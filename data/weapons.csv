@@ -1,0 +1,31 @@
+item_id,floor,path,name,attack,npc_sell_price,npc_buy_price
+6001,1,vanguard,Hearth Arming Sword,14,400,80
+6002,1,cleaver,Hearth Greatsword,18,400,80
+6003,1,shade,Hearth Dagger Pair,10,400,80
+6004,1,slinger,Hearth Shortbow,11,400,80
+6005,1,arcanist,Hearth Focus,14,400,80
+6006,1,vanguard,Hearth Heater Shield,def 16,240,48
+6007,2,vanguard,Ridge Arming Sword,22,1500,300
+6008,2,cleaver,Ridge Greatsword,29,1500,300
+6009,2,shade,Ridge Dagger Pair,15,1500,300
+6010,2,slinger,Ridge Shortbow,18,1500,300
+6011,2,arcanist,Ridge Focus,22,1500,300
+6012,2,vanguard,Ridge Heater Shield,def 22,900,180
+6013,3,vanguard,Rootwood Arming Sword,30,3500,700
+6014,3,cleaver,Rootwood Greatsword,40,3500,700
+6015,3,shade,Rootwood Dagger Pair,21,3500,700
+6016,3,slinger,Rootwood Shortbow,25,3500,700
+6017,3,arcanist,Rootwood Focus,30,3500,700
+6018,3,vanguard,Rootwood Heater Shield,def 28,2100,420
+6019,4,vanguard,Lakesteel Arming Sword,38,6500,1300
+6020,4,cleaver,Lakesteel Greatsword,51,6500,1300
+6021,4,shade,Lakesteel Dagger Pair,27,6500,1300
+6022,4,slinger,Lakesteel Shortbow,32,6500,1300
+6023,4,arcanist,Lakesteel Focus,38,6500,1300
+6024,4,vanguard,Lakesteel Heater Shield,def 34,3900,780
+6025,5,vanguard,Ringforged Arming Sword,46,10000,2000
+6026,5,cleaver,Ringforged Greatsword,62,10000,2000
+6027,5,shade,Ringforged Dagger Pair,33,10000,2000
+6028,5,slinger,Ringforged Shortbow,39,10000,2000
+6029,5,arcanist,Ringforged Focus,46,10000,2000
+6030,5,vanguard,Ringforged Heater Shield,def 40,6000,1200

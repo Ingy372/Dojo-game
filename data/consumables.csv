@@ -1,0 +1,19 @@
+item_id,name,type,npc_sell_price,effect,where
+8001,Travel Bread,food,6,regen 3 min,all towns
+8002,Smoked Ham,food,12,regen 6 min,all towns
+8003,Hearth Stew,food,0,"crafted only (s4 recipe); regen 10 min, +5% stamina regen",crafted
+8011,Minor Salve,heal,45,heals 70-110 HP; shared 2s cooldown,all towns
+8012,Salve,heal,110,heals 220-300 HP,F2+ towns
+8013,Greater Salve,heal,250,heals 480-620 HP,F4+ towns
+8014,Bandage,heal,15,"3s channel, 20% max HP, breaks on damage",all towns
+8021,Minor Tonic,resource,50,restores 60-90 Stamina/Focus,all towns
+8022,Tonic,resource,120,restores 160-220,F2+ towns
+8023,Greater Tonic,resource,260,restores 340-440,F4+ towns
+8031,Basic Arrow,ammo,1,atk 5; 70% recoverable,all towns
+8032,Broadhead,ammo,0,crafted only; Pinshot ammo; atk 9,crafted
+8033,Signal Arrow,ammo,0,crafted only; Mark ammo,crafted
+8034,Ironpoint Arrow,ammo,4,atk 11,F3+ towns
+8041,Lantern,tool,80,light radius 4,all towns
+8042,Rope,tool,30,rope spots,all towns
+8043,Shovel,tool,30,dig spots,all towns
+8051,Debt Chip,special,0,clears one death's XP debt if used within 60s of that death; bound,"s1 W5 weekly, s21 weekly"

@@ -1,0 +1,6 @@
+monster_id,floor,name,hp,xp,rules,drops
+5192,1,Echo of Axe-Lord of the Stair,19200,2210,"party of 4, 8-min enrage, lockout 20h per character per floor",Tempered mat 1-2; Spire Scrap 15% +5% per scrapless kill (per character)
+5292,2,Echo of Crowned Aurochs,64900,5850,"party of 4, 8-min enrage, lockout 20h per character per floor",Tempered mat 1-2; Spire Scrap 15% +5% per scrapless kill (per character)
+5392,3,Echo of Sleeping Trunk,114000,7475,"party of 4, 8-min enrage, lockout 20h per character per floor",Tempered mat 1-2; Spire Scrap 15% +5% per scrapless kill (per character)
+5492,4,Echo of Knight of the Closed Helm,154000,9425,"party of 4, 8-min enrage, lockout 20h per character per floor",Tempered mat 1-2; Spire Scrap 15% +5% per scrapless kill (per character)
+5592,5,Echo of Empty Colossus,200000,11050,"party of 4, 8-min enrage, lockout 20h per character per floor",Tempered mat 1-2; Spire Scrap 15% +5% per scrapless kill (per character)

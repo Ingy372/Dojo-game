@@ -1,0 +1,61 @@
+item_id,floor,class,for_paths,name,slot,armor,npc_sell_price,npc_buy_price,bonus
+7001,1,heavy,"Vanguard, Cleaver",Hearth Heavy Helm,helm,3,96,19,
+7002,1,heavy,"Vanguard, Cleaver",Hearth Heavy Body,body,6,192,38,
+7003,1,heavy,"Vanguard, Cleaver",Hearth Heavy Legs,legs,4,120,24,
+7004,1,heavy,"Vanguard, Cleaver",Hearth Heavy Boots,boots,2,72,14,
+7005,1,light,"Shade, Slinger",Hearth Light Helm,helm,2,96,19,
+7006,1,light,"Shade, Slinger",Hearth Light Body,body,4,192,38,dodge +1%
+7007,1,light,"Shade, Slinger",Hearth Light Legs,legs,3,120,24,
+7008,1,light,"Shade, Slinger",Hearth Light Boots,boots,2,72,14,
+7009,1,robe,Arcanist,Hearth Robe Helm,helm,1,96,19,
+7010,1,robe,Arcanist,Hearth Robe Body,body,3,192,38,focus regen +4%
+7011,1,robe,Arcanist,Hearth Robe Legs,legs,2,120,24,
+7012,1,robe,Arcanist,Hearth Robe Boots,boots,1,72,14,
+7013,2,heavy,"Vanguard, Cleaver",Ridge Heavy Helm,helm,4,360,72,
+7014,2,heavy,"Vanguard, Cleaver",Ridge Heavy Body,body,9,720,144,
+7015,2,heavy,"Vanguard, Cleaver",Ridge Heavy Legs,legs,6,450,90,
+7016,2,heavy,"Vanguard, Cleaver",Ridge Heavy Boots,boots,3,270,54,
+7017,2,light,"Shade, Slinger",Ridge Light Helm,helm,3,360,72,
+7018,2,light,"Shade, Slinger",Ridge Light Body,body,6,720,144,dodge +2%
+7019,2,light,"Shade, Slinger",Ridge Light Legs,legs,4,450,90,
+7020,2,light,"Shade, Slinger",Ridge Light Boots,boots,2,270,54,
+7021,2,robe,Arcanist,Ridge Robe Helm,helm,2,360,72,
+7022,2,robe,Arcanist,Ridge Robe Body,body,4,720,144,focus regen +8%
+7023,2,robe,Arcanist,Ridge Robe Legs,legs,2,450,90,
+7024,2,robe,Arcanist,Ridge Robe Boots,boots,1,270,54,
+7025,3,heavy,"Vanguard, Cleaver",Rootwood Heavy Helm,helm,6,840,168,
+7026,3,heavy,"Vanguard, Cleaver",Rootwood Heavy Body,body,12,1680,336,
+7027,3,heavy,"Vanguard, Cleaver",Rootwood Heavy Legs,legs,7,1050,210,
+7028,3,heavy,"Vanguard, Cleaver",Rootwood Heavy Boots,boots,4,630,126,
+7029,3,light,"Shade, Slinger",Rootwood Light Helm,helm,4,840,168,
+7030,3,light,"Shade, Slinger",Rootwood Light Body,body,8,1680,336,dodge +3%
+7031,3,light,"Shade, Slinger",Rootwood Light Legs,legs,5,1050,210,
+7032,3,light,"Shade, Slinger",Rootwood Light Boots,boots,3,630,126,
+7033,3,robe,Arcanist,Rootwood Robe Helm,helm,3,840,168,
+7034,3,robe,Arcanist,Rootwood Robe Body,body,5,1680,336,focus regen +12%
+7035,3,robe,Arcanist,Rootwood Robe Legs,legs,3,1050,210,
+7036,3,robe,Arcanist,Rootwood Robe Boots,boots,2,630,126,
+7037,4,heavy,"Vanguard, Cleaver",Lakesteel Heavy Helm,helm,7,1560,312,
+7038,4,heavy,"Vanguard, Cleaver",Lakesteel Heavy Body,body,14,3120,624,
+7039,4,heavy,"Vanguard, Cleaver",Lakesteel Heavy Legs,legs,9,1950,390,
+7040,4,heavy,"Vanguard, Cleaver",Lakesteel Heavy Boots,boots,5,1170,234,
+7041,4,light,"Shade, Slinger",Lakesteel Light Helm,helm,5,1560,312,
+7042,4,light,"Shade, Slinger",Lakesteel Light Body,body,10,3120,624,dodge +4%
+7043,4,light,"Shade, Slinger",Lakesteel Light Legs,legs,6,1950,390,
+7044,4,light,"Shade, Slinger",Lakesteel Light Boots,boots,4,1170,234,
+7045,4,robe,Arcanist,Lakesteel Robe Helm,helm,3,1560,312,
+7046,4,robe,Arcanist,Lakesteel Robe Body,body,6,3120,624,focus regen +16%
+7047,4,robe,Arcanist,Lakesteel Robe Legs,legs,4,1950,390,
+7048,4,robe,Arcanist,Lakesteel Robe Boots,boots,2,1170,234,
+7049,5,heavy,"Vanguard, Cleaver",Ringforged Heavy Helm,helm,9,2400,480,
+7050,5,heavy,"Vanguard, Cleaver",Ringforged Heavy Body,body,17,4800,960,
+7051,5,heavy,"Vanguard, Cleaver",Ringforged Heavy Legs,legs,11,3000,600,
+7052,5,heavy,"Vanguard, Cleaver",Ringforged Heavy Boots,boots,6,1800,360,
+7053,5,light,"Shade, Slinger",Ringforged Light Helm,helm,6,2400,480,
+7054,5,light,"Shade, Slinger",Ringforged Light Body,body,12,4800,960,dodge +5%
+7055,5,light,"Shade, Slinger",Ringforged Light Legs,legs,8,3000,600,
+7056,5,light,"Shade, Slinger",Ringforged Light Boots,boots,5,1800,360,
+7057,5,robe,Arcanist,Ringforged Robe Helm,helm,4,2400,480,
+7058,5,robe,Arcanist,Ringforged Robe Body,body,8,4800,960,focus regen +20%
+7059,5,robe,Arcanist,Ringforged Robe Legs,legs,5,3000,600,
+7060,5,robe,Arcanist,Ringforged Robe Boots,boots,3,1800,360,

@@ -1,0 +1,24 @@
+item_id,name,floor,tier,npc_buy_price,source
+5101,Hearthroot,1,common,2,F1 trash
+5102,Boar Hide,1,common,3,F1 boars
+5103,Cinderstone,1,keen,25,"F1 elites, labyrinth chests"
+5104,Stair Iron,1,tempered,0,"Gate Hound, Axe-Lord first kill and Echo"
+5201,Horn Shard,2,common,6,F2 trash
+5202,Ridge Pelt,2,common,8,F2 cats
+5203,Blightglass,2,keen,60,F2 elites
+5204,Aurochs Horn,2,tempered,0,"Horn Brute, Crowned Aurochs + Echo"
+5301,Spore Cap,3,common,10,F3 trash
+5302,Mossweave,3,common,12,F3 crawlers
+5303,Fog Amber,3,keen,110,F3 elites
+5304,Heartwood,3,tempered,0,"Mossback Warden, Sleeping Trunk + Echo"
+5401,Eel Scale,4,common,15,F4 eels
+5402,Drowned Iron,4,common,18,F4 drowned
+5403,Tide Pearl,4,keen,170,F4 elites
+5404,Helm Steel,4,tempered,0,"Lake Knight, Closed Helm + Echo"
+5501,Arena Sand,5,common,22,F5 trash
+5502,Drill Core,5,common,26,F5 constructs
+5503,Champion Seal,5,keen,240,F5 elites
+5504,Colossus Core,5,tempered,0,"Arena Warden, Empty Colossus + Echo"
+5901,Spire Scrap,0,spireforged,0,"Echo 15% + pity, optional bosses 10%"
+5902,Last Blow Shard,0,spireforged,0,First-kill last hit only. Bound. Counts as a Spire Scrap AND forces that upgrade to succeed
+5911,Blackstone Shard,1,keen,40,"Underkeep, all wings"

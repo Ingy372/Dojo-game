@@ -1,0 +1,20 @@
+# build outputs
+/assets/build/
+/maps/build/
+/maps/preview/
+/server/build/
+/client/build/
+*.otbm.bak
+# secrets
+*.env
+.env*
+*.pem
+*.key
+config.lua
+# python
+__pycache__/
+*.pyc
+.venv/
+# os
+.DS_Store
+Thumbs.db

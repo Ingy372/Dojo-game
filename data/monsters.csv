@@ -1,0 +1,69 @@
+monster_id,tuned_floor,zone,name,role,hp,xp,melee_max,col_min,col_max,respawn_s,drops(item:chance:qty),notes
+101,1,camp,Bristle Boar,trash,80,22,15,2,9,60,5102:40%:1-2;5101:25%:1,charges 2 tiles after 600ms telegraph
+102,1,camp,Meadow Wolf,trash,100,27,19,2,9,60,5101:30%:1,spawns in packs of 3
+103,1,camp,Field Shardling,trash,70,20,17,2,9,60,5101:40%:1-2,flees at 20% hp
+104,1,camp,Road Bandit,trash,140,42,21,2,9,60,5101:20%:1,
+105,1,camp,Thornsnap,trash,120,33,17,2,9,60,5101:45%:1-2,"stationary, 1-tile poison field"
+106,1,labyrinth,Ruin Sentinel,trash,180,55,23,2,9,60,5101:20%:1;5103:2%:1,-50% damage taken from its front tile
+107,1,labyrinth,Ruin Archer,trash,130,39,21,2,9,60,5101:20%:1;5103:2%:1,ranged 4
+108,1,underkeep,Mire Toad,trash,160,44,19,2,9,60,5911:6%:1,"Underkeep W1, slime field on death"
+109,1,underkeep,Black Crawler,trash,170,51,23,2,9,60,5911:6%:1,Underkeep W1
+151,1,camp,Bandit Captain,elite,1000,476,39,38,116,600,5103:35%:1-2;recipe_scrap_keen_f1:3%:1,1 per bandit camp
+152,1,camp,Grey Alpha,elite,1000,476,39,38,116,600,5103:35%:1-2,howl: wolves +20% speed 10s
+153,1,labyrinth,Sentinel Captain,elite,1100,524,39,38,116,600,5103:45%:1-2,labyrinth level 3
+171,1,secret,Old Tusk,mini,7200,1020,55,82,248,1800,dye_mudbrown:100%:1;5103:100%:2-3,secret s2
+191,1,pass,Gate Hound,field_boss,24000,3060,69,0,0,0,5104:100%:1,see 10_BOSSES
+192,1,boss,Axe-Lord of the Stair,floor_boss,48000,8840,86,0,0,0,5104:100%:2-4,see 10_BOSSES
+111,2,underkeep,Vault Rat,trash,380,72,31,7,23,60,5911:8%:1,Underkeep W2 (tuned F2)
+112,2,underkeep,Chain Ghoul,trash,620,122,34,7,23,60,5911:8%:1,"Underkeep W2, slow on hit"
+181,2,underkeep,Drain Matron,mini,24340,2700,87,225,676,1800,5911:100%:3-5;5203:50%:1,"Underkeep W2 side boss, daily per character"
+113,3,underkeep,Trap Mimic,trash,1080,149,48,12,37,60,5911:10%:1,"Underkeep W3, looks like a chest"
+114,3,underkeep,Iron Shade,trash,900,129,52,12,37,60,5911:10%:1,Underkeep W3
+115,4,underkeep,Keep Warden,elite,8020,2030,110,252,757,600,5911:40%:2;5403:15%:1,"Underkeep W4, packs of 3"
+182,5,underkeep,Vault Warden,optional,150000,9350,208,1040,3121,0,5911:100%:6;5504:30%:1;5901:10%:1,Underkeep W5 boss. Chained lantern + tower shield silhouette. NOT a scythe
+201,2,camp,Horned Grazer,trash,430,78,28,7,23,60,5201:40%:1-2,herds of 4
+202,2,camp,Ridge Cat,trash,430,87,37,7,23,60,5202:35%:1,pounce 3 tiles after telegraph
+203,2,camp,Dust Strider,trash,480,90,31,7,23,60,5201:30%:1,fast
+204,2,camp,Hill Cutthroat,trash,570,112,34,7,23,60,5201:20%:1,bleed
+205,2,camp,Blight Wasp,trash,330,63,31,7,23,60,5201:30%:1,poison
+206,2,labyrinth,Stonehide Bull,trash,760,156,37,7,23,60,5201:30%:1;5203:2%:1,line charge 3
+251,2,camp,Herd Bull,elite,3380,1260,62,105,316,600,5203:35%:1-2;recipe_scrap_keen_f2:3%:1,
+252,2,camp,Ridge Matriarch,elite,3380,1260,62,105,316,600,5203:35%:1-2,
+271,2,secret,Ridge Alpha,mini,24340,2700,87,225,676,1800,5203:100%:2-3,secret s14
+272,2,secret,Hollow Bull,optional,48690,4950,109,300,901,0,5204:50%:1;5901:10%:1,"secret s19, instanced"
+273,2,secret,Fir Rumor Beast,optional,58420,5940,109,300,901,0,8051:100%:1,"secret s21, Sundays 20:00 ET in a gated glade"
+291,2,pass,Horn Brute,field_boss,81150,8100,109,0,0,0,5204:100%:1,
+292,2,boss,Crowned Aurochs,floor_boss,162290,23400,136,0,0,0,5204:100%:2-4,
+301,3,camp,Spore Bat,trash,630,80,40,12,37,60,5301:40%:1,blind 1s
+302,3,camp,Moss Crawler,trash,1080,132,36,12,37,60,5302:40%:1-2,
+303,3,camp,Fog Lurker,trash,900,124,48,12,37,60,5301:30%:1,invisible until adjacent
+304,3,camp,Bark Mantis,trash,990,137,48,12,37,60,5302:25%:1,
+305,3,camp,Lantern Wisp,trash,540,69,40,12,37,60,5301:35%:1,ranged
+306,3,labyrinth,Rootbound Husk,trash,1440,191,44,12,37,60,5302:30%:1;5303:2%:1,root 1s
+351,3,camp,Moss Elder,elite,5940,1610,81,168,505,600,5303:35%:1-2;recipe_scrap_keen_f3:3%:1,
+371,3,secret,Canopy Mother,mini,42750,3450,113,360,1081,1800,5303:100%:2-3,secret s26
+372,3,secret,Waking Root,optional,85500,6325,142,480,1441,0,5304:50%:1;5901:10%:1,"secret s31, instanced"
+391,3,pass,Mossback Warden,field_boss,142500,10350,142,0,0,0,5304:100%:1,
+392,3,boss,Sleeping Trunk,floor_boss,285000,29900,177,0,0,0,5304:100%:2-4,
+401,4,camp,Lake Eel,trash,1260,136,55,18,55,60,5401:40%:1-2,water edge
+402,4,camp,Drowned Footman,trash,1680,174,50,18,55,60,5402:40%:1,
+403,4,camp,Reed Witch,trash,1120,125,60,18,55,60,5401:25%:1,"ranged, silence 2s"
+404,4,camp,Tide Crab,trash,1960,195,45,18,55,60,5402:30%:1,high armor
+405,4,labyrinth,Helm Knight,trash,2380,266,60,18,55,60,5402:30%:1;5403:2%:1,shield front
+406,4,camp,Castle Hound,trash,1260,136,55,18,55,60,5401:25%:1,packs of 3
+451,4,camp,Drowned Sergeant,elite,8020,2030,100,252,757,600,5403:35%:1-2;recipe_scrap_keen_f4:3%:1,
+471,4,secret,Eel King,mini,57750,4350,140,540,1621,1800,5403:100%:2-3,secret s38
+472,4,secret,The Unhelmed,optional,115500,7975,175,720,2161,0,5404:50%:1;5901:10%:1,"secret s41, instanced"
+491,4,pass,Lake Knight,field_boss,192500,13050,175,0,0,0,5404:100%:1,
+492,4,boss,Knight of the Closed Helm,floor_boss,385000,37700,218,0,0,0,5404:100%:2-4,
+501,5,camp,Deserter,trash,2200,194,65,26,79,60,5501:40%:1-2,
+502,5,camp,Drill Construct,trash,2800,238,59,26,79,60,5502:40%:1,
+503,5,camp,Arena Hound,trash,1600,141,65,26,79,60,5501:30%:1,packs of 3
+504,5,camp,Pit Brawler,trash,2400,228,77,26,79,60,5501:25%:1,knockback 1
+505,5,camp,Ring Archer,trash,1800,159,65,26,79,60,5501:30%:1,ranged
+506,5,labyrinth,Sand Golem,trash,3600,330,71,26,79,60,5502:30%:1;5503:2%:1,
+551,5,camp,Deserter Lieutenant,elite,10420,2380,118,364,1093,600,5503:35%:1-2;recipe_scrap_keen_f5:3%:1,
+571,5,secret,Deserter Captain,mini,75000,5100,166,780,2341,1800,5503:100%:2-3,secret s50
+572,5,secret,Cracked Copy,optional,150000,9350,208,1040,3121,0,5504:50%:1;5901:10%:1,"secret s53, instanced"
+591,5,pass,Arena Warden,field_boss,250000,15300,208,0,0,0,5504:100%:1,
+592,5,boss,Empty Colossus,floor_boss,500000,44200,260,0,0,0,5504:100%:2-4,splits at 50%

@@ -1,0 +1,156 @@
+npc,town,item,sell_price_col,note
+Marra the Quartermaster,Hearthgate,Travel Bread,6,
+Marra the Quartermaster,Hearthgate,Smoked Ham,12,
+Marra the Quartermaster,Hearthgate,Minor Salve,45,
+Marra the Quartermaster,Hearthgate,Bandage,15,
+Marra the Quartermaster,Hearthgate,Minor Tonic,50,
+Marra the Quartermaster,Hearthgate,Basic Arrow,1,
+Marra the Quartermaster,Hearthgate,Rope,30,
+Marra the Quartermaster,Hearthgate,Shovel,30,
+Marra the Quartermaster,Hearthgate,Lantern,80,
+Pell the Innkeeper,Millcross,Travel Bread,7,
+Pell the Innkeeper,Millcross,Smoked Ham,13,
+Pell the Innkeeper,Millcross,Minor Salve,48,
+Pell the Innkeeper,Millcross,Bandage,16,
+Pell the Innkeeper,Millcross,Basic Arrow,1,
+Quartermaster of Highrest,Highrest,Travel Bread,6,
+Quartermaster of Highrest,Highrest,Smoked Ham,12,
+Quartermaster of Highrest,Highrest,Minor Salve,45,
+Quartermaster of Highrest,Highrest,Bandage,15,
+Quartermaster of Highrest,Highrest,Minor Tonic,50,
+Quartermaster of Highrest,Highrest,Basic Arrow,1,
+Quartermaster of Highrest,Highrest,Rope,30,
+Quartermaster of Highrest,Highrest,Shovel,30,
+Quartermaster of Highrest,Highrest,Lantern,80,
+Quartermaster of Highrest,Highrest,Salve,110,
+Quartermaster of Highrest,Highrest,Tonic,120,
+Quartermaster of Rootwell,Rootwell,Travel Bread,6,
+Quartermaster of Rootwell,Rootwell,Smoked Ham,12,
+Quartermaster of Rootwell,Rootwell,Minor Salve,45,
+Quartermaster of Rootwell,Rootwell,Bandage,15,
+Quartermaster of Rootwell,Rootwell,Minor Tonic,50,
+Quartermaster of Rootwell,Rootwell,Basic Arrow,1,
+Quartermaster of Rootwell,Rootwell,Rope,30,
+Quartermaster of Rootwell,Rootwell,Shovel,30,
+Quartermaster of Rootwell,Rootwell,Lantern,80,
+Quartermaster of Rootwell,Rootwell,Salve,110,
+Quartermaster of Rootwell,Rootwell,Tonic,120,
+Quartermaster of Rootwell,Rootwell,Ironpoint Arrow,4,
+Quartermaster of Lakehold,Lakehold,Travel Bread,6,
+Quartermaster of Lakehold,Lakehold,Smoked Ham,12,
+Quartermaster of Lakehold,Lakehold,Minor Salve,45,
+Quartermaster of Lakehold,Lakehold,Bandage,15,
+Quartermaster of Lakehold,Lakehold,Minor Tonic,50,
+Quartermaster of Lakehold,Lakehold,Basic Arrow,1,
+Quartermaster of Lakehold,Lakehold,Rope,30,
+Quartermaster of Lakehold,Lakehold,Shovel,30,
+Quartermaster of Lakehold,Lakehold,Lantern,80,
+Quartermaster of Lakehold,Lakehold,Salve,110,
+Quartermaster of Lakehold,Lakehold,Tonic,120,
+Quartermaster of Lakehold,Lakehold,Ironpoint Arrow,4,
+Quartermaster of Lakehold,Lakehold,Greater Salve,250,
+Quartermaster of Lakehold,Lakehold,Greater Tonic,260,
+Quartermaster of Ringhold,Ringhold,Travel Bread,6,
+Quartermaster of Ringhold,Ringhold,Smoked Ham,12,
+Quartermaster of Ringhold,Ringhold,Minor Salve,45,
+Quartermaster of Ringhold,Ringhold,Bandage,15,
+Quartermaster of Ringhold,Ringhold,Minor Tonic,50,
+Quartermaster of Ringhold,Ringhold,Basic Arrow,1,
+Quartermaster of Ringhold,Ringhold,Rope,30,
+Quartermaster of Ringhold,Ringhold,Shovel,30,
+Quartermaster of Ringhold,Ringhold,Lantern,80,
+Quartermaster of Ringhold,Ringhold,Salve,110,
+Quartermaster of Ringhold,Ringhold,Tonic,120,
+Quartermaster of Ringhold,Ringhold,Ironpoint Arrow,4,
+Quartermaster of Ringhold,Ringhold,Greater Salve,250,
+Quartermaster of Ringhold,Ringhold,Greater Tonic,260,
+Smith of Hearthgate,Hearthgate,Hearth Arming Sword,400,buys back at 80
+Smith of Hearthgate,Hearthgate,Hearth Greatsword,400,buys back at 80
+Smith of Hearthgate,Hearthgate,Hearth Dagger Pair,400,buys back at 80
+Smith of Hearthgate,Hearthgate,Hearth Shortbow,400,buys back at 80
+Smith of Hearthgate,Hearthgate,Hearth Focus,400,buys back at 80
+Smith of Hearthgate,Hearthgate,Hearth Heater Shield,240,buys back at 48
+Armorer of Hearthgate,Hearthgate,Hearth Heavy Helm,96,buys back at 19
+Armorer of Hearthgate,Hearthgate,Hearth Heavy Body,192,buys back at 38
+Armorer of Hearthgate,Hearthgate,Hearth Heavy Legs,120,buys back at 24
+Armorer of Hearthgate,Hearthgate,Hearth Heavy Boots,72,buys back at 14
+Armorer of Hearthgate,Hearthgate,Hearth Light Helm,96,buys back at 19
+Armorer of Hearthgate,Hearthgate,Hearth Light Body,192,buys back at 38
+Armorer of Hearthgate,Hearthgate,Hearth Light Legs,120,buys back at 24
+Armorer of Hearthgate,Hearthgate,Hearth Light Boots,72,buys back at 14
+Armorer of Hearthgate,Hearthgate,Hearth Robe Helm,96,buys back at 19
+Armorer of Hearthgate,Hearthgate,Hearth Robe Body,192,buys back at 38
+Armorer of Hearthgate,Hearthgate,Hearth Robe Legs,120,buys back at 24
+Armorer of Hearthgate,Hearthgate,Hearth Robe Boots,72,buys back at 14
+Smith of Highrest,Highrest,Ridge Arming Sword,1500,buys back at 300
+Smith of Highrest,Highrest,Ridge Greatsword,1500,buys back at 300
+Smith of Highrest,Highrest,Ridge Dagger Pair,1500,buys back at 300
+Smith of Highrest,Highrest,Ridge Shortbow,1500,buys back at 300
+Smith of Highrest,Highrest,Ridge Focus,1500,buys back at 300
+Smith of Highrest,Highrest,Ridge Heater Shield,900,buys back at 180
+Armorer of Highrest,Highrest,Ridge Heavy Helm,360,buys back at 72
+Armorer of Highrest,Highrest,Ridge Heavy Body,720,buys back at 144
+Armorer of Highrest,Highrest,Ridge Heavy Legs,450,buys back at 90
+Armorer of Highrest,Highrest,Ridge Heavy Boots,270,buys back at 54
+Armorer of Highrest,Highrest,Ridge Light Helm,360,buys back at 72
+Armorer of Highrest,Highrest,Ridge Light Body,720,buys back at 144
+Armorer of Highrest,Highrest,Ridge Light Legs,450,buys back at 90
+Armorer of Highrest,Highrest,Ridge Light Boots,270,buys back at 54
+Armorer of Highrest,Highrest,Ridge Robe Helm,360,buys back at 72
+Armorer of Highrest,Highrest,Ridge Robe Body,720,buys back at 144
+Armorer of Highrest,Highrest,Ridge Robe Legs,450,buys back at 90
+Armorer of Highrest,Highrest,Ridge Robe Boots,270,buys back at 54
+Smith of Rootwell,Rootwell,Rootwood Arming Sword,3500,buys back at 700
+Smith of Rootwell,Rootwell,Rootwood Greatsword,3500,buys back at 700
+Smith of Rootwell,Rootwell,Rootwood Dagger Pair,3500,buys back at 700
+Smith of Rootwell,Rootwell,Rootwood Shortbow,3500,buys back at 700
+Smith of Rootwell,Rootwell,Rootwood Focus,3500,buys back at 700
+Smith of Rootwell,Rootwell,Rootwood Heater Shield,2100,buys back at 420
+Armorer of Rootwell,Rootwell,Rootwood Heavy Helm,840,buys back at 168
+Armorer of Rootwell,Rootwell,Rootwood Heavy Body,1680,buys back at 336
+Armorer of Rootwell,Rootwell,Rootwood Heavy Legs,1050,buys back at 210
+Armorer of Rootwell,Rootwell,Rootwood Heavy Boots,630,buys back at 126
+Armorer of Rootwell,Rootwell,Rootwood Light Helm,840,buys back at 168
+Armorer of Rootwell,Rootwell,Rootwood Light Body,1680,buys back at 336
+Armorer of Rootwell,Rootwell,Rootwood Light Legs,1050,buys back at 210
+Armorer of Rootwell,Rootwell,Rootwood Light Boots,630,buys back at 126
+Armorer of Rootwell,Rootwell,Rootwood Robe Helm,840,buys back at 168
+Armorer of Rootwell,Rootwell,Rootwood Robe Body,1680,buys back at 336
+Armorer of Rootwell,Rootwell,Rootwood Robe Legs,1050,buys back at 210
+Armorer of Rootwell,Rootwell,Rootwood Robe Boots,630,buys back at 126
+Smith of Lakehold,Lakehold,Lakesteel Arming Sword,6500,buys back at 1300
+Smith of Lakehold,Lakehold,Lakesteel Greatsword,6500,buys back at 1300
+Smith of Lakehold,Lakehold,Lakesteel Dagger Pair,6500,buys back at 1300
+Smith of Lakehold,Lakehold,Lakesteel Shortbow,6500,buys back at 1300
+Smith of Lakehold,Lakehold,Lakesteel Focus,6500,buys back at 1300
+Smith of Lakehold,Lakehold,Lakesteel Heater Shield,3900,buys back at 780
+Armorer of Lakehold,Lakehold,Lakesteel Heavy Helm,1560,buys back at 312
+Armorer of Lakehold,Lakehold,Lakesteel Heavy Body,3120,buys back at 624
+Armorer of Lakehold,Lakehold,Lakesteel Heavy Legs,1950,buys back at 390
+Armorer of Lakehold,Lakehold,Lakesteel Heavy Boots,1170,buys back at 234
+Armorer of Lakehold,Lakehold,Lakesteel Light Helm,1560,buys back at 312
+Armorer of Lakehold,Lakehold,Lakesteel Light Body,3120,buys back at 624
+Armorer of Lakehold,Lakehold,Lakesteel Light Legs,1950,buys back at 390
+Armorer of Lakehold,Lakehold,Lakesteel Light Boots,1170,buys back at 234
+Armorer of Lakehold,Lakehold,Lakesteel Robe Helm,1560,buys back at 312
+Armorer of Lakehold,Lakehold,Lakesteel Robe Body,3120,buys back at 624
+Armorer of Lakehold,Lakehold,Lakesteel Robe Legs,1950,buys back at 390
+Armorer of Lakehold,Lakehold,Lakesteel Robe Boots,1170,buys back at 234
+Smith of Ringhold,Ringhold,Ringforged Arming Sword,10000,buys back at 2000
+Smith of Ringhold,Ringhold,Ringforged Greatsword,10000,buys back at 2000
+Smith of Ringhold,Ringhold,Ringforged Dagger Pair,10000,buys back at 2000
+Smith of Ringhold,Ringhold,Ringforged Shortbow,10000,buys back at 2000
+Smith of Ringhold,Ringhold,Ringforged Focus,10000,buys back at 2000
+Smith of Ringhold,Ringhold,Ringforged Heater Shield,6000,buys back at 1200
+Armorer of Ringhold,Ringhold,Ringforged Heavy Helm,2400,buys back at 480
+Armorer of Ringhold,Ringhold,Ringforged Heavy Body,4800,buys back at 960
+Armorer of Ringhold,Ringhold,Ringforged Heavy Legs,3000,buys back at 600
+Armorer of Ringhold,Ringhold,Ringforged Heavy Boots,1800,buys back at 360
+Armorer of Ringhold,Ringhold,Ringforged Light Helm,2400,buys back at 480
+Armorer of Ringhold,Ringhold,Ringforged Light Body,4800,buys back at 960
+Armorer of Ringhold,Ringhold,Ringforged Light Legs,3000,buys back at 600
+Armorer of Ringhold,Ringhold,Ringforged Light Boots,1800,buys back at 360
+Armorer of Ringhold,Ringhold,Ringforged Robe Helm,2400,buys back at 480
+Armorer of Ringhold,Ringhold,Ringforged Robe Body,4800,buys back at 960
+Armorer of Ringhold,Ringhold,Ringforged Robe Legs,3000,buys back at 600
+Armorer of Ringhold,Ringhold,Ringforged Robe Boots,1800,buys back at 360

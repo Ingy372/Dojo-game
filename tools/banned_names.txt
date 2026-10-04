@@ -1,0 +1,53 @@
+# One per line, case-insensitive substring match. check_names.py fails the build on any hit in shipped strings
+# (items, monsters, NPCs, dialogue, map signs, client UI, website). Extend as needed.
+# --- Source (SAO) proper names ---
+sword art
+aincrad
+kirito
+asuna
+klein
+agil
+argo
+diavel
+kibaou
+heathcliff
+lisbeth
+silica
+sachi
+illfang
+kobold lord
+asterius
+taurus king
+nicholas the renegade
+divine stone
+fatal scythe
+black iron palace
+town of beginnings
+tolbana
+horunka
+urbus
+moonlit black cats
+knights of the blood
+aincrad liberation
+cardinal system
+starburst stream
+dual blades
+# --- CipSoft / Tibia proper names (map, NPC, monster) ---
+rookgaard
+thais
+carlin
+venore
+edron
+ab'dendriel
+kazordoon
+darashia
+ankrahmun
+port hope
+svargrond
+rotworm
+demon
+ferumbras
+orshabaal
+morgaroth
+ghazbaran
+annihilator
