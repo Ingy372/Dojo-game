@@ -1,0 +1,78 @@
+name: client-windows
+# Builds the Spirebound Windows client from the pinned OTClient (mehah) commit and packages it with
+# our things (dat/spr), server address and RSA public key. Run it from the Actions tab
+# ("Run workflow"). Repository variables (Settings > Secrets and variables > Actions > Variables):
+#   SPIRE_LOGIN_HOST  - server address players connect to (e.g. a staging IP or DNS name)
+#   SPIRE_RSA_PUBLIC  - decimal public modulus printed by ops/gen_rsa_key.sh on the server (public, not secret)
+on:
+  workflow_dispatch:
+    inputs:
+      host:
+        description: "Login server address (blank = repository variable SPIRE_LOGIN_HOST)"
+        required: false
+  push:
+    tags: ["client-v*"]
+
+env:
+  OTCLIENT_REPO: mehah/otclient
+  OTCLIENT_COMMIT: 396f0b396741bdd4469f27cf9376103930712cff
+
+jobs:
+  windows:
+    runs-on: windows-2025-vs2026
+    env:
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\vcpkg_cache
+      VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}\\vcpkg_cache,readwrite"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout pinned OTClient
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.OTCLIENT_REPO }}
+          ref: ${{ env.OTCLIENT_COMMIT }}
+          path: otclient
+      - name: vcpkg baseline
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path $env:VCPKG_DEFAULT_BINARY_CACHE | Out-Null
+          $json = Get-Content otclient/vcpkg.json -Raw | ConvertFrom-Json
+          "VCPKG_GIT_COMMIT_ID=$($json.'builtin-baseline')" | Out-File -FilePath $env:GITHUB_ENV -Append
+      - uses: actions/cache@v4
+        with:
+          path: vcpkg_cache
+          key: vcpkg-win-${{ env.OTCLIENT_COMMIT }}
+          restore-keys: vcpkg-win-
+      - uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitURL: "https://github.com/microsoft/vcpkg.git"
+          vcpkgGitCommitId: ${{ env.VCPKG_GIT_COMMIT_ID }}
+      - uses: lukka/run-cmake@v10
+        with:
+          cmakeListsTxtPath: otclient/CMakeLists.txt
+          configurePreset: windows-release
+          buildPreset: windows-release
+          configurePresetAdditionalArgs: "['-DTOGGLE_BIN_FOLDER=ON', '-DOPTIONS_ENABLE_IPO=OFF', '-DOTCLIENT_BUILD_TESTS=OFF']"
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Build assets and package the client
+        shell: pwsh
+        env:
+          HOST_INPUT: ${{ github.event.inputs.host }}
+          HOST_VAR: ${{ vars.SPIRE_LOGIN_HOST }}
+          RSA_VAR: ${{ vars.SPIRE_RSA_PUBLIC }}
+        run: |
+          python -m pip install --quiet -r tools/requirements.txt
+          python tools/build_assets.py
+          $h = if ($env:HOST_INPUT) { $env:HOST_INPUT } else { $env:HOST_VAR }
+          if (-not $h) { throw "Set the SPIRE_LOGIN_HOST repository variable or pass a host input." }
+          if (-not $env:RSA_VAR) { throw "Set the SPIRE_RSA_PUBLIC repository variable (from ops/gen_rsa_key.sh)." }
+          $bins = Get-ChildItem otclient/build/windows-release/bin -File | Where-Object { $_.Extension -in '.exe','.dll' } | ForEach-Object { $_.FullName }
+          python tools/package_client.py --otclient otclient --binary $bins --host $h --rsa $env:RSA_VAR --out dist/Spirebound
+          Compress-Archive -Path dist/Spirebound -DestinationPath dist/Spirebound-windows.zip
+          (Get-FileHash dist/Spirebound-windows.zip -Algorithm SHA256).Hash | Out-File dist/Spirebound-windows.zip.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Spirebound-windows
+          path: |
+            dist/Spirebound-windows.zip
+            dist/Spirebound-windows.zip.sha256

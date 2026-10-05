@@ -1,0 +1,68 @@
+name: server
+# Builds the TFS fork and runs the phase 0 automated gate (asset round trip, map compile,
+# zero-warning boot, scripted login) against a throwaway MariaDB.
+on:
+  push:
+    branches: [main, "phase-*"]
+    paths: ["server/**", "tools/**", "assets/**", "maps/**", "data/**", "ops/**", ".github/workflows/server.yml"]
+  pull_request:
+    paths: ["server/**", "tools/**", "assets/**", "maps/**", "data/**", "ops/**", ".github/workflows/server.yml"]
+  workflow_dispatch:
+
+jobs:
+  build-and-gate:
+    runs-on: ubuntu-24.04
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MARIADB_ROOT_PASSWORD: ci-root-only
+          MARIADB_DATABASE: spirebound
+          MARIADB_USER: spirebound
+          MARIADB_PASSWORD: ci-only
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq cmake ninja-build ccache libboost-system-dev libboost-iostreams-dev \
+            libboost-filesystem-dev libboost-locale-dev libboost-date-time-dev libluajit-5.1-dev libmariadb-dev \
+            libmariadb-dev-compat libpugixml-dev libfmt-dev libcrypto++-dev libgmp-dev mariadb-client gettext-base
+          python3 -m pip install --quiet -r tools/requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ccache
+          key: ccache-server-${{ hashFiles('server/src/**', 'server/CMakeLists.txt') }}
+          restore-keys: ccache-server-
+      - name: Build server
+        run: |
+          cmake -S server -B server/build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          cmake --build server/build -j4
+      - name: Phase 0 gate
+        run: |
+          cat > /tmp/ci.env <<'ENV'
+          SPIRE_PUBLIC_IP=127.0.0.1
+          SPIRE_DB_HOST=127.0.0.1
+          SPIRE_DB_USER=spirebound
+          SPIRE_DB_PASS=ci-only
+          SPIRE_DB_NAME=spirebound
+          SPIRE_WEBSITE_URL=http://localhost/
+          ENV
+          printf '[client]\nhost=127.0.0.1\nuser=root\npassword=ci-root-only\n' > ~/.my.cnf
+          tools/gate_phase0.sh /tmp/ci.env
+      - name: Map preview
+        if: always()
+        run: python3 tools/render_map.py --scale 16 || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: phase0-evidence
+          path: |
+            maps/preview/
+            assets/build/manifest.json
+            /tmp/spire-boot.log
