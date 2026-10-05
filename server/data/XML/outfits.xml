@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Looktypes from assets/assets.csv (category outfit). Placeholders until HANDOFF art arrives. -->
+<outfits>
+	<outfit type="0" looktype="1" name="Adventurer" premium="no" unlocked="yes" enabled="yes" />
+	<outfit type="1" looktype="1" name="Adventurer" premium="no" unlocked="yes" enabled="yes" />
+</outfits>

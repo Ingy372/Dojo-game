@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Phase 0 test monsters (data/monsters.csv rows 1001-1003). Phase 2 generates every monster from the CSV. -->
+<monsters>
+	<monster name="Field Rat" file="starter/field_rat.xml" />
+</monsters>

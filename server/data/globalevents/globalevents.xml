@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<globalevents>
+	<globalevent type="startup" name="ServerStartup" script="startup.lua" />
+	<globalevent type="record" name="PlayerRecord" script="record.lua" />
+	<!-- Daily server save 05:00 US Eastern (22). The host clock runs in America/New_York; notice starts 5 min earlier. -->
+	<globalevent name="Server Save" time="04:55:00" script="serversave.lua" />
+</globalevents>

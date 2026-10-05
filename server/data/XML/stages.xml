@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<stages>
+	<!-- Spirebound uses rateExp = 1 and data/xp_table.csv (phase 1). No experience stages. -->
+	<config enabled="0" />
+</stages>

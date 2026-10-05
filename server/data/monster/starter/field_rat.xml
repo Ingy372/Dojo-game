@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- data/monsters.csv 1001: hp 25, xp 9, melee_max 6. Loot comes from server/data/spire/loot.lua (09), never from XML. -->
+<monster name="Field Rat" nameDescription="a field rat" race="blood" experience="9" speed="184" manacost="0">
+	<health now="25" max="25" />
+	<look type="10" corpse="3001" />
+	<targetchange interval="4000" chance="0" />
+	<flags>
+		<flag summonable="0" />
+		<flag attackable="1" />
+		<flag hostile="1" />
+		<flag illusionable="0" />
+		<flag convinceable="0" />
+		<flag pushable="1" />
+		<flag canpushitems="0" />
+		<flag canpushcreatures="0" />
+		<flag targetdistance="1" />
+		<flag staticattack="90" />
+		<flag runonhealth="0" />
+	</flags>
+	<attacks>
+		<attack name="melee" interval="2000" min="0" max="-6" />
+	</attacks>
+	<defenses armor="1" defense="1" />
+	<loot />
+</monster>

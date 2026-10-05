@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spells>
+	<!-- No spell words in Spirebound (06): skills are cast from the skill bar via opcode (phase 1). -->
+</spells>
