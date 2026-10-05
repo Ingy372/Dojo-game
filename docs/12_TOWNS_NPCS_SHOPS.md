@@ -45,6 +45,12 @@ Each has: temple keeper, smith, armorer, quartermaster, banker (floors 3 and 5 o
 ## Shop rules
 
 - NPC sell prices: data/shops.csv. Village markups are intentional (Millcross +5–10%).
-- NPC buy prices: only items with npc_buy_price > 0 in weapons.csv, armor.csv, materials.csv. Keen and Tempered materials are never bought by NPCs.
+- NPC buy prices: only items with npc_buy_price > 0 in weapons.csv, armor.csv, materials.csv. Keen materials are bought only at their low floor price; Tempered materials and Spire Scrap are never bought by NPCs.
 - NPCs sell the worst arrow and the weakest consumables above craft cost, so a broke player can always function and crafters still have a market.
 - No NPC sells anything with an attack value above that floor's Common base.
+
+## Finding a guild (OWNER: the hardest part of starting)
+
+- Recruitment Hall in Hearthgate beside Guildwarden Sela: a board listing every guild that set "Recruiting" with its message, language, PvP stance (war-focused, mixed, casual), and minimum level.
+- A player can set a "Looking for guild" flag (shown on their name tooltip and on the website). Guild leaders get a weekly list.
+- Players under level 40 in a guild that marked itself "Mentoring" give that guild a small cosmetic point counter; nothing else (no power).

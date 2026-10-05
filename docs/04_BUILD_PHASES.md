@@ -37,7 +37,9 @@ Tasks
 5. Starter and proficiency-10 skills for all paths. Proficiency 25/40 rows exist but are world-gated.
 6. Party cap 4, shared XP rules, path-diversity bonus.
 7. XP debt, death item rules.
-8. Skulls, protection zones, protection level, PZ lock (TFS default 60 s), guards.
+8. Core details from 22 (capacity, speed, regen, logout, idle, saves, chat, names, P11–P13).
+9. Skulls, protection zones, protection level, PZ lock (TFS default 60 s), guards, PvP zone tiers (Guarded/Open/Contested/Deadzone), Blood Marks, PvP crowd-control rules.
+10. Party XP and col formula and Mentor sharing (05); quest perks framework (06).
 
 Gate (each as a scripted GM test + one manual check)
 - Each path can kill a test monster using only its starter skill and basic attack.
@@ -57,13 +59,20 @@ Tasks
 3. NPCs and shops for Hearthgate and Millcross (12). Task board.
 4. World state: table `world_floors`; field boss Gate Hound; labyrinth door; Axe-Lord; credit; last hit; broadcast + bell; monument; teleport gate lights.
 5. Echo system (instanced room copies) for Axe-Lord.
-6. Floor-1 quests (13).
+6. Arrival Yard onboarding and Starter Fields (22); Reward Chest at the monument; population mode and tower weakening (23).
+7. Floor-1 quests (13) with quest log entries; floor-1 apex spawn (Old Watchtower, four layers); world event scheduler; Recruitment Hall.
 
 Gate
 - Killing Gate Hound (GM-spawned party of bots or GM chars) opens the labyrinth door for a character who was not present; restart does not reseal.
 - Killing Axe-Lord opens floor 2 stair for a character not present; monument lists credited names; Last Blow Shard goes to the killing-blow owner; credit ranks by contribution; boss resets after 60 s with no damage.
 - Enrage scaling: with 1 player in the room the Axe-Lord enrages at 60:00; with 8 or more at 8:00; a GM solo test at level 45 with Hearth +4 gear and 40 salves can kill the Axe-Lord before enrage (record time).
 - Echo opens 6 h after first kill (GM time-skip allowed); lockout 20 h; drops match data/echoes.csv.
+- An unjust kill in a Guarded zone gives red immediately; a kill in the Contested apex zone gives no skull and one Blood Mark; the same pair cannot earn a second mark within 30 min.
+- A scripted 4-path party at Boar Camp earns at least 1.3× solo XP per person per hour.
+- Every floor-1 quest step shows a quest-log entry.
+- A new character finishes the Arrival Yard in under 10 minutes and reaches level 8 in the Starter Fields in 35–60 minutes (scripted bot).
+- Killing the server process right after a first kill: on restart the floor is open and the Reward Chest holds every credited player's rewards.
+- compile_map.py rejects a secret trigger visible from a road or plaza.
 - render_map PNGs of floor 1 attached to STATUS.md.
 - OWNER: plays floor 1 for one hour and writes notes in STATUS.md.
 
@@ -90,7 +99,7 @@ Gate
 Read: 15.
 
 Tasks
-1. Floor-1 houses from data/houses.csv; purchase at listed price; rent auto-debit from bank weekly; 7-day grace; relist at next server save with broadcast.
+1. House functions (training dummy, anchor, trophy stands, dice table; Echo shrine in eligible houses). Floor-1 houses from data/houses.csv; purchase at listed price; rent auto-debit from bank weekly; 7-day grace; relist at next server save with broadcast.
 2. One house per account. Guild halls owned by guild.
 3. Head-start window logic (used from floor 2 on; GM-testable now).
 4. Guilds (TFS), guild war contract NPC, break fee.
@@ -132,7 +141,7 @@ Gate
 
 Read: 17, 19.
 
-Gate: every module in 17 works on Windows build; website pages in 19 live on staging; check_names passes on client strings and website.
+Gate: every module in 17 works on Windows build; website pages in 19 live on staging in English, Portuguese, and Spanish; check_names passes on client strings and website.
 
 ## Phase 8 — Art, scale, operations
 
@@ -144,6 +153,7 @@ Gate
 - No placeholder art remains in: player outfits, floor-1 monsters, floor-1 tiles, UI (other floors may still be placeholder for closed beta).
 - Load test: 500 loadbot sessions (300 hunting floors 1–2, 200 idle in towns) for 60 minutes: average tick under 25 ms, p99 under 50 ms, no crash.
 - Restore drill: restore last night's backup to a scratch DB and boot from it.
+- Population tests from 23 (60-player and 500-player scenarios) pass.
 
 ## Phase 9 — Closed beta, tuning, wipe, launch kit
 

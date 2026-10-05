@@ -49,6 +49,8 @@ If a conflict is not resolved by this order, stop and write it under `known_gaps
 | 19_WEBSITE_AND_COMMUNITY.md | Website pages, Discord, launch comms |
 | 20_HANDOFF.md | What Cowork cannot do and who does it |
 | 21_MONETIZATION.md | Cosmetic Wardrobe, floor drops, Supporter, payments |
+| 22_CORE_DETAILS.md | Capacity, speed, regen, onboarding, logout, saves, loot, depot, chat, accounts, GM tools |
+| 23_POPULATION_SCENARIOS.md | Every system checked at 50–100 and 500 players; population switches |
 | OWNER_INPUT.md (root) | Questions only the owner can answer; read before designing anything player-facing |
 | data/ | Generated tables (monsters, items, shops, houses, secrets, XP, economy check) |
 | tools/gen_tables.py | Table generator and economy checker (run it; it fails loudly if a target is missed) |

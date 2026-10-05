@@ -26,7 +26,11 @@ Every mechanic below uses only fields, summons, telegraphed area damage, conditi
 
 **Lake Knight.** Shield bash (1-tile knockback), lance thrust line 3 (heavy). Splash field (slow) under itself at 50%.
 
-**Knight of the Closed Helm.** Every 20 s the helm visor shuts (telegraph: effect on the boss for 1 s), then silences all skills in the room for 4 s. Basic attacks, salves and bandages still work. At 30%, silence lasts 6 s and comes every 15 s.
+**Knight of the Closed Helm.** Phase 1 (100–60%): every 20 s the helm visor shuts (telegraph: effect on the boss for 1 s), then silences all skills in the room for 4 s. Basic attacks, salves and bandages still work.
+
+Phase 2 (60–30%), the aggro bounce (OWNER's most memorable fight): every 10 s the boss's attention jumps to a random non-Vanguard player (a red marker over that player and a 2-second telegraph). Its next hit on a non-Vanguard deals 90% of that player's max HP. A Vanguard can take the hit by using Hold the Door within the 2 seconds (the boss returns to them) or by standing adjacent to the marked player with Shieldwall up (the Vanguard intercepts). Vanguard hits are heavy but survivable with Ward healing right after. Two Helm Knights join at 60%.
+
+Phase 3 (below 30%): silence every 15 s for 6 s, and bounces continue every 14 s.
 
 ## Floor 5
 

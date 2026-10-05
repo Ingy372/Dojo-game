@@ -41,6 +41,7 @@ Biome: grass, broken ruins, windmills, a river running north–south.
 | Area | Approx. position (relative to origin) | Size | Contents |
 |---|---|---|---|
 | Hearthgate | (160, 260) | 90 × 80 | Walled town; temple, depot + market hall, monument square, bank, inn (8 inn rooms), smith, armorer, quartermaster, registrar, guild hall office, Vesper's main board, teleport plaza, 24 cottages in two streets |
+| Arrival Yard and Starter Fields | yard inside Hearthgate's west wall; three fields west, south, east of town | yard 20 × 15; fields 50 × 40 each | Onboarding path, Field Rats, Hopper Toads, Sproutlings (Guarded) |
 | Millcross | (40, 180) | 50 × 40 | Windmill village; inn, strategy-board square, 6 cottages |
 | Camps 1–14 | ring around both towns | 25–35 tiles each | See table |
 | The Pass | (300, 90) | road through cliffs; arena 24 × 20 with door | Gate Hound |
@@ -61,7 +62,7 @@ Floor 1 camps (14, sized for launch crowding):
 | 13 | River Bend | Meadow Wolf, Thornsnap | — |
 | 14 | Old Quarry | Field Shardling, Ruin Archer | — |
 
-Hunting capacity at launch (party of 4 + 1 per pocket): 14 camps × 2 pockets ≈ 140 players, labyrinth 3 levels × 4 pockets ≈ 60, Underkeep wing 1 ≈ 30 → about 230 hunting slots on floor 1. With typical town idling, that carries 350–500 online before floor 2 opens; patch P6 shortens respawn as population rises.
+Hunting capacity at launch (party of 4 + 1 per pocket): Starter Fields ≈ 150 (levels 1–8), 14 camps × 2 pockets ≈ 140, labyrinth 3 levels × 4 pockets ≈ 60 (after the field boss), Underkeep wing 1 ≈ 30, apex spawn ≈ 30 → about 410 hunting slots on floor 1. With typical town idling, that carries 350–500 online before floor 2 opens; patch P6 shortens respawn as population rises.
 
 ## Floor 2 — Highrest highlands (300 × 300)
 
@@ -82,3 +83,17 @@ Stone ring-city around a colosseum. Town Ringhold on the outer ring: 12 houses +
 ## Teleport gates
 
 Each town plaza has a gate. A gate lights when its floor opens. Using a gate costs col (07). Floor 1's gate exists at launch but only lists opened floors.
+
+## Apex spawns (OWNER's favorite hunt, one per floor)
+
+Each floor has one layered apex spawn in a Contested zone. Its monster heals itself and is too strong for the floor band, but gives better XP per hour than the floor's normal camps even several floors later, so it stays a reason to fight.
+
+| Floor | Apex spawn | Apex monster | Layout |
+|---|---|---|---|
+| 1 | Old Watchtower | Stonehorn Ram (self-heals 5% every 6 s; charge) | Layer 1 courtyard: groups of 2–3. Layer 2 tower floor: a packed room. Layer 3: semi-hidden rope spot to the cliff caves, big spawn with good groupings (Deadzone). Hidden: a cracked wall in the caves opens the Ram Pens, easier monsters, slightly less XP, dense spawn |
+| 2 | Bone Mesa | Mesa Wyrmling | Same four-layer pattern |
+| 3 | Drowned Grove | Grove Hydraling (three heads, regrows one head every 20 s unless it is burned with a fire skill or field) | Same pattern |
+| 4 | Siege Pits | Siege Beast | Same pattern |
+| 5 | Champion's Undercroft | Undying Champion | Same pattern |
+
+Tuning (rows added to monsters.csv by tools/gen_tables.py, role "apex"): HP 3.5× the floor's trash average, XP 4.5× (so XP per HP beats normal camps by ~30%), self-heal as listed, damage 1.4× trash. Party of 3–4 at the floor band; still strong for duos two floors later. Hidden-layer access is a plain map feature (rope spot, cracked wall), not a sellable secret.

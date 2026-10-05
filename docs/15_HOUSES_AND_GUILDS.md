@@ -34,7 +34,19 @@ Houses are social space and storage, not a combat buff (R2). Purchase is a liste
 
 ## Inside a house
 
-Protection zone. Owner may invite (guests) and subowners. Furniture is decoration. Training dummies in houses may not exceed town dummies by more than 10% (s56 is the only place with the +10% dummy). Red and black skulls cannot enter their own house.
+Protection zone. Owner may invite (guests) and subowners. Red and black skulls cannot enter their own house.
+
+Houses have functions, not just looks (OWNER):
+
+| Function | Item / rule | Who |
+|---|---|---|
+| Training room | House training dummy (crafted or bought, 25,000 col), same rate as the town dummy; offline-safe training is not added | Any house |
+| Teleport anchor | House Anchor: a gate in town can send you to your house's front door on that floor for the normal gate fee | Any house |
+| Trophy hall | Trophy stands for boss trophies (cosmetic drops from first kills, Echoes, optional bosses) | Any house |
+| Echo shrine | Summon an Echo of an opened floor boss in a private house arena; uses the same 20-hour Echo lockout; party of 1–4 | Guild halls and the largest house size on floors 3–5 (arena room required in the floor plan) |
+| Dice table | Players can host dice games for col (Tibia-style dice item). Col only; no store items, no automated house edge | Any house; guild halls get a larger table |
+
+s56 Quiet Cellar remains the only dummy with +10%.
 
 ## Guilds
 

@@ -106,7 +106,7 @@ Every path has: basic attack (no slot), Bandage (3 s channel, 20% HP, breaks on 
 
 ## Party
 
-See 05: cap 4, shared XP rules, +10% per extra distinct path (cap +30%).
+See 05: cap 4, shared XP and col formula, mentor sharing.
 
 ## Monster rules
 
@@ -118,3 +118,29 @@ See 05: cap 4, shared XP rules, +10% per extra distinct path (cap +30%).
 ## Not ported from Tibia
 
 No rune system, no "SD with a new name", no spell words, no potions that out-heal Ward, no promotion that doubles regen, no magic level.
+
+## Quest perks (OWNER: unlock progression through quests)
+
+Completing both story quests of a floor (13) unlocks that floor's perk choice at the Registrar. Pick one of two. Re-pick later for 5,000 col × floor (sink). Perks are earned only; never sold.
+
+| Floor | Option A | Option B |
+|---|---|---|
+| 1 | Thick Skin: +5% max HP | Light Step: +10 movement speed |
+| 2 | Field Medic: +15% healing from salves and bandages | Deep Reserves: +10% Stamina/Focus pool |
+| 3 | Fog Sense: +1 vision tile in fog, +5% dodge in fog | Hunter's Eye: +3% crit chance |
+| 4 | Iron Will: −20% duration of silence, root, stun, fear | Second Wind: once per 5 min, heal 15% max HP when dropping below 25% |
+| 5 | Executioner: +10% damage to targets under 30% HP | Bulwark: +5% damage reduction |
+
+## PvP fairness (OWNER: counters and escapes win fights)
+
+Every path has at least one PvP counter or escape on its bar by proficiency 25:
+
+| Path | Counter/escape |
+|---|---|
+| Vanguard | Shieldwall (also reduces player damage 50%) |
+| Cleaver | Shoulder knocks a player back 1 tile (new PvP effect) |
+| Shade | Fade also breaks player targeting for 1 s (once per use) |
+| Slinger | Pinshot slow |
+| Arcanist | Brand: Cinder knocks back 1 tile from the center tile; Ward: Bramble root (1.5 s on players) |
+
+Crowd control on players lasts half its monster duration, with 10 s diminishing immunity per effect type. Level differences are kept modest by the damage formula (level is not a damage multiplier), so a skilled small team can beat a higher-level player.

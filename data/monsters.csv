@@ -67,3 +67,11 @@ monster_id,tuned_floor,zone,name,role,hp,xp,melee_max,col_min,col_max,respawn_s,
 572,5,secret,Cracked Copy,optional,150000,9350,208,1040,3121,0,5504:50%:1;5901:10%:1,"secret s53, instanced"
 591,5,pass,Arena Warden,field_boss,250000,15300,208,0,0,0,5504:100%:1,
 592,5,boss,Empty Colossus,floor_boss,500000,44200,260,0,0,0,5504:100%:2-4,splits at 50%
+1001,1,starter,Field Rat,trash,25,9,6,0,2,30,5101:15%:1,"Starter Fields, Guarded zone"
+1002,1,starter,Hopper Toad,trash,40,14,8,0,2,30,5101:15%:1,"Starter Fields, Guarded zone"
+1003,1,starter,Sproutling,trash,55,19,10,0,2,30,5101:15%:1,"Starter Fields, Guarded zone"
+1181,1,apex,Stonehorn Ram,apex,420,153,27,8,25,60,keen mat of floor:4%:1;common mats of floor:60%:1-2,self-heal; Contested zone; see 11 Apex spawns
+1281,2,apex,Mesa Wyrmling,apex,1660,405,43,22,68,60,keen mat of floor:4%:1;common mats of floor:60%:1-2,self-heal; Contested zone; see 11 Apex spawns
+1381,3,apex,Grove Hydraling,apex,3150,518,56,36,109,60,keen mat of floor:4%:1;common mats of floor:60%:1-2,self-heal; Contested zone; see 11 Apex spawns
+1481,4,apex,Siege Beast,apex,4900,652,70,54,163,60,keen mat of floor:4%:1;common mats of floor:60%:1-2,self-heal; Contested zone; see 11 Apex spawns
+1581,5,apex,Undying Champion,apex,7000,765,83,78,235,60,keen mat of floor:4%:1;common mats of floor:60%:1-2,self-heal; Contested zone; see 11 Apex spawns

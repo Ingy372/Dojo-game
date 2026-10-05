@@ -51,3 +51,10 @@ Reward: the Builder's Cloak (cosmetic, account-bound), recipe for a Signal Arrow
 Not a quest chain; content in 14. Wing chests: W1 daily common chest, W2 daily keen chest + Drain Matron, W3 trap-room chests (a chest that locks the room and spawns a wave; clearable), W4 hidden smithy bench (one recipe), W5 Vault Warden weekly chest.
 
 No other quest types in the proof.
+
+## Guidance rules (OWNER: no unexplained or hour-long puzzles)
+
+- Every quest step has a quest-log entry stating what to do next and where (17: spire_questlog). NPCs repeat the current step if asked "quest".
+- No required puzzle (labyrinth or story quest) should take more than about 15 minutes once understood. Each puzzle has an in-world hint (carved pillar, NPC line, book).
+- The website guide explains every story quest step (secrets excluded).
+- Completing both story quests on a floor unlocks the floor's perk choice (06).

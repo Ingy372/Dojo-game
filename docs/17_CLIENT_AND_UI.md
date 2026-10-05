@@ -21,3 +21,13 @@ Rules
 - Asset hash check at login (server sends expected hash of dat/spr).
 - Windows build signed (HANDOFF: certificate). Publish SHA-256 of the installer on the website.
 - Client strings pass tools/check_names.py.
+
+## Added from owner input
+
+| Module | Opcode | Purpose |
+|---|---|---|
+| spire_questlog | 0x59 | Active quests with the next step and location; hint button repeats the NPC's hint |
+| spire_zone_indicator | 0x5A | Current PvP tier icon and color (Guarded / Open / Contested / Deadzone) |
+| spire_events | 0x5B | Next world event countdown and current event |
+| spire_lfg | 0x5C | Looking-for-group and raid calls ("Echo of Floor 2, need Ward"), guild recruitment browser |
+| spire_language | — | English / Português / Español; all client strings from translation tables |

@@ -22,4 +22,15 @@ Targets (07_ECONOMY): mid house 15–25 net hours; rent 0.8–1.5 net hours per 
 | 58 | 2,931,700 | 145 | 23,203 | 23,925 |
 | 70 | 5,246,300 | 235 | 25,718 | 25,500 |
 
-Party of 4 with 3 distinct paths earns +20% XP each (06_CLASSES). Supplied XP/h within ±25% of needed is acceptable; outside fails the gate.
+Supplied XP/h within ±25% of needed is acceptable.
+
+## Party vs solo (owner requirement: team hunting must pay more per person)
+
+| Party | Kill-speed factor vs solo | XP mult | Per-person XP/h vs solo | Col mult | Per-person col/h vs solo |
+|---|---|---|---|---|---|
+| 2 players, 2 paths | 1.6 | 1.40 | 1.12x | 1.15 | 0.92x |
+| 3 players, 3 paths | 2.1 | 1.80 | 1.26x | 1.30 | 0.91x |
+| 4 players, 4 paths | 2.5 | 2.20 | 1.38x | 1.45 | 0.91x |
+| 4 players, 2 paths | 2.3 | 2.00 | 1.15x | 1.45 | 0.83x |
+
+Gate: every party row must give at least 1.05x solo XP per person. Party col per person is intentionally near solo; group content (apex, labyrinth, Echoes) adds the rest.

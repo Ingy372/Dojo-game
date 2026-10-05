@@ -25,7 +25,7 @@ Targets: a mid house costs 15–25 net hours on its floor; weekly rent costs 0.8
 | Faucet | Rule |
 |---|---|
 | Monster col | monsters.csv col_min/col_max; trash only within its floor band |
-| NPC buyback | Only items with npc_buy_price > 0 (commons, salvage, old gear at 20%). Keen and tempered mats: no NPC buy — player market only |
+| NPC buyback | Only items with npc_buy_price > 0 (commons, salvage, old gear at 20%, Keen mats at a low floor price from materials.csv so a small population never holds dead inventory). Tempered mats and Spire Scrap: never bought by NPCs |
 | Task board | 3 paid tasks per character per floor per day; pay = 25 trash-kill equivalents of col |
 | Quests | Fixed one-time rewards (13) |
 | Secrets | One-time lump sum per secret (data/secrets.csv); ~970,000 col across all 60 |
@@ -55,7 +55,7 @@ Floor-tagged, tradeable (except bound items). Common mats drop from trash and se
 
 - No monster drops col above its floor band.
 - Task col capped (3/floor/day). Labyrinth chests: one material bundle per character per floor per day. Echo lockout 20 h.
-- No NPC buys Keen or Tempered materials.
+- NPCs buy Keen materials only at the low floor price in materials.csv (about a quarter of their expected player value). NPCs never buy Tempered materials or Spire Scrap.
 - GM money commands are logged and not available to the production GM group.
 
 ## Telemetry (phase 3)

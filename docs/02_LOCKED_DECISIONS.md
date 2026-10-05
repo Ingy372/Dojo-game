@@ -77,3 +77,21 @@ Plan for 500 concurrent (OWNER). One character per account at launch, two client
 ## Monetization (OWNER + DEFAULT)
 
 No store during closed beta. At public launch: cosmetic-only Wardrobe at real-money prices, themed sets released when floors open, optional cosmetic Supporter subscription. No premium account, no power, no loot boxes. Full design and the research behind it: `21_MONETIZATION.md` (OWNER to confirm prices and the receiving legal entity).
+
+## From OWNER_INPUT.md (2026-10-05)
+
+The owner answered the questionnaire. Decisions below come from those answers. OWNER = their words or direct preference; DEFAULT = planner's implementation of it.
+
+- PvP zone tiers (OWNER): some zones encourage PvP and reward it, some punish it harshly, some are extreme risk for great reward. Implemented as Guarded, Open, Contested, and Deadzone tiers (05).
+- Apex spawns (OWNER, from his favorite hunt): each floor has one layered, over-tuned spawn that stays worth hunting long past its floor, sits in a Contested zone, and hides deeper layers behind a rope spot and a hidden side dungeon (11).
+- Team hunting must beat solo per hour (OWNER: most servers got the team algorithm wrong). New party formula in 05 and 06, verified in data/economy_check.md.
+- Quest guidance (OWNER hated long, unexplained puzzles): every quest has a quest-log entry with the next step; no required puzzle takes longer than about 15 minutes when understood; hints exist in game (13, 17).
+- Quest-unlocked perks (OWNER loved custom unlock progression): each floor's story quests unlock one perk choice (06).
+- Functional houses (OWNER): training room, house teleport anchor, trophy hall, private Echo shrine (guild halls and large houses), player dice tables with col only (15).
+- Aggro-bounce boss (OWNER's most memorable fight): Knight of the Closed Helm phase 2 (10).
+- Finding a clan is hard (OWNER): guild recruitment board, recruit flag, LFG/raid-call channel (12, 17, 19).
+- Something happening at all hours (OWNER): rotating world events (05).
+- Hearthgate is our echo of the source's starting city. Concept only; the literal source name is not used (OWNER: copy concepts, avoid infringement).
+- Spells and skills must be captivating to watch (OWNER): effects get a larger art budget, especially Brand AoE (18).
+- Owner tests about an hour a night and plans to use Grok's agent for beta testing; no human helpers at start. Operations are designed for a solo owner (16, 20).
+- Languages and time zone chosen for player reach, not owner preference (OWNER): English, Portuguese (Brazil), Spanish at launch; US East hosting in Miami; launch times picked for Americas overlap (16, 19).

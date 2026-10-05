@@ -19,7 +19,7 @@ No CipSoft graphics anywhere. Every pixel is original: generated procedurally by
 | Player outfits: 5 paths × 2 sexes, 4 directions × 3 walk frames + idle | 10 sheets | HANDOFF Grok or human artist |
 | Monsters: ~60 looktypes, 4 directions × 2–3 frames; bosses 64 × 64 | 60 sheets | HANDOFF Grok or human artist |
 | NPCs (reuse player bases + recolors) | ~45 | Cowork recolors once bases exist |
-| Effects (8-frame strips) and missiles | ~30 | Cowork procedural (particles) + HANDOFF |
+| Effects (8–12-frame strips) and missiles | ~60 (owner priority: spells and skills must be captivating to watch; Brand AoE and Vanguard/Cleaver heavy hits get unique effects) | HANDOFF Grok for key frames + Cowork procedural particles and layering |
 | Corpses (per monster) | ~60 | Cowork derives (desaturate + flatten from monster sheet) |
 | UI skin (OTClient) | 1 theme | Cowork |
 

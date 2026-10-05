@@ -152,6 +152,15 @@ M+= [mk(101,1,"camp","Bristle Boar","trash",0.7,0.8,"charges 2 tiles after 600ms
      mk(591,5,"pass","Arena Warden","field_boss",1.0,1.0,"","5504:100%:1"),
      mk(592,5,"boss","Empty Colossus","floor_boss",1.0,1.0,"splits at 50%","5504:100%:2-4"),
 ]
+# Starter Fields (22_CORE_DETAILS): levels 1-8 in ~45 min, generous XP per HP
+for mid,nm,hp,xp,dmg in [(1001,"Field Rat",25,9,6),(1002,"Hopper Toad",40,14,8),(1003,"Sproutling",55,19,10)]:
+    M.append([mid,1,"starter",nm,"trash",hp,xp,dmg,0,2,30,"5101:15%:1","Starter Fields, Guarded zone"])
+# Apex spawns (owner input): over-tuned, self-healing, best XP per HP on the floor
+APEX=[(1181,1,"Stonehorn Ram"),(1281,2,"Mesa Wyrmling"),(1381,3,"Grove Hydraling"),(1481,4,"Siege Beast"),(1581,5,"Undying Champion")]
+for mid,fl,nm in APEX:
+    f=FLOOR[fl]; base=sum(f["hp"])/2
+    band_mid=sum(f["band"])/2; php=150+band_mid*11
+    M.append([mid,fl,"apex",nm,"apex",int(round(base*3.5,-1)),int(round(f["xp"]*4.5)),int(php/14*1.4),int(f["col"]*3*0.5),int(f["col"]*3*1.5)+1,60,"keen mat of floor:4%:1;common mats of floor:60%:1-2","self-heal; Contested zone; see 11 Apex spawns"])
 ECHO=[]
 for r in M:
     if r[4]=="floor_boss":
@@ -277,7 +286,14 @@ for i,(lv,h) in enumerate(HOURS_TO.items(), start=1):
     sup=FLOOR[i]["xp"]*FLOOR[i]["kph"]
     L.append(f"| {lv} | {xp_for(lv):,} | {h} | {need:,.0f} | {sup:,} |")
     pL,pH=lv,h
-L.append("\nParty of 4 with 3 distinct paths earns +20% XP each (06_CLASSES). Supplied XP/h within ±25% of needed is acceptable; outside fails the gate.")
+L.append("\nSupplied XP/h within ±25% of needed is acceptable.")
+L.append("\n## Party vs solo (owner requirement: team hunting must pay more per person)\n\n| Party | Kill-speed factor vs solo | XP mult | Per-person XP/h vs solo | Col mult | Per-person col/h vs solo |\n|---|---|---|---|---|---|")
+for n,distinct,k in [(2,2,1.6),(3,3,2.1),(4,4,2.5),(4,2,2.3)]:
+    mx=1+0.30*(n-1)+0.10*(distinct-1); mc=1+0.15*(n-1)
+    px=k*mx/n; pc=k*mc/n
+    if px<1.05: fails+=1
+    L.append(f"| {n} players, {distinct} paths | {k} | {mx:.2f} | {px:.2f}x | {mc:.2f} | {pc:.2f}x |")
+L.append("\nGate: every party row must give at least 1.05x solo XP per person. Party col per person is intentionally near solo; group content (apex, labyrinth, Echoes) adds the rest.")
 open(os.path.join(OUT,"economy_check.md"),"w").write("\n".join(L)+"\n")
 print("ok",len(M),"monsters",len(wp),"weapons",len(ar),"armor",len(SH),"shop rows",len(H),"houses","fails",fails)
 

@@ -1,6 +1,6 @@
 # Website and community
 
-MyAAC on the same host behind HTTPS (or a small separate VPS). English only at launch.
+MyAAC on the same host behind HTTPS (or a small separate VPS). English, Portuguese (Brazil), and Spanish at launch. Pages add: Guild recruitment (from the in-game board), World events schedule, Quest guide.
 
 ## Pages
 

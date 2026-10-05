@@ -78,6 +78,9 @@ Gate: server boots with zero "item not found" warnings.
 | P8 | Status protocol reports at most 4 players per IP | Server-list honesty rule |
 | P9 | Remove magic level growth and hide it from protocol | No magic level |
 | P10 | Hook for extended opcode 0x50 "skill cast" -> Lua | Skill bar |
+| P11 | Account passwords hashed with a modern salted algorithm (argon2id or bcrypt) on both server and website, replacing TFS 1.4.2's SHA-1 | Account security |
+| P12 | Spawn rules: no respawn while a player stands within 2 tiles of the spawn point (retry every 5 s); monsters more than 14 tiles from their spawn with no target for 5 s walk home and heal; monsters never enter protection zones | Spawn camping, luring trains into towns |
+| P13 | Rate limits per connection on skill-cast opcodes (max 10/s) and chat | Packet spam |
 
 Everything else is Lua (RevScriptSys): skills, stats, proficiency, resources, XP debt (onGainExperience), boss logic, credit, echoes, secrets, houses head start, guild war contract, telemetry.
 

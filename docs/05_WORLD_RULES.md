@@ -93,12 +93,54 @@ War frags never count as unjust. PZ lock: 60 s after attacking a player (TFS def
 
 ## Death
 
-From 02: debt 5% of next-level XP per death (cap 15%), 50% of new XP pays debt, priest clears for 0.5 col/point, Debt Chip within 60 s. Backpack items 10% each (unbound only); red/black lose the whole backpack and 10% per unbound equipped item. Respawn at the temple of the highest town you have attuned.
+From 02: debt 5% of next-level XP per death (cap 15%), 50% of new XP pays debt, priest clears for 0.5 col/point, Debt Chip within 60 s. Backpack items 10% each (unbound only); red/black lose the whole backpack and 10% per unbound equipped item. Respawn at the temple of the town on the floor where you died if you have attuned it; otherwise Hearthgate.
 
 ## Party
 
-Cap 4 (patch P7). Shared XP requires being on the same floor, within 30 tiles, and highest level ≤ 1.5 × lowest level. Bonus +10% XP per additional distinct path in range (cap +30%). Inside a boss room all credited characters share XP as one group (same bonus rule).
+Cap 4 (patch P7). Shared XP requires being on the same floor, within 30 tiles, and highest level ≤ 1.5 × lowest level.
+
+Team hunting must pay better per person than solo (OWNER). A party of n members in range gets, per kill:
+
+```
+XP multiplier  M_xp  = 1 + 0.30 × (n − 1) + 0.10 × (distinct paths − 1)
+col multiplier M_col = 1 + 0.15 × (n − 1)
+each member receives  monster XP × M_xp / n   and   corpse col × M_col / n (auto-split to each member)
+```
+
+A party kills about 1.6× (duo) to 2.5× (four) as fast as a solo player. With those kill rates, per-person XP/h is about 1.1× solo for a duo and about 1.4× solo for a four-path party (data/economy_check.md checks this). Party col per person stays a little under solo on ordinary camps; apex spawns and labyrinths (group content) make up the difference.
+
+Mentor sharing: if the level spread breaks the 1.5× rule, the party can still share if the leader turns on Mentor mode: members above 1.5× the lowest level receive 0 XP, and the others receive the normal share +10%. This lets clans bring new players along (OWNER: big clans treating new players as future firepower).
+
+Inside a boss room all credited characters share XP as one group with the same formula (n capped at 8 for the multiplier).
 
 ## Strategy books
 
 A read-only book with the seeded tell sits beside a player-writable book on each floor's strategy-board square. The writable book keeps the last 50 entries, each prefixed with the writer's name (append-only via NPC "Scribe" or book-use script). GMs can clear it.
+
+## PvP zone tiers (OWNER)
+
+Every non-PZ tile has one tier, set by zone_rect in the map source and shown in the client corner (icon + color).
+
+| Tier | Where | Rule |
+|---|---|---|
+| Guarded | roads and fields within ~40 tiles of each town, the floor-1 starter fields | PvP allowed, but an unjust kill here counts as 3 unjust kills (straight to red), and the killer is marked for guards for 30 minutes |
+| Open | most camps, labyrinths, the Underkeep wings 1–2 | Standard skull rules |
+| Contested | one per floor: the apex spawn and its approach | Kills never count as unjust and never paint skulls. Each kill awards the killer one Blood Mark (bound; spent at the Quartermaster for supplies and at the Dye Merchant for a Contested cosmetic line). Victim's unbound backpack items drop at 25% each instead of 10%. Protection level still applies (under 20 cannot enter; the zone border blocks them) |
+| Deadzone | Underkeep wings 4–5 and each floor's apex inner layer | Contested rules, plus protection level does not apply, plus deaths drop unbound equipped items at 10% each. Best XP and loot on the floor. A warning sign and a confirm dialog on first entry |
+
+Blood Marks cannot be farmed between friends: kills of the same victim by the same killer award a mark at most once per 30 minutes, and never between guildmates, party members, or characters sharing an IP.
+
+Anti-bullying: an unjust kill on a player 30+ levels lower than the killer counts double toward skulls everywhere except Contested and Deadzone.
+
+## World events (something happening at all hours)
+
+A scheduler runs every 3 hours, on the hour (00:00, 03:00, … ET). It picks one opened floor and one event:
+
+| Event | Effect | Length |
+|---|---|---|
+| Frenzy | That floor's apex spawn: +50% respawn speed and +25% loot | 45 min |
+| Incursion | Elite packs appear on two Open camps, extra Keen mats | 30 min |
+| Tide of Coin | One Contested zone: Blood Marks doubled | 45 min |
+| Wandering Champion | A roaming mini-boss walks a road between two camps (party content, Keen and Tempered mats) | until killed or 60 min |
+
+Announced server-wide 10 minutes ahead and on the website and Discord. Events never touch world-first rooms.

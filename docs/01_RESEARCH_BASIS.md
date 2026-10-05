@@ -19,7 +19,7 @@ Debeauvais, Nardi, Schiano, Ducheneaut and Yee studied retention in a cross-cult
 Sources: Debeauvais et al., "If you build it they might stay: retention mechanisms in World of Warcraft," FDG 2011 (https://www.artifex.org/~bonnie/WoW_retention_04_24_11.pdf); "Achievement and Friends: Key Factors of Player Retention Vary Across Player Levels in Online Multiplayer Games," WWW 2017 (https://arxiv.org/abs/1702.08005).
 
 Design rules:
-- Party play must beat solo play per hour (+10% XP per extra distinct path, cap +30%), without making solo unviable.
+- Party play must beat solo play per person per hour (formula in 05, checked in data/economy_check.md), without making solo unviable.
 - Guilds exist from minute one; guild halls are status, not permission.
 - Houses, monuments, strategy books, and the raid-of-20 floor boss create shared stories. These are retention systems, not decoration.
 - Secrets deliberately create trust tests inside parties (owner intent). That is social content: it produces stories and reputation.

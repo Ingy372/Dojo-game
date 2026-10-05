@@ -41,3 +41,11 @@ Cowork can produce procedural grounds, borders, walls, effects, corpses, recolor
 ## Better tool for the heavy coding
 
 Claude Cowork can carry this project, but most phases are repository and compiler work (C++ patches, Lua, Python tools, CI). Claude Code is built for exactly that and handles long build/test loops better. A practical split: Claude Code for phases 0–8 (code), Cowork for docs, data tables, art batching, launch copy, and coordinating Grok handoffs.
+
+## Beta testing with Grok's agent (OWNER plan)
+
+The owner plans to test about an hour a night and use Grok's agent to test alongside. To make that productive, Cowork provides:
+- `tools/loadbot` scenarios that drive scripted characters through each phase gate (Grok's agent can run and watch them, or play through the client if it can operate a desktop app).
+- `docs/BETA_TEST_SCRIPTS.md` (Cowork writes it in phase 9): step-by-step test runs with expected results, written so any tester (human or AI) can follow them and file a GitHub issue with the bug template.
+- Telemetry dashboards so a tester can check XP/h and col/h against data/economy_check.md.
+Limits: an AI tester can confirm that things work and that numbers match; it cannot judge whether PvP feels fair or a boss is fun. That still needs the owner and, after launch, real players.
