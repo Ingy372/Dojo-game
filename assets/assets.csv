@@ -1,0 +1,361 @@
+id,category,name,flags,size,frames,png,xml,notes
+100,item,grass,ground:150;minimap:24,1x1,1,generated:ground/grass_0.png,,procedural
+101,item,grass,ground:150;minimap:24,1x1,1,generated:ground/grass_1.png,,procedural
+102,item,grass,ground:150;minimap:24,1x1,1,generated:ground/grass_2.png,,procedural
+103,item,grass,ground:150;minimap:24,1x1,1,generated:ground/grass_3.png,,procedural
+104,item,grass,ground:150;minimap:24,1x1,1,generated:ground/grass_4.png,,procedural
+105,item,grass,ground:150;minimap:24,1x1,1,generated:ground/grass_5.png,,procedural
+106,item,dirt,ground:150;minimap:121,1x1,1,generated:ground/dirt_0.png,,procedural
+107,item,dirt,ground:150;minimap:121,1x1,1,generated:ground/dirt_1.png,,procedural
+108,item,dirt,ground:150;minimap:121,1x1,1,generated:ground/dirt_2.png,,procedural
+109,item,dirt,ground:150;minimap:121,1x1,1,generated:ground/dirt_3.png,,procedural
+110,item,dirt,ground:150;minimap:121,1x1,1,generated:ground/dirt_4.png,,procedural
+111,item,dirt,ground:150;minimap:121,1x1,1,generated:ground/dirt_5.png,,procedural
+112,item,cobblestone,ground:130;minimap:86,1x1,1,generated:ground/cobble_0.png,,procedural
+113,item,cobblestone,ground:130;minimap:86,1x1,1,generated:ground/cobble_1.png,,procedural
+114,item,cobblestone,ground:130;minimap:86,1x1,1,generated:ground/cobble_2.png,,procedural
+115,item,cobblestone,ground:130;minimap:86,1x1,1,generated:ground/cobble_3.png,,procedural
+116,item,cobblestone,ground:130;minimap:86,1x1,1,generated:ground/cobble_4.png,,procedural
+117,item,cobblestone,ground:130;minimap:86,1x1,1,generated:ground/cobble_5.png,,procedural
+118,item,shallow water,ground:500;block;blockpath;minimap:40,1x1,1,generated:ground/water_0.png,,procedural
+119,item,shallow water,ground:500;block;blockpath;minimap:40,1x1,1,generated:ground/water_1.png,,procedural
+120,item,shallow water,ground:500;block;blockpath;minimap:40,1x1,1,generated:ground/water_2.png,,procedural
+121,item,shallow water,ground:500;block;blockpath;minimap:40,1x1,1,generated:ground/water_3.png,,procedural
+122,item,shallow water,ground:500;block;blockpath;minimap:40,1x1,1,generated:ground/water_4.png,,procedural
+123,item,shallow water,ground:500;block;blockpath;minimap:40,1x1,1,generated:ground/water_5.png,,procedural
+124,item,wooden floor,ground:150;minimap:121,1x1,1,generated:ground/planks_0.png,,procedural
+125,item,wooden floor,ground:150;minimap:121,1x1,1,generated:ground/planks_1.png,,procedural
+126,item,wooden floor,ground:150;minimap:121,1x1,1,generated:ground/planks_2.png,,procedural
+127,item,wooden floor,ground:150;minimap:121,1x1,1,generated:ground/planks_3.png,,procedural
+128,item,wooden floor,ground:150;minimap:121,1x1,1,generated:ground/planks_4.png,,procedural
+129,item,wooden floor,ground:150;minimap:121,1x1,1,generated:ground/planks_5.png,,procedural
+130,item,temple floor,ground:130;minimap:172,1x1,1,generated:ground/marble_0.png,,procedural
+131,item,temple floor,ground:130;minimap:172,1x1,1,generated:ground/marble_1.png,,procedural
+132,item,temple floor,ground:130;minimap:172,1x1,1,generated:ground/marble_2.png,,procedural
+133,item,temple floor,ground:130;minimap:172,1x1,1,generated:ground/marble_3.png,,procedural
+134,item,temple floor,ground:130;minimap:172,1x1,1,generated:ground/marble_4.png,,procedural
+135,item,temple floor,ground:130;minimap:172,1x1,1,generated:ground/marble_5.png,,procedural
+190,item,void,ground:0;block;blockmissile;blockpath,1x1,1,generated:ground/void.png,,map edge
+1000,item,stone wall,bottom;block;immovable;blockmissile;blockpath;minimap:129,1x1,1,generated:wall/stone_h.png,,procedural; horizontal
+1001,item,stone wall,bottom;block;immovable;blockmissile;blockpath;minimap:129,1x1,1,generated:wall/stone_v.png,,procedural; vertical
+1002,item,stone wall,bottom;block;immovable;blockmissile;blockpath;minimap:129,1x1,1,generated:wall/stone_c.png,,procedural; corner
+1003,item,stone pillar,bottom;block;immovable;blockmissile;blockpath;minimap:129,1x1,1,generated:wall/stone_p.png,,procedural; pole
+1010,item,wooden fence,bottom;block;immovable;blockpath,1x1,1,generated:wall/fence.png,,procedural
+1100,item,door,bottom;block;immovable;blockmissile;blockpath;hookeast,1x1,1,,type=door,"closed, horizontal wall; use opens to 1101"
+1101,item,open door,bottom;immovable;hookeast,1x1,1,,type=door,"open, horizontal wall"
+1102,item,door,bottom;block;immovable;blockmissile;blockpath;hooksouth,1x1,1,,type=door,"closed, vertical wall"
+1103,item,open door,bottom;immovable;hooksouth,1x1,1,,type=door,"open, vertical wall"
+1110,item,house door,bottom;block;immovable;blockmissile;blockpath;hookeast,1x1,1,,type=door,"closed house door, horizontal"
+1111,item,open house door,bottom;immovable;hookeast,1x1,1,,type=door,"open house door, horizontal"
+1112,item,house door,bottom;block;immovable;blockmissile;blockpath;hooksouth,1x1,1,,type=door,"closed house door, vertical"
+1113,item,open house door,bottom;immovable;hooksouth,1x1,1,,type=door,"open house door, vertical"
+1500,item,fire field,immovable;light:3:199,1x1,1,,type=magicfield;field=fire,engine id (spire_ids.h)
+1501,item,fire field,immovable;light:3:199,1x1,1,,type=magicfield;field=fire,engine id (spire_ids.h)
+1502,item,fire field,immovable;light:3:199,1x1,1,,type=magicfield;field=fire,engine id (spire_ids.h)
+1503,item,fire field,immovable;light:3:199,1x1,1,,type=magicfield;field=fire,engine id (spire_ids.h)
+1504,item,fire field,immovable;light:3:199,1x1,1,,type=magicfield;field=fire,engine id (spire_ids.h)
+1505,item,fire field,immovable;light:3:199,1x1,1,,type=magicfield;field=fire,engine id (spire_ids.h)
+1506,item,fire field,immovable;light:3:199,1x1,1,,type=magicfield;field=fire,engine id (spire_ids.h)
+1510,item,poison field,immovable,1x1,1,,type=magicfield;field=poison,engine id (spire_ids.h)
+1511,item,poison field,immovable,1x1,1,,type=magicfield;field=poison,engine id (spire_ids.h)
+1512,item,poison field,immovable,1x1,1,,type=magicfield;field=poison,engine id (spire_ids.h)
+1515,item,energy field,immovable;light:3:137,1x1,1,,type=magicfield;field=energy,engine id (spire_ids.h)
+1516,item,energy field,immovable;light:3:137,1x1,1,,type=magicfield;field=energy,engine id (spire_ids.h)
+1517,item,energy field,immovable;light:3:137,1x1,1,,type=magicfield;field=energy,engine id (spire_ids.h)
+1520,item,barrier wall,block;immovable;blockmissile;blockpath,1x1,1,,type=magicfield,engine id (spire_ids.h)
+1521,item,barrier wall,block;immovable;blockmissile;blockpath,1x1,1,,type=magicfield,engine id (spire_ids.h)
+1522,item,barrier wall,block;immovable;blockmissile;blockpath,1x1,1,,type=magicfield,engine id (spire_ids.h)
+1523,item,barrier wall,block;immovable;blockmissile;blockpath,1x1,1,,type=magicfield,engine id (spire_ids.h)
+1525,item,bramble wall,block;immovable;blockmissile;blockpath,1x1,1,,type=magicfield,engine id (spire_ids.h)
+1526,item,bramble wall,block;immovable;blockmissile;blockpath,1x1,1,,type=magicfield,engine id (spire_ids.h)
+1527,item,bramble wall,block;immovable;blockmissile;blockpath,1x1,1,,type=magicfield,engine id (spire_ids.h)
+1528,item,bramble wall,block;immovable;blockmissile;blockpath,1x1,1,,type=magicfield,engine id (spire_ids.h)
+1600,item,tree,block;immovable;blockpath;blockmissile;minimap:24,1x1,1,generated:nature/tree.png,,procedural placeholder
+1601,item,bush,block;immovable;blockpath;minimap:24,1x1,1,generated:nature/bush.png,,procedural placeholder
+1602,item,rock,block;immovable;blockpath,1x1,1,generated:nature/rock.png,,procedural placeholder
+1610,item,altar,block;immovable;height,1x1,1,,,temple
+1611,item,table,block;immovable;height,1x1,1,,,
+1612,item,bench,immovable;rotate,1x1,1,,,
+1620,item,sign,block;immovable;look,1x1,1,,readable=1,map text
+1630,item,torch bracket,immovable;hooksouth;light:6:206,1x1,1,,,wall light
+2001,item,col,stackable;pickup,1x1,1,,weight=10,engine id; currency 1
+2002,item,silver col,stackable;pickup,1x1,1,,weight=10,engine id; currency 100
+2003,item,gold col,stackable;pickup,1x1,1,,weight=10,"engine id; currency 10,000"
+2004,item,unused store coin,stackable;pickup,1x1,1,,weight=1,engine id; never created (no premium currency)
+2010,item,bag,container;pickup,1x1,1,,type=container;containerSize=8;weight=180;slotType=backpack,engine id
+2011,item,shopping bag,container;pickup,1x1,1,,type=container;containerSize=20;weight=10,engine id
+2012,item,backpack,container;pickup,1x1,1,,type=container;containerSize=20;weight=180;slotType=backpack,starter backpack (22: 20 slots)
+2020,item,depot chest,container;immovable,1x1,1,,containerSize=30,engine id
+2021,item,locker,container;immovable;block,1x1,1,,type=depot;containerSize=3,engine id; place with depot id
+2022,item,your inbox,container;immovable,1x1,1,,type=container;containerSize=30,engine id
+2023,item,market,immovable;block,1x1,1,,,engine id
+2024,item,store inbox,container;immovable,1x1,1,,type=container;containerSize=20,engine id; phase 10 grants
+2030,item,depot box 1,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2031,item,depot box 2,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2032,item,depot box 3,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2033,item,depot box 4,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2034,item,depot box 5,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2035,item,depot box 6,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2036,item,depot box 7,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2037,item,depot box 8,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2038,item,depot box 9,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2039,item,depot box 10,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2040,item,depot box 11,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2041,item,depot box 12,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2042,item,depot box 13,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2043,item,depot box 14,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2044,item,depot box 15,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2045,item,depot box 16,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2046,item,depot box 17,container;immovable,1x1,1,,type=container;containerSize=2000,engine id
+2050,item,parcel,container;pickup,1x1,1,,type=container;containerSize=10;weight=1800,engine id
+2051,item,letter,pickup;writable:1000,1x1,1,,weight=50;writeable=1;maxTextLen=1000,engine id
+2052,item,stamped letter,pickup,1x1,1,,weight=50;readable=1,engine id
+2053,item,label,pickup;writable:100,1x1,1,,weight=50;writeable=1;maxTextLen=100,engine id
+2055,item,mailbox,block;immovable,1x1,1,,type=mailbox,mail
+2060,item,pool,splash;immovable,1x1,1,,,engine id; full splash
+2061,item,splash,splash;immovable,1x1,1,,,engine id; small splash
+2070,item,document,pickup,1x1,1,,weight=50;readable=1,engine id; read-only
+2080,item,dead adventurer,container;corpse;immovable,1x1,1,,type=container;containerSize=10;corpseType=blood;decayTo=0;duration=900,engine id; male corpse
+2081,item,dead adventurer,container;corpse;immovable,1x1,1,,type=container;containerSize=10;corpseType=blood;decayTo=0;duration=900,engine id; female corpse
+2099,item,browse field,container,1x1,1,,type=container;containerSize=30,engine id; internal
+3001,item,dead field rat,container;corpse;immovable,1x1,1,,type=container;containerSize=5;corpseType=blood;decayTo=0;duration=300,
+3002,item,dead hopper toad,container;corpse;immovable,1x1,1,,type=container;containerSize=5;corpseType=venom;decayTo=0;duration=300,
+3003,item,dead sproutling,container;corpse;immovable,1x1,1,,type=container;containerSize=5;decayTo=0;duration=300,
+1,outfit,placeholder adventurer,,1x1,3,,,players and NPCs until path outfits exist
+2,outfit,Vanguard outfit placeholder,,1x1,3,,,HANDOFF art: path outfit
+3,outfit,Cleaver outfit placeholder,,1x1,3,,,HANDOFF art: path outfit
+4,outfit,Shade outfit placeholder,,1x1,3,,,HANDOFF art: path outfit
+5,outfit,Slinger outfit placeholder,,1x1,3,,,HANDOFF art: path outfit
+6,outfit,Arcanist outfit placeholder,,1x1,3,,,HANDOFF art: path outfit
+10,outfit,Field Rat,,1x1,3,,,monster 1001
+11,outfit,Hopper Toad,,1x1,3,,,monster 1002
+12,outfit,Sproutling,,1x1,3,,,monster 1003
+1,effect,effect 1,,1x1,4,,,placeholder
+2,effect,effect 2,,1x1,4,,,placeholder
+3,effect,effect 3,,1x1,4,,,placeholder
+4,effect,effect 4,,1x1,4,,,placeholder
+5,effect,effect 5,,1x1,4,,,placeholder
+6,effect,effect 6,,1x1,4,,,placeholder
+7,effect,effect 7,,1x1,4,,,placeholder
+8,effect,effect 8,,1x1,4,,,placeholder
+9,effect,effect 9,,1x1,4,,,placeholder
+10,effect,effect 10,,1x1,4,,,placeholder
+11,effect,effect 11,,1x1,4,,,placeholder
+12,effect,effect 12,,1x1,4,,,placeholder
+13,effect,effect 13,,1x1,4,,,placeholder
+14,effect,effect 14,,1x1,4,,,placeholder
+15,effect,effect 15,,1x1,4,,,placeholder
+16,effect,effect 16,,1x1,4,,,placeholder
+17,effect,effect 17,,1x1,4,,,placeholder
+18,effect,effect 18,,1x1,4,,,placeholder
+19,effect,effect 19,,1x1,4,,,placeholder
+20,effect,effect 20,,1x1,4,,,placeholder
+21,effect,effect 21,,1x1,4,,,placeholder
+22,effect,effect 22,,1x1,4,,,placeholder
+23,effect,effect 23,,1x1,4,,,placeholder
+24,effect,effect 24,,1x1,4,,,placeholder
+25,effect,effect 25,,1x1,4,,,placeholder
+26,effect,effect 26,,1x1,4,,,placeholder
+27,effect,effect 27,,1x1,4,,,placeholder
+28,effect,effect 28,,1x1,4,,,placeholder
+29,effect,effect 29,,1x1,4,,,placeholder
+30,effect,effect 30,,1x1,4,,,placeholder
+31,effect,effect 31,,1x1,4,,,placeholder
+32,effect,effect 32,,1x1,4,,,placeholder
+33,effect,effect 33,,1x1,4,,,placeholder
+34,effect,effect 34,,1x1,4,,,placeholder
+35,effect,effect 35,,1x1,4,,,placeholder
+36,effect,effect 36,,1x1,4,,,placeholder
+37,effect,effect 37,,1x1,4,,,placeholder
+38,effect,effect 38,,1x1,4,,,placeholder
+39,effect,effect 39,,1x1,4,,,placeholder
+40,effect,effect 40,,1x1,4,,,placeholder
+41,effect,effect 41,,1x1,4,,,placeholder
+42,effect,effect 42,,1x1,4,,,placeholder
+43,effect,effect 43,,1x1,4,,,placeholder
+44,effect,effect 44,,1x1,4,,,placeholder
+45,effect,effect 45,,1x1,4,,,placeholder
+46,effect,effect 46,,1x1,4,,,placeholder
+47,effect,effect 47,,1x1,4,,,placeholder
+48,effect,effect 48,,1x1,4,,,placeholder
+49,effect,effect 49,,1x1,4,,,placeholder
+50,effect,effect 50,,1x1,4,,,placeholder
+51,effect,effect 51,,1x1,4,,,placeholder
+52,effect,effect 52,,1x1,4,,,placeholder
+53,effect,effect 53,,1x1,4,,,placeholder
+54,effect,effect 54,,1x1,4,,,placeholder
+55,effect,effect 55,,1x1,4,,,placeholder
+56,effect,effect 56,,1x1,4,,,placeholder
+57,effect,effect 57,,1x1,4,,,placeholder
+58,effect,effect 58,,1x1,4,,,placeholder
+59,effect,effect 59,,1x1,4,,,placeholder
+60,effect,effect 60,,1x1,4,,,placeholder
+61,effect,effect 61,,1x1,4,,,placeholder
+62,effect,effect 62,,1x1,4,,,placeholder
+63,effect,effect 63,,1x1,4,,,placeholder
+64,effect,effect 64,,1x1,4,,,placeholder
+65,effect,effect 65,,1x1,4,,,placeholder
+66,effect,effect 66,,1x1,4,,,placeholder
+67,effect,effect 67,,1x1,4,,,placeholder
+68,effect,effect 68,,1x1,4,,,placeholder
+69,effect,effect 69,,1x1,4,,,placeholder
+70,effect,effect 70,,1x1,4,,,placeholder
+71,effect,effect 71,,1x1,4,,,placeholder
+72,effect,effect 72,,1x1,4,,,placeholder
+73,effect,effect 73,,1x1,4,,,placeholder
+74,effect,effect 74,,1x1,4,,,placeholder
+75,effect,effect 75,,1x1,4,,,placeholder
+76,effect,effect 76,,1x1,4,,,placeholder
+77,effect,effect 77,,1x1,4,,,placeholder
+78,effect,effect 78,,1x1,4,,,placeholder
+79,effect,effect 79,,1x1,4,,,placeholder
+80,effect,effect 80,,1x1,4,,,placeholder
+81,effect,effect 81,,1x1,4,,,placeholder
+82,effect,effect 82,,1x1,4,,,placeholder
+83,effect,effect 83,,1x1,4,,,placeholder
+84,effect,effect 84,,1x1,4,,,placeholder
+85,effect,effect 85,,1x1,4,,,placeholder
+86,effect,effect 86,,1x1,4,,,placeholder
+87,effect,effect 87,,1x1,4,,,placeholder
+88,effect,effect 88,,1x1,4,,,placeholder
+89,effect,effect 89,,1x1,4,,,placeholder
+90,effect,effect 90,,1x1,4,,,placeholder
+91,effect,effect 91,,1x1,4,,,placeholder
+92,effect,effect 92,,1x1,4,,,placeholder
+93,effect,effect 93,,1x1,4,,,placeholder
+94,effect,effect 94,,1x1,4,,,placeholder
+95,effect,effect 95,,1x1,4,,,placeholder
+96,effect,effect 96,,1x1,4,,,placeholder
+97,effect,effect 97,,1x1,4,,,placeholder
+98,effect,effect 98,,1x1,4,,,placeholder
+99,effect,effect 99,,1x1,4,,,placeholder
+100,effect,effect 100,,1x1,4,,,placeholder
+101,effect,effect 101,,1x1,4,,,placeholder
+102,effect,effect 102,,1x1,4,,,placeholder
+103,effect,effect 103,,1x1,4,,,placeholder
+104,effect,effect 104,,1x1,4,,,placeholder
+105,effect,effect 105,,1x1,4,,,placeholder
+106,effect,effect 106,,1x1,4,,,placeholder
+107,effect,effect 107,,1x1,4,,,placeholder
+108,effect,effect 108,,1x1,4,,,placeholder
+109,effect,effect 109,,1x1,4,,,placeholder
+110,effect,effect 110,,1x1,4,,,placeholder
+111,effect,effect 111,,1x1,4,,,placeholder
+112,effect,effect 112,,1x1,4,,,placeholder
+113,effect,effect 113,,1x1,4,,,placeholder
+114,effect,effect 114,,1x1,4,,,placeholder
+115,effect,effect 115,,1x1,4,,,placeholder
+116,effect,effect 116,,1x1,4,,,placeholder
+117,effect,effect 117,,1x1,4,,,placeholder
+118,effect,effect 118,,1x1,4,,,placeholder
+119,effect,effect 119,,1x1,4,,,placeholder
+120,effect,effect 120,,1x1,4,,,placeholder
+121,effect,effect 121,,1x1,4,,,placeholder
+122,effect,effect 122,,1x1,4,,,placeholder
+123,effect,effect 123,,1x1,4,,,placeholder
+124,effect,effect 124,,1x1,4,,,placeholder
+125,effect,effect 125,,1x1,4,,,placeholder
+126,effect,effect 126,,1x1,4,,,placeholder
+127,effect,effect 127,,1x1,4,,,placeholder
+128,effect,effect 128,,1x1,4,,,placeholder
+129,effect,effect 129,,1x1,4,,,placeholder
+130,effect,effect 130,,1x1,4,,,placeholder
+131,effect,effect 131,,1x1,4,,,placeholder
+132,effect,effect 132,,1x1,4,,,placeholder
+133,effect,effect 133,,1x1,4,,,placeholder
+134,effect,effect 134,,1x1,4,,,placeholder
+135,effect,effect 135,,1x1,4,,,placeholder
+136,effect,effect 136,,1x1,4,,,placeholder
+137,effect,effect 137,,1x1,4,,,placeholder
+138,effect,effect 138,,1x1,4,,,placeholder
+139,effect,effect 139,,1x1,4,,,placeholder
+140,effect,effect 140,,1x1,4,,,placeholder
+141,effect,effect 141,,1x1,4,,,placeholder
+142,effect,effect 142,,1x1,4,,,placeholder
+143,effect,effect 143,,1x1,4,,,placeholder
+144,effect,effect 144,,1x1,4,,,placeholder
+145,effect,effect 145,,1x1,4,,,placeholder
+146,effect,effect 146,,1x1,4,,,placeholder
+147,effect,effect 147,,1x1,4,,,placeholder
+148,effect,effect 148,,1x1,4,,,placeholder
+149,effect,effect 149,,1x1,4,,,placeholder
+150,effect,effect 150,,1x1,4,,,placeholder
+151,effect,effect 151,,1x1,4,,,placeholder
+152,effect,effect 152,,1x1,4,,,placeholder
+153,effect,effect 153,,1x1,4,,,placeholder
+154,effect,effect 154,,1x1,4,,,placeholder
+155,effect,effect 155,,1x1,4,,,placeholder
+156,effect,effect 156,,1x1,4,,,placeholder
+157,effect,effect 157,,1x1,4,,,placeholder
+158,effect,effect 158,,1x1,4,,,placeholder
+159,effect,effect 159,,1x1,4,,,placeholder
+160,effect,effect 160,,1x1,4,,,placeholder
+161,effect,effect 161,,1x1,4,,,placeholder
+162,effect,effect 162,,1x1,4,,,placeholder
+163,effect,effect 163,,1x1,4,,,placeholder
+164,effect,effect 164,,1x1,4,,,placeholder
+165,effect,effect 165,,1x1,4,,,placeholder
+166,effect,effect 166,,1x1,4,,,placeholder
+167,effect,effect 167,,1x1,4,,,placeholder
+168,effect,effect 168,,1x1,4,,,placeholder
+169,effect,effect 169,,1x1,4,,,placeholder
+170,effect,effect 170,,1x1,4,,,placeholder
+171,effect,effect 171,,1x1,4,,,placeholder
+172,effect,effect 172,,1x1,4,,,placeholder
+173,effect,effect 173,,1x1,4,,,placeholder
+174,effect,effect 174,,1x1,4,,,placeholder
+175,effect,effect 175,,1x1,4,,,placeholder
+1,missile,missile 1,,1x1,1,,,placeholder
+2,missile,missile 2,,1x1,1,,,placeholder
+3,missile,missile 3,,1x1,1,,,placeholder
+4,missile,missile 4,,1x1,1,,,placeholder
+5,missile,missile 5,,1x1,1,,,placeholder
+6,missile,missile 6,,1x1,1,,,placeholder
+7,missile,missile 7,,1x1,1,,,placeholder
+8,missile,missile 8,,1x1,1,,,placeholder
+9,missile,missile 9,,1x1,1,,,placeholder
+10,missile,missile 10,,1x1,1,,,placeholder
+11,missile,missile 11,,1x1,1,,,placeholder
+12,missile,missile 12,,1x1,1,,,placeholder
+13,missile,missile 13,,1x1,1,,,placeholder
+14,missile,missile 14,,1x1,1,,,placeholder
+15,missile,missile 15,,1x1,1,,,placeholder
+16,missile,missile 16,,1x1,1,,,placeholder
+17,missile,missile 17,,1x1,1,,,placeholder
+18,missile,missile 18,,1x1,1,,,placeholder
+19,missile,missile 19,,1x1,1,,,placeholder
+20,missile,missile 20,,1x1,1,,,placeholder
+21,missile,missile 21,,1x1,1,,,placeholder
+22,missile,missile 22,,1x1,1,,,placeholder
+23,missile,missile 23,,1x1,1,,,placeholder
+24,missile,missile 24,,1x1,1,,,placeholder
+25,missile,missile 25,,1x1,1,,,placeholder
+26,missile,missile 26,,1x1,1,,,placeholder
+27,missile,missile 27,,1x1,1,,,placeholder
+28,missile,missile 28,,1x1,1,,,placeholder
+29,missile,missile 29,,1x1,1,,,placeholder
+30,missile,missile 30,,1x1,1,,,placeholder
+31,missile,missile 31,,1x1,1,,,placeholder
+32,missile,missile 32,,1x1,1,,,placeholder
+33,missile,missile 33,,1x1,1,,,placeholder
+34,missile,missile 34,,1x1,1,,,placeholder
+35,missile,missile 35,,1x1,1,,,placeholder
+36,missile,missile 36,,1x1,1,,,placeholder
+37,missile,missile 37,,1x1,1,,,placeholder
+38,missile,missile 38,,1x1,1,,,placeholder
+39,missile,missile 39,,1x1,1,,,placeholder
+40,missile,missile 40,,1x1,1,,,placeholder
+41,missile,missile 41,,1x1,1,,,placeholder
+42,missile,missile 42,,1x1,1,,,placeholder
+43,missile,missile 43,,1x1,1,,,placeholder
+44,missile,missile 44,,1x1,1,,,placeholder
+45,missile,missile 45,,1x1,1,,,placeholder
+46,missile,missile 46,,1x1,1,,,placeholder
+47,missile,missile 47,,1x1,1,,,placeholder
+48,missile,missile 48,,1x1,1,,,placeholder
+49,missile,missile 49,,1x1,1,,,placeholder
+50,missile,missile 50,,1x1,1,,,placeholder
+51,missile,missile 51,,1x1,1,,,placeholder
+52,missile,missile 52,,1x1,1,,,placeholder
+53,missile,missile 53,,1x1,1,,,placeholder
+54,missile,missile 54,,1x1,1,,,placeholder
