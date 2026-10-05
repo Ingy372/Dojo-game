@@ -13,3 +13,11 @@
 - Floor 4 and 5 labyrinth puzzles made solo-capable.
 - Added docs/21_MONETIZATION.md (cosmetic Wardrobe, floor drops, Supporter) and phase 10.
 - Added OWNER_INPUT.md and GitHub structure (CLAUDE.md, CI table check, issue templates, phase-issue script).
+
+## 2026-10-05 — Phase 0 started (branch phase-0-toolchain)
+- Imported TFS v1.4.2 (31d6e85) into server/; patch P1 routes every engine item id through server/src/spire_ids.h and removes CipSoft item special cases.
+- New tools: build_assets (dat/spr/otb/items.xml + round-trip test), procedural_tiles, placeholder_art, compile_map (ASCII -> OTBM with validation), render_map, check_names (whole-word + near-miss), scripted 10.98 login client, dev_account, package_client, gate_phase0.sh.
+- Spirebound datapack in server/data (engine Lua from upstream; CipSoft achievement list removed), five paths declared as vocations, 40x40 test town with temple, depot, house, NPC, spawn.
+- CI: server.yml builds the server and runs the automated phase 0 gate; client-windows.yml builds the Windows client from the pinned OTClient (manual run).
+- Automated gate: 7/7 pass (zero-warning boot, asset round trip, scripted login at the temple). Open: Windows client run and owner login (need GitHub access + a reachable server).
+- Plan review: 18 known gaps with proposed fixes in STATUS.md; one owner decision drafted (test server location).

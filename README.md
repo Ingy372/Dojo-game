@@ -2,7 +2,7 @@
 
 An original-art Open Tibia server inspired by a floating tower of floors: when a raid kills a floor boss, the whole world advances. Five paths, real skull PvP, houses, guilds, a secret-broker economy, and a dungeon under the starting town that grows as the tower opens.
 
-Status: design complete, build not started. See [STATUS.md](STATUS.md).
+Status: phase 0 (toolchain) in progress. See [STATUS.md](STATUS.md).
 
 ## For the build agent (Claude Cowork / Claude Code)
 

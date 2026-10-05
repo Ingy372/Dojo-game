@@ -1,4 +1,4 @@
-# One per line, case-insensitive substring match. check_names.py fails the build on any hit in shipped strings
+# One per line, case-insensitive whole-word match (plurals and possessives included). check_names.py fails the build on any hit in shipped strings
 # (items, monsters, NPCs, dialogue, map signs, client UI, website). Extend as needed.
 # --- Source (SAO) proper names ---
 sword art
