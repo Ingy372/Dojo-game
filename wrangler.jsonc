@@ -1,0 +1,10 @@
+// Cloudflare hosting settings. The game is a set of static files, so there is
+// no server code yet: Cloudflare just serves the built game folder.
+{
+  "name": "dojo-ascent",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./apps/client/dist"
+  },
+  "preview_urls": true
+}
