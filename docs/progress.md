@@ -15,8 +15,8 @@
 - The Cloudflare Pages steps didn't match his screen: Cloudflare now creates a "Worker" project by default. Fixed by adding `wrangler.jsonc`.
 - The first Cloudflare build failed because `main` didn't contain the game yet. Fixed by copying the work onto `main`.
 
-**Still to confirm**
-- Jay opens the Visit link on his phone and sees the title screen (milestone 0's "done when" check).
+**Confirmed**
+- Jay opened the Visit link on his phone, turned it sideways, and saw the "Dojo Ascent" title screen. Milestone 0 is done.
 
 **Next**
-- Milestone 1: Movement.
+- Milestone 1: Movement (start in a fresh session).
