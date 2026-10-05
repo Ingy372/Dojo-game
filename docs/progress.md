@@ -9,8 +9,14 @@
 - `packages/sim` with Vitest and one passing test (20 ticks per second).
 - `docs/decisions.md` and `docs/progress.md` created.
 
-**In progress**
-- Jay connecting Cloudflare Pages (step-by-step instructions given in the session).
+- Cloudflare hosting connected (a Worker project named `dojo-ascent`, set up in `wrangler.jsonc`). The work was copied onto `main` so Cloudflare publishes it.
+
+**Problems Jay reported**
+- The Cloudflare Pages steps didn't match his screen: Cloudflare now creates a "Worker" project by default. Fixed by adding `wrangler.jsonc`.
+- The first Cloudflare build failed because `main` didn't contain the game yet. Fixed by copying the work onto `main`.
+
+**Still to confirm**
+- Jay opens the Visit link on his phone and sees the title screen (milestone 0's "done when" check).
 
 **Next**
 - Milestone 1: Movement.
