@@ -212,7 +212,7 @@ export class GameScene extends Phaser.Scene {
       this,
       cam,
       (x, y) => ({ x: x / TILE, y: y / TILE }),
-      (x, y) => this.menuOpen || this.buttons.contains(x, y),
+      (x, y) => this.menuOpen || this.buttons.contains(x, y) || this.onHomeButton(x, y),
     );
     this.makeHud();
     cam.ignore([...this.controls.objects, ...this.buttons.objects]);
@@ -493,7 +493,22 @@ export class GameScene extends Phaser.Scene {
       .setVisible(false);
     this.screenFlash = this.add.rectangle(0, 0, 10, 10, 0xffffff).setOrigin(0).setAlpha(0);
     const small = { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 };
-    this.roomLabel = this.add.text(0, 14, '', small).setOrigin(1, 0).setResolution(crisp()).setVisible(!!this.run);
+    this.roomLabel = this.add.text(0, 14, '', small).setOrigin(1, 0).setResolution(crisp());
+    if (!this.run) {
+      // The practice room has a way back home.
+      this.roomLabel
+        .setText('◀ Home')
+        .setFontSize(18)
+        .setPadding(10, 6, 10, 6)
+        .setBackgroundColor('#2a2536')
+        .setInteractive()
+        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+          if (this.leaving) return;
+          this.leaving = true;
+          this.cameras.main.fadeOut(300, 10, 8, 16);
+          this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home'));
+        });
+    }
     this.timerText = this.add
       .text(0, 36, '', { ...small, fontStyle: 'bold', fontSize: '20px' })
       .setOrigin(1, 0)
@@ -711,6 +726,10 @@ export class GameScene extends Phaser.Scene {
   }
 
   // ---------------------------------------------------------------- the run
+
+  private onHomeButton(x: number, y: number): boolean {
+    return !this.run && !!this.roomLabel && this.roomLabel.getBounds().contains(x, y);
+  }
 
   private playRunEvents(events: RunEvent[]): void {
     for (const ev of events) {
