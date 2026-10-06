@@ -28,11 +28,10 @@
 - Movement rules in `packages/sim`: stick movement, tap-to-move with a route around walls, sliding along walls, 20 ticks per second. 13 automated tests pass (never through walls, same inputs always give the same result, saveable state).
 - The Phaser game draws the room and a placeholder character (a white circle with a belt and a dot showing which way it faces), with a gold ring where it's walking to and a small walking bob.
 - Title screen now says "Tap to start".
-- Pushed to the `claude/determined-noether-ikwere` branch for a Cloudflare preview link. Not yet copied onto `main`.
+- Pushed to the `claude/determined-noether-ikwere` branch. The Cloudflare preview link was hard to find (Cloudflare moved previews to the build page), so with Jay's OK the work was copied onto `main` (the live link) on 2026-10-06.
 
 **Waiting on Jay**
 - Test on his phone: does moving feel smooth and natural with both tap-to-move and the stick?
-- OK to copy the work onto `main` (the live link).
 
 **Next**
-- After Jay's OK: copy onto `main`, then milestone 2: Combat core (fresh session).
+- After Jay confirms movement feels good: milestone 2: Combat core (fresh session).
