@@ -57,3 +57,24 @@
 
 **Next**
 - Milestone 3: A full floor (fresh session).
+
+## Milestone 3 — A full floor (2026-10-06)
+
+**Done**
+- **Dash** button (no protection mid-dash, per Jay).
+- **Swarmer** and **Shield Guard** enemies, plus the **Floor Keeper** boss (two attacks, calls in swarmers at half health). Waiting enemies circle the player; still only two attack at once.
+- **A 7-room floor** from a library of 10 hand-made rooms: door choices (battle, challenge, treasure, rest), health carrying over, chests, the rest shrine, challenge timers, then the boss and its chest, then the door home.
+- **Room grades** S / A / B, with a bonus item for S.
+- **9 Insights**: pick 1 of 3 after each battle or challenge room.
+- **Loot**: hand wraps, gi and charms with rarity colors and chimes, the 70 / 22 / 7 / 1 rarity shares, and bad-luck protection (guaranteed Rare on the 5th dry run).
+- **Home Dojo screen**: Enter the Tower, Practice room, last run summary, personal bests with "NEW!", and gear you can wear, with up/down arrows.
+- Rooms, enemies, Insights and loot tables are data files in `content/`. 64 automated tests pass (including a full floor played start to finish, rarity shares, bad-luck protection, the same seed giving the same run, and defeat keeping your items).
+- Checked on a phone-sized screen in a test browser: Home, a battle room, the grade, the Insight cards, treasure room and doors, the boss with its helpers, coming home to the summary, the gear screen, and the practice room's Home button.
+
+**Not done / known limits**
+- A run in progress isn't saved if the app is closed.
+- Real fights haven't been balanced beyond the starting numbers; Jay's playtest decides.
+
+**Next**
+- Jay plays full runs on his phone and gives feedback (run length 10–15 minutes? enemy mix? Dash feel?).
+- Milestone 4: Training link (mock data), in a fresh session.
