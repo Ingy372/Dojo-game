@@ -229,7 +229,10 @@ describe('the counter', () => {
       const inside = setup(d);
       expect(counterAt(inside.world, inside.room, w - 1).some((ev) => ev.kind === 'perfectCounter')).toBe(true);
       const outside = setup(d);
-      expect(counterAt(outside.world, outside.room, w).some((ev) => ev.kind === 'perfectCounter')).toBe(false);
+      const events = counterAt(outside.world, outside.room, w);
+      expect(events.some((ev) => ev.kind === 'perfectCounter')).toBe(false);
+      // Just outside the window is still a Block on every difficulty.
+      expect(events.some((ev) => ev.kind === 'block')).toBe(true);
     }
     const rooted = setup();
     rooted.p.counterBonusTicks = COMBAT.rootedFormBonusTicks;

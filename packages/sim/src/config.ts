@@ -26,7 +26,8 @@ export const MOVEMENT = {
  * enemy telegraphs (wind-ups) are multiplied by telegraphScale.
  */
 export const DIFFICULTY = {
-  guided: { counterWindowTicks: 10, telegraphScale: 1.5 },
+  // Guided widened from 10 to 14 ticks (0.7 s) after Jay's first playtest: doable for a 6-year-old, not automatic.
+  guided: { counterWindowTicks: 14, telegraphScale: 1.5 },
   standard: { counterWindowTicks: 6, telegraphScale: 1 },
   challenge: { counterWindowTicks: 4, telegraphScale: 0.8 },
 } as const;
@@ -81,6 +82,8 @@ export const COMBAT = {
   counter: {
     /** After pressing Counter, the player holds a guard pose this many ticks (no walking). */
     guardTicks: 10,
+    /** The guard pose always lasts at least this long past the Perfect window, so a slightly early press is still a Block. */
+    blockTicksAfterWindow: 4,
     /** If nothing was countered, Counter can't be pressed again for this many ticks. */
     missLockoutTicks: 10,
     /** Perfect Counter: enemy staggered this long (1 second). */

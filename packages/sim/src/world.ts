@@ -230,7 +230,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
 
   if (input.action === 'counter' && p.guardTicks === 0 && p.counterLockout === 0) {
     p.counterPressedTick = world.tick;
-    p.guardTicks = Math.max(COMBAT.counter.guardTicks, counterWindowTicks(world, p));
+    p.guardTicks = Math.max(COMBAT.counter.guardTicks, counterWindowTicks(world, p) + COMBAT.counter.blockTicksAfterWindow);
     p.path = null;
     world.events.push({ kind: 'counterPressed', playerId: p.id });
   } else if (input.action === 'strike' && p.guardTicks === 0 && p.strikeRecovery === 0) {

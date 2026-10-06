@@ -7,7 +7,9 @@ import {
   loadEnemy,
   loadRoom,
   stepWorld,
+  DIFFICULTY,
   type CombatEvent,
+  type Difficulty,
   type EnemyState,
   type PlayerId,
   type PlayerInput,
@@ -110,7 +112,7 @@ export class GameScene extends Phaser.Scene {
 
   create(): void {
     this.room = loadRoom(trainingRoom);
-    this.world = createWorld(this.room, [this.me], { enemyTypes: { brute: loadEnemy(bruteData) } });
+    this.world = createWorld(this.room, [this.me], { enemyTypes: { brute: loadEnemy(bruteData) }, difficulty: testDifficulty() });
     this.prevPos = { ...this.world.players[this.me].pos };
     this.elapsed = 0;
     this.hitStopMs = 0;
@@ -573,4 +575,13 @@ export class GameScene extends Phaser.Scene {
 function blendColor(a: number, b: number, t: number): number {
   const mix = (shift: number) => Math.round(((a >> shift) & 0xff) * (1 - t) + ((b >> shift) & 0xff) * t);
   return (mix(16) << 16) | (mix(8) << 8) | mix(0);
+}
+
+/**
+ * For testing only, until the difficulty choice arrives in milestone 7:
+ * adding ?difficulty=guided (or challenge) to the link picks that difficulty.
+ */
+function testDifficulty(): Difficulty | undefined {
+  const asked = new URLSearchParams(window.location.search).get('difficulty');
+  return asked && asked in DIFFICULTY ? (asked as Difficulty) : undefined;
 }
