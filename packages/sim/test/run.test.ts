@@ -163,6 +163,20 @@ describe('a full run', () => {
     }
   });
 
+  it('a treasure room or rest shrine is always followed by a fight, so fights can never be skipped', () => {
+    for (const prefer of ['treasure', 'rest']) {
+      for (let seed = 1; seed <= 60; seed++) {
+        const run = startRun(content, { seed, dryRuns: 0 });
+        autoplayPreferring(run, prefer);
+        const kinds = run.results.map((r) => r.kind);
+        const calm = (k: string) => k === 'treasure' || k === 'rest';
+        for (let i = 1; i < kinds.length; i++) expect(calm(kinds[i]) && calm(kinds[i - 1])).toBe(false);
+        expect(kinds.filter((k) => k === 'rest').length).toBeLessThanOrEqual(FLOOR.maxRestRooms);
+        expect(kinds.filter((k) => k === 'battle' || k === 'challenge').length).toBeGreaterThanOrEqual(4);
+      }
+    }
+  });
+
   it('the same seed always gives the same run', () => {
     const a = startRun(content, { seed: 99, dryRuns: 2 });
     const b = startRun(content, { seed: 99, dryRuns: 2 });

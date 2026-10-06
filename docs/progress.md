@@ -104,3 +104,13 @@
 **Next**
 - Jay confirms the run length feels right. Then milestone 3 is done.
 - Milestone 4: Training link (mock data), in a fresh session. Try Guided (`?difficulty=guided`) when time allows.
+
+**Final changes and sign-off (2026-10-06)**
+- Fix: after a treasure room or rest shrine, every door leads to a fight; at most 2 rest shrines per floor (Jay found rest/treasure could skip all fights). 68 tests pass. Copied onto `main`.
+- Dodge-only attacks (can't be Countered or Blocked) recorded for milestone 10.
+- Jay is happy with the run length for now. **Milestone 3 is done.**
+
+**Next**
+- Milestone 4: Training link (mock data), in a fresh session.
+- Still open: Jay to try Guided (`?difficulty=guided`) when he has time.
+- Balance tool: `npm run balance` in `packages/sim` re-checks difficulty after any change.
