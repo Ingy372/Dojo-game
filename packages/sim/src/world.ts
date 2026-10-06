@@ -9,7 +9,7 @@ import { noMods, type PlayerMods } from './effects';
 import type { EnemyAttackDef, EnemyDef } from './enemy';
 import { clamp, distance, length, quantize, type Vec2 } from './math';
 import { findPath, standableSpot } from './path';
-import { activeDoorSlots, type Room } from './room';
+import { activeDoorSlots, waveCount, type EnemySpawn, type Room } from './room';
 
 export type PlayerId = string;
 export type EnemyId = string;
@@ -142,8 +142,10 @@ export type CombatEvent =
   | { kind: 'summon'; enemyId: EnemyId; summoned: EnemyId[] }
   | { kind: 'speedBurst'; playerId: PlayerId }
   | { kind: 'winded'; enemyId: EnemyId }
+  | { kind: 'wave'; wave: number; of: number }
   | { kind: 'playerOut'; playerId: PlayerId }
   | { kind: 'roomCleared' }
+  | { kind: 'breath'; playerId: PlayerId; healed: number }
   | { kind: 'chestOpened'; playerId: PlayerId }
   | { kind: 'shrineUsed'; playerId: PlayerId; healed: number }
   | { kind: 'doorsOpen' }
@@ -163,6 +165,11 @@ export interface WorldState {
   respawnEnemies: boolean;
   /** Counts up for naming enemies that are called in. */
   nextEnemyNumber: number;
+  /** The wave in progress (floor rooms send enemies in waves). */
+  wave: number;
+  waveCount: number;
+  /** Enemies still to arrive in later waves. */
+  pendingSpawns: EnemySpawn[];
   progress: RoomProgress;
   /** Events from the most recent tick only. */
   events: CombatEvent[];
@@ -239,22 +246,28 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     };
   }
 
+  const respawnEnemies = options.respawnEnemies ?? true;
   const enemies: EnemyState[] = [];
-  if (options.enemyTypes) {
-    room.enemySpawns.forEach((spawn, i) => {
-      const def = options.enemyTypes![spawn.enemy];
-      if (!def) throw new Error(`Room "${room.id}" uses enemy "${spawn.enemy}", but no such enemy type was loaded`);
-      enemies.push(newEnemy(`e${i + 1}`, def, spawn.pos, i));
-    });
-  }
-  // Keep the types a boss can call in, so the world has everything it needs when saved or sent.
+  const pendingSpawns: EnemySpawn[] = [];
+  // Keep every type that can appear later (later waves, a boss's helpers), so the
+  // world has everything it needs when saved or sent.
   const enemyTypes: Record<string, EnemyDef> = {};
-  for (const e of enemies) {
-    const s = e.def.summon;
-    if (!s) continue;
-    const def = options.enemyTypes?.[s.enemy];
-    if (!def) throw new Error(`Enemy "${e.def.id}" calls in "${s.enemy}", but no such enemy type was loaded`);
-    enemyTypes[s.enemy] = def;
+  if (options.enemyTypes) {
+    const typeOf = (id: string): EnemyDef => {
+      const def = options.enemyTypes![id];
+      if (!def) throw new Error(`Room "${room.id}" uses enemy "${id}", but no such enemy type was loaded`);
+      return def;
+    };
+    room.enemySpawns.forEach((spawn, i) => {
+      const def = typeOf(spawn.enemy);
+      // Practice rooms put everyone in at once; floor rooms hold later waves back.
+      if (spawn.wave === 1 || respawnEnemies) enemies.push(newEnemy(`e${i + 1}`, def, spawn.pos, i));
+      else {
+        pendingSpawns.push({ enemy: spawn.enemy, pos: { ...spawn.pos }, wave: spawn.wave });
+        enemyTypes[spawn.enemy] = def;
+      }
+      if (def.summon) enemyTypes[def.summon.enemy] = typeOf(def.summon.enemy);
+    });
   }
 
   return {
@@ -264,8 +277,11 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     players,
     enemies,
     enemyTypes,
-    respawnEnemies: options.respawnEnemies ?? true,
-    nextEnemyNumber: enemies.length + 1,
+    respawnEnemies,
+    nextEnemyNumber: room.enemySpawns.length + 1,
+    wave: 1,
+    waveCount: respawnEnemies ? 1 : Math.max(1, waveCount(room)),
+    pendingSpawns,
     progress: {
       cleared: false,
       chestOpened: false,
@@ -342,7 +358,7 @@ export function currentAttack(e: EnemyState): EnemyAttackDef {
 
 /** True when every enemy in the room is beaten (and none will come back). */
 export function allEnemiesBeaten(world: WorldState): boolean {
-  return !world.respawnEnemies && world.enemies.every((e) => e.mode === 'defeated');
+  return !world.respawnEnemies && world.pendingSpawns.length === 0 && world.enemies.every((e) => e.mode === 'defeated');
 }
 
 /**
@@ -832,6 +848,18 @@ function summonHelpers(world: WorldState, boss: EnemyState, room: Room): void {
   world.events.push({ kind: 'summon', enemyId: boss.id, summoned: ids });
 }
 
+function spawnNextWave(world: WorldState): void {
+  world.wave++;
+  const now = world.pendingSpawns.filter((s) => s.wave <= world.wave);
+  world.pendingSpawns = world.pendingSpawns.filter((s) => s.wave > world.wave);
+  for (const s of now) {
+    const e = newEnemy(`e${world.nextEnemyNumber++}`, world.enemyTypes[s.enemy], s.pos, world.enemies.length);
+    world.enemies.push(e);
+    world.events.push({ kind: 'enemySpawn', enemyId: e.id });
+  }
+  world.events.push({ kind: 'wave', wave: world.wave, of: world.waveCount });
+}
+
 /** Keeps enemies from standing inside each other (pairs in a fixed order). */
 function separateEnemies(world: WorldState, room: Room): void {
   const list = world.enemies;
@@ -916,10 +944,24 @@ function updateProgress(world: WorldState, room: Room, ids: PlayerId[]): void {
   const prog = world.progress;
   const players = ids.map((id) => world.players[id]).filter(isActive);
 
+  // The next wave arrives when the room is nearly clear.
+  if (world.pendingSpawns.length > 0) {
+    const left = world.enemies.filter((e) => e.mode !== 'defeated').length;
+    if (left <= COMBAT.nextWaveWhenLeft) spawnNextWave(world);
+  }
+
   if (!prog.cleared) {
     if (allEnemiesBeaten(world)) {
       prog.cleared = true;
       world.events.push({ kind: 'roomCleared' });
+      // Catch your breath: a small heal after a fight.
+      if (room.enemySpawns.length > 0) {
+        for (const p of players) {
+          const before = p.health;
+          p.health = Math.min(p.maxHealth, p.health + Math.round(p.maxHealth * COMBAT.roomClearHeal));
+          if (p.health > before) world.events.push({ kind: 'breath', playerId: p.id, healed: p.health - before });
+        }
+      }
     } else {
       prog.ticks++;
     }

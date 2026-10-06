@@ -66,11 +66,12 @@ describe('content', () => {
 });
 
 describe('room grades', () => {
-  it('S needs Perfect Counters, little damage and a fast clear', () => {
-    expect(gradeRoom(2, 10, 100, 20 * 40, 50)).toBe('S');
-    expect(gradeRoom(0, 10, 100, 20 * 40, 50)).toBe('A');
-    expect(gradeRoom(0, 50, 100, 20 * 40, 50)).toBe('B');
-    expect(gradeRoom(3, 50, 100, 20 * 80, 50)).toBe('B');
+  it('S needs enough Perfect Counters for the room, little damage and a fast clear', () => {
+    // 4 enemies: 2 Perfect Counters earn the point.
+    expect(gradeRoom(2, 10, 100, 20 * 40, 50, 4)).toBe('S');
+    expect(gradeRoom(1, 10, 100, 20 * 40, 50, 4)).toBe('A');
+    expect(gradeRoom(0, 50, 100, 20 * 40, 50, 4)).toBe('B');
+    expect(gradeRoom(3, 50, 100, 20 * 80, 50, 4)).toBe('B');
   });
 });
 

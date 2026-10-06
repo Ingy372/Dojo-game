@@ -3,7 +3,7 @@
   "name": "Shield Guard",
   "notes": "Basic attacks bounce off its shield. A Strike or a Perfect Counter breaks the shield; it grows back after 6 seconds.",
   "color": "#5a6b85",
-  "maxHealth": 70,
+  "maxHealth": 90,
   "power": 15,
   "guard": 15,
   "radius": 0.42,
@@ -20,5 +20,6 @@
     "areaRadius": 0.8,
     "telegraphTicks": 14,
     "recoverTicks": 18
-  }
+  },
+  "parSeconds": 5
 }

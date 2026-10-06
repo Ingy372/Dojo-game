@@ -3,7 +3,6 @@
   "name": "Pillar Court",
   "kind": "battle",
   "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
-  "parSeconds": 55,
   "tiles": [
     "####D#####D#####D###",
     "#..................#",
@@ -18,26 +17,79 @@
     "#..................#",
     "####################"
   ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
   "enemies": [
     {
       "enemy": "shield",
-      "column": 6,
-      "row": 3
+      "column": 4,
+      "row": 3,
+      "wave": 1
     },
     {
       "enemy": "shield",
-      "column": 14,
-      "row": 3
+      "column": 7,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 11,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 3,
+      "wave": 1
     },
     {
       "enemy": "swarmer",
       "column": 7,
-      "row": 6
+      "row": 3,
+      "wave": 2
     },
     {
       "enemy": "swarmer",
-      "column": 14,
-      "row": 6
+      "column": 11,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 18,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "brute",
+      "column": 4,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "shield",
+      "column": 11,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 18,
+      "row": 3,
+      "wave": 3
     }
   ]
 }

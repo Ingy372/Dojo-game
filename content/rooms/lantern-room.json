@@ -3,7 +3,6 @@
   "name": "Lantern Room",
   "kind": "battle",
   "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
-  "parSeconds": 55,
   "tiles": [
     "####D#####D#####D###",
     "#..................#",
@@ -18,36 +17,85 @@
     "#..................#",
     "####################"
   ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
   "enemies": [
     {
       "enemy": "swarmer",
       "column": 5,
-      "row": 3
+      "row": 3,
+      "wave": 1
     },
     {
-      "enemy": "shield",
+      "enemy": "swarmer",
       "column": 10,
-      "row": 3
+      "row": 3,
+      "wave": 1
     },
     {
       "enemy": "swarmer",
       "column": 15,
-      "row": 3
+      "row": 3,
+      "wave": 1
     },
     {
       "enemy": "swarmer",
       "column": 9,
-      "row": 5
+      "row": 5,
+      "wave": 1
+    },
+    {
+      "enemy": "shield",
+      "column": 10,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 9,
+      "row": 5,
+      "wave": 2
     },
     {
       "enemy": "swarmer",
       "column": 12,
-      "row": 5
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "brute",
+      "column": 5,
+      "row": 3,
+      "wave": 3
     },
     {
       "enemy": "swarmer",
-      "column": 10,
-      "row": 7
+      "column": 15,
+      "row": 3,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 9,
+      "row": 5,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 12,
+      "row": 5,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 7,
+      "wave": 3
     }
   ]
 }

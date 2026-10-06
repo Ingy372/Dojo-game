@@ -222,9 +222,9 @@ export function chooseInsight(run: RunState, id: string): boolean {
 }
 
 /** Grades a cleared room: one point each for Perfect Counters, little damage, and a fast clear. */
-export function gradeRoom(perfects: number, damageTaken: number, maxHealth: number, ticks: number, parSeconds: number): Grade {
+export function gradeRoom(perfects: number, damageTaken: number, maxHealth: number, ticks: number, parSeconds: number, enemies: number): Grade {
   let points = 0;
-  if (perfects >= GRADES.perfectsForPoint) points++;
+  if (perfects >= Math.max(1, Math.ceil(enemies * GRADES.perfectsPerEnemy))) points++;
   if (damageTaken <= maxHealth * GRADES.damageShareForPoint) points++;
   if (ticks <= parSeconds * TICKS_PER_SECOND) points++;
   return points >= 3 ? 'S' : points === 2 ? 'A' : 'B';
@@ -303,6 +303,12 @@ function offerInsights(content: Content, run: RunState): string[] {
   return shuffled(run.rng, left).slice(0, FLOOR.insightChoices);
 }
 
+/** The room's par time: set in the room file, or the enemies' par times added up. */
+export function parSeconds(room: Room, world: WorldState): number {
+  if (room.parSeconds !== null) return room.parSeconds;
+  return world.enemies.reduce((sum, e) => sum + e.def.parSeconds, 0);
+}
+
 function roomResult(room: Room, world: WorldState): RoomResult {
   const prog = world.progress;
   const p = world.players.p1;
@@ -311,7 +317,7 @@ function roomResult(room: Room, world: WorldState): RoomResult {
     roomId: room.id,
     name: room.name,
     kind: room.kind,
-    grade: fights ? gradeRoom(prog.perfects, prog.damageTaken, p?.maxHealth ?? COMBAT.player.maxHealth, prog.ticks, room.parSeconds) : null,
+    grade: fights ? gradeRoom(prog.perfects, prog.damageTaken, p?.maxHealth ?? COMBAT.player.maxHealth, prog.ticks, parSeconds(room, world), world.enemies.length) : null,
     ticks: prog.ticks,
     perfects: prog.perfects,
     damageTaken: prog.damageTaken,

@@ -41,8 +41,8 @@ export interface Room {
   doors: Vec2[];
   chest: Vec2 | null;
   shrine: Vec2 | null;
-  /** A good clear time, for the room grade. */
-  parSeconds: number;
+  /** A good clear time set by the room file (null = add up the enemies' par times). */
+  parSeconds: number | null;
   challenge: RoomChallenge | null;
 }
 
@@ -50,6 +50,8 @@ export interface EnemySpawn {
   /** The enemy type's id, matching a file in content/enemies. */
   enemy: string;
   pos: Vec2;
+  /** Which wave it arrives in (1 = from the start). Later waves arrive when the room is nearly clear. */
+  wave: number;
 }
 
 export class RoomError extends Error {
@@ -130,6 +132,10 @@ export function loadRoom(data: unknown): Room {
     throw new RoomError(id, 'this kind of room needs 3 door slots "D" (for up to 3 door choices)');
   }
   if (fights && enemySpawns.length === 0) throw new RoomError(id, `a ${kind} room needs enemies`);
+  const lastWave = enemySpawns.reduce((m, s) => Math.max(m, s.wave), 0);
+  for (let w = 1; w <= lastWave; w++) {
+    if (!enemySpawns.some((s) => s.wave === w)) throw new RoomError(id, `wave ${w} has no enemies (waves must be 1, 2, 3... with no gaps)`);
+  }
   if (!fights && kind !== 'practice' && enemySpawns.length > 0) throw new RoomError(id, `a ${kind} room can't have enemies`);
   if ((kind === 'treasure' || kind === 'challenge' || kind === 'boss') && !chest) {
     throw new RoomError(id, `a ${kind} room needs a chest "C"`);
@@ -137,7 +143,7 @@ export function loadRoom(data: unknown): Room {
   if (kind === 'rest' && !shrine) throw new RoomError(id, 'a rest room needs a shrine "S"');
   doors.sort((a, b) => a.y - b.y || a.x - b.x);
 
-  let parSeconds = 60;
+  let parSeconds: number | null = null;
   if (raw.parSeconds !== undefined) {
     if (typeof raw.parSeconds !== 'number' || !(raw.parSeconds > 0)) throw new RoomError(id, '"parSeconds" must be a number above 0');
     parSeconds = raw.parSeconds;
@@ -186,8 +192,19 @@ function loadEnemySpawns(id: string, data: unknown, walls: boolean[][], width: n
     if (col < 1 || row < 1 || col > width || row > height || walls[row - 1][col - 1]) {
       throw new RoomError(id, `enemy ${n} must stand on a floor tile (row ${row}, column ${col} isn't one)`);
     }
-    return { enemy: e.enemy, pos: { x: col - 0.5, y: row - 0.5 } };
+    const wave = e.wave ?? 1;
+    if (typeof wave !== 'number' || !Number.isInteger(wave) || wave < 1) {
+      throw new RoomError(id, `enemy ${n}'s "wave" must be a whole number from 1`);
+    }
+    return { enemy: e.enemy, pos: { x: col - 0.5, y: row - 0.5 }, wave };
   });
+}
+
+/** How many waves a room has (0 if it has no enemies). Waves must be numbered 1, 2, 3... with no gaps. */
+export function waveCount(room: Room): number {
+  let n = 0;
+  for (const s of room.enemySpawns) n = Math.max(n, s.wave);
+  return n;
 }
 
 /** True if the tile at (column, row) is a wall. Anything outside the room counts as wall. */

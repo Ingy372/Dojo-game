@@ -114,11 +114,15 @@ export const COMBAT = {
 
   /** Only this many enemies may be attacking at once ("kung fu circle"). */
   maxAttackersAtOnce: 2,
+  /** In floor rooms, the next wave of enemies arrives when this many (or fewer) are left. */
+  nextWaveWhenLeft: 1,
   /** Enemies waiting their turn circle the player this far outside their attack range (tiles). */
   circleExtraRange: 1.8,
   /** ...moving sideways at this share of their walking speed. */
   circleSpeedShare: 0.5,
 
+  /** Clearing a room with enemies restores this share of max health ("catch your breath"). */
+  roomClearHeal: 0.15,
   /** A rest shrine restores this share of max health. */
   restShrineHeal: 0.6,
 
@@ -148,10 +152,12 @@ export const FLOOR = {
 
 /**
  * Room grades (S, A, B). One point each for: enough Perfect Counters, little damage
- * taken, and a clear within the room's par time. 3 points = S, 2 = A, otherwise B.
+ * taken, and a clear within the room's par time (the enemies' par times added up,
+ * unless the room file sets "parSeconds"). 3 points = S, 2 = A, otherwise B.
  */
 export const GRADES = {
-  perfectsForPoint: 2,
+  /** Perfect Counters needed for a point, per enemy in the room (0.5 = one for every two enemies). */
+  perfectsPerEnemy: 0.5,
   /** Damage taken at most this share of max health. */
   damageShareForPoint: 0.15,
   /** An S grade adds this many items to the room's loot. */

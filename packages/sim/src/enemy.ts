@@ -58,6 +58,8 @@ export interface EnemyDef {
   boss: boolean;
   summon: EnemySummonDef | null;
   winded: EnemyWindedDef | null;
+  /** A good time to beat it, in seconds; a room's par time for grades adds these up. */
+  parSeconds: number;
   /** Placeholder body color, as "#rrggbb" (art comes later). */
   color: string;
 }
@@ -181,6 +183,7 @@ export function loadEnemy(data: unknown): EnemyDef {
     boss,
     summon,
     winded,
+    parSeconds: raw.parSeconds === undefined ? 4 : positiveNumber(raw, 'parSeconds', id),
     color,
   };
 }

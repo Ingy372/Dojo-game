@@ -3,10 +3,9 @@
   "name": "Shield Wall",
   "kind": "challenge",
   "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
-  "parSeconds": 60,
   "challenge": {
-    "seconds": 60,
-    "text": "Clear the room in 60 seconds for a better chest!"
+    "seconds": 100,
+    "text": "Clear the room in 100 seconds for a better chest!"
   },
   "tiles": [
     "####D#####D#####D###",
@@ -22,31 +21,85 @@
     "#..................#",
     "####################"
   ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
   "enemies": [
     {
       "enemy": "shield",
+      "column": 4,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "shield",
+      "column": 17,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "shield",
       "column": 6,
-      "row": 5
+      "row": 5,
+      "wave": 1
+    },
+    {
+      "enemy": "shield",
+      "column": 17,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 6,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 11,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 7,
+      "wave": 2
+    },
+    {
+      "enemy": "shield",
+      "column": 6,
+      "row": 5,
+      "wave": 3
     },
     {
       "enemy": "shield",
       "column": 11,
-      "row": 5
+      "row": 5,
+      "wave": 3
     },
     {
-      "enemy": "shield",
+      "enemy": "swarmer",
       "column": 16,
-      "row": 5
+      "row": 5,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 7,
+      "wave": 3
     },
     {
       "enemy": "swarmer",
       "column": 9,
-      "row": 7
-    },
-    {
-      "enemy": "swarmer",
-      "column": 13,
-      "row": 7
+      "row": 7,
+      "wave": 3
     }
   ]
 }

@@ -4,7 +4,7 @@
   "notes": "The floor boss. Takes turns between a ground slam and a wide sweep all around itself, and calls in two swarmers at half health. Only place it in open rooms.",
   "color": "#6b2d5c",
   "boss": true,
-  "maxHealth": 520,
+  "maxHealth": 700,
   "power": 26,
   "guard": 30,
   "radius": 0.85,
@@ -34,5 +34,6 @@
       "telegraphTicks": 22,
       "recoverTicks": 26
     }
-  ]
+  ],
+  "parSeconds": 25
 }
