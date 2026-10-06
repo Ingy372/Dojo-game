@@ -17,6 +17,14 @@ export interface Room {
   /** walls[row][column] is true where a wall is. */
   walls: boolean[][];
   playerStart: Vec2;
+  /** Where enemies start (centers of tiles), in the order listed in the file. */
+  enemySpawns: EnemySpawn[];
+}
+
+export interface EnemySpawn {
+  /** The enemy type's id, matching a file in content/enemies. */
+  enemy: string;
+  pos: Vec2;
 }
 
 export class RoomError extends Error {
@@ -72,7 +80,30 @@ export function loadRoom(data: unknown): Room {
   });
   if (!playerStart) throw new RoomError(id, 'there is no player start "P"');
 
-  return { id, name: raw.name, width, height, walls, playerStart };
+  const enemySpawns = loadEnemySpawns(id, raw.enemies, walls, width, height);
+  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns };
+}
+
+/** Reads the optional "enemies" list. Column and row count from 1, like the error messages. */
+function loadEnemySpawns(id: string, data: unknown, walls: boolean[][], width: number, height: number): EnemySpawn[] {
+  if (data === undefined) return [];
+  if (!Array.isArray(data)) throw new RoomError(id, '"enemies" must be a list');
+  return data.map((item, i) => {
+    const e = item as Record<string, unknown>;
+    const n = i + 1;
+    if (typeof e !== 'object' || e === null || typeof e.enemy !== 'string' || e.enemy.length === 0) {
+      throw new RoomError(id, `enemy ${n} needs an "enemy" type`);
+    }
+    const col = e.column;
+    const row = e.row;
+    if (typeof col !== 'number' || typeof row !== 'number' || !Number.isInteger(col) || !Number.isInteger(row)) {
+      throw new RoomError(id, `enemy ${n} needs a whole-number "column" and "row"`);
+    }
+    if (col < 1 || row < 1 || col > width || row > height || walls[row - 1][col - 1]) {
+      throw new RoomError(id, `enemy ${n} must stand on a floor tile (row ${row}, column ${col} isn't one)`);
+    }
+    return { enemy: e.enemy, pos: { x: col - 0.5, y: row - 0.5 } };
+  });
 }
 
 /** True if the tile at (column, row) is a wall. Anything outside the room counts as wall. */

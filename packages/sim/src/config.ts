@@ -20,3 +20,86 @@ export const MOVEMENT = {
   /** Stops walking to a tapped spot if blocked for this many ticks. */
   stuckTicks: 10,
 } as const;
+
+/**
+ * Difficulty settings (core-design section 4). The Perfect Counter window is in ticks;
+ * enemy telegraphs (wind-ups) are multiplied by telegraphScale.
+ */
+export const DIFFICULTY = {
+  guided: { counterWindowTicks: 10, telegraphScale: 1.5 },
+  standard: { counterWindowTicks: 6, telegraphScale: 1 },
+  challenge: { counterWindowTicks: 4, telegraphScale: 0.8 },
+} as const;
+
+export type Difficulty = keyof typeof DIFFICULTY;
+
+/** Combat numbers. Starting values from core-design section 4; tune from playtesting. */
+export const COMBAT = {
+  defaultDifficulty: 'standard' as Difficulty,
+  /** The Rooted Form adds this many ticks to the Perfect Counter window. */
+  rootedFormBonusTicks: 2,
+
+  /** Starting player stats (later these come from the student's profile). */
+  player: { maxHealth: 100, power: 10, guard: 0 },
+
+  focus: {
+    max: 100,
+    /** Gained for every hit the player lands. */
+    perHit: 5,
+    /** Gained for every Perfect Counter. */
+    perPerfectCounter: 25,
+  },
+
+  /** Combo damage bonus: at 10 / 20 / 30 hits without being hit. Taking a Hit resets it. */
+  comboTiers: [
+    { hits: 30, bonus: 0.15 },
+    { hits: 20, bonus: 0.1 },
+    { hits: 10, bonus: 0.05 },
+  ],
+
+  /** Automatic basic attack against the nearest enemy in reach. */
+  basicAttack: {
+    strength: 1,
+    /** Gap between the two bodies (in tiles) that still counts as in reach. */
+    reach: 0.55,
+    /** Ticks between basic attacks (12 ticks = 0.6 seconds). */
+    cooldownTicks: 12,
+  },
+
+  /** The Strike button: one heavy hit with a short lunge. */
+  strike: {
+    focusCost: 30,
+    strength: 2.5,
+    /** Gap between bodies (tiles) the Strike can reach, lunge included. */
+    reach: 1.4,
+    /** How far the player lunges toward the target, at most (tiles). */
+    lungeTiles: 0.7,
+    /** Ticks after a Strike before the next attack. */
+    recoveryTicks: 8,
+  },
+
+  counter: {
+    /** After pressing Counter, the player holds a guard pose this many ticks (no walking). */
+    guardTicks: 10,
+    /** If nothing was countered, Counter can't be pressed again for this many ticks. */
+    missLockoutTicks: 10,
+    /** Perfect Counter: enemy staggered this long (1 second). */
+    perfectStaggerTicks: 20,
+    /** Perfect Counter: the counter hit uses this move strength (2x Power). */
+    perfectStrength: 2,
+    /** Block: damage taken is multiplied by this. */
+    blockDamageMultiplier: 0.5,
+  },
+
+  /** Only this many enemies may be attacking at once ("kung fu circle"). */
+  maxAttackersAtOnce: 2,
+
+  /** After defeat, the player is down this long before the room restarts (1.5 seconds). */
+  defeatTicks: 30,
+  /** A defeated enemy comes back after this long (4 seconds), so practice can continue. */
+  enemyRespawnTicks: 80,
+  /** A new or returning enemy waits this long before moving (1 second). */
+  enemySpawnWaitTicks: 20,
+  /** Enemies re-plan their route to the player this often. */
+  enemyRepathTicks: 10,
+} as const;

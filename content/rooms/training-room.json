@@ -18,5 +18,13 @@
     "#........................#",
     "#........................#",
     "##########################"
+  ],
+  "enemies_note": "Where enemies start. column and row count from 1 at the top-left corner, like the error messages.",
+  "enemies": [
+    {
+      "enemy": "brute",
+      "column": 20,
+      "row": 12
+    }
   ]
 }
