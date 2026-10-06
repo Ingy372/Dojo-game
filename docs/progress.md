@@ -79,3 +79,12 @@
 - Jay plays full runs on his phone and gives feedback (run length 10–15 minutes? enemy mix? Dash feel?).
 - Milestone 4: Training link (mock data), in a fresh session.
 - With Jay's OK, milestone 3 was copied onto `main` (the live link) on 2026-10-06 for testing.
+
+**Jay's first playtest and changes (2026-10-06)**
+- Lost twice, won once. Feedback: too many treasure rooms in a row; fights messy and crowded; swarmers and brutes too close in speed; no reason to run and pick off swarmers.
+- Ran a balance simulation, then: treasure rooms never back to back (max 2 per floor), swarmers faster (4.0), brutes slower (1.2) and they get **winded** after a long chase (stop and take +50% damage), waiting enemies circle farther out, lighter freezes on small hits. 67 tests pass.
+- Street Smarts doors idea saved for milestone 6 (see decisions).
+- Copied onto `main` for Jay to test again.
+
+**Next**
+- Jay re-tests: can he now separate swarmers from the brute, and does running feel worth it? Is the crowding better?
