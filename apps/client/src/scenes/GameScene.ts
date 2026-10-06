@@ -651,6 +651,16 @@ export class GameScene extends Phaser.Scene {
           this.cameras.main.fade(900, 10, 8, 16);
           this.message.setText(this.run ? 'Ouch! The run is over.\nYou keep everything you found.' : 'Ouch!\nBack to the start.').setVisible(true);
           break;
+        case 'wave':
+          sfx.wave();
+          this.popWord(ev.wave === ev.of ? 'Final wave!' : `Wave ${ev.wave}`, '#ff8a80', 40);
+          break;
+        case 'breath': {
+          const p = this.world.players[ev.playerId];
+          this.ring(p.pos, COLORS.health, 1.4);
+          this.floatText(p.pos, `+${ev.healed} catch your breath`, '#5cd65c', 20, 1.1);
+          break;
+        }
         case 'winded': {
           const e = this.enemy(ev.enemyId);
           sfx.winded();
@@ -904,7 +914,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     // Room number and name (top right).
-    this.roomLabel.setText(`Room ${this.run.depth + 1} of ${this.run.totalRooms}`);
+    const waves = this.world.waveCount > 1 && !prog.cleared ? `  ·  Wave ${this.world.wave} of ${this.world.waveCount}` : '';
+    this.roomLabel.setText(`Room ${this.run.depth + 1} of ${this.run.totalRooms}${waves}`);
 
     // Challenge timer.
     const ch = this.room.challenge;

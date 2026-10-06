@@ -122,6 +122,12 @@ class SoundMaker {
     [523, 659, 784, 1047, 784, 1047].forEach((f, i) => this.tone(f, f, 0.2, 'triangle', 0.16, i * 0.11));
   }
 
+  /** A new wave of enemies arrives: a low drum and a rising horn. */
+  wave(): void {
+    this.noise(0.2, 0.35, 300);
+    this.tone(220, 330, 0.35, 'sawtooth', 0.08, 0.05);
+  }
+
   /** A brute runs out of breath: two heavy puffs. */
   winded(): void {
     this.noise(0.18, 0.25, 500);
