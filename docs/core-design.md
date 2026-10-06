@@ -379,3 +379,364 @@ In the Home Dojo and at the end of every run, a **Path card** shows the student'
 - **Real to game:** every real step produces a visible, specific change in the game, named after the real technique and the instructor who signed it off.
 - **Game to real:** every Gate lock, quest, Scroll, and Path card points to a specific real action: a technique to learn, a video to watch, a session to practice, a class to attend.
 - **One ending for both journeys:** the Tower's light returns one fragment per real promotion, the summit is black belt, and the story's mystery resolves as the student's real journey matures. The game's greatest achievement and the real goal are the same moment.
+
+## 10. Full progression: from first day to tenth-year black belt
+
+### How a character starts
+
+- **New students** create a character with their real name and belt pulled from DojoForge, choose a look, and start at level 1 with auto-attack, a basic Counter, and the Beginner's Stance, in the white belt tier.
+- **Existing students get the legacy grant.** DojoForge may not have per-technique sign-offs for ranks earned years ago, so every requirement of every rank a student has already passed counts as signed off automatically. On first login, years of training unlock in one cascade of reward moments.
+- **Catch-up experience.** Every player starts at level 1, but anyone below their rank's expected level earns double experience until they reach it. A veteran catches up in days, and still gets to feel the climb.
+
+### Belts
+
+Each real belt is one tier of the Tower. A promotion:
+
+- opens the next tier (5 floors and a Guardian);
+- raises the level cap by 10;
+- makes room for that belt's ability package: 1 Form (kata), 1 Strike (kick combo), and 5 Technique Seals (self-defense);
+- adds a room or area to the Home Dojo;
+- unlocks the next story chapter and returns a fragment of the Tower's light;
+- plays the promotion ceremony, the biggest moment in the game.
+
+**Black belt degrees** each add a new summit tier above the black belt tier, with new enemies, master cosmetics, and higher level caps, so the game keeps growing with students for as long as they train.
+
+### Stripes become Virtues
+
+Every real character stripe grants a **Virtue**: a special power used with a full Focus meter. Up to 2 per belt, matching the real limit.
+
+| Stripe word | Virtue | Effect |
+| --- | --- | --- |
+| **Respect** | Shield of Respect | A protective shield for you, or for your whole party in co-op |
+| **Great Effort** | Second Wind | Refills Focus and some Health when you're in trouble |
+| **Self-Discipline** | Perfect Discipline | For a few seconds, every Counter is a Perfect Counter |
+
+- **Earning the same word again at a later belt ranks that Virtue up** (Respect II, Respect III), making it stronger and changing how it looks.
+- **The character's belt shows the current belt's stripes,** like the real belt.
+- **A Virtue banner in the Home Dojo** displays every stripe the student has ever earned, with dates.
+- Other schools can add their own stripe words; each word is mapped to a Virtue in the game's data.
+
+### Every way to earn power outside the game
+
+| Real-world action | In-game result | Type |
+| --- | --- | --- |
+| Technique sign-offs | Forms, Strikes, Technique Seals | Power |
+| Promotions | New tier, higher level cap, new dojo room, story chapter | Power |
+| Character stripes | Virtues and Virtue ranks | Power |
+| Attending class | Dojo Blessing: bonus experience and better loot for 48 hours | Boost |
+| Weekly attendance streak | A growing aura and a small experience bonus | Boost |
+| Parent-approved home practice | Training Points to upgrade abilities | Power |
+| Watching technique videos | A small one-time bonus per video | Boost |
+| Class milestones and anniversaries | Titles, certified trophies, cosmetics | Prestige |
+| Student of the Month | A statue in the town square and a title | Prestige |
+| Class goals | A special event floor for the class | Access |
+| Real-life quests | Decorations, cleaning tools, titles | Prestige |
+
+### Every way to earn power inside the game
+
+- **Experience levels,** capped by real rank.
+- **Gear,** capped by belt tier.
+- **Ability Mastery** from using abilities.
+- **Insights,** temporary upgrades within a run.
+- **Crafting** upgrades from materials and recipes.
+- **Decoration set bonuses** and **Calm Mind** from a clean dojo.
+- **Honor** from manners and good choices, which unlocks quests and items.
+- **Street Smarts power and location perks** (section 12), plus **Sensei's Scrolls and the Bestiary,** which give titles and small bonuses.
+
+Real training still provides about two-thirds of a character's strength at every tier.
+
+### End game
+
+- **Summit tiers** for each black belt degree.
+- **The Endless Ascent:** an infinite challenge climb that grows harder floor by floor. Players chase their own best floor, never a public ranking.
+- **Mentorship:** black belts act as Senpai, leading parties of lower belts and earning Mentor rewards, mirroring their real role in the dojo.
+- **Legendary sets, master crafting, and complete collections.**
+- **The Hall of Masters:** every student who earns a real black belt gets a permanent plaque and statue in the school's Tower hall, showing their name, years trained, and black belt date. Younger students walk past it every day.
+
+### The veteran black belt (8–12 years of training)
+
+- A black belt with degree bars and the title **"Martial artist since [year],"** from their DojoForge start date.
+- **An anniversary aura** that has grown with every year trained.
+- **Every ability in the system:** every Form, every Strike, and dozens of Technique Seals; their Counter can throw, sweep, disarm, and escape.
+- **Up to about 20 stripes** across their belts, giving several high-rank Virtues.
+- **A full dojo estate** with courtyard and garden, plus legendary gear.
+- **A plaque in the Hall of Masters.**
+
+When a white belt sees that character in the town square, they see exactly where the journey leads.
+
+## 11. Multiplayer and showing off
+
+### Three steps to multiplayer
+
+| Step | What students experience | When |
+| --- | --- | --- |
+| **1. Shared world (not live)** | Visit classmates' dojos and leave bows; see the Student of the Month statue; see classmates' characters in the town square as "echoes" | First release |
+| **2. Live town square** | Classmates online at the same time see each other walking around the dojo town in real time, and wave, bow, and use preset emotes together | Second release |
+| **3. Co-op Tower runs** | Parties of 2–4 classmates climb floors together in real time | After the game is proven |
+
+The game server and the shared rules package are built from the start so these steps can be added without rewriting the game.
+
+### Mentor play
+
+When a higher belt joins a lower belt's run, the higher belt's power is scaled down to that floor's level, so the lower belt's contribution still matters. The higher belt keeps all their abilities, earns a **Mentor bonus**, and their Respect Virtue can shield the whole party. This mirrors senior students helping juniors in the real dojo.
+
+### Showing off your dojo
+
+Every decoration is earned, in the Tower or through real achievements. Nothing is ever bought.
+
+- **Visiting:** classmates walk through your dojo and leave a bow. Only the owner sees their bow count, so it never becomes a popularity contest.
+- **Certified trophies:** trophies for real achievements (promotions, anniversaries, Student of the Month, stripes) carry a seal with the date earned. Visitors can tell they're real, and they can't be earned any other way.
+- **Featured Dojo of the Week:** chosen by an instructor and shown in the town square. A staff pick, never a vote.
+- **Dojo photo card:** a shareable picture of the student's dojo for parents, like the promotion card.
+- **Open House events:** a few times a year, every dojo in the school is open to tour.
+
+### Safety and legal
+
+This isn't legal advice; have a lawyer review the privacy policy and children's privacy (COPPA) compliance before public launch.
+
+- **No free-text chat, ever.** Only preset emotes and phrases ("Nice counter!", "Follow me!"). Children can't share personal information, which removes most of the legal risk of multiplayer.
+- **Same-school players only,** shown as first name and last initial or a school-approved nickname.
+- **Parents control it:** they can turn multiplayer off, make their child's dojo private, and hide any player.
+- **Consent runs through the parent's DojoForge account,** with a written privacy policy covering what the game stores.
+
+### Costs
+
+| Item | Estimated cost |
+| --- | --- |
+| Cloudflare (hosting, saves, live multiplayer) | About $5–15 a month for one school, on the Workers Paid plan ($5 minimum, with generous included usage); possibly $0 extra if DojoForge already pays for that plan. Tens of dollars a month across many schools. |
+| Apple Developer Program | About $99 a year |
+| Google Play Console | About $25, one time |
+| Art, sound, and music packs | Roughly $20–100, one time |
+| Lawyer review (privacy policy, COPPA) | One time; varies by lawyer |
+| Claude usage after the $100 credit | The plan's regular usage |
+
+Dojo layouts, bows, and showing off cost essentially nothing; they're tiny amounts of saved data. Live multiplayer is the only feature with a meaningful running cost, and it stays small at one school's size.
+
+## 12. Power Rating, difficulty, perks, and maps
+
+One number, the **Power Rating (PR)**, measures both players and monsters so everything can be compared. Numbers assume about 10 ranks from white to black belt; the formulas adjust automatically to each school's real belt list.
+
+### The Power Rating scale
+
+| Rank | Player max PR | Toughest normal content |
+| --- | --- | --- |
+| White belt (tier 1) | 1,000 | Guardian ≈ 900 |
+| Each belt after that | +1,000 per belt | Guardian ≈ 90% of that tier's max |
+| Black belt (tier 10) | 10,000 | Guardian ≈ 9,000 |
+| Each black belt degree | +500 per degree | Summit Guardian ≈ 90% of that cap |
+
+- **Player max is a hard cap per rank,** not one cap for everyone. Nobody can out-power their real rank.
+- **Monster max in normal content** is the highest summit Guardian, just below the top player cap.
+- **The Endless Ascent has no ceiling:** each floor is about 3% stronger than the last. It's where black belts test pure skill and chase a personal best.
+
+### What makes up a player's PR
+
+Every player at a rank shares the same cap, but how close they get varies. At any belt tier, the max PR is made of:
+
+| Source | Share of tier max | What fills it |
+| --- | --- | --- |
+| Technique sign-offs | 40% | Forms, Strikes, Technique Seals, including catch-up items |
+| Training Points | 17% | Parent-approved home practice; each ability upgrades to level 5, then it's maxed |
+| Virtues | 10% | Character stripes (up to 2 per belt) and Virtue ranks |
+| **Real training total** | **67%** | |
+| Experience level | 18% | Playing; 10 levels per belt |
+| Gear | 8% | Loot and crafting; capped by belt tier |
+| Street Smarts | 5% | Real-world scenarios cleared and location sets completed (below) |
+| Ability Mastery | 2% | Using abilities in combat |
+| **Play and learning total** | **33%** | |
+
+Every source has its own ceiling, including home practice, so no one can grind past the cap. A black belt with every stripe, regular home practice, and lots of play sits near 10,000; one who skipped stripes and home practice might sit around 7,500, still strong, and able to see exactly what's missing.
+
+### Street Smarts power
+
+Real-world scenarios add real power, so the lessons that matter most in life also matter in the game.
+
+Scenarios are grouped into **locations** on the town map: the Park, the School, the Bus Stop, the Store, the Neighborhood, and (for ages 10 and up) Online. Each location holds a set of scenarios for the player's age band.
+
+| Achievement | Reward |
+| --- | --- |
+| **Clear a scenario** (at least 1 star) | A small amount of power: +0.25% of the current tier's max PR, counted once per scenario |
+| **3 stars on a scenario** | An extra +0.1% of tier max |
+| **Complete a location set** (every scenario at that location with at least 2 stars) | +1% of tier max, the location's **badge**, and its **location perk** |
+
+Street Smarts power is a share of the current tier's max, so it keeps its value as the student rises in rank. The total from Street Smarts is capped at 5% of the tier max.
+
+**Location perks** match the real lesson each place teaches:
+
+| Location | Perk | Effect |
+| --- | --- | --- |
+| **Bus Stop** | Situational Awareness | Enemy telegraphs appear 1 tick earlier |
+| **Park** | Eyes Open | Secret rooms show on the floor map, and doors reveal what's behind them from farther away |
+| **Store** | Stay Close | Healing teas restore more; in co-op, a bonus when near your party |
+| **School** | Steady Voice | Virtues cost less Focus |
+| **Neighborhood** | Safe Path | The escape dash from Technique Seals recovers faster |
+| **Online** (ages 10+) | Guarded | Less damage from ranged enemies |
+
+When a student moves into an older age band, each location gets a new, more mature set of scenarios. Completing a location again in the new age band ranks its perk up (Situational Awareness II), just like Virtues. Old scenarios still return for spaced review, but replaying them never removes or re-earns power.
+
+### Difficulty levels
+
+| Setting | Who it's for | Rewards |
+| --- | --- | --- |
+| **Guided** | Young kids and beginners: wider counter window, slower enemies | Same experience and loot as Standard. Young players are never punished for needing help. |
+| **Standard** | Most players | Full progression |
+| **Challenge** | Skilled players: enemies about 1.3–1.5× stronger, tighter timing | Everything in Standard, plus the extras below |
+| **Endless Ascent** | End game | Personal-best floor and a milestone trophy every 10 floors |
+
+Why choose Challenge, beyond the challenge itself:
+
+- **Better gear:** Standard gear reaches about 90% of the tier's gear cap; Challenge gear can reach 100%. A small edge, never needed to progress.
+- **Challenge-only cosmetics:** gi trims, auras, and decorations available nowhere else.
+- **Certified "Challenge Clear" trophies** for the Home Dojo.
+- **Rare crafting materials** for legendary sets, and better loot odds.
+- **Faster ability Mastery** and harder titles.
+
+Challenge monsters can be stronger than the player. Skill closes the gap (Perfect Counters, smart Form switching), not stats, the same way it does in martial arts.
+
+### Perks and special powers
+
+| System | What it is | Permanent? |
+| --- | --- | --- |
+| **Abilities** | Forms, Strikes, Technique Seals from sign-offs | Yes |
+| **Virtues** | Special powers from character stripes | Yes |
+| **Path Perks** | At each promotion, choose 1 of 3 permanent perks (for example, "Counters heal 5%" or "Strikes chain one extra hit"); can be re-picked anytime at the Home Dojo | Yes |
+| **Location perks** | From completing Street Smarts location sets | Yes |
+| **Insights** | Pick 1 of 3 upgrades after battle rooms | One run only |
+| **Blessings** | Dojo Blessing (attending class), Calm Mind (clean dojo), streak aura | Temporary |
+| **Set bonuses** | Completing gear or decoration sets | While equipped or displayed |
+| **Mentor bonus** | Helping lower belts in co-op | Per run |
+| **Titles** | Earned from achievements | Cosmetic only |
+
+### Metrics for player power
+
+- **Power Rating,** with its breakdown by source (visible to staff and the system only; see section 13).
+- **Level** and **level cap.**
+- **Core stats:** Health, Power, Guard, Speed, and Focus (meter size and refill rate).
+- **Counter window bonus:** extra ticks from Forms, perks, and upgrades.
+- **Training Power:** abilities unlocked, upgrade levels, Virtue ranks.
+- **Street Smarts Rating:** scenarios cleared, stars, location sets completed, perk ranks.
+- **Gear Rating:** combined gear strength against the tier cap.
+- **Mastery levels** per ability.
+
+Tracked but not counted as power: Perfect Counter rate, room grades, best Endless Ascent floor, floors cleared, Bestiary completion, and Honor.
+
+### Metrics for monster power
+
+- **Monster Rating,** on the same scale as player PR.
+- **Rank:** normal, elite, boss, or Guardian.
+- **Core stats:** Health, Power, Guard, Speed.
+- **Telegraph time:** ticks of warning before each attack, the main difficulty lever for young players.
+- **Aggression:** how often it attacks.
+- **Poise:** how hard it is to stagger.
+- **Attack patterns:** how many different moves it has.
+- **Elite traits:** Swift, Shielded, Splitting, Guarding.
+- **Loot tier:** what it can drop.
+
+Within a tier, floor 1 enemies sit around 50% of the tier's max PR, rising to about 85% by floor 5, with the Guardian around 90%. Floors are tuned for a typical student at that point, not a perfect one, so nobody needs every stripe or every Street Smarts set to progress.
+
+### Maps
+
+There's no open world (expensive to build and easy for young kids to get lost in). Instead, three maps:
+
+1. **The town map:** the hub, with the Home Dojo, town square, Hall of Masters, quest board, crafting workshop, the Tower entrance, and the Street Smarts locations. **New districts open as the Tower's light returns** with each real promotion, so the town grows as the student progresses.
+2. **The Tower map:** every tier at a glance, with cleared floors, Guardians, and each Gate's requirement locks lit or unlit. It's the clearest picture of the student's real journey in the whole game.
+3. **Floor maps:** rooms reveal as the player explores, doors ahead show what kind of room is behind them, and secret rooms appear as cracks or hidden paths.
+
+## 13. Final build decisions
+
+These decisions come from the final design review. **Where they differ from earlier sections, this section wins.**
+
+### Systems unlock gradually, taught by Sensei
+
+A new player never faces every system at once. Each system appears when it first matters, with a short lesson from Sensei.
+
+| When | What unlocks |
+| --- | --- |
+| **First session (any rank)** | Moving, Counter and Perfect Counter, Strike, Focus, loot and equipping gear, the Home Dojo (placing, cleaning, the bow), the Gate and Path card, reward moments |
+| **The first time it's earned (any rank)** | Form switching (first Form), Virtues (first stripe), Training Points (first approved home practice), Missions (first mission) |
+| **2nd belt** | Insights, Street Smarts |
+| **3rd belt** | Life-lesson quest stories and Honor |
+| **4th belt** | Challenge mode and elite enemies |
+| **5th belt and up** | Later systems as they ship: Path Perks, crafting, Sensei's Scrolls, the Bestiary |
+| **Black belt** | Endless Ascent and Mentor play (after launch) |
+
+**Sensei's Lessons** are how each system is taught:
+
+- Short and hands-on: one sentence per screen, then practice in a safe training room where the player can't fail.
+- **Never more than one new system per session.**
+- Every lesson can be replayed anytime from the **Lesson Scroll** in the Home Dojo.
+- **Existing students** receive their earned abilities right away, but their systems are introduced one per session over a **Welcome Week**, so a brown belt isn't buried on day one.
+
+### Missions: every real-world goal spelled out
+
+Every real-world goal that counts toward progress has a written **Mission** in the game with clear steps. Students arrive at class with the steps already done, and staff see them waiting in DojoForge.
+
+| Real goal | Mission steps in the game | Who confirms |
+| --- | --- | --- |
+| **Technique sign-off** (kata, self-defense, kick combo) | Watch the technique video; log practice sessions (for example, 3, parent-approved); tap "Ready to show Sensei" | An instructor watches the student demonstrate in class, then taps OK or Not yet |
+| **Character stripe** | Choose a word; the parent sets the 1–4 week period; the parent submits a short report | An instructor reviews the report, then taps OK or schedules a retry |
+| **Belt test readiness** | All requirements signed off (or effort approval), time in rank complete | An instructor approves the student to test |
+| **Home practice hours** | Log each session | Parent, one tap with Face ID |
+| **Real-life quests** | Complete the task at home | Parent, one tap with Face ID |
+| **Class milestones, anniversaries, streaks** | Automatic | No one; the system tracks them |
+| **Street Smarts and in-game quests** | Complete them in the game | No one; the game tracks them |
+
+**The staff side:** DojoForge gets a **"Ready for review" queue** listing students whose mission steps are complete, so approving takes one tap.
+
+- **The standard never changes.** For techniques, the mission prepares the student; the sign-off still happens only after the student shows the technique in class.
+- **"Not yet" stays private.** The student sees an encouraging message and a practice suggestion, never anything other players can see.
+- **The game still never changes DojoForge records.** The "Ready to show Sensei" request goes through a request endpoint Nic builds, and only staff actions change a student's record.
+
+### Power Rating is hidden from players
+
+- **Players never see Power Rating or Monster Rating.** They see their belt, stripes, level, abilities, the Gate, and gear comparisons shown as simple better-or-worse arrows instead of numbers.
+- **Staff accounts in DojoForge see each student's PR** and its breakdown. The system uses PR for balancing and measurement.
+- **Personal-best skill stats stay visible to the player** (Perfect Counters, room grades), since they compare a student only to themselves.
+
+### Experience pacing
+
+- Experience for each tier is tuned so **a typical player reaches the tier's level cap at about 75% of the school's typical time in rank** for that belt (from DojoForge history or a school setting). Longer ranks get proportionally more to do.
+- Higher belts, where ranks take longer, get more Challenge floors and events so the wait stays engaging.
+- Catch-up double experience and the overflow into materials and Mastery stay in place.
+- All experience numbers live in the tuning file and are reviewed after every playtest.
+
+### Street Smarts format: illustrated story scenes
+
+Scenarios are text-based scenes with multiple-choice answers, built so young readers can play them:
+
+- **Each scene is one illustrated picture** (made with Grok, following the style guide), 1–3 short sentences, and 2–4 choices shown as large buttons.
+- **Narration:** every line can be read aloud using the phone's built-in text-to-speech, which is free. It's on by default for ages 6–9, since many 6-year-olds can't read fluently yet. Jay can record his own voice for key scenes later.
+- **A few interactive moments** where they fit naturally: tapping to spot exits and trusted adults, holding a button for the loud voice, and the escape timing challenge.
+- **Branching:** each choice leads to a different next scene. The safest path earns the most stars, and Sensei reflects at the end.
+- **About 6–10 scenes per scenario,** with backgrounds reused across scenarios at the same location.
+- Claude drafts each script in plain language, ChatGPT can check the reading level, and **Jay approves every script before it's built.**
+
+### Parents: as close to zero effort as possible
+
+- **Nothing in the game requires a parent to play.** Parents only approve things that count as real progress.
+- **One-tap Face ID approvals,** with "Approve all" when several entries are waiting.
+- **At most one notification a day,** bundled together.
+- **Stripe reports take a minute:** a few quick taps, then 1–2 sentences, with voice-to-text.
+- **The weekly digest is automatic,** and every setting has a sensible default.
+
+### Launch scope (6 months)
+
+**At launch:**
+
+- The Tower for every belt tier, using remixed rooms and enemy traits to keep content manageable, with a Guardian for each tier.
+- Combat with Forms, Strikes, Technique Seals, and Virtues; loot and gear; Insights; Challenge mode.
+- The Gate, the Path card, the promotion ceremony, the legacy grant, and Welcome Week.
+- The Home Dojo: decorating, cleaning, the bow, certified trophies, visiting classmates' dojos, and the Hall of Masters.
+- Missions and the staff approval queue; Training Points; the Dojo Blessing and streaks.
+- Sensei's Lessons and the gradual unlock schedule.
+- Street Smarts: 2–3 locations for ages 6–9 and 10–13.
+- A starter set of manners quests and 2 life-lesson stories.
+- Parent controls and approvals.
+
+**After launch:** the live town square, co-op and Mentor play, the Endless Ascent, crafting, Path Perks, Sensei's Scrolls, the Bestiary, real-life quests, the Visitor's Pass, more Street Smarts locations, and more quest stories.
+
+The month-by-month roadmap is in the framework, section 15.
+
+### Legal timing
+
+Talk with a lawyer **before milestone 8** (the store apps), not right before launch. App Store and Google Play rules for children's apps, and multiplayer for kids, are much easier to design around early than to fix later.

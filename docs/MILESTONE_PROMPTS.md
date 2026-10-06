@@ -4,6 +4,21 @@ Copy and paste these into Claude Code, one milestone at a time. Start each miles
 
 ---
 
+## The plan at a glance
+
+12 milestones over 6 months, launching by early April 2027:
+
+| Month | Milestones |
+| --- | --- |
+| 1: Oct 6 – Nov 4 (cloud credit) | 0–4 |
+| 2: November | 5–7 |
+| 3: December | 8 |
+| 4: January | 9 |
+| 5: February | 10–11 |
+| 6: March | 12 (launch) |
+
+---
+
 ## Before you start (one time)
 
 1. **Create a new GitHub repository** named `dojo-ascent` (private).
@@ -143,6 +158,7 @@ We're doing milestone 4: Training link with fake data. Build:
 - Reward moments when new progress appears ("Sensei Jay signed off Self-Defense #3!").
 - The promotion ceremony when the profile's belt goes up.
 - The Path card showing the next real step.
+- The Power Rating calculation from section 12 of docs/core-design.md. Players must never see it; add a hidden testing screen so I can check the numbers.
 
 Show me your plan first and wait for my approval.
 ```
@@ -175,13 +191,13 @@ Show me your plan first and wait for my approval.
 ## Milestone 6 — Story and Street Smarts sample
 
 ```
-Read CLAUDE.md, docs/progress.md, docs/decisions.md, and sections 8 and 9 of docs/framework.md.
+Read CLAUDE.md, docs/progress.md, docs/decisions.md, sections 8 and 9 of docs/framework.md, and section 13 of docs/core-design.md.
 
 We're doing milestone 6: Story and Street Smarts sample. Build:
 - A dialogue and choice system, with dialogue stored as data files.
 - Sensei and Kohai characters.
 - One dojo manners quest and one life-lesson quest with a meaningful choice and Honor.
-- One Street Smarts scenario for ages 6 to 9 (getting separated from a parent in a store), using Awareness, Choice, and Get-help moments, scored with up to 3 stars, with Sensei's reflection at the end.
+- One Street Smarts scenario for ages 6 to 9 (getting separated from a parent in a store) in the illustrated story scene format from section 13 of docs/core-design.md: one picture, 1 to 3 short sentences, and 2 to 4 big choice buttons per scene, branching choices, text-to-speech narration on by default, plus Awareness and Get-help moments. Score it with up to 3 stars and end with Sensei's reflection. Use placeholder pictures until the real illustrations are made.
 
 Before building the scenario, write its full script in plain language for me to approve. Nothing about the scenario gets built until I approve the script.
 
@@ -200,6 +216,7 @@ Read CLAUDE.md, docs/progress.md, and docs/decisions.md.
 We're doing milestone 7: Playtest ready. Build:
 - Guided mode (wider counter window, slower telegraphs), on by default for the youngest fake profile.
 - The first 30 minutes as described in section 7 of docs/core-design.md, including the cascade of unlocks from real training.
+- The Sensei's Lessons system from section 13 of docs/core-design.md: short hands-on lessons, never more than one new system per session, and a Lesson Scroll in the Home Dojo to replay them. Build lessons for every first-session system, and set up the gradual unlock schedule so later systems can plug in.
 - Sound effects and music on all main actions and screens.
 - A play-time limit setting that ends play gracefully after the current room.
 - Fix anything from my notes in docs/progress.md.
@@ -231,6 +248,82 @@ Show me your plan first and wait for my approval.
 **Done when:** the game installs and plays on both an iPhone and an Android phone through TestFlight and Google Play internal testing.
 
 **Before publishing publicly:** have a lawyer review children's privacy compliance (COPPA), as noted in the framework.
+
+---
+
+## Milestone 9 — Real DojoForge connection (with Nic)
+
+Nic needs to have the progress feed, the request endpoint, and the "Ready for review" queue ready in DojoForge first.
+
+```
+Read CLAUDE.md, docs/progress.md, docs/decisions.md, section 14 of docs/framework.md, and section 13 of docs/core-design.md.
+
+We're doing milestone 9: Real DojoForge connection. Nic has built the progress feed and request endpoint in DojoForge; I'll give you the details he provided. Please:
+- Replace the fake profiles with the real progress feed, keeping the fake profiles for testing.
+- Add student login with their DojoForge account.
+- Save game progress on the game server (Cloudflare Workers + D1).
+- Build Missions: written steps for every real-world goal, and send "Ready to show Sensei" requests to DojoForge when a mission's steps are complete.
+- Add the legacy grant and Welcome Week for existing students.
+
+Show me your plan first and wait for my approval.
+```
+
+**Done when:** a real Action Zone student logs in, sees their real belt and sign-offs, and a completed mission shows up in your queue in DojoForge.
+
+---
+
+## Milestone 10 — Every belt tier and Sensei's Lessons
+
+```
+Read CLAUDE.md, docs/progress.md, docs/decisions.md, and sections 10, 12, and 13 of docs/core-design.md.
+
+We're doing milestone 10: Every belt tier. Please:
+- Build a Tower tier for every rank in the school's belt list, using remixed rooms and elite enemy traits so content stays manageable, with a Guardian for each tier.
+- Apply the Power Rating scale and experience pacing from sections 12 and 13.
+- Finish the gradual unlock schedule and a Sensei's Lesson for every system in the launch scope.
+- Add Challenge mode.
+
+Show me your plan first and wait for my approval.
+```
+
+**Done when:** a white belt and a brown belt can each play their full rank and learn every system they've unlocked.
+
+---
+
+## Milestone 11 — Street Smarts and quests
+
+Before this milestone, work through the scenario and quest scripts in your regular Claude chat and approve them. Make the scene illustrations with Grok.
+
+```
+Read CLAUDE.md, docs/progress.md, docs/decisions.md, and sections 8 and 9 of docs/framework.md and sections 12 and 13 of docs/core-design.md.
+
+We're doing milestone 11: Street Smarts and quests. I've added the approved scripts and illustrations to the content and assets folders. Please:
+- Build every approved Street Smarts scenario in the illustrated story scene format, grouped into locations on the town map.
+- Add Street Smarts power and location perks from section 12.
+- Build the approved manners quests and life-lesson stories, with Honor.
+
+Only build scripts I've approved. Show me your plan first and wait for my approval.
+```
+
+**Done when:** students complete the scenarios and quests without help and can explain what they'd do in real life.
+
+---
+
+## Milestone 12 — Launch
+
+```
+Read CLAUDE.md, docs/progress.md, and docs/decisions.md.
+
+We're doing milestone 12: Launch. Please:
+- Add visiting classmates' dojos with bows (only the owner sees their count), certified trophies, and the Hall of Masters.
+- Finish parent controls: multiplayer on or off, private dojo, hiding players, play limits, quiet hours, Street Smarts topics.
+- Fix everything from my playtest notes in docs/progress.md.
+- Prepare the App Store and Google Play releases, and give me a plain-language checklist of everything I need to submit.
+
+Show me your plan first and wait for my approval.
+```
+
+**Done when:** the game is live for Action Zone families on both stores.
 
 ---
 

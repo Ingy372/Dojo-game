@@ -34,7 +34,7 @@ Most martial arts games fail because they're one of two things: a cheap reskin o
 | **Genre** | Top-down 2D adventure RPG with three parts: the Tower (dungeon crawling), Street Smarts (real-world scenarios), and the Home Dojo (build, care for, and take on quests) |
 | **Look** | Clean pixel art, readable on a phone screen |
 | **Session length** | Flexible: a 10–15 minute Tower run, a 3–5 minute scenario, or a whole afternoon |
-| **Players** | Solo first; co-op parties of 2–4 classmates in a later phase |
+| **Players** | A shared world from the start (visit classmates' dojos, see classmates in the town square), then a live town square, then co-op parties of 2–4 classmates; same school only |
 | **Who plays** | Every student, age 6 through adult, with assist options for young kids |
 | **Platform** | iPhone and Android apps on the App Store and Google Play, built from one codebase; the same game also runs in a phone browser and inside the DojoForge student app |
 | **Cost to families** | Included with membership: no purchases, no ads |
@@ -76,7 +76,7 @@ As a design target, about **two-thirds of a character's strength at any belt tie
 | **Kick combo signed off** | Unlocks or upgrades a **Strike** combo, the character's main damage. |
 | **Self-defense technique signed off** | Unlocks a **Technique Seal**, an upgrade to the character's Counter and defensive skills. Five per belt, matching the five real techniques. |
 | **Catch-up items** | Appear as locked seals with a clear label ("Sign off Self-Defense #4 to unlock"). Finishing catch-up items in class instantly unlocks them. |
-| **Character stripe earned** | Grants the matching **Virtue**, a special power named after the word (e.g. Respect, Great Effort). Up to two per belt, like the real stripes. |
+| **Character stripe earned** | Grants the matching **Virtue**, a special power named after the word (e.g. Respect, Great Effort). Up to two per belt, like the real stripes. Earning the same word again at a later belt ranks the Virtue up. |
 | **Attending class** | Grants the **Dojo Blessing**: bonus XP and better loot for the next 48 hours. Playing after class feels great; nothing is taken away when you miss. |
 | **Weekly training streak** | A cosmetic aura that grows with the streak, plus a small XP bonus. When Jay restores a streak, the aura comes back too. |
 | **Home practice hours (parent-approved)** | Earns **Training Points**, spent to upgrade unlocked abilities. The more a student practices at home, the further they can sharpen what they've learned. |
@@ -279,7 +279,7 @@ Parents can approve real-world tasks that pay off in the Home Dojo, using the sa
 
 ### Visiting classmates
 
-In a later phase, students can visit classmates' dojos (same school only), look around, and leave a bow as a sign of respect. There's no text and no rating, only a count of bows received. Showing off a space you're proud of is one of the most motivating social features in games for kids.
+From the first release, students can visit classmates' dojos (same school only), look around, and leave a bow as a sign of respect. There's no text and no rating, and only the owner sees their bow count. Certified trophies, the Featured Dojo of the Week, dojo photo cards, and Open House events are in the Core Game Design doc, section 11. Showing off a space you're proud of is one of the most motivating social features in games for kids.
 
 ## 8. Street Smarts: real self-defense and dangerous situations
 
@@ -336,7 +336,7 @@ Research on teaching children safety skills shows that knowing the right answer 
 
 ### Rewards
 
-Street Smarts stars and badges are displayed in the Home Dojo, and completing a set of scenarios earns special decorations and titles. Scenarios can be replayed for more stars, and older ones come back on a spaced schedule so the lessons stay fresh.
+Street Smarts stars and badges are displayed in the Home Dojo, and completing a set of scenarios earns special decorations and titles. Each cleared scenario also adds a little power, and completing every scenario at a location (such as the Bus Stop) earns more power plus a location perk tied to that place's lesson. The full system, including how Street Smarts fits the power budget, is in the Core Game Design doc, section 12. Scenarios can be replayed for more stars, and older ones come back on a spaced schedule so the lessons stay fresh.
 
 ## 9. Quests: manners, culture, and life lessons
 
@@ -476,7 +476,7 @@ Many players will be under 13, and the game comes from a school parents trust. T
 
 - **No free-text chat.** Players communicate only through preset emotes and callouts ("Nice counter!", "Help!", "Let's go!").
 - **Co-op parties form only between students at the same school,** from a list of classmates or a parent-approved friend list.
-- **Player names are first name plus last initial,** or a school-approved nickname.
+- **Player names are first name plus last initial,** or a school-approved nickname. Parents can turn multiplayer off, make their child's dojo private, and hide any player.
 
 ### Parent controls
 
@@ -527,8 +527,10 @@ The repository includes a short style guide: the palette, sprite size, fonts, an
 | **Jay** | Vision, decisions, curriculum content, playtesting with students, final approval |
 | **Claude (chat)** | Design framework, system design, balancing math, writing (lore, Scrolls, UI text), reviewing plans |
 | **Claude Code** | Writing, testing, and fixing all game code in the GitHub repository |
-| **Grok** | Generating icons, portraits, and backgrounds; second opinions on art direction |
+| **Grok** | Grok and Grok bot: generating icons, portraits, backgrounds, and Street Smarts scene illustrations; backup help when Claude can't do something |
 | **Nic** | The DojoForge side: the progress feed the game reads and student login |
+
+**ChatGPT** (free account) is a second opinion: checking that scenario and quest text reads at the right level for young kids, proofreading, and brainstorming ideas. Code always stays with Claude Code, so there's one source of truth for the game.
 
 ## 14. Technical architecture
 
@@ -561,7 +563,7 @@ DojoForge stays the source of truth for everything real. The game keeps only its
 One read-only endpoint per student returning:
 
 - **Identity:** student ID, first name and last initial, school ID, age band (for Guided mode defaults).
-- **Rank:** current belt, belt history with dates, and the school's full ordered belt list.
+- **Rank:** current belt, belt history with dates (including ranks earned before DojoForge, for the legacy grant), the student's training start date (for anniversaries), and the school's full ordered belt list.
 - **Requirements:** each requirement for the current rank with its type (kata, kick combo, self-defense), name, signed-off status and date, plus catch-up items.
 - **Stripes:** earned stripe words with dates.
 - **Attendance:** recent class dates and assigned class days.
@@ -610,9 +612,31 @@ My best guess is that the $100 credit covers milestones 0–4. The Home Dojo and
 
 **Milestone 8 — iPhone and Android apps** follows the playtest build: the game is wrapped with Capacitor, test builds go out through TestFlight and Google Play internal testing, and the app is checked against App Store Kids Category and Google Play Families rules. It requires an Apple Developer Program membership and a Google Play Console account. The game is phone-first from milestone 0, so this step packages it rather than reworking it.
 
-### After the prototype
+### Milestones after the prototype
 
-In rough order: the real DojoForge feed (with Nic), saving progress on the game server, Training Points and Sensei's Scrolls, more belt tiers and enemies, more Street Smarts scenarios and quest stories, Home Dojo expansion with rank, real-life quests, embedding in the DojoForge student app, parent controls, the Visitor's Pass, visiting classmates' dojos, and finally co-op.
+| # | Milestone | What gets built | Done when |
+| --- | --- | --- | --- |
+| 9 | **Real DojoForge connection** (with Nic) | The real progress feed, student login, saving game progress on the server, Missions, and the staff "Ready for review" queue | A real Action Zone student logs in, sees their real belt and sign-offs, and a completed mission shows up in Jay's queue |
+| 10 | **Every belt tier and Sensei's Lessons** | Tower tiers for every rank using remixed rooms and enemy traits, a Guardian per tier, the gradual unlock schedule, Sensei's Lessons, Welcome Week | A white belt and a brown belt can each play their full rank and learn every system they've unlocked |
+| 11 | **Street Smarts and quests** | Illustrated scene scenarios for 2–3 locations (ages 6–9 and 10–13), location perks, a starter set of manners quests and 2 life-lesson stories | Jay has approved every scenario and quest, and students complete them without help |
+| 12 | **Launch** | Visiting classmates' dojos, certified trophies, the Hall of Masters, parent controls, final polish, App Store and Google Play release | The game is live for Action Zone families on both stores |
+
+### Six-month roadmap (October 2026 – March 2027)
+
+| Month | Milestones | Also that month |
+| --- | --- | --- |
+| **1: Oct 6 – Nov 4** (cloud credit) | 0–4 | Agree on the progress feed and approval queue with Nic before milestone 4 |
+| **2: November** | 5–7 | Buy the art pack; first playtest with students at the dojo |
+| **3: December** | 8 | Lawyer consultation before milestone 8; Apple and Google developer accounts |
+| **4: January** | 9 | Nic builds the feed, request endpoint, and approval queue in DojoForge |
+| **5: February** | 10–11 | Jay reviews and approves scenarios and quests each week |
+| **6: March** | 12 | Store review and launch at Action Zone by early April 2027 |
+
+After the cloud credit runs out on November 4, Claude Code uses the plan's regular usage. Everything not on the launch list (live town square, co-op, Endless Ascent, crafting, Path Perks, Sensei's Scrolls, the Bestiary, real-life quests, the Visitor's Pass) comes in updates after launch. The full launch scope is in the Core Game Design doc, section 13.
+
+### After launch
+
+Updates after launch, in rough order: real-life quests, Sensei's Scrolls, more Street Smarts locations and quest stories, crafting and Path Perks, the Bestiary, the Visitor's Pass, the live town square, the Endless Ascent, and finally co-op with Mentor play.
 
 ### How to work with Claude Code (to stretch the credit)
 
@@ -670,3 +694,8 @@ None of these block milestones 0–3. They should be settled before milestone 4 
 - [ ] **Real-life quests:** offer them at launch, or add them once the rest is working?
 - [ ] **Home Dojo mess rate:** how quickly dust builds and how long until it hits the limit (about a week proposed).
 - [ ] **Where the game lives:** its own app on the App Store and Google Play, inside the DojoForge student app, or both. A standalone app is easier for families to find and supports the Visitor's Pass; living inside DojoForge keeps one login. The same build supports either.
+- [ ] **Virtues for each stripe word:** confirm or change the proposed Virtues (Respect, Great Effort, Self-Discipline) and add any other stripe words.
+- [ ] **Rank history before DojoForge:** how far back DojoForge has each student's belt dates and start date, so the legacy grant and anniversaries are accurate.
+- [ ] **Featured Dojo of the Week:** who picks it, and how often.
+- [ ] **Street Smarts locations and perks:** confirm the locations (Park, School, Bus Stop, Store, Neighborhood, Online for ages 10+) and the perk for each.
+- [ ] **Path Perks:** approve the list of permanent perks offered at each promotion.
