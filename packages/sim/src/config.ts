@@ -100,6 +100,18 @@ export const COMBAT = {
     blockDamageMultiplier: 0.5,
   },
 
+  /**
+   * The Dash button: a quick burst in the stick's direction (or the way the player faces).
+   * No protection while dashing (Jay, 2026-10-06): the player must react in time.
+   */
+  dash: {
+    distanceTiles: 2.5,
+    /** The dash covers its distance over this many ticks (0.25 seconds). */
+    ticks: 5,
+    /** Ticks before Dash can be used again (1.5 seconds), counted from the press. */
+    cooldownTicks: 30,
+  },
+
   /** Only this many enemies may be attacking at once ("kung fu circle"). */
   maxAttackersAtOnce: 2,
 

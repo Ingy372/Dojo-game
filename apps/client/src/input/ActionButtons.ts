@@ -1,12 +1,13 @@
 import Phaser from 'phaser';
-import { COMBAT, type PlayerState } from '@dojo/sim';
+import { COMBAT, type PlayerAction, type PlayerState } from '@dojo/sim';
 
 const COUNTER_RADIUS = 48;
 const STRIKE_RADIUS = 38;
+const DASH_RADIUS = 32;
 const MARGIN = 26;
 
 interface Button {
-  action: 'strike' | 'counter';
+  action: PlayerAction;
   radius: number;
   container: Phaser.GameObjects.Container;
   face: Phaser.GameObjects.Arc;
@@ -14,13 +15,16 @@ interface Button {
 }
 
 /**
- * The Strike and Counter buttons in the bottom-right corner. A button acts the
+ * The Strike, Counter and Dash buttons in the bottom-right corner. A button acts the
  * moment a finger touches it (not on release), so Counter timing is exact.
  */
 export class ActionButtons {
-  private pending: 'strike' | 'counter' | null = null;
+  private pending: PlayerAction | null = null;
   private readonly counter: Button;
   private readonly strike: Button;
+  private readonly dash: Button;
+  /** Ring around Dash showing it recharging. */
+  private readonly dashRing: Phaser.GameObjects.Graphics;
   /** Ring around Strike showing Focus filling toward the Strike cost. */
   private readonly strikeRing: Phaser.GameObjects.Graphics;
 
@@ -33,17 +37,20 @@ export class ActionButtons {
     this.strike = this.makeButton('strike', 'STRIKE', STRIKE_RADIUS, 0xd5713a);
     this.strikeRing = scene.add.graphics();
     this.strike.container.add(this.strikeRing);
+    this.dash = this.makeButton('dash', 'DASH', DASH_RADIUS, 0x3aa57a);
+    this.dashRing = scene.add.graphics();
+    this.dash.container.add(this.dashRing);
     this.layout();
     scene.input.on(Phaser.Input.Events.POINTER_DOWN, this.onDown, this);
   }
 
   get objects(): Phaser.GameObjects.GameObject[] {
-    return [this.counter.container, this.strike.container];
+    return [this.counter.container, this.strike.container, this.dash.container];
   }
 
   /** True if a screen point is on a button (so it isn't treated as tap-to-move or the stick). */
   contains(x: number, y: number): boolean {
-    return this.hit(this.counter, x, y) || this.hit(this.strike, x, y);
+    return this.all().some((b) => this.hit(b, x, y));
   }
 
   layout(): void {
@@ -52,10 +59,11 @@ export class ActionButtons {
     const cy = height - COUNTER_RADIUS - MARGIN;
     this.counter.container.setPosition(cx, cy);
     this.strike.container.setPosition(cx - COUNTER_RADIUS - STRIKE_RADIUS - 22, cy - 34);
+    this.dash.container.setPosition(cx + 6, cy - COUNTER_RADIUS - DASH_RADIUS - 24);
   }
 
   /** The button pressed since the last tick, if any (sent once). */
-  takeAction(): 'strike' | 'counter' | undefined {
+  takeAction(): PlayerAction | undefined {
     const a = this.pending;
     this.pending = null;
     return a ?? undefined;
@@ -81,13 +89,24 @@ export class ActionButtons {
     this.strikeRing.beginPath();
     this.strikeRing.arc(0, 0, STRIKE_RADIUS + 5, -Math.PI / 2, -Math.PI / 2 + fill * Math.PI * 2);
     this.strikeRing.strokePath();
+
+    const dashReady = alive && p.dashCooldown === 0 && p.guardTicks === 0;
+    this.dash.container.setAlpha(dashReady ? 1 : 0.5);
+    this.dashRing.clear();
+    if (p.dashCooldown > 0) {
+      const done = 1 - p.dashCooldown / COMBAT.dash.cooldownTicks;
+      this.dashRing.lineStyle(4, 0x9ad1ff, 0.8);
+      this.dashRing.beginPath();
+      this.dashRing.arc(0, 0, DASH_RADIUS + 4, -Math.PI / 2, -Math.PI / 2 + done * Math.PI * 2);
+      this.dashRing.strokePath();
+    }
     if (strikeReady) this.strike.container.setScale(1 + Math.sin(this.scene.time.now / 160) * 0.04);
     else this.strike.container.setScale(1);
   }
 
   /** A little shake when a press is refused (for example, not enough Focus). */
-  refuse(action: 'strike' | 'counter'): void {
-    const b = action === 'strike' ? this.strike : this.counter;
+  refuse(action: PlayerAction): void {
+    const b = action === 'strike' ? this.strike : action === 'dash' ? this.dash : this.counter;
     const x = b.container.x;
     this.scene.tweens.add({ targets: b.container, x: x + 6, duration: 40, yoyo: true, repeat: 2, onComplete: () => this.layout() });
   }
@@ -102,13 +121,17 @@ export class ActionButtons {
     return { action, radius, container, face, label };
   }
 
+  private all(): Button[] {
+    return [this.counter, this.strike, this.dash];
+  }
+
   private hit(b: Button, x: number, y: number): boolean {
     // A little larger than drawn, so small fingers don't miss.
     return Phaser.Math.Distance.Between(x, y, b.container.x, b.container.y) <= b.radius + 12;
   }
 
   private onDown(pointer: Phaser.Input.Pointer): void {
-    for (const b of [this.counter, this.strike]) {
+    for (const b of this.all()) {
       if (this.hit(b, pointer.x, pointer.y)) {
         this.onTouch();
         this.pending = b.action;

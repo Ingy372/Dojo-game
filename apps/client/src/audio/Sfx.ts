@@ -78,6 +78,12 @@ class SoundMaker {
     this.noise(0.05, 0.2, 2500);
   }
 
+  /** Dash: a fast airy swoosh. */
+  dash(): void {
+    this.noise(0.12, 0.3, 1800);
+    this.tone(300, 700, 0.1, 'sine', 0.08);
+  }
+
   /** Not enough Focus, or nothing in reach. */
   denied(): void {
     this.tone(140, 120, 0.12, 'square', 0.15);

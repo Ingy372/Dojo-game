@@ -473,6 +473,12 @@ export class GameScene extends Phaser.Scene {
         case 'counterPressed':
           sfx.guard();
           break;
+        case 'dash': {
+          const p = this.world.players[ev.playerId];
+          sfx.dash();
+          this.dashTrail(p.pos);
+          break;
+        }
         case 'strikeRefused':
           sfx.denied();
           this.buttons.refuse('strike');
@@ -533,6 +539,19 @@ export class GameScene extends Phaser.Scene {
         ease: 'Cubic.Out',
         onComplete: () => s.destroy(),
       });
+    }
+  }
+
+  /** A few fading after-images along the dash. */
+  private dashTrail(from: Vec2): void {
+    const p = this.world.players[this.me];
+    const r = MOVEMENT.playerRadius * TILE;
+    for (let i = 0; i < 4; i++) {
+      const t = i / 4;
+      const x = from.x + p.dashDir.x * COMBAT.dash.distanceTiles * t;
+      const y = from.y + p.dashDir.y * COMBAT.dash.distanceTiles * t;
+      const ghost = this.addWorld(this.add.circle(x * TILE, y * TILE, r, 0x9ad1ff, 0.35).setDepth(3));
+      this.tweens.add({ targets: ghost, alpha: 0, scale: 0.6, delay: i * 40, duration: 260, onComplete: () => ghost.destroy() });
     }
   }
 

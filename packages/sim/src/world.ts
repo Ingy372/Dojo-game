@@ -45,6 +45,12 @@ export interface PlayerState {
   counterLockout: number;
   /** Extra Perfect Counter window ticks (the Rooted Form adds some later). */
   counterBonusTicks: number;
+  /** Ticks of dash movement left (0 = not dashing). */
+  dashTicks: number;
+  /** Direction of the current dash, length 1. */
+  dashDir: Vec2;
+  /** Ticks before Dash can be pressed again. */
+  dashCooldown: number;
   /** Ticks left before returning to the room start after defeat; 0 while fighting. */
   downTicks: number;
 }
@@ -85,6 +91,7 @@ export type CombatEvent =
   | { kind: 'block'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'hit'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'counterPressed'; playerId: PlayerId }
+  | { kind: 'dash'; playerId: PlayerId }
   | { kind: 'strikeRefused'; playerId: PlayerId; reason: 'focus' | 'noTarget' }
   | { kind: 'playerDown'; playerId: PlayerId }
   | { kind: 'playerReturn'; playerId: PlayerId }
@@ -110,7 +117,8 @@ export type MoveInput =
   | { kind: 'moveTo'; x: number; y: number };
 
 /** What a player asks for on one tick: movement, plus a button press if any. */
-export type PlayerInput = MoveInput & { action?: 'strike' | 'counter' };
+export type PlayerAction = 'strike' | 'counter' | 'dash';
+export type PlayerInput = MoveInput & { action?: PlayerAction };
 
 export interface WorldOptions {
   /** Enemy types by id. Without these, the room's enemies are left out (an empty practice room). */
@@ -144,6 +152,9 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       guardTicks: 0,
       counterLockout: 0,
       counterBonusTicks: 0,
+      dashTicks: 0,
+      dashDir: { x: 0, y: 1 },
+      dashCooldown: 0,
       downTicks: 0,
     };
   }
@@ -233,35 +244,66 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   if (p.attackCooldown > 0) p.attackCooldown--;
   if (p.strikeRecovery > 0) p.strikeRecovery--;
   if (p.counterLockout > 0) p.counterLockout--;
+  if (p.dashCooldown > 0) p.dashCooldown--;
   if (p.guardTicks > 0) {
     p.guardTicks--;
     // The guard ran out without countering anything: Counter rests briefly, so it can't be spammed.
     if (p.guardTicks === 0) p.counterLockout = COMBAT.counter.missLockoutTicks;
   }
 
-  if (input.action === 'counter' && p.guardTicks === 0 && p.counterLockout === 0) {
+  if (input.action === 'dash' && p.guardTicks === 0 && p.dashTicks === 0 && p.dashCooldown === 0) {
+    startDash(world, p, input);
+  } else if (input.action === 'counter' && p.guardTicks === 0 && p.dashTicks === 0 && p.counterLockout === 0) {
     p.counterPressedTick = world.tick;
     p.guardTicks = Math.max(COMBAT.counter.guardTicks, counterWindowTicks(world, p) + COMBAT.counter.blockTicksAfterWindow);
     p.path = null;
     world.events.push({ kind: 'counterPressed', playerId: p.id });
-  } else if (input.action === 'strike' && p.guardTicks === 0 && p.strikeRecovery === 0) {
+  } else if (input.action === 'strike' && p.guardTicks === 0 && p.dashTicks === 0 && p.strikeRecovery === 0) {
     tryStrike(world, p, room);
   }
 
-  if (p.guardTicks > 0) {
+  if (p.dashTicks > 0) {
+    dashStep(p, room);
+  } else if (p.guardTicks > 0) {
     // Holding the guard pose: no walking.
     p.moving = false;
   } else {
     movePlayer(p, room, input);
   }
 
-  if (p.guardTicks === 0 && p.strikeRecovery === 0 && p.attackCooldown === 0) {
+  if (p.dashTicks === 0 && p.guardTicks === 0 && p.strikeRecovery === 0 && p.attackCooldown === 0) {
     const target = nearestEnemy(world, p, COMBAT.basicAttack.reach);
     if (target) {
       p.attackCooldown = COMBAT.basicAttack.cooldownTicks;
       landHit(world, p, target, 'basic', COMBAT.basicAttack.strength, COMBAT.focus.perHit);
     }
   }
+}
+
+/** Dash: toward the stick if it's pushed, otherwise the way the player faces. */
+function startDash(world: WorldState, p: PlayerState, input: PlayerInput): void {
+  let dir = p.facing;
+  if (input.kind === 'stick') {
+    const sx = quantize(clamp(input.x, -1, 1));
+    const sy = quantize(clamp(input.y, -1, 1));
+    const push = length(sx, sy);
+    if (push > MOVEMENT.stickDeadZone) dir = { x: sx / push, y: sy / push };
+  }
+  p.dashDir = { x: dir.x, y: dir.y };
+  p.facing = { x: dir.x, y: dir.y };
+  p.dashTicks = COMBAT.dash.ticks;
+  p.dashCooldown = COMBAT.dash.cooldownTicks;
+  p.path = null;
+  world.events.push({ kind: 'dash', playerId: p.id });
+}
+
+function dashStep(p: PlayerState, room: Room): void {
+  const step = COMBAT.dash.distanceTiles / COMBAT.dash.ticks;
+  p.pos.x += p.dashDir.x * step;
+  p.pos.y += p.dashDir.y * step;
+  pushOutOfWalls(room, p.pos, R);
+  p.dashTicks--;
+  p.moving = true;
 }
 
 function tryStrike(world: WorldState, p: PlayerState, room: Room): void {
@@ -339,6 +381,8 @@ function returnToStart(world: WorldState, p: PlayerState, room: Room): void {
   p.counterPressedTick = -1;
   p.guardTicks = 0;
   p.counterLockout = 0;
+  p.dashTicks = 0;
+  p.dashCooldown = 0;
   world.events.push({ kind: 'playerReturn', playerId: p.id });
   // If nobody else is still fighting, the whole room starts over.
   const othersFighting = Object.values(world.players).some((o) => o !== p && isActive(o));
@@ -534,6 +578,7 @@ function hurt(world: WorldState, p: PlayerState, dmg: number): void {
     p.downTicks = COMBAT.defeatTicks;
     p.path = null;
     p.guardTicks = 0;
+    p.dashTicks = 0;
     p.moving = false;
     world.events.push({ kind: 'playerDown', playerId: p.id });
   }
