@@ -47,6 +47,11 @@
 **Jay's feedback**
 - Good for ages 10 and up; brute pace and damage are right. For Guided, the danger circle now fills at normal speed and then holds "nearly full" for 0.5 s (vs 0.3 s on Standard), so young kids still have to time the tap (testable with `?difficulty=guided` on the link).
 
+**Confirmed**
+- Jay approved the new Guided timing. Milestone 2 is done (2026-10-06).
+
+**Open question for milestone 3 (fights with several enemies)**
+- If two enemies' attacks land at the exact same moment, one Counter press currently covers only the first; the second counts as a Hit. Proposed: one well-timed press counters every attack landing in that moment, and enemies in the "kung fu circle" space out their swings so they rarely land together. Decide with Jay at the start of milestone 3.
+
 **Next**
-- Jay tries Guided with a young student and confirms milestone 2 is done.
-- Then milestone 3: A full floor (fresh session).
+- Milestone 3: A full floor (fresh session).
