@@ -92,3 +92,27 @@ Decisions made during development, newest at the bottom. Read this every session
 - **Winded brutes:** a brute that chases for 4 s without swinging gets winded. It stops for 2.5 s, goes pale with sweat drops and a "huff" sound, and takes 50% more damage. Set per enemy with `"winded"` in its data file; the boss and swarmers don't get winded.
 - **Less crowding:** enemies waiting their turn circle farther out (1.2 → 1.8 tiles outside their reach), and small hits freeze the action for less time (45 → 20 ms) with a lighter shake.
 - **Street Smarts doors (Jay's idea, saved for milestone 6):** a door can lead to a Street Smarts room. A short story window ("A stranger tries to talk to you. What do you do?"), then the scene in the room (for example, two strangers saying "Want some candy?") with 2–3 big choice buttons, while the player keeps the stick. The right answer is a safe action, such as moving or dashing to a clearly marked exit. Agreed: a wrong choice gets no in-game penalty (no extra monsters, no lost health). Sensei shows what could have gone differently and the player tries again; the safest choice earns the reward. Jay also considered a 2–3 question quiz with penalties for wrong answers; the choice buttons cover the quiz part. Built in milestone 6, and only after Jay approves each script.
+
+### Milestone 3 — Claude's own playtest (2026-10-06)
+
+Jay asked Claude to test and tune the game before his next playtest.
+
+- **Balance-testing computer player** (`packages/sim/test/balance/`, run with `npm run balance` in `packages/sim`). It plays complete runs like a student would: it reacts a moment after a telegraph starts and presses Counter with some timing error. Three skill levels: sharp (fast and accurate), typical (about a 10–12 year old) and novice. Two styles: "smart" (runs from brutes, picks off swarmers, punishes winded brutes, Dashes out of overlapping hits) and "stand" (walks up and counters everything). It prints win rate, run time, grades, where players die, and per room: time, damage, Perfect Counters / Blocks / Hits, crowding (enemies within 2.5 tiles), and how often brutes got winded. It isn't part of the normal tests.
+- **What the first report showed:** the computer player cleared rooms in 5–10 s and a whole floor in about 1 min (enemies died too fast for the player's damage). All of a room's enemies rushed in at once (up to 5–6 around the player), and grades were almost all S.
+- **Waves:** fight rooms now send enemies in 3 waves (the Gauntlet 4). The next wave arrives when 1 enemy or none is left, with a "Wave 2" / "Final wave!" banner, a sound, and "Wave 2 of 3" next to the room number. Practice rooms still put everyone in at once. Room files give each enemy a `"wave"`.
+- **Tougher enemies:** swarmer health 30 → 40, shield 70 → 90, brute 120 → 180, Floor Keeper 520 → 700. The Training Yard has 2 brutes (3 was the deadliest room). The boss room sends 2 swarmers with the boss, then 2 more waves of helpers.
+- **Catch your breath:** clearing a fight room restores 15% of max health (`COMBAT.roomClearHeal`). Without it, damage built up across the longer fights and most deaths came from being worn down.
+- **Fairer grades:** the Perfect Counter point now needs one Perfect Counter for every two enemies in the room. The par time adds up each enemy's `"parSeconds"` (swarmer 2.5, shield 5, brute 8, boss 25) unless a room sets its own.
+- **Less loot from enemies:** swarmer 3.5%, shield 10%, brute 15% (about 11 items per run instead of 16, so Rares stay special).
+- **Challenge time limits:** Gauntlet 2 minutes, Shield Wall 100 seconds (they have more enemies now).
+- **Results after tuning** (80 runs per row):
+
+| Player | Smart play wins | Stand-and-counter wins |
+| --- | --- | --- |
+| Sharp, Standard | 100% | 100% |
+| Typical, Standard | 93% | 78% |
+| Novice, Standard | 41% | 29% |
+| Novice, Guided | 99% | 96% |
+
+  Smart play is clearly rewarded. Most deaths are at the boss. Average crowding is about 1.5–2 enemies near the player, and the worst moments are about 3–5 (up to 6 in the Gauntlet).
+- **Run length is still the open question.** The computer player takes about 2–2.5 minutes of fighting per floor. People are slower (moving, reading cards, picking doors), but by how much is unknown. Jay will report his run time (shown in the run summary), and we'll tune toward 10–15 minutes with more waves or more rooms if needed.

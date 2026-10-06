@@ -88,3 +88,9 @@
 
 **Next**
 - Jay re-tests: can he now separate swarmers from the brute, and does running feel worth it? Is the crowding better?
+
+**Claude's own playtest (2026-10-06)**
+- Built a computer player that plays full runs (`npm run balance` in `packages/sim`) and used it to tune: enemy waves, tougher enemies, a catch-your-breath heal after fight rooms, fairer grades, less enemy loot, a gentler Training Yard. Typical players now win about 93% playing smart versus 78% standing and countering; the boss is the main challenge. 67 tests pass. Copied onto `main`.
+
+**Next**
+- Jay playtests: run time (shown on the run summary), whether waves feel less crowded, whether running and winded brutes feel good, and whether the difficulty feels right.
