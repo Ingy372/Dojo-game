@@ -78,3 +78,4 @@
 **Next**
 - Jay plays full runs on his phone and gives feedback (run length 10–15 minutes? enemy mix? Dash feel?).
 - Milestone 4: Training link (mock data), in a fresh session.
+- With Jay's OK, milestone 3 was copied onto `main` (the live link) on 2026-10-06 for testing.
