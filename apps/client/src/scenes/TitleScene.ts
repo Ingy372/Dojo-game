@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { sfx } from '../audio/Sfx';
 
 export class TitleScene extends Phaser.Scene {
   private title!: Phaser.GameObjects.Text;
@@ -42,7 +43,11 @@ export class TitleScene extends Phaser.Scene {
       .setResolution(crisp);
     this.tweens.add({ targets: this.prompt, alpha: 0.35, duration: 900, yoyo: true, repeat: -1 });
 
-    this.input.once(Phaser.Input.Events.POINTER_UP, () => this.scene.start('Game'));
+    this.input.once(Phaser.Input.Events.POINTER_UP, () => {
+      // Phones only allow sound after a touch, so switch it on here.
+      sfx.unlock();
+      this.scene.start('Game');
+    });
 
     this.layout(this.scale.gameSize);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);

@@ -23,8 +23,8 @@
   "enemies": [
     {
       "enemy": "brute",
-      "column": 20,
-      "row": 12
+      "column": 12,
+      "row": 6
     }
   ]
 }

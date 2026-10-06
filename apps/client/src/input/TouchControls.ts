@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import type { PlayerInput } from '@dojo/sim';
+import type { MoveInput } from '@dojo/sim';
 
 /** How far (in screen pixels) the stick knob can travel from its center. */
 const STICK_RADIUS = 56;
@@ -26,9 +26,11 @@ export class TouchControls {
     private readonly worldCamera: Phaser.Cameras.Scene2D.Camera,
     /** Converts a world point (pixels) to room tiles. */
     private readonly toTiles: (x: number, y: number) => { x: number; y: number },
+    /** True for screen points that belong to buttons, which this ignores. */
+    private readonly isButton: (x: number, y: number) => boolean = () => false,
   ) {
-    // Allow two fingers at once (stick plus a tap).
-    scene.input.addPointer(1);
+    // Allow several fingers at once (stick, a button, and a tap).
+    scene.input.addPointer(2);
 
     this.base = scene.add.circle(0, 0, STICK_RADIUS, 0xffffff, 0.12).setStrokeStyle(3, 0xffffff, 0.35);
     this.knob = scene.add.circle(0, 0, KNOB_RADIUS, 0xffffff, 0.45);
@@ -54,8 +56,8 @@ export class TouchControls {
     this.hint.setPosition(STICK_RADIUS + 36, height - STICK_RADIUS - 36);
   }
 
-  /** The request for this tick. A new tap is sent once; the stick is sent every tick it's held. */
-  takeInput(): PlayerInput {
+  /** The movement request for this tick. A new tap is sent once; the stick is sent every tick it's held. */
+  takeInput(): MoveInput {
     if (this.stickPointer !== null) {
       return { kind: 'stick', x: this.stickVector.x, y: this.stickVector.y };
     }
@@ -82,6 +84,7 @@ export class TouchControls {
   }
 
   private onDown(pointer: Phaser.Input.Pointer): void {
+    if (this.isButton(pointer.x, pointer.y)) return;
     if (this.stickPointer === null && this.inStickZone(pointer.x, pointer.y)) {
       this.stickPointer = pointer.id;
       // Keep the whole stick on screen even if the thumb lands near the edge.

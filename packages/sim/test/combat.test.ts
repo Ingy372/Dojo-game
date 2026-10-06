@@ -106,7 +106,7 @@ describe('enemy and room data', () => {
 
   it('reads enemy start spots, and refuses one on a wall', () => {
     const room = loadRoom(trainingRoom);
-    expect(room.enemySpawns).toEqual([{ enemy: 'brute', pos: { x: 19.5, y: 11.5 } }]);
+    expect(room.enemySpawns).toEqual([{ enemy: 'brute', pos: { x: 11.5, y: 5.5 } }]);
     expect(() => arena([{ enemy: 'brute', column: 1, row: 1 }])).toThrow(RoomError);
   });
 
