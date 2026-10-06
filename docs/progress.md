@@ -50,8 +50,10 @@
 **Confirmed**
 - Jay approved the new Guided timing. Milestone 2 is done (2026-10-06).
 
-**Open question for milestone 3 (fights with several enemies)**
-- If two enemies' attacks land at the exact same moment, one Counter press currently covers only the first; the second counts as a Hit. Proposed: one well-timed press counters every attack landing in that moment, and enemies in the "kung fu circle" space out their swings so they rarely land together. Decide with Jay at the start of milestone 3.
+**Decided for milestone 3 (fights with several enemies)**
+- Attacks landing at the same moment stay as they are: one Counter covers one attack (Jay's call: realistic, forces judgement calls).
+- Add a **Dash** button so players can get out of the way before overlapping attacks land. Plan its details with Jay first.
+- Grunts move faster than brutes (see decisions).
 
 **Next**
 - Milestone 3: A full floor (fresh session).
