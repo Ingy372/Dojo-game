@@ -16,7 +16,7 @@ import { TouchControls } from '../input/TouchControls';
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
 /** How many tiles tall the view is, whatever the phone's size. */
-const VISIBLE_ROWS = 9;
+const VISIBLE_ROWS = 8;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 /** Never run more than this many ticks in one frame (e.g. after a long pause). */
 const MAX_TICKS_PER_FRAME = 5;

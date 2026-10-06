@@ -30,8 +30,8 @@
 - Title screen now says "Tap to start".
 - Pushed to the `claude/determined-noether-ikwere` branch. The Cloudflare preview link was hard to find (Cloudflare moved previews to the build page), so with Jay's OK the work was copied onto `main` (the live link) on 2026-10-06.
 
-**Waiting on Jay**
-- Test on his phone: does moving feel smooth and natural with both tap-to-move and the stick?
+**Confirmed**
+- Jay tested on his phone: tap-to-move and the stick both work great. He asked for a slightly bigger character, which was done (about 35% bigger on screen). Milestone 1 is done.
 
 **Next**
-- After Jay confirms movement feels good: milestone 2: Combat core (fresh session).
+- Milestone 2: Combat core (fresh session).

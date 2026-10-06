@@ -13,8 +13,8 @@ export function secondsToTicks(seconds: number): number {
 export const MOVEMENT = {
   /** Walking speed at full stick or when walking to a tapped spot, in tiles per second. */
   speedTilesPerSecond: 4.5,
-  /** The character's body is a circle this big (a tile is 1). */
-  playerRadius: 0.35,
+  /** The character's body is a circle this big (a tile is 1). Keep under 0.5 so it fits through one-tile gaps. */
+  playerRadius: 0.42,
   /** Stick pushes smaller than this (0 to 1) are ignored, so a resting thumb doesn't drift. */
   stickDeadZone: 0.15,
   /** Stops walking to a tapped spot if blocked for this many ticks. */
