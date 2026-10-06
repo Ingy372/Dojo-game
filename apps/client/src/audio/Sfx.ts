@@ -78,6 +78,18 @@ class SoundMaker {
     this.noise(0.05, 0.2, 2500);
   }
 
+  /** A basic attack bounces off a shield: a metal clank. */
+  clank(): void {
+    this.tone(1400, 1300, 0.08, 'square', 0.12);
+    this.tone(2100, 1900, 0.06, 'triangle', 0.1);
+  }
+
+  /** A shield breaks. */
+  shieldBreak(): void {
+    this.noise(0.3, 0.5, 3000);
+    this.tone(900, 300, 0.25, 'square', 0.15);
+  }
+
   /** Dash: a fast airy swoosh. */
   dash(): void {
     this.noise(0.12, 0.3, 1800);

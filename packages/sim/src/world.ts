@@ -5,7 +5,7 @@
 import { pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
 import { COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, type Difficulty } from './config';
-import type { EnemyDef } from './enemy';
+import type { EnemyAttackDef, EnemyDef } from './enemy';
 import { clamp, distance, length, quantize, type Vec2 } from './math';
 import { findPath, standableSpot } from './path';
 import type { Room } from './room';
@@ -80,6 +80,18 @@ export interface EnemyState {
   path: Vec2[] | null;
   /** Ticks until the route to the player is planned again. */
   repathIn: number;
+  /** Which of its attacks it uses next (bosses take turns between attacks). */
+  attackIndex: number;
+  /** Shield enemies: true while the shield is up. */
+  shieldUp: boolean;
+  /** Ticks until a broken shield grows back. */
+  shieldRegrow: number;
+  /** True for enemies called in by a boss (they never come back once beaten). */
+  summoned: boolean;
+  /** True once a boss has called in its helpers. */
+  summonDone: boolean;
+  /** Which way it circles while waiting its turn to attack: 1 or -1. */
+  orbit: number;
 }
 
 /** Things that happened during the last tick, so the game can play effects and sounds. */
@@ -95,7 +107,11 @@ export type CombatEvent =
   | { kind: 'strikeRefused'; playerId: PlayerId; reason: 'focus' | 'noTarget' }
   | { kind: 'playerDown'; playerId: PlayerId }
   | { kind: 'playerReturn'; playerId: PlayerId }
-  | { kind: 'enemySpawn'; enemyId: EnemyId };
+  | { kind: 'enemySpawn'; enemyId: EnemyId }
+  | { kind: 'shieldBlock'; playerId: PlayerId; enemyId: EnemyId }
+  | { kind: 'shieldBreak'; playerId: PlayerId; enemyId: EnemyId }
+  | { kind: 'shieldRegrow'; enemyId: EnemyId }
+  | { kind: 'summon'; enemyId: EnemyId; summoned: EnemyId[] };
 
 export interface WorldState {
   tick: number;
@@ -104,6 +120,12 @@ export interface WorldState {
   players: Record<PlayerId, PlayerState>;
   /** Enemies in a fixed order (updated in this order every tick). */
   enemies: EnemyState[];
+  /** Enemy types that can be called in during the fight (by a boss). */
+  enemyTypes: Record<string, EnemyDef>;
+  /** Practice rooms bring beaten enemies back; floor rooms don't. */
+  respawnEnemies: boolean;
+  /** Counts up for naming enemies that are called in. */
+  nextEnemyNumber: number;
   /** Events from the most recent tick only. */
   events: CombatEvent[];
 }
@@ -124,6 +146,8 @@ export interface WorldOptions {
   /** Enemy types by id. Without these, the room's enemies are left out (an empty practice room). */
   enemyTypes?: Record<string, EnemyDef>;
   difficulty?: Difficulty;
+  /** Bring beaten enemies back after a few seconds (default true, for practice rooms). */
+  respawnEnemies?: boolean;
 }
 
 const NO_INPUT: PlayerInput = { kind: 'none' };
@@ -164,22 +188,17 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     room.enemySpawns.forEach((spawn, i) => {
       const def = options.enemyTypes![spawn.enemy];
       if (!def) throw new Error(`Room "${room.id}" uses enemy "${spawn.enemy}", but no such enemy type was loaded`);
-      const e: EnemyState = {
-        id: `e${i + 1}`,
-        def,
-        spawn: { ...spawn.pos },
-        pos: { ...spawn.pos },
-        facing: { x: 0, y: 1 },
-        health: def.maxHealth,
-        mode: 'waiting',
-        modeTicks: COMBAT.enemySpawnWaitTicks,
-        windupTotal: 0,
-        attackCenter: null,
-        path: null,
-        repathIn: 0,
-      };
-      enemies.push(e);
+      enemies.push(newEnemy(`e${i + 1}`, def, spawn.pos, i));
     });
+  }
+  // Keep the types a boss can call in, so the world has everything it needs when saved or sent.
+  const enemyTypes: Record<string, EnemyDef> = {};
+  for (const e of enemies) {
+    const s = e.def.summon;
+    if (!s) continue;
+    const def = options.enemyTypes?.[s.enemy];
+    if (!def) throw new Error(`Enemy "${e.def.id}" calls in "${s.enemy}", but no such enemy type was loaded`);
+    enemyTypes[s.enemy] = def;
   }
 
   return {
@@ -188,7 +207,33 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     difficulty: options.difficulty ?? COMBAT.defaultDifficulty,
     players,
     enemies,
+    enemyTypes,
+    respawnEnemies: options.respawnEnemies ?? true,
+    nextEnemyNumber: enemies.length + 1,
     events: [],
+  };
+}
+
+function newEnemy(id: EnemyId, def: EnemyDef, pos: Vec2, n: number): EnemyState {
+  return {
+    id,
+    def,
+    spawn: { ...pos },
+    pos: { ...pos },
+    facing: { x: 0, y: 1 },
+    health: def.maxHealth,
+    mode: 'waiting',
+    modeTicks: COMBAT.enemySpawnWaitTicks,
+    windupTotal: 0,
+    attackCenter: null,
+    path: null,
+    repathIn: 0,
+    attackIndex: 0,
+    shieldUp: def.shield !== null,
+    shieldRegrow: 0,
+    summoned: false,
+    summonDone: false,
+    orbit: n % 2 === 0 ? 1 : -1,
   };
 }
 
@@ -201,6 +246,7 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
     stepPlayer(world, world.players[id], room, inputs[id] ?? NO_INPUT);
   }
   for (const e of world.enemies) stepEnemy(world, e, room);
+  separateEnemies(world, room);
   for (const id of ids) separateFromEnemies(world, world.players[id], room);
   world.tick++;
 }
@@ -215,13 +261,23 @@ export function isEnemyPresent(e: EnemyState): boolean {
   return e.mode !== 'defeated';
 }
 
+/** The attack an enemy is winding up (or will use next). */
+export function currentAttack(e: EnemyState): EnemyAttackDef {
+  return e.def.attacks[e.attackIndex % e.def.attacks.length];
+}
+
+/** True when every enemy in the room is beaten (and none will come back). */
+export function allEnemiesBeaten(world: WorldState): boolean {
+  return !world.respawnEnemies && world.enemies.every((e) => e.mode === 'defeated');
+}
+
 /**
  * Total wind-up for an enemy's attack on a difficulty. The enemy file's telegraphTicks is the
  * Standard total; its fill part (before the Standard window) is scaled, then this
  * difficulty's window is added.
  */
-export function telegraphTicks(def: EnemyDef, difficulty: Difficulty): number {
-  const fill = def.attack.telegraphTicks - DIFFICULTY.standard.counterWindowTicks;
+export function telegraphTicks(attack: EnemyAttackDef, difficulty: Difficulty): number {
+  const fill = attack.telegraphTicks - DIFFICULTY.standard.counterWindowTicks;
   const d = DIFFICULTY[difficulty];
   return Math.round(fill * d.fillScale) + d.counterWindowTicks;
 }
@@ -340,6 +396,18 @@ function landHit(
   strength: number,
   focusGain: number,
 ): void {
+  if (e.shieldUp) {
+    if (move === 'basic') {
+      // Basic attacks bounce off the shield: no damage, no Focus.
+      p.facing = directionTo(p.pos, e.pos);
+      world.events.push({ kind: 'shieldBlock', playerId: p.id, enemyId: e.id });
+      return;
+    }
+    // A Strike or Perfect Counter breaks the shield, and the hit still lands.
+    e.shieldUp = false;
+    e.shieldRegrow = e.def.shield!.regrowTicks;
+    world.events.push({ kind: 'shieldBreak', playerId: p.id, enemyId: e.id });
+  }
   const dmg = damage(p.power, strength, e.def.guard, comboBonus(p.combo));
   e.health = Math.max(0, e.health - dmg);
   p.combo++;
@@ -387,6 +455,7 @@ function returnToStart(world: WorldState, p: PlayerState, room: Room): void {
   // If nobody else is still fighting, the whole room starts over.
   const othersFighting = Object.values(world.players).some((o) => o !== p && isActive(o));
   if (!othersFighting) {
+    world.enemies = world.enemies.filter((e) => !e.summoned);
     for (const e of world.enemies) resetEnemy(world, e);
   }
 }
@@ -478,9 +547,17 @@ function separateFromEnemies(world: WorldState, p: PlayerState, room: Room): voi
 // ---------------------------------------------------------------- enemies
 
 function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
+  if (e.mode !== 'defeated') {
+    if (!e.shieldUp && e.def.shield && --e.shieldRegrow <= 0) {
+      e.shieldUp = true;
+      world.events.push({ kind: 'shieldRegrow', enemyId: e.id });
+    }
+    const s = e.def.summon;
+    if (s && !e.summonDone && e.health <= e.def.maxHealth * s.atHealthFraction) summonHelpers(world, e, room);
+  }
   switch (e.mode) {
     case 'defeated':
-      if (--e.modeTicks <= 0) {
+      if (world.respawnEnemies && !e.summoned && --e.modeTicks <= 0) {
         resetEnemy(world, e);
       }
       return;
@@ -492,9 +569,10 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
     case 'windup':
       if (--e.modeTicks <= 0) {
         e.mode = 'recover';
-        e.modeTicks = e.def.attack.recoverTicks;
+        e.modeTicks = currentAttack(e).recoverTicks;
         resolveAttack(world, e);
         e.attackCenter = null;
+        e.attackIndex = (e.attackIndex + 1) % e.def.attacks.length;
       }
       return;
     case 'chase':
@@ -510,16 +588,31 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
     return;
   }
   e.facing = directionTo(e.pos, target.pos);
-  const a = e.def.attack;
-  if (distance(e.pos, target.pos) <= a.startRange && attackersNow(world) < COMBAT.maxAttackersAtOnce) {
+  const a = currentAttack(e);
+  const dist = distance(e.pos, target.pos);
+  const canAttack = attackersNow(world) < COMBAT.maxAttackersAtOnce;
+  if (dist <= a.startRange && canAttack) {
     // Start the telegraph. The danger area is fixed now, so the player can step out of it.
-    const ticks = telegraphTicks(e.def, world.difficulty);
+    const ticks = telegraphTicks(a, world.difficulty);
     e.mode = 'windup';
     e.modeTicks = ticks;
     e.windupTotal = ticks;
     e.attackCenter = { x: e.pos.x + e.facing.x * a.reach, y: e.pos.y + e.facing.y * a.reach };
     e.path = null;
     world.events.push({ kind: 'telegraph', enemyId: e.id, ticks });
+    return;
+  }
+  const speed = e.def.moveSpeedTilesPerSecond / TICKS_PER_SECOND;
+  if (!canAttack && dist <= a.startRange + COMBAT.circleExtraRange) {
+    // Waiting its turn ("kung fu circle"): circle around the player at a little distance.
+    const out = { x: (e.pos.x - target.pos.x) / (dist || 1), y: (e.pos.y - target.pos.y) / (dist || 1) };
+    const want = a.startRange + COMBAT.circleExtraRange * 0.5;
+    const pull = clamp(want - dist, -1, 1) * 0.5;
+    const side = COMBAT.circleSpeedShare;
+    e.pos.x += (-out.y * e.orbit * side + out.x * pull) * speed;
+    e.pos.y += (out.x * e.orbit * side + out.y * pull) * speed;
+    pushOutOfWalls(room, e.pos, e.def.radius);
+    e.path = null;
     return;
   }
   if (e.repathIn <= 0 || !e.path) {
@@ -529,7 +622,7 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
   e.repathIn--;
   // Don't walk right on top of the player; stop once in attack range.
   if (e.path && distance(e.pos, target.pos) > a.startRange * 0.8) {
-    walkPath(e.pos, e.path, e.def.moveSpeedTilesPerSecond / TICKS_PER_SECOND);
+    walkPath(e.pos, e.path, speed);
     pushOutOfWalls(room, e.pos, e.def.radius);
   }
 }
@@ -539,7 +632,7 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
   world.events.push({ kind: 'enemySwing', enemyId: e.id });
   const center = e.attackCenter;
   if (!center) return;
-  const a = e.def.attack;
+  const a = currentAttack(e);
   for (const id of Object.keys(world.players).sort()) {
     const p = world.players[id];
     if (!isActive(p)) continue;
@@ -584,6 +677,62 @@ function hurt(world: WorldState, p: PlayerState, dmg: number): void {
   }
 }
 
+/** A boss calls in helpers around itself (once). */
+function summonHelpers(world: WorldState, boss: EnemyState, room: Room): void {
+  const s = boss.def.summon!;
+  const def = world.enemyTypes[s.enemy];
+  boss.summonDone = true;
+  if (!def) return;
+  const ids: EnemyId[] = [];
+  for (let i = 0; i < s.count; i++) {
+    // Spread around the boss, then nudged onto open floor.
+    const angle = (i / s.count) * Math.PI * 2 + 0.6;
+    const away = boss.def.radius + def.radius + 0.6;
+    const pos = { x: boss.pos.x + Math.cos(angle) * away, y: boss.pos.y + Math.sin(angle) * away };
+    pushOutOfWalls(room, pos, def.radius);
+    const id = `e${world.nextEnemyNumber++}`;
+    const e = newEnemy(id, def, pos, world.enemies.length);
+    e.summoned = true;
+    world.enemies.push(e);
+    ids.push(id);
+  }
+  world.events.push({ kind: 'summon', enemyId: boss.id, summoned: ids });
+}
+
+/** Keeps enemies from standing inside each other (pairs in a fixed order). */
+function separateEnemies(world: WorldState, room: Room): void {
+  const list = world.enemies;
+  for (let i = 0; i < list.length; i++) {
+    const a = list[i];
+    if (!isEnemyPresent(a)) continue;
+    for (let j = i + 1; j < list.length; j++) {
+      const b = list[j];
+      if (!isEnemyPresent(b)) continue;
+      const min = a.def.radius + b.def.radius;
+      const dx = b.pos.x - a.pos.x;
+      const dy = b.pos.y - a.pos.y;
+      const d = length(dx, dy);
+      if (d >= min) continue;
+      const nx = d > 0 ? dx / d : 1;
+      const ny = d > 0 ? dy / d : 0;
+      const push = (min - d) / 2;
+      // An enemy winding up holds its ground; the other moves out of the way.
+      const aFixed = a.mode === 'windup';
+      const bFixed = b.mode === 'windup';
+      if (!aFixed) {
+        a.pos.x -= nx * push * (bFixed ? 2 : 1);
+        a.pos.y -= ny * push * (bFixed ? 2 : 1);
+        pushOutOfWalls(room, a.pos, a.def.radius);
+      }
+      if (!bFixed) {
+        b.pos.x += nx * push * (aFixed ? 2 : 1);
+        b.pos.y += ny * push * (aFixed ? 2 : 1);
+        pushOutOfWalls(room, b.pos, b.def.radius);
+      }
+    }
+  }
+}
+
 function resetEnemy(world: WorldState, e: EnemyState): void {
   e.pos = { ...e.spawn };
   e.facing = { x: 0, y: 1 };
@@ -594,6 +743,10 @@ function resetEnemy(world: WorldState, e: EnemyState): void {
   e.attackCenter = null;
   e.path = null;
   e.repathIn = 0;
+  e.attackIndex = 0;
+  e.shieldUp = e.def.shield !== null;
+  e.shieldRegrow = 0;
+  e.summonDone = false;
   world.events.push({ kind: 'enemySpawn', enemyId: e.id });
 }
 

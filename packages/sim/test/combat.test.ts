@@ -96,7 +96,7 @@ describe('damage formula', () => {
 describe('enemy and room data', () => {
   it('loads the brute', () => {
     expect(brute.id).toBe('brute');
-    expect(brute.attack.telegraphTicks).toBeGreaterThanOrEqual(10);
+    expect(brute.attacks[0].telegraphTicks).toBeGreaterThanOrEqual(10);
   });
 
   it('refuses an attack without enough warning', () => {
@@ -156,7 +156,7 @@ describe('enemy telegraphs', () => {
         if (ev.kind === 'telegraph') telegraphTick = tick;
         if (ev.kind === 'enemySwing') {
           expect(telegraphTick).toBeGreaterThanOrEqual(0);
-          expect(tick - telegraphTick).toBe(brute.attack.telegraphTicks);
+          expect(tick - telegraphTick).toBe(brute.attacks[0].telegraphTicks);
           telegraphTick = -1;
           swings++;
         }
@@ -171,10 +171,10 @@ describe('enemy telegraphs', () => {
       const { room, world } = setup(d);
       stepUntil(world, room, 'telegraph');
       totals[d] = world.enemies[0].windupTotal;
-      expect(totals[d]).toBe(telegraphTicks(brute, d));
+      expect(totals[d]).toBe(telegraphTicks(brute.attacks[0], d));
     }
-    const fill = brute.attack.telegraphTicks - DIFFICULTY.standard.counterWindowTicks;
-    expect(totals.standard).toBe(brute.attack.telegraphTicks);
+    const fill = brute.attacks[0].telegraphTicks - DIFFICULTY.standard.counterWindowTicks;
+    expect(totals.standard).toBe(brute.attacks[0].telegraphTicks);
     expect(totals.guided).toBe(fill + DIFFICULTY.guided.counterWindowTicks);
     expect(totals.challenge).toBeLessThan(totals.standard);
   });
@@ -182,7 +182,7 @@ describe('enemy telegraphs', () => {
   it('a player who steps out of the danger area takes no damage', () => {
     const { room, world, p } = setup();
     stepUntil(world, room, 'telegraph');
-    for (let i = 0; i < brute.attack.telegraphTicks; i++) stepWorld(world, room, { p1: { kind: 'stick', x: -1, y: 0 } });
+    for (let i = 0; i < brute.attacks[0].telegraphTicks; i++) stepWorld(world, room, { p1: { kind: 'stick', x: -1, y: 0 } });
     expect(world.events.some((ev) => ev.kind === 'enemySwing')).toBe(true);
     expect(p.health).toBe(p.maxHealth);
   });

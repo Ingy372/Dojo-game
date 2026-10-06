@@ -114,6 +114,10 @@ export const COMBAT = {
 
   /** Only this many enemies may be attacking at once ("kung fu circle"). */
   maxAttackersAtOnce: 2,
+  /** Enemies waiting their turn circle the player this far outside their attack range (tiles). */
+  circleExtraRange: 1.2,
+  /** ...moving sideways at this share of their walking speed. */
+  circleSpeedShare: 0.5,
 
   /** After defeat, the player is down this long before the room restarts (1.5 seconds). */
   defeatTicks: 30,

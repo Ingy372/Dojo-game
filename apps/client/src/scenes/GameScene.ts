@@ -5,6 +5,7 @@ import {
   TICKS_PER_SECOND,
   TELEGRAPH_NEARLY_FULL,
   counterWindowTicks,
+  currentAttack,
   createWorld,
   loadEnemy,
   loadRoom,
@@ -20,6 +21,8 @@ import {
   type WorldState,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
+import swarmerData from '../../../../content/enemies/swarmer.json';
+import shieldData from '../../../../content/enemies/shield.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
 import { sfx } from '../audio/Sfx';
 import { ActionButtons } from '../input/ActionButtons';
@@ -69,6 +72,8 @@ interface EnemyView {
   hpFill: Phaser.GameObjects.Rectangle;
   hpBack: Phaser.GameObjects.Rectangle;
   stars: Phaser.GameObjects.Arc[];
+  shieldGfx: Phaser.GameObjects.Graphics;
+  color: number;
   prev: Vec2;
   flashUntil: number;
 }
@@ -114,7 +119,7 @@ export class GameScene extends Phaser.Scene {
 
   create(): void {
     this.room = loadRoom(trainingRoom);
-    this.world = createWorld(this.room, [this.me], { enemyTypes: { brute: loadEnemy(bruteData) }, difficulty: testDifficulty() });
+    this.world = createWorld(this.room, [this.me], { enemyTypes: { brute: loadEnemy(bruteData), swarmer: loadEnemy(swarmerData), shield: loadEnemy(shieldData) }, difficulty: testDifficulty() });
     this.prevPos = { ...this.world.players[this.me].pos };
     this.elapsed = 0;
     this.hitStopMs = 0;
@@ -223,6 +228,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     this.danger.clear();
+    this.syncEnemyViews();
     for (const e of this.world.enemies) this.drawEnemy(e, blend, now);
 
     this.buttons.update(p);
@@ -242,7 +248,7 @@ export class GameScene extends Phaser.Scene {
     v.eye.setPosition(e.facing.x * r * 0.55, e.facing.y * r * 0.55);
     v.hpFill.width = (v.hpBack.width - 4) * (e.health / e.def.maxHealth);
 
-    let color = COLORS.brute;
+    let color = v.color;
     let scale = 1;
     let rotation = 0;
     let alpha = 1;
@@ -261,16 +267,26 @@ export class GameScene extends Phaser.Scene {
         ? TELEGRAPH_NEARLY_FULL + (1 - TELEGRAPH_NEARLY_FULL) * ((elapsed - fillTicks) / window)
         : TELEGRAPH_NEARLY_FULL * (elapsed / fillTicks);
       const pulse = Math.sin(now / 45) > 0 ? 1 : 0.75;
-      color = blendColor(COLORS.brute, COLORS.bruteAngry, progress * pulse);
+      color = blendColor(v.color, COLORS.bruteAngry, progress * pulse);
       scale = 1 + progress * 0.18;
       const cx = e.attackCenter.x * TILE;
       const cy = e.attackCenter.y * TILE;
-      const area = e.def.attack.areaRadius * TILE;
+      const area = currentAttack(e).areaRadius * TILE;
       this.danger.fillStyle(COLORS.danger, 0.16).fillCircle(cx, cy, area);
       this.danger.lineStyle(inWindow ? 6 : 3, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
       this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
     } else if (e.mode === 'stagger') {
       rotation = Math.sin(now / 60) * 0.18;
+    }
+
+    // Shield guards hold a shield in front of them while it's up.
+    v.shieldGfx.clear();
+    if (e.shieldUp) {
+      const angle = Math.atan2(e.facing.y, e.facing.x);
+      v.shieldGfx.lineStyle(7, 0xc9d6e8, 1);
+      v.shieldGfx.beginPath();
+      v.shieldGfx.arc(0, 0, r * 1.25, angle - 0.9, angle + 0.9);
+      v.shieldGfx.strokePath();
     }
 
     if (now < v.flashUntil) color = 0xffffff;
@@ -351,16 +367,30 @@ export class GameScene extends Phaser.Scene {
     return this.add.container(0, 0, [this.shield, this.body, belt, this.facingDot]);
   }
 
+  /** Adds views for enemies that were called in, and removes views for enemies that are gone. */
+  private syncEnemyViews(): void {
+    const ids = new Set(this.world.enemies.map((e) => e.id));
+    for (const [id, v] of this.enemyViews) {
+      if (!ids.has(id)) {
+        v.container.destroy();
+        this.enemyViews.delete(id);
+      }
+    }
+    for (const e of this.world.enemies) if (!this.enemyViews.has(e.id)) this.makeEnemy(e);
+  }
+
   private makeEnemy(e: EnemyState): void {
     const r = e.def.radius * TILE;
-    const body = this.add.circle(0, 0, r, COLORS.brute).setStrokeStyle(4, COLORS.outline);
+    const color = Phaser.Display.Color.HexStringToColor(e.def.color).color;
+    const body = this.add.circle(0, 0, r, color).setStrokeStyle(4, COLORS.outline);
     const eye = this.add.circle(0, 0, r * 0.22, 0xffe0a0).setStrokeStyle(2, COLORS.outline);
     const hpBack = this.add.rectangle(0, -r - 12, r * 2, 8, 0x000000, 0.6);
     const hpFill = this.add.rectangle(-r + 2, -r - 12, r * 2 - 4, 4, COLORS.healthLow).setOrigin(0, 0.5);
     const stars = [0, 1, 2].map(() => this.add.circle(0, 0, 4, COLORS.gold).setVisible(false));
-    const container = this.add.container(e.pos.x * TILE, e.pos.y * TILE, [body, eye, hpBack, hpFill, ...stars]).setDepth(4);
+    const shieldGfx = this.add.graphics();
+    const container = this.add.container(e.pos.x * TILE, e.pos.y * TILE, [shieldGfx, body, eye, hpBack, hpFill, ...stars]).setDepth(4);
     this.uiCamera.ignore(container);
-    this.enemyViews.set(e.id, { container, body, eye, hpBack, hpFill, stars, prev: { ...e.pos }, flashUntil: 0 });
+    this.enemyViews.set(e.id, { container, body, eye, hpBack, hpFill, stars, shieldGfx, color, prev: { ...e.pos }, flashUntil: 0 });
   }
 
   private makeHud(): void {
@@ -426,7 +456,7 @@ export class GameScene extends Phaser.Scene {
           if (ev.defeated) {
             sfx.enemyDown();
             this.impact(FEEL.enemyDown);
-            this.sparks(e.pos, 24, COLORS.brute);
+            this.sparks(e.pos, 24, v.color);
             this.ring(e.pos, 0xffffff, 1.6);
           }
           break;
@@ -467,7 +497,7 @@ export class GameScene extends Phaser.Scene {
         case 'enemySwing': {
           const e = this.enemy(ev.enemyId);
           if (!countered.has(ev.enemyId)) sfx.whoosh();
-          if (e?.attackCenter) this.ring(e.attackCenter, 0xffffff, e.def.attack.areaRadius, 0.6);
+          if (e?.attackCenter) this.ring(e.attackCenter, 0xffffff, currentAttack(e).areaRadius, 0.6);
           break;
         }
         case 'counterPressed':
@@ -501,7 +531,42 @@ export class GameScene extends Phaser.Scene {
           const e = this.enemy(ev.enemyId);
           if (e) {
             sfx.appear();
-            this.ring(e.pos, COLORS.brute, 1.2);
+            this.ring(e.pos, this.enemyViews.get(e.id)?.color ?? COLORS.brute, 1.2);
+          }
+          break;
+        }
+        case 'shieldBlock': {
+          const e = this.enemy(ev.enemyId);
+          sfx.clank();
+          if (e) {
+            this.sparks(e.pos, 4, 0xc9d6e8);
+            this.floatText(e.pos, 'CLANK', '#c9d6e8', 18);
+          }
+          break;
+        }
+        case 'shieldBreak': {
+          const e = this.enemy(ev.enemyId);
+          sfx.shieldBreak();
+          if (e) {
+            this.sparks(e.pos, 16, 0xc9d6e8);
+            this.ring(e.pos, 0xc9d6e8, 1.4);
+            this.floatText({ x: e.pos.x, y: e.pos.y - 0.5 }, 'SHIELD BROKEN!', '#ffffff', 22);
+          }
+          break;
+        }
+        case 'shieldRegrow': {
+          const e = this.enemy(ev.enemyId);
+          if (e) this.ring(e.pos, 0xc9d6e8, 0.9, 0.6);
+          break;
+        }
+        case 'summon': {
+          const e = this.enemy(ev.enemyId);
+          sfx.appear();
+          if (e) this.floatText({ x: e.pos.x, y: e.pos.y - 1 }, 'Help me!', '#ffd166', 24);
+          this.syncEnemyViews();
+          for (const id of ev.summoned) {
+            const s = this.enemy(id);
+            if (s) this.ring(s.pos, 0xffffff, 1);
           }
           break;
         }

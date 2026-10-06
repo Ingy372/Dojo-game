@@ -1,0 +1,38 @@
+{
+  "id": "floor-keeper",
+  "name": "Floor Keeper",
+  "notes": "The floor boss. Takes turns between a ground slam and a wide sweep all around itself, and calls in two swarmers at half health. Only place it in open rooms.",
+  "color": "#6b2d5c",
+  "boss": true,
+  "maxHealth": 520,
+  "power": 26,
+  "guard": 30,
+  "radius": 0.85,
+  "moveSpeedTilesPerSecond": 1.6,
+  "sightRange": 20,
+  "summon": {
+    "enemy": "swarmer",
+    "count": 2,
+    "atHealthFraction": 0.5
+  },
+  "attacks": [
+    {
+      "name": "slam",
+      "strength": 1,
+      "startRange": 1.9,
+      "reach": 1.1,
+      "areaRadius": 1.3,
+      "telegraphTicks": 18,
+      "recoverTicks": 22
+    },
+    {
+      "name": "sweep",
+      "strength": 0.8,
+      "startRange": 1.9,
+      "reach": 0,
+      "areaRadius": 2.1,
+      "telegraphTicks": 22,
+      "recoverTicks": 26
+    }
+  ]
+}

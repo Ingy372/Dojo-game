@@ -25,6 +25,26 @@
       "enemy": "brute",
       "column": 12,
       "row": 6
+    },
+    {
+      "enemy": "swarmer",
+      "column": 20,
+      "row": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 22,
+      "row": 4
+    },
+    {
+      "enemy": "swarmer",
+      "column": 21,
+      "row": 6
+    },
+    {
+      "enemy": "shield",
+      "column": 20,
+      "row": 12
     }
   ]
 }

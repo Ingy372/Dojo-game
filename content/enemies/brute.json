@@ -15,5 +15,6 @@
     "areaRadius": 0.95,
     "telegraphTicks": 16,
     "recoverTicks": 18
-  }
+  },
+  "color": "#7d3f2f"
 }

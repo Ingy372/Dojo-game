@@ -1,0 +1,21 @@
+{
+  "id": "swarmer",
+  "name": "Swarmer",
+  "notes": "Small, fast and weak; comes in groups. Moves faster than the brute (Jay's note). Distances in tiles, times in ticks (20 per second).",
+  "color": "#4f8a3c",
+  "maxHealth": 30,
+  "power": 8,
+  "guard": 0,
+  "radius": 0.3,
+  "moveSpeedTilesPerSecond": 3.2,
+  "sightRange": 12,
+  "attack": {
+    "name": "jab",
+    "strength": 1,
+    "startRange": 0.95,
+    "reach": 0.5,
+    "areaRadius": 0.55,
+    "telegraphTicks": 12,
+    "recoverTicks": 16
+  }
+}
