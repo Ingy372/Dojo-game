@@ -109,6 +109,10 @@ export function finishRun(profile: Profile, summary: RunSummary): BestKey[] {
 
   const newBests: BestKey[] = [];
   const b = profile.bests;
+  if (summary.test) {
+    profile.lastRun = { summary: { ...summary, items }, newBests };
+    return newBests;
+  }
   if (summary.result === 'cleared') {
     profile.floorsCleared++;
     if (b.fastestClearTicks === null || summary.ticks < b.fastestClearTicks) {

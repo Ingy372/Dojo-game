@@ -56,6 +56,8 @@ export interface RunState {
   /** A Rare or better was found this run. */
   rareFound: boolean;
   nextUid: number;
+  /** Started from a test link (a chosen first room): doesn't count for personal bests. */
+  test: boolean;
 }
 
 /** Things that happened, for the game to show. */
@@ -94,6 +96,7 @@ export function startRun(content: Content, options: RunOptions): RunState {
     dryRuns: options.dryRuns,
     rareFound: false,
     nextUid: 1,
+    test: !!options.firstRoomId,
   };
   const first = options.firstRoomId ? content.rooms.find((r) => r.id === options.firstRoomId) : undefined;
   enterRoom(run, first ?? pickRoom(content, run, 'battle'));
@@ -239,6 +242,8 @@ export interface RunSummary {
   ticks: number;
   sGrades: number;
   insights: string[];
+  /** A test-link run (doesn't count for personal bests). */
+  test: boolean;
 }
 
 export function summarizeRun(run: RunState): RunSummary {
@@ -253,6 +258,7 @@ export function summarizeRun(run: RunState): RunSummary {
     ticks: run.ticks,
     sGrades: run.results.filter((r) => r.grade === 'S').length,
     insights: run.insights.slice(),
+    test: run.test,
   };
 }
 

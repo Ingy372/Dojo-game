@@ -11,7 +11,22 @@ import {
   loadRoom,
   stepWorld,
   DIFFICULTY,
+  activeDoorSlots,
+  chooseInsight,
+  createRunWorld,
+  currentRoom,
+  finishRun,
+  modsFrom,
+  playerStats,
+  rarityRank,
+  runEffects,
+  setPlayerMods,
+  summarizeRun,
+  updateRun,
   type CombatEvent,
+  type DoorKind,
+  type RunEvent,
+  type RunState,
   type Difficulty,
   type EnemyState,
   type PlayerId,
@@ -21,10 +36,12 @@ import {
   type WorldState,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
-import swarmerData from '../../../../content/enemies/swarmer.json';
-import shieldData from '../../../../content/enemies/shield.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
 import { sfx } from '../audio/Sfx';
+import { CONTENT } from '../game/content';
+import { loadSave, writeSave } from '../game/save';
+import { InsightPicker } from '../ui/InsightPicker';
+import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
 import { TouchControls } from '../input/TouchControls';
 
@@ -65,6 +82,27 @@ const COLORS = {
   gold: 0xffd166,
 };
 
+const DOOR_LOOK: Record<DoorKind, { label: string; color: number }> = {
+  battle: { label: 'BATTLE', color: 0xe0533d },
+  challenge: { label: 'CHALLENGE', color: 0xb46cff },
+  treasure: { label: 'TREASURE', color: 0xffd166 },
+  rest: { label: 'REST', color: 0x5cd65c },
+  boss: { label: 'BOSS', color: 0xff3b30 },
+  home: { label: 'HOME', color: 0xf2e9d8 },
+};
+
+interface DoorView {
+  kind: DoorKind;
+  gfx: Phaser.GameObjects.Graphics;
+  label: Phaser.GameObjects.Text;
+  at: Vec2;
+}
+
+/** What the game scene is started with: a run in progress, or nothing for the practice room. */
+export interface GameSceneData {
+  run?: RunState;
+}
+
 interface EnemyView {
   container: Phaser.GameObjects.Container;
   body: Phaser.GameObjects.Arc;
@@ -87,6 +125,20 @@ export class GameScene extends Phaser.Scene {
   private room!: Room;
   private world!: WorldState;
   private readonly me: PlayerId = 'p1';
+  /** The run in progress (null in the practice room). */
+  private run: RunState | null = null;
+  /** True while a menu (like the Insight choice) is open: the fight is paused. */
+  private menuOpen = false;
+  /** True once leaving the room (next room, or home). */
+  private leaving = false;
+  private picker: InsightPicker | null = null;
+  private doorViews: DoorView[] = [];
+  private chestGfx: Phaser.GameObjects.Graphics | null = null;
+  private shrineGfx: Phaser.GameObjects.Graphics | null = null;
+  private roomLabel!: Phaser.GameObjects.Text;
+  private timerText!: Phaser.GameObjects.Text;
+  private bossName!: Phaser.GameObjects.Text;
+  private toastY = 0;
   private prevPos: Vec2 = { x: 0, y: 0 };
   private elapsed = 0;
   /** While above 0, the action is frozen for a moment on impact. */
@@ -117,9 +169,24 @@ export class GameScene extends Phaser.Scene {
     super('Game');
   }
 
+  init(data: GameSceneData): void {
+    this.run = data.run ?? null;
+  }
+
   create(): void {
-    this.room = loadRoom(trainingRoom);
-    this.world = createWorld(this.room, [this.me], { enemyTypes: { brute: loadEnemy(bruteData), swarmer: loadEnemy(swarmerData), shield: loadEnemy(shieldData) }, difficulty: testDifficulty() });
+    if (this.run) {
+      this.room = currentRoom(CONTENT, this.run);
+      const stats = playerStats(loadSave());
+      this.world = createRunWorld(CONTENT, this.run, stats, stats.effects, testDifficulty());
+    } else {
+      this.room = loadRoom(trainingRoom);
+      this.world = createWorld(this.room, [this.me], { enemyTypes: { brute: loadEnemy(bruteData) }, difficulty: testDifficulty() });
+    }
+    this.menuOpen = false;
+    this.leaving = false;
+    this.picker = null;
+    this.doorViews = [];
+    this.toastY = 0;
     this.prevPos = { ...this.world.players[this.me].pos };
     this.elapsed = 0;
     this.hitStopMs = 0;
@@ -127,16 +194,16 @@ export class GameScene extends Phaser.Scene {
     this.shownCombo = 0;
 
     const roomGfx = this.drawRoom();
+    const objects = this.makeRoomObjects();
     this.danger = this.add.graphics().setDepth(1);
     this.marker = this.add.circle(0, 0, TILE * 0.22).setStrokeStyle(3, COLORS.marker, 0.9).setVisible(false).setDepth(2);
     this.player = this.makePlayer().setDepth(5);
 
     // Two cameras: one follows the character through the room, one holds the on-screen controls.
     const cam = this.cameras.main;
-    cam.setBounds(0, 0, this.room.width * TILE, this.room.height * TILE);
     cam.startFollow(this.player, true);
     this.uiCamera = this.cameras.add(0, 0, this.scale.width, this.scale.height);
-    this.uiCamera.ignore([roomGfx, this.danger, this.marker, this.player]);
+    this.uiCamera.ignore([roomGfx, ...objects, this.danger, this.marker, this.player]);
 
     for (const e of this.world.enemies) this.makeEnemy(e);
 
@@ -145,10 +212,12 @@ export class GameScene extends Phaser.Scene {
       this,
       cam,
       (x, y) => ({ x: x / TILE, y: y / TILE }),
-      (x, y) => this.buttons.contains(x, y),
+      (x, y) => this.menuOpen || this.buttons.contains(x, y),
     );
     this.makeHud();
     cam.ignore([...this.controls.objects, ...this.buttons.objects]);
+    cam.fadeIn(350, 10, 8, 16);
+    this.introduceRoom();
 
     this.layout(this.scale.gameSize);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
@@ -165,7 +234,12 @@ export class GameScene extends Phaser.Scene {
   }
 
   update(_time: number, delta: number): void {
-    if (this.hitStopMs > 0) {
+    if (this.menuOpen || this.leaving) {
+      // Paused: drop any touches so nothing happens when play resumes.
+      this.controls.takeInput();
+      this.buttons.takeAction();
+      this.elapsed = 0;
+    } else if (this.hitStopMs > 0) {
       // Freeze the action briefly on impact; effects and the camera keep moving.
       this.hitStopMs -= delta;
     } else {
@@ -179,7 +253,8 @@ export class GameScene extends Phaser.Scene {
         stepWorld(this.world, this.room, { [this.me]: input });
         this.elapsed -= TICK_MS;
         this.playEvents(this.world.events);
-        if (this.hitStopMs > 0) break;
+        if (this.run) this.playRunEvents(updateRun(CONTENT, this.run, this.world));
+        if (this.hitStopMs > 0 || this.menuOpen || this.leaving) break;
       }
     }
     this.draw(Math.min(1, this.elapsed / TICK_MS));
@@ -233,6 +308,7 @@ export class GameScene extends Phaser.Scene {
 
     this.buttons.update(p);
     this.drawHud();
+    this.drawRunHud(now);
   }
 
   private drawEnemy(e: EnemyState, blend: number, now: number): void {
@@ -350,6 +426,10 @@ export class GameScene extends Phaser.Scene {
         if (this.room.walls[row][col]) {
           g.fillStyle(COLORS.wall).fillRect(x, y, TILE, TILE);
           g.fillStyle(COLORS.wallTop).fillRect(x, y, TILE, TILE * 0.25);
+          if (this.room.doors.some((d) => Math.floor(d.x) === col && Math.floor(d.y) === row)) {
+            // A sealed door slot (unused slots stay sealed).
+            g.fillStyle(0x3b2f27).fillRect(x + 4, y + 4, TILE - 8, TILE - 4);
+          }
         } else {
           g.fillStyle((row + col) % 2 === 0 ? COLORS.floorA : COLORS.floorB).fillRect(x, y, TILE, TILE);
         }
@@ -394,38 +474,59 @@ export class GameScene extends Phaser.Scene {
   }
 
   private makeHud(): void {
-    const crisp = window.devicePixelRatio || 1;
+    const res = crisp();
     this.hud = this.add.graphics();
     this.comboText = this.add
       .text(0, 14, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '26px', color: '#ffd166', stroke: '#14121c', strokeThickness: 5 })
       .setOrigin(0.5, 0)
-      .setResolution(crisp)
+      .setResolution(res)
       .setVisible(false);
     this.comboBonusText = this.add
       .text(0, 46, '', { fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 })
       .setOrigin(0.5, 0)
-      .setResolution(crisp)
+      .setResolution(res)
       .setVisible(false);
     this.message = this.add
       .text(0, 0, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '28px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 6, align: 'center' })
       .setOrigin(0.5)
-      .setResolution(crisp)
+      .setResolution(res)
       .setVisible(false);
     this.screenFlash = this.add.rectangle(0, 0, 10, 10, 0xffffff).setOrigin(0).setAlpha(0);
-    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.message, this.screenFlash]);
+    const small = { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 };
+    this.roomLabel = this.add.text(0, 14, '', small).setOrigin(1, 0).setResolution(crisp()).setVisible(!!this.run);
+    this.timerText = this.add
+      .text(0, 36, '', { ...small, fontStyle: 'bold', fontSize: '20px' })
+      .setOrigin(1, 0)
+      .setResolution(crisp())
+      .setVisible(false);
+    this.bossName = this.add.text(0, 0, '', { ...small, fontSize: '13px' }).setOrigin(0.5, 0).setResolution(crisp()).setVisible(false);
+    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.message, this.screenFlash, this.roomLabel, this.timerText, this.bossName]);
   }
 
   private layout(size: Phaser.Structs.Size): void {
     const { width, height } = size;
     const cam = this.cameras.main;
     cam.setSize(width, height);
-    cam.setZoom(height / (VISIBLE_ROWS * TILE));
+    const zoom = height / (VISIBLE_ROWS * TILE);
+    cam.setZoom(zoom);
+    // Camera limits: a strip above the top wall keeps doors clear of the health bars,
+    // and rooms smaller than the screen sit in the middle.
+    const viewW = width / zoom;
+    const viewH = height / zoom;
+    const roomW = this.room.width * TILE;
+    const top = -TILE * 1.1;
+    const roomH = this.room.height * TILE - top;
+    const bw = Math.max(roomW, viewW);
+    const bh = Math.max(roomH, viewH);
+    cam.setBounds((roomW - bw) / 2, top - (bh - roomH) / 2, bw, bh);
     this.uiCamera.setSize(width, height);
     this.controls.layout();
     this.buttons.layout();
     this.comboText.setX(width / 2);
     this.comboBonusText.setX(width / 2);
     this.message.setPosition(width / 2, height * 0.4);
+    this.roomLabel.setX(width - 16);
+    this.timerText.setX(width - 16);
     this.screenFlash.setSize(width, height);
   }
 
@@ -452,6 +553,9 @@ export class GameScene extends Phaser.Scene {
           } else if (ev.move === 'strike') {
             sfx.strike();
             this.impact(FEEL.strike);
+          } else if (ev.move === 'chain' || ev.move === 'ripple' || ev.move === 'reflect') {
+            sfx.hit();
+            this.ring(e.pos, ev.move === 'ripple' ? COLORS.gold : 0xffffff, 0.8, 0.7);
           }
           if (ev.defeated) {
             sfx.enemyDown();
@@ -520,8 +624,40 @@ export class GameScene extends Phaser.Scene {
         case 'playerDown':
           sfx.playerDown();
           this.cameras.main.fade(900, 10, 8, 16);
-          this.message.setText('Ouch!\nBack to the start.').setVisible(true);
+          this.message.setText(this.run ? 'Ouch! The run is over.\nYou keep everything you found.' : 'Ouch!\nBack to the start.').setVisible(true);
           break;
+        case 'speedBurst': {
+          const p = this.world.players[ev.playerId];
+          sfx.dash();
+          this.ring(p.pos, 0x5cd6b0, 1.3);
+          this.floatText(p.pos, 'WIND STEP!', '#5cd6b0', 20);
+          break;
+        }
+        case 'roomCleared':
+          if (this.room.kind !== 'treasure' && this.room.kind !== 'rest') sfx.roomClear();
+          break;
+        case 'chestOpened':
+          sfx.chest();
+          if (this.room.chest) {
+            this.ring(this.room.chest, COLORS.gold, 1.8);
+            this.sparks(this.room.chest, 18, COLORS.gold);
+          }
+          break;
+        case 'shrineUsed': {
+          const p = this.world.players[ev.playerId];
+          sfx.shrine();
+          this.ring(p.pos, COLORS.health, 1.8);
+          this.floatText(p.pos, ev.healed > 0 ? `+${ev.healed} health` : 'Rested', '#5cd65c', 24);
+          break;
+        }
+        case 'doorsOpen': {
+          sfx.doors();
+          for (const d of this.doorViews) this.ring(d.at, DOOR_LOOK[d.kind].color, 1.2);
+          const p = this.world.players[this.me];
+          const one = this.doorViews.length === 1;
+          this.floatText(p.pos, one ? 'The door is open!' : 'The doors are open! Pick one.', '#f2e9d8', 20, 1.2);
+          break;
+        }
         case 'playerReturn':
           this.cameras.main.resetFX();
           this.cameras.main.fadeIn(400, 10, 8, 16);
@@ -572,6 +708,249 @@ export class GameScene extends Phaser.Scene {
         }
       }
     }
+  }
+
+  // ---------------------------------------------------------------- the run
+
+  private playRunEvents(events: RunEvent[]): void {
+    for (const ev of events) {
+      switch (ev.kind) {
+        case 'loot':
+          this.showLoot(ev.item.name, ev.item.rarity, ev.at);
+          break;
+        case 'graded':
+          this.showGrade(ev.result.grade!, ev.result.perfects, ev.result.damageTaken, ev.result.ticks, ev.result.inTime);
+          break;
+        case 'insightChoice':
+          // Let the grade show for a moment, then offer the Insights.
+          this.menuOpen = true;
+          this.time.delayedCall(900, () => this.openInsights(ev.ids));
+          break;
+        case 'nextRoom':
+          this.leaving = true;
+          sfx.doors();
+          this.cameras.main.fadeOut(300, 10, 8, 16);
+          this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.restart({ run: this.run }));
+          break;
+        case 'runOver':
+          this.endRun(ev.status);
+          break;
+      }
+    }
+  }
+
+  private openInsights(ids: string[]): void {
+    const defs = ids.map((id) => CONTENT.insights.find((i) => i.id === id)!).filter(Boolean);
+    this.picker = new InsightPicker(this, defs, (id) => {
+      if (!this.run) return;
+      chooseInsight(this.run, id);
+      const stats = playerStats(loadSave());
+      setPlayerMods(this.world.players[this.me], modsFrom(runEffects(CONTENT, this.run, stats.effects), TICKS_PER_SECOND));
+      sfx.insight();
+      this.picker?.destroy();
+      this.picker = null;
+      this.menuOpen = false;
+      this.controls.reset();
+      this.buttons.reset();
+      const name = defs.find((d) => d.id === id)?.name ?? '';
+      this.popWord(name, '#ffd166', 34);
+    });
+    this.cameras.main.ignore(this.picker.container);
+  }
+
+  /** Brings the run's loot home, saves, and goes to the Home Dojo. */
+  private endRun(status: 'cleared' | 'lost'): void {
+    if (!this.run) return;
+    const profile = loadSave();
+    finishRun(profile, summarizeRun(this.run));
+    writeSave(profile);
+    this.leaving = true;
+    const delay = status === 'lost' ? 1600 : 200;
+    if (status === 'cleared') {
+      sfx.floorClear();
+      this.message.setText('Floor cleared!').setVisible(true);
+    }
+    this.time.delayedCall(delay, () => {
+      this.cameras.main.fadeOut(600, 10, 8, 16);
+      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home'));
+    });
+  }
+
+  /** The room's name (and challenge rule) when entering. */
+  private introduceRoom(): void {
+    if (!this.run) return;
+    const lines = [this.room.name];
+    if (this.room.challenge) lines.push(this.room.challenge.text);
+    else if (this.room.kind === 'rest') lines.push('Walk to the shrine to rest.');
+    else if (this.room.kind === 'treasure') lines.push('Open the chest!');
+    else if (this.room.kind === 'boss') lines.push('The Floor Keeper awaits.');
+    this.message.setText(lines.join('\n')).setFontSize(this.room.challenge ? 22 : 26).setVisible(true).setAlpha(1);
+    this.tweens.add({
+      targets: this.message,
+      alpha: 0,
+      delay: 1400,
+      duration: 500,
+      onComplete: () => this.message.setVisible(false).setAlpha(1).setFontSize(28),
+    });
+  }
+
+  private makeRoomObjects(): Phaser.GameObjects.GameObject[] {
+    const objs: Phaser.GameObjects.GameObject[] = [];
+    if (this.run) {
+      const slots = activeDoorSlots(this.room, this.run.doors.length);
+      this.run.doors.forEach((kind, i) => {
+        const at = this.room.doors[slots[i]];
+        const gfx = this.add.graphics().setDepth(1);
+        const look = DOOR_LOOK[kind];
+        const label = this.add
+          .text(at.x * TILE, (at.y + 0.95) * TILE, look.label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: css(look.color), stroke: '#14121c', strokeThickness: 4 })
+          .setOrigin(0.5, 0)
+          .setResolution(crisp())
+          .setDepth(6);
+        this.doorViews.push({ kind, gfx, label, at });
+        objs.push(gfx, label);
+      });
+    }
+    this.chestGfx = this.room.chest ? this.add.graphics().setDepth(2) : null;
+    this.shrineGfx = this.room.shrine ? this.add.graphics().setDepth(2) : null;
+    if (this.chestGfx) objs.push(this.chestGfx);
+    if (this.shrineGfx) objs.push(this.shrineGfx);
+    return objs;
+  }
+
+  /** Doors, the chest, the shrine, and the run's labels, timer and boss bar. */
+  private drawRunHud(now: number): void {
+    if (!this.run) return;
+    const prog = this.world.progress;
+    const pulse = 0.75 + Math.sin(now / 200) * 0.25;
+
+    for (const d of this.doorViews) {
+      const look = DOOR_LOOK[d.kind];
+      const x = (d.at.x - 0.5) * TILE;
+      const y = (d.at.y - 0.5) * TILE;
+      d.gfx.clear();
+      if (prog.doorsOpen) {
+        d.gfx.fillStyle(0x0a0810).fillRect(x + 4, y + 4, TILE - 8, TILE - 4);
+        d.gfx.lineStyle(4, look.color, pulse).strokeRect(x + 3, y + 3, TILE - 6, TILE - 3);
+      } else {
+        d.gfx.fillStyle(0x3b2f27).fillRect(x + 4, y + 4, TILE - 8, TILE - 4);
+        d.gfx.lineStyle(2, look.color, 0.35).strokeRect(x + 4, y + 4, TILE - 8, TILE - 4);
+      }
+      d.label.setAlpha(prog.doorsOpen ? 1 : 0.55);
+    }
+
+    if (this.chestGfx && this.room.chest) {
+      const g = this.chestGfx;
+      g.clear();
+      if (prog.cleared) {
+        const cx = this.room.chest.x * TILE;
+        const cy = this.room.chest.y * TILE;
+        const w = TILE * 0.8;
+        const h = TILE * 0.55;
+        if (!prog.chestOpened) {
+          g.fillStyle(COLORS.gold, 0.25 * pulse).fillCircle(cx, cy, TILE * 0.75);
+        }
+        g.fillStyle(0x7a4a24).fillRect(cx - w / 2, cy - h / 2, w, h);
+        g.lineStyle(3, COLORS.outline).strokeRect(cx - w / 2, cy - h / 2, w, h);
+        g.fillStyle(COLORS.gold).fillRect(cx - w / 2, cy - 3, w, 6);
+        if (prog.chestOpened) g.fillStyle(0x14121c).fillRect(cx - w / 2 + 4, cy - h / 2 + 2, w - 8, h * 0.35);
+      }
+    }
+
+    if (this.shrineGfx && this.room.shrine) {
+      const g = this.shrineGfx;
+      const cx = this.room.shrine.x * TILE;
+      const cy = this.room.shrine.y * TILE;
+      g.clear();
+      if (!prog.shrineUsed) g.fillStyle(COLORS.health, 0.22 * pulse).fillCircle(cx, cy, TILE * 0.8);
+      g.fillStyle(0x8a8f99).fillRect(cx - 12, cy - 6, 24, 22);
+      g.fillStyle(0x6b707a).fillRect(cx - 18, cy - 14, 36, 8);
+      g.fillStyle(prog.shrineUsed ? 0x445544 : 0xb6ffb6).fillCircle(cx, cy + 4, 6);
+    }
+
+    // Room number and name (top right).
+    this.roomLabel.setText(`Room ${this.run.depth + 1} of ${this.run.totalRooms}`);
+
+    // Challenge timer.
+    const ch = this.room.challenge;
+    if (ch) {
+      const left = Math.max(0, ch.seconds * TICKS_PER_SECOND - prog.ticks);
+      const done = prog.cleared;
+      this.timerText.setVisible(true);
+      this.timerText.setText(done ? (prog.ticks <= ch.seconds * TICKS_PER_SECOND ? 'In time!' : 'Out of time') : clock(left, TICKS_PER_SECOND));
+      this.timerText.setColor(left > 10 * TICKS_PER_SECOND || done ? '#f2e9d8' : '#ff6b5b');
+    } else {
+      this.timerText.setVisible(false);
+    }
+
+    // Boss health bar (top middle).
+    const boss = this.world.enemies.find((e) => e.def.boss);
+    const g = this.hud;
+    if (boss && boss.mode !== 'defeated') {
+      const { width } = this.scale.gameSize;
+      const w = Math.min(320, width * 0.4);
+      const x = width / 2 - w / 2;
+      const y = 74;
+      g.fillStyle(0x000000, 0.55).fillRoundedRect(x - 3, y - 3, w + 6, 16, 5);
+      g.fillStyle(0xb046a0).fillRoundedRect(x, y, Math.max(6, w * (boss.health / boss.def.maxHealth)), 10, 3);
+      this.bossName.setText(boss.def.name).setPosition(width / 2, y + 14).setVisible(true);
+    } else {
+      this.bossName.setVisible(false);
+    }
+  }
+
+  /** A dropped item: a glowing orb that pops out, then a note at the top of the screen. */
+  private showLoot(name: string, rarity: Parameters<typeof rarityRank>[0], at: Vec2): void {
+    const color = RARITY_COLOR[rarity];
+    const rank = rarityRank(rarity);
+    sfx.loot(rank);
+    const orb = this.addWorld(this.add.circle(at.x * TILE, at.y * TILE, 8 + rank * 2, color).setStrokeStyle(3, 0xffffff, 0.8).setDepth(12));
+    this.tweens.add({ targets: orb, y: orb.y - TILE * 0.9, duration: 260, ease: 'Cubic.Out', yoyo: true, hold: 200 });
+    this.tweens.add({ targets: orb, alpha: 0, scale: 1.6, delay: 760, duration: 220, onComplete: () => orb.destroy() });
+    if (rank >= 2) this.ring(at, color, 1.6);
+
+    const { width } = this.scale.gameSize;
+    const y = 64 + this.toastY * 26;
+    this.toastY++;
+    const t = this.add
+      .text(width - 16, y, `${RARITY_NAME[rarity]}: ${name}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: css(color), stroke: '#14121c', strokeThickness: 4 })
+      .setOrigin(1, 0)
+      .setResolution(crisp())
+      .setAlpha(0);
+    this.cameras.main.ignore(t);
+    this.tweens.add({ targets: t, alpha: 1, x: { from: width + 40, to: width - 16 }, duration: 220, ease: 'Back.Out' });
+    this.tweens.add({
+      targets: t,
+      alpha: 0,
+      delay: 2600,
+      duration: 400,
+      onComplete: () => {
+        t.destroy();
+        this.toastY = Math.max(0, this.toastY - 1);
+      },
+    });
+  }
+
+  private showGrade(grade: 'S' | 'A' | 'B', perfects: number, damage: number, ticks: number, inTime: boolean | null): void {
+    const { width, height } = this.scale.gameSize;
+    sfx.grade(grade);
+    const letter = this.add
+      .text(width / 2, height * 0.36, grade, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '84px', color: GRADE_COLOR[grade], stroke: '#14121c', strokeThickness: 9 })
+      .setOrigin(0.5)
+      .setResolution(crisp())
+      .setScale(2.2)
+      .setAlpha(0);
+    const parts = [`${perfects} Perfect`, damage > 0 ? `-${damage} health` : 'no damage', clock(ticks, TICKS_PER_SECOND)];
+    if (inTime !== null) parts.push(inTime ? 'in time!' : 'out of time');
+    const line = this.add
+      .text(width / 2, height * 0.36 + 58, `Room clear!  ${parts.join('  ·  ')}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 })
+      .setOrigin(0.5)
+      .setResolution(crisp())
+      .setAlpha(0);
+    this.cameras.main.ignore([letter, line]);
+    this.tweens.add({ targets: letter, scale: 1, alpha: 1, duration: 260, ease: 'Back.Out' });
+    this.tweens.add({ targets: line, alpha: 1, delay: 150, duration: 200 });
+    this.tweens.add({ targets: [letter, line], alpha: 0, delay: 1700, duration: 400, onComplete: () => (letter.destroy(), line.destroy()) });
   }
 
   private enemy(id: string): EnemyState | undefined {

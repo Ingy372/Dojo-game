@@ -46,7 +46,7 @@ export class TitleScene extends Phaser.Scene {
     this.input.once(Phaser.Input.Events.POINTER_UP, () => {
       // Phones only allow sound after a touch, so switch it on here.
       sfx.unlock();
-      this.scene.start('Game');
+      this.scene.start(new URLSearchParams(window.location.search).get('room') === 'training' ? 'Game' : 'Home');
     });
 
     this.layout(this.scale.gameSize);

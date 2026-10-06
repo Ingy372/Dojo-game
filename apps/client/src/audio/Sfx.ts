@@ -78,6 +78,50 @@ class SoundMaker {
     this.noise(0.05, 0.2, 2500);
   }
 
+  /** Every enemy in the room is beaten. */
+  roomClear(): void {
+    [523, 659, 784, 1047].forEach((f, i) => this.tone(f, f, 0.16, 'triangle', 0.16, i * 0.07));
+  }
+
+  /** The room grade appears: brighter for better grades. */
+  grade(grade: 'S' | 'A' | 'B'): void {
+    const top = grade === 'S' ? 1319 : grade === 'A' ? 1047 : 784;
+    this.tone(top / 2, top, 0.25, 'triangle', 0.18);
+  }
+
+  /** A chest opens. */
+  chest(): void {
+    this.noise(0.15, 0.3, 600);
+    [392, 523, 659].forEach((f, i) => this.tone(f, f, 0.14, 'square', 0.08, 0.05 + i * 0.06));
+  }
+
+  /** An item drops: rarer items get a longer, higher chime. */
+  loot(rank: number): void {
+    const notes = [659, 784, 988, 1175, 1319].slice(0, 2 + rank);
+    notes.forEach((f, i) => this.tone(f, f, 0.12 + rank * 0.03, 'sine', 0.12 + rank * 0.03, 0.1 + i * 0.06));
+  }
+
+  /** The rest shrine heals. */
+  shrine(): void {
+    [440, 554, 659, 880].forEach((f, i) => this.tone(f, f, 0.4, 'sine', 0.1, i * 0.1));
+  }
+
+  /** The doors open, or the player walks through one. */
+  doors(): void {
+    this.tone(110, 70, 0.35, 'sawtooth', 0.08);
+    this.noise(0.25, 0.15, 400);
+  }
+
+  /** An Insight is chosen. */
+  insight(): void {
+    [784, 1047, 1319].forEach((f, i) => this.tone(f, f * 1.01, 0.2, 'sine', 0.12, i * 0.05));
+  }
+
+  /** The floor is cleared (kept smaller than real promotions will be). */
+  floorClear(): void {
+    [523, 659, 784, 1047, 784, 1047].forEach((f, i) => this.tone(f, f, 0.2, 'triangle', 0.16, i * 0.11));
+  }
+
   /** A basic attack bounces off a shield: a metal clank. */
   clank(): void {
     this.tone(1400, 1300, 0.08, 'square', 0.12);

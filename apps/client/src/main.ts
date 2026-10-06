@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { GameScene } from './scenes/GameScene';
+import { HomeScene } from './scenes/HomeScene';
 import { TitleScene } from './scenes/TitleScene';
 
 const game = new Phaser.Game({
@@ -15,7 +16,7 @@ const game = new Phaser.Game({
   input: {
     mouse: false,
   },
-  scene: [TitleScene, GameScene],
+  scene: [TitleScene, HomeScene, GameScene],
 });
 
 // Pause when the app goes to the background (or a call comes in), and resume cleanly.
@@ -26,3 +27,6 @@ document.addEventListener('visibilitychange', () => {
     game.loop.wake();
   }
 });
+
+// Developer builds only (never in the published game): lets automated checks reach the game.
+if (import.meta.env.DEV) (window as unknown as { game: Phaser.Game }).game = game;
