@@ -85,10 +85,19 @@ dojo-ascent/
 1. **Game rules live in `packages/sim`.** Combat, abilities, and progression are pure TypeScript with no Phaser, no DOM, and no network calls. The client draws what the rules package decides. This lets the same rules run on the server later for co-op.
 2. **The rules package is deterministic.** It runs on a fixed tick of **20 ticks per second**. Never use `Math.random()`, `Date.now()`, or real time inside it; use a seeded random number generator and tick counts.
 3. **Content is data, not code.** Abilities, enemies, rooms, loot tables, Insights, quests, dialogue, and scenarios are defined in data files in `content/`, validated against a schema when loaded.
-4. **DojoForge is read-only.** The game only reads a student's progress; it never writes to DojoForge.
+4. **DojoForge is read-only.** The game only reads a student's progress and never changes DojoForge records. The one exception is sending **requests** (such as "Ready to show Sensei") through a request endpoint Nic builds; only staff actions in DojoForge change a student's record.
 5. **Mock data first.** Until Nic delivers the real progress feed, use the fake student profiles in `fixtures/`, shaped exactly like the feed described in `docs/framework.md` (section 14).
 6. **Phone first.** Touch controls (tap to move, on-screen stick, four ability buttons), landscape, readable on a small screen, aiming for a smooth 60 frames per second on a mid-range phone. Every feature must work the same in the iOS app, the Android app, and a phone browser.
-7. **No school is hardcoded.** Belt tiers, technique names, and culture content come from data, so other DojoForge schools can use the game.
+7. **No school is hardcoded.** Belt tiers, technique names, stripe words, Virtues, and culture content come from data, so other DojoForge schools can use the game.
+8. **Build for multiplayer from the start, even before it exists.** Multiplayer arrives in three steps (see `docs/core-design.md` section 11): a shared world (dojo visits, bows, classmates as "echoes"), then a live town square, then 2–4 player co-op. Keep game state serializable, keep all game rules inside `packages/sim` so the server can run them, and design player IDs, saves, and the game server so these steps can be added without rewriting the game. Don't build live multiplayer until Jay asks for that milestone.
+9. **Progression follows `docs/core-design.md` section 10.** In particular: the legacy grant (every requirement of a rank the student has already passed counts as signed off), double experience for players below their rank's expected level, stripes granting Virtues that rank up when the same word is earned again, and black belt degrees adding summit tiers.
+10. **Power follows `docs/core-design.md` section 12.** One Power Rating (PR) scale for players and monsters: max PR is 1,000 per belt tier (+500 per black belt degree) and is a hard cap per rank. Each tier's max is split: sign-offs 40%, Training Points 17%, Virtues 10%, level 18%, gear 8%, Street Smarts 5%, Mastery 2%. Every source has its own ceiling. Street Smarts power comes from clearing scenarios and completing location sets, which also grant location perks. Keep all these numbers in the single tuning config file.
+11. **Systems unlock gradually** (`docs/core-design.md` section 13). Each system appears when it first matters, taught by a short Sensei's Lesson: one sentence per screen, practice in a safe room, never more than one new system per session, replayable from the Lesson Scroll. Existing students get a Welcome Week that introduces their systems one per session.
+12. **Missions spell out every real-world goal** (section 13). Each has clear steps; when complete, the game sends a request to DojoForge's "Ready for review" queue. Staff confirm with one tap. Technique sign-offs still require the student to demonstrate in class; the game never signs anything off itself.
+13. **Power Rating is never shown to players.** Players see belt, stripes, level, abilities, the Gate, and gear as better-or-worse arrows. PR and Monster Rating exist for staff views and system balancing only.
+14. **Experience pacing:** tune each tier so a typical player reaches the level cap at about 75% of the school's typical time in rank for that belt. Keep the numbers in the tuning file.
+15. **Street Smarts scenarios are illustrated story scenes:** one picture, 1–3 short sentences, and 2–4 large choice buttons per scene, with branching, built-in text-to-speech narration (on by default for ages 6–9), and a few interactive moments. Scripts are data files, and none is built until Jay approves its script.
+16. **Parents do as little as possible:** nothing requires a parent to play; approvals are one tap with Face ID plus "Approve all"; at most one bundled notification a day.
 
 ## Hard rules: never break these
 
@@ -98,10 +107,19 @@ dojo-ascent/
 - **No purchases, ads, loot boxes, or anything bought.**
 - **No punishment for missing class or not playing.** Absence never removes power or items. The Home Dojo's dust is cosmetic, capped, and never blocks play.
 - **No free-text chat.** Only preset emotes and callouts.
+- **Multiplayer is same-school only,** names are first name plus last initial, and parents can turn multiplayer off, make a dojo private, and hide players.
+- **Every decoration is earned** in the Tower or through real achievements. Real-achievement trophies are "certified" with the date earned and can't be obtained any other way. Only a dojo's owner sees its bow count.
 - **No third-party analytics, ads, or tracking tools.** Collect only what the game needs.
+- **Power Rating is never visible to players.** Staff and the system only.
 - **Every enemy attack is telegraphed.** No unavoidable damage.
 - **The game never shows or guesses why a student wasn't approved to test.**
 - **Street Smarts scenarios are never graphic or frightening,** and no scenario ships without Jay's approval.
+
+## Timeline and launch scope
+
+The game must launch within **6 months (by early April 2027)**. The month-by-month roadmap and milestones 0–12 are in `docs/framework.md` section 15; the launch scope is in `docs/core-design.md` section 13.
+
+**Do not build these until after launch, even if they're described in the docs:** the live town square, co-op and Mentor play, the Endless Ascent, crafting, Path Perks, Sensei's Scrolls, the Bestiary, real-life quests, and the Visitor's Pass. Design code so they can be added later, but don't build them.
 
 ## Starting numbers (tune later from playtesting)
 
