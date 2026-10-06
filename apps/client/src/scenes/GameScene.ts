@@ -55,7 +55,8 @@ const MAX_TICKS_PER_FRAME = 5;
 
 /** Game feel: how long the action freezes on impact, and how hard the screen shakes. */
 const FEEL = {
-  basic: { stopMs: 45, shakeMs: 70, shake: 0.0025 },
+  // Small hits barely freeze, so fights with many swarmers stay readable.
+  basic: { stopMs: 20, shakeMs: 50, shake: 0.0015 },
   strike: { stopMs: 95, shakeMs: 140, shake: 0.007 },
   perfect: { stopMs: 180, shakeMs: 220, shake: 0.012 },
   block: { stopMs: 60, shakeMs: 90, shake: 0.004 },
@@ -353,6 +354,10 @@ export class GameScene extends Phaser.Scene {
       this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
     } else if (e.mode === 'stagger') {
       rotation = Math.sin(now / 60) * 0.18;
+    } else if (e.mode === 'winded') {
+      // Out of breath: pale, slumped, and breathing hard.
+      color = blendColor(v.color, 0xd8d0c4, 0.45);
+      scale = 1 + Math.sin(now / 110) * 0.06;
     }
 
     // Shield guards hold a shield in front of them while it's up.
@@ -371,13 +376,18 @@ export class GameScene extends Phaser.Scene {
     v.body.setRotation(rotation);
     v.container.setAlpha(alpha);
 
-    // Dizzy stars circling a staggered brute.
+    // Dizzy stars circling a staggered enemy; sweat drops on a winded one.
     const dizzy = e.mode === 'stagger';
+    const winded = e.mode === 'winded';
     v.stars.forEach((s, i) => {
-      s.setVisible(dizzy);
-      if (!dizzy) return;
-      const a = now / 180 + (i * Math.PI * 2) / v.stars.length;
-      s.setPosition(Math.cos(a) * r * 0.8, -r * 1.25 + Math.sin(a) * r * 0.25);
+      s.setVisible(dizzy || winded);
+      if (dizzy) {
+        const a = now / 180 + (i * Math.PI * 2) / v.stars.length;
+        s.setFillStyle(COLORS.gold).setScale(1).setPosition(Math.cos(a) * r * 0.8, -r * 1.25 + Math.sin(a) * r * 0.25);
+      } else if (winded) {
+        const fall = ((now / 600 + i / v.stars.length) % 1) * r * 0.9;
+        s.setFillStyle(0x9ad1ff).setScale(1.5).setPosition((i - 1) * r * 0.7, -r * 0.9 + fall);
+      }
     });
   }
 
@@ -641,6 +651,12 @@ export class GameScene extends Phaser.Scene {
           this.cameras.main.fade(900, 10, 8, 16);
           this.message.setText(this.run ? 'Ouch! The run is over.\nYou keep everything you found.' : 'Ouch!\nBack to the start.').setVisible(true);
           break;
+        case 'winded': {
+          const e = this.enemy(ev.enemyId);
+          sfx.winded();
+          if (e) this.floatText({ x: e.pos.x, y: e.pos.y - e.def.radius - 0.2 }, 'huff... huff...', '#9ad1ff', 20, 0.6);
+          break;
+        }
         case 'speedBurst': {
           const p = this.world.players[ev.playerId];
           sfx.dash();

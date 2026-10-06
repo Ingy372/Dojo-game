@@ -7,7 +7,7 @@
   "power": 8,
   "guard": 0,
   "radius": 0.3,
-  "moveSpeedTilesPerSecond": 3.2,
+  "moveSpeedTilesPerSecond": 4.0,
   "sightRange": 12,
   "attack": {
     "name": "jab",

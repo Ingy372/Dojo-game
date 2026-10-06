@@ -115,7 +115,7 @@ export const COMBAT = {
   /** Only this many enemies may be attacking at once ("kung fu circle"). */
   maxAttackersAtOnce: 2,
   /** Enemies waiting their turn circle the player this far outside their attack range (tiles). */
-  circleExtraRange: 1.2,
+  circleExtraRange: 1.8,
   /** ...moving sideways at this share of their walking speed. */
   circleSpeedShare: 0.5,
 

@@ -1,6 +1,8 @@
 // Enemy types are content (data files in content/enemies), checked here when loaded.
 // Distances are in tiles and times in ticks.
 
+import { TICKS_PER_SECOND } from './config';
+
 export interface EnemyAttackDef {
   /** Optional name, for bosses with several attacks (for example "slam"). */
   name: string;
@@ -21,6 +23,14 @@ export interface EnemyAttackDef {
 export interface EnemyShieldDef {
   /** After the shield breaks, it grows back after this many ticks. */
   regrowTicks: number;
+}
+
+/** Slow chasers get winded: after chasing this long without swinging, they stop to catch their breath. */
+export interface EnemyWindedDef {
+  afterTicks: number;
+  ticks: number;
+  /** Extra damage share taken while winded (0.5 = +50%). */
+  damageBonus: number;
 }
 
 export interface EnemySummonDef {
@@ -47,6 +57,7 @@ export interface EnemyDef {
   /** Bosses may be bigger than one tile and should only be placed in open rooms. */
   boss: boolean;
   summon: EnemySummonDef | null;
+  winded: EnemyWindedDef | null;
   /** Placeholder body color, as "#rrggbb" (art comes later). */
   color: string;
 }
@@ -143,6 +154,17 @@ export function loadEnemy(data: unknown): EnemyDef {
     summon = { enemy: s.enemy, count, atHealthFraction: at };
   }
 
+  let winded: EnemyWindedDef | null = null;
+  if (raw.winded !== undefined) {
+    const w = raw.winded as Record<string, unknown>;
+    if (typeof w !== 'object' || w === null) throw new EnemyError(id, '"winded" must be an object');
+    winded = {
+      afterTicks: Math.round(positiveNumber(w, 'afterSeconds', id, 'winded.') * TICKS_PER_SECOND),
+      ticks: Math.round(positiveNumber(w, 'seconds', id, 'winded.') * TICKS_PER_SECOND),
+      damageBonus: nonNegative(w, 'damageBonus', id, 'winded.'),
+    };
+  }
+
   const color = typeof raw.color === 'string' && /^#[0-9a-fA-F]{6}$/.test(raw.color) ? raw.color : '#7d3f2f';
 
   return {
@@ -158,6 +180,7 @@ export function loadEnemy(data: unknown): EnemyDef {
     shield,
     boss,
     summon,
+    winded,
     color,
   };
 }

@@ -125,6 +125,46 @@ describe('several enemies', () => {
   });
 });
 
+describe('winded brute', () => {
+  it('a brute that chases for 4 seconds without swinging gets winded, stops, and takes 50% more damage', () => {
+    const { room, world, p } = arena([{ enemy: 'brute', column: 15, row: 4 }], false);
+    const b = world.enemies[0];
+    let windedAt = -1;
+    // Keep running away along the room so the brute can never swing.
+    for (let t = 0; t < 400 && windedAt < 0; t++) {
+      const away = b.pos.x > 8 ? -1 : 1;
+      p.pos = { x: b.pos.x + away * 4, y: 3.5 };
+      stepWorld(world, room, { p1: IDLE });
+      if (world.events.some((ev) => ev.kind === 'winded')) windedAt = t;
+    }
+    expect(windedAt).toBeGreaterThan(0);
+    expect(b.mode).toBe('winded');
+    const x = b.pos.x;
+    stepWorld(world, room, { p1: IDLE });
+    expect(b.pos.x).toBe(x);
+
+    // Same hit, winded vs not.
+    p.pos = { x: b.pos.x - 0.95, y: b.pos.y };
+    p.attackCooldown = 0;
+    let before = b.health;
+    stepWorld(world, room, { p1: IDLE });
+    const windedHit = before - b.health;
+    b.mode = 'stagger';
+    b.modeTicks = 100;
+    p.attackCooldown = 0;
+    p.combo = 0;
+    before = b.health;
+    stepWorld(world, room, { p1: IDLE });
+    const normalHit = before - b.health;
+    expect(windedHit).toBeGreaterThan(normalHit);
+  });
+
+  it('the boss and swarmers never get winded', () => {
+    expect(enemyTypes['floor-keeper'].winded).toBeNull();
+    expect(enemyTypes.swarmer.winded).toBeNull();
+  });
+});
+
 describe('boss', () => {
   it('takes turns between its attacks and calls in two swarmers at half health', () => {
     const { room, world } = arena([{ enemy: 'floor-keeper', column: 9, row: 4 }], false);

@@ -81,9 +81,10 @@ export interface RoomProgress {
 /**
  * What an enemy is doing:
  * waiting (just appeared), chase, windup (telegraphing an attack), recover (after a swing),
- * stagger (after a Perfect Counter), defeated (gone until it comes back).
+ * stagger (after a Perfect Counter), winded (out of breath after a long chase),
+ * defeated (gone until it comes back).
  */
-export type EnemyMode = 'waiting' | 'chase' | 'windup' | 'recover' | 'stagger' | 'defeated';
+export type EnemyMode = 'waiting' | 'chase' | 'windup' | 'recover' | 'stagger' | 'winded' | 'defeated';
 
 export interface EnemyState {
   id: EnemyId;
@@ -115,6 +116,8 @@ export interface EnemyState {
   summonDone: boolean;
   /** Which way it circles while waiting its turn to attack: 1 or -1. */
   orbit: number;
+  /** Ticks spent chasing since its last swing (for getting winded). */
+  chaseTicks: number;
 }
 
 /** Things that happened during the last tick, so the game can play effects and sounds. */
@@ -138,6 +141,7 @@ export type CombatEvent =
   | { kind: 'shieldRegrow'; enemyId: EnemyId }
   | { kind: 'summon'; enemyId: EnemyId; summoned: EnemyId[] }
   | { kind: 'speedBurst'; playerId: PlayerId }
+  | { kind: 'winded'; enemyId: EnemyId }
   | { kind: 'playerOut'; playerId: PlayerId }
   | { kind: 'roomCleared' }
   | { kind: 'chestOpened'; playerId: PlayerId }
@@ -302,6 +306,7 @@ function newEnemy(id: EnemyId, def: EnemyDef, pos: Vec2, n: number): EnemyState 
     summoned: false,
     summonDone: false,
     orbit: n % 2 === 0 ? 1 : -1,
+    chaseTicks: 0,
   };
 }
 
@@ -491,7 +496,10 @@ function landHit(
     e.shieldRegrow = e.def.shield!.regrowTicks;
     world.events.push({ kind: 'shieldBreak', playerId: p.id, enemyId: e.id });
   }
-  const bonus = comboBonus(p.combo) + (e.mode === 'stagger' ? p.mods.staggerBonus : 0);
+  const bonus =
+    comboBonus(p.combo) +
+    (e.mode === 'stagger' ? p.mods.staggerBonus : 0) +
+    (e.mode === 'winded' && e.def.winded ? e.def.winded.damageBonus : 0);
   const dmg = damage(p.power * (1 + p.mods.powerScale), strength, e.def.guard, bonus);
   p.combo++;
   if (p.combo > world.progress.bestCombo) world.progress.bestCombo = p.combo;
@@ -661,6 +669,7 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
     case 'waiting':
     case 'recover':
     case 'stagger':
+    case 'winded':
       if (--e.modeTicks <= 0) e.mode = 'chase';
       return;
     case 'windup':
@@ -696,6 +705,7 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
     e.windupTotal = ticks;
     e.attackCenter = { x: e.pos.x + e.facing.x * a.reach, y: e.pos.y + e.facing.y * a.reach };
     e.path = null;
+    e.chaseTicks = 0;
     world.events.push({ kind: 'telegraph', enemyId: e.id, ticks });
     return;
   }
@@ -721,6 +731,15 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
   if (e.path && distance(e.pos, target.pos) > a.startRange * 0.8) {
     walkPath(e.pos, e.path, speed);
     pushOutOfWalls(room, e.pos, e.def.radius);
+    // A long chase without a swing leaves slow enemies out of breath.
+    const w = e.def.winded;
+    if (w && ++e.chaseTicks >= w.afterTicks) {
+      e.chaseTicks = 0;
+      e.mode = 'winded';
+      e.modeTicks = w.ticks;
+      e.path = null;
+      world.events.push({ kind: 'winded', enemyId: e.id });
+    }
   }
 }
 
@@ -861,6 +880,7 @@ function resetEnemy(world: WorldState, e: EnemyState): void {
   e.shieldUp = e.def.shield !== null;
   e.shieldRegrow = 0;
   e.summonDone = false;
+  e.chaseTicks = 0;
   world.events.push({ kind: 'enemySpawn', enemyId: e.id });
 }
 

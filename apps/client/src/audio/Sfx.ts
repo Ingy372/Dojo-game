@@ -122,6 +122,13 @@ class SoundMaker {
     [523, 659, 784, 1047, 784, 1047].forEach((f, i) => this.tone(f, f, 0.2, 'triangle', 0.16, i * 0.11));
   }
 
+  /** A brute runs out of breath: two heavy puffs. */
+  winded(): void {
+    this.noise(0.18, 0.25, 500);
+    this.tone(200, 140, 0.18, 'sine', 0.08);
+    this.tone(190, 130, 0.2, 'sine', 0.08, 0.35);
+  }
+
   /** A basic attack bounces off a shield: a metal clank. */
   clank(): void {
     this.tone(1400, 1300, 0.08, 'square', 0.12);
