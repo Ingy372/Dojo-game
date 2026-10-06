@@ -4,6 +4,7 @@ export class TitleScene extends Phaser.Scene {
   private title!: Phaser.GameObjects.Text;
   private subtitle!: Phaser.GameObjects.Text;
   private belt!: Phaser.GameObjects.Rectangle;
+  private prompt!: Phaser.GameObjects.Text;
 
   constructor() {
     super('Title');
@@ -32,6 +33,17 @@ export class TitleScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setResolution(crisp);
 
+    this.prompt = this.add
+      .text(0, 0, 'Tap to start', {
+        fontFamily: 'system-ui, sans-serif',
+        color: '#f2e9d8',
+      })
+      .setOrigin(0.5)
+      .setResolution(crisp);
+    this.tweens.add({ targets: this.prompt, alpha: 0.35, duration: 900, yoyo: true, repeat: -1 });
+
+    this.input.once(Phaser.Input.Events.POINTER_UP, () => this.scene.start('Game'));
+
     this.layout(this.scale.gameSize);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -53,5 +65,8 @@ export class TitleScene extends Phaser.Scene {
     this.subtitle
       .setFontSize(Math.max(14, Math.round(titleSize * 0.3)))
       .setPosition(cx, cy + titleSize * 0.85);
+    this.prompt
+      .setFontSize(Math.max(16, Math.round(titleSize * 0.32)))
+      .setPosition(cx, cy + titleSize * 1.6);
   }
 }

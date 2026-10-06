@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@dojo/sim": "*",
     "phaser": "^3.90.0"
   },
   "devDependencies": {
