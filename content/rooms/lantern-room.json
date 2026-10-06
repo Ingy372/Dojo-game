@@ -1,0 +1,53 @@
+{
+  "id": "lantern-room",
+  "name": "Lantern Room",
+  "kind": "battle",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "parSeconds": 55,
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.##............##.#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..##..........##..#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "enemies": [
+    {
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 3
+    },
+    {
+      "enemy": "shield",
+      "column": 10,
+      "row": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 9,
+      "row": 5
+    },
+    {
+      "enemy": "swarmer",
+      "column": 12,
+      "row": 5
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 7
+    }
+  ]
+}

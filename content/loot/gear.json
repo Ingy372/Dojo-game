@@ -1,0 +1,40 @@
+{
+  "notes": "Gear that drops on the white belt tier. Stat lists are per rarity: [common, uncommon, rare, epic]. Charms have a small effect instead of stats (effect types are in packages/sim/src/effects.ts).",
+  "tier": "white",
+  "slotStats": {
+    "hands": { "power": [1, 2, 3, 4] },
+    "gi": { "maxHealth": [8, 14, 20, 28], "guard": [2, 3, 5, 7] }
+  },
+  "items": [
+    { "id": "cloth-wraps", "name": "Cloth Hand Wraps", "slot": "hands" },
+    { "id": "leather-wraps", "name": "Leather Hand Wraps", "slot": "hands" },
+    { "id": "tiger-wraps", "name": "Tiger Stripe Wraps", "slot": "hands" },
+    { "id": "training-gi", "name": "Training Gi", "slot": "gi" },
+    { "id": "padded-gi", "name": "Padded Gi", "slot": "gi" },
+    { "id": "mountain-gi", "name": "Mountain Gi", "slot": "gi" },
+    {
+      "id": "jade-charm",
+      "name": "Jade Charm",
+      "slot": "charm",
+      "text": "+{pct} Power",
+      "effect": { "type": "powerScale" },
+      "amounts": [0.04, 0.06, 0.09, 0.12]
+    },
+    {
+      "id": "lotus-charm",
+      "name": "Lotus Charm",
+      "slot": "charm",
+      "text": "Start each room with {n} Focus",
+      "effect": { "type": "startFocus" },
+      "amounts": [10, 15, 20, 30]
+    },
+    {
+      "id": "crane-charm",
+      "name": "Crane Charm",
+      "slot": "charm",
+      "text": "Perfect Counters heal {n} health",
+      "effect": { "type": "healOnPerfect" },
+      "amounts": [2, 3, 4, 6]
+    }
+  ]
+}

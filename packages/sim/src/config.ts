@@ -119,6 +119,9 @@ export const COMBAT = {
   /** ...moving sideways at this share of their walking speed. */
   circleSpeedShare: 0.5,
 
+  /** A rest shrine restores this share of max health. */
+  restShrineHeal: 0.6,
+
   /** After defeat, the player is down this long before the room restarts (1.5 seconds). */
   defeatTicks: 30,
   /** A defeated enemy comes back after this long (4 seconds), so practice can continue. */
@@ -127,4 +130,48 @@ export const COMBAT = {
   enemySpawnWaitTicks: 20,
   /** Enemies re-plan their route to the player this often. */
   enemyRepathTicks: 10,
+} as const;
+
+/** The floor (core-design section 3): rooms, then the boss. */
+export const FLOOR = {
+  /** Rooms before the boss room (so a floor is this + 1 rooms). */
+  roomsBeforeBoss: 6,
+  /** How often each kind of door is offered (higher = more often). */
+  doorWeights: { battle: 4, challenge: 1.5, treasure: 1.2, rest: 1.2 },
+  /** Chance of 3 doors instead of 2. */
+  threeDoorChance: 0.5,
+  /** Insights offered after each battle or challenge room. */
+  insightChoices: 3,
+} as const;
+
+/**
+ * Room grades (S, A, B). One point each for: enough Perfect Counters, little damage
+ * taken, and a clear within the room's par time. 3 points = S, 2 = A, otherwise B.
+ */
+export const GRADES = {
+  perfectsForPoint: 2,
+  /** Damage taken at most this share of max health. */
+  damageShareForPoint: 0.15,
+  /** An S grade adds this many items to the room's loot. */
+  sGradeBonusItems: 1,
+} as const;
+
+export type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export const RARITIES: readonly Rarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
+
+/** Loot rarity (CLAUDE.md starting numbers). Legendaries come from Guardians only (later). */
+export const LOOT = {
+  rarityWeights: { common: 70, uncommon: 22, rare: 7, epic: 1 },
+  /** Bad-luck protection: each run in a row without a Rare adds this much weight to Rare (taken from Common)... */
+  rareWeightPerDryRun: 3,
+  /** ...and the 5th run in a row without a Rare is guaranteed one (in its first chest). */
+  guaranteedRareOnRun: 5,
+} as const;
+
+/**
+ * Placeholder gear limits for the white belt tier, until real profiles arrive (milestone 4).
+ * Gear stats are capped at these, so gear never outweighs real training.
+ */
+export const GEAR_CAPS = {
+  white: { power: 4, maxHealth: 30, guard: 8 },
 } as const;

@@ -1,0 +1,43 @@
+{
+  "id": "pillar-court",
+  "name": "Pillar Court",
+  "kind": "battle",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "parSeconds": 55,
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..#....#....#...#.#",
+    "#..................#",
+    "#..................#",
+    "#..#....#....#...#.#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "enemies": [
+    {
+      "enemy": "shield",
+      "column": 6,
+      "row": 3
+    },
+    {
+      "enemy": "shield",
+      "column": 14,
+      "row": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 7,
+      "row": 6
+    },
+    {
+      "enemy": "swarmer",
+      "column": 14,
+      "row": 6
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "notes": "Loot tables: who drops what and how much. Rarity shares and bad-luck protection are in packages/sim/src/config.ts (LOOT).",
+  "enemyDropChance": { "swarmer": 0.08, "shield": 0.2, "brute": 0.3 },
+  "chests": {
+    "treasure": { "items": 2, "minRarity": "common" },
+    "challenge": { "items": 2, "minRarity": "common", "inTimeItems": 3, "inTimeMinRarity": "uncommon" },
+    "boss": { "items": 3, "minRarity": "uncommon" }
+  }
+}

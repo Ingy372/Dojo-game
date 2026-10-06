@@ -1,0 +1,42 @@
+{
+  "id": "narrow-bridge",
+  "name": "Narrow Bridge",
+  "kind": "battle",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "parSeconds": 55,
+  "tiles": [
+    "#####D#####D#####D####",
+    "#....................#",
+    "#....................#",
+    "#....................#",
+    "#######......#########",
+    "#######......#########",
+    "#######......#########",
+    "#....................#",
+    "#....................#",
+    "#.........P..........#",
+    "######################"
+  ],
+  "enemies": [
+    {
+      "enemy": "swarmer",
+      "column": 7,
+      "row": 3
+    },
+    {
+      "enemy": "brute",
+      "column": 13,
+      "row": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 4
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 7
+    }
+  ]
+}

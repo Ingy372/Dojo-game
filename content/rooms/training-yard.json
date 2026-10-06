@@ -1,0 +1,33 @@
+{
+  "id": "training-yard",
+  "name": "Training Yard",
+  "kind": "battle",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "parSeconds": 60,
+  "tiles": [
+    "####D####D####D###",
+    "#................#",
+    "#................#",
+    "#................#",
+    "#................#",
+    "#......####......#",
+    "#................#",
+    "#................#",
+    "#................#",
+    "#.......P........#",
+    "#................#",
+    "##################"
+  ],
+  "enemies": [
+    {
+      "enemy": "brute",
+      "column": 6,
+      "row": 3
+    },
+    {
+      "enemy": "brute",
+      "column": 13,
+      "row": 3
+    }
+  ]
+}

@@ -5,10 +5,11 @@
 import { pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
 import { COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, type Difficulty } from './config';
+import { noMods, type PlayerMods } from './effects';
 import type { EnemyAttackDef, EnemyDef } from './enemy';
 import { clamp, distance, length, quantize, type Vec2 } from './math';
 import { findPath, standableSpot } from './path';
-import type { Room } from './room';
+import { activeDoorSlots, type Room } from './room';
 
 export type PlayerId = string;
 export type EnemyId = string;
@@ -53,6 +54,28 @@ export interface PlayerState {
   dashCooldown: number;
   /** Ticks left before returning to the room start after defeat; 0 while fighting. */
   downTicks: number;
+  /** True once defeated in a floor room (the run is over). */
+  out: boolean;
+  /** Effects from Insights and charms. */
+  mods: PlayerMods;
+  /** Ticks of speed burst left (Wind Step). */
+  speedBoostTicks: number;
+}
+
+/** How the current room is going: for doors, the chest, the shrine and the room grade. */
+export interface RoomProgress {
+  /** Every enemy is beaten (rooms without enemies count as cleared from the start). */
+  cleared: boolean;
+  chestOpened: boolean;
+  shrineUsed: boolean;
+  doorsOpen: boolean;
+  /** How many doors this room offers (0 = none). */
+  doorCount: number;
+  /** Ticks spent before the room was cleared. */
+  ticks: number;
+  perfects: number;
+  damageTaken: number;
+  bestCombo: number;
 }
 
 /**
@@ -95,8 +118,10 @@ export interface EnemyState {
 }
 
 /** Things that happened during the last tick, so the game can play effects and sounds. */
+export type AttackMove = 'basic' | 'strike' | 'counter' | 'chain' | 'ripple' | 'reflect';
+
 export type CombatEvent =
-  | { kind: 'playerAttack'; playerId: PlayerId; enemyId: EnemyId; move: 'basic' | 'strike' | 'counter'; damage: number; defeated: boolean }
+  | { kind: 'playerAttack'; playerId: PlayerId; enemyId: EnemyId; move: AttackMove; damage: number; defeated: boolean }
   | { kind: 'telegraph'; enemyId: EnemyId; ticks: number }
   | { kind: 'enemySwing'; enemyId: EnemyId }
   | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId }
@@ -111,7 +136,15 @@ export type CombatEvent =
   | { kind: 'shieldBlock'; playerId: PlayerId; enemyId: EnemyId }
   | { kind: 'shieldBreak'; playerId: PlayerId; enemyId: EnemyId }
   | { kind: 'shieldRegrow'; enemyId: EnemyId }
-  | { kind: 'summon'; enemyId: EnemyId; summoned: EnemyId[] };
+  | { kind: 'summon'; enemyId: EnemyId; summoned: EnemyId[] }
+  | { kind: 'speedBurst'; playerId: PlayerId }
+  | { kind: 'playerOut'; playerId: PlayerId }
+  | { kind: 'roomCleared' }
+  | { kind: 'chestOpened'; playerId: PlayerId }
+  | { kind: 'shrineUsed'; playerId: PlayerId; healed: number }
+  | { kind: 'doorsOpen' }
+  /** `door` is the position in the offered doors (0 = leftmost offered door). */
+  | { kind: 'doorEntered'; playerId: PlayerId; door: number };
 
 export interface WorldState {
   tick: number;
@@ -126,6 +159,7 @@ export interface WorldState {
   respawnEnemies: boolean;
   /** Counts up for naming enemies that are called in. */
   nextEnemyNumber: number;
+  progress: RoomProgress;
   /** Events from the most recent tick only. */
   events: CombatEvent[];
 }
@@ -148,14 +182,29 @@ export interface WorldOptions {
   difficulty?: Difficulty;
   /** Bring beaten enemies back after a few seconds (default true, for practice rooms). */
   respawnEnemies?: boolean;
+  /** How many doors to offer once the room is done (default 0). */
+  doorCount?: number;
+  /** The player's stats (from gear and Insights); defaults to the starting stats. */
+  player?: PlayerSetup;
+}
+
+export interface PlayerSetup {
+  maxHealth: number;
+  power: number;
+  guard: number;
+  /** Health carried over from the last room (defaults to full). */
+  health?: number;
+  mods?: PlayerMods;
 }
 
 const NO_INPUT: PlayerInput = { kind: 'none' };
-const STEP = MOVEMENT.speedTilesPerSecond / TICKS_PER_SECOND;
+const BASE_STEP = MOVEMENT.speedTilesPerSecond / TICKS_PER_SECOND;
 const R = MOVEMENT.playerRadius;
 
 export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOptions = {}): WorldState {
   const players: Record<PlayerId, PlayerState> = {};
+  const setup = options.player ?? COMBAT.player;
+  const mods = options.player?.mods ?? noMods();
   for (const id of playerIds) {
     players[id] = {
       id,
@@ -164,11 +213,11 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       path: null,
       stuckTicks: 0,
       moving: false,
-      health: COMBAT.player.maxHealth,
-      maxHealth: COMBAT.player.maxHealth,
-      power: COMBAT.player.power,
-      guard: COMBAT.player.guard,
-      focus: 0,
+      health: clamp(options.player?.health ?? setup.maxHealth, 1, setup.maxHealth),
+      maxHealth: setup.maxHealth,
+      power: setup.power,
+      guard: setup.guard,
+      focus: Math.min(COMBAT.focus.max, mods.startFocus),
       combo: 0,
       attackCooldown: 0,
       strikeRecovery: 0,
@@ -180,6 +229,9 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       dashDir: { x: 0, y: 1 },
       dashCooldown: 0,
       downTicks: 0,
+      out: false,
+      mods: { ...mods },
+      speedBoostTicks: 0,
     };
   }
 
@@ -210,8 +262,24 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     enemyTypes,
     respawnEnemies: options.respawnEnemies ?? true,
     nextEnemyNumber: enemies.length + 1,
+    progress: {
+      cleared: false,
+      chestOpened: false,
+      shrineUsed: false,
+      doorsOpen: false,
+      doorCount: options.doorCount ?? 0,
+      ticks: 0,
+      perfects: 0,
+      damageTaken: 0,
+      bestCombo: 0,
+    },
     events: [],
   };
+}
+
+/** Changes a player's Insight and charm effects (for example after picking an Insight). */
+export function setPlayerMods(p: PlayerState, mods: PlayerMods): void {
+  p.mods = { ...mods };
 }
 
 function newEnemy(id: EnemyId, def: EnemyDef, pos: Vec2, n: number): EnemyState {
@@ -248,12 +316,13 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
   for (const e of world.enemies) stepEnemy(world, e, room);
   separateEnemies(world, room);
   for (const id of ids) separateFromEnemies(world, world.players[id], room);
+  updateProgress(world, room, ids);
   world.tick++;
 }
 
 /** True while a player is fighting (not defeated). */
 export function isActive(p: PlayerState): boolean {
-  return p.downTicks === 0;
+  return p.downTicks === 0 && !p.out;
 }
 
 /** True if an enemy is in the room and can be hit. */
@@ -290,12 +359,22 @@ export function counterWindowTicks(world: WorldState, p: PlayerState): number {
 // ---------------------------------------------------------------- players
 
 function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: PlayerInput): void {
+  if (p.out) return;
   if (p.downTicks > 0) {
     p.moving = false;
     p.downTicks--;
-    if (p.downTicks === 0) returnToStart(world, p, room);
+    if (p.downTicks === 0) {
+      if (world.respawnEnemies) {
+        returnToStart(world, p, room);
+      } else {
+        // In a floor room, defeat ends the run (the player keeps everything found so far).
+        p.out = true;
+        world.events.push({ kind: 'playerOut', playerId: p.id });
+      }
+    }
     return;
   }
+  if (p.speedBoostTicks > 0) p.speedBoostTicks--;
 
   if (p.attackCooldown > 0) p.attackCooldown--;
   if (p.strikeRecovery > 0) p.strikeRecovery--;
@@ -330,7 +409,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   if (p.dashTicks === 0 && p.guardTicks === 0 && p.strikeRecovery === 0 && p.attackCooldown === 0) {
     const target = nearestEnemy(world, p, COMBAT.basicAttack.reach);
     if (target) {
-      p.attackCooldown = COMBAT.basicAttack.cooldownTicks;
+      p.attackCooldown = Math.max(1, Math.round(COMBAT.basicAttack.cooldownTicks * (1 - p.mods.attackSpeed)));
       landHit(world, p, target, 'basic', COMBAT.basicAttack.strength, COMBAT.focus.perHit);
     }
   }
@@ -385,6 +464,10 @@ function tryStrike(world: WorldState, p: PlayerState, room: Room): void {
   p.strikeRecovery = s.recoveryTicks;
   p.attackCooldown = Math.max(p.attackCooldown, s.recoveryTicks);
   landHit(world, p, target, 'strike', s.strength, COMBAT.focus.perHit);
+  // Double Strike: a second, lighter hit right after.
+  if (p.mods.strikeExtraHit > 0 && isEnemyPresent(target)) {
+    landHit(world, p, target, 'chain', s.strength * p.mods.strikeExtraHit, COMBAT.focus.perHit);
+  }
 }
 
 /** A player's hit on an enemy: damage with the combo bonus, Focus, and the combo counter. */
@@ -392,12 +475,12 @@ function landHit(
   world: WorldState,
   p: PlayerState,
   e: EnemyState,
-  move: 'basic' | 'strike' | 'counter',
+  move: AttackMove,
   strength: number,
   focusGain: number,
 ): void {
   if (e.shieldUp) {
-    if (move === 'basic') {
+    if ((move === 'basic' || move === 'ripple') && !p.mods.shieldBreaker) {
       // Basic attacks bounce off the shield: no damage, no Focus.
       p.facing = directionTo(p.pos, e.pos);
       world.events.push({ kind: 'shieldBlock', playerId: p.id, enemyId: e.id });
@@ -408,11 +491,23 @@ function landHit(
     e.shieldRegrow = e.def.shield!.regrowTicks;
     world.events.push({ kind: 'shieldBreak', playerId: p.id, enemyId: e.id });
   }
-  const dmg = damage(p.power, strength, e.def.guard, comboBonus(p.combo));
-  e.health = Math.max(0, e.health - dmg);
+  const bonus = comboBonus(p.combo) + (e.mode === 'stagger' ? p.mods.staggerBonus : 0);
+  const dmg = damage(p.power * (1 + p.mods.powerScale), strength, e.def.guard, bonus);
   p.combo++;
-  p.focus = Math.min(COMBAT.focus.max, p.focus + focusGain);
+  if (p.combo > world.progress.bestCombo) world.progress.bestCombo = p.combo;
+  if (p.mods.comboSpeedEvery > 0 && p.combo % p.mods.comboSpeedEvery === 0) {
+    p.speedBoostTicks = p.mods.comboSpeedTicks;
+    world.events.push({ kind: 'speedBurst', playerId: p.id });
+  }
+  const lowHealth = p.health < p.maxHealth * p.mods.lowHealthBelow;
+  p.focus = Math.min(COMBAT.focus.max, p.focus + focusGain * (lowHealth ? p.mods.lowHealthFocusScale : 1));
   p.facing = directionTo(p.pos, e.pos);
+  hurtEnemy(world, p, e, move, dmg);
+}
+
+/** Damage lands on an enemy. */
+function hurtEnemy(world: WorldState, p: PlayerState, e: EnemyState, move: AttackMove, dmg: number): void {
+  e.health = Math.max(0, e.health - dmg);
   const defeated = e.health === 0;
   if (defeated) {
     e.mode = 'defeated';
@@ -451,6 +546,7 @@ function returnToStart(world: WorldState, p: PlayerState, room: Room): void {
   p.counterLockout = 0;
   p.dashTicks = 0;
   p.dashCooldown = 0;
+  p.speedBoostTicks = 0;
   world.events.push({ kind: 'playerReturn', playerId: p.id });
   // If nobody else is still fighting, the whole room starts over.
   const othersFighting = Object.values(world.players).some((o) => o !== p && isActive(o));
@@ -462,6 +558,7 @@ function returnToStart(world: WorldState, p: PlayerState, room: Room): void {
 
 function movePlayer(p: PlayerState, room: Room, input: MoveInput): void {
   const before = { x: p.pos.x, y: p.pos.y };
+  const STEP = BASE_STEP * (p.speedBoostTicks > 0 ? 1 + p.mods.comboSpeedBonus : 1);
 
   if (input.kind === 'stick') {
     p.path = null;
@@ -643,11 +740,22 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
     if (guarding && world.tick - p.counterPressedTick < counterWindowTicks(world, p)) {
       // Perfect Counter: no damage, enemy staggered, counter hit for 2x Power, +25 Focus.
       p.guardTicks = 0;
+      world.progress.perfects++;
       world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id });
+      if (p.mods.healOnPerfect > 0) p.health = Math.min(p.maxHealth, p.health + p.mods.healOnPerfect);
       landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength, COMBAT.focus.perPerfectCounter);
       if (e.mode !== 'defeated') {
         e.mode = 'stagger';
         e.modeTicks = COMBAT.counter.perfectStaggerTicks;
+      }
+      // Ripple Counter: the counter also hits every other enemy nearby.
+      if (p.mods.rippleRadius > 0) {
+        for (const o of world.enemies) {
+          if (o === e || !isEnemyPresent(o)) continue;
+          if (bodyGap(p.pos, R, o.pos, o.def.radius) <= p.mods.rippleRadius) {
+            landHit(world, p, o, 'ripple', p.mods.rippleStrength, 0);
+          }
+        }
       }
     } else if (guarding) {
       // Block: half damage, no stagger. The combo is kept.
@@ -655,6 +763,11 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       const dmg = damage(e.def.power, a.strength * COMBAT.counter.blockDamageMultiplier, p.guard);
       world.events.push({ kind: 'block', playerId: p.id, enemyId: e.id, damage: dmg });
       hurt(world, p, dmg);
+      // Iron Skin: part of the full hit bounces back (shields stop it, unless Shield Breaker).
+      if (p.mods.blockReflect > 0 && isEnemyPresent(e) && (!e.shieldUp || p.mods.shieldBreaker)) {
+        const back = Math.max(1, Math.round(damage(e.def.power, a.strength, p.guard) * p.mods.blockReflect));
+        hurtEnemy(world, p, e, 'reflect', back);
+      }
     } else {
       // Hit: full damage, combo resets.
       const dmg = damage(e.def.power, a.strength, p.guard);
@@ -666,6 +779,7 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
 }
 
 function hurt(world: WorldState, p: PlayerState, dmg: number): void {
+  world.progress.damageTaken += Math.min(dmg, p.health);
   p.health = Math.max(0, p.health - dmg);
   if (p.health === 0) {
     p.downTicks = COMBAT.defeatTicks;
@@ -770,6 +884,57 @@ function attackersNow(world: WorldState): number {
   let n = 0;
   for (const e of world.enemies) if (e.mode === 'windup') n++;
   return n;
+}
+
+// ---------------------------------------------------------------- room progress
+
+/** How close (tiles, center to center) a player must get to use the chest, the shrine or a door. */
+const TOUCH = 1.05;
+
+function updateProgress(world: WorldState, room: Room, ids: PlayerId[]): void {
+  if (world.respawnEnemies) return; // practice rooms have no progress
+  const prog = world.progress;
+  const players = ids.map((id) => world.players[id]).filter(isActive);
+
+  if (!prog.cleared) {
+    if (allEnemiesBeaten(world)) {
+      prog.cleared = true;
+      world.events.push({ kind: 'roomCleared' });
+    } else {
+      prog.ticks++;
+    }
+  }
+
+  for (const p of players) {
+    if (room.chest && prog.cleared && !prog.chestOpened && distance(p.pos, room.chest) <= TOUCH) {
+      prog.chestOpened = true;
+      world.events.push({ kind: 'chestOpened', playerId: p.id });
+    }
+    if (room.shrine && !prog.shrineUsed && distance(p.pos, room.shrine) <= TOUCH) {
+      prog.shrineUsed = true;
+      const healed = Math.round(p.maxHealth * COMBAT.restShrineHeal);
+      const before = p.health;
+      p.health = Math.min(p.maxHealth, p.health + healed);
+      world.events.push({ kind: 'shrineUsed', playerId: p.id, healed: p.health - before });
+    }
+  }
+
+  if (!prog.doorsOpen && prog.cleared && prog.doorCount > 0 && (!room.chest || prog.chestOpened)) {
+    prog.doorsOpen = true;
+    world.events.push({ kind: 'doorsOpen' });
+  }
+  if (prog.doorsOpen) {
+    const slots = activeDoorSlots(room, prog.doorCount);
+    for (const p of players) {
+      const door = slots.findIndex((slot) => distance(p.pos, room.doors[slot]) <= TOUCH);
+      if (door >= 0) {
+        world.events.push({ kind: 'doorEntered', playerId: p.id, door });
+        prog.doorsOpen = false;
+        prog.doorCount = 0;
+        return;
+      }
+    }
+  }
 }
 
 // ---------------------------------------------------------------- helpers

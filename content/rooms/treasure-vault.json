@@ -1,0 +1,17 @@
+{
+  "id": "treasure-vault",
+  "name": "Treasure Vault",
+  "kind": "treasure",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#.#.......#.#",
+    "#.....C.....#",
+    "#.#.......#.#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ]
+}

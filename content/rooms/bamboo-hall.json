@@ -1,0 +1,47 @@
+{
+  "id": "bamboo-hall",
+  "name": "Bamboo Hall",
+  "kind": "battle",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "parSeconds": 50,
+  "tiles": [
+    "####D####D####D###",
+    "#................#",
+    "#................#",
+    "#................#",
+    "#..##........##..#",
+    "#..##........##..#",
+    "#................#",
+    "#................#",
+    "#.......P........#",
+    "#................#",
+    "##################"
+  ],
+  "enemies": [
+    {
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 13,
+      "row": 3
+    },
+    {
+      "enemy": "brute",
+      "column": 9,
+      "row": 4
+    },
+    {
+      "enemy": "swarmer",
+      "column": 8,
+      "row": 6
+    },
+    {
+      "enemy": "swarmer",
+      "column": 11,
+      "row": 6
+    }
+  ]
+}

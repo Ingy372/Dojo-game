@@ -1,0 +1,68 @@
+{
+  "notes": "Insights last for one run. After each battle room the player picks 1 of 3. Effect types are listed in packages/sim/src/effects.ts.",
+  "insights": [
+    {
+      "id": "ripple-counter",
+      "name": "Ripple Counter",
+      "family": "rooted",
+      "text": "Perfect Counters also hit every enemy near you.",
+      "effect": { "type": "rippleCounter", "amount": 1.5, "radius": 2.2 }
+    },
+    {
+      "id": "iron-skin",
+      "name": "Iron Skin",
+      "family": "rooted",
+      "text": "Blocks bounce half the hit back at the attacker.",
+      "effect": { "type": "blockReflect", "amount": 0.5 }
+    },
+    {
+      "id": "wind-step",
+      "name": "Wind Step",
+      "family": "flowing",
+      "text": "Every 10 combo hits gives you a burst of speed.",
+      "effect": { "type": "comboSpeed", "amount": 0.4, "everyHits": 10, "seconds": 3 }
+    },
+    {
+      "id": "double-strike",
+      "name": "Double Strike",
+      "family": "flowing",
+      "text": "Strikes chain one extra hit.",
+      "effect": { "type": "strikeExtraHit", "amount": 0.6 }
+    },
+    {
+      "id": "quick-hands",
+      "name": "Quick Hands",
+      "family": "flowing",
+      "text": "Your basic attacks are 25% faster.",
+      "effect": { "type": "attackSpeed", "amount": 0.25 }
+    },
+    {
+      "id": "press-the-advantage",
+      "name": "Press the Advantage",
+      "family": "power",
+      "text": "Staggered enemies take 30% more damage.",
+      "effect": { "type": "staggerBonus", "amount": 0.3 }
+    },
+    {
+      "id": "shield-breaker",
+      "name": "Shield Breaker",
+      "family": "power",
+      "text": "Any hit breaks shields.",
+      "effect": { "type": "shieldBreaker" }
+    },
+    {
+      "id": "heavy-hands",
+      "name": "Heavy Hands",
+      "family": "power",
+      "text": "+20% Power.",
+      "effect": { "type": "powerScale", "amount": 0.2 }
+    },
+    {
+      "id": "second-wind",
+      "name": "Second Wind",
+      "family": "virtue",
+      "text": "Focus fills twice as fast when your health is below half.",
+      "effect": { "type": "lowHealthFocus", "amount": 2, "below": 0.5 }
+    }
+  ]
+}

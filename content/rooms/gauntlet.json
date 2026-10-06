@@ -1,0 +1,67 @@
+{
+  "id": "gauntlet",
+  "name": "The Gauntlet",
+  "kind": "challenge",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "parSeconds": 70,
+  "challenge": {
+    "seconds": 75,
+    "text": "Clear the room in 75 seconds for a better chest!"
+  },
+  "tiles": [
+    "#####D#####D#####D####",
+    "#....................#",
+    "#..........C.........#",
+    "#....................#",
+    "#..##............##..#",
+    "#....................#",
+    "#..##............##..#",
+    "#....................#",
+    "#....................#",
+    "#..........P.........#",
+    "#....................#",
+    "######################"
+  ],
+  "enemies": [
+    {
+      "enemy": "swarmer",
+      "column": 5,
+      "row": 4
+    },
+    {
+      "enemy": "brute",
+      "column": 10,
+      "row": 4
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 4
+    },
+    {
+      "enemy": "swarmer",
+      "column": 8,
+      "row": 6
+    },
+    {
+      "enemy": "shield",
+      "column": 13,
+      "row": 6
+    },
+    {
+      "enemy": "swarmer",
+      "column": 6,
+      "row": 8
+    },
+    {
+      "enemy": "swarmer",
+      "column": 12,
+      "row": 8
+    },
+    {
+      "enemy": "swarmer",
+      "column": 18,
+      "row": 8
+    }
+  ]
+}

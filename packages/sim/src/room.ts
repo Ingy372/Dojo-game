@@ -7,7 +7,24 @@ import type { Vec2 } from './math';
 const WALL = '#';
 const FLOOR = '.';
 const PLAYER_START = 'P';
-const ALLOWED = new Set([WALL, FLOOR, PLAYER_START]);
+/** A door slot in the outer wall. Doors stay shut (like walls) until the room is done. */
+const DOOR = 'D';
+/** Where the treasure chest appears (floor). */
+const CHEST = 'C';
+/** Where the rest shrine stands (floor). */
+const SHRINE = 'S';
+const ALLOWED = new Set([WALL, FLOOR, PLAYER_START, DOOR, CHEST, SHRINE]);
+
+/** What a room is for. Practice rooms (like the training room) bring enemies back and have no doors. */
+export type RoomKind = 'practice' | 'battle' | 'challenge' | 'treasure' | 'rest' | 'boss';
+export const ROOM_KINDS: readonly RoomKind[] = ['practice', 'battle', 'challenge', 'treasure', 'rest', 'boss'];
+
+export interface RoomChallenge {
+  /** Clear the room within this many seconds for the better chest. */
+  seconds: number;
+  /** What the player is told, e.g. "Clear the room in 60 seconds!" */
+  text: string;
+}
 
 export interface Room {
   id: string;
@@ -19,6 +36,14 @@ export interface Room {
   playerStart: Vec2;
   /** Where enemies start (centers of tiles), in the order listed in the file. */
   enemySpawns: EnemySpawn[];
+  kind: RoomKind;
+  /** Door slots (tile centers), left to right, then top to bottom. */
+  doors: Vec2[];
+  chest: Vec2 | null;
+  shrine: Vec2 | null;
+  /** A good clear time, for the room grade. */
+  parSeconds: number;
+  challenge: RoomChallenge | null;
 }
 
 export interface EnemySpawn {
@@ -56,6 +81,9 @@ export function loadRoom(data: unknown): Room {
 
   const walls: boolean[][] = [];
   let playerStart: Vec2 | null = null;
+  const doors: Vec2[] = [];
+  let chest: Vec2 | null = null;
+  let shrine: Vec2 | null = null;
   rows.forEach((row, y) => {
     if (row.length !== width) {
       throw new RoomError(id, `row ${y + 1} is ${row.length} tiles wide, but row 1 is ${width}`);
@@ -67,21 +95,77 @@ export function loadRoom(data: unknown): Room {
         throw new RoomError(id, `unknown tile "${ch}" at row ${y + 1}, column ${x + 1}`);
       }
       const onEdge = x === 0 || y === 0 || x === width - 1 || y === height - 1;
-      if (onEdge && ch !== WALL) {
-        throw new RoomError(id, `the outer edge must be all walls (row ${y + 1}, column ${x + 1})`);
+      const corner = (x === 0 || x === width - 1) && (y === 0 || y === height - 1);
+      if (ch === DOOR) {
+        if (!onEdge || corner) throw new RoomError(id, `a door "D" must be in the outer wall, not a corner (row ${y + 1}, column ${x + 1})`);
+        doors.push({ x: x + 0.5, y: y + 0.5 });
+      } else if (onEdge && ch !== WALL) {
+        throw new RoomError(id, `the outer edge must be all walls or doors (row ${y + 1}, column ${x + 1})`);
+      }
+      if (ch === CHEST) {
+        if (chest) throw new RoomError(id, 'there is more than one chest "C"');
+        chest = { x: x + 0.5, y: y + 0.5 };
+      }
+      if (ch === SHRINE) {
+        if (shrine) throw new RoomError(id, 'there is more than one shrine "S"');
+        shrine = { x: x + 0.5, y: y + 0.5 };
       }
       if (ch === PLAYER_START) {
         if (playerStart) throw new RoomError(id, 'there is more than one player start "P"');
         playerStart = { x: x + 0.5, y: y + 0.5 };
       }
-      wallRow.push(ch === WALL);
+      wallRow.push(ch === WALL || ch === DOOR);
     }
     walls.push(wallRow);
   });
   if (!playerStart) throw new RoomError(id, 'there is no player start "P"');
 
   const enemySpawns = loadEnemySpawns(id, raw.enemies, walls, width, height);
-  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns };
+
+  const kind = (raw.kind ?? 'practice') as RoomKind;
+  if (!ROOM_KINDS.includes(kind)) throw new RoomError(id, `"kind" must be one of: ${ROOM_KINDS.join(', ')}`);
+  const fights = kind === 'battle' || kind === 'challenge' || kind === 'boss';
+  if (kind !== 'practice' && doors.length === 0) throw new RoomError(id, 'floor rooms need at least one door "D"');
+  if (kind !== 'practice' && kind !== 'boss' && doors.length < 3) {
+    throw new RoomError(id, 'this kind of room needs 3 door slots "D" (for up to 3 door choices)');
+  }
+  if (fights && enemySpawns.length === 0) throw new RoomError(id, `a ${kind} room needs enemies`);
+  if (!fights && kind !== 'practice' && enemySpawns.length > 0) throw new RoomError(id, `a ${kind} room can't have enemies`);
+  if ((kind === 'treasure' || kind === 'challenge' || kind === 'boss') && !chest) {
+    throw new RoomError(id, `a ${kind} room needs a chest "C"`);
+  }
+  if (kind === 'rest' && !shrine) throw new RoomError(id, 'a rest room needs a shrine "S"');
+  doors.sort((a, b) => a.y - b.y || a.x - b.x);
+
+  let parSeconds = 60;
+  if (raw.parSeconds !== undefined) {
+    if (typeof raw.parSeconds !== 'number' || !(raw.parSeconds > 0)) throw new RoomError(id, '"parSeconds" must be a number above 0');
+    parSeconds = raw.parSeconds;
+  }
+  let challenge: RoomChallenge | null = null;
+  if (kind === 'challenge') {
+    const c = raw.challenge as Record<string, unknown> | undefined;
+    if (!c || typeof c.seconds !== 'number' || !(c.seconds > 0) || typeof c.text !== 'string') {
+      throw new RoomError(id, 'a challenge room needs "challenge": { "seconds": number, "text": "..." }');
+    }
+    challenge = { seconds: c.seconds, text: c.text };
+  }
+
+  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns, kind, doors, chest, shrine, parSeconds, challenge };
+}
+
+/**
+ * Which door slots to use when offering `count` doors: spread out evenly
+ * (one door uses the middle slot; two use the outer slots).
+ */
+export function activeDoorSlots(room: Room, count: number): number[] {
+  const n = room.doors.length;
+  const c = Math.min(count, n);
+  if (c <= 0) return [];
+  if (c === 1) return [Math.floor((n - 1) / 2)];
+  const out: number[] = [];
+  for (let i = 0; i < c; i++) out.push(Math.round((i * (n - 1)) / (c - 1)));
+  return out;
 }
 
 /** Reads the optional "enemies" list. Column and row count from 1, like the error messages. */

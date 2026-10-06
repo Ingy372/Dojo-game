@@ -1,0 +1,52 @@
+{
+  "id": "shield-wall",
+  "name": "Shield Wall",
+  "kind": "challenge",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "parSeconds": 60,
+  "challenge": {
+    "seconds": 60,
+    "text": "Clear the room in 60 seconds for a better chest!"
+  },
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#.........C........#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "enemies": [
+    {
+      "enemy": "shield",
+      "column": 6,
+      "row": 5
+    },
+    {
+      "enemy": "shield",
+      "column": 11,
+      "row": 5
+    },
+    {
+      "enemy": "shield",
+      "column": 16,
+      "row": 5
+    },
+    {
+      "enemy": "swarmer",
+      "column": 9,
+      "row": 7
+    },
+    {
+      "enemy": "swarmer",
+      "column": 13,
+      "row": 7
+    }
+  ]
+}
