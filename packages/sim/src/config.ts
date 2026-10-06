@@ -139,7 +139,7 @@ export const COMBAT = {
 /** The floor (core-design section 3): rooms, then the boss. */
 export const FLOOR = {
   /** Rooms before the boss room (so a floor is this + 1 rooms). */
-  roomsBeforeBoss: 6,
+  roomsBeforeBoss: 7,
   /** How often each kind of door is offered (higher = more often). */
   doorWeights: { battle: 4, challenge: 1.5, treasure: 0.7, rest: 1.2 },
   /** Treasure rooms: never two in a row (Jay, after playtest), and at most this many per floor. */

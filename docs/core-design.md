@@ -74,7 +74,7 @@ Good games are built from loops nested inside each other: a satisfying action re
 | Loop | Time scale | What the player does | Main hook |
 | --- | --- | --- | --- |
 | **Moment** | Seconds | Read an enemy's telegraph, counter or strike, see and hear the impact | Mastery |
-| **Run** | 10–15 minutes | Clear a floor room by room, pick Insights, beat the boss, collect loot | Anticipation |
+| **Run** | 5–7 minutes | Clear a floor room by room, pick Insights, beat the boss, collect loot | Anticipation |
 | **Session** | 20–60 minutes | Return home, upgrade, craft, decorate, clean, take a quest or scenario, then start another run | Ownership |
 | **Week** | Days | Real class grants the Dojo Blessing; home practice earns Training Points; the quest board refreshes; class events | Anticipation |
 | **Journey** | Months to years | Earn belts, open Gates, restore the Tower's light, expand the dojo, follow the story | All three |

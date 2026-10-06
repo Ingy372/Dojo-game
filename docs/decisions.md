@@ -116,3 +116,9 @@ Jay asked Claude to test and tune the game before his next playtest.
 
   Smart play is clearly rewarded. Most deaths are at the boss. Average crowding is about 1.5–2 enemies near the player, and the worst moments are about 3–5 (up to 6 in the Gauntlet).
 - **Run length is still the open question.** The computer player takes about 2–2.5 minutes of fighting per floor. People are slower (moving, reading cards, picking doors), but by how much is unknown. Jay will report his run time (shown in the run summary), and we'll tune toward 10–15 minutes with more waves or more rooms if needed.
+
+### Milestone 3 — run length (Jay, 2026-10-06)
+
+- **Jay's second playtest:** waves made fights much cleaner. Leading swarmers away works, and winded brutes are worth chasing (the +50% damage is "perfect"). His run took about 5–6 minutes in real time (2:43 of room time on the summary, plus reading the Insight cards).
+- **Runs are 5–7 minutes, not 10–15 (Jay's choice).** Phone sessions are short: 15–30 minutes means a few runs, not one long one. Updated in `core-design.md` (the five loops table) and `framework.md` (session length, milestone 3's "done when").
+- **Floors are now 8 rooms:** 7 chosen through doors, then the boss (`FLOOR.roomsBeforeBoss` 6 → 7). The balance report barely changed (typical player still wins 93% playing smart), and fight time grew by about 10%.

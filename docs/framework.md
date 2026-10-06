@@ -33,7 +33,7 @@ Most martial arts games fail because they're one of two things: a cheap reskin o
 | --- | --- |
 | **Genre** | Top-down 2D adventure RPG with three parts: the Tower (dungeon crawling), Street Smarts (real-world scenarios), and the Home Dojo (build, care for, and take on quests) |
 | **Look** | Clean pixel art, readable on a phone screen |
-| **Session length** | Flexible: a 10–15 minute Tower run, a 3–5 minute scenario, or a whole afternoon |
+| **Session length** | Flexible: a 5–7 minute Tower run (sessions of 15–30 minutes are several runs), a 3–5 minute scenario, or a whole afternoon |
 | **Players** | A shared world from the start (visit classmates' dojos, see classmates in the town square), then a live town square, then co-op parties of 2–4 classmates; same school only |
 | **Who plays** | Every student, age 6 through adult, with assist options for young kids |
 | **Platform** | iPhone and Android apps on the App Store and Google Play, built from one codebase; the same game also runs in a phone browser and inside the DojoForge student app |
@@ -602,7 +602,7 @@ Each milestone ends with something Jay can check himself, without reading code.
 | 0 | **Setup** | GitHub repo, CLAUDE.md, this framework in docs/, a blank Phaser game deployed to Cloudflare Pages | A link opens the game on your phone |
 | 1 | **Movement** | One room, the character moving by tap or stick, walls and collision | Moving around feels smooth on a phone |
 | 2 | **Combat core** | Tick-based rules package, one brute enemy, auto-attack, Strike, Counter with telegraphs and Perfect Counter, health, defeat, impact effects | Landing a Perfect Counter feels satisfying, and a student can play for two minutes without help |
-| 3 | **A full floor** | 5–8 rooms with door choices, three enemy types, a boss, loot, a return to the Home Dojo | A full run takes 10–15 minutes and feels complete |
+| 3 | **A full floor** | 5–8 rooms with door choices, three enemy types, a boss, loot, a return to the Home Dojo | A full run takes 5–7 minutes and feels complete |
 | 4 | **Training link (mock data)** | Fake student profiles; abilities, Forms, and seals unlock from profile data; level cap; the Gate; Dojo Blessing; reward moments; the promotion ceremony | Switching the fake profile from white belt to yellow belt visibly changes the character and opens the Gate |
 | 5 | **Home Dojo basics** | A small room, placing and moving about ten decorations, mess that builds while away, the cleaning routine, the bow ritual | A student decorates and cleans their dojo without help |
 | 6 | **Story and Street Smarts sample** | Dialogue and choice system, Sensei and Kohai, one manners quest, one life-lesson quest, one Street Smarts scenario for ages 6–9 | Jay approves the scenario, and a student completes it and can explain what they'd do |
