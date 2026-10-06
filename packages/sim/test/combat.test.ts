@@ -10,6 +10,7 @@ import {
   loadEnemy,
   loadRoom,
   stepWorld,
+  telegraphTicks,
   type CombatEvent,
   type Difficulty,
   type PlayerInput,
@@ -164,12 +165,18 @@ describe('enemy telegraphs', () => {
     expect(swings).toBeGreaterThan(0);
   });
 
-  it('telegraphs longer on Guided and shorter on Challenge', () => {
+  it('fills at the same speed on Guided and Standard; Guided just holds longer before impact', () => {
+    const totals: Record<string, number> = {};
     for (const d of ['guided', 'standard', 'challenge'] as Difficulty[]) {
       const { room, world } = setup(d);
       stepUntil(world, room, 'telegraph');
-      expect(world.enemies[0].windupTotal).toBe(Math.round(brute.attack.telegraphTicks * DIFFICULTY[d].telegraphScale));
+      totals[d] = world.enemies[0].windupTotal;
+      expect(totals[d]).toBe(telegraphTicks(brute, d));
     }
+    const fill = brute.attack.telegraphTicks - DIFFICULTY.standard.counterWindowTicks;
+    expect(totals.standard).toBe(brute.attack.telegraphTicks);
+    expect(totals.guided).toBe(fill + DIFFICULTY.guided.counterWindowTicks);
+    expect(totals.challenge).toBeLessThan(totals.standard);
   });
 
   it('a player who steps out of the danger area takes no damage', () => {

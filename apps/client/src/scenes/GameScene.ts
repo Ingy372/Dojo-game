@@ -3,6 +3,8 @@ import {
   COMBAT,
   MOVEMENT,
   TICKS_PER_SECOND,
+  TELEGRAPH_NEARLY_FULL,
+  counterWindowTicks,
   createWorld,
   loadEnemy,
   loadRoom,
@@ -248,9 +250,16 @@ export class GameScene extends Phaser.Scene {
     if (e.mode === 'waiting') {
       alpha = 1 - (e.modeTicks / COMBAT.enemySpawnWaitTicks) * 0.8;
     } else if (e.mode === 'windup' && e.attackCenter) {
-      // The telegraph: the brute swells and turns red, and the danger area fills up.
-      // When the inner circle reaches the edge, the attack lands.
-      const progress = Phaser.Math.Clamp((e.windupTotal - e.modeTicks + blend) / e.windupTotal, 0, 1);
+      // The telegraph: the brute swells and turns red, and the danger area fills up to
+      // "nearly full". It then holds nearly full (creeping to the edge) while the Perfect
+      // Counter window is open, with a brighter ring. At the edge, the attack lands.
+      const window = counterWindowTicks(this.world, this.world.players[this.me]);
+      const fillTicks = Math.max(1, e.windupTotal - window);
+      const elapsed = Math.min(e.windupTotal, e.windupTotal - e.modeTicks + blend);
+      const inWindow = elapsed >= fillTicks;
+      const progress = inWindow
+        ? TELEGRAPH_NEARLY_FULL + (1 - TELEGRAPH_NEARLY_FULL) * ((elapsed - fillTicks) / window)
+        : TELEGRAPH_NEARLY_FULL * (elapsed / fillTicks);
       const pulse = Math.sin(now / 45) > 0 ? 1 : 0.75;
       color = blendColor(COLORS.brute, COLORS.bruteAngry, progress * pulse);
       scale = 1 + progress * 0.18;
@@ -258,8 +267,8 @@ export class GameScene extends Phaser.Scene {
       const cy = e.attackCenter.y * TILE;
       const area = e.def.attack.areaRadius * TILE;
       this.danger.fillStyle(COLORS.danger, 0.16).fillCircle(cx, cy, area);
-      this.danger.lineStyle(3, COLORS.danger, 0.9).strokeCircle(cx, cy, area);
-      this.danger.fillStyle(COLORS.danger, 0.4).fillCircle(cx, cy, area * progress);
+      this.danger.lineStyle(inWindow ? 6 : 3, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
+      this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
     } else if (e.mode === 'stagger') {
       rotation = Math.sin(now / 60) * 0.18;
     }

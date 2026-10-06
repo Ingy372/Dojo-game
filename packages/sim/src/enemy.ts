@@ -10,7 +10,7 @@ export interface EnemyAttackDef {
   reach: number;
   /** Size of the round danger area shown on the floor. */
   areaRadius: number;
-  /** Wind-up (telegraph) length on Standard difficulty. */
+  /** Wind-up (telegraph) length on Standard difficulty, Perfect Counter window included. */
   telegraphTicks: number;
   /** Pause after swinging before it can move or attack again. */
   recoverTicks: number;

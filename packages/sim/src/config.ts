@@ -22,15 +22,21 @@ export const MOVEMENT = {
 } as const;
 
 /**
- * Difficulty settings (core-design section 4). The Perfect Counter window is in ticks;
- * enemy telegraphs (wind-ups) are multiplied by telegraphScale.
+ * Difficulty settings (core-design section 4, adjusted from Jay's playtest).
+ * An enemy wind-up has two parts: the "fill" (the danger circle filling up) and then the
+ * Perfect Counter window (the circle holding nearly full). fillScale changes the fill;
+ * the window is added on top, so easier difficulties hold "nearly full" longer
+ * instead of slowing the whole wind-up down.
  */
 export const DIFFICULTY = {
-  // Guided widened from 10 to 14 ticks (0.7 s) after Jay's first playtest: doable for a 6-year-old, not automatic.
-  guided: { counterWindowTicks: 14, telegraphScale: 1.5 },
-  standard: { counterWindowTicks: 6, telegraphScale: 1 },
-  challenge: { counterWindowTicks: 4, telegraphScale: 0.8 },
+  // Guided: same fill speed as Standard, then a 0.5 s window (Jay, 2026-10-06).
+  guided: { counterWindowTicks: 10, fillScale: 1 },
+  standard: { counterWindowTicks: 6, fillScale: 1 },
+  challenge: { counterWindowTicks: 4, fillScale: 0.8 },
 } as const;
+
+/** How full the danger circle is (0 to 1) when the Perfect Counter window opens. */
+export const TELEGRAPH_NEARLY_FULL = 0.85;
 
 export type Difficulty = keyof typeof DIFFICULTY;
 

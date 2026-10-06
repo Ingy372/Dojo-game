@@ -204,6 +204,17 @@ export function isEnemyPresent(e: EnemyState): boolean {
   return e.mode !== 'defeated';
 }
 
+/**
+ * Total wind-up for an enemy's attack on a difficulty. The enemy file's telegraphTicks is the
+ * Standard total; its fill part (before the Standard window) is scaled, then this
+ * difficulty's window is added.
+ */
+export function telegraphTicks(def: EnemyDef, difficulty: Difficulty): number {
+  const fill = def.attack.telegraphTicks - DIFFICULTY.standard.counterWindowTicks;
+  const d = DIFFICULTY[difficulty];
+  return Math.round(fill * d.fillScale) + d.counterWindowTicks;
+}
+
 /** The Perfect Counter window for a player, in ticks. */
 export function counterWindowTicks(world: WorldState, p: PlayerState): number {
   return DIFFICULTY[world.difficulty].counterWindowTicks + p.counterBonusTicks;
@@ -458,7 +469,7 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
   const a = e.def.attack;
   if (distance(e.pos, target.pos) <= a.startRange && attackersNow(world) < COMBAT.maxAttackersAtOnce) {
     // Start the telegraph. The danger area is fixed now, so the player can step out of it.
-    const ticks = Math.max(1, Math.round(a.telegraphTicks * DIFFICULTY[world.difficulty].telegraphScale));
+    const ticks = telegraphTicks(e.def, world.difficulty);
     e.mode = 'windup';
     e.modeTicks = ticks;
     e.windupTotal = ticks;

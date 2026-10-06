@@ -45,7 +45,7 @@
 - Pushed to the `claude/practical-pascal-jyrddw` branch, then copied onto `main` (the live link) with Jay's OK on 2026-10-06.
 
 **Jay's feedback**
-- Good for ages 10 and up; brute pace and damage are right. Guided's Perfect Counter window was widened to 0.7 s for young kids (testable with `?difficulty=guided` on the link).
+- Good for ages 10 and up; brute pace and damage are right. For Guided, the danger circle now fills at normal speed and then holds "nearly full" for 0.5 s (vs 0.3 s on Standard), so young kids still have to time the tap (testable with `?difficulty=guided` on the link).
 
 **Next**
 - Jay tries Guided with a young student and confirms milestone 2 is done.
