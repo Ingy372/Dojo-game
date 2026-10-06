@@ -99,7 +99,7 @@ export function startRun(content: Content, options: RunOptions): RunState {
     test: !!options.firstRoomId,
   };
   const first = options.firstRoomId ? content.rooms.find((r) => r.id === options.firstRoomId) : undefined;
-  enterRoom(run, first ?? pickRoom(content, run, 'battle'));
+  enterRoom(content, run, first ?? pickRoom(content, run, 'battle'));
   return run;
 }
 
@@ -198,7 +198,7 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
         }
         run.health = world.players.p1.health;
         run.depth++;
-        enterRoom(run, pickRoom(content, run, door));
+        enterRoom(content, run, pickRoom(content, run, door));
         out.push({ kind: 'nextRoom', door });
         return out;
       }
@@ -264,10 +264,11 @@ export function summarizeRun(run: RunState): RunSummary {
 
 // ---------------------------------------------------------------- inside
 
-function enterRoom(run: RunState, room: Room): void {
+function enterRoom(content: Content, run: RunState, room: Room): void {
   run.roomId = room.id;
   run.usedRooms.push(room.id);
-  run.doors = offerDoors(run, room);
+  const treasureSoFar = run.usedRooms.filter((id) => content.rooms.find((r) => r.id === id)?.kind === 'treasure').length;
+  run.doors = offerDoors(run, room, treasureSoFar);
 }
 
 function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
@@ -277,13 +278,15 @@ function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
 }
 
 /** Which doors appear when a room is done. */
-function offerDoors(run: RunState, room: Room): DoorKind[] {
+function offerDoors(run: RunState, room: Room, treasureSoFar: number): DoorKind[] {
   if (room.kind === 'boss') return ['home'];
   if (run.depth >= run.totalRooms - 2) return ['boss'];
   const count = Math.min(room.doors.length, nextFloat(run.rng) < FLOOR.threeDoorChance ? 3 : 2);
   let pool = Object.entries(FLOOR.doorWeights) as Array<[DoorKind, number]>;
   // No two rest shrines in a row.
   if (room.kind === 'rest') pool = pool.filter(([k]) => k !== 'rest');
+  // No two treasure rooms in a row, and only a few per floor.
+  if (room.kind === 'treasure' || treasureSoFar >= FLOOR.maxTreasureRooms) pool = pool.filter(([k]) => k !== 'treasure');
   const doors: DoorKind[] = [];
   while (doors.length < count && pool.length > 0) {
     const k = pickWeighted(run.rng, pool);

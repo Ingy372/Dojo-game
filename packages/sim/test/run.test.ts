@@ -25,7 +25,7 @@ const content = testContent();
 const BASE = { maxHealth: 100, power: 10, guard: 0 };
 
 /** Plays a whole run by skipping the fights: beats every enemy, opens chests, takes door `pickDoor`. */
-function autoplay(run: RunState, pickDoor = (n: number) => n - 1): RunEvent[] {
+function autoplay(run: RunState, pickDoor = (n: number) => n - 1, prefer?: string): RunEvent[] {
   const all: RunEvent[] = [];
   for (let guard = 0; guard < 50 && run.status === 'playing'; guard++) {
     const room = currentRoom(content, run);
@@ -37,7 +37,8 @@ function autoplay(run: RunState, pickDoor = (n: number) => n - 1): RunEvent[] {
       if (room.chest && !world.progress.chestOpened && world.progress.cleared) p.pos = { x: room.chest.x, y: room.chest.y + 1 };
       else if (world.progress.doorsOpen) {
         const slots = activeDoorSlots(room, run.doors.length);
-        const d = room.doors[slots[pickDoor(slots.length)]];
+        const wanted = prefer ? run.doors.indexOf(prefer as never) : -1;
+        const d = room.doors[slots[wanted >= 0 ? wanted : pickDoor(slots.length)]];
         p.pos = { x: d.x, y: d.y + 1 };
       }
       stepWorld(world, room, { p1: { kind: 'none' } });
@@ -47,6 +48,11 @@ function autoplay(run: RunState, pickDoor = (n: number) => n - 1): RunEvent[] {
     }
   }
   return all;
+}
+
+/** Like autoplay, but takes a door of this kind whenever one is offered. */
+function autoplayPreferring(run: RunState, kind: string): void {
+  autoplay(run, () => 0, kind);
 }
 
 describe('content', () => {
@@ -143,6 +149,17 @@ describe('a full run', () => {
     run.depth = FLOOR.roomsBeforeBoss - 1;
     autoplay(run, () => 0);
     expect(run.results.slice(-2).map((r) => r.kind)).toEqual([expect.any(String), 'boss']);
+  });
+
+  it('never two treasure rooms in a row, and at most 2 per floor, even when always picking treasure', () => {
+    for (let seed = 1; seed <= 60; seed++) {
+      const run = startRun(content, { seed, dryRuns: 0 });
+      // Always walk through the treasure door when there is one.
+      autoplayPreferring(run, 'treasure');
+      const kinds = run.results.map((r) => r.kind);
+      expect(kinds.filter((k) => k === 'treasure').length).toBeLessThanOrEqual(FLOOR.maxTreasureRooms);
+      for (let i = 1; i < kinds.length; i++) expect(kinds[i] === 'treasure' && kinds[i - 1] === 'treasure').toBe(false);
+    }
   });
 
   it('the same seed always gives the same run', () => {

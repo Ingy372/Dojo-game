@@ -137,7 +137,9 @@ export const FLOOR = {
   /** Rooms before the boss room (so a floor is this + 1 rooms). */
   roomsBeforeBoss: 6,
   /** How often each kind of door is offered (higher = more often). */
-  doorWeights: { battle: 4, challenge: 1.5, treasure: 1.2, rest: 1.2 },
+  doorWeights: { battle: 4, challenge: 1.5, treasure: 0.7, rest: 1.2 },
+  /** Treasure rooms: never two in a row (Jay, after playtest), and at most this many per floor. */
+  maxTreasureRooms: 2,
   /** Chance of 3 doors instead of 2. */
   threeDoorChance: 0.5,
   /** Insights offered after each battle or challenge room. */
