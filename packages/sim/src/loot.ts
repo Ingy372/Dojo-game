@@ -142,11 +142,12 @@ export function rarityRank(r: Rarity): number {
 
 /**
  * Rolls a rarity with the shares from config. `dryRuns` (runs in a row without a Rare)
- * shifts weight from Common to Rare (bad-luck protection). Never below `min`.
+ * shifts weight from Common to Rare (bad-luck protection), and so does `extraRareWeight`
+ * (the Dojo Blessing). Never below `min`.
  */
-export function rollRarity(rng: Rng, dryRuns: number, min: Rarity = 'common'): Rarity {
+export function rollRarity(rng: Rng, dryRuns: number, min: Rarity = 'common', extraRareWeight = 0): Rarity {
   const w = LOOT.rarityWeights;
-  const boost = Math.min(w.common, dryRuns * LOOT.rareWeightPerDryRun);
+  const boost = Math.min(w.common, dryRuns * LOOT.rareWeightPerDryRun + extraRareWeight);
   const weights: Array<[Rarity, number]> = [
     ['common', w.common - boost],
     ['uncommon', w.uncommon],

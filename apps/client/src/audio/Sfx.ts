@@ -56,6 +56,46 @@ class SoundMaker {
     this.noise(0.04, 0.3, 3000);
   }
 
+  // ---- celebrations, from smallest to biggest (real achievements are always biggest)
+
+  /** Dojo Blessing or Sensei's Seal: a warm two-note chime. */
+  blessing(): void {
+    this.tone(660, 660, 0.4, 'sine', 0.2);
+    this.tone(990, 990, 0.6, 'sine', 0.16, 0.12);
+  }
+
+  /** A real sign-off: a rising three-note chime. */
+  signOff(): void {
+    [523, 659, 784].forEach((f, i) => this.tone(f, f, 0.45, 'triangle', 0.22, i * 0.11));
+    this.tone(1046, 1046, 0.8, 'sine', 0.18, 0.33);
+  }
+
+  /** A character stripe: a fuller, brighter fanfare. */
+  stripe(): void {
+    [523, 659, 784, 1046].forEach((f, i) => this.tone(f, f, 0.5, 'triangle', 0.24, i * 0.12));
+    [784, 1046, 1318].forEach((f) => this.tone(f, f, 1.2, 'sine', 0.14, 0.5));
+  }
+
+  /** A real promotion: the biggest sound in the game. */
+  promotion(): void {
+    this.noise(0.3, 0.3, 600);
+    [392, 523, 659, 784, 1046].forEach((f, i) => this.tone(f, f, 0.5, 'sawtooth', 0.12, i * 0.14));
+    [523, 659, 784, 1046, 1318].forEach((f) => this.tone(f, f, 2.2, 'triangle', 0.16, 0.75));
+    this.tone(65, 65, 1.6, 'sine', 0.35, 0.75);
+  }
+
+  /** Belt tied / Gate opening: a deep gong. */
+  gong(): void {
+    this.tone(110, 98, 2.4, 'sine', 0.45);
+    this.tone(220, 196, 1.8, 'triangle', 0.15);
+    this.noise(0.15, 0.25, 500);
+  }
+
+  /** A game level up: small, so real achievements stay bigger. */
+  levelUp(): void {
+    this.tone(523, 784, 0.25, 'triangle', 0.18);
+  }
+
   /** The player gets hit. */
   hurt(): void {
     this.noise(0.1, 0.5, 900);

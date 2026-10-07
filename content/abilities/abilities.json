@@ -14,7 +14,7 @@
     {
       "id": "rooted-form",
       "name": "Rooted Form",
-      "text": "Feet planted: the Perfect Counter window is 2 ticks longer and you take less damage, but you move 15% slower.",
+      "text": "Feet planted: 2 extra ticks to Perfect Counter and less damage taken, but 15% slower.",
       "counterWindow": 2,
       "attackSpeed": 0,
       "moveSpeed": -0.15,
@@ -64,7 +64,7 @@
       "name": "Shield of Respect",
       "words": ["Respect"],
       "kind": "shield",
-      "text": "A shield that soaks up {n} damage for 6 seconds.",
+      "text": "A shield that soaks up {n} damage for {s} seconds.",
       "amount": 40,
       "seconds": 6
     },

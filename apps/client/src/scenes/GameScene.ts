@@ -16,9 +16,13 @@ import {
   createRunWorld,
   currentRoom,
   finishRun,
+  activeForm,
+  characterSetup,
+  gainXp,
   modsFrom,
-  playerStats,
   rarityRank,
+  runXp,
+  strikeCost,
   runEffects,
   setPlayerMods,
   summarizeRun,
@@ -34,12 +38,16 @@ import {
   type Room,
   type Vec2,
   type WorldState,
+  type CharacterSetup,
+  type TrainingState,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
+import { currentTraining } from '../game/student';
+import { drawBelt } from '../ui/belt';
 import { InsightPicker } from '../ui/InsightPicker';
 import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
@@ -71,7 +79,6 @@ const COLORS = {
   wallTop: 0x7a6553,
   gi: 0xf2e9d8,
   outline: 0x14121c,
-  belt: 0xffffff,
   marker: 0xf2c14e,
   brute: 0x7d3f2f,
   bruteAngry: 0xff3b30,
@@ -128,6 +135,11 @@ export class GameScene extends Phaser.Scene {
   private readonly me: PlayerId = 'p1';
   /** The run in progress (null in the practice room). */
   private run: RunState | null = null;
+  /** The student's real progress, and the character it makes (level, abilities, Virtue). */
+  private training!: TrainingState;
+  private setup!: CharacterSetup;
+  /** Aura around the character while a Virtue lasts. */
+  private virtueAura!: Phaser.GameObjects.Arc;
   /** True while a menu (like the Insight choice) is open: the fight is paused. */
   private menuOpen = false;
   /** True once leaving the room (next room, or home). */
@@ -175,13 +187,18 @@ export class GameScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.training = currentTraining();
+    this.setup = characterSetup(loadSave(), this.training, CONTENT.abilities);
     if (this.run) {
       this.room = currentRoom(CONTENT, this.run);
-      const stats = playerStats(loadSave());
-      this.world = createRunWorld(CONTENT, this.run, stats, stats.effects, testDifficulty());
+      this.world = createRunWorld(CONTENT, this.run, this.setup, this.setup.effects, testDifficulty());
     } else {
       this.room = loadRoom(trainingRoom);
-      this.world = createWorld(this.room, [this.me], { enemyTypes: { brute: loadEnemy(bruteData) }, difficulty: testDifficulty() });
+      this.world = createWorld(this.room, [this.me], {
+        enemyTypes: { brute: loadEnemy(bruteData) },
+        difficulty: testDifficulty(),
+        player: { ...this.setup, mods: modsFrom(this.setup.effects, TICKS_PER_SECOND) },
+      });
     }
     this.menuOpen = false;
     this.leaving = false;
@@ -208,7 +225,8 @@ export class GameScene extends Phaser.Scene {
 
     for (const e of this.world.enemies) this.makeEnemy(e);
 
-    this.buttons = new ActionButtons(this, () => sfx.unlock());
+    const p0 = this.world.players[this.me];
+    this.buttons = new ActionButtons(this, () => sfx.unlock(), { forms: p0.forms.length > 1, virtue: !!p0.virtue });
     this.controls = new TouchControls(
       this,
       cam,
@@ -285,6 +303,15 @@ export class GameScene extends Phaser.Scene {
     this.body.setScale(bob, 2 - bob);
     this.body.setFillStyle(now < this.playerFlashUntil ? 0xff6b5b : COLORS.gi);
     this.player.setAlpha(p.downTicks > 0 ? 0.4 : 1);
+
+    // A Virtue in effect: a golden shield (Respect) or a calm blue glow (Discipline).
+    const lasting = p.virtueTicks > 0 && p.virtue;
+    this.virtueAura.setVisible(!!lasting);
+    if (lasting) {
+      const shield = p.virtue!.kind === 'shield';
+      this.virtueAura.setStrokeStyle(shield ? 5 : 4, shield ? COLORS.gold : 0x9ad1ff, 0.6 + Math.sin(now / 90) * 0.3);
+      this.virtueAura.setScale(1 + Math.sin(now / 160) * 0.05);
+    }
 
     // Guard pose: a shield arc in front of the character.
     this.shield.clear();
@@ -404,9 +431,10 @@ export class GameScene extends Phaser.Scene {
     // Focus, with a mark where Strike becomes ready
     const focus = p.focus / COMBAT.focus.max;
     g.fillStyle(0x000000, 0.45).fillRoundedRect(x - 3, 37, w + 6, 14, 5);
-    const ready = p.focus >= COMBAT.strike.focusCost;
+    const cost = strikeCost(p);
+    const ready = p.focus >= cost;
     if (w * focus >= 6) g.fillStyle(ready ? COLORS.gold : COLORS.focus).fillRoundedRect(x, 40, w * focus, 8, 3);
-    const mark = x + (w * COMBAT.strike.focusCost) / COMBAT.focus.max;
+    const mark = x + (w * cost) / COMBAT.focus.max;
     g.fillStyle(0xffffff, 0.8).fillRect(mark - 1, 37, 2, 14);
 
     if (p.combo !== this.shownCombo) {
@@ -451,10 +479,13 @@ export class GameScene extends Phaser.Scene {
   private makePlayer(): Phaser.GameObjects.Container {
     const r = MOVEMENT.playerRadius * TILE;
     this.body = this.add.circle(0, 0, r, COLORS.gi).setStrokeStyle(3, COLORS.outline);
-    const belt = this.add.rectangle(0, r * 0.15, r * 1.9, r * 0.28, COLORS.belt).setStrokeStyle(2, COLORS.outline);
+    // The real belt's color and stripes.
+    const belt = this.add.graphics();
+    drawBelt(belt, 0, r * 0.15, r * 1.9, r * 0.28, this.training.belt, this.training.stripesThisBelt);
     this.facingDot = this.add.circle(0, 0, r * 0.28, COLORS.outline);
     this.shield = this.add.graphics();
-    return this.add.container(0, 0, [this.shield, this.body, belt, this.facingDot]);
+    this.virtueAura = this.add.circle(0, 0, r * 1.6).setStrokeStyle(5, COLORS.gold).setVisible(false);
+    return this.add.container(0, 0, [this.virtueAura, this.shield, this.body, belt, this.facingDot]);
   }
 
   /** Adds views for enemies that were called in, and removes views for enemies that are gone. */
@@ -638,6 +669,38 @@ export class GameScene extends Phaser.Scene {
           this.dashTrail(p.pos);
           break;
         }
+        case 'formChange': {
+          const p = this.world.players[ev.playerId];
+          sfx.insight();
+          this.ring(p.pos, 0x6fb7ff, 1.2);
+          this.floatText(p.pos, activeForm(p).name, '#9ad1ff', 22, 1);
+          break;
+        }
+        case 'virtue': {
+          const p = this.world.players[ev.playerId];
+          sfx.stripe();
+          this.flashScreen(0xffd166, 0.35, 260);
+          this.ring(p.pos, COLORS.gold, 2.4);
+          this.popWord(p.virtue?.name ?? 'Virtue', '#ffd166', 40);
+          if (ev.healed > 0) this.floatText(p.pos, `+${ev.healed}`, '#5cd65c', 26, 1.2);
+          break;
+        }
+        case 'virtueEnd':
+          break;
+        case 'virtueRefused': {
+          const p = this.world.players[ev.playerId];
+          sfx.denied();
+          this.buttons.refuse('virtue');
+          this.floatText(p.pos, p.virtueTicks > 0 ? 'Already active' : 'Fill your Focus first', '#f2e9d8', 18);
+          break;
+        }
+        case 'shieldSoak': {
+          const p = this.world.players[ev.playerId];
+          sfx.block();
+          this.ring(p.pos, COLORS.gold, 1.3);
+          this.floatText(p.pos, `SHIELDED ${ev.soaked}`, '#ffd166', 22);
+          break;
+        }
         case 'strikeRefused':
           sfx.denied();
           this.buttons.refuse('strike');
@@ -789,8 +852,7 @@ export class GameScene extends Phaser.Scene {
     this.picker = new InsightPicker(this, defs, (id) => {
       if (!this.run) return;
       chooseInsight(this.run, id);
-      const stats = playerStats(loadSave());
-      setPlayerMods(this.world.players[this.me], modsFrom(runEffects(CONTENT, this.run, stats.effects), TICKS_PER_SECOND));
+      setPlayerMods(this.world.players[this.me], modsFrom(runEffects(CONTENT, this.run, this.setup.effects), TICKS_PER_SECOND));
       sfx.insight();
       this.picker?.destroy();
       this.picker = null;
@@ -807,7 +869,11 @@ export class GameScene extends Phaser.Scene {
   private endRun(status: 'cleared' | 'lost'): void {
     if (!this.run) return;
     const profile = loadSave();
-    finishRun(profile, summarizeRun(this.run));
+    const summary = summarizeRun(this.run);
+    finishRun(profile, summary);
+    // Experience, capped by the real belt (with the Blessing and catch-up bonuses).
+    const xp = gainXp(profile, this.training, runXp(summary));
+    if (profile.lastRun) profile.lastRun.xp = xp;
     writeSave(profile);
     this.leaving = true;
     const delay = status === 'lost' ? 1600 : 200;

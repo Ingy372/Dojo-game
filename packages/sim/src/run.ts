@@ -3,7 +3,7 @@
 // plain data and uses the seeded random number generator, so a run can be saved
 // and replayed exactly.
 
-import { COMBAT, FLOOR, GRADES, LOOT, TICKS_PER_SECOND, type Difficulty, type Rarity } from './config';
+import { BLESSING, COMBAT, FLOOR, GRADES, LOOT, TICKS_PER_SECOND, type Difficulty, type Rarity } from './config';
 import type { Content } from './content';
 import { modsFrom, type Effect } from './effects';
 import { chance, makeItem, rarityRank, rollRarity, type GearItem } from './loot';
@@ -58,6 +58,8 @@ export interface RunState {
   nextUid: number;
   /** Started from a test link (a chosen first room): doesn't count for personal bests. */
   test: boolean;
+  /** The Dojo Blessing was active when the run started: better loot. */
+  blessed: boolean;
 }
 
 /** Things that happened, for the game to show. */
@@ -74,6 +76,8 @@ export interface RunOptions {
   dryRuns: number;
   /** For testing: start in this room instead of a random battle room. */
   firstRoomId?: string;
+  /** Dojo Blessing (attended class in the last 48 hours). */
+  blessed?: boolean;
 }
 
 export function startRun(content: Content, options: RunOptions): RunState {
@@ -97,6 +101,7 @@ export function startRun(content: Content, options: RunOptions): RunState {
     rareFound: false,
     nextUid: 1,
     test: !!options.firstRoomId,
+    blessed: !!options.blessed,
   };
   const first = options.firstRoomId ? content.rooms.find((r) => r.id === options.firstRoomId) : undefined;
   enterRoom(content, run, first ?? pickRoom(content, run, 'battle'));
@@ -331,7 +336,7 @@ function roomResult(room: Room, world: WorldState): RoomResult {
 function drop(content: Content, run: RunState, min: Rarity, at: Vec2, source: 'enemy' | 'chest' | 'grade'): RunEvent {
   let floor = min;
   if (source === 'chest' && !run.rareFound && run.dryRuns >= LOOT.guaranteedRareOnRun - 1) floor = 'rare';
-  const rarity = rollRarity(run.rng, run.dryRuns, floor);
+  const rarity = rollRarity(run.rng, run.dryRuns, floor, run.blessed ? BLESSING.rareWeight : 0);
   if (rarityRank(rarity) >= rarityRank('rare')) run.rareFound = true;
   const item = makeItem(run.rng, content.loot, rarity, `r${run.nextUid++}`);
   run.loot.push(item);

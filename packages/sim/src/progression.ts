@@ -7,7 +7,7 @@ import type { Effect } from './effects';
 import type { FeedBelt } from './feed';
 import { playerStats, type Profile } from './profile';
 import type { RunSummary } from './run';
-import { unlockedForms, virtueTitle, type TrainingState } from './training';
+import { unlockedForms, virtueTitle, type TrainingState, type VirtueInfo } from './training';
 import type { PlayerSetup, VirtueSetup } from './world';
 
 /** Total experience for one belt tier's levels, from the school's typical time in rank. */
@@ -84,8 +84,11 @@ export function gainXp(profile: Profile, training: TrainingState, base: number):
 
 /** The Virtue taken into fights, with its rank applied (each rank above I is 25% stronger). */
 export function virtueSetup(training: TrainingState): VirtueSetup | null {
-  const v = training.virtue;
-  if (!v) return null;
+  return training.virtue ? virtueSetupFor(training.virtue) : null;
+}
+
+/** Any earned Virtue at its rank. */
+export function virtueSetupFor(v: VirtueInfo): VirtueSetup {
   const scale = 1 + VIRTUE_RANK_BONUS * (v.rank - 1);
   return {
     id: v.def.id,

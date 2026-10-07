@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  BLESSING,
   FLOOR,
   LOOT,
   activeDoorSlots,
@@ -97,6 +98,16 @@ describe('loot rarity', () => {
       return r;
     };
     expect(rare(3)).toBeGreaterThan(rare(0) * 1.8);
+  });
+
+  it('the Dojo Blessing raises the chance of a Rare', () => {
+    const rare = (extra: number) => {
+      const rng = createRng(7);
+      let r = 0;
+      for (let i = 0; i < 20000; i++) if (rollRarity(rng, 0, 'common', extra) === 'rare') r++;
+      return r;
+    };
+    expect(rare(BLESSING.rareWeight)).toBeGreaterThan(rare(0) * 1.3);
   });
 
   it('the 5th run in a row without a Rare gets one, in its first chest', () => {
