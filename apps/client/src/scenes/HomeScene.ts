@@ -12,7 +12,7 @@ import {
   letGo,
   rewardMoments,
   snapshot,
-  startRun,
+  decorationDef,
   virtueSetupFor,
   virtueTitle,
   wornItem,
@@ -28,6 +28,7 @@ import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining, selectProfile, shortDate } from '../game/student';
+import { startTowerRun } from '../game/tower';
 import { makeCharacter } from '../ui/belt';
 import { Celebrations } from '../ui/Celebrations';
 import { TestingPanel } from '../ui/TestingPanel';
@@ -47,9 +48,9 @@ type Tab = 'run' | 'gear' | 'abilities' | 'gate';
 const KIND_LABEL = { form: 'Form', strike: 'Strike', seal: 'Technique Seal' } as const;
 
 /**
- * The Home Dojo (simple version): the character with their real belt, level and Blessing,
- * the Path card, starting a run, the last run's summary, gear, abilities, and the Gate.
- * Decorating comes in milestone 5.
+ * The training board (opened from the notice board in the Home Dojo): the character with
+ * their real belt, level and Blessing, the Path card, starting a run, the last run's
+ * summary, gear, abilities, and the Gate.
  */
 export class HomeScene extends Phaser.Scene {
   private profile!: Profile;
@@ -117,8 +118,9 @@ export class HomeScene extends Phaser.Scene {
     for (let x = 0; x < width; x += 48) this.ui.add(this.add.rectangle(x, 0, 2, height, 0x2a241c).setOrigin(0));
 
     // ---- left: title, character, level, Blessing, Enter the Tower, the Path card
-    const title = this.text(pad, pad - 4, 'Home Dojo', 24, '#f2e9d8', true, 'Georgia, serif');
+    const title = this.text(pad, pad - 4, 'Training Board', 22, '#f2e9d8', true, 'Georgia, serif');
     title.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.tapTitle());
+    this.button(pad + leftW - 84, pad - 4, 84, 30, '◀ Dojo', 0x8a5a35, 14, () => this.backToDojo());
 
     const cy = pad + 58;
     if (t.blessed) {
@@ -236,6 +238,11 @@ export class HomeScene extends Phaser.Scene {
       y += 22;
     }
 
+    const decos = s.decorations ?? [];
+    if (decos.length > 0) {
+      this.text(x, y, `For your dojo: ${decos.map((id) => decorationDef(CONTENT.dojo, id).name).join(', ')}`, 14, '#ffd166', true, FONT, w);
+      y += 22;
+    }
     this.text(x, y, `Items found (${s.items.length})`, 15, '#ffd166', true);
     y += 22;
     const lineH = 19;
@@ -459,12 +466,15 @@ export class HomeScene extends Phaser.Scene {
   // ---------------------------------------------------------------- actions
 
   private enterTower(): void {
-    const params = new URLSearchParams(window.location.search);
-    const seedParam = Number(params.get('seed'));
-    const seed = Number.isFinite(seedParam) && seedParam > 0 ? seedParam : Math.floor(Math.random() * 2147483647) + 1;
-    const firstRoomId = params.get('room') ?? undefined;
-    const run = startRun(CONTENT, { seed, dryRuns: this.profile.dryRuns, firstRoomId, blessed: this.training.blessed });
-    this.goTo('Game', { run });
+    this.goTo('Game', { run: startTowerRun(this.profile, this.training) });
+  }
+
+  private backToDojo(): void {
+    if (this.celebrating) return;
+    sfx.unlock();
+    this.input.enabled = false;
+    this.cameras.main.fadeOut(300, 10, 8, 16);
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Dojo'));
   }
 
   // ---------------------------------------------------------------- hidden testing screen

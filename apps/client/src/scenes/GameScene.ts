@@ -12,6 +12,9 @@ import {
   stepWorld,
   DIFFICULTY,
   activeDoorSlots,
+  addDecorations,
+  bowIn,
+  decorationDef,
   chooseInsight,
   createRunWorld,
   currentRoom,
@@ -45,9 +48,11 @@ import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
+import { homeDojo } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { drawBelt } from '../ui/belt';
+import { bowPrompt, playBow } from '../ui/bow';
 import { InsightPicker } from '../ui/InsightPicker';
 import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
@@ -236,7 +241,8 @@ export class GameScene extends Phaser.Scene {
     this.makeHud();
     cam.ignore([...this.controls.objects, ...this.buttons.objects]);
     cam.fadeIn(350, 10, 8, 16);
-    this.introduceRoom();
+    if (this.run && this.run.depth === 0 && !this.run.bowed) this.askForBow();
+    else this.introduceRoom();
 
     this.layout(this.scale.gameSize);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
@@ -556,6 +562,8 @@ export class GameScene extends Phaser.Scene {
       .setResolution(crisp())
       .setVisible(false);
     this.bossName = this.add.text(0, 0, '', { ...small, fontSize: '13px' }).setOrigin(0.5, 0).setResolution(crisp()).setVisible(false);
+    const calm = this.add.text(16, 55, 'Calm Mind', { ...small, fontSize: '12px', color: '#bff5ec' }).setResolution(crisp()).setVisible(!!this.run?.calmMind);
+    this.cameras.main.ignore(calm);
     this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.message, this.screenFlash, this.roomLabel, this.timerText, this.bossName]);
   }
 
@@ -826,6 +834,9 @@ export class GameScene extends Phaser.Scene {
         case 'loot':
           this.showLoot(ev.item.name, ev.item.rarity, ev.at);
           break;
+        case 'decoration':
+          this.showDecoration(ev.id, ev.at);
+          break;
         case 'graded':
           this.showGrade(ev.result.grade!, ev.result.perfects, ev.result.damageTaken, ev.result.ticks, ev.result.inTime);
           break;
@@ -871,6 +882,7 @@ export class GameScene extends Phaser.Scene {
     const profile = loadSave();
     const summary = summarizeRun(this.run);
     finishRun(profile, summary);
+    addDecorations(homeDojo(profile), summary.decorations);
     // Experience, capped by the real belt (with the Blessing and catch-up bonuses).
     const xp = gainXp(profile, this.training, runXp(summary));
     if (profile.lastRun) profile.lastRun.xp = xp;
@@ -885,6 +897,24 @@ export class GameScene extends Phaser.Scene {
       this.cameras.main.fadeOut(600, 10, 8, 16);
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home'));
     });
+  }
+
+  /** The bow at the start of the floor: the fight waits, then a small Focus head start. */
+  private askForBow(): void {
+    this.menuOpen = true;
+    const prompt = bowPrompt(this, 'Bow to begin the floor', () => {
+      playBow(this, this.player, () => {
+        if (!this.run) return;
+        bowIn(this.world, this.me);
+        this.run.bowed = true;
+        this.menuOpen = false;
+        this.controls.reset();
+        this.buttons.reset();
+        this.floatText(this.world.players[this.me].pos, '+Focus', '#9ad1ff', 18);
+        this.introduceRoom();
+      });
+    });
+    this.cameras.main.ignore(prompt);
   }
 
   /** The room's name (and challenge rule) when entering. */
@@ -1035,6 +1065,32 @@ export class GameScene extends Phaser.Scene {
       targets: t,
       alpha: 0,
       delay: 2600,
+      duration: 400,
+      onComplete: () => {
+        t.destroy();
+        this.toastY = Math.max(0, this.toastY - 1);
+      },
+    });
+  }
+
+  /** A decoration for the Home Dojo came out of the chest. */
+  private showDecoration(id: string, at: Vec2): void {
+    const name = decorationDef(CONTENT.dojo, id).name;
+    sfx.loot(2);
+    this.ring(at, COLORS.gold, 1.4);
+    this.floatText(at, 'For your dojo!', '#ffd166', 16, 1.2);
+    const { width } = this.scale.gameSize;
+    const y = 64 + this.toastY * 26;
+    this.toastY++;
+    const t = this.add
+      .text(width - 16, y, `Decoration: ${name}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffd166', stroke: '#14121c', strokeThickness: 4 })
+      .setOrigin(1, 0)
+      .setResolution(crisp());
+    this.cameras.main.ignore(t);
+    this.tweens.add({
+      targets: t,
+      alpha: 0,
+      delay: 3000,
       duration: 400,
       onComplete: () => {
         t.destroy();

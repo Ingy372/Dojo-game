@@ -214,6 +214,45 @@ class SoundMaker {
     this.tone(200, 400, 0.25, 'sine', 0.12);
   }
 
+  // ---- the Home Dojo
+
+  /** The bow: a soft wooden clack and a low, calm bell. */
+  bow(): void {
+    this.tone(900, 700, 0.06, 'square', 0.1);
+    this.tone(330, 328, 1.1, 'sine', 0.16, 0.25);
+    this.tone(495, 492, 0.9, 'sine', 0.07, 0.27);
+  }
+
+  /** A sweep of the broom; `n` rises in pitch as a sweeping streak continues. */
+  sweep(n: number): void {
+    this.noise(0.12, 0.25, 2500);
+    const f = 600 * Math.pow(1.06, Math.min(n, 12));
+    this.tone(f, f * 1.02, 0.12, 'sine', 0.08, 0.03);
+  }
+
+  /** One wipe of a mat (a soft rub); the last wipe sparkles. */
+  wipe(last: boolean): void {
+    this.noise(0.1, 0.18, 1400);
+    if (last) [1047, 1319, 1568].forEach((f, i) => this.tone(f, f, 0.25, 'sine', 0.1, 0.05 + i * 0.06));
+  }
+
+  /** A weapon set straight on the rack: a wooden knock. */
+  straighten(last: boolean): void {
+    this.tone(420, 380, 0.08, 'triangle', 0.2);
+    this.tone(260, 240, 0.12, 'sine', 0.15, 0.02);
+    if (last) [784, 988].forEach((f, i) => this.tone(f, f, 0.25, 'sine', 0.1, 0.1 + i * 0.07));
+  }
+
+  /** The dojo is clean: Calm Mind (kept smaller than the Blessing and real achievements). */
+  calmMind(): void {
+    [523, 659, 784].forEach((f, i) => this.tone(f, f, 0.5, 'sine', 0.1, i * 0.15));
+  }
+
+  /** Picking up or putting down a decoration. */
+  place(down: boolean): void {
+    this.tone(down ? 260 : 380, down ? 200 : 460, 0.08, 'triangle', 0.15);
+  }
+
   private tone(from: number, to: number, seconds: number, type: OscillatorType, volume: number, delay = 0): void {
     if (!this.ctx || !this.master) return;
     const t = this.ctx.currentTime + delay;
