@@ -1,0 +1,641 @@
+{
+  "feedVersion": 1,
+  "asOf": "2026-11-18T20:00:00Z",
+  "rank": {
+    "currentBelt": "white",
+    "trainingStartDate": "2026-10-05",
+    "history": [
+      {
+        "belt": "white",
+        "earnedOn": "2026-10-05"
+      }
+    ]
+  },
+  "requirements": [
+    {
+      "id": "white-kata",
+      "type": "kata",
+      "name": "Basic Form 1",
+      "videoId": null,
+      "signedOff": true,
+      "signedOffOn": "2026-11-02",
+      "signedOffBy": "Sensei Jay"
+    },
+    {
+      "id": "white-sd-1",
+      "type": "selfDefense",
+      "name": "Self-Defense #1",
+      "videoId": null,
+      "signedOff": true,
+      "signedOffOn": "2026-10-26",
+      "signedOffBy": "Sensei Jay"
+    },
+    {
+      "id": "white-sd-2",
+      "type": "selfDefense",
+      "name": "Self-Defense #2",
+      "videoId": null,
+      "signedOff": false,
+      "signedOffOn": null,
+      "signedOffBy": null
+    },
+    {
+      "id": "white-sd-3",
+      "type": "selfDefense",
+      "name": "Self-Defense #3",
+      "videoId": null,
+      "signedOff": true,
+      "signedOffOn": "2026-11-18",
+      "signedOffBy": "Sensei Jay"
+    },
+    {
+      "id": "white-sd-4",
+      "type": "selfDefense",
+      "name": "Self-Defense #4",
+      "videoId": null,
+      "signedOff": false,
+      "signedOffOn": null,
+      "signedOffBy": null
+    },
+    {
+      "id": "white-sd-5",
+      "type": "selfDefense",
+      "name": "Self-Defense #5",
+      "videoId": null,
+      "signedOff": false,
+      "signedOffOn": null,
+      "signedOffBy": null
+    },
+    {
+      "id": "white-kick",
+      "type": "kickCombo",
+      "name": "Kick Combo 1",
+      "videoId": null,
+      "signedOff": false,
+      "signedOffOn": null,
+      "signedOffBy": null
+    }
+  ],
+  "catchUp": [],
+  "stripes": [
+    {
+      "word": "Respect",
+      "belt": "white",
+      "earnedOn": "2026-11-11"
+    }
+  ],
+  "attendance": {
+    "recentClasses": [
+      "2026-11-09T17:00:00Z",
+      "2026-11-11T17:00:00Z",
+      "2026-11-16T17:00:00Z",
+      "2026-11-18T17:00:00Z"
+    ],
+    "classDays": [
+      "Mon",
+      "Wed"
+    ],
+    "classesInRank": 12
+  },
+  "testing": {
+    "approved": false,
+    "testDate": null
+  },
+  "streak": {
+    "weeks": 6
+  },
+  "homePractice": {
+    "approvedMinutes": 135,
+    "recent": [
+      {
+        "date": "2026-11-15",
+        "minutes": 20
+      },
+      {
+        "date": "2026-11-17",
+        "minutes": 25
+      }
+    ]
+  },
+  "student": {
+    "id": "fake-sam",
+    "firstName": "Sam",
+    "lastInitial": "T",
+    "schoolId": "action-zone",
+    "ageBand": "10-13"
+  },
+  "school": {
+    "id": "action-zone",
+    "name": "Action Zone CMA",
+    "belts": [
+      {
+        "id": "white",
+        "name": "White Belt",
+        "color": "#f4f1ea",
+        "color2": null,
+        "degree": 0,
+        "typicalMonthsInRank": 3,
+        "classesBeforeTest": 24,
+        "requirements": [
+          {
+            "id": "white-kata",
+            "type": "kata",
+            "name": "Basic Form 1",
+            "videoId": null
+          },
+          {
+            "id": "white-sd-1",
+            "type": "selfDefense",
+            "name": "Self-Defense #1",
+            "videoId": null
+          },
+          {
+            "id": "white-sd-2",
+            "type": "selfDefense",
+            "name": "Self-Defense #2",
+            "videoId": null
+          },
+          {
+            "id": "white-sd-3",
+            "type": "selfDefense",
+            "name": "Self-Defense #3",
+            "videoId": null
+          },
+          {
+            "id": "white-sd-4",
+            "type": "selfDefense",
+            "name": "Self-Defense #4",
+            "videoId": null
+          },
+          {
+            "id": "white-sd-5",
+            "type": "selfDefense",
+            "name": "Self-Defense #5",
+            "videoId": null
+          },
+          {
+            "id": "white-kick",
+            "type": "kickCombo",
+            "name": "Kick Combo 1",
+            "videoId": null
+          }
+        ]
+      },
+      {
+        "id": "yellow",
+        "name": "Yellow Belt",
+        "color": "#f5d22e",
+        "color2": null,
+        "degree": 0,
+        "typicalMonthsInRank": 3,
+        "classesBeforeTest": 24,
+        "requirements": [
+          {
+            "id": "yellow-kata",
+            "type": "kata",
+            "name": "Basic Form 2",
+            "videoId": null
+          },
+          {
+            "id": "yellow-sd-1",
+            "type": "selfDefense",
+            "name": "Self-Defense #6",
+            "videoId": null
+          },
+          {
+            "id": "yellow-sd-2",
+            "type": "selfDefense",
+            "name": "Self-Defense #7",
+            "videoId": null
+          },
+          {
+            "id": "yellow-sd-3",
+            "type": "selfDefense",
+            "name": "Self-Defense #8",
+            "videoId": null
+          },
+          {
+            "id": "yellow-sd-4",
+            "type": "selfDefense",
+            "name": "Self-Defense #9",
+            "videoId": null
+          },
+          {
+            "id": "yellow-sd-5",
+            "type": "selfDefense",
+            "name": "Self-Defense #10",
+            "videoId": null
+          },
+          {
+            "id": "yellow-kick",
+            "type": "kickCombo",
+            "name": "Kick Combo 2",
+            "videoId": null
+          }
+        ]
+      },
+      {
+        "id": "orange",
+        "name": "Orange Belt",
+        "color": "#f08a24",
+        "color2": null,
+        "degree": 0,
+        "typicalMonthsInRank": 4,
+        "classesBeforeTest": 24,
+        "requirements": [
+          {
+            "id": "orange-kata",
+            "type": "kata",
+            "name": "Keon",
+            "videoId": null
+          },
+          {
+            "id": "orange-sd-1",
+            "type": "selfDefense",
+            "name": "Self-Defense #11",
+            "videoId": null
+          },
+          {
+            "id": "orange-sd-2",
+            "type": "selfDefense",
+            "name": "Self-Defense #12",
+            "videoId": null
+          },
+          {
+            "id": "orange-sd-3",
+            "type": "selfDefense",
+            "name": "Self-Defense #13",
+            "videoId": null
+          },
+          {
+            "id": "orange-sd-4",
+            "type": "selfDefense",
+            "name": "Self-Defense #14",
+            "videoId": null
+          },
+          {
+            "id": "orange-sd-5",
+            "type": "selfDefense",
+            "name": "Self-Defense #15",
+            "videoId": null
+          },
+          {
+            "id": "orange-kick",
+            "type": "kickCombo",
+            "name": "Kick Combo 3",
+            "videoId": null
+          }
+        ]
+      },
+      {
+        "id": "green",
+        "name": "Green Belt",
+        "color": "#3aa655",
+        "color2": null,
+        "degree": 0,
+        "typicalMonthsInRank": 4,
+        "classesBeforeTest": 24,
+        "requirements": [
+          {
+            "id": "green-kata",
+            "type": "kata",
+            "name": "David and Goliath",
+            "videoId": null
+          },
+          {
+            "id": "green-sd-1",
+            "type": "selfDefense",
+            "name": "Self-Defense #16",
+            "videoId": null
+          },
+          {
+            "id": "green-sd-2",
+            "type": "selfDefense",
+            "name": "Self-Defense #17",
+            "videoId": null
+          },
+          {
+            "id": "green-sd-3",
+            "type": "selfDefense",
+            "name": "Self-Defense #18",
+            "videoId": null
+          },
+          {
+            "id": "green-sd-4",
+            "type": "selfDefense",
+            "name": "Self-Defense #19",
+            "videoId": null
+          },
+          {
+            "id": "green-sd-5",
+            "type": "selfDefense",
+            "name": "Self-Defense #20",
+            "videoId": null
+          },
+          {
+            "id": "green-kick",
+            "type": "kickCombo",
+            "name": "Kick Combo 4",
+            "videoId": null
+          }
+        ]
+      },
+      {
+        "id": "blue",
+        "name": "Blue Belt",
+        "color": "#2f6fd6",
+        "color2": null,
+        "degree": 0,
+        "typicalMonthsInRank": 5,
+        "classesBeforeTest": 24,
+        "requirements": [
+          {
+            "id": "blue-kata",
+            "type": "kata",
+            "name": "Penon 1",
+            "videoId": null
+          },
+          {
+            "id": "blue-sd-1",
+            "type": "selfDefense",
+            "name": "Self-Defense #21",
+            "videoId": null
+          },
+          {
+            "id": "blue-sd-2",
+            "type": "selfDefense",
+            "name": "Self-Defense #22",
+            "videoId": null
+          },
+          {
+            "id": "blue-sd-3",
+            "type": "selfDefense",
+            "name": "Self-Defense #23",
+            "videoId": null
+          },
+          {
+            "id": "blue-sd-4",
+            "type": "selfDefense",
+            "name": "Self-Defense #24",
+            "videoId": null
+          },
+          {
+            "id": "blue-sd-5",
+            "type": "selfDefense",
+            "name": "Self-Defense #25",
+            "videoId": null
+          },
+          {
+            "id": "blue-kick",
+            "type": "kickCombo",
+            "name": "Kick Combo 5",
+            "videoId": null
+          }
+        ]
+      },
+      {
+        "id": "red",
+        "name": "Red Belt",
+        "color": "#d8352a",
+        "color2": null,
+        "degree": 0,
+        "typicalMonthsInRank": 6,
+        "classesBeforeTest": 24,
+        "requirements": [
+          {
+            "id": "red-kata",
+            "type": "kata",
+            "name": "Penon 2",
+            "videoId": null
+          },
+          {
+            "id": "red-sd-1",
+            "type": "selfDefense",
+            "name": "Self-Defense #26",
+            "videoId": null
+          },
+          {
+            "id": "red-sd-2",
+            "type": "selfDefense",
+            "name": "Self-Defense #27",
+            "videoId": null
+          },
+          {
+            "id": "red-sd-3",
+            "type": "selfDefense",
+            "name": "Self-Defense #28",
+            "videoId": null
+          },
+          {
+            "id": "red-sd-4",
+            "type": "selfDefense",
+            "name": "Self-Defense #29",
+            "videoId": null
+          },
+          {
+            "id": "red-sd-5",
+            "type": "selfDefense",
+            "name": "Self-Defense #30",
+            "videoId": null
+          },
+          {
+            "id": "red-kick",
+            "type": "kickCombo",
+            "name": "Kick Combo 6",
+            "videoId": null
+          }
+        ]
+      },
+      {
+        "id": "red-black",
+        "name": "Red/Black Belt",
+        "color": "#d8352a",
+        "color2": "#1a1a1a",
+        "degree": 0,
+        "typicalMonthsInRank": 6,
+        "classesBeforeTest": 24,
+        "requirements": [
+          {
+            "id": "red-black-kata",
+            "type": "kata",
+            "name": "Penon 3",
+            "videoId": null
+          },
+          {
+            "id": "red-black-sd-1",
+            "type": "selfDefense",
+            "name": "Self-Defense #31",
+            "videoId": null
+          },
+          {
+            "id": "red-black-sd-2",
+            "type": "selfDefense",
+            "name": "Self-Defense #32",
+            "videoId": null
+          },
+          {
+            "id": "red-black-sd-3",
+            "type": "selfDefense",
+            "name": "Self-Defense #33",
+            "videoId": null
+          },
+          {
+            "id": "red-black-sd-4",
+            "type": "selfDefense",
+            "name": "Self-Defense #34",
+            "videoId": null
+          },
+          {
+            "id": "red-black-sd-5",
+            "type": "selfDefense",
+            "name": "Self-Defense #35",
+            "videoId": null
+          },
+          {
+            "id": "red-black-kick",
+            "type": "kickCombo",
+            "name": "Kick Combo 7",
+            "videoId": null
+          }
+        ]
+      },
+      {
+        "id": "brown",
+        "name": "Brown Belt",
+        "color": "#7a4a26",
+        "color2": null,
+        "degree": 0,
+        "typicalMonthsInRank": 8,
+        "classesBeforeTest": 24,
+        "requirements": [
+          {
+            "id": "brown-kata",
+            "type": "kata",
+            "name": "Nihanchi",
+            "videoId": null
+          },
+          {
+            "id": "brown-sd-1",
+            "type": "selfDefense",
+            "name": "Self-Defense #36",
+            "videoId": null
+          },
+          {
+            "id": "brown-sd-2",
+            "type": "selfDefense",
+            "name": "Self-Defense #37",
+            "videoId": null
+          },
+          {
+            "id": "brown-sd-3",
+            "type": "selfDefense",
+            "name": "Self-Defense #38",
+            "videoId": null
+          },
+          {
+            "id": "brown-sd-4",
+            "type": "selfDefense",
+            "name": "Self-Defense #39",
+            "videoId": null
+          },
+          {
+            "id": "brown-sd-5",
+            "type": "selfDefense",
+            "name": "Self-Defense #40",
+            "videoId": null
+          }
+        ]
+      },
+      {
+        "id": "brown-black",
+        "name": "Brown/Black Belt",
+        "color": "#7a4a26",
+        "color2": "#1a1a1a",
+        "degree": 0,
+        "typicalMonthsInRank": 8,
+        "classesBeforeTest": 24,
+        "requirements": [
+          {
+            "id": "brown-black-kata",
+            "type": "kata",
+            "name": "Possi",
+            "videoId": null
+          },
+          {
+            "id": "brown-black-sd-1",
+            "type": "selfDefense",
+            "name": "Self-Defense #41",
+            "videoId": null
+          },
+          {
+            "id": "brown-black-sd-2",
+            "type": "selfDefense",
+            "name": "Self-Defense #42",
+            "videoId": null
+          },
+          {
+            "id": "brown-black-sd-3",
+            "type": "selfDefense",
+            "name": "Self-Defense #43",
+            "videoId": null
+          },
+          {
+            "id": "brown-black-sd-4",
+            "type": "selfDefense",
+            "name": "Self-Defense #44",
+            "videoId": null
+          },
+          {
+            "id": "brown-black-sd-5",
+            "type": "selfDefense",
+            "name": "Self-Defense #45",
+            "videoId": null
+          }
+        ]
+      },
+      {
+        "id": "black",
+        "name": "Black Belt",
+        "color": "#1a1a1a",
+        "color2": null,
+        "degree": 0,
+        "typicalMonthsInRank": 12,
+        "classesBeforeTest": 24,
+        "requirements": [
+          {
+            "id": "black-kick-8",
+            "type": "kickCombo",
+            "name": "Kick Combo 8",
+            "videoId": null
+          },
+          {
+            "id": "black-kick-9",
+            "type": "kickCombo",
+            "name": "Kick Combo 9",
+            "videoId": null
+          },
+          {
+            "id": "black-kick-10",
+            "type": "kickCombo",
+            "name": "Kick Combo 10",
+            "videoId": null
+          },
+          {
+            "id": "black-kick-11",
+            "type": "kickCombo",
+            "name": "Kick Combo 11",
+            "videoId": null
+          },
+          {
+            "id": "black-kick-12",
+            "type": "kickCombo",
+            "name": "Kick Combo 12",
+            "videoId": null
+          }
+        ]
+      }
+    ]
+  },
+  "accolades": [],
+  "classGoals": []
+}

@@ -2,6 +2,7 @@
 // plain data (no classes or functions), so it can be saved, copied, or sent
 // over the network later for visits and co-op.
 
+import type { FormDef, VirtueKind } from './abilities';
 import { pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
 import { COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, type Difficulty } from './config';
@@ -60,6 +61,30 @@ export interface PlayerState {
   mods: PlayerMods;
   /** Ticks of speed burst left (Wind Step). */
   speedBoostTicks: number;
+  /** Forms to switch between (from kata sign-offs); forms[0] is the Beginner's Stance. */
+  forms: FormDef[];
+  /** Which Form is active. */
+  form: number;
+  /** Ticks before the Form can be switched again. */
+  formCooldown: number;
+  /** The Virtue taken into the fight (from a character stripe), or null. */
+  virtue: VirtueSetup | null;
+  /** Ticks left of a lasting Virtue (shield, discipline). */
+  virtueTicks: number;
+  /** Damage the Shield of Respect can still soak up. */
+  virtueShield: number;
+}
+
+/** A Virtue ready for the fight, with its rank already applied. */
+export interface VirtueSetup {
+  id: string;
+  name: string;
+  kind: VirtueKind;
+  rank: number;
+  /** shield: damage soaked up; heal: share of max Health restored. */
+  amount: number;
+  /** How long it lasts (shield, discipline). */
+  ticks: number;
 }
 
 /** How the current room is going: for doors, the chest, the shrine and the room grade. */
@@ -141,6 +166,11 @@ export type CombatEvent =
   | { kind: 'shieldRegrow'; enemyId: EnemyId }
   | { kind: 'summon'; enemyId: EnemyId; summoned: EnemyId[] }
   | { kind: 'speedBurst'; playerId: PlayerId }
+  | { kind: 'formChange'; playerId: PlayerId; form: number }
+  | { kind: 'virtue'; playerId: PlayerId; virtue: VirtueKind; healed: number }
+  | { kind: 'virtueEnd'; playerId: PlayerId }
+  | { kind: 'virtueRefused'; playerId: PlayerId }
+  | { kind: 'shieldSoak'; playerId: PlayerId; soaked: number }
   | { kind: 'winded'; enemyId: EnemyId }
   | { kind: 'wave'; wave: number; of: number }
   | { kind: 'playerOut'; playerId: PlayerId }
@@ -184,7 +214,7 @@ export type MoveInput =
   | { kind: 'moveTo'; x: number; y: number };
 
 /** What a player asks for on one tick: movement, plus a button press if any. */
-export type PlayerAction = 'strike' | 'counter' | 'dash';
+export type PlayerAction = 'strike' | 'counter' | 'dash' | 'form' | 'virtue';
 export type PlayerInput = MoveInput & { action?: PlayerAction };
 
 export interface WorldOptions {
@@ -206,7 +236,13 @@ export interface PlayerSetup {
   /** Health carried over from the last room (defaults to full). */
   health?: number;
   mods?: PlayerMods;
+  /** Forms to switch between; the first is active at the start. Defaults to none (Beginner's Stance). */
+  forms?: FormDef[];
+  virtue?: VirtueSetup | null;
 }
+
+/** The Beginner's Stance: no changes. Used when the player has no Forms. */
+export const NO_FORM: FormDef = { id: 'none', name: "Beginner's Stance", text: '', counterWindow: 0, attackSpeed: 0, moveSpeed: 0, guardScale: 0, powerScale: 0 };
 
 const NO_INPUT: PlayerInput = { kind: 'none' };
 const BASE_STEP = MOVEMENT.speedTilesPerSecond / TICKS_PER_SECOND;
@@ -243,6 +279,12 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       out: false,
       mods: { ...mods },
       speedBoostTicks: 0,
+      forms: (options.player?.forms ?? []).map((f) => ({ ...f })),
+      form: 0,
+      formCooldown: 0,
+      virtue: options.player?.virtue ? { ...options.player.virtue } : null,
+      virtueTicks: 0,
+      virtueShield: 0,
     };
   }
 
@@ -372,9 +414,24 @@ export function telegraphTicks(attack: EnemyAttackDef, difficulty: Difficulty): 
   return Math.round(fill * d.fillScale) + d.counterWindowTicks;
 }
 
-/** The Perfect Counter window for a player, in ticks. */
+/** The Perfect Counter window for a player, in ticks (Forms and Technique Seals can widen it). */
 export function counterWindowTicks(world: WorldState, p: PlayerState): number {
-  return DIFFICULTY[world.difficulty].counterWindowTicks + p.counterBonusTicks;
+  return DIFFICULTY[world.difficulty].counterWindowTicks + p.counterBonusTicks + p.mods.counterWindow + activeForm(p).counterWindow;
+}
+
+/** The Form in use. */
+export function activeForm(p: PlayerState): FormDef {
+  return p.forms[p.form] ?? NO_FORM;
+}
+
+/** Focus a Strike costs this player (Strike upgrades can lower it). */
+export function strikeCost(p: PlayerState): number {
+  return Math.max(10, COMBAT.strike.focusCost - p.mods.strikeCostCut);
+}
+
+/** The player's Guard with the active Form. */
+function guardOf(p: PlayerState): number {
+  return p.guard * (1 + activeForm(p).guardScale);
 }
 
 // ---------------------------------------------------------------- players
@@ -401,6 +458,11 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   if (p.strikeRecovery > 0) p.strikeRecovery--;
   if (p.counterLockout > 0) p.counterLockout--;
   if (p.dashCooldown > 0) p.dashCooldown--;
+  if (p.formCooldown > 0) p.formCooldown--;
+  if (p.virtueTicks > 0 && --p.virtueTicks === 0) {
+    p.virtueShield = 0;
+    world.events.push({ kind: 'virtueEnd', playerId: p.id });
+  }
   if (p.guardTicks > 0) {
     p.guardTicks--;
     // The guard ran out without countering anything: Counter rests briefly, so it can't be spammed.
@@ -416,6 +478,12 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
     world.events.push({ kind: 'counterPressed', playerId: p.id });
   } else if (input.action === 'strike' && p.guardTicks === 0 && p.dashTicks === 0 && p.strikeRecovery === 0) {
     tryStrike(world, p, room);
+  } else if (input.action === 'form' && p.forms.length > 1 && p.formCooldown === 0) {
+    p.form = (p.form + 1) % p.forms.length;
+    p.formCooldown = COMBAT.formSwitchTicks;
+    world.events.push({ kind: 'formChange', playerId: p.id, form: p.form });
+  } else if (input.action === 'virtue' && p.virtue) {
+    useVirtue(world, p);
   }
 
   if (p.dashTicks > 0) {
@@ -430,7 +498,8 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   if (p.dashTicks === 0 && p.guardTicks === 0 && p.strikeRecovery === 0 && p.attackCooldown === 0) {
     const target = nearestEnemy(world, p, COMBAT.basicAttack.reach);
     if (target) {
-      p.attackCooldown = Math.max(1, Math.round(COMBAT.basicAttack.cooldownTicks * (1 - p.mods.attackSpeed)));
+      const speed = Math.min(0.6, p.mods.attackSpeed + activeForm(p).attackSpeed);
+      p.attackCooldown = Math.max(1, Math.round(COMBAT.basicAttack.cooldownTicks * (1 - speed)));
       landHit(world, p, target, 'basic', COMBAT.basicAttack.strength, COMBAT.focus.perHit);
     }
   }
@@ -462,9 +531,34 @@ function dashStep(p: PlayerState, room: Room): void {
   p.moving = true;
 }
 
+/** A Virtue: needs a full Focus meter, and spends all of it. */
+function useVirtue(world: WorldState, p: PlayerState): void {
+  const v = p.virtue!;
+  if (p.focus < COMBAT.focus.max || p.virtueTicks > 0) {
+    world.events.push({ kind: 'virtueRefused', playerId: p.id });
+    return;
+  }
+  p.focus = 0;
+  let healed = 0;
+  if (v.kind === 'shield') {
+    p.virtueShield = v.amount;
+    p.virtueTicks = v.ticks;
+  } else if (v.kind === 'discipline') {
+    p.virtueTicks = v.ticks;
+  } else {
+    // Second Wind: Health back, and half the Focus returned.
+    const before = p.health;
+    p.health = Math.min(p.maxHealth, p.health + Math.round(p.maxHealth * v.amount));
+    healed = p.health - before;
+    p.focus = COMBAT.focus.max * COMBAT.secondWindFocusBack;
+  }
+  world.events.push({ kind: 'virtue', playerId: p.id, virtue: v.kind, healed });
+}
+
 function tryStrike(world: WorldState, p: PlayerState, room: Room): void {
   const s = COMBAT.strike;
-  if (p.focus < s.focusCost) {
+  const cost = strikeCost(p);
+  if (p.focus < cost) {
     world.events.push({ kind: 'strikeRefused', playerId: p.id, reason: 'focus' });
     return;
   }
@@ -481,7 +575,7 @@ function tryStrike(world: WorldState, p: PlayerState, room: Room): void {
   p.pos.y += dir.y * lunge;
   pushOutOfWalls(room, p.pos, R);
   p.path = null;
-  p.focus -= s.focusCost;
+  p.focus -= cost;
   p.strikeRecovery = s.recoveryTicks;
   p.attackCooldown = Math.max(p.attackCooldown, s.recoveryTicks);
   landHit(world, p, target, 'strike', s.strength, COMBAT.focus.perHit);
@@ -516,7 +610,7 @@ function landHit(
     comboBonus(p.combo) +
     (e.mode === 'stagger' ? p.mods.staggerBonus : 0) +
     (e.mode === 'winded' && e.def.winded ? e.def.winded.damageBonus : 0);
-  const dmg = damage(p.power * (1 + p.mods.powerScale), strength, e.def.guard, bonus);
+  const dmg = damage(p.power * (1 + p.mods.powerScale + activeForm(p).powerScale), strength, e.def.guard, bonus);
   p.combo++;
   if (p.combo > world.progress.bestCombo) world.progress.bestCombo = p.combo;
   if (p.mods.comboSpeedEvery > 0 && p.combo % p.mods.comboSpeedEvery === 0) {
@@ -571,6 +665,8 @@ function returnToStart(world: WorldState, p: PlayerState, room: Room): void {
   p.dashTicks = 0;
   p.dashCooldown = 0;
   p.speedBoostTicks = 0;
+  p.virtueTicks = 0;
+  p.virtueShield = 0;
   world.events.push({ kind: 'playerReturn', playerId: p.id });
   // If nobody else is still fighting, the whole room starts over.
   const othersFighting = Object.values(world.players).some((o) => o !== p && isActive(o));
@@ -582,7 +678,7 @@ function returnToStart(world: WorldState, p: PlayerState, room: Room): void {
 
 function movePlayer(p: PlayerState, room: Room, input: MoveInput): void {
   const before = { x: p.pos.x, y: p.pos.y };
-  const STEP = BASE_STEP * (p.speedBoostTicks > 0 ? 1 + p.mods.comboSpeedBonus : 1);
+  const STEP = BASE_STEP * (p.speedBoostTicks > 0 ? 1 + p.mods.comboSpeedBonus : 1) * (1 + activeForm(p).moveSpeed);
 
   if (input.kind === 'stick') {
     p.path = null;
@@ -772,16 +868,18 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
     if (distance(p.pos, center) > a.areaRadius + R * 0.5) continue;
 
     const guarding = p.guardTicks > 0;
-    if (guarding && world.tick - p.counterPressedTick < counterWindowTicks(world, p)) {
+    // Perfect Discipline: while it lasts, every Counter is a Perfect Counter.
+    const disciplined = p.virtue?.kind === 'discipline' && p.virtueTicks > 0;
+    if (guarding && (disciplined || world.tick - p.counterPressedTick < counterWindowTicks(world, p))) {
       // Perfect Counter: no damage, enemy staggered, counter hit for 2x Power, +25 Focus.
       p.guardTicks = 0;
       world.progress.perfects++;
       world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id });
       if (p.mods.healOnPerfect > 0) p.health = Math.min(p.maxHealth, p.health + p.mods.healOnPerfect);
-      landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength, COMBAT.focus.perPerfectCounter);
+      landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, COMBAT.focus.perPerfectCounter + p.mods.focusOnPerfect);
       if (e.mode !== 'defeated') {
         e.mode = 'stagger';
-        e.modeTicks = COMBAT.counter.perfectStaggerTicks;
+        e.modeTicks = COMBAT.counter.perfectStaggerTicks + p.mods.staggerTicks;
       }
       // Ripple Counter: the counter also hits every other enemy nearby.
       if (p.mods.rippleRadius > 0) {
@@ -795,17 +893,19 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
     } else if (guarding) {
       // Block: half damage, no stagger. The combo is kept.
       p.guardTicks = 0;
-      const dmg = damage(e.def.power, a.strength * COMBAT.counter.blockDamageMultiplier, p.guard);
+      const share = Math.max(0.1, COMBAT.counter.blockDamageMultiplier - p.mods.blockCut);
+      const dmg = damage(e.def.power, a.strength * share, guardOf(p));
       world.events.push({ kind: 'block', playerId: p.id, enemyId: e.id, damage: dmg });
+      if (p.mods.dashOnBlock) p.dashCooldown = 0;
       hurt(world, p, dmg);
       // Iron Skin: part of the full hit bounces back (shields stop it, unless Shield Breaker).
       if (p.mods.blockReflect > 0 && isEnemyPresent(e) && (!e.shieldUp || p.mods.shieldBreaker)) {
-        const back = Math.max(1, Math.round(damage(e.def.power, a.strength, p.guard) * p.mods.blockReflect));
+        const back = Math.max(1, Math.round(damage(e.def.power, a.strength, guardOf(p)) * p.mods.blockReflect));
         hurtEnemy(world, p, e, 'reflect', back);
       }
     } else {
       // Hit: full damage, combo resets.
-      const dmg = damage(e.def.power, a.strength, p.guard);
+      const dmg = damage(e.def.power, a.strength, guardOf(p));
       p.combo = 0;
       world.events.push({ kind: 'hit', playerId: p.id, enemyId: e.id, damage: dmg });
       hurt(world, p, dmg);
@@ -814,6 +914,18 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
 }
 
 function hurt(world: WorldState, p: PlayerState, dmg: number): void {
+  // Shield of Respect soaks up damage first.
+  if (p.virtueShield > 0) {
+    const soaked = Math.min(p.virtueShield, dmg);
+    p.virtueShield -= soaked;
+    dmg -= soaked;
+    world.events.push({ kind: 'shieldSoak', playerId: p.id, soaked });
+    if (p.virtueShield === 0) {
+      p.virtueTicks = 0;
+      world.events.push({ kind: 'virtueEnd', playerId: p.id });
+    }
+    if (dmg === 0) return;
+  }
   world.progress.damageTaken += Math.min(dmg, p.health);
   p.health = Math.max(0, p.health - dmg);
   if (p.health === 0) {

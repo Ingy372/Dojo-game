@@ -4,6 +4,8 @@
 import { COMBAT, LOOT, type Rarity } from './config';
 import type { Effect } from './effects';
 import { GEAR_SLOTS, rarityRank, type GearItem, type GearSlot } from './loot';
+import type { XpGain } from './progression';
+import type { ProgressSnapshot } from './rewards';
 import type { RunSummary } from './run';
 
 export interface PersonalBests {
@@ -27,7 +29,12 @@ export interface Profile {
   bests: PersonalBests;
   runsPlayed: number;
   floorsCleared: number;
-  lastRun: { summary: RunSummary; newBests: BestKey[] } | null;
+  lastRun: { summary: RunSummary; newBests: BestKey[]; xp?: XpGain } | null;
+  /** Experience level (capped by real rank) and experience toward the next level. */
+  level: number;
+  xp: number;
+  /** The real progress the player has already celebrated, so new progress gets a reward moment. */
+  seen: ProgressSnapshot | null;
 }
 
 export function newProfile(): Profile {
@@ -41,6 +48,9 @@ export function newProfile(): Profile {
     runsPlayed: 0,
     floorsCleared: 0,
     lastRun: null,
+    level: 1,
+    xp: 0,
+    seen: null,
   };
 }
 

@@ -1,5 +1,6 @@
-// Effects that change how the player fights. Insights (for one run) and charms
-// (gear) both use these, and they stack by adding up. All plain data.
+// Effects that change how the player fights. Insights (for one run), charms (gear),
+// Technique Seals and Strike upgrades (from real sign-offs) all use these, and they
+// stack by adding up. All plain data.
 
 export type EffectType =
   | 'powerScale'
@@ -12,7 +13,14 @@ export type EffectType =
   | 'comboSpeed'
   | 'lowHealthFocus'
   | 'startFocus'
-  | 'healOnPerfect';
+  | 'healOnPerfect'
+  | 'strikeCost'
+  | 'staggerTicks'
+  | 'dashOnBlock'
+  | 'blockCut'
+  | 'counterWindow'
+  | 'focusOnPerfect'
+  | 'counterStrength';
 
 export interface Effect {
   type: EffectType;
@@ -60,6 +68,20 @@ export interface PlayerMods {
   startFocus: number;
   /** Health restored by each Perfect Counter. */
   healOnPerfect: number;
+  /** Strikes cost this much less Focus. */
+  strikeCostCut: number;
+  /** Perfect Counters stagger this many ticks longer. */
+  staggerTicks: number;
+  /** A Block recharges Dash right away. */
+  dashOnBlock: boolean;
+  /** Blocks take this much less of the hit (0.1 = 50% becomes 40%). */
+  blockCut: number;
+  /** Extra Perfect Counter window ticks. */
+  counterWindow: number;
+  /** Extra Focus from each Perfect Counter. */
+  focusOnPerfect: number;
+  /** Extra move strength for the Perfect Counter hit. */
+  counterStrength: number;
 }
 
 export function noMods(): PlayerMods {
@@ -79,6 +101,13 @@ export function noMods(): PlayerMods {
     lowHealthFocusScale: 1,
     startFocus: 0,
     healOnPerfect: 0,
+    strikeCostCut: 0,
+    staggerTicks: 0,
+    dashOnBlock: false,
+    blockCut: 0,
+    counterWindow: 0,
+    focusOnPerfect: 0,
+    counterStrength: 0,
   };
 }
 
@@ -124,6 +153,27 @@ export function modsFrom(effects: readonly Effect[], ticksPerSecond: number): Pl
       case 'healOnPerfect':
         m.healOnPerfect += e.amount;
         break;
+      case 'strikeCost':
+        m.strikeCostCut += e.amount;
+        break;
+      case 'staggerTicks':
+        m.staggerTicks += e.amount;
+        break;
+      case 'dashOnBlock':
+        m.dashOnBlock = true;
+        break;
+      case 'blockCut':
+        m.blockCut += e.amount;
+        break;
+      case 'counterWindow':
+        m.counterWindow += e.amount;
+        break;
+      case 'focusOnPerfect':
+        m.focusOnPerfect += e.amount;
+        break;
+      case 'counterStrength':
+        m.counterStrength += e.amount;
+        break;
     }
   }
   return m;
@@ -141,7 +191,17 @@ const TYPES: readonly EffectType[] = [
   'lowHealthFocus',
   'startFocus',
   'healOnPerfect',
+  'strikeCost',
+  'staggerTicks',
+  'dashOnBlock',
+  'blockCut',
+  'counterWindow',
+  'focusOnPerfect',
+  'counterStrength',
 ];
+
+/** Effects that are simply on or off (no amount needed). */
+const SWITCHES: readonly EffectType[] = ['shieldBreaker', 'dashOnBlock'];
 
 /** Checks an effect from a data file. `fail` throws the caller's own error type. */
 export function loadEffect(data: unknown, fail: (problem: string) => never): Effect {
@@ -155,7 +215,7 @@ export function loadEffect(data: unknown, fail: (problem: string) => never): Eff
     return v as number;
   };
   const type = e.type as EffectType;
-  const out: Effect = { type, amount: num('amount', type !== 'shieldBreaker') ?? 0 };
+  const out: Effect = { type, amount: num('amount', !SWITCHES.includes(type)) ?? 0 };
   const radius = num('radius', type === 'rippleCounter');
   const everyHits = num('everyHits', type === 'comboSpeed');
   const seconds = num('seconds', type === 'comboSpeed');

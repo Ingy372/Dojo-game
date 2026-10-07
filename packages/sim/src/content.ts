@@ -1,6 +1,7 @@
-// Loads and cross-checks all the game's content (rooms, enemies, Insights, loot),
+// Loads and cross-checks all the game's content (rooms, enemies, Insights, loot, abilities),
 // so a mistake in a data file shows a clear message right away.
 
+import { loadAbilities, type AbilityContent } from './abilities';
 import { loadEnemy, type EnemyDef } from './enemy';
 import { loadInsights, type InsightDef } from './insight';
 import { loadLootTables, type LootTables } from './loot';
@@ -11,6 +12,7 @@ export interface Content {
   enemies: Record<string, EnemyDef>;
   insights: InsightDef[];
   loot: LootTables;
+  abilities: AbilityContent;
 }
 
 export interface RawContent {
@@ -19,6 +21,7 @@ export interface RawContent {
   insights: unknown;
   gear: unknown;
   drops: unknown;
+  abilities: unknown;
 }
 
 export function loadContent(raw: RawContent): Content {
@@ -47,5 +50,5 @@ export function loadContent(raw: RawContent): Content {
   for (const id of Object.keys(loot.enemyDropChance)) {
     if (!enemies[id]) throw new Error(`Loot drops list enemy "${id}", which doesn't exist`);
   }
-  return { rooms, enemies, insights: loadInsights(raw.insights), loot };
+  return { rooms, enemies, insights: loadInsights(raw.insights), loot, abilities: loadAbilities(raw.abilities) };
 }

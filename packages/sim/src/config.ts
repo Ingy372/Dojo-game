@@ -112,6 +112,11 @@ export const COMBAT = {
     cooldownTicks: 30,
   },
 
+  /** Ticks before the Form can be switched again (half a second). */
+  formSwitchTicks: 10,
+  /** Second Wind (the Great Effort Virtue) gives back this share of the Focus it used. */
+  secondWindFocusBack: 0.5,
+
   /** Only this many enemies may be attacking at once ("kung fu circle"). */
   maxAttackersAtOnce: 2,
   /** In floor rooms, the next wave of enemies arrives when this many (or fewer) are left. */
@@ -185,3 +190,69 @@ export const LOOT = {
 export const GEAR_CAPS = {
   white: { power: 4, maxHealth: 30, guard: 8 },
 } as const;
+
+// ---------------------------------------------------------------- the training link (milestone 4)
+
+/** Levels and experience (core-design sections 10 and 13). */
+export const PROGRESSION = {
+  /** Each belt tier adds this many levels to the cap (white belt: cap 10). */
+  levelsPerTier: 10,
+  /** Each level above 1 adds this much Health and Power. */
+  healthPerLevel: 3,
+  powerPerLevel: 0.4,
+  /**
+   * Experience pacing: a typical player reaches the tier's level cap at this share of the
+   * school's typical time in rank for that belt.
+   */
+  capAtShareOfRank: 0.75,
+  /** Assumed for pacing: runs a typical player finishes per week... */
+  typicalRunsPerWeek: 8,
+  /** ...and experience from a typical run (about what xpPerRoom gives for a mixed run). */
+  typicalRunXp: 110,
+  weeksPerMonth: 4.35,
+  /** Experience for each room cleared, by kind, plus a bonus for clearing the whole floor. */
+  xpPerRoom: { battle: 12, challenge: 16, treasure: 4, rest: 4, boss: 40, practice: 0 },
+  xpFloorClear: 20,
+  /** Below the rank's expected level (the level cap of the belt before), experience is doubled. */
+  catchUpMultiplier: 2,
+} as const;
+
+/** Dojo Blessing (core-design section 10): after attending class. */
+export const BLESSING = {
+  hours: 48,
+  /** Extra share of experience while blessed (0.5 = +50%). */
+  xpBonus: 0.5,
+  /** Better loot: this much weight moves from Common to Rare on every roll while blessed. */
+  rareWeight: 3,
+} as const;
+
+/** Home practice (framework section 5): approved minutes per Training Point. */
+export const TRAINING_POINTS = {
+  minutesPerPoint: 15,
+  /** Each ability upgrades from level 1 to 5, so it can take this many points. */
+  upgradesPerAbility: 4,
+} as const;
+
+/**
+ * Power Rating (core-design section 12). Never shown to players: staff and the system only.
+ * Each belt tier adds 1,000 to the max; each black belt degree adds 500.
+ * Each source's share of the tier max is its own ceiling.
+ */
+export const POWER = {
+  perTier: 1000,
+  perDegree: 500,
+  shares: {
+    signOffs: 0.4,
+    trainingPoints: 0.17,
+    virtues: 0.1,
+    level: 0.18,
+    gear: 0.08,
+    streetSmarts: 0.05,
+    mastery: 0.02,
+  },
+  /** Character stripes possible per belt (real limit). */
+  stripesPerBelt: 2,
+} as const;
+
+/** Virtues get this much stronger for each rank above I (earning the same word again). */
+export const VIRTUE_RANK_BONUS = 0.25;
