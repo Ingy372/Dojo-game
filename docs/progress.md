@@ -114,3 +114,33 @@
 - Milestone 4: Training link (mock data), in a fresh session.
 - Still open: Jay to try Guided (`?difficulty=guided`) when he has time.
 - Balance tool: `npm run balance` in `packages/sim` re-checks difficulty after any change.
+
+## Milestone 4 — Training link with fake data (2026-10-07)
+
+**Done**
+- Three fake profiles of one student (Sam T.) in `fixtures/`, shaped like the DojoForge feed, with Action Zone's real belt list and technique names: brand-new white belt, white belt with 3 sign-offs and the Respect stripe, and yellow belt (all yellow signed off, approved to test, one white catch-up item).
+- A hidden **testing screen** (tap "Home Dojo" 5 times). You can switch profiles, replay the celebrations, add levels, and see the **Power Rating** with its breakdown (hidden everywhere else).
+- Abilities unlock from sign-offs: **Forms** (with a Form button in fights), **Strike upgrades**, **Technique Seals** (upgrading the Counter) and **Virtues** from stripes (with a Virtue button). Respect earned again becomes Shield of Respect II. A new **Abilities** tab shows each one with its real technique name, who signed it off and when, or what to sign off to unlock it.
+- The character's **belt color and stripes** match the profile, in the Home Dojo and in fights.
+- **Levels and experience**, capped by belt (10 per tier), with double experience below the expected level.
+- **The Gate** tab: a lock per requirement, the time-in-rank sundial, Sensei's Seal with the test date, and "READY".
+- **The Dojo Blessing** after class: glow, +50% experience, better loot.
+- **Reward moments**, sized by importance, and the 4-step **promotion ceremony**.
+- **The Path card**: next technique (or catch-up item), next class day, test day.
+- The Insight "Second Wind" is renamed "Rally" (the Great Effort Virtue uses that name).
+- 109 automated tests pass (new: profiles load, the curriculum's numbering, legacy grant and catch-up, Gate, Path card, Blessing, reward moment order, experience pacing and the level cap, the Power Rating split and its hard cap, and every Form, Seal and Virtue in a real fight).
+- Checked on a phone-sized screen in a test browser:
+  - the welcome
+  - the stripe and sign-off moments
+  - the full white → yellow ceremony
+  - the Gate and Abilities tabs
+  - the Virtue shield and Form switch in the practice room
+  - experience after a run
+
+**Not done / known limits**
+- Spending Training Points, a loadout screen, Missions, the "Watch the real technique" videos, the promotion trophy and card, and Tower floors per belt are later milestones.
+- Typical time in rank per belt is a guess (see decisions); Jay to correct.
+
+**Next**
+- Jay tests on his phone (steps in the session summary) and gives feedback.
+- Milestone 5: Home Dojo basics, in a fresh session.

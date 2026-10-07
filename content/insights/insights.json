@@ -58,8 +58,8 @@
       "effect": { "type": "powerScale", "amount": 0.2 }
     },
     {
-      "id": "second-wind",
-      "name": "Second Wind",
+      "id": "rally",
+      "name": "Rally",
       "family": "virtue",
       "text": "Focus fills twice as fast when your health is below half.",
       "effect": { "type": "lowHealthFocus", "amount": 2, "below": 0.5 }

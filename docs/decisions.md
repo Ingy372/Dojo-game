@@ -128,3 +128,91 @@ Jay asked Claude to test and tune the game before his next playtest.
 - **No skipping fights:** Jay found that picking rest, treasure, rest, treasure... avoided fighting all the way to the boss. Now, **after a treasure room or a rest shrine, every door leads to a fight** (battle or challenge), and rest shrines are capped at 2 per floor (`FLOOR.maxRestRooms`), like treasure rooms. A floor now always has at least 4 fight rooms plus the boss, and at most 3 calm rooms.
 - **Run length (5–7 minutes) is OK for now** (Jay).
 - **Dodge-only attacks (Jay's idea, for milestone 10):** an enemy attack that can't be Countered or Blocked, only dodged by moving or Dashing out of the way. It's revealed as players climb to higher Tower tiers, as one of the "new enemy mechanic per tier" additions in milestone 10. It must look clearly different from normal telegraphs (for example a striped purple danger zone with a double "!!"), still give the usual warning time (it's still telegraphed, so never unavoidable), and come with a Sensei's Lesson the first time it appears. Not built yet.
+
+## Milestone 4 — Training link with fake data (2026-10-07)
+
+- **Action Zone's curriculum (Jay, 2026-10-07):** White Belt Basic Form 1, Yellow Basic Form 2, Orange Keon, Green David and Goliath, Blue Penon 1, Red Penon 2, Red/Black Penon 3, Brown Nihanchi, Brown/Black Possi, then Black Belt. Self-defense techniques have no names, just numbers, and keep counting (white #1–5, yellow #6–10, …). Kick combos are numbered too: Kick Combo 1 at white up to Kick Combo 7 at red/black. Brown and brown/black have no new kick combo. Black belt has Kick Combos 8–12 (12 in all for now).
+- **The curriculum is data, not code.** It lives in the fake profiles (`fixtures/`), shaped like Nic's feed, so another school only needs its own curriculum.
+- **Three fake profiles = one student ("Sam T.") at three points in time:** (1) brand-new white belt, (2) six weeks later with 3 sign-offs (Basic Form 1, Self-Defense #1, #3), the Respect stripe and class today, (3) yellow belt with all 7 yellow requirements signed off, Respect earned again (rank II), Great Effort earned at white, approved to test with a test date, and white belt's Self-Defense #4 still a catch-up item. Switching forward plays the reward moments, and white → yellow plays the promotion ceremony.
+- **Fake profiles always look fresh:** their dates are moved so the profile's "last update" is now (testing only; real feeds are never moved). That keeps "class today" and the Blessing working whenever Jay tests.
+- **Feed shape (for Nic, framework section 14).** These are the extras the game needs beyond the section 14 list:
+  - the school's full curriculum per belt (requirement ids, types and names), so the legacy grant can unlock earlier belts' abilities
+  - per belt: color, second color for striped belts, black belt degree, typical months in rank, and classes before testing
+  - `attendance.classesInRank` for the sundial
+  - `testing.approved` and `testing.testDate` for Sensei's Seal
+  - which belt each catch-up item belongs to
+
+  The game checks every profile when it loads and gives a clear message if something is wrong.
+- **Abilities map in curriculum order** (`content/abilities/abilities.json`): the n-th kata unlocks the n-th Form, the n-th kick combo the n-th Strike upgrade, and the n-th self-defense technique the n-th Technique Seal. Powers exist for white and yellow belt so far. Later belts still unlock their ability, with the power "arriving in a later update" (milestone 10). Each ability card shows the real technique name, who signed it off and when.
+- **Forms:** Beginner's Stance (everyone), Rooted Form (Basic Form 1: +2 ticks of Perfect Counter window, +30% Guard, 15% slower) and Flowing Form (Basic Form 2: 15% faster movement, 20% faster attacks). A **Form button** appears once a kata is signed off and switches between up to 3 earned Forms plus the Beginner's Stance. The current Form's name shows under the button.
+- **Strike upgrades stack** (no loadout screen yet): Kick Combo 1 adds a follow-up kick, and Kick Combo 2 makes Strikes cost 8 less Focus.
+- **Technique Seals** (all active, upgrading the Counter):
+
+  | Self-defense | Seal | What it does |
+  | --- | --- | --- |
+  | #1 | Firm Grip | Longer stagger after a Perfect Counter |
+  | #2 | Escape Step | A Block recharges Dash |
+  | #3 | Sweep | A Perfect Counter also hits enemies close by |
+  | #4 | Steady Breath | +3 Health per Perfect Counter |
+  | #5 | Strong Block | Blocks take 10% less damage |
+  | #6 | Sharp Eyes | +1 tick of Perfect Counter window |
+  | #7 | Push Back | Blocks bounce back 20% |
+  | #8 | Disarm | +10 Focus per Perfect Counter |
+  | #9 | Throw | Stronger counter hit |
+  | #10 | Hold Ground | +15% damage to staggered enemies |
+- **Virtues** use a full Focus meter (all of it) from a **Virtue button** that appears once a stripe is earned:
+  - Respect → Shield of Respect: soaks up 40 damage for 6 s
+  - Great Effort → Second Wind: restores 30% Health and gives back half the Focus
+  - Self-Discipline → Perfect Discipline: every Counter is Perfect for 3 s
+
+  Each rank above I (the same word earned again) is 25% stronger. The Virtue taken into fights is the highest rank, then the most recent (a loadout choice comes later).
+- **The Insight "Second Wind" is renamed "Rally"** so it doesn't clash with the Great Effort Virtue.
+- **Levels:** cap 10 per belt tier (white 10, yellow 20). Each level adds +3 Health and +0.4 Power. Runs give experience per room cleared (battle 12, challenge 16, treasure/rest 4, boss 40, plus 20 for clearing the floor). Each tier's experience is set so a typical player (8 runs a week, about 110 experience a run) reaches the cap at 75% of the belt's typical time in rank. At the cap, experience stops for now; overflow into materials and Mastery comes after launch. All numbers are in `PROGRESSION` in the settings file.
+- **Typical time in rank (placeholder guesses, Jay to correct):** white and yellow 3 months, orange and green 4, blue 5, red and red/black 6, brown and brown/black 8, black 12. 24 classes before testing at every belt.
+- **Catch-up experience:** below the rank's expected level (the previous belt's cap, so a yellow belt is expected to be at least level 10), experience is doubled. A saved level above the current belt's cap (only possible when switching fake profiles) is shown capped.
+- **Dojo Blessing:** a class in the last 48 hours gives +50% experience and better loot (3 points of weight move from Common to Rare on every roll). The Home Dojo shows a glow around the character and the hours left. Nothing is shown when not blessed (no punishment).
+- **The Gate** is a tab in the Home Dojo:
+  - one lock per requirement of the current rank, gold and lit when signed off
+  - the sundial, showing classes attended out of classes before testing
+  - Sensei's Seal, red and lit with the test date when approved; otherwise it reads "Lights when Sensei approves you to test" and never gives a reason
+  - a pulsing "READY" when every lock is lit
+
+  Catch-up items never appear on the Gate.
+- **The Path card** sits in the Home Dojo under the buttons. It shows:
+  - the next unsigned requirement of the current rank, then catch-up items (labeled "Catch-up from White Belt")
+  - the next class day and the test date
+  - a greyed "Video soon" until the video library is connected (milestone 9)
+- **Reward moments**, biggest first:
+  1. the promotion ceremony
+  2. character stripes (a gold band and the stripe word)
+  3. sign-offs ("Sensei Jay signed off Self-Defense #3!" with the ability unlocked; more than 3 at once are shown on one list card)
+  4. Sensei's Seal
+  5. the Dojo Blessing (small)
+
+  A game level-up is only a line on the run summary. The game remembers what it has celebrated in the save, so each moment plays once.
+- **First time playing (or after "Forget what I've seen"):** one welcome card lists everything the student's training has already unlocked (the legacy grant's cascade), with no ceremony, because it isn't a new promotion.
+- **The promotion ceremony** has 4 tap-through steps:
+  1. The character bows and the new belt is tied, with rays, confetti and the biggest sound in the game.
+  2. The Gate's doors slide open on the new tier.
+  3. The new belt's techniques, each with what it unlocks.
+  4. The raised level cap.
+
+  Not yet built: the trophy, the cosmetic and the new dojo room (milestone 5 and later), and the promotion card for parents (later). There are no Tower floors per tier yet (milestone 10), so a yellow belt still climbs the first tier.
+- **Going down a belt** (only possible by switching fake profiles) celebrates nothing.
+- **Power Rating** (`packages/sim/src/power.ts`, numbers in `POWER`): each tier's max is 1,000 per belt plus 500 per black belt degree. The sources and how they fill:
+  - **Sign-offs:** signed requirements out of every requirement up to the current belt. Ranks already passed count (the legacy grant); catch-up items don't count until signed.
+  - **Training Points:** 15 approved minutes = 1 point, out of 4 upgrades per ability. Points are counted, but spending them comes later.
+  - **Virtues:** stripes out of 2 per belt so far.
+  - **Level:** level out of the cap.
+  - **Gear:** worn gear's hidden score out of the best possible at the tier.
+  - **Street Smarts and Mastery:** 0 for now.
+
+  Every source is capped at its share, so the total can never pass the rank's max (tested).
+- **Hidden testing screen:** tap "Home Dojo" 5 times quickly. It lets you:
+  - switch fake profiles
+  - "Forget what I've seen" (replays the welcome)
+  - "+1 level" / "Back to level 1"
+  - see the Power Rating with its breakdown
+
+  Power Rating appears nowhere else. This screen stays until the real DojoForge connection (milestone 9), when it should become staff-only.
+- **Belt colors are drawn in code** from the belt list (two-color belts get a center stripe; stripes are white tape on dark belts, black on light ones). This is a placeholder until the palette-swapped sprite (milestone 7).
