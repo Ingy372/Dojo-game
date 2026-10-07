@@ -4,6 +4,7 @@
 import { COMBAT, LOOT, type Rarity } from './config';
 import type { Effect } from './effects';
 import { GEAR_SLOTS, rarityRank, type GearItem, type GearSlot } from './loot';
+import type { DojoState } from './dojo';
 import type { XpGain } from './progression';
 import type { ProgressSnapshot } from './rewards';
 import type { RunSummary } from './run';
@@ -35,6 +36,8 @@ export interface Profile {
   xp: number;
   /** The real progress the player has already celebrated, so new progress gets a reward moment. */
   seen: ProgressSnapshot | null;
+  /** The Home Dojo (created on the first visit). */
+  dojo: DojoState | null;
 }
 
 export function newProfile(): Profile {
@@ -51,6 +54,7 @@ export function newProfile(): Profile {
     level: 1,
     xp: 0,
     seen: null,
+    dojo: null,
   };
 }
 

@@ -5,7 +5,7 @@
 import type { FormDef, VirtueKind } from './abilities';
 import { pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
-import { COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, type Difficulty } from './config';
+import { BOW, COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, type Difficulty } from './config';
 import { noMods, type PlayerMods } from './effects';
 import type { EnemyAttackDef, EnemyDef } from './enemy';
 import { clamp, distance, length, quantize, type Vec2 } from './math';
@@ -341,6 +341,12 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
   };
 }
 
+/** The bow at the start of a Tower floor: a small Focus head start (BOW in the settings). */
+export function bowIn(world: WorldState, playerId: PlayerId): void {
+  const p = world.players[playerId];
+  if (p) p.focus = Math.min(COMBAT.focus.max, p.focus + BOW.focus);
+}
+
 /** Changes a player's Insight and charm effects (for example after picking an Insight). */
 export function setPlayerMods(p: PlayerState, mods: PlayerMods): void {
   p.mods = { ...mods };
@@ -621,7 +627,7 @@ function landHit(
     world.events.push({ kind: 'speedBurst', playerId: p.id });
   }
   const lowHealth = p.health < p.maxHealth * p.mods.lowHealthBelow;
-  p.focus = Math.min(COMBAT.focus.max, p.focus + focusGain * (lowHealth ? p.mods.lowHealthFocusScale : 1));
+  p.focus = Math.min(COMBAT.focus.max, p.focus + focusGain * (1 + p.mods.focusGain) * (lowHealth ? p.mods.lowHealthFocusScale : 1));
   p.facing = directionTo(p.pos, e.pos);
   hurtEnemy(world, p, e, move, dmg);
 }

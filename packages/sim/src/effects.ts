@@ -20,7 +20,8 @@ export type EffectType =
   | 'blockCut'
   | 'counterWindow'
   | 'disarm'
-  | 'counterStrength';
+  | 'counterStrength'
+  | 'focusGain';
 
 export interface Effect {
   type: EffectType;
@@ -82,6 +83,8 @@ export interface PlayerMods {
   disarm: number;
   /** Extra move strength for the Perfect Counter hit. */
   counterStrength: number;
+  /** Focus gains are this share bigger (0.2 = +20%; Calm Mind). */
+  focusGain: number;
 }
 
 export function noMods(): PlayerMods {
@@ -108,6 +111,7 @@ export function noMods(): PlayerMods {
     counterWindow: 0,
     disarm: 0,
     counterStrength: 0,
+    focusGain: 0,
   };
 }
 
@@ -174,6 +178,9 @@ export function modsFrom(effects: readonly Effect[], ticksPerSecond: number): Pl
       case 'counterStrength':
         m.counterStrength += e.amount;
         break;
+      case 'focusGain':
+        m.focusGain += e.amount;
+        break;
     }
   }
   return m;
@@ -198,6 +205,7 @@ const TYPES: readonly EffectType[] = [
   'counterWindow',
   'disarm',
   'counterStrength',
+  'focusGain',
 ];
 
 /** Effects that are simply on or off (no amount needed). */

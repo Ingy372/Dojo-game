@@ -3,7 +3,7 @@
 // plain data and uses the seeded random number generator, so a run can be saved
 // and replayed exactly.
 
-import { BLESSING, COMBAT, FLOOR, GRADES, LOOT, TICKS_PER_SECOND, type Difficulty, type Rarity } from './config';
+import { BLESSING, COMBAT, DOJO, FLOOR, GRADES, LOOT, TICKS_PER_SECOND, type Difficulty, type Rarity } from './config';
 import type { Content } from './content';
 import { modsFrom, type Effect } from './effects';
 import { chance, makeItem, rarityRank, rollRarity, type GearItem } from './loot';
@@ -60,11 +60,20 @@ export interface RunState {
   test: boolean;
   /** The Dojo Blessing was active when the run started: better loot. */
   blessed: boolean;
+  /** Calm Mind (a clean Home Dojo) was active when the run started: Focus builds faster. */
+  calmMind: boolean;
+  /** The player has bowed in at the start of this floor. */
+  bowed: boolean;
+  /** Decorations found this run (decoration ids). */
+  decorations: string[];
+  /** How many of each decoration the player already had (so new kinds are found first). */
+  ownedDecorations: Record<string, number>;
 }
 
 /** Things that happened, for the game to show. */
 export type RunEvent =
   | { kind: 'loot'; item: GearItem; at: Vec2; source: 'enemy' | 'chest' | 'grade' }
+  | { kind: 'decoration'; id: string; at: Vec2 }
   | { kind: 'graded'; result: RoomResult }
   | { kind: 'insightChoice'; ids: string[] }
   | { kind: 'nextRoom'; door: DoorKind }
@@ -78,6 +87,10 @@ export interface RunOptions {
   firstRoomId?: string;
   /** Dojo Blessing (attended class in the last 48 hours). */
   blessed?: boolean;
+  /** Calm Mind from a clean Home Dojo. */
+  calmMind?: boolean;
+  /** How many of each decoration the player already has. */
+  ownedDecorations?: Record<string, number>;
 }
 
 export function startRun(content: Content, options: RunOptions): RunState {
@@ -102,6 +115,10 @@ export function startRun(content: Content, options: RunOptions): RunState {
     nextUid: 1,
     test: !!options.firstRoomId,
     blessed: !!options.blessed,
+    calmMind: !!options.calmMind,
+    bowed: false,
+    decorations: [],
+    ownedDecorations: { ...(options.ownedDecorations ?? {}) },
   };
   const first = options.firstRoomId ? content.rooms.find((r) => r.id === options.firstRoomId) : undefined;
   enterRoom(content, run, first ?? pickRoom(content, run, 'battle'));
@@ -114,12 +131,13 @@ export function currentRoom(content: Content, run: RunState): Room {
   return room;
 }
 
-/** The player's effects for this run: Insights picked so far plus any worn charm effects. */
+/** The player's effects for this run: Insights picked so far, any worn charm effects, and Calm Mind. */
 export function runEffects(content: Content, run: RunState, gearEffects: readonly Effect[] = []): Effect[] {
   const fromInsights = run.insights
     .map((id) => content.insights.find((i) => i.id === id)?.effect)
     .filter((e): e is Effect => !!e);
-  return [...fromInsights, ...gearEffects];
+  const calm: Effect[] = run.calmMind ? [{ type: 'focusGain', amount: DOJO.calmMind.focusGain }] : [];
+  return [...fromInsights, ...gearEffects, ...calm];
 }
 
 /** Builds the world for the run's current room. `player` comes from the profile's gear. */
@@ -190,7 +208,10 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
         const inTime = result?.inTime === true;
         const count = inTime && table.inTimeItems ? table.inTimeItems : table.items;
         const min = inTime && table.inTimeMinRarity ? table.inTimeMinRarity : table.minRarity;
-        for (let i = 0; i < count; i++) out.push(drop(content, run, min, room.chest ?? world.players.p1.pos, 'chest'));
+        const at = room.chest ?? world.players.p1.pos;
+        for (let i = 0; i < count; i++) out.push(drop(content, run, min, at, 'chest'));
+        const deco = dropDecoration(content, run, room.kind, at);
+        if (deco) out.push(deco);
         break;
       }
       case 'doorEntered': {
@@ -247,6 +268,8 @@ export interface RunSummary {
   ticks: number;
   sGrades: number;
   insights: string[];
+  /** Decorations found (decoration ids). */
+  decorations: string[];
   /** A test-link run (doesn't count for personal bests). */
   test: boolean;
 }
@@ -263,6 +286,7 @@ export function summarizeRun(run: RunState): RunSummary {
     ticks: run.ticks,
     sGrades: run.results.filter((r) => r.grade === 'S').length,
     insights: run.insights.slice(),
+    decorations: run.decorations.slice(),
     test: run.test,
   };
 }
@@ -341,4 +365,20 @@ function drop(content: Content, run: RunState, min: Rarity, at: Vec2, source: 'e
   const item = makeItem(run.rng, content.loot, rarity, `r${run.nextUid++}`);
   run.loot.push(item);
   return { kind: 'loot', item, at: { x: at.x, y: at.y }, source };
+}
+
+/**
+ * A chest may hold a decoration for the Home Dojo (the boss chest always does).
+ * Kinds the player has fewest of come first, so a new player fills their dojo with variety.
+ */
+function dropDecoration(content: Content, run: RunState, kind: RoomKind, at: Vec2): RunEvent | null {
+  const share = content.dojo.dropChance[kind] ?? 0;
+  if (share <= 0 || !chance(run.rng, share)) return null;
+  const pool = content.dojo.decorations.filter((d) => d.source === 'tower');
+  if (pool.length === 0) return null;
+  const have = (id: string) => (run.ownedDecorations[id] ?? 0) + run.decorations.filter((x) => x === id).length;
+  const fewest = Math.min(...pool.map((d) => have(d.id)));
+  const id = pick(run.rng, pool.filter((d) => have(d.id) === fewest)).id;
+  run.decorations.push(id);
+  return { kind: 'decoration', id, at: { x: at.x, y: at.y } };
 }

@@ -1,7 +1,8 @@
-// Loads and cross-checks all the game's content (rooms, enemies, Insights, loot, abilities),
+// Loads and cross-checks all the game's content (rooms, enemies, Insights, loot, abilities, the Home Dojo),
 // so a mistake in a data file shows a clear message right away.
 
 import { loadAbilities, type AbilityContent } from './abilities';
+import { loadDojoContent, type DojoContent } from './dojo';
 import { loadEnemy, type EnemyDef } from './enemy';
 import { loadInsights, type InsightDef } from './insight';
 import { loadLootTables, type LootTables } from './loot';
@@ -13,6 +14,7 @@ export interface Content {
   insights: InsightDef[];
   loot: LootTables;
   abilities: AbilityContent;
+  dojo: DojoContent;
 }
 
 export interface RawContent {
@@ -22,6 +24,8 @@ export interface RawContent {
   gear: unknown;
   drops: unknown;
   abilities: unknown;
+  dojoRoom: unknown;
+  decorations: unknown;
 }
 
 export function loadContent(raw: RawContent): Content {
@@ -50,5 +54,12 @@ export function loadContent(raw: RawContent): Content {
   for (const id of Object.keys(loot.enemyDropChance)) {
     if (!enemies[id]) throw new Error(`Loot drops list enemy "${id}", which doesn't exist`);
   }
-  return { rooms, enemies, insights: loadInsights(raw.insights), loot, abilities: loadAbilities(raw.abilities) };
+  return {
+    rooms,
+    enemies,
+    insights: loadInsights(raw.insights),
+    loot,
+    abilities: loadAbilities(raw.abilities),
+    dojo: loadDojoContent(raw.dojoRoom, raw.decorations),
+  };
 }

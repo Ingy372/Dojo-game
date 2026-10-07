@@ -256,3 +256,49 @@ export const POWER = {
 
 /** Virtues get this much stronger for each rank above I (earning the same word again). */
 export const VIRTUE_RANK_BONUS = 0.25;
+
+/**
+ * Home Dojo (framework section 7). Mess is cosmetic, capped, and never removes or blocks anything.
+ * How messy the dojo is follows a curve over time away: nothing for the first hours, then
+ * fast at first and slower later, reaching the limit after about a week. Short, frequent
+ * visits always find a small, quick tidy; a long absence is never worse than "needs a good cleaning."
+ */
+export const DOJO = {
+  /** No mess at all for this many hours after a clean (a quick break doesn't leave dust). */
+  messStartsAfterHours: 4,
+  /** Mess reaches its limit after this many hours away (7 days). */
+  messFullAfterHours: 168,
+  /** Dust and leaves on the floor at the limit (swept by walking over them). */
+  maxFloorSpots: 16,
+  /** Share of floor spots that are fallen leaves instead of dust (looks only). */
+  leafShare: 0.3,
+  /** How close (tiles) the character must pass to sweep a spot. */
+  sweepRadius: 0.75,
+  /** Mats start getting scuffed at this much mess (0 to 1); later mats need more. */
+  matScuffFrom: 0.2,
+  matScuffSpread: 0.4,
+  /** Taps of "Wipe" to clean one scuffed mat. */
+  wipeTaps: 4,
+  /** Weapons knocked crooked on each rack at these mess levels (one more per level passed). */
+  rackCrookedAt: [0.35, 0.6, 0.85],
+  /** How close (tiles) the character must stand to wipe a mat or straighten a rack. */
+  reach: 1.4,
+  /** After this many hours away, the welcome-back card appears. */
+  welcomeBackHours: 48,
+  /**
+   * Calm Mind: earned by cleaning a messy dojo. Focus builds this much faster, for this
+   * many Tower runs. Counted in runs (not hours) so it never pressures anyone to play now,
+   * and it doesn't stack. Kept smaller than the Dojo Blessing (real class).
+   */
+  calmMind: { focusGain: 0.2, runs: 3 },
+} as const;
+
+/**
+ * The bow (framework section 9): at the start of each Tower floor. A small, instant,
+ * guaranteed reward turns the ritual into a habit: about 3 hits' head start on Focus.
+ */
+export const BOW = {
+  focus: 15,
+  /** How long the bow animation takes (ms, looks only). */
+  ms: 900,
+} as const;

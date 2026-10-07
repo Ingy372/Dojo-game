@@ -19,3 +19,4 @@ export * from './training';
 export * from './progression';
 export * from './rewards';
 export * from './power';
+export * from './dojo';

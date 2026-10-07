@@ -1,0 +1,18 @@
+{
+  "notes": "Home Dojo decorations. Every decoration is earned, never bought. source: starter (Sensei's welcome gifts), tower (found in Tower chests). Later: trophies from real achievements. place: floor or wall (the top wall). solid: the character can't walk through it. clean: mat (gets scuffed, wiped clean) or rack (weapons get knocked crooked, straightened). shape and color are placeholder looks until the art pack.",
+  "dropChance_note": "Chance that a chest also holds a decoration, by room kind.",
+  "dropChance": { "boss": 1, "treasure": 0.25, "challenge": 0.25 },
+  "decorations": [
+    { "id": "training-mat", "name": "Training Mat", "source": "starter", "place": "floor", "width": 2, "height": 2, "solid": false, "clean": "mat", "shape": "mat", "color": "#3a6ea5" },
+    { "id": "weapon-rack", "name": "Weapon Rack", "source": "starter", "place": "floor", "width": 2, "height": 1, "solid": true, "clean": "rack", "shape": "rack", "color": "#8a5a35" },
+    { "id": "dojo-banner", "name": "Dojo Banner", "source": "starter", "place": "wall", "width": 1, "height": 1, "solid": false, "shape": "banner", "color": "#b8322a" },
+    { "id": "practice-mat", "name": "Practice Mat", "source": "tower", "place": "floor", "width": 2, "height": 2, "solid": false, "clean": "mat", "shape": "mat", "color": "#4f8a4a" },
+    { "id": "punching-bag", "name": "Punching Bag", "source": "tower", "place": "floor", "width": 1, "height": 1, "solid": true, "shape": "bag", "color": "#7a2e2e" },
+    { "id": "stone-lantern", "name": "Stone Lantern", "source": "tower", "place": "floor", "width": 1, "height": 1, "solid": true, "shape": "lantern", "color": "#9a978f" },
+    { "id": "bonsai-tree", "name": "Bonsai Tree", "source": "tower", "place": "floor", "width": 1, "height": 1, "solid": true, "shape": "plant", "color": "#3f8f4f" },
+    { "id": "bamboo-pot", "name": "Potted Bamboo", "source": "tower", "place": "floor", "width": 1, "height": 1, "solid": true, "shape": "bamboo", "color": "#7fbf5a" },
+    { "id": "taiko-drum", "name": "Taiko Drum", "source": "tower", "place": "floor", "width": 1, "height": 1, "solid": true, "shape": "drum", "color": "#a0522d" },
+    { "id": "wooden-bench", "name": "Wooden Bench", "source": "tower", "place": "floor", "width": 2, "height": 1, "solid": true, "shape": "bench", "color": "#9c6b3c" },
+    { "id": "calligraphy-scroll", "name": "Calligraphy Scroll", "source": "tower", "place": "wall", "width": 1, "height": 1, "solid": false, "shape": "scroll", "color": "#efe4c8" }
+  ]
+}
