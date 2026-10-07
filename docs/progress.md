@@ -139,7 +139,7 @@
 
 **Not done / known limits**
 - Spending Training Points, a loadout screen, Missions, the "Watch the real technique" videos, the promotion trophy and card, and Tower floors per belt are later milestones.
-- Typical time in rank per belt is a guess (see decisions); Jay to correct.
+- Time in rank per belt now uses Jay's real numbers (2026-10-07). Classes before testing still assume 2 classes a week (open question in decisions).
 
 **Next**
 - Jay tests on his phone (steps in the session summary) and gives feedback.

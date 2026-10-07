@@ -1,6 +1,14 @@
 # Decisions
 
-Decisions made during development, newest at the bottom. Read this every session so settled questions aren't re-debated.
+A record of choices already made, newest at the bottom, so settled questions aren't re-debated. Read this every session.
+
+## Open questions for Jay
+
+Anything waiting on Jay's answer goes here. When he answers, the answer moves into the log below and the question is removed.
+
+1. **Classes before testing.** The time-in-rank dial assumes about 2 classes a week: 24 classes for a 3-month belt, 48 for red and red/black, 72 for brown, 96 for brown/black. Is that how Action Zone counts it, or is there a set number of classes per belt?
+2. **The powers each technique unlocks** (milestone 4 section below: Forms, Technique Seals, Virtues). These are Claude's starting picks. Change any that feel wrong once you've played with them.
+3. **Black belt to 1st degree.** How long does it usually take? (Set to 12 months for now; it only matters much later.)
 
 ## Milestone 0 — Setup (2026-10-05)
 
@@ -168,7 +176,7 @@ Jay asked Claude to test and tune the game before his next playtest.
   Each rank above I (the same word earned again) is 25% stronger. The Virtue taken into fights is the highest rank, then the most recent (a loadout choice comes later).
 - **The Insight "Second Wind" is renamed "Rally"** so it doesn't clash with the Great Effort Virtue.
 - **Levels:** cap 10 per belt tier (white 10, yellow 20). Each level adds +3 Health and +0.4 Power. Runs give experience per room cleared (battle 12, challenge 16, treasure/rest 4, boss 40, plus 20 for clearing the floor). Each tier's experience is set so a typical player (8 runs a week, about 110 experience a run) reaches the cap at 75% of the belt's typical time in rank. At the cap, experience stops for now; overflow into materials and Mastery comes after launch. All numbers are in `PROGRESSION` in the settings file.
-- **Typical time in rank (placeholder guesses, Jay to correct):** white and yellow 3 months, orange and green 4, blue 5, red and red/black 6, brown and brown/black 8, black 12. 24 classes before testing at every belt.
+- **Typical time in rank (Jay, 2026-10-07):** white through blue test every 3 months; red to red/black 6 months; red/black to brown 6 months; brown to brown/black 9 months; brown/black to black 1 year. Black belt (toward 1st degree) is set to 12 months until Jay says otherwise. Classes before testing assume about 2 classes a week (8 per month in rank); see open questions.
 - **Catch-up experience:** below the rank's expected level (the previous belt's cap, so a yellow belt is expected to be at least level 10), experience is doubled. A saved level above the current belt's cap (only possible when switching fake profiles) is shown capped.
 - **Dojo Blessing:** a class in the last 48 hours gives +50% experience and better loot (3 points of weight move from Common to Rare on every roll). The Home Dojo shows a glow around the character and the hours left. Nothing is shown when not blessed (no punishment).
 - **The Gate** is a tab in the Home Dojo:

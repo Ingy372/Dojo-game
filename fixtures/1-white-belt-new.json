@@ -219,7 +219,7 @@
         "color": "#f08a24",
         "color2": null,
         "degree": 0,
-        "typicalMonthsInRank": 4,
+        "typicalMonthsInRank": 3,
         "classesBeforeTest": 24,
         "requirements": [
           {
@@ -272,7 +272,7 @@
         "color": "#3aa655",
         "color2": null,
         "degree": 0,
-        "typicalMonthsInRank": 4,
+        "typicalMonthsInRank": 3,
         "classesBeforeTest": 24,
         "requirements": [
           {
@@ -325,7 +325,7 @@
         "color": "#2f6fd6",
         "color2": null,
         "degree": 0,
-        "typicalMonthsInRank": 5,
+        "typicalMonthsInRank": 3,
         "classesBeforeTest": 24,
         "requirements": [
           {
@@ -379,7 +379,7 @@
         "color2": null,
         "degree": 0,
         "typicalMonthsInRank": 6,
-        "classesBeforeTest": 24,
+        "classesBeforeTest": 48,
         "requirements": [
           {
             "id": "red-kata",
@@ -432,7 +432,7 @@
         "color2": "#1a1a1a",
         "degree": 0,
         "typicalMonthsInRank": 6,
-        "classesBeforeTest": 24,
+        "classesBeforeTest": 48,
         "requirements": [
           {
             "id": "red-black-kata",
@@ -484,8 +484,8 @@
         "color": "#7a4a26",
         "color2": null,
         "degree": 0,
-        "typicalMonthsInRank": 8,
-        "classesBeforeTest": 24,
+        "typicalMonthsInRank": 9,
+        "classesBeforeTest": 72,
         "requirements": [
           {
             "id": "brown-kata",
@@ -531,8 +531,8 @@
         "color": "#7a4a26",
         "color2": "#1a1a1a",
         "degree": 0,
-        "typicalMonthsInRank": 8,
-        "classesBeforeTest": 24,
+        "typicalMonthsInRank": 12,
+        "classesBeforeTest": 96,
         "requirements": [
           {
             "id": "brown-black-kata",
@@ -579,7 +579,7 @@
         "color2": null,
         "degree": 0,
         "typicalMonthsInRank": 12,
-        "classesBeforeTest": 24,
+        "classesBeforeTest": 96,
         "requirements": [
           {
             "id": "black-kick-8",
