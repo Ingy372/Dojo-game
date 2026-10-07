@@ -143,6 +143,8 @@ export interface EnemyState {
   orbit: number;
   /** Ticks spent chasing since its last swing (for getting winded). */
   chaseTicks: number;
+  /** Disarmed by a Perfect Counter: its next attack does this much less damage (0 = not disarmed). */
+  disarmed: number;
 }
 
 /** Things that happened during the last tick, so the game can play effects and sounds. */
@@ -365,6 +367,7 @@ function newEnemy(id: EnemyId, def: EnemyDef, pos: Vec2, n: number): EnemyState 
     summonDone: false,
     orbit: n % 2 === 0 ? 1 : -1,
     chaseTicks: 0,
+    disarmed: 0,
   };
 }
 
@@ -861,6 +864,9 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
   const center = e.attackCenter;
   if (!center) return;
   const a = currentAttack(e);
+  // A disarmed enemy's swing is weaker (this swing only).
+  const weak = 1 - e.disarmed;
+  e.disarmed = 0;
   for (const id of Object.keys(world.players).sort()) {
     const p = world.players[id];
     if (!isActive(p)) continue;
@@ -876,10 +882,12 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       world.progress.perfects++;
       world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id });
       if (p.mods.healOnPerfect > 0) p.health = Math.min(p.maxHealth, p.health + p.mods.healOnPerfect);
-      landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, COMBAT.focus.perPerfectCounter + p.mods.focusOnPerfect);
+      landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, COMBAT.focus.perPerfectCounter);
       if (e.mode !== 'defeated') {
         e.mode = 'stagger';
         e.modeTicks = COMBAT.counter.perfectStaggerTicks + p.mods.staggerTicks;
+        // Disarm: this attacker's next attack is weaker.
+        if (p.mods.disarm > 0) e.disarmed = Math.max(e.disarmed, p.mods.disarm);
       }
       // Ripple Counter: the counter also hits every other enemy nearby.
       if (p.mods.rippleRadius > 0) {
@@ -894,7 +902,7 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       // Block: half damage, no stagger. The combo is kept.
       p.guardTicks = 0;
       const share = Math.max(0.1, COMBAT.counter.blockDamageMultiplier - p.mods.blockCut);
-      const dmg = damage(e.def.power, a.strength * share, guardOf(p));
+      const dmg = damage(e.def.power, a.strength * share * weak, guardOf(p));
       world.events.push({ kind: 'block', playerId: p.id, enemyId: e.id, damage: dmg });
       if (p.mods.dashOnBlock) p.dashCooldown = 0;
       hurt(world, p, dmg);
@@ -905,7 +913,7 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       }
     } else {
       // Hit: full damage, combo resets.
-      const dmg = damage(e.def.power, a.strength, guardOf(p));
+      const dmg = damage(e.def.power, a.strength * weak, guardOf(p));
       p.combo = 0;
       world.events.push({ kind: 'hit', playerId: p.id, enemyId: e.id, damage: dmg });
       hurt(world, p, dmg);
@@ -1021,6 +1029,7 @@ function resetEnemy(world: WorldState, e: EnemyState): void {
   e.shieldRegrow = 0;
   e.summonDone = false;
   e.chaseTicks = 0;
+  e.disarmed = 0;
   world.events.push({ kind: 'enemySpawn', enemyId: e.id });
 }
 

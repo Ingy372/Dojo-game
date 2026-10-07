@@ -99,7 +99,7 @@ describe('white belt with 3 sign-offs and a stripe', () => {
   it('unlocks the Form, and a Technique Seal per self-defense sign-off', () => {
     const unlocked = t.abilities.filter((a) => a.unlocked);
     expect(unlocked.map((a) => a.requirement.name)).toEqual(['Basic Form 1', 'Self-Defense #1', 'Self-Defense #3']);
-    expect(unlocked.map((a) => a.form?.name ?? a.perk?.name)).toEqual(['Rooted Form', 'Firm Grip', 'Sweep']);
+    expect(unlocked.map((a) => a.form?.name ?? a.perk?.name)).toEqual(['Rooted Form', 'Off-Balance', 'Sweep']);
     expect(unlocked[2].requirement.signedOffBy).toBe('Sensei Jay');
     expect(unlockedForms(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance", 'Rooted Form']);
   });

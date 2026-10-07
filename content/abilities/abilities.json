@@ -1,5 +1,5 @@
 {
-  "notes": "Game abilities that real sign-offs unlock (framework section 5). The real technique names come from the school's curriculum; these are the generic powers they map to, in belt order. The 1st belt's kata unlocks forms[1], the 2nd belt's forms[2], and so on; each belt's kick combo unlocks the next strike; each self-defense technique unlocks the next seal (5 per belt). forms[0] is the Beginner's Stance everyone starts with. Belts beyond the end of a list still unlock their ability, with its power arriving in a later update. Effect types are listed in packages/sim/src/effects.ts. Virtues: each stripe word maps to one Virtue.",
+  "notes": "Game abilities that real sign-offs unlock (framework section 5). The real technique names come from the school's curriculum; these are the generic powers they map to, in belt order. The 1st belt's kata unlocks forms[1], the 2nd belt's forms[2], and so on; each belt's kick combo unlocks the next strike; each self-defense technique unlocks the next seal (5 per belt). forms[0] is the Beginner's Stance everyone starts with. Belts beyond the end of a list still unlock their ability, with its power arriving in a later update. Effect types are listed in packages/sim/src/effects.ts. Virtues: each stripe word maps to one Virtue. The reason behind each choice is in docs/decisions.md (milestone 4).",
   "forms": [
     {
       "id": "beginners-stance",
@@ -37,32 +37,120 @@
       "id": "follow-up-kick",
       "name": "Follow-up Kick",
       "text": "Your Strike adds a second kick.",
-      "effect": { "type": "strikeExtraHit", "amount": 0.5 }
+      "effect": {
+        "type": "strikeExtraHit",
+        "amount": 0.5
+      }
     },
     {
       "id": "quick-combo",
       "name": "Quick Combo",
-      "text": "Strikes cost 8 less Focus.",
-      "effect": { "type": "strikeCost", "amount": 8 }
+      "text": "Practiced combos flow smoothly: Strikes cost 8 less Focus.",
+      "effect": {
+        "type": "strikeCost",
+        "amount": 8
+      }
     }
   ],
   "seals": [
-    { "id": "firm-grip", "name": "Firm Grip", "text": "Perfect Counters stagger for half a second longer.", "effect": { "type": "staggerTicks", "amount": 10 } },
-    { "id": "escape-step", "name": "Escape Step", "text": "A Block instantly recharges Dash.", "effect": { "type": "dashOnBlock" } },
-    { "id": "sweep", "name": "Sweep", "text": "Perfect Counters also knock into enemies close by.", "effect": { "type": "rippleCounter", "amount": 0.6, "radius": 1.2 } },
-    { "id": "steady-breath", "name": "Steady Breath", "text": "Each Perfect Counter restores 3 Health.", "effect": { "type": "healOnPerfect", "amount": 3 } },
-    { "id": "strong-block", "name": "Strong Block", "text": "Blocks take 10% less damage.", "effect": { "type": "blockCut", "amount": 0.1 } },
-    { "id": "sharp-eyes", "name": "Sharp Eyes", "text": "The Perfect Counter window is 1 tick longer.", "effect": { "type": "counterWindow", "amount": 1 } },
-    { "id": "push-back", "name": "Push Back", "text": "Blocks bounce 20% of the hit back.", "effect": { "type": "blockReflect", "amount": 0.2 } },
-    { "id": "disarm", "name": "Disarm", "text": "Perfect Counters give 10 extra Focus.", "effect": { "type": "focusOnPerfect", "amount": 10 } },
-    { "id": "throw", "name": "Throw", "text": "Perfect Counter hits are 25% stronger.", "effect": { "type": "counterStrength", "amount": 0.5 } },
-    { "id": "hold-ground", "name": "Hold Ground", "text": "Staggered enemies take 15% more damage.", "effect": { "type": "staggerBonus", "amount": 0.15 } }
+    {
+      "id": "off-balance",
+      "name": "Off-Balance",
+      "text": "Perfect Counters leave the attacker off-balance half a second longer.",
+      "effect": {
+        "type": "staggerTicks",
+        "amount": 10
+      }
+    },
+    {
+      "id": "escape-step",
+      "name": "Escape Step",
+      "text": "A Block instantly recharges Dash, so you can get away.",
+      "effect": {
+        "type": "dashOnBlock"
+      }
+    },
+    {
+      "id": "sweep",
+      "name": "Sweep",
+      "text": "Perfect Counters also knock into enemies close by.",
+      "effect": {
+        "type": "rippleCounter",
+        "amount": 0.6,
+        "radius": 1.2
+      }
+    },
+    {
+      "id": "steady-breath",
+      "name": "Steady Breath",
+      "text": "Each Perfect Counter restores 3 Health.",
+      "effect": {
+        "type": "healOnPerfect",
+        "amount": 3
+      }
+    },
+    {
+      "id": "strong-block",
+      "name": "Strong Block",
+      "text": "Blocks take 10% less damage.",
+      "effect": {
+        "type": "blockCut",
+        "amount": 0.1
+      }
+    },
+    {
+      "id": "sharp-eyes",
+      "name": "Sharp Eyes",
+      "text": "The Perfect Counter window is 1 tick longer.",
+      "effect": {
+        "type": "counterWindow",
+        "amount": 1
+      }
+    },
+    {
+      "id": "create-distance",
+      "name": "Create Distance",
+      "text": "Blocks shove the attacker back, bouncing 20% of the hit back at them.",
+      "effect": {
+        "type": "blockReflect",
+        "amount": 0.2
+      }
+    },
+    {
+      "id": "disarm",
+      "name": "Disarm",
+      "text": "After a Perfect Counter, that attacker's next attack does half damage.",
+      "effect": {
+        "type": "disarm",
+        "amount": 0.5
+      }
+    },
+    {
+      "id": "throw",
+      "name": "Throw",
+      "text": "Perfect Counter hits are 25% stronger.",
+      "effect": {
+        "type": "counterStrength",
+        "amount": 0.5
+      }
+    },
+    {
+      "id": "follow-through",
+      "name": "Follow Through",
+      "text": "Off-balance (staggered) enemies take 15% more damage.",
+      "effect": {
+        "type": "staggerBonus",
+        "amount": 0.15
+      }
+    }
   ],
   "virtues": [
     {
       "id": "shield-of-respect",
       "name": "Shield of Respect",
-      "words": ["Respect"],
+      "words": [
+        "Respect"
+      ],
       "kind": "shield",
       "text": "A shield that soaks up {n} damage for {s} seconds.",
       "amount": 40,
@@ -71,7 +159,9 @@
     {
       "id": "second-wind",
       "name": "Second Wind",
-      "words": ["Great Effort"],
+      "words": [
+        "Great Effort"
+      ],
       "kind": "heal",
       "text": "Restores {pct} of your Health and gives back half your Focus.",
       "amount": 0.3,
@@ -80,7 +170,9 @@
     {
       "id": "perfect-discipline",
       "name": "Perfect Discipline",
-      "words": ["Self-Discipline"],
+      "words": [
+        "Self-Discipline"
+      ],
       "kind": "discipline",
       "text": "For {s} seconds, every Counter is a Perfect Counter.",
       "amount": 0,

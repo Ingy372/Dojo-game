@@ -103,7 +103,7 @@ describe('Forms', () => {
 });
 
 describe('Technique Seals and Strike upgrades', () => {
-  it('Firm Grip makes Perfect Counters stagger longer', () => {
+  it('Off-Balance makes Perfect Counters stagger longer', () => {
     const w = world(character(white3));
     const events = counterAt(w, 1);
     expect(events.some((e) => e.kind === 'perfectCounter')).toBe(true);
@@ -123,6 +123,20 @@ describe('Technique Seals and Strike upgrades', () => {
     const events = counterAt(w, standard + 2);
     expect(events.some((e) => e.kind === 'block')).toBe(true);
     expect(p.dashCooldown).toBe(0);
+  });
+
+  it("Disarm halves the countered attacker's next attack", () => {
+    const hitDamage = (setup?: PlayerSetup) => {
+      const w = world(setup);
+      counterAt(w, 1);
+      stepUntil(w, room, 'hit');
+      const ev = w.events.find((e) => e.kind === 'hit');
+      return ev && ev.kind === 'hit' ? ev.damage : 0;
+    };
+    const y = character(yellow);
+    const plain = hitDamage({ ...y, mods: { ...y.mods, disarm: 0 } });
+    const disarmed = hitDamage(y);
+    expect(disarmed).toBe(Math.round(plain / 2));
   });
 });
 

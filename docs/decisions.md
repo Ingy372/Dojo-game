@@ -6,9 +6,7 @@ A record of choices already made, newest at the bottom, so settled questions are
 
 Anything waiting on Jay's answer goes here. When he answers, the answer moves into the log below and the question is removed.
 
-1. **Classes before testing.** The time-in-rank dial assumes about 2 classes a week: 24 classes for a 3-month belt, 48 for red and red/black, 72 for brown, 96 for brown/black. Is that how Action Zone counts it, or is there a set number of classes per belt?
-2. **The powers each technique unlocks** (milestone 4 section below: Forms, Technique Seals, Virtues). These are Claude's starting picks. Change any that feel wrong once you've played with them.
-3. **Black belt to 1st degree.** How long does it usually take? (Set to 12 months for now; it only matters much later.)
+1. **Black belt to 2nd degree.** At Action Zone, black belt is 1st degree. How long does a student usually wait between 1st degree and 2nd degree? (Set to 1 year for now; it only matters for students far in the future.)
 
 ## Milestone 0 — Setup (2026-10-05)
 
@@ -152,31 +150,49 @@ Jay asked Claude to test and tune the game before his next playtest.
 
   The game checks every profile when it loads and gives a clear message if something is wrong.
 - **Abilities map in curriculum order** (`content/abilities/abilities.json`): the n-th kata unlocks the n-th Form, the n-th kick combo the n-th Strike upgrade, and the n-th self-defense technique the n-th Technique Seal. Powers exist for white and yellow belt so far. Later belts still unlock their ability, with the power "arriving in a later update" (milestone 10). Each ability card shows the real technique name, who signed it off and when.
-- **Forms:** Beginner's Stance (everyone), Rooted Form (Basic Form 1: +2 ticks of Perfect Counter window, +30% Guard, 15% slower) and Flowing Form (Basic Form 2: 15% faster movement, 20% faster attacks). A **Form button** appears once a kata is signed off and switches between up to 3 earned Forms plus the Beginner's Stance. The current Form's name shows under the button.
-- **Strike upgrades stack** (no loadout screen yet): Kick Combo 1 adds a follow-up kick, and Kick Combo 2 makes Strikes cost 8 less Focus.
-- **Technique Seals** (all active, upgrading the Counter):
+- **Every power has a real reason (Jay, 2026-10-07: "make it make sense, but don't sacrifice the fun").** Jay asked Claude to choose the powers and give each a reason he could explain to a student. Rule of thumb: the game power does what the real technique teaches. Everything is in `content/abilities/abilities.json`.
+- **Forms (from kata).** Kata teach stance, balance and movement, so each Form changes how you stand and move. A **Form button** appears once a kata is signed off and switches between up to 3 earned Forms plus the Beginner's Stance; the current Form's name shows under the button.
 
-  | Self-defense | Seal | What it does |
-  | --- | --- | --- |
-  | #1 | Firm Grip | Longer stagger after a Perfect Counter |
-  | #2 | Escape Step | A Block recharges Dash |
-  | #3 | Sweep | A Perfect Counter also hits enemies close by |
-  | #4 | Steady Breath | +3 Health per Perfect Counter |
-  | #5 | Strong Block | Blocks take 10% less damage |
-  | #6 | Sharp Eyes | +1 tick of Perfect Counter window |
-  | #7 | Push Back | Blocks bounce back 20% |
-  | #8 | Disarm | +10 Focus per Perfect Counter |
-  | #9 | Throw | Stronger counter hit |
-  | #10 | Hold Ground | +15% damage to staggered enemies |
-- **Virtues** use a full Focus meter (all of it) from a **Virtue button** that appears once a stripe is earned:
-  - Respect → Shield of Respect: soaks up 40 damage for 6 s
-  - Great Effort → Second Wind: restores 30% Health and gives back half the Focus
-  - Self-Discipline → Perfect Discipline: every Counter is Perfect for 3 s
+  | Kata | Form | What it does | Why |
+  | --- | --- | --- | --- |
+  | (everyone) | Beginner's Stance | Nothing changes | The starting point before any kata |
+  | Basic Form 1 | Rooted Form | +2 ticks of Perfect Counter window, +30% Guard, 15% slower | The first form builds a strong, balanced stance and blocks. A rooted stance makes you harder to move and steadier to counter from, but slower on your feet. |
+  | Basic Form 2 | Flowing Form | 15% faster movement, 20% faster attacks | The second form adds stepping and turning. Moving well between techniques makes you quicker. |
 
-  Each rank above I (the same word earned again) is 25% stronger. The Virtue taken into fights is the highest rank, then the most recent (a loadout choice comes later).
+  Idea for later belts (milestone 10): David and Goliath (green) could become a Form that does extra damage to big enemies and bosses. The small one beats the giant.
+- **Strike upgrades (from kick combos).** A kick combo is several kicks chained together, so each combo upgrades the Strike button. They stack; there's no loadout screen yet.
+
+  | Kick combo | Upgrade | What it does | Why |
+  | --- | --- | --- | --- |
+  | Kick Combo 1 | Follow-up Kick | Strike adds a second kick | Your first combo teaches you to follow one kick with another. |
+  | Kick Combo 2 | Quick Combo | Strikes cost 8 less Focus | With more combos practiced, they flow without wasted effort, so each one costs less energy. |
+- **Technique Seals (from self-defense).** Real self-defense teaches seeing the attack coming, blocking, getting the attacker off-balance, creating distance and getting away safely. Each Seal upgrades the Counter (Counter is the game's self-defense move), and all earned Seals are always on.
+
+  | Self-defense | Seal | What it does | Why |
+  | --- | --- | --- | --- |
+  | #1 | Off-Balance | Perfect Counters stagger half a second longer | A good technique leaves the attacker off-balance. |
+  | #2 | Escape Step | A Block instantly recharges Dash | Block, then get away: escape is the goal of self-defense. |
+  | #3 | Sweep | A Perfect Counter also knocks into enemies close by | Taking one attacker down can trip up the ones next to them. |
+  | #4 | Steady Breath | +3 Health per Perfect Counter | Staying calm and breathing under pressure keeps you going. |
+  | #5 | Strong Block | Blocks take 10% less damage | Practiced blocks absorb more. |
+  | #6 | Sharp Eyes | +1 tick of Perfect Counter window | Awareness: you see the attack coming a moment sooner. |
+  | #7 | Create Distance | Blocks shove the attacker back (20% of the hit bounces back) | Pushing an attacker away to make space. |
+  | #8 | Disarm | After a Perfect Counter, that attacker's next attack does half damage | Taking away what they're attacking with. (This replaced an earlier "+10 Focus" idea that had no real link to disarming.) |
+  | #9 | Throw | Perfect Counter hits are 25% stronger | A throw turns the attacker's own force against them. |
+  | #10 | Follow Through | Off-balance (staggered) enemies take 15% more damage | Finish the technique while the attacker is off-balance. |
+- **Virtues (from character stripes).** A Virtue is used with a full Focus meter (all of it) from a **Virtue button** that appears once a stripe is earned.
+
+  | Stripe word | Virtue | What it does | Why |
+  | --- | --- | --- | --- |
+  | Respect | Shield of Respect | Soaks up 40 damage for 6 s | Respect protects: people who show respect are protected by others. In co-op (later) it shields the whole party. |
+  | Great Effort | Second Wind | Restores 30% Health and gives back half the Focus | Great effort means pushing on when you're tired. |
+  | Self-Discipline | Perfect Discipline | Every Counter is Perfect for 3 s | Discipline is control and precision. |
+
+  Each rank above I (the same word earned again) is 25% stronger (bigger shield, longer discipline), because practicing a virtue for longer makes it stronger. The Virtue taken into fights is the highest rank, then the most recent (a loadout choice comes later).
 - **The Insight "Second Wind" is renamed "Rally"** so it doesn't clash with the Great Effort Virtue.
 - **Levels:** cap 10 per belt tier (white 10, yellow 20). Each level adds +3 Health and +0.4 Power. Runs give experience per room cleared (battle 12, challenge 16, treasure/rest 4, boss 40, plus 20 for clearing the floor). Each tier's experience is set so a typical player (8 runs a week, about 110 experience a run) reaches the cap at 75% of the belt's typical time in rank. At the cap, experience stops for now; overflow into materials and Mastery comes after launch. All numbers are in `PROGRESSION` in the settings file.
-- **Typical time in rank (Jay, 2026-10-07):** white through blue test every 3 months; red to red/black 6 months; red/black to brown 6 months; brown to brown/black 9 months; brown/black to black 1 year. Black belt (toward 1st degree) is set to 12 months until Jay says otherwise. Classes before testing assume about 2 classes a week (8 per month in rank); see open questions.
+- **Typical time in rank (Jay, 2026-10-07):** white through blue test every 3 months; red to red/black 6 months; red/black to brown 6 months; brown to brown/black 9 months; brown/black to black 1 year. At Action Zone black belt is 1st degree; the wait to 2nd degree is set to 1 year until Jay says otherwise. White to black takes about 4–5 years.
+- **Classes before testing (Jay, 2026-10-07):** 2 classes a week, with 1 week (2 classes) excused per belt; any other missed class must be made up. That makes 24 classes for a 3-month belt, 50 for 6 months, 76 for 9 months and 102 for a year. This is the Gate's time-in-rank dial. Note for Nic: DojoForge will need to count classes in rank (made-up classes included) so the dial is right.
 - **Catch-up experience:** below the rank's expected level (the previous belt's cap, so a yellow belt is expected to be at least level 10), experience is doubled. A saved level above the current belt's cap (only possible when switching fake profiles) is shown capped.
 - **Dojo Blessing:** a class in the last 48 hours gives +50% experience and better loot (3 points of weight move from Common to Rare on every roll). The Home Dojo shows a glow around the character and the hours left. Nothing is shown when not blessed (no punishment).
 - **The Gate** is a tab in the Home Dojo:

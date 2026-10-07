@@ -19,7 +19,7 @@ export type EffectType =
   | 'dashOnBlock'
   | 'blockCut'
   | 'counterWindow'
-  | 'focusOnPerfect'
+  | 'disarm'
   | 'counterStrength';
 
 export interface Effect {
@@ -78,8 +78,8 @@ export interface PlayerMods {
   blockCut: number;
   /** Extra Perfect Counter window ticks. */
   counterWindow: number;
-  /** Extra Focus from each Perfect Counter. */
-  focusOnPerfect: number;
+  /** After a Perfect Counter, that enemy's next attack does this much less damage (0.5 = half). */
+  disarm: number;
   /** Extra move strength for the Perfect Counter hit. */
   counterStrength: number;
 }
@@ -106,7 +106,7 @@ export function noMods(): PlayerMods {
     dashOnBlock: false,
     blockCut: 0,
     counterWindow: 0,
-    focusOnPerfect: 0,
+    disarm: 0,
     counterStrength: 0,
   };
 }
@@ -168,8 +168,8 @@ export function modsFrom(effects: readonly Effect[], ticksPerSecond: number): Pl
       case 'counterWindow':
         m.counterWindow += e.amount;
         break;
-      case 'focusOnPerfect':
-        m.focusOnPerfect += e.amount;
+      case 'disarm':
+        m.disarm = Math.min(0.9, m.disarm + e.amount);
         break;
       case 'counterStrength':
         m.counterStrength += e.amount;
@@ -196,7 +196,7 @@ const TYPES: readonly EffectType[] = [
   'dashOnBlock',
   'blockCut',
   'counterWindow',
-  'focusOnPerfect',
+  'disarm',
   'counterStrength',
 ];
 

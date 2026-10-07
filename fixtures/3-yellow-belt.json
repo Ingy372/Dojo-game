@@ -424,7 +424,7 @@
         "color2": null,
         "degree": 0,
         "typicalMonthsInRank": 6,
-        "classesBeforeTest": 48,
+        "classesBeforeTest": 50,
         "requirements": [
           {
             "id": "red-kata",
@@ -477,7 +477,7 @@
         "color2": "#1a1a1a",
         "degree": 0,
         "typicalMonthsInRank": 6,
-        "classesBeforeTest": 48,
+        "classesBeforeTest": 50,
         "requirements": [
           {
             "id": "red-black-kata",
@@ -530,7 +530,7 @@
         "color2": null,
         "degree": 0,
         "typicalMonthsInRank": 9,
-        "classesBeforeTest": 72,
+        "classesBeforeTest": 76,
         "requirements": [
           {
             "id": "brown-kata",
@@ -577,7 +577,7 @@
         "color2": "#1a1a1a",
         "degree": 0,
         "typicalMonthsInRank": 12,
-        "classesBeforeTest": 96,
+        "classesBeforeTest": 102,
         "requirements": [
           {
             "id": "brown-black-kata",
@@ -624,7 +624,7 @@
         "color2": null,
         "degree": 0,
         "typicalMonthsInRank": 12,
-        "classesBeforeTest": 96,
+        "classesBeforeTest": 102,
         "requirements": [
           {
             "id": "black-kick-8",
