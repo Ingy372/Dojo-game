@@ -144,3 +144,8 @@
 **Next**
 - Jay tests on his phone (steps in the session summary) and gives feedback.
 - Milestone 5: Home Dojo basics, in a fresh session.
+
+**Paused (Jay, 2026-10-07)**
+- Milestone 4 is built and on the live link, but **paused, not signed off**. Grok bot is preparing material that should answer the open design questions (powers, numbers, black belt degrees) without back-and-forth. Come back to milestone 4 once that work arrives: compare it with `content/abilities/abilities.json`, the `PROGRESSION` / `POWER` settings and the open questions at the top of `docs/decisions.md`, then adjust.
+- Jay's on-phone test of milestone 4 is still to do.
+- Meanwhile: milestone 5 (Home Dojo basics), in a fresh session.
