@@ -169,5 +169,6 @@
 - Placeholder shapes until the art pack.
 
 **Next**
+- Copied onto `main` (the live link) with Jay's OK on 2026-10-07.
 - Jay tests on his phone and gives feedback (does cleaning feel satisfying? is decorating easy? is the mess rate right?).
 - Milestone 4 is still paused, waiting for Grok bot's design material.
