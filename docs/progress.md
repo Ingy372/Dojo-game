@@ -149,3 +149,25 @@
 - Milestone 4 is built and on the live link, but **paused, not signed off**. Grok bot is preparing material that should answer the open design questions (powers, numbers, black belt degrees) without back-and-forth. Come back to milestone 4 once that work arrives: compare it with `content/abilities/abilities.json`, the `PROGRESSION` / `POWER` settings and the open questions at the top of `docs/decisions.md`, then adjust.
 - Jay's on-phone test of milestone 4 is still to do.
 - Meanwhile: milestone 5 (Home Dojo basics), in a fresh session.
+
+## Milestone 5 — Home Dojo basics (2026-10-07)
+
+**Done**
+- **A walk-around Home Dojo:** a small wooden room that fits the screen, the notice board (opens the Training Board, the old Home screen) and the door to the Tower.
+- **The bow** when entering the dojo and at the start of each Tower floor (+15 Focus in the Tower).
+- **Warm welcome cards** for the first visit and for coming back after 2+ days. Real reward moments now play in the dojo right after the bow.
+- **Mess while away:** dust, leaves, scuffed mats and crooked weapons. Nothing for 4 hours, full at a week, and it stops there. It never removes anything or blocks play.
+- **Cleaning:** sweep by walking over dust, tap Wipe on mats, tap Straighten at the rack, with puffs, sparkles and sounds. A full clean gives **Calm Mind** (Focus builds 20% faster for 3 Tower runs).
+- **Decorating:** 11 decorations (3 starter gifts, 8 from Tower chests, the boss chest always has one). Drag to move, put away, place from the storage tray. Banners and scrolls go on the wall, and nothing can block the doorway.
+- **Testing screen in the dojo** (tap "Home Dojo" 5 times): +1 day / +3 days / +1 week away, clean everything, get every decoration, start a new dojo.
+- 128 automated tests pass. New tests cover: the mess curve and its cap, nothing ever removed, planned absences pausing mess, cleaning and Calm Mind, decorating rules (no blocking the door, wall items), saving and loading, boss-chest decorations, the bow's Focus, and Calm Mind's faster Focus.
+- Checked on a phone-sized screen in a test browser: the bow, the first-visit card, the welcome back after a week, a messy dojo, sweeping, wiping, straightening, Calm Mind, dragging a mat, placing every decoration from storage, the testing screen, the Training Board's "◀ Dojo", and the bow at the start of a Tower floor.
+
+**Not done / known limits**
+- Watering plants, extra rooms per belt, visiting classmates, certified trophies (milestone 12) and real-life chores (after launch) aren't built.
+- Planned absences pause mess in the rules, but nothing sends them until the DojoForge feed (milestone 9).
+- Placeholder shapes until the art pack.
+
+**Next**
+- Jay tests on his phone and gives feedback (does cleaning feel satisfying? is decorating easy? is the mess rate right?).
+- Milestone 4 is still paused, waiting for Grok bot's design material.

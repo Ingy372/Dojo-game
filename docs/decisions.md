@@ -240,3 +240,31 @@ Jay asked Claude to test and tune the game before his next playtest.
 
   Power Rating appears nowhere else. This screen stays until the real DojoForge connection (milestone 9), when it should become staff-only.
 - **Belt colors are drawn in code** from the belt list (two-color belts get a center stripe; stripes are white tape on dark belts, black on light ones). This is a placeholder until the palette-swapped sprite (milestone 7).
+
+## Milestone 5 — Home Dojo basics (2026-10-07)
+
+- **The Home Dojo is now a room you walk around in** (`content/dojo/home-dojo.json`, 13 × 8 tiles of floor). The whole room fits on screen. The same tap-to-move and stick work as in the Tower. The **notice board** on the top wall (walk to it, or the "Board" button) opens the old Home screen, now called the **Training Board** (Tower, practice room, last run, gear, abilities, Gate, Path card), with a "◀ Dojo" button back. The **door** at the bottom leads to the Tower. The title screen now goes to the dojo.
+- **The bow:** a big "Bow" button appears when entering the dojo (starting the game, and coming back from the Tower) and at the start of each Tower floor. Tapping it plays a short bow with a calm bell. The fight waits until the player bows.
+- **Bow and Calm Mind numbers (Jay asked Claude to choose them using game design science):**
+  - **The bow at each Tower floor gives +15 Focus** (about 3 hits' head start). A small, instant, guaranteed reward turns a ritual into a habit. The dojo bow is the ritual only, with no bonus.
+  - **Calm Mind: Focus builds 20% faster for the next 3 Tower runs**, earned by fully cleaning a dojo that had mess. You feel it in fights (Strikes come sooner), and it fits the name. It's counted in runs, not hours, so it never pressures a child to play now. It doesn't stack past 3, and it stays smaller than the Dojo Blessing (real class). It shows as a soft aqua glow on the character, "Calm Mind · 3 Tower runs" in the dojo, and "Calm Mind" under the Focus bar in fights.
+- **How mess builds:** nothing for the first 4 hours, then fast at first and slower later (an ease-out curve), full at 7 days, and it stops there. After 1 day there's a small 15-second tidy (about 4 dust spots and a scuffed mat); after a week, about a 1-minute clean (16 dust and leaf spots, scuffed mats, 3 crooked weapons per rack). Frequent short visits always have something quick and satisfying to do, and a long absence is never worse than "needs a good cleaning". Mess never removes or damages anything and never blocks the Tower. All numbers are in `DOJO` in the settings file.
+- **Planned absences pause the mess** in the rules already (vacations and illness), but nothing sends them yet. They'll come from the student app through the DojoForge feed (milestone 9).
+- **Cleaning:** walk over dust and leaves to **sweep** them (a puff, a sparkle and a rising note for each spot in a streak). Stand on a scuffed mat and tap **Wipe** 4 times. Stand by the weapon rack and tap **Straighten** once per crooked weapon. The button appears only when something is in reach. "Watering the plants" from framework section 7 is left for later; Jay named three chores.
+- **Welcome cards (always warm):**
+  - **First visit:** "Your Home Dojo", with three short lines on bowing, cleaning and the board.
+  - **Back after 2 days or more:** "Welcome back, Sam!", one of a few friendly lines, then "A little dust settled while you were away. Let's get your dojo ready together." (or "Everything is just how you left it.").
+  - Real reward moments (promotion, stripes, sign-offs) now play right after the bow, in the dojo, so real achievements still come first and biggest.
+- **Decorations (11 kinds, placeholder shapes)** in `content/dojo/decorations.json`. Every one is earned.
+  - **Sensei's three welcome gifts** come with a new dojo: Training Mat, Weapon Rack, Dojo Banner. (Jay approved.)
+  - **Eight found in the Tower:** Practice Mat, Punching Bag, Stone Lantern, Bonsai Tree, Potted Bamboo, Taiko Drum, Wooden Bench, Calligraphy Scroll. The Floor Keeper's chest always holds one, and treasure and challenge chests hold one 25% of the time. Kinds the player has fewest of come first. Duplicates are allowed once every kind is owned.
+- **Decorating:** tap "Decorate", then drag any decoration. It snaps to tiles and shows a green outline where it fits and red where it doesn't. Tap one to select it, and "Put away" sends it to storage. The storage tray at the bottom places a stored decoration in the best free spot with one tap. Banners and scrolls hang on the top wall. Solid things can never block the doorway or wall off part of the room. Dust under a moved decoration moves out from under it.
+- **Real-achievement decorations (Jay, 2026-10-07), for milestone 12 (certified trophies):** trophies and decorations for earning stripes, belt promotions and days trained in the dojo (10, 25, 50, 100, 250, 500 days, and other fun milestones for students to aim for). They carry the date earned and can only be earned in the real dojo. The decoration list already has a "source" field ready for them.
+- **Hidden dojo testing screen:** tap "Home Dojo" in the dojo 5 times. It shows the mess level and has these buttons:
+  - **+1 day / +3 days / +1 week away:** pretends the last visit was earlier, then walks back in with the bow, like a real return. +3 days and +1 week also show the welcome-back card.
+  - **Clean everything**
+  - **Get every decoration**
+  - **Start a new dojo**
+
+  The student profile and Power Rating testing screen is still on the Training Board (tap its title 5 times).
+- **Saving:** the dojo (decorations, mess, Calm Mind, last visit time) is saved in the player's profile on the phone, as plain data with its own seeded random numbers, so the server can hold it later and classmates can visit it (shared world, step 1 of multiplayer).
