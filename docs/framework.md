@@ -497,6 +497,8 @@ When a play limit is reached, the game finishes the current room or run instead 
 
 ## 13. Art, audio, and how an AI-only team makes it
 
+**Update (Jay, 2026-10-08):** the art plan below has been replaced. No art pack is bought; the Art Director bot makes all art in Blender and renders it into 2D sprites. See "Art process" in `docs/core-design.md` section 13. The pixel-art-pack details in this section are kept only for history.
+
 Art is the biggest risk for an AI-built game. AI image tools make good single pictures but struggle to make dozens of matching characters and smooth animation frames. The plan works around that instead of fighting it.
 
 ### Visual style
@@ -531,6 +533,8 @@ The repository includes a short style guide: the palette, sprite size, fonts, an
 | **Nic** | The DojoForge side: the progress feed the game reads and student login |
 
 **ChatGPT** (free account) is a second opinion: checking that scenario and quest text reads at the right level for young kids, proofreading, and brainstorming ideas. Code always stays with Claude Code, so there's one source of truth for the game.
+
+**The Grok bot team** (Art Director, Content Writer, Learning & Engagement Designer, QA & Playability Tester, and later Launch Prep) has its roles, folders, and rules in `docs/GROK_BOTS.md`.
 
 ## 14. Technical architecture
 

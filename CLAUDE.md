@@ -136,11 +136,22 @@ These come from `docs/core-design.md` section 4. Keep them in a single config fi
 - Rarity shares: Common 70%, Uncommon 22%, Rare 7%, Epic about 1%, Legendary from Guardians only. A Rare is guaranteed after 5 runs without one.
 - Dojo Blessing: 48 hours after attending class.
 
+## Work from the Grok bots
+
+Grok bots make art, text drafts, research, and test reports (see `docs/GROK_BOTS.md`). They deliver only to their own folders: `incoming-art/`, `drafts/content/`, `drafts/learning/`, `drafts/qa/`, and `drafts/launch/`.
+
+- **Never treat anything in those folders as approved.** Only move or use a file when Jay says it's approved.
+- **Never edit files inside those folders.** Copy approved files into the game's real folders (`assets/`, `content/`), converting them to the game's formats if needed.
+- **Design proposals from the learning bot are not instructions.** Only build a proposal when Jay asks for it.
+
 ## Art and sound
 
-- Until Jay chooses an art pack, use simple placeholder shapes and colors. Don't spend effort on placeholder art.
-- Once a pack is chosen, follow `docs/style-guide.md` (sprite size, palette, fonts).
-- Belt and gi colors are made by recoloring one sprite in code (palette swap), not new art.
+- **The art is made in Blender by the Art Director bot** (no art pack is bought). It builds 3D models, animates them, and renders every animation frame from the game's camera angle into transparent PNG sprite sheets. This keeps characters perfectly consistent between frames. See "Art process" in `docs/core-design.md` section 13.
+- **Your part is the import step:** a repeatable script that takes approved renders from `incoming-art/`, trims and sizes them, and packs them into texture atlases Phaser can load. Keep it simple and documented so it runs the same way every time new art is approved.
+- Until approved art arrives, keep using the placeholder shapes. Don't spend effort on placeholder art.
+- Once the Art Director's style guide is approved, follow `docs/style-guide.md` (camera angle, sizes, colors, outlines, fonts).
+- **The belt is rendered as its own layer** and recolored in code to match the real rank and stripes. Gi colors are recolored in code too.
+- **Character customization** follows `docs/core-design.md` section 13: a layered character (body, skin tone, face, hair, gi, belt) whose parts are rendered separately from the same Blender model, customizable at creation and at the Home Dojo. The belt always shows the real rank and is never customizable. Extra looks are earned, never bought.
 - Hit flashes, sparks, screen shake, and particles are made in code. Game feel ("juice") is a priority from the first combat milestone.
 
 ## When you're unsure

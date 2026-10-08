@@ -335,6 +335,27 @@ Before we finish: commit everything, add any decisions we made to docs/decisions
 
 ---
 
+## Working with the Grok bots
+
+The bots' directions are in `docs/GROK_BOTS.md`. They deliver drafts to their own folders through pull requests. After you've reviewed a bot's pull request and approved the work, merge it, then use one of these prompts in Claude Code.
+
+**The one-character art test (when the Art Director delivers it):**
+```
+Read CLAUDE.md, docs/decisions.md, and "Art process" in section 13 of docs/core-design.md. The Art Director bot has delivered the one-character test in incoming-art/character-test/. On a separate test branch only: build the art import step (a repeatable script that trims, sizes, and packs the renders into a texture atlas for Phaser), then replace the placeholder circle with this character, using its idle, walk, strike, and counter animations in all 8 directions. Recolor the belt layer to match the profile's real rank. Give me a link to see it on my phone. Don't copy it onto main. Show me your plan first and wait for my approval.
+```
+
+**Moving approved bot work into the game:**
+```
+Read CLAUDE.md and docs/GROK_BOTS.md. I've approved these files from the Grok bots: [list the files or folder, for example "everything in incoming-art/enemies-tier1/"]. Please copy them into the game's real folders, run them through the art import step if they're art, and use them where they belong. Don't change anything inside the bot folders. Show me your plan first and wait for my approval.
+```
+
+**Character customization (after the full character is approved):**
+```
+Read CLAUDE.md, "Character customization" and "Art process" in section 13 of docs/core-design.md, and docs/decisions.md. I've approved the full customizable character in incoming-art/[folder] and the style guide. Move the style guide into docs/style-guide.md. Then build a character creation screen (body, skin tone, face, hair style, hair color, gi color) that can also be changed later at the Home Dojo. The belt layer must always show the real rank and stripes and is never customizable. Show me your plan first and wait for my approval.
+```
+
+---
+
 ## Helpful prompts when something goes wrong
 
 **Something broke:**

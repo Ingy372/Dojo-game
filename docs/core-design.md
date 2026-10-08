@@ -740,3 +740,27 @@ The month-by-month roadmap is in the framework, section 15.
 ### Legal timing
 
 Talk with a lawyer **before milestone 8** (the store apps), not right before launch. App Store and Google Play rules for children's apps, and multiplayer for kids, are much easier to design around early than to fix later.
+
+### Character customization
+
+The player's character is a real martial artist, not a placeholder shape. Players build their own look in character creation and can change it anytime at the Home Dojo:
+
+- **Built from layers** (body, skin tone, face, hair style and color, gi, belt). Each part is rendered separately from the same Blender model, so every combination animates correctly.
+- **Gi colors** come from recoloring in code.
+- **The belt is never customizable.** It's its own layer, recolored in code to always show the student's real rank and stripes.
+- **Extra looks are earned, never bought:** headbands, hand wraps, gi trims, and auras from the Tower, Challenge mode, and real milestones.
+- Every option is available to every player from the start except earned items, so no child feels left out by the basics.
+
+### Art process: Blender, by the Art Director bot
+
+No art pack is bought. The Art Director bot (Grok bot) is the game's artist and works in **Blender**, a free 3D program it can control with scripts:
+
+1. **Build each character, enemy, and object once** as a low-poly 3D model in a bright, kid-friendly style with clear silhouettes that read at small size on a phone.
+2. **Rig and animate it.** Mixamo (free) can add skeletons and provides martial arts animations; Jay judges every martial arts move like a student's technique.
+3. **Render every animation frame** from one fixed camera angle (top-down three-quarter view) in 8 directions, as transparent PNG sprite sheets, using a reusable Blender script.
+4. **Render icons, portraits, and scene pictures from the same models,** so everything in the game shares one style.
+5. **Claude Code imports approved renders** with a repeatable script that trims, sizes, and packs them into texture atlases for Phaser.
+
+Why this way: every frame comes from the same model, so animations stay perfectly consistent, which is the main thing that makes AI-made art look cheap when it's drawn picture by picture. Customization becomes swapping parts on one model. And a hired artist could later improve the same Blender files, so nothing is wasted.
+
+The first step is a **one-character test** (a martial artist with idle, walk, strike, and counter animations). The full art plan starts only after Jay approves how it looks moving on his phone.
