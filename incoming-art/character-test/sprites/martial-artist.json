@@ -128,9 +128,9 @@
       }
     },
     "walk": {
-      "frames": 8,
-      "fps": 16,
-      "durationSec": 0.5,
+      "frames": 10,
+      "fps": 30,
+      "durationSec": 0.3333,
       "loop": true,
       "tags": {},
       "sheets": {
@@ -144,10 +144,10 @@
         "belt-tape2": "martial-artist_belt-tape2_walk.png"
       },
       "groundMotion": {
-        "strideTilesPerLoop": 2.25,
-        "stridePxPerLoop": 180.0,
+        "strideTilesPerLoop": 1.5,
+        "stridePxPerLoop": 120.0,
         "designSpeedTilesPerSec": 4.5,
-        "fpsPerTilePerSec": 3.5556,
+        "fpsPerTilePerSec": 6.6667,
         "note": "planted feet stay still when fps = speed (tiles/s) * fpsPerTilePerSec; at the design speed that is the fps above"
       }
     },

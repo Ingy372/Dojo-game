@@ -241,7 +241,12 @@ def tube(p0, p1, r0, r1, segs=12, sx=1.0, sy=1.0):
                           radius1=r0, radius2=r1, depth=d.length)
     # cone is centred on origin along Z; non-uniform cross-section first
     bmesh.ops.transform(bm, matrix=Matrix.Diagonal((sx, sy, 1, 1)), verts=bm.verts)
-    rot = Vector((0, 0, 1)).rotation_difference(d.normalized()).to_matrix().to_4x4()
+    if d.normalized().z < -0.9999:
+        # straight down: rotation_difference() would flip around a 45-degree axis and swap sx/sy
+        # (Revision 2 fix - this made the gi skirt deeper than the belt, so it poked through at the back)
+        rot = Matrix.Rotation(math.pi, 4, "X")
+    else:
+        rot = Vector((0, 0, 1)).rotation_difference(d.normalized()).to_matrix().to_4x4()
     bmesh.ops.transform(bm, matrix=Matrix.Translation((p0 + p1) / 2) @ rot, verts=bm.verts)
     return bm
 
@@ -468,34 +473,43 @@ for i in range(8):
     p["hand_r"] = (-0.05, -0.20, 0.85 - 0.014 * (1 - math.cos(ph + 0.6)) / 2)
     idle.append(p)
 
-# WALK (Revision 1): a light running step synced to the game's move speed so the planted foot
-# doesn't slide. The game moves the player 4.5 tiles/s. With 8 frames at 16 fps the loop covers
-# 4.5 * 8 / 16 = 2.25 tiles (one step = 1.125 tiles). A foot on the ground moves back exactly
-# 4.5 / 16 = 0.28125 tiles per frame, the same distance the game moves the character, so it stays put.
-WALK_FPS, WALK_SPEED, WALK_FRAMES = 16, 4.5, 8
-STEP_PER_FRAME = WALK_SPEED / WALK_FPS                   # 0.28125 tiles
-STRIDE_TILES = WALK_SPEED * WALK_FRAMES / WALK_FPS       # 2.25 tiles per loop
-#            y (forward -)   z       toe pitch (+ = toes down)
-LEG_PATH = [(-STEP_PER_FRAME / 2, 0.07, 0),      # 0 contact (front)
-            (+STEP_PER_FRAME / 2, 0.07, 0),      # 1 contact (push off), moved back exactly one frame's travel
-            (0.215, 0.15, 35),                   # 2 heel kicks up behind
-            (0.11, 0.215, 28),                   # 3 knee drives forward
-            (-0.03, 0.205, 6),                   # 4 swing through
-            (-0.155, 0.16, -8),                  # 5 reach
-            (-0.20, 0.11, -10),                  # 6 extend
-            (-0.17, 0.085, -5)]                  # 7 drop to touchdown
-HIP_Z = [-0.050, -0.040, -0.012, -0.018]         # low on contact, high in the air (per step half)
+# WALK (Revision 2): a natural, confident jog. 4.5 tiles/s is a sprint for legs only 0.48 tiles long,
+# so a true walk can't keep up without sliding; a light jog can. 10 frames at 30 fps = one loop (2 steps)
+# every 1/3 s. A planted foot moves back 4.5 / 30 = 0.15 tiles per frame (exactly the game's travel),
+# so the loop covers 4.5 * 10 / 30 = 1.5 tiles (one step = 0.75 tiles, was 1.125 - far too long).
+# Each step (5 frames): contact, down (lowest, knee soaks up weight), push (heel peels), up (short
+# flight), reach. Hips and shoulders counter-rotate, relaxed arms swing opposite the legs, the body bobs.
+WALK_FPS, WALK_SPEED, WALK_FRAMES = 30, 4.5, 10
+STEP_PER_FRAME = WALK_SPEED / WALK_FPS                   # 0.15 tiles
+STRIDE_TILES = WALK_SPEED * WALK_FRAMES / WALK_FPS       # 1.5 tiles per loop
+#            y (forward -)        z      toe pitch (+ = toes down)
+LEG_PATH = [(-STEP_PER_FRAME, 0.070, -6),   # 0 contact (heel first)
+            (0.0,             0.070, 0),    # 1 down: planted, moved back exactly one frame of travel
+            (+STEP_PER_FRAME, 0.086, 12),   # 2 push: planted, heel peels off
+            (0.215, 0.148, 30),             # 3 toe-off (up / flight)
+            (0.225, 0.185, 38),             # 4 heel lifts behind
+            (0.150, 0.240, 32),             # 5 fold (other foot lands)
+            (0.035, 0.262, 14),             # 6 passing: knee comes through
+            (-0.095, 0.235, -2),            # 7 knee drives forward
+            (-0.175, 0.160, -10),           # 8 reach
+            (-0.190, 0.105, -10)]           # 9 drop, foot slows to meet the ground
+HIP_BOB = [-0.040, -0.058, -0.044, -0.022, -0.026]   # per step: contact, down (lowest), push, up (highest), reach
 walk = []
 for i in range(WALK_FRAMES):
-    l, r = LEG_PATH[i], LEG_PATH[(i + 4) % 8]
-    sw = math.cos(2 * math.pi * i / 8)           # +1 when the left foot is planted in front
-    p = pose(hips=(0, -0.03, HIP_Z[i % 4]), hips_rot=(12, -7 * sw, 0), chest_rot=(4, 14 * sw, 0),
-             head_rot=(-20, -6 * sw, 0),
-             foot_l=(0.09, l[0], l[1]), foot_r=(-0.09, r[0], r[1]),
+    l, r = LEG_PATH[i], LEG_PATH[(i + 5) % 10]
+    ph = 2 * math.pi * i / WALK_FRAMES
+    sw = math.cos(ph)                            # +1 left foot lands in front, -1 right foot lands
+    ha = math.cos(ph - 0.35)                     # arms swing a touch behind the legs (relaxed)
+    hz = HIP_BOB[i % 5]
+    side = 0.008 * math.cos(ph - 0.6)           # weight shifts over the supporting foot
+    p = pose(hips=(side, -0.025, hz), hips_rot=(7, -9 * sw, -2.0 * math.cos(ph - 0.6)),
+             chest_rot=(3, 18 * sw, 2.0 * math.cos(ph - 0.6)),   # shoulders twist against the hips
+             head_rot=(-18 + 1.5 * (hz + 0.04) / 0.018, -9 * sw, 0),  # head stays facing the way we run
+             foot_l=(0.085, l[0], l[1]), foot_r=(-0.085, r[0], r[1]),
              foot_l_rot=(l[2], 0, 0), foot_r_rot=(r[2], 0, 0),
-             # arms pump against the legs: right hand forward while the left foot is planted
-             hand_l=(0.13, -0.08 + 0.12 * sw, 0.73 - 0.06 * sw),
-             hand_r=(-0.13, -0.08 - 0.12 * sw, 0.73 + 0.06 * sw))
+             # relaxed arms, elbows bent, swinging opposite the legs: right hand forward as the left foot lands
+             hand_l=(0.155 - 0.04 * (1 - ha) / 2, -0.035 + 0.115 * ha, 0.68 - 0.035 * ha + hz + 0.04),
+             hand_r=(-0.155 + 0.04 * (1 + ha) / 2, -0.035 - 0.115 * ha, 0.68 + 0.035 * ha + hz + 0.04))
     walk.append(p)
 
 # STRIKE: step-in reverse punch (gyaku-zuki) - right fist from the hip, left hand pulls back (hikite)

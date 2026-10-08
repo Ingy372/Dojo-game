@@ -14,7 +14,7 @@ A Blender-made martial artist rendered to 2D sprites. See `DELIVERY_NOTE.md` for
 | Animation | Frames | FPS | Loop | Notes |
 | --- | --- | --- | --- | --- |
 | `idle` | 8 | 8 | yes | Fighting stance with breathing |
-| `walk` | 8 | 16 | yes | A light running step, in place, two steps per loop. Matched to the game's 4.5 tiles/s so planted feet don't slide (see below). |
+| `walk` | 10 | 30 | yes | A natural jog (Revision 2), in place, two steps per loop. Matched to the game's 4.5 tiles/s so planted feet don't slide (see below). The name stays `walk` so the game code doesn't change. |
 | `strike` | 8 | 16 | no | Stepping reverse punch. Tag `impact: 4` (frame index 4, the 5th frame) is when the fist is fully out. The game's lunge movement stays in code. |
 | `counter` | 12 | 16 | no | `block: 0-7` is the block (0.5 s), and `block_hold: 3-7` is the full guard held. For a plain Block, play 0–7 (or hold frame 7 while guarding). `counter_hit: 8` is the counter punch landing. For a Perfect Counter, play 8–11 (0.25 s). |
 
@@ -24,12 +24,12 @@ A Blender-made martial artist rendered to 2D sprites. See `DELIVERY_NOTE.md` for
 
 | Key | Value | Meaning |
 | --- | --- | --- |
-| `strideTilesPerLoop` | 2.25 | Ground covered by one 8-frame loop |
-| `stridePxPerLoop` | 180 | The same in render pixels (80 px per tile), so 22.5 px per frame |
-| `designSpeedTilesPerSec` | 4.5 | The move speed the fps (16) is matched to |
-| `fpsPerTilePerSec` | 3.5556 | Playback fps = move speed (tiles/s) × 3.5556. For example, Rooted Form's 15% slower walk (3.825 tiles/s) plays at 13.6 fps. |
+| `strideTilesPerLoop` | 1.5 | Ground covered by one 10-frame loop (2 steps of 0.75 tiles) |
+| `stridePxPerLoop` | 120 | The same in render pixels (80 px per tile), so 12 px per frame |
+| `designSpeedTilesPerSec` | 4.5 | The move speed the fps (30) is matched to |
+| `fpsPerTilePerSec` | 6.6667 | Playback fps = move speed (tiles/s) × 6.6667. For example, Rooted Form's 15% slower walk (3.825 tiles/s) plays at 25.5 fps. |
 
-A foot on the ground moves back exactly 0.28125 tiles per frame (4.5 / 16), the distance the game moves the character in one frame at 16 fps. I checked this in the renders: the planted foot moves 22.9 px between contact frames, against 22.5 px expected.
+A foot on the ground moves back exactly 0.15 tiles per frame (4.5 / 30), the distance the game moves the character in one frame at 30 fps. Each foot is planted for 3 frames (contact, down, push), then both feet are off the ground for 2 frames (a short jog float). I checked it on the model in Blender: the planted foot moves back 0.150 tiles (12 px) per frame, and the toe clears the ground as it lifts, so nothing drags. `preview/walk-compare.gif` plays the old and new walk over a floor grid that scrolls at 4.5 tiles/s, so you can see the feet stick.
 
 ### Layers (draw bottom to top)
 
@@ -85,4 +85,5 @@ Re-running gives the same sheets. In my check, rebuilding the `.blend` from the 
 - Collections `L_body`, `L_gi`, `L_belt`, `L_belt-center`, `L_belt-tape1-edge`, `L_belt-tape1`, `L_belt-tape2-edge` and `L_belt-tape2` are the sprite layers.
 - The actions `idle`, `walk`, `strike` and `counter` are keyed once per sprite frame. Their custom properties hold the fps, looping and tags, and for the walk the stride and design speed.
 - The scene property `sprite_meta` holds the tint guidance; the render script copies it into the JSON.
-- Revision 1 numbers live at the top of each section of the script: `HAIRLINE_FRONT`, the `WALK_*` constants, `TAPE_LEN`/`TAPE_RIM`, and the extra `BLOCK_HOLDS` frames.
+- Revision 1 numbers live at the top of each section of the script: `HAIRLINE_FRONT`, `TAPE_LEN`/`TAPE_RIM`, and the extra `BLOCK_HOLDS` frames. Revision 2: the jog is `WALK_*`, `LEG_PATH` (one foot's path, 10 frames) and `HIP_BOB`.
+- Revision 2 belt fix: `tube()` used to turn straight-down tubes sideways, which made the gi skirt deeper than the belt so it poked through at the back. Rule now: at every height the belt covers, the belt (0.171 × 0.131 tiles) is bigger than the gi skirt plus its outline (at most 0.157 × 0.123).

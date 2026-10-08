@@ -7,6 +7,8 @@ then writes review images:
   <out>/<name>_preview.gif          all animations, 8 directions side by side, animated
   <out>/<name>_belts.png            the same frame with every belt colour of the school
   <out>/head-closeup.png            the face (idle, first frame) in S, SE, E, SW, W at 4x, for checking faces
+  <out>/belt-back.png               the waist at 4x in N, NE, E, NW (idle, strike impact, counter punch, walk)
+                                    with a blue belt, for checking the belt is one unbroken band
 
     python3 make_preview.py --sheets <folder with sheets + json> --out <folder> [--scale 2] [--gif-scale 1]
 Needs Python 3 with Pillow and numpy (pip install pillow numpy).
@@ -91,21 +93,23 @@ def main():
         if a.scale > 1:
             lab = lab.resize((lab.width * a.scale, lab.height * a.scale), Image.NEAREST)
         lab.save(os.path.join(a.out, f"{name}_contact_{an}.png"))
-    # animated GIF: one row per animation, every direction across, 12 fps master clock.
+    # animated GIF: one row per animation, every direction across, 30 fps master clock (2 s, 60 frames).
     # Looping animations loop; one-shot animations play, hold, and restart every 2 seconds.
+    # (GIF stores delays in 1/100 s, so it plays at ~33 fps: about 10% fast. Timing in the JSON is exact.)
+    CLK, TICKS = 30, 60
     anims = list(meta["animations"])
     gif_frames = []
     LABEL = 64
-    for t in range(48):
+    for t in range(TICKS):
         canvas = Image.new("RGBA", (LABEL + len(dirs) * W, len(anims) * H), FLOOR)
         d = ImageDraw.Draw(canvas)
         for r, an in enumerate(anims):
             info = meta["animations"][an]
             n = info["frames"]
             if info["loop"]:
-                f = int(t * info["fps"] / 12) % n
+                f = int(t * info["fps"] / CLK) % n
             else:
-                f = min(int((t % 24) * info["fps"] / 12), n - 1)
+                f = min(int(t * info["fps"] / CLK), n - 1)
             d.text((6, r * H + H // 2 - 6), an, fill=(255, 220, 120, 255))
             for i in range(len(dirs)):
                 cell = comps[an][i * H:(i + 1) * H, f * W:(f + 1) * W]
@@ -116,7 +120,7 @@ def main():
             canvas = canvas.resize((canvas.width * a.gif_scale, canvas.height * a.gif_scale), Image.NEAREST)
         gif_frames.append(canvas.convert("RGB"))
     gif_frames[0].save(os.path.join(a.out, f"{name}_preview.gif"), save_all=True, append_images=gif_frames[1:],
-                       duration=int(1000 / 12), loop=0, optimize=False)
+                       duration=int(1000 / CLK), loop=0, optimize=False)
     # belt colours (idle frame 0, S and SE directions)
     an = "idle" if "idle" in meta["animations"] else anims[0]
     row = []
@@ -151,6 +155,38 @@ def main():
         sheet.paste(im.resize((48 * 4, 44 * 4), Image.NEAREST), (x, 20))
         d.text((x + 4, 4), f"{dn} (4x)", fill=(255, 255, 255, 255))
     sheet.save(os.path.join(a.out, "head-closeup.png"))
+    # belt close-up (Revision 2): the waist at 4x in N, NE, E, NW, blue belt so any gap shows up
+    BB_DIRS = [d for d in ("N", "NE", "E", "NW") if d in dirs]
+    BB_ROWS = []
+    for an, label, pick in (("idle", "idle", 0), ("strike", "strike impact", "impact"),
+                            ("counter", "counter punch", "counter_hit"), ("walk", "walk (passing)", 1)):
+        if an not in meta["animations"]:
+            continue
+        info = meta["animations"][an]
+        f = int(str(info["tags"].get(pick, "0")).split("-")[0]) if isinstance(pick, str) else pick
+        BB_ROWS.append((an, f, f"{label} {f + 1}"))
+    blue = next(b for b in BELTS if b[0] == "Blue")
+    TW, TH, Z = 48, 32, 4
+    sheet = Image.new("RGBA", (96 + len(BB_DIRS) * (TW * Z + 6), 18 + len(BB_ROWS) * (TH * Z + 6)), (24, 22, 32, 255))
+    d = ImageDraw.Draw(sheet)
+    cache = {}
+    for r, (an, f, label) in enumerate(BB_ROWS):
+        if an not in cache:
+            cache[an] = composite(a.sheets, meta, an, belt=blue, stripes=1)
+        belt_only = np.asarray(Image.open(os.path.join(a.sheets, meta["animations"][an]["sheets"]["belt"])).convert("RGBA"))
+        d.text((4, 18 + r * (TH * Z + 6) + TH * Z // 2 - 6), label, fill=(255, 220, 120, 255))
+        for k, dn in enumerate(BB_DIRS):
+            i = dirs.index(dn)
+            cell = cache[an][i * H:(i + 1) * H, f * W:(f + 1) * W]
+            ys, xs = np.nonzero(belt_only[i * H:(i + 1) * H, f * W:(f + 1) * W, 3] > 128)
+            cy = int(np.median(ys)) if len(ys) else int(H * 0.55)
+            cx = int(np.median(xs)) if len(xs) else W // 2
+            y0 = min(max(0, cy - TH // 2), H - TH); x0 = min(max(0, cx - TW // 2), W - TW)
+            x = 96 + k * (TW * Z + 6)
+            sheet.paste(to_img(cell[y0:y0 + TH, x0:x0 + TW]).resize((TW * Z, TH * Z), Image.NEAREST), (x, 18 + r * (TH * Z + 6)))
+            if r == 0:
+                d.text((x + 4, 3), f"{dn} (4x)", fill=(255, 255, 255, 255))
+    sheet.save(os.path.join(a.out, "belt-back.png"))
     print("previews written to", a.out)
 
 main()

@@ -5,7 +5,8 @@ Scripts the Art Director bot uses so every character, enemy and object renders e
 | File | What it does |
 | --- | --- |
 | `render_sprites.py` | Renders a character `.blend` into transparent PNG sprite sheets (8 directions, one sheet per layer per animation) plus a JSON description. Runs inside Blender. |
-| `make_preview.py` | Stacks the layer sheets the way the game will (with belt and gi colours, black belts as charcoal) and makes review pictures: contact sheets, an animated GIF, a belt-colour chart and a 4× head close-up. Runs with normal Python. |
+| `make_preview.py` | Stacks the layer sheets the way the game will (with belt and gi colours, black belts as charcoal) and makes review pictures: contact sheets, an animated GIF (30 fps clock), a belt-colour chart, a 4× head close-up and a 4× waist close-up (`belt-back.png`, N/NE/E/NW, blue belt, to check the belt is one unbroken band). Runs with normal Python. |
+| `make_compare.py` | Plays one animation from two renders side by side (for example an old and a new walk) over a floor grid that scrolls at the design speed, so you can check the feet stay planted. Runs with normal Python. |
 
 Made with Blender 4.2 LTS (4.2.23). Previews need Python 3 with Pillow and numpy (`pip install pillow numpy`).
 
@@ -55,3 +56,12 @@ All layers come from the same model, camera and frame, so they share the same ca
 ```bash
 python3 incoming-art/tools/make_preview.py --sheets path/to/sprites --out path/to/preview
 ```
+
+Compare two renders of one animation (an old render can be pulled out of git with `git show <commit>:<path> > file` into a folder, sheets plus JSON):
+
+```bash
+python3 incoming-art/tools/make_compare.py --old path/to/old-sprites --new path/to/sprites \
+    --anim walk --dirs E,SE --old-label "old" --new-label "new" --out path/to/walk-compare.gif
+```
+
+GIF previews keep time with a 30 fps clock. GIF delays are stored in 1/100 s, so they play about 10% fast; the JSON timing is exact.
