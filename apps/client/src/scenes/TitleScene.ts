@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+
+declare const __BUILD_TIME__: string;
 import { sfx } from '../audio/Sfx';
 
 export class TitleScene extends Phaser.Scene {
@@ -42,6 +44,13 @@ export class TitleScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setResolution(crisp);
     this.tweens.add({ targets: this.prompt, alpha: 0.35, duration: 900, yoyo: true, repeat: -1 });
+
+    // Which version this is (when it was built), to check a phone has the newest one.
+    const built = new Date(__BUILD_TIME__);
+    const stamp = built.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    this.add
+      .text(8, 6, `Version: ${stamp}`, { fontFamily: 'system-ui, sans-serif', fontSize: '11px', color: '#6f6658' })
+      .setResolution(crisp);
 
     this.input.once(Phaser.Input.Events.POINTER_UP, () => {
       // Phones only allow sound after a touch, so switch it on here.
