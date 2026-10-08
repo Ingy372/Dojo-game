@@ -290,3 +290,4 @@ Jay asked Claude to test and tune the game before his next playtest.
   - **Tap a decoration, then tap where it should go.** If it doesn't fit, a short message explains why.
   - **Big arrow buttons** (bottom-right) move the selected decoration one step, hopping over anything in the way. Wall items only move left and right.
   - Dragging still works. Dragging the empty floor scrolls the view, and the camera follows the selected decoration.
+- **Choose how to move decorations (Jay, 2026-10-08):** a missed arrow tap landed on the floor and sent the decoration across the room. Now the first time you tap Decorate, a card asks **"Tap to move"** or **"Arrow pad"**, and only that style is active. The choice is remembered on the phone and can be changed with the "Move" button. With the arrow pad, floor taps never move anything, the arrows are bigger (60 px), and a backing panel around them catches near-misses. Dragging still works in both styles.

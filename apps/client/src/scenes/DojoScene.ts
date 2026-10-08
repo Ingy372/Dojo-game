@@ -58,7 +58,10 @@ const VIEW_ROWS = 6.5;
 /** A tap this close (tiles) to a decoration picks it, for big fingers. */
 const PICK_SLACK = 0.7;
 /** Arrow buttons for moving the selected decoration. */
-const ARROW = 54;
+const ARROW = 60;
+/** How the player likes to move decorations (remembered on this phone). */
+type MoveStyle = 'tap' | 'arrows';
+const MOVE_STYLE_KEY = 'dojo-ascent-move-style';
 const CHORE_RADIUS = 46;
 const CALM = 0x7fe0d0;
 
@@ -110,6 +113,7 @@ export class DojoScene extends Phaser.Scene {
   private cam: Vec2 = { x: 0, y: 0 };
   private panned = false;
   private pan: { pointerId: number; last: Vec2; moved: boolean } | null = null;
+  private moveStyle: MoveStyle | null = null;
   private elapsed = 0;
   private prevPos: Vec2 = { x: 0, y: 0 };
   /** The door and board trigger only after the character has stepped away from them. */
@@ -152,6 +156,7 @@ export class DojoScene extends Phaser.Scene {
     this.cam = { ...this.world.players.p1.pos };
     this.panned = false;
     this.pan = null;
+    this.moveStyle = loadMoveStyle();
 
     this.worldLayer = this.add.container(0, 0);
     this.worldLayer.add(this.drawRoom());
@@ -399,6 +404,8 @@ export class DojoScene extends Phaser.Scene {
       this.mode = 'decorate';
       // The movement stick isn't used while decorating.
       for (const o of this.controls.objects) (o as Phaser.GameObjects.Arc).setVisible(false);
+      // The first time, ask how they like to move decorations.
+      if (!this.moveStyle) this.time.delayedCall(0, () => this.chooseMoveStyle());
     } else {
       this.mode = 'play';
       // Solid decorations may have moved: rebuild the walkable room, keeping the character in place
@@ -490,7 +497,7 @@ export class DojoScene extends Phaser.Scene {
     const pan = this.pan;
     if (pan && pointer.id === pan.pointerId) {
       this.pan = null;
-      if (!pan.moved && this.selected) this.moveSelectedTo(this.toTile(pointer.x, pointer.y));
+      if (!pan.moved && this.selected && this.moveStyle === 'tap') this.moveSelectedTo(this.toTile(pointer.x, pointer.y));
       return;
     }
     const d = this.drag;
@@ -716,10 +723,12 @@ export class DojoScene extends Phaser.Scene {
 
     if (this.mode === 'decorate') {
       this.button(width - pad - 90, 8, 90, 32, 'Done', 0x3aa57a, 15, () => this.setDecorating(false));
-      const hint = this.selected ? 'Tap a spot to move it there, or use the arrows' : 'Tap a decoration to pick it';
+      const arrows = this.moveStyle === 'arrows';
+      const hint = !this.selected ? 'Tap a decoration to pick it' : arrows ? 'Use the arrows to move it' : 'Now tap where it should go';
+      this.button(width - pad - 90 - 8 - 110 - 8 - 130, 8, 130, 32, arrows ? 'Move: Arrows ⇄' : 'Move: Tap ⇄', 0x3a3a4a, 13, () => this.chooseMoveStyle());
       if (this.selected) {
         this.button(width - pad - 90 - 8 - 110, 8, 110, 32, 'Put away', 0x6b3a3a, 14, () => this.putAway());
-        this.renderArrows(width, height);
+        if (arrows) this.renderArrows(width, height);
       }
       this.text(width / 2, TOP + 6, hint, 14, '#fff6e0', true).setOrigin(0.5, 0).setStroke('#14121c', 5);
       this.renderTray(width, height);
@@ -735,12 +744,56 @@ export class DojoScene extends Phaser.Scene {
     const x0 = width - 12 - 3 * ARROW - 2 * gap;
     const y0 = height - TRAY - 10 - 3 * ARROW - 2 * gap;
     const step = ARROW + gap;
+    // A backing panel catches near-misses, so a missed arrow never lands on the floor.
+    const m = 16;
+    const panel = this.add.rectangle(x0 - m, y0 - m, 3 * step - gap + 2 * m, 3 * step - gap + 2 * m, 0x14121c, 0.55).setOrigin(0).setInteractive();
+    this.ui.add(panel);
+    this.uiRects.push(panel.getBounds());
     const it = this.dojo.items.find((x) => x.uid === this.selected);
     const wall = it ? decorationDef(CONTENT.dojo, it.id).place === 'wall' : false;
     if (!wall) this.button(x0 + step, y0, ARROW, ARROW, '▲', 0x3a3a4a, 22, () => this.nudge(0, -1));
     this.button(x0, y0 + step, ARROW, ARROW, '◀', 0x3a3a4a, 22, () => this.nudge(-1, 0));
     this.button(x0 + 2 * step, y0 + step, ARROW, ARROW, '▶', 0x3a3a4a, 22, () => this.nudge(1, 0));
     if (!wall) this.button(x0 + step, y0 + 2 * step, ARROW, ARROW, '▼', 0x3a3a4a, 22, () => this.nudge(0, 1));
+  }
+
+  /** Asks how the player likes to move decorations: tap the spot, or an arrow pad. */
+  private chooseMoveStyle(): void {
+    const back = this.mode;
+    this.mode = 'menu';
+    const { width, height } = this.scale.gameSize;
+    const box = this.add.container(0, 0).setDepth(70);
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.75).setOrigin(0).setInteractive());
+    const title = this.add
+      .text(width / 2, height * 0.12, 'How do you like to move decorations?', { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' })
+      .setOrigin(0.5, 0)
+      .setResolution(crisp());
+    box.add(title);
+    const w = Math.min(300, (width - 60) / 2);
+    const h = Math.min(170, height * 0.5);
+    const top = height * 0.12 + 44;
+    const options: Array<[MoveStyle, string, string]> = [
+      ['tap', 'Tap to move', 'Tap a decoration, then tap the spot where it should go.'],
+      ['arrows', 'Arrow pad', 'Tap a decoration, then use big arrows to move it one step at a time.'],
+    ];
+    options.forEach(([style, name, text], i) => {
+      const x = width / 2 + (i === 0 ? -w - 10 : 10);
+      const on = this.moveStyle === style;
+      const bg = this.add.rectangle(x, top, w, h, 0x2a2536).setOrigin(0).setStrokeStyle(on ? 4 : 2, on ? 0xffd166 : 0xffffff, on ? 1 : 0.35).setInteractive();
+      box.add(bg);
+      box.add(this.add.text(x + w / 2, top + 22, name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5, 0).setResolution(crisp()));
+      box.add(this.add.text(x + w / 2, top + 58, text, { fontFamily: FONT, fontSize: '14px', color: '#e8d9b5', align: 'center', wordWrap: { width: w - 28 } }).setOrigin(0.5, 0).setResolution(crisp()));
+      bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+        sfx.unlock();
+        sfx.place(true);
+        this.moveStyle = style;
+        saveMoveStyle(style);
+        box.destroy();
+        this.mode = back === 'menu' ? 'decorate' : back;
+        this.renderUi();
+      });
+    });
+    box.add(this.add.text(width / 2, top + h + 14, 'You can change this any time with the "Move" button.', { fontFamily: FONT, fontSize: '12px', color: '#b9ad99' }).setOrigin(0.5, 0).setResolution(crisp()));
   }
 
   /** Stored decorations, as chips along the bottom. Tap one to place it. */
@@ -964,5 +1017,22 @@ export class DojoScene extends Phaser.Scene {
       sfx.unlock();
       onTap();
     });
+  }
+}
+
+function loadMoveStyle(): MoveStyle | null {
+  try {
+    const v = localStorage.getItem(MOVE_STYLE_KEY);
+    return v === 'tap' || v === 'arrows' ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveMoveStyle(style: MoveStyle): void {
+  try {
+    localStorage.setItem(MOVE_STYLE_KEY, style);
+  } catch {
+    // Storage blocked: asked again next time.
   }
 }

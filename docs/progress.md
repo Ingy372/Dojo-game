@@ -176,3 +176,4 @@
 **Jay's first test (2026-10-08)**
 - It works. Fixed: the bow could be skipped by tapping elsewhere (now only the button counts, and Tower enemies wait hidden until the bow). The dojo was too zoomed out and decorations were hard to tap: the camera now zooms in and follows the character, and decorating is tap-to-pick, tap-to-place, with big arrow buttons. Copied onto `main`.
 - Next: Jay re-tests decorating and the zoom on his phone.
+- Jay: view much better, but moving was still clunky (a missed arrow tap moved the decoration across the room). Added a "Tap to move" or "Arrow pad" choice (asked the first time, changeable with the "Move" button); arrow mode ignores floor taps and catches near-misses. Copied onto `main`.
