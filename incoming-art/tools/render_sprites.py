@@ -24,8 +24,10 @@ What the .blend must contain (see README.md next to this script):
   * CHAR_ROOT: empty at the feet, parent of the rig. Character faces -Y when unrotated.
   * Collections L_<layer>. Optional custom props: sprite_order (int), sprite_tint (bool),
     sprite_overlay (bool: an optional extra drawn on top, e.g. belt stripes).
-  * Actions with custom props sprite_fps (int), sprite_loop (bool), sprite_tags (str).
-    Each integer frame in the action's frame range is one sprite frame.
+  * Actions with custom props sprite_fps (int), sprite_loop (bool), sprite_tags (str), sprite_order (int),
+    and for locomotion sprite_stride_tiles + sprite_design_speed (ground covered per loop, and the speed
+    the fps is synced to). Each integer frame in the action's frame range is one sprite frame.
+  * Optional: scene["sprite_meta"], a JSON string merged into the output JSON (e.g. tint guidance).
 
 How layers work: when a layer is rendered, every other layer is still there but acts
 as a "holdout" (it hides what is behind it and leaves a transparent hole), so stacking
@@ -221,12 +223,22 @@ def main():
             if ":" in part:
                 k, v = part.split(":", 1)
                 tags[k.strip()] = v.strip()
-        meta["animations"][act.name] = dict(frames=len(frames), fps=int(act["sprite_fps"]),
-                                            loop=bool(act.get("sprite_loop", True)), tags=tags, sheets=sheets)
+        info = dict(frames=len(frames), fps=int(act["sprite_fps"]), durationSec=round(len(frames) / int(act["sprite_fps"]), 4),
+                    loop=bool(act.get("sprite_loop", True)), tags=tags, sheets=sheets)
+        if "sprite_stride_tiles" in act:   # locomotion: lets the game sync playback to movement speed
+            st = float(act["sprite_stride_tiles"])
+            info["groundMotion"] = dict(
+                strideTilesPerLoop=st, stridePxPerLoop=round(st * a.size / a.ortho, 3),
+                designSpeedTilesPerSec=float(act.get("sprite_design_speed", 0)),
+                fpsPerTilePerSec=round(len(frames) / st, 4),
+                note="planted feet stay still when fps = speed (tiles/s) * fpsPerTilePerSec; at the design speed that is the fps above")
+        meta["animations"][act.name] = info
     root.rotation_euler = rot0
     for l in layers:
         l["lc"].holdout = False
         l["lc"].collection.hide_render = False
+    if "sprite_meta" in scene:             # character-specific notes stored in the .blend
+        meta.update(json.loads(scene["sprite_meta"]))
     with open(os.path.join(out, f"{name}.json"), "w") as fh:
         json.dump(meta, fh, indent=2)
     if not a.keep_frames:

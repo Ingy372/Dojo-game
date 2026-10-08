@@ -4,7 +4,7 @@ A Blender-made martial artist rendered to 2D sprites. See `DELIVERY_NOTE.md` for
 
 ## Sprite sheets (`sprites/`)
 
-- One PNG per **layer** per **animation**: `martial-artist_<layer>_<animation>.png`.
+- One PNG per **layer** per **animation**: `martial-artist_<layer>_<animation>.png` (8 layers × 4 animations = 32 sheets).
 - Each sheet has **8 rows = directions** in the order `N, NE, E, SE, S, SW, W, NW` (top to bottom) and **columns = frames** (left to right). No padding or spacing.
 - **Frame size 128 × 128 px**, RGBA, straight (not premultiplied) alpha. Fully see-through pixels are pure 0,0,0,0.
 - **Anchor / feet point: (64, 105)** in each frame (exact value in the JSON: 64.0, 104.96). Put this point on the character's position in the world.
@@ -14,9 +14,22 @@ A Blender-made martial artist rendered to 2D sprites. See `DELIVERY_NOTE.md` for
 | Animation | Frames | FPS | Loop | Notes |
 | --- | --- | --- | --- | --- |
 | `idle` | 8 | 8 | yes | Fighting stance with breathing |
-| `walk` | 8 | 12 | yes | In place, two steps per loop. Speed up the playback for the 4.5 tiles/s move speed if the feet slide. |
+| `walk` | 8 | 16 | yes | A light running step, in place, two steps per loop. Matched to the game's 4.5 tiles/s so planted feet don't slide (see below). |
 | `strike` | 8 | 16 | no | Stepping reverse punch. Tag `impact: 4` (frame index 4, the 5th frame) is when the fist is fully out. The game's lunge movement stays in code. |
-| `counter` | 8 | 16 | no | Tag `block: 0-3` and `block_hold: 3` cover a plain Block (play 0–3 and hold 3 while guarding). Tag `counter_hit: 4` is the counter punch landing, for a Perfect Counter (play 4–7). |
+| `counter` | 12 | 16 | no | `block: 0-7` is the block (0.5 s), and `block_hold: 3-7` is the full guard held. For a plain Block, play 0–7 (or hold frame 7 while guarding). `counter_hit: 8` is the counter punch landing. For a Perfect Counter, play 8–11 (0.25 s). |
+
+### Keeping the walk's feet planted
+
+`animations.walk.groundMotion` in the JSON:
+
+| Key | Value | Meaning |
+| --- | --- | --- |
+| `strideTilesPerLoop` | 2.25 | Ground covered by one 8-frame loop |
+| `stridePxPerLoop` | 180 | The same in render pixels (80 px per tile), so 22.5 px per frame |
+| `designSpeedTilesPerSec` | 4.5 | The move speed the fps (16) is matched to |
+| `fpsPerTilePerSec` | 3.5556 | Playback fps = move speed (tiles/s) × 3.5556. For example, Rooted Form's 15% slower walk (3.825 tiles/s) plays at 13.6 fps. |
+
+A foot on the ground moves back exactly 0.28125 tiles per frame (4.5 / 16), the distance the game moves the character in one frame at 16 fps. I checked this in the renders: the planted foot moves 22.9 px between contact frames, against 22.5 px expected.
 
 ### Layers (draw bottom to top)
 
@@ -26,12 +39,22 @@ A Blender-made martial artist rendered to 2D sprites. See `DELIVERY_NOTE.md` for
 | 1 | `gi` | yes, gi colour | yes | Jacket and pants in neutral light grey. Tint with the gi colour (the current placeholder uses `#f2e9d8`). |
 | 2 | `belt` | yes, `belt.color` | yes | The belt in neutral light grey |
 | 3 | `belt-center` | yes, `belt.color2` | only for two-colour belts | The centre line of red/black and brown/black belts |
-| 4 | `belt-tape1` | yes, tape colour | if stripes ≥ 1 | 1st rank stripe on the belt tail |
-| 5 | `belt-tape2` | yes, tape colour | if stripes ≥ 2 | 2nd rank stripe (up to 2 per belt, per core-design section 10) |
+| 4 | `belt-tape1-edge` | **no** | if stripes ≥ 1 | Light rim (1 px) at both ends of stripe 1 |
+| 5 | `belt-tape1` | yes, tape colour | if stripes ≥ 1 | 1st rank stripe on the belt tail (about 4 px long, 3–4 px across) |
+| 6 | `belt-tape2-edge` | **no** | if stripes ≥ 2 | Light rim of stripe 2 |
+| 7 | `belt-tape2` | yes, tape colour | if stripes ≥ 2 | 2nd rank stripe (up to 2 per belt, per core-design section 10) |
 
-- **Tint = multiply** (Phaser's `setTint` does exactly this). The grey layers have their shading built in (lit ≈ 242, highlight ≈ 253, shadow ≈ 202, lapels a little darker, outline ≈ 20), so any colour keeps its light and shadow and the outline stays dark. The tape colour rule can stay as in `apps/client/src/ui/belt.ts` (white tape on dark belts, black on light ones).
+- **Tint = multiply** (Phaser's `setTint` does exactly this). The grey layers have their shading built in, so any colour keeps its light and shadow and the outline stays dark (about 20):
+  - gi: lit ≈ 242, highlight ≈ 253, shadow ≈ 202, lapels a little darker
+  - belt: face ≈ 222, with a lighter top edge ≈ 255
+- **Tint guidance** (also in the JSON under `tintGuidance`):
+  - gi: the gi colour.
+  - belt: `belt.color`, except **black: use charcoal `#3c3c44`** (any belt colour darker than luminance 40). Pure black would disappear into the outline, while charcoal plus the light top edge still reads.
+  - belt-center: `belt.color2`, with the same charcoal rule.
+  - stripes: tape colour per `apps/client/src/ui/belt.ts` (white tape `#f4f1ea` on dark belts, `#1a1a1a` on light ones).
+  - stripe edges: never tinted.
 - All layers share the same frames, canvas and pixel grid, so draw them at the same position with the same frame index. Each base layer has holes only where another base layer is in front of it (for example the gi has a hole where the belt crosses it), so the three base layers must always be drawn together. The optional overlays (center and tapes) are switched off while the base layers render, so the base layers have no holes under them, and skipping an overlay is always safe.
-- `preview/martial-artist_belts.png` shows all 10 belts made this way.
+- `preview/martial-artist_belts.png` shows all 10 belts made this way (2 stripes each on the coloured belts).
 
 ## Re-rendering
 
@@ -42,7 +65,7 @@ You need Blender 4.2 LTS. These commands are run from the repository root.
 blender -b -P incoming-art/character-test/source/build_character.py -- \
     --out "$PWD/incoming-art/character-test/source/martial_artist.blend"
 
-# 2. render all sheets + JSON (about 2 minutes on a CPU)
+# 2. render all sheets + JSON (about 3 minutes on a CPU)
 blender -b incoming-art/character-test/source/martial_artist.blend \
     -P incoming-art/tools/render_sprites.py -- \
     --out incoming-art/character-test/sprites --name martial-artist
@@ -52,12 +75,14 @@ python3 incoming-art/tools/make_preview.py \
     --sheets incoming-art/character-test/sprites --out incoming-art/character-test/preview
 ```
 
-Rendering is deterministic: the same `.blend` gives byte-identical sheets (checked). Options and the conventions a `.blend` must follow are in `incoming-art/tools/README.md`.
+Re-running gives the same sheets. In my check, rebuilding the `.blend` from the script and rendering again matched every pixel except one, which was off by 1 colour level (normal floating-point rounding). Options and the conventions a `.blend` must follow are in `incoming-art/tools/README.md`.
 
 ## How the model is built (`source/build_character.py`)
 
 - About 1.4 tiles tall, low-poly, with chunky kid-friendly proportions. It faces -Y, with its feet at the origin under the `CHAR_ROOT` empty.
 - The skeleton has a root, hips, chest and head. The arms and legs use IK (the hands and feet are placed and the elbows and knees follow), with knee and elbow aim bones. Each mesh part is attached to one bone (rigid parts, no skin weights).
 - Flat cartoon shading is done with emission materials and a fixed light direction (upper left, from the camera side), so every direction is lit the same way. A thin dark outline (`#14121c`, the game's outline colour) uses the "inverted hull" method.
-- Collections `L_body`, `L_gi`, `L_belt`, `L_belt-center`, `L_belt-tape1` and `L_belt-tape2` are the sprite layers.
-- The actions `idle`, `walk`, `strike` and `counter` are keyed once per sprite frame. Their custom properties hold the fps, looping and tags.
+- Collections `L_body`, `L_gi`, `L_belt`, `L_belt-center`, `L_belt-tape1-edge`, `L_belt-tape1`, `L_belt-tape2-edge` and `L_belt-tape2` are the sprite layers.
+- The actions `idle`, `walk`, `strike` and `counter` are keyed once per sprite frame. Their custom properties hold the fps, looping and tags, and for the walk the stride and design speed.
+- The scene property `sprite_meta` holds the tint guidance; the render script copies it into the JSON.
+- Revision 1 numbers live at the top of each section of the script: `HAIRLINE_FRONT`, the `WALK_*` constants, `TAPE_LEN`/`TAPE_RIM`, and the extra `BLOCK_HOLDS` frames.

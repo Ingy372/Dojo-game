@@ -105,7 +105,10 @@ PALETTE = {
     # recolourable layers are neutral light grey; the game tints them (multiply)
     "gi":     "#f2f2f2",
     "lapel":  "#d2d2d2",
-    "belt":   "#f2f2f2",
+    "belt":   "#dedede",   # belt face, a step darker than its edge so even a charcoal black belt shows an edge
+    "belt_edge": "#ffffff",
+    "tape":   "#f2f2f2",
+    "tape_edge": "#f4f1ea",  # rank stripe edge: NOT tinted, a light rim so stripes read on any belt
 }
 MAT = {k: toon_material(k.upper(), v) for k, v in PALETTE.items()}
 MAT["eye"] = toon_material("EYE", PALETTE["eye"], shadow=1.0, highlight=1.0)
@@ -114,13 +117,13 @@ OUTLINE = outline_material()
 OUTLINE_W = 0.013        # world units (~1.1 px at the standard camera)
 
 # ---------------------------------------------------------------- collections
-LAYERS = ["body", "gi", "belt", "belt-center", "belt-tape1", "belt-tape2"]
+LAYERS = ["body", "gi", "belt", "belt-center", "belt-tape1-edge", "belt-tape1", "belt-tape2-edge", "belt-tape2"]
 COLL = {}
 for i, name in enumerate(LAYERS):
     c = bpy.data.collections.new("L_" + name)
     scene.collection.children.link(c)
     c["sprite_order"] = i                       # draw order in the game (bottom to top)
-    c["sprite_tint"] = name != "body"           # neutral grey: the game recolours it
+    c["sprite_tint"] = name != "body" and not name.endswith("-edge")   # neutral grey: the game recolours it
     c["sprite_overlay"] = name.startswith("belt-")  # optional extra on top of the belt
     COLL[name] = c
 rig_coll = bpy.data.collections.new("RIG")
@@ -279,25 +282,40 @@ finish_mesh("head", ellipsoid(HEAD_C, (0.19, 0.18, 0.185), segs=20, rings=14), M
 for x in (1, -1):
     finish_mesh(f"ear.{'L' if x > 0 else 'R'}", ellipsoid((0.183 * x, 0.005, 1.105), (0.03, 0.022, 0.04)),
                 MAT["skin"], "body", "head")
-# hair: cap + back + side-swept fringe
-bm = ellipsoid(HEAD_C + Vector((0, 0.008, 0.012)), (0.203, 0.195, 0.2), segs=20, rings=14)
-bisect_keep(bm, (0, 0, 1.17), (0, -0.55, 1))
+# hair: cap + back + sides + short fringe. The hairline sits well above the brows so the
+# eyes stay readable from the high camera (Revision 1: Jay found the old fringe covered them).
+HAIRLINE_FRONT = 1.262   # cap edge height at the forehead (brows are at ~1.19, eye tops ~1.16)
+bm = ellipsoid(HEAD_C + Vector((0, 0.008, 0.012)), (0.203, 0.195, 0.2), segs=24, rings=16)
+bisect_keep(bm, (0, -0.19, HAIRLINE_FRONT), (0, 0.38, 1))   # higher at the front, lower at the back
 finish_mesh("hair_cap", bm, MAT["hair"], "body", "head")
-bm = ellipsoid(HEAD_C + Vector((0, 0.012, 0.005)), (0.2, 0.195, 0.197), segs=20, rings=14)
-bisect_keep(bm, (0, 0.035, 0), (0, 1, 0))
+bm = ellipsoid(HEAD_C + Vector((0, 0.012, 0.005)), (0.2, 0.195, 0.197), segs=24, rings=16)
+bisect_keep(bm, (0, 0.04, 0), (0, 1, 0))
 bisect_keep(bm, (0, 0, 1.0), (0, 0, 1))
 finish_mesh("hair_back", bm, MAT["hair"], "body", "head")
-for i, (fx, fz, rz, sx) in enumerate(((0.088, 1.245, -30, 0.06), (0.018, 1.262, -8, 0.068), (-0.062, 1.252, 20, 0.058))):
-    fy = -0.148 + abs(fx) * 0.22
-    finish_mesh(f"hair_fringe{i}", ellipsoid((fx, fy, fz), (sx, 0.03, 0.042), rot=(-35, 0, rz)), MAT["hair"], "body", "head")
+
+def on_head(x, z, inset=0.004):
+    """Point on the front of the head surface, and the pitch that lays a flat piece onto it."""
+    a, b, c = 0.19, 0.18, 0.185
+    k = max(0.0, 1 - (x / a) ** 2 - ((z - HEAD_C.z) / c) ** 2)
+    y = -b * math.sqrt(k)
+    ny, nz = y / b ** 2, (z - HEAD_C.z) / c ** 2
+    return y + inset, -math.degrees(math.atan2(nz, -ny))
+
+for x, s in ((1, "L"), (-1, "R")):   # sideburns frame the face without reaching the eyes
+    finish_mesh(f"hair_side.{s}", ellipsoid((0.172 * x, 0.0, 1.175), (0.036, 0.06, 0.075), rot=(0, 0, -12 * x)),
+                MAT["hair"], "body", "head")
+for i, (fx, fz, rz, sx) in enumerate(((0.085, 1.255, -26, 0.05), (0.02, 1.268, -6, 0.06), (-0.055, 1.26, 18, 0.05))):
+    fy, pitch = on_head(fx, fz)
+    finish_mesh(f"hair_fringe{i}", ellipsoid((fx, fy, fz), (sx, 0.022, 0.034), rot=(pitch, 0, rz)),
+                MAT["hair"], "body", "head")
 finish_mesh("hair_tuft", tube((0.0, 0.02, 1.3), (-0.02, 0.06, 1.39), 0.06, 0.005, segs=8), MAT["hair"], "body", "head")
 # face
 for x, s in ((1, "L"), (-1, "R")):
-    finish_mesh(f"eye.{s}", ellipsoid((0.064 * x, -0.166, 1.112), (0.031, 0.016, 0.048), rot=(0, 0, 21 * x), segs=12, rings=8),
+    finish_mesh(f"eye.{s}", ellipsoid((0.071 * x, -0.162, 1.112), (0.031, 0.016, 0.048), rot=(0, 0, 25 * x), segs=12, rings=8),
                 MAT["eye"], "body", "head", outline=False)
-    finish_mesh(f"eye_shine.{s}", ellipsoid((0.072 * x, -0.179, 1.132), (0.012, 0.006, 0.014), segs=8, rings=6),
+    finish_mesh(f"eye_shine.{s}", ellipsoid((0.08 * x, -0.174, 1.132), (0.012, 0.006, 0.014), segs=8, rings=6),
                 MAT["shine"], "body", "head", outline=False)
-    finish_mesh(f"brow.{s}", box((0.066 * x, -0.156, 1.19), (0.05, 0.012, 0.011), rot=(-25, -9 * x, 21 * x)),
+    finish_mesh(f"brow.{s}", box((0.073 * x, -0.151, 1.19), (0.05, 0.012, 0.011), rot=(-25, -9 * x, 25 * x)),
                 MAT["eye"], "body", "head", outline=False)
     finish_mesh(f"blush.{s}", ellipsoid((0.112 * x, -0.137, 1.055), (0.024, 0.008, 0.014), rot=(0, 0, 38 * x), segs=10, rings=6),
                 MAT["blush"], "body", "head", outline=False)
@@ -341,24 +359,37 @@ for x, s in ((1, "L"), (-1, "R")):
 # ---- belt (always its own layer, neutral grey so the game can recolour it)
 BELT_Z0, BELT_Z1 = 0.578, 0.628
 finish_mesh("belt_band", tube((0, 0, BELT_Z0), (0, 0, BELT_Z1), 1.0, 1.0, segs=24, sx=0.171, sy=0.131), MAT["belt"], "belt", "hips")
+# lighter top edge (Revision 1): gives every belt colour, black included, a visible edge against the outline
+finish_mesh("belt_edge", tube((0, 0, 0.6155), (0, 0, 0.6305), 1.0, 1.0, segs=24, sx=0.1735, sy=0.1335),
+            MAT["belt_edge"], "belt", "hips", outline=False)
 KNOT = Vector((0.0, -0.137, 0.603))
 finish_mesh("belt_knot", box(KNOT, (0.058, 0.03, 0.05), rot=(0, 0, 0), bevel=0.012), MAT["belt"], "belt", "hips")
-TAILS = [((0.01, -0.145, 0.59), (0.055, -0.16, 0.445)), ((-0.008, -0.145, 0.59), (-0.04, -0.158, 0.44))]
+TAILS = [((0.01, -0.145, 0.59), (0.06, -0.168, 0.382)), ((-0.008, -0.145, 0.59), (-0.045, -0.166, 0.388))]
 for i, (a, b) in enumerate(TAILS):
     finish_mesh(f"belt_tail{i}", strip(a, b, 0.036, 0.011), MAT["belt"], "belt", "hips")
 # centre line for two-colour belts (e.g. red/black): its own overlay layer
 finish_mesh("beltc_band", tube((0, 0, 0.5965), (0, 0, 0.6095), 1.0, 1.0, segs=24, sx=0.1735, sy=0.1335),
-            MAT["belt"], "belt-center", "hips", outline=False)
+            MAT["tape"], "belt-center", "hips", outline=False)
 for i, (a, b) in enumerate(TAILS):
     a, b = Vector(a), Vector(b)
     finish_mesh(f"beltc_tail{i}", strip(a + Vector((0, -0.007, 0)), b + Vector((0, -0.007, 0)), 0.012, 0.004),
-                MAT["belt"], "belt-center", "hips", outline=False)
-finish_mesh("beltc_knot", box(KNOT + Vector((0, -0.016, 0)), (0.06, 0.004, 0.013)), MAT["belt"], "belt-center", "hips", outline=False)
-# rank stripes (tape) near the end of the left tail: up to 2 per belt (core-design section 10)
+                MAT["tape"], "belt-center", "hips", outline=False)
+finish_mesh("beltc_knot", box(KNOT + Vector((0, -0.016, 0)), (0.06, 0.004, 0.013)), MAT["tape"], "belt-center", "hips", outline=False)
+# rank stripes (tape) near the end of the left tail: up to 2 per belt (core-design section 10).
+# Revision 1: each stripe is 0.065 tiles long (about 4 px at 128 px frames, at least 3 px seen from the front) with an
+# untinted light rim (0.011 beyond each end) on its own layer, drawn with the stripe.
 a, b = Vector(TAILS[0][0]), Vector(TAILS[0][1])
-for k, t in enumerate((0.70, 0.84)):
-    p = a.lerp(b, t); q = a.lerp(b, t + 0.09)
-    finish_mesh(f"tape{k + 1}", strip(p, q, 0.041, 0.017), MAT["belt"], f"belt-tape{k + 1}", "hips", outline=False)
+tail_len = (b - a).length
+d = (b - a).normalized()
+TAPE_LEN, TAPE_RIM = 0.065, 0.011
+end = tail_len - 0.010                       # stop just short of the tail end
+for k in range(2):                           # stripe 1 is nearest the end
+    core1 = end - TAPE_RIM - k * (TAPE_LEN + 2 * TAPE_RIM + 0.004)
+    core0 = core1 - TAPE_LEN
+    finish_mesh(f"tape{k + 1}", strip(a + d * core0, a + d * core1, 0.041, 0.017), MAT["tape"],
+                f"belt-tape{k + 1}", "hips", outline=False)
+    finish_mesh(f"tape{k + 1}_edge", strip(a + d * (core0 - TAPE_RIM), a + d * (core1 + TAPE_RIM), 0.040, 0.0155),
+                MAT["tape_edge"], f"belt-tape{k + 1}-edge", "hips", outline=False)
 
 # ------------------------------------------------------------------ animation
 PB = arm.pose.bones
@@ -437,20 +468,34 @@ for i in range(8):
     p["hand_r"] = (-0.05, -0.20, 0.85 - 0.014 * (1 - math.cos(ph + 0.6)) / 2)
     idle.append(p)
 
-# WALK: light, quick steps with the guard held loosely (loop, in place)
+# WALK (Revision 1): a light running step synced to the game's move speed so the planted foot
+# doesn't slide. The game moves the player 4.5 tiles/s. With 8 frames at 16 fps the loop covers
+# 4.5 * 8 / 16 = 2.25 tiles (one step = 1.125 tiles). A foot on the ground moves back exactly
+# 4.5 / 16 = 0.28125 tiles per frame, the same distance the game moves the character, so it stays put.
+WALK_FPS, WALK_SPEED, WALK_FRAMES = 16, 4.5, 8
+STEP_PER_FRAME = WALK_SPEED / WALK_FPS                   # 0.28125 tiles
+STRIDE_TILES = WALK_SPEED * WALK_FRAMES / WALK_FPS       # 2.25 tiles per loop
+#            y (forward -)   z       toe pitch (+ = toes down)
+LEG_PATH = [(-STEP_PER_FRAME / 2, 0.07, 0),      # 0 contact (front)
+            (+STEP_PER_FRAME / 2, 0.07, 0),      # 1 contact (push off), moved back exactly one frame's travel
+            (0.215, 0.15, 35),                   # 2 heel kicks up behind
+            (0.11, 0.215, 28),                   # 3 knee drives forward
+            (-0.03, 0.205, 6),                   # 4 swing through
+            (-0.155, 0.16, -8),                  # 5 reach
+            (-0.20, 0.11, -10),                  # 6 extend
+            (-0.17, 0.085, -5)]                  # 7 drop to touchdown
+HIP_Z = [-0.050, -0.040, -0.012, -0.018]         # low on contact, high in the air (per step half)
 walk = []
-for i in range(8):
-    ph = 2 * math.pi * i / 8
-    def foot(phase, x):
-        """Foot goes back on the ground and lifts while it swings forward."""
-        return (x, -0.15 * math.cos(phase), 0.07 + 0.10 * max(0.0, -math.sin(phase)))
-    bob = abs(math.sin(ph))
-    p = pose(hips=(0, -0.02, -0.045 + 0.03 * bob), hips_rot=(8, 8 * math.cos(ph), 0), chest_rot=(4, -12 * math.cos(ph), 0),
-             head_rot=(-17, 4 * math.cos(ph), 0), foot_l=foot(ph, 0.09), foot_r=foot(ph + math.pi, -0.09),
-             foot_l_rot=(-25 * max(0, -math.sin(ph)), 0, 0),      # toes point down while the foot swings
-             foot_r_rot=(-25 * max(0, math.sin(ph)), 0, 0),
-             hand_l=(0.14, -0.15 + 0.10 * math.cos(ph), 0.70 + 0.03 * bob),   # arms swing against the legs
-             hand_r=(-0.14, -0.15 - 0.10 * math.cos(ph), 0.70 + 0.03 * bob))
+for i in range(WALK_FRAMES):
+    l, r = LEG_PATH[i], LEG_PATH[(i + 4) % 8]
+    sw = math.cos(2 * math.pi * i / 8)           # +1 when the left foot is planted in front
+    p = pose(hips=(0, -0.03, HIP_Z[i % 4]), hips_rot=(12, -7 * sw, 0), chest_rot=(4, 14 * sw, 0),
+             head_rot=(-20, -6 * sw, 0),
+             foot_l=(0.09, l[0], l[1]), foot_r=(-0.09, r[0], r[1]),
+             foot_l_rot=(l[2], 0, 0), foot_r_rot=(r[2], 0, 0),
+             # arms pump against the legs: right hand forward while the left foot is planted
+             hand_l=(0.13, -0.08 + 0.12 * sw, 0.73 - 0.06 * sw),
+             hand_r=(-0.13, -0.08 - 0.12 * sw, 0.73 + 0.06 * sw))
     walk.append(p)
 
 # STRIKE: step-in reverse punch (gyaku-zuki) - right fist from the hip, left hand pulls back (hikite)
@@ -482,12 +527,31 @@ CPUNCH = pose(hips=(0, -0.05, -0.075), hips_rot=(6, 24, 0), chest_rot=(3, 12, 0)
               foot_l=(0.10, -0.13, 0.07), foot_r=(-0.11, 0.12, 0.07), foot_l_rot=(0, 8, 0), foot_r_rot=(0, -40, 0),
               hand_l=(0.13, 0.02, 0.61), hand_r=(-0.01, -0.54, 0.80))
 CHOLD = dict(CPUNCH); CHOLD["hand_r"] = (-0.01, -0.535, 0.795)
-counter = [STANCE, CHAMBER, BLOCK, BLOCK_HOLD, CPUNCH, CHOLD, blend(CPUNCH, STANCE, 0.5), blend(CPUNCH, STANCE, 0.85)]
+# Revision 1: the block is held 4 more frames (block phase 8 frames = 0.5 s at 16 fps, was 0.25 s) so it
+# reads clearly; the counter punch keeps its speed (4 frames = 0.25 s).
+def settle(p, dz, dh):
+    q = dict(p); q["hips"] = (0, 0.0, p["hips"][2] + dz)
+    q["hand_l"] = (p["hand_l"][0], p["hand_l"][1], p["hand_l"][2] + dh)
+    return q
+BLOCK_HOLDS = [settle(BLOCK_HOLD, dz, dh) for dz, dh in ((-0.002, -0.002), (-0.003, -0.003), (-0.003, -0.002), (-0.002, -0.001))]
+counter = [STANCE, CHAMBER, BLOCK, BLOCK_HOLD, *BLOCK_HOLDS,
+           CPUNCH, CHOLD, blend(CPUNCH, STANCE, 0.5), blend(CPUNCH, STANCE, 0.85)]
 
 make_action("idle", idle, fps=8, loop=True)
-make_action("walk", walk, fps=12, loop=True)
+w = make_action("walk", walk, fps=WALK_FPS, loop=True)
+w["sprite_stride_tiles"] = STRIDE_TILES          # ground covered by one loop (render script converts to px)
+w["sprite_design_speed"] = WALK_SPEED            # tiles per second this fps is synced to
 make_action("strike", strike, fps=16, loop=False, tags="impact:4")
-make_action("counter", counter, fps=16, loop=False, tags="block:0-3,block_hold:3,counter_hit:4")
+make_action("counter", counter, fps=16, loop=False, tags="block:0-7,block_hold:3-7,counter_hit:8")
+import json as _json
+scene["sprite_meta"] = _json.dumps({"tintGuidance": {
+    "mode": "multiply (Phaser setTint); untinted layers are drawn as they are",
+    "gi": "gi colour (current placeholder #f2e9d8)",
+    "belt": "the profile's belt.color, except very dark colours (black, #1a1a1a): use charcoal #3c3c44 so the belt and its light top edge read against the dark outline",
+    "belt-center": "the profile's belt.color2 (same charcoal rule for black)",
+    "belt-tape1 / belt-tape2": "tape colour: #f4f1ea on dark belts, #1a1a1a on light belts (rule in apps/client/src/ui/belt.ts)",
+    "belt-tape1-edge / belt-tape2-edge": "no tint; draw each with its stripe (stripes >= 1 / >= 2)",
+}})
 arm.animation_data.action = bpy.data.actions["idle"]
 scene.frame_start, scene.frame_end = 1, 8
 
