@@ -280,3 +280,13 @@ Jay asked Claude to test and tune the game before his next playtest.
 - **No art pack is bought.** The Art Director bot makes all art in Blender: low-poly 3D models, rigged and animated (Mixamo allowed), rendered from one fixed top-down three-quarter camera in 8 directions into transparent PNG sprite sheets with a reusable render script. Icons, portraits and scene pictures come from the same models so everything matches. This replaces the pixel-art-pack plan in framework section 13. Details: "Art process" in core-design section 13.
 - **Claude Code builds the import step:** a repeatable script that trims, sizes and packs approved renders into texture atlases for Phaser.
 - **Character customization replaces the placeholder circle:** a layered character (body, skin tone, face, hair style and color, gi, belt), each part rendered separately from the same model, chosen at character creation and changeable at the Home Dojo. The belt is its own layer, recolored in code to the real rank and stripes, and is never customizable. Extra looks are earned, never bought.
+
+### Milestone 5 — changes after Jay's first test (2026-10-08)
+
+- **The bow can't be missed:** only the Bow button bows. Tapping anywhere else just makes the button pulse. In the Tower, the room's enemies stay hidden and frozen until the bow, then appear with a puff and a sound.
+- **The dojo is zoomed in (Jay: "very zoomed out, a bit clunky"):** the view is now 6.5 tiles tall (a bit closer than the Tower's 8) and the camera follows the character, instead of fitting the whole room on screen. Decorations are about 75% bigger on screen.
+- **Decorating for big fingers (Jay: "very hard to tap on the decorations"):**
+  - A tap near a decoration (within 0.7 tiles) picks it.
+  - **Tap a decoration, then tap where it should go.** If it doesn't fit, a short message explains why.
+  - **Big arrow buttons** (bottom-right) move the selected decoration one step, hopping over anything in the way. Wall items only move left and right.
+  - Dragging still works. Dragging the empty floor scrolls the view, and the camera follows the selected decoration.

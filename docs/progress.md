@@ -172,3 +172,7 @@
 - Copied onto `main` (the live link) with Jay's OK on 2026-10-07.
 - Jay tests on his phone and gives feedback (does cleaning feel satisfying? is decorating easy? is the mess rate right?).
 - Milestone 4 is still paused, waiting for Grok bot's design material.
+
+**Jay's first test (2026-10-08)**
+- It works. Fixed: the bow could be skipped by tapping elsewhere (now only the button counts, and Tower enemies wait hidden until the bow). The dojo was too zoomed out and decorations were hard to tap: the camera now zooms in and follows the character, and decorating is tap-to-pick, tap-to-place, with big arrow buttons. Copied onto `main`.
+- Next: Jay re-tests decorating and the zoom on his phone.

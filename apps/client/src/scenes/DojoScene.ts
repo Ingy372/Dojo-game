@@ -50,9 +50,15 @@ const TILE = 48;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 const MAX_TICKS_PER_FRAME = 5;
 const HOUR = 3_600_000;
-/** Screen space kept free above the room (title and buttons) and below it while decorating (the tray). */
+/** Screen space taken by the title bar, and by the storage tray while decorating. */
 const TOP = 48;
 const TRAY = 70;
+/** How many tiles tall the view is (the camera follows the character, like in the Tower). */
+const VIEW_ROWS = 6.5;
+/** A tap this close (tiles) to a decoration picks it, for big fingers. */
+const PICK_SLACK = 0.7;
+/** Arrow buttons for moving the selected decoration. */
+const ARROW = 54;
 const CHORE_RADIUS = 46;
 const CALM = 0x7fe0d0;
 
@@ -100,6 +106,10 @@ export class DojoScene extends Phaser.Scene {
   private zoom = 1;
   private offX = 0;
   private offY = 0;
+  /** Where the camera looks (tiles). While decorating, dragging the floor pans it. */
+  private cam: Vec2 = { x: 0, y: 0 };
+  private panned = false;
+  private pan: { pointerId: number; last: Vec2; moved: boolean } | null = null;
   private elapsed = 0;
   private prevPos: Vec2 = { x: 0, y: 0 };
   /** The door and board trigger only after the character has stepped away from them. */
@@ -139,6 +149,9 @@ export class DojoScene extends Phaser.Scene {
     this.world = createWorld(this.room, ['p1']);
     this.world.players.p1.facing = { x: 0, y: -1 };
     this.prevPos = { ...this.world.players.p1.pos };
+    this.cam = { ...this.world.players.p1.pos };
+    this.panned = false;
+    this.pan = null;
 
     this.worldLayer = this.add.container(0, 0);
     this.worldLayer.add(this.drawRoom());
@@ -200,6 +213,7 @@ export class DojoScene extends Phaser.Scene {
       }
     }
     this.draw(Math.min(1, this.elapsed / TICK_MS));
+    this.updateCamera(false);
   }
 
   // ---------------------------------------------------------------- arriving
@@ -379,6 +393,8 @@ export class DojoScene extends Phaser.Scene {
     this.controls.reset();
     this.selected = null;
     this.drag = null;
+    this.pan = null;
+    this.panned = false;
     if (on) {
       this.mode = 'decorate';
       // The movement stick isn't used while decorating.
@@ -411,28 +427,53 @@ export class DojoScene extends Phaser.Scene {
         if (!found || def.clean !== 'mat') found = it;
       }
     }
+    if (found) return found;
+    // Nothing right under the finger: take the closest decoration nearby.
+    let best = PICK_SLACK;
+    for (const it of this.dojo.items) {
+      if (it.col === null || it.row === null) continue;
+      const def = decorationDef(CONTENT.dojo, it.id);
+      const dx = Math.max(it.col - tile.x, 0, tile.x - (it.col + def.width));
+      const dy = Math.max(it.row - tile.y, 0, tile.y - (it.row + def.height));
+      const d = Math.hypot(dx, dy);
+      if (d < best) {
+        best = d;
+        found = it;
+      }
+    }
     return found;
   }
 
   private onDecoDown(pointer: Phaser.Input.Pointer): void {
-    if (this.mode !== 'decorate' || this.drag || this.onUi(pointer.x, pointer.y)) return;
+    if (this.mode !== 'decorate' || this.drag || this.pan || this.onUi(pointer.x, pointer.y)) return;
     const tile = this.toTile(pointer.x, pointer.y);
     const it = this.itemAt(tile);
     if (!it) {
-      if (this.selected) {
-        this.selected = null;
-        this.redrawDecorations();
-        this.renderUi();
-      }
+      // Empty floor: drag to look around, or tap to move the selected decoration here.
+      this.pan = { pointerId: pointer.id, last: { x: pointer.x, y: pointer.y }, moved: false };
       return;
     }
     sfx.place(false);
+    this.panned = false;
     this.drag = { uid: it.uid, pointerId: pointer.id, grab: { x: tile.x - it.col!, y: tile.y - it.row! }, startCol: it.col!, startRow: it.row!, col: it.col!, row: it.row!, moved: false };
     this.selected = it.uid;
     this.redrawDecorations();
   }
 
   private onDecoMove(pointer: Phaser.Input.Pointer): void {
+    const pan = this.pan;
+    if (pan && pointer.id === pan.pointerId && pointer.isDown) {
+      const dx = pointer.x - pan.last.x;
+      const dy = pointer.y - pan.last.y;
+      if (!pan.moved && Math.hypot(pointer.x - pointer.downX, pointer.y - pointer.downY) < 12) return;
+      pan.moved = true;
+      pan.last = { x: pointer.x, y: pointer.y };
+      this.cam.x -= dx / (this.zoom * TILE);
+      this.cam.y -= dy / (this.zoom * TILE);
+      this.panned = true;
+      this.updateCamera(true);
+      return;
+    }
     const d = this.drag;
     if (!d || pointer.id !== d.pointerId || !pointer.isDown) return;
     const tile = this.toTile(pointer.x, pointer.y);
@@ -446,6 +487,12 @@ export class DojoScene extends Phaser.Scene {
   }
 
   private onDecoUp(pointer: Phaser.Input.Pointer): void {
+    const pan = this.pan;
+    if (pan && pointer.id === pan.pointerId) {
+      this.pan = null;
+      if (!pan.moved && this.selected) this.moveSelectedTo(this.toTile(pointer.x, pointer.y));
+      return;
+    }
     const d = this.drag;
     if (!d || pointer.id !== d.pointerId) return;
     this.drag = null;
@@ -457,6 +504,46 @@ export class DojoScene extends Phaser.Scene {
     this.redrawDecorations();
     this.redrawSpots();
     this.renderUi();
+  }
+
+  /** Tap-to-place: the selected decoration moves to where the floor was tapped (if it fits). */
+  private moveSelectedTo(tile: Vec2): void {
+    const it = this.dojo.items.find((x) => x.uid === this.selected);
+    if (!it) return;
+    const def = decorationDef(CONTENT.dojo, it.id);
+    const col = Math.round(tile.x - def.width / 2);
+    const row = def.place === 'wall' ? 0 : Math.round(tile.y - def.height / 2);
+    if (placeItem(this.dojo, CONTENT.dojo, it.uid, col, row)) {
+      sfx.place(true);
+      this.panned = false;
+      writeSave(this.profile);
+      this.redrawDecorations();
+      this.redrawSpots();
+    } else {
+      sfx.denied();
+      this.toast(def.place === 'wall' ? 'That goes on the top wall, in a free spot.' : "It doesn't fit there.");
+    }
+  }
+
+  /** The arrow buttons: move the selected decoration one step (hopping over anything in the way). */
+  private nudge(dx: number, dy: number): void {
+    const it = this.dojo.items.find((x) => x.uid === this.selected);
+    if (!it || it.col === null || it.row === null) return;
+    const room = CONTENT.dojo.room;
+    for (let k = 1; k < Math.max(room.width, room.height); k++) {
+      const col = it.col + dx * k;
+      const row = it.row + dy * k;
+      if (col < 0 || row < 0 || col >= room.width || row >= room.height) break;
+      if (placeItem(this.dojo, CONTENT.dojo, it.uid, col, row)) {
+        sfx.place(true);
+        this.panned = false;
+        writeSave(this.profile);
+        this.redrawDecorations();
+        this.redrawSpots();
+        return;
+      }
+    }
+    sfx.denied();
   }
 
   /** Takes a decoration out of storage and puts it in the best free spot. */
@@ -471,6 +558,7 @@ export class DojoScene extends Phaser.Scene {
     placeItem(this.dojo, CONTENT.dojo, uid, spot.col, spot.row);
     sfx.place(true);
     this.selected = uid;
+    this.panned = false;
     writeSave(this.profile);
     this.redrawDecorations();
     this.redrawSpots();
@@ -613,6 +701,8 @@ export class DojoScene extends Phaser.Scene {
     const { width, height } = this.scale.gameSize;
     const pad = 12;
 
+    // A dark strip behind the title and buttons (the room scrolls underneath).
+    this.ui.add(this.add.rectangle(0, 0, width, TOP, 0x14121c, 0.7).setOrigin(0));
     const title = this.text(pad, 8, 'Home Dojo', 20, '#f2e9d8', true, 'Georgia, serif');
     title.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.tapTitle());
     this.uiRects.push(title.getBounds());
@@ -626,13 +716,31 @@ export class DojoScene extends Phaser.Scene {
 
     if (this.mode === 'decorate') {
       this.button(width - pad - 90, 8, 90, 32, 'Done', 0x3aa57a, 15, () => this.setDecorating(false));
-      if (this.selected) this.button(width - pad - 90 - 8 - 110, 8, 110, 32, 'Put away', 0x6b3a3a, 14, () => this.putAway());
-      else this.text(width / 2, 14, 'Drag a decoration to move it', 13, '#e8d9b5', true).setOrigin(0.5, 0);
+      const hint = this.selected ? 'Tap a spot to move it there, or use the arrows' : 'Tap a decoration to pick it';
+      if (this.selected) {
+        this.button(width - pad - 90 - 8 - 110, 8, 110, 32, 'Put away', 0x6b3a3a, 14, () => this.putAway());
+        this.renderArrows(width, height);
+      }
+      this.text(width / 2, TOP + 6, hint, 14, '#fff6e0', true).setOrigin(0.5, 0).setStroke('#14121c', 5);
       this.renderTray(width, height);
     } else if (this.mode === 'play') {
       this.button(width - pad - 80, 8, 80, 32, 'Board', 0x4a3f63, 14, () => this.goBoard());
       this.button(width - pad - 80 - 8 - 100, 8, 100, 32, 'Decorate', 0x8a5a35, 14, () => this.setDecorating(true));
     }
+  }
+
+  /** Big arrow buttons (bottom-right, above the tray) for the selected decoration. */
+  private renderArrows(width: number, height: number): void {
+    const gap = 6;
+    const x0 = width - 12 - 3 * ARROW - 2 * gap;
+    const y0 = height - TRAY - 10 - 3 * ARROW - 2 * gap;
+    const step = ARROW + gap;
+    const it = this.dojo.items.find((x) => x.uid === this.selected);
+    const wall = it ? decorationDef(CONTENT.dojo, it.id).place === 'wall' : false;
+    if (!wall) this.button(x0 + step, y0, ARROW, ARROW, '▲', 0x3a3a4a, 22, () => this.nudge(0, -1));
+    this.button(x0, y0 + step, ARROW, ARROW, '◀', 0x3a3a4a, 22, () => this.nudge(-1, 0));
+    this.button(x0 + 2 * step, y0 + step, ARROW, ARROW, '▶', 0x3a3a4a, 22, () => this.nudge(1, 0));
+    if (!wall) this.button(x0 + step, y0 + 2 * step, ARROW, ARROW, '▼', 0x3a3a4a, 22, () => this.nudge(0, 1));
   }
 
   /** Stored decorations, as chips along the bottom. Tap one to place it. */
@@ -757,18 +865,44 @@ export class DojoScene extends Phaser.Scene {
     this.renderUi();
   }
 
-  /** Scales the room to fit the screen, below the title bar (and above the tray while decorating). */
+  /** Zooms in so the view is VIEW_ROWS tiles tall, like the Tower. */
   private layout(): void {
     const { width, height } = this.scale.gameSize;
-    const room = CONTENT.dojo.room;
-    const bottom = this.mode === 'decorate' ? TRAY : 6;
-    const availH = height - TOP - bottom;
-    this.zoom = Math.min(availH / (room.height * TILE), (width - 16) / (room.width * TILE));
-    this.offX = (width - room.width * TILE * this.zoom) / 2;
-    this.offY = TOP + (availH - room.height * TILE * this.zoom) / 2;
-    this.worldLayer.setScale(this.zoom).setPosition(this.offX, this.offY);
+    this.zoom = height / (VIEW_ROWS * TILE);
+    this.worldLayer.setScale(this.zoom);
     this.choreButton.setPosition(width - CHORE_RADIUS - 24, height - CHORE_RADIUS - 24);
     this.controls.layout();
+    this.updateCamera(true);
+  }
+
+  /**
+   * Moves the view toward what matters: the character, or the selected decoration while
+   * decorating (unless the player dragged the view). The room's edges stay on screen.
+   */
+  private updateCamera(snap: boolean): void {
+    const { width, height } = this.scale.gameSize;
+    const room = CONTENT.dojo.room;
+    const t = TILE * this.zoom;
+    let target: Vec2 = this.cam;
+    if (this.mode !== 'decorate') target = this.world.players.p1.pos;
+    else if (!this.panned && this.selected) {
+      const it = this.dojo.items.find((x) => x.uid === this.selected);
+      if (it && it.col !== null && it.row !== null) {
+        const def = decorationDef(CONTENT.dojo, it.id);
+        target = { x: it.col + def.width / 2, y: it.row + def.height / 2 };
+      }
+    }
+    const k = snap ? 1 : 0.15;
+    const viewW = width / t;
+    const viewH = height / t;
+    const clamp = (v: number, lo: number, hi: number) => (lo > hi ? (lo + hi) / 2 : Math.max(lo, Math.min(hi, v)));
+    const bottom = (this.mode === 'decorate' ? TRAY : 0) / t;
+    const tx = clamp(target.x, viewW / 2, room.width - viewW / 2);
+    const ty = clamp(target.y, viewH / 2 - TOP / t, room.height + bottom - viewH / 2);
+    this.cam = { x: this.cam.x + (tx - this.cam.x) * k, y: this.cam.y + (ty - this.cam.y) * k };
+    this.offX = width / 2 - this.cam.x * t;
+    this.offY = height / 2 - this.cam.y * t;
+    this.worldLayer.setPosition(this.offX, this.offY);
   }
 
   /** Screen point to room tiles. */

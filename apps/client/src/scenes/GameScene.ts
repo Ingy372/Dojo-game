@@ -159,6 +159,8 @@ export class GameScene extends Phaser.Scene {
   private toastY = 0;
   private prevPos: Vec2 = { x: 0, y: 0 };
   private elapsed = 0;
+  /** When the room's enemies appeared (null until the floor's bow is done). */
+  private enemiesAt: number | null = 0;
   /** While above 0, the action is frozen for a moment on impact. */
   private hitStopMs = 0;
 
@@ -241,6 +243,7 @@ export class GameScene extends Phaser.Scene {
     this.makeHud();
     cam.ignore([...this.controls.objects, ...this.buttons.objects]);
     cam.fadeIn(350, 10, 8, 16);
+    this.enemiesAt = 0;
     if (this.run && this.run.depth === 0 && !this.run.bowed) this.askForBow();
     else this.introduceRoom();
 
@@ -348,8 +351,9 @@ export class GameScene extends Phaser.Scene {
   private drawEnemy(e: EnemyState, blend: number, now: number): void {
     const v = this.enemyViews.get(e.id);
     if (!v) return;
-    v.container.setVisible(e.mode !== 'defeated');
-    if (e.mode === 'defeated') return;
+    // Before the bow, the room's enemies haven't arrived yet.
+    v.container.setVisible(e.mode !== 'defeated' && this.enemiesAt !== null);
+    if (e.mode === 'defeated' || this.enemiesAt === null) return;
 
     const x = Phaser.Math.Linear(v.prev.x, e.pos.x, blend);
     const y = Phaser.Math.Linear(v.prev.y, e.pos.y, blend);
@@ -407,7 +411,7 @@ export class GameScene extends Phaser.Scene {
     v.body.setFillStyle(color);
     v.body.setScale(scale);
     v.body.setRotation(rotation);
-    v.container.setAlpha(alpha);
+    v.container.setAlpha(alpha * Math.min(1, (now - this.enemiesAt) / 450));
 
     // Dizzy stars circling a staggered enemy; sweat drops on a winded one.
     const dizzy = e.mode === 'stagger';
@@ -902,6 +906,7 @@ export class GameScene extends Phaser.Scene {
   /** The bow at the start of the floor: the fight waits, then a small Focus head start. */
   private askForBow(): void {
     this.menuOpen = true;
+    this.enemiesAt = null;
     const prompt = bowPrompt(this, 'Bow to begin the floor', () => {
       playBow(this, this.player, () => {
         if (!this.run) return;
@@ -912,6 +917,10 @@ export class GameScene extends Phaser.Scene {
         this.buttons.reset();
         this.floatText(this.world.players[this.me].pos, '+Focus', '#9ad1ff', 18);
         this.introduceRoom();
+        // The enemies arrive now, with a puff where each one stands.
+        this.enemiesAt = this.time.now;
+        sfx.appear();
+        for (const e of this.world.enemies) if (e.mode !== 'defeated') this.ring(e.pos, 0xffffff, 1.2, 0.6);
       });
     });
     this.cameras.main.ignore(prompt);

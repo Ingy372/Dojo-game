@@ -7,7 +7,8 @@ import { sfx } from '../audio/Sfx';
 import { FONT, crisp } from './theme';
 
 /**
- * A soft dimmed screen with a big "Bow" button. Calls `onBow` once when tapped.
+ * A soft dimmed screen with a big "Bow" button. Calls `onBow` once when the button is tapped
+ * (taps elsewhere just make the button pulse).
  * Returns the container (screen space) so a zoomed camera can ignore it.
  */
 export function bowPrompt(scene: Phaser.Scene, line: string, onBow: () => void): Phaser.GameObjects.Container {
@@ -36,7 +37,12 @@ export function bowPrompt(scene: Phaser.Scene, line: string, onBow: () => void):
     scene.tweens.add({ targets: box, alpha: 0, duration: 200, onComplete: () => box.destroy() });
     onBow();
   };
-  shade.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, tap);
+  // Only the button bows; taps anywhere else are ignored, so the bow can't be missed.
+  button.setInteractive(new Phaser.Geom.Circle(r, r, r * 1.25), Phaser.Geom.Circle.Contains);
+  button.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, tap);
+  shade.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+    scene.tweens.add({ targets: [button, label], scale: 1.12, duration: 110, yoyo: true });
+  });
   return box;
 }
 
