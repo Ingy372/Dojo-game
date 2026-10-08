@@ -722,13 +722,14 @@ export class DojoScene extends Phaser.Scene {
     }
 
     if (this.mode === 'decorate') {
-      this.button(width - pad - 90, 8, 90, 32, 'Done', 0x3aa57a, 15, () => this.setDecorating(false));
       const arrows = this.moveStyle === 'arrows';
+      // The arrows go first, so the top buttons (Done, Put away) always sit above them.
+      if (this.selected && arrows) this.renderArrows(width, height);
+      this.button(width - pad - 90, 8, 90, 32, 'Done', 0x3aa57a, 15, () => this.setDecorating(false));
       const hint = !this.selected ? 'Tap a decoration to pick it' : arrows ? 'Use the arrows to move it' : 'Now tap where it should go';
       this.button(width - pad - 90 - 8 - 110 - 8 - 130, 8, 130, 32, arrows ? 'Move: Arrows ⇄' : 'Move: Tap ⇄', 0x3a3a4a, 13, () => this.chooseMoveStyle());
       if (this.selected) {
         this.button(width - pad - 90 - 8 - 110, 8, 110, 32, 'Put away', 0x6b3a3a, 14, () => this.putAway());
-        if (arrows) this.renderArrows(width, height);
       }
       this.text(width / 2, TOP + 6, hint, 14, '#fff6e0', true).setOrigin(0.5, 0).setStroke('#14121c', 5);
       this.renderTray(width, height);
@@ -738,24 +739,44 @@ export class DojoScene extends Phaser.Scene {
     }
   }
 
-  /** Big arrow buttons (bottom-right, above the tray) for the selected decoration. */
+  /**
+   * Big arrow buttons (bottom-right, above the tray) for the selected decoration: a cross
+   * when there's room, or one row of big arrows on short screens (so they never shrink or
+   * cover the top buttons).
+   */
   private renderArrows(width: number, height: number): void {
-    const gap = 6;
-    const x0 = width - 12 - 3 * ARROW - 2 * gap;
-    const y0 = height - TRAY - 10 - 3 * ARROW - 2 * gap;
-    const step = ARROW + gap;
-    // A backing panel catches near-misses, so a missed arrow never lands on the floor.
-    const m = 16;
-    const panel = this.add.rectangle(x0 - m, y0 - m, 3 * step - gap + 2 * m, 3 * step - gap + 2 * m, 0x14121c, 0.55).setOrigin(0).setInteractive();
-    this.ui.add(panel);
-    this.uiRects.push(panel.getBounds());
+    const gap = 8;
+    const m = 14;
+    const a = ARROW;
+    const bottom = height - TRAY - 10;
+    const cross = bottom - (3 * a + 2 * gap) - m >= TOP + 30;
     const it = this.dojo.items.find((x) => x.uid === this.selected);
     const wall = it ? decorationDef(CONTENT.dojo, it.id).place === 'wall' : false;
-    if (!wall) this.button(x0 + step, y0, ARROW, ARROW, '▲', 0x3a3a4a, 22, () => this.nudge(0, -1));
-    this.button(x0, y0 + step, ARROW, ARROW, '◀', 0x3a3a4a, 22, () => this.nudge(-1, 0));
-    this.button(x0 + 2 * step, y0 + step, ARROW, ARROW, '▶', 0x3a3a4a, 22, () => this.nudge(1, 0));
-    if (!wall) this.button(x0 + step, y0 + 2 * step, ARROW, ARROW, '▼', 0x3a3a4a, 22, () => this.nudge(0, 1));
+    const buttons: Array<[number, number, string, number, number]> = [];
+    let px: number, py: number, pw: number, ph: number;
+    if (cross) {
+      const step = a + gap;
+      const x0 = width - 12 - 3 * a - 2 * gap;
+      const y0 = bottom - 3 * a - 2 * gap;
+      if (!wall) buttons.push([x0 + step, y0, '▲', 0, -1]);
+      buttons.push([x0, y0 + step, '◀', -1, 0], [x0 + 2 * step, y0 + step, '▶', 1, 0]);
+      if (!wall) buttons.push([x0 + step, y0 + 2 * step, '▼', 0, 1]);
+      [px, py, pw, ph] = [x0, y0, 3 * step - gap, 3 * step - gap];
+    } else {
+      const arrows: Array<[string, number, number]> = wall ? [['◀', -1, 0], ['▶', 1, 0]] : [['◀', -1, 0], ['▲', 0, -1], ['▼', 0, 1], ['▶', 1, 0]];
+      const rowW = arrows.length * a + (arrows.length - 1) * gap;
+      const x0 = width - 12 - rowW;
+      const y0 = bottom - a;
+      arrows.forEach(([label, dx, dy], i) => buttons.push([x0 + i * (a + gap), y0, label, dx, dy]));
+      [px, py, pw, ph] = [x0, y0, rowW, a];
+    }
+    // A backing panel catches near-misses, so a missed arrow never lands on the floor.
+    const panel = this.add.rectangle(px - m, py - m, pw + 2 * m, ph + 2 * m, 0x14121c, 0.55).setOrigin(0).setInteractive();
+    this.ui.add(panel);
+    this.uiRects.push(panel.getBounds());
+    for (const [x, y, label, dx, dy] of buttons) this.button(x, y, a, a, label, 0x3a3a4a, 22, () => this.nudge(dx, dy));
   }
+
 
   /** Asks how the player likes to move decorations: tap the spot, or an arrow pad. */
   private chooseMoveStyle(): void {
