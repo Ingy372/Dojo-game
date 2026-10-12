@@ -92,3 +92,15 @@ Learning & Engagement Designer, 2026-10-12. Suggestions for Jay to review with h
 ### What I checked
 
 All sources above were looked up and confirmed to exist. Where research is weak or doesn't apply directly to games or children, I said so. No proposal adds a new mode, a purchase, a streak, or a timer that punishes absence.
+
+## Proposal 6: Guided First Counter
+
+**Idea:** The first time a "!" warning appears, the game slows down, the Counter button pulses, and Sensei says a few read-aloud words. Nothing else happens until the player lands the Counter. On the next few warnings the help fades: a shorter hint, then only the pulse, then nothing.
+
+**What it teaches:** Reading an opponent's warning and answering with the right move at the right time.
+
+**Why it's fun:** The first Counter is a guaranteed success and a "whoa" moment, not a failure the kid doesn't understand.
+
+**Evidence:** Guided practice that is gradually removed (scaffolding and fading) is a well-established teaching approach, and learning by doing generally beats reading instructions for young children. The evidence for the overall approach is MODERATE to STRONG. There are no studies of this exact feature in action games, and the specific sources still need to be checked before citing.
+
+**Cost:** Small. **Fits:** Room 1 of the first run and the Sensei's Lesson system. Text comes from the Content Designer.
