@@ -1,0 +1,41 @@
+{
+  "notes": "DRAFT for proposal 2 (Sensei's Question at the Bow), as a REFLECTION, not a quiz. Shown sometimes (not every bow). Every choice is right; there is no score and it never changes rewards. 'earned' = 2-3 of the player's earned abilities, each shown as its real name (from technique-callouts.json) with its picture. {name} = the chosen real name. Every question has a 'Not now' skip. After the reply, offer 'Watch the real technique' when the ability has a video.",
+  "skipText": "Not now",
+  "watchText": "Watch the real technique",
+  "questions": [
+    {
+      "id": "bow-favorite",
+      "sensei": "Which technique felt best today?",
+      "choices": "earned",
+      "reply": "{name}. I can see why. Keep practicing it with your instructor."
+    },
+    {
+      "id": "bow-practice",
+      "sensei": "Which one would you like to practice at the dojo?",
+      "choices": "earned",
+      "reply": "Good choice. {name} grows stronger every time you train it."
+    },
+    {
+      "id": "bow-helped",
+      "sensei": "Which technique helped you most in the Tower?",
+      "choices": "earned",
+      "reply": "{name} helped you stay steady. Thank you for sharing."
+    },
+    {
+      "id": "bow-show",
+      "sensei": "Which one would you show a friend?",
+      "choices": "earned",
+      "reply": "{name}! Your friend would love to see it."
+    },
+    {
+      "id": "bow-virtue",
+      "sensei": "Which word did you live out this week?",
+      "choices": [
+        "Respect",
+        "Great Effort",
+        "Self-Discipline"
+      ],
+      "reply": "{name}. That kind of light shines from the inside."
+    }
+  ]
+}

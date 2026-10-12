@@ -1,12 +1,13 @@
 {
-  "notes": "DRAFT. Opening chapter of the Tower story, one short line per screen. speaker: narrator, sensei, guardian. Screens 1-7 play on first entering the Tower; 8-9 on reaching the first Guardian; 10-15 after the Guardian is defeated AND the Gate opens with the real promotion (framework: Guardians never open the Gate). Relic text is in relics.",
+  "notes": "DRAFT. Opening chapter, one short line per screen. speaker: narrator, sensei, guardian. Screens 1-8 play on first entering the Tower; 9-11 on reaching the white-tier Guardian; 12-13 after the Guardian is defeated (it gives no light yet); 14-17 when the real promotion opens the Gate (framework: only the real belt opens the Gate). Screen 15 echoes John 1:5. Faith themes added at Jay's direct request (2026-10-12).",
   "id": "chapter-1",
   "name": "The Shattered Light",
   "tier": "white",
   "guardian": {
-    "id": "first-guardian",
+    "id": "lamp-keeper",
     "name": "The Lamp Keeper",
-    "description": "Once it kept the Tower's first lamp lit. The shadow made it forget."
+    "tier": "white",
+    "description": "Once it kept the Tower's first lamp lit. The shadow made it forget, but it never stopped hoping."
   },
   "screens": [
     {
@@ -17,7 +18,7 @@
     {
       "n": 2,
       "speaker": "narrator",
-      "text": "It kept the town below warm and safe."
+      "text": "It was a gift from God, and it kept the town warm and safe."
     },
     {
       "n": 3,
@@ -32,55 +33,65 @@
     {
       "n": 5,
       "speaker": "sensei",
-      "text": "Each piece of light is still up there, waiting."
+      "text": "Darkness never wins against the light. Not even a little."
     },
     {
       "n": 6,
       "speaker": "sensei",
-      "text": "Every belt you earn helps bring one home."
+      "text": "Each piece of light is still up there, waiting for you."
     },
     {
       "n": 7,
       "speaker": "sensei",
-      "text": "You do not have to be fearless. You only have to begin."
+      "text": "Every belt you earn helps bring one home."
     },
     {
       "n": 8,
-      "speaker": "narrator",
-      "text": "At the top of the first floors waits the first Guardian."
+      "speaker": "sensei",
+      "text": "You do not have to be fearless. You only have to begin."
     },
     {
       "n": 9,
+      "speaker": "narrator",
+      "text": "At the top of the white floors waits the first Guardian."
+    },
+    {
+      "n": 10,
       "speaker": "guardian",
       "text": "Who climbs my stairs? Turn back!"
     },
     {
-      "n": 10,
+      "n": 11,
       "speaker": "sensei",
       "text": "Remember your training. Watch, wait, then answer."
     },
     {
-      "n": 11,
+      "n": 12,
       "speaker": "narrator",
-      "text": "The Guardian falls to one knee. Something glows in its hands."
+      "text": "The Lamp Keeper bows its head. Something glows in its hands."
     },
     {
-      "n": 12,
+      "n": 13,
       "speaker": "guardian",
       "text": "A spark... I had forgotten how warm it feels."
     },
     {
-      "n": 13,
+      "n": 14,
       "speaker": "narrator",
-      "text": "The first piece of light rises up into the Tower."
+      "text": "With your new belt, the Gate opens, and the first piece of light rises."
     },
     {
-      "n": 14,
+      "n": 15,
+      "speaker": "sensei",
+      "text": "The light of Yeshua shines in the darkness, and the darkness cannot put it out."
+    },
+    {
+      "n": 16,
       "speaker": "sensei",
       "text": "Look. The town is a little brighter tonight."
     },
     {
-      "n": 15,
+      "n": 17,
       "speaker": "sensei",
       "text": "What did you learn on your way up?"
     }
@@ -98,7 +109,14 @@
       "name": "Faded Map",
       "tier": "white",
       "description": "An old map of the Tower. Someone circled the very top floor.",
-      "sensei": "Someone else climbed before you. I wonder who."
+      "sensei": "Someone else climbed before you. You are not alone on this path."
+    },
+    {
+      "id": "lamp-wick",
+      "name": "Little Wick",
+      "tier": "white",
+      "description": "A tiny wick, still glowing. Even a small light can fill a dark room.",
+      "sensei": "A small light still matters. So do you."
     }
   ]
 }
