@@ -1,0 +1,104 @@
+{
+  "notes": "DRAFT. Opening chapter of the Tower story, one short line per screen. speaker: narrator, sensei, guardian. Screens 1-7 play on first entering the Tower; 8-9 on reaching the first Guardian; 10-15 after the Guardian is defeated AND the Gate opens with the real promotion (framework: Guardians never open the Gate). Relic text is in relics.",
+  "id": "chapter-1",
+  "name": "The Shattered Light",
+  "tier": "white",
+  "guardian": {
+    "id": "first-guardian",
+    "name": "The Lamp Keeper",
+    "description": "Once it kept the Tower's first lamp lit. The shadow made it forget."
+  },
+  "screens": [
+    {
+      "n": 1,
+      "speaker": "narrator",
+      "text": "Long ago, a great light shone at the top of the Tower."
+    },
+    {
+      "n": 2,
+      "speaker": "narrator",
+      "text": "It kept the town below warm and safe."
+    },
+    {
+      "n": 3,
+      "speaker": "narrator",
+      "text": "One night, the light broke into pieces."
+    },
+    {
+      "n": 4,
+      "speaker": "narrator",
+      "text": "Shadow slipped into the Tower, floor by floor."
+    },
+    {
+      "n": 5,
+      "speaker": "sensei",
+      "text": "Each piece of light is still up there, waiting."
+    },
+    {
+      "n": 6,
+      "speaker": "sensei",
+      "text": "Every belt you earn helps bring one home."
+    },
+    {
+      "n": 7,
+      "speaker": "sensei",
+      "text": "You do not have to be fearless. You only have to begin."
+    },
+    {
+      "n": 8,
+      "speaker": "narrator",
+      "text": "At the top of the first floors waits the first Guardian."
+    },
+    {
+      "n": 9,
+      "speaker": "guardian",
+      "text": "Who climbs my stairs? Turn back!"
+    },
+    {
+      "n": 10,
+      "speaker": "sensei",
+      "text": "Remember your training. Watch, wait, then answer."
+    },
+    {
+      "n": 11,
+      "speaker": "narrator",
+      "text": "The Guardian falls to one knee. Something glows in its hands."
+    },
+    {
+      "n": 12,
+      "speaker": "guardian",
+      "text": "A spark... I had forgotten how warm it feels."
+    },
+    {
+      "n": 13,
+      "speaker": "narrator",
+      "text": "The first piece of light rises up into the Tower."
+    },
+    {
+      "n": 14,
+      "speaker": "sensei",
+      "text": "Look. The town is a little brighter tonight."
+    },
+    {
+      "n": 15,
+      "speaker": "sensei",
+      "text": "What did you learn on your way up?"
+    }
+  ],
+  "relics": [
+    {
+      "id": "cracked-lamp-glass",
+      "name": "Cracked Lamp Glass",
+      "tier": "white",
+      "description": "A curved piece of glass, still warm. It came from something very big and very bright.",
+      "sensei": "Something this warm was never meant to stay in the dark."
+    },
+    {
+      "id": "faded-map",
+      "name": "Faded Map",
+      "tier": "white",
+      "description": "An old map of the Tower. Someone circled the very top floor.",
+      "sensei": "Someone else climbed before you. I wonder who."
+    }
+  ]
+}

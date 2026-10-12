@@ -1,0 +1,114 @@
+{
+  "notes": "Gear that drops on the white belt tier. Stat lists are per rarity: [common, uncommon, rare, epic]. Charms have a small effect instead of stats (effect types are in packages/sim/src/effects.ts).",
+  "tier": "white",
+  "slotStats": {
+    "hands": {
+      "power": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "gi": {
+      "maxHealth": [
+        8,
+        14,
+        20,
+        28
+      ],
+      "guard": [
+        2,
+        3,
+        5,
+        7
+      ]
+    }
+  },
+  "items": [
+    {
+      "id": "cloth-wraps",
+      "name": "Cloth Hand Wraps",
+      "slot": "hands",
+      "description": "Simple cloth wraps. Every journey starts with the first step."
+    },
+    {
+      "id": "leather-wraps",
+      "name": "Leather Hand Wraps",
+      "slot": "hands",
+      "description": "Tough leather wraps that help your hands stay strong."
+    },
+    {
+      "id": "tiger-wraps",
+      "name": "Tiger Stripe Wraps",
+      "slot": "hands",
+      "description": "Bold striped wraps. They remind you to be brave."
+    },
+    {
+      "id": "training-gi",
+      "name": "Training Gi",
+      "slot": "gi",
+      "description": "A plain white gi, ready for hard work."
+    },
+    {
+      "id": "padded-gi",
+      "name": "Padded Gi",
+      "slot": "gi",
+      "description": "A gi with soft padding to help you take a hit."
+    },
+    {
+      "id": "mountain-gi",
+      "name": "Mountain Gi",
+      "slot": "gi",
+      "description": "A sturdy gi that stands firm, like a mountain."
+    },
+    {
+      "id": "jade-charm",
+      "name": "Jade Charm",
+      "slot": "charm",
+      "text": "+{pct} Power",
+      "effect": {
+        "type": "powerScale"
+      },
+      "amounts": [
+        0.04,
+        0.06,
+        0.09,
+        0.12
+      ],
+      "description": "A smooth green stone that fills your hits with strength."
+    },
+    {
+      "id": "lotus-charm",
+      "name": "Lotus Charm",
+      "slot": "charm",
+      "text": "Start each room with {n} Focus",
+      "effect": {
+        "type": "startFocus"
+      },
+      "amounts": [
+        10,
+        15,
+        20,
+        30
+      ],
+      "description": "A lotus grows bright even in muddy water. Start each room ready."
+    },
+    {
+      "id": "crane-charm",
+      "name": "Crane Charm",
+      "slot": "charm",
+      "text": "Perfect Counters heal {n} health",
+      "effect": {
+        "type": "healOnPerfect"
+      },
+      "amounts": [
+        2,
+        3,
+        4,
+        6
+      ],
+      "description": "The crane waits, then moves at the perfect time."
+    }
+  ]
+}

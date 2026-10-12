@@ -1,0 +1,29 @@
+{
+  "notes": "DRAFT ONLY. Materials do not exist in content/ yet (core-design section on loot lists bamboo, stone, silk, jade; crafting is after launch). Text only, no stats or drop rates. Ids are suggestions.",
+  "materials": [
+    {
+      "id": "bamboo",
+      "name": "Bamboo",
+      "tier": "white",
+      "description": "Strong and bendy. Builders use it for almost everything."
+    },
+    {
+      "id": "stone",
+      "name": "Stone",
+      "tier": "white",
+      "description": "A piece of the Tower's old wall. Solid and steady."
+    },
+    {
+      "id": "silk",
+      "name": "Silk",
+      "tier": "yellow",
+      "description": "Soft, shiny thread. It is stronger than it looks."
+    },
+    {
+      "id": "jade",
+      "name": "Jade",
+      "tier": "orange",
+      "description": "A green stone that glows a little in the dark."
+    }
+  ]
+}
