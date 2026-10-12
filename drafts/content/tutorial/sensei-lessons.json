@@ -1,0 +1,99 @@
+{
+  "notes": "DRAFT tutorial text (no existing Sensei's Lesson format found in content/ or code docs, so this is a new format). One short sentence per screen, read-aloud friendly. Mechanics from docs/decisions.md: basic attacks are automatic; Strike costs 30 Focus and pulses when ready; red circle + '!' = wind-up, circle holds nearly full during the Perfect window; Counter early in the 0.5 s guard = Block; Dash is above Counter, 2.5 tiles, 1.5 s recharge. Lessons 3-6 pair with Learning proposal 6 (guided first Counter: slowdown, pulsing Counter, help fades). 'success' shows after the player lands it; 'retry' if they miss (never a penalty). Each lesson shows once per profile.",
+  "speaker": "sensei",
+  "lessons": [
+    {
+      "id": "lesson-move",
+      "order": 1,
+      "trigger": "First room of the first run, before any enemy moves",
+      "screens": [
+        "Move with the stick.",
+        "You punch all by yourself when you are close."
+      ]
+    },
+    {
+      "id": "lesson-strike",
+      "order": 2,
+      "trigger": "First time the Strike button fills and pulses (30 Focus)",
+      "screens": [
+        "Your Strike button is glowing!",
+        "Tap it for a big, strong hit."
+      ]
+    },
+    {
+      "id": "lesson-warning",
+      "order": 3,
+      "trigger": "First '!' and red circle seen (game slows for the guided Counter)",
+      "slowdown": true,
+      "screens": [
+        "Look! A red circle.",
+        "It's coming!"
+      ]
+    },
+    {
+      "id": "lesson-counter-guided",
+      "order": 4,
+      "trigger": "During the slowdown, as the circle nears full; Counter button pulses",
+      "slowdown": true,
+      "screens": [
+        "Tap Counter... now!"
+      ],
+      "success": "You did it! Perfect!",
+      "retry": "So close! Let's try again."
+    },
+    {
+      "id": "lesson-counter-hint-2",
+      "order": 5,
+      "trigger": "Second '!' seen (smaller slowdown or none, Counter still pulses)",
+      "screens": [
+        "Wait for it... Counter!"
+      ],
+      "success": "Great timing!"
+    },
+    {
+      "id": "lesson-counter-hint-3",
+      "order": 6,
+      "trigger": "Third '!' seen (no slowdown; small pulse only)",
+      "screens": [
+        "Counter!"
+      ],
+      "success": "Yes!"
+    },
+    {
+      "id": "lesson-perfect",
+      "order": 7,
+      "trigger": "After the first Perfect Counter without help",
+      "screens": [
+        "Tap when the circle is almost full.",
+        "That is a Perfect Counter.",
+        "It fills your Focus fast!"
+      ]
+    },
+    {
+      "id": "lesson-block",
+      "order": 8,
+      "trigger": "First Block (Counter pressed a little early)",
+      "screens": [
+        "That was a Block. Good guarding!",
+        "Wait a tiny bit longer for Perfect."
+      ]
+    },
+    {
+      "id": "lesson-dash",
+      "order": 9,
+      "trigger": "First time two attacks will land together, or first boss sweep",
+      "screens": [
+        "Two at once? Too many!",
+        "Tap Dash to zoom away."
+      ]
+    },
+    {
+      "id": "lesson-step-out",
+      "order": 10,
+      "trigger": "First time the player walks out of a red circle",
+      "screens": [
+        "Smart! Stepping out works too."
+      ]
+    }
+  ]
+}
