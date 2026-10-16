@@ -9,6 +9,11 @@ Scripts the Art Director bot uses so every character, enemy and object renders e
 | `make_belt_chart.py` | Belt chart: chosen belts (white, yellow, red/black, brown/black, black) on the white gi, at real size (1x) and 4x at the waist. One row for the old render, then one row per belt style option of the new render (`--options A,B,C`; the options are `BELT_OPTIONS` in `make_preview.py`, `chosen` is the default). Runs with normal Python. |
 | `make_still.py` | Pose stills: chosen frames in chosen directions, old render above new (for example the bow's lowest point from the side and front). Runs with normal Python. |
 | `make_compare.py` | Plays one animation from two renders side by side (for example an old and a new walk) over a floor grid that scrolls at the design speed, so you can check the feet stay planted. Runs with normal Python. |
+| `toon_kit.py` | The shared house look for every build script (enemies, rooms, props): the toon material (one fixed light), the dark outline hull, coloured rim hulls (glow, telegraph) and mesh helpers. Imported inside Blender. |
+| `make_creature_preview.py` | Enemy previews: stacks body, shield, glow, telegraph (tinted red during wind-ups) and light layers; writes a contact sheet and a GIF per animation (`--with shield` or `--with shield-broken` picks the shield layer). Runs with normal Python. |
+| `make_review_sheet.py` | "Review these first" pictures: chosen frames of chosen animations in chosen directions, labelled, at 2x (`--kind player` or `creature`). Runs with normal Python. |
+| `render_static.py` | Renders static art (rooms, decorations, tiles, doors, chests) from the same 35° camera, with the floor grid at exactly 80 px per tile. One PNG per target and layer (multi-frame targets as horizontal strips) plus `static.json` with sizes, anchors and footprints. The targets come from the `.blend`'s `static_targets`. Runs inside Blender. |
+| `make_static_preview.py` | Static art previews: a gallery of every sprite (`--gallery`) and a room with decorations placed on the grid (`--scene room --place "id@col,row;..."`, `--frame id=n`), with the front wall drawn on top. Runs with normal Python. |
 
 Made with Blender 4.2 LTS (4.2.23). Previews need Python 3 with Pillow and numpy (`pip install pillow numpy`).
 
