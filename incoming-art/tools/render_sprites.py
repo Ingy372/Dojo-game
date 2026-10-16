@@ -24,6 +24,8 @@ What the .blend must contain (see README.md next to this script):
   * CHAR_ROOT: empty at the feet, parent of the rig. Character faces -Y when unrotated.
   * Collections L_<layer>. Optional custom props: sprite_order (int), sprite_tint (bool),
     sprite_overlay (bool: an optional extra drawn on top, e.g. belt stripes).
+  * Optional collection prop sprite_group (str): pick-one options such as hair-01..hair-08 share a group; only
+    the active option is drawn while rendering, and each option is rendered with the base layers as holdouts.
   * Optional collection prop sprite_optional (bool, default = sprite_overlay): an overlay that must always
     be drawn (e.g. the belt rim) sets it False.
   * Actions with custom props sprite_fps (int), sprite_loop (bool), sprite_tags (str), sprite_order (int),
@@ -132,7 +134,8 @@ def find_layers(scene, wanted):
             continue
         out.append(dict(name=name, lc=lc, order=int(c.get("sprite_order", len(out))),
                         tint=bool(c.get("sprite_tint", False)), overlay=bool(c.get("sprite_overlay", False)),
-                        optional=bool(c.get("sprite_optional", c.get("sprite_overlay", False)))))
+                        optional=bool(c.get("sprite_optional", c.get("sprite_overlay", False))),
+                        group=c.get("sprite_group")))
     out.sort(key=lambda l: l["order"])
     return out
 
@@ -142,6 +145,12 @@ def set_active_layer(all_layers, active):
         l["lc"].holdout = not is_active
         # overlays are off while a base layer renders, so base layers have no holes
         l["lc"].collection.hide_render = (l["overlay"] and not active["overlay"] and not is_active)
+        # pick-one options (sprite_group, e.g. hair-01..08): only the active one is ever drawn, so options never
+        # punch holes in each other or in the base layers; an option is rendered with the base layers as holdouts
+        if l["group"] and not is_active:
+            l["lc"].collection.hide_render = True
+        if active["group"] and l["overlay"] and not is_active:
+            l["lc"].collection.hide_render = True
 
 def find_rig(root):
     for ob in root.children_recursive:
@@ -195,7 +204,7 @@ def main():
                             note="one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"),
                 directions=dirs, directionVectors={d: ALL_DIRS[d][1] for d in dirs},
                 sheetLayout="rows = directions (in the order above), columns = frames, no padding",
-                layers=[dict(name=l["name"], order=l["order"], tint=l["tint"], optional=l["optional"]) for l in layers],
+                layers=[dict(name=l["name"], order=l["order"], tint=l["tint"], optional=l["optional"], **({"group": l["group"]} if l["group"] else {})) for l in layers],
                 animations={})
     t0 = time.time()
     n = 0

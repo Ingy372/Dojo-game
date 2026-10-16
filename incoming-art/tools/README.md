@@ -88,3 +88,9 @@ GIF previews keep time with a 30 fps clock. GIF delays are stored in 1/100 s, so
 **Belt styles in the previews:** for sheets with a tinted `belt-rim` layer (the player character, belt revision), `make_preview.py` tints every belt layer per belt with the chosen style (`belt_style()`, the same table as `beltStyles` in `player.json`). Older sheets keep the old rule.
 
 **Review sheets (Batch 1+):** `make_review_sheet.py --kind player|creature --sheets <folder> --cells "anim:frame:dir;..." --title "..." --out review.png` puts chosen frames side by side at 2x with labels. Each batch's `preview/review-N-*.png` ("review these first") is made with it.
+
+**`render_sprites.py`: pick-one options (Batch 6).**
+- A collection with the property `sprite_group` (for example `"hair"` on `L_hair-01` … `L_hair-08`) is an option.
+- While rendering, only the active option is drawn, so options never punch holes in each other.
+- Each option is rendered with the base layers as holdouts and drawn after them, so it is still hidden correctly behind the body.
+- The group is written into the layer entry in the JSON. Files without groups render exactly as before.
