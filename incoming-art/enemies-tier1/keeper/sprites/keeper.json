@@ -1,0 +1,275 @@
+{
+  "character": "keeper",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "anchor": {
+    "x": 128.0,
+    "y": 209.92,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 80.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 3.2,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "directionVectors": {
+    "N": [
+      0,
+      -1
+    ],
+    "NE": [
+      0.7071,
+      -0.7071
+    ],
+    "E": [
+      1,
+      0
+    ],
+    "SE": [
+      0.7071,
+      0.7071
+    ],
+    "S": [
+      0,
+      1
+    ],
+    "SW": [
+      -0.7071,
+      0.7071
+    ],
+    "W": [
+      -1,
+      0
+    ],
+    "NW": [
+      -0.7071,
+      -0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "body",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "glow",
+      "order": 1,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "telegraph",
+      "order": 2,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "light",
+      "order": 3,
+      "tint": false,
+      "optional": false
+    }
+  ],
+  "animations": {
+    "idle": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "keeper_body_idle.png",
+        "glow": "keeper_glow_idle.png",
+        "telegraph": "keeper_telegraph_idle.png",
+        "light": "keeper_light_idle.png"
+      }
+    },
+    "move": {
+      "frames": 6,
+      "fps": 12,
+      "durationSec": 0.5,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "keeper_body_move.png",
+        "glow": "keeper_glow_move.png",
+        "telegraph": "keeper_telegraph_move.png",
+        "light": "keeper_light_move.png"
+      },
+      "designSpeedTilesPerSecond": 1.6,
+      "note": "bouncy waddle; the feet don't need to stay planted, play at any move speed"
+    },
+    "windup_slam": {
+      "frames": 9,
+      "fps": 10,
+      "durationSec": 0.9,
+      "loop": false,
+      "tags": {
+        "telegraph": "0-8"
+      },
+      "sheets": {
+        "body": "keeper_body_windup_slam.png",
+        "glow": "keeper_glow_windup_slam.png",
+        "telegraph": "keeper_telegraph_windup_slam.png",
+        "light": "keeper_light_windup_slam.png"
+      },
+      "telegraphSeconds": 0.9,
+      "telegraphTicks": 18,
+      "note": "lasts exactly the telegraph (18 ticks). Flash the telegraph layer (tint it, e.g. #ff3b30) for the whole wind-up. In Guided mode the wind-up is slower: hold the last frame"
+    },
+    "slam": {
+      "frames": 13,
+      "fps": 10,
+      "durationSec": 1.3,
+      "loop": false,
+      "tags": {
+        "impact": "0",
+        "recover": "2-12"
+      },
+      "sheets": {
+        "body": "keeper_body_slam.png",
+        "glow": "keeper_glow_slam.png",
+        "telegraph": "keeper_telegraph_slam.png",
+        "light": "keeper_light_slam.png"
+      },
+      "keyFrames": {
+        "impact": 0
+      },
+      "recoverSeconds": 1.1,
+      "note": "ground slam with both fists"
+    },
+    "windup_sweep": {
+      "frames": 11,
+      "fps": 10,
+      "durationSec": 1.1,
+      "loop": false,
+      "tags": {
+        "telegraph": "0-10"
+      },
+      "sheets": {
+        "body": "keeper_body_windup_sweep.png",
+        "glow": "keeper_glow_windup_sweep.png",
+        "telegraph": "keeper_telegraph_windup_sweep.png",
+        "light": "keeper_light_windup_sweep.png"
+      },
+      "telegraphSeconds": 1.1,
+      "telegraphTicks": 22,
+      "note": "lasts exactly the telegraph (22 ticks). Flash the telegraph layer (tint it, e.g. #ff3b30) for the whole wind-up. In Guided mode the wind-up is slower: hold the last frame"
+    },
+    "sweep": {
+      "frames": 19,
+      "fps": 10,
+      "durationSec": 1.9,
+      "loop": false,
+      "tags": {
+        "spin": "0-5",
+        "recover": "6-18"
+      },
+      "sheets": {
+        "body": "keeper_body_sweep.png",
+        "glow": "keeper_glow_sweep.png",
+        "telegraph": "keeper_telegraph_sweep.png",
+        "light": "keeper_light_sweep.png"
+      },
+      "keyFrames": {
+        "spin": "0-5"
+      },
+      "recoverSeconds": 1.3,
+      "note": "wide sweep: one full turn with both arms out (the hit ring is all around him)"
+    },
+    "call": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "keeper_body_call.png",
+        "glow": "keeper_glow_call.png",
+        "telegraph": "keeper_telegraph_call.png",
+        "light": "keeper_light_call.png"
+      },
+      "note": "calling for help (at half health the Keeper calls in 2 swarmers): loop while the swarmers arrive"
+    },
+    "hit": {
+      "frames": 3,
+      "fps": 12,
+      "durationSec": 0.25,
+      "loop": false,
+      "tags": {
+        "recoil": "0"
+      },
+      "sheets": {
+        "body": "keeper_body_hit.png",
+        "glow": "keeper_glow_hit.png",
+        "telegraph": "keeper_telegraph_hit.png",
+        "light": "keeper_light_hit.png"
+      }
+    },
+    "stagger": {
+      "frames": 8,
+      "fps": 10,
+      "durationSec": 0.8,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "keeper_body_stagger.png",
+        "glow": "keeper_glow_stagger.png",
+        "telegraph": "keeper_telegraph_stagger.png",
+        "light": "keeper_light_stagger.png"
+      },
+      "note": "dizzy wobble; loop for as long as the stagger lasts"
+    },
+    "defeat": {
+      "frames": 14,
+      "fps": 12,
+      "durationSec": 1.1667,
+      "loop": false,
+      "tags": {
+        "light": "3",
+        "gone": "13"
+      },
+      "sheets": {
+        "body": "keeper_body_defeat.png",
+        "glow": "keeper_glow_defeat.png",
+        "telegraph": "keeper_telegraph_defeat.png",
+        "light": "keeper_light_defeat.png"
+      },
+      "keyFrames": {
+        "light": 3,
+        "gone": 13
+      },
+      "removeAfter": true,
+      "note": "dissolves into light and sparkles (a hopeful 'set free', not a death). The last frame is empty"
+    }
+  },
+  "enemy": "floor-keeper",
+  "name": "Floor Keeper",
+  "sizeTiles": {
+    "bodyWidth": 0.85,
+    "bodyHeight": 1.3,
+    "radiusInData": 0.85
+  },
+  "tintGuidance": {
+    "mode": "multiply (Phaser setTint)",
+    "body": "no tint",
+    "glow": "no tint, always drawn (soft rim)",
+    "telegraph": "optional: draw only during the wind-up, tinted (e.g. #ff3b30 red, or #ffd36b gold in Guided mode) and flashed / pulsed in alpha",
+    "light": "no tint, always drawn (only the defeat has anything in it)"
+  }
+}
