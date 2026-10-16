@@ -24,7 +24,7 @@ Everything is built by script:
 | `defeat` | 16 | 12 | 1.333 s | no | `ouch: 1`, `sink: 5-10`, `kneel: 11`, `hold: 15` | **New.** A soft "Ouch!", then he sinks to one knee. **Hold the last frame** (`holdLastFrame: true`) during the fade. |
 | `dash` | 8 | 20 | 0.4 s | no | `push: 1`, `travel: 1-5`, `land: 5`, `recover: 6-7` | **Batch 1.** Played in place: the game moves him 2.5 tiles during frames 1–5 (0.25 s). Low lean, push off the back foot, a long stretch, land, back to the guard. |
 | `hit` | 5 | 20 | 0.25 s | no | `recoil: 1`, `back: 4` | **Batch 1.** Hit flinch: a small head and shoulder bob back, the guard stays up. |
-| `sweep` | 8 | 10 | 0.8 s | yes | | **Batch 1.** Sweeping with a broom (two strokes per loop). Draw `prop-broom`. |
+| `sweep` | 8 | 10 | 0.8 s | yes | | **Batch 1, grip fixed in the review.** Both hands on the handle in front of the body: the right (top) hand near the end at chest height, the left hand partway down. The handle runs down and forward to the bristles. Two strokes per loop. Draw `prop-broom`. Checked for intersections on every frame with `tools/check_prop_clearance.py` (0 found) |
 | `wipe` | 8 | 8 | 1.0 s | yes | | **Batch 1.** Kneeling, wiping the mat in a circle with a cloth. Draw `prop-rag`. |
 | `straighten` | 14 | 12 | 1.17 s | no | `reach: 3-4`, `adjust: 4-7`, `nod: 10` | **Batch 1.** Reach out at chest height and set the weapon rack level, a small nod, back to the guard. |
 | `celebrate` | 24 | 16 | 1.5 s | no | `arms_up: 4-12`, `hop_top: 5`, `proud: 18` | **Batch 1.** Promotion ceremony: both arms up with a little hop, then a proud stance with fists at the hips so the belt shows. **Hold the last frame.** |

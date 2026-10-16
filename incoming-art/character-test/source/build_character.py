@@ -455,7 +455,7 @@ for k in range(2):                           # stripe 1 is nearest the end
 
 if PLAYER:
     # BROOM (prop-broom): a soft straw broom, kid-sized. Built around its bone pivot (0, 0, 0.5) = the lower hand.
-    finish_mesh("broom_shaft", tube((0, 0, 0.5 - 0.40), (0, 0, 0.5 + 0.34), 0.014, 0.014, segs=8), MAT["wood"], "prop-broom", "broom")
+    finish_mesh("broom_shaft", tube((0, 0, 0.5 - 0.40), (0, 0, 0.5 + 0.24), 0.014, 0.014, segs=8), MAT["wood"], "prop-broom", "broom")
     finish_mesh("broom_head", tube((0, 0, 0.5 - 0.58), (0, 0, 0.5 - 0.40), 0.075, 0.03, segs=10, sx=1.0, sy=0.45), MAT["straw"], "prop-broom", "broom")
     finish_mesh("broom_cord", tube((0, 0, 0.5 - 0.43), (0, 0, 0.5 - 0.41), 0.04, 0.036, segs=10, sx=1.0, sy=0.6), MAT["cord"], "prop-broom", "broom", outline=False)
     # RAG (prop-rag): a folded light-blue cloth under the right hand, pivot on the floor
@@ -741,22 +741,25 @@ if PLAYER:
     def prop_world(rot):
         return _M @ Euler([math.radians(v) for v in rot], "XYZ").to_matrix() @ _M.transposed()
 
-    # SWEEP (loop): a wide, low stance, slight forward lean, the broom held across the body (left hand low,
-    # right hand high on the handle), bristles on the floor ahead, swept side to side with the hips.
+    # SWEEP (loop): a wide, low stance, slight forward lean. Natural two-hand grip, both hands in FRONT of the body:
+    # the right (top) hand near the handle's end at chest height, the left (lower) hand partway down; the handle
+    # runs down and forward to the bristles on the floor ahead. The top hand stays put and the bristles swing
+    # side to side under it (Jay's review fix: the old grip ran the handle through his back).
     # 8 frames at 10 fps = 0.8 s per loop. prop-broom is drawn only here.
     SW_BASE = pose(hips=(0, 0.02, -0.07), hips_rot=(14, 0, 0), chest_rot=(10, 0, 0), head_rot=(-6, 0, 0),
                    foot_l=(0.15, -0.04, 0.07), foot_r=(-0.15, 0.06, 0.07), foot_l_rot=(0, 14, 0), foot_r_rot=(0, -14, 0))
     sweep = []
     for i in range(8):
         ph = 2 * math.pi * i / 8
-        yaw = 26 * math.sin(ph)
-        pv = Vector((0.025 * math.sin(ph), -0.13, 0.55))
-        rot = (-25, 0, yaw)
+        roll = 24 * math.sin(ph)
+        rot = (-12, 0, roll)                         # handle 12 degrees off vertical: bristles ahead of the feet, inside the frame
         Rw = prop_world(rot)
+        top = Vector((-0.03 + 0.02 * math.sin(ph), -0.255, 0.72))       # top hand, chest height (s = 0.165, near the end)
+        pv = top - Rw @ Vector((0, 0, 0.165))         # the bone pivot (s = 0) follows from the top hand
         p = dict(SW_BASE)
         p["hips_rot"] = (14, 7 * math.sin(ph), 0); p["chest_rot"] = (10, 9 * math.sin(ph), 0)
         p["head_rot"] = (-6, -10 * math.sin(ph), 0)
-        p["hand_l"] = tuple(pv); p["hand_r"] = tuple(pv + Rw @ Vector((0, 0, 0.26)))
+        p["hand_r"] = tuple(top); p["hand_l"] = tuple(pv + Rw @ Vector((0, 0, -0.07)))
         p["broom"] = (*pv, *rot, 1.0)
         sweep.append(p)
 

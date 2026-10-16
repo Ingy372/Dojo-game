@@ -1,3 +1,23 @@
+# Delivery Note: Batch 1 review fix (sweep grip), 2026-10-16
+
+**WHAT**
+- The sweep has a new grip: both hands hold the handle in front of the body.
+  - The right (top) hand is near the end, at chest height.
+  - The left hand is partway down.
+  - The handle angles down and forward to the bristles.
+- The broom is a little shorter (kid-sized), so the bristles stay inside the frame in every direction.
+- Re-rendered the sweep (8 directions, all layers). New `preview/player_sweep.gif`, `player_contact_sweep.png` and `sweep-grip-still.png`.
+
+**WHY**
+- Jay's review: the rear hand held the back end of the broom, and the handle went through his back.
+- The new `tools/check_prop_clearance.py` tests the broom against the body in 3D on every frame, so all 8 directions at once. It finds 0 intersections; the old sweep failed on frame 8.
+
+**DECIDE (Jay):** approve the new sweep grip. Everything else in Batch 1 is already approved.
+
+**NEXT:** nothing more for Batch 1.
+
+**Note:** in SE, on one frame, the bristle tip touches the frame's bottom edge (about 1 px).
+
 # Delivery Note: Batch 1 (complete): the rest of the player animations + style guide draft
 
 **WHAT:** The rest of the player character's animations, in all 8 directions, with every layer:
