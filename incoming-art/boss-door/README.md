@@ -1,34 +1,43 @@
 # Boss door (Batch 5): technical sheet
 
-**Status: SAMPLES ONLY (3 looks of the closed door). Waiting for Jay to pick one.** Nothing here is ready for the game yet.
+**Status: draft until Jay approves.** This is look A, the stone gate, which Jay picked from the samples. Samples B and C were removed and are still in git history (commit b89845a).
 
 ```bash
-blender -b -P incoming-art/boss-door/source/build_boss_door.py -- --out $PWD/incoming-art/boss-door/source/boss_samples.blend
-blender -b incoming-art/boss-door/source/boss_samples.blend -P incoming-art/tools/render_static.py -- --out incoming-art/boss-door/sprites/samples
-python3 incoming-art/boss-door/source/make_samples_preview.py
+blender -b -P incoming-art/boss-door/source/build_boss_door.py -- --out $PWD/incoming-art/boss-door/source/boss_door.blend
+blender -b incoming-art/boss-door/source/boss_door.blend -P incoming-art/tools/render_static.py -- --out incoming-art/boss-door/sprites
+python3 incoming-art/boss-door/source/make_preview.py
 ```
 
-- **Build:** `source/build_boss_door.py`. It uses the same helpers, camera (35°) and toon look as `tower-rooms/source/build_tower.py`, at 80 px per tile.
-- **Colours:** Tier 1 wall stone (`#8e92ab`, `#71758f`, `#a9adc4`) and the Floor Keeper's gold `#ffd36b`.
-- **Opening:** 1 tile wide, the same dark opening as the other doors.
-- **Frame:** 2 tiles wide (160 px: the door cell plus half a tile of wall on each side). It rises 1.15–1.25 tiles above the floor line.
-- **Anchor:** `anchorPx` = bottom-centre of the door cell, (80, image height). Exact values are in `sprites/samples/static.json`.
-- **Crown medallion:** the same round medallion as the other four door icons (cream face, coloured ring), with a gold ring and a friendly round crown with three ball tips and a small amber gem.
+- **Same as the other doors:** the same helpers, 35° camera, toon look and 80 px per tile as `tower-rooms/`.
+- **Colours:** Tier 1 wall stone and the Floor Keeper's gold `#ffd36b`.
+- **JSON:** `sprites/static.json`, in the same format as `tower-rooms/sprites/static.json`.
 
-| Sample | Look |
-| --- | --- |
-| A, stone gate | Light carved stone posts with gold caps and gold edging, a stepped crest and the crown medallion, heavy wooden doors with gold bands and studs |
-| B, gate with curved top beam | Red round posts, a dark top beam with raised ends and a gold edge, the medallion on the tie beam, gold-framed glowing paper doors (the other doors' family look, made grander) |
-| C, sunrise arch | A pale stone round arch with a gold keystone, soft rounded gold rays rising behind the medallion, two small glowing lanterns, wooden doors |
+| Sprite | Size | Frames | Use |
+| --- | --- | --- | --- |
+| `door-boss` | 160 × 172 per frame | 2 (fps 1, no loop) | Frame 0 closed, frame 1 open (the wooden doors slide apart behind the posts and the doorway glows warm) |
+| `door-boss-glow` | 160 × 172 per frame | 8 (8 fps, loop, 1 s) | Draw on top of `door-boss` frame 0 while the door is closed and the room is being fought. A gold halo swells around the crown medallion and light breathes along the gold frame. See-through, straight alpha |
+| `icon-boss` | 48 × 64 | 1 | The crown medallion on its own, like `icon-battle` |
 
-**After Jay picks a look, the full batch will add:**
-- `door-boss`: 2 frames, closed and open (the doors slide apart and the doorway glows);
-- `door-boss-glow`: an 8-frame loop at 8 fps;
-- `icon-boss`;
-- the full `static.json` entry;
-- the room previews at 1× and 2×;
-- the glow GIF.
+**Placement:**
+- The door goes in the `D` slot in the top wall.
+- `anchorPx` (80, 172) = the bottom-centre of the door cell, where the wall meets the floor. `door-boss-glow` uses the same anchor.
+- The opening is 1 tile wide, in the middle.
+- The stone frame is 2 tiles wide: it overlaps half a wall tile on each side, so draw it over those `wall-face` tiles.
+- `topExtraTiles` = 1.15 (the crest and medallion rise above the wall).
 
-**Checks:** the samples were looked at by eye at 1×, 2× and 3×. Nothing is clipped at the top. The left and right edges are wall that continues into the next wall tiles.
+**Look:**
+- Light carved stone posts with gold edging and gold caps.
+- A stone lintel and a stepped crest.
+- Heavy wooden doors with gold bands, studs and ring handles.
+- A round medallion with a cream face, a gold ring and a friendly crown (three ball tips and a small amber gem).
 
-Previews: `preview/review-1-samples-3x.png` (start here) and `preview/sample-{a,b,c}-room.png` (each look in a tiled room next to the battle door, at 1× and 2×).
+**Checks:**
+- Looked at by eye at 1×, 2× and 3×, closed and open, in a tiled room next to the battle door.
+- Nothing is clipped at the top.
+- The left and right edges are wall that continues into the next wall tiles.
+
+**Previews:**
+- `preview/review-1-room.png`: the room, closed with the glow and open, at 1× and 2×.
+- `preview/review-2-pieces-3x.png`: closed, open, the glow on its own, and the icon next to `icon-battle`.
+- `preview/door-boss_glow.gif`: the glow loop.
+- `preview/door-boss_open.gif`: two glow loops, then the door opens.

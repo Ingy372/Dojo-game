@@ -7,16 +7,16 @@
   },
   "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
   "sprites": {
-    "door-boss-a": {
+    "door-boss": {
       "size": [
         160,
         172
       ],
       "layers": [
-        "door-boss-a"
+        "door-boss"
       ],
       "files": {
-        "door-boss-a": "door-boss-a_door-boss-a.png"
+        "door-boss": "door-boss_door-boss.png"
       },
       "groundRect": {
         "col0": -0.5,
@@ -31,18 +31,22 @@
         172.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "SAMPLE look A (closed door only). 160 px wide: the door cell plus half a tile of wall each side; anchorPx = bottom-centre of the door cell"
+      "frames": 2,
+      "frameWidth": 160,
+      "fps": 1,
+      "loop": false,
+      "note": "Boss door (the Floor Keeper's door) for the 'D' slot of the room before the boss: frame 0 closed, frame 1 open (the doors slide apart behind the posts, the doorway glows warm). 160 px wide: the 1-tile opening in the middle and the stone frame overlapping half a wall tile on each side (draw it over those wall tiles). anchorPx = bottom-centre of the door cell. Add door-boss-glow on top while it's closed and the room is being fought"
     },
-    "door-boss-b": {
+    "door-boss-glow": {
       "size": [
         160,
         172
       ],
       "layers": [
-        "door-boss-b"
+        "door-boss-glow"
       ],
       "files": {
-        "door-boss-b": "door-boss-b_door-boss-b.png"
+        "door-boss-glow": "door-boss-glow_door-boss-glow.png"
       },
       "groundRect": {
         "col0": -0.5,
@@ -57,33 +61,37 @@
         172.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "SAMPLE look B (closed door only). 160 px wide: the door cell plus half a tile of wall each side; anchorPx = bottom-centre of the door cell"
+      "frames": 8,
+      "frameWidth": 160,
+      "fps": 8,
+      "loop": true,
+      "note": "The boss door's glow loop (8 frames at 8 fps = 1 s): a gold halo swells around the crown medallion and light breathes along the gold frame. Same size and anchor as door-boss; draw it on top of door-boss frame 0 while the door is closed and the room is being fought. Straight alpha, see-through"
     },
-    "door-boss-c": {
+    "icon-boss": {
       "size": [
-        160,
-        180
+        48,
+        64
       ],
       "layers": [
-        "door-boss-c"
+        "icon-boss"
       ],
       "files": {
-        "door-boss-c": "door-boss-c_door-boss-c.png"
+        "icon-boss": "icon-boss_icon-boss.png"
       },
       "groundRect": {
-        "col0": -0.5,
-        "row0": 0,
-        "col1": 1.5,
-        "row1": 1,
+        "col0": 5.2,
+        "row0": 1.047152872702092,
+        "col1": 5.8,
+        "row1": 1.2471528727020922,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 1.25,
+      "topExtraTiles": 0.6,
       "anchorPx": [
-        80.0,
-        180.0
+        24.0,
+        64
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "SAMPLE look C (closed door only). 160 px wide: the door cell plus half a tile of wall each side; anchorPx = bottom-centre of the door cell"
+      "note": "the boss door's crown icon on its round medallion, on its own (like icon-battle: for labels, the floor map or buttons)"
     }
   }
 }

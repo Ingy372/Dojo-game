@@ -1,29 +1,28 @@
-# Delivery Note: Batch 5 boss door, SAMPLES (draft), 2026-10-16
+# Delivery Note: Batch 5, the boss door, 2026-10-16
 
 **WHAT**
-- Three looks for the closed boss door (A stone gate, B gate with curved top beam, C sunrise arch). Each look:
-  - keeps the opening 1 tile wide;
-  - has a frame 2 tiles wide that rises above the wall;
-  - uses Tier 1 stone and the Floor Keeper's gold;
-  - has a round crown medallion in the same style as the other door icons.
+- **The door:** the boss door in look A (the stone gate), closed and open. The doors slide apart and the doorway glows warm.
+- **The glow:** an 8-frame glow loop (1 s) around the crown medallion and the gold frame.
+- **The icon:** the crown medallion on its own (`icon-boss`).
+- **The JSON:** `sprites/static.json` entries in the same format as the Tower doors.
 - **Previews in `preview/`:**
-  - `review-1-samples-3x.png`: the three side by side, 3× (start here);
-  - `sample-a-room.png`, `sample-b-room.png`, `sample-c-room.png`: each look in a tiled Tier 1 room next to the battle door, at 1× and 2×.
+  - `review-1-room.png` (start here)
+  - `review-2-pieces-3x.png`
+  - `door-boss_glow.gif`
+  - `door-boss_open.gif`
+- **Removed:** samples B and C. They stay in git history.
 
-**WHY:** Jay asked for a special "Keeper's door" (brief, Batch 5). The brief says to show 3 stills of the closed door and stop.
+**WHY:** Jay picked look A. The room before the Floor Keeper should have a special "Keeper's door" (brief, Batch 5).
 
 **DECIDE (Jay)**
-1. **Pick a look:** A, B or C, or a mix (for example, B's frame with C's rays).
-2. **Sample B uses a torii-style gate,** a Japanese shrine gate. That's fine for a dojo look, but it's a religious symbol, so you may prefer A or C.
-3. **Crown medallion:** the crown is gold on the usual cream face. OK, or should the face be a different colour so it stands out more from the other doors?
-4. **Glow loop:** should it pulse only the medallion and the frame's gold (planned), or the doorway seams too?
+1. **Medallion face:** kept cream, like the other doors. *Defaulted, easy to change.*
+2. **Glow loop:** it pulses only the medallion and the gold frame, not the edges of the doorway. *Defaulted, easy to change.*
+3. Approve Batch 5 so Claude Code can put it in the game.
 
-No names or words are needed for this batch. The id `door-boss` comes from the brief.
+No names or words were needed.
 
-**NEXT:** after Jay's OK:
-- `door-boss` (closed and open), `door-boss-glow` (8 frames, 8 fps) and `icon-boss`;
-- the full `static.json` entry;
-- the room previews at 1× and 2×;
-- the glow GIF.
+**NEXT**
+- Claude Code replaces the borrowed battle door on the boss room's door with `door-boss`, and plays `door-boss-glow` while the room is being fought.
+- Then Batch 6 (the customizable player character), only after Jay's OK.
 
-**Conflicts with the docs:** none found. The brief, the style guide and `decisions.md` agree: the boss uses the battle door until this arrives.
+**Conflicts with the docs:** none.

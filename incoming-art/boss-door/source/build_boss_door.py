@@ -1,12 +1,12 @@
 """
-Dojo Ascent - the boss door (Art Director bot), Batch 5 SAMPLES: three looks of the closed door.
+Dojo Ascent - the boss door (Art Director bot), Batch 5: door-boss (look A, the stone gate), door-boss-glow and icon-boss.
 
 The door for the 'D' slot in the top wall of the room before the Floor Keeper: a 1-tile opening, a bigger
 frame (about 2 tiles wide, rising above the wall), Tier 1 stone and the Keeper's gold #ffd36b, and a crown
 medallion. Special and a little exciting, never scary. Same helpers and camera as tower-rooms/build_tower.py.
 
-    blender -b -P incoming-art/boss-door/source/build_boss_door.py -- --out $PWD/incoming-art/boss-door/source/boss_samples.blend
-    blender -b incoming-art/boss-door/source/boss_samples.blend -P incoming-art/tools/render_static.py -- --out incoming-art/boss-door/sprites/samples
+    blender -b -P incoming-art/boss-door/source/build_boss_door.py -- --out $PWD/incoming-art/boss-door/source/boss_door.blend
+    blender -b incoming-art/boss-door/source/boss_door.blend -P incoming-art/tools/render_static.py -- --out incoming-art/boss-door/sprites
 """
 import bpy, bmesh, math, sys, os, argparse, json, random
 from mathutils import Vector, Matrix, Euler
@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from toon_kit import srgb, toon_material, outline_material, add_hull, ellipsoid, tube, box, OUTLINE_W
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
-ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); ap.add_argument("--looks", default="a,b,c"); A = ap.parse_args(argv)
+ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); A = ap.parse_args(argv)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene; scene.name = "Tower"
 K = 1 / math.sin(math.radians(35)); COS = math.cos(math.radians(35))
@@ -120,16 +120,23 @@ def heavy_doors(lay, kind="wood"):
                 obox(lay, f"{lay}_bar{k}{z}", Vector((x, Y - 0.048, z)), (0.27, 0.006, 0.02), M(GOLD_D, True), outline=False)
             obox(lay, f"{lay}_vbar{k}", Vector((x, Y - 0.048, 0.6)), (0.02, 0.006, 0.82), M(GOLD_D, True), outline=False)
 
-LOOKS = {}
-def look(fn): LOOKS[fn.__name__[-1]] = fn; return fn
+def glow_mat(name, hex_color, alpha):
+    """See-through light: emission mixed with transparency; returns (material, the mix node) so Fac can be keyed."""
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = srgb(hex_color)
+    tr = nt.nodes.new("ShaderNodeBsdfTransparent"); mx = nt.nodes.new("ShaderNodeMixShader"); mx.inputs["Fac"].default_value = alpha
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs["Surface"])
+    m.blend_method = "BLEND"; return m, mx
 
-@look
-def look_a():
-    """A: 'stone gate'. A big carved stone frame in two shades with gold edging, wide square posts with
-    gold caps, a stepped crest above the wall with the crown medallion; warm wooden doors with gold bands."""
-    lay = "door-boss-a"; wall_and_opening(lay)
-    for sx in (-1, 1):
-        x = 0.5 + sx * 0.5
+MED_C, MED_R = Vector((0.5, Y - 0.25, 1.7)), 0.27
+POSTS = [(0.5 + sx * 0.5, sx) for sx in (-1, 1)]
+
+def door_boss():
+    """Look A, the stone gate (Jay picked it): light carved stone posts with gold caps and gold edging, a stepped
+    crest with the crown medallion, heavy wooden doors with gold bands. Frame 1 closed, frame 2 open."""
+    lay = "door-boss"; wall_and_opening(lay)
+    for x, sx in POSTS:
         obox(lay, f"{lay}_post{sx}", Vector((x, Y - 0.06, 0.72)), (0.24, 0.16, 1.44), WCAP, bevel=0.02)
         obox(lay, f"{lay}_pedge{sx}", Vector((x - sx * 0.125, Y - 0.141, 0.72)), (0.025, 0.01, 1.4), M(GOLD, True), outline=False)
         obox(lay, f"{lay}_pbase{sx}", Vector((x, Y - 0.06, 0.08)), (0.3, 0.2, 0.16), WDARK, bevel=0.02)
@@ -138,69 +145,66 @@ def look_a():
     obox(lay, f"{lay}_lgold", Vector((0.5, Y - 0.152, 1.2)), (1.0, 0.01, 0.03), M(GOLD, True), outline=False)
     obox(lay, f"{lay}_crest1", Vector((0.5, Y - 0.06, 1.48)), (0.9, 0.14, 0.2), WCAP, bevel=0.02)
     obox(lay, f"{lay}_crest2", Vector((0.5, Y - 0.06, 1.66)), (0.6, 0.12, 0.18), WSTONE, bevel=0.02)
-    heavy_doors(lay, "wood")
-    medallion(lay, Vector((0.5, Y - 0.25, 1.7)), r=0.27)
-    return lay, 1.15
+    # the two door leaves on sliding pivots (they slide behind the posts when open)
+    hinge = [empty(f"{lay}_slideL", Vector((0, 0, 0))), empty(f"{lay}_slideR", Vector((0, 0, 0)))]
+    for k, x in enumerate((0.32, 0.68)):
+        par = hinge[k]
+        obox(lay, f"{lay}_leaf{k}", Vector((x, Y - 0.025, 0.55)), (0.36, 0.035, 1.1), WOOD, parent=par)
+        for z in (0.22, 0.88):
+            obox(lay, f"{lay}_gb{k}{z}", Vector((x, Y - 0.045, z)), (0.36, 0.008, 0.07), M(GOLD_D, True), outline=False, parent=par)
+            for dx in (-0.1, 0.1):
+                oell(lay, f"{lay}_stud{k}{z}{dx}", Vector((x + dx, Y - 0.05, z)), (0.022, 0.015, 0.022), GOLD, outline=False, parent=par)
+        obox(lay, f"{lay}_ring{k}", Vector((0.5 + (k * 2 - 1) * 0.05, Y - 0.06, 0.55)), (0.025, 0.02, 0.12), GOLD, parent=par)
+    # the warm light in the open doorway (hidden when closed)
+    glow = empty(f"{lay}_lightpiv", Vector((0.5, Y, 0.55)))
+    obox(lay, lay + "_light", Vector((0.5, Y - 0.006, 0.55)), (0.7, 0.01, 1.08), M("#fff3c4", True), outline=False, parent=glow)
+    obox(lay, lay + "_lightcore", Vector((0.5, Y - 0.008, 0.5)), (0.36, 0.01, 0.9), M("#fffbe8", True), outline=False, parent=glow)
+    medallion(lay, MED_C, r=MED_R)
+    for o in hinge + [glow]:
+        o.keyframe_insert("location", frame=1); o.keyframe_insert("scale", frame=1)
+    hinge[0].location = (-0.3, 0, 0); hinge[1].location = (0.3, 0, 0)
+    for o in hinge: o.keyframe_insert("location", frame=2)
+    glow.scale = (1, 1, 1); glow.keyframe_insert("scale", frame=2)
+    glow.scale = (0.0001, 1, 0.0001); glow.keyframe_insert("scale", frame=1)
+    for o in hinge + [glow]:
+        for fc in o.animation_data.action.fcurves:
+            for kp in fc.keyframe_points: kp.interpolation = "CONSTANT"
+    target(lay, [lay], [-0.5, 0, 1.5, 1], 1.15, anchor=[0.5, 1], frames=[1, 2], fps=1, group="doors",
+           note="Boss door (the Floor Keeper's door) for the 'D' slot of the room before the boss: frame 0 closed, frame 1 open (the doors slide apart behind the posts, the doorway glows warm). 160 px wide: the 1-tile opening in the middle and the stone frame overlapping half a wall tile on each side (draw it over those wall tiles). anchorPx = bottom-centre of the door cell. Add door-boss-glow on top while it's closed and the room is being fought")
 
-@look
-def look_b():
-    """B: 'Keeper's torii'. A tall gate of dark wood and gold over the opening: two round posts, a curved
-    top beam whose ends turn up, a straight lower beam, the crown medallion hanging between them; gold-framed
-    glowing paper doors (the family look of the other doors, made grander)."""
-    lay = "door-boss-b"; wall_and_opening(lay)
-    for sx in (-1, 1):
-        x = 0.5 + sx * 0.56
-        otube(lay, f"{lay}_post{sx}", Vector((x, Y - 0.12, 0.0)), Vector((x, Y - 0.12, 1.62)), 0.075, 0.065, "#b8322a", segs=14)
-        otube(lay, f"{lay}_foot{sx}", Vector((x, Y - 0.12, 0.0)), Vector((x, Y - 0.12, 0.14)), 0.1, 0.1, "#3a3248", segs=14)
-    obox(lay, f"{lay}_tie", Vector((0.5, Y - 0.12, 1.3)), (1.3, 0.1, 0.1), "#b8322a")
-    # kasagi: one long dark top beam with gently raised ends, a gold edge under it
-    obox(lay, f"{lay}_kasa", Vector((0.5, Y - 0.12, 1.64)), (1.5, 0.17, 0.11), "#3a3248")
-    obox(lay, f"{lay}_kgold", Vector((0.5, Y - 0.21, 1.6)), (1.5, 0.01, 0.025), M(GOLD, True), outline=False)
-    for sx in (-1, 1):
-        obox(lay, f"{lay}_kend{sx}", Vector((0.5 + sx * 0.83, Y - 0.12, 1.69)), (0.24, 0.17, 0.11), "#3a3248", rot=(0, -sx * 14, 0))
-    obox(lay, f"{lay}_kasaR", Vector((0.5, Y - 0.12, 1.53)), (1.4, 0.13, 0.08), "#b8322a")
-    obox(lay, f"{lay}_strut", Vector((0.5, Y - 0.12, 1.42)), (0.08, 0.08, 0.2), "#b8322a")
-    heavy_doors(lay, "paper")
-    medallion(lay, Vector((0.5, Y - 0.25, 1.42)), r=0.23)
-    return lay, 1.15
+def door_boss_glow():
+    """8-frame loop (8 fps): a soft gold halo swelling around the medallion and light breathing along the gold
+    frame (post edges, caps, lintel line). Only the medallion and gold frame, per the default for Jay's question."""
+    lay = "door-boss-glow"
+    halo_m, halo_mx = glow_mat("BOSSHALO", "#ffe9a0", 0.6)
+    edge_m, edge_mx = glow_mat("BOSSEDGE", "#ffd36b", 0.6)
+    hp = empty(lay + "_halopiv", MED_C + Vector((0, 0.02, 0)))
+    bm = bmesh.new()   # a flat ring (annulus) just outside the medallion
+    n = 40
+    outer = [bm.verts.new(MED_C + Vector((math.cos(2 * math.pi * i / n) * (MED_R + 0.07), 0.02, math.sin(2 * math.pi * i / n) * (MED_R + 0.07)))) for i in range(n)]
+    inner = [bm.verts.new(MED_C + Vector((math.cos(2 * math.pi * i / n) * (MED_R - 0.005), 0.02, math.sin(2 * math.pi * i / n) * (MED_R - 0.005)))) for i in range(n)]
+    for i in range(n): bm.faces.new([outer[i], outer[(i + 1) % n], inner[(i + 1) % n], inner[i]])
+    put(lay + "_halo", bm, halo_m, lay, outline=False, parent=hp)
+    hp.rotation_euler = (math.radians(-35), 0, 0)
+    for x, sx in POSTS:   # light over the gold edging and caps, just in front of them
+        obox(lay, f"{lay}_edge{sx}", Vector((x - sx * 0.125, Y - 0.15, 0.72)), (0.045, 0.01, 1.42), edge_m, outline=False)
+        obox(lay, f"{lay}_cap{sx}", Vector((x, Y - 0.17, 1.5)), (0.34, 0.01, 0.16), edge_m, outline=False)
+    obox(lay, f"{lay}_line", Vector((0.5, Y - 0.16, 1.2)), (1.02, 0.01, 0.05), edge_m, outline=False)
+    for f in range(1, 9):
+        b = 0.5 - 0.5 * math.cos(2 * math.pi * (f - 1) / 8)       # 0 -> 1 -> 0, smooth
+        hp.scale = (1 + 0.12 * b,) * 3; hp.keyframe_insert("scale", frame=f)
+        halo_mx.inputs["Fac"].default_value = 0.25 + 0.55 * b; halo_mx.inputs["Fac"].keyframe_insert("default_value", frame=f)
+        edge_mx.inputs["Fac"].default_value = 0.15 + 0.5 * b; edge_mx.inputs["Fac"].keyframe_insert("default_value", frame=f)
+    target(lay, [lay], [-0.5, 0, 1.5, 1], 1.15, anchor=[0.5, 1], frames=[1, 8], fps=8, loop=True, group="doors",
+           note="The boss door's glow loop (8 frames at 8 fps = 1 s): a gold halo swells around the crown medallion and light breathes along the gold frame. Same size and anchor as door-boss; draw it on top of door-boss frame 0 while the door is closed and the room is being fought. Straight alpha, see-through")
 
-@look
-def look_c():
-    """C: 'sunrise arch'. A round-topped stone arch in pale cap stone with a gold keystone band, a fan of gold
-    rays rising behind a big crown medallion, low gold lanterns on each side; wooden doors with gold bands."""
-    lay = "door-boss-c"; wall_and_opening(lay)
-    # rays: a half fan of tapered gold rays behind the medallion (flat light, no outline, soft)
-    cpos = Vector((0.5, Y - 0.05, 1.42)); piv = empty(lay + "_raypiv", cpos)
-    for i in range(7):
-        a = math.radians(-72 + i * 24); L = 0.5 if i % 2 == 0 else 0.42
-        d = Vector((math.sin(a), 0, math.cos(a)))
-        oell(lay, f"{lay}_ray{i}", cpos + d * (0.16 + L / 2), (0.07 if i % 2 == 0 else 0.055, 0.008, L / 2), M(GOLD if i % 2 == 0 else "#ffe9a0", True),
-             rot=(0, math.degrees(a), 0), outline=False, parent=piv)
-    piv.rotation_euler = (math.radians(-35), 0, 0)
-    # the arch: posts + a ring of stone blocks
-    for sx in (-1, 1):
-        x = 0.5 + sx * 0.47
-        obox(lay, f"{lay}_post{sx}", Vector((x, Y - 0.06, 0.55)), (0.22, 0.14, 1.1), WCAP, bevel=0.02)
-        obox(lay, f"{lay}_pbase{sx}", Vector((x, Y - 0.06, 0.07)), (0.28, 0.18, 0.14), WDARK, bevel=0.02)
-        # little round lantern on a stone foot, outside the posts
-        lx = 0.5 + sx * 0.78
-        obox(lay, f"{lay}_lfoot{sx}", Vector((lx, Y - 0.15, 0.12)), (0.12, 0.12, 0.24), WDARK, bevel=0.02)
-        oell(lay, f"{lay}_lamp{sx}", Vector((lx, Y - 0.15, 0.33)), (0.08, 0.08, 0.09), M("#fff3c4", True))
-        obox(lay, f"{lay}_lroof{sx}", Vector((lx, Y - 0.15, 0.44)), (0.17, 0.17, 0.04), GOLD_D)
-    n = 11
-    for i in range(n):
-        a = math.pi * i / (n - 1)
-        x = 0.5 - math.cos(a) * 0.47; z = 1.1 + math.sin(a) * 0.3
-        obox(lay, f"{lay}_arch{i}", Vector((x, Y - 0.06, z)), (0.17, 0.14, 0.2), WCAP if i != 5 else GOLD, rot=(0, math.degrees(a) - 90, 0), bevel=0.01)
-    heavy_doors(lay, "wood")
-    medallion(lay, Vector((0.5, Y - 0.25, 1.5)), r=0.26)
-    return lay, 1.25
+def icon_boss():
+    ic = "icon-boss"; pc = Vector((5.5, -2.0, 0.6))
+    medallion(ic, pc, r=0.22)
+    target(ic, [ic], [pc.x - 0.3, -pc.y / K - 0.1, pc.x + 0.3, -pc.y / K + 0.1], 0.6, anchor="bottom-center", group="doors",
+           note="the boss door's crown icon on its round medallion, on its own (like icon-battle: for labels, the floor map or buttons)")
 
-for k in A.looks.split(","):
-    lay, top = LOOKS[k]()
-    target(lay, [lay], [-0.5, 0, 1.5, 1], top, anchor=[0.5, 1], group="boss-door-samples",
-           note=f"SAMPLE look {k.upper()} (closed door only). 160 px wide: the door cell plus half a tile of wall each side; anchorPx = bottom-centre of the door cell")
-
+door_boss(); door_boss_glow(); icon_boss()
 scene.frame_set(1)
 scene["static_targets"] = json.dumps(TARGETS)
 bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(A.out))
