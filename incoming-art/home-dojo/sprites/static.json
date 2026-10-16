@@ -1,0 +1,734 @@
+{
+  "pixelsPerTile": 80,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "facing": "north (the one game view)"
+  },
+  "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+  "sprites": {
+    "room": {
+      "size": [
+        1200,
+        824
+      ],
+      "layers": [
+        "floor",
+        "notice-board",
+        "wall-front"
+      ],
+      "files": {
+        "floor": "room_floor.png",
+        "notice-board": "room_notice-board.png",
+        "wall-front": "room_wall-front.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 15,
+        "row1": 10,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.3,
+      "anchorPx": [
+        0,
+        24.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "the whole room: draw floor at depth 0 (under everything), notice-board on top of it, wall-front ABOVE the characters and decorations. anchorPx = the grid's top-left corner (tile 0,0)",
+      "info": {
+        "tiles": [
+          "###############",
+          "#.............#",
+          "#.............#",
+          "#.............#",
+          "#.............#",
+          "#.............#",
+          "#.............#",
+          "#.............#",
+          "#......P......#",
+          "#######D#######"
+        ],
+        "board": {
+          "column": 8,
+          "row": 1
+        }
+      }
+    },
+    "training-mat": {
+      "size": [
+        184,
+        186
+      ],
+      "layers": [
+        "training-mat"
+      ],
+      "files": {
+        "training-mat": "training-mat_training-mat.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 2.15,
+        "row1": 2.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.2,
+      "anchorPx": [
+        92.0,
+        176.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        2,
+        2
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row"
+    },
+    "practice-mat": {
+      "size": [
+        184,
+        186
+      ],
+      "layers": [
+        "practice-mat"
+      ],
+      "files": {
+        "practice-mat": "practice-mat_practice-mat.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 2.15,
+        "row1": 2.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.2,
+      "anchorPx": [
+        92.0,
+        176.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        2,
+        2
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row"
+    },
+    "training-mat-scuffed": {
+      "size": [
+        184,
+        186
+      ],
+      "layers": [
+        "training-mat-scuffed"
+      ],
+      "files": {
+        "training-mat-scuffed": "training-mat-scuffed_training-mat-scuffed.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 2.15,
+        "row1": 2.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.2,
+      "anchorPx": [
+        92.0,
+        176.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        2,
+        2
+      ],
+      "place": "floor",
+      "note": "mess overlay: draw on top of training-mat at the same anchor while the mat is scuffed (clean = don't draw it)"
+    },
+    "practice-mat-scuffed": {
+      "size": [
+        184,
+        186
+      ],
+      "layers": [
+        "practice-mat-scuffed"
+      ],
+      "files": {
+        "practice-mat-scuffed": "practice-mat-scuffed_practice-mat-scuffed.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 2.15,
+        "row1": 2.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.2,
+      "anchorPx": [
+        92.0,
+        176.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        2,
+        2
+      ],
+      "place": "floor",
+      "note": "mess overlay: draw on top of practice-mat at the same anchor while the mat is scuffed (clean = don't draw it)"
+    },
+    "weapon-rack": {
+      "size": [
+        184,
+        190
+      ],
+      "layers": [
+        "weapon-rack"
+      ],
+      "files": {
+        "weapon-rack": "weapon-rack_weapon-rack.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 2.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.25,
+      "anchorPx": [
+        92.0,
+        180.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 1,
+      "frameWidth": 184,
+      "fps": 12,
+      "loop": false,
+      "footprint": [
+        2,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row"
+    },
+    "weapon-rack-crooked": {
+      "size": [
+        184,
+        190
+      ],
+      "layers": [
+        "weapon-rack"
+      ],
+      "files": {
+        "weapon-rack": "weapon-rack-crooked_weapon-rack.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 2.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.25,
+      "anchorPx": [
+        92.0,
+        180.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 3,
+      "frameWidth": 184,
+      "fps": 12,
+      "loop": false,
+      "footprint": [
+        2,
+        1
+      ],
+      "place": "floor",
+      "note": "mess state of the weapon rack: a sheet of 3 frames = 1, 2 or 3 weapons knocked crooked (config DOJO.rackCrookedAt). The clean version is weapon-rack"
+    },
+    "wooden-bench": {
+      "size": [
+        184,
+        146
+      ],
+      "layers": [
+        "wooden-bench"
+      ],
+      "files": {
+        "wooden-bench": "wooden-bench_wooden-bench.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 2.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.7,
+      "anchorPx": [
+        92.0,
+        136.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        2,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row"
+    },
+    "punching-bag": {
+      "size": [
+        104,
+        210
+      ],
+      "layers": [
+        "punching-bag"
+      ],
+      "files": {
+        "punching-bag": "punching-bag_punching-bag.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.5,
+      "anchorPx": [
+        52.0,
+        200.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row"
+    },
+    "stone-lantern": {
+      "size": [
+        104,
+        210
+      ],
+      "layers": [
+        "stone-lantern"
+      ],
+      "files": {
+        "stone-lantern": "stone-lantern_stone-lantern.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.5,
+      "anchorPx": [
+        52.0,
+        200.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row"
+    },
+    "bonsai-tree": {
+      "size": [
+        104,
+        178
+      ],
+      "layers": [
+        "bonsai-tree"
+      ],
+      "files": {
+        "bonsai-tree": "bonsai-tree_bonsai-tree.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.1,
+      "anchorPx": [
+        52.0,
+        168.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row"
+    },
+    "bamboo-pot": {
+      "size": [
+        104,
+        230
+      ],
+      "layers": [
+        "bamboo-pot"
+      ],
+      "files": {
+        "bamboo-pot": "bamboo-pot_bamboo-pot.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.75,
+      "anchorPx": [
+        52.0,
+        220.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row"
+    },
+    "taiko-drum": {
+      "size": [
+        104,
+        170
+      ],
+      "layers": [
+        "taiko-drum"
+      ],
+      "files": {
+        "taiko-drum": "taiko-drum_taiko-drum.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.0,
+      "anchorPx": [
+        52.0,
+        160.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row"
+    },
+    "dojo-banner": {
+      "size": [
+        80,
+        108
+      ],
+      "layers": [
+        "dojo-banner"
+      ],
+      "files": {
+        "dojo-banner": "dojo-banner_dojo-banner.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.35,
+      "anchorPx": [
+        40.0,
+        108.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "wall",
+      "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)"
+    },
+    "calligraphy-scroll": {
+      "size": [
+        80,
+        128
+      ],
+      "layers": [
+        "calligraphy-scroll"
+      ],
+      "files": {
+        "calligraphy-scroll": "calligraphy-scroll_calligraphy-scroll.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        40.0,
+        128.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "wall",
+      "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)"
+    },
+    "dust-1": {
+      "size": [
+        80,
+        88
+      ],
+      "layers": [
+        "dust-1"
+      ],
+      "files": {
+        "dust-1": "dust-1_dust-1.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.1,
+      "anchorPx": [
+        40.0,
+        48.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "mess: a dust spot, centred on the spot (anchorPx = cell centre). Clean = not drawn"
+    },
+    "dust-2": {
+      "size": [
+        80,
+        88
+      ],
+      "layers": [
+        "dust-2"
+      ],
+      "files": {
+        "dust-2": "dust-2_dust-2.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.1,
+      "anchorPx": [
+        40.0,
+        48.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "mess: a dust spot, centred on the spot (anchorPx = cell centre). Clean = not drawn"
+    },
+    "dust-3": {
+      "size": [
+        80,
+        88
+      ],
+      "layers": [
+        "dust-3"
+      ],
+      "files": {
+        "dust-3": "dust-3_dust-3.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.1,
+      "anchorPx": [
+        40.0,
+        48.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "mess: a dust spot, centred on the spot (anchorPx = cell centre). Clean = not drawn"
+    },
+    "footprints-1": {
+      "size": [
+        80,
+        96
+      ],
+      "layers": [
+        "footprints-1"
+      ],
+      "files": {
+        "footprints-1": "footprints-1_footprints-1.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.2,
+      "anchorPx": [
+        40.0,
+        56.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "mess: muddy footprints from outdoor shoes, centred on the spot (anchorPx = cell centre). Replaces the fallen leaves: draw for the game's 'leaf' floor spots (pick one of footprints-1, footprints-2, towel, water-bottle). Clean = not drawn",
+      "info": {
+        "spotKind": "leaf",
+        "what": "muddy footprints from outdoor shoes"
+      }
+    },
+    "footprints-2": {
+      "size": [
+        80,
+        96
+      ],
+      "layers": [
+        "footprints-2"
+      ],
+      "files": {
+        "footprints-2": "footprints-2_footprints-2.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.2,
+      "anchorPx": [
+        40.0,
+        56.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "mess: muddy footprints from outdoor shoes, centred on the spot (anchorPx = cell centre). Replaces the fallen leaves: draw for the game's 'leaf' floor spots (pick one of footprints-1, footprints-2, towel, water-bottle). Clean = not drawn",
+      "info": {
+        "spotKind": "leaf",
+        "what": "muddy footprints from outdoor shoes"
+      }
+    },
+    "towel": {
+      "size": [
+        80,
+        96
+      ],
+      "layers": [
+        "towel"
+      ],
+      "files": {
+        "towel": "towel_towel.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.2,
+      "anchorPx": [
+        40.0,
+        56.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "mess: a dropped towel, centred on the spot (anchorPx = cell centre). Replaces the fallen leaves: draw for the game's 'leaf' floor spots (pick one of footprints-1, footprints-2, towel, water-bottle). Clean = not drawn",
+      "info": {
+        "spotKind": "leaf",
+        "what": "a dropped towel"
+      }
+    },
+    "water-bottle": {
+      "size": [
+        80,
+        96
+      ],
+      "layers": [
+        "water-bottle"
+      ],
+      "files": {
+        "water-bottle": "water-bottle_water-bottle.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.2,
+      "anchorPx": [
+        40.0,
+        56.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "mess: a water bottle left on the floor, centred on the spot (anchorPx = cell centre). Replaces the fallen leaves: draw for the game's 'leaf' floor spots (pick one of footprints-1, footprints-2, towel, water-bottle). Clean = not drawn",
+      "info": {
+        "spotKind": "leaf",
+        "what": "a water bottle left on the floor"
+      }
+    }
+  }
+}

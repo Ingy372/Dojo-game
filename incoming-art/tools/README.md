@@ -6,8 +6,18 @@ Scripts the Art Director bot uses so every character, enemy and object renders e
 | --- | --- |
 | `render_sprites.py` | Renders a character `.blend` into transparent PNG sprite sheets (8 directions, one sheet per layer per animation) plus a JSON description. Runs inside Blender. |
 | `make_preview.py` | Stacks the layer sheets the way the game will (with belt and gi colours, black belts as charcoal) and makes review pictures: contact sheets, an animated GIF (30 fps clock), a belt-colour chart, a 4× head close-up and a 4× waist close-up (`belt-back.png`, N/NE/E/NW, blue belt, to check the belt is one unbroken band). Runs with normal Python. |
-| `make_belt_chart.py` | Before/after belt chart: chosen belts (white, yellow, red/black, brown/black, black) on the white gi from two renders, at real size (1x) and 4x at the waist. Runs with normal Python. |
+| `make_belt_chart.py` | Belt chart: chosen belts (white, yellow, red/black, brown/black, black) on the white gi, at real size (1x) and 4x at the waist. One row for the old render, then one row per belt style option of the new render (`--options A,B,C`; the options are `BELT_OPTIONS` in `make_preview.py`, `chosen` is the default). Runs with normal Python. |
+| `make_still.py` | Pose stills: chosen frames in chosen directions, old render above new (for example the bow's lowest point from the side and front). Runs with normal Python. |
 | `make_compare.py` | Plays one animation from two renders side by side (for example an old and a new walk) over a floor grid that scrolls at the design speed, so you can check the feet stay planted. Runs with normal Python. |
+| `toon_kit.py` | The shared house look for every build script (enemies, rooms, props): the toon material (one fixed light), the dark outline hull, coloured rim hulls (glow, telegraph) and mesh helpers. Imported inside Blender. |
+| `make_creature_preview.py` | Enemy previews: stacks body, shield, glow, telegraph (tinted red during wind-ups) and light layers; writes a contact sheet and a GIF per animation (`--with shield` or `--with shield-broken` picks the shield layer). Runs with normal Python. |
+| `make_anim_gif.py` | Animated enemy previews from the existing sheets (no re-render): every animation in order at its own fps, every frame, S/E/SE side by side with a label (`<enemy>_anim.gif`), or a side-by-side wind-up→attack comparison of all four on one scale (`--windups`). The telegraph rim follows each frame's `telegraphIntensity`. Runs with normal Python. |
+| `make_enemy_lineup.py` | Enemy line-up: all Tier 1 enemies side by side (idle and wind-up, chosen directions) at 1x (true size) and 2x on the same world scale. Runs with normal Python. |
+| `check_prop_clearance.py` | Prop clearance check: tests a prop (for example the broom) against the body's meshes in 3D on every frame of an animation and lists any intersection (the hands may touch). One check covers all 8 directions. Runs inside Blender. |
+| `make_review_sheet.py` | "Review these first" pictures: chosen frames of chosen animations in chosen directions, labelled, at 2x (`--kind player` or `creature`). Runs with normal Python. |
+| `render_static.py` | Renders static art (rooms, decorations, tiles, doors, chests) from the same 35° camera, with the floor grid at exactly 80 px per tile. One PNG per target and layer (multi-frame targets as horizontal strips) plus `static.json` with sizes, anchors and footprints. The targets come from the `.blend`'s `static_targets`. Runs inside Blender. |
+| `make_static_preview.py` | Static art previews: a gallery of every sprite (`--gallery`) and a room with decorations placed on the grid (`--scene room --place "id@col,row;..."`, `--frame id=n`), with the front wall drawn on top. Runs with normal Python. |
+| `make_tower_preview.py` | Tower kit previews: a mock room tiled from the kit (floors, wall, pillars, the 4 doors, chest, shrine), the doors closed and open at 2x, the chest and shrine frames, `chest_open.gif`, `shrine_glow.gif` and the open-chest still. Runs with normal Python. |
 
 Made with Blender 4.2 LTS (4.2.23). Previews need Python 3 with Pillow and numpy (`pip install pillow numpy`).
 
@@ -69,7 +79,12 @@ python3 incoming-art/tools/make_compare.py --old path/to/old-sprites --new path/
 `make_preview.py --anim-gifs jab,bow,defeat` also writes one GIF per animation (all 8 directions, real frame timing; one-shots hold their last frame, or wait for `repeatEverySec`, then replay). `--gif-anims none` skips the big combined GIF. `make_compare.py --strip file.png` also writes every frame of both renders side by side (first direction).
 
 ```bash
-python3 incoming-art/tools/make_belt_chart.py --old path/to/old-sprites --new path/to/sprites --out belt-chart.png
+python3 incoming-art/tools/make_belt_chart.py --old path/to/old-sprites --new path/to/sprites --out belt-chart.png [--options A,B,C]
+python3 incoming-art/tools/make_still.py --old path/to/old-sprites --new path/to/sprites --anim bow --frames 11 --dirs E,W,S --out still.png
 ```
 
 GIF previews keep time with a 30 fps clock. GIF delays are stored in 1/100 s, so they play about 10% fast; the JSON timing is exact.
+
+**Belt styles in the previews:** for sheets with a tinted `belt-rim` layer (the player character, belt revision), `make_preview.py` tints every belt layer per belt with the chosen style (`belt_style()`, the same table as `beltStyles` in `player.json`). Older sheets keep the old rule.
+
+**Review sheets (Batch 1+):** `make_review_sheet.py --kind player|creature --sheets <folder> --cells "anim:frame:dir;..." --title "..." --out review.png` puts chosen frames side by side at 2x with labels. Each batch's `preview/review-N-*.png` ("review these first") is made with it.

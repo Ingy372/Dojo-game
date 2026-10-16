@@ -49,8 +49,35 @@ def over(dst, src):
     out = (src[..., :3] * a + dst[..., :3] * dst[..., 3:4] * (1 - a)) / np.maximum(out_a, 1e-6)
     return np.concatenate([out, out_a], -1)
 
-def composite(sheets, meta, anim, gi="#f2e9d8", belt=("Yellow", "#f5d22e", None), stripes=1):
+def lum(color):
+    c = rgb(color) * 255; return c[0] * 0.3 + c[1] * 0.59 + c[2] * 0.11
+
+# Belt styles for the belt revision layers (belt-rim, belt-center-edge, belt-sheen). Each option gives the
+# tint for every belt layer; None = do not draw that layer. "chosen" is the default recorded in player.json.
+BELT_OPTIONS = {
+    "batch1": dict(dark="#3c3c44", rim_dark_belt="#2e2a3a", sep=None, sheen=None),            # Batch 1 look
+    "A": dict(dark="#3c3c44", rim_dark_belt="#c9ccd6", sep=None, sheen=None),                 # light rim on black belts
+    "B": dict(dark="#3c3c44", rim_dark_belt="#c9ccd6", sep="#ece6d8", sheen=None),            # A + light separator
+    "C": dict(dark="#26272f", rim_dark_belt="#c9ccd6", sep=None, sheen="#a2a6b6",             # light rim, deeper black
+              center_dark="#111116"),                                                        # + top sheen, deep-black centre
+}
+BELT_OPTIONS["chosen"] = BELT_OPTIONS["C"]
+
+def belt_style(belt, option="chosen"):
+    """Tints for every belt layer of one belt (name, color, color2) under a style option."""
+    o = BELT_OPTIONS[option]
+    dk = lambda c: c and lum(c) < 40
+    t = lambda c: (o["dark"] if dk(c) else c) if c else None
+    cd = o.get("center_dark")
+    return {"belt": t(belt[1]), "belt-center": (cd if cd and dk(belt[2]) else t(belt[2])),
+            "belt-rim": o["rim_dark_belt"] if dk(belt[1]) else "#2e2a3a",
+            "belt-center-edge": o["sep"] if belt[2] else None,
+            "belt-sheen": o["sheen"] if dk(belt[1]) else None}
+
+def composite(sheets, meta, anim, gi="#f2e9d8", belt=("Yellow", "#f5d22e", None), stripes=1, style="chosen"):
     layers = sorted(meta["layers"], key=lambda l: l["order"])
+    bs = belt_style(belt, style)
+    styled = any(x["name"] == "belt-rim" and x["tint"] for x in layers)
     base = None
     for l in layers:
         name = l["name"]
@@ -61,7 +88,11 @@ def composite(sheets, meta, anim, gi="#f2e9d8", belt=("Yellow", "#f5d22e", None)
             continue
         img = np.asarray(Image.open(os.path.join(sheets, meta["animations"][anim]["sheets"][name])).convert("RGBA"),
                          dtype=np.float32) / 255
+        if name in ("belt-center-edge", "belt-sheen") and not bs[name]:
+            continue
         tint = {"gi": gi, "belt": belt_tint(belt[1]), "belt-center": belt_tint(belt[2])}.get(name)
+        if styled and name in bs:
+            tint = bs[name]                            # belt revision sheets: per-belt style; older sheets keep the old rule
         if m:
             tint = tape_for(belt[1])
         if l["tint"] and tint:
