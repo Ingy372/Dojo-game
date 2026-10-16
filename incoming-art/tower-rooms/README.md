@@ -24,7 +24,7 @@ All sizes, anchors and frame counts are in `sprites/static.json`. Multi-frame pi
 ## Doors (`door-battle`, `door-challenge`, `door-treasure`, `door-rest`)
 
 - **Size:** 96 × 140. Frame 0 = closed sliding panels, frame 1 = open (warm light in the doorway). Anchor = the bottom-centre on the wall's foot line.
-- **Icon:** each door has its icon on a round plaque above the lintel. The same icon is also a separate 48 × 56 sprite (`icon-<type>`) for the map or a hover hint.
+- **Icon:** each door has its icon on a full round medallion above the lintel (review fix: it used to be cut off by the wall cap). The medallion is turned to face the camera, so it reads as a true circle, with the icon centred on it. The same icon is also a separate 48 × 56 sprite (`icon-<type>`) for the map or a hover hint.
 
 | Type | Colour | Icon |
 | --- | --- | --- |
@@ -33,10 +33,20 @@ All sizes, anchors and frame counts are in `sprites/static.json`. Multi-frame pi
 | treasure | gold `#d9a441` | A little chest |
 | rest | green `#3f9a7a` | A green leaf |
 
-## Chest: `chest` (104 × 168, 7 frames)
+## Chest (review fix: made special): 3 sheets, 12 fps, all 104 px wide, layers `chest`, `chest-glow`, `chest-fx`
 
-- **Frames:** 0 closed; 1–5 the lid opens with a warm glow and sparkles; 6 open.
-- `preview/chest-open.png` is the open still (frame 6). Play frames 0→6 at 12 fps once, then hold 6.
+The layers stack bottom to top: wood and gold, then the light in the seams, inside and the glints, then the beam, stars and sparkles. With the FX on their own layers, the game can add sound or particles on the key frames.
+
+| Sheet | Frames | Plays | What |
+| --- | --- | --- | --- |
+| `chest-closed` | 12 (1.0 s) | loop | Closed idle: a glint slides down a gold band |
+| `chest-open` | 30 (2.5 s) | once | **0–11 anticipation:** wiggles and little hops, the lid rattles, light grows in the seam. **12 the lid bursts open:** squash and overshoot, a bright golden light beam. **13–29:** stars and sparkles rise and spin, the inside glow pulses (peak on frame 16), the beam fades by frame 26 |
+| `chest-opened` | 12 (1.0 s) | loop | Open idle: the light inside gently breathes, small twinkles rise |
+
+- **Key frames** are in `static.json` (`keyFrames`): anticipation 0–11, lidBurst 12, beamPeak 14, glowPulse 16, starsRise 13–29, settled 29.
+- **Sound cues:** a rising shimmer on 0–11, a pop and chime on 12.
+- `chest-open` and `chest-opened` are the same size and anchor, so they follow on seamlessly. `chest-closed` is shorter: it has no beam room above it. All three anchor on the bottom-centre of the C tile.
+- **Previews:** `preview/chest-open.png` is the open still. `chest_closed_idle.gif` shows the closed idle; `chest_open.gif` plays closed idle → opening → open idle.
 
 ## Rest shrine: `shrine` + `shrine-glow` (104 × 168, 8 frames)
 
@@ -48,4 +58,4 @@ All sizes, anchors and frame counts are in `sprites/static.json`. Multi-frame pi
 - `review-1-tiled-room.png`: start here.
 - `review-2-doors-2x.png`: start here.
 - `review-3-chest-and-shrine-2x.png`: start here.
-- `chest_open.gif`, `shrine_glow.gif`, `gallery-1x.png`.
+- `door-closeup-3x.png`, `chest_closed_idle.gif`, `chest_open.gif`, `shrine_glow.gif`, `gallery-1x.png`.

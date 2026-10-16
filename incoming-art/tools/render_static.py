@@ -109,7 +109,7 @@ def main():
              "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)"}
         if frames:
             e.update(frames=frames[1] - frames[0] + 1, frameWidth=wpx, fps=t.get("fps", 12), loop=t.get("loop", False))
-        for k in ("footprint", "place", "note", "info"):
+        for k in ("footprint", "place", "note", "info", "keyFrames"):
             if k in t: e[k] = t[k]
         meta["sprites"][t["name"]] = e
     for lc in lcs.values():

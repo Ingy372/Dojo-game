@@ -143,6 +143,17 @@ def icon(lay, kind, c, s, parent=None):
         oell(lay, f"{lay}_leaf", Vector((c.x, y, c.z + 0.02 * s)), (0.075 * s, 0.03, 0.17 * s), "#6cc46f", rot=(0, 35, 0), parent=parent)
         obox(lay, f"{lay}_vein", Vector((c.x, y - 0.031, c.z + 0.02 * s)), (0.006 * s, 0.004, 0.24 * s), M("#3f8f4f", True), rot=(0, 35, 0), outline=False, parent=parent)
         obox(lay, f"{lay}_stem", Vector((c.x - 0.1 * s, y - 0.01, c.z - 0.14 * s)), (0.015 * s, 0.01, 0.08 * s), "#3f8f4f", rot=(0, 35, 0), parent=parent)
+def medallion(lay, pc, d):
+    """A full round medallion turned to face the camera (so it reads as a true circle, not an ellipse), with
+    a cream face, the room colour as a ring, and the icon centred on it. Sits in front of the wall cap."""
+    piv = empty(lay + "_medal", pc)
+    otube(lay, lay + "_plaque", pc + Vector((0, 0.03, 0)), pc + Vector((0, -0.02, 0)), 0.22, 0.22, "#f6efdc", segs=32, parent=piv)
+    otube(lay, lay + "_plaquerim", pc + Vector((0, -0.021, 0)), pc + Vector((0, -0.026, 0)), 0.205, 0.205, M(d["trim"], True), segs=32, outline=False, parent=piv)
+    otube(lay, lay + "_plaquein", pc + Vector((0, -0.027, 0)), pc + Vector((0, -0.03, 0)), 0.175, 0.175, M("#f6efdc", True), segs=32, outline=False, parent=piv)
+    icon(lay, d["icon"], pc + Vector((0, -0.02, 0)), 1.0, parent=piv)
+    piv.rotation_euler = (math.radians(-35), 0, 0)    # face the 35-degree camera
+    return piv
+
 def door(kind):
     d = DOORS[kind]; lay = f"door-{kind}"; y = grid(0, 1).y
     # stone frame and wooden posts in the top wall cell, the room kind's colour on the trim
@@ -160,12 +171,8 @@ def door(kind):
         obox(lay, f"{lay}_bar{k}", Vector((x, y - 0.04, 0.58)), (0.24, 0.006, 0.02), M("#a07a4a", True), outline=False, parent=hinge[k])
     glow = empty(f"{lay}_glowpivot", Vector((0.5, y, 0.52)))
     obox(lay, lay + "_glow", Vector((0.5, y - 0.006, 0.52)), (0.64, 0.01, 1.02), M("#fff3c4", True), outline=False, parent=glow)
-    # plaque with the icon above the door
-    pc = Vector((0.5, y - 0.06, 1.42))
-    otube(lay, lay + "_plaque", pc + Vector((0, 0.03, 0)), pc + Vector((0, -0.02, 0)), 0.22, 0.22, "#f6efdc", segs=24)
-    otube(lay, lay + "_plaquerim", pc + Vector((0, -0.021, 0)), pc + Vector((0, -0.026, 0)), 0.205, 0.205, M(d["trim"], True), segs=24, outline=False)
-    otube(lay, lay + "_plaquein", pc + Vector((0, -0.027, 0)), pc + Vector((0, -0.03, 0)), 0.18, 0.18, M("#f6efdc", True), segs=24, outline=False)
-    icon(lay, d["icon"], pc + Vector((0, -0.02, 0)), 1.0)
+    # round medallion with the icon above the door (Jay's review: full circle, icon centred, fully visible)
+    medallion(lay, Vector((0.5, y - 0.2, 1.42)), d)
     # frames: 1 = closed, 2 = open (panels slide into the wall, the doorway glows warm)
     for o in hinge + [glow]:
         o.keyframe_insert("location", frame=1); o.keyframe_insert("scale", frame=1)
@@ -176,47 +183,150 @@ def door(kind):
     for o in hinge + [glow]:
         for fc in o.animation_data.action.fcurves:
             for kp in fc.keyframe_points: kp.interpolation = "CONSTANT"
-    target(lay, [lay], [-0.1, 0, 1.1, 1], 0.75, anchor=[0.5, 1], frames=[1, 2], fps=1, group="doors",
+    target(lay, [lay], [-0.1, 0, 1.1, 1], 0.95, anchor=[0.5, 1], frames=[1, 2], fps=1, group="doors",
            note=f"{d['label']} door for a 'D' slot in the top wall: frame 0 closed, frame 1 open (doors slide apart, the doorway glows). anchorPx = bottom-centre of the door cell. The icon plaque rises above the wall")
     # the icon on its own too (for door labels, the map, buttons)
     ic = f"icon-{kind}"
     pc2 = Vector((5.5 + list(DOORS).index(kind) * 1.0, -2.0, 0.6))
-    otube(ic, ic + "_plaque", pc2 + Vector((0, 0.03, 0)), pc2 + Vector((0, -0.02, 0)), 0.22, 0.22, "#f6efdc", segs=24)
-    otube(ic, ic + "_rim", pc2 + Vector((0, -0.021, 0)), pc2 + Vector((0, -0.026, 0)), 0.205, 0.205, M(d["trim"], True), segs=24, outline=False)
-    otube(ic, ic + "_in", pc2 + Vector((0, -0.027, 0)), pc2 + Vector((0, -0.03, 0)), 0.18, 0.18, M("#f6efdc", True), segs=24, outline=False)
-    icon(ic, d["icon"], pc2 + Vector((0, -0.02, 0)), 1.0)
-    target(ic, [ic], [pc2.x - 0.3, -pc2.y / K - 0.1, pc2.x + 0.3, -pc2.y / K + 0.1], 0.5, anchor="bottom-center", group="doors",
-           note="the door's icon on its plaque, on its own (for labels, the floor map or buttons)")
+    medallion(ic, pc2, d)
+    target(ic, [ic], [pc2.x - 0.3, -pc2.y / K - 0.1, pc2.x + 0.3, -pc2.y / K + 0.1], 0.6, anchor="bottom-center", group="doors",
+           note="the door's icon on its round medallion, on its own (for labels, the floor map or buttons)")
 for k in DOORS:
     door(k)
 
-# ------------------------------------------------------------------ chest: closed, opening, open
+# ------------------------------------------------------------------ chest: closed idle, opening, open idle
+# Jay's review: make opening it special. One timeline at 12 fps, three targets (three sheets):
+#   chest-closed : frames 1-12  (1.0 s loop)  closed, a glint sweeps across the gold bands now and then
+#   chest-open   : frames 13-42 (2.5 s, once) anticipation (wiggle, light building in the seams), the lid bursts
+#                  open with a golden light beam, stars and sparkles rise, the glow pulses and settles
+#   chest-opened : frames 43-54 (1.0 s loop)  open, a soft shimmering glow and a few twinkles
+# Layers: chest (wood and gold), chest-glow (seam light, the light inside, the glints), chest-fx (beam, stars,
+# sparkles), so the game can add sound or particles on the key frames listed in the json.
+def glow_mat(name, hex_color, alpha):
+    """See-through light (for the beam): emission mixed with transparency."""
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = srgb(hex_color)
+    tr = nt.nodes.new("ShaderNodeBsdfTransparent"); mx = nt.nodes.new("ShaderNodeMixShader"); mx.inputs["Fac"].default_value = alpha
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs["Surface"])
+    m.blend_method = "BLEND"; return m
+
+def star_bm(r, inner=0.42):
+    bm = bmesh.new()
+    pts = [Vector((math.cos(a) * (r if i % 2 == 0 else r * inner), 0, math.sin(a) * (r if i % 2 == 0 else r * inner)))
+           for i, a in enumerate([math.pi / 2 + i * math.pi / 5 for i in range(10)])]
+    vs = [bm.verts.new(p) for p in pts]; bm.faces.new(vs)
+    bmesh.ops.solidify(bm, geom=bm.faces[:], thickness=0.01)
+    return bm
+
+def kf(o, f, loc=None, rot=None, sc=None):
+    if loc is not None: o.location = loc; o.keyframe_insert("location", frame=f)
+    if rot is not None: o.rotation_euler = [math.radians(v) for v in rot]; o.keyframe_insert("rotation_euler", frame=f)
+    if sc is not None:
+        o.scale = sc if isinstance(sc, (tuple, list)) else (max(sc, 1e-4),) * 3; o.keyframe_insert("scale", frame=f)
+
 def chest():
-    lay = "chest"; c = grid(0.5, 0.55)
-    obox(lay, "chest_body", c + Vector((0, 0, 0.18)), (0.6, 0.4, 0.34), "#a46e40", bevel=0.02)
+    L, G, X = "chest", "chest-glow", "chest-fx"; c = grid(0.5, 0.6)
+    root = empty("chest_root", c)
+    def par(o, p):
+        bpy.context.view_layer.update(); o.parent = p; o.matrix_parent_inverse = p.matrix_world.inverted()
+    obox(L, "chest_body", c + Vector((0, 0, 0.18)), (0.6, 0.4, 0.34), "#a46e40", bevel=0.02, parent=root)
     for x in (-0.22, 0.22):
-        obox(lay, f"chest_band{x}", c + Vector((x, 0, 0.18)), (0.05, 0.415, 0.345), "#d9a441", outline=False)
-    hinge = empty("chest_hinge", c + Vector((0, 0.2, 0.35)))
-    put("chest_lid", tube(c + Vector((-0.3, 0, 0.35)), c + Vector((0.3, 0, 0.35)), 0.2, 0.2, segs=16, sy=1.0), "#b57a45", lay, smooth=True, parent=hinge)
-    bm = bpy.data.objects["chest_lid"]
-    obox(lay, "chest_lock", c + Vector((0, -0.205, 0.33)), (0.1, 0.03, 0.12), "#ffd36b", parent=None)
+        obox(L, f"chest_band{x}", c + Vector((x, 0, 0.18)), (0.05, 0.415, 0.345), "#e0b04a", outline=False, parent=root)
+    obox(L, "chest_lock", c + Vector((0, -0.21, 0.33)), (0.1, 0.03, 0.12), "#ffd36b", parent=root)
+    hinge = empty("chest_hinge", c + Vector((0, 0.2, 0.35))); par(hinge, root)
+    put("chest_lid", tube(c + Vector((-0.3, 0, 0.35)), c + Vector((0.3, 0, 0.35)), 0.2, 0.2, segs=16), "#b57a45", L, smooth=True, parent=hinge)
     for x in (-0.22, 0.22):
         put(f"chest_lidband{x}", tube(c + Vector((x - 0.025, 0, 0.35)), c + Vector((x + 0.025, 0, 0.35)), 0.205, 0.205, segs=16),
-            "#d9a441", lay, outline=False, smooth=True, parent=hinge)
-    # treasure glow inside (scales up as the lid opens): soft warm light and a few sparkles, nothing to read
-    glow = empty("chest_glow", c + Vector((0, 0, 0.36)))
-    oell(lay, "chest_light", c + Vector((0, 0, 0.36)), (0.26, 0.16, 0.12), M("#fff3c4", True), outline=False, parent=glow)
+            "#e0b04a", L, outline=False, smooth=True, parent=hinge)
+    # glow layer: a thin line of light in the seam, the light inside, a glint on the bands
+    seam = empty("chest_seam", c + Vector((0, -0.1, 0.35))); par(seam, root)
+    obox(G, "chest_seamlight", c + Vector((0, -0.205, 0.352)), (0.6, 0.012, 0.022), M("#fff3c4", True), outline=False, parent=seam)
+    inside = empty("chest_inside", c + Vector((0, 0, 0.36))); par(inside, root)
+    oell(G, "chest_light", c + Vector((0, 0, 0.36)), (0.27, 0.17, 0.1), M("#fff6c8", True), outline=False, parent=inside)
+    oell(G, "chest_aura", c + Vector((0, 0, 0.38)), (0.4, 0.27, 0.05), M("#ffe48a", True), outline=False, parent=inside)
+    glint = empty("chest_glint", c + Vector((-0.22, -0.22, 0.2))); par(glint, root)
+    put("chest_glintstar", star_bm(0.06, 0.3), M("#fffbe8", True), G, outline=False, parent=glint)
+    # fx layer: the light beam, 5 stars and 6 sparkles
+    beam = empty("chest_beam", c + Vector((0, 0, 0.36)))
+    otube(X, "chest_beamcore", c + Vector((0, 0, 0.36)), c + Vector((0, 0, 1.9)), 0.1, 0.035, glow_mat("BEAMCORE", "#fffdf0", 0.85), segs=16, outline=False, parent=beam)
+    otube(X, "chest_beamedge", c + Vector((0, 0.02, 0.36)), c + Vector((0, 0.02, 1.9)), 0.22, 0.07, glow_mat("BEAMEDGE", "#ffeaa0", 0.5), segs=16, outline=False, parent=beam)
+    stars, sparks = [], []
     for k in range(5):
-        a = k * 2 * math.pi / 5
-        oell(lay, f"chest_spark{k}", c + Vector((math.cos(a) * 0.2, math.sin(a) * 0.08, 0.5 + 0.08 * (k % 2))), (0.03, 0.03, 0.05),
-             M("#ffe48a", True), outline=False, segs=4, rings=2, parent=glow)
-    N = 7
-    for f in range(1, N + 1):
-        t = (f - 1) / (N - 1); e = 0.5 - 0.5 * math.cos(math.pi * t)
-        hinge.rotation_euler = (math.radians(-105 * e), 0, 0); hinge.keyframe_insert("rotation_euler", frame=f)
-        glow.scale = (max(0.0001, e),) * 3; glow.location = c + Vector((0, 0, 0.36 + 0.1 * e)); glow.keyframe_insert("scale", frame=f); glow.keyframe_insert("location", frame=f)
-    target("chest", [lay], [-0.15, 0, 1.15, 1.1], 1.0, anchor=[0.5, 1], frames=[1, N], fps=12, group="chest",
-           note="the chest for a 'C' spot: a sheet of 7 frames: frame 0 = closed (still), 1-5 the lid opens, 6 = open (still). Play 0 -> 6 once at 12 fps (0.5 s), then hold the last frame")
+        e = empty(f"chest_starpiv{k}", c + Vector((0, -0.05, 0.4)))
+        put(f"chest_star{k}", star_bm(0.12 if k % 2 else 0.095), "#ffd36b", X, parent=e)
+        stars.append(e)
+    for k in range(6):
+        e = empty(f"chest_sparkpiv{k}", c + Vector((0, -0.05, 0.4)))
+        put(f"chest_spark{k}", star_bm(0.055, 0.28), M("#fffbe8", True), X, outline=False, parent=e)
+        sparks.append(e)
+    CL = (-35, 0, 0)   # stars face the camera
+    def lid(f, ang): kf(hinge, f, rot=(-ang, 0, 0))
+    # --- closed idle 1-12: still, a glint slides down a band on frames 3-8
+    for f in range(1, 13):
+        kf(root, f, loc=c, rot=(0, 0, 0), sc=(1, 1, 1)); lid(f, 0)
+        kf(seam, f, sc=0); kf(inside, f, sc=0); kf(beam, f, sc=0)
+        t = (f - 3) / 5
+        x = -0.22 if f < 8 else 0.22
+        kf(glint, f, loc=c + Vector((-0.22 + 0.44 * (0 <= t <= 1 and t > 0.5), -0.22, 0.32 - 0.24 * (t % 1 if 0 <= t <= 1 else 0))),
+           rot=CL, sc=(math.sin(math.pi * t) if 0 <= t <= 1 else 0))
+        for e in stars + sparks: kf(e, f, sc=0)
+    # --- opening 13-42
+    F0 = 13
+    for i in range(30):
+        f = F0 + i
+        wig = 0.0; hop = 0.0; ang = 0.0; sq = (1, 1, 1)
+        if i < 12:                       # anticipation: wiggles growing, lid rattles, light leaks from the seam
+            g = (i + 1) / 12
+            wig = 5 * g * math.sin(i * 2.2); hop = 0.025 * g * abs(math.sin(i * 1.7)); ang = 3 * g * abs(math.sin(i * 2.9))
+            kf(seam, f, sc=(1, 1, 0.3 + 1.7 * g)); kf(inside, f, sc=0); kf(beam, f, sc=0)
+        else:
+            j = i - 12                   # 0..17
+            ang = [60, 112, 118, 108, 104, 106][j] if j < 6 else 105
+            sq = [(1.08, 1.08, 0.88), (0.95, 0.95, 1.08), (1.02, 1.02, 0.98)][j] if j < 3 else (1, 1, 1)
+            kf(seam, f, sc=0)
+            pulse = 1 + 0.35 * math.exp(-((j - 4) / 3.0) ** 2)
+            kf(inside, f, sc=min(1, (j + 1) / 2) * pulse)
+            bw = [0.5, 1.0, 1.15, 1.1, 1.0, 0.9, 0.8, 0.68, 0.56, 0.45, 0.34, 0.24, 0.15, 0.08, 0.0, 0, 0, 0][j]
+            bh = [0.45, 0.9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.98, 0.95, 0.9, 0.85, 0.8, 0.8, 0.8, 0.8][j]
+            kf(beam, f, sc=(max(bw, 1e-4), max(bw, 1e-4), max(bh, 1e-4)))
+        kf(root, f, loc=c + Vector((0, 0, hop)), rot=(0, wig, 0), sc=sq); lid(f, ang)
+        kf(glint, f, sc=0, rot=CL)
+        for k, e in enumerate(stars):       # stars burst up and out, spin, twinkle away
+            j = i - 13 - k * 0.6
+            if j < 0 or j > 14: kf(e, f, sc=0, rot=CL); continue
+            u = j / 14; a = (k - 2) * 0.17
+            kf(e, f, loc=c + Vector((a * (0.4 + 1.2 * u), -0.15, 0.55 + 1.5 * u - 0.4 * u * u)), rot=(-35, 0, 140 * u * (1 if k % 2 else -1)),
+               sc=(1.0 - u ** 3) * min(1, j / 1.5))
+        for k, e in enumerate(sparks):
+            j = i - 14 - k
+            if j < 0 or j > 10: kf(e, f, sc=0, rot=CL); continue
+            u = j / 10; a = ((k * 37) % 11 - 5) / 5
+            kf(e, f, loc=c + Vector((a * 0.35, -0.2, 0.5 + 1.0 * u)), rot=CL, sc=math.sin(math.pi * u) * (1.2 if k % 2 else 0.9))
+    # --- open idle 43-54: soft glow breathing, two twinkles
+    for i in range(12):
+        f = 43 + i; ph = 2 * math.pi * i / 12
+        kf(root, f, loc=c, rot=(0, 0, 0), sc=(1, 1, 1)); lid(f, 105); kf(seam, f, sc=0); kf(beam, f, sc=0)
+        kf(inside, f, sc=1.0 + 0.08 * math.sin(ph)); kf(glint, f, sc=0, rot=CL)
+        for e in stars: kf(e, f, sc=0)
+        for k, e in enumerate(sparks):
+            if k < 3:
+                u = ((i + 4 * k) % 12) / 12
+                kf(e, f, loc=c + Vector(((k - 1) * 0.18, -0.15, 0.5 + 0.35 * u)), rot=CL, sc=math.sin(math.pi * u) * 0.9)
+            else: kf(e, f, sc=0)
+    for o in bpy.data.objects:
+        if o.animation_data and o.animation_data.action and o.name.startswith("chest_"):
+            for fc in o.animation_data.action.fcurves:
+                for kp in fc.keyframe_points: kp.interpolation = "LINEAR"
+    common = dict(group="chest", anchor=[0.5, 1])
+    lays = [L, G, X]
+    target("chest-closed", lays, [-0.3, 0, 1.3, 1.2], 0.8, frames=[1, 12], fps=12, loop=True,
+           note="closed chest idle loop (1 s at 12 fps): a glint slides down the gold bands. Layers bottom to top: chest, chest-glow, chest-fx", **common)
+    target("chest-open", lays, [-0.3, 0, 1.3, 1.2], 2.3, frames=[13, 42], fps=12,
+           keyFrames={"anticipation": "0-11", "lidBurst": 12, "beamPeak": 14, "starsRise": "13-29", "glowPulse": 16, "settled": 29},
+           note="opening, once (2.5 s at 12 fps), then play chest-opened. 0-11 wiggle and light in the seams (a rising sound), 12 the lid bursts open (pop / chime), 12-25 the light beam fades, 13-29 stars and sparkles rise", **common)
+    target("chest-opened", lays, [-0.3, 0, 1.3, 1.2], 2.3, frames=[43, 54], fps=12, loop=True,
+           note="open chest idle loop (1 s at 12 fps): soft shimmering light and twinkles. Same size and anchor as chest-open, so it follows seamlessly", **common)
 chest()
 
 # ------------------------------------------------------------------ rest shrine with a gentle glow loop

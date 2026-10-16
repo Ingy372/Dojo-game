@@ -1,3 +1,23 @@
+# Delivery Note: Batch 4 review fixes (door medallions, special chest), 2026-10-16
+
+**WHAT**
+- **Door medallions:** full, clean round medallions with the icon centred, fully visible on every door and on the separate `icon-*` sprites. See `preview/door-closeup-3x.png`.
+- **Chest, rebuilt as 3 sheets:**
+  - a closed idle with a glint;
+  - the opening: wiggle and light in the seams, then the lid bursts open with a golden beam, stars and sparkles, and a glow pulse;
+  - a shimmering open idle.
+- The chest has 3 layers (`chest`, `chest-glow`, `chest-fx`), with frame-by-frame key frames in `static.json`.
+- GIFs: `preview/chest_closed_idle.gif` and `preview/chest_open.gif`.
+
+**WHY**
+- Jay's review: the medallions were cut off (not intended), and opening a chest should feel special and rewarding.
+
+**DECIDE (Jay)**
+1. Approve the medallions.
+2. Approve the chest opening. Is 2.5 s the right length, or should it be shorter?
+
+**NEXT:** Claude Code plays `chest-open` once, then loops `chest-opened`, and adds sound on the key frames.
+
 # Delivery Note: Batch 4 (Tower rooms), 2026-10-16
 
 **WHAT**
