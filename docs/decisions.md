@@ -328,3 +328,11 @@ Jay asked Claude to test and tune the game before his next playtest.
   - 9 small gold stars drifting up (16 and a bigger flash for the Floor Keeper).
   
   These use normal colours with a thin darker edge, so they show on any floor.
+- **Next art (brief for the Art Director, 2026-10-16):** `docs/briefs/art-director-batches-5-9.md`. In order:
+  - 5: the boss door;
+  - 6: the customizable character (tinted skin and hair, pick-one faces and hair styles, colour palettes);
+  - 7: Sensei, Senpai and Kohai, with portraits;
+  - 8: icons for existing gear, Insights, abilities and decorations;
+  - 9: the Yellow belt room kit.
+  
+  The art bot draws only. Names, words and game rules come from the other bots or Jay. Yellow belt creatures wait until their behaviour is designed.
