@@ -178,3 +178,28 @@
 - Next: Jay re-tests decorating and the zoom on his phone.
 - Jay: view much better, but moving was still clunky (a missed arrow tap moved the decoration across the room). Added a "Tap to move" or "Arrow pad" choice (asked the first time, changeable with the "Move" button); arrow mode ignores floor taps and catches near-misses. Copied onto `main`.
 - Jay: the arrow pad covered the Done button. Fixed: top buttons always stay on top, and short screens get one row of big arrows. Checked at 844×390, 844×300 and 667×320. Copied onto `main`.
+
+## Art in the game (2026-10-16)
+
+Jay approved all four art batches from the Art Director bot. The placeholder shapes are replaced.
+
+**Done**
+- **The import step** (`tools/art-import/`): one command packs approved art from `incoming-art/` into small picture pages in `assets/art/` (about 10 MB in all).
+- **The character** in the Tower, the dojo, the Training Board and the celebrations:
+  - 13 moves in 8 directions, with the belt in the real rank's colours and stripes;
+  - the promotion ceremony: bow, new belt tied, celebrate.
+- **The four Tier 1 creatures:** moving, wind-ups with the warning glow, attacks, flinching, dizzy, winded, the boss calling for help, and the dissolve into light.
+- **Tower rooms:** stone floors and walls, pillars, coloured doors with icons that open, the treasure chest's opening, and the glowing rest shrine.
+- **Home Dojo:** the wooden room, all 11 decorations, scuffed mats, the crooked weapon rack, and the dust, footprints, towel and water bottle.
+- 128 automated tests pass. Checked on a phone-sized screen in a test browser: walking, wind-up and attack, a treasure room's chest, a rest room, the practice room, the bow, the promotion ceremony, and a messy dojo with every decoration placed.
+- Copied onto `main` (the live link) after each step, with Jay's OK.
+
+**Not done / known limits**
+- No special boss door yet (the boss uses the battle door).
+- Style guide and fonts still to approve (open questions).
+- Art may look slightly soft on high-end phones (see decisions).
+- The menus, buttons and icons are still the simple placeholder style.
+
+**Next**
+- Jay tests on his phone (see the session summary for what to try) and gives feedback.
+- Milestone 4 is still paused, waiting for the Grok bot's design material.

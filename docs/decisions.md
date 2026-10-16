@@ -7,7 +7,8 @@ A record of choices already made, newest at the bottom, so settled questions are
 Anything waiting on Jay's answer goes here. When he answers, the answer moves into the log below and the question is removed.
 
 1. **Black belt to 2nd degree.** At Action Zone, black belt is 1st degree. How long does a student usually wait between 1st degree and 2nd degree? (Set to 1 year for now; it only matters for students far in the future.)
-2. **The one-character art test.** The Art Director bot (Grok bot) is building one martial artist in Blender (idle, walk, strike, counter). When it arrives, Claude Code puts it in the game on a test branch so Jay can approve the art style on his phone.
+2. **Style guide and fonts.** The Art Director's `incoming-art/style-guide-draft.md` hasn't been approved on its own yet (the art that follows it is). When it is, move it to `docs/style-guide.md`. Fonts: Fredoka + Nunito, Fredoka + Andika, or keep the system font? (System font for now.)
+3. **Boss door.** The boss and "home" doors borrow the battle and rest doors. Does Jay want the bot to make a special boss door (e.g. bigger, with a crown)?
 
 ## Milestone 0 — Setup (2026-10-05)
 
@@ -293,3 +294,25 @@ Jay asked Claude to test and tune the game before his next playtest.
 - **Choose how to move decorations (Jay, 2026-10-08):** a missed arrow tap landed on the floor and sent the decoration across the room. Now the first time you tap Decorate, a card asks **"Tap to move"** or **"Arrow pad"**, and only that style is active. The choice is remembered on the phone and can be changed with the "Move" button. With the arrow pad, floor taps never move anything, the arrows are bigger (60 px), and a backing panel around them catches near-misses. Dragging still works in both styles.
 - **Version stamp on the title screen (2026-10-08):** small text at the top-left shows when the build was made (in the phone's own time), so Jay can check his phone has the newest version. Jay's phone showed an older copy after the move-style change was published.
 - **Arrow pad never covers the top buttons (Jay, 2026-10-08):** on Jay's phone the arrow pad covered "Done", so there was no way out of decorating. Now the top buttons are always drawn above the pad, and on short screens (browser toolbars showing) the arrows switch from a cross to one row of big arrows (◀ ▲ ▼ ▶) just above the storage tray, instead of shrinking.
+
+## Art import (Jay approved all four art batches, 2026-10-16)
+
+- **Approved:** Batch 1 (player character, every animation), Batch 2 (Tier 1 creatures), Batch 3 (Home Dojo), Batch 4 (Tower rooms). The old one-character test (`incoming-art/character-test/`) is replaced by Batch 1 and isn't used.
+- **The import step** is `tools/art-import/import_art.py` (Python 3 + Pillow, a free picture library; Jay OK'd it). It only runs while building, so nothing extra goes into the game. It reads the approved list in `tools/art-import/approved.json` and never changes `incoming-art/`. How to run it and add new art: `tools/art-import/README.md`.
+- **Art is shrunk to the game's tile size:** the renders are 80 px per tile, and the game draws 48 px per tile. At full size the art would use about 35 million pixels of phone memory; at 0.6× it uses about a third of that and matches what the screen shows today.
+- **Packed art lives in `assets/art/`** as lossless WebP pages (exact pixels, about 40% smaller than PNG; every current phone supports WebP). The game now serves files from `assets/` (the app manifest moved there too). Download: player 2.6 MB, Tier 1 creatures 6.9 MB, Tower rooms 0.2 MB, dojo 0.2 MB.
+- **Each area loads only its art:** the title screen loads the character, the Tower loads creatures and rooms, the dojo loads the room and decorations ("load art per tier").
+- **A full-detail ceremony pack** (`player-big`, 0.1 MB): the character facing the camera (stand, bow, celebrate) at full resolution, so the promotion ceremony and welcome screens stay sharp when shown big.
+- **The warning glow layer** is kept only in wind-ups and attacks (the only times it shows), which saved about 4 MB.
+- **Belt colours follow style option C**, worked out from the belt's colours (not a table of Action Zone belt names), so other schools' belts work too. At most 2 stripes, matching `stripesPerBelt`.
+- **The bow now takes 1.375 s** (`BOW.ms`, looks only), the art's full bow, instead of 0.9 s.
+- **Animations follow the rules:**
+  - Tower moves: the jab plays only when standing still, so walking stays smooth. The guard pose is held while guarding. Dash, hit, defeat (kneel) and the bow play once.
+  - Dojo moves: sweeping plays when you walk over dust, and kneel-and-wipe and straighten play facing the mat or rack. Calm Mind doesn't use the celebrate move, which is kept for real promotions.
+  - The promotion ceremony: the student bows, the new belt is tied, then arms up and a proud stance.
+  - Creature wind-ups run on the rules' telegraph clock (so they always end exactly when the hit lands). The warning glow follows the art's per-frame strength and is tinted the same red as the danger circle. The danger circle itself is unchanged.
+- **Characters, walls and decorations are drawn front-to-back by where they stand**, so walls and tall decorations hide feet behind them. The dojo's front wall and door are drawn in front of the character.
+- **The chest:** it glints until opened, then plays its 2.5 s opening and shimmers. Its light and stars are drawn above the player (who stands on it). The chime, sparks and loot wait until the lid bursts open.
+- **Doors:** closed until the room is clear, then they slide open with a warm glow (the bot's version, kept). The boss and home doors borrow the battle and rest doors for now.
+- **Dojo mess:** the old "leaf" spots are now muddy footprints, a dropped towel or a water bottle. The internal name stays "leaf" so existing saves keep working.
+- **Possible later improvement:** the game draws at the phone's basic screen resolution, not its sharper "retina" resolution, so art can look a little soft on high-end phones. Making it draw at full sharpness touches every screen's layout, so it isn't done yet. Ask Jay if it bothers him.
