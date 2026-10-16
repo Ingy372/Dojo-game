@@ -20,7 +20,7 @@ Sizes and timings are read from `content/enemies/*.json` when the model is built
 
 Each has `sprites/<id>_<layer>_<animation>.png` and `sprites/<id>.json`: anchor (feet point), directions, fps, frames, key frames, telegraph seconds and notes. Previews are in `preview/`: one GIF and one contact sheet per animation.
 
-Batch review pictures are in `preview/review-*.png`.
+Batch review pictures are in `preview/review-*.png`. The animated previews are `preview/<enemy>_anim.gif` (every animation in order at its real fps; loops play twice; S, E, SE) and `preview/windup_compare.gif` (all four wind-ups into their attacks, same scale), made with `tools/make_anim_gif.py`.
 
 ## Animations
 
