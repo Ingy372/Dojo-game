@@ -8,6 +8,7 @@ for E in "${@:-swarmer shield brute keeper}"; do
   for e in $E; do
     SIZE=128; ORTHO=1.6
     if [ "$e" = keeper ]; then SIZE=256; ORTHO=3.2; fi      # bigger frame, same 80 px per tile
+    if [ "$e" = brute ]; then SIZE=160; ORTHO=2.0; fi       # the wide Brute and his big fists need room
     blender -b -P $D/source/build_enemy.py -- --enemy $e --out $PWD/$D/source/$e.blend
     rm -rf /tmp/enemy_$e
     blender -b $D/source/$e.blend -P $T/render_sprites.py -- --out /tmp/enemy_$e --name $e --size $SIZE --ortho $ORTHO > /tmp/enemy_$e.log

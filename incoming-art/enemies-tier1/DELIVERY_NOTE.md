@@ -1,47 +1,33 @@
-# Delivery Note: Batch 2 (Tier 1 shadow creatures), 2026-10-16
+# Delivery Note: Batch 2 review redesign (sample check), 2026-10-16
 
 **WHAT**
-- Four shadow creatures, each in 8 directions with transparent PNG sheets and json:
-  - Swarmer
-  - Shield Guard (with an intact and a broken shield layer)
-  - Brute
-  - Floor Keeper (256 px frames, same 80 px per tile)
-- Every creature has idle, move, wind-up, attack, hit flinch, stagger and defeat.
-- Specials:
-  - Swarmer jab
-  - Shield Guard shield bash and broken shield
-  - Brute winded
-  - Floor Keeper slam, sweep and "calling for help"
-- Each has a separate `telegraph` layer (a neutral rim the game tints and flashes) and a soft `glow` layer.
-- Everything is script-built: `source/build_enemy.py` + `source/render_all.sh`.
+- **New designs for all four creatures.** They are the same shadow family (glowing eyes, soft rim, dissolve into light), but each has its own silhouette, features, accent colour and movement:
+  - **Swarmer:** a teal flame-tufted wisp that bounces.
+  - **Shield Guard:** an amber beetle sentinel with a big round shield that marches.
+  - **Brute:** a wide, low, crimson-magenta ox-hulk with horns and big fists that stomps.
+  - **Floor Keeper:** a tall, gold, masked, crowned, haloed and caped guardian that glides.
+- **Wind-up glow:** it ramps up through the wind-up and dims smoothly over the first half of the attack. The per-frame `telegraphIntensity` is in the json.
+- **Defeat:** unchanged.
+- **Rendered as a sample only:** the Swarmer's full set, plus idle, wind-up and attack for the other three.
+- **Previews:**
+  - `preview/lineup-redesign.png`
+  - `preview/swarmer_anim.gif`
+  - `preview/windup_compare.gif`
 
 **WHY**
-- Soft, rounded blobs with big glowing eyes and no teeth or claws: a little spooky, friendly underneath, right for ages 6+.
-- The wind-up is the biggest pose they make: they stretch tall, lean back and pull the arm far back, with a red rim. It lasts exactly the docs' telegraph time:
-  - Swarmer 0.6 s
-  - Shield Guard 0.7 s
-  - Brute 0.8 s
-  - Keeper slam 0.9 s, sweep 1.1 s
-- Attack recovery follows the data's `recoverTicks`.
-- Defeat is a happy blink into a ball of light that floats up in sparkles: the creature is set free, not hurt.
-- Body widths match the data radii (0.30 / 0.42 / 0.48 / 0.85 tiles).
+- Jay's review: the creatures were too similar, so each now reads at a glance on a phone by silhouette and colour, not just size.
+- The red rim used to be on at full and then cut instantly at the attack.
 
 **DECIDE (Jay)**
-1. Approve the creature look: indigo bodies, lavender glow, cyan eyes; the Floor Keeper has a little gold crown-gem.
-2. Approve the wind-up style: stretch tall + red rim. Is it readable enough for kids?
-3. Approve the broken shield (cracked in two halves).
-4. Swarmer was the sample: is its look the right base for the others?
+1. Approve the four designs (or name changes per creature). On approval I'll render the full sets for the Shield Guard, Brute and Floor Keeper:
+   - all animations;
+   - the broken shield;
+   - winded;
+   - sweep;
+   - calling for help.
+2. Approve the glow ramp and fade.
+3. Does the Brute's bigger 160 px frame suit Claude Code? Same 80 px per tile and the same feet anchor.
 
-**NEXT**
-- Batch 3 (Home Dojo), then Batch 4 (Tower rooms).
-- After approval, Claude Code swaps these in for the placeholder shapes.
+**NEXT:** stopped here as asked. After approval: full re-render, then new GIFs and review pictures.
 
-**Doc conflicts / notes (not blocking)**
-- **Telegraph lengths:** all match `content/enemies/*.json`. On Guided/Challenge difficulty the danger circle holds near full for a different time (decisions.md, "Guided timing, second version"), so the game should **hold the last wind-up frame** while that hold lasts rather than stretch the animation. The wind-up sheets end on a held pose (with a tiny tremble) for that.
-- **Brute colour:** decisions.md says the brute "swells and turns red" during its wind-up. The art swells; the red comes from tinting the `telegraph` rim (and optionally the body tint in-game), so the base art stays purple.
-- **Floor Keeper wind-up (slam):** from the front, the raised fists are partly hidden behind his head. The silhouette still changes a lot (stretch + rim). Say if you want the arms to show more.
-
-**Review these first** (in `preview/`):
-- `review-1-windups-and-attacks.png`
-- `review-2-specials.png`
-- `review-3-defeat-sparkle.png`
+**Doc conflicts:** none. The telegraph timings still match `content/enemies/*.json`.

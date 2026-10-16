@@ -3,7 +3,8 @@ Dojo Ascent - previews for enemies and other non-belt sprite sets (Art Director 
 
 Stacks the layer sheets the way the game will, then writes per-animation GIFs (8 directions, real timing),
 contact sheets (every frame, every direction) and a size line-up. Layers marked optional are left out unless
-listed in --with; the "telegraph" layer is drawn only in wind-up animations (tinted, like the game will).
+listed in --with; the "telegraph" layer is drawn tinted, like the game will: per frame at the animation's "telegraphIntensity"
+(ramping up through the wind-up, fading through the attack), or in wind-ups only for older sheets without it.
 
     python3 make_creature_preview.py --sheets <folder> --out <folder> [--with shield] [--tele-tint #ff3b30]
         [--gifs all|a,b] [--scale 2]
@@ -29,7 +30,9 @@ def load(folder):
 
 def composite(folder, meta, anim, with_layers=(), tele_tint="#ff3b30", tele=None):
     base = None
-    tele = anim.startswith("windup") if tele is None else tele
+    inten = meta["animations"][anim].get("telegraphIntensity")      # per-frame 0..1 (wind-up ramps up, attack fades)
+    if tele is None:
+        tele = any(v > 0 for v in inten) if inten else anim.startswith("windup")
     for l in sorted(meta["layers"], key=lambda l: l["order"]):
         n = l["name"]
         if n == "telegraph":
@@ -41,6 +44,9 @@ def composite(folder, meta, anim, with_layers=(), tele_tint="#ff3b30", tele=None
         img = np.asarray(Image.open(os.path.join(folder, f)).convert("RGBA"), dtype=np.float32) / 255
         if n == "telegraph":
             img = img.copy(); img[..., :3] *= rgb(tele_tint); img[..., 3] *= 0.85
+            if inten:       # fade each frame column by its intensity, the same way the game will
+                W = meta["frameWidth"]
+                for k, v in enumerate(inten): img[:, k * W:(k + 1) * W, 3] *= v
         base = img if base is None else over(base, img)
     return base
 

@@ -1,17 +1,17 @@
 {
   "character": "brute",
-  "frameWidth": 128,
-  "frameHeight": 128,
+  "frameWidth": 160,
+  "frameHeight": 160,
   "anchor": {
-    "x": 64.0,
-    "y": 104.96,
+    "x": 80.0,
+    "y": 131.2,
     "note": "feet / ground point of the character, in pixels from the frame's top-left"
   },
   "pixelsPerTile": 80.0,
   "camera": {
     "projection": "orthographic",
     "elevationDeg": 35.0,
-    "orthoScaleTiles": 1.6,
+    "orthoScaleTiles": 2.0,
     "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
   },
   "directions": [
@@ -97,22 +97,8 @@
         "glow": "brute_glow_idle.png",
         "telegraph": "brute_telegraph_idle.png",
         "light": "brute_light_idle.png"
-      }
-    },
-    "move": {
-      "frames": 6,
-      "fps": 12,
-      "durationSec": 0.5,
-      "loop": true,
-      "tags": {},
-      "sheets": {
-        "body": "brute_body_move.png",
-        "glow": "brute_glow_move.png",
-        "telegraph": "brute_telegraph_move.png",
-        "light": "brute_light_move.png"
       },
-      "designSpeedTilesPerSecond": 1.2,
-      "note": "bouncy waddle; the feet don't need to stay planted, play at any move speed"
+      "note": "heavy breathing, 1 s loop"
     },
     "windup": {
       "frames": 8,
@@ -130,7 +116,17 @@
       },
       "telegraphSeconds": 0.8,
       "telegraphTicks": 16,
-      "note": "lasts exactly the telegraph (16 ticks). Flash the telegraph layer (tint it, e.g. #ff3b30) for the whole wind-up. In Guided mode the wind-up is slower: hold the last frame"
+      "telegraphIntensity": [
+        0.25,
+        0.287,
+        0.391,
+        0.542,
+        0.708,
+        0.859,
+        0.963,
+        1.0
+      ],
+      "note": "lasts exactly the telegraph (16 ticks). In Guided mode the wind-up holds: hold the last frame (intensity 1). telegraphIntensity: per-frame alpha (0..1) for the telegraph layer. It ramps up through the wind-up and fades smoothly through the first half of the attack (no hard cut). Multiply it into the tinted layer's alpha"
     },
     "attack": {
       "frames": 11,
@@ -151,79 +147,27 @@
         "impact": 0
       },
       "recoverSeconds": 0.9,
+      "telegraphIntensity": [
+        1.0,
+        0.933,
+        0.75,
+        0.5,
+        0.25,
+        0.067,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
       "note": "the Brute's two-fist smash in front"
-    },
-    "hit": {
-      "frames": 3,
-      "fps": 12,
-      "durationSec": 0.25,
-      "loop": false,
-      "tags": {
-        "recoil": "0"
-      },
-      "sheets": {
-        "body": "brute_body_hit.png",
-        "glow": "brute_glow_hit.png",
-        "telegraph": "brute_telegraph_hit.png",
-        "light": "brute_light_hit.png"
-      }
-    },
-    "stagger": {
-      "frames": 8,
-      "fps": 10,
-      "durationSec": 0.8,
-      "loop": true,
-      "tags": {},
-      "sheets": {
-        "body": "brute_body_stagger.png",
-        "glow": "brute_glow_stagger.png",
-        "telegraph": "brute_telegraph_stagger.png",
-        "light": "brute_light_stagger.png"
-      },
-      "note": "dizzy wobble; loop for as long as the stagger lasts"
-    },
-    "winded": {
-      "frames": 8,
-      "fps": 8,
-      "durationSec": 1.0,
-      "loop": true,
-      "tags": {},
-      "sheets": {
-        "body": "brute_body_winded.png",
-        "glow": "brute_glow_winded.png",
-        "telegraph": "brute_telegraph_winded.png",
-        "light": "brute_light_winded.png"
-      },
-      "note": "winded (stopped for 2.5 s, takes +50% damage): loop. The game adds the pale tint, sweat drops and 'huff... huff...'"
-    },
-    "defeat": {
-      "frames": 14,
-      "fps": 12,
-      "durationSec": 1.1667,
-      "loop": false,
-      "tags": {
-        "light": "3",
-        "gone": "13"
-      },
-      "sheets": {
-        "body": "brute_body_defeat.png",
-        "glow": "brute_glow_defeat.png",
-        "telegraph": "brute_telegraph_defeat.png",
-        "light": "brute_light_defeat.png"
-      },
-      "keyFrames": {
-        "light": 3,
-        "gone": 13
-      },
-      "removeAfter": true,
-      "note": "dissolves into light and sparkles (a hopeful 'set free', not a death). The last frame is empty"
     }
   },
   "enemy": "brute",
   "name": "Brute",
   "sizeTiles": {
     "bodyWidth": 0.48,
-    "bodyHeight": 0.88,
+    "bodyHeight": 0.72,
     "radiusInData": 0.48
   },
   "tintGuidance": {

@@ -88,8 +88,8 @@
   "animations": {
     "idle": {
       "frames": 8,
-      "fps": 8,
-      "durationSec": 1.0,
+      "fps": 10,
+      "durationSec": 0.8,
       "loop": true,
       "tags": {},
       "sheets": {
@@ -97,7 +97,8 @@
         "glow": "swarmer_glow_idle.png",
         "telegraph": "swarmer_telegraph_idle.png",
         "light": "swarmer_light_idle.png"
-      }
+      },
+      "note": "restless flicker, 0.8 s loop"
     },
     "move": {
       "frames": 6,
@@ -112,7 +113,7 @@
         "light": "swarmer_light_move.png"
       },
       "designSpeedTilesPerSecond": 4.0,
-      "note": "bouncy waddle; the feet don't need to stay planted, play at any move speed"
+      "note": "quick bouncing hops; play at any move speed"
     },
     "windup": {
       "frames": 6,
@@ -130,7 +131,15 @@
       },
       "telegraphSeconds": 0.6,
       "telegraphTicks": 12,
-      "note": "lasts exactly the telegraph (12 ticks). Flash the telegraph layer (tint it, e.g. #ff3b30) for the whole wind-up. In Guided mode the wind-up is slower: hold the last frame"
+      "telegraphIntensity": [
+        0.25,
+        0.322,
+        0.509,
+        0.741,
+        0.928,
+        1.0
+      ],
+      "note": "lasts exactly the telegraph (12 ticks). In Guided mode the wind-up holds: hold the last frame (intensity 1). telegraphIntensity: per-frame alpha (0..1) for the telegraph layer. It ramps up through the wind-up and fades smoothly through the first half of the attack (no hard cut). Multiply it into the tinted layer's alpha"
     },
     "attack": {
       "frames": 10,
@@ -151,7 +160,19 @@
         "impact": 0
       },
       "recoverSeconds": 0.8,
-      "note": "the Swarmer's jab"
+      "telegraphIntensity": [
+        1.0,
+        0.905,
+        0.655,
+        0.345,
+        0.095,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "note": "the Swarmer's jab: a quick stretchy poke"
     },
     "hit": {
       "frames": 3,
@@ -209,7 +230,7 @@
   "name": "Swarmer",
   "sizeTiles": {
     "bodyWidth": 0.3,
-    "bodyHeight": 0.4,
+    "bodyHeight": 0.42,
     "radiusInData": 0.3
   },
   "tintGuidance": {
