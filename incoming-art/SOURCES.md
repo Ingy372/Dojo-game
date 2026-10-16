@@ -8,5 +8,6 @@ Everything in `incoming-art/` that wasn't made from scratch by the Art Director 
 
 Notes:
 - **character-test/**: the model, rig, animations, materials and scripts were all made from scratch in Blender with Python. No Mixamo, no downloaded models, no textures, no fonts.
+- **player-character/** (Batch 1): built by the same scripts (`character-test/source/build_character.py --profile player`, `tools/`). Also made from scratch; nothing outside the project was used.
 - **Blender 4.2 LTS** was the tool used to make them. Blender is free software (GPL), and the GPL does not cover the art you make with it, so the renders and `.blend` files belong to the project.
 - The labels in the preview pictures use Pillow's built-in default font. The previews are only for review and don't go into the game.

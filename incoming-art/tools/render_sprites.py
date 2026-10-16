@@ -24,7 +24,10 @@ What the .blend must contain (see README.md next to this script):
   * CHAR_ROOT: empty at the feet, parent of the rig. Character faces -Y when unrotated.
   * Collections L_<layer>. Optional custom props: sprite_order (int), sprite_tint (bool),
     sprite_overlay (bool: an optional extra drawn on top, e.g. belt stripes).
+  * Optional collection prop sprite_optional (bool, default = sprite_overlay): an overlay that must always
+    be drawn (e.g. the belt rim) sets it False.
   * Actions with custom props sprite_fps (int), sprite_loop (bool), sprite_tags (str), sprite_order (int),
+    optional sprite_info (JSON string merged into the animation's JSON entry: phases, hold frame, ...),
     and for locomotion sprite_stride_tiles + sprite_design_speed (ground covered per loop, and the speed
     the fps is synced to). Each integer frame in the action's frame range is one sprite frame.
   * Optional: scene["sprite_meta"], a JSON string merged into the output JSON (e.g. tint guidance).
@@ -128,7 +131,8 @@ def find_layers(scene, wanted):
         if wanted and name not in wanted:
             continue
         out.append(dict(name=name, lc=lc, order=int(c.get("sprite_order", len(out))),
-                        tint=bool(c.get("sprite_tint", False)), overlay=bool(c.get("sprite_overlay", False))))
+                        tint=bool(c.get("sprite_tint", False)), overlay=bool(c.get("sprite_overlay", False)),
+                        optional=bool(c.get("sprite_optional", c.get("sprite_overlay", False)))))
     out.sort(key=lambda l: l["order"])
     return out
 
@@ -178,7 +182,9 @@ def main():
     wanted_anims = [x for x in a.anims.split(",") if x]
     actions = [bpy.data.actions[n] for n in wanted_anims] if wanted_anims else \
         sorted([act for act in bpy.data.actions if "sprite_fps" in act], key=lambda x: (int(x.get("sprite_order", 99)), x.name))
-    layers = find_layers(scene, [x for x in a.layers.split(",") if x])
+    all_layers = find_layers(scene, [])                     # every layer takes part (as holdout) ...
+    wanted_layers = [x for x in a.layers.split(",") if x]
+    layers = [l for l in all_layers if not wanted_layers or l["name"] in wanted_layers]   # ... only these are written
     if not actions or not layers:
         raise SystemExit("Nothing to render (no sprite actions or L_ collections found)")
     rot0 = root.rotation_euler.copy()
@@ -189,7 +195,7 @@ def main():
                             note="one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"),
                 directions=dirs, directionVectors={d: ALL_DIRS[d][1] for d in dirs},
                 sheetLayout="rows = directions (in the order above), columns = frames, no padding",
-                layers=[dict(name=l["name"], order=l["order"], tint=l["tint"], optional=l["overlay"]) for l in layers],
+                layers=[dict(name=l["name"], order=l["order"], tint=l["tint"], optional=l["optional"]) for l in layers],
                 animations={})
     t0 = time.time()
     n = 0
@@ -202,7 +208,7 @@ def main():
             for fi, f in enumerate(frames):
                 scene.frame_set(f)
                 for l in layers:
-                    set_active_layer(layers, l)
+                    set_active_layer(all_layers, l)
                     scene.render.filepath = os.path.join(tmp, l["name"], act.name, f"{d}_{fi:02d}.png")
                     bpy.ops.render.render(write_still=True)
                     n += 1
@@ -232,9 +238,11 @@ def main():
                 designSpeedTilesPerSec=float(act.get("sprite_design_speed", 0)),
                 fpsPerTilePerSec=round(len(frames) / st, 4),
                 note="planted feet stay still when fps = speed (tiles/s) * fpsPerTilePerSec; at the design speed that is the fps above")
+        if "sprite_info" in act:          # extra timing notes (phases, hold frame...) as a JSON string
+            info.update(json.loads(act["sprite_info"]))
         meta["animations"][act.name] = info
     root.rotation_euler = rot0
-    for l in layers:
+    for l in all_layers:
         l["lc"].holdout = False
         l["lc"].collection.hide_render = False
     if "sprite_meta" in scene:             # character-specific notes stored in the .blend

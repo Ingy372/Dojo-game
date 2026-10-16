@@ -6,6 +6,7 @@ Scripts the Art Director bot uses so every character, enemy and object renders e
 | --- | --- |
 | `render_sprites.py` | Renders a character `.blend` into transparent PNG sprite sheets (8 directions, one sheet per layer per animation) plus a JSON description. Runs inside Blender. |
 | `make_preview.py` | Stacks the layer sheets the way the game will (with belt and gi colours, black belts as charcoal) and makes review pictures: contact sheets, an animated GIF (30 fps clock), a belt-colour chart, a 4× head close-up and a 4× waist close-up (`belt-back.png`, N/NE/E/NW, blue belt, to check the belt is one unbroken band). Runs with normal Python. |
+| `make_belt_chart.py` | Before/after belt chart: chosen belts (white, yellow, red/black, brown/black, black) on the white gi from two renders, at real size (1x) and 4x at the waist. Runs with normal Python. |
 | `make_compare.py` | Plays one animation from two renders side by side (for example an old and a new walk) over a floor grid that scrolls at the design speed, so you can check the feet stay planted. Runs with normal Python. |
 
 Made with Blender 4.2 LTS (4.2.23). Previews need Python 3 with Pillow and numpy (`pip install pillow numpy`).
@@ -28,7 +29,7 @@ Options (the defaults are the house standard, so leave them alone unless Jay cha
 | `--elevation` | `35` | Camera looks down this many degrees (top-down three-quarter view) |
 | `--anchor-y` | `0.82` | Where the feet land in the frame (0 = top, 1 = bottom) |
 | `--anims` | all | Comma list of action names to render |
-| `--layers` | all | Comma list of layers to render |
+| `--layers` | all | Comma list of layers to write. The other layers still take part as holdouts, so a partial render matches a full one exactly (fixed in Batch 1: they used to show up in the partial renders) |
 | `--directions` | `N,NE,E,SE,S,SW,W,NW` | Sheet rows, top to bottom |
 | `--samples` | `24` | Anti-aliasing quality |
 | `--root` | `CHAR_ROOT` | The object that gets turned for each direction |
@@ -43,7 +44,8 @@ The script builds its own camera and render settings every time (orthographic ca
    - `sprite_order` (number): stacking order in the game, bottom to top
    - `sprite_tint` (true/false): the layer is neutral grey and the game recolours it
    - `sprite_overlay` (true/false): an optional extra drawn on top (like belt stripes). Base layers are rendered with overlays switched off, so they never have holes.
-3. **One action per animation** on the rig, with custom properties `sprite_fps` (number), `sprite_loop` (true/false), `sprite_tags` (text like `impact:4`) and `sprite_order` (number). Every whole frame in the action's frame range becomes one sprite frame. For walking or running, also set `sprite_stride_tiles` (ground covered per loop) and `sprite_design_speed` (tiles per second the fps is matched to). The JSON then gets a `groundMotion` block (stride in pixels, fps per tile/s) so the game can keep the feet planted.
+   - `sprite_optional` (true/false, default = `sprite_overlay`): set it false on an overlay that must always be drawn (like `belt-rim`). It becomes `optional` in the JSON.
+3. **One action per animation** on the rig, with custom properties `sprite_fps` (number), `sprite_loop` (true/false), `sprite_tags` (text like `impact:4`) and `sprite_order` (number). Every whole frame in the action's frame range becomes one sprite frame. For walking or running, also set `sprite_stride_tiles` (ground covered per loop) and `sprite_design_speed` (tiles per second the fps is matched to). The JSON then gets a `groundMotion` block (stride in pixels, fps per tile/s) so the game can keep the feet planted. An optional `sprite_info` property (a JSON string) is merged into that animation's JSON entry, for timing notes such as `keyFrames`, `holdLastFrame` or `repeatEverySec`.
 4. **Optional:** a scene property `sprite_meta` holding a JSON string. It's copied into the output JSON as-is, for character-specific notes such as tint guidance.
 5. **Materials** should be the flat "toon" emission style used in `character-test/source/build_character.py`, so lighting matches everywhere. No lamps are needed.
 
@@ -62,6 +64,12 @@ Compare two renders of one animation (an old render can be pulled out of git wit
 ```bash
 python3 incoming-art/tools/make_compare.py --old path/to/old-sprites --new path/to/sprites \
     --anim walk --dirs E,SE --old-label "old" --new-label "new" --out path/to/walk-compare.gif
+```
+
+`make_preview.py --anim-gifs jab,bow,defeat` also writes one GIF per animation (all 8 directions, real frame timing; one-shots hold their last frame, or wait for `repeatEverySec`, then replay). `--gif-anims none` skips the big combined GIF. `make_compare.py --strip file.png` also writes every frame of both renders side by side (first direction).
+
+```bash
+python3 incoming-art/tools/make_belt_chart.py --old path/to/old-sprites --new path/to/sprites --out belt-chart.png
 ```
 
 GIF previews keep time with a 30 fps clock. GIF delays are stored in 1/100 s, so they play about 10% fast; the JSON timing is exact.

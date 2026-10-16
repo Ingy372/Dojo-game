@@ -32,6 +32,7 @@ def main():
     ap.add_argument("--anim", default="walk"); ap.add_argument("--dirs", default="E,SE")
     ap.add_argument("--out", required=True); ap.add_argument("--scale", type=int, default=2)
     ap.add_argument("--seconds", type=float, default=2.0)
+    ap.add_argument("--strip", default="", help="also write a PNG: every frame of both renders, first direction, 2x")
     a = ap.parse_args()
     sides = []
     for folder, label in ((a.old, a.old_label), (a.new, a.new_label)):
@@ -41,7 +42,7 @@ def main():
         gm = info.get("groundMotion") or {}
         speed_px = gm.get("designSpeedTilesPerSec", 0) * meta["pixelsPerTile"]
         sides.append(dict(meta=meta, info=info, comp=comp, speed=speed_px, label=label,
-                          text=f"{label}: {info['frames']} frames @ {info['fps']} fps, {gm.get('stridePxPerLoop', '?')} px/loop"))
+                          text=f"{label}: {info['frames']} frames @ {info['fps']} fps" + (f", {gm['stridePxPerLoop']} px/loop" if gm else "")))
     dirs = a.dirs.split(",")
     W = H = sides[0]["meta"]["frameWidth"]; S = a.scale
     LAB, TOP = 34, 30
@@ -74,9 +75,23 @@ def main():
                 canvas.paste(cell, (LAB + c * (W * S + 8), TOP + r * (H * S + 4)))
                 if c == 0:
                     d.text((6, TOP + r * (H * S + 4) + H * S // 2 - 6), dn, fill=(255, 255, 255, 255))
-        d.text((LAB + 4, 16), f"{a.anim}, floor scrolls at the design speed", fill=(180, 180, 200, 255))
+        d.text((LAB + 4, 16), f"{a.anim}" + (", floor scrolls at the design speed" if any(sd["speed"] for sd in sides) else ""), fill=(180, 180, 200, 255))
         frames.append(canvas.convert("RGB"))
     frames[0].save(a.out, save_all=True, append_images=frames[1:], duration=int(1000 / CLK), loop=0)
+    if a.strip:
+        dn = dirs[0]; n = max(sd["info"]["frames"] for sd in sides)
+        img = Image.new("RGBA", (LAB + n * W * S, 2 * (H * S + 18)), (24, 22, 32, 255)); d = ImageDraw.Draw(img)
+        for r, sd in enumerate(sides):
+            i = sd["meta"]["directions"].index(dn); y = r * (H * S + 18)
+            d.text((4, y + 3), f"{sd['label']} ({dn}): " + sd["text"].split(": ", 1)[1], fill=(255, 220, 120, 255))
+            for f in range(sd["info"]["frames"]):
+                cell = Image.new("RGBA", (W, H), FLOOR)
+                spr = sd["comp"][i * H:(i + 1) * H, f * W:(f + 1) * W]
+                cell.alpha_composite(Image.fromarray((np.clip(spr, 0, 1) * 255).astype(np.uint8), "RGBA"))
+                img.paste(cell.resize((W * S, H * S), Image.NEAREST), (LAB + f * W * S, y + 18))
+                d.text((LAB + f * W * S + 4, y + 20), str(f + 1), fill=(255, 255, 255, 255))
+        img.save(a.strip)
+        print("wrote", a.strip)
     print("wrote", a.out)
 
 main()

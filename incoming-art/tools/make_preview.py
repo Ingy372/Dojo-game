@@ -7,6 +7,8 @@ then writes review images:
   <out>/<name>_preview.gif          all animations, 8 directions side by side, animated
   <out>/<name>_belts.png            the same frame with every belt colour of the school
   <out>/head-closeup.png            the face (idle, first frame) in S, SE, E, SW, W at 4x, for checking faces
+  <out>/<name>_<anim>.gif           with --anim-gifs a,b: one GIF per animation, all 8 directions (2 rows of 4),
+                                    real timing per frame; one-shots hold their last frame, then replay
   <out>/belt-back.png               the waist at 4x in N, NE, E, NW (idle, strike impact, counter punch, walk)
                                     with a blue belt, for checking the belt is one unbroken band
 
@@ -77,6 +79,8 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--scale", type=int, default=2, help="zoom for the contact sheets")
     ap.add_argument("--gif-scale", type=int, default=1, help="zoom for the animated GIF")
+    ap.add_argument("--anim-gifs", default="", help="comma list of animations that also get their own GIF")
+    ap.add_argument("--gif-anims", default="", help="animations in the combined GIF (default: all; 'none' to skip it)")
     a = ap.parse_args()
     meta = json.load(open([os.path.join(a.sheets, f) for f in os.listdir(a.sheets) if f.endswith(".json")][0]))
     os.makedirs(a.out, exist_ok=True)
@@ -97,7 +101,7 @@ def main():
     # Looping animations loop; one-shot animations play, hold, and restart every 2 seconds.
     # (GIF stores delays in 1/100 s, so it plays at ~33 fps: about 10% fast. Timing in the JSON is exact.)
     CLK, TICKS = 30, 60
-    anims = list(meta["animations"])
+    anims = list(meta["animations"]) if not a.gif_anims else [x for x in a.gif_anims.split(",") if x in meta["animations"]]
     gif_frames = []
     LABEL = 64
     for t in range(TICKS):
@@ -119,8 +123,36 @@ def main():
         if a.gif_scale > 1:
             canvas = canvas.resize((canvas.width * a.gif_scale, canvas.height * a.gif_scale), Image.NEAREST)
         gif_frames.append(canvas.convert("RGB"))
-    gif_frames[0].save(os.path.join(a.out, f"{name}_preview.gif"), save_all=True, append_images=gif_frames[1:],
-                       duration=int(1000 / CLK), loop=0, optimize=False)
+    if anims:
+        gif_frames[0].save(os.path.join(a.out, f"{name}_preview.gif"), save_all=True, append_images=gif_frames[1:],
+                           duration=int(1000 / CLK), loop=0, optimize=False)
+    # one GIF per animation: 8 directions in 2 rows of 4, every sprite frame at its real duration
+    for an in [x for x in a.anim_gifs.split(",") if x in meta["animations"]]:
+        info = meta["animations"][an]; n, fps = info["frames"], info["fps"]
+        cols = 4; rows = (len(dirs) + cols - 1) // cols; Sg = 2
+        seq = []                                   # (frame, ms)
+        reps = 1 if info["loop"] else 3
+        for _ in range(reps if not info["loop"] else 3):
+            for f in range(n):
+                seq.append((f, 1000 / fps))
+            if not info["loop"]:
+                rest = info.get("repeatEverySec")
+                hold = (rest * 1000 - n * 1000 / fps) if rest else (1200 if info.get("holdLastFrame") else 600)
+                seq[-1] = (seq[-1][0], seq[-1][1] + max(hold, 0))
+        frames, durs = [], []
+        for f, ms in seq:
+            canvas = Image.new("RGBA", (cols * W * Sg, rows * H * Sg + 18), FLOOR)
+            d = ImageDraw.Draw(canvas)
+            for i, dn in enumerate(dirs):
+                cell = comps[an][i * H:(i + 1) * H, f * W:(f + 1) * W]
+                im = Image.fromarray((np.clip(cell, 0, 1) * 255).astype(np.uint8), "RGBA").resize((W * Sg, H * Sg), Image.NEAREST)
+                x, y = (i % cols) * W * Sg, 18 + (i // cols) * H * Sg
+                canvas.alpha_composite(im, (x, y))
+                d.text((x + 6, y + 4), dn, fill=(255, 255, 255, 255))
+            d.text((6, 3), f"{an}: frame {f + 1}/{n} @ {fps} fps", fill=(255, 220, 120, 255))
+            frames.append(canvas.convert("RGB")); durs.append(int(round(ms / 10.0)) * 10)
+        frames[0].save(os.path.join(a.out, f"{name}_{an}.gif"), save_all=True, append_images=frames[1:],
+                       duration=durs, loop=0, optimize=False)
     # belt colours (idle frame 0, S and SE directions)
     an = "idle" if "idle" in meta["animations"] else anims[0]
     row = []
