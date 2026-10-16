@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import {
+  BOW,
   DOJO,
   MOVEMENT,
   TICKS_PER_SECOND,
@@ -39,7 +40,9 @@ import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
 import { TouchControls } from '../input/TouchControls';
-import { drawBelt } from '../ui/belt';
+import { loadArt } from '../art/art';
+import type { LayeredSprite } from '../art/LayeredSprite';
+import { makePlayerSprite, playLocomotion } from '../art/player';
 import { bowPrompt, playBow } from '../ui/bow';
 import { Celebrations } from '../ui/Celebrations';
 import { drawDecoration, drawSpot } from '../ui/decorations';
@@ -98,7 +101,9 @@ export class DojoScene extends Phaser.Scene {
   private spotGfx!: Phaser.GameObjects.Graphics;
   private selectGfx!: Phaser.GameObjects.Graphics;
   private player!: Phaser.GameObjects.Container;
-  private facingDot!: Phaser.GameObjects.Arc;
+  /** The character's art, and a one-off move it's playing (sweep, wipe, straighten, bow). */
+  private hero!: LayeredSprite;
+  private heroAction: { name: string; until: number; face: Vec2 | null } | null = null;
   private calmAura!: Phaser.GameObjects.Arc;
   private ui!: Phaser.GameObjects.Container;
   private uiRects: Phaser.Geom.Rectangle[] = [];
@@ -130,6 +135,10 @@ export class DojoScene extends Phaser.Scene {
     super('Dojo');
   }
 
+  preload(): void {
+    loadArt(this, ['player', 'player-big', 'dojo']);
+  }
+
   create(): void {
     this.profile = loadSave();
     this.dojo = homeDojo(this.profile);
@@ -148,6 +157,7 @@ export class DojoScene extends Phaser.Scene {
     this.doorArmed = false;
     this.boardArmed = true;
     this.sweepStreak = 0;
+    this.heroAction = null;
 
     this.room = dojoRoom(this.dojo, CONTENT.dojo);
     this.world = createWorld(this.room, ['p1']);
@@ -195,10 +205,16 @@ export class DojoScene extends Phaser.Scene {
     if (bowIsDue()) {
       this.mode = 'arriving';
       bowPrompt(this, 'Bow as you enter your dojo', () => {
-        playBow(this, this.player, () => {
-          setBowDue(false);
-          this.arrive(hoursAway);
-        });
+        this.heroDo('bow', BOW.ms);
+        playBow(
+          this,
+          this.player,
+          () => {
+            setBowDue(false);
+            this.arrive(hoursAway);
+          },
+          this.hero,
+        );
       });
     }
   }
@@ -308,6 +324,7 @@ export class DojoScene extends Phaser.Scene {
       this.sweepStreak = time - this.lastSweepAt < 1500 ? this.sweepStreak + 1 : 0;
       this.lastSweepAt = time;
       for (const s of swept) this.puff(s);
+      this.heroDo('sweep', 800);
       sfx.sweep(this.sweepStreak);
       this.redrawSpots();
       writeSave(this.profile);
@@ -336,6 +353,11 @@ export class DojoScene extends Phaser.Scene {
     const result = chore.kind === 'wipe' ? wipeMat(this.dojo, it.uid) : straightenRack(this.dojo, it.uid);
     if (chore.kind === 'wipe') sfx.wipe(result.done);
     else sfx.straighten(result.done);
+    // Kneel and wipe, or reach out and straighten the rack, facing it.
+    const p = this.world.players.p1.pos;
+    const face = { x: center.x - p.x, y: center.y - p.y };
+    if (chore.kind === 'wipe') this.heroDo('wipe', 1000, face);
+    else this.heroDo('straighten', 1170, face);
     this.sparkle(center, result.done ? 12 : 4);
     this.tweens.add({ targets: this.choreButton, scale: 0.88, duration: 70, yoyo: true });
     this.redrawDecorations();
@@ -637,12 +659,30 @@ export class DojoScene extends Phaser.Scene {
     const r = MOVEMENT.playerRadius * TILE;
     this.calmAura = this.add.circle(0, 0, r * 1.5, CALM, 0.18).setStrokeStyle(2, CALM, 0.6);
     this.tweens.add({ targets: this.calmAura, scale: 1.15, alpha: 0.5, duration: 1300, yoyo: true, repeat: -1 });
-    const body = this.add.circle(0, 0, r, 0xf2e9d8).setStrokeStyle(3, 0x14121c);
-    const belt = this.add.graphics();
-    drawBelt(belt, 0, r * 0.15, r * 1.9, r * 0.28, this.training.belt, this.training.stripesThisBelt);
-    this.facingDot = this.add.circle(0, 0, r * 0.28, 0x14121c);
+    this.calmAura.setY(-r * 0.4);
+    this.hero = makePlayerSprite(this, this.training.belt, this.training.stripesThisBelt)!;
     const p = this.world.players.p1.pos;
-    return this.add.container(p.x * TILE, p.y * TILE, [this.calmAura, body, belt, this.facingDot]);
+    return this.add.container(p.x * TILE, p.y * TILE, [this.calmAura, this.hero.container]);
+  }
+
+  /** Starts a one-off move for `ms` milliseconds, optionally facing a direction. */
+  private heroDo(name: string, ms: number, face: Vec2 | null = null): void {
+    this.heroAction = { name, until: this.time.now + ms, face };
+    this.hero.play(name, { restart: this.hero.current !== name || name !== 'sweep' });
+  }
+
+  /** Walk or stand, unless a one-off move (sweep, wipe, straighten, bow) is playing. */
+  private animateHero(): void {
+    const p = this.world.players.p1;
+    const a = this.heroAction;
+    if (a && this.time.now > a.until) this.heroAction = null;
+    if (this.heroAction?.face) this.hero.face(this.heroAction.face.x, this.heroAction.face.y);
+    else this.hero.face(p.facing.x, p.facing.y);
+    if (!this.heroAction) {
+      const speed = Math.hypot(p.pos.x - this.prevPos.x, p.pos.y - this.prevPos.y) * TICKS_PER_SECOND;
+      playLocomotion(this.hero, p.moving ? speed : 0);
+    }
+    this.hero.update();
   }
 
   private draw(blend: number): void {
@@ -650,8 +690,7 @@ export class DojoScene extends Phaser.Scene {
     const x = Phaser.Math.Linear(this.prevPos.x, p.pos.x, blend);
     const y = Phaser.Math.Linear(this.prevPos.y, p.pos.y, blend);
     this.player.setPosition(x * TILE, y * TILE);
-    const r = MOVEMENT.playerRadius * TILE;
-    this.facingDot.setPosition(p.facing.x * r * 0.6, p.facing.y * r * 0.6);
+    this.animateHero();
     this.calmAura.setVisible(this.dojo.calmMindRuns > 0);
     this.player.setAlpha(this.mode === 'decorate' ? 0.4 : 1);
 

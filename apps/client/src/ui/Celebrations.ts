@@ -6,7 +6,8 @@ import Phaser from 'phaser';
 import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { shortDate } from '../game/student';
-import { drawBelt, hex, makeCharacter } from './belt';
+import { makeStandingCharacter } from '../art/player';
+import { hex } from './belt';
 import { FONT, crisp } from './theme';
 
 type Step =
@@ -94,15 +95,18 @@ export class Celebrations {
     this.text(width / 2, height * 0.13, 'PROMOTION', 18, '#ffd166', true).setOrigin(0.5);
     const title = this.text(width / 2, height * 0.24, `${this.training.firstName} earned the ${to.name}!`, 30, '#ffffff', true, 'Georgia, serif').setOrigin(0.5).setAlpha(0);
     const r = Math.min(56, height * 0.14);
-    const ch = makeCharacter(this.scene, width / 2, height * 0.58, r, from, 0);
+    const ch = makeStandingCharacter(this.scene, width / 2, height * 0.58, r, from, 0);
     this.layer.add(ch.container);
-    // Bow: lean forward and back.
-    this.scene.tweens.add({ targets: ch.container, scaleY: 0.82, y: ch.container.y + r * 0.2, duration: 420, yoyo: true, hold: 300, ease: 'Sine.InOut' });
+    // Bow: the real bow with the art, or lean forward and back.
+    if (ch.sprite) ch.sprite.play('bow', { restart: true });
+    else this.scene.tweens.add({ targets: ch.container, scaleY: 0.82, y: ch.container.y + r * 0.2, duration: 420, yoyo: true, hold: 300, ease: 'Sine.InOut' });
     this.scene.time.delayedCall(1300, () => {
       if (!ch.container.active) return;
-      // The new belt is tied.
-      drawBelt(ch.belt, 0, r * 0.15, r * 1.9, r * 0.3, to, 0);
-      this.scene.tweens.add({ targets: ch.container, scale: 1.18, duration: 220, yoyo: true, ease: 'Back.Out' });
+      // The new belt is tied, and the character celebrates (arms up, then a proud stance).
+      ch.retie(to, 0);
+      if (ch.sprite) ch.sprite.play('celebrate', { restart: true });
+      const s = ch.container.scale;
+      this.scene.tweens.add({ targets: ch.container, scale: s * 1.12, duration: 220, yoyo: true, ease: 'Back.Out' });
       this.burst(width / 2, height * 0.58, [hex(to.color), GOLD, 0xffffff], 60);
       this.rays(width / 2, height * 0.58, hex(to.color));
       sfx.promotion();
@@ -170,7 +174,7 @@ export class Celebrations {
       case 'welcome': {
         sfx.signOff();
         this.text(cx, height * 0.1, `Welcome, ${m.name}!`, 30, '#ffd166', true, 'Georgia, serif').setOrigin(0.5);
-        const ch = makeCharacter(this.scene, cx, height * 0.1 + 62, 26, m.belt, this.training.stripesThisBelt);
+        const ch = makeStandingCharacter(this.scene, cx, height * 0.1 + 62, 26, m.belt, this.training.stripesThisBelt);
         this.layer.add(ch.container);
         let y = height * 0.1 + 100;
         if (m.unlocked.length === 0) {

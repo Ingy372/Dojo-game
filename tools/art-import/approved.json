@@ -5,22 +5,81 @@
   "packs": {
     "player": {
       "sources": [
-        { "id": "player", "type": "character", "json": "incoming-art/player-character/sprites/player.json", "skipLayers": ["belt-center-edge"] }
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-character/sprites/player.json",
+          "skipLayers": [
+            "belt-center-edge"
+          ]
+        }
+      ]
+    },
+    "player-big": {
+      "scale": 1.0,
+      "note": "Full detail, facing the camera, for the promotion ceremony and other big moments.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-character/sprites/player.json",
+          "skipLayers": [
+            "belt-center-edge",
+            "prop-broom",
+            "prop-rag"
+          ],
+          "animations": [
+            "idle",
+            "bow",
+            "celebrate"
+          ],
+          "directions": [
+            "S"
+          ]
+        }
       ]
     },
     "enemies-t1": {
       "sources": [
-        { "id": "swarmer", "type": "character", "json": "incoming-art/enemies-tier1/swarmer/sprites/swarmer.json" },
-        { "id": "shield", "type": "character", "json": "incoming-art/enemies-tier1/shield/sprites/shield.json" },
-        { "id": "brute", "type": "character", "json": "incoming-art/enemies-tier1/brute/sprites/brute.json" },
-        { "id": "floor-keeper", "type": "character", "json": "incoming-art/enemies-tier1/keeper/sprites/keeper.json" }
+        {
+          "id": "swarmer",
+          "type": "character",
+          "json": "incoming-art/enemies-tier1/swarmer/sprites/swarmer.json"
+        },
+        {
+          "id": "shield",
+          "type": "character",
+          "json": "incoming-art/enemies-tier1/shield/sprites/shield.json"
+        },
+        {
+          "id": "brute",
+          "type": "character",
+          "json": "incoming-art/enemies-tier1/brute/sprites/brute.json"
+        },
+        {
+          "id": "floor-keeper",
+          "type": "character",
+          "json": "incoming-art/enemies-tier1/keeper/sprites/keeper.json"
+        }
       ]
     },
     "tower-t1": {
-      "sources": [{ "id": "tower", "type": "static", "json": "incoming-art/tower-rooms/sprites/static.json" }]
+      "sources": [
+        {
+          "id": "tower",
+          "type": "static",
+          "json": "incoming-art/tower-rooms/sprites/static.json"
+        }
+      ]
     },
     "dojo": {
-      "sources": [{ "id": "dojo", "type": "static", "json": "incoming-art/home-dojo/sprites/static.json" }]
+      "sources": [
+        {
+          "id": "dojo",
+          "type": "static",
+          "json": "incoming-art/home-dojo/sprites/static.json"
+        }
+      ]
     }
   }
 }

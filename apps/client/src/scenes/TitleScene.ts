@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 declare const __BUILD_TIME__: string;
+import { loadArt } from '../art/art';
 import { sfx } from '../audio/Sfx';
 
 export class TitleScene extends Phaser.Scene {
@@ -11,6 +12,17 @@ export class TitleScene extends Phaser.Scene {
 
   constructor() {
     super('Title');
+  }
+
+  preload(): void {
+    // The character's art is used everywhere, so it loads first (with a small note while it does).
+    const { width, height } = this.scale.gameSize;
+    const note = this.add
+      .text(width / 2, height / 2, 'Loading…', { fontFamily: 'system-ui, sans-serif', fontSize: '18px', color: '#b9ad99' })
+      .setOrigin(0.5)
+      .setResolution(window.devicePixelRatio || 1);
+    this.load.once(Phaser.Loader.Events.COMPLETE, () => note.destroy());
+    loadArt(this, ['player', 'player-big']);
   }
 
   create(): void {

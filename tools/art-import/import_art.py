@@ -100,7 +100,8 @@ class Packer:
         return out
 
 
-def load_character(packer: Packer, json_path: str, scale: float, skip_layers: list[str]) -> dict:
+def load_character(packer: Packer, json_path: str, scale: float, skip_layers: list[str],
+                   only_anims: list[str] | None = None, only_dirs: list[str] | None = None) -> dict:
     d = json.load(open(json_path))
     base = os.path.dirname(json_path)
     fw, fh = d['frameWidth'], d['frameHeight']
@@ -110,6 +111,8 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
     layers = [l for l in sorted(d['layers'], key=lambda l: l['order']) if l['name'] not in skip_layers]
     anims = {}
     for name, a in d['animations'].items():
+        if only_anims and name not in only_anims:
+            continue
         info = {k: v for k, v in a.items() if k not in ('sheets',)}
         info['layers'] = {}
         for layer in layers:
@@ -122,6 +125,9 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
             ids = []
             for r in range(ndir):
                 row = []
+                if only_dirs and d['directions'][r] not in only_dirs:
+                    ids.append([-1] * a['frames'])  # direction not included in this pack
+                    continue
                 for c in range(a['frames']):
                     fr = im.crop((c * fw, r * fh, (c + 1) * fw, (r + 1) * fh))
                     row.append(packer.add(shrink(fr, scale)))
@@ -187,7 +193,8 @@ def main() -> None:
         for src in pack['sources']:
             path = rel(src['json'])
             if src['type'] == 'character':
-                entries[src['id']] = load_character(packer, path, scale, src.get('skipLayers', []))
+                entries[src['id']] = load_character(packer, path, scale, src.get('skipLayers', []),
+                                                    src.get('animations'), src.get('directions'))
             else:
                 entries[src['id']] = load_static(packer, path, scale, src.get('only'))
         pages = packer.pack()

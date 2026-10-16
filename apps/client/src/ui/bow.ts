@@ -3,6 +3,7 @@
 
 import Phaser from 'phaser';
 import { BOW } from '@dojo/sim';
+import type { LayeredSprite } from '../art/LayeredSprite';
 import { sfx } from '../audio/Sfx';
 import { FONT, crisp } from './theme';
 
@@ -46,9 +47,17 @@ export function bowPrompt(scene: Phaser.Scene, line: string, onBow: () => void):
   return box;
 }
 
-/** The character bows: dips forward, holds, and rises, with a calm bell. */
-export function playBow(scene: Phaser.Scene, character: Phaser.GameObjects.Container, onDone: () => void): void {
+/**
+ * The character bows, with a calm bell. With the character's art, it plays the real bow
+ * (feet together, a 30° bow from the hips, rise); otherwise a simple dip.
+ */
+export function playBow(scene: Phaser.Scene, character: Phaser.GameObjects.Container, onDone: () => void, sprite?: LayeredSprite): void {
   sfx.bow();
+  if (sprite?.has('bow')) {
+    sprite.play('bow', { restart: true });
+    scene.time.delayedCall(BOW.ms, onDone);
+    return;
+  }
   const sx = character.scaleX;
   const sy = character.scaleY;
   scene.tweens.add({

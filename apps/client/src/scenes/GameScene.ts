@@ -46,12 +46,14 @@ import {
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
+import { loadArt } from '../art/art';
+import type { LayeredSprite } from '../art/LayeredSprite';
+import { makePlayerSprite, playLocomotion } from '../art/player';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
 import { homeDojo } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
-import { drawBelt } from '../ui/belt';
 import { bowPrompt, playBow } from '../ui/bow';
 import { InsightPicker } from '../ui/InsightPicker';
 import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
@@ -65,6 +67,11 @@ const VISIBLE_ROWS = 8;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 /** Never run more than this many ticks in one frame (e.g. after a long pause). */
 const MAX_TICKS_PER_FRAME = 5;
+
+/** Draw order for things standing in the room: lower on screen = in front. */
+function depthAt(yPx: number): number {
+  return 3 + yPx / 10000;
+}
 
 /** Game feel: how long the action freezes on impact, and how hard the screen shakes. */
 const FEEL = {
@@ -165,8 +172,9 @@ export class GameScene extends Phaser.Scene {
   private hitStopMs = 0;
 
   private player!: Phaser.GameObjects.Container;
-  private body!: Phaser.GameObjects.Arc;
-  private facingDot!: Phaser.GameObjects.Arc;
+  /** The character's art (layers in the real belt), and the one-off move it's playing. */
+  private hero!: LayeredSprite;
+  private heroAction: string | null = null;
   private shield!: Phaser.GameObjects.Graphics;
   private playerFlashUntil = 0;
   private marker!: Phaser.GameObjects.Arc;
@@ -193,6 +201,10 @@ export class GameScene extends Phaser.Scene {
     this.run = data.run ?? null;
   }
 
+  preload(): void {
+    loadArt(this, ['player', 'enemies-t1', 'tower-t1']);
+  }
+
   create(): void {
     this.training = currentTraining();
     this.setup = characterSetup(loadSave(), this.training, CONTENT.abilities);
@@ -217,12 +229,13 @@ export class GameScene extends Phaser.Scene {
     this.hitStopMs = 0;
     this.enemyViews.clear();
     this.shownCombo = 0;
+    this.heroAction = null;
 
     const roomGfx = this.drawRoom();
     const objects = this.makeRoomObjects();
     this.danger = this.add.graphics().setDepth(1);
     this.marker = this.add.circle(0, 0, TILE * 0.22).setStrokeStyle(3, COLORS.marker, 0.9).setVisible(false).setDepth(2);
-    this.player = this.makePlayer().setDepth(5);
+    this.player = this.makePlayer();
 
     // Two cameras: one follows the character through the room, one holds the on-screen controls.
     const cam = this.cameras.main;
@@ -303,15 +316,10 @@ export class GameScene extends Phaser.Scene {
     const p = this.world.players[this.me];
     const x = Phaser.Math.Linear(this.prevPos.x, p.pos.x, blend);
     const y = Phaser.Math.Linear(this.prevPos.y, p.pos.y, blend);
-    this.player.setPosition(x * TILE, y * TILE);
+    this.player.setPosition(x * TILE, y * TILE).setDepth(depthAt(y * TILE));
+    this.animateHero(p, now);
 
     const r = MOVEMENT.playerRadius * TILE;
-    this.facingDot.setPosition(p.facing.x * r * 0.6, p.facing.y * r * 0.6);
-    // A gentle bob while walking, so movement feels alive.
-    const bob = p.moving ? 1 + Math.sin(now / 70) * 0.05 : 1;
-    this.body.setScale(bob, 2 - bob);
-    this.body.setFillStyle(now < this.playerFlashUntil ? 0xff6b5b : COLORS.gi);
-    this.player.setAlpha(p.downTicks > 0 ? 0.4 : 1);
 
     // A Virtue in effect: a golden shield (Respect) or a calm blue glow (Discipline).
     const lasting = p.virtueTicks > 0 && p.virtue;
@@ -346,6 +354,31 @@ export class GameScene extends Phaser.Scene {
     this.buttons.update(p);
     this.drawHud();
     this.drawRunHud(now);
+  }
+
+  /** Picks the character's animation: a one-off move (punch, dash, ...), else walk or idle. */
+  private animateHero(p: WorldState['players'][string], now: number): void {
+    const s = this.hero;
+    s.face(p.facing.x, p.facing.y);
+    if (p.downTicks > 0) {
+      s.play('defeat');
+    } else {
+      const a = this.heroAction;
+      // A move ends when it's done, except the guard pose, held while guarding.
+      if (a && (s.current !== a || s.finished) && !(a === 'counter' && p.guardTicks > 0)) this.heroAction = null;
+      if (!this.heroAction) {
+        const speed = Math.hypot(p.pos.x - this.prevPos.x, p.pos.y - this.prevPos.y) * TICKS_PER_SECOND;
+        playLocomotion(s, p.moving ? speed : 0);
+      }
+    }
+    s.flash(now < this.playerFlashUntil ? 0xff8a80 : null);
+    s.update();
+  }
+
+  /** Starts a one-off move on the character (frames `from`..`to` of the animation). */
+  private heroDo(name: string, from?: number, to?: number): void {
+    this.heroAction = name;
+    this.hero.play(name, { restart: true, from, to });
   }
 
   private drawEnemy(e: EnemyState, blend: number, now: number): void {
@@ -488,14 +521,11 @@ export class GameScene extends Phaser.Scene {
 
   private makePlayer(): Phaser.GameObjects.Container {
     const r = MOVEMENT.playerRadius * TILE;
-    this.body = this.add.circle(0, 0, r, COLORS.gi).setStrokeStyle(3, COLORS.outline);
-    // The real belt's color and stripes.
-    const belt = this.add.graphics();
-    drawBelt(belt, 0, r * 0.15, r * 1.9, r * 0.28, this.training.belt, this.training.stripesThisBelt);
-    this.facingDot = this.add.circle(0, 0, r * 0.28, COLORS.outline);
+    // The character in the real belt's color and stripes.
+    this.hero = makePlayerSprite(this, this.training.belt, this.training.stripesThisBelt)!;
     this.shield = this.add.graphics();
-    this.virtueAura = this.add.circle(0, 0, r * 1.6).setStrokeStyle(5, COLORS.gold).setVisible(false);
-    return this.add.container(0, 0, [this.virtueAura, this.shield, this.body, belt, this.facingDot]);
+    this.virtueAura = this.add.circle(0, -r * 0.6, r * 1.6).setStrokeStyle(5, COLORS.gold).setVisible(false);
+    return this.add.container(0, 0, [this.virtueAura, this.hero.container, this.shield]);
   }
 
   /** Adds views for enemies that were called in, and removes views for enemies that are gone. */
@@ -615,6 +645,9 @@ export class GameScene extends Phaser.Scene {
           const heavy = ev.move !== 'basic';
           this.sparks(e.pos, heavy ? 12 : 5, heavy ? COLORS.gold : 0xffffff);
           this.floatText(e.pos, `${ev.damage}`, heavy ? '#ffd166' : '#ffffff', heavy ? 30 : 22);
+          // The character punches (the automatic jab only when standing, so walking stays smooth).
+          if (ev.move === 'basic' && !this.world.players[ev.playerId].moving && !this.heroAction) this.heroDo('jab');
+          else if (ev.move === 'strike') this.heroDo('strike');
           if (ev.move === 'basic') {
             sfx.hit();
             this.impact(FEEL.basic);
@@ -636,6 +669,7 @@ export class GameScene extends Phaser.Scene {
         case 'perfectCounter': {
           const p = this.world.players[ev.playerId];
           sfx.perfect();
+          this.heroDo('counter', 8); // the counter punch
           this.impact(FEEL.perfect);
           this.flashScreen(0xffffff, 0.55, 220);
           this.ring(p.pos, COLORS.gold, 2.2);
@@ -654,6 +688,7 @@ export class GameScene extends Phaser.Scene {
         case 'hit': {
           const p = this.world.players[ev.playerId];
           sfx.hurt();
+          this.heroDo('hit');
           this.impact(FEEL.hurt);
           this.playerFlashUntil = this.time.now + 160;
           this.flashScreen(0xff2a1a, 0.3, 200);
@@ -674,10 +709,12 @@ export class GameScene extends Phaser.Scene {
         }
         case 'counterPressed':
           sfx.guard();
+          this.heroDo('counter', 0, 7); // the block, held while guarding
           break;
         case 'dash': {
           const p = this.world.players[ev.playerId];
           sfx.dash();
+          this.heroDo('dash');
           this.dashTrail(p.pos);
           break;
         }
@@ -723,6 +760,7 @@ export class GameScene extends Phaser.Scene {
           break;
         case 'playerDown':
           sfx.playerDown();
+          this.heroDo('defeat');
           this.cameras.main.fade(900, 10, 8, 16);
           this.message.setText(this.run ? 'Ouch! The run is over.\nYou keep everything you found.' : 'Ouch!\nBack to the start.').setVisible(true);
           break;
@@ -908,6 +946,7 @@ export class GameScene extends Phaser.Scene {
     this.menuOpen = true;
     this.enemiesAt = null;
     const prompt = bowPrompt(this, 'Bow to begin the floor', () => {
+      this.heroDo('bow');
       playBow(this, this.player, () => {
         if (!this.run) return;
         bowIn(this.world, this.me);
@@ -921,7 +960,7 @@ export class GameScene extends Phaser.Scene {
         this.enemiesAt = this.time.now;
         sfx.appear();
         for (const e of this.world.enemies) if (e.mode !== 'defeated') this.ring(e.pos, 0xffffff, 1.2, 0.6);
-      });
+      }, this.hero);
     });
     this.cameras.main.ignore(prompt);
   }

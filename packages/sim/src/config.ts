@@ -299,6 +299,6 @@ export const DOJO = {
  */
 export const BOW = {
   focus: 15,
-  /** How long the bow animation takes (ms, looks only). */
-  ms: 900,
+  /** How long the bow animation takes (ms, looks only): the full 22-frame bow from the art. */
+  ms: 1375,
 } as const;
