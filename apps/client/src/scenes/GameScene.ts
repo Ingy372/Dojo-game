@@ -441,7 +441,13 @@ export class GameScene extends Phaser.Scene {
 
     if (e.mode === 'defeated') {
       if (started || s.current !== 'defeat') s.play('defeat', { restart: true });
+      // The dissolve is drawn a little bigger and glowing, and its shadow fades with it.
+      const t = Phaser.Math.Clamp((now - (v.defeatAt ?? now)) / ((defeat.frames / defeat.fps) * 1000), 0, 1);
+      s.container.setScale(1 + 0.3 * Math.min(1, t * 3));
+      (s.container.list[0] as Phaser.GameObjects.Ellipse | undefined)?.setAlpha(1 - t);
     } else if (e.mode === 'waiting') {
+      s.container.setScale(1);
+      (s.container.list[0] as Phaser.GameObjects.Ellipse | undefined)?.setAlpha(1);
       alpha = 1 - (e.modeTicks / COMBAT.enemySpawnWaitTicks) * 0.8;
       s.play('idle');
     } else if (e.mode === 'windup' && e.attackCenter) {
@@ -758,8 +764,7 @@ export class GameScene extends Phaser.Scene {
           if (ev.defeated) {
             sfx.enemyDown();
             this.impact(FEEL.enemyDown);
-            this.sparks(e.pos, 24, v.color);
-            this.ring(e.pos, 0xffffff, 1.6);
+            this.setFree(e.pos, !!e.def.boss);
           }
           break;
         }
@@ -1300,6 +1305,60 @@ export class GameScene extends Phaser.Scene {
   private addWorld<T extends Phaser.GameObjects.GameObject>(obj: T): T {
     this.uiCamera.ignore(obj);
     return obj;
+  }
+
+  /**
+   * A beaten creature is "set free": a soft golden flash, its dissolve into light (drawn
+   * glowing), and a few sparkles drifting up. Short and light, so the fight stays readable.
+   */
+  private setFree(at: Vec2, boss: boolean): void {
+    const x = at.x * TILE;
+    const y = at.y * TILE;
+    const size = boss ? 1.6 : 1;
+    // A warm golden flash (normal colours, so it shows on light stone as well as dark floors).
+    const glow = this.addWorld(this.add.image(x, y - TILE * 0.45, this.softGlow()).setDepth(8));
+    glow.setTint(0xffb627).setScale(0.4).setAlpha(1);
+    this.tweens.add({ targets: glow, scale: 2.2 * size, alpha: 0, duration: 650, ease: 'Cubic.Out', onComplete: () => glow.destroy() });
+    const core = this.addWorld(this.add.image(x, y - TILE * 0.45, this.softGlow()).setDepth(8).setScale(0.3));
+    this.tweens.add({ targets: core, scale: 1.1 * size, alpha: 0, duration: 380, ease: 'Cubic.Out', onComplete: () => core.destroy() });
+    this.ring({ x: at.x, y: at.y - 0.3 }, 0xffd166, 1.3 * size, 0.9);
+    // Little golden stars drift up and fade.
+    const count = boss ? 16 : 9;
+    for (let i = 0; i < count; i++) {
+      const sx = x + (Math.random() - 0.5) * TILE * 0.9 * size;
+      const r = 5 + Math.random() * 4;
+      const star = this.addWorld(this.add.star(sx, y - TILE * (0.2 + Math.random() * 0.5), 4, r * 0.4, r, i % 3 === 0 ? 0xffffff : 0xffe48a));
+      star.setStrokeStyle(1.5, 0xc98a1a, 0.9).setDepth(8).setScale(0.4);
+      this.tweens.add({ targets: star, scale: 1, duration: 140, delay: i * 25, ease: 'Back.Out' });
+      this.tweens.add({
+        targets: star,
+        y: star.y - TILE * (0.8 + Math.random() * 0.9) * size,
+        x: sx + (Math.random() - 0.5) * TILE * 0.4,
+        angle: (Math.random() - 0.5) * 180,
+        alpha: 0,
+        delay: i * 25,
+        duration: 700 + Math.random() * 350,
+        ease: 'Sine.Out',
+        onComplete: () => star.destroy(),
+      });
+    }
+  }
+
+  /** A soft round glow (white in the middle, fading out), made once and reused. */
+  private softGlow(): string {
+    const key = 'fx-soft-glow';
+    if (!this.textures.exists(key)) {
+      const tex = this.textures.createCanvas(key, 64, 64)!;
+      const ctx = tex.getContext();
+      const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+      g.addColorStop(0, 'rgba(255,255,255,1)');
+      g.addColorStop(0.45, 'rgba(255,255,255,0.8)');
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, 64, 64);
+      tex.refresh();
+    }
+    return key;
   }
 
   private sparks(at: Vec2, count: number, color: number): void {
