@@ -1,17 +1,17 @@
 {
   "character": "brute",
-  "frameWidth": 160,
-  "frameHeight": 160,
+  "frameWidth": 208,
+  "frameHeight": 208,
   "anchor": {
-    "x": 80.0,
-    "y": 131.2,
+    "x": 104.0,
+    "y": 170.56,
     "note": "feet / ground point of the character, in pixels from the frame's top-left"
   },
   "pixelsPerTile": 80.0,
   "camera": {
     "projection": "orthographic",
     "elevationDeg": 35.0,
-    "orthoScaleTiles": 2.0,
+    "orthoScaleTiles": 2.6,
     "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
   },
   "directions": [
@@ -100,6 +100,21 @@
       },
       "note": "heavy breathing, 1 s loop"
     },
+    "move": {
+      "frames": 6,
+      "fps": 10,
+      "durationSec": 0.6,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "brute_body_move.png",
+        "glow": "brute_glow_move.png",
+        "telegraph": "brute_telegraph_move.png",
+        "light": "brute_light_move.png"
+      },
+      "designSpeedTilesPerSecond": 1.2,
+      "note": "heavy stomps; play at any move speed"
+    },
     "windup": {
       "frames": 8,
       "fps": 10,
@@ -161,6 +176,71 @@
         0.0
       ],
       "note": "the Brute's two-fist smash in front"
+    },
+    "hit": {
+      "frames": 3,
+      "fps": 12,
+      "durationSec": 0.25,
+      "loop": false,
+      "tags": {
+        "recoil": "0"
+      },
+      "sheets": {
+        "body": "brute_body_hit.png",
+        "glow": "brute_glow_hit.png",
+        "telegraph": "brute_telegraph_hit.png",
+        "light": "brute_light_hit.png"
+      }
+    },
+    "stagger": {
+      "frames": 8,
+      "fps": 10,
+      "durationSec": 0.8,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "brute_body_stagger.png",
+        "glow": "brute_glow_stagger.png",
+        "telegraph": "brute_telegraph_stagger.png",
+        "light": "brute_light_stagger.png"
+      },
+      "note": "dizzy wobble; loop for as long as the stagger lasts"
+    },
+    "winded": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "brute_body_winded.png",
+        "glow": "brute_glow_winded.png",
+        "telegraph": "brute_telegraph_winded.png",
+        "light": "brute_light_winded.png"
+      },
+      "note": "winded (stopped for 2.5 s, takes +50% damage): loop. The game adds the pale tint, sweat drops and 'huff... huff...'"
+    },
+    "defeat": {
+      "frames": 14,
+      "fps": 12,
+      "durationSec": 1.1667,
+      "loop": false,
+      "tags": {
+        "light": "3",
+        "gone": "13"
+      },
+      "sheets": {
+        "body": "brute_body_defeat.png",
+        "glow": "brute_glow_defeat.png",
+        "telegraph": "brute_telegraph_defeat.png",
+        "light": "brute_light_defeat.png"
+      },
+      "keyFrames": {
+        "light": 3,
+        "gone": 13
+      },
+      "removeAfter": true,
+      "note": "dissolves into light and sparkles (a hopeful 'set free', not a death). The last frame is empty"
     }
   },
   "enemy": "brute",

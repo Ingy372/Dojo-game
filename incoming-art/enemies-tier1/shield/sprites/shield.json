@@ -114,6 +114,23 @@
       },
       "note": "stiff, watchful sentinel, 1 s loop"
     },
+    "move": {
+      "frames": 6,
+      "fps": 10,
+      "durationSec": 0.6,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "shield_body_move.png",
+        "shield": "shield_shield_move.png",
+        "shield-broken": "shield_shield-broken_move.png",
+        "glow": "shield_glow_move.png",
+        "telegraph": "shield_telegraph_move.png",
+        "light": "shield_light_move.png"
+      },
+      "designSpeedTilesPerSecond": 2.4,
+      "note": "steady march; play at any move speed"
+    },
     "windup": {
       "frames": 7,
       "fps": 10,
@@ -178,6 +195,63 @@
         0.0
       ],
       "note": "shield bash: the shield shoves forward"
+    },
+    "hit": {
+      "frames": 3,
+      "fps": 12,
+      "durationSec": 0.25,
+      "loop": false,
+      "tags": {
+        "recoil": "0"
+      },
+      "sheets": {
+        "body": "shield_body_hit.png",
+        "shield": "shield_shield_hit.png",
+        "shield-broken": "shield_shield-broken_hit.png",
+        "glow": "shield_glow_hit.png",
+        "telegraph": "shield_telegraph_hit.png",
+        "light": "shield_light_hit.png"
+      }
+    },
+    "stagger": {
+      "frames": 8,
+      "fps": 10,
+      "durationSec": 0.8,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "shield_body_stagger.png",
+        "shield": "shield_shield_stagger.png",
+        "shield-broken": "shield_shield-broken_stagger.png",
+        "glow": "shield_glow_stagger.png",
+        "telegraph": "shield_telegraph_stagger.png",
+        "light": "shield_light_stagger.png"
+      },
+      "note": "dizzy wobble; loop for as long as the stagger lasts"
+    },
+    "defeat": {
+      "frames": 14,
+      "fps": 12,
+      "durationSec": 1.1667,
+      "loop": false,
+      "tags": {
+        "light": "3",
+        "gone": "13"
+      },
+      "sheets": {
+        "body": "shield_body_defeat.png",
+        "shield": "shield_shield_defeat.png",
+        "shield-broken": "shield_shield-broken_defeat.png",
+        "glow": "shield_glow_defeat.png",
+        "telegraph": "shield_telegraph_defeat.png",
+        "light": "shield_light_defeat.png"
+      },
+      "keyFrames": {
+        "light": 3,
+        "gone": 13
+      },
+      "removeAfter": true,
+      "note": "dissolves into light and sparkles (a hopeful 'set free', not a death). The last frame is empty"
     }
   },
   "enemy": "shield",

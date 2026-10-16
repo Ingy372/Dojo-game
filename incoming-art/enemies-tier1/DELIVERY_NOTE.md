@@ -1,4 +1,31 @@
-# Delivery Note: Batch 2 review redesign (sample check), 2026-10-16
+# Delivery Note: Batch 2 full sets (approved redesign), 2026-10-16
+
+**WHAT**
+- Full sets for the Shield Guard, Brute and Floor Keeper with the approved designs and glow fade. The Swarmer was already complete.
+- Every enemy has idle, move, wind-up, attack, hit flinch, stagger and defeat into light, in 8 directions.
+- Specials:
+  - **Shield Guard:** bash, plus the `shield` and `shield-broken` layers on every animation. The broken shield is now the same blue-grey shield cracked in two, instead of solid amber.
+  - **Brute:** winded.
+  - **Floor Keeper:** slam, sweep and calling for help.
+- `telegraphIntensity` (per frame) is in the json for every wind-up and attack.
+- **New previews in `preview/`:**
+  - all four `<enemy>_anim.gif`
+  - `windup_compare.gif`
+  - `lineup-redesign.png`
+  - 3 review pictures
+
+**WHY:** Jay approved the four redesigns and the glow fade.
+
+**DECIDE (Jay):** approve the full sets. Start with `preview/review-1-windups-and-attacks.png`, `review-2-specials.png`, `review-3-defeat-sparkle.png` and the four GIFs.
+
+**NEXT:** Claude Code swaps out the placeholder enemies. Use each json's `anchor` and frame size; the Brute is now 208 px.
+
+**Issues / notes**
+- **Brute frame size:** a 176 px frame still clipped the telegraph rim in SE/SW on the attack's impact, so the Brute is now **208 × 208** (80 px per tile, feet anchor at 82%, recorded in `brute.json`).
+- **Clipping:** the check finds no clipped frames in any enemy.
+- **Doc conflicts:** none. The telegraph timings match `content/enemies/*.json`.
+
+# Earlier: Batch 2 review redesign (sample check), 2026-10-16
 
 **WHAT**
 - **New designs for all four creatures.** They are the same shadow family (glowing eyes, soft rim, dissolve into light), but each has its own silhouette, features, accent colour and movement:

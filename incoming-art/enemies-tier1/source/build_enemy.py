@@ -219,7 +219,7 @@ if E == "shield":
         bmesh.ops.contextual_create(bm, geom=[e for e in bm.edges if e.is_boundary])
         bmesh.ops.rotate(bm, verts=bm.verts, cent=c, matrix=Matrix.Rotation(math.radians(ang), 3, "Y"))
         bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((dx, 0, -0.02 - 0.015 * k)))
-        mesh(f"shield_half{k}", bm, MAT["shield_rim"], "shield-broken", "shield")
+        mesh(f"shield_half{k}", bm, MAT["shield"], "shield-broken", "shield")   # the same blue-grey shield, cracked
 
 # ----------------------------------------------------------------- posing
 def P(body=(0, 0, 0, 0, 0, 0, 1, 1, 1), eyes=(1, 1), arm_l=(0, 0), arm_r=(0, 0), foot_l=(0, 0, 0), foot_r=(0, 0, 0),
