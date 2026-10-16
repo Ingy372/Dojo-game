@@ -117,7 +117,9 @@ PALETTE = {
     "tape":   "#f2f2f2",
     "tape_edge": "#f4f1ea",  # rank stripe edge: NOT tinted, a light rim so stripes read on any belt
     "belt_rim": "#2e2a3a",   # Batch 1 (test of record): untinted dark rim (now tinted per belt, see belt_rim_w)
-    "belt_rim_w": "#ffffff", # Belt revision: rim / separator / sheen are neutral white, tinted per belt by the game
+    "belt_rim_w": "#ffffff",
+    # Batch 1 props (own layers, real colours, not tinted)
+    "wood": "#b5834f", "wood_dark": "#8a5a35", "straw": "#e6c56c", "cord": "#c0392b", "rag": "#8fc3e6", # Belt revision: rim / separator / sheen are neutral white, tinted per belt by the game
 }
 MAT = {k: toon_material(k.upper(), v) for k, v in PALETTE.items()}
 MAT["eye"] = toon_material("EYE", PALETTE["eye"], shadow=1.0, highlight=1.0)
@@ -129,12 +131,13 @@ OUTLINE_W = 0.013        # world units (~1.1 px at the standard camera)
 LAYERS = ["body", "gi", "belt", "belt-center", "belt-tape1-edge", "belt-tape1", "belt-tape2-edge", "belt-tape2"]
 if PLAYER:   # belt revision: belt-sheen (dark belts), belt-center-edge (two-colour separator), belt-rim (tinted per belt)
     LAYERS[LAYERS.index("belt-center"):LAYERS.index("belt-center") + 1] = ["belt-sheen", "belt-center", "belt-center-edge", "belt-rim"]
+    LAYERS += ["prop-broom", "prop-rag"]   # Batch 1 cleaning props: own layers, drawn only in their animations
 COLL = {}
 for i, name in enumerate(LAYERS):
     c = bpy.data.collections.new("L_" + name)
     scene.collection.children.link(c)
     c["sprite_order"] = i                       # draw order in the game (bottom to top)
-    c["sprite_tint"] = name != "body" and (not name.endswith("-edge") or name == "belt-center-edge")  # neutral: recoloured
+    c["sprite_tint"] = name != "body" and not name.startswith("prop-") and (not name.endswith("-edge") or name == "belt-center-edge")
     c["sprite_overlay"] = name.startswith("belt-")  # extra on top of the belt
     if name == "belt-rim":
         c["sprite_optional"] = False                # drawn on top of the belt, but always drawn
@@ -184,6 +187,9 @@ for s, x in (("L", 1), ("R", -1)):
     bone(f"knee_pole.{s}", (0.085 * x, -0.6, 0.32), (0.085 * x, -0.6, 0.40), f"foot_ik.{s}", False)
     bone(f"hand_ik.{s}", (0.19 * x, -0.01, 0.54), (0.19 * x, -0.01, 0.62), "root", False)
     bone(f"elbow_pole.{s}", (0.28 * x, 0.45, 0.15), (0.28 * x, 0.45, 0.23), "chest", False)
+if PLAYER:   # prop control bones (pivot = where the hands hold it); scale 0 hides the prop
+    bone("broom", (0, 0, 0.5), (0, 0, 0.62), "root", False)
+    bone("rag", (0, 0, 0.03), (0, 0, 0.15), "root", False)
 bpy.ops.object.mode_set(mode="OBJECT")
 
 for s in ("L", "R"):
@@ -447,6 +453,14 @@ for k in range(2):                           # stripe 1 is nearest the end
     finish_mesh(f"tape{k + 1}_edge", strip(a + d * (core0 - TAPE_RIM), a + d * (core1 + TAPE_RIM), 0.040, 0.0155),
                 MAT["tape_edge"], f"belt-tape{k + 1}-edge", "hips", outline=False)
 
+if PLAYER:
+    # BROOM (prop-broom): a soft straw broom, kid-sized. Built around its bone pivot (0, 0, 0.5) = the lower hand.
+    finish_mesh("broom_shaft", tube((0, 0, 0.5 - 0.40), (0, 0, 0.5 + 0.34), 0.014, 0.014, segs=8), MAT["wood"], "prop-broom", "broom")
+    finish_mesh("broom_head", tube((0, 0, 0.5 - 0.58), (0, 0, 0.5 - 0.40), 0.075, 0.03, segs=10, sx=1.0, sy=0.45), MAT["straw"], "prop-broom", "broom")
+    finish_mesh("broom_cord", tube((0, 0, 0.5 - 0.43), (0, 0, 0.5 - 0.41), 0.04, 0.036, segs=10, sx=1.0, sy=0.6), MAT["cord"], "prop-broom", "broom", outline=False)
+    # RAG (prop-rag): a folded light-blue cloth under the right hand, pivot on the floor
+    finish_mesh("rag_cloth", box((0, 0, 0.03), (0.16, 0.12, 0.024), bevel=0.008), MAT["rag"], "prop-rag", "rag")
+
 # ------------------------------------------------------------------ animation
 PB = arm.pose.bones
 
@@ -469,9 +483,13 @@ def blend(p, q, t):
 
 def pose(hips=(0, 0, 0), hips_rot=(0, 0, 0), chest_rot=(0, 0, 0), head_rot=(0, 0, 0),
          foot_l=(0.085, 0, 0.07), foot_r=(-0.085, 0, 0.07), foot_l_rot=(0, 0, 0), foot_r_rot=(0, 0, 0),
-         hand_l=(0.19, -0.01, 0.54), hand_r=(-0.19, -0.01, 0.54)):
-    return dict(hips=hips, hips_rot=hips_rot, chest_rot=chest_rot, head_rot=head_rot, foot_l=foot_l, foot_r=foot_r,
-                foot_l_rot=foot_l_rot, foot_r_rot=foot_r_rot, hand_l=hand_l, hand_r=hand_r)
+         hand_l=(0.19, -0.01, 0.54), hand_r=(-0.19, -0.01, 0.54), broom=None, rag=None):
+    q = dict(hips=hips, hips_rot=hips_rot, chest_rot=chest_rot, head_rot=head_rot, foot_l=foot_l, foot_r=foot_r,
+             foot_l_rot=foot_l_rot, foot_r_rot=foot_r_rot, hand_l=hand_l, hand_r=hand_r)
+    if PLAYER:   # props: (x, y, z, pitch, yaw, roll, scale) in root space; scale 0 = hidden
+        q["broom"] = broom or (0, 0, 0.5, 0, 0, 0, 0.0)
+        q["rag"] = rag or (0, 0, 0.03, 0, 0, 0, 0.0)
+    return q
 
 def apply(p, frame):
     """Rotations in degrees: (pitch forward +, turn-to-own-left +, lean)."""
@@ -487,6 +505,11 @@ def apply(p, frame):
     loc(PB["foot_ik.R"], Vector(p["foot_r"]) - REST["foot.R"]); rot(PB["foot_ik.R"], p["foot_r_rot"])
     loc(PB["hand_ik.L"], Vector(p["hand_l"]) - REST["hand.L"])
     loc(PB["hand_ik.R"], Vector(p["hand_r"]) - REST["hand.R"])
+    if PLAYER:
+        for nm, rest in (("broom", (0, 0, 0.5)), ("rag", (0, 0, 0.03))):
+            v = p.get(nm) or (*rest, 0, 0, 0, 0.0)
+            loc(PB[nm], Vector(v[:3]) - Vector(rest)); rot(PB[nm], v[3:6])
+            PB[nm].scale = (v[6],) * 3; PB[nm].keyframe_insert("scale", frame=frame)
 
 def make_action(name, poses, fps, loop, tags=None):
     act = bpy.data.actions.new(name)
@@ -680,6 +703,116 @@ if PLAYER:
     defeat += [blend(SAG, KNEEL, ease(k / 6)) for k in range(1, 7)]      # 6 frames sinking to the knee
     defeat += [kneel_breath(1.0), kneel_breath(0.6), kneel_breath(0.0), KNEEL, KNEEL]
 
+if PLAYER:
+    # ---------------- Batch 1, the rest of the player set ----------------
+    def shift(p, dy=0.0, dz=0.0, dx=0.0):
+        """Move the whole upper body (hips + both hands) by an offset, feet stay put."""
+        q = dict(p)
+        q["hips"] = (p["hips"][0] + dx, p["hips"][1] + dy, p["hips"][2] + dz)
+        q["hand_l"] = (p["hand_l"][0] + dx, p["hand_l"][1] + dy, p["hand_l"][2] + dz)
+        q["hand_r"] = (p["hand_r"][0] + dx, p["hand_r"][1] + dy, p["hand_r"][2] + dz)
+        return q
+
+    # DASH: the game moves him 2.5 tiles in 0.25 s (decisions.md); this is the body action, played in place.
+    # Load (sink), push off the rear foot, low forward lean with the guard tucked, a brief long stretch,
+    # land on the front foot, then recover to the guard. 8 frames at 20 fps = 0.4 s (travel = frames 1-5).
+    D_LOAD = shift(STANCE, 0.02, -0.04); D_LOAD["hips_rot"] = (10, -14, 0); D_LOAD["chest_rot"] = (6, -6, 0); D_LOAD["head_rot"] = (-26, 18, 0)
+    D_PUSH = pose(hips=(0, -0.06, -0.09), hips_rot=(22, -8, 0), chest_rot=(8, -4, 0), head_rot=(-40, 10, 0),
+                  foot_l=(0.10, -0.24, 0.12), foot_r=(-0.11, 0.20, 0.08), foot_l_rot=(-14, 8, 0), foot_r_rot=(30, -30, 0),
+                  hand_l=(0.09, -0.36, 0.76), hand_r=(-0.06, -0.28, 0.74))
+    D_STRETCH = pose(hips=(0, -0.10, -0.08), hips_rot=(26, -6, 0), chest_rot=(8, -2, 0), head_rot=(-44, 8, 0),
+                     foot_l=(0.10, -0.30, 0.14), foot_r=(-0.11, 0.24, 0.12), foot_l_rot=(-18, 8, 0), foot_r_rot=(40, -26, 0),
+                     hand_l=(0.09, -0.42, 0.76), hand_r=(-0.06, -0.33, 0.74))
+    D_LAND = pose(hips=(0, -0.08, -0.10), hips_rot=(16, -10, 0), chest_rot=(6, -4, 0), head_rot=(-32, 14, 0),
+                  foot_l=(0.10, -0.22, 0.07), foot_r=(-0.11, 0.16, 0.08), foot_l_rot=(0, 8, 0), foot_r_rot=(18, -34, 0),
+                  hand_l=(0.09, -0.36, 0.78), hand_r=(-0.06, -0.28, 0.78))
+    dash = [D_LOAD, D_PUSH, D_STRETCH, D_STRETCH, blend(D_STRETCH, D_LAND, 0.5), D_LAND,
+            blend(D_LAND, STANCE, ease(0.5)), blend(D_LAND, STANCE, ease(0.85))]
+
+    # HIT FLINCH: small and quick, never painful-looking: the head and shoulders bob back a little,
+    # the guard stays up, then he settles back into the guard. 5 frames at 20 fps = 0.25 s.
+    F_BACK = shift(STANCE, 0.035, -0.012); F_BACK["hips_rot"] = (-2, -16, 0); F_BACK["chest_rot"] = (-9, -8, 2)
+    F_BACK["head_rot"] = (-28, 22, 4)
+    F_BACK["hand_l"] = (0.10, -0.20, 0.88); F_BACK["hand_r"] = (-0.06, -0.15, 0.87)
+    flinch = [blend(STANCE, F_BACK, 0.7), F_BACK, blend(F_BACK, STANCE, 0.45), blend(F_BACK, STANCE, 0.8), STANCE]
+
+    # helper for props: local Euler on a vertical control bone -> world rotation (local X = X, Y = Z, Z = -Y)
+    _M = Matrix(((1, 0, 0), (0, 0, -1), (0, 1, 0)))
+    def prop_world(rot):
+        return _M @ Euler([math.radians(v) for v in rot], "XYZ").to_matrix() @ _M.transposed()
+
+    # SWEEP (loop): a wide, low stance, slight forward lean, the broom held across the body (left hand low,
+    # right hand high on the handle), bristles on the floor ahead, swept side to side with the hips.
+    # 8 frames at 10 fps = 0.8 s per loop. prop-broom is drawn only here.
+    SW_BASE = pose(hips=(0, 0.02, -0.07), hips_rot=(14, 0, 0), chest_rot=(10, 0, 0), head_rot=(-6, 0, 0),
+                   foot_l=(0.15, -0.04, 0.07), foot_r=(-0.15, 0.06, 0.07), foot_l_rot=(0, 14, 0), foot_r_rot=(0, -14, 0))
+    sweep = []
+    for i in range(8):
+        ph = 2 * math.pi * i / 8
+        yaw = 26 * math.sin(ph)
+        pv = Vector((0.025 * math.sin(ph), -0.13, 0.55))
+        rot = (-25, 0, yaw)
+        Rw = prop_world(rot)
+        p = dict(SW_BASE)
+        p["hips_rot"] = (14, 7 * math.sin(ph), 0); p["chest_rot"] = (10, 9 * math.sin(ph), 0)
+        p["head_rot"] = (-6, -10 * math.sin(ph), 0)
+        p["hand_l"] = tuple(pv); p["hand_r"] = tuple(pv + Rw @ Vector((0, 0, 0.26)))
+        p["broom"] = (*pv, *rot, 1.0)
+        sweep.append(p)
+
+    # WIPE (loop): kneeling on both knees, leaning in from the hips, the right hand wipes the mat in a
+    # small circle with a folded cloth; the left hand rests on the thigh. 8 frames at 8 fps = 1.0 s per loop.
+    WP_BASE = pose(hips=(0, 0.06, -0.30), hips_rot=(34, 0, 0), chest_rot=(22, 0, 0), head_rot=(-24, 0, 0),
+                   foot_l=(0.10, 0.22, 0.12), foot_r=(-0.10, 0.22, 0.12), foot_l_rot=(56, 0, 0), foot_r_rot=(56, 0, 0),
+                   hand_l=(0.15, -0.12, 0.30))
+    wipe = []
+    for i in range(8):
+        ph = 2 * math.pi * i / 8
+        rp = Vector((-0.06 + 0.065 * math.cos(ph), -0.29 + 0.04 * math.sin(ph), 0.03))
+        p = dict(WP_BASE)
+        p["hips_rot"] = (34, -4 * math.cos(ph), 0); p["chest_rot"] = (22, -6 * math.cos(ph), 0)
+        p["hand_r"] = (rp.x, rp.y + 0.01, 0.065)
+        p["rag"] = (*rp, 0, 0, -12 * math.cos(ph), 1.0)
+        wipe.append(p)
+
+    # STRAIGHTEN (one-shot): step up to an item (the weapon rack), reach out with both hands at chest
+    # height, turn it level (one hand lifts, the other lowers), a small nod, then step back to the guard.
+    # 14 frames at 12 fps = 1.17 s.
+    ST_UP = pose(hips=(0, -0.03, -0.012), hips_rot=(4, 0, 0), chest_rot=(4, 0, 0), head_rot=(-12, 0, 0),
+                 foot_l=(0.10, -0.08, 0.07), foot_r=(-0.10, 0.02, 0.07), foot_l_rot=(0, 10, 0), foot_r_rot=(0, -10, 0),
+                 hand_l=(0.17, -0.06, 0.58), hand_r=(-0.17, -0.06, 0.58))
+    def st_reach(t, tilt):
+        p = dict(ST_UP)
+        p["hips"] = (0, -0.03 - 0.03 * t, -0.012 - 0.01 * t); p["hips_rot"] = (4 + 8 * t, 0, 0)
+        p["hand_l"] = lerp((0.17, -0.06, 0.58), (0.12, -0.40, 0.80 + tilt), t)
+        p["hand_r"] = lerp((-0.17, -0.06, 0.58), (-0.12, -0.40, 0.80 - tilt), t)
+        return p
+    straighten = [STANCE, blend(STANCE, ST_UP, 0.5), ST_UP, st_reach(0.5, 0.0), st_reach(1.0, -0.03), st_reach(1.0, -0.03),
+                  st_reach(1.0, 0.0), st_reach(1.0, 0.0), st_reach(0.6, 0.0), ST_UP]
+    NOD = dict(ST_UP); NOD["head_rot"] = (2, 0, 0)
+    straighten += [NOD, ST_UP, blend(ST_UP, STANCE, 0.5), STANCE]
+
+    # CELEBRATE (promotion ceremony): a happy fist pump, both arms up with a little hop, land, then a
+    # proud, respectful stance: feet apart, fists at the hips so the new belt is in full view. Hold the
+    # last frame. 24 frames at 16 fps = 1.5 s.
+    PROUD = pose(hips=(0, 0, -0.008), head_rot=(-20, 0, 0), chest_rot=(-3, 0, 0),
+                 foot_l=(0.12, -0.02, 0.07), foot_r=(-0.12, -0.02, 0.07), foot_l_rot=(0, 16, 0), foot_r_rot=(0, -16, 0),
+                 hand_l=(0.235, -0.03, 0.62), hand_r=(-0.235, -0.03, 0.62))
+    PUMP_LOAD = pose(hips=(0, 0.01, -0.07), hips_rot=(8, 0, 0), chest_rot=(4, 0, 0), head_rot=(-14, 0, 0),
+                     foot_l=(0.11, -0.02, 0.07), foot_r=(-0.11, -0.02, 0.07), foot_l_rot=(0, 12, 0), foot_r_rot=(0, -12, 0),
+                     hand_l=(0.16, -0.16, 0.74), hand_r=(-0.16, -0.16, 0.74))
+    UP = pose(hips=(0, 0, 0.0), hips_rot=(-3, 0, 0), chest_rot=(-3, 0, 0), head_rot=(-20, 0, 0),
+              foot_l=(0.11, -0.02, 0.07), foot_r=(-0.11, -0.02, 0.07), foot_l_rot=(0, 12, 0), foot_r_rot=(0, -12, 0),
+              hand_l=(0.25, -0.04, 1.22), hand_r=(-0.25, -0.04, 1.22))
+    def hop(p, h):
+        q = shift(p, 0, h)
+        q["foot_l"] = (p["foot_l"][0], p["foot_l"][1], p["foot_l"][2] + h * 0.9)
+        q["foot_r"] = (p["foot_r"][0], p["foot_r"][1], p["foot_r"][2] + h * 0.9)
+        return q
+    celebrate = [STANCE, blend(STANCE, PUMP_LOAD, 0.6), PUMP_LOAD, blend(PUMP_LOAD, UP, 0.6), hop(UP, 0.05), hop(UP, 0.085),
+                 hop(UP, 0.07), hop(UP, 0.03), shift(UP, 0, -0.02), shift(UP, 0, -0.035), shift(UP, 0, -0.02), UP, UP]
+    celebrate += [blend(UP, PROUD, ease(k / 5)) for k in range(1, 6)]
+    celebrate += [PROUD] * 6
 make_action("idle", idle, fps=8, loop=True)
 w = make_action("walk", walk, fps=WALK_FPS, loop=True)
 w["sprite_stride_tiles"] = STRIDE_TILES          # ground covered by one loop (render script converts to px)
@@ -700,6 +833,24 @@ if PLAYER:
     a_def = make_action("defeat", defeat, fps=12, loop=False, tags="ouch:1,sink:5-10,hold:15")
     info(a_def, {"keyFrames": {"ouch": 1, "sink": "5-10", "kneel": 11, "hold": 15}, "holdLastFrame": True,
                  "note": "play once, then hold the last frame during the fade and 'Ouch! Back to the start.'"})
+if PLAYER:
+    def _act(name, poses, fps, loop, tags, d):
+        a = make_action(name, poses, fps=fps, loop=loop, tags=tags); info(a, d); return a
+    _act("dash", dash, 20, False, "push:1,travel:1-5,land:5,recover:6-7",
+         {"keyFrames": {"push": 1, "travel": "1-5", "land": 5, "recover": "6-7"},
+          "note": "8 frames = 0.4 s. Played in place; the game moves him 2.5 tiles during frames 1-5 (0.25 s). Ends on the guard"})
+    _act("hit", flinch, 20, False, "recoil:1,back:4",
+         {"keyFrames": {"recoil": 1, "back": 4}, "note": "hit flinch, 5 frames = 0.25 s, small head/shoulder recoil, ends on the guard"})
+    _act("sweep", sweep, 10, True, "",
+         {"props": ["prop-broom"], "note": "loop, 0.8 s; draw prop-broom (no tint). One loop = two strokes"})
+    _act("wipe", wipe, 8, True, "",
+         {"props": ["prop-rag"], "note": "loop, 1.0 s, one circle per loop; draw prop-rag (no tint). Play while the player taps Wipe"})
+    _act("straighten", straighten, 12, False, "reach:3-4,adjust:4-7,nod:10",
+         {"keyFrames": {"reach": "3-4", "adjust": "4-7", "nod": 10},
+          "note": "one-shot, 14 frames = 1.17 s: reach out at chest height and set the item level (weapon rack), ends on the guard"})
+    _act("celebrate", celebrate, 16, False, "jump:4-7,arms_up:4-12,proud:18",
+         {"keyFrames": {"arms_up": "4-12", "hop_top": 5, "proud": 18}, "holdLastFrame": True,
+          "note": "promotion ceremony, 24 frames = 1.5 s, then hold the last frame (proud stance, fists at the hips so the new belt is in full view)"})
 import json as _json
 _guide = {
     "mode": "multiply (Phaser setTint); untinted layers are drawn as they are",

@@ -77,3 +77,5 @@ python3 incoming-art/tools/make_still.py --old path/to/old-sprites --new path/to
 GIF previews keep time with a 30 fps clock. GIF delays are stored in 1/100 s, so they play about 10% fast; the JSON timing is exact.
 
 **Belt styles in the previews:** for sheets with a tinted `belt-rim` layer (the player character, belt revision), `make_preview.py` tints every belt layer per belt with the chosen style (`belt_style()`, the same table as `beltStyles` in `player.json`). Older sheets keep the old rule.
+
+**Review sheets (Batch 1+):** `make_review_sheet.py --kind player|creature --sheets <folder> --cells "anim:frame:dir;..." --title "..." --out review.png` puts chosen frames side by side at 2x with labels. Each batch's `preview/review-N-*.png` ("review these first") is made with it.

@@ -22,6 +22,12 @@ Everything is built by script:
 | `jab` | 6 | 20 | 0.3 s | no | `impact: 2` | **New.** The automatic basic attack. Play once per attack. It starts and ends on the guard (frame 0 = idle frame 0), so after 0.3 s it hands back to idle until the next attack 0.6 s later (`repeatEverySec: 0.6`). |
 | `bow` | 22 | 16 | 1.375 s | no | `feet_together: 3`, `bow_down: 5-9`, `bow_hold: 9-13`, `rise: 14-18`, `upright: 18` | **New.** Rei: the feet come together, a 30° bow from the hips, a 0.3 s hold, rise, then back to the guard (frames 19–21). **Revision:** the head stays up, eyes on the partner; the legs are straight (not locked) and the bend comes only from the hips. |
 | `defeat` | 16 | 12 | 1.333 s | no | `ouch: 1`, `sink: 5-10`, `kneel: 11`, `hold: 15` | **New.** A soft "Ouch!", then he sinks to one knee. **Hold the last frame** (`holdLastFrame: true`) during the fade. |
+| `dash` | 8 | 20 | 0.4 s | no | `push: 1`, `travel: 1-5`, `land: 5`, `recover: 6-7` | **Batch 1.** Played in place: the game moves him 2.5 tiles during frames 1–5 (0.25 s). Low lean, push off the back foot, a long stretch, land, back to the guard. |
+| `hit` | 5 | 20 | 0.25 s | no | `recoil: 1`, `back: 4` | **Batch 1.** Hit flinch: a small head and shoulder bob back, the guard stays up. |
+| `sweep` | 8 | 10 | 0.8 s | yes | | **Batch 1.** Sweeping with a broom (two strokes per loop). Draw `prop-broom`. |
+| `wipe` | 8 | 8 | 1.0 s | yes | | **Batch 1.** Kneeling, wiping the mat in a circle with a cloth. Draw `prop-rag`. |
+| `straighten` | 14 | 12 | 1.17 s | no | `reach: 3-4`, `adjust: 4-7`, `nod: 10` | **Batch 1.** Reach out at chest height and set the weapon rack level, a small nod, back to the guard. |
+| `celebrate` | 24 | 16 | 1.5 s | no | `arms_up: 4-12`, `hop_top: 5`, `proud: 18` | **Batch 1.** Promotion ceremony: both arms up with a little hop, then a proud stance with fists at the hips so the belt shows. **Hold the last frame.** |
 
 **Bow and the game's timing:** the game's placeholder bow takes 0.9 s (`BOW.ms` in `packages/sim/src/config.ts`, looks only). To keep the full bow, set it to 1375. To stay near 0.9 s, play frames 3–18 (1.0 s) or play all 22 frames at 24 fps (0.92 s).
 
@@ -39,6 +45,10 @@ Every belt layer is neutral (light grey or white) and gets a multiply tint chose
 | 5 | `belt-center-edge` | (`#ece6d8`) | **not used** in the chosen style | Thin separator around the centre stripe (option B; kept in case it's wanted later) |
 | 6 | `belt-rim` | `#2e2a3a` (dark), or `#c9ccd6` (light) when `belt.color` is black | **always** | Rim just above and below the belt and the knot |
 | 7–10 | `belt-tape1-edge`, `belt-tape1`, `belt-tape2-edge`, `belt-tape2` | as in the test | by stripe count | Rank stripes, unchanged |
+| 11 | `prop-broom` | none | only in `sweep` (empty in every other animation) | The broom (straw head, wooden handle, red cord) |
+| 12 | `prop-rag` | none | only in `wipe` | The light-blue cleaning cloth |
+
+- **Props** are ordinary (non-overlay) layers: each is rendered with the body as a holdout and the body with the prop as a holdout, so the broom correctly passes in front of or behind him in every direction. Their sheets in other animations are empty (skip them). Each animation lists its props in `props` in the JSON.
 
 - "Black" means luminance below 40, where luminance = 0.3 R + 0.59 G + 0.11 B (0–255). Fixtures black is `#1a1a1a`.
 - Overlays (orders 3–10) are drawn over a complete belt; there are no holes under them. `belt-rim` is not optional (`optional: false`).

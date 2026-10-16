@@ -1,4 +1,52 @@
-# Delivery Note: bow fix (legs straight) + belt option C confirmed
+# Delivery Note: Batch 1 (complete): the rest of the player animations + style guide draft
+
+**WHAT:** The rest of the player character's animations, in all 8 directions, with every layer:
+- **Dash:** a quick burst. He sinks, pushes off the back foot, leans low with the guard tucked, stretches long, lands and comes back to the guard.
+- **Hit flinch:** small and quick, never painful-looking. His head and shoulders bob back a little, the guard stays up, and he's ready again in 0.25 s.
+- **Cleaning ×3:**
+  - **Sweep** (loop) with a broom.
+  - **Kneel and wipe** a mat (loop) with a cloth.
+  - **Straighten** (once): he reaches out and sets the weapon rack level, with a small nod.
+  - The broom and cloth are separate prop layers.
+- **Celebrate** (promotion ceremony): a happy jump with both arms up, then a proud, respectful stance with his fists at his hips, so the new belt is in full view.
+- **Style guide draft:** `incoming-art/style-guide-draft.md`. It covers the camera, sizes, frame rates, directions, palette, lighting, outlines, layers and tinting, belt rules (option C), naming, and recommended fonts.
+
+Timings are in `sprites/player.json` (and in the README table). Everything is a draft until you approve it.
+
+**WHY:** These are the rest of the player animations on your list: the Dash button, getting hit, the Home Dojo cleaning routine, and the promotion ceremony.
+
+**DECIDE:**
+1. Approve (or correct) dash, hit flinch, the 3 cleaning moves and celebrate. **Start with the 3 "review first" pictures:**
+   - `preview/review-1-dash-and-hit.png`
+   - `preview/review-2-cleaning.png`
+   - `preview/review-3-celebrate.png`
+
+   Then `preview/player_<animation>.gif` for each one, all 8 directions at real speed.
+2. Approve the style guide draft, and **pick the fonts** (it recommends Fredoka for titles and Nunito for text, both free under the SIL Open Font License).
+
+**NEXT:** Batches 2–4 follow on this branch: Tier 1 enemies, the Home Dojo room and decorations, and the Tower room kit. After approval: customisation parts, icons, portraits.
+
+## Timings
+
+| Animation | Frames @ fps | Length | Key frames (from 0) | Notes |
+| --- | --- | --- | --- | --- |
+| `dash` | 8 @ 20 | 0.4 s | push 1, travel 1–5, land 5, recover 6–7 | The game moves him 2.5 tiles in 0.25 s (frames 1–5), as in the docs. Played in place. |
+| `hit` | 5 @ 20 | 0.25 s | recoil 1, back 4 | Ends on the guard. |
+| `sweep` | 8 @ 10 | 0.8 s, loop | | `prop-broom` |
+| `wipe` | 8 @ 8 | 1.0 s, loop | | `prop-rag`. One circle per loop; play while the player taps Wipe (4 taps per mat in the game). |
+| `straighten` | 14 @ 12 | 1.17 s | reach 3–4, adjust 4–7, nod 10 | Ends on the guard. |
+| `celebrate` | 24 @ 16 | 1.5 s, hold the last frame | arms up 4–12, top of the hop 5, proud 18 | |
+
+## Things to know
+
+- **Props:** `prop-broom` and `prop-rag` are their own layers (no tint). They pass correctly in front of or behind him in every direction. In the other animations their sheets are empty.
+- **Dash and the docs:** the docs say there's no protection while dashing, so the dash has no "invincible" look (no blur or flash). The game can add a speed trail.
+- **Cleaning in the game:** sweeping happens by walking over dust. The sweep loop can play while walking (the feet shuffle in place), or only while standing on a dusty spot. Claude Code's choice.
+- **Re-render:** everything is still script-built (`build_character.py --profile player`, `tools/render_sprites.py`). The approved animations were not changed. Only the two prop layers were added to their sheets (empty).
+
+---
+
+# Earlier: bow fix (legs straight) + belt option C confirmed (approved: "looks great")
 
 **WHAT:**
 - **Bow:** once the feet come together, the legs go straight: natural, not locked, knee about 172°. Before, it was about 154°. The 30° bow now comes only from the hips, with the head up and the eyes forward as before.

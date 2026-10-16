@@ -125,6 +125,18 @@
       "order": 10,
       "tint": true,
       "optional": true
+    },
+    {
+      "name": "prop-broom",
+      "order": 11,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "prop-rag",
+      "order": 12,
+      "tint": false,
+      "optional": false
     }
   ],
   "animations": {
@@ -145,7 +157,9 @@
         "belt-tape1-edge": "player_belt-tape1-edge_idle.png",
         "belt-tape1": "player_belt-tape1_idle.png",
         "belt-tape2-edge": "player_belt-tape2-edge_idle.png",
-        "belt-tape2": "player_belt-tape2_idle.png"
+        "belt-tape2": "player_belt-tape2_idle.png",
+        "prop-broom": "player_prop-broom_idle.png",
+        "prop-rag": "player_prop-rag_idle.png"
       }
     },
     "walk": {
@@ -165,7 +179,9 @@
         "belt-tape1-edge": "player_belt-tape1-edge_walk.png",
         "belt-tape1": "player_belt-tape1_walk.png",
         "belt-tape2-edge": "player_belt-tape2-edge_walk.png",
-        "belt-tape2": "player_belt-tape2_walk.png"
+        "belt-tape2": "player_belt-tape2_walk.png",
+        "prop-broom": "player_prop-broom_walk.png",
+        "prop-rag": "player_prop-rag_walk.png"
       },
       "groundMotion": {
         "strideTilesPerLoop": 1.5,
@@ -194,7 +210,9 @@
         "belt-tape1-edge": "player_belt-tape1-edge_strike.png",
         "belt-tape1": "player_belt-tape1_strike.png",
         "belt-tape2-edge": "player_belt-tape2-edge_strike.png",
-        "belt-tape2": "player_belt-tape2_strike.png"
+        "belt-tape2": "player_belt-tape2_strike.png",
+        "prop-broom": "player_prop-broom_strike.png",
+        "prop-rag": "player_prop-rag_strike.png"
       },
       "keyFrames": {
         "impact": 4
@@ -222,7 +240,9 @@
         "belt-tape1-edge": "player_belt-tape1-edge_counter.png",
         "belt-tape1": "player_belt-tape1_counter.png",
         "belt-tape2-edge": "player_belt-tape2-edge_counter.png",
-        "belt-tape2": "player_belt-tape2_counter.png"
+        "belt-tape2": "player_belt-tape2_counter.png",
+        "prop-broom": "player_prop-broom_counter.png",
+        "prop-rag": "player_prop-rag_counter.png"
       }
     },
     "jab": {
@@ -244,7 +264,9 @@
         "belt-tape1-edge": "player_belt-tape1-edge_jab.png",
         "belt-tape1": "player_belt-tape1_jab.png",
         "belt-tape2-edge": "player_belt-tape2-edge_jab.png",
-        "belt-tape2": "player_belt-tape2_jab.png"
+        "belt-tape2": "player_belt-tape2_jab.png",
+        "prop-broom": "player_prop-broom_jab.png",
+        "prop-rag": "player_prop-rag_jab.png"
       },
       "keyFrames": {
         "impact": 2
@@ -276,7 +298,9 @@
         "belt-tape1-edge": "player_belt-tape1-edge_bow.png",
         "belt-tape1": "player_belt-tape1_bow.png",
         "belt-tape2-edge": "player_belt-tape2-edge_bow.png",
-        "belt-tape2": "player_belt-tape2_bow.png"
+        "belt-tape2": "player_belt-tape2_bow.png",
+        "prop-broom": "player_prop-broom_bow.png",
+        "prop-rag": "player_prop-rag_bow.png"
       },
       "keyFrames": {
         "feet_together": 3,
@@ -308,7 +332,9 @@
         "belt-tape1-edge": "player_belt-tape1-edge_defeat.png",
         "belt-tape1": "player_belt-tape1_defeat.png",
         "belt-tape2-edge": "player_belt-tape2-edge_defeat.png",
-        "belt-tape2": "player_belt-tape2_defeat.png"
+        "belt-tape2": "player_belt-tape2_defeat.png",
+        "prop-broom": "player_prop-broom_defeat.png",
+        "prop-rag": "player_prop-rag_defeat.png"
       },
       "keyFrames": {
         "ouch": 1,
@@ -318,6 +344,187 @@
       },
       "holdLastFrame": true,
       "note": "play once, then hold the last frame during the fade and 'Ouch! Back to the start.'"
+    },
+    "dash": {
+      "frames": 8,
+      "fps": 20,
+      "durationSec": 0.4,
+      "loop": false,
+      "tags": {
+        "push": "1",
+        "travel": "1-5",
+        "land": "5",
+        "recover": "6-7"
+      },
+      "sheets": {
+        "body": "player_body_dash.png",
+        "gi": "player_gi_dash.png",
+        "belt": "player_belt_dash.png",
+        "belt-sheen": "player_belt-sheen_dash.png",
+        "belt-center": "player_belt-center_dash.png",
+        "belt-center-edge": "player_belt-center-edge_dash.png",
+        "belt-rim": "player_belt-rim_dash.png",
+        "belt-tape1-edge": "player_belt-tape1-edge_dash.png",
+        "belt-tape1": "player_belt-tape1_dash.png",
+        "belt-tape2-edge": "player_belt-tape2-edge_dash.png",
+        "belt-tape2": "player_belt-tape2_dash.png",
+        "prop-broom": "player_prop-broom_dash.png",
+        "prop-rag": "player_prop-rag_dash.png"
+      },
+      "keyFrames": {
+        "push": 1,
+        "travel": "1-5",
+        "land": 5,
+        "recover": "6-7"
+      },
+      "note": "8 frames = 0.4 s. Played in place; the game moves him 2.5 tiles during frames 1-5 (0.25 s). Ends on the guard"
+    },
+    "hit": {
+      "frames": 5,
+      "fps": 20,
+      "durationSec": 0.25,
+      "loop": false,
+      "tags": {
+        "recoil": "1",
+        "back": "4"
+      },
+      "sheets": {
+        "body": "player_body_hit.png",
+        "gi": "player_gi_hit.png",
+        "belt": "player_belt_hit.png",
+        "belt-sheen": "player_belt-sheen_hit.png",
+        "belt-center": "player_belt-center_hit.png",
+        "belt-center-edge": "player_belt-center-edge_hit.png",
+        "belt-rim": "player_belt-rim_hit.png",
+        "belt-tape1-edge": "player_belt-tape1-edge_hit.png",
+        "belt-tape1": "player_belt-tape1_hit.png",
+        "belt-tape2-edge": "player_belt-tape2-edge_hit.png",
+        "belt-tape2": "player_belt-tape2_hit.png",
+        "prop-broom": "player_prop-broom_hit.png",
+        "prop-rag": "player_prop-rag_hit.png"
+      },
+      "keyFrames": {
+        "recoil": 1,
+        "back": 4
+      },
+      "note": "hit flinch, 5 frames = 0.25 s, small head/shoulder recoil, ends on the guard"
+    },
+    "sweep": {
+      "frames": 8,
+      "fps": 10,
+      "durationSec": 0.8,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "player_body_sweep.png",
+        "gi": "player_gi_sweep.png",
+        "belt": "player_belt_sweep.png",
+        "belt-sheen": "player_belt-sheen_sweep.png",
+        "belt-center": "player_belt-center_sweep.png",
+        "belt-center-edge": "player_belt-center-edge_sweep.png",
+        "belt-rim": "player_belt-rim_sweep.png",
+        "belt-tape1-edge": "player_belt-tape1-edge_sweep.png",
+        "belt-tape1": "player_belt-tape1_sweep.png",
+        "belt-tape2-edge": "player_belt-tape2-edge_sweep.png",
+        "belt-tape2": "player_belt-tape2_sweep.png",
+        "prop-broom": "player_prop-broom_sweep.png",
+        "prop-rag": "player_prop-rag_sweep.png"
+      },
+      "props": [
+        "prop-broom"
+      ],
+      "note": "loop, 0.8 s; draw prop-broom (no tint). One loop = two strokes"
+    },
+    "wipe": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "player_body_wipe.png",
+        "gi": "player_gi_wipe.png",
+        "belt": "player_belt_wipe.png",
+        "belt-sheen": "player_belt-sheen_wipe.png",
+        "belt-center": "player_belt-center_wipe.png",
+        "belt-center-edge": "player_belt-center-edge_wipe.png",
+        "belt-rim": "player_belt-rim_wipe.png",
+        "belt-tape1-edge": "player_belt-tape1-edge_wipe.png",
+        "belt-tape1": "player_belt-tape1_wipe.png",
+        "belt-tape2-edge": "player_belt-tape2-edge_wipe.png",
+        "belt-tape2": "player_belt-tape2_wipe.png",
+        "prop-broom": "player_prop-broom_wipe.png",
+        "prop-rag": "player_prop-rag_wipe.png"
+      },
+      "props": [
+        "prop-rag"
+      ],
+      "note": "loop, 1.0 s, one circle per loop; draw prop-rag (no tint). Play while the player taps Wipe"
+    },
+    "straighten": {
+      "frames": 14,
+      "fps": 12,
+      "durationSec": 1.1667,
+      "loop": false,
+      "tags": {
+        "reach": "3-4",
+        "adjust": "4-7",
+        "nod": "10"
+      },
+      "sheets": {
+        "body": "player_body_straighten.png",
+        "gi": "player_gi_straighten.png",
+        "belt": "player_belt_straighten.png",
+        "belt-sheen": "player_belt-sheen_straighten.png",
+        "belt-center": "player_belt-center_straighten.png",
+        "belt-center-edge": "player_belt-center-edge_straighten.png",
+        "belt-rim": "player_belt-rim_straighten.png",
+        "belt-tape1-edge": "player_belt-tape1-edge_straighten.png",
+        "belt-tape1": "player_belt-tape1_straighten.png",
+        "belt-tape2-edge": "player_belt-tape2-edge_straighten.png",
+        "belt-tape2": "player_belt-tape2_straighten.png",
+        "prop-broom": "player_prop-broom_straighten.png",
+        "prop-rag": "player_prop-rag_straighten.png"
+      },
+      "keyFrames": {
+        "reach": "3-4",
+        "adjust": "4-7",
+        "nod": 10
+      },
+      "note": "one-shot, 14 frames = 1.17 s: reach out at chest height and set the item level (weapon rack), ends on the guard"
+    },
+    "celebrate": {
+      "frames": 24,
+      "fps": 16,
+      "durationSec": 1.5,
+      "loop": false,
+      "tags": {
+        "jump": "4-7",
+        "arms_up": "4-12",
+        "proud": "18"
+      },
+      "sheets": {
+        "body": "player_body_celebrate.png",
+        "gi": "player_gi_celebrate.png",
+        "belt": "player_belt_celebrate.png",
+        "belt-sheen": "player_belt-sheen_celebrate.png",
+        "belt-center": "player_belt-center_celebrate.png",
+        "belt-center-edge": "player_belt-center-edge_celebrate.png",
+        "belt-rim": "player_belt-rim_celebrate.png",
+        "belt-tape1-edge": "player_belt-tape1-edge_celebrate.png",
+        "belt-tape1": "player_belt-tape1_celebrate.png",
+        "belt-tape2-edge": "player_belt-tape2-edge_celebrate.png",
+        "belt-tape2": "player_belt-tape2_celebrate.png",
+        "prop-broom": "player_prop-broom_celebrate.png",
+        "prop-rag": "player_prop-rag_celebrate.png"
+      },
+      "keyFrames": {
+        "arms_up": "4-12",
+        "hop_top": 5,
+        "proud": 18
+      },
+      "holdLastFrame": true,
+      "note": "promotion ceremony, 24 frames = 1.5 s, then hold the last frame (proud stance, fists at the hips so the new belt is in full view)"
     }
   },
   "tintGuidance": {
