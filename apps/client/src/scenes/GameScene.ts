@@ -46,7 +46,7 @@ import {
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
-import { characterArt, characterTop, loadArt } from '../art/art';
+import { addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { sfx } from '../audio/Sfx';
@@ -113,10 +113,22 @@ const DOOR_LOOK: Record<DoorKind, { label: string; color: number }> = {
 
 interface DoorView {
   kind: DoorKind;
-  gfx: Phaser.GameObjects.Graphics;
+  /** The door's art: frame 0 closed, frame 1 open. */
+  images: Phaser.GameObjects.Image[];
+  art: string;
   label: Phaser.GameObjects.Text;
   at: Vec2;
 }
+
+/** Which door art each kind of door uses (the boss and home doors borrow one until they get their own). */
+const DOOR_ART: Record<DoorKind, string> = {
+  battle: 'door-battle',
+  challenge: 'door-challenge',
+  treasure: 'door-treasure',
+  rest: 'door-rest',
+  boss: 'door-battle',
+  home: 'door-rest',
+};
 
 /** What the game scene is started with: a run in progress, or nothing for the practice room. */
 export interface GameSceneData {
@@ -173,8 +185,10 @@ export class GameScene extends Phaser.Scene {
   private leaving = false;
   private picker: InsightPicker | null = null;
   private doorViews: DoorView[] = [];
-  private chestGfx: Phaser.GameObjects.Graphics | null = null;
-  private shrineGfx: Phaser.GameObjects.Graphics | null = null;
+  private chestImgs: Phaser.GameObjects.Image[] = [];
+  private shrineImgs: Phaser.GameObjects.Image[] = [];
+  /** When the chest started opening (its 2.5 s opening plays once), or null. */
+  private chestOpenAt: number | null = null;
   private roomLabel!: Phaser.GameObjects.Text;
   private timerText!: Phaser.GameObjects.Text;
   private bossName!: Phaser.GameObjects.Text;
@@ -246,6 +260,7 @@ export class GameScene extends Phaser.Scene {
     this.shownCombo = 0;
     this.heroAction = null;
 
+    this.chestOpenAt = null;
     const roomGfx = this.drawRoom();
     const objects = this.makeRoomObjects();
     this.danger = this.add.graphics().setDepth(1);
@@ -256,7 +271,7 @@ export class GameScene extends Phaser.Scene {
     const cam = this.cameras.main;
     cam.startFollow(this.player, true);
     this.uiCamera = this.cameras.add(0, 0, this.scale.width, this.scale.height);
-    this.uiCamera.ignore([roomGfx, ...objects, this.danger, this.marker, this.player]);
+    this.uiCamera.ignore([...roomGfx, ...objects, this.danger, this.marker, this.player]);
 
     for (const e of this.world.enemies) this.makeEnemy(e);
 
@@ -544,25 +559,42 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  private drawRoom(): Phaser.GameObjects.Graphics {
-    const g = this.add.graphics();
-    for (let row = 0; row < this.room.height; row++) {
-      for (let col = 0; col < this.room.width; col++) {
+  /**
+   * The stone room from the art: floor tiles, the tall wall along the top, low stone blocks
+   * for other walls, and round pillars for single wall spots inside the room. Walls are
+   * drawn front-to-back with the characters, so a wall below a character hides its feet.
+   */
+  private drawRoom(): Phaser.GameObjects.GameObject[] {
+    const out: Phaser.GameObjects.GameObject[] = [];
+    const { walls, width, height } = this.room;
+    const wall = (r: number, c: number) => r < 0 || c < 0 || r >= height || c >= width || walls[r][c];
+    const put = (id: string, x: number, y: number, depth: number) => {
+      for (const img of addStatic(this, 'tower-t1', id, x, y)) out.push(img.setDepth(depth));
+    };
+    for (let row = 0; row < height; row++) {
+      for (let col = 0; col < width; col++) {
         const x = col * TILE;
         const y = row * TILE;
-        if (this.room.walls[row][col]) {
-          g.fillStyle(COLORS.wall).fillRect(x, y, TILE, TILE);
-          g.fillStyle(COLORS.wallTop).fillRect(x, y, TILE, TILE * 0.25);
-          if (this.room.doors.some((d) => Math.floor(d.x) === col && Math.floor(d.y) === row)) {
-            // A sealed door slot (unused slots stay sealed).
-            g.fillStyle(0x3b2f27).fillRect(x + 4, y + 4, TILE - 8, TILE - 4);
-          }
+        const inside = row > 0 && col > 0 && row < height - 1 && col < width - 1;
+        const pillar = walls[row][col] && inside && !wall(row - 1, col) && !wall(row + 1, col) && !wall(row, col - 1) && !wall(row, col + 1);
+        if (!walls[row][col] || pillar) {
+          // A mix of floor tiles, the same every visit (picked from the tile's position).
+          const h = ((col * 73856093) ^ (row * 19349663)) >>> 0;
+          const pick = h % 100;
+          put(pick < 8 ? 'floor-worn' : pick < 30 ? 'floor-quad' : 'floor-big', x, y, 0);
+        }
+        if (!walls[row][col]) continue;
+        if (row === 0) {
+          // The top wall. Door slots in use get a door on top (drawn by the run); unused ones stay plain wall.
+          put('wall-face', x, y, 0.5);
         } else {
-          g.fillStyle((row + col) % 2 === 0 ? COLORS.floorA : COLORS.floorB).fillRect(x, y, TILE, TILE);
+          // A single wall spot inside the room is a round pillar; other walls are stone blocks.
+          if (pillar) put('pillar', x + TILE / 2, y + TILE, depthAt(y + TILE / 2));
+          else put('wall-block', x, y, depthAt(y + 1));
         }
       }
     }
-    return g;
+    return out;
   }
 
   private makePlayer(): Phaser.GameObjects.Container {
@@ -855,13 +887,19 @@ export class GameScene extends Phaser.Scene {
         case 'roomCleared':
           if (this.room.kind !== 'treasure' && this.room.kind !== 'rest') sfx.roomClear();
           break;
-        case 'chestOpened':
-          sfx.chest();
-          if (this.room.chest) {
-            this.ring(this.room.chest, COLORS.gold, 1.8);
-            this.sparks(this.room.chest, 18, COLORS.gold);
-          }
+        case 'chestOpened': {
+          // The chest wiggles first; the chime, ring and sparks come when the lid bursts open.
+          this.chestOpenAt = this.time.now;
+          const at = this.room.chest;
+          this.time.delayedCall(this.chestTiming().burstMs, () => {
+            sfx.chest();
+            if (at) {
+              this.ring(at, COLORS.gold, 1.8);
+              this.sparks(at, 18, COLORS.gold);
+            }
+          });
           break;
+        }
         case 'shrineUsed': {
           const p = this.world.players[ev.playerId];
           sfx.shrine();
@@ -941,10 +979,10 @@ export class GameScene extends Phaser.Scene {
     for (const ev of events) {
       switch (ev.kind) {
         case 'loot':
-          this.showLoot(ev.item.name, ev.item.rarity, ev.at);
+          this.afterChestBurst(() => this.showLoot(ev.item.name, ev.item.rarity, ev.at));
           break;
         case 'decoration':
-          this.showDecoration(ev.id, ev.at);
+          this.afterChestBurst(() => this.showDecoration(ev.id, ev.at));
           break;
         case 'graded':
           this.showGrade(ev.result.grade!, ev.result.perfects, ev.result.damageTaken, ev.result.ticks, ev.result.inTime);
@@ -965,6 +1003,13 @@ export class GameScene extends Phaser.Scene {
           break;
       }
     }
+  }
+
+  /** Runs `show` now, or (while the chest is opening) once its lid bursts open. */
+  private afterChestBurst(show: () => void): void {
+    const wait = this.chestOpenAt === null ? 0 : this.chestOpenAt + this.chestTiming().burstMs - this.time.now;
+    if (wait > 0) this.time.delayedCall(wait, show);
+    else show();
   }
 
   private openInsights(ids: string[]): void {
@@ -1056,22 +1101,45 @@ export class GameScene extends Phaser.Scene {
       const slots = activeDoorSlots(this.room, this.run.doors.length);
       this.run.doors.forEach((kind, i) => {
         const at = this.room.doors[slots[i]];
-        const gfx = this.add.graphics().setDepth(1);
+        // The door stands in its wall slot, its feet on the wall's bottom edge.
+        const art = DOOR_ART[kind];
+        const images = addStatic(this, 'tower-t1', art, at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.6));
         const look = DOOR_LOOK[kind];
         const label = this.add
-          .text(at.x * TILE, (at.y + 0.95) * TILE, look.label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: css(look.color), stroke: '#14121c', strokeThickness: 4 })
+          .text(at.x * TILE, (at.y + 0.55) * TILE, look.label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: css(look.color), stroke: '#14121c', strokeThickness: 4 })
           .setOrigin(0.5, 0)
           .setResolution(crisp())
           .setDepth(6);
-        this.doorViews.push({ kind, gfx, label, at });
-        objs.push(gfx, label);
+        this.doorViews.push({ kind, images, art, label, at });
+        objs.push(...images, label);
       });
     }
-    this.chestGfx = this.room.chest ? this.add.graphics().setDepth(2) : null;
-    this.shrineGfx = this.room.shrine ? this.add.graphics().setDepth(2) : null;
-    if (this.chestGfx) objs.push(this.chestGfx);
-    if (this.shrineGfx) objs.push(this.shrineGfx);
+    // The chest and the shrine stand on their tile, drawn front-to-back with the characters.
+    const c = this.room.chest;
+    this.chestImgs = c ? addStatic(this, 'tower-t1', 'chest-closed', c.x * TILE, (c.y + 0.5) * TILE) : [];
+    const sh = this.room.shrine;
+    this.shrineImgs = sh ? addStatic(this, 'tower-t1', 'shrine', sh.x * TILE, (sh.y + 0.5) * TILE) : [];
+    // The chest's glow, beam and stars show above the character standing at it.
+    if (c) this.chestImgs.forEach((img, i) => img.setDepth(i === 0 ? depthAt((c.y + 0.4) * TILE) : 8));
+    if (sh) this.shrineImgs.forEach((img) => img.setDepth(depthAt((sh.y + 0.4) * TILE)));
+    objs.push(...this.chestImgs, ...this.shrineImgs);
     return objs;
+  }
+
+  /** Plays a looping (or once-only) static animation on images made by addStatic. */
+  private animateStatic(id: string, images: Phaser.GameObjects.Image[], seconds: number): void {
+    const art = staticArt(this, 'tower-t1', id);
+    if (!art) return;
+    const f = Math.floor(seconds * (art.fps ?? 8));
+    setStaticFrame(this, 'tower-t1', id, images, art.loop ? f % art.frames : Math.min(f, art.frames - 1));
+  }
+
+  /** How long the chest's opening takes before the lid bursts open (ms), and in total. */
+  private chestTiming(): { burstMs: number; totalMs: number } {
+    const art = staticArt(this, 'tower-t1', 'chest-open');
+    const fps = art?.fps ?? 12;
+    const burst = Number(art?.keyFrames?.lidBurst ?? 12);
+    return { burstMs: (burst / fps) * 1000, totalMs: ((art?.frames ?? 30) / fps) * 1000 };
   }
 
   /** Doors, the chest, the shrine, and the run's labels, timer and boss bar. */
@@ -1081,47 +1149,30 @@ export class GameScene extends Phaser.Scene {
     const pulse = 0.75 + Math.sin(now / 200) * 0.25;
 
     for (const d of this.doorViews) {
-      const look = DOOR_LOOK[d.kind];
-      const x = (d.at.x - 0.5) * TILE;
-      const y = (d.at.y - 0.5) * TILE;
-      d.gfx.clear();
-      if (prog.doorsOpen) {
-        d.gfx.fillStyle(0x0a0810).fillRect(x + 4, y + 4, TILE - 8, TILE - 4);
-        d.gfx.lineStyle(4, look.color, pulse).strokeRect(x + 3, y + 3, TILE - 6, TILE - 3);
-      } else {
-        d.gfx.fillStyle(0x3b2f27).fillRect(x + 4, y + 4, TILE - 8, TILE - 4);
-        d.gfx.lineStyle(2, look.color, 0.35).strokeRect(x + 4, y + 4, TILE - 8, TILE - 4);
-      }
-      d.label.setAlpha(prog.doorsOpen ? 1 : 0.55);
+      // Closed until the room is cleared, then the doors slide open and the doorway glows.
+      setStaticFrame(this, 'tower-t1', d.art, d.images, prog.doorsOpen ? 1 : 0);
+      d.label.setAlpha(prog.doorsOpen ? pulse : 0.55);
     }
 
-    if (this.chestGfx && this.room.chest) {
-      const g = this.chestGfx;
-      g.clear();
+    // The chest appears once the room is clear: a glinting chest, then (once opened)
+    // its 2.5 s opening (wiggle, the lid bursts open, light and stars), then a soft shimmer.
+    if (this.chestImgs.length) {
+      this.chestImgs.forEach((img) => img.setAlpha(prog.cleared ? 1 : 0));
       if (prog.cleared) {
-        const cx = this.room.chest.x * TILE;
-        const cy = this.room.chest.y * TILE;
-        const w = TILE * 0.8;
-        const h = TILE * 0.55;
-        if (!prog.chestOpened) {
-          g.fillStyle(COLORS.gold, 0.25 * pulse).fillCircle(cx, cy, TILE * 0.75);
+        if (!prog.chestOpened) this.animateStatic('chest-closed', this.chestImgs, now / 1000);
+        else {
+          const since = now - (this.chestOpenAt ?? now - 1e9);
+          const { totalMs } = this.chestTiming();
+          if (since < totalMs) this.animateStatic('chest-open', this.chestImgs, since / 1000);
+          else this.animateStatic('chest-opened', this.chestImgs, (since - totalMs) / 1000);
         }
-        g.fillStyle(0x7a4a24).fillRect(cx - w / 2, cy - h / 2, w, h);
-        g.lineStyle(3, COLORS.outline).strokeRect(cx - w / 2, cy - h / 2, w, h);
-        g.fillStyle(COLORS.gold).fillRect(cx - w / 2, cy - 3, w, 6);
-        if (prog.chestOpened) g.fillStyle(0x14121c).fillRect(cx - w / 2 + 4, cy - h / 2 + 2, w - 8, h * 0.35);
       }
     }
 
-    if (this.shrineGfx && this.room.shrine) {
-      const g = this.shrineGfx;
-      const cx = this.room.shrine.x * TILE;
-      const cy = this.room.shrine.y * TILE;
-      g.clear();
-      if (!prog.shrineUsed) g.fillStyle(COLORS.health, 0.22 * pulse).fillCircle(cx, cy, TILE * 0.8);
-      g.fillStyle(0x8a8f99).fillRect(cx - 12, cy - 6, 24, 22);
-      g.fillStyle(0x6b707a).fillRect(cx - 18, cy - 14, 36, 8);
-      g.fillStyle(prog.shrineUsed ? 0x445544 : 0xb6ffb6).fillCircle(cx, cy + 4, 6);
+    // The rest shrine glows gently until it's used.
+    if (this.shrineImgs.length) {
+      this.animateStatic('shrine', this.shrineImgs, now / 1000);
+      this.shrineImgs[1]?.setVisible(!prog.shrineUsed);
     }
 
     // Room number and name (top right).
