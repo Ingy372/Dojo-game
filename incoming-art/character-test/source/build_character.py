@@ -639,14 +639,15 @@ if PLAYER:
     jab = [STANCE, jab_pose(0.55, 0.45), jab_pose(1.0, 1.0), jab_pose(0.9, 0.9), jab_pose(0.45, 0.4), jab_pose(0.12, 0.08)]
 
     # BOW (Batch 1): a standing bow (rei). Feet come together (heels together, toes a little apart), hands at
-    # the sides, bow about 30 degrees from the hips with the back straight, eyes up on the partner, a short hold,
+    # the sides, bow about 30 degrees from the hips only (legs straight) with the back straight, eyes up on the partner, a short hold,
     # rise, then back to the guard. 22 frames at 16 fps = 1.375 s.
-    ATTN = pose(hips=(0, 0.0, -0.012), hips_rot=(0, 0, 0), chest_rot=(0, 0, 0), head_rot=(-16, 0, 0),
+    ATTN = pose(hips=(0, 0.0, -0.001),     # legs straight: knee about 172 degrees (natural, not locked)
+                 hips_rot=(0, 0, 0), chest_rot=(0, 0, 0), head_rot=(-16, 0, 0),
                 foot_l=(0.05, 0.0, 0.07), foot_r=(-0.05, 0.0, 0.07), foot_l_rot=(0, 20, 0), foot_r_rot=(0, -20, 0),
                 hand_l=(0.185, 0.0, 0.55), hand_r=(-0.185, 0.0, 0.55))
     def bowed(t):                   # t = 0 upright .. 1 full 30-degree bow
         p = dict(ATTN)
-        p["hips"] = (0, 0.035 * t, -0.012 - 0.012 * t)        # weight shifts back a touch as the hips hinge
+        p["hips"] = (0, 0.045 * t, -0.001 - 0.002 * t)     # legs stay straight; pelvis shifts back so the hips stay over the feet
         p["hips_rot"] = (30 * t, 0, 0)
         p["head_rot"] = (-16 - 27 * t, 0, 0)                  # revision: face stays forward, eyes on the partner
         p["hand_l"] = (0.185, -0.045 * t, 0.55 - 0.035 * t)   # hands stay at the sides of the thighs
@@ -657,7 +658,7 @@ if PLAYER:
     bow += [bowed(ease(k / 5)) for k in range(1, 6)]                      # 5 frames down
     bow += [bowed(1.0)] * 4                                               # short hold (4 frames, 0.25 s)
     bow += [bowed(ease(1 - k / 5)) for k in range(1, 6)]                  # 5 frames up (last = upright)
-    bow += [ATTN, blend(ATTN, STANCE, 0.4), blend(ATTN, STANCE, 0.8), STANCE][1:]
+    bow += [blend(ATTN, STANCE, ease(1 / 3)), blend(ATTN, STANCE, ease(2 / 3)), STANCE]   # eased back to the guard
 
     # DEFEAT (Batch 1): a soft "Ouch!" - never violent. A small surprised flinch back, the shoulders sag,
     # then he sinks down onto the right knee, left hand resting on the left knee, head down, catching his
@@ -695,7 +696,7 @@ if PLAYER:
                  "note": "basic attack: play once per attack (0.3 s); the last frame flows back into idle frame 0"})
     a_bow = make_action("bow", bow, fps=16, loop=False, tags="feet_together:3,bow_down:5-9,bow_hold:9-13,rise:14-18,upright:18")
     info(a_bow, {"keyFrames": {"feet_together": 3, "bow_down": "5-9", "bow_hold": "9-13", "rise": "14-18", "upright": 18},
-                 "note": "22 frames = 1.375 s; frames 0-3 step the feet together, 19-21 return to the guard. For the game's current 0.9 s, play frames 3-18 at 16 fps (1.0 s) or the whole bow at 24 fps"})
+                 "note": "22 frames = 1.375 s; legs straight (knees soft, not locked) once the feet are together, the 30-degree bend is only from the hips; the head stays up, eyes on the partner; frames 0-3 step the feet together, 19-21 return to the guard. For the game's current 0.9 s, play frames 3-18 at 16 fps (1.0 s) or the whole bow at 24 fps"})
     a_def = make_action("defeat", defeat, fps=12, loop=False, tags="ouch:1,sink:5-10,hold:15")
     info(a_def, {"keyFrames": {"ouch": 1, "sink": "5-10", "kneel": 11, "hold": 15}, "holdLastFrame": True,
                  "note": "play once, then hold the last frame during the fade and 'Ouch! Back to the start.'"})

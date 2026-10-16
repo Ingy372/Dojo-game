@@ -285,7 +285,7 @@
         "rise": "14-18",
         "upright": 18
       },
-      "note": "22 frames = 1.375 s; frames 0-3 step the feet together, 19-21 return to the guard. For the game's current 0.9 s, play frames 3-18 at 16 fps (1.0 s) or the whole bow at 24 fps"
+      "note": "22 frames = 1.375 s; legs straight (knees soft, not locked) once the feet are together, the 30-degree bend is only from the hips; the head stays up, eyes on the partner; frames 0-3 step the feet together, 19-21 return to the guard. For the game's current 0.9 s, play frames 3-18 at 16 fps (1.0 s) or the whole bow at 24 fps"
     },
     "defeat": {
       "frames": 16,

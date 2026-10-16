@@ -1,4 +1,26 @@
-# Delivery Note: Batch 1 revision (belts and bow)
+# Delivery Note: bow fix (legs straight) + belt option C confirmed
+
+**WHAT:**
+- **Bow:** once the feet come together, the legs go straight: natural, not locked, knee about 172°. Before, it was about 154°. The 30° bow now comes only from the hips, with the head up and the eyes forward as before.
+  - The pelvis shifts back 0.045 tiles as he bows, so his hips stay over his feet and the balance looks right.
+  - The return to the fighting stance is eased (frames 19–21).
+  - Timing is unchanged: 22 frames at 16 fps, 1.375 s, same key frames.
+  - The bow's note in `sprites/player.json` now says "legs straight" and "head stays up".
+- **Belts:** option C is confirmed (your choice). Nothing about the belts changed in this step.
+
+Only the bow sheets were re-rendered (11 layers). This is a draft until you approve it.
+
+**WHY:** You said bowing with bent knees looks awkward. A proper rei keeps the legs straight and bends only at the hips.
+
+**DECIDE:** Please approve (or correct) the bow:
+- `preview/player_bow.gif`: all 8 directions.
+- `preview/bow-side-before-after.png`: the feet-together frame (3) and the lowest point (11), from E, W and S, before (knees bent) vs now (legs straight).
+
+**NEXT:** Once you approve, I'll make the remaining player animations: dash, hit flinch, cleaning ×3 (sweep, kneel and wipe, straighten) and celebrate. Then `style-guide-draft.md`.
+
+---
+
+# Earlier: Batch 1 revision (belts and bow); belt option C confirmed by Jay
 
 **WHAT:** Your two Batch 1 notes are fixed. Everything is re-rendered in all 8 directions:
 - **Black belts pop.** On red/black, brown/black and solid black, the black now shows instantly at real size. The belt layer is still neutral and recolourable; the game picks the tints per belt (table in `sprites/player.json`, `beltStyles`).

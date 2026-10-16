@@ -20,7 +20,7 @@ Everything is built by script:
 | `strike` | 8 | 16 | 0.5 s | no | `impact: 4` | **Fixed:** reads from the front (see below) |
 | `counter` | 12 | 16 | 0.75 s | no | `block: 0-7`, `block_hold: 3-7`, `counter_hit: 8` | Same as the test |
 | `jab` | 6 | 20 | 0.3 s | no | `impact: 2` | **New.** The automatic basic attack. Play once per attack. It starts and ends on the guard (frame 0 = idle frame 0), so after 0.3 s it hands back to idle until the next attack 0.6 s later (`repeatEverySec: 0.6`). |
-| `bow` | 22 | 16 | 1.375 s | no | `feet_together: 3`, `bow_down: 5-9`, `bow_hold: 9-13`, `rise: 14-18`, `upright: 18` | **New.** Rei: the feet come together, a 30° bow from the hips, a 0.3 s hold, rise, then back to the guard (frames 19–21). **Revision:** the head stays up, eyes on the partner. |
+| `bow` | 22 | 16 | 1.375 s | no | `feet_together: 3`, `bow_down: 5-9`, `bow_hold: 9-13`, `rise: 14-18`, `upright: 18` | **New.** Rei: the feet come together, a 30° bow from the hips, a 0.3 s hold, rise, then back to the guard (frames 19–21). **Revision:** the head stays up, eyes on the partner; the legs are straight (not locked) and the bend comes only from the hips. |
 | `defeat` | 16 | 12 | 1.333 s | no | `ouch: 1`, `sink: 5-10`, `kneel: 11`, `hold: 15` | **New.** A soft "Ouch!", then he sinks to one knee. **Hold the last frame** (`holdLastFrame: true`) during the fade. |
 
 **Bow and the game's timing:** the game's placeholder bow takes 0.9 s (`BOW.ms` in `packages/sim/src/config.ts`, looks only). To keep the full bow, set it to 1375. To stay near 0.9 s, play frames 3–18 (1.0 s) or play all 22 frames at 24 fps (0.92 s).
