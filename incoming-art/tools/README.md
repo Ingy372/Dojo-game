@@ -14,6 +14,7 @@ Scripts the Art Director bot uses so every character, enemy and object renders e
 | `make_review_sheet.py` | "Review these first" pictures: chosen frames of chosen animations in chosen directions, labelled, at 2x (`--kind player` or `creature`). Runs with normal Python. |
 | `render_static.py` | Renders static art (rooms, decorations, tiles, doors, chests) from the same 35° camera, with the floor grid at exactly 80 px per tile. One PNG per target and layer (multi-frame targets as horizontal strips) plus `static.json` with sizes, anchors and footprints. The targets come from the `.blend`'s `static_targets`. Runs inside Blender. |
 | `make_static_preview.py` | Static art previews: a gallery of every sprite (`--gallery`) and a room with decorations placed on the grid (`--scene room --place "id@col,row;..."`, `--frame id=n`), with the front wall drawn on top. Runs with normal Python. |
+| `make_tower_preview.py` | Tower kit previews: a mock room tiled from the kit (floors, wall, pillars, the 4 doors, chest, shrine), the doors closed and open at 2x, the chest and shrine frames, `chest_open.gif`, `shrine_glow.gif` and the open-chest still. Runs with normal Python. |
 
 Made with Blender 4.2 LTS (4.2.23). Previews need Python 3 with Pillow and numpy (`pip install pillow numpy`).
 
