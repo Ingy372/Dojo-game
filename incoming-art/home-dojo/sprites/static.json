@@ -528,37 +528,6 @@
       "place": "floor",
       "note": "mess: a dust spot, centred on the spot (anchorPx = cell centre). Clean = not drawn"
     },
-    "leaves-1": {
-      "size": [
-        80,
-        88
-      ],
-      "layers": [
-        "leaves-1"
-      ],
-      "files": {
-        "leaves-1": "leaves-1_leaves-1.png"
-      },
-      "groundRect": {
-        "col0": 0,
-        "row0": 0,
-        "col1": 1,
-        "row1": 1,
-        "note": "the image's ground area in tiles"
-      },
-      "topExtraTiles": 0.1,
-      "anchorPx": [
-        40.0,
-        48.0
-      ],
-      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "footprint": [
-        1,
-        1
-      ],
-      "place": "floor",
-      "note": "mess: fallen leaves, centred on the spot. Clean = not drawn"
-    },
     "dust-2": {
       "size": [
         80,
@@ -589,37 +558,6 @@
       ],
       "place": "floor",
       "note": "mess: a dust spot, centred on the spot (anchorPx = cell centre). Clean = not drawn"
-    },
-    "leaves-2": {
-      "size": [
-        80,
-        88
-      ],
-      "layers": [
-        "leaves-2"
-      ],
-      "files": {
-        "leaves-2": "leaves-2_leaves-2.png"
-      },
-      "groundRect": {
-        "col0": 0,
-        "row0": 0,
-        "col1": 1,
-        "row1": 1,
-        "note": "the image's ground area in tiles"
-      },
-      "topExtraTiles": 0.1,
-      "anchorPx": [
-        40.0,
-        48.0
-      ],
-      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "footprint": [
-        1,
-        1
-      ],
-      "place": "floor",
-      "note": "mess: fallen leaves, centred on the spot. Clean = not drawn"
     },
     "dust-3": {
       "size": [
@@ -652,16 +590,16 @@
       "place": "floor",
       "note": "mess: a dust spot, centred on the spot (anchorPx = cell centre). Clean = not drawn"
     },
-    "leaves-3": {
+    "footprints-1": {
       "size": [
         80,
-        88
+        96
       ],
       "layers": [
-        "leaves-3"
+        "footprints-1"
       ],
       "files": {
-        "leaves-3": "leaves-3_leaves-3.png"
+        "footprints-1": "footprints-1_footprints-1.png"
       },
       "groundRect": {
         "col0": 0,
@@ -670,10 +608,10 @@
         "row1": 1,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.1,
+      "topExtraTiles": 0.2,
       "anchorPx": [
         40.0,
-        48.0
+        56.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "footprint": [
@@ -681,7 +619,116 @@
         1
       ],
       "place": "floor",
-      "note": "mess: fallen leaves, centred on the spot. Clean = not drawn"
+      "note": "mess: muddy footprints from outdoor shoes, centred on the spot (anchorPx = cell centre). Replaces the fallen leaves: draw for the game's 'leaf' floor spots (pick one of footprints-1, footprints-2, towel, water-bottle). Clean = not drawn",
+      "info": {
+        "spotKind": "leaf",
+        "what": "muddy footprints from outdoor shoes"
+      }
+    },
+    "footprints-2": {
+      "size": [
+        80,
+        96
+      ],
+      "layers": [
+        "footprints-2"
+      ],
+      "files": {
+        "footprints-2": "footprints-2_footprints-2.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.2,
+      "anchorPx": [
+        40.0,
+        56.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "mess: muddy footprints from outdoor shoes, centred on the spot (anchorPx = cell centre). Replaces the fallen leaves: draw for the game's 'leaf' floor spots (pick one of footprints-1, footprints-2, towel, water-bottle). Clean = not drawn",
+      "info": {
+        "spotKind": "leaf",
+        "what": "muddy footprints from outdoor shoes"
+      }
+    },
+    "towel": {
+      "size": [
+        80,
+        96
+      ],
+      "layers": [
+        "towel"
+      ],
+      "files": {
+        "towel": "towel_towel.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.2,
+      "anchorPx": [
+        40.0,
+        56.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "mess: a dropped towel, centred on the spot (anchorPx = cell centre). Replaces the fallen leaves: draw for the game's 'leaf' floor spots (pick one of footprints-1, footprints-2, towel, water-bottle). Clean = not drawn",
+      "info": {
+        "spotKind": "leaf",
+        "what": "a dropped towel"
+      }
+    },
+    "water-bottle": {
+      "size": [
+        80,
+        96
+      ],
+      "layers": [
+        "water-bottle"
+      ],
+      "files": {
+        "water-bottle": "water-bottle_water-bottle.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.2,
+      "anchorPx": [
+        40.0,
+        56.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "mess: a water bottle left on the floor, centred on the spot (anchorPx = cell centre). Replaces the fallen leaves: draw for the game's 'leaf' floor spots (pick one of footprints-1, footprints-2, towel, water-bottle). Clean = not drawn",
+      "info": {
+        "spotKind": "leaf",
+        "what": "a water bottle left on the floor"
+      }
     }
   }
 }

@@ -330,17 +330,49 @@ def dust(lay, seed):
             p = grid(c.x + rnd.uniform(-0.12, 0.12), c.y + rnd.uniform(-0.08, 0.08), 0.0)
             s = rnd.uniform(0.04, 0.07)
             oell(lay, f"{lay}_{k}_{q}", p, (s, s, s * 0.7), rnd.choice(["#cfc8bb", "#bdb5a7", "#ddd7cb"]), outline=False)
-def leaves(lay, seed):
-    rnd = random.Random(seed)
-    for k in range(rnd.randint(3, 5)):
-        p = grid(rnd.uniform(0.2, 0.8), rnd.uniform(0.25, 0.8), 0.01)
-        oell(lay, f"{lay}_{k}", p, (0.12, 0.06, 0.01), rnd.choice(["#e08a2e", "#d9b23a", "#c9573a", "#8fae4a"]),
-             rot=(0, 0, rnd.uniform(0, 180)), outline=True, segs=10, rings=4)
+def footprints(lay, seed):
+    """Muddy footprints from outdoor shoes: a little trail of shoe prints (sole + heel) across the spot."""
+    rnd = random.Random(seed); ang = rnd.uniform(-40, 40) + (0 if seed % 2 else 180)
+    d = Vector((math.sin(math.radians(ang)), math.cos(math.radians(ang)))); side = Vector((d.y, -d.x))
+    for k in range(4):
+        t = -0.36 + 0.24 * k; sgn = 1 if k % 2 else -1
+        c = Vector((0.5, 0.5)) + d * t + side * (0.085 * sgn)
+        rot = (0, 0, -ang)
+        for nm, off, sz in (("sole", 0.05, (0.065, 0.095, 0.004)), ("heel", -0.08, (0.055, 0.05, 0.004))):
+            q = c + d * off
+            oell(lay, f"{lay}_{k}{nm}", grid(q.x, q.y, 0.004), (sz[0], sz[1] * K, sz[2]), rnd.choice(["#7a5638", "#6e4c30"]),
+                 rot=rot, outline=False, segs=12, rings=4)
+    oell(lay, f"{lay}_smudge", grid(0.5 - d.x * 0.38, 0.5 - d.y * 0.38, 0.003), (0.05, 0.035 * K, 0.003), "#8a6644", outline=False, segs=10, rings=4)
+
+def towel(lay, seed):
+    """A dropped practice towel: soft blue, folded over and crumpled, with a white stripe."""
+    rnd = random.Random(seed); c = grid(0.5, 0.55)
+    r = rnd.uniform(-25, 25)
+    obox(lay, lay + "_a", c + Vector((0, 0, 0.02)), (0.66, 0.4 * K * 0.8, 0.04), "#7fb3d9", rot=(0, 0, r), bevel=0.012)
+    obox(lay, lay + "_b", c + Vector((0.07, -0.03, 0.055)), (0.42, 0.28 * K * 0.8, 0.035), "#8cbde0", rot=(4, -6, r + 12), bevel=0.012)
+    obox(lay, lay + "_stripe", c + Vector((0.07, -0.03, 0.072)), (0.43, 0.045, 0.006), M("#f6efdc", True), rot=(4, -6, r + 12), outline=False)
+
+def bottle(lay, seed):
+    """A water bottle left on the floor, lying on its side: clear blue body, white cap, a little label."""
+    c = grid(0.5, 0.55, 0.1); r = math.radians(20 if seed % 2 else -25)
+    d = Vector((math.cos(r), math.sin(r) * K * 0.6, 0))
+    otube(lay, lay + "_body", c - d * 0.24, c + d * 0.17, 0.1, 0.1, "#6fb6e0", segs=16)
+    otube(lay, lay + "_neck", c + d * 0.17, c + d * 0.24, 0.1, 0.055, "#6fb6e0", segs=16)
+    otube(lay, lay + "_cap", c + d * 0.24, c + d * 0.32, 0.058, 0.058, "#f6efdc", segs=16)
+    otube(lay, lay + "_label", c - d * 0.08, c + d * 0.06, 0.103, 0.103, "#ffd36b", segs=16, outline=False)
+    oell(lay, lay + "_shine", c + Vector((0, -0.045, 0.07)) - d * 0.07, (0.11, 0.02, 0.015), M("#d6eefa", True), rot=(0, 0, math.degrees(r)), outline=False)
+
 for i in range(3):
     dust(f"dust-{i + 1}", 11 + i); target(f"dust-{i + 1}", [f"dust-{i + 1}"], [0, 0, 1, 1], 0.1, anchor=[0.5, 0.5], footprint=[1, 1],
                                            place="floor", group="mess", note="mess: a dust spot, centred on the spot (anchorPx = cell centre). Clean = not drawn")
-    leaves(f"leaves-{i + 1}", 21 + i); target(f"leaves-{i + 1}", [f"leaves-{i + 1}"], [0, 0, 1, 1], 0.1, anchor=[0.5, 0.5], footprint=[1, 1],
-                                               place="floor", group="mess", note="mess: fallen leaves, centred on the spot. Clean = not drawn")
+# Jay's review: the fallen leaves looked out of place. The game's 'leaf' floor-spot kind now draws one of these
+# (things that clearly belong in a dojo and need tidying): muddy footprints or dropped gear.
+LITTER = [("footprints-1", footprints, 31, "muddy footprints from outdoor shoes"), ("footprints-2", footprints, 32, "muddy footprints from outdoor shoes"),
+          ("towel", towel, 33, "a dropped towel"), ("water-bottle", bottle, 34, "a water bottle left on the floor")]
+for nm, fn, sd, what in LITTER:
+    fn(nm, sd); target(nm, [nm], [0, 0, 1, 1], 0.2, anchor=[0.5, 0.5], footprint=[1, 1], place="floor", group="mess",
+                       info={"spotKind": "leaf", "what": what},
+                       note=f"mess: {what}, centred on the spot (anchorPx = cell centre). Replaces the fallen leaves: draw for the game's 'leaf' floor spots (pick one of footprints-1, footprints-2, towel, water-bottle). Clean = not drawn")
 
 scene.frame_set(1)
 scene["static_targets"] = json.dumps(TARGETS)

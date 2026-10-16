@@ -1,3 +1,21 @@
+# Delivery Note: Batch 3 review fix (no more leaves), 2026-10-16
+
+**WHAT**
+- The fallen-leaves mess is replaced by four floor spots that clearly belong in a dojo:
+  - two muddy-footprint trails from outdoor shoes (`footprints-1`, `footprints-2`)
+  - a dropped towel (`towel`)
+  - a water bottle left on the floor (`water-bottle`)
+- They use the same 1×1 footprint, anchor and "clean = not drawn" rule; `static.json` is updated and the `leaves-*` files are removed.
+- The messy-room preview is updated: `preview/review-3-room-messy.png`.
+- The dust, scuffed mats and crooked rack stay as they were.
+
+**WHY**
+- Jay's review: the red-orange and green spots read as piles of leaves and looked out of place indoors.
+
+**DECIDE (Jay):** approve the new mess pieces. Are the footprints easy enough to spot?
+
+**NEXT:** Claude Code maps the game's `leaf` floor spot (`DOJO.leafShare`) to these sprites. The game code still calls the spot kind `leaf`; renaming it (for example to `litter`) is up to Claude Code. The json marks each sprite with `info.spotKind = "leaf"`.
+
 # Delivery Note: Batch 3 (Home Dojo), 2026-10-16
 
 **WHAT**

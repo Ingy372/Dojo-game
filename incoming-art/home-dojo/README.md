@@ -55,7 +55,7 @@ python3 incoming-art/tools/make_static_preview.py --sprites incoming-art/home-do
 | Sprite | Draw | Clean version |
 | --- | --- | --- |
 | `dust-1`, `dust-2`, `dust-3` | Centred on a dust spot (`anchorPx` = cell centre): fluffy dust bunnies | Nothing (the floor) |
-| `leaves-1`, `leaves-2`, `leaves-3` | Centred on a leaf spot: 3–5 fallen leaves | Nothing |
+| `footprints-1`, `footprints-2`, `towel`, `water-bottle` | **Replace the fallen leaves (review fix).** Centred on the game's `leaf` floor spots, the same 1×1 spots and anchors; pick one of the four per spot. They show muddy footprints from outdoor shoes, a dropped towel and a water bottle left on the floor | Nothing (the floor) |
 | `training-mat-scuffed`, `practice-mat-scuffed` | Over the mat, same anchor and size: light scuff streaks | The mat without the overlay |
 | `weapon-rack-crooked` | A sheet of 3 frames: 1, 2 or 3 weapons knocked crooked (`rackCrookedAt` has 3 levels) | `weapon-rack` |
 
