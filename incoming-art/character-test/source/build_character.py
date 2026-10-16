@@ -116,7 +116,8 @@ PALETTE = {
     "belt_edge": "#ffffff",
     "tape":   "#f2f2f2",
     "tape_edge": "#f4f1ea",  # rank stripe edge: NOT tinted, a light rim so stripes read on any belt
-    "belt_rim": "#2e2a3a",   # Batch 1: untinted dark rim just outside both belt edges (white belt on white gi)
+    "belt_rim": "#2e2a3a",   # Batch 1 (test of record): untinted dark rim (now tinted per belt, see belt_rim_w)
+    "belt_rim_w": "#ffffff", # Belt revision: rim / separator / sheen are neutral white, tinted per belt by the game
 }
 MAT = {k: toon_material(k.upper(), v) for k, v in PALETTE.items()}
 MAT["eye"] = toon_material("EYE", PALETTE["eye"], shadow=1.0, highlight=1.0)
@@ -126,14 +127,14 @@ OUTLINE_W = 0.013        # world units (~1.1 px at the standard camera)
 
 # ---------------------------------------------------------------- collections
 LAYERS = ["body", "gi", "belt", "belt-center", "belt-tape1-edge", "belt-tape1", "belt-tape2-edge", "belt-tape2"]
-if PLAYER:
-    LAYERS.insert(LAYERS.index("belt-center") + 1, "belt-rim")
+if PLAYER:   # belt revision: belt-sheen (dark belts), belt-center-edge (two-colour separator), belt-rim (tinted per belt)
+    LAYERS[LAYERS.index("belt-center"):LAYERS.index("belt-center") + 1] = ["belt-sheen", "belt-center", "belt-center-edge", "belt-rim"]
 COLL = {}
 for i, name in enumerate(LAYERS):
     c = bpy.data.collections.new("L_" + name)
     scene.collection.children.link(c)
     c["sprite_order"] = i                       # draw order in the game (bottom to top)
-    c["sprite_tint"] = name != "body" and not name.endswith("-edge") and name != "belt-rim"  # neutral grey: recoloured
+    c["sprite_tint"] = name != "body" and (not name.endswith("-edge") or name == "belt-center-edge")  # neutral: recoloured
     c["sprite_overlay"] = name.startswith("belt-")  # extra on top of the belt
     if name == "belt-rim":
         c["sprite_optional"] = False                # drawn on top of the belt, but always drawn
@@ -394,33 +395,42 @@ if not PLAYER:
                     MAT["tape"], "belt-center", "hips", outline=False)
     finish_mesh("beltc_knot", box(KNOT + Vector((0, -0.016, 0)), (0.06, 0.004, 0.013)), MAT["tape"], "belt-center", "hips", outline=False)
 else:
-    # Batch 1 belt: a little taller (0.072 tiles, ~5 px, was 0.05). Bottom to top:
-    #   [dark rim] | belt | centre stripe (two-colour belts, 0.032 = 44% of the belt) | belt | light top edge | [dark rim]
-    # The two rims sit just OUTSIDE the belt's height (0.008 each) on their own UNTINTED layer (belt-rim): a
-    # bold dark border so a white belt reads on a white gi, without eating into the belt's colour.
-    BELT_Z0, BELT_Z1 = 0.566, 0.638
+    # Belt revision (after Batch 1): 0.08 tiles tall (was 0.072, 0.05 in the test). Bottom to top:
+    #   [rim] | belt | [separator] centre stripe (0.036, 45%) [separator] | belt | top edge (+ [sheen] on dark belts) | [rim]
+    # rim, separator and sheen are neutral white on their own layers; the game tints them per belt (player.json beltStyles)
+    # so a white belt gets a dark rim and a black belt gets a light rim, a light separator and a bright sheen.
+    BELT_Z0, BELT_Z1 = 0.566, 0.646
+    W = MAT["belt_rim_w"]
     finish_mesh("belt_band", tube((0, 0, BELT_Z0), (0, 0, BELT_Z1), 1.0, 1.0, segs=24, sx=0.171, sy=0.131), MAT["belt"], "belt", "hips")
-    finish_mesh("belt_edge", tube((0, 0, 0.627), (0, 0, 0.6375), 1.0, 1.0, segs=24, sx=0.1735, sy=0.1335),
+    finish_mesh("belt_edge", tube((0, 0, 0.635), (0, 0, 0.6455), 1.0, 1.0, segs=24, sx=0.1735, sy=0.1335),
                 MAT["belt_edge"], "belt", "hips", outline=False)
-    for i, (z0, z1) in enumerate(((BELT_Z0 - 0.0085, BELT_Z0), (BELT_Z1, BELT_Z1 + 0.0085))):
+    finish_mesh("belt_sheen", tube((0, 0, 0.6345), (0, 0, 0.6445), 1.0, 1.0, segs=24, sx=0.1745, sy=0.1345),
+                W, "belt-sheen", "hips", outline=False)
+    for i, (z0, z1) in enumerate(((BELT_Z0 - 0.0095, BELT_Z0), (BELT_Z1, BELT_Z1 + 0.0095))):
         finish_mesh(f"belt_rim{i}", tube((0, 0, z0), (0, 0, z1), 1.0, 1.0, segs=24, sx=0.1705, sy=0.1305),
-                    MAT["belt_rim"], "belt-rim", "hips", outline=False)
-    KNOT = Vector((0.0, -0.137, 0.602))
-    finish_mesh("belt_knot", box(KNOT, (0.058, 0.03, 0.068), rot=(0, 0, 0), bevel=0.012), MAT["belt"], "belt", "hips")
-    for i, dz in enumerate((-0.038, 0.038)):   # rim lines just above and below the knot too
-        finish_mesh(f"belt_knot_rim{i}", box(KNOT + Vector((0, -0.010, dz)), (0.056, 0.012, 0.008)),
-                    MAT["belt_rim"], "belt-rim", "hips", outline=False)
-    TAILS = [((0.01, -0.145, 0.59), (0.06, -0.168, 0.382)), ((-0.008, -0.145, 0.59), (-0.045, -0.166, 0.388))]
+                    W, "belt-rim", "hips", outline=False)
+    KNOT = Vector((0.0, -0.137, 0.606))
+    finish_mesh("belt_knot", box(KNOT, (0.058, 0.03, 0.076), rot=(0, 0, 0), bevel=0.012), MAT["belt"], "belt", "hips")
+    for i, dz in enumerate((-0.0425, 0.0425)):   # rim lines just above and below the knot too
+        finish_mesh(f"belt_knot_rim{i}", box(KNOT + Vector((0, -0.010, dz)), (0.056, 0.012, 0.009)),
+                    W, "belt-rim", "hips", outline=False)
+    TAILS = [((0.01, -0.145, 0.594), (0.06, -0.168, 0.382)), ((-0.008, -0.145, 0.594), (-0.045, -0.166, 0.388))]
     for i, (a, b) in enumerate(TAILS):
         finish_mesh(f"belt_tail{i}", strip(a, b, 0.036, 0.011), MAT["belt"], "belt", "hips")
-    # wider centre line for two-colour belts (Batch 1: 0.032 tall, was 0.013)
-    finish_mesh("beltc_band", tube((0, 0, 0.584), (0, 0, 0.616), 1.0, 1.0, segs=24, sx=0.1735, sy=0.1335),
+    C0, C1 = 0.588, 0.624                        # centre stripe 0.036 tall
+    finish_mesh("beltc_band", tube((0, 0, C0), (0, 0, C1), 1.0, 1.0, segs=24, sx=0.1735, sy=0.1335),
                 MAT["tape"], "belt-center", "hips", outline=False)
+    for i, (z0, z1) in enumerate(((C0 - 0.0105, C0), (C1, C1 + 0.0105))):   # thin separators, ~1 px
+        finish_mesh(f"beltc_sep{i}", tube((0, 0, z0), (0, 0, z1), 1.0, 1.0, segs=24, sx=0.1740, sy=0.1340),
+                    W, "belt-center-edge", "hips", outline=False)
     for i, (a, b) in enumerate(TAILS):
         a, b = Vector(a), Vector(b)
         finish_mesh(f"beltc_tail{i}", strip(a + Vector((0, -0.007, 0)), b + Vector((0, -0.007, 0)), 0.018, 0.004),
                     MAT["tape"], "belt-center", "hips", outline=False)
-    finish_mesh("beltc_knot", box(KNOT + Vector((0, -0.016, -0.002)), (0.06, 0.004, 0.032)), MAT["tape"], "belt-center", "hips", outline=False)
+    finish_mesh("beltc_knot", box(KNOT + Vector((0, -0.016, 0)), (0.06, 0.004, 0.036)), MAT["tape"], "belt-center", "hips", outline=False)
+    for i, dz in enumerate((-0.0232, 0.0232)):
+        finish_mesh(f"beltc_knot_sep{i}", box(KNOT + Vector((0, -0.0175, dz)), (0.06, 0.004, 0.0105)),
+                    W, "belt-center-edge", "hips", outline=False)
 # rank stripes (tape) near the end of the left tail: up to 2 per belt (core-design section 10).
 # Revision 1: each stripe is 0.065 tiles long (about 4 px at 128 px frames, at least 3 px seen from the front) with an
 # untinted light rim (0.011 beyond each end) on its own layer, drawn with the stripe.
@@ -629,7 +639,7 @@ if PLAYER:
     jab = [STANCE, jab_pose(0.55, 0.45), jab_pose(1.0, 1.0), jab_pose(0.9, 0.9), jab_pose(0.45, 0.4), jab_pose(0.12, 0.08)]
 
     # BOW (Batch 1): a standing bow (rei). Feet come together (heels together, toes a little apart), hands at
-    # the sides, bow about 30 degrees from the hips with the back and neck straight, eyes down, a short hold,
+    # the sides, bow about 30 degrees from the hips with the back straight, eyes up on the partner, a short hold,
     # rise, then back to the guard. 22 frames at 16 fps = 1.375 s.
     ATTN = pose(hips=(0, 0.0, -0.012), hips_rot=(0, 0, 0), chest_rot=(0, 0, 0), head_rot=(-16, 0, 0),
                 foot_l=(0.05, 0.0, 0.07), foot_r=(-0.05, 0.0, 0.07), foot_l_rot=(0, 20, 0), foot_r_rot=(0, -20, 0),
@@ -638,7 +648,7 @@ if PLAYER:
         p = dict(ATTN)
         p["hips"] = (0, 0.035 * t, -0.012 - 0.012 * t)        # weight shifts back a touch as the hips hinge
         p["hips_rot"] = (30 * t, 0, 0)
-        p["head_rot"] = (-16 + 22 * t, 0, 0)                  # neck in line with the back, eyes to the floor
+        p["head_rot"] = (-16 - 27 * t, 0, 0)                  # revision: face stays forward, eyes on the partner
         p["hand_l"] = (0.185, -0.045 * t, 0.55 - 0.035 * t)   # hands stay at the sides of the thighs
         p["hand_r"] = (-0.185, -0.045 * t, 0.55 - 0.035 * t)
         return p
@@ -690,15 +700,38 @@ if PLAYER:
     info(a_def, {"keyFrames": {"ouch": 1, "sink": "5-10", "kneel": 11, "hold": 15}, "holdLastFrame": True,
                  "note": "play once, then hold the last frame during the fade and 'Ouch! Back to the start.'"})
 import json as _json
-scene["sprite_meta"] = _json.dumps({"tintGuidance": {
+_guide = {
     "mode": "multiply (Phaser setTint); untinted layers are drawn as they are",
     "gi": "gi colour (current placeholder #f2e9d8)",
     "belt": "the profile's belt.color, except very dark colours (black, #1a1a1a): use charcoal #3c3c44 so the belt and its light top edge read against the dark outline",
     "belt-center": "the profile's belt.color2 (same charcoal rule for black)",
     "belt-tape1 / belt-tape2": "tape colour: #f4f1ea on dark belts, #1a1a1a on light belts (rule in apps/client/src/ui/belt.ts)",
     "belt-tape1-edge / belt-tape2-edge": "no tint; draw each with its stripe (stripes >= 1 / >= 2)",
-    **({"belt-rim": "no tint; ALWAYS draw it, right after the belt (and belt-center). Dark rim along both belt edges so every belt, white included, reads on any gi colour"} if PLAYER else {}),
-}})
+}
+_meta = {"tintGuidance": _guide}
+if PLAYER:
+    # Belt revision: every belt layer is neutral white/grey and tinted per belt. Rule (dark = luminance < 40,
+    # luminance = 0.3 R + 0.59 G + 0.11 B on 0-255): see beltStyles for the ready-made table.
+    _guide.update({
+        "belt": "the profile's belt.color; a dark (black) belt.color is drawn as #26272f",
+        "belt-center": "two-colour belts only: belt.color2; a dark (black) color2 is drawn as deep black #111116 (it sits between two coloured bands, not next to the outline)",
+        "belt-sheen": "dark (black) belt.color only: tint #a2a6b6, a bright top edge so black reads as a belt, not as outline; skip on other belts",
+        "belt-center-edge": "optional separator around the centre stripe; NOT used in the chosen style (skip it). Tint #ece6d8 if a future style wants it",
+        "belt-rim": "ALWAYS draw it, after belt-center: tint #2e2a3a (dark rim) on every belt except a dark (black) belt.color, which gets light #c9ccd6",
+    })
+    def _style(name, c1, c2):
+        dk = lambda h: h is not None and (0.3 * int(h[1:3], 16) + 0.59 * int(h[3:5], 16) + 0.11 * int(h[5:7], 16)) < 40
+        return {"belt": "#26272f" if dk(c1) else c1,
+                **({"belt-center": "#111116" if dk(c2) else c2} if c2 else {}),
+                **({"belt-sheen": "#a2a6b6"} if dk(c1) else {}),
+                "belt-rim": "#c9ccd6" if dk(c1) else "#2e2a3a"}
+    _meta["beltStyles"] = {
+        "note": "chosen belt style (belt revision, option C): tint per layer for each Action Zone belt (fixtures/); a layer that is not listed is not drawn (belt-center-edge is never drawn in this style). Tape stripes keep the belt.ts rule",
+        **{n: _style(n, c1, c2) for n, c1, c2 in (
+            ("White", "#f4f1ea", None), ("Yellow", "#f5d22e", None), ("Orange", "#f08a24", None), ("Green", "#3aa655", None),
+            ("Blue", "#2f6fd6", None), ("Red", "#d8352a", None), ("Red/Black", "#d8352a", "#1a1a1a"),
+            ("Brown", "#7a4a26", None), ("Brown/Black", "#7a4a26", "#1a1a1a"), ("Black", "#1a1a1a", None))}}
+scene["sprite_meta"] = _json.dumps(_meta)
 arm.animation_data.action = bpy.data.actions["idle"]
 scene.frame_start, scene.frame_end = 1, 8
 

@@ -6,7 +6,8 @@ Scripts the Art Director bot uses so every character, enemy and object renders e
 | --- | --- |
 | `render_sprites.py` | Renders a character `.blend` into transparent PNG sprite sheets (8 directions, one sheet per layer per animation) plus a JSON description. Runs inside Blender. |
 | `make_preview.py` | Stacks the layer sheets the way the game will (with belt and gi colours, black belts as charcoal) and makes review pictures: contact sheets, an animated GIF (30 fps clock), a belt-colour chart, a 4× head close-up and a 4× waist close-up (`belt-back.png`, N/NE/E/NW, blue belt, to check the belt is one unbroken band). Runs with normal Python. |
-| `make_belt_chart.py` | Before/after belt chart: chosen belts (white, yellow, red/black, brown/black, black) on the white gi from two renders, at real size (1x) and 4x at the waist. Runs with normal Python. |
+| `make_belt_chart.py` | Belt chart: chosen belts (white, yellow, red/black, brown/black, black) on the white gi, at real size (1x) and 4x at the waist. One row for the old render, then one row per belt style option of the new render (`--options A,B,C`; the options are `BELT_OPTIONS` in `make_preview.py`, `chosen` is the default). Runs with normal Python. |
+| `make_still.py` | Pose stills: chosen frames in chosen directions, old render above new (for example the bow's lowest point from the side and front). Runs with normal Python. |
 | `make_compare.py` | Plays one animation from two renders side by side (for example an old and a new walk) over a floor grid that scrolls at the design speed, so you can check the feet stay planted. Runs with normal Python. |
 
 Made with Blender 4.2 LTS (4.2.23). Previews need Python 3 with Pillow and numpy (`pip install pillow numpy`).
@@ -69,7 +70,10 @@ python3 incoming-art/tools/make_compare.py --old path/to/old-sprites --new path/
 `make_preview.py --anim-gifs jab,bow,defeat` also writes one GIF per animation (all 8 directions, real frame timing; one-shots hold their last frame, or wait for `repeatEverySec`, then replay). `--gif-anims none` skips the big combined GIF. `make_compare.py --strip file.png` also writes every frame of both renders side by side (first direction).
 
 ```bash
-python3 incoming-art/tools/make_belt_chart.py --old path/to/old-sprites --new path/to/sprites --out belt-chart.png
+python3 incoming-art/tools/make_belt_chart.py --old path/to/old-sprites --new path/to/sprites --out belt-chart.png [--options A,B,C]
+python3 incoming-art/tools/make_still.py --old path/to/old-sprites --new path/to/sprites --anim bow --frames 11 --dirs E,W,S --out still.png
 ```
 
 GIF previews keep time with a 30 fps clock. GIF delays are stored in 1/100 s, so they play about 10% fast; the JSON timing is exact.
+
+**Belt styles in the previews:** for sheets with a tinted `belt-rim` layer (the player character, belt revision), `make_preview.py` tints every belt layer per belt with the chosen style (`belt_style()`, the same table as `beltStyles` in `player.json`). Older sheets keep the old rule.

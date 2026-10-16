@@ -1,4 +1,51 @@
-# Delivery Note: Batch 1 (samples): player character fixes + jab, bow, defeat
+# Delivery Note: Batch 1 revision (belts and bow)
+
+**WHAT:** Your two Batch 1 notes are fixed. Everything is re-rendered in all 8 directions:
+- **Black belts pop.** On red/black, brown/black and solid black, the black now shows instantly at real size. The belt layer is still neutral and recolourable; the game picks the tints per belt (table in `sprites/player.json`, `beltStyles`).
+- **Bow with eyes up.** He bows 30° from the hips like before, but his head stays up and his eyes stay on the partner, the way a martial arts rei is done.
+
+Jab, defeat and the new strike are approved and unchanged. Only the belt (a bit taller) and the bow head are different. This is a draft until you approve it.
+
+**WHY:** You said the black was still hard to see on the two-colour belts and the black belt, and that a rei keeps the eyes on the partner, not on the floor.
+
+**DECIDE:** Please approve (or correct) the belt look and the bow:
+1. `preview/belt-chart.png`: the current belts and 3 options (A, B, C) at real size and 4×, with white and yellow for reference. **I picked C.**
+2. `preview/player_bow.gif`: the bow in all 8 directions.
+3. `preview/bow-side-before-after.png`: the lowest point of the bow from the side (E, W) and the front (S, SE), old (eyes down) and new (eyes up).
+
+**NEXT:** Once you approve, I'll make the remaining player animations: dash, hit flinch, cleaning ×3 (sweep, kneel and wipe, straighten) and celebrate. Then `style-guide-draft.md`.
+
+---
+
+## Belts: the options and my pick
+
+All three options use the slightly taller belt: 0.08 tiles instead of 0.072 (about 6 px instead of 5). The centre stripe is now 0.036 tall, 45% of the belt.
+
+| Option | What changes | How it looks |
+| --- | --- | --- |
+| **A** | The rim around a black belt is light grey (`#c9ccd6`) instead of dark. | The black belt finally has an edge against the dark outline. Red/black and brown/black don't change. |
+| **B** | A, plus a thin light line between the colour and the black on two-colour belts. | The lines are only about 1 px. At real size they wash the red and brown out into pink/beige stripes, so the belt reads as "striped", not as "red and black". |
+| **C (picked)** | A, plus: the black on a black belt is a slightly lighter, neutral black (`#26272f`) with a bright top sheen (`#a2a6b6`). The black centre stripe on two-colour belts is a deep black (`#111116`). No separator line. | Best at real size. The black belt has a light edge and a shine, so it reads as a black belt instead of a dark blob. On red/black and brown/black, the deep-black centre contrasts strongly with the colour on both sides. |
+
+- **Why C:** the black centre stripe never touches the dark outline (it sits between two coloured bands), so it can be truly black. Only the black next to the outline needs to be lighter, plus a light edge and a sheen.
+- **Not blue:** I tried a blue-black too (`#262c40`). Next to the blue belt it looked navy, so C keeps the black neutral.
+- **Light belts:** white, yellow and the other light belts keep the dark rim (`#2e2a3a`), so the white belt still stands out on the white gi.
+
+## Bow: eyes on the partner
+
+- The body is the same as before: feet together, hands at the sides, a 30° bow from the hips, back straight.
+- The head now tilts back up as the body bows (27° against the 30° bow), so the face stays forward and the eyes stay on the partner. The neck stays in line with the back.
+- Facing the camera (S), you see his face during the whole bow (before, you saw the top of his head).
+- Timing is unchanged: 22 frames at 16 fps (1.375 s); key frames are in `sprites/player.json`.
+
+## Other notes
+
+- **PR #1 was merged.** I brought `bot-art` up to date with `main` (a normal fast-forward, no force push), and this revision is in a new pull request.
+- **Layers:** there are 2 new belt layers, `belt-sheen` and `belt-center-edge` (the separator, only used by option B; skip it), and `belt-rim` is now tinted per belt. All 11 layers × 7 animations (77 sheets) are re-rendered. See `README.md`.
+- **New preview tool:** `tools/make_still.py` makes pose stills (used for the bow side view). The belt chart can now show several style options.
+- **Nothing from outside** was used (`incoming-art/SOURCES.md`).
+
+# Earlier: Batch 1 (samples), delivered 2026-10-16 (jab, defeat and strike approved)
 
 **WHAT:** The approved martial artist, with your 3 fixes and 3 sample animations, all rendered in 8 directions with every layer:
 - **Fixes:**
@@ -59,7 +106,7 @@ and the style guide draft. Look at these pictures:
 
 - **Bow length:** the game's bow takes 0.9 s (code). Mine is 1.375 s, because a real rei with a hold looks rushed in 0.9 s. Claude Code can set the bow to 1.375 s, or play only the bow itself (frames 3–18, 1.0 s), or play all of it faster (24 fps = 0.92 s).
 - **Auto-attack while walking:** the docs say basic attacks fire every 0.6 s even while walking. The jab is a whole-body sprite, so playing it mid-walk would freeze his legs for 0.3 s. Two options for Claude Code: play the jab only when standing still, or keep the walk running while moving (and show the hit with an effect). Upper-body-only sprites are possible later if you want them.
-- **PR #1 is still open,** so this batch is committed to the same `bot-art` branch. GitHub allows only one open pull request from `bot-art` to `main`, so it shows up in PR #1 instead of a new PR. Merging PR #1 now would bring these drafts with it, but they are only files in `incoming-art/`.
+- PR #1 was still open at the time, so Batch 1 went into PR #1, which has since been merged.
 - **Script fixes:**
   - `render_sprites.py --layers` used to let the other layers show up in a partial render. Fixed, and it can't change a full render.
   - The tools gained per-animation GIFs, a before/after strip and a belt chart maker.
@@ -70,10 +117,11 @@ and the style guide draft. Look at these pictures:
 | File | What it is |
 | --- | --- |
 | `README.md` | Technical sheet: frames, fps, key frames, layers, re-render commands. |
-| `sprites/player_<layer>_<animation>.png` | 63 sheets: 9 layers × 7 animations (idle, walk, strike, counter, jab, bow, defeat). |
+| `sprites/player_<layer>_<animation>.png` | Now 77 sheets: 11 layers × 7 animations (idle, walk, strike, counter, jab, bow, defeat). |
 | `sprites/player.json` | Frame size, feet point, directions, timing, key frames, hold/repeat notes, tint guidance. |
 | `source/player_character.blend` | The Blender file (built by `../character-test/source/build_character.py --profile player`). |
 | `preview/player_jab.gif`, `player_bow.gif`, `player_defeat.gif`, `player_strike.gif` | One GIF per animation, all 8 directions, real timing. |
 | `preview/strike-before-after.gif`, `strike-S-before-after.png` | The Strike, approved test vs Batch 1 (S, SE, SW; the strip shows S). |
-| `preview/belt-chart.png` | Belts before vs after, at 1× and 4×. |
+| `preview/belt-chart.png` | Belts: current vs options A, B, C, at 1× and 4×. |
+| `preview/bow-side-before-after.png` | The bow's lowest point from E, W, S and SE, eyes down (before) vs eyes up (now). |
 | `preview/player_belts.png`, `belt-back.png`, `head-closeup.png`, `player_contact_<animation>.png` | The usual previews: all 10 belts, the belt from behind, the face, every frame. |

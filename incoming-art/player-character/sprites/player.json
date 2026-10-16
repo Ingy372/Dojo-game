@@ -79,38 +79,50 @@
       "optional": false
     },
     {
-      "name": "belt-center",
+      "name": "belt-sheen",
       "order": 3,
       "tint": true,
       "optional": true
     },
     {
-      "name": "belt-rim",
+      "name": "belt-center",
       "order": 4,
-      "tint": false,
-      "optional": false
-    },
-    {
-      "name": "belt-tape1-edge",
-      "order": 5,
-      "tint": false,
-      "optional": true
-    },
-    {
-      "name": "belt-tape1",
-      "order": 6,
       "tint": true,
       "optional": true
     },
     {
-      "name": "belt-tape2-edge",
+      "name": "belt-center-edge",
+      "order": 5,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "belt-rim",
+      "order": 6,
+      "tint": true,
+      "optional": false
+    },
+    {
+      "name": "belt-tape1-edge",
       "order": 7,
       "tint": false,
       "optional": true
     },
     {
-      "name": "belt-tape2",
+      "name": "belt-tape1",
       "order": 8,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "belt-tape2-edge",
+      "order": 9,
+      "tint": false,
+      "optional": true
+    },
+    {
+      "name": "belt-tape2",
+      "order": 10,
       "tint": true,
       "optional": true
     }
@@ -126,7 +138,9 @@
         "body": "player_body_idle.png",
         "gi": "player_gi_idle.png",
         "belt": "player_belt_idle.png",
+        "belt-sheen": "player_belt-sheen_idle.png",
         "belt-center": "player_belt-center_idle.png",
+        "belt-center-edge": "player_belt-center-edge_idle.png",
         "belt-rim": "player_belt-rim_idle.png",
         "belt-tape1-edge": "player_belt-tape1-edge_idle.png",
         "belt-tape1": "player_belt-tape1_idle.png",
@@ -144,7 +158,9 @@
         "body": "player_body_walk.png",
         "gi": "player_gi_walk.png",
         "belt": "player_belt_walk.png",
+        "belt-sheen": "player_belt-sheen_walk.png",
         "belt-center": "player_belt-center_walk.png",
+        "belt-center-edge": "player_belt-center-edge_walk.png",
         "belt-rim": "player_belt-rim_walk.png",
         "belt-tape1-edge": "player_belt-tape1-edge_walk.png",
         "belt-tape1": "player_belt-tape1_walk.png",
@@ -171,7 +187,9 @@
         "body": "player_body_strike.png",
         "gi": "player_gi_strike.png",
         "belt": "player_belt_strike.png",
+        "belt-sheen": "player_belt-sheen_strike.png",
         "belt-center": "player_belt-center_strike.png",
+        "belt-center-edge": "player_belt-center-edge_strike.png",
         "belt-rim": "player_belt-rim_strike.png",
         "belt-tape1-edge": "player_belt-tape1-edge_strike.png",
         "belt-tape1": "player_belt-tape1_strike.png",
@@ -197,7 +215,9 @@
         "body": "player_body_counter.png",
         "gi": "player_gi_counter.png",
         "belt": "player_belt_counter.png",
+        "belt-sheen": "player_belt-sheen_counter.png",
         "belt-center": "player_belt-center_counter.png",
+        "belt-center-edge": "player_belt-center-edge_counter.png",
         "belt-rim": "player_belt-rim_counter.png",
         "belt-tape1-edge": "player_belt-tape1-edge_counter.png",
         "belt-tape1": "player_belt-tape1_counter.png",
@@ -217,7 +237,9 @@
         "body": "player_body_jab.png",
         "gi": "player_gi_jab.png",
         "belt": "player_belt_jab.png",
+        "belt-sheen": "player_belt-sheen_jab.png",
         "belt-center": "player_belt-center_jab.png",
+        "belt-center-edge": "player_belt-center-edge_jab.png",
         "belt-rim": "player_belt-rim_jab.png",
         "belt-tape1-edge": "player_belt-tape1-edge_jab.png",
         "belt-tape1": "player_belt-tape1_jab.png",
@@ -247,7 +269,9 @@
         "body": "player_body_bow.png",
         "gi": "player_gi_bow.png",
         "belt": "player_belt_bow.png",
+        "belt-sheen": "player_belt-sheen_bow.png",
         "belt-center": "player_belt-center_bow.png",
+        "belt-center-edge": "player_belt-center-edge_bow.png",
         "belt-rim": "player_belt-rim_bow.png",
         "belt-tape1-edge": "player_belt-tape1-edge_bow.png",
         "belt-tape1": "player_belt-tape1_bow.png",
@@ -277,7 +301,9 @@
         "body": "player_body_defeat.png",
         "gi": "player_gi_defeat.png",
         "belt": "player_belt_defeat.png",
+        "belt-sheen": "player_belt-sheen_defeat.png",
         "belt-center": "player_belt-center_defeat.png",
+        "belt-center-edge": "player_belt-center-edge_defeat.png",
         "belt-rim": "player_belt-rim_defeat.png",
         "belt-tape1-edge": "player_belt-tape1-edge_defeat.png",
         "belt-tape1": "player_belt-tape1_defeat.png",
@@ -297,10 +323,58 @@
   "tintGuidance": {
     "mode": "multiply (Phaser setTint); untinted layers are drawn as they are",
     "gi": "gi colour (current placeholder #f2e9d8)",
-    "belt": "the profile's belt.color, except very dark colours (black, #1a1a1a): use charcoal #3c3c44 so the belt and its light top edge read against the dark outline",
-    "belt-center": "the profile's belt.color2 (same charcoal rule for black)",
+    "belt": "the profile's belt.color; a dark (black) belt.color is drawn as #26272f",
+    "belt-center": "two-colour belts only: belt.color2; a dark (black) color2 is drawn as deep black #111116 (it sits between two coloured bands, not next to the outline)",
     "belt-tape1 / belt-tape2": "tape colour: #f4f1ea on dark belts, #1a1a1a on light belts (rule in apps/client/src/ui/belt.ts)",
     "belt-tape1-edge / belt-tape2-edge": "no tint; draw each with its stripe (stripes >= 1 / >= 2)",
-    "belt-rim": "no tint; ALWAYS draw it, right after the belt (and belt-center). Dark rim along both belt edges so every belt, white included, reads on any gi colour"
+    "belt-sheen": "dark (black) belt.color only: tint #a2a6b6, a bright top edge so black reads as a belt, not as outline; skip on other belts",
+    "belt-center-edge": "optional separator around the centre stripe; NOT used in the chosen style (skip it). Tint #ece6d8 if a future style wants it",
+    "belt-rim": "ALWAYS draw it, after belt-center: tint #2e2a3a (dark rim) on every belt except a dark (black) belt.color, which gets light #c9ccd6"
+  },
+  "beltStyles": {
+    "note": "chosen belt style (belt revision, option C): tint per layer for each Action Zone belt (fixtures/); a layer that is not listed is not drawn (belt-center-edge is never drawn in this style). Tape stripes keep the belt.ts rule",
+    "White": {
+      "belt": "#f4f1ea",
+      "belt-rim": "#2e2a3a"
+    },
+    "Yellow": {
+      "belt": "#f5d22e",
+      "belt-rim": "#2e2a3a"
+    },
+    "Orange": {
+      "belt": "#f08a24",
+      "belt-rim": "#2e2a3a"
+    },
+    "Green": {
+      "belt": "#3aa655",
+      "belt-rim": "#2e2a3a"
+    },
+    "Blue": {
+      "belt": "#2f6fd6",
+      "belt-rim": "#2e2a3a"
+    },
+    "Red": {
+      "belt": "#d8352a",
+      "belt-rim": "#2e2a3a"
+    },
+    "Red/Black": {
+      "belt": "#d8352a",
+      "belt-center": "#111116",
+      "belt-rim": "#2e2a3a"
+    },
+    "Brown": {
+      "belt": "#7a4a26",
+      "belt-rim": "#2e2a3a"
+    },
+    "Brown/Black": {
+      "belt": "#7a4a26",
+      "belt-center": "#111116",
+      "belt-rim": "#2e2a3a"
+    },
+    "Black": {
+      "belt": "#26272f",
+      "belt-sheen": "#a2a6b6",
+      "belt-rim": "#c9ccd6"
+    }
   }
 }
