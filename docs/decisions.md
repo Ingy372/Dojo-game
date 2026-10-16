@@ -7,8 +7,7 @@ A record of choices already made, newest at the bottom, so settled questions are
 Anything waiting on Jay's answer goes here. When he answers, the answer moves into the log below and the question is removed.
 
 1. **Black belt to 2nd degree.** At Action Zone, black belt is 1st degree. How long does a student usually wait between 1st degree and 2nd degree? (Set to 1 year for now; it only matters for students far in the future.)
-2. **Style guide and fonts.** The Art Director's `incoming-art/style-guide-draft.md` hasn't been approved on its own yet (the art that follows it is). When it is, move it to `docs/style-guide.md`. Fonts: Fredoka + Nunito, Fredoka + Andika, or keep the system font? (System font for now.)
-3. **Boss door.** The boss and "home" doors borrow the battle and rest doors. Does Jay want the bot to make a special boss door (e.g. bigger, with a crown)?
+2. **Fonts.** The style guide recommends Fredoka (titles) + Nunito (text), or Fredoka + Andika, both free. Which one, or keep the system font? (System font for now. Adding a font means bundling its files with the game.)
 
 ## Milestone 0 — Setup (2026-10-05)
 
@@ -316,3 +315,16 @@ Jay asked Claude to test and tune the game before his next playtest.
 - **Doors:** closed until the room is clear, then they slide open with a warm glow (the bot's version, kept). The boss and home doors borrow the battle and rest doors for now.
 - **Dojo mess:** the old "leaf" spots are now muddy footprints, a dropped towel or a water bottle. The internal name stays "leaf" so existing saves keep working.
 - **Possible later improvement:** the game draws at the phone's basic screen resolution, not its sharper "retina" resolution, so art can look a little soft on high-end phones. Making it draw at full sharpness touches every screen's layout, so it isn't done yet. Ask Jay if it bothers him.
+
+### After Jay's test of the art (2026-10-16)
+
+- **Jay: "everything appears to be working properly."**
+- **Style guide approved.** Moved to `docs/style-guide.md` (the bot's draft stays in its folder). Fonts are still open.
+- **Boss door wanted.** Jay asked for a special Floor Keeper door. It's on the Art Director's list. Until it arrives, the boss uses the battle door.
+- **Defeat needs to be visible (Jay: "it needs to be bigger and brighter… a small visual reward for killing something", without distracting from combat).** The art's dissolve was a tiny dot of light that disappeared on the light stone floor. Now a beaten creature gets about 1 second of "set free", drawn in code:
+  - a warm golden flash;
+  - the dissolve drawn 30% bigger, with its shadow fading;
+  - a golden ring;
+  - 9 small gold stars drifting up (16 and a bigger flash for the Floor Keeper).
+  
+  These use normal colours with a thin darker edge, so they show on any floor.
