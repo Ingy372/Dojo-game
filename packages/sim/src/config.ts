@@ -268,9 +268,9 @@ export const DOJO = {
   messStartsAfterHours: 4,
   /** Mess reaches its limit after this many hours away (7 days). */
   messFullAfterHours: 168,
-  /** Dust and leaves on the floor at the limit (swept by walking over them). */
+  /** Dust and litter on the floor at the limit (swept by walking over them). */
   maxFloorSpots: 16,
-  /** Share of floor spots that are fallen leaves instead of dust (looks only). */
+  /** Share of floor spots that are litter ("leaf" spots: footprints, towel, water bottle) instead of dust (looks only). */
   leafShare: 0.3,
   /** How close (tiles) the character must pass to sweep a spot. */
   sweepRadius: 0.75,

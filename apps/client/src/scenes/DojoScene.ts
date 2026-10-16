@@ -40,12 +40,11 @@ import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
 import { TouchControls } from '../input/TouchControls';
-import { loadArt } from '../art/art';
+import { addStatic, loadArt } from '../art/art';
 import type { LayeredSprite } from '../art/LayeredSprite';
 import { makePlayerSprite, playLocomotion } from '../art/player';
 import { bowPrompt, playBow } from '../ui/bow';
 import { Celebrations } from '../ui/Celebrations';
-import { drawDecoration, drawSpot } from '../ui/decorations';
 import { FONT, crisp } from '../ui/theme';
 
 /** Pixels per tile in the room (before it's scaled to fit the screen). */
@@ -97,8 +96,11 @@ export class DojoScene extends Phaser.Scene {
 
   private worldLayer!: Phaser.GameObjects.Container;
   private decoLayer!: Phaser.GameObjects.Container;
-  private decoViews = new Map<string, Phaser.GameObjects.Graphics>();
-  private spotGfx!: Phaser.GameObjects.Graphics;
+  private decoViews = new Map<string, Phaser.GameObjects.Container>();
+  /** Dust, footprints and other mess on the floor. */
+  private spotLayer!: Phaser.GameObjects.Container;
+  /** Standing decorations and the character, drawn front-to-back by where they stand. */
+  private standLayer!: Phaser.GameObjects.Container;
   private selectGfx!: Phaser.GameObjects.Graphics;
   private player!: Phaser.GameObjects.Container;
   /** The character's art, and a one-off move it's playing (sweep, wipe, straighten, bow). */
@@ -169,13 +171,16 @@ export class DojoScene extends Phaser.Scene {
     this.moveStyle = loadMoveStyle();
 
     this.worldLayer = this.add.container(0, 0);
-    this.worldLayer.add(this.drawRoom());
+    const room = this.drawRoom();
     this.decoLayer = this.add.container(0, 0);
-    this.spotGfx = this.add.graphics();
+    this.spotLayer = this.add.container(0, 0);
+    this.standLayer = this.add.container(0, 0);
     this.selectGfx = this.add.graphics();
     this.player = this.makePlayer();
-    // Mats lie under the dust; everything else stands above it.
-    this.worldLayer.add([this.decoLayer, this.spotGfx, this.selectGfx, this.player]);
+    this.standLayer.add(this.player);
+    // Bottom to top: the floor and back wall, mats, the mess on the floor, standing things
+    // and the character, then the front wall (the character walks behind it), outlines and labels.
+    this.worldLayer.add([...room.back, this.decoLayer, this.spotLayer, this.standLayer, ...room.front, this.selectGfx, ...room.labels]);
     this.redrawDecorations();
     this.redrawSpots();
 
@@ -606,53 +611,25 @@ export class DojoScene extends Phaser.Scene {
 
   // ---------------------------------------------------------------- drawing
 
-  private drawRoom(): Phaser.GameObjects.Graphics {
-    const g = this.add.graphics();
+  /**
+   * The wooden room from the art: the floor and back wall with the notice board, and the
+   * front wall with the door, which is drawn in front of the character.
+   */
+  private drawRoom(): { back: Phaser.GameObjects.GameObject[]; front: Phaser.GameObjects.GameObject[]; labels: Phaser.GameObjects.GameObject[] } {
     const room = CONTENT.dojo.room;
-    for (let row = 0; row < room.height; row++) {
-      for (let col = 0; col < room.width; col++) {
-        const x = col * TILE;
-        const y = row * TILE;
-        if (room.walls[row][col]) {
-          g.fillStyle(0x5b4a3c).fillRect(x, y, TILE, TILE);
-          g.fillStyle(0x7a6553).fillRect(x, y, TILE, TILE * 0.25);
-        } else {
-          // Warm wooden floorboards.
-          g.fillStyle(row % 2 === 0 ? 0x8a6a48 : 0x83643f).fillRect(x, y, TILE, TILE);
-          g.fillStyle(0x6e5134, 0.5).fillRect(x, y + TILE - 2, TILE, 2);
-          if ((row + col) % 3 === 0) g.fillStyle(0x6e5134, 0.5).fillRect(x + TILE - 2, y, 2, TILE);
-        }
-      }
-    }
-    // The door to the Tower.
+    const [floor, board, front] = addStatic(this, 'dojo', 'room', 0, 0);
     const door = room.doors[0];
-    const dx = (door.x - 0.5) * TILE;
-    const dy = (door.y - 0.5) * TILE;
-    g.fillStyle(0x2a1f18).fillRect(dx + 4, dy, TILE - 8, TILE);
-    g.fillStyle(0xd5713a, 0.9).fillRect(dx + 8, dy + 4, TILE - 16, TILE - 6);
-    g.fillStyle(0xffd166).fillCircle(dx + TILE - 14, dy + TILE / 2, 3);
-    // The notice board.
     const b = CONTENT.dojo.board;
-    const bx = b.col * TILE;
-    g.fillStyle(0x6b4a2b).fillRect(bx + 3, 4, TILE - 6, TILE - 8);
-    g.fillStyle(0xc8a46a).fillRect(bx + 7, 8, TILE - 14, TILE - 16);
-    g.fillStyle(0xf2e9d8).fillRect(bx + 11, 12, 12, 9);
-    g.fillStyle(0xf2e9d8).fillRect(bx + 25, 16, 11, 12);
-    g.fillStyle(0xff3b30).fillCircle(bx + 17, 13, 2).fillCircle(bx + 30, 17, 2);
-    this.worldLayer.add(
+    const label = (x: number, y: number, text: string, size: number) =>
       this.add
-        .text(door.x * TILE, (door.y - 0.5) * TILE + TILE * 0.5, 'TOWER', { fontFamily: FONT, fontStyle: 'bold', fontSize: '11px', color: '#fff6e0', stroke: '#14121c', strokeThickness: 3 })
-        .setOrigin(0.5)
-        .setResolution(crisp() * 2),
-    );
-    this.worldLayer.add(
-      this.add
-        .text(bx + TILE / 2, TILE + 2, 'BOARD', { fontFamily: FONT, fontStyle: 'bold', fontSize: '10px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 3 })
+        .text(x, y, text, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color: '#fff6e0', stroke: '#14121c', strokeThickness: 3 })
         .setOrigin(0.5, 0)
-        .setResolution(crisp() * 2)
-        .setDepth(1),
-    );
-    return g;
+        .setResolution(crisp() * 2);
+    return {
+      back: [floor, board].filter(Boolean),
+      front: [front].filter(Boolean),
+      labels: [label(door.x * TILE, (door.y - 0.2) * TILE, 'TOWER', 11), label(b.col * TILE + TILE / 2, TILE + 2, 'BOARD', 10)],
+    };
   }
 
   private makePlayer(): Phaser.GameObjects.Container {
@@ -690,6 +667,7 @@ export class DojoScene extends Phaser.Scene {
     const x = Phaser.Math.Linear(this.prevPos.x, p.pos.x, blend);
     const y = Phaser.Math.Linear(this.prevPos.y, p.pos.y, blend);
     this.player.setPosition(x * TILE, y * TILE);
+    this.standLayer.sort('y');
     this.animateHero();
     this.calmAura.setVisible(this.dojo.calmMindRuns > 0);
     this.player.setAlpha(this.mode === 'decorate' ? 0.4 : 1);
@@ -705,38 +683,55 @@ export class DojoScene extends Phaser.Scene {
   }
 
   private redrawDecorations(): void {
-    for (const g of this.decoViews.values()) g.destroy();
+    for (const v of this.decoViews.values()) v.destroy();
     this.decoViews.clear();
     this.decoLayer.removeAll(true);
     this.selectGfx.clear();
     const placed = this.dojo.items.filter((it) => it.col !== null && it.row !== null);
-    // Mats go under the dust (decoLayer); everything else above it, sorted top to bottom.
-    const mats = placed.filter((it) => decorationDef(CONTENT.dojo, it.id).clean === 'mat');
-    const others = placed.filter((it) => !mats.includes(it)).sort((a, b) => a.row! - b.row!);
-    for (const it of [...mats, ...others]) {
+    for (const it of placed) {
       const def = decorationDef(CONTENT.dojo, it.id);
-      const g = this.add.graphics();
       const dragging = this.drag?.uid === it.uid;
       const col = dragging ? this.drag!.col : it.col!;
       const row = dragging ? this.drag!.row : it.row!;
-      drawDecoration(g, def, it, 0, 0, TILE);
-      g.setPosition(col * TILE, row * TILE);
-      if (mats.includes(it)) this.decoLayer.add(g);
-      else this.worldLayer.addAt(g, this.worldLayer.getIndex(this.selectGfx));
-      this.decoViews.set(it.uid, g);
+      // Each decoration stands on the bottom-centre of its footprint.
+      const view = this.add.container((col + def.width / 2) * TILE, (row + def.height) * TILE, this.decorationImages(it));
+      // Mats lie under the dust; everything else stands with the character, front-to-back.
+      if (def.clean === 'mat') this.decoLayer.add(view);
+      else this.standLayer.add(view);
+      this.decoViews.set(it.uid, view);
       if (this.mode === 'decorate') {
         const ok = !dragging || !this.drag!.moved || canPlace(this.dojo, CONTENT.dojo, it.uid, col, row);
         const color = dragging ? (ok ? 0x5cd65c : 0xff3b30) : this.selected === it.uid ? 0xffd166 : 0xffffff;
         const alpha = dragging || this.selected === it.uid ? 1 : 0.25;
         this.selectGfx.lineStyle(dragging || this.selected === it.uid ? 3 : 1.5, color, alpha).strokeRect(col * TILE + 1, row * TILE + 1, def.width * TILE - 2, def.height * TILE - 2);
-        if (dragging) g.setAlpha(ok ? 0.85 : 0.5);
+        if (dragging) view.setAlpha(ok ? 0.85 : 0.5);
       }
     }
+    this.standLayer.sort('y');
   }
 
+  /**
+   * A decoration's pictures: a scuffed mat gets its scuff marks on top (fading as it's
+   * wiped), and a messy weapon rack shows 1 to 3 crooked weapons.
+   */
+  private decorationImages(it: DojoItem): Phaser.GameObjects.Image[] {
+    const def = decorationDef(CONTENT.dojo, it.id);
+    if (def.clean === 'rack' && it.crooked > 0) return addStatic(this, 'dojo', `${it.id}-crooked`, 0, 0, it.crooked - 1);
+    const images = addStatic(this, 'dojo', it.id, 0, 0);
+    if (def.clean === 'mat' && it.scuffed) {
+      for (const scuff of addStatic(this, 'dojo', `${it.id}-scuffed`, 0, 0)) images.push(scuff.setAlpha(1 - it.wipes / DOJO.wipeTaps));
+    }
+    return images;
+  }
+
+  /** The mess on the floor: dust, and (the "leaf" spots) muddy footprints, a towel or a water bottle. */
   private redrawSpots(): void {
-    this.spotGfx.clear();
-    for (const s of this.dojo.spots) drawSpot(this.spotGfx, s, TILE);
+    this.spotLayer.removeAll(true);
+    const litter = ['footprints-1', 'footprints-2', 'towel', 'water-bottle'];
+    for (const s of this.dojo.spots) {
+      const id = s.kind === 'leaf' ? litter[s.id % litter.length] : `dust-${(s.id % 3) + 1}`;
+      this.spotLayer.add(addStatic(this, 'dojo', id, (s.col + 0.5 + s.dx) * TILE, (s.row + 0.5 + s.dy) * TILE));
+    }
   }
 
   // ---------------------------------------------------------------- screen buttons

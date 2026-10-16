@@ -52,7 +52,10 @@ export interface DojoItem {
   crooked: number;
 }
 
-/** A bit of dust or a fallen leaf on one floor tile. */
+/**
+ * A bit of dust or litter on one floor tile. "leaf" spots are drawn as litter (muddy
+ * footprints, a dropped towel, a water bottle); the name stays "leaf" so saves keep working.
+ */
 export interface MessSpot {
   id: number;
   col: number;
