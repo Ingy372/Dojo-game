@@ -1,0 +1,26 @@
+{
+  "about": "Art Jay has approved, and how it is packed. Only add a source here after Jay approves it.",
+  "outDir": "assets/art",
+  "scale": 0.6,
+  "packs": {
+    "player": {
+      "sources": [
+        { "id": "player", "type": "character", "json": "incoming-art/player-character/sprites/player.json", "skipLayers": ["belt-center-edge"] }
+      ]
+    },
+    "enemies-t1": {
+      "sources": [
+        { "id": "swarmer", "type": "character", "json": "incoming-art/enemies-tier1/swarmer/sprites/swarmer.json" },
+        { "id": "shield", "type": "character", "json": "incoming-art/enemies-tier1/shield/sprites/shield.json" },
+        { "id": "brute", "type": "character", "json": "incoming-art/enemies-tier1/brute/sprites/brute.json" },
+        { "id": "floor-keeper", "type": "character", "json": "incoming-art/enemies-tier1/keeper/sprites/keeper.json" }
+      ]
+    },
+    "tower-t1": {
+      "sources": [{ "id": "tower", "type": "static", "json": "incoming-art/tower-rooms/sprites/static.json" }]
+    },
+    "dojo": {
+      "sources": [{ "id": "dojo", "type": "static", "json": "incoming-art/home-dojo/sprites/static.json" }]
+    }
+  }
+}
