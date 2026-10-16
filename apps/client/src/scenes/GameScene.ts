@@ -46,9 +46,9 @@ import {
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
-import { loadArt } from '../art/art';
-import type { LayeredSprite } from '../art/LayeredSprite';
-import { makePlayerSprite, playLocomotion } from '../art/player';
+import { characterArt, characterTop, loadArt } from '../art/art';
+import { LayeredSprite } from '../art/LayeredSprite';
+import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
 import { homeDojo } from '../game/dojo';
@@ -125,16 +125,31 @@ export interface GameSceneData {
 
 interface EnemyView {
   container: Phaser.GameObjects.Container;
-  body: Phaser.GameObjects.Arc;
-  eye: Phaser.GameObjects.Arc;
+  /** The creature's art (body, glow, warning glow, defeat light, shield). */
+  sprite: LayeredSprite;
   hpFill: Phaser.GameObjects.Rectangle;
   hpBack: Phaser.GameObjects.Rectangle;
   stars: Phaser.GameObjects.Arc[];
-  shieldGfx: Phaser.GameObjects.Graphics;
+  /** Its colour, for sparks and rings. */
   color: number;
+  /** Its height above the feet (px), for the dizzy stars and sweat drops. */
+  top: number;
   prev: Vec2;
   flashUntil: number;
+  /** The mode drawn last frame, to start animations when it changes. */
+  lastMode: string;
+  /** The attack being wound up (its animation plays when it lands). */
+  attack: string;
+  /** A short flinch when hit, until this time. */
+  hitUntil: number;
+  /** Calling for help (the boss), until this time. */
+  callUntil: number;
+  /** When it was beaten (the dissolve into light plays), or null. */
+  defeatAt: number | null;
 }
+
+/** The warning glow's colour while a creature winds up (matches the danger circle). */
+const TELEGRAPH_TINT = 0xff3b30;
 
 /**
  * The room. The rules package decides what happens, 20 times a second;
@@ -384,28 +399,41 @@ export class GameScene extends Phaser.Scene {
   private drawEnemy(e: EnemyState, blend: number, now: number): void {
     const v = this.enemyViews.get(e.id);
     if (!v) return;
+    const s = v.sprite;
+    // Beaten: dissolve into light (a hopeful "set free"), then disappear.
+    const defeat = s.art.animations.defeat;
+    const dissolving = e.mode === 'defeated' && v.defeatAt !== null && now - v.defeatAt < (defeat.frames / defeat.fps) * 1000;
     // Before the bow, the room's enemies haven't arrived yet.
-    v.container.setVisible(e.mode !== 'defeated' && this.enemiesAt !== null);
-    if (e.mode === 'defeated' || this.enemiesAt === null) return;
+    v.container.setVisible((e.mode !== 'defeated' || dissolving) && this.enemiesAt !== null);
+    if ((e.mode === 'defeated' && !dissolving) || this.enemiesAt === null) {
+      v.lastMode = e.mode;
+      return;
+    }
 
     const x = Phaser.Math.Linear(v.prev.x, e.pos.x, blend);
     const y = Phaser.Math.Linear(v.prev.y, e.pos.y, blend);
-    v.container.setPosition(x * TILE, y * TILE);
-    const r = e.def.radius * TILE;
-    v.eye.setPosition(e.facing.x * r * 0.55, e.facing.y * r * 0.55);
+    v.container.setPosition(x * TILE, y * TILE).setDepth(depthAt(y * TILE));
     v.hpFill.width = (v.hpBack.width - 4) * (e.health / e.def.maxHealth);
+    v.hpBack.setVisible(e.mode !== 'defeated');
+    v.hpFill.setVisible(e.mode !== 'defeated');
+    s.face(e.facing.x, e.facing.y);
+    const started = e.mode !== v.lastMode;
+    v.lastMode = e.mode;
 
-    let color = v.color;
-    let scale = 1;
-    let rotation = 0;
     let alpha = 1;
+    let telegraph = 0;
+    let tint: number | null = null;
 
-    if (e.mode === 'waiting') {
+    if (e.mode === 'defeated') {
+      if (started || s.current !== 'defeat') s.play('defeat', { restart: true });
+    } else if (e.mode === 'waiting') {
       alpha = 1 - (e.modeTicks / COMBAT.enemySpawnWaitTicks) * 0.8;
+      s.play('idle');
     } else if (e.mode === 'windup' && e.attackCenter) {
-      // The telegraph: the brute swells and turns red, and the danger area fills up to
-      // "nearly full". It then holds nearly full (creeping to the edge) while the Perfect
-      // Counter window is open, with a brighter ring. At the edge, the attack lands.
+      // The telegraph: the danger area fills up to "nearly full", then holds nearly full
+      // (creeping to the edge) while the Perfect Counter window is open, with a brighter
+      // ring. At the edge, the attack lands. The wind-up animation and its warning glow
+      // follow the same clock, so they always end exactly when the attack lands.
       const window = counterWindowTicks(this.world, this.world.players[this.me]);
       const fillTicks = Math.max(1, e.windupTotal - window);
       const elapsed = Math.min(e.windupTotal, e.windupTotal - e.modeTicks + blend);
@@ -413,52 +441,70 @@ export class GameScene extends Phaser.Scene {
       const progress = inWindow
         ? TELEGRAPH_NEARLY_FULL + (1 - TELEGRAPH_NEARLY_FULL) * ((elapsed - fillTicks) / window)
         : TELEGRAPH_NEARLY_FULL * (elapsed / fillTicks);
-      const pulse = Math.sin(now / 45) > 0 ? 1 : 0.75;
-      color = blendColor(v.color, COLORS.bruteAngry, progress * pulse);
-      scale = 1 + progress * 0.18;
+      v.attack = currentAttack(e).name ?? '';
+      const anim = this.enemyAnim(s, `windup_${v.attack}`, 'windup');
+      const frames = s.art.animations[anim].frames;
+      s.showFrame(anim, (elapsed / e.windupTotal) * frames);
+      const pulse = inWindow && Math.sin(now / 45) < 0 ? 0.7 : 1;
+      telegraph = (s.art.animations[anim].telegraphIntensity?.[s.frame] ?? progress) * pulse;
       const cx = e.attackCenter.x * TILE;
       const cy = e.attackCenter.y * TILE;
       const area = currentAttack(e).areaRadius * TILE;
       this.danger.fillStyle(COLORS.danger, 0.16).fillCircle(cx, cy, area);
       this.danger.lineStyle(inWindow ? 6 : 3, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
       this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
+    } else if (e.mode === 'recover') {
+      // The attack itself (it lands on its first frame), then catching its breath.
+      const anim = this.enemyAnim(s, v.attack, 'attack');
+      if (started) s.play(anim, { restart: true });
+      telegraph = s.art.animations[anim].telegraphIntensity?.[s.frame] ?? 0;
     } else if (e.mode === 'stagger') {
-      rotation = Math.sin(now / 60) * 0.18;
+      s.play('stagger');
     } else if (e.mode === 'winded') {
       // Out of breath: pale, slumped, and breathing hard.
-      color = blendColor(v.color, 0xd8d0c4, 0.45);
-      scale = 1 + Math.sin(now / 110) * 0.06;
+      s.play(this.enemyAnim(s, 'winded', 'stagger'));
+      tint = 0xd8d0c4;
+    } else if (now < v.callUntil) {
+      s.play(this.enemyAnim(s, 'call', 'idle'));
+    } else if (now < v.hitUntil) {
+      s.play('hit');
+    } else {
+      // Chasing or circling: walk while moving, at a pace matched to its speed.
+      const speed = Math.hypot(e.pos.x - v.prev.x, e.pos.y - v.prev.y) * TICKS_PER_SECOND;
+      const design = (s.art.animations.move as { designSpeedTilesPerSecond?: number }).designSpeedTilesPerSecond ?? 2;
+      if (speed > 0.2) s.play('move', { speed: Phaser.Math.Clamp(speed / design, 0.5, 2) });
+      else s.play('idle');
     }
 
-    // Shield guards hold a shield in front of them while it's up.
-    v.shieldGfx.clear();
-    if (e.shieldUp) {
-      const angle = Math.atan2(e.facing.y, e.facing.x);
-      v.shieldGfx.lineStyle(7, 0xc9d6e8, 1);
-      v.shieldGfx.beginPath();
-      v.shieldGfx.arc(0, 0, r * 1.25, angle - 0.9, angle + 0.9);
-      v.shieldGfx.strokePath();
-    }
-
-    if (now < v.flashUntil) color = 0xffffff;
-    v.body.setFillStyle(color);
-    v.body.setScale(scale);
-    v.body.setRotation(rotation);
+    // The warning glow, only while winding up and swinging.
+    s.setLayer('telegraph', telegraph > 0.01);
+    s.images.get('telegraph')?.setAlpha(Phaser.Math.Clamp(telegraph, 0, 1));
+    // Shield guards: the shield while it's up, the cracked one once broken.
+    s.setLayer('shield', e.shieldUp);
+    s.setLayer('shield-broken', !e.shieldUp);
+    s.flash(now < v.flashUntil ? 0xffffff : tint, now < v.flashUntil);
+    s.update();
     v.container.setAlpha(alpha * Math.min(1, (now - this.enemiesAt) / 450));
 
     // Dizzy stars circling a staggered enemy; sweat drops on a winded one.
+    const r = e.def.radius * TILE;
     const dizzy = e.mode === 'stagger';
     const winded = e.mode === 'winded';
-    v.stars.forEach((s, i) => {
-      s.setVisible(dizzy || winded);
+    v.stars.forEach((st, i) => {
+      st.setVisible(dizzy || winded);
       if (dizzy) {
         const a = now / 180 + (i * Math.PI * 2) / v.stars.length;
-        s.setFillStyle(COLORS.gold).setScale(1).setPosition(Math.cos(a) * r * 0.8, -r * 1.25 + Math.sin(a) * r * 0.25);
+        st.setFillStyle(COLORS.gold).setScale(1).setPosition(Math.cos(a) * r * 0.8, -v.top - 4 + Math.sin(a) * r * 0.25);
       } else if (winded) {
         const fall = ((now / 600 + i / v.stars.length) % 1) * r * 0.9;
-        s.setFillStyle(0x9ad1ff).setScale(1.5).setPosition((i - 1) * r * 0.7, -r * 0.9 + fall);
+        st.setFillStyle(0x9ad1ff).setScale(1.5).setPosition((i - 1) * r * 0.7, -v.top * 0.8 + fall);
       }
     });
+  }
+
+  /** The first of these animations the creature has (e.g. the boss's "windup_slam", else "windup"). */
+  private enemyAnim(s: LayeredSprite, wanted: string, fallback: string): string {
+    return s.has(wanted) ? wanted : fallback;
   }
 
   private drawHud(): void {
@@ -543,15 +589,32 @@ export class GameScene extends Phaser.Scene {
   private makeEnemy(e: EnemyState): void {
     const r = e.def.radius * TILE;
     const color = Phaser.Display.Color.HexStringToColor(e.def.color).color;
-    const body = this.add.circle(0, 0, r, color).setStrokeStyle(4, COLORS.outline);
-    const eye = this.add.circle(0, 0, r * 0.22, 0xffe0a0).setStrokeStyle(2, COLORS.outline);
-    const hpBack = this.add.rectangle(0, -r - 12, r * 2, 8, 0x000000, 0.6);
-    const hpFill = this.add.rectangle(-r + 2, -r - 12, r * 2 - 4, 4, COLORS.healthLow).setOrigin(0, 0.5);
+    const art = characterArt(this, 'enemies-t1', e.def.id)!;
+    const sprite = new LayeredSprite(this, art);
+    sprite.container.addAt(addShadow(this, r * 2.2), 0);
+    sprite.setLayer('telegraph', false).setLayerTint('telegraph', TELEGRAPH_TINT);
+    const top = characterTop(this, art);
+    const hpBack = this.add.rectangle(0, -top - 8, r * 2, 8, 0x000000, 0.6);
+    const hpFill = this.add.rectangle(-r + 2, -top - 8, r * 2 - 4, 4, COLORS.healthLow).setOrigin(0, 0.5);
     const stars = [0, 1, 2].map(() => this.add.circle(0, 0, 4, COLORS.gold).setVisible(false));
-    const shieldGfx = this.add.graphics();
-    const container = this.add.container(e.pos.x * TILE, e.pos.y * TILE, [shieldGfx, body, eye, hpBack, hpFill, ...stars]).setDepth(4);
+    const container = this.add.container(e.pos.x * TILE, e.pos.y * TILE, [sprite.container, hpBack, hpFill, ...stars]).setDepth(4);
     this.uiCamera.ignore(container);
-    this.enemyViews.set(e.id, { container, body, eye, hpBack, hpFill, stars, shieldGfx, color, prev: { ...e.pos }, flashUntil: 0 });
+    this.enemyViews.set(e.id, {
+      container,
+      sprite,
+      hpBack,
+      hpFill,
+      stars,
+      color,
+      top,
+      prev: { ...e.pos },
+      flashUntil: 0,
+      lastMode: e.mode,
+      attack: '',
+      hitUntil: 0,
+      callUntil: 0,
+      defeatAt: null,
+    });
   }
 
   private makeHud(): void {
@@ -642,6 +705,8 @@ export class GameScene extends Phaser.Scene {
           if (!e) break;
           const v = this.enemyViews.get(e.id)!;
           v.flashUntil = this.time.now + (ev.move === 'basic' ? 70 : 120);
+          if (ev.defeated) v.defeatAt = this.time.now;
+          else v.hitUntil = this.time.now + 250; // a quick flinch (only while chasing)
           const heavy = ev.move !== 'basic';
           this.sparks(e.pos, heavy ? 12 : 5, heavy ? COLORS.gold : 0xffffff);
           this.floatText(e.pos, `${ev.damage}`, heavy ? '#ffd166' : '#ffffff', heavy ? 30 : 22);
@@ -853,6 +918,8 @@ export class GameScene extends Phaser.Scene {
           const e = this.enemy(ev.enemyId);
           sfx.appear();
           if (e) this.floatText({ x: e.pos.x, y: e.pos.y - 1 }, 'Help me!', '#ffd166', 24);
+          const caller = this.enemyViews.get(ev.enemyId);
+          if (caller) caller.callUntil = this.time.now + 1000;
           this.syncEnemyViews();
           for (const id of ev.summoned) {
             const s = this.enemy(id);
@@ -1257,12 +1324,6 @@ export class GameScene extends Phaser.Scene {
     this.screenFlash.setFillStyle(color).setAlpha(alpha);
     this.tweens.add({ targets: this.screenFlash, alpha: 0, duration: ms });
   }
-}
-
-/** Mixes two colors: t = 0 gives `a`, t = 1 gives `b`. */
-function blendColor(a: number, b: number, t: number): number {
-  const mix = (shift: number) => Math.round(((a >> shift) & 0xff) * (1 - t) + ((b >> shift) & 0xff) * t);
-  return (mix(16) << 16) | (mix(8) << 8) | mix(0);
 }
 
 /**

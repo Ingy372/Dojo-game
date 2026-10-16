@@ -84,6 +84,21 @@ export function frameOf(scene: Phaser.Scene, pack: PackName, id: number): [strin
   return [pageKey(pack, data.frames[id][0]), String(id)];
 }
 
+/**
+ * How far above the feet a character's picture reaches (pixels), measured on its
+ * idle frame facing the camera. Used to put health bars just over the head.
+ */
+export function characterTop(scene: Phaser.Scene, art: CharacterArt): number {
+  const data = register(scene, art.pack);
+  const anim = art.animations.idle ?? Object.values(art.animations)[0];
+  let top = art.anchor.y;
+  for (const ids of Object.values(anim.layers)) {
+    const id = ids[4]?.[0] ?? -1;
+    if (id >= 0 && data) top = Math.min(top, data.frames[id][6]);
+  }
+  return art.anchor.y - top;
+}
+
 /** A layered character (player or enemy), or null if its pack isn't loaded. */
 export function characterArt(scene: Phaser.Scene, pack: PackName, id: string): CharacterArt | null {
   const entry = register(scene, pack)?.entries[id];
