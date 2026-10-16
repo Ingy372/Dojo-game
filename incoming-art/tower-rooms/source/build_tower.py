@@ -196,7 +196,7 @@ for k in DOORS:
 
 # ------------------------------------------------------------------ chest: closed idle, opening, open idle
 # Jay's review: make opening it special. One timeline at 12 fps, three targets (three sheets):
-#   chest-closed : frames 1-12  (1.0 s loop)  closed, a glint sweeps across the gold bands now and then
+#   chest-closed : frames 1-12  (1.0 s loop)  closed, a glint slides down a gold band
 #   chest-open   : frames 13-42 (2.5 s, once) anticipation (wiggle, light building in the seams), the lid bursts
 #                  open with a golden light beam, stars and sparkles rise, the glow pulses and settles
 #   chest-opened : frames 43-54 (1.0 s loop)  open, a soft shimmering glow and a few twinkles
@@ -260,16 +260,18 @@ def chest():
         e = empty(f"chest_sparkpiv{k}", c + Vector((0, -0.05, 0.4)))
         put(f"chest_spark{k}", star_bm(0.055, 0.28), M("#fffbe8", True), X, outline=False, parent=e)
         sparks.append(e)
+    # the star and glint meshes are built at the origin: let them follow their empty exactly
+    for e in stars + sparks + [glint]:
+        for ch in e.children: ch.matrix_parent_inverse = Matrix.Identity(4)
     CL = (-35, 0, 0)   # stars face the camera
     def lid(f, ang): kf(hinge, f, rot=(-ang, 0, 0))
     # --- closed idle 1-12: still, a glint slides down a band on frames 3-8
     for f in range(1, 13):
         kf(root, f, loc=c, rot=(0, 0, 0), sc=(1, 1, 1)); lid(f, 0)
         kf(seam, f, sc=0); kf(inside, f, sc=0); kf(beam, f, sc=0)
-        t = (f - 3) / 5
-        x = -0.22 if f < 8 else 0.22
-        kf(glint, f, loc=c + Vector((-0.22 + 0.44 * (0 <= t <= 1 and t > 0.5), -0.22, 0.32 - 0.24 * (t % 1 if 0 <= t <= 1 else 0))),
-           rot=CL, sc=(math.sin(math.pi * t) if 0 <= t <= 1 else 0))
+        t = (f - 3) / 5          # glint slides down the left gold band on frames 3-8 (world position: the parent inverse cancels the root)
+        on = 0 <= t <= 1
+        kf(glint, f, loc=c + Vector((-0.22, -0.23, 0.33 - 0.26 * (t if on else 0))), rot=CL, sc=(math.sin(math.pi * t) * 1.3 if on else 0))
         for e in stars + sparks: kf(e, f, sc=0)
     # --- opening 13-42
     F0 = 13
