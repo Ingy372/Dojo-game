@@ -1,0 +1,89 @@
+{
+  "pixelsPerTile": 80,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "facing": "north (the one game view)"
+  },
+  "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+  "sprites": {
+    "door-boss-a": {
+      "size": [
+        160,
+        172
+      ],
+      "layers": [
+        "door-boss-a"
+      ],
+      "files": {
+        "door-boss-a": "door-boss-a_door-boss-a.png"
+      },
+      "groundRect": {
+        "col0": -0.5,
+        "row0": 0,
+        "col1": 1.5,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.15,
+      "anchorPx": [
+        80.0,
+        172.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "SAMPLE look A (closed door only). 160 px wide: the door cell plus half a tile of wall each side; anchorPx = bottom-centre of the door cell"
+    },
+    "door-boss-b": {
+      "size": [
+        160,
+        172
+      ],
+      "layers": [
+        "door-boss-b"
+      ],
+      "files": {
+        "door-boss-b": "door-boss-b_door-boss-b.png"
+      },
+      "groundRect": {
+        "col0": -0.5,
+        "row0": 0,
+        "col1": 1.5,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.15,
+      "anchorPx": [
+        80.0,
+        172.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "SAMPLE look B (closed door only). 160 px wide: the door cell plus half a tile of wall each side; anchorPx = bottom-centre of the door cell"
+    },
+    "door-boss-c": {
+      "size": [
+        160,
+        180
+      ],
+      "layers": [
+        "door-boss-c"
+      ],
+      "files": {
+        "door-boss-c": "door-boss-c_door-boss-c.png"
+      },
+      "groundRect": {
+        "col0": -0.5,
+        "row0": 0,
+        "col1": 1.5,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.25,
+      "anchorPx": [
+        80.0,
+        180.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "SAMPLE look C (closed door only). 160 px wide: the door cell plus half a tile of wall each side; anchorPx = bottom-centre of the door cell"
+    }
+  }
+}
