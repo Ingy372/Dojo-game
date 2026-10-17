@@ -100,8 +100,8 @@ if __name__ == "__main__" and A.sheets_b:
             info = B["J"]["animations"][anim]; ms = max(int(1000 / info["fps"]), 40)
             for r in range(reps):
                 for f in range(info["frames"]):
-                    row = Image.new("RGBA", (cw * 2 * len(dirs), (104 + TOP) * 2), BG + (255,))
-                    for k, d in enumerate(dirs): row.alpha_composite(on_bg(crop(B["compose"](ch, anim, d, f)), 2), (k * cw * 2, 0))
+                    row = Image.new("RGBA", (cw * 2 * len(dirs), (FH - 8) * 2), BG + (255,))   # full height: the broom reaches below the feet
+                    for k, d in enumerate(dirs): row.alpha_composite(on_bg(crop(B["compose"](ch, anim, d, f), bottom=FW - 2), 2), (k * cw * 2, 0))
                     frames.append((row.convert("P", palette=Image.ADAPTIVE, colors=255), ms))
             if info.get("holdLastFrame"): frames[-1] = (frames[-1][0], 800)
         frames[0][0].save(os.path.join(A.out, f"player-{tag}_combo.gif"), save_all=True, append_images=[f for f, _ in frames[1:]],

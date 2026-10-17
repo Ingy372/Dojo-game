@@ -1,18 +1,25 @@
 # Customizable player (Batch 6): technical sheet
 
-**Status: SAMPLES, round 2 (after Jay's feedback). Waiting for Jay's OK before the full render** (both bodies, all 13 animations × 8 directions × every layer).
+**Status: FULL SET** (approved samples, round 2). Both bodies, all 13 animations × 8 directions × 32 layers.
 
-This is built on the **approved player model** (`player-character/source/player_character.blend`). The rig, poses, timings, frame counts, feet anchor, gi, belt layers and props are unchanged. `source/build_custom.py` only splits the old `body` layer and adds the options.
+- **Frames: 128 × 160 px, feet anchor (64, 136.96)**, still 80 px per tile. This is a change from 128 × 128 / (64, 104.96), and it's for all player art: the approved `player-character/` sheets were re-rendered the same way. See `../NOTES-FOR-CLAUDE-CODE.md`.
+- `sprites/body-a/`: `player-a.json` + `player-a_<layer>_<animation>.png`.
+- `sprites/body-b/`: `player-b.json` + `player-b_<layer>_<animation>.png`.
+- The animations, frame counts, fps, key frames, `groundMotion`, `props` and `holdLastFrame` are the same as Batch 1.
+- Sizes: see "Download size" below.
+
+This is built on the **approved player model** (`player-character/source/player_character.blend`). The rig, poses, timings, gi, belt layers and props are unchanged. `source/build_custom.py` only splits the old `body` layer and adds the options.
 
 ```bash
 for B in a b; do blender -b incoming-art/player-character/source/player_character.blend -P incoming-art/player-custom/source/build_custom.py -- \
     --body $B --out $PWD/incoming-art/player-custom/source/player_custom_$B.blend; done
-blender -b incoming-art/player-custom/source/player_custom_a.blend -P incoming-art/tools/render_sprites.py -- \
-    --out incoming-art/player-custom/sprites/body-a --name player     # full set (after approval); same for body b
-python3 incoming-art/player-custom/source/make_samples2.py --a <body A idle> --b <body B idle> --bm <body B motion> --out incoming-art/player-custom/preview
+for B in a b; do blender -b incoming-art/player-custom/source/player_custom_$B.blend -P incoming-art/tools/render_sprites.py -- \
+    --out incoming-art/player-custom/sprites/body-$B --name player-$B --height 160 --anchor-y 0.856; done
+python3 incoming-art/player-custom/source/make_custom_preview.py --sheets incoming-art/player-custom/sprites/body-a \
+    --sheets-b incoming-art/player-custom/sprites/body-b --out incoming-art/player-custom/preview
 ```
 
-The sample sheets in `sprites/samples/` are not committed. They re-render in about 10 minutes, and only the previews are for review.
+A full body takes about 80 minutes on 8 CPU cores (about 38,000 layer renders). `--anims` renders part of the set; I rendered it in 7 chunks and merged the JSONs, which gives the same files.
 
 ## Layers (drawing order)
 
@@ -21,10 +28,10 @@ The sample sheets in `sprites/samples/` are not committed. They re-render in abo
 | 0 | `body` | no | | What's left of the base: the outlines and untinted parts |
 | 1 | `skin` | **yes**, `palettes.skin` | | Head, ears, neck, chest V, forearms, hands, feet, in a light neutral `#f2f2f2` |
 | 2 | `gi` | yes | | Unchanged |
-| 3–12 | `belt` … `belt-tape2` | as before | | Unchanged (the belt is never customizable) |
-| 13–14 | `prop-broom`, `prop-rag` | no | | Unchanged |
-| 15–20 | `face-01` … `face-06` | no | `face` | Pick one: eyes, shine, brows, mouth, cheeks |
-| 21–32 | `hair-01` … `hair-12` | **yes**, `palettes.hair` | `hair` | Pick one. Only hair, in neutral grey `#e6e6e6` |
+| 3–11 | `belt` … `belt-tape2` | as before | | Unchanged (the belt is never customizable) |
+| 12–13 | `prop-broom`, `prop-rag` | no | | Unchanged |
+| 14–19 | `face-01` … `face-06` | no | `face` | Pick one: eyes, shine, brows, mouth, cheeks |
+| 20–31 | `hair-01` … `hair-12` | **yes**, `palettes.hair` | `hair` | Pick one. Only hair, in neutral grey `#e6e6e6` |
 
 **How the options work:**
 - The face and hair options are collections with `sprite_group`. The shared renderer now supports this (see `tools/README.md`).
@@ -62,7 +69,7 @@ The sample sheets in `sprites/samples/` are not committed. They re-render in abo
 - **Textured hair:** the afro is redesigned and 4 textured styles are added (see `research-textured-hair.md`). The hair layer now uses two neutral greys (`#e6e6e6` base, `#f7f7f7` highlight on clump tops), still with one multiply tint.
 - **Faces on deep skin:** every face has a faint light edge around the eyes (`#f3e6dc`, nearly invisible on light skin) and a lighter mouth (`#a8473f`).
 - **Gi palette:** the black gi is now a softer charcoal `#4a4a55` (id `charcoal`).
-- **Two bodies, same rig:** `--body a` (as before) and `--body b` (the girl). Both have the same 13 animations, timing, 128 px frame and feet anchor (64, 104.96), with the same gi, belt layers and tints.
+- **Two bodies, same rig:** `--body a` (as before) and `--body b` (the girl). Both have the same 13 animations, timing, frame and feet anchor, with the same gi, belt layers and tints.
 - **Body B differences (only small, tasteful ones):**
   - a slightly rounder, softer head with soft cheeks;
   - slightly smaller ears;
@@ -70,4 +77,27 @@ The sample sheets in `sprites/samples/` are not committed. They re-render in abo
 - **Faces are shared:** the same 6 `face-*` layers work on both bodies. Her lashes come from her body layer, so there's no second set of 6 faces to download.
 - **Hair is shared too:** the 12 hair layers fit both heads (rendered per body).
 
-**Known issue:** big and tall styles touch the top edge of the 128 px frame during `celebrate`, on the hop with the arms up: the afro, puffs, bun, twists and high-top. Even the approved player's raised fists touch it in 4 frames. See DECIDE in the Delivery Note.
+**Celebrate clipping: fixed** by the taller 128 × 160 frame (Jay chose option A). The checks are below.
+
+## Checks (full set)
+
+- **Edge and clipping check (script, every layer × animation × direction × frame, both bodies and `player-character/`):**
+  - Nothing touches the top edge. The closest is `hair-12` (high-top) at the celebrate hop, 27 px from the top. All the tall styles now fit.
+  - The only pixels touching an edge are the broom's bristle tip at the bottom edge in `sweep`, SE, frames 5–7: 4–9 faint pixels. This was already in the approved Batch 1 sheets. It isn't visible in the game, so I left it as it is.
+  - The left and right margins are at least 1 px (the strike lunge, as in Batch 1).
+- **Alignment check (script):**
+  - Stacking `body` + `skin` + `gi` + `belt` + `belt-rim` + `face-01` + `hair-02` gives the same outline as the approved player in every animation. The worst overlap is 99.3% for body A and 98.9% for body B; the small difference is body B's rounder head.
+  - Both JSONs have 13 animations, and every listed sheet exists and is 8 × 160 px tall.
+- **By eye:** I checked the faces on 3 skin tones, the 12 hair styles × 3 colours, the line-up, and frames from all 4 GIFs (strike, dash, the broom in sweep, the celebrate hop). All OK.
+- **Size:**
+
+| Folder | Size | What it is |
+| --- | --- | --- |
+| `sprites/body-a/` | 46 MB | 416 PNGs + json |
+| `sprites/body-b/` | 46 MB | 416 PNGs + json |
+| `player-character/sprites/` | 14 MB | re-rendered, about the same as before |
+| `preview/` | 12 MB | |
+
+  - Per body: about 14.7 MB of base layers, 0.65–0.8 MB per face, and 1.4–3.6 MB per hair style (the afro and twists are the biggest).
+  - **One finished character is about 18 MB at 80 px per tile, before the 0.6× import shrink.**
+  - The git repo grew by about **82 MB** for Batch 6 (`.git` went from 224 MB to 306 MB). That covers both bodies, the player-character re-render and the previews.

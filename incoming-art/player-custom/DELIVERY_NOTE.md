@@ -1,4 +1,65 @@
-# Delivery Note: Batch 6, customizable player, SAMPLES ROUND 2 (draft), 2026-10-16
+# Delivery Note: Batch 6, customizable player, FULL SET, 2026-10-16
+
+**WHAT:** the full Batch 6 render from the approved samples (round 2). Body B, all 12 hair styles, the shared faces and the palettes are as approved, with the deep-skin face fix and the charcoal gi.
+
+- **Both bodies,** in `sprites/body-a/` (`player-a.json`) and `sprites/body-b/` (`player-b.json`):
+  - all 13 animations × 8 directions;
+  - 32 layers: body, skin, gi, 9 belt layers, 2 props, 6 faces, 12 hair styles;
+  - every sheet is committed.
+- **[CHANGE] Frames are now 128 × 160 px, feet anchor (64, 136.96).** This is option A, which Jay chose. It's still 80 px per tile, and the feet are in the same place relative to the bottom; the extra 32 px are headroom on top.
+- **The approved `player-character/sprites/` sheets were re-rendered at 128 × 160 too,** so all player art matches. All 169 sheets plus `player.json` were redone.
+  - The poses, timing and layers didn't change.
+  - Checked by script: the bottom 128 rows match the old sheets (0.0001% of pixels differ, which is render noise). The JSON only changed `frameHeight` and `anchor`.
+  - The fists that used to be cut off on the celebrate hop are now whole.
+- **JSON:** `layers` with `order`, `tint` and `group`, plus `groups`, `palettes`, `palettesDraftLabels` (placeholders), `beltStyles` (option C) and `optionNotes`.
+- **Previews,** in `preview/`:
+  - `review-1-faces-x-skin.png`: all 6 faces on light, medium and deep skin, both bodies; heads at 3×, figures at 1× and 2×.
+  - `review-2-hair-x-colour-body-a.png` and `-b.png`: all 12 hair styles × 3 hair colours, SE and N, at 1× and 2×.
+  - `review-3-lineup-8.png`: 8 finished characters, each with a different belt.
+  - `player-a1_combo.gif`, `player-a2_combo.gif`, `player-b1_combo.gif` and `player-b2_combo.gif`: full combos with walk, jab, strike, counter, dash, bow, sweep and celebrate, facing S, E, NW and N.
+- **Integration notes** for all batches are now in one file: `incoming-art/NOTES-FOR-CLAUDE-CODE.md`.
+- **Tool:** `tools/render_sprites.py` has a new `--height` option, documented in `tools/README.md`.
+
+**Checks and size:**
+- **Edge and clipping check (script, every layer × animation × direction × frame, both bodies and `player-character/`):**
+  - Nothing touches the top edge. The closest is `hair-12` (high-top) at the celebrate hop, 27 px from the top. All the tall styles now fit.
+  - The only pixels touching an edge are the broom's bristle tip at the bottom edge in `sweep`, SE, frames 5–7: 4–9 faint pixels. This was already in the approved Batch 1 sheets. It isn't visible in the game, so I left it as it is.
+  - The left and right margins are at least 1 px (the strike lunge, as in Batch 1).
+- **Alignment check (script):**
+  - Stacking `body` + `skin` + `gi` + `belt` + `belt-rim` + `face-01` + `hair-02` gives the same outline as the approved player in every animation. The worst overlap is 99.3% for body A and 98.9% for body B; the small difference is body B's rounder head.
+  - Both JSONs have 13 animations, and every listed sheet exists and is 8 × 160 px tall.
+- **By eye:** I checked the faces on 3 skin tones, the 12 hair styles × 3 colours, the line-up, and frames from all 4 GIFs (strike, dash, the broom in sweep, the celebrate hop). All OK.
+- **Size:**
+
+| Folder | Size | What it is |
+| --- | --- | --- |
+| `sprites/body-a/` | 46 MB | 416 PNGs + json |
+| `sprites/body-b/` | 46 MB | 416 PNGs + json |
+| `player-character/sprites/` | 14 MB | re-rendered, about the same as before |
+| `preview/` | 12 MB | |
+
+  - Per body: about 14.7 MB of base layers, 0.65–0.8 MB per face, and 1.4–3.6 MB per hair style (the afro and twists are the biggest).
+  - **One finished character is about 18 MB at 80 px per tile, before the 0.6× import shrink.**
+  - The git repo grew by about **82 MB** for Batch 6 (`.git` went from 224 MB to 306 MB). That covers both bodies, the player-character re-render and the previews.
+
+**WHY:** Jay approved the round-2 samples and asked for the full set, with option A for the celebrate clipping.
+
+**DECIDE (Jay)**
+1. **Body choice labels:** how the player picks the body (for example "Body A/B", "boy/girl", or just two pictures to tap) is a game-rules and words call. In the files they're the placeholders `body-a` and `body-b`.
+2. **Option names come from the Content Writer:** all 6 faces, 12 hair styles, 10 skin tones, 10 hair colours, 10 gi colours and the two bodies. The files only use placeholder ids (`face-01`, `hair-09`, the `palettesDraftLabels`).
+3. **Puff bounce, later:** a small bounce for the two puffs and the ponytail. The hair is rigid on the head today. It's a later add-on and doesn't change any files here.
+4. **[CHANGE CLAUDE CODE MUST HANDLE] The 128 × 160 frame.** Every player sheet (`player-character/` and `player-custom/`) is now 128 × 160, with the anchor at (64, 136.96) (was 104.96).
+   - The game must read `frameHeight` and `anchor` from the JSON and update:
+     - its player sprite setup;
+     - the `player-big` ceremony pack;
+     - `tools/art-import/approved.json`, if it lists sizes.
+   - It's listed first in `NOTES-FOR-CLAUDE-CODE.md`.
+
+**NEXT:** Jay reviews the previews. Claude Code does the integration using the notes file, then I fix anything that comes up. Batch 7 isn't started; it waits for Jay.
+
+---
+
+# (Earlier) Delivery Note: Batch 6, SAMPLES ROUND 2 (approved), 2026-10-16
 
 **WHAT:** after Jay's feedback on the first samples:
 

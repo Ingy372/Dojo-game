@@ -178,7 +178,11 @@ Drawing order is the `order` field (the Batch 1 layers moved up by one because `
 | hair-12 | high-top fade |
 
 - **Faces:** `face-01` to `face-06`. Every face has the light eye edge and the lighter mouth (the deep-skin fix).
-- **Download size:** each option layer holds only its own pixels, so the game can load just the options chosen. Sizes are in `player-custom/README.md`.
+- **Download size:** each option layer holds only its own pixels, so the game can load just the options chosen.
+  - Per body: about 14.7 MB of base layers, 0.65–0.8 MB per face, and 1.4–3.6 MB per hair style.
+  - One character is about 18 MB at 80 px per tile, before the import shrink.
+  - Consider loading only the chosen face and hair (and maybe a smaller set of animations in menus).
+- **Edges:** only the broom's bristle tip touches the bottom edge (`sweep` SE, frames 5–7, a few faint pixels, as in Batch 1). Nothing touches the top.
 - [OPEN] **Later idea:** a small bounce for the puffs and ponytail. The hair is rigid on the head bone today.
 
 ---
