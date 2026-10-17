@@ -9,7 +9,8 @@ sprite sheet per layer per animation, plus a JSON file describing the sheets.
         --out <folder> --name <character> [options]
 
 Options (defaults are the house standard - keep them the same for everything):
-    --size 128            frame width/height in pixels
+    --size 128            frame width (and height, unless --height) in pixels
+    --height 0            frame height in pixels (0 = square). The camera keeps --ortho tiles across the width
     --ortho 1.6           world units (= game tiles) across one frame
     --elevation 35        camera looks down this many degrees from horizontal
     --anchor-y 0.82       where the feet (CHAR_ROOT origin) land, 0 = top, 1 = bottom
@@ -24,6 +25,8 @@ What the .blend must contain (see README.md next to this script):
   * CHAR_ROOT: empty at the feet, parent of the rig. Character faces -Y when unrotated.
   * Collections L_<layer>. Optional custom props: sprite_order (int), sprite_tint (bool),
     sprite_overlay (bool: an optional extra drawn on top, e.g. belt stripes).
+  * Optional collection prop sprite_group (str): pick-one options such as hair-01..hair-08 share a group; only
+    the active option is drawn while rendering, and each option is rendered with the base layers as holdouts.
   * Optional collection prop sprite_optional (bool, default = sprite_overlay): an overlay that must always
     be drawn (e.g. the belt rim) sets it False.
   * Actions with custom props sprite_fps (int), sprite_loop (bool), sprite_tags (str), sprite_order (int),
@@ -54,6 +57,7 @@ def parse():
     ap.add_argument("--out", required=True)
     ap.add_argument("--name", default=None)
     ap.add_argument("--size", type=int, default=128)
+    ap.add_argument("--height", type=int, default=0)   # frame height; 0 = square (= size)
     ap.add_argument("--ortho", type=float, default=1.6)
     ap.add_argument("--elevation", type=float, default=35.0)
     ap.add_argument("--anchor-y", type=float, default=0.82)
@@ -77,7 +81,7 @@ def setup_render(scene, a):
     scene.cycles.pixel_filter_type = "BLACKMAN_HARRIS"
     scene.cycles.filter_width = 1.2
     r.film_transparent = True
-    r.resolution_x = r.resolution_y = a.size
+    r.resolution_x = a.size; r.resolution_y = a.height or a.size
     r.resolution_percentage = 100
     r.pixel_aspect_x = r.pixel_aspect_y = 1
     r.use_border = False
@@ -105,6 +109,7 @@ def setup_camera(scene, a):
     cd = bpy.data.cameras.new("SPRITE_CAM")
     cd.type = "ORTHO"
     cd.ortho_scale = a.ortho
+    cd.sensor_fit = "HORIZONTAL"     # ortho = tiles across the frame width, whatever the height
     cd.clip_start, cd.clip_end = 0.1, 100
     cam = bpy.data.objects.new("SPRITE_CAM", cd)
     scene.collection.objects.link(cam)
@@ -113,13 +118,13 @@ def setup_camera(scene, a):
     fwd = Vector((0, -math.sin(rx), -math.cos(rx)))  # R_x(rx) @ (0,0,-1)
     fwd = Euler((rx, 0, 0)).to_matrix() @ Vector((0, 0, -1))
     up = Euler((rx, 0, 0)).to_matrix() @ Vector((0, 1, 0))
-    zt = (a.anchor_y - 0.5) * a.ortho / up.z
+    zt = (a.anchor_y - 0.5) * a.ortho * ((a.height or a.size) / a.size) / up.z
     target = Vector((0, 0, zt))
     cam.location = target - fwd * 20
     scene.camera = cam
     bpy.context.view_layer.update()
     p = world_to_camera_view(scene, cam, Vector((0, 0, 0)))
-    return cam, (p.x * a.size, (1 - p.y) * a.size)
+    return cam, (p.x * a.size, (1 - p.y) * (a.height or a.size))
 
 def find_layers(scene, wanted):
     out = []
@@ -132,7 +137,8 @@ def find_layers(scene, wanted):
             continue
         out.append(dict(name=name, lc=lc, order=int(c.get("sprite_order", len(out))),
                         tint=bool(c.get("sprite_tint", False)), overlay=bool(c.get("sprite_overlay", False)),
-                        optional=bool(c.get("sprite_optional", c.get("sprite_overlay", False)))))
+                        optional=bool(c.get("sprite_optional", c.get("sprite_overlay", False))),
+                        group=c.get("sprite_group")))
     out.sort(key=lambda l: l["order"])
     return out
 
@@ -142,6 +148,12 @@ def set_active_layer(all_layers, active):
         l["lc"].holdout = not is_active
         # overlays are off while a base layer renders, so base layers have no holes
         l["lc"].collection.hide_render = (l["overlay"] and not active["overlay"] and not is_active)
+        # pick-one options (sprite_group, e.g. hair-01..08): only the active one is ever drawn, so options never
+        # punch holes in each other or in the base layers; an option is rendered with the base layers as holdouts
+        if l["group"] and not is_active:
+            l["lc"].collection.hide_render = True
+        if active["group"] and l["overlay"] and not is_active:
+            l["lc"].collection.hide_render = True
 
 def find_rig(root):
     for ob in root.children_recursive:
@@ -176,6 +188,7 @@ def main():
     os.makedirs(tmp, exist_ok=True)
     setup_render(scene, a)
     cam, anchor = setup_camera(scene, a)
+    FH = a.height or a.size
     root = bpy.data.objects[a.root]
     rig = find_rig(root)
     dirs = [d.strip() for d in a.directions.split(",") if d.strip()]
@@ -188,14 +201,14 @@ def main():
     if not actions or not layers:
         raise SystemExit("Nothing to render (no sprite actions or L_ collections found)")
     rot0 = root.rotation_euler.copy()
-    meta = dict(character=name, frameWidth=a.size, frameHeight=a.size,
+    meta = dict(character=name, frameWidth=a.size, frameHeight=FH,
                 anchor=dict(x=round(anchor[0], 2), y=round(anchor[1], 2), note="feet / ground point of the character, in pixels from the frame's top-left"),
                 pixelsPerTile=round(a.size / a.ortho, 3),
                 camera=dict(projection="orthographic", elevationDeg=a.elevation, orthoScaleTiles=a.ortho,
                             note="one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"),
                 directions=dirs, directionVectors={d: ALL_DIRS[d][1] for d in dirs},
                 sheetLayout="rows = directions (in the order above), columns = frames, no padding",
-                layers=[dict(name=l["name"], order=l["order"], tint=l["tint"], optional=l["optional"]) for l in layers],
+                layers=[dict(name=l["name"], order=l["order"], tint=l["tint"], optional=l["optional"], **({"group": l["group"]} if l["group"] else {})) for l in layers],
                 animations={})
     t0 = time.time()
     n = 0
@@ -215,12 +228,12 @@ def main():
             print(f"[render_sprites] {act.name} {d} done ({n} renders, {time.time() - t0:.0f}s)", flush=True)
         sheets = {}
         for l in layers:
-            sheet = np.zeros((a.size * len(dirs), a.size * len(frames), 4), dtype=np.float32)
+            sheet = np.zeros((FH * len(dirs), a.size * len(frames), 4), dtype=np.float32)
             for di, d in enumerate(dirs):
                 for fi in range(len(frames)):
                     px = load_rgba(os.path.join(tmp, l["name"], act.name, f"{d}_{fi:02d}.png"))
                     px[px[..., 3] < 0.5 / 255] = 0     # clean see-through pixels (holdout leaves colour there)
-                    sheet[di * a.size:(di + 1) * a.size, fi * a.size:(fi + 1) * a.size] = px
+                    sheet[di * FH:(di + 1) * FH, fi * a.size:(fi + 1) * a.size] = px
             fname = f"{name}_{l['name']}_{act.name}.png"
             save_rgba(sheet, os.path.join(out, fname))
             sheets[l["name"]] = fname
