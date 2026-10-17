@@ -336,3 +336,14 @@ Jay asked Claude to test and tune the game before his next playtest.
   - 9: the Yellow belt room kit.
   
   The art bot draws only. Names, words and game rules come from the other bots or Jay. Yellow belt creatures wait until their behaviour is designed.
+
+## Batches 5 and 6 in the game (Jay approved, 2026-10-17)
+
+- **Boss door (Batch 5):** the boss door, the only door in the room before the Floor Keeper, is now the Keeper's stone gate with its crown medallion. Its gold glow pulses while the room is being fought and stops when the door opens. The medallion stays cream and the glow covers only the medallion and frame (the bot's defaults, approved with the batch). The "home" door still borrows the rest door.
+- **Customizable character (Batch 6):** 2 bodies, 6 faces, 12 hair styles, and 10 swatches each for skin, hair and gi from the art's palettes.
+  - Player frames are now 128 × 160 (the feet anchor is read from the art).
+  - The old single-look player packs (from `player-character/`) are no longer used. Body A with face 1, hair 2, skin swatch 2, hair colour 2 and the white gi is the default, matching the approved Batch 1 look.
+- **Each piece is its own pack** (body, faces, each hair style, plus a full-detail ceremony pack per body), so a phone downloads only the chosen look: about 4 MB, the same as before. All 24 hair packs together would be about 12 MB.
+- **Where the look is kept for now:** on the phone (`dojo-ascent-look`). It can be changed only from the dojo's hidden testing screen (tap "Home Dojo" 5 times → Body / Face / Hair / Skin / Hair colour / Gi).
+  - The character creation screen is its own later step (`docs/MILESTONE_PROMPTS.md`). It will save the look with the student's profile.
+  - It needs Jay's answers first: how the two bodies are offered and labelled, and the names of the options (from the Content Writer).

@@ -203,3 +203,14 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 **Next**
 - Jay tests on his phone (see the session summary for what to try) and gives feedback.
 - Milestone 4 is still paused, waiting for the Grok bot's design material.
+
+## Batches 5 and 6 in the game (2026-10-17)
+
+**Done**
+- The Floor Keeper's boss door, with its crown and gold glow, on the room before the boss.
+- The customizable character: 2 bodies, 6 faces, 12 hair styles and the skin, hair and gi colours. It's used everywhere the character appears (Tower, dojo, Training Board, ceremony). Only the chosen look is downloaded.
+- Try looks from the dojo's hidden testing screen (tap "Home Dojo" 5 times).
+- 128 tests pass. Checked in a test browser: four different looks in the Tower, the promotion ceremony with body B, and the boss door.
+
+**Next**
+- The character creation screen, when Jay asks for it. First needed: how the bodies are offered and labelled, and the option names (Content Writer).
