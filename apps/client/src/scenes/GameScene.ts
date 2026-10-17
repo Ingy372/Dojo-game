@@ -49,6 +49,7 @@ import trainingRoom from '../../../../content/rooms/training-room.json';
 import { addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
+import { loadLook, playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
 import { homeDojo } from '../game/dojo';
@@ -116,17 +117,19 @@ interface DoorView {
   /** The door's art: frame 0 closed, frame 1 open. */
   images: Phaser.GameObjects.Image[];
   art: string;
+  /** The boss door's gold glow, pulsing while the room is being fought (empty for other doors). */
+  glow: Phaser.GameObjects.Image[];
   label: Phaser.GameObjects.Text;
   at: Vec2;
 }
 
-/** Which door art each kind of door uses (the boss and home doors borrow one until they get their own). */
+/** Which door art each kind of door uses (the home door borrows the rest door until it gets its own). */
 const DOOR_ART: Record<DoorKind, string> = {
   battle: 'door-battle',
   challenge: 'door-challenge',
   treasure: 'door-treasure',
   rest: 'door-rest',
-  boss: 'door-battle',
+  boss: 'door-boss',
   home: 'door-rest',
 };
 
@@ -231,7 +234,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   preload(): void {
-    loadArt(this, ['player', 'enemies-t1', 'tower-t1']);
+    loadArt(this, [...playerPacks(), 'enemies-t1', 'tower-t1']);
   }
 
   create(): void {
@@ -606,7 +609,7 @@ export class GameScene extends Phaser.Scene {
   private makePlayer(): Phaser.GameObjects.Container {
     const r = MOVEMENT.playerRadius * TILE;
     // The character in the real belt's color and stripes.
-    this.hero = makePlayerSprite(this, this.training.belt, this.training.stripesThisBelt)!;
+    this.hero = makePlayerSprite(this, this.training.belt, this.training.stripesThisBelt, loadLook())!;
     this.shield = this.add.graphics();
     this.virtueAura = this.add.circle(0, -r * 0.6, r * 1.6).setStrokeStyle(5, COLORS.gold).setVisible(false);
     return this.add.container(0, 0, [this.virtueAura, this.hero.container, this.shield]);
@@ -1109,14 +1112,15 @@ export class GameScene extends Phaser.Scene {
         // The door stands in its wall slot, its feet on the wall's bottom edge.
         const art = DOOR_ART[kind];
         const images = addStatic(this, 'tower-t1', art, at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.6));
+        const glow = kind === 'boss' ? addStatic(this, 'tower-t1', 'door-boss-glow', at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.61)) : [];
         const look = DOOR_LOOK[kind];
         const label = this.add
           .text(at.x * TILE, (at.y + 0.55) * TILE, look.label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: css(look.color), stroke: '#14121c', strokeThickness: 4 })
           .setOrigin(0.5, 0)
           .setResolution(crisp())
           .setDepth(6);
-        this.doorViews.push({ kind, images, art, label, at });
-        objs.push(...images, label);
+        this.doorViews.push({ kind, images, art, glow, label, at });
+        objs.push(...images, ...glow, label);
       });
     }
     // The chest and the shrine stand on their tile, drawn front-to-back with the characters.
@@ -1156,6 +1160,10 @@ export class GameScene extends Phaser.Scene {
     for (const d of this.doorViews) {
       // Closed until the room is cleared, then the doors slide open and the doorway glows.
       setStaticFrame(this, 'tower-t1', d.art, d.images, prog.doorsOpen ? 1 : 0);
+      if (d.glow.length) {
+        d.glow.forEach((img) => img.setVisible(!prog.doorsOpen));
+        if (!prog.doorsOpen) this.animateStatic('door-boss-glow', d.glow, now / 1000);
+      }
       d.label.setAlpha(prog.doorsOpen ? pulse : 0.55);
     }
 

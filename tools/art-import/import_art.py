@@ -101,14 +101,16 @@ class Packer:
 
 
 def load_character(packer: Packer, json_path: str, scale: float, skip_layers: list[str],
-                   only_anims: list[str] | None = None, only_dirs: list[str] | None = None) -> dict:
+                   only_anims: list[str] | None = None, only_dirs: list[str] | None = None,
+                   only_layers: list[str] | None = None) -> dict:
     d = json.load(open(json_path))
     base = os.path.dirname(json_path)
     fw, fh = d['frameWidth'], d['frameHeight']
     ndir = len(d['directions'])
     sw, sh = round(fw * scale), round(fh * scale)
     sx, sy = sw / fw, sh / fh
-    layers = [l for l in sorted(d['layers'], key=lambda l: l['order']) if l['name'] not in skip_layers]
+    layers = [l for l in sorted(d['layers'], key=lambda l: l['order'])
+              if l['name'] not in skip_layers and (not only_layers or l['name'] in only_layers)]
     anims = {}
     for name, a in d['animations'].items():
         if only_anims and name not in only_anims:
@@ -138,14 +140,15 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
         anims[name] = info
     out = {
         'kind': 'character',
+        'layerOrder': [l['name'] for l in sorted(d['layers'], key=lambda l: l['order'])],
         'frameWidth': sw,
         'frameHeight': sh,
         'anchor': {'x': round(d['anchor']['x'] * sx, 2), 'y': round(d['anchor']['y'] * sy, 2)},
         'directions': d['directions'],
-        'layers': [{'name': l['name'], 'tint': l['tint'], 'optional': l['optional']} for l in layers],
+        'layers': [{k: l[k] for k in ('name', 'tint', 'optional', 'group') if k in l} for l in layers],
         'animations': anims,
     }
-    for extra in ('beltStyles', 'enemy', 'name', 'sizeTiles'):
+    for extra in ('beltStyles', 'enemy', 'name', 'sizeTiles', 'palettes', 'groups'):
         if extra in d:
             out[extra] = d[extra]
     return out
@@ -194,7 +197,8 @@ def main() -> None:
             path = rel(src['json'])
             if src['type'] == 'character':
                 entries[src['id']] = load_character(packer, path, scale, src.get('skipLayers', []),
-                                                    src.get('animations'), src.get('directions'))
+                                                    src.get('animations'), src.get('directions'),
+                                                    src.get('layers'))
             else:
                 entries[src['id']] = load_static(packer, path, scale, src.get('only'))
         pages = packer.pack()

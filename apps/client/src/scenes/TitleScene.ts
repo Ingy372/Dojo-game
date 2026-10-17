@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 
 declare const __BUILD_TIME__: string;
 import { loadArt } from '../art/art';
+import { playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
 
 export class TitleScene extends Phaser.Scene {
@@ -22,7 +23,7 @@ export class TitleScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setResolution(window.devicePixelRatio || 1);
     this.load.once(Phaser.Loader.Events.COMPLETE, () => note.destroy());
-    loadArt(this, ['player', 'player-big']);
+    loadArt(this, playerPacks());
   }
 
   create(): void {

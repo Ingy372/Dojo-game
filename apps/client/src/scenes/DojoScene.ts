@@ -43,6 +43,7 @@ import { TouchControls } from '../input/TouchControls';
 import { addStatic, loadArt } from '../art/art';
 import type { LayeredSprite } from '../art/LayeredSprite';
 import { makePlayerSprite, playLocomotion } from '../art/player';
+import { FACES, HAIRS, SWATCHES, loadLook, playerPacks, saveLook } from '../game/look';
 import { bowPrompt, playBow } from '../ui/bow';
 import { Celebrations } from '../ui/Celebrations';
 import { FONT, crisp } from '../ui/theme';
@@ -138,7 +139,7 @@ export class DojoScene extends Phaser.Scene {
   }
 
   preload(): void {
-    loadArt(this, ['player', 'player-big', 'dojo']);
+    loadArt(this, [...playerPacks(), 'dojo']);
   }
 
   create(): void {
@@ -637,7 +638,7 @@ export class DojoScene extends Phaser.Scene {
     this.calmAura = this.add.circle(0, 0, r * 1.5, CALM, 0.18).setStrokeStyle(2, CALM, 0.6);
     this.tweens.add({ targets: this.calmAura, scale: 1.15, alpha: 0.5, duration: 1300, yoyo: true, repeat: -1 });
     this.calmAura.setY(-r * 0.4);
-    this.hero = makePlayerSprite(this, this.training.belt, this.training.stripesThisBelt)!;
+    this.hero = makePlayerSprite(this, this.training.belt, this.training.stripesThisBelt, loadLook())!;
     const p = this.world.players.p1.pos;
     return this.add.container(p.x * TILE, p.y * TILE, [this.calmAura, this.hero.container]);
   }
@@ -962,6 +963,27 @@ export class DojoScene extends Phaser.Scene {
       this.scene.restart();
     });
     y += 54;
+    // The character's look (until the character creation screen): each button steps to the next option.
+    const look = loadLook();
+    text(pad, y, 'Character look (testing only, saved on this phone):', 12, '#b9ad99');
+    y += 18;
+    const step = (change: () => void) => () => {
+      change();
+      saveLook(look);
+      this.scene.restart();
+    };
+    const next = (list: string[], cur: string) => list[(list.indexOf(cur) + 1) % list.length];
+    const lw = Math.min(130, (width - pad * 2 - 5 * 6) / 6);
+    const looks: Array<[string, () => void]> = [
+      [`Body ${look.body.toUpperCase()}`, () => (look.body = look.body === 'a' ? 'b' : 'a')],
+      [`Face ${FACES.indexOf(look.face) + 1}/${FACES.length}`, () => (look.face = next(FACES, look.face))],
+      [`Hair ${HAIRS.indexOf(look.hair) + 1}/${HAIRS.length}`, () => (look.hair = next(HAIRS, look.hair))],
+      [`Skin ${look.skin + 1}/${SWATCHES}`, () => (look.skin = (look.skin + 1) % SWATCHES)],
+      [`Hair colour ${look.hairColor + 1}`, () => (look.hairColor = (look.hairColor + 1) % SWATCHES)],
+      [`Gi ${look.gi + 1}/${SWATCHES}`, () => (look.gi = (look.gi + 1) % SWATCHES)],
+    ];
+    looks.forEach(([label, change], i) => btn(pad + i * (lw + 6), y, lw, label, 0x4a3f63, step(change)));
+    y += 46;
     text(pad, y, 'Student profiles and Power Rating: open the Board and tap its title 5 times.', 12, '#b9ad99');
     btn(pad, height - pad - 36, Math.min(200, width - pad * 2), 'Close', 0x5b4a3c, close);
   }

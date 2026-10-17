@@ -31,6 +31,7 @@ import { currentTraining, selectProfile, shortDate } from '../game/student';
 import { startTowerRun } from '../game/tower';
 import { loadArt } from '../art/art';
 import { makeStandingCharacter } from '../art/player';
+import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
 import { TestingPanel } from '../ui/TestingPanel';
 import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
@@ -72,7 +73,7 @@ export class HomeScene extends Phaser.Scene {
   }
 
   preload(): void {
-    loadArt(this, ['player', 'player-big']);
+    loadArt(this, playerPacks());
   }
 
   create(): void {
@@ -133,7 +134,7 @@ export class HomeScene extends Phaser.Scene {
       this.ui.add(glow);
       this.tweens.add({ targets: glow, scale: 1.15, alpha: 0.1, duration: 1100, yoyo: true, repeat: -1 });
     }
-    this.ui.add(makeStandingCharacter(this, pad + 24, cy, 22, t.belt, t.stripesThisBelt).container);
+    this.ui.add(makeStandingCharacter(this, pad + 24, cy, 22, t.belt, t.stripesThisBelt, loadLook()).container);
     this.text(pad + 58, cy - 22, t.displayName, 17, '#f2e9d8', true);
     const stripeText = t.stripesThisBelt ? `  ·  ${t.stripesThisBelt} stripe${t.stripesThisBelt > 1 ? 's' : ''}` : '';
     this.text(pad + 58, cy, `${t.belt.name}${stripeText}`, 14, beltTextColor(t.belt.color), true);

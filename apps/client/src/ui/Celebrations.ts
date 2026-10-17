@@ -7,6 +7,7 @@ import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState } from '@
 import { sfx } from '../audio/Sfx';
 import { shortDate } from '../game/student';
 import { makeStandingCharacter } from '../art/player';
+import { loadLook } from '../game/look';
 import { hex } from './belt';
 import { FONT, crisp } from './theme';
 
@@ -95,7 +96,7 @@ export class Celebrations {
     this.text(width / 2, height * 0.13, 'PROMOTION', 18, '#ffd166', true).setOrigin(0.5);
     const title = this.text(width / 2, height * 0.24, `${this.training.firstName} earned the ${to.name}!`, 30, '#ffffff', true, 'Georgia, serif').setOrigin(0.5).setAlpha(0);
     const r = Math.min(56, height * 0.14);
-    const ch = makeStandingCharacter(this.scene, width / 2, height * 0.58, r, from, 0);
+    const ch = makeStandingCharacter(this.scene, width / 2, height * 0.58, r, from, 0, loadLook());
     this.layer.add(ch.container);
     // Bow: the real bow with the art, or lean forward and back.
     if (ch.sprite) ch.sprite.play('bow', { restart: true });
@@ -174,7 +175,7 @@ export class Celebrations {
       case 'welcome': {
         sfx.signOff();
         this.text(cx, height * 0.1, `Welcome, ${m.name}!`, 30, '#ffd166', true, 'Georgia, serif').setOrigin(0.5);
-        const ch = makeStandingCharacter(this.scene, cx, height * 0.1 + 62, 26, m.belt, this.training.stripesThisBelt);
+        const ch = makeStandingCharacter(this.scene, cx, height * 0.1 + 62, 26, m.belt, this.training.stripesThisBelt, loadLook());
         this.layer.add(ch.container);
         let y = height * 0.1 + 100;
         if (m.unlocked.length === 0) {

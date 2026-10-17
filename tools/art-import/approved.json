@@ -3,26 +3,436 @@
   "outDir": "assets/art",
   "scale": 0.6,
   "packs": {
-    "player": {
+    "player-a": {
+      "note": "Body A: the base layers (body, skin, gi, belt, props).",
       "sources": [
         {
           "id": "player",
           "type": "character",
-          "json": "incoming-art/player-character/sprites/player.json",
-          "skipLayers": [
-            "belt-center-edge"
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "body",
+            "skin",
+            "gi",
+            "belt",
+            "belt-sheen",
+            "belt-center",
+            "belt-rim",
+            "belt-tape1-edge",
+            "belt-tape1",
+            "belt-tape2-edge",
+            "belt-tape2",
+            "prop-broom",
+            "prop-rag"
           ]
         }
       ]
     },
-    "player-big": {
-      "scale": 1.0,
-      "note": "Full detail, facing the camera, for the promotion ceremony and other big moments.",
+    "player-a-faces": {
+      "note": "All 6 faces (small).",
       "sources": [
         {
           "id": "player",
           "type": "character",
-          "json": "incoming-art/player-character/sprites/player.json",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "face-01",
+            "face-02",
+            "face-03",
+            "face-04",
+            "face-05",
+            "face-06"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-01": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-01"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-02": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-02"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-03": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-03"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-04": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-04"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-05": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-05"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-06": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-06"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-07": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-07"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-08": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-08"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-09": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-09"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-10": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-10"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-11": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-11"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-12": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-12"
+          ]
+        }
+      ]
+    },
+    "player-a-big": {
+      "scale": 1.0,
+      "note": "Full detail, facing the camera, every face and hair: for the promotion ceremony and other big moments.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "skipLayers": [
+            "belt-center-edge",
+            "prop-broom",
+            "prop-rag"
+          ],
+          "animations": [
+            "idle",
+            "bow",
+            "celebrate"
+          ],
+          "directions": [
+            "S"
+          ]
+        }
+      ]
+    },
+    "player-b": {
+      "note": "Body B: the base layers (body, skin, gi, belt, props).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "body",
+            "skin",
+            "gi",
+            "belt",
+            "belt-sheen",
+            "belt-center",
+            "belt-rim",
+            "belt-tape1-edge",
+            "belt-tape1",
+            "belt-tape2-edge",
+            "belt-tape2",
+            "prop-broom",
+            "prop-rag"
+          ]
+        }
+      ]
+    },
+    "player-b-faces": {
+      "note": "All 6 faces (small).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "face-01",
+            "face-02",
+            "face-03",
+            "face-04",
+            "face-05",
+            "face-06"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-01": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-01"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-02": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-02"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-03": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-03"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-04": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-04"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-05": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-05"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-06": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-06"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-07": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-07"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-08": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-08"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-09": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-09"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-10": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-10"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-11": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-11"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-12": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-12"
+          ]
+        }
+      ]
+    },
+    "player-b-big": {
+      "scale": 1.0,
+      "note": "Full detail, facing the camera, every face and hair: for the promotion ceremony and other big moments.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
           "skipLayers": [
             "belt-center-edge",
             "prop-broom",
@@ -69,6 +479,11 @@
           "id": "tower",
           "type": "static",
           "json": "incoming-art/tower-rooms/sprites/static.json"
+        },
+        {
+          "id": "boss-door",
+          "type": "static",
+          "json": "incoming-art/boss-door/sprites/static.json"
         }
       ]
     },

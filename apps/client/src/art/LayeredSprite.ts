@@ -169,7 +169,7 @@ export class LayeredSprite {
     for (const [name, img] of this.images) {
       const ids = this.anim.layers[name];
       const id = ids && !this.hidden.has(name) ? ids[this.dir]?.[frame] ?? -1 : -1;
-      const f = frameOf(this.scene, this.art.pack, id);
+      const f = frameOf(this.scene, this.art.layerPack?.[name] ?? this.art.pack, id);
       if (f) img.setTexture(f[0], f[1]);
       img.setVisible(!!f);
     }

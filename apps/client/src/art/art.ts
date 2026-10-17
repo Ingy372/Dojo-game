@@ -3,7 +3,8 @@
 
 import Phaser from 'phaser';
 
-export type PackName = 'player' | 'player-big' | 'enemies-t1' | 'tower-t1' | 'dojo';
+/** A pack made by tools/art-import/ (see tools/art-import/approved.json), e.g. "tower-t1" or "player-a-hair-02". */
+export type PackName = string;
 
 /** One animation of a layered character: frame ids per layer, per direction, per frame (-1 = nothing). */
 export interface ArtAnimation {
@@ -23,8 +24,37 @@ export interface CharacterArt {
   frameHeight: number;
   anchor: { x: number; y: number };
   directions: string[];
-  layers: { name: string; tint: boolean; optional: boolean }[];
+  layers: { name: string; tint: boolean; optional?: boolean; group?: string }[];
   animations: Record<string, ArtAnimation>;
+  /** Every layer of the full character in drawing order (a pack may hold only some of them). */
+  layerOrder?: string[];
+  /** Which pack each layer's frames are in, when the character is put together from several packs. */
+  layerPack?: Record<string, PackName>;
+  /** Recommended colours (hex) for tinted layers, e.g. skin, hair and gi swatches. */
+  palettes?: Record<string, string[]>;
+}
+
+/**
+ * Puts one character together from several packs (e.g. a body, its faces and one hair style),
+ * keeping the layers in the art's drawing order.
+ */
+export function combineArt(parts: CharacterArt[]): CharacterArt {
+  const [first] = parts;
+  const order = first.layerOrder ?? first.layers.map((l) => l.name);
+  const layerPack: Record<string, PackName> = {};
+  const layers: CharacterArt['layers'] = [];
+  const animations: Record<string, ArtAnimation> = {};
+  for (const part of parts) {
+    for (const l of part.layers) {
+      layerPack[l.name] = part.pack;
+      layers.push(l);
+    }
+    for (const [name, anim] of Object.entries(part.animations)) {
+      animations[name] = { ...anim, ...(animations[name] ?? {}), layers: { ...(animations[name]?.layers ?? {}), ...anim.layers } };
+    }
+  }
+  layers.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+  return { ...first, layers, animations, layerPack };
 }
 
 /** A room piece, prop or decoration: frame ids per layer, per frame. */
@@ -88,11 +118,12 @@ export function frameOf(scene: Phaser.Scene, pack: PackName, id: number): [strin
  * How far above the feet a character's picture reaches (pixels), measured on its
  * idle frame facing the camera. Used to put health bars just over the head.
  */
-export function characterTop(scene: Phaser.Scene, art: CharacterArt): number {
-  const data = register(scene, art.pack);
+export function characterTop(scene: Phaser.Scene, art: CharacterArt, layers?: string[]): number {
   const anim = art.animations.idle ?? Object.values(art.animations)[0];
   let top = art.anchor.y;
-  for (const ids of Object.values(anim.layers)) {
+  for (const [name, ids] of Object.entries(anim.layers)) {
+    if (layers && !layers.includes(name)) continue;
+    const data = register(scene, art.layerPack?.[name] ?? art.pack);
     const id = ids[4]?.[0] ?? -1;
     if (id >= 0 && data) top = Math.min(top, data.frames[id][6]);
   }
