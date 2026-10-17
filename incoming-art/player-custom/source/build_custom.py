@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from toon_kit import toon_material
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
-ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); A = ap.parse_args(argv)
+ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); ap.add_argument("--body", default="a", choices=["a", "b"]); A = ap.parse_args(argv)
 scene = bpy.context.scene
 arm = bpy.data.objects["MartialArtistRig"]
 OUTLINE = bpy.data.materials["OUTLINE"]; OUTLINE_W = 0.013
@@ -83,9 +83,34 @@ for ob in list(body.objects):
     if "SKIN" in ms:
         body.objects.unlink(ob); skin.objects.link(ob); ob.data.materials[0] = SKIN_N
 
+# ------------------------------------------------------------------ body B: same rig, gi, belt and animations
+def remesh(name, bm):
+    ob = bpy.data.objects[name]; old = ob.data; me = bpy.data.meshes.new(name + "_b")
+    for f in bm.faces: f.smooth = True
+    mw = ob.matrix_world.copy(); inv = mw.inverted(); bm.transform(inv); bm.to_mesh(me); bm.free()
+    for m in old.materials: me.materials.append(m)
+    ob.data = me
+if A.body == "b":
+    EYELASH = mat("B_LASH", "#1d1a24", True)
+    for nm in ("head", "head_outline"):
+        bm = ellipsoid(HEAD_C + Vector((0, 0, -0.004)), (0.193, 0.182, 0.18), segs=20, rings=14)
+        if nm.endswith("outline"):
+            bm.normal_update()
+            for v in bm.verts: v.co += v.normal * OUTLINE_W
+            bmesh.ops.reverse_faces(bm, faces=bm.faces[:])
+        remesh(nm, bm)
+    for side in ("L", "R"):
+        for nm in (f"ear.{side}", f"ear.{side}_outline"):
+            ob = bpy.data.objects[nm]; ob.scale = (0.85, 0.85, 0.85)
+    for x, sd in ((1, "L"), (-1, "R")):          # soft round cheeks (skin)
+        put(skin, f"cheek.{sd}", ellipsoid((0.085 * x, -0.1, 1.06), (0.07, 0.03, 0.055), segs=12, rings=8), SKIN_N, outline=False)
+        for k, (dx, dz, rz) in enumerate(((-0.006, 0.012, -15), (0.006, 0.0, -35), (0.014, -0.015, -60))):   # three longer lash flicks at the outer corner
+            lx, lz = (0.103 + dx) * x, 1.142 + dz
+            put(body, f"lash{k}.{sd}", box((lx, front(lx, lz, -0.008), lz), (0.036, 0.009, 0.011), rot=(-20, 0, rz * x)), EYELASH, outline=False)
+
 # ------------------------------------------------------------------ faces (real colours; never mocking)
 EYE = mat("F_EYE", "#1d1a24", True); SHINE = mat("F_SHINE", "#ffffff", True)
-MOUTH = mat("F_MOUTH", "#7a2e2a", True); BLUSH = mat("F_BLUSH", "#e2786b", True); FRECK = mat("F_FRECK", "#9a5a3c", True)
+MOUTH = mat("F_MOUTH", "#a8473f", True); EYERIM = mat("F_EYERIM", "#f3e6dc", True); BLUSH = mat("F_BLUSH", "#e2786b", True); FRECK = mat("F_FRECK", "#9a5a3c", True)
 FACES = {
  1: dict(eye=(0.031, 0.048), eye_rot=25, eye_z=1.112, brow=(0.05, 0.011), brow_rot=25, brow_z=1.19, mouth=(0.026, 0.011), blush=True,
          note="the approved face of Batch 1: oval eyes with a shine, friendly brows, a small smile"),
@@ -105,6 +130,7 @@ for i, f in FACES.items():
     for x, s in ((1, "L"), (-1, "R")):
         ex = 0.071 * x; ez = f["eye_z"]
         put(c, f"f{i}_eye.{s}", ellipsoid((ex, front(ex, ez, 0.005), ez), (f["eye"][0], 0.016, f["eye"][1]), rot=(0, 0, f["eye_rot"] * x), segs=12, rings=8), EYE, outline=False)
+        put(c, f"f{i}_eyerim.{s}", ellipsoid((ex, front(ex, ez, 0.009), ez), (f["eye"][0] + 0.007, 0.012, f["eye"][1] + 0.007), rot=(0, 0, f["eye_rot"] * x), segs=12, rings=8), EYERIM, outline=False)
         put(c, f"f{i}_shine.{s}", ellipsoid((ex + 0.009 * x, front(ex, ez + 0.02, 0.0) - 0.011, ez + 0.02), (0.012, 0.006, 0.014), segs=8, rings=6), SHINE, outline=False)
         bx = 0.073 * x; bz = f["brow_z"]
         put(c, f"f{i}_brow.{s}", box((bx, front(bx, bz, 0.0), bz), (f["brow"][0], 0.012, f["brow"][1]), rot=(-25, -9 * x, f["brow_rot"] * x)), EYE, outline=False)
@@ -155,20 +181,38 @@ def curly(c, n):
         p = HEAD_C + Vector((d.x * 0.2, d.y * 0.2 + 0.01, d.z * 0.2 + 0.02))
         if p.y < -0.12 and p.z < 1.26: continue          # keep the forehead and eyes clear
         put(c, f"{n}_curl{i}", ellipsoid(p, (0.05, 0.05, 0.045), segs=10, rings=6), HAIR)
+import random
+HAIR_HI = mat("HAIR_NEUTRAL_HI", "#f7f7f7")      # a lighter neutral for clump tops: texture by highlights, still one tint
+def clumps(c, n, centre, radii, count, size, seed, keep=lambda p: True, hi_every=3):
+    """Soft coil clumps spread over an ellipsoid: each clump is a round puff; every few gets a lighter top."""
+    rnd = random.Random(seed); k = 0
+    for i in range(count * 4):
+        if k >= count: break
+        u = rnd.uniform(-1, 1); a = rnd.uniform(0, 2 * math.pi); r = math.sqrt(1 - u * u)
+        d = Vector((r * math.cos(a), r * math.sin(a), u))
+        p = centre + Vector((d.x * radii[0], d.y * radii[1], d.z * radii[2]))
+        if not keep(p): continue
+        sz = size * rnd.uniform(0.8, 1.15)
+        put(c, f"{n}_clump{k}", ellipsoid(p, (sz, sz, sz * 0.92), segs=10, rings=7), HAIR)
+        if k % hi_every == 0:
+            q = p + d * sz * 0.55 + Vector((-0.2, -0.25, 0.6)).normalized() * sz * 0.25
+            put(c, f"{n}_hi{k}", ellipsoid(q, (sz * 0.42, sz * 0.42, sz * 0.3), segs=8, rings=5), HAIR_HI, outline=False)
+        k += 1
+def hairline_coils(c, n, z=1.255, span=150, count=11, size=0.028, y_in=0.0):
+    """small coils along a natural, softly scalloped hairline (no hard flat edge across the forehead)"""
+    for k in range(count):
+        a = math.radians(-span / 2 + span * k / (count - 1)) - math.pi / 2
+        x = math.cos(a) * 0.19; zz = z + 0.012 * math.cos(k * 1.7) + (0.02 if abs(k - (count - 1) / 2) > count / 3 else 0)
+        y = front(x, zz, y_in) if abs(x) < 0.185 else math.sin(a) * 0.18
+        put(c, f"{n}_line{k}", ellipsoid((x, y, zz), (size, size * 0.8, size), segs=8, rings=6), HAIR)
 @hair
 def afro(c, n):
-    """afro: a big round, soft volume of curls, the front edge above the brows"""
-    bm = ellipsoid(HEAD_C + Vector((0, 0.03, 0.07)), (0.245, 0.235, 0.225), segs=28, rings=18)
-    bisect_keep(bm, (0, -0.2, 1.255), (0, 0.42, 1)); put(c, f"{n}_volume", bm, HAIR)
+    """afro: a rounded shape built from soft coil clumps with light tops, a natural hairline above the brows"""
+    C = HEAD_C + Vector((0, 0.03, 0.065))
+    bm = ellipsoid(C, (0.215, 0.205, 0.195), segs=24, rings=16); bisect_keep(bm, (0, -0.2, 1.255), (0, 0.42, 1)); put(c, f"{n}_core", bm, HAIR)
     back(c, n, grow=0.02, low=1.0)
-    import random; rnd = random.Random(11)
-    for i in range(40):        # soft round puffs on the surface so it reads as hair, not a helmet
-        a = rnd.uniform(0, 2 * math.pi); el = rnd.uniform(-0.1, 1.4)
-        d = Vector((math.cos(a) * math.cos(el), math.sin(a) * math.cos(el), math.sin(el)))
-        p = HEAD_C + Vector((0, 0.03, 0.07)) + Vector((d.x * 0.235, d.y * 0.225, d.z * 0.215))
-        if p.y < -0.1 and p.z < 1.28: continue
-        if p.z < 1.0: continue
-        put(c, f"{n}_puff{i}", ellipsoid(p, (0.055, 0.055, 0.05), segs=10, rings=6), HAIR)
+    clumps(c, n, C, (0.225, 0.215, 0.205), 70, 0.052, 21, keep=lambda p: p.z > 1.0 and not (p.y < -0.1 and p.z < 1.29))
+    hairline_coils(c, n)
 @hair
 def braids(c, n):
     """braids: a smooth cap with two braids hanging behind the ears to the shoulders"""
@@ -188,12 +232,63 @@ def ponytail(c, n):
 def bun(c, n):
     """bun: cap with a round bun on top towards the back"""
     cap(c, n); back(c, n); sides(c, n, h=0.06)
-    put(c, f"{n}_bun", ellipsoid((0, 0.07, 1.36), (0.085, 0.08, 0.075), segs=14, rings=10), HAIR)
+    put(c, f"{n}_bun", ellipsoid((0, 0.11, 1.32), (0.08, 0.075, 0.07), segs=14, rings=10), HAIR)
 @hair
 def tied_back(c, n):
     """tied back: smooth hair combed back to a low knot at the nape"""
     cap(c, n, front_z=1.27); back(c, n, low=1.02)
     put(c, f"{n}_knot", ellipsoid((0, 0.19, 1.04), (0.06, 0.045, 0.045), segs=12, rings=8), HAIR)
+@hair
+def two_puffs(c, n):
+    """two puffs: hair parted down the middle and gathered into two round coil puffs high on the head"""
+    cap(c, n); back(c, n)
+    for x in (1, -1):
+        C = Vector((0.15 * x, 0.06, 1.29))
+        put(c, f"{n}_puffcore{x}", ellipsoid(C, (0.085, 0.08, 0.08), segs=14, rings=10), HAIR)
+        clumps(c, n + f"p{x}", C, (0.088, 0.083, 0.083), 22, 0.032, 30 + x, keep=lambda p: True)
+        put(c, f"{n}_band{x}", ellipsoid(C + Vector((-0.07 * x, 0, -0.065)), (0.03, 0.03, 0.02), segs=8, rings=6), HAIR)
+    hairline_coils(c, n, size=0.022, count=9)
+@hair
+def short_twists(c, n):
+    """short twists: a soft cap covered in short, rounded twists that point up and out (they never reach the eyes)"""
+    cap(c, n, grow=0.004); back(c, n)
+    rnd = random.Random(41); k = 0
+    for i in range(300):
+        if k >= 46: break
+        u = rnd.uniform(0.05, 1); a = rnd.uniform(0, 2 * math.pi); r = math.sqrt(1 - u * u)
+        d = Vector((r * math.cos(a), r * math.sin(a), u))
+        p = HEAD_C + Vector((d.x * 0.2, d.y * 0.195 + 0.01, d.z * 0.2 + 0.01))
+        if p.y < -0.08 and p.z < 1.27: continue
+        for j in range(3):   # a twist = three stacked round segments, a little smaller each time
+            q = p + d * (0.02 + j * 0.026); sz = 0.03 - j * 0.004
+            put(c, f"{n}_tw{k}_{j}", ellipsoid(q, (sz, sz, sz * 0.9), segs=8, rings=6), HAIR_HI if (j == 2 and k % 3 == 0) else HAIR, outline=(j == 2))
+        k += 1
+@hair
+def cornrows_braids(c, n):
+    """cornrows into braids: neat raised rows from the hairline to the back, ending in braids that hang behind the shoulders"""
+    bm = ellipsoid(HEAD_C + Vector((0, 0.006, 0.006)), (0.196, 0.187, 0.192), segs=24, rings=16)
+    bisect_keep(bm, (0, -0.19, 1.25), (0, 0.5, 1)); put(c, f"{n}_scalp", bm, HAIR)
+    for r, x0 in enumerate((-0.12, -0.06, 0.0, 0.06, 0.12)):
+        for j in range(9):       # one row: a line of small round knots over the head, front to back
+            t = j / 8; a = math.radians(40 + 128 * t)
+            y = -math.cos(a) * 0.195 + 0.006; z = HEAD_C.z + 0.006 + math.sin(a) * 0.2 + 0.01
+            xx = x0 * (1 - 0.35 * t) * (1.0 if j else 0.95)
+            k2 = 1 - (xx / 0.2) ** 2
+            put(c, f"{n}_row{r}_{j}", ellipsoid((xx, y * math.sqrt(max(k2, 0.3)), z * 1.0 - (1 - math.sqrt(max(k2, 0.3))) * 0.05), (0.024, 0.026, 0.02), segs=8, rings=6),
+                HAIR_HI if j % 2 else HAIR, outline=(j % 2 == 0))
+        for k in range(5):       # the braid down the back, behind the head and shoulders
+            put(c, f"{n}_br{r}_{k}", ellipsoid((x0 * 0.8, 0.17 + 0.012 * k, 1.03 - k * 0.05), (0.022, 0.022, 0.03), segs=8, rings=6), HAIR)
+@hair
+def high_top(c, n):
+    """high-top fade: short faded sides and a tall rounded flat-top of tight coils"""
+    bm = ellipsoid(HEAD_C + Vector((0, 0.004, 0.004)), (0.194, 0.185, 0.19), segs=24, rings=16)
+    bisect_keep(bm, (0, -0.19, 1.24), (0, 0.5, 1)); put(c, f"{n}_fade", bm, HAIR)
+    C = HEAD_C + Vector((0, 0.02, 0.17))
+    bm = ellipsoid(C, (0.17, 0.16, 0.13), segs=20, rings=12); bisect_keep(bm, (0, 0, 1.18), (0, 0, 1)); bisect_keep(bm, (0, 0, 1.36), (0, 0, -1))
+    put(c, f"{n}_top", bm, HAIR)
+    put(c, f"{n}_lid", ellipsoid(Vector((0, 0.02, 1.36)), (0.16, 0.15, 0.025), segs=20, rings=6), HAIR)
+    clumps(c, n, C + Vector((0, 0, 0.02)), (0.165, 0.155, 0.13), 34, 0.034, 55, keep=lambda p: 1.2 < p.z < 1.4 and not (p.y < -0.12 and p.z < 1.27))
+
 for i, fn in HAIRS.items():
     c = coll(f"hair-{i:02d}", 20 + i - 1, True, "hair")
     fn(c, f"h{i}")
@@ -204,7 +299,7 @@ meta = json.loads(scene.get("sprite_meta", "{}"))
 SKINS = ["#f6d7c3", "#efc3a4", "#e0a984", "#c98e65", "#b07650", "#946042", "#7a4b32", "#603926", "#4a2c1f", "#38221a"]
 HAIRC = {"black": "#1f1a1c", "dark-brown": "#3a2519", "brown": "#5c3a22", "light-brown": "#8a5f3b", "blonde": "#d9b26a",
          "red": "#b5482a", "auburn": "#8a3a26", "grey": "#9a9aa2", "blue": "#3f6fd1", "purple": "#7d4cc2"}
-GIC = {"white": "#f2f2f2", "black": "#2b2b33", "navy": "#24345e", "blue": "#3a6ea5", "red": "#b8322a", "grey": "#8a8d99",
+GIC = {"white": "#f2f2f2", "charcoal": "#4a4a55", "navy": "#24345e", "blue": "#3a6ea5", "red": "#b8322a", "grey": "#8a8d99",
        "green": "#3f7a4a", "unbleached": "#e9dfc9", "sky": "#7fb2e0", "maroon": "#7a2a33"}
 meta["palettes"] = dict(
     skin=SKINS, hair=list(HAIRC.values()), gi=list(GIC.values()),
