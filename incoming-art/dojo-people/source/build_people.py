@@ -16,7 +16,9 @@ head up, eyes forward), demonstrate (Sensei: a slow, clean block and punch), por
         --who sensei --out $PWD/incoming-art/dojo-people/source/sensei.blend
     (senpai: from player_custom_b.blend; kohai: from player_custom_a.blend)
 
-All looks are PLACEHOLDERS for Jay (see the Delivery Note): skin, hair, gi colour and who looks like what.
+Sensei is a friendly cartoon likeness of Jay, instructor-2 of Jay's wife and founder of the school's founder, all based on
+reference photos provided by Jay (not stored in the repo). (instructor-2 from player_custom_b.blend, founder from _a.)
+Senpai and Kohai are made-up characters; their looks are placeholders for Jay (see the Delivery Note).
 """
 import bpy, bmesh, math, sys, os, argparse, json, random
 from mathutils import Vector, Matrix, Euler
@@ -24,20 +26,33 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from toon_kit import toon_material
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
-ap = argparse.ArgumentParser(); ap.add_argument("--who", required=True, choices=["sensei", "senpai", "kohai"]); ap.add_argument("--out", required=True)
+ap = argparse.ArgumentParser(); ap.add_argument("--who", required=True, choices=["sensei", "senpai", "kohai", "instructor-2", "founder"]); ap.add_argument("--out", required=True)
 A = ap.parse_args(argv)
 
 # ------------------------------------------------------------------ the three looks (placeholders, flagged in DECIDE)
 LOOKS = {
-    "sensei": dict(base="a", scale=1.28, head=0.80, skin="#603926", hair="#8d8d96", hair_hi="#b4b4bc", face="face-03", hair_style="hair-01",
-                   beard=True, gi="#24345e", belt="Black",
-                   note="adult; tallest; calm almond eyes; close-cropped grey hair and a short, neat grey chin beard; dark navy gi; black belt"),
+    "sensei": dict(base="a", scale=1.28, head=0.80, skin="#f2cdb6", hair="#6e4b2f", hair_hi="#8f6a48", face="custom", hair_style="sensei_top",
+                   beard=False, glasses=True, gi="#24345e", belt="Black",
+                   note="adult (young), the tallest; a friendly cartoon likeness of Jay, based on reference photos provided by Jay (not stored in the repo): "
+                        "light skin, short brown hair (short sides, longer tousled top swept up at the front), bold black rectangular glasses, "
+                        "a light brown moustache and short chin beard, a big warm smile; dark navy gi; black belt"),
     "senpai": dict(base="b", scale=1.10, head=0.88, skin="#c98e65", hair="#3a2519", hair_hi="#5a3f2e", face="face-01", hair_style="high_ponytail",
-                   beard=False, gi="#f2f2f2", belt="Black",
-                   note="teen; a little taller than the player; high ponytail; white gi; black belt (brief: brown/black or black)"),
+                   beard=False, gi="#f2f2f2", belt="Brown/Black",
+                   note="teen; a little taller than the player; high ponytail; white gi; brown/black belt (Jay, 2026-10-17)"),
     "kohai":  dict(base="a", scale=0.84, head=1.06, skin="#efc3a4", hair="#b5482a", hair_hi="#d86a45", face="face-02", hair_style="hair-03",
                    beard=False, gi="#f2f2f2", belt="White",
                    note="small child; smallest, with a bigger head; big round eyes; curly red hair; white gi; white belt"),
+    "instructor-2": dict(base="b", scale=1.20, head=0.84, skin="#f6d7c3", hair="#3a2519", hair_hi="#5a3f2e", face="custom", hair_style="long_purple",
+                   beard=False, glasses=False, eye="#33405a", freckles=True, gi="#4a4a55", belt="Black",
+                   note="adult (young), between Senpai and Sensei in height; a friendly cartoon likeness of Jay's wife, based on reference photos provided by Jay "
+                        "(not stored in the repo): fair skin with light freckles, long straight dark brown hair past the chest with purple ends (mostly on her left), "
+                        "blue-grey eyes, a big warm smile; charcoal gi; black belt (Jay confirmed)"),
+    "founder": dict(base="a", scale=1.26, head=0.81, skin="#d5a27c", hair="#524c48", hair_hi="#8e8882", face="custom", hair_style="founder_wavy",
+                   beard=False, glasses=False, eye="#2a1f1a", gi="#f2f2f2", belt="Black", headband=True,
+                   note="older adult (about 60), about Sensei's height; a friendly cartoon likeness of the school's founder, based on reference photos "
+                        "provided by Jay (not stored in the repo): tanned olive skin, short wavy dark hair going grey (grey at the temples), a grey-and-dark "
+                        "moustache with light stubble, a broad warm toothy smile with crinkly eyes and smile lines; white gi; black belt; "
+                        "optional red headband as its own overlay layer (headband)"),
 }
 L = LOOKS[A.who]
 scene = bpy.context.scene
@@ -59,7 +74,7 @@ def move_to_body(c):
     bpy.data.collections.remove(c)
 
 # ------------------------------------------------------------------ fixed looks: skin, face and hair go into body (real colours)
-SKIN = toon_material(f"{A.who.upper()}_SKIN", L["skin"])
+SKIN = toon_material(f"{A.who.upper().replace('-', '_')}_SKIN", L["skin"])
 for ob in C("skin").objects:
     if ob.type == "MESH" and ob.data.materials and ob.data.materials[0] and ob.data.materials[0].name.startswith("SKIN_NEUTRAL"):
         ob.data.materials[0] = SKIN
@@ -74,7 +89,7 @@ for c in [c for c in bpy.data.collections if c.name.startswith("L_hair-")]:
     (move_to_body if c.name == "L_" + str(keep_hair) else kill_coll)(c)
 for p in ("prop-broom", "prop-rag"): kill_coll(C(p))
 
-HAIR = toon_material(f"{A.who.upper()}_HAIR", L["hair"]); HAIR_HI = toon_material(f"{A.who.upper()}_HAIR_HI", L["hair_hi"])
+HAIR = toon_material(f"{A.who.upper().replace('-', '_')}_HAIR", L["hair"]); HAIR_HI = toon_material(f"{A.who.upper().replace('-', '_')}_HAIR_HI", L["hair_hi"])
 for ob in body.objects:
     if ob.type == "MESH" and ob.data.materials and ob.data.materials[0]:
         n = ob.data.materials[0].name
@@ -95,6 +110,10 @@ def put(name, bm, m, outline=True, bone="head"):
     return ob
 def ellipsoid(center, size, rot=(0, 0, 0), segs=16, rings=10):
     bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=segs, v_segments=rings, radius=1.0)
+    m = Matrix.Translation(center) @ Euler([math.radians(a) for a in rot]).to_matrix().to_4x4() @ Matrix.Diagonal((*size, 1))
+    bmesh.ops.transform(bm, matrix=m, verts=bm.verts); return bm
+def box_(center, size, rot=(0, 0, 0)):
+    bm = bmesh.new(); bmesh.ops.create_cube(bm, size=1.0)
     m = Matrix.Translation(center) @ Euler([math.radians(a) for a in rot]).to_matrix().to_4x4() @ Matrix.Diagonal((*size, 1))
     bmesh.ops.transform(bm, matrix=m, verts=bm.verts); return bm
 def bisect_keep(bm, co, no):
@@ -121,6 +140,176 @@ if L["beard"]:
     for x, s in ((1, "L"), (-1, "R")):   # a short moustache that stops above the smile
         put(f"moustache.{s}", ellipsoid((0.03 * x, -0.172, 1.055), (0.034, 0.012, 0.011), rot=(0, 0, -10 * x), segs=10, rings=6), HAIR, outline=False)
 
+def front(x, z, inset=0.004):
+    """y on the front of the head at (x, z) (the head ellipsoid, as in build_custom.py)."""
+    k = max(0.0, 1 - (x / HA) ** 2 - ((z - HEAD_C.z) / HC) ** 2); return -HB * math.sqrt(k) + inset
+def bar(name, p0, p1, w, t, m, normal=(0, -1, 0)):
+    """a flat bar from p0 to p1, w wide and t thick (glasses frame pieces)"""
+    p0, p1 = Vector(p0), Vector(p1); d = p1 - p0; y = d.normalized(); n = Vector(normal).normalized()
+    x = y.cross(n).normalized(); n = x.cross(y).normalized()
+    M = Matrix((x, y, n)).transposed().to_4x4()
+    bm = bmesh.new(); bmesh.ops.create_cube(bm, size=1.0)
+    bmesh.ops.transform(bm, matrix=Matrix.Translation((p0 + p1) / 2) @ M @ Matrix.Diagonal((w, d.length + w, t, 1)), verts=bm.verts)
+    return put(name, bm, m, outline=False)
+if L["face"] == "custom":
+    # a likeness face: smiling eyes with the light edge, brows, a big warm smile (the Sensei and instructor-2 likenesses)
+    EYE = toon_material("S_EYE", L.get("eye", "#1d1a24"), 1.0, 1.0); SHINE = toon_material("S_SHINE", "#ffffff", 1.0, 1.0)
+    RIM = toon_material("S_EYERIM", "#f3e6dc", 1.0, 1.0); BROW = toon_material("S_BROW", {"sensei": "#4a3020", "founder": "#4a4440"}.get(A.who, "#2e1d14"), 1.0, 1.0)
+    EYE_SZ = {"sensei": ((0.028, 0.016, 0.034), (0.035, 0.012, 0.041)), "founder": ((0.029, 0.016, 0.024), (0.035, 0.012, 0.03))}.get(A.who, ((0.031, 0.016, 0.04), (0.038, 0.012, 0.047)))
+    MOUTH = toon_material("S_MOUTH", "#7a2e30", 1.0, 1.0); TEETH = toon_material("S_TEETH", "#fbf7f0", 1.0, 1.0)
+    LIP = toon_material("S_LIP", "#a8473f", 1.0, 1.0); STACHE = toon_material("S_STACHE", "#9a7350", 1.0, 1.0)
+    for x, sd in ((1, "L"), (-1, "R")):
+        ex, ez = 0.071 * x, 1.112
+        put(f"s_eye.{sd}", ellipsoid((ex, front(ex, ez, 0.005), ez), EYE_SZ[0], rot=(0, 0, 12 * x), segs=12, rings=8), EYE, outline=False)
+        put(f"s_eyerim.{sd}", ellipsoid((ex, front(ex, ez, 0.009), ez), EYE_SZ[1], rot=(0, 0, 12 * x), segs=12, rings=8), RIM, outline=False)
+        put(f"s_shine.{sd}", ellipsoid((ex + 0.009 * x, front(ex, ez + 0.014, 0.0) - 0.011, ez + 0.014), (0.011, 0.006, 0.012), segs=8, rings=6), SHINE, outline=False)
+        bx, bz = 0.073 * x, 1.198      # brows sit just above the frame, so they still show
+        put(f"s_brow.{sd}", box_((bx, front(bx, bz, 0.0), bz), (0.056, 0.012, 0.014), rot=(-25, -9 * x, 6 * x)), BROW, outline=False)
+    # the big warm smile: an open "D" smile with the top teeth showing (portrait "happy" and the sprites);
+    # a soft closed smile is kept hidden for the "neutral" portrait (portrait_prep.py switches them)
+    bm = ellipsoid((0, front(0, 1.03, -0.008), 1.03), (0.044, 0.009, 0.024), segs=14, rings=8); bisect_keep(bm, (0, 0, 1.036), (0, 0, -1))
+    put("expr_toothy_mouth", bm, MOUTH, outline=False)
+    bm = ellipsoid((0, front(0, 1.03, -0.011), 1.031), (0.036, 0.007, 0.009), segs=12, rings=6); bisect_keep(bm, (0, 0, 1.036), (0, 0, -1))
+    put("expr_toothy_teeth", bm, TEETH, outline=False)
+    put("expr_soft_mouth", ellipsoid((0, front(0, 1.033, -0.008), 1.033), (0.034, 0.008, 0.009), segs=10, rings=6), LIP, outline=False)
+    bpy.data.objects["expr_soft_mouth"].hide_render = True
+    if L.get("freckles"):
+        FRECK = toon_material("S_FRECK", "#c88a68", 1.0, 1.0)
+        for x in (1, -1):
+            for k, (fx, fz) in enumerate(((0.098, 1.07), (0.122, 1.062), (0.11, 1.047), (0.135, 1.078))):
+                put(f"s_freck{k}.{x}", ellipsoid((fx * x, front(fx * x, fz, -0.002), fz), (0.007, 0.005, 0.007), segs=8, rings=6), FRECK, outline=False)
+        for k, fx in enumerate((-0.012, 0.012)):     # a few across the nose
+            put(f"s_freckn{k}", ellipsoid((fx, front(fx, 1.075, -0.003), 1.075), (0.006, 0.005, 0.006), segs=8, rings=6), FRECK, outline=False)
+if L["face"] == "custom" and A.who == "sensei":
+    # light brown moustache and a short chin beard (kept small and neat)
+    for x, sd in ((1, "L"), (-1, "R")):
+        put(f"s_stache.{sd}", ellipsoid((0.027 * x, front(0.027 * x, 1.047, -0.01), 1.047), (0.032, 0.009, 0.0085), rot=(0, 0, -14 * x), segs=10, rings=6), STACHE, outline=False)
+    put("s_goatee", ellipsoid((0, front(0, 0.985, -0.012), 0.985), (0.04, 0.01, 0.024), segs=12, rings=6), STACHE, outline=False)
+    put("s_soulpatch", ellipsoid((0, front(0, 1.008, -0.01), 1.008), (0.01, 0.007, 0.01), segs=8, rings=6), STACHE, outline=False)
+if A.who == "founder":
+    # older and kind: crinkly smiling eyes (shorter eye shapes, set above), smile creases at the outer eye corners and beside the
+    # mouth, thicker grey-dark brows, a full grey-and-dark moustache over the smile, and light stubble (a soft tone on the lower face)
+    CREASE = toon_material("F_CREASE", "#a9705a", 1.0, 1.0); STACHE_F = toon_material("F_STACHE", "#6a635e", 1.0, 1.0)
+    STACHE_D = toon_material("F_STACHE_DARK", "#3e3835", 1.0, 1.0); STUBBLE = toon_material("F_STUBBLE", "#c99d7e", 1.0, 1.0)
+    for x, sd in ((1, "L"), (-1, "R")):
+        for k, (dz, rz) in enumerate(((0.012, -22), (-0.012, 22))):        # crow's feet: two short lines fanning out
+            cx, cz = 0.118 * x, 1.112 + dz
+            put(f"f_crow{k}.{sd}", box_((cx, front(cx, cz, 0.0), cz), (0.022, 0.006, 0.004), rot=(0, rz * x, -28 * x)), CREASE, outline=False)
+        put(f"f_undereye.{sd}", box_((0.071 * x, front(0.071 * x, 1.086, 0.0), 1.086), (0.034, 0.006, 0.004), rot=(-20, 0, 0)), CREASE, outline=False)
+        mx, mz = 0.062 * x, 1.035                                         # smile lines beside the mouth
+        put(f"f_smile.{sd}", box_((mx, front(mx, mz, 0.0), mz), (0.005, 0.006, 0.04), rot=(-15, -10 * x, -14 * x)), CREASE, outline=False)
+        bx, bz = 0.073 * x, 1.162
+        put(f"f_brow.{sd}", box_((bx, front(bx, bz, 0.0), bz), (0.06, 0.012, 0.018), rot=(-25, -9 * x, -7 * x)), BROW, outline=False)
+        put(f"f_stache.{sd}", ellipsoid((0.034 * x, front(0.034 * x, 1.053, -0.012), 1.053), (0.05, 0.013, 0.02), rot=(0, 0, -14 * x), segs=12, rings=8), STACHE_F, outline=False)
+    for ob in [o for o in bpy.data.objects if o.name.startswith("s_brow.")]: bpy.data.objects.remove(ob, do_unlink=True)   # the founder's own brows above
+    bm = ellipsoid(HEAD_C + Vector((0, 0, -0.004)), (0.1915, 0.1825, 0.1885), segs=24, rings=16)       # stubble: a thin shell over the lower jaw
+    bisect_keep(bm, (0, -0.17, 0.995), (0, 0.6, -1)); bisect_keep(bm, (0, 0.03, 0), (0, -1, 0)); put("f_stubble", bm, STUBBLE, outline=False)
+    for n in ("s_eye", "s_eyerim"):     # crinkly smiling eyes: the bottom of each eye is cut flat, a happy half-moon
+        for sd in ("L", "R"):
+            ob = bpy.data.objects[f"{n}.{sd}"]; bm = bmesh.new(); bm.from_mesh(ob.data)
+            bisect_keep(bm, (0, 0, 1.104 if n == "s_eye" else 1.1), (0, 0, 1)); bm.to_mesh(ob.data); bm.free()
+    for n in ("expr_toothy_mouth", "expr_toothy_teeth", "expr_soft_mouth"):   # a broader smile
+        me = bpy.data.objects[n].data; cen = sum((v.co for v in me.vertices), Vector()) / len(me.vertices)
+        for v in me.vertices: v.co = Vector((cen.x + (v.co.x - cen.x) * 1.35, v.co.y, cen.z + (v.co.z - cen.z) * 1.15))
+if L.get("headband"):
+    # the optional red headband (DECIDE): a band around the head above the brows, a knot and two short tails at the back.
+    # Its own overlay layer "headband" (optional, untinted), so the game can switch it on or off.
+    hbc = bpy.data.collections.new("L_headband"); scene.collection.children.link(hbc)
+    hbc["sprite_order"] = 99; hbc["sprite_tint"] = False; hbc["sprite_overlay"] = True; hbc["sprite_optional"] = True
+    RED = toon_material("F_HEADBAND", "#c8282c"); RED_D = toon_material("F_HEADBAND_DARK", "#9a1c22")
+    bm = ellipsoid(HEAD_C + Vector((0, 0.004, 0.0)), (0.214, 0.205, 0.21), segs=28, rings=20)
+    bisect_keep(bm, (0, 0, 1.236), (0, -0.18, -1)); bisect_keep(bm, (0, 0, 1.186), (0, 0.18, 1))
+    hb = put("headband", bm, RED); kn = put("headband_knot", ellipsoid((0, 0.212, 1.215), (0.03, 0.022, 0.026), segs=10, rings=6), RED_D)
+    tails = [put(f"headband_tail{k}", ellipsoid((0.03 * x, 0.24, 1.15), (0.022, 0.012, 0.06), rot=(25, 0, 22 * x), segs=10, rings=6), RED)
+             for k, x in enumerate((1, -1))]
+    for ob in [hb, kn] + tails:
+        for o in (ob, bpy.data.objects.get(ob.name + "_outline")):
+            if o is None: continue
+            for c in list(o.users_collection): c.objects.unlink(o)
+            hbc.objects.link(o)
+if L["hair_style"] == "founder_wavy":
+    # short, wavy dark hair going grey: grey at the temples and over the ears, darker waves on top, the hairline a little higher
+    # at the temples (older), never over the brows
+    bm = ellipsoid(HEAD_C + Vector((0, 0.008, 0.004)), (0.196, 0.187, 0.191), segs=24, rings=16)
+    bisect_keep(bm, (0, -0.19, 1.262), (0, 0.42, 1)); put("fw_cap", bm, HAIR)
+    for x, sd in ((1, "L"), (-1, "R")):
+        bm = ellipsoid((0.168 * x, 0.04, 1.16), (0.03, 0.075, 0.055), rot=(0, 0, -6 * x), segs=12, rings=8); put(f"fw_temple.{sd}", bm, HAIR_HI)
+    rnd = random.Random(11)
+    for k in range(18):               # small waves all over the top, a few grey
+        a = rnd.uniform(0, 2 * math.pi); r = rnd.uniform(0.0, 0.14)
+        px, py = r * math.cos(a), r * math.sin(a) * 0.95 + 0.03
+        pz = HEAD_C.z + 0.19 * math.sqrt(max(0.0, 1 - (px / 0.2) ** 2 - ((py - 0.008) / 0.19) ** 2)) - 0.004
+        put(f"fw_wave{k}", ellipsoid((px, py, pz), (0.042, 0.036, 0.022), rot=(rnd.uniform(-20, 20), rnd.uniform(-20, 20), rnd.uniform(0, 90)), segs=10, rings=6),
+            HAIR_HI if k in (4, 13) else HAIR, outline=False)
+    for k, fx in enumerate((-0.05, 0.02, 0.07)):   # a soft wave at the front
+        put(f"fw_front{k}", ellipsoid((fx, front(fx, 1.262, 0.0) + 0.018, 1.275), (0.045, 0.03, 0.03), rot=(-30, 0, 10 - 10 * k), segs=10, rings=6),
+            HAIR)
+if L.get("glasses"):
+    FRAME = toon_material("S_GLASSES", "#16141c", 1.0, 1.0)
+    # bold black rectangular glasses: two lens frames that follow the face, a bridge, arms back to the ears.
+    # Bars are 0.022 (rig) = about 2 px in the sprites, so they read at game size and from every direction.
+    BW, BT = 0.022, 0.014
+    for x, sd in ((1, "L"), (-1, "R")):
+        cx, cz = 0.071 * x, 1.112; yaw = 20 * x
+        R = Euler((0, 0, math.radians(yaw))).to_matrix()
+        c = Vector((cx, front(cx, cz, 0.0) - 0.028, cz))
+        hw, hh = 0.05, 0.045           # half width / height to the bar centre lines
+        P = lambda u, v: tuple(c + R @ Vector((u, 0, v)))
+        bar(f"gl_top.{sd}", P(-hw, hh), P(hw, hh), BW, BT, FRAME)
+        bar(f"gl_bot.{sd}", P(-hw, -hh), P(hw, -hh), BW, BT, FRAME)
+        bar(f"gl_in.{sd}", P(-hw * x, -hh), P(-hw * x, hh), BW, BT, FRAME)
+        bar(f"gl_out.{sd}", P(hw * x, -hh), P(hw * x, hh), BW, BT, FRAME)
+        oc = Vector(P(hw * x, hh * 0.55))
+        bar(f"gl_arm.{sd}", tuple(oc), (0.196 * x, 0.02, 1.13), 0.016, 0.012, FRAME, normal=(x, 0, 0))
+    bar("gl_bridge", (0.024, front(0.024, 1.13, 0.0) - 0.03, 1.13), (-0.024, front(-0.024, 1.13, 0.0) - 0.03, 1.13), 0.016, BT, FRAME)
+if L["hair_style"] == "sensei_top":
+    # short on the sides, longer and tousled on top, swept up at the front (hairline stays above the brows and the frame)
+    bm = ellipsoid(HEAD_C + Vector((0, 0.006, 0.006)), (0.197, 0.188, 0.193), segs=24, rings=16)
+    bisect_keep(bm, (0, -0.19, 1.25), (0, 0.5, 1)); put("st_sides", bm, HAIR)
+    bm = ellipsoid(HEAD_C + Vector((0, 0.015, 0.085)), (0.178, 0.172, 0.15), segs=22, rings=14)
+    bisect_keep(bm, (0, 0, 1.22), (0, 0, 1)); bisect_keep(bm, (0, -0.16, 1.26), (0, 0.6, 1)); put("st_top", bm, HAIR)
+    rnd = random.Random(7)
+    for k in range(16):               # tousled tufts on top, a few with lighter tips
+        a = rnd.uniform(0, 2 * math.pi); r = rnd.uniform(0.02, 0.13)
+        px, py = r * math.cos(a), r * math.sin(a) * 0.9 + 0.02
+        pz = HEAD_C.z + 0.085 + 0.15 * math.sqrt(max(0.0, 1 - (px / 0.178) ** 2 - ((py - 0.015) / 0.172) ** 2)) - 0.012
+        put(f"st_tuft{k}", ellipsoid((px, py, pz), (0.045, 0.04, 0.03), rot=(rnd.uniform(-25, 25), rnd.uniform(-25, 25), rnd.uniform(0, 90)), segs=10, rings=6),
+            HAIR_HI if k % 4 == 0 else HAIR)
+    for k, (fx, rz) in enumerate(((-0.06, 14), (0.0, 0), (0.06, -14))):   # the front, swept up and back
+        fz = 1.305; fy = front(fx, 1.27, 0.0) + 0.01
+        put(f"st_quiff{k}", ellipsoid((fx, fy, fz), (0.05, 0.034, 0.06), rot=(-40, 0, rz), segs=12, rings=8), HAIR_HI if k == 1 else HAIR)
+
+if L["hair_style"] == "long_purple":
+    # long, straight hair with a middle part: a smooth cap, side curtains that frame the face (never over the eyes), a long back
+    # and front strands over the shoulders past the chest. The lower strands hang from the CHEST bone so they follow the body in
+    # the bow instead of cutting through it. The ends are purple (baked in, a key feature), mostly on her left side (+x).
+    PURP = toon_material("I2_PURPLE", "#7d4cc2"); PURP_HI = toon_material("I2_PURPLE_HI", "#a07ae0")
+    hs = L["head"]
+    def H(p): return Vector((p[0] * hs, p[1] * hs, 0.95 + (p[2] - 0.95) * hs))    # head-bone rig coords -> where they land after the head scale
+    bm = ellipsoid(HEAD_C + Vector((0, 0.008, 0.012)), (0.204, 0.196, 0.2), segs=24, rings=16); bisect_keep(bm, (0, -0.19, 1.262), (0, 0.38, 1)); put("lh_cap", bm, HAIR)
+    put("lh_part", ellipsoid((0, front(0, 1.3, 0.0) + 0.02, 1.30), (0.006, 0.05, 0.012), rot=(-40, 0, 0), segs=8, rings=6), HAIR_HI, outline=False)
+    bm = ellipsoid(HEAD_C + Vector((0, 0.03, -0.04)), (0.212, 0.19, 0.24), segs=24, rings=16); bisect_keep(bm, (0, 0.02, 0), (0, 1, 0)); bisect_keep(bm, (0, 0, 0.95), (0, 0, 1)); put("lh_back", bm, HAIR)
+    for x, sd in ((1, "L"), (-1, "R")):
+        put(f"lh_curtain.{sd}", ellipsoid((0.178 * x, -0.035, 1.07), (0.05, 0.075, 0.16), rot=(6, 0, -6 * x), segs=12, rings=10), HAIR)
+    # the long part below the jaw, on the chest bone
+    for x, sd in ((1, "L"), (-1, "R")):
+        top = H((0.17 * x, -0.04, 0.96))
+        ends_from = 0.86 if x > 0 else 0.73                        # purple starts higher on her left (only the tips on her right)
+        for k in range(6):
+            z = top.z - 0.045 - k * 0.048
+            p = Vector((top.x * (1 - 0.02 * k) , -0.045 - 0.006 * k, z))
+            purple = z < ends_from
+            put(f"lh_front{sd}{k}", ellipsoid(p, (0.05 - 0.002 * k, 0.04, 0.042), segs=10, rings=8), PURP if purple else HAIR, bone="chest")
+            if k % 2 == 0: put(f"lh_fronthi{sd}{k}", ellipsoid(p + Vector((0.012 * x, -0.03, 0.01)), (0.016, 0.012, 0.03), segs=8, rings=6),
+                               PURP_HI if purple else HAIR_HI, outline=False, bone="chest")
+    for k in range(6):                                              # the back: a wide fall of hair behind the shoulders
+        z = H((0, 0, 0.98)).z - k * 0.05
+        p = Vector((0.0, 0.14 + 0.004 * k, z))
+        put(f"lh_back{k}", ellipsoid(p, (0.16 - 0.006 * k, 0.05, 0.05), segs=14, rings=8), HAIR, bone="chest")
+        if z < 0.84:
+            put(f"lh_backend{k}", ellipsoid(p + Vector((0.075, 0.004, 0)), (0.08, 0.05, 0.05), segs=12, rings=8), PURP, bone="chest")
+            if z < 0.78: put(f"lh_backendr{k}", ellipsoid(p + Vector((-0.09, 0.004, 0)), (0.06, 0.05, 0.045), segs=12, rings=8), PURP, bone="chest")
+
 # body B fix: build_custom.py shrank body B's ears with ob.scale, which scales about the world origin and so also moved them
 # down to the jaw. Here the ears get their real size (0.85) about their own centre, in their place beside the eyes.
 for side in ("L", "R"):
@@ -134,6 +323,7 @@ for side in ("L", "R"):
 
 # ------------------------------------------------------------------ layer order: body 0, gi 1, belt layers as the player
 order = ["body", "gi", "belt", "belt-sheen", "belt-center", "belt-center-edge", "belt-rim", "belt-tape1-edge", "belt-tape1", "belt-tape2-edge", "belt-tape2"]
+if L.get("headband"): order.append("headband")      # the founder's optional headband overlay, drawn last
 for i, n in enumerate(order): C(n)["sprite_order"] = i
 assert sorted(c.name[2:] for c in bpy.data.collections if c.name.startswith("L_")) == sorted(order)
 
@@ -198,6 +388,15 @@ elif A.who == "senpai":    # confident and friendly: weight a touch on one leg, 
                foot_l=(0.10, -0.01, 0.07), foot_r=(-0.085, 0.02, 0.07), foot_l_rot=(0, 14, 0), foot_r_rot=(0, -18, 0),
                hand_l=(0.19, -0.02, 0.55), hand_r=(-0.08, -0.15, 0.60))
     SWAY = dict(chest=1.5, hips=0.005, side=0.004, hands=0.006)
+elif A.who == "instructor-2":   # friendly and calm: feet a little apart, one hand relaxed at the side, the other resting by the belt
+    REL = pose(head_rot=(-16, -3, -2), hips=(-0.008, 0, -0.004), hips_rot=(0, 3, 2), chest_rot=(0, -2, -1),
+               foot_l=(0.085, 0.01, 0.07), foot_r=(-0.095, -0.01, 0.07), foot_l_rot=(0, 16, 0), foot_r_rot=(0, -12, 0),
+               hand_l=(0.19, -0.02, 0.55), hand_r=(-0.17, -0.06, 0.57))
+    SWAY = dict(chest=1.3, hips=0.004, side=0.003, hands=0.006)
+elif A.who == "founder":   # lively and warm: a solid stance, feet a little wider, hands loose, a slightly bigger sway
+    REL = pose(head_rot=(-15, 2, 1), hips=(0, 0, -0.005), foot_l=(0.10, 0.0, 0.07), foot_r=(-0.10, 0.0, 0.07), foot_l_rot=(0, 16, 0), foot_r_rot=(0, -16, 0),
+               hand_l=(0.20, -0.02, 0.55), hand_r=(-0.20, -0.02, 0.55))
+    SWAY = dict(chest=1.6, hips=0.005, side=0.003, hands=0.007)
 else:                      # eager and a little shy: feet close, hands held together in front, a small bounce
     REL = pose(head_rot=(-14, 0, 0), hips=(0, 0, -0.004), chest_rot=(2, 0, 0),
                foot_l=(0.065, -0.01, 0.07), foot_r=(-0.065, -0.01, 0.07), foot_l_rot=(0, 6, 0), foot_r_rot=(0, -6, 0),

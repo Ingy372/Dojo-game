@@ -185,6 +185,18 @@ Drawing order is the `order` field (the Batch 1 layers moved up by one because `
 - **Edges:** only the broom's bristle tip touches the bottom edge (`sweep` SE, frames 5–7, a few faint pixels, as in Batch 1). Nothing touches the top.
 - [OPEN] **Later idea:** a small bounce for the puffs and ponytail. The hair is rigid on the head bone today.
 
+## Batch 7: dojo people, `incoming-art/dojo-people/` [SAMPLES ONLY, nothing to integrate yet]
+
+- **Characters (file ids, final names from the Content Writer):** `sensei`, `instructor-2`, `founder`, `senpai`, `kohai`.
+- **Frames:** the same as the player: 128 × 160, feet anchor (64, 136.96), 80 px per tile, 8 directions.
+- **Layers:**
+  - `body` (order 0): untinted, real colours (skin, face, hair);
+  - `gi` (order 1): tinted, with a suggested colour in `suggested.gi`;
+  - the player's belt set (orders 2–10), tinted with `beltStyles`, the same as the player.
+  - The founder also has `headband` (order 11): an optional overlay, untinted. Draw it only when the game wants the headband.
+- **Portraits:** 512 × 512, the same layers.
+- **Status:** only the sample sheets have been rendered, and they aren't committed. Plan for the layers above; the full sheets and JSON come after Jay approves.
+
 ---
 
 ## Open items in one place

@@ -15,4 +15,4 @@ Notes:
 
 **Batch 6 (customizable player): no outside assets.** All hair, faces and the second body are built from simple shapes by `player-custom/source/build_custom.py`. The textured-hair redesign was informed by public articles and guides, used as reference only, with nothing copied. The links are in `player-custom/research-textured-hair.md`. The full set (2026-10-16) is rendered from the same files, with no outside assets added.
 
-**Batch 7 (Sensei, Senpai and Kohai, samples): no outside assets.** Built by `dojo-people/source/build_people.py` from the approved player models; all three are made-up characters, not based on any real person.
+**Batch 7 (dojo people, samples): no outside assets.** Built by `dojo-people/source/build_people.py` from the approved player models. Senpai and Kohai are made-up characters. From samples 2 (2026-10-17), Sensei, `instructor-2` and `founder` are friendly cartoon likenesses, based on reference photos provided by Jay (not stored in the repo).

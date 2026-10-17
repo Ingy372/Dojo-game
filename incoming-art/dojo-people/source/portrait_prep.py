@@ -23,3 +23,8 @@ if ob:
     from mathutils import Vector
     me = ob.data; cen = sum((v.co for v in me.vertices), Vector()) / len(me.vertices)
     for v in me.vertices: v.co = Vector((cen.x + (v.co.x - cen.x) * 0.55, v.co.y, cen.z + (v.co.z - cen.z) * 1.15))
+import os
+EXPR = os.environ.get("PORTRAIT_EXPR", "")   # "neutral": the soft closed smile; "happy" (or unset): the big toothy smile
+for ob in bpy.data.objects:
+    if ob.name.startswith("expr_soft_"): ob.hide_render = EXPR != "neutral"
+    if ob.name.startswith("expr_toothy_"): ob.hide_render = EXPR == "neutral"
