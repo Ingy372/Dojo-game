@@ -1,10 +1,10 @@
 {
   "character": "player",
   "frameWidth": 128,
-  "frameHeight": 128,
+  "frameHeight": 160,
   "anchor": {
     "x": 64.0,
-    "y": 104.96,
+    "y": 136.96,
     "note": "feet / ground point of the character, in pixels from the frame's top-left"
   },
   "pixelsPerTile": 80.0,
