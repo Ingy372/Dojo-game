@@ -34,7 +34,8 @@ Options (the defaults are the house standard, so leave them alone unless Jay cha
 
 | Option | Default | Meaning |
 | --- | --- | --- |
-| `--size` | `128` | Frame width and height in pixels |
+| `--size` | `128` | Frame width (and height, unless `--height` is given) in pixels |
+| `--height` | same as `--size` | Taller frame (Batch 6: 160 for all player art). The camera keeps `--ortho` tiles across the width, so the scale stays 80 px per tile. The extra rows go where `--anchor-y` puts them: use `--height 160 --anchor-y 0.856` to keep the feet 23 px above the bottom, with all the new room on top (anchor (64, 136.96)) |
 | `--ortho` | `1.6` | Game tiles across one frame (so 1 tile = 80 px) |
 | `--elevation` | `35` | Camera looks down this many degrees (top-down three-quarter view) |
 | `--anchor-y` | `0.82` | Where the feet land in the frame (0 = top, 1 = bottom) |

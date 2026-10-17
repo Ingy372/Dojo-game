@@ -8,8 +8,8 @@ Everything is built by script:
 
 ## Frames and timing (all in `sprites/player.json`)
 
-- **Frame:** 128 × 128 px, transparent PNG.
-- **Feet point:** x 64, y 104.96.
+- **Frame:** 128 × 160 px, transparent PNG. **Changed in Batch 6** (it was 128 × 128): 32 px more room on top for raised fists and tall hair. Still 80 px per tile.
+- **Feet point:** x 64, y 136.96 (was 104.96; the feet didn't move relative to the bottom). The sheets were re-rendered in Batch 6 with no other change. See `../NOTES-FOR-CLAUDE-CODE.md`.
 - **Scale:** 80 px per tile.
 - **Sheets:** rows are N, NE, E, SE, S, SW, W, NW; columns are frames (counting from 0).
 
@@ -61,7 +61,8 @@ Every belt layer is neutral (light grey or white) and gets a multiply tint chose
 blender -b -P incoming-art/character-test/source/build_character.py -- \
     --profile player --out $PWD/incoming-art/player-character/source/player_character.blend
 blender -b incoming-art/player-character/source/player_character.blend \
-    -P incoming-art/tools/render_sprites.py -- --out incoming-art/player-character/sprites --name player
+    -P incoming-art/tools/render_sprites.py -- --out incoming-art/player-character/sprites --name player \
+    --height 160 --anchor-y 0.856
 python3 incoming-art/tools/make_preview.py --sheets incoming-art/player-character/sprites \
     --out incoming-art/player-character/preview --gif-anims none --anim-gifs jab,bow,defeat,strike
 python3 incoming-art/tools/make_compare.py --old incoming-art/character-test/sprites \

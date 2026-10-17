@@ -145,17 +145,17 @@ Status markers used below:
 
 ### Layers and tints
 
-Drawing order is the `order` field; the JSON lists each layer's `tint` and `group`.
+Drawing order is the `order` field (the Batch 1 layers moved up by one because `skin` was added at 1); the JSON lists each layer's `tint` and `group`.
 
 | order | Layer | Tint | Notes |
 | --- | --- | --- | --- |
 | 0 | `body` | no | Outlines and the untinted base. Body B's longer lashes are in here |
 | 1 | `skin` | **yes**, `palettes.skin` | Light neutral `#f2f2f2` |
 | 2 | `gi` | yes, gi colour | Unchanged |
-| 3–12 | `belt` … `belt-tape2` | as in Batch 1 | Unchanged. The belt is never customizable |
-| 13–14 | `prop-broom`, `prop-rag` | no | As in Batch 1 |
-| 15–20 | `face-01` … `face-06` | no | **Pick exactly one** (`group: "face"`). Shared by both bodies |
-| 21–32 | `hair-01` … `hair-12` | **yes**, `palettes.hair` | **Pick exactly one** (`group: "hair"`). Two neutral greys in one layer (base and highlight); one multiply tint covers both |
+| 3–11 | `belt` … `belt-tape2` | as in Batch 1 | Unchanged. The belt is never customizable |
+| 12–13 | `prop-broom`, `prop-rag` | no | As in Batch 1 |
+| 14–19 | `face-01` … `face-06` | no | **Pick exactly one** (`group: "face"`). Shared by both bodies |
+| 20–31 | `hair-01` … `hair-12` | **yes**, `palettes.hair` | **Pick exactly one** (`group: "hair"`). Two neutral greys in one layer (base and highlight); one multiply tint covers both |
 
 - **How the pick-one groups work:** each option was rendered with only itself switched on and the base layers as holdouts. So draw the base layers, then the chosen face, then the chosen hair. Never draw two options from one group.
 - **Palettes** (in the JSON, `palettes`): 10 skin tones from light to deep, 10 hair colours and 10 gi colours. White is first, and the 2nd gi colour is **charcoal `#4a4a55`** (it replaced black). The game shows exactly these as swatches.
