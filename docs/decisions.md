@@ -347,3 +347,7 @@ Jay asked Claude to test and tune the game before his next playtest.
 - **Where the look is kept for now:** on the phone (`dojo-ascent-look`). It can be changed only from the dojo's hidden testing screen (tap "Home Dojo" 5 times → Body / Face / Hair / Skin / Hair colour / Gi).
   - The character creation screen is its own later step (`docs/MILESTONE_PROMPTS.md`). It will save the look with the student's profile.
   - It needs Jay's answers first: how the two bodies are offered and labelled, and the names of the options (from the Content Writer).
+- **Character options, labels (Jay, 2026-10-17):**
+  - The two bodies are offered as **Boy** and **Girl**.
+  - The other options get plain numbered names, no special names: "Hairstyle 1, 2, …", "Eyes 1, 2, …" (the faces), and colours shown as swatches.
+  - The Content Writer bot may write short descriptions, but the screen doesn't depend on them.

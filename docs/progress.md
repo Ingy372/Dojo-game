@@ -213,4 +213,4 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - 128 tests pass. Checked in a test browser: four different looks in the Tower, the promotion ceremony with body B, and the boss door.
 
 **Next**
-- The character creation screen, when Jay asks for it. First needed: how the bodies are offered and labelled, and the option names (Content Writer).
+- The character creation screen, when Jay asks for it. Its open questions are answered: Boy/Girl bodies, numbered names for the other options.
