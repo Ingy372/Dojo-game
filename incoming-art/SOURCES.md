@@ -14,3 +14,5 @@ Notes:
 - The labels in the preview pictures use Pillow's built-in default font. The previews are only for review and don't go into the game.
 
 **Batch 6 (customizable player): no outside assets.** All hair, faces and the second body are built from simple shapes by `player-custom/source/build_custom.py`. The textured-hair redesign was informed by public articles and guides, used as reference only, with nothing copied. The links are in `player-custom/research-textured-hair.md`. The full set (2026-10-16) is rendered from the same files, with no outside assets added.
+
+**Batch 7 (Sensei, Senpai and Kohai, samples): no outside assets.** Built by `dojo-people/source/build_people.py` from the approved player models; all three are made-up characters, not based on any real person.
