@@ -18,11 +18,6 @@ for ob in [o for o in bpy.data.objects if o.name.endswith("_outline") and o.type
 for ob in bpy.data.objects:
     if ob.type == "MESH" and len(ob.data.vertices) > 8:
         m = ob.modifiers.new("smooth", "SUBSURF"); m.levels = 2; m.render_levels = 2
-ob = bpy.data.objects.get("chest_v")    # at 512 px the round neck opening reads as a disc: make it a narrow V-like opening
-if ob:
-    from mathutils import Vector
-    me = ob.data; cen = sum((v.co for v in me.vertices), Vector()) / len(me.vertices)
-    for v in me.vertices: v.co = Vector((cen.x + (v.co.x - cen.x) * 0.55, v.co.y, cen.z + (v.co.z - cen.z) * 1.15))
 import os
 EXPR = os.environ.get("PORTRAIT_EXPR", "")   # "neutral": the soft closed smile; "happy" (or unset): the big toothy smile
 for ob in bpy.data.objects:

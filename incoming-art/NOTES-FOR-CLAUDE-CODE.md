@@ -193,7 +193,9 @@ Drawing order is the `order` field (the Batch 1 layers moved up by one because `
   - `body` (order 0): untinted, real colours (skin, face, hair);
   - `gi` (order 1): tinted, with a suggested colour in `suggested.gi`;
   - the player's belt set (orders 2–10), tinted with `beltStyles`, the same as the player.
-  - The founder also has `headband` (order 11): an optional overlay, untinted. Draw it only when the game wants the headband.
+  - The founder also has `headband` (order 11): an optional overlay, untinted, **off by default** (`optionalLayers.headband.default: false`). Draw it only when the game switches it on.
+  - The default gi tints are in `suggested.gi`: Sensei `#4a4a55`, instructor-2 `#3f7fd0`, founder, Senpai and Kohai `#f2f2f2`.
+  - The dojo people have a closed gi collar, so no skin shows at the neck. The Batch 6 player still has a small skin oval there, on its skin layer; Jay decides whether to re-render it.
 - **Portraits:** 512 × 512, the same layers.
 - **Status:** only the sample sheets have been rendered, and they aren't committed. Plan for the layers above; the full sheets and JSON come after Jay approves.
 

@@ -32,10 +32,10 @@ A = ap.parse_args(argv)
 # ------------------------------------------------------------------ the three looks (placeholders, flagged in DECIDE)
 LOOKS = {
     "sensei": dict(base="a", scale=1.28, head=0.80, skin="#f2cdb6", hair="#6e4b2f", hair_hi="#8f6a48", face="custom", hair_style="sensei_top",
-                   beard=False, glasses=True, gi="#24345e", belt="Black",
+                   beard=False, glasses=True, gi="#4a4a55", belt="Black",
                    note="adult (young), the tallest; a friendly cartoon likeness of Jay, based on reference photos provided by Jay (not stored in the repo): "
                         "light skin, short brown hair (short sides, longer tousled top swept up at the front), bold black rectangular glasses, "
-                        "a light brown moustache and short chin beard, a big warm smile; dark navy gi; black belt"),
+                        "a light brown moustache and short chin beard, a big warm smile; charcoal gi (samples 3); black belt"),
     "senpai": dict(base="b", scale=1.10, head=0.88, skin="#c98e65", hair="#3a2519", hair_hi="#5a3f2e", face="face-01", hair_style="high_ponytail",
                    beard=False, gi="#f2f2f2", belt="Brown/Black",
                    note="teen; a little taller than the player; high ponytail; white gi; brown/black belt (Jay, 2026-10-17)"),
@@ -43,10 +43,10 @@ LOOKS = {
                    beard=False, gi="#f2f2f2", belt="White",
                    note="small child; smallest, with a bigger head; big round eyes; curly red hair; white gi; white belt"),
     "instructor-2": dict(base="b", scale=1.20, head=0.84, skin="#f6d7c3", hair="#3a2519", hair_hi="#5a3f2e", face="custom", hair_style="long_purple",
-                   beard=False, glasses=False, eye="#33405a", freckles=True, gi="#4a4a55", belt="Black",
+                   beard=False, glasses=False, eye="#33405a", freckles=True, gi="#3f7fd0", belt="Black",
                    note="adult (young), between Senpai and Sensei in height; a friendly cartoon likeness of Jay's wife, based on reference photos provided by Jay "
                         "(not stored in the repo): fair skin with light freckles, long straight dark brown hair past the chest with purple ends (mostly on her left), "
-                        "blue-grey eyes, a big warm smile; charcoal gi; black belt (Jay confirmed)"),
+                        "blue-grey eyes, a big warm smile; medium blue gi (samples 3); black belt (Jay confirmed)"),
     "founder": dict(base="a", scale=1.26, head=0.81, skin="#d5a27c", hair="#524c48", hair_hi="#8e8882", face="custom", hair_style="founder_wavy",
                    beard=False, glasses=False, eye="#2a1f1a", gi="#f2f2f2", belt="Black", headband=True,
                    note="older adult (about 60), about Sensei's height; a friendly cartoon likeness of the school's founder, based on reference photos "
@@ -260,7 +260,12 @@ if L.get("glasses"):
         bar(f"gl_in.{sd}", P(-hw * x, -hh), P(-hw * x, hh), BW, BT, FRAME)
         bar(f"gl_out.{sd}", P(hw * x, -hh), P(hw * x, hh), BW, BT, FRAME)
         oc = Vector(P(hw * x, hh * 0.55))
-        bar(f"gl_arm.{sd}", tuple(oc), (0.196 * x, 0.02, 1.13), 0.016, 0.012, FRAME, normal=(x, 0, 0))
+        # temple arms (samples 3): from the lens corner out to a hinge just off the cheek, straight back along the side of
+        # the head, over the top of the ear, and a short drop behind it, so they read as real glasses from the side and 3/4
+        hinge = Vector((0.152 * x, oc.y + 0.045, oc.z)); over = Vector((0.212 * x, 0.0, 1.142)); behind = Vector((0.203 * x, 0.04, 1.108))
+        bar(f"gl_hinge.{sd}", tuple(oc), tuple(hinge), 0.018, 0.014, FRAME)
+        bar(f"gl_arm.{sd}", tuple(hinge), tuple(over), 0.02, 0.012, FRAME, normal=(x, 0, 0))
+        bar(f"gl_armtip.{sd}", tuple(over), tuple(behind), 0.018, 0.012, FRAME, normal=(x, 0, 0))
     bar("gl_bridge", (0.024, front(0.024, 1.13, 0.0) - 0.03, 1.13), (-0.024, front(-0.024, 1.13, 0.0) - 0.03, 1.13), 0.016, BT, FRAME)
 if L["hair_style"] == "sensei_top":
     # short on the sides, longer and tousled on top, swept up at the front (hairline stays above the brows and the frame)
@@ -320,6 +325,31 @@ for side in ("L", "R"):
         for v in me.vertices: v.co = cen + (v.co - cen) * f
         o = bpy.data.objects.get(f"ear.{side}_outline")
         if o is not None: o.scale = (1, 1, 1)
+
+# ------------------------------------------------------------------ closed gi collar (samples 3, Jay: a shirt is worn under the gi,
+# so no skin shows except the face, hands and feet). The skin oval in the neck opening (chest_v, from the Batch 1 model) is removed,
+# and the opening is filled with gi cloth on the tinted gi layer, so the whole chest and collar recolour with the gi. The lapels
+# are re-laid to cross high on the chest, left over right as a gi is worn; they stay a lighter tone of the gi, as a subtle line.
+GI_M = bpy.data.objects["gi_torso"].data.materials[0]; LAPEL_M = bpy.data.objects["gi_lapel.L"].data.materials[0]
+for n in ("chest_v", "chest_v_outline"):
+    ob = bpy.data.objects.get(n)
+    if ob is not None: bpy.data.objects.remove(ob, do_unlink=True)
+def gi_piece(name, bm, m):
+    me = bpy.data.meshes.new(name)
+    for f in bm.faces: f.smooth = True
+    bm.to_mesh(me); bm.free(); me.materials.append(m)
+    ob = bpy.data.objects.new(name, me); C("gi").objects.link(ob); parent(ob, "chest"); return ob
+def strip_(p0, p1, width, thick, normal_hint=(0, -1, 0.25)):
+    p0, p1 = Vector(p0), Vector(p1); d = p1 - p0; y = d.normalized(); n = Vector(normal_hint).normalized()
+    x = y.cross(n).normalized(); n = x.cross(y).normalized(); M = Matrix((x, y, n)).transposed().to_4x4()
+    bm = bmesh.new(); bmesh.ops.create_cube(bm, size=1.0)
+    bmesh.ops.transform(bm, matrix=Matrix.Translation((p0 + p1) / 2) @ M @ Matrix.Diagonal((width, d.length, thick, 1)), verts=bm.verts); return bm
+# the fill: a rounded piece of gi in front of the neck and upper chest, between the lapels and up under the chin
+gi_piece("gi_collar_fill", ellipsoid((0, -0.052, 0.925), (0.075, 0.05, 0.062), segs=16, rings=10), GI_M)
+for n in ("gi_lapel.L", "gi_lapel.R"):
+    ob = bpy.data.objects[n]; bpy.data.objects.remove(ob, do_unlink=True)
+gi_piece("gi_lapel.R", strip_((-0.07, -0.098, 0.962), (0.016, -0.108, 0.84), 0.033, 0.010), LAPEL_M)      # under: it ends where the left lapel covers it
+gi_piece("gi_lapel.L", strip_((0.07, -0.1, 0.962), (-0.07, -0.13, 0.64), 0.035, 0.012), LAPEL_M)          # over (wearer's left)
 
 # ------------------------------------------------------------------ layer order: body 0, gi 1, belt layers as the player
 order = ["body", "gi", "belt", "belt-sheen", "belt-center", "belt-center-edge", "belt-rim", "belt-tape1-edge", "belt-tape1", "belt-tape2-edge", "belt-tape2"]
@@ -468,6 +498,8 @@ tg["gi"] = f"multiply by this character's gi colour; suggested placeholder {L['g
 meta["character"] = A.who
 meta["suggested"] = dict(gi=L["gi"], belt=L["belt"], note="PLACEHOLDER look for the samples; the game sets the real belt (beltStyles) and gi colour")
 meta["lookNote"] = L["note"]
+if L.get("headband"):
+    meta["optionalLayers"] = {"headband": {"default": False, "note": "the founder's red headband; OFF by default (Jay, samples 3). Draw it only when the game switches it on"}}
 meta["proportions"] = dict(rigScale=L["scale"], headScale=L["head"], note="the whole rig is scaled; the head bone is scaled back so heads stay a similar size")
 scene["sprite_meta"] = json.dumps(meta)
 bpy.context.view_layer.update()
