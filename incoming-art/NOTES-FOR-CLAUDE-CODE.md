@@ -185,12 +185,42 @@ Drawing order is the `order` field (the Batch 1 layers moved up by one because `
 - **Edges:** only the broom's bristle tip touches the bottom edge (`sweep` SE, frames 5–7, a few faint pixels, as in Batch 1). Nothing touches the top.
 - [OPEN] **Later idea:** a small bounce for the puffs and ponytail. The hair is rigid on the head bone today.
 
+## Batch 7: dojo people, `incoming-art/dojo-people/` [NEW, full set]
+
+- **Characters (file ids):** `sensei`, `senpai`, `kohai`, `instructor-2` (Jay's wife, an instructor and the office manager, black belt) and `founder` (the school's founder). The display names and introductions come from the Content Writer. Where instructor-2 and the founder appear is for Jay and you.
+- **Sheets:** `sprites/<id>/<id>.json`, in the same format as `player.json`.
+  - Frames are 128 × 160 with the feet anchor at (64, 136.96), 80 px per tile, 8 directions (rows), the same as the player since Batch 6. Draw them with the same anchor code as the player.
+  - Animations: `idle` (loop), `walk` (loop), `bow`, `talk` (loop, while a speech card is open), `nod` (once), `point` (once, **hold the last frame**; `holdLastFrame: true` in its entry), and `demonstrate` (Sensei and Senpai only, once).
+  - `walk` has `groundMotion` like the player's walk: a stride per loop and a design speed of about 2 tiles/s (fps 22–34 per character). Keep fps = speed × `fpsPerTilePerSec` so the feet don't slide.
+- **Layers** (in `layers` with `order` and `tint`):
+  - `body` (order 0): untinted, real colours;
+  - `gi` (1): multiply tint;
+  - the player's belt set (2–10): tinted with `beltStyles`, exactly as the player;
+  - for the founder only, `headband` (11): an optional untinted overlay, **off by default** (`optionalLayers.headband.default: false`). Draw it only when the game switches it on.
+- **Default tints** (`suggested`):
+
+| Id | gi | belt |
+| --- | --- | --- |
+| sensei | `#4a4a55` | `Black` |
+| senpai | `#f2f2f2` | `Brown/Black` |
+| kohai | `#f2f2f2` | `White` |
+| instructor-2 | `#3f7fd0` | `Black` |
+| founder | `#f2f2f2` | `Black` |
+
+- **Portraits:** `portraits/<id>/<id>_portrait_<neutral|happy|proud|thinking>.png`, 512 × 512 transparent, flattened with the default tints (headband off).
+  - For other gi or belt colours, or the headband, stack `layers/<id>_portrait_<expression>_<layer>.png` the same way as the sprites. The order, tints and belt styles are in `<id>_portraits.json`.
+- **Collar:** every dojo character has a closed gi collar (Jay's school wears a shirt under the gi), so no skin shows at the neck.
+- [OPEN] **The player's neck oval:** the Batch 6 player (and `player-character`) still has a small skin-coloured oval at the neck, on its skin layer. At game size it's about 4 × 4 px in walk and bow facing S and SE. Jay: leave it for now, and patch it later only if it's noticeable in the game. A patch is about 3 hours of rendering.
+- **Download size:** about 36 MB of sheets (5.3–8.9 MB per character) plus 6.5 MB of portraits with layers. The flattened portraits alone are about 2 MB.
+
 ---
 
 ## Open items in one place
 
-1. **[NEW]** The player frame changed to 128 × 160 with the anchor at (64, 136.96). It applies to `player-character/` and `player-custom/`.
+1. The player frame changed to 128 × 160 with the anchor at (64, 136.96). It applies to `player-character/` and `player-custom/`.
 2. How the Batch 6 body is chosen and labelled (Jay).
 3. Names for the faces, hair, palette swatches and bodies (Content Writer).
 4. Puff and ponytail bounce (later).
 5. Fonts are still Jay's choice (style guide section 9). There's no text in the art.
+6. **[NEW]** The Batch 6 player's neck oval: leave it for now (Jay), and patch it later only if it's noticeable in the game.
+7. **[NEW]** Where instructor-2 and the founder appear in the game (Jay and Claude Code), and their names (Content Writer).
