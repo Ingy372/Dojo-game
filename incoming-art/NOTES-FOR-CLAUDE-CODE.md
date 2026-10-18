@@ -211,7 +211,7 @@ Drawing order is the `order` field (the Batch 1 layers moved up by one because `
   - For other gi or belt colours, or the headband, stack `layers/<id>_portrait_<expression>_<layer>.png` the same way as the sprites. The order, tints and belt styles are in `<id>_portraits.json`.
 - **Collar:** every dojo character has a closed gi collar (Jay's school wears a shirt under the gi), so no skin shows at the neck.
 - [OPEN] **The player's neck oval:** the Batch 6 player (and `player-character`) still has a small skin-coloured oval at the neck, on its skin layer. At game size it's about 4 × 4 px in walk and bow facing S and SE. Jay: leave it for now, and patch it later only if it's noticeable in the game. A patch is about 3 hours of rendering.
-- **Download size:** about SIZE_MB MB of sheets and portraits for the five characters.
+- **Download size:** about 36 MB of sheets (5.3–8.9 MB per character) plus 6.5 MB of portraits with layers. The flattened portraits alone are about 2 MB.
 
 ---
 

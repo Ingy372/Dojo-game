@@ -106,4 +106,17 @@ Jay's school wears a shirt under the gi, so no skin shows except the face, hands
 
 ## Checks
 
-CHECKS
+- **Edges** (script, every layer, frame and direction): nothing touches a frame edge.
+  - The smallest margin is 3 px, at the far foot of the walk stride facing E/W for Sensei and the founder.
+  - Everything else has at least 10 px (Sensei's hair and the punch).
+- **By eye:**
+  - the 8-direction contact sheets of every animation: the bow (legs straight, head up), the walk (planted feet, arms swinging opposite the legs), talk, nod, point (the hold), and the demonstration for Sensei and Senpai;
+  - all 20 portraits;
+  - the ponytail in 8 directions, idle and mid-bow (it stays on her back and follows the bow).
+- **The ponytail from the front:** it reads clearly from the side and back (E, NE, N, NW, W, SW). Facing S it shows only as a small purple tip by her left shoulder, and facing SE it's hidden behind her head, as a real low ponytail would be.
+- **The collar:** no skin at the neck in any frame or portrait.
+- **Sizes:**
+  - sheets: about 36 MB (Sensei 8.9, Senpai 8.2, founder 7.2, instructor-2 6.4, Kohai 5.3);
+  - portraits with layers: 6.5 MB;
+  - previews and GIFs: 15 MB.
+- **Reference photos:** none are in the repo or the previews.

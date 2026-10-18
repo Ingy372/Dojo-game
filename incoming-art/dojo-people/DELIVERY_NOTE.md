@@ -39,6 +39,15 @@
   - `founder-headband.png`: the optional headband, switched on;
   - `gif/<id>_<animation>.gif`: a GIF of every animation, all 8 directions.
 
+**Checks and sizes:**
+- Nothing touches a frame edge. The closest is 3 px, at the walk's far foot facing E/W.
+- The ponytail reads clearly from the side and back. Facing S it's a small purple tip by her left shoulder, and facing SE it's hidden behind her head, as a real low ponytail would be.
+- The repo grows by about 58 MB:
+  - sheets: 36 MB;
+  - portraits with layers: 6.5 MB;
+  - previews and GIFs: 15 MB.
+- No photos are in the repo.
+
 **WHY:** Jay approved samples 3. This is the full set the brief asks for, with his decisions applied:
 - the idle personality touches stay;
 - the shared body shape stays;
@@ -50,6 +59,7 @@
 1. **Names:** the names and how each character is introduced come from the Content Writer. The files use the ids above.
 2. **Demonstrate for instructor-2 and the founder:** the brief gives `demonstrate` to Sensei and Senpai only. Should instructor-2 and the founder get it too? It's the same approved block and punch, and about 5 minutes of rendering each.
 3. **Where the two extra characters appear** (instructor-2 and the founder) is for Jay and Claude Code. Their art works anywhere the other dojo people do.
-4. **The player's neck oval** (Batch 6) is left as it is (Jay). It would be a future patch, only if it's noticeable in the game. That's about 3 hours of rendering.
+4. **The ponytail facing S/SE:** if Jay wants it clearly visible from the front too, I can sweep it further over her left shoulder (about 40 minutes, re-rendering only instructor-2).
+5. **The player's neck oval** (Batch 6) is left as it is (Jay). It would be a future patch, only if it's noticeable in the game. That's about 3 hours of rendering.
 
 **NEXT:** Batch 8, when Jay says go.
