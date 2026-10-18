@@ -10,7 +10,8 @@ Proportions: the whole rig is scaled (Sensei taller, Kohai smaller) and the head
 so the adult has a smaller head for his height and the small child a bigger one. Every outline is rebuilt so it stays
 the house width (0.013 tiles) at the new size.
 New actions for the samples: idle (relaxed standing), bow (Jay's rules: legs straight, the bend only from the hips,
-head up, eyes forward), demonstrate (Sensei: a slow, clean block and punch), portrait (one still pose, facing the viewer).
+head up, eyes forward), walk (calm, about 2 tiles/s), talk, nod, point, demonstrate (Sensei and Senpai: a slow, clean block and
+punch), and one portrait pose per expression (portrait_neutral / _happy / _proud / _thinking).
 
     blender -b incoming-art/player-custom/source/player_custom_a.blend -P incoming-art/dojo-people/source/build_people.py -- \
         --who sensei --out $PWD/incoming-art/dojo-people/source/sensei.blend
@@ -42,10 +43,10 @@ LOOKS = {
     "kohai":  dict(base="a", scale=0.84, head=1.06, skin="#efc3a4", hair="#b5482a", hair_hi="#d86a45", face="face-02", hair_style="hair-03",
                    beard=False, gi="#f2f2f2", belt="White",
                    note="small child; smallest, with a bigger head; big round eyes; curly red hair; white gi; white belt"),
-    "instructor-2": dict(base="b", scale=1.20, head=0.84, skin="#f6d7c3", hair="#3a2519", hair_hi="#5a3f2e", face="custom", hair_style="long_purple",
+    "instructor-2": dict(base="b", scale=1.20, head=0.84, skin="#f6d7c3", hair="#3a2519", hair_hi="#5a3f2e", face="custom", hair_style="low_ponytail",
                    beard=False, glasses=False, eye="#33405a", freckles=True, gi="#3f7fd0", belt="Black",
                    note="adult (young), between Senpai and Sensei in height; a friendly cartoon likeness of Jay's wife, based on reference photos provided by Jay "
-                        "(not stored in the repo): fair skin with light freckles, long straight dark brown hair past the chest with purple ends (mostly on her left), "
+                        "(not stored in the repo): fair skin with light freckles, dark brown hair in a low ponytail at the back of the head, the ponytail purple (her request, Batch 7 full set), "
                         "blue-grey eyes, a big warm smile; medium blue gi (samples 3); black belt (Jay confirmed)"),
     "founder": dict(base="a", scale=1.26, head=0.81, skin="#d5a27c", hair="#524c48", hair_hi="#8e8882", face="custom", hair_style="founder_wavy",
                    beard=False, glasses=False, eye="#2a1f1a", gi="#f2f2f2", belt="Black", headband=True,
@@ -284,36 +285,43 @@ if L["hair_style"] == "sensei_top":
         fz = 1.305; fy = front(fx, 1.27, 0.0) + 0.01
         put(f"st_quiff{k}", ellipsoid((fx, fy, fz), (0.05, 0.034, 0.06), rot=(-40, 0, rz), segs=12, rings=8), HAIR_HI if k == 1 else HAIR)
 
-if L["hair_style"] == "long_purple":
-    # long, straight hair with a middle part: a smooth cap, side curtains that frame the face (never over the eyes), a long back
-    # and front strands over the shoulders past the chest. The lower strands hang from the CHEST bone so they follow the body in
-    # the bow instead of cutting through it. The ends are purple (baked in, a key feature), mostly on her left side (+x).
-    PURP = toon_material("I2_PURPLE", "#7d4cc2"); PURP_HI = toon_material("I2_PURPLE_HI", "#a07ae0")
+if L["hair_style"] == "low_ponytail":
+    # a low ponytail (Batch 7 full set, her request): smooth dark brown hair with a middle part, short side pieces framing the
+    # face, pulled back to a dark tie low at the back of the head; the tail is PURPLE (baked in) and falls behind the shoulders,
+    # sweeping to her left behind the shoulder so its purple end shows beside her left arm from the front. Clearly unlike Senpai's high ponytail (tie on the
+    # crown, tail swinging out behind the head). The tail below the tie hangs from the CHEST bone so it follows her in the bow.
+    PURP = toon_material("I2_PURPLE", "#7d4cc2"); PURP_HI = toon_material("I2_PURPLE_HI", "#a07ae0"); TIE = toon_material("I2_TIE", "#26202a")
     hs = L["head"]
-    def H(p): return Vector((p[0] * hs, p[1] * hs, 0.95 + (p[2] - 0.95) * hs))    # head-bone rig coords -> where they land after the head scale
-    bm = ellipsoid(HEAD_C + Vector((0, 0.008, 0.012)), (0.204, 0.196, 0.2), segs=24, rings=16); bisect_keep(bm, (0, -0.19, 1.262), (0, 0.38, 1)); put("lh_cap", bm, HAIR)
-    put("lh_part", ellipsoid((0, front(0, 1.3, 0.0) + 0.02, 1.30), (0.006, 0.05, 0.012), rot=(-40, 0, 0), segs=8, rings=6), HAIR_HI, outline=False)
-    bm = ellipsoid(HEAD_C + Vector((0, 0.03, -0.04)), (0.212, 0.19, 0.24), segs=24, rings=16); bisect_keep(bm, (0, 0.02, 0), (0, 1, 0)); bisect_keep(bm, (0, 0, 0.95), (0, 0, 1)); put("lh_back", bm, HAIR)
+    def H(p): return Vector((p[0] * hs, p[1] * hs, 0.95 + (p[2] - 0.95) * hs))
+    bm = ellipsoid(HEAD_C + Vector((0, 0.008, 0.012)), (0.204, 0.196, 0.2), segs=24, rings=16); bisect_keep(bm, (0, -0.19, 1.262), (0, 0.38, 1)); put("lp_cap", bm, HAIR)
+    put("lp_part", ellipsoid((0, front(0, 1.3, 0.0) + 0.02, 1.30), (0.006, 0.05, 0.012), rot=(-40, 0, 0), segs=8, rings=6), HAIR_HI, outline=False)
+    bm = ellipsoid(HEAD_C + Vector((0, 0.02, -0.01)), (0.207, 0.195, 0.205), segs=24, rings=16); bisect_keep(bm, (0, 0.03, 0), (0, 1, 0)); bisect_keep(bm, (0, 0, 1.0), (0, 0, 1)); put("lp_back", bm, HAIR)
     for x, sd in ((1, "L"), (-1, "R")):
-        put(f"lh_curtain.{sd}", ellipsoid((0.178 * x, -0.035, 1.07), (0.05, 0.075, 0.16), rot=(6, 0, -6 * x), segs=12, rings=10), HAIR)
-    # the long part below the jaw, on the chest bone
-    for x, sd in ((1, "L"), (-1, "R")):
-        top = H((0.17 * x, -0.04, 0.96))
-        ends_from = 0.86 if x > 0 else 0.73                        # purple starts higher on her left (only the tips on her right)
-        for k in range(6):
-            z = top.z - 0.045 - k * 0.048
-            p = Vector((top.x * (1 - 0.02 * k) , -0.045 - 0.006 * k, z))
-            purple = z < ends_from
-            put(f"lh_front{sd}{k}", ellipsoid(p, (0.05 - 0.002 * k, 0.04, 0.042), segs=10, rings=8), PURP if purple else HAIR, bone="chest")
-            if k % 2 == 0: put(f"lh_fronthi{sd}{k}", ellipsoid(p + Vector((0.012 * x, -0.03, 0.01)), (0.016, 0.012, 0.03), segs=8, rings=6),
-                               PURP_HI if purple else HAIR_HI, outline=False, bone="chest")
-    for k in range(6):                                              # the back: a wide fall of hair behind the shoulders
-        z = H((0, 0, 0.98)).z - k * 0.05
-        p = Vector((0.0, 0.14 + 0.004 * k, z))
-        put(f"lh_back{k}", ellipsoid(p, (0.16 - 0.006 * k, 0.05, 0.05), segs=14, rings=8), HAIR, bone="chest")
-        if z < 0.84:
-            put(f"lh_backend{k}", ellipsoid(p + Vector((0.075, 0.004, 0)), (0.08, 0.05, 0.05), segs=12, rings=8), PURP, bone="chest")
-            if z < 0.78: put(f"lh_backendr{k}", ellipsoid(p + Vector((-0.09, 0.004, 0)), (0.06, 0.05, 0.045), segs=12, rings=8), PURP, bone="chest")
+        put(f"lp_side.{sd}", ellipsoid((0.176 * x, -0.03, 1.12), (0.04, 0.06, 0.1), rot=(8, 0, -8 * x), segs=12, rings=8), HAIR)
+        put(f"lp_sweep.{sd}", ellipsoid((0.13 * x, 0.13, 1.1), (0.06, 0.08, 0.05), rot=(0, 0, 30 * x), segs=12, rings=8), HAIR)   # pulled back to the tie
+    put("lp_tie", ellipsoid((0.025, 0.2, 1.03), (0.045, 0.03, 0.035), segs=12, rings=8), TIE)
+    put("lp_root", ellipsoid((0.035, 0.21, 0.99), (0.05, 0.04, 0.045), segs=12, rings=8), PURP)
+    t0 = H((0.035, 0.21, 0.99))
+    for k in range(5):                               # the tail, on the chest bone: gently tapering, drifting to her left
+        z = t0.z - 0.045 - k * 0.05; x = t0.x + 0.035 + 0.03 * k; y = max(0.145, t0.y - 0.015 * k)
+        w = 0.055 - 0.006 * k
+        put(f"lp_tail{k}", ellipsoid((x, y, z), (w, 0.042 - 0.003 * k, 0.05), rot=(-6, 0, -4), segs=12, rings=8), PURP, bone="chest")
+        if k % 2 == 0: put(f"lp_tailhi{k}", ellipsoid((x + 0.012, y + 0.03, z + 0.012), (0.016, 0.012, 0.03), segs=8, rings=6), PURP_HI, outline=False, bone="chest")
+# ------------------------------------------------------------------ portrait expressions (Batch 7 full set), every character
+# Mouth pieces named expr_<expr>_*: portrait_prep.py shows the set for PORTRAIT_EXPR (neutral / happy / proud / thinking).
+# The likeness faces have soft + toothy already; the player faces (Senpai, Kohai) keep their own mouth as the neutral one.
+EM = toon_material("X_MOUTH", "#7a2e30", 1.0, 1.0); ET = toon_material("X_TEETH", "#fbf7f0", 1.0, 1.0)
+for ob in [o for o in bpy.data.objects if o.parent_bone == "head" and o.name.endswith("_mouth") and not o.name.startswith("expr_")]:
+    ob.name = "expr_soft_" + ob.name                 # the player face's mouth is the neutral one
+if not bpy.data.objects.get("expr_toothy_mouth"):
+    bm = ellipsoid((0, front(0, 1.03, -0.008), 1.03), (0.04, 0.009, 0.022), segs=14, rings=8); bisect_keep(bm, (0, 0, 1.036), (0, 0, -1)); put("expr_toothy_mouth", bm, EM, outline=False)
+    bm = ellipsoid((0, front(0, 1.03, -0.011), 1.031), (0.032, 0.007, 0.008), segs=12, rings=6); bisect_keep(bm, (0, 0, 1.036), (0, 0, -1)); put("expr_toothy_teeth", bm, ET, outline=False)
+    for n in ("expr_toothy_mouth", "expr_toothy_teeth"): bpy.data.objects[n].hide_render = True    # sprites keep the face's own mouth
+mw = 1.3 if A.who == "founder" else 1.0
+bm = ellipsoid((0, front(0, 1.034, -0.008), 1.034), (0.044 * mw, 0.008, 0.014), segs=14, rings=8); bisect_keep(bm, (0, 0, 1.037), (0, 0, -1))
+put("expr_proud_mouth", bm, EM, outline=False)        # a wide, closed, confident smile
+put("expr_thinking_mouth", ellipsoid((0.016, front(0.016, 1.03, -0.008), 1.03), (0.018 * mw, 0.007, 0.006), rot=(0, 0, -12), segs=10, rings=6), EM, outline=False)
+for n in ("expr_proud_mouth", "expr_thinking_mouth"): bpy.data.objects[n].hide_render = True
 
 # body B fix: build_custom.py shrank body B's ears with ob.scale, which scales about the world origin and so also moved them
 # down to the jaw. Here the ears get their real size (0.85) about their own centre, in their place beside the eyes.
@@ -460,8 +468,54 @@ make_action("bow", bow, 16, False, {"keyFrames": {"feet_together": 2, "bow_down"
             "note": "standing bow from the relaxed idle, 20 frames = 1.25 s; legs straight once the heels are together, the bend only from the hips, head up, eyes forward"},
             tags="feet_together:2,bow_hold:8-12,upright:17")
 
-if A.who == "sensei":
-    # DEMONSTRATE (sample): slow and clean, so a kid can copy it. From the relaxed stance he steps the left foot out to a
+# WALK: a calm walk (not the player's jog). 12 frames = one loop (2 steps). The step scales with the character's size (0.42 rig
+# units = about the player's leg length x 0.9), and the fps is chosen so the loop moves at about 2 tiles/s; a planted foot
+# moves back exactly one frame of travel per frame, so the feet don't slide when the game moves the character at that speed.
+WF = 12; STEP_RIG = 0.42; D = STEP_RIG / 6                      # rig units per frame (6 frames per step)
+WALK_FPS = round(2.0 * WF / (2 * STEP_RIG * L["scale"]))
+STRIDE = 2 * STEP_RIG * L["scale"]; WALK_SPEED = STRIDE * WALK_FPS / WF
+def foot_path(i):                                              # one foot over 12 frames: 7 frames planted, 5 in the swing
+    if i <= 6: return (-3 * D + D * i, 0.07, -4 + 14 * i / 6)    # contact in front -> push off behind
+    k = i - 6; t = ease(k / 6)
+    return (3 * D - 6 * D * t, 0.07 + 0.055 * math.sin(math.pi * k / 6), 10 - 16 * t)
+walk = []
+for i in range(WF):
+    l, r = foot_path(i), foot_path((i + 6) % WF); ph = 2 * math.pi * i / WF; sw = math.cos(ph)
+    bob = -0.004 - 0.006 * (0.5 + 0.5 * math.cos(2 * ph))      # lowest at the contacts, highest as the legs pass
+    p = pose(hips=(0.006 * math.cos(ph), 0, bob), hips_rot=(2, -5 * sw, 0), chest_rot=(1, 7 * sw, 0), head_rot=(-16, -3 * sw, 0),
+             foot_l=(0.08, l[0], l[1]), foot_r=(-0.08, r[0], r[1]), foot_l_rot=(l[2], 0, 0), foot_r_rot=(r[2], 0, 0),
+             hand_l=(0.19, -0.01 + 0.07 * sw, 0.55 + 0.012 * abs(sw)), hand_r=(-0.19, -0.01 - 0.07 * sw, 0.55 + 0.012 * abs(sw)))
+    walk.append(p)
+wa = make_action("walk", walk, WALK_FPS, True, {"note": f"calm walk, loop of 2 steps; about {WALK_SPEED:.2f} tiles/s at {WALK_FPS} fps"})
+wa["sprite_stride_tiles"] = round(STRIDE, 4); wa["sprite_design_speed"] = round(WALK_SPEED, 4)
+
+# TALK: a gentle speaking gesture, loop (played while a speech card is open): one open hand rises a little in front of the
+# body and makes a small, calm beat; the head nods softly with the words. 16 frames at 10 fps.
+TALK = []
+for i in range(16):
+    ph = 2 * math.pi * i / 16; b = math.sin(ph); b2 = math.sin(2 * ph)
+    p = dict(REL)
+    p["hand_r"] = (-0.15, -0.12 - 0.02 * b, 0.66 + 0.035 * (0.5 + 0.5 * b))
+    p["head_rot"] = (REL["head_rot"][0] + 2.2 * b2, REL["head_rot"][1] + 3 * b, REL["head_rot"][2])
+    p["chest_rot"] = (REL["chest_rot"][0] + 1.0 * b, REL["chest_rot"][1] - 2 * b, REL["chest_rot"][2])
+    TALK.append(p)
+make_action("talk", TALK, 10, True, {"note": "gentle speaking gesture, loop"})
+
+# NOD: an approving nod, once: two small nods, the second smaller, then back. 12 frames at 12 fps.
+def head(dp): p = dict(REL); p["head_rot"] = (REL["head_rot"][0] + dp, REL["head_rot"][1], REL["head_rot"][2]); return p
+NOD = [head(v) for v in (0, 6, 13, 15, 8, 1, 7, 10, 5, 1, 0, 0)]
+make_action("nod", NOD, 12, False, {"keyFrames": {"down": 4, "second_down": 8}, "note": "approving nod, once"}, tags="down:4")
+
+# POINT: points / gestures toward something ("over there"), once, holds the last frame: the right arm rises and extends
+# forward and to the right, the head and chest turn a little that way. 14 frames at 12 fps; frames 10-14 are the hold.
+PT = dict(REL); PT["hand_r"] = (-0.29, -0.30, 0.93); PT["head_rot"] = (REL["head_rot"][0] - 2, -14, 0); PT["chest_rot"] = (0, -10, 0); PT["hips_rot"] = (0, -3, 0)
+PT_UP = dict(REL); PT_UP["hand_r"] = (-0.2, -0.16, 0.76); PT_UP["head_rot"] = (REL["head_rot"][0], -8, 0)
+POINT = [REL, blend(REL, PT_UP, 0.4), blend(REL, PT_UP, 0.8), PT_UP, blend(PT_UP, PT, 0.35), blend(PT_UP, PT, 0.7), blend(PT_UP, PT, 0.92), PT, PT, PT, PT, PT, PT, PT]
+make_action("point", POINT, 12, False, {"keyFrames": {"pointing": 8, "hold": "8-14"}, "holdLastFrame": True,
+            "note": "points forward-right (his/her right), once; hold the last frame"}, tags="pointing:8")
+
+if A.who in ("sensei", "senpai"):
+    # DEMONSTRATE (approved in the samples): slow and clean, so a kid can copy it. From the relaxed stance he steps the left foot out to a
     # natural parallel stance (heiko-dachi, feet shoulder width), fists ready in front of the belt (yoi). Then:
     #   inside-to-outside middle block (uchi-uke) with the LEFT forearm, the right fist chambered at the right hip, palm up;
     #   a middle punch (chudan-zuki) with the RIGHT fist to the centre line at chest height, the left fist pulled back to
@@ -484,10 +538,16 @@ if A.who == "sensei":
                  "note": "slow demonstration (sample): parallel stance, left inside-to-outside middle block, then right middle punch with hikite; once"},
                 tags="block:9-12,punch:15")
 
-# PORTRAIT: one still pose for the speech-card portrait (facing the viewer, head level for a front camera)
+# PORTRAITS: one still pose per expression (facing the viewer, head level for the front camera). portrait_prep.py also
+# switches the mouth (and moves the brows) for the expression.
 PORT = dict(REL); PORT["head_rot"] = (-2, 0, 0); PORT["hips_rot"] = (0, 0, 0); PORT["chest_rot"] = (0, 0, 0); PORT["hips"] = (0, 0, REL["hips"][2])
 if A.who == "senpai": PORT["head_rot"] = (-2, 0, 3)
-make_action("portrait", [PORT], 1, False, {"note": "portrait still (rendered with the portrait camera, see README)"})
+make_action("portrait", [PORT], 1, False, {"note": "portrait still (samples)"})
+PH = dict(PORT); PH["head_rot"] = (PORT["head_rot"][0] - 1, 0, 4)                               # happy: a small warm tilt
+PP = dict(PORT); PP["head_rot"] = (-8, 0, 0); PP["chest_rot"] = (-3, 0, 0)                        # proud: chin up, chest up
+PTK = dict(PORT); PTK["head_rot"] = (-5, 8, 7); PTK["hand_r"] = (-0.06, -0.2, 0.87)               # thinking: head tilted, hand to the chin
+for ex, pp in (("neutral", PORT), ("happy", PH), ("proud", PP), ("thinking", PTK)):
+    make_action(f"portrait_{ex}", [pp], 1, False, {"note": f"portrait still, {ex} (rendered with the portrait camera, see README)"})
 
 # ------------------------------------------------------------------ restore and write the meta
 arm.data.pose_position = "POSE"; arm.animation_data.action = bpy.data.actions["idle"]
@@ -496,7 +556,7 @@ for k in ("palettes", "palettesDraftLabels", "groups", "optionNotes"): meta.pop(
 tg = meta.get("tintGuidance", {}); tg.pop("skin", None); tg.pop("hair", None)
 tg["gi"] = f"multiply by this character's gi colour; suggested placeholder {L['gi']}"
 meta["character"] = A.who
-meta["suggested"] = dict(gi=L["gi"], belt=L["belt"], note="PLACEHOLDER look for the samples; the game sets the real belt (beltStyles) and gi colour")
+meta["suggested"] = dict(gi=L["gi"], belt=L["belt"], note="default look (approved by Jay); the game can set another belt (beltStyles) and gi colour")
 meta["lookNote"] = L["note"]
 if L.get("headband"):
     meta["optionalLayers"] = {"headband": {"default": False, "note": "the founder's red headband; OFF by default (Jay, samples 3). Draw it only when the game switches it on"}}

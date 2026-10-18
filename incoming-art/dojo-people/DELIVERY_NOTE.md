@@ -1,47 +1,55 @@
-# Delivery Note: Batch 7, dojo people, SAMPLES 3, 2026-10-17
+# Delivery Note: Batch 7, dojo people, FULL SET, 2026-10-17
 
-**WHAT:** the fixes from your review of samples 2 (likenesses approved). These are still samples; there are no full sheets yet.
+**WHAT:** the full Batch 7 set for all five characters: `sensei`, `senpai`, `kohai`, `instructor-2` and `founder`.
 
-1. **Sensei's glasses:** the temple arms now run from the frame, back along the side of the head, over the ear, and a little down behind it. They read as real glasses in side and three-quarter views and in the portrait.
-2. **The founder's red headband** is still its own optional layer (`headband`), but it's **off by default**: in the JSON (`optionalLayers.headband.default: false`) and in every preview except `sample-4-founder-headband.png`.
-3. **New default gi colours** (tints; `suggested.gi` in each JSON):
-   - Sensei: charcoal `#4a4a55`, the player palette's charcoal. It reads better than black against the black belt, and the belt keeps its option C rim and centre stripe contrast.
-   - instructor-2: medium blue `#3f7fd0`, clearly lighter than the old navy.
-   - The founder: white `#f2f2f2`.
-4. **Kohai:** no changes to the look. Kohai gets only the collar fix from item 5, because it's in the shared build.
-5. **The "open circle below the head" is fixed on all five.** Your school wears a shirt under the gi, so no skin shows except the face, hands and feet.
-   - The skin oval in the neck opening (from the Batch 1 model) is removed.
-   - The opening is closed with gi cloth on the tinted gi layer, so the whole chest and collar recolour with the gi.
-   - The lapels now cross high on the chest, left over right, as a gi is worn, as a subtle lighter line in the gi colour.
-   - The sprites and the portraits use the same geometry.
+- **Sheets** (`sprites/<id>/`): 8 directions, 128 × 160 px frames, feet anchor (64, 136.96), in the same JSON format as `player.json`.
+  - Every character has `idle`, `walk`, `bow`, `talk`, `nod` and `point`.
+  - Sensei and Senpai also have `demonstrate`.
+  - `walk` is a calm walk at about 2 tiles/s, with `groundMotion` (stride and design speed), like the player's walk.
+  - `point` holds its last frame.
+- **Portraits** (`portraits/<id>/`): 512 × 512 transparent, in 4 expressions (`neutral`, `happy`, `proud`, `thinking`), with the belt at the bottom edge.
+  - Flattened PNGs use the default colours: `<id>_portrait_<expression>.png`.
+  - The layers and a JSON are there too, so the game can tint the gi and belt like the sprites.
+- **Layers:**
+  - `body` (real colours);
+  - `gi` (tinted);
+  - the player's belt set (tinted with `beltStyles`);
+  - for the founder only, an optional `headband` overlay, **off by default**.
+- **Default colours:**
 
-**Previews** (in `preview/`, everything re-rendered for all five):
-- `sample-1-lineup.png` and `sample-1-lineup-S-3x.png`;
-- `sample-2-<id>.gif`;
-- `sample-3-portraits.png` (top row neutral, bottom row happy) and the single `<id>_portrait_<neutral|happy>.png` files;
-- `sample-4-founder-headband.png` (the optional headband, switched on).
+| Id | Gi | Belt |
+| --- | --- | --- |
+| `sensei` | charcoal `#4a4a55` | Black |
+| `senpai` | white | Brown/Black |
+| `kohai` | white | White |
+| `instructor-2` | blue `#3f7fd0` | Black |
+| `founder` | white | Black |
 
-**The player (Batch 6, already in main) has the same skin oval.** I haven't re-rendered it. It's on the tinted skin layer, so it shows in the player's skin tone. Measured on body A against the committed sheets:
-- **At game size (48 px per tile):** a patch of about 4 × 4 px (up to about 19 game pixels) in `walk` and `bow` facing S and SE. It's about half that in `idle`, where the guard fists cover most of it, and it's small facing E.
-- **How it reads:** it shows most on dark gis and light skin, and least on a white gi.
-- **Re-render cost:** first rebuild the models with the same collar fix (`build_character.py` → `player_character.blend` → `build_custom.py`). Then:
-  - re-render `player-character`: about 9 min;
-  - re-render bodies A and B: about 80 min each on 8 cores;
-  - previews and checks: about 15 min.
-  - **Total:** about 3 hours, plus a new set of committed sheets (repo growth similar to Batch 6).
+- **instructor-2's new ponytail** (her request): her hair is her natural dark brown, pulled back into a low ponytail tied at the back of the head. The ponytail itself is purple.
+  - It's clearly unlike Senpai's high ponytail, which is tied on the crown and swings out behind.
+  - It sweeps behind her left shoulder, so the purple shows from the front as well as from the side and back.
+  - It hangs from the chest bone, so it follows her in the bow.
+- **The closed gi collar** is on every character: no skin shows at the neck.
+- **Portrait gi:** less puffy than in the samples (less smoothing on the gi).
+- **Previews** (in `preview/`):
+  - `lineup-S-3x.png`: everyone next to the player, facing you;
+  - `lineup-8dir.png`: the line-up in all 8 directions;
+  - `portrait-sheet.png`: all 20 portraits (rows: Sensei, instructor-2, founder, Senpai, Kohai; columns: neutral, happy, proud, thinking);
+  - `instructor-2-ponytail-3x.png`: the ponytail in 8 directions, idle and mid-bow;
+  - `founder-headband.png`: the optional headband, switched on;
+  - `gif/<id>_<animation>.gif`: a GIF of every animation, all 8 directions.
 
-**DECIDE (Jay)**
-1. **The player:** fix the collar on the Batch 6 player too (about 3 hours, see above), or leave it?
-2. **Names and introductions** for all five come from the Content Writer. Files keep the ids `sensei`, `senpai`, `kohai`, `instructor-2` and `founder`.
-3. **The collar:** is the closed gi collar with the crossed lapels what your students' gis look like? Or should the lapels be stronger (a darker line) or subtler?
-4. **Body build:** the rig is shared, so the founder isn't broader than Sensei, only older in the face and hair. Is that OK for now, or should I make a sturdier body variant? That's more work, and it touches every animation.
-5. **Portrait style:** the gi still looks a little puffy at 512 px. For the full set I'd make the 4 expressions `neutral`, `happy`, `proud` and `thinking`.
+**WHY:** Jay approved samples 3. This is the full set the brief asks for, with his decisions applied:
+- the idle personality touches stay;
+- the shared body shape stays;
+- the portrait direction stays, with less gi puffiness;
+- the collar is closed on every new character;
+- the Batch 6 player's neck oval stays as it is for now.
 
-The open questions from samples 1 (idle poses, the demonstration technique) still stand.
+**DECIDE**
+1. **Names:** the names and how each character is introduced come from the Content Writer. The files use the ids above.
+2. **Demonstrate for instructor-2 and the founder:** the brief gives `demonstrate` to Sensei and Senpai only. Should instructor-2 and the founder get it too? It's the same approved block and punch, and about 5 minutes of rendering each.
+3. **Where the two extra characters appear** (instructor-2 and the founder) is for Jay and Claude Code. Their art works anywhere the other dojo people do.
+4. **The player's neck oval** (Batch 6) is left as it is (Jay). It would be a future patch, only if it's noticeable in the game. That's about 3 hours of rendering.
 
-**NEXT:** once you approve, I'll render the full set for all five:
-- `idle`, `walk`, `bow`, `talk`, `nod`, `point`, plus `demonstrate` for Sensei and Senpai, all in 8 directions;
-- 4 portraits each;
-- the line-up, the GIFs and the portrait sheet.
-
-Then I'll stop for your review again.
+**NEXT:** Batch 8, when Jay says go.

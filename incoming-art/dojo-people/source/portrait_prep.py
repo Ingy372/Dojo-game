@@ -17,9 +17,23 @@ for ob in [o for o in bpy.data.objects if o.name.endswith("_outline") and o.type
     bmesh.ops.reverse_faces(bm, faces=bm.faces[:]); bm.to_mesh(ob.data); bm.free()
 for ob in bpy.data.objects:
     if ob.type == "MESH" and len(ob.data.vertices) > 8:
-        m = ob.modifiers.new("smooth", "SUBSURF"); m.levels = 2; m.render_levels = 2
+        # smoother curves for the big size; the gi only gets one level, so it stays crisp cloth instead of looking puffy
+        gi = any(c.name == "L_gi" for c in ob.users_collection)
+        m = ob.modifiers.new("smooth", "SUBSURF"); m.levels = m.render_levels = (1 if gi else 2)
 import os
-EXPR = os.environ.get("PORTRAIT_EXPR", "")   # "neutral": the soft closed smile; "happy" (or unset): the big toothy smile
-for ob in bpy.data.objects:
-    if ob.name.startswith("expr_soft_"): ob.hide_render = EXPR != "neutral"
-    if ob.name.startswith("expr_toothy_"): ob.hide_render = EXPR == "neutral"
+from mathutils import Matrix, Vector
+EXPR = os.environ.get("PORTRAIT_EXPR", "")   # neutral / happy / proud / thinking; unset = the mouths as built (the sprite face)
+if EXPR:
+    for ob in bpy.data.objects:
+        key = {"neutral": "soft", "happy": "toothy"}.get(EXPR, EXPR)     # the mouth set for each expression
+        if ob.name.startswith("expr_"): ob.hide_render = not ob.name.startswith(f"expr_{key}_")
+    # brows: proud lifts both a little; thinking lifts one and lowers the other (moved in the head's space)
+    lift = {"proud": (0.008, 0.008), "thinking": (0.016, -0.006)}.get(EXPR)
+    if lift:
+        bpy.context.view_layer.update()
+        for ob in bpy.data.objects:
+            n = ob.name
+            if ob.type != "MESH" or "brow" not in n or n.endswith("_outline"): continue
+            dz = lift[0] if n.endswith(".L") else lift[1]
+            me = ob.data
+            for v in me.vertices: v.co.z += dz

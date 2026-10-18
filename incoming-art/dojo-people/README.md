@@ -1,23 +1,32 @@
 # Dojo people (Batch 7): technical sheet
 
-**Status: SAMPLES 3.** Waiting for Jay's OK before the full set. The full set is all animations × 8 directions, plus 4 portraits per character.
+**Status: FULL SET** (2026-10-17). These are five characters: `sensei`, `senpai`, `kohai`, `instructor-2` and `founder`. Each has 8-direction sheets for every animation, plus 512 px portraits in 4 expressions.
 
-There are five characters: `sensei`, `senpai`, `kohai`, `instructor-2` and `founder`. They are built by script on the **approved Batch 6 player models**, so they use the same rig, camera, toon light, outline width and belt layers.
+They are built by script on the **approved Batch 6 player models**, so they share the rig, camera, toon light, outline width and belt layers.
 
 ```bash
 blender -b incoming-art/player-custom/source/player_custom_a.blend -P incoming-art/dojo-people/source/build_people.py -- \
     --who sensei --out $PWD/incoming-art/dojo-people/source/sensei.blend      # kohai, founder: also from _a; senpai, instructor-2: from _b
-bash incoming-art/dojo-people/source/make_samples.sh                           # the sample sheets and 512 px portraits (ONLY="..." for some)
-python3 incoming-art/dojo-people/source/make_people_preview.py --sheets incoming-art/dojo-people/sprites/samples \
-    --player incoming-art/player-character/sprites --out incoming-art/dojo-people/preview
+bash incoming-art/dojo-people/source/make_full.sh                              # all sheets + raw portraits (about 35 min, 2 Blender lanes)
+python3 incoming-art/dojo-people/source/make_people_full_preview.py            # portraits/<id>/ and every preview
 ```
 
-The sample sheets in `sprites/samples/` aren't committed (`.gitignore`); only the previews are for review.
+`make_samples.sh` and `make_people_preview.py` made the earlier samples, and they still work.
+
+## Files
+
+| Path | What |
+| --- | --- |
+| `sprites/<id>/<id>.json` + `<id>_<layer>_<animation>.png` | The sheets, in the same JSON format as `player.json`: 8 rows (directions) × frames, 128 × 160 per frame |
+| `portraits/<id>/<id>_portrait_<expression>.png` | 512 × 512 transparent portraits, flattened with the default gi and belt (the founder's headband off) |
+| `portraits/<id>/layers/<id>_portrait_<expression>_<layer>.png` + `<id>_portraits.json` | The same portraits as layers, to tint like the sprites |
+| `preview/` | The line-ups, `portrait-sheet.png`, `instructor-2-ponytail-3x.png`, `founder-headband.png`, and `gif/<id>_<animation>.gif` (every animation, all 8 directions) |
+| `source/` | The build scripts and the five `.blend` files |
 
 ## How they're made
 
 - **Frames:** 128 × 160 px, feet anchor (64, 136.96), 80 px per tile, the 35° camera. This is the same as all player art since Batch 6.
-- **Height:** the whole rig is scaled, and the head bone is scaled back the other way, so heads stay about the player's size. That gives the adult adult proportions and the small child a bigger head for their size.
+- **Height:** the whole rig is scaled, and the head bone is scaled back the other way, so heads stay about the player's size.
 
 | Character | Rig scale | Head scale | On-screen height, idle S (render px) |
 | --- | --- | --- | --- |
@@ -29,59 +38,72 @@ The sample sheets in `sprites/samples/` aren't committed (`.gitignore`); only th
 | Founder | 1.26 | 0.81 | 118 |
 
 - **Outline:** every outline is rebuilt, so the line stays the house 0.013 tiles (about 1 px) at every size.
-- **Layers:**
+- **Layers** (sprites and portraits alike):
 
 | Order | Layer | Tint | What |
 | --- | --- | --- | --- |
-| 0 | `body` | no | Skin, face, hair, beard, in real colours. These characters don't change their look, so there's no skin or hair tint and no pick-one options |
-| 1 | `gi` | **yes** | Neutral grey. A suggested gi colour is in the JSON (`suggested.gi`) |
-| 2–10 | `belt`, `belt-sheen`, `belt-center`, `belt-center-edge`, `belt-rim`, `belt-tape1-edge`, `belt-tape1`, `belt-tape2-edge`, `belt-tape2` | as the player | Exactly the player's belt set. The game sets the real belt with `beltStyles` (option C) |
-| 11 | `headband` | no | **Founder only.** An optional overlay (`optional: true`), the red headband, drawn last. It's **off by default**: the JSON has `optionalLayers.headband.default: false`, and the previews leave it off (except `sample-4`) |
+| 0 | `body` | no | Skin, face, hair and beard, in real colours. These characters keep their look, so there's no skin or hair tint |
+| 1 | `gi` | **yes** | Neutral grey, multiplied by the gi colour (`suggested.gi`) |
+| 2–10 | `belt`, `belt-sheen`, `belt-center`, `belt-center-edge`, `belt-rim`, `belt-tape1-edge`, `belt-tape1`, `belt-tape2-edge`, `belt-tape2` | as the player | Exactly the player's belt set. The game sets the belt with `beltStyles` (option C) |
+| 11 | `headband` | no | **Founder only.** The red headband, an optional overlay drawn last. **Off by default** (`optionalLayers.headband.default: false`) |
 
-- **Animations in the samples:**
+- **Defaults** (`suggested` in each JSON):
+
+| Id | Gi | Belt |
+| --- | --- | --- |
+| `sensei` | charcoal `#4a4a55` | `Black` |
+| `senpai` | white `#f2f2f2` | `Brown/Black` |
+| `kohai` | white `#f2f2f2` | `White` |
+| `instructor-2` | blue `#3f7fd0` | `Black` |
+| `founder` | white `#f2f2f2` | `Black` |
+
+## Animations (8 directions each)
 
 | Animation | Frames | fps | Who | Notes |
 | --- | --- | --- | --- | --- |
-| `idle` | 8 | 8 | all | Relaxed, natural standing. Loops |
-| `bow` | 20 | 16 | all | 1.25 s. It starts and ends on the relaxed idle |
-| `demonstrate` | 28 | 12 | Sensei | 2.33 s. Block on frames 9–12, punch on frame 15, held on 15–19 |
+| `idle` | 8 | 8 | all | Relaxed, natural standing; each character has a small personality touch (approved). Loops |
+| `walk` | 12 | 22–34 | all | A calm walk (2 steps per loop), about 2 tiles/s. See the table below. Loops |
+| `bow` | 20 | 16 | all | 1.25 s. It starts and ends on the relaxed idle. Legs straight, the bend only from the hips, head up, eyes forward |
+| `talk` | 16 | 10 | all | A gentle speaking gesture: the right hand rises a little in a calm beat, with small head nods. Loops while a speech card is open |
+| `nod` | 12 | 12 | all | An approving nod, once: two nods, the second smaller. Tag `down` on frame 4 |
+| `point` | 14 | 12 | all | Points forward and to the character's right ("over there"), once. **Hold the last frame** (`holdLastFrame: true`); the point is reached on frame 8 |
+| `demonstrate` | 28 | 12 | Sensei, Senpai | The approved demonstration: a parallel stance, a left inside-to-outside middle block, then a right middle punch with the other fist pulled back to the hip. Block on frames 9–12, punch on frame 15, held on 15–19 |
 
-  - **The bow** follows Jay's rules: heels together, legs straight (natural, not locked), a 30° bend only from the hips with a straight back, head up and eyes forward, hands at the sides of the thighs.
-  - **Sensei's demonstration** is slow, so it reads as a lesson, in this order:
-    1. a natural parallel stance (heiko-dachi), fists ready in front of the belt;
-    2. a left inside-to-outside middle block, with the right fist chambered at the hip;
-    3. a right middle punch to the centre line at chest height, while the left fist pulls back to the hip (hikite). The elbow stays soft, not locked, and the shoulders stay level;
-    4. back to ready, then the relaxed stance.
-- **Portraits:** 512 × 512 px, head and shoulders, facing the viewer. They use the same models and light, with the belt layers at the bottom edge (tinted, as above).
-  - Rendered with `tools/render_sprites.py` and a front camera (5°). The framing is fitted to each character.
-  - `source/portrait_prep.py` makes two changes for the big size, in memory only:
-    - curves are smoothed (subdivision);
-    - the outline is thinner, 0.006 tiles (about 3–4 px instead of 7).
-  - Likeness characters (Sensei, instructor-2, founder) have two expressions in the samples: `happy` (the big toothy smile) and `neutral` (a soft closed smile). The two mouths are both in the model, and `portrait_prep.py` shows one, chosen by `PORTRAIT_EXPR=neutral|happy`. Senpai and Kohai use their player face, so they have one portrait each. The full set will have 4 expressions.
+**Walk:** the step scales with each character's size, and the fps is chosen so a loop moves at about 2 tiles/s. The JSON's `groundMotion` gives the stride and the design speed, like the player's walk. Planted feet stay still when fps = speed × `fpsPerTilePerSec`.
 
-## The gi collar (samples 3, all five characters)
+| Id | fps | Stride per loop (tiles) | Design speed (tiles/s) |
+| --- | --- | --- | --- |
+| `sensei` | 22 | 1.075 | 1.97 |
+| `senpai` | 26 | 0.924 | 2.00 |
+| `kohai` | 34 | 0.706 | 2.00 |
+| `instructor-2` | 24 | 1.008 | 2.02 |
+| `founder` | 23 | 1.058 | 2.03 |
+
+## Portraits
+
+- **Size and framing:** 512 × 512 px, transparent, head and shoulders facing the viewer, with the belt at the bottom edge. They use the same models and light, a front camera (5°), and framing fitted to each character.
+- **Expressions:**
+  - `neutral`: a soft closed smile;
+  - `happy`: a big warm smile with a little head tilt;
+  - `proud`: chin and chest up, brows lifted, a wide closed smile;
+  - `thinking`: head tilted, one brow up, a small side mouth, and the right hand to the chin.
+- **How the expressions are made:** the mouths are all in the model (`expr_<set>_*`), and `source/portrait_prep.py` shows one set with `PORTRAIT_EXPR` and moves the brows.
+- **Size-related changes:** `portrait_prep.py` also makes, in memory only, smoother curves (subdivision: 2 levels on the head and hands, 1 on the gi, so it stays crisp cloth instead of puffy) and a thinner outline (0.006 tiles, about 3–4 px).
+
+## The gi collar (all five characters)
 
 Jay's school wears a shirt under the gi, so no skin shows except the face, hands and feet. The Batch 1 model had a skin oval in the neck opening (`chest_v`), which read as a hole. `build_people.py` removes it, fills the opening with gi cloth (`gi_collar_fill`) on the tinted gi layer, and re-lays the lapels to cross high on the chest, left over right. The under lapel ends where the over lapel covers it. The lapels stay a lighter tone of the gi, as a subtle line. The portraits use the same geometry, and the old portrait-only neck tweak is gone. The player (Batch 6) still has the oval; see the Delivery Note.
 
-## Looks (see DECIDE in the Delivery Note)
+## Looks (approved by Jay)
 
 | Id | Look |
 | --- | --- |
-| `sensei` | A friendly cartoon likeness of Jay, based on reference photos provided by Jay (not stored in the repo). A young adult, the tallest. Light skin, short brown hair (short sides, a tousled top swept up at the front), bold black rectangular glasses (with temple arms back over the ears), a light brown moustache and short chin beard, a big warm smile. Charcoal gi (#4a4a55, samples 3), black belt. Stands tall, hands relaxed at the sides |
-| `instructor-2` | A friendly cartoon likeness of Jay's wife, based on reference photos provided by Jay (not stored in the repo). Built on body B. An adult, between Senpai and Sensei in height. Fair skin with light freckles, blue-grey eyes, long straight dark brown hair past the chest with purple ends (baked in, mostly on her left), a big warm smile. Medium blue gi (#3f7fd0, samples 3), black belt. The long hair below the jaw hangs from the chest bone, so it follows her in the bow |
+| `sensei` | A friendly cartoon likeness of Jay, based on reference photos provided by Jay (not stored in the repo). A young adult, the tallest. Light skin, short brown hair (short sides, a tousled top swept up at the front), bold black rectangular glasses (with temple arms back over the ears), a light brown moustache and short chin beard, a big warm smile. Charcoal gi (#4a4a55), black belt. Stands tall, hands relaxed at the sides |
+| `instructor-2` | A friendly cartoon likeness of Jay's wife, based on reference photos provided by Jay (not stored in the repo). Built on body B. An adult, between Senpai and Sensei in height. Fair skin with light freckles, blue-grey eyes, dark brown hair with a middle part, pulled back into a low ponytail tied at the back of the head. The ponytail is purple (baked in, her request), and it sweeps behind her left shoulder so it shows from the front too. A big warm smile. Medium blue gi (#3f7fd0), black belt. The ponytail below the tie hangs from the chest bone, so it follows her in the bow |
 | `founder` | A friendly cartoon likeness of the school's founder, based on reference photos provided by Jay (not stored in the repo). Built on body A. An older adult, about Sensei's height. Tanned olive skin, short wavy dark hair going grey at the temples, a full grey-and-dark moustache with light stubble, crinkly smiling eyes with smile lines, a broad toothy smile. White gi, black belt, an optional red headband (its own layer, off by default). A solid, relaxed stance |
 | `senpai` | Teen, a little taller than the player (built on body B). Medium skin, a dark brown high ponytail. White gi, brown/black belt (Jay). Weight a touch on one leg, one hand resting by the belt knot |
 | `kohai` | Small child, the smallest, with a bigger head. Light skin, curly red hair, big round eyes. White gi, white belt. Feet close together, hands held together in front |
 
-## Checks (samples)
+## Checks
 
-- **Edges (script, every layer, frame and direction of the sample sheets):** nothing touches an edge.
-  - The smallest top margin is Sensei's hair, 21 px. instructor-2 has 30 px and the founder 26 px.
-  - At the full punch, his fist is 15 px from the side edge (E and W).
-  - The full set (talk, point) has room: at least 21 px above, and the 128 px width allows Sensei a full arm reach.
-- **By eye:**
-  - the line-up in 4 directions;
-  - all GIFs, frame by frame: the bow from the side (legs straight, head up; instructor-2's long hair stays with her body) and the demonstration from S, SE and E;
-  - all the portraits, neutral and happy, and the founder's headband in 4 directions.
-  - Samples 3 re-rendered all five, because the collar fix is in every model.
-- **Found and fixed while building on body B:** `build_custom.py` (Batch 6) shrinks body B's ears with an object scale. That scales about the world origin, so the ears also moved down to the jaw. In this batch they are rebuilt in the right place (`build_people.py`). The approved Batch 6 body B sheets still have this; Jay decided to leave Batch 6 as it is.
+CHECKS
