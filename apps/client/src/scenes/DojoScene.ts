@@ -43,7 +43,7 @@ import { TouchControls } from '../input/TouchControls';
 import { addStatic, loadArt } from '../art/art';
 import type { LayeredSprite } from '../art/LayeredSprite';
 import { makePlayerSprite, playLocomotion } from '../art/player';
-import { FACES, HAIRS, SWATCHES, loadLook, playerPacks, saveLook } from '../game/look';
+import { loadLook, playerPacks } from '../game/look';
 import { bowPrompt, playBow } from '../ui/bow';
 import { Celebrations } from '../ui/Celebrations';
 import { FONT, crisp } from '../ui/theme';
@@ -421,6 +421,14 @@ export class DojoScene extends Phaser.Scene {
 
   // ---------------------------------------------------------------- decorating
 
+  /** Opens the character screen to change the look (saved there; the dojo reopens after). */
+  private changeLook(): void {
+    if (this.leaving || this.mode !== 'play') return;
+    this.leaving = true;
+    this.cameras.main.fadeOut(250, 10, 8, 16);
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Create', { first: false }));
+  }
+
   private setDecorating(on: boolean): void {
     sfx.unlock();
     this.controls.reset();
@@ -771,6 +779,7 @@ export class DojoScene extends Phaser.Scene {
     } else if (this.mode === 'play') {
       this.button(width - pad - 80, 8, 80, 32, 'Board', 0x4a3f63, 14, () => this.goBoard());
       this.button(width - pad - 80 - 8 - 100, 8, 100, 32, 'Decorate', 0x8a5a35, 14, () => this.setDecorating(true));
+      this.button(width - pad - 80 - 8 - 100 - 8 - 70, 8, 70, 32, 'Look', 0x3a6ea5, 14, () => this.changeLook());
     }
   }
 
@@ -963,27 +972,6 @@ export class DojoScene extends Phaser.Scene {
       this.scene.restart();
     });
     y += 54;
-    // The character's look (until the character creation screen): each button steps to the next option.
-    const look = loadLook();
-    text(pad, y, 'Character look (testing only, saved on this phone):', 12, '#b9ad99');
-    y += 18;
-    const step = (change: () => void) => () => {
-      change();
-      saveLook(look);
-      this.scene.restart();
-    };
-    const next = (list: string[], cur: string) => list[(list.indexOf(cur) + 1) % list.length];
-    const lw = Math.min(130, (width - pad * 2 - 5 * 6) / 6);
-    const looks: Array<[string, () => void]> = [
-      [`Body ${look.body.toUpperCase()}`, () => (look.body = look.body === 'a' ? 'b' : 'a')],
-      [`Face ${FACES.indexOf(look.face) + 1}/${FACES.length}`, () => (look.face = next(FACES, look.face))],
-      [`Hair ${HAIRS.indexOf(look.hair) + 1}/${HAIRS.length}`, () => (look.hair = next(HAIRS, look.hair))],
-      [`Skin ${look.skin + 1}/${SWATCHES}`, () => (look.skin = (look.skin + 1) % SWATCHES)],
-      [`Hair colour ${look.hairColor + 1}`, () => (look.hairColor = (look.hairColor + 1) % SWATCHES)],
-      [`Gi ${look.gi + 1}/${SWATCHES}`, () => (look.gi = (look.gi + 1) % SWATCHES)],
-    ];
-    looks.forEach(([label, change], i) => btn(pad + i * (lw + 6), y, lw, label, 0x4a3f63, step(change)));
-    y += 46;
     text(pad, y, 'Student profiles and Power Rating: open the Board and tap its title 5 times.', 12, '#b9ad99');
     btn(pad, height - pad - 36, Math.min(200, width - pad * 2), 'Close', 0x5b4a3c, close);
   }

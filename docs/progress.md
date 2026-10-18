@@ -214,3 +214,15 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 
 **Next**
 - The character creation screen, when Jay asks for it. Its open questions are answered: Boy/Girl bodies, numbered names for the other options.
+
+## Character creation (2026-10-18)
+
+**Done**
+- A new student makes their character right after "Tap to start": Boy/Girl, Eyes 1–6, Hairstyle 1–12, skin, hair and gi colours. It's welcomed by their real name and belt.
+- The Home Dojo's **Look** button changes it any time.
+- The look is saved with the student's progress.
+- 132 automated tests pass (new: the look is saved and loaded, old saves still work, a damaged look is ignored).
+- Checked on 844×390 and 667×320 test screens: making a character, the dojo showing it, changing it, and Back.
+
+**Next**
+- Milestone 6 (Story and Street Smarts sample), which brings in Batch 7 (Sensei, Senpai, Kohai, the second instructor, the founder). It needs dialogue and quest drafts from the Content Writer, and Jay's approval of one Street Smarts script.

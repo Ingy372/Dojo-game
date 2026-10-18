@@ -351,3 +351,17 @@ Jay asked Claude to test and tune the game before his next playtest.
   - The two bodies are offered as **Boy** and **Girl**.
   - The other options get plain numbered names, no special names: "Hairstyle 1, 2, …", "Eyes 1, 2, …" (the faces), and colours shown as swatches.
   - The Content Writer bot may write short descriptions, but the screen doesn't depend on them.
+
+## Character creation (2026-10-18)
+
+- **When it shows:** the first time a student taps "Tap to start". It's "Choose a look in under a minute" from the first 30 minutes in core-design, and the welcome uses the student's real name and belt: "Welcome, Sam! Sensei says you're a White Belt."
+- **Changing it later:** the Home Dojo's **Look** button (top bar) reopens it, with "Done" (save) or "◀ Back" (no change).
+- **On the screen:**
+  - The character stands large on the left. The belt shows the real rank and isn't a choice.
+  - On the right: **Boy / Girl**, **Eyes 1–6** and **Hairstyle 1–12** with ◀ ▶ arrows, and **Skin**, **Hair colour** and **Gi** as rows of 10 colour circles. Each colour's whole cell is the tap target.
+  - Every option is open to everyone.
+- **Fast choosing:** it uses the full-detail pictures of both bodies (0.8 MB, every face and hairstyle facing the camera), so every change shows at once. The Tower and dojo then load only the chosen look.
+- **Saved with the student's progress** (`look` in the profile, checked when loaded), not just on the phone, so it can move to the game server later.
+  - A look set earlier from the testing screen is used as the starting point.
+  - The testing screen's look buttons are removed.
+- **Saving plays the bow.** The celebrate move stays reserved for real promotions.

@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 declare const __BUILD_TIME__: string;
 import { loadArt } from '../art/art';
-import { playerPacks } from '../game/look';
+import { hasLook, playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
 
 export class TitleScene extends Phaser.Scene {
@@ -68,7 +68,10 @@ export class TitleScene extends Phaser.Scene {
     this.input.once(Phaser.Input.Events.POINTER_UP, () => {
       // Phones only allow sound after a touch, so switch it on here.
       sfx.unlock();
-      this.scene.start(new URLSearchParams(window.location.search).get('room') === 'training' ? 'Game' : 'Dojo');
+      if (new URLSearchParams(window.location.search).get('room') === 'training') this.scene.start('Game');
+      // A new student makes their character first.
+      else if (!hasLook()) this.scene.start('Create', { first: true });
+      else this.scene.start('Dojo');
     });
 
     this.layout(this.scale.gameSize);

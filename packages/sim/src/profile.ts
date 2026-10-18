@@ -19,6 +19,29 @@ export interface PersonalBests {
 
 export type BestKey = keyof PersonalBests;
 
+/**
+ * How the student's character looks, chosen at character creation and changeable in the
+ * Home Dojo. Options are ids from the art (body "a"/"b", "face-01", "hair-02") and positions
+ * in the art's colour swatches. The belt is never part of the look: it shows the real rank.
+ */
+export interface CharacterLook {
+  body: string;
+  face: string;
+  hair: string;
+  skin: number;
+  hairColor: number;
+  gi: number;
+}
+
+/** A saved look if it has the right shape, otherwise null (the student picks again). */
+export function readLook(data: unknown): CharacterLook | null {
+  const l = data as CharacterLook;
+  if (!l || typeof l !== 'object') return null;
+  const strings = [l.body, l.face, l.hair].every((v) => typeof v === 'string' && v.length > 0);
+  const swatches = [l.skin, l.hairColor, l.gi].every((v) => Number.isInteger(v) && v >= 0);
+  return strings && swatches ? { body: l.body, face: l.face, hair: l.hair, skin: l.skin, hairColor: l.hairColor, gi: l.gi } : null;
+}
+
 export interface Profile {
   version: 1;
   nextItemId: number;
@@ -38,6 +61,8 @@ export interface Profile {
   seen: ProgressSnapshot | null;
   /** The Home Dojo (created on the first visit). */
   dojo: DojoState | null;
+  /** The character's look, or null until the student makes their character. */
+  look: CharacterLook | null;
 }
 
 export function newProfile(): Profile {
@@ -55,6 +80,7 @@ export function newProfile(): Profile {
     xp: 0,
     seen: null,
     dojo: null,
+    look: null,
   };
 }
 
@@ -65,7 +91,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests } };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, look: readLook(p.look) };
 }
 
 export function wornItem(profile: Profile, slot: GearSlot): GearItem | null {
