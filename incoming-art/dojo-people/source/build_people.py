@@ -288,7 +288,7 @@ if L["hair_style"] == "sensei_top":
 if L["hair_style"] == "low_ponytail":
     # a low ponytail (Batch 7 full set, her request): smooth dark brown hair with a middle part, short side pieces framing the
     # face, pulled back to a dark tie low at the back of the head; the tail is PURPLE (baked in) and falls behind the shoulders,
-    # sweeping to her left behind the shoulder so its purple end shows beside her left arm from the front. Clearly unlike Senpai's high ponytail (tie on the
+    # sweeping round her left side and forward over her LEFT shoulder, so a purple length lies on the front of her chest. Clearly unlike Senpai's high ponytail (tie on the
     # crown, tail swinging out behind the head). The tail below the tie hangs from the CHEST bone so it follows her in the bow.
     PURP = toon_material("I2_PURPLE", "#7d4cc2"); PURP_HI = toon_material("I2_PURPLE_HI", "#a07ae0"); TIE = toon_material("I2_TIE", "#26202a")
     hs = L["head"]
@@ -302,11 +302,24 @@ if L["hair_style"] == "low_ponytail":
     put("lp_tie", ellipsoid((0.025, 0.2, 1.03), (0.045, 0.03, 0.035), segs=12, rings=8), TIE)
     put("lp_root", ellipsoid((0.035, 0.21, 0.99), (0.05, 0.04, 0.045), segs=12, rings=8), PURP)
     t0 = H((0.035, 0.21, 0.99))
-    for k in range(5):                               # the tail, on the chest bone: gently tapering, drifting to her left
-        z = t0.z - 0.045 - k * 0.05; x = t0.x + 0.035 + 0.03 * k; y = max(0.145, t0.y - 0.015 * k)
-        w = 0.055 - 0.006 * k
-        put(f"lp_tail{k}", ellipsoid((x, y, z), (w, 0.042 - 0.003 * k, 0.05), rot=(-6, 0, -4), segs=12, rings=8), PURP, bone="chest")
-        if k % 2 == 0: put(f"lp_tailhi{k}", ellipsoid((x + 0.012, y + 0.03, z + 0.012), (0.016, 0.012, 0.03), segs=8, rings=6), PURP_HI, outline=False, bone="chest")
+    # the tail sweeps from the tie round the LEFT side of the neck, over the top of her left shoulder and down the front of
+    # her chest (her signature look, so it reads from the front and in the portraits as well as from the side and back).
+    # Chest bone, so it follows the bow; it stays clear of the gi, the collar, the head and the left arm.
+    path = [Vector(t0), Vector((0.07, 0.15, 0.985)), Vector((0.125, 0.09, 0.99)), Vector((0.16, 0.02, 0.985)), Vector((0.158, -0.055, 0.955)),
+            Vector((0.138, -0.112, 0.89)), Vector((0.122, -0.136, 0.82)), Vector((0.11, -0.142, 0.755))]
+    def along(t):                                   # a point on the path, t in 0..1 (linear between the points)
+        u = t * (len(path) - 1); i = min(int(u), len(path) - 2); f = u - i
+        return path[i].lerp(path[i + 1], f), (path[i + 1] - path[i]).normalized()
+    N = 14
+    for k in range(N):
+        t = (k + 0.5) / N; pos, d = along(t); w = 0.046 - 0.016 * t
+        q = Vector((0, 0, 1)).rotation_difference(d)
+        bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=12, v_segments=8, radius=1.0)
+        bmesh.ops.transform(bm, matrix=Matrix.Translation(pos) @ q.to_matrix().to_4x4() @ Matrix.Diagonal((w, w * 0.8, 0.05, 1)), verts=bm.verts)
+        put(f"lp_tail{k}", bm, PURP, bone="chest")
+        if k % 3 == 1:
+            hp = pos + Vector((0.012, -0.022, 0.0)) if t > 0.4 else pos + Vector((0.016, 0.0, 0.02))
+            put(f"lp_tailhi{k}", ellipsoid(hp, (0.014, 0.012, 0.026)), PURP_HI, outline=False, bone="chest")
 # ------------------------------------------------------------------ portrait expressions (Batch 7 full set), every character
 # Mouth pieces named expr_<expr>_*: portrait_prep.py shows the set for PORTRAIT_EXPR (neutral / happy / proud / thinking).
 # The likeness faces have soft + toothy already; the player faces (Senpai, Kohai) keep their own mouth as the neutral one.

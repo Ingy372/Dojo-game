@@ -27,7 +27,7 @@
 
 - **instructor-2's new ponytail** (her request): her hair is her natural dark brown, pulled back into a low ponytail tied at the back of the head. The ponytail itself is purple.
   - It's clearly unlike Senpai's high ponytail, which is tied on the crown and swings out behind.
-  - It sweeps behind her left shoulder, so the purple shows from the front as well as from the side and back.
+  - It sweeps forward over her LEFT shoulder, so a clear purple length lies on the front of her chest in front views and in all 4 portraits. It still shows from the side and back.
   - It hangs from the chest bone, so it follows her in the bow.
 - **The closed gi collar** is on every character: no skin shows at the neck.
 - **Portrait gi:** less puffy than in the samples (less smoothing on the gi).
@@ -41,7 +41,6 @@
 
 **Checks and sizes:**
 - Nothing touches a frame edge. The closest is 3 px, at the walk's far foot facing E/W.
-- The ponytail reads clearly from the side and back. Facing S it's a small purple tip by her left shoulder, and facing SE it's hidden behind her head, as a real low ponytail would be.
 - The repo grows by about 58 MB:
   - sheets: 36 MB;
   - portraits with layers: 6.5 MB;
@@ -59,7 +58,6 @@
 1. **Names:** the names and how each character is introduced come from the Content Writer. The files use the ids above.
 2. **Demonstrate for instructor-2 and the founder:** the brief gives `demonstrate` to Sensei and Senpai only. Should instructor-2 and the founder get it too? It's the same approved block and punch, and about 5 minutes of rendering each.
 3. **Where the two extra characters appear** (instructor-2 and the founder) is for Jay and Claude Code. Their art works anywhere the other dojo people do.
-4. **The ponytail facing S/SE:** if Jay wants it clearly visible from the front too, I can sweep it further over her left shoulder (about 40 minutes, re-rendering only instructor-2).
-5. **The player's neck oval** (Batch 6) is left as it is (Jay). It would be a future patch, only if it's noticeable in the game. That's about 3 hours of rendering.
+4. **The player's neck oval** (Batch 6) is left as it is (Jay). It would be a future patch, only if it's noticeable in the game. That's about 3 hours of rendering.
 
 **NEXT:** Batch 8, when Jay says go.
