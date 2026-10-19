@@ -1,0 +1,124 @@
+{
+  "notes": "DRAFT for proposal 1 (Technique Callouts). callout = exact real name from the school data (fixtures/), shown big for about 1 second when the ability fires; subtitle = small game name underneath. Max 3 words, kept away from danger circles. Mapping follows abilities.json notes: belt kata -> forms[n], belt kick combo -> next strike, self-defense #n -> seals[n-1]. Orange (Keon, Kick Combo 3, Self-Defense #11-15) has no game abilities in abilities.json yet, so no callouts for orange. Beginner's Stance has no callout (not a real technique). If the school feed sends different names, show the feed name.",
+  "callouts": [
+    {
+      "ability": "rooted-form",
+      "kind": "form",
+      "callout": "Basic Form 1!",
+      "subtitle": "Rooted Form",
+      "belt": "white"
+    },
+    {
+      "ability": "flowing-form",
+      "kind": "form",
+      "callout": "Basic Form 2!",
+      "subtitle": "Flowing Form",
+      "belt": "yellow"
+    },
+    {
+      "ability": "follow-up-kick",
+      "kind": "strike",
+      "callout": "Kick Combo 1!",
+      "subtitle": "Follow-up Kick",
+      "belt": "white"
+    },
+    {
+      "ability": "quick-combo",
+      "kind": "strike",
+      "callout": "Kick Combo 2!",
+      "subtitle": "Quick Combo",
+      "belt": "yellow"
+    },
+    {
+      "ability": "off-balance",
+      "kind": "seal",
+      "callout": "Self-Defense #1!",
+      "subtitle": "Off-Balance",
+      "belt": "white"
+    },
+    {
+      "ability": "escape-step",
+      "kind": "seal",
+      "callout": "Self-Defense #2!",
+      "subtitle": "Escape Step",
+      "belt": "white"
+    },
+    {
+      "ability": "sweep",
+      "kind": "seal",
+      "callout": "Self-Defense #3!",
+      "subtitle": "Sweep",
+      "belt": "white"
+    },
+    {
+      "ability": "steady-breath",
+      "kind": "seal",
+      "callout": "Self-Defense #4!",
+      "subtitle": "Steady Breath",
+      "belt": "white"
+    },
+    {
+      "ability": "strong-block",
+      "kind": "seal",
+      "callout": "Self-Defense #5!",
+      "subtitle": "Strong Block",
+      "belt": "white"
+    },
+    {
+      "ability": "sharp-eyes",
+      "kind": "seal",
+      "callout": "Self-Defense #6!",
+      "subtitle": "Sharp Eyes",
+      "belt": "yellow"
+    },
+    {
+      "ability": "create-distance",
+      "kind": "seal",
+      "callout": "Self-Defense #7!",
+      "subtitle": "Create Distance",
+      "belt": "yellow"
+    },
+    {
+      "ability": "disarm",
+      "kind": "seal",
+      "callout": "Self-Defense #8!",
+      "subtitle": "Disarm",
+      "belt": "yellow"
+    },
+    {
+      "ability": "throw",
+      "kind": "seal",
+      "callout": "Self-Defense #9!",
+      "subtitle": "Throw",
+      "belt": "yellow"
+    },
+    {
+      "ability": "follow-through",
+      "kind": "seal",
+      "callout": "Self-Defense #10!",
+      "subtitle": "Follow Through",
+      "belt": "yellow"
+    },
+    {
+      "ability": "shield-of-respect",
+      "kind": "virtue",
+      "callout": "Respect!",
+      "subtitle": "Shield of Respect",
+      "belt": "any"
+    },
+    {
+      "ability": "second-wind",
+      "kind": "virtue",
+      "callout": "Great Effort!",
+      "subtitle": "Second Wind",
+      "belt": "any"
+    },
+    {
+      "ability": "perfect-discipline",
+      "kind": "virtue",
+      "callout": "Self-Discipline!",
+      "subtitle": "Perfect Discipline",
+      "belt": "any"
+    }
+  ]
+}
