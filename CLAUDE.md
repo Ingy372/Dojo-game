@@ -119,7 +119,7 @@ dojo-ascent/
 
 The game must launch within **6 months (by early April 2027)**. The month-by-month roadmap and milestones 0–12 are in `docs/framework.md` section 15; the launch scope is in `docs/core-design.md` section 13.
 
-**Do not build these until after launch, even if they're described in the docs:** the live town square, co-op and Mentor play, the Endless Ascent, crafting, Path Perks, Sensei's Scrolls, the Bestiary, real-life quests, and the Visitor's Pass. Design code so they can be added later, but don't build them.
+**Do not build these until after launch, even if they're described in the docs:** the live town square, co-op and Mentor play, the Endless Ascent, crafting, Path Perks, Sensei's Scrolls, real-life quests, and the Visitor's Pass. Design code so they can be added later, but don't build them.
 
 ## Starting numbers (tune later from playtesting)
 

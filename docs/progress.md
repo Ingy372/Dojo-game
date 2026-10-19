@@ -226,3 +226,21 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 
 **Next**
 - Milestone 6 (Story and Street Smarts sample), which brings in Batch 7 (Sensei, Senpai, Kohai, the second instructor, the founder). It needs dialogue and quest drafts from the Content Writer, and Jay's approval of one Street Smarts script.
+
+## Phase 1: tidy up and lock in (2026-10-19)
+
+Jay's new docs arrived (curriculum, self-defense #1–30, faith and creed, work board) and Jay wrote down a refocused plan with Claude: `jay/game-plan.md` (8 phases to launch).
+
+**Done**
+- Jay's four docs added to `docs/`.
+- Curriculum fixed to match Jay: Key On, Pinon 1–3, Nahanchi; Possi at brown/black; no kick combo after #7 before black belt.
+- Work-board decisions recorded. The QA bot is active, the Game Systems Designer (Bot 6) is added with its folder, the Bestiary moved into launch scope, and the Sensei's Lessons timing fixed (built in milestone 7, finished in 10).
+- **Milestone 4 signed off** (Jay). Real-technique powers come in Phase 3.
+- A lost run shows a "Good effort!" card with Try again and Back home.
+- The promotion ceremony is 3 screens instead of 8.
+- Friendlier welcome-back line; mouse clicks work on a computer.
+- 132 automated tests pass. Checked in a phone-sized test browser (844 × 390): losing a run and both buttons, the white → yellow promotion, a phone tap and a computer click on the title.
+
+**Next**
+- Jay tests on his phone: lose a run and tap Try again; switch Sam to yellow on the Board's testing screen (tap "Training Board" 5 times) and count the promotion screens; "+1 week away" in the dojo's testing screen and read the welcome-back line.
+- Phase 2 (milestone 6) when the Content Writer's dialogue and scenario (C1) and the Batch 7 art are approved.

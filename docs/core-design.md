@@ -657,7 +657,7 @@ A new player never faces every system at once. Each system appears when it first
 | **2nd belt** | Insights, Street Smarts |
 | **3rd belt** | Life-lesson quest stories and Honor |
 | **4th belt** | Challenge mode and elite enemies |
-| **5th belt and up** | Later systems as they ship: Path Perks, crafting, Sensei's Scrolls, the Bestiary |
+| **5th belt and up** | Later systems as they ship: Path Perks, crafting, Sensei's Scrolls |
 | **Black belt** | Endless Ascent and Mentor play (after launch) |
 
 **Sensei's Lessons** are how each system is taught:
@@ -730,10 +730,11 @@ Scenarios are text-based scenes with multiple-choice answers, built so young rea
 - Missions and the staff approval queue; Training Points; the Dojo Blessing and streaks.
 - Sensei's Lessons and the gradual unlock schedule.
 - Street Smarts: 2–3 locations for ages 6–9 and 10–13.
+- The Tower's story and enemy lore, and the Bestiary: an enemy's entry fills in the first time the player defeats it, and deeper lore unlocks with each real belt (Jay, 2026-10-18). When the Bestiary first appears in the unlock schedule is still to be proposed.
 - A starter set of manners quests and 2 life-lesson stories.
 - Parent controls and approvals.
 
-**After launch:** the live town square, co-op and Mentor play, the Endless Ascent, crafting, Path Perks, Sensei's Scrolls, the Bestiary, real-life quests, the Visitor's Pass, more Street Smarts locations, and more quest stories.
+**After launch:** the live town square, co-op and Mentor play, the Endless Ascent, crafting, Path Perks, Sensei's Scrolls, real-life quests, the Visitor's Pass, more Street Smarts locations, and more quest stories.
 
 The month-by-month roadmap is in the framework, section 15.
 

@@ -365,3 +365,33 @@ Jay asked Claude to test and tune the game before his next playtest.
   - A look set earlier from the testing screen is used as the starting point.
   - The testing screen's look buttons are removed.
 - **Saving plays the bow.** The celebrate move stays reserved for real promotions.
+
+## Jay's new docs and the work board (Jay, 2026-10-18 and 2026-10-19)
+
+- **New source docs from Jay:** `docs/curriculum.md` (the belt ladder), `docs/self-defense.md` (#1–30), `docs/faith-and-creed.md` (verses, covenants, FAITH DOES life words, the Class Creed) and `docs/work-board.md` (the one list of open work for every bot and Claude Code). They were meant to be pushed on 2026-10-18 and were added on 2026-10-19.
+- **Curriculum corrections (Jay, 2026-10-19):**
+  - **Spellings students see:** Key On (orange), Pinon 1–3 (blue, red, red/black), Nahanchi (brown). They replace Keon, Penon and Nihanchi in the fake profiles.
+  - **Brown/Black → Black:** the kata Possi and Self-Defense #41–45, as the game already had.
+  - **Kick combos:** the highest before black belt is Kick Combo 7 (at red/black). Brown and brown/black have no new kick combo, and black belt has Kick Combos 8–12, as the game already had. `docs/curriculum.md` was corrected to match.
+- **Bow question = recall.** Sensei shows a picture of one of the player's earned abilities and asks "What's this one called?" with 3 picture-and-word choices. After the answer, the character performs the move. A wrong answer warmly shows the right name, with no penalty. Correct answers are counted forever, with awards at 5, 10, 20, 50 and 100 (may go higher). At most one question a day, and it can always be skipped. This replaces the "Which felt best?" reflection draft.
+- **Lore comes first.** The Tower's story and enemy lore are launch scope, and the game is built around them where it fits.
+- **The Bestiary is launch scope.** An enemy's entry fills in the first time the player defeats it; deeper lore unlocks with each real belt. Removed from the after-launch lists in CLAUDE.md, framework and core-design. When it first appears in the unlock schedule is still to be proposed.
+- **First movement lesson:** "Tap where you want to go, or use the stick."
+- **Real techniques decide game effects.** Each self-defense technique's callout and in-game effect must match what the real technique does to an opponent (`docs/self-defense.md`). The game shows outcomes (off-balance, trapped, thrown, disarmed, escaped), never injuries. The current Technique Seals were placeholders and will be replaced (work board S4, then Phase 3 of Jay's plan).
+- **The QA bot is active now.**
+- **A sixth bot, the Game Systems Designer,** owns combat, items, Forms, power-ups, difficulty, achievements and rewards (folder `drafts/systems/`, branch `bot-systems`, instructions in `docs/GROK_BOTS.md`). The milestone 4 recommendations (powers, numbers, black belt degrees) move to it from the Learning Designer, who now reviews its proposals.
+- **Sensei's Lessons timing:** the lesson system is built in milestone 7 (with lessons for every first-session system) and finished in milestone 10. The framework's milestone table now says so.
+- **Milestone 4 is signed off (Jay, 2026-10-19).** The real-technique powers come later as their own step, once the Game Systems Designer's power list is approved.
+- **Jay's game plan** lives in `jay/game-plan.md` (for Jay only; the bots use the work board).
+
+## Phase 1 fixes from the QA report (2026-10-19)
+
+- **A lost run gets its own card:** "Good effort!", how far you got ("You reached room 3 of 8"), what you keep ("You keep everything you found: 4 treasures", or "Every climb makes you stronger."), the experience earned, and two big buttons: **Try again** (a new run, starting with the floor's bow) and **Back home** (the Training Board, as before). It appears about 1.4 s after the fall. Nothing is taken away, as before.
+- **The promotion ceremony is 3 screens** (was 4, plus one screen for each stripe, sign-off list and Sensei's Seal that came with it, 8 in all for Sam's yellow belt):
+  1. the bow and the new belt (unchanged);
+  2. the Gate opens (unchanged);
+  3. "Congratulations!": what was earned on the left (the new level limit, each stripe word once, the number of techniques signed off, Sensei's Seal and test day) and the new belt's techniques on the right, with "Each one Sensei signs off unlocks a new power. See them anytime on the Board."
+
+  Plain words only: "Technique Seal", "Strike upgrade" and "new Form" are gone from the ceremony. Stripes, sign-offs and the Seal still get their own big screens when they arrive without a promotion. The promotion is still the biggest moment in the game.
+- **Welcome-back line:** "Your dojo is ready for a fresh sweep! Let's make it shine together." (was "A little dust settled while you were away…"). The mess hours stay only on the hidden testing screen.
+- **Mouse clicks work** (they were switched off), so the link also works on a computer. Phaser blocks the browser's duplicate mouse events after a tap, so a phone tap still counts once (checked in a test browser).
