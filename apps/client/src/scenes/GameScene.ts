@@ -57,6 +57,8 @@ import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { bowPrompt, playBow } from '../ui/bow';
 import { InsightPicker } from '../ui/InsightPicker';
+import { runOverCard } from '../ui/RunOverCard';
+import { startTowerRun } from '../game/tower';
 import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
 import { TouchControls } from '../input/TouchControls';
@@ -1050,15 +1052,36 @@ export class GameScene extends Phaser.Scene {
     if (profile.lastRun) profile.lastRun.xp = xp;
     writeSave(profile);
     this.leaving = true;
-    const delay = status === 'lost' ? 1600 : 200;
-    if (status === 'cleared') {
-      sfx.floorClear();
-      this.message.setText('Floor cleared!').setVisible(true);
-    }
-    this.time.delayedCall(delay, () => {
+    const leave = (scene: string, data?: GameSceneData) => {
       this.cameras.main.fadeOut(600, 10, 8, 16);
-      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home'));
-    });
+      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start(scene, data));
+    };
+    if (status === 'lost') {
+      // A soft card with what they keep, then Try again or Back home.
+      this.time.delayedCall(1400, () => {
+        this.message.setVisible(false);
+        const card = runOverCard(
+          this,
+          summary,
+          xp.gained,
+          () => {
+            this.uiCamera.fadeOut(400, 10, 8, 16);
+            this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () =>
+              this.scene.start('Game', { run: startTowerRun(loadSave(), this.training) }),
+            );
+          },
+          () => {
+            this.uiCamera.fadeOut(400, 10, 8, 16);
+            this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home'));
+          },
+        );
+        this.cameras.main.ignore(card);
+      });
+      return;
+    }
+    sfx.floorClear();
+    this.message.setText('Floor cleared!').setVisible(true);
+    this.time.delayedCall(200, () => leave('Home'));
   }
 
   /** The bow at the start of the floor: the fight waits, then a small Focus head start. */
