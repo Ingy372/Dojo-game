@@ -15,8 +15,10 @@ type Step =
   | { kind: 'moment'; moment: Exclude<RewardMoment, { kind: 'promotion' }> }
   | { kind: 'bow'; from: BeltInfo; to: BeltInfo }
   | { kind: 'gate'; to: BeltInfo }
-  | { kind: 'preview'; to: BeltInfo; preview: RequirementStatus[] }
-  | { kind: 'rewards'; to: BeltInfo; levelCap: number };
+  | { kind: 'summary'; to: BeltInfo; levelCap: number; preview: RequirementStatus[]; extras: Extra[] };
+
+/** Other real moments that arrive together with a promotion: shown on its last screen instead of one screen each. */
+type Extra = Exclude<RewardMoment, { kind: 'promotion' } | { kind: 'welcome' }>;
 
 const GOLD = 0xffd166;
 
@@ -34,14 +36,18 @@ export class Celebrations {
     private readonly training: TrainingState,
     private readonly onDone: () => void,
   ) {
+    // The promotion ceremony is 3 screens (QA, 2026-10-18: 8 in a row was too many):
+    // the bow and new belt, the Gate opens, then one screen with everything new.
+    // Stripes, sign-offs and Sensei's Seal that arrive with it join that last screen;
+    // the details stay on the Board's Abilities and Gate tabs.
+    const promotion = moments.find((m) => m.kind === 'promotion');
+    const extras: Extra[] = promotion ? moments.filter((m): m is Extra => m.kind !== 'promotion' && m.kind !== 'welcome') : [];
     for (const m of moments) {
       if (m.kind === 'promotion') {
-        // The ceremony (framework section 6): bow and new belt, the Gate opens, a preview, the rewards.
         this.steps.push({ kind: 'bow', from: m.from, to: m.to });
         this.steps.push({ kind: 'gate', to: m.to });
-        this.steps.push({ kind: 'preview', to: m.to, preview: m.preview });
-        this.steps.push({ kind: 'rewards', to: m.to, levelCap: m.levelCap });
-      } else this.steps.push({ kind: 'moment', moment: m });
+        this.steps.push({ kind: 'summary', to: m.to, levelCap: m.levelCap, preview: m.preview, extras });
+      } else if (m.kind === 'welcome' || !promotion) this.steps.push({ kind: 'moment', moment: m });
     }
     const { width, height } = scene.scale.gameSize;
     const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.9).setOrigin(0).setInteractive();
@@ -71,11 +77,8 @@ export class Celebrations {
       case 'gate':
         wait = this.gate(step.to);
         break;
-      case 'preview':
-        this.preview(step.to, step.preview);
-        break;
-      case 'rewards':
-        wait = this.rewards(step.to, step.levelCap);
+      case 'summary':
+        wait = this.summary(step.to, step.levelCap, step.preview, step.extras);
         break;
       case 'moment':
         this.moment(step.moment);
@@ -137,31 +140,43 @@ export class Celebrations {
     return 1600;
   }
 
-  /** 3. What the new belt will unlock, once each technique is signed off. */
-  private preview(to: BeltInfo, preview: RequirementStatus[]): void {
+  /** 3. Everything new, on one screen: what was earned, and what to learn next in class. */
+  private summary(to: BeltInfo, levelCap: number, preview: RequirementStatus[], extras: Extra[]): number {
     const { width, height } = this.size();
-    this.text(width / 2, height * 0.1, `New at ${to.name}`, 26, '#ffd166', true).setOrigin(0.5);
-    this.text(width / 2, height * 0.1 + 32, 'Learn these in class. Each sign-off unlocks a new power.', 15, '#f2e9d8').setOrigin(0.5);
-    let y = height * 0.1 + 66;
-    const lineH = Math.min(30, (height - y - 50) / Math.max(1, preview.length));
-    preview.forEach((r, i) => {
-      const mark = r.signedOff ? '✓' : '○';
-      const color = r.signedOff ? '#5cd65c' : '#f2e9d8';
-      const t = this.text(width / 2 - 150, y, `${mark}  ${r.name}  ·  ${abilityKind(r)}`, 17, color).setAlpha(0);
-      this.scene.tweens.add({ targets: t, alpha: 1, delay: i * 90, duration: 250 });
-      y += lineH;
-    });
-  }
+    const cx = width / 2;
+    this.text(cx, height * 0.08, `Congratulations, ${this.training.firstName}!`, 26, '#ffd166', true, 'Georgia, serif').setOrigin(0.5);
 
-  /** 4. Promotion rewards: the higher level cap. */
-  private rewards(to: BeltInfo, levelCap: number): number {
-    const { width, height } = this.size();
-    this.text(width / 2, height * 0.2, 'Promotion rewards', 24, '#ffd166', true).setOrigin(0.5);
-    const big = this.text(width / 2, height * 0.42, `Level cap: ${levelCap}`, 40, '#ffffff', true).setOrigin(0.5).setScale(0.3);
-    this.scene.tweens.add({ targets: big, scale: 1, duration: 500, ease: 'Back.Out' });
-    this.text(width / 2, height * 0.58, `Your ${to.name} lets your character grow 10 more levels.`, 16, '#f2e9d8').setOrigin(0.5);
-    this.text(width / 2, height * 0.66, `Congratulations, ${this.training.firstName}!`, 22, '#ffd166', true, 'Georgia, serif').setOrigin(0.5);
-    this.burst(width / 2, height * 0.42, [hex(to.color), GOLD], 40);
+    // Left: what was earned.
+    const earned: { line: string; color: string }[] = [{ line: `Your character can now reach level ${levelCap}`, color: '#ffffff' }];
+    // One line per stripe word, at its highest rank ("earned again" when the same word comes back).
+    const stripes = new Map<string, number>();
+    for (const e of extras) if (e.kind === 'stripe') stripes.set(e.word, Math.max(stripes.get(e.word) ?? 0, e.rank));
+    for (const [word, rank] of stripes) earned.push({ line: `★ ${word} stripe${rank > 1 ? ', earned again' : ''}`, color: '#ffd166' });
+    for (const e of extras) {
+      if (e.kind === 'stripe') continue;
+      else if (e.kind === 'signOff') earned.push({ line: `✓ ${e.requirement.name} signed off`, color: '#5cd65c' });
+      else if (e.kind === 'signOffs') earned.push({ line: `✓ ${e.list.length} techniques signed off`, color: '#5cd65c' });
+      else if (e.kind === 'testApproved') earned.push({ line: `Sensei's Seal is lit${e.testDate ? `: test day ${shortDate(e.testDate)}` : ''}`, color: '#ffd166' });
+      else if (e.kind === 'blessing') earned.push({ line: 'Dojo Blessing for 48 hours', color: '#9ad1ff' });
+    }
+    // Right: the new belt's techniques, in the school's own words.
+    const colW = Math.min(360, width / 2 - 28);
+    const leftX = cx - colW - 14;
+    const rightX = cx + 14;
+    const top = height * 0.08 + 34;
+    this.text(leftX, top, 'You earned', 17, '#ffd166', true);
+    this.text(rightX, top, `${to.name} techniques`, 17, '#ffd166', true);
+    const lineH = Math.min(26, (height - top - 70) / Math.max(earned.length, preview.length, 1));
+    earned.forEach((e, i) => {
+      const t = this.text(leftX, top + 30 + i * lineH, e.line, 15, e.color, false, FONT, colW).setAlpha(0);
+      this.scene.tweens.add({ targets: t, alpha: 1, delay: 200 + i * 120, duration: 250 });
+    });
+    preview.forEach((r, i) => {
+      const t = this.text(rightX, top + 30 + i * lineH, `${r.signedOff ? '✓' : '○'}  ${r.name}`, 15, r.signedOff ? '#5cd65c' : '#f2e9d8', false, FONT, colW).setAlpha(0);
+      this.scene.tweens.add({ targets: t, alpha: 1, delay: 200 + i * 90, duration: 250 });
+    });
+    this.text(cx, height - 50, `Each one Sensei signs off unlocks a new power. See them anytime on the Board.`, 13, '#b9ad99', false, FONT, width - 40).setOrigin(0.5).setAlign('center');
+    this.burst(cx, height * 0.08, [hex(to.color), GOLD], 40);
     sfx.stripe();
     return 900;
   }
@@ -310,7 +325,3 @@ export class Celebrations {
 }
 
 const OUTLINE_GOLD = 0xb08a3c;
-
-function abilityKind(r: RequirementStatus): string {
-  return r.type === 'kata' ? 'new Form' : r.type === 'kickCombo' ? 'Strike upgrade' : 'Technique Seal';
-}
