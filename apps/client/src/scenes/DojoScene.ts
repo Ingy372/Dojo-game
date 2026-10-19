@@ -262,7 +262,7 @@ export class DojoScene extends Phaser.Scene {
       writeSave(this.profile);
     } else if (hoursAway >= DOJO.welcomeBackHours) {
       const hello = ["It's so good to see you!", 'Your dojo missed you.', 'Ready to train?'][Math.floor(Math.random() * 3)];
-      const line = chores > 0 ? "A little dust settled while you were away. Let's get your dojo ready together." : 'Everything is just how you left it.';
+      const line = chores > 0 ? "Your dojo is ready for a fresh sweep! Let's make it shine together." : 'Everything is just how you left it.';
       steps.push(() => this.card(`Welcome back, ${name}!`, [hello, line], chores > 0 ? "Let's clean up" : "Let's go!", next));
     }
     const moments = rewardMoments(this.profile.seen, this.training);

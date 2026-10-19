@@ -15,8 +15,11 @@ const game = new Phaser.Game({
     width: '100%',
     height: '100%',
   },
+  // Touch first. The mouse also works so previews can be clicked on a computer;
+  // Phaser blocks the browser's copy-of-a-tap mouse events, so a phone tap counts once.
   input: {
-    mouse: false,
+    mouse: true,
+    touch: true,
   },
   scene: [TitleScene, CreateScene, DojoScene, HomeScene, GameScene],
 });
