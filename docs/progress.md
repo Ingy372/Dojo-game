@@ -497,3 +497,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - New lessons now come one per session (a calendar day with a run) and one per room; Perfect, Block and Step-out ignore the session limit. Each lesson has a triggerKey fired from play (Dash, Insights, Decorating, Perfect, Block, Step-out).
 - Sensei's Scroll in the Home Dojo lists every lesson seen (not the fading follow-ups or the welcome line); tap to replay, plus "Replay the tutorial floor".
 - Tests 261 passed / 1 skipped (new packages/sim/test/lessons.test.ts: two sessions in a row give one new lesson each, never two; every seen lesson is on the Scroll and replays). Typecheck and build pass. Screenshots /workspace/k17-{667,844}-{dojo,scroll,replay,replay2}.png.
+
+## K19 / M7-P7 Gradual unlock schedule and Welcome Week (2026-10-24)
+- Existing students (any sign-off, or a belt above white) get every earned ability on day 1, and meet the dojo's systems one per day (Street Smarts, Journal, Scroll) through a short Sensei card. This shares the one-new-thing-a-day budget with Sensei's Lessons. New students are unchanged.
+- The testing screen's "+1 day away" now moves the session day forward too (a dev-only day offset).
+- New `packages/sim/src/unlocks.ts` and `content/settings/unlock-schedule.json`. Tests: 271 passed / 1 skipped (new unlocks.test.ts covers the fixtures, the yellow belt day by day, gaps, the shared budget, old saves and kind wording). Typecheck and build pass. Screenshots: /workspace/k19-{667,844}-{day1..3-sensei,day1..4-dojo,testing}.png.

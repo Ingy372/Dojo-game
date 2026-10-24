@@ -134,9 +134,10 @@ const counts = (l: SenseiLesson): boolean => !l.fadingFollowUp;
 
 /**
  * The lesson to show for a game event, or null: not seen yet, its session has come, and the
- * limits allow it. `room` names the room it comes up in (null at home).
+ * limits allow it. `room` names the room it comes up in (null at home). `systemToday`: a
+ * Welcome Week system was already met today.
  */
-export function lessonFor(lessons: Record<string, SenseiLesson>, log: LessonLog, triggerKey: string, today: string, room: string | null): SenseiLesson | null {
+export function lessonFor(lessons: Record<string, SenseiLesson>, log: LessonLog, triggerKey: string, today: string, room: string | null, systemToday = false): SenseiLesson | null {
   const lesson = Object.values(lessons).find((l) => l.triggerKey === triggerKey);
   if (!lesson || log.seen.some((s) => s.id === lesson.id)) return null;
   if (sessionNumber(log, today) < lesson.earliestSession) return null;
@@ -144,6 +145,8 @@ export function lessonFor(lessons: Record<string, SenseiLesson>, log: LessonLog,
   const counted = log.seen.filter((s) => lessons[s.id] && counts(lessons[s.id]));
   if (room !== null && counted.some((s) => s.room === room && s.day === today)) return null;
   if (!lesson.ignoresSessionLimit && counted.some((s) => s.day === today && !lessons[s.id].ignoresSessionLimit)) return null;
+  // Welcome Week (M7-P7): a system met today uses up today's one new thing too (Manager call: shared budget).
+  if (!lesson.ignoresSessionLimit && systemToday) return null;
   return lesson;
 }
 

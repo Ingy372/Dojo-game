@@ -1,0 +1,23 @@
+{
+  "notes": "M7-P7 gradual unlock schedule. Welcome Week: existing students (any sign-off, or a belt above white) get every earned ability on day 1, but meet these dojo systems one per day, in this order. A system the student's belt hasn't opened yet (minTier) is skipped. One new thing per day in total, shared with Sensei's Lessons. Kind wording only: no countdowns, no 'you missed'. Later systems plug in here (milestone 10).",
+  "systems": [
+    {
+      "id": "street-smarts",
+      "name": "Street Smarts",
+      "minTier": 2,
+      "screens": ["Something new in your dojo: Street Smarts!", "Practice staying safe out in the world. Tap Street Smarts to try it."]
+    },
+    {
+      "id": "journal",
+      "name": "Monster Journal",
+      "minTier": 2,
+      "screens": ["Something new in your dojo: the Monster Journal!", "Special monsters you meet in the Tower get a page here."]
+    },
+    {
+      "id": "scroll",
+      "name": "Sensei's Scroll",
+      "minTier": 1,
+      "screens": ["Something new in your dojo: Sensei's Scroll!", "Every lesson I teach you is kept here, to see again any time."]
+    }
+  ]
+}
