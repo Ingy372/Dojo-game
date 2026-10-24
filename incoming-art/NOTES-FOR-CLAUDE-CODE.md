@@ -233,6 +233,13 @@ Drawing order is the `order` field (the Batch 1 layers moved up by one because `
   - Layer order: floor -> tether + foot glows -> red danger circle -> aura back -> enemies -> aura front. Blue never covers the red circle. Range/count/damage rules come from the planning doc, not the art.
 - `aura-sparkle-gold` is a PROPOSAL only (possible rare named monster). Do not wire.
 
+## Tier 2 enemies and elite auras
+- If Tier 2 (Sunrise Garden) reuses the Tier 1 creatures, the existing elite aura sheets in `incoming-art/elite-auras/sprites/<enemy>/` (Swift, Guarding, Guarding foot glow) apply as-is.
+
+## M7-N1 named monster, `incoming-art/named-monster/sprites/static.json` [NEW, batch 2]
+- Draw order: name-plate (under the feet, fades after 3 s) -> enemy -> named-sparkle. Once the plate is gone, `name-tag` fades in above the head at `headOffsetPx[enemy]` (the only thing above any head). The game renders all names and text.
+- Journal parts in `journal/` with layout slots in static.json; stickers in `sticker/` (samples, wall items).
+
 ## Open items in one place
 
 1. The player frame changed to 128 × 160 with the anchor at (64, 136.96). It applies to `player-character/` and `player-custom/`.
