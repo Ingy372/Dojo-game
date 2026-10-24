@@ -759,7 +759,7 @@ No art pack is bought. The Art Director bot (Grok bot) is the game's artist and 
 2. **Rig and animate it.** Mixamo (free) can add skeletons and provides martial arts animations; Jay judges every martial arts move like a student's technique.
 3. **Render every animation frame** from one fixed camera angle (top-down three-quarter view) in 8 directions, as transparent PNG sprite sheets, using a reusable Blender script.
 4. **Render icons, portraits, and scene pictures from the same models,** so everything in the game shares one style.
-5. **Claude Code imports approved renders** with a repeatable script that trims, sizes, and packs them into texture atlases for Phaser.
+5. **Dojo-Ascent Programmer imports approved renders** with a repeatable script that trims, sizes, and packs them into texture atlases for Phaser.
 
 Why this way: every frame comes from the same model, so animations stay perfectly consistent, which is the main thing that makes AI-made art look cheap when it's drawn picture by picture. Customization becomes swapping parts on one model. And a hired artist could later improve the same Blender files, so nothing is wasted.
 

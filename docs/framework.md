@@ -520,7 +520,7 @@ Street Smarts and the Home Dojo need modern scenes as well as fantasy ones: stre
 
 ### The style guide keeps AI output consistent
 
-The repository includes a short style guide: the palette, sprite size, fonts, and example images. Every request to Grok for new art includes it, and Claude Code follows it for UI. Consistency matters more than any single beautiful image.
+The repository includes a short style guide: the palette, sprite size, fonts, and example images. Every request to Grok for new art includes it, and Dojo-Ascent Programmer follows it for UI. Consistency matters more than any single beautiful image.
 
 ### Who does what
 
@@ -528,17 +528,17 @@ The repository includes a short style guide: the palette, sprite size, fonts, an
 | --- | --- |
 | **Jay** | Vision, decisions, curriculum content, playtesting with students, final approval |
 | **Claude (chat)** | Design framework, system design, balancing math, writing (lore, Scrolls, UI text), reviewing plans |
-| **Claude Code** | Writing, testing, and fixing all game code in the GitHub repository |
+| **Dojo-Ascent Programmer** | Writing, testing, and fixing all game code in the GitHub repository |
 | **Grok** | Grok and Grok bot: generating icons, portraits, backgrounds, and Street Smarts scene illustrations; backup help when Claude can't do something |
 | **Nic** | The DojoForge side: the progress feed the game reads and student login |
 
-**ChatGPT** (free account) is a second opinion: checking that scenario and quest text reads at the right level for young kids, proofreading, and brainstorming ideas. Code always stays with Claude Code, so there's one source of truth for the game.
+**ChatGPT** (free account) is a second opinion: checking that scenario and quest text reads at the right level for young kids, proofreading, and brainstorming ideas. Code always stays with Dojo-Ascent Programmer, so there's one source of truth for the game.
 
 **The Grok bot team** (Art Director, Content Writer, Learning & Engagement Designer, QA & Playability Tester, and later Launch Prep) has its roles, folders, and rules in `docs/GROK_BOTS.md`.
 
 ## 14. Technical architecture
 
-This section is written for Nic and Claude Code. Nic should confirm it fits the existing DojoForge stack before building starts.
+This section is written for Nic and Dojo-Ascent Programmer. Nic should confirm it fits the existing DojoForge stack before building starts.
 
 **How the parts connect:** DojoForge (Nic's backend: rank, sign-offs, stripes, attendance, hours, streaks) → read-only feed → **Game server** (Cloudflare Workers + D1; saves game progress) ↔ login and progress ↔ **Game client** (the Phaser game inside the phone app or a browser). In a later phase, **co-op rooms** (Cloudflare Durable Objects) run 2–4 player parties off the game server.
 
@@ -583,7 +583,7 @@ The student logs in with their DojoForge account, and the game server checks tha
 
 ```
 dojo-ascent/
-  CLAUDE.md          instructions Claude Code reads first
+  CLAUDE.md          instructions Dojo-Ascent Programmer reads first
   docs/              this framework, style guide, decisions log
   packages/sim/      shared game rules (combat, abilities, progression)
   apps/client/       Phaser game
@@ -593,7 +593,7 @@ dojo-ascent/
   assets/            licensed art and sound
 ```
 
-## 15. Build plan for Claude Code and the $100 credit
+## 15. Build plan for Dojo-Ascent Programmer and the $100 credit
 
 The goal for the $100 credit is a **playable prototype**: one complete floor, the core combat, and the training link working with fake student data. That's enough to put in front of students at the dojo and to show Nic. Everything after it builds on a proven foundation.
 
@@ -636,21 +636,21 @@ My best guess is that the $100 credit covers milestones 0–4. The Home Dojo and
 | **5: February** | 10–11 | Jay reviews and approves scenarios and quests each week |
 | **6: March** | 12 | Store review and launch at Action Zone by early April 2027 |
 
-After the cloud credit runs out on November 4, Claude Code uses the plan's regular usage. Everything not on the launch list (live town square, co-op, Endless Ascent, crafting, Path Perks, Sensei's Scrolls, the Bestiary, real-life quests, the Visitor's Pass) comes in updates after launch. The full launch scope is in the Core Game Design doc, section 13.
+After the cloud credit runs out on November 4, Dojo-Ascent Programmer uses the plan's regular usage. Everything not on the launch list (live town square, co-op, Endless Ascent, crafting, Path Perks, Sensei's Scrolls, the Bestiary, real-life quests, the Visitor's Pass) comes in updates after launch. The full launch scope is in the Core Game Design doc, section 13.
 
 ### After launch
 
 Updates after launch, in rough order: real-life quests, Sensei's Scrolls, more Street Smarts locations and quest stories, crafting and Path Perks, the Bestiary, the Visitor's Pass, the live town square, the Endless Ascent, and finally co-op with Mentor play.
 
-### How to work with Claude Code (to stretch the credit)
+### How to work with Dojo-Ascent Programmer (to stretch the credit)
 
 1. **One milestone per session.** Start each session with: *"Read CLAUDE.md and docs/framework. We're working on milestone 2. Plan it first, then build it."*
 2. **Ask for a plan before code.** Review the plan in plain language; fixing a plan is far cheaper than fixing code.
 3. **Keep requests small and specific.** "Add the Perfect Counter timing window" costs much less than "make combat better."
-4. **Save working versions often.** Ask Claude Code to commit to GitHub after each thing that works, so a bad change can always be undone.
+4. **Save working versions often.** Ask Dojo-Ascent Programmer to commit to GitHub after each thing that works, so a bad change can always be undone.
 5. **Test on your phone after each step,** and describe what feels wrong in plain words ("the counter window feels too short").
 6. **Keep a decisions log** in docs/ so future sessions don't re-debate settled questions.
-7. **Bring design questions back to this chat** instead of spending credit on them in Claude Code.
+7. **Bring design questions back to this chat** instead of spending credit on them with Dojo-Ascent Programmer.
 
 ## 16. Playtesting and metrics
 

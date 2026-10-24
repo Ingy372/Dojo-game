@@ -273,12 +273,12 @@ Jay asked Claude to test and tune the game before his next playtest.
 ## Grok bot team and the art process (Jay, in his Claude chat, 2026-10-08)
 
 - **Five Grok bots join the team,** each with one job: Art Director, Content Writer, Learning & Engagement Designer, QA & Playability Tester (beta testing and balancing as the game nears completion), and Launch Prep (shortly before launch). Their full directions are in `docs/GROK_BOTS.md`.
-- **Bots never change code.** Claude Code is the only one who changes the game.
+- **Bots never change code.** Dojo-Ascent Programmer is the only one who changes the game.
 - **Each bot has its own folder and branch** (`incoming-art/` on `bot-art`, `drafts/content/` on `bot-content`, `drafts/learning/` on `bot-learning`, `drafts/qa/` on `bot-qa`, `drafts/launch/` on `bot-launch`) and delivers through pull requests that Jay merges. Each folder has a README explaining this.
-- **Nothing in a bot folder is approved until Jay says so.** Claude Code copies approved files into `assets/` or `content/` only when Jay asks, and never edits files inside the bot folders.
+- **Nothing in a bot folder is approved until Jay says so.** Dojo-Ascent Programmer copies approved files into `assets/` or `content/` only when Jay asks, and never edits files inside the bot folders.
 - **The Learning & Engagement Designer's proposals are suggestions,** reviewed by Jay with his Claude chat before anything is built. It also reviews milestone 4's open questions (powers, numbers, black belt degrees), which is the design material milestone 4 is paused for.
 - **No art pack is bought.** The Art Director bot makes all art in Blender: low-poly 3D models, rigged and animated (Mixamo allowed), rendered from one fixed top-down three-quarter camera in 8 directions into transparent PNG sprite sheets with a reusable render script. Icons, portraits and scene pictures come from the same models so everything matches. This replaces the pixel-art-pack plan in framework section 13. Details: "Art process" in core-design section 13.
-- **Claude Code builds the import step:** a repeatable script that trims, sizes and packs approved renders into texture atlases for Phaser.
+- **Dojo-Ascent Programmer builds the import step:** a repeatable script that trims, sizes and packs approved renders into texture atlases for Phaser.
 - **Character customization replaces the placeholder circle:** a layered character (body, skin tone, face, hair style and color, gi, belt), each part rendered separately from the same model, chosen at character creation and changeable at the Home Dojo. The belt is its own layer, recolored in code to the real rank and stripes, and is never customizable. Extra looks are earned, never bought.
 
 ### Milestone 5 — changes after Jay's first test (2026-10-08)

@@ -1,6 +1,6 @@
-# Dojo Ascent — Prompts for Claude Code
+# Dojo Ascent — Prompts for Dojo-Ascent Programmer
 
-Copy and paste these into Claude Code, one milestone at a time. Start each milestone in a **fresh session**, so Claude Code begins clean and doesn't waste credit on old conversation.
+Copy and paste these to Dojo-Ascent Programmer, one milestone at a time. Start each milestone in a **fresh session**, so Dojo-Ascent Programmer begins clean and doesn't waste credit on old conversation.
 
 ---
 
@@ -29,8 +29,8 @@ Copy and paste these into Claude Code, one milestone at a time. Start each miles
    - `CLAUDE.md` in the main folder
    - `framework.md` and `core-design.md` inside a folder named `docs`
    - this file (`MILESTONE_PROMPTS.md`) inside `docs` too, so it's always handy
-4. **Connect Claude Code to the repository.** Setup guide: https://docs.claude.com/en/docs/claude-code/overview
-5. **Have a Cloudflare account ready** (free). Claude Code will walk you through connecting it in milestone 0. Never paste passwords or keys into the chat; enter them yourself where it tells you.
+4. **Connect Dojo-Ascent Programmer to the repository.**
+5. **Have a Cloudflare account ready** (free). Dojo-Ascent Programmer will walk you through connecting it in milestone 0. Never paste passwords or keys into the chat; enter them yourself where it tells you.
 6. **Before milestone 8 (not needed yet),** you'll need developer accounts to publish the apps: an **Apple Developer Program** membership (about $99 a year) and a **Google Play Console** account (about $25, one time). Check the current prices when you sign up. If Tarnished Labs already has these for DojoForge, use those.
 
 ---
@@ -38,7 +38,7 @@ Copy and paste these into Claude Code, one milestone at a time. Start each miles
 ## How every session works
 
 1. Paste the milestone prompt.
-2. Read the plan Claude Code gives you. If it makes sense, reply **"Approved, go ahead."** If not, say what's wrong in plain words.
+2. Read the plan Dojo-Ascent Programmer gives you. If it makes sense, reply **"Approved, go ahead."** If not, say what's wrong in plain words.
 3. Test what it builds on your phone using the preview link.
 4. When the milestone's **"Done when"** check passes, paste the **end-of-session prompt** (at the bottom of this file).
 5. Check how much credit you've used before starting the next milestone.
@@ -109,7 +109,7 @@ Show me your plan first and wait for my approval.
 
 ## Before milestone 3 — Choose the art
 
-Bring this back to your regular Claude chat: "Help me choose a pixel-art asset pack for Dojo Ascent." Once you've bought one, add it to the `assets` folder and ask Claude Code:
+Bring this back to your regular Claude chat: "Help me choose a pixel-art asset pack for Dojo Ascent." Once you've bought one, add it to the `assets` folder and ask Dojo-Ascent Programmer:
 
 ```
 Read CLAUDE.md. I've added the art pack to the assets folder. Please write docs/style-guide.md (sprite size, palette, fonts) based on it, then swap the placeholder shapes in the movement room and combat for the real art. Show me your plan first.
@@ -337,7 +337,7 @@ Before we finish: commit everything, add any decisions we made to docs/decisions
 
 ## Working with the Grok bots
 
-The bots' directions are in `docs/GROK_BOTS.md`. They deliver drafts to their own folders through pull requests. After you've reviewed a bot's pull request and approved the work, merge it, then use one of these prompts in Claude Code.
+The bots' directions are in `docs/GROK_BOTS.md`. They deliver drafts to their own folders through pull requests. After you've reviewed a bot's pull request and approved the work, merge it, then send one of these prompts to Dojo-Ascent Programmer.
 
 **The one-character art test (when the Art Director delivers it):**
 ```
@@ -373,4 +373,4 @@ Let's stop and step back. Undo back to the last commit that worked, explain in p
 Please explain that again in plain language for someone who isn't a programmer, and tell me exactly what you need me to do.
 ```
 
-**Design question:** Don't spend credit on design debates in Claude Code. Bring the question back to your regular Claude chat, then add the decision to docs/decisions.md.
+**Design question:** Don't spend credit on design debates with Dojo-Ascent Programmer. Bring the question back to your regular Claude chat, then add the decision to docs/decisions.md.
