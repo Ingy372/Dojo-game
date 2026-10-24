@@ -1,5 +1,7 @@
 # M7-P8a check 2: WAFU LICENSE.txt
 
+> **Update (Oct 24, 2026):** WAFU replied; the pick, terms and open points are in `M7-P8a-music-decision.md`. The white-label question and the drafted WAFU email are resolved.
+
 **For:** Jay · **Date:** 2026-10-24 · **Status:** Research only. No music files are in the repo.
 
 ## What I did
