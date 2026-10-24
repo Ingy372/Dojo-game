@@ -32,11 +32,13 @@ import {
   type TrainingState,
   type Vec2,
   type WorldState,
+  streetSmartsOpen,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
 import { bowIsDue, homeDojo, setBowDue } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
+import streetUi from '../../../../content/street-smarts/ui.json';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
 import { TouchControls } from '../input/TouchControls';
@@ -780,6 +782,7 @@ export class DojoScene extends Phaser.Scene {
       this.button(width - pad - 80, 8, 80, 32, 'Board', 0x4a3f63, 14, () => this.goBoard());
       this.button(width - pad - 80 - 8 - 100, 8, 100, 32, 'Decorate', 0x8a5a35, 14, () => this.setDecorating(true));
       this.button(width - pad - 80 - 8 - 100 - 8 - 70, 8, 70, 32, 'Look', 0x3a6ea5, 14, () => this.changeLook());
+      if (streetSmartsOpen(this.training.tier, streetUi.unlockTier)) this.button(width - pad - 130, 46, 130, 32, streetUi.button, 0x3aa57a, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
     }
   }
 

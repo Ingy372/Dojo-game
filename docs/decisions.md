@@ -432,3 +432,13 @@ From section 1 of `docs/work-board.md`.
 - **One-line text on the Training Board.** Gear and Abilities text shrinks (not below 9–10 px), then cuts with "…", instead of wrapping onto the line below. The selected item's detail still shows the full name and stats.
 - **Insight card border = icon accent colour.** The colours come from the PR #56 colour key and are kept in `apps/client/src/art/icons.ts` (`INSIGHT_ACCENT`). The top stripe keeps the family colour.
 - **Live deploy.** The K7 merge and the merges right after it (09:17–09:37 EDT, `f89af8a`…`7c595d6`) got no Cloudflare build. The first build after them (`a4b0d16`, 09:45 EDT) published K7. QA had checked the live link before that build ran.
+
+## K2: Street Smarts scene (2026-10-24)
+
+- **Script stays data.** The scene only draws what `currentLine()` returns. The loader checks every link (choice → branch, retry → choice in the same scene, star choices), so a typo fails at load time instead of trapping a player.
+- **Stars follow the script's rule.** `starChoices` lists stay, helper and offer in the content copy. Only the first try at each one counts. Voice is required but earns no star, so the max is 3.
+- **After a good branch**, the story goes on from the line after the choice. A retry branch's last line jumps back to its choice.
+- **2–4 buttons per choice (CLAUDE.md rule 15).** The loader enforces 2–4. The current store script's helper choice still has 5; it carries a `pendingTrim` note, which lets that one script show 1 extra button until the Content Designer's trimmed 4-choice script lands on main. Then replace the content copy (keep `starChoices`) and delete `pendingTrim`.
+- **Read-aloud uses the browser's own speech** (`speechSynthesis`), so no new package. It's on by default when the scenario's age band is 6–9, and the player's on/off choice is remembered.
+- **Profile gets `streetSmarts: { best, grownup }`**, and older saves get a blank default.
+- **Opens at the 2nd belt** (core-design). The tier lives in content/street-smarts/ui.json (`unlockTier: 2`); the Dojo button is hidden below it. The `?street=` test link opens it at any belt.
