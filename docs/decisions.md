@@ -365,3 +365,17 @@ Jay asked Claude to test and tune the game before his next playtest.
   - A look set earlier from the testing screen is used as the starting point.
   - The testing screen's look buttons are removed.
 - **Saving plays the bow.** The celebrate move stays reserved for real promotions.
+
+## Jay's work-board decisions (Jay, 2026-10-18; recorded for work-board item K1)
+
+From section 1 of `docs/work-board.md`.
+
+- **Bow question = recall.** Sensei shows a picture of one of the player's earned abilities and asks "What's this one called?" with 3 picture-and-word choices. After the answer, the character performs the move. A wrong answer warmly shows the right name; there is no penalty. Correct answers are counted forever, with awards at 5, 10, 20, 50 and 100 (may go higher). At most one question per day. It can always be skipped. This replaces the "Which felt best?" draft.
+- **Lore comes first.** The Tower's story and enemy lore are launch scope, and the game is built around them where it fits.
+- **The Bestiary is launch scope.** An enemy's entry fills in the first time the player defeats it; deeper lore unlocks with each real belt. The unlock schedule in core-design section 13 still needs updating to match.
+- **First movement lesson:** "Tap where you want to go, or use the stick."
+- **Real techniques decide game effects.** Each self-defense technique's callout and in-game effect must match what the real technique does to an opponent. Jay's descriptions are in `docs/self-defense.md`. The game shows outcomes (off-balance, trapped, thrown, disarmed, escaped), never injuries.
+- **The QA bot is active now.**
+- **A sixth bot, the Game Systems Designer,** owns combat, items, Forms, power-ups, difficulty, achievements and rewards. Answering the milestone 4 questions (powers, numbers, black belt degrees) moves from the Learning Designer to this bot; the Learning Designer reviews its work.
+- **Claude Code is replaced by Dojo-Ascent Programmer** (Jay, 2026-10-23). Jay no longer works with Claude Code; every mention in `docs/` now says Dojo-Ascent Programmer.
+- **Sensei's Lessons timing:** the Lessons system is built in milestone 7 and finished (a lesson for every launch system) in milestone 10.
