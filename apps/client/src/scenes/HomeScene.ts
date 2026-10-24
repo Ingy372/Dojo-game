@@ -29,6 +29,7 @@ import { CONTENT } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining, selectProfile, shortDate } from '../game/student';
 import { startTowerRun } from '../game/tower';
+import { addIcon, ICON_PACK } from '../art/icons';
 import { loadArt } from '../art/art';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
@@ -73,7 +74,7 @@ export class HomeScene extends Phaser.Scene {
   }
 
   preload(): void {
-    loadArt(this, playerPacks());
+    loadArt(this, [...playerPacks(), ICON_PACK]);
   }
 
   create(): void {
@@ -294,6 +295,8 @@ export class HomeScene extends Phaser.Scene {
       status: string;
       unlocked: boolean;
       color: number;
+      /** Icon id (Batch 8), if it has one. */
+      icon?: string;
     }
     const rows: Row[] = [];
     for (const v of t.virtues) {
@@ -320,6 +323,7 @@ export class HomeScene extends Phaser.Scene {
         status: a.unlocked ? signedLine(r) : `Sign off ${r.name} to unlock${r.catchUp ? ' (catch-up)' : ''}`,
         unlocked: a.unlocked,
         color: a.kind === 'form' ? 0x6fb7ff : a.kind === 'strike' ? 0xff7a45 : 0x5cd6b0,
+        icon: a.form?.id ?? a.perk?.id,
       });
     }
 
@@ -331,9 +335,13 @@ export class HomeScene extends Phaser.Scene {
       const by = y + i * rowH;
       this.ui.add(this.add.rectangle(x, by, w, rowH - 6, row.unlocked ? 0x221d2e : 0x18151f).setOrigin(0).setStrokeStyle(2, row.color, row.unlocked ? 0.8 : 0.25));
       const c = row.unlocked ? '#ffffff' : '#6b6478';
-      this.text(x + 8, by + 4, `${row.unlocked ? '' : '🔒 '}${row.tag}: ${row.title}`, 13, row.unlocked ? css(row.color) : '#8a8296', true, FONT, w - 16);
-      this.text(x + 8, by + 20, row.text, 11, c, false, FONT, w - 16);
-      this.text(x + 8, by + 33, row.status, 11, row.unlocked ? '#b9ad99' : '#ffd166', false, FONT, w - 16);
+      const icon = row.icon ? addIcon(this, row.icon, x + 26, by + (rowH - 6) / 2, 40) : null;
+      if (icon) this.ui.add(icon.setAlpha(row.unlocked ? 1 : 0.35));
+      const tx = icon ? x + 52 : x + 8;
+      const tw = icon ? w - 60 : w - 16;
+      this.text(tx, by + 4, `${row.unlocked ? '' : '🔒 '}${row.tag}: ${row.title}`, 13, row.unlocked ? css(row.color) : '#8a8296', true, FONT, tw);
+      this.text(tx, by + 20, row.text, 11, c, false, FONT, tw);
+      this.text(tx, by + 33, row.status, 11, row.unlocked ? '#b9ad99' : '#ffd166', false, FONT, tw);
     });
     if (rows.length === 0) this.text(x, y, 'No abilities yet.', 14, '#b9ad99');
     if (pages > 1) {
@@ -409,9 +417,12 @@ export class HomeScene extends Phaser.Scene {
       const item = wornItem(this.profile, slot);
       const bx = x + i * (slotW + 8);
       this.ui.add(this.add.rectangle(bx, y, slotW, 54, 0x221d2e).setOrigin(0).setStrokeStyle(2, item ? RARITY_COLOR[item.rarity] : 0x3a3150));
+      const icon = item ? addIcon(this, item.base, bx + slotW - 22, y + 27, 36) : null;
+      if (icon) this.ui.add(icon);
+      const tw = icon ? slotW - 50 : slotW - 10;
       this.text(bx + 6, y + 4, SLOT_NAME[slot], 11, '#b9ad99');
-      this.text(bx + 6, y + 18, item ? item.name : 'Nothing', 13, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true, FONT, slotW - 10);
-      if (item) this.text(bx + 6, y + 36, describeItem(item), 11, '#f2e9d8', false, FONT, slotW - 10);
+      this.text(bx + 6, y + 18, item ? item.name : 'Nothing', 13, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true, FONT, tw);
+      if (item) this.text(bx + 6, y + 36, describeItem(item), 11, '#f2e9d8', false, FONT, tw);
     });
     y += 64;
 
@@ -443,8 +454,11 @@ export class HomeScene extends Phaser.Scene {
       const arrow = cmp === 'up' ? '▲' : cmp === 'down' ? '▼' : '=';
       const arrowColor = cmp === 'up' ? '#5cd65c' : cmp === 'down' ? '#e0533d' : '#b9ad99';
       this.text(bx + 8, by + cardH / 2, arrow, 18, arrowColor, true).setOrigin(0, 0.5);
-      this.text(bx + 30, by + 4, it.name, 13, css(RARITY_COLOR[it.rarity]), true, FONT, cardW - 36);
-      this.text(bx + 30, by + 22, `${SLOT_NAME[it.slot]} · ${describeItem(it)}`, 11, '#f2e9d8', false, FONT, cardW - 36);
+      const icon = addIcon(this, it.base, bx + 46, by + cardH / 2, 34);
+      if (icon) this.ui.add(icon);
+      const tx = icon ? bx + 68 : bx + 30;
+      this.text(tx, by + 4, it.name, 13, css(RARITY_COLOR[it.rarity]), true, FONT, cardW - (tx - bx) - 6);
+      this.text(tx, by + 22, `${SLOT_NAME[it.slot]} · ${describeItem(it)}`, 11, '#f2e9d8', false, FONT, cardW - (tx - bx) - 6);
       bg.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
         this.selected = isSel ? null : it.uid;
         this.confirmLetGo = false;

@@ -55,6 +55,7 @@ import lessonsData from '../../../../content/tutorial/sensei-lessons.json';
 const LESSONS = loadLessons(lessonsData);
 import { type PackName, addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
+import { ICON_PACK } from '../art/icons';
 import { auraId, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
@@ -260,7 +261,7 @@ export class GameScene extends Phaser.Scene {
   preload(): void {
     this.towerPack = towerPack(currentTraining().belt.tier);
     const aura = testAura();
-    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ...(aura ? ['auras-t1'] : [])]);
+    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(aura ? ['auras-t1'] : [])]);
   }
 
   create(): void {
