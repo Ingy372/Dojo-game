@@ -210,6 +210,138 @@
       ],
       "frames": 8,
       "fps": 10
+    },
+    "guard-tether-beam": {
+      "files": {
+        "beam": "guard-tether_beam.png"
+      },
+      "size": [
+        64,
+        24
+      ],
+      "frames": 8,
+      "fps": 10,
+      "tile": "repeat along x (or stretch); line centre y = 12; +x points guarder -> protected",
+      "drawUnder": "enemies, red danger circle"
+    },
+    "guard-tether-cap": {
+      "files": {
+        "cap": "guard-tether_cap.png"
+      },
+      "size": [
+        24,
+        24
+      ],
+      "anchorPx": [
+        12,
+        12
+      ],
+      "frames": 8,
+      "fps": 10,
+      "note": "one on each end point"
+    },
+    "guard-tether-snap": {
+      "files": {
+        "snap": "guard-tether_snap.png"
+      },
+      "size": [
+        64,
+        64
+      ],
+      "anchorPx": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 12,
+      "loop": false,
+      "note": "play once at each line's midpoint when the guarder is defeated, while the line and foot glow fade out"
+    },
+    "aura-sparkle-gold": {
+      "files": {
+        "front": "aura-sparkle-gold_front.png"
+      },
+      "size": [
+        256,
+        256
+      ],
+      "anchorPx": [
+        128,
+        210
+      ],
+      "frames": 8,
+      "fps": 10,
+      "proposal": true,
+      "note": "PROPOSAL ONLY (possible future rare named monster). Not wired. Scale like the aura masters."
+    },
+    "guard-protected-swarmer": {
+      "enemy": "swarmer",
+      "files": {
+        "glow": "swarmer/guard-protected_glow.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64.0,
+        104.96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "drawUnder": "enemy"
+    },
+    "guard-protected-shield": {
+      "enemy": "shield",
+      "files": {
+        "glow": "shield/guard-protected_glow.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64.0,
+        104.96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "drawUnder": "enemy"
+    },
+    "guard-protected-brute": {
+      "enemy": "brute",
+      "files": {
+        "glow": "brute/guard-protected_glow.png"
+      },
+      "size": [
+        208,
+        208
+      ],
+      "anchorPx": [
+        104.0,
+        170.56
+      ],
+      "frames": 8,
+      "fps": 10,
+      "drawUnder": "enemy"
+    },
+    "guard-protected-keeper": {
+      "enemy": "keeper",
+      "files": {
+        "glow": "keeper/guard-protected_glow.png"
+      },
+      "size": [
+        256,
+        256
+      ],
+      "anchorPx": [
+        128.0,
+        209.92
+      ],
+      "frames": 8,
+      "fps": 10,
+      "drawUnder": "enemy"
     }
-  }
+  },
+  "guardNote": "Guarding links (S1 follow-up). Lines and glows sit UNDER the enemy and UNDER the red danger circle. Nothing above heads."
 }
