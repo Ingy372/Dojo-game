@@ -24,17 +24,17 @@ import {
   chooseInsight,
   createRunWorld,
   currentRoom,
-  finishRun,
+  wrapUpRun,
+  chooseDifficulty,
+  markGuidedOffered,
+  shouldOfferGuided,
   activeForm,
   characterSetup,
-  gainXp,
   modsFrom,
   rarityRank,
-  runXp,
   strikeCost,
   runEffects,
   setPlayerMods,
-  summarizeRun,
   updateRun,
   type CombatEvent,
   type DoorKind,
@@ -70,8 +70,11 @@ import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { bowPrompt, playBow } from '../ui/bow';
 import { InsightPicker } from '../ui/InsightPicker';
-import { runOverCard } from '../ui/RunOverCard';
+import { choiceCard, restCard, runOverCard } from '../ui/RunOverCard';
+import { PLAY_TIME_TEXT, isPlayTimeUp } from '../game/playTime';
+import { DIFFICULTY_TEXT, localToday } from '../game/difficulty';
 import { startTowerRun } from '../game/tower';
+import { bankRun, saveRunInProgress } from '../game/runSave';
 import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
 import { TouchControls } from '../input/TouchControls';
@@ -297,6 +300,19 @@ export class GameScene extends Phaser.Scene {
         guideStep: testGuide() ?? loadSave().guideStep,
         player: { ...this.setup, mods: modsFrom(this.setup.effects, TICKS_PER_SECOND) },
       });
+    }
+    // Save the run at the start of each room, so closing the app doesn't lose it (M7-P11).
+    if (this.run) saveRunInProgress(this.run);
+    if (this.run) {
+      // The grown-up's play-time limit (M7-P9): checked every few seconds, never shown as a timer.
+      const limitProfile = loadSave();
+      const check = () => {
+        if (!this.run || this.run.wrapUp || this.run.status !== 'playing' || !isPlayTimeUp(limitProfile)) return;
+        wrapUpRun(this.run);
+        this.senseiSay([PLAY_TIME_TEXT.wrapUpLine], 2200);
+      };
+      this.time.addEvent({ delay: 2000, loop: true, callback: check });
+      this.time.delayedCall(1500, check);
     }
     this.senseiText = null;
     this.menuOpen = false;
@@ -1227,25 +1243,51 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** Brings the run's loot home, saves, and goes to the Home Dojo. */
-  private endRun(status: 'cleared' | 'lost'): void {
+  private endRun(status: 'cleared' | 'lost' | 'rested'): void {
     if (!this.run) return;
-    const profile = loadSave();
-    const summary = summarizeRun(this.run);
-    finishRun(profile, summary);
-    addDecorations(homeDojo(profile), summary.decorations);
-    // Experience, capped by the real belt (with the Blessing and catch-up bonuses).
-    const xp = gainXp(profile, this.training, runXp(summary));
-    if (profile.lastRun) profile.lastRun.xp = xp;
-    writeSave(profile);
+    const { summary, xp, profile } = bankRun(this.run, this.training, status);
     this.leaving = true;
     const leave = (scene: string, data?: GameSceneData) => {
       this.cameras.main.fadeOut(600, 10, 8, 16);
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start(scene, data));
     };
+    if (status === 'rested') {
+      // Play time is up (M7-P9): a kind card, then home. Everything found is already saved.
+      sfx.floorClear();
+      this.time.delayedCall(500, () => {
+        const card = restCard(this, () => {
+          this.uiCamera.fadeOut(400, 10, 8, 16);
+          this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home'));
+        });
+        this.cameras.main.ignore(card);
+      });
+      return;
+    }
     if (status === 'lost') {
-      // A soft card with what they keep, then Try again or Back home.
+      // A soft card with what they keep, then Try again or Back home. After losses in a row on
+      // this floor, Guided is kindly offered first, at most once a day (M7-P1).
+      const tier = this.run.tier;
+      const offer = shouldOfferGuided(profile, tier, DIFFICULTY_TEXT, localToday());
+      if (offer) {
+        markGuidedOffered(profile, localToday());
+        writeSave(profile);
+      }
       this.time.delayedCall(1400, () => {
         this.message.setVisible(false);
+        if (offer) {
+          const o = DIFFICULTY_TEXT.offer;
+          const ask = choiceCard(this, o.title, o.line, o.no, o.yes, (yes) => {
+            if (yes) {
+              const p = loadSave();
+              chooseDifficulty(p, 'guided');
+              writeSave(p);
+            }
+            showCard();
+          });
+          this.cameras.main.ignore(ask);
+        } else showCard();
+      });
+      const showCard = () => {
         const card = runOverCard(
           this,
           summary,
@@ -1253,7 +1295,7 @@ export class GameScene extends Phaser.Scene {
           () => {
             this.uiCamera.fadeOut(400, 10, 8, 16);
             this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () =>
-              this.scene.start('Game', { run: startTowerRun(loadSave(), this.training) }),
+              isPlayTimeUp(loadSave()) ? this.scene.start('Dojo') : this.scene.start('Game', { run: startTowerRun(loadSave(), this.training) }),
             );
           },
           () => {
@@ -1262,7 +1304,7 @@ export class GameScene extends Phaser.Scene {
           },
         );
         this.cameras.main.ignore(card);
-      });
+      };
       return;
     }
     sfx.floorClear();

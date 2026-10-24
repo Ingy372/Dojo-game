@@ -53,7 +53,10 @@ export interface RunState {
   perfects: number;
   bestCombo: number;
   ticks: number;
-  status: 'playing' | 'cleared' | 'lost';
+  /** 'rested': the play-time limit ended the run after a room (M7-P9). Nothing is lost. */
+  status: 'playing' | 'cleared' | 'lost' | 'rested';
+  /** Play time is up: the run ends at the next door, after the current room (M7-P9). */
+  wrapUp: boolean;
   /** Runs in a row without a Rare before this one (bad-luck protection). */
   dryRuns: number;
   /** A Rare or better was found this run. */
@@ -106,7 +109,7 @@ export type RunEvent =
   | { kind: 'graded'; result: RoomResult }
   | { kind: 'insightChoice'; ids: string[] }
   | { kind: 'nextRoom'; door: DoorKind }
-  | { kind: 'runOver'; status: 'cleared' | 'lost' };
+  | { kind: 'runOver'; status: 'cleared' | 'lost' | 'rested' };
 
 export interface RunOptions {
   seed: number;
@@ -153,6 +156,7 @@ export function startRun(content: Content, options: RunOptions): RunState {
     bestCombo: 0,
     ticks: 0,
     status: 'playing',
+    wrapUp: false,
     dryRuns: options.dryRuns,
     rareFound: false,
     nextUid: 1,
@@ -308,6 +312,12 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
           out.push({ kind: 'runOver', status: 'cleared' });
           return out;
         }
+        if (run.wrapUp) {
+          // Play time is up: this room is finished, so go home with everything found (M7-P9).
+          run.status = 'rested';
+          out.push({ kind: 'runOver', status: 'rested' });
+          return out;
+        }
         run.health = world.players.p1.health;
         run.depth++;
         enterRoom(content, run, pickRoom(content, run, door));
@@ -343,7 +353,7 @@ export function gradeRoom(perfects: number, damageTaken: number, maxHealth: numb
 }
 
 export interface RunSummary {
-  result: 'cleared' | 'lost';
+  result: 'cleared' | 'lost' | 'rested';
   /** Rooms fully cleared. */
   roomsCleared: number;
   totalRooms: number;
@@ -364,7 +374,7 @@ export interface RunSummary {
 
 export function summarizeRun(run: RunState): RunSummary {
   return {
-    result: run.status === 'cleared' ? 'cleared' : 'lost',
+    result: run.status === 'playing' ? 'lost' : run.status,
     roomsCleared: run.results.length,
     totalRooms: run.totalRooms,
     results: run.results.slice(),
@@ -575,4 +585,37 @@ function dropDecoration(content: Content, run: RunState, share: number, at: Vec2
   const id = pick(run.rng, pool.filter((d) => have(d.id) === fewest)).id;
   run.decorations.push(id);
   return { kind: 'decoration', id, at: { x: at.x, y: at.y } };
+}
+
+/** Play time is up: finish the current room, then the next door ends the run (M7-P9). */
+export function wrapUpRun(run: RunState): void {
+  if (run.status === 'playing') run.wrapUp = true;
+}
+
+/**
+ * A run saved at the start of its current room (M7-P11), so closing the app doesn't lose it.
+ * Returns null for anything that can't be played on: not a run, already over, or a room
+ * that no longer exists in this version of the content.
+ */
+export function restoreRun(content: Content, data: unknown): RunState | null {
+  if (!data || typeof data !== 'object') return null;
+  const run = data as Partial<RunState>;
+  const ok =
+    run.status === 'playing' &&
+    typeof run.depth === 'number' &&
+    typeof run.totalRooms === 'number' &&
+    run.depth < run.totalRooms &&
+    typeof run.roomId === 'string' &&
+    content.rooms.some((r) => r.id === run.roomId) &&
+    typeof run.rng?.state === 'number' &&
+    typeof run.namedRng?.state === 'number' &&
+    Array.isArray(run.doors) &&
+    Array.isArray(run.loot) &&
+    Array.isArray(run.results) &&
+    Array.isArray(run.insights) &&
+    Array.isArray(run.decorations);
+  if (!ok) return null;
+  const restored = JSON.parse(JSON.stringify(run)) as RunState;
+  restored.wrapUp ??= false;
+  return restored;
 }

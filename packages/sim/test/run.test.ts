@@ -17,6 +17,12 @@ import {
   stepWorld,
   summarizeRun,
   updateRun,
+  wrapUpRun,
+  tickPlayClock,
+  makeGateQuestion,
+  playTimeUp,
+  isPlayLimit,
+  loadProfile,
   type RunEvent,
   type RunState,
 } from '../src';
@@ -235,5 +241,58 @@ describe('personal bests', () => {
     const again = finishRun(profile, { ...s, perfects: 2, ticks: s.ticks + 100 });
     expect(again).toEqual([]);
     expect(profile.bests.mostPerfects).toBe(4);
+  });
+});
+
+describe('play-time limit (M7-P9)', () => {
+  it('wrap-up ends the run at the next door as rested, keeping the loot', () => {
+    const run = startRun(content, { seed: 7, dryRuns: LOOT.guaranteedRareOnRun - 1 });
+    wrapUpRun(run);
+    const events = autoplay(run);
+    expect(run.status).toBe('rested');
+    expect(run.depth).toBe(0);
+    expect(events.some((e) => e.kind === 'runOver' && e.status === 'rested')).toBe(true);
+    const summary = summarizeRun(run);
+    expect(summary.result).toBe('rested');
+    const profile = newProfile();
+    const before = profile.inventory.length;
+    finishRun(profile, summary);
+    expect(profile.inventory.length).toBe(before + summary.items.length);
+  });
+
+  it('play time adds up through the day, ignores time away, and resets at midnight', () => {
+    const min = 60_000;
+    let c = tickPlayClock(null, '2026-10-24', 0, min);
+    for (let t = 1; t <= 16; t++) c = tickPlayClock(c, '2026-10-24', t * min, min);
+    expect(playTimeUp(c, 15)).toBe(true);
+    expect(playTimeUp(c, 0)).toBe(false);
+    // Three hours away counts as at most one minute.
+    c = tickPlayClock(c, '2026-10-24', 200 * min, min);
+    expect(c.playedMs).toBe(17 * min);
+    // Still up later the same day, even after a long break.
+    expect(playTimeUp(c, 15)).toBe(true);
+    c = tickPlayClock(c, '2026-10-25', 900 * min, min);
+    expect(c.playedMs).toBe(0);
+    expect(playTimeUp(c, 15)).toBe(false);
+  });
+
+  it('the grown-up gate asks a sum with 4 different choices, one right', () => {
+    let seed = 1;
+    const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < 200; i++) {
+      const q = makeGateQuestion(rand);
+      expect(q.answer).toBe(q.a + q.b);
+      expect(q.choices).toContain(q.answer);
+      expect(new Set(q.choices).size).toBe(4);
+      expect(q.choices.every((n) => n > 0)).toBe(true);
+    }
+  });
+
+  it('only off/15/30/45/60 are valid, default off, bad saves fall back to off', () => {
+    expect([0, 15, 30, 45, 60].every(isPlayLimit)).toBe(true);
+    expect(isPlayLimit(20)).toBe(false);
+    expect(newProfile().playLimitMinutes).toBe(0);
+    const saved = { ...newProfile(), playLimitMinutes: 99 };
+    expect(loadProfile(JSON.parse(JSON.stringify(saved))).playLimitMinutes).toBe(0);
   });
 });

@@ -277,6 +277,19 @@ Earlier sample notes: idle, windup and attack, in 8 directions. The frame is 192
 - `dojo-people/sprites/kohai/` (all sheets and `kohai.json`) and `dojo-people/portraits/kohai/`: re-import. The kohai now has a curly top-knot with a teal tie, baked into the `body` layer.
 - UI suggestion from QA, not done here: give dark swatches a light border.
 
+## A6 decoration samples (S7-rev pool), `incoming-art/decor-pool-a6/sprites/static.json` [NEW, SAMPLES only, do not wire yet]
+6 sample pieces (class scroll, kick pad, keeper statue, journal trophy, fan stand, folding screen 2x1) in the Home Dojo format: same camera and 80 px tiles, with `footprint`, `place` (floor or wall) and `anchorPx` like `home-dojo/sprites/static.json`. Ids are working ids, not names. See the DELIVERY_NOTE for DECIDE.
+
+## A6 Tier 1 decoration set, `incoming-art/decor-tier1-a6/sprites/static.json` [UPDATED: C10 ids]
+- **Ids and names now follow C10 (PR #123, `drafts/content/decorations/a6-decorations-text.json`).** Every sprite has `info.name` and `info.description` from C10. **Id change:** `decor-t1-*` (#124) became `decor-a6-*`, and the sprite files were renamed to match. If anything imported the `decor-t1-*` ids, switch to the new ones (old-to-new table in `decor-tier1-a6/DELIVERY_NOTE.md`; `source/rename_c10.py` holds the map).
+- C10 has one id each for the statue and the trophy, so the variants use them as a prefix: `decor-a6-keeper-statue-floor1..3` (shared layer `decor-a6-keeper-statue-base`) and `decor-a6-journal-trophy-{swarmer,shield,brute,keeper,bopper}` (shared layer `decor-a6-journal-trophy-stand`). All variants share one C10 name.
+- The full-set ids reuse some sample ids from `decor-pool-a6/` (`decor-a6-kick-pad`, `-fan-stand`, `-folding-screen`). Load only `decor-tier1-a6/`; the samples are superseded.
+- 7 class scrolls (wall), 6 class gear, 5 random kinds with a `-tint` layer, 3 first-clear statues, 5 Journal trophies and the 2x1 folding screen.
+- **Tint:** for random pieces, draw `<id>`, then `<id>-tint` multiplied by `info.colour1`, or by colour 2 = the drop floor's belt colour (`beltStyles[belt].belt`).
+- **White-belt fallback [NEW]:** on White-belt floors, colour 2 is soft wood tan **`#d2a878`** (`placement.whiteBeltFallback`, `info.colour2WhiteFallback`), not the near-white belt colour.
+- **Folding screen is bonus-only [NEW]:** `decor-a6-folding-screen` is not in the random pool (`info.bonusOnly = true`, `placement.bonusOnly`). Placement: any free cell, except `info.mustTouchWall` pieces (the screen), whose top row must be row 1.
+- **Parked [NEW]:** gold-plate trophies for Tier 2+ named monsters are parked until Tier 2 is planned. No art yet.
+
 ## Open items in one place
 
 1. The player frame changed to 128 × 160 with the anchor at (64, 136.96). It applies to `player-character/` and `player-custom/`.
@@ -289,3 +302,4 @@ Earlier sample notes: idle, windup and attack, in 8 directions. The frame is 192
 8. **[NEW]** A1 cosmetics: names (Content Writer), unlock rules and colours (Jay), and the headband fit over big hair.
 9. **[NEW]** A5 Bouncy Bopper: Jay approved the 192 px frame, the lime accent, and hiding the staff to show disarmed (2026-10-24). The full set is delivered. Jay's calls (2026-10-24): disarmed uses a weak **push-paw** attack, and the asset files keep the `padded` names. Still to decide: HP, power and the push-paw's power after the balance run (PR #102), and which seals use it.
 10. **[NEW]** A7: Jay approved the kohai top-knot, the teal tie and `#34303f` as black (2026-10-24). Only the swatch border (Programmer) is still open.
+12. **[UPDATED]** A6 decoration pool: ids and names follow C10; colour 2 on White floors is wood tan `#d2a878`; the folding screen is bonus-only; Tier 2+ gold-plate trophies are parked. Still open: the keeper figures per floor (lion-dog, turtle, crane) and the scroll picture-to-subject pairing (mapped in order; Content Designer to confirm).

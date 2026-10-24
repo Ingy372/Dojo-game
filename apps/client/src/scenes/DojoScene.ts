@@ -34,11 +34,18 @@ import {
   type Vec2,
   type WorldState,
   streetSmartsOpen,
+  chooseDifficulty,
+  PLAY_LIMIT_CHOICES,
+  makeGateQuestion,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
 import { bowIsDue, homeDojo, setBowDue } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
+import { DIFFICULTY_TEXT, ensureDifficulty } from '../game/difficulty';
+import { PLAY_TIME_TEXT, isPlayTimeUp, touchPlayClock } from '../game/playTime';
+import { bankRun, savedRun } from '../game/runSave';
+import RESUME_TEXT from '../../../../content/settings/run-resume.json';
 import streetUi from '../../../../content/street-smarts/ui.json';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
@@ -138,6 +145,7 @@ export class DojoScene extends Phaser.Scene {
   private selected: string | null = null;
   private titleTaps: number[] = [];
   private leaving = false;
+  private restingNote: Phaser.GameObjects.Text | null = null;
 
   constructor() {
     super('Dojo');
@@ -152,6 +160,7 @@ export class DojoScene extends Phaser.Scene {
     this.dojo = homeDojo(this.profile);
     this.training = currentTraining();
     const hoursAway = returnToDojo(this.dojo, CONTENT.dojo, Date.now());
+    ensureDifficulty(this.profile);
     writeSave(this.profile);
 
     this.mode = 'play';
@@ -212,7 +221,11 @@ export class DojoScene extends Phaser.Scene {
       this.game.events.off(Phaser.Core.Events.HIDDEN, release);
     });
     this.cameras.main.fadeIn(400, 10, 8, 16);
+    // Time in the dojo is play time too (M7-P9's clock).
+    touchPlayClock();
+    this.time.addEvent({ delay: 5000, loop: true, callback: () => touchPlayClock() });
 
+    if (!bowIsDue()) this.offerResume();
     if (bowIsDue()) {
       this.mode = 'arriving';
       bowPrompt(this, 'Bow as you enter your dojo', () => {
@@ -280,6 +293,7 @@ export class DojoScene extends Phaser.Scene {
         }),
       );
     }
+    if (savedRun()) steps.push(() => this.offerResume(next));
     let i = 0;
     const next = (): void => {
       const step = steps[i++];
@@ -377,6 +391,20 @@ export class DojoScene extends Phaser.Scene {
     if (result.calmMind) this.celebrateCalm();
   }
 
+  /** "Your dojo is resting for today" at the Tower door, when today's play time is up. */
+  private showResting(): void {
+    if (this.restingNote?.active) return;
+    const { width, height } = this.scale.gameSize;
+    const pt = PLAY_TIME_TEXT;
+    const t = this.add
+      .text(width / 2, height * 0.3, `${pt.doorResting}\n${pt.doorRestingLine}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '18px', color: '#fff6e0', align: 'center', stroke: '#14121c', strokeThickness: 5 })
+      .setOrigin(0.5)
+      .setResolution(crisp())
+      .setDepth(40);
+    this.restingNote = t;
+    this.tweens.add({ targets: t, alpha: 0, delay: 3200, duration: 500, onComplete: () => t.destroy() });
+  }
+
   /** The dojo is spotless: Calm Mind. Kept modest, so real achievements are always bigger. */
   private celebrateCalm(): void {
     writeSave(this.profile);
@@ -407,6 +435,8 @@ export class DojoScene extends Phaser.Scene {
 
   private goTower(): void {
     if (this.leaving) return;
+    // Today's play time is used up: the door kindly stays shut until midnight (M7-P9).
+    if (isPlayTimeUp(this.profile)) return this.showResting();
     const run = startTowerRun(this.profile, this.training);
     this.leaveTo('Game', { run });
   }
@@ -787,6 +817,14 @@ export class DojoScene extends Phaser.Scene {
       this.button(width - pad - 80, 8, 80, 32, 'Board', 0x4a3f63, 14, () => this.goBoard());
       this.button(width - pad - 80 - 8 - 100, 8, 100, 32, 'Decorate', 0x8a5a35, 14, () => this.setDecorating(true));
       this.button(width - pad - 80 - 8 - 100 - 8 - 70, 8, 70, 32, 'Look', 0x3a6ea5, 14, () => this.changeLook());
+      this.button(width - pad - 80 - 8 - 100 - 8 - 70 - 8 - 90, 8, 90, 32, DIFFICULTY_TEXT.button, 0x3a3a4a, 14, () => this.openDifficulty());
+      // One line says which difficulty they're on, shown once ever (M7-P1).
+      if (!this.profile.difficultyLineShown && this.profile.difficulty) {
+        const name = DIFFICULTY_TEXT.choices.find((c) => c.id === this.profile.difficulty)?.name ?? '';
+        this.text(pad, TOP + 6, DIFFICULTY_TEXT.homeLine.replace('{name}', name), 14, '#fff6e0', true).setStroke('#14121c', 5);
+        this.profile.difficultyLineShown = true;
+        writeSave(this.profile);
+      }
       if (streetSmartsOpen(this.training.tier, streetUi.unlockTier)) this.button(width - pad - 130, 46, 130, 32, streetUi.button, 0x3aa57a, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
       // The Monster Journal, from the belt where named monsters start showing up.
       if (this.training.tier >= CONTENT.named.rules.minBeltTier) {
@@ -844,6 +882,190 @@ export class DojoScene extends Phaser.Scene {
       this.mode = before === 'menu' ? 'play' : before;
       this.renderUi();
     });
+  }
+
+  /** Settings: the difficulty choice (Guided / Steady / Challenge). Picking one makes it the player's own. */
+  private openDifficulty(): void {
+    const back = this.mode;
+    this.mode = 'menu';
+    this.controls.reset();
+    const { width, height } = this.scale.gameSize;
+    const box = this.add.container(0, 0).setDepth(70);
+    const dim = this.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive();
+    box.add(dim);
+    const close = () => {
+      box.destroy();
+      this.mode = back === 'menu' ? 'play' : back;
+      this.renderUi();
+    };
+    dim.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, close);
+    const t = DIFFICULTY_TEXT;
+    box.add(this.add.text(width / 2, height * 0.1, t.title, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
+    const gap = 12;
+    const n = t.choices.length;
+    const w = Math.min(220, (width - 40 - gap * (n - 1)) / n);
+    const h = Math.min(170, height * 0.5);
+    const top = height * 0.1 + 44;
+    const x0 = width / 2 - (n * w + (n - 1) * gap) / 2;
+    const current = this.profile.difficulty ?? 'standard';
+    t.choices.forEach((c, i) => {
+      const x = x0 + i * (w + gap);
+      const on = current === c.id;
+      const bg = this.add.rectangle(x, top, w, h, 0x2a2536).setOrigin(0).setStrokeStyle(on ? 4 : 2, on ? 0xffd166 : 0xffffff, on ? 1 : 0.35).setInteractive();
+      box.add(bg);
+      box.add(this.add.text(x + w / 2, top + 18, (on ? '✓ ' : '') + c.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5, 0).setResolution(crisp()));
+      box.add(this.add.text(x + w / 2, top + 54, c.text, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w - 24 } }).setOrigin(0.5, 0).setResolution(crisp()));
+      bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+        sfx.unlock();
+        sfx.place(true);
+        chooseDifficulty(this.profile, c.id);
+        writeSave(this.profile);
+        close();
+      });
+    });
+    box.add(this.add.text(width / 2, top + h + 14, t.footer, { fontFamily: FONT, fontSize: '14px', color: '#b9ad99' }).setOrigin(0.5, 0).setResolution(crisp()));
+    // Grown-up settings sit behind a simple sum, so a young child can't open them by accident (M7-P9).
+    const pt = PLAY_TIME_TEXT;
+    const gw = 190;
+    const gh = 34;
+    const gx = width - 12 - gw;
+    const gy = height - 12 - gh;
+    const gate = this.add.rectangle(gx, gy, gw, gh, 0x3a3a4a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35).setInteractive();
+    const gateLabel = this.add.text(gx + gw / 2, gy + gh / 2, pt.grownUpButton, { fontFamily: FONT, fontStyle: 'bold', fontSize: '14px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp());
+    box.add([gate, gateLabel]);
+    gate.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+      sfx.unlock();
+      box.destroy();
+      this.openGrownUpGate(back);
+    });
+  }
+
+  /** The grown-up gate: "what is a + b?" with 4 choices. Right opens the play-time setting; wrong goes back. */
+  private openGrownUpGate(back: Mode): void {
+    const pt = PLAY_TIME_TEXT;
+    const q = makeGateQuestion(Math.random);
+    const { width, height } = this.scale.gameSize;
+    const box = this.add.container(0, 0).setDepth(70);
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.96).setOrigin(0).setInteractive());
+    const leave = () => {
+      box.destroy();
+      this.mode = back === 'menu' ? 'play' : back;
+      this.renderUi();
+    };
+    box.add(this.add.text(width / 2, height * 0.2, pt.gateText.replace('{a}', String(q.a)).replace('{b}', String(q.b)), { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
+    const bw = 84;
+    const gap = 12;
+    const bh = 48;
+    const by = height * 0.2 + 56;
+    const x0 = width / 2 - (q.choices.length * bw + (q.choices.length - 1) * gap) / 2;
+    q.choices.forEach((n, i) => {
+      const x = x0 + i * (bw + gap);
+      const bg = this.add.rectangle(x, by, bw, bh, 0x2a2536).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35).setInteractive();
+      box.add([bg, this.add.text(x + bw / 2, by + bh / 2, String(n), { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
+      bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+        if (n !== q.answer) return leave();
+        sfx.place(true);
+        box.destroy();
+        this.openPlayLimit(back);
+      });
+    });
+    const cw = 120;
+    const cy = by + bh + 24;
+    const cancel = this.add.rectangle(width / 2 - cw / 2, cy, cw, 38, 0x4a4a55).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35).setInteractive();
+    box.add([cancel, this.add.text(width / 2, cy + 19, pt.gateCancel, { fontFamily: FONT, fontStyle: 'bold', fontSize: '15px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
+    cancel.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, leave);
+  }
+
+  /** A run left open when the app closed (M7-P11): keep climbing from that room, or rest and keep the loot. */
+  private offerResume(done?: () => void): void {
+    const run = savedRun();
+    if (!run) return;
+    const t = RESUME_TEXT;
+    const { width, height } = this.scale.gameSize;
+    const back = this.mode === 'arriving' ? 'play' : this.mode;
+    this.mode = 'menu';
+    const box = this.add.container(0, 0).setDepth(80);
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive());
+    const w = Math.min(460, width - 40);
+    const h = 200;
+    const left = (width - w) / 2;
+    const top = (height - h) / 2;
+    box.add(this.add.rectangle(left, top, w, h, 0x221d2e).setOrigin(0).setStrokeStyle(3, 0xffd166, 0.9));
+    const label = (y: number, s: string, size: number, color: string, bold = false) =>
+      this.add.text(width / 2, y, s, { fontFamily: FONT, fontStyle: bold ? 'bold' : 'normal', fontSize: `${size}px`, color, align: 'center', wordWrap: { width: w - 32 } }).setOrigin(0.5, 0).setResolution(crisp());
+    box.add(label(top + 18, t.title, 24, '#ffd166', true));
+    box.add(label(top + 60, t.line.replace('{room}', String(run.depth + 1)).replace('{total}', String(run.totalRooms)), 16, '#f2e9d8'));
+    const bw = (w - 48) / 2;
+    const bh = 50;
+    const by = top + h - bh - 20;
+    const button = (x: number, text: string, color: number, onTap: () => void) => {
+      const bg = this.add.rectangle(x, by, bw, bh, color).setOrigin(0).setStrokeStyle(2, 0xfff6e0, 0.5).setInteractive();
+      box.add([bg, this.add.text(x + bw / 2, by + bh / 2, text, { fontFamily: FONT, fontStyle: 'bold', fontSize: '17px', color: '#fff6e0' }).setOrigin(0.5).setResolution(crisp())]);
+      bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, onTap);
+    };
+    button(left + 16, t.rest, 0x4a4a55, () => {
+      // Bank it like a play-time rest: nothing found is lost.
+      run.status = 'rested';
+      bankRun(run, this.training, 'rested');
+      box.destroy();
+      this.profile = loadSave();
+      this.toast(t.restLine);
+      if (done) done();
+      else {
+        this.mode = back;
+        this.renderUi();
+      }
+    });
+    button(left + 32 + bw, t.continue, 0x3aa57a, () => {
+      this.leaving = true;
+      this.cameras.main.fadeOut(400, 10, 8, 16);
+      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Game', { run }));
+    });
+  }
+
+  /** Grown-up setting: the play-time limit (off / 15 / 30 / 45 / 60 minutes). */
+  private openPlayLimit(back: Mode): void {
+    const pt = PLAY_TIME_TEXT;
+    const { width, height } = this.scale.gameSize;
+    const box = this.add.container(0, 0).setDepth(70);
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.85).setOrigin(0).setInteractive());
+    const close = () => {
+      box.destroy();
+      this.mode = back === 'menu' ? 'play' : back;
+      this.renderUi();
+    };
+    const w = Math.min(560, width - 40);
+    box.add(this.add.text(width / 2, height * 0.08, pt.title, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
+    const help = this.add.text(width / 2, height * 0.08 + 36, pt.help, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
+    box.add(help);
+    const choices = PLAY_LIMIT_CHOICES;
+    const gap = 10;
+    const bw = Math.min(96, (w - gap * (choices.length - 1)) / choices.length);
+    const bh = 44;
+    const by = help.y + help.height + 18;
+    const x0 = width / 2 - (choices.length * bw + (choices.length - 1) * gap) / 2;
+    const draw = () => {
+      box.list.filter((o) => o.getData('choice')).forEach((o) => o.destroy());
+      choices.forEach((n, i) => {
+        const on = this.profile.playLimitMinutes === n;
+        const x = x0 + i * (bw + gap);
+        const bg = this.add.rectangle(x, by, bw, bh, on ? 0x3aa57a : 0x2a2536).setOrigin(0).setStrokeStyle(on ? 3 : 2, on ? 0xffd166 : 0xffffff, on ? 1 : 0.35).setInteractive().setData('choice', true);
+        const label = this.add.text(x + bw / 2, by + bh / 2, n === 0 ? pt.off : pt.minutes.replace('{n}', String(n)), { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp()).setData('choice', true);
+        bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+          sfx.place(true);
+          this.profile.playLimitMinutes = n;
+          writeSave(this.profile);
+          draw();
+        });
+        box.add([bg, label]);
+      });
+    };
+    draw();
+    const dw = 140;
+    const dy = Math.min(height - 12 - 40, by + bh + 22);
+    const done = this.add.rectangle(width / 2 - dw / 2, dy, dw, 40, 0x3aa57a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
+    box.add([done, this.add.text(width / 2, dy + 20, pt.done, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
+    done.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, close);
   }
 
   /** Asks how the player likes to move decorations: tap the spot, or an arrow pad. */
