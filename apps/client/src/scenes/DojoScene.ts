@@ -276,14 +276,6 @@ export class DojoScene extends Phaser.Scene {
     const name = this.training.displayName.split(' ')[0];
     const chores = choresLeft(this.dojo);
     const steps: Array<() => void> = [];
-    // First return home after the tutorial floor: Sensei's welcome line, once (line-welcome-home, M7-P5).
-    if (this.profile.lastRun?.summary.tutorial) {
-      const welcome = takeLesson('firstHomeReturn', null);
-      if (welcome) {
-        this.profile.lessons = loadSave().lessons;
-        steps.push(() => this.card('Sensei', welcome.screens.map((l) => l.replace('{player}', name)), 'Thanks, Sensei!', next));
-      }
-    }
     if (!this.dojo.welcomed) {
       steps.push(() =>
         this.card('Your Home Dojo', [

@@ -625,6 +625,12 @@ Follow-up (K17b):
 - Manager call: line-welcome-home is wired. It fires (once) on the first return home after the tutorial floor, as a Sensei card before the other welcome cards.
 - The dojo's once-ever difficulty line moves below the second button row (Scroll, Journal, Street Smarts), so nothing covers it at 667 or 844 wide.
 
+## M7-P4 Unlock cascade on the first return home (K18) (2026-10-24)
+- Manager call: the cascade plays on the Training Board (HomeScene), where the tutorial floor returns. Sensei's welcome-home line (line-welcome-home, K17) plays first, then the cascade. The welcome line moved out of DojoScene.
+- Manager call: if the Beginner's Stance weren't a real ability it would be a label only. It is real (`forms[0]` in content/abilities/abilities.json), so the preview uses its name from there.
+- Order: an opening card ("You've already earned these in the dojo."), then each sign-off in the order it was earned (its ability on the card), then each stripe. More than 3 sign-offs are shown together on one screen, as before, so a green belt isn't buried in cards.
+- Nothing plays twice: the snapshot is saved when the cascade ends. Fake profiles now shift their dates by whole days, so the last class doesn't change on every visit (it used to replay the Dojo Blessing on each visit).
+
 ## M7-P7 Gradual unlock schedule and Welcome Week (K19) (2026-10-24)
 Manager calls:
 1. K19 shares K17's budget: one new thing per day in total (a lesson or a system).

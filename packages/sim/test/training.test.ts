@@ -166,9 +166,9 @@ describe('reward moments', () => {
 
   it('welcomes a first-time player with everything their training unlocked', () => {
     const m = rewardMoments(null, c);
-    expect(m).toHaveLength(1);
     expect(m[0].kind).toBe('welcome');
-    if (m[0].kind === 'welcome') expect(m[0].unlocked).toHaveLength(13);
+    const signOffs = m.find((x) => x.kind === 'signOffs');
+    expect(signOffs?.kind === 'signOffs' && signOffs.list).toHaveLength(13);
   });
 
   it('celebrates new progress, the stripe before the sign-offs', () => {

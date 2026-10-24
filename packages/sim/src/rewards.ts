@@ -19,8 +19,12 @@ export interface ProgressSnapshot {
 }
 
 export type RewardMoment =
-  /** First time this student opens the game: everything their training has unlocked, in one cascade. */
-  | { kind: 'welcome'; name: string; belt: BeltInfo; unlocked: RequirementStatus[]; virtues: string[] }
+  /**
+   * First return home (M7-P4): the opening card of the unlock cascade. The sign-offs and
+   * stripes already earned follow as their own moments. A player with no sign-offs yet gets
+   * the preview instead: the Beginner's Stance and what the first sign-off unlocks.
+   */
+  | { kind: 'welcome'; name: string; belt: BeltInfo; count: number; preview: WelcomePreview | null }
   /** The biggest moment: a real promotion. */
   | { kind: 'promotion'; from: BeltInfo; to: BeltInfo; levelCap: number; preview: RequirementStatus[] }
   | { kind: 'stripe'; word: string; virtue: string; rank: number; belt: string }
@@ -29,6 +33,14 @@ export type RewardMoment =
   | { kind: 'signOffs'; list: Array<{ requirement: RequirementStatus; ability: string }> }
   | { kind: 'testApproved'; testDate: string | null }
   | { kind: 'blessing' };
+
+export interface WelcomePreview {
+  /** The Form everyone starts with (forms[0]). */
+  stance: string;
+  /** The next technique to get signed off, and what it unlocks. */
+  next: RequirementStatus | null;
+  ability: string;
+}
 
 export const MAX_SINGLE_SIGNOFFS = 3;
 
@@ -58,17 +70,9 @@ export function abilityLabel(t: TrainingState, id: string): string {
 }
 
 /** What's new since the last snapshot, biggest celebration first. `prev` null = first time. */
-export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState): RewardMoment[] {
+export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState, stance = "Beginner's Stance"): RewardMoment[] {
   if (!prev || prev.studentId !== t.studentId) {
-    return [
-      {
-        kind: 'welcome',
-        name: t.firstName,
-        belt: t.belt,
-        unlocked: t.requirements.filter((r) => r.signedOff),
-        virtues: t.virtues.map(virtueTitle),
-      },
-    ];
+    return unlockCascade(t, stance);
   }
   // Going down in rank can only happen while testing with fake profiles: nothing to celebrate.
   if (t.tier < prev.tier) return [];
@@ -105,4 +109,28 @@ export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState): 
 
 function titleAtRank(v: VirtueInfo, rank: number): string {
   return virtueTitle({ ...v, rank });
+}
+
+/**
+ * The unlock cascade on the first return home (M7-P4, core-design 0:10): "You've already
+ * earned these in the dojo." The opening card, then each sign-off in the order it was earned
+ * (more than 3 are shown together), then each stripe. Nothing earned yet: the preview.
+ */
+export function unlockCascade(t: TrainingState, stance: string): RewardMoment[] {
+  const signed = t.requirements
+    .filter((r) => r.signedOff)
+    .map((r, i) => ({ r, i }))
+    .sort((a, b) => (a.r.signedOffOn ?? '9999').localeCompare(b.r.signedOffOn ?? '9999') || a.i - b.i)
+    .map(({ r }) => ({ requirement: r, ability: abilityLabel(t, r.id) }));
+  const stripes: RewardMoment[] = t.virtues.flatMap((v) =>
+    v.earned.map((s, i) => ({ kind: 'stripe' as const, word: s.word, virtue: titleAtRank(v, i + 1), rank: i + 1, belt: t.belts.find((b) => b.id === s.belt)?.name ?? s.belt })),
+  );
+  const count = signed.length + stripes.length;
+  const next = t.path.next;
+  const preview: WelcomePreview | null = count === 0 ? { stance, next, ability: next ? abilityLabel(t, next.id) : '' } : null;
+  const out: RewardMoment[] = [{ kind: 'welcome', name: t.firstName, belt: t.belt, count, preview }];
+  if (signed.length > MAX_SINGLE_SIGNOFFS) out.push({ kind: 'signOffs', list: signed });
+  else for (const f of signed) out.push({ kind: 'signOff', ...f });
+  out.push(...stripes);
+  return out;
 }

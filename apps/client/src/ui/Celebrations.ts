@@ -12,6 +12,8 @@ import { hex } from './belt';
 import { FONT, crisp } from './theme';
 
 type Step =
+  /** Sensei's welcome-home line, before the cascade (M7-P4, Manager call). */
+  | { kind: 'sensei'; lines: string[] }
   | { kind: 'moment'; moment: Exclude<RewardMoment, { kind: 'promotion' }> }
   | { kind: 'bow'; from: BeltInfo; to: BeltInfo }
   | { kind: 'gate'; to: BeltInfo }
@@ -35,7 +37,9 @@ export class Celebrations {
     moments: RewardMoment[],
     private readonly training: TrainingState,
     private readonly onDone: () => void,
+    sensei: string[] = [],
   ) {
+    if (sensei.length) this.steps.push({ kind: 'sensei', lines: sensei });
     // The promotion ceremony is 3 screens (QA, 2026-10-18: 8 in a row was too many):
     // the bow and new belt, the Gate opens, then one screen with everything new.
     // Stripes, sign-offs and Sensei's Seal that arrive with it join that last screen;
@@ -82,6 +86,9 @@ export class Celebrations {
         break;
       case 'moment':
         this.moment(step.moment);
+        break;
+      case 'sensei':
+        this.sensei(step.lines);
         break;
     }
     this.readyAt = this.scene.time.now + wait;
@@ -188,32 +195,25 @@ export class Celebrations {
     const cx = width / 2;
     switch (m.kind) {
       case 'welcome': {
+        // The unlock cascade's opening card (M7-P4). Each unlock follows on its own screen.
         sfx.signOff();
-        this.text(cx, height * 0.1, `Welcome, ${m.name}!`, 30, '#ffd166', true, 'Georgia, serif').setOrigin(0.5);
-        const ch = makeStandingCharacter(this.scene, cx, height * 0.1 + 62, 26, m.belt, this.training.stripesThisBelt, loadLook());
+        this.text(cx, height * 0.12, `Welcome home, ${m.name}!`, 30, '#ffd166', true, 'Georgia, serif').setOrigin(0.5);
+        const ch = makeStandingCharacter(this.scene, cx, height * 0.12 + 66, 28, m.belt, this.training.stripesThisBelt, loadLook());
         this.layer.add(ch.container);
-        let y = height * 0.1 + 100;
-        if (m.unlocked.length === 0) {
-          this.text(cx, y, `You start as a ${m.belt.name}. Every technique Sensei signs off\nwill unlock a new power here.`, 16, '#f2e9d8').setOrigin(0.5, 0).setAlign('center');
+        const y = height * 0.12 + 112;
+        const wrap = Math.min(520, width - 40);
+        if (!m.preview) {
+          this.text(cx, y, "You've already earned these in the dojo.", 19, '#f2e9d8', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
+          this.text(cx, y + 34, `${m.count} ${m.count === 1 ? 'thing' : 'things'} to unlock!`, 17, '#5cd65c', true).setOrigin(0.5, 0);
+          this.burst(cx, height * 0.12, [0x5cd65c, GOLD], 24);
           break;
         }
-        this.text(cx, y, 'Your real training has already unlocked:', 16, '#f2e9d8').setOrigin(0.5, 0);
-        y += 26;
-        // A long list (a green belt has ~35) becomes one count, a few examples and "and N more",
-        // so the lines never crowd together on a small phone (Q2 / elites QA).
-        const MAX_SHOWN = 4;
-        const shown = m.unlocked.length > MAX_SHOWN + 2 ? m.unlocked.slice(0, MAX_SHOWN) : m.unlocked;
-        const lines = [
-          ...(shown.length < m.unlocked.length ? [`✓ ${m.unlocked.length} techniques unlocked!`] : []),
-          ...shown.map((r) => `✓ ${r.name}`),
-          ...(shown.length < m.unlocked.length ? [`   …and ${m.unlocked.length - shown.length} more`] : []),
-          ...m.virtues.map((v) => `★ ${v}`),
-        ];
-        const lineH = Math.min(24, (height - y - 50) / lines.length);
-        lines.forEach((line, i) => {
-          const t = this.text(cx - 120, y + i * lineH, line, i === 0 && shown.length < m.unlocked.length ? 17 : 15, line.startsWith('★') ? '#ffd166' : line.startsWith('✓') ? '#5cd65c' : '#b9ad99', i === 0 && shown.length < m.unlocked.length).setAlpha(0);
-          this.scene.tweens.add({ targets: t, alpha: 1, delay: i * 60, duration: 200 });
-        });
+        // A brand-new white belt: the Beginner's Stance, and a preview of the first sign-off.
+        this.text(cx, y, `You start with the ${m.preview.stance}.`, 18, '#f2e9d8', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
+        if (m.preview.next) {
+          this.text(cx, y + 34, `When Sensei signs off ${m.preview.next.name}, you unlock:`, 15, '#b9ad99', false, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
+          this.text(cx, y + 60, m.preview.ability, 18, '#ffd166', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
+        }
         break;
       }
       case 'stripe': {
@@ -275,6 +275,16 @@ export class Celebrations {
         break;
       }
     }
+  }
+
+  /** Sensei's welcome-home line (M7-P5), the first screen of the first return home. */
+  private sensei(lines: string[]): void {
+    const { width, height } = this.size();
+    const cx = width / 2;
+    const w = Math.min(520, width - 40);
+    this.card(cx, height * 0.45, w, 70 + lines.length * 34);
+    this.text(cx, height * 0.45 - 12 - lines.length * 17, 'Sensei', 22, '#ffd166', true, 'Georgia, serif').setOrigin(0.5);
+    lines.forEach((l, i) => this.text(cx, height * 0.45 + 18 - (lines.length - 1) * 17 + i * 34, l, 17, '#f2e9d8', false, FONT, w - 40).setOrigin(0.5).setAlign('center'));
   }
 
   // ---------------------------------------------------------------- helpers

@@ -36,6 +36,7 @@ import { loadArt } from '../art/art';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
+import { takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
 import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css } from '../ui/theme';
 import type { GameSceneData } from './GameScene';
@@ -97,22 +98,39 @@ export class HomeScene extends Phaser.Scene {
   /** Reads the student's real progress and celebrates anything new since last time. */
   private refresh(): void {
     this.training = currentTraining();
-    const moments = rewardMoments(this.profile.seen, this.training);
+    const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.forms[0].name);
+    // First return home after the tutorial floor: Sensei's welcome line, once, then the
+    // unlock cascade (M7-P4, Manager call: both play here, the line first).
+    const sensei: string[] = [];
+    if (this.profile.lastRun?.summary.tutorial) {
+      const welcome = takeLesson('firstHomeReturn', null);
+      if (welcome) {
+        this.profile.lessons = loadSave().lessons;
+        const name = this.training.firstName;
+        sensei.push(...welcome.screens.map((l) => l.replace('{player}', name)));
+      }
+    }
     this.render();
     const remember = () => {
       this.profile.seen = snapshot(this.training);
       writeSave(this.profile);
     };
-    if (moments.length === 0) {
+    if (moments.length === 0 && sensei.length === 0) {
       remember();
       return;
     }
     this.celebrating = true;
-    new Celebrations(this, moments, this.training, () => {
-      this.celebrating = false;
-      remember();
-      this.render();
-    });
+    new Celebrations(
+      this,
+      moments,
+      this.training,
+      () => {
+        this.celebrating = false;
+        remember();
+        this.render();
+      },
+      sensei,
+    );
   }
 
   private render(): void {
