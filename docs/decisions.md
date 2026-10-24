@@ -382,3 +382,11 @@ From section 1 of `docs/work-board.md`.
 - **Cosmetics (J5, Jay, 2026-10-23):** cosmetics come from gear, in-game achievements and dojo achievements, and are never bought.
 - **Fonts (J7, Jay, 2026-10-23):** Fredoka for headings, Andika for body text. The game still uses the system font until Dojo-Ascent Programmer adds the font files in a later code step.
 - **Belt names (Jay, 2026-10-23):** keep the game's wording, "Red/Black Belt" and "Brown/Black Belt". The curriculum's "Red with a black stripe" and "Brown with a black stripe" describe the same ranks.
+
+## S1 change 2: Perfect Counter chain (Jay, 2026-10-23)
+
+- Perfect Counters in a row (no Hit taken in between) make a chain. Focus per Perfect Counter: +25 for the 1st, +30 for the 2nd, +35 for the 3rd, then +40 from then on. Focus still stops at 100.
+- A Hit ends the chain. A Block keeps it but doesn't add to it. The chain starts again in each room.
+- From x2, the screen shows "PERFECT x2", "PERFECT x3"... under the combo counter, with a glow that gets brighter up to x5.
+- "Longest chain" is not a personal best (Jay, 2026-10-23).
+- Balance check (computer player, 1,000 runs each): Strikes per fight room went up 11–18% depending on the player (the limit was 20%). Novice on Standard won 35% before and 40% after (smart play).

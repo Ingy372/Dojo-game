@@ -53,8 +53,11 @@ export const COMBAT = {
     max: 100,
     /** Gained for every hit the player lands. */
     perHit: 5,
-    /** Gained for every Perfect Counter. */
-    perPerfectCounter: 25,
+    /**
+     * Gained for each Perfect Counter in a chain (no Hit taken in between): 1st, 2nd, 3rd,
+     * then the last number from then on. A Hit ends the chain; a Block keeps it (S1 change 2).
+     */
+    perPerfectCounterChain: [25, 30, 35, 40],
   },
 
   /** Combo damage bonus: at 10 / 20 / 30 hits without being hit. Taking a Hit resets it. */

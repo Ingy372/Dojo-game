@@ -35,6 +35,8 @@ export interface PlayerState {
   focus: number;
   /** Hits landed in a row without taking a Hit. */
   combo: number;
+  /** Perfect Counters in a row without taking a Hit (a Block keeps it). */
+  counterChain: number;
   /** Ticks until the next automatic basic attack is allowed. */
   attackCooldown: number;
   /** Ticks of Strike recovery left (no attacking while above 0). */
@@ -154,7 +156,7 @@ export type CombatEvent =
   | { kind: 'playerAttack'; playerId: PlayerId; enemyId: EnemyId; move: AttackMove; damage: number; defeated: boolean }
   | { kind: 'telegraph'; enemyId: EnemyId; ticks: number }
   | { kind: 'enemySwing'; enemyId: EnemyId }
-  | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId }
+  | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId; chain: number }
   | { kind: 'block'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'hit'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'counterPressed'; playerId: PlayerId }
@@ -268,6 +270,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       guard: setup.guard,
       focus: Math.min(COMBAT.focus.max, mods.startFocus),
       combo: 0,
+      counterChain: 0,
       attackCooldown: 0,
       strikeRecovery: 0,
       counterPressedTick: -1,
@@ -883,12 +886,13 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
     // Perfect Discipline: while it lasts, every Counter is a Perfect Counter.
     const disciplined = p.virtue?.kind === 'discipline' && p.virtueTicks > 0;
     if (guarding && (disciplined || world.tick - p.counterPressedTick < counterWindowTicks(world, p))) {
-      // Perfect Counter: no damage, enemy staggered, counter hit for 2x Power, +25 Focus.
+      // Perfect Counter: no damage, enemy staggered, counter hit for 2x Power, Focus by chain (+25, +30, +35, +40).
       p.guardTicks = 0;
+      p.counterChain++;
       world.progress.perfects++;
-      world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id });
+      world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id, chain: p.counterChain });
       if (p.mods.healOnPerfect > 0) p.health = Math.min(p.maxHealth, p.health + p.mods.healOnPerfect);
-      landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, COMBAT.focus.perPerfectCounter);
+      landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, chainFocus(p.counterChain));
       if (e.mode !== 'defeated') {
         e.mode = 'stagger';
         e.modeTicks = COMBAT.counter.perfectStaggerTicks + p.mods.staggerTicks;
@@ -921,10 +925,17 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       // Hit: full damage, combo resets.
       const dmg = damage(e.def.power, a.strength * weak, guardOf(p));
       p.combo = 0;
+      p.counterChain = 0;
       world.events.push({ kind: 'hit', playerId: p.id, enemyId: e.id, damage: dmg });
       hurt(world, p, dmg);
     }
   }
+}
+
+/** Focus for the nth Perfect Counter in a chain (1 = first). */
+export function chainFocus(chain: number): number {
+  const steps = COMBAT.focus.perPerfectCounterChain;
+  return steps[Math.min(chain, steps.length) - 1];
 }
 
 function hurt(world: WorldState, p: PlayerState, dmg: number): void {
