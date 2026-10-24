@@ -29,6 +29,6 @@ A big, round cook with a ladle. The shadow made it guard the cold ovens alone.
 
 ## What the player learns
 
-The night the light broke, the town was not together. Many had stopped coming to the table.
+The night the storm came, one student left supper and ran up the Tower to help.
 
 Next: [Tier 4](04-green.md)

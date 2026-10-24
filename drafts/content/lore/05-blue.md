@@ -23,12 +23,12 @@ A heron made of water. The shadow muddied its eyes, so it cannot see who is frie
 
 | Relic | What the player reads | Sensei |
 | --- | --- | --- |
-| Boat Log Page | "Tonight one traveler took the light alone. They did not want to share." | What happens when someone keeps the light to themselves? |
+| Boat Log Page | "Tonight one traveler carried the light to keep it dry. The storm was coming." | Helping can be very brave. |
 | Clear Drop | A drop of water that never dries. You can see the stars inside it. | Clear water shows the way. |
 | Worn Oar Handle | Smooth from many hands rowing together. | Many hands make the river easy. |
 
 ## What the player learns
 
-A boat's log says one traveler carried the great light down the river, all alone.
+A boat's log says one brave traveler carried the great light through the rain.
 
 Next: [Tier 6](06-red.md)
