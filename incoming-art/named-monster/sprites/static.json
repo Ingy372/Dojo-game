@@ -1,5 +1,5 @@
 {
-  "note": "M7-N1 named monster. Batch 2: denser sparkles, name-tag, journal parts, stickers (samples). Nothing above heads except name-tag.",
+  "note": "M7-N1 named monster. Final tells (per-enemy folders), name-tag, journal parts, finished stickers. Nothing above heads except name-tag.",
   "sprites": {
     "named-sparkle": {
       "files": {
@@ -95,56 +95,6 @@
       "textColor": "#3a2a22",
       "note": "BLANK. The game renders the name (Fredoka/Andika). Top-centre sits ~6 px under the enemy's feet. Fades out after 3 s (rule from the proposal)."
     },
-    "tell-stamp-dust": {
-      "files": {
-        "fx": "tell-stamp-dust.png"
-      },
-      "size": [
-        128,
-        64
-      ],
-      "anchorPx": [
-        64,
-        50
-      ],
-      "frames": 4,
-      "fps": 12,
-      "loop": false,
-      "rough": true,
-      "note": "brute tell: once per stamp at the feet (+ small screen shake by the game)"
-    },
-    "tell-dash-trail": {
-      "files": {
-        "fx": "tell-dash-trail.png"
-      },
-      "size": [
-        64,
-        24
-      ],
-      "frames": 8,
-      "fps": 10,
-      "tile": "repeat along x, line centre y = 12, +x = dash direction",
-      "rough": true,
-      "note": "swarmer tell: along the path it will dash, under enemies and under the red danger circle"
-    },
-    "tell-shield-tap": {
-      "files": {
-        "fx": "tell-shield-tap.png"
-      },
-      "size": [
-        48,
-        48
-      ],
-      "anchorPx": [
-        24,
-        24
-      ],
-      "frames": 3,
-      "fps": 12,
-      "loop": false,
-      "rough": true,
-      "note": "shield tell: once per tap, on the shield (3 taps)"
-    },
     "name-tag": {
       "files": {
         "tag": "name-tag.png"
@@ -171,11 +121,11 @@
       ],
       "textColor": "#3a2a22",
       "headOffsetPx": {
-        "brute": 61,
-        "swarmer": 47,
-        "shield": 64
+        "brute": 98,
+        "swarmer": 66,
+        "shield": 88
       },
-      "note": "BLANK. Appears (fade in ~0.3 s) when the under-feet name-plate has faded. Bottom-centre sits headOffsetPx[enemy] above the enemy's ground point. The ONLY thing drawn above any head. Small font (Fredoka/Andika)."
+      "note": "BLANK. Appears (fade in ~0.3 s) when the under-feet name-plate has faded. Bottom-centre sits headOffsetPx[enemy] above the enemy's ground point. The ONLY thing drawn above any head. Small font (Fredoka/Andika). headOffsetPx covers idle, wind-up and attack poses (highest head + 10 px), so the tag never moves or overlaps during a tell."
     },
     "journal-silhouette-brute": {
       "files": {
@@ -317,8 +267,7 @@
         1
       ],
       "place": "wall",
-      "sample": true,
-      "note": "Home Dojo wall sticker, earned on the first win vs that named monster (proposal). Same wall-item rules as home-dojo/static.json."
+      "note": "Home Dojo wall sticker (final): die-cut, thick white border, gold keyline, gold sparkles. Given once, on the first win vs that named monster. Same wall-item rules as home-dojo/static.json."
     },
     "sticker-swarmer": {
       "files": {
@@ -337,8 +286,7 @@
         1
       ],
       "place": "wall",
-      "sample": true,
-      "note": "Home Dojo wall sticker, earned on the first win vs that named monster (proposal). Same wall-item rules as home-dojo/static.json."
+      "note": "Home Dojo wall sticker (final): die-cut, thick white border, gold keyline, gold sparkles. Given once, on the first win vs that named monster. Same wall-item rules as home-dojo/static.json."
     },
     "sticker-shield": {
       "files": {
@@ -357,8 +305,150 @@
         1
       ],
       "place": "wall",
-      "sample": true,
-      "note": "Home Dojo wall sticker, earned on the first win vs that named monster (proposal). Same wall-item rules as home-dojo/static.json."
+      "note": "Home Dojo wall sticker (final): die-cut, thick white border, gold keyline, gold sparkles. Given once, on the first win vs that named monster. Same wall-item rules as home-dojo/static.json."
+    },
+    "tell-stamp-dust": {
+      "enemy": "brute",
+      "files": {
+        "fx": "brute/tell-stamp-dust.png"
+      },
+      "frameSize": [
+        208,
+        208
+      ],
+      "anchorPx": [
+        104.0,
+        170.56
+      ],
+      "frames": 6,
+      "fps": 15,
+      "durationSec": 0.4,
+      "loop": false,
+      "layer": "under the enemy, over the floor and danger circle",
+      "timing": {
+        "during": "windup",
+        "playAtSec": [
+          0.0,
+          0.4
+        ],
+        "screenShake": {
+          "px": 2,
+          "sec": 0.12,
+          "atSec": [
+            0.0,
+            0.4
+          ]
+        }
+      },
+      "note": "Old Thumper stamps twice. Same wind-up length (0.8 s); the tell only adds to the warning. Same for all 8 directions (ground effect)."
+    },
+    "tell-dash-trail": {
+      "enemy": "swarmer",
+      "files": {
+        "fx": "swarmer/tell-dash-trail.png",
+        "tile": "swarmer/tell-dash-trail-tile.png"
+      },
+      "frameSize": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64.0,
+        104.96
+      ],
+      "frames": 6,
+      "fps": 10,
+      "durationSec": 0.6,
+      "loop": false,
+      "holdLastFrame": true,
+      "drawnFor": "dash direction +x (E); rotate about anchorPx to the real dash angle (ground plane: also squash y by 0.5 for N/S dashes)",
+      "tile": {
+        "size": [
+          64,
+          24
+        ],
+        "frames": 6,
+        "fps": 10,
+        "loop": true,
+        "lineY": 12,
+        "note": "repeat along +x from the frame's right edge to the dash end"
+      },
+      "timing": {
+        "during": "windup",
+        "playAtSec": [
+          0.0
+        ],
+        "removeAtSec": "attack frame 2 (end of the dash)"
+      },
+      "layer": "under enemies, over the danger circle",
+      "note": "Zippy Zoom: shows the exact path it will dash along. Wind-up stays 0.6 s."
+    },
+    "tell-shield-tap": {
+      "enemy": "shield",
+      "files": {
+        "fx": "shield/tell-shield-tap.png"
+      },
+      "frameSize": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64.0,
+        104.96
+      ],
+      "flashCentreInFramePx": [
+        64.0,
+        64.96
+      ],
+      "frames": 4,
+      "fps": 20,
+      "durationSec": 0.2,
+      "loop": false,
+      "offsetPerDirectionPx": {
+        "N": [
+          -24.5,
+          4.0
+        ],
+        "NE": [
+          -13.0,
+          -8.5
+        ],
+        "E": [
+          14.5,
+          1.5
+        ],
+        "SE": [
+          24.5,
+          10.0
+        ],
+        "S": [
+          19.0,
+          20.0
+        ],
+        "SW": [
+          4.0,
+          25.0
+        ],
+        "W": [
+          -13.0,
+          23.5
+        ],
+        "NW": [
+          -24.5,
+          14.5
+        ]
+      },
+      "timing": {
+        "during": "windup",
+        "playAtSec": [
+          0.0,
+          0.233,
+          0.467
+        ],
+        "sound": "clank x3 at the same times"
+      },
+      "layer": "over the enemy",
+      "note": "Captain Clank taps three times. Draw the sheet at the enemy anchor shifted by offsetPerDirectionPx[dir] so the flash sits on the shield. Wind-up stays 0.7 s."
     }
   }
 }
