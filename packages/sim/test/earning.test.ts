@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  journalKinds,
   DECOR_MAX_COPIES,
   bankRunDecorations,
   classPieceOrder,
@@ -248,5 +249,14 @@ describe('the feed\'s classesTotal', () => {
   it('is read when sent and null when an older feed leaves it out', () => {
     expect(loadFeed(yellowFeed).attendance.classesTotal).toBe(61);
     expect(loadFeed(whiteFeed).attendance.classesTotal).toBeNull();
+  });
+});
+
+describe('journal kinds', () => {
+  it('lists every trophy kind, Tier 1 first, met only once its trophy is given', () => {
+    const kinds = journalKinds(content, ['decor-a6-journal-trophy-brute']);
+    expect(kinds.map((k) => k.monster)).toEqual(['swarmer', 'shield', 'brute', 'floor-keeper', 'bopper']);
+    expect(kinds.filter((k) => k.met).map((k) => k.monster)).toEqual(['brute']);
+    expect(kinds[2].trophy.name).toBe('Gentle Brute Trophy');
   });
 });

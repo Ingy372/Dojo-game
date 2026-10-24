@@ -913,7 +913,8 @@ export class DojoScene extends Phaser.Scene {
     const before = this.mode;
     this.mode = 'menu';
     this.controls.reset();
-    openMonsterJournal(this, loadSave().monsterJournal, () => {
+    const saved = loadSave();
+    openMonsterJournal(this, saved.monsterJournal, saved.decorEarning.given, () => {
       this.mode = before === 'menu' ? 'play' : before;
       this.renderUi();
     });

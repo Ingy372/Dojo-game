@@ -150,3 +150,20 @@ export function bankRunDecorations(profile: Profile, dojo: DojoState, content: C
   addDecorations(dojo, [...found, ...oneTime.map((id) => ({ id, belt: { ...belt } }))]);
   return oneTime;
 }
+
+/** One monster kind in the Journal, from its trophy's content (no story text of its own). */
+export interface JournalKind {
+  monster: string;
+  trophy: DecorationDef;
+  /** Its trophy has been given: the kind has been beaten once. */
+  met: boolean;
+}
+
+/** The monster kinds the Journal trophies stand for, by Journal tier then file order. */
+export function journalKinds(content: Content, given: readonly string[]): JournalKind[] {
+  return content.dojo.decorations
+    .filter((d) => d.source === 'trophy' && d.monster)
+    .map((d, i) => ({ d, i }))
+    .sort((a, b) => (a.d.journalTier ?? 1) - (b.d.journalTier ?? 1) || a.i - b.i)
+    .map(({ d }) => ({ monster: d.monster!, trophy: d, met: given.includes(d.id) }));
+}

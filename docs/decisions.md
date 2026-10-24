@@ -566,3 +566,9 @@ My calls (not Manager):
 - Each piece stores its drop belt (`belt: {tier, color}`): the run's tier for Tower pieces, the current belt for class pieces. Colour 2 uses it (tan on White). Older pieces use the current belt.
 - Test-link runs find no surprise pieces and bank no decorations (fixes the bankRun leak). Once every surprise piece has 3 copies, the roll gives nothing.
 - C11 unique names applied to statues and trophies.
+
+## Journal kinds (2026-10-24)
+- The Monster Journal now turns pages: page 1 is the named monsters, as before. After it come the monster kinds, three per page, in trophy order (Journal tier, then file order): swarmer, shield, brute, floor-keeper, bopper.
+- A kind counts as met once its Journal trophy is given (`decorEarning.given`); trophies come on first defeat (S7). Met cards show the trophy art, the trophy's name, its description as the fact, and the win stamp. Unmet cards look like the named ones: a silhouette, "?" and "Keep exploring!". Floor Keeper and Bopper have no silhouette art, so their unmet cards show a big "?" in the well. All text comes from decorations.json and named.json; nothing new was written.
+- Bopper is listed for every belt (the Manager asked for all five), though its trophy can only drop from Yellow on.
+- The sim helper `journalKinds` (earning.ts) builds the list and has a test.
