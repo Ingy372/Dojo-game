@@ -216,11 +216,11 @@ Drawing order is the `order` field (the Batch 1 layers moved up by one because `
 ---
 
 ## Batch 8: icons, `incoming-art/icons/sprites/static.json` [NEW, full set]
-- 28 icons, `icon-<id>.png`, 128 x 128, frames 1: 9 gear, 9 Insights, 10 Seals; ids exactly as in the brief. Map each to the existing id; no new ids.
+- 28 icons, `icon-<id>.png`, 128 x 128, frames 1: 9 gear, 9 Insights, 10 Seals; ids exactly as in the brief. Map each to the existing id; no new ids. Second pass (2026-10-24) redrew 8 icons; same ids and files.
 
 ## Batch 9: Yellow belt Tower kit, `incoming-art/tower-rooms-t2/sprites/static.json` [NEW, full set]
 - Bamboo Garden Hall. Same sprite ids, layers, anchors and timing as Tier 1 `tower-rooms/` + `boss-door/` (boss door merged into the same static.json), so Tier 2 rooms can load this folder instead.
-- Extra optional decor: `decor-lantern`, `decor-bamboo-pot`, `decor-basin`. Chest is the Tier 1 chest. `proposals/` is reference only; do not load.
+- Extra optional decor: `decor-lantern`, `decor-bamboo-pot`, `decor-basin`. Chest is the Tier 1 chest (Jay OK'd). Tower name: TBD with the game planner. `proposals/` is reference only; do not load.
 
 ## S1 #3 elite auras, `incoming-art/elite-auras/` [SAMPLES, waiting for Jay's OK - do not wire yet]
 - Overlay layers `aura-swift`, `aura-guarding` (back + front); draw order back -> enemy -> front. No head badges.
