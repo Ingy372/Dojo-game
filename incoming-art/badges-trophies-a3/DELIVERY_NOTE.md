@@ -39,3 +39,11 @@
 5. **Names:** the ids (`badge-bow-*`, `certified-trophy-sample`) are working ids. All player-facing names and text come from C7.
 
 **NEXT:** Once you've picked: the full CT set (promotions using the belt colour, stripes, classes, weeks, anniversary, sign-offs, accolades), all on the same seal and plate. Then the badge family for the other achievement groups, if wanted.
+
+---
+## Seal follow-up (branch `bot-art-a3-seal`, 2026-10-24)
+- New: `source/make_a3_seal.py`, `SEAL_SPEC.md`, `sprites/trophies/certified-layers/` (base, 2 backings, 2 marks, a 128 px template), and a `certified-trophy-layered` entry in `static.json`. The existing #138 files are unchanged.
+- Action Zone colours come from the website CSS (indigo #191a3e, paper-warm #efeadc, gold #c9a227). **No logo is in the repo or this PR**; the mark is a PLACEHOLDER layer.
+- Previews: `review-4` wall (default / AZ + placeholder / AZ + star) at 1x and 2x, `review-5` phone 390 px, `review-6` layer breakdown, `review-7` seal close-up, `greyscale-4`.
+- Second pass: shortened the preview labels (they overlapped). Checked that the indigo scallop still separates from the dark plinth thanks to the gold tails and ring, and that the stacked default layers match the #138 sample (the only differences are small anti-alias edges, because each layer is now outlined and downsampled on its own).
+- Missing: the Action Zone logo file from Jay (128x128 transparent PNG per SEAL_SPEC.md).

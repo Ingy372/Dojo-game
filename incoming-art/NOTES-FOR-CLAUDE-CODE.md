@@ -320,3 +320,11 @@ Two player stance idles on the existing player rig: `stance_rooted` (**Rooted Fo
 - `badge-bow-{5,10,20,50,100}` (128x128, centre anchor) are for `ach.bow.correct.<n>`. They have no text; the tier shows in the rim, the pips and the rays.
 - `certified-trophy-sample` (104x166, bottom anchor) is the Certified look: a gold seal rosette with sky tails, a halo and a blank `datePlate` where the game writes the date. Game trophies keep the plain decor-tier1-a6 look.
 - Open: see the A3 DECIDE list (badge use, numbers, date length, the seal mark).
+
+## A3 seal layers (bot-art-a3-seal)
+The certified trophy is now 3 stacked layers (same 104x166 canvas and anchor): `trophy-base` + `seal-backing-{palette}` + `seal-mark-{school|default}`. Fall back to `default` for both the backing and the mark when a school has none. Never render `seal-mark-PLACEHOLDER-school.png` in the shipped game. Spec: `badges-trophies-a3/SEAL_SPEC.md`.
+
+## A3b certified trophies + badges (badges-trophies-a3b)
+- `sprites/static.json` maps every sprite to its `ach.*` ID.
+- **Certified trophies:** stack `halo`, `stand`, `topper`, the promotion `beltBand` (baked per belt, or tint the `-TINT` mask with `beltStyles[belt].belt`, and `belt-center` for two-colour belts), then the A3 `seal-backing-<palette>` and `seal-mark-<school>`. The baked `ct-*.png` files have the default seal and are for previews and fallback only.
+- **Templates:** one sprite for every accolade (`ct-accolade-template`), every journal master and every smarts location. The game writes the name.
