@@ -48,5 +48,14 @@ describe.skipIf(!enabled)('balance report', () => {
         summarize(`${skill} player, ${style}, ${difficulty}`, runs);
       }
     }
+    // First run with and without Sensei's guided Counter (G1), for players who never Counter.
+    for (const difficulty of ['standard', 'guided'] as Difficulty[]) {
+      for (const style of ['masher', 'smart'] as Style[]) {
+        for (const guide of [undefined, 0]) {
+          const runs = Array.from({ length: RUNS }, (_, i) => playRun(content, 1000 + i, style, SKILLS.novice, difficulty, undefined, guide));
+          summarize(`novice player, ${style}, ${difficulty}, guide ${guide === undefined ? 'off' : 'on'}`, runs);
+        }
+      }
+    }
   }, 600000);
 });

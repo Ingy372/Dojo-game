@@ -147,6 +147,8 @@ export function createRunWorld(
   player: Omit<PlayerSetup, 'health' | 'mods'>,
   gearEffects: readonly Effect[] = [],
   difficulty?: Difficulty,
+  /** Sensei's guided Counter step from the profile (see GUIDE_DONE); off by default. */
+  guideStep?: number,
 ): WorldState {
   const room = currentRoom(content, run);
   return createWorld(room, ['p1'], {
@@ -154,6 +156,7 @@ export function createRunWorld(
     difficulty,
     respawnEnemies: false,
     doorCount: run.doors.length,
+    guideStep,
     player: {
       ...player,
       health: run.health ?? undefined,

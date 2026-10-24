@@ -1,5 +1,9 @@
 import Phaser from 'phaser';
 import {
+  GUIDE_DONE,
+  GUIDE_LESSONS,
+  WARNING_LESSON,
+  loadLessons,
   COMBAT,
   MOVEMENT,
   TICKS_PER_SECOND,
@@ -46,6 +50,9 @@ import {
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
+import lessonsData from '../../../../content/tutorial/sensei-lessons.json';
+
+const LESSONS = loadLessons(lessonsData);
 import { addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
@@ -225,6 +232,7 @@ export class GameScene extends Phaser.Scene {
   private comboBonusText!: Phaser.GameObjects.Text;
   private shownCombo = 0;
   private message!: Phaser.GameObjects.Text;
+  private senseiText: Phaser.GameObjects.Text | null = null;
   private screenFlash!: Phaser.GameObjects.Rectangle;
 
   constructor() {
@@ -244,7 +252,7 @@ export class GameScene extends Phaser.Scene {
     this.setup = characterSetup(loadSave(), this.training, CONTENT.abilities);
     if (this.run) {
       this.room = currentRoom(CONTENT, this.run);
-      this.world = createRunWorld(CONTENT, this.run, this.setup, this.setup.effects, testDifficulty());
+      this.world = createRunWorld(CONTENT, this.run, this.setup, this.setup.effects, testDifficulty(), testGuide() ?? loadSave().guideStep);
     } else {
       this.room = loadRoom(trainingRoom);
       this.world = createWorld(this.room, [this.me], {
@@ -253,6 +261,7 @@ export class GameScene extends Phaser.Scene {
         player: { ...this.setup, mods: modsFrom(this.setup.effects, TICKS_PER_SECOND) },
       });
     }
+    this.senseiText = null;
     this.menuOpen = false;
     this.leaving = false;
     this.picker = null;
@@ -320,7 +329,7 @@ export class GameScene extends Phaser.Scene {
       this.hitStopMs -= delta;
     } else {
       // Run the rules at a fixed 20 ticks per second, whatever the screen's frame rate.
-      this.elapsed = Math.min(this.elapsed + delta, TICK_MS * MAX_TICKS_PER_FRAME);
+      this.elapsed = Math.min(this.elapsed + delta * this.guideSpeed(), TICK_MS * MAX_TICKS_PER_FRAME);
       while (this.elapsed >= TICK_MS) {
         this.savePrevious();
         const move = this.controls.takeInput();
@@ -800,6 +809,21 @@ export class GameScene extends Phaser.Scene {
           this.playerFlashUntil = this.time.now + 160;
           this.flashScreen(0xff2a1a, 0.3, 200);
           this.floatText(p.pos, `-${ev.damage}`, '#ff6b5b', 26);
+          break;
+        }
+        case 'guideStart': {
+          // Step 0 opens with the warning lesson; the hints say their one line and pulse Counter.
+          const lesson = LESSONS[GUIDE_LESSONS[ev.step]];
+          this.senseiSay(ev.step === 0 ? LESSONS[WARNING_LESSON].screens : lesson.screens, 1100);
+          this.buttons.pulseCounter(ev.step === 2 ? 1 : 2);
+          break;
+        }
+        case 'guideWait':
+          this.senseiSay(LESSONS[GUIDE_LESSONS[0]].screens);
+          break;
+        case 'guideDone': {
+          const lesson = LESSONS[GUIDE_LESSONS[ev.step]];
+          this.senseiDone(ev.success ? lesson.success : lesson.retry);
           break;
         }
         case 'telegraph': {
@@ -1448,6 +1472,50 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** A big word in the middle of the screen (for Perfect Counters). */
+  /** Sensei's guided Counter slows the game while the taught attack winds up (step 0 most). */
+  private guideSpeed(): number {
+    const g = this.world.guide;
+    if (!g || g.enemyId === null) return 1;
+    return g.step === 0 ? 0.5 : g.step === 1 ? 0.75 : 1;
+  }
+
+  /** Shows Sensei's read-aloud lines one after another at the top of the screen. */
+  private senseiSay(lines: string[], holdMs = 1400): void {
+    this.senseiText?.destroy();
+    const { width, height } = this.scale.gameSize;
+    const t = this.add
+      .text(width / 2, height * 0.2, '', {
+        fontFamily: 'system-ui, sans-serif',
+        fontStyle: 'bold',
+        fontSize: '26px',
+        color: '#ffffff',
+        backgroundColor: '#2a2440dd',
+        padding: { x: 16, y: 8 },
+        align: 'center',
+      })
+      .setOrigin(0.5)
+      .setResolution(window.devicePixelRatio || 1);
+    this.cameras.main.ignore(t);
+    this.senseiText = t;
+    lines.forEach((line, i) => this.time.delayedCall(i * holdMs, () => t.active && t.setText(`Sensei: ${line}`)));
+  }
+
+  private senseiDone(line: string | undefined): void {
+    this.buttons.pulseCounter(0);
+    if (line) this.senseiSay([line]);
+    const t = this.senseiText;
+    this.time.delayedCall(1800, () => {
+      if (t && t === this.senseiText) {
+        t.destroy();
+        this.senseiText = null;
+      }
+    });
+    // Remember where the guide is, so each lesson shows once per profile.
+    const profile = loadSave();
+    profile.guideStep = this.world.guide?.step ?? GUIDE_DONE;
+    writeSave(profile);
+  }
+
   private popWord(text: string, color: string, size: number): void {
     const { width, height } = this.scale.gameSize;
     const t = this.add
@@ -1471,6 +1539,12 @@ export class GameScene extends Phaser.Scene {
  * For testing only, until the difficulty choice arrives in milestone 7:
  * adding ?difficulty=guided (or challenge) to the link picks that difficulty.
  */
+/** For testing: ?guide=0 starts Sensei's guided Counter from the beginning, whatever the save says. */
+function testGuide(): number | undefined {
+  const asked = new URLSearchParams(window.location.search).get('guide');
+  return asked !== null && /^[0-3]$/.test(asked) ? Number(asked) : undefined;
+}
+
 function testDifficulty(): Difficulty | undefined {
   const asked = new URLSearchParams(window.location.search).get('difficulty');
   return asked && asked in DIFFICULTY ? (asked as Difficulty) : undefined;
