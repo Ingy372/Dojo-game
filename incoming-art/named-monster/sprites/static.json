@@ -1,5 +1,5 @@
 {
-  "note": "M7-N1 named monster SAMPLES. Not wired until Jay OKs. Nothing above heads; plate goes under the feet.",
+  "note": "M7-N1 named monster. Batch 2: denser sparkles, name-tag, journal parts, stickers (samples). Nothing above heads except name-tag.",
   "sprites": {
     "named-sparkle": {
       "files": {
@@ -144,6 +144,221 @@
       "loop": false,
       "rough": true,
       "note": "shield tell: once per tap, on the shield (3 taps)"
+    },
+    "name-tag": {
+      "files": {
+        "tag": "name-tag.png"
+      },
+      "size": [
+        64,
+        14
+      ],
+      "anchorPx": [
+        32.0,
+        14
+      ],
+      "nineSlice": {
+        "left": 11,
+        "right": 11,
+        "top": 4,
+        "bottom": 4
+      },
+      "textArea": [
+        11,
+        2,
+        42,
+        10
+      ],
+      "textColor": "#3a2a22",
+      "headOffsetPx": {
+        "brute": 61,
+        "swarmer": 47,
+        "shield": 64
+      },
+      "note": "BLANK. Appears (fade in ~0.3 s) when the under-feet name-plate has faded. Bottom-centre sits headOffsetPx[enemy] above the enemy's ground point. The ONLY thing drawn above any head. Small font (Fredoka/Andika)."
+    },
+    "journal-silhouette-brute": {
+      "files": {
+        "img": "journal/silhouette-brute.png"
+      },
+      "size": [
+        116,
+        120
+      ],
+      "note": "unmet treatment: flat warm grey #786c5c + soft inner light; place in the card's picture well (10,10)-(126,126)"
+    },
+    "journal-silhouette-swarmer": {
+      "files": {
+        "img": "journal/silhouette-swarmer.png"
+      },
+      "size": [
+        116,
+        120
+      ],
+      "note": "unmet treatment: flat warm grey #786c5c + soft inner light; place in the card's picture well (10,10)-(126,126)"
+    },
+    "journal-silhouette-shield": {
+      "files": {
+        "img": "journal/silhouette-shield.png"
+      },
+      "size": [
+        116,
+        120
+      ],
+      "note": "unmet treatment: flat warm grey #786c5c + soft inner light; place in the card's picture well (10,10)-(126,126)"
+    },
+    "journal-page-frame": {
+      "files": {
+        "img": "journal/page-frame.png"
+      },
+      "size": [
+        390,
+        600
+      ],
+      "note": "phone page; paper area (22,22)-(366,573); title banner centred at y 30; 3 cards at x 36, y 92 / 252 / 412"
+    },
+    "journal-title-banner": {
+      "files": {
+        "img": "journal/title-banner.png"
+      },
+      "size": [
+        260,
+        46
+      ],
+      "textArea": [
+        30,
+        6,
+        200,
+        28
+      ],
+      "textColor": "#3a2a22",
+      "note": "BLANK; the game writes the title \"Monster Journal\""
+    },
+    "journal-card-met": {
+      "files": {
+        "img": "journal/card-met.png"
+      },
+      "size": [
+        318,
+        140
+      ],
+      "pictureWell": [
+        10,
+        10,
+        126,
+        126
+      ],
+      "nameSlot": [
+        138,
+        14,
+        304,
+        40
+      ],
+      "factArea": [
+        140,
+        50,
+        304,
+        100
+      ],
+      "stampSpot": [
+        250,
+        74,
+        304,
+        128
+      ],
+      "note": "game renders name + fact"
+    },
+    "journal-card-unmet": {
+      "files": {
+        "img": "journal/card-unmet.png"
+      },
+      "size": [
+        318,
+        140
+      ],
+      "pictureWell": [
+        10,
+        10,
+        126,
+        126
+      ],
+      "textArea": [
+        140,
+        50,
+        304,
+        100
+      ],
+      "note": "\"?\" baked in the name slot (from the proposal); the game may write \"Keep exploring!\" in textArea"
+    },
+    "journal-stamp": {
+      "files": {
+        "img": "journal/stamp.png"
+      },
+      "size": [
+        60,
+        60
+      ],
+      "note": "cosmetic stamp (first win); centre it on the card's stampSpot"
+    },
+    "sticker-brute": {
+      "files": {
+        "img": "sticker/sticker-brute.png"
+      },
+      "size": [
+        80,
+        80
+      ],
+      "anchorPx": [
+        40,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "wall",
+      "sample": true,
+      "note": "Home Dojo wall sticker, earned on the first win vs that named monster (proposal). Same wall-item rules as home-dojo/static.json."
+    },
+    "sticker-swarmer": {
+      "files": {
+        "img": "sticker/sticker-swarmer.png"
+      },
+      "size": [
+        80,
+        80
+      ],
+      "anchorPx": [
+        40,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "wall",
+      "sample": true,
+      "note": "Home Dojo wall sticker, earned on the first win vs that named monster (proposal). Same wall-item rules as home-dojo/static.json."
+    },
+    "sticker-shield": {
+      "files": {
+        "img": "sticker/sticker-shield.png"
+      },
+      "size": [
+        80,
+        80
+      ],
+      "anchorPx": [
+        40,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "wall",
+      "sample": true,
+      "note": "Home Dojo wall sticker, earned on the first win vs that named monster (proposal). Same wall-item rules as home-dojo/static.json."
     }
   }
 }

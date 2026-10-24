@@ -25,15 +25,17 @@ def sheet(fr):
 def star(d, x, y, r, col):
     d.polygon([(x, y - r), (x + r / 3, y), (x, y + r), (x - r / 3, y)], fill=col); d.polygon([(x - r, y), (x, y + r / 3), (x + r, y), (x, y - r / 3)], fill=col)
 # sparkles: 6 fireflies, slow drift, sway, fade in AND out (soft), staying around the body, never stacking above the head as a badge
-FLIES = [(-58, 0.0, 5.5), (-20, 0.33, 4.5), (24, 0.66, 6.0), (60, 0.17, 5.0), (-40, 0.5, 4.0), (44, 0.83, 4.5)]
+# batch 2: denser (12) and each sparkle has a thin amber rim so it still reads in greyscale on the light floors
+FLIES = [(-62, 0.0, 6.5), (-24, 0.33, 5.5), (22, 0.66, 7.0), (62, 0.17, 6.0), (-44, 0.5, 5.0), (44, 0.83, 5.5),
+         (-8, 0.08, 6.0), (34, 0.42, 5.0), (-52, 0.25, 5.5), (54, 0.58, 6.5), (-30, 0.75, 6.0), (10, 0.92, 5.0)]
 def sparkle(i):
     im = L(256, 256); halo = L(256, 256); d, h = ImageDraw.Draw(im), ImageDraw.Draw(halo)
     for x0, ph, r0 in FLIES:
         p = (i / N / 2 + ph) % 1   # half a rise per loop -> slow
         x = 128 + x0 + 6 * math.sin(2 * math.pi * (p * 2 + ph)); y = 200 - p * 110; a = math.sin(math.pi * p)
         r = r0 * (0.7 + 0.3 * a) * SS
-        h.ellipse((x * SS - r * 2, y * SS - r * 2, x * SS + r * 2, y * SS + r * 2), fill=GOLD + (int(140 * a),))
-        star(d, x * SS, y * SS, r, GOLD_L + (int(255 * a),)); d.ellipse((x * SS - r / 3, y * SS - r / 3, x * SS + r / 3, y * SS + r / 3), fill=(255, 255, 255, int(255 * a)))
+        h.ellipse((x * SS - r * 2, y * SS - r * 2, x * SS + r * 2, y * SS + r * 2), fill=GOLD + (int(160 * a),))
+        star(d, x * SS, y * SS, r * 1.35, (196, 118, 10, int(255 * a))); star(d, x * SS, y * SS, r, GOLD_L + (int(255 * a),)); d.ellipse((x * SS - r / 3, y * SS - r / 3, x * SS + r / 3, y * SS + r / 3), fill=(255, 255, 255, int(255 * a)))
     out = dn(halo, 256, 256, 3); out.alpha_composite(dn(im, 256, 256, 0.4)); return out
 SPK = [sparkle(i) for i in range(N)]; sheet(SPK).save(os.path.join(SP, "named-sparkle_front.png"))
 meta = {"note": "M7-N1 named monster SAMPLES. Not wired until Jay OKs. Nothing above heads; plate goes under the feet.", "sprites": {
