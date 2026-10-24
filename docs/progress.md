@@ -318,3 +318,16 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 
 **Next**
 - Jay opens each `?twist=` link on his phone and checks the banner is easy to read.
+
+## K7: new art in the game (2026-10-24)
+
+**Done**
+- **Yellow belt Tower kit (Sunrise Garden).** Yellow belt students (belt tier 2) and above now see the new floor, walls, pillars, doors, chest and shrine in the Tower. White belts still see the Tier 1 look. Test link: `?tower=t2` (or `?tower=t1`). The new lantern, bamboo pot and basin decorations are packed but not placed yet.
+- **Batch 8 icons.** All 28 icons show next to their names: on the "Choose an Insight" cards, on worn gear and bag items, and on the Technique Seals in the Abilities list. Each matches an existing id, so no content changed. Icons are kept at full size (128 px) so they stay sharp in menus.
+- **Elite auras (art only).** The gold Swift and blue Guarding auras are packed for all 4 Tier 1 creatures and drawn back layer, creature, front layer, with nothing above the head. Elites don't exist in the game yet (S1 #3), so the auras only show with the test link `?aura=swift` or `?aura=guarding`, which puts that aura on every enemy and changes no rules.
+- Checked with screenshots at 667x375 and 844x390.
+- 152 tests pass (1 skipped) and the game builds.
+
+**Next**
+- S1 #3: elite rules (who becomes elite, Swift and Guarding effects), using these auras.
+- Place the optional Sunrise Garden decorations in Tier 2 rooms.

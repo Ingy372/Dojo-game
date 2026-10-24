@@ -417,9 +417,10 @@ export class HomeScene extends Phaser.Scene {
       const item = wornItem(this.profile, slot);
       const bx = x + i * (slotW + 8);
       this.ui.add(this.add.rectangle(bx, y, slotW, 54, 0x221d2e).setOrigin(0).setStrokeStyle(2, item ? RARITY_COLOR[item.rarity] : 0x3a3150));
-      const icon = item ? addIcon(this, item.base, bx + slotW - 22, y + 27, 36) : null;
+      // A small icon beside the slot name, so the item name keeps the full width on small phones.
+      const icon = item ? addIcon(this, item.base, bx + slotW - 15, y + 12, 22) : null;
       if (icon) this.ui.add(icon);
-      const tw = icon ? slotW - 50 : slotW - 10;
+      const tw = slotW - 10;
       this.text(bx + 6, y + 4, SLOT_NAME[slot], 11, '#b9ad99');
       this.text(bx + 6, y + 18, item ? item.name : 'Nothing', 13, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true, FONT, tw);
       if (item) this.text(bx + 6, y + 36, describeItem(item), 11, '#f2e9d8', false, FONT, tw);
