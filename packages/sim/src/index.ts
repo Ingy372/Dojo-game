@@ -20,4 +20,5 @@ export * from './progression';
 export * from './rewards';
 export * from './power';
 export * from './dojo';
+export * from './twist';
 export * from './lessons';

@@ -2,6 +2,7 @@
 // plain data (no classes or functions), so it can be saved, copied, or sent
 // over the network later for visits and co-op.
 
+import type { TwistDef } from './twist';
 import type { FormDef, VirtueKind } from './abilities';
 import { pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
@@ -155,6 +156,8 @@ export type AttackMove = 'basic' | 'strike' | 'counter' | 'chain' | 'ripple' | '
 export type CombatEvent =
   | { kind: 'playerAttack'; playerId: PlayerId; enemyId: EnemyId; move: AttackMove; damage: number; defeated: boolean }
   | { kind: 'telegraph'; enemyId: EnemyId; ticks: number }
+  /** Bell Room twist: a Perfect Counter rang a bell (`count` so far, `of` needed). */
+  | { kind: 'bell'; count: number; of: number }
   /** Sensei's guided Counter: a warning is being taught (step 0 guided, 1 and 2 fading hints). */
   | { kind: 'guideStart'; step: number; enemyId: EnemyId }
   /** Step 0 only: the game holds still with the circle nearly full until Counter is tapped. */
@@ -215,6 +218,10 @@ export interface WorldState {
   progress: RoomProgress;
   /** Events from the most recent tick only. */
   events: CombatEvent[];
+  /** This room's twist, or null. */
+  twist: TwistDef | null;
+  /** Bell Room: bells rung so far. */
+  bells: number;
   /** Sensei's guided first Counter, or null when it's finished or off. */
   guide: GuideState | null;
 }
@@ -256,6 +263,8 @@ export interface WorldOptions {
   doorCount?: number;
   /** The player's stats (from gear and Insights); defaults to the starting stats. */
   player?: PlayerSetup;
+  /** This room's twist (Tower rooms only). */
+  twist?: TwistDef | null;
   /** Guided Counter step to start at (see GUIDE_DONE). Default: done (off). */
   guideStep?: number;
 }
@@ -368,6 +377,8 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       bestCombo: 0,
     },
     events: [],
+    twist: options.twist ?? null,
+    bells: 0,
     guide: (options.guideStep ?? GUIDE_DONE) < GUIDE_DONE ? { step: options.guideStep!, enemyId: null, waiting: false, waitTicks: 0 } : null,
   };
 }
@@ -574,7 +585,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   }
 
   if (p.dashTicks > 0) {
-    dashStep(p, room);
+    dashStep(world, p, room);
   } else if (p.guardTicks > 0) {
     // Holding the guard pose: no walking.
     p.moving = false;
@@ -609,8 +620,9 @@ function startDash(world: WorldState, p: PlayerState, input: PlayerInput): void 
   world.events.push({ kind: 'dash', playerId: p.id });
 }
 
-function dashStep(p: PlayerState, room: Room): void {
-  const step = COMBAT.dash.distanceTiles / COMBAT.dash.ticks;
+function dashStep(world: WorldState, p: PlayerState, room: Room): void {
+  // Slippery Floor twist: the dash slides farther.
+  const step = (COMBAT.dash.distanceTiles * (world.twist?.dashScale ?? 1)) / COMBAT.dash.ticks;
   p.pos.x += p.dashDir.x * step;
   p.pos.y += p.dashDir.y * step;
   pushOutOfWalls(room, p.pos, R);
@@ -966,6 +978,9 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       p.counterChain++;
       world.progress.perfects++;
       world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id, chain: p.counterChain });
+      // Bell Room twist: each Perfect Counter rings a bell, up to the number needed.
+      const bellsNeeded = world.twist?.bells ?? 0;
+      if (world.bells < bellsNeeded) world.events.push({ kind: 'bell', count: ++world.bells, of: bellsNeeded });
       if (p.mods.healOnPerfect > 0) p.health = Math.min(p.maxHealth, p.health + p.mods.healOnPerfect);
       landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, chainFocus(p.counterChain));
       if (e.mode !== 'defeated') {
