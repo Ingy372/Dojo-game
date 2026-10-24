@@ -277,6 +277,8 @@ Earlier sample notes: idle, windup and attack, in 8 directions. The frame is 192
 - `dojo-people/sprites/kohai/` (all sheets and `kohai.json`) and `dojo-people/portraits/kohai/`: re-import. The kohai now has a curly top-knot with a teal tie, baked into the `body` layer.
 - UI suggestion from QA, not done here: give dark swatches a light border.
 
+## A2 Form stances (samples), `incoming-art/form-stances-a2/` [NEW, SAMPLES only, do not wire yet]
+Two player stance idles on the existing player rig: `stance_rooted` (**Rooted Form, chosen: option A, the wide front stance**) and `stance_flowing`. Option B (`stance_rooted_back`) is in `form-stances-a2/alternate-not-used/`. Do not import it. Same 128x160 frames, anchor-y 0.856 and 32 layers as `player-custom`; the belt stays its own neutral layer and the gi stays recolourable. Sheets are in `sprites/body-a` and `sprites/body-b`. The ids are working ids only, not names. See the DELIVERY_NOTE for DECIDE.
 ## A6 decoration samples (S7-rev pool), `incoming-art/decor-pool-a6/sprites/static.json` [NEW, SAMPLES only, do not wire yet]
 6 sample pieces (class scroll, kick pad, keeper statue, journal trophy, fan stand, folding screen 2x1) in the Home Dojo format: same camera and 80 px tiles, with `footprint`, `place` (floor or wall) and `anchorPx` like `home-dojo/sprites/static.json`. Ids are working ids, not names. See the DELIVERY_NOTE for DECIDE.
 
@@ -307,5 +309,6 @@ Earlier sample notes: idle, windup and attack, in 8 directions. The frame is 192
 8. **[NEW]** A1 cosmetics: names (Content Writer), unlock rules and colours (Jay), and the headband fit over big hair.
 9. **[NEW]** A5 Bouncy Bopper: Jay approved the 192 px frame, the lime accent, and hiding the staff to show disarmed (2026-10-24). The full set is delivered. Jay's calls (2026-10-24): disarmed uses a weak **push-paw** attack, and the asset files keep the `padded` names. Still to decide: HP, power and the push-paw's power after the balance run (PR #102), and which seals use it.
 10. **[NEW]** A7: Jay approved the kohai top-knot, the teal tie and `#34303f` as black (2026-10-24). Only the swatch border (Programmer) is still open.
+11. **[UPDATED]** A2 Form stances: Rooted = option A (decided by Jay). Still open: the real names (Content Writer), when the stance idle shows, and whether other animations get form variants.
 12. **[UPDATED]** A6 decoration pool: ids and names follow C10; colour 2 on White floors is wood tan `#d2a878`; the folding screen is bonus-only; Tier 2+ gold-plate trophies are parked. Still open: the keeper figures per floor (lion-dog, turtle, crane) and the scroll picture-to-subject pairing (mapped in order; Content Designer to confirm).
 13. **[NEW]** S4c Injured art: enemies only, the stars at head height, and 2 stars for the Keeper and Guardians (decided by Jay). The 'Injured!' wording goes to S4c-C1.

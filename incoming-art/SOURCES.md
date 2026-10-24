@@ -27,6 +27,7 @@ Notes:
 
 **A7 QA fixes (2026-10-24): no outside assets.** These are edits to `player-custom/source/build_custom.py` and `dojo-people/source/build_people.py` only.
 
+**A2 form stance samples (2026-10-24): no outside assets.** Built by `form-stances-a2/source/add_stances.py` on the approved player-custom blends, rendered with `tools/`.
 **A5 padded-weapon enemy samples (2026-10-24): no outside assets.** Built by `enemy-padded-weapon/source/build_padded.py`, which is adapted from the Tier 1 enemy builder, with `tools/`. The full set (move, hit, stagger, defeat) comes from the same script, also with no outside assets.
 
 **A6 decoration samples (2026-10-24): no outside assets.** Built by `decor-pool-a6/source/build_decor_a6.py` with helpers copied from the Home Dojo builder, rendered with `tools/`.
