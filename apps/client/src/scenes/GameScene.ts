@@ -616,7 +616,7 @@ export class GameScene extends Phaser.Scene {
     if (n.shownAt === null && e.mode !== 'waiting' && e.mode !== 'defeated') {
       n.shownAt = now;
       const profile = loadSave();
-      meetNamed(profile, n.def.id);
+      if (this.run) meetNamed(profile, this.run, n.def.id);
       writeSave(profile);
       this.senseiSay([n.def.lines.meet, n.def.lines.senseiTip], 1800);
     }
@@ -1604,7 +1604,7 @@ export class GameScene extends Phaser.Scene {
     const def = CONTENT.named.monsters.find((m) => m.id === id);
     if (!def) return;
     const profile = loadSave();
-    const sticker = beatNamed(profile, CONTENT.named, id);
+    const sticker = this.run ? beatNamed(profile, this.run, CONTENT.named, id) : null;
     if (sticker) addDecorations(homeDojo(profile), [sticker]);
     writeSave(profile);
     this.senseiSay([def.lines.freed], 1800);

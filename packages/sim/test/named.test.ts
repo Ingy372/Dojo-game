@@ -124,13 +124,24 @@ describe('where named monsters appear (1,000 floors at tier 2)', () => {
 });
 
 describe('Monster Journal', () => {
+  const real = { test: false };
+
+  it('a ?named= test run never writes the journal or gives the sticker', () => {
+    const run = startRun(content, { seed: 7, dryRuns: 0, firstRoomId: 'brute-and-swarm', forcedNamed: 'old-thumper' });
+    expect(run.test).toBe(true);
+    const p = newProfile();
+    expect(meetNamed(p, run, 'old-thumper')).toBe(false);
+    expect(beatNamed(p, run, named, 'old-thumper')).toBeNull();
+    expect(p.monsterJournal).toEqual({});
+  });
+
   it('meeting marks met; the first win gives the sticker once; later wins give nothing', () => {
     const p = newProfile();
-    expect(meetNamed(p, 'zippy-zoom')).toBe(true);
-    expect(meetNamed(p, 'zippy-zoom')).toBe(false);
+    expect(meetNamed(p, real, 'zippy-zoom')).toBe(true);
+    expect(meetNamed(p, real, 'zippy-zoom')).toBe(false);
     expect(p.monsterJournal['zippy-zoom']).toEqual({ met: true, beaten: false });
-    expect(beatNamed(p, named, 'zippy-zoom')).toBe('sticker-swarmer');
-    expect(beatNamed(p, named, 'zippy-zoom')).toBeNull();
+    expect(beatNamed(p, real, named, 'zippy-zoom')).toBe('sticker-swarmer');
+    expect(beatNamed(p, real, named, 'zippy-zoom')).toBeNull();
     expect(p.monsterJournal['zippy-zoom']).toEqual({ met: true, beaten: true });
     const back = loadProfile(JSON.parse(JSON.stringify(p)));
     expect(back.monsterJournal['zippy-zoom']).toEqual({ met: true, beaten: true });
