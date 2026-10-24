@@ -643,3 +643,9 @@ My calls (not Manager):
 - The tutorial floor's guided lessons (warning, Counter, Strike) don't use up the day. Perfect, Block and Step-out keep ignoring the limit, as in K17.
 - Whether a profile takes Welcome Week is decided once, the first time the dojo checks. Saves that already played before this change keep everything open.
 - The dev offset is kept in localStorage (`dojo-ascent-dev-day-offset`). `localDay()` adds it, so sessions, lessons and Welcome Week all move together. The testing screen shows the session day.
+
+## Kid-facing tone pass (K19 follow-up) (2026-10-24)
+Manager calls:
+- The Welcome Back card line 'Your dojo missed you.' becomes exactly 'Welcome back! Your dojo is ready.' (DojoScene.arrive). It was the only line in content/ and the client strings that clearly leaned toward guilt. Borderline lines were listed for review, not changed: "Your climb is waiting!" (run-resume title) and "Come back tomorrow for more training!" (play-time doorRestingLine).
+- Old saves (from before M7-P7) keep everything open and skip Welcome Week.
+- If the app closes mid-play during the K18 unlock cascade, the cascade replaying on the next return is fine.
