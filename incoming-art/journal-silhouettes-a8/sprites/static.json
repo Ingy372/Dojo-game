@@ -1,0 +1,24 @@
+{
+  "sprites": {
+    "journal-silhouette-keeper": {
+      "files": {
+        "img": "journal/silhouette-keeper.png"
+      },
+      "size": [
+        116,
+        120
+      ],
+      "note": "unmet treatment: flat warm grey #786c5c + soft inner light; place in the card's picture well (10,10)-(126,126)"
+    },
+    "journal-silhouette-padded": {
+      "files": {
+        "img": "journal/silhouette-padded.png"
+      },
+      "size": [
+        116,
+        120
+      ],
+      "note": "unmet treatment: flat warm grey #786c5c + soft inner light; place in the card's picture well (10,10)-(126,126)"
+    }
+  }
+}

@@ -309,3 +309,6 @@ Earlier sample notes: idle, windup and attack, in 8 directions. The frame is 192
 10. **[NEW]** A7: Jay approved the kohai top-knot, the teal tie and `#34303f` as black (2026-10-24). Only the swatch border (Programmer) is still open.
 12. **[UPDATED]** A6 decoration pool: ids and names follow C10; colour 2 on White floors is wood tan `#d2a878`; the folding screen is bonus-only; Tier 2+ gold-plate trophies are parked. Still open: the keeper figures per floor (lion-dog, turtle, crane) and the scroll picture-to-subject pairing (mapped in order; Content Designer to confirm).
 13. **[NEW]** S4c Injured art: enemies only, the stars at head height, and 2 stars for the Keeper and Guardians (decided by Jay). The 'Injured!' wording goes to S4c-C1.
+
+## A8: Monster Journal silhouettes (journal-silhouettes-a8/)
+- `journal-silhouette-keeper` and `journal-silhouette-padded` (116x120) are in `journal-silhouettes-a8/sprites/static.json`. They are the same treatment as the named-monster silhouettes. Use them on the unmet Floor Keeper and Bopper cards in place of the big "?" (#135).
