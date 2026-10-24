@@ -4,7 +4,7 @@
 - **ITEM:** L5 (feeds C5, owned by the Content Designer).
 - **WHAT:** Seven ways kids meet the Class Creed, the belt verses, covenants and FAITH DOES life words inside play. No tests, quizzes, locks, streaks or pressure. All words come from `docs/faith-and-creed.md` and are never reworded.
 - **WHY:** Section 6 of `docs/faith-and-creed.md` says students learn these through play (Sensei, the Belt Gate screen, a Creed Wall), and they are not Gate locks. Hearing the words often, spaced out, in warm moments helps kids remember them without making it a test.
-- **DECIDE:** Jay picks which ideas go forward (1–3 fit places already planned; 4–7 are proposals outside launch scope). Open questions are at the end.
+- **DECIDE:** Jay picks which ideas go forward (1–3 fit places already planned; 4–7 are proposals outside launch scope). Decisions are at the end.
 - **NEXT:** After Jay chooses, the Content Designer writes the C5 lines in the chosen places. I check that the pacing fits the section 13 unlock schedule.
 
 ## Ground rules used
@@ -79,9 +79,9 @@ Sources used below:
 - Ideas 2–3 show up only at a real promotion, one at a time.
 - Ideas 4–7 wait for later belts and are outside launch scope.
 
-## Open questions for Jay (through the Manager)
-1. Is the Creed Wall (idea 3) launch scope, or a proposal for later?
-2. Should the bow play the Creed every time, or only when the student holds the bow (my suggestion: only when held, so it never gets old)?
-3. Can Sensei use short new lines about the life words (idea 4), or only the exact wall text?
-4. Do existing students get all their earned letters right away during Welcome Week, or one per session?
-5. Text-to-speech will read scripture aloud. Is that OK, or should Jay record those lines himself?
+## Decisions (Jay and the Manager)
+1. The Creed Wall (idea 3) is in launch scope. (Manager)
+2. The creed plays only when the student holds the bow. (Manager)
+3. Sensei may say short new lines about the life words, but scripture and the creed stay exact sign text. (Manager)
+4. Existing students get all their earned letters at once, with one warm celebration. (Manager)
+5. The phone's built-in text-to-speech reads the verses aloud, wording exactly as on the wall. It goes in before launch. (Jay)
