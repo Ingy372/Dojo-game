@@ -1,8 +1,8 @@
-# Action Zone Self-Defense Techniques (1–35)
+# Action Zone Self-Defense Techniques (1–40)
 
 Source: Jay, head instructor, 2026-10-18. This is the real curriculum. **Game effects must match what each technique does** (docs/decisions.md). Where a line says "(not stated)", Jay hasn't described that part yet, so don't guess.
 
-**Belts:** confirmed by Jay. A technique is listed under the belt the student is wearing while learning it: #1–5 are learned at White to earn Yellow, #6–10 at Yellow, and so on. #31–35 (Red/Black) were added from Jay's descriptions on 2026-10-23, in his own words. #36–40 (Brown) are still to come from Jay. The full belt ladder is in `docs/curriculum.md`.
+**Belts:** confirmed by Jay. A technique is listed under the belt the student is wearing while learning it: #1–5 are learned at White to earn Yellow, #6–10 at Yellow, and so on. #31–35 (Red/Black) were added from Jay's descriptions on 2026-10-23, in his own words. #36–40 (Brown) and the results and attacks below were added from Jay's answers on 2026-10-24, in his words. **Jay (2026-10-24): students cap at self-defense #40 and kick combo 7.** The full belt ladder is in `docs/curriculum.md`.
 
 **Game category** is a short label grouping techniques that do the same kind of thing. The Game Systems Designer uses it for item S4.
 
@@ -10,9 +10,9 @@ Source: Jay, head instructor, 2026-10-18. This is the real curriculum. **Game ef
 | --- | --- | --- | --- | --- | --- |
 | 1 | White | A punch (type not stated) | Parry, block, step to the side, double punch | Attack misses; student is off the line and answers with two punches. Teaches avoidance. | Avoid |
 | 2 | White | Same as #1 | Same as #1, moving the other direction | Same as #1, other side | Avoid |
-| 3 | White | (not stated) | Step across the center line with an inside block, spin, back fist | Attack turned aside; struck from the spin | Spin strike |
-| 4 | White | (not stated) | Step forward with an outside block, double punch to the solar plexus, step and punch high to the face | Driven back by a body-then-head attack | Advancing combo |
-| 5 | White | (not stated) | Like #3: step across the center line, inside block, spin with an elbow, step out, finish with a back fist | Attack turned aside; elbow, then back fist | Spin strike |
+| 3 | White | Hook punch (Jay, 2026-10-24) | Step across the center line with an inside block, spin, back fist | Attack turned aside; struck from the spin | Spin strike |
+| 4 | White | Straight reach for the throat (Jay, 2026-10-24). In the game: a "grab reach". | Step forward with an outside block, double punch to the solar plexus, step and punch high to the face | Driven back by a body-then-head attack | Advancing combo |
+| 5 | White | Hook punch (Jay, 2026-10-24) | Like #3: step across the center line, inside block, spin with an elbow, step out, finish with a back fist | Attack turned aside; elbow, then back fist | Spin strike |
 | 6 | Yellow | Hook punch | Step and meet it with an outside block, wrap the arm, strike up under the chin to the bridge of the nose, hook punch to the cheek, bring the elbow back to strike the other side | Arm trapped while several strikes land | Trap and combo |
 | 7 | Yellow | Hook punch | Step and outside block, wrap and trap the arm, palm heel to the nose | Arm trapped, one strong strike | Trap |
 | 8 | Yellow | Hook punch | Step out with an outside block, striking the solar plexus at the same moment | Blocked and hit in one motion | Block-and-strike together |
@@ -22,7 +22,7 @@ Source: Jay, head instructor, 2026-10-18. This is the real curriculum. **Game ef
 | 12 | Orange | Hook punch | Outside block, osotogari, punch to the ribs, stomp to the ribs | Thrown, then finished on the ground | Takedown |
 | 13 | Orange | A weapon coming toward the student | Jump to a fighting stance, inside kick the weapon, spin, side kick to the solar plexus | Weapon kicked aside, then kicked | Kick away the weapon |
 | 14 | Orange | A weapon coming toward the student | Jump to a fighting stance, inside kick the weapon, turn, spin kick toward the head | Weapon kicked aside, then high kick | Kick away the weapon |
-| 15 | Orange | (not stated) | Step to the side, parry, outside block, double punch to the head | Attack misses; answered with two punches | Avoid |
+| 15 | Orange | Straight jab (Jay, 2026-10-24) | Step to the side, parry, outside block, double punch to the head | Attack misses; answered with two punches | Avoid |
 | 16 | Green | Hook punch | Step to the side, double knifehand block, grab the wrist, strike low to the groin, strike high to the head | Wrist held; low-then-high strikes | Grab and strike |
 | 17 | Green | Hook punch | Outside block, snake the leg between the attacker's legs, reach over the arm to set an arm bar, then reach back over and finish with an elbow strike | Arm locked, then struck | Joint lock |
 | 18 | Green | Knife stab to the midsection | Slide to the side, parry the knife, right hand strikes the throat | Knife misses; strong counter | Avoid the weapon |
@@ -38,19 +38,27 @@ Source: Jay, head instructor, 2026-10-18. This is the real curriculum. **Game ef
 | 28 | Red | Overhead knife attack | Block high, reach behind, grab your own wrist, set a four-corner shoulder lock | Weapon arm locked | Weapon control |
 | 29 | Red | Two-hand choke from the front | Hands up between the attacker's elbows, left hand to the chin, right hand to the back of the head, step back and throw the attacker by the head | Choke broken, attacker thrown | Choke escape |
 | 30 | Red | Two-hand choke from the front | Hands up between the attacker's elbows, palms to the sides of the head, thumbs to the eyes | Choke broken | Choke escape |
-| 31 | Red/Black | Jab | Self defense 31: attacker throws jab, you cross step to the back as you parry and strike the arm (hyperextension), then roll it into an arm bar and control or break. | (not stated) | TBD (for Dojo-Ascent Researcher & Planner) |
-| 32 | Red/Black | Jab | Self defense 32: same as 31; once at arm bar, slide to the wrist and set wrist lock. | (not stated) | TBD (for Dojo-Ascent Researcher & Planner) |
-| 33 | Red/Black | Jab | Self defense 33: same as 32; once wrist lock is set, rotate hand to the left, bend the elbow and set a party flex. **Needs Jay's confirmation of the term "party flex".** | (not stated) | TBD (for Dojo-Ascent Researcher & Planner) |
-| 34 | Red/Black | Jab | Self defense 34: same as 33 with a slam at the end. | (not stated) | TBD (for Dojo-Ascent Researcher & Planner) |
-| 35 | Red/Black | Jab | Self defense 35: attacker throws jab, slide to the side and parry, catching the hand and setting a wrist lock. | (not stated) | TBD (for Dojo-Ascent Researcher & Planner) |
+| 31 | Red/Black | Jab | Self defense 31: attacker throws jab, you cross step to the back as you parry and strike the arm (hyperextension), then roll it into an arm bar and control or break. | Joint control/break | Joint control |
+| 32 | Red/Black | Jab | Self defense 32: same as 31; once at arm bar, slide to the wrist and set wrist lock. | Joint control/break | Joint control |
+| 33 | Red/Black | Jab | Self defense 33: same as 32; once wrist lock is set, rotate hand to the left, bend the elbow and set a party flex. | Joint control/break. "Party flex" is a type of wrist lock (Jay, 2026-10-24). | Joint control |
+| 34 | Red/Black | Jab | Self defense 34: same as 33 with a slam at the end. | Joint control/break and takedown | Joint control and takedown |
+| 35 | Red/Black | Jab | Self defense 35: attacker throws jab, slide to the side and parry, catching the hand and setting a wrist lock. | Wrist control/break | Wrist control |
+| 36 | Brown | (not stated) | (not stated) | Joint manipulation/break | Joint control |
+| 37 | Brown | (not stated) | (not stated) | Joint manipulation/break | Joint control |
+| 38 | Brown | (not stated) | (not stated) | Joint manipulation/break into takedown | Joint control and takedown |
+| 39 | Brown | (not stated) | (not stated) | Joint manipulation/break | Joint control |
+| 40 | Brown | (not stated) | (not stated) | Joint manipulation/break and takedown | Joint control and takedown |
 
-**#36–40 (Brown): still to come from Jay.** #31–35 are Jay's words exactly; the "Result on the opponent" and "Game category" columns are left for Jay and Dojo-Ascent Researcher & Planner to fill in.
+**#31–40:** the "What the student does" text for #31–35 and every "Result" are Jay's words exactly (2026-10-18 to 10-24). Jay hasn't described the attack or the steps for #36–40 yet, so they say "(not stated)". **In the game, "break" only ever means control and escape** (Break Free style), never an injury.
+
+**Cap (Jay, 2026-10-24):** before black belt, the student curriculum stops at kata **Possi** (the highest kata before black belt), self-defense **#40** and kick combo **7**. Kick combos 8–12 stay as empty slots for later belts and are **not in launch scope**.
 
 ---
 
 ## Rules for using these in the game (ages 6 and up)
 
-- **The game shows outcomes, never injuries.** On screen, an enemy can be off-balance, stunned, trapped, thrown, pinned, disarmed or escaped from. It is never shown hurt, broken, gouged or bleeding, and no text describes it that way. The real details stay in the curriculum and the technique videos.
+- **The game shows outcomes.** On screen, an enemy can be off-balance, stunned, trapped, thrown, pinned, disarmed or escaped from, or **Injured** (see below). It is never shown broken, gouged or bleeding, and no text describes it that way.
+- **Injured (2026-10-24):** an enemy can be **Injured** (a short, cartoon status: bandage sticker and dizzy stars) from the break techniques, self-defense #31–40 only. It always recovers or poofs away. No blood, gore, bones or cracks, and never the word "broken" on screen (Jay via Manager, 2026-10-24; spec: `drafts/planning/S4c-injured-status.md`). The real details stay in the curriculum and the technique videos.
 - **Callouts use the real number** ("Self-Defense #17!") with a short, kid-safe subtitle ("Arm Bar", "Choke Escape").
 - **Weapons:** enemies in the Tower are shadow creatures. How weapon attacks look in the game (for example, a shadow blade or staff) is a proposal for Dojo-Ascent Researcher & Planner and the Art Director; Jay decides.
 - **Street Smarts is different:** its safety lessons always teach getting away and finding a trusted adult first, especially around weapons, even though the curriculum teaches what to do when there is no escape.
