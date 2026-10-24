@@ -572,3 +572,6 @@ My calls (not Manager):
 - A kind counts as met once its Journal trophy is given (`decorEarning.given`); trophies come on first defeat (S7). Met cards show the trophy art, the trophy's name, its description as the fact, and the win stamp. Unmet cards look like the named ones: a silhouette, "?" and "Keep exploring!". Floor Keeper and Bopper have no silhouette art, so their unmet cards show a big "?" in the well. All text comes from decorations.json and named.json; nothing new was written.
 - Bopper is listed for every belt (the Manager asked for all five), though its trophy can only drop from Yellow on.
 - The sim helper `journalKinds` (earning.ts) builds the list and has a test.
+## Rest refresh (2026-10-24)
+- After "Rest for now" on the resume card, DojoScene now uses the profile that `bankRun` returns and takes its dojo with `homeDojo`. Before, it reloaded only the profile, so `this.dojo` still pointed at the old dojo object: the new pieces didn't show, and later dojo edits went to that old object. Those edits could be lost, or could overwrite what was banked. The new pieces go to storage, so the walkable room doesn't change; redrawing is enough.
+- There's no client test harness and adding one would mean new dependencies, so this fix is checked with before/after screenshots instead of a test.
