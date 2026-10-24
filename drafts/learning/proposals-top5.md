@@ -23,20 +23,31 @@ Learning & Engagement Designer, 2026-10-12. Suggestions for Jay to review with h
 
 ---
 
-## 2. Sensei's Question at the Bow
+## 2. Sensei's Question at the Bow (recall version)
 
-**Idea.** Sometimes (not every time), when the player bows in the Home Dojo, Sensei holds up a picture of one of their earned abilities and asks, "What's this one called?" with 2–3 big picture-and-word choices. Right or wrong, Sensei shows the answer warmly and offers the "Watch the real technique" button; a right answer adds a small Focus bonus on top of the bow's.
+*Updated for L2 to match the decision "Bow question = recall" in `docs/decisions.md`. It replaces the earlier "Which felt best?" reflection.*
 
-**What it teaches.** Recall of real technique names, spaced over days. It also points back to the real technique video.
+**Idea.** At most once a day, when the player bows in the Home Dojo, Sensei holds up a picture of one of their earned abilities and asks, "What's this one called?" There are 3 big picture-and-word choices. After any answer, the character performs the move.
+- **Right:** "Yes! That's Self-Defense #3." The answer is added to a count that never goes down.
+- **Not quite:** Sensei warmly shows the right name: "This one is Self-Defense #3. Let's see it!" No penalty, no lost points, no sad sound.
+- **Skip:** A "Not today" button is always there. Skipping costs nothing and is never mentioned again.
+- **Awards:** Correct answers count forever, with small awards at 5, 10, 20, 50 and 100 (may go higher later). The count only goes up. It never resets and there is no daily streak.
+- Questions only use abilities the student has already earned from real training, so class stays the source of power. Wrong answers never block play or change rewards.
 
-**Why it's fun.** It's a quick, low-stakes quiz kids can win, with a reward, and it lasts five seconds.
+**What it teaches.** Recall of real technique names, spaced over days, linked to what the move looks like.
+
+**Why it's fun.** It's a five-second quiz kids can win, they get to watch their move, and the count climbing feels like a growing collection.
 
 **Evidence.**
-- Practice testing beats re-reading (Adesope, Trevisan & Sundararajan, 2017, meta-analysis of 118 studies, *Review of Educational Research*; g = 0.51 vs restudy). Multiple-choice worked well. STRONG.
-- Spacing practice over days beats cramming (Cepeda et al., 2006, meta-analysis, *Psychological Bulletin*). STRONG.
-- Guardrails: no penalty for a wrong answer, never blocks play, can be skipped. Unexpected small bonuses are less likely to undermine interest than expected ones (Deci, Koestner & Ryan, 1999). STRONG.
+- Taking a recall test helps memory a week later more than studying again (Roediger & Karpicke, 2006, *Psychological Science*). STRONG. *(cited from memory, please check)*
+- Testing beats restudy across many studies, and helps more when feedback is given (Rowland, 2014, meta-analysis, *Psychological Bulletin*). STRONG. *(cited from memory, please check)*
+- Practice testing beats re-reading, and multiple-choice works well (Adesope, Trevisan & Sundararajan, 2017, meta-analysis, *Review of Educational Research*). STRONG. *(cited from memory, please check)*
+- Spacing practice over days beats cramming (Cepeda et al., 2006, meta-analysis, *Psychological Bulletin*). STRONG. *(cited from memory, please check)*
+- Showing the right answer after a miss is what keeps a wrong guess from sticking (feedback finding in Rowland 2014 above). MODERATE for ages 6+, since most studies use older students. *(please check)*
 
-**Cost:** Small. **Fits:** Home Dojo (the bow) + Abilities.
+**Guardrails.** No failure, lock, penalty, guilt or streak. One question a day at most, always skippable, short text for ages 6+.
+
+**Cost:** Small. **Fits:** Home Dojo (the bow) + Abilities + Awards.
 
 ---
 
