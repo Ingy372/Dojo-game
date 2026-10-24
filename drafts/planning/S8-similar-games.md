@@ -167,6 +167,96 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24.
 - **Borrow:** good timing rewards you twice (safety plus progress). Our brute "winded" state works like a posture break.
 - **Avoid:** a single fixed difficulty. Kids need Guided (S5).
 
+## Expansion: three groups (Jay's ask, Oct 24)
+
+Jay asked: "Find other games that are similar in play style. What has made them successful? Are there any elements from what already exists, that is successful, that we can play to this game?"
+
+Games already covered above are linked by name, not repeated. Sales or player numbers appear only where a linked source gives them. "Why it worked" lines are what the sources say, not my opinion, unless marked "(guess)".
+
+### Group A: top-down action RPGs
+
+| Game | In the section above? |
+|---|---|
+| Zelda top-down (Link's Awakening, A Link Between Worlds) | New, below |
+| Hades | Yes |
+| Moonlighter | New, below |
+| Children of Morta | New, below |
+
+#### The Legend of Zelda: Link's Awakening (Switch, 2019) and A Link Between Worlds (3DS, 2013)
+
+- **Numbers:** Link's Awakening sold 6.46 million units by Dec 31, 2022 (CESA White Book, via [Nintendo Everything](https://nintendoeverything.com/tons-of-sales-data-revealed-for-first-and-third-party-switch-3ds-games/)).
+- **Why it worked (sources):** in A Link Between Worlds, Ravio's shop lets you rent most key items early, so most dungeons can be done in any order. Reviewers praised the freedom; some said it made each dungeon lean on one item ([Zelda Universe review](https://zeldauniverse.net/2013/11/21/review-the-legend-of-zelda-a-link-between-worlds/), [Zelda Dungeon: Aonuma on Ravio's shop](https://www.zeldadungeon.net/aonuma-explains-how-ravios-shop-works/)).
+- **Fits our rules:** a choice of which floor path to try next, with no fixed order inside a belt tier (guess: only within a tier, so belt gates stay).
+- **Does not fit:** Link Between Worlds takes rented items back when you fall. We never take things away.
+
+#### Moonlighter (Digital Sun, 2018)
+
+- **Numbers:** over 1 million copies by May 2020, with the Switch the biggest revenue source, and 3.5 million total players ([11 bit studios press release via GoNintendo](https://gonintendo.com/archives/336053-pr-one-million-copies-of-moonlighter-sold-as-between-dimensions-expansion-launches)). Over 2 million copies by June 2022 ([GamingBolt](https://gamingbolt.com/11-bit-studios-celebrates-2-million-copies-of-moonlighter-and-1-million-copies-of-children-of-morta-sold)).
+- **Why it worked (sources):** it pairs dungeon runs with a calm shop and town to come home to. The studio credits its community and "numerous free updates" (same press release).
+- **Fits our rules:** a calm home space between runs. We already have the dojo room (S7). Free content updates, never paid.
+- **Does not fit:** thieves in the shop and losing items on a failed run. Nothing is taken away in our game.
+
+#### Children of Morta (Dead Mage, 2019)
+
+- **Numbers:** over 1 million copies by June 2022 ([GamingBolt](https://gamingbolt.com/11-bit-studios-celebrates-2-million-copies-of-moonlighter-and-1-million-copies-of-children-of-morta-sold)).
+- **Why it worked (sources):** you play six family members, each with a different style. "Family traits" mean that levelling one member gives a bonus to everyone, so no one is left weak ([Xbox Wire, by the developers](https://news.xbox.com/en-us/2019/08/07/children-of-morta-preview-xbox-one/), [Game Developer interview](https://www.gamedeveloper.com/design/making-family-matter-in-i-children-of-morta-i-)). Reviewers liked the family scenes between runs ([GameSpot review](https://www.gamespot.com/reviews/children-of-morta-review/1900-6417304/), [Game Informer review](https://gameinformer.com/review/children-of-morta/children-of-morta-review-family-matters)).
+- **Fits our rules:** shared growth. A dojo-wide "everyone gets a little stronger" bonus from belt milestones. Classmates could show up to help in runs now and then (guess).
+- **Does not fit:** "corruption fatigue" lowers a hero's health if you use them too much. That is a penalty, so we skip it.
+
+### Group B: mobile roguelites
+
+| Game | In the section above? |
+|---|---|
+| Archero | Yes |
+| Soul Knight | Yes |
+| Vampire Survivors (mobile) | New, below |
+
+Extra numbers for the two already covered:
+
+- **Archero:** about 96 million downloads and over $263 million in in-app spending by Jan 2025 ([Game World Observer](https://gameworldobserver.com/2025/01/20/archero-2-revenue-8-million-in-11-days-vs-original-game)). Most of that money is from the in-app purchases we avoid.
+- **Soul Knight:** 100M+ installs shown on its [Google Play listing](https://play.google.com/store/apps/details?hl=de&id=com.ChillyRoom.DungeonShooter).
+
+#### Vampire Survivors, mobile (poncle, 2022)
+
+- **Numbers:** no mobile sales or player figure found in a source I trust, so none is given.
+- **Why it worked (sources):** the full game was free on phones, playable offline, with no microtransactions. The founder said: "I'm personally not a fan of microtransactions... This is the full game, for free, for real" ([PocketGamer.biz](https://www.pocketgamer.biz/vampire-survivors-surprise-launches-to-mobile/)). Ads are optional (for a revive or gold after a run), and buying a DLC turns them off ([poncle support](https://poncle.zendesk.com/hc/en-gb/articles/14803391394705-How-do-I-buy-DLC-on-mobile)).
+- **Fits our rules:** short runs, one-thumb play, offline play, the whole game with nothing to buy.
+- **Does not fit:** ads of any kind, and paid DLC.
+
+### Group C: kid-friendly
+
+| Game | In the section above? |
+|---|---|
+| Prodigy | Yes |
+| Pokémon | Yes. Extra number: Scarlet and Violet sold 20.61 million by Dec 31, 2022 ([Nintendo Everything, CESA](https://nintendoeverything.com/tons-of-sales-data-revealed-for-first-and-third-party-switch-3ds-games/)) |
+| Ring Fit Adventure | Yes. Extra number: 15.22 million by Dec 31, 2022 (same source) |
+| Kirby | New, below |
+
+#### Kirby and the Forgotten Land (Nintendo, 2022)
+
+- **Numbers:** 6.12 million by Dec 31, 2022 ([Nintendo Everything, CESA](https://nintendoeverything.com/tons-of-sales-data-revealed-for-first-and-third-party-switch-3ds-games/)). 7.52 million by March 31, 2024 ([Wikipedia, citing Nintendo](https://en.wikipedia.org/wiki/Kirby_and_the_Forgotten_Land)).
+- **Why it worked (sources):** the accessibility report lists a choice of difficulty, helpful visual prompts and forgiving hits ([Family Gaming Database](https://www.familygamingdatabase.com/accessibility/Kirby+and+the+Forgotten+Land)). An accessibility writer writes about the hidden help Kirby gives players to make it more accessible ([Access-Ability](https://access-ability.uk/2022/04/25/lies-kirby-and-other-games-tell-you-to-improve-accessibility/)). Copy abilities can be upgraded, which gives a reason to replay ([Nintendo World Report review](http://www.nintendoworldreport.com/review/60126/kirby-and-the-forgotten-land-switch-review)).
+- **Fits our rules:** a gentle mode with a kind name (our Steady, S5). Quiet help the kid doesn't have to ask for. Moves that grow when you use them.
+- **Does not fit:** nothing big. Kirby is the closest match to our tone.
+
+## Ideas to borrow, ranked
+
+Ranked by fun for the cost (my guess, marked). Cost: S = small, M = medium, L = large (all guesses). Every idea passes our rules: no purchases, ads, timers, streak punishment, or taking things away.
+
+| # | Idea | Seen in | Fun for the cost (guess) | Cost (guess) | Fit notes | Suggested S item |
+|---|---|---|---|---|---|---|
+| 1 | A clear sight and sound warning before each enemy attack | Hades, Punch-Out!!, Sekiro (above) | High | S–M | Fair fights for young players. Reading a tell is like reading a partner in class. | **S11** (next in the queue) |
+| 2 | Practice each enemy calmly in the Monster Journal | Kirby gentle help, Ring Fit | High | M | No fail state, no score pressure. | **S12** (in the queue) |
+| 3 | A calm home space that fills up with earned things | Moonlighter, Animal Crossing (above) | High | S (we have the dojo room) | Show the room after every run, win or lose. | Already in S7. Small polish only. |
+| 4 | Shared growth: belt milestones give everyone a small boost | Children of Morta family traits | Med–High | S | Matches "real training is the power". Must not make old gear useless. | New: **S13 dojo-wide bonuses** (guess, Manager to approve) |
+| 5 | Moves that grow when you use them (kick combos level up) | Kirby ability upgrades, Hades | Med–High | M | Use only Jay's combos 1–7 from `docs/curriculum.md`. | **S4** (in the queue) |
+| 6 | Pick which floor path to try next inside a belt tier | A Link Between Worlds | Medium | M | Keep belt gates. Nothing rented, nothing lost. | New: **S14 floor choice** (guess) |
+| 7 | Classmates join runs now and then to help | Children of Morta | Medium | M | A new helper system (guess). No online play needed. | Fold into S11/S12 enemy work or a later S item (guess) |
+| 8 | Full game offline, one thumb, short runs | Vampire Survivors mobile, Archero | Medium | S (mostly true already) | We already have no purchases. Check offline play in a test. | Test note for QA, not a spec |
+| 9 | Free content updates | Moonlighter, Hades Early Access | Medium | L (ongoing) | Always free. Never time-limited. | Post-launch plan, not now |
+
+Not borrowed (clashes with our rules): rented items lost on a fall (Link Between Worlds), fatigue penalties (Children of Morta), ads and in-app purchases (Archero, Soul Knight, Vampire Survivors mobile), membership-only looks (Prodigy), and items taken by thieves (Moonlighter).
+
 ## What this supports in our specs
 
 | Our spec | Supported by the examples above |
@@ -179,6 +269,8 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24.
 
 ## Done-when
 
+- The expansion covers all three groups Jay named, and each new game has linked sources, "why it worked", and fit notes.
+- The ranked borrow list names a suggested S item for every row, and S13 and S14 are marked as guesses for the Manager.
 - Every game on the work-board list has borrow and avoid lines, with at least one linked source.
 - Every fact has a link. Suggestions are marked "For us".
 - The Learning Designer and the Manager have read it, and any "borrow" they accept is written into a spec item.
