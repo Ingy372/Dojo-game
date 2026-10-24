@@ -222,8 +222,10 @@ Drawing order is the `order` field (the Batch 1 layers moved up by one because `
 - Bamboo Garden Hall. Same sprite ids, layers, anchors and timing as Tier 1 `tower-rooms/` + `boss-door/` (boss door merged into the same static.json), so Tier 2 rooms can load this folder instead.
 - Extra optional decor: `decor-lantern`, `decor-bamboo-pot`, `decor-basin`. Chest is the Tier 1 chest (Jay OK'd). Tower name: TBD with the game planner. `proposals/` is reference only; do not load.
 
-## S1 #3 elite auras, `incoming-art/elite-auras/` [SAMPLES, waiting for Jay's OK - do not wire yet]
-- Overlay layers `aura-swift`, `aura-guarding` (back + front); draw order back -> enemy -> front. No head badges.
+## S1 #3 elite auras, `incoming-art/elite-auras/sprites/static.json` [NEW, full set, Jay approved]
+- Overlay layers per tier-1 enemy: `sprites/<enemy>/aura-{swift,guarding}_{back,front}.png` (entries `aura-<kind>-<enemy>` in static.json). 8 frames, loop at 10 fps, same frame size + anchor as the enemy, so stack 1:1.
+- Draw order: aura back -> enemy -> aura front. Swift = gold, Guarding = blue. Nothing above the head (no badges). Game rules (who becomes elite, effects, 1 per room) come from the S1 brief, not from the art.
+- The 256 masters `sprites/aura-<kind>_<layer>.png` are reference only.
 
 ## Open items in one place
 
