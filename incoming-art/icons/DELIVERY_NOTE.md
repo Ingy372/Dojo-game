@@ -1,18 +1,22 @@
-# Delivery Note: A0 (samples) - Batch 8 icons, 2026-10-23
+# Delivery Note: A0 - Batch 8 icons (full set), 2026-10-24
 
-**ITEM:** A0 (work board): finish Batch 8 (icons). This is the 3-sample step only.
+**ITEM:** A0 (work board): Batch 8, all remaining gear, Insight and Seal icons.
 
 **WHAT**
-- 3 sample icons, 128 x 128, one per family: gear `cloth-wraps`, Insight `ripple-counter`, Seal `strong-block`.
-- Previews on the dark menu colour and all five rarity colours at 1x and 2x, a true phone-size mock, and a margin check.
+- `sprites/icon-<id>.png`, 128 x 128, 28 icons, `static.json` (frames 1), ids exactly as in the brief:
+  - Gear (9): cloth-wraps, leather-wraps, tiger-wraps, training-gi, padded-gi, mountain-gi, jade-charm, lotus-charm, crane-charm.
+  - Insights (9, glowing scroll): ripple-counter, iron-skin, wind-step, double-strike, quick-hands, press-the-advantage, shield-breaker, heavy-hands, rally.
+  - Seals (10, blue-rim medallion): off-balance, escape-step, sweep, steady-breath, strong-block, sharp-eyes, create-distance, disarm, throw, follow-through.
+- Sample styles kept; cloth-wrap loose end is now a smooth curved ribbon; Strong Block stays a raised forearm.
+- `preview/`: per-set sheets at 1x and 2x on the menu colour and rarity colours, and a phone mock (48 px).
 
 **WHY**
-- Jay's rule: show 3 samples before any big batch. One per family checks the family looks (object / glowing scroll / medallion) before drawing all of them.
+- Jay approved the 3 sample looks; this completes the brief's list in the same style. No text in any icon.
 
 **DECIDE (Jay)**
-1. Approve the three family looks (or change one).
-2. Seal symbol for Strong Block: a forearm raised in a block (my pick), or a plain shield?
-3. Seal medallion rim colour: blue for all Seals, or a colour per Seal type (technique / Form / Virtue)?
-4. Is the thicker icon outline right at phone size?
+1. Symbol picks are mine (e.g. dizzy stars = off-balance, cracked shield = shield-breaker, heart + arrow = rally). Change any?
+2. Off-balance / press-the-advantage / follow-through all use dizzy stars (with arrow or burst added). OK, or make them more different?
+3. Seal rim stays one blue for all Seals (no per-type colour yet).
+4. Rarity background colours in the preview are placeholders; the game's own colours apply.
 
-**NEXT:** after approval, draw the rest of the existing gear, Insight and Seal ids in the same style (Forms and Virtues too, per the brief), then hand off to Claude Code.
+**NEXT:** Claude Code maps `icon-<id>` to the existing gear / Insight / Seal ids.
