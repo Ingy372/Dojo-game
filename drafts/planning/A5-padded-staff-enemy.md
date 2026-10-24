@@ -2,7 +2,7 @@
 
 Manager item A5 (Oct 24). This sets the stats for the padded-staff enemy drawn in PR #95, using the same fields as `content/enemies/*.json`.
 
-Author: Dojo-Ascent Researcher & Planner, 2026-10-24. Plan only, no game code changes. **(guess)** marks numbers that haven't been through a balance run yet. The name is a placeholder; the Content Writer chooses it.
+Author: Dojo-Ascent Researcher & Planner, 2026-10-24. Plan only, no game code changes. **(guess)** marks numbers that haven't been through a balance run yet. Name: **Bouncy Bopper** (C8, #97).
 
 ## What the art fixes (PR #95, `padded.json`)
 
@@ -18,8 +18,8 @@ The art numbers 16 / 18 are exactly the Brute's telegraph and the Shield's recov
 
 | Field | Value | Compare | Why |
 | --- | --- | --- | --- |
-| maxHealth | **110** (guess) | Shield 90, Brute 180 | Mid-tier, a bit tougher than Shield |
-| power | **16** (guess) | Shield 15, Brute 25 | A soft foam bonk; staff reach is its threat, not damage |
+| maxHealth | **110** (OK for now, pending the balance run) | Shield 90, Brute 180 | Mid-tier, a bit tougher than Shield |
+| power | **16** (OK for now, pending the balance run) | Shield 15, Brute 25 | A soft foam bonk; staff reach is its threat, not damage |
 | guard | **10** (guess) | Swarmer 0, Shield 15 | |
 | radius | **0.38** | art | Fixed by the art |
 | moveSpeedTilesPerSecond | **2.2** (guess) | Shield 2.4, Brute 1.2 | Slightly slower than the art placeholder, so its longer reach stays fair |
@@ -65,7 +65,7 @@ S11 (PR #98) rules: never colour alone, never sound alone, no sim changes.
 - **Floor shape:** a narrow line in front of it, 1.0 tile long and 0.7 wide (follows reach and areaRadius). It fills in time with the art's `telegraphIntensity` ramp.
 - **Sound:** a soft whoosh that rises through the wind-up. It's different from the Swarmer, Shield, Brute and Keeper sounds; the Audio role picks the actual sound.
 - **Bestiary tip (Content Writer, example):** "When the staff goes up, get ready to Counter or step aside!"
-- **Disarmed:** no staff is drawn, and its next attack is a weak push-paw with the same wind-up length, so the tell rules still apply (guess: show the same pose without the staff).
+- **Disarmed:** no staff is drawn, and its next attack is a weak push-paw with the same wind-up length, so the tell rules still apply (decided: the same pose without the staff).
 
 ## How the S4 weapon seals work with it
 
@@ -100,8 +100,8 @@ The "vs weapon" conditions check `weapon` is set; on any other enemy they do not
 - **Client:** small. Hide the weapon layer when disarmed, the lime colour, and the S11 sound.
 - **Art:** the full animation set comes next (PR #95 NEXT).
 
-## Decisions still open
+## Decisions (decided, Manager, Oct 24)
 
-1. Name (Content Writer).
-2. Are 110 HP and power 16 OK before the balance run?
-3. Does a disarmed enemy attack with a weaker push-paw, or not attack at all? I recommend the push-paw.
+1. **Name: Bouncy Bopper** (C8, #97).
+2. **110 Health and 16 damage are OK for now**, pending the Tester's balance run.
+3. **A disarmed Bouncy Bopper still pushes weakly**: the push-paw keeps the same wind-up length and S11 warning, and does half damage (8), or none with #19.
