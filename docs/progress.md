@@ -240,3 +240,13 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 **Next**
 - Jay reviews the K1 pull request and answers its DECIDE list (including the term "party flex" in #33).
 - Self-defense #36–45, kick combos 8–12 and the kata descriptions are still to come from Jay.
+
+## J6: black belt time to 2nd degree (2026-10-23)
+
+**Done**
+- The three test profiles now give Black Belt 24 months (2 years) before 2nd degree, as Jay decided. Brown/Black stays at 12 months.
+- The black belt tier's levels now take twice as much experience as brown/black's.
+- New test checks this. 133 tests pass and the game builds.
+
+**Next**
+- Nic's DojoForge data needs the same 24-month value for black belt.
