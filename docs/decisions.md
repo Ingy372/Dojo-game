@@ -390,3 +390,8 @@ From section 1 of `docs/work-board.md`.
 - From x2, the screen shows "PERFECT x2", "PERFECT x3"... under the combo counter, with a glow that gets brighter up to x5.
 - "Longest chain" is not a personal best (Jay, 2026-10-23).
 - Balance check (computer player, 1,000 runs each): Strikes per fight room went up 11–18% depending on the player (the limit was 20%). Novice on Standard won 35% before and 40% after (smart play).
+## S1 change 1: enemy mixes (Jay, 2026-10-23)
+
+- Five new battle rooms, each built around one enemy mix from the S1 proposal: **Brute and Swarm** and **Stone Garden** (brute + swarmers), **Guarded Swarm** and **Shield Escort** (shield + swarmers), and **Twin Shields** (only shields, so Focus runs out and Perfect Counters matter). Each room file says its mix in a `"mix"` line.
+- Room files can now set `"earliestRoom"` (1 = first room of the floor). Harder mixes wait: Stone Garden from room 2, Guarded Swarm from 3, Shield Escort from 4, Twin Shields from 5. Brute and Swarm can come first. Rooms without the line can come any time, as before.
+- Balance check (computer player, 1,000 runs each): novice on Standard won 35% before and 41% after (smart play); 19% before and 19% after (standing still). The limit was a drop of no more than 3 points.
