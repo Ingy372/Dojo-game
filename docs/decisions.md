@@ -453,7 +453,8 @@ From section 1 of `docs/work-board.md`.
 - **Its own random stream.** The named roll uses a separate rng seeded from the run seed, so rooms, enemies and elites stay the same as a run without it, up to the named room.
 - **Earliest wave.** The named monster replaces an enemy in its type's first wave, so it's there when the room opens. If the rolled type isn't in the room, another tier monster whose type is there takes its place.
 - **No elite in the named room.** Elites are still picked (so the rng doesn't shift) and then dropped; they don't count toward the elite cap.
-- **Forced test links** (`?named=`) put it in the first battle room from room 3, or in any room with `&room=`. Like elite test links giving decorations, these runs still record the journal and the sticker.
+- **Forced test links** (`?named=`) put it in the first battle room from room 3, or in any room with `&room=`. These test runs do **not** write the journal or give the sticker (changed in K10): `meetNamed`/`beatNamed` take the run and do nothing when `run.test` is set.
+- **Journal facts on landscape phones (K10):** each card's fact sits in a note beside the page at 15px on screen (the Street Smarts body size), not inside the scaled card, so it is readable and clear of the stamp. Screens too narrow for the notes keep the fact in the card, at 15px on screen, left of the stamp spot.
 - **Reduced motion** is the phone's `prefers-reduced-motion` setting (the game has no setting of its own yet); it turns off the stamp shake only.
 - **Journal button text** is content (`journalButton`), and the button shows from `rules.minBeltTier`.
 
