@@ -1,0 +1,1036 @@
+{
+ "pixelsPerTile": 80,
+ "camera": {
+  "projection": "orthographic",
+  "elevationDeg": 35.0,
+  "facing": "north (the one game view)"
+ },
+ "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+ "sprites": {
+  "decor-t1-scroll-sun-hills": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-t1-scroll-sun-hills"
+   ],
+   "files": {
+    "decor-t1-scroll-sun-hills": "decor-t1-scroll-sun-hills_decor-t1-scroll-sun-hills.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 1,
+    "mount": "#4f8a4a"
+   }
+  },
+  "decor-t1-scroll-moon-clouds": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-t1-scroll-moon-clouds"
+   ],
+   "files": {
+    "decor-t1-scroll-moon-clouds": "decor-t1-scroll-moon-clouds_decor-t1-scroll-moon-clouds.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 2,
+    "mount": "#34406e"
+   }
+  },
+  "decor-t1-scroll-bamboo": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-t1-scroll-bamboo"
+   ],
+   "files": {
+    "decor-t1-scroll-bamboo": "decor-t1-scroll-bamboo_decor-t1-scroll-bamboo.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 3,
+    "mount": "#2f8f87"
+   }
+  },
+  "decor-t1-scroll-blossom": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-t1-scroll-blossom"
+   ],
+   "files": {
+    "decor-t1-scroll-blossom": "decor-t1-scroll-blossom_decor-t1-scroll-blossom.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 4,
+    "mount": "#b3678f"
+   }
+  },
+  "decor-t1-scroll-waves": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-t1-scroll-waves"
+   ],
+   "files": {
+    "decor-t1-scroll-waves": "decor-t1-scroll-waves_decor-t1-scroll-waves.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 5,
+    "mount": "#3a6ea5"
+   }
+  },
+  "decor-t1-scroll-peak": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-t1-scroll-peak"
+   ],
+   "files": {
+    "decor-t1-scroll-peak": "decor-t1-scroll-peak_decor-t1-scroll-peak.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 6,
+    "mount": "#6b5a9e"
+   }
+  },
+  "decor-t1-scroll-koi": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-t1-scroll-koi"
+   ],
+   "files": {
+    "decor-t1-scroll-koi": "decor-t1-scroll-koi_decor-t1-scroll-koi.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 7,
+    "mount": "#c77a2e"
+   }
+  },
+  "decor-t1-gear-kick-pad": {
+   "size": [
+    104,
+    186
+   ],
+   "layers": [
+    "decor-t1-gear-kick-pad"
+   ],
+   "files": {
+    "decor-t1-gear-kick-pad": "decor-t1-gear-kick-pad_decor-t1-gear-kick-pad.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.2,
+   "anchorPx": [
+    52.0,
+    176.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "class",
+    "set": "dojo gear",
+    "order": 1
+   }
+  },
+  "decor-t1-gear-focus-mitts": {
+   "size": [
+    104,
+    150
+   ],
+   "layers": [
+    "decor-t1-gear-focus-mitts"
+   ],
+   "files": {
+    "decor-t1-gear-focus-mitts": "decor-t1-gear-focus-mitts_decor-t1-gear-focus-mitts.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.75,
+   "anchorPx": [
+    52.0,
+    140.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "class",
+    "set": "dojo gear",
+    "order": 2
+   }
+  },
+  "decor-t1-gear-belt-rack": {
+   "size": [
+    104,
+    190
+   ],
+   "layers": [
+    "decor-t1-gear-belt-rack"
+   ],
+   "files": {
+    "decor-t1-gear-belt-rack": "decor-t1-gear-belt-rack_decor-t1-gear-belt-rack.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.25,
+   "anchorPx": [
+    52.0,
+    180.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "class",
+    "set": "dojo gear",
+    "order": 3
+   }
+  },
+  "decor-t1-gear-helmet": {
+   "size": [
+    104,
+    170
+   ],
+   "layers": [
+    "decor-t1-gear-helmet"
+   ],
+   "files": {
+    "decor-t1-gear-helmet": "decor-t1-gear-helmet_decor-t1-gear-helmet.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.0,
+   "anchorPx": [
+    52.0,
+    160.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "class",
+    "set": "dojo gear",
+    "order": 4
+   }
+  },
+  "decor-t1-gear-water-bottle": {
+   "size": [
+    104,
+    158
+   ],
+   "layers": [
+    "decor-t1-gear-water-bottle"
+   ],
+   "files": {
+    "decor-t1-gear-water-bottle": "decor-t1-gear-water-bottle_decor-t1-gear-water-bottle.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.85,
+   "anchorPx": [
+    52.0,
+    148.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "class",
+    "set": "dojo gear",
+    "order": 5
+   }
+  },
+  "decor-t1-gear-bow-mat": {
+   "size": [
+    104,
+    102
+   ],
+   "layers": [
+    "decor-t1-gear-bow-mat"
+   ],
+   "files": {
+    "decor-t1-gear-bow-mat": "decor-t1-gear-bow-mat_decor-t1-gear-bow-mat.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.15,
+   "anchorPx": [
+    52.0,
+    92.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "class",
+    "set": "dojo gear",
+    "order": 6
+   }
+  },
+  "decor-t1-fan": {
+   "size": [
+    104,
+    162
+   ],
+   "layers": [
+    "decor-t1-fan",
+    "decor-t1-fan-tint"
+   ],
+   "files": {
+    "decor-t1-fan": "decor-t1-fan_decor-t1-fan.png",
+    "decor-t1-fan-tint": "decor-t1-fan_decor-t1-fan-tint.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.9,
+   "anchorPx": [
+    52.0,
+    152.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "random",
+    "colours": 2,
+    "tintLayer": "decor-t1-fan-tint",
+    "colour1": "#5ab4e6",
+    "colour2": "belt colour of the floor where it drops (beltStyles[belt].belt)",
+    "howToTint": "draw the base layer, then the -tint layer multiplied by the colour (rgb * colour / 255, alpha unchanged). The -tint art is neutral light grey so its shading survives"
+   }
+  },
+  "decor-t1-lantern": {
+   "size": [
+    104,
+    178
+   ],
+   "layers": [
+    "decor-t1-lantern",
+    "decor-t1-lantern-tint"
+   ],
+   "files": {
+    "decor-t1-lantern": "decor-t1-lantern_decor-t1-lantern.png",
+    "decor-t1-lantern-tint": "decor-t1-lantern_decor-t1-lantern-tint.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.1,
+   "anchorPx": [
+    52.0,
+    168.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "random",
+    "colours": 2,
+    "tintLayer": "decor-t1-lantern-tint",
+    "colour1": "#2f8f87",
+    "colour2": "belt colour of the floor where it drops (beltStyles[belt].belt)",
+    "howToTint": "draw the base layer, then the -tint layer multiplied by the colour (rgb * colour / 255, alpha unchanged). The -tint art is neutral light grey so its shading survives"
+   }
+  },
+  "decor-t1-bonsai": {
+   "size": [
+    104,
+    150
+   ],
+   "layers": [
+    "decor-t1-bonsai",
+    "decor-t1-bonsai-tint"
+   ],
+   "files": {
+    "decor-t1-bonsai": "decor-t1-bonsai_decor-t1-bonsai.png",
+    "decor-t1-bonsai-tint": "decor-t1-bonsai_decor-t1-bonsai-tint.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.75,
+   "anchorPx": [
+    52.0,
+    140.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "random",
+    "colours": 2,
+    "tintLayer": "decor-t1-bonsai-tint",
+    "colour1": "#3a6ea5",
+    "colour2": "belt colour of the floor where it drops (beltStyles[belt].belt)",
+    "howToTint": "draw the base layer, then the -tint layer multiplied by the colour (rgb * colour / 255, alpha unchanged). The -tint art is neutral light grey so its shading survives"
+   }
+  },
+  "decor-t1-cushion": {
+   "size": [
+    104,
+    106
+   ],
+   "layers": [
+    "decor-t1-cushion",
+    "decor-t1-cushion-tint"
+   ],
+   "files": {
+    "decor-t1-cushion": "decor-t1-cushion_decor-t1-cushion.png",
+    "decor-t1-cushion-tint": "decor-t1-cushion_decor-t1-cushion-tint.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.2,
+   "anchorPx": [
+    52.0,
+    96.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "random",
+    "colours": 2,
+    "tintLayer": "decor-t1-cushion-tint",
+    "colour1": "#9660e6",
+    "colour2": "belt colour of the floor where it drops (beltStyles[belt].belt)",
+    "howToTint": "draw the base layer, then the -tint layer multiplied by the colour (rgb * colour / 255, alpha unchanged). The -tint art is neutral light grey so its shading survives"
+   }
+  },
+  "decor-t1-banner": {
+   "size": [
+    80,
+    112
+   ],
+   "layers": [
+    "decor-t1-banner",
+    "decor-t1-banner-tint"
+   ],
+   "files": {
+    "decor-t1-banner": "decor-t1-banner_decor-t1-banner.png",
+    "decor-t1-banner-tint": "decor-t1-banner_decor-t1-banner-tint.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.4,
+   "anchorPx": [
+    40.0,
+    112.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "random",
+    "colours": 2,
+    "tintLayer": "decor-t1-banner-tint",
+    "colour1": "#3aa655",
+    "colour2": "belt colour of the floor where it drops (beltStyles[belt].belt)",
+    "howToTint": "draw the base layer, then the -tint layer multiplied by the colour (rgb * colour / 255, alpha unchanged). The -tint art is neutral light grey so its shading survives"
+   }
+  },
+  "decor-t1-statue-floor1": {
+   "size": [
+    104,
+    182
+   ],
+   "layers": [
+    "decor-t1-statue-base",
+    "decor-t1-statue-fig-lion-dog"
+   ],
+   "files": {
+    "decor-t1-statue-base": "decor-t1-statue-floor1_decor-t1-statue-base.png",
+    "decor-t1-statue-fig-lion-dog": "decor-t1-statue-floor1_decor-t1-statue-fig-lion-dog.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.15,
+   "anchorPx": [
+    52.0,
+    172.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "first floor clear",
+    "floor": 1,
+    "sharedLayer": "decor-t1-statue-base"
+   }
+  },
+  "decor-t1-statue-floor2": {
+   "size": [
+    104,
+    150
+   ],
+   "layers": [
+    "decor-t1-statue-base",
+    "decor-t1-statue-fig-turtle"
+   ],
+   "files": {
+    "decor-t1-statue-base": "decor-t1-statue-floor2_decor-t1-statue-base.png",
+    "decor-t1-statue-fig-turtle": "decor-t1-statue-floor2_decor-t1-statue-fig-turtle.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.75,
+   "anchorPx": [
+    52.0,
+    140.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "first floor clear",
+    "floor": 2,
+    "sharedLayer": "decor-t1-statue-base"
+   }
+  },
+  "decor-t1-statue-floor3": {
+   "size": [
+    104,
+    186
+   ],
+   "layers": [
+    "decor-t1-statue-base",
+    "decor-t1-statue-fig-crane"
+   ],
+   "files": {
+    "decor-t1-statue-base": "decor-t1-statue-floor3_decor-t1-statue-base.png",
+    "decor-t1-statue-fig-crane": "decor-t1-statue-floor3_decor-t1-statue-fig-crane.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.2,
+   "anchorPx": [
+    52.0,
+    176.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "first floor clear",
+    "floor": 3,
+    "sharedLayer": "decor-t1-statue-base"
+   }
+  },
+  "decor-t1-trophy-swarmer": {
+   "size": [
+    104,
+    138
+   ],
+   "layers": [
+    "decor-t1-trophy-stand",
+    "decor-t1-trophy-fig-swarmer"
+   ],
+   "files": {
+    "decor-t1-trophy-stand": "decor-t1-trophy-swarmer_decor-t1-trophy-stand.png",
+    "decor-t1-trophy-fig-swarmer": "decor-t1-trophy-swarmer_decor-t1-trophy-fig-swarmer.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    52.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "Monster Journal",
+    "monster": "swarmer",
+    "sharedLayer": "decor-t1-trophy-stand"
+   }
+  },
+  "decor-t1-trophy-shield": {
+   "size": [
+    104,
+    158
+   ],
+   "layers": [
+    "decor-t1-trophy-stand",
+    "decor-t1-trophy-fig-shield"
+   ],
+   "files": {
+    "decor-t1-trophy-stand": "decor-t1-trophy-shield_decor-t1-trophy-stand.png",
+    "decor-t1-trophy-fig-shield": "decor-t1-trophy-shield_decor-t1-trophy-fig-shield.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.85,
+   "anchorPx": [
+    52.0,
+    148.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "Monster Journal",
+    "monster": "shield",
+    "sharedLayer": "decor-t1-trophy-stand"
+   }
+  },
+  "decor-t1-trophy-brute": {
+   "size": [
+    104,
+    154
+   ],
+   "layers": [
+    "decor-t1-trophy-stand",
+    "decor-t1-trophy-fig-brute"
+   ],
+   "files": {
+    "decor-t1-trophy-stand": "decor-t1-trophy-brute_decor-t1-trophy-stand.png",
+    "decor-t1-trophy-fig-brute": "decor-t1-trophy-brute_decor-t1-trophy-fig-brute.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.8,
+   "anchorPx": [
+    52.0,
+    144.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "Monster Journal",
+    "monster": "brute",
+    "sharedLayer": "decor-t1-trophy-stand"
+   }
+  },
+  "decor-t1-trophy-keeper": {
+   "size": [
+    104,
+    166
+   ],
+   "layers": [
+    "decor-t1-trophy-stand",
+    "decor-t1-trophy-fig-keeper"
+   ],
+   "files": {
+    "decor-t1-trophy-stand": "decor-t1-trophy-keeper_decor-t1-trophy-stand.png",
+    "decor-t1-trophy-fig-keeper": "decor-t1-trophy-keeper_decor-t1-trophy-fig-keeper.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.95,
+   "anchorPx": [
+    52.0,
+    156.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "Monster Journal",
+    "monster": "keeper",
+    "sharedLayer": "decor-t1-trophy-stand"
+   }
+  },
+  "decor-t1-trophy-bopper": {
+   "size": [
+    104,
+    162
+   ],
+   "layers": [
+    "decor-t1-trophy-stand",
+    "decor-t1-trophy-fig-bopper"
+   ],
+   "files": {
+    "decor-t1-trophy-stand": "decor-t1-trophy-bopper_decor-t1-trophy-stand.png",
+    "decor-t1-trophy-fig-bopper": "decor-t1-trophy-bopper_decor-t1-trophy-fig-bopper.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.9,
+   "anchorPx": [
+    52.0,
+    152.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "Monster Journal",
+    "monster": "padded",
+    "sharedLayer": "decor-t1-trophy-stand"
+   }
+  },
+  "decor-t1-folding-screen": {
+   "size": [
+    184,
+    194
+   ],
+   "layers": [
+    "decor-t1-folding-screen"
+   ],
+   "files": {
+    "decor-t1-folding-screen": "decor-t1-folding-screen_decor-t1-folding-screen.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 2.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.3,
+   "anchorPx": [
+    92.0,
+    184.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    2,
+    1
+   ],
+   "place": "floor",
+   "note": "must sit against a wall: the footprint's top row is the row just below the top wall (row 1). anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "random (A6 sample kept; see DECIDE)",
+    "mustTouchWall": true,
+    "placeRule": "the footprint touches the top wall: its top row is row 1"
+   }
+  }
+ },
+ "placement": {
+  "default": "any free cell (floor pieces on floor cells, wall pieces on top-wall cells)",
+  "mustTouchWall": "pieces with info.mustTouchWall = true (the 2x1 folding screen) only go where the footprint's top row is row 1, against the top wall",
+  "tint": "random pieces: draw <id>, then <id>-tint multiplied by info.colour1, or by the drop floor's belt colour (beltStyles[belt].belt)"
+ }
+}

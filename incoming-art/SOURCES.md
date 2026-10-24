@@ -30,3 +30,5 @@ Notes:
 **A5 padded-weapon enemy samples (2026-10-24): no outside assets.** Built by `enemy-padded-weapon/source/build_padded.py`, which is adapted from the Tier 1 enemy builder, with `tools/`. The full set (move, hit, stagger, defeat) comes from the same script, also with no outside assets.
 
 **A6 decoration samples (2026-10-24): no outside assets.** Built by `decor-pool-a6/source/build_decor_a6.py` with helpers copied from the Home Dojo builder, rendered with `tools/`.
+
+**A6 Tier 1 decoration set (2026-10-24): no outside assets.** Built by `decor-tier1-a6/source/build_decor_t1.py` (helpers from the Home Dojo builder; monster colours from `enemies-tier1/source`), rendered with `tools/`.
