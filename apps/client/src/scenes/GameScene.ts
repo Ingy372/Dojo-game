@@ -82,6 +82,7 @@ import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css } from '
 import { ActionButtons } from '../input/ActionButtons';
 import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
+import type { HomeSceneData } from './HomeScene';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
@@ -1323,7 +1324,7 @@ export class GameScene extends Phaser.Scene {
     if (!this.run) return;
     const { summary, xp, profile } = bankRun(this.run, this.training, status);
     this.leaving = true;
-    const leave = (scene: string, data?: GameSceneData) => {
+    const leave = (scene: string, data?: GameSceneData | HomeSceneData) => {
       this.cameras.main.fadeOut(600, 10, 8, 16);
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start(scene, data));
     };
@@ -1333,7 +1334,7 @@ export class GameScene extends Phaser.Scene {
       this.time.delayedCall(500, () => {
         const card = restCard(this, () => {
           this.uiCamera.fadeOut(400, 10, 8, 16);
-          this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home'));
+          this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home', { fromRun: true }));
         });
         this.cameras.main.ignore(card);
       });
@@ -1376,7 +1377,7 @@ export class GameScene extends Phaser.Scene {
           },
           () => {
             this.uiCamera.fadeOut(400, 10, 8, 16);
-            this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home'));
+            this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home', { fromRun: true }));
           },
         );
         this.cameras.main.ignore(card);
@@ -1385,7 +1386,7 @@ export class GameScene extends Phaser.Scene {
     }
     sfx.floorClear();
     this.message.setText('Floor cleared!').setVisible(true);
-    this.time.delayedCall(200, () => leave('Home'));
+    this.time.delayedCall(200, () => leave('Home', { fromRun: true }));
   }
 
   /** The bow at the start of the floor: the fight waits, then a small Focus head start. */

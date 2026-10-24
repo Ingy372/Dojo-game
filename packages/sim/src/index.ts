@@ -18,6 +18,7 @@ export * from './abilities';
 export * from './training';
 export * from './progression';
 export * from './rewards';
+export * from './goals';
 export * from './power';
 export * from './dojo';
 export * from './twist';
