@@ -57,7 +57,7 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. A short spec only; no game
 
 **How it shows:**
 
-- A small banner on the Home Dojo, next to the Path card, in calm colours (no red, no fire or "danger" icons).
+- A small banner on the Home Dojo, next to the Path card, shown only once `weeksTrained` ≥ 1 (hidden before that). Visitors to the dojo see the aura but never the weeks number. Calm look: in calm colours (no red, no fire or "danger" icons).
 - The streak aura from `core-design.md` line 427 grows with `weeksTrained` and **never shrinks**.
 - Milestones (5, 10, 20, 50, 100 weeks) get a warm moment: "10 weeks of training! Your aura grows."
 
@@ -68,16 +68,16 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. A short spec only; no game
 
 **Not allowed anywhere:** reset to 0 on screen, "streak lost", "keep your streak", timers, push reminders about streaks, or guilt words.
 
-**The streak XP bonus** (`framework.md` line 81) is tied to `weeksTrained` milestones, so it also only goes up. Its size is a Manager or Jay decision (guess: +2% per 10 weeks, capped at +10%).
+**No streak XP bonus** (S9-rev, Manager decision). Weeks trained give the aura only, so a missed class never costs power.
 
 ## 3. The first Mission: the white belt's weekly thing to do
 
-**What it is:** one Mission card for the next real technique, `PathCard.next` (for a new white belt: Self-Defense #1). It shows on the Home Dojo as "This week's Mission". It follows the Missions table in `core-design.md` lines 674–686, with game-only steps until milestone 9.
+**What it is:** one Mission card for the next real technique, `PathCard.next` (for a new white belt: Self-Defense #1). It shows on the Home Dojo as "Your Mission". It first appears in session 2, or as soon as the first class is counted in the feed, whichever comes first, so session 1 never teaches it (S9-rev). It follows the Missions table in `core-design.md` lines 674–686, with game-only steps until milestone 9.
 
 **Steps (no real student data needed):**
 
 1. **Watch Sensei.** A short in-game card shows the matching seal's move and its kid-safe subtitle (from S4, PR #70). It's done when the card is closed.
-2. **Try it in the Tower.** Use the matching game action 3 times (guess) in any runs. For example: Self-Defense #1 "Off the Line" = 3 Perfect Counters; kicks = 3 Strikes. The game tracks this itself.
+2. **Try it in the Tower.** Use the matching game action 3 times (guess) in any runs. For example: Self-Defense #1 "Off the Line" = 3 Counters (any timing, not Perfect); kicks = 3 Strikes. The game tracks this itself.
 3. **"Ready to show Sensei!"** Tap the button. Sensei says: "Great! Show me in class."
 
 **How it completes:**
@@ -90,7 +90,7 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. A short spec only; no game
 
 **No pressure if missed:**
 
-- "This week's" is only a friendly label. There is no deadline, no expiry, no penalty and no reminder push.
+- The label has no time words. There is no deadline, no expiry, no penalty and no reminder push.
 - An unfinished Mission simply stays.
 - If the real sign-off comes before the steps are done, the Mission completes anyway, because class always wins.
 
@@ -102,7 +102,6 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. A short spec only; no game
 - Mission card UI, the Sensei demo card, and the closest-goal line (small).
 - Step 2 needs a mapping from each technique to a trackable game action. S4 gives #1–30; kick combos and katas wait on J2 and S3.
 - The "Ready to show Sensei" request to DojoForge is milestone 9 (Nic). Until then it's local only.
-- The streak XP bonus size needs a decision.
 - **Open question for the Manager (L3):** confirm Insights stay at 2nd belt, so the summary doesn't get crowded.
 
 ## Done-when
@@ -124,7 +123,12 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. A short spec only; no game
 
 **Mission:**
 
-- A new white-belt fake profile sees "This week's Mission: Self-Defense #1".
+- A new white-belt fake profile sees no Mission in session 1, then "Your Mission: Self-Defense #1" in session 2 or right after the first counted class.
+- Step 2 counts any Counter, not only Perfect.
+- No screen says "this week" or "This week's" (word check).
+- A profile with `weeksTrained` 0 shows no weeks banner; at 1 it shows.
+- A visitor's view of another dojo shows no weeks number.
+- No XP change from `weeksTrained` (test).
 - Steps 1–3 complete in play and show "Ready".
 - A sign-off in the fixture completes the Mission and shows the next one.
 - Leaving it untouched for weeks of fake time changes nothing and sends no messages.
