@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-24 (2:10 PM) by Dojo-ascent Manager. Catch-up covers PRs #62–#125.
+Last updated: 2026-10-24 (3:05 PM EDT) by Dojo-ascent Manager. Catch-up covers PRs #62–#136.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -110,9 +110,12 @@ Start with **M7-P1, M7-P9 and M7-P11**. Full specs are in the plan file under th
 | K9 | **Done (PR #89).** Difficulty reaches elites, plus the elites QA fixes. | — |
 | K10 | **Done (PR #105, merged Oct 24).** K9 retest fixes (COMBO off the boss bar, Sensei banner off door labels, `?elite=guarding` respects Guided). 197 tests pass. | — |
 | K11 | **Done (PRs #108, #110, #113, merged Oct 24).** M7-P1, M7-P9, M7-P11. | — |
-| K12 | **In review (PR #119).** Q3 named-monster fixes, reduced-motion switch, A7 swatch rim, Bopper art import (`?skin=bopper`), named monsters about 1 in 30 runs. **Programmer:** fix the merge conflicts with main, and move the Reduced motion switch into Settings behind the grown-up gate now that #108/#110 are in. | Programmer (conflicts) |
-| K13 | **Next after K12:** add the A6 Tier 1 decoration set (PRs #122, #124, #125; names and lines from C10, PR #123) to `content/dojo/decorations.json`, with the tint (multiply), the `mustTouchWall` placement check and the White-belt fallback colour. One PR. | K12 |
-| S4c-P1 | **After launch (first update).** Build the Injured status from break seals #31–40 (`drafts/planning/S4c-injured-status.md`, PR #120). | S4 locks built, launch |
+| K12 | **Done (PR #119, merged Oct 24).** Q3 named-monster fixes, reduced-motion switch, A7 swatch rim, Bopper art, named monsters about 1 in 30 runs. | — |
+| K13 | **Done (PRs #131, #133, #134).** A6 Tier 1 decorations imported (#131); earning built (#133): class pieces (one every 2 class dates at White, every 3 after), Journal trophies, keeper statues, folding screen, S7 surprise drops; Rest-for-now refresh fix (#134). **Manager calls:** each piece keeps the belt it dropped on; classes count once per calendar date. | — |
+| K13b | **Done (PR #135).** Monster Journal pages for the monster kinds, with plain enemy names. | — |
+| K14 | **Next (ready now).** In the Monster Journal, use the A8 silhouettes `journal-silhouette-keeper` and `journal-silhouette-padded` (PR #136) for the unmet Floor Keeper and Bopper cards instead of the big "?". Small PR. | nothing |
+| K15 | **After K14.** M7-P2 Tutorial floor (section 3b; lines from M7-P3 are ready). One PR. | K14 |
+| S4c-P1 | **After launch (first update).** Build the Injured status from break seals #31–40 (`drafts/planning/S4c-injured-status.md`, PR #120). Text is ready (S4c-C1 PR #128, S4c-C2 PR #129) and art is ready (S4c-A1 PRs #126, #130). You may adjust the proposed seal ids at import. | S4 locks built, launch |
 | K3 | Run the balance-testing computer player whenever the QA bot or the Systems Designer asks, and send Jay the report. | requests |
 
 ---
@@ -175,7 +178,9 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | C8 | **Delivered (PR #97).** Bouncy Bopper text (the padded-staff enemy, from yellow belt). | — |
 | C9 | **Delivered (PR #115).** Wording check for #108, #110, #113. | — |
 | C10 | **Delivered (PR #123).** A6 decoration names and story lines. | — |
-| S4c-C1 | **After launch.** Injured pop-up and any lines for S4c. | S4c-P1 |
+| S4c-C1 | **Delivered (PR #128).** Injured pop-up, Sensei line, Journal tip, recover line and seal suffix. **Manager calls:** lines under 80 characters are fine; keep the recover line. | — |
+| S4c-C2 | **Delivered (PR #129).** Effect text for break seals #31–40. **Manager calls:** proposed ids OK (Programmer may adjust); seal names as subtitles with the "Self-Defense #N!" callout OK; keep "and leaves them Injured" on all ten, including #32, #33, #37, as the plan says; `effectRef` as a text pointer is fine. | — |
+| C11 | **Delivered (PR #132).** Unique keeper statue and Journal trophy names and lines; in the game via #133. | — |
 | C7 | **Delivered (PRs #90, #96).** Redo the technique callouts so each subtitle matches the real technique in `docs/self-defense.md` (for example, #3 is a spinning back fist, not "Sweep"). Kid-safe subtitles only. | S4 |
 
 ---
@@ -186,10 +191,11 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | --- | --- | --- |
 | A0 | **Done (PR #10 merged; K7 wired it in).** Yellow belt Tower kit in B Bamboo Garden Hall (`incoming-art/tower-rooms-t2/`), all 28 icons (`incoming-art/icons/`), and the full elite aura set for S1 #3 (`incoming-art/elite-auras/`). Manager calls on the small questions: delete `tower-rooms-t2/proposals/` before merge (B is chosen); one blue rim for all Seals is fine. Tier 2 in-game name and whether Guarding shows which enemies it protects go to the Researcher & Planner (S1). Artist: delete the proposals folder and take "do not merge" off the PR title. | — |
 | A1 | **Samples delivered (PR #78).** **Earned cosmetics:** headbands, hand wraps matching the gear (cloth, leather, tiger stripe), gi trims, and a soft aura. 3 samples first. | nothing (J5 done) |
-| A2 | **Samples in review (PR #121).** **Manager call (Oct 24):** Rooted Form uses option A, the wide fighting stance (it reads as "feet planted" at phone size); drop option B. Use the stance idle in place of the guard idle while a Form is equipped, in fights and the Tower only. No Form variants of walk or strike for now. **Artist:** fix the merge conflicts and the failed preview build, then make the pair final. Jay can glance at it later (J13). Later Forms follow S3. | Artist (conflicts) |
-| A3 | **Badges and trophies:** the bow-question award badges (5/10/20/50/100) and a trophy-wall style for certified trophies versus game trophies. | S6 for the full set |
+| A2 | **Done (PR #121, merged Oct 24).** Rooted Form uses option A, the wide fighting stance; option B moved to `alternate-not-used/`. Use the stance idle in place of the guard idle while a Form is equipped, in fights and the Tower only. Wired in when Forms are built (after S3). Later Forms follow S3. | — |
+| A3 | **Next for the Artist (ready now; S6 delivered in PR #80).** **Badges and trophies:** the bow-question award badges (5/10/20/50/100) and a trophy-wall style for certified trophies versus game trophies. 3 samples first. | nothing |
 | A6 | **Done (PRs #122, #124, #125).** Tier 1 decoration set, 7 scrolls + 6 gear class pieces, White-belt fallback colour. Into the game under K13. | — |
-| S4c-A1 | **After launch.** Cartoon bandage and dizzy stars for Injured (no blood or bones). | S4c-P1 |
+| S4c-A1 | **Done (PRs #126, #130).** Cartoon bandage and dizzy stars for Injured: enemies only, stars at head height, 2 stars on the Floor Keeper. | — |
+| A8 | **Done (PR #136).** Monster Journal silhouettes for the Floor Keeper and the Bouncy Bopper. Into the game under K14. | — |
 | A5 | **Full set done (PR #111).** Samples PR #95. Padded-staff enemy (Bouncy Bopper) idle, wind-up and attack. Numbers in PR #102. Next: the full animation set (move, hit, stagger, defeat, staff drop). | nothing |
 | A4 | **Town square concept:** one picture of the dojo town (Student of the Month statue, doors to classmates' dojos, the Tower in the distance) for Jay to approve before any building. | nothing |
 
