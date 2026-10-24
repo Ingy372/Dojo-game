@@ -213,6 +213,17 @@ describe('levels and experience', () => {
     expect(runs).toBeCloseTo(belts[0].typicalMonthsInRank * PROGRESSION.capAtShareOfRank, 1);
   });
 
+  it('gives black belt 2 years before 2nd degree, twice the brown/black time (Jay, J6)', () => {
+    for (const f of [newWhite, white3, yellow]) {
+      const belts = loadFeed(f).school.belts;
+      const black = belts.find((b) => b.id === 'black')!;
+      const brownBlack = belts.find((b) => b.id === 'brown-black')!;
+      expect(black.typicalMonthsInRank).toBe(24);
+      expect(brownBlack.typicalMonthsInRank).toBe(12);
+      expect(tierXp(black)).toBeCloseTo(2 * tierXp(brownBlack), 5);
+    }
+  });
+
   it('stops at the level cap', () => {
     const t = train(newWhite);
     const p = newProfile();
