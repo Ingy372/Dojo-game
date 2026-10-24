@@ -1,3 +1,6 @@
+import { stepGain } from '@dojo/sim';
+import { AUDIO_TEXT, loadVolume } from './volume';
+
 /**
  * Simple sounds made in code with the phone's built-in Web Audio, so there are no
  * sound files to download. Phones only allow sound after the first touch, so
@@ -7,6 +10,22 @@ class SoundMaker {
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
   private noiseBuffer: AudioBuffer | null = null;
+  private unlockListeners: Array<() => void> = [];
+
+  /** The shared audio context (music plays on it too), or null before the first touch. */
+  context(): AudioContext | null {
+    return this.ctx;
+  }
+
+  /** Runs `fn` each time a touch unlocks sound (the music player starts from here). */
+  onUnlock(fn: () => void): void {
+    this.unlockListeners.push(fn);
+  }
+
+  /** Sound volume step 0..5 (Settings). */
+  setVolume(step: number): void {
+    if (this.master) this.master.gain.value = stepGain(step, AUDIO_TEXT.sound.full);
+  }
 
   unlock(): void {
     if (!this.ctx) {
@@ -14,7 +33,7 @@ class SoundMaker {
       if (!Ctor) return;
       this.ctx = new Ctor();
       this.master = this.ctx.createGain();
-      this.master.gain.value = 0.5;
+      this.master.gain.value = stepGain(loadVolume('sound'), AUDIO_TEXT.sound.full);
       this.master.connect(this.ctx.destination);
       // Half a second of white noise, reused for hits and whooshes.
       const len = Math.floor(this.ctx.sampleRate * 0.5);
@@ -27,6 +46,7 @@ class SoundMaker {
       });
     }
     if (this.ctx.state === 'suspended' && !document.hidden) void this.ctx.resume();
+    for (const fn of this.unlockListeners) fn();
   }
 
   /** A short punchy hit. */

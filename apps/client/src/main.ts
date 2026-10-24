@@ -5,6 +5,7 @@ import { GameScene } from './scenes/GameScene';
 import { HomeScene } from './scenes/HomeScene';
 import { StreetSmartsScene } from './scenes/StreetSmartsScene';
 import { TitleScene } from './scenes/TitleScene';
+import { music } from './audio/Music';
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
@@ -23,6 +24,11 @@ const game = new Phaser.Game({
     touch: true,
   },
   scene: [TitleScene, CreateScene, DojoScene, HomeScene, GameScene, StreetSmartsScene],
+});
+
+// Music (M7-P8): each screen that opens picks its track from content/settings/audio.json.
+game.events.once(Phaser.Core.Events.READY, () => {
+  for (const s of game.scene.scenes) s.events.on(Phaser.Scenes.Events.CREATE, () => music.setScene(s.scene.key));
 });
 
 // Pause when the app goes to the background (or a call comes in), and resume cleanly.
