@@ -20,3 +20,5 @@ Notes:
 **Batch 8 (icons, full set) and Batch 9 (Yellow belt Tower kit, working label Sunrise Garden), 2026-10-24: no outside assets.** Built from scratch by `icons/source/build_icons.py`, `tower-rooms-t2/source/build_tower_t2.py` and `build_boss_door_t2.py` with `tools/`. **Elite aura samples (S1 #3):** drawn by code with Pillow (`elite-auras/source/make_auras.py`), no outside assets.
 
 **S1 Guarding links + gold sparkle proposal (2026-10-24): no outside assets.** Drawn by code with Pillow (`elite-auras/source/make_guard_links.py`). Previews use only the project's own floor and enemy sprites.
+
+**A5 padded-weapon enemy samples (2026-10-24): no outside assets.** Built by `enemy-padded-weapon/source/build_padded.py`, which is adapted from the Tier 1 enemy builder, with `tools/`.
