@@ -1,6 +1,6 @@
 {
   "_note": "This is the only real lesson file. For the Programmer on M7-P5: once it is promoted to content/tutorial/, retire content/tutorial/sensei-lessons.json and point GameScene.ts, lessons.ts and guide.test.ts here. The warning and guided Counter lines are copied word for word from it.",
-  "notes": "DRAFT for M7-P6, revised after the M7-P13 review (PR #46). Session 1 (the tutorial, run 1) teaches only Move, the '!' warning, the guided Counter and Strike. The warning and guided Counter lines, plus 'slowdown'/'nudge', are copied exactly from content/tutorial/sensei-lessons.json. lesson-counter-hint-2 and -3 are fading follow-ups (fadingFollowUp: true) and don't count as new lessons. Bow is taught once, by the tutorial floor's tutorial-bow step, so there is no second Bow lesson at home (review S1). After session 1, at most one new lesson per session: Dash (2), Insights (3), Decorating (4). Perfect Counter, Block and Step-out have ignoresSessionLimit: true and show right away the first time they come up. Keys: id, order, trigger, screens, practice, success, retry, earliestSession, ignoresSessionLimit, fadingFollowUp, plus optional slowdown/nudge. One sentence per screen; button names match the UI.",
+  "notes": "DRAFT for M7-P6, revised after the M7-P13 review (PR #46). Session 1 (the tutorial, run 1) teaches only Move, the '!' warning, the guided Counter and Strike. The warning and guided Counter lines, plus 'slowdown'/'nudge', are copied exactly from content/tutorial/sensei-lessons.json. lesson-counter-hint-2 and -3 are fading follow-ups (fadingFollowUp: true) and don't count as new lessons. Bow is taught once, by the tutorial floor's tutorial-bow step, so there is no second Bow lesson at home (review S1). After session 1, at most one new lesson per session: Dash (2), Insights (3), Decorating (4). Perfect Counter, Block and Step-out have ignoresSessionLimit: true and show right away the first time they come up. Keys: id, order, trigger, screens, practice, success, retry, earliestSession, ignoresSessionLimit, fadingFollowUp, plus optional slowdown/nudge. One sentence per screen; button names match the UI. line-welcome-home is a plain greeting on the first return home, not a lesson. It has no practice room and doesn't count toward the session limit. {player} is the profile's display name.",
   "speaker": "sensei",
   "lessons": [
     {
@@ -93,8 +93,21 @@
       "fadingFollowUp": false
     },
     {
+      "id": "line-welcome-home",
+      "trigger": "First return to the Home Dojo, right after the tutorial's door home (plain line, not a lesson; no practice room)",
+      "screens": [
+        "Welcome home, {player}! I'm glad you're back."
+      ],
+      "practice": "",
+      "retry": "",
+      "earliestSession": 1,
+      "ignoresSessionLimit": true,
+      "fadingFollowUp": true,
+      "order": 7
+    },
+    {
       "id": "lesson-dash",
-      "order": 7,
+      "order": 8,
       "trigger": "First time two attacks will land together",
       "screens": [
         "Too many circles? Dash away.",
@@ -109,7 +122,7 @@
     },
     {
       "id": "lesson-insights",
-      "order": 8,
+      "order": 9,
       "trigger": "First Insight choice",
       "screens": [
         "After a fight, you can pick one Insight.",
@@ -124,7 +137,7 @@
     },
     {
       "id": "lesson-decorating",
-      "order": 9,
+      "order": 10,
       "trigger": "First decoration found",
       "screens": [
         "You found something for your dojo!",
@@ -139,7 +152,7 @@
     },
     {
       "id": "lesson-perfect",
-      "order": 10,
+      "order": 11,
       "trigger": "First occurrence in play (shows right away): the first Perfect Counter without help",
       "screens": [
         "Tap when the circle is almost full.",
@@ -155,7 +168,7 @@
     },
     {
       "id": "lesson-block",
-      "order": 11,
+      "order": 12,
       "trigger": "First occurrence in play (shows right away): the first Block (COUNTER pressed a little early)",
       "screens": [
         "That was a Block. Good guarding!",
@@ -170,7 +183,7 @@
     },
     {
       "id": "lesson-step-out",
-      "order": 12,
+      "order": 13,
       "trigger": "First occurrence in play (shows right away): the player walks out of a red circle",
       "screens": [
         "Smart! Stepping out works too."
