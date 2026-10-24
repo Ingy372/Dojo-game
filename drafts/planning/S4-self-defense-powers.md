@@ -74,11 +74,11 @@ All 10 build on the Joint lock line (#17 Arm Bar `counterLock` 20, #26, #28) and
 | 31 | Red/Black | Joint control | Arm Bar Release | Locks last +10 ticks. When a lock ends, the enemy is pushed back 1 tile and off-balance | `counterLock` +10, **new** `lockRelease` push 1.0 | S | #17, #28 |
 | 32 | Red/Black | Joint control | Slide to the Wrist | Locked enemies take 15% more damage | `staggerBonus` 0.15 (while locked, **new** condition) | S | #31, #19 |
 | 33 | Red/Black | Joint control (wrist lock) | Party Flex | Each lock you set gives +5 Focus | **new** `lockFocus` 5 | S | #32 |
-| 34 | Red/Black | Joint control and takedown | Lock and Slam | When a lock ends, the enemy is **thrown** instead (down 30 ticks) | `lockRelease` → `counterThrow` 30 | M | #33, #11, #27 |
+| 34 | Red/Black | Joint control and takedown | Lock and Drop | When a lock ends, the enemy is **thrown** instead (down 30 ticks) | `lockRelease` → `counterThrow` 30 | M | #33, #11, #27 |
 | 35 | Red/Black | Wrist control | Catch the Hand | A **Block** (not only a Perfect Counter) locks a quick attacker (wind-up 12 ticks or less) for 10 ticks | **new** `blockLock` 10 (quick attacks only) | M | #17, #31 |
 | 36 | Brown | Joint control | Wide Release | Release pushes +0.5 tiles further, and the pushed enemy knocks back anyone it bumps | `lockRelease` +0.5, **new** flag `releaseBumps` | S | #31 |
 | 37 | Brown | Joint control | Steady Hold | While you hold a lock, the Counter window is 1 tick longer | `counterWindow` 1 (while locking, condition from #26) | S | #26 |
-| 38 | Brown | Joint control and takedown | Lock to Takedown | A thrown enemy stays down +15 ticks. Lock and Slam works on shields and Guarding elites | `counterThrow` +15, `throwAll` on lock throws | S | #34, #27, #22 |
+| 38 | Brown | Joint control and takedown | Lock to Takedown | A thrown enemy stays down +15 ticks. Lock and Drop works on shields and Guarding elites | `counterThrow` +15, `throwAll` on lock throws | S | #34, #27, #22 |
 | 39 | Brown | Joint control | Release and Go | Release also makes every enemy within 1.5 tiles off-balance, and refills Dash | `lockRelease` + `breakFree` 1.5 + `dashOnBlock` | M | #36, #29, #30 |
 | 40 | Brown | Joint control and takedown | Master Hold | Locks last +10 ticks, and enemies thrown from a lock take 25% more damage while down | `counterLock` +10, `downBonus` +0.25 on lock throws | S | #34, #38, #12 |
 
