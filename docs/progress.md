@@ -418,3 +418,5 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - While a player is on an automatic Guided, the Home Dojo shows "You're on Guided. Change anytime in Settings."
 - `TrainingState` now has `ageBand` from the feed.
 - New tests in `packages/sim/test/difficulty.test.ts`. In the browser: the new white belt starts on Guided; tapping Steady sticks after a reload; the green belt starts on Standard. 204 tests pass, 1 skipped.
+
+- **2026-10-24 (K11 update, #108):** P1 reworked per Manager + Learning Designer: everyone starts on Standard, kind Guided offer after 2 losses on one floor (max once a day, never automatic), one-time home line, "The usual pace", 6-9 fixture. Screens: /workspace/k11-p1-{667,844}-{home-line,home-again,settings,offer,after-offer}.png.

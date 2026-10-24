@@ -466,4 +466,15 @@ From section 1 of `docs/work-board.md`.
 - **Who starts on Guided:** a new profile (no runs started or played) whose feed age band tops out at 9 or under, **or** a white belt (tier 1) with 0 sign-offs at that belt (Manager decision, Oct 24). Everyone else starts on Standard.
 - **Kid-facing names:** Guided / Steady / Challenge. "Standard" stays the internal id (`standard`) and is the default.
 - **Never switched off a choice:** the first pick in Settings saves `difficultyChosenByPlayer: true`, and the game never changes it after that. A profile that already has runs but no difficulty gets Standard, not Guided.
-- **Age band parsing:** the top number of the band ("6-9" → 9) is compared with `guidedUpToAge`. All four fake profiles are "10-13", so profile 1 gets Guided through the white-belt rule.
+- ~~**Age band parsing:** the age-based Guided default~~ was removed by the Manager call below (2026-10-24).
+
+## M7-P1 update: everyone starts on Standard (Manager + Learning Designer, 2026-10-24)
+
+- **Everyone starts on Standard** ("Steady" to kids). No age-based Guided default and no age question. `settleDifficulty(profile)` only fills an empty difficulty.
+- **Kind Guided offer:** after `offerAfterLosses` (2) lost runs in a row on the same floor (belt tier), a card offers Guided before the run-over card. A clear resets the count; resting doesn't count. At most once a day (`guidedOfferedOn`, local date). The text never mentions losing (a test checks). It never switches by itself: only "Try Guided" changes it.
+- **Ambiguity:** the call said "offer Steady (Guided)". In our content Steady is Standard's kid name, so the offer is for Guided and the "no" button is "Keep it Steady". Flag if Steady was meant to be renamed Guided.
+- **Home line** "You're on {name}…" shows once ever (`difficultyLineShown`).
+- **Standard card** now reads "The usual pace."
+- **Guided in Settings:** still on the Settings choice screen. In P1 that screen isn't behind a grown-up gate; #110 (P9) adds the grown-up gate. Merge #108 before #110.
+- **Fixture:** `fixtures/5-white-belt-age-6-9.json` (Mia R., ageBand 6-9) for testing young players; it starts on Standard like everyone.
+- All text is in content/settings/difficulty.json.

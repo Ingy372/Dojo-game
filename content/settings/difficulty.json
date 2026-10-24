@@ -1,14 +1,31 @@
 {
-  "_note": "M7-P1. Who starts on Guided, and the words on the difficulty choice screen. 'standard' is the internal id; kids see 'Steady'. Standard is the default.",
-  "guidedUpToAge": 9,
-  "guidedNewBeltTier": 1,
+  "_note": "M7-P1. Everyone starts on Standard (kids see 'Steady'). After offerAfterLosses lost runs in a row on the same floor, Guided is kindly offered (at most once a day, never mentions losing, never switches by itself). homeLine shows once. Guided can also be picked any time in Settings.",
+  "offerAfterLosses": 2,
   "button": "Settings",
   "title": "How do you like to train?",
   "footer": "You can change this any time in Settings.",
-  "homeLine": "You're on Guided. Change anytime in Settings.",
   "choices": [
-    { "id": "guided", "name": "Guided", "text": "More time to counter. Great for learning the moves." },
-    { "id": "standard", "name": "Steady", "text": "The normal way to train." },
-    { "id": "challenge", "name": "Challenge", "text": "Enemies wind up faster. Less time to counter." }
-  ]
+    {
+      "id": "guided",
+      "name": "Guided",
+      "text": "More time to counter. Great for learning the moves."
+    },
+    {
+      "id": "standard",
+      "name": "Steady",
+      "text": "The usual pace."
+    },
+    {
+      "id": "challenge",
+      "name": "Challenge",
+      "text": "Enemies wind up faster. Less time to counter."
+    }
+  ],
+  "offer": {
+    "title": "Want a different pace?",
+    "line": "Guided gives you more time to spot each move and counter. You can switch back any time in Settings.",
+    "yes": "Try Guided",
+    "no": "Keep it Steady"
+  },
+  "homeLine": "You're on {name}. You can change it any time in Settings."
 }

@@ -153,7 +153,7 @@ export class DojoScene extends Phaser.Scene {
     this.dojo = homeDojo(this.profile);
     this.training = currentTraining();
     const hoursAway = returnToDojo(this.dojo, CONTENT.dojo, Date.now());
-    ensureDifficulty(this.profile, this.training);
+    ensureDifficulty(this.profile);
     writeSave(this.profile);
 
     this.mode = 'play';
@@ -790,9 +790,12 @@ export class DojoScene extends Phaser.Scene {
       this.button(width - pad - 80 - 8 - 100, 8, 100, 32, 'Decorate', 0x8a5a35, 14, () => this.setDecorating(true));
       this.button(width - pad - 80 - 8 - 100 - 8 - 70, 8, 70, 32, 'Look', 0x3a6ea5, 14, () => this.changeLook());
       this.button(width - pad - 80 - 8 - 100 - 8 - 70 - 8 - 90, 8, 90, 32, DIFFICULTY_TEXT.button, 0x3a3a4a, 14, () => this.openDifficulty());
-      // A new young player was put on Guided for them: one line says so (M7-P1).
-      if (this.profile.difficulty === 'guided' && !this.profile.difficultyChosenByPlayer) {
-        this.text(pad, TOP + 6, DIFFICULTY_TEXT.homeLine, 14, '#fff6e0', true).setStroke('#14121c', 5);
+      // One line says which difficulty they're on, shown once ever (M7-P1).
+      if (!this.profile.difficultyLineShown && this.profile.difficulty) {
+        const name = DIFFICULTY_TEXT.choices.find((c) => c.id === this.profile.difficulty)?.name ?? '';
+        this.text(pad, TOP + 6, DIFFICULTY_TEXT.homeLine.replace('{name}', name), 14, '#fff6e0', true).setStroke('#14121c', 5);
+        this.profile.difficultyLineShown = true;
+        writeSave(this.profile);
       }
       if (streetSmartsOpen(this.training.tier, streetUi.unlockTier)) this.button(width - pad - 130, 46, 130, 32, streetUi.button, 0x3aa57a, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
       // The Monster Journal, from the belt where named monsters start showing up.
