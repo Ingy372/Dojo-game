@@ -18,7 +18,7 @@ Every promotion requires 1 kata and the next 5 self-defense techniques. Promotio
 | --- | --- | --- | --- | --- |
 | White → Yellow | Basic Form 1 | #1–5 | 5 | #1 |
 | Yellow → Orange | Basic Form 2 | #6–10 | 10 | #2 |
-| Orange → Green | Key On | #11–15 | 15 | #3 |
+| Orange → Green | Keon | #11–15 | 15 | #3 |
 | Green → Blue | David and Goliath | #16–20 | 20 | #4 |
 | Blue → Red | Pinon 1 | #21–25 | 25 | #5 |
 | Red → Red/Black | Pinon 2 | #26–30 | 30 | #6 |
@@ -61,4 +61,4 @@ The kata names are in the table above. Their descriptions are still a work in pr
 2. **Kick combinations #8–12** for black belt, one line each (#1–7 are in the Kick combos section above).
 3. **One line on each kata's character,** for example "slow and rooted" or "fast, with turns." This decides how each Form plays.
 
-**Settled (Jay, 2026-10-19):** the spellings in this file are the ones students see (Key On, Pinon 1–3, Nahanchi). Brown/Black → Black is Possi with Self-Defense #41–45.
+**Settled (Jay, 2026-10-19):** the spellings in this file are the ones students see (Keon, Pinon 1–3, Nahanchi). Brown/Black → Black is Possi with Self-Defense #41–45.
