@@ -3,6 +3,7 @@
   "enemyDropChance": {
     "swarmer": 0.035,
     "shield": 0.1,
+    "bopper": 0.1,
     "brute": 0.15
   },
   "chests": {

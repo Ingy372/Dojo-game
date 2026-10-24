@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { reducedMotion, setReducedMotion } from '../game/motion';
 import {
   BOW,
   DOJO,
@@ -45,6 +46,7 @@ import { DIFFICULTY_TEXT, ensureDifficulty } from '../game/difficulty';
 import { PLAY_TIME_TEXT, isPlayTimeUp, touchPlayClock } from '../game/playTime';
 import { bankRun, savedRun } from '../game/runSave';
 import RESUME_TEXT from '../../../../content/settings/run-resume.json';
+import MOTION_TEXT from '../../../../content/settings/motion.json';
 import streetUi from '../../../../content/street-smarts/ui.json';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
@@ -932,6 +934,19 @@ export class DojoScene extends Phaser.Scene {
     const gate = this.add.rectangle(gx, gy, gw, gh, 0x3a3a4a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35).setInteractive();
     const gateLabel = this.add.text(gx + gw / 2, gy + gh / 2, pt.grownUpButton, { fontFamily: FONT, fontStyle: 'bold', fontSize: '14px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp());
     box.add([gate, gateLabel]);
+    // Reduced motion (K12): a switch for this device, on by default if the device asks for less motion.
+    const motionLabel = () => `${MOTION_TEXT.label}: ${reducedMotion() ? MOTION_TEXT.on : MOTION_TEXT.off}`;
+    const mw = Math.min(210, gx - 24);
+    const mx = 12;
+    const motion = this.add.rectangle(mx, gy, mw, gh, 0x3a3a4a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35).setInteractive();
+    const motionText = this.add.text(mx + mw / 2, gy + gh / 2, motionLabel(), { fontFamily: FONT, fontStyle: 'bold', fontSize: '14px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp());
+    const motionHint = this.add.text(mx, gy - 6, MOTION_TEXT.hint, { fontFamily: FONT, fontSize: '13px', color: '#b9ad99', wordWrap: { width: Math.max(mw, 160) } }).setOrigin(0, 1).setResolution(crisp());
+    box.add([motion, motionText, motionHint]);
+    motion.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+      sfx.unlock();
+      setReducedMotion(!reducedMotion());
+      motionText.setText(motionLabel());
+    });
     gate.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
       sfx.unlock();
       box.destroy();
@@ -1288,6 +1303,7 @@ export class DojoScene extends Phaser.Scene {
   }
 
   private sparkle(at: Vec2, count: number, color = 0xfff6e0): void {
+    if (reducedMotion()) return;
     for (let i = 0; i < count; i++) {
       const s = this.add.star(at.x * TILE + (Math.random() - 0.5) * TILE * 1.4, at.y * TILE + (Math.random() - 0.5) * TILE * 1.2, 4, 2, 7, color);
       s.setScale(0.3);

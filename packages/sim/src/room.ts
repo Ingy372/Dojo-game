@@ -46,6 +46,8 @@ export interface Room {
   challenge: RoomChallenge | null;
   /** The earliest room of a floor this room can be (1 = first). Harder rooms start later. */
   earliestRoom: number;
+  /** The lowest belt tier that can get this room (1 = White belt, 2 = Yellow belt). */
+  minBeltTier: number;
 }
 
 export interface EnemySpawn {
@@ -167,7 +169,14 @@ export function loadRoom(data: unknown): Room {
     earliestRoom = raw.earliestRoom;
   }
 
-  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns, kind, doors, chest, shrine, parSeconds, challenge, earliestRoom };
+  let minBeltTier = 1;
+  if (raw.minBeltTier !== undefined) {
+    if (typeof raw.minBeltTier !== 'number' || !Number.isInteger(raw.minBeltTier) || raw.minBeltTier < 1) {
+      throw new RoomError(id, '"minBeltTier" must be a whole number, 1 or more');
+    }
+    minBeltTier = raw.minBeltTier;
+  }
+  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns, kind, doors, chest, shrine, parSeconds, challenge, earliestRoom, minBeltTier };
 }
 
 /**

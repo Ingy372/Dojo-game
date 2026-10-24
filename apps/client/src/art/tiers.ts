@@ -32,3 +32,8 @@ export function testAura(search = window.location.search): AuraKind | null {
 export function auraId(kind: AuraKind, enemyId: string): string {
   return `aura-${kind}-${enemyId === 'floor-keeper' ? 'keeper' : enemyId}`;
 }
+
+/** Enemies drawn from their own art pack instead of the Tier 1 enemy pack (pack, art id). */
+export const ENEMY_PACKS: Record<string, { pack: PackName; id: string }> = {
+  bopper: { pack: 'enemy-bopper', id: 'bopper' },
+};

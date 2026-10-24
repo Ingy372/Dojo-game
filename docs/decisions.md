@@ -463,6 +463,21 @@ From section 1 of `docs/work-board.md`.
 - **The Sensei banner checks the door labels on screen** (they scroll with the room), so the fix works in every room, not just the Keeper's.
 - **The forced-elite test link keeps the belt and first-floor bypass**, but Guided still wins over Guarding (it becomes Swift, the same swap as normal play).
 
+## K12: Q3 named-monster fixes (2026-10-24)
+- **Equal mix over a steady rate.** The swap to another named monster whose type is in the room (K-M7) made Zippy Zoom about 45%. It's gone: the rolled monster waits for a battle room with its type. The roll is still 5%, but a few floors never offer such a room, so slightly fewer floors get one. This replaces the "Earliest wave" swap note above.
+- **Test links are steered, normal runs are not.** `?named=` runs pick rooms with the asked-for type from room 3 and allow a challenge room, so the link always works whatever doors are taken. Normal runs never steer room picks, so the "same rooms with or without it" rule still holds.
+- **Reduced motion is a device setting** (localStorage `dojo.reducedMotion`), not part of the profile, because it's about the screen, like the OS setting it starts from. The switch is on the Title screen, because Settings (#108) isn't on main yet. After #108/#110 merge it should move into Settings (behind the grown-up gate) and leave the Title screen.
+- **What stays with reduced motion:** wind-up poses, the telegraph glow, the shield tap and the player's red hurt tint. These are information, not decoration.
+- **This replaces the K-M7 note** that reduced motion is OS-only and turns off only the stamp shake.
+
+## K12: named monsters rarer (2026-10-24)
+- `rules.chancePerRun` in content/named/named.json goes from 0.05 to **0.0333**, about 1 in 30 eligible runs (Manager call). The other spawn rules stay the same: yellow belt or higher, after the first 3 runs, room 3 or later, battle rooms only, at most one per floor, no elite. The 5% roll mentioned above is replaced.
+- Because some floors have no battle room with the rolled type, the measured rate is about 2.8% over 1,000 seeds. The test band is now 2–4.5%.
+
+## K12: Bouncy Bopper art imported (2026-10-24)
+- Merged main (#111, A5 full set). New pack `enemy-bopper` in approved.json (the source files keep the `padded` names, per Jay). `import_art.py` was re-run. That also refreshed the player packs to the A7 art Jay approved (`#34303f` black hair swatch), which main had not re-packed yet.
+- Bopper has no content json yet, because HP, power and push-paw power are still DECIDE items (#102). For now it appears only through the test link `?skin=bopper`, which draws Bopper on every enemy and changes only the picture (like `?aura=`). It is not added to any spawn pool.
+
 ## M7-P1: starting difficulty (2026-10-24)
 - **Who starts on Guided:** a new profile (no runs started or played) whose feed age band tops out at 9 or under, **or** a white belt (tier 1) with 0 sign-offs at that belt (Manager decision, Oct 24). Everyone else starts on Standard.
 - **Kid-facing names:** Guided / Steady / Challenge. "Standard" stays the internal id (`standard`) and is the default.
@@ -515,3 +530,10 @@ From section 1 of `docs/work-board.md`.
 
 ## C9 wording (PR #115) on P11 (2026-10-24)
 - Resume card line: "You'll start again at room {room}." (the "of {total}" part is dropped). Buttons stay "Keep climbing" / "Rest for now" in normal case.
+
+## K12b — Reduced motion in Settings; Bopper as a real enemy (2026-10-24)
+- Reduced motion toggle moved from Title to the Settings sheet (bottom-left, beside "For grown-ups"); fits 667 and 844 wide.
+- Bopper (`content/enemies/bopper.json`): HP 110, damage 16 (#102), disarmed push 8 (#118) via new `weapon.disarmedPower`. Wobbly 6 skipped.
+- Spawn gating is room-level: new `minBeltTier` on rooms (default 1); `bopper-yard` and `staff-and-shield` require Yellow (tier 2).
+- Bopper drop chance 0.1 (same as shield) — my guess, not a decided number.
+- `?skin=bopper` removed (Bopper is real now); use `?room=bopper-yard` to test.

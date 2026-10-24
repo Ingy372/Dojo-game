@@ -1017,8 +1017,11 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
   const center = e.attackCenter;
   if (!center) return;
   const a = currentAttack(e);
-  // A disarmed enemy's swing is weaker (this swing only).
-  const weak = 1 - e.disarmed;
+  // A disarmed enemy's swing is weaker (this swing only). An enemy with a weapon (Bouncy Bopper)
+  // drops it and pushes instead, at the push's own power (A5, #118).
+  const pushing = e.disarmed > 0 && e.def.weapon !== null;
+  const power = pushing ? e.def.weapon!.disarmedPower : e.def.power;
+  const weak = pushing ? 1 : 1 - e.disarmed;
   e.disarmed = 0;
   for (const id of Object.keys(world.players).sort()) {
     const p = world.players[id];
@@ -1059,7 +1062,7 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       // Block: half damage, no stagger. The combo is kept.
       p.guardTicks = 0;
       const share = Math.max(0.1, COMBAT.counter.blockDamageMultiplier - p.mods.blockCut);
-      const dmg = damage(e.def.power, a.strength * share * weak, guardOf(p));
+      const dmg = damage(power, a.strength * share * weak, guardOf(p));
       world.events.push({ kind: 'block', playerId: p.id, enemyId: e.id, damage: dmg });
       if (p.mods.dashOnBlock) p.dashCooldown = 0;
       hurt(world, p, dmg);
@@ -1070,7 +1073,7 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       }
     } else {
       // Hit: full damage, combo resets.
-      const dmg = damage(e.def.power, a.strength * weak, guardOf(p));
+      const dmg = damage(power, a.strength * weak, guardOf(p));
       p.combo = 0;
       p.counterChain = 0;
       world.events.push({ kind: 'hit', playerId: p.id, enemyId: e.id, damage: dmg });

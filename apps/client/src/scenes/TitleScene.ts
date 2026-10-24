@@ -4,6 +4,7 @@ declare const __BUILD_TIME__: string;
 import { loadArt } from '../art/art';
 import { hasLook, playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
+import { reducedMotion } from '../game/motion';
 
 export class TitleScene extends Phaser.Scene {
   private title!: Phaser.GameObjects.Text;
@@ -56,7 +57,14 @@ export class TitleScene extends Phaser.Scene {
       })
       .setOrigin(0.5)
       .setResolution(crisp);
-    this.tweens.add({ targets: this.prompt, alpha: 0.35, duration: 900, yoyo: true, repeat: -1 });
+    // The pulse stops with reduced motion.
+    const pulse = this.tweens.add({ targets: this.prompt, alpha: 0.35, duration: 900, yoyo: true, repeat: -1 });
+
+    // Reduced motion (K12; the switch is in Settings) stops it.
+    if (reducedMotion()) {
+      pulse.pause();
+      this.prompt.setAlpha(1);
+    }
 
     // Which version this is (when it was built), to check a phone has the newest one.
     const built = new Date(__BUILD_TIME__);
@@ -65,7 +73,10 @@ export class TitleScene extends Phaser.Scene {
       .text(8, 6, `Version: ${stamp}`, { fontFamily: 'system-ui, sans-serif', fontSize: '11px', color: '#6f6658' })
       .setResolution(crisp);
 
-    this.input.once(Phaser.Input.Events.POINTER_UP, () => {
+    let started = false;
+    this.input.on(Phaser.Input.Events.POINTER_UP, () => {
+      if (started) return;
+      started = true;
       // Phones only allow sound after a touch, so switch it on here.
       sfx.unlock();
       const params = new URLSearchParams(window.location.search);

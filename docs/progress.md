@@ -417,6 +417,19 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - `?named=` (and other test-link) runs no longer write the Monster Journal or give the sticker. New test in packages/sim/test/named.test.ts; checked in the browser too (journal stayed empty).
 - 198 tests pass, 1 skipped; typecheck and build clean.
 
+## K12: Q3 named-monster fixes (2026-10-24)
+- From the Q3 QA report (drafts/qa/2026-10-24-q3-named-monsters.md).
+- Sensei's banner wraps long lines and uses 20px text on screens under 720px wide, so the "freed" line fits at 667x375. The gold "Decoration: … Sticker" label moves under the banner whenever it would sit on it, every frame.
+- `?named=X` without `&room=` always gives X: from room 3, test runs pick battle (or challenge) rooms that have X's type, and X can be in a challenge room on a test run only. Checked on 200 seeds for each monster.
+- Equal mix: a rolled named monster no longer swaps to "another monster whose type is in the room". It waits for the first battle room from room 3 that has its type. Over 6,000 floors each monster is about 1/3. The overall rate at tier 2 drops a little (3.9% on the 1,000-seed test).
+- The first named monster a student ever meets also gets Sensei's journal intro ("You met a named monster! I've started your Monster Journal.") before its greeting.
+- Name plates move above the head if another creature or the player is under its feet. Near the top of the screen (under the HUD), the head tag moves under the feet. Both hide once it's beaten.
+- Reduced motion: a "Reduced motion: On/Off" switch on the Title screen (bottom right). It saves on this device and starts On if the phone asks for reduced motion. When on, it turns off screen shake (hits and the stamp), named sparkles, the dash trail, the white hit flash, screen flashes, the golden "set free" flash and stars, the Dojo sparkles and the Title pulse. Text is in content/settings/motion.json.
+- Character creator: dark swatches get a thicker, solid light rim (A7).
+- 200 tests pass (1 skipped), typecheck and build clean. Screenshots: /workspace/k12-{667,844}-{title-motion-on,title-motion-off,swatches,intro-plate,freed}.png.
+- **2026-10-24 (K12, #119):** named monsters are rarer: chancePerRun 0.0333, about 1 in 30 eligible runs, measured at 2.8%. The frequency test band is now 0.02–0.045.
+- **2026-10-24 (K12, #119):** main merged in (#111). Bopper art imported as `enemy-bopper`, viewable with `?skin=bopper`. Screenshots: /workspace/k12-{667,844}-bopper-2.png.
+
 ## K11 / M7-P1: Guided by default for young and new players (2026-10-24)
 - A new profile (no runs yet) starts on **Guided** if the student's age band tops out at 9 or under, or they're a white belt with 0 sign-offs. Everyone else starts on **Standard** (the default). The rules are in `content/settings/difficulty.json`.
 - `profile.difficulty` now always gets a real value. It is set the first time the Home Dojo opens or a Tower run starts (`settleDifficulty`). It is never changed again after the player picks one: `difficultyChosenByPlayer` is saved when they do.
@@ -451,3 +464,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - **2026-10-24 (C9 wording, #108):** Content Designer wording (PR #115) applied to content/settings/difficulty.json. The Guided offer now uses the #114 wording ("Want more time to COUNTER?", "Try it" / "No thanks"), which settles the Guided/Steady question. The ✓ on the picked difficulty is confirmed. Menu buttons are in normal case; only fight buttons are in caps.
 - **2026-10-24 (C9 wording, #110):** merged P1's C9 update. play-time.json wrap-up, rest and help lines follow C9. The rest card shows all 3 lines.
 - **2026-10-24 (C9 wording, #113):** merged P9's C9 update; run-resume line per C9.
+
+## K12b (2026-10-24)
+- Merged origin/main. Reduced motion now in Settings. Bopper added as data-driven enemy, Yellow belt+, with disarmed push. Tests 218 passed / 1 skipped; typecheck + build clean. Screenshots k12b-*.png.
