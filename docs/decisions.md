@@ -678,3 +678,8 @@ From the review in PR #151 (drafts/learning/m7-p13-recheck.md). Manager calls:
    - Unchanged on purpose: move names ("Perfect Counter", "Block"), meters ("Focus", "Health"), the Virtue/Form names on the Abilities cards, and the Scroll's lesson titles ("Counter", "Strike", "Dash").
 5. **C5:** goals card real-dojo line: "Get {X} signed off to unlock …" → "Show Sensei {X} in class to unlock …", and "Get {X} signed off in class." → "Show Sensei {X} in class."
 6. **C6:** Sensei's Seal celebration "You are approved to test." → "You're ready for your next belt test!"
+
+## K22b Locked-card wording and wrapping Abilities cards (2026-10-24)
+Manager calls:
+1. The locked ability card's line "Sign off {X} to unlock (catch-up)" is now "Show Sensei {X} in class to unlock" (e.g. "Show Sensei Self-Defense #4 in class to unlock"). Both this line and the goals card's real-dojo goal use one template, `showSensei()` in packages/sim/src/goals.ts. The "(catch-up)" tag is dropped: it no longer reads well after "to unlock", and the Your Next Step card already says "Catch-up from {belt}".
+2. Abilities cards wrap their description and status lines instead of shrinking them and cutting them off with "…" (Rooted Form, Create Distance). Each card is as tall as its text, and a page holds as many cards as fit. Text unchanged. At 667 wide this gives 6 pages instead of 4 for the yellow-belt fixture.

@@ -514,3 +514,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## K22 / M7-P13 Learning Designer fixes (2026-10-24)
 - The goals card now starts at session 2. In session 1 the first return home shows only the welcome line and the cascade. Kid text fixes: "glowing COUNTER" (no colour-only pointer), "until you go home", fight-button capitals (COUNTER/STRIKE/DASH), "Show Sensei {X} in class", and "You're ready for your next belt test!". Every change is listed in decisions.md.
 - Tests 285 passed / 1 skipped (new goals test: session 1 never shows the card; session 2 does, once). Typecheck and build pass. Screenshots at 667×375: /workspace/k22-*.png.
+
+## K22b Locked-card wording and wrapping Abilities cards (2026-10-24)
+- Locked ability cards say "Show Sensei {X} in class to unlock" (same template as the goals card). Abilities descriptions wrap instead of being cut off. Tests 285 passed / 1 skipped; typecheck and build pass. Screenshots /workspace/k22b-{667,844}-abilities*.png.
