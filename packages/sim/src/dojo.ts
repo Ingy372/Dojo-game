@@ -12,7 +12,8 @@ import { loadRoom, type Room, type RoomKind } from './room';
 
 export type DecorationPlace = 'floor' | 'wall';
 export type DecorationClean = 'mat' | 'rack';
-export type DecorationSource = 'starter' | 'tower';
+/** starter: Sensei's gifts; tower: found in chests; named: a named monster's sticker (first win only, never in chests). */
+export type DecorationSource = 'starter' | 'tower' | 'named';
 
 export interface DecorationDef {
   id: string;
@@ -121,7 +122,7 @@ export function loadDojoContent(roomData: unknown, decorationsData: unknown): Do
       return n;
     };
     const source = text('source') as DecorationSource;
-    if (source !== 'starter' && source !== 'tower') throw new DojoError(`${where}'s "source" must be starter or tower`);
+    if (source !== 'starter' && source !== 'tower' && source !== 'named') throw new DojoError(`${where}'s "source" must be starter, tower or named`);
     const place = text('place') as DecorationPlace;
     if (place !== 'floor' && place !== 'wall') throw new DojoError(`${where}'s "place" must be floor or wall`);
     const clean = (it.clean ?? null) as DecorationClean | null;

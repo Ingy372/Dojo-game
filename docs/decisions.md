@@ -446,3 +446,13 @@ From section 1 of `docs/work-board.md`.
 ## K9: elites QA fixes (2026-10-24)
 - **One wiring point for difficulty.** `runDifficulty(profile, testLink)` in packages/sim/src/profile.ts. The M7-P1 choice screen isn't on main yet, so the profile field starts at null (= the default); M7-P1 just sets it. GameScene builds the room from `run.difficulty`; the `?difficulty=` link only still feeds the practice room directly.
 - **Boss bar in the HUD top strip** (y 16, width fits between the player's bars and the room label), never over enemy heads.
+
+## M7-N1: named monsters (2026-10-24)
+- **Stickers are decorations with source `named`.** The loader fails if a monster's sticker isn't one, so a typo can't hand out a missing prize.
+- **`runsStarted` counts runs begun** (the "first 3 runs" rule). Older saves start it at `runsPlayed`. Test-link runs don't count.
+- **Its own random stream.** The named roll uses a separate rng seeded from the run seed, so rooms, enemies and elites stay the same as a run without it, up to the named room.
+- **Earliest wave.** The named monster replaces an enemy in its type's first wave, so it's there when the room opens. If the rolled type isn't in the room, another tier monster whose type is there takes its place.
+- **No elite in the named room.** Elites are still picked (so the rng doesn't shift) and then dropped; they don't count toward the elite cap.
+- **Forced test links** (`?named=`) put it in the first battle room from room 3, or in any room with `&room=`. Like elite test links giving decorations, these runs still record the journal and the sticker.
+- **Reduced motion** is the phone's `prefers-reduced-motion` setting (the game has no setting of its own yet); it turns off the stamp shake only.
+- **Journal button text** is content (`journalButton`), and the button shows from `rules.minBeltTier`.

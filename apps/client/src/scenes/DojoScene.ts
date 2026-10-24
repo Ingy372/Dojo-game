@@ -49,6 +49,8 @@ import { loadLook, playerPacks } from '../game/look';
 import { bowPrompt, playBow } from '../ui/bow';
 import { Celebrations } from '../ui/Celebrations';
 import { FONT, crisp } from '../ui/theme';
+import { NAMED_PACK } from '../game/named';
+import { openMonsterJournal } from '../ui/MonsterJournal';
 
 /** Pixels per tile in the room (before it's scaled to fit the screen). */
 const TILE = 48;
@@ -141,7 +143,7 @@ export class DojoScene extends Phaser.Scene {
   }
 
   preload(): void {
-    loadArt(this, [...playerPacks(), 'dojo']);
+    loadArt(this, [...playerPacks(), 'dojo', NAMED_PACK]);
   }
 
   create(): void {
@@ -727,6 +729,8 @@ export class DojoScene extends Phaser.Scene {
    */
   private decorationImages(it: DojoItem): Phaser.GameObjects.Image[] {
     const def = decorationDef(CONTENT.dojo, it.id);
+    // Named-monster stickers are drawn in the named-monster pack.
+    if (def.source === 'named') return addStatic(this, NAMED_PACK, it.id, 0, 0);
     if (def.clean === 'rack' && it.crooked > 0) return addStatic(this, 'dojo', `${it.id}-crooked`, 0, 0, it.crooked - 1);
     const images = addStatic(this, 'dojo', it.id, 0, 0);
     if (def.clean === 'mat' && it.scuffed) {
@@ -783,6 +787,11 @@ export class DojoScene extends Phaser.Scene {
       this.button(width - pad - 80 - 8 - 100, 8, 100, 32, 'Decorate', 0x8a5a35, 14, () => this.setDecorating(true));
       this.button(width - pad - 80 - 8 - 100 - 8 - 70, 8, 70, 32, 'Look', 0x3a6ea5, 14, () => this.changeLook());
       if (streetSmartsOpen(this.training.tier, streetUi.unlockTier)) this.button(width - pad - 130, 46, 130, 32, streetUi.button, 0x3aa57a, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
+      // The Monster Journal, from the belt where named monsters start showing up.
+      if (this.training.tier >= CONTENT.named.rules.minBeltTier) {
+        const x = width - pad - (streetSmartsOpen(this.training.tier, streetUi.unlockTier) ? 130 + 8 : 0) - 100;
+        this.button(x, 46, 100, 32, CONTENT.named.journalButton, 0x6b5a2a, 14, () => this.openJournal());
+      }
     }
   }
 
@@ -824,6 +833,17 @@ export class DojoScene extends Phaser.Scene {
     for (const [x, y, label, dx, dy] of buttons) this.button(x, y, a, a, label, 0x3a3a4a, 22, () => this.nudge(dx, dy));
   }
 
+
+  /** The Monster Journal page (read-only keepsake). */
+  private openJournal(): void {
+    const before = this.mode;
+    this.mode = 'menu';
+    this.controls.reset();
+    openMonsterJournal(this, loadSave().monsterJournal, () => {
+      this.mode = before === 'menu' ? 'play' : before;
+      this.renderUi();
+    });
+  }
 
   /** Asks how the player likes to move decorations: tap the spot, or an arrow pad. */
   private chooseMoveStyle(): void {

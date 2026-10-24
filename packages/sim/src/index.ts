@@ -24,3 +24,4 @@ export * from './twist';
 export * from './lessons';
 export * from './elite';
 export * from './streetSmarts';
+export * from './named';

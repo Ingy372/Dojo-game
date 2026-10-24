@@ -5,6 +5,7 @@ import { loadAbilities, type AbilityContent } from './abilities';
 import { loadDojoContent, type DojoContent } from './dojo';
 import { loadElites, type EliteRules } from './elite';
 import { loadEnemy, type EnemyDef } from './enemy';
+import { loadNamed, type NamedContent } from './named';
 import { loadInsights, type InsightDef } from './insight';
 import { loadLootTables, type LootTables } from './loot';
 import { loadRoom, type Room, type RoomKind } from './room';
@@ -19,6 +20,7 @@ export interface Content {
   dojo: DojoContent;
   twists: TwistContent;
   elites: EliteRules;
+  named: NamedContent;
 }
 
 export interface RawContent {
@@ -32,6 +34,7 @@ export interface RawContent {
   decorations: unknown;
   twists: unknown;
   elites: unknown;
+  named: unknown;
 }
 
 export function loadContent(raw: RawContent): Content {
@@ -67,14 +70,20 @@ export function loadContent(raw: RawContent): Content {
   for (const id of Object.keys(loot.enemyDropChance)) {
     if (!enemies[id]) throw new Error(`Loot drops list enemy "${id}", which doesn't exist`);
   }
+  const dojo = loadDojoContent(raw.dojoRoom, raw.decorations);
+  const named = loadNamed(raw.named, enemies);
+  for (const m of named.monsters) {
+    if (!dojo.decorations.some((d) => d.id === m.sticker && d.source === 'named')) throw new Error(`Named monster "${m.id}" gives sticker "${m.sticker}", which isn't a "named" decoration`);
+  }
   return {
     rooms,
     enemies,
     insights: loadInsights(raw.insights),
     loot,
     abilities: loadAbilities(raw.abilities),
-    dojo: loadDojoContent(raw.dojoRoom, raw.decorations),
+    dojo,
     twists: loadTwists(raw.twists),
     elites,
+    named,
   };
 }
