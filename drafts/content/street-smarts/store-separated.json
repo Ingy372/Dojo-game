@@ -67,11 +67,10 @@
           "choices": [
             { "text": "The worker with a name tag.", "stars": 1, "next": "helper-good" },
             { "text": "The cashier at the counter.", "stars": 1, "next": "helper-good" },
-            { "text": "A police officer.", "stars": 1, "next": "helper-good" },
             { "text": "A grown-up with kids.", "stars": 1, "next": "helper-good" },
             { "text": "Hide and wait alone.", "stars": 0, "next": "helper-retry" }
           ],
-          "note": "Safe helpers (J11): store worker in uniform or with a name tag, cashier, police officer, grown-up with kids. The worker is taught first and is the helper the story continues with."
+          "note": "Safe helpers (J11): store worker in uniform or with a name tag, cashier, police officer, grown-up with kids. Buttons show 3 of them (police officer left off to meet the 2-4 button rule; officers are rarely inside a store and the worker and cashier already cover store staff). The worker is taught first and is the helper the story continues with."
         }
       ],
       "branches": {
