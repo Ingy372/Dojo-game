@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import type { InsightDef } from '@dojo/sim';
-import { addIcon } from '../art/icons';
+import { addIcon, INSIGHT_ACCENT } from '../art/icons';
 import { FAMILY_COLOR, FONT, crisp, css } from './theme';
 
 /** Taps are ignored for this long after the cards appear, so a tap meant for the fight doesn't pick a card. */
@@ -36,7 +36,7 @@ export class InsightPicker {
     insights.forEach((ins, i) => {
       const x = left + i * (cardW + gap);
       const color = FAMILY_COLOR[ins.family];
-      const bg = scene.add.rectangle(x, top, cardW, cardH, 0x221d2e).setOrigin(0).setStrokeStyle(3, color, 0.9);
+      const bg = scene.add.rectangle(x, top, cardW, cardH, 0x221d2e).setOrigin(0).setStrokeStyle(3, INSIGHT_ACCENT[ins.id] ?? color, 0.9);
       const stripe = scene.add.rectangle(x, top, cardW, 30, color).setOrigin(0);
       const family = scene.add
         .text(x + cardW / 2, top + 15, ins.family.toUpperCase(), { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: '#14121c' })

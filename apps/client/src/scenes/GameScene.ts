@@ -75,6 +75,10 @@ import { twistBanner, twistIcon } from '../ui/twist';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
+/** Screen pixels the top bar (health, Focus, "Room 1 of 8") takes up. */
+const HUD_TOP_PX = 56;
+/** Screen y of the boss health bar; its name sits just under it. */
+const BOSS_BAR_Y = 74;
 /** How many tiles tall the view is, whatever the phone's size. */
 const VISIBLE_ROWS = 8;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
@@ -1344,6 +1348,10 @@ export class GameScene extends Phaser.Scene {
         if (!prog.doorsOpen) this.animateStatic('door-boss-glow', d.glow, now / 1000);
       }
       d.label.setAlpha(prog.doorsOpen ? pulse : 0.55);
+      // Keep the label below the top bar (health, Focus, "Room 1 of 8"): in small rooms
+      // the top doors sit right under it on a 667-wide phone.
+      const cam = this.cameras.main;
+      d.label.setY(Math.max((d.at.y + 0.55) * TILE, cam.worldView.y + HUD_TOP_PX / cam.zoom));
     }
 
     // The chest appears once the room is clear: a glinting chest, then (once opened)
@@ -1390,7 +1398,7 @@ export class GameScene extends Phaser.Scene {
       const { width } = this.scale.gameSize;
       const w = Math.min(320, width * 0.4);
       const x = width / 2 - w / 2;
-      const y = 74;
+      const y = BOSS_BAR_Y;
       g.fillStyle(0x000000, 0.55).fillRoundedRect(x - 3, y - 3, w + 6, 16, 5);
       g.fillStyle(0xb046a0).fillRoundedRect(x, y, Math.max(6, w * (boss.health / boss.def.maxHealth)), 10, 3);
       this.bossName.setText(boss.def.name).setPosition(width / 2, y + 14).setVisible(true);
@@ -1611,12 +1619,18 @@ export class GameScene extends Phaser.Scene {
     return g.step === 0 ? 0.5 : g.step === 1 ? 0.75 : 1;
   }
 
+  /** Top of Sensei's banner: just under the boss bar and its name when a boss is up, so both stay readable. */
+  private senseiTop(height: number): number {
+    const boss = this.world.enemies.find((e) => e.def.boss && e.mode !== 'defeated');
+    return boss ? BOSS_BAR_Y + 34 : height * 0.2 - 22;
+  }
+
   /** Shows Sensei's read-aloud lines one after another at the top of the screen. */
   private senseiSay(lines: string[], holdMs = 1400): void {
     this.senseiText?.destroy();
     const { width, height } = this.scale.gameSize;
     const t = this.add
-      .text(width / 2, height * 0.2, '', {
+      .text(width / 2, this.senseiTop(height), '', {
         fontFamily: 'system-ui, sans-serif',
         fontStyle: 'bold',
         fontSize: '26px',
@@ -1625,7 +1639,7 @@ export class GameScene extends Phaser.Scene {
         padding: { x: 16, y: 8 },
         align: 'center',
       })
-      .setOrigin(0.5)
+      .setOrigin(0.5, 0)
       .setResolution(window.devicePixelRatio || 1);
     this.cameras.main.ignore(t);
     this.senseiText = t;

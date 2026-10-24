@@ -335,13 +335,14 @@ export class HomeScene extends Phaser.Scene {
       const by = y + i * rowH;
       this.ui.add(this.add.rectangle(x, by, w, rowH - 6, row.unlocked ? 0x221d2e : 0x18151f).setOrigin(0).setStrokeStyle(2, row.color, row.unlocked ? 0.8 : 0.25));
       const c = row.unlocked ? '#ffffff' : '#6b6478';
-      const icon = row.icon ? addIcon(this, row.icon, x + 26, by + (rowH - 6) / 2, 40) : null;
+      const iconSize = w < 560 ? 32 : 40;
+      const icon = row.icon ? addIcon(this, row.icon, x + 6 + iconSize / 2, by + (rowH - 6) / 2, iconSize) : null;
       if (icon) this.ui.add(icon.setAlpha(row.unlocked ? 1 : 0.35));
-      const tx = icon ? x + 52 : x + 8;
-      const tw = icon ? w - 60 : w - 16;
-      this.text(tx, by + 4, `${row.unlocked ? '' : '🔒 '}${row.tag}: ${row.title}`, 13, row.unlocked ? css(row.color) : '#8a8296', true, FONT, tw);
-      this.text(tx, by + 20, row.text, 11, c, false, FONT, tw);
-      this.text(tx, by + 33, row.status, 11, row.unlocked ? '#b9ad99' : '#ffd166', false, FONT, tw);
+      const tx = icon ? x + iconSize + 12 : x + 8;
+      const tw = w - (tx - x) - 8;
+      this.oneLine(this.text(tx, by + 4, `${row.unlocked ? '' : '🔒 '}${row.tag}: ${row.title}`, 13, row.unlocked ? css(row.color) : '#8a8296', true), tw, 10);
+      this.oneLine(this.text(tx, by + 20, row.text, 11, c), tw, 9);
+      this.oneLine(this.text(tx, by + 33, row.status, 11, row.unlocked ? '#b9ad99' : '#ffd166'), tw, 9);
     });
     if (rows.length === 0) this.text(x, y, 'No abilities yet.', 14, '#b9ad99');
     if (pages > 1) {
@@ -455,11 +456,14 @@ export class HomeScene extends Phaser.Scene {
       const arrow = cmp === 'up' ? '▲' : cmp === 'down' ? '▼' : '=';
       const arrowColor = cmp === 'up' ? '#5cd65c' : cmp === 'down' ? '#e0533d' : '#b9ad99';
       this.text(bx + 8, by + cardH / 2, arrow, 18, arrowColor, true).setOrigin(0, 0.5);
-      const icon = addIcon(this, it.base, bx + 46, by + cardH / 2, 34);
+      // Narrow cards (667-wide phones) get a smaller icon so the name and stats fit on their lines.
+      const iconSize = cardW < 300 ? 28 : 34;
+      const icon = addIcon(this, it.base, bx + 26 + iconSize / 2, by + cardH / 2, iconSize);
       if (icon) this.ui.add(icon);
-      const tx = icon ? bx + 68 : bx + 30;
-      this.text(tx, by + 4, it.name, 13, css(RARITY_COLOR[it.rarity]), true, FONT, cardW - (tx - bx) - 6);
-      this.text(tx, by + 22, `${SLOT_NAME[it.slot]} · ${describeItem(it)}`, 11, '#f2e9d8', false, FONT, cardW - (tx - bx) - 6);
+      const tx = icon ? bx + 32 + iconSize : bx + 30;
+      const tw = cardW - (tx - bx) - 6;
+      this.oneLine(this.text(tx, by + 4, it.name, 13, css(RARITY_COLOR[it.rarity]), true), tw, 10);
+      this.oneLine(this.text(tx, by + 22, `${SLOT_NAME[it.slot]} · ${describeItem(it)}`, 11, '#f2e9d8'), tw, 9);
       bg.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
         this.selected = isSel ? null : it.uid;
         this.confirmLetGo = false;
@@ -595,6 +599,21 @@ export class HomeScene extends Phaser.Scene {
       .text(x, y, str, { fontFamily: family, fontSize: `${size}px`, color, fontStyle: bold ? 'bold' : 'normal', wordWrap: wrap ? { width: wrap } : undefined })
       .setResolution(crisp());
     this.ui.add(t);
+    return t;
+  }
+
+  /**
+   * Keeps a text on one line inside maxW: shrinks the font (not below minSize), then
+   * cuts the end with "…". Narrow phones (667 wide) would otherwise wrap names onto the line below.
+   */
+  private oneLine(t: Phaser.GameObjects.Text, maxW: number, minSize: number): Phaser.GameObjects.Text {
+    let size = parseInt(String(t.style.fontSize), 10);
+    while (t.width > maxW && size > minSize) t.setFontSize(--size);
+    if (t.width > maxW) {
+      const full = t.text;
+      let n = full.length;
+      while (n > 1 && t.width > maxW) t.setText(full.slice(0, --n).trimEnd() + '…');
+    }
     return t;
   }
 
