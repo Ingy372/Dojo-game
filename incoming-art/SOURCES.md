@@ -23,4 +23,4 @@ Notes:
 
 **A1 earned cosmetics samples (2026-10-24): no outside assets.** The headband, wraps and gi trim are built from the approved player model by `cosmetics-a1/source/build_cosmetics.py`. The aura is drawn by code with Pillow (`make_aura.py`). The wrap colours come from the project's own gear icons.
 
-**A5 padded-weapon enemy samples (2026-10-24): no outside assets.** Built by `enemy-padded-weapon/source/build_padded.py`, which is adapted from the Tier 1 enemy builder, with `tools/`.
+**A5 padded-weapon enemy samples (2026-10-24): no outside assets.** Built by `enemy-padded-weapon/source/build_padded.py`, which is adapted from the Tier 1 enemy builder, with `tools/`. The full set (move, hit, stagger, defeat) comes from the same script, also with no outside assets.

@@ -56,7 +56,7 @@ SPEC = {
     "keeper":  dict(W=0.85, H=1.30, arm=1.5, eye=0.82, color="#241e52", belly="#3a3278", accent="#ffc83d", glow="#ffd86b",
                     eye_c="#fff0b0", eye_z=0.71, eye_y=0.8, eye_dx=0.2, sh=0.58, arm_x=0.85),
     # padded: a round little sparring sprite with two soft leaf-ear tufts, lime accent (unused by the other four)
-    "padded":  dict(W=0.38, H=0.58, arm=1.05, eye=1.0, color="#262c64", belly="#39458f", accent="#a6e34a", glow="#c4f27a",
+    "padded":  dict(W=0.41, H=0.62, arm=1.05, eye=1.12, color="#323b86", belly="#4d5db8", accent="#a6e34a", glow="#c4f27a",
                     eye_c="#e6ffc0", eye_z=0.66, eye_y=0.9, eye_dx=0.33, sh=0.52, arm_x=0.98),
 }[E]
 W, H = SPEC["W"], SPEC["H"]
@@ -301,7 +301,7 @@ def action(name, poses, fps, loop, tags="", info=None):
 
 ease = lambda x: 0.5 - 0.5 * math.cos(math.pi * max(0, min(1, x)))
 if E == "padded":   # no content/enemies file yet: PLACEHOLDER numbers for the samples only (the game decides the real ones)
-    DATA = {"id": "padded", "name": "(name to decide)", "radius": 0.38, "moveSpeedTilesPerSecond": 2.4,
+    DATA = {"id": "padded", "name": "Bouncy Bopper", "radius": 0.38, "moveSpeedTilesPerSecond": 2.2,   # numbers: PR #102, name: PR #97
             "attack": {"name": "padded staff bonk", "telegraphTicks": 16, "recoverTicks": 18}}
 else:
     DATA = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "content", "enemies",
@@ -365,7 +365,10 @@ for i in range(6):
     if E == "swarmer":  # quick, high bouncing hops: stretch in the air, squash on landing
         move.append(g(body=gb(dz=0.22 * H * up, pitch=18, roll=4 * sn, sw=1 + 0.12 * (1 - up) - 0.06 * up, sh=1 - 0.14 * (1 - up) + 0.12 * up),
                       arm_l=(40 - 30 * up, 30), arm_r=(40 - 30 * up, 30)))
-    elif E in ("shield", "padded"): # a steady march: upright, small even steps, a little side-to-side
+    elif E == "padded":  # springy little hops (it is a Bouncy Bopper): squash on landing, the staff held steady in guard
+        move.append(g(body=gb(dz=0.1 * H * up, pitch=8, roll=3 * sn, sw=1 + 0.08 * (1 - up) - 0.03 * up, sh=1 - 0.09 * (1 - up) + 0.07 * up),
+                      foot_l=(0, 0, 0.06 * H * up), foot_r=(0, 0, 0.06 * H * up)))
+    elif E == "shield": # a steady march: upright, small even steps, a little side-to-side
         move.append(g(body=gb(dz=0.015 * H * up, roll=4 * sn, pitch=2),
                       foot_l=(0, -0.12 * W * sn, 0.03 * max(0, sn)), foot_r=(0, 0.12 * W * sn, 0.03 * max(0, -sn))))
     elif E == "brute":  # heavy stomps: big sway, squash on each step
@@ -377,7 +380,7 @@ for i in range(6):
                       foot_l=(0, 0, 0.012 * H * (1 + math.sin(ph))), foot_r=(0, 0, 0.012 * H * (1 + math.sin(ph)))))
 mfps = {"swarmer": 12, "shield": 10, "brute": 10, "keeper": 8, "padded": 10}[E]
 action("move", move, mfps, True, info={"designSpeedTilesPerSecond": DATA["moveSpeedTilesPerSecond"],
-       "note": {"swarmer": "quick bouncing hops", "shield": "steady march", "brute": "heavy stomps", "keeper": "smooth glide", "padded": "steady march"}[E] + "; play at any move speed"})
+       "note": {"swarmer": "quick bouncing hops", "shield": "steady march", "brute": "heavy stomps", "keeper": "smooth glide", "padded": "springy hops"}[E] + "; play at any move speed"})
 
 def ramp(n):
     """Telegraph intensity through a wind-up: starts soft and builds to full on the last frame."""
@@ -429,7 +432,7 @@ if E == "padded":       # swings the staff up and back over its shoulder, leanin
     at = DATA["attack"]
     PW = P(body=B(dy=0.08 * W, pitch=-20, yaw=-24, sw=0.9, sh=1.2), eyes=(1.15, 1.3), arm_l=(30, 30), arm_r=(-165, 10))
     telegraph_action("windup", PW, at["telegraphTicks"])
-    PH = P(body=B(dy=-0.2 * W, pitch=26, yaw=14, sw=1.1, sh=0.88), eyes=(1.1, 0.75), arm_l=(20, 30), arm_r=(88, 32))
+    PH = P(body=B(dy=-0.2 * W, pitch=22, yaw=24, roll=-10, sw=1.12, sh=0.88), eyes=(1.1, 0.75), arm_l=(20, 40), arm_r=(80, 58))   # full set: a diagonal bonk, so it reads from the front (S) too
     attack_action("attack", PH, at["recoverTicks"], {"note": "padded staff bonk: a big overhead swing down in front (soft foam pad lands first)"})
 if E == "keeper":
     sl, sw = DATA["attacks"][0], DATA["attacks"][1]
