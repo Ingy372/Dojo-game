@@ -499,3 +499,7 @@ From section 1 of `docs/work-board.md`.
 - Home line: "You're on {name}, and you can change it in Settings." "any time" is two words everywhere.
 - **Caps rule (Manager):** only fight-button names (COUNTER, STRIKE, DASH…) are in caps; menu buttons use normal case ("Settings", "Try it", "No thanks").
 - **Selected difficulty:** marked with a ✓ before the name as well as the gold border, never colour alone.
+
+## C9 wording (PR #115) on P9 (2026-10-24)
+- Wrap-up line: "Nice work, let's finish this room and rest!" Rest card lines: "You trained hard today!", "Rest now, or show a grown-up your moves.", "Everything you found is safe in your dojo." The card now draws every line in restLines.
+- Grown-up help: "…Then the game praises their training and returns to the dojo…". Menu buttons stay in normal case.
