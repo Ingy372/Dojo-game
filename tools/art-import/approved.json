@@ -4,7 +4,7 @@
   "scale": 0.6,
   "packs": {
     "player-a": {
-      "note": "Body A: the base layers (body, skin, gi, belt, props).",
+      "note": "Body A: the base layers (body, skin, gi, belt, props). Form stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations.",
       "sources": [
         {
           "id": "player",
@@ -24,6 +24,9 @@
             "belt-tape2",
             "prop-broom",
             "prop-rag"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -42,6 +45,9 @@
             "face-04",
             "face-05",
             "face-06"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -55,6 +61,9 @@
           "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
           "layers": [
             "hair-01"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -68,6 +77,9 @@
           "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
           "layers": [
             "hair-02"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -81,6 +93,9 @@
           "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
           "layers": [
             "hair-03"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -94,6 +109,9 @@
           "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
           "layers": [
             "hair-04"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -107,6 +125,9 @@
           "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
           "layers": [
             "hair-05"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -120,6 +141,9 @@
           "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
           "layers": [
             "hair-06"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -133,6 +157,9 @@
           "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
           "layers": [
             "hair-07"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -146,6 +173,9 @@
           "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
           "layers": [
             "hair-08"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -159,6 +189,9 @@
           "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
           "layers": [
             "hair-09"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -172,6 +205,9 @@
           "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
           "layers": [
             "hair-10"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -185,6 +221,9 @@
           "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
           "layers": [
             "hair-11"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -198,6 +237,9 @@
           "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
           "layers": [
             "hair-12"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
           ]
         }
       ]
@@ -227,7 +269,7 @@
       ]
     },
     "player-b": {
-      "note": "Body B: the base layers (body, skin, gi, belt, props).",
+      "note": "Body B: the base layers (body, skin, gi, belt, props). Form stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations.",
       "sources": [
         {
           "id": "player",
@@ -247,6 +289,9 @@
             "belt-tape2",
             "prop-broom",
             "prop-rag"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -265,6 +310,9 @@
             "face-04",
             "face-05",
             "face-06"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -278,6 +326,9 @@
           "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
           "layers": [
             "hair-01"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -291,6 +342,9 @@
           "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
           "layers": [
             "hair-02"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -304,6 +358,9 @@
           "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
           "layers": [
             "hair-03"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -317,6 +374,9 @@
           "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
           "layers": [
             "hair-04"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -330,6 +390,9 @@
           "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
           "layers": [
             "hair-05"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -343,6 +406,9 @@
           "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
           "layers": [
             "hair-06"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -356,6 +422,9 @@
           "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
           "layers": [
             "hair-07"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -369,6 +438,9 @@
           "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
           "layers": [
             "hair-08"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -382,6 +454,9 @@
           "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
           "layers": [
             "hair-09"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -395,6 +470,9 @@
           "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
           "layers": [
             "hair-10"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -408,6 +486,9 @@
           "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
           "layers": [
             "hair-11"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -421,6 +502,9 @@
           "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
           "layers": [
             "hair-12"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
           ]
         }
       ]
@@ -548,7 +632,7 @@
       ]
     },
     "named-monster": {
-      "note": "M7-N1 named monsters (Manager approved for Jay, PRs #53/#60): per-enemy sparkles, name plate and tag, the 3 tells, Journal parts, stickers. The 256 master sparkle is reference only.",
+      "note": "M7-N1 named monsters (Manager approved for Jay, PRs #53/#60): per-enemy sparkles, name plate and tag, the 3 tells, Journal parts, stickers. The 256 master sparkle is reference only. A8 Journal silhouettes for Floor Keeper and Bopper (PR #136).",
       "sources": [
         {
           "id": "named",
@@ -574,6 +658,15 @@
             "tell-stamp-dust",
             "tell-dash-trail",
             "tell-shield-tap"
+          ]
+        },
+        {
+          "id": "named-a8",
+          "type": "static",
+          "json": "incoming-art/journal-silhouettes-a8/sprites/static.json",
+          "only": [
+            "journal-silhouette-keeper",
+            "journal-silhouette-padded"
           ]
         }
       ]

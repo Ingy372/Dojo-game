@@ -82,10 +82,17 @@ export function makePlayerSprite(scene: Phaser.Scene, belt: BeltInfo, stripes: n
   return sprite;
 }
 
-/** Walk while moving (the jog's speed matched to how fast the character goes), else idle. */
-export function playLocomotion(sprite: LayeredSprite, tilesPerSecond: number): void {
+/** The idle for a Form: the art's animation tagged with that Form's id, else the plain guard idle. */
+export function idleFor(sprite: LayeredSprite, formId?: string): string {
+  if (!formId) return 'idle';
+  const found = Object.entries(sprite.art.animations).find(([, a]) => a.form === formId);
+  return found ? found[0] : 'idle';
+}
+
+/** Walk while moving (the jog's speed matched to how fast the character goes), else the Form's idle. */
+export function playLocomotion(sprite: LayeredSprite, tilesPerSecond: number, formId?: string): void {
   if (tilesPerSecond > 0.2) sprite.play('walk', { speed: Phaser.Math.Clamp(tilesPerSecond / MOVEMENT.speedTilesPerSecond, 0.4, 1.6) });
-  else sprite.play('idle');
+  else sprite.play(idleFor(sprite, formId));
 }
 
 /** A character shown standing in a menu or celebration (not walking around a room). */
