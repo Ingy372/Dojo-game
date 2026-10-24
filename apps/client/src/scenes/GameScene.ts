@@ -208,6 +208,8 @@ export class GameScene extends Phaser.Scene {
   private toastY = 0;
   private twistBadge: Phaser.GameObjects.Container | null = null;
   private twistBannerView: Phaser.GameObjects.Container | null = null;
+  /** While a twist banner shows, the big message starts below this y (0 = no limit). */
+  private messageTop = 0;
   private prevPos: Vec2 = { x: 0, y: 0 };
   private elapsed = 0;
   /** When the room's enemies appeared (null until the floor's bow is done). */
@@ -777,7 +779,7 @@ export class GameScene extends Phaser.Scene {
     this.comboText.setX(width / 2);
     this.comboBonusText.setX(width / 2);
     this.chainText.setX(width / 2);
-    this.message.setPosition(width / 2, height * 0.4);
+    this.placeMessage();
     this.roomLabel.setX(width - 16);
     this.timerText.setX(width - 16);
     this.screenFlash.setSize(width, height);
@@ -1196,35 +1198,55 @@ export class GameScene extends Phaser.Scene {
     else if (this.room.kind === 'rest') lines.push('Walk to the shrine to rest.');
     else if (this.room.kind === 'treasure') lines.push('Open the chest!');
     else if (this.room.kind === 'boss') lines.push('The Floor Keeper awaits.');
-    this.showTwist();
+    const bannerBottom = this.showTwist();
     this.message.setText(lines.join('\n')).setFontSize(this.room.challenge ? 22 : 26).setVisible(true).setAlpha(1);
+    // With a twist banner at the top, the room name and goal sit just under it so nothing overlaps.
+    this.messageTop = bannerBottom ? bannerBottom + 10 : 0;
+    this.placeMessage();
     this.tweens.add({
       targets: this.message,
       alpha: 0,
       delay: 1400,
       duration: 500,
-      onComplete: () => this.message.setVisible(false).setAlpha(1).setFontSize(28),
+      onComplete: () => {
+        this.messageTop = 0;
+        this.message.setVisible(false).setAlpha(1).setFontSize(28);
+        this.placeMessage();
+      },
     });
   }
 
-  /** Room twist: a banner with its icon and Sensei's one-line rule, then a small icon in the corner. */
-  private showTwist(): void {
+  /** The big middle message, moved down under the twist banner while one is showing. */
+  private placeMessage(): void {
+    const { width, height } = this.scale.gameSize;
+    const y = this.messageTop ? Math.max(height * 0.4, this.messageTop + this.message.height / 2) : height * 0.4;
+    this.message.setPosition(width / 2, y);
+  }
+
+  /**
+   * Room twist: a banner with its icon and Sensei's one-line rule, then a small icon in the corner.
+   * Returns the banner's bottom edge (0 when there's no twist).
+   */
+  private showTwist(): number {
     this.twistBadge?.destroy();
     this.twistBadge = null;
     const twist = this.world.twist;
-    if (!twist) return;
+    if (!twist) return 0;
     const { width } = this.scale.gameSize;
-    // Near the top, under the health bar, so it never covers the fight or a warning circle.
-    const BANNER_Y = 92;
-    const banner = twistBanner(this, twist, width, BANNER_Y);
+    // Near the top, just under the health and Focus bars, so it never covers the fight or a warning circle.
+    const banner = twistBanner(this, twist, width, 0);
+    const BANNER_Y = 58 + banner.height / 2;
+    banner.setY(BANNER_Y);
     this.cameras.main.ignore(banner);
     this.tweens.add({ targets: banner, alpha: { from: 0, to: 1 }, y: { from: BANNER_Y + 20, to: BANNER_Y }, duration: 300, ease: 'Back.Out' });
     this.tweens.add({ targets: banner, alpha: 0, delay: 4200, duration: 500, onComplete: () => banner.destroy() });
     this.twistBannerView = banner;
     this.twistBadge = this.add.container(0, 0, [twistIcon(this, twist.icon, 34)]).setDepth(20);
     this.cameras.main.ignore(this.twistBadge);
-    this.twistBadge.setPosition(width / 2 + 120, 30);
+    // Top right, under the room count and timer, so it never covers them on a small phone.
+    this.twistBadge.setPosition(width - 70, 84);
     this.drawTwistBells();
+    return BANNER_Y + banner.height / 2;
   }
 
   /** Bell Room: the bells rung so far, next to the twist icon. */
