@@ -68,6 +68,13 @@ export interface Profile {
   look: CharacterLook | null;
   /** Sensei's guided first Counter: the next step to show (GUIDE_DONE once it's finished). */
   guideStep: number;
+  /** Street Smarts: best stars per scenario, and who the player picked as their grown-up. */
+  streetSmarts: StreetSmartsSave;
+}
+
+export interface StreetSmartsSave {
+  best: Record<string, number>;
+  grownup: 'Mom' | 'Dad' | null;
 }
 
 export function newProfile(): Profile {
@@ -88,6 +95,7 @@ export function newProfile(): Profile {
     dojo: null,
     look: null,
     guideStep: 0,
+    streetSmarts: { best: {}, grownup: null },
   };
 }
 
@@ -98,7 +106,22 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0 };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts) };
+}
+
+function readStreetSmarts(v: unknown): StreetSmartsSave {
+  const s = v as Partial<StreetSmartsSave> | undefined;
+  const best: Record<string, number> = {};
+  if (s?.best && typeof s.best === 'object') for (const [k, n] of Object.entries(s.best)) if (typeof n === 'number') best[k] = n;
+  return { best, grownup: s?.grownup === 'Mom' || s?.grownup === 'Dad' ? s.grownup : null };
+}
+
+/** Keeps the best star count for a finished scenario. Returns true if it's a new best. */
+export function recordScenario(profile: Profile, id: string, stars: number): boolean {
+  const old = profile.streetSmarts.best[id] ?? -1;
+  if (stars <= old) return false;
+  profile.streetSmarts.best[id] = stars;
+  return true;
 }
 
 export function wornItem(profile: Profile, slot: GearSlot): GearItem | null {

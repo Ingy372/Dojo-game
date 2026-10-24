@@ -1,0 +1,26 @@
+{
+  "notes": "Screen text for the Street Smarts scene (not part of any script).",
+  "title": "Street Smarts",
+  "pickGrownup": "Who are you at the store with?",
+  "grownups": [
+    "Mom",
+    "Dad"
+  ],
+  "next": "Next",
+  "speakOn": "Sound on",
+  "speakOff": "Sound off",
+  "back": "Back to the dojo",
+  "playAgain": "Play again",
+  "starsEarned": "You earned {stars} of {max} stars!",
+  "starsAll": "All {max} stars! Great job.",
+  "starsMore": "Play again any time to try for all {max} stars.",
+  "button": "Street Smarts",
+  "speakers": {
+    "narrator": "",
+    "sensei": "Sensei",
+    "worker": "Store worker",
+    "grownup": "{grownup}",
+    "shopper": "Shopper",
+    "player": "{player}"
+  }
+}
