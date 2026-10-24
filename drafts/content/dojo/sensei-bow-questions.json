@@ -1,41 +1,29 @@
 {
-  "notes": "DRAFT for proposal 2 (Sensei's Question at the Bow), as a REFLECTION, not a quiz. Shown sometimes (not every bow). Every choice is right; there is no score and it never changes rewards. 'earned' = 2-3 of the player's earned abilities, each shown as its real name (from technique-callouts.json) with its picture. {name} = the chosen real name. Every question has a 'Not now' skip. After the reply, offer 'Watch the real technique' when the ability has a video.",
+  "notes": "DRAFT for C2: Sensei's Question at the Bow, redone as RECALL (Jay, docs/decisions.md K1). Same file and top-level keys as before (notes, skipText, watchText, questions). Sensei shows a picture of one of the player's earned abilities (any earned one, not only the newest; docs/curriculum.md) and asks its name. 'choices': 'earned' = 3 picture-and-word choices: the right one plus 2 other abilities, all shown by their real name from abilities/technique-callouts.json. If fewer than 3 abilities are earned, fill with locked ones the player has seen on the Gate. {name} = the right real name. After any answer, the character performs the move. A wrong answer warmly shows the right name; there is no penalty. Correct answers are counted forever; 'awards' play at 5, 10, 20, 50 and 100 (the list can grow). At most one question per day. 'Not now' is always there. Lines are one short sentence each. The first movement lesson ('Tap where you want to go, or use the stick.') is already in tutorial/first-session-lessons.json (lesson-move).",
   "skipText": "Not now",
   "watchText": "Watch the real technique",
   "questions": [
     {
-      "id": "bow-favorite",
-      "sensei": "Which technique felt best today?",
+      "id": "bow-recall",
+      "sensei": "What's this one called?",
       "choices": "earned",
-      "reply": "{name}. I can see why. Keep practicing it with your instructor."
-    },
-    {
-      "id": "bow-practice",
-      "sensei": "Which one would you like to practice at the dojo?",
-      "choices": "earned",
-      "reply": "Good choice. {name} grows stronger every time you train it."
-    },
-    {
-      "id": "bow-helped",
-      "sensei": "Which technique helped you most in the Tower?",
-      "choices": "earned",
-      "reply": "{name} helped you stay steady. Thank you for sharing."
-    },
-    {
-      "id": "bow-show",
-      "sensei": "Which one would you show a friend?",
-      "choices": "earned",
-      "reply": "{name}! Your friend would love to see it."
-    },
-    {
-      "id": "bow-virtue",
-      "sensei": "Which word did you live out this week?",
-      "choices": [
-        "Respect",
-        "Great Effort",
-        "Self-Discipline"
+      "correct": [
+        "Yes! That's {name}.",
+        "You remembered! {name}.",
+        "That's right. {name}, just like in class."
       ],
-      "reply": "{name}. That kind of light shines from the inside."
+      "wrong": [
+        "Good try! This one is {name}.",
+        "Close! This one is {name}.",
+        "This one is {name}. Now you know it."
+      ]
     }
+  ],
+  "awards": [
+    { "count": 5, "sensei": "Five right answers! Your memory is getting strong." },
+    { "count": 10, "sensei": "Ten! You really know your techniques." },
+    { "count": 20, "sensei": "Twenty! Your training is staying with you." },
+    { "count": 50, "sensei": "Fifty! You remember like a true student." },
+    { "count": 100, "sensei": "One hundred! What you learn in class stays in your heart." }
   ]
 }
