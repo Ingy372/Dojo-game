@@ -24,3 +24,24 @@
 4. White Guardian gem: uses the white-belt fallback tan `#d2a878` (existing rule).
 
 No outside assets. No baked text or numbers.
+
+---
+## Student of the Month (branch `bot-art-a3b-sotm`, 2026-10-24)
+- **New:**
+  - `source/make_sotm.py`;
+  - `sprites/trophies/ct-accolade-student-of-the-month.png`, baked with the Action Zone seal backing and the default star mark;
+  - `layers/ct-accolade-student-of-the-month-topper.png`, `layers/stand-pips0.png` and `layers/halo-pips0-gem.png`;
+  - a `static.json` entry for `ach.dojo.accolade.student-of-the-month`.
+- **Top piece:** a gold crescent moon (the month) holding a big star (the student), with a sky-blue gem on the post. It is the only curved, open silhouette in the set, so it reads apart from the cup, column, star, goblet, ring, scroll and shield.
+- **Seal:** Action Zone backing (indigo, paper-warm and gold, from #146) with the default star until the logo arrives.
+- **Previews:**
+  - `review-5-sotm-vs-categories-1x/2x.png`: next to one of each category, all with the AZ seal;
+  - `review-6-sotm-phone-half-size.png`, plus a greyscale version;
+  - `review-7-sotm-closeup-AZ-default-grey.png`.
+- **Second pass:**
+  - shrank the crescent so its tip no longer crowds the seal or the canvas edge;
+  - made the post longer so the moon reads as being on a stand;
+  - fixed the greyscale close-up, which was losing transparency.
+- **DECIDE:**
+  - The slug `student-of-the-month` is assumed; it must match the DojoForge accolade slug.
+  - Does a student who earns it several times get one trophy per month or one trophy with a count? This is the Programmer's call.

@@ -328,3 +328,4 @@ The certified trophy is now 3 stacked layers (same 104x166 canvas and anchor): `
 - `sprites/static.json` maps every sprite to its `ach.*` ID.
 - **Certified trophies:** stack `halo`, `stand`, `topper`, the promotion `beltBand` (baked per belt, or tint the `-TINT` mask with `beltStyles[belt].belt`, and `belt-center` for two-colour belts), then the A3 `seal-backing-<palette>` and `seal-mark-<school>`. The baked `ct-*.png` files have the default seal and are for previews and fallback only.
 - **Templates:** one sprite for every accolade (`ct-accolade-template`), every journal master and every smarts location. The game writes the name.
+- **Student of the Month:** when the accolade slug is `student-of-the-month`, use `ct-accolade-student-of-the-month` (it has its own crescent-and-star top piece) instead of `ct-accolade-template`. The stack order is the same as for the other certified trophies.
