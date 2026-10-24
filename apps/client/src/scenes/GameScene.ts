@@ -1693,17 +1693,30 @@ export class GameScene extends Phaser.Scene {
     let top = this.senseiTop(height);
     const left = t.x - t.width / 2;
     const right = t.x + t.width / 2;
+    // Screen boxes the banner keeps off: each door (its tile plus the label under it, K23),
+    // the chest once it shows, and the big centre message such as "Ouch! The run is over." (K23b).
+    const toScreen = (x0: number, y0: number, x1: number, y1: number) => ({
+      x0: (x0 - cam.worldView.x) * cam.zoom,
+      x1: (x1 - cam.worldView.x) * cam.zoom,
+      y0: (y0 - cam.worldView.y) * cam.zoom,
+      y1: (y1 - cam.worldView.y) * cam.zoom,
+    });
+    const boxes: { x0: number; x1: number; y0: number; y1: number }[] = [];
+    for (const d of this.doorViews) {
+      if (!d.label.visible) continue;
+      const b = d.label.getBounds();
+      boxes.push(toScreen(Math.min(b.left, d.at.x * TILE - TILE / 2), b.top - TILE * 2, Math.max(b.right, d.at.x * TILE + TILE / 2), b.bottom));
+    }
+    const c = this.room.chest;
+    if (c && this.chestImgs[0]?.alpha) boxes.push(toScreen((c.x - 0.6) * TILE, (c.y - 0.7) * TILE, (c.x + 0.6) * TILE, (c.y + 0.6) * TILE));
+    if (this.message.visible) {
+      const m = this.message.getBounds();
+      boxes.push({ x0: m.left, x1: m.right, y0: m.top, y1: m.bottom });
+    }
     for (let pass = 0; pass < 2; pass++) {
-      for (const d of this.doorViews) {
-        if (!d.label.visible) continue;
-        const b = d.label.getBounds();
-        // The door stands in the wall just above its name label, so keep off it too (K23).
-        const sx0 = (Math.min(b.left, d.at.x * TILE - TILE / 2) - cam.worldView.x) * cam.zoom;
-        const sx1 = (Math.max(b.right, d.at.x * TILE + TILE / 2) - cam.worldView.x) * cam.zoom;
-        const sy0 = (b.top - TILE * 2 - cam.worldView.y) * cam.zoom;
-        const sy1 = (b.bottom - cam.worldView.y) * cam.zoom;
-        if (sx1 < left || sx0 > right || sy1 < top || sy0 > top + t.height) continue;
-        top = Math.max(top, sy1 + 6);
+      for (const b of boxes) {
+        if (b.x1 < left || b.x0 > right || b.y1 < top || b.y0 > top + t.height) continue;
+        top = Math.max(top, b.y1 + 6);
       }
     }
     t.setY(top);

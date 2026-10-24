@@ -521,3 +521,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## K23 / M7-P12 playtest fixes (2026-10-24)
 - First floor ends with a simple card (grade, one reward, Continue); Sensei comes after. Chest icon replaces '$'. Title/Create/Guided/Street Smarts lines are one short sentence each, in content data (new content/settings/screens.json). Room-clear health number dropped. Sensei banner keeps off doors at 667. Combo clears when the fight ends. Named monster plate and freed line checked by hand. Every change is listed in decisions.md.
 - Tests 285 passed / 1 skipped; typecheck and build pass. Screenshots /workspace/k23-*.png at 667 and 844.
+
+## K23b Banner layout fixes (2026-10-24)
+- Sensei's banner now keeps off the floor chest and the "Ouch! The run is over" message, as well as doors (one list of boxes in placeSensei). K23's four lines are approved.
+- Screenshots /workspace/k23b-*.png at 667 and 844.

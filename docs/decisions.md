@@ -698,3 +698,8 @@ Manager calls:
 6. **'3 COMBO' clears when the fight ends:** no enemies left standing, or the hero is down.
 7. **Named monsters checked by hand** with ?named=old-thumper&room=brute-and-swarm at 667 and 844: the name plate and the "freed" line both show.
 Also: the Home "For your dojo" line now measures its own height, so a two-line list no longer overlaps "Items found".
+
+## K23b Banner layout fixes (2026-10-24)
+K23's four short lines (Title, Create, Guided offer, Street Smarts unlock) were approved as written. Manager calls:
+1. **(a) The "freed" banner and "Ouch! The run is over":** the banner moves. Its every-frame placement now treats the big centre message as one more thing to keep off, so if the run ends while Sensei is talking, the banner drops just below "You keep everything you found." The two never overlap, and neither is cut short.
+2. **(b) The floor chest:** the same placement also keeps off the chest once it shows (its tile plus a little above). Doors, the chest and the centre message now go through one list of screen boxes, so there is one rule rather than three.
