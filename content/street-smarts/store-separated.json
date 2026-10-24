@@ -1,5 +1,5 @@
 {
-  "notes": "DRAFT Street Smarts scenario for milestone 6 (work item C1). For Jay's safety review; nothing here ships until Jay approves (framework section 8). Ages 6-9, one short sentence per screen, read aloud by text-to-speech. Same line format as drafts/content/dialogue/milestone-6.json (speaker, text, expression, animation, choices, branches). Street Smarts additions: 'stars' on a choice (0-3, framework section 8) instead of honor; 'retry' names the choice point to return to. A 0-star choice never shows danger: the story pauses, Sensei reflects, and the player tries again right away. No penalties, no lost health, no guilt. No phone numbers, no real people. {player} = display name; {grownup} = 'Mom' or 'Dad' only, never a real name (Jay, J11). Family secret word is always generic ('your family's secret word'); no real words.",
+  "notes": "Street Smarts scenario 'Separated from your grown-up in a store'. Copied from drafts/content/street-smarts/store-separated.json (PR #58, approved through J11), with the helper question trimmed to 4 choices (#79). starChoices = the choice points that earn a star on a best first try; voice is required to continue but earns none.",
   "id": "store-separated",
   "location": "store",
   "ageBand": "6-9",

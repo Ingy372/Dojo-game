@@ -1465,6 +1465,50 @@ export class GameScene extends Phaser.Scene {
     } else {
       this.bossName.setVisible(false);
     }
+    this.placeCombo(!!boss && boss.mode !== 'defeated');
+    this.placeSensei();
+  }
+
+  /**
+   * The combo count sits top-centre, where the boss bar goes. While a boss bar shows, it
+   * moves under the player's bars on the left so both stay readable (K10).
+   */
+  private placeCombo(bossUp: boolean): void {
+    const { width } = this.scale.gameSize;
+    if (bossUp) {
+      this.comboText.setOrigin(0, 0).setPosition(16, HUD_TOP_PX + 4);
+      this.comboBonusText.setOrigin(0, 0).setPosition(18, HUD_TOP_PX + 36);
+    } else {
+      this.comboText.setOrigin(0.5, 0).setPosition(width / 2, 14);
+      this.comboBonusText.setOrigin(0.5, 0).setPosition(width / 2, 46);
+    }
+  }
+
+  /**
+   * Keeps Sensei's banner under the boss bar and off the door labels (which scroll with the
+   * room), every frame, so it stays right when a boss appears or the camera moves (K10).
+   */
+  private placeSensei(): void {
+    const t = this.senseiText;
+    if (!t?.active) return;
+    const { height } = this.scale.gameSize;
+    const cam = this.cameras.main;
+    let top = this.senseiTop(height);
+    const left = t.x - t.width / 2;
+    const right = t.x + t.width / 2;
+    for (let pass = 0; pass < 2; pass++) {
+      for (const d of this.doorViews) {
+        if (!d.label.visible) continue;
+        const b = d.label.getBounds();
+        const sx0 = (b.left - cam.worldView.x) * cam.zoom;
+        const sx1 = (b.right - cam.worldView.x) * cam.zoom;
+        const sy0 = (b.top - cam.worldView.y) * cam.zoom;
+        const sy1 = (b.bottom - cam.worldView.y) * cam.zoom;
+        if (sx1 < left || sx0 > right || sy1 < top || sy0 > top + t.height) continue;
+        top = Math.max(top, sy1 + 6);
+      }
+    }
+    t.setY(top);
   }
 
   /** A dropped item: a glowing orb that pops out, then a note at the top of the screen. */

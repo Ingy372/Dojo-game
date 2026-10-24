@@ -403,3 +403,10 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 **Next**
 - Jay plays a yellow-belt run with `?named=` on his phone.
 - Named monsters for later belts (the spec's bigger version).
+
+## K10: K9 retest fixes (2026-10-24)
+- From the K9 retest (PR #101). While a boss bar shows, the COMBO count (and its +% power line) moves under the player's bars on the left, clear of the boss bar and its name.
+- Sensei's banner is placed every frame: under the boss bar when a boss is up, and pushed below any door label it would cover (e.g. HOME in the Keeper's room). This finishes the K7-fix and K9 banner work.
+- The `?elite=guarding` test link now respects Guided: it gives a Swift elite instead.
+- The store script's notes say "approved through J11, helper question trimmed to 4 choices (#79)" again, not the old DRAFT note.
+- 197 tests pass (1 skipped), typecheck clean, build passes. Screenshots at 667x375 and 844x390.
