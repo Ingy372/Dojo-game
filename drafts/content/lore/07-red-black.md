@@ -23,12 +23,12 @@ A floating mask that copies your moves. Under the mask, it is lonely.
 
 | Relic | What the player reads | Sensei |
 | --- | --- | --- |
-| Traveler's Note | "If I keep the light, the dark can never reach me." | Light grows when it is shared, not hidden. |
+| Traveler's Note | "I will hold the light until help comes." | Help is on the way. |
 | Kind Word Stone | When you whisper to it, it whispers back: "You are loved." | You are loved. |
 | Half Mask | A mask cut in two. One side smiles. | Be the same person inside and out. |
 
 ## What the player learns
 
-The traveler heard the echoes too. They began to believe the light was not safe with anyone else.
+The echoes told the traveler to give up. The traveler kept holding on.
 
 Next: [Tier 8](08-brown.md)

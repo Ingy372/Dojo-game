@@ -25,6 +25,8 @@ export interface TestingActions {
   close: () => void;
 }
 
+const COUNT_WORDS: Record<number, string> = { 2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six' };
+
 export class TestingPanel {
   readonly container: Phaser.GameObjects.Container;
 
@@ -44,7 +46,7 @@ export class TestingPanel {
     this.text(pad, pad + 26, 'Hidden from players. Fake students until DojoForge is connected.', 11, '#b9ad99', false, leftW);
 
     let y = pad + 58;
-    this.text(pad, y, 'Student profile (same student, three points in time):', 12, '#f2e9d8', false, leftW);
+    this.text(pad, y, `Student profile (same student, ${COUNT_WORDS[FAKE_PROFILES.length] ?? FAKE_PROFILES.length} points in time):`, 12, '#f2e9d8', false, leftW);
     y += 20;
     const current = selectedProfileKey();
     for (const p of FAKE_PROFILES) {

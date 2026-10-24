@@ -1,0 +1,842 @@
+{
+ "guidedSetting": [
+  {
+   "v": "667x375",
+   "runs": 300,
+   "notGuided": 0,
+   "guarding": 0,
+   "swift": 0,
+   "world": "guided",
+   "run": "guided",
+   "errs": []
+  },
+  {
+   "v": "844x390",
+   "runs": 300,
+   "notGuided": 0,
+   "guarding": 0,
+   "swift": 0,
+   "world": "guided",
+   "run": "guided",
+   "errs": []
+  }
+ ],
+ "boss": [
+  {
+   "n": "667x375-boss-t1",
+   "bossScreen": [
+    8,
+    -161
+   ],
+   "zoom": 0.9765625,
+   "texts": [
+    {
+     "t": "Keeper's Hall\nThe Floor Keeper",
+     "x": 171,
+     "y": 112,
+     "r": 496,
+     "bt": 188
+    },
+    {
+     "t": "Room 1 of 8  ·  Wave 1 of 3",
+     "x": 461,
+     "y": 14,
+     "r": 651,
+     "bt": 36
+    },
+    {
+     "t": "Floor Keeper",
+     "x": 292,
+     "y": 30,
+     "r": 374,
+     "bt": 50
+    },
+    {
+     "t": "HOME",
+     "x": 482,
+     "y": 345,
+     "r": 526,
+     "bt": 366
+    }
+   ],
+   "errs": []
+  },
+  {
+   "n": "667x375-boss-t2",
+   "bossScreen": [
+    8,
+    -161
+   ],
+   "zoom": 0.9765625,
+   "texts": [
+    {
+     "t": "Keeper's Hall\nThe Floor Keeper",
+     "x": 171,
+     "y": 112,
+     "r": 496,
+     "bt": 188
+    },
+    {
+     "t": "Room 1 of 8  ·  Wave 1 of 3",
+     "x": 461,
+     "y": 14,
+     "r": 651,
+     "bt": 36
+    },
+    {
+     "t": "Floor Keeper",
+     "x": 292,
+     "y": 30,
+     "r": 374,
+     "bt": 50
+    },
+    {
+     "t": "HOME",
+     "x": 482,
+     "y": 345,
+     "r": 526,
+     "bt": 366
+    }
+   ],
+   "errs": []
+  },
+  {
+   "n": "667x375-boss-t2-guide",
+   "bossScreen": [
+    10,
+    -158
+   ],
+   "zoom": 0.9765625,
+   "texts": [
+    {
+     "t": "Keeper's Hall\nThe Floor Keeper",
+     "x": 171,
+     "y": 112,
+     "r": 496,
+     "bt": 188
+    },
+    {
+     "t": "Room 1 of 8  ·  Wave 1 of 3",
+     "x": 461,
+     "y": 14,
+     "r": 651,
+     "bt": 36
+    },
+    {
+     "t": "Floor Keeper",
+     "x": 292,
+     "y": 30,
+     "r": 374,
+     "bt": 50
+    },
+    {
+     "t": "HOME",
+     "x": 482,
+     "y": 345,
+     "r": 526,
+     "bt": 366
+    }
+   ],
+   "errs": []
+  },
+  {
+   "n": "844x390-boss-t1",
+   "bossScreen": [
+    85,
+    -164
+   ],
+   "zoom": 1.015625,
+   "texts": [
+    {
+     "t": "Keeper's Hall\nThe Floor Keeper",
+     "x": 259,
+     "y": 118,
+     "r": 584,
+     "bt": 194
+    },
+    {
+     "t": "Room 1 of 8  ·  Wave 1 of 3",
+     "x": 638,
+     "y": 14,
+     "r": 828,
+     "bt": 36
+    },
+    {
+     "t": "Floor Keeper",
+     "x": 381,
+     "y": 30,
+     "r": 463,
+     "bt": 50
+    },
+    {
+     "t": "HOME",
+     "x": 482,
+     "y": 343,
+     "r": 526,
+     "bt": 364
+    }
+   ],
+   "errs": []
+  },
+  {
+   "n": "844x390-boss-t2",
+   "bossScreen": [
+    85,
+    -164
+   ],
+   "zoom": 1.015625,
+   "texts": [
+    {
+     "t": "Keeper's Hall\nThe Floor Keeper",
+     "x": 259,
+     "y": 118,
+     "r": 584,
+     "bt": 194
+    },
+    {
+     "t": "Room 1 of 8  ·  Wave 1 of 3",
+     "x": 638,
+     "y": 14,
+     "r": 828,
+     "bt": 36
+    },
+    {
+     "t": "Floor Keeper",
+     "x": 381,
+     "y": 30,
+     "r": 463,
+     "bt": 50
+    },
+    {
+     "t": "HOME",
+     "x": 482,
+     "y": 343,
+     "r": 526,
+     "bt": 364
+    }
+   ],
+   "errs": []
+  },
+  {
+   "n": "844x390-boss-t2-guide",
+   "bossScreen": [
+    85,
+    -164
+   ],
+   "zoom": 1.015625,
+   "texts": [
+    {
+     "t": "Keeper's Hall\nThe Floor Keeper",
+     "x": 259,
+     "y": 118,
+     "r": 584,
+     "bt": 194
+    },
+    {
+     "t": "Room 1 of 8  ·  Wave 1 of 3",
+     "x": 638,
+     "y": 14,
+     "r": 828,
+     "bt": 36
+    },
+    {
+     "t": "Floor Keeper",
+     "x": 381,
+     "y": 30,
+     "r": 463,
+     "bt": 50
+    },
+    {
+     "t": "HOME",
+     "x": 482,
+     "y": 343,
+     "r": 526,
+     "bt": 364
+    }
+   ],
+   "errs": []
+  }
+ ],
+ "tether": [
+  {
+   "v": "667x375",
+   "tetherFilter": 2,
+   "uiCam": 2,
+   "mainCam": 1,
+   "errs": []
+  },
+  {
+   "v": "844x390",
+   "tetherFilter": 2,
+   "uiCam": 2,
+   "mainCam": 1,
+   "errs": []
+  }
+ ],
+ "realReward": [
+  {
+   "v": "667x375",
+   "got": [
+    "+15 Focus"
+   ],
+   "errs": []
+  },
+  {
+   "v": "844x390",
+   "got": [
+    "+15 Focus"
+   ],
+   "errs": []
+  }
+ ],
+ "testing": [
+  {
+   "v": "667x375",
+   "tt": [
+    "Student profile (same student, four points in time):"
+   ],
+   "errs": []
+  },
+  {
+   "v": "844x390",
+   "tt": [
+    "Student profile (same student, four points in time):"
+   ],
+   "errs": []
+  }
+ ],
+ "create": [
+  {
+   "v": "667x375",
+   "errs": []
+  },
+  {
+   "v": "844x390",
+   "errs": []
+  }
+ ],
+ "street": [
+  {
+   "v": "667x375",
+   "c1": "choice-stay",
+   "c2": "choice-helper",
+   "wrongIdx": {
+    "choices": [
+     "The worker with a name tag. (1)",
+     "The cashier at the counter. (1)",
+     "A grown-up with kids. (1)",
+     "Hide and wait alone. (0)"
+    ],
+    "wrong": 3
+   },
+   "helper": [
+    {
+     "t": "Street Smarts",
+     "fs": "18px",
+     "x": 12,
+     "y": 12,
+     "r": 135,
+     "bt": 34,
+     "off": false
+    },
+    {
+     "t": "✕",
+     "fs": "16px",
+     "x": 626,
+     "y": 14,
+     "r": 639,
+     "bt": 33,
+     "off": false
+    },
+    {
+     "t": "Sound on",
+     "fs": "13px",
+     "x": 517,
+     "y": 15,
+     "r": 578,
+     "bt": 32,
+     "off": false
+    },
+    {
+     "t": "…",
+     "fs": "31px",
+     "x": 320,
+     "y": 111,
+     "r": 347,
+     "bt": 148,
+     "off": false
+    },
+    {
+     "t": "Who do you ask for help?",
+     "fs": "20px",
+     "x": 208,
+     "y": 185,
+     "r": 458,
+     "bt": 209,
+     "off": false
+    },
+    {
+     "t": "The worker with a name tag.",
+     "fs": "15px",
+     "x": 63,
+     "y": 258,
+     "r": 278,
+     "bt": 276,
+     "off": false
+    },
+    {
+     "t": "The cashier at the counter.",
+     "fs": "15px",
+     "x": 396,
+     "y": 258,
+     "r": 595,
+     "bt": 276,
+     "off": false
+    },
+    {
+     "t": "A grown-up with kids.",
+     "fs": "15px",
+     "x": 89,
+     "y": 322,
+     "r": 252,
+     "bt": 340,
+     "off": false
+    },
+    {
+     "t": "Hide and wait alone.",
+     "fs": "15px",
+     "x": 419,
+     "y": 322,
+     "r": 572,
+     "bt": 340,
+     "off": false
+    }
+   ],
+   "wrong": [
+    {
+     "t": "Street Smarts",
+     "fs": "18px",
+     "x": 12,
+     "y": 12,
+     "r": 135,
+     "bt": 34,
+     "off": false
+    },
+    {
+     "t": "✕",
+     "fs": "16px",
+     "x": 626,
+     "y": 14,
+     "r": 639,
+     "bt": 33,
+     "off": false
+    },
+    {
+     "t": "Sound on",
+     "fs": "13px",
+     "x": 517,
+     "y": 15,
+     "r": 578,
+     "bt": 32,
+     "off": false
+    },
+    {
+     "t": "師",
+     "fs": "41px",
+     "x": 313,
+     "y": 149,
+     "r": 354,
+     "bt": 197,
+     "off": false
+    },
+    {
+     "t": "Sensei",
+     "fs": "14px",
+     "x": 12,
+     "y": 243,
+     "r": 57,
+     "bt": 260,
+     "off": false
+    },
+    {
+     "t": "Let's see what could have gone differently.",
+     "fs": "20px",
+     "x": 120,
+     "y": 261,
+     "r": 547,
+     "bt": 285,
+     "off": false
+    },
+    {
+     "t": "Next ▶",
+     "fs": "18px",
+     "x": 302,
+     "y": 320,
+     "r": 364,
+     "bt": 342,
+     "off": false
+    }
+   ],
+   "wrongLines": [
+    {
+     "text": "Let's see what could have gone differently.",
+     "choices": false,
+     "branch": "helper-retry"
+    },
+    {
+     "text": "If you hide, who will know you need help?",
+     "choices": false,
+     "branch": "helper-retry"
+    },
+    {
+     "text": "Let's try again.",
+     "choices": false,
+     "branch": "helper-retry"
+    },
+    {
+     "id": "choice-helper",
+     "text": "Who do you ask for help?",
+     "choices": true,
+     "branch": null
+    }
+   ],
+   "right": {
+    "branch": "helper-good",
+    "text": "Yes! Those are safe helpers."
+   },
+   "end": [
+    {
+     "t": "Street Smarts",
+     "fs": "18px",
+     "x": 12,
+     "y": 12,
+     "r": 135,
+     "bt": 34,
+     "off": false
+    },
+    {
+     "t": "✕",
+     "fs": "16px",
+     "x": 626,
+     "y": 14,
+     "r": 639,
+     "bt": 33,
+     "off": false
+    },
+    {
+     "t": "Sound on",
+     "fs": "13px",
+     "x": 517,
+     "y": 15,
+     "r": 578,
+     "bt": 32,
+     "off": false
+    },
+    {
+     "t": "★★☆",
+     "fs": "48px",
+     "x": 269,
+     "y": 61,
+     "r": 398,
+     "bt": 118,
+     "off": false
+    },
+    {
+     "t": "You earned 2 of 3 stars! Play again any time to try for all 3 stars.",
+     "fs": "20px",
+     "x": 44,
+     "y": 133,
+     "r": 623,
+     "bt": 181,
+     "off": false
+    },
+    {
+     "t": "Play again",
+     "fs": "17px",
+     "x": 171,
+     "y": 250,
+     "r": 259,
+     "bt": 271,
+     "off": false
+    },
+    {
+     "t": "Back to the dojo",
+     "fs": "17px",
+     "x": 382,
+     "y": 250,
+     "r": 520,
+     "bt": 271,
+     "off": false
+    }
+   ],
+   "errs": [],
+   "save": {
+    "best": {
+     "store-separated": 2
+    },
+    "grownup": "Mom"
+   }
+  },
+  {
+   "v": "844x390",
+   "c1": "choice-stay",
+   "c2": "choice-helper",
+   "wrongIdx": {
+    "choices": [
+     "The worker with a name tag. (1)",
+     "The cashier at the counter. (1)",
+     "A grown-up with kids. (1)",
+     "Hide and wait alone. (0)"
+    ],
+    "wrong": 3
+   },
+   "helper": [
+    {
+     "t": "Street Smarts",
+     "fs": "18px",
+     "x": 12,
+     "y": 12,
+     "r": 135,
+     "bt": 34,
+     "off": false
+    },
+    {
+     "t": "✕",
+     "fs": "16px",
+     "x": 803,
+     "y": 14,
+     "r": 816,
+     "bt": 33,
+     "off": false
+    },
+    {
+     "t": "Sound on",
+     "fs": "13px",
+     "x": 694,
+     "y": 15,
+     "r": 755,
+     "bt": 32,
+     "off": false
+    },
+    {
+     "t": "…",
+     "fs": "35px",
+     "x": 407,
+     "y": 118,
+     "r": 437,
+     "bt": 160,
+     "off": false
+    },
+    {
+     "t": "Who do you ask for help?",
+     "fs": "22px",
+     "x": 284,
+     "y": 200,
+     "r": 559,
+     "bt": 227,
+     "off": false
+    },
+    {
+     "t": "The worker with a name tag.",
+     "fs": "17px",
+     "x": 93,
+     "y": 271,
+     "r": 337,
+     "bt": 292,
+     "off": false
+    },
+    {
+     "t": "The cashier at the counter.",
+     "fs": "17px",
+     "x": 516,
+     "y": 271,
+     "r": 741,
+     "bt": 292,
+     "off": false
+    },
+    {
+     "t": "A grown-up with kids.",
+     "fs": "17px",
+     "x": 123,
+     "y": 335,
+     "r": 307,
+     "bt": 356,
+     "off": false
+    },
+    {
+     "t": "Hide and wait alone.",
+     "fs": "17px",
+     "x": 542,
+     "y": 335,
+     "r": 716,
+     "bt": 356,
+     "off": false
+    }
+   ],
+   "wrong": [
+    {
+     "t": "Street Smarts",
+     "fs": "18px",
+     "x": 12,
+     "y": 12,
+     "r": 135,
+     "bt": 34,
+     "off": false
+    },
+    {
+     "t": "✕",
+     "fs": "16px",
+     "x": 803,
+     "y": 14,
+     "r": 816,
+     "bt": 33,
+     "off": false
+    },
+    {
+     "t": "Sound on",
+     "fs": "13px",
+     "x": 694,
+     "y": 15,
+     "r": 755,
+     "bt": 32,
+     "off": false
+    },
+    {
+     "t": "師",
+     "fs": "41px",
+     "x": 401,
+     "y": 160,
+     "r": 442,
+     "bt": 208,
+     "off": false
+    },
+    {
+     "t": "Sensei",
+     "fs": "14px",
+     "x": 12,
+     "y": 258,
+     "r": 57,
+     "bt": 275,
+     "off": false
+    },
+    {
+     "t": "Let's see what could have gone differently.",
+     "fs": "22px",
+     "x": 187,
+     "y": 276,
+     "r": 656,
+     "bt": 303,
+     "off": false
+    },
+    {
+     "t": "Next ▶",
+     "fs": "18px",
+     "x": 391,
+     "y": 335,
+     "r": 453,
+     "bt": 357,
+     "off": false
+    }
+   ],
+   "wrongLines": [
+    {
+     "text": "Let's see what could have gone differently.",
+     "choices": false,
+     "branch": "helper-retry"
+    },
+    {
+     "text": "If you hide, who will know you need help?",
+     "choices": false,
+     "branch": "helper-retry"
+    },
+    {
+     "text": "Let's try again.",
+     "choices": false,
+     "branch": "helper-retry"
+    },
+    {
+     "id": "choice-helper",
+     "text": "Who do you ask for help?",
+     "choices": true,
+     "branch": null
+    }
+   ],
+   "right": {
+    "branch": "helper-good",
+    "text": "Yes! Those are safe helpers."
+   },
+   "end": [
+    {
+     "t": "Street Smarts",
+     "fs": "18px",
+     "x": 12,
+     "y": 12,
+     "r": 135,
+     "bt": 34,
+     "off": false
+    },
+    {
+     "t": "✕",
+     "fs": "16px",
+     "x": 803,
+     "y": 14,
+     "r": 816,
+     "bt": 33,
+     "off": false
+    },
+    {
+     "t": "Sound on",
+     "fs": "13px",
+     "x": 694,
+     "y": 15,
+     "r": 755,
+     "bt": 32,
+     "off": false
+    },
+    {
+     "t": "★★☆",
+     "fs": "48px",
+     "x": 357,
+     "y": 65,
+     "r": 486,
+     "bt": 122,
+     "off": false
+    },
+    {
+     "t": "You earned 2 of 3 stars! Play again any time to try for all 3 stars.",
+     "fs": "20px",
+     "x": 105,
+     "y": 151,
+     "r": 739,
+     "bt": 175,
+     "off": false
+    },
+    {
+     "t": "Play again",
+     "fs": "17px",
+     "x": 260,
+     "y": 259,
+     "r": 348,
+     "bt": 280,
+     "off": false
+    },
+    {
+     "t": "Back to the dojo",
+     "fs": "17px",
+     "x": 471,
+     "y": 259,
+     "r": 609,
+     "bt": 280,
+     "off": false
+    }
+   ],
+   "errs": [],
+   "save": {
+    "best": {
+     "store-separated": 2
+    },
+    "grownup": "Mom"
+   }
+  }
+ ]
+}

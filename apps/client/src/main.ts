@@ -3,6 +3,7 @@ import { CreateScene } from './scenes/CreateScene';
 import { DojoScene } from './scenes/DojoScene';
 import { GameScene } from './scenes/GameScene';
 import { HomeScene } from './scenes/HomeScene';
+import { StreetSmartsScene } from './scenes/StreetSmartsScene';
 import { TitleScene } from './scenes/TitleScene';
 
 const game = new Phaser.Game({
@@ -21,7 +22,7 @@ const game = new Phaser.Game({
     mouse: true,
     touch: true,
   },
-  scene: [TitleScene, CreateScene, DojoScene, HomeScene, GameScene],
+  scene: [TitleScene, CreateScene, DojoScene, HomeScene, GameScene, StreetSmartsScene],
 });
 
 // Pause when the app goes to the background (or a call comes in), and resume cleanly.

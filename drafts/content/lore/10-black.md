@@ -9,13 +9,13 @@ At the very top sits the empty stand where the great light once shone over the t
 
 ## The shattered light
 
-Here the traveler gripped the light so tightly that it broke. They have hidden in the dark ever since.
+Here the storm struck the light, and it broke. The traveler caught the last piece and held on.
 
 ## The Guardian: The Lost Lightbearer
 
-The traveler, wrapped in shadow. They thought keeping the light would keep them safe.
+The traveler, wrapped in storm clouds. They are tired from holding the last piece.
 
-- **When freed:** "You came all this way for me? Then I am not alone."
+- **When freed:** "You came all this way to help? Now we can finish together."
 - **Sensei, after:** "Love brought the light home, and it brought them home too."
 - **The light piece** rises only when the real belt opens the Gate.
 
@@ -29,4 +29,4 @@ The traveler, wrapped in shadow. They thought keeping the light would keep them 
 
 ## What the player learns
 
-The light was never taken by a monster. It broke when someone tried to keep it for themselves. It comes back when it is shared.
+A storm broke the light, and a brave student tried to save it. No one is to blame. Together, you bring it home.

@@ -1,7 +1,7 @@
 // The player's saved progress from play: gear, personal bests, and bad-luck
 // protection. Plain data (the game stores it on the phone for now; on the server later).
 
-import { COMBAT, LOOT, type Rarity } from './config';
+import { COMBAT, DIFFICULTY, LOOT, type Difficulty, type Rarity } from './config';
 import type { Effect } from './effects';
 import { GEAR_SLOTS, rarityRank, type GearItem, type GearSlot } from './loot';
 import type { DojoState } from './dojo';
@@ -68,6 +68,18 @@ export interface Profile {
   look: CharacterLook | null;
   /** Sensei's guided first Counter: the next step to show (GUIDE_DONE once it's finished). */
   guideStep: number;
+  /**
+   * The difficulty the player plays on (milestone 7), or null until one is set (then Standard).
+   * Every Tower run takes its difficulty from here, so elites and combat always agree.
+   */
+  difficulty: Difficulty | null;
+  /** Street Smarts: best stars per scenario, and who the player picked as their grown-up. */
+  streetSmarts: StreetSmartsSave;
+}
+
+export interface StreetSmartsSave {
+  best: Record<string, number>;
+  grownup: 'Mom' | 'Dad' | null;
 }
 
 export function newProfile(): Profile {
@@ -88,6 +100,8 @@ export function newProfile(): Profile {
     dojo: null,
     look: null,
     guideStep: 0,
+    streetSmarts: { best: {}, grownup: null },
+    difficulty: null,
   };
 }
 
@@ -98,7 +112,22 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0 };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null };
+}
+
+function readStreetSmarts(v: unknown): StreetSmartsSave {
+  const s = v as Partial<StreetSmartsSave> | undefined;
+  const best: Record<string, number> = {};
+  if (s?.best && typeof s.best === 'object') for (const [k, n] of Object.entries(s.best)) if (typeof n === 'number') best[k] = n;
+  return { best, grownup: s?.grownup === 'Mom' || s?.grownup === 'Dad' ? s.grownup : null };
+}
+
+/** Keeps the best star count for a finished scenario. Returns true if it's a new best. */
+export function recordScenario(profile: Profile, id: string, stars: number): boolean {
+  const old = profile.streetSmarts.best[id] ?? -1;
+  if (stars <= old) return false;
+  profile.streetSmarts.best[id] = stars;
+  return true;
 }
 
 export function wornItem(profile: Profile, slot: GearSlot): GearItem | null {
@@ -188,4 +217,17 @@ export function finishRun(profile: Profile, summary: RunSummary): BestKey[] {
 /** True when the student hasn't played a (real) floor at this belt tier yet. */
 export function firstFloorOfTier(profile: Profile, tier: number): boolean {
   return (profile.floorsByTier[String(tier)] ?? 0) === 0;
+}
+
+function isDifficulty(v: unknown): v is Difficulty {
+  return typeof v === 'string' && v in DIFFICULTY;
+}
+
+/**
+ * The difficulty a Tower run is played on: a ?difficulty= test link wins, then the player's
+ * setting, then Standard. The run passes it to both the elite rules and the room's combat.
+ */
+export function runDifficulty(profile: Profile, testLink: string | null = null): Difficulty {
+  if (isDifficulty(testLink)) return testLink;
+  return profile.difficulty ?? COMBAT.defaultDifficulty;
 }

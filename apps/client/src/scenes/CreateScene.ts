@@ -136,7 +136,17 @@ export class CreateScene extends Phaser.Scene {
     const go = (d: number) => () => pick(list[(i + d + list.length) % list.length]);
     this.button(at.x, at.y + 5, bw, h, '◀', 0x4a3f63, 20, go(-1));
     this.button(at.x + at.w - bw, at.y + 5, bw, h, '▶', 0x4a3f63, 20, go(1));
-    this.text(at.x + at.w / 2, at.y + rowH / 2, `${name} ${i + 1}`, 15, '#ffffff', true).setOrigin(0.5);
+    // No words or numbers to read: one dot per option, the chosen one big and gold.
+    const n = list.length;
+    const gap = Math.min(14, (at.w - 2 * bw - 16) / n);
+    const g = this.add.graphics();
+    for (let k = 0; k < n; k++) {
+      const dx = at.x + at.w / 2 + (k - (n - 1) / 2) * gap;
+      if (k === i) g.fillStyle(GOLD, 1).fillCircle(dx, at.y + rowH / 2, 5.5);
+      else g.fillStyle(0xf2e9d8, 0.45).fillCircle(dx, at.y + rowH / 2, 3);
+    }
+    this.ui.add(g);
+    void name;
   }
 
   /** A row of colour circles; the chosen one has a gold ring. */
@@ -148,7 +158,7 @@ export class CreateScene extends Phaser.Scene {
       const cx = at.x + cell * (i + 0.5);
       const cy = at.y + rowH / 2;
       const on = i === cur;
-      const dot = this.add.circle(cx, cy, rad, Phaser.Display.Color.HexStringToColor(hex).color).setStrokeStyle(on ? 4 : 2, on ? GOLD : 0x14121c);
+      const dot = this.add.circle(cx, cy, rad, Phaser.Display.Color.HexStringToColor(hex).color).setStrokeStyle(on ? 4 : 2, on ? GOLD : 0xf2e9d8, on ? 1 : 0.6); // light rim so dark swatches show on the dark panel
       if (on) this.ui.add(this.add.circle(cx, cy, rad + 5).setStrokeStyle(2, GOLD, 0.5));
       // The whole cell is the tap target, so small fingers don't miss.
       dot.setInteractive(new Phaser.Geom.Rectangle(rad - cell / 2, rad - rowH / 2, cell, rowH), Phaser.Geom.Rectangle.Contains);

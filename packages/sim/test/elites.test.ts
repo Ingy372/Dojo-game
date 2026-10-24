@@ -8,6 +8,9 @@ import {
   firstFloorOfTier,
   loadRoom,
   newProfile,
+  createRunWorld,
+  runDifficulty,
+  loadProfile,
   startRun,
   stepWorld,
   summarizeRun,
@@ -419,5 +422,35 @@ describe('elite reward (PR #54, Done-when 10b)', () => {
     }
     expect(decos / N).toBeGreaterThan(0.45);
     expect(decos / N).toBeLessThan(0.55);
+  });
+});
+
+describe('the difficulty setting reaches elites (K9)', () => {
+  it('the test link wins, then the player setting, then Standard; old saves have no setting', () => {
+    const p = newProfile();
+    expect(runDifficulty(p)).toBe('standard');
+    p.difficulty = 'guided';
+    expect(runDifficulty(p)).toBe('guided');
+    expect(runDifficulty(p, 'challenge')).toBe('challenge');
+    expect(runDifficulty(p, 'nonsense')).toBe('guided');
+    expect(loadProfile({ ...newProfile(), difficulty: undefined }).difficulty).toBeNull();
+    expect(loadProfile({ ...newProfile(), difficulty: 'guided' }).difficulty).toBe('guided');
+  });
+
+  it('a Guided player never meets a Guarding elite (1,000 green-belt floors), and the room plays on Guided too', () => {
+    const p = newProfile();
+    p.difficulty = 'guided';
+    let elites = 0;
+    for (let seed = 1; seed <= 1000; seed++) {
+      const rooms = walkFloor(seed, { tier: 4, difficulty: runDifficulty(p) });
+      for (const r of rooms) {
+        elites += r.elites.length;
+        expect(r.elites.map((x) => x.kind)).not.toContain('guarding');
+      }
+    }
+    expect(elites).toBeGreaterThan(0);
+    const run = startRun(content, { seed: 7, dryRuns: 0, tier: 4, difficulty: runDifficulty(p) });
+    const world = createRunWorld(content, run, { maxHealth: 100, power: 10, guard: 0 });
+    expect(world.difficulty).toBe('guided');
   });
 });

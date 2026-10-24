@@ -359,3 +359,33 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 
 **Next**
 - Jay checks the Gear and Abilities tabs on a small phone.
+
+## K2: Street Smarts sample, "Separated in a store" (2026-10-24)
+
+**Done**
+- The Street Smarts scene from the approved script (PR #58, J11). The script is copied into `content/street-smarts/store-separated.json`, and the screen text is in `content/street-smarts/ui.json`. None of the words are in code.
+- The rules package walks the script: Next, choices, gentle retries and stars (`packages/sim/src/streetSmarts.ts`). A choice that isn't the best one never shows danger. Sensei asks a question and the same choice comes back.
+- Stars: the best answer on the first try earns 1 star each at "stay", "helper" and "offer", for 3 in all. Telling the worker what's wrong has to happen to go on, but it earns no star. The best score is saved. Street Smarts power stays at 0.
+- The first time, the player picks Mom or Dad. The game remembers the pick, and the story says "{player}" and "Mom" or "Dad".
+- The phone's built-in voice reads each line and its choices aloud. It's on by default for this 6–9 scenario, and the player can switch it off.
+- How to open it: a "Street Smarts" button in the Home Dojo from the 2nd belt on, or the test link `?street=store-separated` at any belt.
+- Choices are 2–4 buttons (CLAUDE.md). The helper question uses the trimmed 4-choice script (#79, wired in K2-trim).
+- The picture is placeholder art for now: a drawn store aisle with a coloured circle for whoever is talking.
+- 14 new tests. 185 tests pass (1 skipped), typecheck is clean and the game builds. Checked with screenshots at 667x375 and 844x390.
+
+**Next**
+- Street Smarts art (the store, the worker, Sensei, the reunion).
+- Jay plays it on his phone with the sound on.
+
+## K9: elites QA fixes (2026-10-24)
+- The difficulty setting now reaches elites. The profile has a `difficulty` field, and `runDifficulty()` picks it (the `?difficulty=` test link wins, then the profile, then the default). The run and the room both use it, so a Guided player never meets a Guarding elite. A sim test walks 1,000 tier-4 Guided floors and finds none.
+- No more ghost Guarding line on an empty floor: the tether is now hidden from the screen camera.
+- The +15 Focus reward pops in bigger above the player and stays on screen about 1 second.
+- The boss bar and name moved to the top strip, between the player's bars and the room label, so they no longer cover the Keeper.
+- The testing screen says "four points in time" (it counts the profiles).
+- The welcome card shows "35 techniques unlocked!", 4 examples and "…and 31 more" instead of a cramped 2-column list.
+- Create screen: Eyes and Hairstyle show a row of dots (the chosen one gold) instead of "Eyes 3"; colour swatches have a light rim. Boy/Girl unchanged.
+- 187 tests pass (1 skipped), typecheck clean, build passes. Screenshots at 667x375 and 844x390.
+
+**Next**
+- M7-P1 (the difficulty choice) only has to set `profile.difficulty`.
