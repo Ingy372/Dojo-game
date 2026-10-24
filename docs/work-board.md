@@ -20,6 +20,8 @@ Last updated: 2026-10-23 by Dojo-ascent Manager.
 6. **The QA bot is active now.**
 7. **A sixth bot, the Game Systems Designer, owns combat, items, Forms, power-ups, difficulty, achievements and rewards** (section 6 below). Answering the milestone 4 questions (powers, numbers, black belt degrees) moves from the Learning Designer to this bot; the Learning Designer reviews its work.
 
+8. **Belt wording:** keep "Red/Black" and "Brown/Black" (PR #15).
+
 ---
 
 ## 2. Already answered in the design (no new decision needed)
@@ -48,8 +50,16 @@ These questions already have answers in the design docs. The bots build on these
 | J3 | ~~Kata list~~ **Names done** (`docs/curriculum.md`). ~~Spellings~~ done (commit 660c98d). Still needed (in progress): one line on each kata's character. | S3 |
 | J4 | ~~Faith texts~~ **Done:** `docs/faith-and-creed.md`. Still needed: Jay's answers to the questions in its section 6. | L5 can start now; C5 waits on the answers |
 | J5 | ~~Confirm cosmetics~~ **Done (Oct 23):** cosmetics come from gear, in-game achievements and dojo achievements, and are never bought. | ~~A1~~ (unblocked) |
-| J6 | ~~Black belt to 2nd degree~~ **Done (Oct 23):** 2 years between 1st and 2nd degree. | ~~milestone 4~~ (unblocked) |
+| J6 | ~~Black belt to 2nd degree~~ **Done (Oct 23):** 2 years between 1st and 2nd degree. Code change done in PR #16. | ~~milestone 4~~ (unblocked) |
 | J7 | ~~Fonts~~ **Done (Oct 23, Jay delegated to the Manager):** Fredoka for headings + Andika for body text, because Andika is built for early readers (ages 6+). | ~~menu art~~ (unblocked) |
+
+---
+
+## 3a. Top fix waiting on assignment
+
+| ID | Task | Waiting on |
+| --- | --- | --- |
+| G1 | **Top fix from Q1: guided first Counter** (Learning proposal 6 in `drafts/learning/proposals-top5.md`). The game slows down and shows the child when to press Counter, the first few times. | the Manager's assignment |
 
 ---
 
@@ -58,6 +68,7 @@ These questions already have answers in the design docs. The bots build on these
 | ID | Task | Waiting on |
 | --- | --- | --- |
 | K1 | **In progress (sent Oct 23).** Check that the game's belt list, kata names and requirement counts match `docs/curriculum.md` (fixtures and content/), and list any differences for Jay. Record section 1 in docs/decisions.md. In docs/GROK_BOTS.md, mark the QA bot active and move the milestone 4 recommendation task from the Learning Designer to the Dojo-Ascent Researcher & Planner. Fix one fact wherever it appears: Sensei's Lessons are built in milestone 7 and finished in milestone 10. Remove the black belt question from the Open questions list only after J6 is answered. Also add Jay's new curriculum text (self-defense #31–35, kick combos 1–7) to the docs, and replace remaining Claude Code references in the docs with the Dojo-Ascent Programmer. Also record Jay's Oct 23 decisions in docs/decisions.md: J5 (cosmetics from gear, in-game and dojo achievements, never bought), J6 (2 years from 1st to 2nd degree) and J7 (Fredoka headings + Andika body). Show Jay the changes before committing. | nothing |
+| K4 | **In progress (Oct 23).** Build S1 #1 (enemy mixes) and #2 (Perfect Counter chain) from `drafts/planning/`. The "longest chain" record is deferred. | nothing |
 | K2 | Continue milestone 6 (Story and Street Smarts sample) when the Content Writer's C1 is approved. | C1 |
 | K3 | Run the balance-testing computer player whenever the QA bot or the Systems Designer asks, and send Jay the report. | requests |
 
@@ -67,7 +78,7 @@ These questions already have answers in the design docs. The bots build on these
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| Q1 | **In progress (sent Oct 23).** **Full combat test** on the live link: all three difficulties, all three test profiles, every room type and the boss. Report bugs, then a playability report. Add one extra section: "What would make combat more varied and more rewarding?", thinking like a 6-year-old, a 12-year-old and an adult. | nothing |
+| Q1 | **Delivered (PR #17):** `drafts/qa/2026-10-23-q1-combat-report.md`. Headline: a player who never Counters wins 0% of runs on every difficulty. ~~**Full combat test** on the live link: all three difficulties, all three test profiles, every room type and the boss. Report bugs, then a playability report. Add one extra section: "What would make combat more varied and more rewarding?", thinking like a 6-year-old, a 12-year-old and an adult.~~ | — |
 | Q2 | Test character creation and the newly imported art (Batches 4–7): readability on a phone, anything that looks wrong. | nothing |
 | Q3 | Ask Jay for a balance run from Dojo-Ascent Programmer (K3), compare it with your own play, and suggest specific number changes. Note: novice players on Standard currently win only 41% of runs. | K3 |
 
@@ -81,7 +92,7 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | --- | --- | --- |
 **Owner:** Jay assigned S1–S8 to the Dojo-Ascent Researcher & Planner on Oct 23 (the separate Game Systems Designer bot was not set up).
 
-| S1 | **In progress (sent Oct 23).** **Combat depth proposal.** Combat is fun but needs more variety and more reward. Review what's built, plus Q1 when it lands. Propose up to 6 changes, ranked by fun per cost. Ideas to weigh: enemy mixes that force different answers, elite enemy modifiers, room twists, Form-switching moments, Perfect Counter chains, combo finishers, risk-and-reward choices between rooms, better hit feedback. Each change must keep the core skill of reading the warning, then answering. | nothing (use Q1 when it arrives) |
+| S1 | **Done (PR #12).** The Programmer is building #1 and #2 (K4). **Combat depth proposal.** Combat is fun but needs more variety and more reward. Review what's built, plus Q1 when it lands. Propose up to 6 changes, ranked by fun per cost. Ideas to weigh: enemy mixes that force different answers, elite enemy modifiers, room twists, Form-switching moments, Perfect Counter chains, combo finishers, risk-and-reward choices between rooms, better hit feedback. Each change must keep the core skill of reading the warning, then answering. | nothing (use Q1 when it arrives) |
 | S2 | **Item system spec.** Gear slots, rarity, stat ranges inside the power budget, drop sources by tier, breaking duplicates down into materials, and how gear stats and cosmetic looks stay separate. What's in launch and what comes later. | nothing |
 | S3 | **Forms (stances).** One Form per kata in `docs/curriculum.md` (8 known so far): its name, how it plays, and the reason to switch to it. Plus the switching rules (how, when, cooldown) and how Forms stay simple for a 6-year-old. | J3 (kata character lines) |
 | S4 | **Power-ups from real training.** Start with self-defense: give each of #1–30 in `docs/self-defense.md` an in-game effect that matches what the real technique does, using its game category, and follow the rules at the bottom of that file. Techniques in the same category should build on each other (for example, #13, #14 and #24 all kick a weapon away, each a little stronger). Replace the current placeholder powers. Then do the kick combos (after J2) and the katas (after S3). Finally, give a recommendation for each milestone 4 open question (content/abilities/abilities.json, and the PROGRESSION and POWER settings in docs/decisions.md). | self-defense: nothing · kick combos: nothing (J2 done) |
@@ -108,7 +119,7 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| C1 | **In progress (sent Oct 23):** milestone 6 dialogue in progress; the Street Smarts script waits on Jay deciding where it's drafted. **Milestone 6 material:** dialogue for Sensei, Senpai, Kohai, the second instructor and the founder; plus one Street Smarts scenario script for Jay to approve. | Street Smarts script: Jay (where it's drafted) |
+| C1 | **Milestone 6 dialogue merged (PR #9).** The Street Smarts script is still waiting on Jay deciding where it's drafted. **Milestone 6 material:** dialogue for Sensei, Senpai, Kohai, the second instructor and the founder; plus one Street Smarts scenario script for Jay to approve. | Street Smarts script: Jay (where it's drafted) |
 | C2 | Redo `dojo/sensei-bow-questions.json` as recall questions, with Sensei's lines for a correct answer, a wrong answer, and each award. Change the first lesson to "Tap where you want to go, or use the stick." | nothing |
 | C3 | **Lore bible (lore first).** The Tower's history, the shattered light, the Guardian of every belt tier (white to black), and the Relics. Keep it to one page per tier. This becomes the foundation every quest and enemy is built on. | nothing |
 | C4 | **Quest lines.** After C3 is approved: an outline of the main story chapter for each tier, the life-lesson quests (3rd belt), and the manners and culture quests. Outlines first; full scripts after Jay approves. | C3 |
