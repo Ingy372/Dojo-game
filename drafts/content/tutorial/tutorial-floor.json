@@ -1,0 +1,79 @@
+{
+  "notes": "DRAFT for M7-P3 (tutorial lines for the P2 tutorial floor). Same format and keys as content/tutorial/sensei-lessons.json. One screen line per step, each under 12 words; 'success' shows when the step is done; 'retry'/'nudge' only on the brute step (never a penalty, Health never drops below 1). 'COUNTER' matches the button label. The P4 cascade line 'You've already earned these in the dojo.' is in the plan's own spec and isn't repeated here. Played once per profile; replay from the Lesson Scroll.",
+  "speaker": "sensei",
+  "lessons": [
+    {
+      "id": "tutorial-bow",
+      "order": 1,
+      "trigger": "Tutorial floor starts: bow at the door",
+      "screens": [
+        "Bow at the door to show respect."
+      ],
+      "success": "Nice bow. Let's go in.",
+      "earliestRun": 1
+    },
+    {
+      "id": "tutorial-walk",
+      "order": 2,
+      "trigger": "Walk to the glowing spot",
+      "screens": [
+        "Tap where you want to go, or use the stick."
+      ],
+      "success": "You found it!",
+      "earliestRun": 1
+    },
+    {
+      "id": "tutorial-brute",
+      "order": 3,
+      "trigger": "Slow brute appears and winds up (game slows, COUNTER pulses)",
+      "screens": [
+        "Red circle! Tap COUNTER now!"
+      ],
+      "success": "Perfect! You did it!",
+      "earliestRun": 1,
+      "retry": "Almost! The circle will come again.",
+      "nudge": "Take your time. Tap the blue COUNTER button!"
+    },
+    {
+      "id": "tutorial-insight",
+      "order": 4,
+      "trigger": "Insight choice (1 of 3) opens",
+      "screens": [
+        "Pick one Insight. It helps for this climb."
+      ],
+      "success": "Good pick!",
+      "earliestRun": 1
+    },
+    {
+      "id": "tutorial-chest",
+      "order": 5,
+      "trigger": "Guaranteed Uncommon chest appears",
+      "screens": [
+        "A treasure chest! Walk up to open it."
+      ],
+      "success": "Look what you found!",
+      "earliestRun": 1
+    },
+    {
+      "id": "tutorial-boss",
+      "order": 6,
+      "trigger": "Easy tutorial boss enters",
+      "screens": [
+        "A bigger foe. Watch the circles, like before."
+      ],
+      "success": "You stayed calm. Well done!",
+      "earliestRun": 1
+    },
+    {
+      "id": "tutorial-door",
+      "order": 7,
+      "trigger": "Boss defeated; door home opens",
+      "screens": [
+        "The door home is open."
+      ],
+      "success": "What was your favorite part?",
+      "earliestRun": 1
+    }
+  ],
+  "maxNewLessonsPerRoom": 1
+}
