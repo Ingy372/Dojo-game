@@ -657,5 +657,8 @@ My calls (not Manager):
 
 ## Kid-facing tone pass (K19 follow-up) (2026-10-24)
 Manager calls:
+- The Welcome Back card body line 'Your dojo missed you.' becomes exactly 'Your dojo is ready.' (DojoScene.arrive). The card title already says "Welcome back, {name}!".
+- The run-resume title (content/settings/run-resume.json) "Your climb is waiting!" becomes 'Pick up your climb?'.
+- The Tower door's doorRestingLine (content/settings/play-time.json) "Come back tomorrow for more training!" becomes 'More training tomorrow!'.
 - Old saves (from before M7-P7) keep everything open and skip Welcome Week.
 - If the app closes mid-play during the K18 unlock cascade, the cascade replaying on the next return is fine.
