@@ -6,8 +6,7 @@ A record of choices already made, newest at the bottom, so settled questions are
 
 Anything waiting on Jay's answer goes here. When he answers, the answer moves into the log below and the question is removed.
 
-1. **Black belt to 2nd degree.** At Action Zone, black belt is 1st degree. How long does a student usually wait between 1st degree and 2nd degree? (Set to 1 year for now; it only matters for students far in the future.)
-2. **Fonts.** The style guide recommends Fredoka (titles) + Nunito (text), or Fredoka + Andika, both free. Which one, or keep the system font? (System font for now. Adding a font means bundling its files with the game.)
+(None right now.)
 
 ## Milestone 0 — Setup (2026-10-05)
 
@@ -192,7 +191,7 @@ Jay asked Claude to test and tune the game before his next playtest.
   Each rank above I (the same word earned again) is 25% stronger (bigger shield, longer discipline), because practicing a virtue for longer makes it stronger. The Virtue taken into fights is the highest rank, then the most recent (a loadout choice comes later).
 - **The Insight "Second Wind" is renamed "Rally"** so it doesn't clash with the Great Effort Virtue.
 - **Levels:** cap 10 per belt tier (white 10, yellow 20). Each level adds +3 Health and +0.4 Power. Runs give experience per room cleared (battle 12, challenge 16, treasure/rest 4, boss 40, plus 20 for clearing the floor). Each tier's experience is set so a typical player (8 runs a week, about 110 experience a run) reaches the cap at 75% of the belt's typical time in rank. At the cap, experience stops for now; overflow into materials and Mastery comes after launch. All numbers are in `PROGRESSION` in the settings file.
-- **Typical time in rank (Jay, 2026-10-07):** white through blue test every 3 months; red to red/black 6 months; red/black to brown 6 months; brown to brown/black 9 months; brown/black to black 1 year. At Action Zone black belt is 1st degree; the wait to 2nd degree is set to 1 year until Jay says otherwise. White to black takes about 4–5 years.
+- **Typical time in rank (Jay, 2026-10-07):** white through blue test every 3 months; red to red/black 6 months; red/black to brown 6 months; brown to brown/black 9 months; brown/black to black 1 year. At Action Zone black belt is 1st degree; the wait to 2nd degree is 2 years (Jay, 2026-10-23; see the work-board decisions below). White to black takes about 4–5 years.
 - **Classes before testing (Jay, 2026-10-07):** 2 classes a week, with 1 week (2 classes) excused per belt; any other missed class must be made up. That makes 24 classes for a 3-month belt, 50 for 6 months, 76 for 9 months and 102 for a year. This is the Gate's time-in-rank dial. Note for Nic: DojoForge will need to count classes in rank (made-up classes included) so the dial is right.
 - **Catch-up experience:** below the rank's expected level (the previous belt's cap, so a yellow belt is expected to be at least level 10), experience is doubled. A saved level above the current belt's cap (only possible when switching fake profiles) is shown capped.
 - **Dojo Blessing:** a class in the last 48 hours gives +50% experience and better loot (3 points of weight move from Common to Rare on every roll). The Home Dojo shows a glow around the character and the hours left. Nothing is shown when not blessed (no punishment).
@@ -273,12 +272,12 @@ Jay asked Claude to test and tune the game before his next playtest.
 ## Grok bot team and the art process (Jay, in his Claude chat, 2026-10-08)
 
 - **Five Grok bots join the team,** each with one job: Art Director, Content Writer, Learning & Engagement Designer, QA & Playability Tester (beta testing and balancing as the game nears completion), and Launch Prep (shortly before launch). Their full directions are in `docs/GROK_BOTS.md`.
-- **Bots never change code.** Claude Code is the only one who changes the game.
+- **Bots never change code.** Dojo-Ascent Programmer is the only one who changes the game.
 - **Each bot has its own folder and branch** (`incoming-art/` on `bot-art`, `drafts/content/` on `bot-content`, `drafts/learning/` on `bot-learning`, `drafts/qa/` on `bot-qa`, `drafts/launch/` on `bot-launch`) and delivers through pull requests that Jay merges. Each folder has a README explaining this.
-- **Nothing in a bot folder is approved until Jay says so.** Claude Code copies approved files into `assets/` or `content/` only when Jay asks, and never edits files inside the bot folders.
+- **Nothing in a bot folder is approved until Jay says so.** Dojo-Ascent Programmer copies approved files into `assets/` or `content/` only when Jay asks, and never edits files inside the bot folders.
 - **The Learning & Engagement Designer's proposals are suggestions,** reviewed by Jay with his Claude chat before anything is built. It also reviews milestone 4's open questions (powers, numbers, black belt degrees), which is the design material milestone 4 is paused for.
 - **No art pack is bought.** The Art Director bot makes all art in Blender: low-poly 3D models, rigged and animated (Mixamo allowed), rendered from one fixed top-down three-quarter camera in 8 directions into transparent PNG sprite sheets with a reusable render script. Icons, portraits and scene pictures come from the same models so everything matches. This replaces the pixel-art-pack plan in framework section 13. Details: "Art process" in core-design section 13.
-- **Claude Code builds the import step:** a repeatable script that trims, sizes and packs approved renders into texture atlases for Phaser.
+- **Dojo-Ascent Programmer builds the import step:** a repeatable script that trims, sizes and packs approved renders into texture atlases for Phaser.
 - **Character customization replaces the placeholder circle:** a layered character (body, skin tone, face, hair style and color, gi, belt), each part rendered separately from the same model, chosen at character creation and changeable at the Home Dojo. The belt is its own layer, recolored in code to the real rank and stripes, and is never customizable. Extra looks are earned, never bought.
 
 ### Milestone 5 — changes after Jay's first test (2026-10-08)
@@ -365,3 +364,20 @@ Jay asked Claude to test and tune the game before his next playtest.
   - A look set earlier from the testing screen is used as the starting point.
   - The testing screen's look buttons are removed.
 - **Saving plays the bow.** The celebrate move stays reserved for real promotions.
+
+## Jay's work-board decisions (Jay, 2026-10-18; recorded for work-board item K1)
+
+From section 1 of `docs/work-board.md`.
+
+- **Bow question = recall.** Sensei shows a picture of one of the player's earned abilities and asks "What's this one called?" with 3 picture-and-word choices. After the answer, the character performs the move. A wrong answer warmly shows the right name; there is no penalty. Correct answers are counted forever, with awards at 5, 10, 20, 50 and 100 (may go higher). At most one question per day. It can always be skipped. This replaces the "Which felt best?" draft.
+- **Lore comes first.** The Tower's story and enemy lore are launch scope, and the game is built around them where it fits.
+- **The Bestiary is launch scope.** An enemy's entry fills in the first time the player defeats it; deeper lore unlocks with each real belt. The unlock schedule in core-design section 13 still needs updating to match.
+- **First movement lesson:** "Tap where you want to go, or use the stick."
+- **Real techniques decide game effects.** Each self-defense technique's callout and in-game effect must match what the real technique does to an opponent. Jay's descriptions are in `docs/self-defense.md`. The game shows outcomes (off-balance, trapped, thrown, disarmed, escaped), never injuries.
+- **The QA bot is active now.**
+- **Systems design goes to Dojo-Ascent Researcher & Planner.** The board planned a sixth bot, the Game Systems Designer, to own combat, items, Forms, power-ups, difficulty, achievements and rewards. Jay instead gave those items (S1–S8) to the existing bot Dojo-Ascent Researcher & Planner (2026-10-23), so no sixth bot and no `drafts/systems/` folder were created. Answering the milestone 4 questions (powers, numbers, black belt degrees) moves from the Learning Designer to Dojo-Ascent Researcher & Planner; the Learning Designer reviews its work.
+- **Claude Code is replaced by Dojo-Ascent Programmer** (Jay, 2026-10-23). Jay no longer works with Claude Code; every mention in `docs/` now says Dojo-Ascent Programmer.
+- **Sensei's Lessons timing:** the Lessons system is built in milestone 7 and finished (a lesson for every launch system) in milestone 10.
+- **Black belt to 2nd degree (J6, Jay, 2026-10-23):** 2 years between 1st degree and 2nd degree black belt. The game's setting still uses the old 1-year placeholder; Dojo-Ascent Programmer changes it in a later code step when Jay asks.
+- **Cosmetics (J5, Jay, 2026-10-23):** cosmetics come from gear, in-game achievements and dojo achievements, and are never bought.
+- **Fonts (J7, Jay, 2026-10-23):** Fredoka for headings, Andika for body text. The game still uses the system font until Dojo-Ascent Programmer adds the font files in a later code step.

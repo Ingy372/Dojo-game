@@ -1,8 +1,8 @@
-# Action Zone Self-Defense Techniques (1–30)
+# Action Zone Self-Defense Techniques (1–35)
 
 Source: Jay, head instructor, 2026-10-18. This is the real curriculum. **Game effects must match what each technique does** (docs/decisions.md). Where a line says "(not stated)", Jay hasn't described that part yet, so don't guess.
 
-**Belts:** confirmed by Jay. A technique is listed under the belt the student is wearing while learning it: #1–5 are learned at White to earn Yellow, #6–10 at Yellow, and so on. #31–40 (Red/Black and Brown) aren't described yet. The full belt ladder is in `docs/curriculum.md`.
+**Belts:** confirmed by Jay. A technique is listed under the belt the student is wearing while learning it: #1–5 are learned at White to earn Yellow, #6–10 at Yellow, and so on. #31–35 (Red/Black) were added from Jay's descriptions on 2026-10-23, in his own words. #36–40 (Brown) are still to come from Jay. The full belt ladder is in `docs/curriculum.md`.
 
 **Game category** is a short label grouping techniques that do the same kind of thing. The Game Systems Designer uses it for item S4.
 
@@ -38,6 +38,13 @@ Source: Jay, head instructor, 2026-10-18. This is the real curriculum. **Game ef
 | 28 | Red | Overhead knife attack | Block high, reach behind, grab your own wrist, set a four-corner shoulder lock | Weapon arm locked | Weapon control |
 | 29 | Red | Two-hand choke from the front | Hands up between the attacker's elbows, left hand to the chin, right hand to the back of the head, step back and throw the attacker by the head | Choke broken, attacker thrown | Choke escape |
 | 30 | Red | Two-hand choke from the front | Hands up between the attacker's elbows, palms to the sides of the head, thumbs to the eyes | Choke broken | Choke escape |
+| 31 | Red/Black | Jab | Self defense 31: attacker throws jab, you cross step to the back as you parry and strike the arm (hyperextension), then roll it into an arm bar and control or break. | (not stated) | TBD (for Dojo-Ascent Researcher & Planner) |
+| 32 | Red/Black | Jab | Self defense 32: same as 31; once at arm bar, slide to the wrist and set wrist lock. | (not stated) | TBD (for Dojo-Ascent Researcher & Planner) |
+| 33 | Red/Black | Jab | Self defense 33: same as 32; once wrist lock is set, rotate hand to the left, bend the elbow and set a party flex. **Needs Jay's confirmation of the term "party flex".** | (not stated) | TBD (for Dojo-Ascent Researcher & Planner) |
+| 34 | Red/Black | Jab | Self defense 34: same as 33 with a slam at the end. | (not stated) | TBD (for Dojo-Ascent Researcher & Planner) |
+| 35 | Red/Black | Jab | Self defense 35: attacker throws jab, slide to the side and parry, catching the hand and setting a wrist lock. | (not stated) | TBD (for Dojo-Ascent Researcher & Planner) |
+
+**#36–40 (Brown): still to come from Jay.** #31–35 are Jay's words exactly; the "Result on the opponent" and "Game category" columns are left for Jay and Dojo-Ascent Researcher & Planner to fill in.
 
 ---
 
@@ -45,7 +52,7 @@ Source: Jay, head instructor, 2026-10-18. This is the real curriculum. **Game ef
 
 - **The game shows outcomes, never injuries.** On screen, an enemy can be off-balance, stunned, trapped, thrown, pinned, disarmed or escaped from. It is never shown hurt, broken, gouged or bleeding, and no text describes it that way. The real details stay in the curriculum and the technique videos.
 - **Callouts use the real number** ("Self-Defense #17!") with a short, kid-safe subtitle ("Arm Bar", "Choke Escape").
-- **Weapons:** enemies in the Tower are shadow creatures. How weapon attacks look in the game (for example, a shadow blade or staff) is a proposal for the Game Systems Designer and the Art Director; Jay decides.
+- **Weapons:** enemies in the Tower are shadow creatures. How weapon attacks look in the game (for example, a shadow blade or staff) is a proposal for Dojo-Ascent Researcher & Planner and the Art Director; Jay decides.
 - **Street Smarts is different:** its safety lessons always teach getting away and finding a trusted adult first, especially around weapons, even though the curriculum teaches what to do when there is no escape.
 
 ## The game's current powers versus the real techniques

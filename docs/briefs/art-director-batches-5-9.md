@@ -1,9 +1,9 @@
 # Art Director brief: Batches 5–9
 
-**From:** Jay (written with Claude Code), 2026-10-16
+**From:** Jay (written with Dojo-Ascent Programmer), 2026-10-16
 **To:** the Art Director bot (folder `incoming-art/`, branch `bot-art`)
 
-Read this whole brief before starting. It explains what to make next, in what order, and exactly how to deliver each piece so Claude Code can drop it straight into the game.
+Read this whole brief before starting. It explains what to make next, in what order, and exactly how to deliver each piece so Dojo-Ascent Programmer can drop it straight into the game.
 
 ---
 
@@ -11,7 +11,7 @@ Read this whole brief before starting. It explains what to make next, in what or
 
 - **Batches 1–4 are approved and in the game** (live since 2026-10-16): the player character (all animations), the four Tier 1 creatures, the Home Dojo room and decorations, and the Tower room kit. Jay: "everything appears to be working properly."
 - **Your style guide is approved.** It now lives at `docs/style-guide.md`. Follow it for everything below. Fonts (section 9) are still Jay's choice, so don't put any text in the art.
-- **How your art is used:** Claude Code's import tool (`tools/art-import/`) reads your sheets and JSON, shrinks everything to **48 px per tile** (0.6×), trims empty space and packs it. So:
+- **How your art is used:** Dojo-Ascent Programmer's import tool (`tools/art-import/`) reads your sheets and JSON, shrinks everything to **48 px per tile** (0.6×), trims empty space and packs it. So:
   - keep rendering at **80 px per tile**, exactly as before;
   - keep the **same JSON format** as Batches 1–4: character JSON like `player-character/sprites/player.json`, static JSON like `tower-rooms/sprites/static.json`;
   - details thinner than about 2 px at 80 px per tile disappear in the game. Keep shapes bold.
@@ -24,7 +24,7 @@ Read this whole brief before starting. It explains what to make next, in what or
 - **You do NOT write content.** No names, descriptions, dialogue, story, quest text, lore or labels. If a piece of art needs a name or words, use a plain placeholder id in the file name (e.g. `sensei`, `hair-03`). Then list it under **DECIDE** in your Delivery Note, so Jay can send it to the Content Writer bot.
 - **You do NOT design game rules.** No stats, numbers, abilities, enemy behaviour or new items. Draw only things that already exist in the game's data files (listed below). If something needs new rules, stop and ask Jay.
 - **No text inside the pictures** (no letters, numbers or words). The only exceptions are the approved kanji 心 and 道 on the existing decorations.
-- **Never edit anything outside `incoming-art/`.** Claude Code moves approved art into the game.
+- **Never edit anything outside `incoming-art/`.** Dojo-Ascent Programmer moves approved art into the game.
 - **Before every big batch, deliver 3 samples and stop** until Jay approves them. That's the rule from `docs/GROK_BOTS.md`, and it saves you redoing work.
 - Everything must pass section 10 of the style guide: kid-friendly for ages 6+, never frightening, real clean martial arts technique.
 
