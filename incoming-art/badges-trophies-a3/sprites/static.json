@@ -100,6 +100,82 @@
       ],
       "dateTextColor": "#3a2a22",
       "note": "SAMPLE CT (belt promotion: band uses the belt colour, orange shown). Certified cues: gold cup, gold seal rosette with sky ribbons, warm halo, sparkles, cream date plate. BLANK plate: the game writes 'Earned {date}' (C7 trophyText)."
+    },
+    "certified-trophy-layered": {
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "layers": [
+        {
+          "id": "base",
+          "files": {
+            "img": "trophies/certified-layers/trophy-base.png"
+          },
+          "note": "cup + stand + plinth + blank date plate + halo + sparkles, one layer. Belt band orange in this sample."
+        },
+        {
+          "id": "sealBacking",
+          "files": {
+            "default": "trophies/certified-layers/seal-backing-default.png",
+            "actionzone": "trophies/certified-layers/seal-backing-actionzone.png"
+          },
+          "fallback": "default",
+          "note": "school palette picks the file; unknown school -> default (gold + sky)"
+        },
+        {
+          "id": "schoolMark",
+          "files": {
+            "default": "trophies/certified-layers/seal-mark-default-star.png",
+            "placeholder": "trophies/certified-layers/seal-mark-PLACEHOLDER-school.png"
+          },
+          "fallback": "default",
+          "note": "PLACEHOLDER is a stand-in only; never ship it. No school logo is in the repo yet."
+        }
+      ],
+      "schoolMarkSpec": {
+        "centrePx": [
+          76,
+          130
+        ],
+        "faceRadiusPx": 10,
+        "safeRadiusPx": 8,
+        "onTrophyPx": [
+          16,
+          16
+        ],
+        "supplyAs": "square PNG, 128x128 (min 64x64), RGBA with transparent background, sRGB, mark centred",
+        "safeArea": "keep all of the mark inside the centred circle of diameter 112 px (8 px margin on a 128 canvas); outside that is clipped by the face ring",
+        "rules": "no text smaller than the mark itself (it shows at 16 px); bold simple shapes; no red (house rule); test on the seal face colour of your palette",
+        "palette": "backing colours: scallop, face, faceRing, tail (hex). Defaults: #d68c14 #ffd34d #fff5be #4096eb"
+      },
+      "palettes": {
+        "default": {
+          "scallop": "#d68c14",
+          "face": "#ffd34d",
+          "faceRing": "#fff5be",
+          "tail": "#4096eb",
+          "source": "A3 house palette (generic fallback, unchanged from PR #138)"
+        },
+        "actionzone": {
+          "scallop": "#191a3e",
+          "face": "#efeadc",
+          "faceRing": "#c9a227",
+          "tail": "#c9a227",
+          "source": "actionzonecma.com CSS: --color-indigo #191a3e, --color-paper-warm #efeadc, --color-gold #c9a227"
+        }
+      }
     }
   }
 }
