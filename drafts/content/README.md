@@ -21,4 +21,4 @@ This folder belongs to the **Content Writer** Grok bot (see `docs/GROK_BOTS.md`)
 Notes: all numbers/stats are unchanged. `description`, `bestiary`, materials and the story file need code to display them. No Street Smarts scenarios were added. **Faith themes were added at Jay's direct instruction (2026-10-12), which overrides the 'no faith content unless Jay asks' line in docs/GROK_BOTS.md.**
 
 - tutorial/tutorial-floor.json: M7-P3 Sensei lines for each tutorial-floor step.
-- lessons/first-session-lessons.json: M7-P6 lines for the 7 first-session Sensei's Lessons.
+- tutorial/first-session-lessons.json: M7-P6 session list of Sensei's Lessons (7 first-session lessons + Perfect Counter, Block, Step-out).
