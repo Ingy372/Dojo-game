@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-24 (3:05 PM EDT) by Dojo-ascent Manager. Catch-up covers PRs #62–#136.
+Last updated: 2026-10-24 (4:05 PM EDT) by Dojo-ascent Manager. Catch-up covers PRs #62–#142.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -78,19 +78,19 @@ Start with **M7-P1, M7-P9 and M7-P11**. Full specs are in the plan file under th
 | ID | Task | Owner | Waiting on | Done when |
 | --- | --- | --- | --- | --- |
 | M7-P1 | **Done (PR #108, merged Oct 24).** Default difficulty is Standard, with a difficulty choice screen (Manager call). Original: Guided on by default for new profiles aged 6–9 or white belt with 0 sign-offs; never switch a player off a mode they chose. | Programmer | nothing | Youngest fake profile starts on Guided; switching to Standard sticks after reload; an older profile starts on Standard. |
-| M7-P2 | Tutorial floor (first 10 minutes, can't lose). | Programmer | nothing (M7-P3 delivered) | First Perfect Counter under 2 minutes from "Tap to start"; can't lose by doing nothing; chest always Uncommon or better. |
+| M7-P2 | **Done (PR #139, merged Oct 24).** First Perfect Counter in about 40 s; can't lose; chest always Special or better. Original: Tutorial floor (first 10 minutes, can't lose). | Programmer | — | First Perfect Counter under 2 minutes from "Tap to start"; can't lose by doing nothing; chest always Uncommon or better. |
 | M7-P3 | **Delivered (PRs #37, #49).** Tutorial lines for each P2 step. | Content Designer | — | Every P2 step has one line in a data file, each under 12 words. |
-| M7-P4 | Cascade of unlocks on first return home. | Programmer | M7-P2 | Profile 2 sees 3 unlocks plus the stripe in order; profile 1 sees the preview; nothing plays twice. |
-| M7-P5 | Sensei's Lessons + Lesson Scroll. Retire the old `content/tutorial/sensei-lessons.json` (see `_note` in the new file). | Programmer | nothing (M7-P6 delivered) | Two sessions in a row show one new lesson each, never two; every seen lesson replays from the Scroll. |
+| M7-P4 | **Next for the Programmer (ready now, K18).** Cascade of unlocks on first return home. | Programmer | nothing (M7-P2 done) | Profile 2 sees 3 unlocks plus the stripe in order; profile 1 sees the preview; nothing plays twice. |
+| M7-P5 | **Done (PR #142, merged Oct 24).** A session is a calendar day with at least one run; one new lesson per session and per room; Scroll button in the dojo replays seen lessons and the tutorial floor. | Programmer | — | Two sessions in a row show one new lesson each, never two; every seen lesson replays from the Scroll. |
 | M7-P6 | **Delivered (PRs #37, #39, #44, #49, #50).** Lesson lines for first-session systems; `drafts/content/tutorial/first-session-lessons.json` is the only lesson file. | Content Designer | — | Each P5 lesson has its lines in a data file, one sentence per screen. |
-| M7-P7 | Gradual unlock schedule + Welcome Week. | Programmer | M7-P5 | Yellow-belt profile gets all abilities on day 1 but meets one new system per session; "+1 day" moves it forward. |
+| M7-P7 | **After M7-P4 (K19).** Gradual unlock schedule + Welcome Week. | Programmer | nothing (M7-P5 done); do after K18 | Yellow-belt profile gets all abilities on day 1 but meets one new system per session; "+1 day" moves it forward. |
 | M7-P8 | Sound and music on every main screen. | Programmer | M7-P8a (music pick, waits on J10) | No main screen without sound; both volume sliders work and are remembered. |
 | M7-P8a | **Shortlist delivered (PRs #38, #43).** Shortlist 3 free-licence music packs (commercial use allowed); Manager picks one. | Researcher & Planner | WAFU's reply (J10) | Shortlist in drafts/planning/ with licence links; Manager's pick recorded here. |
 | M7-P9 | **Done (PR #110, merged Oct 24).** Grown-up gate is a math question; play time resets at midnight. Original: Play-time limit parent setting (off/15/30/45/60, default off); finish the room, friendly "Great training today!", go home. | Programmer | nothing | With `?playlimit=1` the run ends after the current room, nothing is lost, the message is friendly. |
-| M7-P10 | Three next goals at session end (game, collection, real-world). | Programmer | M7-P4 | Every profile sees exactly 3 goals; the real-world one names a real next technique. |
+| M7-P10 | **After M7-P7 (K20).** Three next goals at session end (game, collection, real-world). | Programmer | M7-P4 | Every profile sees exactly 3 goals; the real-world one names a real next technique. |
 | M7-P11 | **Done (PR #113, merged Oct 24):** a Tower run now survives the app closing. Original: Fix the open bug notes in `docs/progress.md` (for example, a run in progress isn't saved if the app closes). | Programmer | nothing | Each fixed note has a test or screenshot in the PR. |
 | M7-P12 | Playtest-readiness check. | QA Tester | M7-P1 to M7-P11 | Report on each fake profile's first 30 minutes on a phone-sized screen: time to first Perfect Counter, screens over one sentence, ways to lose the tutorial, crashes. |
-| M7-P13 | **Draft review done (PR #46), fixes merged (PR #49).** Learning and overwhelm review of P2–P7; re-check once P2–P7 are built. | Learning Designer | M7-P2 to M7-P7 builds | Short pass/change note on overwhelm, ethics and age 6+ reading level. |
+| M7-P13 | **Draft review done (PR #46), fixes merged (PR #49).** Learning and overwhelm review of P2–P7; re-check once P2–P7 are built (P2 and P5 are built; P4 and P7 are next). | Learning Designer | M7-P4 and M7-P7 builds | Short pass/change note on overwhelm, ethics and age 6+ reading level. |
 | M7-N1 | **Done (PR #104, merged Oct 24):** small version, three named monsters from yellow belt, tells wired in, Monster Journal and stickers. Bigger version for later belts comes later. Original: **Ready to build (launch scope, J8).** Named monster (`drafts/planning/named-monster-proposal.md`, final spec PR #47). Text in `drafts/content/enemies/named-monsters.json` (PR #45); art in `incoming-art/named-monster/` (PRs #48, #51, #53, tells fixed in #60; brute stamp shake off with reduced motion). Build the monster now; wire the warning moves after J12. | Programmer | — | As the proposal's Done-when. |
 
 ---
@@ -113,8 +113,14 @@ Start with **M7-P1, M7-P9 and M7-P11**. Full specs are in the plan file under th
 | K12 | **Done (PR #119, merged Oct 24).** Q3 named-monster fixes, reduced-motion switch, A7 swatch rim, Bopper art, named monsters about 1 in 30 runs. | — |
 | K13 | **Done (PRs #131, #133, #134).** A6 Tier 1 decorations imported (#131); earning built (#133): class pieces (one every 2 class dates at White, every 3 after), Journal trophies, keeper statues, folding screen, S7 surprise drops; Rest-for-now refresh fix (#134). **Manager calls:** each piece keeps the belt it dropped on; classes count once per calendar date. | — |
 | K13b | **Done (PR #135).** Monster Journal pages for the monster kinds, with plain enemy names. | — |
-| K14 | **Next (ready now).** In the Monster Journal, use the A8 silhouettes `journal-silhouette-keeper` and `journal-silhouette-padded` (PR #136) for the unmet Floor Keeper and Bopper cards instead of the big "?". Small PR. | nothing |
-| K15 | **After K14.** M7-P2 Tutorial floor (section 3b; lines from M7-P3 are ready). One PR. | K14 |
+| K14 | **Done (PR #140).** Journal silhouettes for unmet Floor Keeper and Bopper cards, plus the A2 Form stance idles (Rooted = option A). | — |
+| K15 | **Done (PR #139).** M7-P2 Tutorial floor. | — |
+| K16 | **Done (PR #141).** C7 kid-facing rarity names from content: common is "Everyday", uncommon is "Special". | — |
+| K17 | **Done (PR #142).** M7-P5 Sensei's Lessons and the Lesson Scroll. | — |
+| K18 | **Next (ready now).** M7-P4 Cascade of unlocks on first return home (section 3b). One PR. | nothing |
+| K19 | **After K18.** M7-P7 Gradual unlock schedule + Welcome Week (section 3b). One PR. | K18 |
+| K20 | **After K19.** M7-P10 Three next goals at session end (section 3b). One PR. | K19 |
+| K21 | **Later (when the achievements and trophy screens are built).** Use the A3 bow badges as the achievement icons on the Goals page and the award pop-up, with the number drawn under each badge in the UI font; write the short date on the certified trophy's plate. | achievement screens |
 | S4c-P1 | **After launch (first update).** Build the Injured status from break seals #31–40 (`drafts/planning/S4c-injured-status.md`, PR #120). Text is ready (S4c-C1 PR #128, S4c-C2 PR #129) and art is ready (S4c-A1 PRs #126, #130). You may adjust the proposed seal ids at import. | S4 locks built, launch |
 | K3 | Run the balance-testing computer player whenever the QA bot or the Systems Designer asks, and send Jay the report. | requests |
 
@@ -192,7 +198,8 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | A0 | **Done (PR #10 merged; K7 wired it in).** Yellow belt Tower kit in B Bamboo Garden Hall (`incoming-art/tower-rooms-t2/`), all 28 icons (`incoming-art/icons/`), and the full elite aura set for S1 #3 (`incoming-art/elite-auras/`). Manager calls on the small questions: delete `tower-rooms-t2/proposals/` before merge (B is chosen); one blue rim for all Seals is fine. Tier 2 in-game name and whether Guarding shows which enemies it protects go to the Researcher & Planner (S1). Artist: delete the proposals folder and take "do not merge" off the PR title. | — |
 | A1 | **Samples delivered (PR #78).** **Earned cosmetics:** headbands, hand wraps matching the gear (cloth, leather, tiger stripe), gi trims, and a soft aura. 3 samples first. | nothing (J5 done) |
 | A2 | **Done (PR #121, merged Oct 24).** Rooted Form uses option A, the wide fighting stance; option B moved to `alternate-not-used/`. Use the stance idle in place of the guard idle while a Form is equipped, in fights and the Tower only. Wired in when Forms are built (after S3). Later Forms follow S3. | — |
-| A3 | **Next for the Artist (ready now; S6 delivered in PR #80).** **Badges and trophies:** the bow-question award badges (5/10/20/50/100) and a trophy-wall style for certified trophies versus game trophies. 3 samples first. | nothing |
+| A3 | **Samples done (PR #138, merged Oct 24).** **Manager calls:** (1) yes, the badges are the achievement icons on the Goals page and the award pop-up, next to the reward; (2) the game draws the number under each badge in its UI font, nothing baked in; (3) the plate shows a short date, and the full "Earned {date}" line goes in the info pop-up; (4) the gold rosette with sky-blue tails is the one Certified mark (no school logo, so it works for any dojo); (5) working ids are fine. | — |
+| A3b | **Next for the Artist (ready now).** The full certified trophy set on the same seal and plate: belt promotions in the belt colour, stripes, classes, weeks, anniversary, sign-offs and accolades. Then the badge family for the other achievement groups in S6. | nothing |
 | A6 | **Done (PRs #122, #124, #125).** Tier 1 decoration set, 7 scrolls + 6 gear class pieces, White-belt fallback colour. Into the game under K13. | — |
 | S4c-A1 | **Done (PRs #126, #130).** Cartoon bandage and dizzy stars for Injured: enemies only, stars at head height, 2 stars on the Floor Keeper. | — |
 | A8 | **Done (PR #136).** Monster Journal silhouettes for the Floor Keeper and the Bouncy Bopper. Into the game under K14. | — |
