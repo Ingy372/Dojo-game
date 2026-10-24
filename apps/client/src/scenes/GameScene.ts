@@ -261,6 +261,7 @@ export class GameScene extends Phaser.Scene {
       this.world = createWorld(this.room, [this.me], {
         enemyTypes: { brute: loadEnemy(bruteData) },
         difficulty: testDifficulty(),
+        guideStep: testGuide() ?? loadSave().guideStep,
         player: { ...this.setup, mods: modsFrom(this.setup.effects, TICKS_PER_SECOND) },
       });
     }
@@ -848,6 +849,12 @@ export class GameScene extends Phaser.Scene {
         case 'guideWait':
           this.senseiSay(LESSONS[GUIDE_LESSONS[0]].screens);
           break;
+        case 'guideNudge': {
+          const nudge = LESSONS[GUIDE_LESSONS[0]].nudge;
+          if (nudge) this.senseiSay([nudge]);
+          this.buttons.pulseCounter(3);
+          break;
+        }
         case 'guideDone': {
           const lesson = LESSONS[GUIDE_LESSONS[ev.step]];
           this.senseiDone(ev.success ? lesson.success : lesson.retry);
@@ -1502,7 +1509,7 @@ export class GameScene extends Phaser.Scene {
   /** Sensei's guided Counter slows the game while the taught attack winds up (step 0 most). */
   private guideSpeed(): number {
     const g = this.world.guide;
-    if (!g || g.enemyId === null) return 1;
+    if (!g || g.enemyId === null || g.waiting) return 1;
     return g.step === 0 ? 0.5 : g.step === 1 ? 0.75 : 1;
   }
 

@@ -159,6 +159,8 @@ export type CombatEvent =
   | { kind: 'guideStart'; step: number; enemyId: EnemyId }
   /** Step 0 only: the game holds still with the circle nearly full until Counter is tapped. */
   | { kind: 'guideWait' }
+  /** The hold has waited a while with no tap: Sensei gives a kind hint (repeats calmly, never ends the hold). */
+  | { kind: 'guideNudge' }
   /** The taught attack landed or was countered. */
   | { kind: 'guideDone'; step: number; success: boolean }
   | { kind: 'enemySwing'; enemyId: EnemyId }
@@ -219,6 +221,8 @@ export interface WorldState {
 
 /** Steps of the guided Counter: 0 guided (holds still), 1 hint, 2 pulse only, 3 done. */
 export const GUIDE_DONE = 3;
+/** How long the hold waits before each gentle nudge (5 seconds). */
+export const GUIDE_NUDGE_TICKS = 100;
 
 export interface GuideState {
   step: number;
@@ -226,6 +230,8 @@ export interface GuideState {
   enemyId: EnemyId | null;
   /** True while the game holds still, waiting for the Counter tap. */
   waiting: boolean;
+  /** Ticks spent holding still so far (for the gentle nudge). */
+  waitTicks: number;
 }
 
 /** Movement part of a player's request for one tick. */
@@ -362,7 +368,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       bestCombo: 0,
     },
     events: [],
-    guide: (options.guideStep ?? GUIDE_DONE) < GUIDE_DONE ? { step: options.guideStep!, enemyId: null, waiting: false } : null,
+    guide: (options.guideStep ?? GUIDE_DONE) < GUIDE_DONE ? { step: options.guideStep!, enemyId: null, waiting: false, waitTicks: 0 } : null,
   };
 }
 
@@ -410,8 +416,13 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
   const guide = world.guide;
   if (guide?.waiting) {
     // Holding still for the guided Counter: nothing moves until Counter is tapped.
-    if (!ids.some((id) => inputs[id]?.action === 'counter')) return;
+    if (!ids.some((id) => inputs[id]?.action === 'counter')) {
+      // Still waiting: every few seconds Sensei gives a kind hint. No countdown, no failing.
+      if (++guide.waitTicks % GUIDE_NUDGE_TICKS === 0) world.events.push({ kind: 'guideNudge' });
+      return;
+    }
     guide.waiting = false;
+    guide.waitTicks = 0;
   }
   for (const id of ids) {
     stepPlayer(world, world.players[id], room, inputs[id] ?? NO_INPUT);

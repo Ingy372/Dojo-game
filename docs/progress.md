@@ -260,7 +260,10 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - The balance player has a new "masher" style that never Counters, for QA's never-Counters players.
 - Checked on an 844×390 test screen: the game holds still, tapping Counter gives "PERFECT!" and "You did it! Perfect!", and the step is saved.
 
+- Gentle nudge: after 5 seconds of holding still, Sensei shows a kind hint and Counter pulses more strongly. It repeats calmly and never ends the hold. The guide also runs in the practice room.
+
 **Next**
+- The Content Designer approves or replaces the nudge line.
 - The guide teaches the Counter, but it does not win runs for someone who still never Counters afterward: the masher's win rate stays at 0%. The lessons that come after the guide (7–10, run 2 on) are the next step.
 ## S1 change 1: enemy mixes (2026-10-23)
 

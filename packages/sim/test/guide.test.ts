@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { GUIDE_DONE, GUIDE_LESSONS, createWorld, loadProfile, newProfile, loadEnemy, loadLessons, loadRoom, stepWorld, type PlayerInput, type WorldState } from '../src';
+import { GUIDE_DONE, GUIDE_NUDGE_TICKS, GUIDE_LESSONS, createWorld, loadProfile, newProfile, loadEnemy, loadLessons, loadRoom, stepWorld, type PlayerInput, type WorldState } from '../src';
 import bruteData from '../../../content/enemies/brute.json';
 import lessonsData from '../../../content/tutorial/sensei-lessons.json';
 
@@ -78,5 +78,22 @@ describe('guided first Counter', () => {
     const old = { ...newProfile(), runsPlayed: 3 } as Record<string, unknown>;
     delete old.guideStep;
     expect(loadProfile(old).guideStep).toBe(GUIDE_DONE);
+  });
+
+  it('gives a calm nudge every 5 seconds of waiting, and keeps waiting for the tap', () => {
+    const w = world(0);
+    untilSwing(w, () => IDLE, 300);
+    expect(w.guide?.waiting).toBe(true);
+    let nudges = 0;
+    for (let i = 0; i < GUIDE_NUDGE_TICKS * 3; i++) {
+      stepWorld(w, room, { p1: IDLE });
+      if (w.events.some((e) => e.kind === 'guideNudge')) nudges++;
+    }
+    expect(GUIDE_NUDGE_TICKS).toBe(100);
+    expect(nudges).toBe(3);
+    expect(w.guide?.waiting).toBe(true);
+    expect(w.players.p1.health).toBe(w.players.p1.maxHealth);
+    expect(untilSwing(w, (x) => (x.guide?.waiting ? COUNTER : IDLE))).toContain('perfectCounter');
+    expect(loadLessons(lessonsData)[GUIDE_LESSONS[0]].nudge).toBeTruthy();
   });
 });

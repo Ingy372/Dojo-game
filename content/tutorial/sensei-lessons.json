@@ -43,6 +43,8 @@
       ],
       "success": "You did it! Perfect!",
       "retry": "So close! Let's try again.",
+      "nudge": "Take your time. Tap the big blue Counter button!",
+      "nudgeStatus": "PLACEHOLDER: needs the Content Designer's approval (G1 gentle nudge)",
       "earliestRun": 1
     },
     {

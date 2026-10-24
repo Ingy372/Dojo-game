@@ -23,7 +23,7 @@ interface Button {
  */
 export class ActionButtons {
   private pending: PlayerAction | null = null;
-  /** Sensei's guide: 0 none, 1 small pulse, 2 big pulse on Counter. */
+  /** Sensei's guide: 0 none, 1 small, 2 big, 3 stronger nudge pulse on Counter. */
   private counterPulse = 0;
   private readonly counter: Button;
   private readonly strike: Button;
@@ -100,7 +100,7 @@ export class ActionButtons {
     this.pending = null;
   }
 
-  /** Makes Counter pulse for Sensei's guide (0 none, 1 small, 2 big). */
+  /** Makes Counter pulse for Sensei's guide (0 none, 1 small, 2 big, 3 nudge). */
   pulseCounter(level: number): void {
     this.counterPulse = level;
   }
@@ -110,7 +110,7 @@ export class ActionButtons {
     const alive = p.downTicks === 0;
     const counterReady = alive && p.guardTicks === 0 && p.counterLockout === 0;
     this.counter.container.setAlpha(counterReady ? 1 : 0.45);
-    const pulse = this.counterPulse === 2 ? 0.14 : this.counterPulse === 1 ? 0.06 : 0;
+    const pulse = this.counterPulse === 3 ? 0.24 : this.counterPulse === 2 ? 0.14 : this.counterPulse === 1 ? 0.06 : 0;
     this.counter.container.setScale(1 + Math.abs(Math.sin(this.scene.time.now / 140)) * pulse);
 
     const cost = strikeCost(p);
