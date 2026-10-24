@@ -301,7 +301,8 @@ function enterRoom(content: Content, run: RunState, room: Room): void {
 }
 
 function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
-  const all = content.rooms.filter((r) => r.kind === kind);
+  // Harder rooms wait until later in the floor (depth 0 is room 1).
+  const all = content.rooms.filter((r) => r.kind === kind && r.earliestRoom <= run.depth + 1);
   const fresh = all.filter((r) => !run.usedRooms.includes(r.id));
   return pick(run.rng, fresh.length > 0 ? fresh : all);
 }

@@ -44,6 +44,8 @@ export interface Room {
   /** A good clear time set by the room file (null = add up the enemies' par times). */
   parSeconds: number | null;
   challenge: RoomChallenge | null;
+  /** The earliest room of a floor this room can be (1 = first). Harder rooms start later. */
+  earliestRoom: number;
 }
 
 export interface EnemySpawn {
@@ -157,7 +159,15 @@ export function loadRoom(data: unknown): Room {
     challenge = { seconds: c.seconds, text: c.text };
   }
 
-  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns, kind, doors, chest, shrine, parSeconds, challenge };
+  let earliestRoom = 1;
+  if (raw.earliestRoom !== undefined) {
+    if (typeof raw.earliestRoom !== 'number' || !Number.isInteger(raw.earliestRoom) || raw.earliestRoom < 1) {
+      throw new RoomError(id, '"earliestRoom" must be a whole number, 1 or more');
+    }
+    earliestRoom = raw.earliestRoom;
+  }
+
+  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns, kind, doors, chest, shrine, parSeconds, challenge, earliestRoom };
 }
 
 /**
