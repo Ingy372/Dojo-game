@@ -85,6 +85,20 @@ Write these in `drafts/content/loot/gear.json` (same shape as now, plus a `tier`
    | brown-black | `counterWindow` |
    | black | `dashOnBlock` |
 
+   **Charm amounts (all guesses; common / uncommon / rare / epic):** charms are shares, so they don't grow with the tier caps. Each epic stays at or under the Jade Charm's 12% Power, or the matching small step, so a charm is never bigger than a level-up or the Calm Mind blessing (`DOJO.calmMind.focusGain` 0.2) from real class.
+
+   | Belt | Effect | `amounts` | What the kid sees (`{pct}`) | Notes |
+   | --- | --- | --- | --- | --- |
+   | yellow | `focusGain` | 0.05, 0.08, 0.12, 0.15 | 5% to 15% | Below Calm Mind's 20%. |
+   | orange | `blockCut` | 0.03, 0.05, 0.07, 0.10 | 3% to 10% | Small, because blocks already soften hits. |
+   | green | `attackSpeed` | 0.04, 0.06, 0.09, 0.12 | 4% to 12% | Code caps the total at 0.6. |
+   | blue | `staggerBonus` | 0.08, 0.12, 0.18, 0.25 | 8% to 25% | Only hits staggered enemies, so it can be bigger. |
+   | red | `comboSpeed` | 0.08, 0.12, 0.18, 0.25 | 8% to 25% walk speed | Uses the defaults: every 10 combo hits, for 3 seconds. |
+   | red-black | `lowHealthFocus` | 1.10, 1.15, 1.25, 1.35 | 10% to 35% | This is a multiplier, so `{pct}` = amount − 1. Works below half health (default). |
+   | brown | `strikeCost` | 3, 4, 6, 8 | 3 to 8 less Focus (`{n}`) | **Decided (Manager, Oct 24): code wins.** Flat Focus cut (Strike costs 30, minimum 10). Text is now "STRIKE costs {n} less Focus". |
+   | brown-black | `counterWindow` | 1, 1, 2, 2 ticks | no number | **Decided (Manager, Oct 24): code wins.** Adds ticks. Text is now "A little more time to COUNTER". |
+   | black | `dashOnBlock` | none (on/off) | no number | **Decided (Manager, Oct 24): code wins.** `dashOnBlock` is an on/off full recharge at every rarity, with no sim change. Text is now "Blocks fully charge your next DASH". |
+
 3. **Materials: 10**, one per tier. Slots: `id`, `name` (≤ 16), `description` (≤ 80).
 4. **Rarity words: 5.** Common, Uncommon, Rare, Epic and Legendary exist. C6 may suggest kid-friendlier display names (≤ 10), but the IDs stay.
 5. **UI lines (≤ 40 each):**
@@ -99,13 +113,13 @@ Write these in `drafts/content/loot/gear.json` (same shape as now, plus a `tier`
 | Launch | Later |
 | --- | --- |
 | 3 slots, 4 rarities, caps per tier | Legendary gear and sets |
-| 81 items (9 + 72) | Crafting and recipe scrolls |
+| 72 new items for tiers 2–10 (the 9 white items already exist) | Crafting and recipe scrolls |
 | Letting go gives materials (they collect, or turn into decorations) | Spending materials |
 | Look picker | Healing teas, relics as loot (`core-design.md` §5) |
 
 ## Scope flags
 
-- 72 new item art pieces. Recolours of shared bases can cut this; the Art Director should size it.
+- 72 new item art pieces. Recolours of shared bases can cut this; the Artist should size it.
 - `GEAR_CAPS` and `gear.json` both need a per-tier form; data validation follows.
 - New saved fields: `looks`, `ownedLooks`, `materials`. Old saves need a migration.
 - The materials sink decision (above).

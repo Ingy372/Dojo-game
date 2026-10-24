@@ -8,10 +8,11 @@ import type { Content } from './content';
 import { modsFrom, type Effect } from './effects';
 import { chance, makeItem, rarityRank, rollRarity, type GearItem } from './loot';
 import type { Vec2 } from './math';
-import { createRng, nextFloat, pick, pickWeighted, shuffled, type Rng } from './rng';
+import { createRng, nextFloat, nextInt, pick, pickWeighted, shuffled, type Rng } from './rng';
 import type { Room, RoomKind } from './room';
 import { createWorld, type PlayerSetup, type WorldState } from './world';
 import type { TwistDef } from './twist';
+import { namedForTier, type NamedSpawn } from './named';
 import { elitesAllowed, type EliteKind, type EliteSpawn } from './elite';
 
 export type Grade = 'S' | 'A' | 'B';
@@ -87,12 +88,19 @@ export interface RunState {
   guardingCount: number;
   /** For testing (?elite=): every battle and challenge room gets one elite of this kind. */
   forcedElite?: EliteKind;
+  /** Named monster (M7-N1) rolled at floor start and not placed yet (monster id), or null. */
+  namedPending: string | null;
+  /** The named monster in the current room, or null. At most one per floor. */
+  named: NamedSpawn | null;
+  /** Separate random stream for named monsters, so they never shift the floor's other rolls. */
+  namedRng: Rng;
 }
 
 /** Things that happened, for the game to show. */
 export type RunEvent =
   | { kind: 'loot'; item: GearItem; at: Vec2; source: 'enemy' | 'chest' | 'grade' | 'bell' }
   | { kind: 'decoration'; id: string; at: Vec2 }
+  | { kind: 'namedDefeated'; id: string; at: Vec2 }
   | { kind: 'graded'; result: RoomResult }
   | { kind: 'insightChoice'; ids: string[] }
   | { kind: 'nextRoom'; door: DoorKind }
@@ -120,6 +128,10 @@ export interface RunOptions {
   firstFloorOfTier?: boolean;
   /** For testing: one elite of this kind in every battle and challenge room. */
   forcedElite?: EliteKind;
+  /** Runs this profile has started before this one (named monsters skip the first few). */
+  runsStarted?: number;
+  /** For testing (?named=): this named monster comes in the first battle room it can be in. */
+  forcedNamed?: string;
 }
 
 export function startRun(content: Content, options: RunOptions): RunState {
@@ -155,7 +167,12 @@ export function startRun(content: Content, options: RunOptions): RunState {
     elites: [],
     eliteCount: 0,
     guardingCount: 0,
+    namedPending: null,
+    named: null,
+    namedRng: createRng((options.seed ^ 0x9e3779b9) >>> 0),
   };
+  run.namedPending = rollNamed(content, run, options);
+  if (options.forcedNamed) run.test = true;
   if (options.forcedElite) {
     run.forcedElite = options.forcedElite;
     run.test = true;
@@ -166,7 +183,8 @@ export function startRun(content: Content, options: RunOptions): RunState {
     run.test = true;
   }
   const first = options.firstRoomId ? content.rooms.find((r) => r.id === options.firstRoomId) : undefined;
-  enterRoom(content, run, first ?? pickRoom(content, run, 'battle'));
+  // ?named= with ?room=: the test room itself gets the named monster (so it can be looked at quickly).
+  enterRoom(content, run, first ?? pickRoom(content, run, 'battle'), !!(first && options.forcedNamed));
   return run;
 }
 
@@ -201,6 +219,8 @@ export function createRunWorld(
     difficulty: difficulty ?? run.difficulty,
     elites: run.elites,
     eliteRules: content.elites,
+    named: run.named,
+    namedRules: content.named.rules,
     respawnEnemies: false,
     doorCount: run.doors.length,
     twist: currentTwist(content, run),
@@ -233,6 +253,7 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
           const share = e ? content.loot.enemyDropChance[e.def.id] ?? 0 : 0;
           if (e && chance(run.rng, share)) out.push(drop(content, run, 'common', e.pos, 'enemy'));
           // Elite reward: a chance of one extra Home Dojo decoration (never gear; Focus is given in the world).
+          if (e?.named) out.push({ kind: 'namedDefeated', id: e.named, at: { ...e.pos } });
           if (e?.elite) {
             const deco = dropDecoration(content, run, content.elites.reward.decorationChance, e.pos);
             if (deco) out.push(deco);
@@ -356,15 +377,61 @@ export function summarizeRun(run: RunState): RunSummary {
 
 // ---------------------------------------------------------------- inside
 
-function enterRoom(content: Content, run: RunState, room: Room): void {
+function enterRoom(content: Content, run: RunState, room: Room, anyRoom = false): void {
   run.roomId = room.id;
   run.usedRooms.push(room.id);
   const count = (kind: string) => run.usedRooms.filter((id) => content.rooms.find((r) => r.id === id)?.kind === kind).length;
   run.doors = offerDoors(run, room, count('treasure'), count('rest'));
   run.twist = pickTwist(content, run, room);
-  run.elites = pickElites(content, run, room);
+  run.named = placeNamed(content, run, room, anyRoom);
+  // Elites are still rolled (so later rooms roll the same), but the named monster's room never has one.
+  const elites = pickElites(content, run, room);
+  run.elites = run.named ? [] : elites;
   run.eliteCount += run.elites.length;
   run.guardingCount += run.elites.filter((x) => x.kind === 'guarding').length;
+}
+
+/**
+ * Named monsters (M7-N1): one roll per floor, at the start, on its own random stream.
+ * Never below the belt tier in content/named, never in a profile's first few runs and
+ * never in test runs. ?named= skips the roll.
+ */
+function rollNamed(content: Content, run: RunState, options: RunOptions): string | null {
+  const named = content.named;
+  if (options.forcedNamed) {
+    if (!named.monsters.some((m) => m.id === options.forcedNamed)) throw new Error(`Unknown named monster: ${options.forcedNamed}`);
+    return options.forcedNamed;
+  }
+  if (run.test || run.tier < named.rules.minBeltTier || (options.runsStarted ?? 0) < named.rules.skipFirstRuns) return null;
+  const list = namedForTier(named, run.tier);
+  if (!list.length || nextFloat(run.namedRng) >= named.rules.chancePerRun) return null;
+  return list[nextInt(run.namedRng, list.length)].id;
+}
+
+/**
+ * Puts the rolled named monster in the first battle room at or after the earliest room.
+ * It takes the place of an enemy of its type; if the room has none, another named monster
+ * of this tier whose type is in the room comes instead (in that type's earliest wave).
+ * If no battle room comes, nothing does and nothing carries over to the next floor.
+ */
+function placeNamed(content: Content, run: RunState, room: Room, anyRoom: boolean): NamedSpawn | null {
+  const id = run.namedPending;
+  if (!id || room.kind !== 'battle' || (!anyRoom && run.depth + 1 < content.named.rules.earliestRoom)) return null;
+  const spotsOf = (enemy: string) =>
+    room.enemySpawns.map((s, i) => ({ s, i })).filter(({ s }) => s.enemy === enemy && !content.enemies[s.enemy]?.boss).map(({ i }) => i);
+  const wanted = content.named.monsters.find((m) => m.id === id);
+  let chosen = wanted && spotsOf(wanted.baseEnemy).length ? wanted : undefined;
+  if (!chosen) {
+    const others = namedForTier(content.named, Math.max(run.tier, content.named.rules.minBeltTier)).filter((m) => spotsOf(m.baseEnemy).length);
+    if (!others.length) return null;
+    chosen = others[nextInt(run.namedRng, others.length)];
+  }
+  // Its earliest wave, so it is met soon after the room starts.
+  const all = spotsOf(chosen.baseEnemy);
+  const wave = Math.min(...all.map((i) => room.enemySpawns[i].wave));
+  const spots = all.filter((i) => room.enemySpawns[i].wave === wave);
+  run.namedPending = null;
+  return { spawn: spots[nextInt(run.namedRng, spots.length)], id: chosen.id };
 }
 
 /**
@@ -378,8 +445,10 @@ function pickElites(content: Content, run: RunState, room: Room): EliteSpawn[] {
   const spawnsFor = (kind: EliteKind) =>
     room.enemySpawns.map((s, i) => ({ s, i })).filter(({ s }) => rules.kinds[kind].enemies.includes(s.enemy) && !content.enemies[s.enemy]?.boss).map(({ i }) => i);
   if (run.forcedElite) {
-    const spots = spawnsFor(run.forcedElite);
-    return spots.length ? [{ spawn: pick(run.rng, spots), kind: run.forcedElite }] : [];
+    // The test link skips the belt and first-floor rules, but not Guided: Guarding becomes Swift (K10).
+    const kind = run.forcedElite === 'guarding' && rules.noGuardingOnGuided && run.difficulty === 'guided' ? 'swift' : run.forcedElite;
+    const spots = spawnsFor(kind);
+    return spots.length ? [{ spawn: pick(run.rng, spots), kind }] : [];
   }
   const allowed = elitesAllowed(rules, run.tier, run.difficulty, run.firstFloorOfTier);
   if (!allowed.any || run.depth + 1 < rules.earliestRoom || rules.maxPerRoom < 1 || run.eliteCount >= rules.maxPerFloor) return [];

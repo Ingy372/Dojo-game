@@ -389,3 +389,24 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 
 **Next**
 - M7-P1 (the difficulty choice) only has to set `profile.difficulty`.
+
+## M7-N1: named monsters, small version (2026-10-24)
+- Three named monsters from the PR #47 spec: Old Thumper (brute), Zippy Zoom (swarmer) and Captain Clank (shield). Numbers and lines live in `content/named/named.json`; the sim reads them in `packages/sim/src/named.ts`.
+- From the yellow belt (tier 2), after the first 3 runs, each Tower run has a 5% chance of one named monster. It shows up in a battle room from room 3 on, replacing one normal enemy of its type in that type's first wave. It has 1.5× Health and nothing else changes. That room gets no elite.
+- On screen: a name plate under its feet for 3 s, then a small name tag above its head. Its tell from PR #60 plays during the windup: stamp dust (two beats, with a 2 px camera shake that is off when the phone asks for reduced motion), shield taps with a clank, or the dash trail. Art is the PR #53 pack, imported through approved.json.
+- First meeting: Sensei greets it and the Monster Journal remembers it. First win: a cosmetic sticker for the Home Dojo wall. No counts, no buying.
+- Home Dojo: a "Journal" button from the yellow belt opens the journal page (met cards show the name, fact and stamp; unmet cards say "Keep exploring!").
+- Test link: `?named=old-thumper` (or `zippy-zoom`, `captain-clank`), optionally with `&room=`.
+- Balance: over 20,000 tier-2 runs the roll hit 5.16% and a named monster actually appeared in 4.79% (a few rolls find no room with its type). Old Thumper 269, Captain Clank 330, Zippy Zoom 358. The 1,000-seed test sees 4.2%.
+- 9 new tests. 196 tests pass (1 skipped), typecheck clean, build passes. Screenshots at 667x375 and 844x390.
+
+**Next**
+- Jay plays a yellow-belt run with `?named=` on his phone.
+- Named monsters for later belts (the spec's bigger version).
+
+## K10: K9 retest fixes (2026-10-24)
+- From the K9 retest (PR #101). While a boss bar shows, the COMBO count (and its +% power line) moves under the player's bars on the left, clear of the boss bar and its name.
+- Sensei's banner is placed every frame: under the boss bar when a boss is up, and pushed below any door label it would cover (e.g. HOME in the Keeper's room). This finishes the K7-fix and K9 banner work.
+- The `?elite=guarding` test link now respects Guided: it gives a Swift elite instead.
+- The store script's notes say "approved through J11, helper question trimmed to 4 choices (#79)" again, not the old DRAFT note.
+- 197 tests pass (1 skipped), typecheck clean, build passes. Screenshots at 667x375 and 844x390.

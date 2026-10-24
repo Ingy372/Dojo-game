@@ -17,6 +17,8 @@ import {
   DIFFICULTY,
   activeDoorSlots,
   addDecorations,
+  beatNamed,
+  meetNamed,
   bowIn,
   decorationDef,
   chooseInsight,
@@ -62,6 +64,7 @@ import { loadLook, playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
 import { homeDojo } from '../game/dojo';
+import { NAMED_PACK, NamedView } from '../game/named';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { bowPrompt, playBow } from '../ui/bow';
@@ -181,6 +184,8 @@ interface EnemyView {
   defeatAt: number | null;
   /** Elite aura art (test link only for now): its id and its back and front images. */
   aura: { id: string; back: Phaser.GameObjects.Image[]; front: Phaser.GameObjects.Image[] } | null;
+  /** A named monster's extras (M7-N1): sparkles, name plate and tag, its tell. */
+  named: NamedView | null;
 }
 
 /** The warning glow's colour while a creature winds up (matches the danger circle). */
@@ -270,7 +275,7 @@ export class GameScene extends Phaser.Scene {
     // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
     const tier = currentTraining().belt.tier;
     const auras = testAura() || new URLSearchParams(window.location.search).has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
-    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : [])]);
+    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : [])]);
   }
 
   create(): void {
@@ -582,6 +587,7 @@ export class GameScene extends Phaser.Scene {
     s.setLayer('shield-broken', !e.shieldUp);
     s.flash(now < v.flashUntil ? 0xffffff : tint, now < v.flashUntil);
     s.update();
+    if (v.named) this.drawNamed(e, v.named, now, blend, s.frame);
     v.container.setAlpha(alpha * Math.min(1, (now - this.enemiesAt) / 450));
 
     // Dizzy stars circling a staggered enemy; sweat drops on a winded one.
@@ -598,6 +604,19 @@ export class GameScene extends Phaser.Scene {
         st.setFillStyle(0x9ad1ff).setScale(1.5).setPosition((i - 1) * r * 0.7, -v.top * 0.8 + fall);
       }
     });
+  }
+
+  /** A named monster: the first time it's seen, Sensei says hello and the journal remembers it; then its plate, tag and tell. */
+  private drawNamed(e: EnemyState, n: NamedView, now: number, blend: number, frame: number): void {
+    if (n.shownAt === null && e.mode !== 'waiting' && e.mode !== 'defeated') {
+      n.shownAt = now;
+      const profile = loadSave();
+      meetNamed(profile, n.def.id);
+      writeSave(profile);
+      this.senseiSay([n.def.lines.meet, n.def.lines.senseiTip], 1800);
+    }
+    const windupSec = e.mode === 'windup' ? Math.min(e.windupTotal, e.windupTotal - e.modeTicks + blend) / TICKS_PER_SECOND : null;
+    if (n.update(e, now, windupSec, frame, TILE).clank) sfx.clank();
   }
 
   /** The first of these animations the creature has (e.g. the boss's "windup_slam", else "windup"). */
@@ -735,7 +754,12 @@ export class GameScene extends Phaser.Scene {
     const id = kind ? auraId(kind, e.def.id) : '';
     const [back, front] = kind ? addStatic(this, 'auras-t1', id, 0, 0) : [];
     const aura = back && front ? { id, back: [back], front: [front] } : null;
-    const container = this.add.container(e.pos.x * TILE, e.pos.y * TILE, [...(aura?.back ?? []), sprite.container, ...(aura?.front ?? []), hpBack, hpFill, ...stars]).setDepth(4);
+    // Named monster (M7-N1): its ground tell under it, sparkles, name plate and tag over it. Never an elite aura.
+    const namedDef = e.named ? CONTENT.named.monsters.find((m) => m.id === e.named) : undefined;
+    const named = namedDef ? new NamedView(this, e, namedDef) : null;
+    const container = this.add
+      .container(e.pos.x * TILE, e.pos.y * TILE, [...(aura?.back ?? []), ...(named?.behind ?? []), sprite.container, ...(aura?.front ?? []), ...(named?.front ?? []), hpBack, hpFill, ...stars])
+      .setDepth(4);
     this.uiCamera.ignore(container);
     this.enemyViews.set(e.id, {
       container,
@@ -753,6 +777,7 @@ export class GameScene extends Phaser.Scene {
       callUntil: 0,
       defeatAt: null,
       aura,
+      named,
     });
   }
 
@@ -1132,6 +1157,9 @@ export class GameScene extends Phaser.Scene {
         case 'decoration':
           this.afterChestBurst(() => this.showDecoration(ev.id, ev.at));
           break;
+        case 'namedDefeated':
+          this.namedFreed(ev.id, ev.at);
+          break;
         case 'graded':
           this.showGrade(ev.result.grade!, ev.result.perfects, ev.result.damageTaken, ev.result.ticks, ev.result.inTime);
           break;
@@ -1437,6 +1465,50 @@ export class GameScene extends Phaser.Scene {
     } else {
       this.bossName.setVisible(false);
     }
+    this.placeCombo(!!boss && boss.mode !== 'defeated');
+    this.placeSensei();
+  }
+
+  /**
+   * The combo count sits top-centre, where the boss bar goes. While a boss bar shows, it
+   * moves under the player's bars on the left so both stay readable (K10).
+   */
+  private placeCombo(bossUp: boolean): void {
+    const { width } = this.scale.gameSize;
+    if (bossUp) {
+      this.comboText.setOrigin(0, 0).setPosition(16, HUD_TOP_PX + 4);
+      this.comboBonusText.setOrigin(0, 0).setPosition(18, HUD_TOP_PX + 36);
+    } else {
+      this.comboText.setOrigin(0.5, 0).setPosition(width / 2, 14);
+      this.comboBonusText.setOrigin(0.5, 0).setPosition(width / 2, 46);
+    }
+  }
+
+  /**
+   * Keeps Sensei's banner under the boss bar and off the door labels (which scroll with the
+   * room), every frame, so it stays right when a boss appears or the camera moves (K10).
+   */
+  private placeSensei(): void {
+    const t = this.senseiText;
+    if (!t?.active) return;
+    const { height } = this.scale.gameSize;
+    const cam = this.cameras.main;
+    let top = this.senseiTop(height);
+    const left = t.x - t.width / 2;
+    const right = t.x + t.width / 2;
+    for (let pass = 0; pass < 2; pass++) {
+      for (const d of this.doorViews) {
+        if (!d.label.visible) continue;
+        const b = d.label.getBounds();
+        const sx0 = (b.left - cam.worldView.x) * cam.zoom;
+        const sx1 = (b.right - cam.worldView.x) * cam.zoom;
+        const sy0 = (b.top - cam.worldView.y) * cam.zoom;
+        const sy1 = (b.bottom - cam.worldView.y) * cam.zoom;
+        if (sx1 < left || sx0 > right || sy1 < top || sy0 > top + t.height) continue;
+        top = Math.max(top, sy1 + 6);
+      }
+    }
+    t.setY(top);
   }
 
   /** A dropped item: a glowing orb that pops out, then a note at the top of the screen. */
@@ -1495,6 +1567,23 @@ export class GameScene extends Phaser.Scene {
         this.toastY = Math.max(0, this.toastY - 1);
       },
     });
+  }
+
+  /**
+   * A named monster is set free: Sensei's line, and the first time only, its journal
+   * stamp and a sticker for the Home Dojo. Later wins give nothing more.
+   */
+  private namedFreed(id: string, at: Vec2): void {
+    const def = CONTENT.named.monsters.find((m) => m.id === id);
+    if (!def) return;
+    const profile = loadSave();
+    const sticker = beatNamed(profile, CONTENT.named, id);
+    if (sticker) addDecorations(homeDojo(profile), [sticker]);
+    writeSave(profile);
+    this.senseiSay([def.lines.freed], 1800);
+    if (!sticker) return;
+    this.floatText(at, def.journal.stampText, '#ffd166', 15, 1.6);
+    this.showDecoration(sticker, at);
   }
 
   private showGrade(grade: 'S' | 'A' | 'B', perfects: number, damage: number, ticks: number, inTime: boolean | null): void {

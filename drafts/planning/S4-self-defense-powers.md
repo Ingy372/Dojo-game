@@ -45,12 +45,12 @@ Effect types in `code` already exist in `packages/sim/src/effects.ts`. **New:** 
 | 15 | Orange | Avoid | Slip and Double | Off the Line adds a 3rd punch, and the Counter window is 1 tick longer | `counterHits` +1, `counterWindow` 1 | S | #1, #2 |
 | 16 | Green | Grab and strike | Low-High Strike | Strikes add a second hit (30%) | `strikeExtraHit` 0.3 | M | #10 |
 | 17 | Green | Joint lock | Arm Bar | A Perfect Counter **locks** the attacker for 20 ticks; locked enemies can't block or shield | **New:** `counterLock` 20 (uses shield-break rules while locked) | M | Starts Lock |
-| 18 | Green | Avoid the weapon | Slide Away | Dashing through a shadow-blade attack gives +10 Focus | **New:** `dashDodgeFocus` 10 | S | Avoid (#1, #2, #15) |
-| 19 | Green | Weapon control | Wrist Lock | Disarm on a shadow-blade enemy is full for 1 attack (no damage) | `disarm` 1.0 vs weapon enemies | M | #13, #14, #17 |
+| 18 | Green | Avoid the weapon | Slide Away | Dashing through a padded-staff attack gives +10 Focus | **New:** `dashDodgeFocus` 10 | S | Avoid (#1, #2, #15) |
+| 19 | Green | Weapon control | Wrist Lock | Disarm on a padded-staff enemy is full for 1 attack (no damage) | `disarm` 1.0 vs weapon enemies | M | #13, #14, #17 |
 | 20 | Green | Grab and combo | Hold and Combo | Every 4 combo hits gives a short speed burst | `comboSpeed` 4 hits / +20% / 40 ticks | S | #10, #16 |
 | 21 | Blue | Weapon control | X-Block Lock | Perfect Counters are +20% stronger against disarmed enemies | `counterStrength` +0.2 (disarmed only, **new** condition) | S | #19 |
 | 22 | Blue | Weapon control and pin | Lock and Pin | A disarmed enemy that is thrown or locked is **pinned** 15 ticks longer | `counterThrow` / `counterLock` +15 | S | #11, #17, #19 |
-| 23 | Blue | Redirect the weapon | Turn It Back | Blocking a shadow-blade attack bounces 50% of it back | `blockReflect` 0.5 vs weapon enemies (**new** condition) | M | #8, #9 |
+| 23 | Blue | Redirect the weapon | Turn It Back | Blocking a padded-staff attack bounces 50% of it back | `blockReflect` 0.5 vs weapon enemies (**new** condition) | M | #8, #9 |
 | 24 | Blue | Kick away the weapon | Wrist Kick | A Strike (not only a Counter) can disarm | `disarm` + **new** `disarmOnStrike` | M | #13, #14 |
 | 25 | Blue | Escape | Escape from Behind | You can Perfect Counter an attack from behind, and you turn to face it | **New:** `rearCounter` | M | Starts Escape |
 | 26 | Red | Control hold | Shoulder Control | While an enemy is locked, your Blocks take 15% less damage | `blockCut` 0.15 (while locking, **new** condition) | S | #17 |
@@ -75,7 +75,7 @@ I suggest moving them to Virtues or Forms (decision for Jay). Saves keep working
 `counterHits`, `counterPush`, `reflectStaggers`, `counterThrow` / `downBonus` / `throwAll`, `disarmAttacks` / `disarmOnStrike`, `counterLock`, `dashDodgeFocus`, `rearCounter`, `breakFree`, plus conditions (vs weapon enemies, vs disarmed, while locking).
 
 - That's about 10 new types. The biggest are **throw**, **lock** and **rear counter**, because each needs new enemy states and art (tumble, held, turn).
-- A **weapon enemy** (shadow blade or staff) doesn't exist yet. #13–14, #18–19, #21–24 and #28 need one, and its look needs the Art Director and Jay. Until it exists, those seals work against every enemy's attack (safe fallback).
+- A **weapon enemy** carries a **padded staff**: a kid-safe padded foam training weapon, nothing sharp or realistic (art: PR #95; numbers: `drafts/planning/A5-padded-staff-enemy.md`). #13–14, #18–19, #21–24 and #28 face it. The Artist and Jay confirm the look. Until it exists, those seals work against every enemy's attack (safe fallback).
 
 ## Kick combos and katas
 
@@ -101,7 +101,7 @@ I suggest moving them to Virtues or Forms (decision for Jay). Saves keep working
 3. The attack for **#3, #4, #5 and #15** ("not stated"). The seals above don't depend on it, but the callout art should match.
 4. Kick combo and kata descriptions (J2, S3).
 5. Approval of the kid-safe subtitles, especially #29–30 ("Break Free" instead of choke words).
-6. How weapon enemies look (with the Art Director).
+6. How weapon enemies look: answered, a padded staff (PR #95, with the Artist).
 
 ## Scope flags
 
@@ -120,3 +120,6 @@ I suggest moving them to Virtues or Forms (decision for Jay). Saves keep working
 - **Safety:** a word check finds no injury or body-part words in seal names, text or callouts. Enemies only show the outcome states.
 - **Old saves:** a profile with old seals loads and shows the new seals for the same technique numbers.
 - **Balance:** the balance player with all 30 seals at 4th-belt-plus floors stays within the S1 clear-rate bands (typical ≥ 90%).
+- **Padded staff wording:** a word check finds no "blade", "sword" or "knife" in this spec, the seal text or the callouts. Every weapon enemy is called a "padded staff" (kid-safe padded training weapon).
+- **Weapon seals:** #13–14, #18–19, #21–24 and #28 have a sim test against the padded-staff enemy (`weapon: "padded-staff"`). The vs-weapon conditions (#19, #23) do nothing against enemies without a weapon. Until the enemy ships, the fallback rule above applies.
+- **Disarmed look:** a disarmed padded-staff enemy draws without its weapon layer, and the staff comes back when the disarm ends (client test).

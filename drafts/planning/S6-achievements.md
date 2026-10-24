@@ -34,7 +34,7 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. Plan only; no game code or
 | --- | --- | --- | --- | --- |
 | `ach.dojo.promotion.<belt>` (9: yellow → black) | Promoted to that belt | `rank.history` | CT belt trophy | Yes |
 | `ach.dojo.stripes.<n>` (1, 5, 10, 20) | Stripes earned, total | `stripes` | CT; T at 10 and 20 | Yes |
-| `ach.dojo.classes.<n>` (10, 25, 50, 100, 250, 500) | Classes trained, total | **Needs a new feed field `classesTotal`** (scope flag); until then, S7's `classesCounted` | CT; T at 100, 250, 500 | Yes |
+| `ach.dojo.classes.<n>` (10, 25, 50, 100, 250, 500) | Classes trained, total | Feed `attendance.classesTotal` first; fallback S7's `classesCounted` (see `classes-total-feed-field.md`) | CT; T at 100, 250, 500 | Yes |
 | `ach.dojo.weeks.<n>` (5, 10, 20, 50, 100) | Weeks trained (S9 `weeksTrained`) | `attendance` | Aura step (S9); CT at 50 and 100 | Yes |
 | `ach.dojo.anniversary.<y>` (1, 2, 3, 5, 10) | Years since `rank.trainingStartDate` | `rank` | CT; T at 5 and 10 | Yes |
 | `ach.dojo.signoffs.<n>` (1, 10, 25, 50) | Technique sign-offs, total | `requirements` + `catchUp` | CT at 1 and 50; GT otherwise | Yes |
@@ -45,7 +45,7 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. Plan only; no game code or
 
 | ID | Threshold | Reward | Launch? |
 | --- | --- | --- | --- |
-| `ach.bow.correct.<n>` (5, 10, 20, 50, 100) | Correct answers, all-time | 5: D (small scroll), 10: GT, 20: C gi trim, 50: T, 100: T + GT | Yes |
+| `ach.bow.correct.<n>` (5, 10, 20, 50, 100) | Correct answers, all-time | 5: D (small scroll), 10: GT, 20: C gi trim, 50: D (scroll shelf), 100: T + GT (matches C2) | Yes |
 
 Wrong answers never count against you. At most one question a day already applies, and missing a day changes nothing.
 
@@ -95,13 +95,13 @@ No achievements for visitor bows (that would make it a popularity contest, `core
 | Category | Achievements | With a title | Certified |
 | --- | --- | --- | --- |
 | Dojo | 9 + 4 + 6 + 5 + 5 + 4 + 5 + 1 template = **39** | 2 + 3 + 2 + 1 + 1 = **9** | 39 (all real) |
-| Sensei's Questions | **5** | 2 | 0 |
+| Sensei's Questions | **5** | 1 (only 100; 50 is a decoration, per C2) | 0 |
 | Tower | 10 + 5 + 5 + 3 + 1 + 3 + 3 = **30** | 10 + 1 + 1 + 1 = **13** | 0 |
 | Monster Journal | 3 + 4 now (one more per new enemy) = **7+** | 4+ | 0 |
 | Home Dojo | **6** | 1 | 0 |
 | Street Smarts | 2–3 locations + 3 = **5–6** | 2–3 | 0 |
 | Real-life quests | **3** (post-launch) | 1 | 0 |
-| **Total** | **~95** (launch ~92) | **~32** | 39 |
+| **Total** | **~95** (launch ~92) | **~31** | 39 |
 
 ## For C6: text slots
 
@@ -127,7 +127,7 @@ C6 writes one entry per achievement ID above, in a new draft file `drafts/conten
 ## Scope flags
 
 - **New saved counters:** `perfectsTotal`, `elitesDefeated`, `challengeFloors`, `tidyCount`, `bowCorrect` (if it isn't already saved), `achievementsEarned`.
-- **`classesTotal` feed field** from Nic (DojoForge). Until then, classes milestones use S7's `classesCounted` (seeded from `classesInRank`, so it undercounts earlier belts).
+- **`classesTotal` feed field:** Nic can add it (request in `drafts/planning/classes-total-feed-field.md`). Class milestones read `classesLifetime = max(saved classesLifetime, feed classesTotal, classesCounted)`. When the field is missing, they use `classesCounted`, which undercounts earlier belts. Several milestones earned on the first sync show together in one "Your training so far" moment.
 - **Art:** about 40 trophy or decoration pieces. Families share one model with a colour or number plate.
 - **UI:** trophy-wall "Goals" page, title picker, and a "Certified" seal look.
 - Real-life quests are post-launch.
@@ -142,3 +142,7 @@ C6 writes one entry per achievement ID above, in a new draft file `drafts/conten
 - The 4th-belt families stay hidden below 4th belt. The Goals page opens after the first floor clear.
 - Visiting a dojo shows trophies but no counts.
 - C6's `achievements.json` covers every ID with all required slots filled.
+- **`classesTotal` (feed field):**
+  - A fixture with `classesTotal` 120 and saved `classesCounted` 9 earns classes 10, 25, 50 and 100 on the first sync, in one moment.
+  - A later feed with `classesTotal` 90 changes nothing.
+  - A fixture with no `classesTotal` uses `classesCounted`.

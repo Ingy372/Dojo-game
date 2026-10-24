@@ -53,6 +53,7 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. A short spec only; no game
 - It's a new saved counter, `weeksTrained`, that only goes up. Each new training week adds 1, including weeks that arrive late in the feed.
 - The feed's existing `streak.weeks` (DojoForge's in-a-row count) is **not shown**.
   - It's used only as a one-time starting value for old saves: `weeksTrained = max(0, streak.weeks)`.
+  - `classesTotal` (new feed field) counts classes, not weeks, so it doesn't set `weeksTrained`. Only one floor applies: `weeksTrained` can't go above `classesTotal` (each training week needs at least one class), and that check never lowers a saved value.
   - If DojoForge resets its number, the game ignores the drop.
 
 **How it shows:**

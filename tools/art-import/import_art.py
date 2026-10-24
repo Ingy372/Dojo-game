@@ -162,21 +162,32 @@ def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | 
         if only and name not in only:
             continue
         frames = s.get('frames', 1)
-        fw = s.get('frameWidth', s['size'][0])
-        fh = s['size'][1]
+        # Some packs (M7-N1 named-monster) give "frameSize" instead of "size", and no "layers" list
+        # (then every file is a layer, in order). A layer whose sheet has a different frame size
+        # (e.g. a trail tile) is cut by its own width / frames and its size kept in "layerSizes".
+        size = s.get('size') or s.get('frameSize')
+        fw = s.get('frameWidth', size[0])
+        fh = size[1]
         layers = {}
-        for layer in s['layers']:
+        layer_sizes = {}
+        for layer in s.get('layers', list(s['files'])):
             im = Image.open(os.path.join(base, s['files'][layer])).convert('RGBA')
-            layers[layer] = [packer.add(shrink(im.crop((c * fw, 0, (c + 1) * fw, fh)), scale)) for c in range(frames)]
+            lw, lh = (fw, fh) if im.size[0] == fw * frames and im.size[1] == fh else (im.size[0] // frames, im.size[1])
+            if (lw, lh) != (fw, fh):
+                layer_sizes[layer] = [round(lw * scale), round(lh * scale)]
+            layers[layer] = [packer.add(shrink(im.crop((c * lw, 0, (c + 1) * lw, lh)), scale)) for c in range(frames)]
         sw, sh = round(fw * scale), round(fh * scale)
-        info = {k: v for k, v in s.items() if k not in ('files', 'layers', 'size', 'frameWidth', 'anchorNote', 'groundRect')}
+        info = {k: v for k, v in s.items() if k not in ('files', 'layers', 'size', 'frameSize', 'frameWidth', 'anchorNote', 'groundRect')}
+        anchor = s.get('anchorPx', [fw / 2, fh / 2])
         info.update({
             'frameWidth': sw,
             'frameHeight': sh,
-            'anchor': [round(s['anchorPx'][0] * sw / fw, 2), round(s['anchorPx'][1] * sh / fh, 2)],
+            'anchor': [round(anchor[0] * sw / fw, 2), round(anchor[1] * sh / fh, 2)],
             'frames': frames,
             'layers': layers,
         })
+        if layer_sizes:
+            info['layerSizes'] = layer_sizes
         info.pop('anchorPx', None)
         sprites[name] = info
     return {'kind': 'static', 'sprites': sprites}

@@ -9,6 +9,7 @@ import type { XpGain } from './progression';
 import type { ProgressSnapshot } from './rewards';
 import type { RunSummary } from './run';
 import { GUIDE_DONE } from './world';
+import { readJournal, type JournalEntry, type NamedContent } from './named';
 
 export interface PersonalBests {
   /** Fastest full floor clear, in ticks (null until a floor is cleared). */
@@ -75,6 +76,10 @@ export interface Profile {
   difficulty: Difficulty | null;
   /** Street Smarts: best stars per scenario, and who the player picked as their grown-up. */
   streetSmarts: StreetSmartsSave;
+  /** Monster Journal (M7-N1): named monsters met and beaten. Never counts, only yes/no. */
+  monsterJournal: Record<string, JournalEntry>;
+  /** Tower runs started (finished or not); named monsters skip a profile's first few. */
+  runsStarted: number;
 }
 
 export interface StreetSmartsSave {
@@ -102,6 +107,8 @@ export function newProfile(): Profile {
     guideStep: 0,
     streetSmarts: { best: {}, grownup: null },
     difficulty: null,
+    monsterJournal: {},
+    runsStarted: 0,
   };
 }
 
@@ -112,7 +119,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, monsterJournal: readJournal(p.monsterJournal), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0 };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {
@@ -120,6 +127,25 @@ function readStreetSmarts(v: unknown): StreetSmartsSave {
   const best: Record<string, number> = {};
   if (s?.best && typeof s.best === 'object') for (const [k, n] of Object.entries(s.best)) if (typeof n === 'number') best[k] = n;
   return { best, grownup: s?.grownup === 'Mom' || s?.grownup === 'Dad' ? s.grownup : null };
+}
+
+/** Marks a named monster as met in the Monster Journal. Returns true the first time. */
+export function meetNamed(profile: Profile, id: string): boolean {
+  const e = profile.monsterJournal[id];
+  if (e?.met) return false;
+  profile.monsterJournal[id] = { met: true, beaten: e?.beaten ?? false };
+  return true;
+}
+
+/**
+ * Marks a named monster as beaten. The first win only returns its sticker (a Home Dojo
+ * decoration id) to give; later wins return null and give nothing more.
+ */
+export function beatNamed(profile: Profile, named: NamedContent, id: string): string | null {
+  const e = profile.monsterJournal[id];
+  if (e?.beaten) return null;
+  profile.monsterJournal[id] = { met: true, beaten: true };
+  return named.monsters.find((m) => m.id === id)?.sticker ?? null;
 }
 
 /** Keeps the best star count for a finished scenario. Returns true if it's a new best. */

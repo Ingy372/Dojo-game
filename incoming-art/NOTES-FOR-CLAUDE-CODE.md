@@ -267,6 +267,8 @@ Same ids, file names, 128 x 128 size, anchor (64, 64) and static.json. Only the 
 - Aura: `sprites/body-a/aura.json`, with `aura-back` (drawn before all player layers) and `aura-front` (after). Both are tinted. Reduced motion: frame 0 only.
 - Draw order: aura-back, player layers, gi-trim, headband, wraps, aura-front. Reference: `source/cosm_lib.py compose()`. The belt is unchanged and never customizable.
 - Names, unlock rules and colours are open (see `cosmetics-a1/DELIVERY_NOTE.md`).
+## A5 padded-weapon enemy (samples), `incoming-art/enemy-padded-weapon/` [NEW]
+These are samples only: idle, windup and attack, in 8 directions. The frame is 192 and the anchor is (96, 142). The layers are body, glow, telegraph and light, the same as Tier 1, plus a new `weapon` layer drawn after body. **To show disarmed, skip the weapon layer.** The telegraph works like Tier 1 (`telegraphIntensity`). There is no content json yet, and the stats in the script are placeholders. See its README.md.
 
 ## A7 QA fixes (PR #83): re-import [NEW]
 - `player-custom/sprites/body-a/` and `body-b/`: **re-import the `face-01` … `face-06` sheets** (all animations). They have a bigger, lighter eye ring, a second shine and a lighter mouth. Frames, anchors and layer names are unchanged.
@@ -284,4 +286,5 @@ Same ids, file names, 128 x 128 size, anchor (64, 64) and static.json. Only the 
 6. **[NEW]** The Batch 6 player's neck oval: leave it for now (Jay), and patch it later only if it's noticeable in the game.
 7. **[NEW]** Where instructor-2 and the founder appear in the game (Jay and Claude Code), and their names (Content Writer).
 8. **[NEW]** A1 cosmetics: names (Content Writer), unlock rules and colours (Jay), and the headband fit over big hair.
-- **[NEW]** A7: the kohai top-knot and teal tie, the softer black hair colour, and the swatch border (Programmer) are all waiting on Jay.
+9. **[NEW]** A5 padded-weapon enemy: the name, stats, which seals use it and the content json are still to decide. Jay approved the 192 px frame, the lime accent, and hiding the staff to show disarmed (2026-10-24). The full set (move, hit, stagger, defeat) is queued.
+10. **[NEW]** A7: Jay approved the kohai top-knot, the teal tie and `#34303f` as black (2026-10-24). Only the swatch border (Programmer) is still open.

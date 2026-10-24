@@ -1,0 +1,190 @@
+{
+  "character": "padded",
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "anchor": {
+    "x": 96.0,
+    "y": 142.08,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 80.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 2.4,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "directionVectors": {
+    "N": [
+      0,
+      -1
+    ],
+    "NE": [
+      0.7071,
+      -0.7071
+    ],
+    "E": [
+      1,
+      0
+    ],
+    "SE": [
+      0.7071,
+      0.7071
+    ],
+    "S": [
+      0,
+      1
+    ],
+    "SW": [
+      -0.7071,
+      0.7071
+    ],
+    "W": [
+      -1,
+      0
+    ],
+    "NW": [
+      -0.7071,
+      -0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "body",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "weapon",
+      "order": 1,
+      "tint": false,
+      "optional": true
+    },
+    {
+      "name": "glow",
+      "order": 2,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "telegraph",
+      "order": 3,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "light",
+      "order": 4,
+      "tint": false,
+      "optional": false
+    }
+  ],
+  "animations": {
+    "idle": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "padded_body_idle.png",
+        "weapon": "padded_weapon_idle.png",
+        "glow": "padded_glow_idle.png",
+        "telegraph": "padded_telegraph_idle.png",
+        "light": "padded_light_idle.png"
+      },
+      "note": "bouncy sparring stance, staff upright, 1 s loop"
+    },
+    "windup": {
+      "frames": 8,
+      "fps": 10,
+      "durationSec": 0.8,
+      "loop": false,
+      "tags": {
+        "telegraph": "0-7"
+      },
+      "sheets": {
+        "body": "padded_body_windup.png",
+        "weapon": "padded_weapon_windup.png",
+        "glow": "padded_glow_windup.png",
+        "telegraph": "padded_telegraph_windup.png",
+        "light": "padded_light_windup.png"
+      },
+      "telegraphSeconds": 0.8,
+      "telegraphTicks": 16,
+      "telegraphIntensity": [
+        0.25,
+        0.287,
+        0.391,
+        0.542,
+        0.708,
+        0.859,
+        0.963,
+        1.0
+      ],
+      "note": "lasts exactly the telegraph (16 ticks). In Guided mode the wind-up holds: hold the last frame (intensity 1). telegraphIntensity: per-frame alpha (0..1) for the telegraph layer. It ramps up through the wind-up and fades smoothly through the first half of the attack (no hard cut). Multiply it into the tinted layer's alpha"
+    },
+    "attack": {
+      "frames": 11,
+      "fps": 10,
+      "durationSec": 1.1,
+      "loop": false,
+      "tags": {
+        "impact": "0",
+        "recover": "2-10"
+      },
+      "sheets": {
+        "body": "padded_body_attack.png",
+        "weapon": "padded_weapon_attack.png",
+        "glow": "padded_glow_attack.png",
+        "telegraph": "padded_telegraph_attack.png",
+        "light": "padded_light_attack.png"
+      },
+      "keyFrames": {
+        "impact": 0
+      },
+      "recoverSeconds": 0.9,
+      "telegraphIntensity": [
+        1.0,
+        0.933,
+        0.75,
+        0.5,
+        0.25,
+        0.067,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "note": "padded staff bonk: a big overhead swing down in front (soft foam pad lands first)"
+    }
+  },
+  "enemy": "padded",
+  "name": "(name to decide)",
+  "sizeTiles": {
+    "bodyWidth": 0.38,
+    "bodyHeight": 0.58,
+    "radiusInData": 0.38
+  },
+  "tintGuidance": {
+    "mode": "multiply (Phaser setTint)",
+    "body": "no tint",
+    "glow": "no tint, always drawn (soft rim)",
+    "telegraph": "optional: draw only during the wind-up, tinted (e.g. #ff3b30 red, or #ffd36b gold in Guided mode) and flashed / pulsed in alpha",
+    "light": "no tint, always drawn (only the defeat has anything in it)",
+    "weapon": "the padded staff, no tint. Draw it normally; stop drawing it while the enemy is disarmed (it can't attack with it)"
+  }
+}

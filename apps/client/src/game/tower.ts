@@ -19,7 +19,14 @@ export function startTowerRun(profile: Profile, training: TrainingState): RunSta
   // (the run then doesn't count toward the profile).
   const eliteParam = params.get('elite');
   const forcedElite: EliteKind | undefined = eliteParam === 'swift' || eliteParam === 'guarding' ? eliteParam : undefined;
+  // For testing: ?named=old-thumper puts that named monster in the first battle room from room 3
+  // (with ?room= too, in that first room). The run then doesn't count toward the profile.
+  const namedParam = params.get('named');
+  const forcedNamed = CONTENT.named.monsters.some((m) => m.id === namedParam) ? (namedParam ?? undefined) : undefined;
   const tier = training.belt.tier;
+  // Named monsters skip a profile's first few runs: count every real run started.
+  const runsStarted = profile.runsStarted;
+  if (!firstRoomId && !forcedTwist && !forcedElite && !forcedNamed) profile.runsStarted++;
   const dojo = homeDojo(profile);
   const calmMind = useCalmMind(dojo);
   writeSave(profile);
@@ -37,5 +44,7 @@ export function startTowerRun(profile: Profile, training: TrainingState): RunSta
     difficulty,
     firstFloorOfTier: firstFloorOfTier(profile, tier),
     forcedElite,
+    runsStarted,
+    forcedNamed,
   });
 }
