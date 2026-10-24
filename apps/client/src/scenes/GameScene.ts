@@ -78,7 +78,7 @@ import { DIFFICULTY_TEXT, localToday } from '../game/difficulty';
 import { startTowerRun } from '../game/tower';
 import { LESSONS, noteLessonSeen, takeLesson } from '../game/lessons';
 import { bankRun, saveRunInProgress } from '../game/runSave';
-import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
+import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
 import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
@@ -1719,7 +1719,7 @@ export class GameScene extends Phaser.Scene {
     const y = 64 + this.toastY * 26;
     this.toastY++;
     const t = this.add
-      .text(width - 16, y, `${RARITY_NAME[rarity]}: ${name}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: css(color), stroke: '#14121c', strokeThickness: 4 })
+      .text(width - 16, y, `${rarityName(rarity)}: ${name}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: css(color), stroke: '#14121c', strokeThickness: 4 })
       .setOrigin(1, 0)
       .setResolution(crisp())
       .setAlpha(0);

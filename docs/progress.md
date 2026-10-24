@@ -489,6 +489,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Timed browser check: first Perfect Counter about 40 s after "Tap to start" at both 667 and 844 wide (including 15 s idling on Create). Sim: under 60 s over 20 seeds.
 - Tests 250 passed / 1 skipped; typecheck and build pass. Screenshots /workspace/p2-{667,844}-*.png.
 - Follow-up: the combo HUD is hidden until the guided Counter, and the tutorial Brute starts low so the Sensei banner no longer covers it.
+
+## K16 Kid-facing rarity names (2026-10-24)
+- C7 names (PR #92) now shown everywhere a rarity appears: Everyday, Special, Rare, Epic, Legendary. Names live in `content/loot/gear.json` (`rarityNames`), checked at load; the `RARITY_NAME` strings in theme.ts are gone. Internal ids unchanged. Screens: Training Board last run, Gear details, in-run loot popup. Tests 253 passed / 1 skipped; typecheck and build pass. Screenshots: /workspace/k16-{667,844}-{home-run,home-gear,loot}.png.
+
 ## K17 / M7-P5 Sensei's Lessons and the Lesson Scroll (2026-10-24)
 - New lessons now come one per session (a calendar day with a run) and one per room; Perfect, Block and Step-out ignore the session limit. Each lesson has a triggerKey fired from play (Dash, Insights, Decorating, Perfect, Block, Step-out).
 - Sensei's Scroll in the Home Dojo lists every lesson seen (not the fading follow-ups or the welcome line); tap to replay, plus "Replay the tutorial floor".
