@@ -14,6 +14,10 @@ const CARD_X = 36;
 const CARD_YS = [92, 252, 412];
 const TITLE_Y = 30;
 const SOURCE_PAGE_WIDTH = 390;
+/** Fact text on screen: the game's body size (Street Smarts body text), never smaller (K10). */
+const BODY_PX = 15;
+/** Room the fact notes need beside the page to sit in one wide column. */
+const NOTE_MIN_W = 220;
 
 type Box = [number, number, number, number];
 
@@ -34,7 +38,13 @@ export function openMonsterJournal(scene: Phaser.Scene, journal: Record<string, 
   const ph = frame?.frameHeight ?? 360;
   const k = pw / SOURCE_PAGE_WIDTH; // source pixels -> packed pixels
   const scale = Math.min((height - 12) / ph, (width - 12) / pw, 1.6);
-  const page = scene.add.container(width / 2, height / 2).setScale(scale);
+  // Landscape phones: the page goes left and each card's fact sits in a note beside it, at
+  // body size, so it is never shrunk with the page or drawn under the stamp (K10).
+  const noteW = Math.min(360, width - pw * scale - 48);
+  const side = noteW >= NOTE_MIN_W;
+  const groupW = side ? pw * scale + 16 + noteW : pw * scale;
+  const pageX = width / 2 - groupW / 2 + (pw * scale) / 2;
+  const page = scene.add.container(pageX, height / 2).setScale(scale);
   box.add(page);
   // The page itself swallows taps (only the dark area around it closes).
   page.add(scene.add.rectangle(0, 0, pw, ph, 0x000000, 0.001).setInteractive());
@@ -57,6 +67,25 @@ export function openMonsterJournal(scene: Phaser.Scene, journal: Record<string, 
   const ch = card?.frameHeight ?? 84;
   const ck = cw / 318; // card source pixels -> packed pixels
   const inCard = (cx: number, cy: number, b: Box): [number, number, number, number] => [cx + b[0] * ck, cy + b[1] * ck, (b[2] - b[0]) * ck, (b[3] - b[1]) * ck];
+  const noteX = pageX + (pw * scale) / 2 + 16;
+  /** A card's fact: in a note beside the card, or (narrow screens) in the card's fact area, left of the stamp. */
+  const fact = (cx: number, cy: number, str: string, color: string, bold: boolean) => {
+    if (side) {
+      const y = height / 2 + cy * scale;
+      const h = ch * scale;
+      const note = scene.add.rectangle(noteX, y + 4, noteW, h - 8, 0xf6ecd6).setOrigin(0).setStrokeStyle(2, 0x8a6a48);
+      const tail = scene.add.triangle(noteX, y + h / 2, 0, 0, -10, 8, 0, 16, 0xf6ecd6).setOrigin(1, 0.5);
+      const t = scene.add
+        .text(noteX + 12, y + h / 2, str, { fontFamily: FONT, fontSize: `${BODY_PX}px`, color, fontStyle: bold ? 'bold' : 'normal', wordWrap: { width: noteW - 24 } })
+        .setOrigin(0, 0.5)
+        .setResolution(crisp());
+      box.add([note, tail, t]);
+    } else {
+      // Fact area minus the stamp spot's columns, at body size on screen.
+      const [fx, fy, fw] = inCard(cx, cy, [140, 46, 246, 128]);
+      page.add(text(fx, fy, str, BODY_PX / scale, color, bold, fw));
+    }
+  };
   namedForTier(CONTENT.named, tier).forEach((m, i) => {
     const e = journal[m.id];
     const met = !!e?.met;
@@ -75,21 +104,19 @@ export function openMonsterJournal(scene: Phaser.Scene, journal: Record<string, 
       page.add(pics);
       const [nx, ny, nw] = inCard(cx, cy, [138, 14, 304, 40]);
       page.add(text(nx, ny, m.journal.name, 11, '#3a2a22', true, nw));
-      const [fx, fy, fw] = inCard(cx, cy, [140, 50, 304, 100]);
-      page.add(text(fx, fy, m.journal.fact, 8, '#3a2a22', false, fw).setLineSpacing(-1));
+      fact(cx, cy, m.journal.fact, '#3a2a22', false);
       if (e.beaten) {
         const [sx, sy, sw, sh] = inCard(cx, cy, [250, 74, 304, 128]);
         page.add(addStatic(scene, NAMED_PACK, 'journal-stamp', sx + sw / 2, sy + sh / 2));
       }
     } else {
       page.add(addStatic(scene, NAMED_PACK, `journal-silhouette-${m.baseEnemy}`, wellX, wellY));
-      const [fx, fy, fw] = inCard(cx, cy, [140, 50, 304, 100]);
-      page.add(text(fx, fy, CONTENT.named.journalUnknown.fact, 9, '#6b5440', true, fw));
+      fact(cx, cy, CONTENT.named.journalUnknown.fact, '#6b5440', true);
     }
   });
 
   // A big, easy close button.
-  const bx = width / 2 + (pw / 2) * scale - 4;
+  const bx = side ? Math.min(width - 22, noteX + noteW) : pageX + (pw / 2) * scale - 4;
   const by = height / 2 - (ph / 2) * scale + 4;
   const btn = scene.add.circle(bx, by, 18, 0x3a3a4a).setStrokeStyle(2, 0xffffff, 0.5).setInteractive();
   btn.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, close);

@@ -30,6 +30,6 @@ BASE=idle,walk,bow,talk,nod,point
 ( sprites sensei $BASE,demonstrate; sprites founder $BASE; sprites kohai $BASE; echo lane1 done ) &
 ( sprites senpai $BASE,demonstrate; sprites instructor-2 $BASE
   portraits sensei 1.28 0.80 1.33; portraits instructor-2 1.20 0.84 1.35; portraits founder 1.26 0.81 1.30
-  portraits senpai 1.10 0.88 1.35; portraits kohai 0.84 1.06 1.37; echo lane2 done ) &
+  portraits senpai 1.10 0.88 1.35; portraits kohai 0.84 1.06 1.50; echo lane2 done ) &
 wait
 echo ALL DONE

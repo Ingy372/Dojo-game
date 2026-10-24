@@ -411,6 +411,12 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - The store script's notes say "approved through J11, helper question trimmed to 4 choices (#79)" again, not the old DRAFT note.
 - 197 tests pass (1 skipped), typecheck clean, build passes. Screenshots at 667x375 and 844x390.
 
+### K10 follow-up (Manager review)
+- Journal fact text is now 15px on screen (game body size) at 667x375 and 844x390: facts sit in notes beside the page. Screenshots: /workspace/k10-journal-667.png, /workspace/k10-journal-844.png.
+- The Old Thumper fact no longer sits on the stamp art.
+- `?named=` (and other test-link) runs no longer write the Monster Journal or give the sticker. New test in packages/sim/test/named.test.ts; checked in the browser too (journal stayed empty).
+- 198 tests pass, 1 skipped; typecheck and build clean.
+
 ## K11 / M7-P1: Guided by default for young and new players (2026-10-24)
 - A new profile (no runs yet) starts on **Guided** if the student's age band tops out at 9 or under, or they're a white belt with 0 sign-offs. Everyone else starts on **Standard** (the default). The rules are in `content/settings/difficulty.json`.
 - `profile.difficulty` now always gets a real value. It is set the first time the Home Dojo opens or a Tower run starts (`settleDifficulty`). It is never changed again after the player picks one: `difficultyChosenByPlayer` is saved when they do.
