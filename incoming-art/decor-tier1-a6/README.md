@@ -10,4 +10,5 @@ Rebuild:
 
     blender -b -P incoming-art/decor-tier1-a6/source/build_decor_t1.py -- --out /tmp/t1.blend
     blender -b /tmp/t1.blend -P incoming-art/tools/render_static.py -- --out incoming-art/decor-tier1-a6/sprites
+    python3 incoming-art/decor-tier1-a6/source/rename_c10.py   # C10 ids + names
     python3 incoming-art/decor-tier1-a6/source/make_t1_preview.py
