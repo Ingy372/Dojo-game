@@ -37,7 +37,7 @@ import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
 import { TestingPanel } from '../ui/TestingPanel';
-import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
+import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css } from '../ui/theme';
 import type { GameSceneData } from './GameScene';
 
 const SLOT_NAME: Record<GearSlot, string> = { hands: 'Hands', gi: 'Gi', charm: 'Charm' };
@@ -258,7 +258,7 @@ export class HomeScene extends Phaser.Scene {
     const fit = Math.max(1, Math.floor((this.panelBottom(h) - 50 - y) / lineH));
     const items = s.items.slice().sort((a, b) => RARITY_ORDER(b) - RARITY_ORDER(a));
     items.slice(0, fit).forEach((it) => {
-      this.text(x, y, `${RARITY_NAME[it.rarity]}: ${it.name}  (${describeItem(it)})`, 14, css(RARITY_COLOR[it.rarity]), false, FONT, w);
+      this.text(x, y, `${rarityName(it.rarity)}: ${it.name}  (${describeItem(it)})`, 14, css(RARITY_COLOR[it.rarity]), false, FONT, w);
       y += lineH;
     });
     if (items.length > fit) this.text(x, y, `+${items.length - fit} more in your Gear`, 13, '#b9ad99');
@@ -483,7 +483,7 @@ export class HomeScene extends Phaser.Scene {
     if (selected) {
       const dy = pagerY + 34;
       const worn = wornItem(this.profile, selected.slot);
-      this.text(x, dy, `${RARITY_NAME[selected.rarity]} ${SLOT_NAME[selected.slot]}: ${describeItem(selected)}`, 13, css(RARITY_COLOR[selected.rarity]), true, FONT, w);
+      this.text(x, dy, `${rarityName(selected.rarity)} ${SLOT_NAME[selected.slot]}: ${describeItem(selected)}`, 13, css(RARITY_COLOR[selected.rarity]), true, FONT, w);
       this.text(x, dy + 17, worn ? `Now wearing: ${worn.name} (${describeItem(worn)})` : 'Nothing worn in this slot', 12, '#b9ad99', false, FONT, w);
       this.button(x, dy + 36, 110, 30, 'Wear', 0x3aa57a, 15, () => this.wear(selected));
       this.button(x + 118, dy + 36, 120, 30, this.confirmLetGo ? 'Sure? Tap again' : 'Let go', 0x6b3a3a, 13, () => this.letGo(selected));
