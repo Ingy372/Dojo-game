@@ -49,30 +49,31 @@
     {
       "n": 4,
       "text": "Pivot on the balls of feet, face L w/RF in rear, LL is now forward, LH downward block, then RF step forward, RH straight forward punch",
-      "facing": [],
+      "facing": [
+        "L"
+      ],
       "moves": [
         "pivot",
         "block.downward",
         "punch.straight"
       ],
       "kiai": false,
-      "question": [
-        "Q15"
-      ]
+      "question": null
     },
     {
       "n": 5,
       "text": "Raise RH fist (across body) to L ear, look over R shoulder then 180- degree turn (“big special turn”) w/RF leading, end facing R w/RF forward, followed by RH downward block (over RL), LF step forward then LF straightforward punch",
-      "facing": [],
+      "facing": [
+        "R"
+      ],
       "moves": [
         "turn.big-special",
         "block.downward",
         "punch.straight"
       ],
       "kiai": false,
-      "question": [
-        "Q3"
-      ]
+      "question": null,
+      "jayNote": "Left-hand straight punch (Jay, Oct 24)."
     },
     {
       "n": 6,
@@ -106,16 +107,16 @@
     {
       "n": 8,
       "text": "Hide L fist behind head/raise to L ear, then look over R shoulder then 180- degree turn w/RF leading, end facing R w/RF forward. LH reverse inside block then step forward with LF then RH reverse straight forward punch",
-      "facing": [],
+      "facing": [
+        "R"
+      ],
       "moves": [
         "turn.180",
         "block.reverse-inside",
         "punch.reverse"
       ],
       "kiai": false,
-      "question": [
-        "Q13"
-      ]
+      "question": null
     },
     {
       "n": 9,
@@ -135,7 +136,9 @@
     {
       "n": 10,
       "text": "**From perspective of facing the rear** Pivot to L w/ LF forward, then LH overhead block, followed by “catching” hands on the R hip, then RF front kick w/ RF landing in front, followed by RH straightforward punch",
-      "facing": [],
+      "facing": [
+        "R"
+      ],
       "moves": [
         "pivot",
         "block.overhead",
@@ -150,7 +153,9 @@
     {
       "n": 11,
       "text": "**From perspective of facing the rear** Look over R shoulder, then 180- degree turn w/RF leading, end facing R w/RF forward, RH overhead block, followed by “catching” hands on the L hip, then LF front kick w/ LF landing in front, followed by LH straight forward punch",
-      "facing": [],
+      "facing": [
+        "L"
+      ],
       "moves": [
         "turn.180",
         "block.overhead",
@@ -159,10 +164,8 @@
         "punch.straight"
       ],
       "kiai": false,
-      "question": [
-        "Q16"
-      ],
-      "schoolNote": "**L of school=R Pivot: Even though it is the ”L” of the school, it is the student’s ”R” due to 1st Person point-if-view from facing the rear."
+      "question": null,
+      "schoolNote": "**L of school=R Pivot: Even though it is the ”L” of the school, it is the student’s ”R” due to 1st Person point-of-view from facing the rear."
     },
     {
       "n": 12,
@@ -179,8 +182,6 @@
       "question": null
     }
   ],
-  "finish": null,
-  "finishQuestion": [
-    "Q14"
-  ]
+  "finish": "Move to attention & bow out",
+  "finishNote": "Not on the school sheet; Jay confirmed D&G ends with a bow (Oct 24)."
 }

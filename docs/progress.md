@@ -529,3 +529,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## S3-P1 Kata cards + Keon spelling (2026-10-24)
 - "Keon" replaces "Key On" everywhere students see it (Jay's call via the Manager). Ids unchanged, so saves load as before.
 - Earned katas get a card on the Abilities tab: name, step count and direction arrows (no arrow where the direction is still open). Data in content/katas/. New test file katas.test.ts (4 tests). Screenshots /workspace/s3p1-*.png at 667 and 844.
+## K23c Ability pop-up placement (2026-10-24)
+- The Insight name pop-up after room 1 no longer covers the treasure door, Sensei's banner or the "Room clear!" line (same protected boxes as the banner). Screenshots /workspace/k23b-c-*.png at 667 and 844.

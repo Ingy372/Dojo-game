@@ -3,6 +3,7 @@
   "moves": {
     "pivot": "Pivot",
     "turn.180": "Half turn",
+    "turn": "Turn",
     "turn.big-special": "Big special turn",
     "stance.cat": "Cat stance",
     "stance.front": "Front stance",
@@ -14,7 +15,6 @@
     "punch.straight": "Straight punch",
     "punch.reverse": "Reverse punch",
     "strike.backfist": "Backfist",
-    "kick.reverse-straight": "Reverse straight kick",
     "kick.reverse": "Reverse kick",
     "kick.straight": "Straight kick",
     "kick.front": "Front kick",

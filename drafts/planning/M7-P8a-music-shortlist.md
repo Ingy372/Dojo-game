@@ -1,5 +1,7 @@
 # M7-P8a: Music shortlist (3 free-licence packs)
 
+> **Update (Oct 24, 2026):** WAFU replied; the pick, terms and open points are in `M7-P8a-music-decision.md`. The white-label question and the drafted WAFU email are resolved.
+
 **For:** Jay · **Date:** 2026-10-24 · **Status:** Research only. Nothing is added to the game until you pick.
 
 ## What the game needs (from the docs)
