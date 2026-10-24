@@ -1,0 +1,112 @@
+{
+  "notes": "DRAFT tutorial text (no existing Sensei's Lesson format found in content/ or code docs, so this is a new format). One short sentence per screen, read-aloud friendly. Mechanics from docs/decisions.md: basic attacks are automatic; Strike costs 30 Focus and pulses when ready; red circle + '!' = wind-up, circle holds nearly full during the Perfect window; Counter early in the 0.5 s guard = Block; Dash is above Counter, 2.5 tiles, 1.5 s recharge. Lessons 3-6 pair with Learning proposal 6 (guided first Counter: slowdown, pulsing Counter, help fades). 'success' shows after the player lands it; 'retry' if they miss (never a penalty). Each lesson shows once per profile. Pacing (QA, 2026-10-12): run 1 teaches only Move, Strike, the '!' warning and the guided Counter with its fading follow-ups. Perfect Counter, Block, Dash and stepping out wait until earliestRun 2 and their first real need. At most one NEW lesson per room; if two trigger in one room, the later one waits for the next room. Fading follow-ups (lessons 5-6) are not counted as new lessons.",
+  "speaker": "sensei",
+  "lessons": [
+    {
+      "id": "lesson-move",
+      "order": 1,
+      "trigger": "First room of the first run, before any enemy moves",
+      "screens": [
+        "Move with the stick.",
+        "You punch all by yourself when you are close."
+      ],
+      "earliestRun": 1
+    },
+    {
+      "id": "lesson-strike",
+      "order": 2,
+      "trigger": "First time the Strike button fills and pulses (30 Focus)",
+      "screens": [
+        "Your Strike button is glowing!",
+        "Tap it for a big, strong hit."
+      ],
+      "earliestRun": 1
+    },
+    {
+      "id": "lesson-warning",
+      "order": 3,
+      "trigger": "First '!' and red circle seen (game slows for the guided Counter)",
+      "slowdown": true,
+      "screens": [
+        "Look! A red circle.",
+        "It's coming!"
+      ],
+      "earliestRun": 1
+    },
+    {
+      "id": "lesson-counter-guided",
+      "order": 4,
+      "trigger": "During the slowdown, as the circle nears full; Counter button pulses",
+      "slowdown": true,
+      "screens": [
+        "Tap Counter... now!"
+      ],
+      "success": "You did it! Perfect!",
+      "retry": "So close! Let's try again.",
+      "nudge": "Take your time. Tap the big blue Counter button!",
+      "nudgeStatus": "PLACEHOLDER: needs the Content Designer's approval (G1 gentle nudge)",
+      "earliestRun": 1
+    },
+    {
+      "id": "lesson-counter-hint-2",
+      "order": 5,
+      "trigger": "Second '!' seen (smaller slowdown or none, Counter still pulses)",
+      "screens": [
+        "Wait for it... Counter!"
+      ],
+      "success": "Great timing!",
+      "earliestRun": 1
+    },
+    {
+      "id": "lesson-counter-hint-3",
+      "order": 6,
+      "trigger": "Third '!' seen (no slowdown; small pulse only)",
+      "screens": [
+        "Counter!"
+      ],
+      "success": "Yes!",
+      "earliestRun": 1
+    },
+    {
+      "id": "lesson-perfect",
+      "order": 7,
+      "trigger": "Run 2 or later, on first real need: after the first Perfect Counter without help",
+      "screens": [
+        "Tap when the circle is almost full.",
+        "That is a Perfect Counter.",
+        "It fills your Focus fast!"
+      ],
+      "earliestRun": 2
+    },
+    {
+      "id": "lesson-block",
+      "order": 8,
+      "trigger": "Run 2 or later, on first real need: first Block (Counter pressed a little early)",
+      "screens": [
+        "That was a Block. Good guarding!",
+        "Wait a tiny bit longer for Perfect."
+      ],
+      "earliestRun": 2
+    },
+    {
+      "id": "lesson-dash",
+      "order": 9,
+      "trigger": "Run 2 or later, on first real need: first time two attacks will land together, or first boss sweep",
+      "screens": [
+        "Two at once? Too many!",
+        "Tap Dash to zoom away."
+      ],
+      "earliestRun": 2
+    },
+    {
+      "id": "lesson-step-out",
+      "order": 10,
+      "trigger": "Run 2 or later, on first real need: first time the player walks out of a red circle",
+      "screens": [
+        "Smart! Stepping out works too."
+      ],
+      "earliestRun": 2
+    }
+  ],
+  "maxNewLessonsPerRoom": 1
+}

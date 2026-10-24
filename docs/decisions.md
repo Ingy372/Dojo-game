@@ -382,6 +382,7 @@ From section 1 of `docs/work-board.md`.
 - **Cosmetics (J5, Jay, 2026-10-23):** cosmetics come from gear, in-game achievements and dojo achievements, and are never bought.
 - **Fonts (J7, Jay, 2026-10-23):** Fredoka for headings, Andika for body text. The game still uses the system font until Dojo-Ascent Programmer adds the font files in a later code step.
 - **Belt names (Jay, 2026-10-23):** keep the game's wording, "Red/Black Belt" and "Brown/Black Belt". The curriculum's "Red with a black stripe" and "Brown with a black stripe" describe the same ranks.
+- **Guided first Counter (G1, 2026-10-23, Learning proposal 6):** On a new profile, the first "!" warning slows the game to half speed and Sensei says "Look! A red circle." / "It's coming!". When the circle is nearly full, the game holds still with Counter pulsing and "Tap Counter... now!" until Counter is tapped, which always gives a Perfect Counter. The next warning: three-quarter speed, pulse, "Wait for it... Counter!". The one after: normal speed, small pulse, "Counter!". Then the guide is done for that profile. The lines come from `content/tutorial/sensei-lessons.json`. The hold-still rule is in `packages/sim` (world `guide`); the slowdown and pulse are in the client. Saves made before G1 by players who have already played a run skip the guide. Open questions are in the G1 pull request's DECIDE list.
 
 ## S1 change 1: enemy mixes (Jay, 2026-10-23)
 
@@ -396,3 +397,4 @@ From section 1 of `docs/work-board.md`.
 - From x2, the screen shows "PERFECT x2", "PERFECT x3"... under the combo counter, with a glow that gets brighter up to x5.
 - "Longest chain" is not a personal best (Jay, 2026-10-23).
 - Balance check (computer player, 1,000 runs each): Strikes per fight room went up 11–18% depending on the player (the limit was 20%). Novice on Standard won 35% before and 40% after (smart play).
+- **G1 follow-up (2026-10-23):** If the guided Counter's hold waits 5 seconds with no tap, Sensei shows a kind hint and Counter pulses more strongly. This repeats every 5 seconds and never ends the hold (the rule is in `packages/sim`). The hint line is a placeholder that needs the Content Designer's approval. The guide also runs in the practice room. There's no existing place to replay it, so players who finished runs before G1 still skip it.
