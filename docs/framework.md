@@ -610,7 +610,7 @@ Each milestone ends with something Jay can check himself, without reading code.
 | 4 | **Training link (mock data)** | Fake student profiles; abilities, Forms, and seals unlock from profile data; level cap; the Gate; Dojo Blessing; reward moments; the promotion ceremony | Switching the fake profile from white belt to yellow belt visibly changes the character and opens the Gate |
 | 5 | **Home Dojo basics** | A small room, placing and moving about ten decorations, mess that builds while away, the cleaning routine, the bow ritual | A student decorates and cleans their dojo without help |
 | 6 | **Story and Street Smarts sample** | Dialogue and choice system, Sensei and Kohai, one manners quest, one life-lesson quest, one Street Smarts scenario for ages 6–9 | Jay approves the scenario, and a student completes it and can explain what they'd do |
-| 7 | **Playtest ready** | Belt colors by palette swap, Guided mode, sound, run and scenario summaries, parent play limit | Ready to hand to 3–5 students at the dojo |
+| 7 | **Playtest ready** | Belt colors by palette swap, Guided mode, the Sensei's Lessons system with lessons for every first-session system, sound, run and scenario summaries, parent play limit | Ready to hand to 3–5 students at the dojo |
 
 My best guess is that the $100 credit covers milestones 0–4. The Home Dojo and story systems (5–6) are new systems and will likely need additional credit. If the credit runs short, milestones 2, 4, and 6 prove the idea best: combat that feels good, the link to real training, and real-world lessons.
 
@@ -621,7 +621,7 @@ My best guess is that the $100 credit covers milestones 0–4. The Home Dojo and
 | # | Milestone | What gets built | Done when |
 | --- | --- | --- | --- |
 | 9 | **Real DojoForge connection** (with Nic) | The real progress feed, student login, saving game progress on the server, Missions, and the staff "Ready for review" queue | A real Action Zone student logs in, sees their real belt and sign-offs, and a completed mission shows up in Jay's queue |
-| 10 | **Every belt tier and Sensei's Lessons** | Tower tiers for every rank using remixed rooms and enemy traits, a Guardian per tier, the gradual unlock schedule, Sensei's Lessons, Welcome Week | A white belt and a brown belt can each play their full rank and learn every system they've unlocked |
+| 10 | **Every belt tier and finishing Sensei's Lessons** | Tower tiers for every rank using remixed rooms and enemy traits, a Guardian per tier, the finished gradual unlock schedule, a Sensei's Lesson for every launch system (the Lessons system itself is built in milestone 7), Welcome Week | A white belt and a brown belt can each play their full rank and learn every system they've unlocked |
 | 11 | **Street Smarts and quests** | Illustrated scene scenarios for 2–3 locations (ages 6–9 and 10–13), location perks, a starter set of manners quests and 2 life-lesson stories | Jay has approved every scenario and quest, and students complete them without help |
 | 12 | **Launch** | Visiting classmates' dojos, certified trophies, the Hall of Masters, parent controls, final polish, App Store and Google Play release | The game is live for Action Zone families on both stores |
 

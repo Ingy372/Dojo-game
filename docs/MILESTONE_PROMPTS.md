@@ -272,7 +272,7 @@ Show me your plan first and wait for my approval.
 
 ---
 
-## Milestone 10 — Every belt tier and Sensei's Lessons
+## Milestone 10 — Every belt tier and finishing Sensei's Lessons
 
 ```
 Read CLAUDE.md, docs/progress.md, docs/decisions.md, and sections 10, 12, and 13 of docs/core-design.md.
