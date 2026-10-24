@@ -267,8 +267,9 @@ Same ids, file names, 128 x 128 size, anchor (64, 64) and static.json. Only the 
 - Aura: `sprites/body-a/aura.json`, with `aura-back` (drawn before all player layers) and `aura-front` (after). Both are tinted. Reduced motion: frame 0 only.
 - Draw order: aura-back, player layers, gi-trim, headband, wraps, aura-front. Reference: `source/cosm_lib.py compose()`. The belt is unchanged and never customizable.
 - Names, unlock rules and colours are open (see `cosmetics-a1/DELIVERY_NOTE.md`).
-## A5 padded-weapon enemy (samples), `incoming-art/enemy-padded-weapon/` [NEW]
-These are samples only: idle, windup and attack, in 8 directions. The frame is 192 and the anchor is (96, 142). The layers are body, glow, telegraph and light, the same as Tier 1, plus a new `weapon` layer drawn after body. **To show disarmed, skip the weapon layer.** The telegraph works like Tier 1 (`telegraphIntensity`). There is no content json yet, and the stats in the script are placeholders. See its README.md.
+## A5 Bouncy Bopper (padded-weapon enemy), `incoming-art/enemy-padded-weapon/` [NEW]
+**Full set (2026-10-24), re-import all of it:** idle, windup, attack, move, hit, stagger and defeat, in 8 directions. The body was redrawn a little bigger and brighter, and the front (S) attack was opened up, so idle, windup and attack changed too. Use the name "Bouncy Bopper" (PR #97 C8, `drafts/content/enemies/bopper.json`). The asset id and file names stay `padded`. Numbers follow PR #102: windup 8 frames at 10 fps (16 ticks), attack 11 frames at 10 fps with `keyFrames.impact` 0 (recovery frames 2-10), and move is springy hops at 2.2 tiles/s. Hit is 3 frames at 12 fps, stagger is 8 frames at 10 fps looping, and defeat is 14 frames at 12 fps (a kid-safe poof into a light orb and soft sparkles, like Tier 1; `keyFrames` light 3 and gone 13, and the last frame is empty). There is no drop animation: when it is disarmed, just stop drawing the weapon layer. **Disarmed attack: `pushpaw`** (11 frames at 10 fps, the same pose and timing as attack with an empty paw, impact on frame 0). It has no weapon sheet. Play `windup` first, with the weapon layer hidden. It is a weak hit; its power is the game's number. The staff scales away with the body in defeat.
+Earlier sample notes: idle, windup and attack, in 8 directions. The frame is 192 and the anchor is (96, 142). The layers are body, glow, telegraph and light, the same as Tier 1, plus a new `weapon` layer drawn after body. **To show disarmed, skip the weapon layer.** The telegraph works like Tier 1 (`telegraphIntensity`). There is no content json yet, and the stats in the script are placeholders. See its README.md.
 
 ## A7 QA fixes (PR #83): re-import [NEW]
 - `player-custom/sprites/body-a/` and `body-b/`: **re-import the `face-01` … `face-06` sheets** (all animations). They have a bigger, lighter eye ring, a second shine and a lighter mouth. Frames, anchors and layer names are unchanged.
@@ -277,7 +278,24 @@ These are samples only: idle, windup and attack, in 8 directions. The frame is 1
 - UI suggestion from QA, not done here: give dark swatches a light border.
 
 ## A2 Form stances (samples), `incoming-art/form-stances-a2/` [NEW, SAMPLES only, do not wire yet]
-Three player stance idles on the existing player rig: `stance_rooted` (front stance, option A), `stance_rooted_back` (back stance, option B) and `stance_flowing`. Same 128x160 frames, anchor-y 0.856 and 32 layers as `player-custom`; the belt stays its own neutral layer and the gi stays recolourable. Sheets are in `sprites/body-a` and `sprites/body-b`. The ids are working ids only, not names. See the DELIVERY_NOTE for DECIDE.
+Two player stance idles on the existing player rig: `stance_rooted` (**Rooted Form, chosen: option A, the wide front stance**) and `stance_flowing`. Option B (`stance_rooted_back`) is in `form-stances-a2/alternate-not-used/`. Do not import it. Same 128x160 frames, anchor-y 0.856 and 32 layers as `player-custom`; the belt stays its own neutral layer and the gi stays recolourable. Sheets are in `sprites/body-a` and `sprites/body-b`. The ids are working ids only, not names. See the DELIVERY_NOTE for DECIDE.
+## A6 decoration samples (S7-rev pool), `incoming-art/decor-pool-a6/sprites/static.json` [NEW, SAMPLES only, do not wire yet]
+6 sample pieces (class scroll, kick pad, keeper statue, journal trophy, fan stand, folding screen 2x1) in the Home Dojo format: same camera and 80 px tiles, with `footprint`, `place` (floor or wall) and `anchorPx` like `home-dojo/sprites/static.json`. Ids are working ids, not names. See the DELIVERY_NOTE for DECIDE.
+
+## A6 Tier 1 decoration set, `incoming-art/decor-tier1-a6/sprites/static.json` [UPDATED: C10 ids]
+- **Ids and names now follow C10 (PR #123, `drafts/content/decorations/a6-decorations-text.json`).** Every sprite has `info.name` and `info.description` from C10. **Id change:** `decor-t1-*` (#124) became `decor-a6-*`, and the sprite files were renamed to match. If anything imported the `decor-t1-*` ids, switch to the new ones (old-to-new table in `decor-tier1-a6/DELIVERY_NOTE.md`; `source/rename_c10.py` holds the map).
+- C10 has one id each for the statue and the trophy, so the variants use them as a prefix: `decor-a6-keeper-statue-floor1..3` (shared layer `decor-a6-keeper-statue-base`) and `decor-a6-journal-trophy-{swarmer,shield,brute,keeper,bopper}` (shared layer `decor-a6-journal-trophy-stand`). All variants share one C10 name.
+- The full-set ids reuse some sample ids from `decor-pool-a6/` (`decor-a6-kick-pad`, `-fan-stand`, `-folding-screen`). Load only `decor-tier1-a6/`; the samples are superseded.
+- 7 class scrolls (wall), 6 class gear, 5 random kinds with a `-tint` layer, 3 first-clear statues, 5 Journal trophies and the 2x1 folding screen.
+- **Tint:** for random pieces, draw `<id>`, then `<id>-tint` multiplied by `info.colour1`, or by colour 2 = the drop floor's belt colour (`beltStyles[belt].belt`).
+- **White-belt fallback [NEW]:** on White-belt floors, colour 2 is soft wood tan **`#d2a878`** (`placement.whiteBeltFallback`, `info.colour2WhiteFallback`), not the near-white belt colour.
+- **Folding screen is bonus-only [NEW]:** `decor-a6-folding-screen` is not in the random pool (`info.bonusOnly = true`, `placement.bonusOnly`). Placement: any free cell, except `info.mustTouchWall` pieces (the screen), whose top row must be row 1.
+- **Parked [NEW]:** gold-plate trophies for Tier 2+ named monsters are parked until Tier 2 is planned. No art yet.
+
+## S4c Injured status, `incoming-art/status-injured-s4c/sprites/injured.json` [NEW, SAMPLES, after launch]
+- **Enemies only.** Overlay sheets for each enemy (the 5 enemies idle/move/wind-up), the same frame size and rows as the enemy. The Floor Keeper and Guardians use the 2-star variant (`starCount`). The stars never go above the head-top line. The word belongs to S4c-C1. Draw order: `injured-stars-back` → character → `injured-bandage` → `injured-stars-front`, while `injuredTicks > 0`.
+- During a wind-up the stars fade to 50% over 4 ticks (the bandage stays). Wobble ±3°, 1.6 s, idle/move only.
+- `fx/injured-popup_plate.png` has no text; the game draws "Injured!" in its UI font in `textArea`. `fx/injured-puff_shake-off.png` plays on `injuredEnd`.
 
 ## Open items in one place
 
@@ -289,6 +307,8 @@ Three player stance idles on the existing player rig: `stance_rooted` (front sta
 6. **[NEW]** The Batch 6 player's neck oval: leave it for now (Jay), and patch it later only if it's noticeable in the game.
 7. **[NEW]** Where instructor-2 and the founder appear in the game (Jay and Claude Code), and their names (Content Writer).
 8. **[NEW]** A1 cosmetics: names (Content Writer), unlock rules and colours (Jay), and the headband fit over big hair.
-9. **[NEW]** A5 padded-weapon enemy: the name, stats, which seals use it and the content json are still to decide. Jay approved the 192 px frame, the lime accent, and hiding the staff to show disarmed (2026-10-24). The full set (move, hit, stagger, defeat) is queued.
+9. **[NEW]** A5 Bouncy Bopper: Jay approved the 192 px frame, the lime accent, and hiding the staff to show disarmed (2026-10-24). The full set is delivered. Jay's calls (2026-10-24): disarmed uses a weak **push-paw** attack, and the asset files keep the `padded` names. Still to decide: HP, power and the push-paw's power after the balance run (PR #102), and which seals use it.
 10. **[NEW]** A7: Jay approved the kohai top-knot, the teal tie and `#34303f` as black (2026-10-24). Only the swatch border (Programmer) is still open.
-11. **[NEW]** A2 Form stances: DECIDE rooted option A or B, the real names (Content Writer), when the stance idle shows, and whether other animations get form variants.
+11. **[UPDATED]** A2 Form stances: Rooted = option A (decided by Jay). Still open: the real names (Content Writer), when the stance idle shows, and whether other animations get form variants.
+12. **[UPDATED]** A6 decoration pool: ids and names follow C10; colour 2 on White floors is wood tan `#d2a878`; the folding screen is bonus-only; Tier 2+ gold-plate trophies are parked. Still open: the keeper figures per floor (lion-dog, turtle, crane) and the scroll picture-to-subject pairing (mapped in order; Content Designer to confirm).
+13. **[NEW]** S4c Injured art: enemies only, the stars at head height, and 2 stars for the Keeper and Guardians (decided by Jay). The 'Injured!' wording goes to S4c-C1.

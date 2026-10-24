@@ -28,3 +28,10 @@ Notes:
 **A7 QA fixes (2026-10-24): no outside assets.** These are edits to `player-custom/source/build_custom.py` and `dojo-people/source/build_people.py` only.
 
 **A2 form stance samples (2026-10-24): no outside assets.** Built by `form-stances-a2/source/add_stances.py` on the approved player-custom blends, rendered with `tools/`.
+**A5 padded-weapon enemy samples (2026-10-24): no outside assets.** Built by `enemy-padded-weapon/source/build_padded.py`, which is adapted from the Tier 1 enemy builder, with `tools/`. The full set (move, hit, stagger, defeat) comes from the same script, also with no outside assets.
+
+**A6 decoration samples (2026-10-24): no outside assets.** Built by `decor-pool-a6/source/build_decor_a6.py` with helpers copied from the Home Dojo builder, rendered with `tools/`.
+
+**A6 Tier 1 decoration set (2026-10-24): no outside assets.** Built by `decor-tier1-a6/source/build_decor_t1.py` (helpers from the Home Dojo builder; monster colours from `enemies-tier1/source`), rendered with `tools/`.
+
+**S4c-A1 Injured status (2026-10-24): no outside assets in the sprites.** Drawn by `status-injured-s4c/source/make_injured.py` (PIL). The preview mock of the word uses the system Nunito font (SIL OFL); it is not shipped in any sprite.

@@ -496,6 +496,16 @@
         }
       ]
     },
+    "decor-tier1": {
+      "note": "A6 Tier 1 decoration set (PR #124/#125): 5 random tinted pieces, 13 class pieces, 3 keeper statues, 5 Journal trophies, the folding screen. decor-pool-a6 is not included.",
+      "sources": [
+        {
+          "id": "decor-tier1",
+          "type": "static",
+          "json": "incoming-art/decor-tier1-a6/sprites/static.json"
+        }
+      ]
+    },
     "tower-t2": {
       "note": "Yellow belt Tower kit (Sunrise Garden). Same sprite ids as tower-t1, plus optional decor.",
       "sources": [
@@ -565,6 +575,16 @@
             "tell-dash-trail",
             "tell-shield-tap"
           ]
+        }
+      ]
+    },
+    "enemy-bopper": {
+      "note": "A5 Bouncy Bopper, full set (PR #111; Jay approved the 192 px frame, lime accent, hidden staff for disarmed and push-paw). Asset files keep the `padded` names. Stats are still a DECIDE (#102), so the game only shows it through the ?skin=bopper test link for now.",
+      "sources": [
+        {
+          "id": "bopper",
+          "type": "character",
+          "json": "incoming-art/enemy-padded-weapon/sprites/padded.json"
         }
       ]
     }

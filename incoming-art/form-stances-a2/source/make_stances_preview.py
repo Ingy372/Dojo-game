@@ -5,7 +5,7 @@ import os, sys, json, shutil, tempfile
 from PIL import Image, ImageDraw
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.join(HERE, "..")
 OUT = os.path.join(ROOT, "preview"); os.makedirs(OUT, exist_ok=True)
-STANCES = ["stance_rooted", "stance_rooted_back", "stance_flowing"]
+STANCES = ["stance_rooted", "stance_flowing"]  # Rooted = option A (chosen); option B lives in alternate-not-used/
 
 def combined(body):
     """temp folder: the stance sheets plus the approved guard idle, one JSON"""

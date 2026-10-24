@@ -12,8 +12,13 @@ import { loadRoom, type Room, type RoomKind } from './room';
 
 export type DecorationPlace = 'floor' | 'wall';
 export type DecorationClean = 'mat' | 'rack';
-/** starter: Sensei's gifts; tower: found in chests; named: a named monster's sticker (first win only, never in chests). */
-export type DecorationSource = 'starter' | 'tower' | 'named';
+/**
+ * starter: Sensei's gifts; tower: found in chests; named: a named monster's sticker (first win only, never in chests).
+ * Tier 1 set (A6): random (tinted pieces), class (real classes), keeper (first clear of a floor),
+ * trophy (Monster Journal), bonus (the folding screen). How these are earned comes later.
+ */
+export type DecorationSource = 'starter' | 'tower' | 'named' | 'random' | 'class' | 'keeper' | 'trophy' | 'bonus';
+const SOURCES: readonly DecorationSource[] = ['starter', 'tower', 'named', 'random', 'class', 'keeper', 'trophy', 'bonus'];
 
 export interface DecorationDef {
   id: string;
@@ -28,6 +33,17 @@ export interface DecorationDef {
   /** Placeholder look until the art pack. */
   shape: string;
   color: string;
+  /** One short story line (optional). */
+  description?: string;
+  /** The art pack it is drawn from, when it isn't "dojo". */
+  art?: string;
+  /** Only goes where its top row is against the top wall (the first floor row), e.g. the folding screen. */
+  mustTouchWall: boolean;
+  /** Trophies: the enemy id whose first defeat gives it, and the belt tier its Journal entry belongs to. */
+  monster?: string;
+  journalTier?: number;
+  /** Keeper statues: given the first time the Floor Keeper is beaten at this belt tier. */
+  keeperFloor?: number;
 }
 
 export interface DojoContent {
@@ -51,7 +67,20 @@ export interface DojoItem {
   wipes: number;
   /** Racks: weapons knocked crooked. */
   crooked: number;
+  /** Tinted (random) pieces: 1 = the art's own colour, 2 = the belt colour of the floor it came from. */
+  colour?: 1 | 2;
+  /** The belt of the floor (or class) it came from: colour 2 of tinted pieces uses it. */
+  belt?: DropBelt;
 }
+
+/** The belt a piece came from. */
+export interface DropBelt {
+  tier: number;
+  color: string;
+}
+
+/** A newly earned piece: just an id, or with its colour roll and drop belt. */
+export type NewDecoration = string | { id: string; colour?: 1 | 2; belt?: DropBelt };
 
 /**
  * A bit of dust or litter on one floor tile. "leaf" spots are drawn as litter (muddy
@@ -122,7 +151,7 @@ export function loadDojoContent(roomData: unknown, decorationsData: unknown): Do
       return n;
     };
     const source = text('source') as DecorationSource;
-    if (source !== 'starter' && source !== 'tower' && source !== 'named') throw new DojoError(`${where}'s "source" must be starter, tower or named`);
+    if (!SOURCES.includes(source)) throw new DojoError(`${where}'s "source" must be one of ${SOURCES.join(', ')}`);
     const place = text('place') as DecorationPlace;
     if (place !== 'floor' && place !== 'wall') throw new DojoError(`${where}'s "place" must be floor or wall`);
     const clean = (it.clean ?? null) as DecorationClean | null;
@@ -138,7 +167,24 @@ export function loadDojoContent(roomData: unknown, decorationsData: unknown): Do
       clean,
       shape: text('shape'),
       color: text('color'),
+      mustTouchWall: it.mustTouchWall === true,
     };
+    if (typeof it.description === 'string') def.description = it.description;
+    if (typeof it.art === 'string') def.art = it.art;
+    if (typeof it.monster === 'string') def.monster = it.monster;
+    const tierNum = (k: string) => {
+      const n = it[k];
+      if (n === undefined) return undefined;
+      if (typeof n !== 'number' || !Number.isInteger(n) || n < 1) throw new DojoError(`${where}'s "${k}" must be a whole number from 1`);
+      return n;
+    };
+    const jt = tierNum('journalTier');
+    if (jt !== undefined) def.journalTier = jt;
+    const kf = tierNum('keeperFloor');
+    if (kf !== undefined) def.keeperFloor = kf;
+    if (source === 'trophy' && (!def.monster || def.journalTier === undefined)) throw new DojoError(`${where} is a trophy, so it needs a "monster" and a "journalTier"`);
+    if (source === 'keeper' && def.keeperFloor === undefined) throw new DojoError(`${where} is a keeper statue, so it needs a "keeperFloor"`);
+    if (def.mustTouchWall && place !== 'floor') throw new DojoError(`${where} has mustTouchWall, so it must be a floor decoration`);
     if (place === 'wall' && (def.height !== 1 || def.solid || clean)) throw new DojoError(`${where} hangs on the wall, so it must be 1 tall, not solid, and need no cleaning`);
     if (clean === 'mat' && def.solid) throw new DojoError(`${where} is a mat, so it can't be solid`);
     return def;
@@ -222,8 +268,14 @@ export function loadDojo(data: unknown, content: DojoContent): DojoState | null 
 }
 
 /** Adds newly earned decorations to storage. */
-export function addDecorations(dojo: DojoState, ids: readonly string[]): DojoItem[] {
-  return ids.map((id) => addItem(dojo, id));
+export function addDecorations(dojo: DojoState, pieces: readonly NewDecoration[]): DojoItem[] {
+  return pieces.map((p) => {
+    if (typeof p === 'string') return addItem(dojo, p);
+    const item = addItem(dojo, p.id);
+    if (p.colour) item.colour = p.colour;
+    if (p.belt) item.belt = { ...p.belt };
+    return item;
+  });
 }
 
 /** How many of each decoration the player owns. */
@@ -389,6 +441,9 @@ export function canPlace(dojo: DojoState, content: DojoContent, uid: string, col
     return !placed(dojo).some((o) => o.uid !== uid && decorationDef(content, o.id).place === 'wall' && overlaps(tiles, footprint(o.col!, o.row!, decorationDef(content, o.id))));
   }
   if (tiles.some((t) => room.walls[t.row]?.[t.col] !== false)) return false;
+  // Pieces like the folding screen stand with their back against the top wall.
+  // ...but never right in front of the notice board, which must stay visible.
+  if (def.mustTouchWall && (row !== 1 || tiles.some((t) => t.col === content.board.col))) return false;
   for (const o of placed(dojo)) {
     if (o.uid === uid) continue;
     const od = decorationDef(content, o.id);

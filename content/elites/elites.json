@@ -55,6 +55,6 @@
   "reward": {
     "_about": "On defeating any elite (PR #54): Focus added at once (capped at the normal Focus max), and a chance of one extra Home Dojo decoration. Never gear.",
     "focus": 15,
-    "decorationChance": 0.5
+    "decorationChance": 0.15
   }
 }

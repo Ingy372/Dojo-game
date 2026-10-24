@@ -76,6 +76,8 @@ export interface StudentFeed {
     classDays: string[];
     /** Classes attended since the last promotion (the Gate's sundial). */
     classesInRank: number;
+    /** Lifetime certified classes across all ranks; null when an older feed leaves it out. */
+    classesTotal: number | null;
   };
   /** Sensei's Seal: approved to test, and the test date once scheduled. */
   testing: { approved: boolean; testDate: string | null };
@@ -228,6 +230,7 @@ export function loadFeed(data: unknown): StudentFeed {
       recentClasses: list(att.recentClasses ?? [], '"attendance.recentClasses"').map((d, i) => date(d, `"attendance.recentClasses[${i + 1}]"`)),
       classDays,
       classesInRank: count(att.classesInRank ?? 0, '"attendance.classesInRank"'),
+      classesTotal: att.classesTotal === undefined || att.classesTotal === null ? null : Math.floor(count(att.classesTotal, '"attendance.classesTotal"')),
     },
     testing: { approved: testing.approved === true, testDate: textOrNull(testing.testDate, '"testing.testDate"') },
     streak: { weeks: count(obj(f.streak ?? { weeks: 0 }, '"streak"').weeks ?? 0, '"streak.weeks"') },

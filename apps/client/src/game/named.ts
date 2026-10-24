@@ -7,16 +7,15 @@ import type { EnemyState, NamedMonsterDef } from '@dojo/sim';
 import { addStatic, directionIndex, frameOf, setStaticFrame, staticArt } from '../art/art';
 import { FONT, crisp } from '../ui/theme';
 import { CONTENT } from './content';
+import { reducedMotion } from './motion';
 
 export const NAMED_PACK = 'named-monster';
 const DIRS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 const TAG_FADE_MS = 300;
 const PLATE_FADE_MS = 400;
+/** The plate's spot under the feet (px). */
+const PLATE_BELOW = 6;
 
-/** The player asked their device for less motion: no screen shake from tells. */
-export function reducedMotion(): boolean {
-  return typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-}
 
 interface ArtExtras {
   nineSlice?: { left: number; right: number; top: number; bottom: number };
@@ -68,6 +67,32 @@ export class NamedView {
   shownAt: number | null = null;
   /** Tell beats already played in the current wind-up. */
   private beats = 0;
+  /** The head tag's spot (px above the feet). */
+  private headY = -80;
+
+  /**
+   * K12: keeps the plate and tag readable. The plate sits under the feet unless another
+   * creature or the player is there (then over the head); near the top of the screen,
+   * where the HUD is, a label over the head moves under the feet. Both hide once it's beaten.
+   * `others` are the other creatures' feet, in px from this one's feet; `topRoom` is how many
+   * px there are between this one's feet and the bottom of the HUD.
+   */
+  layout(others: Array<{ x: number; y: number }>, topRoom: number, defeated: boolean): void {
+    if (defeated) {
+      this.plate?.setVisible(false);
+      this.tag?.setVisible(false);
+      return;
+    }
+    const blocked = (y0: number, y1: number, halfW: number) => others.some((o) => Math.abs(o.x) < halfW + 18 && o.y + 8 > y0 && o.y - 70 < y1);
+    if (this.plate) {
+      const halfW = this.plate.getBounds().width / 2;
+      const h = 22;
+      const aboveY = this.headY - h;
+      const below = !blocked(PLATE_BELOW, PLATE_BELOW + h, halfW) || -aboveY > topRoom;
+      this.plate.setY(below ? PLATE_BELOW : aboveY);
+    }
+    if (this.tag) this.tag.setY(-this.headY + 4 > topRoom ? PLATE_BELOW + 22 : this.headY);
+  }
 
   constructor(
     private scene: Phaser.Scene,
@@ -80,9 +105,10 @@ export class NamedView {
     this.sparkle = addStatic(scene, NAMED_PACK, this.sparkleId, 0, 0);
     this.front.push(...this.sparkle);
     this.plate = label(scene, 'name-plate', def.name, 14, 12);
-    if (this.plate) this.plate.setY(6);
+    if (this.plate) this.plate.setY(PLATE_BELOW);
     this.tag = label(scene, 'name-tag', def.name, 10, 8);
-    if (this.tag) this.tag.setY(-(extras(scene, 'name-tag').headOffsetPx?.[base] ?? 80)).setAlpha(0);
+    this.headY = -(extras(scene, 'name-tag').headOffsetPx?.[base] ?? 80);
+    if (this.tag) this.tag.setY(this.headY).setAlpha(0);
     if (base === 'brute') {
       this.dust = addStatic(scene, NAMED_PACK, 'tell-stamp-dust', 0, 0);
       this.dust.forEach((d) => d.setVisible(false));
@@ -113,7 +139,10 @@ export class NamedView {
   /** Draws this frame. Returns the tell sound/shake beats that start now. */
   update(e: EnemyState, now: number, windupSec: number | null, windupFrame: number, tilePx: number): { clank: boolean } {
     const a = staticArt(this.scene, NAMED_PACK, this.sparkleId);
-    if (a) setStaticFrame(this.scene, NAMED_PACK, this.sparkleId, this.sparkle, Math.floor((now / 1000) * (a.fps ?? 10)) % a.frames);
+    // Reduced motion (K12): no sparkles.
+    const calm = reducedMotion();
+    this.sparkle.forEach((sp) => sp.setVisible(!calm));
+    if (a && !calm) setStaticFrame(this.scene, NAMED_PACK, this.sparkleId, this.sparkle, Math.floor((now / 1000) * (a.fps ?? 10)) % a.frames);
     // Name plate for the first few seconds, then the head tag fades in.
     if (this.shownAt !== null) {
       const plateMs = CONTENT.named.rules.plateSeconds * 1000;
@@ -159,7 +188,8 @@ export class NamedView {
       this.tap.forEach((d) => d.setVisible(show).setPosition(o[0], o[1]));
       if (show) setStaticFrame(this.scene, NAMED_PACK, tellId, this.tap, frame);
       out.clank = fresh;
-    } else if (this.trail && e.attackCenter) {
+    } else if (this.trail && e.attackCenter && !reducedMotion()) {
+      // Reduced motion (K12): no dash trail (the wind-up pose and telegraph still show).
       const dx = e.attackCenter.x - e.pos.x;
       const dy = e.attackCenter.y - e.pos.y;
       const angle = Math.atan2(dy, dx);

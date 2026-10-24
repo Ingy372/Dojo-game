@@ -72,7 +72,7 @@
 - Checked on a phone-sized screen in a test browser: Home, a battle room, the grade, the Insight cards, treasure room and doors, the boss with its helpers, coming home to the summary, the gear screen, and the practice room's Home button.
 
 **Not done / known limits**
-- A run in progress isn't saved if the app is closed.
+- ~~A run in progress isn't saved if the app is closed.~~ Fixed in K11/M7-P11: the run is saved at the start of each room.
 - Real fights haven't been balanced beyond the starting numbers; Jay's playtest decides.
 
 **Next**
@@ -416,3 +416,63 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - The Old Thumper fact no longer sits on the stamp art.
 - `?named=` (and other test-link) runs no longer write the Monster Journal or give the sticker. New test in packages/sim/test/named.test.ts; checked in the browser too (journal stayed empty).
 - 198 tests pass, 1 skipped; typecheck and build clean.
+
+## K12: Q3 named-monster fixes (2026-10-24)
+- From the Q3 QA report (drafts/qa/2026-10-24-q3-named-monsters.md).
+- Sensei's banner wraps long lines and uses 20px text on screens under 720px wide, so the "freed" line fits at 667x375. The gold "Decoration: … Sticker" label moves under the banner whenever it would sit on it, every frame.
+- `?named=X` without `&room=` always gives X: from room 3, test runs pick battle (or challenge) rooms that have X's type, and X can be in a challenge room on a test run only. Checked on 200 seeds for each monster.
+- Equal mix: a rolled named monster no longer swaps to "another monster whose type is in the room". It waits for the first battle room from room 3 that has its type. Over 6,000 floors each monster is about 1/3. The overall rate at tier 2 drops a little (3.9% on the 1,000-seed test).
+- The first named monster a student ever meets also gets Sensei's journal intro ("You met a named monster! I've started your Monster Journal.") before its greeting.
+- Name plates move above the head if another creature or the player is under its feet. Near the top of the screen (under the HUD), the head tag moves under the feet. Both hide once it's beaten.
+- Reduced motion: a "Reduced motion: On/Off" switch on the Title screen (bottom right). It saves on this device and starts On if the phone asks for reduced motion. When on, it turns off screen shake (hits and the stamp), named sparkles, the dash trail, the white hit flash, screen flashes, the golden "set free" flash and stars, the Dojo sparkles and the Title pulse. Text is in content/settings/motion.json.
+- Character creator: dark swatches get a thicker, solid light rim (A7).
+- 200 tests pass (1 skipped), typecheck and build clean. Screenshots: /workspace/k12-{667,844}-{title-motion-on,title-motion-off,swatches,intro-plate,freed}.png.
+- **2026-10-24 (K12, #119):** named monsters are rarer: chancePerRun 0.0333, about 1 in 30 eligible runs, measured at 2.8%. The frequency test band is now 0.02–0.045.
+- **2026-10-24 (K12, #119):** main merged in (#111). Bopper art imported as `enemy-bopper`, viewable with `?skin=bopper`. Screenshots: /workspace/k12-{667,844}-bopper-2.png.
+
+## K11 / M7-P1: Guided by default for young and new players (2026-10-24)
+- A new profile (no runs yet) starts on **Guided** if the student's age band tops out at 9 or under, or they're a white belt with 0 sign-offs. Everyone else starts on **Standard** (the default). The rules are in `content/settings/difficulty.json`.
+- `profile.difficulty` now always gets a real value. It is set the first time the Home Dojo opens or a Tower run starts (`settleDifficulty`). It is never changed again after the player picks one: `difficultyChosenByPlayer` is saved when they do.
+- New **Settings** button in the Home Dojo. It opens the difficulty choice screen: Guided / **Steady** (the kid-facing name for Standard) / Challenge.
+- While a player is on an automatic Guided, the Home Dojo shows "You're on Guided. Change anytime in Settings."
+- `TrainingState` now has `ageBand` from the feed.
+- New tests in `packages/sim/test/difficulty.test.ts`. In the browser: the new white belt starts on Guided; tapping Steady sticks after a reload; the green belt starts on Standard. 204 tests pass, 1 skipped.
+
+## K11 / M7-P9 — Play-time limit (grown-up setting)
+
+- Settings → "For grown-ups" (press and hold 2 s) → Play-time limit: Off / 15 / 30 / 45 / 60 min. Default Off. Saved as `profile.playLimitMinutes`.
+- When time is up, Sensei says "Nice work! Let's finish this room, then rest." The current room plays out; at the door the run ends as `rested` with a "Great training today!" card, and everything found is kept (normal finishRun). No timer or countdown is shown to the child.
+- A session is time played with no break of 30+ min (content/settings/play-time.json `sessionBreakMinutes`); the clock is in localStorage `dojo-ascent-play-clock` and counts time in the dojo and the tower.
+- Test link: `?playlimit=N` overrides the setting with N minutes.
+- Tests: run.test.ts "play-time limit (M7-P9)". Screenshots: k11-p9-{667,844}-{wrapup,rest,home,settings,playlimit}.png.
+
+## K11 / M7-P11 — Fix open notes
+
+I checked every "Next" and "Not done / known limits" note. Only one is a bug: **a run in progress isn't saved if the app is closed.** The rest are playtests for Jay, later milestones, art, or open decisions.
+
+- **Fixed:** the Tower run is saved to localStorage (`dojo-ascent-run-in-progress`) at the start of every room. It's cleared as soon as the run ends and is banked.
+- **Next time the Home Dojo opens** (after the bow and welcome cards), a card says "Your climb is waiting! Room X of Y." **Keep climbing** restarts that room with the same insights, health, loot and floor. **Rest for now** banks the run like a play-time rest, so nothing found is lost.
+- A save from a room that no longer exists in the content, or a broken save, is dropped quietly.
+- **Limit:** you replay the room you were in. Anything picked up in that room before the app closed isn't kept, because the save is taken at the room's start.
+- **Tests:** `packages/sim/test/runSave.test.ts`. Screenshots: `k11-p11-{667,844}-{resume,resumed,rested}.png`.
+
+- **2026-10-24 (K11 update, #108):** P1 reworked per Manager + Learning Designer: everyone starts on Standard, kind Guided offer after 2 losses on one floor (max once a day, never automatic), one-time home line, "The usual pace", 6-9 fixture. Screens: /workspace/k11-p1-{667,844}-{home-line,home-again,settings,offer,after-offer}.png.
+
+- **2026-10-24 (K11 update, #110):** P9 reworked: daily play time (resets at local midnight), math-question grown-up gate, Tower door rests when time is up. Merged origin/main and the updated #108. Screens: /workspace/k11-p9-{667,844}-{wrapup,rest,home,door-resting,settings,gate,playlimit}.png.
+
+- **2026-10-24 (K11 update, #113):** merged origin/main and the updated #110 (which has #108). `bankRun` now also records the floor result for the Guided offer. The Manager accepted losing a room's pickups on resume (decisions.md). Screens re-taken: /workspace/k11-p11-{667,844}-{resume,resumed,rested}.png.
+- **2026-10-24 (C9 wording, #108):** Content Designer wording (PR #115) applied to content/settings/difficulty.json. The Guided offer now uses the #114 wording ("Want more time to COUNTER?", "Try it" / "No thanks"), which settles the Guided/Steady question. The ✓ on the picked difficulty is confirmed. Menu buttons are in normal case; only fight buttons are in caps.
+- **2026-10-24 (C9 wording, #110):** merged P1's C9 update. play-time.json wrap-up, rest and help lines follow C9. The rest card shows all 3 lines.
+- **2026-10-24 (C9 wording, #113):** merged P9's C9 update; run-resume line per C9.
+
+## K12b (2026-10-24)
+- Merged origin/main. Reduced motion now in Settings. Bopper added as data-driven enemy, Yellow belt+, with disarmed push. Tests 218 passed / 1 skipped; typecheck + build clean. Screenshots k12b-*.png.
+
+## Decor Tier 1 import (2026-10-24)
+- 27 Tier 1 decorations imported and drawn in the dojo (tinted pieces use belt colour / tan on White). mustTouchWall rule + test. Testing screen has "Try the new decorations". Tests 220 passed / 1 skipped; typecheck + build clean. Screenshots /workspace/decor1-{667,844}-{white,yellow}-{left,right}.png. Next: earning PR.
+
+## Decor earning (2026-10-24)
+- New `packages/sim/src/earning.ts`: class pieces at the dojo (welcome piece, then every 2/3 classes), Journal trophies, keeper statues, folding screen. Surprise pool (tower + random) at S7 rates with 3-copy cap and colour roll. Pieces remember their drop belt. Test runs award nothing (bankRun leak fixed). C11 names. Tests 239 passed / 1 skipped (key rules checked to fail when removed); typecheck + build clean. Screenshots /workspace/earn-{667,844}-{card0,card1,dojo-left,dojo-right}.png.
+
+## Rest refresh (2026-10-24)
+- Fixed: pieces banked by "Rest for now" in the dojo now show at once. Tests 239 passed / 1 skipped; typecheck and build pass. Screenshots: /workspace/rest-{before,after}-{667,844}-storage.png (before: 1 stored, after: 4).

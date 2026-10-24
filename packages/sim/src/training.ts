@@ -90,6 +90,8 @@ export interface PathCard {
 export interface TrainingState {
   studentId: string;
   firstName: string;
+  /** The student's age band from the feed, like "6-9" or "10-13". */
+  ageBand: string;
   displayName: string;
   schoolName: string;
   belts: FeedBelt[];
@@ -114,6 +116,10 @@ export interface TrainingState {
   /** When the Blessing ends (ms), or null. */
   blessingEndsMs: number | null;
   lastClass: string | null;
+  /** Class check-ins so far (feed recentClasses up to now): each new one counts toward class pieces. */
+  classCheckIns: string[];
+  /** Lifetime classes from the feed, or null if the feed doesn't send it. */
+  classesTotal: number | null;
   trainingPoints: number;
   approvedMinutes: number;
 }
@@ -228,6 +234,7 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
   return {
     studentId: feed.student.id,
     firstName: feed.student.firstName,
+    ageBand: feed.student.ageBand,
     displayName: `${feed.student.firstName} ${feed.student.lastInitial}.`,
     schoolName: feed.school.name,
     belts,
@@ -247,6 +254,8 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
     blessed,
     blessingEndsMs: blessed ? endsMs : null,
     lastClass: last === null ? null : feed.attendance.recentClasses.find((d) => Date.parse(d) === last) ?? null,
+    classCheckIns: feed.attendance.recentClasses.filter((d) => Date.parse(d) <= now.ms),
+    classesTotal: feed.attendance.classesTotal,
     trainingPoints: Math.floor(feed.homePractice.approvedMinutes / TRAINING_POINTS.minutesPerPoint),
     approvedMinutes: feed.homePractice.approvedMinutes,
   };

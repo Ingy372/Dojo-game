@@ -119,7 +119,8 @@
       "Mon",
       "Wed"
     ],
-    "classesInRank": 22
+    "classesInRank": 22,
+    "classesTotal": 61
   },
   "testing": {
     "approved": true,

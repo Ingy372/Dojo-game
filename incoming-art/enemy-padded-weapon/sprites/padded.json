@@ -170,13 +170,121 @@
         0.0
       ],
       "note": "padded staff bonk: a big overhead swing down in front (soft foam pad lands first)"
+    },
+    "pushpaw": {
+      "frames": 11,
+      "fps": 10,
+      "durationSec": 1.1,
+      "loop": false,
+      "tags": {
+        "impact": "0",
+        "recover": "2-10"
+      },
+      "sheets": {
+        "body": "padded_body_pushpaw.png",
+        "glow": "padded_glow_pushpaw.png",
+        "telegraph": "padded_telegraph_pushpaw.png",
+        "light": "padded_light_pushpaw.png"
+      },
+      "keyFrames": {
+        "impact": 0
+      },
+      "recoverSeconds": 0.9,
+      "telegraphIntensity": [
+        1.0,
+        0.933,
+        0.75,
+        0.5,
+        0.25,
+        0.067,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "disarmed": true,
+      "layersNotDrawn": [
+        "weapon"
+      ],
+      "note": "push-paw: the disarmed attack. The same pose and timing as attack, with an empty paw (do not draw the weapon layer). Play windup first, with the weapon layer hidden. A weak hit; its power is the game's call"
+    },
+    "move": {
+      "frames": 6,
+      "fps": 10,
+      "durationSec": 0.6,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "padded_body_move.png",
+        "weapon": "padded_weapon_move.png",
+        "glow": "padded_glow_move.png",
+        "telegraph": "padded_telegraph_move.png",
+        "light": "padded_light_move.png"
+      },
+      "designSpeedTilesPerSecond": 2.2,
+      "note": "springy hops; play at any move speed"
+    },
+    "hit": {
+      "frames": 3,
+      "fps": 12,
+      "durationSec": 0.25,
+      "loop": false,
+      "tags": {
+        "recoil": "0"
+      },
+      "sheets": {
+        "body": "padded_body_hit.png",
+        "weapon": "padded_weapon_hit.png",
+        "glow": "padded_glow_hit.png",
+        "telegraph": "padded_telegraph_hit.png",
+        "light": "padded_light_hit.png"
+      }
+    },
+    "stagger": {
+      "frames": 8,
+      "fps": 10,
+      "durationSec": 0.8,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "padded_body_stagger.png",
+        "weapon": "padded_weapon_stagger.png",
+        "glow": "padded_glow_stagger.png",
+        "telegraph": "padded_telegraph_stagger.png",
+        "light": "padded_light_stagger.png"
+      },
+      "note": "dizzy wobble; loop for as long as the stagger lasts"
+    },
+    "defeat": {
+      "frames": 14,
+      "fps": 12,
+      "durationSec": 1.1667,
+      "loop": false,
+      "tags": {
+        "light": "3",
+        "gone": "13"
+      },
+      "sheets": {
+        "body": "padded_body_defeat.png",
+        "weapon": "padded_weapon_defeat.png",
+        "glow": "padded_glow_defeat.png",
+        "telegraph": "padded_telegraph_defeat.png",
+        "light": "padded_light_defeat.png"
+      },
+      "keyFrames": {
+        "light": 3,
+        "gone": 13
+      },
+      "removeAfter": true,
+      "note": "dissolves into light and sparkles (a hopeful 'set free', not a death). The last frame is empty"
     }
   },
   "enemy": "padded",
-  "name": "(name to decide)",
+  "name": "Bouncy Bopper",
   "sizeTiles": {
-    "bodyWidth": 0.38,
-    "bodyHeight": 0.58,
+    "bodyWidth": 0.41,
+    "bodyHeight": 0.62,
     "radiusInData": 0.38
   },
   "tintGuidance": {

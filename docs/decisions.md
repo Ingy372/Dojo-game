@@ -373,7 +373,7 @@ From section 1 of `docs/work-board.md`.
 - **Lore comes first.** The Tower's story and enemy lore are launch scope, and the game is built around them where it fits.
 - **The Bestiary is launch scope.** An enemy's entry fills in the first time the player defeats it; deeper lore unlocks with each real belt. The unlock schedule in core-design section 13 still needs updating to match.
 - **First movement lesson:** "Tap where you want to go, or use the stick."
-- **Real techniques decide game effects.** Each self-defense technique's callout and in-game effect must match what the real technique does to an opponent. Jay's descriptions are in `docs/self-defense.md`. The game shows outcomes (off-balance, trapped, thrown, disarmed, escaped), never injuries.
+- **Real techniques decide game effects.** Each self-defense technique's callout and in-game effect must match what the real technique does to an opponent. Jay's descriptions are in `docs/self-defense.md`. The game shows outcomes (off-balance, trapped, thrown, disarmed, escaped). **Exception (2026-10-24):** an enemy can be **Injured** (a short, cartoon status: bandage sticker and dizzy stars) from the break techniques, self-defense #31–40 only. It always recovers or poofs away. No blood, gore, bones or cracks, and never the word "broken" on screen (Jay via Manager, 2026-10-24; spec: `drafts/planning/S4c-injured-status.md`).
 - **The QA bot is active now.**
 - **Systems design goes to Dojo-Ascent Researcher & Planner.** The board planned a sixth bot, the Game Systems Designer, to own combat, items, Forms, power-ups, difficulty, achievements and rewards. Jay instead gave those items (S1–S8) to the existing bot Dojo-Ascent Researcher & Planner (2026-10-23), so no sixth bot and no `drafts/systems/` folder were created. Answering the milestone 4 questions (powers, numbers, black belt degrees) moves from the Learning Designer to Dojo-Ascent Researcher & Planner; the Learning Designer reviews its work.
 - **Claude Code is replaced by Dojo-Ascent Programmer** (Jay, 2026-10-23). Jay no longer works with Claude Code; every mention in `docs/` now says Dojo-Ascent Programmer.
@@ -462,3 +462,111 @@ From section 1 of `docs/work-board.md`.
 - **COMBO goes left during a boss fight**, under the player's bars, instead of lower in the centre, where it would collide with Sensei's banner.
 - **The Sensei banner checks the door labels on screen** (they scroll with the room), so the fix works in every room, not just the Keeper's.
 - **The forced-elite test link keeps the belt and first-floor bypass**, but Guided still wins over Guarding (it becomes Swift, the same swap as normal play).
+
+## K12: Q3 named-monster fixes (2026-10-24)
+- **Equal mix over a steady rate.** The swap to another named monster whose type is in the room (K-M7) made Zippy Zoom about 45%. It's gone: the rolled monster waits for a battle room with its type. The roll is still 5%, but a few floors never offer such a room, so slightly fewer floors get one. This replaces the "Earliest wave" swap note above.
+- **Test links are steered, normal runs are not.** `?named=` runs pick rooms with the asked-for type from room 3 and allow a challenge room, so the link always works whatever doors are taken. Normal runs never steer room picks, so the "same rooms with or without it" rule still holds.
+- **Reduced motion is a device setting** (localStorage `dojo.reducedMotion`), not part of the profile, because it's about the screen, like the OS setting it starts from. The switch is on the Title screen, because Settings (#108) isn't on main yet. After #108/#110 merge it should move into Settings (behind the grown-up gate) and leave the Title screen.
+- **What stays with reduced motion:** wind-up poses, the telegraph glow, the shield tap and the player's red hurt tint. These are information, not decoration.
+- **This replaces the K-M7 note** that reduced motion is OS-only and turns off only the stamp shake.
+
+## K12: named monsters rarer (2026-10-24)
+- `rules.chancePerRun` in content/named/named.json goes from 0.05 to **0.0333**, about 1 in 30 eligible runs (Manager call). The other spawn rules stay the same: yellow belt or higher, after the first 3 runs, room 3 or later, battle rooms only, at most one per floor, no elite. The 5% roll mentioned above is replaced.
+- Because some floors have no battle room with the rolled type, the measured rate is about 2.8% over 1,000 seeds. The test band is now 2–4.5%.
+
+## K12: Bouncy Bopper art imported (2026-10-24)
+- Merged main (#111, A5 full set). New pack `enemy-bopper` in approved.json (the source files keep the `padded` names, per Jay). `import_art.py` was re-run. That also refreshed the player packs to the A7 art Jay approved (`#34303f` black hair swatch), which main had not re-packed yet.
+- Bopper has no content json yet, because HP, power and push-paw power are still DECIDE items (#102). For now it appears only through the test link `?skin=bopper`, which draws Bopper on every enemy and changes only the picture (like `?aura=`). It is not added to any spawn pool.
+
+## M7-P1: starting difficulty (2026-10-24)
+- **Who starts on Guided:** a new profile (no runs started or played) whose feed age band tops out at 9 or under, **or** a white belt (tier 1) with 0 sign-offs at that belt (Manager decision, Oct 24). Everyone else starts on Standard.
+- **Kid-facing names:** Guided / Steady / Challenge. "Standard" stays the internal id (`standard`) and is the default.
+- **Never switched off a choice:** the first pick in Settings saves `difficultyChosenByPlayer: true`, and the game never changes it after that. A profile that already has runs but no difficulty gets Standard, not Guided.
+- **Age band parsing:** the top number of the band ("6-9" → 9) is compared with `guidedUpToAge`. All four fake profiles are "10-13", so profile 1 gets Guided through the white-belt rule.
+
+## M7-P9 — Play-time limit
+- Ends after the current room (at the door) as a new run result `rested`, never mid-fight; loot is kept like a cleared run.
+- Session = play with no 30-minute break (tunable in content). Open: is 30 min right, and should the reset be daily instead?
+- Grown-up gate is a 2-second press-and-hold, not a math question or PIN. Open: is that enough of a gate?
+- If time is already up when a run starts, the child still gets to play that first room. Open: block new runs instead?
+
+## M7-P11 — Resuming a run after the app closes
+- Saved at each room's start, not mid-fight: a room can't be rebuilt mid-wave, and replaying one room is fair. Open: OK, or should mid-room chest loot be kept too?
+- The choice is offered in the Home Dojo ("Keep climbing" / "Rest for now"). Resting banks the loot, like the play-time limit.
+
+- ~~**Age band parsing:** the age-based Guided default~~ was removed by the Manager call below (2026-10-24).
+
+## M7-P1 update: everyone starts on Standard (Manager + Learning Designer, 2026-10-24)
+
+- **Everyone starts on Standard** ("Steady" to kids). No age-based Guided default and no age question. `settleDifficulty(profile)` only fills an empty difficulty.
+- **Kind Guided offer:** after `offerAfterLosses` (2) lost runs in a row on the same floor (belt tier), a card offers Guided before the run-over card. A clear resets the count; resting doesn't count. At most once a day (`guidedOfferedOn`, local date). The text never mentions losing (a test checks). It never switches by itself: only "Try it" changes it.
+- **Offer resolved (C9 update):** the Learning Designer's review (#114, SHOULD 3) settles it: the offer is for **Guided** ("Want more time to COUNTER?" / "You can try Guided…", buttons "Try it" / "No thanks"). Steady stays Standard's kid name.
+- **Home line** "You're on {name}…" shows once ever (`difficultyLineShown`).
+- **Standard card** now reads "The usual pace."
+- **Guided in Settings:** still on the Settings choice screen. In P1 that screen isn't behind a grown-up gate; #110 (P9) adds the grown-up gate. Merge #108 before #110.
+- **Fixture:** `fixtures/5-white-belt-age-6-9.json` (Mia R., ageBand 6-9) for testing young players; it starts on Standard like everyone.
+- All text is in content/settings/difficulty.json.
+
+## M7-P9 update: daily play time, math gate, resting door (Manager + Learning Designer, 2026-10-24)
+
+- **Daily, not per sitting:** play time adds up through the day and resets at **local midnight** (`PlayClock {date, playedMs, lastSeenMs}`). The 30-minute-break session rule is gone. Time away counts only up to `maxGapSeconds` (60), so a tab left open overnight or a long break isn't counted.
+- **Grown-up gate is a sum**, not press-and-hold: "Grown-ups: what is a + b?" (a 12-19, b 6-9) with 4 choices. A wrong answer quietly goes back. `makeGateQuestion` in sim, tested.
+- **When time is up mid-run:** the current room finishes, then "Great training today!" (as before).
+- **No new run until midnight:** the Tower door shows "Your dojo is resting for today / Come back tomorrow for more training!" and no run starts. The Board's ENTER THE TOWER and the lost card's Try again go to the dojo instead.
+- Text in content/settings/play-time.json.
+
+## M7-P11: room pickups on resume (Manager call, 2026-10-24)
+
+- **Accepted:** when a run is resumed, the room restarts fresh, so pickups already collected in that room (but not yet banked) are lost. Everything banked from earlier rooms is kept. No change planned.
+## C9 wording (PR #115) on P1 (2026-10-24)
+- Card texts: Guided "More time to COUNTER while you learn.", Challenge "Faster enemies and less time to COUNTER." Standard keeps "The usual pace." (the Manager/#114 must-fix wins over C9's "The normal way to train.").
+- Home line: "You're on {name}, and you can change it in Settings." "any time" is two words everywhere.
+- **Caps rule (Manager):** only fight-button names (COUNTER, STRIKE, DASH…) are in caps; menu buttons use normal case ("Settings", "Try it", "No thanks").
+- **Selected difficulty:** marked with a ✓ before the name as well as the gold border, never colour alone.
+
+## C9 wording (PR #115) on P9 (2026-10-24)
+- Wrap-up line: "Nice work, let's finish this room and rest!" Rest card lines: "You trained hard today!", "Rest now, or show a grown-up your moves.", "Everything you found is safe in your dojo." The card now draws every line in restLines.
+- Grown-up help: "…Then the game praises their training and returns to the dojo…". Menu buttons stay in normal case.
+
+## C9 wording (PR #115) on P11 (2026-10-24)
+- Resume card line: "You'll start again at room {room}." (the "of {total}" part is dropped). Buttons stay "Keep climbing" / "Rest for now" in normal case.
+
+## K12b — Reduced motion in Settings; Bopper as a real enemy (2026-10-24)
+- Reduced motion toggle moved from Title to the Settings sheet (bottom-left, beside "For grown-ups"); fits 667 and 844 wide.
+- Bopper (`content/enemies/bopper.json`): HP 110, damage 16 (#102), disarmed push 8 (#118) via new `weapon.disarmedPower`. Wobbly 6 skipped.
+- Spawn gating is room-level: new `minBeltTier` on rooms (default 1); `bopper-yard` and `staff-and-shield` require Yellow (tier 2).
+- Bopper drop chance 0.1 (same as shield) — my guess, not a decided number.
+- `?skin=bopper` removed (Bopper is real now); use `?room=bopper-yard` to test.
+
+## Decor Tier 1 import (A6 pack, C10 text) (2026-10-24)
+- New art pack `decor-tier1` (only `incoming-art/decor-tier1-a6/sprites/static.json`; `decor-pool-a6` left out).
+- 27 pieces in decorations.json with C10 ids/names/lines: 5 random, 13 class, 3 keeper statues, 5 trophies, 1 bonus folding screen. Old Stone Lantern, Bonsai Tree, Dojo Banner kept.
+- Tinted pieces: `<id>` then `<id>-tint` with setTint. Colour 1 = info.colour1; colour 2 = belt colour, or #d2a878 on White. For now colour 2 uses the current belt (pieces don't yet remember their drop floor).
+- `mustTouchWall`: the folding screen's top row must be row 1, and it may not stand in front of the notice board column.
+- Bow mat and cushion walk-through; other floor pieces solid — my guess.
+- No earning/drops yet (next PR).
+
+## Decor earning (S7) (2026-10-24)
+Manager calls:
+1. Class pieces: one every 2 classes at White belt, then one every 3 after White.
+2. Uses the feed's `attendance.classesTotal` (optional) and gives one welcome class piece on the first sync.
+3. Old saves seed `classesCounted` from `classesInRank` (max with classesTotal); it never goes down.
+4. Class pieces in a fixed order: the class scrolls in curriculum order (file order), then gear.
+5. `keeper-statue-floorN` the first time the Floor Keeper is beaten at belt tier N.
+6. Each monster kind's Journal trophy on its first defeat (win or loss), including Floor Keeper and Bopper. A named monster's sticker comes with its kind's trophy.
+7. S7 rates: boss 0.05, treasure 0.04, challenge 0.03, elite 0.15. Old tower pieces stay in the surprise pool; new pieces before repeats, up to 3 copies each; shown as "A surprise!".
+8. Each random piece gets a 50/50 colour roll; kinds count by piece, not colour.
+9. The folding screen once every Tier 1 Journal trophy is earned.
+10. The meter and the lesson are left out of this PR.
+
+My calls (not Manager):
+- Classes count one per date (YYYY-MM-DD); two check-ins the same day count once. Fixture feeds shift dates to "now", so in dev a fixture can count new classes on a new day.
+- "Tier 1 Journal entries" = trophies with `journalTier: 1` (swarmer, shield, brute, floor-keeper). Bopper is `journalTier: 2` (Yellow+).
+- Trophy monster ids are enemy ids: Bopper `padded`→`bopper`, keeper `keeper`→`floor-keeper`. Content load fails if a trophy names an unknown enemy.
+- Each piece stores its drop belt (`belt: {tier, color}`): the run's tier for Tower pieces, the current belt for class pieces. Colour 2 uses it (tan on White). Older pieces use the current belt.
+- Test-link runs find no surprise pieces and bank no decorations (fixes the bankRun leak). Once every surprise piece has 3 copies, the roll gives nothing.
+- C11 unique names applied to statues and trophies.
+
+## Rest refresh (2026-10-24)
+- After "Rest for now" on the resume card, DojoScene now uses the profile that `bankRun` returns and takes its dojo with `homeDojo`. Before, it reloaded only the profile, so `this.dojo` still pointed at the old dojo object: the new pieces didn't show, and later dojo edits went to that old object. Those edits could be lost, or could overwrite what was banked. The new pieces go to storage, so the walkable room doesn't change; redrawing is enough.
+- There's no client test harness and adding one would mean new dependencies, so this fix is checked with before/after screenshots instead of a test.

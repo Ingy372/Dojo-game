@@ -8,8 +8,7 @@
 
 | Animation | Frames | fps | Loop | What it is |
 | --- | --- | --- | --- | --- |
-| `stance_rooted` | 12 | 8 | 1.5 s | **Rooted Form, option A.** A low, wide fighting stance. The feet are about two shoulder-widths apart and a long step front to back. The knees are bent out over the toes, the hips are sunk, the back is upright, the weight is even and the guard is compact. It breathes slowly. |
-| `stance_rooted_back` | 12 | 8 | 1.5 s | **Rooted Form, option B.** A back stance (kokutsu-dachi). About 70% of the weight is on the bent back leg. The front foot points forward, the back foot is turned out, the hips are side-on and the lead hand is forward. It breathes slowly. |
+| `stance_rooted` | 12 | 8 | 1.5 s | **Rooted Form (chosen, option A).** A low, wide fighting stance. The feet are about two shoulder-widths apart and a long step front to back. The knees are bent out over the toes, the hips are sunk, the back is upright, the weight is even and the guard is compact. It breathes slowly. |
 | `stance_flowing` | 8 | 10 | 0.8 s | **Flowing Form.** A light, shorter stance on the balls of the feet, more bladed. It makes two small springy bounces and a gentle rock forward and back, with a loose guard, and the eyes stay on the opponent. |
 
 ## How it's built
@@ -18,7 +17,7 @@
 for B in a b; do
   blender -b incoming-art/player-custom/source/player_custom_$B.blend -P incoming-art/form-stances-a2/source/add_stances.py -- --out /tmp/stances_$B.blend
   blender -b /tmp/stances_$B.blend -P incoming-art/tools/render_sprites.py -- --out incoming-art/form-stances-a2/sprites/body-$B \
-      --name player-$B --height 160 --anchor-y 0.856 --anims stance_rooted,stance_rooted_back,stance_flowing
+      --name player-$B --height 160 --anchor-y 0.856 --anims stance_rooted,stance_flowing
 done
 python3 incoming-art/form-stances-a2/source/make_stances_preview.py
 ```
@@ -28,3 +27,6 @@ python3 incoming-art/form-stances-a2/source/make_stances_preview.py
 - `preview/review-2-technique-3x.png`: S, SE, E and W at 3× with a ground line, for judging the stance like a student's.
 - `preview/review-3-body-b-blue-gi.png`: body B in a blue gi and orange belt, which shows the tint and belt layers still work.
 - `preview/<stance>_body-<a|b>.gif`: each loop, with S, SE and E side by side.
+
+
+**Alternate, not used:** option B (`stance_rooted_back`, the back stance) is in `alternate-not-used/`. It isn't in `sprites/` or the JSONs, so don't import it. Rebuild it with `--anims stance_rooted_back` if it's ever needed.

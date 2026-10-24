@@ -24,17 +24,17 @@ import {
   chooseInsight,
   createRunWorld,
   currentRoom,
-  finishRun,
+  wrapUpRun,
+  chooseDifficulty,
+  markGuidedOffered,
+  shouldOfferGuided,
   activeForm,
   characterSetup,
-  gainXp,
   modsFrom,
   rarityRank,
-  runXp,
   strikeCost,
   runEffects,
   setPlayerMods,
-  summarizeRun,
   updateRun,
   type CombatEvent,
   type DoorKind,
@@ -58,19 +58,23 @@ const LESSONS = loadLessons(lessonsData);
 import { type PackName, addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { ICON_PACK } from '../art/icons';
-import { auraId, testAura, towerPack } from '../art/tiers';
+import { ENEMY_PACKS, auraId, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
 import { homeDojo } from '../game/dojo';
 import { NAMED_PACK, NamedView } from '../game/named';
+import { reducedMotion } from '../game/motion';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { bowPrompt, playBow } from '../ui/bow';
 import { InsightPicker } from '../ui/InsightPicker';
-import { runOverCard } from '../ui/RunOverCard';
+import { choiceCard, restCard, runOverCard } from '../ui/RunOverCard';
+import { PLAY_TIME_TEXT, isPlayTimeUp } from '../game/playTime';
+import { DIFFICULTY_TEXT, localToday } from '../game/difficulty';
 import { startTowerRun } from '../game/tower';
+import { bankRun, saveRunInProgress } from '../game/runSave';
 import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
 import { TouchControls } from '../input/TouchControls';
@@ -84,6 +88,8 @@ const HUD_TOP_PX = 56;
 // The boss bar sits in the HUD's top strip, between the player's bars and the room label,
 // so it never covers the Keeper (K9: it used to sit over the Keeper's head at y 74).
 const BOSS_BAR_Y = 16;
+/** The bottom of the health and Focus bars (screen px). */
+const HUD_BOTTOM = 56;
 /** How many tiles tall the view is, whatever the phone's size. */
 const VISIBLE_ROWS = 8;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
@@ -176,6 +182,8 @@ interface EnemyView {
   lastMode: string;
   /** The attack being wound up (its animation plays when it lands). */
   attack: string;
+  /** A disarmed enemy with a weapon is pushing this attack instead (no staff drawn, push-paw animation). */
+  pushing: boolean;
   /** A short flinch when hit, until this time. */
   hitUntil: number;
   /** Calling for help (the boss), until this time. */
@@ -221,6 +229,8 @@ export class GameScene extends Phaser.Scene {
   private timerText!: Phaser.GameObjects.Text;
   private bossName!: Phaser.GameObjects.Text;
   private toastY = 0;
+  /** Decoration labels on screen and where they'd like to be (K12). */
+  private decoToasts: Array<{ t: Phaser.GameObjects.Text; y: number }> = [];
   private twistBadge: Phaser.GameObjects.Container | null = null;
   private twistBannerView: Phaser.GameObjects.Container | null = null;
   /** While a twist banner shows, the big message starts below this y (0 = no limit). */
@@ -275,7 +285,7 @@ export class GameScene extends Phaser.Scene {
     // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
     const tier = currentTraining().belt.tier;
     const auras = testAura() || new URLSearchParams(window.location.search).has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
-    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : [])]);
+    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...new Set(Object.values(ENEMY_PACKS).map((p) => p.pack))]);
   }
 
   create(): void {
@@ -293,12 +303,26 @@ export class GameScene extends Phaser.Scene {
         player: { ...this.setup, mods: modsFrom(this.setup.effects, TICKS_PER_SECOND) },
       });
     }
+    // Save the run at the start of each room, so closing the app doesn't lose it (M7-P11).
+    if (this.run) saveRunInProgress(this.run);
+    if (this.run) {
+      // The grown-up's play-time limit (M7-P9): checked every few seconds, never shown as a timer.
+      const limitProfile = loadSave();
+      const check = () => {
+        if (!this.run || this.run.wrapUp || this.run.status !== 'playing' || !isPlayTimeUp(limitProfile)) return;
+        wrapUpRun(this.run);
+        this.senseiSay([PLAY_TIME_TEXT.wrapUpLine], 2200);
+      };
+      this.time.addEvent({ delay: 2000, loop: true, callback: check });
+      this.time.delayedCall(1500, check);
+    }
     this.senseiText = null;
     this.menuOpen = false;
     this.leaving = false;
     this.picker = null;
     this.doorViews = [];
     this.toastY = 0;
+    this.decoToasts = [];
     this.prevPos = { ...this.world.players[this.me].pos };
     this.elapsed = 0;
     this.hitStopMs = 0;
@@ -543,6 +567,8 @@ export class GameScene extends Phaser.Scene {
         ? TELEGRAPH_NEARLY_FULL + (1 - TELEGRAPH_NEARLY_FULL) * ((elapsed - fillTicks) / window)
         : TELEGRAPH_NEARLY_FULL * (elapsed / fillTicks);
       v.attack = currentAttack(e).name ?? '';
+      // Disarmed (A5): same wind-up and warning, but the staff is gone and it pushes.
+      v.pushing = !!e.def.weapon && e.disarmed > 0;
       const anim = this.enemyAnim(s, `windup_${v.attack}`, 'windup');
       const frames = s.art.animations[anim].frames;
       s.showFrame(anim, (elapsed / e.windupTotal) * frames);
@@ -558,7 +584,7 @@ export class GameScene extends Phaser.Scene {
       this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
     } else if (e.mode === 'recover') {
       // The attack itself (it lands on its first frame), then catching its breath.
-      const anim = this.enemyAnim(s, v.attack, 'attack');
+      const anim = v.pushing ? this.enemyAnim(s, 'pushpaw', 'attack') : this.enemyAnim(s, v.attack, 'attack');
       if (started) s.play(anim, { restart: true });
       telegraph = s.art.animations[anim].telegraphIntensity?.[s.frame] ?? 0;
     } else if (e.mode === 'stagger') {
@@ -579,13 +605,18 @@ export class GameScene extends Phaser.Scene {
       else s.play('idle');
     }
 
+    if (e.mode !== 'windup' && e.mode !== 'recover') v.pushing = false;
+    // The staff (weapon layer) is hidden while disarmed.
+    if (e.def.weapon) s.setLayer('weapon', !v.pushing && e.disarmed === 0);
     // The warning glow, only while winding up and swinging.
     s.setLayer('telegraph', telegraph > 0.01);
     s.images.get('telegraph')?.setAlpha(Phaser.Math.Clamp(telegraph, 0, 1));
     // Shield guards: the shield while it's up, the cracked one once broken.
     s.setLayer('shield', e.shieldUp);
     s.setLayer('shield-broken', !e.shieldUp);
-    s.flash(now < v.flashUntil ? 0xffffff : tint, now < v.flashUntil);
+    // Reduced motion (K12): no white hit flash.
+    const hitFlash = now < v.flashUntil && !reducedMotion();
+    s.flash(hitFlash ? 0xffffff : tint, hitFlash);
     s.update();
     if (v.named) this.drawNamed(e, v.named, now, blend, s.frame);
     v.container.setAlpha(alpha * Math.min(1, (now - this.enemiesAt) / 450));
@@ -611,10 +642,21 @@ export class GameScene extends Phaser.Scene {
     if (n.shownAt === null && e.mode !== 'waiting' && e.mode !== 'defeated') {
       n.shownAt = now;
       const profile = loadSave();
-      if (this.run) meetNamed(profile, this.run, n.def.id);
+      // K12: the very first named monster ever met also gets Sensei's journal intro.
+      const firstEver = !Object.values(profile.monsterJournal).some((j) => j.met);
+      const met = this.run ? meetNamed(profile, this.run, n.def.id) : false;
       writeSave(profile);
-      this.senseiSay([n.def.lines.meet, n.def.lines.senseiTip], 1800);
+      const intro = met && firstEver ? [CONTENT.named.senseiIntro.replace(/^Sensei:\s*/, '')] : [];
+      this.senseiSay([...intro, n.def.lines.meet, n.def.lines.senseiTip], 1800);
     }
+    // K12: plate and tag clear of other creatures, the player and the HUD.
+    const others = [
+      ...this.world.enemies.filter((o) => o.id !== e.id && o.mode !== 'defeated').map((o) => o.pos),
+      ...Object.values(this.world.players).map((p) => p.pos),
+    ].map((o) => ({ x: (o.x - e.pos.x) * TILE, y: (o.y - e.pos.y) * TILE }));
+    const cam = this.cameras.main;
+    const feetOnScreen = (e.pos.y * TILE - cam.worldView.y) * cam.zoom;
+    n.layout(others, (feetOnScreen - HUD_BOTTOM) / cam.zoom, e.mode === 'defeated');
     const windupSec = e.mode === 'windup' ? Math.min(e.windupTotal, e.windupTotal - e.modeTicks + blend) / TICKS_PER_SECOND : null;
     if (n.update(e, now, windupSec, frame, TILE).clank) sfx.clank();
   }
@@ -740,7 +782,8 @@ export class GameScene extends Phaser.Scene {
   private makeEnemy(e: EnemyState): void {
     const r = e.def.radius * TILE;
     const color = Phaser.Display.Color.HexStringToColor(e.def.color).color;
-    const art = characterArt(this, 'enemies-t1', e.def.id)!;
+    const own = ENEMY_PACKS[e.def.id];
+    const art = (own && characterArt(this, own.pack, own.id)) || characterArt(this, 'enemies-t1', e.def.id)!;
     const sprite = new LayeredSprite(this, art);
     sprite.container.addAt(addShadow(this, r * 2.2), 0);
     sprite.setLayer('telegraph', false).setLayerTint('telegraph', TELEGRAPH_TINT);
@@ -773,6 +816,7 @@ export class GameScene extends Phaser.Scene {
       flashUntil: 0,
       lastMode: e.mode,
       attack: '',
+      pushing: false,
       hitUntil: 0,
       callUntil: 0,
       defeatAt: null,
@@ -1155,7 +1199,7 @@ export class GameScene extends Phaser.Scene {
           this.afterChestBurst(() => this.showLoot(ev.item.name, ev.item.rarity, ev.at));
           break;
         case 'decoration':
-          this.afterChestBurst(() => this.showDecoration(ev.id, ev.at));
+          this.afterChestBurst(() => this.showDecoration(ev.id, ev.at, true));
           break;
         case 'namedDefeated':
           this.namedFreed(ev.id, ev.at);
@@ -1207,25 +1251,51 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** Brings the run's loot home, saves, and goes to the Home Dojo. */
-  private endRun(status: 'cleared' | 'lost'): void {
+  private endRun(status: 'cleared' | 'lost' | 'rested'): void {
     if (!this.run) return;
-    const profile = loadSave();
-    const summary = summarizeRun(this.run);
-    finishRun(profile, summary);
-    addDecorations(homeDojo(profile), summary.decorations);
-    // Experience, capped by the real belt (with the Blessing and catch-up bonuses).
-    const xp = gainXp(profile, this.training, runXp(summary));
-    if (profile.lastRun) profile.lastRun.xp = xp;
-    writeSave(profile);
+    const { summary, xp, profile } = bankRun(this.run, this.training, status);
     this.leaving = true;
     const leave = (scene: string, data?: GameSceneData) => {
       this.cameras.main.fadeOut(600, 10, 8, 16);
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start(scene, data));
     };
+    if (status === 'rested') {
+      // Play time is up (M7-P9): a kind card, then home. Everything found is already saved.
+      sfx.floorClear();
+      this.time.delayedCall(500, () => {
+        const card = restCard(this, () => {
+          this.uiCamera.fadeOut(400, 10, 8, 16);
+          this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home'));
+        });
+        this.cameras.main.ignore(card);
+      });
+      return;
+    }
     if (status === 'lost') {
-      // A soft card with what they keep, then Try again or Back home.
+      // A soft card with what they keep, then Try again or Back home. After losses in a row on
+      // this floor, Guided is kindly offered first, at most once a day (M7-P1).
+      const tier = this.run.tier;
+      const offer = shouldOfferGuided(profile, tier, DIFFICULTY_TEXT, localToday());
+      if (offer) {
+        markGuidedOffered(profile, localToday());
+        writeSave(profile);
+      }
       this.time.delayedCall(1400, () => {
         this.message.setVisible(false);
+        if (offer) {
+          const o = DIFFICULTY_TEXT.offer;
+          const ask = choiceCard(this, o.title, o.line, o.no, o.yes, (yes) => {
+            if (yes) {
+              const p = loadSave();
+              chooseDifficulty(p, 'guided');
+              writeSave(p);
+            }
+            showCard();
+          });
+          this.cameras.main.ignore(ask);
+        } else showCard();
+      });
+      const showCard = () => {
         const card = runOverCard(
           this,
           summary,
@@ -1233,7 +1303,7 @@ export class GameScene extends Phaser.Scene {
           () => {
             this.uiCamera.fadeOut(400, 10, 8, 16);
             this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () =>
-              this.scene.start('Game', { run: startTowerRun(loadSave(), this.training) }),
+              isPlayTimeUp(loadSave()) ? this.scene.start('Dojo') : this.scene.start('Game', { run: startTowerRun(loadSave(), this.training) }),
             );
           },
           () => {
@@ -1242,7 +1312,7 @@ export class GameScene extends Phaser.Scene {
           },
         );
         this.cameras.main.ignore(card);
-      });
+      };
       return;
     }
     sfx.floorClear();
@@ -1509,6 +1579,7 @@ export class GameScene extends Phaser.Scene {
       }
     }
     t.setY(top);
+    this.placeDecoToasts();
   }
 
   /** A dropped item: a glowing orb that pops out, then a note at the top of the screen. */
@@ -1543,20 +1614,23 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  /** A decoration for the Home Dojo came out of the chest. */
-  private showDecoration(id: string, at: Vec2): void {
+  /** A decoration for the Home Dojo: a surprise from a chest or elite (S7), or a sticker. */
+  private showDecoration(id: string, at: Vec2, surprise = false): void {
     const name = decorationDef(CONTENT.dojo, id).name;
     sfx.loot(2);
     this.ring(at, COLORS.gold, 1.4);
-    this.floatText(at, 'For your dojo!', '#ffd166', 16, 1.2);
+    this.floatText(at, surprise ? 'A surprise!' : 'For your dojo!', '#ffd166', 16, 1.2);
     const { width } = this.scale.gameSize;
     const y = 64 + this.toastY * 26;
     this.toastY++;
     const t = this.add
-      .text(width - 16, y, `Decoration: ${name}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffd166', stroke: '#14121c', strokeThickness: 4 })
+      .text(width - 16, y, surprise ? `A surprise! ${name}` : `Decoration: ${name}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffd166', stroke: '#14121c', strokeThickness: 4 })
       .setOrigin(1, 0)
       .setResolution(crisp());
     this.cameras.main.ignore(t);
+    // K12: kept clear of Sensei's banner every frame (placeSensei), since the banner moves.
+    this.decoToasts.push({ t, y });
+    this.placeDecoToasts();
     this.tweens.add({
       targets: t,
       alpha: 0,
@@ -1564,9 +1638,19 @@ export class GameScene extends Phaser.Scene {
       duration: 400,
       onComplete: () => {
         t.destroy();
+        this.decoToasts = this.decoToasts.filter((d) => d.t !== t);
         this.toastY = Math.max(0, this.toastY - 1);
       },
     });
+  }
+
+  /** Decoration labels go under Sensei's banner when they would sit on it (K12). */
+  private placeDecoToasts(): void {
+    const b = this.senseiText?.active ? this.senseiText.getBounds() : null;
+    for (const d of this.decoToasts) {
+      const overlaps = b && d.y + d.t.height > b.top && d.y < b.bottom && d.t.x - d.t.width < b.right;
+      d.t.setY(overlaps ? b.bottom + 8 : d.y);
+    }
   }
 
   /**
@@ -1615,7 +1699,7 @@ export class GameScene extends Phaser.Scene {
   /** A short freeze plus a small screen shake. */
   private impact(feel: { stopMs: number; shakeMs: number; shake: number }): void {
     this.hitStopMs = Math.max(this.hitStopMs, feel.stopMs);
-    this.cameras.main.shake(feel.shakeMs, feel.shake);
+    if (!reducedMotion()) this.cameras.main.shake(feel.shakeMs, feel.shake);
   }
 
   private addWorld<T extends Phaser.GameObjects.GameObject>(obj: T): T {
@@ -1631,15 +1715,18 @@ export class GameScene extends Phaser.Scene {
     const x = at.x * TILE;
     const y = at.y * TILE;
     const size = boss ? 1.6 : 1;
-    // A warm golden flash (normal colours, so it shows on light stone as well as dark floors).
-    const glow = this.addWorld(this.add.image(x, y - TILE * 0.45, this.softGlow()).setDepth(8));
-    glow.setTint(0xffb627).setScale(0.4).setAlpha(1);
-    this.tweens.add({ targets: glow, scale: 2.2 * size, alpha: 0, duration: 650, ease: 'Cubic.Out', onComplete: () => glow.destroy() });
-    const core = this.addWorld(this.add.image(x, y - TILE * 0.45, this.softGlow()).setDepth(8).setScale(0.3));
-    this.tweens.add({ targets: core, scale: 1.1 * size, alpha: 0, duration: 380, ease: 'Cubic.Out', onComplete: () => core.destroy() });
+    // No golden flash with reduced motion (K12).
+    if (!reducedMotion()) {
+      // A warm golden flash (normal colours, so it shows on light stone as well as dark floors).
+      const glow = this.addWorld(this.add.image(x, y - TILE * 0.45, this.softGlow()).setDepth(8));
+      glow.setTint(0xffb627).setScale(0.4).setAlpha(1);
+      this.tweens.add({ targets: glow, scale: 2.2 * size, alpha: 0, duration: 650, ease: 'Cubic.Out', onComplete: () => glow.destroy() });
+      const core = this.addWorld(this.add.image(x, y - TILE * 0.45, this.softGlow()).setDepth(8).setScale(0.3));
+      this.tweens.add({ targets: core, scale: 1.1 * size, alpha: 0, duration: 380, ease: 'Cubic.Out', onComplete: () => core.destroy() });
+    }
     this.ring({ x: at.x, y: at.y - 0.3 }, 0xffd166, 1.3 * size, 0.9);
-    // Little golden stars drift up and fade.
-    const count = boss ? 16 : 9;
+    // Little golden stars drift up and fade (none with reduced motion).
+    const count = reducedMotion() ? 0 : boss ? 16 : 9;
     for (let i = 0; i < count; i++) {
       const sx = x + (Math.random() - 0.5) * TILE * 0.9 * size;
       const r = 5 + Math.random() * 4;
@@ -1768,17 +1855,21 @@ export class GameScene extends Phaser.Scene {
       .text(width / 2, this.senseiTop(height), '', {
         fontFamily: 'system-ui, sans-serif',
         fontStyle: 'bold',
-        fontSize: '26px',
+        // K12: smaller on phones, and long lines wrap so they always fit on screen.
+        fontSize: width < 720 ? '20px' : '26px',
         color: '#ffffff',
         backgroundColor: '#2a2440dd',
         padding: { x: 16, y: 8 },
         align: 'center',
+        wordWrap: { width: Math.min(width - 48, 640), useAdvancedWrap: true },
       })
       .setOrigin(0.5, 0)
       .setResolution(window.devicePixelRatio || 1);
     this.cameras.main.ignore(t);
     this.senseiText = t;
-    lines.forEach((line, i) => this.time.delayedCall(i * holdMs, () => t.active && t.setText(`Sensei: ${line}`)));
+    // The first line shows straight away, so its size is known (K12: labels keep clear of it).
+    if (lines.length) t.setText(`Sensei: ${lines[0]}`);
+    lines.slice(1).forEach((line, i) => this.time.delayedCall((i + 1) * holdMs, () => t.active && t.setText(`Sensei: ${line}`)));
   }
 
   private senseiDone(line: string | undefined): void {
@@ -1810,6 +1901,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private flashScreen(color: number, alpha: number, ms: number): void {
+    if (reducedMotion()) return;
     this.tweens.killTweensOf(this.screenFlash);
     this.screenFlash.setFillStyle(color).setAlpha(alpha);
     this.tweens.add({ targets: this.screenFlash, alpha: 0, duration: ms });

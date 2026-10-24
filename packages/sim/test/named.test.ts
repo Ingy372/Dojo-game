@@ -19,17 +19,17 @@ const named = content.named;
 const PLAYER = { maxHealth: 100, power: 10, guard: 0 };
 
 /** Walks a run through every room without fighting, recording where the named monster is. */
-function walkFloor(opts: Omit<RunOptions, 'dryRuns'>) {
-  const run = startRun(content, { dryRuns: 0, ...opts });
+function walkFloor(opts: Omit<RunOptions, 'dryRuns'>, c = content) {
+  const run = startRun(c, { dryRuns: 0, ...opts });
   const rooms: Array<{ depth: number; kind: string; named: RunState['named']; elites: number; enemy: string | null }> = [];
   const record = (r: RunState) => {
-    const room = content.rooms.find((x) => x.id === r.roomId)!;
+    const room = c.rooms.find((x) => x.id === r.roomId)!;
     rooms.push({ depth: r.depth, kind: room.kind, named: r.named, elites: r.elites.length, enemy: r.named ? room.enemySpawns[r.named.spawn].enemy : null });
   };
   record(run);
   for (let guard = 0; guard < 20 && run.status === 'playing'; guard++) {
     const fake = { events: [{ kind: 'doorEntered', playerId: 'p1', door: 0 }], players: { p1: { health: 100, pos: { x: 0, y: 0 } } }, progress: { bestCombo: 0 }, enemies: [] } as unknown as WorldState;
-    updateRun(content, run, fake);
+    updateRun(c, run, fake);
     if (run.status === 'playing') record(run);
   }
   return { run, rooms };
@@ -47,7 +47,7 @@ describe('named monster stats', () => {
 });
 
 describe('where named monsters appear (1,000 floors at tier 2)', () => {
-  it('about 5% of floors, at most one per floor, only in battle rooms from room 3, never with an elite', () => {
+  it('about 1 in 30 floors (~3%), at most one per floor, only in battle rooms from room 3, never with an elite', () => {
     let floors = 0;
     let appeared = 0;
     for (let seed = 1; seed <= 1000; seed++) {
@@ -65,8 +65,37 @@ describe('where named monsters appear (1,000 floors at tier 2)', () => {
       }
     }
     const rate = appeared / floors;
-    expect(rate).toBeGreaterThanOrEqual(0.04);
-    expect(rate).toBeLessThanOrEqual(0.06);
+    // 1-in-30 roll (rules.chancePerRun 0.0333). A few floors have no battle room with the rolled
+    // type after room 3, so it comes out a bit under (2.8% on these 1,000 seeds).
+    expect(rate).toBeGreaterThanOrEqual(0.02);
+    expect(rate).toBeLessThanOrEqual(0.045);
+  });
+
+  it('K12: the three named monsters come equally often (each about 1/3 over 6,000 floors)', () => {
+    const always = { ...content, named: { ...named, rules: { ...named.rules, chancePerRun: 1 } } };
+    const counts: Record<string, number> = {};
+    let total = 0;
+    for (let seed = 1; seed <= 6000; seed++) {
+      const at = walkFloor({ seed, tier: 2, runsStarted: 10 }, always).rooms.find((r) => r.named);
+      if (!at) continue;
+      counts[at.named!.id] = (counts[at.named!.id] ?? 0) + 1;
+      total++;
+    }
+    expect(Object.keys(counts).sort()).toEqual(named.monsters.map((m) => m.id).sort());
+    for (const id of Object.keys(counts)) {
+      expect(counts[id] / total).toBeGreaterThan(0.28);
+      expect(counts[id] / total).toBeLessThan(0.39);
+    }
+  });
+
+  it('K12: ?named=X without &room= always gives X (every monster, 200 seeds each)', () => {
+    for (const m of named.monsters) {
+      for (let seed = 1; seed <= 200; seed++) {
+        const at = walkFloor({ seed, tier: 1, forcedNamed: m.id }).rooms.find((r) => r.named);
+        expect(at?.named?.id).toBe(m.id);
+        expect(at!.enemy).toBe(m.baseEnemy);
+      }
+    }
   });
 
   it('never below tier 2, in the first 3 runs, or in test runs', () => {
@@ -97,7 +126,7 @@ describe('where named monsters appear (1,000 floors at tier 2)', () => {
     let seen = 0;
     for (let seed = 1; seed <= 50; seed++) {
       const { rooms } = walkFloor({ seed, tier: 1, forcedNamed: 'old-thumper' });
-      const first = rooms.find((r) => r.kind === 'battle' && r.depth + 1 >= named.rules.earliestRoom);
+      const first = rooms.find((r) => (r.kind === 'battle' || r.kind === 'challenge') && r.depth + 1 >= named.rules.earliestRoom);
       const at = rooms.find((r) => r.named);
       if (!first) continue;
       expect(at).toBe(first);

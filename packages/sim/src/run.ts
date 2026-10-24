@@ -53,7 +53,10 @@ export interface RunState {
   perfects: number;
   bestCombo: number;
   ticks: number;
-  status: 'playing' | 'cleared' | 'lost';
+  /** 'rested': the play-time limit ended the run after a room (M7-P9). Nothing is lost. */
+  status: 'playing' | 'cleared' | 'lost' | 'rested';
+  /** Play time is up: the run ends at the next door, after the current room (M7-P9). */
+  wrapUp: boolean;
   /** Runs in a row without a Rare before this one (bad-luck protection). */
   dryRuns: number;
   /** A Rare or better was found this run. */
@@ -69,6 +72,10 @@ export interface RunState {
   bowed: boolean;
   /** Decorations found this run (decoration ids). */
   decorations: string[];
+  /** Colour roll of each found decoration (same order): 1 or 2 for tinted pieces, null otherwise. */
+  decorationColours: Array<1 | 2 | null>;
+  /** Enemy kinds (enemy ids) beaten this run, each once: they give Journal trophies and keeper statues. */
+  defeated: string[];
   /** How many of each decoration the player already had (so new kinds are found first). */
   ownedDecorations: Record<string, number>;
   /** The current room's twist id, or null. */
@@ -94,6 +101,8 @@ export interface RunState {
   named: NamedSpawn | null;
   /** Separate random stream for named monsters, so they never shift the floor's other rolls. */
   namedRng: Rng;
+  /** A ?named= test run: battle rooms with that monster's type are picked first (K12). */
+  forcedNamedTest?: boolean;
 }
 
 /** Things that happened, for the game to show. */
@@ -104,7 +113,7 @@ export type RunEvent =
   | { kind: 'graded'; result: RoomResult }
   | { kind: 'insightChoice'; ids: string[] }
   | { kind: 'nextRoom'; door: DoorKind }
-  | { kind: 'runOver'; status: 'cleared' | 'lost' };
+  | { kind: 'runOver'; status: 'cleared' | 'lost' | 'rested' };
 
 export interface RunOptions {
   seed: number;
@@ -151,6 +160,7 @@ export function startRun(content: Content, options: RunOptions): RunState {
     bestCombo: 0,
     ticks: 0,
     status: 'playing',
+    wrapUp: false,
     dryRuns: options.dryRuns,
     rareFound: false,
     nextUid: 1,
@@ -159,6 +169,8 @@ export function startRun(content: Content, options: RunOptions): RunState {
     calmMind: !!options.calmMind,
     bowed: false,
     decorations: [],
+    decorationColours: [],
+    defeated: [],
     ownedDecorations: { ...(options.ownedDecorations ?? {}) },
     twist: null,
     tier: options.tier ?? 1,
@@ -172,7 +184,10 @@ export function startRun(content: Content, options: RunOptions): RunState {
     namedRng: createRng((options.seed ^ 0x9e3779b9) >>> 0),
   };
   run.namedPending = rollNamed(content, run, options);
-  if (options.forcedNamed) run.test = true;
+  if (options.forcedNamed) {
+    run.test = true;
+    run.forcedNamedTest = true;
+  }
   if (options.forcedElite) {
     run.forcedElite = options.forcedElite;
     run.test = true;
@@ -253,6 +268,7 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
           const share = e ? content.loot.enemyDropChance[e.def.id] ?? 0 : 0;
           if (e && chance(run.rng, share)) out.push(drop(content, run, 'common', e.pos, 'enemy'));
           // Elite reward: a chance of one extra Home Dojo decoration (never gear; Focus is given in the world).
+          if (e && !run.defeated.includes(e.def.id)) run.defeated.push(e.def.id);
           if (e?.named) out.push({ kind: 'namedDefeated', id: e.named, at: { ...e.pos } });
           if (e?.elite) {
             const deco = dropDecoration(content, run, content.elites.reward.decorationChance, e.pos);
@@ -303,6 +319,12 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
           out.push({ kind: 'runOver', status: 'cleared' });
           return out;
         }
+        if (run.wrapUp) {
+          // Play time is up: this room is finished, so go home with everything found (M7-P9).
+          run.status = 'rested';
+          out.push({ kind: 'runOver', status: 'rested' });
+          return out;
+        }
         run.health = world.players.p1.health;
         run.depth++;
         enterRoom(content, run, pickRoom(content, run, door));
@@ -338,7 +360,7 @@ export function gradeRoom(perfects: number, damageTaken: number, maxHealth: numb
 }
 
 export interface RunSummary {
-  result: 'cleared' | 'lost';
+  result: 'cleared' | 'lost' | 'rested';
   /** Rooms fully cleared. */
   roomsCleared: number;
   totalRooms: number;
@@ -351,6 +373,10 @@ export interface RunSummary {
   insights: string[];
   /** Decorations found (decoration ids). */
   decorations: string[];
+  /** Colour roll of each found decoration (same order). */
+  decorationColours: Array<1 | 2 | null>;
+  /** Enemy kinds beaten this run, each once (kept on a loss too). */
+  defeated: string[];
   /** A test-link run (doesn't count for personal bests). */
   test: boolean;
   /** The belt tier the floor was played at. */
@@ -359,7 +385,7 @@ export interface RunSummary {
 
 export function summarizeRun(run: RunState): RunSummary {
   return {
-    result: run.status === 'cleared' ? 'cleared' : 'lost',
+    result: run.status === 'playing' ? 'lost' : run.status,
     roomsCleared: run.results.length,
     totalRooms: run.totalRooms,
     results: run.results.slice(),
@@ -370,6 +396,8 @@ export function summarizeRun(run: RunState): RunSummary {
     sGrades: run.results.filter((r) => r.grade === 'S').length,
     insights: run.insights.slice(),
     decorations: run.decorations.slice(),
+    decorationColours: run.decorationColours.slice(),
+    defeated: run.defeated.slice(),
     test: run.test,
     tier: run.tier,
   };
@@ -408,30 +436,33 @@ function rollNamed(content: Content, run: RunState, options: RunOptions): string
   return list[nextInt(run.namedRng, list.length)].id;
 }
 
+/** The room's non-boss spawns of this enemy type (spawn indexes). */
+function spotsOf(content: Content, room: Room, enemy: string): number[] {
+  return room.enemySpawns.map((s, i) => ({ s, i })).filter(({ s }) => s.enemy === enemy && !content.enemies[s.enemy]?.boss).map(({ i }) => i);
+}
+
+/** The base enemy type of the rolled named monster still waiting to be placed, or null. */
+function pendingBase(content: Content, run: RunState): string | null {
+  return content.named.monsters.find((m) => m.id === run.namedPending)?.baseEnemy ?? null;
+}
+
 /**
- * Puts the rolled named monster in the first battle room at or after the earliest room.
- * It takes the place of an enemy of its type; if the room has none, another named monster
- * of this tier whose type is in the room comes instead (in that type's earliest wave).
- * If no battle room comes, nothing does and nothing carries over to the next floor.
+ * Puts the rolled named monster in the first battle room at or after the earliest room that
+ * has an enemy of its type. It never turns into a different named monster (K12: equal mix,
+ * and ?named= always gives the asked-for one). If no such room comes, nothing does and
+ * nothing carries over to the next floor.
  */
 function placeNamed(content: Content, run: RunState, room: Room, anyRoom: boolean): NamedSpawn | null {
   const id = run.namedPending;
-  if (!id || room.kind !== 'battle' || (!anyRoom && run.depth + 1 < content.named.rules.earliestRoom)) return null;
-  const spotsOf = (enemy: string) =>
-    room.enemySpawns.map((s, i) => ({ s, i })).filter(({ s }) => s.enemy === enemy && !content.enemies[s.enemy]?.boss).map(({ i }) => i);
-  const wanted = content.named.monsters.find((m) => m.id === id);
-  let chosen = wanted && spotsOf(wanted.baseEnemy).length ? wanted : undefined;
-  if (!chosen) {
-    const others = namedForTier(content.named, Math.max(run.tier, content.named.rules.minBeltTier)).filter((m) => spotsOf(m.baseEnemy).length);
-    if (!others.length) return null;
-    chosen = others[nextInt(run.namedRng, others.length)];
-  }
+  const kindOk = room.kind === 'battle' || (!!run.forcedNamedTest && room.kind === 'challenge');
+  if (!id || !kindOk || (!anyRoom && run.depth + 1 < content.named.rules.earliestRoom)) return null;
+  const all = spotsOf(content, room, pendingBase(content, run) ?? '');
+  if (!all.length) return null;
   // Its earliest wave, so it is met soon after the room starts.
-  const all = spotsOf(chosen.baseEnemy);
   const wave = Math.min(...all.map((i) => room.enemySpawns[i].wave));
   const spots = all.filter((i) => room.enemySpawns[i].wave === wave);
   run.namedPending = null;
-  return { spawn: spots[nextInt(run.namedRng, spots.length)], id: chosen.id };
+  return { spawn: spots[nextInt(run.namedRng, spots.length)], id };
 }
 
 /**
@@ -478,9 +509,18 @@ export function currentTwist(content: Content, run: RunState): TwistDef | null {
 }
 
 function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
-  // Harder rooms wait until later in the floor (depth 0 is room 1).
-  const all = content.rooms.filter((r) => r.kind === kind && r.earliestRoom <= run.depth + 1);
-  const fresh = all.filter((r) => !run.usedRooms.includes(r.id));
+  // Harder rooms wait until later in the floor (depth 0 is room 1), and some wait for a higher belt.
+  const all = content.rooms.filter((r) => r.kind === kind && r.earliestRoom <= run.depth + 1 && r.minBeltTier <= run.tier);
+  let fresh = all.filter((r) => !run.usedRooms.includes(r.id));
+  // ?named= test runs (K12): from the earliest room, battle rooms with the asked-for type come
+  // first, and a challenge room can have it too, so the link always gives that monster
+  // whichever doors are taken. Normal runs are never steered.
+  const base = run.forcedNamedTest && (kind === 'battle' || kind === 'challenge') && run.depth + 1 >= content.named.rules.earliestRoom ? pendingBase(content, run) : null;
+  if (base) {
+    const fits = (rooms: Room[]) => rooms.filter((r) => spotsOf(content, r, base).length > 0);
+    const pool = fits(fresh).length ? fits(fresh) : fits(all);
+    if (pool.length) fresh = pool;
+  }
   return pick(run.rng, fresh.length > 0 ? fresh : all);
 }
 
@@ -545,17 +585,62 @@ function drop(content: Content, run: RunState, min: Rarity, at: Vec2, source: 'e
   return { kind: 'loot', item, at: { x: at.x, y: at.y }, source };
 }
 
+/** Most copies of one surprise piece a player can be given (S7, Manager call). */
+export const DECOR_MAX_COPIES = 3;
+
 /**
- * A chest may hold a decoration for the Home Dojo (the boss chest always does).
- * Kinds the player has fewest of come first, so a new player fills their dojo with variety.
+ * A chest or elite may hold a surprise decoration (S7 rates in content). The pool is the
+ * random Tier 1 pieces plus the old tower pieces. New pieces come before repeats; after
+ * that a repeat is an extra copy, up to DECOR_MAX_COPIES of each, then the roll gives nothing.
+ * Tinted (random) pieces get a 50/50 colour roll; kinds count by piece, not colour.
+ * Test-link runs never find decorations.
  */
 function dropDecoration(content: Content, run: RunState, share: number, at: Vec2): RunEvent | null {
-  if (share <= 0 || !chance(run.rng, share)) return null;
-  const pool = content.dojo.decorations.filter((d) => d.source === 'tower');
-  if (pool.length === 0) return null;
+  if (run.test || share <= 0 || !chance(run.rng, share)) return null;
   const have = (id: string) => (run.ownedDecorations[id] ?? 0) + run.decorations.filter((x) => x === id).length;
+  const pool = content.dojo.decorations.filter(
+    (d) => (d.source === 'tower' || d.source === 'random') && have(d.id) < DECOR_MAX_COPIES,
+  );
+  if (pool.length === 0) return null;
   const fewest = Math.min(...pool.map((d) => have(d.id)));
-  const id = pick(run.rng, pool.filter((d) => have(d.id) === fewest)).id;
-  run.decorations.push(id);
-  return { kind: 'decoration', id, at: { x: at.x, y: at.y } };
+  const def = pick(run.rng, pool.filter((d) => have(d.id) === fewest));
+  run.decorations.push(def.id);
+  run.decorationColours.push(def.source === 'random' ? (chance(run.rng, 0.5) ? 2 : 1) : null);
+  return { kind: 'decoration', id: def.id, at: { x: at.x, y: at.y } };
+}
+
+/** Play time is up: finish the current room, then the next door ends the run (M7-P9). */
+export function wrapUpRun(run: RunState): void {
+  if (run.status === 'playing') run.wrapUp = true;
+}
+
+/**
+ * A run saved at the start of its current room (M7-P11), so closing the app doesn't lose it.
+ * Returns null for anything that can't be played on: not a run, already over, or a room
+ * that no longer exists in this version of the content.
+ */
+export function restoreRun(content: Content, data: unknown): RunState | null {
+  if (!data || typeof data !== 'object') return null;
+  const run = data as Partial<RunState>;
+  const ok =
+    run.status === 'playing' &&
+    typeof run.depth === 'number' &&
+    typeof run.totalRooms === 'number' &&
+    run.depth < run.totalRooms &&
+    typeof run.roomId === 'string' &&
+    content.rooms.some((r) => r.id === run.roomId) &&
+    typeof run.rng?.state === 'number' &&
+    typeof run.namedRng?.state === 'number' &&
+    Array.isArray(run.doors) &&
+    Array.isArray(run.loot) &&
+    Array.isArray(run.results) &&
+    Array.isArray(run.insights) &&
+    Array.isArray(run.decorations);
+  if (!ok) return null;
+  const restored = JSON.parse(JSON.stringify(run)) as RunState;
+  restored.wrapUp ??= false;
+  // Runs saved before decor earning.
+  restored.decorationColours ??= restored.decorations.map(() => null);
+  restored.defeated ??= [];
+  return restored;
 }

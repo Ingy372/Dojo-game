@@ -41,6 +41,13 @@ export interface EnemySummonDef {
   atHealthFraction: number;
 }
 
+/** Enemies that carry a weapon (Bouncy Bopper's padded staff). Disarmed, they push instead. */
+export interface EnemyWeaponDef {
+  id: string;
+  /** Power of the weak push a disarmed enemy uses instead of its weapon (same wind-up and warning). */
+  disarmedPower: number;
+}
+
 export interface EnemyDef {
   id: string;
   name: string;
@@ -58,6 +65,7 @@ export interface EnemyDef {
   boss: boolean;
   summon: EnemySummonDef | null;
   winded: EnemyWindedDef | null;
+  weapon: EnemyWeaponDef | null;
   /** A good time to beat it, in seconds; a room's par time for grades adds these up. */
   parSeconds: number;
   /** Placeholder body color, as "#rrggbb" (art comes later). */
@@ -167,6 +175,13 @@ export function loadEnemy(data: unknown): EnemyDef {
     };
   }
 
+  let weapon: EnemyWeaponDef | null = null;
+  if (raw.weapon !== undefined) {
+    const w = raw.weapon as Record<string, unknown>;
+    if (typeof w !== 'object' || w === null || typeof w.id !== 'string' || !w.id) throw new EnemyError(id, '"weapon" needs an "id"');
+    weapon = { id: w.id, disarmedPower: positiveNumber(w, 'disarmedPower', id, 'weapon.') };
+  }
+
   const color = typeof raw.color === 'string' && /^#[0-9a-fA-F]{6}$/.test(raw.color) ? raw.color : '#7d3f2f';
 
   return {
@@ -183,6 +198,7 @@ export function loadEnemy(data: unknown): EnemyDef {
     boss,
     summon,
     winded,
+    weapon,
     parSeconds: raw.parSeconds === undefined ? 4 : positiveNumber(raw, 'parSeconds', id),
     color,
   };
