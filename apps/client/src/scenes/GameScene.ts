@@ -25,6 +25,7 @@ import {
   createRunWorld,
   currentRoom,
   finishRun,
+  wrapUpRun,
   activeForm,
   characterSetup,
   gainXp,
@@ -69,7 +70,8 @@ import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { bowPrompt, playBow } from '../ui/bow';
 import { InsightPicker } from '../ui/InsightPicker';
-import { runOverCard } from '../ui/RunOverCard';
+import { restCard, runOverCard } from '../ui/RunOverCard';
+import { PLAY_TIME_TEXT, isPlayTimeUp } from '../game/playTime';
 import { startTowerRun } from '../game/tower';
 import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
@@ -292,6 +294,17 @@ export class GameScene extends Phaser.Scene {
         guideStep: testGuide() ?? loadSave().guideStep,
         player: { ...this.setup, mods: modsFrom(this.setup.effects, TICKS_PER_SECOND) },
       });
+    }
+    if (this.run) {
+      // The grown-up's play-time limit (M7-P9): checked every few seconds, never shown as a timer.
+      const limitProfile = loadSave();
+      const check = () => {
+        if (!this.run || this.run.wrapUp || this.run.status !== 'playing' || !isPlayTimeUp(limitProfile)) return;
+        wrapUpRun(this.run);
+        this.senseiSay([PLAY_TIME_TEXT.wrapUpLine], 2200);
+      };
+      this.time.addEvent({ delay: 2000, loop: true, callback: check });
+      this.time.delayedCall(1500, check);
     }
     this.senseiText = null;
     this.menuOpen = false;
@@ -1207,7 +1220,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** Brings the run's loot home, saves, and goes to the Home Dojo. */
-  private endRun(status: 'cleared' | 'lost'): void {
+  private endRun(status: 'cleared' | 'lost' | 'rested'): void {
     if (!this.run) return;
     const profile = loadSave();
     const summary = summarizeRun(this.run);
@@ -1222,6 +1235,18 @@ export class GameScene extends Phaser.Scene {
       this.cameras.main.fadeOut(600, 10, 8, 16);
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start(scene, data));
     };
+    if (status === 'rested') {
+      // Play time is up (M7-P9): a kind card, then home. Everything found is already saved.
+      sfx.floorClear();
+      this.time.delayedCall(500, () => {
+        const card = restCard(this, () => {
+          this.uiCamera.fadeOut(400, 10, 8, 16);
+          this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home'));
+        });
+        this.cameras.main.ignore(card);
+      });
+      return;
+    }
     if (status === 'lost') {
       // A soft card with what they keep, then Try again or Back home.
       this.time.delayedCall(1400, () => {

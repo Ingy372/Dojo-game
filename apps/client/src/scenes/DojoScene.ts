@@ -34,12 +34,14 @@ import {
   type WorldState,
   streetSmartsOpen,
   chooseDifficulty,
+  PLAY_LIMIT_CHOICES,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
 import { bowIsDue, homeDojo, setBowDue } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
 import { DIFFICULTY_TEXT, ensureDifficulty } from '../game/difficulty';
+import { PLAY_TIME_TEXT, touchPlayClock } from '../game/playTime';
 import streetUi from '../../../../content/street-smarts/ui.json';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
@@ -214,6 +216,9 @@ export class DojoScene extends Phaser.Scene {
       this.game.events.off(Phaser.Core.Events.HIDDEN, release);
     });
     this.cameras.main.fadeIn(400, 10, 8, 16);
+    // Time in the dojo is play time too (M7-P9's clock).
+    touchPlayClock();
+    this.time.addEvent({ delay: 5000, loop: true, callback: () => touchPlayClock() });
 
     if (bowIsDue()) {
       this.mode = 'arriving';
@@ -893,6 +898,83 @@ export class DojoScene extends Phaser.Scene {
       });
     });
     box.add(this.add.text(width / 2, top + h + 14, t.footer, { fontFamily: FONT, fontSize: '14px', color: '#b9ad99' }).setOrigin(0.5, 0).setResolution(crisp()));
+    // Grown-up settings sit behind a press-and-hold, so a tap by accident doesn't open them (M7-P9).
+    const pt = PLAY_TIME_TEXT;
+    const gw = 190;
+    const gh = 34;
+    const gx = width - 12 - gw;
+    const gy = height - 12 - gh;
+    const gate = this.add.rectangle(gx, gy, gw, gh, 0x3a3a4a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35).setInteractive();
+    const fill = this.add.rectangle(gx, gy, 0, gh, 0x6b5a2a).setOrigin(0);
+    const gateLabel = this.add.text(gx + gw / 2, gy + gh / 2, pt.grownUpButton, { fontFamily: FONT, fontStyle: 'bold', fontSize: '14px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp());
+    box.add([gate, fill, gateLabel]);
+    let hold: Phaser.Tweens.Tween | null = null;
+    const stop = () => {
+      hold?.stop();
+      hold = null;
+      fill.width = 0;
+      gateLabel.setText(pt.grownUpButton);
+    };
+    gate.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
+      gateLabel.setText(pt.gateText);
+      hold = this.tweens.add({
+        targets: fill,
+        width: gw,
+        duration: pt.holdMs,
+        onComplete: () => {
+          hold = null;
+          box.destroy();
+          this.openPlayLimit(back);
+        },
+      });
+    });
+    gate.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, stop);
+    gate.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, stop);
+  }
+
+  /** Grown-up setting: the play-time limit (off / 15 / 30 / 45 / 60 minutes). */
+  private openPlayLimit(back: Mode): void {
+    const pt = PLAY_TIME_TEXT;
+    const { width, height } = this.scale.gameSize;
+    const box = this.add.container(0, 0).setDepth(70);
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.85).setOrigin(0).setInteractive());
+    const close = () => {
+      box.destroy();
+      this.mode = back === 'menu' ? 'play' : back;
+      this.renderUi();
+    };
+    const w = Math.min(560, width - 40);
+    box.add(this.add.text(width / 2, height * 0.08, pt.title, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
+    const help = this.add.text(width / 2, height * 0.08 + 36, pt.help, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
+    box.add(help);
+    const choices = PLAY_LIMIT_CHOICES;
+    const gap = 10;
+    const bw = Math.min(96, (w - gap * (choices.length - 1)) / choices.length);
+    const bh = 44;
+    const by = help.y + help.height + 18;
+    const x0 = width / 2 - (choices.length * bw + (choices.length - 1) * gap) / 2;
+    const draw = () => {
+      box.list.filter((o) => o.getData('choice')).forEach((o) => o.destroy());
+      choices.forEach((n, i) => {
+        const on = this.profile.playLimitMinutes === n;
+        const x = x0 + i * (bw + gap);
+        const bg = this.add.rectangle(x, by, bw, bh, on ? 0x3aa57a : 0x2a2536).setOrigin(0).setStrokeStyle(on ? 3 : 2, on ? 0xffd166 : 0xffffff, on ? 1 : 0.35).setInteractive().setData('choice', true);
+        const label = this.add.text(x + bw / 2, by + bh / 2, n === 0 ? pt.off : pt.minutes.replace('{n}', String(n)), { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp()).setData('choice', true);
+        bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+          sfx.place(true);
+          this.profile.playLimitMinutes = n;
+          writeSave(this.profile);
+          draw();
+        });
+        box.add([bg, label]);
+      });
+    };
+    draw();
+    const dw = 140;
+    const dy = Math.min(height - 12 - 40, by + bh + 22);
+    const done = this.add.rectangle(width / 2 - dw / 2, dy, dw, 40, 0x3aa57a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
+    box.add([done, this.add.text(width / 2, dy + 20, pt.done, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
+    done.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, close);
   }
 
   /** Asks how the player likes to move decorations: tap the spot, or an arrow pad. */

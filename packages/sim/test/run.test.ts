@@ -17,6 +17,11 @@ import {
   stepWorld,
   summarizeRun,
   updateRun,
+  wrapUpRun,
+  tickPlayClock,
+  playTimeUp,
+  isPlayLimit,
+  loadProfile,
   type RunEvent,
   type RunState,
 } from '../src';
@@ -235,5 +240,42 @@ describe('personal bests', () => {
     const again = finishRun(profile, { ...s, perfects: 2, ticks: s.ticks + 100 });
     expect(again).toEqual([]);
     expect(profile.bests.mostPerfects).toBe(4);
+  });
+});
+
+describe('play-time limit (M7-P9)', () => {
+  it('wrap-up ends the run at the next door as rested, keeping the loot', () => {
+    const run = startRun(content, { seed: 7, dryRuns: LOOT.guaranteedRareOnRun - 1 });
+    wrapUpRun(run);
+    const events = autoplay(run);
+    expect(run.status).toBe('rested');
+    expect(run.depth).toBe(0);
+    expect(events.some((e) => e.kind === 'runOver' && e.status === 'rested')).toBe(true);
+    const summary = summarizeRun(run);
+    expect(summary.result).toBe('rested');
+    const profile = newProfile();
+    const before = profile.inventory.length;
+    finishRun(profile, summary);
+    expect(profile.inventory.length).toBe(before + summary.items.length);
+  });
+
+  it('the clock counts one session and restarts after a long break', () => {
+    const min = 60_000;
+    let c = tickPlayClock(null, 0, 30 * min);
+    c = tickPlayClock(c, 10 * min, 30 * min);
+    c = tickPlayClock(c, 16 * min, 30 * min);
+    expect(playTimeUp(c, 15, 16 * min)).toBe(true);
+    expect(playTimeUp(c, 0, 16 * min)).toBe(false);
+    c = tickPlayClock(c, 60 * min, 30 * min);
+    expect(c.startedMs).toBe(60 * min);
+    expect(playTimeUp(c, 15, 60 * min)).toBe(false);
+  });
+
+  it('only off/15/30/45/60 are valid, default off, bad saves fall back to off', () => {
+    expect([0, 15, 30, 45, 60].every(isPlayLimit)).toBe(true);
+    expect(isPlayLimit(20)).toBe(false);
+    expect(newProfile().playLimitMinutes).toBe(0);
+    const saved = { ...newProfile(), playLimitMinutes: 99 };
+    expect(loadProfile(JSON.parse(JSON.stringify(saved))).playLimitMinutes).toBe(0);
   });
 });

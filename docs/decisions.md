@@ -467,3 +467,9 @@ From section 1 of `docs/work-board.md`.
 - **Kid-facing names:** Guided / Steady / Challenge. "Standard" stays the internal id (`standard`) and is the default.
 - **Never switched off a choice:** the first pick in Settings saves `difficultyChosenByPlayer: true`, and the game never changes it after that. A profile that already has runs but no difficulty gets Standard, not Guided.
 - **Age band parsing:** the top number of the band ("6-9" → 9) is compared with `guidedUpToAge`. All four fake profiles are "10-13", so profile 1 gets Guided through the white-belt rule.
+
+## M7-P9 — Play-time limit
+- Ends after the current room (at the door) as a new run result `rested`, never mid-fight; loot is kept like a cleared run.
+- Session = play with no 30-minute break (tunable in content). Open: is 30 min right, and should the reset be daily instead?
+- Grown-up gate is a 2-second press-and-hold, not a math question or PIN. Open: is that enough of a gate?
+- If time is already up when a run starts, the child still gets to play that first room. Open: block new runs instead?

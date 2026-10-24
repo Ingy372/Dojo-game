@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import playTimeText from '../../../../content/settings/play-time.json';
 import {
   BLESSING,
   GEAR_SLOTS,
@@ -221,8 +222,8 @@ export class HomeScene extends Phaser.Scene {
       return;
     }
     const s = last.summary;
-    const headline = s.result === 'cleared' ? 'Floor cleared!' : `You reached room ${Math.min(s.totalRooms, s.roomsCleared + 1)} of ${s.totalRooms}`;
-    this.text(x, y, headline, 20, s.result === 'cleared' ? '#ffd166' : '#f2e9d8', true);
+    const headline = s.result === 'cleared' ? 'Floor cleared!' : s.result === 'rested' ? playTimeText.homeHeadline : `You reached room ${Math.min(s.totalRooms, s.roomsCleared + 1)} of ${s.totalRooms}`;
+    this.text(x, y, headline, 20, s.result !== 'lost' ? '#ffd166' : '#f2e9d8', true);
     y += 30;
 
     // One chip per room: its grade, or a mark for treasure and rest rooms.

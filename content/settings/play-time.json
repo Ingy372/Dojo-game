@@ -1,0 +1,17 @@
+{
+  "_note": "M7-P9. Play-time limit (a grown-up setting). Default off. Wording: no guilt, no pressure, no countdowns shown to the child.",
+  "sessionBreakMinutes": 30,
+  "grownUpButton": "For grown-ups",
+  "gateText": "Grown-ups: press and hold",
+  "holdMs": 2000,
+  "title": "Play-time limit",
+  "help": "When time is up, your child finishes the room they're in. Then the game says well done and goes back to the dojo. Nothing they found is lost.",
+  "off": "Off",
+  "minutes": "{n} min",
+  "done": "Done",
+  "wrapUpLine": "Nice work! Let's finish this room, then rest.",
+  "restTitle": "Great training today!",
+  "restLines": ["You trained hard today.", "Everything you found is safe in your dojo."],
+  "restButton": "Back to my dojo",
+  "homeHeadline": "Great training today!"
+}

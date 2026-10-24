@@ -418,3 +418,11 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - While a player is on an automatic Guided, the Home Dojo shows "You're on Guided. Change anytime in Settings."
 - `TrainingState` now has `ageBand` from the feed.
 - New tests in `packages/sim/test/difficulty.test.ts`. In the browser: the new white belt starts on Guided; tapping Steady sticks after a reload; the green belt starts on Standard. 204 tests pass, 1 skipped.
+
+## K11 / M7-P9 — Play-time limit (grown-up setting)
+
+- Settings → "For grown-ups" (press and hold 2 s) → Play-time limit: Off / 15 / 30 / 45 / 60 min. Default Off. Saved as `profile.playLimitMinutes`.
+- When time is up, Sensei says "Nice work! Let's finish this room, then rest." The current room plays out; at the door the run ends as `rested` with a "Great training today!" card, and everything found is kept (normal finishRun). No timer or countdown is shown to the child.
+- A session is time played with no break of 30+ min (content/settings/play-time.json `sessionBreakMinutes`); the clock is in localStorage `dojo-ascent-play-clock` and counts time in the dojo and the tower.
+- Test link: `?playlimit=N` overrides the setting with N minutes.
+- Tests: run.test.ts "play-time limit (M7-P9)". Screenshots: k11-p9-{667,844}-{wrapup,rest,home,settings,playlimit}.png.

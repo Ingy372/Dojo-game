@@ -25,3 +25,4 @@ export * from './lessons';
 export * from './elite';
 export * from './streetSmarts';
 export * from './named';
+export * from './playTime';
