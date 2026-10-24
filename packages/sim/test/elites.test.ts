@@ -406,7 +406,7 @@ describe('elite reward (PR #54, Done-when 10b)', () => {
     expect(defeatElite(95, true).p.focus).toBe(COMBAT.focus.max);
   });
 
-  it('gives at most one extra decoration (about half the time) and never extra gear', () => {
+  it('gives at most one extra decoration (S7: about 15% of the time) and never extra gear', () => {
     let decos = 0;
     const N = 1000;
     for (let seed = 1; seed <= N; seed++) {
@@ -428,8 +428,8 @@ describe('elite reward (PR #54, Done-when 10b)', () => {
       expect(elite.decos).toBeLessThanOrEqual(1);
       decos += elite.decos;
     }
-    expect(decos / N).toBeGreaterThan(0.45);
-    expect(decos / N).toBeLessThan(0.55);
+    expect(decos / N).toBeGreaterThan(0.12);
+    expect(decos / N).toBeLessThan(0.18);
   });
 });
 

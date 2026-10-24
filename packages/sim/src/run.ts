@@ -72,6 +72,10 @@ export interface RunState {
   bowed: boolean;
   /** Decorations found this run (decoration ids). */
   decorations: string[];
+  /** Colour roll of each found decoration (same order): 1 or 2 for tinted pieces, null otherwise. */
+  decorationColours: Array<1 | 2 | null>;
+  /** Enemy kinds (enemy ids) beaten this run, each once: they give Journal trophies and keeper statues. */
+  defeated: string[];
   /** How many of each decoration the player already had (so new kinds are found first). */
   ownedDecorations: Record<string, number>;
   /** The current room's twist id, or null. */
@@ -165,6 +169,8 @@ export function startRun(content: Content, options: RunOptions): RunState {
     calmMind: !!options.calmMind,
     bowed: false,
     decorations: [],
+    decorationColours: [],
+    defeated: [],
     ownedDecorations: { ...(options.ownedDecorations ?? {}) },
     twist: null,
     tier: options.tier ?? 1,
@@ -262,6 +268,7 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
           const share = e ? content.loot.enemyDropChance[e.def.id] ?? 0 : 0;
           if (e && chance(run.rng, share)) out.push(drop(content, run, 'common', e.pos, 'enemy'));
           // Elite reward: a chance of one extra Home Dojo decoration (never gear; Focus is given in the world).
+          if (e && !run.defeated.includes(e.def.id)) run.defeated.push(e.def.id);
           if (e?.named) out.push({ kind: 'namedDefeated', id: e.named, at: { ...e.pos } });
           if (e?.elite) {
             const deco = dropDecoration(content, run, content.elites.reward.decorationChance, e.pos);
@@ -366,6 +373,10 @@ export interface RunSummary {
   insights: string[];
   /** Decorations found (decoration ids). */
   decorations: string[];
+  /** Colour roll of each found decoration (same order). */
+  decorationColours: Array<1 | 2 | null>;
+  /** Enemy kinds beaten this run, each once (kept on a loss too). */
+  defeated: string[];
   /** A test-link run (doesn't count for personal bests). */
   test: boolean;
   /** The belt tier the floor was played at. */
@@ -385,6 +396,8 @@ export function summarizeRun(run: RunState): RunSummary {
     sGrades: run.results.filter((r) => r.grade === 'S').length,
     insights: run.insights.slice(),
     decorations: run.decorations.slice(),
+    decorationColours: run.decorationColours.slice(),
+    defeated: run.defeated.slice(),
     test: run.test,
     tier: run.tier,
   };
@@ -572,19 +585,28 @@ function drop(content: Content, run: RunState, min: Rarity, at: Vec2, source: 'e
   return { kind: 'loot', item, at: { x: at.x, y: at.y }, source };
 }
 
+/** Most copies of one surprise piece a player can be given (S7, Manager call). */
+export const DECOR_MAX_COPIES = 3;
+
 /**
- * A chest may hold a decoration for the Home Dojo (the boss chest always does).
- * Kinds the player has fewest of come first, so a new player fills their dojo with variety.
+ * A chest or elite may hold a surprise decoration (S7 rates in content). The pool is the
+ * random Tier 1 pieces plus the old tower pieces. New pieces come before repeats; after
+ * that a repeat is an extra copy, up to DECOR_MAX_COPIES of each, then the roll gives nothing.
+ * Tinted (random) pieces get a 50/50 colour roll; kinds count by piece, not colour.
+ * Test-link runs never find decorations.
  */
 function dropDecoration(content: Content, run: RunState, share: number, at: Vec2): RunEvent | null {
-  if (share <= 0 || !chance(run.rng, share)) return null;
-  const pool = content.dojo.decorations.filter((d) => d.source === 'tower');
-  if (pool.length === 0) return null;
+  if (run.test || share <= 0 || !chance(run.rng, share)) return null;
   const have = (id: string) => (run.ownedDecorations[id] ?? 0) + run.decorations.filter((x) => x === id).length;
+  const pool = content.dojo.decorations.filter(
+    (d) => (d.source === 'tower' || d.source === 'random') && have(d.id) < DECOR_MAX_COPIES,
+  );
+  if (pool.length === 0) return null;
   const fewest = Math.min(...pool.map((d) => have(d.id)));
-  const id = pick(run.rng, pool.filter((d) => have(d.id) === fewest)).id;
-  run.decorations.push(id);
-  return { kind: 'decoration', id, at: { x: at.x, y: at.y } };
+  const def = pick(run.rng, pool.filter((d) => have(d.id) === fewest));
+  run.decorations.push(def.id);
+  run.decorationColours.push(def.source === 'random' ? (chance(run.rng, 0.5) ? 2 : 1) : null);
+  return { kind: 'decoration', id: def.id, at: { x: at.x, y: at.y } };
 }
 
 /** Play time is up: finish the current room, then the next door ends the run (M7-P9). */
@@ -617,5 +639,8 @@ export function restoreRun(content: Content, data: unknown): RunState | null {
   if (!ok) return null;
   const restored = JSON.parse(JSON.stringify(run)) as RunState;
   restored.wrapUp ??= false;
+  // Runs saved before decor earning.
+  restored.decorationColours ??= restored.decorations.map(() => null);
+  restored.defeated ??= [];
   return restored;
 }

@@ -6,6 +6,7 @@ import {
   MOVEMENT,
   TICKS_PER_SECOND,
   addDecorations,
+  syncClassPieces,
   canPlace,
   choreInReach,
   choresLeft,
@@ -285,6 +286,25 @@ export class DojoScene extends Phaser.Scene {
       const hello = ["It's so good to see you!", 'Your dojo missed you.', 'Ready to train?'][Math.floor(Math.random() * 3)];
       const line = chores > 0 ? "Your dojo is ready for a fresh sweep! Let's make it shine together." : 'Everything is just how you left it.';
       steps.push(() => this.card(`Welcome back, ${name}!`, [hello, line], chores > 0 ? "Let's clean up" : "Let's go!", next));
+    }
+    // Real classes give class pieces (S7): a welcome piece first, then one every few classes.
+    const t = this.training;
+    const classPieces = syncClassPieces(this.profile, this.dojo, CONTENT, {
+      checkIns: t.classCheckIns,
+      classesInRank: t.gate.classesInRank,
+      classesTotal: t.classesTotal,
+      belt: { tier: t.belt.tier, color: t.belt.color },
+    });
+    if (classPieces.length > 0) {
+      writeSave(this.profile);
+      const names = classPieces.map((id) => decorationDef(CONTENT.dojo, id).name).join(', ');
+      const first = this.profile.decorEarning.classPiecesGiven === classPieces.length;
+      steps.push(() =>
+        this.card(first ? 'A gift for training' : 'From your classes', [
+          first ? `Sensei is glad you train at the real dojo. Here is a ${names} for your Home Dojo.` : `You keep coming to class! Something new for your Home Dojo: ${names}.`,
+          'Find it in storage when you decorate.',
+        ], 'Thank you!', next),
+      );
     }
     const moments = rewardMoments(this.profile.seen, this.training);
     if (moments.length > 0) {
@@ -766,7 +786,7 @@ export class DojoScene extends Phaser.Scene {
     // Named-monster stickers are drawn in the named-monster pack.
     if (def.source === 'named') return addStatic(this, NAMED_PACK, it.id, 0, 0);
     // Tier 1 pieces have their own pack; random ones are tinted (colour 1, or the belt colour).
-    if (def.art) return def.source === 'random' ? addTinted(this, def.art, it.id, 0, 0, it.colour === 2 ? this.beltTint() : undefined) : addStatic(this, def.art, it.id, 0, 0);
+    if (def.art) return def.source === 'random' ? addTinted(this, def.art, it.id, 0, 0, it.colour === 2 ? this.beltTint(it) : undefined) : addStatic(this, def.art, it.id, 0, 0);
     if (def.clean === 'rack' && it.crooked > 0) return addStatic(this, 'dojo', `${it.id}-crooked`, 0, 0, it.crooked - 1);
     const images = addStatic(this, 'dojo', it.id, 0, 0);
     if (def.clean === 'mat' && it.scuffed) {
@@ -777,10 +797,11 @@ export class DojoScene extends Phaser.Scene {
 
   /**
    * Colour 2 of a tinted piece: the belt colour, or soft wood tan on White belt (white would
-   * look washed out). Uses the current belt until pieces remember the floor they came from.
+   * look washed out). Each piece remembers the belt of the floor it came from; older pieces
+   * use the current belt.
    */
-  private beltTint(): string {
-    const belt = this.training.belt;
+  private beltTint(it: DojoItem): string {
+    const belt = it.belt ?? this.training.belt;
     return belt.tier === 1 ? WHITE_BELT_TINT : belt.color;
   }
 

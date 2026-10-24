@@ -545,3 +545,24 @@ From section 1 of `docs/work-board.md`.
 - `mustTouchWall`: the folding screen's top row must be row 1, and it may not stand in front of the notice board column.
 - Bow mat and cushion walk-through; other floor pieces solid — my guess.
 - No earning/drops yet (next PR).
+
+## Decor earning (S7) (2026-10-24)
+Manager calls:
+1. Class pieces: one every 2 classes at White belt, then one every 3 after White.
+2. Uses the feed's `attendance.classesTotal` (optional) and gives one welcome class piece on the first sync.
+3. Old saves seed `classesCounted` from `classesInRank` (max with classesTotal); it never goes down.
+4. Class pieces in a fixed order: the class scrolls in curriculum order (file order), then gear.
+5. `keeper-statue-floorN` the first time the Floor Keeper is beaten at belt tier N.
+6. Each monster kind's Journal trophy on its first defeat (win or loss), including Floor Keeper and Bopper. A named monster's sticker comes with its kind's trophy.
+7. S7 rates: boss 0.05, treasure 0.04, challenge 0.03, elite 0.15. Old tower pieces stay in the surprise pool; new pieces before repeats, up to 3 copies each; shown as "A surprise!".
+8. Each random piece gets a 50/50 colour roll; kinds count by piece, not colour.
+9. The folding screen once every Tier 1 Journal trophy is earned.
+10. The meter and the lesson are left out of this PR.
+
+My calls (not Manager):
+- Classes count one per date (YYYY-MM-DD); two check-ins the same day count once. Fixture feeds shift dates to "now", so in dev a fixture can count new classes on a new day.
+- "Tier 1 Journal entries" = trophies with `journalTier: 1` (swarmer, shield, brute, floor-keeper). Bopper is `journalTier: 2` (Yellow+).
+- Trophy monster ids are enemy ids: Bopper `padded`→`bopper`, keeper `keeper`→`floor-keeper`. Content load fails if a trophy names an unknown enemy.
+- Each piece stores its drop belt (`belt: {tier, color}`): the run's tier for Tower pieces, the current belt for class pieces. Colour 2 uses it (tan on White). Older pieces use the current belt.
+- Test-link runs find no surprise pieces and bank no decorations (fixes the bankRun leak). Once every surprise piece has 3 copies, the roll gives nothing.
+- C11 unique names applied to statues and trophies.

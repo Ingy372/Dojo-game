@@ -71,6 +71,9 @@ export function loadContent(raw: RawContent): Content {
     if (!enemies[id]) throw new Error(`Loot drops list enemy "${id}", which doesn't exist`);
   }
   const dojo = loadDojoContent(raw.dojoRoom, raw.decorations);
+  for (const d of dojo.decorations) {
+    if (d.monster && !enemies[d.monster]) throw new Error(`Trophy "${d.id}" is for monster "${d.monster}", which isn't an enemy`);
+  }
   const named = loadNamed(raw.named, enemies);
   for (const m of named.monsters) {
     if (!dojo.decorations.some((d) => d.id === m.sticker && d.source === 'named')) throw new Error(`Named monster "${m.id}" gives sticker "${m.sticker}", which isn't a "named" decoration`);

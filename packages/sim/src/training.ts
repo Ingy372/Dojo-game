@@ -116,6 +116,10 @@ export interface TrainingState {
   /** When the Blessing ends (ms), or null. */
   blessingEndsMs: number | null;
   lastClass: string | null;
+  /** Class check-ins so far (feed recentClasses up to now): each new one counts toward class pieces. */
+  classCheckIns: string[];
+  /** Lifetime classes from the feed, or null if the feed doesn't send it. */
+  classesTotal: number | null;
   trainingPoints: number;
   approvedMinutes: number;
 }
@@ -250,6 +254,8 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
     blessed,
     blessingEndsMs: blessed ? endsMs : null,
     lastClass: last === null ? null : feed.attendance.recentClasses.find((d) => Date.parse(d) === last) ?? null,
+    classCheckIns: feed.attendance.recentClasses.filter((d) => Date.parse(d) <= now.ms),
+    classesTotal: feed.attendance.classesTotal,
     trainingPoints: Math.floor(feed.homePractice.approvedMinutes / TRAINING_POINTS.minutesPerPoint),
     approvedMinutes: feed.homePractice.approvedMinutes,
   };

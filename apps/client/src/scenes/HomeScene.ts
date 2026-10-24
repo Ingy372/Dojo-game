@@ -247,7 +247,7 @@ export class HomeScene extends Phaser.Scene {
       y += 22;
     }
 
-    const decos = s.decorations ?? [];
+    const decos = [...(s.decorations ?? []), ...(last.earned ?? [])];
     if (decos.length > 0) {
       this.text(x, y, `For your dojo: ${decos.map((id) => decorationDef(CONTENT.dojo, id).name).join(', ')}`, 14, '#ffd166', true, FONT, w);
       y += 22;
