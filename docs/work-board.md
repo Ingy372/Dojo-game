@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-24 (12 AM) by Dojo-ascent Manager.
+Last updated: 2026-10-24 (9 AM) by Dojo-ascent Manager.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -71,6 +71,7 @@ These questions already have answers in the design docs. The bots build on these
 | K4 | **Done (PRs #19 and #20, merged Oct 23).** S1 #1 (enemy mixes) and #2 (Perfect Counter chain). The "longest chain" record is deferred. | — |
 | K5 | **Done (PR #22, merged Oct 23).** S1 #4 room twists, with the final twist text and guided-Counter nudge. Slide stays at 1.6x (Q4 found no real cost; drop to 1.3x if kids slide into danger on a real phone). | — |
 | K6 | **Done (PR #26, merged Oct 23).** Twist banner no longer covers the room name or goal; `?twist=<id>` test link added (fixes Q4 bugs 1 and 3). | — |
+| K7 | Wire the new art from PR #10 into the game: the Yellow belt Tower kit (Bamboo Garden Hall), the 28 icons, and the elite auras (S1 #3: Swift and Guarding). Keep "nothing above enemy heads". | PR #10 merged |
 | K2 | Continue milestone 6 (Story and Street Smarts sample) when the Content Writer's C1 is approved. | C1 |
 | K3 | Run the balance-testing computer player whenever the QA bot or the Systems Designer asks, and send Jay the report. | requests |
 
@@ -136,7 +137,7 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| A0 | **Samples delivered (PR #10, do not merge yet).** Batch 8 icons and 3 Yellow belt Tower themes (A Sunlit Sandstone, B Bamboo Garden Hall, C Sunrise Lacquer). Full batches follow once a theme is picked. | **Theme chosen (Oct 24): B Bamboo Garden Hall.** It matches the Bamboo Garden decoration set and the bamboo material in `core-design.md`, so the first Tower floor feels like it belongs to the player's Home Dojo. That gives a calm, natural starting step before the bolder themes on later belts. Artist: start the full Yellow belt batches, then the elite aura art. | nothing |
+| A0 | **Full build delivered (PR #10, Oct 24).** Yellow belt Tower kit in B Bamboo Garden Hall (`incoming-art/tower-rooms-t2/`), all 28 icons (`incoming-art/icons/`), and the full elite aura set for S1 #3 (`incoming-art/elite-auras/`). Manager calls on the small questions: delete `tower-rooms-t2/proposals/` before merge (B is chosen); one blue rim for all Seals is fine. Tier 2 in-game name and whether Guarding shows which enemies it protects go to the Researcher & Planner (S1). Artist: delete the proposals folder and take "do not merge" off the PR title. | Jay: are the redrawn icons OK? Then merge. |
 | A1 | **Earned cosmetics:** headbands, hand wraps matching the gear (cloth, leather, tiger stripe), gi trims, and a soft aura. 3 samples first. | nothing (J5 done) |
 | A2 | **Form stances:** a stance idle for Rooted Form and Flowing Form (the two Forms that already exist). Later Forms follow S3. | nothing (later Forms: S3) |
 | A3 | **Badges and trophies:** the bow-question award badges (5/10/20/50/100) and a trophy-wall style for certified trophies versus game trophies. | S6 for the full set |
