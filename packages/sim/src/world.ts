@@ -199,6 +199,7 @@ export type CombatEvent =
   | { kind: 'winded'; enemyId: EnemyId }
   | { kind: 'wave'; wave: number; of: number }
   | { kind: 'playerOut'; playerId: PlayerId }
+  | { kind: 'goalReached' }
   | { kind: 'roomCleared' }
   | { kind: 'breath'; playerId: PlayerId; healed: number }
   | { kind: 'chestOpened'; playerId: PlayerId }
@@ -237,6 +238,10 @@ export interface WorldState {
   bells: number;
   /** Sensei's guided first Counter, or null when it's finished or off. */
   guide: GuideState | null;
+  /** Health never drops below this (1 on the tutorial floor, else 0). */
+  minHealth: number;
+  /** The tutorial floor's glowing spot, or null. */
+  goal: GoalState | null;
   /** Elite rules (from content/elites), or null when the room has no elites. */
   elites: EliteRules | null;
   /** Named monster rules (M7-N1) when this room has one, else null. */
@@ -247,6 +252,14 @@ export interface WorldState {
 export const GUIDE_DONE = 3;
 /** How long the hold waits before each gentle nudge (5 seconds). */
 export const GUIDE_NUDGE_TICKS = 100;
+
+/** The tutorial floor's glowing spot: the room's enemies wait until the player walks onto it. */
+export interface GoalState {
+  pos: Vec2;
+  reached: boolean;
+}
+/** How close (in tiles) counts as standing on the glowing spot. */
+export const GOAL_RADIUS = 0.8;
 
 export interface GuideState {
   step: number;
@@ -291,6 +304,10 @@ export interface WorldOptions {
   /** A named monster in this room (M7-N1), with its rules. That spawn is never an elite. */
   named?: NamedSpawn | null;
   namedRules?: NamedRules;
+  /** Health never drops below this (the tutorial floor uses 1, so doing nothing can't lose). Default 0. */
+  minHealth?: number;
+  /** The tutorial floor's easy boss (M7-P2): bosses have this share of their health and call in no helpers. */
+  easyBossHealth?: number;
 }
 
 export interface PlayerSetup {
@@ -367,6 +384,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     const typeOf = (id: string): EnemyDef => {
       const def = options.enemyTypes![id];
       if (!def) throw new Error(`Room "${room.id}" uses enemy "${id}", but no such enemy type was loaded`);
+      if (def.boss && options.easyBossHealth !== undefined) return { ...def, maxHealth: Math.max(1, Math.round(def.maxHealth * options.easyBossHealth)), summon: null };
       return def;
     };
     room.enemySpawns.forEach((spawn, i) => {
@@ -411,6 +429,8 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     bells: 0,
     elites: rules,
     namedRules,
+    minHealth: Math.max(0, options.minHealth ?? 0),
+    goal: room.goal ? { pos: { ...room.goal }, reached: false } : null,
     guide: (options.guideStep ?? GUIDE_DONE) < GUIDE_DONE ? { step: options.guideStep!, enemyId: null, waiting: false, waitTicks: 0 } : null,
   };
 }
@@ -484,7 +504,16 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
   for (const id of ids) {
     stepPlayer(world, world.players[id], room, inputs[id] ?? NO_INPUT);
   }
-  for (const e of world.enemies) stepEnemy(world, e, room);
+  // Tutorial floor: the enemies wait until the player has walked to the glowing spot.
+  const goal = world.goal;
+  if (goal && !goal.reached) {
+    const p = world.players[ids[0]];
+    if (p && distance(p.pos, goal.pos) <= GOAL_RADIUS) {
+      goal.reached = true;
+      world.events.push({ kind: 'goalReached' });
+    }
+  }
+  if (!goal || goal.reached) for (const e of world.enemies) stepEnemy(world, e, room);
   separateEnemies(world, room);
   updateGuards(world);
   for (const id of ids) separateFromEnemies(world, world.players[id], room);
@@ -1102,7 +1131,7 @@ function hurt(world: WorldState, p: PlayerState, dmg: number): void {
     if (dmg === 0) return;
   }
   world.progress.damageTaken += Math.min(dmg, p.health);
-  p.health = Math.max(0, p.health - dmg);
+  p.health = Math.max(Math.min(world.minHealth, p.health), p.health - dmg);
   if (p.health === 0) {
     p.downTicks = COMBAT.defeatTicks;
     p.path = null;
