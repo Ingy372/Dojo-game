@@ -62,6 +62,7 @@ import { startTowerRun } from '../game/tower';
 import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
 import { TouchControls } from '../input/TouchControls';
+import { twistBanner, twistIcon } from '../ui/twist';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
@@ -198,6 +199,8 @@ export class GameScene extends Phaser.Scene {
   private timerText!: Phaser.GameObjects.Text;
   private bossName!: Phaser.GameObjects.Text;
   private toastY = 0;
+  private twistBadge: Phaser.GameObjects.Container | null = null;
+  private twistBannerView: Phaser.GameObjects.Container | null = null;
   private prevPos: Vec2 = { x: 0, y: 0 };
   private elapsed = 0;
   /** When the room's enemies appeared (null until the floor's bow is done). */
@@ -272,7 +275,14 @@ export class GameScene extends Phaser.Scene {
     this.chestOpenAt = null;
     const roomGfx = this.drawRoom();
     const objects = this.makeRoomObjects();
-    this.danger = this.add.graphics().setDepth(1);
+    // Lantern Dark twist: the room is dim, but the warning circles are drawn on top, extra bright.
+    const dim = this.world.twist?.dim ?? false;
+    if (dim) {
+      const w = this.room.width * TILE;
+      const h = this.room.height * TILE;
+      objects.push(this.add.rectangle(0, 0, w, h, 0x05040a, 0.5).setOrigin(0).setDepth(9));
+    }
+    this.danger = this.add.graphics().setDepth(dim ? 10 : 1);
     this.marker = this.add.circle(0, 0, TILE * 0.22).setStrokeStyle(3, COLORS.marker, 0.9).setVisible(false).setDepth(2);
     this.player = this.makePlayer();
 
@@ -480,8 +490,10 @@ export class GameScene extends Phaser.Scene {
       const cx = e.attackCenter.x * TILE;
       const cy = e.attackCenter.y * TILE;
       const area = currentAttack(e).areaRadius * TILE;
-      this.danger.fillStyle(COLORS.danger, 0.16).fillCircle(cx, cy, area);
-      this.danger.lineStyle(inWindow ? 6 : 3, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
+      const glow = this.world.twist?.dim ? 1.6 : 1; // Lantern Dark: warnings glow extra bright
+      if (glow > 1) this.danger.lineStyle(10, 0xffd166, 0.35).strokeCircle(cx, cy, area + 4);
+      this.danger.fillStyle(COLORS.danger, 0.16 * glow).fillCircle(cx, cy, area);
+      this.danger.lineStyle(inWindow ? 6 : 3 * glow, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
       this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
     } else if (e.mode === 'recover') {
       // The attack itself (it lands on its first frame), then catching its breath.
@@ -829,7 +841,17 @@ export class GameScene extends Phaser.Scene {
           this.floatText(p.pos, `-${ev.damage}`, '#ff6b5b', 26);
           break;
         }
+        case 'bell': {
+          const p = this.world.players[this.me];
+          sfx.loot(ev.count === ev.of ? 2 : 0);
+          this.ring(p.pos, COLORS.gold, 1.6);
+          this.floatText(p.pos, ev.count === ev.of ? 'Ding! Bonus prize!' : `Ding! Bell ${ev.count} of ${ev.of}`, '#ffd166', 24, 1.1);
+          this.drawTwistBells();
+          break;
+        }
         case 'telegraph': {
+          // A warning is coming: the twist banner gets out of the way so it never covers one.
+          if (this.twistBannerView?.active) this.tweens.add({ targets: this.twistBannerView, alpha: 0.25, duration: 150 });
           const e = this.enemy(ev.enemyId);
           sfx.windup(ev.ticks / TICKS_PER_SECOND);
           if (e) this.floatText({ x: e.pos.x, y: e.pos.y - e.def.radius - 0.3 }, '!', '#ff3b30', 40, 0.4);
@@ -1143,6 +1165,7 @@ export class GameScene extends Phaser.Scene {
     else if (this.room.kind === 'rest') lines.push('Walk to the shrine to rest.');
     else if (this.room.kind === 'treasure') lines.push('Open the chest!');
     else if (this.room.kind === 'boss') lines.push('The Floor Keeper awaits.');
+    this.showTwist();
     this.message.setText(lines.join('\n')).setFontSize(this.room.challenge ? 22 : 26).setVisible(true).setAlpha(1);
     this.tweens.add({
       targets: this.message,
@@ -1151,6 +1174,39 @@ export class GameScene extends Phaser.Scene {
       duration: 500,
       onComplete: () => this.message.setVisible(false).setAlpha(1).setFontSize(28),
     });
+  }
+
+  /** Room twist: a banner with its icon and Sensei's one-line rule, then a small icon in the corner. */
+  private showTwist(): void {
+    this.twistBadge?.destroy();
+    this.twistBadge = null;
+    const twist = this.world.twist;
+    if (!twist) return;
+    const { width } = this.scale.gameSize;
+    // Near the top, under the health bar, so it never covers the fight or a warning circle.
+    const BANNER_Y = 92;
+    const banner = twistBanner(this, twist, width, BANNER_Y);
+    this.cameras.main.ignore(banner);
+    this.tweens.add({ targets: banner, alpha: { from: 0, to: 1 }, y: { from: BANNER_Y + 20, to: BANNER_Y }, duration: 300, ease: 'Back.Out' });
+    this.tweens.add({ targets: banner, alpha: 0, delay: 4200, duration: 500, onComplete: () => banner.destroy() });
+    this.twistBannerView = banner;
+    this.twistBadge = this.add.container(0, 0, [twistIcon(this, twist.icon, 34)]).setDepth(20);
+    this.cameras.main.ignore(this.twistBadge);
+    this.twistBadge.setPosition(width / 2 + 120, 30);
+    this.drawTwistBells();
+  }
+
+  /** Bell Room: the bells rung so far, next to the twist icon. */
+  private drawTwistBells(): void {
+    const twist = this.world.twist;
+    if (!twist?.bells || !this.twistBadge) return;
+    this.twistBadge.list.slice(1).forEach((o) => o.destroy());
+    const text = this.add
+      .text(22, 0, `${this.world.bells}/${twist.bells}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffd166', stroke: '#14121c', strokeThickness: 4 })
+      .setOrigin(0, 0.5)
+      .setResolution(crisp());
+    this.cameras.main.ignore(text);
+    this.twistBadge.add(text);
   }
 
   private makeRoomObjects(): Phaser.GameObjects.GameObject[] {

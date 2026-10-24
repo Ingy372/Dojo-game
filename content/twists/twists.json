@@ -1,0 +1,30 @@
+{
+  "notes": "Room twists (S1 #4). A Tower battle or challenge room after the first one may get one twist, never more. 'chance' is per eligible room, tuned so about 1 room in 4 of a whole run has a twist. 'banner' and 'sensei' lines are PLACEHOLDERS: they need the Content Writer's approval. No twist may hide a warning.",
+  "chance": 0.5,
+  "twists": [
+    {
+      "id": "lantern-dark",
+      "name": "Lantern Dark",
+      "icon": "lantern",
+      "banner": "Lantern Dark: the room is dim, but red circles glow bright!",
+      "sensei": "It's dark in here. Look for the glowing circles!",
+      "dim": true
+    },
+    {
+      "id": "slippery-floor",
+      "name": "Slippery Floor",
+      "icon": "ice",
+      "banner": "Slippery Floor: your Dash slides farther!",
+      "sensei": "Whee! The floor is slippery. Your Dash goes far!",
+      "dashScale": 1.6
+    },
+    {
+      "id": "bell-room",
+      "name": "Bell Room",
+      "icon": "bell",
+      "banner": "Bell Room: ring 3 bells for a bonus prize!",
+      "sensei": "Each Perfect Counter rings a bell. Can you ring three?",
+      "bells": 3
+    }
+  ]
+}

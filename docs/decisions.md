@@ -396,3 +396,13 @@ From section 1 of `docs/work-board.md`.
 - From x2, the screen shows "PERFECT x2", "PERFECT x3"... under the combo counter, with a glow that gets brighter up to x5.
 - "Longest chain" is not a personal best (Jay, 2026-10-23).
 - Balance check (computer player, 1,000 runs each): Strikes per fight room went up 11–18% depending on the player (the limit was 20%). Novice on Standard won 35% before and 40% after (smart play).
+
+## S1 change 4: room twists (2026-10-23)
+
+- Three starter twists from the S1 proposal live in `content/twists/twists.json`: **Lantern Dark** (the room is dim, warning circles glow extra bright on top), **Slippery Floor** (Dash goes 1.6 times as far), and **Bell Room** (each Perfect Counter rings a bell; the 3rd bell drops a bonus prize, at least Uncommon).
+- A room gets at most one twist. Only Tower battle and challenge rooms can get one, never the first room (kept calm for the guided first Counter) and never the boss. The chance per such room is 50%, which comes to about 1 room in 4 over a whole run (25.6% in a 200-run test).
+- The rules are in `packages/sim` (Dash distance, bells, the bonus prize). The dim look and the banner are only in the game screen.
+- No twist hides a warning. A test checks that every twist room gives exactly the same warnings, at the same times, as the same room without a twist. Lantern Dark draws the warning circles above the dimness. The twist banner sits at the top of the screen and fades back as soon as any warning starts.
+- Each twist room shows a banner with a drawn icon (no emoji, so it looks the same on every phone) and Sensei saying the rule in one line. A small icon stays at the top while you're in the room; in the Bell Room it shows the bells rung, like "1/3".
+- The banner and Sensei lines are placeholders until the Content Designer approves them.
+- Balance check (computer player, 1,000 runs each): novice on Standard (smart play) won 50% before and 44% after. Of that, 3 points come only from the rooms being shuffled differently (47% with twists turned off), and 3 points from the twists themselves. Standing-still novice: 25% → 26%. Guided: 98% → 99% and 95% → 95%. Items per run went up by about 1 (the bell prize).
