@@ -1,181 +1,182 @@
 {
-  "sprites": {
-    "badge-bow-5": {
-      "files": {
-        "img": "badges/badge-bow-5.png"
-      },
-      "size": [
-        128,
-        128
-      ],
-      "anchorPx": [
-        64,
-        64
-      ],
-      "achievement": "ach.bow.correct.5",
-      "tier": 1,
-      "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
+ "sprites": {
+  "badge-bow-5": {
+   "files": {
+    "img": "badges/badge-bow-5.png"
+   },
+   "size": [
+    128,
+    128
+   ],
+   "anchorPx": [
+    64,
+    64
+   ],
+   "achievement": "ach.bow.correct.5",
+   "tier": 1,
+   "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
+  },
+  "badge-bow-10": {
+   "files": {
+    "img": "badges/badge-bow-10.png"
+   },
+   "size": [
+    128,
+    128
+   ],
+   "anchorPx": [
+    64,
+    64
+   ],
+   "achievement": "ach.bow.correct.10",
+   "tier": 2,
+   "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
+  },
+  "badge-bow-20": {
+   "files": {
+    "img": "badges/badge-bow-20.png"
+   },
+   "size": [
+    128,
+    128
+   ],
+   "anchorPx": [
+    64,
+    64
+   ],
+   "achievement": "ach.bow.correct.20",
+   "tier": 3,
+   "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
+  },
+  "badge-bow-50": {
+   "files": {
+    "img": "badges/badge-bow-50.png"
+   },
+   "size": [
+    128,
+    128
+   ],
+   "anchorPx": [
+    64,
+    64
+   ],
+   "achievement": "ach.bow.correct.50",
+   "tier": 4,
+   "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
+  },
+  "badge-bow-100": {
+   "files": {
+    "img": "badges/badge-bow-100.png"
+   },
+   "size": [
+    128,
+    128
+   ],
+   "anchorPx": [
+    64,
+    64
+   ],
+   "achievement": "ach.bow.correct.100",
+   "tier": 5,
+   "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
+  },
+  "certified-trophy-sample": {
+   "files": {
+    "img": "trophies/certified-trophy-sample.png"
+   },
+   "size": [
+    104,
+    166
+   ],
+   "anchorPx": [
+    52,
+    156
+   ],
+   "datePlate": [
+    26,
+    134,
+    62,
+    148
+   ],
+   "dateTextColor": "#3a2a22",
+   "note": "SAMPLE CT (belt promotion: band uses the belt colour, orange shown). Certified cues: gold cup, gold seal rosette with sky ribbons, warm halo, sparkles, cream date plate. BLANK plate: the game writes 'Earned {date}' (C7 trophyText)."
+  },
+  "certified-trophy-layered": {
+   "size": [
+    104,
+    166
+   ],
+   "anchorPx": [
+    52,
+    156
+   ],
+   "datePlate": [
+    26,
+    134,
+    62,
+    148
+   ],
+   "dateTextColor": "#3a2a22",
+   "layers": [
+    {
+     "id": "base",
+     "files": {
+      "img": "trophies/certified-layers/trophy-base.png"
+     },
+     "note": "cup + stand + plinth + blank date plate + halo + sparkles, one layer. Belt band orange in this sample."
     },
-    "badge-bow-10": {
-      "files": {
-        "img": "badges/badge-bow-10.png"
-      },
-      "size": [
-        128,
-        128
-      ],
-      "anchorPx": [
-        64,
-        64
-      ],
-      "achievement": "ach.bow.correct.10",
-      "tier": 2,
-      "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
+    {
+     "id": "sealBacking",
+     "files": {
+      "default": "trophies/certified-layers/seal-backing-default.png",
+      "actionzone": "trophies/certified-layers/seal-backing-actionzone.png"
+     },
+     "fallback": "default",
+     "note": "school palette picks the file; unknown school -> default (gold + sky)"
     },
-    "badge-bow-20": {
-      "files": {
-        "img": "badges/badge-bow-20.png"
-      },
-      "size": [
-        128,
-        128
-      ],
-      "anchorPx": [
-        64,
-        64
-      ],
-      "achievement": "ach.bow.correct.20",
-      "tier": 3,
-      "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
-    },
-    "badge-bow-50": {
-      "files": {
-        "img": "badges/badge-bow-50.png"
-      },
-      "size": [
-        128,
-        128
-      ],
-      "anchorPx": [
-        64,
-        64
-      ],
-      "achievement": "ach.bow.correct.50",
-      "tier": 4,
-      "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
-    },
-    "badge-bow-100": {
-      "files": {
-        "img": "badges/badge-bow-100.png"
-      },
-      "size": [
-        128,
-        128
-      ],
-      "anchorPx": [
-        64,
-        64
-      ],
-      "achievement": "ach.bow.correct.100",
-      "tier": 5,
-      "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
-    },
-    "certified-trophy-sample": {
-      "files": {
-        "img": "trophies/certified-trophy-sample.png"
-      },
-      "size": [
-        104,
-        166
-      ],
-      "anchorPx": [
-        52,
-        156
-      ],
-      "datePlate": [
-        26,
-        134,
-        62,
-        148
-      ],
-      "dateTextColor": "#3a2a22",
-      "note": "SAMPLE CT (belt promotion: band uses the belt colour, orange shown). Certified cues: gold cup, gold seal rosette with sky ribbons, warm halo, sparkles, cream date plate. BLANK plate: the game writes 'Earned {date}' (C7 trophyText)."
-    },
-    "certified-trophy-layered": {
-      "size": [
-        104,
-        166
-      ],
-      "anchorPx": [
-        52,
-        156
-      ],
-      "datePlate": [
-        26,
-        134,
-        62,
-        148
-      ],
-      "dateTextColor": "#3a2a22",
-      "layers": [
-        {
-          "id": "base",
-          "files": {
-            "img": "trophies/certified-layers/trophy-base.png"
-          },
-          "note": "cup + stand + plinth + blank date plate + halo + sparkles, one layer. Belt band orange in this sample."
-        },
-        {
-          "id": "sealBacking",
-          "files": {
-            "default": "trophies/certified-layers/seal-backing-default.png",
-            "actionzone": "trophies/certified-layers/seal-backing-actionzone.png"
-          },
-          "fallback": "default",
-          "note": "school palette picks the file; unknown school -> default (gold + sky)"
-        },
-        {
-          "id": "schoolMark",
-          "files": {
-            "default": "trophies/certified-layers/seal-mark-default-star.png",
-            "placeholder": "trophies/certified-layers/seal-mark-PLACEHOLDER-school.png"
-          },
-          "fallback": "default",
-          "note": "PLACEHOLDER is a stand-in only; never ship it. No school logo is in the repo yet."
-        }
-      ],
-      "schoolMarkSpec": {
-        "centrePx": [
-          76,
-          130
-        ],
-        "faceRadiusPx": 10,
-        "safeRadiusPx": 8,
-        "onTrophyPx": [
-          16,
-          16
-        ],
-        "supplyAs": "square PNG, 128x128 (min 64x64), RGBA with transparent background, sRGB, mark centred",
-        "safeArea": "keep all of the mark inside the centred circle of diameter 112 px (8 px margin on a 128 canvas); outside that is clipped by the face ring",
-        "rules": "no text smaller than the mark itself (it shows at 16 px); bold simple shapes; no red (house rule); test on the seal face colour of your palette",
-        "palette": "backing colours: scallop, face, faceRing, tail (hex). Defaults: #d68c14 #ffd34d #fff5be #4096eb"
-      },
-      "palettes": {
-        "default": {
-          "scallop": "#d68c14",
-          "face": "#ffd34d",
-          "faceRing": "#fff5be",
-          "tail": "#4096eb",
-          "source": "A3 house palette (generic fallback, unchanged from PR #138)"
-        },
-        "actionzone": {
-          "scallop": "#191a3e",
-          "face": "#efeadc",
-          "faceRing": "#c9a227",
-          "tail": "#c9a227",
-          "source": "actionzonecma.com CSS: --color-indigo #191a3e, --color-paper-warm #efeadc, --color-gold #c9a227"
-        }
-      }
+    {
+     "id": "schoolMark",
+     "files": {
+      "default": "trophies/certified-layers/seal-mark-default-star.png",
+      "placeholder": "trophies/certified-layers/seal-mark-PLACEHOLDER-school.png",
+      "school": "trophies/certified-layers/seal-mark-school.png"
+     },
+     "fallback": "default",
+     "note": "school = the school's own logo (A3c: red cross + kicking figure). PLACEHOLDER is a stand-in only; never ship it."
     }
+   ],
+   "schoolMarkSpec": {
+    "centrePx": [
+     76,
+     130
+    ],
+    "faceRadiusPx": 10,
+    "safeRadiusPx": 8,
+    "onTrophyPx": [
+     16,
+     16
+    ],
+    "supplyAs": "square PNG, 128x128 (min 64x64), RGBA with transparent background, sRGB, mark centred",
+    "safeArea": "keep all of the mark inside the centred circle of diameter 112 px (8 px margin on a 128 canvas); outside that is clipped by the face ring",
+    "rules": "no text smaller than the mark itself (it shows at 16 px); bold simple shapes; no red (house rule); test on the seal face colour of your palette",
+    "palette": "backing colours: scallop, face, faceRing, tail (hex). Defaults: #d68c14 #ffd34d #fff5be #4096eb"
+   },
+   "palettes": {
+    "default": {
+     "scallop": "#d68c14",
+     "face": "#ffd34d",
+     "faceRing": "#fff5be",
+     "tail": "#4096eb",
+     "source": "A3 house palette (generic fallback, unchanged from PR #138)"
+    },
+    "actionzone": {
+     "scallop": "#191a3e",
+     "face": "#efeadc",
+     "faceRing": "#c9a227",
+     "tail": "#c9a227",
+     "source": "actionzonecma.com CSS: --color-indigo #191a3e, --color-paper-warm #efeadc, --color-gold #c9a227"
+    }
+   }
   }
+ }
 }
