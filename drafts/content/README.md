@@ -23,3 +23,4 @@ Notes: all numbers/stats are unchanged. `description`, `bestiary`, materials and
 - tutorial/tutorial-floor.json: M7-P3 Sensei lines for each tutorial-floor step.
 - tutorial/first-session-lessons.json: M7-P6 session list of Sensei's Lessons (7 first-session lessons + Perfect Counter, Block, Step-out).
 - enemies/named-monsters.json: M7-N1 Tier 2 named monsters (lines + Monster Journal text).
+- lore/: C3 lore bible. 00-index.md plus one page per tier (01-white to 10-black) and guardians-and-relics.json (same shape as chapter-1's guardian/relics).
