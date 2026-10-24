@@ -1,16 +1,16 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-18 by Jay (with his Claude chat).
+Last updated: 2026-10-23 by Dojo-ascent Manager.
 
-**What this file is:** the one list of open work. Every bot and Claude Code reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
+**What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
 **How it stays current:** Jay marks items done or changes them here. Decisions go into `docs/decisions.md`. If this file and `docs/decisions.md` disagree, `docs/decisions.md` wins.
 
-**Owners:** Jay · Claude Code · Game Systems Designer (new bot) · Learning & Engagement Designer · Content Writer · Art Director · QA & Playability Tester · DojoForge (outside this repository).
+**Owners:** Jay · Dojo-Ascent Programmer · Game Systems Designer (new bot) · Learning & Engagement Designer · Content Writer · Art Director · QA & Playability Tester · DojoForge (outside this repository).
 
 ---
 
-## 1. Decisions Jay has made (Claude Code: record these in docs/decisions.md)
+## 1. Decisions Jay has made (Dojo-Ascent Programmer: record these in docs/decisions.md)
 
 1. **Bow question = recall.** Sensei shows a picture of one of the player's earned abilities and asks "What's this one called?" with 3 picture-and-word choices. After the answer, the character performs the move. A wrong answer warmly shows the right name; there is no penalty. Correct answers are counted forever, with awards at 5, 10, 20, 50 and 100 (may go higher). At most one question per day. It can always be skipped. This replaces the "Which felt best?" draft.
 2. **Lore comes first.** The Tower's story and enemy lore are launch scope, and the game is built around them where it fits.
@@ -43,9 +43,9 @@ These questions already have answers in the design docs. The bots build on these
 
 | ID | What Jay provides | Unblocks |
 | --- | --- | --- |
-| J1 | ~~Self-defense list~~ **Mostly done:** `docs/self-defense.md` (#1–30) and the belt ladder in `docs/curriculum.md`. Still needed: #31–40, the Brown/Black → Black requirements, and the attacks marked "(not stated)". | S4 for #31–40 |
-| J2 | **Kick combo list:** one line per combo, in the same format. | S4 |
-| J3 | ~~Kata list~~ **Names done** (`docs/curriculum.md`). Still needed: one line on each kata's character, and confirmation of the spellings. | S3 |
+| J1 | ~~Self-defense list~~ **Mostly done:** `docs/self-defense.md` (#1–30) and the belt ladder in `docs/curriculum.md`. Jay gave #31–35 on Oct 23 (Programmer adding them under K1); #33's "party flex" needs Jay's confirmation. Still needed: #36–40, the Brown/Black → Black requirements, and the attacks marked "(not stated)". | S4 for #36–40 |
+| J2 | ~~Kick combo list~~ **Done:** Jay gave combos 1–7 on Oct 23; the Programmer is adding them to the docs under K1. | ~~S4 kick combos~~ (no longer blocked) |
+| J3 | ~~Kata list~~ **Names done** (`docs/curriculum.md`). ~~Spellings~~ done (commit 660c98d). Still needed (in progress): one line on each kata's character. | S3 |
 | J4 | ~~Faith texts~~ **Done:** `docs/faith-and-creed.md`. Still needed: Jay's answers to the questions in its section 6. | L5 can start now; C5 waits on the answers |
 | J5 | **Confirm cosmetics:** earned only, never bought, looks separate from stats. | A1 |
 | J6 | **Black belt to 2nd degree:** the usual wait. | milestone 4 |
@@ -53,11 +53,11 @@ These questions already have answers in the design docs. The bots build on these
 
 ---
 
-## 4. Claude Code
+## 4. Dojo-Ascent Programmer
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| K1 | Check that the game's belt list, kata names and requirement counts match `docs/curriculum.md` (fixtures and content/), and list any differences for Jay. Record section 1 in docs/decisions.md. In docs/GROK_BOTS.md, mark the QA bot active, add the Game Systems Designer as Bot 6, using the instructions in the appendix of this file, and move the milestone 4 recommendation task from the Learning Designer to it. Create drafts/systems/README.md. Fix one fact wherever it appears: Sensei's Lessons are built in milestone 7 and finished in milestone 10. Remove the black belt question from the Open questions list only after J6 is answered. Show Jay the changes before committing. | nothing |
+| K1 | **In progress (sent Oct 23).** Check that the game's belt list, kata names and requirement counts match `docs/curriculum.md` (fixtures and content/), and list any differences for Jay. Record section 1 in docs/decisions.md. In docs/GROK_BOTS.md, mark the QA bot active, add the Game Systems Designer as Bot 6, using the instructions in the appendix of this file, and move the milestone 4 recommendation task from the Learning Designer to it. Create drafts/systems/README.md. Fix one fact wherever it appears: Sensei's Lessons are built in milestone 7 and finished in milestone 10. Remove the black belt question from the Open questions list only after J6 is answered. Also add Jay's new curriculum text (self-defense #31–35, kick combos 1–7) to the docs, and replace remaining Claude Code references in the docs with the Dojo-Ascent Programmer. Show Jay the changes before committing. | nothing |
 | K2 | Continue milestone 6 (Story and Street Smarts sample) when the Content Writer's C1 is approved. | C1 |
 | K3 | Run the balance-testing computer player whenever the QA bot or the Systems Designer asks, and send Jay the report. | requests |
 
@@ -67,22 +67,24 @@ These questions already have answers in the design docs. The bots build on these
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| Q1 | **Full combat test** on the live link: all three difficulties, all three test profiles, every room type and the boss. Report bugs, then a playability report. Add one extra section: "What would make combat more varied and more rewarding?", thinking like a 6-year-old, a 12-year-old and an adult. | nothing |
+| Q1 | **In progress (sent Oct 23).** **Full combat test** on the live link: all three difficulties, all three test profiles, every room type and the boss. Report bugs, then a playability report. Add one extra section: "What would make combat more varied and more rewarding?", thinking like a 6-year-old, a 12-year-old and an adult. | nothing |
 | Q2 | Test character creation and the newly imported art (Batches 4–7): readability on a phone, anything that looks wrong. | nothing |
-| Q3 | Ask Jay for a balance run from Claude Code (K3), compare it with your own play, and suggest specific number changes. Note: novice players on Standard currently win only 41% of runs. | K3 |
+| Q3 | Ask Jay for a balance run from Dojo-Ascent Programmer (K3), compare it with your own play, and suggest specific number changes. Note: novice players on Standard currently win only 41% of runs. | K3 |
 
 ---
 
 ## 6. Game Systems Designer (new bot: drafts/systems/, branch bot-systems)
 
-Every proposal from this bot gets checked twice: by Claude Code's balance-testing player for the numbers, and by the Learning Designer (L4) for learning and ethics.
+Every proposal from this bot gets checked twice: by Dojo-Ascent Programmer's balance-testing player for the numbers, and by the Learning Designer (L4) for learning and ethics.
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
+**Owner not set:** the Game Systems Designer bot isn't set up yet. S1–S8 wait on Jay choosing the owner.
+
 | S1 | **Combat depth proposal.** Combat is fun but needs more variety and more reward. Review what's built, plus Q1 when it lands. Propose up to 6 changes, ranked by fun per cost. Ideas to weigh: enemy mixes that force different answers, elite enemy modifiers, room twists, Form-switching moments, Perfect Counter chains, combo finishers, risk-and-reward choices between rooms, better hit feedback. Each change must keep the core skill of reading the warning, then answering. | nothing (use Q1 when it arrives) |
 | S2 | **Item system spec.** Gear slots, rarity, stat ranges inside the power budget, drop sources by tier, breaking duplicates down into materials, and how gear stats and cosmetic looks stay separate. What's in launch and what comes later. | nothing |
 | S3 | **Forms (stances).** One Form per kata in `docs/curriculum.md` (8 known so far): its name, how it plays, and the reason to switch to it. Plus the switching rules (how, when, cooldown) and how Forms stay simple for a 6-year-old. | J3 (kata character lines) |
-| S4 | **Power-ups from real training.** Start with self-defense: give each of #1–30 in `docs/self-defense.md` an in-game effect that matches what the real technique does, using its game category, and follow the rules at the bottom of that file. Techniques in the same category should build on each other (for example, #13, #14 and #24 all kick a weapon away, each a little stronger). Replace the current placeholder powers. Then do the kick combos (after J2) and the katas (after S3). Finally, give a recommendation for each milestone 4 open question (content/abilities/abilities.json, and the PROGRESSION and POWER settings in docs/decisions.md). | self-defense: nothing · kick combos: J2 |
+| S4 | **Power-ups from real training.** Start with self-defense: give each of #1–30 in `docs/self-defense.md` an in-game effect that matches what the real technique does, using its game category, and follow the rules at the bottom of that file. Techniques in the same category should build on each other (for example, #13, #14 and #24 all kick a weapon away, each a little stronger). Replace the current placeholder powers. Then do the kick combos (after J2) and the katas (after S3). Finally, give a recommendation for each milestone 4 open question (content/abilities/abilities.json, and the PROGRESSION and POWER settings in docs/decisions.md). | owner (Jay) · self-defense: nothing · kick combos: nothing (J2 done) |
 | S5 | **Difficulty.** Review core-design §12: is there a clear, kid-understandable reason to choose Challenge? Should young beginners be offered Guided automatically, given the 41% novice win rate? What does Endless Ascent give at black belt? | nothing |
 | S6 | **Achievements.** The full list: categories, thresholds, what each awards (titles, trophies, decorations, cosmetics), certified real-world trophies versus game trophies, and the bow-question awards (5/10/20/50/100). No achievement may reward daily logins or punish missed days. | nothing |
 | S7 | **Earning decorations in play.** A table of every in-game source (chests by tier, first floor clears, Bestiary entries, Decoration sets, Challenge, Open House events, crafting later), with rough rates so a student finds something new every few runs. | nothing |
@@ -94,7 +96,7 @@ Every proposal from this bot gets checked twice: by Claude Code's balance-testin
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| L1 | Fix your audit: Sensei's Lessons are built in milestone 7, not 10. | nothing |
+| L1 | ~~Fix your audit: Sensei's Lessons are built in milestone 7, not 10.~~ **Done:** PR #8, merged by Jay. | — |
 | L2 | Update proposal 2 to the recall bow question (section 1, item 1). | nothing |
 | L3 | **Coming-back audit.** Check the five loops against the built game: does a student have a good reason to play a few times a week, without pressure? What's missing at white belt specifically? | nothing |
 | L4 | Review every Game Systems Designer proposal for learning value, overwhelm and ethics. | S1–S8 |
@@ -106,7 +108,7 @@ Every proposal from this bot gets checked twice: by Claude Code's balance-testin
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| C1 | **Milestone 6 material:** dialogue for Sensei, Senpai, Kohai, the second instructor and the founder; plus one Street Smarts scenario script for Jay to approve. | nothing |
+| C1 | **In progress (sent Oct 23):** milestone 6 dialogue in progress; the Street Smarts script waits on Jay deciding where it's drafted. **Milestone 6 material:** dialogue for Sensei, Senpai, Kohai, the second instructor and the founder; plus one Street Smarts scenario script for Jay to approve. | Street Smarts script: Jay (where it's drafted) |
 | C2 | Redo `dojo/sensei-bow-questions.json` as recall questions, with Sensei's lines for a correct answer, a wrong answer, and each award. Change the first lesson to "Tap where you want to go, or use the stick." | nothing |
 | C3 | **Lore bible (lore first).** The Tower's history, the shattered light, the Guardian of every belt tier (white to black), and the Relics. Keep it to one page per tier. This becomes the foundation every quest and enemy is built on. | nothing |
 | C4 | **Quest lines.** After C3 is approved: an outline of the main story chapter for each tier, the life-lesson quests (3rd belt), and the manners and culture quests. Outlines first; full scripts after Jay approves. | C3 |
@@ -120,7 +122,7 @@ Every proposal from this bot gets checked twice: by Claude Code's balance-testin
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| A0 | Finish Batch 8 (icons) and Batch 9 (Yellow belt Tower room kit) from `docs/briefs/art-director-batches-5-9.md`. | nothing |
+| A0 | **In progress (sent Oct 23).** Finish Batch 8 (icons) and Batch 9 (Yellow belt Tower room kit) from `docs/briefs/art-director-batches-5-9.md`. | nothing |
 | A1 | **Earned cosmetics:** headbands, hand wraps matching the gear (cloth, leather, tiger stripe), gi trims, and a soft aura. 3 samples first. | J5 |
 | A2 | **Form stances:** a stance idle for Rooted Form and Flowing Form (the two Forms that already exist). Later Forms follow S3. | nothing (later Forms: S3) |
 | A3 | **Badges and trophies:** the bow-question award badges (5/10/20/50/100) and a trophy-wall style for certified trophies versus game trophies. | S6 for the full set |
@@ -143,7 +145,7 @@ Copy the shared rules from docs/GROK_BOTS.md, plus this section, into the bot's 
 ```
 Your role: Game Systems Designer. Your folder: drafts/systems/. Your branch: bot-systems.
 
-You design how Dojo Ascent plays: combat depth, Forms (stances), power-ups from real techniques, items and gear, difficulty, achievements, and rewards. You turn ideas into clear rules and starting numbers that Claude Code can build and test.
+You design how Dojo Ascent plays: combat depth, Forms (stances), power-ups from real techniques, items and gear, difficulty, achievements, and rewards. You turn ideas into clear rules and starting numbers that Dojo-Ascent Programmer can build and test.
 
 Your work list is in docs/work-board.md, section 6 (items S1-S8). Do them in order and skip any item still waiting on Jay. Put the item ID in every Delivery Note.
 
@@ -159,5 +161,5 @@ How you work:
 Limits:
 - No daily-login rewards, streaks that punish a missed day, fear of missing out, random paid rewards, or anything for sale.
 - Rewards from play never outweigh real training, and the Gate opens only with real promotions.
-- The Learning & Engagement Designer reviews every proposal, and Jay approves it in his Claude chat before Claude Code builds anything.
+- The Learning & Engagement Designer reviews every proposal, and Jay approves it in his Claude chat before Dojo-Ascent Programmer builds anything.
 ```
