@@ -46,6 +46,7 @@ Each sure source has its own short meter. The run summary shows **one** of them,
   - Each new class date in `recentClasses` adds 1, **including dates that arrive late**. A kid who opens the game a week after class still gets credit, because it counts class dates and not game opens.
   - The counter only goes up. It never resets, never needs days in a row, and has no deadline.
   - At every 3rd class, the Blessing reward moment also shows "A new class piece for your dojo!"
+- **Feed total (when present):** if the feed has `attendance.classesTotal` (lifetime certified classes, see `classes-total-feed-field.md`), the counter takes `classesCounted = max(classesCounted, classesTotal)` on every sync. It never goes lower. Class pieces still come only from **new** class dates after install. A first sync that raises the total from, say, 9 to 200 does not dump 60 pieces; it gives at most 1 "welcome" class piece (guess). The big total feeds S6 milestones and S10 looks instead.
 - **No real student data is needed to build it.** Fake profiles in `fixtures/` already carry `attendance`, so the testing screen can add a class.
 - A student who can't attend for a while loses nothing; the meter just waits.
 
@@ -114,7 +115,7 @@ What the table shows:
 ## Scope risks
 
 1. **Art:** class pieces (about 9–35 per tier), 10 random pieces per tier, plus floor pieces and trophies. Colours and a shared class-scroll design keep the cost down. The Art Director should size this.
-2. **`classesCounted`** is a new saved field. It needs a migration for old saves: start at 0, or seed it from `classesInRank` (Manager to choose; I suggest seeding so current students aren't behind).
+2. **`classesCounted`** is a new saved field. When the feed has `classesTotal`, that wins (take the max); `classesInRank` seeding is only the fallback. It needs a migration for old saves: start at 0, or seed it from `classesInRank` (Manager to choose; I suggest seeding so current students aren't behind).
 3. **Parent or teacher view:** this is new UI. If the Parent Zone isn't in launch, the odds stay in data and docs until it is.
 4. **Floors per tier and the number of Journal entries** are guesses until milestone 10.
 5. **Elite rate** goes from 0.5 (PR #54) to 0.15. This needs the Manager's OK.
@@ -127,6 +128,7 @@ What the table shows:
   - A class date that arrives late still counts.
   - Opening the game twice for the same class adds nothing.
   - `classesCounted` never goes down, even if the feed's list gets shorter.
+  - With `classesTotal` 200 and a saved 9, after sync `classesCounted` is 200 and at most 1 class piece is given; with `classesTotal` missing, counting falls back to class dates; a later lower `classesTotal` (e.g. 150) changes nothing.
   - There's no rule about days or weeks in a row anywhere in the code.
 - **First clear:** each floor names its piece in data; the first clear always gives it, and never again; test.
 - **Monster Journal:** every 2 new entries gives one trophy, and a named monster gives its trophy on its first defeat; test.
