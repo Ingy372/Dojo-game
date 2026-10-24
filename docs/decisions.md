@@ -512,3 +512,6 @@ From section 1 of `docs/work-board.md`.
 ## C9 wording (PR #115) on P9 (2026-10-24)
 - Wrap-up line: "Nice work, let's finish this room and rest!" Rest card lines: "You trained hard today!", "Rest now, or show a grown-up your moves.", "Everything you found is safe in your dojo." The card now draws every line in restLines.
 - Grown-up help: "…Then the game praises their training and returns to the dojo…". Menu buttons stay in normal case.
+
+## C9 wording (PR #115) on P11 (2026-10-24)
+- Resume card line: "You'll start again at room {room}." (the "of {total}" part is dropped). Buttons stay "Keep climbing" / "Rest for now" in normal case.
