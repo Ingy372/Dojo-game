@@ -1,0 +1,92 @@
+{
+  "pixelsPerTile": 80,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "facing": "north (the one game view)"
+  },
+  "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+  "sprites": {
+    "icon-cloth-wraps": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-cloth-wraps"
+      ],
+      "files": {
+        "icon-cloth-wraps": "icon-cloth-wraps.png"
+      },
+      "groundRect": {
+        "col0": 1.1920928910669204e-08,
+        "row0": 0.0,
+        "col1": 1.600000011920929,
+        "row1": 1.6,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "gear (hands): Cloth Hand Wraps, a rolled cream cloth wrap with its loose end. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-ripple-counter": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-ripple-counter"
+      ],
+      "files": {
+        "icon-ripple-counter": "icon-ripple-counter.png"
+      },
+      "groundRect": {
+        "col0": 2.9999999523162844,
+        "row0": 0.0,
+        "col1": 4.599999952316284,
+        "row1": 1.6,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Insight: Ripple Counter, the Insight scroll family (a glowing open scroll) showing ripples spreading from one point. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-strong-block": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-strong-block"
+      ],
+      "files": {
+        "icon-strong-block": "icon-strong-block.png"
+      },
+      "groundRect": {
+        "col0": 6.0000001907348635,
+        "row0": 0.0,
+        "col1": 7.600000190734863,
+        "row1": 1.6,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Seal (technique seal): Strong Block, the seal medallion family showing a raised forearm block. 128 x 128, anchor = centre",
+      "frames": 1
+    }
+  }
+}

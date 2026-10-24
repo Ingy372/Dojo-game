@@ -1,0 +1,197 @@
+{
+  "pixelsPerTile": 80,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "facing": "north (the one game view)"
+  },
+  "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+  "sprites": {
+    "floor-big": {
+      "size": [
+        80,
+        80
+      ],
+      "layers": [
+        "floor-big"
+      ],
+      "files": {
+        "floor-big": "floor-big_floor-big.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        0,
+        0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "floor tile, exactly 80 x 80 px; anchorPx = top-left corner of the cell"
+    },
+    "floor-quad": {
+      "size": [
+        80,
+        80
+      ],
+      "layers": [
+        "floor-quad"
+      ],
+      "files": {
+        "floor-quad": "floor-quad_floor-quad.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        0,
+        0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "floor tile, exactly 80 x 80 px; anchorPx = top-left corner of the cell"
+    },
+    "floor-worn": {
+      "size": [
+        80,
+        80
+      ],
+      "layers": [
+        "floor-worn"
+      ],
+      "files": {
+        "floor-worn": "floor-worn_floor-worn.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        0,
+        0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "floor tile, exactly 80 x 80 px; anchorPx = top-left corner of the cell"
+    },
+    "wall-face": {
+      "size": [
+        80,
+        104
+      ],
+      "layers": [
+        "wall-face"
+      ],
+      "files": {
+        "wall-face": "wall-face_wall-face.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.3,
+      "anchorPx": [
+        0,
+        24.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "the outer top wall (same rules as Tier 1)"
+    },
+    "wall-block": {
+      "size": [
+        80,
+        114
+      ],
+      "layers": [
+        "wall-block"
+      ],
+      "files": {
+        "wall-block": "wall-block_wall-block.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.4295760221444959,
+      "anchorPx": [
+        0,
+        34.4
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "any other '#' cell (same rules as Tier 1)"
+    },
+    "pillar": {
+      "size": [
+        88,
+        224
+      ],
+      "layers": [
+        "pillar"
+      ],
+      "files": {
+        "pillar": "pillar_pillar.png"
+      },
+      "groundRect": {
+        "col0": -0.05,
+        "row0": 0,
+        "col1": 1.05,
+        "row1": 1.05,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.75,
+      "anchorPx": [
+        44.0,
+        220.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "pillar (same rules as Tier 1)"
+    },
+    "door-battle": {
+      "size": [
+        96,
+        156
+      ],
+      "layers": [
+        "door-battle"
+      ],
+      "files": {
+        "door-battle": "door-battle_door-battle.png"
+      },
+      "groundRect": {
+        "col0": -0.1,
+        "row0": 0,
+        "col1": 1.1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.95,
+      "anchorPx": [
+        48.0,
+        156.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 2,
+      "frameWidth": 96,
+      "fps": 1,
+      "loop": false,
+      "note": "Battle door for a 'D' slot in the top wall: frame 0 closed, frame 1 open (doors slide apart, the doorway glows). anchorPx = bottom-centre of the door cell. The icon plaque rises above the wall"
+    }
+  }
+}
