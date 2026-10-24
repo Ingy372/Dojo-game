@@ -49,7 +49,11 @@ export function selectProfile(key: string): void {
 export function currentTraining(): TrainingState {
   const fake = FAKE_PROFILES.find((p) => p.key === selectedProfileKey())!;
   const now = new Date();
-  const feed = shiftFeedDates(fake.feed, now.toISOString());
+  // Shift by whole days, so the dates (and the last class) stay the same all day and a
+  // celebration isn't replayed on every visit (M7-P4: nothing plays twice).
+  const DAY = 24 * 60 * 60 * 1000;
+  const asOf = Date.parse(fake.feed.asOf);
+  const feed = shiftFeedDates(fake.feed, new Date(asOf + Math.floor((now.getTime() - asOf) / DAY) * DAY).toISOString());
   return buildTraining(feed, CONTENT.abilities, { ms: now.getTime(), weekday: now.getDay() });
 }
 
