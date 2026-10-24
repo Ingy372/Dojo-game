@@ -7,7 +7,7 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. Plan only; no game code or
 
 ## Ground rules (from `docs/self-defense.md` and `docs/decisions.md`)
 
-- **Outcomes, never injuries.** The game only shows these words: off-balance, trapped, thrown, pinned, disarmed, escaped (plus stunned). Enemies are shadow creatures. They fade or tumble; nothing is hurt or broken.
+- **Outcomes, never injuries.** The game only shows these words: off-balance, trapped, thrown, pinned, disarmed, escaped (plus stunned). Enemies are shadow creatures. They fade or tumble; nothing is broken. The one exception is the cartoon **Injured** status from #31–40 (S4c).
 - **Callout uses the real number:** "Self-Defense #17!" with a kid-safe subtitle (below). No body-part words (no throat, eyes, groin, nose).
 - **Real training is the main source of power.**
   - A seal unlocks **only** when Sensei signs off that technique in DojoForge. A catch-up item shows as a locked seal ("Sign off Self-Defense #4 to unlock") (`docs/framework.md` lines 77–78).
@@ -63,7 +63,7 @@ Effect types in `code` already exist in `packages/sim/src/effects.ts`. **New:** 
 
 Jay's results: #31–33 joint control/break; #34 joint control/break and takedown; #35 wrist control/break ("party flex", #33, is a type of wrist lock); #36, #37 and #39 joint manipulation/break; #38 joint manipulation/break into takedown; #40 joint manipulation/break and takedown.
 
-**Kid-safe rule for "break":** in the game, "break" only ever means **control and escape** (Break Free style). The enemy is let go, pushed away or off-balance, and you get space. Nothing is hurt or broken, and the word "break" never shows on screen except in "Break Free".
+**Kid-safe rule for "break":** in the game, "break" only ever means **control and escape** (Break Free style). The enemy is let go, pushed away or off-balance, and you get space. The word "break" never shows on screen except in "Break Free". **Update (S4c, 2026-10-24):** these 10 seals (#31–40) also leave the enemy **Injured**, a short cartoon status (bandage, dizzy stars; "Injured!" pop-up) that always wears off. No blood, bones or the word "broken". The earlier lock seals #17, #19, #21, #26 and #28 do not cause it. See `S4c-injured-status.md`.
 
 All 10 build on the Joint lock line (#17 Arm Bar `counterLock` 20, #26, #28) and the Takedown line (#11, #12, #27), plus Break Free (#29–30).
 

@@ -57,7 +57,8 @@ Source: Jay, head instructor, 2026-10-18. This is the real curriculum. **Game ef
 
 ## Rules for using these in the game (ages 6 and up)
 
-- **The game shows outcomes, never injuries.** On screen, an enemy can be off-balance, stunned, trapped, thrown, pinned, disarmed or escaped from. It is never shown hurt, broken, gouged or bleeding, and no text describes it that way. The real details stay in the curriculum and the technique videos.
+- **The game shows outcomes.** On screen, an enemy can be off-balance, stunned, trapped, thrown, pinned, disarmed or escaped from, or **Injured** (see below). It is never shown broken, gouged or bleeding, and no text describes it that way.
+- **Injured (2026-10-24):** an enemy can be **Injured** (a short, cartoon status: bandage sticker and dizzy stars) from the break techniques, self-defense #31–40 only. It always recovers or poofs away. No blood, gore, bones or cracks, and never the word "broken" on screen (Jay via Manager, 2026-10-24; spec: `drafts/planning/S4c-injured-status.md`). The real details stay in the curriculum and the technique videos.
 - **Callouts use the real number** ("Self-Defense #17!") with a short, kid-safe subtitle ("Arm Bar", "Choke Escape").
 - **Weapons:** enemies in the Tower are shadow creatures. How weapon attacks look in the game (for example, a shadow blade or staff) is a proposal for Dojo-Ascent Researcher & Planner and the Art Director; Jay decides.
 - **Street Smarts is different:** its safety lessons always teach getting away and finding a trusted adult first, especially around weapons, even though the curriculum teaches what to do when there is no escape.
