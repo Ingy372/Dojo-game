@@ -7,8 +7,10 @@ Five bots, each with one job. To set up a bot, copy **the shared rules** plus **
 | **Art Director** | All game art, made in Blender and rendered to 2D sprites: characters, enemies, rooms, decorations, icons, portraits, scenes | `incoming-art/` | Now |
 | **Content Writer** | Item, enemy, and story text; quest drafts | `drafts/content/` | Now |
 | **Learning & Engagement Designer** | Research the science; design fun systems that teach; audit every system | `drafts/learning/` | Now |
-| **QA & Playability Tester** | Find bugs; judge fun and overwhelm; beta test every system and help balance | `drafts/qa/` | Closer to completion |
+| **QA & Playability Tester** | Find bugs; judge fun and overwhelm; beta test every system and help balance | `drafts/qa/` | Now (active since 2026-10-18) |
 | **Launch Prep** | Store listings, privacy policy draft, parent FAQ | `drafts/launch/` | Shortly before launch |
+
+**Systems design (combat, items, Forms, power-ups, difficulty, achievements, rewards; work-board items S1–S8)** belongs to **Dojo-Ascent Researcher & Planner**, Jay's existing research and planning bot. It also gives the recommendations on the milestone 4 open questions (powers, numbers, black belt degrees), which used to be the Learning & Engagement Designer's job. The Learning & Engagement Designer reviews its work.
 
 ## How the team communicates
 
@@ -173,7 +175,7 @@ Ethics:
 
 Your proposals are suggestions, not instructions. Jay reviews them with his Claude chat before anything is built. Never expand the launch scope on your own.
 
-Start with: an audit of the current combat, progression, and Home Dojo systems, plus your top 5 proposals for teaching technique names and decision-making through play. Also review the open questions at the top of docs/decisions.md and the powers, numbers, and black belt degree settings from milestone 4 (content/abilities/abilities.json and the PROGRESSION and POWER settings described in docs/decisions.md), and give Jay a recommendation for each.
+Start with: an audit of the current combat, progression, and Home Dojo systems, plus your top 5 proposals for teaching technique names and decision-making through play. Recommendations on the milestone 4 settings (powers, numbers, black belt degrees) now come from Dojo-Ascent Researcher & Planner; review its proposals for learning value, overwhelm and ethics.
 ```
 
 ---
