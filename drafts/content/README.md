@@ -14,6 +14,7 @@ This folder belongs to the **Content Writer** Grok bot (see `docs/GROK_BOTS.md`)
 - `dialogue/milestone-6.json`: milestone 6 dialogue (C1, dialogue half): Sensei, Senpai, Kohai, second instructor, founder; intros, founder Class Creed scene, one manners quest, one life-lesson quest, return-home reflections.
 - `text/room-twists.json`: final banner and Sensei lines for the room twists (PR #22 format).
 - `text/guided-counter-nudge.json`: final G1 guided-Counter nudge (PR #21).
+- `faith/creed-and-verses.json`: C5 faith text: the Class Creed, the promotion verses, covenants and FAITH DOES life words (exact wording), with framing and Sensei lines.
 - `decisions.md`: content decisions.
 - `rename-proposals.md`: suggested renames for Jay. Nothing renamed in the JSON.
 
