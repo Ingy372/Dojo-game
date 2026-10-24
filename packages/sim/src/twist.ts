@@ -16,6 +16,8 @@ export interface TwistDef {
   dashScale: number;
   /** Perfect Counters ring a bell; this many bells give a bonus prize (0 = no bells). */
   bells: number;
+  /** The first room of a floor this twist can show up in (1 = any room; room 1 never has a twist anyway). */
+  earliestRoom: number;
 }
 
 export interface TwistContent {
@@ -36,8 +38,13 @@ export function loadTwists(data: unknown): TwistContent {
       if (typeof t?.[k] !== 'string' || !(t[k] as string)) throw new Error(`Twist "${id}": "${k}" must be text`);
     }
     if (!ICONS.includes(t.icon as TwistIcon)) throw new Error(`Twist "${id}": "icon" must be one of ${ICONS.join(', ')}`);
+    const earliestRoom = t.earliestRoom ?? 1;
+    if (typeof earliestRoom !== 'number' || !Number.isInteger(earliestRoom) || earliestRoom < 1) {
+      throw new Error(`Twist "${id}": "earliestRoom" must be a whole number, 1 or more`);
+    }
     return {
       id,
+      earliestRoom,
       name: t.name as string,
       icon: t.icon as TwistIcon,
       banner: t.banner as string,

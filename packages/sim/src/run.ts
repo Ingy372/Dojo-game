@@ -151,6 +151,8 @@ export function createRunWorld(
   player: Omit<PlayerSetup, 'health' | 'mods'>,
   gearEffects: readonly Effect[] = [],
   difficulty?: Difficulty,
+  /** Sensei's guided Counter step from the profile (see GUIDE_DONE); off by default. */
+  guideStep?: number,
 ): WorldState {
   const room = currentRoom(content, run);
   return createWorld(room, ['p1'], {
@@ -159,6 +161,7 @@ export function createRunWorld(
     respawnEnemies: false,
     doorCount: run.doors.length,
     twist: currentTwist(content, run),
+    guideStep,
     player: {
       ...player,
       health: run.health ?? undefined,
@@ -314,7 +317,8 @@ function enterRoom(content: Content, run: RunState, room: Room): void {
 function pickTwist(content: Content, run: RunState, room: Room): string | null {
   if (run.depth === 0 || (room.kind !== 'battle' && room.kind !== 'challenge')) return null;
   if (nextFloat(run.rng) >= content.twists.chance) return null;
-  return pick(run.rng, content.twists.twists).id;
+  const allowed = content.twists.twists.filter((t) => t.earliestRoom <= run.depth + 1);
+  return allowed.length ? pick(run.rng, allowed).id : null;
 }
 
 /** The current room's twist, or null. */

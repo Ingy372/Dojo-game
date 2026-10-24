@@ -64,6 +64,16 @@ describe('room twists', () => {
     for (const t of content.twists.twists) expect(twisted.some((r) => r.twist === t.id)).toBe(true);
   });
 
+  it('Slippery Floor stays out of the first 3 rooms of a floor', () => {
+    expect(twist('slippery-floor').earliestRoom).toBe(4);
+    const rooms = Array.from({ length: 200 }, (_, i) => roomsOfRun(3000 + i)).flat();
+    const slippery = rooms.filter((r) => r.twist === 'slippery-floor');
+    expect(slippery.length).toBeGreaterThan(0);
+    for (const r of slippery) expect(r.depth + 1).toBeGreaterThanOrEqual(4);
+    // The other twists can still come in rooms 2 and 3.
+    expect(rooms.some((r) => r.twist && r.depth + 1 <= 3)).toBe(true);
+  });
+
   it('never hide a warning: every twist room still shows each attack warning at the same time', () => {
     const run = startRun(content, { seed: 7, dryRuns: 0 });
     const firstWarning = (id: string | null) => {

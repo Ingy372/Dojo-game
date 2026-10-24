@@ -158,6 +158,14 @@ export type CombatEvent =
   | { kind: 'telegraph'; enemyId: EnemyId; ticks: number }
   /** Bell Room twist: a Perfect Counter rang a bell (`count` so far, `of` needed). */
   | { kind: 'bell'; count: number; of: number }
+  /** Sensei's guided Counter: a warning is being taught (step 0 guided, 1 and 2 fading hints). */
+  | { kind: 'guideStart'; step: number; enemyId: EnemyId }
+  /** Step 0 only: the game holds still with the circle nearly full until Counter is tapped. */
+  | { kind: 'guideWait' }
+  /** The hold has waited a while with no tap: Sensei gives a kind hint (repeats calmly, never ends the hold). */
+  | { kind: 'guideNudge' }
+  /** The taught attack landed or was countered. */
+  | { kind: 'guideDone'; step: number; success: boolean }
   | { kind: 'enemySwing'; enemyId: EnemyId }
   | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId; chain: number }
   | { kind: 'block'; playerId: PlayerId; enemyId: EnemyId; damage: number }
@@ -214,6 +222,23 @@ export interface WorldState {
   twist: TwistDef | null;
   /** Bell Room: bells rung so far. */
   bells: number;
+  /** Sensei's guided first Counter, or null when it's finished or off. */
+  guide: GuideState | null;
+}
+
+/** Steps of the guided Counter: 0 guided (holds still), 1 hint, 2 pulse only, 3 done. */
+export const GUIDE_DONE = 3;
+/** How long the hold waits before each gentle nudge (5 seconds). */
+export const GUIDE_NUDGE_TICKS = 100;
+
+export interface GuideState {
+  step: number;
+  /** The enemy whose attack is being taught right now. */
+  enemyId: EnemyId | null;
+  /** True while the game holds still, waiting for the Counter tap. */
+  waiting: boolean;
+  /** Ticks spent holding still so far (for the gentle nudge). */
+  waitTicks: number;
 }
 
 /** Movement part of a player's request for one tick. */
@@ -240,6 +265,8 @@ export interface WorldOptions {
   player?: PlayerSetup;
   /** This room's twist (Tower rooms only). */
   twist?: TwistDef | null;
+  /** Guided Counter step to start at (see GUIDE_DONE). Default: done (off). */
+  guideStep?: number;
 }
 
 export interface PlayerSetup {
@@ -352,6 +379,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     events: [],
     twist: options.twist ?? null,
     bells: 0,
+    guide: (options.guideStep ?? GUIDE_DONE) < GUIDE_DONE ? { step: options.guideStep!, enemyId: null, waiting: false, waitTicks: 0 } : null,
   };
 }
 
@@ -396,6 +424,17 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
   world.events = [];
   // Sorted order, so results are the same no matter how inputs arrived.
   const ids = Object.keys(world.players).sort();
+  const guide = world.guide;
+  if (guide?.waiting) {
+    // Holding still for the guided Counter: nothing moves until Counter is tapped.
+    if (!ids.some((id) => inputs[id]?.action === 'counter')) {
+      // Still waiting: every few seconds Sensei gives a kind hint. No countdown, no failing.
+      if (++guide.waitTicks % GUIDE_NUDGE_TICKS === 0) world.events.push({ kind: 'guideNudge' });
+      return;
+    }
+    guide.waiting = false;
+    guide.waitTicks = 0;
+  }
   for (const id of ids) {
     stepPlayer(world, world.players[id], room, inputs[id] ?? NO_INPUT);
   }
@@ -403,7 +442,43 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
   separateEnemies(world, room);
   for (const id of ids) separateFromEnemies(world, world.players[id], room);
   updateProgress(world, room, ids);
+  if (guide) stepGuide(world, guide, ids);
   world.tick++;
+}
+
+/** Sensei's guided first Counter: picks the warning to teach, holds still on step 0, and moves on. */
+function stepGuide(world: WorldState, guide: GuideState, ids: string[]): void {
+  if (guide.enemyId === null) {
+    const t = world.events.find((ev) => ev.kind === 'telegraph');
+    if (t?.kind === 'telegraph') {
+      guide.enemyId = t.enemyId;
+      world.events.push({ kind: 'guideStart', step: guide.step, enemyId: t.enemyId });
+    }
+    return;
+  }
+  const e = world.enemies.find((x) => x.id === guide.enemyId);
+  if (world.events.some((ev) => ev.kind === 'enemySwing' && ev.enemyId === guide.enemyId)) {
+    const success = world.events.some((ev) => ev.kind === 'perfectCounter' && ev.enemyId === guide.enemyId);
+    world.events.push({ kind: 'guideDone', step: guide.step, success });
+    // The guided step waits for a real success; the fading hints move on either way.
+    if (success || guide.step > 0) guide.step++;
+    guide.enemyId = null;
+    if (guide.step >= GUIDE_DONE) world.guide = null;
+    return;
+  }
+  if (!e || e.mode !== 'windup' || !e.attackCenter) {
+    guide.enemyId = null; // Beaten or knocked out of its wind-up: wait for the next warning.
+    return;
+  }
+  // Step 0: with the circle nearly full (inside the Perfect window), hold still for the tap.
+  const p = world.players[ids[0]];
+  if (guide.step === 0 && e.modeTicks === 2 && p && isActive(p) && distance(p.pos, e.attackCenter) <= currentAttack(e).areaRadius + R * 0.5) {
+    p.guardTicks = 0;
+    p.counterLockout = 0;
+    p.dashTicks = 0;
+    guide.waiting = true;
+    world.events.push({ kind: 'guideWait' });
+  }
 }
 
 /** True while a player is fighting (not defeated). */

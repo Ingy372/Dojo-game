@@ -8,6 +8,7 @@ import type { DojoState } from './dojo';
 import type { XpGain } from './progression';
 import type { ProgressSnapshot } from './rewards';
 import type { RunSummary } from './run';
+import { GUIDE_DONE } from './world';
 
 export interface PersonalBests {
   /** Fastest full floor clear, in ticks (null until a floor is cleared). */
@@ -63,6 +64,8 @@ export interface Profile {
   dojo: DojoState | null;
   /** The character's look, or null until the student makes their character. */
   look: CharacterLook | null;
+  /** Sensei's guided first Counter: the next step to show (GUIDE_DONE once it's finished). */
+  guideStep: number;
 }
 
 export function newProfile(): Profile {
@@ -81,6 +84,7 @@ export function newProfile(): Profile {
     seen: null,
     dojo: null,
     look: null,
+    guideStep: 0,
   };
 }
 
@@ -91,7 +95,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, look: readLook(p.look) };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0 };
 }
 
 export function wornItem(profile: Profile, slot: GearSlot): GearItem | null {

@@ -251,6 +251,20 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 **Next**
 - Nic's DojoForge data needs the same 24-month value for black belt.
 
+## G1: guided first Counter (2026-10-23)
+
+**Done**
+- New players get Sensei's guided first Counter (Learning proposal 6). On the first warning the game slows down. Once the circle is nearly full, it holds still with Counter pulsing until the player taps it, and that tap is always a Perfect Counter. On the next two warnings the help fades. It runs once per profile.
+- Sensei's lines come from `content/tutorial/sensei-lessons.json`, copied word for word from the draft.
+- 6 new tests. 140 pass (1 balance report skipped) and the game builds.
+- The balance player has a new "masher" style that never Counters, for QA's never-Counters players.
+- Checked on an 844×390 test screen: the game holds still, tapping Counter gives "PERFECT!" and "You did it! Perfect!", and the step is saved.
+
+- Gentle nudge: after 5 seconds of holding still, Sensei shows a kind hint and Counter pulses more strongly. It repeats calmly and never ends the hold. The guide also runs in the practice room.
+
+**Next**
+- The Content Designer approves or replaces the nudge line.
+- The guide teaches the Counter, but it does not win runs for someone who still never Counters afterward: the masher's win rate stays at 0%. The lessons that come after the guide (7–10, run 2 on) are the next step.
 ## S1 change 1: enemy mixes (2026-10-23)
 
 **Done**

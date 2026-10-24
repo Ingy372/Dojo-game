@@ -4,10 +4,14 @@
 // dashes out of attacks it can't counter. Two styles can be compared:
 //   'smart' - plays as above
 //   'stand' - walks up to the nearest enemy and counters everything
+//   'masher' - a 6-year-old who never Counters: walks at the nearest enemy and Strikes
+//              when it can. With Sensei's guide on, it taps Counter only while the game
+//              holds still and the button pulses.
 // It uses its own seeded random numbers, so results repeat exactly.
 
 import {
   COMBAT,
+  GUIDE_DONE,
   activeDoorSlots,
   chooseInsight,
   counterWindowTicks,
@@ -34,7 +38,7 @@ import {
   type WorldState,
 } from '../../src';
 
-export type Style = 'smart' | 'stand';
+export type Style = 'smart' | 'stand' | 'masher';
 
 export interface Skill {
   /** Ticks after a telegraph starts before the bot reacts. */
@@ -142,6 +146,15 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
     }
     if (room.shrine && !prog.shrineUsed) return { kind: 'moveTo', ...room.shrine };
     return { kind: 'none' };
+  }
+
+  // Sensei holds the game still with Counter pulsing: every style taps it.
+  if (world.guide?.waiting) return { kind: 'none', action: 'counter' };
+  if (style === 'masher') {
+    const t = nearest(p.pos, alive)!;
+    const near = distance(p.pos, t.pos) - t.def.radius - 0.42 <= COMBAT.strike.reach;
+    const move = approach(p, t);
+    return near && p.focus >= COMBAT.strike.focusCost ? { ...move, action: 'strike' } : move;
   }
 
   // 1. Notice attacks aimed at us and plan a response.
@@ -284,15 +297,16 @@ function awayFrom(pos: Vec2, from: Vec2[], room: Room): Vec2 {
 }
 
 /** Plays a whole run. */
-export function playRun(content: Content, seed: number, style: Style, skill: Skill, difficulty: Difficulty = 'standard', base = { maxHealth: 100, power: 10, guard: 0 }): RunStats {
+export function playRun(content: Content, seed: number, style: Style, skill: Skill, difficulty: Difficulty = 'standard', base = { maxHealth: 100, power: 10, guard: 0 }, guideStep?: number): RunStats {
   const run = startRun(content, { seed, dryRuns: 0 });
   const rng = createRng(seed * 7919 + 13);
   const rooms: RoomStats[] = [];
   let ticks = 0;
   while (run.status === 'playing' && rooms.length < 20) {
     const room = currentRoom(content, run);
-    const world = createRunWorld(content, run, base, [], difficulty);
+    const world = createRunWorld(content, run, base, [], difficulty, guideStep);
     rooms.push(playRoom(content, run, world, room, style, skill, rng));
+    if (guideStep !== undefined) guideStep = world.guide?.step ?? GUIDE_DONE;
     ticks += world.tick;
   }
   return { won: run.status === 'cleared', ticks, rooms, items: run.loot.length };
