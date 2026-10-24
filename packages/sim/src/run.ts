@@ -12,6 +12,7 @@ import { createRng, nextFloat, pick, pickWeighted, shuffled, type Rng } from './
 import type { Room, RoomKind } from './room';
 import { createWorld, type PlayerSetup, type WorldState } from './world';
 import type { TwistDef } from './twist';
+import { elitesAllowed, type EliteKind, type EliteSpawn } from './elite';
 
 export type Grade = 'S' | 'A' | 'B';
 /** What's behind a door: a kind of room, or the way home after the boss. */
@@ -73,6 +74,19 @@ export interface RunState {
   twist: string | null;
   /** For testing (?twist=): this twist comes in the next room it's allowed in, then it's cleared. */
   forcedTwist?: string;
+  /** The student's belt tier (1 = White belt). Elites start at the tier set in content/elites. */
+  tier: number;
+  /** The difficulty the floor is played on (Guided floors never get Guarding elites). */
+  difficulty: Difficulty;
+  /** The first floor the student plays at this belt tier (no Guarding elites). */
+  firstFloorOfTier: boolean;
+  /** Elites in the current room. */
+  elites: EliteSpawn[];
+  /** Elites so far on this floor, and how many of them were Guarding. */
+  eliteCount: number;
+  guardingCount: number;
+  /** For testing (?elite=): every battle and challenge room gets one elite of this kind. */
+  forcedElite?: EliteKind;
 }
 
 /** Things that happened, for the game to show. */
@@ -98,6 +112,14 @@ export interface RunOptions {
   ownedDecorations?: Record<string, number>;
   /** For testing: force this twist id in the next room that can have it. */
   forcedTwist?: string;
+  /** The student's belt tier (default 1). */
+  tier?: number;
+  /** Difficulty for this floor (default Standard). */
+  difficulty?: Difficulty;
+  /** True on the first floor played at this belt tier (default false). */
+  firstFloorOfTier?: boolean;
+  /** For testing: one elite of this kind in every battle and challenge room. */
+  forcedElite?: EliteKind;
 }
 
 export function startRun(content: Content, options: RunOptions): RunState {
@@ -127,7 +149,17 @@ export function startRun(content: Content, options: RunOptions): RunState {
     decorations: [],
     ownedDecorations: { ...(options.ownedDecorations ?? {}) },
     twist: null,
+    tier: options.tier ?? 1,
+    difficulty: options.difficulty ?? COMBAT.defaultDifficulty,
+    firstFloorOfTier: !!options.firstFloorOfTier,
+    elites: [],
+    eliteCount: 0,
+    guardingCount: 0,
   };
+  if (options.forcedElite) {
+    run.forcedElite = options.forcedElite;
+    run.test = true;
+  }
   if (options.forcedTwist) {
     if (!content.twists.twists.some((t) => t.id === options.forcedTwist)) throw new Error(`Unknown twist: ${options.forcedTwist}`);
     run.forcedTwist = options.forcedTwist;
@@ -166,7 +198,9 @@ export function createRunWorld(
   const room = currentRoom(content, run);
   return createWorld(room, ['p1'], {
     enemyTypes: content.enemies,
-    difficulty,
+    difficulty: difficulty ?? run.difficulty,
+    elites: run.elites,
+    eliteRules: content.elites,
     respawnEnemies: false,
     doorCount: run.doors.length,
     twist: currentTwist(content, run),
@@ -198,6 +232,8 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
           const e = world.enemies.find((x) => x.id === ev.enemyId);
           const share = e ? content.loot.enemyDropChance[e.def.id] ?? 0 : 0;
           if (e && chance(run.rng, share)) out.push(drop(content, run, 'common', e.pos, 'enemy'));
+          // Elites drop slightly better loot: extra item rolls.
+          if (e?.elite) for (let i = 0; i < content.elites.kinds[e.elite].extraLootRolls; i++) out.push(drop(content, run, 'common', e.pos, 'enemy'));
         }
         break;
       case 'bell':
@@ -293,6 +329,8 @@ export interface RunSummary {
   decorations: string[];
   /** A test-link run (doesn't count for personal bests). */
   test: boolean;
+  /** The belt tier the floor was played at. */
+  tier: number;
 }
 
 export function summarizeRun(run: RunState): RunSummary {
@@ -309,6 +347,7 @@ export function summarizeRun(run: RunState): RunSummary {
     insights: run.insights.slice(),
     decorations: run.decorations.slice(),
     test: run.test,
+    tier: run.tier,
   };
 }
 
@@ -320,6 +359,32 @@ function enterRoom(content: Content, run: RunState, room: Room): void {
   const count = (kind: string) => run.usedRooms.filter((id) => content.rooms.find((r) => r.id === id)?.kind === kind).length;
   run.doors = offerDoors(run, room, count('treasure'), count('rest'));
   run.twist = pickTwist(content, run, room);
+  run.elites = pickElites(content, run, room);
+  run.eliteCount += run.elites.length;
+  run.guardingCount += run.elites.filter((x) => x.kind === 'guarding').length;
+}
+
+/**
+ * Elites (S1 #3): from a set belt tier, some battle and challenge rooms after the first
+ * few get one elite, within the per-room and per-floor caps. A rolled Guarding becomes
+ * Swift where Guarding isn't allowed (Guided, a tier's first floor, or the floor's Guarding cap).
+ */
+function pickElites(content: Content, run: RunState, room: Room): EliteSpawn[] {
+  const rules = content.elites;
+  if (room.kind !== 'battle' && room.kind !== 'challenge') return [];
+  const spawnsFor = (kind: EliteKind) =>
+    room.enemySpawns.map((s, i) => ({ s, i })).filter(({ s }) => rules.kinds[kind].enemies.includes(s.enemy) && !content.enemies[s.enemy]?.boss).map(({ i }) => i);
+  if (run.forcedElite) {
+    const spots = spawnsFor(run.forcedElite);
+    return spots.length ? [{ spawn: pick(run.rng, spots), kind: run.forcedElite }] : [];
+  }
+  const allowed = elitesAllowed(rules, run.tier, run.difficulty, run.firstFloorOfTier);
+  if (!allowed.any || run.depth + 1 < rules.earliestRoom || rules.maxPerRoom < 1 || run.eliteCount >= rules.maxPerFloor) return [];
+  if (nextFloat(run.rng) >= rules.chance[room.kind]) return [];
+  let kind = pickWeighted(run.rng, Object.entries(rules.kindWeights) as Array<[EliteKind, number]>);
+  if (kind === 'guarding' && (!allowed.guarding || run.guardingCount >= rules.maxGuardingPerFloor || spawnsFor('guarding').length === 0)) kind = 'swift';
+  const spots = spawnsFor(kind);
+  return spots.length ? [{ spawn: pick(run.rng, spots), kind }] : [];
 }
 
 /** Room twists: some battle and challenge rooms after the first get one friendly rule (never more). */
