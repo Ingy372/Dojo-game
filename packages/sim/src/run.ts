@@ -496,8 +496,8 @@ export function currentTwist(content: Content, run: RunState): TwistDef | null {
 }
 
 function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
-  // Harder rooms wait until later in the floor (depth 0 is room 1).
-  const all = content.rooms.filter((r) => r.kind === kind && r.earliestRoom <= run.depth + 1);
+  // Harder rooms wait until later in the floor (depth 0 is room 1), and some wait for a higher belt.
+  const all = content.rooms.filter((r) => r.kind === kind && r.earliestRoom <= run.depth + 1 && r.minBeltTier <= run.tier);
   let fresh = all.filter((r) => !run.usedRooms.includes(r.id));
   // ?named= test runs (K12): from the earliest room, battle rooms with the asked-for type come
   // first, and a challenge room can have it too, so the link always gives that monster

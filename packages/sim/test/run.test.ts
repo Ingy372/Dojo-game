@@ -63,9 +63,9 @@ function autoplayPreferring(run: RunState, kind: string): void {
 }
 
 describe('content', () => {
-  it('has about 9 Insights, 3 enemy types plus a boss, and every kind of room', () => {
+  it('has about 9 Insights, 4 enemy types plus a boss, and every kind of room', () => {
     expect(content.insights.length).toBe(9);
-    expect(Object.keys(content.enemies).sort()).toEqual(['brute', 'floor-keeper', 'shield', 'swarmer']);
+    expect(Object.keys(content.enemies).sort()).toEqual(['bopper', 'brute', 'floor-keeper', 'shield', 'swarmer']);
     for (const k of ['battle', 'challenge', 'treasure', 'rest', 'boss']) {
       expect(content.rooms.some((r) => r.kind === k)).toBe(true);
     }

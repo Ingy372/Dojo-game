@@ -58,7 +58,7 @@ const LESSONS = loadLessons(lessonsData);
 import { type PackName, addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { ICON_PACK } from '../art/icons';
-import { auraId, testAura, testSkin, towerPack } from '../art/tiers';
+import { ENEMY_PACKS, auraId, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
@@ -182,6 +182,8 @@ interface EnemyView {
   lastMode: string;
   /** The attack being wound up (its animation plays when it lands). */
   attack: string;
+  /** A disarmed enemy with a weapon is pushing this attack instead (no staff drawn, push-paw animation). */
+  pushing: boolean;
   /** A short flinch when hit, until this time. */
   hitUntil: number;
   /** Calling for help (the boss), until this time. */
@@ -283,7 +285,7 @@ export class GameScene extends Phaser.Scene {
     // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
     const tier = currentTraining().belt.tier;
     const auras = testAura() || new URLSearchParams(window.location.search).has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
-    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...(testSkin() ? [testSkin()!.pack] : [])]);
+    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...new Set(Object.values(ENEMY_PACKS).map((p) => p.pack))]);
   }
 
   create(): void {
@@ -565,6 +567,8 @@ export class GameScene extends Phaser.Scene {
         ? TELEGRAPH_NEARLY_FULL + (1 - TELEGRAPH_NEARLY_FULL) * ((elapsed - fillTicks) / window)
         : TELEGRAPH_NEARLY_FULL * (elapsed / fillTicks);
       v.attack = currentAttack(e).name ?? '';
+      // Disarmed (A5): same wind-up and warning, but the staff is gone and it pushes.
+      v.pushing = !!e.def.weapon && e.disarmed > 0;
       const anim = this.enemyAnim(s, `windup_${v.attack}`, 'windup');
       const frames = s.art.animations[anim].frames;
       s.showFrame(anim, (elapsed / e.windupTotal) * frames);
@@ -580,7 +584,7 @@ export class GameScene extends Phaser.Scene {
       this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
     } else if (e.mode === 'recover') {
       // The attack itself (it lands on its first frame), then catching its breath.
-      const anim = this.enemyAnim(s, v.attack, 'attack');
+      const anim = v.pushing ? this.enemyAnim(s, 'pushpaw', 'attack') : this.enemyAnim(s, v.attack, 'attack');
       if (started) s.play(anim, { restart: true });
       telegraph = s.art.animations[anim].telegraphIntensity?.[s.frame] ?? 0;
     } else if (e.mode === 'stagger') {
@@ -601,6 +605,9 @@ export class GameScene extends Phaser.Scene {
       else s.play('idle');
     }
 
+    if (e.mode !== 'windup' && e.mode !== 'recover') v.pushing = false;
+    // The staff (weapon layer) is hidden while disarmed.
+    if (e.def.weapon) s.setLayer('weapon', !v.pushing && e.disarmed === 0);
     // The warning glow, only while winding up and swinging.
     s.setLayer('telegraph', telegraph > 0.01);
     s.images.get('telegraph')?.setAlpha(Phaser.Math.Clamp(telegraph, 0, 1));
@@ -775,8 +782,8 @@ export class GameScene extends Phaser.Scene {
   private makeEnemy(e: EnemyState): void {
     const r = e.def.radius * TILE;
     const color = Phaser.Display.Color.HexStringToColor(e.def.color).color;
-    const skin = testSkin();
-    const art = (skin && characterArt(this, skin.pack, skin.id)) || characterArt(this, 'enemies-t1', e.def.id)!;
+    const own = ENEMY_PACKS[e.def.id];
+    const art = (own && characterArt(this, own.pack, own.id)) || characterArt(this, 'enemies-t1', e.def.id)!;
     const sprite = new LayeredSprite(this, art);
     sprite.container.addAt(addShadow(this, r * 2.2), 0);
     sprite.setLayer('telegraph', false).setLayerTint('telegraph', TELEGRAPH_TINT);
@@ -809,6 +816,7 @@ export class GameScene extends Phaser.Scene {
       flashUntil: 0,
       lastMode: e.mode,
       attack: '',
+      pushing: false,
       hitUntil: 0,
       callUntil: 0,
       defeatAt: null,

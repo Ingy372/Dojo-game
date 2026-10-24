@@ -464,3 +464,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - **2026-10-24 (C9 wording, #108):** Content Designer wording (PR #115) applied to content/settings/difficulty.json. The Guided offer now uses the #114 wording ("Want more time to COUNTER?", "Try it" / "No thanks"), which settles the Guided/Steady question. The ✓ on the picked difficulty is confirmed. Menu buttons are in normal case; only fight buttons are in caps.
 - **2026-10-24 (C9 wording, #110):** merged P1's C9 update. play-time.json wrap-up, rest and help lines follow C9. The rest card shows all 3 lines.
 - **2026-10-24 (C9 wording, #113):** merged P9's C9 update; run-resume line per C9.
+
+## K12b (2026-10-24)
+- Merged origin/main. Reduced motion now in Settings. Bopper added as data-driven enemy, Yellow belt+, with disarmed push. Tests 218 passed / 1 skipped; typecheck + build clean. Screenshots k12b-*.png.

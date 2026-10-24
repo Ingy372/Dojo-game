@@ -530,3 +530,10 @@ From section 1 of `docs/work-board.md`.
 
 ## C9 wording (PR #115) on P11 (2026-10-24)
 - Resume card line: "You'll start again at room {room}." (the "of {total}" part is dropped). Buttons stay "Keep climbing" / "Rest for now" in normal case.
+
+## K12b — Reduced motion in Settings; Bopper as a real enemy (2026-10-24)
+- Reduced motion toggle moved from Title to the Settings sheet (bottom-left, beside "For grown-ups"); fits 667 and 844 wide.
+- Bopper (`content/enemies/bopper.json`): HP 110, damage 16 (#102), disarmed push 8 (#118) via new `weapon.disarmedPower`. Wobbly 6 skipped.
+- Spawn gating is room-level: new `minBeltTier` on rooms (default 1); `bopper-yard` and `staff-and-shield` require Yellow (tier 2).
+- Bopper drop chance 0.1 (same as shield) — my guess, not a decided number.
+- `?skin=bopper` removed (Bopper is real now); use `?room=bopper-yard` to test.
