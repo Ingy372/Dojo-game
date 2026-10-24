@@ -434,6 +434,9 @@ if E == "padded":       # swings the staff up and back over its shoulder, leanin
     telegraph_action("windup", PW, at["telegraphTicks"])
     PH = P(body=B(dy=-0.2 * W, pitch=22, yaw=24, roll=-10, sw=1.12, sh=0.88), eyes=(1.1, 0.75), arm_l=(20, 40), arm_r=(80, 58))   # full set: a diagonal bonk, so it reads from the front (S) too
     attack_action("attack", PH, at["recoverTicks"], {"note": "padded staff bonk: a big overhead swing down in front (soft foam pad lands first)"})
+    # disarmed (Jay, 2026-10-24): the same pose with no staff, a weak paw push. Rendered without the weapon layer.
+    attack_action("pushpaw", PH, at["recoverTicks"], {"disarmed": True, "layersNotDrawn": ["weapon"],
+                  "note": "push-paw: the disarmed attack. The same pose and timing as attack, with an empty paw (do not draw the weapon layer). Play windup first, with the weapon layer hidden. A weak hit; its power is the game's call"})
 if E == "keeper":
     sl, sw = DATA["attacks"][0], DATA["attacks"][1]
     KS = P(body=B(dy=0.06 * W, pitch=-16, sw=0.92, sh=1.2), eyes=(1.15, 1.3), arm_l=(-30, 150, 1.25), arm_r=(-30, 150, 1.25))

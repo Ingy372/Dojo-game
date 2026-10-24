@@ -18,4 +18,4 @@ python3 tools/make_creature_preview.py --sheets enemy-padded-weapon/sprites --ou
 python3 enemy-padded-weapon/source/make_review.py
 ```
 ## Full set (2026-10-24)
-All 7 animations are rendered: idle, windup, attack, move, hit, stagger and defeat. The name is "Bouncy Bopper" (PR #97) and the numbers come from PR #102. The body was made bigger (W 0.41, H 0.62) and brighter (#323b86), and the S attack is now a diagonal bonk. Defeat poofs into soft sparkles. There is no drop animation; hide the weapon layer for disarmed. See `preview/review-4-before-after-S-attack-and-body.png` (top is before, bottom is after).
+All 7 animations are rendered: idle, windup, attack, move, hit, stagger and defeat. The name is "Bouncy Bopper" (PR #97) and the numbers come from PR #102. The body was made bigger (W 0.41, H 0.62) and brighter (#323b86), and the S attack is now a diagonal bonk. Defeat poofs into soft sparkles. There is no drop animation; hide the weapon layer for disarmed. The disarmed attack is `pushpaw`, rendered with `--anims pushpaw --layers body,glow,telegraph,light`. See `preview/review-4-before-after-S-attack-and-body.png` (top is before, bottom is after).
