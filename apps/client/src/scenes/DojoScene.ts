@@ -275,6 +275,14 @@ export class DojoScene extends Phaser.Scene {
     const name = this.training.displayName.split(' ')[0];
     const chores = choresLeft(this.dojo);
     const steps: Array<() => void> = [];
+    // First return home after the tutorial floor: Sensei's welcome line, once (line-welcome-home, M7-P5).
+    if (this.profile.lastRun?.summary.tutorial) {
+      const welcome = takeLesson('firstHomeReturn', null);
+      if (welcome) {
+        this.profile.lessons = loadSave().lessons;
+        steps.push(() => this.card('Sensei', welcome.screens.map((l) => l.replace('{player}', name)), 'Thanks, Sensei!', next));
+      }
+    }
     if (!this.dojo.welcomed) {
       steps.push(() =>
         this.card('Your Home Dojo', [
@@ -509,8 +517,8 @@ export class DojoScene extends Phaser.Scene {
       // The movement stick isn't used while decorating.
       for (const o of this.controls.objects) (o as Phaser.GameObjects.Arc).setVisible(false);
       // The first time, ask how they like to move decorations.
-      if (!this.moveStyle) this.time.delayedCall(0, () => this.chooseMoveStyle());
-      // Sensei's Lessons (M7-P5): the first time decorating, once the session allows it.
+      // Sensei's Lessons (M7-P5): the Decorating lesson comes right after that choice, on the same visit (Manager call).
+      if (!this.moveStyle) this.time.delayedCall(0, () => this.chooseMoveStyle(() => this.decoratingLesson()));
       else this.decoratingLesson();
     } else {
       this.mode = 'play';
@@ -868,7 +876,8 @@ export class DojoScene extends Phaser.Scene {
       // One line says which difficulty they're on, shown once ever (M7-P1).
       if (!this.profile.difficultyLineShown && this.profile.difficulty) {
         const name = DIFFICULTY_TEXT.choices.find((c) => c.id === this.profile.difficulty)?.name ?? '';
-        this.text(pad, TOP + 6, DIFFICULTY_TEXT.homeLine.replace('{name}', name), 14, '#fff6e0', true).setStroke('#14121c', 5);
+        // Below the second button row (Scroll, Journal, Street Smarts) so nothing covers it.
+        this.text(pad, 46 + 32 + 8, DIFFICULTY_TEXT.homeLine.replace('{name}', name), 14, '#fff6e0', true).setStroke('#14121c', 5);
         this.profile.difficultyLineShown = true;
         writeSave(this.profile);
       }
@@ -1209,7 +1218,8 @@ export class DojoScene extends Phaser.Scene {
   }
 
   /** Asks how the player likes to move decorations: tap the spot, or an arrow pad. */
-  private chooseMoveStyle(): void {
+  /** `then` runs after a style is picked (the first Decorate visit's lesson, M7-P5). */
+  private chooseMoveStyle(then?: () => void): void {
     const back = this.mode;
     this.mode = 'menu';
     const { width, height } = this.scale.gameSize;
@@ -1242,6 +1252,7 @@ export class DojoScene extends Phaser.Scene {
         box.destroy();
         this.mode = back === 'menu' ? 'decorate' : back;
         this.renderUi();
+        then?.();
       });
     });
     box.add(this.add.text(width / 2, top + h + 14, 'You can change this any time with the "Move" button.', { fontFamily: FONT, fontSize: '12px', color: '#b9ad99' }).setOrigin(0.5, 0).setResolution(crisp()));

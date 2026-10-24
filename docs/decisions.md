@@ -614,6 +614,11 @@ Manager calls:
 My calls (not Manager):
 - The profile keeps `lessons: { seen: [{id, day, room}], sessionDays: [] }`. A run started from the dojo, board or "next floor" adds today; test-link runs (?room=, ?twist=, ?elite=, ?named=) don't, same as runsStarted.
 - The tutorial floor teaches on its own guide path (no limits); those lessons are saved as seen so the Scroll lists them.
-- Triggers: twoAttacksAtOnce = a warning starts while another is still filling; firstStepOut = the player was inside the circle when it showed and the swing hit, blocked and countered nobody; firstPerfectUnaided = a Perfect Counter with no guide running; firstInsightChoice = the Insight picker opens; firstDecoration = entering Decorate (after the move-style choice). firstHomeReturn (welcome line) has a key but isn't wired yet.
+- Triggers: twoAttacksAtOnce = a warning starts while another is still filling; firstStepOut = the player was inside the circle when it showed and the swing hit, blocked and countered nobody; firstPerfectUnaided = a Perfect Counter with no guide running; firstInsightChoice = the Insight picker opens; firstDecoration = entering Decorate (after the move-style choice). firstHomeReturn: first return home after the tutorial floor (wired in K17b).
 - The Scroll is a Dojo button (row 2, left of Journal). Tapping a lesson replays it one screen per tap as a Sensei card, ending with its practice line. "Replay the tutorial floor" starts the tutorial floor (same as ?tutorial=1) as a normal run.
 - Scroll names for lessons live in apps/client/src/game/lessons.ts (no new content field).
+
+Follow-up (K17b):
+- Manager call: the Decorating lesson shows right after the move-style choice, on the same first Decorate visit (not the next visit).
+- Manager call: line-welcome-home is wired. It fires (once) on the first return home after the tutorial floor, as a Sensei card before the other welcome cards.
+- The dojo's once-ever difficulty line moves below the second button row (Scroll, Journal, Street Smarts), so nothing covers it at 667 or 844 wide.
