@@ -470,3 +470,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## Decor Tier 1 import (2026-10-24)
 - 27 Tier 1 decorations imported and drawn in the dojo (tinted pieces use belt colour / tan on White). mustTouchWall rule + test. Testing screen has "Try the new decorations". Tests 220 passed / 1 skipped; typecheck + build clean. Screenshots /workspace/decor1-{667,844}-{white,yellow}-{left,right}.png. Next: earning PR.
+
+## Decor earning (2026-10-24)
+- New `packages/sim/src/earning.ts`: class pieces at the dojo (welcome piece, then every 2/3 classes), Journal trophies, keeper statues, folding screen. Surprise pool (tower + random) at S7 rates with 3-copy cap and colour roll. Pieces remember their drop belt. Test runs award nothing (bankRun leak fixed). C11 names. Tests 239 passed / 1 skipped (key rules checked to fail when removed); typecheck + build clean. Screenshots /workspace/earn-{667,844}-{card0,card1,dojo-left,dojo-right}.png.

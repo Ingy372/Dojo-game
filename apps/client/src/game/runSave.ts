@@ -2,7 +2,7 @@
 // doesn't lose the climb. It's cleared when the run ends.
 
 import {
-  addDecorations,
+  bankRunDecorations,
   finishRun,
   recordFloorResult,
   gainXp,
@@ -62,7 +62,11 @@ export function bankRun(
   const summary = summarizeRun(run);
   finishRun(profile, summary);
   recordFloorResult(profile, run.tier, result);
-  addDecorations(homeDojo(profile), summary.decorations);
+  // Surprise pieces keep their colour roll; all remember this floor's belt. One-time pieces
+  // (Journal trophies, keeper statues, the folding screen) are added too. Test runs add nothing.
+  const belt = training.belts[run.tier - 1] ?? training.belt;
+  const earned = bankRunDecorations(profile, homeDojo(profile), CONTENT, summary, { tier: run.tier, color: belt.color });
+  if (profile.lastRun) profile.lastRun.earned = earned;
   // Experience, capped by the real belt (with the Blessing and catch-up bonuses).
   const xp = gainXp(profile, training, runXp(summary));
   if (profile.lastRun) profile.lastRun.xp = xp;

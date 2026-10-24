@@ -24,7 +24,6 @@ import {
   storeItem,
   straightenRack,
   sweepAt,
-  updateRun,
   useCalmMind,
   wipeMat,
   type DojoState,
@@ -254,17 +253,6 @@ describe('Tier 1 decorations (A6)', () => {
 });
 
 describe('Tower decorations and the bow', () => {
-  it('the boss chest always holds a decoration, new kinds first', () => {
-    const run = startRun(content, { seed: 12, dryRuns: 0, firstRoomId: 'keepers-hall', ownedDecorations: { 'stone-lantern': 1 } });
-    const world = createRunWorld(content, run, { maxHealth: 100, power: 10, guard: 0 });
-    world.progress.cleared = true;
-    world.events = [{ kind: 'chestOpened' } as never];
-    const events = updateRun(content, run, world);
-    expect(events.some((e) => e.kind === 'decoration')).toBe(true);
-    expect(run.decorations.length).toBe(1);
-    expect(run.decorations[0]).not.toBe('stone-lantern');
-  });
-
   it('bowing in gives a small Focus head start', () => {
     const run = startRun(content, { seed: 1, dryRuns: 0 });
     const world = createRunWorld(content, run, { maxHealth: 100, power: 10, guard: 0 });

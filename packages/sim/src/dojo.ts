@@ -39,6 +39,11 @@ export interface DecorationDef {
   art?: string;
   /** Only goes where its top row is against the top wall (the first floor row), e.g. the folding screen. */
   mustTouchWall: boolean;
+  /** Trophies: the enemy id whose first defeat gives it, and the belt tier its Journal entry belongs to. */
+  monster?: string;
+  journalTier?: number;
+  /** Keeper statues: given the first time the Floor Keeper is beaten at this belt tier. */
+  keeperFloor?: number;
 }
 
 export interface DojoContent {
@@ -64,7 +69,18 @@ export interface DojoItem {
   crooked: number;
   /** Tinted (random) pieces: 1 = the art's own colour, 2 = the belt colour of the floor it came from. */
   colour?: 1 | 2;
+  /** The belt of the floor (or class) it came from: colour 2 of tinted pieces uses it. */
+  belt?: DropBelt;
 }
+
+/** The belt a piece came from. */
+export interface DropBelt {
+  tier: number;
+  color: string;
+}
+
+/** A newly earned piece: just an id, or with its colour roll and drop belt. */
+export type NewDecoration = string | { id: string; colour?: 1 | 2; belt?: DropBelt };
 
 /**
  * A bit of dust or litter on one floor tile. "leaf" spots are drawn as litter (muddy
@@ -155,6 +171,19 @@ export function loadDojoContent(roomData: unknown, decorationsData: unknown): Do
     };
     if (typeof it.description === 'string') def.description = it.description;
     if (typeof it.art === 'string') def.art = it.art;
+    if (typeof it.monster === 'string') def.monster = it.monster;
+    const tierNum = (k: string) => {
+      const n = it[k];
+      if (n === undefined) return undefined;
+      if (typeof n !== 'number' || !Number.isInteger(n) || n < 1) throw new DojoError(`${where}'s "${k}" must be a whole number from 1`);
+      return n;
+    };
+    const jt = tierNum('journalTier');
+    if (jt !== undefined) def.journalTier = jt;
+    const kf = tierNum('keeperFloor');
+    if (kf !== undefined) def.keeperFloor = kf;
+    if (source === 'trophy' && (!def.monster || def.journalTier === undefined)) throw new DojoError(`${where} is a trophy, so it needs a "monster" and a "journalTier"`);
+    if (source === 'keeper' && def.keeperFloor === undefined) throw new DojoError(`${where} is a keeper statue, so it needs a "keeperFloor"`);
     if (def.mustTouchWall && place !== 'floor') throw new DojoError(`${where} has mustTouchWall, so it must be a floor decoration`);
     if (place === 'wall' && (def.height !== 1 || def.solid || clean)) throw new DojoError(`${where} hangs on the wall, so it must be 1 tall, not solid, and need no cleaning`);
     if (clean === 'mat' && def.solid) throw new DojoError(`${where} is a mat, so it can't be solid`);
@@ -239,8 +268,14 @@ export function loadDojo(data: unknown, content: DojoContent): DojoState | null 
 }
 
 /** Adds newly earned decorations to storage. */
-export function addDecorations(dojo: DojoState, ids: readonly string[]): DojoItem[] {
-  return ids.map((id) => addItem(dojo, id));
+export function addDecorations(dojo: DojoState, pieces: readonly NewDecoration[]): DojoItem[] {
+  return pieces.map((p) => {
+    if (typeof p === 'string') return addItem(dojo, p);
+    const item = addItem(dojo, p.id);
+    if (p.colour) item.colour = p.colour;
+    if (p.belt) item.belt = { ...p.belt };
+    return item;
+  });
 }
 
 /** How many of each decoration the player owns. */

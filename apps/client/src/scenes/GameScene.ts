@@ -1199,7 +1199,7 @@ export class GameScene extends Phaser.Scene {
           this.afterChestBurst(() => this.showLoot(ev.item.name, ev.item.rarity, ev.at));
           break;
         case 'decoration':
-          this.afterChestBurst(() => this.showDecoration(ev.id, ev.at));
+          this.afterChestBurst(() => this.showDecoration(ev.id, ev.at, true));
           break;
         case 'namedDefeated':
           this.namedFreed(ev.id, ev.at);
@@ -1614,17 +1614,17 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  /** A decoration for the Home Dojo came out of the chest. */
-  private showDecoration(id: string, at: Vec2): void {
+  /** A decoration for the Home Dojo: a surprise from a chest or elite (S7), or a sticker. */
+  private showDecoration(id: string, at: Vec2, surprise = false): void {
     const name = decorationDef(CONTENT.dojo, id).name;
     sfx.loot(2);
     this.ring(at, COLORS.gold, 1.4);
-    this.floatText(at, 'For your dojo!', '#ffd166', 16, 1.2);
+    this.floatText(at, surprise ? 'A surprise!' : 'For your dojo!', '#ffd166', 16, 1.2);
     const { width } = this.scale.gameSize;
     const y = 64 + this.toastY * 26;
     this.toastY++;
     const t = this.add
-      .text(width - 16, y, `Decoration: ${name}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffd166', stroke: '#14121c', strokeThickness: 4 })
+      .text(width - 16, y, surprise ? `A surprise! ${name}` : `Decoration: ${name}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffd166', stroke: '#14121c', strokeThickness: 4 })
       .setOrigin(1, 0)
       .setResolution(crisp());
     this.cameras.main.ignore(t);
