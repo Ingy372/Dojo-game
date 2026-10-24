@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-23 by Dojo-ascent Manager.
+Last updated: 2026-10-23 (11 PM) by Dojo-ascent Manager.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -59,7 +59,7 @@ These questions already have answers in the design docs. The bots build on these
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| G1 | **Top fix from Q1: guided first Counter** (Learning proposal 6 in `drafts/learning/proposals-top5.md`). The game slows down and shows the child when to press Counter, the first few times. | the Manager's assignment |
+| G1 | **Done (PR #21, merged Oct 23).** Guided first Counter (Learning proposal 6). Final nudge text is in `drafts/content/text/guided-counter-nudge.json` (PR #23); the Programmer copies it in under K5. | — |
 
 ---
 
@@ -68,7 +68,8 @@ These questions already have answers in the design docs. The bots build on these
 | ID | Task | Waiting on |
 | --- | --- | --- |
 | K1 | **In progress (sent Oct 23).** Check that the game's belt list, kata names and requirement counts match `docs/curriculum.md` (fixtures and content/), and list any differences for Jay. Record section 1 in docs/decisions.md. In docs/GROK_BOTS.md, mark the QA bot active and move the milestone 4 recommendation task from the Learning Designer to the Dojo-Ascent Researcher & Planner. Fix one fact wherever it appears: Sensei's Lessons are built in milestone 7 and finished in milestone 10. Remove the black belt question from the Open questions list only after J6 is answered. Also add Jay's new curriculum text (self-defense #31–35, kick combos 1–7) to the docs, and replace remaining Claude Code references in the docs with the Dojo-Ascent Programmer. Also record Jay's Oct 23 decisions in docs/decisions.md: J5 (cosmetics from gear, in-game and dojo achievements, never bought), J6 (2 years from 1st to 2nd degree) and J7 (Fredoka headings + Andika body). Show Jay the changes before committing. | nothing |
-| K4 | **In progress (Oct 23).** Build S1 #1 (enemy mixes) and #2 (Perfect Counter chain) from `drafts/planning/`. The "longest chain" record is deferred. | nothing |
+| K4 | **Done (PRs #19 and #20, merged Oct 23).** S1 #1 (enemy mixes) and #2 (Perfect Counter chain). The "longest chain" record is deferred. | — |
+| K5 | **In progress (PR #22).** S1 #4 room twists. PR #22 now conflicts with main (after #21 merged) and its build fails: merge main in and fix. Fold in the final text from `drafts/content/text/room-twists.json` (Manager's call: put it in PR #22, not a later PR) and the final guided-Counter nudge from `drafts/content/text/guided-counter-nudge.json`, removing `nudgeStatus`. Keep the 1.6x slide for now; Q4 checks balance after merge. | nothing |
 | K2 | Continue milestone 6 (Story and Street Smarts sample) when the Content Writer's C1 is approved. | C1 |
 | K3 | Run the balance-testing computer player whenever the QA bot or the Systems Designer asks, and send Jay the report. | requests |
 
@@ -80,6 +81,7 @@ These questions already have answers in the design docs. The bots build on these
 | --- | --- | --- |
 | Q1 | **Delivered (PR #17):** `drafts/qa/2026-10-23-q1-combat-report.md`. Headline: a player who never Counters wins 0% of runs on every difficulty. ~~**Full combat test** on the live link: all three difficulties, all three test profiles, every room type and the boss. Report bugs, then a playability report. Add one extra section: "What would make combat more varied and more rewarding?", thinking like a 6-year-old, a 12-year-old and an adult.~~ | — |
 | Q2 | Test character creation and the newly imported art (Batches 4–7): readability on a phone, anything that looks wrong. | nothing |
+| Q4 | After PR #22 merges: check on a phone-sized screen that every twist banner fits (Bell Room is the longest; fallback "Bell Room: Perfect Counters ring bells. Ring 3!"), and report the novice-on-Standard win rate with twists (PR #22 measured 44%, down from 50%). | K5 |
 | Q3 | Ask Jay for a balance run from Dojo-Ascent Programmer (K3), compare it with your own play, and suggest specific number changes. Note: novice players on Standard currently win only 41% of runs. | K3 |
 
 ---
@@ -92,7 +94,7 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | --- | --- | --- |
 **Owner:** Jay assigned S1–S8 to the Dojo-Ascent Researcher & Planner on Oct 23 (the separate Game Systems Designer bot was not set up).
 
-| S1 | **Done (PR #12).** The Programmer is building #1 and #2 (K4). **Combat depth proposal.** Combat is fun but needs more variety and more reward. Review what's built, plus Q1 when it lands. Propose up to 6 changes, ranked by fun per cost. Ideas to weigh: enemy mixes that force different answers, elite enemy modifiers, room twists, Form-switching moments, Perfect Counter chains, combo finishers, risk-and-reward choices between rooms, better hit feedback. Each change must keep the core skill of reading the warning, then answering. | nothing (use Q1 when it arrives) |
+| S1 | **Done (PR #12).** #1 and #2 built (K4); #4 room twists in PR #22 (K5). **Combat depth proposal.** Combat is fun but needs more variety and more reward. Review what's built, plus Q1 when it lands. Propose up to 6 changes, ranked by fun per cost. Ideas to weigh: enemy mixes that force different answers, elite enemy modifiers, room twists, Form-switching moments, Perfect Counter chains, combo finishers, risk-and-reward choices between rooms, better hit feedback. Each change must keep the core skill of reading the warning, then answering. | nothing (use Q1 when it arrives) |
 | S2 | **Item system spec.** Gear slots, rarity, stat ranges inside the power budget, drop sources by tier, breaking duplicates down into materials, and how gear stats and cosmetic looks stay separate. What's in launch and what comes later. | nothing |
 | S3 | **Forms (stances).** One Form per kata in `docs/curriculum.md` (8 known so far): its name, how it plays, and the reason to switch to it. Plus the switching rules (how, when, cooldown) and how Forms stay simple for a 6-year-old. | J3 (kata character lines) |
 | S4 | **Power-ups from real training.** Start with self-defense: give each of #1–30 in `docs/self-defense.md` an in-game effect that matches what the real technique does, using its game category, and follow the rules at the bottom of that file. Techniques in the same category should build on each other (for example, #13, #14 and #24 all kick a weapon away, each a little stronger). Replace the current placeholder powers. Then do the kick combos (after J2) and the katas (after S3). Finally, give a recommendation for each milestone 4 open question (content/abilities/abilities.json, and the PROGRESSION and POWER settings in docs/decisions.md). | self-defense: nothing · kick combos: nothing (J2 done) |
@@ -133,7 +135,7 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| A0 | **In progress (sent Oct 23).** Finish Batch 8 (icons) and Batch 9 (Yellow belt Tower room kit) from `docs/briefs/art-director-batches-5-9.md`. | nothing |
+| A0 | **Samples delivered (PR #10, do not merge yet).** Batch 8 icons and 3 Yellow belt Tower themes (A Sunlit Sandstone, B Bamboo Garden Hall, C Sunrise Lacquer). Full batches follow once a theme is picked. | Jay: theme pick |
 | A1 | **Earned cosmetics:** headbands, hand wraps matching the gear (cloth, leather, tiger stripe), gi trims, and a soft aura. 3 samples first. | nothing (J5 done) |
 | A2 | **Form stances:** a stance idle for Rooted Form and Flowing Form (the two Forms that already exist). Later Forms follow S3. | nothing (later Forms: S3) |
 | A3 | **Badges and trophies:** the bow-question award badges (5/10/20/50/100) and a trophy-wall style for certified trophies versus game trophies. | S6 for the full set |
