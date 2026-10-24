@@ -72,7 +72,7 @@
 - Checked on a phone-sized screen in a test browser: Home, a battle room, the grade, the Insight cards, treasure room and doors, the boss with its helpers, coming home to the summary, the gear screen, and the practice room's Home button.
 
 **Not done / known limits**
-- A run in progress isn't saved if the app is closed.
+- ~~A run in progress isn't saved if the app is closed.~~ Fixed in K11/M7-P11: the run is saved at the start of each room.
 - Real fights haven't been balanced beyond the starting numbers; Jay's playtest decides.
 
 **Next**
@@ -426,3 +426,13 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - A session is time played with no break of 30+ min (content/settings/play-time.json `sessionBreakMinutes`); the clock is in localStorage `dojo-ascent-play-clock` and counts time in the dojo and the tower.
 - Test link: `?playlimit=N` overrides the setting with N minutes.
 - Tests: run.test.ts "play-time limit (M7-P9)". Screenshots: k11-p9-{667,844}-{wrapup,rest,home,settings,playlimit}.png.
+
+## K11 / M7-P11 — Fix open notes
+
+I checked every "Next" and "Not done / known limits" note. Only one is a bug: **a run in progress isn't saved if the app is closed.** The rest are playtests for Jay, later milestones, art, or open decisions.
+
+- **Fixed:** the Tower run is saved to localStorage (`dojo-ascent-run-in-progress`) at the start of every room. It's cleared as soon as the run ends and is banked.
+- **Next time the Home Dojo opens** (after the bow and welcome cards), a card says "Your climb is waiting! Room X of Y." **Keep climbing** restarts that room with the same insights, health, loot and floor. **Rest for now** banks the run like a play-time rest, so nothing found is lost.
+- A save from a room that no longer exists in the content, or a broken save, is dropped quietly.
+- **Limit:** you replay the room you were in. Anything picked up in that room before the app closed isn't kept, because the save is taken at the room's start.
+- **Tests:** `packages/sim/test/runSave.test.ts`. Screenshots: `k11-p11-{667,844}-{resume,resumed,rested}.png`.

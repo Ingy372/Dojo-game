@@ -473,3 +473,7 @@ From section 1 of `docs/work-board.md`.
 - Session = play with no 30-minute break (tunable in content). Open: is 30 min right, and should the reset be daily instead?
 - Grown-up gate is a 2-second press-and-hold, not a math question or PIN. Open: is that enough of a gate?
 - If time is already up when a run starts, the child still gets to play that first room. Open: block new runs instead?
+
+## M7-P11 — Resuming a run after the app closes
+- Saved at each room's start, not mid-fight: a room can't be rebuilt mid-wave, and replaying one room is fair. Open: OK, or should mid-room chest loot be kept too?
+- The choice is offered in the Home Dojo ("Keep climbing" / "Rest for now"). Resting banks the loot, like the play-time limit.
