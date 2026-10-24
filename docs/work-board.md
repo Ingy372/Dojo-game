@@ -45,10 +45,10 @@ These questions already have answers in the design docs. The bots build on these
 
 | ID | What Jay provides | Unblocks |
 | --- | --- | --- |
-| J1 | ~~Self-defense list~~ **Mostly done:** `docs/self-defense.md` (#1–30) and the belt ladder in `docs/curriculum.md`. Jay gave #31–35 on Oct 23 (Programmer adding them under K1); #33's "party flex" needs Jay's confirmation. Still needed: #36–40, the Brown/Black → Black requirements, and the attacks marked "(not stated)". | S4 for #36–40 |
+| J1 | ~~Self-defense list~~ **Mostly done:** `docs/self-defense.md` (#1–30) and the belt ladder in `docs/curriculum.md`. Jay gave #31–35 on Oct 23 (Programmer adding them under K1); **Deferred by Jay (Oct 24), not blocking:** #33's "party flex" wording, #36–40, the Brown/Black → Black requirements, and the attacks marked "(not stated)". Jay will fill these in later. | nothing (build around the gap) |
 | J2 | ~~Kick combo list~~ **Done:** Jay gave combos 1–7 on Oct 23; the Programmer is adding them to the docs under K1. | ~~S4 kick combos~~ (no longer blocked) |
 | J3 | ~~Kata list~~ **Names done** (`docs/curriculum.md`). ~~Spellings~~ done (commit 660c98d). Still needed (in progress): one line on each kata's character. | S3 |
-| J4 | ~~Faith texts~~ **Done:** `docs/faith-and-creed.md`. Still needed: Jay's answers to the questions in its section 6. | L5 can start now; C5 waits on the answers |
+| J4 | ~~Faith texts~~ **Done:** `docs/faith-and-creed.md`. Section 6 answered from Jay's wall photos (Oct 24): KJV text, the full Confidentiality line, and no covenant for Brown/Black → Black. | — |
 | J5 | ~~Confirm cosmetics~~ **Done (Oct 23):** cosmetics come from gear, in-game achievements and dojo achievements, and are never bought. | ~~A1~~ (unblocked) |
 | J6 | ~~Black belt to 2nd degree~~ **Done (Oct 23):** 2 years between 1st and 2nd degree. Code change done in PR #16. | ~~milestone 4~~ (unblocked) |
 | J7 | ~~Fonts~~ **Done (Oct 23, Jay delegated to the Manager):** Fredoka for headings + Andika for body text, because Andika is built for early readers (ages 6+). | ~~menu art~~ (unblocked) |
@@ -122,11 +122,11 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| C1 | **Milestone 6 dialogue merged (PR #9).** The Street Smarts script is still waiting on Jay deciding where it's drafted. **Milestone 6 material:** dialogue for Sensei, Senpai, Kohai, the second instructor and the founder; plus one Street Smarts scenario script for Jay to approve. | Street Smarts script: Jay (where it's drafted) |
+| C1 | **Milestone 6 dialogue merged (PR #9).** **Assigned to the Content Designer (Jay, Oct 24):** draft the Street Smarts script. **Milestone 6 material:** dialogue for Sensei, Senpai, Kohai, the second instructor and the founder; plus one Street Smarts scenario script for Jay to approve. | nothing (Content Designer drafts it) |
 | C2 | Redo `dojo/sensei-bow-questions.json` as recall questions, with Sensei's lines for a correct answer, a wrong answer, and each award. Change the first lesson to "Tap where you want to go, or use the stick." | nothing |
 | C3 | **Lore bible (lore first).** The Tower's history, the shattered light, the Guardian of every belt tier (white to black), and the Relics. Keep it to one page per tier. This becomes the foundation every quest and enemy is built on. | nothing |
 | C4 | **Quest lines.** After C3 is approved: an outline of the main story chapter for each tier, the life-lesson quests (3rd belt), and the manners and culture quests. Outlines first; full scripts after Jay approves. | C3 |
-| C5 | Faith content drafts, in the places L5 proposes, using the exact text in `docs/faith-and-creed.md`. | J4 answers, L5 |
+| C5 | Faith content drafts, in the places L5 proposes, using the exact text in `docs/faith-and-creed.md`. | **Unblocked (Oct 24):** J4 answered (see section 6 of `docs/faith-and-creed.md`). Uses KJV text, and the material is learned through play, not used as Gate locks. | L5 |
 | C6 | Names and text for achievements and items. | S6, S2 |
 | C7 | Redo the technique callouts so each subtitle matches the real technique in `docs/self-defense.md` (for example, #3 is a spinning back fist, not "Sweep"). Kid-safe subtitles only. | S4 |
 
@@ -136,7 +136,7 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| A0 | **Samples delivered (PR #10, do not merge yet).** Batch 8 icons and 3 Yellow belt Tower themes (A Sunlit Sandstone, B Bamboo Garden Hall, C Sunrise Lacquer). Full batches follow once a theme is picked. | Jay: theme pick |
+| A0 | **Samples delivered (PR #10, do not merge yet).** Batch 8 icons and 3 Yellow belt Tower themes (A Sunlit Sandstone, B Bamboo Garden Hall, C Sunrise Lacquer). Full batches follow once a theme is picked. | **Theme chosen (Oct 24): B Bamboo Garden Hall.** It matches the Bamboo Garden decoration set and the bamboo material in `core-design.md`, so the first Tower floor feels like it belongs to the player's Home Dojo. That gives a calm, natural starting step before the bolder themes on later belts. Artist: start the full Yellow belt batches, then the elite aura art. | nothing |
 | A1 | **Earned cosmetics:** headbands, hand wraps matching the gear (cloth, leather, tiger stripe), gi trims, and a soft aura. 3 samples first. | nothing (J5 done) |
 | A2 | **Form stances:** a stance idle for Rooted Form and Flowing Form (the two Forms that already exist). Later Forms follow S3. | nothing (later Forms: S3) |
 | A3 | **Badges and trophies:** the bow-question award badges (5/10/20/50/100) and a trophy-wall style for certified trophies versus game trophies. | S6 for the full set |
