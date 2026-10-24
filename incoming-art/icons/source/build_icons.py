@@ -324,18 +324,20 @@ def _(ic): seal(ic, lambda D: (D.heart(0, -0.04, 0.22, "#e5503f"), D.arc(-0.12, 
 def _(ic): seal(ic, _block)
 SKIN, SKIN_D, SKIN_L, OUT = "#e7b48c", "#a8704a", "#f6d0ae", "#3a2a22"
 def _block(D):
-    F0 = D.frame(0.24, -0.26, 138)               # forearm axis: elbow (low right) -> fist (high left), the rising-block angle
-    F = lambda u, v: F0(u, -v)                    # +v = the top (striking) side of the arm
+    F0 = D.frame(-0.02, -0.03, 138)               # forearm axis: elbow (low right) -> fist (high left), the rising-block angle
+    F = lambda u, v: F0(1.18 * (u - 0.2), -1.18 * v)   # centred + enlarged; +v = the top (striking) side of the arm
     L = lambda pts: [F(u, v) for u, v in pts]
     for u, l in ((0.16, 0.07), (0.26, 0.09), (0.36, 0.07)):                                            # impact lines on the top side
         p0, p1 = F(u, 0.14), F(u + 0.02, 0.14 + l); D.bar(p0[0], p0[1], p1[0], p1[1], 0.034, "#f2a23a")
     D.opoly(L([(0.06, -0.08), (0.34, -0.07), (0.34, 0.07), (0.06, 0.08)]), SKIN, OUT)                 # forearm
     D.poly(L([(0.08, 0.035), (0.32, 0.03), (0.32, 0.055), (0.08, 0.06)]), SKIN_L)                      # light along the top
-    D.opoly(L([(0.31, -0.11), (0.5, -0.11), (0.54, -0.07), (0.54, 0.09), (0.5, 0.125), (0.34, 0.125), (0.31, 0.08)]), SKIN, OUT)  # fist
-    for k in range(4):                                                                                 # 4 knuckles + finger creases
-        u = 0.345 + k * 0.05; x, z = F(u, 0.12); D.disc(x, z, 0.03, OUT); D.disc(x, z, 0.019, SKIN_L)
-        if k < 3: D.stroke(L([(u + 0.025, 0.11), (u + 0.025, 0.02)]), 0.014, OUT, closed=False)
-    D.stroke(L([(0.34, -0.035), (0.49, -0.035), (0.53, 0.0)]), 0.024, SKIN_D, closed=False)           # thumb wrapped across the fingers
+    # fist: a straight-wrist continuation of the forearm axis (age-uke: palm turned out toward the viewer),
+    # knuckle end pointing ALONG the arm, never sideways
+    D.opoly(L([(0.31, -0.095), (0.5, -0.1), (0.54, -0.06), (0.54, 0.06), (0.5, 0.1), (0.31, 0.095)]), SKIN, OUT)
+    for k in range(3):                                                                                 # 4 curled fingers side by side, running along the arm
+        v = -0.05 + k * 0.05; D.stroke(L([(0.4, v), (0.535, v)]), 0.014, OUT, closed=False)
+    D.poly(L([(0.48, -0.09), (0.53, -0.055), (0.53, 0.055), (0.48, 0.09)]), SKIN_L)                    # light on the knuckle end
+    D.opoly(L([(0.355, -0.1), (0.405, -0.1), (0.415, 0.03), (0.39, 0.05), (0.36, 0.03)]), SKIN_D, OUT, 0.02)  # thumb folded across the fingers
     D.opoly(L([(-0.14, -0.13), (0.1, -0.115), (0.1, 0.115), (-0.14, 0.13)]), "#ffffff", OUT)           # gi sleeve
     D.poly(L([(0.04, -0.1), (0.09, -0.1), (0.09, 0.1), (0.04, 0.1)]), "#cfc6b0")                        # cuff band
 @icon("sharp-eyes", "Seal: Sharp Eyes, a wide-open eye (the Perfect Counter window is longer)")
