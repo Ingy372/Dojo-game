@@ -24,11 +24,11 @@ A tall figure of wind and lightning. It shouts the storm louder so no one hears 
 | Relic | What the player reads | Sensei |
 | --- | --- | --- |
 | Calm Feather | It floats still, even in the strongest wind. | Peace can be inside you, even in a storm. |
-| Unsent Letter | "I'm sorry. I broke it. I'm too afraid to come down." | No one is too far to come home. |
+| Unsent Letter | "I saved what I could. Please come help me finish." | No one has to finish alone. |
 | Rainbow Shard | A piece of the great light, shining every color. | After the storm comes a promise. |
 
 ## What the player learns
 
-The storm is the traveler's fear, grown very big. The traveler is at the summit, holding the last of the light.
+The storm still spins at the top. The traveler is there, holding the last of the light.
 
 Next: [Tier 10](10-black.md)
