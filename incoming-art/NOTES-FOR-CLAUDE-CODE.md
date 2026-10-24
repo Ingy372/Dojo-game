@@ -291,7 +291,7 @@ Earlier sample notes: idle, windup and attack, in 8 directions. The frame is 192
 - **Parked [NEW]:** gold-plate trophies for Tier 2+ named monsters are parked until Tier 2 is planned. No art yet.
 
 ## S4c Injured status, `incoming-art/status-injured-s4c/sprites/injured.json` [NEW, SAMPLES, after launch]
-- Overlay sheets for each character (player idle/walk/hit; the 5 enemies idle/move/wind-up), the same frame size and rows as the character. Draw order: `injured-stars-back` → character → `injured-bandage` → `injured-stars-front`, while `injuredTicks > 0`.
+- **Enemies only.** Overlay sheets for each enemy (the 5 enemies idle/move/wind-up), the same frame size and rows as the enemy. The Floor Keeper and Guardians use the 2-star variant (`starCount`). The stars never go above the head-top line. The word belongs to S4c-C1. Draw order: `injured-stars-back` → character → `injured-bandage` → `injured-stars-front`, while `injuredTicks > 0`.
 - During a wind-up the stars fade to 50% over 4 ticks (the bandage stays). Wobble ±3°, 1.6 s, idle/move only.
 - `fx/injured-popup_plate.png` has no text; the game draws "Injured!" in its UI font in `textArea`. `fx/injured-puff_shake-off.png` plays on `injuredEnd`.
 
@@ -308,4 +308,4 @@ Earlier sample notes: idle, windup and attack, in 8 directions. The frame is 192
 9. **[NEW]** A5 Bouncy Bopper: Jay approved the 192 px frame, the lime accent, and hiding the staff to show disarmed (2026-10-24). The full set is delivered. Jay's calls (2026-10-24): disarmed uses a weak **push-paw** attack, and the asset files keep the `padded` names. Still to decide: HP, power and the push-paw's power after the balance run (PR #102), and which seals use it.
 10. **[NEW]** A7: Jay approved the kohai top-knot, the teal tie and `#34303f` as black (2026-10-24). Only the swatch border (Programmer) is still open.
 12. **[UPDATED]** A6 decoration pool: ids and names follow C10; colour 2 on White floors is wood tan `#d2a878`; the folding screen is bonus-only; Tier 2+ gold-plate trophies are parked. Still open: the keeper figures per floor (lion-dog, turtle, crane) and the scroll picture-to-subject pairing (mapped in order; Content Designer to confirm).
-13. **[NEW]** S4c Injured art: is it player, enemies or both (the spec says enemies)? Stars slightly above the head (spec) vs the nothing-above-heads rule; fewer stars on bosses?
+13. **[NEW]** S4c Injured art: enemies only, the stars at head height, and 2 stars for the Keeper and Guardians (decided by Jay). The 'Injured!' wording goes to S4c-C1.

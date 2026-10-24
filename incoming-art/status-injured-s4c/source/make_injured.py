@@ -10,7 +10,6 @@ STAR, STAR2, STAR_OL = (255, 229, 138), (255, 250, 236), (150, 108, 40)         
 BAND, BAND_PAD, BAND_OL, BAND_DOT = (243, 214, 170), (255, 246, 228), (138, 96, 62), (205, 168, 122)
 SS = 4  # supersample
 CHARS = {  # json, animations that can be Injured (idle/chase + wind-up for enemies; player: idle, walk, hit)
-    "player":  ("player-character/sprites/player.json", ["idle", "walk", "hit"]),
     "swarmer": ("enemies-tier1/swarmer/sprites/swarmer.json", ["idle", "move", "windup"]),
     "shield":  ("enemies-tier1/shield/sprites/shield.json", ["idle", "move", "windup"]),
     "brute":   ("enemies-tier1/brute/sprites/brute.json", ["idle", "move", "windup"]),
@@ -57,6 +56,8 @@ def cen(im):
     return (sx / n, sy / n) if n else (w / 2, h / 2)
 DIRX = {"N": 0, "NE": 1, "E": 1, "SE": 1, "S": 0, "SW": -1, "W": -1, "NW": -1}
 FACING_AWAY = {"N", "NE", "NW"}
+STARS = {"keeper": 2}   # bosses: Floor Keeper (and Guardians, by rule) use the 2-star variant
+HEADLINE = {}           # (char, anim, dir, frame) -> head-top y, for the check
 def overlay(char, jpath, anims, meta):
     J = json.load(open(os.path.join(IA, jpath))); fw, fh = J["frameWidth"], J["frameHeight"]; base = os.path.dirname(os.path.join(IA, jpath))
     info = {"frameWidth": fw, "frameHeight": fh, "anchor": J["anchor"], "directions": J["directions"], "animations": {}}
@@ -74,23 +75,27 @@ def overlay(char, jpath, anims, meta):
                 (cx0, cy0), (cx1, cy1) = cen(ref), cen(fr)
                 hx, hy, hw, hh, top = h; hx += cx1 - cx0; hy += cy1 - cy0; top += cy1 - cy0; ox, oy = f * fw, ri * fh
                 # stars: 3 on a flat orbit at the top of the head (centre a little below the silhouette top, so nothing floats above the head)
-                rx, ry = max(13, hw * 0.62), max(4, hw * 0.16); cy = top + hh * 0.18
+                rs = max(4.4, fw / 128 * 5.4); pad = rs * 1.45     # star radius + outline
+                rx, ry = max(13, hw * 0.62), max(3, hw * 0.12); cy = top + pad + ry          # orbit at head height: highest star touches the head-top line, never above
+                HEADLINE[(char, an, dn, f)] = top
                 ph = 2 * math.pi * (f / nf) * (2 if an in ("walk", "move") else 1)  # one turn per loop (two for the short run loops)
-                rs = max(4.4, fw / 128 * 5.4)
-                for k in range(3):
-                    t = ph + k * 2 * math.pi / 3; x = hx + rx * math.cos(t); y = cy + ry * math.sin(t)
+                n = STARS.get(char, 3)
+                for k in range(n):
+                    t = ph + k * 2 * math.pi / n; x = hx + rx * math.cos(t); y = cy + ry * math.sin(t)
+                    x = min(max(x, pad + 1), fw - pad - 1); y = max(y, top + pad)              # inside the frame, below the head-top line
                     front = math.sin(t) > 0; lay = "injured-stars-front" if front else "injured-stars-back"
                     sc = 1.0 if front else 0.8
                     draw_star(dr[lay], ox + x, oy + y, rs * sc, t * 0.5, STAR if k != 1 else STAR2, 255 if front else 215)
                 # bandage sticker on the cheek/forehead, on the side facing the camera
                 # forehead corner, on the side away from the face's centre so it never covers the eyes
                 dx = DIRX[dn]; side = -dx if dx else 1
-                bx = hx + side * 0.24 * hw; by = top + hh * 0.3
+                bx = hx + side * 0.24 * hw; by = top + hh * (0.62 if char == "keeper" else 0.4)
                 draw_bandage(dr["injured-bandage"], ox + bx, oy + by, max(3.4, fw / 128 * 4.0), -20 - side * 15)
         files = {}
         for k, im in sheets.items():
             im = im.resize((fw * nf, fh * 8), Image.LANCZOS); fn = f"{char}_{k}_{an}.png"; im.save(os.path.join(OUT, char, fn)); files[k] = fn
         info["animations"][an] = {"frames": nf, "fps": A["fps"], "sheets": files}
+    info["stars"] = STARS.get(char, 3)
     return info
 def puff():
     """'shake it off' puff: 8 frames, 128x128, soft cream cloud ring + 2 tiny stars popping away, ground point 64,104.96"""
@@ -120,10 +125,24 @@ if __name__ == "__main__":
             "drawOrder": "injured-stars-back -> character layers -> injured-bandage -> injured-stars-front",
             "windupFade": {"rule": "during a wind-up the star layers fade to 50% alpha over the first 4 ticks and come back over 4 ticks after it ends; the bandage stays at 100%", "alpha": 0.5, "fadeTicks": 4},
             "wobble": {"rule": "idle and move/chase only: rotate the whole character draw +-3 deg around its ground point, 1.6 s period (sine); stops during a wind-up (eased over 4 ticks)", "deg": 3, "periodSec": 1.6},
+            "starCount": {"default": 3, "bossVariant": 2, "rule": "Floor Keeper and Guardians (half-strength Injured) use the same art with 2 stars; the keeper sheets here are the 2-star variant, and future Guardians get their sheets from make_injured.py with STARS[<id>] = 2"},
+            "starBounds": "stars orbit at head height: never above the head-top line (top of the idle silhouette, moved with the body each frame) and always inside the frame",
+            "wording": "the word 'Injured!' is owned by S4c-C1 (Content); the plate has no baked text",
             "characters": {}}
     for c, (jp, an) in CHARS.items():
         os.makedirs(os.path.join(OUT, c), exist_ok=True); meta["characters"][c] = overlay(c, jp, an, meta)
     os.makedirs(os.path.join(OUT, "fx"), exist_ok=True); puff()
     meta["fx"] = {"puff": {"file": "fx/injured-puff_shake-off.png", "frames": 8, "fps": 16, "frameSize": [128, 128], "anchor": [64, 104.96], "when": "injuredEnd (or defeat while Injured uses the normal poof)"},
                   "popup": dict(plate(), file="fx/injured-popup_plate.png", word="Injured!", when="once when Injured starts; 0.9 s: pop in 0.12 s (scale 0.6 -> 1.05 -> 1), hold, float up 10 px and fade the last 0.3 s")}
-    json.dump(meta, open(os.path.join(OUT, "injured.json"), "w"), indent=1); print("ok")
+    json.dump(meta, open(os.path.join(OUT, "injured.json"), "w"), indent=1)
+    # check: every star pixel in every frame is at or below the head-top line and inside the frame
+    bad = 0; tot = 0
+    for c, ci in meta["characters"].items():
+        for an, a in ci["animations"].items():
+            for lay in ("injured-stars-back", "injured-stars-front"):
+                im = Image.open(os.path.join(OUT, c, a["sheets"][lay])).split()[3]; fw, fh = ci["frameWidth"], ci["frameHeight"]
+                for ri, dn in enumerate(ci["directions"]):
+                    for f in range(a["frames"]):
+                        bb = im.crop((f * fw, ri * fh, (f + 1) * fw, (ri + 1) * fh)).point(lambda v: 255 if v > 8 else 0).getbbox(); tot += 1
+                        if bb and (bb[1] < HEADLINE[(c, an, dn, f)] - 0.5 or bb[0] < 1 or bb[2] > fw - 1): bad += 1; print("ABOVE/OUT", c, an, lay, dn, f, bb, HEADLINE[(c, an, dn, f)])
+    print("star check:", tot, "frame-layers,", bad, "bad")
