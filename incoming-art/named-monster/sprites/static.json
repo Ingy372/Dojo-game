@@ -1,0 +1,149 @@
+{
+  "note": "M7-N1 named monster SAMPLES. Not wired until Jay OKs. Nothing above heads; plate goes under the feet.",
+  "sprites": {
+    "named-sparkle": {
+      "files": {
+        "front": "named-sparkle_front.png"
+      },
+      "size": [
+        256,
+        256
+      ],
+      "anchorPx": [
+        128,
+        210
+      ],
+      "frames": 8,
+      "fps": 10,
+      "master": true
+    },
+    "named-sparkle-swarmer": {
+      "enemy": "swarmer",
+      "files": {
+        "front": "swarmer/named-sparkle_front.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64.0,
+        104.96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "draw": "after the enemy"
+    },
+    "named-sparkle-shield": {
+      "enemy": "shield",
+      "files": {
+        "front": "shield/named-sparkle_front.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64.0,
+        104.96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "draw": "after the enemy"
+    },
+    "named-sparkle-brute": {
+      "enemy": "brute",
+      "files": {
+        "front": "brute/named-sparkle_front.png"
+      },
+      "size": [
+        208,
+        208
+      ],
+      "anchorPx": [
+        104.0,
+        170.56
+      ],
+      "frames": 8,
+      "fps": 10,
+      "draw": "after the enemy"
+    },
+    "name-plate": {
+      "files": {
+        "plate": "name-plate.png"
+      },
+      "size": [
+        120,
+        30
+      ],
+      "anchorPx": [
+        60.0,
+        0
+      ],
+      "nineSlice": {
+        "left": 18,
+        "right": 18,
+        "top": 8,
+        "bottom": 10
+      },
+      "textArea": [
+        18,
+        6,
+        84,
+        16
+      ],
+      "textColor": "#3a2a22",
+      "note": "BLANK. The game renders the name (Fredoka/Andika). Top-centre sits ~6 px under the enemy's feet. Fades out after 3 s (rule from the proposal)."
+    },
+    "tell-stamp-dust": {
+      "files": {
+        "fx": "tell-stamp-dust.png"
+      },
+      "size": [
+        128,
+        64
+      ],
+      "anchorPx": [
+        64,
+        50
+      ],
+      "frames": 4,
+      "fps": 12,
+      "loop": false,
+      "rough": true,
+      "note": "brute tell: once per stamp at the feet (+ small screen shake by the game)"
+    },
+    "tell-dash-trail": {
+      "files": {
+        "fx": "tell-dash-trail.png"
+      },
+      "size": [
+        64,
+        24
+      ],
+      "frames": 8,
+      "fps": 10,
+      "tile": "repeat along x, line centre y = 12, +x = dash direction",
+      "rough": true,
+      "note": "swarmer tell: along the path it will dash, under enemies and under the red danger circle"
+    },
+    "tell-shield-tap": {
+      "files": {
+        "fx": "tell-shield-tap.png"
+      },
+      "size": [
+        48,
+        48
+      ],
+      "anchorPx": [
+        24,
+        24
+      ],
+      "frames": 3,
+      "fps": 12,
+      "loop": false,
+      "rough": true,
+      "note": "shield tell: once per tap, on the shield (3 taps)"
+    }
+  }
+}
