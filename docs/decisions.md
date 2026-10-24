@@ -704,8 +704,23 @@ K23's four short lines (Title, Create, Guided offer, Street Smarts unlock) were 
 1. **(a) The "freed" banner and "Ouch! The run is over":** the banner moves. Its every-frame placement now treats the big centre message as one more thing to keep off, so if the run ends while Sensei is talking, the banner drops just below "You keep everything you found." The two never overlap, and neither is cut short.
 2. **(b) The floor chest:** the same placement also keeps off the chest once it shows (its tile plus a little above). Doors, the chest and the centre message now go through one list of screen boxes, so there is one rule rather than three.
 
+## Keon spelling (2026-10-24)
+Jay's call, relayed by the Manager: "Keon is the correct spelling." The orange-belt kata is now "Keon", not "Key On", in everything students see: the fixtures' kata requirement names, the class scroll decoration (now "Keon Scroll" / "The Keon form, ready to open the next door.") and docs/curriculum.md (this replaces the 2026-10-19 "Key On" spelling). Ids are unchanged: the requirement id is `orange-kata`, and the decoration id stays `decor-a6-class-scroll-key-on`, because it is stored in saves and is also the sprite name in the generated art atlas. Ids are never shown, so old saves load as before. drafts/content/katas is left to the Content Designer (S3-K2).
+
+## S3-P1 Kata cards on the Abilities tab (2026-10-24)
+Manager calls, following the S3 plan (#161) and decision D1 (names, step counts and arrows only):
+1. **Kata data lives in content/katas/** (one file per kata: id, name, requirement id, Form id or null, and each step's directions). The files are built from the Content Designer's drafts/content/katas (#163) with the school's step text, moves and kiai left out. Adding a kata means adding one file; `parseKata` in packages/sim checks each file when the game loads.
+2. **The card:** each earned kata gets a "Kata" card right after its Form card, showing the kata name, "{n} steps" and each step's number with an arrow (↑ Front, ↓ Back, ← Left, → Right). A step whose direction is still an open question (no `facing` in the data) shows its number with no arrow. Unearned katas show no kata card; their Form card already says what to show Sensei.
+3. **Form links checked:** Basic Form 1 → rooted-form and Basic Form 2 → flowing-form. This matches abilities.json, where the 1st belt's kata unlocks forms[1] (Rooted Form) and the 2nd forms[2] (Flowing Form), so no fix was needed. A test now guards it. Keon and David and Goliath have no Form yet (D3: milestone 10).
 ## K23c Ability pop-up keeps off the treasure door (2026-10-24)
 Manager call: at 667 wide the ability name that pops up after room 1 (e.g. "Ripple Counter") briefly covered the treasure door and its label. The pop-up now uses the same list of protected screen boxes as Sensei's banner (doors, chest, centre message), plus the banner itself and the "Room clear!" line. It moves down below anything it would cover. To make that work, Sensei's "Here is an Insight for you!" banner is now shown just before the pop-up rather than just after it. Text and timing are unchanged.
+
+## S3-P1 merge with main, Manager calls (2026-10-24)
+After #167 and #168 merged, S3-P1 took main in with a normal merge commit. Both sides' doc sections are kept.
+1. **Ids stay as they are:** `orange-kata` and `decor-a6-class-scroll-key-on` are not renamed; only the names players see say "Keon". Old saves load as before.
+2. **docs/GROK_BOTS.md is fixed in #169:** the curriculum list now says "Orange Keon".
+3. **A kata shows only once earned:** the Abilities tab gets a Kata card only for katas the student has; unearned ones show nothing extra.
+4. **content/katas/ is rebuilt from the Content Designer's updated drafts (#168)** for all four katas. Every step now has a direction, so every step shows an arrow; a step with no direction would still show its number alone (tested).
 
 ## M7-P8 Music and Sound (2026-10-24)
 Jay's call, relayed by the Manager: AI-assisted WAFU music is fine ("I don't care if music is made by ai personally."). That answers shortlist question 1; the pick stays The Mountain Temple (Vol.35) and The Long Road (Vol.29) (drafts/planning/M7-P8a-music-decision.md).

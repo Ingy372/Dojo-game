@@ -8,6 +8,7 @@ export * from './world';
 export * from './combat';
 export * from './rng';
 export * from './effects';
+export * from './katas';
 export * from './insight';
 export * from './loot';
 export * from './content';
