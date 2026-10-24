@@ -68,7 +68,10 @@ export class TitleScene extends Phaser.Scene {
     this.input.once(Phaser.Input.Events.POINTER_UP, () => {
       // Phones only allow sound after a touch, so switch it on here.
       sfx.unlock();
-      if (new URLSearchParams(window.location.search).get('room') === 'training') this.scene.start('Game');
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('room') === 'training') this.scene.start('Game');
+      // Test link: ?street=store-separated opens a Street Smarts scenario straight away.
+      else if (params.get('street')) this.scene.start('StreetSmarts', { id: params.get('street') });
       // A new student makes their character first.
       else if (!hasLook()) this.scene.start('Create', { first: true });
       else this.scene.start('Dojo');

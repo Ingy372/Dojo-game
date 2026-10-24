@@ -347,3 +347,19 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 **Next**
 - Jay decides whether the typical player's win rate is OK: it drops from 100% to 93% at the 4th belt, more than the 5-point target.
 - Tether art and a "snap" effect when a guard falls (now plain lines).
+
+## K2: Street Smarts sample, "Separated in a store" (2026-10-24)
+
+**Done**
+- The Street Smarts scene from the approved script (PR #58, J11). The script is copied into `content/street-smarts/store-separated.json`, and the screen text is in `content/street-smarts/ui.json`. None of the words are in code.
+- The rules package walks the script: Next, choices, gentle retries and stars (`packages/sim/src/streetSmarts.ts`). A choice that isn't the best one never shows danger. Sensei asks a question and the same choice comes back.
+- Stars: the best answer on the first try earns 1 star each at "stay", "helper" and "offer", for 3 in all. Telling the worker what's wrong has to happen to go on, but it earns no star. The best score is saved. Street Smarts power stays at 0.
+- The first time, the player picks Mom or Dad. The game remembers the pick, and the story says "{player}" and "Mom" or "Dad".
+- The phone's built-in voice reads each line and its choices aloud. It's on by default for this 6–9 scenario, and the player can switch it off.
+- How to open it: a "Street Smarts" button in the Home Dojo, or the test link `?street=store-separated`.
+- The picture is placeholder art for now: a drawn store aisle with a coloured circle for whoever is talking.
+- 12 new tests. 183 tests pass (1 skipped), typecheck is clean and the game builds. Checked with screenshots at 667x375 and 844x390.
+
+**Next**
+- Street Smarts art (the store, the worker, Sensei, the reunion).
+- Jay plays it on his phone with the sound on.

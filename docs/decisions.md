@@ -427,3 +427,13 @@ From section 1 of `docs/work-board.md`.
 - **Extra decoration drops where the elite falls**, not in the room chest, because battle rooms may have no chest.
 - **Guarding cut comes first** in the damage math (0.67x), so Perfect Counter's stagger and Strike breaking a shield work the same.
 - **Balance (60 runs each, smart play, 4th-belt profile):** sharp 100% → 100%, typical 100% → 93%, novice 45% → 48%, novice Guided 100% → 100%. With every fight room forced to Guarding, room time is 1.06–1.12x (worst single room 1.43x for the novice).
+
+## K2: Street Smarts scene (2026-10-24)
+
+- **Script stays data.** The scene only draws what `currentLine()` returns. The loader checks every link (choice → branch, retry → choice in the same scene, star choices), so a typo fails at load time instead of trapping a player.
+- **Stars follow the script's rule.** `starChoices` lists stay, helper and offer in the content copy. Only the first try at each one counts. Voice is required but earns no star, so the max is 3.
+- **After a good branch**, the story goes on from the line after the choice. A retry branch's last line jumps back to its choice.
+- **5 buttons on the helper choice.** The approved script has 5, one more than the 2–4 in CLAUDE.md rule 15. On phones they're laid out in 2 columns, each at least 44 px tall. The loader allows up to 5.
+- **Read-aloud uses the browser's own speech** (`speechSynthesis`), so no new package. It's on by default when the scenario's age band is 6–9, and the player's on/off choice is remembered.
+- **Profile gets `streetSmarts: { best, grownup }`**, and older saves get a blank default.
+- **Open to every belt for now** (core-design says Street Smarts unlocks at the 2nd belt) so the sample can be tested. Gating comes with the unlock cascade.
