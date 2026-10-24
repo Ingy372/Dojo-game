@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-24 (9 AM) by Dojo-ascent Manager.
+Last updated: 2026-10-24 (9:15 AM) by Dojo-ascent Manager.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -30,7 +30,7 @@ These questions already have answers in the design docs. The bots build on these
 
 | Question | Where it's answered |
 | --- | --- |
-| Will cosmetics exist? | Yes, earned only and never bought, with looks kept separate from stats: core-design §5 "Style separate from stats" and §13 "Character customization". **Jay to confirm.** |
+| Will cosmetics exist? | Yes, earned only and never bought, with looks kept separate from stats: core-design §5 "Style separate from stats" and §13 "Character customization". **Confirmed by Jay (Oct 23, J5):** from gear, in-game achievements and dojo achievements, never bought. |
 | How are decorations earned outside real life? | Tower chests (built), Decoration sets, crafting, Challenge-only decorations: core-design §5, §11, §12. Item S7 turns this into a full list. |
 | Gathering place / community | The dojo town square, in three steps (shared world → live town square → co-op runs): core-design §11. |
 | Achievements | The trophy wall, collections, Bestiary, certified trophies: core-design §5 and §11. Item S6 turns this into a full list. |
@@ -51,6 +51,8 @@ These questions already have answers in the design docs. The bots build on these
 | J4 | ~~Faith texts~~ **Done:** `docs/faith-and-creed.md`. Section 6 answered from Jay's wall photos (Oct 24): KJV text, the full Confidentiality line, and no covenant for Brown/Black → Black. | — |
 | J5 | ~~Confirm cosmetics~~ **Done (Oct 23):** cosmetics come from gear, in-game achievements and dojo achievements, and are never bought. | ~~A1~~ (unblocked) |
 | J6 | ~~Black belt to 2nd degree~~ **Done (Oct 23):** 2 years between 1st and 2nd degree. Code change done in PR #16. | ~~milestone 4~~ (unblocked) |
+| J8 | **Named monster: before or after launch?** Everything else is decided by the Manager (see M7-N1). | M7-N1 |
+| J9 | **Scripture read aloud:** phone text-to-speech, or Jay records the lines himself? Until then, verses show as text only (L5). | spoken verses in L5/C5 |
 | J7 | ~~Fonts~~ **Done (Oct 23, Jay delegated to the Manager):** Fredoka for headings + Andika for body text, because Andika is built for early readers (ages 6+). | ~~menu art~~ (unblocked) |
 
 ---
@@ -60,6 +62,32 @@ These questions already have answers in the design docs. The bots build on these
 | ID | Task | Waiting on |
 | --- | --- | --- |
 | G1 | **Done (PR #21, merged Oct 23).** Guided first Counter (Learning proposal 6). Final nudge text is in `drafts/content/text/guided-counter-nudge.json` (PR #23); the Programmer copies it in under K5. | — |
+
+---
+
+## 3b. Milestone 7 "Playtest ready" (plan: `drafts/planning/next-plan-milestone-7.md`, PR #33)
+
+Start with **M7-P1, M7-P9 and M7-P11**. Full specs are in the plan file under the same P number.
+
+**Manager decisions (Oct 24):** Guided is on by default for ages 6–9 **and** new white belts (0 sign-offs). Play-time limit is a parent setting: off / 15 / 30 / 45 / 60 minutes, default **off**. Music: the Researcher & Planner shortlists 3 free-licence packs (commercial use allowed) and the Manager picks.
+
+| ID | Task | Owner | Waiting on | Done when |
+| --- | --- | --- | --- | --- |
+| M7-P1 | **Start first.** Guided on by default for new profiles aged 6–9 or white belt with 0 sign-offs; never switch a player off a mode they chose. | Programmer | nothing | Youngest fake profile starts on Guided; switching to Standard sticks after reload; an older profile starts on Standard. |
+| M7-P2 | Tutorial floor (first 10 minutes, can't lose). | Programmer | M7-P3 | First Perfect Counter under 2 minutes from "Tap to start"; can't lose by doing nothing; chest always Uncommon or better. |
+| M7-P3 | Tutorial lines for each P2 step. | Content Designer | nothing | Every P2 step has one line in a data file, each under 12 words. |
+| M7-P4 | Cascade of unlocks on first return home. | Programmer | M7-P2 | Profile 2 sees 3 unlocks plus the stripe in order; profile 1 sees the preview; nothing plays twice. |
+| M7-P5 | Sensei's Lessons + Lesson Scroll. | Programmer | M7-P6 | Two sessions in a row show one new lesson each, never two; every seen lesson replays from the Scroll. |
+| M7-P6 | Lesson lines for first-session systems. | Content Designer | nothing | Each P5 lesson has its lines in a data file, one sentence per screen. |
+| M7-P7 | Gradual unlock schedule + Welcome Week. | Programmer | M7-P5 | Yellow-belt profile gets all abilities on day 1 but meets one new system per session; "+1 day" moves it forward. |
+| M7-P8 | Sound and music on every main screen. | Programmer | M7-P8a (music pick) | No main screen without sound; both volume sliders work and are remembered. |
+| M7-P8a | Shortlist 3 free-licence music packs (commercial use allowed); Manager picks one. | Researcher & Planner | nothing | Shortlist in drafts/planning/ with licence links; Manager's pick recorded here. |
+| M7-P9 | **Start first.** Play-time limit parent setting (off/15/30/45/60, default off); finish the room, friendly "Great training today!", go home. | Programmer | nothing | With `?playlimit=1` the run ends after the current room, nothing is lost, the message is friendly. |
+| M7-P10 | Three next goals at session end (game, collection, real-world). | Programmer | M7-P4 | Every profile sees exactly 3 goals; the real-world one names a real next technique. |
+| M7-P11 | **Start first.** Fix the open bug notes in `docs/progress.md` (for example, a run in progress isn't saved if the app closes). | Programmer | nothing | Each fixed note has a test or screenshot in the PR. |
+| M7-P12 | Playtest-readiness check. | QA Tester | M7-P1 to M7-P11 | Report on each fake profile's first 30 minutes on a phone-sized screen: time to first Perfect Counter, screens over one sentence, ways to lose the tutorial, crashes. |
+| M7-P13 | Learning and overwhelm review of P2–P7. | Learning Designer | M7-P2 to M7-P7 drafts | Short pass/change note on overwhelm, ethics and age 6+ reading level. |
+| M7-N1 | **Not started.** Named monster (`drafts/planning/named-monster-proposal.md`). Manager decisions: 5% chance per run, yellow belt and up, gold sparkles only, small Monster Journal. | Programmer | J8 (Jay: before or after launch) | As the proposal's Done-when. |
 
 ---
 
@@ -115,7 +143,7 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | L2 | Update proposal 2 to the recall bow question (section 1, item 1). | nothing |
 | L3 | **Coming-back audit.** Check the five loops against the built game: does a student have a good reason to play a few times a week, without pressure? What's missing at white belt specifically? | nothing |
 | L4 | Review every Dojo-Ascent Researcher & Planner systems proposal (S1–S8) for learning value, overwhelm and ethics. | S1–S8 |
-| L5 | **Faith and creed in the game.** Using `docs/faith-and-creed.md` and the research on spaced recall, propose where the verses, covenants, FAITH DOES life words and the Class Creed appear (for example: the bow, the Gate, the promotion ceremony, Sensei's lines, the Lamp Keeper's story, a FAITH DOES collection) so students learn them by heart without it feeling like a test. The words are never reworded. | nothing |
+| L5 | **Delivered (PR #32, merged Oct 24).** Spoken scripture waits on J9; text only until then. Original task: **Faith and creed in the game.** Using `docs/faith-and-creed.md` and the research on spaced recall, propose where the verses, covenants, FAITH DOES life words and the Class Creed appear (for example: the bow, the Gate, the promotion ceremony, Sensei's lines, the Lamp Keeper's story, a FAITH DOES collection) so students learn them by heart without it feeling like a test. The words are never reworded. | nothing |
 
 ---
 
@@ -127,7 +155,7 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | C2 | Redo `dojo/sensei-bow-questions.json` as recall questions, with Sensei's lines for a correct answer, a wrong answer, and each award. Change the first lesson to "Tap where you want to go, or use the stick." | nothing |
 | C3 | **Lore bible (lore first).** The Tower's history, the shattered light, the Guardian of every belt tier (white to black), and the Relics. Keep it to one page per tier. This becomes the foundation every quest and enemy is built on. | nothing |
 | C4 | **Quest lines.** After C3 is approved: an outline of the main story chapter for each tier, the life-lesson quests (3rd belt), and the manners and culture quests. Outlines first; full scripts after Jay approves. | C3 |
-| C5 | Faith content drafts, in the places L5 proposes, using the exact text in `docs/faith-and-creed.md`. | **Unblocked (Oct 24):** J4 answered (see section 6 of `docs/faith-and-creed.md`). Uses KJV text, and the material is learned through play, not used as Gate locks. | L5 |
+| C5 | **Delivered (PR #31, merged Oct 24).** Verses use the dojo sign wording (Manager call). Original task: Faith content drafts, in the places L5 proposes, using the exact text in `docs/faith-and-creed.md`. | **Unblocked (Oct 24):** J4 answered (see section 6 of `docs/faith-and-creed.md`). Uses KJV text, and the material is learned through play, not used as Gate locks. | L5 |
 | C6 | Names and text for achievements and items. | S6, S2 |
 | C7 | Redo the technique callouts so each subtitle matches the real technique in `docs/self-defense.md` (for example, #3 is a spinning back fist, not "Sweep"). Kid-safe subtitles only. | S4 |
 
