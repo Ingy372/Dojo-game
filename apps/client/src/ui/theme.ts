@@ -1,5 +1,6 @@
 // Shared placeholder colors and text styles (until an art pack is chosen).
 
+import { CONTENT } from '../game/content';
 import type { Grade, InsightFamily, Rarity } from '@dojo/sim';
 
 export const FONT = 'system-ui, sans-serif';
@@ -12,13 +13,8 @@ export const RARITY_COLOR: Record<Rarity, number> = {
   legendary: 0xffb02e,
 };
 
-export const RARITY_NAME: Record<Rarity, string> = {
-  common: 'Common',
-  uncommon: 'Uncommon',
-  rare: 'Rare',
-  epic: 'Epic',
-  legendary: 'Legendary',
-};
+/** The rarity name kids see, from content/loot/gear.json (C7). */
+export const rarityName = (r: Rarity): string => CONTENT.loot.rarityNames[r];
 
 export const FAMILY_COLOR: Record<InsightFamily, number> = {
   rooted: 0x6fb7ff,

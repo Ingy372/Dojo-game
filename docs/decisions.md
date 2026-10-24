@@ -594,3 +594,6 @@ My calls (not Manager):
 - The Insight is given automatically after the tutorial battle (no menu). The chest rarity is raised to at least uncommon.
 - The easy boss is the normal Floor Keeper at 35% health and no summons (a world option, so no new art).
 - `?tutorial=1` test link replays the floor.
+
+## Kid-facing rarity names in content (K16) (2026-10-24)
+- C7 (PR #92): kids see Everyday / Special / Rare / Epic / Legendary. The names are content (`rarityNames` in content/loot/gear.json); every rarity must have one or the game won't load. Ids (`common`, `uncommon`, ...) stay as they are in data, saves and code.

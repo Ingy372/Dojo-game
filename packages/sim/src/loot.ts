@@ -48,6 +48,8 @@ export interface ChestTable {
 }
 
 export interface LootTables {
+  /** The rarity names kids see (C7), by internal id. */
+  rarityNames: Record<Rarity, string>;
   tier: keyof typeof GEAR_CAPS;
   slotStats: Record<'hands' | 'gi', Partial<Record<keyof GearStats, number[]>>>;
   bases: GearBase[];
@@ -127,7 +129,17 @@ export function loadLootTables(gear: unknown, drops: unknown): LootTables {
     if (t.inTimeMinRarity !== undefined) out.inTimeMinRarity = rarityOf(t.inTimeMinRarity, `"chests.${key}.inTimeMinRarity"`);
     return out;
   };
+  const names = g.rarityNames as Record<string, unknown> | undefined;
+  if (!names || typeof names !== 'object') fail('"rarityNames" is missing');
+  const rarityNames = {} as Record<Rarity, string>;
+  for (const r of RARITIES) {
+    const n = names![r];
+    if (typeof n !== 'string' || n.trim() === '') fail(`"rarityNames.${r}" needs a name`);
+    rarityNames[r] = n as string;
+  }
+  for (const k of Object.keys(names!)) if (!RARITIES.includes(k as Rarity)) fail(`"rarityNames.${k}" is not a rarity`);
   return {
+    rarityNames,
     tier,
     slotStats,
     bases,
