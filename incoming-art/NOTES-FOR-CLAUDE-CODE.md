@@ -218,6 +218,21 @@ Drawing order is the `order` field (the Batch 1 layers moved up by one because `
 ## Batch 8: icons, `incoming-art/icons/sprites/static.json` [NEW, full set]
 - 28 icons, `icon-<id>.png`, 128 x 128, frames 1: 9 gear, 9 Insights, 10 Seals; ids exactly as in the brief. Map each to the existing id; no new ids. Second pass (2026-10-24) redrew 8 icons; same ids and files.
 
+### Insight colour key [UPDATED K7-art2]
+Same ids, file names, 128 x 128 size, anchor (64, 64) and static.json. Only the 9 Insight PNGs changed. If the UI tints or labels Insights, use these accents:
+
+| Insight id | accent / glow colour | symbol |
+|---|---|---|
+| `ripple-counter` | sky blue `#4096eb` | a water drop falling into rings |
+| `iron-skin` | slate grey `#6e7c96` | a solid riveted shield |
+| `wind-step` | mint `#3cc896` | a footprint with wind lines |
+| `double-strike` | orange `#ff921e` | two lightning bolts |
+| `quick-hands` | sunny yellow `#fad628` | an open hand with speed lines |
+| `press-the-advantage` | violet `#9660e6` | a double forward chevron |
+| `shield-breaker` | cyan `#1ebace` | a shield cracked in two |
+| `heavy-hands` | brown `#965c32` | a round kettlebell weight |
+| `rally` | lime green `#82cd32` | a flag with a star |
+
 ## Batch 9: Yellow belt Tower kit, `incoming-art/tower-rooms-t2/sprites/static.json` [NEW, full set]
 - Working label **Sunrise Garden** (was "Bamboo Garden Hall"; folder name unchanged; final name is Jay's call). Same sprite ids, layers, anchors and timing as Tier 1 `tower-rooms/` + `boss-door/` (boss door merged into the same static.json), so Tier 2 rooms can load this folder instead.
 - Extra optional decor: `decor-lantern`, `decor-bamboo-pot`, `decor-basin`. Chest is the Tier 1 chest (Jay OK'd). Tower working label: Sunrise Garden (planner pick, drafts/planning/S1-tier2-name-and-guarding-aura.md). `proposals/` is reference only; do not load.
