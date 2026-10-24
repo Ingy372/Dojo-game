@@ -142,6 +142,17 @@ class Draw:
         self.poly(top + bot, pupil); self.poly([(x + (px - x) * 0.9, z + (pz - z) * 0.84) for px, pz in top + bot], white)
         self.disc(x, z, r * 0.38, iris); self.disc(x, z, r * 0.18, pupil); self.disc(x + r * 0.12, z + r * 0.12, r * 0.07, "#ffffff")
     def burst(self, x, z, r, col): self.star(x, z, r, col, pts=8, inner=0.55, rot=0)
+    def stroke(self, pts, w, col, closed=True):
+        for i in range(len(pts) - (0 if closed else 1)):
+            (x0, z0), (x1, z1) = pts[i], pts[(i + 1) % len(pts)]; self.bar(x0, z0, x1, z1, w, col)
+    def opoly(self, pts, col, ink, w=0.035):   # filled shape with a dark outline (outline drawn first, behind)
+        self.stroke(pts, w, ink); self.poly(pts, col)
+    def frame(self, ox, oz, ang):                 # local (u, v) -> (x, z), u along ang
+        a = math.radians(ang); c, sn = math.cos(a), math.sin(a)
+        return lambda u, v: (ox + u * c - v * sn, oz + u * sn + v * c)
+    def spiral(self, x, z, r, w, col, turns=1.6):
+        pts = [(x + math.cos(t) * r * t / (turns * 2 * math.pi), z + math.sin(t) * r * t / (turns * 2 * math.pi)) for t in [0.6 + i * turns * 2 * math.pi / 30 for i in range(31)]]
+        self.stroke(pts, w, col, closed=False)
 
 # ------------------------------------------------------------------ family builders
 INK, INK2 = "#2f5f9e", "#5aa0e6"
@@ -199,7 +210,11 @@ def gi(ic, col, trim, belt, quilt=None, mountain=None):
     D.poly([(-0.36, 0.3), (-0.2, 0.3), (0.06, -0.05), (-0.08, -0.05)], trim)       # left lapel
     D.poly([(0.36, 0.3), (0.2, 0.3), (-0.06, -0.05), (0.08, -0.05)], trim)         # right lapel
     D.poly([(-0.2, 0.3), (0.2, 0.3), (0.0, 0.03)], "#f6efdc" if col != "#f4efe4" else "#e3dccb")   # the V of the collar
-    if mountain: D.poly([(0.12, -0.2), (0.24, -0.04), (0.3, -0.12), (0.36, -0.2)], mountain); D.poly([(0.2, -0.09), (0.24, -0.04), (0.28, -0.09)], "#ffffff")
+    if mountain:   # a round cream chest crest with a big two-peak snowy mountain
+        cx, cz = 0.2, 0.1; D.disc(cx, cz, 0.15, "#2b3f5c"); D.disc(cx, cz, 0.128, "#f6efdc")
+        D.poly([(cx - 0.11, cz - 0.07), (cx - 0.02, cz + 0.08), (cx + 0.03, cz + 0.01), (cx + 0.06, cz + 0.05), (cx + 0.11, cz - 0.07)], mountain)
+        D.poly([(cx - 0.055, cz + 0.025), (cx - 0.02, cz + 0.08), (cx + 0.01, cz + 0.035), (cx - 0.02, cz + 0.045)], "#ffffff")
+        D.poly([(cx + 0.04, cz + 0.025), (cx + 0.06, cz + 0.05), (cx + 0.08, cz + 0.02)], "#ffffff")
     D.bar(-0.38, -0.14, 0.38, -0.14, 0.08, belt)                                   # the tie
     D.poly([(-0.06, -0.12), (-0.14, -0.3), (-0.06, -0.3)], belt); D.poly([(0.0, -0.12), (0.08, -0.32), (0.14, -0.28)], belt)
 def cord(ic, top, col="#d8352a"):
@@ -228,7 +243,7 @@ def _(ic): gi(ic, "#f4efe4", "#e3dccb", "#c9a06a")
 @icon("padded-gi", "gear (gi): Padded Gi, a folded white gi with quilted padding and light blue trim")
 def _(ic): gi(ic, "#f4efe4", "#8cc4ec", "#5aa0e6", quilt="#d6cfbf")
 @icon("mountain-gi", "gear (gi): Mountain Gi, a folded slate-blue gi with a small snowy mountain")
-def _(ic): gi(ic, "#5d7fa8", "#3f5f86", "#c9a06a", mountain="#8fb0d4")
+def _(ic): gi(ic, "#6d8fb8", "#3f5f86", "#c9a06a", mountain="#3f5f86")
 @icon("jade-charm", "gear (charm): Jade Charm, a round green jade disc on a red cord with a tassel")
 def _(ic):
     ob = ic.put("jade", tube((0, 0.04, 0.05), (0, -0.04, 0.05), 0.3, 0.3, segs=40), "#5cc08a"); cut_ring(ic, "jh", ob, Vector((0, 0.1, 0.05)), Vector((0, -0.1, 0.05)), 0.1)
@@ -242,18 +257,20 @@ def _(ic):
         ic.put(f"petal{k}", ellipsoid(p, (0.1, 0.05, sz), rot=(0, a, 0), segs=16, rings=10), col)
     ic.put("heart", ellipsoid(Vector((0, -0.14, -0.12)), (0.07, 0.03, 0.05), segs=12, rings=8), "#ffd36b")
     cord(ic, Vector((0, 0.0, 0.3)))
-@icon("crane-charm", "gear (charm): Crane Charm, a little white paper crane charm with a red-capped head, on a red cord")
+@icon("crane-charm", "gear (charm): Crane Charm, a folded red-pink paper crane (wings up, long neck) on a gold cord")
 def _(ic):
-    W = "#fbf7ee"
-    ic.put("body", solid([Vector((-0.3, 0, -0.1)), Vector((0.0, 0, -0.22)), Vector((0.3, 0, -0.1)), Vector((0.0, 0, 0.0))], 0.05), W, smooth=False)
-    ic.put("wingL", solid([Vector((-0.05, -0.03, -0.06)), Vector((-0.42, -0.03, 0.3)), Vector((-0.18, -0.03, -0.12))], 0.03), "#efe8d8", smooth=False)
-    ic.put("wingR", solid([Vector((0.05, -0.04, -0.06)), Vector((0.36, -0.04, 0.34)), Vector((0.16, -0.04, -0.12))], 0.03), W, smooth=False)
-    ic.put("neck", solid([Vector((0.22, -0.02, -0.12)), Vector((0.42, -0.02, 0.12)), Vector((0.3, -0.02, -0.12))], 0.03), W, smooth=False)
-    ic.put("tail", solid([Vector((-0.22, -0.02, -0.12)), Vector((-0.44, -0.02, 0.02)), Vector((-0.3, -0.02, -0.14))], 0.03), W, smooth=False)
-    ic.put("head", ellipsoid(Vector((0.43, -0.04, 0.13)), (0.04, 0.03, 0.04), segs=12, rings=8), "#d8352a")
-    ic.put("cord", tube((0.0, 0.0, -0.0), (0.0, 0.0, 0.42), 0.018, 0.018, segs=8), "#d8352a")
-    ic.put("loop", ellipsoid(Vector((0, 0, 0.45)), (0.06, 0.02, 0.06), segs=16, rings=8), "#d8352a")
-    tassel(ic, Vector((0, -0.04, -0.26)))
+    W, W2, C = "#f27a7a", "#d85a5a", "#b8474a"     # red-pink folded paper, darker back wing / fold lines
+    S = lambda pts, d: solid([Vector((x, d, z)) for x, z in pts], 0.03)
+    ic.put("wingB", S([(-0.06, -0.04), (-0.26, 0.4), (0.06, 0.08)], 0.03), W2, smooth=False)               # back wing
+    ic.put("tail", S([(-0.14, -0.12), (-0.5, 0.2), (-0.4, 0.24), (-0.04, -0.0)], 0.0), W, smooth=False)    # tail point
+    ic.put("neck", S([(0.06, -0.12), (0.4, 0.3), (0.47, 0.26), (0.14, -0.0)], 0.0), W, smooth=False)       # neck
+    ic.put("head", S([(0.38, 0.28), (0.56, 0.18), (0.47, 0.3)], -0.02), W2, smooth=False)                 # head, beak down
+    ic.put("body", S([(-0.26, -0.06), (0.0, -0.22), (0.26, -0.06), (0.0, 0.05)], -0.03), W, smooth=False) # body diamond
+    ic.put("wingF", S([(-0.1, -0.06), (0.1, 0.48), (0.2, -0.04)], -0.06), "#f79a9a", smooth=False)         # front wing up
+    D = Draw(ic, -0.1, 1.0); D.bar(0.1, 0.42, 0.04, -0.03, 0.014, C); D.bar(-0.22, -0.07, 0.22, -0.07, 0.014, C)  # paper folds
+    ic.put("cord", tube((0.1, -0.06, 0.46), (0.1, -0.06, 0.56), 0.018, 0.018, segs=8), "#e0b04a")
+    ic.put("loop", ellipsoid(Vector((0.1, -0.06, 0.6)), (0.05, 0.02, 0.05), segs=16, rings=8), "#e0b04a")
+    tassel(ic, Vector((0.0, -0.04, -0.26)), col="#e0b04a")
 
 # ------------------------------------------------------------------ Insights (glowing scroll + one picture)
 def _rip(D):
@@ -269,8 +286,9 @@ def _(ic): scroll(ic, lambda D: ([D.bar(-0.3, z, -0.12 - abs(z) * 0.4, z, 0.035,
 def _(ic): scroll(ic, lambda D: (D.burst(-0.1, 0.06, 0.18, "#f2a23a"), D.burst(0.1, -0.06, 0.18, "#e5503f"), D.burst(0.1, -0.06, 0.08, "#ffe48a")))
 @icon("quick-hands", "Insight: Quick Hands, a fist with speed lines")
 def _(ic): scroll(ic, lambda D: ([D.bar(-0.32, z, -0.16, z, 0.032, INK2) for z in (-0.08, 0.02, 0.12)], D.fist(0.06, 0.02, 0.2, "#e7b48c", "#b07a52")))
-@icon("press-the-advantage", "Insight: Press the Advantage, dizzy stars (a staggered enemy) and a red up arrow (more damage)")
-def _(ic): scroll(ic, lambda D: (D.dizzy(-0.08, 0.02, 0.15, "#8a7ab8", "#f2b230"), D.arrow(0.2, -0.18, 0.2, 0.12, 0.05, "#e5503f")))
+@icon("press-the-advantage", "Insight: Press the Advantage, two red chevrons charging at a dizzy target (hit harder while they are staggered)")
+def _(ic): scroll(ic, lambda D: (D.disc(0.14, 0.0, 0.13, "#3b2f63"), D.disc(0.14, 0.0, 0.105, "#b3a6dc"), D.spiral(0.14, 0.0, 0.08, 0.022, "#8a7ab8"),
+                                 [D.stroke([(x, 0.14), (x + 0.1, 0.0), (x, -0.14)], 0.055, "#e5503f", closed=False) for x in (-0.28, -0.14)]))
 @icon("shield-breaker", "Insight: Shield Breaker, a cracked shield")
 def _(ic): scroll(ic, lambda D: (D.shield(0.0, 0.0, 0.24, "#a9bccf", rim="#5d7088"),
                                   D.poly([(0.02, 0.22), (-0.06, 0.08), (0.04, 0.02), (-0.05, -0.12), (0.0, -0.2), (0.09, -0.11), (0.01, 0.0), (0.1, 0.08), (0.06, 0.22)], "#f7eed6")))
@@ -282,22 +300,44 @@ def _(ic): scroll(ic, lambda D: (D.heart(-0.07, 0.0, 0.2, "#e5503f"), D.poly([(-
 
 # ------------------------------------------------------------------ Seals (round medallion + one symbol)
 S_INK = "#2e6f9e"
-@icon("off-balance", "Seal: Off-balance, dizzy stars circling (the attacker stays off-balance longer)")
-def _(ic): seal(ic, lambda D: D.dizzy(0, 0.0, 0.2, "#8a7ab8", "#f2b230"))
-@icon("escape-step", "Seal: Escape Step, a footprint dashing away (a Block recharges Dash)")
-def _(ic): seal(ic, lambda D: ([D.bar(-0.3, z, -0.14 - abs(z) * 0.4, z, 0.035, "#7fb8e0") for z in (-0.1, 0.0, 0.1)], D.foot(0.08, -0.02, 0.24, S_INK)))
-@icon("sweep", "Seal: Sweep, a low sweeping arrow")
-def _(ic): seal(ic, lambda D: (D.arc(0, 0.06, 0.26, 0.06, 200, 340, S_INK), D.head(0.25, -0.03, 75, 0.09, S_INK), D.disc(-0.24, -0.03, 0.04, S_INK)))
+@icon("off-balance", "Seal: Off-balance, a little round fighter tipping over, wobble lines and a dizzy swirl (the attacker stays off-balance longer)")
+def _(ic): seal(ic, _offbal)
+def _offbal(D):
+    F = D.frame(-0.02, -0.21, 62); L = lambda pts: [F(u, v) for u, v in pts]
+    D.poly([(-0.3, -0.25), (0.3, -0.25), (0.3, -0.21), (-0.3, -0.21)], "#c9bfa4")                     # floor
+    for v in (0.1, -0.1):                                                                              # arms flailing
+        p0, p1 = F(0.2, v), F(0.3, v * 2.6); D.bar(p0[0], p0[1], p1[0], p1[1], 0.06, "#3b2f63"); D.bar(p0[0], p0[1], p1[0], p1[1], 0.035, "#8a7ab8")
+    body = L([(0.15 + math.cos(t) * 0.15, math.sin(t) * 0.12) for t in [i * math.pi / 16 for i in range(32)]])
+    D.opoly(body, "#8a7ab8", "#3b2f63")                                                                 # round body, leaning
+    hx, hz = F(0.38, 0.0); D.disc(hx, hz, 0.105, "#3b2f63"); D.disc(hx, hz, 0.08, "#b3a6dc")
+    D.disc(hx - 0.03, hz + 0.01, 0.018, "#3b2f63"); D.disc(hx + 0.03, hz + 0.01, 0.018, "#3b2f63")    # wide eyes
+    D.spiral(hx + 0.02, hz + 0.18, 0.09, 0.025, "#f2b230")
+    D.arc(-0.05, -0.02, 0.3, 0.03, 100, 150, S_INK); D.arc(-0.05, -0.02, 0.22, 0.03, 105, 145, S_INK)  # wobble lines
+@icon("escape-step", "Seal: Escape Step, a footprint hopping back along a curved arrow (a Block recharges Dash)")
+def _(ic): seal(ic, lambda D: (D.foot(0.12, -0.04, 0.22, S_INK), D.arc(-0.06, 0.0, 0.2, 0.045, 60, 200, "#7fb8e0"), D.head(-0.25, -0.06, -95, 0.08, "#7fb8e0")))
+@icon("sweep", "Seal: Sweep, a foot sweeping low along the floor, with a curved arrow")
+def _(ic): seal(ic, lambda D: (D.bar(-0.32, -0.2, 0.32, -0.2, 0.03, "#c9bfa4"), D.arc(0.0, 0.1, 0.24, 0.055, 200, 330, S_INK), D.head(0.21, -0.03, 70, 0.09, S_INK),
+                               D.foot(-0.22, -0.02, 0.16, S_INK)))
 @icon("steady-breath", "Seal: Steady Breath, a heart with soft breath wisps (Perfect Counters restore Health)")
 def _(ic): seal(ic, lambda D: (D.heart(0, -0.04, 0.22, "#e5503f"), D.arc(-0.12, 0.2, 0.08, 0.025, 20, 160, "#7fb8e0"), D.arc(0.12, 0.2, 0.08, 0.025, 20, 160, "#7fb8e0")))
-@icon("strong-block", "Seal: Strong Block, a forearm raised in a rising block")
-def _(ic):
-    seal(ic, None)
-    ic.put("sleeve", tube((0.28, -0.1, -0.24), (-0.05, -0.1, 0.06), 0.11, 0.1, segs=16), "#ffffff")
-    ic.put("forearm", tube((-0.02, -0.1, 0.04), (-0.17, -0.1, 0.17), 0.08, 0.075, segs=16), "#e7b48c")
-    ic.put("fist", ellipsoid(Vector((-0.21, -0.1, 0.21)), (0.1, 0.09, 0.09), rot=(0, 40, 0), segs=16, rings=10), "#e7b48c")
-    D = Draw(ic, -0.06, 1.0)
-    for r in (0.33, 0.27): D.arc(-0.1, 0.05, r, 0.03, 75, 155, S_INK)
+@icon("strong-block", "Seal: Strong Block, a gi-sleeved forearm raised in a rising block, fist closed, a hit bouncing off the top")
+def _(ic): seal(ic, _block)
+SKIN, SKIN_D, SKIN_L, OUT = "#e7b48c", "#a8704a", "#f6d0ae", "#3a2a22"
+def _block(D):
+    F0 = D.frame(0.24, -0.26, 138)               # forearm axis: elbow (low right) -> fist (high left), the rising-block angle
+    F = lambda u, v: F0(u, -v)                    # +v = the top (striking) side of the arm
+    L = lambda pts: [F(u, v) for u, v in pts]
+    for u, l in ((0.16, 0.07), (0.26, 0.09), (0.36, 0.07)):                                            # impact lines on the top side
+        p0, p1 = F(u, 0.14), F(u + 0.02, 0.14 + l); D.bar(p0[0], p0[1], p1[0], p1[1], 0.034, "#f2a23a")
+    D.opoly(L([(0.06, -0.08), (0.34, -0.07), (0.34, 0.07), (0.06, 0.08)]), SKIN, OUT)                 # forearm
+    D.poly(L([(0.08, 0.035), (0.32, 0.03), (0.32, 0.055), (0.08, 0.06)]), SKIN_L)                      # light along the top
+    D.opoly(L([(0.31, -0.11), (0.5, -0.11), (0.54, -0.07), (0.54, 0.09), (0.5, 0.125), (0.34, 0.125), (0.31, 0.08)]), SKIN, OUT)  # fist
+    for k in range(4):                                                                                 # 4 knuckles + finger creases
+        u = 0.345 + k * 0.05; x, z = F(u, 0.12); D.disc(x, z, 0.03, OUT); D.disc(x, z, 0.019, SKIN_L)
+        if k < 3: D.stroke(L([(u + 0.025, 0.11), (u + 0.025, 0.02)]), 0.014, OUT, closed=False)
+    D.stroke(L([(0.34, -0.035), (0.49, -0.035), (0.53, 0.0)]), 0.024, SKIN_D, closed=False)           # thumb wrapped across the fingers
+    D.opoly(L([(-0.14, -0.13), (0.1, -0.115), (0.1, 0.115), (-0.14, 0.13)]), "#ffffff", OUT)           # gi sleeve
+    D.poly(L([(0.04, -0.1), (0.09, -0.1), (0.09, 0.1), (0.04, 0.1)]), "#cfc6b0")                        # cuff band
 @icon("sharp-eyes", "Seal: Sharp Eyes, a wide-open eye (the Perfect Counter window is longer)")
 def _(ic): seal(ic, lambda D: D.eye(0, 0, 0.3, "#ffffff", "#3f9ad0", "#1f2a44"))
 @icon("create-distance", "Seal: Create Distance, two arrows pushing apart")
@@ -306,8 +346,9 @@ def _(ic): seal(ic, lambda D: (D.bar(0, -0.18, 0, 0.18, 0.04, "#7fb8e0"), D.arro
 def _(ic): seal(ic, lambda D: (D.fist(-0.08, 0.04, 0.18, "#e7b48c", "#b07a52"), D.arrow(0.2, 0.14, 0.2, -0.16, 0.05, S_INK)))
 @icon("throw", "Seal: Throw, a big arrow arcing over the top (Perfect Counter hits are stronger)")
 def _(ic): seal(ic, lambda D: (D.arc(0, -0.04, 0.25, 0.06, 10, 170, S_INK), D.head(0.25, -0.06, -90, 0.09, S_INK), D.disc(-0.25, -0.06, 0.045, S_INK), D.burst(0, -0.14, 0.1, "#f2a23a")))
-@icon("follow-through", "Seal: Follow-through, dizzy stars with a hit burst (off-balance enemies take more damage)")
-def _(ic): seal(ic, lambda D: (D.dizzy(-0.04, 0.06, 0.15, "#8a7ab8", "#f2b230"), D.burst(0.12, -0.14, 0.13, "#e5503f")))
+@icon("follow-through", "Seal: Follow-through, a fist that keeps going after the hit: a long swoosh trail through a burst (off-balance enemies take more damage)")
+def _(ic): seal(ic, lambda D: ([D.arc(0.1, -0.55, r, 0.035, 150, 82, S_INK if k == 1 else "#7fb8e0") for k, r in enumerate((0.55, 0.64, 0.73))],
+                                D.burst(-0.06, 0.04, 0.14, "#f2a23a"), D.fist(0.2, 0.08, 0.17, "#e7b48c", "#b07a52")))
 
 for i, (id_, note, fn) in enumerate(ALL):
     ic = Icon("icon-" + id_, i); fn(ic); ic.finish(note)

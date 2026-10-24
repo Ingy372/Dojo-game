@@ -223,7 +223,7 @@ Drawing order is the `order` field (the Batch 1 layers moved up by one because `
 - Extra optional decor: `decor-lantern`, `decor-bamboo-pot`, `decor-basin`. Chest is the Tier 1 chest. `proposals/` is reference only; do not load.
 
 ## S1 #3 elite auras, `incoming-art/elite-auras/` [SAMPLES, waiting for Jay's OK - do not wire yet]
-- Overlay layers `aura-swift`, `aura-guarding` (back + front), badges; draw order back -> enemy -> front -> badge.
+- Overlay layers `aura-swift`, `aura-guarding` (back + front); draw order back -> enemy -> front. No head badges.
 
 ## Open items in one place
 

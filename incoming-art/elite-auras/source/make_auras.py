@@ -6,7 +6,7 @@ Draws soft overlay layers (no Blender needed), 8 frames each, 256 x 256 per fram
 = same frame size/anchor as the keeper; scale the sheet to the enemy's footprint (swarmer/shield 0.5, brute 0.8125).
   aura-<kind>_back.png  : behind the enemy (ground glow + back half of the motif)
   aura-<kind>_front.png : in front of the enemy (front half of the motif)
-  badge-<kind>.png      : 64 x 64 badge, 8 frames, drawn above the enemy's head (bob)
+  (no head badges: removed per Jay, they clutter a busy room)
 Then writes the 3 sample previews into elite-auras/preview/.
 """
 import os, math, json
@@ -48,17 +48,6 @@ def guarding(i):
     d.arc(((AX - R) * SS, (AY - 30) * SS, (AX + R) * SS, (AY + 30) * SS), 0, 180, fill=BLUE + (int(170 + 60 * pulse),), width=w)  # ground ring, front half
     bk = layer(); ImageDraw.Draw(bk).arc(((AX - R) * SS, (AY - 30) * SS, (AX + R) * SS, (AY + 30) * SS), 180, 360, fill=BLUE + (int(120 + 60 * pulse),), width=w)
     back.alpha_composite(down(bk, 0.6)); return back, down(fr, 0.8)
-def badge(kind, i):
-    S = 64; im = Image.new("RGBA", (S * SS, S * SS)); d = ImageDraw.Draw(im); c = S * SS / 2; bob = math.sin(i / N * 2 * math.pi) * 3 * SS
-    col, dk = (GOLD, GOLD_D) if kind == "swift" else (BLUE, BLUE_D)
-    d.ellipse((6 * SS, 6 * SS + bob, 58 * SS, 58 * SS + bob), fill=(255, 255, 255, 235), outline=dk + (255,), width=4 * SS)
-    if kind == "swift":   # double chevron = faster
-        for dx in (-9, 7):
-            x = c + dx * SS; d.line([(x - 6 * SS, c - 12 * SS + bob), (x + 6 * SS, c + bob), (x - 6 * SS, c + 12 * SS + bob)], fill=dk + (255,), width=6 * SS, joint="curve")
-    else:                 # little shield
-        pts = [(c - 13 * SS, c - 14 * SS), (c + 13 * SS, c - 14 * SS), (c + 13 * SS, c + 0 * SS), (c, c + 15 * SS), (c - 13 * SS, c)]
-        d.polygon([(x, y + bob) for x, y in pts], fill=col + (255,), outline=dk + (255,), width=3 * SS)
-    return im.resize((S, S), Image.LANCZOS)
 meta = {"note": "SAMPLES for S1 #3 elite auras. 8 frames, play 10 fps loop. Frame 256x256, ground point anchorPx; scale to the enemy footprint.", "sprites": {}}
 for kind, fn in (("swift", swift), ("guarding", guarding)):
     fr = [fn(i) for i in range(N)]
@@ -66,11 +55,7 @@ for kind, fn in (("swift", swift), ("guarding", guarding)):
         sh = Image.new("RGBA", (F * N, F))
         for i, f in enumerate(fr): sh.alpha_composite(f[li], (i * F, 0))
         sh.save(os.path.join(SP, f"aura-{kind}_{ln}.png"))
-    bs = Image.new("RGBA", (64 * N, 64))
-    for i in range(N): bs.alpha_composite(badge(kind, i), (i * 64, 0))
-    bs.save(os.path.join(SP, f"badge-{kind}.png"))
     meta["sprites"][f"aura-{kind}"] = {"files": {"back": f"aura-{kind}_back.png", "front": f"aura-{kind}_front.png"}, "layers": ["back", "front"], "size": [F, F], "anchorPx": [AX, AY], "frames": N, "fps": 10}
-    meta["sprites"][f"badge-{kind}"] = {"files": {"badge": f"badge-{kind}.png"}, "size": [64, 64], "anchorPx": [32, 58], "frames": N, "fps": 10}
 json.dump(meta, open(os.path.join(SP, "static.json"), "w"), indent=2)
 # ---- previews ----
 def enemy(e, f=0):
@@ -96,7 +81,6 @@ def draw(c, e, kind, x, y, i):
     c.alpha_composite(im, (int(x - ax), int(y - ay)))
     if kind:
         a = sheet(f"aura-{kind}", "front", i, F).resize((int(F * s), int(F * s)), Image.LANCZOS); c.alpha_composite(a, (int(x - AX * s), int(y - AY * s)))
-        top = im.getbbox()[1]; b = sheet(f"badge-{kind}", None, i, 64); c.alpha_composite(b, (int(x - 32), int(y - ay + top - 60)))
 EN = ["swarmer", "shield", "brute", "keeper"]
 def grid(i):
     W, H = 4 * 240, 3 * 280; c = floor(W, H); d = ImageDraw.Draw(c)

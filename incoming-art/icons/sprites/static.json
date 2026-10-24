@@ -247,7 +247,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "gear (charm): Crane Charm, a little white paper crane charm with a red-capped head, on a red cord. 128 x 128, anchor = centre",
+      "note": "gear (charm): Crane Charm, a folded red-pink paper crane (wings up, long neck) on a gold cord. 128 x 128, anchor = centre",
       "frames": 1
     },
     "icon-ripple-counter": {
@@ -409,7 +409,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "Insight: Press the Advantage, dizzy stars (a staggered enemy) and a red up arrow (more damage). 128 x 128, anchor = centre",
+      "note": "Insight: Press the Advantage, two red chevrons charging at a dizzy target (hit harder while they are staggered). 128 x 128, anchor = centre",
       "frames": 1
     },
     "icon-shield-breaker": {
@@ -517,7 +517,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "Seal: Off-balance, dizzy stars circling (the attacker stays off-balance longer). 128 x 128, anchor = centre",
+      "note": "Seal: Off-balance, a little round fighter tipping over, wobble lines and a dizzy swirl (the attacker stays off-balance longer). 128 x 128, anchor = centre",
       "frames": 1
     },
     "icon-escape-step": {
@@ -544,7 +544,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "Seal: Escape Step, a footprint dashing away (a Block recharges Dash). 128 x 128, anchor = centre",
+      "note": "Seal: Escape Step, a footprint hopping back along a curved arrow (a Block recharges Dash). 128 x 128, anchor = centre",
       "frames": 1
     },
     "icon-sweep": {
@@ -571,7 +571,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "Seal: Sweep, a low sweeping arrow. 128 x 128, anchor = centre",
+      "note": "Seal: Sweep, a foot sweeping low along the floor, with a curved arrow. 128 x 128, anchor = centre",
       "frames": 1
     },
     "icon-steady-breath": {
@@ -625,7 +625,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "Seal: Strong Block, a forearm raised in a rising block. 128 x 128, anchor = centre",
+      "note": "Seal: Strong Block, a gi-sleeved forearm raised in a rising block, fist closed, a hit bouncing off the top. 128 x 128, anchor = centre",
       "frames": 1
     },
     "icon-sharp-eyes": {
@@ -760,7 +760,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "Seal: Follow-through, dizzy stars with a hit burst (off-balance enemies take more damage). 128 x 128, anchor = centre",
+      "note": "Seal: Follow-through, a fist that keeps going after the hit: a long swoosh trail through a burst (off-balance enemies take more damage). 128 x 128, anchor = centre",
       "frames": 1
     }
   }

@@ -16,9 +16,9 @@
 - Jay picked B. Warm cream floor stays calm, so the red danger circle, gold star and dark swarmer read clearly; green bamboo makes the tier change obvious at a glance.
 
 **DECIDE (Jay)**
-1. The chest is the Tier 1 chest unchanged (it already fits the warm wood). OK, or re-colour?
-2. The 3 decor pieces are my own additions (not in the brief). Keep, or drop?
-3. Does the Tier 2 Tower need an in-game name? "Bamboo Garden Hall" is only a working label.
+1. Chest: the Tier 1 chest, unchanged. Jay OK'd it (2026-10-24).
+2. Decor (lantern, bamboo pot, water basin): Jay OK'd, kept.
+3. In-game Tower name: Jay will discuss this with the game planner. "Bamboo Garden Hall" stays a working label.
 4. Delete `proposals/` once the theme is final?
 
 **NEXT:** Claude Code wires `sprites/static.json` for Tier 2 rooms (same code path as Tier 1).

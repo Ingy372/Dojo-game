@@ -1,6 +1,6 @@
 # Menu icons (Batch 8) - SAMPLES ONLY
 
-Three sample icons, one per family, before the full batch (Jay's rule: 3 samples, then wait).
+All 28 icons (9 gear, 9 Insights, 10 Seals), 128 x 128, in the approved family styles. Second pass 2026-10-24: strong-block, mountain-gi, crane-charm, off-balance, press-the-advantage, follow-through, sweep and escape-step redrawn. Rebuild: build_icons.py -> render_static.py -> finalize_icons.py -> make_icon_preview.py (see DELIVERY_NOTE.md).
 
 | file | id (existing) | family | what it shows |
 |---|---|---|---|
