@@ -495,6 +495,47 @@
           "json": "incoming-art/home-dojo/sprites/static.json"
         }
       ]
+    },
+    "tower-t2": {
+      "note": "Yellow belt Tower kit (Sunrise Garden). Same sprite ids as tower-t1, plus optional decor.",
+      "sources": [
+        {
+          "id": "tower",
+          "type": "static",
+          "json": "incoming-art/tower-rooms-t2/sprites/static.json"
+        }
+      ]
+    },
+    "icons": {
+      "note": "Batch 8: 28 icons for gear, Insights and Seals. Kept at full size (scale 1) so they stay sharp in menus.",
+      "scale": 1,
+      "sources": [
+        {
+          "id": "icons",
+          "type": "static",
+          "json": "incoming-art/icons/sprites/static.json"
+        }
+      ]
+    },
+    "auras-t1": {
+      "note": "S1 #3 elite auras for Tier 1 enemies (Jay approved). Per-enemy entries only; the 256 masters are reference.",
+      "sources": [
+        {
+          "id": "auras",
+          "type": "static",
+          "json": "incoming-art/elite-auras/sprites/static.json",
+          "only": [
+            "aura-swift-swarmer",
+            "aura-swift-shield",
+            "aura-swift-brute",
+            "aura-swift-keeper",
+            "aura-guarding-swarmer",
+            "aura-guarding-shield",
+            "aura-guarding-brute",
+            "aura-guarding-keeper"
+          ]
+        }
+      ]
     }
   }
 }
