@@ -683,3 +683,18 @@ From the review in PR #151 (drafts/learning/m7-p13-recheck.md). Manager calls:
 Manager calls:
 1. The locked ability card's line "Sign off {X} to unlock (catch-up)" is now "Show Sensei {X} in class to unlock" (e.g. "Show Sensei Self-Defense #4 in class to unlock"). Both this line and the goals card's real-dojo goal use one template, `showSensei()` in packages/sim/src/goals.ts. The "(catch-up)" tag is dropped: it no longer reads well after "to unlock", and the Your Next Step card already says "Catch-up from {belt}".
 2. Abilities cards wrap their description and status lines instead of shrinking them and cutting them off with "…" (Rooted Form, Create Distance). Each card is as tall as its text, and a page holds as many cards as fit. Text unchanged. At 667 wide this gives 6 pages instead of 4 for the yellow-belt fixture.
+
+## M7-P12 playtest fixes (K23) (2026-10-24)
+Manager calls:
+1. **First-floor results card:** after the tutorial floor, Home first shows one simple card: "Floor cleared!", the best room grade, one reward ("You found: {best item}", or a dojo decoration if no item), and Continue. No Sensei popup sits on top. Sensei's welcome, the unlock cascade and the goals come after Continue.
+2. **Treasure mark:** the '$' room chip is now a small chest drawn in code (lid, box, band, lock in gold). No new art files. Rest rooms keep '+'.
+3. **One short sentence each, kept in content data.** Title and Create lines moved out of client code into the new content/settings/screens.json:
+   - Title: "Climb the Tower. Train in the dojo." → "Climb the Tower and train in the dojo."
+   - Create: "Sensei says you're a {belt}.\nMake your character!" → "Sensei says you're a {belt}, so make your character!"
+   - Guided offer (difficulty.json): "You can try Guided. You can change it any time in Settings." → "Try Guided, and change it any time in Settings."
+   - Street Smarts unlock (unlock-schedule.json): "Practice staying safe out in the world. Tap Street Smarts to try it." → "Tap Street Smarts to practice staying safe."
+4. **'-100 health': dropped.** The room-clear line no longer shows health lost. It still says "no damage" on a clean room.
+5. **Sensei banner vs the treasure door:** the banner's every-frame placement now keeps off the whole door (its tile plus two tiles above the name label), not just the label. It moves just below the door when they would overlap.
+6. **'3 COMBO' clears when the fight ends:** no enemies left standing, or the hero is down.
+7. **Named monsters checked by hand** with ?named=old-thumper&room=brute-and-swarm at 667 and 844: the name plate and the "freed" line both show.
+Also: the Home "For your dojo" line now measures its own height, so a two-line list no longer overlaps "Items found".

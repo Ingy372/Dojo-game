@@ -58,7 +58,7 @@ const BEST_NAME: Record<BestKey, string> = {
   longestCombo: 'Longest combo',
   mostSGrades: 'Most S grades',
 };
-const KIND_MARK: Record<string, string> = { treasure: '$', rest: '+' };
+const KIND_MARK: Record<string, string> = { rest: '+' };
 
 type Tab = 'run' | 'gear' | 'abilities' | 'gate';
 const KIND_LABEL = { form: 'Form', strike: 'Strike', seal: 'Technique Seal' } as const;
@@ -83,6 +83,7 @@ export class HomeScene extends Phaser.Scene {
   private titleTaps: number[] = [];
   /** Came here straight from a run, and the next goals haven't been considered yet. */
   private fromRun = false;
+  private firstFloorDone = false;
 
   constructor() {
     super('Home');
@@ -94,6 +95,7 @@ export class HomeScene extends Phaser.Scene {
 
   init(data: HomeSceneData): void {
     this.fromRun = data?.fromRun === true;
+    this.firstFloorDone = false;
   }
 
   create(): void {
@@ -113,6 +115,19 @@ export class HomeScene extends Phaser.Scene {
 
   /** Reads the student's real progress and celebrates anything new since last time. */
   private refresh(): void {
+    // K23: straight back from the tutorial floor, a simple card comes first (grade, one
+    // reward, Continue); Sensei's line, the cascade and the full summary wait until Continue.
+    if (this.fromRun && this.profile.lastRun?.summary.tutorial && !this.firstFloorDone) {
+      this.firstFloorDone = true;
+      this.training = currentTraining();
+      this.render();
+      this.celebrating = true;
+      this.firstFloorCard(() => {
+        this.celebrating = false;
+        this.refresh();
+      });
+      return;
+    }
     this.training = currentTraining();
     const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.forms[0].name);
     // First return home after the tutorial floor: Sensei's welcome line, once, then the
@@ -149,6 +164,39 @@ export class HomeScene extends Phaser.Scene {
       },
       sensei,
     );
+  }
+
+  /** K23: the first floor's results for a 6-year-old: the grade, one reward and Continue. */
+  private firstFloorCard(onDone: () => void): void {
+    const s = this.profile.lastRun!.summary;
+    const { width, height } = this.scale.gameSize;
+    const card = this.add.container(0, 0).setDepth(50);
+    const add = <T extends Phaser.GameObjects.GameObject>(o: T): T => (card.add(o), o);
+    const label = (x: number, y: number, str: string, size: number, color: string, family = FONT) =>
+      add(this.add.text(x, y, str, { fontFamily: family, fontSize: `${size}px`, color, fontStyle: 'bold', align: 'center', wordWrap: { width: 300, useAdvancedWrap: true } }).setOrigin(0.5).setResolution(crisp()));
+    add(this.add.rectangle(0, 0, width, height, 0x000000, 0.7).setOrigin(0).setInteractive());
+    const w = Math.min(340, width - 40);
+    const h = Math.min(280, height - 30);
+    const cx = width / 2;
+    const top = (height - h) / 2;
+    add(this.add.rectangle(cx, height / 2, w, h, 0x221d2e).setStrokeStyle(3, 0xffd166));
+    label(cx, top + 26, 'Floor cleared!', 24, '#ffd166', 'Georgia, serif');
+    const order = ['S', 'A', 'B'] as const;
+    const grade = order.find((g) => s.results.some((r) => r.grade === g));
+    if (grade) label(cx, top + h * 0.36, grade, 64, GRADE_COLOR[grade], 'Georgia, serif');
+    const best = s.items.slice().sort((a, b) => RARITY_ORDER(b) - RARITY_ORDER(a))[0];
+    const deco = [...(s.decorations ?? []), ...(this.profile.lastRun!.earned ?? [])][0];
+    const reward = best ? `You found: ${best.name}` : deco ? `For your dojo: ${decorationDef(CONTENT.dojo, deco).name}` : '';
+    if (reward) label(cx, top + h * 0.6, reward, 17, best ? css(RARITY_COLOR[best.rarity]) : '#ffd166');
+    const bw = 160;
+    const by = top + h - 58;
+    const btn = add(this.add.rectangle(cx - bw / 2, by, bw, 42, 0xd5713a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35));
+    label(cx, by + 21, 'Continue', 19, '#ffffff');
+    btn.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+      sfx.unlock();
+      card.destroy();
+      onDone();
+    });
   }
 
   /** The three next goals (M7-P10), after the run summary and any celebrations, at most once a day. */
@@ -280,6 +328,13 @@ export class HomeScene extends Phaser.Scene {
     // One chip per room: its grade, or a mark for treasure and rest rooms.
     let cx = x;
     for (const r of s.results) {
+      if (r.kind === 'treasure' && !r.grade) {
+        // K23: a small drawn chest (no "$", which read like money).
+        this.ui.add(this.add.rectangle(cx, y, 30, 30, 0x221d2e).setOrigin(0).setStrokeStyle(2, 0xffd166));
+        this.ui.add(chestIcon(this, cx + 15, y + 15, 0xffd166));
+        cx += 36;
+        continue;
+      }
       const label = r.grade ?? KIND_MARK[r.kind] ?? '·';
       const color = r.grade ? GRADE_COLOR[r.grade] : '#b9ad99';
       this.ui.add(this.add.rectangle(cx, y, 30, 30, 0x221d2e).setOrigin(0).setStrokeStyle(2, Phaser.Display.Color.HexStringToColor(color).color));
@@ -299,8 +354,8 @@ export class HomeScene extends Phaser.Scene {
 
     const decos = [...(s.decorations ?? []), ...(last.earned ?? [])];
     if (decos.length > 0) {
-      this.text(x, y, `For your dojo: ${decos.map((id) => decorationDef(CONTENT.dojo, id).name).join(', ')}`, 14, '#ffd166', true, FONT, w);
-      y += 22;
+      const line = this.text(x, y, `For your dojo: ${decos.map((id) => decorationDef(CONTENT.dojo, id).name).join(', ')}`, 14, '#ffd166', true, FONT, w);
+      y += line.height + 5;
     }
     this.text(x, y, `Items found (${s.items.length})`, 15, '#ffd166', true);
     y += 22;
@@ -703,6 +758,16 @@ export class HomeScene extends Phaser.Scene {
       onTap();
     });
   }
+}
+
+/** A tiny treasure chest drawn in code (no art file): lid, box, band and lock. */
+function chestIcon(scene: Phaser.Scene, x: number, y: number, color: number): Phaser.GameObjects.Graphics {
+  const g = scene.add.graphics({ x, y });
+  g.fillStyle(0x8a5a35).fillRoundedRect(-10, -8, 20, 7, { tl: 4, tr: 4, bl: 0, br: 0 });
+  g.fillStyle(0x6b4428).fillRect(-10, -1, 20, 10);
+  g.lineStyle(2, color).strokeRoundedRect(-10, -8, 20, 17, 3).lineBetween(-10, -1, 10, -1);
+  g.fillStyle(color).fillRect(-2, -3, 4, 5);
+  return g;
 }
 
 function RARITY_ORDER(item: GearItem): number {

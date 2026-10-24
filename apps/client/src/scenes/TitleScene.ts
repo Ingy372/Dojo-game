@@ -1,3 +1,4 @@
+import SCREENS from '../../../../content/settings/screens.json';
 import Phaser from 'phaser';
 
 declare const __BUILD_TIME__: string;
@@ -43,7 +44,7 @@ export class TitleScene extends Phaser.Scene {
     this.belt = this.add.rectangle(0, 0, 10, 10, 0xffffff);
 
     this.subtitle = this.add
-      .text(0, 0, 'Climb the Tower. Train in the dojo.', {
+      .text(0, 0, SCREENS.titleLine, {
         fontFamily: 'system-ui, sans-serif',
         color: '#b9ad99',
       })

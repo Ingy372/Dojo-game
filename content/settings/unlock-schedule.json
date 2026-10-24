@@ -5,7 +5,7 @@
       "id": "street-smarts",
       "name": "Street Smarts",
       "minTier": 2,
-      "screens": ["Something new in your dojo: Street Smarts!", "Practice staying safe out in the world. Tap Street Smarts to try it."]
+      "screens": ["Something new in your dojo: Street Smarts!", "Tap Street Smarts to practice staying safe."]
     },
     {
       "id": "journal",
