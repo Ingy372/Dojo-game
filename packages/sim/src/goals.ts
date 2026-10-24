@@ -44,13 +44,18 @@ function collectionGoal(profile: Profile, content: Pick<Content, 'dojo' | 'named
   return 'Find a new piece of gear in a Tower chest.';
 }
 
+/** The one kid-facing wording for "get this requirement signed off" (M7-P13 C5, K22b Manager call). */
+export function showSensei(requirementName: string): string {
+  return `Show Sensei ${requirementName} in class`;
+}
+
 function realWorldGoal(t: TrainingState): string {
   const next = t.path.next;
   if (!next) return NO_NEXT_TECHNIQUE;
   const ability = abilityLabel(t, next.id).split(' (')[0];
-  if (!ability) return `Show Sensei ${next.name} in class.`;
+  if (!ability) return `${showSensei(next.name)}.`;
   // "Technique Seal" alone (its power arrives in a later update) reads better as "a new Technique Seal".
-  return `Show Sensei ${next.name} in class to unlock ${ability.includes(':') ? ability : `a new ${ability}`}.`;
+  return `${showSensei(next.name)} to unlock ${ability.includes(':') ? ability : `a new ${ability}`}.`;
 }
 
 /**

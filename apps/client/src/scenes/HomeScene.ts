@@ -27,6 +27,7 @@ import {
   type Profile,
   type RequirementStatus,
   type TrainingState,
+  showSensei,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
@@ -371,29 +372,52 @@ export class HomeScene extends Phaser.Scene {
         tag: KIND_LABEL[a.kind],
         title: `${name}  ·  ${r.name}`,
         text: a.form?.text ?? a.perk?.text ?? 'Its power arrives in a later update.',
-        status: a.unlocked ? signedLine(r) : `Sign off ${r.name} to unlock${r.catchUp ? ' (catch-up)' : ''}`,
+        status: a.unlocked ? signedLine(r) : `${showSensei(r.name)} to unlock`,
         unlocked: a.unlocked,
         color: a.kind === 'form' ? 0x6fb7ff : a.kind === 'strike' ? 0xff7a45 : 0x5cd6b0,
         icon: a.form?.id ?? a.perk?.id,
       });
     }
 
-    const rowH = 54;
-    const perPage = Math.max(1, Math.floor((h - 34) / rowH));
-    const pages = Math.max(1, Math.ceil(rows.length / perPage));
+    // Descriptions and status lines wrap (K22b), so each card is as tall as its text and a
+    // page holds as many cards as fit.
+    const iconSize = w < 560 ? 32 : 40;
+    const gap = 6;
+    const textW = (row: Row): number => w - (row.icon ? iconSize + 12 : 8) - 8;
+    const measure = (str: string, width: number): number => {
+      const t = this.add.text(0, 0, str, { fontFamily: FONT, fontSize: '11px', wordWrap: { width } });
+      const hh = t.height;
+      t.destroy();
+      return hh;
+    };
+    const heights = rows.map((row) => Math.max(48, 20 + measure(row.text, textW(row)) + measure(row.status, textW(row)) + 6));
+    const avail = h - 34;
+    const pageStarts: number[] = [0];
+    let used = 0;
+    heights.forEach((hh, i) => {
+      if (used > 0 && used + hh > avail) {
+        pageStarts.push(i);
+        used = 0;
+      }
+      used += hh + gap;
+    });
+    const pages = pageStarts.length;
     this.page = Math.min(this.page, pages - 1);
-    rows.slice(this.page * perPage, (this.page + 1) * perPage).forEach((row, i) => {
-      const by = y + i * rowH;
-      this.ui.add(this.add.rectangle(x, by, w, rowH - 6, row.unlocked ? 0x221d2e : 0x18151f).setOrigin(0).setStrokeStyle(2, row.color, row.unlocked ? 0.8 : 0.25));
+    const from = pageStarts[this.page];
+    const to = pageStarts[this.page + 1] ?? rows.length;
+    let by = y;
+    rows.slice(from, to).forEach((row, k) => {
+      const boxH = heights[from + k];
+      this.ui.add(this.add.rectangle(x, by, w, boxH, row.unlocked ? 0x221d2e : 0x18151f).setOrigin(0).setStrokeStyle(2, row.color, row.unlocked ? 0.8 : 0.25));
       const c = row.unlocked ? '#ffffff' : '#6b6478';
-      const iconSize = w < 560 ? 32 : 40;
-      const icon = row.icon ? addIcon(this, row.icon, x + 6 + iconSize / 2, by + (rowH - 6) / 2, iconSize) : null;
+      const icon = row.icon ? addIcon(this, row.icon, x + 6 + iconSize / 2, by + boxH / 2, iconSize) : null;
       if (icon) this.ui.add(icon.setAlpha(row.unlocked ? 1 : 0.35));
       const tx = icon ? x + iconSize + 12 : x + 8;
-      const tw = w - (tx - x) - 8;
+      const tw = textW(row);
       this.oneLine(this.text(tx, by + 4, `${row.unlocked ? '' : '🔒 '}${row.tag}: ${row.title}`, 13, row.unlocked ? css(row.color) : '#8a8296', true), tw, 10);
-      this.oneLine(this.text(tx, by + 20, row.text, 11, c), tw, 9);
-      this.oneLine(this.text(tx, by + 33, row.status, 11, row.unlocked ? '#b9ad99' : '#ffd166'), tw, 9);
+      const desc = this.text(tx, by + 20, row.text, 11, c, false, FONT, tw);
+      this.text(tx, desc.y + desc.height, row.status, 11, row.unlocked ? '#b9ad99' : '#ffd166', false, FONT, tw);
+      by += boxH + gap;
     });
     if (rows.length === 0) this.text(x, y, 'No abilities yet.', 14, '#b9ad99');
     if (pages > 1) {
