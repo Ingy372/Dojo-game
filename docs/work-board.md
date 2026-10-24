@@ -6,7 +6,7 @@ Last updated: 2026-10-23 by Dojo-ascent Manager.
 
 **How it stays current:** Jay marks items done or changes them here. Decisions go into `docs/decisions.md`. If this file and `docs/decisions.md` disagree, `docs/decisions.md` wins.
 
-**Owners:** Jay · Dojo-Ascent Programmer · Game Systems Designer (new bot) · Learning & Engagement Designer · Content Writer · Art Director · QA & Playability Tester · DojoForge (outside this repository).
+**Owners:** Jay · Dojo-Ascent Programmer · Dojo-Ascent Researcher & Planner (drafts/planning/) · Learning & Engagement Designer · Content Writer · Art Director · QA & Playability Tester · DojoForge (outside this repository).
 
 ---
 
@@ -57,7 +57,7 @@ These questions already have answers in the design docs. The bots build on these
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| K1 | **In progress (sent Oct 23).** Check that the game's belt list, kata names and requirement counts match `docs/curriculum.md` (fixtures and content/), and list any differences for Jay. Record section 1 in docs/decisions.md. In docs/GROK_BOTS.md, mark the QA bot active, add the Game Systems Designer as Bot 6, using the instructions in the appendix of this file, and move the milestone 4 recommendation task from the Learning Designer to it. Create drafts/systems/README.md. Fix one fact wherever it appears: Sensei's Lessons are built in milestone 7 and finished in milestone 10. Remove the black belt question from the Open questions list only after J6 is answered. Also add Jay's new curriculum text (self-defense #31–35, kick combos 1–7) to the docs, and replace remaining Claude Code references in the docs with the Dojo-Ascent Programmer. Show Jay the changes before committing. | nothing |
+| K1 | **In progress (sent Oct 23).** Check that the game's belt list, kata names and requirement counts match `docs/curriculum.md` (fixtures and content/), and list any differences for Jay. Record section 1 in docs/decisions.md. In docs/GROK_BOTS.md, mark the QA bot active and move the milestone 4 recommendation task from the Learning Designer to the Dojo-Ascent Researcher & Planner. Fix one fact wherever it appears: Sensei's Lessons are built in milestone 7 and finished in milestone 10. Remove the black belt question from the Open questions list only after J6 is answered. Also add Jay's new curriculum text (self-defense #31–35, kick combos 1–7) to the docs, and replace remaining Claude Code references in the docs with the Dojo-Ascent Programmer. Show Jay the changes before committing. | nothing |
 | K2 | Continue milestone 6 (Story and Street Smarts sample) when the Content Writer's C1 is approved. | C1 |
 | K3 | Run the balance-testing computer player whenever the QA bot or the Systems Designer asks, and send Jay the report. | requests |
 
@@ -75,7 +75,7 @@ These questions already have answers in the design docs. The bots build on these
 
 ## 6. Dojo-Ascent Researcher & Planner (systems design: drafts/planning/)
 
-Every proposal from this bot gets checked twice: by Dojo-Ascent Programmer's balance-testing player for the numbers, and by the Learning Designer (L4) for learning and ethics.
+Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets checked twice: by Dojo-Ascent Programmer's balance-testing player for the numbers, and by the Learning Designer (L4) for learning and ethics.
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
@@ -99,7 +99,7 @@ Every proposal from this bot gets checked twice: by Dojo-Ascent Programmer's bal
 | L1 | ~~Fix your audit: Sensei's Lessons are built in milestone 7, not 10.~~ **Done:** PR #8, merged by Jay. | — |
 | L2 | Update proposal 2 to the recall bow question (section 1, item 1). | nothing |
 | L3 | **Coming-back audit.** Check the five loops against the built game: does a student have a good reason to play a few times a week, without pressure? What's missing at white belt specifically? | nothing |
-| L4 | Review every Game Systems Designer proposal for learning value, overwhelm and ethics. | S1–S8 |
+| L4 | Review every Dojo-Ascent Researcher & Planner systems proposal (S1–S8) for learning value, overwhelm and ethics. | S1–S8 |
 | L5 | **Faith and creed in the game.** Using `docs/faith-and-creed.md` and the research on spaced recall, propose where the verses, covenants, FAITH DOES life words and the Class Creed appear (for example: the bow, the Gate, the promotion ceremony, Sensei's lines, the Lamp Keeper's story, a FAITH DOES collection) so students learn them by heart without it feeling like a test. The words are never reworded. | nothing |
 
 ---
@@ -138,28 +138,6 @@ Every proposal from this bot gets checked twice: by Dojo-Ascent Programmer's bal
 
 ---
 
-## Appendix: Game Systems Designer instructions (Bot 6)
+## Appendix: Systems design
 
-Copy the shared rules from docs/GROK_BOTS.md, plus this section, into the bot's instructions.
-
-```
-Your role: Game Systems Designer. Your folder: drafts/systems/. Your branch: bot-systems.
-
-You design how Dojo Ascent plays: combat depth, Forms (stances), power-ups from real techniques, items and gear, difficulty, achievements, and rewards. You turn ideas into clear rules and starting numbers that Dojo-Ascent Programmer can build and test.
-
-Your work list is in docs/work-board.md, section 6 (items S1-S8). Do them in order and skip any item still waiting on Jay. Put the item ID in every Delivery Note.
-
-How you work:
-- Start from what is built. docs/progress.md and docs/decisions.md describe the real game (timing in ticks, enemy stats, Focus, Counter windows, the power budget). content/ holds the real data files. Never redesign something that already works; improve it.
-- Every proposal includes: the idea in two or three sentences, exactly how it plays (rules and starting numbers), why it is fun, how it fits the power budget (real training stays about two-thirds of a character's strength), what it costs to build (small / medium / large), and how to tell whether it works (what the balance-testing computer player or a playtest should show).
-- Use numbers the computer player can check. Say which number to change and why, for example "brute health 180 to 160, because novices die in Pillar Court".
-- Keep the core skill central: read the warning, then answer. New features add choices, not button-mashing.
-- Build for ages 6 to adult: simple for a 6-year-old to play, with depth that a skilled player discovers.
-- Real techniques decide game effects. A power from a real self-defense technique, kick combo or kata must do in the game what that technique really does to an opponent. Use Jay's descriptions; never guess what a technique is.
-- Point to games that already do it well (Hades, Archero, Soul Knight, Ring Fit Adventure, Pokémon, Animal Crossing and others), and say what to borrow and what to avoid.
-
-Limits:
-- No daily-login rewards, streaks that punish a missed day, fear of missing out, random paid rewards, or anything for sale.
-- Rewards from play never outweigh real training, and the Gate opens only with real promotions.
-- The Learning & Engagement Designer reviews every proposal, and Jay approves it in his Claude chat before Dojo-Ascent Programmer builds anything.
-```
+The systems design work (S1–S8) moved to the Dojo-Ascent Researcher & Planner (drafts/planning/) on Oct 23; the separate Bot 6 instructions are retired.
