@@ -258,5 +258,7 @@ describe('journal kinds', () => {
     expect(kinds.map((k) => k.monster)).toEqual(['swarmer', 'shield', 'brute', 'floor-keeper', 'bopper']);
     expect(kinds.filter((k) => k.met).map((k) => k.monster)).toEqual(['brute']);
     expect(kinds[2].trophy.name).toBe('Gentle Brute Trophy');
+    // Met cards show the plain enemy name (Manager call).
+    expect(kinds.map((k) => content.enemies[k.monster].shortName)).toEqual(['Swarmer', 'Shield Guard', 'Brute', 'Floor Keeper', 'Bopper']);
   });
 });

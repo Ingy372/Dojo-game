@@ -476,5 +476,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## Journal kinds (2026-10-24)
 - The Monster Journal now has pages for the monster kinds, with ‹ › page-turn buttons. Tests 240 passed / 1 skipped; typecheck and build pass. Screenshots: /workspace/jkinds-{667,844}-p{0,1,2}.png.
+- Merged main (#134). Met cards now show the plain enemy name (`shortName` in enemy content). Tests 240 passed / 1 skipped; typecheck and build pass. Screenshots: /workspace/jkinds2-{667,844}-p{1,2}.png. A8 silhouettes for Floor Keeper and Bopper are pending.
+
 ## Rest refresh (2026-10-24)
 - Fixed: pieces banked by "Rest for now" in the dojo now show at once. Tests 239 passed / 1 skipped; typecheck and build pass. Screenshots: /workspace/rest-{before,after}-{667,844}-storage.png (before: 1 stored, after: 4).

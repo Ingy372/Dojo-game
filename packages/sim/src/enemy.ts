@@ -51,6 +51,8 @@ export interface EnemyWeaponDef {
 export interface EnemyDef {
   id: string;
   name: string;
+  /** Short plain name for small spaces like Journal cards; falls back to name. */
+  shortName: string;
   maxHealth: number;
   power: number;
   guard: number;
@@ -129,6 +131,9 @@ export function loadEnemy(data: unknown): EnemyDef {
   if (typeof raw.name !== 'string' || raw.name.length === 0) {
     throw new EnemyError(id, '"name" must be a non-empty text');
   }
+  if (raw.shortName !== undefined && (typeof raw.shortName !== 'string' || raw.shortName.length === 0)) {
+    throw new EnemyError(id, '"shortName" must be a non-empty text when given');
+  }
   const guard = nonNegative(raw, 'guard', id);
   const boss = raw.boss === true;
   const radius = positiveNumber(raw, 'radius', id);
@@ -187,6 +192,7 @@ export function loadEnemy(data: unknown): EnemyDef {
   return {
     id,
     name: raw.name,
+    shortName: typeof raw.shortName === 'string' ? raw.shortName : raw.name,
     maxHealth: positiveNumber(raw, 'maxHealth', id),
     power: positiveNumber(raw, 'power', id),
     guard,

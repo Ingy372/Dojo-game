@@ -148,7 +148,7 @@ export function openMonsterJournal(scene: Phaser.Scene, journal: Record<string, 
       }
       if (kd.met) {
         const [nx, ny, nw] = inCard(cx, cy, [138, 14, 304, 40]);
-        cards.add(text(nx, ny, def.name, 11, '#3a2a22', true, nw));
+        cards.add(text(nx, ny, CONTENT.enemies[kd.monster]?.shortName ?? def.name, 11, '#3a2a22', true, nw));
         fact(cx, cy, def.description ?? '', '#3a2a22', false);
         const [sx, sy, sw, sh] = inCard(cx, cy, [250, 74, 304, 128]);
         cards.add(addStatic(scene, NAMED_PACK, 'journal-stamp', sx + sw / 2, sy + sh / 2));
