@@ -45,7 +45,7 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. Plan only; no game code or
   1. "Tougher monsters. Your timing has to be sharp!"
   2. "Earn Challenge medals and the silver gi trim." That's S7 source D, S6 `ach.tower.challenge.<n>` and S10 `look.trim.silver`.
   3. "Gear can be a little stronger." Challenge reaches 100% of the cap, Standard ~90% (S2).
-- **Drop "better loot odds."** Challenge chests already give 3 items and uncommon or better when cleared in time (`drops.json`). Changing the rarity odds isn't needed.
+- **Drop "better loot odds."** (Manager OK'd, Oct 24; removed from `docs/core-design.md` §12 in this PR.) Challenge chests already give 3 items and uncommon or better when cleared in time (`drops.json`). Changing the rarity odds isn't needed.
 - **Keep "rare materials"** off the kid screen until crafting exists.
 - **Keep the rule:** Challenge is never needed to progress. Belts, sign-offs and every real-training look never need Challenge.
 - **Faster Mastery** stays as written. It's a parent-facing detail, not kid copy (guess).
@@ -56,19 +56,15 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. Plan only; no game code or
 
 **Proposal (no automatic switching without a choice):**
 
-1. **Starting setting** comes from the parent setup age band (guess):
-   - age 6–7 starts on **Guided**
-   - age 8+ starts on **Standard**
-
-   The parent can change it any time in the parent settings screen.
-2. **Sensei's offer:** after **2 losses on the same floor** (total, not in a row and not timed; guess), Sensei offers:
+1. **Starting setting (Manager call, Oct 24):** everyone starts on **Standard**. There is no age-band question, because we have no student data to base it on. A parent can pick **Steady** (Guided) any time in the parent settings screen.
+2. **Sensei's offer (Manager OK'd, Oct 24):** after **2 losses on the same floor** (total, not in a row and not timed), Sensei kindly offers Steady:
 
    > "Want the monsters to wait a bit longer before they attack? You can change it back any time."
 
    - Buttons: "Yes, please" and "No thanks". They're the same size and colour, with no default.
    - The offer comes once per floor, at most one offer per session, and never during a run.
    - Saying no is remembered for that floor.
-3. **No labels that shame.** On the kid screen the settings are **"Steady"** (Guided), **"Standard"** and **"Challenge"** (guess, C7 or the Content Writer to name). Nothing says "easy" or "baby". No badge shows the setting to visitors.
+3. **No labels that shame.** On the kid screen the settings are **"Steady"** (Guided), **"Standard"** and **"Challenge"** (Manager OK'd "Steady", Oct 24). The code ID stays `guided`. Nothing says "easy" or "baby". No badge shows the setting to visitors.
 4. **Moving up:** after 3 floor clears on Guided (guess), Sensei may say once: "You're getting quick! Want to try Standard? You can always come back." It's never automatic.
 5. **Parent lock:** the parent can turn the offers off.
 
@@ -98,8 +94,8 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. Plan only; no game code or
   - "No thanks" means it never shows again on that floor
   - nothing shows during a run
   - the parent lock hides it
-- An age 6–7 profile starts on Guided. Changing the setting never changes loot or XP (test against `rewards.ts` and chest results).
-- No kid-facing text says "easy" (word check). Visitors can't see the setting.
+- A new profile starts on Standard, and a parent can switch it to Steady in settings. Changing the setting never changes loot or XP (test against `rewards.ts` and chest results).
+- No kid-facing text says "easy" or "Guided"; it says "Steady" (word check). Visitors can't see the setting.
 - **Endless Ascent (when built):**
   - the best floor only goes up
   - trophies at every 10 floors
@@ -109,16 +105,20 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. Plan only; no game code or
 
 ## Scope flags
 
-- A new parent setup field: the age band (asked as a range, not a birthday; guess). Ties into parent settings.
+- No age-band field (Manager, Oct 24). The parent settings screen needs the difficulty choice.
 - New saved fields: the Guided-offer state per floor, and `endlessBest`.
-- core-design §12 wording edits ("better loot odds", "rare materials") are for the Manager to approve. I didn't edit docs.
+- core-design §12: "better loot odds" is removed in this PR (Manager OK'd). "Rare crafting materials" now says "once crafting exists".
 - The Endless Ascent is post-launch. Only its IDs and rules are fixed here.
 - The Artist draws the endless trophy plate and maybe 1 aura tint.
 
-## Decisions needed
+## Decisions (answered Oct 24)
 
-1. Remove "better loot odds" from Challenge?
-2. Should age 6–7 start on Guided, and should we add an age-band question?
-3. The offer trigger: is "2 losses on the same floor" OK?
-4. Rename Guided to "Steady" on the kid screen?
-5. Endless rewards: trophies only, plus 1 aura at floor 50?
+All five were answered by the Manager on Oct 24:
+
+1. Remove "better loot odds": **yes** (done in core-design §12).
+2. Age band: **no question**. Everyone starts on Standard; a parent can pick Steady.
+3. Offer after 2 losses on the same floor: **yes**, said kindly.
+4. "Steady" on the kid screen: **yes**.
+5. Endless rewards (trophies, plus 1 aura at floor 50): **OK**.
+
+Still open: point 4 under §2, "Moving up" after 3 Steady clears (guess).

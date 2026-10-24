@@ -45,7 +45,7 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. Plan only; no game code or
 
 | ID | Threshold | Reward | Launch? |
 | --- | --- | --- | --- |
-| `ach.bow.correct.<n>` (5, 10, 20, 50, 100) | Correct answers, all-time | 5: D (small scroll), 10: GT, 20: C gi trim, 50: T, 100: T + GT | Yes |
+| `ach.bow.correct.<n>` (5, 10, 20, 50, 100) | Correct answers, all-time | 5: D (small scroll), 10: GT, 20: C gi trim, 50: D (scroll shelf), 100: T + GT (matches C2) | Yes |
 
 Wrong answers never count against you. At most one question a day already applies, and missing a day changes nothing.
 
@@ -95,13 +95,13 @@ No achievements for visitor bows (that would make it a popularity contest, `core
 | Category | Achievements | With a title | Certified |
 | --- | --- | --- | --- |
 | Dojo | 9 + 4 + 6 + 5 + 5 + 4 + 5 + 1 template = **39** | 2 + 3 + 2 + 1 + 1 = **9** | 39 (all real) |
-| Sensei's Questions | **5** | 2 | 0 |
+| Sensei's Questions | **5** | 1 (only 100; 50 is a decoration, per C2) | 0 |
 | Tower | 10 + 5 + 5 + 3 + 1 + 3 + 3 = **30** | 10 + 1 + 1 + 1 = **13** | 0 |
 | Monster Journal | 3 + 4 now (one more per new enemy) = **7+** | 4+ | 0 |
 | Home Dojo | **6** | 1 | 0 |
 | Street Smarts | 2–3 locations + 3 = **5–6** | 2–3 | 0 |
 | Real-life quests | **3** (post-launch) | 1 | 0 |
-| **Total** | **~95** (launch ~92) | **~32** | 39 |
+| **Total** | **~95** (launch ~92) | **~31** | 39 |
 
 ## For C6: text slots
 

@@ -588,7 +588,7 @@ Why choose Challenge, beyond the challenge itself:
 - **Better gear:** Standard gear reaches about 90% of the tier's gear cap; Challenge gear can reach 100%. A small edge, never needed to progress.
 - **Challenge-only cosmetics:** gi trims, auras, and decorations available nowhere else.
 - **Certified "Challenge Clear" trophies** for the Home Dojo.
-- **Rare crafting materials** for legendary sets, and better loot odds.
+- **Rare crafting materials** for legendary sets (once crafting exists).
 - **Faster ability Mastery** and harder titles.
 
 Challenge monsters can be stronger than the player. Skill closes the gap (Perfect Counters, smart Form switching), not stats, the same way it does in martial arts.
