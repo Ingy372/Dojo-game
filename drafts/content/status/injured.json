@@ -1,0 +1,10 @@
+{
+  "notes": "S4c-C1: kid-facing words for the Injured status (plan: drafts/planning/S4c-injured-status.md, merged in #120). Only enemies are ever Injured. Never 'broken', no blood, bone, crack or pain words. One short sentence per line. Ages 6-9. Slots follow the plan's S4c-C1 row; the plan sets no character limits, so lines are kept under 80 characters.",
+  "statusId": "injured",
+  "popup": "Injured!",
+  "senseiLine": "Injured enemies are slower, so watch the warning and stay calm!",
+  "bestiaryTip": "An Injured enemy wobbles, swings slower and hits softer for a little while.",
+  "recoverLine": "It shook it off and is ready again!",
+  "sealTextSuffix": "and leaves them Injured",
+  "sealTextSuffix_note": "Appended to the effect text of break seals #31-40 only (e.g. 'Locks the arm and leaves them Injured.'). Not for #17, #19, #21, #26 or #28. Seal effect text for #31-40 is not yet in drafts/content, so only the suffix is provided."
+}
