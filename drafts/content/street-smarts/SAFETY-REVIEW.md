@@ -23,3 +23,17 @@ Nothing here ships until Jay approves it (framework section 8).
 10. **Two-sentence screens.** These break the one-sentence rule: "I can help. What is your grown-up's name?", "Thank you. Let's stay here together.", "That's right. We'll wait right here.", "There you are! I'm so glad you stayed.", and Sensei's summary line. Split them, or keep them?
 11. **Stars.** One star each for stay, helper, and refusing the offer. Wrong choices cost nothing and you retry right away. OK?
 12. **Match to class.** Does this match what you teach in class? Could it be a Scenario of the Month?
+
+## J11 resolved (Oct 24, 2026)
+Jay answered on Oct 24 at 11:18 AM EDT. Applied in `store-separated.json`:
+1. **Safe helpers — RESOLVED.** A store worker in uniform or with a name tag, a cashier, a police officer, or a grown-up with kids are all right answers. The game teaches the store worker first. (Jay left this to the Manager.)
+2. **Shopper line — RESOLVED.** Kept. It's OK for ages 6+.
+3. **Sensei rule line — RESOLVED.** Replaced with "Only safe grown-ups know your family's secret word."
+4. **Code word — RESOLVED.** Added. It's always "your family's secret word", never a real word. Jay can change it later.
+5. **Grown-up's name — RESOLVED.** The kid says "Mom" or "Dad". `{grownupName}` was removed. No real names and no phone numbers.
+6. **`{grownup}` word — RESOLVED.** It's "Mom" or "Dad" only. Which one is shown is a build detail for K2.
+7. **Reunion — RESOLVED.** Shown as a short, warm scene with a hug, the worker's praise, and going home smiling.
+8, 9. Unchanged, no concerns raised.
+10. **Two-sentence screens — RESOLVED.** Split into one sentence per screen.
+11. Stars unchanged. Wrong choices cost nothing, and you retry at the missed choice.
+12. **Match to class — RESOLVED.** Jay confirmed: "we talk about safety a lot in class."
