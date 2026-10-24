@@ -478,3 +478,28 @@ From section 1 of `docs/work-board.md`.
 ## M7-P11 — Resuming a run after the app closes
 - Saved at each room's start, not mid-fight: a room can't be rebuilt mid-wave, and replaying one room is fair. Open: OK, or should mid-room chest loot be kept too?
 - The choice is offered in the Home Dojo ("Keep climbing" / "Rest for now"). Resting banks the loot, like the play-time limit.
+
+- ~~**Age band parsing:** the age-based Guided default~~ was removed by the Manager call below (2026-10-24).
+
+## M7-P1 update: everyone starts on Standard (Manager + Learning Designer, 2026-10-24)
+
+- **Everyone starts on Standard** ("Steady" to kids). No age-based Guided default and no age question. `settleDifficulty(profile)` only fills an empty difficulty.
+- **Kind Guided offer:** after `offerAfterLosses` (2) lost runs in a row on the same floor (belt tier), a card offers Guided before the run-over card. A clear resets the count; resting doesn't count. At most once a day (`guidedOfferedOn`, local date). The text never mentions losing (a test checks). It never switches by itself: only "Try Guided" changes it.
+- **Ambiguity:** the call said "offer Steady (Guided)". In our content Steady is Standard's kid name, so the offer is for Guided and the "no" button is "Keep it Steady". Flag if Steady was meant to be renamed Guided.
+- **Home line** "You're on {name}…" shows once ever (`difficultyLineShown`).
+- **Standard card** now reads "The usual pace."
+- **Guided in Settings:** still on the Settings choice screen. In P1 that screen isn't behind a grown-up gate; #110 (P9) adds the grown-up gate. Merge #108 before #110.
+- **Fixture:** `fixtures/5-white-belt-age-6-9.json` (Mia R., ageBand 6-9) for testing young players; it starts on Standard like everyone.
+- All text is in content/settings/difficulty.json.
+
+## M7-P9 update: daily play time, math gate, resting door (Manager + Learning Designer, 2026-10-24)
+
+- **Daily, not per sitting:** play time adds up through the day and resets at **local midnight** (`PlayClock {date, playedMs, lastSeenMs}`). The 30-minute-break session rule is gone. Time away counts only up to `maxGapSeconds` (60), so a tab left open overnight or a long break isn't counted.
+- **Grown-up gate is a sum**, not press-and-hold: "Grown-ups: what is a + b?" (a 12-19, b 6-9) with 4 choices. A wrong answer quietly goes back. `makeGateQuestion` in sim, tested.
+- **When time is up mid-run:** the current room finishes, then "Great training today!" (as before).
+- **No new run until midnight:** the Tower door shows "Your dojo is resting for today / Come back tomorrow for more training!" and no run starts. The Board's ENTER THE TOWER and the lost card's Try again go to the dojo instead.
+- Text in content/settings/play-time.json.
+
+## M7-P11: room pickups on resume (Manager call, 2026-10-24)
+
+- **Accepted:** when a run is resumed, the room restarts fresh, so pickups already collected in that room (but not yet banked) are lost. Everything banked from earlier rooms is kept. No change planned.

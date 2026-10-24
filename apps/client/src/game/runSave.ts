@@ -4,10 +4,12 @@
 import {
   addDecorations,
   finishRun,
+  recordFloorResult,
   gainXp,
   restoreRun,
   runXp,
   summarizeRun,
+  type Profile,
   type RunState,
   type RunSummary,
   type TrainingState,
@@ -50,15 +52,20 @@ export function savedRun(): RunState | null {
  * Adds a finished run to the save: items, decorations, experience. The saved run is cleared
  * first, so a run can never be banked twice. Used when a run ends, and for "Rest for now".
  */
-export function bankRun(run: RunState, training: TrainingState): { summary: RunSummary; xp: ReturnType<typeof gainXp> } {
+export function bankRun(
+  run: RunState,
+  training: TrainingState,
+  result: 'cleared' | 'lost' | 'rested',
+): { summary: RunSummary; xp: ReturnType<typeof gainXp>; profile: Profile } {
   clearRunInProgress();
   const profile = loadSave();
   const summary = summarizeRun(run);
   finishRun(profile, summary);
+  recordFloorResult(profile, run.tier, result);
   addDecorations(homeDojo(profile), summary.decorations);
   // Experience, capped by the real belt (with the Blessing and catch-up bonuses).
   const xp = gainXp(profile, training, runXp(summary));
   if (profile.lastRun) profile.lastRun.xp = xp;
   writeSave(profile);
-  return { summary, xp };
+  return { summary, xp, profile };
 }
