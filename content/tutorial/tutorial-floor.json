@@ -32,7 +32,7 @@
       "success": "Perfect! You did it!",
       "earliestRun": 1,
       "retry": "Almost! The circle will come again.",
-      "nudge": "Take your time. Tap the blue COUNTER button!"
+      "nudge": "Take your time. Tap the glowing COUNTER button!"
     },
     {
       "id": "tutorial-insight",
@@ -41,7 +41,7 @@
       "screens": [
         "Here is an Insight for you!"
       ],
-      "success": "It will help you on this climb.",
+      "success": "It will help you until you go home.",
       "earliestRun": 1
     },
     {

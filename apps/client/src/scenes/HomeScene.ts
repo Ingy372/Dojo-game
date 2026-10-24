@@ -40,8 +40,7 @@ import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
 import { GoalsCard } from '../ui/GoalsCard';
-import { localToday } from '../game/difficulty';
-import { takeLesson } from '../game/lessons';
+import { localDay, takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
 import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css } from '../ui/theme';
 import type { GameSceneData } from './GameScene';
@@ -155,7 +154,7 @@ export class HomeScene extends Phaser.Scene {
   private maybeGoals(): void {
     if (!this.fromRun) return;
     this.fromRun = false;
-    const today = localToday();
+    const today = localDay();
     if (!goalsDue(this.profile, today)) return;
     markGoalsShown(this.profile, today);
     writeSave(this.profile);

@@ -662,3 +662,19 @@ Manager calls:
 - The Tower door's doorRestingLine (content/settings/play-time.json) "Come back tomorrow for more training!" becomes 'More training tomorrow!'.
 - Old saves (from before M7-P7) keep everything open and skip Welcome Week.
 - If the app closes mid-play during the K18 unlock cascade, the cascade replaying on the next return is fine.
+
+## M7-P13 Learning Designer fixes (K22) (2026-10-24)
+From the review in PR #151 (drafts/learning/m7-p13-recheck.md). Manager calls:
+1. **C1:** the three-goals card starts at session 2. In session 1 the first return home shows only the welcome line and the unlock cascade. `goalsDue` now also needs `sessionNumber(profile.lessons, today) >= 2`. Home checks it with the same session clock as lessons (`localDay`), so the testing panel's day fast-forward works.
+2. **C2:** "Take your time. Tap the blue COUNTER button!" → "Take your time. Tap the glowing COUNTER button!" (tutorial-floor.json tutorial-brute nudge; first-session-lessons.json lesson-counter-guided nudge). No colour-only pointer.
+3. **C3:** tutorial-insight success "It will help you on this climb." → "It will help you until you go home." This was the only "this climb" line kids see.
+4. **C4:** fight-button names in kid-facing text use the same capitals as the buttons (COUNTER, STRIKE, DASH):
+   - abilities.json follow-up-kick: "Your Strike adds a second kick." → "Your STRIKE adds a second kick."
+   - abilities.json quick-combo: "Practiced combos flow smoothly: Strikes cost 8 less Focus." → "Practiced combos flow smoothly: each STRIKE costs 8 less Focus."
+   - abilities.json escape-step: "A Block instantly recharges Dash, so you can get away." → "A Block instantly recharges DASH, so you can get away."
+   - abilities.json perfect-discipline: "For {s} seconds, every Counter is a Perfect Counter." → "For {s} seconds, every COUNTER is a Perfect Counter."
+   - first-session-lessons.json lesson-dash: "Too many circles? Dash away." → "Too many circles? DASH away."
+   - named.json Captain Clank senseiTip: "Listen: clank, clank, clank, then Counter!" → "Listen: clank, clank, clank, then COUNTER!"
+   - Unchanged on purpose: move names ("Perfect Counter", "Block"), meters ("Focus", "Health"), the Virtue/Form names on the Abilities cards, and the Scroll's lesson titles ("Counter", "Strike", "Dash").
+5. **C5:** goals card real-dojo line: "Get {X} signed off to unlock …" → "Show Sensei {X} in class to unlock …", and "Get {X} signed off in class." → "Show Sensei {X} in class."
+6. **C6:** Sensei's Seal celebration "You are approved to test." → "You're ready for your next belt test!"

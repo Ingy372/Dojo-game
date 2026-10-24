@@ -3,6 +3,7 @@
 // counts of days, no "only N left", no deadlines.
 
 import type { Content } from './content';
+import { sessionNumber } from './lessons';
 import type { Profile } from './profile';
 import { abilityLabel } from './rewards';
 import type { TrainingState } from './training';
@@ -47,14 +48,17 @@ function realWorldGoal(t: TrainingState): string {
   const next = t.path.next;
   if (!next) return NO_NEXT_TECHNIQUE;
   const ability = abilityLabel(t, next.id).split(' (')[0];
-  if (!ability) return `Get ${next.name} signed off in class.`;
+  if (!ability) return `Show Sensei ${next.name} in class.`;
   // "Technique Seal" alone (its power arrives in a later update) reads better as "a new Technique Seal".
-  return `Get ${next.name} signed off to unlock ${ability.includes(':') ? ability : `a new ${ability}`}.`;
+  return `Show Sensei ${next.name} in class to unlock ${ability.includes(':') ? ability : `a new ${ability}`}.`;
 }
 
-/** The goals card shows at most once a day, after a run (M7-P10, Manager call). */
+/**
+ * The goals card shows at most once a day, after a run (M7-P10, Manager call), from session 2
+ * on: session 1 already has the welcome line and the unlock cascade (M7-P13 C1, Manager call).
+ */
 export function goalsDue(profile: Profile, today: string): boolean {
-  return profile.lastRun !== null && profile.goalsShownOn !== today;
+  return profile.lastRun !== null && profile.goalsShownOn !== today && sessionNumber(profile.lessons, today) >= 2;
 }
 
 export function markGoalsShown(profile: Profile, today: string): void {

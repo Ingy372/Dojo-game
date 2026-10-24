@@ -65,7 +65,7 @@
       "tell": "Taps its shield three times before attacking",
       "lines": {
         "meet": "Captain Clank is on guard!",
-        "senseiTip": "Listen: clank, clank, clank, then Counter!",
+        "senseiTip": "Listen: clank, clank, clank, then COUNTER!",
         "freed": "Captain Clank lowers its shield and bows."
       },
       "journal": {

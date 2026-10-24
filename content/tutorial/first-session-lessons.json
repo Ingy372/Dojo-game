@@ -30,7 +30,7 @@
       "success": "You did it! Perfect!",
       "retry": "So close! Let's try again.",
       "slowdown": true,
-      "nudge": "Take your time. Tap the blue COUNTER button!",
+      "nudge": "Take your time. Tap the glowing COUNTER button!",
       "fadingFollowUp": false,
       "order": 3,
       "earliestSession": 1,
@@ -105,7 +105,7 @@
       "order": 8,
       "trigger": "First time two attacks will land together",
       "screens": [
-        "Too many circles? Dash away.",
+        "Too many circles? DASH away.",
         "Tap DASH to zoom out of danger."
       ],
       "practice": "DASH out of the circle.",
