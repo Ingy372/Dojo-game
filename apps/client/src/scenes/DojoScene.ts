@@ -1054,9 +1054,11 @@ export class DojoScene extends Phaser.Scene {
     button(left + 16, t.rest, 0x4a4a55, () => {
       // Bank it like a play-time rest: nothing found is lost.
       run.status = 'rested';
-      bankRun(run, this.training, 'rested');
+      // Banking writes a fresh profile; take its dojo too, so the pieces just banked show here.
+      this.profile = bankRun(run, this.training, 'rested').profile;
+      this.dojo = homeDojo(this.profile);
       box.destroy();
-      this.profile = loadSave();
+      this.redrawDecorations();
       this.toast(t.restLine);
       if (done) done();
       else {

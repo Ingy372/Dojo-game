@@ -566,3 +566,7 @@ My calls (not Manager):
 - Each piece stores its drop belt (`belt: {tier, color}`): the run's tier for Tower pieces, the current belt for class pieces. Colour 2 uses it (tan on White). Older pieces use the current belt.
 - Test-link runs find no surprise pieces and bank no decorations (fixes the bankRun leak). Once every surprise piece has 3 copies, the roll gives nothing.
 - C11 unique names applied to statues and trophies.
+
+## Rest refresh (2026-10-24)
+- After "Rest for now" on the resume card, DojoScene now uses the profile that `bankRun` returns and takes its dojo with `homeDojo`. Before, it reloaded only the profile, so `this.dojo` still pointed at the old dojo object: the new pieces didn't show, and later dojo edits went to that old object. Those edits could be lost, or could overwrite what was banked. The new pieces go to storage, so the walkable room doesn't change; redrawing is enough.
+- There's no client test harness and adding one would mean new dependencies, so this fix is checked with before/after screenshots instead of a test.
