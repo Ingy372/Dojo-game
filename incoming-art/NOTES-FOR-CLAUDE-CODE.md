@@ -215,6 +215,18 @@ Drawing order is the `order` field (the Batch 1 layers moved up by one because `
 
 ---
 
+## Batch 8: icons, `incoming-art/icons/sprites/static.json` [NEW, full set]
+- 28 icons, `icon-<id>.png`, 128 x 128, frames 1: 9 gear, 9 Insights, 10 Seals; ids exactly as in the brief. Map each to the existing id; no new ids. Second pass (2026-10-24) redrew 8 icons; same ids and files.
+
+## Batch 9: Yellow belt Tower kit, `incoming-art/tower-rooms-t2/sprites/static.json` [NEW, full set]
+- Bamboo Garden Hall. Same sprite ids, layers, anchors and timing as Tier 1 `tower-rooms/` + `boss-door/` (boss door merged into the same static.json), so Tier 2 rooms can load this folder instead.
+- Extra optional decor: `decor-lantern`, `decor-bamboo-pot`, `decor-basin`. Chest is the Tier 1 chest (Jay OK'd). Tower name: TBD with the game planner. `proposals/` is reference only; do not load.
+
+## S1 #3 elite auras, `incoming-art/elite-auras/sprites/static.json` [NEW, full set, Jay approved]
+- Overlay layers per tier-1 enemy: `sprites/<enemy>/aura-{swift,guarding}_{back,front}.png` (entries `aura-<kind>-<enemy>` in static.json). 8 frames, loop at 10 fps, same frame size + anchor as the enemy, so stack 1:1.
+- Draw order: aura back -> enemy -> aura front. Swift = gold, Guarding = blue. Nothing above the head (no badges). Game rules (who becomes elite, effects, 1 per room) come from the S1 brief, not from the art.
+- The 256 masters `sprites/aura-<kind>_<layer>.png` are reference only.
+
 ## Open items in one place
 
 1. The player frame changed to 128 × 160 with the anchor at (64, 136.96). It applies to `player-character/` and `player-custom/`.

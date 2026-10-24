@@ -1,0 +1,215 @@
+{
+  "note": "S1 #3 elite auras, full set (Jay approved). 8 frames, loop at 10 fps. Draw order: back -> enemy -> front. Use the per-enemy entries (same frame size + anchor as the enemy); the 256 masters are kept for reference.",
+  "sprites": {
+    "aura-swift": {
+      "files": {
+        "back": "aura-swift_back.png",
+        "front": "aura-swift_front.png"
+      },
+      "layers": [
+        "back",
+        "front"
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "anchorPx": [
+        128,
+        210
+      ],
+      "frames": 8,
+      "fps": 10,
+      "master": true
+    },
+    "aura-swift-swarmer": {
+      "enemy": "swarmer",
+      "files": {
+        "back": "swarmer/aura-swift_back.png",
+        "front": "swarmer/aura-swift_front.png"
+      },
+      "layers": [
+        "back",
+        "front"
+      ],
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64.0,
+        104.96
+      ],
+      "frames": 8,
+      "fps": 10
+    },
+    "aura-swift-shield": {
+      "enemy": "shield",
+      "files": {
+        "back": "shield/aura-swift_back.png",
+        "front": "shield/aura-swift_front.png"
+      },
+      "layers": [
+        "back",
+        "front"
+      ],
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64.0,
+        104.96
+      ],
+      "frames": 8,
+      "fps": 10
+    },
+    "aura-swift-brute": {
+      "enemy": "brute",
+      "files": {
+        "back": "brute/aura-swift_back.png",
+        "front": "brute/aura-swift_front.png"
+      },
+      "layers": [
+        "back",
+        "front"
+      ],
+      "size": [
+        208,
+        208
+      ],
+      "anchorPx": [
+        104.0,
+        170.56
+      ],
+      "frames": 8,
+      "fps": 10
+    },
+    "aura-swift-keeper": {
+      "enemy": "keeper",
+      "files": {
+        "back": "keeper/aura-swift_back.png",
+        "front": "keeper/aura-swift_front.png"
+      },
+      "layers": [
+        "back",
+        "front"
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "anchorPx": [
+        128.0,
+        209.92
+      ],
+      "frames": 8,
+      "fps": 10
+    },
+    "aura-guarding": {
+      "files": {
+        "back": "aura-guarding_back.png",
+        "front": "aura-guarding_front.png"
+      },
+      "layers": [
+        "back",
+        "front"
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "anchorPx": [
+        128,
+        210
+      ],
+      "frames": 8,
+      "fps": 10,
+      "master": true
+    },
+    "aura-guarding-swarmer": {
+      "enemy": "swarmer",
+      "files": {
+        "back": "swarmer/aura-guarding_back.png",
+        "front": "swarmer/aura-guarding_front.png"
+      },
+      "layers": [
+        "back",
+        "front"
+      ],
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64.0,
+        104.96
+      ],
+      "frames": 8,
+      "fps": 10
+    },
+    "aura-guarding-shield": {
+      "enemy": "shield",
+      "files": {
+        "back": "shield/aura-guarding_back.png",
+        "front": "shield/aura-guarding_front.png"
+      },
+      "layers": [
+        "back",
+        "front"
+      ],
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64.0,
+        104.96
+      ],
+      "frames": 8,
+      "fps": 10
+    },
+    "aura-guarding-brute": {
+      "enemy": "brute",
+      "files": {
+        "back": "brute/aura-guarding_back.png",
+        "front": "brute/aura-guarding_front.png"
+      },
+      "layers": [
+        "back",
+        "front"
+      ],
+      "size": [
+        208,
+        208
+      ],
+      "anchorPx": [
+        104.0,
+        170.56
+      ],
+      "frames": 8,
+      "fps": 10
+    },
+    "aura-guarding-keeper": {
+      "enemy": "keeper",
+      "files": {
+        "back": "keeper/aura-guarding_back.png",
+        "front": "keeper/aura-guarding_front.png"
+      },
+      "layers": [
+        "back",
+        "front"
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "anchorPx": [
+        128.0,
+        209.92
+      ],
+      "frames": 8,
+      "fps": 10
+    }
+  }
+}
