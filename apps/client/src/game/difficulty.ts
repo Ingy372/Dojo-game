@@ -1,21 +1,25 @@
-// M7-P1: the starting difficulty (Guided for young or brand-new students) and the words for
-// the difficulty choice screen. Rules and text live in content/settings/difficulty.json.
+// M7-P1: everyone starts on Standard ("Steady"); Guided is kindly offered after losses on one
+// floor, and can be picked any time in Settings. Rules and text: content/settings/difficulty.json.
 
-import { settleDifficulty, type Difficulty, type Profile, type TrainingState } from '@dojo/sim';
+import { settleDifficulty, type Difficulty, type Profile } from '@dojo/sim';
 import settings from '../../../../content/settings/difficulty.json';
 
 export const DIFFICULTY_TEXT = settings as {
-  guidedUpToAge: number;
-  guidedNewBeltTier: number;
+  offerAfterLosses: number;
   button: string;
   title: string;
   footer: string;
-  homeLine: string;
   choices: Array<{ id: Difficulty; name: string; text: string }>;
+  homeLine: string;
+  offer: { title: string; line: string; yes: string; no: string };
 };
 
 /** Gives a new profile its starting difficulty (once). Returns true if it set one. */
-export function ensureDifficulty(profile: Profile, training: TrainingState): boolean {
-  const signOffsThisBelt = training.requirements.filter((r) => r.belt === training.belt.id && r.signedOff).length;
-  return settleDifficulty(profile, { ageBand: training.ageBand, beltTier: training.belt.tier, signOffsThisBelt }, DIFFICULTY_TEXT);
+export function ensureDifficulty(profile: Profile): boolean {
+  return settleDifficulty(profile);
+}
+
+/** Today's local date as YYYY-MM-DD (the Guided offer is at most once a day). */
+export function localToday(d = new Date()): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }

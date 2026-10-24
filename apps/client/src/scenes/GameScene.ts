@@ -26,6 +26,10 @@ import {
   currentRoom,
   finishRun,
   wrapUpRun,
+  chooseDifficulty,
+  markGuidedOffered,
+  recordFloorResult,
+  shouldOfferGuided,
   activeForm,
   characterSetup,
   gainXp,
@@ -70,8 +74,9 @@ import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { bowPrompt, playBow } from '../ui/bow';
 import { InsightPicker } from '../ui/InsightPicker';
-import { restCard, runOverCard } from '../ui/RunOverCard';
+import { choiceCard, restCard, runOverCard } from '../ui/RunOverCard';
 import { PLAY_TIME_TEXT, isPlayTimeUp } from '../game/playTime';
+import { DIFFICULTY_TEXT, localToday } from '../game/difficulty';
 import { startTowerRun } from '../game/tower';
 import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
@@ -1225,6 +1230,7 @@ export class GameScene extends Phaser.Scene {
     const profile = loadSave();
     const summary = summarizeRun(this.run);
     finishRun(profile, summary);
+    recordFloorResult(profile, this.run.tier, status);
     addDecorations(homeDojo(profile), summary.decorations);
     // Experience, capped by the real belt (with the Blessing and catch-up bonuses).
     const xp = gainXp(profile, this.training, runXp(summary));
@@ -1248,9 +1254,30 @@ export class GameScene extends Phaser.Scene {
       return;
     }
     if (status === 'lost') {
-      // A soft card with what they keep, then Try again or Back home.
+      // A soft card with what they keep, then Try again or Back home. After losses in a row on
+      // this floor, Guided is kindly offered first, at most once a day (M7-P1).
+      const tier = this.run.tier;
+      const offer = shouldOfferGuided(profile, tier, DIFFICULTY_TEXT, localToday());
+      if (offer) {
+        markGuidedOffered(profile, localToday());
+        writeSave(profile);
+      }
       this.time.delayedCall(1400, () => {
         this.message.setVisible(false);
+        if (offer) {
+          const o = DIFFICULTY_TEXT.offer;
+          const ask = choiceCard(this, o.title, o.line, o.no, o.yes, (yes) => {
+            if (yes) {
+              const p = loadSave();
+              chooseDifficulty(p, 'guided');
+              writeSave(p);
+            }
+            showCard();
+          });
+          this.cameras.main.ignore(ask);
+        } else showCard();
+      });
+      const showCard = () => {
         const card = runOverCard(
           this,
           summary,
@@ -1267,7 +1294,7 @@ export class GameScene extends Phaser.Scene {
           },
         );
         this.cameras.main.ignore(card);
-      });
+      };
       return;
     }
     sfx.floorClear();

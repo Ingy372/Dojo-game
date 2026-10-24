@@ -474,3 +474,15 @@ From section 1 of `docs/work-board.md`.
 - Session = play with no 30-minute break (tunable in content). Open: is 30 min right, and should the reset be daily instead?
 - Grown-up gate is a 2-second press-and-hold, not a math question or PIN. Open: is that enough of a gate?
 - If time is already up when a run starts, the child still gets to play that first room. Open: block new runs instead?
+- ~~**Age band parsing:** the age-based Guided default~~ was removed by the Manager call below (2026-10-24).
+
+## M7-P1 update: everyone starts on Standard (Manager + Learning Designer, 2026-10-24)
+
+- **Everyone starts on Standard** ("Steady" to kids). No age-based Guided default and no age question. `settleDifficulty(profile)` only fills an empty difficulty.
+- **Kind Guided offer:** after `offerAfterLosses` (2) lost runs in a row on the same floor (belt tier), a card offers Guided before the run-over card. A clear resets the count; resting doesn't count. At most once a day (`guidedOfferedOn`, local date). The text never mentions losing (a test checks). It never switches by itself: only "Try Guided" changes it.
+- **Ambiguity:** the call said "offer Steady (Guided)". In our content Steady is Standard's kid name, so the offer is for Guided and the "no" button is "Keep it Steady". Flag if Steady was meant to be renamed Guided.
+- **Home line** "You're on {name}…" shows once ever (`difficultyLineShown`).
+- **Standard card** now reads "The usual pace."
+- **Guided in Settings:** still on the Settings choice screen. In P1 that screen isn't behind a grown-up gate; #110 (P9) adds the grown-up gate. Merge #108 before #110.
+- **Fixture:** `fixtures/5-white-belt-age-6-9.json` (Mia R., ageBand 6-9) for testing young players; it starts on Standard like everyone.
+- All text is in content/settings/difficulty.json.
