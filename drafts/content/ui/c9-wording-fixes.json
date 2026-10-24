@@ -1,0 +1,21 @@
+{
+  "_note": "C9 wording check of kid- and parent-facing text in PRs #108, #110 and #113. Suggestions only; the Programmer applies them in their own branches. #113 is stacked on #108 and #110, so its copies of difficulty.json and play-time.json take the same fixes. Button names use the all-caps style (COUNTER, STRIKE, DASH).",
+  "fixes": [
+    { "pr": 108, "file": "content/settings/difficulty.json", "key": "choices[guided].text", "current": "More time to counter. Great for learning the moves.", "suggested": "More time to COUNTER while you learn.", "reason": "Two sentences become one, and COUNTER uses the button caps." },
+    { "pr": 108, "file": "content/settings/difficulty.json", "key": "choices[standard].text", "current": "The normal way to train.", "suggested": "The normal way to train.", "reason": "Fine as is; listed so the set is complete." },
+    { "pr": 108, "file": "content/settings/difficulty.json", "key": "choices[challenge].text", "current": "Enemies wind up faster. Less time to counter.", "suggested": "Faster enemies and less time to COUNTER.", "reason": "One sentence, and COUNTER uses the button caps." },
+    { "pr": 108, "file": "content/settings/difficulty.json", "key": "homeLine", "current": "You're on Guided. Change anytime in Settings.", "suggested": "You're on Guided, and you can change it in Settings.", "reason": "One full sentence; matches the footer's wording." },
+    { "pr": 108, "file": "content/settings/difficulty.json", "key": "footer", "current": "You can change this any time in Settings.", "suggested": "You can change this any time in Settings.", "reason": "Fine; keep 'any time' (two words) everywhere." },
+    { "pr": 108, "file": "apps/client/src/scenes/DojoScene.ts", "key": "difficulty choice selected state", "current": "Selected choice shown only by a gold, thicker border", "suggested": "Also show a check mark before the selected name, e.g. '✓ Steady'", "reason": "No colour-only cues; a shape marks the choice too (DECIDE: check mark or 'ON' tag)." },
+    { "pr": 110, "file": "content/settings/play-time.json", "key": "wrapUpLine", "current": "Nice work! Let's finish this room, then rest.", "suggested": "Nice work, let's finish this room and rest!", "reason": "Two sentences become one; still warm and calm." },
+    { "pr": 110, "file": "content/settings/play-time.json", "key": "restLines", "current": ["You trained hard today.", "Everything you found is safe in your dojo."], "suggested": ["You trained hard today!", "Rest now, or show a grown-up your moves.", "Everything you found is safe in your dojo."], "reason": "The brief asks the rest message to invite rest or real practice, not just stop." },
+    { "pr": 110, "file": "content/settings/play-time.json", "key": "help", "current": "When time is up, your child finishes the room they're in. Then the game says well done and goes back to the dojo. Nothing they found is lost.", "suggested": "When time is up, your child finishes the room they're in. Then the game praises their training and returns to the dojo. Nothing they found is lost.", "reason": "Parent text is already clear; small tweak only, optional." },
+    { "pr": 110, "file": "content/settings/play-time.json", "key": "title / gateText / restTitle / restButton / homeHeadline", "current": "Play-time limit / Grown-ups: press and hold / Great training today! / Back to my dojo / Great training today!", "suggested": "No change", "reason": "Plain, hopeful, no guilt or pressure." },
+    { "pr": 113, "file": "content/settings/run-resume.json", "key": "line", "current": "Room {room} of {total}. You'll start that room again.", "suggested": "You'll start again at room {room}.", "reason": "One sentence; dropping the total avoids a 'so far to go' feeling." },
+    { "pr": 113, "file": "content/settings/run-resume.json", "key": "title / continue / rest / restLine", "current": "Your climb is waiting! / Keep climbing / Rest for now / Everything you found is safe in your dojo.", "suggested": "No change", "reason": "Hopeful, and resting is a real, guilt-free choice." }
+  ],
+  "decide": [
+    "Selected-state marker on the choice screen: a check mark or an 'ON' tag.",
+    "Menu buttons (Settings, Keep climbing, Rest for now, Back to my dojo) stay in sentence case; only combat buttons use caps. Confirm."
+  ]
+}

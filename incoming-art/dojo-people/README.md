@@ -120,3 +120,6 @@ Jay's school wears a shirt under the gi, so no skin shows except the face, hands
   - portraits with layers: 6.5 MB;
   - previews and GIFs: 15 MB.
 - **Reference photos:** none are in the repo or the previews.
+
+## A7 change (QA PR #83)
+The kohai has a curly top-knot with a teal tie on top of the approved curly red hair. This keeps the kohai from being mistaken for a red-haired custom player. Its sheets and portraits were re-rendered (the portrait hair-top setting is now 1.50 in `make_full.sh`). Before and after: `preview/a7-kohai-vs-player-before-after.png`.
