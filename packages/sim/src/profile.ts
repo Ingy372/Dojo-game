@@ -74,6 +74,14 @@ export interface Profile {
    * Every Tower run takes its difficulty from here, so elites and combat always agree.
    */
   difficulty: Difficulty | null;
+  /** True once the player picks a difficulty themselves; then it is never changed for them (M7-P1). */
+  difficultyChosenByPlayer: boolean;
+  /** Lost runs in a row on one floor (belt tier), for the kind Guided offer (M7-P1). */
+  floorLosses: { tier: number; count: number } | null;
+  /** The local date (YYYY-MM-DD) Guided was last offered, or null: at most once a day. */
+  guidedOfferedOn: string | null;
+  /** The one-time "You're on ..." home line has been shown. */
+  difficultyLineShown: boolean;
   /** Street Smarts: best stars per scenario, and who the player picked as their grown-up. */
   streetSmarts: StreetSmartsSave;
   /** Monster Journal (M7-N1): named monsters met and beaten. Never counts, only yes/no. */
@@ -107,19 +115,28 @@ export function newProfile(): Profile {
     guideStep: 0,
     streetSmarts: { best: {}, grownup: null },
     difficulty: null,
+    difficultyChosenByPlayer: false,
+    floorLosses: null,
+    guidedOfferedOn: null,
+    difficultyLineShown: false,
     monsterJournal: {},
     runsStarted: 0,
   };
 }
 
 /** Reads a saved profile, falling back to a fresh one if it's missing or damaged. */
+function readFloorLosses(v: unknown): Profile['floorLosses'] {
+  const o = v as { tier?: unknown; count?: unknown } | null;
+  return o && typeof o.tier === 'number' && typeof o.count === 'number' ? { tier: o.tier, count: o.count } : null;
+}
+
 export function loadProfile(data: unknown): Profile {
   const p = data as Profile;
   if (!p || typeof p !== 'object' || p.version !== 1 || !Array.isArray(p.inventory) || !p.equipped || !p.bests) {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, monsterJournal: readJournal(p.monsterJournal), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0 };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, monsterJournal: readJournal(p.monsterJournal), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0 };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {
@@ -260,4 +277,49 @@ function isDifficulty(v: unknown): v is Difficulty {
 export function runDifficulty(profile: Profile, testLink: string | null = null): Difficulty {
   if (isDifficulty(testLink)) return testLink;
   return profile.difficulty ?? COMBAT.defaultDifficulty;
+}
+
+/**
+ * Gives the profile a real difficulty the first time it's needed: everyone starts on the
+ * default (Standard, "Steady" for kids). A difficulty already set or chosen is never changed.
+ * Returns true if it set one. (Manager call, 2026-10-24: no age-based Guided default.)
+ */
+export function settleDifficulty(profile: Profile): boolean {
+  if (profile.difficultyChosenByPlayer || profile.difficulty !== null) return false;
+  profile.difficulty = COMBAT.defaultDifficulty;
+  return true;
+}
+
+/** When Guided is offered after losses (content/settings/difficulty.json). */
+export interface GuidedOfferRules {
+  /** Lost runs in a row on the same floor (belt tier) before Guided is offered. */
+  offerAfterLosses: number;
+}
+
+/** Counts lost runs in a row on one floor (belt tier). A cleared floor resets it; a rest doesn't count. */
+export function recordFloorResult(profile: Profile, tier: number, result: 'cleared' | 'lost' | 'rested'): void {
+  if (result === 'cleared') profile.floorLosses = null;
+  else if (result === 'lost')
+    profile.floorLosses = profile.floorLosses?.tier === tier ? { tier, count: profile.floorLosses.count + 1 } : { tier, count: 1 };
+}
+
+/**
+ * True when Guided should be kindly offered: enough lost runs in a row on this floor, not on
+ * Guided already, and not offered yet today (`today` is the local date, YYYY-MM-DD).
+ * Only an offer: the difficulty never changes unless the player picks it.
+ */
+export function shouldOfferGuided(profile: Profile, tier: number, rules: GuidedOfferRules, today: string): boolean {
+  const losses = profile.floorLosses;
+  return profile.difficulty !== 'guided' && profile.guidedOfferedOn !== today && losses?.tier === tier && losses.count >= rules.offerAfterLosses;
+}
+
+/** The offer was shown (whatever the answer): not again today. */
+export function markGuidedOffered(profile: Profile, today: string): void {
+  profile.guidedOfferedOn = today;
+}
+
+/** The player picks a difficulty in Settings; from now on it's theirs. */
+export function chooseDifficulty(profile: Profile, difficulty: Difficulty): void {
+  profile.difficulty = difficulty;
+  profile.difficultyChosenByPlayer = true;
 }

@@ -90,6 +90,8 @@ export interface PathCard {
 export interface TrainingState {
   studentId: string;
   firstName: string;
+  /** The student's age band from the feed, like "6-9" or "10-13". */
+  ageBand: string;
   displayName: string;
   schoolName: string;
   belts: FeedBelt[];
@@ -228,6 +230,7 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
   return {
     studentId: feed.student.id,
     firstName: feed.student.firstName,
+    ageBand: feed.student.ageBand,
     displayName: `${feed.student.firstName} ${feed.student.lastInitial}.`,
     schoolName: feed.school.name,
     belts,
