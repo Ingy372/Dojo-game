@@ -1285,7 +1285,7 @@ export class GameScene extends Phaser.Scene {
           () => {
             this.uiCamera.fadeOut(400, 10, 8, 16);
             this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () =>
-              this.scene.start('Game', { run: startTowerRun(loadSave(), this.training) }),
+              isPlayTimeUp(loadSave()) ? this.scene.start('Dojo') : this.scene.start('Game', { run: startTowerRun(loadSave(), this.training) }),
             );
           },
           () => {

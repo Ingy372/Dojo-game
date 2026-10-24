@@ -486,3 +486,11 @@ From section 1 of `docs/work-board.md`.
 - **Guided in Settings:** still on the Settings choice screen. In P1 that screen isn't behind a grown-up gate; #110 (P9) adds the grown-up gate. Merge #108 before #110.
 - **Fixture:** `fixtures/5-white-belt-age-6-9.json` (Mia R., ageBand 6-9) for testing young players; it starts on Standard like everyone.
 - All text is in content/settings/difficulty.json.
+
+## M7-P9 update: daily play time, math gate, resting door (Manager + Learning Designer, 2026-10-24)
+
+- **Daily, not per sitting:** play time adds up through the day and resets at **local midnight** (`PlayClock {date, playedMs, lastSeenMs}`). The 30-minute-break session rule is gone. Time away counts only up to `maxGapSeconds` (60), so a tab left open overnight or a long break isn't counted.
+- **Grown-up gate is a sum**, not press-and-hold: "Grown-ups: what is a + b?" (a 12-19, b 6-9) with 4 choices. A wrong answer quietly goes back. `makeGateQuestion` in sim, tested.
+- **When time is up mid-run:** the current room finishes, then "Great training today!" (as before).
+- **No new run until midnight:** the Tower door shows "Your dojo is resting for today / Come back tomorrow for more training!" and no run starts. The Board's ENTER THE TOWER and the lost card's Try again go to the dojo instead.
+- Text in content/settings/play-time.json.

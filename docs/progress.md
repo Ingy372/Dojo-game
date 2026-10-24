@@ -433,3 +433,5 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - Test link: `?playlimit=N` overrides the setting with N minutes.
 - Tests: run.test.ts "play-time limit (M7-P9)". Screenshots: k11-p9-{667,844}-{wrapup,rest,home,settings,playlimit}.png.
 - **2026-10-24 (K11 update, #108):** P1 reworked per Manager + Learning Designer: everyone starts on Standard, kind Guided offer after 2 losses on one floor (max once a day, never automatic), one-time home line, "The usual pace", 6-9 fixture. Screens: /workspace/k11-p1-{667,844}-{home-line,home-again,settings,offer,after-offer}.png.
+
+- **2026-10-24 (K11 update, #110):** P9 reworked: daily play time (resets at local midnight), math-question grown-up gate, Tower door rests when time is up. Merged origin/main and the updated #108. Screens: /workspace/k11-p9-{667,844}-{wrapup,rest,home,door-resting,settings,gate,playlimit}.png.

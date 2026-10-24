@@ -1,5 +1,5 @@
-// M7-P9: the play-time limit. The clock lives in localStorage so a reload doesn't reset it;
-// a long break (content: sessionBreakMinutes) starts a new session.
+// M7-P9: the play-time limit, per day. The clock lives in localStorage so a reload doesn't
+// reset it; it resets at local midnight. Time away counts only up to maxGapSeconds.
 
 import { isPlayLimit, playTimeUp, tickPlayClock, type PlayClock, type Profile } from '@dojo/sim';
 import text from '../../../../content/settings/play-time.json';
@@ -10,15 +10,20 @@ const KEY = 'dojo-ascent-play-clock';
 function readClock(): PlayClock | null {
   try {
     const c = JSON.parse(localStorage.getItem(KEY) ?? 'null');
-    return c && typeof c.startedMs === 'number' && typeof c.lastSeenMs === 'number' ? c : null;
+    return c && typeof c.date === 'string' && typeof c.playedMs === 'number' && typeof c.lastSeenMs === 'number' ? c : null;
   } catch {
     return null;
   }
 }
 
-/** Notes that the player is playing now; returns the session clock. */
+/** Today's local date, YYYY-MM-DD. */
+export function localDate(d = new Date()): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+/** Notes that the player is playing now; returns today's clock. */
 export function touchPlayClock(now = Date.now()): PlayClock {
-  const clock = tickPlayClock(readClock(), now, text.sessionBreakMinutes * 60_000);
+  const clock = tickPlayClock(readClock(), localDate(new Date(now)), now, text.maxGapSeconds * 1000);
   try {
     localStorage.setItem(KEY, JSON.stringify(clock));
   } catch {
@@ -34,7 +39,7 @@ export function playLimit(profile: Profile): number {
   return isPlayLimit(profile.playLimitMinutes) ? profile.playLimitMinutes : 0;
 }
 
-/** True once this session has reached the limit. */
+/** True once today's play has reached the limit. No new run starts until local midnight. */
 export function isPlayTimeUp(profile: Profile, now = Date.now()): boolean {
-  return playTimeUp(touchPlayClock(now), playLimit(profile), now);
+  return playTimeUp(touchPlayClock(now), playLimit(profile));
 }

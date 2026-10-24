@@ -30,6 +30,7 @@ import { CONTENT } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining, selectProfile, shortDate } from '../game/student';
 import { startTowerRun } from '../game/tower';
+import { isPlayTimeUp } from '../game/playTime';
 import { addIcon, ICON_PACK } from '../art/icons';
 import { loadArt } from '../art/art';
 import { makeStandingCharacter } from '../art/player';
@@ -492,6 +493,8 @@ export class HomeScene extends Phaser.Scene {
   // ---------------------------------------------------------------- actions
 
   private enterTower(): void {
+    // Today's play time is used up: back to the dojo, whose door says it's resting (M7-P9).
+    if (isPlayTimeUp(this.profile)) return this.goTo('Dojo', {});
     this.goTo('Game', { run: startTowerRun(this.profile, this.training) });
   }
 
