@@ -1,5 +1,5 @@
 {
-  "notes": "DRAFT for C2: Sensei's Question at the Bow, redone as RECALL (Jay, docs/decisions.md K1). Same file and top-level keys as before (notes, skipText, watchText, questions). Sensei shows a picture of one of the player's earned abilities (any earned one, not only the newest; docs/curriculum.md) and asks its name. 'choices': 'earned' = 3 picture-and-word choices: the right one plus 2 other abilities, all shown by their real name from abilities/technique-callouts.json. If fewer than 3 abilities are earned, fill with locked ones the player has seen on the Gate. {name} = the right real name. After any answer, the character performs the move. A wrong answer warmly shows the right name; there is no penalty. Correct answers are counted forever; 'awards' play at 5, 10, 20, 50 and 100 (the list can grow). At most one question per day. 'Not now' is always there. Lines are one short sentence each. The first movement lesson ('Tap where you want to go, or use the stick.') is already in tutorial/first-session-lessons.json (lesson-move).",
+  "notes": "DRAFT for C2: Sensei's Question at the Bow, redone as RECALL (Jay, docs/decisions.md K1). Same file and top-level keys as before (notes, skipText, watchText, questions). Sensei shows a picture of one of the player's earned abilities (any earned one, not only the newest; docs/curriculum.md) and asks its name. 'choices': 'earned' = 3 picture-and-word choices: the right one plus 2 other abilities, all shown by their real name from abilities/technique-callouts.json. If fewer than 3 abilities are earned, fill with locked ones the player has seen on the Gate. {name} = the right real name. After any answer, the character performs the move. A wrong answer warmly shows the right name; there is no penalty. Correct answers are counted forever; 'awards' play at 5, 10, 20, 50 and 100 (the list can grow). At most one question per day. 'Not now' is always there. Lines are one short sentence each. The first movement lesson ('Tap where you want to go, or use the stick.') is already in tutorial/first-session-lessons.json (lesson-move). Manager calls (after PR #66): locked abilities the player has seen on the Gate are APPROVED as filler choices. Every award gives a badge; the 50 award also gives a decoration and the 100 award also gives a title. Names are drafts; art is A3.",
   "skipText": "Not now",
   "watchText": "Watch the real technique",
   "questions": [
@@ -20,10 +20,56 @@
     }
   ],
   "awards": [
-    { "count": 5, "sensei": "Five right answers! Your memory is getting strong." },
-    { "count": 10, "sensei": "Ten! You really know your techniques." },
-    { "count": 20, "sensei": "Twenty! Your training is staying with you." },
-    { "count": 50, "sensei": "Fifty! You remember like a true student." },
-    { "count": 100, "sensei": "One hundred! What you learn in class stays in your heart." }
-  ]
+    {
+      "count": 5,
+      "sensei": "Five right answers! Your memory is getting strong.",
+      "badge": {
+        "name": "Sharp Memory",
+        "description": "You named five techniques right!"
+      }
+    },
+    {
+      "count": 10,
+      "sensei": "Ten! You really know your techniques.",
+      "badge": {
+        "name": "Bright Mind",
+        "description": "Ten techniques remembered. Great job!"
+      }
+    },
+    {
+      "count": 20,
+      "sensei": "Twenty! Your training is staying with you.",
+      "badge": {
+        "name": "Steady Student",
+        "description": "Twenty right! Your training stays with you."
+      }
+    },
+    {
+      "count": 50,
+      "sensei": "Fifty! You remember like a true student.",
+      "badge": {
+        "name": "Lantern of Learning",
+        "description": "Fifty right! Your learning shines bright."
+      },
+      "decoration": {
+        "name": "Glowing Scroll Shelf",
+        "description": "A shelf of glowing scrolls for your dojo."
+      }
+    },
+    {
+      "count": 100,
+      "sensei": "One hundred! What you learn in class stays in your heart.",
+      "badge": {
+        "name": "Heart of Remembering",
+        "description": "One hundred right! You keep what you learn."
+      },
+      "title": {
+        "name": "Keeper of Techniques",
+        "description": "You remember your moves like a true martial artist."
+      }
+    }
+  ],
+  "fillerChoices": {
+    "lockedGateAbilities": "approved"
+  }
 }
