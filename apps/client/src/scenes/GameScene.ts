@@ -53,8 +53,9 @@ import trainingRoom from '../../../../content/rooms/training-room.json';
 import lessonsData from '../../../../content/tutorial/sensei-lessons.json';
 
 const LESSONS = loadLessons(lessonsData);
-import { addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
+import { type PackName, addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
+import { auraId, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
@@ -171,6 +172,8 @@ interface EnemyView {
   callUntil: number;
   /** When it was beaten (the dissolve into light plays), or null. */
   defeatAt: number | null;
+  /** Elite aura art (test link only for now): its id and its back and front images. */
+  aura: { id: string; back: Phaser.GameObjects.Image[]; front: Phaser.GameObjects.Image[] } | null;
 }
 
 /** The warning glow's colour while a creature winds up (matches the danger circle). */
@@ -243,6 +246,9 @@ export class GameScene extends Phaser.Scene {
   private senseiText: Phaser.GameObjects.Text | null = null;
   private screenFlash!: Phaser.GameObjects.Rectangle;
 
+  /** The tower art for the student's belt tier (or the ?tower= test link). */
+  private towerPack: PackName = 'tower-t1';
+
   constructor() {
     super('Game');
   }
@@ -252,7 +258,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   preload(): void {
-    loadArt(this, [...playerPacks(), 'enemies-t1', 'tower-t1']);
+    this.towerPack = towerPack(currentTraining().belt.tier);
+    const aura = testAura();
+    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ...(aura ? ['auras-t1'] : [])]);
   }
 
   create(): void {
@@ -463,6 +471,10 @@ export class GameScene extends Phaser.Scene {
     v.hpBack.setVisible(e.mode !== 'defeated');
     v.hpFill.setVisible(e.mode !== 'defeated');
     s.face(e.facing.x, e.facing.y);
+    if (v.aura) {
+      const a = staticArt(this, 'auras-t1', v.aura.id);
+      if (a) setStaticFrame(this, 'auras-t1', v.aura.id, [...v.aura.back, ...v.aura.front], Math.floor((now / 1000) * (a.fps ?? 10)) % a.frames);
+    }
     const started = e.mode !== v.lastMode;
     v.lastMode = e.mode;
 
@@ -625,7 +637,7 @@ export class GameScene extends Phaser.Scene {
     const { walls, width, height } = this.room;
     const wall = (r: number, c: number) => r < 0 || c < 0 || r >= height || c >= width || walls[r][c];
     const put = (id: string, x: number, y: number, depth: number) => {
-      for (const img of addStatic(this, 'tower-t1', id, x, y)) out.push(img.setDepth(depth));
+      for (const img of addStatic(this, this.towerPack, id, x, y)) out.push(img.setDepth(depth));
     };
     for (let row = 0; row < height; row++) {
       for (let col = 0; col < width; col++) {
@@ -685,7 +697,13 @@ export class GameScene extends Phaser.Scene {
     const hpBack = this.add.rectangle(0, -top - 8, r * 2, 8, 0x000000, 0.6);
     const hpFill = this.add.rectangle(-r + 2, -top - 8, r * 2 - 4, 4, COLORS.healthLow).setOrigin(0, 0.5);
     const stars = [0, 1, 2].map(() => this.add.circle(0, 0, 4, COLORS.gold).setVisible(false));
-    const container = this.add.container(e.pos.x * TILE, e.pos.y * TILE, [sprite.container, hpBack, hpFill, ...stars]).setDepth(4);
+    // Elite aura (S1 #3 art, ?aura= test link): back layer under the creature, front layer over it.
+    // Nothing goes above the head.
+    const kind = testAura();
+    const id = kind ? auraId(kind, e.def.id) : '';
+    const [back, front] = kind ? addStatic(this, 'auras-t1', id, 0, 0) : [];
+    const aura = back && front ? { id, back: [back], front: [front] } : null;
+    const container = this.add.container(e.pos.x * TILE, e.pos.y * TILE, [...(aura?.back ?? []), sprite.container, ...(aura?.front ?? []), hpBack, hpFill, ...stars]).setDepth(4);
     this.uiCamera.ignore(container);
     this.enemyViews.set(e.id, {
       container,
@@ -702,6 +720,7 @@ export class GameScene extends Phaser.Scene {
       hitUntil: 0,
       callUntil: 0,
       defeatAt: null,
+      aura,
     });
   }
 
@@ -1270,8 +1289,8 @@ export class GameScene extends Phaser.Scene {
         const at = this.room.doors[slots[i]];
         // The door stands in its wall slot, its feet on the wall's bottom edge.
         const art = DOOR_ART[kind];
-        const images = addStatic(this, 'tower-t1', art, at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.6));
-        const glow = kind === 'boss' ? addStatic(this, 'tower-t1', 'door-boss-glow', at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.61)) : [];
+        const images = addStatic(this, this.towerPack, art, at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.6));
+        const glow = kind === 'boss' ? addStatic(this, this.towerPack, 'door-boss-glow', at.x * TILE, (at.y + 0.5) * TILE).map((img) => img.setDepth(0.61)) : [];
         const look = DOOR_LOOK[kind];
         const label = this.add
           .text(at.x * TILE, (at.y + 0.55) * TILE, look.label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: css(look.color), stroke: '#14121c', strokeThickness: 4 })
@@ -1284,9 +1303,9 @@ export class GameScene extends Phaser.Scene {
     }
     // The chest and the shrine stand on their tile, drawn front-to-back with the characters.
     const c = this.room.chest;
-    this.chestImgs = c ? addStatic(this, 'tower-t1', 'chest-closed', c.x * TILE, (c.y + 0.5) * TILE) : [];
+    this.chestImgs = c ? addStatic(this, this.towerPack, 'chest-closed', c.x * TILE, (c.y + 0.5) * TILE) : [];
     const sh = this.room.shrine;
-    this.shrineImgs = sh ? addStatic(this, 'tower-t1', 'shrine', sh.x * TILE, (sh.y + 0.5) * TILE) : [];
+    this.shrineImgs = sh ? addStatic(this, this.towerPack, 'shrine', sh.x * TILE, (sh.y + 0.5) * TILE) : [];
     // The chest's glow, beam and stars show above the character standing at it.
     if (c) this.chestImgs.forEach((img, i) => img.setDepth(i === 0 ? depthAt((c.y + 0.4) * TILE) : 8));
     if (sh) this.shrineImgs.forEach((img) => img.setDepth(depthAt((sh.y + 0.4) * TILE)));
@@ -1296,15 +1315,15 @@ export class GameScene extends Phaser.Scene {
 
   /** Plays a looping (or once-only) static animation on images made by addStatic. */
   private animateStatic(id: string, images: Phaser.GameObjects.Image[], seconds: number): void {
-    const art = staticArt(this, 'tower-t1', id);
+    const art = staticArt(this, this.towerPack, id);
     if (!art) return;
     const f = Math.floor(seconds * (art.fps ?? 8));
-    setStaticFrame(this, 'tower-t1', id, images, art.loop ? f % art.frames : Math.min(f, art.frames - 1));
+    setStaticFrame(this, this.towerPack, id, images, art.loop ? f % art.frames : Math.min(f, art.frames - 1));
   }
 
   /** How long the chest's opening takes before the lid bursts open (ms), and in total. */
   private chestTiming(): { burstMs: number; totalMs: number } {
-    const art = staticArt(this, 'tower-t1', 'chest-open');
+    const art = staticArt(this, this.towerPack, 'chest-open');
     const fps = art?.fps ?? 12;
     const burst = Number(art?.keyFrames?.lidBurst ?? 12);
     return { burstMs: (burst / fps) * 1000, totalMs: ((art?.frames ?? 30) / fps) * 1000 };
@@ -1318,7 +1337,7 @@ export class GameScene extends Phaser.Scene {
 
     for (const d of this.doorViews) {
       // Closed until the room is cleared, then the doors slide open and the doorway glows.
-      setStaticFrame(this, 'tower-t1', d.art, d.images, prog.doorsOpen ? 1 : 0);
+      setStaticFrame(this, this.towerPack, d.art, d.images, prog.doorsOpen ? 1 : 0);
       if (d.glow.length) {
         d.glow.forEach((img) => img.setVisible(!prog.doorsOpen));
         if (!prog.doorsOpen) this.animateStatic('door-boss-glow', d.glow, now / 1000);
