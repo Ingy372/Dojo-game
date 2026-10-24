@@ -467,6 +467,13 @@ From section 1 of `docs/work-board.md`.
 - **Who starts on Guided:** a new profile (no runs started or played) whose feed age band tops out at 9 or under, **or** a white belt (tier 1) with 0 sign-offs at that belt (Manager decision, Oct 24). Everyone else starts on Standard.
 - **Kid-facing names:** Guided / Steady / Challenge. "Standard" stays the internal id (`standard`) and is the default.
 - **Never switched off a choice:** the first pick in Settings saves `difficultyChosenByPlayer: true`, and the game never changes it after that. A profile that already has runs but no difficulty gets Standard, not Guided.
+- **Age band parsing:** the top number of the band ("6-9" → 9) is compared with `guidedUpToAge`. All four fake profiles are "10-13", so profile 1 gets Guided through the white-belt rule.
+
+## M7-P9 — Play-time limit
+- Ends after the current room (at the door) as a new run result `rested`, never mid-fight; loot is kept like a cleared run.
+- Session = play with no 30-minute break (tunable in content). Open: is 30 min right, and should the reset be daily instead?
+- Grown-up gate is a 2-second press-and-hold, not a math question or PIN. Open: is that enough of a gate?
+- If time is already up when a run starts, the child still gets to play that first room. Open: block new runs instead?
 - ~~**Age band parsing:** the age-based Guided default~~ was removed by the Manager call below (2026-10-24).
 
 ## M7-P1 update: everyone starts on Standard (Manager + Learning Designer, 2026-10-24)
@@ -480,8 +487,19 @@ From section 1 of `docs/work-board.md`.
 - **Fixture:** `fixtures/5-white-belt-age-6-9.json` (Mia R., ageBand 6-9) for testing young players; it starts on Standard like everyone.
 - All text is in content/settings/difficulty.json.
 
+## M7-P9 update: daily play time, math gate, resting door (Manager + Learning Designer, 2026-10-24)
+
+- **Daily, not per sitting:** play time adds up through the day and resets at **local midnight** (`PlayClock {date, playedMs, lastSeenMs}`). The 30-minute-break session rule is gone. Time away counts only up to `maxGapSeconds` (60), so a tab left open overnight or a long break isn't counted.
+- **Grown-up gate is a sum**, not press-and-hold: "Grown-ups: what is a + b?" (a 12-19, b 6-9) with 4 choices. A wrong answer quietly goes back. `makeGateQuestion` in sim, tested.
+- **When time is up mid-run:** the current room finishes, then "Great training today!" (as before).
+- **No new run until midnight:** the Tower door shows "Your dojo is resting for today / Come back tomorrow for more training!" and no run starts. The Board's ENTER THE TOWER and the lost card's Try again go to the dojo instead.
+- Text in content/settings/play-time.json.
 ## C9 wording (PR #115) on P1 (2026-10-24)
 - Card texts: Guided "More time to COUNTER while you learn.", Challenge "Faster enemies and less time to COUNTER." Standard keeps "The usual pace." (the Manager/#114 must-fix wins over C9's "The normal way to train.").
 - Home line: "You're on {name}, and you can change it in Settings." "any time" is two words everywhere.
 - **Caps rule (Manager):** only fight-button names (COUNTER, STRIKE, DASH…) are in caps; menu buttons use normal case ("Settings", "Try it", "No thanks").
 - **Selected difficulty:** marked with a ✓ before the name as well as the gold border, never colour alone.
+
+## C9 wording (PR #115) on P9 (2026-10-24)
+- Wrap-up line: "Nice work, let's finish this room and rest!" Rest card lines: "You trained hard today!", "Rest now, or show a grown-up your moves.", "Everything you found is safe in your dojo." The card now draws every line in restLines.
+- Grown-up help: "…Then the game praises their training and returns to the dojo…". Menu buttons stay in normal case.

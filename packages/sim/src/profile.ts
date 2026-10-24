@@ -1,6 +1,7 @@
 // The player's saved progress from play: gear, personal bests, and bad-luck
 // protection. Plain data (the game stores it on the phone for now; on the server later).
 
+import { isPlayLimit, type PlayLimit } from './playTime';
 import { COMBAT, DIFFICULTY, LOOT, type Difficulty, type Rarity } from './config';
 import type { Effect } from './effects';
 import { GEAR_SLOTS, rarityRank, type GearItem, type GearSlot } from './loot';
@@ -76,6 +77,8 @@ export interface Profile {
   difficulty: Difficulty | null;
   /** True once the player picks a difficulty themselves; then it is never changed for them (M7-P1). */
   difficultyChosenByPlayer: boolean;
+  /** Parent setting (M7-P9): play-time limit in minutes, 0 = off (the default). */
+  playLimitMinutes: PlayLimit;
   /** Lost runs in a row on one floor (belt tier), for the kind Guided offer (M7-P1). */
   floorLosses: { tier: number; count: number } | null;
   /** The local date (YYYY-MM-DD) Guided was last offered, or null: at most once a day. */
@@ -116,6 +119,7 @@ export function newProfile(): Profile {
     streetSmarts: { best: {}, grownup: null },
     difficulty: null,
     difficultyChosenByPlayer: false,
+    playLimitMinutes: 0,
     floorLosses: null,
     guidedOfferedOn: null,
     difficultyLineShown: false,
@@ -136,7 +140,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, monsterJournal: readJournal(p.monsterJournal), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0 };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, monsterJournal: readJournal(p.monsterJournal), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0 };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {

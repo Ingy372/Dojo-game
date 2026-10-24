@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import playTimeText from '../../../../content/settings/play-time.json';
 import {
   BLESSING,
   GEAR_SLOTS,
@@ -29,6 +30,7 @@ import { CONTENT } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining, selectProfile, shortDate } from '../game/student';
 import { startTowerRun } from '../game/tower';
+import { isPlayTimeUp } from '../game/playTime';
 import { addIcon, ICON_PACK } from '../art/icons';
 import { loadArt } from '../art/art';
 import { makeStandingCharacter } from '../art/player';
@@ -221,8 +223,8 @@ export class HomeScene extends Phaser.Scene {
       return;
     }
     const s = last.summary;
-    const headline = s.result === 'cleared' ? 'Floor cleared!' : `You reached room ${Math.min(s.totalRooms, s.roomsCleared + 1)} of ${s.totalRooms}`;
-    this.text(x, y, headline, 20, s.result === 'cleared' ? '#ffd166' : '#f2e9d8', true);
+    const headline = s.result === 'cleared' ? 'Floor cleared!' : s.result === 'rested' ? playTimeText.homeHeadline : `You reached room ${Math.min(s.totalRooms, s.roomsCleared + 1)} of ${s.totalRooms}`;
+    this.text(x, y, headline, 20, s.result !== 'lost' ? '#ffd166' : '#f2e9d8', true);
     y += 30;
 
     // One chip per room: its grade, or a mark for treasure and rest rooms.
@@ -491,6 +493,8 @@ export class HomeScene extends Phaser.Scene {
   // ---------------------------------------------------------------- actions
 
   private enterTower(): void {
+    // Today's play time is used up: back to the dojo, whose door says it's resting (M7-P9).
+    if (isPlayTimeUp(this.profile)) return this.goTo('Dojo', {});
     this.goTo('Game', { run: startTowerRun(this.profile, this.training) });
   }
 
