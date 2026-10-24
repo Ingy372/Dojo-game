@@ -37,7 +37,7 @@
       "id": "lesson-counter-guided",
       "trigger": "During the slowdown, as the circle nears full; Counter button pulses",
       "screens": [
-        "Tap Counter... now!"
+        "Tap COUNTER... now!"
       ],
       "practice": "Tap COUNTER when Sensei says now.",
       "success": "You did it! Perfect!",
@@ -53,7 +53,7 @@
       "id": "lesson-counter-hint-2",
       "trigger": "Second '!' seen (smaller slowdown or none, Counter still pulses)",
       "screens": [
-        "Wait for it... Counter!"
+        "Wait for it... COUNTER!"
       ],
       "practice": "Tap COUNTER again.",
       "success": "Great timing!",
@@ -67,7 +67,7 @@
       "id": "lesson-counter-hint-3",
       "trigger": "Third '!' seen (no slowdown; small pulse only)",
       "screens": [
-        "Counter!"
+        "COUNTER!"
       ],
       "practice": "Tap COUNTER on your own.",
       "success": "Yes!",
@@ -85,7 +85,7 @@
         "Your STRIKE button is glowing.",
         "Tap it for a big, strong hit."
       ],
-      "practice": "Strike the practice bag.",
+      "practice": "STRIKE the practice bag.",
       "success": "What a hit!",
       "retry": "That's okay. Try again whenever you're ready.",
       "earliestSession": 1,
@@ -113,7 +113,7 @@
         "Too many circles? Dash away.",
         "Tap DASH to zoom out of danger."
       ],
-      "practice": "Dash out of the circle.",
+      "practice": "DASH out of the circle.",
       "success": "Quick feet!",
       "retry": "That's okay. Try again whenever you're ready.",
       "earliestSession": 2,
@@ -159,7 +159,7 @@
         "That is a Perfect Counter.",
         "It fills your Focus fast!"
       ],
-      "practice": "Counter when the circle is almost full.",
+      "practice": "Tap COUNTER when the circle is almost full.",
       "success": "Perfect! How did that feel?",
       "retry": "That's okay. Try again whenever you're ready.",
       "earliestSession": 5,
