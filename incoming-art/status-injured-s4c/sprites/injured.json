@@ -1,0 +1,358 @@
+{
+ "item": "S4c-A1 Injured status (samples)",
+ "colours": {
+  "star": "#ffe58a",
+  "star2": "#fffaec",
+  "starOutline": "#966c28",
+  "bandage": "#f3d6aa",
+  "pad": "#fff6e4",
+  "bandageOutline": "#8a603e"
+ },
+ "drawOrder": "injured-stars-back -> character layers -> injured-bandage -> injured-stars-front",
+ "windupFade": {
+  "rule": "during a wind-up the star layers fade to 50% alpha over the first 4 ticks and come back over 4 ticks after it ends; the bandage stays at 100%",
+  "alpha": 0.5,
+  "fadeTicks": 4
+ },
+ "wobble": {
+  "rule": "idle and move/chase only: rotate the whole character draw +-3 deg around its ground point, 1.6 s period (sine); stops during a wind-up (eased over 4 ticks)",
+  "deg": 3,
+  "periodSec": 1.6
+ },
+ "characters": {
+  "player": {
+   "frameWidth": 128,
+   "frameHeight": 160,
+   "anchor": {
+    "x": 64.0,
+    "y": 136.96,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+   },
+   "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+   ],
+   "animations": {
+    "idle": {
+     "frames": 8,
+     "fps": 8,
+     "sheets": {
+      "injured-stars-back": "player_injured-stars-back_idle.png",
+      "injured-stars-front": "player_injured-stars-front_idle.png",
+      "injured-bandage": "player_injured-bandage_idle.png"
+     }
+    },
+    "walk": {
+     "frames": 10,
+     "fps": 30,
+     "sheets": {
+      "injured-stars-back": "player_injured-stars-back_walk.png",
+      "injured-stars-front": "player_injured-stars-front_walk.png",
+      "injured-bandage": "player_injured-bandage_walk.png"
+     }
+    },
+    "hit": {
+     "frames": 5,
+     "fps": 20,
+     "sheets": {
+      "injured-stars-back": "player_injured-stars-back_hit.png",
+      "injured-stars-front": "player_injured-stars-front_hit.png",
+      "injured-bandage": "player_injured-bandage_hit.png"
+     }
+    }
+   }
+  },
+  "swarmer": {
+   "frameWidth": 128,
+   "frameHeight": 128,
+   "anchor": {
+    "x": 64.0,
+    "y": 104.96,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+   },
+   "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+   ],
+   "animations": {
+    "idle": {
+     "frames": 8,
+     "fps": 10,
+     "sheets": {
+      "injured-stars-back": "swarmer_injured-stars-back_idle.png",
+      "injured-stars-front": "swarmer_injured-stars-front_idle.png",
+      "injured-bandage": "swarmer_injured-bandage_idle.png"
+     }
+    },
+    "move": {
+     "frames": 6,
+     "fps": 12,
+     "sheets": {
+      "injured-stars-back": "swarmer_injured-stars-back_move.png",
+      "injured-stars-front": "swarmer_injured-stars-front_move.png",
+      "injured-bandage": "swarmer_injured-bandage_move.png"
+     }
+    },
+    "windup": {
+     "frames": 6,
+     "fps": 10,
+     "sheets": {
+      "injured-stars-back": "swarmer_injured-stars-back_windup.png",
+      "injured-stars-front": "swarmer_injured-stars-front_windup.png",
+      "injured-bandage": "swarmer_injured-bandage_windup.png"
+     }
+    }
+   }
+  },
+  "shield": {
+   "frameWidth": 128,
+   "frameHeight": 128,
+   "anchor": {
+    "x": 64.0,
+    "y": 104.96,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+   },
+   "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+   ],
+   "animations": {
+    "idle": {
+     "frames": 8,
+     "fps": 8,
+     "sheets": {
+      "injured-stars-back": "shield_injured-stars-back_idle.png",
+      "injured-stars-front": "shield_injured-stars-front_idle.png",
+      "injured-bandage": "shield_injured-bandage_idle.png"
+     }
+    },
+    "move": {
+     "frames": 6,
+     "fps": 10,
+     "sheets": {
+      "injured-stars-back": "shield_injured-stars-back_move.png",
+      "injured-stars-front": "shield_injured-stars-front_move.png",
+      "injured-bandage": "shield_injured-bandage_move.png"
+     }
+    },
+    "windup": {
+     "frames": 7,
+     "fps": 10,
+     "sheets": {
+      "injured-stars-back": "shield_injured-stars-back_windup.png",
+      "injured-stars-front": "shield_injured-stars-front_windup.png",
+      "injured-bandage": "shield_injured-bandage_windup.png"
+     }
+    }
+   }
+  },
+  "brute": {
+   "frameWidth": 208,
+   "frameHeight": 208,
+   "anchor": {
+    "x": 104.0,
+    "y": 170.56,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+   },
+   "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+   ],
+   "animations": {
+    "idle": {
+     "frames": 8,
+     "fps": 8,
+     "sheets": {
+      "injured-stars-back": "brute_injured-stars-back_idle.png",
+      "injured-stars-front": "brute_injured-stars-front_idle.png",
+      "injured-bandage": "brute_injured-bandage_idle.png"
+     }
+    },
+    "move": {
+     "frames": 6,
+     "fps": 10,
+     "sheets": {
+      "injured-stars-back": "brute_injured-stars-back_move.png",
+      "injured-stars-front": "brute_injured-stars-front_move.png",
+      "injured-bandage": "brute_injured-bandage_move.png"
+     }
+    },
+    "windup": {
+     "frames": 8,
+     "fps": 10,
+     "sheets": {
+      "injured-stars-back": "brute_injured-stars-back_windup.png",
+      "injured-stars-front": "brute_injured-stars-front_windup.png",
+      "injured-bandage": "brute_injured-bandage_windup.png"
+     }
+    }
+   }
+  },
+  "keeper": {
+   "frameWidth": 256,
+   "frameHeight": 256,
+   "anchor": {
+    "x": 128.0,
+    "y": 209.92,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+   },
+   "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+   ],
+   "animations": {
+    "idle": {
+     "frames": 8,
+     "fps": 8,
+     "sheets": {
+      "injured-stars-back": "keeper_injured-stars-back_idle.png",
+      "injured-stars-front": "keeper_injured-stars-front_idle.png",
+      "injured-bandage": "keeper_injured-bandage_idle.png"
+     }
+    },
+    "move": {
+     "frames": 6,
+     "fps": 8,
+     "sheets": {
+      "injured-stars-back": "keeper_injured-stars-back_move.png",
+      "injured-stars-front": "keeper_injured-stars-front_move.png",
+      "injured-bandage": "keeper_injured-bandage_move.png"
+     }
+    },
+    "windup_slam": {
+     "frames": 9,
+     "fps": 10,
+     "sheets": {
+      "injured-stars-back": "keeper_injured-stars-back_windup_slam.png",
+      "injured-stars-front": "keeper_injured-stars-front_windup_slam.png",
+      "injured-bandage": "keeper_injured-bandage_windup_slam.png"
+     }
+    },
+    "windup_sweep": {
+     "frames": 11,
+     "fps": 10,
+     "sheets": {
+      "injured-stars-back": "keeper_injured-stars-back_windup_sweep.png",
+      "injured-stars-front": "keeper_injured-stars-front_windup_sweep.png",
+      "injured-bandage": "keeper_injured-bandage_windup_sweep.png"
+     }
+    }
+   }
+  },
+  "padded": {
+   "frameWidth": 192,
+   "frameHeight": 192,
+   "anchor": {
+    "x": 96.0,
+    "y": 142.08,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+   },
+   "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+   ],
+   "animations": {
+    "idle": {
+     "frames": 8,
+     "fps": 8,
+     "sheets": {
+      "injured-stars-back": "padded_injured-stars-back_idle.png",
+      "injured-stars-front": "padded_injured-stars-front_idle.png",
+      "injured-bandage": "padded_injured-bandage_idle.png"
+     }
+    },
+    "move": {
+     "frames": 6,
+     "fps": 10,
+     "sheets": {
+      "injured-stars-back": "padded_injured-stars-back_move.png",
+      "injured-stars-front": "padded_injured-stars-front_move.png",
+      "injured-bandage": "padded_injured-bandage_move.png"
+     }
+    },
+    "windup": {
+     "frames": 8,
+     "fps": 10,
+     "sheets": {
+      "injured-stars-back": "padded_injured-stars-back_windup.png",
+      "injured-stars-front": "padded_injured-stars-front_windup.png",
+      "injured-bandage": "padded_injured-bandage_windup.png"
+     }
+    }
+   }
+  }
+ },
+ "fx": {
+  "puff": {
+   "file": "fx/injured-puff_shake-off.png",
+   "frames": 8,
+   "fps": 16,
+   "frameSize": [
+    128,
+    128
+   ],
+   "anchor": [
+    64,
+    104.96
+   ],
+   "when": "injuredEnd (or defeat while Injured uses the normal poof)"
+  },
+  "popup": {
+   "size": [
+    176,
+    56
+   ],
+   "textArea": [
+    46,
+    8,
+    166,
+    44
+   ],
+   "textColour": "#5a3e22",
+   "anchor": [
+    88,
+    56
+   ],
+   "note": "draw centred at the top of the head + 6 px; no text baked in",
+   "file": "fx/injured-popup_plate.png",
+   "word": "Injured!",
+   "when": "once when Injured starts; 0.9 s: pop in 0.12 s (scale 0.6 -> 1.05 -> 1), hold, float up 10 px and fade the last 0.3 s"
+  }
+ }
+}

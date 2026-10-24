@@ -32,3 +32,5 @@ Notes:
 **A6 decoration samples (2026-10-24): no outside assets.** Built by `decor-pool-a6/source/build_decor_a6.py` with helpers copied from the Home Dojo builder, rendered with `tools/`.
 
 **A6 Tier 1 decoration set (2026-10-24): no outside assets.** Built by `decor-tier1-a6/source/build_decor_t1.py` (helpers from the Home Dojo builder; monster colours from `enemies-tier1/source`), rendered with `tools/`.
+
+**S4c-A1 Injured status (2026-10-24): no outside assets in the sprites.** Drawn by `status-injured-s4c/source/make_injured.py` (PIL). The preview mock of the word uses the system Nunito font (SIL OFL); it is not shipped in any sprite.
