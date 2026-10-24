@@ -381,3 +381,4 @@ From section 1 of `docs/work-board.md`.
 - **Black belt to 2nd degree (J6, Jay, 2026-10-23):** 2 years between 1st degree and 2nd degree black belt. The game's setting still uses the old 1-year placeholder; Dojo-Ascent Programmer changes it in a later code step when Jay asks.
 - **Cosmetics (J5, Jay, 2026-10-23):** cosmetics come from gear, in-game achievements and dojo achievements, and are never bought.
 - **Fonts (J7, Jay, 2026-10-23):** Fredoka for headings, Andika for body text. The game still uses the system font until Dojo-Ascent Programmer adds the font files in a later code step.
+- **Belt names (Jay, 2026-10-23):** keep the game's wording, "Red/Black Belt" and "Brown/Black Belt". The curriculum's "Red with a black stripe" and "Brown with a black stripe" describe the same ranks.
