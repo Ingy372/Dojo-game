@@ -1,5 +1,5 @@
 {
-  "notes": "C7: S2 rarity display names (optional, ids stay) and UI lines. Legendary is post-launch; names are drafts.",
+  "notes": "C7: S2 rarity display names (optional, ids stay) and UI lines. Legendary is post-launch; names are drafts. C7 resolved (Manager): Common shows as Everyday and Uncommon as Special (ids unchanged); C2 order wins (decoration at 50, title at 100); 72 items; stone at green, bamboo at white; best-guess charm texts OK; titles approved.",
   "rarity": [
     {
       "id": "common",
