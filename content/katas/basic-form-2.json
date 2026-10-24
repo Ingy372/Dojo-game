@@ -1,0 +1,57 @@
+{
+  "id": "basic-form-2",
+  "name": "Basic Form 2",
+  "requirement": "yellow-kata",
+  "form": "flowing-form",
+  "from": "drafts/content/katas/basic-form-2.json (S3-K1). Only names, step counts and directions are shown in the game (D1).",
+  "steps": [
+    {
+      "n": 1,
+      "facing": [
+        "L"
+      ]
+    },
+    {
+      "n": 2,
+      "facing": [
+        "R"
+      ]
+    },
+    {
+      "n": 3,
+      "facing": [
+        "R"
+      ]
+    },
+    {
+      "n": 4,
+      "facing": [
+        "L"
+      ]
+    },
+    {
+      "n": 5,
+      "facing": [
+        "R"
+      ]
+    },
+    {
+      "n": 6,
+      "facing": [
+        "R"
+      ]
+    },
+    {
+      "n": 7,
+      "facing": [
+        "L"
+      ]
+    },
+    {
+      "n": 8,
+      "facing": [
+        "R"
+      ]
+    }
+  ]
+}
