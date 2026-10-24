@@ -250,3 +250,13 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 
 **Next**
 - Nic's DojoForge data needs the same 24-month value for black belt.
+
+## S1 change 1: enemy mixes (2026-10-23)
+
+**Done**
+- Five new battle rooms that each ask one clear question (brute + swarmers, shield + swarmers, two shields). The harder ones only show up later in a floor.
+- A new test plays 5 runs and checks they show at least 4 different enemy mixes (they show 2 without the new rooms).
+- Novice win rate on Standard went from 35% to 41%, so no drop. 135 tests pass and the game builds.
+
+**Next**
+- Jay plays a few floors and says whether the mixes feel different. S1 change 2 (Perfect Counter chain) is in its own pull request.
