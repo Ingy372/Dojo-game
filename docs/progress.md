@@ -497,3 +497,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - New lessons now come one per session (a calendar day with a run) and one per room; Perfect, Block and Step-out ignore the session limit. Each lesson has a triggerKey fired from play (Dash, Insights, Decorating, Perfect, Block, Step-out).
 - Sensei's Scroll in the Home Dojo lists every lesson seen (not the fading follow-ups or the welcome line); tap to replay, plus "Replay the tutorial floor".
 - Tests 261 passed / 1 skipped (new packages/sim/test/lessons.test.ts: two sessions in a row give one new lesson each, never two; every seen lesson is on the Scroll and replays). Typecheck and build pass. Screenshots /workspace/k17-{667,844}-{dojo,scroll,replay,replay2}.png.
+
+## K18 / M7-P4 Unlock cascade on the first return home (2026-10-24)
+- First return home: Sensei's welcome line, then "You've already earned these in the dojo.", then each sign-off in the order earned, then each stripe. A brand-new white belt sees the Beginner's Stance and what the first sign-off unlocks. Nothing plays twice.
+- New packages/sim/test/cascade.test.ts runs over all 5 fake profiles. Screenshots /workspace/k18-{667,844}-*.png.
