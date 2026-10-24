@@ -38,9 +38,9 @@ K = {
    7:["turn.180","block.downward","chamber","kick.reverse","punch.reverse","punch.straight"],
    8:["turn.180","block.downward","chamber","kick.reverse","punch.reverse","punch.straight"]}),
  "keon": dict(md="keon.md", name="Keon", school="Keon", form=None, belt="orange-to-green",
-  facing={1:["L"],2:["R"],3:["R"],4:["R"],5:["L"],6:["F"],7:["L"],8:["R"],9:["B"]}, q={}, jay={2:"Left-hand straight punch (Jay, Oct 24).",4:"Same-side ear is correct (Jay, Oct 24).",5:"Same-side ear is correct (Jay, Oct 24)."}, kiai=[9],
+  facing={1:["L"],2:["R"],3:["F"],4:["R"],5:["L"],6:["F"],7:["L"],8:["R"],9:["B"]}, q={}, jay={3:"No step: the RH punch is thrown from where they stand (Jay, Oct 24). Facing F is our reading; the sheet gives no direction.",2:"Left-hand straight punch (Jay, Oct 24).",4:"Same-side ear is correct. 'step w/RF, end facing R' is a turn (Jay, Oct 24).",5:"Same-side ear is correct (Jay, Oct 24)."}, kiai=[9],
   moves={1:["pivot","block.downward","punch.straight"],2:["turn.180","block.downward","punch.straight"],3:["stance.cat","stance.front","block.downward","punch.straight"],
-   4:["block.reverse-inside","punch.reverse"],5:["turn.180","block.reverse-inside","punch.reverse"],6:["stance.cat","block.downward","punch.reverse"],
+   4:["turn","block.reverse-inside","punch.reverse"],5:["turn.180","block.reverse-inside","punch.reverse"],6:["stance.cat","block.downward","punch.reverse"],
    7:["pivot","block.overhead","catch","kick.straight","punch.straight"],8:["turn.180","block.overhead","catch","kick.straight","punch.straight"],
    9:["pivot","stance.front","block.downward","punch.straight"]}),
  "david-and-goliath": dict(md="david-and-goliath.md", name="David and Goliath", school="David and Goliath", form=None, belt="green-to-blue",
@@ -50,7 +50,7 @@ K = {
    8:["turn.180","block.reverse-inside","punch.reverse"],9:["pivot","strike.backfist","punch.straight","punch.reverse"],10:["pivot","block.overhead","catch","kick.front","punch.straight"],
    11:["turn.180","block.overhead","catch","kick.front","punch.straight"],12:["pivot","stance.attention","break.double-choke"]}),
 }
-MOVES = {"pivot":"Pivot","turn.180":"Half turn","turn.big-special":"Big special turn","stance.cat":"Cat stance","stance.front":"Front stance","stance.attention":"Attention",
+MOVES = {"pivot":"Pivot","turn.180":"Half turn","turn":"Turn","turn.big-special":"Big special turn","stance.cat":"Cat stance","stance.front":"Front stance","stance.attention":"Attention",
  "block.downward":"Low block","block.reverse-inside":"Inside block","block.overhead":"High block","block.double-knife-hand":"Double knife-hand block",
  "punch.straight":"Straight punch","punch.reverse":"Reverse punch","strike.backfist":"Backfist","kick.reverse":"Reverse kick",
  "kick.straight":"Straight kick","kick.front":"Front kick","chamber":"Chamber","catch":"Catch","break.double-choke":"Choke break"}
