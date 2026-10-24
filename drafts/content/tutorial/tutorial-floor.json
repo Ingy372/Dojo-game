@@ -1,5 +1,5 @@
 {
-  "notes": "DRAFT for M7-P3 (tutorial lines for the P2 tutorial floor). Same format and keys as content/tutorial/sensei-lessons.json. One screen line per step, each under 12 words; 'success' shows when the step is done; 'retry'/'nudge' only on the brute step (never a penalty, Health never drops below 1). 'COUNTER' matches the button label. The P4 cascade line 'You've already earned these in the dojo.' is in the plan's own spec and isn't repeated here. Played once per profile; replay from the Lesson Scroll.",
+  "notes": "DRAFT for M7-P3 (tutorial lines for the P2 tutorial floor). Same format and keys as content/tutorial/sensei-lessons.json. One screen line per step, each under 12 words; 'success' shows when the step is done; 'retry'/'nudge' only on the brute step (never a penalty, Health never drops below 1). 'COUNTER' matches the button label. The P4 cascade line 'You've already earned these in the dojo.' is in the plan's own spec and isn't repeated here. Played once per profile; replay from the Lesson Scroll. Revised after M7-P13: the Insight step is automatic with no menu; the real Insight choice is taught in session 3 (lesson-insights).",
   "speaker": "sensei",
   "lessons": [
     {
@@ -37,11 +37,11 @@
     {
       "id": "tutorial-insight",
       "order": 4,
-      "trigger": "Insight choice (1 of 3) opens",
+      "trigger": "After the brute: Sensei auto-picks one Insight (no menu, no cards)",
       "screens": [
-        "Pick one Insight. It helps for this climb."
+        "Sensei gives you an Insight!"
       ],
-      "success": "Good pick!",
+      "success": "It will help you on this climb.",
       "earliestRun": 1
     },
     {
