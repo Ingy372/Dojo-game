@@ -567,6 +567,16 @@
           ]
         }
       ]
+    },
+    "enemy-bopper": {
+      "note": "A5 Bouncy Bopper, full set (PR #111; Jay approved the 192 px frame, lime accent, hidden staff for disarmed and push-paw). Asset files keep the `padded` names. Stats are still a DECIDE (#102), so the game only shows it through the ?skin=bopper test link for now.",
+      "sources": [
+        {
+          "id": "bopper",
+          "type": "character",
+          "json": "incoming-art/enemy-padded-weapon/sprites/padded.json"
+        }
+      ]
     }
   }
 }

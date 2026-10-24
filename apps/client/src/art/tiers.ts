@@ -32,3 +32,17 @@ export function testAura(search = window.location.search): AuraKind | null {
 export function auraId(kind: AuraKind, enemyId: string): string {
   return `aura-${kind}-${enemyId === 'floor-keeper' ? 'keeper' : enemyId}`;
 }
+
+/** Enemy art that is imported but not in the game yet (its numbers are still a DECIDE). */
+export const TEST_SKINS: Record<string, { pack: PackName; id: string }> = {
+  bopper: { pack: 'enemy-bopper', id: 'bopper' },
+};
+
+/**
+ * For testing only: ?skin=bopper draws the Bouncy Bopper art (A5, PR #111) on every enemy.
+ * It changes only the picture, never the game rules, and the staff (weapon layer) is shown.
+ */
+export function testSkin(search = window.location.search): { pack: PackName; id: string } | null {
+  const asked = new URLSearchParams(search).get('skin');
+  return asked ? TEST_SKINS[asked] ?? null : null;
+}
