@@ -130,7 +130,9 @@ function readStreetSmarts(v: unknown): StreetSmartsSave {
 }
 
 /** Marks a named monster as met in the Monster Journal. Returns true the first time. */
-export function meetNamed(profile: Profile, id: string): boolean {
+export function meetNamed(profile: Profile, run: { test: boolean }, id: string): boolean {
+  // Test-link runs (?named=, ?room=, ...) never write the journal (K10).
+  if (run.test) return false;
   const e = profile.monsterJournal[id];
   if (e?.met) return false;
   profile.monsterJournal[id] = { met: true, beaten: e?.beaten ?? false };
@@ -139,9 +141,11 @@ export function meetNamed(profile: Profile, id: string): boolean {
 
 /**
  * Marks a named monster as beaten. The first win only returns its sticker (a Home Dojo
- * decoration id) to give; later wins return null and give nothing more.
+ * decoration id) to give; later wins and test-link runs return null and give nothing.
  */
-export function beatNamed(profile: Profile, named: NamedContent, id: string): string | null {
+export function beatNamed(profile: Profile, run: { test: boolean }, named: NamedContent, id: string): string | null {
+  // Test-link runs never stamp the journal or give the sticker (K10).
+  if (run.test) return null;
   const e = profile.monsterJournal[id];
   if (e?.beaten) return null;
   profile.monsterJournal[id] = { met: true, beaten: true };
