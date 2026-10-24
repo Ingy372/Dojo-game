@@ -9,6 +9,7 @@
 //              holds still and the button pulses.
 // It uses its own seeded random numbers, so results repeat exactly.
 
+import type { EliteKind } from '../../src';
 import {
   COMBAT,
   GUIDE_DONE,
@@ -56,6 +57,8 @@ export const SKILLS: Record<string, Skill> = {
 
 export interface RoomStats {
   roomId: string;
+  /** Elite in the room, if any (S1 #3). */
+  elite?: EliteKind | null;
   kind: string;
   ticks: number;
   damage: number;
@@ -297,15 +300,18 @@ function awayFrom(pos: Vec2, from: Vec2[], room: Room): Vec2 {
 }
 
 /** Plays a whole run. */
-export function playRun(content: Content, seed: number, style: Style, skill: Skill, difficulty: Difficulty = 'standard', base = { maxHealth: 100, power: 10, guard: 0 }, guideStep?: number): RunStats {
-  const run = startRun(content, { seed, dryRuns: 0 });
+export function playRun(content: Content, seed: number, style: Style, skill: Skill, difficulty: Difficulty = 'standard', base = { maxHealth: 100, power: 10, guard: 0 }, guideStep?: number, elites: { tier?: number; forcedElite?: EliteKind } = {}): RunStats {
+  const run = startRun(content, { seed, dryRuns: 0, difficulty, ...elites });
   const rng = createRng(seed * 7919 + 13);
   const rooms: RoomStats[] = [];
   let ticks = 0;
   while (run.status === 'playing' && rooms.length < 20) {
     const room = currentRoom(content, run);
     const world = createRunWorld(content, run, base, [], difficulty, guideStep);
-    rooms.push(playRoom(content, run, world, room, style, skill, rng));
+    const elite = run.elites[0]?.kind ?? null;
+    const played = playRoom(content, run, world, room, style, skill, rng);
+    played.elite = elite;
+    rooms.push(played);
     if (guideStep !== undefined) guideStep = world.guide?.step ?? GUIDE_DONE;
     ticks += world.tick;
   }

@@ -3,6 +3,7 @@
 
 import { loadAbilities, type AbilityContent } from './abilities';
 import { loadDojoContent, type DojoContent } from './dojo';
+import { loadElites, type EliteRules } from './elite';
 import { loadEnemy, type EnemyDef } from './enemy';
 import { loadInsights, type InsightDef } from './insight';
 import { loadLootTables, type LootTables } from './loot';
@@ -17,6 +18,7 @@ export interface Content {
   abilities: AbilityContent;
   dojo: DojoContent;
   twists: TwistContent;
+  elites: EliteRules;
 }
 
 export interface RawContent {
@@ -29,6 +31,7 @@ export interface RawContent {
   dojoRoom: unknown;
   decorations: unknown;
   twists: unknown;
+  elites: unknown;
 }
 
 export function loadContent(raw: RawContent): Content {
@@ -53,6 +56,13 @@ export function loadContent(raw: RawContent): Content {
   for (const kind of ['battle', 'challenge', 'treasure', 'rest', 'boss'] as RoomKind[]) {
     if (!rooms.some((r) => r.kind === kind)) throw new Error(`There is no ${kind} room`);
   }
+  const elites = loadElites(raw.elites);
+  for (const k of Object.values(elites.kinds)) {
+    for (const id of k.enemies) {
+      if (!enemies[id]) throw new Error(`Elites list enemy "${id}", which doesn't exist`);
+      if (enemies[id].boss) throw new Error(`Elites list "${id}", but bosses are never elites`);
+    }
+  }
   const loot = loadLootTables(raw.gear, raw.drops);
   for (const id of Object.keys(loot.enemyDropChance)) {
     if (!enemies[id]) throw new Error(`Loot drops list enemy "${id}", which doesn't exist`);
@@ -65,5 +75,6 @@ export function loadContent(raw: RawContent): Content {
     abilities: loadAbilities(raw.abilities),
     dojo: loadDojoContent(raw.dojoRoom, raw.decorations),
     twists: loadTwists(raw.twists),
+    elites,
   };
 }

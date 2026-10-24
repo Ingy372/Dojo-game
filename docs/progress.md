@@ -331,3 +331,19 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 **Next**
 - S1 #3: elite rules (who becomes elite, Swift and Guarding effects), using these auras.
 - Place the optional Sunrise Garden decorations in Tier 2 rooms.
+
+## S1 #3: elites (2026-10-24)
+
+**Done**
+- **Elites from the 4th belt (green) up.** From room 3 on, a battle room has a 20% chance of an elite and a challenge room 35%. There can be 1 per room and 2 per floor. First the kind is rolled (Swift 60%, Guarding 40%). Then a random brute, swarmer or shield is picked from the whole room, later waves included. The boss and its summons are never picked.
+- **Swift (gold aura):** 1.25x health, 1.25x speed, recovers faster. On Standard its wind-up is 0.8x (never under 10 ticks). Guided and Challenge keep the normal wind-up.
+- **Guarding (blue aura):** only a brute or shield gets it. It has 1.25x health and protects the 2 closest enemies within 3 tiles, which take 0.67x damage. A blue line joins them. Perfect Counter and Strike-breaks-shield still work. There is no Guarding on Guided or on the first floor of a new belt; it becomes Swift instead.
+- **Reward:** beating an elite gives +15 Focus (max 100) and a 50% chance of one extra decoration. No gear.
+- All the numbers are in `content/elites/elites.json`.
+- New 4th-belt test profile: `fixtures/4-green-belt.json`.
+- Test link: `?elite=swift` or `?elite=guarding` puts that elite in the first fight room. It skips the normal rules.
+- 171 tests pass (1 skipped) and the game builds.
+
+**Next**
+- Jay decides whether the typical player's win rate is OK: it drops from 100% to 93% at the 4th belt, more than the 5-point target.
+- Tether art and a "snap" effect when a guard falls (now plain lines).

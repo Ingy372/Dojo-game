@@ -8,6 +8,7 @@ import { pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
 import { BOW, COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, type Difficulty } from './config';
 import { noMods, type PlayerMods } from './effects';
+import { eliteDef, eliteWindup, type EliteKind, type EliteRules, type EliteSpawn } from './elite';
 import type { EnemyAttackDef, EnemyDef } from './enemy';
 import { clamp, distance, length, quantize, type Vec2 } from './math';
 import { findPath, standableSpot } from './path';
@@ -148,6 +149,10 @@ export interface EnemyState {
   chaseTicks: number;
   /** Disarmed by a Perfect Counter: its next attack does this much less damage (0 = not disarmed). */
   disarmed: number;
+  /** Elite trait (S1 #3), or null for a normal enemy. Its stats in `def` are already scaled. */
+  elite: EliteKind | null;
+  /** The Guarding elite protecting this enemy right now (updated every tick), or null. */
+  guardedBy: EnemyId | null;
 }
 
 /** Things that happened during the last tick, so the game can play effects and sounds. */
@@ -155,6 +160,8 @@ export type AttackMove = 'basic' | 'strike' | 'counter' | 'chain' | 'ripple' | '
 
 export type CombatEvent =
   | { kind: 'playerAttack'; playerId: PlayerId; enemyId: EnemyId; move: AttackMove; damage: number; defeated: boolean }
+  /** An elite was defeated: its Focus reward (S1 #3), already added. */
+  | { kind: 'eliteFocus'; playerId: PlayerId; enemyId: EnemyId; focus: number }
   | { kind: 'telegraph'; enemyId: EnemyId; ticks: number }
   /** Bell Room twist: a Perfect Counter rang a bell (`count` so far, `of` needed). */
   | { kind: 'bell'; count: number; of: number }
@@ -197,6 +204,9 @@ export type CombatEvent =
   /** `door` is the position in the offered doors (0 = leftmost offered door). */
   | { kind: 'doorEntered'; playerId: PlayerId; door: number };
 
+/** An enemy waiting for a later wave (it may be an elite). */
+type PendingSpawn = EnemySpawn & { elite?: EliteKind | null };
+
 export interface WorldState {
   tick: number;
   roomId: string;
@@ -214,7 +224,7 @@ export interface WorldState {
   wave: number;
   waveCount: number;
   /** Enemies still to arrive in later waves. */
-  pendingSpawns: EnemySpawn[];
+  pendingSpawns: PendingSpawn[];
   progress: RoomProgress;
   /** Events from the most recent tick only. */
   events: CombatEvent[];
@@ -224,6 +234,8 @@ export interface WorldState {
   bells: number;
   /** Sensei's guided first Counter, or null when it's finished or off. */
   guide: GuideState | null;
+  /** Elite rules (from content/elites), or null when the room has no elites. */
+  elites: EliteRules | null;
 }
 
 /** Steps of the guided Counter: 0 guided (holds still), 1 hint, 2 pulse only, 3 done. */
@@ -267,6 +279,10 @@ export interface WorldOptions {
   twist?: TwistDef | null;
   /** Guided Counter step to start at (see GUIDE_DONE). Default: done (off). */
   guideStep?: number;
+  /** Elites in this room: which enemy spawns (index in the room file) and their kind. */
+  elites?: EliteSpawn[];
+  /** Elite rules (from content/elites); needed when `elites` is given. */
+  eliteRules?: EliteRules;
 }
 
 export interface PlayerSetup {
@@ -331,7 +347,9 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
 
   const respawnEnemies = options.respawnEnemies ?? true;
   const enemies: EnemyState[] = [];
-  const pendingSpawns: EnemySpawn[] = [];
+  const pendingSpawns: PendingSpawn[] = [];
+  const rules = options.eliteRules ?? null;
+  const eliteOf = (i: number): EliteKind | null => (rules ? options.elites?.find((x) => x.spawn === i)?.kind ?? null : null);
   // Keep every type that can appear later (later waves, a boss's helpers), so the
   // world has everything it needs when saved or sent.
   const enemyTypes: Record<string, EnemyDef> = {};
@@ -344,9 +362,10 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     room.enemySpawns.forEach((spawn, i) => {
       const def = typeOf(spawn.enemy);
       // Practice rooms put everyone in at once; floor rooms hold later waves back.
-      if (spawn.wave === 1 || respawnEnemies) enemies.push(newEnemy(`e${i + 1}`, def, spawn.pos, i));
+      const elite = eliteOf(i);
+      if (spawn.wave === 1 || respawnEnemies) enemies.push(newEnemy(`e${i + 1}`, def, spawn.pos, i, elite, rules));
       else {
-        pendingSpawns.push({ enemy: spawn.enemy, pos: { ...spawn.pos }, wave: spawn.wave });
+        pendingSpawns.push({ enemy: spawn.enemy, pos: { ...spawn.pos }, wave: spawn.wave, elite });
         enemyTypes[spawn.enemy] = def;
       }
       if (def.summon) enemyTypes[def.summon.enemy] = typeOf(def.summon.enemy);
@@ -379,6 +398,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     events: [],
     twist: options.twist ?? null,
     bells: 0,
+    elites: rules,
     guide: (options.guideStep ?? GUIDE_DONE) < GUIDE_DONE ? { step: options.guideStep!, enemyId: null, waiting: false, waitTicks: 0 } : null,
   };
 }
@@ -394,7 +414,8 @@ export function setPlayerMods(p: PlayerState, mods: PlayerMods): void {
   p.mods = { ...mods };
 }
 
-function newEnemy(id: EnemyId, def: EnemyDef, pos: Vec2, n: number): EnemyState {
+function newEnemy(id: EnemyId, base: EnemyDef, pos: Vec2, n: number, elite: EliteKind | null = null, rules: EliteRules | null = null): EnemyState {
+  const def = elite && rules ? eliteDef(base, elite, rules) : base;
   return {
     id,
     def,
@@ -416,6 +437,8 @@ function newEnemy(id: EnemyId, def: EnemyDef, pos: Vec2, n: number): EnemyState 
     orbit: n % 2 === 0 ? 1 : -1,
     chaseTicks: 0,
     disarmed: 0,
+    elite: elite && rules ? elite : null,
+    guardedBy: null,
   };
 }
 
@@ -440,6 +463,7 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
   }
   for (const e of world.enemies) stepEnemy(world, e, room);
   separateEnemies(world, room);
+  updateGuards(world);
   for (const id of ids) separateFromEnemies(world, world.players[id], room);
   updateProgress(world, room, ids);
   if (guide) stepGuide(world, guide, ids);
@@ -724,6 +748,9 @@ function landHit(
 
 /** Damage lands on an enemy. */
 function hurtEnemy(world: WorldState, p: PlayerState, e: EnemyState, move: AttackMove, dmg: number): void {
+  // Guarding aura: a protected enemy takes less from every kind of player damage. Applied last,
+  // after all bonuses, rounded, at least 1.
+  if (e.guardedBy && world.elites) dmg = Math.max(1, Math.round(dmg * world.elites.guarding.damageScale));
   e.health = Math.max(0, e.health - dmg);
   const defeated = e.health === 0;
   if (defeated) {
@@ -733,6 +760,12 @@ function hurtEnemy(world: WorldState, p: PlayerState, e: EnemyState, move: Attac
     e.path = null;
   }
   world.events.push({ kind: 'playerAttack', playerId: p.id, enemyId: e.id, move, damage: dmg, defeated });
+  // Elite reward: a burst of Focus for whoever defeated it.
+  if (defeated && e.elite && world.elites) {
+    const before = p.focus;
+    p.focus = Math.min(COMBAT.focus.max, p.focus + world.elites.reward.focus);
+    world.events.push({ kind: 'eliteFocus', playerId: p.id, enemyId: e.id, focus: p.focus - before });
+  }
 }
 
 function nearestEnemy(world: WorldState, p: PlayerState, maxGap: number): EnemyState | null {
@@ -910,7 +943,8 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
   const canAttack = attackersNow(world) < COMBAT.maxAttackersAtOnce;
   if (dist <= a.startRange && canAttack) {
     // Start the telegraph. The danger area is fixed now, so the player can step out of it.
-    const ticks = telegraphTicks(a, world.difficulty);
+    let ticks = telegraphTicks(a, world.difficulty);
+    if (e.elite && world.elites) ticks = eliteWindup(ticks, e.elite, world.difficulty, world.elites, DIFFICULTY[world.difficulty].counterWindowTicks);
     e.mode = 'windup';
     e.modeTicks = ticks;
     e.windupTotal = ticks;
@@ -1080,11 +1114,31 @@ function spawnNextWave(world: WorldState): void {
   const now = world.pendingSpawns.filter((s) => s.wave <= world.wave);
   world.pendingSpawns = world.pendingSpawns.filter((s) => s.wave > world.wave);
   for (const s of now) {
-    const e = newEnemy(`e${world.nextEnemyNumber++}`, world.enemyTypes[s.enemy], s.pos, world.enemies.length);
+    const e = newEnemy(`e${world.nextEnemyNumber++}`, world.enemyTypes[s.enemy], s.pos, world.enemies.length, s.elite ?? null, world.elites);
     world.enemies.push(e);
     world.events.push({ kind: 'enemySpawn', enemyId: e.id });
   }
   world.events.push({ kind: 'wave', wave: world.wave, of: world.waveCount });
+}
+
+/**
+ * Guarding aura, every tick: each Guarding elite protects the closest enemies within range
+ * (center to center), up to `protects` of them. Ties go to the enemy that came into the room
+ * first. Guarders never protect themselves, each other, or a boss.
+ */
+export function updateGuards(world: WorldState): void {
+  for (const e of world.enemies) e.guardedBy = null;
+  const g = world.elites?.guarding;
+  if (!g) return;
+  for (const guard of world.enemies) {
+    if (guard.elite !== 'guarding' || !isEnemyPresent(guard)) continue;
+    const near = world.enemies
+      .map((o, order) => ({ o, order, d: distance(guard.pos, o.pos) }))
+      .filter(({ o, d }) => o !== guard && isEnemyPresent(o) && o.elite !== 'guarding' && !o.def.boss && !o.guardedBy && d <= g.rangeTiles)
+      .sort((a, b) => a.d - b.d || a.order - b.order)
+      .slice(0, g.protects);
+    for (const { o } of near) o.guardedBy = guard.id;
+  }
 }
 
 /** Keeps enemies from standing inside each other (pairs in a fixed order). */
