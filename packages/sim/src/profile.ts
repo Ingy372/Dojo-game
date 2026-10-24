@@ -74,6 +74,8 @@ export interface Profile {
    * Every Tower run takes its difficulty from here, so elites and combat always agree.
    */
   difficulty: Difficulty | null;
+  /** True once the player picks a difficulty themselves; then it is never changed for them (M7-P1). */
+  difficultyChosenByPlayer: boolean;
   /** Street Smarts: best stars per scenario, and who the player picked as their grown-up. */
   streetSmarts: StreetSmartsSave;
   /** Monster Journal (M7-N1): named monsters met and beaten. Never counts, only yes/no. */
@@ -107,6 +109,7 @@ export function newProfile(): Profile {
     guideStep: 0,
     streetSmarts: { best: {}, grownup: null },
     difficulty: null,
+    difficultyChosenByPlayer: false,
     monsterJournal: {},
     runsStarted: 0,
   };
@@ -119,7 +122,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, monsterJournal: readJournal(p.monsterJournal), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0 };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, monsterJournal: readJournal(p.monsterJournal), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0 };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {
@@ -256,4 +259,45 @@ function isDifficulty(v: unknown): v is Difficulty {
 export function runDifficulty(profile: Profile, testLink: string | null = null): Difficulty {
   if (isDifficulty(testLink)) return testLink;
   return profile.difficulty ?? COMBAT.defaultDifficulty;
+}
+
+/** Who starts on Guided (M7-P1), from content/settings/difficulty.json. */
+export interface StartingDifficultyRules {
+  /** Age bands like "6-9" whose top age is at most this start on Guided. */
+  guidedUpToAge: number;
+  /** A student on this belt tier (white = 1) with no sign-offs yet starts on Guided. */
+  guidedNewBeltTier: number;
+}
+
+/** The parts of the student's real progress the starting difficulty looks at. */
+export interface StarterInfo {
+  ageBand: string;
+  beltTier: number;
+  signOffsThisBelt: number;
+}
+
+/** True for a young or brand-new student: ages up to guidedUpToAge, or a white belt with 0 sign-offs. */
+export function startsOnGuided(info: StarterInfo, rules: StartingDifficultyRules): boolean {
+  const top = Number(info.ageBand.split('-').pop());
+  const young = Number.isFinite(top) && top > 0 && top <= rules.guidedUpToAge;
+  const brandNew = info.beltTier === rules.guidedNewBeltTier && info.signOffsThisBelt === 0;
+  return young || brandNew;
+}
+
+/**
+ * Gives the profile a real difficulty the first time it's needed. A new profile (no runs yet)
+ * starts on Guided if startsOnGuided, otherwise on the default (Standard). A difficulty the
+ * player chose, or one already set, is never changed. Returns true if it set one.
+ */
+export function settleDifficulty(profile: Profile, info: StarterInfo, rules: StartingDifficultyRules): boolean {
+  if (profile.difficultyChosenByPlayer || profile.difficulty !== null) return false;
+  const fresh = profile.runsStarted === 0 && profile.runsPlayed === 0;
+  profile.difficulty = fresh && startsOnGuided(info, rules) ? 'guided' : COMBAT.defaultDifficulty;
+  return true;
+}
+
+/** The player picks a difficulty in Settings; from now on it's theirs. */
+export function chooseDifficulty(profile: Profile, difficulty: Difficulty): void {
+  profile.difficulty = difficulty;
+  profile.difficultyChosenByPlayer = true;
 }

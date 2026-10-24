@@ -410,3 +410,11 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - The `?elite=guarding` test link now respects Guided: it gives a Swift elite instead.
 - The store script's notes say "approved through J11, helper question trimmed to 4 choices (#79)" again, not the old DRAFT note.
 - 197 tests pass (1 skipped), typecheck clean, build passes. Screenshots at 667x375 and 844x390.
+
+## K11 / M7-P1: Guided by default for young and new players (2026-10-24)
+- A new profile (no runs yet) starts on **Guided** if the student's age band tops out at 9 or under, or they're a white belt with 0 sign-offs. Everyone else starts on **Standard** (the default). The rules are in `content/settings/difficulty.json`.
+- `profile.difficulty` now always gets a real value. It is set the first time the Home Dojo opens or a Tower run starts (`settleDifficulty`). It is never changed again after the player picks one: `difficultyChosenByPlayer` is saved when they do.
+- New **Settings** button in the Home Dojo. It opens the difficulty choice screen: Guided / **Steady** (the kid-facing name for Standard) / Challenge.
+- While a player is on an automatic Guided, the Home Dojo shows "You're on Guided. Change anytime in Settings."
+- `TrainingState` now has `ageBand` from the feed.
+- New tests in `packages/sim/test/difficulty.test.ts`. In the browser: the new white belt starts on Guided; tapping Steady sticks after a reload; the green belt starts on Standard. 204 tests pass, 1 skipped.

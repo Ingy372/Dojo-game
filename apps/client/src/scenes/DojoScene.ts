@@ -33,11 +33,13 @@ import {
   type Vec2,
   type WorldState,
   streetSmartsOpen,
+  chooseDifficulty,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
 import { bowIsDue, homeDojo, setBowDue } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
+import { DIFFICULTY_TEXT, ensureDifficulty } from '../game/difficulty';
 import streetUi from '../../../../content/street-smarts/ui.json';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
@@ -151,6 +153,7 @@ export class DojoScene extends Phaser.Scene {
     this.dojo = homeDojo(this.profile);
     this.training = currentTraining();
     const hoursAway = returnToDojo(this.dojo, CONTENT.dojo, Date.now());
+    ensureDifficulty(this.profile, this.training);
     writeSave(this.profile);
 
     this.mode = 'play';
@@ -786,6 +789,11 @@ export class DojoScene extends Phaser.Scene {
       this.button(width - pad - 80, 8, 80, 32, 'Board', 0x4a3f63, 14, () => this.goBoard());
       this.button(width - pad - 80 - 8 - 100, 8, 100, 32, 'Decorate', 0x8a5a35, 14, () => this.setDecorating(true));
       this.button(width - pad - 80 - 8 - 100 - 8 - 70, 8, 70, 32, 'Look', 0x3a6ea5, 14, () => this.changeLook());
+      this.button(width - pad - 80 - 8 - 100 - 8 - 70 - 8 - 90, 8, 90, 32, DIFFICULTY_TEXT.button, 0x3a3a4a, 14, () => this.openDifficulty());
+      // A new young player was put on Guided for them: one line says so (M7-P1).
+      if (this.profile.difficulty === 'guided' && !this.profile.difficultyChosenByPlayer) {
+        this.text(pad, TOP + 6, DIFFICULTY_TEXT.homeLine, 14, '#fff6e0', true).setStroke('#14121c', 5);
+      }
       if (streetSmartsOpen(this.training.tier, streetUi.unlockTier)) this.button(width - pad - 130, 46, 130, 32, streetUi.button, 0x3aa57a, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
       // The Monster Journal, from the belt where named monsters start showing up.
       if (this.training.tier >= CONTENT.named.rules.minBeltTier) {
@@ -843,6 +851,48 @@ export class DojoScene extends Phaser.Scene {
       this.mode = before === 'menu' ? 'play' : before;
       this.renderUi();
     });
+  }
+
+  /** Settings: the difficulty choice (Guided / Steady / Challenge). Picking one makes it the player's own. */
+  private openDifficulty(): void {
+    const back = this.mode;
+    this.mode = 'menu';
+    this.controls.reset();
+    const { width, height } = this.scale.gameSize;
+    const box = this.add.container(0, 0).setDepth(70);
+    const dim = this.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive();
+    box.add(dim);
+    const close = () => {
+      box.destroy();
+      this.mode = back === 'menu' ? 'play' : back;
+      this.renderUi();
+    };
+    dim.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, close);
+    const t = DIFFICULTY_TEXT;
+    box.add(this.add.text(width / 2, height * 0.1, t.title, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
+    const gap = 12;
+    const n = t.choices.length;
+    const w = Math.min(220, (width - 40 - gap * (n - 1)) / n);
+    const h = Math.min(170, height * 0.5);
+    const top = height * 0.1 + 44;
+    const x0 = width / 2 - (n * w + (n - 1) * gap) / 2;
+    const current = this.profile.difficulty ?? 'standard';
+    t.choices.forEach((c, i) => {
+      const x = x0 + i * (w + gap);
+      const on = current === c.id;
+      const bg = this.add.rectangle(x, top, w, h, 0x2a2536).setOrigin(0).setStrokeStyle(on ? 4 : 2, on ? 0xffd166 : 0xffffff, on ? 1 : 0.35).setInteractive();
+      box.add(bg);
+      box.add(this.add.text(x + w / 2, top + 18, (on ? '✓ ' : '') + c.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5, 0).setResolution(crisp()));
+      box.add(this.add.text(x + w / 2, top + 54, c.text, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w - 24 } }).setOrigin(0.5, 0).setResolution(crisp()));
+      bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+        sfx.unlock();
+        sfx.place(true);
+        chooseDifficulty(this.profile, c.id);
+        writeSave(this.profile);
+        close();
+      });
+    });
+    box.add(this.add.text(width / 2, top + h + 14, t.footer, { fontFamily: FONT, fontSize: '14px', color: '#b9ad99' }).setOrigin(0.5, 0).setResolution(crisp()));
   }
 
   /** Asks how the player likes to move decorations: tap the spot, or an arrow pad. */

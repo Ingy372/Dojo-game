@@ -2,6 +2,7 @@
 
 import { firstFloorOfTier, runDifficulty, ownedDecorations, startRun, type EliteKind, useCalmMind, type Profile, type RunState, type TrainingState } from '@dojo/sim';
 import { CONTENT } from './content';
+import { ensureDifficulty } from './difficulty';
 import { homeDojo, setBowDue } from './dojo';
 import { writeSave } from './save';
 
@@ -14,6 +15,7 @@ export function startTowerRun(profile: Profile, training: TrainingState): RunSta
   const twistParam = params.get('twist');
   const forcedTwist = CONTENT.twists.twists.some((t) => t.id === twistParam) ? (twistParam ?? undefined) : undefined;
   // One difficulty for the whole run (elites and combat): ?difficulty= test link, else the player's setting, else Standard.
+  ensureDifficulty(profile, training);
   const difficulty = runDifficulty(profile, params.get('difficulty'));
   // For testing: ?elite=swift or ?elite=guarding puts that elite in every battle and challenge room
   // (the run then doesn't count toward the profile).

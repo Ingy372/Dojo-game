@@ -1,0 +1,14 @@
+{
+  "_note": "M7-P1. Who starts on Guided, and the words on the difficulty choice screen. 'standard' is the internal id; kids see 'Steady'. Standard is the default.",
+  "guidedUpToAge": 9,
+  "guidedNewBeltTier": 1,
+  "button": "Settings",
+  "title": "How do you like to train?",
+  "footer": "You can change this any time in Settings.",
+  "homeLine": "You're on Guided. Change anytime in Settings.",
+  "choices": [
+    { "id": "guided", "name": "Guided", "text": "More time to counter. Great for learning the moves." },
+    { "id": "standard", "name": "Steady", "text": "The normal way to train." },
+    { "id": "challenge", "name": "Challenge", "text": "Enemies wind up faster. Less time to counter." }
+  ]
+}
