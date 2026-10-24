@@ -599,7 +599,7 @@
         "color": "#1a1a1a",
         "color2": null,
         "degree": 0,
-        "typicalMonthsInRank": 12,
+        "typicalMonthsInRank": 24,
         "classesBeforeTest": 102,
         "requirements": [
           {
