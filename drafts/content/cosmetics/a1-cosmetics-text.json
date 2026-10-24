@@ -1,0 +1,27 @@
+{
+  "notes": "Display names and one-line descriptions for the A1 earned cosmetics (PR #78). Keys under 'layers' are PR #78's layer ids from sprites/body-a/player-a.json and aura.json; the aura's two layers (aura-back, aura-front) share one entry, 'aura'. Colour names are suggestions keyed by PR #78's preview tints; colour ids are not defined yet. Fields follow gear.json (id, name, text). Cosmetics are looks only and give no power.",
+  "layers": [
+    { "id": "headband", "name": "Focus Headband", "text": "Tie it on and keep your eyes on the goal." },
+    { "id": "wraps-cloth", "name": "First Steps Wraps", "text": "Soft wraps for hands that keep practicing." },
+    { "id": "wraps-leather", "name": "Steady Hands Wraps", "text": "Tough wraps for a student who keeps going." },
+    { "id": "wraps-tiger", "name": "Brave Tiger Wraps", "text": "Bold stripes for a brave and kind heart." },
+    { "id": "gi-trim", "name": "Dojo Trim", "text": "A bright edge for your gi, earned by real effort." },
+    { "id": "aura", "layerIds": ["aura-back", "aura-front"], "name": "Gentle Glow", "text": "A soft light that shines when you do your best." }
+  ],
+  "colours": {
+    "gi-trim": [
+      { "tint": "blue", "name": "River Blue" },
+      { "tint": "gold", "name": "Sunrise Gold" },
+      { "tint": "white", "name": "Snow White" },
+      { "tint": "sky", "name": "Morning Sky" }
+    ],
+    "aura": [
+      { "tint": "warm-white", "name": "Lantern Light" },
+      { "tint": "mint", "name": "Garden Mint" },
+      { "tint": "lavender", "name": "Evening Lavender" }
+    ],
+    "headband": [
+      { "tint": "gold", "name": "Sunrise Gold" }
+    ]
+  }
+}
