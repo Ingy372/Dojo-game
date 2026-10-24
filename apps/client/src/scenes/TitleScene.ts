@@ -4,12 +4,15 @@ declare const __BUILD_TIME__: string;
 import { loadArt } from '../art/art';
 import { hasLook, playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
+import { reducedMotion, setReducedMotion } from '../game/motion';
+import motionText from '../../../../content/settings/motion.json';
 
 export class TitleScene extends Phaser.Scene {
   private title!: Phaser.GameObjects.Text;
   private subtitle!: Phaser.GameObjects.Text;
   private belt!: Phaser.GameObjects.Rectangle;
   private prompt!: Phaser.GameObjects.Text;
+  private motion!: Phaser.GameObjects.Text;
 
   constructor() {
     super('Title');
@@ -56,7 +59,28 @@ export class TitleScene extends Phaser.Scene {
       })
       .setOrigin(0.5)
       .setResolution(crisp);
-    this.tweens.add({ targets: this.prompt, alpha: 0.35, duration: 900, yoyo: true, repeat: -1 });
+    // The pulse stops with reduced motion.
+    const pulse = this.tweens.add({ targets: this.prompt, alpha: 0.35, duration: 900, yoyo: true, repeat: -1 });
+
+    // Reduced motion (K12): a switch for this device, on by default if the device asks for less motion.
+    const motionLabel = () => `${motionText.label}: ${reducedMotion() ? motionText.on : motionText.off}`;
+    this.motion = this.add
+      .text(0, 0, motionLabel(), { fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#f2e9d8', backgroundColor: '#2a2440', padding: { x: 12, y: 8 } })
+      .setOrigin(1, 1)
+      .setResolution(crisp)
+      .setInteractive({ useHandCursor: true });
+    const applyCalm = () => {
+      if (reducedMotion()) {
+        pulse.pause();
+        this.prompt.setAlpha(1);
+      } else pulse.resume();
+    };
+    applyCalm();
+    this.motion.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+      setReducedMotion(!reducedMotion());
+      this.motion.setText(motionLabel());
+      applyCalm();
+    });
 
     // Which version this is (when it was built), to check a phone has the newest one.
     const built = new Date(__BUILD_TIME__);
@@ -65,7 +89,11 @@ export class TitleScene extends Phaser.Scene {
       .text(8, 6, `Version: ${stamp}`, { fontFamily: 'system-ui, sans-serif', fontSize: '11px', color: '#6f6658' })
       .setResolution(crisp);
 
-    this.input.once(Phaser.Input.Events.POINTER_UP, () => {
+    let started = false;
+    this.input.on(Phaser.Input.Events.POINTER_UP, (_p: Phaser.Input.Pointer, over: Phaser.GameObjects.GameObject[]) => {
+      // Tapping the Reduced motion switch doesn't start the game.
+      if (started || over.includes(this.motion)) return;
+      started = true;
       // Phones only allow sound after a touch, so switch it on here.
       sfx.unlock();
       const params = new URLSearchParams(window.location.search);
@@ -101,5 +129,6 @@ export class TitleScene extends Phaser.Scene {
     this.prompt
       .setFontSize(Math.max(16, Math.round(titleSize * 0.32)))
       .setPosition(cx, cy + titleSize * 1.6);
+    this.motion.setPosition(width - 12, height - 12);
   }
 }

@@ -65,6 +65,7 @@ import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
 import { homeDojo } from '../game/dojo';
 import { NAMED_PACK, NamedView } from '../game/named';
+import { reducedMotion } from '../game/motion';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { bowPrompt, playBow } from '../ui/bow';
@@ -84,6 +85,8 @@ const HUD_TOP_PX = 56;
 // The boss bar sits in the HUD's top strip, between the player's bars and the room label,
 // so it never covers the Keeper (K9: it used to sit over the Keeper's head at y 74).
 const BOSS_BAR_Y = 16;
+/** The bottom of the health and Focus bars (screen px). */
+const HUD_BOTTOM = 56;
 /** How many tiles tall the view is, whatever the phone's size. */
 const VISIBLE_ROWS = 8;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
@@ -221,6 +224,8 @@ export class GameScene extends Phaser.Scene {
   private timerText!: Phaser.GameObjects.Text;
   private bossName!: Phaser.GameObjects.Text;
   private toastY = 0;
+  /** Decoration labels on screen and where they'd like to be (K12). */
+  private decoToasts: Array<{ t: Phaser.GameObjects.Text; y: number }> = [];
   private twistBadge: Phaser.GameObjects.Container | null = null;
   private twistBannerView: Phaser.GameObjects.Container | null = null;
   /** While a twist banner shows, the big message starts below this y (0 = no limit). */
@@ -299,6 +304,7 @@ export class GameScene extends Phaser.Scene {
     this.picker = null;
     this.doorViews = [];
     this.toastY = 0;
+    this.decoToasts = [];
     this.prevPos = { ...this.world.players[this.me].pos };
     this.elapsed = 0;
     this.hitStopMs = 0;
@@ -585,7 +591,9 @@ export class GameScene extends Phaser.Scene {
     // Shield guards: the shield while it's up, the cracked one once broken.
     s.setLayer('shield', e.shieldUp);
     s.setLayer('shield-broken', !e.shieldUp);
-    s.flash(now < v.flashUntil ? 0xffffff : tint, now < v.flashUntil);
+    // Reduced motion (K12): no white hit flash.
+    const hitFlash = now < v.flashUntil && !reducedMotion();
+    s.flash(hitFlash ? 0xffffff : tint, hitFlash);
     s.update();
     if (v.named) this.drawNamed(e, v.named, now, blend, s.frame);
     v.container.setAlpha(alpha * Math.min(1, (now - this.enemiesAt) / 450));
@@ -611,10 +619,21 @@ export class GameScene extends Phaser.Scene {
     if (n.shownAt === null && e.mode !== 'waiting' && e.mode !== 'defeated') {
       n.shownAt = now;
       const profile = loadSave();
-      if (this.run) meetNamed(profile, this.run, n.def.id);
+      // K12: the very first named monster ever met also gets Sensei's journal intro.
+      const firstEver = !Object.values(profile.monsterJournal).some((j) => j.met);
+      const met = this.run ? meetNamed(profile, this.run, n.def.id) : false;
       writeSave(profile);
-      this.senseiSay([n.def.lines.meet, n.def.lines.senseiTip], 1800);
+      const intro = met && firstEver ? [CONTENT.named.senseiIntro.replace(/^Sensei:\s*/, '')] : [];
+      this.senseiSay([...intro, n.def.lines.meet, n.def.lines.senseiTip], 1800);
     }
+    // K12: plate and tag clear of other creatures, the player and the HUD.
+    const others = [
+      ...this.world.enemies.filter((o) => o.id !== e.id && o.mode !== 'defeated').map((o) => o.pos),
+      ...Object.values(this.world.players).map((p) => p.pos),
+    ].map((o) => ({ x: (o.x - e.pos.x) * TILE, y: (o.y - e.pos.y) * TILE }));
+    const cam = this.cameras.main;
+    const feetOnScreen = (e.pos.y * TILE - cam.worldView.y) * cam.zoom;
+    n.layout(others, (feetOnScreen - HUD_BOTTOM) / cam.zoom, e.mode === 'defeated');
     const windupSec = e.mode === 'windup' ? Math.min(e.windupTotal, e.windupTotal - e.modeTicks + blend) / TICKS_PER_SECOND : null;
     if (n.update(e, now, windupSec, frame, TILE).clank) sfx.clank();
   }
@@ -1509,6 +1528,7 @@ export class GameScene extends Phaser.Scene {
       }
     }
     t.setY(top);
+    this.placeDecoToasts();
   }
 
   /** A dropped item: a glowing orb that pops out, then a note at the top of the screen. */
@@ -1557,6 +1577,9 @@ export class GameScene extends Phaser.Scene {
       .setOrigin(1, 0)
       .setResolution(crisp());
     this.cameras.main.ignore(t);
+    // K12: kept clear of Sensei's banner every frame (placeSensei), since the banner moves.
+    this.decoToasts.push({ t, y });
+    this.placeDecoToasts();
     this.tweens.add({
       targets: t,
       alpha: 0,
@@ -1564,9 +1587,19 @@ export class GameScene extends Phaser.Scene {
       duration: 400,
       onComplete: () => {
         t.destroy();
+        this.decoToasts = this.decoToasts.filter((d) => d.t !== t);
         this.toastY = Math.max(0, this.toastY - 1);
       },
     });
+  }
+
+  /** Decoration labels go under Sensei's banner when they would sit on it (K12). */
+  private placeDecoToasts(): void {
+    const b = this.senseiText?.active ? this.senseiText.getBounds() : null;
+    for (const d of this.decoToasts) {
+      const overlaps = b && d.y + d.t.height > b.top && d.y < b.bottom && d.t.x - d.t.width < b.right;
+      d.t.setY(overlaps ? b.bottom + 8 : d.y);
+    }
   }
 
   /**
@@ -1615,7 +1648,7 @@ export class GameScene extends Phaser.Scene {
   /** A short freeze plus a small screen shake. */
   private impact(feel: { stopMs: number; shakeMs: number; shake: number }): void {
     this.hitStopMs = Math.max(this.hitStopMs, feel.stopMs);
-    this.cameras.main.shake(feel.shakeMs, feel.shake);
+    if (!reducedMotion()) this.cameras.main.shake(feel.shakeMs, feel.shake);
   }
 
   private addWorld<T extends Phaser.GameObjects.GameObject>(obj: T): T {
@@ -1631,15 +1664,18 @@ export class GameScene extends Phaser.Scene {
     const x = at.x * TILE;
     const y = at.y * TILE;
     const size = boss ? 1.6 : 1;
-    // A warm golden flash (normal colours, so it shows on light stone as well as dark floors).
-    const glow = this.addWorld(this.add.image(x, y - TILE * 0.45, this.softGlow()).setDepth(8));
-    glow.setTint(0xffb627).setScale(0.4).setAlpha(1);
-    this.tweens.add({ targets: glow, scale: 2.2 * size, alpha: 0, duration: 650, ease: 'Cubic.Out', onComplete: () => glow.destroy() });
-    const core = this.addWorld(this.add.image(x, y - TILE * 0.45, this.softGlow()).setDepth(8).setScale(0.3));
-    this.tweens.add({ targets: core, scale: 1.1 * size, alpha: 0, duration: 380, ease: 'Cubic.Out', onComplete: () => core.destroy() });
+    // No golden flash with reduced motion (K12).
+    if (!reducedMotion()) {
+      // A warm golden flash (normal colours, so it shows on light stone as well as dark floors).
+      const glow = this.addWorld(this.add.image(x, y - TILE * 0.45, this.softGlow()).setDepth(8));
+      glow.setTint(0xffb627).setScale(0.4).setAlpha(1);
+      this.tweens.add({ targets: glow, scale: 2.2 * size, alpha: 0, duration: 650, ease: 'Cubic.Out', onComplete: () => glow.destroy() });
+      const core = this.addWorld(this.add.image(x, y - TILE * 0.45, this.softGlow()).setDepth(8).setScale(0.3));
+      this.tweens.add({ targets: core, scale: 1.1 * size, alpha: 0, duration: 380, ease: 'Cubic.Out', onComplete: () => core.destroy() });
+    }
     this.ring({ x: at.x, y: at.y - 0.3 }, 0xffd166, 1.3 * size, 0.9);
-    // Little golden stars drift up and fade.
-    const count = boss ? 16 : 9;
+    // Little golden stars drift up and fade (none with reduced motion).
+    const count = reducedMotion() ? 0 : boss ? 16 : 9;
     for (let i = 0; i < count; i++) {
       const sx = x + (Math.random() - 0.5) * TILE * 0.9 * size;
       const r = 5 + Math.random() * 4;
@@ -1768,17 +1804,21 @@ export class GameScene extends Phaser.Scene {
       .text(width / 2, this.senseiTop(height), '', {
         fontFamily: 'system-ui, sans-serif',
         fontStyle: 'bold',
-        fontSize: '26px',
+        // K12: smaller on phones, and long lines wrap so they always fit on screen.
+        fontSize: width < 720 ? '20px' : '26px',
         color: '#ffffff',
         backgroundColor: '#2a2440dd',
         padding: { x: 16, y: 8 },
         align: 'center',
+        wordWrap: { width: Math.min(width - 48, 640), useAdvancedWrap: true },
       })
       .setOrigin(0.5, 0)
       .setResolution(window.devicePixelRatio || 1);
     this.cameras.main.ignore(t);
     this.senseiText = t;
-    lines.forEach((line, i) => this.time.delayedCall(i * holdMs, () => t.active && t.setText(`Sensei: ${line}`)));
+    // The first line shows straight away, so its size is known (K12: labels keep clear of it).
+    if (lines.length) t.setText(`Sensei: ${lines[0]}`);
+    lines.slice(1).forEach((line, i) => this.time.delayedCall((i + 1) * holdMs, () => t.active && t.setText(`Sensei: ${line}`)));
   }
 
   private senseiDone(line: string | undefined): void {
@@ -1810,6 +1850,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private flashScreen(color: number, alpha: number, ms: number): void {
+    if (reducedMotion()) return;
     this.tweens.killTweensOf(this.screenFlash);
     this.screenFlash.setFillStyle(color).setAlpha(alpha);
     this.tweens.add({ targets: this.screenFlash, alpha: 0, duration: ms });

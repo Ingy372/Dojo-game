@@ -416,3 +416,14 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - The Old Thumper fact no longer sits on the stamp art.
 - `?named=` (and other test-link) runs no longer write the Monster Journal or give the sticker. New test in packages/sim/test/named.test.ts; checked in the browser too (journal stayed empty).
 - 198 tests pass, 1 skipped; typecheck and build clean.
+
+## K12: Q3 named-monster fixes (2026-10-24)
+- From the Q3 QA report (drafts/qa/2026-10-24-q3-named-monsters.md).
+- Sensei's banner wraps long lines and uses 20px text on screens under 720px wide, so the "freed" line fits at 667x375. The gold "Decoration: … Sticker" label moves under the banner whenever it would sit on it, every frame.
+- `?named=X` without `&room=` always gives X: from room 3, test runs pick battle (or challenge) rooms that have X's type, and X can be in a challenge room on a test run only. Checked on 200 seeds for each monster.
+- Equal mix: a rolled named monster no longer swaps to "another monster whose type is in the room". It waits for the first battle room from room 3 that has its type. Over 6,000 floors each monster is about 1/3. The overall rate at tier 2 drops a little (3.9% on the 1,000-seed test).
+- The first named monster a student ever meets also gets Sensei's journal intro ("You met a named monster! I've started your Monster Journal.") before its greeting.
+- Name plates move above the head if another creature or the player is under its feet. Near the top of the screen (under the HUD), the head tag moves under the feet. Both hide once it's beaten.
+- Reduced motion: a "Reduced motion: On/Off" switch on the Title screen (bottom right). It saves on this device and starts On if the phone asks for reduced motion. When on, it turns off screen shake (hits and the stamp), named sparkles, the dash trail, the white hit flash, screen flashes, the golden "set free" flash and stars, the Dojo sparkles and the Title pulse. Text is in content/settings/motion.json.
+- Character creator: dark swatches get a thicker, solid light rim (A7).
+- 202 tests pass (1 skipped), typecheck and build clean. Screenshots: /workspace/k12-{667,844}-{title-motion-on,title-motion-off,swatches,intro-plate,freed}.png.

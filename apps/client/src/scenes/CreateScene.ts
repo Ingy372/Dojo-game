@@ -158,7 +158,10 @@ export class CreateScene extends Phaser.Scene {
       const cx = at.x + cell * (i + 0.5);
       const cy = at.y + rowH / 2;
       const on = i === cur;
-      const dot = this.add.circle(cx, cy, rad, Phaser.Display.Color.HexStringToColor(hex).color).setStrokeStyle(on ? 4 : 2, on ? GOLD : 0xf2e9d8, on ? 1 : 0.6); // light rim so dark swatches show on the dark panel
+      // A light rim so dark swatches show on the dark panel (A7): thicker and solid on the dark ones.
+      const c = Phaser.Display.Color.HexStringToColor(hex);
+      const dark = (0.2126 * c.red + 0.7152 * c.green + 0.0722 * c.blue) / 255 < 0.35;
+      const dot = this.add.circle(cx, cy, rad, c.color).setStrokeStyle(on ? 4 : dark ? 3 : 2, on ? GOLD : 0xf2e9d8, on || dark ? 1 : 0.6);
       if (on) this.ui.add(this.add.circle(cx, cy, rad + 5).setStrokeStyle(2, GOLD, 0.5));
       // The whole cell is the tap target, so small fingers don't miss.
       dot.setInteractive(new Phaser.Geom.Rectangle(rad - cell / 2, rad - rowH / 2, cell, rowH), Phaser.Geom.Rectangle.Contains);

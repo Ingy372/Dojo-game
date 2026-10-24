@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { reducedMotion } from '../game/motion';
 import {
   BOW,
   DOJO,
@@ -1066,6 +1067,7 @@ export class DojoScene extends Phaser.Scene {
   }
 
   private sparkle(at: Vec2, count: number, color = 0xfff6e0): void {
+    if (reducedMotion()) return;
     for (let i = 0; i < count; i++) {
       const s = this.add.star(at.x * TILE + (Math.random() - 0.5) * TILE * 1.4, at.y * TILE + (Math.random() - 0.5) * TILE * 1.2, 4, 2, 7, color);
       s.setScale(0.3);

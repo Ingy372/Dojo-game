@@ -94,6 +94,8 @@ export interface RunState {
   named: NamedSpawn | null;
   /** Separate random stream for named monsters, so they never shift the floor's other rolls. */
   namedRng: Rng;
+  /** A ?named= test run: battle rooms with that monster's type are picked first (K12). */
+  forcedNamedTest?: boolean;
 }
 
 /** Things that happened, for the game to show. */
@@ -172,7 +174,10 @@ export function startRun(content: Content, options: RunOptions): RunState {
     namedRng: createRng((options.seed ^ 0x9e3779b9) >>> 0),
   };
   run.namedPending = rollNamed(content, run, options);
-  if (options.forcedNamed) run.test = true;
+  if (options.forcedNamed) {
+    run.test = true;
+    run.forcedNamedTest = true;
+  }
   if (options.forcedElite) {
     run.forcedElite = options.forcedElite;
     run.test = true;
@@ -408,30 +413,33 @@ function rollNamed(content: Content, run: RunState, options: RunOptions): string
   return list[nextInt(run.namedRng, list.length)].id;
 }
 
+/** The room's non-boss spawns of this enemy type (spawn indexes). */
+function spotsOf(content: Content, room: Room, enemy: string): number[] {
+  return room.enemySpawns.map((s, i) => ({ s, i })).filter(({ s }) => s.enemy === enemy && !content.enemies[s.enemy]?.boss).map(({ i }) => i);
+}
+
+/** The base enemy type of the rolled named monster still waiting to be placed, or null. */
+function pendingBase(content: Content, run: RunState): string | null {
+  return content.named.monsters.find((m) => m.id === run.namedPending)?.baseEnemy ?? null;
+}
+
 /**
- * Puts the rolled named monster in the first battle room at or after the earliest room.
- * It takes the place of an enemy of its type; if the room has none, another named monster
- * of this tier whose type is in the room comes instead (in that type's earliest wave).
- * If no battle room comes, nothing does and nothing carries over to the next floor.
+ * Puts the rolled named monster in the first battle room at or after the earliest room that
+ * has an enemy of its type. It never turns into a different named monster (K12: equal mix,
+ * and ?named= always gives the asked-for one). If no such room comes, nothing does and
+ * nothing carries over to the next floor.
  */
 function placeNamed(content: Content, run: RunState, room: Room, anyRoom: boolean): NamedSpawn | null {
   const id = run.namedPending;
-  if (!id || room.kind !== 'battle' || (!anyRoom && run.depth + 1 < content.named.rules.earliestRoom)) return null;
-  const spotsOf = (enemy: string) =>
-    room.enemySpawns.map((s, i) => ({ s, i })).filter(({ s }) => s.enemy === enemy && !content.enemies[s.enemy]?.boss).map(({ i }) => i);
-  const wanted = content.named.monsters.find((m) => m.id === id);
-  let chosen = wanted && spotsOf(wanted.baseEnemy).length ? wanted : undefined;
-  if (!chosen) {
-    const others = namedForTier(content.named, Math.max(run.tier, content.named.rules.minBeltTier)).filter((m) => spotsOf(m.baseEnemy).length);
-    if (!others.length) return null;
-    chosen = others[nextInt(run.namedRng, others.length)];
-  }
+  const kindOk = room.kind === 'battle' || (!!run.forcedNamedTest && room.kind === 'challenge');
+  if (!id || !kindOk || (!anyRoom && run.depth + 1 < content.named.rules.earliestRoom)) return null;
+  const all = spotsOf(content, room, pendingBase(content, run) ?? '');
+  if (!all.length) return null;
   // Its earliest wave, so it is met soon after the room starts.
-  const all = spotsOf(chosen.baseEnemy);
   const wave = Math.min(...all.map((i) => room.enemySpawns[i].wave));
   const spots = all.filter((i) => room.enemySpawns[i].wave === wave);
   run.namedPending = null;
-  return { spawn: spots[nextInt(run.namedRng, spots.length)], id: chosen.id };
+  return { spawn: spots[nextInt(run.namedRng, spots.length)], id };
 }
 
 /**
@@ -480,7 +488,16 @@ export function currentTwist(content: Content, run: RunState): TwistDef | null {
 function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
   // Harder rooms wait until later in the floor (depth 0 is room 1).
   const all = content.rooms.filter((r) => r.kind === kind && r.earliestRoom <= run.depth + 1);
-  const fresh = all.filter((r) => !run.usedRooms.includes(r.id));
+  let fresh = all.filter((r) => !run.usedRooms.includes(r.id));
+  // ?named= test runs (K12): from the earliest room, battle rooms with the asked-for type come
+  // first, and a challenge room can have it too, so the link always gives that monster
+  // whichever doors are taken. Normal runs are never steered.
+  const base = run.forcedNamedTest && (kind === 'battle' || kind === 'challenge') && run.depth + 1 >= content.named.rules.earliestRoom ? pendingBase(content, run) : null;
+  if (base) {
+    const fits = (rooms: Room[]) => rooms.filter((r) => spotsOf(content, r, base).length > 0);
+    const pool = fits(fresh).length ? fits(fresh) : fits(all);
+    if (pool.length) fresh = pool;
+  }
   return pick(run.rng, fresh.length > 0 ? fresh : all);
 }
 

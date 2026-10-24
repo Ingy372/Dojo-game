@@ -462,3 +462,10 @@ From section 1 of `docs/work-board.md`.
 - **COMBO goes left during a boss fight**, under the player's bars, instead of lower in the centre, where it would collide with Sensei's banner.
 - **The Sensei banner checks the door labels on screen** (they scroll with the room), so the fix works in every room, not just the Keeper's.
 - **The forced-elite test link keeps the belt and first-floor bypass**, but Guided still wins over Guarding (it becomes Swift, the same swap as normal play).
+
+## K12: Q3 named-monster fixes (2026-10-24)
+- **Equal mix over a steady rate.** The swap to another named monster whose type is in the room (K-M7) made Zippy Zoom about 45%. It's gone: the rolled monster waits for a battle room with its type. The roll is still 5%, but a few floors never offer such a room, so slightly fewer floors get one. This replaces the "Earliest wave" swap note above.
+- **Test links are steered, normal runs are not.** `?named=` runs pick rooms with the asked-for type from room 3 and allow a challenge room, so the link always works whatever doors are taken. Normal runs never steer room picks, so the "same rooms with or without it" rule still holds.
+- **Reduced motion is a device setting** (localStorage `dojo.reducedMotion`), not part of the profile, because it's about the screen, like the OS setting it starts from. The switch is on the Title screen, because Settings (#108) isn't on main yet. After #108/#110 merge it should move into Settings (behind the grown-up gate) and leave the Title screen.
+- **What stays with reduced motion:** wind-up poses, the telegraph glow, the shield tap and the player's red hurt tint. These are information, not decoration.
+- **This replaces the K-M7 note** that reduced motion is OS-only and turns off only the stamp shake.
