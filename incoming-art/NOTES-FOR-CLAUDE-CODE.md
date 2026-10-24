@@ -262,6 +262,12 @@ Same ids, file names, 128 x 128 size, anchor (64, 64) and static.json. Only the 
 - Stickers in `sticker/` are final (die-cut style).
 - Journal parts in `journal/` with layout slots in static.json; stickers in `sticker/` (final, wall items).
 
+## A1 earned cosmetics, `incoming-art/cosmetics-a1/` [NEW, SAMPLES only, do not wire yet]
+- Body A, idle only. Layers in `sprites/body-a/player-a.json` (same frames, anchor and directions as `player-custom/sprites/body-a`): `gi-trim` (tint), `headband` (tint), `wraps-cloth` / `wraps-leather` / `wraps-tiger` (group `wraps`, no tint).
+- Aura: `sprites/body-a/aura.json`, with `aura-back` (drawn before all player layers) and `aura-front` (after). Both are tinted. Reduced motion: frame 0 only.
+- Draw order: aura-back, player layers, gi-trim, headband, wraps, aura-front. Reference: `source/cosm_lib.py compose()`. The belt is unchanged and never customizable.
+- Names, unlock rules and colours are open (see `cosmetics-a1/DELIVERY_NOTE.md`).
+
 ## Open items in one place
 
 1. The player frame changed to 128 × 160 with the anchor at (64, 136.96). It applies to `player-character/` and `player-custom/`.
@@ -271,3 +277,4 @@ Same ids, file names, 128 x 128 size, anchor (64, 64) and static.json. Only the 
 5. Fonts are still Jay's choice (style guide section 9). There's no text in the art.
 6. **[NEW]** The Batch 6 player's neck oval: leave it for now (Jay), and patch it later only if it's noticeable in the game.
 7. **[NEW]** Where instructor-2 and the founder appear in the game (Jay and Claude Code), and their names (Content Writer).
+8. **[NEW]** A1 cosmetics: names (Content Writer), unlock rules and colours (Jay), and the headband fit over big hair.
