@@ -36,10 +36,12 @@ export interface Scenario {
   /** The choice points that earn a star when the best answer is picked on the first try. */
   starChoices: string[];
   maxStars: number;
+  /** Set while a script waits for a trim to 4 buttons (see the content file). */
+  pendingTrim: string | null;
 }
 
-/** Most buttons one choice may show (the store script's helper choice has 5). */
-export const MAX_CHOICES = 5;
+/** Most buttons one choice may show (CLAUDE.md rule 15: 2-4 large buttons). */
+export const MAX_CHOICES = 4;
 
 /** Reads a scenario file and checks every link in it, so a typo can't strand a player. */
 export function loadScenario(data: unknown): Scenario {
@@ -60,7 +62,9 @@ export function loadScenario(data: unknown): Scenario {
       if (l.retry) throw new Error(`${where}: ${raw.id} line ${i + 1}: "retry" only goes in a branch`);
       if (l.choices) {
         if (!l.id) throw new Error(`${where}: a choice in ${raw.id} needs an id`);
-        if (l.choices.length < 2 || l.choices.length > MAX_CHOICES) throw new Error(`${where}: ${l.id} needs 2-${MAX_CHOICES} choices`);
+        // A script waiting on a Content Designer trim may carry one extra button until it lands.
+        const most = typeof d.pendingTrim === 'string' ? MAX_CHOICES + 1 : MAX_CHOICES;
+        if (l.choices.length < 2 || l.choices.length > most) throw new Error(`${where}: ${l.id} needs 2-${MAX_CHOICES} choices`);
         if (!l.choices.some((c) => c.stars > 0)) throw new Error(`${where}: ${l.id} needs a good choice`);
         for (const c of l.choices) {
           if (typeof c.text !== 'string' || !Number.isInteger(c.stars) || c.stars < 0 || c.stars > 3) throw new Error(`${where}: ${l.id} has a bad choice`);
@@ -83,7 +87,7 @@ export function loadScenario(data: unknown): Scenario {
   const starChoices = Array.isArray(d.starChoices) ? (d.starChoices as string[]) : [...choiceIds];
   for (const id of starChoices) if (!choiceIds.has(id)) throw new Error(`${where}: star choice "${id}" isn't in the script`);
   const max = Number((d.stars as { max?: unknown })?.max ?? starChoices.length);
-  return { id: d.id, location: String(d.location ?? ''), ageBand: String(d.ageBand ?? ''), topic: String(d.topic ?? ''), scenes, starChoices, maxStars: max };
+  return { id: d.id, location: String(d.location ?? ''), ageBand: String(d.ageBand ?? ''), topic: String(d.topic ?? ''), scenes, starChoices, maxStars: max, pendingTrim: typeof d.pendingTrim === 'string' ? d.pendingTrim : null };
 }
 
 /** Where the player is in a scenario. Plain data, so it can be saved or sent. */
@@ -148,4 +152,9 @@ export function scenarioStars(sc: Scenario, st: ScenarioState): number {
 /** Fills in {player} and {grownup}. */
 export function fillLine(text: string, vars: { player: string; grownup: string }): string {
   return text.replace(/\{player\}/g, vars.player).replace(/\{grownup\}/g, vars.grownup);
+}
+
+/** Street Smarts opens at this belt tier (from content), or always for a test link. */
+export function streetSmartsOpen(tier: number, unlockTier: number, testLink = false): boolean {
+  return testLink || tier >= unlockTier;
 }

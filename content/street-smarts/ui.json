@@ -1,5 +1,5 @@
 {
-  "notes": "Screen text for the Street Smarts scene (not part of any script).",
+  "notes": "Screen text for the Street Smarts scene (not part of any script). unlockTier: the belt tier that opens Street Smarts (2 = 2nd belt, core-design section 'unlocks'); the ?street= test link opens it at any belt.",
   "title": "Street Smarts",
   "pickGrownup": "Who are you at the store with?",
   "grownups": [
@@ -22,5 +22,6 @@
     "grownup": "{grownup}",
     "shopper": "Shopper",
     "player": "{player}"
-  }
+  },
+  "unlockTier": 2
 }

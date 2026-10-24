@@ -439,5 +439,6 @@
     "choice-stay",
     "choice-helper",
     "choice-offer"
-  ]
+  ],
+  "pendingTrim": "The helper question has 5 buttons; CLAUDE.md rule 15 allows 2-4. The Content Designer is trimming it to 4. Replace this file with the trimmed script and delete this field."
 }

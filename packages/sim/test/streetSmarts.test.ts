@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { advance, choose, currentLine, fillLine, loadScenario, loadProfile, newProfile, recordScenario, scenarioStars, startScenario, type Scenario, type ScenarioState } from '../src';
+import { MAX_CHOICES, streetSmartsOpen, advance, choose, currentLine, fillLine, loadScenario, loadProfile, newProfile, recordScenario, scenarioStars, startScenario, type Scenario, type ScenarioState } from '../src';
 import store from '../../../content/street-smarts/store-separated.json';
 
 const sc = loadScenario(store);
@@ -69,9 +69,27 @@ describe('Street Smarts: store scenario', () => {
         }
   });
 
-  it('every safe helper choice is a good answer', () => {
+  it('every helper choice except hiding is a good answer', () => {
     const helper = sc.scenes.find((s) => s.id === 'helper')!.lines.find((l) => l.choices)!;
-    expect(helper.choices!.filter((c) => c.stars > 0)).toHaveLength(4);
+    expect(helper.choices!.filter((c) => c.stars === 0).map((c) => c.text)).toEqual(['Hide and wait alone.']);
+  });
+
+  it('allows 2-4 buttons; one extra only while a trim is pending', () => {
+    expect(MAX_CHOICES).toBe(4);
+    const a = clone();
+    delete a.pendingTrim;
+    const tooMany = a.scenes.some((s: { lines: { choices?: unknown[] }[] }) => s.lines.some((l) => (l.choices?.length ?? 0) > 4));
+    if (tooMany) expect(() => loadScenario(a)).toThrow(/2-4 choices/);
+    else expect(() => loadScenario(a)).not.toThrow();
+    const b = clone();
+    b.scenes[1].lines[0].choices = [b.scenes[1].lines[0].choices[0]];
+    expect(() => loadScenario(b)).toThrow(/2-4 choices/);
+  });
+
+  it('opens at the 2nd belt, or at any belt from the test link', () => {
+    expect(streetSmartsOpen(1, 2)).toBe(false);
+    expect(streetSmartsOpen(2, 2)).toBe(true);
+    expect(streetSmartsOpen(1, 2, true)).toBe(true);
   });
 
   it('keeps text short for early readers and never names a real grown-up', () => {

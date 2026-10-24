@@ -368,9 +368,10 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - Stars: the best answer on the first try earns 1 star each at "stay", "helper" and "offer", for 3 in all. Telling the worker what's wrong has to happen to go on, but it earns no star. The best score is saved. Street Smarts power stays at 0.
 - The first time, the player picks Mom or Dad. The game remembers the pick, and the story says "{player}" and "Mom" or "Dad".
 - The phone's built-in voice reads each line and its choices aloud. It's on by default for this 6–9 scenario, and the player can switch it off.
-- How to open it: a "Street Smarts" button in the Home Dojo, or the test link `?street=store-separated`.
+- How to open it: a "Street Smarts" button in the Home Dojo from the 2nd belt on, or the test link `?street=store-separated` at any belt.
+- Choices are 2–4 buttons (CLAUDE.md). Pending: the helper question still has 5 until the Content Designer's trimmed script lands on main; it is marked `pendingTrim` in the content file.
 - The picture is placeholder art for now: a drawn store aisle with a coloured circle for whoever is talking.
-- 12 new tests. 183 tests pass (1 skipped), typecheck is clean and the game builds. Checked with screenshots at 667x375 and 844x390.
+- 14 new tests. 185 tests pass (1 skipped), typecheck is clean and the game builds. Checked with screenshots at 667x375 and 844x390.
 
 **Next**
 - Street Smarts art (the store, the worker, Sensei, the reunion).
