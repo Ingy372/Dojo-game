@@ -74,13 +74,13 @@ describe('Street Smarts: store scenario', () => {
     expect(helper.choices!.filter((c) => c.stars === 0).map((c) => c.text)).toEqual(['Hide and wait alone.']);
   });
 
-  it('allows 2-4 buttons; one extra only while a trim is pending', () => {
+  it('allows 2-4 buttons: the store script loads, 5 or 1 fail', () => {
     expect(MAX_CHOICES).toBe(4);
+    expect(() => loadScenario(clone())).not.toThrow();
     const a = clone();
-    delete a.pendingTrim;
-    const tooMany = a.scenes.some((s: { lines: { choices?: unknown[] }[] }) => s.lines.some((l) => (l.choices?.length ?? 0) > 4));
-    if (tooMany) expect(() => loadScenario(a)).toThrow(/2-4 choices/);
-    else expect(() => loadScenario(a)).not.toThrow();
+    const helper = a.scenes.find((s: { id: string }) => s.id === 'helper').lines.find((l: { choices?: unknown[] }) => l.choices);
+    helper.choices.push({ ...helper.choices[0], id: 'extra' });
+    expect(() => loadScenario(a)).toThrow(/2-4 choices/);
     const b = clone();
     b.scenes[1].lines[0].choices = [b.scenes[1].lines[0].choices[0]];
     expect(() => loadScenario(b)).toThrow(/2-4 choices/);

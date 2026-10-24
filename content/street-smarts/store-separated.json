@@ -1,5 +1,5 @@
 {
-  "notes": "Street Smarts scenario 'Separated from your grown-up in a store'. Copied from drafts/content/street-smarts/store-separated.json (PR #58, approved through J11). starChoices = the choice points that earn a star on a best first try; voice is required to continue but earns none.",
+  "notes": "DRAFT Street Smarts scenario for milestone 6 (work item C1). For Jay's safety review; nothing here ships until Jay approves (framework section 8). Ages 6-9, one short sentence per screen, read aloud by text-to-speech. Same line format as drafts/content/dialogue/milestone-6.json (speaker, text, expression, animation, choices, branches). Street Smarts additions: 'stars' on a choice (0-3, framework section 8) instead of honor; 'retry' names the choice point to return to. A 0-star choice never shows danger: the story pauses, Sensei reflects, and the player tries again right away. No penalties, no lost health, no guilt. No phone numbers, no real people. {player} = display name; {grownup} = 'Mom' or 'Dad' only, never a real name (Jay, J11). Family secret word is always generic ('your family's secret word'); no real words.",
   "id": "store-separated",
   "location": "store",
   "ageBand": "6-9",
@@ -168,11 +168,6 @@
               "next": "helper-good"
             },
             {
-              "text": "A police officer.",
-              "stars": 1,
-              "next": "helper-good"
-            },
-            {
               "text": "A grown-up with kids.",
               "stars": 1,
               "next": "helper-good"
@@ -183,7 +178,7 @@
               "next": "helper-retry"
             }
           ],
-          "note": "Safe helpers (J11): store worker in uniform or with a name tag, cashier, police officer, grown-up with kids. The worker is taught first and is the helper the story continues with."
+          "note": "Safe helpers (J11): store worker in uniform or with a name tag, cashier, police officer, grown-up with kids. Buttons show 3 of them (police officer left off to meet the 2-4 button rule; officers are rarely inside a store and the worker and cashier already cover store staff). The worker is taught first and is the helper the story continues with."
         }
       ],
       "branches": {
@@ -439,6 +434,5 @@
     "choice-stay",
     "choice-helper",
     "choice-offer"
-  ],
-  "pendingTrim": "The helper question has 5 buttons; CLAUDE.md rule 15 allows 2-4. The Content Designer is trimming it to 4. Replace this file with the trimmed script and delete this field."
+  ]
 }

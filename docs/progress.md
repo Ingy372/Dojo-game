@@ -369,7 +369,7 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - The first time, the player picks Mom or Dad. The game remembers the pick, and the story says "{player}" and "Mom" or "Dad".
 - The phone's built-in voice reads each line and its choices aloud. It's on by default for this 6–9 scenario, and the player can switch it off.
 - How to open it: a "Street Smarts" button in the Home Dojo from the 2nd belt on, or the test link `?street=store-separated` at any belt.
-- Choices are 2–4 buttons (CLAUDE.md). Pending: the helper question still has 5 until the Content Designer's trimmed script lands on main; it is marked `pendingTrim` in the content file.
+- Choices are 2–4 buttons (CLAUDE.md). The helper question uses the trimmed 4-choice script (#79, wired in K2-trim).
 - The picture is placeholder art for now: a drawn store aisle with a coloured circle for whoever is talking.
 - 14 new tests. 185 tests pass (1 skipped), typecheck is clean and the game builds. Checked with screenshots at 667x375 and 844x390.
 
