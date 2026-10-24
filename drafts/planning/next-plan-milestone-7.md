@@ -18,7 +18,7 @@ Item IDs below (P1, P2, ...) are suggestions. The Manager picks the real IDs.
 | ID | Item | Owner | Waits on | Size |
 | --- | --- | --- | --- | --- |
 | P1 | Guided on by default for young / new players | Programmer | S5 answer (or your call) | S |
-| P2 | Tutorial floor (first 10 minutes) | Programmer | C8 lines | M |
+| P2 | Tutorial floor (first 10 minutes) | Programmer | P3 lines | M |
 | P3 | Tutorial lines | Content Designer | nothing | S |
 | P4 | Cascade of unlocks on first return home | Programmer | P2 | S–M |
 | P5 | Sensei's Lessons system + Lesson Scroll | Programmer | P6 lines | M–L |
