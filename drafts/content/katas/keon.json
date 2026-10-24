@@ -1,6 +1,6 @@
 {
-  "id": "key-on",
-  "name": "Key On",
+  "id": "keon",
+  "name": "Keon",
   "schoolName": "Keon",
   "belt": "orange-to-green",
   "source": "Toni Kennerson, school sheet (Keon.docx via /workspace/katas/keon.md)",
@@ -32,9 +32,8 @@
         "punch.straight"
       ],
       "kiai": false,
-      "question": [
-        "Q2"
-      ]
+      "question": null,
+      "jayNote": "LF = left foot forward: a straight punch from a left-foot-forward stance (Jay, Oct 24)."
     },
     {
       "n": 3,
@@ -61,9 +60,9 @@
       ],
       "kiai": false,
       "question": [
-        "Q7",
         "Q9"
-      ]
+      ],
+      "jayNote": "Same-side ear is correct (Jay, Oct 24)."
     },
     {
       "n": 5,
@@ -75,9 +74,8 @@
         "punch.reverse"
       ],
       "kiai": false,
-      "question": [
-        "Q8"
-      ]
+      "question": null,
+      "jayNote": "Same-side ear is correct (Jay, Oct 24)."
     },
     {
       "n": 6,
