@@ -58,6 +58,8 @@ export interface RoomStats {
   perfects: number;
   blocks: number;
   hits: number;
+  /** Strikes the player landed. */
+  strikes: number;
   died: boolean;
   /** Average number of enemies within 2.5 tiles of the player while fighting. */
   crowd: number;
@@ -90,7 +92,7 @@ interface Plan {
 export function playRoom(content: Content, run: RunState, world: WorldState, room: Room, style: Style, skill: Skill, rng: Rng): RoomStats {
   const p = world.players.p1;
   const plans = new Map<string, Plan>();
-  const stats: RoomStats = { roomId: room.id, kind: room.kind, ticks: 0, damage: 0, perfects: 0, blocks: 0, hits: 0, died: false, crowd: 0, peakCrowd: 0, winded: 0, grade: null };
+  const stats: RoomStats = { roomId: room.id, kind: room.kind, ticks: 0, damage: 0, perfects: 0, blocks: 0, hits: 0, strikes: 0, died: false, crowd: 0, peakCrowd: 0, winded: 0, grade: null };
   let crowdSum = 0;
   let crowdN = 0;
   const limit = 20 * 60 * 6;
@@ -102,6 +104,7 @@ export function playRoom(content: Content, run: RunState, world: WorldState, roo
       if (ev.kind === 'perfectCounter') stats.perfects++;
       if (ev.kind === 'block') stats.blocks++;
       if (ev.kind === 'hit') stats.hits++;
+      if (ev.kind === 'playerAttack' && ev.move === 'strike') stats.strikes++;
       if (ev.kind === 'winded') stats.winded++;
     }
     const alive = world.enemies.filter((e) => e.mode !== 'defeated');

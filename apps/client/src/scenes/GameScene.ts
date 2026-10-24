@@ -224,6 +224,9 @@ export class GameScene extends Phaser.Scene {
   private comboText!: Phaser.GameObjects.Text;
   private comboBonusText!: Phaser.GameObjects.Text;
   private shownCombo = 0;
+  /** Perfect Counter chain label ("x2", "x3"...) with a glow that grows with the chain. */
+  private chainText!: Phaser.GameObjects.Text;
+  private shownChain = 0;
   private message!: Phaser.GameObjects.Text;
   private screenFlash!: Phaser.GameObjects.Rectangle;
 
@@ -263,6 +266,7 @@ export class GameScene extends Phaser.Scene {
     this.hitStopMs = 0;
     this.enemyViews.clear();
     this.shownCombo = 0;
+    this.shownChain = 0;
     this.heroAction = null;
 
     this.chestOpenAt = null;
@@ -568,6 +572,23 @@ export class GameScene extends Phaser.Scene {
       this.comboText.setVisible(p.combo >= 2);
       this.comboBonusText.setVisible(p.combo >= 2);
     }
+
+    if (p.counterChain !== this.shownChain) {
+      const grew = p.counterChain > this.shownChain;
+      this.shownChain = p.counterChain;
+      if (p.counterChain >= 2) {
+        // Brighter glow as the chain grows (it stops growing at x5).
+        const glow = Math.min(p.counterChain, 5);
+        this.chainText.setText(`PERFECT x${p.counterChain}`).setShadow(0, 0, '#ffd166', 4 + glow * 4, true, true);
+        this.chainText.setColor(glow >= 4 ? '#fff6d5' : '#ffd166');
+        if (grew) {
+          this.tweens.killTweensOf(this.chainText);
+          this.chainText.setScale(1.4);
+          this.tweens.add({ targets: this.chainText, scale: 1, duration: 160, ease: 'Back.Out' });
+        }
+      }
+      this.chainText.setVisible(p.counterChain >= 2);
+    }
   }
 
   /**
@@ -673,6 +694,11 @@ export class GameScene extends Phaser.Scene {
       .setOrigin(0.5, 0)
       .setResolution(res)
       .setVisible(false);
+    this.chainText = this.add
+      .text(0, 68, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166', stroke: '#14121c', strokeThickness: 5 })
+      .setOrigin(0.5, 0)
+      .setResolution(res)
+      .setVisible(false);
     this.message = this.add
       .text(0, 0, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '28px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 6, align: 'center' })
       .setOrigin(0.5)
@@ -704,7 +730,7 @@ export class GameScene extends Phaser.Scene {
     this.bossName = this.add.text(0, 0, '', { ...small, fontSize: '13px' }).setOrigin(0.5, 0).setResolution(crisp()).setVisible(false);
     const calm = this.add.text(16, 55, 'Calm Mind', { ...small, fontSize: '12px', color: '#bff5ec' }).setResolution(crisp()).setVisible(!!this.run?.calmMind);
     this.cameras.main.ignore(calm);
-    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.message, this.screenFlash, this.roomLabel, this.timerText, this.bossName]);
+    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.chainText, this.message, this.screenFlash, this.roomLabel, this.timerText, this.bossName]);
   }
 
   private layout(size: Phaser.Structs.Size): void {
@@ -728,6 +754,7 @@ export class GameScene extends Phaser.Scene {
     this.buttons.layout();
     this.comboText.setX(width / 2);
     this.comboBonusText.setX(width / 2);
+    this.chainText.setX(width / 2);
     this.message.setPosition(width / 2, height * 0.4);
     this.roomLabel.setX(width - 16);
     this.timerText.setX(width - 16);
