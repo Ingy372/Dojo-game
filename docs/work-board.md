@@ -221,3 +221,15 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 ## Appendix: Systems design
 
 The systems design work (S1–S8) moved to the Dojo-Ascent Researcher & Planner (drafts/planning/) on Oct 23; the separate Bot 6 instructions are retired.
+
+### S3 Forms from the school's kata sheets (plan: drafts/planning/S3-forms-kata-plan.md, PR #161)
+| ID | Task | Owner | Waiting on | Done when |
+| --- | --- | --- | --- | --- |
+| S3-J1 | Jay answers kata questions Q1–16 (in the plan). Manager calls: D1 in-game shows names, step counts and arrows only; D2 practice room after launch; D3 Key On and D&G Forms in milestone 10. | Jay | nothing | Answers recorded in the plan. |
+| S3-J2 | Jay's character lines for the Key On and D&G Forms. | Jay | nothing | Lines in the plan. |
+| S3-K1 | Kata data files (school's exact words) for the 4 katas. | Content Designer | nothing (typos stay as flagged until S3-J1) | As in the plan. |
+| S3-P1 | Kata card in the Abilities tab. | Programmer | S3-K1 | As in the plan. |
+| S3-A1 | Direction picture and kata icons. | Artist | after the walk samples and A3c | As in the plan. |
+| S3-D1 | Design the two new Forms. | Researcher & Planner | S3-J2 | As in the plan. |
+| S3-P2 | Calm practice room (after launch). | Programmer | launch | As in the plan. |
+| S3-T1 | Check the kata cards against the sheets. | QA Tester | S3-P1 | As in the plan. |
