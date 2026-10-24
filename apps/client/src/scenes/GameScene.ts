@@ -78,7 +78,9 @@ const TILE = 48;
 /** Screen pixels the top bar (health, Focus, "Room 1 of 8") takes up. */
 const HUD_TOP_PX = 56;
 /** Screen y of the boss health bar; its name sits just under it. */
-const BOSS_BAR_Y = 74;
+// The boss bar sits in the HUD's top strip, between the player's bars and the room label,
+// so it never covers the Keeper (K9: it used to sit over the Keeper's head at y 74).
+const BOSS_BAR_Y = 16;
 /** How many tiles tall the view is, whatever the phone's size. */
 const VISIBLE_ROWS = 8;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
@@ -276,7 +278,7 @@ export class GameScene extends Phaser.Scene {
     this.setup = characterSetup(loadSave(), this.training, CONTENT.abilities);
     if (this.run) {
       this.room = currentRoom(CONTENT, this.run);
-      this.world = createRunWorld(CONTENT, this.run, this.setup, this.setup.effects, testDifficulty(), testGuide() ?? loadSave().guideStep);
+      this.world = createRunWorld(CONTENT, this.run, this.setup, this.setup.effects, undefined, testGuide() ?? loadSave().guideStep);
     } else {
       this.room = loadRoom(trainingRoom);
       this.world = createWorld(this.room, [this.me], {
@@ -320,7 +322,8 @@ export class GameScene extends Phaser.Scene {
     const cam = this.cameras.main;
     cam.startFollow(this.player, true);
     this.uiCamera = this.cameras.add(0, 0, this.scale.width, this.scale.height);
-    this.uiCamera.ignore([...roomGfx, ...objects, this.danger, this.marker, this.player]);
+    // The Guarding tether is world art too, or the screen camera draws a ghost copy (elites QA bug 1).
+    this.uiCamera.ignore([...roomGfx, ...objects, this.tether, this.danger, this.marker, this.player]);
 
     for (const e of this.world.enemies) this.makeEnemy(e);
 
@@ -844,7 +847,7 @@ export class GameScene extends Phaser.Scene {
       switch (ev.kind) {
         case 'eliteFocus': {
           // Elite reward: a small blue-white Focus pop (not a pickup to chase).
-          if (ev.focus > 0) this.floatText(this.world.players[ev.playerId]?.pos ?? { x: 0, y: 0 }, `+${ev.focus} Focus`, '#cfeaff', 20, 1);
+          if (ev.focus > 0) this.focusPop(this.world.players[ev.playerId]?.pos ?? { x: 0, y: 0 }, `+${ev.focus} Focus`);
           break;
         }
         case 'playerAttack': {
@@ -1420,12 +1423,12 @@ export class GameScene extends Phaser.Scene {
       this.timerText.setVisible(false);
     }
 
-    // Boss health bar (top middle).
+    // Boss health bar (top strip, between the player's bars and the room label).
     const boss = this.world.enemies.find((e) => e.def.boss);
     const g = this.hud;
     if (boss && boss.mode !== 'defeated') {
       const { width } = this.scale.gameSize;
-      const w = Math.min(320, width * 0.4);
+      const w = Math.max(140, Math.min(300, width - 450));
       const x = width / 2 - w / 2;
       const y = BOSS_BAR_Y;
       g.fillStyle(0x000000, 0.55).fillRoundedRect(x - 3, y - 3, w + 6, 16, 5);
@@ -1622,6 +1625,20 @@ export class GameScene extends Phaser.Scene {
     this.tweens.add({ targets: c, scale: 1, alpha: 0, duration: 300, ease: 'Cubic.Out', onComplete: () => c.destroy() });
   }
 
+  /** The elite Focus reward: pops in above the player, holds long enough to read, then floats away. */
+  private focusPop(at: Vec2, text: string): void {
+    const t = this.addWorld(
+      this.add
+        .text(at.x * TILE, (at.y - 1.3) * TILE, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '24px', color: '#cfeaff', stroke: '#14121c', strokeThickness: 6 })
+        .setOrigin(0.5)
+        .setResolution(window.devicePixelRatio || 1)
+        .setDepth(12)
+        .setScale(0.5),
+    );
+    this.tweens.add({ targets: t, scale: 1, duration: 180, ease: 'Back.Out' });
+    this.tweens.add({ targets: t, y: t.y - 0.6 * TILE, alpha: 0, delay: 1100, duration: 500, ease: 'Cubic.In', onComplete: () => t.destroy() });
+  }
+
   private floatText(at: Vec2, text: string, color: string, size: number, rise = 0.8): void {
     const t = this.addWorld(
       this.add
@@ -1710,16 +1727,13 @@ export class GameScene extends Phaser.Scene {
   }
 }
 
-/**
- * For testing only, until the difficulty choice arrives in milestone 7:
- * adding ?difficulty=guided (or challenge) to the link picks that difficulty.
- */
 /** For testing: ?guide=0 starts Sensei's guided Counter from the beginning, whatever the save says. */
 function testGuide(): number | undefined {
   const asked = new URLSearchParams(window.location.search).get('guide');
   return asked !== null && /^[0-3]$/.test(asked) ? Number(asked) : undefined;
 }
 
+/** Practice room only: ?difficulty=guided (or challenge). Tower runs carry their own difficulty (runDifficulty). */
 function testDifficulty(): Difficulty | undefined {
   const asked = new URLSearchParams(window.location.search).get('difficulty');
   return asked && asked in DIFFICULTY ? (asked as Difficulty) : undefined;
