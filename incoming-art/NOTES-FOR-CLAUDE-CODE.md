@@ -219,13 +219,19 @@ Drawing order is the `order` field (the Batch 1 layers moved up by one because `
 - 28 icons, `icon-<id>.png`, 128 x 128, frames 1: 9 gear, 9 Insights, 10 Seals; ids exactly as in the brief. Map each to the existing id; no new ids. Second pass (2026-10-24) redrew 8 icons; same ids and files.
 
 ## Batch 9: Yellow belt Tower kit, `incoming-art/tower-rooms-t2/sprites/static.json` [NEW, full set]
-- Bamboo Garden Hall. Same sprite ids, layers, anchors and timing as Tier 1 `tower-rooms/` + `boss-door/` (boss door merged into the same static.json), so Tier 2 rooms can load this folder instead.
-- Extra optional decor: `decor-lantern`, `decor-bamboo-pot`, `decor-basin`. Chest is the Tier 1 chest (Jay OK'd). Tower name: TBD with the game planner. `proposals/` is reference only; do not load.
+- Working label **Sunrise Garden** (was "Bamboo Garden Hall"; folder name unchanged; final name is Jay's call). Same sprite ids, layers, anchors and timing as Tier 1 `tower-rooms/` + `boss-door/` (boss door merged into the same static.json), so Tier 2 rooms can load this folder instead.
+- Extra optional decor: `decor-lantern`, `decor-bamboo-pot`, `decor-basin`. Chest is the Tier 1 chest (Jay OK'd). Tower working label: Sunrise Garden (planner pick, drafts/planning/S1-tier2-name-and-guarding-aura.md). `proposals/` is reference only; do not load.
 
 ## S1 #3 elite auras, `incoming-art/elite-auras/sprites/static.json` [NEW, full set, Jay approved]
 - Overlay layers per tier-1 enemy: `sprites/<enemy>/aura-{swift,guarding}_{back,front}.png` (entries `aura-<kind>-<enemy>` in static.json). 8 frames, loop at 10 fps, same frame size + anchor as the enemy, so stack 1:1.
 - Draw order: aura back -> enemy -> aura front. Swift = gold, Guarding = blue. Nothing above the head (no badges). Game rules (who becomes elite, effects, 1 per room) come from the S1 brief, not from the art.
 - The 256 masters `sprites/aura-<kind>_<layer>.png` are reference only.
+- **[NEW] Guarding links** (same static.json, from `source/make_guard_links.py`):
+  - `guard-tether-beam` (64 x 24, 8 frames @ 10 fps): repeat (or stretch) along x from the guarder's ground point to the protected enemy's ground point, rotated to that angle, line centre at y = 12. `guard-tether-cap` (24 x 24, centre 12,12) on both ends.
+  - `guard-protected-<enemy>`: foot glow per tier-1 enemy, same frame + anchor as the enemy, drawn just before the enemy.
+  - `guard-tether-snap` (64 x 64, 4 frames @ 12 fps, once): at each line's midpoint when the guarder is defeated, while the lines and glows fade (~0.2 s).
+  - Layer order: floor -> tether + foot glows -> red danger circle -> aura back -> enemies -> aura front. Blue never covers the red circle. Range/count/damage rules come from the planning doc, not the art.
+- `aura-sparkle-gold` is a PROPOSAL only (possible rare named monster). Do not wire.
 
 ## Open items in one place
 

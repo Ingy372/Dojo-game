@@ -18,7 +18,7 @@
 **DECIDE (Jay)**
 1. Chest: the Tier 1 chest, unchanged. Jay OK'd it (2026-10-24).
 2. Decor (lantern, bamboo pot, water basin): Jay OK'd, kept.
-3. In-game Tower name: Jay will discuss this with the game planner. "Bamboo Garden Hall" stays a working label.
+3. In-game Tower name: Jay will discuss this with the game planner. Working label is now "Sunrise Garden" (planner pick, 2026-10-24); folder name unchanged.
 4. Delete `proposals/` once the theme is final?
 
 **NEXT:** Claude Code wires `sprites/static.json` for Tier 2 rooms (same code path as Tier 1).

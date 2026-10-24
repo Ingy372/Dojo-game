@@ -1,4 +1,4 @@
-# Batch 9 - Yellow belt Tower kit (Bamboo Garden Hall)
+# Batch 9 - Yellow belt Tower kit (working label: Sunrise Garden; was Bamboo Garden Hall)
 
 Same format as `incoming-art/tower-rooms/` and `incoming-art/boss-door/`: `sprites/static.json` lists every sprite with `files`, `layers`, `size`, `anchorPx`, `frames`.
 
