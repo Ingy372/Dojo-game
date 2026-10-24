@@ -59,7 +59,7 @@
       "order": 6,
       "trigger": "Easy tutorial boss enters",
       "screens": [
-        "A bigger foe. Watch the circles, like before."
+        "A big one! Watch the circles, like before."
       ],
       "success": "You stayed calm. Well done!",
       "earliestRun": 1

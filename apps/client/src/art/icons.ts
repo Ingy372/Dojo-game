@@ -19,3 +19,20 @@ export function addIcon(scene: Phaser.Scene, id: string, x: number, y: number, s
   // Scale the full frame (not the trimmed picture) so every icon has the same size.
   return img.setScale(size / s.frameWidth);
 }
+
+/**
+ * Each Insight icon's own accent colour (K7-art2, PR #56 colour key in
+ * incoming-art/icons/README.md). The Insight card's border uses it so the
+ * cards are easy to tell apart. No red: red means danger.
+ */
+export const INSIGHT_ACCENT: Readonly<Record<string, number>> = {
+  'ripple-counter': 0x4096eb,
+  'iron-skin': 0x6e7c96,
+  'wind-step': 0x3cc896,
+  'double-strike': 0xff921e,
+  'quick-hands': 0xfad628,
+  'press-the-advantage': 0x9660e6,
+  'shield-breaker': 0x1ebace,
+  'heavy-hands': 0x965c32,
+  rally: 0x82cd32,
+};

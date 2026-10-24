@@ -9,7 +9,7 @@ This folder belongs to the **Content Writer** Grok bot (see `docs/GROK_BOTS.md`)
 - `dojo/decorations.json`: copy of `content/dojo/decorations.json` plus a NEW `description` field per decoration.
 - `story/chapter-1.json`: "The Shattered Light", opening chapter: 17 one-line screens, the first Guardian, 3 Relics.
 - `abilities/technique-callouts.json`: Technique Callouts text (proposal 1 from drafts/learning).
-- `dojo/sensei-bow-questions.json`: Sensei's Question at the Bow, as a reflection (proposal 2).
+- `dojo/sensei-bow-questions.json`: Sensei's Question at the Bow, as recall (C2; replaces the reflection draft).
 - `tutorial/sensei-lessons.json`: **SUPERSEDED** by `tutorial/first-session-lessons.json` (M7-P13). Kept only as history, because game code still reads the content/ copy until M7-P5. Originally: first-run Sensei's Lessons (move, Strike, the "!" warning, guided Counter, Perfect Counter, Block, Dash). The guided Counter lines pair with Learning proposal 6.
 - `dialogue/milestone-6.json`: milestone 6 dialogue (C1, dialogue half): Sensei, Senpai, Kohai, second instructor, founder; intros, founder Class Creed scene, one manners quest, one life-lesson quest, return-home reflections.
 - `text/room-twists.json`: final banner and Sensei lines for the room twists (PR #22 format).
@@ -23,3 +23,4 @@ Notes: all numbers/stats are unchanged. `description`, `bestiary`, materials and
 - tutorial/tutorial-floor.json: M7-P3 Sensei lines for each tutorial-floor step.
 - tutorial/first-session-lessons.json: M7-P6 session list of Sensei's Lessons (7 first-session lessons + Perfect Counter, Block, Step-out).
 - enemies/named-monsters.json: M7-N1 Tier 2 named monsters (lines + Monster Journal text).
+- lore/: C3 lore bible. 00-index.md plus one page per tier (01-white to 10-black) and guardians-and-relics.json (same shape as chapter-1's guardian/relics).
