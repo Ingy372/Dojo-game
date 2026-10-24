@@ -5,9 +5,9 @@ Sprites (named-monster/sprites/, see static.json):
   named-sparkle_front.png         256 master, ground (128, 210), 8 frames @ 10 fps: drifting gold sparkles ONLY (no swooshes, no glow, no dome).
   <enemy>/named-sparkle_front.png same, pre-scaled to brute / swarmer / shield frame + anchor (Floor Keeper is never named).
   name-plate.png                  BLANK cream plate for under the feet (the game renders the name text). 9-slice: stretch the middle.
-  tell-stamp-dust.png             rough: Old Thumper stamp dust puff, 128 x 64, 4 frames @ 12 fps, once per stamp, at the feet.
-  tell-dash-trail.png             rough: Zippy Zoom dash sparkle trail, 64 x 24 tileable segment, 8 frames @ 10 fps.
-  tell-shield-tap.png             rough: Captain Clank shield-tap flash, 48 x 48, 3 frames @ 12 fps, once per tap, on the shield.
+  tell-stamp-dust.png             rough (replaced by make_tells.py, which deletes these): Old Thumper stamp dust puff, 128 x 64, 4 frames @ 12 fps, once per stamp, at the feet.
+  tell-dash-trail.png             rough (replaced by make_tells.py, which deletes these): Zippy Zoom dash sparkle trail, 64 x 24 tileable segment, 8 frames @ 10 fps.
+  tell-shield-tap.png             rough (replaced by make_tells.py, which deletes these): Captain Clank shield-tap flash, 48 x 48, 3 frames @ 12 fps, once per tap, on the shield.
 No text in the art. Previews (with labels / marked placeholders) go to named-monster/preview/.
 """
 import os, math, json, random
