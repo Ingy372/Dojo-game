@@ -44,10 +44,6 @@ def popup(word="Injured!", scale=1):
     bb = d.textbbox((0, 0), word, font=f); d.text(((x0 + x1 - bb[2]) / 2 - bb[0] / 2, (y0 + y1 - bb[3] - bb[1]) / 2), word, font=f, fill=M["fx"]["popup"]["textColour"])
     return big.resize((W * scale, Hh * scale), Image.LANCZOS)
 dirs = ["S", "SE", "E", "NE", "N", "NW", "W", "SW"]
-# 1: player all 8 directions, idle f0 + walk f3, before / after
-r1 = [sheet([frame("player", "idle", d, 0, injured=False) for d in dirs[:3]] + [frame("player", "idle", d, 0) for d in dirs], 2, None),
-      sheet([frame("player", "walk", d, 3) for d in dirs] + [frame("player", "hit", "S", 1)], 2, None)]
-stack(r1, "review-1-player-8-directions-2x.png")
 # 2: every enemy idle (S, E, N) + wind-up fade strip (stars 100 -> 50%)
 rows = []
 for c in ["swarmer", "shield", "brute", "keeper", "padded"]:
@@ -62,13 +58,14 @@ r3 = [sheet([popup(scale=2), Image.open(os.path.join(S, "fx", "injured-popup_pla
       sheet([pf.crop((i * 128, 0, (i + 1) * 128, 128)) for i in range(n)], 2, None)]
 stack(r3, "review-3-popup-and-shake-off-puff-2x.png")
 # 4: greyscale check of 1+2
-for nm in ("review-1-player-8-directions-2x.png", "review-2-enemies-idle-then-windup-fade-2x.png"):
+for nm in ("review-2-enemies-idle-then-windup-fade-2x.png",):
     ImageOps.grayscale(Image.open(os.path.join(P, nm)).convert("RGB")).save(os.path.join(P, nm.replace("review-", "greyscale-")))
 # 5: phone-size scene: room floor, player injured with pop-up, Bopper injured in wind-up, a swarmer injured; at game 1x then scaled to 390 px wide
 sc = Image.new("RGBA", (780, 460), FLOOR); d = ImageDraw.Draw(sc)
 for y in range(0, 460, 46): d.line([(0, y), (780, y)], fill=(196, 166, 120, 255), width=2)
 def put(im, gx, gy, anchor): sc.alpha_composite(im, (int(gx - anchor[0]), int(gy - anchor[1])))
-put(frame("player", "idle", "SE", 0), 240, 300, (64, 136.96)); pu = popup(); put(pu, 240, 300 - 150, (pu.width / 2, pu.height))
+put(frame("shield", "idle", "SE", 0), 240, 300, (64, 104.96)); pu = popup(); put(pu, 240, 300 - 90, (pu.width / 2, pu.height))
+put(frame("keeper", "idle", "S", 0), 400, 210, (json.load(open(os.path.join(IA, SRC["keeper"])))["anchor"]["x"], json.load(open(os.path.join(IA, SRC["keeper"])))["anchor"]["y"]))
 put(frame("padded", "windup", "SW", 3, stars_a=0.5), 470, 280, (96, 142.08)); put(frame("swarmer", "idle", "W", 0), 620, 380, (64, 104.96))
 put(frame("brute", "move", "S", 2), 120, 420, (json.load(open(os.path.join(IA, SRC["brute"])))["anchor"]["x"], json.load(open(os.path.join(IA, SRC["brute"])))["anchor"]["y"]))
 sc.save(os.path.join(P, "review-4-scene-1x.png")); sc.resize((390, 230), Image.LANCZOS).save(os.path.join(P, "review-4-scene-phone-390px.png"))

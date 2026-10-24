@@ -19,55 +19,14 @@
   "deg": 3,
   "periodSec": 1.6
  },
+ "starCount": {
+  "default": 3,
+  "bossVariant": 2,
+  "rule": "Floor Keeper and Guardians (half-strength Injured) use the same art with 2 stars; the keeper sheets here are the 2-star variant, and future Guardians get their sheets from make_injured.py with STARS[<id>] = 2"
+ },
+ "starBounds": "stars orbit at head height: never above the head-top line (top of the idle silhouette, moved with the body each frame) and always inside the frame",
+ "wording": "the word 'Injured!' is owned by S4c-C1 (Content); the plate has no baked text",
  "characters": {
-  "player": {
-   "frameWidth": 128,
-   "frameHeight": 160,
-   "anchor": {
-    "x": 64.0,
-    "y": 136.96,
-    "note": "feet / ground point of the character, in pixels from the frame's top-left"
-   },
-   "directions": [
-    "N",
-    "NE",
-    "E",
-    "SE",
-    "S",
-    "SW",
-    "W",
-    "NW"
-   ],
-   "animations": {
-    "idle": {
-     "frames": 8,
-     "fps": 8,
-     "sheets": {
-      "injured-stars-back": "player_injured-stars-back_idle.png",
-      "injured-stars-front": "player_injured-stars-front_idle.png",
-      "injured-bandage": "player_injured-bandage_idle.png"
-     }
-    },
-    "walk": {
-     "frames": 10,
-     "fps": 30,
-     "sheets": {
-      "injured-stars-back": "player_injured-stars-back_walk.png",
-      "injured-stars-front": "player_injured-stars-front_walk.png",
-      "injured-bandage": "player_injured-bandage_walk.png"
-     }
-    },
-    "hit": {
-     "frames": 5,
-     "fps": 20,
-     "sheets": {
-      "injured-stars-back": "player_injured-stars-back_hit.png",
-      "injured-stars-front": "player_injured-stars-front_hit.png",
-      "injured-bandage": "player_injured-bandage_hit.png"
-     }
-    }
-   }
-  },
   "swarmer": {
    "frameWidth": 128,
    "frameHeight": 128,
@@ -114,7 +73,8 @@
       "injured-bandage": "swarmer_injured-bandage_windup.png"
      }
     }
-   }
+   },
+   "stars": 3
   },
   "shield": {
    "frameWidth": 128,
@@ -162,7 +122,8 @@
       "injured-bandage": "shield_injured-bandage_windup.png"
      }
     }
-   }
+   },
+   "stars": 3
   },
   "brute": {
    "frameWidth": 208,
@@ -210,7 +171,8 @@
       "injured-bandage": "brute_injured-bandage_windup.png"
      }
     }
-   }
+   },
+   "stars": 3
   },
   "keeper": {
    "frameWidth": 256,
@@ -267,7 +229,8 @@
       "injured-bandage": "keeper_injured-bandage_windup_sweep.png"
      }
     }
-   }
+   },
+   "stars": 2
   },
   "padded": {
    "frameWidth": 192,
@@ -315,7 +278,8 @@
       "injured-bandage": "padded_injured-bandage_windup.png"
      }
     }
-   }
+   },
+   "stars": 3
   }
  },
  "fx": {
