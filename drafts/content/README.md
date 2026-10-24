@@ -12,6 +12,8 @@ This folder belongs to the **Content Writer** Grok bot (see `docs/GROK_BOTS.md`)
 - `dojo/sensei-bow-questions.json`: Sensei's Question at the Bow, as a reflection (proposal 2).
 - `tutorial/sensei-lessons.json`: first-run Sensei's Lessons (move, Strike, the "!" warning, guided Counter, Perfect Counter, Block, Dash). The guided Counter lines pair with Learning proposal 6.
 - `dialogue/milestone-6.json`: milestone 6 dialogue (C1, dialogue half): Sensei, Senpai, Kohai, second instructor, founder; intros, founder Class Creed scene, one manners quest, one life-lesson quest, return-home reflections.
+- `text/room-twists.json`: final banner and Sensei lines for the room twists (PR #22 format).
+- `text/guided-counter-nudge.json`: final G1 guided-Counter nudge (PR #21).
 - `decisions.md`: content decisions.
 - `rename-proposals.md`: suggested renames for Jay. Nothing renamed in the JSON.
 
