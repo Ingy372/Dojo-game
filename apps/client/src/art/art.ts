@@ -69,6 +69,8 @@ export interface StaticSprite {
   place?: string;
   keyFrames?: Record<string, number | string>;
   layers: Record<string, number[]>;
+  /** Extra notes from the artist, e.g. a tinted piece's colour1. */
+  info?: Record<string, unknown>;
 }
 
 interface PackFile {
@@ -190,4 +192,17 @@ export function setStaticFrame(scene: Phaser.Scene, pack: PackName, id: string, 
     if (f) img.setTexture(f[0], f[1]);
     img.setVisible(!!f);
   });
+}
+
+/**
+ * Draws a two-colour piece: <id>, then its <id>-tint layer multiplied by a colour
+ * (setTint keeps the grey shading). With no colour given it uses the art's own info.colour1.
+ */
+export function addTinted(scene: Phaser.Scene, pack: PackName, id: string, x: number, y: number, colour?: string): Phaser.GameObjects.Image[] {
+  const images = addStatic(scene, pack, id, x, y);
+  const s = staticArt(scene, pack, id);
+  const hex = colour ?? (typeof s?.info?.colour1 === 'string' ? s.info.colour1 : null);
+  const i = s ? Object.keys(s.layers).indexOf(`${id}-tint`) : -1;
+  if (hex && i >= 0 && images[i]) images[i].setTint(Phaser.Display.Color.HexStringToColor(hex).color);
+  return images;
 }

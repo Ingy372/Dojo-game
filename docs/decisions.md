@@ -537,3 +537,11 @@ From section 1 of `docs/work-board.md`.
 - Spawn gating is room-level: new `minBeltTier` on rooms (default 1); `bopper-yard` and `staff-and-shield` require Yellow (tier 2).
 - Bopper drop chance 0.1 (same as shield) — my guess, not a decided number.
 - `?skin=bopper` removed (Bopper is real now); use `?room=bopper-yard` to test.
+
+## Decor Tier 1 import (A6 pack, C10 text) (2026-10-24)
+- New art pack `decor-tier1` (only `incoming-art/decor-tier1-a6/sprites/static.json`; `decor-pool-a6` left out).
+- 27 pieces in decorations.json with C10 ids/names/lines: 5 random, 13 class, 3 keeper statues, 5 trophies, 1 bonus folding screen. Old Stone Lantern, Bonsai Tree, Dojo Banner kept.
+- Tinted pieces: `<id>` then `<id>-tint` with setTint. Colour 1 = info.colour1; colour 2 = belt colour, or #d2a878 on White. For now colour 2 uses the current belt (pieces don't yet remember their drop floor).
+- `mustTouchWall`: the folding screen's top row must be row 1, and it may not stand in front of the notice board column.
+- Bow mat and cushion walk-through; other floor pieces solid — my guess.
+- No earning/drops yet (next PR).

@@ -496,6 +496,16 @@
         }
       ]
     },
+    "decor-tier1": {
+      "note": "A6 Tier 1 decoration set (PR #124/#125): 5 random tinted pieces, 13 class pieces, 3 keeper statues, 5 Journal trophies, the folding screen. decor-pool-a6 is not included.",
+      "sources": [
+        {
+          "id": "decor-tier1",
+          "type": "static",
+          "json": "incoming-art/decor-tier1-a6/sprites/static.json"
+        }
+      ]
+    },
     "tower-t2": {
       "note": "Yellow belt Tower kit (Sunrise Garden). Same sprite ids as tower-t1, plus optional decor.",
       "sources": [

@@ -51,7 +51,7 @@ import streetUi from '../../../../content/street-smarts/ui.json';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
 import { TouchControls } from '../input/TouchControls';
-import { addStatic, loadArt } from '../art/art';
+import { addStatic, addTinted, loadArt } from '../art/art';
 import type { LayeredSprite } from '../art/LayeredSprite';
 import { makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
@@ -63,6 +63,8 @@ import { openMonsterJournal } from '../ui/MonsterJournal';
 
 /** Pixels per tile in the room (before it's scaled to fit the screen). */
 const TILE = 48;
+/** Colour 2 of tinted decorations on White belt (A6 art rule). */
+const WHITE_BELT_TINT = '#d2a878';
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 const MAX_TICKS_PER_FRAME = 5;
 const HOUR = 3_600_000;
@@ -153,7 +155,7 @@ export class DojoScene extends Phaser.Scene {
   }
 
   preload(): void {
-    loadArt(this, [...playerPacks(), 'dojo', NAMED_PACK]);
+    loadArt(this, [...playerPacks(), 'dojo', NAMED_PACK, ...new Set(CONTENT.dojo.decorations.flatMap((d) => (d.art ? [d.art] : [])))]);
   }
 
   create(): void {
@@ -763,12 +765,23 @@ export class DojoScene extends Phaser.Scene {
     const def = decorationDef(CONTENT.dojo, it.id);
     // Named-monster stickers are drawn in the named-monster pack.
     if (def.source === 'named') return addStatic(this, NAMED_PACK, it.id, 0, 0);
+    // Tier 1 pieces have their own pack; random ones are tinted (colour 1, or the belt colour).
+    if (def.art) return def.source === 'random' ? addTinted(this, def.art, it.id, 0, 0, it.colour === 2 ? this.beltTint() : undefined) : addStatic(this, def.art, it.id, 0, 0);
     if (def.clean === 'rack' && it.crooked > 0) return addStatic(this, 'dojo', `${it.id}-crooked`, 0, 0, it.crooked - 1);
     const images = addStatic(this, 'dojo', it.id, 0, 0);
     if (def.clean === 'mat' && it.scuffed) {
       for (const scuff of addStatic(this, 'dojo', `${it.id}-scuffed`, 0, 0)) images.push(scuff.setAlpha(1 - it.wipes / DOJO.wipeTaps));
     }
     return images;
+  }
+
+  /**
+   * Colour 2 of a tinted piece: the belt colour, or soft wood tan on White belt (white would
+   * look washed out). Uses the current belt until pieces remember the floor they came from.
+   */
+  private beltTint(): string {
+    const belt = this.training.belt;
+    return belt.tier === 1 ? WHITE_BELT_TINT : belt.color;
   }
 
   /** The mess on the floor: dust, and (the "leaf" spots) muddy footprints, a towel or a water bottle. */
@@ -1229,6 +1242,22 @@ export class DojoScene extends Phaser.Scene {
       homeDojo(this.profile);
       writeSave(this.profile);
       setBowDue(true);
+      this.scene.restart();
+    });
+    y += 46;
+    btn(pad, y, Math.min(260, width - pad * 2), 'Try the new decorations', 0x8a5a35, () => {
+      // Puts the old pieces away and sets out the Tier 1 set (tinted ones in both colours).
+      for (const it of this.dojo.items) if (!CONTENT.dojo.starter.some((s) => s.decoration === it.id)) storeItem(this.dojo, it.uid);
+      const tier1 = CONTENT.dojo.decorations.filter((d) => d.id.startsWith('decor-a6-'));
+      const ids = tier1.flatMap((d) => (d.source === 'random' ? [d.id, d.id] : [d.id]));
+      const added = addDecorations(this.dojo, ids);
+      added.forEach((it, i) => {
+        if (decorationDef(CONTENT.dojo, it.id).source === 'random' && added[i - 1]?.id === it.id) it.colour = 2;
+        const spot = findSpot(this.dojo, CONTENT.dojo, it.uid);
+        if (spot) placeItem(this.dojo, CONTENT.dojo, it.uid, spot.col, spot.row);
+      });
+      writeSave(this.profile);
+      // Solid pieces moved, so start the room again to rebuild where you can walk.
       this.scene.restart();
     });
     y += 54;

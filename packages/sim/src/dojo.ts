@@ -12,8 +12,13 @@ import { loadRoom, type Room, type RoomKind } from './room';
 
 export type DecorationPlace = 'floor' | 'wall';
 export type DecorationClean = 'mat' | 'rack';
-/** starter: Sensei's gifts; tower: found in chests; named: a named monster's sticker (first win only, never in chests). */
-export type DecorationSource = 'starter' | 'tower' | 'named';
+/**
+ * starter: Sensei's gifts; tower: found in chests; named: a named monster's sticker (first win only, never in chests).
+ * Tier 1 set (A6): random (tinted pieces), class (real classes), keeper (first clear of a floor),
+ * trophy (Monster Journal), bonus (the folding screen). How these are earned comes later.
+ */
+export type DecorationSource = 'starter' | 'tower' | 'named' | 'random' | 'class' | 'keeper' | 'trophy' | 'bonus';
+const SOURCES: readonly DecorationSource[] = ['starter', 'tower', 'named', 'random', 'class', 'keeper', 'trophy', 'bonus'];
 
 export interface DecorationDef {
   id: string;
@@ -28,6 +33,12 @@ export interface DecorationDef {
   /** Placeholder look until the art pack. */
   shape: string;
   color: string;
+  /** One short story line (optional). */
+  description?: string;
+  /** The art pack it is drawn from, when it isn't "dojo". */
+  art?: string;
+  /** Only goes where its top row is against the top wall (the first floor row), e.g. the folding screen. */
+  mustTouchWall: boolean;
 }
 
 export interface DojoContent {
@@ -51,6 +62,8 @@ export interface DojoItem {
   wipes: number;
   /** Racks: weapons knocked crooked. */
   crooked: number;
+  /** Tinted (random) pieces: 1 = the art's own colour, 2 = the belt colour of the floor it came from. */
+  colour?: 1 | 2;
 }
 
 /**
@@ -122,7 +135,7 @@ export function loadDojoContent(roomData: unknown, decorationsData: unknown): Do
       return n;
     };
     const source = text('source') as DecorationSource;
-    if (source !== 'starter' && source !== 'tower' && source !== 'named') throw new DojoError(`${where}'s "source" must be starter, tower or named`);
+    if (!SOURCES.includes(source)) throw new DojoError(`${where}'s "source" must be one of ${SOURCES.join(', ')}`);
     const place = text('place') as DecorationPlace;
     if (place !== 'floor' && place !== 'wall') throw new DojoError(`${where}'s "place" must be floor or wall`);
     const clean = (it.clean ?? null) as DecorationClean | null;
@@ -138,7 +151,11 @@ export function loadDojoContent(roomData: unknown, decorationsData: unknown): Do
       clean,
       shape: text('shape'),
       color: text('color'),
+      mustTouchWall: it.mustTouchWall === true,
     };
+    if (typeof it.description === 'string') def.description = it.description;
+    if (typeof it.art === 'string') def.art = it.art;
+    if (def.mustTouchWall && place !== 'floor') throw new DojoError(`${where} has mustTouchWall, so it must be a floor decoration`);
     if (place === 'wall' && (def.height !== 1 || def.solid || clean)) throw new DojoError(`${where} hangs on the wall, so it must be 1 tall, not solid, and need no cleaning`);
     if (clean === 'mat' && def.solid) throw new DojoError(`${where} is a mat, so it can't be solid`);
     return def;
@@ -389,6 +406,9 @@ export function canPlace(dojo: DojoState, content: DojoContent, uid: string, col
     return !placed(dojo).some((o) => o.uid !== uid && decorationDef(content, o.id).place === 'wall' && overlaps(tiles, footprint(o.col!, o.row!, decorationDef(content, o.id))));
   }
   if (tiles.some((t) => room.walls[t.row]?.[t.col] !== false)) return false;
+  // Pieces like the folding screen stand with their back against the top wall.
+  // ...but never right in front of the notice board, which must stay visible.
+  if (def.mustTouchWall && (row !== 1 || tiles.some((t) => t.col === content.board.col))) return false;
   for (const o of placed(dojo)) {
     if (o.uid === uid) continue;
     const od = decorationDef(content, o.id);
