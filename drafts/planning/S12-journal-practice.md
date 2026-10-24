@@ -60,6 +60,7 @@ The Content Writer writes the final lines. They must be one short sentence each,
 - Slow sets the counter window to 10 ticks only inside practice. The main game setting is unchanged afterwards (test).
 - Sensei watches reuses the existing guide events, with no new sim mode (code check).
 - "Done" always returns to the Journal in one tap (test).
+- A Guardian's Practice button is hidden until the player has beaten that Guardian (test).
 - The Learning Designer reads the flow and the Sensei lines.
 
 ## Scope flags
@@ -68,10 +69,10 @@ The Content Writer writes the final lines. They must be one short sentence each,
 - **Client:** a Practice button on the Journal page, a Done button, and a helper toggles panel.
 - **Content:** one practice room, and about 4 Sensei lines.
 - **Depends on** the Journal screen being built (named monsters M7-N1, or the full Bestiary). If only the small named-monster Journal is built at launch, practice opens from those 3 pages plus a basic page for each of the 4 base enemies (guess).
-- Guardians: practice could come later. Whether a Guardian can be practised before beating it is a Manager call (decision 3).
+- Guardians: practice could come later. A Guardian's Practice button shows only after the player has beaten one (decided).
 
-## Decisions needed
+## Decisions (decided, Manager, Oct 24)
 
-1. Practice gives **no** Journal progress (no defeats or Perfect Counters counted). Is that OK? The other option is that practice counts toward Journal steps, but that turns practice into a grind.
-2. Are the helper defaults OK: Slow off, Sensei watches on for the first visit?
-3. Guardians: practise only after beating one, or never?
+1. **Decided:** practice does **not** count toward the Journal (no defeats or Perfect Counters counted).
+2. **Decided:** the helper defaults are OK: Slow off, Sensei watches on for the first visit only, Show the tell on the first visit only, Calm enemy off.
+3. **Decided:** a Guardian can be practised only **after the player has beaten one**.

@@ -248,9 +248,9 @@ Ranked by fun for the cost (my guess, marked). Cost: S = small, M = medium, L = 
 | 1 | A clear sight and sound warning before each enemy attack | Hades, Punch-Out!!, Sekiro (above) | High | S–M | Fair fights for young players. Reading a tell is like reading a partner in class. | **S11** (next in the queue) |
 | 2 | Practice each enemy calmly in the Monster Journal | Kirby gentle help, Ring Fit | High | M | No fail state, no score pressure. | **S12** (in the queue) |
 | 3 | A calm home space that fills up with earned things | Moonlighter, Animal Crossing (above) | High | S (we have the dojo room) | Show the room after every run, win or lose. | Already in S7. Small polish only. |
-| 4 | Shared growth: belt milestones give everyone a small boost | Children of Morta family traits | Med–High | S | Matches "real training is the power". Must not make old gear useless. | New: **S13 dojo-wide bonuses** (guess, Manager to approve) |
+| 4 | Shared growth: belt milestones give everyone a small boost | Children of Morta family traits | Med–High | S | Matches "real training is the power". Must not make old gear useless. | New: **S13 dojo-wide bonuses**: PARKED, not approved (Manager, Oct 24) |
 | 5 | Moves that grow when you use them (kick combos level up) | Kirby ability upgrades, Hades | Med–High | M | Use only Jay's combos 1–7 from `docs/curriculum.md`. | **S4** (in the queue) |
-| 6 | Pick which floor path to try next inside a belt tier | A Link Between Worlds | Medium | M | Keep belt gates. Nothing rented, nothing lost. | New: **S14 floor choice** (guess) |
+| 6 | Pick which floor path to try next inside a belt tier | A Link Between Worlds | Medium | M | Keep belt gates. Nothing rented, nothing lost. | New: **S14 floor choice**: PARKED, not approved (Manager, Oct 24) |
 | 7 | Classmates join runs now and then to help | Children of Morta | Medium | M | A new helper system (guess). No online play needed. | Fold into S11/S12 enemy work or a later S item (guess) |
 | 8 | Full game offline, one thumb, short runs | Vampire Survivors mobile, Archero | Medium | S (mostly true already) | We already have no purchases. Check offline play in a test. | Test note for QA, not a spec |
 | 9 | Free content updates | Moonlighter, Hades Early Access | Medium | L (ongoing) | Always free. Never time-limited. | Post-launch plan, not now |
@@ -270,7 +270,7 @@ Not borrowed (clashes with our rules): rented items lost on a fall (Link Between
 ## Done-when
 
 - The expansion covers all three groups Jay named, and each new game has linked sources, "why it worked", and fit notes.
-- The ranked borrow list names a suggested S item for every row, and S13 and S14 are marked as guesses for the Manager.
+- The ranked borrow list names a suggested S item for every row, and S13 and S14 are parked, not approved (Manager, Oct 24).
 - Every game on the work-board list has borrow and avoid lines, with at least one linked source.
 - Every fact has a link. Suggestions are marked "For us".
 - The Learning Designer and the Manager have read it, and any "borrow" they accept is written into a spec item.

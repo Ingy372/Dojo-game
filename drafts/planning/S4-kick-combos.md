@@ -21,12 +21,12 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. Plan only. No game code ch
 | 3 | Orange | combo 2 + round kick and butterfly kick | **Butterfly Flow** | Practised combos flow: Strikes cost 8 less Focus | `strikeCost` 8 | No: today's "Quick Combo", renamed |
 | 4 | Green | step-behind side kicks both ways, roundhouse, spin kicks, left and right | **Both Sides** | The Strike's extra kick can turn to hit an enemy behind you (guess) | **new** flag `strikeBothSides` | New |
 | 5 | Blue | combo 4 + low roundhouses, step-behind hook kicks, then front kick left, right, left | **Low-High Kicks** | Adds a third quick hit (30%) and makes the target off-balance | `strikeExtraHit` +0.3, plus **new** flag `strikeStaggers` | New flag |
-| 6 | Red | palm-down block, reverse punch, jumping spin kick ... ends stepping back twice and lunging in with a jumping front kick | **Block, Punch, Lunge** | For 0.5 s after a Strike starts, a hit is Blocked automatically; the Strike ends with a short lunge forward (guess: 1 tile) | **new** `strikeGuard` ticks 10, **new** `strikeLunge` tiles 1 | New |
+| 6 | Red | palm-down block, reverse punch, jumping spin kick ... ends stepping back twice and lunging in with a jumping front kick | **Block, Punch, Lunge** | The Strike ends with a short lunge forward (guess: 1 tile). No auto-Block (decided). | **new** `strikeLunge` tiles 1 | New |
 | 7 | Red/Black | front, axe, round, butterfly, spinning heel, cross centre line, spinning hook kick | **Axe and Hook** | Strikes break guards (hit through the Guardian/elite guard) | `shieldBreaker` (existing), limited to Strikes (guess) | Existing type; needs a Strike-only check |
 
 Notes:
 - #1 and #3 only need a name change and new text. The effects already work.
-- #4 to #6 need new effect types. In total that is 5 new effect types or flags: `strikeRipple`, `strikeBothSides`, `strikeStaggers`, `strikeGuard`, `strikeLunge`.
+- #4 to #6 need new effect types. In total that is 4 new effect types or flags: `strikeRipple`, `strikeBothSides`, `strikeStaggers`, `strikeLunge`.
 - #7: please check that `shieldBreaker` works on Strikes in `effects.ts`. If it only works on Counters, a "Strike only" option is needed.
 - My game summaries cut down Jay's words. The full real text stays in `curriculum.md` and should show on the Strike's info page ("In the dojo:" plus Jay's line).
 
@@ -38,7 +38,7 @@ One short sentence each, ages 6+:
 3. "Your kicks flow: Strikes cost less Focus."
 4. "Kick both ways: your Strike can hit behind you."
 5. "Low, then high: one more kick, and they wobble."
-6. "Block first, then lunge in with a jumping kick."
+6. "Step back, then lunge in with a jumping kick."
 7. "Axe kick and hook kick break through guards."
 
 ## Done-when
@@ -53,12 +53,13 @@ One short sentence each, ages 6+:
 ## Scope flags
 
 - **Content:** small (7 entries and their text).
-- **Sim:** medium (5 new effect types or flags; #6 is the biggest: a timed auto-Block plus a lunge).
+- **Sim:** small to medium (4 new effect types or flags; #6 is now a lunge only).
 - **Client:** small (Strike info page line). The animation for each Strike is optional; it can be done later by the Artist.
 - **Out of scope:** combos 8–12 and katas.
 
-## Decisions needed (for the Manager, and for Jay where marked)
+## Decisions (decided, Manager, Oct 24)
 
-1. Can today's 2 Strikes be renamed to #1 "Spin Kick Finish" and #3 "Butterfly Flow"? (Their effects stay the same.)
-2. #6 is the strongest and most complex. Should it be cut down to the lunge only (drop the auto-Block)?
-3. **Jay:** are the names OK, and is "butterfly kick" the right word for kids to see (he wrote "tornado kick (we call it butterfly kick)")?
+1. **Decided:** today's 2 Strikes are renamed: "Follow-up Kick" becomes #1 "Spin Kick Finish" and "Quick Combo" becomes #3 "Butterfly Flow". Their effects stay the same.
+2. **Decided:** #6 drops the auto-Block and keeps only the lunge.
+3. **Decided:** the 7 names are approved, and kids see "butterfly kick" (the school's word).
+4. **Still open:** #7 (guard-break on Strikes) waits on the Programmer's code check of `shieldBreaker`.
