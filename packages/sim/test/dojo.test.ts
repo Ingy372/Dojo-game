@@ -225,6 +225,34 @@ describe('decorating', () => {
   });
 });
 
+describe('Tier 1 decorations (A6)', () => {
+  it('has all 27 pieces, next to the old lantern, bonsai and banner', () => {
+    const tier1 = dc.decorations.filter((d) => d.id.startsWith('decor-a6-'));
+    expect(tier1).toHaveLength(27);
+    const count = (s: string) => tier1.filter((d) => d.source === s).length;
+    expect([count('random'), count('class'), count('keeper'), count('trophy'), count('bonus')]).toEqual([5, 13, 3, 5, 1]);
+    for (const id of ['stone-lantern', 'bonsai-tree', 'dojo-banner']) expect(dc.decorations.some((d) => d.id === id)).toBe(true);
+  });
+
+  it('the folding screen only stands with its back against the top wall', () => {
+    const dojo = newDojo(dc, 1);
+    const [screen] = addDecorations(dojo, ['decor-a6-folding-screen']);
+    expect(canPlace(dojo, dc, screen.uid, 9, 1)).toBe(true);
+    // Not in front of the notice board (column 8, 0-based 7).
+    expect(canPlace(dojo, dc, screen.uid, 7, 1)).toBe(false);
+    expect(canPlace(dojo, dc, screen.uid, 6, 1)).toBe(false);
+    expect(canPlace(dojo, dc, screen.uid, 9, 2)).toBe(false);
+    expect(canPlace(dojo, dc, screen.uid, 9, 5)).toBe(false);
+    // Somewhere to go out of storage, and it lands against the wall.
+    const spot = findSpot(dojo, dc, screen.uid)!;
+    expect(spot.row).toBe(1);
+    expect(placeItem(dojo, dc, screen.uid, spot.col, spot.row)).toBe(true);
+    // Other floor pieces still go anywhere free.
+    const [cushion] = addDecorations(dojo, ['decor-a6-cushion']);
+    expect(canPlace(dojo, dc, cushion.uid, 9, 5)).toBe(true);
+  });
+});
+
 describe('Tower decorations and the bow', () => {
   it('the boss chest always holds a decoration, new kinds first', () => {
     const run = startRun(content, { seed: 12, dryRuns: 0, firstRoomId: 'keepers-hall', ownedDecorations: { 'stone-lantern': 1 } });
