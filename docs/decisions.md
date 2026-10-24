@@ -703,3 +703,6 @@ Also: the Home "For your dojo" line now measures its own height, so a two-line l
 K23's four short lines (Title, Create, Guided offer, Street Smarts unlock) were approved as written. Manager calls:
 1. **(a) The "freed" banner and "Ouch! The run is over":** the banner moves. Its every-frame placement now treats the big centre message as one more thing to keep off, so if the run ends while Sensei is talking, the banner drops just below "You keep everything you found." The two never overlap, and neither is cut short.
 2. **(b) The floor chest:** the same placement also keeps off the chest once it shows (its tile plus a little above). Doors, the chest and the centre message now go through one list of screen boxes, so there is one rule rather than three.
+
+## K23c Ability pop-up keeps off the treasure door (2026-10-24)
+Manager call: at 667 wide the ability name that pops up after room 1 (e.g. "Ripple Counter") briefly covered the treasure door and its label. The pop-up now uses the same list of protected screen boxes as Sensei's banner (doors, chest, centre message), plus the banner itself and the "Room clear!" line. It moves down below anything it would cover. To make that work, Sensei's "Here is an Insight for you!" banner is now shown just before the pop-up rather than just after it. Text and timing are unchanged.

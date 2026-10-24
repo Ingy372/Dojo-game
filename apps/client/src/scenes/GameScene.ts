@@ -271,6 +271,8 @@ export class GameScene extends Phaser.Scene {
   private shownChain = 0;
   private message!: Phaser.GameObjects.Text;
   private senseiText: Phaser.GameObjects.Text | null = null;
+  /** The 'Room clear!' line under the grade, while it shows (K23c: the ability pop-up keeps off it). */
+  private gradeLine: Phaser.GameObjects.Text | null = null;
   private screenFlash!: Phaser.GameObjects.Rectangle;
 
   /** The tower art for the student's belt tier (or the ?tower= test link). */
@@ -329,6 +331,7 @@ export class GameScene extends Phaser.Scene {
       this.time.delayedCall(1500, check);
     }
     this.senseiText = null;
+    this.gradeLine = null;
     this.menuOpen = false;
     this.leaving = false;
     this.picker = null;
@@ -1273,8 +1276,9 @@ export class GameScene extends Phaser.Scene {
           const name = CONTENT.insights.find((i) => i.id === ev.id)?.name ?? '';
           this.time.delayedCall(1600, () => {
             sfx.insight();
-            this.popWord(name, '#ffd166', 34);
+            // Sensei's banner first, so the pop-up can keep clear of it (K23c).
             this.senseiSay([...TUTORIAL['tutorial-insight'].screens, TUTORIAL['tutorial-insight'].success!], 1700);
+            this.popWord(name, '#ffd166', 34);
           });
           break;
         }
@@ -1689,12 +1693,26 @@ export class GameScene extends Phaser.Scene {
     const t = this.senseiText;
     if (!t?.active) return;
     const { height } = this.scale.gameSize;
-    const cam = this.cameras.main;
     let top = this.senseiTop(height);
     const left = t.x - t.width / 2;
     const right = t.x + t.width / 2;
-    // Screen boxes the banner keeps off: each door (its tile plus the label under it, K23),
-    // the chest once it shows, and the big centre message such as "Ouch! The run is over." (K23b).
+    const boxes = this.protectedBoxes(true);
+    for (let pass = 0; pass < 2; pass++) {
+      for (const b of boxes) {
+        if (b.x1 < left || b.x0 > right || b.y1 < top || b.y0 > top + t.height) continue;
+        top = Math.max(top, b.y1 + 6);
+      }
+    }
+    t.setY(top);
+    this.placeDecoToasts();
+  }
+
+  /**
+   * Screen boxes that pop-ups keep off: each door (its tile plus the label under it, K23),
+   * the chest once it shows, and (if asked) the big centre message such as "Ouch! The run is over." (K23b).
+   */
+  private protectedBoxes(withMessage: boolean): { x0: number; x1: number; y0: number; y1: number }[] {
+    const cam = this.cameras.main;
     const toScreen = (x0: number, y0: number, x1: number, y1: number) => ({
       x0: (x0 - cam.worldView.x) * cam.zoom,
       x1: (x1 - cam.worldView.x) * cam.zoom,
@@ -1709,18 +1727,11 @@ export class GameScene extends Phaser.Scene {
     }
     const c = this.room.chest;
     if (c && this.chestImgs[0]?.alpha) boxes.push(toScreen((c.x - 0.6) * TILE, (c.y - 0.7) * TILE, (c.x + 0.6) * TILE, (c.y + 0.6) * TILE));
-    if (this.message.visible) {
+    if (withMessage && this.message.visible) {
       const m = this.message.getBounds();
       boxes.push({ x0: m.left, x1: m.right, y0: m.top, y1: m.bottom });
     }
-    for (let pass = 0; pass < 2; pass++) {
-      for (const b of boxes) {
-        if (b.x1 < left || b.x0 > right || b.y1 < top || b.y0 > top + t.height) continue;
-        top = Math.max(top, b.y1 + 6);
-      }
-    }
-    t.setY(top);
-    this.placeDecoToasts();
+    return boxes;
   }
 
   /** A dropped item: a glowing orb that pops out, then a note at the top of the screen. */
@@ -1829,9 +1840,10 @@ export class GameScene extends Phaser.Scene {
       .setResolution(crisp())
       .setAlpha(0);
     this.cameras.main.ignore([letter, line]);
+    this.gradeLine = line;
     this.tweens.add({ targets: letter, scale: 1, alpha: 1, duration: 260, ease: 'Back.Out' });
     this.tweens.add({ targets: line, alpha: 1, delay: 150, duration: 200 });
-    this.tweens.add({ targets: [letter, line], alpha: 0, delay: 1700, duration: 400, onComplete: () => (letter.destroy(), line.destroy()) });
+    this.tweens.add({ targets: [letter, line], alpha: 0, delay: 1700, duration: 400, onComplete: () => (letter.destroy(), line.destroy(), (this.gradeLine = null)) });
   }
 
   private enemy(id: string): EnemyState | undefined {
@@ -2046,6 +2058,18 @@ export class GameScene extends Phaser.Scene {
       .setResolution(window.devicePixelRatio || 1)
       .setScale(0.4);
     this.cameras.main.ignore(t);
+    // K23c: keep off the doors, the chest, the centre message, Sensei's banner and the 'Room clear!' line; it drifts up 20 px as it fades.
+    let top = t.y - t.height / 2 - 20;
+    const sb = this.senseiText?.active ? this.senseiText.getBounds() : null;
+    const boxes = this.protectedBoxes(true);
+    const gl = this.gradeLine?.active ? this.gradeLine.getBounds() : null;
+    for (const b of [sb, gl]) if (b) boxes.push({ x0: b.left, x1: b.right, y0: b.top, y1: b.bottom });
+    for (let pass = 0; pass < 2; pass++)
+      for (const b of boxes) {
+        if (b.x1 < width / 2 - t.width / 2 || b.x0 > width / 2 + t.width / 2 || b.y1 < top || b.y0 > top + t.height + 20) continue;
+        top = Math.max(top, b.y1 + 6);
+      }
+    t.setY(top + 20 + t.height / 2);
     this.tweens.add({ targets: t, scale: 1, duration: 160, ease: 'Back.Out' });
     this.tweens.add({ targets: t, alpha: 0, y: t.y - 20, delay: 450, duration: 300, onComplete: () => t.destroy() });
   }

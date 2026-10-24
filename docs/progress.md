@@ -525,3 +525,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## K23b Banner layout fixes (2026-10-24)
 - Sensei's banner now keeps off the floor chest and the "Ouch! The run is over" message, as well as doors (one list of boxes in placeSensei). K23's four lines are approved.
 - Screenshots /workspace/k23b-*.png at 667 and 844.
+
+## K23c Ability pop-up placement (2026-10-24)
+- The Insight name pop-up after room 1 no longer covers the treasure door, Sensei's banner or the "Room clear!" line (same protected boxes as the banner). Screenshots /workspace/k23b-c-*.png at 667 and 844.
