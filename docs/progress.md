@@ -502,6 +502,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - First return home: Sensei's welcome line, then "You've already earned these in the dojo.", then each sign-off in the order earned, then each stripe. A brand-new white belt sees the Beginner's Stance and what the first sign-off unlocks. Nothing plays twice.
 - New packages/sim/test/cascade.test.ts runs over all 5 fake profiles. Screenshots /workspace/k18-{667,844}-*.png.
 
+## K20 / M7-P10 Three next goals (2026-10-24)
+- After a run, Home shows "Your next goals" once a day: one in the Tower, one to collect, one in the real dojo (e.g. "Get Self-Defense #2 signed off to unlock Technique Seal: Escape Step."). Shows after the celebrations; tap to close.
+- New `packages/sim/src/goals.ts`. Tests 272 passed / 1 skipped (new packages/sim/test/goals.test.ts: all 5 fixtures get exactly 3 goals and the real-world one names the Path's next technique; no-next-technique line; once per day survives save/load). Typecheck and build pass. Screenshots /workspace/k20-{667,844}-{p2-1..3,p4-1..3,p4-sameday}.png.
+
 ## K19 / M7-P7 Gradual unlock schedule and Welcome Week (2026-10-24)
 - Existing students (any sign-off, or a belt above white) get every earned ability on day 1, and meet the dojo's systems one per day (Street Smarts, Journal, Scroll) through a short Sensei card. This shares the one-new-thing-a-day budget with Sensei's Lessons. New students are unchanged.
 - The testing screen's "+1 day away" now moves the session day forward too (a dev-only day offset).

@@ -631,6 +631,17 @@ Follow-up (K17b):
 - Order: an opening card ("You've already earned these in the dojo."), then each sign-off in the order it was earned (its ability on the card), then each stripe. More than 3 sign-offs are shown together on one screen, as before, so a green belt isn't buried in cards.
 - Nothing plays twice: the snapshot is saved when the cascade ends. Fake profiles now shift their dates by whole days, so the last class doesn't change on every visit (it used to replay the Dojo Blessing on each visit).
 
+## M7-P10 Three next goals (K20) (2026-10-24)
+Manager calls:
+1. The goals card shows after the run summary (and after any celebrations), at most once per day, and after the play-limit card when that shows. No new button: a tap anywhere closes it.
+2. When there's no next technique, the real-world goal says exactly: "Keep practicing with Sensei, and your next test will come!"
+
+My calls (not Manager):
+- Three goals, always in this order: in the Tower (next level up to the belt's cap, then beat your best combo), to collect (beat a met-but-unbeaten named monster for its sticker, else a new decoration, else new gear), in the dojo (the Path's next technique and what it unlocks).
+- No "N of 41 found" count on the collection goal: a long list of missing things reads like a chore.
+- A seal ability with no power yet reads "a new Technique Seal".
+- "Once per day" is saved on the profile as `goalsShownOn` (local date). Home only considers the card when opened straight from a run (`{ fromRun: true }`: cleared, "Back home" after a loss, or the rest card).
+
 ## M7-P7 Gradual unlock schedule and Welcome Week (K19) (2026-10-24)
 Manager calls:
 1. K19 shares K17's budget: one new thing per day in total (a lesson or a system).
@@ -646,6 +657,5 @@ My calls (not Manager):
 
 ## Kid-facing tone pass (K19 follow-up) (2026-10-24)
 Manager calls:
-- The Welcome Back card line 'Your dojo missed you.' becomes exactly 'Welcome back! Your dojo is ready.' (DojoScene.arrive). It was the only line in content/ and the client strings that clearly leaned toward guilt. Borderline lines were listed for review, not changed: "Your climb is waiting!" (run-resume title) and "Come back tomorrow for more training!" (play-time doorRestingLine).
 - Old saves (from before M7-P7) keep everything open and skip Welcome Week.
 - If the app closes mid-play during the K18 unlock cascade, the cascade replaying on the next return is fine.

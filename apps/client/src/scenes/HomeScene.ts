@@ -11,6 +11,9 @@ import {
   equip,
   gearScore,
   letGo,
+  goalsDue,
+  markGoalsShown,
+  nextGoals,
   rewardMoments,
   snapshot,
   decorationDef,
@@ -36,10 +39,17 @@ import { loadArt } from '../art/art';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
+import { GoalsCard } from '../ui/GoalsCard';
+import { localToday } from '../game/difficulty';
 import { takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
 import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css } from '../ui/theme';
 import type { GameSceneData } from './GameScene';
+
+/** How Home was opened: after a run (cleared, lost, or rested at the play limit) the next goals may show. */
+export interface HomeSceneData {
+  fromRun?: boolean;
+}
 
 const SLOT_NAME: Record<GearSlot, string> = { hands: 'Hands', gi: 'Gi', charm: 'Charm' };
 const BEST_NAME: Record<BestKey, string> = {
@@ -71,6 +81,8 @@ export class HomeScene extends Phaser.Scene {
   private celebrating = false;
   /** Times the title was tapped recently (5 quick taps open the hidden testing screen). */
   private titleTaps: number[] = [];
+  /** Came here straight from a run, and the next goals haven't been considered yet. */
+  private fromRun = false;
 
   constructor() {
     super('Home');
@@ -78,6 +90,10 @@ export class HomeScene extends Phaser.Scene {
 
   preload(): void {
     loadArt(this, [...playerPacks(), ICON_PACK]);
+  }
+
+  init(data: HomeSceneData): void {
+    this.fromRun = data?.fromRun === true;
   }
 
   create(): void {
@@ -117,6 +133,7 @@ export class HomeScene extends Phaser.Scene {
     };
     if (moments.length === 0 && sensei.length === 0) {
       remember();
+      this.maybeGoals();
       return;
     }
     this.celebrating = true;
@@ -128,9 +145,24 @@ export class HomeScene extends Phaser.Scene {
         this.celebrating = false;
         remember();
         this.render();
+        this.maybeGoals();
       },
       sensei,
     );
+  }
+
+  /** The three next goals (M7-P10), after the run summary and any celebrations, at most once a day. */
+  private maybeGoals(): void {
+    if (!this.fromRun) return;
+    this.fromRun = false;
+    const today = localToday();
+    if (!goalsDue(this.profile, today)) return;
+    markGoalsShown(this.profile, today);
+    writeSave(this.profile);
+    this.celebrating = true;
+    new GoalsCard(this, nextGoals(this.profile, this.training, CONTENT), () => {
+      this.celebrating = false;
+    });
   }
 
   private render(): void {
