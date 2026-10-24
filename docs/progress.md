@@ -526,5 +526,15 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Sensei's banner now keeps off the floor chest and the "Ouch! The run is over" message, as well as doors (one list of boxes in placeSensei). K23's four lines are approved.
 - Screenshots /workspace/k23b-*.png at 667 and 844.
 
+## S3-P1 Kata cards + Keon spelling (2026-10-24)
+- "Keon" replaces "Key On" everywhere students see it (Jay's call via the Manager). Ids unchanged, so saves load as before.
+- Earned katas get a card on the Abilities tab: name, step count and direction arrows (no arrow where the direction is still open). Data in content/katas/. New test file katas.test.ts (4 tests). Screenshots /workspace/s3p1-*.png at 667 and 844.
 ## K23c Ability pop-up placement (2026-10-24)
 - The Insight name pop-up after room 1 no longer covers the treasure door, Sensei's banner or the "Room clear!" line (same protected boxes as the banner). Screenshots /workspace/k23b-c-*.png at 667 and 844.
+
+## M7-P8 Music and Sound controls (2026-10-24)
+- Music player (apps/client/src/audio/Music.ts) and the screen-to-track map (content/settings/audio.json). It fades between tracks, starts after the first touch, pauses in the background and stays silent if a file is missing.
+- Music and Sound − / + controls (0–5) in Settings, saved as dojo.musicVol / dojo.sfxVol. Sfx no longer uses a fixed 0.5.
+- Checked in the preview: with the files missing, nothing breaks and there are no page errors. With stand-in tones at the expected paths, the Dojo plays the temple loop and the Tower switches to the road loop. Volumes survive a reload. Screenshots: /workspace/m7p8-{667,844}-settings.png.
+- Music added in assets/audio/music/: mountain-temple-loop.ogg (The Great Hall I, 2.96 MB), long-road-loop.ogg (The Grass Road I, 4.42 MB) and both WAFU licence texts. Not re-encoded.
+- Checked in the preview with the real files: Dojo, Home and Street Smarts play the temple loop (132.5 s) and the Tower plays the road loop (201.3 s), with no page errors. The build's dist/audio is 7.1 MB.

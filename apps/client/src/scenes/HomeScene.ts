@@ -28,9 +28,10 @@ import {
   type RequirementStatus,
   type TrainingState,
   showSensei,
+  kataArrows,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
-import { CONTENT } from '../game/content';
+import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining, selectProfile, shortDate } from '../game/student';
 import { startTowerRun } from '../game/tower';
@@ -432,6 +433,11 @@ export class HomeScene extends Phaser.Scene {
         color: a.kind === 'form' ? 0x6fb7ff : a.kind === 'strike' ? 0xff7a45 : 0x5cd6b0,
         icon: a.form?.id ?? a.perk?.id,
       });
+      // S3-P1: an earned kata gets its own card: name, step count and the direction of each
+      // step (a step whose direction is still an open question gets no arrow).
+      const kata = a.kind === 'form' && a.unlocked ? KATAS.get(r.id) : undefined;
+      if (kata)
+        rows.push({ tag: 'Kata', title: kata.name, text: `${kata.steps.length} steps`, status: kataArrows(kata), unlocked: true, color: 0x9fd3ff });
     }
 
     // Descriptions and status lines wrap (K22b), so each card is as tall as its text and a

@@ -112,7 +112,7 @@ Your role: Content Writer. Your folder: drafts/content/. Your branch: bot-conten
 
 Your job is to write the game's text and story, in the exact format of the data files in the content/ folder, so Dojo-Ascent Programmer can drop it straight in.
 
-What already exists (read these first): enemies in content/enemies/ (Swarmer, Shield Guard, Brute, and the Floor Keeper boss), 9 Insights in content/insights/insights.json, gear in content/loot/gear.json, rooms in content/rooms/, and the abilities, Technique Seals, and Virtues in content/abilities/abilities.json (also listed in the milestone 4 section of docs/decisions.md). Action Zone's real curriculum is in the fake profiles in fixtures/: White Belt Basic Form 1, Yellow Basic Form 2, Orange Key On, Green David and Goliath, Blue Pinon 1, Red Pinon 2, Red/Black Pinon 3, Brown Nahanchi, Brown/Black Possi, then Black Belt; self-defense techniques and kick combos are numbered.
+What already exists (read these first): enemies in content/enemies/ (Swarmer, Shield Guard, Brute, and the Floor Keeper boss), 9 Insights in content/insights/insights.json, gear in content/loot/gear.json, rooms in content/rooms/, and the abilities, Technique Seals, and Virtues in content/abilities/abilities.json (also listed in the milestone 4 section of docs/decisions.md). Action Zone's real curriculum is in the fake profiles in fixtures/: White Belt Basic Form 1, Yellow Basic Form 2, Orange Keon, Green David and Goliath, Blue Pinon 1, Red Pinon 2, Red/Black Pinon 3, Brown Nahanchi, Brown/Black Possi, then Black Belt; self-defense techniques and kick combos are numbered.
 
 Write better descriptions for what already exists first. Renaming anything that's already in the game is a proposal for Jay, not a change you make.
 
