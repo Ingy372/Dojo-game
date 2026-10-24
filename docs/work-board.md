@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-24 (1:05 PM) by Dojo-ascent Manager. Catch-up covers PRs #62–#105.
+Last updated: 2026-10-24 (2:10 PM) by Dojo-ascent Manager. Catch-up covers PRs #62–#125.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -56,7 +56,7 @@ These questions already have answers in the design docs. The bots build on these
 | J10 | ~~Music licence~~ **Answered (Oct 24):** AI-assisted (Suno) WAFU music is OK. Jay emailed WAFU (11:53 AM) for a written OK on white-label builds for other dojos; **waiting on WAFU's reply.** | M7-P8a pick, M7-P8 |
 | J11 | ~~Street Smarts safety review~~ **Done (Oct 24):** code word yes, kid says Mom/Dad, the "come with me" line is OK; Manager picked the safe helpers (worker with uniform or name tag, cashier, police officer, grown-up with kids) and a short reunion scene. Applied in PR #58. | ~~C1, K2~~ (unblocked) |
 | J12 | **Not blocking (after-work glance):** the fixed warning moves are now in the game (PR #104). Jay can try them with `?named=old-thumper`, `?named=zippy-zoom` or `?named=captain-clank` on a yellow-belt run and say if anything looks off. | nothing (built) |
-| J13 | **After-work list (not blocking, Jay will do later):** self-defense gaps for S4 (results and categories for #31–35, what "party flex" (#33) means, #36–40 for Brown, the attacks for #3/#4/#5/#15); kick combos 8–12; kata character lines (J3); for the C4 quests, the school's founding story, the arts blended in Yeshua's Ryu and what each belt colour means; whether to ask Nic for a total-classes field (PR #93); quick looks at the cosmetics (PR #78), Insight icons (PR #56) and the padded-staff enemy (PR #95). | S3, S4 rest, C4 details |
+| J13 | **After-work list (not blocking, Jay will do later):** self-defense gaps for S4 (results and categories for #31–35, what "party flex" (#33) means, #36–40 for Brown, the attacks for #3/#4/#5/#15); kick combos 8–12; kata character lines (J3); for the C4 quests, the school's founding story, the arts blended in Yeshua's Ryu and what each belt colour means; whether to ask Nic for a total-classes field (PR #93); quick looks at the cosmetics (PR #78), Insight icons (PR #56) and the padded-staff enemy (PR #95); the A2 Rooted stance pick (PR #121); self-defense #36–40 attacks and student steps. | S3, S4 rest, C4 details |
 | J7 | ~~Fonts~~ **Done (Oct 23, Jay delegated to the Manager):** Fredoka for headings + Andika for body text, because Andika is built for early readers (ages 6+). | ~~menu art~~ (unblocked) |
 
 ---
@@ -77,7 +77,7 @@ Start with **M7-P1, M7-P9 and M7-P11**. Full specs are in the plan file under th
 
 | ID | Task | Owner | Waiting on | Done when |
 | --- | --- | --- | --- | --- |
-| M7-P1 | **Start first.** Guided on by default for new profiles aged 6–9 or white belt with 0 sign-offs; never switch a player off a mode they chose. | Programmer | nothing | Youngest fake profile starts on Guided; switching to Standard sticks after reload; an older profile starts on Standard. |
+| M7-P1 | **Done (PR #108, merged Oct 24).** Default difficulty is Standard, with a difficulty choice screen (Manager call). Original: Guided on by default for new profiles aged 6–9 or white belt with 0 sign-offs; never switch a player off a mode they chose. | Programmer | nothing | Youngest fake profile starts on Guided; switching to Standard sticks after reload; an older profile starts on Standard. |
 | M7-P2 | Tutorial floor (first 10 minutes, can't lose). | Programmer | nothing (M7-P3 delivered) | First Perfect Counter under 2 minutes from "Tap to start"; can't lose by doing nothing; chest always Uncommon or better. |
 | M7-P3 | **Delivered (PRs #37, #49).** Tutorial lines for each P2 step. | Content Designer | — | Every P2 step has one line in a data file, each under 12 words. |
 | M7-P4 | Cascade of unlocks on first return home. | Programmer | M7-P2 | Profile 2 sees 3 unlocks plus the stripe in order; profile 1 sees the preview; nothing plays twice. |
@@ -86,9 +86,9 @@ Start with **M7-P1, M7-P9 and M7-P11**. Full specs are in the plan file under th
 | M7-P7 | Gradual unlock schedule + Welcome Week. | Programmer | M7-P5 | Yellow-belt profile gets all abilities on day 1 but meets one new system per session; "+1 day" moves it forward. |
 | M7-P8 | Sound and music on every main screen. | Programmer | M7-P8a (music pick, waits on J10) | No main screen without sound; both volume sliders work and are remembered. |
 | M7-P8a | **Shortlist delivered (PRs #38, #43).** Shortlist 3 free-licence music packs (commercial use allowed); Manager picks one. | Researcher & Planner | WAFU's reply (J10) | Shortlist in drafts/planning/ with licence links; Manager's pick recorded here. |
-| M7-P9 | **Start first.** Play-time limit parent setting (off/15/30/45/60, default off); finish the room, friendly "Great training today!", go home. | Programmer | nothing | With `?playlimit=1` the run ends after the current room, nothing is lost, the message is friendly. |
+| M7-P9 | **Done (PR #110, merged Oct 24).** Grown-up gate is a math question; play time resets at midnight. Original: Play-time limit parent setting (off/15/30/45/60, default off); finish the room, friendly "Great training today!", go home. | Programmer | nothing | With `?playlimit=1` the run ends after the current room, nothing is lost, the message is friendly. |
 | M7-P10 | Three next goals at session end (game, collection, real-world). | Programmer | M7-P4 | Every profile sees exactly 3 goals; the real-world one names a real next technique. |
-| M7-P11 | **Start first.** Fix the open bug notes in `docs/progress.md` (for example, a run in progress isn't saved if the app closes). | Programmer | nothing | Each fixed note has a test or screenshot in the PR. |
+| M7-P11 | **Done (PR #113, merged Oct 24):** a Tower run now survives the app closing. Original: Fix the open bug notes in `docs/progress.md` (for example, a run in progress isn't saved if the app closes). | Programmer | nothing | Each fixed note has a test or screenshot in the PR. |
 | M7-P12 | Playtest-readiness check. | QA Tester | M7-P1 to M7-P11 | Report on each fake profile's first 30 minutes on a phone-sized screen: time to first Perfect Counter, screens over one sentence, ways to lose the tutorial, crashes. |
 | M7-P13 | **Draft review done (PR #46), fixes merged (PR #49).** Learning and overwhelm review of P2–P7; re-check once P2–P7 are built. | Learning Designer | M7-P2 to M7-P7 builds | Short pass/change note on overwhelm, ethics and age 6+ reading level. |
 | M7-N1 | **Done (PR #104, merged Oct 24):** small version, three named monsters from yellow belt, tells wired in, Monster Journal and stickers. Bigger version for later belts comes later. Original: **Ready to build (launch scope, J8).** Named monster (`drafts/planning/named-monster-proposal.md`, final spec PR #47). Text in `drafts/content/enemies/named-monsters.json` (PR #45); art in `incoming-art/named-monster/` (PRs #48, #51, #53, tells fixed in #60; brute stamp shake off with reduced motion). Build the monster now; wire the warning moves after J12. | Programmer | — | As the proposal's Done-when. |
@@ -109,7 +109,10 @@ Start with **M7-P1, M7-P9 and M7-P11**. Full specs are in the plan file under th
 | K2 | **Done (PRs #75, #82).** Street Smarts scene "Separated in a store", helper question trimmed to 4 choices. | — |
 | K9 | **Done (PR #89).** Difficulty reaches elites, plus the elites QA fixes. | — |
 | K10 | **Done (PR #105, merged Oct 24).** K9 retest fixes (COMBO off the boss bar, Sensei banner off door labels, `?elite=guarding` respects Guided). 197 tests pass. | — |
-| K11 | **Next for the Programmer:** the three Milestone 7 "start first" items, in order: M7-P1, M7-P9, M7-P11 (section 3b). One PR each. | nothing |
+| K11 | **Done (PRs #108, #110, #113, merged Oct 24).** M7-P1, M7-P9, M7-P11. | — |
+| K12 | **In review (PR #119).** Q3 named-monster fixes, reduced-motion switch, A7 swatch rim, Bopper art import (`?skin=bopper`), named monsters about 1 in 30 runs. **Programmer:** fix the merge conflicts with main, and move the Reduced motion switch into Settings behind the grown-up gate now that #108/#110 are in. | Programmer (conflicts) |
+| K13 | **Next after K12:** add the A6 Tier 1 decoration set (PRs #122, #124, #125; names and lines from C10, PR #123) to `content/dojo/decorations.json`, with the tint (multiply), the `mustTouchWall` placement check and the White-belt fallback colour. One PR. | K12 |
+| S4c-P1 | **After launch (first update).** Build the Injured status from break seals #31–40 (`drafts/planning/S4c-injured-status.md`, PR #120). | S4 locks built, launch |
 | K3 | Run the balance-testing computer player whenever the QA bot or the Systems Designer asks, and send Jay the report. | requests |
 
 ---
@@ -121,7 +124,8 @@ Start with **M7-P1, M7-P9 and M7-P11**. Full specs are in the plan file under th
 | Q1 | **Delivered (PR #17):** `drafts/qa/2026-10-23-q1-combat-report.md`. Headline: a player who never Counters wins 0% of runs on every difficulty. ~~**Full combat test** on the live link: all three difficulties, all three test profiles, every room type and the boss. Report bugs, then a playability report. Add one extra section: "What would make combat more varied and more rewarding?", thinking like a 6-year-old, a 12-year-old and an adult.~~ | — |
 | Q2 | Test character creation and the newly imported art (Batches 4–7): readability on a phone, anything that looks wrong. | nothing |
 | Q4 | **Delivered (PR #25):** `drafts/qa/2026-10-23-q4-room-twists-report.md`. Twists change the win rate by only about half a point; the earlier drop was from too few test runs. Banner fixes done in K6. Open note: banner text (17 px, two sentences plus a Sensei line) may be a lot for a new reader; revisit after Jay tries it on his phone. | — |
-| Q3 | Ask Jay for a balance run from Dojo-Ascent Programmer (K3), compare it with your own play, and suggest specific number changes. Note: novice players on Standard currently win only 41% of runs. | K3 |
+| S4c-T1 | **After launch.** Test the Injured status once S4c-P1 is built. | S4c-P1 |
+| Q3 | **Delivered (PR #112):** named-monster QA; fixes in K12. Original: Ask Jay for a balance run from Dojo-Ascent Programmer (K3), compare it with your own play, and suggest specific number changes. Note: novice players on Standard currently win only 41% of runs. | K3 |
 
 ---
 
@@ -136,7 +140,7 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | S1 | **Done (PR #12).** #1 and #2 built (K4); #4 room twists in PR #22 (K5). **Combat depth proposal.** Combat is fun but needs more variety and more reward. Review what's built, plus Q1 when it lands. Propose up to 6 changes, ranked by fun per cost. Ideas to weigh: enemy mixes that force different answers, elite enemy modifiers, room twists, Form-switching moments, Perfect Counter chains, combo finishers, risk-and-reward choices between rooms, better hit feedback. Each change must keep the core skill of reading the warning, then answering. | nothing (use Q1 when it arrives) |
 | S2 | **Delivered (PR #84).** **Item system spec.** Gear slots, rarity, stat ranges inside the power budget, drop sources by tier, breaking duplicates down into materials, and how gear stats and cosmetic looks stay separate. What's in launch and what comes later. | nothing |
 | S3 | **Forms (stances).** One Form per kata in `docs/curriculum.md` (8 known so far): its name, how it plays, and the reason to switch to it. Plus the switching rules (how, when, cooldown) and how Forms stay simple for a 6-year-old. | J3 (kata character lines) |
-| S4 | **Self-defense #1–30 delivered (PR #70); kick combos 1–7 delivered (PR #100); padded-staff wording (PR #102).** Katas wait on S3; #31–40 and combos 8–12 wait on Jay (J13). **Power-ups from real training.** Start with self-defense: give each of #1–30 in `docs/self-defense.md` an in-game effect that matches what the real technique does, using its game category, and follow the rules at the bottom of that file. Techniques in the same category should build on each other (for example, #13, #14 and #24 all kick a weapon away, each a little stronger). Replace the current placeholder powers. Then do the kick combos (after J2) and the katas (after S3). Finally, give a recommendation for each milestone 4 open question (content/abilities/abilities.json, and the PROGRESSION and POWER settings in docs/decisions.md). | self-defense: nothing · kick combos: nothing (J2 done) |
+| S4 | **Self-defense #1–30 delivered (PR #70); #31–40 seals and attacks #3/#4/#5/#15 delivered as S4b (PR #117); Injured status as S4c (PR #120); kick combos 1–7 delivered (PR #100); padded-staff wording (PR #102).** Katas wait on S3; #31–40 and combos 8–12 wait on Jay (J13). **Power-ups from real training.** Start with self-defense: give each of #1–30 in `docs/self-defense.md` an in-game effect that matches what the real technique does, using its game category, and follow the rules at the bottom of that file. Techniques in the same category should build on each other (for example, #13, #14 and #24 all kick a weapon away, each a little stronger). Replace the current placeholder powers. Then do the kick combos (after J2) and the katas (after S3). Finally, give a recommendation for each milestone 4 open question (content/abilities/abilities.json, and the PROGRESSION and POWER settings in docs/decisions.md). | self-defense: nothing · kick combos: nothing (J2 done) |
 | S5 | **Delivered (PR #88).** **Difficulty.** Review core-design §12: is there a clear, kid-understandable reason to choose Challenge? Should young beginners be offered Guided automatically, given the 41% novice win rate? What does Endless Ascent give at black belt? | nothing |
 | S6 | **Delivered (PR #80).** **Achievements.** The full list: categories, thresholds, what each awards (titles, trophies, decorations, cosmetics), certified real-world trophies versus game trophies, and the bow-question awards (5/10/20/50/100). No achievement may reward daily logins or punish missed days. | nothing |
 | S7 | **Delivered (PRs #67, #73, #85; L4 reviews #71, #77).** **Earning decorations in play.** A table of every in-game source (chests by tier, first floor clears, Bestiary entries, Decoration sets, Challenge, Open House events, crafting later), with rough rates so a student finds something new every few runs. | nothing |
@@ -153,6 +157,7 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | L2 | **Done (PR #68).** Update proposal 2 to the recall bow question (section 1, item 1). | nothing |
 | L3 | **Delivered (PR #64).** **Coming-back audit.** Check the five loops against the built game: does a student have a good reason to play a few times a week, without pressure? What's missing at white belt specifically? | nothing |
 | L4 | Review every Dojo-Ascent Researcher & Planner systems proposal (S1–S8) for learning value, overwhelm and ethics. | S1–S8 |
+| L5-new | **Delivered (PR #114).** P1 difficulty and play-time review. | — |
 | L5 | **Delivered (PR #32, merged Oct 24).** Spoken scripture waits on J9; text only until then. Original task: **Faith and creed in the game.** Using `docs/faith-and-creed.md` and the research on spaced recall, propose where the verses, covenants, FAITH DOES life words and the Class Creed appear (for example: the bow, the Gate, the promotion ceremony, Sensei's lines, the Lamp Keeper's story, a FAITH DOES collection) so students learn them by heart without it feeling like a test. The words are never reworded. | nothing |
 
 ---
@@ -168,6 +173,9 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | C5 | **Delivered (PR #31, merged Oct 24).** Verses use the dojo sign wording (Manager call). Original task: Faith content drafts, in the places L5 proposes, using the exact text in `docs/faith-and-creed.md`. | **Unblocked (Oct 24):** J4 answered (see section 6 of `docs/faith-and-creed.md`). Uses KJV text, and the material is learned through play, not used as Gate locks. | L5 |
 | C6 | **Delivered (PRs #81, #90, #92).** Names and text for achievements, items and A1 cosmetics; rarity names Everyday/Special. | — |
 | C8 | **Delivered (PR #97).** Bouncy Bopper text (the padded-staff enemy, from yellow belt). | — |
+| C9 | **Delivered (PR #115).** Wording check for #108, #110, #113. | — |
+| C10 | **Delivered (PR #123).** A6 decoration names and story lines. | — |
+| S4c-C1 | **After launch.** Injured pop-up and any lines for S4c. | S4c-P1 |
 | C7 | **Delivered (PRs #90, #96).** Redo the technique callouts so each subtitle matches the real technique in `docs/self-defense.md` (for example, #3 is a spinning back fist, not "Sweep"). Kid-safe subtitles only. | S4 |
 
 ---
@@ -178,9 +186,11 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | --- | --- | --- |
 | A0 | **Done (PR #10 merged; K7 wired it in).** Yellow belt Tower kit in B Bamboo Garden Hall (`incoming-art/tower-rooms-t2/`), all 28 icons (`incoming-art/icons/`), and the full elite aura set for S1 #3 (`incoming-art/elite-auras/`). Manager calls on the small questions: delete `tower-rooms-t2/proposals/` before merge (B is chosen); one blue rim for all Seals is fine. Tier 2 in-game name and whether Guarding shows which enemies it protects go to the Researcher & Planner (S1). Artist: delete the proposals folder and take "do not merge" off the PR title. | — |
 | A1 | **Samples delivered (PR #78).** **Earned cosmetics:** headbands, hand wraps matching the gear (cloth, leather, tiger stripe), gi trims, and a soft aura. 3 samples first. | nothing (J5 done) |
-| A2 | **Form stances:** a stance idle for Rooted Form and Flowing Form (the two Forms that already exist). Later Forms follow S3. | nothing (later Forms: S3) |
+| A2 | **Samples in review (PR #121).** **Manager call (Oct 24):** Rooted Form uses option A, the wide fighting stance (it reads as "feet planted" at phone size); drop option B. Use the stance idle in place of the guard idle while a Form is equipped, in fights and the Tower only. No Form variants of walk or strike for now. **Artist:** fix the merge conflicts and the failed preview build, then make the pair final. Jay can glance at it later (J13). Later Forms follow S3. | Artist (conflicts) |
 | A3 | **Badges and trophies:** the bow-question award badges (5/10/20/50/100) and a trophy-wall style for certified trophies versus game trophies. | S6 for the full set |
-| A5 | **Samples delivered (PR #95, merged Oct 24).** Padded-staff enemy (Bouncy Bopper) idle, wind-up and attack. Numbers in PR #102. Next: the full animation set (move, hit, stagger, defeat, staff drop). | nothing |
+| A6 | **Done (PRs #122, #124, #125).** Tier 1 decoration set, 7 scrolls + 6 gear class pieces, White-belt fallback colour. Into the game under K13. | — |
+| S4c-A1 | **After launch.** Cartoon bandage and dizzy stars for Injured (no blood or bones). | S4c-P1 |
+| A5 | **Full set done (PR #111).** Samples PR #95. Padded-staff enemy (Bouncy Bopper) idle, wind-up and attack. Numbers in PR #102. Next: the full animation set (move, hit, stagger, defeat, staff drop). | nothing |
 | A4 | **Town square concept:** one picture of the dojo town (Student of the Month statue, doors to classmates' dojos, the Tower in the distance) for Jay to approve before any building. | nothing |
 
 ---
