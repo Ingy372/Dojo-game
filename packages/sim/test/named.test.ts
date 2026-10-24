@@ -47,7 +47,7 @@ describe('named monster stats', () => {
 });
 
 describe('where named monsters appear (1,000 floors at tier 2)', () => {
-  it('about 5% of floors, at most one per floor, only in battle rooms from room 3, never with an elite', () => {
+  it('about 1 in 30 floors (~3%), at most one per floor, only in battle rooms from room 3, never with an elite', () => {
     let floors = 0;
     let appeared = 0;
     for (let seed = 1; seed <= 1000; seed++) {
@@ -65,9 +65,10 @@ describe('where named monsters appear (1,000 floors at tier 2)', () => {
       }
     }
     const rate = appeared / floors;
-    // 5% roll; a few floors have no battle room with the rolled type after room 3, so a bit under.
-    expect(rate).toBeGreaterThanOrEqual(0.03);
-    expect(rate).toBeLessThanOrEqual(0.06);
+    // 1-in-30 roll (rules.chancePerRun 0.0333). A few floors have no battle room with the rolled
+    // type after room 3, so it comes out a bit under (2.8% on these 1,000 seeds).
+    expect(rate).toBeGreaterThanOrEqual(0.02);
+    expect(rate).toBeLessThanOrEqual(0.045);
   });
 
   it('K12: the three named monsters come equally often (each about 1/3 over 6,000 floors)', () => {

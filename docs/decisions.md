@@ -469,3 +469,7 @@ From section 1 of `docs/work-board.md`.
 - **Reduced motion is a device setting** (localStorage `dojo.reducedMotion`), not part of the profile, because it's about the screen, like the OS setting it starts from. The switch is on the Title screen, because Settings (#108) isn't on main yet. After #108/#110 merge it should move into Settings (behind the grown-up gate) and leave the Title screen.
 - **What stays with reduced motion:** wind-up poses, the telegraph glow, the shield tap and the player's red hurt tint. These are information, not decoration.
 - **This replaces the K-M7 note** that reduced motion is OS-only and turns off only the stamp shake.
+
+## K12: named monsters rarer (2026-10-24)
+- `rules.chancePerRun` in content/named/named.json goes from 0.05 to **0.0333**, about 1 in 30 eligible runs (Manager call). The other spawn rules stay the same: yellow belt or higher, after the first 3 runs, room 3 or later, battle rooms only, at most one per floor, no elite. The 5% roll mentioned above is replaced.
+- Because some floors have no battle room with the rolled type, the measured rate is about 2.8% over 1,000 seeds. The test band is now 2–4.5%.

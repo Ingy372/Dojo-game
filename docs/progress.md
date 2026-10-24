@@ -427,3 +427,4 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - Reduced motion: a "Reduced motion: On/Off" switch on the Title screen (bottom right). It saves on this device and starts On if the phone asks for reduced motion. When on, it turns off screen shake (hits and the stamp), named sparkles, the dash trail, the white hit flash, screen flashes, the golden "set free" flash and stars, the Dojo sparkles and the Title pulse. Text is in content/settings/motion.json.
 - Character creator: dark swatches get a thicker, solid light rim (A7).
 - 200 tests pass (1 skipped), typecheck and build clean. Screenshots: /workspace/k12-{667,844}-{title-motion-on,title-motion-off,swatches,intro-plate,freed}.png.
+- **2026-10-24 (K12, #119):** named monsters are rarer: chancePerRun 0.0333, about 1 in 30 eligible runs, measured at 2.8%. The frequency test band is now 0.02–0.045.

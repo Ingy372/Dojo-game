@@ -1,7 +1,7 @@
 {
   "notes": "M7-N1 named monsters (drafts/planning/named-monster-proposal.md, closed spec). Rare, one-of-a-kind versions of normal enemies: drifting gold sparkles, a name plate, x1.5 Health and one extra tell that only adds to the normal warning. Never power: the reward is a Monster Journal stamp and one Home Dojo sticker on the first win. Text comes from drafts/content/enemies/named-monsters.json (Content Designer); ids never change.",
   "rules": {
-    "chancePerRun": 0.05,
+    "chancePerRun": 0.0333,
     "minBeltTier": 2,
     "earliestRoom": 3,
     "skipFirstRuns": 3,
