@@ -1,17 +1,11 @@
 {
-  "notes": "DRAFT ONLY. Materials do not exist in content/ yet (core-design section on loot lists bamboo, stone, silk, jade; crafting is after launch). Text only, no stats or drop rates. Ids are suggestions.",
+  "notes": "C7: one material per tier (S2). White is bamboo; stone moved to green as S2 proposed. At launch materials only collect.",
   "materials": [
     {
       "id": "bamboo",
       "name": "Bamboo",
       "tier": "white",
       "description": "Strong and bendy. Builders use it for almost everything."
-    },
-    {
-      "id": "stone",
-      "name": "Stone",
-      "tier": "white",
-      "description": "A piece of the Tower's old wall. Solid and steady."
     },
     {
       "id": "silk",
@@ -24,6 +18,48 @@
       "name": "Jade",
       "tier": "orange",
       "description": "A green stone that glows a little in the dark."
+    },
+    {
+      "id": "stone",
+      "name": "Stone",
+      "tier": "green",
+      "description": "A piece of the Tower's old wall. Solid and steady."
+    },
+    {
+      "id": "river-pearl",
+      "name": "River Pearl",
+      "tier": "blue",
+      "description": "A smooth pearl from the Quiet River. It shines like the moon."
+    },
+    {
+      "id": "forge-iron",
+      "name": "Forge Iron",
+      "tier": "red",
+      "description": "Warm iron from the Forge of Courage. Strong and helpful."
+    },
+    {
+      "id": "echo-crystal",
+      "name": "Echo Crystal",
+      "tier": "red-black",
+      "description": "A clear crystal that hums kind words back to you."
+    },
+    {
+      "id": "root-wood",
+      "name": "Root Wood",
+      "tier": "brown",
+      "description": "Wood from the Root Library. It smells like old books."
+    },
+    {
+      "id": "storm-glass",
+      "name": "Storm Glass",
+      "tier": "brown-black",
+      "description": "Glass made when the storm passed. It shines like a rainbow."
+    },
+    {
+      "id": "dawn-gold",
+      "name": "Dawn Gold",
+      "tier": "black",
+      "description": "Golden dust from the summit. It sparkles like sunrise."
     }
   ]
 }
