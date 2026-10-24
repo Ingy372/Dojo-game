@@ -497,3 +497,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - New lessons now come one per session (a calendar day with a run) and one per room; Perfect, Block and Step-out ignore the session limit. Each lesson has a triggerKey fired from play (Dash, Insights, Decorating, Perfect, Block, Step-out).
 - Sensei's Scroll in the Home Dojo lists every lesson seen (not the fading follow-ups or the welcome line); tap to replay, plus "Replay the tutorial floor".
 - Tests 261 passed / 1 skipped (new packages/sim/test/lessons.test.ts: two sessions in a row give one new lesson each, never two; every seen lesson is on the Scroll and replays). Typecheck and build pass. Screenshots /workspace/k17-{667,844}-{dojo,scroll,replay,replay2}.png.
+
+## K20 / M7-P10 Three next goals (2026-10-24)
+- After a run, Home shows "Your next goals" once a day: one in the Tower, one to collect, one in the real dojo (e.g. "Get Self-Defense #2 signed off to unlock Technique Seal: Escape Step."). Shows after the celebrations; tap to close.
+- New `packages/sim/src/goals.ts`. Tests 272 passed / 1 skipped (new packages/sim/test/goals.test.ts: all 5 fixtures get exactly 3 goals and the real-world one names the Path's next technique; no-next-technique line; once per day survives save/load). Typecheck and build pass. Screenshots /workspace/k20-{667,844}-{p2-1..3,p4-1..3,p4-sameday}.png.

@@ -624,3 +624,14 @@ Follow-up (K17b):
 - Manager call: the Decorating lesson shows right after the move-style choice, on the same first Decorate visit (not the next visit).
 - Manager call: line-welcome-home is wired. It fires (once) on the first return home after the tutorial floor, as a Sensei card before the other welcome cards.
 - The dojo's once-ever difficulty line moves below the second button row (Scroll, Journal, Street Smarts), so nothing covers it at 667 or 844 wide.
+
+## M7-P10 Three next goals (K20) (2026-10-24)
+Manager calls:
+1. The goals card shows after the run summary (and after any celebrations), at most once per day, and after the play-limit card when that shows. No new button: a tap anywhere closes it.
+2. When there's no next technique, the real-world goal says exactly: "Keep practicing with Sensei, and your next test will come!"
+
+My calls (not Manager):
+- Three goals, always in this order: in the Tower (next level up to the belt's cap, then beat your best combo), to collect (beat a met-but-unbeaten named monster for its sticker, else a new decoration, else new gear), in the dojo (the Path's next technique and what it unlocks).
+- No "N of 41 found" count on the collection goal: a long list of missing things reads like a chore.
+- A seal ability with no power yet reads "a new Technique Seal".
+- "Once per day" is saved on the profile as `goalsShownOn` (local date). Home only considers the card when opened straight from a run (`{ fromRun: true }`: cleared, "Back home" after a loss, or the rest card).
