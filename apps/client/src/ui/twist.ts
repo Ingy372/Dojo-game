@@ -36,7 +36,7 @@ export function twistBanner(scene: Phaser.Scene, twist: TwistDef, width: number,
       color: '#f2e9d8',
       align: 'left',
       lineSpacing: 4,
-      wordWrap: { width: Math.min(500, width - 260) },
+      wordWrap: { width: Math.min(580, width - 240) },
     })
     .setOrigin(0, 0.5)
     .setResolution(crisp());

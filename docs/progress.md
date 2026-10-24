@@ -295,4 +295,15 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - 143 tests pass (1 skipped) and the game builds.
 
 **Next**
-- The Content Designer approves (or changes) the twist lines. Jay plays a few runs on his phone and says whether the twists feel fun.
+- Jay plays a few runs on his phone and says whether the twists feel fun.
+
+## K5: room twists follow-up (2026-10-23)
+
+**Done**
+- Main (with G1) is merged into the twists PR, and both work: room 1 never has a twist, so the guide stays calm.
+- Slippery Floor no longer comes in the first 3 rooms of a floor. A new test checks it.
+- The twist lines and the G1 nudge line are now the Content Designer's final text.
+- 151 tests pass (1 skipped) and the game builds.
+
+**Next**
+- Jay plays a few runs on his phone.
