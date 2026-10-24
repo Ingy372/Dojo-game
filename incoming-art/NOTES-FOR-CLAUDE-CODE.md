@@ -280,6 +280,12 @@ Earlier sample notes: idle, windup and attack, in 8 directions. The frame is 192
 ## A6 decoration samples (S7-rev pool), `incoming-art/decor-pool-a6/sprites/static.json` [NEW, SAMPLES only, do not wire yet]
 6 sample pieces (class scroll, kick pad, keeper statue, journal trophy, fan stand, folding screen 2x1) in the Home Dojo format: same camera and 80 px tiles, with `footprint`, `place` (floor or wall) and `anchorPx` like `home-dojo/sprites/static.json`. Ids are working ids, not names. See the DELIVERY_NOTE for DECIDE.
 
+## A6 Tier 1 decoration set, `incoming-art/decor-tier1-a6/sprites/static.json` [NEW, full set]
+- 7 class scrolls (wall), 6 class gear, 5 random kinds with a `-tint` layer, 3 first-clear statues (shared `decor-t1-statue-base` layer), 5 Journal trophies (shared `decor-t1-trophy-stand` layer) and a 2x1 folding screen. Ids are working ids; names come from the Content Designer.
+- **Tint:** for random pieces, draw `<id>`, then `<id>-tint` multiplied by `info.colour1`, or by the drop floor's belt colour (`beltStyles[belt].belt`).
+- **Placement:** any free cell, except where `info.mustTouchWall` is true (the screen): its top row must be row 1. See the top-level `placement` block.
+- The A6 samples in `decor-pool-a6/` are replaced by this set; don't load both.
+
 ## Open items in one place
 
 1. The player frame changed to 128 × 160 with the anchor at (64, 136.96). It applies to `player-character/` and `player-custom/`.
@@ -292,4 +298,4 @@ Earlier sample notes: idle, windup and attack, in 8 directions. The frame is 192
 8. **[NEW]** A1 cosmetics: names (Content Writer), unlock rules and colours (Jay), and the headband fit over big hair.
 9. **[NEW]** A5 Bouncy Bopper: Jay approved the 192 px frame, the lime accent, and hiding the staff to show disarmed (2026-10-24). The full set is delivered. Jay's calls (2026-10-24): disarmed uses a weak **push-paw** attack, and the asset files keep the `padded` names. Still to decide: HP, power and the push-paw's power after the balance run (PR #102), and which seals use it.
 10. **[NEW]** A7: Jay approved the kohai top-knot, the teal tie and `#34303f` as black (2026-10-24). Only the swatch border (Programmer) is still open.
-12. **[NEW]** A6 decoration pool: DECIDE the class-piece mix, names (Content Writer), the 5 random kinds and colours, the floor statues, the journal trophy approach and placement rules.
+12. **[NEW]** A6 decoration pool: Jay's calls are done (full set in `decor-tier1-a6/`). Still to decide: the scroll order, names (Content Designer), the colour-2 fallback on White floors, the keeper figures per floor, the folding screen's pool, and trophies for named monsters.
