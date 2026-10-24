@@ -43,6 +43,8 @@ import { bowIsDue, homeDojo, setBowDue } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
 import { DIFFICULTY_TEXT, ensureDifficulty } from '../game/difficulty';
 import { PLAY_TIME_TEXT, isPlayTimeUp, touchPlayClock } from '../game/playTime';
+import { bankRun, savedRun } from '../game/runSave';
+import RESUME_TEXT from '../../../../content/settings/run-resume.json';
 import streetUi from '../../../../content/street-smarts/ui.json';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
@@ -222,6 +224,7 @@ export class DojoScene extends Phaser.Scene {
     touchPlayClock();
     this.time.addEvent({ delay: 5000, loop: true, callback: () => touchPlayClock() });
 
+    if (!bowIsDue()) this.offerResume();
     if (bowIsDue()) {
       this.mode = 'arriving';
       bowPrompt(this, 'Bow as you enter your dojo', () => {
@@ -289,6 +292,7 @@ export class DojoScene extends Phaser.Scene {
         }),
       );
     }
+    if (savedRun()) steps.push(() => this.offerResume(next));
     let i = 0;
     const next = (): void => {
       const step = steps[i++];
@@ -969,6 +973,53 @@ export class DojoScene extends Phaser.Scene {
     const cancel = this.add.rectangle(width / 2 - cw / 2, cy, cw, 38, 0x4a4a55).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35).setInteractive();
     box.add([cancel, this.add.text(width / 2, cy + 19, pt.gateCancel, { fontFamily: FONT, fontStyle: 'bold', fontSize: '15px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
     cancel.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, leave);
+  }
+
+  /** A run left open when the app closed (M7-P11): keep climbing from that room, or rest and keep the loot. */
+  private offerResume(done?: () => void): void {
+    const run = savedRun();
+    if (!run) return;
+    const t = RESUME_TEXT;
+    const { width, height } = this.scale.gameSize;
+    const back = this.mode === 'arriving' ? 'play' : this.mode;
+    this.mode = 'menu';
+    const box = this.add.container(0, 0).setDepth(80);
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive());
+    const w = Math.min(460, width - 40);
+    const h = 200;
+    const left = (width - w) / 2;
+    const top = (height - h) / 2;
+    box.add(this.add.rectangle(left, top, w, h, 0x221d2e).setOrigin(0).setStrokeStyle(3, 0xffd166, 0.9));
+    const label = (y: number, s: string, size: number, color: string, bold = false) =>
+      this.add.text(width / 2, y, s, { fontFamily: FONT, fontStyle: bold ? 'bold' : 'normal', fontSize: `${size}px`, color, align: 'center', wordWrap: { width: w - 32 } }).setOrigin(0.5, 0).setResolution(crisp());
+    box.add(label(top + 18, t.title, 24, '#ffd166', true));
+    box.add(label(top + 60, t.line.replace('{room}', String(run.depth + 1)).replace('{total}', String(run.totalRooms)), 16, '#f2e9d8'));
+    const bw = (w - 48) / 2;
+    const bh = 50;
+    const by = top + h - bh - 20;
+    const button = (x: number, text: string, color: number, onTap: () => void) => {
+      const bg = this.add.rectangle(x, by, bw, bh, color).setOrigin(0).setStrokeStyle(2, 0xfff6e0, 0.5).setInteractive();
+      box.add([bg, this.add.text(x + bw / 2, by + bh / 2, text, { fontFamily: FONT, fontStyle: 'bold', fontSize: '17px', color: '#fff6e0' }).setOrigin(0.5).setResolution(crisp())]);
+      bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, onTap);
+    };
+    button(left + 16, t.rest, 0x4a4a55, () => {
+      // Bank it like a play-time rest: nothing found is lost.
+      run.status = 'rested';
+      bankRun(run, this.training, 'rested');
+      box.destroy();
+      this.profile = loadSave();
+      this.toast(t.restLine);
+      if (done) done();
+      else {
+        this.mode = back;
+        this.renderUi();
+      }
+    });
+    button(left + 32 + bw, t.continue, 0x3aa57a, () => {
+      this.leaving = true;
+      this.cameras.main.fadeOut(400, 10, 8, 16);
+      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Game', { run }));
+    });
   }
 
   /** Grown-up setting: the play-time limit (off / 15 / 30 / 45 / 60 minutes). */

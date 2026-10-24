@@ -474,6 +474,11 @@ From section 1 of `docs/work-board.md`.
 - Session = play with no 30-minute break (tunable in content). Open: is 30 min right, and should the reset be daily instead?
 - Grown-up gate is a 2-second press-and-hold, not a math question or PIN. Open: is that enough of a gate?
 - If time is already up when a run starts, the child still gets to play that first room. Open: block new runs instead?
+
+## M7-P11 — Resuming a run after the app closes
+- Saved at each room's start, not mid-fight: a room can't be rebuilt mid-wave, and replaying one room is fair. Open: OK, or should mid-room chest loot be kept too?
+- The choice is offered in the Home Dojo ("Keep climbing" / "Rest for now"). Resting banks the loot, like the play-time limit.
+
 - ~~**Age band parsing:** the age-based Guided default~~ was removed by the Manager call below (2026-10-24).
 
 ## M7-P1 update: everyone starts on Standard (Manager + Learning Designer, 2026-10-24)
@@ -494,6 +499,10 @@ From section 1 of `docs/work-board.md`.
 - **When time is up mid-run:** the current room finishes, then "Great training today!" (as before).
 - **No new run until midnight:** the Tower door shows "Your dojo is resting for today / Come back tomorrow for more training!" and no run starts. The Board's ENTER THE TOWER and the lost card's Try again go to the dojo instead.
 - Text in content/settings/play-time.json.
+
+## M7-P11: room pickups on resume (Manager call, 2026-10-24)
+
+- **Accepted:** when a run is resumed, the room restarts fresh, so pickups already collected in that room (but not yet banked) are lost. Everything banked from earlier rooms is kept. No change planned.
 ## C9 wording (PR #115) on P1 (2026-10-24)
 - Card texts: Guided "More time to COUNTER while you learn.", Challenge "Faster enemies and less time to COUNTER." Standard keeps "The usual pace." (the Manager/#114 must-fix wins over C9's "The normal way to train.").
 - Home line: "You're on {name}, and you can change it in Settings." "any time" is two words everywhere.
@@ -503,3 +512,6 @@ From section 1 of `docs/work-board.md`.
 ## C9 wording (PR #115) on P9 (2026-10-24)
 - Wrap-up line: "Nice work, let's finish this room and rest!" Rest card lines: "You trained hard today!", "Rest now, or show a grown-up your moves.", "Everything you found is safe in your dojo." The card now draws every line in restLines.
 - Grown-up help: "…Then the game praises their training and returns to the dojo…". Menu buttons stay in normal case.
+
+## C9 wording (PR #115) on P11 (2026-10-24)
+- Resume card line: "You'll start again at room {room}." (the "of {total}" part is dropped). Buttons stay "Keep climbing" / "Rest for now" in normal case.

@@ -72,7 +72,7 @@
 - Checked on a phone-sized screen in a test browser: Home, a battle room, the grade, the Insight cards, treasure room and doors, the boss with its helpers, coming home to the summary, the gear screen, and the practice room's Home button.
 
 **Not done / known limits**
-- A run in progress isn't saved if the app is closed.
+- ~~A run in progress isn't saved if the app is closed.~~ Fixed in K11/M7-P11: the run is saved at the start of each room.
 - Real fights haven't been balanced beyond the starting numbers; Jay's playtest decides.
 
 **Next**
@@ -432,8 +432,22 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - A session is time played with no break of 30+ min (content/settings/play-time.json `sessionBreakMinutes`); the clock is in localStorage `dojo-ascent-play-clock` and counts time in the dojo and the tower.
 - Test link: `?playlimit=N` overrides the setting with N minutes.
 - Tests: run.test.ts "play-time limit (M7-P9)". Screenshots: k11-p9-{667,844}-{wrapup,rest,home,settings,playlimit}.png.
+
+## K11 / M7-P11 — Fix open notes
+
+I checked every "Next" and "Not done / known limits" note. Only one is a bug: **a run in progress isn't saved if the app is closed.** The rest are playtests for Jay, later milestones, art, or open decisions.
+
+- **Fixed:** the Tower run is saved to localStorage (`dojo-ascent-run-in-progress`) at the start of every room. It's cleared as soon as the run ends and is banked.
+- **Next time the Home Dojo opens** (after the bow and welcome cards), a card says "Your climb is waiting! Room X of Y." **Keep climbing** restarts that room with the same insights, health, loot and floor. **Rest for now** banks the run like a play-time rest, so nothing found is lost.
+- A save from a room that no longer exists in the content, or a broken save, is dropped quietly.
+- **Limit:** you replay the room you were in. Anything picked up in that room before the app closed isn't kept, because the save is taken at the room's start.
+- **Tests:** `packages/sim/test/runSave.test.ts`. Screenshots: `k11-p11-{667,844}-{resume,resumed,rested}.png`.
+
 - **2026-10-24 (K11 update, #108):** P1 reworked per Manager + Learning Designer: everyone starts on Standard, kind Guided offer after 2 losses on one floor (max once a day, never automatic), one-time home line, "The usual pace", 6-9 fixture. Screens: /workspace/k11-p1-{667,844}-{home-line,home-again,settings,offer,after-offer}.png.
 
 - **2026-10-24 (K11 update, #110):** P9 reworked: daily play time (resets at local midnight), math-question grown-up gate, Tower door rests when time is up. Merged origin/main and the updated #108. Screens: /workspace/k11-p9-{667,844}-{wrapup,rest,home,door-resting,settings,gate,playlimit}.png.
+
+- **2026-10-24 (K11 update, #113):** merged origin/main and the updated #110 (which has #108). `bankRun` now also records the floor result for the Guided offer. The Manager accepted losing a room's pickups on resume (decisions.md). Screens re-taken: /workspace/k11-p11-{667,844}-{resume,resumed,rested}.png.
 - **2026-10-24 (C9 wording, #108):** Content Designer wording (PR #115) applied to content/settings/difficulty.json. The Guided offer now uses the #114 wording ("Want more time to COUNTER?", "Try it" / "No thanks"), which settles the Guided/Steady question. The ✓ on the picked difficulty is confirmed. Menu buttons are in normal case; only fight buttons are in caps.
 - **2026-10-24 (C9 wording, #110):** merged P1's C9 update. play-time.json wrap-up, rest and help lines follow C9. The rest card shows all 3 lines.
+- **2026-10-24 (C9 wording, #113):** merged P9's C9 update; run-resume line per C9.

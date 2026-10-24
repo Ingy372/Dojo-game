@@ -24,22 +24,17 @@ import {
   chooseInsight,
   createRunWorld,
   currentRoom,
-  finishRun,
   wrapUpRun,
   chooseDifficulty,
   markGuidedOffered,
-  recordFloorResult,
   shouldOfferGuided,
   activeForm,
   characterSetup,
-  gainXp,
   modsFrom,
   rarityRank,
-  runXp,
   strikeCost,
   runEffects,
   setPlayerMods,
-  summarizeRun,
   updateRun,
   type CombatEvent,
   type DoorKind,
@@ -78,6 +73,7 @@ import { choiceCard, restCard, runOverCard } from '../ui/RunOverCard';
 import { PLAY_TIME_TEXT, isPlayTimeUp } from '../game/playTime';
 import { DIFFICULTY_TEXT, localToday } from '../game/difficulty';
 import { startTowerRun } from '../game/tower';
+import { bankRun, saveRunInProgress } from '../game/runSave';
 import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
 import { TouchControls } from '../input/TouchControls';
@@ -300,6 +296,8 @@ export class GameScene extends Phaser.Scene {
         player: { ...this.setup, mods: modsFrom(this.setup.effects, TICKS_PER_SECOND) },
       });
     }
+    // Save the run at the start of each room, so closing the app doesn't lose it (M7-P11).
+    if (this.run) saveRunInProgress(this.run);
     if (this.run) {
       // The grown-up's play-time limit (M7-P9): checked every few seconds, never shown as a timer.
       const limitProfile = loadSave();
@@ -1227,15 +1225,7 @@ export class GameScene extends Phaser.Scene {
   /** Brings the run's loot home, saves, and goes to the Home Dojo. */
   private endRun(status: 'cleared' | 'lost' | 'rested'): void {
     if (!this.run) return;
-    const profile = loadSave();
-    const summary = summarizeRun(this.run);
-    finishRun(profile, summary);
-    recordFloorResult(profile, this.run.tier, status);
-    addDecorations(homeDojo(profile), summary.decorations);
-    // Experience, capped by the real belt (with the Blessing and catch-up bonuses).
-    const xp = gainXp(profile, this.training, runXp(summary));
-    if (profile.lastRun) profile.lastRun.xp = xp;
-    writeSave(profile);
+    const { summary, xp, profile } = bankRun(this.run, this.training, status);
     this.leaving = true;
     const leave = (scene: string, data?: GameSceneData) => {
       this.cameras.main.fadeOut(600, 10, 8, 16);

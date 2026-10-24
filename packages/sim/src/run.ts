@@ -574,3 +574,31 @@ function dropDecoration(content: Content, run: RunState, share: number, at: Vec2
 export function wrapUpRun(run: RunState): void {
   if (run.status === 'playing') run.wrapUp = true;
 }
+
+/**
+ * A run saved at the start of its current room (M7-P11), so closing the app doesn't lose it.
+ * Returns null for anything that can't be played on: not a run, already over, or a room
+ * that no longer exists in this version of the content.
+ */
+export function restoreRun(content: Content, data: unknown): RunState | null {
+  if (!data || typeof data !== 'object') return null;
+  const run = data as Partial<RunState>;
+  const ok =
+    run.status === 'playing' &&
+    typeof run.depth === 'number' &&
+    typeof run.totalRooms === 'number' &&
+    run.depth < run.totalRooms &&
+    typeof run.roomId === 'string' &&
+    content.rooms.some((r) => r.id === run.roomId) &&
+    typeof run.rng?.state === 'number' &&
+    typeof run.namedRng?.state === 'number' &&
+    Array.isArray(run.doors) &&
+    Array.isArray(run.loot) &&
+    Array.isArray(run.results) &&
+    Array.isArray(run.insights) &&
+    Array.isArray(run.decorations);
+  if (!ok) return null;
+  const restored = JSON.parse(JSON.stringify(run)) as RunState;
+  restored.wrapUp ??= false;
+  return restored;
+}
