@@ -7,7 +7,7 @@ Script: `source/make_a3_seal.py` (run from `incoming-art/`). Layers in `sprites/
 |---|---|---|---|
 | 1 | Base (cup + stand + plinth + blank date plate + halo + sparkles) | `trophy-base.png` | One layer. Date plate [26,134,62,148] stays blank; the game writes the date. |
 | 2 | Seal backing (scallop, face, ring, ribbon tails) | `seal-backing-default.png`, `seal-backing-actionzone.png` | Picked by the school's palette. Unknown school = `default` (gold + sky blue, same as PR #138). |
-| 3 | School mark | `seal-mark-default-star.png`, `seal-mark-PLACEHOLDER-school.png` | Default = the A3 star. PLACEHOLDER = grey checker in a dashed ring. **Never ship the placeholder.** |
+| 3 | School mark | `seal-mark-default-star.png`, `seal-mark-PLACEHOLDER-school.png` | Default = the A3 star. **`seal-mark-school.png` = the school's own logo (A3c).** PLACEHOLDER = grey checker in a dashed ring. **Never ship the placeholder.** |
 
 ## School mark spec (for the Programmer and other dojos)
 - **Format:** square PNG, **128x128** (64x64 minimum), RGBA, transparent background, sRGB.
