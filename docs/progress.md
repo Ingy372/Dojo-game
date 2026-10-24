@@ -226,3 +226,17 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 
 **Next**
 - Milestone 6 (Story and Street Smarts sample), which brings in Batch 7 (Sensei, Senpai, Kohai, the second instructor, the founder). It needs dialogue and quest drafts from the Content Writer, and Jay's approval of one Street Smarts script.
+
+## Work-board item K1: docs check-up (2026-10-23)
+
+**Done**
+- Checked the game's belt list, kata names and requirement counts against `docs/curriculum.md`. The differences are listed for Jay in the K1 pull request; nothing was changed.
+- Recorded Jay's work-board decisions in `docs/decisions.md`.
+- `docs/GROK_BOTS.md`: the QA bot is active. Systems design (S1–S8) and the milestone 4 recommendations go to Dojo-Ascent Researcher & Planner (no sixth bot).
+- Every "Claude Code" mention in `docs/` now says Dojo-Ascent Programmer.
+- Sensei's Lessons: built in milestone 7, finished in milestone 10.
+- Added Jay's self-defense #31–35 and kick combos 1–7, in his words. No game code changed.
+
+**Next**
+- Jay reviews the K1 pull request and answers its DECIDE list (including the term "party flex" in #33).
+- Self-defense #36–45, kick combos 8–12 and the kata descriptions are still to come from Jay.
