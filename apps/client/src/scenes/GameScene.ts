@@ -511,7 +511,7 @@ export class GameScene extends Phaser.Scene {
       if (a && (s.current !== a || s.finished) && !(a === 'counter' && p.guardTicks > 0)) this.heroAction = null;
       if (!this.heroAction) {
         const speed = Math.hypot(p.pos.x - this.prevPos.x, p.pos.y - this.prevPos.y) * TICKS_PER_SECOND;
-        playLocomotion(s, p.moving ? speed : 0);
+        playLocomotion(s, p.moving ? speed : 0, activeForm(p).id);
       }
     }
     s.flash(now < this.playerFlashUntil ? 0xff8a80 : null);
