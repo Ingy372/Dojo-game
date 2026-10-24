@@ -315,3 +315,8 @@ Two player stance idles on the existing player rig: `stance_rooted` (**Rooted Fo
 
 ## A8: Monster Journal silhouettes (journal-silhouettes-a8/)
 - `journal-silhouette-keeper` and `journal-silhouette-padded` (116x120) are in `journal-silhouettes-a8/sprites/static.json`. They are the same treatment as the named-monster silhouettes. Use them on the unmet Floor Keeper and Bopper cards in place of the big "?" (#135).
+
+## A3 badges and trophies, `incoming-art/badges-trophies-a3/sprites/static.json` [NEW, SAMPLES only, do not wire yet]
+- `badge-bow-{5,10,20,50,100}` (128x128, centre anchor) are for `ach.bow.correct.<n>`. They have no text; the tier shows in the rim, the pips and the rays.
+- `certified-trophy-sample` (104x166, bottom anchor) is the Certified look: a gold seal rosette with sky tails, a halo and a blank `datePlate` where the game writes the date. Game trophies keep the plain decor-tier1-a6 look.
+- Open: see the A3 DECIDE list (badge use, numbers, date length, the seal mark).

@@ -1,0 +1,105 @@
+{
+  "sprites": {
+    "badge-bow-5": {
+      "files": {
+        "img": "badges/badge-bow-5.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "achievement": "ach.bow.correct.5",
+      "tier": 1,
+      "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
+    },
+    "badge-bow-10": {
+      "files": {
+        "img": "badges/badge-bow-10.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "achievement": "ach.bow.correct.10",
+      "tier": 2,
+      "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
+    },
+    "badge-bow-20": {
+      "files": {
+        "img": "badges/badge-bow-20.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "achievement": "ach.bow.correct.20",
+      "tier": 3,
+      "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
+    },
+    "badge-bow-50": {
+      "files": {
+        "img": "badges/badge-bow-50.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "achievement": "ach.bow.correct.50",
+      "tier": 4,
+      "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
+    },
+    "badge-bow-100": {
+      "files": {
+        "img": "badges/badge-bow-100.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "achievement": "ach.bow.correct.100",
+      "tier": 5,
+      "note": "no text baked in; tier = rim (wood, bronze, silver, gold, gold+gem) + 1-5 star pips; the game shows the achievement name (C7) beside it"
+    },
+    "certified-trophy-sample": {
+      "files": {
+        "img": "trophies/certified-trophy-sample.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "note": "SAMPLE CT (belt promotion: band uses the belt colour, orange shown). Certified cues: gold cup, gold seal rosette with sky ribbons, warm halo, sparkles, cream date plate. BLANK plate: the game writes 'Earned {date}' (C7 trophyText)."
+    }
+  }
+}

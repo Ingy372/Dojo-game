@@ -35,3 +35,5 @@ Notes:
 **A6 Tier 1 decoration set (2026-10-24): no outside assets.** Built by `decor-tier1-a6/source/build_decor_t1.py` (helpers from the Home Dojo builder; monster colours from `enemies-tier1/source`), rendered with `tools/`.
 
 **S4c-A1 Injured status (2026-10-24): no outside assets in the sprites.** Drawn by `status-injured-s4c/source/make_injured.py` (PIL). The preview mock of the word uses the system Nunito font (SIL OFL); it is not shipped in any sprite.
+
+**A3 badges and trophies (2026-10-24): no outside assets.** Drawn by `badges-trophies-a3/source/make_a3.py` (PIL). The wall preview reuses the decor-tier1-a6 Journal trophy. Preview labels use DejaVu Sans (Bitstream Vera licence) and are not in the sprites.
