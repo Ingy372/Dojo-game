@@ -141,8 +141,8 @@ export function openMonsterJournal(scene: Phaser.Scene, journal: Record<string, 
         const pics = addStatic(scene, def.art, def.id, wellX, wellY + (st ? st.anchor[1] - st.frameHeight / 2 : 0));
         pics.forEach((p) => p.setScale(Math.min(1, well[2] / (st?.frameWidth ?? well[2]), well[3] / (st?.frameHeight ?? well[3]))));
         cards.add(pics);
-      } else if (!kd.met && staticArt(scene, NAMED_PACK, `journal-silhouette-${kd.monster}`)) {
-        cards.add(addStatic(scene, NAMED_PACK, `journal-silhouette-${kd.monster}`, wellX, wellY));
+      } else if (!kd.met && def.silhouette && staticArt(scene, NAMED_PACK, def.silhouette)) {
+        cards.add(addStatic(scene, NAMED_PACK, def.silhouette, wellX, wellY));
       } else if (!kd.met) {
         cards.add(text(wellX, wellY, CONTENT.named.journalUnknown.name, 28, '#6b5440', true).setOrigin(0.5));
       }

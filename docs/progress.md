@@ -480,3 +480,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## Rest refresh (2026-10-24)
 - Fixed: pieces banked by "Rest for now" in the dojo now show at once. Tests 239 passed / 1 skipped; typecheck and build pass. Screenshots: /workspace/rest-{before,after}-{667,844}-storage.png (before: 1 stored, after: 4).
+
+## K14 Journal silhouettes + Form idles (2026-10-24)
+- A8 (#136) silhouettes imported into the named-monster pack. Unmet Journal cards for Floor Keeper and Bopper now show journal-silhouette-keeper / journal-silhouette-padded instead of '?' (each trophy names its `silhouette` in decorations.json).
+- A2 (#121) stance idles merged into every player-a/b rig (Rooted = option A). Each Form idles in its own stance; the Beginner's Stance keeps the guard idle. Tests 244 passed / 1 skipped; typecheck and build pass. Screenshots: /workspace/k14-{667,844}-journal-keeper-bopper.png, /workspace/k14-{667,844}-idle-{beginners-stance,rooted-form,flowing-form}[-zoom].png, /workspace/k14-{667,844}-idles-strip.png.

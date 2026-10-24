@@ -42,6 +42,8 @@ export interface DecorationDef {
   /** Trophies: the enemy id whose first defeat gives it, and the belt tier its Journal entry belongs to. */
   monster?: string;
   journalTier?: number;
+  /** Trophies: the Journal's unmet-card silhouette art id (in the named-monster pack). */
+  silhouette?: string;
   /** Keeper statues: given the first time the Floor Keeper is beaten at this belt tier. */
   keeperFloor?: number;
 }
@@ -172,6 +174,7 @@ export function loadDojoContent(roomData: unknown, decorationsData: unknown): Do
     if (typeof it.description === 'string') def.description = it.description;
     if (typeof it.art === 'string') def.art = it.art;
     if (typeof it.monster === 'string') def.monster = it.monster;
+    if (typeof it.silhouette === 'string') def.silhouette = it.silhouette;
     const tierNum = (k: string) => {
       const n = it[k];
       if (n === undefined) return undefined;

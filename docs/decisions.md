@@ -578,3 +578,8 @@ My calls (not Manager):
 ## Rest refresh (2026-10-24)
 - After "Rest for now" on the resume card, DojoScene now uses the profile that `bankRun` returns and takes its dojo with `homeDojo`. Before, it reloaded only the profile, so `this.dojo` still pointed at the old dojo object: the new pieces didn't show, and later dojo edits went to that old object. Those edits could be lost, or could overwrite what was banked. The new pieces go to storage, so the walkable room doesn't change; redrawing is enough.
 - There's no client test harness and adding one would mean new dependencies, so this fix is checked with before/after screenshots instead of a test.
+
+## Form idles and Journal silhouettes (K14) (2026-10-24)
+- Stance idles come from a separate A2 JSON, so the importer gained `mergeAnimations` (same frame size and anchor, no name clashes) instead of hand-merging rigs. The `-big` packs are left out (no stance art at that size).
+- The link from Form to idle is data: each stance animation carries `form: <Form id>` from the art JSON. The client plays the animation tagged with the active Form's id and falls back to `idle`. A new Form needs only tagged art.
+- Each Journal trophy names its `silhouette` sprite in decorations.json; a missing one falls back to '?'. A test checks every named silhouette and Form idle exists in the packed art.

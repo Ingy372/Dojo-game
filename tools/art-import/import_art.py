@@ -102,9 +102,19 @@ class Packer:
 
 def load_character(packer: Packer, json_path: str, scale: float, skip_layers: list[str],
                    only_anims: list[str] | None = None, only_dirs: list[str] | None = None,
-                   only_layers: list[str] | None = None) -> dict:
+                   only_layers: list[str] | None = None, merge: list[str] | None = None) -> dict:
     d = json.load(open(json_path))
     base = os.path.dirname(json_path)
+    # Extra animations delivered later for the same rig (e.g. A2 Form stances): same frame and anchor.
+    for extra_path in merge or []:
+        e = json.load(open(extra_path))
+        if (e['frameWidth'], e['frameHeight'], e['anchor']) != (d['frameWidth'], d['frameHeight'], d['anchor']):
+            raise SystemExit(f'{extra_path}: frame size or anchor differs from {json_path}')
+        ebase = os.path.dirname(extra_path)
+        for name, a in e['animations'].items():
+            if name in d['animations']:
+                raise SystemExit(f'{extra_path}: animation "{name}" is already in {json_path}')
+            d['animations'][name] = {**a, 'sheets': {k: os.path.join(ebase, v) for k, v in a['sheets'].items()}}
     fw, fh = d['frameWidth'], d['frameHeight']
     ndir = len(d['directions'])
     sw, sh = round(fw * scale), round(fh * scale)
@@ -209,7 +219,8 @@ def main() -> None:
             if src['type'] == 'character':
                 entries[src['id']] = load_character(packer, path, scale, src.get('skipLayers', []),
                                                     src.get('animations'), src.get('directions'),
-                                                    src.get('layers'))
+                                                    src.get('layers'),
+                                                    [rel(p) for p in src.get('mergeAnimations', [])])
             else:
                 entries[src['id']] = load_static(packer, path, scale, src.get('only'))
         pages = packer.pack()

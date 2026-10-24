@@ -12,6 +12,8 @@ export interface ArtAnimation {
   fps: number;
   loop: boolean;
   holdLastFrame?: boolean;
+  /** A Form's stance idle: the Form id (content/abilities) this animation replaces `idle` for. */
+  form?: string;
   keyFrames?: Record<string, number | string>;
   telegraphIntensity?: number[];
   layers: Record<string, number[][]>;
