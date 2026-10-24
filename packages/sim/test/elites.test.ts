@@ -328,6 +328,14 @@ describe('where elites appear (1,000 floors at 4th belt)', () => {
     for (const x of run.elites) expect(['brute', 'shield']).toContain(room.enemySpawns[x.spawn].enemy);
   });
 
+  it('the ?elite=guarding test link respects Guided (becomes Swift)', () => {
+    const guided = startRun(content, { seed: 7, dryRuns: 0, tier: 4, forcedElite: 'guarding', firstRoomId: 'shield-escort', difficulty: 'guided' });
+    expect(guided.elites.length).toBeGreaterThan(0);
+    for (const x of guided.elites) expect(x.kind).toBe('swift');
+    const standard = startRun(content, { seed: 7, dryRuns: 0, tier: 4, forcedElite: 'guarding', firstRoomId: 'shield-escort', difficulty: 'standard' });
+    for (const x of standard.elites) expect(x.kind).toBe('guarding');
+  });
+
   it('a tier\'s first floor is the first one the student finishes at that tier', () => {
     const profile = newProfile();
     expect(firstFloorOfTier(profile, 4)).toBe(true);

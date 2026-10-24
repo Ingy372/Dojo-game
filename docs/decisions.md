@@ -456,3 +456,8 @@ From section 1 of `docs/work-board.md`.
 - **Forced test links** (`?named=`) put it in the first battle room from room 3, or in any room with `&room=`. Like elite test links giving decorations, these runs still record the journal and the sticker.
 - **Reduced motion** is the phone's `prefers-reduced-motion` setting (the game has no setting of its own yet); it turns off the stamp shake only.
 - **Journal button text** is content (`journalButton`), and the button shows from `rules.minBeltTier`.
+
+## K10: K9 retest fixes (2026-10-24)
+- **COMBO goes left during a boss fight**, under the player's bars, instead of lower in the centre, where it would collide with Sensei's banner.
+- **The Sensei banner checks the door labels on screen** (they scroll with the room), so the fix works in every room, not just the Keeper's.
+- **The forced-elite test link keeps the belt and first-floor bypass**, but Guided still wins over Guarding (it becomes Swift, the same swap as normal play).

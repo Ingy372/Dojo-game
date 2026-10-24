@@ -445,8 +445,10 @@ function pickElites(content: Content, run: RunState, room: Room): EliteSpawn[] {
   const spawnsFor = (kind: EliteKind) =>
     room.enemySpawns.map((s, i) => ({ s, i })).filter(({ s }) => rules.kinds[kind].enemies.includes(s.enemy) && !content.enemies[s.enemy]?.boss).map(({ i }) => i);
   if (run.forcedElite) {
-    const spots = spawnsFor(run.forcedElite);
-    return spots.length ? [{ spawn: pick(run.rng, spots), kind: run.forcedElite }] : [];
+    // The test link skips the belt and first-floor rules, but not Guided: Guarding becomes Swift (K10).
+    const kind = run.forcedElite === 'guarding' && rules.noGuardingOnGuided && run.difficulty === 'guided' ? 'swift' : run.forcedElite;
+    const spots = spawnsFor(kind);
+    return spots.length ? [{ spawn: pick(run.rng, spots), kind }] : [];
   }
   const allowed = elitesAllowed(rules, run.tier, run.difficulty, run.firstFloorOfTier);
   if (!allowed.any || run.depth + 1 < rules.earliestRoom || rules.maxPerRoom < 1 || run.eliteCount >= rules.maxPerFloor) return [];
