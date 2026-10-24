@@ -9,3 +9,4 @@ This folder belongs to the **Art Director** Grok bot (see `docs/GROK_BOTS.md`).
 - `decor-pool-a6/`: A6 decoration pool samples, 6 pieces (2026-10-24).
 - `decor-tier1-a6/`: A6 Tier 1 decoration set, full (2026-10-24).
 - `status-injured-s4c/`: S4c-A1 Injured status samples (2026-10-24).
+- `badges-trophies-a3/`: A3 bow badges and certified vs game trophy, 3 samples (2026-10-24).
