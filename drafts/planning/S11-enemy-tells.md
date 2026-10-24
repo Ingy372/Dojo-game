@@ -32,7 +32,7 @@ So the timing is fair today, but all enemies look and sound the same when they w
 | Swarmer | jab | 12 ticks (0.6 s) | Crouches small and shivers | Small dot that fills fast | Quick high "tik-tik" chirp that rises | "Swarmers move fast, but they always show their jab first." |
 | Shield Guard | shield bash | 14 ticks (0.7 s) | Lifts the shield high, leans back | Wide half-moon in front, striped edge | Low metal "clang" tick, then a rising hum | "When the shield breaks, the guard is open. Be ready." |
 | Brute | swing | 16 ticks (0.8 s) | Raises both arms over its head | Big circle with a thick cracked edge | Deep slow "whum…" that rises | "A winded Brute takes extra damage. Make it chase, then strike." |
-| Floor Keeper | slam | 18 ticks (0.9 s) | Rears up tall | Circle in front, dotted edge | Two low drum taps, then a rise | "Watch the ground: a slam hits in front, a sweep hits…" (existing) |
+| Floor Keeper | slam | 18 ticks (0.9 s) | Rears up tall | Circle in front, dotted edge | Two low drum taps, then a rise | "Watch the ground: a slam hits in front, a sweep hits all around." |
 | Floor Keeper | sweep | 22 ticks (1.1 s) | Spins its arms out wide | Ring all around it, wavy edge | A long swirling "whoosh" rise | (same) |
 
 **The two Floor Keeper attacks must look and sound different** from each other, because the safe answer is different (step behind for the slam, step out for the sweep).
