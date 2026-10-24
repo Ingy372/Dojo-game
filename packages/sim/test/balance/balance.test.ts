@@ -6,6 +6,8 @@ import { describe, it } from 'vitest';
 declare const console: { log(...args: unknown[]): void };
 import type { Difficulty, EliteKind } from '../../src';
 import { testContent } from '../load-content';
+import { buildTraining, loadFeed } from '../../src';
+import green from '../../../../fixtures/4-green-belt.json';
 import { SKILLS, playRun, type RunStats, type Style } from './bot';
 
 const enabled = !!(import.meta.env as Record<string, string | undefined>).BALANCE;
@@ -55,15 +57,18 @@ describe.skipIf(!enabled)('balance report', () => {
       for (const r of runs.flatMap((x) => x.rooms)) if (['battle', 'challenge'].includes(r.kind) && r.roomId !== 'tutorial') m.set(r.roomId, [...(m.get(r.roomId) ?? []), r.ticks / 20]);
       return m;
     };
+    // The 4th-belt test profile (fixtures/4-green-belt.json) sets the tier, so elites come at their real rate.
+    const greenFeed = loadFeed(green);
+    const greenTier = buildTraining(greenFeed, content.abilities, { ms: Date.parse(greenFeed.asOf), weekday: new Date(greenFeed.asOf).getUTCDay() }).belt.tier;
     for (const [skill, difficulty] of cases) {
       const plain = Array.from({ length: RUNS }, (_, i) => playRun(content, 1000 + i, 'smart', SKILLS[skill], difficulty, undefined, undefined, { tier: 1 }));
-      const natural = Array.from({ length: RUNS }, (_, i) => playRun(content, 1000 + i, 'smart', SKILLS[skill], difficulty, undefined, undefined, { tier: 4 }));
+      const natural = Array.from({ length: RUNS }, (_, i) => playRun(content, 1000 + i, 'smart', SKILLS[skill], difficulty, undefined, undefined, { tier: greenTier }));
       const strikes = (runs: RunStats[]) => f1(avg(runs.flatMap((r) => r.rooms).filter((r) => ['battle', 'challenge', 'boss'].includes(r.kind)).map((r) => r.strikes)));
       const wins = (runs: RunStats[]) => pct(runs.filter((r) => r.won).length, runs.length);
       const eliteRooms = natural.flatMap((r) => r.rooms).filter((r) => r.elite);
       console.log(`\n=== elites, ${skill} player, smart, ${difficulty} ===`);
       console.log(`no elites (1st belt): win ${wins(plain)}  strikes/fight room ${strikes(plain)}`);
-      console.log(`elites as rolled (4th belt): win ${wins(natural)}  strikes/fight room ${strikes(natural)}  elite rooms ${eliteRooms.length} (swift ${eliteRooms.filter((r) => r.elite === 'swift').length}, guarding ${eliteRooms.filter((r) => r.elite === 'guarding').length}) over ${RUNS} runs`);
+      console.log(`elites as rolled (4th-belt profile): win ${wins(natural)}  strikes/fight room ${strikes(natural)}  elite rooms ${eliteRooms.length} (swift ${eliteRooms.filter((r) => r.elite === 'swift').length}, guarding ${eliteRooms.filter((r) => r.elite === 'guarding').length}) over ${RUNS} runs`);
       const base = fightSecs(plain);
       for (const kind of ['swift', 'guarding'] as EliteKind[]) {
         const forced = Array.from({ length: RUNS }, (_, i) => playRun(content, 1000 + i, 'smart', SKILLS[skill], difficulty, undefined, undefined, { tier: 4, forcedElite: kind }));

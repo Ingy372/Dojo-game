@@ -2,41 +2,59 @@
   "_about": "Elite enemies (S1 #3). Every elite number lives here; the game and the balance player both read this file. Spec: drafts/planning/S1-tier2-name-and-guarding-aura.md (PR #47).",
   "minBeltTier": 4,
   "earliestRoom": 3,
-  "chance": { "battle": 0.2, "challenge": 0.35 },
+  "chance": {
+    "battle": 0.2,
+    "challenge": 0.35
+  },
   "maxPerRoom": 1,
   "maxPerFloor": 2,
   "maxGuardingPerFloor": 1,
-  "kindWeights": { "swift": 0.6, "guarding": 0.4 },
+  "kindWeights": {
+    "swift": 0.6,
+    "guarding": 0.4
+  },
   "noGuardingOnGuided": true,
   "noGuardingOnFirstFloorOfTier": true,
-  "minWindupTicks": 8,
+  "minWindupTicks": 10,
   "kinds": {
     "swift": {
-      "enemies": ["brute", "swarmer", "shield"],
+      "enemies": [
+        "brute",
+        "swarmer",
+        "shield"
+      ],
       "health": 1.25,
       "power": 1.0,
       "guard": 1.0,
       "moveSpeed": 1.25,
       "windup": 0.8,
       "windupOnGuided": 1.0,
-      "recover": 0.85,
-      "extraLootRolls": 1
+      "windupOnChallenge": 1.0,
+      "recover": 0.85
     },
     "guarding": {
-      "enemies": ["brute", "shield"],
+      "enemies": [
+        "brute",
+        "shield"
+      ],
       "health": 1.25,
       "power": 1.0,
       "guard": 1.0,
       "moveSpeed": 1.0,
       "windup": 1.0,
       "windupOnGuided": 1.0,
-      "recover": 1.0,
-      "extraLootRolls": 1
+      "windupOnChallenge": 1.0,
+      "recover": 1.0
     }
   },
   "guarding": {
     "rangeTiles": 3,
     "protects": 2,
     "damageScale": 0.67
+  },
+  "reward": {
+    "_about": "On defeating any elite (PR #54): Focus added at once (capped at the normal Focus max), and a chance of one extra Home Dojo decoration. Never gear.",
+    "focus": 15,
+    "decorationChance": 0.5
   }
 }

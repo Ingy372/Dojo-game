@@ -160,6 +160,8 @@ export type AttackMove = 'basic' | 'strike' | 'counter' | 'chain' | 'ripple' | '
 
 export type CombatEvent =
   | { kind: 'playerAttack'; playerId: PlayerId; enemyId: EnemyId; move: AttackMove; damage: number; defeated: boolean }
+  /** An elite was defeated: its Focus reward (S1 #3), already added. */
+  | { kind: 'eliteFocus'; playerId: PlayerId; enemyId: EnemyId; focus: number }
   | { kind: 'telegraph'; enemyId: EnemyId; ticks: number }
   /** Bell Room twist: a Perfect Counter rang a bell (`count` so far, `of` needed). */
   | { kind: 'bell'; count: number; of: number }
@@ -758,6 +760,12 @@ function hurtEnemy(world: WorldState, p: PlayerState, e: EnemyState, move: Attac
     e.path = null;
   }
   world.events.push({ kind: 'playerAttack', playerId: p.id, enemyId: e.id, move, damage: dmg, defeated });
+  // Elite reward: a burst of Focus for whoever defeated it.
+  if (defeated && e.elite && world.elites) {
+    const before = p.focus;
+    p.focus = Math.min(COMBAT.focus.max, p.focus + world.elites.reward.focus);
+    world.events.push({ kind: 'eliteFocus', playerId: p.id, enemyId: e.id, focus: p.focus - before });
+  }
 }
 
 function nearestEnemy(world: WorldState, p: PlayerState, maxGap: number): EnemyState | null {

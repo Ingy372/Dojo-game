@@ -21,6 +21,7 @@ import {
 import newWhite from '../../../fixtures/1-white-belt-new.json';
 import white3 from '../../../fixtures/2-white-belt-3-signoffs.json';
 import yellow from '../../../fixtures/3-yellow-belt.json';
+import green from '../../../fixtures/4-green-belt.json';
 import { testContent } from './load-content';
 
 const content = testContent();
@@ -273,5 +274,14 @@ describe('Power Rating (hidden from players)', () => {
     const pr = powerRating(buildTraining(huge, abilities, at(huge)), p);
     for (const part of pr.parts) expect(part.value).toBeLessThanOrEqual(part.max);
     expect(pr.total).toBeLessThanOrEqual(2 * POWER.perTier);
+  });
+});
+
+describe('4th-belt fixture (S1 #3, so QA can meet elites)', () => {
+  it('loads as a Green Belt at tier 4, the first tier with elites', () => {
+    const t = train(green);
+    expect(t.belt.id).toBe('green');
+    expect(t.belt.tier).toBe(4);
+    expect(t.belt.tier).toBeGreaterThanOrEqual(testContent().elites.minBeltTier);
   });
 });

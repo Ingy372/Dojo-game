@@ -3,6 +3,7 @@ import {
   COMBAT,
   createWorld,
   eliteDef,
+  eliteWindup,
   finishRun,
   firstFloorOfTier,
   loadRoom,
@@ -78,7 +79,7 @@ describe('elite stats', () => {
     expect(eliteDef(content.enemies.brute, 'guarding', rules).moveSpeedTilesPerSecond).toBe(content.enemies.brute.moveSpeedTilesPerSecond);
   });
 
-  it('a Swift wind-up is 0.8x on Standard and Challenge, unchanged on Guided, and the Counter window never changes', () => {
+  it('a Swift wind-up is 0.8x on Standard, unchanged on Guided and Challenge (PR #52), never below 10 ticks, and the Counter window never changes', () => {
     const windup = (difficulty: Difficulty, elite: EliteKind | null) => {
       const { room, world, p } = arena([{ enemy: 'swarmer', column: 6, row: 4 }], elite ? [{ spawn: 0, kind: elite }] : [], difficulty);
       const e = world.enemies[0];
@@ -90,7 +91,12 @@ describe('elite stats', () => {
     };
     expect(windup('standard', null)).toBe(12);
     expect(windup('standard', 'swift')).toBe(10);
-    expect(windup('challenge', 'swift')).toBe(Math.max(8, Math.round(windup('challenge', null) * 0.8)));
+    expect(windup('challenge', 'swift')).toBe(windup('challenge', null));
+    expect(rules.minWindupTicks).toBe(10);
+    // An 11-tick wind-up would be 9 at x0.8; the 10-tick floor holds it at 10. Shorter ones are never lengthened.
+    expect(eliteWindup(11, 'swift', 'standard', rules, 4)).toBe(10);
+    expect(eliteWindup(9, 'swift', 'standard', rules, 4)).toBe(9);
+    expect(eliteWindup(16, 'swift', 'standard', rules, 6)).toBe(13);
     expect(windup('guided', 'swift')).toBe(windup('guided', null));
     expect(windup('standard', 'guarding')).toBe(12);
     // Perfect Counter timing: a counter pressed this many ticks before the swing still counts, elite or not.
@@ -327,5 +333,91 @@ describe('where elites appear (1,000 floors at 4th belt)', () => {
     finishRun(profile, summarizeRun(run));
     expect(firstFloorOfTier(profile, 4)).toBe(false);
     expect(firstFloorOfTier(profile, 5)).toBe(true);
+  });
+});
+
+describe('which enemy is the elite (PR #54, Done-when 8b)', () => {
+  it('every Guarding elite at 4th belt is a Brute or Shield Guard, never a boss', () => {
+    let guarding = 0;
+    for (let seed = 1; seed <= 600; seed++) {
+      const run = startRun(content, { seed, dryRuns: 0, tier: 4 });
+      for (let i = 0; i < 20 && run.status === 'playing'; i++) {
+        const room = content.rooms.find((r) => r.id === run.roomId)!;
+        for (const x of run.elites) {
+          const enemy = room.enemySpawns[x.spawn].enemy;
+          expect(content.enemies[enemy].boss ?? false).toBe(false);
+          expect(['brute', 'swarmer', 'shield']).toContain(enemy);
+          if (x.kind === 'guarding') {
+            guarding++;
+            expect(['brute', 'shield']).toContain(enemy);
+          }
+        }
+        const fake = { events: [{ kind: 'doorEntered', playerId: 'p1', door: 0 }], players: { p1: { health: 100, pos: { x: 0, y: 0 } } }, progress: { bestCombo: 0 }, enemies: [] } as unknown as WorldState;
+        updateRun(content, run, fake);
+      }
+    }
+    expect(guarding).toBeGreaterThan(0);
+  });
+
+  it('a wave-2 elite arrives with wave 2, still an elite', () => {
+    const room = loadRoom({
+      id: 'waves',
+      name: 'Waves',
+      tiles: ['##########', '#........#', '#..P.....#', '#........#', '##########'],
+      enemies: [{ enemy: 'swarmer', column: 8, row: 2 }, { enemy: 'brute', column: 8, row: 4, wave: 2 }],
+    });
+    const world = createWorld(room, ['p1'], { enemyTypes: content.enemies, respawnEnemies: false, elites: [{ spawn: 1, kind: 'guarding' }], eliteRules: rules });
+    expect(world.enemies.some((e) => e.elite)).toBe(false);
+    world.enemies[0].health = 0;
+    world.enemies[0].mode = 'defeated';
+    for (let i = 0; i < 200 && world.enemies.length < 2; i++) stepWorld(world, room, { p1: IDLE });
+    const brute = world.enemies.find((e) => e.def.id === 'brute');
+    expect(brute?.elite).toBe('guarding');
+    expect(brute?.health).toBe(225);
+  });
+});
+
+describe('elite reward (PR #54, Done-when 10b)', () => {
+  const defeatElite = (focus: number, elite: boolean) => {
+    const { room, world, p } = arena([{ enemy: 'swarmer', column: 6, row: 4 }], elite ? [{ spawn: 0, kind: 'swift' }] : []);
+    freeze(world);
+    world.enemies[0].health = 1;
+    p.focus = focus;
+    basicHitOn(world, room, 0);
+    return { world, p };
+  };
+
+  it('gives +15 Focus at once, never above 100', () => {
+    const plain = defeatElite(20, false).p.focus;
+    const { world, p } = defeatElite(20, true);
+    expect(p.focus).toBe(Math.min(100, plain + 15));
+    expect(world.events.find((e) => e.kind === 'eliteFocus')).toMatchObject({ focus: 15 });
+    expect(defeatElite(95, true).p.focus).toBe(COMBAT.focus.max);
+  });
+
+  it('gives at most one extra decoration (about half the time) and never extra gear', () => {
+    let decos = 0;
+    const N = 1000;
+    for (let seed = 1; seed <= N; seed++) {
+      const outcome = (elite: boolean) => {
+        const run = startRun(content, { seed, dryRuns: 0, tier: 4 });
+        const fake = {
+          events: [{ kind: 'playerAttack', playerId: 'p1', enemyId: 'e1', move: 'basic', damage: 5, defeated: true }],
+          players: { p1: { health: 100, pos: { x: 1, y: 1 } } },
+          progress: { bestCombo: 0 },
+          enemies: [{ id: 'e1', def: content.enemies.swarmer, pos: { x: 2, y: 2 }, elite: elite ? 'swift' : null }],
+        } as unknown as WorldState;
+        const ev = updateRun(content, run, fake);
+        return { loot: ev.filter((x) => x.kind === 'loot').length, decos: ev.filter((x) => x.kind === 'decoration').length };
+      };
+      const plain = outcome(false);
+      const elite = outcome(true);
+      expect(elite.loot).toBe(plain.loot);
+      expect(plain.decos).toBe(0);
+      expect(elite.decos).toBeLessThanOrEqual(1);
+      decos += elite.decos;
+    }
+    expect(decos / N).toBeGreaterThan(0.45);
+    expect(decos / N).toBeLessThan(0.55);
   });
 });

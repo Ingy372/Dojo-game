@@ -838,6 +838,11 @@ export class GameScene extends Phaser.Scene {
     }
     for (const ev of events) {
       switch (ev.kind) {
+        case 'eliteFocus': {
+          // Elite reward: a small blue-white Focus pop (not a pickup to chase).
+          if (ev.focus > 0) this.floatText(p.pos, `+${ev.focus} Focus`, '#cfeaff', 20, 1);
+          break;
+        }
         case 'playerAttack': {
           const e = this.enemy(ev.enemyId);
           if (!e) break;

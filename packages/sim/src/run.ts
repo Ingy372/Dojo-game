@@ -232,8 +232,11 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
           const e = world.enemies.find((x) => x.id === ev.enemyId);
           const share = e ? content.loot.enemyDropChance[e.def.id] ?? 0 : 0;
           if (e && chance(run.rng, share)) out.push(drop(content, run, 'common', e.pos, 'enemy'));
-          // Elites drop slightly better loot: extra item rolls.
-          if (e?.elite) for (let i = 0; i < content.elites.kinds[e.elite].extraLootRolls; i++) out.push(drop(content, run, 'common', e.pos, 'enemy'));
+          // Elite reward: a chance of one extra Home Dojo decoration (never gear; Focus is given in the world).
+          if (e?.elite) {
+            const deco = dropDecoration(content, run, content.elites.reward.decorationChance, e.pos);
+            if (deco) out.push(deco);
+          }
         }
         break;
       case 'bell':
@@ -267,7 +270,7 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
         const min = inTime && table.inTimeMinRarity ? table.inTimeMinRarity : table.minRarity;
         const at = room.chest ?? world.players.p1.pos;
         for (let i = 0; i < count; i++) out.push(drop(content, run, min, at, 'chest'));
-        const deco = dropDecoration(content, run, room.kind, at);
+        const deco = dropDecoration(content, run, content.dojo.dropChance[room.kind] ?? 0, at);
         if (deco) out.push(deco);
         break;
       }
@@ -477,8 +480,7 @@ function drop(content: Content, run: RunState, min: Rarity, at: Vec2, source: 'e
  * A chest may hold a decoration for the Home Dojo (the boss chest always does).
  * Kinds the player has fewest of come first, so a new player fills their dojo with variety.
  */
-function dropDecoration(content: Content, run: RunState, kind: RoomKind, at: Vec2): RunEvent | null {
-  const share = content.dojo.dropChance[kind] ?? 0;
+function dropDecoration(content: Content, run: RunState, share: number, at: Vec2): RunEvent | null {
   if (share <= 0 || !chance(run.rng, share)) return null;
   const pool = content.dojo.decorations.filter((d) => d.source === 'tower');
   if (pool.length === 0) return null;

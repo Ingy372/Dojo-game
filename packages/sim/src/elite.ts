@@ -20,8 +20,8 @@ export interface EliteKindDef {
   /** Wind-up scale on Standard and Challenge. */
   windup: number;
   windupOnGuided: number;
+  windupOnChallenge: number;
   recover: number;
-  extraLootRolls: number;
 }
 
 export interface EliteRules {
@@ -38,6 +38,8 @@ export interface EliteRules {
   minWindupTicks: number;
   kinds: Record<EliteKind, EliteKindDef>;
   guarding: { rangeTiles: number; protects: number; damageScale: number };
+  /** On defeating an elite: Focus added at once, and the chance of one extra decoration. */
+  reward: { focus: number; decorationChance: number };
 }
 
 function num(v: unknown, where: string, min = 0, max = Infinity): number {
@@ -66,8 +68,8 @@ export function loadElites(data: unknown): EliteRules {
       moveSpeed: num(x.moveSpeed, `kinds.${k}.moveSpeed`, 0.1),
       windup: num(x.windup, `kinds.${k}.windup`, 0.1, 1),
       windupOnGuided: num(x.windupOnGuided, `kinds.${k}.windupOnGuided`, 0.1, 1),
+      windupOnChallenge: num(x.windupOnChallenge, `kinds.${k}.windupOnChallenge`, 0.1, 1),
       recover: num(x.recover, `kinds.${k}.recover`, 0.1),
-      extraLootRolls: whole(x.extraLootRolls, `kinds.${k}.extraLootRolls`),
     };
   }
   return {
@@ -86,6 +88,10 @@ export function loadElites(data: unknown): EliteRules {
       rangeTiles: num(d.guarding?.rangeTiles, 'guarding.rangeTiles', 0),
       protects: whole(d.guarding?.protects, 'guarding.protects'),
       damageScale: num(d.guarding?.damageScale, 'guarding.damageScale', 0, 1),
+    },
+    reward: {
+      focus: whole(d.reward?.focus, 'reward.focus'),
+      decorationChance: num(d.reward?.decorationChance, 'reward.decorationChance', 0, 1),
     },
   };
 }
@@ -109,7 +115,7 @@ export function eliteDef(def: EnemyDef, kind: EliteKind, rules: EliteRules): Ene
  */
 export function eliteWindup(ticks: number, kind: EliteKind, difficulty: Difficulty, rules: EliteRules, counterWindow: number): number {
   const k = rules.kinds[kind];
-  const scale = difficulty === 'guided' ? k.windupOnGuided : k.windup;
+  const scale = difficulty === 'guided' ? k.windupOnGuided : difficulty === 'challenge' ? k.windupOnChallenge : k.windup;
   if (scale === 1) return ticks;
   return Math.min(ticks, Math.max(rules.minWindupTicks, counterWindow, Math.round(ticks * scale)));
 }
