@@ -1,5 +1,5 @@
 {
-  "notes": "DRAFT Street Smarts scenario for milestone 6 (work item C1). For Jay's safety review; nothing here ships until Jay approves (framework section 8). Ages 6-9, one short sentence per screen, read aloud by text-to-speech. Same line format as drafts/content/dialogue/milestone-6.json (speaker, text, expression, animation, choices, branches). Street Smarts additions: 'stars' on a choice (0-3, framework section 8) instead of honor; 'retry' names the choice point to return to. A 0-star choice never shows danger: the story pauses, Sensei reflects, and the player tries again right away. No penalties, no lost health, no guilt. No phone numbers, no real people. {player} = display name; {grownup} = the word the player picks for their grown-up (Mom, Dad, Grandma...), see SAFETY-REVIEW.md.",
+  "notes": "DRAFT Street Smarts scenario for milestone 6 (work item C1). For Jay's safety review; nothing here ships until Jay approves (framework section 8). Ages 6-9, one short sentence per screen, read aloud by text-to-speech. Same line format as drafts/content/dialogue/milestone-6.json (speaker, text, expression, animation, choices, branches). Street Smarts additions: 'stars' on a choice (0-3, framework section 8) instead of honor; 'retry' names the choice point to return to. A 0-star choice never shows danger: the story pauses, Sensei reflects, and the player tries again right away. No penalties, no lost health, no guilt. No phone numbers, no real people. {player} = display name; {grownup} = 'Mom' or 'Dad' only, never a real name (Jay, J11). Family secret word is always generic ('your family's secret word'); no real words.",
   "id": "store-separated",
   "location": "store",
   "ageBand": "6-9",
@@ -7,7 +7,7 @@
   "priorities": ["awareness", "get-help"],
   "characters": [
     { "id": "sensei", "role": "Sensei", "name": null, "title": "Sensei" },
-    { "id": "worker", "role": "Store worker", "name": null, "title": null, "note": "Friendly worker in a store vest with a name tag. Calm and kind." },
+    { "id": "worker", "role": "Store worker", "name": null, "title": null, "note": "Friendly worker in a store uniform or vest with a name tag. Calm and kind. The first safe helper the game teaches." },
     { "id": "grownup", "role": "Player's grown-up", "name": null, "title": null, "note": "Shown only in the happy reunion. Relieved and smiling, never angry." },
     { "id": "shopper", "role": "Shopper", "name": null, "title": null, "note": "Ordinary adult. Not shown as scary or mean. Never says or does anything threatening." }
   ],
@@ -67,13 +67,18 @@
           "choices": [
             { "text": "The worker with a name tag.", "stars": 1, "next": "helper-good" },
             { "text": "The cashier at the counter.", "stars": 1, "next": "helper-good" },
+            { "text": "A police officer.", "stars": 1, "next": "helper-good" },
+            { "text": "A grown-up with kids.", "stars": 1, "next": "helper-good" },
             { "text": "Hide and wait alone.", "stars": 0, "next": "helper-retry" }
-          ]
+          ],
+          "note": "Safe helpers (J11): store worker in uniform or with a name tag, cashier, police officer, grown-up with kids. The worker is taught first and is the helper the story continues with."
         }
       ],
       "branches": {
         "helper-good": [
-          { "speaker": "sensei", "text": "Yes! Store workers help kids find their grown-ups.", "expression": "proud" }
+          { "speaker": "sensei", "text": "Yes! Those are safe helpers.", "expression": "proud" },
+          { "speaker": "sensei", "text": "A store worker is a great first pick.", "expression": "happy" },
+          { "speaker": "narrator", "text": "{player} walks to the worker with a name tag." }
         ],
         "helper-retry": [
           { "speaker": "sensei", "text": "Let's see what could have gone differently.", "expression": "thinking" },
@@ -99,9 +104,10 @@
       ],
       "branches": {
         "voice-good": [
-          { "speaker": "worker", "text": "I can help. What is your grown-up's name?", "expression": "happy" },
-          { "speaker": "player", "text": "My grown-up's name is {grownupName}.", "expression": "neutral" },
-          { "speaker": "worker", "text": "Thank you. Let's stay here together.", "expression": "happy" },
+          { "speaker": "worker", "text": "I can help you.", "expression": "happy" },
+          { "speaker": "worker", "text": "Who are you here with?", "expression": "happy" },
+          { "speaker": "player", "text": "I'm here with my {grownup}.", "expression": "neutral" },
+          { "speaker": "worker", "text": "Let's stay here together.", "expression": "happy" },
           { "speaker": "narrator", "text": "The worker calls on the store speaker." }
         ],
         "voice-retry": [
@@ -116,6 +122,7 @@
       "kind": "choice",
       "lines": [
         { "speaker": "shopper", "text": "I saw your grown-up outside. Come with me.", "expression": "neutral" },
+        { "speaker": "narrator", "text": "Do they know your family's secret word?" },
         {
           "id": "choice-offer",
           "speaker": "narrator",
@@ -128,13 +135,14 @@
       ],
       "branches": {
         "offer-good": [
-          { "speaker": "worker", "text": "That's right. We'll wait right here.", "expression": "happy" },
+          { "speaker": "player", "text": "They don't know our family's secret word.", "expression": "thinking" },
+          { "speaker": "worker", "text": "We'll wait right here.", "expression": "happy" },
           { "speaker": "sensei", "text": "Strong choice, {player}.", "expression": "proud", "animation": "nod" }
         ],
         "offer-retry": [
           { "speaker": "sensei", "text": "Let's see what could have gone differently.", "expression": "thinking" },
           { "speaker": "sensei", "text": "Who did you choose to stay with?", "expression": "thinking" },
-          { "speaker": "sensei", "text": "We never leave the store with someone else.", "expression": "neutral" },
+          { "speaker": "sensei", "text": "Only safe grown-ups know your family's secret word.", "expression": "neutral" },
           { "speaker": "narrator", "text": "Let's try again.", "retry": "choice-offer" }
         ]
       }
@@ -144,8 +152,11 @@
       "kind": "story",
       "lines": [
         { "speaker": "narrator", "text": "Soon, {grownup} comes hurrying over." },
-        { "speaker": "grownup", "text": "There you are! I'm so glad you stayed.", "expression": "happy" },
-        { "speaker": "narrator", "text": "{player} gives {grownup} a big hug." }
+        { "speaker": "grownup", "text": "There you are!", "expression": "happy" },
+        { "speaker": "grownup", "text": "I'm so glad you stayed.", "expression": "happy" },
+        { "speaker": "narrator", "text": "{player} gives {grownup} a big hug." },
+        { "speaker": "worker", "text": "You did great today.", "expression": "happy" },
+        { "speaker": "narrator", "text": "{player} and {grownup} go home smiling." }
       ]
     },
     {
@@ -153,14 +164,11 @@
       "kind": "reflection",
       "lines": [
         { "speaker": "sensei", "text": "What did you do that helped?", "expression": "thinking" },
-        { "speaker": "sensei", "text": "You stayed close. You found a helper. You used your voice.", "expression": "proud" },
+        { "speaker": "sensei", "text": "You stayed close and found a helper.", "expression": "proud" },
+        { "speaker": "sensei", "text": "You used your voice and remembered your secret word.", "expression": "proud" },
         { "speaker": "sensei", "text": "That is how you get home safe.", "expression": "happy", "animation": "bow" }
       ]
     }
   ],
-  "stars": {
-    "max": 3,
-    "rule": "Best choices on the first try at stay, helper, and offer earn 1 star each (voice is required to continue). A retry still finishes the scenario and can be replayed for all 3 stars.",
-    "note": "Exact star math is Jay's / the Systems Designer's call. Per decisions.md, Street Smarts power is 0 for now."
-  }
+  "stars": { "max": 3, "rule": "Best choices on the first try at stay, helper, and offer earn 1 star each (voice is required to continue). A retry still finishes the scenario and can be replayed for all 3 stars.", "note": "Exact star math is Jay's / the Systems Designer's call. Per decisions.md, Street Smarts power is 0 for now." }
 }
