@@ -49,8 +49,8 @@ Item IDs below (P1, P2, ...) are suggestions. The Manager picks the real IDs.
 - **Done when:** profile 2 (3 sign-offs) sees 3 unlocks plus the stripe in order; profile 1 sees the preview; nothing plays twice on a second visit.
 
 ### P5. Sensei's Lessons + Lesson Scroll (core-design §13)
-- **Spec:** A lesson = 1 sentence per screen + practice in a safe room (can't fail). Data-driven (`content/lessons/`). **Never more than one new system per session** (a session = app open after 30+ minutes away). Lesson Scroll in the Home Dojo lists every lesson seen, tap to replay.
-- **First-session lessons:** Move, Counter, Strike, Dash, Insights, Bow, Decorating.
+- **Spec:** A lesson = 1 sentence per screen + practice in a safe room (can't fail). Data-driven (`content/tutorial/first-session-lessons.json`, each lesson with a `triggerKey`). **Never more than one new system per session** (a session = a calendar day with at least one run; Manager call, K17), and never more than one new lesson per room. Lesson Scroll in the Home Dojo lists every lesson seen, tap to replay.
+- **First-session lessons:** as in the lessons file (Manager call, K17): no Move lesson (the tutorial's walk teaches it), and Bow only on the tutorial floor. Counter, Strike, Dash, Insights, Decorating, plus Perfect, Block and Step-out. Fading follow-ups and the welcome-home line are not on the Scroll.
 - **Done when:** a test that opens 2 sessions in a row sees one new lesson each, never two; every seen lesson replays from the Scroll.
 
 ### P6. Lesson lines (Content Designer)

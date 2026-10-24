@@ -4,7 +4,6 @@ import {
   GUIDE_LESSONS,
   WARNING_LESSON,
   STRIKE_LESSON,
-  loadLessons,
   loadTutorialLines,
   COMBAT,
   MOVEMENT,
@@ -54,10 +53,8 @@ import {
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
-import lessonsData from '../../../../content/tutorial/first-session-lessons.json';
 import tutorialData from '../../../../content/tutorial/tutorial-floor.json';
 
-const LESSONS = loadLessons(lessonsData);
 /** The tutorial floor's lines (M7-P2). */
 const TUTORIAL = loadTutorialLines(tutorialData);
 import { type PackName, addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
@@ -79,6 +76,7 @@ import { choiceCard, restCard, runOverCard } from '../ui/RunOverCard';
 import { PLAY_TIME_TEXT, isPlayTimeUp } from '../game/playTime';
 import { DIFFICULTY_TEXT, localToday } from '../game/difficulty';
 import { startTowerRun } from '../game/tower';
+import { LESSONS, noteLessonSeen, takeLesson } from '../game/lessons';
 import { bankRun, saveRunInProgress } from '../game/runSave';
 import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
@@ -280,6 +278,9 @@ export class GameScene extends Phaser.Scene {
   /** Tutorial floor (M7-P2): the glowing spot, and whether Strike has been taught in the boss room. */
   private goalView: Phaser.GameObjects.Arc | null = null;
   private strikeTaught = false;
+  /** Sensei's Lessons (M7-P5): this run's tag for the one-lesson-per-room limit, and warnings still filling. */
+  private runTag = '';
+  private warnings = new Map<string, { until: number; inside: boolean }>();
   private strikeHit = false;
 
   constructor() {
@@ -343,6 +344,8 @@ export class GameScene extends Phaser.Scene {
 
     this.chestOpenAt = null;
     this.strikeTaught = false;
+    this.runTag ||= `run-${Date.now()}`;
+    this.warnings.clear();
     this.strikeHit = false;
     const roomGfx = this.drawRoom();
     const objects = this.makeRoomObjects();
@@ -979,6 +982,7 @@ export class GameScene extends Phaser.Scene {
           this.flashScreen(0xffffff, 0.55, 220);
           this.ring(p.pos, COLORS.gold, 2.2);
           this.popWord('PERFECT!', '#ffd166', 54);
+          if (ev.playerId === this.me && !this.world.guide) this.lesson('firstPerfectUnaided');
           break;
         }
         case 'block': {
@@ -988,6 +992,7 @@ export class GameScene extends Phaser.Scene {
           this.ring(p.pos, COLORS.shield, 1.2);
           this.sparks(p.pos, 6, COLORS.shield);
           this.floatText(p.pos, `BLOCK  -${ev.damage}`, '#9ad1ff', 22);
+          if (ev.playerId === this.me) this.lesson('firstBlock');
           break;
         }
         case 'hit': {
@@ -1011,6 +1016,8 @@ export class GameScene extends Phaser.Scene {
         case 'guideStart': {
           // Step 0 opens with the warning lesson; the hints say their one line and pulse Counter.
           const lesson = LESSONS[GUIDE_LESSONS[ev.step]];
+          if (ev.step === 0) noteLessonSeen(WARNING_LESSON, this.roomTag());
+          noteLessonSeen(lesson.id, this.roomTag());
           this.senseiSay(ev.step === 0 ? LESSONS[WARNING_LESSON].screens : lesson.screens, 1100);
           this.buttons.pulseCounter(ev.step === 2 ? 1 : 2);
           break;
@@ -1035,11 +1042,22 @@ export class GameScene extends Phaser.Scene {
           const e = this.enemy(ev.enemyId);
           sfx.windup(ev.ticks / TICKS_PER_SECOND);
           if (e) this.floatText({ x: e.pos.x, y: e.pos.y - e.def.radius - 0.3 }, '!', '#ff3b30', 40, 0.4);
+          // Sensei's Lessons: a second warning while another is still filling is two attacks at once.
+          const now = this.time.now;
+          if ([...this.warnings].some(([id, w]) => id !== ev.enemyId && w.until > now)) this.lesson('twoAttacksAtOnce');
+          const me = this.world.players[this.me];
+          const inside = !!(e?.attackCenter && me && Math.hypot(me.pos.x - e.attackCenter.x, me.pos.y - e.attackCenter.y) <= currentAttack(e).areaRadius);
+          this.warnings.set(ev.enemyId, { until: now + (ev.ticks / TICKS_PER_SECOND) * 1000, inside });
           break;
         }
         case 'enemySwing': {
           const e = this.enemy(ev.enemyId);
-          if (!countered.has(ev.enemyId)) sfx.whoosh();
+          if (!countered.has(ev.enemyId)) {
+            sfx.whoosh();
+            // The player was in the circle when it showed, and nobody was hit, blocked or countered: they stepped out.
+            if (this.warnings.get(ev.enemyId)?.inside && this.world.players[this.me]?.health > 0) this.lesson('firstStepOut');
+          }
+          this.warnings.delete(ev.enemyId);
           if (e?.attackCenter) this.ring(e.attackCenter, 0xffffff, currentAttack(e).areaRadius, 0.6);
           break;
         }
@@ -1283,6 +1301,7 @@ export class GameScene extends Phaser.Scene {
 
   private openInsights(ids: string[]): void {
     const defs = ids.map((id) => CONTENT.insights.find((i) => i.id === id)!).filter(Boolean);
+    this.lesson('firstInsightChoice');
     this.picker = new InsightPicker(this, defs, (id) => {
       if (!this.run) return;
       chooseInsight(this.run, id);
@@ -1440,12 +1459,28 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
+  /** This room, for the one-new-lesson-per-room limit. */
+  private roomTag(): string {
+    return `${this.runTag}-${this.run?.depth ?? 0}`;
+  }
+
+  /**
+   * Sensei's Lessons (M7-P5): a game event happened; show its lesson if the session and room
+   * limits allow it. The tutorial floor teaches on its own guide path instead.
+   */
+  private lesson(triggerKey: string): void {
+    if (this.run?.tutorial) return;
+    const l = takeLesson(triggerKey, this.roomTag());
+    if (l) this.senseiSay(l.practice ? [...l.screens, l.practice] : l.screens, 1600);
+  }
+
   /** Tutorial boss room: teach Strike the first time Focus fills (Manager call, M7-P2). */
   private checkStrikeLesson(): void {
     if (!this.run?.tutorial || this.room.kind !== 'boss' || this.strikeTaught) return;
     const p = this.world.players[this.me];
     if (!p || p.focus < strikeCost(p)) return;
     this.strikeTaught = true;
+    noteLessonSeen(STRIKE_LESSON, this.roomTag());
     this.senseiSay(LESSONS[STRIKE_LESSON].screens, 1600);
   }
 

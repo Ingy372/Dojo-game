@@ -8,6 +8,23 @@ export interface Lesson {
   retry?: string;
   /** Kind hint shown while the guided Counter waits for a tap. */
   nudge?: string;
+  /** The practice line shown after the screens (lessons file only). */
+  practice?: string;
+}
+
+/** A first-session lesson with its rules (content/tutorial/first-session-lessons.json, M7-P5). */
+export interface SenseiLesson extends Lesson {
+  /** The game event that brings the lesson up (Manager call: one key per lesson). */
+  triggerKey: string;
+  order: number;
+  /** The first session (calendar day with a run) the lesson may show in. */
+  earliestSession: number;
+  /** Shows the first time it comes up, even if a lesson was already new this session. */
+  ignoresSessionLimit: boolean;
+  /** A fading follow-up or plain line: never counts as a new lesson. */
+  fadingFollowUp: boolean;
+  /** Listed on the Lesson Scroll (false for follow-ups and the welcome line). */
+  scroll: boolean;
 }
 
 /** The lessons the guided Counter uses, by guide step (0 guided, 1 hint, 2 pulse only). */
@@ -16,15 +33,33 @@ export const GUIDE_LESSONS = ['lesson-counter-guided', 'lesson-counter-hint-2', 
 export const WARNING_LESSON = 'lesson-warning';
 
 /** Reads the lessons file and checks every lesson the game needs is there. */
-export function loadLessons(data: unknown): Record<string, Lesson> {
+export function loadLessons(data: unknown): Record<string, SenseiLesson> {
   const list = (data as { lessons?: unknown })?.lessons;
   if (!Array.isArray(list)) throw new Error('Sensei lessons: "lessons" must be a list');
-  const out: Record<string, Lesson> = {};
-  for (const l of list as Lesson[]) {
+  const out: Record<string, SenseiLesson> = {};
+  const keys = new Set<string>();
+  for (const l of list as SenseiLesson[]) {
     if (typeof l?.id !== 'string' || !Array.isArray(l.screens) || l.screens.some((s) => typeof s !== 'string')) {
       throw new Error(`Sensei lessons: lesson ${JSON.stringify(l?.id)} needs an id and a list of screens`);
     }
-    out[l.id] = { id: l.id, screens: l.screens, success: l.success, retry: l.retry, nudge: l.nudge };
+    if (typeof l.triggerKey !== 'string' || l.triggerKey === '') throw new Error(`Sensei lessons: "${l.id}" needs a triggerKey`);
+    if (keys.has(l.triggerKey)) throw new Error(`Sensei lessons: triggerKey "${l.triggerKey}" is used twice`);
+    keys.add(l.triggerKey);
+    if (!Number.isInteger(l.order) || !Number.isInteger(l.earliestSession) || l.earliestSession < 1) throw new Error(`Sensei lessons: "${l.id}" needs a whole order and an earliestSession of 1 or more`);
+    out[l.id] = {
+      id: l.id,
+      screens: l.screens,
+      success: l.success,
+      retry: l.retry,
+      nudge: l.nudge,
+      practice: l.practice,
+      triggerKey: l.triggerKey,
+      order: l.order,
+      earliestSession: l.earliestSession,
+      ignoresSessionLimit: l.ignoresSessionLimit === true,
+      fadingFollowUp: l.fadingFollowUp === true,
+      scroll: l.scroll !== false,
+    };
   }
   for (const id of [WARNING_LESSON, ...GUIDE_LESSONS]) if (!out[id]) throw new Error(`Sensei lessons: missing "${id}"`);
   return out;
@@ -49,4 +84,78 @@ export function loadTutorialLines(data: unknown): Record<TutorialStep, Lesson> {
   }
   for (const id of TUTORIAL_STEPS) if (!out[id]) throw new Error(`Tutorial floor: missing "${id}"`);
   return out as Record<TutorialStep, Lesson>;
+}
+
+// ---- Sensei's Lessons: when a new lesson may show (M7-P5) ----
+// A session is a calendar day (YYYY-MM-DD, the player's own clock) with at least one run (Manager call).
+// Limits: at most one new lesson per session (unless ignoresSessionLimit) and one per room.
+// Fading follow-ups and plain lines never count toward either limit.
+
+/** One lesson the player has seen: the day, and the room it came up in (null at home). */
+export interface SeenLesson {
+  id: string;
+  day: string;
+  room: string | null;
+}
+
+/** What the profile keeps about lessons. */
+export interface LessonLog {
+  /** Lessons seen, in the order they were seen. */
+  seen: SeenLesson[];
+  /** Days with at least one run, oldest first: each is a session. */
+  sessionDays: string[];
+}
+
+export function newLessonLog(): LessonLog {
+  return { seen: [], sessionDays: [] };
+}
+
+/** A saved lesson log if it has the right shape, otherwise a fresh one. */
+export function readLessonLog(data: unknown): LessonLog {
+  const d = data as Partial<LessonLog> | null;
+  if (!d || typeof d !== 'object') return newLessonLog();
+  const seen = Array.isArray(d.seen) ? d.seen.filter((s) => s && typeof s.id === 'string' && typeof s.day === 'string').map((s) => ({ id: s.id, day: s.day, room: typeof s.room === 'string' ? s.room : null })) : [];
+  const sessionDays = Array.isArray(d.sessionDays) ? d.sessionDays.filter((x): x is string => typeof x === 'string') : [];
+  return { seen, sessionDays };
+}
+
+/** A run started today: today becomes (or stays) a session. */
+export function noteRunDay(log: LessonLog, today: string): void {
+  if (!log.sessionDays.includes(today)) log.sessionDays.push(today);
+}
+
+/** The session number today belongs to (1 = the first day with a run). */
+export function sessionNumber(log: LessonLog, today: string): number {
+  const before = log.sessionDays.filter((d) => d < today).length;
+  return before + 1;
+}
+
+const counts = (l: SenseiLesson): boolean => !l.fadingFollowUp;
+
+/**
+ * The lesson to show for a game event, or null: not seen yet, its session has come, and the
+ * limits allow it. `room` names the room it comes up in (null at home).
+ */
+export function lessonFor(lessons: Record<string, SenseiLesson>, log: LessonLog, triggerKey: string, today: string, room: string | null): SenseiLesson | null {
+  const lesson = Object.values(lessons).find((l) => l.triggerKey === triggerKey);
+  if (!lesson || log.seen.some((s) => s.id === lesson.id)) return null;
+  if (sessionNumber(log, today) < lesson.earliestSession) return null;
+  if (!counts(lesson)) return lesson;
+  const counted = log.seen.filter((s) => lessons[s.id] && counts(lessons[s.id]));
+  if (room !== null && counted.some((s) => s.room === room && s.day === today)) return null;
+  if (!lesson.ignoresSessionLimit && counted.some((s) => s.day === today && !lessons[s.id].ignoresSessionLimit)) return null;
+  return lesson;
+}
+
+/** Remembers that a lesson was shown. */
+export function markLessonSeen(log: LessonLog, id: string, today: string, room: string | null): void {
+  if (!log.seen.some((s) => s.id === id)) log.seen.push({ id, day: today, room });
+}
+
+/** The Lesson Scroll: every seen lesson that's listed there, in lesson order. */
+export function scrollLessons(lessons: Record<string, SenseiLesson>, log: LessonLog): SenseiLesson[] {
+  return log.seen
+    .map((s) => lessons[s.id])
+    .filter((l): l is SenseiLesson => !!l && l.scroll)
+    .sort((a, b) => a.order - b.order);
 }

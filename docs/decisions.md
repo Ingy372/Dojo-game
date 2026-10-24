@@ -603,3 +603,24 @@ My calls (not Manager):
 - C7 (PR #92): kids see Everyday / Special / Rare / Epic / Legendary. The names are content (`rarityNames` in content/loot/gear.json); every rarity must have one or the game won't load. Ids (`common`, `uncommon`, ...) stay as they are in data, saves and code.
 ## Large stance art parked (K14) (2026-10-24)
 - Manager call: the large (`-big`) stance art is parked for now; the dojo keeps the plain idle, which is fine.
+
+## M7-P5 Sensei's Lessons and the Lesson Scroll (K17) (2026-10-24)
+Manager calls:
+1. A session is a calendar day (the player's own clock) with at least one run. next-plan-milestone-7.md now says so (it said "app open after 30+ minutes away").
+2. The lesson file stays at content/tutorial/first-session-lessons.json (the plan said content/lessons/).
+3. Each lesson has a `triggerKey`: the game event that brings it up. Keys are unique (load fails otherwise).
+4. Both limits stay: one new lesson per session (unless `ignoresSessionLimit`) and one new lesson per room.
+5. The fading follow-ups (counter hints 2 and 3) and line-welcome-home are left off the Scroll (`"scroll": false` in data), and never count toward either limit.
+6. Follow the lesson file: no Move lesson, and Bow only on the tutorial floor.
+
+My calls (not Manager):
+- The profile keeps `lessons: { seen: [{id, day, room}], sessionDays: [] }`. A run started from the dojo, board or "next floor" adds today; test-link runs (?room=, ?twist=, ?elite=, ?named=) don't, same as runsStarted.
+- The tutorial floor teaches on its own guide path (no limits); those lessons are saved as seen so the Scroll lists them.
+- Triggers: twoAttacksAtOnce = a warning starts while another is still filling; firstStepOut = the player was inside the circle when it showed and the swing hit, blocked and countered nobody; firstPerfectUnaided = a Perfect Counter with no guide running; firstInsightChoice = the Insight picker opens; firstDecoration = entering Decorate (after the move-style choice). firstHomeReturn: first return home after the tutorial floor (wired in K17b).
+- The Scroll is a Dojo button (row 2, left of Journal). Tapping a lesson replays it one screen per tap as a Sensei card, ending with its practice line. "Replay the tutorial floor" starts the tutorial floor (same as ?tutorial=1) as a normal run.
+- Scroll names for lessons live in apps/client/src/game/lessons.ts (no new content field).
+
+Follow-up (K17b):
+- Manager call: the Decorating lesson shows right after the move-style choice, on the same first Decorate visit (not the next visit).
+- Manager call: line-welcome-home is wired. It fires (once) on the first return home after the tutorial floor, as a Sensei card before the other welcome cards.
+- The dojo's once-ever difficulty line moves below the second button row (Scroll, Journal, Street Smarts), so nothing covers it at 667 or 844 wide.
