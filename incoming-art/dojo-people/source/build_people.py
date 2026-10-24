@@ -285,6 +285,17 @@ if L["hair_style"] == "sensei_top":
         fz = 1.305; fy = front(fx, 1.27, 0.0) + 0.01
         put(f"st_quiff{k}", ellipsoid((fx, fy, fz), (0.05, 0.034, 0.06), rot=(-40, 0, rz), segs=12, rings=8), HAIR_HI if k == 1 else HAIR)
 
+if A.who == "kohai":
+    # A7 (QA PR #83): a kohai-only curly top-knot tied with a soft teal band, so the small kohai never reads as a
+    # red-haired custom player (no player hairstyle has a top-knot). The curly red hair itself is unchanged.
+    TIE = toon_material("KOHAI_TIE", "#3fb8b0")
+    put("kt_band", ellipsoid((0, 0.03, 1.37), (0.062, 0.057, 0.03), segs=12, rings=6), TIE)
+    rnd = random.Random(11)
+    for k in range(9):
+        a = k * 2 * math.pi / 8; r = 0.0 if k == 8 else 0.052
+        put(f"kt_curl{k}", ellipsoid((r * math.cos(a), 0.03 + r * math.sin(a) * 0.9, 1.43 + (0.035 if k == 8 else rnd.uniform(-0.01, 0.01))),
+            (0.05, 0.047, 0.045), segs=10, rings=6), HAIR_HI if k % 3 == 0 else HAIR)
+
 if L["hair_style"] == "low_ponytail":
     # a low ponytail (Batch 7 full set, her request): smooth dark brown hair with a middle part, short side pieces framing the
     # face, pulled back to a dark tie low at the back of the head; the tail is PURPLE (baked in) and falls behind the shoulders,

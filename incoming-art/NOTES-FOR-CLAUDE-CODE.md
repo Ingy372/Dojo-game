@@ -268,6 +268,12 @@ Same ids, file names, 128 x 128 size, anchor (64, 64) and static.json. Only the 
 - Draw order: aura-back, player layers, gi-trim, headband, wraps, aura-front. Reference: `source/cosm_lib.py compose()`. The belt is unchanged and never customizable.
 - Names, unlock rules and colours are open (see `cosmetics-a1/DELIVERY_NOTE.md`).
 
+## A7 QA fixes (PR #83): re-import [NEW]
+- `player-custom/sprites/body-a/` and `body-b/`: **re-import the `face-01` … `face-06` sheets** (all animations). They have a bigger, lighter eye ring, a second shine and a lighter mouth. Frames, anchors and layer names are unchanged.
+- `player-custom/sprites/body-*/player-*.json`: `palettes.hair[0]` ("black") is now `#34303f` (it was `#1f1a1c`). Nothing else in the JSON changed.
+- `dojo-people/sprites/kohai/` (all sheets and `kohai.json`) and `dojo-people/portraits/kohai/`: re-import. The kohai now has a curly top-knot with a teal tie, baked into the `body` layer.
+- UI suggestion from QA, not done here: give dark swatches a light border.
+
 ## Open items in one place
 
 1. The player frame changed to 128 × 160 with the anchor at (64, 136.96). It applies to `player-character/` and `player-custom/`.
@@ -278,3 +284,4 @@ Same ids, file names, 128 x 128 size, anchor (64, 64) and static.json. Only the 
 6. **[NEW]** The Batch 6 player's neck oval: leave it for now (Jay), and patch it later only if it's noticeable in the game.
 7. **[NEW]** Where instructor-2 and the founder appear in the game (Jay and Claude Code), and their names (Content Writer).
 8. **[NEW]** A1 cosmetics: names (Content Writer), unlock rules and colours (Jay), and the headband fit over big hair.
+- **[NEW]** A7: the kohai top-knot and teal tie, the softer black hair colour, and the swatch border (Programmer) are all waiting on Jay.

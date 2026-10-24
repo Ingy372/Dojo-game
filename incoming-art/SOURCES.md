@@ -22,3 +22,5 @@ Notes:
 **S1 Guarding links + gold sparkle proposal (2026-10-24): no outside assets.** Drawn by code with Pillow (`elite-auras/source/make_guard_links.py`). Previews use only the project's own floor and enemy sprites.
 
 **A1 earned cosmetics samples (2026-10-24): no outside assets.** The headband, wraps and gi trim are built from the approved player model by `cosmetics-a1/source/build_cosmetics.py`. The aura is drawn by code with Pillow (`make_aura.py`). The wrap colours come from the project's own gear icons.
+
+**A7 QA fixes (2026-10-24): no outside assets.** These are edits to `player-custom/source/build_custom.py` and `dojo-people/source/build_people.py` only.

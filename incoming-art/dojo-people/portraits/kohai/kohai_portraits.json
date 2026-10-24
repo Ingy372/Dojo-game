@@ -2,11 +2,11 @@
  "character": "kohai",
  "frameWidth": 512,
  "frameHeight": 512,
- "pixelsPerTile": 692.453,
+ "pixelsPerTile": 598.76,
  "camera": {
   "projection": "orthographic",
   "elevationDeg": 5.0,
-  "orthoScaleTiles": 0.7394,
+  "orthoScaleTiles": 0.8551,
   "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
  },
  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
