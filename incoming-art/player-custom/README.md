@@ -101,3 +101,8 @@ A full body takes about 80 minutes on 8 CPU cores (about 38,000 layer renders). 
   - Per body: about 14.7 MB of base layers, 0.65–0.8 MB per face, and 1.4–3.6 MB per hair style (the afro and twists are the biggest).
   - **One finished character is about 18 MB at 80 px per tile, before the 0.6× import shrink.**
   - The git repo grew by about **82 MB** for Batch 6 (`.git` went from 224 MB to 306 MB). That covers both bodies, the player-character re-render and the previews.
+
+## A7 changes (QA PR #83)
+- **Faces:** the eye ring is now `#fff8f0` and bigger (+0.015), sitting closer to the surface. The shine is bigger, there is a second small shine, and the mouth is `#d8695e`. Only the face layers were re-rendered.
+- **Black hair:** the palette colour is now `#34303f`, a cool soft black, so the hair's shape and highlights show on the dark panel.
+- Before and after: `preview/a7-*.png`.

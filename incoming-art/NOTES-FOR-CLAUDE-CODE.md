@@ -270,6 +270,12 @@ Same ids, file names, 128 x 128 size, anchor (64, 64) and static.json. Only the 
 ## A5 padded-weapon enemy (samples), `incoming-art/enemy-padded-weapon/` [NEW]
 These are samples only: idle, windup and attack, in 8 directions. The frame is 192 and the anchor is (96, 142). The layers are body, glow, telegraph and light, the same as Tier 1, plus a new `weapon` layer drawn after body. **To show disarmed, skip the weapon layer.** The telegraph works like Tier 1 (`telegraphIntensity`). There is no content json yet, and the stats in the script are placeholders. See its README.md.
 
+## A7 QA fixes (PR #83): re-import [NEW]
+- `player-custom/sprites/body-a/` and `body-b/`: **re-import the `face-01` … `face-06` sheets** (all animations). They have a bigger, lighter eye ring, a second shine and a lighter mouth. Frames, anchors and layer names are unchanged.
+- `player-custom/sprites/body-*/player-*.json`: `palettes.hair[0]` ("black") is now `#34303f` (it was `#1f1a1c`). Nothing else in the JSON changed.
+- `dojo-people/sprites/kohai/` (all sheets and `kohai.json`) and `dojo-people/portraits/kohai/`: re-import. The kohai now has a curly top-knot with a teal tie, baked into the `body` layer.
+- UI suggestion from QA, not done here: give dark swatches a light border.
+
 ## Open items in one place
 
 1. The player frame changed to 128 × 160 with the anchor at (64, 136.96). It applies to `player-character/` and `player-custom/`.
@@ -281,3 +287,4 @@ These are samples only: idle, windup and attack, in 8 directions. The frame is 1
 7. **[NEW]** Where instructor-2 and the founder appear in the game (Jay and Claude Code), and their names (Content Writer).
 8. **[NEW]** A1 cosmetics: names (Content Writer), unlock rules and colours (Jay), and the headband fit over big hair.
 9. **[NEW]** A5 padded-weapon enemy: the name, stats, which seals use it and the content json are still to decide. Jay approved the 192 px frame, the lime accent, and hiding the staff to show disarmed (2026-10-24). The full set (move, hit, stagger, defeat) is queued.
+10. **[NEW]** A7: Jay approved the kohai top-knot, the teal tie and `#34303f` as black (2026-10-24). Only the swatch border (Programmer) is still open.
