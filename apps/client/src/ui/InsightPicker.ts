@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import type { InsightDef } from '@dojo/sim';
+import { addIcon } from '../art/icons';
 import { FAMILY_COLOR, FONT, crisp, css } from './theme';
 
 /** Taps are ignored for this long after the cards appear, so a tap meant for the fight doesn't pick a card. */
@@ -41,15 +42,18 @@ export class InsightPicker {
         .text(x + cardW / 2, top + 15, ins.family.toUpperCase(), { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: '#14121c' })
         .setOrigin(0.5)
         .setResolution(crisp());
+      // Its icon (Batch 8) under the stripe, when it has one.
+      const icon = addIcon(scene, ins.id, x + cardW / 2, top + 58, 44);
+      const nameY = icon ? top + 84 : top + 50;
       const name = scene.add
-        .text(x + cardW / 2, top + 50, ins.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '19px', color: css(color), align: 'center', wordWrap: { width: cardW - 16 } })
+        .text(x + cardW / 2, nameY, ins.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '19px', color: css(color), align: 'center', wordWrap: { width: cardW - 16 } })
         .setOrigin(0.5, 0)
         .setResolution(crisp());
       const text = scene.add
-        .text(x + cardW / 2, top + 50 + name.height + 12, ins.text, { fontFamily: FONT, fontSize: '16px', color: '#f2e9d8', align: 'center', wordWrap: { width: cardW - 20 } })
+        .text(x + cardW / 2, nameY + name.height + (icon ? 6 : 12), ins.text, { fontFamily: FONT, fontSize: '16px', color: '#f2e9d8', align: 'center', wordWrap: { width: cardW - 20 } })
         .setOrigin(0.5, 0)
         .setResolution(crisp());
-      const card = scene.add.container(0, 0, [bg, stripe, family, name, text]);
+      const card = scene.add.container(0, 0, [bg, stripe, family, ...(icon ? [icon] : []), name, text]);
       this.container.add(card);
       card.setAlpha(0);
       scene.tweens.add({ targets: card, alpha: 1, y: { from: 20, to: 0 }, delay: i * 90, duration: 220, ease: 'Back.Out' });

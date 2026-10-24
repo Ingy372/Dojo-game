@@ -412,3 +412,10 @@ From section 1 of `docs/work-board.md`.
 - Balance check (computer player, 1,000 runs each): novice on Standard (smart play) won 50% before and 44% after. Of that, 3 points come only from the rooms being shuffled differently (47% with twists turned off), and 3 points from the twists themselves. Standing-still novice: 25% → 26%. Guided: 98% → 99% and 95% → 95%. Items per run went up by about 1 (the bell prize).
 
 - **G1 follow-up (2026-10-23):** If the guided Counter's hold waits 5 seconds with no tap, Sensei shows a kind hint and Counter pulses more strongly. This repeats every 5 seconds and never ends the hold (the rule is in `packages/sim`). The hint line is a placeholder that needs the Content Designer's approval. The guide also runs in the practice room. There's no existing place to replay it, so players who finished runs before G1 still skip it.
+
+## K7: wiring the PR #10 art (2026-10-24)
+
+- **Tower art by belt tier.** `apps/client/src/art/tiers.ts` picks the tower pack from the student's belt tier: tier 1 (White) uses `tower-t1`, tier 2 (Yellow) uses `tower-t2`. Higher belts use the newest kit until their own art arrives. `?tower=t1|t2` forces one for testing. The Tier 2 name is "Sunrise Garden" (PR #30); no tower name is shown on screen yet.
+- **Icons at full size.** The `icons` pack uses `"scale": 1` instead of the usual 0.6, because icons are drawn in menus (22–44 px) and 0.6 would have left them blurry on sharp phone screens. The whole set is about 0.1 MB.
+- **Auras: art only, no rules.** Elites aren't in `packages/sim` yet, so K7 only packs the auras (`auras-t1`, per-enemy entries only; the 256 px masters are reference) and draws them on the test link `?aura=swift|guarding`. The Floor Keeper's art id is `keeper`, so `auraId()` maps `floor-keeper` to it. Who becomes elite and what each aura does is S1 #3.
+- **Small worn-gear icon.** On a 667 px phone the worn-gear boxes are narrow, so the icon sits small (22 px) beside the slot name and the item name keeps the full width.
