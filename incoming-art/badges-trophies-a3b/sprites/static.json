@@ -1,0 +1,1963 @@
+{
+  "sprites": {
+    "ct-promotion-yellow": {
+      "achievement": "ach.dojo.promotion.yellow",
+      "files": {
+        "img": "trophies/ct-promotion-yellow.png",
+        "halo": "layers/halo-pips0.png",
+        "stand": "layers/stand-pips0.png",
+        "topper": "layers/ct-promotion-topper.png",
+        "beltBandTint": "layers/ct-promotion-beltband-TINT.png",
+        "beltBand": "layers/ct-promotion-beltband-yellow.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 0,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}'). Belt band: beltStyles colour (or tint the TINT mask with belt.color / color2)."
+    },
+    "ct-promotion-orange": {
+      "achievement": "ach.dojo.promotion.orange",
+      "files": {
+        "img": "trophies/ct-promotion-orange.png",
+        "halo": "layers/halo-pips0.png",
+        "stand": "layers/stand-pips0.png",
+        "topper": "layers/ct-promotion-topper.png",
+        "beltBandTint": "layers/ct-promotion-beltband-TINT.png",
+        "beltBand": "layers/ct-promotion-beltband-orange.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 0,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}'). Belt band: beltStyles colour (or tint the TINT mask with belt.color / color2)."
+    },
+    "ct-promotion-green": {
+      "achievement": "ach.dojo.promotion.green",
+      "files": {
+        "img": "trophies/ct-promotion-green.png",
+        "halo": "layers/halo-pips0.png",
+        "stand": "layers/stand-pips0.png",
+        "topper": "layers/ct-promotion-topper.png",
+        "beltBandTint": "layers/ct-promotion-beltband-TINT.png",
+        "beltBand": "layers/ct-promotion-beltband-green.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 0,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}'). Belt band: beltStyles colour (or tint the TINT mask with belt.color / color2)."
+    },
+    "ct-promotion-blue": {
+      "achievement": "ach.dojo.promotion.blue",
+      "files": {
+        "img": "trophies/ct-promotion-blue.png",
+        "halo": "layers/halo-pips0.png",
+        "stand": "layers/stand-pips0.png",
+        "topper": "layers/ct-promotion-topper.png",
+        "beltBandTint": "layers/ct-promotion-beltband-TINT.png",
+        "beltBand": "layers/ct-promotion-beltband-blue.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 0,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}'). Belt band: beltStyles colour (or tint the TINT mask with belt.color / color2)."
+    },
+    "ct-promotion-red": {
+      "achievement": "ach.dojo.promotion.red",
+      "files": {
+        "img": "trophies/ct-promotion-red.png",
+        "halo": "layers/halo-pips0.png",
+        "stand": "layers/stand-pips0.png",
+        "topper": "layers/ct-promotion-topper.png",
+        "beltBandTint": "layers/ct-promotion-beltband-TINT.png",
+        "beltBand": "layers/ct-promotion-beltband-red.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 0,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}'). Belt band: beltStyles colour (or tint the TINT mask with belt.color / color2)."
+    },
+    "ct-promotion-red-black": {
+      "achievement": "ach.dojo.promotion.red-black",
+      "files": {
+        "img": "trophies/ct-promotion-red-black.png",
+        "halo": "layers/halo-pips0.png",
+        "stand": "layers/stand-pips0.png",
+        "topper": "layers/ct-promotion-topper.png",
+        "beltBandTint": "layers/ct-promotion-beltband-TINT.png",
+        "beltBand": "layers/ct-promotion-beltband-red-black.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 0,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}'). Belt band: beltStyles colour (or tint the TINT mask with belt.color / color2)."
+    },
+    "ct-promotion-brown": {
+      "achievement": "ach.dojo.promotion.brown",
+      "files": {
+        "img": "trophies/ct-promotion-brown.png",
+        "halo": "layers/halo-pips0.png",
+        "stand": "layers/stand-pips0.png",
+        "topper": "layers/ct-promotion-topper.png",
+        "beltBandTint": "layers/ct-promotion-beltband-TINT.png",
+        "beltBand": "layers/ct-promotion-beltband-brown.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 0,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}'). Belt band: beltStyles colour (or tint the TINT mask with belt.color / color2)."
+    },
+    "ct-promotion-brown-black": {
+      "achievement": "ach.dojo.promotion.brown-black",
+      "files": {
+        "img": "trophies/ct-promotion-brown-black.png",
+        "halo": "layers/halo-pips0.png",
+        "stand": "layers/stand-pips0.png",
+        "topper": "layers/ct-promotion-topper.png",
+        "beltBandTint": "layers/ct-promotion-beltband-TINT.png",
+        "beltBand": "layers/ct-promotion-beltband-brown-black.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 0,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}'). Belt band: beltStyles colour (or tint the TINT mask with belt.color / color2)."
+    },
+    "ct-promotion-black": {
+      "achievement": "ach.dojo.promotion.black",
+      "files": {
+        "img": "trophies/ct-promotion-black.png",
+        "halo": "layers/halo-pips0-gem.png",
+        "stand": "layers/stand-pips0.png",
+        "topper": "layers/ct-promotion-topper.png",
+        "beltBandTint": "layers/ct-promotion-beltband-TINT.png",
+        "beltBand": "layers/ct-promotion-beltband-black.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 0,
+      "gem": true,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}'). Belt band: beltStyles colour (or tint the TINT mask with belt.color / color2)."
+    },
+    "ct-stripes-1": {
+      "achievement": "ach.dojo.stripes.1",
+      "files": {
+        "img": "trophies/ct-stripes-1.png",
+        "halo": "layers/halo-pips1.png",
+        "stand": "layers/stand-pips1.png",
+        "topper": "layers/ct-stripes-1-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "bronze",
+      "pips": 1,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-stripes-5": {
+      "achievement": "ach.dojo.stripes.5",
+      "files": {
+        "img": "trophies/ct-stripes-5.png",
+        "halo": "layers/halo-pips2.png",
+        "stand": "layers/stand-pips2.png",
+        "topper": "layers/ct-stripes-5-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "silver",
+      "pips": 2,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-stripes-10": {
+      "achievement": "ach.dojo.stripes.10",
+      "files": {
+        "img": "trophies/ct-stripes-10.png",
+        "halo": "layers/halo-pips3.png",
+        "stand": "layers/stand-pips3.png",
+        "topper": "layers/ct-stripes-10-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 3,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-stripes-20": {
+      "achievement": "ach.dojo.stripes.20",
+      "files": {
+        "img": "trophies/ct-stripes-20.png",
+        "halo": "layers/halo-pips4-gem.png",
+        "stand": "layers/stand-pips4.png",
+        "topper": "layers/ct-stripes-20-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 4,
+      "gem": true,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-classes-10": {
+      "achievement": "ach.dojo.classes.10",
+      "files": {
+        "img": "trophies/ct-classes-10.png",
+        "halo": "layers/halo-pips1.png",
+        "stand": "layers/stand-pips1.png",
+        "topper": "layers/ct-classes-10-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "bronze",
+      "pips": 1,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-classes-25": {
+      "achievement": "ach.dojo.classes.25",
+      "files": {
+        "img": "trophies/ct-classes-25.png",
+        "halo": "layers/halo-pips2.png",
+        "stand": "layers/stand-pips2.png",
+        "topper": "layers/ct-classes-25-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "bronze",
+      "pips": 2,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-classes-50": {
+      "achievement": "ach.dojo.classes.50",
+      "files": {
+        "img": "trophies/ct-classes-50.png",
+        "halo": "layers/halo-pips3.png",
+        "stand": "layers/stand-pips3.png",
+        "topper": "layers/ct-classes-50-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "silver",
+      "pips": 3,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-classes-100": {
+      "achievement": "ach.dojo.classes.100",
+      "files": {
+        "img": "trophies/ct-classes-100.png",
+        "halo": "layers/halo-pips4.png",
+        "stand": "layers/stand-pips4.png",
+        "topper": "layers/ct-classes-100-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "silver",
+      "pips": 4,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-classes-250": {
+      "achievement": "ach.dojo.classes.250",
+      "files": {
+        "img": "trophies/ct-classes-250.png",
+        "halo": "layers/halo-pips5.png",
+        "stand": "layers/stand-pips5.png",
+        "topper": "layers/ct-classes-250-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 5,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-classes-500": {
+      "achievement": "ach.dojo.classes.500",
+      "files": {
+        "img": "trophies/ct-classes-500.png",
+        "halo": "layers/halo-pips6-gem.png",
+        "stand": "layers/stand-pips6.png",
+        "topper": "layers/ct-classes-500-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 6,
+      "gem": true,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-weeks-50": {
+      "achievement": "ach.dojo.weeks.50",
+      "files": {
+        "img": "trophies/ct-weeks-50.png",
+        "halo": "layers/halo-pips4.png",
+        "stand": "layers/stand-pips4.png",
+        "topper": "layers/ct-weeks-50-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 4,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-weeks-100": {
+      "achievement": "ach.dojo.weeks.100",
+      "files": {
+        "img": "trophies/ct-weeks-100.png",
+        "halo": "layers/halo-pips5-gem.png",
+        "stand": "layers/stand-pips5.png",
+        "topper": "layers/ct-weeks-100-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 5,
+      "gem": true,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-anniversary-1": {
+      "achievement": "ach.dojo.anniversary.1",
+      "files": {
+        "img": "trophies/ct-anniversary-1.png",
+        "halo": "layers/halo-pips1.png",
+        "stand": "layers/stand-pips1.png",
+        "topper": "layers/ct-anniversary-1-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "bronze",
+      "pips": 1,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-anniversary-2": {
+      "achievement": "ach.dojo.anniversary.2",
+      "files": {
+        "img": "trophies/ct-anniversary-2.png",
+        "halo": "layers/halo-pips2.png",
+        "stand": "layers/stand-pips2.png",
+        "topper": "layers/ct-anniversary-2-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "silver",
+      "pips": 2,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-anniversary-3": {
+      "achievement": "ach.dojo.anniversary.3",
+      "files": {
+        "img": "trophies/ct-anniversary-3.png",
+        "halo": "layers/halo-pips3.png",
+        "stand": "layers/stand-pips3.png",
+        "topper": "layers/ct-anniversary-3-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 3,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-anniversary-5": {
+      "achievement": "ach.dojo.anniversary.5",
+      "files": {
+        "img": "trophies/ct-anniversary-5.png",
+        "halo": "layers/halo-pips4.png",
+        "stand": "layers/stand-pips4.png",
+        "topper": "layers/ct-anniversary-5-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 4,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-anniversary-10": {
+      "achievement": "ach.dojo.anniversary.10",
+      "files": {
+        "img": "trophies/ct-anniversary-10.png",
+        "halo": "layers/halo-pips5-gem.png",
+        "stand": "layers/stand-pips5.png",
+        "topper": "layers/ct-anniversary-10-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 5,
+      "gem": true,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-signoffs-1": {
+      "achievement": "ach.dojo.signoffs.1",
+      "files": {
+        "img": "trophies/ct-signoffs-1.png",
+        "halo": "layers/halo-pips1.png",
+        "stand": "layers/stand-pips1.png",
+        "topper": "layers/ct-signoffs-1-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "bronze",
+      "pips": 1,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-signoffs-50": {
+      "achievement": "ach.dojo.signoffs.50",
+      "files": {
+        "img": "trophies/ct-signoffs-50.png",
+        "halo": "layers/halo-pips4-gem.png",
+        "stand": "layers/stand-pips4.png",
+        "topper": "layers/ct-signoffs-50-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 4,
+      "gem": true,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}')."
+    },
+    "ct-accolade-template": {
+      "achievement": "ach.dojo.accolade.{slug}",
+      "files": {
+        "img": "trophies/ct-accolade-template.png",
+        "halo": "layers/halo-pips0.png",
+        "stand": "layers/stand-pips0.png",
+        "topper": "layers/ct-accolade-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 0,
+      "gem": false,
+      "note": "img = baked preview with the DEFAULT seal; in game stack the layers and the school's seal. Plate is blank (game writes 'Earned {date}'). Template: one model for every accolade; the name comes from the feed (C6)."
+    },
+    "badge-tower-floors-1": {
+      "achievement": "ach.tower.floors.1",
+      "files": {
+        "img": "badges/badge-tower-floors-1.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "bronze",
+      "pips": 1,
+      "ribbons": false,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-floors-10": {
+      "achievement": "ach.tower.floors.10",
+      "files": {
+        "img": "badges/badge-tower-floors-10.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "silver",
+      "pips": 2,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-floors-50": {
+      "achievement": "ach.tower.floors.50",
+      "files": {
+        "img": "badges/badge-tower-floors-50.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 3,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-floors-100": {
+      "achievement": "ach.tower.floors.100",
+      "files": {
+        "img": "badges/badge-tower-floors-100.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 4,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-floors-250": {
+      "achievement": "ach.tower.floors.250",
+      "files": {
+        "img": "badges/badge-tower-floors-250.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 5,
+      "ribbons": true,
+      "gem": true,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-perfects-10": {
+      "achievement": "ach.tower.perfects.10",
+      "files": {
+        "img": "badges/badge-tower-perfects-10.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "bronze",
+      "pips": 1,
+      "ribbons": false,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-perfects-100": {
+      "achievement": "ach.tower.perfects.100",
+      "files": {
+        "img": "badges/badge-tower-perfects-100.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "silver",
+      "pips": 2,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-perfects-500": {
+      "achievement": "ach.tower.perfects.500",
+      "files": {
+        "img": "badges/badge-tower-perfects-500.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 3,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-perfects-1000": {
+      "achievement": "ach.tower.perfects.1000",
+      "files": {
+        "img": "badges/badge-tower-perfects-1000.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 4,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-perfects-5000": {
+      "achievement": "ach.tower.perfects.5000",
+      "files": {
+        "img": "badges/badge-tower-perfects-5000.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 5,
+      "ribbons": true,
+      "gem": true,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-combo-10": {
+      "achievement": "ach.tower.combo.10",
+      "files": {
+        "img": "badges/badge-tower-combo-10.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "bronze",
+      "pips": 1,
+      "ribbons": false,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-combo-25": {
+      "achievement": "ach.tower.combo.25",
+      "files": {
+        "img": "badges/badge-tower-combo-25.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "silver",
+      "pips": 2,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-combo-50": {
+      "achievement": "ach.tower.combo.50",
+      "files": {
+        "img": "badges/badge-tower-combo-50.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 3,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-allS": {
+      "achievement": "ach.tower.allS",
+      "files": {
+        "img": "badges/badge-tower-allS.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 0,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-elites-1": {
+      "achievement": "ach.tower.elites.1",
+      "files": {
+        "img": "badges/badge-tower-elites-1.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "bronze",
+      "pips": 1,
+      "ribbons": false,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-elites-25": {
+      "achievement": "ach.tower.elites.25",
+      "files": {
+        "img": "badges/badge-tower-elites-25.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "silver",
+      "pips": 2,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-elites-100": {
+      "achievement": "ach.tower.elites.100",
+      "files": {
+        "img": "badges/badge-tower-elites-100.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 3,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-challenge-1": {
+      "achievement": "ach.tower.challenge.1",
+      "files": {
+        "img": "badges/badge-tower-challenge-1.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "bronze",
+      "pips": 1,
+      "ribbons": false,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-challenge-10": {
+      "achievement": "ach.tower.challenge.10",
+      "files": {
+        "img": "badges/badge-tower-challenge-10.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "silver",
+      "pips": 2,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-challenge-50": {
+      "achievement": "ach.tower.challenge.50",
+      "files": {
+        "img": "badges/badge-tower-challenge-50.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 3,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-journal-entries-5": {
+      "achievement": "ach.journal.entries.5",
+      "files": {
+        "img": "badges/badge-journal-entries-5.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "bronze",
+      "pips": 1,
+      "ribbons": false,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-journal-entries-10": {
+      "achievement": "ach.journal.entries.10",
+      "files": {
+        "img": "badges/badge-journal-entries-10.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "silver",
+      "pips": 2,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-journal-entries-25": {
+      "achievement": "ach.journal.entries.25",
+      "files": {
+        "img": "badges/badge-journal-entries-25.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 3,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-journal-master": {
+      "achievement": "ach.journal.master.{enemyId}",
+      "files": {
+        "img": "badges/badge-journal-master.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 0,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6) Template: one badge for every {enemyId}."
+    },
+    "badge-home-placed-5": {
+      "achievement": "ach.home.placed.5",
+      "files": {
+        "img": "badges/badge-home-placed-5.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "bronze",
+      "pips": 1,
+      "ribbons": false,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-home-placed-15": {
+      "achievement": "ach.home.placed.15",
+      "files": {
+        "img": "badges/badge-home-placed-15.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "silver",
+      "pips": 2,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-home-placed-30": {
+      "achievement": "ach.home.placed.30",
+      "files": {
+        "img": "badges/badge-home-placed-30.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 3,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-home-tidy-5": {
+      "achievement": "ach.home.tidy.5",
+      "files": {
+        "img": "badges/badge-home-tidy-5.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "bronze",
+      "pips": 1,
+      "ribbons": false,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-home-tidy-20": {
+      "achievement": "ach.home.tidy.20",
+      "files": {
+        "img": "badges/badge-home-tidy-20.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "silver",
+      "pips": 2,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-home-tidy-50": {
+      "achievement": "ach.home.tidy.50",
+      "files": {
+        "img": "badges/badge-home-tidy-50.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 3,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-smarts-location": {
+      "achievement": "ach.smarts.location.{place}",
+      "files": {
+        "img": "badges/badge-smarts-location.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 0,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6) Template: one badge for every {place}."
+    },
+    "badge-smarts-stars-10": {
+      "achievement": "ach.smarts.stars.10",
+      "files": {
+        "img": "badges/badge-smarts-stars-10.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "bronze",
+      "pips": 1,
+      "ribbons": false,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-smarts-stars-25": {
+      "achievement": "ach.smarts.stars.25",
+      "files": {
+        "img": "badges/badge-smarts-stars-25.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "silver",
+      "pips": 2,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-smarts-stars-50": {
+      "achievement": "ach.smarts.stars.50",
+      "files": {
+        "img": "badges/badge-smarts-stars-50.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 3,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-life-quests-1": {
+      "achievement": "ach.life.quests.1",
+      "files": {
+        "img": "badges/badge-life-quests-1.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "bronze",
+      "pips": 1,
+      "ribbons": false,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-life-quests-5": {
+      "achievement": "ach.life.quests.5",
+      "files": {
+        "img": "badges/badge-life-quests-5.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "silver",
+      "pips": 2,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-life-quests-10": {
+      "achievement": "ach.life.quests.10",
+      "files": {
+        "img": "badges/badge-life-quests-10.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 3,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-dojo-weeks-5": {
+      "achievement": "ach.dojo.weeks.5",
+      "files": {
+        "img": "badges/badge-dojo-weeks-5.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "bronze",
+      "pips": 1,
+      "ribbons": false,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-dojo-weeks-10": {
+      "achievement": "ach.dojo.weeks.10",
+      "files": {
+        "img": "badges/badge-dojo-weeks-10.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "silver",
+      "pips": 2,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-dojo-weeks-20": {
+      "achievement": "ach.dojo.weeks.20",
+      "files": {
+        "img": "badges/badge-dojo-weeks-20.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 3,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-dojo-signoffs-10": {
+      "achievement": "ach.dojo.signoffs.10",
+      "files": {
+        "img": "badges/badge-dojo-signoffs-10.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "silver",
+      "pips": 2,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-dojo-signoffs-25": {
+      "achievement": "ach.dojo.signoffs.25",
+      "files": {
+        "img": "badges/badge-dojo-signoffs-25.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 3,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-dojo-practice-1": {
+      "achievement": "ach.dojo.practice.1",
+      "files": {
+        "img": "badges/badge-dojo-practice-1.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "bronze",
+      "pips": 1,
+      "ribbons": false,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-dojo-practice-5": {
+      "achievement": "ach.dojo.practice.5",
+      "files": {
+        "img": "badges/badge-dojo-practice-5.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "silver",
+      "pips": 2,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-dojo-practice-10": {
+      "achievement": "ach.dojo.practice.10",
+      "files": {
+        "img": "badges/badge-dojo-practice-10.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 3,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-dojo-practice-25": {
+      "achievement": "ach.dojo.practice.25",
+      "files": {
+        "img": "badges/badge-dojo-practice-25.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 4,
+      "ribbons": true,
+      "gem": false,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-dojo-practice-50": {
+      "achievement": "ach.dojo.practice.50",
+      "files": {
+        "img": "badges/badge-dojo-practice-50.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "pips": 5,
+      "ribbons": true,
+      "gem": true,
+      "note": "no text or numbers baked in; the game shows the name (C6)"
+    },
+    "badge-tower-guardian-white": {
+      "achievement": "ach.tower.guardian.white",
+      "files": {
+        "img": "badges/badge-tower-guardian-white.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "gemColour": "#d2a878",
+      "note": "Guardian: all 10 tiers gold + rays; the top gem is the tier belt colour (beltStyles; white -> #d2a878 fallback)"
+    },
+    "badge-tower-guardian-yellow": {
+      "achievement": "ach.tower.guardian.yellow",
+      "files": {
+        "img": "badges/badge-tower-guardian-yellow.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "gemColour": "#f5d22e",
+      "note": "Guardian: all 10 tiers gold + rays; the top gem is the tier belt colour (beltStyles; white -> #d2a878 fallback)"
+    },
+    "badge-tower-guardian-orange": {
+      "achievement": "ach.tower.guardian.orange",
+      "files": {
+        "img": "badges/badge-tower-guardian-orange.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "gemColour": "#f08a24",
+      "note": "Guardian: all 10 tiers gold + rays; the top gem is the tier belt colour (beltStyles; white -> #d2a878 fallback)"
+    },
+    "badge-tower-guardian-green": {
+      "achievement": "ach.tower.guardian.green",
+      "files": {
+        "img": "badges/badge-tower-guardian-green.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "gemColour": "#3aa655",
+      "note": "Guardian: all 10 tiers gold + rays; the top gem is the tier belt colour (beltStyles; white -> #d2a878 fallback)"
+    },
+    "badge-tower-guardian-blue": {
+      "achievement": "ach.tower.guardian.blue",
+      "files": {
+        "img": "badges/badge-tower-guardian-blue.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "gemColour": "#2f6fd6",
+      "note": "Guardian: all 10 tiers gold + rays; the top gem is the tier belt colour (beltStyles; white -> #d2a878 fallback)"
+    },
+    "badge-tower-guardian-red": {
+      "achievement": "ach.tower.guardian.red",
+      "files": {
+        "img": "badges/badge-tower-guardian-red.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "gemColour": "#d8352a",
+      "note": "Guardian: all 10 tiers gold + rays; the top gem is the tier belt colour (beltStyles; white -> #d2a878 fallback)"
+    },
+    "badge-tower-guardian-red-black": {
+      "achievement": "ach.tower.guardian.red-black",
+      "files": {
+        "img": "badges/badge-tower-guardian-red-black.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "gemColour": "#d8352a",
+      "note": "Guardian: all 10 tiers gold + rays; the top gem is the tier belt colour (beltStyles; white -> #d2a878 fallback)"
+    },
+    "badge-tower-guardian-brown": {
+      "achievement": "ach.tower.guardian.brown",
+      "files": {
+        "img": "badges/badge-tower-guardian-brown.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "gemColour": "#7a4a26",
+      "note": "Guardian: all 10 tiers gold + rays; the top gem is the tier belt colour (beltStyles; white -> #d2a878 fallback)"
+    },
+    "badge-tower-guardian-brown-black": {
+      "achievement": "ach.tower.guardian.brown-black",
+      "files": {
+        "img": "badges/badge-tower-guardian-brown-black.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "gemColour": "#7a4a26",
+      "note": "Guardian: all 10 tiers gold + rays; the top gem is the tier belt colour (beltStyles; white -> #d2a878 fallback)"
+    },
+    "badge-tower-guardian-black": {
+      "achievement": "ach.tower.guardian.black",
+      "files": {
+        "img": "badges/badge-tower-guardian-black.png"
+      },
+      "size": [
+        128,
+        128
+      ],
+      "anchorPx": [
+        64,
+        64
+      ],
+      "metal": "gold",
+      "gemColour": "#26272f",
+      "note": "Guardian: all 10 tiers gold + rays; the top gem is the tier belt colour (beltStyles; white -> #d2a878 fallback)"
+    }
+  },
+  "layerOrder": [
+    "halo",
+    "stand",
+    "topper",
+    "beltBand(promotion only)",
+    "sealBacking (A3 #146, per school)",
+    "schoolMark (A3 #146, per school)"
+  ]
+}
