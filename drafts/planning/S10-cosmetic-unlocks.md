@@ -76,7 +76,7 @@ C6 writes 16 look names (≤ 20 characters) and a one-line "how" for each (≤ 6
 
 ## Scope flags
 
-- **Old saves:** look unlocks run once over S6 achievements already earned, using S7's `classesCounted` (seeded from `classesInRank`). Students who trained before their current rank undercount a little. There's no Nic total-classes field for now (Manager decision).
+- **Old saves:** look unlocks run once over S6 achievements already earned. Class looks read `classesLifetime = max(saved, feed attendance.classesTotal, classesCounted)` (see `classes-total-feed-field.md`). When the feed field is missing, they fall back to `classesCounted`. Counts never go lower, and looks earned on the first sync show in one moment.
 - **Art:** 2 new tints (jade, silver). Body B and the other animations are still to come (A1 NEXT). The Artist sizes the work.
 - **New layer slots:** `profile.looks` gets `headband` and `aura` alongside S2's per-slot looks. The draw order is as A1 describes.
 - Can everything be worn together? I suggest yes (the art allows it). This is the Artist's or Jay's decision from A1.
@@ -92,4 +92,5 @@ C6 writes 16 look names (≤ 20 characters) and a one-line "how" for each (≤ 6
 - No look code reads dates in a row, play time or a deadline (code check). No look screen shows a price or a countdown (word check).
 - Wearing any look never changes stats, and the belt layer always draws unchanged (test).
 - Two unlocks arriving in one session: one shows now and the other next session (test).
+- A fixture with `classesTotal` 30 and no saved progress unlocks the gold and sky headbands on the first sync. With the field missing, they unlock from `classesCounted`.
 - C6 has names and "how" lines for all 16 IDs.
