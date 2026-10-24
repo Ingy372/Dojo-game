@@ -698,12 +698,14 @@ export class GameScene extends Phaser.Scene {
     const mark = x + (w * cost) / COMBAT.focus.max;
     g.fillStyle(0xffffff, 0.8).fillRect(mark - 1, 37, 2, 14);
 
-    if (p.combo !== this.shownCombo) {
-      const grew = p.combo > this.shownCombo;
-      this.shownCombo = p.combo;
-      if (p.combo >= 2) {
-        this.comboText.setText(`${p.combo} COMBO`);
-        const bonus = p.combo >= 30 ? 15 : p.combo >= 20 ? 10 : p.combo >= 10 ? 5 : 0;
+    // Basic hits land while the Brute walks in, before the guided Counter; the combo waits for that lesson.
+    const combo = this.world.guide?.step === 0 ? 0 : p.combo;
+    if (combo !== this.shownCombo) {
+      const grew = combo > this.shownCombo;
+      this.shownCombo = combo;
+      if (combo >= 2) {
+        this.comboText.setText(`${combo} COMBO`);
+        const bonus = combo >= 30 ? 15 : combo >= 20 ? 10 : combo >= 10 ? 5 : 0;
         this.comboBonusText.setText(bonus ? `+${bonus}% power` : '');
         if (grew) {
           this.tweens.killTweensOf(this.comboText);
@@ -711,8 +713,8 @@ export class GameScene extends Phaser.Scene {
           this.tweens.add({ targets: this.comboText, scale: 1, duration: 140, ease: 'Back.Out' });
         }
       }
-      this.comboText.setVisible(p.combo >= 2);
-      this.comboBonusText.setVisible(p.combo >= 2);
+      this.comboText.setVisible(combo >= 2);
+      this.comboBonusText.setVisible(combo >= 2);
     }
 
     if (p.counterChain !== this.shownChain) {
