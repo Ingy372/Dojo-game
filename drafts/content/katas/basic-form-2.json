@@ -18,7 +18,7 @@
         "pivot",
         "block.downward",
         "chamber",
-        "kick.reverse-straight",
+        "kick.reverse",
         "punch.reverse",
         "punch.straight"
       ],
@@ -35,7 +35,7 @@
         "turn.180",
         "block.downward",
         "chamber",
-        "kick.reverse-straight",
+        "kick.reverse",
         "punch.reverse",
         "punch.straight"
       ],
@@ -45,7 +45,9 @@
     {
       "n": 3,
       "text": "Raise LH fist (across body) to R ear, while (short) stepping to rear w/RF into cat stance, step forward w/LF, LH downward block (over LL), RH chambered on R hip. Bring LH across body (between waist & chest high) and place LH (fist) on top of RH (fist) performing a Catch on the R hip. RF reverse kick w/ RF landing forward followed by RH straight forward punch. Bring RH across body (between waist & chest high) and place RH (fist) on top of LH (fist) performing a Catch on the L hip. LF reverse kick w/ LF landing forward followed by LH straight forward punch. Bring LH across body (between waist & chest high) and place LH (fist) on top of RH (fist) performing a Catch on the R hip. RF reverse kick w/ RF landing forward followed by RH straight forward punch. (kiai)",
-      "facing": [],
+      "facing": [
+        "R"
+      ],
       "moves": [
         "stance.cat",
         "block.downward",
@@ -55,48 +57,51 @@
         "punch.straight"
       ],
       "kiai": true,
-      "question": [
-        "Q12"
-      ]
+      "question": null,
+      "jayNote": "Same kick as reverse straight forward kick (Jay, Oct 24)."
     },
     {
       "n": 4,
       "text": "With LF step (behind) 180-degrees now facing L w/LF forward, face L w/RF in rear, LH downward block (protect (L) front leg) w/RH chambered on R hip, return LH to L hip (chamber). RF reverse straight forward kick w/RF landing forward, LH reverse punch, RH straight forward punch",
-      "facing": [],
+      "facing": [
+        "L"
+      ],
       "moves": [
         "turn.180",
         "block.downward",
         "chamber",
-        "kick.reverse-straight",
+        "kick.reverse",
         "punch.reverse",
         "punch.straight"
       ],
       "kiai": false,
-      "question": [
-        "Q4"
-      ]
+      "question": null,
+      "jayNote": "Correct as written: LF = left foot forward, RF = right foot in rear (Jay, Oct 24)."
     },
     {
       "n": 5,
       "text": "Raise RH fist (across body) to L ear, look over R shoulder then 180- degree turn w/RF leading, end facing L w/RF forward, followed by RH downward block (over RL) w/LH chambered on L hip, return RH to R hip (chamber). LF reverse straight forward kick w/LF landing forward, RH reverse punch, LH straightforward punch",
-      "facing": [],
+      "facing": [
+        "R"
+      ],
       "moves": [
         "turn.180",
         "block.downward",
         "chamber",
-        "kick.reverse-straight",
+        "kick.reverse",
         "punch.reverse",
         "punch.straight"
       ],
       "kiai": false,
-      "question": [
-        "Q5"
-      ]
+      "question": null,
+      "jayNote": "Directions copy Basic Form 1 (Jay, Oct 24)."
     },
     {
       "n": 6,
       "text": "Raise LH fist (across body) to R ear, while (short) stepping to rear w/RF into cat stance, step forward w/LF, LH downward block (over LL), RH chambered on R hip. Bring LH across body (between waist & chest high) and place LH (fist) on top of RH (fist) performing a Catch on the R hip. RF reverse kick w/ RF landing forward followed by RH straight forward punch. Bring RH across body (between waist & chest high) and place RH (fist) on top of LH (fist) performing a Catch on the L hip. LF reverse kick w/ LF landing forward followed by LH straight forward punch. Bring LH across body (between waist & chest high) and place LH (fist) on top of RH (fist) performing a Catch on the R hip. RF reverse kick w/ RF landing forward followed by RH straight forward punch. (kiai)",
-      "facing": [],
+      "facing": [
+        "R"
+      ],
       "moves": [
         "stance.cat",
         "block.downward",
@@ -106,9 +111,8 @@
         "punch.straight"
       ],
       "kiai": true,
-      "question": [
-        "Q12"
-      ]
+      "question": null,
+      "jayNote": "Same kick as reverse straight forward kick (Jay, Oct 24)."
     },
     {
       "n": 7,
@@ -120,7 +124,7 @@
         "turn.180",
         "block.downward",
         "chamber",
-        "kick.reverse-straight",
+        "kick.reverse",
         "punch.reverse",
         "punch.straight"
       ],
@@ -130,19 +134,20 @@
     {
       "n": 8,
       "text": "Raise RH fist (across body) to L ear, look over R shoulder then 180- degree turn w/RF leading, end facing L w/RF forward, followed by RH downward block (over RL) w/LH chambered on L hip, return RH to R hip (chamber). LF reverse straight forward kick w/LF landing forward, RH reverse punch, LH straightforward punch",
-      "facing": [],
+      "facing": [
+        "R"
+      ],
       "moves": [
         "turn.180",
         "block.downward",
         "chamber",
-        "kick.reverse-straight",
+        "kick.reverse",
         "punch.reverse",
         "punch.straight"
       ],
       "kiai": false,
-      "question": [
-        "Q6"
-      ]
+      "question": null,
+      "jayNote": "Directions copy Basic Form 1 (Jay, Oct 24)."
     }
   ],
   "finish": "Bring LF 180 degrees into (front facing) ready stance, move to attention & bow out"
