@@ -419,3 +419,9 @@ From section 1 of `docs/work-board.md`.
 - **Icons at full size.** The `icons` pack uses `"scale": 1` instead of the usual 0.6, because icons are drawn in menus (22–44 px) and 0.6 would have left them blurry on sharp phone screens. The whole set is about 0.1 MB.
 - **Auras: art only, no rules.** Elites aren't in `packages/sim` yet, so K7 only packs the auras (`auras-t1`, per-enemy entries only; the 256 px masters are reference) and draws them on the test link `?aura=swift|guarding`. The Floor Keeper's art id is `keeper`, so `auraId()` maps `floor-keeper` to it. Who becomes elite and what each aura does is S1 #3.
 - **Small worn-gear icon.** On a 667 px phone the worn-gear boxes are narrow, so the icon sits small (22 px) beside the slot name and the item name keeps the full width.
+
+## K7-fix (2026-10-24)
+
+- **One-line text on the Training Board.** Gear and Abilities text shrinks (not below 9–10 px), then cuts with "…", instead of wrapping onto the line below. The selected item's detail still shows the full name and stats.
+- **Insight card border = icon accent colour.** The colours come from the PR #56 colour key and are kept in `apps/client/src/art/icons.ts` (`INSIGHT_ACCENT`). The top stripe keeps the family colour.
+- **Live deploy.** The K7 merge and the merges right after it (09:17–09:37 EDT, `f89af8a`…`7c595d6`) got no Cloudflare build. The first build after them (`a4b0d16`, 09:45 EDT) published K7. QA had checked the live link before that build ran.

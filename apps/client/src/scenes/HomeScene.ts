@@ -423,8 +423,8 @@ export class HomeScene extends Phaser.Scene {
       if (icon) this.ui.add(icon);
       const tw = slotW - 10;
       this.text(bx + 6, y + 4, SLOT_NAME[slot], 11, '#b9ad99');
-      this.text(bx + 6, y + 18, item ? item.name : 'Nothing', 13, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true, FONT, tw);
-      if (item) this.text(bx + 6, y + 36, describeItem(item), 11, '#f2e9d8', false, FONT, tw);
+      this.oneLine(this.text(bx + 6, y + 18, item ? item.name : 'Nothing', 13, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true), tw, 10);
+      if (item) this.oneLine(this.text(bx + 6, y + 36, describeItem(item), 11, '#f2e9d8'), tw, 9);
     });
     y += 64;
 
