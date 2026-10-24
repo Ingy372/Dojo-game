@@ -307,3 +307,14 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 
 **Next**
 - Jay plays a few runs on his phone.
+
+## K6: twist banner fix and test link (2026-10-23)
+
+**Done**
+- The twist banner no longer covers the room name or the time goal. The banner sits at the top, and the room name and goal now show just below it. The small twist icon moved to the top right, under the timer.
+- New test link: `?twist=lantern-dark`, `?twist=slippery-floor` or `?twist=bell-room` forces that twist in the next room that can have it. Slippery Floor still waits until room 4. A new test checks this.
+- Checked with screenshots at 667x375, 844x390 and 932x430.
+- 152 tests pass (1 skipped) and the game builds.
+
+**Next**
+- Jay opens each `?twist=` link on his phone and checks the banner is easy to read.

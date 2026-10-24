@@ -26,8 +26,8 @@ const IDLE: PlayerInput = { kind: 'none' };
 const twist = (id: string): TwistDef => content.twists.twists.find((t) => t.id === id)!;
 
 /** Plays a whole run by skipping the fights; returns the twist of every room entered (null = none). */
-function roomsOfRun(seed: number): { kind: string; depth: number; twist: string | null }[] {
-  const run: RunState = startRun(content, { seed, dryRuns: 0 });
+function roomsOfRun(seed: number, forcedTwist?: string): { kind: string; depth: number; twist: string | null }[] {
+  const run: RunState = startRun(content, { seed, dryRuns: 0, forcedTwist });
   const rooms: { kind: string; depth: number; twist: string | null }[] = [];
   for (let guard = 0; guard < 50 && run.status === 'playing'; guard++) {
     const room = currentRoom(content, run);
@@ -72,6 +72,19 @@ describe('room twists', () => {
     for (const r of slippery) expect(r.depth + 1).toBeGreaterThanOrEqual(4);
     // The other twists can still come in rooms 2 and 3.
     expect(rooms.some((r) => r.twist && r.depth + 1 <= 3)).toBe(true);
+  });
+
+  it('?twist= forces that twist once, in the next room that may have it', () => {
+    for (const id of ['lantern-dark', 'slippery-floor', 'bell-room']) {
+      for (let seed = 1; seed <= 20; seed++) {
+        const rooms = roomsOfRun(seed, id);
+        const eligible = rooms.find(
+          (r) => r.depth > 0 && (r.kind === 'battle' || r.kind === 'challenge') && twist(id).earliestRoom <= r.depth + 1,
+        );
+        if (eligible) expect(eligible.twist).toBe(id);
+      }
+    }
+    expect(() => startRun(content, { seed: 1, dryRuns: 0, forcedTwist: 'nope' })).toThrow();
   });
 
   it('never hide a warning: every twist room still shows each attack warning at the same time', () => {

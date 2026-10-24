@@ -48,5 +48,5 @@ export function twistBanner(scene: Phaser.Scene, twist: TwistDef, width: number,
   back.lineStyle(3, 0xffd166, 1).strokeRoundedRect(-w / 2, -h / 2, w, h, 14);
   icon.setPosition(-w / 2 + 12 + 24, 0);
   text.setPosition(-w / 2 + 12 + 48 + 14, 0);
-  return scene.add.container(width / 2, y, [back, icon, text]).setDepth(30);
+  return scene.add.container(width / 2, y, [back, icon, text]).setSize(w, h).setDepth(30);
 }

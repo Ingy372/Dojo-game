@@ -71,6 +71,8 @@ export interface RunState {
   ownedDecorations: Record<string, number>;
   /** The current room's twist id, or null. */
   twist: string | null;
+  /** For testing (?twist=): this twist comes in the next room it's allowed in, then it's cleared. */
+  forcedTwist?: string;
 }
 
 /** Things that happened, for the game to show. */
@@ -94,6 +96,8 @@ export interface RunOptions {
   calmMind?: boolean;
   /** How many of each decoration the player already has. */
   ownedDecorations?: Record<string, number>;
+  /** For testing: force this twist id in the next room that can have it. */
+  forcedTwist?: string;
 }
 
 export function startRun(content: Content, options: RunOptions): RunState {
@@ -124,6 +128,11 @@ export function startRun(content: Content, options: RunOptions): RunState {
     ownedDecorations: { ...(options.ownedDecorations ?? {}) },
     twist: null,
   };
+  if (options.forcedTwist) {
+    if (!content.twists.twists.some((t) => t.id === options.forcedTwist)) throw new Error(`Unknown twist: ${options.forcedTwist}`);
+    run.forcedTwist = options.forcedTwist;
+    run.test = true;
+  }
   const first = options.firstRoomId ? content.rooms.find((r) => r.id === options.firstRoomId) : undefined;
   enterRoom(content, run, first ?? pickRoom(content, run, 'battle'));
   return run;
@@ -316,6 +325,11 @@ function enterRoom(content: Content, run: RunState, room: Room): void {
 /** Room twists: some battle and challenge rooms after the first get one friendly rule (never more). */
 function pickTwist(content: Content, run: RunState, room: Room): string | null {
   if (run.depth === 0 || (room.kind !== 'battle' && room.kind !== 'challenge')) return null;
+  const forced = content.twists.twists.find((t) => t.id === run.forcedTwist);
+  if (forced && forced.earliestRoom <= run.depth + 1) {
+    delete run.forcedTwist;
+    return forced.id;
+  }
   if (nextFloat(run.rng) >= content.twists.chance) return null;
   const allowed = content.twists.twists.filter((t) => t.earliestRoom <= run.depth + 1);
   return allowed.length ? pick(run.rng, allowed).id : null;

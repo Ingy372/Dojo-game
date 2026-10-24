@@ -10,6 +10,9 @@ export function startTowerRun(profile: Profile, training: TrainingState): RunSta
   const seedParam = Number(params.get('seed'));
   const seed = Number.isFinite(seedParam) && seedParam > 0 ? seedParam : Math.floor(Math.random() * 2147483647) + 1;
   const firstRoomId = params.get('room') ?? undefined;
+  // For testing: ?twist=lantern-dark forces that twist in the next room that can have it.
+  const twistParam = params.get('twist');
+  const forcedTwist = CONTENT.twists.twists.some((t) => t.id === twistParam) ? (twistParam ?? undefined) : undefined;
   const dojo = homeDojo(profile);
   const calmMind = useCalmMind(dojo);
   writeSave(profile);
@@ -19,6 +22,7 @@ export function startTowerRun(profile: Profile, training: TrainingState): RunSta
     seed,
     dryRuns: profile.dryRuns,
     firstRoomId,
+    forcedTwist,
     blessed: training.blessed,
     calmMind,
     ownedDecorations: ownedDecorations(dojo),
