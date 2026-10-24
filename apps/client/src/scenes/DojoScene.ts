@@ -38,6 +38,8 @@ import {
   chooseDifficulty,
   PLAY_LIMIT_CHOICES,
   makeGateQuestion,
+  scrollLessons,
+  type SenseiLesson,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
@@ -51,6 +53,7 @@ import MOTION_TEXT from '../../../../content/settings/motion.json';
 import streetUi from '../../../../content/street-smarts/ui.json';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
+import { LESSONS, lessonTitle, takeLesson } from '../game/lessons';
 import { TouchControls } from '../input/TouchControls';
 import { addStatic, addTinted, loadArt } from '../art/art';
 import type { LayeredSprite } from '../art/LayeredSprite';
@@ -487,6 +490,13 @@ export class DojoScene extends Phaser.Scene {
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Create', { first: false }));
   }
 
+  private decoratingLesson(): void {
+    const l = takeLesson('firstDecoration', null);
+    if (!l) return;
+    this.profile.lessons = loadSave().lessons;
+    this.card('Sensei', l.practice ? [...l.screens, l.practice] : l.screens, 'Okay!', () => {});
+  }
+
   private setDecorating(on: boolean): void {
     sfx.unlock();
     this.controls.reset();
@@ -500,6 +510,8 @@ export class DojoScene extends Phaser.Scene {
       for (const o of this.controls.objects) (o as Phaser.GameObjects.Arc).setVisible(false);
       // The first time, ask how they like to move decorations.
       if (!this.moveStyle) this.time.delayedCall(0, () => this.chooseMoveStyle());
+      // Sensei's Lessons (M7-P5): the first time decorating, once the session allows it.
+      else this.decoratingLesson();
     } else {
       this.mode = 'play';
       // Solid decorations may have moved: rebuild the walkable room, keeping the character in place
@@ -866,6 +878,9 @@ export class DojoScene extends Phaser.Scene {
         const x = width - pad - (streetSmartsOpen(this.training.tier, streetUi.unlockTier) ? 130 + 8 : 0) - 100;
         this.button(x, 46, 100, 32, CONTENT.named.journalButton, 0x6b5a2a, 14, () => this.openJournal());
       }
+      // Sensei's Scroll (M7-P5): every lesson seen so far, and the tutorial floor, to replay any time.
+      const rowLeft = (streetSmartsOpen(this.training.tier, streetUi.unlockTier) ? 130 + 8 : 0) + (this.training.tier >= CONTENT.named.rules.minBeltTier ? 100 + 8 : 0);
+      this.button(width - pad - rowLeft - 90, 46, 90, 32, 'Scroll', 0x7a4a6a, 14, () => this.openScroll());
     }
   }
 
@@ -907,6 +922,80 @@ export class DojoScene extends Phaser.Scene {
     for (const [x, y, label, dx, dy] of buttons) this.button(x, y, a, a, label, 0x3a3a4a, 22, () => this.nudge(dx, dy));
   }
 
+
+  /**
+   * Sensei's Scroll (M7-P5): the lessons seen so far (not the fading follow-ups or the welcome
+   * line). Tap one to hear it again, one screen per tap; or replay the tutorial floor.
+   */
+  private openScroll(): void {
+    const back = this.mode;
+    this.mode = 'menu';
+    this.controls.reset();
+    const { width, height } = this.scale.gameSize;
+    const box = this.add.container(0, 0).setDepth(70);
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.85).setOrigin(0).setInteractive());
+    const close = (reopen = false) => {
+      box.destroy();
+      if (reopen) return;
+      this.mode = back === 'menu' ? 'play' : back;
+      this.renderUi();
+    };
+    box.add(this.add.text(width / 2, 12, "Sensei's Scroll", { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '22px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
+    const seen = scrollLessons(LESSONS, loadSave().lessons);
+    const entries: Array<{ label: string; color: number; onTap: () => void }> = seen.map((l) => ({
+      label: lessonTitle(l),
+      color: 0x2a2536,
+      onTap: () => {
+        close(true);
+        this.replayLesson(l, () => this.openScroll());
+      },
+    }));
+    entries.push({ label: '↻ Replay the tutorial floor', color: 0x3a6ea5, onTap: () => this.replayTutorial() });
+    const cols = width >= 800 ? 3 : 2;
+    const gap = 8;
+    const w = Math.min(230, (width - 40 - gap * (cols - 1)) / cols);
+    const h = 40;
+    const x0 = width / 2 - (cols * w + (cols - 1) * gap) / 2;
+    const top = 50;
+    if (seen.length === 0) box.add(this.add.text(width / 2, top - 4, 'Lessons from Sensei show up here.', { fontFamily: FONT, fontSize: '14px', color: '#b9ad99' }).setOrigin(0.5, 0).setResolution(crisp()));
+    const listTop = seen.length === 0 ? top + 22 : top;
+    entries.forEach((e, i) => {
+      const x = x0 + (i % cols) * (w + gap);
+      const y = listTop + Math.floor(i / cols) * (h + gap);
+      const bg = this.add.rectangle(x, y, w, h, e.color).setOrigin(0).setStrokeStyle(2, 0xffd166, 0.5).setInteractive();
+      box.add(bg);
+      box.add(this.add.text(x + w / 2, y + h / 2, e.label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '15px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp()));
+      bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+        sfx.unlock();
+        e.onTap();
+      });
+    });
+    const cw = 120;
+    const closeBtn = this.add.rectangle(width / 2 - cw / 2, height - 12 - 36, cw, 36, 0x3aa57a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
+    box.add(closeBtn);
+    box.add(this.add.text(width / 2, height - 12 - 18, 'Close', { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp()));
+    closeBtn.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+      sfx.unlock();
+      close();
+    });
+  }
+
+  /** A lesson again: one screen per tap as a Sensei card, then its practice line. */
+  private replayLesson(lesson: SenseiLesson, done: () => void): void {
+    const screens = lesson.practice ? [...lesson.screens, `Try it: ${lesson.practice}`] : lesson.screens;
+    const show = (i: number) => {
+      const last = i === screens.length - 1;
+      this.card(`Sensei · ${lessonTitle(lesson)}`, [screens[i]], last ? 'Got it!' : 'Next', () => (last ? done() : show(i + 1)));
+    };
+    show(0);
+  }
+
+  /** The tutorial floor again, from the Scroll. */
+  private replayTutorial(): void {
+    if (this.leaving) return;
+    if (isPlayTimeUp(this.profile)) return this.showResting();
+    this.leaveTo('Game', { run: startTowerRun(this.profile, this.training, { replayTutorial: true }) });
+  }
 
   /** The Monster Journal page (read-only keepsake). */
   private openJournal(): void {

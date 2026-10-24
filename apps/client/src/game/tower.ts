@@ -1,12 +1,14 @@
 // Starting a Tower run (from the dojo's door or the training board).
 
-import { firstFloorOfTier, getsTutorialFloor, runDifficulty, ownedDecorations, startRun, type EliteKind, useCalmMind, type Profile, type RunState, type TrainingState } from '@dojo/sim';
+import { firstFloorOfTier, getsTutorialFloor, noteRunDay, runDifficulty, ownedDecorations, startRun, type EliteKind, useCalmMind, type Profile, type RunState, type TrainingState } from '@dojo/sim';
 import { CONTENT } from './content';
 import { ensureDifficulty } from './difficulty';
 import { homeDojo, setBowDue } from './dojo';
+import { localDay } from './lessons';
 import { writeSave } from './save';
 
-export function startTowerRun(profile: Profile, training: TrainingState): RunState {
+/** `replayTutorial`: the Lesson Scroll's "Replay the tutorial floor" (M7-P5). */
+export function startTowerRun(profile: Profile, training: TrainingState, opts: { replayTutorial?: boolean } = {}): RunState {
   const params = new URLSearchParams(window.location.search);
   const seedParam = Number(params.get('seed'));
   const seed = Number.isFinite(seedParam) && seedParam > 0 ? seedParam : Math.floor(Math.random() * 2147483647) + 1;
@@ -29,8 +31,12 @@ export function startTowerRun(profile: Profile, training: TrainingState): RunSta
   // Named monsters skip a profile's first few runs: count every real run started.
   const runsStarted = profile.runsStarted;
   // A brand-new profile's first floor is the tutorial floor (M7-P2); ?tutorial=1 shows it again for testing.
-  const tutorial = !firstRoomId && !forcedTwist && !forcedElite && !forcedNamed && (params.get('tutorial') === '1' || getsTutorialFloor(profile));
-  if (!firstRoomId && !forcedTwist && !forcedElite && !forcedNamed) profile.runsStarted++;
+  const tutorial = !firstRoomId && !forcedTwist && !forcedElite && !forcedNamed && (opts.replayTutorial === true || params.get('tutorial') === '1' || getsTutorialFloor(profile));
+  if (!firstRoomId && !forcedTwist && !forcedElite && !forcedNamed) {
+    profile.runsStarted++;
+    // A session is a calendar day with at least one run (M7-P5, Manager call).
+    noteRunDay(profile.lessons, localDay());
+  }
   const dojo = homeDojo(profile);
   const calmMind = useCalmMind(dojo);
   writeSave(profile);

@@ -12,6 +12,7 @@ import type { ProgressSnapshot } from './rewards';
 import type { RunSummary } from './run';
 import { GUIDE_DONE } from './world';
 import { readJournal, type JournalEntry, type NamedContent } from './named';
+import { newLessonLog, readLessonLog, type LessonLog } from './lessons';
 
 export interface PersonalBests {
   /** Fastest full floor clear, in ticks (null until a floor is cleared). */
@@ -94,6 +95,8 @@ export interface Profile {
   decorEarning: DecorEarning;
   /** Tower runs started (finished or not); named monsters skip a profile's first few. */
   runsStarted: number;
+  /** Sensei's Lessons (M7-P5): lessons seen and the days with a run (sessions). */
+  lessons: LessonLog;
 }
 
 export interface StreetSmartsSave {
@@ -129,6 +132,7 @@ export function newProfile(): Profile {
     monsterJournal: {},
     decorEarning: newDecorEarning(),
     runsStarted: 0,
+    lessons: newLessonLog(),
   };
 }
 
@@ -144,7 +148,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0 };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons) };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {
