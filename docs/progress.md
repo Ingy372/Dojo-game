@@ -410,3 +410,9 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 - The `?elite=guarding` test link now respects Guided: it gives a Swift elite instead.
 - The store script's notes say "approved through J11, helper question trimmed to 4 choices (#79)" again, not the old DRAFT note.
 - 197 tests pass (1 skipped), typecheck clean, build passes. Screenshots at 667x375 and 844x390.
+
+### K10 follow-up (Manager review)
+- Journal fact text is now 15px on screen (game body size) at 667x375 and 844x390: facts sit in notes beside the page. Screenshots: /workspace/k10-journal-667.png, /workspace/k10-journal-844.png.
+- The Old Thumper fact no longer sits on the stamp art.
+- `?named=` (and other test-link) runs no longer write the Monster Journal or give the sticker. New test in packages/sim/test/named.test.ts; checked in the browser too (journal stayed empty).
+- 198 tests pass, 1 skipped; typecheck and build clean.
