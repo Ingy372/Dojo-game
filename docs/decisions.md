@@ -567,6 +567,14 @@ My calls (not Manager):
 - Test-link runs find no surprise pieces and bank no decorations (fixes the bankRun leak). Once every surprise piece has 3 copies, the roll gives nothing.
 - C11 unique names applied to statues and trophies.
 
+## Journal kinds (2026-10-24)
+- The Monster Journal now turns pages: page 1 is the named monsters, as before. After it come the monster kinds, three per page, in trophy order (Journal tier, then file order): swarmer, shield, brute, floor-keeper, bopper.
+- A kind counts as met once its Journal trophy is given (`decorEarning.given`); trophies come on first defeat (S7). Met cards show the trophy art, the trophy's name, its description as the fact, and the win stamp. Unmet cards look like the named ones: a silhouette, "?" and "Keep exploring!". Floor Keeper and Bopper have no silhouette art, so their unmet cards show a big "?" in the well. All text comes from decorations.json and named.json; nothing new was written.
+- Bopper is listed for every belt (the Manager asked for all five), though its trophy can only drop from Yellow on.
+- The sim helper `journalKinds` (earning.ts) builds the list and has a test.
+- Manager call (2026-10-24): met kind cards show the plain enemy name, not the trophy name. It comes from the enemy file: new optional `shortName` (falls back to `name`); only Bopper sets it ("Bopper", since its `name` is "Bouncy Bopper"). No new story text. Fits the name box at 667 and 844.
+- Manager call: the Artist will make Floor Keeper and Bopper silhouettes (A8); they will be wired in when they land. Until then their unmet cards show "?".
+
 ## Rest refresh (2026-10-24)
 - After "Rest for now" on the resume card, DojoScene now uses the profile that `bankRun` returns and takes its dojo with `homeDojo`. Before, it reloaded only the profile, so `this.dojo` still pointed at the old dojo object: the new pieces didn't show, and later dojo edits went to that old object. Those edits could be lost, or could overwrite what was banked. The new pieces go to storage, so the walkable room doesn't change; redrawing is enough.
 - There's no client test harness and adding one would mean new dependencies, so this fix is checked with before/after screenshots instead of a test.

@@ -474,5 +474,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## Decor earning (2026-10-24)
 - New `packages/sim/src/earning.ts`: class pieces at the dojo (welcome piece, then every 2/3 classes), Journal trophies, keeper statues, folding screen. Surprise pool (tower + random) at S7 rates with 3-copy cap and colour roll. Pieces remember their drop belt. Test runs award nothing (bankRun leak fixed). C11 names. Tests 239 passed / 1 skipped (key rules checked to fail when removed); typecheck + build clean. Screenshots /workspace/earn-{667,844}-{card0,card1,dojo-left,dojo-right}.png.
 
+## Journal kinds (2026-10-24)
+- The Monster Journal now has pages for the monster kinds, with ‹ › page-turn buttons. Tests 240 passed / 1 skipped; typecheck and build pass. Screenshots: /workspace/jkinds-{667,844}-p{0,1,2}.png.
+- Merged main (#134). Met cards now show the plain enemy name (`shortName` in enemy content). Tests 240 passed / 1 skipped; typecheck and build pass. Screenshots: /workspace/jkinds2-{667,844}-p{1,2}.png. A8 silhouettes for Floor Keeper and Bopper are pending.
+
 ## Rest refresh (2026-10-24)
 - Fixed: pieces banked by "Rest for now" in the dojo now show at once. Tests 239 passed / 1 skipped; typecheck and build pass. Screenshots: /workspace/rest-{before,after}-{667,844}-storage.png (before: 1 stored, after: 4).
