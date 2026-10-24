@@ -57,7 +57,11 @@ export function loadContent(raw: RawContent): Content {
     }
   }
   for (const kind of ['battle', 'challenge', 'treasure', 'rest', 'boss'] as RoomKind[]) {
-    if (!rooms.some((r) => r.kind === kind)) throw new Error(`There is no ${kind} room`);
+    if (!rooms.some((r) => r.kind === kind && !r.tutorial)) throw new Error(`There is no ${kind} room`);
+  }
+  // The tutorial floor (M7-P2) needs one tutorial room of each of its kinds.
+  for (const kind of ['battle', 'treasure', 'boss'] as RoomKind[]) {
+    if (rooms.filter((r) => r.tutorial && r.kind === kind).length !== 1) throw new Error(`There must be exactly one tutorial ${kind} room`);
   }
   const elites = loadElites(raw.elites);
   for (const k of Object.values(elites.kinds)) {

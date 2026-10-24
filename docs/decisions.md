@@ -583,3 +583,19 @@ My calls (not Manager):
 - Stance idles come from a separate A2 JSON, so the importer gained `mergeAnimations` (same frame size and anchor, no name clashes) instead of hand-merging rigs. The `-big` packs are left out (no stance art at that size).
 - The link from Form to idle is data: each stance animation carries `form: <Form id>` from the art JSON. The client plays the animation tagged with the active Form's id and falls back to `idle`. A new Form needs only tagged art.
 - Each Journal trophy names its `silhouette` sprite in decorations.json; a missing one falls back to '?'. A test checks every named silhouette and Form idle exists in the packed art.
+## M7-P2 tutorial floor (2026-10-24)
+Manager calls:
+1. A "session" is a calendar day with at least one run. P5 builds the counter.
+2. lesson-move is dropped; the walk-to-the-glowing-spot step teaches moving.
+3. The Brute step uses only the guided Counter lines, not "Red circle!".
+4. Strike is taught in the boss room when Focus fills; nothing else new in that room.
+5. The chest tier uses the C7 name kids see. C7 names are not in content yet: theme.ts still shows "Uncommon", so that is what kids see for now.
+6. Only brand-new profiles (runsStarted 0 and runsPlayed 0) get the tutorial floor.
+
+My calls (not Manager):
+- Tutorial floor = 3 rooms (battle → treasure → boss), each a dedicated `tutorial: true` room; normal floors never pick them. New `G` tile marks the glowing spot (tutorial rooms only).
+- "Doing nothing can't lose": tutorial worlds have minHealth 1, enemies wait until the spot is reached, and the guided Counter holds still until COUNTER is tapped.
+- The Insight is given automatically after the tutorial battle (no menu). The chest rarity is raised to at least uncommon.
+- The easy boss is the normal Floor Keeper at 35% health and no summons (a world option, so no new art).
+- `?tutorial=1` test link replays the floor.
+- Manager call (K14): the large (`-big`) stance art is parked for now; the dojo keeps the plain idle, which is fine.

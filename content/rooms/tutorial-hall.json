@@ -1,0 +1,29 @@
+{
+  "id": "tutorial-hall",
+  "name": "First Steps Hall",
+  "kind": "battle",
+  "tutorial": true,
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), G = the glowing spot (tutorial only)",
+  "notes": "Tutorial floor room 1 (M7-P2): walk to the glowing spot, then one Brute for the guided Counter. The Brute starts low so it reaches the player from below, clear of the Sensei banner at the top.",
+  "parSeconds": 60,
+  "tiles": [
+    "####D####D####D####",
+    "#.................#",
+    "#.................#",
+    "#.................#",
+    "#.................#",
+    "#........G........#",
+    "#.................#",
+    "#.................#",
+    "#........P........#",
+    "#.................#",
+    "###################"
+  ],
+  "enemies": [
+    {
+      "enemy": "brute",
+      "column": 3,
+      "row": 9
+    }
+  ]
+}

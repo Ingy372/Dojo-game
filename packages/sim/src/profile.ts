@@ -331,3 +331,11 @@ export function chooseDifficulty(profile: Profile, difficulty: Difficulty): void
   profile.difficulty = difficulty;
   profile.difficultyChosenByPlayer = true;
 }
+
+/**
+ * Only a brand-new profile plays the tutorial floor (M7-P2, Manager call): no run started
+ * or finished yet. Saves from before runsStarted count their finished runs instead.
+ */
+export function getsTutorialFloor(profile: Pick<Profile, 'runsStarted' | 'runsPlayed'>): boolean {
+  return profile.runsStarted === 0 && profile.runsPlayed === 0;
+}

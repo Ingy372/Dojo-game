@@ -13,7 +13,9 @@ const DOOR = 'D';
 const CHEST = 'C';
 /** Where the rest shrine stands (floor). */
 const SHRINE = 'S';
-const ALLOWED = new Set([WALL, FLOOR, PLAYER_START, DOOR, CHEST, SHRINE]);
+/** The tutorial floor's glowing spot to walk to (floor, M7-P2). */
+const GOAL = 'G';
+const ALLOWED = new Set([WALL, FLOOR, PLAYER_START, DOOR, CHEST, SHRINE, GOAL]);
 
 /** What a room is for. Practice rooms (like the training room) bring enemies back and have no doors. */
 export type RoomKind = 'practice' | 'battle' | 'challenge' | 'treasure' | 'rest' | 'boss';
@@ -48,6 +50,10 @@ export interface Room {
   earliestRoom: number;
   /** The lowest belt tier that can get this room (1 = White belt, 2 = Yellow belt). */
   minBeltTier: number;
+  /** Where the glowing spot is (tutorial rooms only), or null. */
+  goal: Vec2 | null;
+  /** A tutorial floor room (M7-P2): only the tutorial floor uses it, never a normal floor. */
+  tutorial: boolean;
 }
 
 export interface EnemySpawn {
@@ -90,6 +96,7 @@ export function loadRoom(data: unknown): Room {
   const doors: Vec2[] = [];
   let chest: Vec2 | null = null;
   let shrine: Vec2 | null = null;
+  let goal: Vec2 | null = null;
   rows.forEach((row, y) => {
     if (row.length !== width) {
       throw new RoomError(id, `row ${y + 1} is ${row.length} tiles wide, but row 1 is ${width}`);
@@ -115,6 +122,10 @@ export function loadRoom(data: unknown): Room {
       if (ch === SHRINE) {
         if (shrine) throw new RoomError(id, 'there is more than one shrine "S"');
         shrine = { x: x + 0.5, y: y + 0.5 };
+      }
+      if (ch === GOAL) {
+        if (goal) throw new RoomError(id, 'there is more than one glowing spot "G"');
+        goal = { x: x + 0.5, y: y + 0.5 };
       }
       if (ch === PLAYER_START) {
         if (playerStart) throw new RoomError(id, 'there is more than one player start "P"');
@@ -176,7 +187,10 @@ export function loadRoom(data: unknown): Room {
     }
     minBeltTier = raw.minBeltTier;
   }
-  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns, kind, doors, chest, shrine, parSeconds, challenge, earliestRoom, minBeltTier };
+  if (raw.tutorial !== undefined && typeof raw.tutorial !== 'boolean') throw new RoomError(id, '"tutorial" must be true or false');
+  const tutorial = raw.tutorial === true;
+  if (goal && !tutorial) throw new RoomError(id, 'only tutorial rooms can have a glowing spot "G"');
+  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns, kind, doors, chest, shrine, parSeconds, challenge, earliestRoom, minBeltTier, goal, tutorial };
 }
 
 /**

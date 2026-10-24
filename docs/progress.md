@@ -484,3 +484,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## K14 Journal silhouettes + Form idles (2026-10-24)
 - A8 (#136) silhouettes imported into the named-monster pack. Unmet Journal cards for Floor Keeper and Bopper now show journal-silhouette-keeper / journal-silhouette-padded instead of '?' (each trophy names its `silhouette` in decorations.json).
 - A2 (#121) stance idles merged into every player-a/b rig (Rooted = option A). Each Form idles in its own stance; the Beginner's Stance keeps the guard idle. Tests 242 passed / 1 skipped; typecheck and build pass. Screenshots: /workspace/k14-{667,844}-journal-keeper-bopper.png, /workspace/k14-{667,844}-idle-{beginners-stance,rooted-form,flowing-form}[-zoom].png, /workspace/k14-{667,844}-idles-strip.png.
+## M7-P2 tutorial floor (2026-10-24)
+- Brand-new profiles go from Create straight into a 3-room tutorial floor: bow, walk to the glowing spot, guided Brute Counter, automatic Insight, a chest (always Uncommon or better), then an easy Floor Keeper where Strike is taught when Focus fills. Can't lose (health floor of 1).
+- Timed browser check: first Perfect Counter about 40 s after "Tap to start" at both 667 and 844 wide (including 15 s idling on Create). Sim: under 60 s over 20 seeds.
+- Tests 250 passed / 1 skipped; typecheck and build pass. Screenshots /workspace/p2-{667,844}-*.png.
+- Follow-up: the combo HUD is hidden until the guided Counter, and the tutorial Brute starts low so the Sensei banner no longer covers it.

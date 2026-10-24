@@ -103,6 +103,8 @@ export interface RunState {
   namedRng: Rng;
   /** A ?named= test run: battle rooms with that monster's type are picked first (K12). */
   forcedNamedTest?: boolean;
+  /** The scripted tutorial floor (M7-P2), played once by a brand-new profile. */
+  tutorial: boolean;
 }
 
 /** Things that happened, for the game to show. */
@@ -112,6 +114,8 @@ export type RunEvent =
   | { kind: 'namedDefeated'; id: string; at: Vec2 }
   | { kind: 'graded'; result: RoomResult }
   | { kind: 'insightChoice'; ids: string[] }
+  /** Tutorial floor: Sensei picks this Insight for the player (no menu). */
+  | { kind: 'insightGift'; id: string }
   | { kind: 'nextRoom'; door: DoorKind }
   | { kind: 'runOver'; status: 'cleared' | 'lost' | 'rested' };
 
@@ -141,13 +145,28 @@ export interface RunOptions {
   runsStarted?: number;
   /** For testing (?named=): this named monster comes in the first battle room it can be in. */
   forcedNamed?: string;
+  /** Play the scripted tutorial floor (M7-P2) instead of a normal one. */
+  tutorial?: boolean;
 }
+
+/**
+ * The tutorial floor (M7-P2): always these rooms in this order, from the rooms marked
+ * "tutorial". Health never drops below 1, the Insight is picked for the player, the chest
+ * is Uncommon or better and the boss is an easy one.
+ */
+export const TUTORIAL_FLOOR = {
+  rooms: ['battle', 'treasure', 'boss'] as const,
+  minHealth: 1,
+  chestMinRarity: 'uncommon' as Rarity,
+  /** The boss has this share of its health and calls in no helpers. */
+  bossHealth: 0.35,
+};
 
 export function startRun(content: Content, options: RunOptions): RunState {
   const run: RunState = {
     rng: createRng(options.seed),
     depth: 0,
-    totalRooms: FLOOR.roomsBeforeBoss + 1,
+    totalRooms: options.tutorial ? TUTORIAL_FLOOR.rooms.length : FLOOR.roomsBeforeBoss + 1,
     roomId: '',
     doors: [],
     usedRooms: [],
@@ -182,6 +201,7 @@ export function startRun(content: Content, options: RunOptions): RunState {
     namedPending: null,
     named: null,
     namedRng: createRng((options.seed ^ 0x9e3779b9) >>> 0),
+    tutorial: !!options.tutorial,
   };
   run.namedPending = rollNamed(content, run, options);
   if (options.forcedNamed) {
@@ -240,6 +260,7 @@ export function createRunWorld(
     doorCount: run.doors.length,
     twist: currentTwist(content, run),
     guideStep,
+    ...(run.tutorial ? { minHealth: TUTORIAL_FLOOR.minHealth, easyBossHealth: TUTORIAL_FLOOR.bossHealth } : {}),
     player: {
       ...player,
       health: run.health ?? undefined,
@@ -290,7 +311,14 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
             for (let i = 0; i < GRADES.sGradeBonusItems; i++) out.push(drop(content, run, 'common', p.pos, 'grade'));
           }
         }
-        if (room.kind === 'battle' || room.kind === 'challenge') {
+        if (run.tutorial && room.kind === 'battle') {
+          // Tutorial floor: Sensei picks the Insight, with no menu (the real choice opens in session 3).
+          const id = offerInsights(content, run)[0];
+          if (id) {
+            run.insights.push(id);
+            out.push({ kind: 'insightGift', id });
+          }
+        } else if (room.kind === 'battle' || room.kind === 'challenge') {
           const ids = offerInsights(content, run);
           if (ids.length > 0) {
             run.insightChoices = ids;
@@ -304,7 +332,8 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
         const result = run.results[run.results.length - 1];
         const inTime = result?.inTime === true;
         const count = inTime && table.inTimeItems ? table.inTimeItems : table.items;
-        const min = inTime && table.inTimeMinRarity ? table.inTimeMinRarity : table.minRarity;
+        let min = inTime && table.inTimeMinRarity ? table.inTimeMinRarity : table.minRarity;
+        if (run.tutorial && rarityRank(min) < rarityRank(TUTORIAL_FLOOR.chestMinRarity)) min = TUTORIAL_FLOOR.chestMinRarity;
         const at = room.chest ?? world.players.p1.pos;
         for (let i = 0; i < count; i++) out.push(drop(content, run, min, at, 'chest'));
         const deco = dropDecoration(content, run, content.dojo.dropChance[room.kind] ?? 0, at);
@@ -381,6 +410,8 @@ export interface RunSummary {
   test: boolean;
   /** The belt tier the floor was played at. */
   tier: number;
+  /** The tutorial floor (M7-P2). */
+  tutorial: boolean;
 }
 
 export function summarizeRun(run: RunState): RunSummary {
@@ -400,6 +431,7 @@ export function summarizeRun(run: RunState): RunSummary {
     defeated: run.defeated.slice(),
     test: run.test,
     tier: run.tier,
+    tutorial: run.tutorial,
   };
 }
 
@@ -430,7 +462,7 @@ function rollNamed(content: Content, run: RunState, options: RunOptions): string
     if (!named.monsters.some((m) => m.id === options.forcedNamed)) throw new Error(`Unknown named monster: ${options.forcedNamed}`);
     return options.forcedNamed;
   }
-  if (run.test || run.tier < named.rules.minBeltTier || (options.runsStarted ?? 0) < named.rules.skipFirstRuns) return null;
+  if (run.tutorial || run.test || run.tier < named.rules.minBeltTier || (options.runsStarted ?? 0) < named.rules.skipFirstRuns) return null;
   const list = namedForTier(named, run.tier);
   if (!list.length || nextFloat(run.namedRng) >= named.rules.chancePerRun) return null;
   return list[nextInt(run.namedRng, list.length)].id;
@@ -472,6 +504,7 @@ function placeNamed(content: Content, run: RunState, room: Room, anyRoom: boolea
  */
 function pickElites(content: Content, run: RunState, room: Room): EliteSpawn[] {
   const rules = content.elites;
+  if (run.tutorial) return [];
   if (room.kind !== 'battle' && room.kind !== 'challenge') return [];
   const spawnsFor = (kind: EliteKind) =>
     room.enemySpawns.map((s, i) => ({ s, i })).filter(({ s }) => rules.kinds[kind].enemies.includes(s.enemy) && !content.enemies[s.enemy]?.boss).map(({ i }) => i);
@@ -492,7 +525,7 @@ function pickElites(content: Content, run: RunState, room: Room): EliteSpawn[] {
 
 /** Room twists: some battle and challenge rooms after the first get one friendly rule (never more). */
 function pickTwist(content: Content, run: RunState, room: Room): string | null {
-  if (run.depth === 0 || (room.kind !== 'battle' && room.kind !== 'challenge')) return null;
+  if (run.tutorial || run.depth === 0 || (room.kind !== 'battle' && room.kind !== 'challenge')) return null;
   const forced = content.twists.twists.find((t) => t.id === run.forcedTwist);
   if (forced && forced.earliestRoom <= run.depth + 1) {
     delete run.forcedTwist;
@@ -510,7 +543,13 @@ export function currentTwist(content: Content, run: RunState): TwistDef | null {
 
 function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
   // Harder rooms wait until later in the floor (depth 0 is room 1), and some wait for a higher belt.
-  const all = content.rooms.filter((r) => r.kind === kind && r.earliestRoom <= run.depth + 1 && r.minBeltTier <= run.tier);
+  if (run.tutorial) {
+    const room = content.rooms.find((r) => r.tutorial && r.kind === kind);
+    if (!room) throw new Error(`There is no tutorial ${kind} room`);
+    return room;
+  }
+  // Tutorial rooms are only ever used by the tutorial floor.
+  const all = content.rooms.filter((r) => !r.tutorial && r.kind === kind && r.earliestRoom <= run.depth + 1 && r.minBeltTier <= run.tier);
   let fresh = all.filter((r) => !run.usedRooms.includes(r.id));
   // ?named= test runs (K12): from the earliest room, battle rooms with the asked-for type come
   // first, and a challenge room can have it too, so the link always gives that monster
@@ -527,6 +566,7 @@ function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
 /** Which doors appear when a room is done. */
 function offerDoors(run: RunState, room: Room, treasureSoFar: number, restSoFar: number): DoorKind[] {
   if (room.kind === 'boss') return ['home'];
+  if (run.tutorial) return [TUTORIAL_FLOOR.rooms[Math.min(run.depth + 1, TUTORIAL_FLOOR.rooms.length - 1)]];
   if (run.depth >= run.totalRooms - 2) return ['boss'];
   const count = Math.min(room.doors.length, nextFloat(run.rng) < FLOOR.threeDoorChance ? 3 : 2);
   let pool = Object.entries(FLOOR.doorWeights) as Array<[DoorKind, number]>;
@@ -642,5 +682,6 @@ export function restoreRun(content: Content, data: unknown): RunState | null {
   // Runs saved before decor earning.
   restored.decorationColours ??= restored.decorations.map(() => null);
   restored.defeated ??= [];
+  restored.tutorial ??= false;
   return restored;
 }
