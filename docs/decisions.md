@@ -720,4 +720,4 @@ After #167 and #168 merged, S3-P1 took main in with a normal merge commit. Both 
 1. **Ids stay as they are:** `orange-kata` and `decor-a6-class-scroll-key-on` are not renamed; only the names players see say "Keon". Old saves load as before.
 2. **docs/GROK_BOTS.md is fixed in #169:** the curriculum list now says "Orange Keon".
 3. **A kata shows only once earned:** the Abilities tab gets a Kata card only for katas the student has; unearned ones show nothing extra.
-4. content/katas/keon.json is rebuilt from the Content Designer's updated drafts/content/katas/keon.json (#168). Every step now has a direction (1 ← 2 → 3 ↑ 4 → 5 ← 6 ↑ 7 ← 8 → 9 ↓).
+4. **content/katas/ is rebuilt from the Content Designer's updated drafts (#168)** for all four katas. Every step now has a direction, so every step shows an arrow; a step with no direction would still show its number alone (tested).

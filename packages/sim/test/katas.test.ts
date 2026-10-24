@@ -26,7 +26,9 @@ describe('kata cards (S3-P1)', () => {
   it('shows an arrow only on steps whose direction is known', () => {
     const bf1 = byReq.get('white-kata')!;
     expect(bf1.steps).toHaveLength(8);
-    expect(kataArrows(bf1)).toBe('1 ←   2   3   4 ←   5 →   6   7 ←   8 →');
+    expect(kataArrows(bf1)).toBe('1 ←   2 →   3 →   4 ←   5 →   6 →   7 ←   8 →');
+    const open = parseKata({ id: 'x', name: 'X', requirement: 'r', form: null, steps: [{ n: 1, facing: ['L'] }, { n: 2, facing: [] }] });
+    expect(kataArrows(open)).toBe('1 ←   2');
   });
 
   it('rejects a malformed file', () => {

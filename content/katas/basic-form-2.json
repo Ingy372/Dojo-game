@@ -19,19 +19,27 @@
     },
     {
       "n": 3,
-      "facing": []
+      "facing": [
+        "R"
+      ]
     },
     {
       "n": 4,
-      "facing": []
+      "facing": [
+        "L"
+      ]
     },
     {
       "n": 5,
-      "facing": []
+      "facing": [
+        "R"
+      ]
     },
     {
       "n": 6,
-      "facing": []
+      "facing": [
+        "R"
+      ]
     },
     {
       "n": 7,
@@ -41,7 +49,9 @@
     },
     {
       "n": 8,
-      "facing": []
+      "facing": [
+        "R"
+      ]
     }
   ]
 }
