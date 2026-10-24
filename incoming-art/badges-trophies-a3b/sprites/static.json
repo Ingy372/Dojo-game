@@ -1950,6 +1950,36 @@
       "metal": "gold",
       "gemColour": "#26272f",
       "note": "Guardian: all 10 tiers gold + rays; the top gem is the tier belt colour (beltStyles; white -> #d2a878 fallback)"
+    },
+    "ct-accolade-student-of-the-month": {
+      "achievement": "ach.dojo.accolade.student-of-the-month",
+      "files": {
+        "img": "trophies/ct-accolade-student-of-the-month.png",
+        "halo": "layers/halo-pips0-gem.png",
+        "stand": "layers/stand-pips0.png",
+        "topper": "layers/ct-accolade-student-of-the-month-topper.png",
+        "sealBacking": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-backing-<palette>.png",
+        "schoolMark": "../badges-trophies-a3/sprites/trophies/certified-layers/seal-mark-<school>.png"
+      },
+      "size": [
+        104,
+        166
+      ],
+      "anchorPx": [
+        52,
+        156
+      ],
+      "datePlate": [
+        26,
+        134,
+        62,
+        148
+      ],
+      "dateTextColor": "#3a2a22",
+      "metal": "gold",
+      "pips": 0,
+      "gem": true,
+      "note": "Student of the Month: own top piece (gold crescent moon + big star). img is baked with the Action Zone seal backing + the default star mark (until the AZ logo arrives). Use this instead of ct-accolade-template when the accolade slug is student-of-the-month; other accolades keep the shield template. Plate blank (game writes 'Earned {date}'). One trophy per accolade earned (count/stacking = DECIDE)."
     }
   },
   "layerOrder": [
