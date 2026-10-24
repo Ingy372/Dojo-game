@@ -536,6 +536,37 @@
           ]
         }
       ]
+    },
+    "named-monster": {
+      "note": "M7-N1 named monsters (Manager approved for Jay, PRs #53/#60): per-enemy sparkles, name plate and tag, the 3 tells, Journal parts, stickers. The 256 master sparkle is reference only.",
+      "sources": [
+        {
+          "id": "named",
+          "type": "static",
+          "json": "incoming-art/named-monster/sprites/static.json",
+          "only": [
+            "named-sparkle-swarmer",
+            "named-sparkle-shield",
+            "named-sparkle-brute",
+            "name-plate",
+            "name-tag",
+            "journal-silhouette-brute",
+            "journal-silhouette-swarmer",
+            "journal-silhouette-shield",
+            "journal-page-frame",
+            "journal-title-banner",
+            "journal-card-met",
+            "journal-card-unmet",
+            "journal-stamp",
+            "sticker-brute",
+            "sticker-swarmer",
+            "sticker-shield",
+            "tell-stamp-dust",
+            "tell-dash-trail",
+            "tell-shield-tap"
+          ]
+        }
+      ]
     }
   }
 }

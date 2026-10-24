@@ -8,6 +8,7 @@ import { pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
 import { BOW, COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, type Difficulty } from './config';
 import { noMods, type PlayerMods } from './effects';
+import { namedDef, type NamedRules, type NamedSpawn } from './named';
 import { eliteDef, eliteWindup, type EliteKind, type EliteRules, type EliteSpawn } from './elite';
 import type { EnemyAttackDef, EnemyDef } from './enemy';
 import { clamp, distance, length, quantize, type Vec2 } from './math';
@@ -153,6 +154,8 @@ export interface EnemyState {
   elite: EliteKind | null;
   /** The Guarding elite protecting this enemy right now (updated every tick), or null. */
   guardedBy: EnemyId | null;
+  /** Named monster id (M7-N1), or null. Its Health in `def` is already scaled; it is never an elite. */
+  named: string | null;
 }
 
 /** Things that happened during the last tick, so the game can play effects and sounds. */
@@ -205,7 +208,7 @@ export type CombatEvent =
   | { kind: 'doorEntered'; playerId: PlayerId; door: number };
 
 /** An enemy waiting for a later wave (it may be an elite). */
-type PendingSpawn = EnemySpawn & { elite?: EliteKind | null };
+type PendingSpawn = EnemySpawn & { elite?: EliteKind | null; named?: string | null };
 
 export interface WorldState {
   tick: number;
@@ -236,6 +239,8 @@ export interface WorldState {
   guide: GuideState | null;
   /** Elite rules (from content/elites), or null when the room has no elites. */
   elites: EliteRules | null;
+  /** Named monster rules (M7-N1) when this room has one, else null. */
+  namedRules: NamedRules | null;
 }
 
 /** Steps of the guided Counter: 0 guided (holds still), 1 hint, 2 pulse only, 3 done. */
@@ -283,6 +288,9 @@ export interface WorldOptions {
   elites?: EliteSpawn[];
   /** Elite rules (from content/elites); needed when `elites` is given. */
   eliteRules?: EliteRules;
+  /** A named monster in this room (M7-N1), with its rules. That spawn is never an elite. */
+  named?: NamedSpawn | null;
+  namedRules?: NamedRules;
 }
 
 export interface PlayerSetup {
@@ -349,7 +357,9 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
   const enemies: EnemyState[] = [];
   const pendingSpawns: PendingSpawn[] = [];
   const rules = options.eliteRules ?? null;
-  const eliteOf = (i: number): EliteKind | null => (rules ? options.elites?.find((x) => x.spawn === i)?.kind ?? null : null);
+  const namedOf = (i: number): string | null => (options.named && options.namedRules && options.named.spawn === i ? options.named.id : null);
+  const eliteOf = (i: number): EliteKind | null => (rules && !namedOf(i) ? options.elites?.find((x) => x.spawn === i)?.kind ?? null : null);
+  const namedRules = options.namedRules ?? null;
   // Keep every type that can appear later (later waves, a boss's helpers), so the
   // world has everything it needs when saved or sent.
   const enemyTypes: Record<string, EnemyDef> = {};
@@ -363,9 +373,10 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       const def = typeOf(spawn.enemy);
       // Practice rooms put everyone in at once; floor rooms hold later waves back.
       const elite = eliteOf(i);
-      if (spawn.wave === 1 || respawnEnemies) enemies.push(newEnemy(`e${i + 1}`, def, spawn.pos, i, elite, rules));
+      const named = namedOf(i);
+      if (spawn.wave === 1 || respawnEnemies) enemies.push(newEnemy(`e${i + 1}`, def, spawn.pos, i, elite, rules, named, namedRules));
       else {
-        pendingSpawns.push({ enemy: spawn.enemy, pos: { ...spawn.pos }, wave: spawn.wave, elite });
+        pendingSpawns.push({ enemy: spawn.enemy, pos: { ...spawn.pos }, wave: spawn.wave, elite, named });
         enemyTypes[spawn.enemy] = def;
       }
       if (def.summon) enemyTypes[def.summon.enemy] = typeOf(def.summon.enemy);
@@ -399,6 +410,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     twist: options.twist ?? null,
     bells: 0,
     elites: rules,
+    namedRules,
     guide: (options.guideStep ?? GUIDE_DONE) < GUIDE_DONE ? { step: options.guideStep!, enemyId: null, waiting: false, waitTicks: 0 } : null,
   };
 }
@@ -414,8 +426,18 @@ export function setPlayerMods(p: PlayerState, mods: PlayerMods): void {
   p.mods = { ...mods };
 }
 
-function newEnemy(id: EnemyId, base: EnemyDef, pos: Vec2, n: number, elite: EliteKind | null = null, rules: EliteRules | null = null): EnemyState {
-  const def = elite && rules ? eliteDef(base, elite, rules) : base;
+function newEnemy(
+  id: EnemyId,
+  base: EnemyDef,
+  pos: Vec2,
+  n: number,
+  elite: EliteKind | null = null,
+  rules: EliteRules | null = null,
+  named: string | null = null,
+  namedRules: NamedRules | null = null,
+): EnemyState {
+  const isNamed = !!(named && namedRules);
+  const def = isNamed ? namedDef(base, namedRules!) : elite && rules ? eliteDef(base, elite, rules) : base;
   return {
     id,
     def,
@@ -437,8 +459,9 @@ function newEnemy(id: EnemyId, base: EnemyDef, pos: Vec2, n: number, elite: Elit
     orbit: n % 2 === 0 ? 1 : -1,
     chaseTicks: 0,
     disarmed: 0,
-    elite: elite && rules ? elite : null,
+    elite: !isNamed && elite && rules ? elite : null,
     guardedBy: null,
+    named: isNamed ? named : null,
   };
 }
 
@@ -1114,7 +1137,7 @@ function spawnNextWave(world: WorldState): void {
   const now = world.pendingSpawns.filter((s) => s.wave <= world.wave);
   world.pendingSpawns = world.pendingSpawns.filter((s) => s.wave > world.wave);
   for (const s of now) {
-    const e = newEnemy(`e${world.nextEnemyNumber++}`, world.enemyTypes[s.enemy], s.pos, world.enemies.length, s.elite ?? null, world.elites);
+    const e = newEnemy(`e${world.nextEnemyNumber++}`, world.enemyTypes[s.enemy], s.pos, world.enemies.length, s.elite ?? null, world.elites, s.named ?? null, world.namedRules);
     world.enemies.push(e);
     world.events.push({ kind: 'enemySpawn', enemyId: e.id });
   }
@@ -1134,7 +1157,7 @@ export function updateGuards(world: WorldState): void {
     if (guard.elite !== 'guarding' || !isEnemyPresent(guard)) continue;
     const near = world.enemies
       .map((o, order) => ({ o, order, d: distance(guard.pos, o.pos) }))
-      .filter(({ o, d }) => o !== guard && isEnemyPresent(o) && o.elite !== 'guarding' && !o.def.boss && !o.guardedBy && d <= g.rangeTiles)
+      .filter(({ o, d }) => o !== guard && isEnemyPresent(o) && o.elite !== 'guarding' && !o.def.boss && !o.named && !o.guardedBy && d <= g.rangeTiles)
       .sort((a, b) => a.d - b.d || a.order - b.order)
       .slice(0, g.protects);
     for (const { o } of near) o.guardedBy = guard.id;
