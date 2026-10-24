@@ -26,6 +26,7 @@ function summarize(label: string, runs: RunStats[]): void {
   console.log(`\n=== ${label} ===`);
   console.log(`win ${pct(won.length, runs.length)}   run time (won) ${f1(avg(won.map((r) => r.ticks / 20 / 60)))} min   items/run ${f1(avg(runs.map((r) => r.items)))}`);
   console.log(`grades S ${pct(grades.S, fights.length)}  A ${pct(grades.A, fights.length)}  B ${pct(grades.B, fights.length)}`);
+  console.log(`strikes per fight room ${f1(avg(fights.map((r) => r.strikes)))}   perfects per fight room ${f1(avg(fights.map((r) => r.perfects)))}`);
   console.log(`deaths by room: ${Object.entries(deaths).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(', ') || 'none'}`);
   const byRoom = new Map<string, typeof fights>();
   for (const r of fights) byRoom.set(r.roomId, [...(byRoom.get(r.roomId) ?? []), r]);

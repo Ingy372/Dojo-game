@@ -262,3 +262,24 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 
 **Next**
 - The guide teaches the Counter, but it does not win runs for someone who still never Counters afterward: the masher's win rate stays at 0%. The lessons that come after the guide (7–10, run 2 on) are the next step.
+## S1 change 1: enemy mixes (2026-10-23)
+
+**Done**
+- Five new battle rooms that each ask one clear question (brute + swarmers, shield + swarmers, two shields). The harder ones only show up later in a floor.
+- A new test plays 5 runs and checks they show at least 4 different enemy mixes (they show 2 without the new rooms).
+- Novice win rate on Standard went from 35% to 41%, so no drop. 135 tests pass and the game builds.
+
+**Next**
+- Jay plays a few floors and says whether the mixes feel different. S1 change 2 (Perfect Counter chain) is in its own pull request.
+
+## S1 change 2: Perfect Counter chain (2026-10-23)
+
+**Done**
+- Perfect Counters in a row give +25, +30, +35, then +40 Focus. A Hit ends the chain and a Block keeps it.
+- The screen shows "PERFECT x2", "PERFECT x3"... with a brighter glow as the chain grows.
+- New tests check the Focus steps, the Hit reset, the Block keeping the chain, and the Focus limit.
+- The balance report now shows Strikes per fight room. They went from about 14 to about 16 per room (11–18% more; the limit was 20%).
+- 137 tests pass and the game builds.
+
+**Next**
+- Jay tries a x3 chain on the preview and says whether it feels rewarding.

@@ -199,13 +199,67 @@ describe('the counter', () => {
       expect(events.some((ev) => ev.kind === 'perfectCounter')).toBe(true);
       expect(p.health).toBe(p.maxHealth);
       const basics = basicHits(events);
-      expect(p.focus - focusBeforeImpact).toBe(COMBAT.focus.perPerfectCounter + COMBAT.focus.perHit * basics);
+      expect(p.focus - focusBeforeImpact).toBe(COMBAT.focus.perPerfectCounterChain[0] + COMBAT.focus.perHit * basics);
       expect(e.mode).toBe('stagger');
       expect(e.modeTicks).toBe(COMBAT.counter.perfectStaggerTicks);
       const counterHit = events.find((ev) => ev.kind === 'playerAttack' && ev.move === 'counter');
       expect(counterHit).toMatchObject({ damage: damage(COMBAT.player.power, 2, brute.guard) });
       expect(before).toBeGreaterThan(e.health);
     }
+  });
+
+  describe('Perfect Counter chain', () => {
+    // A brute that can't be defeated, so it keeps attacking.
+    const tough = { ...brute, maxHealth: 1_000_000 };
+    const chainSetup = () => {
+      const room = arena();
+      const world = createWorld(room, ['p1'], { enemyTypes: { brute: tough }, difficulty: 'standard' });
+      return { room, world, p: world.players.p1 };
+    };
+    /** Empties Focus, answers the next attack (Perfect = 0 ticks early), and returns the Focus the Counter gave. */
+    const answer = (world: WorldState, room: ReturnType<typeof arena>, early: number | null) => {
+      const p = world.players.p1;
+      p.focus = 0;
+      const events = counterAt(world, room, early);
+      return { events, gained: p.focus - focusBeforeImpact - COMBAT.focus.perHit * basicHits(events) };
+    };
+
+    it('gives +25, +30, +35, then +40 from then on', () => {
+      const { room, world, p } = chainSetup();
+      const gains = [1, 2, 3, 4, 5, 6].map((n) => {
+        const { events, gained } = answer(world, room, 0);
+        expect(events.find((ev) => ev.kind === 'perfectCounter')).toMatchObject({ chain: n });
+        return gained;
+      });
+      expect(gains).toEqual([25, 30, 35, 40, 40, 40]);
+      expect(p.counterChain).toBe(6);
+    });
+
+    it('a Hit ends the chain', () => {
+      const { room, world, p } = chainSetup();
+      answer(world, room, 0);
+      answer(world, room, 0);
+      expect(answer(world, room, null).events.some((ev) => ev.kind === 'hit')).toBe(true);
+      expect(p.counterChain).toBe(0);
+      expect(answer(world, room, 0).gained).toBe(25);
+    });
+
+    it('a Block keeps the chain but does not add to it', () => {
+      const { room, world, p } = chainSetup();
+      answer(world, room, 0);
+      answer(world, room, 0);
+      expect(answer(world, room, window).events.some((ev) => ev.kind === 'block')).toBe(true);
+      expect(p.counterChain).toBe(2);
+      expect(answer(world, room, 0).gained).toBe(35);
+    });
+
+    it('never fills Focus past the maximum', () => {
+      const { room, world, p } = chainSetup();
+      for (let i = 0; i < 4; i++) answer(world, room, 0);
+      p.focus = COMBAT.focus.max - 10;
+      counterAt(world, room, 0);
+      expect(p.focus).toBe(COMBAT.focus.max);
+    });
   });
 
   it('gives a Block (half damage, no stagger, combo kept) when pressed earlier', () => {
