@@ -1,0 +1,93 @@
+{
+  "notes": "C7: S2 rarity display names (optional, ids stay) and UI lines. Legendary is post-launch; names are drafts.",
+  "rarity": [
+    {
+      "id": "common",
+      "display": "Everyday"
+    },
+    {
+      "id": "uncommon",
+      "display": "Special"
+    },
+    {
+      "id": "rare",
+      "display": "Rare"
+    },
+    {
+      "id": "epic",
+      "display": "Epic"
+    },
+    {
+      "id": "legendary",
+      "display": "Legendary"
+    }
+  ],
+  "ui": {
+    "letGoConfirm": "Let go of this? You keep its look.",
+    "savedForWorkshop": "Saved for the workshop!",
+    "lookPickerTitle": "Choose Your Look",
+    "wearingLook": "Wearing the look of {item}"
+  },
+  "legendary": [
+    {
+      "id": "legendary-white",
+      "tier": "white",
+      "name": "Lamp Keeper's Lantern",
+      "description": "A lantern that never goes out. It waited for morning."
+    },
+    {
+      "id": "legendary-yellow",
+      "tier": "yellow",
+      "name": "Sun Gardener's Vine",
+      "description": "A vine that always turns toward the light."
+    },
+    {
+      "id": "legendary-orange",
+      "tier": "orange",
+      "name": "Hearth Cook's Ladle",
+      "description": "A ladle that always saves a bowl for the one who is late."
+    },
+    {
+      "id": "legendary-green",
+      "tier": "green",
+      "name": "Giant's Kind Stone",
+      "description": "Big and heavy, but light in your hand."
+    },
+    {
+      "id": "legendary-blue",
+      "tier": "blue",
+      "name": "River Watcher's Eye",
+      "description": "See clearly, friend. Every shore is in view."
+    },
+    {
+      "id": "legendary-red",
+      "tier": "red",
+      "name": "Ember Knight's Shield",
+      "description": "A shield made for helping others."
+    },
+    {
+      "id": "legendary-red-black",
+      "tier": "red-black",
+      "name": "Echo Mask's Smile",
+      "description": "A mask that repeats kind words now."
+    },
+    {
+      "id": "legendary-brown",
+      "tier": "brown",
+      "name": "Root Keeper's Book",
+      "description": "A book with room for your story."
+    },
+    {
+      "id": "legendary-brown-black",
+      "tier": "brown-black",
+      "name": "Storm Herald's Calm",
+      "description": "A gust of calm that quiets the storm."
+    },
+    {
+      "id": "legendary-black",
+      "tier": "black",
+      "name": "Lightbearer's Sash",
+      "description": "The sash of a brave student who held on."
+    }
+  ]
+}

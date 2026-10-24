@@ -29,6 +29,6 @@ A tall, gentle gardener made of vines. The shadow wrapped it in thorns, but its 
 
 ## What the player learns
 
-The pieces of light fell in a circle around the Tower. Something was standing in the middle.
+The pieces of light fell in a circle around the Tower. Someone was standing in the middle, trying to catch them.
 
 Next: [Tier 3](03-orange.md)
