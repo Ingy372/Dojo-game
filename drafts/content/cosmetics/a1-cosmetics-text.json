@@ -5,7 +5,7 @@
     { "id": "wraps-cloth", "name": "First Steps Wraps", "text": "Soft wraps for hands that keep practicing." },
     { "id": "wraps-leather", "name": "Steady Hands Wraps", "text": "Tough wraps for a student who keeps going." },
     { "id": "wraps-tiger", "name": "Brave Tiger Wraps", "text": "Bold stripes for a brave and kind heart." },
-    { "id": "gi-trim", "name": "Honor Trim", "text": "A bright edge for your gi, earned by real effort." },
+    { "id": "gi-trim", "name": "Dojo Trim", "text": "A bright edge for your gi, earned by real effort." },
     { "id": "aura", "layerIds": ["aura-back", "aura-front"], "name": "Gentle Glow", "text": "A soft light that shines when you do your best." }
   ],
   "colours": {
