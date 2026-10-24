@@ -578,3 +578,19 @@ My calls (not Manager):
 ## Rest refresh (2026-10-24)
 - After "Rest for now" on the resume card, DojoScene now uses the profile that `bankRun` returns and takes its dojo with `homeDojo`. Before, it reloaded only the profile, so `this.dojo` still pointed at the old dojo object: the new pieces didn't show, and later dojo edits went to that old object. Those edits could be lost, or could overwrite what was banked. The new pieces go to storage, so the walkable room doesn't change; redrawing is enough.
 - There's no client test harness and adding one would mean new dependencies, so this fix is checked with before/after screenshots instead of a test.
+
+## M7-P2 tutorial floor (2026-10-24)
+Manager calls:
+1. A "session" is a calendar day with at least one run. P5 builds the counter.
+2. lesson-move is dropped; the walk-to-the-glowing-spot step teaches moving.
+3. The Brute step uses only the guided Counter lines, not "Red circle!".
+4. Strike is taught in the boss room when Focus fills; nothing else new in that room.
+5. The chest tier uses the C7 name kids see. C7 names are not in content yet: theme.ts still shows "Uncommon", so that is what kids see for now.
+6. Only brand-new profiles (runsStarted 0 and runsPlayed 0) get the tutorial floor.
+
+My calls (not Manager):
+- Tutorial floor = 3 rooms (battle → treasure → boss), each a dedicated `tutorial: true` room; normal floors never pick them. New `G` tile marks the glowing spot (tutorial rooms only).
+- "Doing nothing can't lose": tutorial worlds have minHealth 1, enemies wait until the spot is reached, and the guided Counter holds still until COUNTER is tapped.
+- The Insight is given automatically after the tutorial battle (no menu). The chest rarity is raised to at least uncommon.
+- The easy boss is the normal Floor Keeper at 35% health and no summons (a world option, so no new art).
+- `?tutorial=1` test link replays the floor.

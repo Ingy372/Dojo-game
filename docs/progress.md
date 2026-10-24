@@ -480,3 +480,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## Rest refresh (2026-10-24)
 - Fixed: pieces banked by "Rest for now" in the dojo now show at once. Tests 239 passed / 1 skipped; typecheck and build pass. Screenshots: /workspace/rest-{before,after}-{667,844}-storage.png (before: 1 stored, after: 4).
+
+## M7-P2 tutorial floor (2026-10-24)
+- Brand-new profiles go from Create straight into a 3-room tutorial floor: bow, walk to the glowing spot, guided Brute Counter, automatic Insight, a chest (always Uncommon or better), then an easy Floor Keeper where Strike is taught when Focus fills. Can't lose (health floor of 1).
+- Timed browser check: first Perfect Counter about 40 s after "Tap to start" at both 667 and 844 wide (including 15 s idling on Create). Sim: under 60 s over 20 seeds.
+- Tests 250 passed / 1 skipped; typecheck and build pass. Screenshots /workspace/p2-{667,844}-*.png.
+- Follow-up: the combo HUD is hidden until the guided Counter, and the tutorial Brute starts low so the Sensei banner no longer covers it.

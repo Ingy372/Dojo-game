@@ -1,6 +1,6 @@
 // Starting a Tower run (from the dojo's door or the training board).
 
-import { firstFloorOfTier, runDifficulty, ownedDecorations, startRun, type EliteKind, useCalmMind, type Profile, type RunState, type TrainingState } from '@dojo/sim';
+import { firstFloorOfTier, getsTutorialFloor, runDifficulty, ownedDecorations, startRun, type EliteKind, useCalmMind, type Profile, type RunState, type TrainingState } from '@dojo/sim';
 import { CONTENT } from './content';
 import { ensureDifficulty } from './difficulty';
 import { homeDojo, setBowDue } from './dojo';
@@ -28,6 +28,8 @@ export function startTowerRun(profile: Profile, training: TrainingState): RunSta
   const tier = training.belt.tier;
   // Named monsters skip a profile's first few runs: count every real run started.
   const runsStarted = profile.runsStarted;
+  // A brand-new profile's first floor is the tutorial floor (M7-P2); ?tutorial=1 shows it again for testing.
+  const tutorial = !firstRoomId && !forcedTwist && !forcedElite && !forcedNamed && (params.get('tutorial') === '1' || getsTutorialFloor(profile));
   if (!firstRoomId && !forcedTwist && !forcedElite && !forcedNamed) profile.runsStarted++;
   const dojo = homeDojo(profile);
   const calmMind = useCalmMind(dojo);
@@ -48,5 +50,6 @@ export function startTowerRun(profile: Profile, training: TrainingState): RunSta
     forcedElite,
     runsStarted,
     forcedNamed,
+    tutorial,
   });
 }

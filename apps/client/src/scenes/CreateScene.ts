@@ -4,12 +4,14 @@
 // everyone. The belt always shows the real rank and can't be changed here.
 
 import Phaser from 'phaser';
-import type { TrainingState } from '@dojo/sim';
+import { getsTutorialFloor, type TrainingState } from '@dojo/sim';
 import { characterArt, loadArt } from '../art/art';
 import { type StandingCharacter, makeStandingCharacter } from '../art/player';
 import { sfx } from '../audio/Sfx';
 import { FACES, HAIRS, SWATCHES, type PlayerLook, loadLook, saveLook } from '../game/look';
+import { loadSave } from '../game/save';
 import { currentTraining } from '../game/student';
+import { startTowerRun } from '../game/tower';
 import { FONT, crisp } from '../ui/theme';
 
 export interface CreateSceneData {
@@ -184,7 +186,12 @@ export class CreateScene extends Phaser.Scene {
     }
     this.time.delayedCall(save ? 1100 : 0, () => {
       this.cameras.main.fadeOut(300, 10, 8, 16);
-      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Dojo'));
+      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+        // A brand-new player goes straight onto the tutorial floor (M7-P2); everyone else goes home.
+        const profile = loadSave();
+        if (this.first && save && getsTutorialFloor(profile)) this.scene.start('Game', { run: startTowerRun(profile, this.training) });
+        else this.scene.start('Dojo');
+      });
     });
   }
 

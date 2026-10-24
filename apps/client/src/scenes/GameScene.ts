@@ -3,7 +3,9 @@ import {
   GUIDE_DONE,
   GUIDE_LESSONS,
   WARNING_LESSON,
+  STRIKE_LESSON,
   loadLessons,
+  loadTutorialLines,
   COMBAT,
   MOVEMENT,
   TICKS_PER_SECOND,
@@ -52,9 +54,12 @@ import {
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
-import lessonsData from '../../../../content/tutorial/sensei-lessons.json';
+import lessonsData from '../../../../content/tutorial/first-session-lessons.json';
+import tutorialData from '../../../../content/tutorial/tutorial-floor.json';
 
 const LESSONS = loadLessons(lessonsData);
+/** The tutorial floor's lines (M7-P2). */
+const TUTORIAL = loadTutorialLines(tutorialData);
 import { type PackName, addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { ICON_PACK } from '../art/icons';
@@ -272,6 +277,11 @@ export class GameScene extends Phaser.Scene {
   /** The tower art for the student's belt tier (or the ?tower= test link). */
   private towerPack: PackName = 'tower-t1';
 
+  /** Tutorial floor (M7-P2): the glowing spot, and whether Strike has been taught in the boss room. */
+  private goalView: Phaser.GameObjects.Arc | null = null;
+  private strikeTaught = false;
+  private strikeHit = false;
+
   constructor() {
     super('Game');
   }
@@ -332,6 +342,8 @@ export class GameScene extends Phaser.Scene {
     this.heroAction = null;
 
     this.chestOpenAt = null;
+    this.strikeTaught = false;
+    this.strikeHit = false;
     const roomGfx = this.drawRoom();
     const objects = this.makeRoomObjects();
     // Lantern Dark twist: the room is dim, but the warning circles are drawn on top, extra bright.
@@ -406,6 +418,7 @@ export class GameScene extends Phaser.Scene {
         this.elapsed -= TICK_MS;
         this.playEvents(this.world.events);
         if (this.run) this.playRunEvents(updateRun(CONTENT, this.run, this.world));
+        this.checkStrikeLesson();
         if (this.hitStopMs > 0 || this.menuOpen || this.leaving) break;
       }
     }
@@ -685,12 +698,14 @@ export class GameScene extends Phaser.Scene {
     const mark = x + (w * cost) / COMBAT.focus.max;
     g.fillStyle(0xffffff, 0.8).fillRect(mark - 1, 37, 2, 14);
 
-    if (p.combo !== this.shownCombo) {
-      const grew = p.combo > this.shownCombo;
-      this.shownCombo = p.combo;
-      if (p.combo >= 2) {
-        this.comboText.setText(`${p.combo} COMBO`);
-        const bonus = p.combo >= 30 ? 15 : p.combo >= 20 ? 10 : p.combo >= 10 ? 5 : 0;
+    // Basic hits land while the Brute walks in, before the guided Counter; the combo waits for that lesson.
+    const combo = this.world.guide?.step === 0 ? 0 : p.combo;
+    if (combo !== this.shownCombo) {
+      const grew = combo > this.shownCombo;
+      this.shownCombo = combo;
+      if (combo >= 2) {
+        this.comboText.setText(`${combo} COMBO`);
+        const bonus = combo >= 30 ? 15 : combo >= 20 ? 10 : combo >= 10 ? 5 : 0;
         this.comboBonusText.setText(bonus ? `+${bonus}% power` : '');
         if (grew) {
           this.tweens.killTweensOf(this.comboText);
@@ -698,8 +713,8 @@ export class GameScene extends Phaser.Scene {
           this.tweens.add({ targets: this.comboText, scale: 1, duration: 140, ease: 'Back.Out' });
         }
       }
-      this.comboText.setVisible(p.combo >= 2);
-      this.comboBonusText.setVisible(p.combo >= 2);
+      this.comboText.setVisible(combo >= 2);
+      this.comboBonusText.setVisible(combo >= 2);
     }
 
     if (p.counterChain !== this.shownChain) {
@@ -931,7 +946,14 @@ export class GameScene extends Phaser.Scene {
           this.floatText(e.pos, `${ev.damage}`, heavy ? '#ffd166' : '#ffffff', heavy ? 30 : 22);
           // The character punches (the automatic jab only when standing, so walking stays smooth).
           if (ev.move === 'basic' && !this.world.players[ev.playerId].moving && !this.heroAction) this.heroDo('jab');
-          else if (ev.move === 'strike') this.heroDo('strike');
+          else if (ev.move === 'strike') {
+            this.heroDo('strike');
+            // Tutorial boss room: the Strike lesson's well done, once.
+            if (this.strikeTaught && !this.strikeHit) {
+              this.strikeHit = true;
+              this.senseiSay([LESSONS[STRIKE_LESSON].success!]);
+            }
+          }
           if (ev.move === 'basic') {
             sfx.hit();
             this.impact(FEEL.basic);
@@ -1103,12 +1125,26 @@ export class GameScene extends Phaser.Scene {
         }
         case 'roomCleared':
           if (this.room.kind !== 'treasure' && this.room.kind !== 'rest') sfx.roomClear();
+          if (this.run?.tutorial && this.room.kind === 'boss') this.senseiSay([TUTORIAL['tutorial-boss'].success!]);
           break;
+        case 'goalReached': {
+          const p = this.world.players[this.me];
+          sfx.appear();
+          this.ring(p.pos, COLORS.gold, 1.6);
+          this.sparks(p.pos, 14, COLORS.gold);
+          if (this.goalView) {
+            this.tweens.killTweensOf(this.goalView);
+            this.tweens.add({ targets: this.goalView, alpha: 0, scale: 2, duration: 400, onComplete: () => this.goalView?.destroy() });
+          }
+          this.senseiSay([TUTORIAL['tutorial-walk'].success!]);
+          break;
+        }
         case 'chestOpened': {
           // The chest wiggles first; the chime, ring and sparks come when the lid bursts open.
           this.chestOpenAt = this.time.now;
           const at = this.room.chest;
           this.time.delayedCall(this.chestTiming().burstMs, () => {
+            if (this.run?.tutorial) this.senseiSay([TUTORIAL['tutorial-chest'].success!]);
             sfx.chest();
             if (at) {
               this.ring(at, COLORS.gold, 1.8);
@@ -1129,6 +1165,7 @@ export class GameScene extends Phaser.Scene {
           for (const d of this.doorViews) this.ring(d.at, DOOR_LOOK[d.kind].color, 1.2);
           const p = this.world.players[this.me];
           const one = this.doorViews.length === 1;
+          if (this.run?.tutorial && this.room.kind === 'boss') this.time.delayedCall(1800, () => this.senseiSay([...TUTORIAL['tutorial-door'].screens, TUTORIAL['tutorial-door'].success!], 2000));
           this.floatText(p.pos, one ? 'The door is open!' : 'The doors are open! Pick one.', '#f2e9d8', 20, 1.2);
           break;
         }
@@ -1207,6 +1244,18 @@ export class GameScene extends Phaser.Scene {
         case 'graded':
           this.showGrade(ev.result.grade!, ev.result.perfects, ev.result.damageTaken, ev.result.ticks, ev.result.inTime);
           break;
+        case 'insightGift': {
+          // Tutorial floor: Sensei picks the Insight, with no menu.
+          if (!this.run) break;
+          setPlayerMods(this.world.players[this.me], modsFrom(runEffects(CONTENT, this.run, this.setup.effects), TICKS_PER_SECOND));
+          const name = CONTENT.insights.find((i) => i.id === ev.id)?.name ?? '';
+          this.time.delayedCall(1600, () => {
+            sfx.insight();
+            this.popWord(name, '#ffd166', 34);
+            this.senseiSay([...TUTORIAL['tutorial-insight'].screens, TUTORIAL['tutorial-insight'].success!], 1700);
+          });
+          break;
+        }
         case 'insightChoice':
           // Let the grade show for a moment, then offer the Insights.
           this.menuOpen = true;
@@ -1324,7 +1373,8 @@ export class GameScene extends Phaser.Scene {
   private askForBow(): void {
     this.menuOpen = true;
     this.enemiesAt = null;
-    const prompt = bowPrompt(this, 'Bow to begin the floor', () => {
+    const tutorial = this.run?.tutorial ?? false;
+    const prompt = bowPrompt(this, tutorial ? TUTORIAL['tutorial-bow'].screens[0] : 'Bow to begin the floor', () => {
       this.heroDo('bow');
       playBow(this, this.player, () => {
         if (!this.run) return;
@@ -1347,6 +1397,10 @@ export class GameScene extends Phaser.Scene {
   /** The room's name (and challenge rule) when entering. */
   private introduceRoom(): void {
     if (!this.run) return;
+    if (this.run.tutorial) {
+      this.introduceTutorialRoom();
+      return;
+    }
     const lines = [this.room.name];
     if (this.room.challenge) lines.push(this.room.challenge.text);
     else if (this.room.kind === 'rest') lines.push('Walk to the shrine to rest.');
@@ -1368,6 +1422,31 @@ export class GameScene extends Phaser.Scene {
         this.placeMessage();
       },
     });
+  }
+
+  /**
+   * Tutorial floor (M7-P2): one Sensei line per step, and at most one new lesson per room.
+   * Room 1: bow, then walk to the glowing spot (the guided Counter lines follow on their own).
+   * Room 2: the chest. Room 3: the easy boss, with Strike taught when Focus fills.
+   */
+  private introduceTutorialRoom(): void {
+    const kind = this.room.kind;
+    if (kind === 'battle') {
+      this.senseiSay([TUTORIAL['tutorial-bow'].success!, ...TUTORIAL['tutorial-walk'].screens], 1300);
+    } else if (kind === 'treasure') {
+      this.senseiSay(TUTORIAL['tutorial-chest'].screens);
+    } else if (kind === 'boss') {
+      this.senseiSay(TUTORIAL['tutorial-boss'].screens);
+    }
+  }
+
+  /** Tutorial boss room: teach Strike the first time Focus fills (Manager call, M7-P2). */
+  private checkStrikeLesson(): void {
+    if (!this.run?.tutorial || this.room.kind !== 'boss' || this.strikeTaught) return;
+    const p = this.world.players[this.me];
+    if (!p || p.focus < strikeCost(p)) return;
+    this.strikeTaught = true;
+    this.senseiSay(LESSONS[STRIKE_LESSON].screens, 1600);
   }
 
   /** The big middle message, moved down under the twist banner while one is showing. */
@@ -1445,6 +1524,15 @@ export class GameScene extends Phaser.Scene {
     if (c) this.chestImgs.forEach((img, i) => img.setDepth(i === 0 ? depthAt((c.y + 0.4) * TILE) : 8));
     if (sh) this.shrineImgs.forEach((img) => img.setDepth(depthAt((sh.y + 0.4) * TILE)));
     objs.push(...this.chestImgs, ...this.shrineImgs);
+    // Tutorial floor: the glowing spot to walk to, gently pulsing.
+    const g = this.room.goal;
+    this.goalView = null;
+    if (g) {
+      const spot = this.add.circle(g.x * TILE, g.y * TILE, TILE * 0.55, COLORS.gold, 0.35).setStrokeStyle(3, COLORS.gold, 0.9).setDepth(1);
+      this.tweens.add({ targets: spot, scale: 1.25, alpha: 0.6, duration: 700, yoyo: true, repeat: -1 });
+      this.goalView = spot;
+      objs.push(spot);
+    }
     return objs;
   }
 

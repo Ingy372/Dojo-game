@@ -1,0 +1,30 @@
+{
+  "id": "tutorial-keep",
+  "name": "Little Keeper's Hall",
+  "kind": "boss",
+  "tutorial": true,
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest",
+  "notes": "Tutorial floor room 3 (M7-P2): the Floor Keeper on its own. On the tutorial floor it has a third of its health and calls in no helpers (TUTORIAL_FLOOR in packages/sim/src/run.ts).",
+  "parSeconds": 90,
+  "tiles": [
+    "##########D#########",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........C........#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "enemies": [
+    {
+      "enemy": "floor-keeper",
+      "column": 11,
+      "row": 3
+    }
+  ]
+}

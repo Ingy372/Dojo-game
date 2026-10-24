@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { GUIDE_DONE, GUIDE_NUDGE_TICKS, GUIDE_LESSONS, createWorld, loadProfile, newProfile, loadEnemy, loadLessons, loadRoom, stepWorld, type PlayerInput, type WorldState } from '../src';
 import bruteData from '../../../content/enemies/brute.json';
-import lessonsData from '../../../content/tutorial/sensei-lessons.json';
+import lessonsData from '../../../content/tutorial/first-session-lessons.json';
 
 const enemyTypes = { brute: loadEnemy(bruteData) };
 const room = loadRoom({
@@ -68,7 +68,7 @@ describe('guided first Counter', () => {
 
   it('uses the lesson text from content', () => {
     const lessons = loadLessons(lessonsData);
-    expect(lessons[GUIDE_LESSONS[0]].screens).toEqual(['Tap Counter... now!']);
+    expect(lessons[GUIDE_LESSONS[0]].screens).toEqual(['Tap COUNTER... now!']);
     expect(lessons[GUIDE_LESSONS[0]].success).toBe('You did it! Perfect!');
     expect(() => loadLessons({ lessons: [] })).toThrow(/missing/);
   });
