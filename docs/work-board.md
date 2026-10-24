@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-24 (9:15 AM) by Dojo-ascent Manager.
+Last updated: 2026-10-24 (10:05 AM) by Dojo-ascent Manager.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -51,8 +51,10 @@ These questions already have answers in the design docs. The bots build on these
 | J4 | ~~Faith texts~~ **Done:** `docs/faith-and-creed.md`. Section 6 answered from Jay's wall photos (Oct 24): KJV text, the full Confidentiality line, and no covenant for Brown/Black → Black. | — |
 | J5 | ~~Confirm cosmetics~~ **Done (Oct 23):** cosmetics come from gear, in-game achievements and dojo achievements, and are never bought. | ~~A1~~ (unblocked) |
 | J6 | ~~Black belt to 2nd degree~~ **Done (Oct 23):** 2 years between 1st and 2nd degree. Code change done in PR #16. | ~~milestone 4~~ (unblocked) |
-| J8 | **Named monster: before or after launch?** Everything else is decided by the Manager (see M7-N1). | M7-N1 |
-| J9 | **Scripture read aloud:** phone text-to-speech, or Jay records the lines himself? Until then, verses show as text only (L5). | spoken verses in L5/C5 |
+| J8 | ~~Named monster: before or after launch?~~ **Done (Oct 24):** before launch. | ~~M7-N1~~ (unblocked) |
+| J9 | ~~Scripture read aloud~~ **Done (Oct 24):** the phone's voice reads verses; wording stays exactly as on the dojo sign (PR #42). | ~~spoken verses~~ (unblocked) |
+| J10 | **Music licence:** OK to use AI-assisted (Suno) WAFU music, and should we email WAFU (draft in `drafts/planning/M7-P8a-wafu-licence-check.md`, PR #43) for a written OK on white-label builds for other dojos? If no, use the CC0 fallback. | M7-P8a pick, M7-P8 |
+| J11 | **Street Smarts safety review:** PR #34 (`drafts/content/street-smarts/SAFETY-REVIEW.md`): safe helpers, the "come with me" shopper line, a code word, the grown-up's name field, showing the reunion. | C1, K2 |
 | J7 | ~~Fonts~~ **Done (Oct 23, Jay delegated to the Manager):** Fredoka for headings + Andika for body text, because Andika is built for early readers (ages 6+). | ~~menu art~~ (unblocked) |
 
 ---
@@ -74,20 +76,20 @@ Start with **M7-P1, M7-P9 and M7-P11**. Full specs are in the plan file under th
 | ID | Task | Owner | Waiting on | Done when |
 | --- | --- | --- | --- | --- |
 | M7-P1 | **Start first.** Guided on by default for new profiles aged 6–9 or white belt with 0 sign-offs; never switch a player off a mode they chose. | Programmer | nothing | Youngest fake profile starts on Guided; switching to Standard sticks after reload; an older profile starts on Standard. |
-| M7-P2 | Tutorial floor (first 10 minutes, can't lose). | Programmer | M7-P3 | First Perfect Counter under 2 minutes from "Tap to start"; can't lose by doing nothing; chest always Uncommon or better. |
-| M7-P3 | Tutorial lines for each P2 step. | Content Designer | nothing | Every P2 step has one line in a data file, each under 12 words. |
+| M7-P2 | Tutorial floor (first 10 minutes, can't lose). | Programmer | nothing (M7-P3 delivered) | First Perfect Counter under 2 minutes from "Tap to start"; can't lose by doing nothing; chest always Uncommon or better. |
+| M7-P3 | **Delivered (PRs #37, #49).** Tutorial lines for each P2 step. | Content Designer | — | Every P2 step has one line in a data file, each under 12 words. |
 | M7-P4 | Cascade of unlocks on first return home. | Programmer | M7-P2 | Profile 2 sees 3 unlocks plus the stripe in order; profile 1 sees the preview; nothing plays twice. |
-| M7-P5 | Sensei's Lessons + Lesson Scroll. | Programmer | M7-P6 | Two sessions in a row show one new lesson each, never two; every seen lesson replays from the Scroll. |
-| M7-P6 | Lesson lines for first-session systems. | Content Designer | nothing | Each P5 lesson has its lines in a data file, one sentence per screen. |
+| M7-P5 | Sensei's Lessons + Lesson Scroll. Retire the old `content/tutorial/sensei-lessons.json` (see `_note` in the new file). | Programmer | nothing (M7-P6 delivered) | Two sessions in a row show one new lesson each, never two; every seen lesson replays from the Scroll. |
+| M7-P6 | **Delivered (PRs #37, #39, #44, #49, #50).** Lesson lines for first-session systems; `drafts/content/tutorial/first-session-lessons.json` is the only lesson file. | Content Designer | — | Each P5 lesson has its lines in a data file, one sentence per screen. |
 | M7-P7 | Gradual unlock schedule + Welcome Week. | Programmer | M7-P5 | Yellow-belt profile gets all abilities on day 1 but meets one new system per session; "+1 day" moves it forward. |
-| M7-P8 | Sound and music on every main screen. | Programmer | M7-P8a (music pick) | No main screen without sound; both volume sliders work and are remembered. |
-| M7-P8a | Shortlist 3 free-licence music packs (commercial use allowed); Manager picks one. | Researcher & Planner | nothing | Shortlist in drafts/planning/ with licence links; Manager's pick recorded here. |
+| M7-P8 | Sound and music on every main screen. | Programmer | M7-P8a (music pick, waits on J10) | No main screen without sound; both volume sliders work and are remembered. |
+| M7-P8a | **Shortlist delivered (PRs #38, #43).** Shortlist 3 free-licence music packs (commercial use allowed); Manager picks one. | Researcher & Planner | J10 | Shortlist in drafts/planning/ with licence links; Manager's pick recorded here. |
 | M7-P9 | **Start first.** Play-time limit parent setting (off/15/30/45/60, default off); finish the room, friendly "Great training today!", go home. | Programmer | nothing | With `?playlimit=1` the run ends after the current room, nothing is lost, the message is friendly. |
 | M7-P10 | Three next goals at session end (game, collection, real-world). | Programmer | M7-P4 | Every profile sees exactly 3 goals; the real-world one names a real next technique. |
 | M7-P11 | **Start first.** Fix the open bug notes in `docs/progress.md` (for example, a run in progress isn't saved if the app closes). | Programmer | nothing | Each fixed note has a test or screenshot in the PR. |
 | M7-P12 | Playtest-readiness check. | QA Tester | M7-P1 to M7-P11 | Report on each fake profile's first 30 minutes on a phone-sized screen: time to first Perfect Counter, screens over one sentence, ways to lose the tutorial, crashes. |
-| M7-P13 | Learning and overwhelm review of P2–P7. | Learning Designer | M7-P2 to M7-P7 drafts | Short pass/change note on overwhelm, ethics and age 6+ reading level. |
-| M7-N1 | **Not started.** Named monster (`drafts/planning/named-monster-proposal.md`). Manager decisions: 5% chance per run, yellow belt and up, gold sparkles only, small Monster Journal. | Programmer | J8 (Jay: before or after launch) | As the proposal's Done-when. |
+| M7-P13 | **Draft review done (PR #46), fixes merged (PR #49).** Learning and overwhelm review of P2–P7; re-check once P2–P7 are built. | Learning Designer | M7-P2 to M7-P7 builds | Short pass/change note on overwhelm, ethics and age 6+ reading level. |
+| M7-N1 | **Ready to build (launch scope, J8).** Named monster (`drafts/planning/named-monster-proposal.md`, final spec PR #47). Text in `drafts/content/enemies/named-monsters.json` (PR #45); art in `incoming-art/named-monster/` (PRs #48, #51, #53; brute stamp shake off with reduced motion). | Programmer | nothing | As the proposal's Done-when. |
 
 ---
 
@@ -99,8 +101,10 @@ Start with **M7-P1, M7-P9 and M7-P11**. Full specs are in the plan file under th
 | K4 | **Done (PRs #19 and #20, merged Oct 23).** S1 #1 (enemy mixes) and #2 (Perfect Counter chain). The "longest chain" record is deferred. | — |
 | K5 | **Done (PR #22, merged Oct 23).** S1 #4 room twists, with the final twist text and guided-Counter nudge. Slide stays at 1.6x (Q4 found no real cost; drop to 1.3x if kids slide into danger on a real phone). | — |
 | K6 | **Done (PR #26, merged Oct 23).** Twist banner no longer covers the room name or goal; `?twist=<id>` test link added (fixes Q4 bugs 1 and 3). | — |
-| K7 | Wire the new art from PR #10 into the game: the Yellow belt Tower kit (Bamboo Garden Hall), the 28 icons, and the elite auras (S1 #3: Swift and Guarding). Keep "nothing above enemy heads". | PR #10 merged |
-| K2 | Continue milestone 6 (Story and Street Smarts sample) when the Content Writer's C1 is approved. | C1 |
+| K7 | **Done (PR #41).** Tier 2 art (Sunrise Garden), 28 icons, elite aura preview. QA check in PR #55; new Insight icons in PR #56. | — |
+| K7-fix | Fix the small-screen layout bugs in `drafts/qa/2026-10-24-k7-art-qa.md` (PR #55) and swap in the redrawn Insight icons from PR #56. | nothing |
+| K8 | Build S1 #3 elites (Swift and Guarding) from `drafts/planning/S1-tier2-name-and-guarding-aura.md` (PRs #47, #54; sims Q5 PR #40, Q6 PR #52). | Jay's "go" in the Programmer's own chat |
+| K2 | Continue milestone 6 (Story and Street Smarts sample) when the Content Writer's C1 is approved. | C1 (J11) |
 | K3 | Run the balance-testing computer player whenever the QA bot or the Systems Designer asks, and send Jay the report. | requests |
 
 ---
@@ -151,7 +155,7 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| C1 | **Milestone 6 dialogue merged (PR #9).** **Assigned to the Content Designer (Jay, Oct 24):** draft the Street Smarts script. **Milestone 6 material:** dialogue for Sensei, Senpai, Kohai, the second instructor and the founder; plus one Street Smarts scenario script for Jay to approve. | nothing (Content Designer drafts it) |
+| C1 | **Milestone 6 dialogue merged (PR #9).** **Assigned to the Content Designer (Jay, Oct 24):** draft the Street Smarts script. **Milestone 6 material:** dialogue for Sensei, Senpai, Kohai, the second instructor and the founder; plus one Street Smarts scenario script for Jay to approve. | **Delivered (PR #34)**; waits on J11 (Jay's safety review), then Content Designer makes his edits. |
 | C2 | Redo `dojo/sensei-bow-questions.json` as recall questions, with Sensei's lines for a correct answer, a wrong answer, and each award. Change the first lesson to "Tap where you want to go, or use the stick." | nothing |
 | C3 | **Lore bible (lore first).** The Tower's history, the shattered light, the Guardian of every belt tier (white to black), and the Relics. Keep it to one page per tier. This becomes the foundation every quest and enemy is built on. | nothing |
 | C4 | **Quest lines.** After C3 is approved: an outline of the main story chapter for each tier, the life-lesson quests (3rd belt), and the manners and culture quests. Outlines first; full scripts after Jay approves. | C3 |
@@ -165,7 +169,7 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 
 | ID | Task | Waiting on |
 | --- | --- | --- |
-| A0 | **Full build delivered (PR #10, Oct 24).** Yellow belt Tower kit in B Bamboo Garden Hall (`incoming-art/tower-rooms-t2/`), all 28 icons (`incoming-art/icons/`), and the full elite aura set for S1 #3 (`incoming-art/elite-auras/`). Manager calls on the small questions: delete `tower-rooms-t2/proposals/` before merge (B is chosen); one blue rim for all Seals is fine. Tier 2 in-game name and whether Guarding shows which enemies it protects go to the Researcher & Planner (S1). Artist: delete the proposals folder and take "do not merge" off the PR title. | Jay: are the redrawn icons OK? Then merge. |
+| A0 | **Done (PR #10 merged; K7 wired it in).** Yellow belt Tower kit in B Bamboo Garden Hall (`incoming-art/tower-rooms-t2/`), all 28 icons (`incoming-art/icons/`), and the full elite aura set for S1 #3 (`incoming-art/elite-auras/`). Manager calls on the small questions: delete `tower-rooms-t2/proposals/` before merge (B is chosen); one blue rim for all Seals is fine. Tier 2 in-game name and whether Guarding shows which enemies it protects go to the Researcher & Planner (S1). Artist: delete the proposals folder and take "do not merge" off the PR title. | — |
 | A1 | **Earned cosmetics:** headbands, hand wraps matching the gear (cloth, leather, tiger stripe), gi trims, and a soft aura. 3 samples first. | nothing (J5 done) |
 | A2 | **Form stances:** a stance idle for Rooted Form and Flowing Form (the two Forms that already exist). Later Forms follow S3. | nothing (later Forms: S3) |
 | A3 | **Badges and trophies:** the bow-question award badges (5/10/20/50/100) and a trophy-wall style for certified trophies versus game trophies. | S6 for the full set |
