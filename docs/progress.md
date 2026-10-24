@@ -525,3 +525,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## K23b Banner layout fixes (2026-10-24)
 - Sensei's banner now keeps off the floor chest and the "Ouch! The run is over" message, as well as doors (one list of boxes in placeSensei). K23's four lines are approved.
 - Screenshots /workspace/k23b-*.png at 667 and 844.
+
+## S3-P1 Kata cards + Keon spelling (2026-10-24)
+- "Keon" replaces "Key On" everywhere students see it (Jay's call via the Manager). Ids unchanged, so saves load as before.
+- Earned katas get a card on the Abilities tab: name, step count and direction arrows (no arrow where the direction is still open). Data in content/katas/. New test file katas.test.ts (4 tests). Screenshots /workspace/s3p1-*.png at 667 and 844.

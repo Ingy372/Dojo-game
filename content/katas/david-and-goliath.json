@@ -1,0 +1,71 @@
+{
+  "id": "david-and-goliath",
+  "name": "David and Goliath",
+  "requirement": "green-kata",
+  "form": null,
+  "from": "drafts/content/katas/david-and-goliath.json (S3-K1). Only names, step counts and directions are shown in the game (D1).",
+  "steps": [
+    {
+      "n": 1,
+      "facing": [
+        "F"
+      ]
+    },
+    {
+      "n": 2,
+      "facing": [
+        "F"
+      ]
+    },
+    {
+      "n": 3,
+      "facing": [
+        "F"
+      ]
+    },
+    {
+      "n": 4,
+      "facing": []
+    },
+    {
+      "n": 5,
+      "facing": []
+    },
+    {
+      "n": 6,
+      "facing": [
+        "F"
+      ]
+    },
+    {
+      "n": 7,
+      "facing": [
+        "L"
+      ]
+    },
+    {
+      "n": 8,
+      "facing": []
+    },
+    {
+      "n": 9,
+      "facing": [
+        "B"
+      ]
+    },
+    {
+      "n": 10,
+      "facing": []
+    },
+    {
+      "n": 11,
+      "facing": []
+    },
+    {
+      "n": 12,
+      "facing": [
+        "F"
+      ]
+    }
+  ]
+}
