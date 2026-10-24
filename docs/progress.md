@@ -517,3 +517,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## K22b Locked-card wording and wrapping Abilities cards (2026-10-24)
 - Locked ability cards say "Show Sensei {X} in class to unlock" (same template as the goals card). Abilities descriptions wrap instead of being cut off. Tests 285 passed / 1 skipped; typecheck and build pass. Screenshots /workspace/k22b-{667,844}-abilities*.png.
+
+## K23 / M7-P12 playtest fixes (2026-10-24)
+- First floor ends with a simple card (grade, one reward, Continue); Sensei comes after. Chest icon replaces '$'. Title/Create/Guided/Street Smarts lines are one short sentence each, in content data (new content/settings/screens.json). Room-clear health number dropped. Sensei banner keeps off doors at 667. Combo clears when the fight ends. Named monster plate and freed line checked by hand. Every change is listed in decisions.md.
+- Tests 285 passed / 1 skipped; typecheck and build pass. Screenshots /workspace/k23-*.png at 667 and 844.

@@ -402,6 +402,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   update(_time: number, delta: number): void {
+    // K23: the camera follows the player, so a door can slide under Sensei's banner at any time.
     if (this.menuOpen || this.leaving) {
       // Paused: drop any touches so nothing happens when play resumes.
       this.controls.takeInput();
@@ -703,7 +704,9 @@ export class GameScene extends Phaser.Scene {
     g.fillStyle(0xffffff, 0.8).fillRect(mark - 1, 37, 2, 14);
 
     // Basic hits land while the Brute walks in, before the guided Counter; the combo waits for that lesson.
-    const combo = this.world.guide?.step === 0 ? 0 : p.combo;
+    // K23: the count also clears when the fight ends: no enemies left standing, or the hero is down.
+    const fightOver = p.health <= 0 || !this.world.enemies.some((e) => e.mode !== 'defeated');
+    const combo = this.world.guide?.step === 0 || fightOver ? 0 : p.combo;
     if (combo !== this.shownCombo) {
       const grew = combo > this.shownCombo;
       this.shownCombo = combo;
@@ -1694,9 +1697,10 @@ export class GameScene extends Phaser.Scene {
       for (const d of this.doorViews) {
         if (!d.label.visible) continue;
         const b = d.label.getBounds();
-        const sx0 = (b.left - cam.worldView.x) * cam.zoom;
-        const sx1 = (b.right - cam.worldView.x) * cam.zoom;
-        const sy0 = (b.top - cam.worldView.y) * cam.zoom;
+        // The door stands in the wall just above its name label, so keep off it too (K23).
+        const sx0 = (Math.min(b.left, d.at.x * TILE - TILE / 2) - cam.worldView.x) * cam.zoom;
+        const sx1 = (Math.max(b.right, d.at.x * TILE + TILE / 2) - cam.worldView.x) * cam.zoom;
+        const sy0 = (b.top - TILE * 2 - cam.worldView.y) * cam.zoom;
         const sy1 = (b.bottom - cam.worldView.y) * cam.zoom;
         if (sx1 < left || sx0 > right || sy1 < top || sy0 > top + t.height) continue;
         top = Math.max(top, sy1 + 6);
@@ -1803,7 +1807,8 @@ export class GameScene extends Phaser.Scene {
       .setResolution(crisp())
       .setScale(2.2)
       .setAlpha(0);
-    const parts = [`${perfects} Perfect`, damage > 0 ? `-${damage} health` : 'no damage', clock(ticks, TICKS_PER_SECOND)];
+    // K23: the damage number is dropped (it read as harsh to kids); a clean room still says so.
+    const parts = [`${perfects} Perfect`, ...(damage > 0 ? [] : ['no damage']), clock(ticks, TICKS_PER_SECOND)];
     if (inTime !== null) parts.push(inTime ? 'in time!' : 'out of time');
     const line = this.add
       .text(width / 2, height * 0.36 + 58, `Room clear!  ${parts.join('  ·  ')}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 })
@@ -1993,9 +1998,17 @@ export class GameScene extends Phaser.Scene {
     this.senseiText = t;
     // The first line shows straight away, so its size is known (K12: labels keep clear of it).
     if (lines.length) t.setText(`Sensei: ${lines[0]}`);
-    lines.slice(1).forEach((line, i) => this.time.delayedCall((i + 1) * holdMs, () => t.active && t.setText(`Sensei: ${line}`)));
+    this.placeSensei();
+    lines.slice(1).forEach((line, i) =>
+      this.time.delayedCall((i + 1) * holdMs, () => {
+        if (!t.active) return;
+        t.setText(`Sensei: ${line}`);
+        if (t === this.senseiText) this.placeSensei();
+      }),
+    );
   }
 
+  /** K23: on a small phone the banner can sit over a door; then it moves down to just under the doors. */
   private senseiDone(line: string | undefined): void {
     this.buttons.pulseCounter(0);
     if (line) this.senseiSay([line]);

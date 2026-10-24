@@ -3,6 +3,7 @@
 // and from the Home Dojo's "Look" button any time after. Every basic option is open to
 // everyone. The belt always shows the real rank and can't be changed here.
 
+import SCREENS from '../../../../content/settings/screens.json';
 import Phaser from 'phaser';
 import { getsTutorialFloor, type TrainingState } from '@dojo/sim';
 import { characterArt, loadArt } from '../art/art';
@@ -66,8 +67,8 @@ export class CreateScene extends Phaser.Scene {
     const firstName = this.training.firstName;
     const title = this.first ? `Welcome, ${firstName}!` : 'Your look';
     this.text(leftW / 2, pad, title, 22, '#ffd166', true, 'Georgia, serif').setOrigin(0.5, 0);
-    const sub = this.first ? `Sensei says you're a ${this.training.belt.name}.\nMake your character!` : 'Change your look any time.';
-    this.text(leftW / 2, pad + 30, sub, 13, '#f2e9d8').setOrigin(0.5, 0).setAlign('center');
+    const sub = this.first ? SCREENS.createLine.replace('{belt}', this.training.belt.name) : 'Change your look any time.';
+    this.text(leftW / 2, pad + 30, sub, 13, '#f2e9d8').setOrigin(0.5, 0).setAlign('center').setWordWrapWidth(leftW - 24, true);
 
     const r = Math.min(height * 0.16, leftW * 0.2);
     const cy = height * 0.56;
