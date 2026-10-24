@@ -420,8 +420,18 @@ From section 1 of `docs/work-board.md`.
 - **Auras: art only, no rules.** Elites aren't in `packages/sim` yet, so K7 only packs the auras (`auras-t1`, per-enemy entries only; the 256 px masters are reference) and draws them on the test link `?aura=swift|guarding`. The Floor Keeper's art id is `keeper`, so `auraId()` maps `floor-keeper` to it. Who becomes elite and what each aura does is S1 #3.
 - **Small worn-gear icon.** On a 667 px phone the worn-gear boxes are narrow, so the icon sits small (22 px) beside the slot name and the item name keeps the full width.
 
+<<<<<<< HEAD
 ## K7-fix (2026-10-24)
 
 - **One-line text on the Training Board.** Gear and Abilities text shrinks (not below 9–10 px), then cuts with "…", instead of wrapping onto the line below. The selected item's detail still shows the full name and stats.
 - **Insight card border = icon accent colour.** The colours come from the PR #56 colour key and are kept in `apps/client/src/art/icons.ts` (`INSIGHT_ACCENT`). The top stripe keeps the family colour.
 - **Live deploy.** The K7 merge and the merges right after it (09:17–09:37 EDT, `f89af8a`…`7c595d6`) got no Cloudflare build. The first build after them (`a4b0d16`, 09:45 EDT) published K7. QA had checked the live link before that build ran.
+=======
+## S1 #3: elites (2026-10-24)
+
+- **Numbers in a data file.** The spec says a `config.ts` ELITES block; Jay asked for one data file instead, so every elite number is in `content/elites/elites.json` and is checked when it loads.
+- **Picking.** The chance is rolled first, then the kind, then a random eligible enemy from the whole room. If Guarding isn't allowed (Guided, the first floor of a belt) or there is no brute or shield, it becomes Swift. A room with no eligible enemy still uses up its roll.
+- **Extra decoration drops where the elite falls**, not in the room chest, because battle rooms may have no chest.
+- **Guarding cut comes first** in the damage math (0.67x), so Perfect Counter's stagger and Strike breaking a shield work the same.
+- **Balance (60 runs each, smart play, 4th-belt profile):** sharp 100% → 100%, typical 100% → 93%, novice 45% → 48%, novice Guided 100% → 100%. With every fight room forced to Guarding, room time is 1.06–1.12x (worst single room 1.43x for the novice).
+>>>>>>> origin/main

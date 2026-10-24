@@ -256,7 +256,8 @@ Same ids, file names, 128 x 128 size, anchor (64, 64) and static.json. Only the 
 - **Final tells** (each sheet is one row at the enemy's frame size and anchor; played during the normal wind-up, which keeps its length):
   - brute `brute/tell-stamp-dust.png`: 6 frames at 15 fps; play at 0.0 s and 0.4 s of the 0.8 s wind-up, with a 2 px shake for 0.12 s each (off when reduced motion is on, pending Jay). Draw it under the enemy.
   - swarmer `swarmer/tell-dash-trail.png`: 6 frames at 10 fps over the 0.6 s wind-up, then hold the last frame until the dash ends. It is drawn facing +x, so rotate it about the anchor to the dash angle. Loop `tell-dash-trail-tile.png` (64 x 24) for longer dashes. Draw it under enemies, over the danger circle.
-  - shield `shield/tell-shield-tap.png`: 4 frames at 20 fps; play at 0.0, 0.233 and 0.467 s of the 0.7 s wind-up, plus the clank sound. Shift it by `offsetPerDirectionPx[dir]` and draw it over the enemy.
+  - shield `shield/tell-shield-tap.png`: 4 frames at 20 fps; play at 0.0, 0.233 and 0.467 s of the 0.7 s wind-up, plus the clank sound. Shift it by `offsetPerFramePx[dir][current wind-up frame]` (new: the shield rises during the wind-up, so the flash must follow it; `offsetPerDirectionPx` is frame 0 only) and draw it over the enemy.
+- Always pick enemy and effect frames as whole numbers from real time and each animation's own fps (see `make_tells.py` `state()`). Never use a fractional frame index. Sheet sizes, anchors and timings are unchanged.
 - `name-tag.headOffsetPx` covers the idle, wind-up and attack poses, so the tag stays fixed during tells.
 - Stickers in `sticker/` are final (die-cut style).
 - Journal parts in `journal/` with layout slots in static.json; stickers in `sticker/` (final, wall items).

@@ -4,8 +4,10 @@
 import { describe, it } from 'vitest';
 
 declare const console: { log(...args: unknown[]): void };
-import type { Difficulty } from '../../src';
+import type { Difficulty, EliteKind } from '../../src';
 import { testContent } from '../load-content';
+import { buildTraining, loadFeed } from '../../src';
+import green from '../../../../fixtures/4-green-belt.json';
 import { SKILLS, playRun, type RunStats, type Style } from './bot';
 
 const enabled = !!(import.meta.env as Record<string, string | undefined>).BALANCE;
@@ -47,6 +49,32 @@ describe.skipIf(!enabled)('balance report', () => {
       for (const style of ['smart', 'stand'] as Style[]) {
         const runs = Array.from({ length: RUNS }, (_, i) => playRun(content, 1000 + i, style, SKILLS[skill], difficulty));
         summarize(`${skill} player, ${style}, ${difficulty}`, runs);
+      }
+    }
+    // Elites (S1 #3): 4th belt with elites rolled as in play, and every fight room forced to have one.
+    const fightSecs = (runs: RunStats[]) => {
+      const m = new Map<string, number[]>();
+      for (const r of runs.flatMap((x) => x.rooms)) if (['battle', 'challenge'].includes(r.kind) && r.roomId !== 'tutorial') m.set(r.roomId, [...(m.get(r.roomId) ?? []), r.ticks / 20]);
+      return m;
+    };
+    // The 4th-belt test profile (fixtures/4-green-belt.json) sets the tier, so elites come at their real rate.
+    const greenFeed = loadFeed(green);
+    const greenTier = buildTraining(greenFeed, content.abilities, { ms: Date.parse(greenFeed.asOf), weekday: new Date(greenFeed.asOf).getUTCDay() }).belt.tier;
+    for (const [skill, difficulty] of cases) {
+      const plain = Array.from({ length: RUNS }, (_, i) => playRun(content, 1000 + i, 'smart', SKILLS[skill], difficulty, undefined, undefined, { tier: 1 }));
+      const natural = Array.from({ length: RUNS }, (_, i) => playRun(content, 1000 + i, 'smart', SKILLS[skill], difficulty, undefined, undefined, { tier: greenTier }));
+      const strikes = (runs: RunStats[]) => f1(avg(runs.flatMap((r) => r.rooms).filter((r) => ['battle', 'challenge', 'boss'].includes(r.kind)).map((r) => r.strikes)));
+      const wins = (runs: RunStats[]) => pct(runs.filter((r) => r.won).length, runs.length);
+      const eliteRooms = natural.flatMap((r) => r.rooms).filter((r) => r.elite);
+      console.log(`\n=== elites, ${skill} player, smart, ${difficulty} ===`);
+      console.log(`no elites (1st belt): win ${wins(plain)}  strikes/fight room ${strikes(plain)}`);
+      console.log(`elites as rolled (4th-belt profile): win ${wins(natural)}  strikes/fight room ${strikes(natural)}  elite rooms ${eliteRooms.length} (swift ${eliteRooms.filter((r) => r.elite === 'swift').length}, guarding ${eliteRooms.filter((r) => r.elite === 'guarding').length}) over ${RUNS} runs`);
+      const base = fightSecs(plain);
+      for (const kind of ['swift', 'guarding'] as EliteKind[]) {
+        const forced = Array.from({ length: RUNS }, (_, i) => playRun(content, 1000 + i, 'smart', SKILLS[skill], difficulty, undefined, undefined, { tier: 4, forcedElite: kind }));
+        const secs = fightSecs(forced);
+        const ratios = [...secs].filter(([id]) => base.has(id)).map(([id, xs]) => avg(xs) / avg(base.get(id)!));
+        console.log(`every fight room ${kind}: win ${wins(forced)}  strikes/fight room ${strikes(forced)}  room time x${avg(ratios).toFixed(2)} vs same rooms without (worst x${Math.max(...ratios).toFixed(2)})`);
       }
     }
     // First run with and without Sensei's guided Counter (G1), for players who never Counter.

@@ -96,7 +96,14 @@ S["tell-shield-tap"] = {"enemy": "shield", "files": {"fx": "shield/tell-shield-t
 for k in S:  # shift rule simplification: give final offsets directly
     pass
 S["tell-shield-tap"]["offsetPerDirectionPx"] = {k: [v[0], round(v[1] + 40, 1)] for k, v in off.items()}
-S["tell-shield-tap"]["note"] = "Captain Clank taps three times. Draw the sheet at the enemy anchor shifted by offsetPerDirectionPx[dir] so the flash sits on the shield. Wind-up stays 0.7 s."
+nwf = sh.width // W; opf = {}
+for r, dname in enumerate(J["directions"]):
+    opf[dname] = []
+    for f in range(nwf):
+        b = sh.crop((f * W, r * H, (f + 1) * W, (r + 1) * H)).getbbox()
+        opf[dname].append([round((b[0] + b[2]) / 2 - AX, 1), round((b[1] + b[3]) / 2 - AY + 40, 1)] if b else S["tell-shield-tap"]["offsetPerDirectionPx"][dname])
+S["tell-shield-tap"]["offsetPerFramePx"] = opf
+S["tell-shield-tap"]["note"] = "Captain Clank taps three times. Draw the sheet at the enemy anchor shifted by offsetPerFramePx[dir][current wind-up frame] (the shield rises during the wind-up, so it must follow the frame). offsetPerDirectionPx = frame 0 only, kept for old code. Wind-up stays 0.7 s."
 # ---- stickers: finished (die-cut, thick white border + gold keyline) ----
 def enemy(e, f=0, anim="idle", dname="S"):
     J = ej(e); fw, fh = J["frameWidth"], J["frameHeight"]; row = J["directions"].index(dname); im = Image.new("RGBA", (fw, fh))
@@ -145,42 +152,58 @@ SPK_ = {e: Image.open(os.path.join(SP, e, "named-sparkle_front.png")).convert("R
 TAG = Image.open(os.path.join(SP, "name-tag.png")).convert("RGBA"); HO = S["name-tag"]["headOffsetPx"]
 def put(c, img, x, y, ax, ay): c.alpha_composite(img, (int(x - ax), int(y - ay)))
 def fr(sheet_, i, w, h): return sheet_.crop((i * w, 0, (i + 1) * w, h))
-def mon(c, e, x, y, i, anim="idle"):
-    J = ej(e); im, (ax, ay) = enemy(e, i, anim); put(c, im, x, y, ax, ay); put(c, fr(SPK_[e], i % 8, J["frameWidth"], J["frameHeight"]), x, y, ax, ay); put(c, TAG, x, y - HO[e], 32, 16)
-POS = {"brute": (150, 300), "swarmer": (380, 210), "shield": (590, 320)}
+def mon(c, e, x, y, f, anim="idle", spk_f=0):
+    """f MUST be an int frame of that animation (a float here split frames in half: the PR #53 bug)."""
+    J = ej(e); im, (ax, ay) = enemy(e, int(f), anim); put(c, im, x, y, ax, ay); put(c, fr(SPK_[e], int(spk_f) % 8, J["frameWidth"], J["frameHeight"]), x, y, ax, ay); put(c, TAG, x, y - HO[e], 32, 16)
+POS = {"brute": (150, 300), "swarmer": (330, 210), "shield": (590, 320)}
+A = {e: ej(e)["animations"] for e in POS}
 def danger(c, x, y, rx, ry, a):
+    if a <= 0: return
     o = Image.new("RGBA", c.size); d = ImageDraw.Draw(o); d.ellipse((x - rx, y - ry, x + rx, y + ry), fill=(230, 70, 70, int(60 * a)), outline=(230, 70, 70, int(200 * a)), width=3); c.alpha_composite(o)
-def frame(t):
-    """t in ticks of 0.1 s over a 4.0 s cycle: brute 0-1.2, swarmer 1.3-2.5, shield 2.6-3.6"""
-    c = floor(740, 440); sec = t / 10
+START = {"brute": 0.4, "swarmer": 2.6, "shield": 4.8}   # each creature: idle -> wind-up (+ tell) -> attack -> idle; one at a time
+CYCLE = 7.0
+def state(e, sec):
+    """returns (anim, int frame, seconds into that anim) from real time, using each animation's own fps"""
+    a = A[e]; t0 = START[e]; wd, ad = a["windup"]["durationSec"], a["attack"]["durationSec"]
+    if t0 <= sec < t0 + wd: lt = sec - t0; return "windup", min(a["windup"]["frames"] - 1, int(lt * a["windup"]["fps"])), lt
+    if t0 + wd <= sec < t0 + wd + ad: lt = sec - t0 - wd; return "attack", min(a["attack"]["frames"] - 1, int(lt * a["attack"]["fps"])), lt
+    return "idle", int(sec * a["idle"]["fps"]) % a["idle"]["frames"], sec
+def frame(sec):
+    c = floor(740, 440); spk = int(sec * 10)   # sparkles 10 fps
     for e, (x, y) in POS.items():
-        if e == "brute" and sec < 0.8:
-            k = int(sec * 10); danger(c, x, y + 30, 70, 30, J0["brute"][k]); s0 = 0 if sec < .4 else .4; di = min(5, int((sec - s0) * 15))
-            put(c, fr(DS, di, 208, 208), x, y, 104, 170.56); mon(c, e, x, y + (2 if abs(sec - s0) < .12 and k % 2 else 0), k, "windup")
-        elif e == "swarmer" and 1.3 <= sec < 1.9:
-            k = int((sec - 1.3) * 10); danger(c, x + 90, y, 80, 22, J0["swarmer"][k]); put(c, fr(TS, k, 128, 128), x, y, 64, 104.96)
-            for q in range(2): put(c, fr(TT, k, 64, 24), x + 64 + q * 64, y, 0, 12 - 4 + 0)
-            mon(c, e, x, y, k, "windup")
-        elif e == "shield" and 2.6 <= sec < 3.3:
-            k = int((sec - 2.6) * 10); danger(c, x, y + 30, 56, 24, J0["shield"][k]); mon(c, e, x, y, k, "windup"); lt = sec - 2.6
-            for s0 in (0, .233, .467):
-                if s0 <= lt < s0 + .2:
-                    o = S["tell-shield-tap"]["offsetPerDirectionPx"]["S"]; put(c, fr(TP, min(3, int((lt - s0) * 20)), 128, 128), x + o[0], y + o[1], 64, 104.96)
-        else: mon(c, e, x, y, t)
+        an, f, lt = state(e, sec); J = ej(e); ti = (A[e][an].get("telegraphIntensity") or [0] * 99)[f] if an != "idle" else 0
+        if e == "brute":
+            danger(c, x, y + 30, 70, 30, ti)
+            if an == "windup":
+                s0 = 0.0 if lt < 0.4 else 0.4; put(c, fr(DS, min(5, int((lt - s0) * 15)), 208, 208), x, y, 104, 170.56)   # no body bounce: shake is the game's (off with reduced motion)
+            mon(c, e, x, y, f, an, spk)
+        elif e == "swarmer":
+            dx = 0
+            if an == "attack":   # dash out along the trail over frames 0-2, then hop back during the recover
+                dx = 150 * min(1, (lt + 0.1) / 0.3) if f <= 2 else 150 * max(0, 1 - (lt - 0.3) / 0.7)
+            danger(c, x + 90, y, 96, 22, ti)
+            if an == "windup" or (an == "attack" and f <= 2):
+                tf = min(5, int(lt * 10)) if an == "windup" else 5; put(c, fr(TS, tf, 128, 128), x, y, 64, 104.96)
+                if an == "attack" or tf == 5:
+                    for q in range(2): put(c, fr(TT, int(sec * 10) % 6, 64, 24), x + 58 + q * 64, y, 0, 16)   # tile line (y 12) on the trail line (anchor - 4)
+            mon(c, e, x + dx, y, f, an, spk)
+        else:
+            danger(c, x, y + 30, 56, 24, ti); mon(c, e, x, y, f, an, spk)
+            if an == "windup":
+                for s0 in (0.0, 0.233, 0.467):
+                    if s0 <= lt < s0 + 0.2:
+                        o = S["tell-shield-tap"]["offsetPerFramePx"]["S"][f]; put(c, fr(TP, min(3, int((lt - s0) * 20)), 128, 128), x + o[0], y + o[1], 64, 104.96)
     return c
-J0 = {e: ej(e)["animations"]["windup"]["telegraphIntensity"] for e in POS}
 DS = Image.open(os.path.join(SP, "brute", "tell-stamp-dust.png")).convert("RGBA"); TS = Image.open(os.path.join(SP, "swarmer", "tell-dash-trail.png")).convert("RGBA")
 TT = Image.open(os.path.join(SP, "swarmer", "tell-dash-trail-tile.png")).convert("RGBA"); TP = Image.open(os.path.join(SP, "shield", "tell-shield-tap.png")).convert("RGBA")
-# 0.05 s steps for smooth tells
-FR = []
-for q in range(80):
-    FR.append(frame(q / 2).resize((555, 330), Image.LANCZOS))
+STEP = 0.05   # 20 fps GIF; every layer picks its own int frame from real time
+FR = [frame(q * STEP).resize((555, 330), Image.LANCZOS) for q in range(int(CYCLE / STEP))]
 FR[0].save(os.path.join(PV, "tells-room.gif"), save_all=True, append_images=FR[1:], duration=50, loop=0)
 # key frames, colour + greyscale
 keys = [2, 5, 15, 18, 26, 28]   # ticks: brute stamp 1/2, swarmer trail, shield tap 1/2
 row = Image.new("RGBA", (740, 440 * 2 + 20), (46, 42, 58, 255)); a = frame(2.6 * 10 + 2.6); b = frame(.4 * 10 + 1)
 strip = Image.new("RGBA", (3 * 300 + 40, 2 * 240 + 70), (46, 42, 58, 255)); d = ImageDraw.Draw(strip)
-crops = [(frame(4.5), "brute", "stamp dust (2nd stamp)"), (frame(18), "swarmer", "dash sparkle trail"), (frame(26.5), "shield", "shield tap flash")]
+crops = [(frame(START["brute"] + 0.45), "brute", "stamp dust (2nd stamp)"), (frame(START["swarmer"] + 0.55), "swarmer", "dash sparkle trail"), (frame(START["shield"] + 0.5), "shield", "shield tap flash (3rd)")]
 for k, (im, e, lab) in enumerate(crops):
     x, y = POS[e]; cr = im.crop((x - 150 + (60 if e == "swarmer" else 0), y - 170, x + 150 + (60 if e == "swarmer" else 0), y + 70))
     strip.alpha_composite(cr, (10 + k * 310, 30)); strip.alpha_composite(ImageOps.grayscale(cr.convert("RGB")).convert("RGBA"), (10 + k * 310, 300)); d.text((14 + k * 310, 8), lab, fill=(255, 255, 255), font=F(14))

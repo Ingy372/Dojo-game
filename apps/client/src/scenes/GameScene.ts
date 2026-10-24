@@ -233,6 +233,7 @@ export class GameScene extends Phaser.Scene {
   private playerFlashUntil = 0;
   private marker!: Phaser.GameObjects.Arc;
   private danger!: Phaser.GameObjects.Graphics;
+  private tether!: Phaser.GameObjects.Graphics;
   private enemyViews = new Map<string, EnemyView>();
 
   private controls!: TouchControls;
@@ -264,8 +265,10 @@ export class GameScene extends Phaser.Scene {
 
   preload(): void {
     this.towerPack = towerPack(currentTraining().belt.tier);
-    const aura = testAura();
-    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(aura ? ['auras-t1'] : [])]);
+    // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
+    const tier = currentTraining().belt.tier;
+    const auras = testAura() || new URLSearchParams(window.location.search).has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
+    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : [])]);
   }
 
   create(): void {
@@ -307,6 +310,8 @@ export class GameScene extends Phaser.Scene {
       const h = this.room.height * TILE;
       objects.push(this.add.rectangle(0, 0, w, h, 0x05040a, 0.5).setOrigin(0).setDepth(9));
     }
+    // Guarding tethers sit just under the red danger shapes.
+    this.tether = this.add.graphics().setDepth(dim ? 9.5 : 0.9);
     this.danger = this.add.graphics().setDepth(dim ? 10 : 1);
     this.marker = this.add.circle(0, 0, TILE * 0.22).setStrokeStyle(3, COLORS.marker, 0.9).setVisible(false).setDepth(2);
     this.player = this.makePlayer();
@@ -422,12 +427,31 @@ export class GameScene extends Phaser.Scene {
     }
 
     this.danger.clear();
+    this.drawTethers(now);
     this.syncEnemyViews();
     for (const e of this.world.enemies) this.drawEnemy(e, blend, now);
 
     this.buttons.update(p);
     this.drawHud();
     this.drawRunHud(now);
+  }
+
+  /** Guarding elites (S1 #3): a soft blue line to each enemy they protect, and a glow at its feet. */
+  private drawTethers(now: number): void {
+    const g = this.tether;
+    g.clear();
+    if (this.enemiesAt === null) return;
+    const pulse = 0.55 + 0.2 * Math.sin(now / 220);
+    for (const e of this.world.enemies) {
+      if (e.guardedBy === null || e.mode === 'defeated') continue;
+      const by = this.world.enemies.find((x) => x.id === e.guardedBy);
+      const a = this.enemyViews.get(e.id)?.container;
+      const b = by && this.enemyViews.get(by.id)?.container;
+      if (!a || !b) continue;
+      g.lineStyle(5, 0x7fc8ff, pulse * 0.35).lineBetween(b.x, b.y, a.x, a.y);
+      g.lineStyle(2, 0xcfeaff, pulse).lineBetween(b.x, b.y, a.x, a.y);
+      g.fillStyle(0x7fc8ff, pulse * 0.45).fillEllipse(a.x, a.y + 2, TILE * 0.9, TILE * 0.35);
+    }
   }
 
   /** Picks the character's animation: a one-off move (punch, dash, ...), else walk or idle. */
@@ -702,9 +726,9 @@ export class GameScene extends Phaser.Scene {
     const hpBack = this.add.rectangle(0, -top - 8, r * 2, 8, 0x000000, 0.6);
     const hpFill = this.add.rectangle(-r + 2, -top - 8, r * 2 - 4, 4, COLORS.healthLow).setOrigin(0, 0.5);
     const stars = [0, 1, 2].map(() => this.add.circle(0, 0, 4, COLORS.gold).setVisible(false));
-    // Elite aura (S1 #3 art, ?aura= test link): back layer under the creature, front layer over it.
+    // Elite aura (S1 #3; ?aura= draws one on every enemy for testing): back layer under the creature, front layer over it.
     // Nothing goes above the head.
-    const kind = testAura();
+    const kind = testAura() ?? e.elite;
     const id = kind ? auraId(kind, e.def.id) : '';
     const [back, front] = kind ? addStatic(this, 'auras-t1', id, 0, 0) : [];
     const aura = back && front ? { id, back: [back], front: [front] } : null;
@@ -818,6 +842,11 @@ export class GameScene extends Phaser.Scene {
     }
     for (const ev of events) {
       switch (ev.kind) {
+        case 'eliteFocus': {
+          // Elite reward: a small blue-white Focus pop (not a pickup to chase).
+          if (ev.focus > 0) this.floatText(this.world.players[ev.playerId]?.pos ?? { x: 0, y: 0 }, `+${ev.focus} Focus`, '#cfeaff', 20, 1);
+          break;
+        }
         case 'playerAttack': {
           const e = this.enemy(ev.enemyId);
           if (!e) break;

@@ -54,6 +54,8 @@ export interface Profile {
   bests: PersonalBests;
   runsPlayed: number;
   floorsCleared: number;
+  /** Floors played at each belt tier (key: tier), so a tier's first floor can be gentler. */
+  floorsByTier: Record<string, number>;
   lastRun: { summary: RunSummary; newBests: BestKey[]; xp?: XpGain } | null;
   /** Experience level (capped by real rank) and experience toward the next level. */
   level: number;
@@ -78,6 +80,7 @@ export function newProfile(): Profile {
     bests: { fastestClearTicks: null, mostPerfects: 0, longestCombo: 0, mostSGrades: 0 },
     runsPlayed: 0,
     floorsCleared: 0,
+    floorsByTier: {},
     lastRun: null,
     level: 1,
     xp: 0,
@@ -95,7 +98,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0 };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0 };
 }
 
 export function wornItem(profile: Profile, slot: GearSlot): GearItem | null {
@@ -157,6 +160,8 @@ export function finishRun(profile: Profile, summary: RunSummary): BestKey[] {
     profile.lastRun = { summary: { ...summary, items }, newBests };
     return newBests;
   }
+  const tier = String(summary.tier ?? 1);
+  profile.floorsByTier[tier] = (profile.floorsByTier[tier] ?? 0) + 1;
   if (summary.result === 'cleared') {
     profile.floorsCleared++;
     if (b.fastestClearTicks === null || summary.ticks < b.fastestClearTicks) {
@@ -178,4 +183,9 @@ export function finishRun(profile: Profile, summary: RunSummary): BestKey[] {
   }
   profile.lastRun = { summary: { ...summary, items }, newBests };
   return newBests;
+}
+
+/** True when the student hasn't played a (real) floor at this belt tier yet. */
+export function firstFloorOfTier(profile: Profile, tier: number): boolean {
+  return (profile.floorsByTier[String(tier)] ?? 0) === 0;
 }
