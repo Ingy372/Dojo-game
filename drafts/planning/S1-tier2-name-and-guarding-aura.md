@@ -77,7 +77,11 @@ The cut is applied last: after the normal damage formula and all bonuses (combo,
 - **Guarding is never allowed** in Guided mode, or on the **first floor of any tier** (the first floor a student plays after reaching that belt's tier). On those floors a rolled Guarding becomes Swift.
 - **Which enemies:** Swift can be any normal enemy (Brute, Swarmer, Shield Guard). Guarding is only a **Brute or a Shield Guard** (the same guarders the Tester used). A Guarding Swarmer would fall too fast to matter. Bosses and Guardians are never elites.
 - **Rooms with a named monster (M7-N1) have no elite.**
-- Expected result: about 1 elite per floor on average for a 4th-belt student, fewer on Guided.
+- **Which enemy becomes the elite:** when the room starts, after the room is picked as an elite room, roll the trait (Swift 60%, Guarding 40%). Then pick **one enemy at random** from the room's whole enemy list, later waves included (an elite in wave 2 arrives with wave 2). Only `brute`, `swarmer` and `shield` can be picked; the boss (`floor-keeper`) and summoned swarmers never can.
+  - **Swift:** any of the three.
+  - **Guarding:** only a `brute` or `shield`. If the room has neither, or Guarding isn't allowed there, it becomes **Swift** on a random eligible enemy.
+  - If the room has no eligible enemy at all, there is **no elite** and the room doesn't count toward the caps.
+- Expected result: **about 0.6 elites per floor** for a 4th-belt student, fewer on Guided (Tester sim, PR #52: 118 elites in 200 floors). That's on purpose: fewer feels more special. Don't raise the rate to reach 1.
 
 ### Elite stats (multipliers on the normal enemy's file in `content/enemies/`)
 
@@ -87,15 +91,21 @@ The cut is applied last: after the normal damage formula and all bonuses (combo,
 | Power (damage to player) | ×1.0 | ×1.0 |
 | Guard | ×1.0 | ×1.0 |
 | Move speed | ×1.25 | ×1.0 |
-| Wind-up (`telegraphTicks`) | ×0.8 on Standard and Challenge, **×1.0 on Guided** | ×1.0 |
+| Wind-up (`telegraphTicks`) | ×0.8 on **Standard only**. ×1.0 on Guided and Challenge | ×1.0 |
 | Recovery (`recoverTicks`) | ×0.85 | ×1.0 |
 | Perfect Counter window | **Never changes** | Never changes |
 | Aura | none (gold look only) | 3 tiles, 2 closest, ×0.67 |
-| Loot | +1 item roll on defeat ("slightly better loot", S1 #3) | +1 item roll |
+| Reward on defeat | Elite reward (below) | Elite reward (below) |
 
-Example: a Guarding Brute has 225 Health (180 × 1.25). A Swift Swarmer winds up in 10 ticks instead of 12 on Standard, and keeps all 12 on Guided. Round ticks to the nearest whole tick, never below 8.
+Example: a Guarding Brute has 225 Health (180 × 1.25). Swift wind-up on Standard is `round(telegraphTicks × 0.8)`, **never below 10 ticks** (the game's own rule in `packages/sim/src/enemy.ts`: half a second of warning). So a Swift Swarmer is 10 ticks (500 ms), Shield Guard 11, Brute 13. On Guided and Challenge, Swift uses the normal wind-up: Challenge already shortens it (`fillScale` 0.8), and a Swift Swarmer there would leave only 350 ms, too fast to read (Tester sim, PR #52). Swift is still faster on its feet (×1.25) and recovers faster (×0.85) on every difficulty.
 
-Why ×1.25 Health: the sim modelled the guarder with normal stats and every room had one (a worst case). Real floors have about 1 elite, so a small Health bump makes elites feel special without undoing the sim's result. The balance player should re-check this (Done-when 9).
+**Elite reward ("+1 item roll", made exact).** Only Focus or cosmetics, never gear, stats, Training Points, rarity boosts or anything paid:
+- **+15 Focus** the moment an elite is defeated (same size as the bow, `BOW.focus`; capped at `COMBAT.focus.max` 100). Shows as a small blue-white Focus pop, not a pickup to chase.
+- **One extra decoration roll** for the room chest: 50% chance, using the existing `dropDecoration()` pool (`source: "tower"`, kinds you have fewest of first). It adds a Home Dojo decoration only.
+- No gear roll and no change to the rarity weights or bad-luck counter (`LOOT`). Gear stays from normal chests only.
+
+
+Why ×1.25 Health: the sim modelled the guarder with normal stats and every room had one (a worst case). Real floors have about 0.6 elites, and the Tester's PR #52 sim confirmed it passes, so a small Health bump makes elites feel special without undoing the sim's result. The balance player should re-check this (Done-when 9).
 
 **Done when (a tester can check)**
 1. In a room with a Guarding elite and 3 other enemies within 3 tiles, exactly 2 enemies show a blue line and glow: the 2 closest.
@@ -105,9 +115,12 @@ Why ×1.25 Health: the sim modelled the guarder with normal stats and every room
 5. Defeating the guarder removes every line and glow at once.
 6. A Perfect Counter on a protected enemy still shows "PERFECT!" and staggers it for the normal time. A Strike still breaks a protected Shield Guard's shield.
 7. The red danger circle is fully visible on top of any blue line or glow, on a phone screen.
-8. Over 1,000 simulated floors at 4th belt: no elites in rooms 1–2, boss, treasure or rest rooms; never 2 in one room or 3 in one floor; never 2 Guarding in one floor; no Guarding at all on Guided or on a tier's first floor; about 20% of eligible battle rooms and 35% of eligible challenge rooms have one.
+8. Over 1,000 simulated floors at 4th belt: no elites in rooms 1–2, boss, treasure or rest rooms; never 2 in one room or 3 in one floor; never 2 Guarding in one floor; no Guarding at all on Guided or on a tier's first floor; about 20% of eligible battle rooms and 35% of eligible challenge rooms have one; about 0.6 elites per floor.
+8b. Every Guarding elite is a `brute` or `shield`; in a room with neither, a Guarding roll gives a Swift elite instead. The boss and summoned swarmers are never elites. A wave-2 elite arrives with wave 2.
 9. Balance player (Tester's sim, smart novice, Standard): with elites at the real rate, win rate is within 5 points of no elites, and rooms with a Guarding elite take no more than about 25% longer.
-10. A Swift elite's wind-up is 0.8× on Standard and Challenge and unchanged on Guided, and its Perfect Counter window matches the normal enemy on every difficulty (sim tick test).
+10. Sim tick test: a Swift elite's wind-up is 0.8× on Standard (Swarmer 10, Shield 11, Brute 13 ticks), never below 10, and exactly the normal wind-up on Guided and Challenge. Its Perfect Counter window matches the normal enemy on every difficulty.
+10b. Defeating an elite gives +15 Focus (never above 100) and at most one extra decoration roll. No extra gear appears and the `LOOT` rarity weights and bad-luck count don't change.
+10c. A 4th-belt test profile exists in the sim, so the balance player can check elites without forcing them on (Tester issue 3).
 11. An elite has 1.25× the normal enemy's Health (Guarding Brute = 225).
 12. All numbers above sit in one `ELITES` config block; changing one there changes the game and the sim.
 
@@ -124,6 +137,6 @@ Why ×1.25 Health: the sim modelled the guarder with normal stats and every room
 - Guarding: **1/3 less damage from the player, 3 tiles, 2 closest, no Guarding in Guided or on a tier's first floor** (Manager, from the Tester sim, PR #40).
 
 ## Still open (small, the Manager can call these)
-1. Elite rate 20% battle / 35% challenge, caps 1 per room and 2 per floor: OK to start?
-2. Elite Health ×1.25 and Swift numbers: OK to start, pending Done-when 9?
-3. "Floor 1" read as **the first floor of each tier**. If the Manager meant only the very first Tower floor, it's a one-line config change.
+- Decided by the Manager: rates and caps, Health ×1.25, Swift numbers, "floor 1" = first floor of each tier, and no Swift wind-up cut on Challenge.
+- Passed: Done-when 9 (Tester sim, PR #52).
+- Still open: the 50% decoration chance is a starting number for the balance player to tune.
