@@ -706,3 +706,12 @@ K23's four short lines (Title, Create, Guided offer, Street Smarts unlock) were 
 
 ## K23c Ability pop-up keeps off the treasure door (2026-10-24)
 Manager call: at 667 wide the ability name that pops up after room 1 (e.g. "Ripple Counter") briefly covered the treasure door and its label. The pop-up now uses the same list of protected screen boxes as Sensei's banner (doors, chest, centre message), plus the banner itself and the "Room clear!" line. It moves down below anything it would cover. To make that work, Sensei's "Here is an Insight for you!" banner is now shown just before the pop-up rather than just after it. Text and timing are unchanged.
+
+## M7-P8 Music and Sound (2026-10-24)
+Jay's call, relayed by the Manager: AI-assisted WAFU music is fine ("I don't care if music is made by ai personally."). That answers shortlist question 1; the pick stays The Mountain Temple (Vol.35) and The Long Road (Vol.29) (drafts/planning/M7-P8a-music-decision.md).
+Manager calls:
+1. **Download WAFU only after Jay's yes.** He has now said yes. The free itch.io pages can only be downloaded through the "No thanks, just take me to the downloads" button, which needs a browser, so the files are not in this PR yet. Someone adds them in a browser (no login needed) using the normal flow.
+2. **The web preview is OK:** the music files are packed inside the app build and so are reachable in the web preview too. WAFU's rule (schools never get the raw WAV or OGG files) is met because we never hand the files over.
+3. **Commit the files directly, no Git LFS.** Only the two seamless-loop OGG files plus WAFU's LICENSE.txt.
+4. **Volume is 0 to 5 in whole steps,** with big − and + buttons and five bars, in Settings and outside the grown-up gate. Saved on the device as `dojo.musicVol` (default 3) and `dojo.sfxVol` (default 5, the same loudness as before).
+How it works: content/settings/audio.json maps each screen to a track (Temple for Title, Create, Dojo, Home and Street Smarts; Long Road for the Tower), plus the fade time and the button text. apps/client/src/audio/Music.ts plays on the same audio context as the sound effects. It starts after the first touch, fades between tracks when the screen changes, and pauses when the app goes to the background. A missing or unreadable file just means silence. The files go in **assets/audio/music/** (the game's served folder; vite's publicDir is assets/, so apps/client/public would not be served) as `mountain-temple-loop.ogg` and `long-road-loop.ogg`.

@@ -528,3 +528,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## K23c Ability pop-up placement (2026-10-24)
 - The Insight name pop-up after room 1 no longer covers the treasure door, Sensei's banner or the "Room clear!" line (same protected boxes as the banner). Screenshots /workspace/k23b-c-*.png at 667 and 844.
+
+## M7-P8 Music and Sound controls (2026-10-24, draft: music files pending)
+- Music player (apps/client/src/audio/Music.ts) and the screen-to-track map (content/settings/audio.json). It fades between tracks, starts after the first touch, pauses in the background and stays silent if a file is missing.
+- Music and Sound − / + controls (0–5) in Settings, saved as dojo.musicVol / dojo.sfxVol. Sfx no longer uses a fixed 0.5.
+- Checked in the preview: with the files missing, nothing breaks and there are no page errors. With stand-in tones at the expected paths, the Dojo plays the temple loop and the Tower switches to the road loop. Volumes survive a reload. Screenshots: /workspace/m7p8-{667,844}-settings.png.
+- Still to do: add the two WAFU seamless-loop OGG files and LICENSE.txt to assets/audio/music/ (the download needs a browser).

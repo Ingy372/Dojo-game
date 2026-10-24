@@ -42,6 +42,8 @@ import {
   type SenseiLesson,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
+import { music } from '../audio/Music';
+import { addVolumeRow } from '../ui/VolumeRow';
 import { CONTENT } from '../game/content';
 import { bowIsDue, homeDojo, setBowDue } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
@@ -1040,8 +1042,9 @@ export class DojoScene extends Phaser.Scene {
     const gap = 12;
     const n = t.choices.length;
     const w = Math.min(220, (width - 40 - gap * (n - 1)) / n);
-    const h = Math.min(170, height * 0.5);
     const top = height * 0.1 + 44;
+    // Leave room under the cards for the two rows of buttons (Music / Sound, M7-P8).
+    const h = Math.min(170, height * 0.5, height - 12 - 34 * 2 - 8 - 40 - top);
     const x0 = width / 2 - (n * w + (n - 1) * gap) / 2;
     const current = this.profile.difficulty ?? 'standard';
     t.choices.forEach((c, i) => {
@@ -1077,6 +1080,14 @@ export class DojoScene extends Phaser.Scene {
     const motionText = this.add.text(mx + mw / 2, gy + gh / 2, motionLabel(), { fontFamily: FONT, fontStyle: 'bold', fontSize: '14px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp());
     const motionHint = this.add.text(mx, gy - 6, MOTION_TEXT.hint, { fontFamily: FONT, fontSize: '13px', color: '#b9ad99', wordWrap: { width: Math.max(mw, 160) } }).setOrigin(0, 1).setResolution(crisp());
     box.add([motion, motionText, motionHint]);
+    // Music and Sound (M7-P8): big − and + buttons, 0 to 5, saved on this device. Outside the grown-up gate.
+    const vx = mx + mw + 12;
+    const vw = gx - 12 - vx;
+    addVolumeRow(this, box, 'music', vx, gy - gh - 8, vw, gh, (step) => music.setVolume(step));
+    addVolumeRow(this, box, 'sound', vx, gy, vw, gh, (step) => {
+      sfx.setVolume(step);
+      sfx.place(true);
+    });
     motion.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
       sfx.unlock();
       setReducedMotion(!reducedMotion());
