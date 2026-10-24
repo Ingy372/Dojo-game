@@ -598,4 +598,6 @@ My calls (not Manager):
 - The Insight is given automatically after the tutorial battle (no menu). The chest rarity is raised to at least uncommon.
 - The easy boss is the normal Floor Keeper at 35% health and no summons (a world option, so no new art).
 - `?tutorial=1` test link replays the floor.
-- Manager call (K14): the large (`-big`) stance art is parked for now; the dojo keeps the plain idle, which is fine.
+
+## Large stance art parked (K14) (2026-10-24)
+- Manager call: the large (`-big`) stance art is parked for now; the dojo keeps the plain idle, which is fine.
