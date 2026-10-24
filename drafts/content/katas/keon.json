@@ -41,7 +41,7 @@
       "n": 3,
       "text": "Raise LH fist (across body) to R ear, while (short) stepping to rear w/RF into cat stance, step forward w/LF into front stance, LH downward block (over LL) then RH straight forward punch.",
       "facing": [
-        "R"
+        "F"
       ],
       "moves": [
         "stance.cat",
@@ -50,7 +50,8 @@
         "punch.straight"
       ],
       "kiai": false,
-      "question": null
+      "question": null,
+      "jayNote": "No step: the RH punch is thrown from where they stand (Jay, Oct 24). Facing F is our reading; the sheet gives no direction."
     },
     {
       "n": 4,
@@ -59,12 +60,13 @@
         "R"
       ],
       "moves": [
+        "turn",
         "block.reverse-inside",
         "punch.reverse"
       ],
       "kiai": false,
       "question": null,
-      "jayNote": "Same-side ear is correct (Jay, Oct 24)."
+      "jayNote": "Same-side ear is correct. 'step w/RF, end facing R' is a turn (Jay, Oct 24)."
     },
     {
       "n": 5,

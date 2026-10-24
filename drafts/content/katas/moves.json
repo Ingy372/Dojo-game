@@ -3,6 +3,7 @@
   "moves": {
     "pivot": "Pivot",
     "turn.180": "Half turn",
+    "turn": "Turn",
     "turn.big-special": "Big special turn",
     "stance.cat": "Cat stance",
     "stance.front": "Front stance",
