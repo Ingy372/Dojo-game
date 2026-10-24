@@ -25,7 +25,9 @@
     {
       "n": 2,
       "text": "Raise RH fist (across body) to L ear, look over R shoulder then 180- degree turn w/RF leading, end facing R w/RF forward, followed by RH downward block (over RL), LF step forward then LF straightforward punch",
-      "facing": [],
+      "facing": [
+        "R"
+      ],
       "moves": [
         "turn.180",
         "block.downward",
@@ -38,7 +40,9 @@
     {
       "n": 3,
       "text": "Raise LH fist (across body) to R ear, while (short) stepping to rear w/RF into cat stance, step forward w/LF into front stance, LH downward block (over LL) then RH straight forward punch.",
-      "facing": [],
+      "facing": [
+        "R"
+      ],
       "moves": [
         "stance.cat",
         "stance.front",
@@ -46,28 +50,28 @@
         "punch.straight"
       ],
       "kiai": false,
-      "question": [
-        "Q10"
-      ]
+      "question": null
     },
     {
       "n": 4,
       "text": "Raise LH to L ear, then step w/RF, end facing R, w/ RF forward, LH reverse inside block, step forward with LF then RH reverse straight forward punch",
-      "facing": [],
+      "facing": [
+        "R"
+      ],
       "moves": [
         "block.reverse-inside",
         "punch.reverse"
       ],
       "kiai": false,
-      "question": [
-        "Q9"
-      ],
+      "question": null,
       "jayNote": "Same-side ear is correct (Jay, Oct 24)."
     },
     {
       "n": 5,
       "text": "Raise RH to R ear, look over L shoulder then 180- degree turn w/LF leading, end facing L w/LF forward, RH reverse inside block, step forward with RF then LH reverse straight forward punch",
-      "facing": [],
+      "facing": [
+        "L"
+      ],
       "moves": [
         "turn.180",
         "block.reverse-inside",
@@ -79,17 +83,17 @@
     },
     {
       "n": 6,
-      "text": "LF Step back into cat stance (now facing forward, then forward w/RF followed by RH downward block (over RL), then LH reverse straightforward punch",
-      "facing": [],
+      "text": "LF Step back into cat stance (now facing forward), then forward w/RF followed by RH downward block (over RL), then LH reverse straightforward punch",
+      "facing": [
+        "F"
+      ],
       "moves": [
         "stance.cat",
         "block.downward",
         "punch.reverse"
       ],
       "kiai": false,
-      "question": [
-        "Q11"
-      ]
+      "question": null
     },
     {
       "n": 7,
