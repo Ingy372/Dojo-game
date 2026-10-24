@@ -276,6 +276,9 @@ These are samples only: idle, windup and attack, in 8 directions. The frame is 1
 - `dojo-people/sprites/kohai/` (all sheets and `kohai.json`) and `dojo-people/portraits/kohai/`: re-import. The kohai now has a curly top-knot with a teal tie, baked into the `body` layer.
 - UI suggestion from QA, not done here: give dark swatches a light border.
 
+## A6 decoration samples (S7-rev pool), `incoming-art/decor-pool-a6/sprites/static.json` [NEW, SAMPLES only, do not wire yet]
+6 sample pieces (class scroll, kick pad, keeper statue, journal trophy, fan stand, folding screen 2x1) in the Home Dojo format: same camera and 80 px tiles, with `footprint`, `place` (floor or wall) and `anchorPx` like `home-dojo/sprites/static.json`. Ids are working ids, not names. See the DELIVERY_NOTE for DECIDE.
+
 ## Open items in one place
 
 1. The player frame changed to 128 × 160 with the anchor at (64, 136.96). It applies to `player-character/` and `player-custom/`.
@@ -288,3 +291,4 @@ These are samples only: idle, windup and attack, in 8 directions. The frame is 1
 8. **[NEW]** A1 cosmetics: names (Content Writer), unlock rules and colours (Jay), and the headband fit over big hair.
 9. **[NEW]** A5 padded-weapon enemy: the name, stats, which seals use it and the content json are still to decide. Jay approved the 192 px frame, the lime accent, and hiding the staff to show disarmed (2026-10-24). The full set (move, hit, stagger, defeat) is queued.
 10. **[NEW]** A7: Jay approved the kohai top-knot, the teal tie and `#34303f` as black (2026-10-24). Only the swatch border (Programmer) is still open.
+12. **[NEW]** A6 decoration pool: DECIDE the class-piece mix, names (Content Writer), the 5 random kinds and colours, the floor statues, the journal trophy approach and placement rules.
