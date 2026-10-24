@@ -442,3 +442,7 @@ From section 1 of `docs/work-board.md`.
 - **Read-aloud uses the browser's own speech** (`speechSynthesis`), so no new package. It's on by default when the scenario's age band is 6–9, and the player's on/off choice is remembered.
 - **Profile gets `streetSmarts: { best, grownup }`**, and older saves get a blank default.
 - **Opens at the 2nd belt** (core-design). The tier lives in content/street-smarts/ui.json (`unlockTier: 2`); the Dojo button is hidden below it. The `?street=` test link opens it at any belt.
+
+## K9: elites QA fixes (2026-10-24)
+- **One wiring point for difficulty.** `runDifficulty(profile, testLink)` in packages/sim/src/profile.ts. The M7-P1 choice screen isn't on main yet, so the profile field starts at null (= the default); M7-P1 just sets it. GameScene builds the room from `run.difficulty`; the `?difficulty=` link only still feeds the practice room directly.
+- **Boss bar in the HUD top strip** (y 16, width fits between the player's bars and the room label), never over enemy heads.

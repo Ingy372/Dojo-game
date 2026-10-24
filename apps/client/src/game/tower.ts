@@ -1,6 +1,6 @@
 // Starting a Tower run (from the dojo's door or the training board).
 
-import { DIFFICULTY, firstFloorOfTier, ownedDecorations, startRun, type Difficulty, type EliteKind, useCalmMind, type Profile, type RunState, type TrainingState } from '@dojo/sim';
+import { firstFloorOfTier, runDifficulty, ownedDecorations, startRun, type EliteKind, useCalmMind, type Profile, type RunState, type TrainingState } from '@dojo/sim';
 import { CONTENT } from './content';
 import { homeDojo, setBowDue } from './dojo';
 import { writeSave } from './save';
@@ -13,9 +13,8 @@ export function startTowerRun(profile: Profile, training: TrainingState): RunSta
   // For testing: ?twist=lantern-dark forces that twist in the next room that can have it.
   const twistParam = params.get('twist');
   const forcedTwist = CONTENT.twists.twists.some((t) => t.id === twistParam) ? (twistParam ?? undefined) : undefined;
-  // Difficulty for this run's elite rules (the ?difficulty= test link, else Standard).
-  const asked = params.get('difficulty');
-  const difficulty = asked && asked in DIFFICULTY ? (asked as Difficulty) : undefined;
+  // One difficulty for the whole run (elites and combat): ?difficulty= test link, else the player's setting, else Standard.
+  const difficulty = runDifficulty(profile, params.get('difficulty'));
   // For testing: ?elite=swift or ?elite=guarding puts that elite in every battle and challenge room
   // (the run then doesn't count toward the profile).
   const eliteParam = params.get('elite');

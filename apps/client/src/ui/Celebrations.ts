@@ -199,14 +199,19 @@ export class Celebrations {
         }
         this.text(cx, y, 'Your real training has already unlocked:', 16, '#f2e9d8').setOrigin(0.5, 0);
         y += 26;
-        const lines = [...m.unlocked.map((r) => `✓ ${r.name}`), ...m.virtues.map((v) => `★ ${v}`)];
-        const cols = lines.length > 7 ? 2 : 1;
-        const rows = Math.ceil(lines.length / cols);
-        const lineH = Math.min(22, (height - y - 50) / rows);
+        // A long list (a green belt has ~35) becomes one count, a few examples and "and N more",
+        // so the lines never crowd together on a small phone (Q2 / elites QA).
+        const MAX_SHOWN = 4;
+        const shown = m.unlocked.length > MAX_SHOWN + 2 ? m.unlocked.slice(0, MAX_SHOWN) : m.unlocked;
+        const lines = [
+          ...(shown.length < m.unlocked.length ? [`✓ ${m.unlocked.length} techniques unlocked!`] : []),
+          ...shown.map((r) => `✓ ${r.name}`),
+          ...(shown.length < m.unlocked.length ? [`   …and ${m.unlocked.length - shown.length} more`] : []),
+          ...m.virtues.map((v) => `★ ${v}`),
+        ];
+        const lineH = Math.min(24, (height - y - 50) / lines.length);
         lines.forEach((line, i) => {
-          const col = Math.floor(i / rows);
-          const x = cols === 1 ? cx - 100 : cx - 200 + col * 220;
-          const t = this.text(x, y + (i % rows) * lineH, line, 15, line.startsWith('★') ? '#ffd166' : '#5cd65c').setAlpha(0);
+          const t = this.text(cx - 120, y + i * lineH, line, i === 0 && shown.length < m.unlocked.length ? 17 : 15, line.startsWith('★') ? '#ffd166' : line.startsWith('✓') ? '#5cd65c' : '#b9ad99', i === 0 && shown.length < m.unlocked.length).setAlpha(0);
           this.scene.tweens.add({ targets: t, alpha: 1, delay: i * 60, duration: 200 });
         });
         break;

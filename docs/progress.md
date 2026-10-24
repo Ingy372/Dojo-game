@@ -376,3 +376,16 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 **Next**
 - Street Smarts art (the store, the worker, Sensei, the reunion).
 - Jay plays it on his phone with the sound on.
+
+## K9: elites QA fixes (2026-10-24)
+- The difficulty setting now reaches elites. The profile has a `difficulty` field, and `runDifficulty()` picks it (the `?difficulty=` test link wins, then the profile, then the default). The run and the room both use it, so a Guided player never meets a Guarding elite. A sim test walks 1,000 tier-4 Guided floors and finds none.
+- No more ghost Guarding line on an empty floor: the tether is now hidden from the screen camera.
+- The +15 Focus reward pops in bigger above the player and stays on screen about 1 second.
+- The boss bar and name moved to the top strip, between the player's bars and the room label, so they no longer cover the Keeper.
+- The testing screen says "four points in time" (it counts the profiles).
+- The welcome card shows "35 techniques unlocked!", 4 examples and "…and 31 more" instead of a cramped 2-column list.
+- Create screen: Eyes and Hairstyle show a row of dots (the chosen one gold) instead of "Eyes 3"; colour swatches have a light rim. Boy/Girl unchanged.
+- 187 tests pass (1 skipped), typecheck clean, build passes. Screenshots at 667x375 and 844x390.
+
+**Next**
+- M7-P1 (the difficulty choice) only has to set `profile.difficulty`.
