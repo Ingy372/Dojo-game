@@ -95,9 +95,9 @@ Write these in `drafts/content/loot/gear.json` (same shape as now, plus a `tier`
    | blue | `staggerBonus` | 0.08, 0.12, 0.18, 0.25 | 8% to 25% | Only hits staggered enemies, so it can be bigger. |
    | red | `comboSpeed` | 0.08, 0.12, 0.18, 0.25 | 8% to 25% walk speed | Uses the defaults: every 10 combo hits, for 3 seconds. |
    | red-black | `lowHealthFocus` | 1.10, 1.15, 1.25, 1.35 | 10% to 35% | This is a multiplier, so `{pct}` = amount − 1. Works below half health (default). |
-   | brown | `strikeCost` | 3, 4, 6, 8 | 10% to 27% | **Text mismatch:** the code cuts flat Focus (Strike costs 30, minimum 10). `{pct}` should show cut ÷ 30, or C7 changes the text to "{n} less Focus". |
-   | brown-black | `counterWindow` | 1, 1, 2, 2 ticks | about 17% to 33% on Standard | **Text mismatch:** the code adds ticks. `{pct}` depends on the difficulty window (Guided 10, Standard 6, Challenge 4). I suggest showing it against Standard's 6, or C7 changes the text to "A little more time to COUNTER". |
-   | black | `dashOnBlock` | 0.25, 0.40, 0.60, 1.00 | 25% to 100% | **Code mismatch:** today `dashOnBlock` is an on/off switch (a full recharge). The C7 text says "by {pct}". Either the sim gets a partial charge (code change, Programmer) or the text drops `{pct}` and all rarities give a full recharge. Manager to pick. |
+   | brown | `strikeCost` | 3, 4, 6, 8 | 3 to 8 less Focus (`{n}`) | **Decided (Manager, Oct 24): code wins.** Flat Focus cut (Strike costs 30, minimum 10). Text is now "STRIKE costs {n} less Focus". |
+   | brown-black | `counterWindow` | 1, 1, 2, 2 ticks | no number | **Decided (Manager, Oct 24): code wins.** Adds ticks. Text is now "A little more time to COUNTER". |
+   | black | `dashOnBlock` | none (on/off) | no number | **Decided (Manager, Oct 24): code wins.** `dashOnBlock` is an on/off full recharge at every rarity, with no sim change. Text is now "Blocks fully charge your next DASH". |
 
 3. **Materials: 10**, one per tier. Slots: `id`, `name` (≤ 16), `description` (≤ 80).
 4. **Rarity words: 5.** Common, Uncommon, Rare, Epic and Legendary exist. C6 may suggest kid-friendlier display names (≤ 10), but the IDs stay.

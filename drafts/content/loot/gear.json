@@ -487,7 +487,7 @@
       "effect": {
         "type": "strikeCost"
       },
-      "text": "STRIKE costs {pct} less Focus",
+      "text": "STRIKE costs {n} less Focus",
       "description": "A ring of wood that grows a little as you learn."
     },
     {
@@ -540,7 +540,7 @@
       "effect": {
         "type": "counterWindow"
       },
-      "text": "+{pct} more time to COUNTER",
+      "text": "A little more time to COUNTER",
       "description": "A feather that floats still. Wait, watch, then move."
     },
     {
@@ -593,7 +593,7 @@
       "effect": {
         "type": "dashOnBlock"
       },
-      "text": "Blocks charge your next DASH by {pct}",
+      "text": "Blocks fully charge your next DASH",
       "description": "A little lamp. Light grows when it is shared."
     }
   ]

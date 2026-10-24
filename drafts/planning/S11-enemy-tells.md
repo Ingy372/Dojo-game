@@ -76,8 +76,8 @@ So the timing is fair today, but all enemies look and sound the same when they w
 - Guardians are not covered beyond the rules.
 - The "Bigger warnings" setting is new parent-settings UI.
 
-## Decisions needed
+## Decisions (decided, Manager, Oct 24: the recommended answers)
 
-1. Keep red as the shared danger colour, with shape and pattern changing per enemy?
-2. Add the "Bigger warnings" parent setting at launch, or later?
-3. Swift elites: is a higher pitch OK, or do they keep the exact base sound?
+1. **Decided:** red stays the shared danger colour, and shape, pattern and sound change per enemy.
+2. **Decided:** the "Bigger warnings" parent setting comes **later**, not at launch. The tells work without it, and it keeps launch UI small.
+3. **Decided:** swift elites use a slightly higher pitch (+3 semitones, guess) plus the speed flicker.
