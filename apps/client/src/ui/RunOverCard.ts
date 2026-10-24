@@ -83,7 +83,8 @@ export function restCard(scene: Phaser.Scene, onHome: () => void): Phaser.GameOb
   const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive();
   const cardW = Math.min(440, width - 40);
   const btnH = Math.min(52, height * 0.13);
-  const cardH = Math.min(140 + btnH + 22, height - 20);
+  const lineGap = height < 420 ? 26 : 30;
+  const cardH = Math.min(80 + t.restLines.length * lineGap + btnH + 22, height - 20);
   const left = (width - cardW) / 2;
   const top = (height - cardH) / 2;
   const text = (y: number, s: string, size: number, color: string, bold = false) =>
@@ -96,8 +97,7 @@ export function restCard(scene: Phaser.Scene, onHome: () => void): Phaser.GameOb
       shade,
       scene.add.rectangle(left, top, cardW, cardH, 0x221d2e).setOrigin(0).setStrokeStyle(3, 0xffd166, 0.9),
       text(top + 18, t.restTitle, 26, '#ffd166', true),
-      text(top + 62, t.restLines[0], 18, '#f2e9d8'),
-      text(top + 92, t.restLines[1], 16, '#f2e9d8'),
+      ...t.restLines.map((line, i) => text(top + 62 + i * lineGap, line, i === 0 ? 18 : 16, '#f2e9d8')),
     ])
     .setDepth(110);
   const opened = scene.time.now;
