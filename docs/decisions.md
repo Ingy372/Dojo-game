@@ -479,8 +479,8 @@ From section 1 of `docs/work-board.md`.
 ## M7-P1 update: everyone starts on Standard (Manager + Learning Designer, 2026-10-24)
 
 - **Everyone starts on Standard** ("Steady" to kids). No age-based Guided default and no age question. `settleDifficulty(profile)` only fills an empty difficulty.
-- **Kind Guided offer:** after `offerAfterLosses` (2) lost runs in a row on the same floor (belt tier), a card offers Guided before the run-over card. A clear resets the count; resting doesn't count. At most once a day (`guidedOfferedOn`, local date). The text never mentions losing (a test checks). It never switches by itself: only "Try Guided" changes it.
-- **Ambiguity:** the call said "offer Steady (Guided)". In our content Steady is Standard's kid name, so the offer is for Guided and the "no" button is "Keep it Steady". Flag if Steady was meant to be renamed Guided.
+- **Kind Guided offer:** after `offerAfterLosses` (2) lost runs in a row on the same floor (belt tier), a card offers Guided before the run-over card. A clear resets the count; resting doesn't count. At most once a day (`guidedOfferedOn`, local date). The text never mentions losing (a test checks). It never switches by itself: only "Try it" changes it.
+- **Offer resolved (C9 update):** the Learning Designer's review (#114, SHOULD 3) settles it: the offer is for **Guided** ("Want more time to COUNTER?" / "You can try Guided…", buttons "Try it" / "No thanks"). Steady stays Standard's kid name.
 - **Home line** "You're on {name}…" shows once ever (`difficultyLineShown`).
 - **Standard card** now reads "The usual pace."
 - **Guided in Settings:** still on the Settings choice screen. In P1 that screen isn't behind a grown-up gate; #110 (P9) adds the grown-up gate. Merge #108 before #110.
@@ -494,3 +494,8 @@ From section 1 of `docs/work-board.md`.
 - **When time is up mid-run:** the current room finishes, then "Great training today!" (as before).
 - **No new run until midnight:** the Tower door shows "Your dojo is resting for today / Come back tomorrow for more training!" and no run starts. The Board's ENTER THE TOWER and the lost card's Try again go to the dojo instead.
 - Text in content/settings/play-time.json.
+## C9 wording (PR #115) on P1 (2026-10-24)
+- Card texts: Guided "More time to COUNTER while you learn.", Challenge "Faster enemies and less time to COUNTER." Standard keeps "The usual pace." (the Manager/#114 must-fix wins over C9's "The normal way to train.").
+- Home line: "You're on {name}, and you can change it in Settings." "any time" is two words everywhere.
+- **Caps rule (Manager):** only fight-button names (COUNTER, STRIKE, DASH…) are in caps; menu buttons use normal case ("Settings", "Try it", "No thanks").
+- **Selected difficulty:** marked with a ✓ before the name as well as the gold border, never colour alone.
