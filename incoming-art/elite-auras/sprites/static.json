@@ -1,0 +1,75 @@
+{
+  "note": "SAMPLES for S1 #3 elite auras. 8 frames, play 10 fps loop. Frame 256x256, ground point anchorPx; scale to the enemy footprint.",
+  "sprites": {
+    "aura-swift": {
+      "files": {
+        "back": "aura-swift_back.png",
+        "front": "aura-swift_front.png"
+      },
+      "layers": [
+        "back",
+        "front"
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "anchorPx": [
+        128,
+        210
+      ],
+      "frames": 8,
+      "fps": 10
+    },
+    "badge-swift": {
+      "files": {
+        "badge": "badge-swift.png"
+      },
+      "size": [
+        64,
+        64
+      ],
+      "anchorPx": [
+        32,
+        58
+      ],
+      "frames": 8,
+      "fps": 10
+    },
+    "aura-guarding": {
+      "files": {
+        "back": "aura-guarding_back.png",
+        "front": "aura-guarding_front.png"
+      },
+      "layers": [
+        "back",
+        "front"
+      ],
+      "size": [
+        256,
+        256
+      ],
+      "anchorPx": [
+        128,
+        210
+      ],
+      "frames": 8,
+      "fps": 10
+    },
+    "badge-guarding": {
+      "files": {
+        "badge": "badge-guarding.png"
+      },
+      "size": [
+        64,
+        64
+      ],
+      "anchorPx": [
+        32,
+        58
+      ],
+      "frames": 8,
+      "fps": 10
+    }
+  }
+}
