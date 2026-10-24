@@ -43,5 +43,5 @@ No outside assets. No baked text or numbers.
   - made the post longer so the moon reads as being on a stand;
   - fixed the greyscale close-up, which was losing transparency.
 - **DECIDE:**
-  - The slug `student-of-the-month` is assumed; it must match the DojoForge accolade slug.
-  - Does a student who earns it several times get one trophy per month or one trophy with a count? This is the Programmer's call.
+  - ~~The slug `student-of-the-month` is assumed.~~ **Decided (Manager, 2026-10-24):** the id `student-of-the-month` is confirmed.
+  - ~~One trophy per month or one with a count?~~ **Decided (Manager, 2026-10-24):** one trophy, with the win count drawn under it.
