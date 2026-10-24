@@ -167,7 +167,7 @@ The game uses the system font today, and the title uses Georgia. For a kid-frien
 
 - The OFL lets you use, bundle and embed the fonts in a commercial app. The only limits are that you can't sell the font files on their own, and modified versions need a new name. Keep a copy of each font's license file (OFL.txt) next to the font in the app.
 - Please check the license page of each font on Google Fonts before shipping. I checked these from memory and the font files on the box, not from a lawyer.
-- **(Jay decides)** Fredoka + Nunito, Fredoka + Andika, or keep the system font.
+- **Decided (Jay, 2026-10-23):** Fredoka for headings and Andika for body text. Nunito is not used.
 
 ## 10. Kid-appropriateness checklist (every asset)
 

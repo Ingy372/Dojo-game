@@ -7,6 +7,7 @@ import { loadEnemy, type EnemyDef } from './enemy';
 import { loadInsights, type InsightDef } from './insight';
 import { loadLootTables, type LootTables } from './loot';
 import { loadRoom, type Room, type RoomKind } from './room';
+import { loadTwists, type TwistContent } from './twist';
 
 export interface Content {
   rooms: Room[];
@@ -15,6 +16,7 @@ export interface Content {
   loot: LootTables;
   abilities: AbilityContent;
   dojo: DojoContent;
+  twists: TwistContent;
 }
 
 export interface RawContent {
@@ -26,6 +28,7 @@ export interface RawContent {
   abilities: unknown;
   dojoRoom: unknown;
   decorations: unknown;
+  twists: unknown;
 }
 
 export function loadContent(raw: RawContent): Content {
@@ -61,5 +64,6 @@ export function loadContent(raw: RawContent): Content {
     loot,
     abilities: loadAbilities(raw.abilities),
     dojo: loadDojoContent(raw.dojoRoom, raw.decorations),
+    twists: loadTwists(raw.twists),
   };
 }

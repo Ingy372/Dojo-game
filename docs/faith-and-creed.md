@@ -8,7 +8,7 @@ Source: the signs on the wall at Action Zone CMA, transcribed by Jay's Claude ch
 
 ## 1. The Class Creed
 
-Said together in class. Signed by Shinan Lowery.
+Said together in class. Signed by Shihan Lowery.
 
 > I intend to live by the code of the black belt.
 > To seek God's truth. To put God first.
@@ -113,13 +113,29 @@ The acrostic gives the game a natural collection: a student's journey to black b
 
 ---
 
-## 6. Questions for Jay before any of this becomes game text
+## 6. Answers (Jay, Oct 24 2026; C5 is unblocked)
 
-1. **Wording on the signs.** Three lines look like they may differ from how they're taught. Should the game copy the signs exactly, or use corrected wording?
-   - Romans 3:23: "falled short" (usually "fall short" or "come short")
-   - Romans 5:8: "Christ dies for us" (usually "Christ died for us")
-   - Confidentiality: a word on the sign is covered over. Should the game leave it out, as the sign does?
-2. **Brown/Black → Black covenant.** The sign shows a verse and a life word but no covenant. Is there one?
-3. **Bible translation.** The signs mix the King James wording ("commendeth," "begotten") with modern wording ("I tell you the truth"). Should the game keep each verse exactly as on its sign?
-4. **The life words and the stripe words.** The stripe words (Respect, Great Effort, Self-Discipline) already power the game's Virtues. Are the FAITH DOES life words a separate thing students learn for each promotion, and is either one tested?
-5. **What students must know.** For each promotion, do students recite the verse, the covenant and the life word, or are they taught and discussed? This decides whether they become Gate locks, like a kata, or are learned through play.
+Jay sent new photos of the dojo walls on Oct 24. They settle the questions this section used to ask:
+
+1. **Wording.** Use the King James (KJV) text, the same as on the walls. This means Romans 3:23 reads "come short of the glory of God" and Romans 5:8 reads "Christ died for us". The Confidentiality covenant reads in full: "I will keep whatever is shared within the confines of the group to provide an atmosphere of openness."
+2. **Brown/Black Belt → Black.** This step has a verse (John 3:5–8) and a life word (S = Servanthood), but no covenant. The game shows no covenant for it.
+3. **Translation.** KJV for every verse. Where the section 3 text differs from KJV, the game uses the KJV text.
+4. **Life words vs. stripe words.** These are separate. The FAITH DOES letters (Forgiveness, Acceptance, Integrity, Trust, Honor, Discipline, Obedience, Empathy, Servanthood) go with each belt promotion. The stripe words (Respect, Great Effort, Self-Discipline) still power the Virtues. *Manager's call, since Jay delegated gaps.*
+5. **What students must know.** In the game, students learn these through play: the Sensei talks about them, and they appear on the Belt Gate screen and in a collectible "Creed Wall". They are **not** Gate locks. This keeps the faith content warm and hopeful for kids aged 6 and up, not a quiz. *Manager's call. Jay can change it.*
+
+### Summary of each belt step (from the wall photos)
+
+| Promotion | Verse (KJV) | Covenant | Letter |
+|---|---|---|---|
+| White → Yellow | John 3:16 | Unconditional Love: no matter what you say or do to me, I will always love and pray for you | F = Forgiveness |
+| Yellow → Orange | Romans 3:10 | Availability: my time, my money, and anything I have, I will make available to you | A = Acceptance |
+| Orange → Green | Romans 3:23 | Prayer: I will always make time to pray for you | I = Integrity |
+| Green → Blue | Romans 6:23 | Openness: I will always share my thoughts and feelings with you | T = Trust |
+| Blue → Red | Romans 5:8 | Honesty: I will always be honest with you | H = Honor |
+| Red → Red/Black Belt | 1 John 1:9 | Sensitivity: I will always be sensitive to your needs, thoughts, and feelings | D = Discipline |
+| Red/Black Belt → Brown | John 3:17 | Confidentiality: I will keep whatever is shared within the confines of the group to provide an atmosphere of openness | O = Obedience |
+| Brown → Brown/Black Belt | John 3:3 | Accountability: I am accountable to you to become what God has designed me to be in his living creation | E = Empathy |
+| Brown/Black Belt → Black | John 3:5–8 | (none) | S = Servanthood |
+| Black Belt | John 6:40 | — | — |
+
+The letters spell **FAITH DOES**.

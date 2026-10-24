@@ -226,3 +226,95 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 
 **Next**
 - Milestone 6 (Story and Street Smarts sample), which brings in Batch 7 (Sensei, Senpai, Kohai, the second instructor, the founder). It needs dialogue and quest drafts from the Content Writer, and Jay's approval of one Street Smarts script.
+
+## Work-board item K1: docs check-up (2026-10-23)
+
+**Done**
+- Checked the game's belt list, kata names and requirement counts against `docs/curriculum.md`. The differences are listed for Jay in the K1 pull request; nothing was changed.
+- Recorded Jay's work-board decisions in `docs/decisions.md`.
+- `docs/GROK_BOTS.md`: the QA bot is active. Systems design (S1–S8) and the milestone 4 recommendations go to Dojo-Ascent Researcher & Planner (no sixth bot).
+- Every "Claude Code" mention in `docs/` now says Dojo-Ascent Programmer.
+- Sensei's Lessons: built in milestone 7, finished in milestone 10.
+- Added Jay's self-defense #31–35 and kick combos 1–7, in his words. No game code changed.
+
+**Next**
+- Jay reviews the K1 pull request and answers its DECIDE list (including the term "party flex" in #33).
+- Self-defense #36–45, kick combos 8–12 and the kata descriptions are still to come from Jay.
+
+## J6: black belt time to 2nd degree (2026-10-23)
+
+**Done**
+- The three test profiles now give Black Belt 24 months (2 years) before 2nd degree, as Jay decided. Brown/Black stays at 12 months.
+- The black belt tier's levels now take twice as much experience as brown/black's.
+- New test checks this. 133 tests pass and the game builds.
+
+**Next**
+- Nic's DojoForge data needs the same 24-month value for black belt.
+
+## G1: guided first Counter (2026-10-23)
+
+**Done**
+- New players get Sensei's guided first Counter (Learning proposal 6). On the first warning the game slows down. Once the circle is nearly full, it holds still with Counter pulsing until the player taps it, and that tap is always a Perfect Counter. On the next two warnings the help fades. It runs once per profile.
+- Sensei's lines come from `content/tutorial/sensei-lessons.json`, copied word for word from the draft.
+- 6 new tests. 140 pass (1 balance report skipped) and the game builds.
+- The balance player has a new "masher" style that never Counters, for QA's never-Counters players.
+- Checked on an 844×390 test screen: the game holds still, tapping Counter gives "PERFECT!" and "You did it! Perfect!", and the step is saved.
+
+- Gentle nudge: after 5 seconds of holding still, Sensei shows a kind hint and Counter pulses more strongly. It repeats calmly and never ends the hold. The guide also runs in the practice room.
+
+**Next**
+- The Content Designer approves or replaces the nudge line.
+- The guide teaches the Counter, but it does not win runs for someone who still never Counters afterward: the masher's win rate stays at 0%. The lessons that come after the guide (7–10, run 2 on) are the next step.
+## S1 change 1: enemy mixes (2026-10-23)
+
+**Done**
+- Five new battle rooms that each ask one clear question (brute + swarmers, shield + swarmers, two shields). The harder ones only show up later in a floor.
+- A new test plays 5 runs and checks they show at least 4 different enemy mixes (they show 2 without the new rooms).
+- Novice win rate on Standard went from 35% to 41%, so no drop. 135 tests pass and the game builds.
+
+**Next**
+- Jay plays a few floors and says whether the mixes feel different. S1 change 2 (Perfect Counter chain) is in its own pull request.
+
+## S1 change 2: Perfect Counter chain (2026-10-23)
+
+**Done**
+- Perfect Counters in a row give +25, +30, +35, then +40 Focus. A Hit ends the chain and a Block keeps it.
+- The screen shows "PERFECT x2", "PERFECT x3"... with a brighter glow as the chain grows.
+- New tests check the Focus steps, the Hit reset, the Block keeping the chain, and the Focus limit.
+- The balance report now shows Strikes per fight room. They went from about 14 to about 16 per room (11–18% more; the limit was 20%).
+- 137 tests pass and the game builds.
+
+**Next**
+- Jay tries a x3 chain on the preview and says whether it feels rewarding.
+
+## S1 change 4: room twists (2026-10-23)
+
+**Done**
+- About 1 room in 4 now has a twist: Lantern Dark, Slippery Floor or Bell Room. Each one shows a banner, an icon and one Sensei line.
+- New tests check how often twists come, that every warning still shows, that Dash goes farther on the slippery floor, and that the 3rd bell gives a bonus prize.
+- 143 tests pass (1 skipped) and the game builds.
+
+**Next**
+- Jay plays a few runs on his phone and says whether the twists feel fun.
+
+## K5: room twists follow-up (2026-10-23)
+
+**Done**
+- Main (with G1) is merged into the twists PR, and both work: room 1 never has a twist, so the guide stays calm.
+- Slippery Floor no longer comes in the first 3 rooms of a floor. A new test checks it.
+- The twist lines and the G1 nudge line are now the Content Designer's final text.
+- 151 tests pass (1 skipped) and the game builds.
+
+**Next**
+- Jay plays a few runs on his phone.
+
+## K6: twist banner fix and test link (2026-10-23)
+
+**Done**
+- The twist banner no longer covers the room name or the time goal. The banner sits at the top, and the room name and goal now show just below it. The small twist icon moved to the top right, under the timer.
+- New test link: `?twist=lantern-dark`, `?twist=slippery-floor` or `?twist=bell-room` forces that twist in the next room that can have it. Slippery Floor still waits until room 4. A new test checks this.
+- Checked with screenshots at 667x375, 844x390 and 932x430.
+- 152 tests pass (1 skipped) and the game builds.
+
+**Next**
+- Jay opens each `?twist=` link on his phone and checks the banner is easy to read.

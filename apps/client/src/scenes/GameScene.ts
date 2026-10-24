@@ -1,5 +1,9 @@
 import Phaser from 'phaser';
 import {
+  GUIDE_DONE,
+  GUIDE_LESSONS,
+  WARNING_LESSON,
+  loadLessons,
   COMBAT,
   MOVEMENT,
   TICKS_PER_SECOND,
@@ -46,6 +50,9 @@ import {
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
+import lessonsData from '../../../../content/tutorial/sensei-lessons.json';
+
+const LESSONS = loadLessons(lessonsData);
 import { addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
@@ -62,6 +69,7 @@ import { startTowerRun } from '../game/tower';
 import { FONT, GRADE_COLOR, RARITY_COLOR, RARITY_NAME, clock, crisp, css } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
 import { TouchControls } from '../input/TouchControls';
+import { twistBanner, twistIcon } from '../ui/twist';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
@@ -198,6 +206,10 @@ export class GameScene extends Phaser.Scene {
   private timerText!: Phaser.GameObjects.Text;
   private bossName!: Phaser.GameObjects.Text;
   private toastY = 0;
+  private twistBadge: Phaser.GameObjects.Container | null = null;
+  private twistBannerView: Phaser.GameObjects.Container | null = null;
+  /** While a twist banner shows, the big message starts below this y (0 = no limit). */
+  private messageTop = 0;
   private prevPos: Vec2 = { x: 0, y: 0 };
   private elapsed = 0;
   /** When the room's enemies appeared (null until the floor's bow is done). */
@@ -224,7 +236,11 @@ export class GameScene extends Phaser.Scene {
   private comboText!: Phaser.GameObjects.Text;
   private comboBonusText!: Phaser.GameObjects.Text;
   private shownCombo = 0;
+  /** Perfect Counter chain label ("x2", "x3"...) with a glow that grows with the chain. */
+  private chainText!: Phaser.GameObjects.Text;
+  private shownChain = 0;
   private message!: Phaser.GameObjects.Text;
+  private senseiText: Phaser.GameObjects.Text | null = null;
   private screenFlash!: Phaser.GameObjects.Rectangle;
 
   constructor() {
@@ -244,15 +260,17 @@ export class GameScene extends Phaser.Scene {
     this.setup = characterSetup(loadSave(), this.training, CONTENT.abilities);
     if (this.run) {
       this.room = currentRoom(CONTENT, this.run);
-      this.world = createRunWorld(CONTENT, this.run, this.setup, this.setup.effects, testDifficulty());
+      this.world = createRunWorld(CONTENT, this.run, this.setup, this.setup.effects, testDifficulty(), testGuide() ?? loadSave().guideStep);
     } else {
       this.room = loadRoom(trainingRoom);
       this.world = createWorld(this.room, [this.me], {
         enemyTypes: { brute: loadEnemy(bruteData) },
         difficulty: testDifficulty(),
+        guideStep: testGuide() ?? loadSave().guideStep,
         player: { ...this.setup, mods: modsFrom(this.setup.effects, TICKS_PER_SECOND) },
       });
     }
+    this.senseiText = null;
     this.menuOpen = false;
     this.leaving = false;
     this.picker = null;
@@ -263,12 +281,20 @@ export class GameScene extends Phaser.Scene {
     this.hitStopMs = 0;
     this.enemyViews.clear();
     this.shownCombo = 0;
+    this.shownChain = 0;
     this.heroAction = null;
 
     this.chestOpenAt = null;
     const roomGfx = this.drawRoom();
     const objects = this.makeRoomObjects();
-    this.danger = this.add.graphics().setDepth(1);
+    // Lantern Dark twist: the room is dim, but the warning circles are drawn on top, extra bright.
+    const dim = this.world.twist?.dim ?? false;
+    if (dim) {
+      const w = this.room.width * TILE;
+      const h = this.room.height * TILE;
+      objects.push(this.add.rectangle(0, 0, w, h, 0x05040a, 0.5).setOrigin(0).setDepth(9));
+    }
+    this.danger = this.add.graphics().setDepth(dim ? 10 : 1);
     this.marker = this.add.circle(0, 0, TILE * 0.22).setStrokeStyle(3, COLORS.marker, 0.9).setVisible(false).setDepth(2);
     this.player = this.makePlayer();
 
@@ -320,7 +346,7 @@ export class GameScene extends Phaser.Scene {
       this.hitStopMs -= delta;
     } else {
       // Run the rules at a fixed 20 ticks per second, whatever the screen's frame rate.
-      this.elapsed = Math.min(this.elapsed + delta, TICK_MS * MAX_TICKS_PER_FRAME);
+      this.elapsed = Math.min(this.elapsed + delta * this.guideSpeed(), TICK_MS * MAX_TICKS_PER_FRAME);
       while (this.elapsed >= TICK_MS) {
         this.savePrevious();
         const move = this.controls.takeInput();
@@ -476,8 +502,10 @@ export class GameScene extends Phaser.Scene {
       const cx = e.attackCenter.x * TILE;
       const cy = e.attackCenter.y * TILE;
       const area = currentAttack(e).areaRadius * TILE;
-      this.danger.fillStyle(COLORS.danger, 0.16).fillCircle(cx, cy, area);
-      this.danger.lineStyle(inWindow ? 6 : 3, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
+      const glow = this.world.twist?.dim ? 1.6 : 1; // Lantern Dark: warnings glow extra bright
+      if (glow > 1) this.danger.lineStyle(10, 0xffd166, 0.35).strokeCircle(cx, cy, area + 4);
+      this.danger.fillStyle(COLORS.danger, 0.16 * glow).fillCircle(cx, cy, area);
+      this.danger.lineStyle(inWindow ? 6 : 3 * glow, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
       this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
     } else if (e.mode === 'recover') {
       // The attack itself (it lands on its first frame), then catching its breath.
@@ -567,6 +595,23 @@ export class GameScene extends Phaser.Scene {
       }
       this.comboText.setVisible(p.combo >= 2);
       this.comboBonusText.setVisible(p.combo >= 2);
+    }
+
+    if (p.counterChain !== this.shownChain) {
+      const grew = p.counterChain > this.shownChain;
+      this.shownChain = p.counterChain;
+      if (p.counterChain >= 2) {
+        // Brighter glow as the chain grows (it stops growing at x5).
+        const glow = Math.min(p.counterChain, 5);
+        this.chainText.setText(`PERFECT x${p.counterChain}`).setShadow(0, 0, '#ffd166', 4 + glow * 4, true, true);
+        this.chainText.setColor(glow >= 4 ? '#fff6d5' : '#ffd166');
+        if (grew) {
+          this.tweens.killTweensOf(this.chainText);
+          this.chainText.setScale(1.4);
+          this.tweens.add({ targets: this.chainText, scale: 1, duration: 160, ease: 'Back.Out' });
+        }
+      }
+      this.chainText.setVisible(p.counterChain >= 2);
     }
   }
 
@@ -673,6 +718,11 @@ export class GameScene extends Phaser.Scene {
       .setOrigin(0.5, 0)
       .setResolution(res)
       .setVisible(false);
+    this.chainText = this.add
+      .text(0, 68, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166', stroke: '#14121c', strokeThickness: 5 })
+      .setOrigin(0.5, 0)
+      .setResolution(res)
+      .setVisible(false);
     this.message = this.add
       .text(0, 0, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '28px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 6, align: 'center' })
       .setOrigin(0.5)
@@ -704,7 +754,7 @@ export class GameScene extends Phaser.Scene {
     this.bossName = this.add.text(0, 0, '', { ...small, fontSize: '13px' }).setOrigin(0.5, 0).setResolution(crisp()).setVisible(false);
     const calm = this.add.text(16, 55, 'Calm Mind', { ...small, fontSize: '12px', color: '#bff5ec' }).setResolution(crisp()).setVisible(!!this.run?.calmMind);
     this.cameras.main.ignore(calm);
-    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.message, this.screenFlash, this.roomLabel, this.timerText, this.bossName]);
+    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.chainText, this.message, this.screenFlash, this.roomLabel, this.timerText, this.bossName]);
   }
 
   private layout(size: Phaser.Structs.Size): void {
@@ -728,7 +778,8 @@ export class GameScene extends Phaser.Scene {
     this.buttons.layout();
     this.comboText.setX(width / 2);
     this.comboBonusText.setX(width / 2);
-    this.message.setPosition(width / 2, height * 0.4);
+    this.chainText.setX(width / 2);
+    this.placeMessage();
     this.roomLabel.setX(width - 16);
     this.timerText.setX(width - 16);
     this.screenFlash.setSize(width, height);
@@ -802,7 +853,38 @@ export class GameScene extends Phaser.Scene {
           this.floatText(p.pos, `-${ev.damage}`, '#ff6b5b', 26);
           break;
         }
+        case 'bell': {
+          const p = this.world.players[this.me];
+          sfx.loot(ev.count === ev.of ? 2 : 0);
+          this.ring(p.pos, COLORS.gold, 1.6);
+          this.floatText(p.pos, ev.count === ev.of ? 'Ding! Bonus prize!' : `Ding! Bell ${ev.count} of ${ev.of}`, '#ffd166', 24, 1.1);
+          this.drawTwistBells();
+          break;
+        }
+        case 'guideStart': {
+          // Step 0 opens with the warning lesson; the hints say their one line and pulse Counter.
+          const lesson = LESSONS[GUIDE_LESSONS[ev.step]];
+          this.senseiSay(ev.step === 0 ? LESSONS[WARNING_LESSON].screens : lesson.screens, 1100);
+          this.buttons.pulseCounter(ev.step === 2 ? 1 : 2);
+          break;
+        }
+        case 'guideWait':
+          this.senseiSay(LESSONS[GUIDE_LESSONS[0]].screens);
+          break;
+        case 'guideNudge': {
+          const nudge = LESSONS[GUIDE_LESSONS[0]].nudge;
+          if (nudge) this.senseiSay([nudge]);
+          this.buttons.pulseCounter(3);
+          break;
+        }
+        case 'guideDone': {
+          const lesson = LESSONS[GUIDE_LESSONS[ev.step]];
+          this.senseiDone(ev.success ? lesson.success : lesson.retry);
+          break;
+        }
         case 'telegraph': {
+          // A warning is coming: the twist banner gets out of the way so it never covers one.
+          if (this.twistBannerView?.active) this.tweens.add({ targets: this.twistBannerView, alpha: 0.25, duration: 150 });
           const e = this.enemy(ev.enemyId);
           sfx.windup(ev.ticks / TICKS_PER_SECOND);
           if (e) this.floatText({ x: e.pos.x, y: e.pos.y - e.def.radius - 0.3 }, '!', '#ff3b30', 40, 0.4);
@@ -1116,14 +1198,68 @@ export class GameScene extends Phaser.Scene {
     else if (this.room.kind === 'rest') lines.push('Walk to the shrine to rest.');
     else if (this.room.kind === 'treasure') lines.push('Open the chest!');
     else if (this.room.kind === 'boss') lines.push('The Floor Keeper awaits.');
+    const bannerBottom = this.showTwist();
     this.message.setText(lines.join('\n')).setFontSize(this.room.challenge ? 22 : 26).setVisible(true).setAlpha(1);
+    // With a twist banner at the top, the room name and goal sit just under it so nothing overlaps.
+    this.messageTop = bannerBottom ? bannerBottom + 10 : 0;
+    this.placeMessage();
     this.tweens.add({
       targets: this.message,
       alpha: 0,
       delay: 1400,
       duration: 500,
-      onComplete: () => this.message.setVisible(false).setAlpha(1).setFontSize(28),
+      onComplete: () => {
+        this.messageTop = 0;
+        this.message.setVisible(false).setAlpha(1).setFontSize(28);
+        this.placeMessage();
+      },
     });
+  }
+
+  /** The big middle message, moved down under the twist banner while one is showing. */
+  private placeMessage(): void {
+    const { width, height } = this.scale.gameSize;
+    const y = this.messageTop ? Math.max(height * 0.4, this.messageTop + this.message.height / 2) : height * 0.4;
+    this.message.setPosition(width / 2, y);
+  }
+
+  /**
+   * Room twist: a banner with its icon and Sensei's one-line rule, then a small icon in the corner.
+   * Returns the banner's bottom edge (0 when there's no twist).
+   */
+  private showTwist(): number {
+    this.twistBadge?.destroy();
+    this.twistBadge = null;
+    const twist = this.world.twist;
+    if (!twist) return 0;
+    const { width } = this.scale.gameSize;
+    // Near the top, just under the health and Focus bars, so it never covers the fight or a warning circle.
+    const banner = twistBanner(this, twist, width, 0);
+    const BANNER_Y = 58 + banner.height / 2;
+    banner.setY(BANNER_Y);
+    this.cameras.main.ignore(banner);
+    this.tweens.add({ targets: banner, alpha: { from: 0, to: 1 }, y: { from: BANNER_Y + 20, to: BANNER_Y }, duration: 300, ease: 'Back.Out' });
+    this.tweens.add({ targets: banner, alpha: 0, delay: 4200, duration: 500, onComplete: () => banner.destroy() });
+    this.twistBannerView = banner;
+    this.twistBadge = this.add.container(0, 0, [twistIcon(this, twist.icon, 34)]).setDepth(20);
+    this.cameras.main.ignore(this.twistBadge);
+    // Top right, under the room count and timer, so it never covers them on a small phone.
+    this.twistBadge.setPosition(width - 70, 84);
+    this.drawTwistBells();
+    return BANNER_Y + banner.height / 2;
+  }
+
+  /** Bell Room: the bells rung so far, next to the twist icon. */
+  private drawTwistBells(): void {
+    const twist = this.world.twist;
+    if (!twist?.bells || !this.twistBadge) return;
+    this.twistBadge.list.slice(1).forEach((o) => o.destroy());
+    const text = this.add
+      .text(22, 0, `${this.world.bells}/${twist.bells}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffd166', stroke: '#14121c', strokeThickness: 4 })
+      .setOrigin(0, 0.5)
+      .setResolution(crisp());
+    this.cameras.main.ignore(text);
+    this.twistBadge.add(text);
   }
 
   private makeRoomObjects(): Phaser.GameObjects.GameObject[] {
@@ -1448,6 +1584,50 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** A big word in the middle of the screen (for Perfect Counters). */
+  /** Sensei's guided Counter slows the game while the taught attack winds up (step 0 most). */
+  private guideSpeed(): number {
+    const g = this.world.guide;
+    if (!g || g.enemyId === null || g.waiting) return 1;
+    return g.step === 0 ? 0.5 : g.step === 1 ? 0.75 : 1;
+  }
+
+  /** Shows Sensei's read-aloud lines one after another at the top of the screen. */
+  private senseiSay(lines: string[], holdMs = 1400): void {
+    this.senseiText?.destroy();
+    const { width, height } = this.scale.gameSize;
+    const t = this.add
+      .text(width / 2, height * 0.2, '', {
+        fontFamily: 'system-ui, sans-serif',
+        fontStyle: 'bold',
+        fontSize: '26px',
+        color: '#ffffff',
+        backgroundColor: '#2a2440dd',
+        padding: { x: 16, y: 8 },
+        align: 'center',
+      })
+      .setOrigin(0.5)
+      .setResolution(window.devicePixelRatio || 1);
+    this.cameras.main.ignore(t);
+    this.senseiText = t;
+    lines.forEach((line, i) => this.time.delayedCall(i * holdMs, () => t.active && t.setText(`Sensei: ${line}`)));
+  }
+
+  private senseiDone(line: string | undefined): void {
+    this.buttons.pulseCounter(0);
+    if (line) this.senseiSay([line]);
+    const t = this.senseiText;
+    this.time.delayedCall(1800, () => {
+      if (t && t === this.senseiText) {
+        t.destroy();
+        this.senseiText = null;
+      }
+    });
+    // Remember where the guide is, so each lesson shows once per profile.
+    const profile = loadSave();
+    profile.guideStep = this.world.guide?.step ?? GUIDE_DONE;
+    writeSave(profile);
+  }
+
   private popWord(text: string, color: string, size: number): void {
     const { width, height } = this.scale.gameSize;
     const t = this.add
@@ -1471,6 +1651,12 @@ export class GameScene extends Phaser.Scene {
  * For testing only, until the difficulty choice arrives in milestone 7:
  * adding ?difficulty=guided (or challenge) to the link picks that difficulty.
  */
+/** For testing: ?guide=0 starts Sensei's guided Counter from the beginning, whatever the save says. */
+function testGuide(): number | undefined {
+  const asked = new URLSearchParams(window.location.search).get('guide');
+  return asked !== null && /^[0-3]$/.test(asked) ? Number(asked) : undefined;
+}
+
 function testDifficulty(): Difficulty | undefined {
   const asked = new URLSearchParams(window.location.search).get('difficulty');
   return asked && asked in DIFFICULTY ? (asked as Difficulty) : undefined;

@@ -11,6 +11,7 @@ import type { Vec2 } from './math';
 import { createRng, nextFloat, pick, pickWeighted, shuffled, type Rng } from './rng';
 import type { Room, RoomKind } from './room';
 import { createWorld, type PlayerSetup, type WorldState } from './world';
+import type { TwistDef } from './twist';
 
 export type Grade = 'S' | 'A' | 'B';
 /** What's behind a door: a kind of room, or the way home after the boss. */
@@ -68,11 +69,15 @@ export interface RunState {
   decorations: string[];
   /** How many of each decoration the player already had (so new kinds are found first). */
   ownedDecorations: Record<string, number>;
+  /** The current room's twist id, or null. */
+  twist: string | null;
+  /** For testing (?twist=): this twist comes in the next room it's allowed in, then it's cleared. */
+  forcedTwist?: string;
 }
 
 /** Things that happened, for the game to show. */
 export type RunEvent =
-  | { kind: 'loot'; item: GearItem; at: Vec2; source: 'enemy' | 'chest' | 'grade' }
+  | { kind: 'loot'; item: GearItem; at: Vec2; source: 'enemy' | 'chest' | 'grade' | 'bell' }
   | { kind: 'decoration'; id: string; at: Vec2 }
   | { kind: 'graded'; result: RoomResult }
   | { kind: 'insightChoice'; ids: string[] }
@@ -91,6 +96,8 @@ export interface RunOptions {
   calmMind?: boolean;
   /** How many of each decoration the player already has. */
   ownedDecorations?: Record<string, number>;
+  /** For testing: force this twist id in the next room that can have it. */
+  forcedTwist?: string;
 }
 
 export function startRun(content: Content, options: RunOptions): RunState {
@@ -119,7 +126,13 @@ export function startRun(content: Content, options: RunOptions): RunState {
     bowed: false,
     decorations: [],
     ownedDecorations: { ...(options.ownedDecorations ?? {}) },
+    twist: null,
   };
+  if (options.forcedTwist) {
+    if (!content.twists.twists.some((t) => t.id === options.forcedTwist)) throw new Error(`Unknown twist: ${options.forcedTwist}`);
+    run.forcedTwist = options.forcedTwist;
+    run.test = true;
+  }
   const first = options.firstRoomId ? content.rooms.find((r) => r.id === options.firstRoomId) : undefined;
   enterRoom(content, run, first ?? pickRoom(content, run, 'battle'));
   return run;
@@ -147,6 +160,8 @@ export function createRunWorld(
   player: Omit<PlayerSetup, 'health' | 'mods'>,
   gearEffects: readonly Effect[] = [],
   difficulty?: Difficulty,
+  /** Sensei's guided Counter step from the profile (see GUIDE_DONE); off by default. */
+  guideStep?: number,
 ): WorldState {
   const room = currentRoom(content, run);
   return createWorld(room, ['p1'], {
@@ -154,6 +169,8 @@ export function createRunWorld(
     difficulty,
     respawnEnemies: false,
     doorCount: run.doors.length,
+    twist: currentTwist(content, run),
+    guideStep,
     player: {
       ...player,
       health: run.health ?? undefined,
@@ -182,6 +199,10 @@ export function updateRun(content: Content, run: RunState, world: WorldState): R
           const share = e ? content.loot.enemyDropChance[e.def.id] ?? 0 : 0;
           if (e && chance(run.rng, share)) out.push(drop(content, run, 'common', e.pos, 'enemy'));
         }
+        break;
+      case 'bell':
+        // Bell Room twist: the last bell gives a bonus prize.
+        if (ev.count === ev.of) out.push(drop(content, run, 'uncommon', world.players.p1.pos, 'bell'));
         break;
       case 'roomCleared': {
         const result = roomResult(room, world);
@@ -298,10 +319,30 @@ function enterRoom(content: Content, run: RunState, room: Room): void {
   run.usedRooms.push(room.id);
   const count = (kind: string) => run.usedRooms.filter((id) => content.rooms.find((r) => r.id === id)?.kind === kind).length;
   run.doors = offerDoors(run, room, count('treasure'), count('rest'));
+  run.twist = pickTwist(content, run, room);
+}
+
+/** Room twists: some battle and challenge rooms after the first get one friendly rule (never more). */
+function pickTwist(content: Content, run: RunState, room: Room): string | null {
+  if (run.depth === 0 || (room.kind !== 'battle' && room.kind !== 'challenge')) return null;
+  const forced = content.twists.twists.find((t) => t.id === run.forcedTwist);
+  if (forced && forced.earliestRoom <= run.depth + 1) {
+    delete run.forcedTwist;
+    return forced.id;
+  }
+  if (nextFloat(run.rng) >= content.twists.chance) return null;
+  const allowed = content.twists.twists.filter((t) => t.earliestRoom <= run.depth + 1);
+  return allowed.length ? pick(run.rng, allowed).id : null;
+}
+
+/** The current room's twist, or null. */
+export function currentTwist(content: Content, run: RunState): TwistDef | null {
+  return content.twists.twists.find((t) => t.id === run.twist) ?? null;
 }
 
 function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
-  const all = content.rooms.filter((r) => r.kind === kind);
+  // Harder rooms wait until later in the floor (depth 0 is room 1).
+  const all = content.rooms.filter((r) => r.kind === kind && r.earliestRoom <= run.depth + 1);
   const fresh = all.filter((r) => !run.usedRooms.includes(r.id));
   return pick(run.rng, fresh.length > 0 ? fresh : all);
 }
@@ -357,7 +398,7 @@ function roomResult(room: Room, world: WorldState): RoomResult {
 }
 
 /** Rolls one item. The 5th run in a row without a Rare guarantees one in its first chest. */
-function drop(content: Content, run: RunState, min: Rarity, at: Vec2, source: 'enemy' | 'chest' | 'grade'): RunEvent {
+function drop(content: Content, run: RunState, min: Rarity, at: Vec2, source: 'enemy' | 'chest' | 'grade' | 'bell'): RunEvent {
   let floor = min;
   if (source === 'chest' && !run.rareFound && run.dryRuns >= LOOT.guaranteedRareOnRun - 1) floor = 'rare';
   const rarity = rollRarity(run.rng, run.dryRuns, floor, run.blessed ? BLESSING.rareWeight : 0);

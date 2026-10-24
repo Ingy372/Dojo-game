@@ -2,6 +2,7 @@
 // plain data (no classes or functions), so it can be saved, copied, or sent
 // over the network later for visits and co-op.
 
+import type { TwistDef } from './twist';
 import type { FormDef, VirtueKind } from './abilities';
 import { pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
@@ -35,6 +36,8 @@ export interface PlayerState {
   focus: number;
   /** Hits landed in a row without taking a Hit. */
   combo: number;
+  /** Perfect Counters in a row without taking a Hit (a Block keeps it). */
+  counterChain: number;
   /** Ticks until the next automatic basic attack is allowed. */
   attackCooldown: number;
   /** Ticks of Strike recovery left (no attacking while above 0). */
@@ -153,8 +156,18 @@ export type AttackMove = 'basic' | 'strike' | 'counter' | 'chain' | 'ripple' | '
 export type CombatEvent =
   | { kind: 'playerAttack'; playerId: PlayerId; enemyId: EnemyId; move: AttackMove; damage: number; defeated: boolean }
   | { kind: 'telegraph'; enemyId: EnemyId; ticks: number }
+  /** Bell Room twist: a Perfect Counter rang a bell (`count` so far, `of` needed). */
+  | { kind: 'bell'; count: number; of: number }
+  /** Sensei's guided Counter: a warning is being taught (step 0 guided, 1 and 2 fading hints). */
+  | { kind: 'guideStart'; step: number; enemyId: EnemyId }
+  /** Step 0 only: the game holds still with the circle nearly full until Counter is tapped. */
+  | { kind: 'guideWait' }
+  /** The hold has waited a while with no tap: Sensei gives a kind hint (repeats calmly, never ends the hold). */
+  | { kind: 'guideNudge' }
+  /** The taught attack landed or was countered. */
+  | { kind: 'guideDone'; step: number; success: boolean }
   | { kind: 'enemySwing'; enemyId: EnemyId }
-  | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId }
+  | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId; chain: number }
   | { kind: 'block'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'hit'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'counterPressed'; playerId: PlayerId }
@@ -205,6 +218,27 @@ export interface WorldState {
   progress: RoomProgress;
   /** Events from the most recent tick only. */
   events: CombatEvent[];
+  /** This room's twist, or null. */
+  twist: TwistDef | null;
+  /** Bell Room: bells rung so far. */
+  bells: number;
+  /** Sensei's guided first Counter, or null when it's finished or off. */
+  guide: GuideState | null;
+}
+
+/** Steps of the guided Counter: 0 guided (holds still), 1 hint, 2 pulse only, 3 done. */
+export const GUIDE_DONE = 3;
+/** How long the hold waits before each gentle nudge (5 seconds). */
+export const GUIDE_NUDGE_TICKS = 100;
+
+export interface GuideState {
+  step: number;
+  /** The enemy whose attack is being taught right now. */
+  enemyId: EnemyId | null;
+  /** True while the game holds still, waiting for the Counter tap. */
+  waiting: boolean;
+  /** Ticks spent holding still so far (for the gentle nudge). */
+  waitTicks: number;
 }
 
 /** Movement part of a player's request for one tick. */
@@ -229,6 +263,10 @@ export interface WorldOptions {
   doorCount?: number;
   /** The player's stats (from gear and Insights); defaults to the starting stats. */
   player?: PlayerSetup;
+  /** This room's twist (Tower rooms only). */
+  twist?: TwistDef | null;
+  /** Guided Counter step to start at (see GUIDE_DONE). Default: done (off). */
+  guideStep?: number;
 }
 
 export interface PlayerSetup {
@@ -268,6 +306,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       guard: setup.guard,
       focus: Math.min(COMBAT.focus.max, mods.startFocus),
       combo: 0,
+      counterChain: 0,
       attackCooldown: 0,
       strikeRecovery: 0,
       counterPressedTick: -1,
@@ -338,6 +377,9 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       bestCombo: 0,
     },
     events: [],
+    twist: options.twist ?? null,
+    bells: 0,
+    guide: (options.guideStep ?? GUIDE_DONE) < GUIDE_DONE ? { step: options.guideStep!, enemyId: null, waiting: false, waitTicks: 0 } : null,
   };
 }
 
@@ -382,6 +424,17 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
   world.events = [];
   // Sorted order, so results are the same no matter how inputs arrived.
   const ids = Object.keys(world.players).sort();
+  const guide = world.guide;
+  if (guide?.waiting) {
+    // Holding still for the guided Counter: nothing moves until Counter is tapped.
+    if (!ids.some((id) => inputs[id]?.action === 'counter')) {
+      // Still waiting: every few seconds Sensei gives a kind hint. No countdown, no failing.
+      if (++guide.waitTicks % GUIDE_NUDGE_TICKS === 0) world.events.push({ kind: 'guideNudge' });
+      return;
+    }
+    guide.waiting = false;
+    guide.waitTicks = 0;
+  }
   for (const id of ids) {
     stepPlayer(world, world.players[id], room, inputs[id] ?? NO_INPUT);
   }
@@ -389,7 +442,43 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
   separateEnemies(world, room);
   for (const id of ids) separateFromEnemies(world, world.players[id], room);
   updateProgress(world, room, ids);
+  if (guide) stepGuide(world, guide, ids);
   world.tick++;
+}
+
+/** Sensei's guided first Counter: picks the warning to teach, holds still on step 0, and moves on. */
+function stepGuide(world: WorldState, guide: GuideState, ids: string[]): void {
+  if (guide.enemyId === null) {
+    const t = world.events.find((ev) => ev.kind === 'telegraph');
+    if (t?.kind === 'telegraph') {
+      guide.enemyId = t.enemyId;
+      world.events.push({ kind: 'guideStart', step: guide.step, enemyId: t.enemyId });
+    }
+    return;
+  }
+  const e = world.enemies.find((x) => x.id === guide.enemyId);
+  if (world.events.some((ev) => ev.kind === 'enemySwing' && ev.enemyId === guide.enemyId)) {
+    const success = world.events.some((ev) => ev.kind === 'perfectCounter' && ev.enemyId === guide.enemyId);
+    world.events.push({ kind: 'guideDone', step: guide.step, success });
+    // The guided step waits for a real success; the fading hints move on either way.
+    if (success || guide.step > 0) guide.step++;
+    guide.enemyId = null;
+    if (guide.step >= GUIDE_DONE) world.guide = null;
+    return;
+  }
+  if (!e || e.mode !== 'windup' || !e.attackCenter) {
+    guide.enemyId = null; // Beaten or knocked out of its wind-up: wait for the next warning.
+    return;
+  }
+  // Step 0: with the circle nearly full (inside the Perfect window), hold still for the tap.
+  const p = world.players[ids[0]];
+  if (guide.step === 0 && e.modeTicks === 2 && p && isActive(p) && distance(p.pos, e.attackCenter) <= currentAttack(e).areaRadius + R * 0.5) {
+    p.guardTicks = 0;
+    p.counterLockout = 0;
+    p.dashTicks = 0;
+    guide.waiting = true;
+    world.events.push({ kind: 'guideWait' });
+  }
 }
 
 /** True while a player is fighting (not defeated). */
@@ -496,7 +585,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   }
 
   if (p.dashTicks > 0) {
-    dashStep(p, room);
+    dashStep(world, p, room);
   } else if (p.guardTicks > 0) {
     // Holding the guard pose: no walking.
     p.moving = false;
@@ -531,8 +620,9 @@ function startDash(world: WorldState, p: PlayerState, input: PlayerInput): void 
   world.events.push({ kind: 'dash', playerId: p.id });
 }
 
-function dashStep(p: PlayerState, room: Room): void {
-  const step = COMBAT.dash.distanceTiles / COMBAT.dash.ticks;
+function dashStep(world: WorldState, p: PlayerState, room: Room): void {
+  // Slippery Floor twist: the dash slides farther.
+  const step = (COMBAT.dash.distanceTiles * (world.twist?.dashScale ?? 1)) / COMBAT.dash.ticks;
   p.pos.x += p.dashDir.x * step;
   p.pos.y += p.dashDir.y * step;
   pushOutOfWalls(room, p.pos, R);
@@ -883,12 +973,16 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
     // Perfect Discipline: while it lasts, every Counter is a Perfect Counter.
     const disciplined = p.virtue?.kind === 'discipline' && p.virtueTicks > 0;
     if (guarding && (disciplined || world.tick - p.counterPressedTick < counterWindowTicks(world, p))) {
-      // Perfect Counter: no damage, enemy staggered, counter hit for 2x Power, +25 Focus.
+      // Perfect Counter: no damage, enemy staggered, counter hit for 2x Power, Focus by chain (+25, +30, +35, +40).
       p.guardTicks = 0;
+      p.counterChain++;
       world.progress.perfects++;
-      world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id });
+      world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id, chain: p.counterChain });
+      // Bell Room twist: each Perfect Counter rings a bell, up to the number needed.
+      const bellsNeeded = world.twist?.bells ?? 0;
+      if (world.bells < bellsNeeded) world.events.push({ kind: 'bell', count: ++world.bells, of: bellsNeeded });
       if (p.mods.healOnPerfect > 0) p.health = Math.min(p.maxHealth, p.health + p.mods.healOnPerfect);
-      landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, COMBAT.focus.perPerfectCounter);
+      landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, chainFocus(p.counterChain));
       if (e.mode !== 'defeated') {
         e.mode = 'stagger';
         e.modeTicks = COMBAT.counter.perfectStaggerTicks + p.mods.staggerTicks;
@@ -921,10 +1015,17 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       // Hit: full damage, combo resets.
       const dmg = damage(e.def.power, a.strength * weak, guardOf(p));
       p.combo = 0;
+      p.counterChain = 0;
       world.events.push({ kind: 'hit', playerId: p.id, enemyId: e.id, damage: dmg });
       hurt(world, p, dmg);
     }
   }
+}
+
+/** Focus for the nth Perfect Counter in a chain (1 = first). */
+export function chainFocus(chain: number): number {
+  const steps = COMBAT.focus.perPerfectCounterChain;
+  return steps[Math.min(chain, steps.length) - 1];
 }
 
 function hurt(world: WorldState, p: PlayerState, dmg: number): void {

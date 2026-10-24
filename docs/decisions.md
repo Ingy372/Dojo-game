@@ -6,8 +6,7 @@ A record of choices already made, newest at the bottom, so settled questions are
 
 Anything waiting on Jay's answer goes here. When he answers, the answer moves into the log below and the question is removed.
 
-1. **Black belt to 2nd degree.** At Action Zone, black belt is 1st degree. How long does a student usually wait between 1st degree and 2nd degree? (Set to 1 year for now; it only matters for students far in the future.)
-2. **Fonts.** The style guide recommends Fredoka (titles) + Nunito (text), or Fredoka + Andika, both free. Which one, or keep the system font? (System font for now. Adding a font means bundling its files with the game.)
+(None right now.)
 
 ## Milestone 0 — Setup (2026-10-05)
 
@@ -192,7 +191,7 @@ Jay asked Claude to test and tune the game before his next playtest.
   Each rank above I (the same word earned again) is 25% stronger (bigger shield, longer discipline), because practicing a virtue for longer makes it stronger. The Virtue taken into fights is the highest rank, then the most recent (a loadout choice comes later).
 - **The Insight "Second Wind" is renamed "Rally"** so it doesn't clash with the Great Effort Virtue.
 - **Levels:** cap 10 per belt tier (white 10, yellow 20). Each level adds +3 Health and +0.4 Power. Runs give experience per room cleared (battle 12, challenge 16, treasure/rest 4, boss 40, plus 20 for clearing the floor). Each tier's experience is set so a typical player (8 runs a week, about 110 experience a run) reaches the cap at 75% of the belt's typical time in rank. At the cap, experience stops for now; overflow into materials and Mastery comes after launch. All numbers are in `PROGRESSION` in the settings file.
-- **Typical time in rank (Jay, 2026-10-07):** white through blue test every 3 months; red to red/black 6 months; red/black to brown 6 months; brown to brown/black 9 months; brown/black to black 1 year. At Action Zone black belt is 1st degree; the wait to 2nd degree is set to 1 year until Jay says otherwise. White to black takes about 4–5 years.
+- **Typical time in rank (Jay, 2026-10-07):** white through blue test every 3 months; red to red/black 6 months; red/black to brown 6 months; brown to brown/black 9 months; brown/black to black 1 year. At Action Zone black belt is 1st degree; the wait to 2nd degree is 2 years (Jay, 2026-10-23; see the work-board decisions below). White to black takes about 4–5 years.
 - **Classes before testing (Jay, 2026-10-07):** 2 classes a week, with 1 week (2 classes) excused per belt; any other missed class must be made up. That makes 24 classes for a 3-month belt, 50 for 6 months, 76 for 9 months and 102 for a year. This is the Gate's time-in-rank dial. Note for Nic: DojoForge will need to count classes in rank (made-up classes included) so the dial is right.
 - **Catch-up experience:** below the rank's expected level (the previous belt's cap, so a yellow belt is expected to be at least level 10), experience is doubled. A saved level above the current belt's cap (only possible when switching fake profiles) is shown capped.
 - **Dojo Blessing:** a class in the last 48 hours gives +50% experience and better loot (3 points of weight move from Common to Rare on every roll). The Home Dojo shows a glow around the character and the hours left. Nothing is shown when not blessed (no punishment).
@@ -273,12 +272,12 @@ Jay asked Claude to test and tune the game before his next playtest.
 ## Grok bot team and the art process (Jay, in his Claude chat, 2026-10-08)
 
 - **Five Grok bots join the team,** each with one job: Art Director, Content Writer, Learning & Engagement Designer, QA & Playability Tester (beta testing and balancing as the game nears completion), and Launch Prep (shortly before launch). Their full directions are in `docs/GROK_BOTS.md`.
-- **Bots never change code.** Claude Code is the only one who changes the game.
+- **Bots never change code.** Dojo-Ascent Programmer is the only one who changes the game.
 - **Each bot has its own folder and branch** (`incoming-art/` on `bot-art`, `drafts/content/` on `bot-content`, `drafts/learning/` on `bot-learning`, `drafts/qa/` on `bot-qa`, `drafts/launch/` on `bot-launch`) and delivers through pull requests that Jay merges. Each folder has a README explaining this.
-- **Nothing in a bot folder is approved until Jay says so.** Claude Code copies approved files into `assets/` or `content/` only when Jay asks, and never edits files inside the bot folders.
+- **Nothing in a bot folder is approved until Jay says so.** Dojo-Ascent Programmer copies approved files into `assets/` or `content/` only when Jay asks, and never edits files inside the bot folders.
 - **The Learning & Engagement Designer's proposals are suggestions,** reviewed by Jay with his Claude chat before anything is built. It also reviews milestone 4's open questions (powers, numbers, black belt degrees), which is the design material milestone 4 is paused for.
 - **No art pack is bought.** The Art Director bot makes all art in Blender: low-poly 3D models, rigged and animated (Mixamo allowed), rendered from one fixed top-down three-quarter camera in 8 directions into transparent PNG sprite sheets with a reusable render script. Icons, portraits and scene pictures come from the same models so everything matches. This replaces the pixel-art-pack plan in framework section 13. Details: "Art process" in core-design section 13.
-- **Claude Code builds the import step:** a repeatable script that trims, sizes and packs approved renders into texture atlases for Phaser.
+- **Dojo-Ascent Programmer builds the import step:** a repeatable script that trims, sizes and packs approved renders into texture atlases for Phaser.
 - **Character customization replaces the placeholder circle:** a layered character (body, skin tone, face, hair style and color, gi, belt), each part rendered separately from the same model, chosen at character creation and changeable at the Home Dojo. The belt is its own layer, recolored in code to the real rank and stripes, and is never customizable. Extra looks are earned, never bought.
 
 ### Milestone 5 — changes after Jay's first test (2026-10-08)
@@ -365,3 +364,51 @@ Jay asked Claude to test and tune the game before his next playtest.
   - A look set earlier from the testing screen is used as the starting point.
   - The testing screen's look buttons are removed.
 - **Saving plays the bow.** The celebrate move stays reserved for real promotions.
+
+## Jay's work-board decisions (Jay, 2026-10-18; recorded for work-board item K1)
+
+From section 1 of `docs/work-board.md`.
+
+- **Bow question = recall.** Sensei shows a picture of one of the player's earned abilities and asks "What's this one called?" with 3 picture-and-word choices. After the answer, the character performs the move. A wrong answer warmly shows the right name; there is no penalty. Correct answers are counted forever, with awards at 5, 10, 20, 50 and 100 (may go higher). At most one question per day. It can always be skipped. This replaces the "Which felt best?" draft.
+- **Lore comes first.** The Tower's story and enemy lore are launch scope, and the game is built around them where it fits.
+- **The Bestiary is launch scope.** An enemy's entry fills in the first time the player defeats it; deeper lore unlocks with each real belt. The unlock schedule in core-design section 13 still needs updating to match.
+- **First movement lesson:** "Tap where you want to go, or use the stick."
+- **Real techniques decide game effects.** Each self-defense technique's callout and in-game effect must match what the real technique does to an opponent. Jay's descriptions are in `docs/self-defense.md`. The game shows outcomes (off-balance, trapped, thrown, disarmed, escaped), never injuries.
+- **The QA bot is active now.**
+- **Systems design goes to Dojo-Ascent Researcher & Planner.** The board planned a sixth bot, the Game Systems Designer, to own combat, items, Forms, power-ups, difficulty, achievements and rewards. Jay instead gave those items (S1–S8) to the existing bot Dojo-Ascent Researcher & Planner (2026-10-23), so no sixth bot and no `drafts/systems/` folder were created. Answering the milestone 4 questions (powers, numbers, black belt degrees) moves from the Learning Designer to Dojo-Ascent Researcher & Planner; the Learning Designer reviews its work.
+- **Claude Code is replaced by Dojo-Ascent Programmer** (Jay, 2026-10-23). Jay no longer works with Claude Code; every mention in `docs/` now says Dojo-Ascent Programmer.
+- **Sensei's Lessons timing:** the Lessons system is built in milestone 7 and finished (a lesson for every launch system) in milestone 10.
+- **Black belt to 2nd degree (J6, Jay, 2026-10-23):** 2 years between 1st degree and 2nd degree black belt. The game now uses 2 years: Black Belt's time in rank is 24 months in the test profiles (brown/black stays 12), checked by a test. DojoForge's real data needs the same value.
+- **Cosmetics (J5, Jay, 2026-10-23):** cosmetics come from gear, in-game achievements and dojo achievements, and are never bought.
+- **Fonts (J7, Jay, 2026-10-23):** Fredoka for headings, Andika for body text. The game still uses the system font until Dojo-Ascent Programmer adds the font files in a later code step.
+- **Belt names (Jay, 2026-10-23):** keep the game's wording, "Red/Black Belt" and "Brown/Black Belt". The curriculum's "Red with a black stripe" and "Brown with a black stripe" describe the same ranks.
+- **Guided first Counter (G1, 2026-10-23, Learning proposal 6):** On a new profile, the first "!" warning slows the game to half speed and Sensei says "Look! A red circle." / "It's coming!". When the circle is nearly full, the game holds still with Counter pulsing and "Tap Counter... now!" until Counter is tapped, which always gives a Perfect Counter. The next warning: three-quarter speed, pulse, "Wait for it... Counter!". The one after: normal speed, small pulse, "Counter!". Then the guide is done for that profile. The lines come from `content/tutorial/sensei-lessons.json`. The hold-still rule is in `packages/sim` (world `guide`); the slowdown and pulse are in the client. Saves made before G1 by players who have already played a run skip the guide. Open questions are in the G1 pull request's DECIDE list.
+
+## S1 change 1: enemy mixes (Jay, 2026-10-23)
+
+- Five new battle rooms, each built around one enemy mix from the S1 proposal: **Brute and Swarm** and **Stone Garden** (brute + swarmers), **Guarded Swarm** and **Shield Escort** (shield + swarmers), and **Twin Shields** (only shields, so Focus runs out and Perfect Counters matter). Each room file says its mix in a `"mix"` line.
+- Room files can now set `"earliestRoom"` (1 = first room of the floor). Harder mixes wait: Stone Garden from room 2, Guarded Swarm from 3, Shield Escort from 4, Twin Shields from 5. Brute and Swarm can come first. Rooms without the line can come any time, as before.
+- Balance check (computer player, 1,000 runs each): novice on Standard won 35% before and 41% after (smart play); 19% before and 19% after (standing still). The limit was a drop of no more than 3 points.
+
+## S1 change 2: Perfect Counter chain (Jay, 2026-10-23)
+
+- Perfect Counters in a row (no Hit taken in between) make a chain. Focus per Perfect Counter: +25 for the 1st, +30 for the 2nd, +35 for the 3rd, then +40 from then on. Focus still stops at 100.
+- A Hit ends the chain. A Block keeps it but doesn't add to it. The chain starts again in each room.
+- From x2, the screen shows "PERFECT x2", "PERFECT x3"... under the combo counter, with a glow that gets brighter up to x5.
+- "Longest chain" is not a personal best (Jay, 2026-10-23).
+- Balance check (computer player, 1,000 runs each): Strikes per fight room went up 11–18% depending on the player (the limit was 20%). Novice on Standard won 35% before and 40% after (smart play).
+
+## S1 change 4: room twists (2026-10-23)
+
+- Three starter twists from the S1 proposal live in `content/twists/twists.json`: **Lantern Dark** (the room is dim, warning circles glow extra bright on top), **Slippery Floor** (Dash goes 1.6 times as far), and **Bell Room** (each Perfect Counter rings a bell; the 3rd bell drops a bonus prize, at least Uncommon).
+- A room gets at most one twist. Only Tower battle and challenge rooms can get one, never the first room (kept calm for the guided first Counter) and never the boss. The chance per such room is 50%, which comes to about 1 room in 4 over a whole run (25.6% in a 200-run test).
+- The rules are in `packages/sim` (Dash distance, bells, the bonus prize). The dim look and the banner are only in the game screen.
+- No twist hides a warning. A test checks that every twist room gives exactly the same warnings, at the same times, as the same room without a twist. Lantern Dark draws the warning circles above the dimness. The twist banner sits at the top of the screen and fades back as soon as any warning starts.
+- Each twist room shows a banner with a drawn icon (no emoji, so it looks the same on every phone) and Sensei saying the rule in one line. A small icon stays at the top while you're in the room; in the Bell Room it shows the bells rung, like "1/3".
+- The banner and Sensei lines are the Content Designer's final text, copied word for word from `drafts/content/text/room-twists.json` (PR #23). The long Bell Room banner fits on one line at 844x390, so it is used.
+- **K5 follow-up (2026-10-23):** Slippery Floor keeps its 1.6x slide but stays out of the first 3 rooms of every floor. Twists now have an optional `"earliestRoom"` field, like rooms do; Slippery Floor has `"earliestRoom": 4`. A test checks this and fails without the rule.
+- **K5 balance check** (1,000 runs each, after main with G1 was merged in): novice on Standard (smart play) won 50% on main and 42% with twists. With twists switched off on this branch (so only the room order changes) it won 47%. Standing-still novice: 25% → 25%. Guided: 98% → 99% and 95% → 95%. Typical and sharp players didn't change. Keeping Slippery Floor out of rooms 1–3 didn't raise the novice number (44% before this change, 42% now). Only Slippery Floor changes the fighting itself, so most of the gap is probably random variation and the different room order. Jay decides whether to keep it.
+- **G1 nudge final text (K5):** the nudge line is now the Content Designer's final "Take your time. Tap the blue COUNTER button!" from `drafts/content/text/guided-counter-nudge.json`, and the `nudgeStatus` placeholder marker is removed.
+- Balance check (computer player, 1,000 runs each): novice on Standard (smart play) won 50% before and 44% after. Of that, 3 points come only from the rooms being shuffled differently (47% with twists turned off), and 3 points from the twists themselves. Standing-still novice: 25% → 26%. Guided: 98% → 99% and 95% → 95%. Items per run went up by about 1 (the bell prize).
+
+- **G1 follow-up (2026-10-23):** If the guided Counter's hold waits 5 seconds with no tap, Sensei shows a kind hint and Counter pulses more strongly. This repeats every 5 seconds and never ends the hold (the rule is in `packages/sim`). The hint line is a placeholder that needs the Content Designer's approval. The guide also runs in the practice room. There's no existing place to replay it, so players who finished runs before G1 still skip it.
