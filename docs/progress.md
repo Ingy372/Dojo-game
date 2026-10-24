@@ -347,3 +347,15 @@ Jay approved all four art batches from the Art Director bot. The placeholder sha
 **Next**
 - Jay decides whether the typical player's win rate is OK: it drops from 100% to 93% at the 4th belt, more than the 5-point target.
 - Tether art and a "snap" effect when a guard falls (now plain lines).
+## K7-fix: QA fixes and new Insight icons (2026-10-24)
+
+**Done**
+- On a 667-wide phone, gear names and stats (worn and in the bag) and the Abilities rows now stay on one line. The text shrinks a little, then ends with "…" if it still doesn't fit. Narrow cards use a slightly smaller icon.
+- When the Floor Keeper is up, Sensei's banner sits just under the boss bar and its name, so both can be read.
+- Door labels never go under the top bar (health, Focus, "Room 1 of 8").
+- The 9 new Insight icons from PR #56 are in the game. Each Insight card's border uses its icon's own colour.
+- Removed a `node_modules` shortcut that K7 committed by mistake.
+- Checked with screenshots at 667x375 and 844x390. 152 tests pass (1 skipped) and the game builds.
+
+**Next**
+- Jay checks the Gear and Abilities tabs on a small phone.
