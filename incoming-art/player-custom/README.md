@@ -103,6 +103,6 @@ A full body takes about 80 minutes on 8 CPU cores (about 38,000 layer renders). 
   - The git repo grew by about **82 MB** for Batch 6 (`.git` went from 224 MB to 306 MB). That covers both bodies, the player-character re-render and the previews.
 
 ## A7 changes (QA PR #83)
-- **Faces:** the eye ring is now `#fff8f0` and bigger (+0.015), sitting closer to the surface. The shine is bigger, there is a second small shine, and the mouth is `#d8695e`. Only the face layers were re-rendered.
+- **Faces:** the eye ring is now `#fff8f0` and bigger (+0.015), sitting closer to the surface. The shine is bigger, there is a second small shine, and the mouth is `#d8695e`. Only the face layers were re-rendered. **Undone** in bot-art-walk-arms (Jay: "crazy eyes"): the faces are back to the earlier eyes; see `walk-rework/DELIVERY_NOTE.md`.
 - **Black hair:** the palette colour is now `#34303f`, a cool soft black, so the hair's shape and highlights show on the dark panel.
 - Before and after: `preview/a7-*.png`.

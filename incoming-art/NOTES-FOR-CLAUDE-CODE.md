@@ -330,3 +330,10 @@ The certified trophy is now 3 stacked layers (same 104x166 canvas and anchor): `
 - **Templates:** one sprite for every accolade (`ct-accolade-template`), every journal master and every smarts location. The game writes the name.
 - **Student of the Month:** when the accolade slug is `student-of-the-month`, use `ct-accolade-student-of-the-month` (it has its own crescent-and-star top piece) instead of `ct-accolade-template`. The stack order is the same as for the other certified trophies.
   - **Decided (Manager, 2026-10-24):** the id `student-of-the-month` is confirmed. A student who wins it more than once gets **one** trophy, with the win count drawn under it (e.g. `×3`), not one trophy per month. The count is drawn by the game as text; there's no art for it.
+
+## Earlier eyes back (bot-art-walk-arms; Jay: undo the A7 "crazy eyes")
+Re-import, same file names and JSON as before (no layout change):
+- `player-custom/sprites/body-a/` and `body-b/`: the `face-01` … `face-06` sheets of every animation (back to the pre-A7 eyes; the A7 soft black hair stays).
+- `form-stances-a2/sprites/body-a/` and `body-b/`: the `face-0N` sheets of `stance_rooted` and `stance_flowing`.
+- `dojo-people/sprites/kohai/`: the `kohai_body_*` sheets; `dojo-people/portraits/kohai/`: the 4 flattened portraits and the 4 `*_body` layers.
+Don't import `walk-rework/arms-*` yet: Jay hasn't picked one.

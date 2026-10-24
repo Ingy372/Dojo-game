@@ -110,7 +110,7 @@ if A.body == "b":
 
 # ------------------------------------------------------------------ faces (real colours; never mocking)
 EYE = mat("F_EYE", "#1d1a24", True); SHINE = mat("F_SHINE", "#ffffff", True)
-MOUTH = mat("F_MOUTH", "#d8695e", True); EYERIM = mat("F_EYERIM", "#fff8f0", True); BLUSH = mat("F_BLUSH", "#e2786b", True); FRECK = mat("F_FRECK", "#9a5a3c", True)
+MOUTH = mat("F_MOUTH", "#a8473f", True); EYERIM = mat("F_EYERIM", "#f3e6dc", True); BLUSH = mat("F_BLUSH", "#e2786b", True); FRECK = mat("F_FRECK", "#9a5a3c", True)
 FACES = {
  1: dict(eye=(0.031, 0.048), eye_rot=25, eye_z=1.112, brow=(0.05, 0.011), brow_rot=25, brow_z=1.19, mouth=(0.026, 0.011), blush=True,
          note="the approved face of Batch 1: oval eyes with a shine, friendly brows, a small smile"),
@@ -130,9 +130,9 @@ for i, f in FACES.items():
     for x, s in ((1, "L"), (-1, "R")):
         ex = 0.071 * x; ez = f["eye_z"]
         put(c, f"f{i}_eye.{s}", ellipsoid((ex, front(ex, ez, 0.005), ez), (f["eye"][0], 0.016, f["eye"][1]), rot=(0, 0, f["eye_rot"] * x), segs=12, rings=8), EYE, outline=False)
-        put(c, f"f{i}_eyerim.{s}", ellipsoid((ex, front(ex, ez, 0.0065), ez), (f["eye"][0] + 0.013, 0.012, f["eye"][1] + 0.015), rot=(0, 0, f["eye_rot"] * x), segs=12, rings=8), EYERIM, outline=False)
-        put(c, f"f{i}_shine.{s}", ellipsoid((ex + 0.009 * x, front(ex, ez + 0.02, 0.0) - 0.011, ez + 0.02), (0.015, 0.006, 0.017), segs=8, rings=6), SHINE, outline=False)
-        put(c, f"f{i}_shine2.{s}", ellipsoid((ex - 0.01 * x, front(ex, ez - 0.02, 0.0) - 0.011, ez - 0.02), (0.007, 0.005, 0.007), segs=8, rings=6), SHINE, outline=False)   # A7: a second small shine
+        # Eyes as approved before A7 (Jay, walk-arms PR: the A7 ring/shine change read as "crazy eyes", so it is undone)
+        put(c, f"f{i}_eyerim.{s}", ellipsoid((ex, front(ex, ez, 0.009), ez), (f["eye"][0] + 0.007, 0.012, f["eye"][1] + 0.007), rot=(0, 0, f["eye_rot"] * x), segs=12, rings=8), EYERIM, outline=False)
+        put(c, f"f{i}_shine.{s}", ellipsoid((ex + 0.009 * x, front(ex, ez + 0.02, 0.0) - 0.011, ez + 0.02), (0.012, 0.006, 0.014), segs=8, rings=6), SHINE, outline=False)
         bx = 0.073 * x; bz = f["brow_z"]
         put(c, f"f{i}_brow.{s}", box((bx, front(bx, bz, 0.0), bz), (f["brow"][0], 0.012, f["brow"][1]), rot=(-25, -9 * x, f["brow_rot"] * x)), EYE, outline=False)
         if f.get("lashes"):
