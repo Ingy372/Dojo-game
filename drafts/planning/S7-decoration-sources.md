@@ -45,7 +45,7 @@ Each sure source has its own short meter. The run summary shows **one** of them,
 - **New:** a saved counter `classesCounted` in the profile, plus the last class date counted.
   - Each new class date in `recentClasses` adds 1, **including dates that arrive late**. A kid who opens the game a week after class still gets credit, because it counts class dates and not game opens.
   - The counter only goes up. It never resets, never needs days in a row, and has no deadline.
-  - At every 3rd class, the Blessing reward moment also shows "A new class piece for your dojo!"
+  - At every 3rd class (**every 2nd class at white belt**, Manager decision Oct 24), the Blessing reward moment also shows "A new class piece for your dojo!"
 - **No real student data is needed to build it.** Fake profiles in `fixtures/` already carry `attendance`, so the testing screen can add a class.
 - A student who can't attend for a while loses nothing; the meter just waits.
 
@@ -78,7 +78,8 @@ Assumptions:
 
 | Belt tier | Months | Runs | Classes | Class pieces | First clears | Journal trophies | Medals (4th +) | **Sure total** | Random (D × runs, max pool 10) | **All new** | **Runs per new (all)** | **Runs per new (sure only)** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1–3 | 3 | ~104 | ~26 | ~9 | 3 | ~4 | 0 | **~16** | ~10 (D 0.13 → 13.8, pool caps at 10) | ~26 | **~4.0** | ~6.5 |
+| 1 (white, every 2 classes) | 3 | ~104 | ~26 | ~13 | 3 | ~4 | 0 | **~20** | ~10 (pool cap) | ~30 | **~3.5** | ~5.2 |
+| 2–3 | 3 | ~104 | ~26 | ~9 | 3 | ~4 | 0 | **~16** | ~10 (D 0.13 → 13.8, pool caps at 10) | ~26 | **~4.0** | ~6.5 |
 | 4–5 | 3 | ~104 | ~26 | ~9 | 3 | ~4 | 3 | **~19** | ~10 (pool cap) | ~29 | **~3.6** | ~5.5 |
 | 6–7 | 6 | ~209 | ~52 | ~17 | 3 | ~4 | 3 | **~27** | ~10 | ~37 | **~5.6** | ~7.7 |
 | 8 | 9 | ~313 | ~78 | ~26 | 3 | ~4 | 3 | **~36** | ~10 | ~46 | **~6.8** | ~8.7 |
@@ -86,7 +87,7 @@ Assumptions:
 
 What the table shows:
 
-- **Sure sources are 62% (belts 1–3) and 66% (belts 4–5) of all new pieces, and 73–82% at long belts** (S7-rev2: treasure rate and random pool cut). They're also the only part that grows with real training.
+- **Sure sources are 67% at white belt, 62% (belts 2–3) and 66% (belts 4–5) of all new pieces, and 73–82% at long belts** (S7-rev2: treasure rate and random pool cut). They're also the only part that grows with real training.
 - Belts 1–5 get something new about every **3.5–4 runs**. That's slightly slower than before; the trade is chosen so chance stays a small bonus.
 - Long belts get something new about every **5–7 runs**, mostly from class. Going faster would need more art (scope risk 1).
 - A kid who trains more in class gets more pieces. Playing more only speeds up the small random pool, which then stops.
@@ -113,7 +114,7 @@ What the table shows:
 
 ## Scope risks
 
-1. **Art:** class pieces (about 9–35 per tier), 10 random pieces per tier, plus floor pieces and trophies. Colours and a shared class-scroll design keep the cost down. The Art Director should size this.
+1. **Art:** class pieces (about 9–35 per tier), 10 random pieces per tier, plus floor pieces and trophies. Colours and a shared class-scroll design keep the cost down. The Artist should size this (white belt now needs ~13 class pieces).
 2. **`classesCounted`** is a new saved field. It needs a migration for old saves: start at 0, or seed it from `classesInRank` (Manager to choose; I suggest seeding so current students aren't behind).
 3. **Parent or teacher view:** this is new UI. If the Parent Zone isn't in launch, the odds stay in data and docs until it is.
 4. **Floors per tier and the number of Journal entries** are guesses until milestone 10.
@@ -123,7 +124,7 @@ What the table shows:
 ## Done-when
 
 - **Class pieces:**
-  - In a test, a fake profile gains 3 new `recentClasses` dates and gets exactly one class piece.
+  - In a test, a fake profile gains 3 new `recentClasses` dates and gets exactly one class piece; a white-belt profile gets one every 2 classes.
   - A class date that arrives late still counts.
   - Opening the game twice for the same class adds nothing.
   - `classesCounted` never goes down, even if the feed's list gets shorter.
@@ -139,7 +140,7 @@ What the table shows:
 - **Loss:** a test loses a run after a piece drops and checks it's saved.
 - **Duplicates:** none while unowned pieces remain, at most 3 of a kind, no message after that.
 - **Pacing:**
-  - The balance player (typical profile with 2 classes a week, 104 runs at Tier 1) gets something new on average every 3.5–4.5 runs.
+  - The balance player (typical profile with 2 classes a week, 104 runs at Tier 1) gets something new on average about every 3.5 runs; belts 2–5 every 3.5–4.5 runs.
   - At least 60% of the new pieces at belts 1–5 come from sure sources (S7-rev2, from L4 review PR #77).
 - **Open House (post-launch):** visiting gives the banner, and a student who missed it gets it at the next event.
 
