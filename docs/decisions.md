@@ -641,3 +641,24 @@ My calls (not Manager):
 - No "N of 41 found" count on the collection goal: a long list of missing things reads like a chore.
 - A seal ability with no power yet reads "a new Technique Seal".
 - "Once per day" is saved on the profile as `goalsShownOn` (local date). Home only considers the card when opened straight from a run (`{ fromRun: true }`: cleared, "Back home" after a loss, or the rest card).
+
+## M7-P7 Gradual unlock schedule and Welcome Week (K19) (2026-10-24)
+Manager calls:
+1. K19 shares K17's budget: one new thing per day in total (a lesson or a system).
+2. The dev day offset is for the dev/test screen only, so "+1 day" really moves the session day forward.
+3. Welcome Week is for existing students only (any sign-off, or a belt above white). There are no countdowns and no "you missed" messages, and the week resumes at the next session.
+
+My calls (not Manager):
+- The schedule is data in `content/settings/unlock-schedule.json`, in this order: Street Smarts, Monster Journal, Sensei's Scroll. A system the belt hasn't opened yet (`minTier`) is skipped. Later systems plug in at milestone 10. Board, Tower, Look, Difficulty and Decorate are first-session core (core-design section 13), so they're always open.
+- Sensei introduces the day's system in the dojo as a card after arrival (after the welcome cards and celebrations), and its button appears then. Abilities are untouched: all earned abilities arrive on day 1.
+- The tutorial floor's guided lessons (warning, Counter, Strike) don't use up the day. Perfect, Block and Step-out keep ignoring the limit, as in K17.
+- Whether a profile takes Welcome Week is decided once, the first time the dojo checks. Saves that already played before this change keep everything open.
+- The dev offset is kept in localStorage (`dojo-ascent-dev-day-offset`). `localDay()` adds it, so sessions, lessons and Welcome Week all move together. The testing screen shows the session day.
+
+## Kid-facing tone pass (K19 follow-up) (2026-10-24)
+Manager calls:
+- The Welcome Back card body line 'Your dojo missed you.' becomes exactly 'Your dojo is ready.' (DojoScene.arrive). The card title already says "Welcome back, {name}!".
+- The run-resume title (content/settings/run-resume.json) "Your climb is waiting!" becomes 'Pick up your climb?'.
+- The Tower door's doorRestingLine (content/settings/play-time.json) "Come back tomorrow for more training!" becomes 'More training tomorrow!'.
+- Old saves (from before M7-P7) keep everything open and skip Welcome Week.
+- If the app closes mid-play during the K18 unlock cascade, the cascade replaying on the next return is fine.

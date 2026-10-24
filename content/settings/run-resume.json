@@ -1,6 +1,6 @@
 {
   "_note": "M7-P11. Shown in the Home Dojo when a Tower run was left open (the app closed mid-run).",
-  "title": "Your climb is waiting!",
+  "title": "Pick up your climb?",
   "line": "You'll start again at room {room}.",
   "continue": "Keep climbing",
   "rest": "Rest for now",

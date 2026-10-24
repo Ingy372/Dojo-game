@@ -53,7 +53,7 @@ import MOTION_TEXT from '../../../../content/settings/motion.json';
 import streetUi from '../../../../content/street-smarts/ui.json';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
-import { LESSONS, lessonTitle, takeLesson } from '../game/lessons';
+import { LESSONS, addDevDays, devDayOffset, lessonTitle, localDay, takeLesson } from '../game/lessons';
 import { TouchControls } from '../input/TouchControls';
 import { addStatic, addTinted, loadArt } from '../art/art';
 import type { LayeredSprite } from '../art/LayeredSprite';
@@ -64,6 +64,7 @@ import { Celebrations } from '../ui/Celebrations';
 import { FONT, crisp } from '../ui/theme';
 import { NAMED_PACK } from '../game/named';
 import { openMonsterJournal } from '../ui/MonsterJournal';
+import { isOpen, systemForToday } from '../game/unlocks';
 
 /** Pixels per tile in the room (before it's scaled to fit the screen). */
 const TILE = 48;
@@ -286,7 +287,7 @@ export class DojoScene extends Phaser.Scene {
       this.dojo.welcomed = true;
       writeSave(this.profile);
     } else if (hoursAway >= DOJO.welcomeBackHours) {
-      const hello = ["It's so good to see you!", 'Your dojo missed you.', 'Ready to train?'][Math.floor(Math.random() * 3)];
+      const hello = ["It's so good to see you!", 'Your dojo is ready.', 'Ready to train?'][Math.floor(Math.random() * 3)];
       const line = chores > 0 ? "Your dojo is ready for a fresh sweep! Let's make it shine together." : 'Everything is just how you left it.';
       steps.push(() => this.card(`Welcome back, ${name}!`, [hello, line], chores > 0 ? "Let's clean up" : "Let's go!", next));
     }
@@ -318,6 +319,12 @@ export class DojoScene extends Phaser.Scene {
           next();
         }),
       );
+    }
+    // Welcome Week (M7-P7): at most one new system a day for an existing student, shared with the lessons.
+    const system = systemForToday(this.profile, this.training);
+    if (system) {
+      writeSave(this.profile);
+      steps.push(() => this.card('Sensei', system.screens, 'Okay!', next));
     }
     if (savedRun()) steps.push(() => this.offerResume(next));
     let i = 0;
@@ -873,15 +880,18 @@ export class DojoScene extends Phaser.Scene {
         this.profile.difficultyLineShown = true;
         writeSave(this.profile);
       }
-      if (streetSmartsOpen(this.training.tier, streetUi.unlockTier)) this.button(width - pad - 130, 46, 130, 32, streetUi.button, 0x3aa57a, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
+      // Welcome Week (M7-P7): an existing student's systems show once Sensei has introduced them.
+      const street = streetSmartsOpen(this.training.tier, streetUi.unlockTier) && isOpen(this.profile, this.training, 'street-smarts');
+      const journal = this.training.tier >= CONTENT.named.rules.minBeltTier && isOpen(this.profile, this.training, 'journal');
+      if (street) this.button(width - pad - 130, 46, 130, 32, streetUi.button, 0x3aa57a, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
       // The Monster Journal, from the belt where named monsters start showing up.
-      if (this.training.tier >= CONTENT.named.rules.minBeltTier) {
-        const x = width - pad - (streetSmartsOpen(this.training.tier, streetUi.unlockTier) ? 130 + 8 : 0) - 100;
+      if (journal) {
+        const x = width - pad - (street ? 130 + 8 : 0) - 100;
         this.button(x, 46, 100, 32, CONTENT.named.journalButton, 0x6b5a2a, 14, () => this.openJournal());
       }
       // Sensei's Scroll (M7-P5): every lesson seen so far, and the tutorial floor, to replay any time.
-      const rowLeft = (streetSmartsOpen(this.training.tier, streetUi.unlockTier) ? 130 + 8 : 0) + (this.training.tier >= CONTENT.named.rules.minBeltTier ? 100 + 8 : 0);
-      this.button(width - pad - rowLeft - 90, 46, 90, 32, 'Scroll', 0x7a4a6a, 14, () => this.openScroll());
+      const rowLeft = (street ? 130 + 8 : 0) + (journal ? 100 + 8 : 0);
+      if (isOpen(this.profile, this.training, 'scroll')) this.button(width - pad - rowLeft - 90, 46, 90, 32, 'Scroll', 0x7a4a6a, 14, () => this.openScroll());
     }
   }
 
@@ -1325,12 +1335,14 @@ export class DojoScene extends Phaser.Scene {
     text(pad, pad, 'Dojo testing', 20, '#ff9f6b', true);
     const level = Math.round(messLevel(this.dojo.messHours) * 100);
     text(pad, pad + 28, `Mess: ${level}% (${Math.round(this.dojo.messHours)} hours built up; full at ${DOJO.messFullAfterHours}) · chores left: ${choresLeft(this.dojo)} · Calm Mind runs: ${this.dojo.calmMindRuns}`, 12, '#b9ad99');
-    text(pad, pad + 48, 'Fast-forward pretends you were away. You come back in through the door and bow, like a real return.', 12, '#b9ad99');
+    text(pad, pad + 48, `Fast-forward pretends you were away. You come back in through the door and bow, like a real return. Session day: ${localDay()}${devDayOffset() ? ` (+${devDayOffset()})` : ''}.`, 12, '#b9ad99');
     const w = Math.min(170, (width - pad * 2 - 16) / 3);
     let y = pad + 84;
     const away = (hours: number) => {
       // Pretend the last visit was earlier, then walk back in for real.
       this.dojo.lastSeenMs = (this.dojo.lastSeenMs ?? Date.now()) - hours * HOUR;
+      // The session day really moves on too (dev/test only, Manager call M7-P7).
+      addDevDays(Math.floor(hours / 24));
       writeSave(this.profile);
       setBowDue(true);
       this.scene.restart();
