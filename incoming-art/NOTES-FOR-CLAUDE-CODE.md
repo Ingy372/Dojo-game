@@ -276,6 +276,9 @@ These are samples only: idle, windup and attack, in 8 directions. The frame is 1
 - `dojo-people/sprites/kohai/` (all sheets and `kohai.json`) and `dojo-people/portraits/kohai/`: re-import. The kohai now has a curly top-knot with a teal tie, baked into the `body` layer.
 - UI suggestion from QA, not done here: give dark swatches a light border.
 
+## A2 Form stances (samples), `incoming-art/form-stances-a2/` [NEW, SAMPLES only, do not wire yet]
+Three player stance idles on the existing player rig: `stance_rooted` (front stance, option A), `stance_rooted_back` (back stance, option B) and `stance_flowing`. Same 128x160 frames, anchor-y 0.856 and 32 layers as `player-custom`; the belt stays its own neutral layer and the gi stays recolourable. Sheets are in `sprites/body-a` and `sprites/body-b`. The ids are working ids only, not names. See the DELIVERY_NOTE for DECIDE.
+
 ## Open items in one place
 
 1. The player frame changed to 128 × 160 with the anchor at (64, 136.96). It applies to `player-character/` and `player-custom/`.
@@ -288,3 +291,4 @@ These are samples only: idle, windup and attack, in 8 directions. The frame is 1
 8. **[NEW]** A1 cosmetics: names (Content Writer), unlock rules and colours (Jay), and the headband fit over big hair.
 9. **[NEW]** A5 padded-weapon enemy: the name, stats, which seals use it and the content json are still to decide. Jay approved the 192 px frame, the lime accent, and hiding the staff to show disarmed (2026-10-24). The full set (move, hit, stagger, defeat) is queued.
 10. **[NEW]** A7: Jay approved the kohai top-knot, the teal tie and `#34303f` as black (2026-10-24). Only the swatch border (Programmer) is still open.
+11. **[NEW]** A2 Form stances: DECIDE rooted option A or B, the real names (Content Writer), when the stance idle shows, and whether other animations get form variants.
