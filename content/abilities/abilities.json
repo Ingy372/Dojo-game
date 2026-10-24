@@ -36,7 +36,7 @@
     {
       "id": "follow-up-kick",
       "name": "Follow-up Kick",
-      "text": "Your Strike adds a second kick.",
+      "text": "Your STRIKE adds a second kick.",
       "effect": {
         "type": "strikeExtraHit",
         "amount": 0.5
@@ -45,7 +45,7 @@
     {
       "id": "quick-combo",
       "name": "Quick Combo",
-      "text": "Practiced combos flow smoothly: Strikes cost 8 less Focus.",
+      "text": "Practiced combos flow smoothly: each STRIKE costs 8 less Focus.",
       "effect": {
         "type": "strikeCost",
         "amount": 8
@@ -65,7 +65,7 @@
     {
       "id": "escape-step",
       "name": "Escape Step",
-      "text": "A Block instantly recharges Dash, so you can get away.",
+      "text": "A Block instantly recharges DASH, so you can get away.",
       "effect": {
         "type": "dashOnBlock"
       }
@@ -174,7 +174,7 @@
         "Self-Discipline"
       ],
       "kind": "discipline",
-      "text": "For {s} seconds, every Counter is a Perfect Counter.",
+      "text": "For {s} seconds, every COUNTER is a Perfect Counter.",
       "amount": 0,
       "seconds": 3
     }

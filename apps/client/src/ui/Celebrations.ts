@@ -263,7 +263,7 @@ export class Celebrations {
         sfx.blessing();
         this.card(cx, height * 0.45, Math.min(480, width - 40), 150);
         this.text(cx, height * 0.45 - 40, "Sensei's Seal is lit!", 24, '#ffd166', true).setOrigin(0.5);
-        this.text(cx, height * 0.45 + 2, 'You are approved to test.', 17, '#f2e9d8').setOrigin(0.5);
+        this.text(cx, height * 0.45 + 2, "You're ready for your next belt test!", 17, '#f2e9d8').setOrigin(0.5);
         if (m.testDate) this.text(cx, height * 0.45 + 34, `Test day: ${shortDate(m.testDate)}`, 17, '#ffffff', true).setOrigin(0.5);
         break;
       }

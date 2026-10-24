@@ -510,3 +510,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Existing students (any sign-off, or a belt above white) get every earned ability on day 1, and meet the dojo's systems one per day (Street Smarts, Journal, Scroll) through a short Sensei card. This shares the one-new-thing-a-day budget with Sensei's Lessons. New students are unchanged.
 - The testing screen's "+1 day away" now moves the session day forward too (a dev-only day offset).
 - New `packages/sim/src/unlocks.ts` and `content/settings/unlock-schedule.json`. Tests: 271 passed / 1 skipped (new unlocks.test.ts covers the fixtures, the yellow belt day by day, gaps, the shared budget, old saves and kind wording). Typecheck and build pass. Screenshots: /workspace/k19-{667,844}-{day1..3-sensei,day1..4-dojo,testing}.png.
+
+## K22 / M7-P13 Learning Designer fixes (2026-10-24)
+- The goals card now starts at session 2. In session 1 the first return home shows only the welcome line and the cascade. Kid text fixes: "glowing COUNTER" (no colour-only pointer), "until you go home", fight-button capitals (COUNTER/STRIKE/DASH), "Show Sensei {X} in class", and "You're ready for your next belt test!". Every change is listed in decisions.md.
+- Tests 285 passed / 1 skipped (new goals test: session 1 never shows the card; session 2 does, once). Typecheck and build pass. Screenshots at 667×375: /workspace/k22-*.png.
