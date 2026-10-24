@@ -1,5 +1,6 @@
 {
-  "notes": "DRAFT for M7-P6 (+ fix). Session list of Sensei's Lessons. Same keys as content/tutorial/sensei-lessons.json plus 'practice' (one-line goal shown in the safe practice room, which can't be failed) and 'earliestSession'. Session 1 is the tutorial: Move, Counter and Strike play on the tutorial floor, and Bow plays on the first return home after the door home. After session 1, at most one NEW lesson per session: Dash (2), Insights (3), Decorating (4). Perfect Counter, Block and Step-out are merged in from the run-based list (content/tutorial/sensei-lessons.json) with their exact screens. Each one plays the first time it comes up, on or after its earliestSession, and still counts toward the one-per-session limit. If it comes up early, it waits. Button names match the UI (COUNTER, STRIKE, DASH, Bow). One sentence per screen.",
+  "_note": "For the Programmer on M7-P5: once this file is promoted to content/tutorial/, retire the old entries in content/tutorial/sensei-lessons.json (this list replaces them).",
+  "notes": "DRAFT for M7-P6 (+ fix). Session list of Sensei's Lessons. Same keys as content/tutorial/sensei-lessons.json plus 'practice' (one-line goal shown in the safe practice room, which can't be failed) and 'earliestSession'. Session 1 is the tutorial: Move, Counter and Strike play on the tutorial floor, and Bow plays on the first return home after the door home. After session 1, at most one NEW lesson per session: Dash (2), Insights (3), Decorating (4). Perfect Counter, Block and Step-out are merged in from the run-based list (content/tutorial/sensei-lessons.json) with their exact screens. Each one has ignoresSessionLimit: true, so it shows right away the first time it comes up in play, outside the one-new-lesson-per-session limit. Its earliestSession is then just its sort order. Button names match the UI (COUNTER, STRIKE, DASH, Bow). One sentence per screen.",
   "speaker": "sensei",
   "lessons": [
     {
@@ -13,7 +14,8 @@
       "practice": "Walk to the glowing mat.",
       "success": "You've got it!",
       "retry": "That's okay. Try again whenever you're ready.",
-      "earliestSession": 1
+      "earliestSession": 1,
+      "ignoresSessionLimit": false
     },
     {
       "id": "lesson-counter",
@@ -26,7 +28,8 @@
       "practice": "Counter the practice dummy's swing.",
       "success": "Perfect! How did that feel?",
       "retry": "That's okay. Try again whenever you're ready.",
-      "earliestSession": 1
+      "earliestSession": 1,
+      "ignoresSessionLimit": false
     },
     {
       "id": "lesson-strike",
@@ -39,7 +42,8 @@
       "practice": "Strike the practice bag.",
       "success": "What a hit!",
       "retry": "That's okay. Try again whenever you're ready.",
-      "earliestSession": 1
+      "earliestSession": 1,
+      "ignoresSessionLimit": false
     },
     {
       "id": "lesson-bow",
@@ -52,7 +56,8 @@
       "practice": "Tap Bow at the door.",
       "success": "Thank you. That was a good bow.",
       "retry": "That's okay. Try again whenever you're ready.",
-      "earliestSession": 1
+      "earliestSession": 1,
+      "ignoresSessionLimit": false
     },
     {
       "id": "lesson-dash",
@@ -65,7 +70,8 @@
       "practice": "Dash out of the circle.",
       "success": "Quick feet!",
       "retry": "That's okay. Try again whenever you're ready.",
-      "earliestSession": 2
+      "earliestSession": 2,
+      "ignoresSessionLimit": false
     },
     {
       "id": "lesson-insights",
@@ -78,7 +84,8 @@
       "practice": "Pick any Insight you like.",
       "success": "Good choice. Which one did you pick?",
       "retry": "That's okay. Try again whenever you're ready.",
-      "earliestSession": 3
+      "earliestSession": 3,
+      "ignoresSessionLimit": false
     },
     {
       "id": "lesson-decorating",
@@ -91,12 +98,13 @@
       "practice": "Place your new decoration.",
       "success": "Your dojo looks more like you now.",
       "retry": "That's okay. Try again whenever you're ready.",
-      "earliestSession": 4
+      "earliestSession": 4,
+      "ignoresSessionLimit": false
     },
     {
       "id": "lesson-perfect",
       "order": 8,
-      "trigger": "First time it comes up: the first Perfect Counter without help",
+      "trigger": "First occurrence in play (shows right away): the first Perfect Counter without help",
       "screens": [
         "Tap when the circle is almost full.",
         "That is a Perfect Counter.",
@@ -105,12 +113,13 @@
       "practice": "Counter when the circle is almost full.",
       "success": "Perfect! How did that feel?",
       "retry": "That's okay. Try again whenever you're ready.",
-      "earliestSession": 5
+      "earliestSession": 5,
+      "ignoresSessionLimit": true
     },
     {
       "id": "lesson-block",
       "order": 9,
-      "trigger": "First time it comes up: the first Block (COUNTER pressed a little early)",
+      "trigger": "First occurrence in play (shows right away): the first Block (COUNTER pressed a little early)",
       "screens": [
         "That was a Block. Good guarding!",
         "Wait a tiny bit longer for Perfect."
@@ -118,19 +127,21 @@
       "practice": "Wait a tiny bit, then tap COUNTER.",
       "success": "You waited. Nice!",
       "retry": "That's okay. Try again whenever you're ready.",
-      "earliestSession": 6
+      "earliestSession": 6,
+      "ignoresSessionLimit": true
     },
     {
       "id": "lesson-step-out",
       "order": 10,
-      "trigger": "First time it comes up: the player walks out of a red circle",
+      "trigger": "First occurrence in play (shows right away): the player walks out of a red circle",
       "screens": [
         "Smart! Stepping out works too."
       ],
       "practice": "Walk out of the red circle.",
       "success": "You stayed safe!",
       "retry": "That's okay. Try again whenever you're ready.",
-      "earliestSession": 7
+      "earliestSession": 7,
+      "ignoresSessionLimit": true
     }
   ],
   "maxNewLessonsPerRoom": 1,
