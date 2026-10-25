@@ -305,3 +305,32 @@ export const BOW = {
   /** How long the bow animation takes (ms, looks only): the full 22-frame bow from the art. */
   ms: 1375,
 } as const;
+
+/**
+ * K25 (Jay's phone playtest): the whole game runs a bit slower. The rules still count the same
+ * ticks; the client just plays each tick this much slower in real time, so movement, enemies,
+ * attacks and animations all slow together and every wind-up and counter window gets longer
+ * in seconds (never shorter). 0.88 = about 12% slower.
+ */
+export const TEMPO = { speed: 0.88 } as const;
+
+/** Real milliseconds one rules tick lasts on screen at the game tempo. */
+export function realMsPerTick(): number {
+  return 1000 / TICKS_PER_SECOND / TEMPO.speed;
+}
+
+/**
+ * K25 screen shake. No shake when the player attacks. The shake when the player is hit is
+ * only at hurtFromBelt and up, or on Challenge, at hurtScale of its old strength, and never
+ * with Reduced motion.
+ */
+export const SCREEN_SHAKE = { playerAttackScale: 0, hurtScale: 0.65, hurtFromBelt: 'brown' } as const;
+
+/** How strong the being-hit shake is (0 = none) for this belt, difficulty and motion setting. */
+export function hurtShakeScale(o: { beltIds: readonly string[]; beltId: string; difficulty: Difficulty; reducedMotion: boolean }): number {
+  if (o.reducedMotion) return 0;
+  const from = o.beltIds.indexOf(SCREEN_SHAKE.hurtFromBelt);
+  const at = o.beltIds.indexOf(o.beltId);
+  const ranked = from >= 0 && at >= from;
+  return ranked || o.difficulty === 'challenge' ? SCREEN_SHAKE.hurtScale : 0;
+}
