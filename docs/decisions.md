@@ -886,3 +886,7 @@ What is in the code:
 
 ## R-BAL-12e: enemy weapon disarmedPower scales too (2026-10-24)
 A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt Power scale as the enemy's Power, rounded to a whole number. The content file keeps the BASE number (8). A disarmed push still hits softer than a normal swing at every belt. Test: r-bal-12e-disarmed-power.test.ts.
+
+
+## K26 Sign-off list layout (2026-10-24)
+- Fix the root cause (no column width) instead of shortening names: fixed column width + word wrap, measured row heights. Text floor is 12 px; past that we show "…and N more" (positive, points to the Board) rather than shrinking further.

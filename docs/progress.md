@@ -619,3 +619,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## R-BAL-12e disarmedPower scaled
 - Done (stacked on #208).
+
+
+## K26 Sign-off list columns never collide
+- Several-sign-offs screen: each column now has a fixed width and long names wrap inside it, so no name runs into the other column. If the list is too tall it steps 14 → 13 → 12 px (no smaller); if it still doesn't fit it shows what fits plus "…and N more! See them all on the Board."
+- Checked by script at 667×375 and 844×390 with the yellow (13) and green (24) profiles, which include the longest real names ("Self-Defense #7: Technique Seal: Create Distance", "#10 … Follow Through"): zero overlapping boxes, nothing off-screen. Screens: /workspace/qa/k26/.
+- Delivery Note: same layout as #213, so cut from bot-code/R-BAL-12d and based on it (depends on #213 → #208).
