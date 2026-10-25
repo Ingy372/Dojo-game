@@ -406,8 +406,11 @@ export class HomeScene extends Phaser.Scene {
       color: number;
       /** Icon id (Batch 8), if it has one. */
       icon?: string;
+      /** S3-P1b: kata arrows are drawn at the step-number size (13px bold), not 11px. */
+      big?: boolean;
     }
     const rows: Row[] = [];
+    const kataRows: Row[] = [];
     for (const v of t.virtues) {
       const inUse = v === t.virtue;
       const belts = v.earned.map((s) => t.belts.find((b) => b.id === s.belt)?.name ?? s.belt).join(', ');
@@ -438,8 +441,10 @@ export class HomeScene extends Phaser.Scene {
       // step (a step whose direction is still an open question gets no arrow).
       const kata = a.kind === 'form' && a.unlocked ? KATAS.get(r.id) : undefined;
       if (kata)
-        rows.push({ tag: 'Kata', title: kata.name, text: `${kata.steps.length} steps`, status: kataArrows(kata), unlocked: true, color: 0x9fd3ff });
+        kataRows.push({ tag: 'Kata', title: kata.name, text: `${kata.steps.length} steps`, status: kataArrows(kata), unlocked: true, color: 0x9fd3ff, big: true });
     }
+    // S3-P1b: earned katas are grouped together at the top of Abilities.
+    rows.unshift(...kataRows);
 
     // Descriptions and status lines wrap (K22b), so each card is as tall as its text and a
     // page holds as many cards as fit.
@@ -452,7 +457,7 @@ export class HomeScene extends Phaser.Scene {
       t.destroy();
       return hh;
     };
-    const heights = rows.map((row) => Math.max(48, 20 + measure(row.text, textW(row)) + measure(row.status, textW(row)) + 6));
+    const heights = rows.map((row) => Math.max(48, 20 + measure(row.text, textW(row)) + (row.big ? kataLines(row.status, textW(row)) * KATA_LINE : measure(row.status, textW(row))) + 6));
     const avail = h - 34;
     const pageStarts: number[] = [0];
     let used = 0;
@@ -478,7 +483,8 @@ export class HomeScene extends Phaser.Scene {
       const tw = textW(row);
       this.oneLine(this.text(tx, by + 4, `${row.unlocked ? '' : '🔒 '}${row.tag}: ${row.title}`, 13, row.unlocked ? css(row.color) : '#8a8296', true), tw, 10);
       const desc = this.text(tx, by + 20, row.text, 11, c, false, FONT, tw);
-      this.text(tx, desc.y + desc.height, row.status, 11, row.unlocked ? '#b9ad99' : '#ffd166', false, FONT, tw);
+      if (row.big) this.kataSteps(tx, desc.y + desc.height + 2, row.status, tw);
+      else this.text(tx, desc.y + desc.height, row.status, 11, row.unlocked ? '#b9ad99' : '#ffd166', false, FONT, tw);
       by += boxH + gap;
     });
     if (rows.length === 0) this.text(x, y, 'No abilities yet.', 14, '#b9ad99');
@@ -733,6 +739,19 @@ export class HomeScene extends Phaser.Scene {
 
   // ---------------------------------------------------------------- helpers
 
+  /**
+   * S3-P1b: a kata's steps, each the step number (bold 13px) followed by its arrow(s) drawn as
+   * thick shapes as tall as the number, so they never shrink to dots. Wraps by step.
+   */
+  private kataSteps(x: number, y: number, line: string, width: number): void {
+    const g = this.add.graphics();
+    this.ui.add(g);
+    for (const c of kataLayout(line, width)) {
+      this.text(x + c.x, y + c.y + 2, c.n, 13, '#ffffff', true);
+      c.arrows.forEach((d, k) => drawArrow(g, x + c.x + numW(c.n) + k * KATA_ARROW_W + KATA_ARROW_W / 2, y + c.y + 11, d));
+    }
+  }
+
   private text(x: number, y: number, str: string, size: number, color: string, bold = false, family = FONT, wrap?: number): Phaser.GameObjects.Text {
     const t = this.add
       .text(x, y, str, { fontFamily: family, fontSize: `${size}px`, color, fontStyle: bold ? 'bold' : 'normal', wordWrap: wrap ? { width: wrap } : undefined })
@@ -797,4 +816,47 @@ function shortName(r: RequirementStatus): string {
 function beltTextColor(color: string): string {
   const c = Phaser.Display.Color.HexStringToColor(color);
   return c.red + c.green + c.blue < 120 ? '#b9ad99' : color;
+}
+
+/** S3-P1b kata step layout, in screen points. */
+/** Room for the step number: about 8 points a digit plus a gap. */
+const numW = (n: string): number => 10 + 8 * n.length;
+const KATA_ARROW_W = 16;
+const KATA_GAP = 10;
+const KATA_LINE = 22;
+const GLYPH_DIR: Record<string, 'up' | 'down' | 'left' | 'right'> = { '↑': 'up', '↓': 'down', '←': 'left', '→': 'right' };
+interface KataCell {
+  n: string;
+  arrows: Array<'up' | 'down' | 'left' | 'right'>;
+  x: number;
+  y: number;
+}
+/** Lays out kataArrows' text ("1 ←   2 →") step by step, wrapping at width. */
+function kataLayout(line: string, width: number): KataCell[] {
+  let x = 0;
+  let y = 0;
+  return line.split(/\s{3}/).filter(Boolean).map((c) => {
+    const [n, a = ''] = c.trim().split(/\s+/);
+    const arrows = [...a].map((ch) => GLYPH_DIR[ch]).filter(Boolean);
+    const w = numW(n) + arrows.length * KATA_ARROW_W;
+    if (x > 0 && x + w > width) {
+      x = 0;
+      y += KATA_LINE;
+    }
+    const cell = { n, arrows, x, y };
+    x += w + KATA_GAP;
+    return cell;
+  });
+}
+function kataLines(line: string, width: number): number {
+  const cells = kataLayout(line, width);
+  return cells.length ? cells[cells.length - 1].y / KATA_LINE + 1 : 1;
+}
+/** A thick arrow about 14 points long centred on (cx, cy). */
+function drawArrow(g: Phaser.GameObjects.Graphics, cx: number, cy: number, d: 'up' | 'down' | 'left' | 'right'): void {
+  const r = 7;
+  const [dx, dy] = d === 'up' ? [0, -1] : d === 'down' ? [0, 1] : d === 'left' ? [-1, 0] : [1, 0];
+  const [px, py] = [-dy, dx];
+  g.lineStyle(3, 0x9fd3ff, 1).lineBetween(cx - dx * r, cy - dy * r, cx + dx * (r - 4), cy + dy * (r - 4));
+  g.fillStyle(0x9fd3ff, 1).fillTriangle(cx + dx * r, cy + dy * r, cx + dx * (r - 6) + px * 5, cy + dy * (r - 6) + py * 5, cx + dx * (r - 6) - px * 5, cy + dy * (r - 6) - py * 5);
 }
