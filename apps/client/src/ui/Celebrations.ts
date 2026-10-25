@@ -9,7 +9,7 @@ import { shortDate } from '../game/student';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook } from '../game/look';
 import { hex } from './belt';
-import { FONT, crisp } from './theme';
+import { FONT, crisp, view } from './theme';
 
 type Step =
   /** Sensei's welcome-home line, before the cascade (M7-P4, Manager call). */
@@ -53,7 +53,7 @@ export class Celebrations {
         this.steps.push({ kind: 'summary', to: m.to, levelCap: m.levelCap, preview: m.preview, extras });
       } else if (m.kind === 'welcome' || !promotion) this.steps.push({ kind: 'moment', moment: m });
     }
-    const { width, height } = scene.scale.gameSize;
+    const { width, height } = view(scene);
     const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.9).setOrigin(0).setInteractive();
     shade.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.next());
     this.root = scene.add.container(0, 0, [shade]).setDepth(100);
@@ -290,7 +290,7 @@ export class Celebrations {
   // ---------------------------------------------------------------- helpers
 
   private size(): { width: number; height: number } {
-    return this.scene.scale.gameSize;
+    return view(this.scene);
   }
 
   private text(x: number, y: number, str: string, size: number, color: string, bold = false, family = FONT, wrap?: number): Phaser.GameObjects.Text {

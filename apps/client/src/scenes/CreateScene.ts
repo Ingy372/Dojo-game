@@ -13,7 +13,7 @@ import { FACES, HAIRS, SWATCHES, type PlayerLook, loadLook, saveLook } from '../
 import { loadSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
-import { FONT, crisp } from '../ui/theme';
+import { FONT, crisp, view, hiDpi } from '../ui/theme';
 
 export interface CreateSceneData {
   /** True the first time: a welcome, and no way back until the character is made. */
@@ -46,6 +46,7 @@ export class CreateScene extends Phaser.Scene {
   }
 
   create(): void {
+    hiDpi(this.cameras.main);
     this.look = loadLook();
     this.training = currentTraining();
     this.leaving = false;
@@ -59,7 +60,7 @@ export class CreateScene extends Phaser.Scene {
   /** Draws the whole screen again (after any change, or when the screen turns or resizes). */
   private render(): void {
     this.ui.removeAll(true);
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const pad = 14;
     const leftW = Math.round(width * 0.4);
 

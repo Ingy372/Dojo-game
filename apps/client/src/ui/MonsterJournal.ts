@@ -9,7 +9,7 @@ import { journalKinds, namedForTier, type JournalEntry } from '@dojo/sim';
 import { addStatic, staticArt } from '../art/art';
 import { CONTENT } from '../game/content';
 import { NAMED_PACK } from '../game/named';
-import { FONT, crisp } from './theme';
+import { FONT, crisp, view } from './theme';
 
 /** Card spots on the page, in the art's source pixels (journal-page-frame note). */
 const CARD_X = 36;
@@ -25,7 +25,7 @@ type Box = [number, number, number, number];
 
 /** Opens the journal over the scene. Returns its container (destroyed when closed). */
 export function openMonsterJournal(scene: Phaser.Scene, journal: Record<string, JournalEntry>, trophies: readonly string[], onClose: () => void): Phaser.GameObjects.Container {
-  const { width, height } = scene.scale.gameSize;
+  const { width, height } = view(scene);
   const box = scene.add.container(0, 0).setDepth(80).setScrollFactor(0);
   const close = () => {
     box.destroy();

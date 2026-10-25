@@ -5,7 +5,7 @@
 import Phaser from 'phaser';
 import type { NextGoal } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
-import { FONT, crisp } from './theme';
+import { FONT, crisp, view } from './theme';
 
 const LABEL: Record<NextGoal['kind'], { title: string; color: string }> = {
   game: { title: 'In the Tower', color: '#9ad1ff' },
@@ -17,7 +17,7 @@ export class GoalsCard {
   private readonly root: Phaser.GameObjects.Container;
 
   constructor(scene: Phaser.Scene, goals: NextGoal[], onDone: () => void) {
-    const { width, height } = scene.scale.gameSize;
+    const { width, height } = view(scene);
     const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.85).setOrigin(0).setInteractive();
     const cw = Math.min(460, width - 32);
     const rowH = Math.min(78, (height - 150) / 3);

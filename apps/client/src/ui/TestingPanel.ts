@@ -5,7 +5,7 @@
 import Phaser from 'phaser';
 import { powerRating, xpToNext, type PowerSource, type Profile, type TrainingState } from '@dojo/sim';
 import { FAKE_PROFILES, selectedProfileKey } from '../game/student';
-import { FONT, crisp } from './theme';
+import { FONT, crisp, view } from './theme';
 
 const SOURCE_NAME: Record<PowerSource, string> = {
   signOffs: 'Sign-offs',
@@ -36,7 +36,7 @@ export class TestingPanel {
     training: TrainingState,
     actions: TestingActions,
   ) {
-    const { width, height } = scene.scale.gameSize;
+    const { width, height } = view(scene);
     this.container = scene.add.container(0, 0).setDepth(90);
     this.container.add(scene.add.rectangle(0, 0, width, height, 0x0d0b14, 0.97).setOrigin(0).setInteractive());
     const pad = 14;

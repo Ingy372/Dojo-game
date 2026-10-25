@@ -546,4 +546,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Session 2: lesson-dash is a short reminder.
 - Sim: enemyHold/waveHold/releaseWave plus the tutorial flow API, with 7 new tests (step flow, health floor at 1).
 
+- K24c: tower view 6.75 tiles tall; game draws at full retina sharpness (DPR camera zoom + view() helper). Screens: /workspace/qa/k24c/ (sharp-844.png is before/after).
 - K24b: wind-up "!" + fill ring before enemy attacks; COUNTER flashes/rings gold in the counter window; Reduced motion respected. Screens: /workspace/qa/k24b/.

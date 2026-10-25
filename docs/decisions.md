@@ -313,7 +313,7 @@ Jay asked Claude to test and tune the game before his next playtest.
 - **The chest:** it glints until opened, then plays its 2.5 s opening and shimmers. Its light and stars are drawn above the player (who stands on it). The chime, sparks and loot wait until the lid bursts open.
 - **Doors:** closed until the room is clear, then they slide open with a warm glow (the bot's version, kept). The boss and home doors borrow the battle and rest doors for now.
 - **Dojo mess:** the old "leaf" spots are now muddy footprints, a dropped towel or a water bottle. The internal name stays "leaf" so existing saves keep working.
-- **Possible later improvement:** the game draws at the phone's basic screen resolution, not its sharper "retina" resolution, so art can look a little soft on high-end phones. Making it draw at full sharpness touches every screen's layout, so it isn't done yet. Ask Jay if it bothers him.
+- **(Done in K24c, see below.)** ~~Possible later improvement:~~ the game draws at the phone's basic screen resolution, not its sharper "retina" resolution, so art can look a little soft on high-end phones. Making it draw at full sharpness touches every screen's layout, so it isn't done yet. Ask Jay if it bothers him.
 
 ### After Jay's test of the art (2026-10-16)
 
@@ -746,6 +746,17 @@ Programmer calls:
 - Enemies and new waves hold (`enemyHold`, `waveHold` in the sim) until the matching tip's Got it. A step that can no longer happen (for example, no enemies left) ends quietly. There's no failing and no countdown.
 - The tip box is about 65% see-through, with an outline and shadow on the text. It keeps off the doors, chest and messages and, on the tutorial floor, off the hero.
 - On the tutorial floor every enemy sees the player (`seeAll`), so no enemy waits off-screen while a tip asks the player to beat it.
+
+## K24c Closer tower view and full retina sharpness (2026-10-24)
+
+Manager calls:
+- **K24a's two tradeoffs are okayed:** (1) on the tutorial floor every enemy sees the player (`seeAll`); (2) the paused tip can cover the health bar when the hero is near the bottom of the screen. That's fine, since health can't drop below 1 there.
+- **Keep the 3× cap** on retina sharpness (DPR capped at 3).
+
+Programmer calls:
+- **Closer view.** The tower now shows about 6.75 tiles top to bottom instead of 8 (`VISIBLE_ROWS`), so the characters and enemies look bigger.
+- **Full "retina" sharpness.** The game now draws at the phone's real pixel count, not its basic screen resolution. The canvas has DPR real pixels per screen point (DPR is the phone's pixel ratio, capped at 3) and is shown shrunk back to the screen size. Every camera is zoomed by DPR, so the layout code still works in screen points through a new `view()` helper, and tap positions are divided by DPR where code reads them directly. Nothing looks different except sharper.
+- **Cost.** It draws 4 to 9 times as many pixels. In the build box's browser (software drawing, no graphics chip) the frame rate went from about 36 to about 13 frames per second at 844×390 at 3×, and memory went from 81 MB to 86 MB. Real phones draw with their graphics chip, so this box can't show real phone speed. If Jay's phone feels slower, set the cap to 2 (one line in ui/theme.ts).
 
 ## K24b — attack wind-up cue + COUNTER window (2026-10-24)
 - Before an enemy attacks it shows a cue drawn in code: a "!" in a ring that fills from the top (red), turning gold and full during the counter window.
