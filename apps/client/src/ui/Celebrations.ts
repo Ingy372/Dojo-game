@@ -4,12 +4,13 @@
 
 import Phaser from 'phaser';
 import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState } from '@dojo/sim';
-import { gainText, signOffGain, stripeGain } from '@dojo/sim';
+import { gainText, litGateLock, signOffCardText, signOffGain, signOffLines, signOffsTitle, stripeGain } from '@dojo/sim';
 import GAINS from '../../../../content/settings/training-gains.json';
 import { sfx } from '../audio/Sfx';
 import { shortDate } from '../game/student';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook } from '../game/look';
+import { reducedMotion } from '../game/motion';
 import { hex } from './belt';
 import { FONT, crisp, view } from './theme';
 
@@ -161,10 +162,10 @@ export class Celebrations {
     const stripes = new Map<string, number>();
     for (const e of extras) if (e.kind === 'stripe') stripes.set(e.word, Math.max(stripes.get(e.word) ?? 0, e.rank));
     for (const [word, rank] of stripes) earned.push({ line: `★ ${word} stripe${rank > 1 ? ', earned again' : ''}`, color: '#ffd166' });
+    const signed = extras.flatMap((e) => (e.kind === 'signOff' ? [e.requirement] : e.kind === 'signOffs' ? e.list.map((x) => x.requirement) : []));
+    for (const line of signOffLines(signed)) earned.push({ line, color: '#5cd65c' });
     for (const e of extras) {
-      if (e.kind === 'stripe') continue;
-      else if (e.kind === 'signOff') earned.push({ line: `✓ ${e.requirement.name} signed off`, color: '#5cd65c' });
-      else if (e.kind === 'signOffs') earned.push({ line: `✓ ${e.list.length} techniques signed off`, color: '#5cd65c' });
+      if (e.kind === 'stripe' || e.kind === 'signOff' || e.kind === 'signOffs') continue;
       else if (e.kind === 'testApproved') earned.push({ line: `Sensei's Seal is lit${e.testDate ? `: test day ${shortDate(e.testDate)}` : ''}`, color: '#ffd166' });
       else if (e.kind === 'blessing') earned.push({ line: 'Dojo Blessing for 48 hours', color: '#9ad1ff' });
     }
@@ -237,19 +238,19 @@ export class Celebrations {
       case 'signOff': {
         sfx.signOff();
         const r = m.requirement;
-        const who = r.signedOffBy ?? 'Sensei';
+        const words = signOffCardText(r);
         this.card(cx, height * 0.45, Math.min(520, width - 40), 220);
-        this.text(cx, height * 0.45 - 62, 'SIGNED OFF!', 16, '#5cd65c', true).setOrigin(0.5);
-        this.text(cx, height * 0.45 - 28, `${who} signed off ${r.name}!`, 22, '#ffffff', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
+        this.text(cx, height * 0.45 - 62, words.badge, 16, '#5cd65c', true).setOrigin(0.5);
+        this.text(cx, height * 0.45 - 28, words.line, 22, '#ffffff', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
         this.text(cx, height * 0.45 + 18, `New ${m.ability}`, 18, '#ffd166', true).setOrigin(0.5);
         this.text(cx, height * 0.45 + 52, gainText(GAINS.signOff, signOffGain(this.training, [r])), 17, '#5cd65c', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
-        this.text(cx, height * 0.45 + 84, 'Gate lock lit.', 14, '#b9ad99').setOrigin(0.5);
+        if (litGateLock(this.training, r)) this.text(cx, height * 0.45 + 84, 'Gate lock lit.', 14, '#b9ad99').setOrigin(0.5);
         this.burst(cx, height * 0.45 - 28, [0x5cd65c, GOLD], 20);
         break;
       }
       case 'signOffs': {
         sfx.signOff();
-        this.text(cx, height * 0.1, `${m.list.length} techniques signed off!`, 26, '#5cd65c', true).setOrigin(0.5);
+        this.text(cx, height * 0.1, signOffsTitle(m.list.map((x) => x.requirement)), 26, '#5cd65c', true).setOrigin(0.5);
         this.text(cx, height - 64, gainText(GAINS.signOffs, signOffGain(this.training, m.list.map((s) => s.requirement))), 17, '#ffd166', true, FONT, width - 40).setOrigin(0.5).setAlign('center');
         // K26: each column has a fixed width and long names wrap inside it, so they never run into the other column.
         // If the list is too tall, try 13 then 12 px (still readable); if it still doesn't fit, show what fits plus an "and N more" line.
@@ -339,6 +340,7 @@ export class Celebrations {
 
   /** Confetti bursting out from a point. */
   private burst(x: number, y: number, colors: number[], count: number): void {
+    if (reducedMotion()) return; // Reduced motion: no confetti.
     for (let i = 0; i < count; i++) {
       const c = this.scene.add.rectangle(x, y, 6, 10, colors[i % colors.length]).setAngle(Math.random() * 360);
       this.layer.add(c);
@@ -367,7 +369,7 @@ export class Celebrations {
     g.setPosition(x, y).setAlpha(0);
     this.layer.addAt(g, 0);
     this.scene.tweens.add({ targets: g, alpha: 1, duration: 500 });
-    this.scene.tweens.add({ targets: g, angle: 360, duration: 20000, repeat: -1 });
+    if (!reducedMotion()) this.scene.tweens.add({ targets: g, angle: 360, duration: 20000, repeat: -1 }); // Reduced motion: the rays stay still.
   }
 }
 

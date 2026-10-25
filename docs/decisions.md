@@ -961,3 +961,8 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - On a 375 pt tall phone the left column did not fit §3a's sizes with a Blessing line under the bar. The Blessing moved into the character block as a third 12 pt line, and the Path card uses 12 pt padding (not 16) when it is shorter than 69 pt.
 - The XP bar remembers what it last showed (`dojo.xpBarShown` in localStorage). After a run it fills from that to the new value (from empty after a level-up). Nothing remembered means no animation.
 - CreateScene's round colour dots keep their own handler (circles with 44 pt hit areas); they are not square buttons.
+## fix-celebrate-rm (2026-10-25)
+- Manager call (QA on #246): the Reduced motion Celebrations fix and the "practiced" wording ship in their own small PR, not in #246. "Counted" means `legacy` (already passed that rank); a mix shows the real sign-offs line first, then the practiced line. Square buttons go to P-MENU-c.
+## practiced-cards (2026-10-25)
+- Manager call (follow-up to #250): one counted technique shows "PRACTICED!" / "You practiced X!". The many-techniques title says "N techniques practiced!", or "R signed off, C practiced!" for a mix. Real sign-offs are unchanged. Built on bot-code/fix-celebrate-rm (reuses its rewards.ts helpers), so #250 merges first.
+- Manager call (Oct 25): "Gate lock lit." shows on a one-technique card only when that sign-off lit a lock on the Gate, meaning a real sign-off of one of the current rank's techniques (`litGateLock`). It is hidden for counted (legacy) and catch-up techniques.
