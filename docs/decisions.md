@@ -1000,3 +1000,9 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Manager call (Oct 25): two small follow-ups from QA of #261/#262, one PR.
 - Gear: the empty-bag hint (bag icon + words) is hidden while a worn-item sheet is open (`showEmptyBagHint`), so it no longer shows faintly behind the sheet.
 - Last run: when zero item rows fit (667x375), the line reads "N items in your Gear" instead of "+N more in your Gear"; "+N more" stays when at least one name shows (`lastRunMoreLabel`).
+## P-MENU2-a (2026-10-25)
+- Manager call (Oct 25): P-MENU2 plan #259 merged; P-MENU2-a and b plans approved as written. Go.
+- Jay picked mood A (warm dojo wood and paper) for D1. D2-D6 follow the planner's picks: D2 a 2-pick loadout (Stance + Virtue); D3 "Learn this at the dojo" / "Ask Sensei about this one", no locks, no counts; D4 tap-to-equip first, drag as a bonus; D5 read-aloud after the beta; D6 no numbers in the Fighting Style preview.
+- Placeholder art only, drawn in code (wood frame, switch colours in `theme.ts` WOOD). No image files until Jay OKs the Artist's samples.
+- New sizes (`BOARD`, `abilitiesSwitch`, `cubbySize`) live in `ui/tokens.ts` and are re-exported from `theme.ts`, so Vitest can test them without Phaser. No existing token changed.
+- Abilities opens on Trophy Case for now; "open on Trophy Case after a new unlock, else Fighting Style" waits for the unlock tracking in P-MENU2-c and a real Fighting Style (P-MENU2-e).
