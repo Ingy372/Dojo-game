@@ -1,0 +1,33 @@
+{
+  "id": "dust-bunny",
+  "name": "Dust Bunny",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A fluffy dust ball that rolls straight at you, then sneezes. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "color": "#b9b2a6",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "sneeze",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 16,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "white",
+  "band": "F1-2",
+  "tell": "wiggles, then red circle at its front",
+  "senseiLine": "It wiggles before it rolls. Watch, then move.",
+  "description": "A fluffy dust ball that rolls straight at you, then sneezes.",
+  "bestiary": {
+    "tip": "Step aside, or COUNTER the sneeze.",
+    "lore": {
+      "white": "Shadow dust gathered in the quiet corners. Calm it, and it puffs away into clean air."
+    }
+  }
+}

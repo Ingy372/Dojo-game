@@ -1,0 +1,46 @@
+{
+  "id": "vine-sweeper",
+  "name": "Vine Sweeper",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A tangle of vines that swings one long sweep. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "color": "#3f8a4f",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "long sweep",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 28,
+    "recoverTicks": "TODO",
+    "dashOnly": true
+  },
+  "parSeconds": "TODO",
+  "tier": "yellow",
+  "band": "F3-4",
+  "tell": "purple striped arc + '!!'",
+  "senseiLine": "The stripes show where the vines will sweep. DASH out.",
+  "description": "A tangle of vines that swings one long sweep.",
+  "bestiary": {
+    "tip": "DASH out of the arc.",
+    "lore": {
+      "yellow": "The vines grew wild without the sun. Free them, and they curl back around the garden fence."
+    }
+  },
+  "dashOnlyAttack": {
+    "name": "long sweep",
+    "shape": "arc",
+    "telegraphTicks": 28,
+    "recoverTicks": "TODO",
+    "strength": "TODO",
+    "tell": "purple-and-white stripes + '!!' + whoosh",
+    "shapeCue": "arc",
+    "counterable": false,
+    "answer": "dash",
+    "noOverlapWithRedCircle": true
+  }
+}

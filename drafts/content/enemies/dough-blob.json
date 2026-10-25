@@ -1,0 +1,33 @@
+{
+  "id": "dough-blob",
+  "name": "Dough Blob",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A wobbly dough ball. When calmed it splits into two Doughlings. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "color": "#f1dcb0",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "squish",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 18,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "orange",
+  "band": "F1-2",
+  "tell": "squishes down, red circle",
+  "senseiLine": "Two little ones? Calm them quickly.",
+  "description": "A wobbly dough ball. When calmed it splits into two Doughlings.",
+  "bestiary": {
+    "tip": "Calm the little Doughlings fast.",
+    "lore": {
+      "orange": "Dough left out in the shadow puffed up grumpy. Calm it, and it rests, ready to bake into bread."
+    }
+  }
+}
