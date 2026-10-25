@@ -4,7 +4,7 @@
 
 import { unlockedForms, virtueTitle, type AbilityContent, type Loadout, type TrainingState } from '@dojo/sim';
 import words from '../../../../content/abilities/fighting-style.json';
-import { MIN_TAP, S1, S2, TYPE } from './tokens';
+import { MIN_TAP, S1, S2, TYPE, pageDots } from './tokens';
 
 export const STYLE_WORDS = words;
 
@@ -133,4 +133,15 @@ export function trayPaging(rowW: number, minTileW: number, count: number, maxPer
 export function trayPage<T>(picks: T[], paging: TrayPaging, page: number): T[] {
   const p = Math.max(0, Math.min(paging.pages - 1, page));
   return picks.slice(p * paging.perPage, (p + 1) * paging.perPage);
+}
+
+/**
+ * P-MENU2-f: the tray's page dots (like the Trophy Case: dots only, never numbers), so kids can
+ * see there are more picks. One dot per page, the current one lit. Empty when there's one page
+ * or the dots wouldn't fit in `room`.
+ */
+export function trayDots(pages: number, page: number, room: number): { x: number; on: boolean }[] {
+  const d = pageDots(pages, room);
+  if (!d) return [];
+  return Array.from({ length: pages }, (_, i) => ({ x: d.x0 + i * d.step, on: i === page }));
 }
