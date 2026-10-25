@@ -244,11 +244,11 @@ def _(ic): gi(ic, "#f4efe4", "#e3dccb", "#c9a06a")
 def _(ic): gi(ic, "#f4efe4", "#8cc4ec", "#5aa0e6", quilt="#d6cfbf")
 @icon("mountain-gi", "gear (gi): Mountain Gi, a folded slate-blue gi with a small snowy mountain")
 def _(ic): gi(ic, "#6d8fb8", "#3f5f86", "#c9a06a", mountain="#3f5f86")
-@icon("jade-charm", "gear (charm): Jade Charm, a round green jade disc on a red cord with a tassel")
+@icon("jade-charm", "gear (charm): Jade Charm, a round green jade disc on a gold cord with a tassel")
 def _(ic):
     ob = ic.put("jade", tube((0, 0.04, 0.05), (0, -0.04, 0.05), 0.3, 0.3, segs=40), "#5cc08a"); cut_ring(ic, "jh", ob, Vector((0, 0.1, 0.05)), Vector((0, -0.1, 0.05)), 0.1)
     D = Draw(ic, -0.042, 1.0); D.arc(0, 0.05, 0.22, 0.025, 0, 360, "#8fe0b2", n=40); D.arc(-0.05, 0.1, 0.25, 0.03, 110, 160, "#d8f7e4")
-    cord(ic, Vector((0, 0, 0.33))); tassel(ic, Vector((0, -0.02, -0.3)))
+    cord(ic, Vector((0, 0, 0.33)), col="#edbd41"); tassel(ic, Vector((0, -0.02, -0.3)), col="#edbd41")   # gold, not red (red = danger); same gold as PR #212
 @icon("lotus-charm", "gear (charm): Lotus Charm, a small pink lotus flower charm on a red cord")
 def _(ic):
     ic.put("pad", ellipsoid(Vector((0, 0.06, -0.2)), (0.4, 0.2, 0.06), segs=24, rings=8), "#6cc46f")
