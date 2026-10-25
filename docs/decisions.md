@@ -782,6 +782,11 @@ Live enemy changes (maxHealth / power / guard; nothing else changed):
 - Checked with drafts/planning/r-bal-9c-check.py against #188's expected white Artist (Standard / Challenge ×1.5). Hits to beat: Swarmer 2/3, Shield 6/9, Brute 12/18, Floor-keeper 50/75. Enemy hits to KO the player: 18/13, 12/8, 8/5, 8/5. All in band; the player always survives at least 5 hits.
 - Elite and named Brutes follow the Brute (Guarding Brute 158 Health, Old Thumper 189). Their tests were updated to the new numbers.
 - Not in this PR: R-BAL-9b (per-tier gear caps, including the white gear cut). It waits on DECIDE-1 (R-BAL-9a, Jay), which isn't recorded yet.
+
+## R-BAL-4 — bad-luck counter locked (2026-10-24)
+- A test (packages/sim/test/r-bal-4-bad-luck.test.ts) fails if `LOOT.guaranteedRareOnRun` is above 5, so a rare is always promised by run 5 at the latest.
+## R-BAL-5 Softer XP steps (D3)
+Jay's D3: level steps are weighted step + 11 (PROGRESSION.xpStepSoften), so a 3-month tier goes from 1.4–14.2 runs per step to 5.7–10.0. The tier total is unchanged, so the time to reach the cap is the same; early levels just come a bit slower and late levels a lot faster. Test: packages/sim/test/r-bal-5-xp-steps.test.ts.
 ## K25 — slower tempo, calmer screen shake (2026-10-24, from Jay's phone playtest via the Manager)
 - **One tempo value.** `TEMPO.speed = 0.88` in packages/sim/src/config.ts (about 12% slower). The rules still count the same ticks; the client plays each tick 1/0.88 times longer. So movement, enemy speed, attacks, character animations (LayeredSprite) and the Game scene's tweens all slow together, and every wind-up and counter window lasts longer in seconds (50 ms → about 57 ms per tick). No tick numbers were edited, so no sim or balance test changed.
 - **No shake on the player's attacks.** Basic hits, Strikes, Perfect Counters and enemy-down hits keep their short freeze (hit-stop) but never shake the screen (`SCREEN_SHAKE.playerAttackScale = 0`).
@@ -798,6 +803,26 @@ The Manager made the white gear cut from #188 (DECIDE-1, option a) under the bal
 - Drops are clamped to the tier cap, including the Jade charm's Power share. maxGearScore uses each tier's own caps instead of white × tier.
 - Not done here: ENEMY_SCALE for enemies outside their home tier (spec item 5), because no enemy appears off-tier yet; per-tier loot tables (R-BAL-10); XP steps (R-BAL-5, #204).
 
+## R-BAL-12: real training powers combat (2026-10-24; #193, #195, drafts/planning/R-BAL-12-training-powers-combat.md)
+Jay's Decisions A and C and the Manager's Decision B, from the R-BAL-12 doc:
+- **A (Jay):** training gives 40–60% of a typical student's power. The sim gives 51–54% at every belt.
+- **B (Manager):** one enemy multiplier per belt (`ENEMY_TRAINING_SCALE`, internal), and every stat a kid sees is a whole number. Content files keep BASE numbers. A run scales Health and Power with `Math.round`; Guard and timings never scale.
+- **C (Jay):** a class-only kid being a little weaker is OK. No nag or guilt messages; training only adds, never takes away. No timers, streaks or decay.
+
+What is in the code:
+- `TRAINING_STATS` per belt: a sign-off adds Power + Health, a Training Point adds Health (counted up to 28 × tier), a stripe adds Guard. A piece keeps the value of the belt it was earned at.
+- `trainingStats()` feeds `characterSetup`.
+- Save migration: `TrainingState.stripesByBelt` is rebuilt by `migrateStripesByBelt`. Extra stripes from an old save that kept only a count go on the oldest belts with room, then on the current belt. It never removes anything.
+- Test file: r-bal-12-training-stats.test.ts.
+- Not done here: UI gain words (R-BAL-12d); the weapon's disarmedPower isn't scaled.
+
+## R-BAL-12 enemy scale retune (Manager call, option B, Oct 24)
+- **Manager, option B:** re-run the band check on #203's lowered base numbers × `ENEMY_TRAINING_SCALE`, and retune the scale so every live enemy stays inside the #188 bands at every belt.
+- **What the check found:** the old scale (yellow and up) was a ratio against the #188 Artist of each belt. It assumed enemy files built for that belt. The live enemies have white-belt base numbers and appear at every belt, so from yellow up they were far too easy. Swarmer took 1 hit, and the Floor-keeper fell in 7–33 hits instead of 40–80. White was already in band.
+- **New rows (Health × / Power ×), white to black:** 1.27/1.19, 2.14/2.06, 3.19/3.14, 4.65/4.32, 6.56/5.6, 8.46/7.06, 10.77/8.7, 13.1/10.36, 15.91/11.94, 18.72/13.8. White is unchanged. Each row passes for all three model students (typical, trains more, plays only) on Standard and Challenge ×1.5. Each row also keeps the typical student's hits and KO counts as close to white's as the bands allow. Fit: drafts/planning/r-bal-12f-live-check.py.
+- **Bopper base 110/16 → 66/11** (Guard 10 and disarmed push 8 kept). No scale row could keep the Bopper in the mid band alongside the other four. Its Challenge KO fell below 8 at every belt. This changes the A5 numbers from #102/#118.
+- **Guard:** `test/r-bal-12-bands.test.ts` checks every live enemy, belt, student, Standard and Challenge, and fails if a new live enemy file is not listed. Against the old scale, 131 of its cases fail.
+- **Open:** the drafted C13 enemies (drafts/content/enemies) are built for each belt's Artist. If they go live as they are, this scale would double-count. They need white-base numbers, or their own scale, when they land.
 ## K27: tutorial fixes from Q5 (2026-10-24, plan approved by the Manager)
 - **Closing line (Manager's call; Jay will see it).** The door tip's last line was "What was your favorite part?", which a child can't answer. It is now "Great job! You finished the training floor." (content/tutorial/tutorial-floor.json).
 - **Chest and boss tips wait for their own room.** The chest tip shows only in the vault and the boss tip only in the boss room (Q5 B2: the chest tip showed in room 1).

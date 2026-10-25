@@ -12,6 +12,7 @@ import {
   newProfile,
   stepWorld,
   strikeCost,
+  trainingStats,
   TICKS_PER_SECOND,
   type CombatEvent,
   type PlayerInput,
@@ -133,7 +134,9 @@ describe('Technique Seals and Strike upgrades', () => {
       const ev = w.events.find((e) => e.kind === 'hit');
       return ev && ev.kind === 'hit' ? ev.damage : 0;
     };
-    const y = character(yellow);
+    const y0 = character(yellow);
+    // Keep the enemy alive through the counter: test Disarm without R-BAL-12 training Power.
+    const y = { ...y0, power: y0.power - trainingStats(buildTraining(loadFeed(yellow), content.abilities, { ms: 0, weekday: 3 })).power };
     const plain = hitDamage({ ...y, mods: { ...y.mods, disarm: 0 } });
     const disarmed = hitDamage(y);
     expect(disarmed).toBe(Math.round(plain / 2));

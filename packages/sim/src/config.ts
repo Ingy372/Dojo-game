@@ -216,6 +216,8 @@ export function gearCapsForTier(tier: number): (typeof GEAR_CAPS)[keyof typeof G
 export const PROGRESSION = {
   /** Each belt tier adds this many levels to the cap (white belt: cap 10). */
   levelsPerTier: 10,
+  /** R-BAL-5 (D3): each level step's weight is step + this, so later steps grow gently (last step ≤ 10 runs). Tier total unchanged. */
+  xpStepSoften: 11,
   /** Each level above 1 adds this much Health and Power. */
   healthPerLevel: 3,
   powerPerLevel: 0.4,
@@ -251,6 +253,56 @@ export const TRAINING_POINTS = {
   /** Each ability upgrades from level 1 to 5, so it can take this many points. */
   upgradesPerAbility: 4,
 } as const;
+
+/**
+ * R-BAL-12 (#193/#195, drafts/planning/R-BAL-12-training-powers-combat.md): real training adds
+ * whole-number combat stats, for good. Index = belt tier - 1 (white … black); belts past the
+ * list use the last row. A piece keeps the value of the belt it was earned at.
+ */
+export const TRAINING_STATS: ReadonlyArray<{
+  signOff: { power: number; maxHealth: number };
+  trainingPoint: { maxHealth: number };
+  stripe: { guard: number };
+}> = [
+  { signOff: { power: 1, maxHealth: 4 }, trainingPoint: { maxHealth: 1 }, stripe: { guard: 7 } }, // white
+  { signOff: { power: 1, maxHealth: 5 }, trainingPoint: { maxHealth: 1 }, stripe: { guard: 5 } }, // yellow
+  { signOff: { power: 1, maxHealth: 5 }, trainingPoint: { maxHealth: 1 }, stripe: { guard: 3 } }, // orange
+  { signOff: { power: 2, maxHealth: 6 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 3 } }, // green
+  { signOff: { power: 2, maxHealth: 6 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 2 } }, // blue
+  { signOff: { power: 2, maxHealth: 6 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 2 } }, // red
+  { signOff: { power: 2, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 2 } }, // red-black
+  { signOff: { power: 3, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 1 } }, // brown
+  { signOff: { power: 3, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 1 } }, // brown-black
+  { signOff: { power: 3, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 1 } }, // black
+];
+
+/** Training Points that count toward stats per belt tier (power.ts uses the same 28). */
+export const TRAINING_POINTS_PER_BELT = 28;
+
+/**
+ * R-BAL-12 (Decision B): enemy files hold BASE numbers; a run at belt tier n multiplies
+ * Health and Power by row n-1, then rounds. Guard and timings never scale. Internal only.
+ * Retuned (Manager, option B) so the LIVE enemies (white-belt base numbers from #203) stay in the
+ * #188 bands at every belt for all three model students; pinned by test/r-bal-12-bands.test.ts.
+ * Fit: drafts/planning/r-bal-12f-live-check.py.
+ */
+export const ENEMY_TRAINING_SCALE: ReadonlyArray<{ maxHealth: number; power: number }> = [
+  { maxHealth: 1.27, power: 1.19 },
+  { maxHealth: 2.14, power: 2.06 },
+  { maxHealth: 3.19, power: 3.14 },
+  { maxHealth: 4.65, power: 4.32 },
+  { maxHealth: 6.56, power: 5.6 },
+  { maxHealth: 8.46, power: 7.06 },
+  { maxHealth: 10.77, power: 8.7 },
+  { maxHealth: 13.1, power: 10.36 },
+  { maxHealth: 15.91, power: 11.94 },
+  { maxHealth: 18.72, power: 13.8 },
+];
+
+/** The row for a belt tier (1 = white); tiers past the list use the last row. */
+export function byTier<T>(rows: readonly T[], tier: number): T {
+  return rows[Math.max(0, Math.min(rows.length, Math.floor(tier)) - 1)];
+}
 
 /**
  * Power Rating (core-design section 12). Never shown to players: staff and the system only.

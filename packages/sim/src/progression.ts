@@ -7,7 +7,7 @@ import type { Effect } from './effects';
 import type { FeedBelt } from './feed';
 import { playerStats, type Profile } from './profile';
 import type { RunSummary } from './run';
-import { unlockedForms, virtueTitle, type TrainingState, type VirtueInfo } from './training';
+import { trainingStats, unlockedForms, virtueTitle, type TrainingState, type VirtueInfo } from './training';
 import type { PlayerSetup, VirtueSetup } from './world';
 
 /** Total experience for one belt tier's levels, from the school's typical time in rank. */
@@ -29,8 +29,10 @@ export function xpToNext(level: number, belts: readonly FeedBelt[]): number {
   // White belt climbs from 1 to 10 (9 steps); every later tier has 10 steps.
   const steps = tier === 1 ? per - 1 : per;
   const step = tier === 1 ? level : level - (tier - 1) * per + 1;
-  const total = (steps * (steps + 1)) / 2;
-  return Math.max(10, Math.round((tierXp(belt) * step) / total));
+  // R-BAL-5 (D3): weights step + k, so the tier's experience is shared more evenly.
+  const k = PROGRESSION.xpStepSoften;
+  const total = (steps * (steps + 1)) / 2 + k * steps;
+  return Math.max(10, Math.round((tierXp(belt) * (step + k)) / total));
 }
 
 /** The level the character plays at: never above the real rank's cap. */
@@ -119,11 +121,13 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
   const gear = playerStats(profile);
   const level = effectiveLevel(profile, training);
   const earned = training.abilities.filter((a) => a.unlocked && a.perk).map((a) => a.perk!.effect);
+  // R-BAL-12: real training adds whole-number stats on top of gear and level.
+  const trained = trainingStats(training);
   return {
     level,
-    maxHealth: gear.maxHealth + (level - 1) * PROGRESSION.healthPerLevel,
-    power: Math.round((gear.power + (level - 1) * PROGRESSION.powerPerLevel) * 10) / 10,
-    guard: gear.guard,
+    maxHealth: gear.maxHealth + (level - 1) * PROGRESSION.healthPerLevel + trained.maxHealth,
+    power: Math.round((gear.power + (level - 1) * PROGRESSION.powerPerLevel + trained.power) * 10) / 10,
+    guard: gear.guard + trained.guard,
     effects: [...earned, ...gear.effects],
     forms: unlockedForms(training, abilities),
     virtue: virtueSetup(training),

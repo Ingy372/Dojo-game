@@ -4,7 +4,7 @@
 // Pure: "now" is passed in, never read from a clock.
 
 import type { AbilityContent, FormDef, PerkDef, VirtueDef } from './abilities';
-import { BLESSING, POWER, PROGRESSION, TRAINING_POINTS } from './config';
+import { BLESSING, byTier, POWER, PROGRESSION, TRAINING_POINTS, TRAINING_POINTS_PER_BELT, TRAINING_STATS } from './config';
 import { DAY_NAMES, type FeedBelt, type FeedStripe, type RequirementType, type StudentFeed } from './feed';
 
 /** The moment the game is looking at the feed: a timestamp (ms) and today's weekday (0 = Sunday, local time). */
@@ -110,6 +110,8 @@ export interface TrainingState {
   /** Stripes earned at the current belt (shown on the character's belt). */
   stripesThisBelt: number;
   totalStripes: number;
+  /** R-BAL-12: stripes per belt id (at most POWER.stripesPerBelt each), rebuilt by migrateStripesByBelt. */
+  stripesByBelt: Record<string, number>;
   gate: GateState;
   path: PathCard;
   blessed: boolean;
@@ -249,6 +251,7 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
     virtue,
     stripesThisBelt,
     totalStripes: feed.stripes.length,
+    stripesByBelt: migrateStripesByBelt(belts, feed.stripes, feed.stripes.length, idx),
     gate,
     path: { next: nextStep, nextClassDay: nextClassDay(feed.attendance.classDays, now.weekday), testDate: gate.testDate },
     blessed,
@@ -290,5 +293,64 @@ export function roman(n: number): string {
     out += s;
     n -= v;
   }
+  return out;
+}
+
+/**
+ * R-BAL-12 save migration: stripes per belt, from the feed. Never lowers anything: if the
+ * feed names fewer stripes than `totalStripes` (an older save only kept the count), the
+ * extra stripes go on the oldest belts with room (POWER.stripesPerBelt each), then on the
+ * current belt. Stripes on unknown belts count the same way.
+ */
+export function migrateStripesByBelt(
+  belts: readonly FeedBelt[],
+  stripes: readonly { belt: string }[],
+  totalStripes: number,
+  currentIdx: number,
+): Record<string, number> {
+  const cap = POWER.stripesPerBelt;
+  const out: Record<string, number> = {};
+  const last = Math.max(0, Math.min(currentIdx, belts.length - 1));
+  let placed = 0;
+  for (const s of stripes) {
+    const i = belts.findIndex((b) => b.id === s.belt);
+    if (i < 0 || i > last || (out[s.belt] ?? 0) >= cap) continue;
+    out[s.belt] = (out[s.belt] ?? 0) + 1;
+    placed++;
+  }
+  let extra = Math.max(totalStripes, stripes.length) - placed;
+  for (let i = 0; i <= last && extra > 0; i++) {
+    const id = belts[i].id;
+    const room = cap - (out[id] ?? 0);
+    const n = Math.min(room, extra);
+    if (n > 0) out[id] = (out[id] ?? 0) + n;
+    extra -= Math.max(0, n);
+  }
+  if (extra > 0 && belts.length > 0) out[belts[last].id] = (out[belts[last].id] ?? 0) + extra;
+  return out;
+}
+
+export interface TrainingStats {
+  power: number;
+  maxHealth: number;
+  guard: number;
+}
+
+/** R-BAL-12: whole-number stats from real training. Adds only: more training never lowers a stat. */
+export function trainingStats(t: Pick<TrainingState, 'belts' | 'tier' | 'requirements' | 'stripesByBelt' | 'trainingPoints'>): TrainingStats {
+  const out: TrainingStats = { power: 0, maxHealth: 0, guard: 0 };
+  const tierOf = (id: string) => {
+    const i = t.belts.findIndex((b) => b.id === id);
+    return i < 0 ? t.tier : i + 1;
+  };
+  for (const r of t.requirements) {
+    if (!r.signedOff) continue;
+    const v = byTier(TRAINING_STATS, tierOf(r.belt)).signOff;
+    out.power += v.power;
+    out.maxHealth += v.maxHealth;
+  }
+  for (const [belt, n] of Object.entries(t.stripesByBelt)) out.guard += byTier(TRAINING_STATS, tierOf(belt)).stripe.guard * n;
+  const points = Math.min(t.trainingPoints, TRAINING_POINTS_PER_BELT * t.tier);
+  for (let n = 1; n <= points; n++) out.maxHealth += byTier(TRAINING_STATS, Math.ceil(n / TRAINING_POINTS_PER_BELT)).trainingPoint.maxHealth;
   return out;
 }

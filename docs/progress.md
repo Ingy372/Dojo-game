@@ -554,6 +554,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## R-BAL-9c Live enemy numbers
 - Swarmer, Shield, Brute and Floor-keeper set to the #188 numbers; all in band on Standard and Challenge (drafts/planning/r-bal-9c-check.py). D1–D5 logged as Jay's calls.
+
+## R-BAL-4 Bad-luck counter test
+- New test locks `guaranteedRareOnRun` at 5 or lower. Checked it fails when set to 6.
+## R-BAL-5 XP step weights (k+11)
+- Done: progression.ts uses weights step+11. Matches balance-sim.py section 3; no step goes over 10 runs.
 ## K25 Slower tempo and calmer shake
 - Game runs about 12% slower (one `TEMPO.speed` value); wind-ups and counter windows are longer in real time, never shorter.
 - No screen shake on the player's own attacks. The being-hit shake only happens at Brown belt and up or on Challenge, at 65% strength, and never with Reduced motion.
@@ -565,6 +570,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## R-BAL-9b Per-tier gear caps
 - Done: 10-tier GEAR_CAPS, white cut, Jade capped. Test: r-bal-9b-gear-caps.test.ts.
 
+## R-BAL-12 Training powers combat
+- Done: training stats, stripesByBelt migration (never lowers), per-belt enemy scale. UI words (12d) are still open.
+- Enemy scale retuned (Manager option B): live enemies are in the #188 bands at all 10 belts for all three model students; Bopper base is now 66/11. Test: r-bal-12-bands.test.ts.
 ## K27 — tutorial fixes from Q5 (2026-10-24)
 **Done**
 - Q5 B1–B6 fixed: boss "!" clear of the boss bar, boss tip closes on Got it and keeps off the boss; chest tip only in the vault; tip box keeps off HOME, the hero and STRIKE; COUNTER is never dimmed with a gold ring; new closing line (Manager's call).
