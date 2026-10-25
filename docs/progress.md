@@ -591,6 +591,13 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 **Next**
 - None; the shake rank mapping for other dojos is noted in decisions.md.
 
+## K30 — HOME label clear of the boss (2026-10-25)
+**Done**
+- Door labels slide aside when they would overlap the boss's head, health bar or name (`keepLabelOffBoss`).
+- Checked at 667x375 and 844x390 with Reduced motion off and on (/workspace/k30-shots/).
+**Next**
+- Tester re-check of the boss room.
+
 ## K31 — boss name and small bar never touch (2026-10-25)
 
 - Added `bossTagLayout` + `BOSS_TAG` in sim, wired in GameScene (`placeBossTag`), cue avoids the pair. Test: packages/sim/test/k31-boss-tag.test.ts. Shots in /workspace/k31-shots/ (`*-top-*` frames teleport the boss to the top wall).

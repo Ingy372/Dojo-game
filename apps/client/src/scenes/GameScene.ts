@@ -1840,6 +1840,7 @@ export class GameScene extends Phaser.Scene {
       // the top doors sit right under it on a 667-wide phone.
       const cam = this.cameras.main;
       d.label.setY(Math.max((d.at.y + 0.55) * TILE, cam.worldView.y + HUD_TOP_PX / (cam.zoom / DPR)));
+      this.keepLabelOffBoss(d);
     }
 
     // The chest appears once the room is clear: a glinting chest, then (once opened)
@@ -2352,6 +2353,36 @@ export class GameScene extends Phaser.Scene {
     const wl = cam.worldView.x + (Math.min(nx - half, bx) - 4) / k;
     const wr = cam.worldView.x + (Math.max(nx + half, bx) + 4) / k;
     this.bossTagWorld = { left: wl, right: wr, top: toWorldY(t.nameTop) - 2, bottom: toWorldY(t.barY + BOSS_TAG.barH / 2) + 2 };
+  }
+
+  /**
+   * K30: a door label never sits on the boss's head, health bar or name. If it would, it slides
+   * sideways to the far side of the door from the boss (the label still reads as that door's).
+   */
+  private keepLabelOffBoss(d: { label: Phaser.GameObjects.Text; at: Vec2 }): void {
+    const home = d.at.x * TILE;
+    d.label.setX(home);
+    for (const e of this.world.enemies) {
+      if (!e.def.boss || e.mode === 'defeated') continue;
+      const v = this.enemyViews.get(e.id);
+      if (!v || !v.container.visible) continue;
+      const r = e.def.radius * TILE;
+      const hx0 = v.container.x - r - 6;
+      const hx1 = v.container.x + r + 6;
+      const hy0 = v.container.y - v.top - 34; // health bar and name above the head
+      const hy1 = v.container.y - v.top * 0.4; // the head and shoulders
+      const b = d.label.getBounds();
+      // K31: the name and small bar may sit below the boss; keep the label off that pair too.
+      const tag = this.bossTagWorld;
+      if (tag && !(b.right < tag.left || b.left > tag.right || b.bottom < tag.top || b.top > tag.bottom)) {
+        const half = b.width / 2 + 6;
+        d.label.setX(v.container.x >= home ? Math.min(home, tag.left - half) : Math.max(home, tag.right + half));
+        continue;
+      }
+      if (b.right < hx0 || b.left > hx1 || b.bottom < hy0 || b.top > hy1) continue;
+      const half = b.width / 2 + 6;
+      d.label.setX(v.container.x >= home ? Math.min(home, hx0 - half) : Math.max(home, hx1 + half));
+    }
   }
 
   /** K27: the lowest world y a wind-up cue may sit at so it clears the boss bar and name (Q5 B1). */
