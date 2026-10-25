@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-25 4:00 PM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#278.
+Last updated: 2026-10-25 6:00 PM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#286.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -28,11 +28,15 @@ Last updated: 2026-10-25 4:00 PM EDT by Dojo-ascent Manager. Catch-up covers PRs
 | B-SAFE | Dojo-Ascent Programmer | **Done (PR #249, merged Oct 25).** Kid-safety items: outside links behind the gate, a wipe-data button, a "saved on this phone" note. | Every outside link asks the gate question first. Wipe returns to a fresh start. The note shows on first launch. | — |
 | B-MENU | Dojo-Ascent Programmer | **Done (P-MENU-a to f merged Oct 25).** P-MENU-a to e. | Every button is at least 44 pt, shows press feedback, and the grid doesn't jump (P-MENU checks). | P-MENU-a (#228), P-MENU-b to e |
 | B-ART3 | Dojo-ascent Artist | **Samples approved and merged (#241, #242). Full set delivered: enemies #244, Hearth Cook Guardian #247, Ember Kitchens rooms #248; Jay approved Oct 25; all merged.** Tier 3 (Orange) room art, enemies and Guardian. | The art files are in `incoming-art/` and approved by Jay **by Nov 20**. | — |
-| B-T3 | Dojo-Ascent Programmer | **Delivered (PR #278); needs main merged in (conflict), then QA. Supper Rush 90 s from #275 (merged).** Import tier 3, or set the "next floor opens soon" note. | An Orange-belt profile plays tier 3 to its Guardian, or sees the note if B-ART3 slipped. | Conflict fix on #278, then QA |
+| B-T3 | Dojo-Ascent Programmer | **Done (PR #278; tuning #279, #280, #282 at 549/17; boss levers #285). Supper Rush 90 s (#275).** Import tier 3, or set the "next floor opens soon" note. | An Orange-belt profile plays tier 3 to its Guardian, or sees the note if B-ART3 slipped. | — |
 | B-DOCS | Dojo-Ascent Researcher & Planner | **Delivered (PR #236, merged Oct 25).** Parent beta note (one page), privacy page draft, TestFlight beta description, feedback email text. | All four drafts are in `drafts/planning/` for Jay and the lawyer. | — |
 | B-TESTERS | Jay | Pick 5–10 families. Collect each parent's Apple email (iPhone) or Google email (Android), plus their OK. | A list with names, phone type, email and an OK for each family. | — (B-DOCS done) |
 | B-BETAREV | Dojo-Ascent Programmer | Send the first build to TestFlight external testing (Beta App Review). | App Store Connect shows the build "Approved" for external testing. | B-CI, B-DOCS |
-| B-QA | Dojo-Ascent Game Logic/systems Tester | Full beta pass on a small and a large phone, both platforms (or web). | A QA report says READY with no blocking bugs. | B-BELT, B-SAFE, B-T3 |
+| B-QA | Dojo-Ascent Game Logic/systems Tester | Full beta pass on a small and a large phone, both platforms (or web). | A QA report says READY with no blocking bugs. | B-T3-TUNE-2 done (B-BELT, B-SAFE, B-T3 done) |
+| B-T3-TUNE-2a | Dojo-Ascent Programmer | **Done (PR #285).** Pot lid blocks hits while sparks are out (from 66% health), rolling pin every phase. | As in `drafts/planning/B-T3-TUNE-2-boss-levers.md` (PR #284). | — |
+| B-T3-TUNE-2c | Dojo-Ascent Programmer | **Done (PR #285).** About 1 s hold at 66% and 33%. | As in the plan. | — |
+| B-T3-TUNE-2b | Dojo-Ascent Programmer | Client: pot lid look/tint and "clang" sound (no damage number), lid icon on the boss bar. **Placeholder:** code-drawn lid until Jay OKs real lid art. | Screenshot: lid up with sparks out; Reduced motion keeps the lid icon. | after #286 conflict fix |
+| B-T3-TUNE-2d | Dojo-Ascent Game Logic/systems Tester | Replay tier 3 with Orange gear, plus one Guided/young run if possible. | QA note reports time, HP lost and wins against the plan's target, and whether every hit felt fair. | — (#285 merged) |
 | B-SEND | Jay | Freeze Dec 4. Invite testers Dec 7. Fall back to the web link where needed. (Manager runs it; Jay owns it) | Every tester family has the game installed and opened by Dec 15. | B-QA, B-TESTERS, B-BETAREV |
 | B-FEEDBACK | Jay | Collect beta feedback into one place, weekly from Dec 15. (Manager runs it; Jay owns it) | One feedback file with each note, its date and an owner. | B-SEND |
 
@@ -56,16 +60,26 @@ Last updated: 2026-10-25 4:00 PM EDT by Dojo-ascent Manager. Catch-up covers PRs
 | P-MENU2-c | Dojo-Ascent Programmer | **Done (PR #269, QA passed).** Unlock moment, once per unlock. | Cubby lights once after a new sign-off; no replay; Reduced motion fades only. | — |
 | P-MENU2-d | Dojo-Ascent Programmer | **Done (PR #270).** Fighting Style data: starting Form + chosen Virtue in the profile; default = today's behaviour. | Sim tests: default profile fights exactly as today; a chosen Virtue/Form is used next run. | — |
 | P-MENU2-e | Dojo-Ascent Programmer | **Done (PR #272).** Fighting Style screen: slot cards, tray, tap-to-equip, drag, preview, "Always with you" row (drag + preview may slip past beta). | A 6-year-old changes the Stance in 2 taps; the choice survives a restart. | P-MENU2-d; A6, A7 (placeholders OK) |
-| P-MENU2-f | Dojo-Ascent Programmer | **Delivered (PR #273); needs main merged in (conflict), then QA.** Gear paper-doll, 3-column tiles, compare arrows. | As in the plan. | Conflict fix on #273, then QA |
+| P-MENU2-f | Dojo-Ascent Programmer | **Done (PR #273).** Gear paper-doll, 3-column tiles, compare arrows. | As in the plan. | — |
 | P-MENU2-g | Dojo-Ascent Programmer | **Done (PR #274).** Last run "Scroll of the Climb". | As in the plan. | — |
-| P-MENU2-h | Dojo-ascent Artist | **Done: Jay approved Oct 25, merged #265.** Art swap-in by the Programmer follows P-MENU2-f. A1–A13 in mood A; premium full set, no rush. | Jay approves the samples; atlases in `incoming-art/`. | — |
-| P-MENU2-i | Dojo-Ascent Game Logic/systems Tester | Phone pass on the new tabs: small and large, Reduced motion on/off, kid-tap test. | No missed tap in 10 tries; no text under 12; no guilt words. | — (P-MENU2-e done; can start now) |
+| P-MENU2-h | Dojo-ascent Artist | **Done: Jay approved Oct 25, merged #265.** Art swap-in is P-MENU2-i-art (PR #286). A1–A13 in mood A; premium full set, no rush. | Jay approves the samples; atlases in `incoming-art/`. | — |
+| P-MENU2-i-art | Dojo-Ascent Programmer | **Delivered (PR #286); needs main merged in (conflict), then QA.** #265 art in Trophies, Gear and Last run, with code-drawn fallbacks. **Manager OK'd the 4 calls:** Legendary uses Epic art; dark ink on paper stat tiles; "Everyday" in #6b5a48; lantern on the next cubby only. My Style art still held. | QA passes; tests pass. | Conflict fix on #286, then QA |
+| P-MENU2-i | Dojo-Ascent Game Logic/systems Tester | Phone pass on the new tabs (include #286 art): small and large, Reduced motion on/off, kid-tap test. | No missed tap in 10 tries; no text under 12; no guilt words. | #286 conflict fix |
 | ICONS2 | Dojo-ascent Artist | **PR #277: all 8 Forms/Strikes/Virtues icons; Jay's 3 answers in (Strikes violet, bow kept, front kick); Manager first pass passed.** | Jay gives final OK; then added to the menu2 icons64 set. | Jay's final OK on #277 |
+
+## 0b3. Stances (from `drafts/planning/R-STANCE-stances-and-kata-rewards.md`, PR #281). Jay, Oct 25: 5 stances OK; Fighting keeps full attack speed; stances unlock by Sensei sign-off. **Placeholder:** rename only for the beta; kata powers after (Jay picks them tonight).
+| ID | Owner | What | Done when | Waits on |
+|---|---|---|---|---|
+| R-STANCE-a | Dojo-Ascent Programmer | **Done (PR #283, QA passed).** Forms renamed to Stances; old saves migrate. | As in the plan. | — |
+| R-STANCE-b | Dojo-ascent Artist | Rename the #277 icons to stance ids; draw icons for Cat, Front, Fighting and Horse stances in the #277 style. | Icons in `incoming-art/` with stance ids; Jay's final OK. | — (rename on #277 after Jay's OK) |
+| R-STANCE-c | Dojo-Ascent Researcher & Planner | Numbers for the stances (Fighting keeps full attack speed, shorter Dash), with a sim inside the R-BAL bands. Kata reward numbers after Jay's picks. | Sim passes the band tests; Rooted is capped. | stances: — · kata rewards: Jay's picks |
+| R-STANCE-d | Dojo-Ascent Programmer (+ Nic) | Stance sign-off items in the feed and fixtures; each unlocks through the sign-off cascade. Kata rewards after the beta. | As in the plan. | R-STANCE-c; Nic adds 4 DojoForge sign-off items (Cat, Front, Fighting, Horse) |
+| R-STANCE-e | Learning & Engagement Designer (+ Jay) | Steps and one-line character for Pinon 1–3, Nahanchi, Possi, and the dojo stance list, drafted from `docs/curriculum.md` and the kata files; Jay checks. | Files in `drafts/content/katas/`. | — |
 
 **Bug fixes from Jay's phone screenshot (Oct 25), all done:** B-GEAR-BUG #261, B-LASTRUN #262, B-POLISH-1 #263, B-NM-FIX #267, B-NM-FIX-2 #268.
 
 ## 0c. Done Oct 25
-P-MENU2-a #264, b #266, c #269, d #270, e #272, g #274, A-MENU2 art #265, B-POLISH-2 #271, Supper Rush note #275, mood A note #276, P-MENU2 plan #259, P-MENU-b #253, c #254, d #257, e #258, f #260, B-SAFE #249, Celebrations #250 and #252, Orange art #244 #247 #248, Guardian concepts #211, charms #214, bestiary set 2 #256, kata icons #227, bug fixes #261–#263, #267, #268.
+P-MENU2-a #264, b #266, c #269, d #270, e #272, f #273, g #274, B-T3 #278–#280, #282, R-STANCE plan #281, R-STANCE-a #283, B-T3-TUNE-2 plan #284 and 2a/2c #285, A-MENU2 art #265, B-POLISH-2 #271, Supper Rush note #275, mood A note #276, P-MENU2 plan #259, P-MENU-b #253, c #254, d #257, e #258, f #260, B-SAFE #249, Celebrations #250 and #252, Orange art #244 #247 #248, Guardian concepts #211, charms #214, bestiary set 2 #256, kata icons #227, bug fixes #261–#263, #267, #268.
 
 B-WRAP #243, Node 22 #245, B-BELT #246, R-BAL-14b #251, L4 beta-docs review #239 and fixes #240, B-ART3 samples #241 and room brief #242, bestiary set 1 #234 (Jay approved), P-MENU-a #228, B-DOCS #236, R-BAL-14 #237, C7 charm placeholders #233, K27 #218, K28 #219, K29 #220, K30 #221, K31 #222, K32 #226, R-BAL-12d #213, R-BAL-12e #210, K26 #215, R-BAL-13 #224, C14 #217, C13-F #229, A-BEST samples #207, dash telegraphs #209, P-MENU plan #225, Dec 15 replan #230 and beta plan #232. Walk #199 closed (original walk kept).
 
