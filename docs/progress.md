@@ -617,6 +617,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Words in content/settings/training-gains.json (for Jay's review). Sim helpers signOffGain / stripeGain / gainText use each piece's own belt. New test r-bal-12d-gain-words.test.ts (4). Screens at 667 and 844: /workspace/qa/r-bal-12d/.
 - Delivery Note: depends on #208 (R-BAL-12); PR base is bot-code/R-BAL-12.
 
+## R-BAL-12e disarmedPower scaled
+- Done (stacked on #208).
+
 
 ## K26 Sign-off list columns never collide
 - Several-sign-offs screen: each column now has a fixed width and long names wrap inside it, so no name runs into the other column. If the list is too tall it steps 14 → 13 → 12 px (no smaller); if it still doesn't fit it shows what fits plus "…and N more! See them all on the Board."
