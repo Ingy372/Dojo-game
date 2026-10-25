@@ -63,7 +63,7 @@ import {
   type TrainingState,
   TEMPO,
   SCREEN_SHAKE,
-  hurtShakeScale,
+  eventShakeScale,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
@@ -1066,7 +1066,7 @@ export class GameScene extends Phaser.Scene {
           if (ev.playerId === this.me) this.tutorialDid('counter');
           const p = this.world.players[ev.playerId];
           sfx.block();
-          this.impact(FEEL.block, this.hurtShake());
+          this.impact(FEEL.block, this.hurtShake('block'));
           this.ring(p.pos, COLORS.shield, 1.2);
           this.sparks(p.pos, 6, COLORS.shield);
           this.floatText(p.pos, `BLOCK  -${ev.damage}`, '#9ad1ff', 22);
@@ -1077,7 +1077,7 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.hurt();
           this.heroDo('hit');
-          this.impact(FEEL.hurt, this.hurtShake());
+          this.impact(FEEL.hurt, this.hurtShake('hurt'));
           this.playerFlashUntil = this.time.now + 160;
           this.flashScreen(0xff2a1a, 0.3, 200);
           this.floatText(p.pos, `-${ev.damage}`, '#ff6b5b', 26);
@@ -2092,9 +2092,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** K25: being hit shakes only at Brown belt and up or on Challenge, softer, never with Reduced motion. */
-  private hurtShake(): number {
+  private hurtShake(kind: 'hurt' | 'block'): number {
     const t = currentTraining();
-    return hurtShakeScale({ beltIds: t.belts.map((b) => b.id), beltId: t.belt.id, difficulty: this.world.difficulty, reducedMotion: reducedMotion() });
+    return eventShakeScale(kind, { beltIds: t.belts.map((b) => b.id), beltId: t.belt.id, difficulty: this.world.difficulty, reducedMotion: reducedMotion() });
   }
 
   private addWorld<T extends Phaser.GameObjects.GameObject>(obj: T): T {
