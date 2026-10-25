@@ -1025,3 +1025,9 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **Packed shelves.** A short shelf now shares its row with the next one. Each shelf keeps its own label, and every row but the last is full. With 8 cubbies the case takes 1 page at 844x390 and 932x430 (2 rows × 4) and 3 pages at 667x375 (1 row × 3). The test asserts ≤ 2 pages at 844 and 932.
 - **Kata steps on the cream sheet.** Step numbers are `WOOD.ink` (#3a2618, 11.3:1). Arrows are `KATA_INK.onPaper.arrow` (#1d4690, 7.1:1).
 - **Polish.** The grid is centred in the frame. Earned stripe cubbies show the short Virtue name; the sheet keeps the full name. The shelf label "Character stripes" is now "Stripes" so it fits over a single cubby without "…".
+
+## P-MENU2-c: Trophy Case unlock moment (2026-10-25)
+- **Manager approved the plan.** When a cubby becomes earned, the first Trophy Case view that shows it plays one unlock moment: a paper cover sweeps off the wood card left to right (360 ms, `MOTION.unlockSweep`), then the card pops (`MOTION.pop`) and the existing Seal bell (`sfx.seal()`) rings once for the view. With Reduced motion on, the card just fades in, with the bell.
+- **Save field is `trophiesSeen`** (cubby ids), not `seen`, because `profile.seen` already holds the reward-moment snapshot. It follows the `sealsSeen` pattern: `newTrophies()` in packages/sim records an id the first time it is drawn, so a cubby on another page waits for its page.
+- **Old saves.** A save without `trophiesSeen` loads as null; the first Trophy Case view marks every already-earned cubby as seen silently, so returning players see no replays. New profiles start with [] so a new student's first earned cubbies play once.
+- The "POP" is the card's scale pop (no on-screen word, no new copy). No new art or wording; all drawn in code.

@@ -25,6 +25,7 @@ import {
   virtueTitle,
   wornItem,
   sealBell,
+  newTrophies,
   xpToNext,
   type BestKey,
   type GearItem,
@@ -608,6 +609,12 @@ export class HomeScene extends Phaser.Scene {
     const top = y + L.ribbonH + (L.sideArrows ? S1 : S2);
     // Centre the grid (full rows) so the shelves sit square in the frame.
     const sx = x + L.shelfX + Math.max(0, Math.floor((L.shelfW - (L.perRow * (L.cubby + BOARD.cubby.gap) - BOARD.cubby.gap)) / 2));
+    // P-MENU2-c: cubbies on this page earned since the last look play their unlock moment once.
+    const shown = pages[this.page].flatMap((r) => r.segments.flatMap((sg) => sg.cubbies)).filter((c) => c.earned).map((c) => c.id);
+    const migrating = this.profile.trophiesSeen === null;
+    const fresh = newTrophies(this.profile, cubbies.filter((c) => c.earned).map((c) => c.id), shown);
+    if (fresh.length || migrating) writeSave(this.profile);
+    if (fresh.length) sfx.seal();
     let ry = top;
     if (cubbies.length === 0) this.text(x + w / 2, ry + S3, TROPHY_WORDS.empty, TYPE.body, '#f2e3c4', false, FONT, w).setOrigin(0.5, 0).setAlign('center');
     for (const row of pages[this.page]) {
@@ -616,7 +623,7 @@ export class HomeScene extends Phaser.Scene {
       let slot = 0;
       for (const seg of row.segments) {
         this.oneLine(this.text(sx + slot * step, ry, seg.title, TYPE.label, '#e8c48a', true), seg.cubbies.length * step - BOARD.cubby.gap, 10);
-        seg.cubbies.forEach((c, i) => this.cubby(sx + (slot + i) * step, cy, L.cubby, c));
+        seg.cubbies.forEach((c, i) => this.cubby(sx + (slot + i) * step, cy, L.cubby, c, fresh.includes(c.id)));
         slot += seg.cubbies.length;
       }
       ry += L.rowH;
@@ -676,7 +683,7 @@ export class HomeScene extends Phaser.Scene {
   }
 
   /** P-MENU2-b: one cubby, drawn in code on a button() so it presses like every other button. */
-  private cubby(x: number, y: number, size: number, c: Cubby): void {
+  private cubby(x: number, y: number, size: number, c: Cubby, unlock = false): void {
     const btn = button(this, { x, y, w: size, h: size, label: '', color: c.earned ? 0xa8703f : WOOD.paper, size: TYPE.label, selected: false, stroke: c.earned ? 0xffd166 : WOOD.grain, onTap: () => this.openCubby(c) }, this.ui);
     const v = btn.visual;
     const half = size / 2;
@@ -705,6 +712,33 @@ export class HomeScene extends Phaser.Scene {
       lg.lineStyle(1, WOOD.ink === '#3a2618' ? 0x3a2618 : 0x000000, 0.8).lineBetween(half - 13, -half + 4, half - 13, -half + 8);
       v.add(lg);
     }
+    if (unlock) this.unlockMoment(v, size);
+  }
+
+  /**
+   * P-MENU2-c: a just-earned cubby's unlock moment: a paper cover sweeps off the wood left to
+   * right, then a small pop. Reduced motion: a plain fade in. (The bell rings once per view.)
+   */
+  private unlockMoment(v: Phaser.GameObjects.Container, size: number): void {
+    if (reducedMotion()) {
+      v.setAlpha(0);
+      this.tweens.add({ targets: v, alpha: 1, duration: MOTION.reducedFade.ms * 3 });
+      return;
+    }
+    const half = size / 2;
+    const cover = this.add.rectangle(half, 0, size, size, WOOD.paper).setOrigin(1, 0.5);
+    v.add(cover);
+    this.tweens.add({
+      targets: cover,
+      scaleX: 0,
+      duration: MOTION.unlockSweep.ms,
+      ease: MOTION.unlockSweep.ease,
+      onComplete: () => {
+        cover.destroy();
+        v.setScale(0.9);
+        this.tweens.add({ targets: v, scale: 1, duration: MOTION.pop.ms, ease: MOTION.pop.ease });
+      },
+    });
   }
 
   /** P-MENU2-b: ◀ dots ▶ (44 tall). Dots only, never "n / m". */

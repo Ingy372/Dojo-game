@@ -23,6 +23,8 @@ export const MOTION = {
   swap: { ms: 180, ease: 'Cubic.Out' },
   sheet: { ms: 220, ease: 'Cubic.Out', outMs: 160, outEase: 'Cubic.In' },
   pop: { ms: 220, ease: 'Back.Out' },
+  /** P-MENU2-c: the Trophy Case unlock sweep (paper to wood), before the pop. */
+  unlockSweep: { ms: 360, ease: 'Cubic.InOut' },
   /** Reduced motion: no scale or slide, just an instant change and a short fade. */
   reducedFade: { ms: 120 },
   /** The Dojo Blessing glow: a slow breath, no scale. */
