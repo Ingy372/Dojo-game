@@ -867,4 +867,4 @@ What is in the code:
 - `bossTagLayout` now takes one input object (boss x/head/feet, the pair's half width, the screen band, and boxes to avoid) and returns ONE x for the pair. The name and the bar both use it, so they can't split. The pair is clamped on screen as a unit at the left and right edges.
 - Keep-clear boxes: door labels (HOME), COMBO and its "+N% power" line. The pair first slides sideways off a box (away from the box's centre, towards the boss); if that can't clear it, it drops below the box. This applies to the above spot and the below-the-feet spot.
 - Unit tests cover the edge clamp, the HOME slide, and the below spot with COMBO + power line.
-- The boss '!' cue refreshes the pair's box for the current frame before choosing its spot, and gives the pair 8 px of extra room.
+- The boss '!' cue refreshes the pair's box for the current frame before choosing its spot (no extra padding). Root cause of the last 667 miss: while the pair slid sideways off COMBO as it faded in, the pair covered both side spots, so the cue fell back to a fixed spot on top of it. Now, when the side spots are blocked, the cue goes just past the pair's edge, or under it.

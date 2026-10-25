@@ -2295,9 +2295,8 @@ export class GameScene extends Phaser.Scene {
     // Refresh the name + bar box for this frame first, so the cue never reads last frame's spot.
     const bossUp = this.world.enemies.find((e) => e.def.boss && e.mode !== 'defeated');
     if (bossUp && this.bossName.visible) this.placeBossTag(bossUp);
-    // The cue's ring is drawn a little wider than R, so give the pair a few extra px of room.
     const tg = this.bossTagWorld;
-    if (tg) labels.push({ left: tg.left - 8, right: tg.right + 8, top: tg.top - 8, bottom: tg.bottom + 8 });
+    if (tg) labels.push(tg);
     const clear = (cx: number, cy: number) =>
       cy >= minY && labels.every((b) => cx + R < b.left - 4 || cx - R > b.right + 4 || cy + R < b.top - 4 || cy - R > b.bottom + 4);
     const side = Math.max(radius, 24) + R + 8;
@@ -2311,6 +2310,12 @@ export class GameScene extends Phaser.Scene {
       { x: x + side, y: Math.max(bodyY, minY) },
       { x: x - side, y: Math.max(bodyY, minY) },
     ];
+    // While the name + bar slide (e.g. off COMBO as it fades in) they can cover both side spots.
+    // Then the cue goes just past the pair's own edge, or under it, instead of on top of it.
+    if (tg) {
+      const ty = Math.max(bodyY, minY);
+      spots.push({ x: tg.right + R + 6, y: ty }, { x: tg.left - R - 6, y: ty }, { x, y: tg.bottom + R + 6 });
+    }
     return spots.find((p) => clear(p.x, p.y)) ?? spots[5];
   }
 
