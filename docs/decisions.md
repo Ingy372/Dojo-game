@@ -762,3 +762,9 @@ Programmer calls:
 - Before an enemy attacks it shows a cue drawn in code: a "!" in a ring that fills from the top (red), turning gold and full during the counter window.
 - During the counter window the COUNTER button gets a gold ring and flashes. With Reduced motion there's no pulse or flash; the cue and a steady bright COUNTER stay. No art changes.
 - The Sensei tip box avoids the cue so it never hides it.
+
+## S3-P1b — kata cards readable (2026-10-24)
+- Kata step arrows are drawn as thick shapes as tall as the bold 13px step numbers, so they no longer shrink to dots at 844 (S3-T1 bug 1–2). Steps wrap one whole step at a time.
+- Earned kata cards are grouped together at the top of Abilities (S3-T1 bug 3) instead of after each Form.
+- No kata directions or step data changed.
+- Manager-okayed K24a tradeoffs (named here as asked): (1) on the tutorial floor every enemy sees the player; (2) the paused tip can cover the health bar when the hero is near the bottom of the screen, which is fine since health can't drop below 1 there.

@@ -548,3 +548,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 - K24c: tower view 6.75 tiles tall; game draws at full retina sharpness (DPR camera zoom + view() helper). Screens: /workspace/qa/k24c/ (sharp-844.png is before/after).
 - K24b: wind-up "!" + fill ring before enemy attacks; COUNTER flashes/rings gold in the counter window; Reduced motion respected. Screens: /workspace/qa/k24b/.
+
+## S3-P1b Kata cards
+- Bigger drawn kata arrows (same height as the step numbers) and a Kata group at the top of Abilities. Screens: /workspace/qa/s3p1b/final/.
