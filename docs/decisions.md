@@ -907,3 +907,14 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
   - Fix the Blessing glow so the alpha you see breathes 0.25 to 0.15. Before, the tween ran over a 0.25 fill, so it showed about 0.04. The circle now has a full fill and the object's alpha carries the breath.
   - The first-floor summary card's Continue uses the shared button() at 44 tall.
   - Gear cards are left for P-MENU-b.
+
+## B-WRAP Capacitor 8 wrap (2026-10-25)
+
+- Manager calls (B-WRAP GO, 2026-10-25):
+  - These packages are approved and pinned to exact versions: @capacitor/core, cli, android and ios 8.5.3; @capacitor/app 8.1.2; @capacitor/screen-orientation 8.0.2. No other new dependencies.
+  - The app id is `com.placeholder.dojoascent`, a PLACEHOLDER. Jay picks the real one before any store upload, because it can't change after.
+  - The app name is "Dojo Ascent". No new art: the Capacitor template's default icon and splash stay until Jay's icon is ready.
+  - Generate ios/ only if it works without a Mac. It did (Capacitor 8 uses SwiftPM), but it can only be built on a Mac or the B-CI macOS runner.
+  - Pause in the background with the smallest code. One `setAway()` in main.ts sleeps the game loop and suspends the shared audio context (music and sound effects). It runs on `visibilitychange` and, in the app, on @capacitor/app's `appStateChange`.
+- Landscape: Android uses `sensorLandscape` in the manifest, iOS lists landscape only, and the app also calls ScreenOrientation.lock. Full screen: no status bar (Android windowFullscreen, iOS UIStatusBarHidden). The safe areas keep using the existing CSS `env(safe-area-inset-*)` on #game.
+- The Android debug APK is built on the box with JDK 21 and Android SDK 36 (tooling only, not in the repo). The emulator smoke test wasn't possible: the emulator hung at boot on the box.
