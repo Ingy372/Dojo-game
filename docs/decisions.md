@@ -955,3 +955,6 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
   - After a wipe the app reloads, so every scene and module reads the empty save. The first-launch note shows again.
   - The wipe button sits in the play-time screen's bottom-left corner, away from #246's "Belt & stripes" and Done buttons, so the two PRs merge in either order.
 - Manager call on #249 (2026-10-25): the "Saved on this phone" card uses the privacy wording from #240 (`drafts/planning/BETA-privacy-page.md`, "The short version"), word for word, and the PLACEHOLDER marker is gone. If the privacy page changes, `content/settings/safety.json` changes too.
+- QA small fixes on #249 (2026-10-25, qa/2026-10-25-b-safe.md):
+  - The B-BELT confirm card's cancel button now reads "Not yet" (`content/settings/belt-entry.json` `confirmNo`), so it no longer shares the name "Back" with the screen's own Back button.
+  - The outside-link source scan in `b-safe.test.ts` also catches `window.location = …` / `location = …` and any `.href = …` assignment (for example on an `<a>` element). `==`/`===` comparisons don't match. Checked: it passes on current code and fails on planted `window.location =`, `location.href =` and `<a>.href =` lines, which were then removed.
