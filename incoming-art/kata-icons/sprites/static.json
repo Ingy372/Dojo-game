@@ -220,7 +220,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "kata move icon: Low block: forearm sweeping down and out, arrow down. 128 x 128, anchor = centre",
+      "note": "kata move icon: Low block: bold forearm sweeping down and out, one arrow down. 128 x 128, anchor = centre",
       "frames": 1
     },
     "kata-block-reverse-inside": {
@@ -247,7 +247,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "kata move icon: Inside block: forearm up, fist at shoulder height, sweeping in across the body. 128 x 128, anchor = centre",
+      "note": "kata move icon: Inside block: bold forearm up, one arrow sweeping in. 128 x 128, anchor = centre",
       "frames": 1
     },
     "kata-block-overhead": {
@@ -274,7 +274,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "kata move icon: High block: forearm across and above, impact lines on top. 128 x 128, anchor = centre",
+      "note": "kata move icon: High block: bold forearm across the top, one arrow up. 128 x 128, anchor = centre",
       "frames": 1
     },
     "kata-block-double-knife-hand": {
@@ -301,7 +301,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "kata move icon: Double knife-hand block: two open knife hands, one forward and one guarding. 128 x 128, anchor = centre",
+      "note": "kata move icon: Double knife-hand block: two bold open knife hands, one forward and one guarding. 128 x 128, anchor = centre",
       "frames": 1
     },
     "kata-punch-straight": {
@@ -328,7 +328,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "kata move icon: Straight punch: fist going straight forward with speed lines. 128 x 128, anchor = centre",
+      "note": "kata move icon: Straight punch: bold fist going straight forward, one arrow. 128 x 128, anchor = centre",
       "frames": 1
     },
     "kata-punch-reverse": {
@@ -355,7 +355,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "kata move icon: Reverse punch: straight punch with the back hand, hip turning (curved arrow). 128 x 128, anchor = centre",
+      "note": "kata move icon: Reverse punch: bold fist forward, curved hip arrow (back hand). 128 x 128, anchor = centre",
       "frames": 1
     },
     "kata-strike-backfist": {
@@ -382,7 +382,7 @@
         64.0
       ],
       "anchorNote": "anchor = centre of the 128 x 128 image",
-      "note": "kata move icon: Backfist: the back of the fist snaps out in a small arc. 128 x 128, anchor = centre",
+      "note": "kata move icon: Backfist: bold fist snapping out in one arc. 128 x 128, anchor = centre",
       "frames": 1
     },
     "kata-kick-reverse": {

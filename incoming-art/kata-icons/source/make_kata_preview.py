@@ -24,3 +24,7 @@ for r, (dk, mv) in enumerate([("kata-dir-left", ["kata-turn", "kata-stance-front
 y = 560
 for i, k in enumerate(icons): ph.alpha_composite(im(k).resize((40, 40), Image.LANCZOS), (20 + i % 7 * 52, y + i // 7 * 52))
 ph.save(os.path.join(OUT, "phone-mock.png")); print(sorted(os.listdir(OUT)))
+# v2: 40 px check (the smallest size the Manager asked to read), hand icons first, plus a 3x zoom of that so reviewers can see the pixels
+hands = [k for k in icons if any(t in k for t in ("block", "punch", "backfist", "chamber", "catch", "choke"))]
+o = sheet(hands + [k for k in icons if k not in hands], 40, 7, "check-40px.png")
+o.resize((o.width * 3, o.height * 3), Image.NEAREST).save(os.path.join(OUT, "check-40px-zoom3x.png"))

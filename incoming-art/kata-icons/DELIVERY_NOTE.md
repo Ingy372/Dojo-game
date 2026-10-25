@@ -8,13 +8,17 @@
 
 **Checks (2nd pass):** symbols made 22% bigger after pass 1 for phone size; red check: 0 red areas (only 1–3 anti-aliased edge pixels on skin outlines); no red used — impacts are orange, arrows blue; nothing above heads (no characters).
 
+**v2 (Manager review, Oct 25):** hand icons simplified for 40 px: impact/speed lines removed (each block/punch keeps ONE blue motion arrow), fists bolder (thicker outline, 2 bold finger lines instead of 3, bigger in the frame), sleeves kept inside the rim. New `preview/check-40px.png` (+ 3x zoom). Second pass: re-checked at 40 px and 2x; red check still clean (only anti-aliased skin-edge pixels).
+
+**DECIDED (by the Manager):**
+1. Kiai: id `kiai`, starburst, no text.
+4. Big special turn: no set angle (loop + gold star stays).
+6. Kata rim colour: wood #b07a3a stays.
+7. Hand icons: simplified (see v2 above).
+
 **DECIDE (Jay):**
-1. Kiai: not in moves.json — add id `kiai`? Icon is a shout burst with no letters ("KIAI!" text?).
 2. Technique reads — please check each matches the school: cat stance (back foot flat & turned out, front foot on toes), front stance (back foot ~30° out), attention (heels together, toes in V), low block (sweeping down/out), inside block, high block, double knife-hand, front kick vs straight kick (rising arc vs straight line) and reverse punch/kick (curved hip arrow = back hand/leg).
 3. "Choke break" drawn as two forearms pushing up and out (no neck shown, kid-safe). OK?
-4. Turn icons: 90° arrow (turn), 180° (half turn), almost-full loop + gold star (big special turn), foot + small arc (pivot). Should the big special turn show a fixed angle?
 5. Direction picture: no school-map.png on main — I assumed Front top, Left = left side of the picture, student in the middle facing Front. Letters/words on the markers (F/B/L/R vs Front/Back/...) are game text.
-6. Kata rim colour #b07a3a (wood) for the family — or another colour?
-7. Hand icons (blocks/punches) are the busiest at 40 px — OK, or simplify further?
 
 **NEXT:** Manager review, then Jay's OK; after that the Programmer wires them (README). Any DECIDE changes = rebuild with the commands in the README.

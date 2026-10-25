@@ -34,31 +34,30 @@ def medal(ic, symbol):
 def fist(D, x, z, ang, s=1.0):
     """Fist seen from the side, knuckles pointing along ang; with gi sleeve behind."""
     F0 = D.frame(x, z, ang); F = lambda u, v: F0(u * s, v * s); L = lambda p: [F(u, v) for u, v in p]
-    D.opoly(L([(-0.3, -0.075), (-0.06, -0.07), (-0.06, 0.07), (-0.3, 0.075)]), SKIN, OUT, 0.03)          # forearm
-    D.opoly(L([(-0.08, -0.1), (0.1, -0.105), (0.14, -0.065), (0.14, 0.065), (0.1, 0.105), (-0.08, 0.1)]), SKIN, OUT, 0.03)
-    for k in range(3):
-        v = -0.05 + k * 0.05; D.stroke(L([(0.0, v), (0.13, v)]), 0.013 * s, OUT, closed=False)
+    D.opoly(L([(-0.3, -0.075), (-0.06, -0.07), (-0.06, 0.07), (-0.3, 0.075)]), SKIN, OUT, 0.045)          # forearm
+    D.opoly(L([(-0.08, -0.1), (0.1, -0.105), (0.14, -0.065), (0.14, 0.065), (0.1, 0.105), (-0.08, 0.1)]), SKIN, OUT, 0.045)
+    for v in (-0.03, 0.03): D.stroke(L([(0.02, v), (0.13, v)]), 0.02 * s, OUT, closed=False)   # v2: 2 bold finger lines
     D.poly(L([(0.09, -0.09), (0.13, -0.06), (0.13, 0.06), (0.09, 0.09)]), SKIN_L)
     D.opoly(L([(-0.05, 0.1), (0.0, 0.1), (0.01, -0.02), (-0.02, -0.04), (-0.05, -0.02)]), SKIN_D, OUT, 0.018)  # thumb
-    D.opoly(L([(-0.42, -0.12), (-0.28, -0.105), (-0.28, 0.105), (-0.42, 0.12)]), GI, OUT, 0.03)          # sleeve
+    D.opoly(L([(-0.42, -0.12), (-0.28, -0.105), (-0.28, 0.105), (-0.42, 0.12)]), GI, OUT, 0.045)          # sleeve
     D.poly(L([(-0.33, -0.095), (-0.29, -0.095), (-0.29, 0.095), (-0.33, 0.095)]), GI_D)
 def knife(D, x, z, ang, s=1.0, flip=False):
     """Open knife-hand: fingers together, thumb tucked, edge of the hand along ang."""
     g = -1 if flip else 1
     F0 = D.frame(x, z, ang); F = lambda u, v: F0(u * s, g * v * s); L = lambda p: [F(u, v) for u, v in p]
-    D.opoly(L([(-0.28, -0.06), (-0.05, -0.06), (-0.05, 0.06), (-0.28, 0.06)]), SKIN, OUT, 0.028)
-    D.opoly(L([(-0.07, -0.07), (0.17, -0.055), (0.21, -0.02), (0.2, 0.04), (0.14, 0.06), (-0.07, 0.07)]), SKIN, OUT, 0.028)
-    for v in (-0.018, 0.018): D.stroke(L([(0.06, v), (0.18, v)]), 0.01 * s, OUT, closed=False)
+    D.opoly(L([(-0.28, -0.06), (-0.05, -0.06), (-0.05, 0.06), (-0.28, 0.06)]), SKIN, OUT, 0.042)
+    D.opoly(L([(-0.07, -0.07), (0.17, -0.055), (0.21, -0.02), (0.2, 0.04), (0.14, 0.06), (-0.07, 0.07)]), SKIN, OUT, 0.042)
+    for v in (0.0,): D.stroke(L([(0.06, v), (0.18, v)]), 0.016 * s, OUT, closed=False)
     D.opoly(L([(-0.04, 0.06), (0.06, 0.08), (0.07, 0.04), (-0.03, 0.03)]), SKIN_D, OUT, 0.016)      # thumb tucked
-    D.opoly(L([(-0.4, -0.1), (-0.26, -0.09), (-0.26, 0.09), (-0.4, 0.1)]), GI, OUT, 0.028)
+    D.opoly(L([(-0.4, -0.1), (-0.26, -0.09), (-0.26, 0.09), (-0.4, 0.1)]), GI, OUT, 0.042)
 def leg(D, x, z, ang, s=1.0, ball=True):
     """Kicking leg from the side: gi trouser + bare foot; ball=True pulls the toes back (front/straight kick)."""
     F0 = D.frame(x, z, ang); F = lambda u, v: F0(u * s, v * s); L = lambda p: [F(u, v) for u, v in p]
-    D.opoly(L([(-0.36, -0.11), (-0.12, -0.085), (-0.12, 0.085), (-0.36, 0.11)]), GI, OUT, 0.03)           # trouser
+    D.opoly(L([(-0.36, -0.11), (-0.12, -0.085), (-0.12, 0.085), (-0.36, 0.11)]), GI, OUT, 0.045)           # trouser
     D.poly(L([(-0.16, -0.08), (-0.12, -0.08), (-0.12, 0.08), (-0.16, 0.08)]), GI_D)
-    D.opoly(L([(-0.13, -0.06), (0.02, -0.065), (0.02, 0.06), (-0.13, 0.06)]), SKIN, OUT, 0.028)          # ankle
+    D.opoly(L([(-0.13, -0.06), (0.02, -0.065), (0.02, 0.06), (-0.13, 0.06)]), SKIN, OUT, 0.042)          # ankle
     toe = [(0.2, 0.2), (0.24, 0.17), (0.2, 0.1)] if ball else [(0.24, 0.07), (0.26, 0.03)]
-    D.opoly(L([(0.0, -0.08), (0.12, -0.075), (0.18, -0.04), (0.2, 0.05)] + toe + [(0.1, 0.07), (0.0, 0.07)]), SKIN, OUT, 0.028)
+    D.opoly(L([(0.0, -0.08), (0.12, -0.075), (0.18, -0.04), (0.2, 0.05)] + toe + [(0.1, 0.07), (0.0, 0.07)]), SKIN, OUT, 0.042)
     D.poly(L([(0.12, -0.06), (0.17, -0.035), (0.185, 0.04), (0.15, 0.03)]), SKIN_L)                      # ball of the foot (striking part)
 def print_(D, x, z, ang, s=0.16, toes_only=False, heel_only=False):
     """Footprint seen from above, toes pointing along ang (degrees, 90 = up = front)."""
@@ -98,20 +97,20 @@ def _(D): print_(D, 0.08, -0.17, 125, 0.17); print_(D, -0.02, 0.17, 90, 0.17, to
 def _(D): print_(D, -0.12, 0.2, 90, 0.15); print_(D, 0.12, -0.2, 120, 0.15)
 @mv("stance-attention", "Attention: heels together, toes turned out in a small V")
 def _(D): print_(D, -0.08, 0.0, 105, 0.17); print_(D, 0.08, 0.0, 75, 0.17)
-@mv("block-downward", "Low block: forearm sweeping down and out, arrow down")
-def _(D): fist(D, 0.08, -0.06, -40, 0.85); turn_arrow(D, 0.36, 160, 230, 0.05, cx=0.25, cz=0.08); lines(D, [(0.23, -0.3, 0.3, -0.37), (0.3, -0.24, 0.39, -0.28)])
-@mv("block-reverse-inside", "Inside block: forearm up, fist at shoulder height, sweeping in across the body")
-def _(D): fist(D, 0.05, 0.0, 80, 0.8); D.arrow(0.32, 0.18, 0.15, 0.18, 0.05, INKM); lines(D, [(-0.15, 0.2, -0.24, 0.24), (-0.15, 0.1, -0.25, 0.1)])
-@mv("block-overhead", "High block: forearm across and above, impact lines on top")
-def _(D): fist(D, 0.02, 0.0, 165, 0.85); lines(D, [(-0.15, 0.13, -0.17, 0.24), (0.0, 0.13, 0.0, 0.25), (0.15, 0.13, 0.17, 0.24)]); D.arrow(0.0, -0.3, 0.0, -0.13, 0.05, INKM)
-@mv("block-double-knife-hand", "Double knife-hand block: two open knife hands, one forward and one guarding")
-def _(D): knife(D, 0.1, 0.1, 60, 0.75); knife(D, -0.12, -0.12, 20, 0.6, flip=True)
-@mv("punch-straight", "Straight punch: fist going straight forward with speed lines")
-def _(D): fist(D, 0.1, 0.0, 0, 0.85); lines(D, [(0.28, 0.12, 0.36, 0.17), (0.3, 0.0, 0.4, 0.0), (0.28, -0.12, 0.36, -0.17)]); lines(D, [(-0.36, 0.17, -0.2, 0.17), (-0.36, -0.17, -0.2, -0.17)], INKM, 0.035)
-@mv("punch-reverse", "Reverse punch: straight punch with the back hand, hip turning (curved arrow)")
-def _(D): fist(D, 0.12, 0.08, 0, 0.75); turn_arrow(D, 0.16, 250, 100, 0.045, cx=-0.18, cz=-0.12); lines(D, [(0.3, 0.18, 0.37, 0.22), (0.31, 0.08, 0.4, 0.08)])
-@mv("strike-backfist", "Backfist: the back of the fist snaps out in a small arc")
-def _(D): fist(D, 0.04, -0.06, 50, 0.8); turn_arrow(D, 0.3, 140, 60, 0.05, cx=0.0, cz=-0.1); lines(D, [(0.22, 0.16, 0.3, 0.2), (0.25, 0.08, 0.34, 0.08)])
+@mv("block-downward", "Low block: bold forearm sweeping down and out, one arrow down")
+def _(D): fist(D, 0.1, -0.06, -40, 0.92); D.arrow(0.22, 0.08, 0.3, -0.22, 0.06, INKM)
+@mv("block-reverse-inside", "Inside block: bold forearm up, one arrow sweeping in")
+def _(D): fist(D, -0.02, 0.06, 80, 0.9); D.arrow(0.3, 0.12, 0.12, 0.12, 0.06, INKM)
+@mv("block-overhead", "High block: bold forearm across the top, one arrow up")
+def _(D): fist(D, -0.02, 0.06, 165, 0.95); D.arrow(0.0, -0.3, 0.0, -0.08, 0.06, INKM)
+@mv("block-double-knife-hand", "Double knife-hand block: two bold open knife hands, one forward and one guarding")
+def _(D): knife(D, 0.08, 0.1, 60, 0.9); knife(D, -0.12, -0.14, 20, 0.72, flip=True)
+@mv("punch-straight", "Straight punch: bold fist going straight forward, one arrow")
+def _(D): fist(D, 0.1, 0.04, 0, 0.95); D.arrow(-0.22, -0.2, 0.2, -0.2, 0.06, INKM)
+@mv("punch-reverse", "Reverse punch: bold fist forward, curved hip arrow (back hand)")
+def _(D): fist(D, 0.12, 0.1, 0, 0.88); turn_arrow(D, 0.15, 250, 100, 0.06, cx=-0.16, cz=-0.14)
+@mv("strike-backfist", "Backfist: bold fist snapping out in one arc")
+def _(D): fist(D, 0.08, -0.0, 50, 0.9); turn_arrow(D, 0.3, 140, 60, 0.06, cx=0.0, cz=-0.1)
 @mv("kick-reverse", "Reverse kick: straight kick with the back leg, hip turning (curved arrow)")
 def _(D): leg(D, 0.08, 0.08, 0, 0.8, ball=True); turn_arrow(D, 0.15, 250, 100, 0.045, cx=-0.2, cz=-0.16)
 @mv("kick-straight", "Straight kick: leg straight out, speed lines")
@@ -119,11 +118,11 @@ def _(D): leg(D, 0.06, 0.0, 0, 0.85, ball=True); lines(D, [(-0.36, 0.17, -0.22, 
 @mv("kick-front", "Front kick: knee up then the foot snaps up and forward (rising arrow)")
 def _(D): leg(D, 0.06, 0.06, 25, 0.8, ball=True); turn_arrow(D, 0.42, 225, 300, 0.05, cx=-0.05, cz=0.32)
 @mv("chamber", "Chamber: fist pulled back to the hip, palm up")
-def _(D): hip(D, -0.2); fist(D, 0.12, -0.08, 180, 0.75); D.arrow(0.0, 0.16, -0.26, 0.16, 0.05, INKM)
+def _(D): hip(D, -0.22); fist(D, 0.02, -0.06, 180, 0.88); D.arrow(0.1, 0.18, -0.22, 0.18, 0.06, INKM)
 @mv("catch", "Catch: both hands caught together on the hip")
-def _(D): hip(D, -0.22); fist(D, 0.08, -0.06, 180, 0.7); knife(D, 0.02, 0.06, 200, 0.6)
+def _(D): hip(D, -0.22); fist(D, 0.0, -0.06, 180, 0.82); knife(D, -0.04, 0.08, 200, 0.7)
 @mv("break-double-choke", "Choke break: both forearms push up and out from the middle")
-def _(D): fist(D, -0.1, 0.0, 110, 0.65); fist(D, 0.1, 0.0, 70, 0.65); D.arrow(-0.2, -0.26, -0.33, -0.13, 0.045, INKM); D.arrow(0.2, -0.26, 0.33, -0.13, 0.045, INKM)
+def _(D): fist(D, -0.1, 0.0, 110, 0.8); fist(D, 0.1, 0.0, 70, 0.8); D.arrow(-0.22, -0.26, -0.33, -0.12, 0.06, INKM); D.arrow(0.22, -0.26, 0.33, -0.12, 0.06, INKM)
 @mv("kiai", "Kiai: a big shout burst with sound waves (no letters)")
 def _(D):
     D.star(-0.06, 0.0, 0.27, HIT, pts=10, inner=0.7, rot=0); D.star(-0.06, 0.0, 0.2, "#ffe48a", pts=10, inner=0.72, rot=0)
