@@ -1180,3 +1180,28 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 ### B-CF-BUILD — npm only, so Cloudflare builds again (2026-10-25)
 - Cloudflare Workers Builds chooses the installer from the lockfile. A near-empty `pnpm-lock.yaml` (added with B-BELT, #246) made it install with pnpm, which installed nothing, so `tsc` was missing and every build since 3022b7b failed.
 - Removed `pnpm-lock.yaml`; root `package.json` now sets `"packageManager": "npm@10.9.2"` (the npm Cloudflare's build image ships; the box has 10.9.9, so we pin Cloudflare's). A test (`b-cf-build.test.ts`) fails if `pnpm-lock.yaml` or `yarn.lock` shows up at the root. No dashboard or account changes.
+## P-MENU2-i: menu2 art in Trophies, Gear and Last run (2026-10-25)
+- Jay OK'd the #265 art; the Manager gave the go. Only Trophies, Gear and Last run use it.
+- My Style's art (slot-card, tray-tile, tray-equipped-badge, switch, glyph) is held, not imported. A test checks no quoted My Style frame names are used.
+- The @2x files are packed untrimmed ("ui" source type) and drawn at 0.5. Every art draw falls back to the code-drawn version when a frame, page or pack is missing, so no code paths were deleted.
+- Legendary uses the Epic art. Stat-tile words switch to dark ink on the paper tile; the "Everyday" word on the common bag tile uses #6b5a48 so it can be read on paper.
+- The lantern shows on the next cubby only (the code lantern stays in the fallback).
+
+## P-MENU2-i: Manager's calls on #286 (2026-10-25)
+1. The shared #265 pieces join this PR: panel frame, title plaque, and the wood (honey) buttons for the tab bar, Bests, Again, Close and the page arrows, on Trophies, Gear and Last run. The Trophies/My Style switch and all My Style art stay code-drawn. Fallbacks, 44+ taps, 12+ px text and 8+ px padding are kept.
+2. Today's layout stays; no layout changes.
+3. These stay as they are: Legendary borrows Epic, the code-drawn circle on kata cubbies, the lantern on the next cubby only.
+4. Dark ink on the stat tiles and #6b5a48 for "Everyday" are approved.
+- How: the panel frame is drawn at 0.25 so its rail fits the code frame's margin; Gear and the Trophy Case keep their dark well over its paper centre so their light words still read. The page arrows use the honey button with the ◀ ▶ label (the art has no page-arrow sprite). Unpicked tabs are the honey button darkened. Labels on honey are #462a16.
+
+## P-MENU2-i: QA fixes on #286 (2026-10-25)
+- Gear tiles: the bag-tile art is drawn at one uniform scale (fit to the tile width). When that is too tall, the top and bottom halves are cropped and butted together, cutting out the plain middle. Nothing is stretched (`menu2Fit`).
+- Contrast is at least 4.5:1, without changing the art:
+  - Rarity words on paper use darker inks: Special #245a24, Rare #174a7d, Epic #5e2696, Legendary #8a4a12, Everyday #6b5a48.
+  - Earned cubby names keep cream text with a 4 px #3a2618 outline (13.3:1).
+  - The XP number is #245a80 and "New for you" is #8a4a12.
+- 3-slice art (XP rail, shelf plank, belt cord) is now drawn exactly at the height asked. It was drawn about twice as tall, which put the XP rail under the Found dots and "New for you".
+- The XP rail is 1 px taller than the bar on each side.
+- Stat labels sit 8 px inside the painted wood rim (bottom and sides). On 44-tall tiles the rim is drawn at k 0.25 and the number is 14 px, so it clears the label.
+- menu2-0.webp is saved as lossy WebP at quality 90, with alpha kept exact (`webpQuality` in approved.json). It went from 838 KB to 268 KB, with RGB PSNR 35 dB.
+- QA round 2: the XP rail is drawn thinner where space is tight. Its bottom stays at least 8 px above Found, the dots and "New for you" (7 px tall at 667/844, 13 px at 932). The Legendary rarity ink is #5a2e08 (6.69:1 on its tile; #8a4a12 measured 4.05).

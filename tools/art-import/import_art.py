@@ -54,11 +54,13 @@ class Packer:
         self.frames: list[list[int]] = []  # [page, x, y, w, h, offX, offY, srcW, srcH]
         self.by_hash: dict[str, int] = {}
 
-    def add(self, im: Image.Image) -> int:
-        """Returns the frame id, or -1 for an empty frame."""
+    def add(self, im: Image.Image, trim: bool = True) -> int:
+        """Returns the frame id, or -1 for an empty frame. trim=False keeps the full canvas (9-slice art)."""
         bbox = im.getchannel('A').point(lambda a: 255 if a > 2 else 0).getbbox()
         if not bbox:
             return -1
+        if not trim:
+            bbox = (0, 0, im.width, im.height)
         crop = im.crop(bbox)
         key = hashlib.md5(crop.tobytes() + bytes(f'{bbox}{im.size}', 'ascii')).hexdigest()
         if key in self.by_hash:
@@ -208,6 +210,28 @@ def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | 
     return {'kind': 'static', 'sprites': sprites}
 
 
+def load_ui(packer: Packer, json_path: str, only: list[str] | None) -> dict:
+    """P-MENU2-i: menu art (A-MENU2). Packs each sprite's @2x file untrimmed, so 9-slice edges stay
+    exact, and keeps its 1x size, nineSlice [t, r, b, l] (1x) and shadowMargin. Drawn at 0.5 scale."""
+    d = json.load(open(json_path))
+    base = os.path.dirname(json_path)
+    sprites = {}
+    for name, s in d['sprites'].items():
+        if only and name not in only:
+            continue
+        stem, ext = os.path.splitext(s['file'])
+        im = Image.open(os.path.join(base, stem + '@2x' + ext)).convert('RGBA')
+        entry = {'frame': packer.add(im, trim=False), 'size': s['size']}
+        for k in ('nineSlice', 'shadowMargin'):
+            if k in s:
+                entry[k] = s[k]
+        sprites[name] = entry
+    missing = sorted(set(only or []) - set(sprites))
+    if missing:
+        raise SystemExit(f'{json_path}: not in the source: {missing}')
+    return {'kind': 'ui', 'density': 2, 'sprites': sprites}
+
+
 def main() -> None:
     cfg = json.load(open(CONFIG))
     STANCE_IDS.update(cfg.get('stanceIds', {}))
@@ -227,6 +251,8 @@ def main() -> None:
                                                     src.get('animations'), src.get('directions'),
                                                     src.get('layers'),
                                                     [rel(p) for p in src.get('mergeAnimations', [])])
+            elif src['type'] == 'ui':
+                entries[src['id']] = load_ui(packer, path, src.get('only'))
             else:
                 entries[src['id']] = load_static(packer, path, scale, src.get('only'))
         pages = packer.pack()
@@ -235,9 +261,14 @@ def main() -> None:
             if old.startswith(pack_name + '-') and old.endswith(('.png', '.webp')):
                 os.remove(os.path.join(out_dir, old))
         for i, page in enumerate(pages):
-            # Lossless WebP: exact pixels, about 40% smaller than PNG.
+            # Lossless WebP by default: exact pixels, about 40% smaller than PNG.
+            # A pack may set "webpQuality" (lossy, alpha kept exact) when lossless is too big.
             fname = f'{pack_name}-{i}.webp'
-            page.save(os.path.join(out_dir, fname), lossless=True, method=6)
+            q = pack.get('webpQuality')
+            if q:
+                page.save(os.path.join(out_dir, fname), quality=q, alpha_quality=100, method=6)
+            else:
+                page.save(os.path.join(out_dir, fname), lossless=True, method=6)
             names.append(fname)
         meta = {
             'about': 'Made by tools/art-import/import_art.py. Do not edit by hand; re-run the script.',

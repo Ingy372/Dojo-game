@@ -801,3 +801,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Removed the stray `pnpm-lock.yaml` that sent Cloudflare to pnpm (nothing installed, `tsc` not found); pinned `packageManager` to npm@10.9.2; guard test for stray lockfiles.
 **Next**
 - Watch the 'Workers Builds: dojo-ascent' check go green on main after merge.
+## P-MENU2-i (2026-10-25)
+- menu2 art imported (61 frames, 1 page) and drawn in Trophies (cubbies, shelf, seal, lantern, shine, unlock sweep, belt knots), Gear (doll backing, rings, bag tiles) and Last run (stat tiles and icons, XP bar, found tiles). Code-drawn fallback kept everywhere.
+- New test packages/sim/test/p-menu2-i-art.test.ts (7 tests). npm test: 857 passed, 1 skipped.
