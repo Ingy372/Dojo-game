@@ -1,0 +1,132 @@
+{
+  "notes": "Gear drop icons for the loot screen, one per slot x rarity. 128x128, transparent, anchor centre (64,64). Rarity reads by colour + frame shape + pip count. Slots/rarities from content/loot/gear.json; colours from apps/client/src/ui/theme.ts RARITY_COLOR.",
+  "size": [
+    128,
+    128
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "rarityShape": {
+    "common": "circle",
+    "uncommon": "rounded-square",
+    "rare": "hexagon",
+    "epic": "scalloped",
+    "legendary": "sunburst"
+  },
+  "rarityPips": {
+    "common": 1,
+    "uncommon": 2,
+    "rare": 3,
+    "epic": 4,
+    "legendary": 5
+  },
+  "icons": {
+    "hands:common": {
+      "slot": "hands",
+      "rarity": "common",
+      "rarityName": "Everyday",
+      "file": "sprites/drop-hands-common.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-cloth-wraps.png"
+    },
+    "hands:uncommon": {
+      "slot": "hands",
+      "rarity": "uncommon",
+      "rarityName": "Special",
+      "file": "sprites/drop-hands-uncommon.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-cloth-wraps.png"
+    },
+    "hands:rare": {
+      "slot": "hands",
+      "rarity": "rare",
+      "rarityName": "Rare",
+      "file": "sprites/drop-hands-rare.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-cloth-wraps.png"
+    },
+    "hands:epic": {
+      "slot": "hands",
+      "rarity": "epic",
+      "rarityName": "Epic",
+      "file": "sprites/drop-hands-epic.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-cloth-wraps.png"
+    },
+    "hands:legendary": {
+      "slot": "hands",
+      "rarity": "legendary",
+      "rarityName": "Legendary",
+      "file": "sprites/drop-hands-legendary.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-cloth-wraps.png"
+    },
+    "gi:common": {
+      "slot": "gi",
+      "rarity": "common",
+      "rarityName": "Everyday",
+      "file": "sprites/drop-gi-common.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-training-gi.png"
+    },
+    "gi:uncommon": {
+      "slot": "gi",
+      "rarity": "uncommon",
+      "rarityName": "Special",
+      "file": "sprites/drop-gi-uncommon.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-training-gi.png"
+    },
+    "gi:rare": {
+      "slot": "gi",
+      "rarity": "rare",
+      "rarityName": "Rare",
+      "file": "sprites/drop-gi-rare.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-training-gi.png"
+    },
+    "gi:epic": {
+      "slot": "gi",
+      "rarity": "epic",
+      "rarityName": "Epic",
+      "file": "sprites/drop-gi-epic.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-training-gi.png"
+    },
+    "gi:legendary": {
+      "slot": "gi",
+      "rarity": "legendary",
+      "rarityName": "Legendary",
+      "file": "sprites/drop-gi-legendary.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-training-gi.png"
+    },
+    "charm:common": {
+      "slot": "charm",
+      "rarity": "common",
+      "rarityName": "Everyday",
+      "file": "sprites/drop-charm-common.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-jade-charm.png"
+    },
+    "charm:uncommon": {
+      "slot": "charm",
+      "rarity": "uncommon",
+      "rarityName": "Special",
+      "file": "sprites/drop-charm-uncommon.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-jade-charm.png"
+    },
+    "charm:rare": {
+      "slot": "charm",
+      "rarity": "rare",
+      "rarityName": "Rare",
+      "file": "sprites/drop-charm-rare.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-jade-charm.png"
+    },
+    "charm:epic": {
+      "slot": "charm",
+      "rarity": "epic",
+      "rarityName": "Epic",
+      "file": "sprites/drop-charm-epic.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-jade-charm.png"
+    },
+    "charm:legendary": {
+      "slot": "charm",
+      "rarity": "legendary",
+      "rarityName": "Legendary",
+      "file": "sprites/drop-charm-legendary.png",
+      "glyphFrom": "incoming-art/icons/sprites/icon-jade-charm.png"
+    }
+  }
+}
