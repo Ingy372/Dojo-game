@@ -221,10 +221,10 @@ def cord(ic, top, col="#d8352a"):
     ic.put("cord", tube(top, top + Vector((0, 0, 0.14)), 0.02, 0.02, segs=8), col)
     ic.put("loop", ellipsoid(top + Vector((0, 0, 0.2)), (0.07, 0.02, 0.07), segs=16, rings=8), col)
     ic.put("loophole", ellipsoid(top + Vector((0, -0.02, 0.2)), (0.035, 0.005, 0.035), segs=12, rings=6), M("#00000000"[:7], True), outline=False) if False else None
-def tassel(ic, p, col="#d8352a"):
+def tassel(ic, p, col="#d8352a", band="#ffd36b"):
     ic.put("knot", ellipsoid(p, (0.05, 0.05, 0.05), segs=12, rings=8), col)
     ic.put("tassel", tube(p + Vector((0, 0, -0.03)), p + Vector((0, 0, -0.24)), 0.035, 0.07, segs=12), col)
-    ic.put("tband", tube(p + Vector((0, -0.0, -0.07)), p + Vector((0, 0, -0.1)), 0.05, 0.052, segs=12), M("#ffd36b", True), outline=False)
+    ic.put("tband", tube(p + Vector((0, -0.0, -0.07)), p + Vector((0, 0, -0.1)), 0.05, 0.052, segs=12), M(band, True), outline=False)
 
 ALL = []
 def icon(id_, note):
@@ -248,25 +248,25 @@ def _(ic): gi(ic, "#6d8fb8", "#3f5f86", "#c9a06a", mountain="#3f5f86")
 def _(ic):
     ob = ic.put("jade", tube((0, 0.04, 0.05), (0, -0.04, 0.05), 0.3, 0.3, segs=40), "#5cc08a"); cut_ring(ic, "jh", ob, Vector((0, 0.1, 0.05)), Vector((0, -0.1, 0.05)), 0.1)
     D = Draw(ic, -0.042, 1.0); D.arc(0, 0.05, 0.22, 0.025, 0, 360, "#8fe0b2", n=40); D.arc(-0.05, 0.1, 0.25, 0.03, 110, 160, "#d8f7e4")
-    cord(ic, Vector((0, 0, 0.33)), col="#edbd41"); tassel(ic, Vector((0, -0.02, -0.3)), col="#edbd41")   # gold, not red (red = danger); same gold as PR #212
-@icon("lotus-charm", "gear (charm): Lotus Charm, a small pink lotus flower charm on a red cord")
+    cord(ic, Vector((0, 0, 0.33)), col="#edbd41"); tassel(ic, Vector((0, -0.02, -0.3)), col="#edbd41", band="#f4efe4")   # gold, not red (red = danger); same gold as PR #212
+@icon("lotus-charm", "gear (charm): Lotus Charm, a small pink lotus flower charm on a gold cord")
 def _(ic):
     ic.put("pad", ellipsoid(Vector((0, 0.06, -0.2)), (0.4, 0.2, 0.06), segs=24, rings=8), "#6cc46f")
     for k, (a, sz, col) in enumerate(((-60, 0.2, "#f7a8c4"), (60, 0.2, "#f7a8c4"), (-30, 0.24, "#ffbfd6"), (30, 0.24, "#ffbfd6"), (0, 0.27, "#ffd3e2"))):
         aa = math.radians(a); p = Vector((math.sin(aa) * 0.15, -0.02 * k, -0.05 + math.cos(aa) * 0.12))
         ic.put(f"petal{k}", ellipsoid(p, (0.1, 0.05, sz), rot=(0, a, 0), segs=16, rings=10), col)
     ic.put("heart", ellipsoid(Vector((0, -0.14, -0.12)), (0.07, 0.03, 0.05), segs=12, rings=8), "#ffd36b")
-    cord(ic, Vector((0, 0.0, 0.3)))
-@icon("crane-charm", "gear (charm): Crane Charm, a folded red-pink paper crane (wings up, long neck) on a gold cord")
+    cord(ic, Vector((0, 0.0, 0.3)), col="#edbd41")   # gold, not red (red = danger)
+@icon("crane-charm", "gear (charm): Crane Charm, a folded peach paper crane (wings up, long neck) on a gold cord")
 def _(ic):
-    W, W2, C = "#f27a7a", "#d85a5a", "#b8474a"     # red-pink folded paper, darker back wing / fold lines
+    W, W2, C = "#ffbe8c", "#f5a46e", "#cf8750"     # peach folded paper (not red: red = danger), darker back wing / fold lines
     S = lambda pts, d: solid([Vector((x, d, z)) for x, z in pts], 0.03)
     ic.put("wingB", S([(-0.06, -0.04), (-0.26, 0.4), (0.06, 0.08)], 0.03), W2, smooth=False)               # back wing
     ic.put("tail", S([(-0.14, -0.12), (-0.5, 0.2), (-0.4, 0.24), (-0.04, -0.0)], 0.0), W, smooth=False)    # tail point
     ic.put("neck", S([(0.06, -0.12), (0.4, 0.3), (0.47, 0.26), (0.14, -0.0)], 0.0), W, smooth=False)       # neck
     ic.put("head", S([(0.38, 0.28), (0.56, 0.18), (0.47, 0.3)], -0.02), W2, smooth=False)                 # head, beak down
     ic.put("body", S([(-0.26, -0.06), (0.0, -0.22), (0.26, -0.06), (0.0, 0.05)], -0.03), W, smooth=False) # body diamond
-    ic.put("wingF", S([(-0.1, -0.06), (0.1, 0.48), (0.2, -0.04)], -0.06), "#f79a9a", smooth=False)         # front wing up
+    ic.put("wingF", S([(-0.1, -0.06), (0.1, 0.48), (0.2, -0.04)], -0.06), "#ffcfa6", smooth=False)         # front wing up
     D = Draw(ic, -0.1, 1.0); D.bar(0.1, 0.42, 0.04, -0.03, 0.014, C); D.bar(-0.22, -0.07, 0.22, -0.07, 0.014, C)  # paper folds
     ic.put("cord", tube((0.1, -0.06, 0.46), (0.1, -0.06, 0.56), 0.018, 0.018, segs=8), "#e0b04a")
     ic.put("loop", ellipsoid(Vector((0.1, -0.06, 0.6)), (0.05, 0.02, 0.05), segs=16, rings=8), "#e0b04a")
