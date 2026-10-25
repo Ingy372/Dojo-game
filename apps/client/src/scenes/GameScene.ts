@@ -2065,7 +2065,9 @@ export class GameScene extends Phaser.Scene {
       top = fit?.y ?? H - h - 8;
     }
     t.setY(top);
-    btn?.setPosition(t.x, top + t.height + 8);
+    // QA on #295: the "Sensei steps back" banner never covers a player.
+    if (t.getData('keepOffPlayers')) this.placeOffPlayers(t);
+    btn?.setPosition(t.x, t.y + t.height + 8);
     this.placeDecoToasts();
   }
 
@@ -2343,7 +2345,10 @@ export class GameScene extends Phaser.Scene {
   /** B-MASHER-2: once per run, a proud moment when Mash guard steps back (3 Perfect Counters in a room). */
   private senseiStepsBack(playerId: PlayerId): void {
     if (!takeMashGuardMoment(this.run ?? NO_RUN_KEY)) return;
+    // The Manager's call: "seen" is saved with the run, so a reload doesn't show it again.
+    if (this.run) saveRunInProgress(this.run);
     this.senseiSay([MASH_GUARD_LINE], 2200);
+    this.placeSteppedBack();
     const p = this.world.players[playerId];
     if (!p) return;
     const r = 0.9 * TILE;
@@ -2357,6 +2362,72 @@ export class GameScene extends Phaser.Scene {
     if (t) this.tweens.add({ targets: t, alpha: { from: 0, to: 1 }, duration: 250 });
     const c = this.addWorld(this.add.circle(p.pos.x * TILE, p.pos.y * TILE, r).setStrokeStyle(5, SHIELD_GLOW_COLOR, 0.9).setDepth(9));
     this.tweens.add({ targets: c, scale: { from: 0.6, to: 1.4 }, alpha: { from: 1, to: 0 }, duration: 1000, ease: 'Cubic.Out', onComplete: () => c.destroy() });
+  }
+
+  /** QA on #295: every player's sprite on screen, as screen boxes (a little roomy). */
+  private playerScreenBoxes(): { x0: number; x1: number; y0: number; y1: number }[] {
+    const cam = this.cameras.main;
+    const z = cam.zoom / DPR;
+    const k = TILE * z;
+    const boxes = Object.values(this.world.players).map((p) => {
+      const px = (p.pos.x * TILE - cam.worldView.x) * z;
+      const py = (p.pos.y * TILE - cam.worldView.y) * z;
+      return { x0: px - k, x1: px + k, y0: py - 1.8 * k, y1: py + 0.8 * k };
+    });
+    if (this.player?.active) {
+      const r = this.player.getBounds();
+      boxes.push({ x0: (r.left - cam.worldView.x) * z, x1: (r.right - cam.worldView.x) * z, y0: (r.top - cam.worldView.y) * z, y1: (r.bottom - cam.worldView.y) * z });
+    }
+    return boxes;
+  }
+
+  /** Pixels of the Sensei banner that lie over any player sprite (0 = clear). */
+  senseiPlayerOverlap(): number {
+    const t = this.senseiText;
+    if (!t?.active) return 0;
+    const x0 = t.x - t.width / 2, x1 = t.x + t.width / 2, y0 = t.y, y1 = t.y + t.height;
+    return this.playerScreenBoxes().reduce((n, b) => n + Math.max(0, Math.min(x1, b.x1) - Math.max(x0, b.x0)) * Math.max(0, Math.min(y1, b.y1) - Math.max(y0, b.y0)), 0);
+  }
+
+  /**
+   * QA on #295: the "Sensei steps back" banner holds 2.2 s, so it keeps off the players.
+   * Its lines are balanced (no word alone on the last line), and it sits at the first spot
+   * clear of every player: its usual place, the top edge, then the bottom edge.
+   */
+  private placeSteppedBack(): void {
+    const t = this.senseiText;
+    if (!t?.active) return;
+    const { width } = view(this);
+    const maxWrap = Math.min(width - 48, 640);
+    t.setWordWrapWidth(null);
+    const one = t.width - 32; // without the 16 px padding each side
+    const lines = Math.ceil(one / maxWrap);
+    t.setWordWrapWidth(lines > 1 ? Math.min(maxWrap, Math.ceil(one / lines) + 24) : maxWrap, true);
+    t.setData('keepOffPlayers', true);
+    this.placeSensei();
+    // The players move while it holds (2.2 s): if one walks under it, it moves out of the way.
+    this.time.addEvent({ delay: 100, repeat: 24, callback: () => {
+      if (t.active && t === this.senseiText && this.senseiPlayerOverlap() > 0) this.placeOffPlayers(t);
+    } });
+  }
+
+  /** The first spot for the banner clear of every player (and of the doors and messages when it can be). */
+  private placeOffPlayers(t: Phaser.GameObjects.Text): void {
+    const { height } = view(this);
+    const players = this.playerScreenBoxes();
+    const h = t.height;
+    const x0 = t.x - t.width / 2, x1 = t.x + t.width / 2;
+    const hits = (boxes: typeof players) => (y: number) => !boxes.some((b) => b.x1 > x0 && b.x0 < x1 && b.y1 > y && b.y0 < y + h);
+    const buttons = this.buttons.objects.map((o) => {
+      const r = (o as Phaser.GameObjects.Container).getBounds();
+      return { x0: r.left - 8, x1: r.right + 8, y0: r.top - 8, y1: r.bottom + 8 };
+    });
+    const all = [...players, ...buttons, ...this.protectedBoxes(true)];
+    const spots = [t.y, this.senseiTop(height), 8, height - h - 8, ...all.flatMap((b) => [b.y0 - 6 - h, b.y1 + 6])].filter((y) => y >= 8 && y + h <= height - 8);
+    // Clear of everything if it can be; the players always come first.
+    // If nothing is clear of everything, it keeps off the players and stays up top, away from the buttons.
+    const y = spots.find(hits(all)) ?? [this.senseiTop(height), 8, ...spots].find((y) => y >= 8 && y + h <= height - 8 && hits(players)(y));
+    if (y !== undefined) t.setY(y);
   }
 
   private shieldGlow(at: Vec2, radiusTiles: number): void {

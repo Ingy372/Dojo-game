@@ -331,13 +331,13 @@ describe('the counter', () => {
     it('turns off after the room\'s 3rd Perfect Counter: a mid-swing hit is then a full Hit', () => {
       const { room, world, p } = tough();
       for (let i = 0; i < COMBAT.counter.mashGuardPerfects; i++) {
-        expect(mashGuardOn(world)).toBe(true);
+        expect(mashGuardOn(p)).toBe(true);
         const ev = counterAt(world, room, 0);
         expect(ev.some((x) => x.kind === 'perfectCounter')).toBe(true);
         expect(ev.some((x) => x.kind === 'mashGuardOff')).toBe(i === COMBAT.counter.mashGuardPerfects - 1);
       }
       expect(COMBAT.counter.mashGuardPerfects).toBe(3);
-      expect(mashGuardOn(world)).toBe(false);
+      expect(mashGuardOn(p)).toBe(false);
       const events = counterAt(world, room, null);
       expect(p.attackCooldown).toBeGreaterThan(0);
       expect(events.some((x) => x.kind === 'hit')).toBe(true);
@@ -350,10 +350,10 @@ describe('the counter', () => {
     it('two Perfect Counters keep it on; each new room starts it again', () => {
       const a = tough();
       for (let i = 0; i < 2; i++) counterAt(a.world, a.room, 0);
-      expect(mashGuardOn(a.world)).toBe(true);
+      expect(mashGuardOn(a.p)).toBe(true);
       expect(counterAt(a.world, a.room, null).some((x) => x.kind === 'block')).toBe(true);
       const next = tough();
-      expect(mashGuardOn(next.world)).toBe(true);
+      expect(mashGuardOn(next.p)).toBe(true);
       expect(counterAt(next.world, next.room, null).some((x) => x.kind === 'block')).toBe(true);
     });
   });

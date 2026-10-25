@@ -20,6 +20,8 @@ export type EnemyId = string;
 
 export interface PlayerState {
   id: PlayerId;
+  /** B-MASHER-2: this player's Perfect Counters in this room (co-op: per player, Manager's call). */
+  perfects: number;
   pos: Vec2;
   /** Which way the character faces, as a direction of length 1. */
   facing: Vec2;
@@ -369,6 +371,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       focus: Math.min(COMBAT.focus.max, mods.startFocus),
       combo: 0,
       counterChain: 0,
+      perfects: 0,
       attackCooldown: 0,
       strikeRecovery: 0,
       counterPressedTick: -1,
@@ -1159,8 +1162,9 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       p.guardTicks = 0;
       p.counterChain++;
       world.progress.perfects++;
+      p.perfects++;
       world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id, chain: p.counterChain });
-      if (world.progress.perfects === COMBAT.counter.mashGuardPerfects) world.events.push({ kind: 'mashGuardOff', playerId: p.id });
+      if (p.perfects === COMBAT.counter.mashGuardPerfects) world.events.push({ kind: 'mashGuardOff', playerId: p.id });
       // Bell Room twist: each Perfect Counter rings a bell, up to the number needed.
       const bellsNeeded = world.twist?.bells ?? 0;
       if (world.bells < bellsNeeded) world.events.push({ kind: 'bell', count: ++world.bells, of: bellsNeeded });
@@ -1181,7 +1185,7 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
           }
         }
       }
-    } else if (a.counterable !== false && (guarding || (p.attackCooldown > 0 && mashGuardOn(world)))) {
+    } else if (a.counterable !== false && (guarding || (p.attackCooldown > 0 && mashGuardOn(p)))) {
       // Block: half damage (never against a dash-only attack: dash out instead), no stagger. The combo is kept.
       // B-MASHER-b Mash guard: a hit that lands during the player's own basic-attack swing (attackCooldown)
       // counts as the same Block, for everyone. B-MASHER-2 (E3): only until the room's 3rd Perfect Counter.
@@ -1477,7 +1481,7 @@ function directionTo(from: Vec2, to: Vec2): Vec2 {
   return d > 0 ? { x: dx / d, y: dy / d } : { x: 0, y: 1 };
 }
 
-/** B-MASHER-2 (E3): Mash guard helps until this room has COMBAT.counter.mashGuardPerfects Perfect Counters; each new room starts it again. */
-export function mashGuardOn(world: WorldState): boolean {
-  return world.progress.perfects < COMBAT.counter.mashGuardPerfects;
+/** B-MASHER-2 (E3): Mash guard helps a player until they make COMBAT.counter.mashGuardPerfects Perfect Counters in this room; each new room starts it again. In co-op each player has their own. */
+export function mashGuardOn(p: PlayerState): boolean {
+  return p.perfects < COMBAT.counter.mashGuardPerfects;
 }

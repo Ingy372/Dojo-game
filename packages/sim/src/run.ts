@@ -34,6 +34,8 @@ export interface RoomResult {
 
 export interface RunState {
   rng: Rng;
+  /** B-MASHER-2: the once-per-run "Sensei steps back" line has shown; saved with the run so a reload doesn't show it again. */
+  mashGuardSeen: boolean;
   /** Which room of the floor this is (0 = first). */
   depth: number;
   /** Rooms on the floor, boss included. */
@@ -176,6 +178,7 @@ export function startRun(content: Content, options: RunOptions): RunState {
     loot: [],
     results: [],
     perfects: 0,
+    mashGuardSeen: false,
     bestCombo: 0,
     ticks: 0,
     status: 'playing',
@@ -698,5 +701,6 @@ export function restoreRun(content: Content, data: unknown): RunState | null {
   restored.decorationColours ??= restored.decorations.map(() => null);
   restored.defeated ??= [];
   restored.tutorial ??= false;
+  restored.mashGuardSeen ??= false;
   return restored;
 }
