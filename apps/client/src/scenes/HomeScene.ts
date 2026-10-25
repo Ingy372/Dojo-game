@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, gearGrid, lastRunItemsFit, pageDots, panelSwap, xpFillFrom, type PanelChange } from '../ui/tokens';
+import { GATE, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, gearGrid, lastRunItemsFit, pageDots, panelSwap, xpFillFrom, gateLockR, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import {
@@ -24,6 +24,7 @@ import {
   virtueSetupFor,
   virtueTitle,
   wornItem,
+  sealBell,
   xpToNext,
   type BestKey,
   type GearItem,
@@ -667,7 +668,7 @@ export class HomeScene extends Phaser.Scene {
       this.text(x, y, 'You have reached the top of the Tower.', 18, '#ffd166', true, FONT, w);
       return;
     }
-    this.text(x, y, `The Gate to ${g.toBelt.name}`, 19, '#f2e9d8', true, 'Georgia, serif');
+    this.text(x, y, `The Gate to ${g.toBelt.name}`, TYPE.heading, '#f2e9d8', true, 'Georgia, serif');
     if (g.ready) {
       const chip = this.text(x + w, y + 2, ' READY ', 15, '#14121c', true).setOrigin(1, 0).setBackgroundColor('#ffd166');
       // P-MENU-e: one pop when the tab opens, then still (no endless blinking).
@@ -676,40 +677,42 @@ export class HomeScene extends Phaser.Scene {
         this.tweens.add({ targets: chip, scale: 1, duration: MOTION.pop.ms, ease: MOTION.pop.ease });
       }
     }
-    this.text(x, y + 26, `${g.lit} of ${g.locks.length} locks lit. A real promotion opens the Gate.`, 12, '#b9ad99', false, FONT, w);
+    this.text(x, y + 28, `${g.lit} of ${g.locks.length} locks lit. A real promotion opens the Gate.`, TYPE.label, '#b9ad99', false, FONT, w);
 
-    // The locks.
+    // The locks. P-MENU-f: radius 22 (at least 18), labels 12, at most 2 lines, centred.
     const n = g.locks.length;
     const slot = w / n;
-    const r = Math.min(20, slot * 0.36);
-    const ly = y + 50 + r;
+    const r = gateLockR(slot);
+    const ly = y + 52 + r;
     g.locks.forEach((lock, i) => {
       const lx = x + slot * (i + 0.5);
       if (lock.signedOff) {
-        const halo = this.add.circle(lx, ly, r + 6, 0xffd166, 0.25);
-        this.ui.add(halo);
+        this.ui.add(this.add.circle(lx, ly, r + 6, 0xffd166, 0.25));
         this.ui.add(this.add.circle(lx, ly, r, 0xffd166).setStrokeStyle(3, 0xffffff, 0.8));
         this.text(lx, ly, '✓', r, '#14121c', true).setOrigin(0.5);
       } else {
         this.ui.add(this.add.circle(lx, ly, r, 0x221d2e).setStrokeStyle(3, 0x6b6478));
         this.text(lx, ly, '🔒', r * 0.8, '#8a8296').setOrigin(0.5);
       }
-      this.text(lx, ly + r + 4, shortName(lock), 10, lock.signedOff ? '#ffd166' : '#b9ad99', false, FONT, slot - 4).setOrigin(0.5, 0).setAlign('center');
+      const label = this.text(lx, ly + r + 4, shortName(lock), GATE.label, lock.signedOff ? '#ffd166' : '#b9ad99', false, FONT, slot - 4).setOrigin(0.5, 0).setAlign('center');
+      label.setMaxLines(GATE.labelLines);
     });
 
-    // The sundial and Sensei's Seal.
-    const by = ly + r + 40;
-    const sr = Math.max(16, Math.min(24, (y + h - by) / 2 - 6));
-    const half = w / 2;
-    const sx = x + sr + 2;
-    const sy = by + sr;
-    // P-MENU-e: the sundial and the Seal sit on two equal rounded cards.
+    // P-MENU-f: the sundial and Sensei's Seal on two equal 96-tall cards pinned to the panel's bottom.
+    const cardW = w / 2 - GATE.cardGap / 2;
+    const cardY = y + h - GATE.cardH;
+    const sr = GATE.sealR;
     const cards = this.add.graphics();
-    for (const cx of [x, x + half + S1]) {
-      cards.fillStyle(0x221d2e, 0.6).fillRoundedRect(cx - 6, sy - sr - 8, half - S1 - 2, sr * 2 + 16, RADIUS.panel);
-      cards.lineStyle(2, 0x3a3150).strokeRoundedRect(cx - 6, sy - sr - 8, half - S1 - 2, sr * 2 + 16, RADIUS.panel);
+    for (const cx of [x, x + cardW + GATE.cardGap]) {
+      cards.fillStyle(0x221d2e, 0.6).fillRoundedRect(cx, cardY, cardW, GATE.cardH, RADIUS.panel);
+      cards.lineStyle(2, 0x3a3150).strokeRoundedRect(cx, cardY, cardW, GATE.cardH, RADIUS.panel);
     }
     this.ui.add(cards);
+    const sy = cardY + GATE.cardH / 2;
+    const titleY = cardY + 12;
+    const lineY = titleY + TYPE.title + 4;
+    const textW = cardW - sr * 2 - 3 * S2 - 4;
+    const sx = x + S2 + 4 + sr;
     const dial = this.add.graphics();
     dial.fillStyle(0x221d2e).fillCircle(sx, sy, sr);
     if (g.sundial > 0) {
@@ -717,16 +720,34 @@ export class HomeScene extends Phaser.Scene {
     }
     dial.lineStyle(3, 0x6b6478).strokeCircle(sx, sy, sr);
     this.ui.add(dial);
-    this.text(sx + sr + 10, sy - 16, 'Time in rank', 13, '#f2e9d8', true);
-    this.text(sx + sr + 10, sy + 1, `${Math.min(g.classesInRank, g.classesBeforeTest)} of ${g.classesBeforeTest} classes`, 12, '#b9ad99', false, FONT, half - sr * 2 - 16);
+    const tx = sx + sr + S2 + 2;
+    this.oneLine(this.text(tx, titleY, 'Time in rank', TYPE.title, '#f2e9d8', true), textW, TYPE.label);
+    this.text(tx, lineY, `${Math.min(g.classesInRank, g.classesBeforeTest)} of ${g.classesBeforeTest} classes`, TYPE.body, '#b9ad99', false, FONT, textW).setMaxLines(2);
 
-    const kx = x + half + sr + 2;
-    this.ui.add(this.add.circle(kx, sy, sr, g.sealLit ? 0xe0533d : 0x221d2e).setStrokeStyle(3, g.sealLit ? 0xffd166 : 0x6b6478));
-    this.text(kx, sy, '師', sr, g.sealLit ? '#ffffff' : '#6b6478', true).setOrigin(0.5);
-    this.text(kx + sr + 10, sy - 16, "Sensei's Seal", 13, '#f2e9d8', true);
+    const kx = x + cardW + GATE.cardGap + S2 + 4 + sr;
+    const seal = this.add.container(kx, sy);
+    if (g.sealLit) seal.add(this.add.circle(0, 0, sr + GATE.ring.w, 0xffd166, GATE.ring.alpha));
+    seal.add(this.add.circle(0, 0, sr, g.sealLit ? 0xe0533d : 0x221d2e).setStrokeStyle(3, g.sealLit ? 0xffd166 : 0x6b6478));
+    seal.add(this.add.text(0, 0, '師', { fontFamily: FONT, fontSize: `${sr}px`, color: g.sealLit ? '#ffffff' : '#6b6478', fontStyle: 'bold' }).setResolution(crisp()).setOrigin(0.5));
+    this.ui.add(seal);
+    // First time this Seal is seen lit: one pop (skipped in reduced motion) and one soft bell.
+    const migrating = this.profile.sealsSeen === null;
+    const ring = sealBell(this.profile, g.toBelt.id, g.sealLit);
+    if (ring || migrating) writeSave(this.profile);
+    if (ring) {
+      sfx.seal();
+      if (!reducedMotion()) {
+        seal.setScale(0.9);
+        this.tweens.add({ targets: seal, scale: 1, duration: MOTION.pop.ms, ease: MOTION.pop.ease });
+      }
+    }
+    const kt = kx + sr + S2 + 2;
+    this.oneLine(this.text(kt, titleY, "Sensei's Seal", TYPE.title, '#f2e9d8', true), textW, TYPE.label);
     // Never shows or guesses a reason when the Seal isn't lit.
     const sealText = g.sealLit ? (g.testDate ? `Test day: ${shortDate(g.testDate)}` : 'Approved to test!') : 'Lights when Sensei approves you to test.';
-    this.text(kx + sr + 10, sy + 1, sealText, 12, g.sealLit ? '#ffd166' : '#b9ad99', g.sealLit, FONT, half - sr * 2 - 16);
+    // The full words always show: shrink toward 12 until they fit the card (no cut-off reason).
+    const st = this.text(kt, lineY, sealText, TYPE.body, g.sealLit ? '#ffd166' : '#b9ad99', g.sealLit, FONT, textW);
+    for (let size = TYPE.body; st.height > cardY + GATE.cardH - 6 - lineY && size > TYPE.label; ) st.setFontSize(--size);
   }
 
   private renderGear(x: number, y: number, w: number, h: number): void {

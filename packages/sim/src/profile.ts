@@ -105,6 +105,12 @@ export interface Profile {
   welcomeWeek: WelcomeWeekLog;
   /** The local date (YYYY-MM-DD) the three next goals were last shown (M7-P10): at most once a day. */
   goalsShownOn: string | null;
+  /**
+   * P-MENU-f: the belt ids whose Sensei's Seal the player has already seen lit (each rings its
+   * bell once). null = an old save from before this field; the first Gate view fills it in
+   * with the Seal that is already lit, silently (see sealBell).
+   */
+  sealsSeen: string[] | null;
 }
 
 export interface StreetSmartsSave {
@@ -144,6 +150,7 @@ export function newProfile(): Profile {
     lessons: newLessonLog(),
     welcomeWeek: newWelcomeWeekLog(),
     goalsShownOn: null,
+    sealsSeen: [],
   };
 }
 
@@ -159,7 +166,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null, sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {
@@ -353,4 +360,18 @@ export function chooseDifficulty(profile: Profile, difficulty: Difficulty): void
  */
 export function getsTutorialFloor(profile: Pick<Profile, 'runsStarted' | 'runsPlayed'>): boolean {
   return profile.runsStarted === 0 && profile.runsPlayed === 0;
+}
+
+/**
+ * P-MENU-f: should this Gate view ring the Seal's bell (and pop it)? Rings only the first time
+ * the Seal for `beltId` is seen lit. An old save (sealsSeen null) is migrated silently: a Seal
+ * that is already lit counts as seen, so returning players get no bell. Only ever adds ids.
+ */
+export function sealBell(profile: Profile, beltId: string, lit: boolean): boolean {
+  const old = profile.sealsSeen === null;
+  const seen = profile.sealsSeen ?? [];
+  profile.sealsSeen = seen;
+  if (!lit || seen.includes(beltId)) return false;
+  seen.push(beltId);
+  return !old;
 }
