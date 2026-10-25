@@ -1122,6 +1122,55 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **Phase pause (2c):** at 66% and 33% the game holds still for about 1 real second (`PHASE_HOLD_TICKS` = `realSecondsToTicks(1)`), the same way the guided-Counter hold does: nothing moves, nothing is hurt, the Challenge timer stops. Once per threshold per fight; a reset fight starts over.
 - **Placeholder look until Jay OKs art:** a code-drawn grey lid at the end of the boss bar and a grey wash over the bar while the lid is up; a short grey tint on a clang (reuses the clank sound); at the phase pause a "ROAR!" word, an orange glow and the phase's `senseiLine`. Reduced motion keeps the lid marker and drops the glow and the tint. No new art or sound files.
 - **Art gaps:** the phase rigs don't draw every attack in the new patterns (P1 pin, P2 pin, P3 bonk). The client stands in with another wind-up the rig has; the warning shape is code-drawn. Listed in b-t3-art.test.ts until real art comes.
+
+### R-STANCE-d1 — The four real stances and their numbers (2026-10-25)
+- **Manager go (Oct 25):** R-STANCE-d is split. d1 covers the stances and their numbers (drafts/planning/R-STANCE-c-stance-numbers.md, #290). d2 covers sign-off unlocks.
+- Content stances: Beginner's Stance (unchanged), Cat (+1 counter window, dash cooldown −25%, takes 15% more through a block), Front (+8% power, −10% move speed), Fighting (blocks 15% more, Focus gain ×1.2, dash distance ×0.8), Horse (+10% power after 10 still ticks, −20% move speed).
+- **Manager calls:**
+  1. Horse is +10%, final.
+  2. Old `rooted-*` / `flowing-*` saves go to Ready (stance null). The migration stays idempotent. `normalizeLoadout` drops any stance that isn't unlocked.
+  3. No Front push and no strikePush field.
+  4. The picker and the `unlockedStances` logic stay as they are (Ready plus the newest 3); only the ids changed.
+  5. Horse uses the approved stance_rooted idle (approved.json `rooted-form` → `horse-stance`). Cat, Front and Fighting use Ready's idle. No new art.
+  6. Stance text is the #288 one-liners from drafts/content/katas/stances.json. No story text was written.
+- New StanceDef fields: dashCooldownScale, dashScale (defaults to 1), blockCut, focusGain, stillPower and rootTicks. The content check fails if powerScale or stillPower is outside 0 to 0.12, or if guardScale is below 0.
+- **Builder choices (not in the spec):** Cat's dash cooldown is floor(30 × 0.75) = 22 ticks, matching the 22 in the spec. For Horse, guarding and standing still both count as still; walking or dashing resets the count. Stance power adds to gear powerScale.
+- Kata to stance order is positional (Basic Form 1 → Cat, Basic Form 2 → Front, then Fighting, Horse) until d2.
+- The golden run was re-captured. Only the stance ids and the "rooted" case changed: Cat's +1 window replaces Rooted's +3.
+- **Manager confirmations (#293 review, Oct 25):**
+  - Horse counts guarding as standing still.
+  - Stance power stacks with gear power.
+  - Cat's dash cooldown is 22 ticks.
+  - "Beginner's Stance" stays until Jay decides.
+  - The in-game one-liners (what each stance does) come in a follow-up.
+
+## R-STANCE-d1: old Form saves with no virtue keep their loadout (Oct 25, 2026)
+- Manager's call: a save with `loadout.form` and no virtue keeps its migrated stance, and the virtue stays empty (the default). The loadout is not nulled and the stance is not reset.
+- Before: `{ form: 'rooted-form' }` (or flowing-form, rooted-stance, flowing-stance) migrated to `{ stance: null, virtue: null }`, which `readLoadout` then turned into `loadout: null`. A fight played the same (Ready first, today's virtue), but the saved loadout was gone.
+- Now: `readLoadout` keeps `{ stance: null, virtue: null }` for an old Form save or an explicit `stance: null`, and `normalizeLoadout` no longer nulls a loadout whose stance isn't unlocked. Rooted and Flowing still map to Ready. Junk loadouts still load as null.
+- Test: packages/sim/test/r-stance-d1-stances.test.ts ("old Form save with no virtue").
+### B-MASHER — Shield bounce Focus, mash guard, kid bot (2026-10-25)
+- **Manager go (Oct 25):** drafts/planning/B-MASHER-plan.md (#291), approved calls below. Turning it on for everyone is the Manager's routine tuning call.
+1. **Mash guard:** a counterable enemy attack that lands while the player is mid-swing (basic-attack `attackCooldown` > 0, the 12-tick swing) counts as a Block. Dash-only attacks (`counterable: false`) still hit.
+2. **It is a normal Block:** half damage, gear blockCut and reflect apply, combo and chain kept, same block event. A timed Counter stays strictly better (no damage, a stagger, more Focus).
+3. **Shield bounce Focus:** +6 Focus (`COMBAT.focus.perShieldBounce`, capped at max) for basic and ripple shield bounces. The Hearth Cook pot-lid clang gives none.
+4. **Glow:** a code-drawn soft gold ring for 0.4 s on a bounce. With `dojo.reducedMotion` 'on', a steady 0.4 s tint and no pulse.
+5. **Kid bot:** masher plus an independent 12% roll each tick to press Counter or Strike (50/50) at a random living enemy (seeded rng). The 200-run gate (belts 1–10 × 20 seeds; room-1 KOs ≤ 20, wins ≥ 35%) runs only with BALANCE; a 3-seed kid case runs in CI.
+- **Tests:** older tests that assumed a full Hit or 0 Focus now call `holdSwing` (test/hold-swing.ts) or expect the new values. The golden run was recaptured: only run outcomes changed (blocks, health, perfects), setup identical.
+- **Manager calls on #295 (Oct 25):** (1) the b-t3-tune-2 boss-levers "with pauses" floor drops from 15 s to 14 s; (2) the drop in smart-bot damage taken is accepted for now; (3) the golden re-capture is OK.
+
+### B-MASHER-2 — Mash guard fades after 3 Perfect Counters (2026-10-25)
+- **Manager go (Oct 25):** E3 from drafts/planning/B-MASHER-2-mash-guard-tune.md (#296).
+- Mash guard works until the room has `COMBAT.counter.mashGuardPerfects` (3) Perfect Counters, then is off for the rest of that room; every new room starts it again. The sim sends `mashGuardOff` at the 3rd.
+- The first time in a run, Sensei says the line from content/settings/mash-guard.json (final wording from the Content Designer: "Three perfect counters! Your timing can fly on its own now.") with a gold ring that grows and fades around the player. With `dojo.reducedMotion` 'on': the same line, no fade-in, and a steady gold halo for 1.2 s. Text 20–26 px, padding 16/8 px.
+- The golden run was re-captured again (outcomes only).
+- **Manager call on B-MASHER-2 (Oct 25):** the 16–18% drop in smart-bot damage taken (vs 911ce19: −17.8% typical, −15.7% trainsMore, −17.1% playsOnly) is accepted for the beta. Smart bots still win 200/200 and the bands pass 293/293.
+- **Mash guard wording (Content Designer, Oct 25):** "Three perfect counters! Your timing can fly on its own now." (the Sensei box adds "Sensei:").
+- **Manager call (Oct 25): the once-per-run "Sensei steps back" line stays seen after a reload.** It's saved with the run (`RunState.mashGuardSeen`, saved as soon as the line shows); runs saved before this load as not seen.
+- **Manager call (Oct 25): in co-op, Perfect Counters and Mash guard are per player.** `PlayerState.perfects` counts each player's Perfect Counters in the room; `mashGuardOn(p)` and `mashGuardOff` use it. `world.progress.perfects` still counts the room total for grades.
+- **QA on #295 (layout only):** the stepped-back banner keeps off every player's sprite (its usual spot, then the top edge, then the bottom; clear of the buttons and doors when it can be, and of the players always, re-checked while it holds). Its two lines are balanced, so no word sits alone (20 px at 667, 26 px wider).
+- **Manager call (Oct 25): at 667 the stepped-back banner may cover the CHALLENGE door label** (the only spot there clear of the player and the buttons). Accepted as is.
+- **Manager call (Oct 25): in co-op the "Sensei steps back" line shows once per player.** `RunState.mashGuardSeen` is now the list of player ids who have seen it this run, saved with the run (a reload doesn't show it again to anyone who saw it).
 ## P-MENU2-i: menu2 art in Trophies, Gear and Last run (2026-10-25)
 - Jay OK'd the #265 art; the Manager gave the go. Only Trophies, Gear and Last run use it.
 - My Style's art (slot-card, tray-tile, tray-equipped-badge, switch, glyph) is held, not imported. A test checks no quoted My Style frame names are used.

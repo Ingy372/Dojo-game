@@ -34,7 +34,7 @@ import {
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
-import { STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
+import { STYLE_LEFT_SHARE, STYLE_LEFT_SHARE_MIN, STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
 import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, runId, takeCountUp, type FoundTile, type KeyStore } from '../ui/lastRun';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, slotEmptyLine, tileBox, toggleFilter } from '../ui/gearBoard';
@@ -802,7 +802,14 @@ export class HomeScene extends Phaser.Scene {
       const probe = this.add.text(0, 0, word, { fontFamily: FONT, fontSize: `${TYPE.label}px`, fontStyle: 'bold' });
       const wd = probe.width; probe.destroy(); return wd;
     }));
-    const L = styleLayout(w, h, Math.ceil(widest) + 2 * TROPHY_UI.cubbyPadX + TROPHY_UI.stroke);
+    const tileMin = Math.ceil(widest) + 2 * TROPHY_UI.cubbyPadX + TROPHY_UI.stroke;
+    // R-STANCE-d1: every gap in the preview card is at least 8 px (S2). If the longest pick's words
+    // don't fit even at the smaller sizes, the card takes width from the left side (667 only).
+    let L = styleLayout(w, h, tileMin);
+    for (let share = STYLE_LEFT_SHARE; share >= STYLE_LEFT_SHARE_MIN - 1e-9; share -= 0.02) {
+      L = styleLayout(w, h, tileMin, share);
+      if (this.previewFits(m, L.previewW, L.previewH)) break;
+    }
     const ink = WOOD.ink;
     (['stance', 'virtue'] as const).forEach((slot, i) => {
       const pick = m.current[slot];
@@ -863,11 +870,13 @@ export class HomeScene extends Phaser.Scene {
     const pg = this.add.graphics();
     pg.fillStyle(BOARD_PAPER).fillRoundedRect(px, y, L.previewW, L.previewH, RADIUS.panel);
     pg.lineStyle(2, WOOD.grain).strokeRoundedRect(px, y, L.previewW, L.previewH, RADIUS.panel);
+    pg.setData('previewCard', { x: px, y, w: L.previewW, h: L.previewH });
     this.ui.add(pg);
     const pw = L.previewW - 2 * S2;
     // B-POLISH-2: the hint always shows (bottom of the card); the title wraps to 2 lines (no "…"),
     // and the title/body step down a size if the words would otherwise reach the hint.
     const hintText = this.text(px + L.previewW / 2, 0, STYLE_WORDS.hint, TYPE.label, '#7a5a3a', false, FONT, L.previewW - S2).setOrigin(0.5, 0).setAlign('center');
+    balanceWrap(hintText, L.previewW - S2);
     const hy = y + L.previewH - S2 - hintText.height;
     hintText.setY(hy);
     const foot = this.styleSlot === 'stance' ? STYLE_WORDS.switchLine : STYLE_WORDS.virtueLine;
@@ -883,7 +892,7 @@ export class HomeScene extends Phaser.Scene {
       f.setY(py);
       return py + f.height + S1;
     };
-    if (place(S2) > hy) { title.setFontSize(TYPE.body); body.setFontSize(TYPE.label); if (place(S2) > hy) place(S1); }
+    if (place(S2) + S1 > hy) { title.setFontSize(TYPE.body); body.setFontSize(TYPE.label); if (place(S2) + S1 > hy) place(S1); }
 
     // "Always with you": Strikes and Seals are always on, so they are shown, not picked.
     const ay = y + L.alwaysY;
@@ -901,6 +910,21 @@ export class HomeScene extends Phaser.Scene {
       if (icon) this.ui.add(icon);
       // B-POLISH-2: no art yet: a code-drawn placeholder (a small gold star), never a letter.
       else this.ui.add(this.add.star(cx, cy, 5, (L.icon - 8) / 5, (L.icon - 8) / 2.4, 0xffd166).setStrokeStyle(2, 0xa8703f));
+    });
+  }
+
+  /** R-STANCE-d1: true if every pick's preview fits a card previewW x previewH with 8 px gaps (smaller sizes allowed). */
+  private previewFits(m: StyleModel, previewW: number, previewH: number): boolean {
+    const pw = previewW - 2 * S2;
+    const h = (str: string, size: number, bold: boolean, wrap: number): number => {
+      const t = this.add.text(0, 0, str, { fontFamily: FONT, fontSize: `${size}px`, fontStyle: bold ? 'bold' : 'normal', wordWrap: { width: wrap } }).setMaxLines(bold && size !== TYPE.label ? 2 : 0);
+      const v = t.height; t.destroy(); return v;
+    };
+    const hint = h(STYLE_WORDS.hint, TYPE.label, false, previewW - S2);
+    return (['stance', 'virtue'] as const).every((slot) => {
+      const foot = h(slot === 'stance' ? STYLE_WORDS.switchLine : STYLE_WORDS.virtueLine, TYPE.label, true, pw);
+      const picks = m.trays[slot].map((p) => [p.name, p.line]).concat(slot === 'virtue' ? [[STYLE_WORDS.noVirtue, STYLE_WORDS.noVirtueLine]] : []);
+      return picks.every(([name, line]) => S2 + h(name, TYPE.body, true, pw) + S1 + h(line, TYPE.label, false, pw) + S2 + foot + S2 + hint + S2 <= previewH);
     });
   }
 
@@ -1983,4 +2007,21 @@ function wrapLikeCubby(txt: Phaser.GameObjects.Text, label: string, tw: number):
   txt.setLineSpacing(TROPHY_UI.cubbyLineGap).setMaxLines(TROPHY_UI.cubbyLines);
   if (txt.width > tw) txt.setText(label.replace(/-(?=\S)/g, '-\n'));
   return txt;
+}
+
+/**
+ * R-STANCE-d1 QA: wrap a centred text to the narrowest width that keeps the same number of lines,
+ * so the lines come out even and one word ("pick.") is never left alone on the last line.
+ */
+function balanceWrap(t: Phaser.GameObjects.Text, maxW: number): void {
+  t.setWordWrapWidth(maxW);
+  const lines = t.getWrappedText().length;
+  if (lines < 2) return;
+  let lo = 1, hi = Math.ceil(maxW);
+  while (lo < hi) {
+    const mid = Math.floor((lo + hi) / 2);
+    t.setWordWrapWidth(mid);
+    if (t.getWrappedText().length <= lines) hi = mid; else lo = mid + 1;
+  }
+  t.setWordWrapWidth(hi);
 }

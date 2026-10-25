@@ -19,7 +19,22 @@ export interface StanceDef {
   guardScale: number;
   /** Power raised by this share. */
   powerScale: number;
+  /** R-STANCE-d1: dash recharge changed by this share (-0.25 = a quarter shorter). */
+  dashCooldownScale: number;
+  /** R-STANCE-d1: dash length multiplied by this (1 = normal). */
+  dashScale: number;
+  /** R-STANCE-d1: added to the block cut; blocks let max(0.1, 0.5 - blockCut) through. */
+  blockCut: number;
+  /** R-STANCE-d1: added to the Focus gain modifier. */
+  focusGain: number;
+  /** R-STANCE-d1: extra power after standing still for `rootTicks` ticks; moving or dashing resets it. */
+  stillPower: number;
+  /** R-STANCE-d1: ticks of standing still before `stillPower` applies. */
+  rootTicks: number;
 }
+
+/** Stance content check (R-STANCE-c): power bonuses stay within the band-safe cap. */
+export const STANCE_POWER_CAP = 0.12;
 
 /** A Strike upgrade or a Technique Seal: one always-on effect. */
 export interface PerkDef {
@@ -99,8 +114,18 @@ export function loadAbilities(data: unknown): AbilityContent {
       moveSpeed: num(f.moveSpeed, `${w}.moveSpeed`),
       guardScale: num(f.guardScale, `${w}.guardScale`),
       powerScale: num(f.powerScale, `${w}.powerScale`),
+      dashCooldownScale: f.dashCooldownScale === undefined ? 0 : num(f.dashCooldownScale, `${w}.dashCooldownScale`),
+      dashScale: f.dashScale === undefined ? 1 : num(f.dashScale, `${w}.dashScale`),
+      blockCut: f.blockCut === undefined ? 0 : num(f.blockCut, `${w}.blockCut`),
+      focusGain: f.focusGain === undefined ? 0 : num(f.focusGain, `${w}.focusGain`),
+      stillPower: f.stillPower === undefined ? 0 : num(f.stillPower, `${w}.stillPower`),
+      rootTicks: f.rootTicks === undefined ? 0 : num(f.rootTicks, `${w}.rootTicks`),
     };
     if (stance.moveSpeed <= -0.5 || stance.attackSpeed < 0 || stance.counterWindow < 0) fail(`${w} has numbers out of range`);
+    const inCap = (v: number) => v >= 0 && v <= STANCE_POWER_CAP;
+    if (!inCap(stance.powerScale) || !inCap(stance.stillPower)) fail(`${w}: powerScale and stillPower must be from 0 to ${STANCE_POWER_CAP}`);
+    if (stance.guardScale < 0) fail(`${w}: guardScale must be 0 or more`);
+    if (stance.dashCooldownScale <= -1 || stance.dashScale <= 0 || stance.rootTicks < 0) fail(`${w} has dash or root numbers out of range`);
     return stance;
   });
   if (stances.length === 0) fail('"stances" needs at least the Beginner\'s Stance');

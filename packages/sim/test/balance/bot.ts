@@ -7,6 +7,9 @@
 //   'masher' - a 6-year-old who never Counters: walks at the nearest enemy and Strikes
 //              when it can. With Sensei's guide on, it taps Counter only while the game
 //              holds still and the button pulses.
+//   'kid'    - B-MASHER-c: plays like the masher, but on an independent 12% of ticks presses
+//              Counter or Strike (50/50) at a random living enemy, like a young player who
+//              presses every button.
 // It uses its own seeded random numbers, so results repeat exactly.
 
 import type { EliteKind } from '../../src';
@@ -39,7 +42,10 @@ import {
   type WorldState,
 } from '../../src';
 
-export type Style = 'smart' | 'stand' | 'masher';
+export type Style = 'smart' | 'stand' | 'masher' | 'kid';
+
+/** B-MASHER-c: share of ticks on which the kid bot presses a random button. */
+export const KID_RANDOM_PRESS = 0.12;
 
 export interface Skill {
   /** Ticks after a telegraph starts before the bot reacts. */
@@ -156,7 +162,11 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
 
   // Sensei holds the game still with Counter pulsing: every style taps it.
   if (world.guide?.waiting) return { kind: 'none', action: 'counter' };
-  if (style === 'masher') {
+  if (style === 'kid' && nextFloat(rng) < KID_RANDOM_PRESS) {
+    const t = pick(rng, alive);
+    return { ...approach(p, t), action: nextFloat(rng) < 0.5 ? 'counter' : 'strike' };
+  }
+  if (style === 'masher' || style === 'kid') {
     const t = nearest(p.pos, alive)!;
     const near = distance(p.pos, t.pos) - t.def.radius - 0.42 <= COMBAT.strike.reach;
     const move = approach(p, t);

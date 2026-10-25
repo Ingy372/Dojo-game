@@ -15,12 +15,14 @@ import {
   type Difficulty,
   type PlayerInput,
   type WorldState,
+  mashGuardOn,
 } from '../src';
 import bruteData from '../../../content/enemies/brute.json';
 import abilities from '../../../content/abilities/abilities.json';
 
-/** The Rooted Stance's Perfect Counter bonus, read from content (its counterWindow). */
-const ROOTED_BONUS = abilities.stances.find((f) => f.id === 'rooted-stance')!.counterWindow;
+/** The Cat Stance's (was Rooted) Perfect Counter bonus, read from content (its counterWindow). */
+const ROOTED_BONUS = abilities.stances.find((f) => f.id === 'cat-stance')!.counterWindow;
+import { holdSwing } from './hold-swing';
 import trainingRoom from '../../../content/rooms/training-room.json';
 
 const brute = loadEnemy(bruteData);
@@ -55,7 +57,8 @@ function stepUntil(world: WorldState, room: ReturnType<typeof arena>, kind: Comb
 }
 
 /** Waits for a telegraph, presses Counter `early` ticks before impact, and returns the impact's events. */
-function counterAt(world: WorldState, room: ReturnType<typeof arena>, early: number | null): CombatEvent[] {
+/** `swinging: false` keeps the player out of a basic-attack swing at impact (no Mash guard). */
+function counterAt(world: WorldState, room: ReturnType<typeof arena>, early: number | null, swinging = true): CombatEvent[] {
   const start = stepUntil(world, room, 'telegraph');
   const ticks = world.enemies[0].windupTotal;
   const impact = start + ticks;
@@ -66,6 +69,7 @@ function counterAt(world: WorldState, room: ReturnType<typeof arena>, early: num
   const p = world.players.p1;
   focusBeforeImpact = p.focus;
   comboBeforeImpact = p.combo;
+  if (!swinging) holdSwing(p);
   stepWorld(world, room, { p1: world.tick === press ? { kind: 'none', action: 'counter' } : IDLE });
   return world.events;
 }
@@ -221,10 +225,10 @@ describe('the counter', () => {
       return { room, world, p: world.players.p1 };
     };
     /** Empties Focus, answers the next attack (Perfect = 0 ticks early), and returns the Focus the Counter gave. */
-    const answer = (world: WorldState, room: ReturnType<typeof arena>, early: number | null) => {
+    const answer = (world: WorldState, room: ReturnType<typeof arena>, early: number | null, swinging = true) => {
       const p = world.players.p1;
       p.focus = 0;
-      const events = counterAt(world, room, early);
+      const events = counterAt(world, room, early, swinging);
       return { events, gained: p.focus - focusBeforeImpact - COMBAT.focus.perHit * basicHits(events) };
     };
 
@@ -243,7 +247,7 @@ describe('the counter', () => {
       const { room, world, p } = chainSetup();
       answer(world, room, 0);
       answer(world, room, 0);
-      expect(answer(world, room, null).events.some((ev) => ev.kind === 'hit')).toBe(true);
+      expect(answer(world, room, null, false).events.some((ev) => ev.kind === 'hit')).toBe(true);
       expect(p.counterChain).toBe(0);
       expect(answer(world, room, 0).gained).toBe(25);
     });
@@ -281,14 +285,80 @@ describe('the counter', () => {
   it('gives a Hit (full damage, combo reset) with no counter or a counter far too early', () => {
     for (const early of [null, COMBAT.counter.guardTicks + 2]) {
       const { room, world, p } = setup();
-      const events = counterAt(world, room, early);
+      const events = counterAt(world, room, early, false);
       expect(events.some((ev) => ev.kind === 'hit')).toBe(true);
       expect(p.health).toBe(p.maxHealth - brute.power);
       expect(p.combo).toBe(0);
     }
   });
 
-  it('uses the right window on each difficulty, plus the Rooted Stance bonus', () => {
+  describe('Mash guard (B-MASHER-b)', () => {
+    it('a hit that lands mid-swing is a Block: half damage, same block event, combo and chain kept', () => {
+      const { room, world, p } = setup();
+      counterAt(world, room, 0); // a Perfect Counter first, to start a chain
+      const chain = p.counterChain;
+      const health = p.health;
+      const events = counterAt(world, room, null);
+      expect(p.attackCooldown).toBeGreaterThan(0);
+      expect(events.some((ev) => ev.kind === 'block')).toBe(true);
+      expect(events.some((ev) => ev.kind === 'hit')).toBe(false);
+      expect(health - p.health).toBe(damage(brute.power, COMBAT.counter.blockDamageMultiplier, 0));
+      expect(p.counterChain).toBe(chain);
+      expect(p.combo).toBe(comboBeforeImpact + basicHits(events));
+    });
+
+    it('a Counter stays strictly better: no damage, a stagger and Focus', () => {
+      const mash = setup();
+      counterAt(mash.world, mash.room, null);
+      const mashLoss = mash.p.maxHealth - mash.p.health;
+      const counter = setup();
+      const events = counterAt(counter.world, counter.room, 0);
+      expect(events.some((ev) => ev.kind === 'perfectCounter')).toBe(true);
+      expect(counter.p.health).toBe(counter.p.maxHealth);
+      expect(mashLoss).toBeGreaterThan(0);
+      expect(counter.e.mode).toBe('stagger');
+      expect(mash.e.mode).not.toBe('stagger');
+      expect(counter.p.focus - focusBeforeImpact).toBeGreaterThan(mash.p.focus - focusBeforeImpact);
+    });
+  });
+
+  describe('Mash guard fades (B-MASHER-2, E3)', () => {
+    const tough = () => {
+      const s = setup();
+      s.e.health = 100000;
+      return s;
+    };
+    it('turns off after the room\'s 3rd Perfect Counter: a mid-swing hit is then a full Hit', () => {
+      const { room, world, p } = tough();
+      for (let i = 0; i < COMBAT.counter.mashGuardPerfects; i++) {
+        expect(mashGuardOn(p)).toBe(true);
+        const ev = counterAt(world, room, 0);
+        expect(ev.some((x) => x.kind === 'perfectCounter')).toBe(true);
+        expect(ev.some((x) => x.kind === 'mashGuardOff')).toBe(i === COMBAT.counter.mashGuardPerfects - 1);
+      }
+      expect(COMBAT.counter.mashGuardPerfects).toBe(3);
+      expect(mashGuardOn(p)).toBe(false);
+      const events = counterAt(world, room, null);
+      expect(p.attackCooldown).toBeGreaterThan(0);
+      expect(events.some((x) => x.kind === 'hit')).toBe(true);
+      expect(events.some((x) => x.kind === 'block')).toBe(false);
+      // A pressed Counter still Blocks or Perfects as before.
+      const late = counterAt(world, room, window + 1);
+      expect(late.some((x) => x.kind === 'block')).toBe(true);
+    });
+
+    it('two Perfect Counters keep it on; each new room starts it again', () => {
+      const a = tough();
+      for (let i = 0; i < 2; i++) counterAt(a.world, a.room, 0);
+      expect(mashGuardOn(a.p)).toBe(true);
+      expect(counterAt(a.world, a.room, null).some((x) => x.kind === 'block')).toBe(true);
+      const next = tough();
+      expect(mashGuardOn(next.p)).toBe(true);
+      expect(counterAt(next.world, next.room, null).some((x) => x.kind === 'block')).toBe(true);
+    });
+  });
+
+  it('uses the right window on each difficulty, plus the Cat Stance bonus', () => {
     for (const d of ['guided', 'standard', 'challenge'] as Difficulty[]) {
       const w = DIFFICULTY[d].counterWindowTicks;
       const inside = setup(d);
@@ -301,7 +371,7 @@ describe('the counter', () => {
     }
     const rooted = setup();
     rooted.p.counterBonusTicks = ROOTED_BONUS;
-    expect(counterAt(rooted.world, rooted.room, window + 1).some((ev) => ev.kind === 'perfectCounter')).toBe(true);
+    expect(counterAt(rooted.world, rooted.room, window + ROOTED_BONUS - 1).some((ev) => ev.kind === 'perfectCounter')).toBe(true);
   });
 
   it('cannot be spammed: a guard that counters nothing rests the button', () => {

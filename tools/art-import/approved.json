@@ -3,8 +3,7 @@
   "outDir": "assets/art",
   "scale": 0.6,
   "stanceIds": {
-    "rooted-form": "rooted-stance",
-    "flowing-form": "flowing-stance"
+    "rooted-form": "horse-stance"
   },
   "packs": {
     "player-a": {
