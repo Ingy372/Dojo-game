@@ -1,0 +1,11 @@
+4-green-belt 667 375 standard off -
+1-white-belt-new 667 375 guided off brown
+4-green-belt 667 375 challenge on -
+4-green-belt 667 375 standard on brown
+1-white-belt-new 844 390 standard off -
+4-green-belt 844 390 standard off -
+4-green-belt 844 390 guided off -
+4-green-belt 844 390 challenge off -
+4-green-belt 844 390 standard off brown
+4-green-belt 844 390 challenge on -
+4-green-belt 844 390 standard on brown

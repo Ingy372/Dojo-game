@@ -1,0 +1,56 @@
+{
+ "tag": "brute-and-swarm-4-green-belt-own-challenge-rmon-667",
+ "diff": "challenge",
+ "named": true,
+ "scales": [
+  0,
+  0,
+  0
+ ],
+ "impacts": 18,
+ "impactScales": [
+  null,
+  0
+ ],
+ "shakeCalls": [],
+ "windup": [
+  {
+   "t": 19804,
+   "sec": 0.5113636363636364
+  },
+  {
+   "t": 20117,
+   "sec": 0.5113636363636364
+  },
+  {
+   "t": 21941,
+   "sec": 0.5113636363636364
+  },
+  {
+   "t": 26281,
+   "sec": 0.6818181818181819
+  }
+ ],
+ "warn": [
+  {
+   "t": 19811,
+   "ms": 511
+  },
+  {
+   "t": 20118,
+   "ms": 511
+  },
+  {
+   "t": 21941,
+   "ms": 511
+  },
+  {
+   "t": 26282,
+   "ms": 682
+  }
+ ],
+ "framesShaking": 0,
+ "frames": 565,
+ "maxOffsetPx": 0,
+ "errs": []
+}

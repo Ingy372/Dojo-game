@@ -1,0 +1,56 @@
+{
+ "tag": "brute-and-swarm-1-white-belt-new-own-standard-rmoff-844",
+ "diff": "standard",
+ "named": true,
+ "scales": [
+  0,
+  0,
+  0
+ ],
+ "impacts": 25,
+ "impactScales": [
+  null,
+  0
+ ],
+ "shakeCalls": [],
+ "windup": [
+  {
+   "t": 19878,
+   "sec": 0.6818181818181819
+  },
+  {
+   "t": 20225,
+   "sec": 0.6818181818181819
+  },
+  {
+   "t": 22349,
+   "sec": 0.6818181818181819
+  },
+  {
+   "t": 26505,
+   "sec": 0.9090909090909092
+  }
+ ],
+ "warn": [
+  {
+   "t": 19883,
+   "ms": 682
+  },
+  {
+   "t": 20226,
+   "ms": 682
+  },
+  {
+   "t": 22349,
+   "ms": 682
+  },
+  {
+   "t": 26505,
+   "ms": 909
+  }
+ ],
+ "framesShaking": 0,
+ "frames": 506,
+ "maxOffsetPx": 0,
+ "errs": []
+}

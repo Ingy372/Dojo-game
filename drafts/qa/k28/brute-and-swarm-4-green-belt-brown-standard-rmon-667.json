@@ -1,0 +1,56 @@
+{
+ "tag": "brute-and-swarm-4-green-belt-brown-standard-rmon-667",
+ "diff": "standard",
+ "named": true,
+ "scales": [
+  0,
+  0,
+  0
+ ],
+ "impacts": 17,
+ "impactScales": [
+  null,
+  0
+ ],
+ "shakeCalls": [],
+ "windup": [
+  {
+   "t": 20021,
+   "sec": 0.6818181818181819
+  },
+  {
+   "t": 20416,
+   "sec": 0.6818181818181819
+  },
+  {
+   "t": 22054,
+   "sec": 0.6818181818181819
+  },
+  {
+   "t": 22652,
+   "sec": 0.6818181818181819
+  }
+ ],
+ "warn": [
+  {
+   "t": 20027,
+   "ms": 682
+  },
+  {
+   "t": 20428,
+   "ms": 682
+  },
+  {
+   "t": 22055,
+   "ms": 682
+  },
+  {
+   "t": 22653,
+   "ms": 682
+  }
+ ],
+ "framesShaking": 0,
+ "frames": 551,
+ "maxOffsetPx": 0,
+ "errs": []
+}
