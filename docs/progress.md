@@ -697,7 +697,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## B-POLISH-2 — Trophy Case polish (2026-10-25)
 - Unlock pop now scales 1 → 1.06 → 1 (no snap to 0.9 after the sweep). Reduced motion: fade only.
 - Detail sheet description allows 3 lines; Basic Form 1 at 667 shows its full text ending '15% slower.'
-- Cubby labels keep 8 px side padding; 'Self-Defense #1' and '#3' no longer run edge to edge at 844.
+- Cubby labels keep 8 px side padding: a too-wide hyphenated label breaks after the hyphen, labels allow 3 lines at 12 px and the icon shrinks to fit, so "Learn this at the dojo" shows in full.
 - Removed unused COMBAT.rootedFormBonusTicks; tests read the Rooted bonus from content (golden unchanged).
 - Vitest b-polish-2.test.ts covers the pop keyframes, the line cap and the padding. Screenshots at 667, 844 and 932, Reduced motion on and off.
 

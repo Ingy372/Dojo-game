@@ -36,7 +36,7 @@ import {
   kataArrows,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
-import { KATA_INK, MIN_TAP, TROPHY_UI, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
+import { KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
@@ -687,21 +687,23 @@ export class HomeScene extends Phaser.Scene {
     const btn = button(this, { x, y, w: size, h: size, label: '', color: c.earned ? 0xa8703f : WOOD.paper, size: TYPE.label, selected: false, stroke: c.earned ? 0xffd166 : WOOD.grain, onTap: () => this.openCubby(c) }, this.ui);
     const v = btn.visual;
     const half = size / 2;
-    const iconS = Math.round(size * 0.42);
-    const iy = -half + 8 + iconS / 2;
+    const tw = cubbyTextW(size);
+    const label = c.earned ? (c.short ?? c.name) : TROPHY_WORDS.notYet;
+    const txt = this.add
+      .text(0, 0, label, { fontFamily: FONT, fontSize: `${c.earned ? (size >= 112 ? TYPE.body : TYPE.label) : TYPE.label}px`, color: c.earned ? '#fff6e6' : WOOD.ink, fontStyle: c.earned ? 'bold' : 'normal', align: 'center', wordWrap: { width: tw } })
+      .setResolution(crisp())
+      .setOrigin(0.5, 0)
+      .setLineSpacing(TROPHY_UI.cubbyLineGap)
+      .setMaxLines(TROPHY_UI.cubbyLines);
+    // B-POLISH-2: a hyphenated word too wide for the padded width breaks after its hyphen ("Self-" / "Defense #1").
+    if (txt.width > tw) txt.setText(label.replace(/-(?=\S)/g, '-\n'));
+    // The icon gives up room so up to 3 label lines fit in full (never cut "the dojo").
+    const iconS = cubbyIconSize(size, txt.height);
+    const iy = -half + TROPHY_UI.cubbyTop + iconS / 2;
+    txt.setY(iy + iconS / 2 + TROPHY_UI.cubbyGap);
     const icon = c.icon ? addIcon(this, c.icon, 0, iy, iconS) : null;
     if (icon) v.add(icon.setAlpha(c.earned ? 1 : 0.3));
     else v.add(this.add.circle(0, iy, iconS / 2, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.3));
-    const tw = cubbyTextW(size);
-    const ty = iy + iconS / 2 + 4;
-    const label = c.earned ? (c.short ?? c.name) : TROPHY_WORDS.notYet;
-    const txt = this.add
-      .text(0, ty, label, { fontFamily: FONT, fontSize: `${c.earned ? (size >= 112 ? TYPE.body : TYPE.label) : TYPE.label}px`, color: c.earned ? '#fff6e6' : WOOD.ink, fontStyle: c.earned ? 'bold' : 'normal', align: 'center', wordWrap: { width: tw } })
-      .setResolution(crisp())
-      .setOrigin(0.5, 0)
-      .setMaxLines(2);
-    // B-POLISH-2: a long word ("Self-Defense") can't wrap, so step the font down until it clears the padding.
-    for (let fs = parseInt(String(txt.style.fontSize), 10); txt.width > tw && fs > 10; ) txt.setFontSize(--fs);
     v.add(txt);
     if (c.earned) {
       // Sensei's seal: a small red stamp in the corner (placeholder, no text).
