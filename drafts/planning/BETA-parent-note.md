@@ -26,7 +26,9 @@ Thank you for helping us test **Dojo Ascent**! It's a game made for Action Zone 
 3. Note: progress saved in the browser won't move over to the app later.
 
 ## Setting up for your child
-Belt, stripes and sign-offs are entered by **you**, behind a grown-up question in Settings, so your child sees the right belt. [Short steps, once the belt screen is built (board item B-BELT).] In Settings you can also set a daily play-time limit.
+Belt, stripes and sign-offs are entered by **you**, behind a quick grown-up question in Settings (an addition sum with four choices), so your child sees the right belt. [TBD-BUILD: short steps, once the belt screen is built (board item B-BELT).]
+
+Behind the same grown-up question you can set a **daily play-time limit**: 15, 30, 45 or 60 minutes. It's off unless you turn it on. When time is up, your child finishes the room they're in, keeps everything they found, and the game rests until midnight.
 
 ## What we can see (and what we can't)
 - **What Apple or Google show us:**
@@ -35,10 +37,11 @@ Belt, stripes and sign-offs are entered by **you**, behind a grown-up question i
   - **crash counts**
   - any **feedback or screenshots you choose to send** **(D-B2)**
 - **Please keep your child's name and face out of screenshots and feedback.** **(D-B2)**
-- **The game collects nothing about your child.** There are no accounts, no ads, no purchases and no chat. Progress is saved **only on your phone**. We never see it.
+- **The game collects nothing about your child.** There are no accounts, no ads, no purchases and no chat. Progress is saved **only on your phone**. We never see it. If you turn on read-aloud, your phone's built-in voice feature reads the story text. Depending on your phone, it may use Apple or Google servers under their own privacy policies. The game itself sends nothing.
 - Because progress lives on the phone, deleting the app or getting a new phone starts the game fresh.
 
 ## Good to know
+- **Faith:** Action Zone teaches Yeshua's Ryu, and faith is part of real training, the same as kata. This first test version doesn't show any Bible verses, the Class Creed or life words yet. When they're added, they'll be word for word as on the dojo wall, with no quizzes or scores. [TBD-BUILD: belt verses, covenants and FAITH DOES life words at promotions; the Class Creed; the phone's voice reading verses aloud. Update this line when they're built.]
 - Each test version **stops working after 90 days**. We'll send a new one before then. (On the web link this doesn't happen.)
 - The app will update itself as we fix things.
 

@@ -907,3 +907,30 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
   - Fix the Blessing glow so the alpha you see breathes 0.25 to 0.15. Before, the tween ran over a 0.25 fill, so it showed about 0.04. The circle now has a full fill and the object's alpha carries the breath.
   - The first-floor summary card's Continue uses the shared button() at 44 tall.
   - Gear cards are left for P-MENU-b.
+
+## B-WRAP Capacitor 8 wrap (2026-10-25)
+
+- Manager calls (B-WRAP GO, 2026-10-25):
+  - These packages are approved and pinned to exact versions: @capacitor/core, cli, android and ios 8.5.3; @capacitor/app 8.1.2; @capacitor/screen-orientation 8.0.2. No other new dependencies.
+  - The app id is `com.placeholder.dojoascent`, a PLACEHOLDER. Jay picks the real one before any store upload, because it can't change after.
+  - The app name is "Dojo Ascent". No new art: the Capacitor template's default icon and splash stay until Jay's icon is ready.
+  - Generate ios/ only if it works without a Mac. It did (Capacitor 8 uses SwiftPM), but it can only be built on a Mac or the B-CI macOS runner.
+  - Pause in the background with the smallest code. One `setAway()` in main.ts sleeps the game loop and suspends the shared audio context (music and sound effects). It runs on `visibilitychange` and, in the app, on @capacitor/app's `appStateChange`.
+- Landscape: Android uses `sensorLandscape` in the manifest, iOS lists landscape only, and the app also calls ScreenOrientation.lock. Full screen: no status bar (Android windowFullscreen, iOS UIStatusBarHidden). The safe areas keep using the existing CSS `env(safe-area-inset-*)` on #game.
+- The Android debug APK is built on the box with JDK 21 and Android SDK 36 (tooling only, not in the repo). The emulator smoke test wasn't possible: the emulator hung at boot on the box.
+
+## node-22 (2026-10-25)
+- Manager call: the repo's Node version matches Capacitor 8, whose CLI needs Node 22+. `engines.node` is now `>=22` (package.json and the lockfile's root entry). `.nvmrc` already said 22. The repo has no CI workflows yet, so there was no CI Node version to bump; B-CI should use Node 22.
+
+## B-BELT grown-up belt entry (2026-10-25)
+- Manager call (BETA-DEC15 D2): until the DojoForge feed sends it, a grown-up types in the real belt and stripes behind the existing grown-up gate. The sum question leads to the play-time screen, which now has a "Belt & stripes" button. Nothing leaves the phone.
+- The entry is saved in the profile (`beltEntry`, in the same localStorage save), so it survives a restart. Saves without it load with `null`.
+- It never lowers anything. The saved entry only goes up (belt first, then stripes), and the game uses it only when it is above what the feed shows. Lower choices are greyed out on the screen.
+- A higher belt begins like a fresh promotion. Earlier belts count as passed (the existing legacy grant unlocks their items). The new belt has no sign-offs and 0 classes in rank, and Sensei's Seal is off. Stripes on lower belts from the feed are kept. Entered stripes use the words Respect and Great Effort, because a grown-up enters how many stripes there are, not which ones.
+- Scope: belt and stripes only. Entering sign-offs (also in D2) is a follow-up.
+
+- 2026-10-25 — Manager call on #246 (QA fixes): changing the belt chip resets the stripe pick to 0 (never below the saved floor on that belt) via sim `pickBelt`; Save now opens an "Are you sure?" card (shared `button()`) because saves only go up; origin/main merged normally. Promotion still plays at the next dojo visit. Celebrations reduced motion and "practiced" wording moved to bot-code/fix-celebrate-rm; square buttons go to P-MENU-c.
+
+## R-BAL-14b (2026-10-25)
+- Manager call: wire the #237 charm amounts. `lowHealthFocus` amounts are now the extra share (game multiplier = 1 + amount), so Kind Stone 0.25 = x1.25. Rally's Insight amount goes from 2 to 1 so it stays x2. Great Lamp 1 = full DASH recharge and Feather 1 = +1 COUNTER tick; the code already did both, so they only got tests. check-c7 accepts plain kid text for COUNTER-window charms whose amounts are whole ticks.
+- The live content/loot/gear.json has only the 3 white charms. Lotus and Crane already match #237. Jade stays at the #188 white amounts (R-BAL-9 DECIDE-1 is still open). The 9 tier charms are not in the live file yet, because live loot has no per-tier drops; they come in with the tier-2+ gear import.
