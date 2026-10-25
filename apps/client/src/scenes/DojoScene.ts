@@ -1209,41 +1209,6 @@ export class DojoScene extends Phaser.Scene {
     done.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, close);
   }
 
-  /** B-SAFE: a small "Erase progress" button in the play-time screen's corner, with a confirm card. */
-  private addWipeButton(box: Phaser.GameObjects.Container): void {
-    const t = SAFE_TEXT;
-    const { height } = view(this);
-    const label = this.add.text(12 + 8, height - 12 - 22, t.wipeButton, { fontFamily: FONT, fontSize: '14px', color: '#ff9f9f' }).setOrigin(0, 0.5).setResolution(crisp());
-    const bg = this.add.rectangle(12, height - 12 - 44, label.width + 16, 44, 0x2a1a20).setOrigin(0).setStrokeStyle(1, 0xff9f9f, 0.5).setInteractive();
-    box.add([bg, label]);
-    bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.confirmWipe());
-  }
-
-  private confirmWipe(): void {
-    const t = SAFE_TEXT;
-    const { width, height } = view(this);
-    const card = this.add.container(0, 0).setDepth(90);
-    card.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.92).setOrigin(0).setInteractive());
-    const w = Math.min(460, width - 40);
-    const title = this.add.text(width / 2, height * 0.16, t.wipeTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
-    const help = this.add.text(width / 2, title.y + title.height + 12, t.wipeHelp, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
-    card.add([title, help]);
-    const bw = 140;
-    const by = Math.min(height - 12 - 44, help.y + help.height + 22);
-    const keep = this.add.rectangle(width / 2 - bw - 8, by, bw, 44, 0x3aa57a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
-    const erase = this.add.rectangle(width / 2 + 8, by, bw, 44, 0x8a2a35).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
-    card.add([
-      keep, this.add.text(width / 2 - bw / 2 - 8, by + 22, t.wipeCancel, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp()),
-      erase, this.add.text(width / 2 + 8 + bw / 2, by + 22, t.wipeConfirm, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp()),
-    ]);
-    keep.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => card.destroy());
-    erase.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-      wipeAllData();
-      // A fresh start: reload so every scene and module reads the empty save.
-      window.location.reload();
-    });
-  }
-
   /** Asks how the player likes to move decorations: tap the spot, or an arrow pad. */
   /** `then` runs after a style is picked (the first Decorate visit's lesson, M7-P5). */
   private chooseMoveStyle(then?: () => void): void {
@@ -1322,6 +1287,41 @@ export class DojoScene extends Phaser.Scene {
   private onUi(x: number, y: number): boolean {
     if (this.choreButton.visible && Math.hypot(x - this.choreButton.x, y - this.choreButton.y) <= CHORE_RADIUS + 6) return true;
     return this.uiRects.some((r) => r.contains(x, y));
+  }
+
+  /** B-SAFE: a small "Erase progress" button in the play-time screen's corner, with a confirm card. */
+  private addWipeButton(box: Phaser.GameObjects.Container): void {
+    const t = SAFE_TEXT;
+    const { height } = view(this);
+    const label = this.add.text(12 + 8, height - 12 - 22, t.wipeButton, { fontFamily: FONT, fontSize: '14px', color: '#ff9f9f' }).setOrigin(0, 0.5).setResolution(crisp());
+    const bg = this.add.rectangle(12, height - 12 - 44, label.width + 16, 44, 0x2a1a20).setOrigin(0).setStrokeStyle(1, 0xff9f9f, 0.5).setInteractive();
+    box.add([bg, label]);
+    bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.confirmWipe());
+  }
+
+  private confirmWipe(): void {
+    const t = SAFE_TEXT;
+    const { width, height } = view(this);
+    const card = this.add.container(0, 0).setDepth(90);
+    card.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.92).setOrigin(0).setInteractive());
+    const w = Math.min(460, width - 40);
+    const title = this.add.text(width / 2, height * 0.16, t.wipeTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
+    const help = this.add.text(width / 2, title.y + title.height + 12, t.wipeHelp, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
+    card.add([title, help]);
+    const bw = 140;
+    const by = Math.min(height - 12 - 44, help.y + help.height + 22);
+    const keep = this.add.rectangle(width / 2 - bw - 8, by, bw, 44, 0x3aa57a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
+    const erase = this.add.rectangle(width / 2 + 8, by, bw, 44, 0x8a2a35).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
+    card.add([
+      keep, this.add.text(width / 2 - bw / 2 - 8, by + 22, t.wipeCancel, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp()),
+      erase, this.add.text(width / 2 + 8 + bw / 2, by + 22, t.wipeConfirm, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp()),
+    ]);
+    keep.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => card.destroy());
+    erase.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+      wipeAllData();
+      // A fresh start: reload so every scene and module reads the empty save.
+      window.location.reload();
+    });
   }
 
   // ---------------------------------------------------------------- hidden testing screen
