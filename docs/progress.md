@@ -675,3 +675,13 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - B-POLISH-1: empty-bag hint hidden behind an open worn-item sheet; Last run says "N items in your Gear" when no item row fits. Vitest for both; screenshots at 667x375, 844x390, 932x430 with Reduced motion on and off.
 - P-MENU2-a: warm-wood mood frame (code-drawn) on the Training Board panel; Abilities gets a Trophy Case | Fighting Style switch (2 x button(), 44 tall, at most 120 wide); Fighting Style is a placeholder card; BOARD cubby/slot/tile/ribbon tokens; Vitest. Screenshots at 667x375, 844x390, 932x430 with Reduced motion on and off, overlap/clipping/tap-size checked.
 - 2026-10-25 P-MENU2-b: Trophy Case (ribbon, shelves, cubbies, page dots, detail sheet). Wording in content/abilities/trophy-case.json; test p-menu2-b-trophy-case.
+
+## P-MENU2-c — Trophy Case unlock moment (2026-10-25)
+
+**Done**
+- A newly earned cubby plays a paper-to-wood sweep, a small pop and the Seal bell, once per unlock (saved in `trophiesSeen`). Reduced motion: a plain fade plus the bell.
+- Old saves load fine and never replay past unlocks. Vitest covers once-only, paging, save/load and old saves.
+- Screenshots at 667, 844 and 932 wide, Reduced motion on and off.
+
+**Next**
+- P-MENU2-d (loadout). Polish later: a few px of side padding on cubby labels at 844 ('Self-Defense #1' and '#3' run edge to edge).
