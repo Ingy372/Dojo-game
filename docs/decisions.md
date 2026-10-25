@@ -850,3 +850,21 @@ What is in the code:
 ## K30: HOME label clear of the boss (2026-10-25, approved by the Manager)
 - Found in the K27 retest: in the boss room the HOME door label sat on the boss's head and its health bar.
 - Simplest fix: each frame, if a door label overlaps a live boss's head, health bar or name, it slides sideways to the far side of its door from the boss. Otherwise it stays centred on its door. Same place as the existing keep-under-the-top-bar rule.
+
+## K31: boss name and small health bar as one pair (2026-10-25, approved by the Manager)
+
+- One shared rule, `bossTagLayout` (packages/sim/src/bossTag.ts): the name, a fixed 4 px gap, then the small bar, stacked above the boss's head. If the stack would rise into the top HUD strip (above HUD_BOTTOM + 4, under the player's bars) (boss near the top of the screen), both move below the boss's feet together. The pair is always clamped on screen and the gap never changes.
+- The name now follows the boss instead of sitting fixed under the big top bar, so the pair can't be pulled apart. The big boss bar stays where it is.
+- HOME and other door labels: the name slides sideways off a label it would overlap. The combo counter is a keep-clear box too: if the pair would touch it, the same rule runs with the combo's bottom as the floor. The boss '!' cue (`windupCueSpot`) treats the pair's box as a keep-clear area, like door labels.
+
+## K31 follow-up: name follows the boss (2026-10-25, Manager call)
+
+- Manager call: OK for the boss's name to follow the boss (as part of the name + small bar pair) instead of sitting fixed under the big top bar.
+- After merging K30: K30's `keepLabelOffBoss` also keeps door labels off the pair's box (`bossTagWorld`, including when the pair sits below the boss), and K31's `placeBossTag` still slides the name off any door label. The label moves first in the frame, then the name, so they don't fight.
+
+## K31 QA fixes (2026-10-25)
+
+- `bossTagLayout` now takes one input object (boss x/head/feet, the pair's half width, the screen band, and boxes to avoid) and returns ONE x for the pair. The name and the bar both use it, so they can't split. The pair is clamped on screen as a unit at the left and right edges.
+- Keep-clear boxes: door labels (HOME), COMBO and its "+N% power" line. The pair first slides sideways off a box (away from the box's centre, towards the boss); if that can't clear it, it drops below the box. This applies to the above spot and the below-the-feet spot.
+- Unit tests cover the edge clamp, the HOME slide, and the below spot with COMBO + power line.
+- The boss '!' cue refreshes the pair's box for the current frame before choosing its spot (no extra padding). Root cause of the last 667 miss: while the pair slid sideways off COMBO as it faded in, the pair covered both side spots, so the cue fell back to a fixed spot on top of it. Now, when the side spots are blocked, the cue goes just past the pair's edge, or under it.
