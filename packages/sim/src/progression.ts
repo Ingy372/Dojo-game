@@ -5,7 +5,7 @@ import type { AbilityContent } from './abilities';
 import { BLESSING, PROGRESSION, TICKS_PER_SECOND, VIRTUE_RANK_BONUS } from './config';
 import type { Effect } from './effects';
 import type { FeedBelt } from './feed';
-import { playerStats, type Profile } from './profile';
+import { playerStats, type Loadout, type Profile } from './profile';
 import type { RunSummary } from './run';
 import { trainingStats, unlockedForms, virtueTitle, type TrainingState, type VirtueInfo } from './training';
 import type { PlayerSetup, VirtueSetup } from './world';
@@ -129,7 +129,19 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
     power: Math.round((gear.power + (level - 1) * PROGRESSION.powerPerLevel + trained.power) * 10) / 10,
     guard: gear.guard + trained.guard,
     effects: [...earned, ...gear.effects],
-    forms: unlockedForms(training, abilities),
-    virtue: virtueSetup(training),
+    ...loadoutAbilities(profile.loadout, training, abilities),
   };
+}
+
+/**
+ * P-MENU2-d: the Forms and Virtue for a fight, with the student's loadout applied. No loadout
+ * (or a pick not earned) gives exactly today's setup. A chosen Form starts the fight; the
+ * others follow in their usual order, so switching Forms still works.
+ */
+export function loadoutAbilities(loadout: Loadout | null, training: TrainingState, abilities: AbilityContent): Pick<PlayerSetup, 'forms' | 'virtue'> {
+  let forms = unlockedForms(training, abilities);
+  const at = loadout?.form ? forms.findIndex((f) => f.id === loadout.form) : -1;
+  if (at > 0) forms = [...forms.slice(at), ...forms.slice(0, at)];
+  const picked = loadout?.virtue ? training.virtues.find((v) => v.def.id === loadout.virtue) : undefined;
+  return { forms, virtue: picked ? virtueSetupFor(picked) : virtueSetup(training) };
 }

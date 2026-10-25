@@ -685,3 +685,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 **Next**
 - P-MENU2-d (loadout). Polish later: a few px of side padding on cubby labels at 844 ('Self-Defense #1' and '#3' run edge to edge).
+## P-MENU2-d — Fighting Style data (2026-10-25)
+
+**Done**
+- Profile `loadout` (starting Form + Virtue), read safely from old saves. The fight setup (`characterSetup`) uses it; with no loadout it gives exactly today's setup.
+- Golden test of today's default play (captured from main before the change), plus tests for a chosen Stance, a chosen Virtue, old saves and unearned picks.
+
+**Next**
+- P-MENU2-e: the Fighting Style screen, where students make these picks.
