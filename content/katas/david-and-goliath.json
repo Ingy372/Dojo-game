@@ -2,7 +2,7 @@
   "id": "david-and-goliath",
   "name": "David and Goliath",
   "requirement": "green-kata",
-  "form": null,
+  "stance": null,
   "from": "drafts/content/katas/david-and-goliath.json (S3-K1). Only names, step counts and directions are shown in the game (D1).",
   "steps": [
     {

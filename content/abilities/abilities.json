@@ -1,6 +1,6 @@
 {
-  "notes": "Game abilities that real sign-offs unlock (framework section 5). The real technique names come from the school's curriculum; these are the generic powers they map to, in belt order. The 1st belt's kata unlocks forms[1], the 2nd belt's forms[2], and so on; each belt's kick combo unlocks the next strike; each self-defense technique unlocks the next seal (5 per belt). forms[0] is the Beginner's Stance everyone starts with. Belts beyond the end of a list still unlock their ability, with its power arriving in a later update. Effect types are listed in packages/sim/src/effects.ts. Virtues: each stripe word maps to one Virtue. The reason behind each choice is in docs/decisions.md (milestone 4).",
-  "forms": [
+  "notes": "Game abilities that real sign-offs unlock (framework section 5). The real technique names come from the school's curriculum; these are the generic powers they map to, in belt order. The 1st belt's kata unlocks stances[1], the 2nd belt's stances[2], and so on; each belt's kick combo unlocks the next strike; each self-defense technique unlocks the next seal (5 per belt). stances[0] is the Beginner's Stance everyone starts with. Belts beyond the end of a list still unlock their ability, with its power arriving in a later update. Effect types are listed in packages/sim/src/effects.ts. Virtues: each stripe word maps to one Virtue. The reason behind each choice is in docs/decisions.md (milestone 4).",
+  "stances": [
     {
       "id": "beginners-stance",
       "name": "Beginner's Stance",
@@ -12,8 +12,8 @@
       "powerScale": 0
     },
     {
-      "id": "rooted-form",
-      "name": "Rooted Form",
+      "id": "rooted-stance",
+      "name": "Rooted Stance",
       "text": "Feet planted: 2 extra ticks to Perfect Counter and less damage taken, but 15% slower.",
       "counterWindow": 2,
       "attackSpeed": 0,
@@ -22,8 +22,8 @@
       "powerScale": 0
     },
     {
-      "id": "flowing-form",
-      "name": "Flowing Form",
+      "id": "flowing-stance",
+      "name": "Flowing Stance",
       "text": "Light on your feet: move 15% faster and attack 20% faster.",
       "counterWindow": 0,
       "attackSpeed": 0.2,

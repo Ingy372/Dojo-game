@@ -4,8 +4,8 @@ import { buildTraining, characterSetup, counterWindowTicks, createRunWorld, curr
 import { testContent } from './load-content';
 import abilities from '../../../content/abilities/abilities.json';
 
-/** The Rooted Form's Perfect Counter bonus, read from content (its counterWindow). */
-const ROOTED_BONUS = abilities.forms.find((f) => f.id === 'rooted-form')!.counterWindow;
+/** The Rooted Stance's Perfect Counter bonus, read from content (its counterWindow). */
+const ROOTED_BONUS = abilities.stances.find((f) => f.id === 'rooted-stance')!.counterWindow;
 import { SKILLS, playRun } from './balance/bot';
 import white from '../../../fixtures/1-white-belt-new.json';
 import white3 from '../../../fixtures/2-white-belt-3-signoffs.json';
@@ -22,19 +22,19 @@ function training(data: unknown) {
 }
 
 /**
- * Rooted Form: the Perfect Counter window on each difficulty, and a seeded room where the
- * player stands in Rooted Form (with the Rooted bonus, ROOTED_BONUS) pressing
+ * Rooted Stance: the Perfect Counter window on each difficulty, and a seeded room where the
+ * player stands in Rooted Stance (with the Rooted bonus, ROOTED_BONUS) pressing
  * Counter. Any change to the Rooted numbers changes this output.
  */
 function rootedCase(): unknown {
   const setup = characterSetup(newProfile(), training(yellow), content.abilities);
-  const rootedAt = setup.forms!.findIndex((f) => f.id === 'rooted-form');
+  const rootedAt = setup.stances!.findIndex((f) => f.id === 'rooted-stance');
   const out: Record<string, unknown> = { rootedAt };
   for (const d of ['guided', 'standard', 'challenge'] as Difficulty[]) {
     const run = startRun(content, { seed: 2001, dryRuns: 0, difficulty: d });
     const world = createRunWorld(content, run, setup, setup.effects);
     const p = world.players.p1;
-    p.form = rootedAt;
+    p.stance = rootedAt;
     p.counterBonusTicks = ROOTED_BONUS;
     const room = currentRoom(content, run);
     let perfects = 0;

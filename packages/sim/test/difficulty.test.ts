@@ -59,7 +59,7 @@ describe('Kind Guided offer after losses on one floor (M7-P1)', () => {
     for (const w of ['lose', 'lost', 'loss', 'fail']) expect(all).not.toContain(w);
     expect(rules.choices.find((c) => c.id === 'standard')?.text).toBe('The usual pace.');
     // C9: menu buttons in normal case; only fight-button names are in caps.
-    const caps = (s: string) => (s.match(/\b[A-Z]{2,}\b/g) ?? []).filter((w) => !['COUNTER', 'STRIKE', 'DASH', 'FORM', 'VIRTUE'].includes(w));
+    const caps = (s: string) => (s.match(/\b[A-Z]{2,}\b/g) ?? []).filter((w) => !['COUNTER', 'STRIKE', 'DASH', 'STANCE', 'VIRTUE'].includes(w));
     for (const s of [rules.offer.yes, rules.offer.no, rules.offer.title, rules.offer.line, rules.homeLine, ...rules.choices.map((c) => c.text)]) expect(caps(s)).toEqual([]);
   });
 

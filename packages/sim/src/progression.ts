@@ -1,5 +1,5 @@
 // Levels and experience (core-design sections 10 and 13), and the character that real
-// training plus play produces: stats, Forms, Strike upgrades, Technique Seals and a Virtue.
+// training plus play produces: stats, Stances, Strike upgrades, Technique Seals and a Virtue.
 
 import type { AbilityContent } from './abilities';
 import { BLESSING, PROGRESSION, TICKS_PER_SECOND, VIRTUE_RANK_BONUS } from './config';
@@ -7,7 +7,7 @@ import type { Effect } from './effects';
 import type { FeedBelt } from './feed';
 import { playerStats, type Loadout, type Profile } from './profile';
 import type { RunSummary } from './run';
-import { trainingStats, unlockedForms, virtueTitle, type TrainingState, type VirtueInfo } from './training';
+import { trainingStats, unlockedStances, virtueTitle, type TrainingState, type VirtueInfo } from './training';
 import type { PlayerSetup, VirtueSetup } from './world';
 
 /** Total experience for one belt tier's levels, from the school's typical time in rank. */
@@ -134,14 +134,14 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
 }
 
 /**
- * P-MENU2-d: the Forms and Virtue for a fight, with the student's loadout applied. No loadout
- * (or a pick not earned) gives exactly today's setup. A chosen Form starts the fight; the
- * others follow in their usual order, so switching Forms still works.
+ * P-MENU2-d: the Stances and Virtue for a fight, with the student's loadout applied. No loadout
+ * (or a pick not earned) gives exactly today's setup. A chosen Stance starts the fight; the
+ * others follow in their usual order, so switching Stances still works.
  */
-export function loadoutAbilities(loadout: Loadout | null, training: TrainingState, abilities: AbilityContent): Pick<PlayerSetup, 'forms' | 'virtue'> {
-  let forms = unlockedForms(training, abilities);
-  const at = loadout?.form ? forms.findIndex((f) => f.id === loadout.form) : -1;
-  if (at > 0) forms = [...forms.slice(at), ...forms.slice(0, at)];
+export function loadoutAbilities(loadout: Loadout | null, training: TrainingState, abilities: AbilityContent): Pick<PlayerSetup, 'stances' | 'virtue'> {
+  let stances = unlockedStances(training, abilities);
+  const at = loadout?.stance ? stances.findIndex((f) => f.id === loadout.stance) : -1;
+  if (at > 0) stances = [...stances.slice(at), ...stances.slice(0, at)];
   const picked = loadout?.virtue ? training.virtues.find((v) => v.def.id === loadout.virtue) : undefined;
-  return { forms, virtue: picked ? virtueSetupFor(picked) : virtueSetup(training) };
+  return { stances, virtue: picked ? virtueSetupFor(picked) : virtueSetup(training) };
 }

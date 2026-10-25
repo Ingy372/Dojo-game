@@ -15,8 +15,8 @@ export interface KataDef {
   name: string;
   /** The curriculum requirement this kata is (e.g. "white-kata"). */
   requirement: string;
-  /** The Form it unlocks, if one is designed yet. */
-  form: string | null;
+  /** The Stance it unlocks, if one is designed yet. */
+  stance: string | null;
   steps: KataStep[];
 }
 
@@ -27,14 +27,14 @@ export function parseKata(raw: unknown): KataDef {
   const d = raw as Partial<KataDef>;
   const where = `kata ${String(d?.id)}`;
   if (typeof d?.id !== 'string' || typeof d.name !== 'string' || typeof d.requirement !== 'string') throw new Error(`${where}: needs id, name and requirement`);
-  if (d.form !== null && typeof d.form !== 'string') throw new Error(`${where}: form must be an id or null`);
+  if (d.stance !== null && typeof d.stance !== 'string') throw new Error(`${where}: stance must be an id or null`);
   if (!Array.isArray(d.steps) || d.steps.length === 0) throw new Error(`${where}: needs steps`);
   const steps = d.steps.map((s, i) => {
     if (s.n !== i + 1) throw new Error(`${where}: step ${i + 1} is numbered ${s.n}`);
     if (!Array.isArray(s.facing) || s.facing.some((f) => !FACINGS.includes(f))) throw new Error(`${where}: step ${s.n} has a bad facing`);
     return { n: s.n, facing: [...s.facing] };
   });
-  return { id: d.id, name: d.name, requirement: d.requirement, form: d.form ?? null, steps };
+  return { id: d.id, name: d.name, requirement: d.requirement, stance: d.stance ?? null, steps };
 }
 
 const ARROW: Record<Facing, string> = { F: '↑', B: '↓', L: '←', R: '→' };
