@@ -1,0 +1,237 @@
+{
+  "notes": "DRAFT for C5. School content pack (schoolId action-zone). Verse, covenant and creed text are copied exactly from docs/faith-and-creed.md and never reworded; Romans 3:23 and 5:8 use the KJV fixes from section 6. Learned through play, never Gate locks or quizzes. Where it shows (from faith-and-creed.md section 6; L5 hasn't proposed placements yet): the promotion screen after the Gate opens (framing line, then the verse card, then covenant and life word, then Sensei), the Belt Gate screen (the next verse shown softly, no lock), and the Creed Wall collection in the Home Dojo (one FAITH DOES letter lights per promotion). framing and sensei are one short line each; Sensei reflects with a question, never lectures. The light lines tie to the Tower's shattered light: each promotion returns one fragment.",
+  "schoolId": "action-zone",
+  "schoolName": "Action Zone CMA",
+  "style": "Yeshua's Ryu",
+  "creed": {
+    "name": "The Class Creed",
+    "signedBy": "Shihan Lowery",
+    "motto": "More Than a Conqueror",
+    "mottoSource": "Romans 8:37",
+    "text": "I intend to live by the code of the black belt.\nTo seek God's truth. To put God first.\nTo bring honor to the family.\nTo show respect to my fellow man.\nTo encourage and stand firm with him,\ndoing all that I can to make the world a better place to live.\n\nI AM MORE THAN A CONQUEROR THROUGH JESUS CHRIST!!!",
+    "screens": {
+      "intro": "Our class says this creed together.",
+      "afterCreed": "Which line feels like yours today?"
+    }
+  },
+  "lifeWordsAcrostic": "FAITH DOES",
+  "creedWall": {
+    "name": "Creed Wall",
+    "intro": "Each new belt lights one letter.",
+    "complete": "FAITH DOES. The light shines all the way up!",
+    "letterLit": "A new letter shines on your Creed Wall!"
+  },
+  "promotions": [
+    {
+      "id": "white-to-yellow",
+      "fromBelt": "white",
+      "toBelt": "yellow",
+      "verse": {
+        "reference": "John 3:16",
+        "text": "For God so loved the world that he gave his only begotten Son that whosoever believes in him shall not perish but have everlasting life.",
+        "translation": "KJV (as on the dojo wall)"
+      },
+      "covenant": {
+        "name": "Unconditional Love",
+        "text": "No matter what you say or do to me, I will always love and pray for you."
+      },
+      "lifeWord": {
+        "letter": "F",
+        "word": "Forgiveness"
+      },
+      "screens": {
+        "framing": "God's love is the brightest light there is.",
+        "sensei": "Who could you show love to this week?"
+      }
+    },
+    {
+      "id": "yellow-to-orange",
+      "fromBelt": "yellow",
+      "toBelt": "orange",
+      "verse": {
+        "reference": "Romans 3:10",
+        "text": "There is no one righteous, no not one.",
+        "translation": "KJV (as on the dojo wall)"
+      },
+      "covenant": {
+        "name": "Availability",
+        "text": "My time, my money, and anything I have, I will make available to you."
+      },
+      "lifeWord": {
+        "letter": "A",
+        "word": "Acceptance"
+      },
+      "screens": {
+        "framing": "Nobody climbs the Tower perfectly. We all need the light.",
+        "sensei": "How does it feel to know you're not alone?"
+      }
+    },
+    {
+      "id": "orange-to-green",
+      "fromBelt": "orange",
+      "toBelt": "green",
+      "verse": {
+        "reference": "Romans 3:23",
+        "text": "For all have sinned and come short of the glory of God.",
+        "translation": "KJV (as on the dojo wall)"
+      },
+      "covenant": {
+        "name": "Prayer",
+        "text": "I will always make time to pray for you."
+      },
+      "lifeWord": {
+        "letter": "I",
+        "word": "Integrity"
+      },
+      "screens": {
+        "framing": "Everyone stumbles in the dark sometimes.",
+        "sensei": "Who would you like to pray for?"
+      }
+    },
+    {
+      "id": "green-to-blue",
+      "fromBelt": "green",
+      "toBelt": "blue",
+      "verse": {
+        "reference": "Romans 6:23",
+        "text": "For the wages of sin is death but the gift of God is eternal life through Jesus Christ our Lord.",
+        "translation": "KJV (as on the dojo wall)"
+      },
+      "covenant": {
+        "name": "Openness",
+        "text": "I will always share my thoughts and feelings with you."
+      },
+      "lifeWord": {
+        "letter": "T",
+        "word": "Trust"
+      },
+      "screens": {
+        "framing": "A gift is something you don't have to earn.",
+        "sensei": "What is the best gift you have ever been given?"
+      }
+    },
+    {
+      "id": "blue-to-red",
+      "fromBelt": "blue",
+      "toBelt": "red",
+      "verse": {
+        "reference": "Romans 5:8",
+        "text": "For God commendeth his love toward us in that while we were yet sinners Christ died for us.",
+        "translation": "KJV (as on the dojo wall)"
+      },
+      "covenant": {
+        "name": "Honest",
+        "text": "I will always be honest with you."
+      },
+      "lifeWord": {
+        "letter": "H",
+        "word": "Honor"
+      },
+      "screens": {
+        "framing": "The light came to us, even in the dark.",
+        "sensei": "When is it brave to tell the truth?"
+      }
+    },
+    {
+      "id": "red-to-red-black",
+      "fromBelt": "red",
+      "toBelt": "red-black",
+      "verse": {
+        "reference": "1 John 1:9",
+        "text": "If we confess our sins he is faithful and just to forgive us of our sins and purify us from all unrighteousness.",
+        "translation": "KJV (as on the dojo wall)"
+      },
+      "covenant": {
+        "name": "Sensitivity",
+        "text": "I will always be sensitive to your needs, thoughts, and feelings."
+      },
+      "lifeWord": {
+        "letter": "D",
+        "word": "Discipline"
+      },
+      "screens": {
+        "framing": "Saying sorry lets the light back in.",
+        "sensei": "How does it feel to start fresh?"
+      }
+    },
+    {
+      "id": "red-black-to-brown",
+      "fromBelt": "red-black",
+      "toBelt": "brown",
+      "verse": {
+        "reference": "John 3:17",
+        "text": "For God did not send his Son into the world to condemn the world but to save the world through him.",
+        "translation": "KJV (as on the dojo wall)"
+      },
+      "covenant": {
+        "name": "Confidentiality",
+        "text": "I will keep whatever is shared within the confines of the group to provide an atmosphere of openness."
+      },
+      "lifeWord": {
+        "letter": "O",
+        "word": "Obedience"
+      },
+      "screens": {
+        "framing": "The light came to rescue, not to scare.",
+        "sensei": "Who could you help rescue from a hard day?"
+      }
+    },
+    {
+      "id": "brown-to-brown-black",
+      "fromBelt": "brown",
+      "toBelt": "brown-black",
+      "verse": {
+        "reference": "John 3:3",
+        "text": "I tell you the truth, unless a man is born again he may not enter the kingdom of God.",
+        "translation": "KJV (as on the dojo wall)"
+      },
+      "covenant": {
+        "name": "Accountability",
+        "text": "I am accountable to you to become what God has designed me to be in his living creation."
+      },
+      "lifeWord": {
+        "letter": "E",
+        "word": "Empathy"
+      },
+      "screens": {
+        "framing": "Every new belt is a new beginning.",
+        "sensei": "What has changed in you since white belt?"
+      }
+    },
+    {
+      "id": "brown-black-to-black",
+      "fromBelt": "brown-black",
+      "toBelt": "black",
+      "verse": {
+        "reference": "John 3:5–8",
+        "text": "I tell you the truth, unless a man is born of water and the Spirit, he cannot enter the kingdom of God. Flesh gives birth to flesh, but the Spirit gives birth to spirit. You should not be surprised at my saying, \"You must be born again.\" The wind blows wherever it pleases. You hear its sound, but you cannot tell where it comes from or where it is going. So it is with everyone born of the Spirit.",
+        "translation": "KJV (as on the dojo wall)"
+      },
+      "covenant": null,
+      "lifeWord": {
+        "letter": "S",
+        "word": "Servanthood"
+      },
+      "screens": {
+        "framing": "You can't see the wind, but you can see what it moves.",
+        "sensei": "Who could you serve today?"
+      }
+    },
+    {
+      "id": "black-belt",
+      "fromBelt": "black",
+      "toBelt": null,
+      "verse": {
+        "reference": "John 6:40",
+        "text": "For my Father's will is that everyone that looks to the Son and believes in him shall have eternal life, and I shall raise him up at that last day.",
+        "translation": "KJV (as on the dojo wall)"
+      },
+      "covenant": null,
+      "lifeWord": null,
+      "screens": {
+        "framing": "The light has carried you all the way to the top.",
+        "sensei": "Who will you help climb next?"
+      }
+    }
+  ]
+}

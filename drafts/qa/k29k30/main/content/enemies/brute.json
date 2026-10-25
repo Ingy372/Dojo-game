@@ -1,0 +1,26 @@
+{
+  "id": "brute",
+  "name": "Brute",
+  "notes": "Big and slow. Gets winded after chasing for 4 seconds without swinging: it stops for 2.5 seconds and takes 50% more damage. Distances in tiles, times in ticks (20 per second).",
+  "maxHealth": 126,
+  "power": 17,
+  "guard": 25,
+  "radius": 0.48,
+  "moveSpeedTilesPerSecond": 1.2,
+  "sightRange": 10,
+  "attack": {
+    "strength": 1,
+    "startRange": 1.3,
+    "reach": 0.9,
+    "areaRadius": 0.95,
+    "telegraphTicks": 16,
+    "recoverTicks": 18
+  },
+  "color": "#7d3f2f",
+  "winded": {
+    "afterSeconds": 4,
+    "seconds": 2.5,
+    "damageBonus": 0.5
+  },
+  "parSeconds": 8
+}

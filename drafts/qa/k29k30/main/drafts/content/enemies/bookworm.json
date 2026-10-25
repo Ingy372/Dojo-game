@@ -1,0 +1,33 @@
+{
+  "id": "bookworm",
+  "name": "Bookworm",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Tunnels under the floor and pops up near you. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#9bbf5a",
+  "maxHealth": 279,
+  "power": 45,
+  "guard": 15,
+  "radius": 0.38,
+  "moveSpeedTilesPerSecond": 2.0,
+  "sightRange": 10,
+  "attack": {
+    "name": "pop up",
+    "strength": 1,
+    "startRange": 1.0,
+    "reach": 0.7,
+    "areaRadius": 0.8,
+    "telegraphTicks": 20,
+    "recoverTicks": 20
+  },
+  "parSeconds": 3.5,
+  "tier": "brown",
+  "band": "F1-2",
+  "tell": "a dirt bump moves toward you, then red circle",
+  "senseiLine": "Watch the bump. Then step aside.",
+  "description": "Tunnels under the floor and pops up near you.",
+  "bestiary": {
+    "tip": "Step off the bump, then calm it when it pops up.",
+    "lore": {
+      "brown": "A curious worm who loved reading. Calm it, and it curls up with a good book."
+    }
+  }
+}

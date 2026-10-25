@@ -1,0 +1,19 @@
+{
+  "id": "tutorial-vault",
+  "name": "First Treasure",
+  "kind": "treasure",
+  "tutorial": true,
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest",
+  "notes": "Tutorial floor room 2 (M7-P2): one chest, always Uncommon or better.",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#...........#",
+    "#.....C.....#",
+    "#...........#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ]
+}

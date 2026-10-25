@@ -1,0 +1,25 @@
+{
+  "_note": "Kid-readable move names (wording is a guess; Jay/Learning Designer may change).",
+  "moves": {
+    "pivot": "Pivot",
+    "turn.180": "Half turn",
+    "turn": "Turn",
+    "turn.big-special": "Big special turn",
+    "stance.cat": "Cat stance",
+    "stance.front": "Front stance",
+    "stance.attention": "Attention",
+    "block.downward": "Low block",
+    "block.reverse-inside": "Inside block",
+    "block.overhead": "High block",
+    "block.double-knife-hand": "Double knife-hand block",
+    "punch.straight": "Straight punch",
+    "punch.reverse": "Reverse punch",
+    "strike.backfist": "Backfist",
+    "kick.reverse": "Reverse kick",
+    "kick.straight": "Straight kick",
+    "kick.front": "Front kick",
+    "chamber": "Chamber",
+    "catch": "Catch",
+    "break.double-choke": "Choke break"
+  }
+}

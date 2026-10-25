@@ -1,0 +1,111 @@
+{
+  "id": "echo-mask",
+  "name": "The Echo Mask",
+  "notes": "DRAFT for C13-6 (bestiary-plan.md; lore from drafts/content/lore/guardians-and-relics.json, unchanged). Red-Black Guardian on floor 5. Same shape as content/enemies/floor-keeper.json, plus phases (66% and 33%, Manager's call). Stats are TODO for the Researcher. Faith tie-ins stay out until Jay decides; see faithOverlayKey.",
+  "color": "#b05a8a",
+  "boss": true,
+  "guardian": true,
+  "tier": "red-black",
+  "band": "F5",
+  "form": "Penon 3",
+  "maxHealth": 2376,
+  "power": 50,
+  "guard": 30,
+  "radius": 0.85,
+  "moveSpeedTilesPerSecond": 1.6,
+  "sightRange": 20,
+  "attacks": [
+    {
+      "name": "mask swipe",
+      "strength": 1.0,
+      "startRange": 1.9,
+      "reach": 1.1,
+      "areaRadius": 1.3,
+      "telegraphTicks": 18,
+      "recoverTicks": 22
+    },
+    {
+      "name": "echo copy",
+      "strength": 0.8,
+      "startRange": 6.0,
+      "reach": 5.0,
+      "areaRadius": 0.9,
+      "telegraphTicks": 20,
+      "recoverTicks": 26,
+      "note": "Repeats your last move as a soft red circle where you stood."
+    },
+    {
+      "name": "echo lane",
+      "strength": 1.2,
+      "startRange": 6.0,
+      "reach": 6.0,
+      "areaRadius": 0.6,
+      "telegraphTicks": 22,
+      "recoverTicks": 30,
+      "dashOnly": true,
+      "shape": "lane",
+      "shapeCue": "lane",
+      "tell": "purple-and-white stripes + '!!' + whoosh",
+      "counterable": false,
+      "answer": "dash",
+      "overlapOnGuided": false,
+      "noOverlapWithRedCircle": false,
+      "overlapFromFloor": 3,
+      "minOffsetFromRedCircleTicks": 10
+    }
+  ],
+  "signature": "Echo Copy",
+  "phases": [
+    {
+      "id": "swipe",
+      "atHealthFraction": 1.0,
+      "attacks": [
+        "mask swipe"
+      ],
+      "tell": "The mask tilts back; red circle.",
+      "counterplay": "COUNTER the swipe.",
+      "senseiLine": "Watch the mask, not the echo."
+    },
+    {
+      "id": "copy",
+      "atHealthFraction": 0.66,
+      "attacks": [
+        "mask swipe",
+        "echo copy"
+      ],
+      "tell": "Your own move echoes back where you stood.",
+      "counterplay": "Keep moving; don't stand still.",
+      "senseiLine": "It copies you. Choose your own way."
+    },
+    {
+      "id": "lane",
+      "atHealthFraction": 0.33,
+      "attacks": [
+        "echo copy",
+        "echo lane"
+      ],
+      "tell": "A striped lane and double marks.",
+      "counterplay": "DASH out of the lane.",
+      "senseiLine": "Your choice, not the echo's. DASH."
+    }
+  ],
+  "parSeconds": 25,
+  "lines": {
+    "intro": "Your own steps echo back. Who is copying whom?",
+    "freed": "I only copied what I heard. I would like to hear kind words now.",
+    "senseiAfter": "You chose your own words, not the echo's."
+  },
+  "description": "The Echo Mask swipes, copies your last move back at you, then sends a striped echo down a lane.",
+  "bestiary": {
+    "tip": "It copies you. Keep moving and choose your path.",
+    "lore": {
+      "red-black": "A floating mask that copies your moves. Under the mask, it is lonely. Free it, and its light comes home."
+    }
+  },
+  "faithOverlayKey": "echo-mask",
+  "summon": {
+    "enemy": "masklet",
+    "count": 2,
+    "atHealthFraction": 0.66
+  }
+}

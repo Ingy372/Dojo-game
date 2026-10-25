@@ -1,0 +1,43 @@
+{
+ "note": "A1 sample aura. Draw aura-back before every player layer and aura-front after them; tint both (multiply). Frame-for-frame with the player animation of the same name. Reduced motion: show frame 0 only.",
+ "frameWidth": 128,
+ "frameHeight": 160,
+ "anchor": {
+  "x": 64.0,
+  "y": 136.96,
+  "note": "feet / ground point of the character, in pixels from the frame's top-left"
+ },
+ "directions": [
+  "N",
+  "NE",
+  "E",
+  "SE",
+  "S",
+  "SW",
+  "W",
+  "NW"
+ ],
+ "layers": [
+  {
+   "name": "aura-back",
+   "tint": true,
+   "drawn": "first"
+  },
+  {
+   "name": "aura-front",
+   "tint": true,
+   "drawn": "last"
+  }
+ ],
+ "animations": {
+  "idle": {
+   "frames": 8,
+   "fps": 8,
+   "loop": true,
+   "sheets": {
+    "aura-back": "player-a_aura-back_idle.png",
+    "aura-front": "player-a_aura-front_idle.png"
+   }
+  }
+ }
+}

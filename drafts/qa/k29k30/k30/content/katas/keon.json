@@ -1,0 +1,63 @@
+{
+  "id": "keon",
+  "name": "Keon",
+  "requirement": "orange-kata",
+  "form": null,
+  "from": "drafts/content/katas/keon.json (S3-K2). Only names, step counts and directions are shown in the game (D1).",
+  "steps": [
+    {
+      "n": 1,
+      "facing": [
+        "L"
+      ]
+    },
+    {
+      "n": 2,
+      "facing": [
+        "R"
+      ]
+    },
+    {
+      "n": 3,
+      "facing": [
+        "F"
+      ]
+    },
+    {
+      "n": 4,
+      "facing": [
+        "R"
+      ]
+    },
+    {
+      "n": 5,
+      "facing": [
+        "L"
+      ]
+    },
+    {
+      "n": 6,
+      "facing": [
+        "F"
+      ]
+    },
+    {
+      "n": 7,
+      "facing": [
+        "L"
+      ]
+    },
+    {
+      "n": 8,
+      "facing": [
+        "R"
+      ]
+    },
+    {
+      "n": 9,
+      "facing": [
+        "B"
+      ]
+    }
+  ]
+}

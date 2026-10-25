@@ -1,0 +1,423 @@
+{
+  "notes": "DRAFT dialogue for milestone 6 (work item C1, dialogue half). One short sentence per screen, ages 6-9, read aloud by text-to-speech. speaker = character id, 'player', or 'narrator'. expression = Batch 7 portrait (neutral, happy, proud, thinking). animation = Batch 7 animation (idle, walk, bow, talk, nod, point, demonstrate). Character names are null on purpose: the school content pack fills them (no real names written here). {player} = the player's chosen display name. choices: honor never goes down (framework section 9); a 0-honor choice leads somewhere less good, then Sensei reflects. Faith text: only the exact Class Creed from docs/faith-and-creed.md. No Street Smarts script here (waiting on Jay).",
+  "characters": [
+    {
+      "id": "sensei",
+      "role": "Sensei",
+      "name": null,
+      "title": "Sensei",
+      "belt": "black",
+      "note": "Wise, warm head teacher. Reflects, never lectures."
+    },
+    {
+      "id": "senpai",
+      "role": "Senpai",
+      "name": null,
+      "title": "Senpai",
+      "belt": "brown-black",
+      "note": "Teen student mentor. Friendly, confident, models good character."
+    },
+    {
+      "id": "kohai",
+      "role": "Kohai",
+      "name": null,
+      "title": null,
+      "belt": "white",
+      "note": "Small, new student. Eager, a little shy. The player helps them."
+    },
+    {
+      "id": "instructor2",
+      "role": "Second instructor",
+      "name": null,
+      "title": null,
+      "belt": "black",
+      "note": "Runs the warm-up and checks sign-offs. Cheerful and energetic."
+    },
+    {
+      "id": "founder",
+      "role": "Founder",
+      "name": null,
+      "title": null,
+      "belt": "black",
+      "note": "Founder of the school. Appears in the culture scene to share the Class Creed. Name and title from the school pack."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "meet-sensei",
+      "kind": "intro",
+      "trigger": "First visit to the Home Dojo after character creation",
+      "lines": [
+        {
+          "speaker": "sensei",
+          "text": "Welcome to the dojo, {player}.",
+          "expression": "happy",
+          "animation": "bow"
+        },
+        {
+          "speaker": "sensei",
+          "text": "I'm glad you're here.",
+          "expression": "happy"
+        },
+        {
+          "speaker": "sensei",
+          "text": "Every martial artist starts right where you are.",
+          "expression": "neutral",
+          "animation": "talk"
+        },
+        {
+          "speaker": "sensei",
+          "text": "When you're ready, the Tower is through that door.",
+          "expression": "neutral",
+          "animation": "point"
+        }
+      ]
+    },
+    {
+      "id": "meet-senpai",
+      "kind": "intro",
+      "trigger": "After the first Tower run",
+      "lines": [
+        {
+          "speaker": "senpai",
+          "text": "Hey, you made it back!",
+          "expression": "happy",
+          "animation": "bow"
+        },
+        {
+          "speaker": "senpai",
+          "text": "My first run was tough too.",
+          "expression": "thinking"
+        },
+        {
+          "speaker": "senpai",
+          "text": "Want a tip? Watch for the red circle.",
+          "expression": "neutral",
+          "animation": "demonstrate"
+        },
+        {
+          "speaker": "senpai",
+          "text": "See you on the mat!",
+          "expression": "happy",
+          "animation": "nod"
+        }
+      ]
+    },
+    {
+      "id": "meet-kohai",
+      "kind": "intro",
+      "trigger": "Second visit to the Home Dojo",
+      "lines": [
+        {
+          "speaker": "kohai",
+          "text": "Um... hi. I'm new here.",
+          "expression": "thinking",
+          "animation": "bow"
+        },
+        {
+          "speaker": "kohai",
+          "text": "Is it okay if I watch you train?",
+          "expression": "neutral"
+        },
+        {
+          "speaker": "player",
+          "text": "Sure! Stand right here.",
+          "expression": "neutral"
+        },
+        {
+          "speaker": "kohai",
+          "text": "Thank you!",
+          "expression": "happy",
+          "animation": "nod"
+        }
+      ]
+    },
+    {
+      "id": "meet-instructor2",
+      "kind": "intro",
+      "trigger": "First time the player opens the Abilities tab",
+      "lines": [
+        {
+          "speaker": "instructor2",
+          "text": "Hi, {player}! Ready to warm up?",
+          "expression": "happy",
+          "animation": "bow"
+        },
+        {
+          "speaker": "instructor2",
+          "text": "When you show a technique in class, we sign it off.",
+          "expression": "neutral",
+          "animation": "talk"
+        },
+        {
+          "speaker": "instructor2",
+          "text": "Then it shows up here as a new power!",
+          "expression": "happy",
+          "animation": "point"
+        }
+      ]
+    },
+    {
+      "id": "founder-creed",
+      "kind": "culture",
+      "trigger": "After the first Floor Keeper is defeated (culture scene)",
+      "lines": [
+        {
+          "speaker": "sensei",
+          "text": "Someone special came to visit today.",
+          "expression": "happy"
+        },
+        {
+          "speaker": "founder",
+          "text": "Hello, {player}. I started this dojo.",
+          "expression": "happy",
+          "animation": "bow"
+        },
+        {
+          "speaker": "founder",
+          "text": "We say a creed together in class.",
+          "expression": "neutral",
+          "animation": "talk"
+        },
+        {
+          "speaker": "founder",
+          "expression": "proud",
+          "creed": true,
+          "text": "I intend to live by the code of the black belt.\nTo seek God's truth. To put God first.\nTo bring honor to the family.\nTo show respect to my fellow man.\nTo encourage and stand firm with him,\ndoing all that I can to make the world a better place to live.\n\nI AM MORE THAN A CONQUEROR THROUGH JESUS CHRIST!!!",
+          "note": "Exact Class Creed from docs/faith-and-creed.md. Shown as one scroll screen; never reworded or split."
+        },
+        {
+          "speaker": "founder",
+          "text": "More Than a Conqueror is our motto.",
+          "expression": "proud"
+        },
+        {
+          "speaker": "sensei",
+          "text": "What line will you remember?",
+          "expression": "thinking"
+        }
+      ]
+    },
+    {
+      "id": "quest-manners-bow",
+      "kind": "manners",
+      "name": "The Proper Bow",
+      "trigger": "Quest board, after meet-kohai",
+      "honor": 1,
+      "lines": [
+        {
+          "speaker": "kohai",
+          "text": "Why does everyone bow at the door?",
+          "expression": "thinking"
+        },
+        {
+          "speaker": "narrator",
+          "text": "What do you tell Kohai?",
+          "choices": [
+            {
+              "text": "It shows respect.",
+              "honor": 1,
+              "next": "good"
+            },
+            {
+              "text": "I don't know.",
+              "honor": 0,
+              "next": "ask"
+            },
+            {
+              "text": "Show Kohai how.",
+              "honor": 1,
+              "next": "show"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "kohai",
+            "text": "Respect. I like that!",
+            "expression": "happy"
+          },
+          {
+            "speaker": "kohai",
+            "text": "Let's bow together.",
+            "expression": "happy",
+            "animation": "bow"
+          }
+        ],
+        "show": [
+          {
+            "speaker": "player",
+            "text": "Feet together, hands at your sides. Bow.",
+            "expression": "neutral",
+            "animation": "bow"
+          },
+          {
+            "speaker": "kohai",
+            "text": "Like this?",
+            "expression": "happy",
+            "animation": "bow"
+          }
+        ],
+        "ask": [
+          {
+            "speaker": "senpai",
+            "text": "Good question. Let's ask Sensei!",
+            "expression": "happy",
+            "animation": "point"
+          },
+          {
+            "speaker": "sensei",
+            "text": "We bow to show respect for the dojo and each other.",
+            "expression": "neutral",
+            "animation": "bow"
+          }
+        ]
+      },
+      "reflection": [
+        {
+          "speaker": "sensei",
+          "text": "Kohai watched you closely today.",
+          "expression": "thinking"
+        },
+        {
+          "speaker": "sensei",
+          "text": "How did it feel to help?",
+          "expression": "happy"
+        }
+      ]
+    },
+    {
+      "id": "quest-life-honesty",
+      "kind": "lifeLesson",
+      "name": "The Lost Wraps",
+      "trigger": "Quest board, after quest-manners-bow",
+      "honor": 2,
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You find shiny new hand wraps on the bench."
+        },
+        {
+          "speaker": "narrator",
+          "text": "There's a name tag. They belong to Senpai."
+        },
+        {
+          "speaker": "narrator",
+          "text": "What do you do?",
+          "choices": [
+            {
+              "text": "Give them back to Senpai.",
+              "honor": 2,
+              "next": "return"
+            },
+            {
+              "text": "Give them to Sensei.",
+              "honor": 2,
+              "next": "sensei"
+            },
+            {
+              "text": "Keep them.",
+              "honor": 0,
+              "next": "keep"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "return": [
+          {
+            "speaker": "senpai",
+            "text": "My wraps! I looked everywhere.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "senpai",
+            "text": "Thank you. That was honest.",
+            "expression": "proud",
+            "animation": "bow"
+          }
+        ],
+        "sensei": [
+          {
+            "speaker": "sensei",
+            "text": "Thank you. I'll get these to Senpai.",
+            "expression": "happy",
+            "animation": "nod"
+          },
+          {
+            "speaker": "senpai",
+            "text": "You found them? Thank you!",
+            "expression": "happy",
+            "animation": "bow"
+          }
+        ],
+        "keep": [
+          {
+            "speaker": "narrator",
+            "text": "The wraps feel heavy in your bag."
+          },
+          {
+            "speaker": "senpai",
+            "text": "Has anyone seen my wraps?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "What do you do now?",
+            "choices": [
+              {
+                "text": "Give them back.",
+                "honor": 1,
+                "next": "return"
+              },
+              {
+                "text": "Say nothing.",
+                "honor": 0,
+                "next": "end"
+              }
+            ]
+          }
+        ],
+        "end": []
+      },
+      "reflection": [
+        {
+          "speaker": "sensei",
+          "text": "Things we keep can feel heavy.",
+          "expression": "thinking"
+        },
+        {
+          "speaker": "sensei",
+          "text": "What would you do next time?",
+          "expression": "thinking"
+        }
+      ]
+    },
+    {
+      "id": "sensei-reflect-return",
+      "kind": "reflection",
+      "trigger": "Returning home after a run (pick one at random, not every time)",
+      "lines": [
+        {
+          "speaker": "sensei",
+          "text": "Welcome back. What did you notice today?",
+          "expression": "happy",
+          "animation": "bow"
+        },
+        {
+          "speaker": "sensei",
+          "text": "You kept going. I saw that.",
+          "expression": "proud",
+          "animation": "nod"
+        },
+        {
+          "speaker": "sensei",
+          "text": "Rest well. The Tower will wait for you.",
+          "expression": "happy"
+        }
+      ]
+    }
+  ]
+}

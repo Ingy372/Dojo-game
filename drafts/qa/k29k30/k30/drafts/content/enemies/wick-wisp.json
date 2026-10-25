@@ -1,0 +1,33 @@
+{
+  "id": "wick-wisp",
+  "name": "Wick Wisp",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A tiny candle flame that drifts in a wavy line and bumps you. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
+  "color": "#f6d77a",
+  "maxHealth": 20,
+  "power": 7,
+  "guard": 0,
+  "radius": 0.3,
+  "moveSpeedTilesPerSecond": 3.6,
+  "sightRange": 12,
+  "attack": {
+    "name": "bump",
+    "strength": 1,
+    "startRange": 0.95,
+    "reach": 0.5,
+    "areaRadius": 0.55,
+    "telegraphTicks": 14,
+    "recoverTicks": 16
+  },
+  "parSeconds": 2.0,
+  "tier": "white",
+  "band": "F1-2",
+  "tell": "flicker, then small red circle",
+  "senseiLine": "Little lights get lost too. Help it find its glow.",
+  "description": "A tiny candle flame that drifts in a wavy line and bumps you.",
+  "bestiary": {
+    "tip": "Punch it, or COUNTER the bump.",
+    "lore": {
+      "white": "When the lamps went dim, this little flame drifted off and lost its way. Calm it, and it glows warm again."
+    }
+  }
+}

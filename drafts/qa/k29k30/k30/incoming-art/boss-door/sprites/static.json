@@ -1,0 +1,97 @@
+{
+  "pixelsPerTile": 80,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "facing": "north (the one game view)"
+  },
+  "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+  "sprites": {
+    "door-boss": {
+      "size": [
+        160,
+        172
+      ],
+      "layers": [
+        "door-boss"
+      ],
+      "files": {
+        "door-boss": "door-boss_door-boss.png"
+      },
+      "groundRect": {
+        "col0": -0.5,
+        "row0": 0,
+        "col1": 1.5,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.15,
+      "anchorPx": [
+        80.0,
+        172.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 2,
+      "frameWidth": 160,
+      "fps": 1,
+      "loop": false,
+      "note": "Boss door (the Floor Keeper's door) for the 'D' slot of the room before the boss: frame 0 closed, frame 1 open (the doors slide apart behind the posts, the doorway glows warm). 160 px wide: the 1-tile opening in the middle and the stone frame overlapping half a wall tile on each side (draw it over those wall tiles). anchorPx = bottom-centre of the door cell. Add door-boss-glow on top while it's closed and the room is being fought"
+    },
+    "door-boss-glow": {
+      "size": [
+        160,
+        172
+      ],
+      "layers": [
+        "door-boss-glow"
+      ],
+      "files": {
+        "door-boss-glow": "door-boss-glow_door-boss-glow.png"
+      },
+      "groundRect": {
+        "col0": -0.5,
+        "row0": 0,
+        "col1": 1.5,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.15,
+      "anchorPx": [
+        80.0,
+        172.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 8,
+      "frameWidth": 160,
+      "fps": 8,
+      "loop": true,
+      "note": "The boss door's glow loop (8 frames at 8 fps = 1 s): a gold halo swells around the crown medallion and light breathes along the gold frame. Same size and anchor as door-boss; draw it on top of door-boss frame 0 while the door is closed and the room is being fought. Straight alpha, see-through"
+    },
+    "icon-boss": {
+      "size": [
+        48,
+        64
+      ],
+      "layers": [
+        "icon-boss"
+      ],
+      "files": {
+        "icon-boss": "icon-boss_icon-boss.png"
+      },
+      "groundRect": {
+        "col0": 5.2,
+        "row0": 1.047152872702092,
+        "col1": 5.8,
+        "row1": 1.2471528727020922,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        24.0,
+        64
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "the boss door's crown icon on its round medallion, on its own (like icon-battle: for labels, the floor map or buttons)"
+    }
+  }
+}

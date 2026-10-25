@@ -1,0 +1,33 @@
+{
+  "id": "mist-wisp",
+  "name": "Mist Wisp",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). Fades into the mist, then shows up nearby. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#bcd7e6",
+  "maxHealth": 194,
+  "power": 29,
+  "guard": 0,
+  "radius": 0.32,
+  "moveSpeedTilesPerSecond": 3.2,
+  "sightRange": 8,
+  "attack": {
+    "name": "drift",
+    "strength": 1,
+    "startRange": 0.9,
+    "reach": 0.6,
+    "areaRadius": 0.55,
+    "telegraphTicks": 18,
+    "recoverTicks": 18
+  },
+  "parSeconds": 3.5,
+  "tier": "blue",
+  "band": "F1-2",
+  "tell": "shimmers before it appears, then red circle",
+  "senseiLine": "It always shimmers first. Look closely.",
+  "description": "Fades into the mist, then shows up nearby.",
+  "bestiary": {
+    "tip": "Watch the shimmer, then COUNTER.",
+    "lore": {
+      "blue": "A bit of river mist that forgot the morning sun. Free it, and it floats up into the light."
+    }
+  }
+}

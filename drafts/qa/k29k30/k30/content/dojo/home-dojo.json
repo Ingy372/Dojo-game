@@ -1,0 +1,25 @@
+{
+  "id": "home-dojo",
+  "name": "Home Dojo",
+  "legend": "# = wall, . = floor, P = where the player enters, D = the door to the Tower. The top wall holds wall decorations (banners, scrolls) and the notice board.",
+  "tiles": [
+    "###############",
+    "#.............#",
+    "#.............#",
+    "#.............#",
+    "#.............#",
+    "#.............#",
+    "#.............#",
+    "#.............#",
+    "#......P......#",
+    "#######D#######"
+  ],
+  "board_note": "The notice board on the top wall (opens the training board: Tower, Gate, gear, abilities). Column and row count from 1.",
+  "board": { "column": 8, "row": 1 },
+  "starter_note": "Where Sensei's welcome gifts stand in a brand-new dojo.",
+  "starter": [
+    { "decoration": "training-mat", "column": 7, "row": 4 },
+    { "decoration": "weapon-rack", "column": 2, "row": 2 },
+    { "decoration": "dojo-banner", "column": 5, "row": 1 }
+  ]
+}

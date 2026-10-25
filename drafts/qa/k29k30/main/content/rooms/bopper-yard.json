@@ -1,0 +1,60 @@
+{
+  "id": "bopper-yard",
+  "name": "Bopper Yard",
+  "kind": "battle",
+  "mix": "Yellow belt and up. Bouncy Boppers + swarmers: watch for the staff going up, then step aside or Counter.",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "minBeltTier": 2,
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "bopper",
+      "column": 10,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "bopper",
+      "column": 5,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 14,
+      "row": 4,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 2,
+      "wave": 2
+    }
+  ]
+}

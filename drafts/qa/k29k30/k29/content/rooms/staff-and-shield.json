@@ -1,0 +1,55 @@
+{
+  "id": "staff-and-shield",
+  "name": "Staff and Shield",
+  "kind": "battle",
+  "mix": "Yellow belt and up. A Bopper's long reach behind a Shield Guard: Strike the shield, punish the Bopper's recovery.",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "#####D#####D#####D####",
+    "#....................#",
+    "#....................#",
+    "#....................#",
+    "#...##..........##...#",
+    "#....................#",
+    "#....................#",
+    "#....................#",
+    "#..........P.........#",
+    "#....................#",
+    "######################"
+  ],
+  "minBeltTier": 2,
+  "earliestRoom": 3,
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "shield",
+      "column": 11,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "bopper",
+      "column": 6,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "bopper",
+      "column": 16,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 18,
+      "row": 3,
+      "wave": 2
+    }
+  ]
+}

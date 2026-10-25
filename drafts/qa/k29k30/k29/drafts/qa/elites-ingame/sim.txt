@@ -1,0 +1,37 @@
+tier|diff|firstFloor|floors|elites/floor|battle rate (eligible)|challenge rate (eligible)|swift|guarding|guarding enemies|early-room elites|max/floor
+1|guided|true|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+1|guided|false|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+1|standard|true|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+1|standard|false|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+1|challenge|true|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+1|challenge|false|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+2|guided|true|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+2|guided|false|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+2|standard|true|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+2|standard|false|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+2|challenge|true|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+2|challenge|false|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+3|guided|true|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+3|guided|false|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+3|standard|true|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+3|standard|false|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+3|challenge|true|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+3|challenge|false|2000|0.00|0.0%|0.0%|0|0|{}|0|0
+4|guided|true|2000|0.94|19.7%|35.6%|1879|0|{}|0|2
+4|guided|false|2000|0.94|19.7%|35.6%|1879|0|{}|0|2
+4|standard|true|2000|0.94|19.7%|35.6%|1879|0|{}|0|2
+4|standard|false|2000|0.94|19.7%|35.6%|1196|683|{"brute":207,"shield":476}|0|2
+4|challenge|true|2000|0.94|19.7%|35.6%|1879|0|{}|0|2
+4|challenge|false|2000|0.94|19.7%|35.6%|1196|683|{"brute":207,"shield":476}|0|2
+
+STATS
+swift swarmer: hp 40->50 speed 4->5 recover 16->14 windup g/s/c 12 -> 12 / 10 / 12
+guarding swarmer: hp 40->50 speed 4->4 recover 16->16 windup g/s/c 12 -> 12 / 12 / 12
+swift shield: hp 90->113 speed 2.4->3 recover 18->15 windup g/s/c 14 -> 14 / 11 / 14
+guarding shield: hp 90->113 speed 2.4->2.4 recover 18->18 windup g/s/c 14 -> 14 / 14 / 14
+swift brute: hp 180->225 speed 1.2->1.5 recover 18->15 windup g/s/c 16 -> 16 / 13 / 16
+guarding brute: hp 180->225 speed 1.2->1.2 recover 18->18 windup g/s/c 16 -> 16 / 16 / 16
+
+GUARD at 0 tiles; others at 1,2,3,5 tiles -> guardedBy: e1:- e2:e1 e3:e1 e4:- e5:-
+
+REWARD: elite defeat -> decoration in 1032/2000 (51.6%), focus +15

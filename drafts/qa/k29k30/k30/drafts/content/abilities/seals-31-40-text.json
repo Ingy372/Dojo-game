@@ -1,0 +1,85 @@
+{
+  "notes": "S4c-C2: kid-facing effect text for break seals #31-40 (Technique Seal format from content/abilities/abilities.json). Names and effects from the S4b table in drafts/planning/S4-self-defense-powers.md (PR #117); Injured rules from drafts/planning/S4c-injured-status.md. Each text is one sentence under 80 characters, ages 6-9, includes 'and leaves them Injured'. No broken/break/blood/bone/crack/pain/hurt words; only enemies are Injured. ids are proposed (no #31-40 ids exist yet); the Programmer may adjust at import. effectRef is a pointer to the S4b effect, not final effect JSON.",
+  "seals": [
+    {
+      "id": "arm-bar-release",
+      "technique": "Self-Defense #31",
+      "name": "Arm Bar Release",
+      "text": "When your lock ends, it pushes the enemy back and leaves them Injured.",
+      "causesInjured": true,
+      "effectRef": "counterLock +10, lockRelease push 1.0"
+    },
+    {
+      "id": "slide-to-the-wrist",
+      "technique": "Self-Defense #32",
+      "name": "Slide to the Wrist",
+      "text": "A lock makes your hits land harder and leaves them Injured.",
+      "causesInjured": true,
+      "effectRef": "staggerBonus 0.15 while locked"
+    },
+    {
+      "id": "party-flex",
+      "technique": "Self-Defense #33",
+      "name": "Party Flex",
+      "text": "Each lock you set gives you Focus and leaves them Injured.",
+      "causesInjured": true,
+      "effectRef": "lockFocus 5"
+    },
+    {
+      "id": "lock-and-drop",
+      "technique": "Self-Defense #34",
+      "name": "Lock and Drop",
+      "text": "Your lock ends in a throw that keeps them down and leaves them Injured.",
+      "causesInjured": true,
+      "effectRef": "lockRelease -> counterThrow 30"
+    },
+    {
+      "id": "catch-the-hand",
+      "technique": "Self-Defense #35",
+      "name": "Catch the Hand",
+      "text": "A Block catches a quick attacker in a lock and leaves them Injured.",
+      "causesInjured": true,
+      "effectRef": "blockLock 10 (wind-up 12 or less)"
+    },
+    {
+      "id": "wide-release",
+      "technique": "Self-Defense #36",
+      "name": "Wide Release",
+      "text": "Your release pushes farther, bumps others back and leaves them Injured.",
+      "causesInjured": true,
+      "effectRef": "lockRelease +0.5, releaseBumps"
+    },
+    {
+      "id": "steady-hold",
+      "technique": "Self-Defense #37",
+      "name": "Steady Hold",
+      "text": "Holding a lock gives you more time to Counter and leaves them Injured.",
+      "causesInjured": true,
+      "effectRef": "counterWindow 1 while locking"
+    },
+    {
+      "id": "lock-to-takedown",
+      "technique": "Self-Defense #38",
+      "name": "Lock to Takedown",
+      "text": "Your lock throw keeps them down longer, even shields, and leaves them Injured.",
+      "causesInjured": true,
+      "effectRef": "counterThrow +15, throwAll on lock throws"
+    },
+    {
+      "id": "release-and-go",
+      "technique": "Self-Defense #39",
+      "name": "Release and Go",
+      "text": "Release sets nearby enemies off-balance, refills Dash and leaves them Injured.",
+      "causesInjured": true,
+      "effectRef": "lockRelease + breakFree 1.5 + dashOnBlock"
+    },
+    {
+      "id": "master-hold",
+      "technique": "Self-Defense #40",
+      "name": "Master Hold",
+      "text": "Your longer lock lands a stronger throw and leaves them Injured.",
+      "causesInjured": true,
+      "effectRef": "counterLock +10, downBonus 0.25 on lock throws"
+    }
+  ]
+}

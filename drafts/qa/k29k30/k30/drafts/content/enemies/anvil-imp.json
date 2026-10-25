@@ -1,0 +1,33 @@
+{
+  "id": "anvil-imp",
+  "name": "Anvil Imp",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). A small, strong worker who taps a big hammer. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#8a8f99",
+  "maxHealth": 472,
+  "power": 52,
+  "guard": 25,
+  "radius": 0.48,
+  "moveSpeedTilesPerSecond": 1.2,
+  "sightRange": 10,
+  "attack": {
+    "name": "hammer tap",
+    "strength": 1,
+    "startRange": 1.3,
+    "reach": 0.9,
+    "areaRadius": 0.95,
+    "telegraphTicks": 18,
+    "recoverTicks": 18
+  },
+  "parSeconds": 7.0,
+  "tier": "red",
+  "band": "F1-2",
+  "tell": "hammer goes up, then red circle",
+  "senseiLine": "Hammer up? Get ready to COUNTER.",
+  "description": "A small, strong worker who taps a big hammer.",
+  "bestiary": {
+    "tip": "COUNTER the tap.",
+    "lore": {
+      "red": "A busy forge helper who lost track of the work. Free it, and it taps out happy songs again."
+    }
+  }
+}

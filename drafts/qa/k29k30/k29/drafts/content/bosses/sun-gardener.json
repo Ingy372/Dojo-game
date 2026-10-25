@@ -1,0 +1,103 @@
+{
+  "id": "sun-gardener",
+  "name": "The Sun Gardener",
+  "notes": "DRAFT for C13-5 (bestiary-plan.md; lore from drafts/content/lore/guardians-and-relics.json, unchanged). Yellow Guardian on floor 5. Same shape as content/enemies/floor-keeper.json, plus phases. Stats are TODO for the Researcher (the scaling guide puts a Guardian at about 90% of the tier max; hits-to-beat in the 40-80 boss band). Faith tie-ins stay out until Jay decides; see faithOverlayKey.",
+  "color": "#7fbf4d",
+  "boss": true,
+  "guardian": true,
+  "tier": "yellow",
+  "band": "F5",
+  "maxHealth": 742,
+  "power": 19,
+  "guard": 30,
+  "radius": 0.85,
+  "moveSpeedTilesPerSecond": 1.6,
+  "sightRange": 20,
+  "attacks": [
+    {
+      "name": "thorn whip",
+      "strength": 1.0,
+      "startRange": 1.9,
+      "reach": 1.1,
+      "areaRadius": 1.3,
+      "telegraphTicks": 20,
+      "recoverTicks": 22
+    },
+    {
+      "name": "seed rain",
+      "strength": 0.8,
+      "startRange": 6.0,
+      "reach": 5.0,
+      "areaRadius": 0.9,
+      "telegraphTicks": 22,
+      "recoverTicks": 26,
+      "note": "Seeds fall in a few red circles, one after another."
+    },
+    {
+      "name": "vine sweep",
+      "strength": 1.2,
+      "startRange": 2.5,
+      "reach": 0.0,
+      "areaRadius": 2.4,
+      "telegraphTicks": 28,
+      "recoverTicks": 30,
+      "dashOnly": true,
+      "shape": "arc",
+      "shapeCue": "arc",
+      "tell": "purple-and-white stripes + '!!' + whoosh",
+      "counterable": false,
+      "answer": "dash",
+      "overlapOnGuided": false,
+      "noOverlapWithRedCircle": true
+    }
+  ],
+  "signature": "Seed Rain",
+  "phases": [
+    {
+      "id": "thorn",
+      "atHealthFraction": 1.0,
+      "attacks": [
+        "thorn whip"
+      ],
+      "tell": "It pulls back a thorny vine; red circle.",
+      "counterplay": "COUNTER the whip.",
+      "senseiLine": "The vine pulls back first. Ready."
+    },
+    {
+      "id": "seeds",
+      "atHealthFraction": 0.66,
+      "attacks": [
+        "thorn whip",
+        "seed rain"
+      ],
+      "tell": "Seeds glow in the air above you.",
+      "counterplay": "Walk out of each circle.",
+      "senseiLine": "Light feet, like a breeze."
+    },
+    {
+      "id": "sweep",
+      "atHealthFraction": 0.33,
+      "attacks": [
+        "seed rain",
+        "vine sweep"
+      ],
+      "tell": "A striped arc and double marks.",
+      "counterplay": "DASH out of the arc.",
+      "senseiLine": "The vines sweep wide. DASH out."
+    }
+  ],
+  "parSeconds": 25,
+  "lines": {
+    "intro": "The garden is tangled. Its keeper is too.",
+    "freed": "The thorns are gone. My flowers can open again.",
+    "senseiAfter": "You moved light on your feet. The garden noticed."
+  },
+  "description": "The Sun Gardener whips thorny vines, rains glowing seeds, then sweeps a long striped arc.",
+  "bestiary": {
+    "tip": "Thorns first, then seeds, then stripes.",
+    "lore": {
+      "yellow": "A tall, gentle gardener made of vines. The shadow wrapped it in thorns, but its roots still reach for the sun. Free it, and its light comes home."
+    }
+  },
+  "faithOverlayKey": "sun-gardener"
+}

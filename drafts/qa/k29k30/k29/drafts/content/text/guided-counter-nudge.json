@@ -1,0 +1,17 @@
+{
+  "notes": "Final G1 nudge. Replaces the lesson-counter-guided entry in content/tutorial/sensei-lessons.json: set 'nudge' to the value below and remove 'nudgeStatus'. 'COUNTER' matches the button label in apps/client/src/input/ActionButtons.ts.",
+  "file": "content/tutorial/sensei-lessons.json",
+  "lesson": {
+    "id": "lesson-counter-guided",
+    "order": 4,
+    "trigger": "During the slowdown, as the circle nears full; Counter button pulses",
+    "slowdown": true,
+    "screens": [
+      "Tap Counter... now!"
+    ],
+    "success": "You did it! Perfect!",
+    "retry": "So close! Let's try again.",
+    "nudge": "Take your time. Tap the blue COUNTER button!",
+    "earliestRun": 1
+  }
+}

@@ -1,0 +1,1131 @@
+{
+ "pixelsPerTile": 80,
+ "camera": {
+  "projection": "orthographic",
+  "elevationDeg": 35.0,
+  "facing": "north (the one game view)"
+ },
+ "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+ "sprites": {
+  "decor-a6-class-scroll-bow": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-a6-class-scroll-bow"
+   ],
+   "files": {
+    "decor-a6-class-scroll-bow": "decor-a6-class-scroll-bow_decor-a6-class-scroll-bow.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 1,
+    "mount": "#4f8a4a",
+    "name": "Scroll of the Bow",
+    "description": "Every class starts and ends with a respectful bow.",
+    "textFrom": "C10 PR #123"
+   }
+  },
+  "decor-a6-class-scroll-form1": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-a6-class-scroll-form1"
+   ],
+   "files": {
+    "decor-a6-class-scroll-form1": "decor-a6-class-scroll-form1_decor-a6-class-scroll-form1.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 2,
+    "mount": "#34406e",
+    "name": "Basic Form 1 Scroll",
+    "description": "Your very first form, one careful step at a time.",
+    "textFrom": "C10 PR #123"
+   }
+  },
+  "decor-a6-class-scroll-form2": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-a6-class-scroll-form2"
+   ],
+   "files": {
+    "decor-a6-class-scroll-form2": "decor-a6-class-scroll-form2_decor-a6-class-scroll-form2.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 3,
+    "mount": "#2f8f87",
+    "name": "Basic Form 2 Scroll",
+    "description": "A second form, practiced until your feet remember.",
+    "textFrom": "C10 PR #123"
+   }
+  },
+  "decor-a6-class-scroll-key-on": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-a6-class-scroll-key-on"
+   ],
+   "files": {
+    "decor-a6-class-scroll-key-on": "decor-a6-class-scroll-key-on_decor-a6-class-scroll-key-on.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 4,
+    "mount": "#b3678f",
+    "name": "Key On Scroll",
+    "description": "The Key On form, ready to open the next door.",
+    "textFrom": "C10 PR #123"
+   }
+  },
+  "decor-a6-class-scroll-kicks": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-a6-class-scroll-kicks"
+   ],
+   "files": {
+    "decor-a6-class-scroll-kicks": "decor-a6-class-scroll-kicks_decor-a6-class-scroll-kicks.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 5,
+    "mount": "#3a6ea5",
+    "name": "First Kicks Scroll",
+    "description": "Front kick, inside kick, outside kick, then a spin!",
+    "textFrom": "C10 PR #123"
+   }
+  },
+  "decor-a6-class-scroll-defense": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-a6-class-scroll-defense"
+   ],
+   "files": {
+    "decor-a6-class-scroll-defense": "decor-a6-class-scroll-defense_decor-a6-class-scroll-defense.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 6,
+    "mount": "#6b5a9e",
+    "name": "Safe and Smart Scroll",
+    "description": "Self-defense practice helps you stay calm and safe.",
+    "textFrom": "C10 PR #123"
+   }
+  },
+  "decor-a6-class-scroll-kindness": {
+   "size": [
+    80,
+    128
+   ],
+   "layers": [
+    "decor-a6-class-scroll-kindness"
+   ],
+   "files": {
+    "decor-a6-class-scroll-kindness": "decor-a6-class-scroll-kindness_decor-a6-class-scroll-kindness.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    40.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "class",
+    "set": "class scroll",
+    "order": 7,
+    "mount": "#c77a2e",
+    "name": "Helping Hands Scroll",
+    "description": "Strong hands are best for helping others up.",
+    "textFrom": "C10 PR #123"
+   }
+  },
+  "decor-a6-kick-pad": {
+   "size": [
+    104,
+    186
+   ],
+   "layers": [
+    "decor-a6-kick-pad"
+   ],
+   "files": {
+    "decor-a6-kick-pad": "decor-a6-kick-pad_decor-a6-kick-pad.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.2,
+   "anchorPx": [
+    52.0,
+    176.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "class",
+    "set": "dojo gear",
+    "order": 1,
+    "name": "Bright Target Pad",
+    "description": "Every kick you practiced left this pad a little proud.",
+    "textFrom": "C10 PR #123"
+   }
+  },
+  "decor-a6-focus-mitt": {
+   "size": [
+    104,
+    150
+   ],
+   "layers": [
+    "decor-a6-focus-mitt"
+   ],
+   "files": {
+    "decor-a6-focus-mitt": "decor-a6-focus-mitt_decor-a6-focus-mitt.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.75,
+   "anchorPx": [
+    52.0,
+    140.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "class",
+    "set": "dojo gear",
+    "order": 2,
+    "name": "Focus Mitt",
+    "description": "Eyes on the mitt, and your aim gets sharper.",
+    "textFrom": "C10 PR #123"
+   }
+  },
+  "decor-a6-belt-rack": {
+   "size": [
+    104,
+    190
+   ],
+   "layers": [
+    "decor-a6-belt-rack"
+   ],
+   "files": {
+    "decor-a6-belt-rack": "decor-a6-belt-rack_decor-a6-belt-rack.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.25,
+   "anchorPx": [
+    52.0,
+    180.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "class",
+    "set": "dojo gear",
+    "order": 3,
+    "name": "Belt Ladder Rack",
+    "description": "A place for every belt you earned on the climb.",
+    "textFrom": "C10 PR #123"
+   }
+  },
+  "decor-a6-sparring-helmet": {
+   "size": [
+    104,
+    170
+   ],
+   "layers": [
+    "decor-a6-sparring-helmet"
+   ],
+   "files": {
+    "decor-a6-sparring-helmet": "decor-a6-sparring-helmet_decor-a6-sparring-helmet.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.0,
+   "anchorPx": [
+    52.0,
+    160.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "class",
+    "set": "dojo gear",
+    "order": 4,
+    "name": "Safe Sparring Helmet",
+    "description": "Good partners keep each other safe in practice.",
+    "textFrom": "C10 PR #123"
+   }
+  },
+  "decor-a6-water-bottle": {
+   "size": [
+    104,
+    158
+   ],
+   "layers": [
+    "decor-a6-water-bottle"
+   ],
+   "files": {
+    "decor-a6-water-bottle": "decor-a6-water-bottle_decor-a6-water-bottle.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.85,
+   "anchorPx": [
+    52.0,
+    148.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "class",
+    "set": "dojo gear",
+    "order": 5,
+    "name": "Class Water Bottle",
+    "description": "A cool sip between rounds helps you keep going.",
+    "textFrom": "C10 PR #123"
+   }
+  },
+  "decor-a6-bow-mat": {
+   "size": [
+    104,
+    102
+   ],
+   "layers": [
+    "decor-a6-bow-mat"
+   ],
+   "files": {
+    "decor-a6-bow-mat": "decor-a6-bow-mat_decor-a6-bow-mat.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.15,
+   "anchorPx": [
+    52.0,
+    92.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "class",
+    "set": "dojo gear",
+    "order": 6,
+    "name": "Bow Mat",
+    "description": "Stand here, bow to Sensei, and begin with respect.",
+    "textFrom": "C10 PR #123"
+   }
+  },
+  "decor-a6-fan-stand": {
+   "size": [
+    104,
+    162
+   ],
+   "layers": [
+    "decor-a6-fan-stand",
+    "decor-a6-fan-stand-tint"
+   ],
+   "files": {
+    "decor-a6-fan-stand": "decor-a6-fan-stand_decor-a6-fan-stand.png",
+    "decor-a6-fan-stand-tint": "decor-a6-fan-stand_decor-a6-fan-stand-tint.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.9,
+   "anchorPx": [
+    52.0,
+    152.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "random",
+    "colours": 2,
+    "tintLayer": "decor-a6-fan-stand-tint",
+    "colour1": "#5ab4e6",
+    "colour2": "belt colour of the floor where it drops (beltStyles[belt].belt); on White-belt floors use the soft wood tan #d2a878 instead",
+    "howToTint": "draw the base layer, then the -tint layer multiplied by the colour (rgb * colour / 255, alpha unchanged). The -tint art is neutral light grey so its shading survives",
+    "name": "Breeze Fan",
+    "description": "A paper fan that waves hello to every guest.",
+    "textFrom": "C10 PR #123",
+    "colour2WhiteFallback": "#d2a878"
+   }
+  },
+  "decor-a6-lantern-small": {
+   "size": [
+    104,
+    178
+   ],
+   "layers": [
+    "decor-a6-lantern-small",
+    "decor-a6-lantern-small-tint"
+   ],
+   "files": {
+    "decor-a6-lantern-small": "decor-a6-lantern-small_decor-a6-lantern-small.png",
+    "decor-a6-lantern-small-tint": "decor-a6-lantern-small_decor-a6-lantern-small-tint.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.1,
+   "anchorPx": [
+    52.0,
+    168.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "random",
+    "colours": 2,
+    "tintLayer": "decor-a6-lantern-small-tint",
+    "colour1": "#2f8f87",
+    "colour2": "belt colour of the floor where it drops (beltStyles[belt].belt); on White-belt floors use the soft wood tan #d2a878 instead",
+    "howToTint": "draw the base layer, then the -tint layer multiplied by the colour (rgb * colour / 255, alpha unchanged). The -tint art is neutral light grey so its shading survives",
+    "name": "Little Light Lantern",
+    "description": "A small lantern that keeps a bit of the Tower's light.",
+    "textFrom": "C10 PR #123",
+    "colour2WhiteFallback": "#d2a878"
+   }
+  },
+  "decor-a6-bonsai-small": {
+   "size": [
+    104,
+    150
+   ],
+   "layers": [
+    "decor-a6-bonsai-small",
+    "decor-a6-bonsai-small-tint"
+   ],
+   "files": {
+    "decor-a6-bonsai-small": "decor-a6-bonsai-small_decor-a6-bonsai-small.png",
+    "decor-a6-bonsai-small-tint": "decor-a6-bonsai-small_decor-a6-bonsai-small-tint.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.75,
+   "anchorPx": [
+    52.0,
+    140.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "random",
+    "colours": 2,
+    "tintLayer": "decor-a6-bonsai-small-tint",
+    "colour1": "#3a6ea5",
+    "colour2": "belt colour of the floor where it drops (beltStyles[belt].belt); on White-belt floors use the soft wood tan #d2a878 instead",
+    "howToTint": "draw the base layer, then the -tint layer multiplied by the colour (rgb * colour / 255, alpha unchanged). The -tint art is neutral light grey so its shading survives",
+    "name": "Patient Bonsai",
+    "description": "It grows slowly and steadily, just like your training.",
+    "textFrom": "C10 PR #123",
+    "colour2WhiteFallback": "#d2a878"
+   }
+  },
+  "decor-a6-cushion": {
+   "size": [
+    104,
+    106
+   ],
+   "layers": [
+    "decor-a6-cushion",
+    "decor-a6-cushion-tint"
+   ],
+   "files": {
+    "decor-a6-cushion": "decor-a6-cushion_decor-a6-cushion.png",
+    "decor-a6-cushion-tint": "decor-a6-cushion_decor-a6-cushion-tint.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.2,
+   "anchorPx": [
+    52.0,
+    96.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "random",
+    "colours": 2,
+    "tintLayer": "decor-a6-cushion-tint",
+    "colour1": "#9660e6",
+    "colour2": "belt colour of the floor where it drops (beltStyles[belt].belt); on White-belt floors use the soft wood tan #d2a878 instead",
+    "howToTint": "draw the base layer, then the -tint layer multiplied by the colour (rgb * colour / 255, alpha unchanged). The -tint art is neutral light grey so its shading survives",
+    "name": "Rest Cushion",
+    "description": "A soft seat for a calm breath after practice.",
+    "textFrom": "C10 PR #123",
+    "colour2WhiteFallback": "#d2a878"
+   }
+  },
+  "decor-a6-banner-small": {
+   "size": [
+    80,
+    112
+   ],
+   "layers": [
+    "decor-a6-banner-small",
+    "decor-a6-banner-small-tint"
+   ],
+   "files": {
+    "decor-a6-banner-small": "decor-a6-banner-small_decor-a6-banner-small.png",
+    "decor-a6-banner-small-tint": "decor-a6-banner-small_decor-a6-banner-small-tint.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 1,
+    "row1": 1,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.4,
+   "anchorPx": [
+    40.0,
+    112.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "wall",
+   "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+   "info": {
+    "pool": "random",
+    "colours": 2,
+    "tintLayer": "decor-a6-banner-small-tint",
+    "colour1": "#3aa655",
+    "colour2": "belt colour of the floor where it drops (beltStyles[belt].belt); on White-belt floors use the soft wood tan #d2a878 instead",
+    "howToTint": "draw the base layer, then the -tint layer multiplied by the colour (rgb * colour / 255, alpha unchanged). The -tint art is neutral light grey so its shading survives",
+    "name": "Climber's Pennant",
+    "description": "A little flag that cheers every step up the Tower.",
+    "textFrom": "C10 PR #123",
+    "colour2WhiteFallback": "#d2a878"
+   }
+  },
+  "decor-a6-keeper-statue-floor1": {
+   "size": [
+    104,
+    182
+   ],
+   "layers": [
+    "decor-a6-keeper-statue-base",
+    "decor-a6-keeper-statue-fig-lion-dog"
+   ],
+   "files": {
+    "decor-a6-keeper-statue-base": "decor-a6-keeper-statue-floor1_decor-a6-keeper-statue-base.png",
+    "decor-a6-keeper-statue-fig-lion-dog": "decor-a6-keeper-statue-floor1_decor-a6-keeper-statue-fig-lion-dog.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.15,
+   "anchorPx": [
+    52.0,
+    172.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "first floor clear",
+    "floor": 1,
+    "sharedLayer": "decor-a6-keeper-statue-base",
+    "name": "Floor Keeper Statue",
+    "description": "A friendly keeper, thankful you brought light back to its floor.",
+    "textFrom": "C10 PR #123 (decor-a6-keeper-statue, shared by all variants)"
+   }
+  },
+  "decor-a6-keeper-statue-floor2": {
+   "size": [
+    104,
+    150
+   ],
+   "layers": [
+    "decor-a6-keeper-statue-base",
+    "decor-a6-keeper-statue-fig-turtle"
+   ],
+   "files": {
+    "decor-a6-keeper-statue-base": "decor-a6-keeper-statue-floor2_decor-a6-keeper-statue-base.png",
+    "decor-a6-keeper-statue-fig-turtle": "decor-a6-keeper-statue-floor2_decor-a6-keeper-statue-fig-turtle.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.75,
+   "anchorPx": [
+    52.0,
+    140.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "first floor clear",
+    "floor": 2,
+    "sharedLayer": "decor-a6-keeper-statue-base",
+    "name": "Floor Keeper Statue",
+    "description": "A friendly keeper, thankful you brought light back to its floor.",
+    "textFrom": "C10 PR #123 (decor-a6-keeper-statue, shared by all variants)"
+   }
+  },
+  "decor-a6-keeper-statue-floor3": {
+   "size": [
+    104,
+    186
+   ],
+   "layers": [
+    "decor-a6-keeper-statue-base",
+    "decor-a6-keeper-statue-fig-crane"
+   ],
+   "files": {
+    "decor-a6-keeper-statue-base": "decor-a6-keeper-statue-floor3_decor-a6-keeper-statue-base.png",
+    "decor-a6-keeper-statue-fig-crane": "decor-a6-keeper-statue-floor3_decor-a6-keeper-statue-fig-crane.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.2,
+   "anchorPx": [
+    52.0,
+    176.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "first floor clear",
+    "floor": 3,
+    "sharedLayer": "decor-a6-keeper-statue-base",
+    "name": "Floor Keeper Statue",
+    "description": "A friendly keeper, thankful you brought light back to its floor.",
+    "textFrom": "C10 PR #123 (decor-a6-keeper-statue, shared by all variants)"
+   }
+  },
+  "decor-a6-journal-trophy-swarmer": {
+   "size": [
+    104,
+    138
+   ],
+   "layers": [
+    "decor-a6-journal-trophy-stand",
+    "decor-a6-journal-trophy-fig-swarmer"
+   ],
+   "files": {
+    "decor-a6-journal-trophy-stand": "decor-a6-journal-trophy-swarmer_decor-a6-journal-trophy-stand.png",
+    "decor-a6-journal-trophy-fig-swarmer": "decor-a6-journal-trophy-swarmer_decor-a6-journal-trophy-fig-swarmer.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.6,
+   "anchorPx": [
+    52.0,
+    128.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "Monster Journal",
+    "monster": "swarmer",
+    "sharedLayer": "decor-a6-journal-trophy-stand",
+    "name": "Journal Friend Trophy",
+    "description": "A friend you freed from the shadow, smiling on a stand.",
+    "textFrom": "C10 PR #123 (decor-a6-journal-trophy, shared by all variants)"
+   }
+  },
+  "decor-a6-journal-trophy-shield": {
+   "size": [
+    104,
+    158
+   ],
+   "layers": [
+    "decor-a6-journal-trophy-stand",
+    "decor-a6-journal-trophy-fig-shield"
+   ],
+   "files": {
+    "decor-a6-journal-trophy-stand": "decor-a6-journal-trophy-shield_decor-a6-journal-trophy-stand.png",
+    "decor-a6-journal-trophy-fig-shield": "decor-a6-journal-trophy-shield_decor-a6-journal-trophy-fig-shield.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.85,
+   "anchorPx": [
+    52.0,
+    148.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "Monster Journal",
+    "monster": "shield",
+    "sharedLayer": "decor-a6-journal-trophy-stand",
+    "name": "Journal Friend Trophy",
+    "description": "A friend you freed from the shadow, smiling on a stand.",
+    "textFrom": "C10 PR #123 (decor-a6-journal-trophy, shared by all variants)"
+   }
+  },
+  "decor-a6-journal-trophy-brute": {
+   "size": [
+    104,
+    154
+   ],
+   "layers": [
+    "decor-a6-journal-trophy-stand",
+    "decor-a6-journal-trophy-fig-brute"
+   ],
+   "files": {
+    "decor-a6-journal-trophy-stand": "decor-a6-journal-trophy-brute_decor-a6-journal-trophy-stand.png",
+    "decor-a6-journal-trophy-fig-brute": "decor-a6-journal-trophy-brute_decor-a6-journal-trophy-fig-brute.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.8,
+   "anchorPx": [
+    52.0,
+    144.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "Monster Journal",
+    "monster": "brute",
+    "sharedLayer": "decor-a6-journal-trophy-stand",
+    "name": "Journal Friend Trophy",
+    "description": "A friend you freed from the shadow, smiling on a stand.",
+    "textFrom": "C10 PR #123 (decor-a6-journal-trophy, shared by all variants)"
+   }
+  },
+  "decor-a6-journal-trophy-keeper": {
+   "size": [
+    104,
+    166
+   ],
+   "layers": [
+    "decor-a6-journal-trophy-stand",
+    "decor-a6-journal-trophy-fig-keeper"
+   ],
+   "files": {
+    "decor-a6-journal-trophy-stand": "decor-a6-journal-trophy-keeper_decor-a6-journal-trophy-stand.png",
+    "decor-a6-journal-trophy-fig-keeper": "decor-a6-journal-trophy-keeper_decor-a6-journal-trophy-fig-keeper.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.95,
+   "anchorPx": [
+    52.0,
+    156.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "Monster Journal",
+    "monster": "keeper",
+    "sharedLayer": "decor-a6-journal-trophy-stand",
+    "name": "Journal Friend Trophy",
+    "description": "A friend you freed from the shadow, smiling on a stand.",
+    "textFrom": "C10 PR #123 (decor-a6-journal-trophy, shared by all variants)"
+   }
+  },
+  "decor-a6-journal-trophy-bopper": {
+   "size": [
+    104,
+    162
+   ],
+   "layers": [
+    "decor-a6-journal-trophy-stand",
+    "decor-a6-journal-trophy-fig-bopper"
+   ],
+   "files": {
+    "decor-a6-journal-trophy-stand": "decor-a6-journal-trophy-bopper_decor-a6-journal-trophy-stand.png",
+    "decor-a6-journal-trophy-fig-bopper": "decor-a6-journal-trophy-bopper_decor-a6-journal-trophy-fig-bopper.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 1.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 0.9,
+   "anchorPx": [
+    52.0,
+    152.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    1,
+    1
+   ],
+   "place": "floor",
+   "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "Monster Journal",
+    "monster": "padded",
+    "sharedLayer": "decor-a6-journal-trophy-stand",
+    "name": "Journal Friend Trophy",
+    "description": "A friend you freed from the shadow, smiling on a stand.",
+    "textFrom": "C10 PR #123 (decor-a6-journal-trophy, shared by all variants)"
+   }
+  },
+  "decor-a6-folding-screen": {
+   "size": [
+    184,
+    194
+   ],
+   "layers": [
+    "decor-a6-folding-screen"
+   ],
+   "files": {
+    "decor-a6-folding-screen": "decor-a6-folding-screen_decor-a6-folding-screen.png"
+   },
+   "groundRect": {
+    "col0": -0.15,
+    "row0": 0,
+    "col1": 2.15,
+    "row1": 1.12,
+    "note": "the image's ground area in tiles"
+   },
+   "topExtraTiles": 1.3,
+   "anchorPx": [
+    92.0,
+    184.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+   "footprint": [
+    2,
+    1
+   ],
+   "place": "floor",
+   "note": "must sit against a wall: the footprint's top row is the row just below the top wall (row 1). anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+   "info": {
+    "pool": "bonus only (not in the random pool)",
+    "mustTouchWall": true,
+    "placeRule": "the footprint touches the top wall: its top row is row 1",
+    "name": "Quiet Garden Screen",
+    "description": "A calm painted screen for a peaceful corner of your dojo.",
+    "textFrom": "C10 PR #123",
+    "bonusOnly": true
+   }
+  }
+ },
+ "placement": {
+  "default": "any free cell (floor pieces on floor cells, wall pieces on top-wall cells)",
+  "mustTouchWall": "pieces with info.mustTouchWall = true (the 2x1 folding screen) only go where the footprint's top row is row 1, against the top wall",
+  "tint": "random pieces: draw <id>, then <id>-tint multiplied by info.colour1, or by colour 2 = the drop floor's belt colour (beltStyles[belt].belt)",
+  "whiteBeltFallback": {
+   "rule": "on White-belt floors colour 2 is soft wood tan instead of the near-white belt colour",
+   "hex": "#d2a878"
+  },
+  "bonusOnly": [
+   "decor-a6-folding-screen"
+  ],
+  "parked": "Tier 2+ named-monster gold-plate trophies are parked until Tier 2 is planned"
+ }
+}
