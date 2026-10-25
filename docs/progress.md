@@ -536,5 +536,12 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Music player (apps/client/src/audio/Music.ts) and the screen-to-track map (content/settings/audio.json). It fades between tracks, starts after the first touch, pauses in the background and stays silent if a file is missing.
 - Music and Sound − / + controls (0–5) in Settings, saved as dojo.musicVol / dojo.sfxVol. Sfx no longer uses a fixed 0.5.
 - Checked in the preview: with the files missing, nothing breaks and there are no page errors. With stand-in tones at the expected paths, the Dojo plays the temple loop and the Tower switches to the road loop. Volumes survive a reload. Screenshots: /workspace/m7p8-{667,844}-settings.png.
-- Music added in assets/audio/music/: mountain-temple-loop.ogg (The Great Hall I, 2.96 MB), long-road-loop.ogg (The Grass Road I, 4.42 MB) and both WAFU licence texts. Not re-encoded.
+- Music added in assets/audio/music/: mountain-temple-loop.ogg (The Great Hall I, 2.96 MB), long-road-loop.ogg (The Grass Road I, 4.42 MB) and both WAFU licence texts. Not re-encoded. Downloaded by the Programmer through the box browser from WAFU's free itch.io pages.
 - Checked in the preview with the real files: Dojo, Home and Street Smarts play the temple loop (132.5 s) and the Tower plays the road loop (201.3 s), with no page errors. The build's dist/audio is 7.1 MB.
+
+## K24a Tutorial tips wait for the player
+- Tutorial tips come from content/tutorial/tutorial-floor.json (moved from drafts/). Each waits for Got it, then for the player to try the move. No timers.
+- See-through tip box (65%) with outlined text, kept off the action.
+- New waves: 3 Swarmers plus a Brute, a small Swarmer group, Swarmers from two sides. DASH pulses on the dash tip.
+- Session 2: lesson-dash is a short reminder.
+- Sim: enemyHold/waveHold/releaseWave plus the tutorial flow API, with 7 new tests (step flow, health floor at 1).

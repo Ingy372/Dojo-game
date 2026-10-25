@@ -1,7 +1,7 @@
-"""Checks drafts/content/tutorial/tutorial-floor.json: every line < 12 words, advance/waitFor set, enemy names exist."""
+"""Checks content/tutorial/tutorial-floor.json: every line < 12 words, advance/waitFor set, enemy names exist."""
 import json, pathlib, re
 R = pathlib.Path(__file__).resolve().parents[3]
-d = json.loads((R / "drafts/content/tutorial/tutorial-floor.json").read_text())
+d = json.loads((R / "content/tutorial/tutorial-floor.json").read_text())
 names = {json.loads(p.read_text()).get("name") for p in (R / "content/enemies").glob("*.json")}
 bad = []
 for s in d["lessons"]:

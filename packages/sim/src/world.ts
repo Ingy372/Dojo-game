@@ -242,6 +242,12 @@ export interface WorldState {
   minHealth: number;
   /** The tutorial floor's glowing spot, or null. */
   goal: GoalState | null;
+  /** Tutorial floor (K24a): the enemies stand still until Sensei's step lets them go. */
+  enemyHold: boolean;
+  /** Tutorial floor (K24a): later waves come only through releaseWave, never on their own. */
+  waveHold: boolean;
+  /** Tutorial floor: enemies always see the player, so none waits out of sight (K24a). */
+  seeAll: boolean;
   /** Elite rules (from content/elites), or null when the room has no elites. */
   elites: EliteRules | null;
   /** Named monster rules (M7-N1) when this room has one, else null. */
@@ -431,6 +437,9 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     namedRules,
     minHealth: Math.max(0, options.minHealth ?? 0),
     goal: room.goal ? { pos: { ...room.goal }, reached: false } : null,
+    enemyHold: false,
+    waveHold: false,
+    seeAll: false,
     guide: (options.guideStep ?? GUIDE_DONE) < GUIDE_DONE ? { step: options.guideStep!, enemyId: null, waiting: false, waitTicks: 0 } : null,
   };
 }
@@ -513,7 +522,7 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
       world.events.push({ kind: 'goalReached' });
     }
   }
-  if (!goal || goal.reached) for (const e of world.enemies) stepEnemy(world, e, room);
+  if ((!goal || goal.reached) && !world.enemyHold) for (const e of world.enemies) stepEnemy(world, e, room);
   separateEnemies(world, room);
   updateGuards(world);
   for (const id of ids) separateFromEnemies(world, world.players[id], room);
@@ -1164,6 +1173,13 @@ function summonHelpers(world: WorldState, boss: EnemyState, room: Room): void {
   world.events.push({ kind: 'summon', enemyId: boss.id, summoned: ids });
 }
 
+/** Tutorial floor (K24a): bring in the next held wave now. False when none is left. */
+export function releaseWave(world: WorldState): boolean {
+  if (world.pendingSpawns.length === 0) return false;
+  spawnNextWave(world);
+  return true;
+}
+
 function spawnNextWave(world: WorldState): void {
   world.wave++;
   const now = world.pendingSpawns.filter((s) => s.wave <= world.wave);
@@ -1251,7 +1267,7 @@ function resetEnemy(world: WorldState, e: EnemyState): void {
 
 function nearestPlayer(world: WorldState, e: EnemyState): PlayerState | null {
   let best: PlayerState | null = null;
-  let bestDist = e.def.sightRange;
+  let bestDist = world.seeAll ? Infinity : e.def.sightRange;
   for (const id of Object.keys(world.players).sort()) {
     const p = world.players[id];
     if (!isActive(p)) continue;
@@ -1282,7 +1298,7 @@ function updateProgress(world: WorldState, room: Room, ids: PlayerId[]): void {
   const players = ids.map((id) => world.players[id]).filter(isActive);
 
   // The next wave arrives when the room is nearly clear.
-  if (world.pendingSpawns.length > 0) {
+  if (world.pendingSpawns.length > 0 && !world.waveHold) {
     const left = world.enemies.filter((e) => e.mode !== 'defeated').length;
     if (left <= COMBAT.nextWaveWhenLeft) spawnNextWave(world);
   }

@@ -103,17 +103,16 @@
       "id": "lesson-dash",
       "triggerKey": "twoAttacksAtOnce",
       "order": 8,
-      "trigger": "First time two attacks will land together",
+      "trigger": "First time two attacks will land together (session 2 reminder: Dash is taught on the tutorial floor, K24a)",
       "screens": [
-        "Too many circles? DASH away.",
-        "Tap DASH to zoom out of danger."
+        "Remember: DASH out of a crowd."
       ],
-      "practice": "DASH out of the circle.",
       "success": "Quick feet!",
       "retry": "That's okay. Try again whenever you're ready.",
       "earliestSession": 2,
       "ignoresSessionLimit": false,
-      "fadingFollowUp": false
+      "fadingFollowUp": false,
+      "practice": "DASH out of the circle."
     },
     {
       "id": "lesson-insights",

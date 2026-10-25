@@ -5,6 +5,17 @@ import {
   WARNING_LESSON,
   STRIKE_LESSON,
   loadTutorialLines,
+  TUTORIAL_STEPS,
+  currentStep,
+  gotIt,
+  releaseWave,
+  showTip,
+  skipStep,
+  tutorialEvent,
+  tutorialFlow,
+  type TutorialEvent,
+  type TutorialFlow,
+  type TutorialStep,
   COMBAT,
   MOVEMENT,
   TICKS_PER_SECOND,
@@ -221,6 +232,12 @@ export class GameScene extends Phaser.Scene {
   private virtueAura!: Phaser.GameObjects.Arc;
   /** True while a menu (like the Insight choice) is open: the fight is paused. */
   private menuOpen = false;
+  /** Tutorial floor (K24a): where the step flow is, the tip's Got it button, and the success line to lead the next tip. */
+  private tflow: TutorialFlow | null = null;
+  private gotItBtn: Phaser.GameObjects.Text | null = null;
+  private tutorialLead = '';
+  /** Tiles walked since the 'use all of it' tip (walkAround). */
+  private walked = 0;
   /** True once leaving the room (next room, or home). */
   private leaving = false;
   private picker: InsightPicker | null = null;
@@ -308,6 +325,15 @@ export class GameScene extends Phaser.Scene {
     if (this.run) {
       this.room = currentRoom(CONTENT, this.run);
       this.world = createRunWorld(CONTENT, this.run, this.setup, this.setup.effects, undefined, testGuide() ?? loadSave().guideStep);
+      // K24a: on the tutorial's first room, enemies wait and waves come only when Sensei's step lets them in.
+      if (this.run.tutorial && this.room.kind === 'battle') {
+        this.world.enemyHold = true;
+        this.world.waveHold = true;
+        this.world.seeAll = true;
+      }
+      this.tflow = null;
+      this.gotItBtn = null;
+      this.tutorialLead = '';
     } else {
       this.room = loadRoom(trainingRoom);
       this.world = createWorld(this.room, [this.me], {
@@ -422,9 +448,13 @@ export class GameScene extends Phaser.Scene {
         const move = this.controls.takeInput();
         const action = this.buttons.takeAction();
         const input: PlayerInput = action ? { ...move, action } : move;
+        const before = { ...this.world.players[this.me].pos };
         stepWorld(this.world, this.room, { [this.me]: input });
         this.elapsed -= TICK_MS;
+        const after = this.world.players[this.me].pos;
+        this.walked += Math.hypot(after.x - before.x, after.y - before.y);
         this.playEvents(this.world.events);
+        this.tutorialTick();
         if (this.run) this.playRunEvents(updateRun(CONTENT, this.run, this.world));
         this.checkStrikeLesson();
         if (this.hitStopMs > 0 || this.menuOpen || this.leaving) break;
@@ -982,6 +1012,7 @@ export class GameScene extends Phaser.Scene {
           break;
         }
         case 'perfectCounter': {
+          if (ev.playerId === this.me) this.tutorialDid('counter');
           const p = this.world.players[ev.playerId];
           sfx.perfect();
           this.heroDo('counter', 8); // the counter punch
@@ -993,6 +1024,8 @@ export class GameScene extends Phaser.Scene {
           break;
         }
         case 'block': {
+          // A Counter that wasn't perfect still counts as trying it (no pressure).
+          if (ev.playerId === this.me) this.tutorialDid('counter');
           const p = this.world.players[ev.playerId];
           sfx.block();
           this.impact(FEEL.block);
@@ -1040,6 +1073,7 @@ export class GameScene extends Phaser.Scene {
         }
         case 'guideDone': {
           const lesson = LESSONS[GUIDE_LESSONS[ev.step]];
+          if (ev.success) this.tutorialDid('counter');
           this.senseiDone(ev.success ? lesson.success : lesson.retry);
           break;
         }
@@ -1073,6 +1107,7 @@ export class GameScene extends Phaser.Scene {
           this.heroDo('counter', 0, 7); // the block, held while guarding
           break;
         case 'dash': {
+          if (ev.playerId === this.me) this.tutorialDid('dash');
           const p = this.world.players[ev.playerId];
           sfx.dash();
           this.heroDo('dash');
@@ -1150,7 +1185,9 @@ export class GameScene extends Phaser.Scene {
         }
         case 'roomCleared':
           if (this.room.kind !== 'treasure' && this.room.kind !== 'rest') sfx.roomClear();
-          if (this.run?.tutorial && this.room.kind === 'boss') this.senseiSay([TUTORIAL['tutorial-boss'].success!]);
+          if (this.run?.tutorial && this.room.kind === 'boss') this.tutorialDid('defeatBoss');
+          // K24a: if the fights end before a step's try, that step ends quietly.
+          if (this.tflow && this.room.kind === 'battle') while (this.tflow.index < TUTORIAL_STEPS.indexOf('tutorial-insight')) skipStep(this.tflow, currentStep(this.tflow)!);
           break;
         case 'goalReached': {
           const p = this.world.players[this.me];
@@ -1161,7 +1198,7 @@ export class GameScene extends Phaser.Scene {
             this.tweens.killTweensOf(this.goalView);
             this.tweens.add({ targets: this.goalView, alpha: 0, scale: 2, duration: 400, onComplete: () => this.goalView?.destroy() });
           }
-          this.senseiSay([TUTORIAL['tutorial-walk'].success!]);
+          this.tutorialDid('reachSpot');
           break;
         }
         case 'chestOpened': {
@@ -1169,7 +1206,7 @@ export class GameScene extends Phaser.Scene {
           this.chestOpenAt = this.time.now;
           const at = this.room.chest;
           this.time.delayedCall(this.chestTiming().burstMs, () => {
-            if (this.run?.tutorial) this.senseiSay([TUTORIAL['tutorial-chest'].success!]);
+            if (this.run?.tutorial) this.tutorialDid('openChest');
             sfx.chest();
             if (at) {
               this.ring(at, COLORS.gold, 1.8);
@@ -1190,7 +1227,7 @@ export class GameScene extends Phaser.Scene {
           for (const d of this.doorViews) this.ring(d.at, DOOR_LOOK[d.kind].color, 1.2);
           const p = this.world.players[this.me];
           const one = this.doorViews.length === 1;
-          if (this.run?.tutorial && this.room.kind === 'boss') this.time.delayedCall(1800, () => this.senseiSay([...TUTORIAL['tutorial-door'].screens, TUTORIAL['tutorial-door'].success!], 2000));
+          if (this.run?.tutorial && this.room.kind === 'boss') this.tutorialTip('tutorial-door');
           this.floatText(p.pos, one ? 'The door is open!' : 'The doors are open! Pick one.', '#f2e9d8', 20, 1.2);
           break;
         }
@@ -1274,12 +1311,11 @@ export class GameScene extends Phaser.Scene {
           if (!this.run) break;
           setPlayerMods(this.world.players[this.me], modsFrom(runEffects(CONTENT, this.run, this.setup.effects), TICKS_PER_SECOND));
           const name = CONTENT.insights.find((i) => i.id === ev.id)?.name ?? '';
-          this.time.delayedCall(1600, () => {
-            sfx.insight();
-            // Sensei's banner first, so the pop-up can keep clear of it (K23c).
-            this.senseiSay([...TUTORIAL['tutorial-insight'].screens, TUTORIAL['tutorial-insight'].success!], 1700);
-            this.popWord(name, '#ffd166', 34);
-          });
+          // K24a: no timer; the tip waits for Got it.
+          sfx.insight();
+          // Sensei's banner first, so the pop-up can keep clear of it (K23c).
+          this.tutorialTip('tutorial-insight');
+          this.popWord(name, '#ffd166', 34);
           break;
         }
         case 'insightChoice':
@@ -1459,12 +1495,150 @@ export class GameScene extends Phaser.Scene {
   private introduceTutorialRoom(): void {
     const kind = this.room.kind;
     if (kind === 'battle') {
-      this.senseiSay([TUTORIAL['tutorial-bow'].success!, ...TUTORIAL['tutorial-walk'].screens], 1300);
+      // The bow prompt was the bow step's tip, and bowing was its try.
+      this.tflow = tutorialFlow('tutorial-bow');
+      showTip(this.tflow, 'tutorial-bow');
+      gotIt(this.tflow, TUTORIAL);
+      this.tutorialDid('bow');
     } else if (kind === 'treasure') {
-      this.senseiSay(TUTORIAL['tutorial-chest'].screens);
+      this.tflow = tutorialFlow('tutorial-chest');
     } else if (kind === 'boss') {
-      this.senseiSay(TUTORIAL['tutorial-boss'].screens);
+      this.tflow = tutorialFlow('tutorial-boss');
     }
+    this.tutorialTick();
+  }
+
+  /**
+   * Tutorial floor (K24a): starts the next step when its moment comes. No timers: each tip
+   * waits for Got it, and each move step then waits for the player's try.
+   */
+  private tutorialTick(): void {
+    const f = this.tflow;
+    if (!f || f.phase !== 'ready' || this.menuOpen || this.leaving) {
+      this.checkTutorialTry();
+      return;
+    }
+    const id = currentStep(f);
+    const live = this.world.enemies.some((e) => e.mode !== 'defeated');
+    switch (id) {
+      case 'tutorial-walk':
+      case 'tutorial-space':
+      case 'tutorial-tip-tough':
+      case 'tutorial-chest':
+      case 'tutorial-boss':
+        this.tutorialTip(id);
+        break;
+      case 'tutorial-brute':
+        // The guided Counter teaches this step with its own lines, and holds until COUNTER is tapped.
+        showTip(f, id);
+        gotIt(f, TUTORIAL);
+        this.world.enemyHold = false;
+        break;
+      case 'tutorial-tip-warning':
+        if (live) this.tutorialTip(id);
+        else skipStep(f, id);
+        break;
+      case 'tutorial-tip-swarmers':
+      case 'tutorial-tip-space':
+      case 'tutorial-tip-dash':
+        if (!live) this.tutorialTip(id);
+        break;
+      default:
+        break; // bow, insight and door tips come from their own events
+    }
+  }
+
+  /** While a move step waits for its try: the tries the game checks itself. */
+  private checkTutorialTry(): void {
+    const f = this.tflow;
+    if (!f || f.phase !== 'trying') return;
+    const alive = (kind?: string) => this.world.enemies.some((e) => e.mode !== 'defeated' && (!kind || e.def.id === kind));
+    const id = currentStep(f);
+    if (id === 'tutorial-space' && this.walked >= 8) this.tutorialDid('walkAround');
+    else if (id === 'tutorial-tip-swarmers' && !alive('swarmer')) this.tutorialDid('defeatSwarmers');
+    else if (id === 'tutorial-tip-tough' && !alive()) this.tutorialDid('defeatBrute');
+    else if (id === 'tutorial-tip-space' && !alive()) this.tutorialDid('keepSpace');
+    else if (id === 'tutorial-tip-warning' && !alive()) skipStep(f, id);
+    else if (id === 'tutorial-tip-dash' && !alive()) {
+      this.buttons.pulseDash(false);
+      skipStep(f, id);
+    }
+  }
+
+  /** Something the tutorial may be waiting for happened. Its success line leads the next tip. */
+  private tutorialDid(ev: TutorialEvent): void {
+    const f = this.tflow;
+    if (!f) return;
+    const done = tutorialEvent(f, TUTORIAL, ev);
+    if (!done) return;
+    if (done === 'tutorial-tip-dash') this.buttons.pulseDash(false);
+    const line = TUTORIAL[done].success;
+    if (done === 'tutorial-brute') {
+      // The guided Counter already said its own success line.
+      this.tutorialTick();
+      return;
+    }
+    this.tutorialLead = line ?? '';
+    this.tutorialTick();
+    // Nothing follows straight away: the success line shows on its own until the next step.
+    if (this.tutorialLead && !this.gotItBtn) {
+      this.senseiSay([this.tutorialLead]);
+      this.tutorialLead = '';
+    }
+  }
+
+  /** A tip with a Got it button (K24a): the game waits until it is tapped. */
+  private tutorialTip(id: TutorialStep): void {
+    const f = this.tflow;
+    if (!f || !showTip(f, id)) return;
+    const step = TUTORIAL[id];
+    const lead = this.tutorialLead;
+    this.tutorialLead = '';
+    const lines = [...(lead ? [lead] : []), ...step.screens, ...(step.advance === 'tap' && step.success ? [step.success] : [])];
+    this.senseiSay([lines.join('\n')]);
+    this.menuOpen = true;
+    const { width } = this.scale.gameSize;
+    const btn = this.add
+      .text(width / 2, 0, 'Got it', {
+        fontFamily: 'system-ui, sans-serif',
+        fontStyle: 'bold',
+        fontSize: width < 720 ? '20px' : '24px',
+        color: '#1a1426',
+        backgroundColor: '#ffd166',
+        padding: { x: 22, y: 10 },
+      })
+      .setOrigin(0.5, 0)
+      .setResolution(window.devicePixelRatio || 1)
+      .setInteractive({ useHandCursor: true });
+    this.cameras.main.ignore(btn);
+    this.gotItBtn = btn;
+    this.placeSensei();
+    btn.once('pointerup', () => {
+      btn.destroy();
+      this.gotItBtn = null;
+      this.menuOpen = false;
+      this.controls.reset();
+      this.buttons.reset();
+      const finished = gotIt(f, TUTORIAL);
+      if (!finished) this.startTutorialTry(id);
+      // A tap step needs nothing more, so its banner goes when Got it is tapped.
+      else if (this.senseiText) {
+        this.senseiText.destroy();
+        this.senseiText = null;
+      }
+      this.tutorialTick();
+    });
+  }
+
+  /** After Got it on a move step: let in what the player is to try against. */
+  private startTutorialTry(id: TutorialStep): void {
+    if (id === 'tutorial-space') this.walked = 0;
+    if (id === 'tutorial-tip-swarmers' || id === 'tutorial-tip-space' || id === 'tutorial-tip-dash') {
+      const from = this.world.events.length;
+      // The new wave's spawn puffs play now (views are made on the next draw).
+      if (releaseWave(this.world)) this.playEvents(this.world.events.slice(from));
+    }
+    if (id === 'tutorial-tip-dash') this.buttons.pulseDash(true);
   }
 
   /** This room, for the one-new-lesson-per-room limit. */
@@ -1697,13 +1871,30 @@ export class GameScene extends Phaser.Scene {
     const left = t.x - t.width / 2;
     const right = t.x + t.width / 2;
     const boxes = this.protectedBoxes(true);
+    const btn = this.gotItBtn?.active ? this.gotItBtn : null;
+    const h = t.height + (btn ? btn.height + 8 : 0);
     for (let pass = 0; pass < 2; pass++) {
       for (const b of boxes) {
-        if (b.x1 < left || b.x0 > right || b.y1 < top || b.y0 > top + t.height) continue;
+        if (b.x1 < left || b.x0 > right || b.y1 < top || b.y0 > top + h) continue;
         top = Math.max(top, b.y1 + 6);
       }
     }
+    // K24a: the tutorial tip keeps off the action too: if it would cover the hero, it goes under them.
+    if (this.run?.tutorial) {
+      const cam = this.cameras.main;
+      const p = this.world.players[this.me].pos;
+      const py = (p.y * TILE - cam.worldView.y) * cam.zoom;
+      const px = (p.x * TILE - cam.worldView.x) * cam.zoom;
+      const r = TILE * cam.zoom * 1.2;
+      const H = this.scale.gameSize.height;
+      if (px + r > left && px - r < right && py + r > top && py - r < top + h) {
+        // Under the hero when it fits, otherwise above them; the Got it button always stays on screen.
+        top = py + r + 6 + h <= H - 8 ? py + r + 6 : Math.max(8, py - r - 6 - h);
+      }
+      top = Math.min(top, H - h - 8);
+    }
     t.setY(top);
+    btn?.setPosition(t.x, top + t.height + 8);
     this.placeDecoToasts();
   }
 
@@ -2012,7 +2203,9 @@ export class GameScene extends Phaser.Scene {
         // K12: smaller on phones, and long lines wrap so they always fit on screen.
         fontSize: width < 720 ? '20px' : '26px',
         color: '#ffffff',
-        backgroundColor: '#2a2440dd',
+        // K24a: on the tutorial floor the box is see-through (about 65%) and the text has an outline and shadow.
+        backgroundColor: this.run?.tutorial ? '#2a2440a6' : '#2a2440dd',
+        ...(this.run?.tutorial ? { stroke: '#120e1c', strokeThickness: 4, shadow: { offsetX: 0, offsetY: 2, color: '#000000', blur: 4, fill: true, stroke: true } } : {}),
         padding: { x: 16, y: 8 },
         align: 'center',
         wordWrap: { width: Math.min(width - 48, 640), useAdvancedWrap: true },
@@ -2022,6 +2215,8 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.ignore(t);
     this.senseiText = t;
     // The first line shows straight away, so its size is known (K12: labels keep clear of it).
+    // K24a: the tutorial never moves lines on by timer; they all show together.
+    if (this.run?.tutorial && lines.length > 1) lines = [lines.join('\n')];
     if (lines.length) t.setText(`Sensei: ${lines[0]}`);
     this.placeSensei();
     lines.slice(1).forEach((line, i) =>

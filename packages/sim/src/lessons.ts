@@ -65,25 +65,114 @@ export function loadLessons(data: unknown): Record<string, SenseiLesson> {
   return out;
 }
 
-/** The tutorial floor's steps (content/tutorial/tutorial-floor.json), in order. */
-export const TUTORIAL_STEPS = ['tutorial-bow', 'tutorial-walk', 'tutorial-brute', 'tutorial-insight', 'tutorial-chest', 'tutorial-boss', 'tutorial-door'] as const;
+/** The tutorial floor's steps (content/tutorial/tutorial-floor.json), in order (13 since C12/K24a). */
+export const TUTORIAL_STEPS = [
+  'tutorial-bow',
+  'tutorial-walk',
+  'tutorial-space',
+  'tutorial-brute',
+  'tutorial-tip-warning',
+  'tutorial-tip-swarmers',
+  'tutorial-tip-tough',
+  'tutorial-tip-space',
+  'tutorial-tip-dash',
+  'tutorial-insight',
+  'tutorial-chest',
+  'tutorial-boss',
+  'tutorial-door',
+] as const;
 export type TutorialStep = (typeof TUTORIAL_STEPS)[number];
 /** Taught in the tutorial's boss room when Focus first fills (Manager call, M7-P2). */
 export const STRIKE_LESSON = 'lesson-strike';
 
-/** Reads the tutorial floor's lines and checks every step is there. */
-export function loadTutorialLines(data: unknown): Record<TutorialStep, Lesson> {
+/** What the game waits for after a 'move' step's tip (K24a). */
+export const TUTORIAL_EVENTS = ['bow', 'reachSpot', 'walkAround', 'counter', 'defeatSwarmers', 'defeatBrute', 'keepSpace', 'dash', 'openChest', 'defeatBoss'] as const;
+export type TutorialEvent = (typeof TUTORIAL_EVENTS)[number];
+
+/**
+ * One tutorial step (K24a). advance 'tap': done when Got it is tapped.
+ * advance 'move': after Got it, the player tries the move; done when `waitFor` happens.
+ */
+export interface TutorialLine extends Lesson {
+  advance: 'tap' | 'move';
+  waitFor: TutorialEvent | null;
+}
+
+/** Reads the tutorial floor's steps and checks every step is there, with a valid advance and waitFor. */
+export function loadTutorialLines(data: unknown): Record<TutorialStep, TutorialLine> {
   const list = (data as { lessons?: unknown })?.lessons;
   if (!Array.isArray(list)) throw new Error('Tutorial floor: "lessons" must be a list');
-  const out: Partial<Record<TutorialStep, Lesson>> = {};
-  for (const l of list as Lesson[]) {
+  const out: Partial<Record<TutorialStep, TutorialLine>> = {};
+  for (const l of list as TutorialLine[]) {
     if (typeof l?.id !== 'string' || !Array.isArray(l.screens) || l.screens.some((s) => typeof s !== 'string')) {
       throw new Error(`Tutorial floor: step ${JSON.stringify(l?.id)} needs an id and a list of screens`);
     }
-    out[l.id as TutorialStep] = { id: l.id, screens: l.screens, success: l.success, retry: l.retry, nudge: l.nudge };
+    if (l.advance !== 'tap' && l.advance !== 'move') throw new Error(`Tutorial floor: step "${l.id}" needs advance 'tap' or 'move'`);
+    if (l.advance === 'tap' && l.waitFor != null) throw new Error(`Tutorial floor: tap step "${l.id}" must have waitFor null`);
+    if (l.advance === 'move' && !(TUTORIAL_EVENTS as readonly string[]).includes(l.waitFor as string)) {
+      throw new Error(`Tutorial floor: move step "${l.id}" waits for an unknown event ${JSON.stringify(l.waitFor)}`);
+    }
+    out[l.id as TutorialStep] = { id: l.id, screens: l.screens, success: l.success, retry: l.retry, nudge: l.nudge, advance: l.advance, waitFor: l.waitFor ?? null };
   }
   for (const id of TUTORIAL_STEPS) if (!out[id]) throw new Error(`Tutorial floor: missing "${id}"`);
-  return out as Record<TutorialStep, Lesson>;
+  return out as Record<TutorialStep, TutorialLine>;
+}
+
+// ---- Tutorial step flow (K24a): no timers. A tip waits for Got it, then (move steps) for the try. ----
+
+export type TutorialPhase = 'ready' | 'tip' | 'trying';
+
+export interface TutorialFlow {
+  /** Index in TUTORIAL_STEPS of the step now in play; TUTORIAL_STEPS.length when finished. */
+  index: number;
+  phase: TutorialPhase;
+}
+
+/** A flow starting at `from` (each tutorial room picks up at its own first step). */
+export function tutorialFlow(from: TutorialStep = 'tutorial-bow'): TutorialFlow {
+  return { index: TUTORIAL_STEPS.indexOf(from), phase: 'ready' };
+}
+
+/** The step now in play, or null when the flow is finished. */
+export function currentStep(flow: TutorialFlow): TutorialStep | null {
+  return TUTORIAL_STEPS[flow.index] ?? null;
+}
+
+/** Shows the current step's tip. Only from 'ready', and only for the step now in play. */
+export function showTip(flow: TutorialFlow, id: TutorialStep): boolean {
+  if (flow.phase !== 'ready' || currentStep(flow) !== id) return false;
+  flow.phase = 'tip';
+  return true;
+}
+
+/** Got it was tapped: a tap step is done; a move step now waits for the try. Returns the finished step, if any. */
+export function gotIt(flow: TutorialFlow, lines: Record<TutorialStep, TutorialLine>): TutorialStep | null {
+  const id = currentStep(flow);
+  if (flow.phase !== 'tip' || !id) return null;
+  if (lines[id].advance === 'tap') return finish(flow);
+  flow.phase = 'trying';
+  return null;
+}
+
+/** Something happened in the game. Returns the finished step when it was what the current step waits for. */
+export function tutorialEvent(flow: TutorialFlow, lines: Record<TutorialStep, TutorialLine>, ev: TutorialEvent): TutorialStep | null {
+  const id = currentStep(flow);
+  if (flow.phase !== 'trying' || !id || lines[id].waitFor !== ev) return null;
+  return finish(flow);
+}
+
+/** The step can no longer happen (e.g. its enemy is gone): it ends quietly, with no pressure. */
+export function skipStep(flow: TutorialFlow, id: TutorialStep): boolean {
+  if (currentStep(flow) !== id) return false;
+  finish(flow);
+  return true;
+}
+
+function finish(flow: TutorialFlow): TutorialStep {
+  const id = TUTORIAL_STEPS[flow.index];
+  flow.index++;
+  flow.phase = 'ready';
+  return id;
 }
 
 // ---- Sensei's Lessons: when a new lesson may show (M7-P5) ----
