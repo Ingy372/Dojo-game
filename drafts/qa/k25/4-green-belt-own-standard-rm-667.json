@@ -1,0 +1,15 @@
+{
+ "tag": "4-green-belt-own-standard-rm-667",
+ "rmVal": true,
+ "diff": "standard",
+ "impacts": 27,
+ "kinds": {
+  "attack(default 0)": 20,
+  "scale 0": 7
+ },
+ "shakeCalls": [],
+ "framesShaking": 0,
+ "frames": 918,
+ "maxOffsetPx": 0,
+ "errs": []
+}

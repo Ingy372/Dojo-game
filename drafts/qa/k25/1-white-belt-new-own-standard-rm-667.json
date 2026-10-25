@@ -1,0 +1,15 @@
+{
+ "tag": "1-white-belt-new-own-standard-rm-667",
+ "rmVal": true,
+ "diff": "standard",
+ "impacts": 28,
+ "kinds": {
+  "attack(default 0)": 21,
+  "scale 0": 7
+ },
+ "shakeCalls": [],
+ "framesShaking": 0,
+ "frames": 994,
+ "maxOffsetPx": 0,
+ "errs": []
+}

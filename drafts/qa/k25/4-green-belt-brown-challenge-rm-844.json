@@ -1,0 +1,15 @@
+{
+ "tag": "4-green-belt-brown-challenge-rm-844",
+ "rmVal": true,
+ "diff": "challenge",
+ "impacts": 26,
+ "kinds": {
+  "attack(default 0)": 18,
+  "scale 0": 8
+ },
+ "shakeCalls": [],
+ "framesShaking": 0,
+ "frames": 1265,
+ "maxOffsetPx": 0,
+ "errs": []
+}
