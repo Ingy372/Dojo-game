@@ -1,7 +1,7 @@
 {
   "id": "spark-sprite",
   "name": "Spark Sprite",
-  "notes": "DRAFT for C13-1 (bestiary-plan.md). Tiny warm sparks that dart around the ovens. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). Tiny warm sparks that dart around the ovens. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
   "color": "#ff8a3d",
   "maxHealth": 45,
   "power": 18,

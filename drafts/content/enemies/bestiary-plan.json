@@ -126,7 +126,7 @@
           "behaviour": "Bonks with a padded foam staff.",
           "tell": "Raises the staff and glows; red circle.",
           "counterplay": "COUNTER; a Perfect Counter disarms it (staff hidden).",
-          "scaling": "Stats TODO (Researcher).",
+          "scaling": "Stats set in R-BAL-8 (#183).",
           "dashOnly": false,
           "existing": true
         },
@@ -690,7 +690,7 @@
           "behaviour": "Quick storm-cloud wisps.",
           "tell": "Crackle, then red circle.",
           "counterplay": "Clear first.",
-          "scaling": "Top of ENEMY_SCALE; soft-cap ×1.5.",
+          "scaling": "Top of ENEMY_SCALE. Endless: +3% per floor, no cap (Jay's call).",
           "dashOnly": false,
           "existing": false
         },

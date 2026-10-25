@@ -1,7 +1,7 @@
 {
   "id": "vine-sweeper",
   "name": "Vine Sweeper",
-  "notes": "DRAFT for C13-1 (bestiary-plan.md). A tangle of vines that swings one long sweep. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A tangle of vines that swings one long sweep. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
   "color": "#3f8a4f",
   "maxHealth": 116,
   "power": 19,

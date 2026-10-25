@@ -46,7 +46,7 @@ Jay's idea (docs/decisions.md, 'Dodge-only attacks'): an attack that can't be CO
 
 | Name | Role | Band | Behaviour | Tell | Counterplay | Scaling |
 |---|---|---|---|---|---|---|
-| Bouncy Bopper *(existing)* | bonker | F1-2 | Bonks with a padded foam staff. | Raises the staff and glows; red circle. | COUNTER; a Perfect Counter disarms it (staff hidden). | Stats TODO (Researcher). |
+| Bouncy Bopper *(existing)* | bonker | F1-2 | Bonks with a padded foam staff. | Raises the staff and glows; red circle. | COUNTER; a Perfect Counter disarms it (staff hidden). | Stats set in R-BAL-8 (#183). |
 | Buzzy Bee | swarm | F1-2 | Busy little bees in groups of 3-4 that zip in and out. | Short hover, then red circle. | Clear them first; DASH out if they crowd you. | Group size grows by band. |
 | Thorn Sprout | turret | F1-2 | A grumpy sprout that stays put and spits seeds. | Puffs its cheeks; red circle where the seed lands. | Walk around the seeds and calm it up close. | Rooted; fire rate fixed. |
 | Shellback Snail | guard | F3-4 | Slow snail that hides in its shell when hit too often. | Red circle before its head-bump. | Wait for it to peek out, or STRIKE the shell. | Hide time fixed; health by ENEMY_SCALE. |
@@ -119,7 +119,7 @@ Jay's idea (docs/decisions.md, 'Dodge-only attacks'): an attack that can't be CO
 
 | Name | Role | Band | Behaviour | Tell | Counterplay | Scaling |
 |---|---|---|---|---|---|---|
-| Storm Wisp | swarm | F1-2 | Quick storm-cloud wisps. | Crackle, then red circle. | Clear first. | Top of ENEMY_SCALE; soft-cap ×1.5. |
+| Storm Wisp | swarm | F1-2 | Quick storm-cloud wisps. | Crackle, then red circle. | Clear first. | Top of ENEMY_SCALE. Endless: +3% per floor, no cap (Jay's call). |
 | Rumble Brute | heavy | F1-2 | A big storm-wrapped brute; gets winded like a Brute. | Red circle (16 ticks). | COUNTER, or hit while winded. | Health/power by ENEMY_SCALE. |
 | Echo Knight | guard | F3-4 | Remembers every guard trick: shield, turn and copy. | Red circle; shield shines. | STRIKE, circle round, change your move. | Mixes three tells; each stays readable. |
 | Sky Sweeper **[dash-only]** | dash-only | F3-4 | A gust that sweeps an arc, then a lane. | Dash-only: arc then lane, each + '!!', 20 ticks. | DASH twice. | Two in a row, at least 20 ticks apart, never at the same time. |

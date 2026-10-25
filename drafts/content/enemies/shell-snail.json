@@ -1,7 +1,7 @@
 {
   "id": "shell-snail",
   "name": "Shellback Snail",
-  "notes": "DRAFT for C13-1 (bestiary-plan.md). A slow snail that hides in its shell when hit too often. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A slow snail that hides in its shell when hit too often. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
   "color": "#c98d5b",
   "maxHealth": 104,
   "power": 19,

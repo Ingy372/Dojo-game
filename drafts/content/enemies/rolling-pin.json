@@ -1,7 +1,7 @@
 {
   "id": "rolling-pin",
   "name": "Rolling Pin",
-  "notes": "DRAFT for C13-1 (bestiary-plan.md). A giant rolling pin that rolls down a lane. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A giant rolling pin that rolls down a lane. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
   "color": "#d9a86c",
   "maxHealth": 154,
   "power": 27,

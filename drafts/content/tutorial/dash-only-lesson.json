@@ -47,7 +47,7 @@
         "A striped lane with two marks means DASH."
       ],
       "practice": "COUNTER the circle. DASH out of stripes.",
-      "success": "Red circle, COUNTER. Purple stripes, DASH. You knew both.",
+      "success": "You knew both!",
       "retry": "That's okay. Watch the shape, then choose.",
       "slowdown": false,
       "earliestSession": 1,
