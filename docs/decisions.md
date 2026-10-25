@@ -996,3 +996,7 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Manager call (Oct 25): the rest of work-board 3c becomes P-MENU-f (lock and label sizes, 96-tall Seal cards, the Seal's first-lit pop and bell). Plan approved, with one condition: the new "seal seen" save field must load old saves cleanly, defaulting to already-seen for Seals that are already lit (no flood of bells for returning players), with a test.
 - Built that way: `Profile.sealsSeen` (belt ids). Old saves load it as null; the first Gate view fills it with the Seal already lit, silently. It only ever adds ids. The bell is `sfx.seal()`, the bow's bell alone, made in code (no sound file) and following the sound volume. Reduced motion skips the pop, not the bell.
 - The square testing panel stays square (Manager: developers only).
+## B-POLISH-1 (2026-10-25)
+- Manager call (Oct 25): two small follow-ups from QA of #261/#262, one PR.
+- Gear: the empty-bag hint (bag icon + words) is hidden while a worn-item sheet is open (`showEmptyBagHint`), so it no longer shows faintly behind the sheet.
+- Last run: when zero item rows fit (667x375), the line reads "N items in your Gear" instead of "+N more in your Gear"; "+N more" stays when at least one name shows (`lastRunMoreLabel`).

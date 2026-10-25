@@ -114,6 +114,21 @@ export function lastRunItemsFit(itemsTop: number, bestsTop: number, lineH: numbe
   return Math.max(0, Math.floor((room - lineH) / lineH));
 }
 
+/**
+ * B-POLISH-1: the line under the Last run item rows. When no item name fits (667x375),
+ * "+N more" would point at nothing, so it reads "N items in your Gear" instead.
+ */
+export function lastRunMoreLabel(total: number, shown: number): string | null {
+  if (total <= shown) return null;
+  if (shown === 0) return `${total} ${total === 1 ? 'item' : 'items'} in your Gear`;
+  return `+${total - shown} more in your Gear`;
+}
+
+/** B-POLISH-1: the empty-bag hint hides while a worn-item sheet is open over it. */
+export function showEmptyBagHint(bagCount: number, sheetOpen: boolean): boolean {
+  return bagCount === 0 && !sheetOpen;
+}
+
 /** B-LASTRUN: tops for blocks of the given heights, each S1 below the previous bottom. */
 export function stackTops(top: number, heights: readonly number[], gap: number = S1): number[] {
   const tops: number[] = [];
