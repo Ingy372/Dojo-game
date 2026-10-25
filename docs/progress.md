@@ -579,3 +579,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Checked at 667x375 and 844x390 with Reduced motion on and off (headless browser, full tutorial run).
 **Next**
 - Tester re-checks Q5.
+- Retest fix (Manager's call after the K27 retest): the boss "!" is drawn at full strength (opaque disc, solid colors) above the boss, or beside it when the boss bar leaves no room above, and never over a door label or the boss bar. Tutorial tips avoid the cue where it actually sits.
