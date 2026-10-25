@@ -27,15 +27,35 @@ export function menu2Image(scene: Phaser.Scene, name: Name, x: number, y: number
 }
 
 /** A 9-slice (or 3-slice) sprite with its top-left at (x, y), w x h; corners stay at their 1x size. */
-export function menu2Slice(scene: Phaser.Scene, name: Name, x: number, y: number, w: number, h: number): Phaser.GameObjects.NineSlice | null {
+export function menu2Slice(scene: Phaser.Scene, name: Name, x: number, y: number, w: number, h: number, k: number | 'height' = 0.5): Phaser.GameObjects.NineSlice | null {
   const s = lookup(scene, name);
   if (!s?.nineSlice) return null;
   const [t, r, b, l] = s.nineSlice.map((v) => v * 2);
-  const ns = scene.add.nineslice(x, y, s.tex[0], s.tex[1], Math.max(l + r, w * 2), Math.max(t + b, h * 2), l, r, t, b).setOrigin(0);
+  // k = screen px per @2x px. 'height' (3-slices): scale the whole sprite so its height is h, caps included.
+  const sc = k === 'height' ? h / (2 * s.size[1]) : k;
+  const ns = scene.add.nineslice(x, y, s.tex[0], s.tex[1], Math.max(l + r, w / sc), Math.max(t + b, h / sc), l, r, t, b).setOrigin(0);
   // 3-slice art keeps its own height; scale it to fit.
-  if (t === 0 && b === 0) ns.setScale(0.5, h / s.size[1]);
-  else ns.setScale(0.5);
+  if (t === 0 && b === 0 && k !== 'height') ns.setScale(sc, h / s.size[1]);
+  else ns.setScale(sc);
   return ns;
+}
+
+/** Dark ink for words on the honey button and the title plaque (README). */
+export const HONEY_INK = '#462a16';
+
+/**
+ * Puts the honey wood button art on a button() (w x h, centred in its visual). `dim` darkens it
+ * (a tab that isn't picked); `disabled` uses the matte pale wood. False: the code button stays.
+ */
+export function woodSkin(scene: Phaser.Scene, b: { visual: Phaser.GameObjects.Container; hit: Phaser.GameObjects.Zone }, w: number, h: number, o: { dim?: boolean; disabled?: boolean } = {}): boolean {
+  const name = o.disabled ? 'button-primary-disabled' : 'button-primary-normal';
+  const skin = menu2Slice(scene, name, -w / 2, -h / 2, w, h, 'height');
+  if (!skin) return false;
+  if (o.dim) skin.setTint(0xa89078);
+  skinButton(scene, b, skin, name, o.disabled ? undefined : 'button-primary-pressed');
+  for (const c of b.visual.list) if (c instanceof Phaser.GameObjects.Text) c.setColor(HONEY_INK);
+  if (o.disabled) b.visual.setAlpha(1);
+  return true;
 }
 
 /** Re-points an image or 9-slice at another frame (pressed states). False when it can't. */

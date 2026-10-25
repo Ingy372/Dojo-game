@@ -26,6 +26,8 @@ export const MENU2_FRAMES = {
     'xp-bar-frame', 'xp-bar-fill', 'xp-bar-gloss',
     ...RARITY4.map((r) => `found-tile-${r}`),
   ],
+  /** Shared by all three screens: the panel frame, the title plaque and the wood buttons (tabs, Bests, Again, Close, page arrows). */
+  shared: ['panel-frame', 'title-plaque', 'button-primary-normal', 'button-primary-pressed', 'button-primary-disabled'],
 } as const;
 
 export const MENU2_ALL: readonly string[] = Object.values(MENU2_FRAMES).flat();

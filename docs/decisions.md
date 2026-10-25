@@ -1121,3 +1121,10 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - The @2x files are packed untrimmed ("ui" source type) and drawn at 0.5. Every art draw falls back to the code-drawn version when a frame, page or pack is missing, so no code paths were deleted.
 - Legendary uses the Epic art. Stat-tile words switch to dark ink on the paper tile; the "Everyday" word on the common bag tile uses #6b5a48 so it can be read on paper.
 - The lantern shows on the next cubby only (the code lantern stays in the fallback).
+
+## P-MENU2-i: Manager's calls on #286 (2026-10-25)
+1. The shared #265 pieces join this PR: panel frame, title plaque, and the wood (honey) buttons for the tab bar, Bests, Again, Close and the page arrows, on Trophies, Gear and Last run. The Trophies/My Style switch and all My Style art stay code-drawn. Fallbacks, 44+ taps, 12+ px text and 8+ px padding are kept.
+2. Today's layout stays; no layout changes.
+3. These stay as they are: Legendary borrows Epic, the code-drawn circle on kata cubbies, the lantern on the next cubby only.
+4. Dark ink on the stat tiles and #6b5a48 for "Everyday" are approved.
+- How: the panel frame is drawn at 0.25 so its rail fits the code frame's margin; Gear and the Trophy Case keep their dark well over its paper centre so their light words still read. The page arrows use the honey button with the ◀ ▶ label (the art has no page-arrow sprite). Unpicked tabs are the honey button darkened. Labels on honey are #462a16.

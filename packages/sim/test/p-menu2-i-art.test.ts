@@ -58,6 +58,20 @@ describe('P-MENU2-i menu2 art', () => {
     expect(Object.keys(pack.entries[MENU2_PACK].sprites!).filter((n) => /slot-card|tray-|switch-|glyph-/.test(n))).toEqual([]);
   });
 
+  it('the shared pieces (panel frame, title plaque, wood buttons) are imported and drawn, never the switch', () => {
+    const out = Object.keys(pack.entries[MENU2_PACK].sprites!);
+    for (const n of ['panel-frame', 'title-plaque', 'button-primary-normal', 'button-primary-pressed', 'button-primary-disabled']) {
+      expect(MENU2_FRAMES.shared, n).toContain(n);
+      expect(out, n).toContain(n);
+    }
+    expect(home).toMatch(/menu2Slice\(this, 'panel-frame'/);
+    expect(home).toMatch(/menu2Slice\(this, 'title-plaque'/);
+    expect(helpers).toMatch(/'button-primary-normal'/);
+    expect((home.match(/woodSkin\(this/g) ?? []).length).toBeGreaterThanOrEqual(9);
+    expect(out.filter((n) => n.startsWith('switch'))).toEqual([]);
+    expect(home + helpers).not.toMatch(/['"`]switch-(?:track|left|right)/);
+  });
+
   it('Legendary uses the Epic art', () => {
     expect(artRarity('legendary')).toBe('epic');
     expect(artRarity('rare')).toBe('rare');

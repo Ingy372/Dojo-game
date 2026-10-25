@@ -47,7 +47,7 @@ import { isPlayTimeUp } from '../game/playTime';
 import { addIcon, ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { loadArt } from '../art/art';
-import { hasMenu2, menu2Frames, menu2Image, menu2Slice, skinButton } from '../art/menu2';
+import { hasMenu2, menu2Frames, menu2Image, menu2Slice, skinButton, woodSkin, HONEY_INK } from '../art/menu2';
 import { MENU2_PACK, artRarity } from '../art/menu2Frames';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
@@ -116,6 +116,8 @@ export class HomeScene extends Phaser.Scene {
   /** P-MENU-b: the panel contents only. Tab, page and gear taps redraw just this. */
   private panel: Phaser.GameObjects.Container | null = null;
   private panelBox = { rx: 0, top: 0, rw: 0, panelH: 0 };
+  /** P-MENU2-i: the code-drawn panel frame, hidden while the panel-frame art is drawn. */
+  private codeFrame: Phaser.GameObjects.Graphics | null = null;
   private tabBox = { rx: 0, y: 0, tabW: 0 };
   private testing: TestingPanel | null = null;
   private celebrating = false;
@@ -342,7 +344,8 @@ export class HomeScene extends Phaser.Scene {
     const rw = width - rx - pad;
     const top = pad + 46;
     const panelH = height - top - pad;
-    this.ui.add(woodFrame(this, rx, top, rw, panelH));
+    this.codeFrame = woodFrame(this, rx, top, rw, panelH);
+    this.ui.add(this.codeFrame);
     this.panelBox = { rx, top, rw, panelH };
     this.tabBox = { rx, y: pad, tabW: (rw - 6 * 3) / 4 };
   }
@@ -361,7 +364,8 @@ export class HomeScene extends Phaser.Scene {
     ];
     const tabW = this.tabBox.tabW;
     tabs.forEach(([tab, label], i) => {
-      this.button(rx + i * (tabW + 6), pad, tabW, 34, label, this.tab === tab ? 0x4a3f63 : 0x2a2536, 14, () => this.setTab(tab));
+      const b = button(this, { x: rx + i * (tabW + 6), y: pad, w: tabW, h: 34, label, color: this.tab === tab ? 0x4a3f63 : 0x2a2536, size: 14, onTap: () => this.setTab(tab) }, this.ui);
+      woodSkin(this, b, tabW, 34, { dim: this.tab !== tab });
     });
     const i = tabs.findIndex(([tab]) => tab === this.tab);
     const ux = rx + i * (tabW + 6) + 8;
@@ -387,6 +391,7 @@ export class HomeScene extends Phaser.Scene {
     this.panel = panel;
     this.ui = panel;
     const { rx, top, rw, panelH } = this.panelBox;
+    this.panelFrameArt(rx, top, rw, panelH);
     if (this.tab === 'run') this.renderRun(rx + 12, top + 10, rw - 24, panelH - 20);
     else if (this.tab === 'gear') this.renderGear(rx + 10, top + 10, rw - 20, panelH - 20);
     else if (this.tab === 'abilities') this.renderAbilities(rx + 10, top + 10, rw - 20, panelH - 20);
@@ -491,7 +496,7 @@ export class HomeScene extends Phaser.Scene {
     const ch = h - 2 * (6 + S1);
     if (!last) {
       this.text(cx0, cy0 + S2, LASTRUN_WORDS.none, TYPE.body, WOOD.ink, true, FONT, cw - 96 - S2);
-      button(this, { x: cx0 + cw - 96, y: cy0, w: 96, h: MIN_TAP, label: LASTRUN_WORDS.bests, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.openBests() }, this.ui);
+      woodSkin(this, button(this, { x: cx0 + cw - 96, y: cy0, w: 96, h: MIN_TAP, label: LASTRUN_WORDS.bests, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.openBests() }, this.ui), 96, MIN_TAP);
       return;
     }
     const m = buildLastRun(last, playTimeText.homeHeadline);
@@ -504,7 +509,14 @@ export class HomeScene extends Phaser.Scene {
     // Banner: the result in kind words, gold for a clear.
     const head = this.text(X(0), Y(L.banner.h / 2), m.headline, TYPE.heading, m.cleared ? '#a0522d' : WOOD.ink, true).setOrigin(0, 0.5);
     this.oneLine(head, L.banner.w, TYPE.body);
-    button(this, { ...L.bests, x: X(L.bests.x), y: Y(L.bests.y), label: LASTRUN_WORDS.bests, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.openBests() }, this.ui);
+    // P-MENU2-i: the honey title plaque behind the headline (dark ink on it); 12 px caps of padding.
+    const ph = Math.min(40, L.banner.h);
+    const plaque = menu2Slice(this, 'title-plaque', X(0) - 12, Y(L.banner.h / 2) - ph / 2, head.width + 24, ph, 'height');
+    if (plaque) {
+      this.ui.addAt(plaque, this.ui.getIndex(head));
+      head.setColor(HONEY_INK);
+    }
+    woodSkin(this, button(this, { ...L.bests, x: X(L.bests.x), y: Y(L.bests.y), label: LASTRUN_WORDS.bests, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.openBests() }, this.ui), L.bests.w, L.bests.h);
 
     // Room chips: grade, a drawn chest for treasure, or a mark.
     m.chips.forEach((r, i) => {
@@ -596,7 +608,7 @@ export class HomeScene extends Phaser.Scene {
     const fp = foundPage(m.found, L.foundPerPage, this.foundPageNo);
     this.foundPageNo = fp.page;
     if (L.arrows) {
-      button(this, { x: X(L.found.x + L.found.w + S1), y: Y(L.found.y), w: MIN_TAP, h: MIN_TAP, label: '▶', color: WOOD.switchOff, size: TYPE.body, onTap: () => this.turnFound(1) }, this.ui);
+      woodSkin(this, button(this, { x: X(L.found.x + L.found.w + S1), y: Y(L.found.y), w: MIN_TAP, h: MIN_TAP, label: '▶', color: WOOD.switchOff, size: TYPE.body, onTap: () => this.turnFound(1) }, this.ui), MIN_TAP, MIN_TAP);
       const d = pageDots(fp.pages, L.found.w + MIN_TAP - 64);
       if (d) for (let i = 0; i < fp.pages; i++) this.ui.add(this.add.circle(X(L.found.x + 64 + d.x0 + i * d.step), Y(L.foundLabelY + TYPE.label / 2 + 1), GEAR.dot / 2, i === fp.page ? 0xa8703f : WOOD.grain, i === fp.page ? 1 : 0.5).setData('foundDot', i));
     }
@@ -660,7 +672,7 @@ export class HomeScene extends Phaser.Scene {
     }
 
     // Again!: start another climb.
-    button(this, { ...L.again, x: X(L.again.x), y: Y(L.again.y), label: LASTRUN_WORDS.again, color: 0xd5713a, size: TYPE.title, onTap: () => this.enterTower() }, this.ui);
+    woodSkin(this, button(this, { ...L.again, x: X(L.again.x), y: Y(L.again.y), label: LASTRUN_WORDS.again, color: 0xd5713a, size: TYPE.title, onTap: () => this.enterTower() }, this.ui), L.again.w, L.again.h);
   }
 
   private turnFound(by: number): void {
@@ -727,7 +739,7 @@ export class HomeScene extends Phaser.Scene {
       this.oneLine(this.text(sx + pad, ty, str, TYPE.body, color, bold), sw - 2 * pad, TYPE.label);
       ty += TYPE.body + 6;
     }
-    button(this, { x: sx + sw - pad - 96, y: sy + sh - pad - MIN_TAP, w: 96, h: MIN_TAP, label: LASTRUN_WORDS.close, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.closeCubby() }, body);
+    woodSkin(this, button(this, { x: sx + sw - pad - 96, y: sy + sh - pad - MIN_TAP, w: 96, h: MIN_TAP, label: LASTRUN_WORDS.close, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.closeCubby() }, body), 96, MIN_TAP);
     this.ui = prevUi;
     this.panel?.add(sheet);
     if (reducedMotion()) {
@@ -962,8 +974,8 @@ export class HomeScene extends Phaser.Scene {
     }
     // 2-row pages: ◀ ▶ centred on the shelves, dots in the slim strip below.
     const midY = top + (L.rowsPerPage * L.rowH) / 2 - MIN_TAP / 2;
-    this.button(x, midY, MIN_TAP, MIN_TAP, '◀', WOOD.switchOff, 15, () => this.turn(-1));
-    this.button(x + w - MIN_TAP, midY, MIN_TAP, MIN_TAP, '▶', WOOD.switchOff, 15, () => this.turn(1));
+    woodSkin(this, this.button(x, midY, MIN_TAP, MIN_TAP, '◀', WOOD.switchOff, 15, () => this.turn(-1)), MIN_TAP, MIN_TAP);
+    woodSkin(this, this.button(x + w - MIN_TAP, midY, MIN_TAP, MIN_TAP, '▶', WOOD.switchOff, 15, () => this.turn(1)), MIN_TAP, MIN_TAP);
     this.pageDotsRow(x + L.shelfX, y + h - L.pagerH / 2, L.shelfW, pages.length);
   }
 
@@ -1151,8 +1163,8 @@ export class HomeScene extends Phaser.Scene {
 
   /** P-MENU2-b: ◀ dots ▶ (44 tall). Dots only, never "n / m". */
   private trophyPager(x: number, y: number, w: number, pages: number): void {
-    this.button(x, y, GEAR.arrowW, 44, '◀', WOOD.switchOff, 15, () => this.turn(-1));
-    this.button(x + w - GEAR.arrowW, y, GEAR.arrowW, 44, '▶', WOOD.switchOff, 15, () => this.turn(1));
+    woodSkin(this, this.button(x, y, GEAR.arrowW, 44, '◀', WOOD.switchOff, 15, () => this.turn(-1)), GEAR.arrowW, 44);
+    woodSkin(this, this.button(x + w - GEAR.arrowW, y, GEAR.arrowW, 44, '▶', WOOD.switchOff, 15, () => this.turn(1)), GEAR.arrowW, 44);
     this.pageDotsRow(x + GEAR.arrowW, y + 22, w - 2 * GEAR.arrowW, pages);
   }
 
@@ -1766,8 +1778,27 @@ export class HomeScene extends Phaser.Scene {
     return t;
   }
 
-  private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void): void {
-    button(this, { x, y, w, h, label, color, size, onTap }, this.ui);
+  private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void): ReturnType<typeof button> {
+    return button(this, { x, y, w, h, label, color, size, onTap }, this.ui);
+  }
+
+  /**
+   * P-MENU2-i: the panel-frame art on Last run, Gear and the Trophy Case (not My Style, not Gate).
+   * Drawn at 0.25 so its rail (16 px at 1x -> 8 px) sits inside the code frame's margin; the
+   * Gear and Trophy panels keep their dark well on top of the paper centre so their light words
+   * still read. Missing art: the code frame stays.
+   */
+  private panelFrameArt(rx: number, top: number, rw: number, panelH: number): void {
+    const on = this.tab === 'run' || this.tab === 'gear' || (this.tab === 'abilities' && this.part === 'trophy');
+    const sh = 6 * 2 * 0.25;
+    const art = on ? menu2Slice(this, 'panel-frame', rx - sh, top - sh, rw + 2 * sh, panelH + 2 * sh, 0.25) : null;
+    this.codeFrame?.setVisible(!art);
+    if (!art) return;
+    this.ui.add(art);
+    if (this.tab !== 'run') {
+      const f = 8;
+      this.ui.add(this.add.graphics().fillStyle(WOOD.inner, 0.92).fillRoundedRect(rx + f, top + f, rw - 2 * f, panelH - 2 * f, RADIUS.panel - 4));
+    }
   }
 }
 
