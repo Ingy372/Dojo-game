@@ -415,8 +415,3 @@ export function hurtShakeScale(o: { beltTier: number; difficulty: Difficulty; re
   if (o.reducedMotion) return 0;
   return o.beltTier >= SCREEN_SHAKE.hurtFromTier || o.difficulty === 'challenge' ? SCREEN_SHAKE.hurtScale : 0;
 }
-
-/** K25b (Manager): a Block is a success moment, so it never shakes; only being hit does. */
-export function eventShakeScale(kind: 'hurt' | 'block', o: Parameters<typeof hurtShakeScale>[0]): number {
-  return kind === 'block' ? 0 : hurtShakeScale(o);
-}
