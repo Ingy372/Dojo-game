@@ -3,7 +3,7 @@ import playTimeText from '../../../../content/settings/play-time.json';
 import {
   BLESSING,
   GEAR_SLOTS,
-  TICKS_PER_SECOND,
+  realClock,
   compareGear,
   describeItem,
   describeVirtue,
@@ -44,7 +44,7 @@ import { Celebrations } from '../ui/Celebrations';
 import { GoalsCard } from '../ui/GoalsCard';
 import { localDay, takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
-import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css, view, hiDpi } from '../ui/theme';
+import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, crisp, css, view, hiDpi } from '../ui/theme';
 import type { GameSceneData } from './GameScene';
 
 /** How Home was opened: after a run (cleared, lost, or rested at the play limit) the next goals may show. */
@@ -344,7 +344,7 @@ export class HomeScene extends Phaser.Scene {
       cx += 36;
     }
     y += 40;
-    this.text(x, y, `Perfect Counters ${s.perfects}   Best combo ${s.bestCombo}   Time ${clock(s.ticks, TICKS_PER_SECOND)}`, 14, '#f2e9d8', false, FONT, w);
+    this.text(x, y, `Perfect Counters ${s.perfects}   Best combo ${s.bestCombo}   Time ${realClock(s.ticks)}`, 14, '#f2e9d8', false, FONT, w);
     y += 22;
     if (last.xp) {
       const xp = last.xp;
@@ -383,7 +383,7 @@ export class HomeScene extends Phaser.Scene {
     const newBests = new Set(this.profile.lastRun?.newBests ?? []);
     this.text(x, y, 'Personal bests', 13, '#ffd166', true);
     const rows: Array<[BestKey, string]> = [
-      ['fastestClearTicks', b.fastestClearTicks === null ? '—' : clock(b.fastestClearTicks, TICKS_PER_SECOND)],
+      ['fastestClearTicks', b.fastestClearTicks === null ? '—' : realClock(b.fastestClearTicks)],
       ['mostPerfects', `${b.mostPerfects}`],
       ['longestCombo', `${b.longestCombo}`],
       ['mostSGrades', `${b.mostSGrades}`],
