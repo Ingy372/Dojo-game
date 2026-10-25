@@ -918,3 +918,10 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
   - Pause in the background with the smallest code. One `setAway()` in main.ts sleeps the game loop and suspends the shared audio context (music and sound effects). It runs on `visibilitychange` and, in the app, on @capacitor/app's `appStateChange`.
 - Landscape: Android uses `sensorLandscape` in the manifest, iOS lists landscape only, and the app also calls ScreenOrientation.lock. Full screen: no status bar (Android windowFullscreen, iOS UIStatusBarHidden). The safe areas keep using the existing CSS `env(safe-area-inset-*)` on #game.
 - The Android debug APK is built on the box with JDK 21 and Android SDK 36 (tooling only, not in the repo). The emulator smoke test wasn't possible: the emulator hung at boot on the box.
+
+## B-BELT grown-up belt entry (2026-10-25)
+- Manager call (BETA-DEC15 D2): until the DojoForge feed sends it, a grown-up types in the real belt and stripes behind the existing grown-up gate. The sum question leads to the play-time screen, which now has a "Belt & stripes" button. Nothing leaves the phone.
+- The entry is saved in the profile (`beltEntry`, in the same localStorage save), so it survives a restart. Saves without it load with `null`.
+- It never lowers anything. The saved entry only goes up (belt first, then stripes), and the game uses it only when it is above what the feed shows. Lower choices are greyed out on the screen.
+- A higher belt begins like a fresh promotion. Earlier belts count as passed (the existing legacy grant unlocks their items). The new belt has no sign-offs and 0 classes in rank, and Sensei's Seal is off. Stripes on lower belts from the feed are kept. Entered stripes use the words Respect and Great Effort, because a grown-up enters how many stripes there are, not which ones.
+- Scope: belt and stripes only. Entering sign-offs (also in D2) is a follow-up.

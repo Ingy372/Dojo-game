@@ -636,3 +636,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - apps/client now has capacitor.config.ts (PLACEHOLDER app id `com.placeholder.dojoascent`, "Dojo Ascent"), plus the generated android/ and ios/ projects. Landscape lock, full screen, and the game loop, music and sound effects pause in the background.
 - To make a debug APK: in apps/client, run `npm run build`, then `npx cap sync android`, then `cd android && ./gradlew assembleDebug`. This needs Node 22+, JDK 21 and the Android SDK.
 - Vitest, typecheck and the web build pass. Web screenshots at 667x375 and 844x390, Reduced motion off and on, show no regressions.
+
+## B-BELT grown-up belt entry
+- A grown-up can set the real belt and stripes: For grown-ups, answer the sum, then Belt & stripes. "Yellow, 2 stripes" shows Yellow with 2 stripes and unlocks the White items, and the next visit plays the promotion ceremony. It stays after a restart and can only go up.
+- Vitest covers entry, saving and loading, and never lowering (7 tests). Screenshots at 667x375 and 844x390, Reduced motion off and on: no text overlaps on either screen. The entry lasts through a reload, and a lower pick is ignored.
