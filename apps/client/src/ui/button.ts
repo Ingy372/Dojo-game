@@ -16,6 +16,18 @@ export interface ButtonOptions {
   color: number;
   size: number;
   onTap: () => void;
+  /** P-MENU-c: a picked choice (belt, stripes, play time): a 3 pt gold outline. */
+  selected?: boolean;
+  /** P-MENU-c: shown greyed out (35%) and not tappable. */
+  disabled?: boolean;
+  /** P-MENU-c: outline colour when not selected (default white at 35%). */
+  stroke?: number;
+  /** P-MENU-c: label colour (default white). */
+  labelColor?: string;
+  /** P-MENU-c: wrap the label at this width (centred). */
+  labelWrap?: number;
+  /** P-MENU-c: shift the label right by this many points (room for a swatch). */
+  labelDx?: number;
 }
 
 export interface Button {
@@ -31,17 +43,22 @@ export function button(scene: Phaser.Scene, o: ButtonOptions, parent?: Phaser.Ga
   const cy = o.y + o.h / 2;
   const g = scene.add.graphics();
   g.fillStyle(o.color).fillRoundedRect(-o.w / 2, -o.h / 2, o.w, o.h, RADIUS.button);
-  g.lineStyle(2, 0xffffff, 0.35).strokeRoundedRect(-o.w / 2, -o.h / 2, o.w, o.h, RADIUS.button);
+  if (o.selected) g.lineStyle(3, 0xffd166, 1);
+  else g.lineStyle(2, o.stroke ?? 0xffffff, o.stroke === undefined ? 0.35 : 0.8);
+  g.strokeRoundedRect(-o.w / 2, -o.h / 2, o.w, o.h, RADIUS.button);
   const shine = scene.add.graphics().setAlpha(0);
   shine.fillStyle(0xffffff).fillRoundedRect(-o.w / 2, -o.h / 2, o.w, o.h, RADIUS.button);
   const label = scene.add
-    .text(0, 0, o.label, { fontFamily: FONT, fontSize: `${o.size}px`, color: '#ffffff', fontStyle: 'bold' })
+    .text(o.labelDx ?? 0, 0, o.label, { fontFamily: FONT, fontSize: `${o.size}px`, color: o.labelColor ?? '#ffffff', fontStyle: 'bold', align: 'center', wordWrap: o.labelWrap ? { width: o.labelWrap } : undefined })
     .setResolution(crisp())
     .setOrigin(0.5);
   const visual = scene.add.container(cx, cy, [g, shine, label]).setSize(o.w, o.h);
 
   const a = tapArea(o.w, o.h);
-  const hit = scene.add.zone(cx, cy, a.w, a.h).setInteractive({ useHandCursor: true });
+  const hit = scene.add.zone(cx, cy, a.w, a.h);
+  if (o.disabled) visual.setAlpha(0.35);
+  else hit.setInteractive({ useHandCursor: true });
+  // Added last, so the tap zone sits above anything already in `parent` (e.g. a dim layer).
   parent?.add([visual, hit]);
 
   let pressed = false;

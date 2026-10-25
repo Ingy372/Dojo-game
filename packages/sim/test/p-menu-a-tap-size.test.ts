@@ -18,7 +18,7 @@ describe('P-MENU-a tap size', () => {
 
   it('gives every HomeScene button a tap area of at least 44 x 44', () => {
     const calls = [...home.matchAll(/this\.button\(([^,]+),([^,]+),([^,]+),([^,]+),/g)];
-    expect(calls.length).toBeGreaterThanOrEqual(10);
+    expect(calls.length).toBeGreaterThanOrEqual(6); // P-MENU-d moved the Gear buttons to button(); p-menu-d-gear.test.ts checks those.
     // Sizes that are a plain number; the rest (column widths) are wider than 44 on every phone.
     for (const [, , , w, h] of calls) {
       const n = (v: string): number => (/^\s*\d+\s*$/.test(v) ? Number(v) : 100);

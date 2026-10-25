@@ -4,7 +4,7 @@
 
 import Phaser from 'phaser';
 import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState } from '@dojo/sim';
-import { gainText, signOffGain, signOffLines, stripeGain } from '@dojo/sim';
+import { gainText, litGateLock, signOffCardText, signOffGain, signOffLines, signOffsMixed, signOffsRow, signOffsTitle, stripeGain } from '@dojo/sim';
 import GAINS from '../../../../content/settings/training-gains.json';
 import { sfx } from '../audio/Sfx';
 import { shortDate } from '../game/student';
@@ -238,19 +238,19 @@ export class Celebrations {
       case 'signOff': {
         sfx.signOff();
         const r = m.requirement;
-        const who = r.signedOffBy ?? 'Sensei';
+        const words = signOffCardText(r);
         this.card(cx, height * 0.45, Math.min(520, width - 40), 220);
-        this.text(cx, height * 0.45 - 62, 'SIGNED OFF!', 16, '#5cd65c', true).setOrigin(0.5);
-        this.text(cx, height * 0.45 - 28, `${who} signed off ${r.name}!`, 22, '#ffffff', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
+        this.text(cx, height * 0.45 - 62, words.badge, 16, '#5cd65c', true).setOrigin(0.5);
+        this.text(cx, height * 0.45 - 28, words.line, 22, '#ffffff', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
         this.text(cx, height * 0.45 + 18, `New ${m.ability}`, 18, '#ffd166', true).setOrigin(0.5);
         this.text(cx, height * 0.45 + 52, gainText(GAINS.signOff, signOffGain(this.training, [r])), 17, '#5cd65c', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
-        this.text(cx, height * 0.45 + 84, 'Gate lock lit.', 14, '#b9ad99').setOrigin(0.5);
+        if (litGateLock(this.training, r)) this.text(cx, height * 0.45 + 84, 'Gate lock lit.', 14, '#b9ad99').setOrigin(0.5);
         this.burst(cx, height * 0.45 - 28, [0x5cd65c, GOLD], 20);
         break;
       }
       case 'signOffs': {
         sfx.signOff();
-        this.text(cx, height * 0.1, `${m.list.length} techniques signed off!`, 26, '#5cd65c', true).setOrigin(0.5);
+        this.text(cx, height * 0.1, signOffsTitle(m.list.map((x) => x.requirement)), 26, '#5cd65c', true).setOrigin(0.5);
         this.text(cx, height - 64, gainText(GAINS.signOffs, signOffGain(this.training, m.list.map((s) => s.requirement))), 17, '#ffd166', true, FONT, width - 40).setOrigin(0.5).setAlign('center');
         // K26: each column has a fixed width and long names wrap inside it, so they never run into the other column.
         // If the list is too tall, try 13 then 12 px (still readable); if it still doesn't fit, show what fits plus an "and N more" line.
@@ -260,14 +260,17 @@ export class Celebrations {
         const cols = m.list.length > 6 ? 2 : 1;
         const colW = cols === 1 ? Math.min(400, width - 40) : Math.min(390, (width - 32 - gap) / 2);
         const left = cx - (cols * colW + (cols - 1) * gap) / 2;
-        const label = (s: (typeof m.list)[number]) => `✓ ${s.requirement.name}: ${s.ability.split(' (')[0]}`;
+        // P-MENU-d: on a mixed card, real sign-offs are green ✓ rows and counted ones say "(practiced)".
+        const mixed = signOffsMixed(m.list.map((x) => x.requirement));
+        const row = (s: (typeof m.list)[number]) => signOffsRow(s.requirement, s.ability.split(' (')[0], mixed);
         const layout = (size: number, shown: number) => {
           const rows = Math.ceil(shown / cols);
           const ys = Array.from({ length: cols }, () => top);
           const made: Phaser.GameObjects.Text[] = [];
           for (let i = 0; i < shown; i++) {
             const col = Math.floor(i / rows);
-            const t = this.text(left + col * (colW + gap), ys[col], label(m.list[i]), size, '#f2e9d8', false, FONT, colW);
+            const r = row(m.list[i]);
+            const t = this.text(left + col * (colW + gap), ys[col], r.text, size, mixed && r.real ? '#5cd65c' : '#f2e9d8', mixed && r.real, FONT, colW);
             ys[col] += t.height + 3;
             made.push(t);
           }
