@@ -17,7 +17,7 @@ Jay's idea (docs/decisions.md, 'Dodge-only attacks'): an attack that can't be CO
 - **Look:** purple-and-white diagonal **stripes on the floor**, shaped as a **lane, an arc, or a ring with a gap**. Never a circle, never red. A double **'!!'** above the enemy (the red circle has one '!'). A rising *whoosh* sound, not the drum. This follows the decisions.md example (striped purple, '!!') rather than yellow/blue, so it can't be mixed up with Calm Mind's aqua or gold loot glows.
 - **Button hint:** while stripes show, COUNTER dims and DASH pulses (first 3 times only, like the C12 nudges).
 - **Fair timing:** wind-up is never shorter than the blockable tell. Minimum 20 ticks (the Brute's red circle is 16); tiers 1-3 use 26-30. Ticks never scale with tier or difficulty.
-- **No stacking early:** tiers 1-3 never show stripes and a red circle at the same moment (other wind-ups wait). From tier 4, they may overlap only with ≥ 10 ticks between them, and never on Guided.
+- **No stacking early:** tiers 1-3 never show stripes and a red circle at the same moment (other wind-ups wait). From tier 4, floors 1-2 still never overlap; from floor 3 they may overlap only with ≥ 10 ticks between them, and never on Guided (Manager's call, C13-3; `overlapFromFloor: 3`).
 - **Taught first:** White tier, **floor 4**, in a calm practice room with the **Sleepy Sentry** (a drowsy statue). Health never drops below 1 in that room, like the tutorial floor. It's a new Sensei's Lesson (one per session rule applies).
 - **Lines** (one sentence per screen, under 12 words):
   - Lesson screen 1: "Purple stripes can't be COUNTERed."
@@ -68,7 +68,7 @@ Jay's idea (docs/decisions.md, 'Dodge-only attacks'): an attack that can't be CO
 | Pebble Pal | swarm | F1-2 | Little pebbles that hop after you. | Hop, then red circle. | Clear first. | Elites from this tier (elites.json). |
 | Cliff Goat | charger | F1-2 | Lowers its horns and charges in a line. | Stamps, then a long red circle at the line's end. | COUNTER at the end, or step aside. | Charge speed fixed. |
 | Stack Golem | heavy | F3-4 | A tower of stones; each hit knocks one off and it shrinks. | Wobbles; red circle. | Keep hitting; it gets smaller and faster. | Stone count by band (3 → 5). |
-| Boulder Roller **[dash-only]** | dash-only | F3-4 | Pushes a big round boulder down a stripe. | Dash-only: purple stripe lane + '!!', 24 ticks. | DASH out of the lane. | From here a stripe may overlap a red circle, offset ≥ 10 ticks (never on Guided). |
+| Boulder Roller **[dash-only]** | dash-only | F3-4 | Pushes a big round boulder down a stripe. | Dash-only: purple stripe lane + '!!', 24 ticks. | DASH out of the lane. | From here, on floor 3+, a stripe may overlap a red circle, offset ≥ 10 ticks (never on Guided). |
 
 ### Blue: The Quiet River
 
@@ -85,7 +85,7 @@ Jay's idea (docs/decisions.md, 'Dodge-only attacks'): an attack that can't be CO
 |---|---|---|---|---|---|---|
 | Coal Cub | swarm | F1-2 | Warm, playful little coal pups that pounce. | Wiggle, then red circle. | Clear first. | Group size by band. |
 | Anvil Imp | heavy | F1-2 | A small strong worker who taps a big hammer. | Hammer up; red circle. | COUNTER the tap. | Health/power by ENEMY_SCALE. |
-| Bellows Puff | pusher | F3-4 | Huffs gusts that nudge you across the room. | Inflates; a pale gust arrow (no damage). | Stand side-on, or use the push to escape. | Push strength fixed; never into a hazard. |
+| Bellows Puff | pusher | F3-4 | Huffs gusts that nudge you across the room. | Inflates; a pale gust arrow (no damage). | Stand side-on. (Insight: ride the push to escape.) | Push strength fixed; never into a hazard. |
 | Forge Sweeper **[dash-only]** | dash-only | F3-4 | A big glowing broom that sweeps a wide arc. | Dash-only: purple striped arc + '!!', 22 ticks. | DASH out of the arc. | Arc 120° → 180° at F5. |
 
 ### Red/Black: The Hall of Echoes

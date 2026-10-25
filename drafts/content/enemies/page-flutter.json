@@ -1,0 +1,33 @@
+{
+  "id": "page-flutter",
+  "name": "Page Flutter",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Loose pages that flap like birds in groups. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#efe6cf",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "flap",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 14,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "brown",
+  "band": "F1-2",
+  "tell": "rustle, then red circle",
+  "senseiLine": "Little ones first. Steady.",
+  "description": "Loose pages that flap like birds in groups.",
+  "bestiary": {
+    "tip": "Calm the little ones first.",
+    "lore": {
+      "brown": "Pages blew out of their books when the shadow came. Calm them, and they fly back home."
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "id": "cloud-puff",
+  "name": "Cloud Puff",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Fluffy clouds. A big one splits into two small ones. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#e4ecf2",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "puff",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 16,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "brown-black",
+  "band": "F1-2",
+  "tell": "puffs up, then red circle",
+  "senseiLine": "Big cloud, little clouds. Little ones first.",
+  "description": "Fluffy clouds. A big one splits into two small ones.",
+  "bestiary": {
+    "tip": "Calm the small ones first.",
+    "lore": {
+      "brown-black": "Soft clouds bunched up in the storm. Calm them, and they drift off into blue sky."
+    }
+  },
+  "split": {
+    "into": "cloudlet",
+    "count": 2
+  },
+  "variants": {
+    "cloudlet": {
+      "name": "Cloudlet",
+      "notes": "Smaller Cloud Puff from the split. Stats TODO (R-BAL-8). Never splits again.",
+      "color": "#f3f7fa",
+      "maxHealth": "TODO",
+      "power": "TODO",
+      "guard": "TODO",
+      "radius": "TODO",
+      "moveSpeedTilesPerSecond": "TODO",
+      "sightRange": "TODO",
+      "attack": {
+        "name": "little puff",
+        "strength": "TODO",
+        "startRange": "TODO",
+        "reach": "TODO",
+        "areaRadius": "TODO",
+        "telegraphTicks": 14,
+        "recoverTicks": "TODO"
+      },
+      "parSeconds": "TODO",
+      "tell": "tiny puff, then small red circle",
+      "senseiLine": "Little clouds. Calm them gently.",
+      "bestiary": {
+        "tip": "Small and quick. Calm them first.",
+        "lore": {
+          "brown-black": "Two little clouds, still a bit stormy. Calm them, and they float away together."
+        }
+      }
+    }
+  }
+}

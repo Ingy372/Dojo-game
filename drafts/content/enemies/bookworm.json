@@ -1,0 +1,33 @@
+{
+  "id": "bookworm",
+  "name": "Bookworm",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Tunnels under the floor and pops up near you. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#9bbf5a",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "pop up",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 20,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "brown",
+  "band": "F1-2",
+  "tell": "a dirt bump moves toward you, then red circle",
+  "senseiLine": "Watch the bump. Then step aside.",
+  "description": "Tunnels under the floor and pops up near you.",
+  "bestiary": {
+    "tip": "Step off the bump, then calm it when it pops up.",
+    "lore": {
+      "brown": "A curious worm who loved reading. Calm it, and it curls up with a good book."
+    }
+  }
+}

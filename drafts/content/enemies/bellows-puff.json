@@ -25,10 +25,11 @@
   "senseiLine": "The wind only pushes. Use it.",
   "description": "Huffs gusts that nudge you across the room.",
   "bestiary": {
-    "tip": "Stand side-on, or ride the push to escape.",
+    "tip": "Stand side-on to the gust.",
     "lore": {
       "red": "It used to fan the forge fire. Calm it, and it breathes gently to keep the forge warm."
-    }
+    },
+    "insight": "Advanced: ride the push to slip away from a crowd."
   },
   "push": {
     "damage": 0,

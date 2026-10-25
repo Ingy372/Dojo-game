@@ -1,0 +1,49 @@
+{
+  "id": "root-snapper",
+  "name": "Root Snapper",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Roots poke up along a line, one after another. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#6b4a2b",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "root line",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 20,
+    "recoverTicks": "TODO",
+    "dashOnly": true
+  },
+  "parSeconds": "TODO",
+  "tier": "brown",
+  "band": "F3-4",
+  "tell": "purple stripe lane + '!!'",
+  "senseiLine": "The stripes show the roots. DASH out.",
+  "description": "Roots poke up along a line, one after another.",
+  "bestiary": {
+    "tip": "DASH out of the lane.",
+    "lore": {
+      "brown": "Old roots grew restless under the library. Free them, and they hold the shelves up again."
+    }
+  },
+  "dashOnlyAttack": {
+    "name": "root line",
+    "shape": "lane",
+    "telegraphTicks": 20,
+    "recoverTicks": "TODO",
+    "strength": "TODO",
+    "tell": "purple-and-white stripes + '!!' + whoosh",
+    "shapeCue": "lane",
+    "counterable": false,
+    "answer": "dash",
+    "noOverlapWithRedCircle": false,
+    "overlapFromFloor": 3,
+    "minOffsetFromRedCircleTicks": 10,
+    "overlapOnGuided": false
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "gust-sprite",
+  "name": "Gust Sprite",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Spins and blows you sideways. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#a9c6d8",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "gust",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 20,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "brown-black",
+  "band": "F1-2",
+  "tell": "spins, then a pale gust arrow",
+  "senseiLine": "The wind only pushes. Stay steady.",
+  "description": "Spins and blows you sideways.",
+  "bestiary": {
+    "tip": "Stand side-on to the gust.",
+    "lore": {
+      "brown-black": "A playful breeze that spun too fast. Calm it, and it blows a cool, gentle wind."
+    },
+    "insight": "Advanced: ride the gust to slip away from a crowd."
+  },
+  "push": {
+    "damage": 0,
+    "intoHazard": false,
+    "note": "No-damage push (Manager OK, C13). Never into a hazard or off a ledge."
+  }
+}

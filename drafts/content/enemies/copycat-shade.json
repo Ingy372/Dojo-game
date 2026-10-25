@@ -1,0 +1,33 @@
+{
+  "id": "copycat-shade",
+  "name": "Copycat Shade",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Copies your last move a moment later. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#5d5470",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "copy",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 20,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "red-black",
+  "band": "F1-2",
+  "tell": "your move's shape in red, then it copies",
+  "senseiLine": "It copies you. Surprise it kindly.",
+  "description": "Copies your last move a moment later.",
+  "bestiary": {
+    "tip": "Try a different move, then COUNTER its copy.",
+    "lore": {
+      "red-black": "A shadow that only knew how to copy. Free it, and it finds its own way to move."
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "id": "sky-sweeper",
+  "name": "Sky Sweeper",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). A gust that sweeps an arc, then a lane. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#9fb4e8",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "double sweep",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 20,
+    "recoverTicks": "TODO",
+    "dashOnly": true
+  },
+  "parSeconds": "TODO",
+  "tier": "black",
+  "band": "F3-4",
+  "tell": "purple striped arc, then lane, each + '!!'",
+  "senseiLine": "Two stripes. DASH, then DASH again.",
+  "description": "A gust that sweeps an arc, then a lane.",
+  "bestiary": {
+    "tip": "DASH out twice.",
+    "lore": {
+      "black": "The summit wind forgot how to rest. Free it, and it becomes a soft breeze."
+    }
+  },
+  "dashOnlyAttack": {
+    "name": "arc sweep",
+    "shape": "arc",
+    "telegraphTicks": 20,
+    "recoverTicks": "TODO",
+    "strength": "TODO",
+    "tell": "purple-and-white stripes + '!!' + whoosh",
+    "shapeCue": "arc",
+    "counterable": false,
+    "answer": "dash",
+    "noOverlapWithRedCircle": false,
+    "overlapFromFloor": 3,
+    "minOffsetFromRedCircleTicks": 10,
+    "overlapOnGuided": false,
+    "followUp": {
+      "shape": "lane",
+      "telegraphTicks": 20,
+      "neverSimultaneous": true
+    }
+  }
+}

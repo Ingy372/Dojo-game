@@ -5,8 +5,8 @@ import json, re, sys, glob, os
 CORE = ["id","name","notes","color","maxHealth","power","guard","radius","moveSpeedTilesPerSecond","sightRange","attack","parSeconds"]
 ATTACK = ["name","strength","startRange","reach","areaRadius","telegraphTicks","recoverTicks"]
 STATS = ["maxHealth","power","guard","radius","moveSpeedTilesPerSecond","sightRange","parSeconds"]
-TIERS = {"white","yellow","orange","green","blue","purple","red","brown","redblack","black"}
-LIMITS = {"name":3,"tell":12,"senseiLine":12,"description":20,"tip":15,"lore":30}
+TIERS = {"white","yellow","orange","green","blue","red","red-black","brown","brown-black","black"}
+LIMITS = {"insight":15,"name":3,"tell":12,"senseiLine":12,"description":20,"tip":15,"lore":30}
 BANNED = re.compile(r"\b(kill|killed|dead|die|dies|blood|gore|destroy|destroyed|evil|hate|stupid)\b", re.I)
 def words(s): return len(s.split())
 def num_or_todo(v): return v == "TODO" or (isinstance(v,(int,float)) and not isinstance(v,bool))
@@ -27,6 +27,7 @@ def check(path):
     if t not in TIERS: e.append("bad tier")
     if not d.get("band"): e.append("missing band")
     texts={"name":d.get("name",""),"tell":d.get("tell",""),"senseiLine":d.get("senseiLine",""),"description":d.get("description",""),"tip":d.get("bestiary",{}).get("tip","")}
+    if "insight" in d.get("bestiary",{}): texts["insight"]=d["bestiary"]["insight"]
     lore=d.get("bestiary",{}).get("lore",{})
     if t not in lore: e.append("bestiary.lore needs an entry for its own tier")
     for lt,v in lore.items(): texts[f"lore.{lt}"]=v
@@ -40,14 +41,19 @@ def check(path):
     dz=d.get("dashOnlyAttack")
     if dz is not None:
         if dz.get("counterable") is not False or dz.get("answer")!="dash": e.append("dashOnlyAttack must be counterable:false, answer:'dash'")
-        if dz.get("shape") not in ("lane","arc","ring-with-gap"): e.append("dashOnlyAttack.shape must be lane, arc or ring-with-gap (never colour alone)")
+        if dz.get("shape") not in ("lane","arc","ring-with-gap","zigzag"): e.append("dashOnlyAttack.shape must be lane, arc, ring-with-gap or zigzag (never colour alone)")
         tk=dz.get("telegraphTicks"); lo=26 if t in ("white","yellow","orange") else 20
         if not isinstance(tk,int) or not (lo<=tk<=(30 if lo==26 else 999)): e.append("dashOnlyAttack.telegraphTicks must be 26-30 in tiers 1-3" if lo==26 else "dashOnlyAttack.telegraphTicks must be >= 20 from tier 4")
         if t in ("white","yellow","orange") and dz.get("noOverlapWithRedCircle") is not True: e.append("tiers 1-3: noOverlapWithRedCircle must be true")
         if dz.get("noOverlapWithRedCircle") is False:
             if not isinstance(dz.get("minOffsetFromRedCircleTicks"),int) or dz["minOffsetFromRedCircleTicks"]<10: e.append("overlap needs minOffsetFromRedCircleTicks >= 10")
             if dz.get("overlapOnGuided") is not False: e.append("overlapOnGuided must be false")
+            if dz.get("overlapFromFloor")!=3: e.append("overlap needs overlapFromFloor: 3 (floors 1-2 never overlap)")
+        fu=dz.get("followUp")
+        if fu and (fu.get("neverSimultaneous") is not True or not isinstance(fu.get("telegraphTicks"),int) or fu["telegraphTicks"]<lo): e.append("followUp must be neverSimultaneous with a fair wind-up")
         if "DASH" not in d.get("senseiLine","")+d["bestiary"].get("tip",""): e.append("dash-only enemies must say DASH in the line or tip")
+    if "push" in d and "ride" in d["bestiary"].get("tip","").lower(): e.append("push tip stays basic; 'ride the push' belongs in insight")
+    if "push" in d and "insight" not in d.get("bestiary",{}): e.append("pushers need an advanced bestiary.insight hint")
     if "push" in d and (d["push"].get("damage")!=0 or d["push"].get("intoHazard") is not False): e.append("push must do 0 damage and never push into a hazard")
     for vid,v in d.get("variants",{}).items():
         for k in CORE[2:]:
