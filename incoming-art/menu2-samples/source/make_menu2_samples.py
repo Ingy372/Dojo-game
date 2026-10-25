@@ -137,7 +137,7 @@ def cubby(state, icon_path=None, w=112, h=112):
         img.alpha_composite(card, (2 * SS, 2 * SS))
     return img
 
-def cubby_example(state, icon_path):
+def cubby_example(state, icon_path, lamp=False):
     img = cubby(state)
     W = img.size[0]
     if state == 'earned':
@@ -145,11 +145,11 @@ def cubby_example(state, icon_path):
         img.alpha_composite(seal(24), (W - 31 * SS, 7 * SS))
     else:
         ic = soft_outline(Image.open(icon_path).convert('RGBA'), 64); img.alpha_composite(ic, ((W - ic.size[0]) // 2, 9 * SS))
-        img.alpha_composite(lantern(24, 32), (W - 31 * SS, 5 * SS))
+        if lamp: img.alpha_composite(lantern(24, 32), (W - 31 * SS, 5 * SS))
     return img
 
 # ---------- A6 slot card ----------
-def slot_card(selected, w=140, h=120):
+def slot_card(selected, w=140, h=132):
     pad = 8
     W, H = (w + 2 * pad) * SS, (h + 2 * pad) * SS
     img = Image.new('RGBA', (W, H), (0, 0, 0, 0))
@@ -165,7 +165,7 @@ def slot_card(selected, w=140, h=120):
     img.alpha_composite(card, (pad * SS, pad * SS))
     d = ImageDraw.Draw(img)
     # icon well (round, 72) at top centre; the icon (64) sits on top in game
-    cx, cy, r = W / 2, (pad + 36) * SS, 33 * SS
+    cx, cy, r = W / 2, (pad + 44) * SS, 33 * SS
     d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=C(PAPER if selected else (255, 248, 230)), outline=C(GOLD if selected else WOOD_L), width=2 * SS)
     if selected:
         d.rounded_rectangle([box[0] + 2 * SS, box[1] + 2 * SS, box[2] - 2 * SS, box[3] - 2 * SS], 13 * SS, outline=C(GOLD_L), width=2 * SS)
@@ -246,11 +246,11 @@ def main():
     save12(cubby('notyet'), 'cubby-notyet', 112, 112)
     save12(seal(24), 'cubby-seal', 24, 24)
     save12(lantern(24, 32), 'cubby-lantern', 24, 32)
-    ex_e, ex_n = cubby_example('earned', ic_earned), cubby_example('notyet', ic_not)
-    save12(ex_e, 'example-cubby-earned', 112, 112); save12(ex_n, 'example-cubby-notyet', 112, 112)
+    ex_e, ex_n, ex_x = cubby_example('earned', ic_earned), cubby_example('notyet', ic_not), cubby_example('notyet', ic_not, True)
+    save12(ex_e, 'example-cubby-earned', 112, 112); save12(ex_n, 'example-cubby-notyet', 112, 112); save12(ex_x, 'example-cubby-next', 112, 112)
     # A6
     sel, pad = slot_card(True); nor, _ = slot_card(False)
-    save12(sel, 'slot-card-selected', 156, 136); save12(nor, 'slot-card-normal', 156, 136)
+    save12(sel, 'slot-card-selected', 156, 148); save12(nor, 'slot-card-normal', 156, 148)
     # A1
     pf = panel_frame(); save12(pf, 'panel-frame-9slice', 192, 192)
     # A3
@@ -261,15 +261,15 @@ def main():
     big = 3
     for n, im, w, h in [('cubby-pair', None, 0, 0)]:
         pass
-    pair = Image.new('RGBA', (2 * 112 * big + 3 * 24, 112 * big + 48), C(WOOD_D))
-    pair.alpha_composite(down(ex_e, 112 * big, 112 * big), (24, 24)); pair.alpha_composite(down(ex_n, 112 * big, 112 * big), (48 + 112 * big, 24))
-    pair.convert('RGB').save(f'{PV}/cubby-earned-vs-notyet-3x.png')
-    cards = Image.new('RGBA', (2 * 156 * big + 72, 136 * big + 48), C(WOOD_D))
+    pair = Image.new('RGBA', (3 * 112 * big + 4 * 24, 112 * big + 48), C(WOOD_D))
+    for i, im in enumerate([ex_e, ex_x, ex_n]): pair.alpha_composite(down(im, 112 * big, 112 * big), (24 + i * (112 * big + 24), 24))
+    pair.convert('RGB').save(f'{PV}/cubby-earned-next-notyet-3x.png')
+    cards = Image.new('RGBA', (2 * 156 * big + 72, 148 * big + 48), C(WOOD_D))
     for i, im in enumerate([nor, sel]):
-        c = im.copy(); ic = icon_at(ic_stance, 64); c.alpha_composite(ic, ((c.size[0] - ic.size[0]) // 2, (pad + 4) * SS))
-        cards.alpha_composite(down(c, 156 * big, 136 * big), (24 + i * (156 * big + 24), 24))
+        c = im.copy(); ic = icon_at(ic_stance, 64); c.alpha_composite(ic, ((c.size[0] - ic.size[0]) // 2, (pad + 12) * SS))
+        cards.alpha_composite(down(c, 156 * big, 148 * big), (24 + i * (156 * big + 24), 24))
     cards.convert('RGB').save(f'{PV}/slot-card-normal-vs-selected-3x.png')
-    mock(styles, L, pf, ex_e, ex_n, sel, nor, pad, ic_stance)
+    mock(styles, L, pf, ex_e, (ex_n, ex_x), sel, nor, pad, ic_stance)
 
 def nine(src, w, h, c=48):
     """9-slice the SS-scale frame to w x h (1x) at SS scale."""
@@ -331,16 +331,19 @@ def mock(styles, L, pf, ex_e, ex_n, sel, nor, pad, ic_stance):
             cz = 112 if PW > 800 else 96
             k = cz / 112
             cy = ry + ksz + 8
-            card_w, card_h = 140, 120
+            card_w, card_h = 140, 132
             sx = px + pw - 18 - card_w
             ncol = int((sx - 14 - (px + 18)) // (cz + 8))
             gx = px + 18
             rows = [[('e', 'Strong Block'), ('e', 'Name'), ('n', None)][:ncol], [('e', 'Name'), ('n', None), ('n', None)][:ncol]]
+            lamp_used = False  # lantern only on the next cubby to learn
             for r, row in enumerate(rows):
                 yy = cy + r * (cz + 8)
                 d.line([(gx - 4) * s, (yy + cz + 3) * s, (gx + ncol * (cz + 8) - 4) * s, (yy + cz + 3) * s], fill=C(WOOD_M), width=3 * s)  # shelf
                 for i, (st, label) in enumerate(row):
-                    im = ex_e if st == 'e' else ex_n
+                    first_n = st == 'n' and not lamp_used
+                    if first_n: lamp_used = True
+                    im = ex_e if st == 'e' else (ex_n[1] if first_n else ex_n[0])
                     xx = gx + i * (cz + 8)
                     img.alpha_composite(down(im, cz * s, cz * s), (int(xx * s), int(yy * s)))
                     if st == 'e':
@@ -348,14 +351,14 @@ def mock(styles, L, pf, ex_e, ex_n, sel, nor, pad, ic_stance):
                     else:
                         d.multiline_text(((xx + cz / 2) * s, (yy + 92 * k) * s), 'Learn this\nat the dojo', font=font(12 * s), fill=C(WOOD_D), anchor='mm', align='center', spacing=0)
             # slot cards: Stance (selected) + Virtue (normal)
-            for j, (im, slot) in enumerate([(sel, 'Stance'), (nor, 'Virtue')]):
-                sy = cy + j * (card_h + 10)
-                c = im.copy(); ic = icon_at(ic_stance, 64); c.alpha_composite(ic, ((c.size[0] - ic.size[0]) // 2, (pad + 4) * SS))
+            for j, (im, slot) in enumerate([(sel, 'Stance'), (nor, 'Virtue')][:2 if PW > 800 else 1]):
+                sy = cy + j * (card_h + 12)
+                c = im.copy(); ic = icon_at(ic_stance, 64); c.alpha_composite(ic, ((c.size[0] - ic.size[0]) // 2, (pad + 12) * SS))
                 img.alpha_composite(down(c, (card_w + 2 * pad) * s, (card_h + 2 * pad) * s), (int((sx - pad) * s), int((sy - pad) * s)))
                 cx2 = (sx + card_w / 2) * s
-                d.text((cx2, (sy + 76) * s), slot, font=font(12 * s, False), fill=C(INK), anchor='mm')
-                d.text((cx2, (sy + 92) * s), "Item name", font=font(17 * s), fill=C(INK), anchor='mm')
-                d.text((cx2, (sy + 108) * s), "Effect line", font=font(14 * s, False), fill=C(INK), anchor='mm')
+                d.text((cx2, (sy + 84) * s), slot, font=font(12 * s, False), fill=C(INK), anchor='mm')
+                d.text((cx2, (sy + 101) * s), "Item name", font=font(17 * s), fill=C(INK), anchor='mm')
+                d.text((cx2, (sy + 117) * s), "Effect line", font=font(14 * s, False), fill=C(INK), anchor='mm')
             img.convert('RGB').save(f'{PV}/phone-mock-{tag}' + ('@2x' if s == 2 else '') + '.png')
 
 if __name__ == '__main__':

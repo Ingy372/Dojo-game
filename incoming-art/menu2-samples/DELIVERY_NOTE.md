@@ -16,12 +16,18 @@ README with sizes, anchors, layers and draw order.
 - Red check: 0 red pixels in sprites and previews. The first Stance sample icon (steady-breath) has a red heart, so it was swapped for wind-step.
 - No baked text. Not-yet has no lock, grey or count. A lantern and warm paper keep it hopeful. Nothing is drawn above heads (no characters).
 
-**DECIDE (Jay):**
-1. **Seal colour.** The plan says a red sensei seal. Red is reserved for danger, so the sample uses a **gold check seal**. Keep gold, or choose another colour (not red)?
-2. **The not-yet icon look:** a sepia ghost at 30% (as here), or a pure line outline?
-3. **The lantern:** keep it on every not-yet cubby, or only on the next one to learn?
-4. **The slot card icon well** overlaps the top edge of the frame a little, so the 64 px icon and 3 text lines fit in 120 px. OK, or make the card taller (about 132)?
-5. **The ribbon cord colour** (`#d9b47a` wood in the mock), or no cord?
-6. **The icons in the mock** (strong-block, sweep, wind-step) are only stand-ins, and so are all the names shown. The real names are game text from content.
+**v2 (Manager review, Oct 25):**
+- The lantern is now shown only on the next cubby to learn. `cubby-notyet` has no lantern. `cubby-lantern` is a separate overlay, and `example-cubby-next` shows the two put together. The mocks show 1 lantern.
+- The slot card is now 140 × 132 (files 156 × 148). The icon circle sits fully inside the frame and the effect line no longer touches the bottom. The small mock shows only the Stance card, because two cards don't fit in 375 px.
+- Second pass: re-rendered all sprites and both mocks at 1x and 2x, and checked them at real size. Red check: 0 red pixels.
+
+**DECIDED (Manager):**
+1. Seal: gold check seal (not red).
+2. Not-yet icon: faint sepia ghost at 30%.
+3. Lantern: only on the next cubby to learn (separate overlay).
+4. Slot card: taller, 140 × 132, the icon circle fully inside.
+5. Ribbon cord: kept (`#d9b47a`).
+
+**Still open (Jay):** final OK on the look. The icons and names in the mocks are stand-ins; the real names are game text.
 
 **NEXT:** Manager review, then Jay's OK. After that, A1–A13 in this style (P-MENU2-h).
