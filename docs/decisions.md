@@ -1023,5 +1023,5 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 
 ## P-MENU2-b: Tester fixes and polish (2026-10-25)
 - **Packed shelves.** A short shelf now shares its row with the next one. Each shelf keeps its own label, and every row but the last is full. With 8 cubbies the case takes 1 page at 844x390 and 932x430 (2 rows × 4) and 3 pages at 667x375 (1 row × 3). The test asserts ≤ 2 pages at 844 and 932.
-- **Kata steps on the cream sheet.** Step numbers are `WOOD.ink` (#3a2618, 12.0:1). Arrows are `KATA_INK.onPaper.arrow` (#1d4690, 7.1:1).
+- **Kata steps on the cream sheet.** Step numbers are `WOOD.ink` (#3a2618, 11.3:1). Arrows are `KATA_INK.onPaper.arrow` (#1d4690, 7.1:1).
 - **Polish.** The grid is centred in the frame. Earned stripe cubbies show the short Virtue name; the sheet keeps the full name. The shelf label "Character stripes" is now "Stripes" so it fits over a single cubby without "…".
