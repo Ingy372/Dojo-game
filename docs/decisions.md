@@ -769,6 +769,20 @@ Programmer calls:
 - No kata directions or step data changed.
 - Manager-okayed K24a tradeoffs (named here as asked): (1) on the tutorial floor every enemy sees the player; (2) the paused tip can cover the health bar when the hero is near the bottom of the screen, which is fine since health can't drop below 1 there.
 
+## R-BAL-9c — live enemy numbers (2026-10-24, targets from #188)
+Jay's balance calls (D1–D5, drafts/planning/balance-research.md), recorded here:
+- **D1:** enemies are scaled to the *expected* Artist for each tier, not the actual player.
+- **D2:** the target bands are OK as written (Swarmer 2–4 hits, mid 5–10, Brute 10–20, Floor-keeper 40–80; enemy hits to KO the player: 12 / 8 / 5 / 5 at least).
+- **D3:** XP steps are softened so the last step is ≤ 10 runs, using weights (k+11) (R-BAL-5).
+- **D4:** Endless stays +3% per floor with no cap (R-BAL-6 dropped).
+- **D5:** Challenge is ×1.5 enemy Health and Power.
+
+Live enemy changes (maxHealth / power / guard; nothing else changed):
+- Swarmer 40/8/0 → **20/7/0** (DECIDE-2), Shield 90/15/15 → **66/11/15**, Brute 180/25/25 → **126/17/25**, Floor-keeper 700/26/30 → **495/17/30**.
+- Checked with drafts/planning/r-bal-9c-check.py against #188's expected white Artist (Standard / Challenge ×1.5). Hits to beat: Swarmer 2/3, Shield 6/9, Brute 12/18, Floor-keeper 50/75. Enemy hits to KO the player: 18/13, 12/8, 8/5, 8/5. All in band; the player always survives at least 5 hits.
+- Elite and named Brutes follow the Brute (Guarding Brute 158 Health, Old Thumper 189). Their tests were updated to the new numbers.
+- Not in this PR: R-BAL-9b (per-tier gear caps, including the white gear cut). It waits on DECIDE-1 (R-BAL-9a, Jay), which isn't recorded yet.
+
 ## R-BAL-5 Softer XP steps (D3)
 Jay's D3: level steps are weighted step + 11 (PROGRESSION.xpStepSoften), so a 3-month tier goes from 1.4–14.2 runs per step to 5.7–10.0. The tier total is unchanged, so the time to reach the cap is the same; early levels just come a bit slower and late levels a lot faster. Test: packages/sim/test/r-bal-5-xp-steps.test.ts.
 ## K25 — slower tempo, calmer screen shake (2026-10-24, from Jay's phone playtest via the Manager)
@@ -779,3 +793,10 @@ Jay's D3: level steps are weighted step + 11 (PROGRESSION.xpStepSoften), so a 3-
 
 ## K25b: a Block never shakes (Manager's call, 2026-10-24)
 A Block is a success moment, so it never shakes the screen, at any belt or difficulty. Only being hit shakes (K25 rules: Brown and up or Challenge, 65%, off with Reduced motion). `eventShakeScale('block', …)` is always 0. This answers the K25 open question about Block. Test: packages/sim/test/k25b-block-no-shake.test.ts.
+
+## R-BAL-9b: per-tier gear caps; white gear cut (Manager's call, 2026-10-24)
+The Manager made the white gear cut from #188 (DECIDE-1, option a) under the balance calls Jay delegated to the Manager. The game hasn't launched, so no kid loses anything.
+- GEAR_CAPS has all 10 tiers (Power / Health / Guard / Jade): white 1/10/3/4% … black 34/211/17/26%. Before, white was 4/30/8/12%.
+- White loot (content/loot/gear.json): hands Power 1/1/1/1, gi Health 3/5/8/10, gi Guard 1/2/2/3, Jade 1/2/3/4%.
+- Drops are clamped to the tier cap, including the Jade charm's Power share. maxGearScore uses each tier's own caps instead of white × tier.
+- Not done here: ENEMY_SCALE for enemies outside their home tier (spec item 5), because no enemy appears off-tier yet; per-tier loot tables (R-BAL-10); XP steps (R-BAL-5, #204).

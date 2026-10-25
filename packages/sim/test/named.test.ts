@@ -36,10 +36,10 @@ function walkFloor(opts: Omit<RunOptions, 'dryRuns'>, c = content) {
 }
 
 describe('named monster stats', () => {
-  it('x1.5 Health (Old Thumper 270); Power, Guard, speed, wind-up and Counter window unchanged', () => {
+  it('x1.5 Health (Old Thumper 189 after R-BAL-9c); Power, Guard, speed, wind-up and Counter window unchanged', () => {
     const b = content.enemies.brute;
     const t = namedDef(b, named.rules);
-    expect(t.maxHealth).toBe(270);
+    expect(t.maxHealth).toBe(189);
     expect(namedDef(content.enemies.swarmer, named.rules).maxHealth).toBe(Math.round(content.enemies.swarmer.maxHealth * 1.5));
     expect(namedDef(content.enemies.shield, named.rules).maxHealth).toBe(Math.round(content.enemies.shield.maxHealth * 1.5));
     expect({ ...t, maxHealth: b.maxHealth }).toEqual(b);
@@ -122,7 +122,7 @@ describe('where named monsters appear (1,000 floors at tier 2)', () => {
     }
   });
 
-  it('?named=old-thumper comes in the first battle room from room 3 as a 270-Health brute', () => {
+  it('?named=old-thumper comes in the first battle room from room 3 as a 189-Health brute', () => {
     let seen = 0;
     for (let seed = 1; seed <= 50; seed++) {
       const { rooms } = walkFloor({ seed, tier: 1, forcedNamed: 'old-thumper' });
@@ -137,7 +137,7 @@ describe('where named monsters appear (1,000 floors at tier 2)', () => {
     expect(run.named?.id).toBe('old-thumper');
     const world = createRunWorld(content, run, PLAYER);
     const e = world.enemies.find((x) => x.named === 'old-thumper')!;
-    expect(e.health).toBe(270);
+    expect(e.health).toBe(189);
     expect(e.elite).toBeNull();
     expect(world.enemies.filter((x) => x.named).length).toBe(1);
   });
