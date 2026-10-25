@@ -1,0 +1,33 @@
+{
+  "id": "puddle-frog",
+  "name": "Puddle Frog",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). Hops in an arc and lands with a splash. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#4fa36b",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "splash",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 18,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "blue",
+  "band": "F1-2",
+  "tell": "red circle where it will land",
+  "senseiLine": "Watch where it lands. Then move.",
+  "description": "Hops in an arc and lands with a splash.",
+  "bestiary": {
+    "tip": "Step out, then calm it while it blinks.",
+    "lore": {
+      "blue": "A happy pond frog that got lost in the mist. Calm it, and it hops home to its lily pad."
+    }
+  }
+}

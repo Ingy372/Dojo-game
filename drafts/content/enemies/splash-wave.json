@@ -1,0 +1,48 @@
+{
+  "id": "splash-wave",
+  "name": "Splash Wave",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). A rolling wave splashes across one lane of the river. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#5b8fd1",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "wave",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 24,
+    "recoverTicks": "TODO",
+    "dashOnly": true
+  },
+  "parSeconds": "TODO",
+  "tier": "blue",
+  "band": "F3-4",
+  "tell": "purple striped wave lane + '!!'",
+  "senseiLine": "Purple stripes? DASH out of the wave.",
+  "description": "A rolling wave splashes across one lane of the river.",
+  "bestiary": {
+    "tip": "DASH out of the wave lane.",
+    "lore": {
+      "blue": "The river forgot how to flow gently. Free it, and the water runs calm and clear again."
+    }
+  },
+  "dashOnlyAttack": {
+    "name": "rolling wave",
+    "shape": "lane",
+    "telegraphTicks": 24,
+    "recoverTicks": "TODO",
+    "strength": "TODO",
+    "tell": "purple-and-white stripes + '!!' + whoosh",
+    "shapeCue": "lane",
+    "counterable": false,
+    "answer": "dash",
+    "noOverlapWithRedCircle": false,
+    "minOffsetFromRedCircleTicks": 10,
+    "overlapOnGuided": false
+  }
+}

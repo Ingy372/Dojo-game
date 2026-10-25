@@ -1,0 +1,33 @@
+{
+  "id": "mist-wisp",
+  "name": "Mist Wisp",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). Fades into the mist, then shows up nearby. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#bcd7e6",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "drift",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 18,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "blue",
+  "band": "F1-2",
+  "tell": "shimmers before it appears, then red circle",
+  "senseiLine": "It always shimmers first. Look closely.",
+  "description": "Fades into the mist, then shows up nearby.",
+  "bestiary": {
+    "tip": "Watch the shimmer, then COUNTER.",
+    "lore": {
+      "blue": "A bit of river mist that forgot the morning sun. Free it, and it floats up into the light."
+    }
+  }
+}
