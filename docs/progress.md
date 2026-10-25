@@ -639,3 +639,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## node-22
 - The repo now asks for Node 22+ (`engines`, `.nvmrc`), the same as Capacitor 8. No CI workflows exist yet. Typecheck, Vitest and the web build pass on Node 22.23.4.
+
+## fix-celebrate-rm
+- With Reduced motion on, the Celebrations rays stay still and no confetti shows. The Congratulations card says "practiced" for techniques counted from an earlier rank (legacy) and keeps "signed off" for real sign-offs.
