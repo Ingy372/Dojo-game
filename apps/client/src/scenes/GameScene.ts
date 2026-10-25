@@ -118,6 +118,8 @@ const NO_DEFEAT_FADE_MS = 600;
 const HUD_TOP_PX = 56;
 /** Screen y a door label may not rise above: the top bar plus the Challenge timer (top 36, 20 px bold, bottom ~64) and an 8 px gap. */
 const DOOR_LABEL_TOP_PX = 72;
+/** B-T3-NUDGE: gap between Sensei's banner and the ROAR! word. */
+const ROAR_GAP_PX = 8;
 /** Screen y of the boss health bar; its name sits just under it. */
 // The boss bar sits in the HUD's top strip, between the player's bars and the room label,
 // so it never covers the Keeper (K9: it used to sit over the Keeper's head at y 74).
@@ -280,6 +282,65 @@ export class GameScene extends Phaser.Scene {
   private roomLabel!: Phaser.GameObjects.Text;
   private timerText!: Phaser.GameObjects.Text;
   private bossName!: Phaser.GameObjects.Text;
+  /** B-T3-NUDGE: the phase pause's ROAR! word (screen space, under the Sensei banner). */
+  /** A world box in screen points. */
+  private toScreen(w: { left: number; right: number; top: number; bottom: number }): { left: number; right: number; top: number; bottom: number } {
+    const cam = this.cameras.main;
+    const z = cam.zoom / DPR;
+    return { left: (w.left - cam.worldView.x) * z, right: (w.right - cam.worldView.x) * z, top: (w.top - cam.worldView.y) * z, bottom: (w.bottom - cam.worldView.y) * z };
+  }
+
+  private playerOnScreen() {
+    return this.toScreen(this.player.getBounds());
+  }
+
+  /** Every enemy name label on screen: the boss's name + bar pair and named monsters' plates and tags. */
+  private nameLabelsOnScreen() {
+    const boss = this.world.enemies.find((e) => e.def.boss && e.mode !== 'defeated');
+    if (boss && this.bossName.visible) this.placeBossTag(boss);
+    const world = [...(this.bossName.visible && this.bossTagWorld ? [this.bossTagWorld] : []), ...[...this.enemyViews.values()].flatMap((v) => v.named?.labelBounds() ?? [])];
+    return world.map((b) => this.toScreen(b));
+  }
+
+  /** B-T3-NUDGE: nudge a screen text vertically (down first, then up) until it is 8 px clear of every box and never above minTop. */
+  private nudgeClear(t: Phaser.GameObjects.Text, boxes: { left: number; right: number; top: number; bottom: number }[], minTop: number): void {
+    const { height } = view(this);
+    const b = t.getBounds();
+    const h = b.height;
+    const xs = boxes.filter((o) => b.left < o.right && b.right > o.left);
+    const hits = (top: number) => xs.find((o) => top < o.bottom + ROAR_GAP_PX && top + h > o.top - ROAR_GAP_PX);
+    const tryDir = (dir: 1 | -1): number | null => {
+      let top = Math.max(minTop, b.top);
+      for (let i = 0; i < 12; i++) {
+        const o = hits(top);
+        if (!o) return top >= minTop && top + h <= height ? top : null;
+        top = dir > 0 ? o.bottom + ROAR_GAP_PX : o.top - ROAR_GAP_PX - h;
+      }
+      return null;
+    };
+    const top = tryDir(-1) ?? tryDir(1);
+    if (top !== null) t.y += top - b.top;
+  }
+
+  /** B-T3-NUDGE: shift a screen-space text stack off the player: above their head, else below their feet; never above minTop. */
+  private keepOffPlayer(stack: Phaser.GameObjects.Text[], minTop: number): void {
+    const cam = this.cameras.main;
+    const w = this.player.getBounds();
+    const z = cam.zoom / DPR;
+    const p = { top: (w.top - cam.worldView.y) * z, bottom: (w.bottom - cam.worldView.y) * z, left: (w.left - cam.worldView.x) * z, right: (w.right - cam.worldView.x) * z };
+    const bs = stack.map((t) => t.getBounds());
+    const top = Math.min(...bs.map((b) => b.top));
+    const bottom = Math.max(...bs.map((b) => b.bottom));
+    const hits = bs.some((b) => b.left < p.right && b.right > p.left) && top < p.bottom && bottom > p.top;
+    if (!hits) return;
+    let newTop = p.top - ROAR_GAP_PX - (bottom - top);
+    if (newTop < minTop) newTop = p.bottom + ROAR_GAP_PX;
+    stack.forEach((t) => (t.y += newTop - top));
+  }
+
+  private roarText: Phaser.GameObjects.Text | null = null;
+  /** B-T3-NUDGE: the boss's "Help me!" when its helpers come with a phase pause (under ROAR!). */
+  private helpText: Phaser.GameObjects.Text | null = null;
   private toastY = 0;
   /** Decoration labels on screen and where they'd like to be (K12). */
   private decoToasts: Array<{ t: Phaser.GameObjects.Text; y: number }> = [];
@@ -1383,7 +1444,6 @@ export class GameScene extends Phaser.Scene {
           const e = this.enemy(ev.enemyId);
           const ms = ticksToRealMs(ev.ticks);
           if (e) {
-            this.floatText({ x: e.pos.x, y: e.pos.y - 1.2 }, 'ROAR!', '#ffb627', 28);
             if (!reducedMotion()) {
               const glow = this.addWorld(this.add.image(e.pos.x * TILE, (e.pos.y - 0.4) * TILE, this.softGlow()).setDepth(8));
               glow.setTint(0xff7a3c).setScale(0.6).setAlpha(0.9);
@@ -1392,12 +1452,51 @@ export class GameScene extends Phaser.Scene {
           }
           sfx.appear();
           if (ev.senseiLine) this.senseiSay([ev.senseiLine], Math.max(1200, ms));
+          // B-T3-NUDGE: ROAR! sits on screen just under Sensei's banner (8 px gap), above everything, so the banner never covers it.
+          if (e) {
+            const { width } = view(this);
+            const banner = this.senseiText?.active ? this.senseiText.getBounds() : null;
+            const roar = this.add
+              .text(width / 2, banner ? banner.bottom + ROAR_GAP_PX : 72, 'ROAR!', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '28px', color: '#ffb627', stroke: '#2a1408', strokeThickness: 5 })
+              .setOrigin(0.5, 0)
+              .setDepth(60)
+              .setResolution(window.devicePixelRatio || 1);
+            this.cameras.main.ignore(roar);
+            this.roarText?.destroy();
+            this.helpText?.destroy();
+            this.roarText = roar;
+            const fade = [roar];
+            if (events.some((x) => x.kind === 'summon' && x.enemyId === ev.enemyId)) {
+              // "Help me!" sits over the calling enemy's head (screen space) so it reads as the enemy's line, not the student's.
+              const cam = this.cameras.main;
+              const z = cam.zoom / DPR;
+              const ex = (e.pos.x * TILE - cam.worldView.x) * z;
+              const headY = ((e.pos.y - 1) * TILE - cam.worldView.y) * z;
+              const help = this.add
+                .text(ex, headY, 'Help me!', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '22px', color: '#ffd166', stroke: '#2a1408', strokeThickness: 4 })
+                .setOrigin(0.5, 0)
+                .setDepth(60)
+                .setResolution(window.devicePixelRatio || 1);
+              this.cameras.main.ignore(help);
+              this.helpText = help;
+              const minTop = banner ? banner.bottom + ROAR_GAP_PX : 0;
+              const hb = help.getBounds();
+              help.setPosition(Phaser.Math.Clamp(ex, hb.width / 2 + ROAR_GAP_PX, width - hb.width / 2 - ROAR_GAP_PX), Math.max(minTop, headY - hb.height - ROAR_GAP_PX));
+              this.nudgeClear(help, [roar.getBounds(), this.playerOnScreen(), ...this.nameLabelsOnScreen()], minTop);
+              fade.push(help);
+            }
+            this.keepOffPlayer([roar], banner ? banner.bottom + ROAR_GAP_PX : 0);
+            if (this.helpText && fade.includes(this.helpText)) this.nudgeClear(this.helpText, [roar.getBounds(), this.playerOnScreen(), ...this.nameLabelsOnScreen()], banner ? banner.bottom + ROAR_GAP_PX : 0);
+            this.tweens.add({ targets: fade, alpha: 0, delay: ms * 0.6, duration: ms * 0.4, onComplete: () => fade.forEach((t) => t.destroy()) });
+          }
           break;
         }
         case 'summon': {
           const e = this.enemy(ev.enemyId);
           sfx.appear();
-          if (e) this.floatText({ x: e.pos.x, y: e.pos.y - 1 }, 'Help me!', '#ffd166', 24);
+          // B-T3-NUDGE: with a phase pause in the same tick, "Help me!" goes under ROAR! instead (clear of the banner).
+          const paused = events.some((x) => x.kind === 'phaseHold' && x.enemyId === ev.enemyId);
+          if (e && !paused) this.floatText({ x: e.pos.x, y: e.pos.y - 1 }, 'Help me!', '#ffd166', 24);
           const caller = this.enemyViews.get(ev.enemyId);
           if (caller) caller.callUntil = this.time.now + 1000;
           this.syncEnemyViews();

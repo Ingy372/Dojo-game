@@ -63,6 +63,11 @@ export class NamedView {
   private trailTiles: Phaser.GameObjects.Image[] = [];
   private tileW = 38;
   private trailStart = 0;
+  /** World boxes of the visible plate and tag (B-T3-NUDGE: "Help me!" keeps off them). */
+  labelBounds(): Phaser.Geom.Rectangle[] {
+    return [this.plate, this.tag].filter((c): c is Phaser.GameObjects.Container => !!c && c.visible && c.alpha > 0).map((c) => c.getBounds());
+  }
+
   /** When it was first seen (the plate's 3 seconds start), or null. */
   shownAt: number | null = null;
   /** Tell beats already played in the current wind-up. */

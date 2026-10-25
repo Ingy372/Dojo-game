@@ -796,6 +796,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Kid gate: wins 113/200 (56.5%), room-1 KOs 0/200. Smart damage per room vs 911ce19: 28.60 → 23.51 (−17.8%), 26.23 → 22.10 (−15.7%), 28.65 → 23.74 (−17.1%).
 **Next**
 - Manager: smart damage −16 to −18% accepted for the beta (200/200 smart wins, bands 293/293). Final mash-guard wording from the Content Designer landed; shots in b-masher-shots/v3.
+## B-CF-BUILD — Cloudflare build fixed (2026-10-25)
+**Done**
+- Removed the stray `pnpm-lock.yaml` that sent Cloudflare to pnpm (nothing installed, `tsc` not found); pinned `packageManager` to npm@10.9.2; guard test for stray lockfiles.
+**Next**
+- Watch the 'Workers Builds: dojo-ascent' check go green on main after merge.
 ## P-MENU2-i (2026-10-25)
 - menu2 art imported (61 frames, 1 page) and drawn in Trophies (cubbies, shelf, seal, lantern, shine, unlock sweep, belt knots), Gear (doll backing, rings, bag tiles) and Last run (stat tiles and icons, XP bar, found tiles). Code-drawn fallback kept everywhere.
 - New test packages/sim/test/p-menu2-i-art.test.ts (7 tests). npm test: 857 passed, 1 skipped.

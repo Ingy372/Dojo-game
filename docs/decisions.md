@@ -1171,6 +1171,15 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **QA on #295 (layout only):** the stepped-back banner keeps off every player's sprite (its usual spot, then the top edge, then the bottom; clear of the buttons and doors when it can be, and of the players always, re-checked while it holds). Its two lines are balanced, so no word sits alone (20 px at 667, 26 px wider).
 - **Manager call (Oct 25): at 667 the stepped-back banner may cover the CHALLENGE door label** (the only spot there clear of the player and the buttons). Accepted as is.
 - **Manager call (Oct 25): in co-op the "Sensei steps back" line shows once per player.** `RunState.mashGuardSeen` is now the list of player ids who have seen it this run, saved with the run (a reload doesn't show it again to anyone who saw it).
+### B-T3-NUDGE follow-up: phase-pause words keep off the player (2026-10-25)
+- **ROAR!** starts 8 px under Sensei's banner (screen space). If it would cover the player's sprite, it moves above the player's head; if that would push it within 8 px of the banner, it goes 8 px below the player's feet instead.
+- **"Help me!"** (wording unchanged) is the enemy's line, so it sits over the calling enemy's head, not in the centre, so it can't read as the student speaking. It stays at least 8 px under the banner, clear of ROAR!, and gets the same keep-off-the-player move.
+- Shots (`b-t3-tune-2-shots/v4`, reduced motion on/off at 667/844/932): player overlap 0 for both words; "Help me!" centred on the Hearth Cook. Placement makes the speaker clear, so no new wording is needed.
+- **Name labels too:** "Help me!" also keeps 8 px off every enemy name label (the boss's name + bar pair, named monsters' plates and tags). It nudges up first (stays over the caller), then down; never within 8 px of the banner. v5 shots: 0 overlap with player, banner, labels and ROAR!.
+
+### B-CF-BUILD — npm only, so Cloudflare builds again (2026-10-25)
+- Cloudflare Workers Builds chooses the installer from the lockfile. A near-empty `pnpm-lock.yaml` (added with B-BELT, #246) made it install with pnpm, which installed nothing, so `tsc` was missing and every build since 3022b7b failed.
+- Removed `pnpm-lock.yaml`; root `package.json` now sets `"packageManager": "npm@10.9.2"` (the npm Cloudflare's build image ships; the box has 10.9.9, so we pin Cloudflare's). A test (`b-cf-build.test.ts`) fails if `pnpm-lock.yaml` or `yarn.lock` shows up at the root. No dashboard or account changes.
 ## P-MENU2-i: menu2 art in Trophies, Gear and Last run (2026-10-25)
 - Jay OK'd the #265 art; the Manager gave the go. Only Trophies, Gear and Last run use it.
 - My Style's art (slot-card, tray-tile, tray-equipped-badge, switch, glyph) is held, not imported. A test checks no quoted My Style frame names are used.
