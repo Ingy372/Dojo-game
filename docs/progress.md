@@ -561,3 +561,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## K25b Block never shakes
 - Done: Block gives 0 shake; being hit is unchanged. Test added.
+
+## R-BAL-9b Per-tier gear caps
+- Done: 10-tier GEAR_CAPS, white cut, Jade capped. Test: r-bal-9b-gear-caps.test.ts.

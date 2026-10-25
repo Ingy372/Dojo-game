@@ -790,3 +790,10 @@ Live enemy changes (maxHealth / power / guard; nothing else changed):
 
 ## K25b: a Block never shakes (Manager's call, 2026-10-24)
 A Block is a success moment, so it never shakes the screen, at any belt or difficulty. Only being hit shakes (K25 rules: Brown and up or Challenge, 65%, off with Reduced motion). `eventShakeScale('block', …)` is always 0. This answers the K25 open question about Block. Test: packages/sim/test/k25b-block-no-shake.test.ts.
+
+## R-BAL-9b: per-tier gear caps; white gear cut (Manager's call, 2026-10-24)
+The Manager made the white gear cut from #188 (DECIDE-1, option a) under the balance calls Jay delegated to the Manager. The game hasn't launched, so no kid loses anything.
+- GEAR_CAPS has all 10 tiers (Power / Health / Guard / Jade): white 1/10/3/4% … black 34/211/17/26%. Before, white was 4/30/8/12%.
+- White loot (content/loot/gear.json): hands Power 1/1/1/1, gi Health 3/5/8/10, gi Guard 1/2/2/3, Jade 1/2/3/4%.
+- Drops are clamped to the tier cap, including the Jade charm's Power share. maxGearScore uses each tier's own caps instead of white × tier.
+- Not done here: ENEMY_SCALE for enemies outside their home tier (spec item 5), because no enemy appears off-tier yet; per-tier loot tables (R-BAL-10); XP steps (R-BAL-5, #204).
