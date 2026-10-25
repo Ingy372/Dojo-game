@@ -32,13 +32,14 @@ import {
   type Profile,
   type RequirementStatus,
   type TrainingState,
-  showSensei,
   kataArrows,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
+import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining, selectProfile, shortDate } from '../game/student';
+import { hex } from '../ui/belt';
 import { startTowerRun } from '../game/tower';
 import { isPlayTimeUp } from '../game/playTime';
 import { addIcon, ICON_PACK } from '../art/icons';
@@ -69,8 +70,6 @@ const BEST_NAME: Record<BestKey, string> = {
 const KIND_MARK: Record<string, string> = { rest: '+' };
 
 type Tab = 'run' | 'gear' | 'abilities' | 'gate';
-const KIND_LABEL = { form: 'Form', strike: 'Strike', seal: 'Technique Seal' } as const;
-
 /**
  * The training board (opened from the notice board in the Home Dojo): the character with
  * their real belt, level and Blessing, the Path card, starting a run, the last run's
@@ -82,6 +81,9 @@ export class HomeScene extends Phaser.Scene {
   private tab: Tab = 'run';
   /** P-MENU2-a: which part of Abilities is showing. */
   private part: AbilitiesPart = 'trophy';
+  /** P-MENU2-b: the open cubby sheet, and how many Trophy Case pages there are. */
+  private cubbySheet: Phaser.GameObjects.Container | null = null;
+  trophyPages = 1;
   private page = 0;
   /** The bag item being looked at, if any. */
   private selected: string | null = null;
@@ -364,6 +366,7 @@ export class HomeScene extends Phaser.Scene {
     if (this.panel) {
       this.tweens.killTweensOf(this.panel);
       this.panel.destroy(true);
+      this.cubbySheet = null;
     }
     const panel = this.add.container(0, 0);
     this.panel = panel;
@@ -567,8 +570,8 @@ export class HomeScene extends Phaser.Scene {
     // P-MENU2-a: the segmented switch at the top: Trophy Case | Fighting Style, both 44 tall.
     const sw = abilitiesSwitch(w);
     const parts: Array<[AbilitiesPart, string]> = [
-      ['trophy', '🏆 Trophy Case'],
-      ['style', '⚔ Fighting Style'],
+      ['trophy', TROPHY_WORDS.parts.trophy],
+      ['style', TROPHY_WORDS.parts.style],
     ];
     parts.forEach(([part, label], i) => {
       const on = this.part === part;
@@ -585,110 +588,191 @@ export class HomeScene extends Phaser.Scene {
     g.fillStyle(WOOD.paper, 0.12).fillRoundedRect(x, y, w, h, RADIUS.panel);
     g.lineStyle(2, WOOD.grain, 0.6).strokeRoundedRect(x, y, w, h, RADIUS.panel);
     this.ui.add(g);
-    this.text(x + w / 2, y + h / 2 - TYPE.title, 'Your fighting style', TYPE.title, '#f2e3c4', true).setOrigin(0.5);
-    this.text(x + w / 2, y + h / 2 + S2, 'Soon you can pick your stance and your stripe here.', TYPE.body, '#d9c6a3', false, FONT, w - 2 * S3).setOrigin(0.5, 0).setAlign('center');
+    this.text(x + w / 2, y + h / 2 - TYPE.title, TROPHY_WORDS.styleTitle, TYPE.title, '#f2e3c4', true).setOrigin(0.5);
+    this.text(x + w / 2, y + h / 2 + S2, TROPHY_WORDS.styleSoon, TYPE.body, '#d9c6a3', false, FONT, w - 2 * S3).setOrigin(0.5, 0).setAlign('center');
   }
 
-  /** The Trophy Case: every earned and not-yet-earned ability, named after the real technique. */
+  /**
+   * P-MENU2-b: the Trophy Case. A belt ribbon, then shelves of cubbies (earned: wood card and
+   * Sensei's seal; not yet: paper card, lantern and "Learn this at the dojo"), pages as dots.
+   * No locks, no counts. Tapping a cubby opens its detail sheet.
+   */
   private renderTrophyCase(x: number, y: number, w: number, h: number): void {
-    const t = this.training;
-    interface Row {
-      tag: string;
-      title: string;
-      text: string;
-      status: string;
-      unlocked: boolean;
-      color: number;
-      /** Icon id (Batch 8), if it has one. */
-      icon?: string;
-      /** S3-P1b: kata arrows are drawn at the step-number size (13px bold), not 11px. */
-      big?: boolean;
+    this.beltRibbon(x, y, w);
+    const cubbies = this.trophyCubbies();
+    const L = trophyLayout(w, h);
+    const pages = trophyPages(shelfRows(cubbies, L.perRow), L.rowsPerPage);
+    this.trophyPages = pages.length;
+    this.page = Math.min(this.page, pages.length - 1);
+    let ry = y + BOARD.ribbonH + S2;
+    if (cubbies.length === 0) this.text(x + w / 2, ry + S3, TROPHY_WORDS.empty, TYPE.body, '#f2e3c4', false, FONT, w).setOrigin(0.5, 0).setAlign('center');
+    for (const row of pages[this.page]) {
+      this.text(x, ry, row.title, TYPE.label, '#e8c48a', true);
+      const cy = ry + TYPE.label + 4;
+      row.cubbies.forEach((c, i) => this.cubby(x + i * (L.cubby + BOARD.cubby.gap), cy, L.cubby, c));
+      ry += L.rowH;
     }
-    const rows: Row[] = [];
-    const kataRows: Row[] = [];
-    for (const v of t.virtues) {
-      const inUse = v === t.virtue;
-      const belts = v.earned.map((s) => t.belts.find((b) => b.id === s.belt)?.name ?? s.belt).join(', ');
-      rows.push({
-        tag: 'Virtue',
-        title: `${virtueTitle(v)}  ·  ${v.word} stripe`,
-        text: describeVirtue(virtueSetupFor(v), v.def.text),
-        status: `Earned at ${belts}${inUse ? '  ·  in use' : ''}`,
-        unlocked: true,
-        color: 0xffd166,
-      });
-    }
-    const order = { form: 0, strike: 1, seal: 2 };
-    const list = t.abilities.slice().sort((a, b) => order[a.kind] - order[b.kind] || Number(b.unlocked) - Number(a.unlocked));
-    for (const a of list) {
-      const r = a.requirement;
-      const name = a.form?.name ?? a.perk?.name ?? 'Coming in a later update';
-      rows.push({
-        tag: KIND_LABEL[a.kind],
-        title: `${name}  ·  ${r.name}`,
-        text: a.form?.text ?? a.perk?.text ?? 'Its power arrives in a later update.',
-        status: a.unlocked ? signedLine(r) : `${showSensei(r.name)} to unlock`,
-        unlocked: a.unlocked,
-        color: a.kind === 'form' ? 0x6fb7ff : a.kind === 'strike' ? 0xff7a45 : 0x5cd6b0,
-        icon: a.form?.id ?? a.perk?.id,
-      });
-      // S3-P1: an earned kata gets its own card: name, step count and the direction of each
-      // step (a step whose direction is still an open question gets no arrow).
-      const kata = a.kind === 'form' && a.unlocked ? KATAS.get(r.id) : undefined;
-      if (kata)
-        kataRows.push({ tag: 'Kata', title: kata.name, text: `${kata.steps.length} steps`, status: kataArrows(kata), unlocked: true, color: 0x9fd3ff, big: true });
-    }
-    // S3-P1b: earned katas are grouped together at the top of Abilities.
-    rows.unshift(...kataRows);
+    if (pages.length > 1) this.trophyPager(x, y + h - L.pagerH, w, pages.length);
+  }
 
-    // Descriptions and status lines wrap (K22b), so each card is as tall as its text and a
-    // page holds as many cards as fit.
-    const iconSize = w < 560 ? 32 : 40;
-    const gap = 6;
-    const textW = (row: Row): number => w - (row.icon ? iconSize + 12 : 8) - 8;
-    const measure = (str: string, width: number): number => {
-      const t = this.add.text(0, 0, str, { fontFamily: FONT, fontSize: '11px', wordWrap: { width } });
-      const hh = t.height;
-      t.destroy();
-      return hh;
-    };
-    const heights = rows.map((row) => Math.max(48, 20 + measure(row.text, textW(row)) + (row.big ? kataLines(row.status, textW(row)) * KATA_LINE : measure(row.status, textW(row))) + 6));
-    const avail = h - 34;
-    const pageStarts: number[] = [0];
-    let used = 0;
-    heights.forEach((hh, i) => {
-      if (used > 0 && used + hh > avail) {
-        pageStarts.push(i);
-        used = 0;
+  /** P-MENU2-b: the Trophy Case cubbies for this student. */
+  private trophyCubbies(): Cubby[] {
+    const t = this.training;
+    return buildCubbies({
+      abilities: t.abilities,
+      virtues: t.virtues,
+      beltName: (id) => t.belts.find((b) => b.id === id)?.name ?? id,
+      virtueName: (v) => virtueTitle(v),
+      virtueEffect: (v) => describeVirtue(virtueSetupFor(v), v.def.text),
+      kataLine: (id) => {
+        const k = KATAS.get(id);
+        return k ? kataArrows(k) : undefined;
+      },
+    });
+  }
+
+  /** P-MENU2-b: one knot per belt. Earned in full colour, the current one glows with its stripes, future ones are a paper outline. */
+  private beltRibbon(x: number, y: number, w: number): void {
+    const t = this.training;
+    const n = t.belts.length;
+    const cur = t.belts.findIndex((b) => b.id === t.belt.id);
+    const g = this.add.graphics();
+    g.fillStyle(WOOD.frameDark, 0.6).fillRoundedRect(x, y, w, BOARD.ribbonH, RADIUS.button);
+    const slot = (w - S2) / Math.max(1, n);
+    const kw = Math.min(40, slot - 4);
+    const kh = 16;
+    const ky = y + (BOARD.ribbonH - kh) / 2;
+    t.belts.forEach((b, i) => {
+      const kx = x + S1 + i * slot + (slot - kw) / 2;
+      if (i > cur) {
+        g.lineStyle(1.5, WOOD.paper, 0.45).strokeRoundedRect(kx, ky, kw, kh, 4);
+        return;
       }
-      used += hh + gap;
+      if (i === cur) g.fillStyle(0xffd166, 0.3).fillRoundedRect(kx - 3, ky - 3, kw + 6, kh + 6, 6);
+      g.fillStyle(hex(b.color)).fillRoundedRect(kx, ky, kw, kh, 4);
+      if (b.color2) g.fillStyle(hex(b.color2)).fillRect(kx, ky + kh / 2 - 2, kw, 4);
+      g.lineStyle(1, 0x000000, 0.35).strokeRoundedRect(kx, ky, kw, kh, 4);
+      if (i === cur) for (let s = 0; s < t.stripesThisBelt; s++) g.fillStyle(0x222222).fillRect(kx + kw - 6 - s * 5, ky + 2, 3, kh - 4);
     });
-    const pages = pageStarts.length;
-    this.page = Math.min(this.page, pages - 1);
-    const from = pageStarts[this.page];
-    const to = pageStarts[this.page + 1] ?? rows.length;
-    let by = y;
-    rows.slice(from, to).forEach((row, k) => {
-      const boxH = heights[from + k];
-      this.ui.add(this.add.rectangle(x, by, w, boxH, row.unlocked ? 0x221d2e : 0x18151f).setOrigin(0).setStrokeStyle(2, row.color, row.unlocked ? 0.8 : 0.25));
-      const c = row.unlocked ? '#ffffff' : '#6b6478';
-      const icon = row.icon ? addIcon(this, row.icon, x + 6 + iconSize / 2, by + boxH / 2, iconSize) : null;
-      if (icon) this.ui.add(icon.setAlpha(row.unlocked ? 1 : 0.35));
-      const tx = icon ? x + iconSize + 12 : x + 8;
-      const tw = textW(row);
-      this.oneLine(this.text(tx, by + 4, `${row.unlocked ? '' : '🔒 '}${row.tag}: ${row.title}`, 13, row.unlocked ? css(row.color) : '#8a8296', true), tw, 10);
-      const desc = this.text(tx, by + 20, row.text, 11, c, false, FONT, tw);
-      if (row.big) this.kataSteps(tx, desc.y + desc.height + 2, row.status, tw);
-      else this.text(tx, desc.y + desc.height, row.status, 11, row.unlocked ? '#b9ad99' : '#ffd166', false, FONT, tw);
-      by += boxH + gap;
-    });
-    if (rows.length === 0) this.text(x, y, 'No abilities yet.', 14, '#b9ad99');
-    if (pages > 1) {
-      const py = y + h - 28;
-      this.button(x, py, 70, 28, '◀', 0x2a2536, 15, () => this.turn(-1));
-      this.text(x + w / 2, py + 14, `${this.page + 1} / ${pages}`, 13, '#b9ad99').setOrigin(0.5);
-      this.button(x + w - 70, py, 70, 28, '▶', 0x2a2536, 15, () => this.turn(1));
+    this.ui.add(g);
+  }
+
+  /** P-MENU2-b: one cubby, drawn in code on a button() so it presses like every other button. */
+  private cubby(x: number, y: number, size: number, c: Cubby): void {
+    const btn = button(this, { x, y, w: size, h: size, label: '', color: c.earned ? 0xa8703f : WOOD.paper, size: TYPE.label, selected: false, stroke: c.earned ? 0xffd166 : WOOD.grain, onTap: () => this.openCubby(c) }, this.ui);
+    const v = btn.visual;
+    const half = size / 2;
+    const iconS = Math.round(size * 0.42);
+    const iy = -half + 8 + iconS / 2;
+    const icon = c.icon ? addIcon(this, c.icon, 0, iy, iconS) : null;
+    if (icon) v.add(icon.setAlpha(c.earned ? 1 : 0.3));
+    else v.add(this.add.circle(0, iy, iconS / 2, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.3));
+    const tw = size - 10;
+    const ty = iy + iconS / 2 + 4;
+    const label = c.earned ? c.name : TROPHY_WORDS.notYet;
+    const txt = this.add
+      .text(0, ty, label, { fontFamily: FONT, fontSize: `${c.earned ? (size >= 112 ? TYPE.body : TYPE.label) : TYPE.label}px`, color: c.earned ? '#fff6e6' : WOOD.ink, fontStyle: c.earned ? 'bold' : 'normal', align: 'center', wordWrap: { width: tw } })
+      .setResolution(crisp())
+      .setOrigin(0.5, 0)
+      .setMaxLines(2);
+    v.add(txt);
+    if (c.earned) {
+      // Sensei's seal: a small red stamp in the corner (placeholder, no text).
+      v.add(this.add.circle(half - 12, -half + 12, 8, 0xc0392b).setStrokeStyle(2, 0xffe2b0, 0.9));
+    } else {
+      // A little paper lantern: something to look forward to.
+      const lg = this.add.graphics();
+      lg.fillStyle(0xffb347, 0.35).fillCircle(half - 13, -half + 15, 9);
+      lg.fillStyle(0xe8743b).fillRoundedRect(half - 18, -half + 8, 10, 14, 4);
+      lg.lineStyle(1, WOOD.ink === '#3a2618' ? 0x3a2618 : 0x000000, 0.8).lineBetween(half - 13, -half + 4, half - 13, -half + 8);
+      v.add(lg);
     }
+  }
+
+  /** P-MENU2-b: ◀ dots ▶ (44 tall). Dots only, never "n / m". */
+  private trophyPager(x: number, y: number, w: number, pages: number): void {
+    this.button(x, y, GEAR.arrowW, 44, '◀', WOOD.switchOff, 15, () => this.turn(-1));
+    this.button(x + w - GEAR.arrowW, y, GEAR.arrowW, 44, '▶', WOOD.switchOff, 15, () => this.turn(1));
+    const room = w - 2 * GEAR.arrowW;
+    const d = pageDots(pages, room);
+    if (!d) return;
+    for (let i = 0; i < pages; i++) this.ui.add(this.add.circle(x + GEAR.arrowW + d.x0 + i * d.step, y + 22, GEAR.dot / 2, i === this.page ? 0xffd166 : WOOD.paper, i === this.page ? 1 : 0.35));
+  }
+
+  /** P-MENU2-b: the detail sheet: icon, real name, one line of what it does, the status line and kata arrows. */
+  private openCubby(c: Cubby): void {
+    this.closeCubby(true);
+    const { rx, top, rw, panelH } = this.panelBox;
+    const f = BOARD.frame;
+    const sheet = this.add.container(0, 0);
+    this.cubbySheet = sheet;
+    const prevUi = this.ui;
+    this.ui = sheet;
+    const dim = this.add.rectangle(rx + f, top + f, rw - 2 * f, panelH - 2 * f, 0x000000, 0.45).setOrigin(0).setInteractive();
+    dim.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.closeCubby());
+    sheet.add(dim);
+    const pad = S3;
+    const sw = rw - 2 * f;
+    const sx = rx + f;
+    const tw = sw - 2 * pad - 56 - S2;
+    const kataH = c.kata ? TYPE.label + 4 + kataLines(c.kata, sw - 2 * pad) * KATA_LINE : 0;
+    const sh = Math.min(panelH - 2 * f, Math.max((panelH - 2 * f) / 2, pad + TYPE.title + 4 + TYPE.body * 2 + 8 + TYPE.body + 8 + kataH + 44 + pad));
+    const sy = top + panelH - f - sh;
+    const body = this.add.container(0, 0);
+    sheet.add(body);
+    this.ui = body;
+    const bg = this.add.graphics();
+    bg.fillStyle(WOOD.paper).fillRoundedRect(sx, sy, sw, sh, RADIUS.panel);
+    bg.lineStyle(3, c.earned ? 0xffd166 : WOOD.grain).strokeRoundedRect(sx, sy, sw, sh, RADIUS.panel);
+    bg.setInteractive(new Phaser.Geom.Rectangle(sx, sy, sw, sh), Phaser.Geom.Rectangle.Contains);
+    body.add(bg);
+    const icon = c.icon ? addIcon(this, c.icon, sx + pad + 28, sy + pad + 28, 56) : null;
+    if (icon) body.add(icon.setAlpha(c.earned ? 1 : 0.4));
+    else body.add(this.add.circle(sx + pad + 28, sy + pad + 28, 26, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.35));
+    const tx = sx + pad + 56 + S2;
+    let ty = sy + pad;
+    this.oneLine(this.text(tx, ty, c.name, TYPE.title, WOOD.ink, true), tw, TYPE.body);
+    ty += TYPE.title + 4;
+    const eff = this.text(tx, ty, c.effect, TYPE.body, '#5a3e28', false, FONT, tw).setMaxLines(2);
+    ty += eff.height + 6;
+    this.text(tx, ty, c.status, TYPE.body, c.earned ? '#a0522d' : '#7a5a3a', true, FONT, tw);
+    ty = Math.max(ty + TYPE.body + 8, sy + pad + 56 + S2);
+    if (c.kata) {
+      this.text(sx + pad, ty, TROPHY_WORDS.kataSteps, TYPE.label, '#7a5a3a', true);
+      ty += TYPE.label + 4;
+      this.kataSteps(sx + pad, ty, c.kata, sw - 2 * pad);
+    }
+    button(this, { x: sx + sw - pad - 96, y: sy + sh - pad - 44 + 8, w: 96, h: 44, label: TROPHY_WORDS.close, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.closeCubby() }, body);
+    this.ui = prevUi;
+    this.panel?.add(sheet);
+    if (reducedMotion()) {
+      sheet.setAlpha(0);
+      this.tweens.add({ targets: sheet, alpha: 1, duration: MOTION.reducedFade.ms });
+    } else {
+      body.setY(sh);
+      dim.setAlpha(0);
+      this.tweens.add({ targets: body, y: 0, duration: MOTION.sheet.ms, ease: MOTION.sheet.ease });
+      this.tweens.add({ targets: dim, alpha: 1, duration: MOTION.sheet.ms });
+    }
+  }
+
+  /** Screenshot/test hooks: open cubby i (in shelf order), and the index of the first not-yet cubby. */
+  openCubbyAt(i: number): void {
+    const c = this.trophyCubbies()[i];
+    if (c) this.openCubby(c);
+  }
+
+  firstNotYet(): number {
+    return this.trophyCubbies().findIndex((c) => !c.earned);
+  }
+
+  private closeCubby(instant = false): void {
+    const s = this.cubbySheet;
+    if (!s) return;
+    this.cubbySheet = null;
+    this.tweens.killTweensOf(s);
+    if (instant || reducedMotion() || !s.active) s.destroy(true);
+    else this.tweens.add({ targets: s, alpha: 0, duration: MOTION.sheet.outMs, onComplete: () => s.destroy(true) });
   }
 
   /** The Gate: one lock per requirement, the time-in-rank sundial, and Sensei's Seal. */
@@ -1219,12 +1303,6 @@ function RARITY_ORDER(item: GearItem): number {
 }
 
 /** "Signed off by Sensei Jay · Sat, Nov 2", or "Passed at White Belt" for the legacy grant. */
-function signedLine(r: RequirementStatus): string {
-  if (r.legacy) return `Passed at ${r.beltName}`;
-  const who = r.signedOffBy ? `Signed off by ${r.signedOffBy}` : 'Signed off';
-  return r.signedOffOn ? `${who}  ·  ${shortDate(r.signedOffOn)}` : who;
-}
-
 /** A short label for a Gate lock: "Basic Form 1", "SD #6", "Kick 2". */
 function shortName(r: RequirementStatus): string {
   return r.name.replace('Self-Defense ', 'SD ').replace('Kick Combo ', 'Kick ');

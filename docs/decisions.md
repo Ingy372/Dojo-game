@@ -1006,3 +1006,12 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Placeholder art only, drawn in code (wood frame, switch colours in `theme.ts` WOOD). No image files until Jay OKs the Artist's samples.
 - New sizes (`BOARD`, `abilitiesSwitch`, `cubbySize`) live in `ui/tokens.ts` and are re-exported from `theme.ts`, so Vitest can test them without Phaser. No existing token changed.
 - Abilities opens on Trophy Case for now; "open on Trophy Case after a new unlock, else Fighting Style" waits for the unlock tracking in P-MENU2-c and a real Fighting Style (P-MENU2-e).
+
+## P-MENU2-b: Trophy Case (2026-10-25)
+- Built on P-MENU2-a (#264), using the Manager's go, mood A (warm dojo wood) and D2-D6 as the planner recommended.
+- The Trophy Case now replaces the old list. It has a belt ribbon with one knot per belt (earned belts in colour, the current belt glowing with its stripes, later belts drawn as paper outlines) and four shelves: Katas/Forms, Kicks/Strikes, Self-defense/Seals and Character stripes/Virtues. Earned items come first on each shelf.
+- Cubbies are 96 or 112 wide (`cubbySize` rule), with up to 4 per row, built on `button()`. Pages show as dots between 44-tall ◀ ▶ buttons, with no "n / m".
+- An earned cubby is a wood card with a red seal stamp, and its sheet says "Signed at <belt>". A not-yet cubby is a paper card with the icon at 30% alpha, a lantern and "Learn this at the dojo" in 12 pt, and its sheet says "Ask Sensei about this one". There are no locks and no counts.
+- The detail sheet shows the icon, the real name, one line on what it does, the status line and, for earned katas, the kata arrows. It slides up, or fades in when Reduced motion is on.
+- All wording lives in `content/abilities/trophy-case.json`, including the switch labels from A. The model is in `apps/client/src/ui/trophyCase.ts`, which has no Phaser, so Vitest can test it.
+- All art is placeholder, drawn in code (seal, lantern, ribbon). No new images were added; the existing icon set is reused.
