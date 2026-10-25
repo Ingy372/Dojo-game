@@ -7,7 +7,7 @@ Every enemy and Guardian for the 10 belt tiers, plus the dash-only attack. Text 
 - **Tone (ages 6+):** every enemy is a Tower creature the shadow confused or made mischievous. Nobody is evil or hurt. Defeated means *calmed* or *freed*: a soft puff, a smile, and the light returns (lore bible).
 - **Floor bands:** each tier has 5 floors and a Guardian (core-design §12-13). Bands are **F1-2** (new enemies one at a time), **F3-4** (mixed rooms, the tier's dash-only enemy), **F5** (the Guardian floor: everything, then the Guardian).
 - **Ranks** (core-design §12): normal, elite (from the 4th belt, `content/elites/elites.json`), boss (the Floor Keeper on floors 1-4), Guardian (floor 5).
-- **Scaling** (balance-research.md System 2, recommendation a): stats = base × `ENEMY_SCALE[tier]`, tuned so hits-to-beat stays in band (Swarmer 2-4, Brute 10-20, Floor Keeper 40-80). Floor 1 ≈ 50% of tier max PR → floor 5 ≈ 85% → Guardian ≈ 90%. Challenge ×1.3 (research; see DECIDE). **Wind-up ticks never scale** (≥ 10). Difficulty grows by *more kinds and bigger groups*, not faster tells.
+- **Scaling** (balance-research.md System 2, recommendation a): stats = base × `ENEMY_SCALE[tier]`, tuned so hits-to-beat stays in band (Swarmer 2-4, Brute 10-20, Floor Keeper 40-80). Floor 1 ≈ 50% of tier max PR → floor 5 ≈ 85% → Guardian ≈ 90%. Challenge ×1.5 (Jay's call, C13 review; the research suggested ×1.3). **Wind-up ticks never scale** (≥ 10). Difficulty grows by *more kinds and bigger groups*, not faster tells.
 - **C12 tips still hold everywhere:** COUNTER the red circle, clear the small ones first, keep space, DASH out of crowds. Every tier has one swarm-type enemy so 'little ones first' keeps working.
 
 ## Dash-only attacks

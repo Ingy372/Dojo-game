@@ -1,0 +1,33 @@
+{
+  "id": "ladle-lobber",
+  "name": "Ladle Lobber",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). Flings soft soup splats from the back. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "color": "#a0663a",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "soup splat",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 18,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "orange",
+  "band": "F3-4",
+  "tell": "red circle where it lands",
+  "senseiLine": "It hides behind the others. Find a path.",
+  "description": "Flings soft soup splats from the back.",
+  "bestiary": {
+    "tip": "Step out, then reach it behind the others.",
+    "lore": {
+      "orange": "An old ladle that used to serve soup to everyone. Free it, and it goes back to sharing."
+    }
+  }
+}

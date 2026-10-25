@@ -1,0 +1,46 @@
+{
+  "id": "rolling-pin",
+  "name": "Rolling Pin",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A giant rolling pin that rolls down a lane. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "color": "#d9a86c",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "roll",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 26,
+    "recoverTicks": "TODO",
+    "dashOnly": true
+  },
+  "parSeconds": "TODO",
+  "tier": "orange",
+  "band": "F3-4",
+  "tell": "purple stripe lane + '!!'",
+  "senseiLine": "The stripes show the lane. DASH out.",
+  "description": "A giant rolling pin that rolls down a lane.",
+  "bestiary": {
+    "tip": "DASH out of the lane.",
+    "lore": {
+      "orange": "The baker's rolling pin rolled off on its own when the lights went out. Free it, and it rests on the table again."
+    }
+  },
+  "dashOnlyAttack": {
+    "name": "roll",
+    "shape": "lane",
+    "telegraphTicks": 26,
+    "recoverTicks": "TODO",
+    "strength": "TODO",
+    "tell": "purple-and-white stripes + '!!' + whoosh",
+    "shapeCue": "lane",
+    "counterable": false,
+    "answer": "dash",
+    "noOverlapWithRedCircle": true
+  }
+}

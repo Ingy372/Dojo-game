@@ -1,0 +1,33 @@
+{
+  "id": "wick-wisp",
+  "name": "Wick Wisp",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A tiny candle flame that drifts in a wavy line and bumps you. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "color": "#f6d77a",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "bump",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 14,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "white",
+  "band": "F1-2",
+  "tell": "flicker, then small red circle",
+  "senseiLine": "Little lights get lost too. Help it find its glow.",
+  "description": "A tiny candle flame that drifts in a wavy line and bumps you.",
+  "bestiary": {
+    "tip": "Punch it, or COUNTER the bump.",
+    "lore": {
+      "white": "When the lamps went dim, this little flame drifted off and lost its way. Calm it, and it glows warm again."
+    }
+  }
+}

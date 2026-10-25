@@ -1,0 +1,46 @@
+{
+  "id": "sleepy-sentry",
+  "name": "Sleepy Sentry",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A drowsy stone statue. It yawns, then stomps a long purple stripe. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "color": "#8f9aa6",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "yawn stomp",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 30,
+    "recoverTicks": "TODO",
+    "dashOnly": true
+  },
+  "parSeconds": "TODO",
+  "tier": "white",
+  "band": "F4 (practice floor)",
+  "tell": "purple stripe lane + '!!'",
+  "senseiLine": "Purple stripes? DASH out of them.",
+  "description": "A drowsy stone statue. It yawns, then stomps a long purple stripe.",
+  "bestiary": {
+    "tip": "DASH out of the stripes. They can't be COUNTERed.",
+    "lore": {
+      "white": "This old guard fell asleep on duty when the shadow came. Wake it gently, and it stands watch again."
+    }
+  },
+  "dashOnlyAttack": {
+    "name": "yawn stomp",
+    "shape": "lane",
+    "telegraphTicks": 30,
+    "recoverTicks": "TODO",
+    "strength": "TODO",
+    "tell": "purple-and-white stripes + '!!' + whoosh",
+    "shapeCue": "lane",
+    "counterable": false,
+    "answer": "dash",
+    "noOverlapWithRedCircle": true
+  }
+}

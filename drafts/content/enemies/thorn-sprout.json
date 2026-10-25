@@ -1,0 +1,33 @@
+{
+  "id": "thorn-sprout",
+  "name": "Thorn Sprout",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A grumpy sprout that stays put and spits seeds. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "color": "#6fae4a",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "seed spit",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 18,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "yellow",
+  "band": "F1-2",
+  "tell": "puffs cheeks, red circle where the seed lands",
+  "senseiLine": "It can't move. Walk around and come close.",
+  "description": "A grumpy sprout that stays put and spits seeds.",
+  "bestiary": {
+    "tip": "Walk around the seeds and calm it up close.",
+    "lore": {
+      "yellow": "A seed grew up grumpy in the dark. Calm it, and it opens a tiny flower."
+    }
+  }
+}
