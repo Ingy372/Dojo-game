@@ -47,7 +47,7 @@ import { isPlayTimeUp } from '../game/playTime';
 import { addIcon, ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { loadArt } from '../art/art';
-import { hasMenu2, menu2Frames, menu2Image, menu2Slice, skinButton, woodSkin, HONEY_INK } from '../art/menu2';
+import { hasMenu2, menu2Fit, menu2Frames, menu2Image, menu2Slice, setMenu2, skinButton, woodSkin, HONEY_INK } from '../art/menu2';
 import { MENU2_PACK, artRarity } from '../art/menu2Frames';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
@@ -74,6 +74,11 @@ type Tab = 'run' | 'gear' | 'abilities' | 'gate';
  * summary, gear, abilities, and the Gate.
  */
 /** P-MENU2-i: the A-MENU2 stat icons (Rooms has none, so it shows its number only). */
+/** QA: rarity words on the paper tiles, darkened to at least 4.5:1 on the paper (#efe0c4). */
+const RARITY_INK: Record<GearItem['rarity'], string> = { common: '#6b5a48', uncommon: '#245a24', rare: '#174a7d', epic: '#5e2696', legendary: '#8a4a12' };
+/** QA: the painted wood rim of the stat tile at k 0.5 (12 of its 32 @2x slice px; half at k 0.25), and the space kept inside it. */
+const STAT_RIM = 6;
+const STAT_PAD = S2;
 const STAT_ICON: Record<string, string | undefined> = { perfects: 'stat-perfect', combo: 'stat-combo', time: 'stat-clock', xp: 'stat-xp' };
 
 /** A-MENU2: only the Black belt gets the full knot sheen. */
@@ -541,9 +546,11 @@ export class HomeScene extends Phaser.Scene {
     L.tiles.forEach((b, i) => {
       const st = m.stats[i];
       // P-MENU2-i: the A-MENU2 stat tile (9-slice 16) with its icon at x 12; code tile if missing.
-      const tileArt = menu2Slice(this, 'stat-tile', X(b.x), Y(b.y), b.w, b.h);
+      // QA: short (44) tiles draw the rim at half size (k 0.25) so the label keeps 8 px inside it.
+      const rim = b.h < 56 ? STAT_RIM / 2 : STAT_RIM;
+      const tileArt = menu2Slice(this, 'stat-tile', X(b.x), Y(b.y), b.w, b.h, b.h < 56 ? 0.25 : 0.5);
       // On the paper tile the words are dark ink (white on wood stays for the code tile).
-      const ink = tileArt ? { num: st.key === 'xp' ? '#2f6f9a' : WOOD.ink, label: '#5a3e28' } : { num: st.key === 'xp' ? '#9ad1ff' : '#fff6e6', label: '#f2e3c4' };
+      const ink = tileArt ? { num: st.key === 'xp' ? '#245a80' : WOOD.ink, label: '#5a3e28' } : { num: st.key === 'xp' ? '#9ad1ff' : '#fff6e6', label: '#f2e3c4' };
       if (tileArt) {
         this.ui.add(tileArt);
         const iconArt = STAT_ICON[st.key];
@@ -556,10 +563,18 @@ export class HomeScene extends Phaser.Scene {
         tg.lineStyle(2, WOOD.frameDark).strokeRoundedRect(X(b.x), Y(b.y), b.w, b.h, RADIUS.button);
         this.ui.add(tg);
       }
-      const big = b.h >= 56 ? TYPE.heading : TYPE.title;
+      // QA: on the short art tile the number steps down to 14 so it clears the padded label.
+      const big = b.h >= 56 ? TYPE.heading : tileArt ? TYPE.body : TYPE.title;
       const num = this.text(X(b.x + b.w / 2), Y(b.y + S1), st.format(count ? 0 : st.value), big, ink.num, true).setOrigin(0.5, 0);
       num.setData('stat', st.key);
-      this.oneLine(this.text(X(b.x + b.w / 2), Y(b.y + b.h - S1 - TYPE.label - 2), st.label, TYPE.label, ink.label, true).setOrigin(0.5, 0), b.w - 2 * S2, TYPE.label);
+      // QA: on the art the label keeps 8 px inside the painted rim (bottom and sides).
+      const inset = tileArt ? rim + STAT_PAD : S1 + 2;
+      const lab = this.text(X(b.x + b.w / 2), Y(b.y + b.h - inset), st.label, TYPE.label, ink.label, true).setOrigin(0.5, 1);
+      this.oneLine(lab, b.w - 2 * (tileArt ? rim + STAT_PAD : S2), TYPE.label);
+      if (tileArt) {
+        lab.setData('statLabel', st.key);
+        tileArt.setData('statTile', st.key).setData('rim', rim);
+      }
       if (count) {
         const v = { t: 0 };
         this.tweens.add({ targets: v, t: 1, delay: countDelay, duration: LASTRUN_MOTION.countMs, onUpdate: () => num.setText(st.format(countAt(st.value, v.t))), onComplete: () => num.setText(st.format(st.value)) });
@@ -576,11 +591,15 @@ export class HomeScene extends Phaser.Scene {
     const bar = this.add.graphics();
     this.ui.add(bar);
     // P-MENU2-i: the A-MENU2 bar (3-slice frame, fill tinted #f2c14e, gloss on top); code bar if missing.
-    const frameArt = menu2Slice(this, 'xp-bar-frame', X(0), Y(L.bar.y) - 2, cw, L.bar.h + 4);
-    const inset = ((L.bar.h + 4) * 4) / 20;
-    const fillH = ((L.bar.h + 4) * 11) / 20;
-    const fillArt = frameArt ? menu2Slice(this, 'xp-bar-fill', X(inset), Y(L.bar.y) - 2 + inset, cw - 2 * inset, fillH) : null;
-    const glossArt = fillArt ? menu2Slice(this, 'xp-bar-gloss', X(inset), Y(L.bar.y) - 2 + inset, cw - 2 * inset, fillH) : null;
+    // QA: the rail is only 1 px taller than the bar each way, so it stays clear of the tiles above and Found / dots / New for you below.
+    const railH = L.bar.h + 2;
+    const railY = Y(L.bar.y) - 1;
+    const frameArt = menu2Slice(this, 'xp-bar-frame', X(0), railY, cw, railH);
+    frameArt?.setData('xpRail', true);
+    const inset = (railH * 4) / 20;
+    const fillH = (railH * 11) / 20;
+    const fillArt = frameArt ? menu2Slice(this, 'xp-bar-fill', X(inset), railY + inset, cw - 2 * inset, fillH) : null;
+    const glossArt = fillArt ? menu2Slice(this, 'xp-bar-gloss', X(inset), railY + inset, cw - 2 * inset, fillH) : null;
     if (frameArt && fillArt) {
       fillArt.setTint(atCap ? 0xffd166 : 0xf2c14e);
       this.ui.add([frameArt, fillArt, ...(glossArt ? [glossArt] : [])]);
@@ -651,7 +670,7 @@ export class HomeScene extends Phaser.Scene {
     const fresh = newForYou(this.trophyCubbies(), this.profile.trophiesSeen);
     if (fresh) {
       const nc = L.newCard;
-      this.text(X(nc.x), Y(L.newLabelY), LASTRUN_WORDS.newForYou, TYPE.label, '#a0522d', true);
+      this.text(X(nc.x), Y(L.newLabelY), LASTRUN_WORDS.newForYou, TYPE.label, '#8a4a12', true).setData('newLabel', true);
       const b = button(this, { x: X(nc.x), y: Y(nc.y), w: nc.w, h: nc.h, label: '', color: 0xa8703f, size: TYPE.label, stroke: 0xffd166, onTap: () => this.openNewForYou() }, this.ui);
       b.visual.setData('newForYou', fresh.id);
       const tall = nc.h >= 80;
@@ -1079,6 +1098,8 @@ export class HomeScene extends Phaser.Scene {
     const txt = this.cubbyLabel(c, size);
     const iy = -half + TROPHY_UI.stroke / 2 + TROPHY_UI.cubbyTop + iconS / 2;
     txt.setY(iy + iconS / 2 + TROPHY_UI.cubbyGap);
+    // QA: the cream names sit over the yellow icon disc and the honey wood; a dark ink outline keeps them 4.5:1+.
+    if (skin && c.earned) txt.setStroke(WOOD.ink, 4).setData('cubbyName', true);
     const icon = c.icon ? addIcon(this, c.icon, 0, iy, iconS) : null;
     if (icon) v.add(icon.setAlpha(c.earned ? 1 : 0.3));
     else v.add(this.add.circle(0, iy, iconS / 2, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.3));
@@ -1441,8 +1462,20 @@ export class HomeScene extends Phaser.Scene {
       const v = b.visual.setData('gearTile', it.uid);
       // P-MENU2-i: the rarity frame (72 x 88 tile in an 84 x 100 file); Selected art while picked.
       const tileArt = sel ? 'bag-tile-selected' : `bag-tile-${artRarity(it.rarity)}`;
-      const tileSkin = menu2Image(this, tileArt, 0, 0, (box.w * 84) / 72, (box.h * 100) / 88);
-      if (tileSkin) skinButton(this, b, tileSkin, tileArt, 'bag-tile-pressed');
+      // QA: one uniform scale (fit to the width, the plain middle cropped out), never stretched.
+      const halves = menu2Fit(this, tileArt, box.w, box.h, 6);
+      const tileSkin = halves?.[0] ?? null;
+      if (halves) {
+        skinButton(this, b, halves[0], tileArt, 'bag-tile-pressed');
+        halves.slice(1).forEach((hb) => {
+          v.addAt(hb, 2);
+          b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => setMenu2(this, hb, 'bag-tile-pressed'));
+          const up = () => hb.active && setMenu2(this, hb, tileArt);
+          b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, up);
+          b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, up);
+        });
+        v.setData('tileFit', halves.map((im) => [im.scaleX, im.scaleY]));
+      }
       // Icon above, the small rarity word under it (12 px, ≥8 px side padding, B-POLISH-2 wrap rules).
       const lh = GEAR_BOARD.labelH;
       const iconS = Math.min(GEAR_BOARD.iconMax, box.h - lh - 3 * S1 - 4);
@@ -1452,7 +1485,7 @@ export class HomeScene extends Phaser.Scene {
       else v.add(slotGlyph(this, it.slot, 0, iy, iconS - 8, RARITY_COLOR[it.rarity]));
       const tw = cubbyTextW(box.w);
       const word = rarityName(it.rarity);
-      const lab = this.add.text(0, box.h / 2 - S1 - 1, word, { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold', color: tileSkin && it.rarity === 'common' ? '#6b5a48' : css(RARITY_COLOR[it.rarity]), align: 'center', wordWrap: { width: tw } }).setOrigin(0.5, 1).setResolution(crisp()).setData('rarityWord', true);
+      const lab = this.add.text(0, box.h / 2 - S1 - 1, word, { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold', color: tileSkin ? RARITY_INK[it.rarity] : css(RARITY_COLOR[it.rarity]), align: 'center', wordWrap: { width: tw } }).setOrigin(0.5, 1).setResolution(crisp()).setData('rarityWord', true);
       v.add(wrapLikeCubby(lab, word, tw).setMaxLines(1));
       if (cmp.overall === 'worn') {
         v.add(this.add.circle(-box.w / 2 + 9, -box.h / 2 + 9, 7, 0xffd166));

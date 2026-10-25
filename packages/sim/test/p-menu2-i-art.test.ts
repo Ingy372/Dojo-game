@@ -49,7 +49,7 @@ describe('P-MENU2-i menu2 art', () => {
     expect(helpers).toMatch(/if \(!s\) return null/);
     expect(home).toMatch(/if \(tileArt\)[\s\S]{0,400}else/);
     // The bag tile's fallback is the button's own code-drawn face, hidden only when the skin draws.
-    expect(home).toMatch(/if \(tileSkin\) skinButton/);
+    expect(home).toMatch(/if \(halves\) \{\s*skinButton/);
     expect(home).toMatch(/hasMenu2\(this, 'belt-knot-band'\)/);
   });
 
@@ -70,6 +70,32 @@ describe('P-MENU2-i menu2 art', () => {
     expect((home.match(/woodSkin\(this/g) ?? []).length).toBeGreaterThanOrEqual(9);
     expect(out.filter((n) => n.startsWith('switch'))).toEqual([]);
     expect(home + helpers).not.toMatch(/['"`]switch-(?:track|left|right)/);
+  });
+
+  it('QA fixes: inks reach 4.5:1 on the paper, tiles keep one scale, the rail is drawn h tall, the webp is small', () => {
+    const lum = (h: string) => {
+      const c = [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+      return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+    };
+    const ratio = (a: string, b: string) => {
+      const [lo, hi] = [lum(a), lum(b)].sort((x, y) => x - y);
+      return (hi + 0.05) / (lo + 0.05);
+    };
+    const inks = home.match(/const RARITY_INK[^{]*\{([^}]*)\}/)![1];
+    const colours = [...inks.matchAll(/'(#[0-9a-f]{6})'/g)].map((m) => m[1]);
+    expect(colours.length).toBe(5);
+    // The paper under the words is darker on the rarity band, so test a greyer paper too.
+    for (const c of colours) for (const paper of ['#efe0c4', '#e2dccb']) expect(ratio(c, paper), c).toBeGreaterThanOrEqual(4.5);
+    expect(home).toMatch(/txt\.setStroke\(WOOD\.ink, 4\)/);
+    expect(ratio('#fff6e6', '#3a2618')).toBeGreaterThanOrEqual(4.5);
+    expect(home).toMatch(/menu2Fit\(this, tileArt/);
+    expect(home).not.toMatch(/box\.w \* 84\) \/ 72, \(box\.h \* 100\) \/ 88/);
+    expect(helpers).toMatch(/setScale\(sc, h \/ ns\.height\)/);
+    expect(home).toMatch(/STAT_RIM \+|rim \+ STAT_PAD/);
+    const dataUrl = raw(import.meta.glob('../../../assets/art/menu2-0.webp', { query: '?inline', import: 'default', eager: true }));
+    const bytes = ((dataUrl.length - dataUrl.indexOf(',') - 1) * 3) / 4;
+    expect(bytes).toBeGreaterThan(50 * 1024);
+    expect(bytes).toBeLessThan(400 * 1024);
   });
 
   it('Legendary uses the Epic art', () => {

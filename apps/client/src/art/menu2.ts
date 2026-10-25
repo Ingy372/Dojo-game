@@ -34,8 +34,8 @@ export function menu2Slice(scene: Phaser.Scene, name: Name, x: number, y: number
   // k = screen px per @2x px. 'height' (3-slices): scale the whole sprite so its height is h, caps included.
   const sc = k === 'height' ? h / (2 * s.size[1]) : k;
   const ns = scene.add.nineslice(x, y, s.tex[0], s.tex[1], Math.max(l + r, w / sc), Math.max(t + b, h / sc), l, r, t, b).setOrigin(0);
-  // 3-slice art keeps its own height; scale it to fit.
-  if (t === 0 && b === 0 && k !== 'height') ns.setScale(sc, h / s.size[1]);
+  // 3-slice art keeps its own (@2x) height; scale it so it is drawn exactly h tall.
+  if (t === 0 && b === 0 && k !== 'height') ns.setScale(sc, h / ns.height);
   else ns.setScale(sc);
   return ns;
 }
@@ -56,6 +56,35 @@ export function woodSkin(scene: Phaser.Scene, b: { visual: Phaser.GameObjects.Co
   for (const c of b.visual.list) if (c instanceof Phaser.GameObjects.Text) c.setColor(HONEY_INK);
   if (o.disabled) b.visual.setAlpha(1);
   return true;
+}
+
+/**
+ * A fixed-size frame drawn into a box of another shape at ONE uniform scale (no stretching): it is
+ * scaled to the box width and, when it is then too tall, its top and bottom halves are cropped and
+ * butted together (the plain middle is cut out). `pad` is the shadow margin per side, in 1x px.
+ * Returns the two halves (or one image), centred on (0, 0); null when the frame can't be drawn.
+ */
+export function menu2Fit(scene: Phaser.Scene, name: Name, w: number, h: number, pad: number): Phaser.GameObjects.Image[] | null {
+  const s = lookup(scene, name);
+  if (!s) return null;
+  const [fw, fh] = s.size;
+  const sc = w / (fw - 2 * pad);
+  const fullH = fh * sc;
+  const showH = h + 2 * pad * sc;
+  const img = () => scene.add.image(0, 0, s.tex[0], s.tex[1]).setDisplaySize(fw * sc, fullH);
+  if (showH >= fullH - 0.5) {
+    // A box taller than the art: fit the height instead (a narrower, portrait tile; still one scale).
+    const sh = h / (fh - 2 * pad);
+    return [img().setDisplaySize(fw * sh, fh * sh)];
+  }
+  const top = img();
+  const bot = img();
+  const texH = top.frame.realHeight;
+  const texW = top.frame.realWidth;
+  const cut = Math.ceil((texH * showH) / 2 / fullH) + 1;
+  top.setCrop(0, 0, texW, cut).setY(-showH / 2 + fullH / 2);
+  bot.setCrop(0, texH - cut, texW, cut).setY(showH / 2 - fullH / 2);
+  return [top, bot];
 }
 
 /** Re-points an image or 9-slice at another frame (pressed states). False when it can't. */

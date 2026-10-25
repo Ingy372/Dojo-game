@@ -261,9 +261,14 @@ def main() -> None:
             if old.startswith(pack_name + '-') and old.endswith(('.png', '.webp')):
                 os.remove(os.path.join(out_dir, old))
         for i, page in enumerate(pages):
-            # Lossless WebP: exact pixels, about 40% smaller than PNG.
+            # Lossless WebP by default: exact pixels, about 40% smaller than PNG.
+            # A pack may set "webpQuality" (lossy, alpha kept exact) when lossless is too big.
             fname = f'{pack_name}-{i}.webp'
-            page.save(os.path.join(out_dir, fname), lossless=True, method=6)
+            q = pack.get('webpQuality')
+            if q:
+                page.save(os.path.join(out_dir, fname), quality=q, alpha_quality=100, method=6)
+            else:
+                page.save(os.path.join(out_dir, fname), lossless=True, method=6)
             names.append(fname)
         meta = {
             'about': 'Made by tools/art-import/import_art.py. Do not edit by hand; re-run the script.',

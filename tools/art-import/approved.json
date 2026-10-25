@@ -778,6 +778,7 @@
     "menu2": {
       "note": "P-MENU2-i: A-MENU2 menu art for Trophies, Gear and Last run only (Jay OK'd the #265 art; Manager go). @2x files packed untrimmed, drawn at 0.5. Shared pieces (panel frame, title plaque, wood buttons) added on the Manager's call. My Style art (slot-card, tray-tile, switch, glyph) is held.",
       "scale": 1,
+      "webpQuality": 90,
       "sources": [
         {
           "id": "menu2",

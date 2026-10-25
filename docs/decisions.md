@@ -1135,3 +1135,14 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 3. These stay as they are: Legendary borrows Epic, the code-drawn circle on kata cubbies, the lantern on the next cubby only.
 4. Dark ink on the stat tiles and #6b5a48 for "Everyday" are approved.
 - How: the panel frame is drawn at 0.25 so its rail fits the code frame's margin; Gear and the Trophy Case keep their dark well over its paper centre so their light words still read. The page arrows use the honey button with the ◀ ▶ label (the art has no page-arrow sprite). Unpicked tabs are the honey button darkened. Labels on honey are #462a16.
+
+## P-MENU2-i: QA fixes on #286 (2026-10-25)
+- Gear tiles: the bag-tile art is drawn at one uniform scale (fit to the tile width). When that is too tall, the top and bottom halves are cropped and butted together, cutting out the plain middle. Nothing is stretched (`menu2Fit`).
+- Contrast is at least 4.5:1, without changing the art:
+  - Rarity words on paper use darker inks: Special #245a24, Rare #174a7d, Epic #5e2696, Legendary #8a4a12, Everyday #6b5a48.
+  - Earned cubby names keep cream text with a 4 px #3a2618 outline (13.3:1).
+  - The XP number is #245a80 and "New for you" is #8a4a12.
+- 3-slice art (XP rail, shelf plank, belt cord) is now drawn exactly at the height asked. It was drawn about twice as tall, which put the XP rail under the Found dots and "New for you".
+- The XP rail is 1 px taller than the bar on each side.
+- Stat labels sit 8 px inside the painted wood rim (bottom and sides). On 44-tall tiles the rim is drawn at k 0.25 and the number is 14 px, so it clears the label.
+- menu2-0.webp is saved as lossy WebP at quality 90, with alpha kept exact (`webpQuality` in approved.json). It went from 838 KB to 268 KB, with RGB PSNR 35 dB.
