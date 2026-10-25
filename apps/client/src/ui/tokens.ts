@@ -139,3 +139,36 @@ export function stackTops(top: number, heights: readonly number[], gap: number =
   }
   return tops;
 }
+
+/**
+ * P-MENU2-a: Training Board redesign sizes (drafts/planning/P-MENU2-training-board-redesign.md
+ * sections 1b and 2). Added only; no older token changes. The Abilities switch is 2 x 120x44,
+ * a Trophy Case cubby is 96 (small phone) or 112 (large), Fighting Style slot cards 140x120,
+ * tray tiles 72, the belt ribbon 40 tall.
+ */
+export const BOARD = {
+  frame: 6,
+  switchW: 120,
+  switchH: MIN_TAP,
+  switchGap: S2,
+  cubby: { small: 96, large: 112, gap: S2, icon: 64 },
+  slot: { w: 140, h: 120 },
+  tile: 72,
+  ribbonH: 40,
+} as const;
+
+/** P-MENU2-a: the two Abilities parts. */
+export type AbilitiesPart = 'trophy' | 'style';
+
+/** P-MENU2-a: the segmented switch, centred in a panel w wide: two equal 44-tall segments, never wider than 120. */
+export function abilitiesSwitch(w: number): { x0: number; segW: number; h: number; gap: number } {
+  const segW = Math.min(BOARD.switchW, Math.floor((w - BOARD.switchGap) / 2));
+  const total = segW * 2 + BOARD.switchGap;
+  return { x0: Math.round((w - total) / 2), segW, h: BOARD.switchH, gap: BOARD.switchGap };
+}
+
+/** P-MENU2-a: cubby size for a shelf this wide: 112 when 4 large cubbies fit, else 96. */
+export function cubbySize(shelfW: number): number {
+  const { large, gap } = BOARD.cubby;
+  return shelfW >= large * 4 + gap * 3 ? large : BOARD.cubby.small;
+}

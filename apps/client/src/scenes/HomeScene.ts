@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { GATE, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, gearGrid, lastRunItemsFit, lastRunMoreLabel, showEmptyBagHint, pageDots, panelSwap, xpFillFrom, gateLockR, type PanelChange } from '../ui/tokens';
+import { GATE, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, gearGrid, lastRunItemsFit, lastRunMoreLabel, showEmptyBagHint, pageDots, panelSwap, xpFillFrom, gateLockR, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import {
@@ -51,7 +51,7 @@ import { GoalsCard } from '../ui/GoalsCard';
 import { localDay, takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
 import { BETA } from '../game/beta';
-import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, crisp, css, view, hiDpi } from '../ui/theme';
+import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, crisp, css, view, hiDpi, WOOD } from '../ui/theme';
 import type { GameSceneData } from './GameScene';
 
 /** How Home was opened: after a run (cleared, lost, or rested at the play limit) the next goals may show. */
@@ -80,6 +80,8 @@ export class HomeScene extends Phaser.Scene {
   private profile!: Profile;
   private training!: TrainingState;
   private tab: Tab = 'run';
+  /** P-MENU2-a: which part of Abilities is showing. */
+  private part: AbilitiesPart = 'trophy';
   private page = 0;
   /** The bag item being looked at, if any. */
   private selected: string | null = null;
@@ -323,7 +325,7 @@ export class HomeScene extends Phaser.Scene {
     const rw = width - rx - pad;
     const top = pad + 46;
     const panelH = height - top - pad;
-    this.ui.add(this.add.rectangle(rx, top, rw, panelH, 0x14121c, 0.65).setOrigin(0).setStrokeStyle(2, 0x3a3150));
+    this.ui.add(woodFrame(this, rx, top, rw, panelH));
     this.panelBox = { rx, top, rw, panelH };
     this.tabBox = { rx, y: pad, tabW: (rw - 6 * 3) / 4 };
   }
@@ -562,6 +564,33 @@ export class HomeScene extends Phaser.Scene {
 
   /** Every earned and not-yet-earned ability, named after the real technique. */
   private renderAbilities(x: number, y: number, w: number, h: number): void {
+    // P-MENU2-a: the segmented switch at the top: Trophy Case | Fighting Style, both 44 tall.
+    const sw = abilitiesSwitch(w);
+    const parts: Array<[AbilitiesPart, string]> = [
+      ['trophy', '🏆 Trophy Case'],
+      ['style', '⚔ Fighting Style'],
+    ];
+    parts.forEach(([part, label], i) => {
+      const on = this.part === part;
+      button(this, { x: x + sw.x0 + i * (sw.segW + sw.gap), y, w: sw.segW, h: sw.h, label, color: on ? WOOD.switchOn : WOOD.switchOff, size: TYPE.body, selected: on, onTap: () => this.setPart(part) }, this.ui);
+    });
+    const top = y + sw.h + S2;
+    if (this.part === 'style') this.renderFightingStyle(x, top, w, h - (top - y));
+    else this.renderTrophyCase(x, top, w, h - (top - y));
+  }
+
+  /** P-MENU2-a: placeholder until P-MENU2-e builds the Stance and Virtue slots. */
+  private renderFightingStyle(x: number, y: number, w: number, h: number): void {
+    const g = this.add.graphics();
+    g.fillStyle(WOOD.paper, 0.12).fillRoundedRect(x, y, w, h, RADIUS.panel);
+    g.lineStyle(2, WOOD.grain, 0.6).strokeRoundedRect(x, y, w, h, RADIUS.panel);
+    this.ui.add(g);
+    this.text(x + w / 2, y + h / 2 - TYPE.title, 'Your fighting style', TYPE.title, '#f2e3c4', true).setOrigin(0.5);
+    this.text(x + w / 2, y + h / 2 + S2, 'Soon you can pick your stance and your stripe here.', TYPE.body, '#d9c6a3', false, FONT, w - 2 * S3).setOrigin(0.5, 0).setAlign('center');
+  }
+
+  /** The Trophy Case: every earned and not-yet-earned ability, named after the real technique. */
+  private renderTrophyCase(x: number, y: number, w: number, h: number): void {
     const t = this.training;
     interface Row {
       tag: string;
@@ -1028,6 +1057,13 @@ export class HomeScene extends Phaser.Scene {
     this.renderPanel('tab');
   }
 
+  private setPart(part: AbilitiesPart): void {
+    if (part === this.part) return;
+    this.part = part;
+    this.page = 0;
+    this.renderPanel('tab');
+  }
+
   private turn(by: number): void {
     this.page = Math.max(0, this.page + by);
     this.selected = null;
@@ -1133,6 +1169,29 @@ export class HomeScene extends Phaser.Scene {
   private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void): void {
     button(this, { x, y, w, h, label, color, size, onTap }, this.ui);
   }
+}
+
+/**
+ * P-MENU2-a: the mood-A panel frame drawn in code (no art file): a warm wood border with a
+ * little grain, a dark inner board and a thin paper line inside.
+ */
+function woodFrame(scene: Phaser.Scene, x: number, y: number, w: number, h: number): Phaser.GameObjects.Graphics {
+  const f = BOARD.frame;
+  const g = scene.add.graphics();
+  g.fillStyle(WOOD.frameDark).fillRoundedRect(x - 1, y - 1, w + 2, h + 2, RADIUS.panel + 1);
+  g.fillStyle(WOOD.frame).fillRoundedRect(x, y, w, h, RADIUS.panel);
+  g.lineStyle(1, WOOD.grain, 0.5);
+  for (let gy = y + 2; gy < y + h - 2; gy += 9) {
+    g.lineBetween(x + 2, gy, x + f - 1, gy + 3);
+    g.lineBetween(x + w - f + 1, gy + 4, x + w - 2, gy + 1);
+  }
+  for (let gx = x + 12; gx < x + w - 12; gx += 23) {
+    g.lineBetween(gx, y + 2, gx + 14, y + f - 2);
+    g.lineBetween(gx + 6, y + h - f + 2, gx + 20, y + h - 2);
+  }
+  g.fillStyle(WOOD.inner, 0.92).fillRoundedRect(x + f, y + f, w - 2 * f, h - 2 * f, RADIUS.panel - 4);
+  g.lineStyle(1, WOOD.paper, 0.3).strokeRoundedRect(x + f + 2, y + f + 2, w - 2 * f - 4, h - 2 * f - 4, RADIUS.panel - 5);
+  return g;
 }
 
 /** P-MENU-d: a faint bag drawn in code (no art file): body, flap and drawstring. */
