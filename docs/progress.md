@@ -646,3 +646,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## R-BAL-14b
 - Charm amounts wired: Kind Stone multiplies low-health Focus by 1 + amount (Rally stays x2), Great Lamp and Feather tested, and check-c7 passes again.
+
+## P-MENU-b
+- The Training Board is split into a shell (background, left column, panel frame), a tab bar and a panel. Tab, page, gear-pick, Wear and Let go taps redraw only the panel. The tab underline slides in 180 ms and the panel slides in: 12 pt for a tab, 24 pt for a page. With Reduced motion on there is no slide, just a 120 ms fade. A gear pick stays instant. Code was only moved, nothing restyled.
