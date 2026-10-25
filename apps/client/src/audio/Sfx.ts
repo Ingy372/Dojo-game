@@ -251,6 +251,12 @@ class SoundMaker {
     this.tone(495, 492, 0.9, 'sine', 0.07, 0.27);
   }
 
+  /** P-MENU-f: the Seal's first light: the bow's low, calm bell alone, a little softer. */
+  seal(): void {
+    this.tone(330, 328, 1.1, 'sine', 0.12, 0.05);
+    this.tone(495, 492, 0.9, 'sine', 0.05, 0.07);
+  }
+
   /** A sweep of the broom; `n` rises in pitch as a sweeping streak continues. */
   sweep(n: number): void {
     this.noise(0.12, 0.25, 2500);
