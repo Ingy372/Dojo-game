@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, gearGrid, lastRunItemsFit, pageDots, panelSwap, xpFillFrom, type PanelChange } from '../ui/tokens';
+import { GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, gearGrid, lastRunItemsFit, lastRunMoreLabel, showEmptyBagHint, pageDots, panelSwap, xpFillFrom, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import {
@@ -520,7 +520,8 @@ export class HomeScene extends Phaser.Scene {
         this.oneLine(this.text(tx, y, `${rarityName(it.rarity)}: ${it.name}  (${describeItem(it)})`, 14, css(RARITY_COLOR[it.rarity]), false), w - (tx - x), 10);
         y += lineH;
       });
-      if (items.length > fit && y + lineH <= bestsTop - S2) this.oneLine(this.text(x, y, `+${items.length - fit} more in your Gear`, 13, '#b9ad99'), w, 10);
+      const more = lastRunMoreLabel(items.length, fit);
+      if (more && y + lineH <= bestsTop - S2) this.oneLine(this.text(x, y, more, 13, '#b9ad99'), w, 10);
       if (items.length === 0) this.oneLine(this.text(x, y, 'None this time. Beat enemies and open chests!', 14, '#b9ad99'), w, 10);
     }
     this.renderBests(x, bestsTop, w);
@@ -780,9 +781,12 @@ export class HomeScene extends Phaser.Scene {
       .sort((a, b) => GEAR_SLOTS.indexOf(a.slot) - GEAR_SLOTS.indexOf(b.slot) || gearScore(b) - gearScore(a));
     if (bag.length === 0) {
       // P-MENU-d: a faint bag drawn in code above the same words, centred in the space left.
-      const midY = (y + panelBottom) / 2;
-      this.ui.add(bagIcon(this, x + w / 2, midY - 26));
-      this.text(x + w / 2, midY + 6, 'Your bag is empty. Items you find in the Tower appear here.', TYPE.body, '#b9ad99', false, FONT, w - 32).setOrigin(0.5, 0).setAlign('center');
+      // B-POLISH-1: hidden while a worn-item sheet is open, so it doesn't show faintly behind it.
+      if (showEmptyBagHint(bag.length, !!selected)) {
+        const midY = (y + panelBottom) / 2;
+        this.ui.add(bagIcon(this, x + w / 2, midY - 26));
+        this.text(x + w / 2, midY + 6, 'Your bag is empty. Items you find in the Tower appear here.', TYPE.body, '#b9ad99', false, FONT, w - 32).setOrigin(0.5, 0).setAlign('center');
+      }
       if (selected) this.renderSheet(selected, x, y - boxH - S2, w, panelBottom, -1);
       return;
     }

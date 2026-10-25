@@ -992,3 +992,7 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Manager call (Oct 25): urgent fix from Jay's iPhone test (Safari, landscape). The Last run panel must never overlap at landscape phone sizes; keep it small, an Abilities/Gear redesign is planned.
 - Every block stacks below the measured height of the one before (ui/tokens.ts S1/S2). Personal bests sit on the panel's real bottom edge (or just below the content, whichever is lower), and the item list only gets the rows left between, with "+N more in your Gear" for the rest.
 - A very long "For your dojo" list is cut with "…" so at least the item heading and one row stay visible; the full list is in the Dojo. Personal bests drop to one column when a row doesn't fit in half the width.
+## B-POLISH-1 (2026-10-25)
+- Manager call (Oct 25): two small follow-ups from QA of #261/#262, one PR.
+- Gear: the empty-bag hint (bag icon + words) is hidden while a worn-item sheet is open (`showEmptyBagHint`), so it no longer shows faintly behind the sheet.
+- Last run: when zero item rows fit (667x375), the line reads "N items in your Gear" instead of "+N more in your Gear"; "+N more" stays when at least one name shows (`lastRunMoreLabel`).
