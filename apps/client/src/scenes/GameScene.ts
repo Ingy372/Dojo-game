@@ -2292,7 +2292,12 @@ export class GameScene extends Phaser.Scene {
     const R = 21;
     const minY = this.belowBossBar() + R;
     const labels: { left: number; right: number; top: number; bottom: number }[] = [...this.doorViews.filter((d) => d.label.visible).map((d) => d.label.getBounds())];
-    if (this.bossTagWorld) labels.push(this.bossTagWorld);
+    // Refresh the name + bar box for this frame first, so the cue never reads last frame's spot.
+    const bossUp = this.world.enemies.find((e) => e.def.boss && e.mode !== 'defeated');
+    if (bossUp && this.bossName.visible) this.placeBossTag(bossUp);
+    // The cue's ring is drawn a little wider than R, so give the pair a few extra px of room.
+    const tg = this.bossTagWorld;
+    if (tg) labels.push({ left: tg.left - 8, right: tg.right + 8, top: tg.top - 8, bottom: tg.bottom + 8 });
     const clear = (cx: number, cy: number) =>
       cy >= minY && labels.every((b) => cx + R < b.left - 4 || cx - R > b.right + 4 || cy + R < b.top - 4 || cy - R > b.bottom + 4);
     const side = Math.max(radius, 24) + R + 8;
