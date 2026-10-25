@@ -551,3 +551,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## R-BAL-4 Bad-luck counter test
 - New test locks `guaranteedRareOnRun` at 5 or lower. Checked it fails when set to 6.
+## K25 Slower tempo and calmer shake
+- Game runs about 12% slower (one `TEMPO.speed` value); wind-ups and counter windows are longer in real time, never shorter.
+- No screen shake on the player's own attacks. The being-hit shake only happens at Brown belt and up or on Challenge, at 65% strength, and never with Reduced motion.
+- New tests: packages/sim/test/k25-tempo-shake.test.ts (6). Preview playthroughs at 667 and 844: /workspace/qa/k25/.
