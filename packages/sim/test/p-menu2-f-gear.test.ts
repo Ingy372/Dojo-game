@@ -1,5 +1,5 @@
 // P-MENU2-f: the Gear screen. A paper doll with one ring per slot (tap = filter, tap again = all),
-// a bag grid that uses as many columns as fit (at least 3) and pages with ◀ ▶, and a calm ↑ / ↓
+// a bag grid that uses as many columns as fit (at least 2) and pages with ◀ ▶, and a calm ↑ / ↓
 // compare with plain words (numbers behind Details, D6). The grid never moves on pick, wear or
 // filter, wearing is saved as before, and the sim (golden run) is unchanged.
 import { describe, expect, it } from 'vitest';
@@ -17,18 +17,19 @@ const mk = (uid: string, slot: GearItem['slot'], power: number, guard = 0, maxHe
 
 const bag = (): GearItem[] => [mk('h1', 'hands', 1), mk('g1', 'gi', 0, 2), mk('h2', 'hands', 3), mk('c1', 'charm', 0), mk('g2', 'gi', 0, 1, 4), mk('h3', 'hands', 2, 1)];
 
-// The Gear area (panel minus its 10px inset) at 667x375, 844x390 and 932x430, and the columns there (3 / 4 / 5).
-const SIZES = [{ w: 345, h: 277, cols: 3 }, { w: 476, h: 292, cols: 4 }, { w: 564, h: 332, cols: 5 }];
+// The Gear area (panel minus its 10px inset) at 667x375, 844x390 and 932x430, and the columns there (2 / 4 / 5; Manager: 2 at 667 so the student figure stays).
+const SIZES = [{ w: 345, h: 277, cols: 2 }, { w: 476, h: 292, cols: 4 }, { w: 564, h: 332, cols: 5 }];
 // Widths are Chromium's bold 12px system-ui measures (the shots), rounded up.
 const WORD_W: Record<string, number> = { Everyday: 55, Special: 42, Rare: 30, Epic: 27, Legendary: 64 };
 const MIN_TILE = tileWForLabel(WORD_W.Legendary);
 
 describe('P-MENU2-f layout', () => {
   for (const s of SIZES) {
-    it(`${s.w}x${s.h}: at least 3 columns, they fit, tiles and rings are ≥44`, () => {
+    it(`${s.w}x${s.h}: at least 2 columns, they fit, tiles and rings are ≥44`, () => {
       const L = gearBoardLayout(s.w, s.h, MIN_TILE);
-      expect(L.cols).toBeGreaterThanOrEqual(3);
       expect(L.cols).toBe(s.cols);
+      expect(L.figureR).toBeGreaterThanOrEqual(14);
+      expect(L.figureX + L.figureR).toBeLessThanOrEqual(L.dollW);
       const last = tileBox(L, L.perPage - 1);
       expect(last.x + last.w).toBeLessThanOrEqual(s.w);
       expect(last.y + last.h).toBeLessThanOrEqual(L.pagerY);
@@ -41,8 +42,20 @@ describe('P-MENU2-f layout', () => {
       expect(L.gridX).toBeGreaterThanOrEqual(L.dollW);
     });
   }
-  it('even a very narrow grid keeps 3 columns', () => {
-    expect(gearColumns(100).cols).toBe(3);
+  it('paging reaches every item exactly once at each size', () => {
+    const items = Array.from({ length: 23 }, (_, i) => i);
+    for (const s of SIZES) {
+      const L = gearBoardLayout(s.w, s.h, MIN_TILE);
+      const pages = Math.max(1, Math.ceil(items.length / L.perPage));
+      const seen = Array.from({ length: pages }, (_, p) => items.slice(p * L.perPage, (p + 1) * L.perPage)).flat();
+      expect(seen).toEqual(items);
+    }
+    const scene = src.slice(src.indexOf('private renderGear('), src.indexOf('private renderSheet('));
+    expect(scene).toMatch(/bag\.slice\(this\.page \* L\.perPage, \(this\.page \+ 1\) \* L\.perPage\)/);
+    expect(scene).toMatch(/this\.trophyPager\(gx, y \+ L\.pagerY, L\.gridW, pages\)/);
+  });
+  it('even a very narrow grid keeps 2 columns', () => {
+    expect(gearColumns(100).cols).toBe(2);
     expect(gearColumns(932).cols).toBeGreaterThan(gearColumns(476).cols);
   });
 });

@@ -724,6 +724,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Wearing flies the item to its ring with a small pop and a glow on the doll. With Reduced motion on, it's a plain swap. The save works as before.
 - Fighting Style: when the tray pages (1 tile per page at 667), page dots now show under it, with no numbers.
 - The art is placeholder drawn in code. No #265 art is used. The words are in content/loot/gear-board.json.
+- **#273 Tester fixes (2026-10-25):** every rarity word, Legendary included, now has 8 px clear each side inside the 2 px border (tiles 84 wide). Manager: at 667 the bag is 2 columns with ◀ ▶ paging so the student figure stays; 844 and 932 keep 4 and 5. The sheet is 172 tall: long names wrap to 2 lines, the compare line wraps, and Details moved to the button row, 8 px from Let go (all 52 tall). The Vitest test checks Legendary padding at all 3 widths.
 **Next**
-- **#273 Tester fixes (2026-10-25):** every rarity word, Legendary included, now has 8 px clear each side inside the 2 px border (tiles 84 wide, still 3/4/5 columns). At 667 the doll shrinks to its rings (the figure is hidden) to make room. The sheet is 172 tall: long names wrap to 2 lines, the compare line wraps, and Details moved to the button row, 8 px from Let go (all 52 tall). The Vitest test checks Legendary padding at all 3 widths.
 - Swap in the real art once Jay OKs #265.

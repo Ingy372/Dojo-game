@@ -1107,12 +1107,10 @@ export class HomeScene extends Phaser.Scene {
     this.gearTiles = {};
     // The paper doll: the student, with a ring per slot.
     const t = this.training;
-    if (L.showFigure) {
-      const glow = this.add.ellipse(x + L.figureX, y + L.figureY + L.figureR * 0.9, L.figureR * 2.6, L.figureR * 3.4, 0xffd166, 0);
-      this.ui.add(glow);
-      this.gearDollGlow = glow;
-      this.ui.add(makeStandingCharacter(this, x + L.figureX, y + L.figureY, L.figureR, t.belt, t.stripesThisBelt, loadLook()).container);
-    }
+    const glow = this.add.ellipse(x + L.figureX, y + L.figureY + L.figureR * 0.9, L.figureR * 2.6, L.figureR * 3.4, 0xffd166, 0);
+    this.ui.add(glow);
+    this.gearDollGlow = glow;
+    this.ui.add(makeStandingCharacter(this, x + L.figureX, y + L.figureY, L.figureR, t.belt, t.stripesThisBelt, loadLook()).container);
     GEAR_SLOTS.forEach((slot, i) => {
       const item = wornItem(this.profile, slot);
       const on = this.gearFilter === slot;
@@ -1130,10 +1128,8 @@ export class HomeScene extends Phaser.Scene {
     const ay = y + L.alwaysY;
     if (L.alwaysRows > 0) {
       const always = this.styleModel().always;
-      const head = this.text(x, ay, W.always, TYPE.label, '#f2e3c4', true, FONT, L.alwaysLines > 1 ? L.dollW : undefined);
-      if (L.alwaysLines > 1) this.twoLines(head.setLineSpacing(-3), L.dollW, TYPE.label);
-      else this.oneLine(head, L.dollW, TYPE.label);
-      const iy = ay + L.alwaysLines * TYPE.label + S1;
+      this.oneLine(this.text(x, ay, W.always, TYPE.label, '#f2e3c4', true), L.dollW, TYPE.label);
+      const iy = ay + TYPE.label + S1;
       const n = L.alwaysIcon;
       if (!always.length) this.twoLines(this.text(x, iy, W.alwaysEmpty, TYPE.label, '#d9c6a3', false, FONT, L.dollW), L.dollW, TYPE.label);
       always.slice(0, L.perAlwaysRow * L.alwaysRows).forEach((a, i) => {
