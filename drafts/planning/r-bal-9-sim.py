@@ -169,6 +169,63 @@ def main():
         hpg = f"{e['maxHealth']}/{e['power']}/{e['guard']}"
         print(f"{eid:>20} {tier:>11} {hpg:>14}  {bs:>3}/{bc:<4} {ks:>3}/{kc:<3}  {'PASS' if ok else 'OUT '}   {prop}")
     print(f"\nC13 files: {n}; out of band now: {len(out)}")
+    return A
+
+# ---------------- 5. Guardians (tiers 1-5) phase by phase, and the Cloudlet ----------------
+BOSS_DIR = os.path.join(HERE, "..", "content", "bosses")
+BOSS_BAND = {"hits": (40, 80), "ko_min": 5}          # Floor-keeper band [DECIDED]
+BOSS_TARGET = (50, 8)                                # [FITTED] same as Floor-keeper fix (sec. 3)
+BOSS_GUARD = 30                                      # [CODE] floor-keeper.json guard
+# attack kind -> (strength, startRange, reach, areaRadius, recoverTicks)  all [GUESS], floor-keeper shapes
+KIND = {"melee": (1.0, 1.9, 1.1, 1.3, 22), "circles": (0.8, 6.0, 5.0, 0.9, 26),
+        "lane": (1.2, 6.0, 6.0, 0.6, 30), "arc": (1.2, 2.5, 0.0, 2.4, 30), "zone": (0.0, 5.0, 4.0, 1.0, 26)}
+def kind(a):
+    if a.get("shape") in ("lane", "arc"): return a["shape"]
+    if "zone" in a: return "zone"
+    return "melee" if a is a.get("_first") else "circles"
+def boss_design(b, A):
+    a = A[TIERS[b["tier"]]]; hits, ko = BOSS_TARGET
+    smax = max(KIND[k][0] for k in b["_kinds"].values())
+    H, P, G = design(a, BOSS_GUARD, hits, ko)
+    return H, round(P / smax), G   # strongest attack lands exactly on the KO target
+def phase_check(b, stats, a):
+    H, P, G = stats; d = damage(a["power"], 1, G); rows = []; ok = True
+    ph = sorted(b["phases"], key=lambda p: -p["atHealthFraction"]) + [{"atHealthFraction": 0}]
+    for p, nxt in zip(ph, ph[1:]):
+        sl = p["atHealthFraction"] - nxt["atHealthFraction"]
+        lo, hi = BOSS_BAND["hits"]; plo, phi = math.floor(lo * sl), math.ceil(hi * sl)
+        s = max(KIND[b["_kinds"][n]][0] for n in p["attacks"])
+        r = []
+        for m in (1, CHALLENGE):
+            hb = math.ceil(H * m * sl / d); k = math.ceil(a["health"] / damage(P * m, s, a["guard"])) if s else 99
+            r.append((hb, k)); ok &= plo <= hb <= phi and k >= BOSS_BAND["ko_min"]
+        rows.append((p["id"], sl, s, r, (plo, phi)))
+    return rows, ok
+def load_bosses():
+    out = []
+    for fn in sorted(os.listdir(BOSS_DIR)):
+        b = json.load(open(os.path.join(BOSS_DIR, fn))); b["_file"] = fn
+        if TIERS[b["tier"]] > 5: continue
+        b["attacks"][0]["_first"] = b["attacks"][0]
+        b["_kinds"] = {x["name"]: kind(x) for x in b["attacks"]}
+        out.append(b)
+    return sorted(out, key=lambda b: TIERS[b["tier"]])
+def section5(A):
+    print("\n== 5. Guardians tiers 1-5, phase by phase (band 40-80 hits, KO >= 5; phase share of hits = band x phase slice) ==")
+    res = {}
+    for b in load_bosses():
+        a = A[TIERS[b["tier"]]]
+        st = (b["maxHealth"], b["power"], b["guard"]) if isinstance(b["maxHealth"], int) else boss_design(b, A)
+        res[b["id"]] = st
+        rows, ok = phase_check(b, st, a)
+        print(f"{b['id']:>14} {b['tier']:>6}  H{st[0]} P{st[1]} G{st[2]}  {'PASS' if ok else 'OUT'}")
+        for pid, sl, s, r, pb in rows:
+            print(f"{'':>16}phase {pid:<7} slice {sl:.2f} strongest x{s:.1f}  beat S/C {r[0][0]}/{r[1][0]} (phase band {pb[0]}-{pb[1]})  KO S/C {r[0][1]}/{r[1][1]}")
+        tot = [math.ceil(st[0] * m / damage(a["power"], 1, st[2])) for m in (1, CHALLENGE)]
+        print(f"{'':>16}whole fight beat S/C {tot[0]}/{tot[1]}")
+    a9 = A[9]; c = design(a9, 0, 1.6, 24); chk = check(c, a9, ess.BANDS["small"])  # [FITTED] smaller than parent, 2 hits; chk = check(c, a9, ess.BANDS["small"])
+    print(f"\n   cloudlet (brown-black, small): H{c[0]} P{c[1]} G{c[2]} -> beat {chk[0]}/{chk[1]} KO {chk[2]}/{chk[3]} {'PASS' if chk[4] else 'OUT'}")
+    return res, c
 
 if __name__ == "__main__":
-    main()
+    section5(main())
