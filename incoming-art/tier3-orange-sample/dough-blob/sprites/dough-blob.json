@@ -1,0 +1,196 @@
+{
+  "character": "dough-blob",
+  "frameWidth": 128,
+  "frameHeight": 128,
+  "anchor": {
+    "x": 64.0,
+    "y": 104.96,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 80.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 1.6,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "directionVectors": {
+    "N": [
+      0,
+      -1
+    ],
+    "NE": [
+      0.7071,
+      -0.7071
+    ],
+    "E": [
+      1,
+      0
+    ],
+    "SE": [
+      0.7071,
+      0.7071
+    ],
+    "S": [
+      0,
+      1
+    ],
+    "SW": [
+      -0.7071,
+      0.7071
+    ],
+    "W": [
+      -1,
+      0
+    ],
+    "NW": [
+      -0.7071,
+      -0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "body",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "glow",
+      "order": 1,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "telegraph",
+      "order": 2,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "light",
+      "order": 3,
+      "tint": false,
+      "optional": false
+    }
+  ],
+  "animations": {
+    "idle": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "dough-blob_body_idle.png",
+        "glow": "dough-blob_glow_idle.png",
+        "telegraph": "dough-blob_telegraph_idle.png",
+        "light": "dough-blob_light_idle.png"
+      },
+      "note": "dough wobble, 1 s loop"
+    },
+    "move": {
+      "frames": 6,
+      "fps": 8,
+      "durationSec": 0.75,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "dough-blob_body_move.png",
+        "glow": "dough-blob_glow_move.png",
+        "telegraph": "dough-blob_telegraph_move.png",
+        "light": "dough-blob_light_move.png"
+      },
+      "designSpeedTilesPerSecond": 1.6,
+      "note": "squishy bounce; play at any move speed"
+    },
+    "windup": {
+      "frames": 9,
+      "fps": 10,
+      "durationSec": 0.9,
+      "loop": false,
+      "tags": {
+        "telegraph": "0-8"
+      },
+      "sheets": {
+        "body": "dough-blob_body_windup.png",
+        "glow": "dough-blob_glow_windup.png",
+        "telegraph": "dough-blob_telegraph_windup.png",
+        "light": "dough-blob_light_windup.png"
+      },
+      "telegraphSeconds": 0.9,
+      "telegraphTicks": 18,
+      "telegraphIntensity": [
+        0.25,
+        0.279,
+        0.36,
+        0.481,
+        0.625,
+        0.769,
+        0.89,
+        0.971,
+        1.0
+      ],
+      "note": "lasts exactly the telegraph (18 ticks). In Guided mode the wind-up holds: hold the last frame (intensity 1). telegraphIntensity: per-frame alpha (0..1) for the telegraph layer. It ramps up through the wind-up and fades smoothly through the first half of the attack (no hard cut). Multiply it into the tinted layer's alpha"
+    },
+    "attack": {
+      "frames": 11,
+      "fps": 10,
+      "durationSec": 1.1,
+      "loop": false,
+      "tags": {
+        "impact": "0",
+        "recover": "2-10"
+      },
+      "sheets": {
+        "body": "dough-blob_body_attack.png",
+        "glow": "dough-blob_glow_attack.png",
+        "telegraph": "dough-blob_telegraph_attack.png",
+        "light": "dough-blob_light_attack.png"
+      },
+      "keyFrames": {
+        "impact": 0
+      },
+      "recoverSeconds": 0.9,
+      "telegraphIntensity": [
+        1.0,
+        0.933,
+        0.75,
+        0.5,
+        0.25,
+        0.067,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "note": "the squish: a wide flat plop; the red circle is drawn by the game"
+    }
+  },
+  "enemy": "dough-blob",
+  "name": "Dough Blob",
+  "sizeTiles": {
+    "bodyWidth": 0.45,
+    "bodyHeight": 0.55,
+    "radiusInData": 0.45
+  },
+  "tintGuidance": {
+    "mode": "multiply (Phaser setTint)",
+    "body": "no tint",
+    "glow": "no tint, always drawn (soft rim)",
+    "telegraph": "optional: draw only during the wind-up, tinted (e.g. #ff3b30 red, or #ffd36b gold in Guided mode) and flashed / pulsed in alpha",
+    "light": "no tint, always drawn (only the defeat has anything in it)"
+  }
+}
