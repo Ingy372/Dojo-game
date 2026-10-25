@@ -117,6 +117,8 @@ const NO_DEFEAT_FADE_MS = 600;
 const HUD_TOP_PX = 56;
 /** Screen y a door label may not rise above: the top bar plus the Challenge timer (top 36, 20 px bold, bottom ~64) and an 8 px gap. */
 const DOOR_LABEL_TOP_PX = 72;
+/** B-T3-NUDGE: gap between Sensei's banner and the ROAR! word. */
+const ROAR_GAP_PX = 8;
 /** Screen y of the boss health bar; its name sits just under it. */
 // The boss bar sits in the HUD's top strip, between the player's bars and the room label,
 // so it never covers the Keeper (K9: it used to sit over the Keeper's head at y 74).
@@ -273,6 +275,8 @@ export class GameScene extends Phaser.Scene {
   private roomLabel!: Phaser.GameObjects.Text;
   private timerText!: Phaser.GameObjects.Text;
   private bossName!: Phaser.GameObjects.Text;
+  /** B-T3-NUDGE: the phase pause's ROAR! word (screen space, under the Sensei banner). */
+  private roarText: Phaser.GameObjects.Text | null = null;
   private toastY = 0;
   /** Decoration labels on screen and where they'd like to be (K12). */
   private decoToasts: Array<{ t: Phaser.GameObjects.Text; y: number }> = [];
@@ -1372,7 +1376,6 @@ export class GameScene extends Phaser.Scene {
           const e = this.enemy(ev.enemyId);
           const ms = ticksToRealMs(ev.ticks);
           if (e) {
-            this.floatText({ x: e.pos.x, y: e.pos.y - 1.2 }, 'ROAR!', '#ffb627', 28);
             if (!reducedMotion()) {
               const glow = this.addWorld(this.add.image(e.pos.x * TILE, (e.pos.y - 0.4) * TILE, this.softGlow()).setDepth(8));
               glow.setTint(0xff7a3c).setScale(0.6).setAlpha(0.9);
@@ -1381,6 +1384,20 @@ export class GameScene extends Phaser.Scene {
           }
           sfx.appear();
           if (ev.senseiLine) this.senseiSay([ev.senseiLine], Math.max(1200, ms));
+          // B-T3-NUDGE: ROAR! sits on screen just under Sensei's banner (8 px gap), above everything, so the banner never covers it.
+          if (e) {
+            const { width } = view(this);
+            const banner = this.senseiText?.active ? this.senseiText.getBounds() : null;
+            const roar = this.add
+              .text(width / 2, banner ? banner.bottom + ROAR_GAP_PX : 72, 'ROAR!', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '28px', color: '#ffb627', stroke: '#2a1408', strokeThickness: 5 })
+              .setOrigin(0.5, 0)
+              .setDepth(60)
+              .setResolution(window.devicePixelRatio || 1);
+            this.cameras.main.ignore(roar);
+            this.roarText?.destroy();
+            this.roarText = roar;
+            this.tweens.add({ targets: roar, alpha: 0, delay: ms * 0.6, duration: ms * 0.4, onComplete: () => roar.destroy() });
+          }
           break;
         }
         case 'summon': {
