@@ -18,7 +18,7 @@ def walk(o):
 walk(fs)
 d = json.loads((R/"drafts/content/faith/guardian-faith-overlay.json").read_text())
 e = []
-REF = re.compile(r"^(\d )?[A-Z][a-z]+ \d+:\d+(-\d+)?$")
+REF = re.compile(r"^(\d )?[A-Z][a-z]+ \d+:\d+(-\d+)?( \(part\))?$")
 seen = {}
 for g in d.get("guardians", []):
     k = g.get("faithOverlayKey"); seen[k] = seen.get(k, 0) + 1
@@ -27,6 +27,7 @@ for g in d.get("guardians", []):
     if not vs: e.append(f"{k}: needs at least one verse")
     for v in vs:
         if not REF.match(v.get("reference", "")): e.append(f"{k}: bad reference {v.get('reference')!r}")
+        if v.get("reference","").endswith("(part)") != (v.get("partial") is True): e.append(f"{k}: '(part)' reference and partial: true go together")
         if not v.get("text"): e.append(f"{k}: verse {v.get('reference')} has no text")
     s = g.get("sensei")
     if not isinstance(s, str) or not s.strip(): e.append(f"{k}: needs one Sensei line (a string)")

@@ -1,5 +1,5 @@
 {
-  "notes": "DRAFT for C13-F (Jay approved the faith direction in drafts/content/enemies/bestiary-plan.md). Action Zone faith overlay (schoolId action-zone), a swappable layer keyed by faithOverlayKey in drafts/content/bosses/*.json and drafts/content/enemies/guardian-form-shifts.json; core Guardian text stays neutral. Each Guardian drops one relic or scroll, found after it is freed: no locks, no quizzes. One Sensei line per relic that reflects, never lectures. Verse text is KJV, word for word. None of these verses are in docs/faith-and-creed.md (only the motto names Romans 8:37), so each was checked against two public KJV sources on 2026-10-25: bible-api.com (translation=kjv) and bolls.life (KJV). Changes from the plan (Manager notes): Galatians 5:22-23 no longer claims fruit grows slowly; Psalm 23:2 is about rest, not seeing clearly; the Hearth Cook uses John 6:35 instead of Acts 2:46; the Lost Lightbearer adds John 8:12 and drops Matthew 5:14-16.",
+  "notes": "DRAFT for C13-F (Jay approved the faith direction in drafts/content/enemies/bestiary-plan.md). Action Zone faith overlay (schoolId action-zone), a swappable layer keyed by faithOverlayKey in drafts/content/bosses/*.json and drafts/content/enemies/guardian-form-shifts.json; core Guardian text stays neutral. Each Guardian drops one relic or scroll, found after it is freed: no locks, no quizzes. One Sensei line per relic that reflects, never lectures. Verse text is KJV, word for word. None of these verses are in docs/faith-and-creed.md (only the motto names Romans 8:37), so each was checked against two public KJV sources on 2026-10-25: bible-api.com (translation=kjv) and bolls.life (KJV). Changes from the plan (Manager notes): Galatians 5:22-23 no longer claims fruit grows slowly; Psalm 23:2 is about rest, not seeing clearly; the Hearth Cook uses John 6:35 instead of Acts 2:46; the Lost Lightbearer adds John 8:12. Jay's calls (PR #229): Hearth Cook keeps John 6:35; Hebrews 13:5 shows only its second half (partial: true); Stone Giant uses 1 Samuel 17:47.",
   "schoolId": "action-zone",
   "translation": "KJV",
   "verifiedAgainst": [
@@ -69,11 +69,11 @@
       "theme": "David and Goliath, the tier's own form",
       "verses": [
         {
-          "reference": "1 Samuel 17:45",
-          "text": "Then said David to the Philistine, Thou comest to me with a sword, and with a spear, and with a shield: but I come to thee in the name of the LORD of hosts, the God of the armies of Israel, whom thou hast defied."
+          "reference": "1 Samuel 17:47",
+          "text": "And all this assembly shall know that the LORD saveth not with sword and spear: for the battle is the LORD'S, and he will give you into our hands."
         }
       ],
-      "sensei": "David was small, but he was not alone."
+      "sensei": "David was small, but the battle was the Lord's."
     },
     {
       "faithOverlayKey": "river-watcher",
@@ -120,8 +120,9 @@
       "theme": "Never alone",
       "verses": [
         {
-          "reference": "Hebrews 13:5",
-          "text": "Let your conversation be without covetousness; and be content with such things as ye have: for he hath said, I will never leave thee, nor forsake thee."
+          "reference": "Hebrews 13:5 (part)",
+          "partial": true,
+          "text": "I will never leave thee, nor forsake thee."
         }
       ],
       "sensei": "Who reminds you that you are never alone?"
