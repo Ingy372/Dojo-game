@@ -1081,3 +1081,5 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **Rolling pin lane** uses a round danger area for now (Manager); the real lane shape is a follow-up.
 - **Art (Manager):** imported tower-t3, the Orange enemies and the three Hearth Cook rigs, plus Ladle Lobber and Dough Blob from #241. The Doughling uses the approved stand-in. No badges-trophies-a3* art.
 - **Client:** the Hearth Cook rig follows its phase (p1 ≥ 0.66 health, p2 ≥ 0.33, else p3, from the phase data). It swaps only between attacks, because the next rig may not have the current attack's art (this crashed in screenshots before the fix). Art without a defeat animation fades out over 600 ms (visual only).
+
+- Hearth Cook tuning (#279) deferred to B-T3-TUNE; 575/20 failed R-BAL-12 at belts 4–10 (Manager, Oct 25).
