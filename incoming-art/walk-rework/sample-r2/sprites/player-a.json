@@ -1,0 +1,505 @@
+{
+  "character": "player-a",
+  "frameWidth": 128,
+  "frameHeight": 160,
+  "anchor": {
+    "x": 64.0,
+    "y": 136.96,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 80.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 1.6,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "directionVectors": {
+    "N": [
+      0,
+      -1
+    ],
+    "NE": [
+      0.7071,
+      -0.7071
+    ],
+    "E": [
+      1,
+      0
+    ],
+    "SE": [
+      0.7071,
+      0.7071
+    ],
+    "S": [
+      0,
+      1
+    ],
+    "SW": [
+      -0.7071,
+      0.7071
+    ],
+    "W": [
+      -1,
+      0
+    ],
+    "NW": [
+      -0.7071,
+      -0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "body",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "skin",
+      "order": 1,
+      "tint": true,
+      "optional": false
+    },
+    {
+      "name": "gi",
+      "order": 2,
+      "tint": true,
+      "optional": false
+    },
+    {
+      "name": "belt",
+      "order": 3,
+      "tint": true,
+      "optional": false
+    },
+    {
+      "name": "belt-sheen",
+      "order": 4,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "belt-center",
+      "order": 5,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "belt-center-edge",
+      "order": 6,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "belt-rim",
+      "order": 7,
+      "tint": true,
+      "optional": false
+    },
+    {
+      "name": "belt-tape1-edge",
+      "order": 8,
+      "tint": false,
+      "optional": true
+    },
+    {
+      "name": "belt-tape1",
+      "order": 9,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "belt-tape2-edge",
+      "order": 10,
+      "tint": false,
+      "optional": true
+    },
+    {
+      "name": "belt-tape2",
+      "order": 11,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "prop-broom",
+      "order": 12,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "prop-rag",
+      "order": 13,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "face-01",
+      "order": 14,
+      "tint": false,
+      "optional": false,
+      "group": "face"
+    },
+    {
+      "name": "face-02",
+      "order": 15,
+      "tint": false,
+      "optional": false,
+      "group": "face"
+    },
+    {
+      "name": "face-03",
+      "order": 16,
+      "tint": false,
+      "optional": false,
+      "group": "face"
+    },
+    {
+      "name": "face-04",
+      "order": 17,
+      "tint": false,
+      "optional": false,
+      "group": "face"
+    },
+    {
+      "name": "face-05",
+      "order": 18,
+      "tint": false,
+      "optional": false,
+      "group": "face"
+    },
+    {
+      "name": "face-06",
+      "order": 19,
+      "tint": false,
+      "optional": false,
+      "group": "face"
+    },
+    {
+      "name": "hair-01",
+      "order": 20,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-02",
+      "order": 21,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-03",
+      "order": 22,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-04",
+      "order": 23,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-05",
+      "order": 24,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-06",
+      "order": 25,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-07",
+      "order": 26,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-08",
+      "order": 27,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-09",
+      "order": 28,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-10",
+      "order": 29,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-11",
+      "order": 30,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-12",
+      "order": 31,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    }
+  ],
+  "animations": {
+    "walk": {
+      "frames": 10,
+      "fps": 30,
+      "durationSec": 0.3333,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "player-a_body_walk.png",
+        "skin": "player-a_skin_walk.png",
+        "gi": "player-a_gi_walk.png",
+        "belt": "player-a_belt_walk.png",
+        "belt-sheen": "player-a_belt-sheen_walk.png",
+        "belt-center": "player-a_belt-center_walk.png",
+        "belt-center-edge": "player-a_belt-center-edge_walk.png",
+        "belt-rim": "player-a_belt-rim_walk.png",
+        "belt-tape1-edge": "player-a_belt-tape1-edge_walk.png",
+        "belt-tape1": "player-a_belt-tape1_walk.png",
+        "belt-tape2-edge": "player-a_belt-tape2-edge_walk.png",
+        "belt-tape2": "player-a_belt-tape2_walk.png",
+        "prop-broom": "player-a_prop-broom_walk.png",
+        "prop-rag": "player-a_prop-rag_walk.png",
+        "face-01": "player-a_face-01_walk.png",
+        "face-02": "player-a_face-02_walk.png",
+        "face-03": "player-a_face-03_walk.png",
+        "face-04": "player-a_face-04_walk.png",
+        "face-05": "player-a_face-05_walk.png",
+        "face-06": "player-a_face-06_walk.png",
+        "hair-01": "player-a_hair-01_walk.png",
+        "hair-02": "player-a_hair-02_walk.png",
+        "hair-03": "player-a_hair-03_walk.png",
+        "hair-04": "player-a_hair-04_walk.png",
+        "hair-05": "player-a_hair-05_walk.png",
+        "hair-06": "player-a_hair-06_walk.png",
+        "hair-07": "player-a_hair-07_walk.png",
+        "hair-08": "player-a_hair-08_walk.png",
+        "hair-09": "player-a_hair-09_walk.png",
+        "hair-10": "player-a_hair-10_walk.png",
+        "hair-11": "player-a_hair-11_walk.png",
+        "hair-12": "player-a_hair-12_walk.png"
+      },
+      "groundMotion": {
+        "strideTilesPerLoop": 1.5,
+        "stridePxPerLoop": 120.0,
+        "designSpeedTilesPerSec": 4.5,
+        "fpsPerTilePerSec": 6.6667,
+        "note": "planted feet stay still when fps = speed (tiles/s) * fpsPerTilePerSec; at the design speed that is the fps above"
+      }
+    }
+  },
+  "tintGuidance": {
+    "mode": "multiply (Phaser setTint); untinted layers are drawn as they are",
+    "gi": "gi colour (current placeholder #f2e9d8)",
+    "belt": "the profile's belt.color; a dark (black) belt.color is drawn as #26272f",
+    "belt-center": "two-colour belts only: belt.color2; a dark (black) color2 is drawn as deep black #111116 (it sits between two coloured bands, not next to the outline)",
+    "belt-tape1 / belt-tape2": "tape colour: #f4f1ea on dark belts, #1a1a1a on light belts (rule in apps/client/src/ui/belt.ts)",
+    "belt-tape1-edge / belt-tape2-edge": "no tint; draw each with its stripe (stripes >= 1 / >= 2)",
+    "belt-sheen": "dark (black) belt.color only: tint #a2a6b6, a bright top edge so black reads as a belt, not as outline; skip on other belts",
+    "belt-center-edge": "optional separator around the centre stripe; NOT used in the chosen style (skip it). Tint #ece6d8 if a future style wants it",
+    "belt-rim": "ALWAYS draw it, after belt-center: tint #2e2a3a (dark rim) on every belt except a dark (black) belt.color, which gets light #c9ccd6",
+    "skin": "multiply by a palettes.skin colour (the layer is a light neutral grey)",
+    "hair": "multiply every hair-* layer by a palettes.hair colour (light neutral grey)"
+  },
+  "beltStyles": {
+    "note": "chosen belt style (belt revision, option C): tint per layer for each Action Zone belt (fixtures/); a layer that is not listed is not drawn (belt-center-edge is never drawn in this style). Tape stripes keep the belt.ts rule",
+    "White": {
+      "belt": "#f4f1ea",
+      "belt-rim": "#2e2a3a"
+    },
+    "Yellow": {
+      "belt": "#f5d22e",
+      "belt-rim": "#2e2a3a"
+    },
+    "Orange": {
+      "belt": "#f08a24",
+      "belt-rim": "#2e2a3a"
+    },
+    "Green": {
+      "belt": "#3aa655",
+      "belt-rim": "#2e2a3a"
+    },
+    "Blue": {
+      "belt": "#2f6fd6",
+      "belt-rim": "#2e2a3a"
+    },
+    "Red": {
+      "belt": "#d8352a",
+      "belt-rim": "#2e2a3a"
+    },
+    "Red/Black": {
+      "belt": "#d8352a",
+      "belt-center": "#111116",
+      "belt-rim": "#2e2a3a"
+    },
+    "Brown": {
+      "belt": "#7a4a26",
+      "belt-rim": "#2e2a3a"
+    },
+    "Brown/Black": {
+      "belt": "#7a4a26",
+      "belt-center": "#111116",
+      "belt-rim": "#2e2a3a"
+    },
+    "Black": {
+      "belt": "#26272f",
+      "belt-sheen": "#a2a6b6",
+      "belt-rim": "#c9ccd6"
+    }
+  },
+  "palettes": {
+    "skin": [
+      "#f6d7c3",
+      "#efc3a4",
+      "#e0a984",
+      "#c98e65",
+      "#b07650",
+      "#946042",
+      "#7a4b32",
+      "#603926",
+      "#4a2c1f",
+      "#38221a"
+    ],
+    "hair": [
+      "#403b52",
+      "#3a2519",
+      "#5c3a22",
+      "#8a5f3b",
+      "#d9b26a",
+      "#b5482a",
+      "#8a3a26",
+      "#9a9aa2",
+      "#3f6fd1",
+      "#7d4cc2"
+    ],
+    "gi": [
+      "#f2f2f2",
+      "#4a4a55",
+      "#24345e",
+      "#3a6ea5",
+      "#b8322a",
+      "#8a8d99",
+      "#3f7a4a",
+      "#e9dfc9",
+      "#7fb2e0",
+      "#7a2a33"
+    ],
+    "note": "Recommended swatches (hex), shown by the game in this order. They are multiply tints for the tinted layers (skin, hair-*, gi). Skin runs from light to deep. The ids in palettesDraftLabels are placeholders for the Content Writer, not names"
+  },
+  "palettesDraftLabels": {
+    "skin": [
+      "skin-01",
+      "skin-02",
+      "skin-03",
+      "skin-04",
+      "skin-05",
+      "skin-06",
+      "skin-07",
+      "skin-08",
+      "skin-09",
+      "skin-10"
+    ],
+    "hair": [
+      "black",
+      "dark-brown",
+      "brown",
+      "light-brown",
+      "blonde",
+      "red",
+      "auburn",
+      "grey",
+      "blue",
+      "purple"
+    ],
+    "gi": [
+      "white",
+      "charcoal",
+      "navy",
+      "blue",
+      "red",
+      "grey",
+      "green",
+      "unbleached",
+      "sky",
+      "maroon"
+    ]
+  },
+  "groups": {
+    "face": [
+      "face-01",
+      "face-02",
+      "face-03",
+      "face-04",
+      "face-05",
+      "face-06"
+    ],
+    "hair": [
+      "hair-01",
+      "hair-02",
+      "hair-03",
+      "hair-04",
+      "hair-05",
+      "hair-06",
+      "hair-07",
+      "hair-08",
+      "hair-09",
+      "hair-10",
+      "hair-11",
+      "hair-12"
+    ],
+    "note": "draw exactly one layer of each group, after the base layers (face, then hair)"
+  },
+  "optionNotes": {
+    "face-01": "the approved face of Batch 1: oval eyes with a shine, friendly brows, a small smile",
+    "face-02": "big round eyes, soft high brows, a wider smile",
+    "face-03": "calm almond eyes, straight brows, a small smile",
+    "face-04": "oval eyes with small lashes at the outer corner, a happy smile",
+    "face-05": "bold thick brows, determined but friendly",
+    "face-06": "oval eyes and freckles across the cheeks",
+    "hair-01": "very short (close crop): a thin cap that follows the head",
+    "hair-02": "short: the approved Batch 1 hair (cap, back, sideburns, a short fringe and a tuft)",
+    "hair-03": "curly: a rounder cap made of soft curls",
+    "hair-04": "afro: a rounded shape built from soft coil clumps with light tops, a natural hairline above the brows",
+    "hair-05": "braids: a smooth cap with two braids hanging behind the ears to the shoulders",
+    "hair-06": "ponytail: cap pulled back to a tie at the back of the head, a short tail (above the belt)",
+    "hair-07": "bun: cap with a round bun on top towards the back",
+    "hair-08": "tied back: smooth hair combed back to a low knot at the nape",
+    "hair-09": "two puffs: hair parted down the middle and gathered into two round coil puffs high on the head",
+    "hair-10": "short twists: a soft cap covered in short, rounded twists that point up and out (they never reach the eyes)",
+    "hair-11": "cornrows into braids: neat raised rows from the hairline to the back, ending in braids that hang behind the shoulders",
+    "hair-12": "high-top fade: short faded sides and a tall rounded flat-top of tight coils"
+  }
+}
