@@ -10,7 +10,7 @@ Render: `render_sprites.py --size 128 --ortho 1.6 --anims idle,move,windup,attac
 
 **Spark Sprite recolour:** the merged sample is now re-rendered in **#ff8a3d** (the plan colour), in place under `tier3-orange-sample/spark-sprite/` and its previews (the colour is also changed in `build_t3.py`). The Ladle Lobber is unchanged: its handle still sits out the back and low.
 
-Previews: `preview/lineup.png` (scale against the player, tier 1, the #207 bestiary samples and the tier 3 samples; tier 3 is marked "+") and `preview/<enemy>/` (contact sheets and GIFs; the preview tool tints the telegraph layer red, as the game does).
+Previews: `preview/lineup.png` (scale against the player, tier 1, the #207 bestiary samples and the tier 3 samples; tier 3 is marked "+") and `preview/<enemy>/` (contact sheets and GIFs; the preview tool tints the telegraph layer red, as the game does; the rolling-pin previews use the purple lane tint #8a5cf0, as the Manager decided).
 Sprites: `<enemy>/sprites/`. Blend files: `source/t3_<enemy>.blend`.
 
 **Red check** (hue <15 or >237 out of 255, saturation >115, value >76; telegraph layer not counted): rolling pin 0 px, doughling 0 px. The spark shows 139 px out of all its sheets, all orange edge shading at the hue cut-off (for example 244,134,94, about 16°), not red. Nothing sits above the head. Silhouettes: a long sideways log (pin) vs a small round dome (doughling).
