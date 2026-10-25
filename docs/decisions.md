@@ -768,3 +768,10 @@ Programmer calls:
 - **No shake on the player's attacks.** Basic hits, Strikes, Perfect Counters and enemy-down hits keep their short freeze (hit-stop) but never shake the screen (`SCREEN_SHAKE.playerAttackScale = 0`).
 - **Being-hit shake only for older students.** The shake when the player is hit is on only at Brown belt and up, or on Challenge, at 65% of its old strength, and always off with Reduced motion (`SCREEN_SHAKE`, `hurtShakeScale`). Programmer call: a Block (hit while guarding) follows the same rule as a hit.
 - Named-monster tell shakes (content timing) are unchanged; they already respect Reduced motion.
+
+## R-BAL-9b: per-tier gear caps; white gear cut (Manager's call, 2026-10-24)
+The Manager made the white gear cut from #188 (DECIDE-1, option a) under the balance calls Jay delegated to the Manager. The game hasn't launched, so no kid loses anything.
+- GEAR_CAPS has all 10 tiers (Power / Health / Guard / Jade): white 1/10/3/4% … black 34/211/17/26%. Before, white was 4/30/8/12%.
+- White loot (content/loot/gear.json): hands Power 1/1/1/1, gi Health 3/5/8/10, gi Guard 1/2/2/3, Jade 1/2/3/4%.
+- Drops are clamped to the tier cap, including the Jade charm's Power share. maxGearScore uses each tier's own caps instead of white × tier.
+- Not done here: ENEMY_SCALE for enemies outside their home tier (spec item 5), because no enemy appears off-tier yet; per-tier loot tables (R-BAL-10); XP steps (R-BAL-5, #204).

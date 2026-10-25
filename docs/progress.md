@@ -553,3 +553,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Game runs about 12% slower (one `TEMPO.speed` value); wind-ups and counter windows are longer in real time, never shorter.
 - No screen shake on the player's own attacks. The being-hit shake only happens at Brown belt and up or on Challenge, at 65% strength, and never with Reduced motion.
 - New tests: packages/sim/test/k25-tempo-shake.test.ts (6). Preview playthroughs at 667 and 844: /workspace/qa/k25/.
+
+## R-BAL-9b Per-tier gear caps
+- Done: 10-tier GEAR_CAPS, white cut, Jade capped. Test: r-bal-9b-gear-caps.test.ts.
