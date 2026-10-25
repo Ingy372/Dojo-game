@@ -178,9 +178,12 @@ BOSS_TARGET = (50, 8)                                # [FITTED] same as Floor-ke
 BOSS_GUARD = 30                                      # [CODE] floor-keeper.json guard
 # attack kind -> (strength, startRange, reach, areaRadius, recoverTicks)  all [GUESS], floor-keeper shapes
 KIND = {"melee": (1.0, 1.9, 1.1, 1.3, 22), "circles": (0.8, 6.0, 5.0, 0.9, 26),
-        "lane": (1.2, 6.0, 6.0, 0.6, 30), "arc": (1.2, 2.5, 0.0, 2.4, 30), "zone": (0.0, 5.0, 4.0, 1.0, 26)}
+        "lane": (1.2, 6.0, 6.0, 0.6, 30), "arc": (1.2, 2.5, 0.0, 2.4, 30), "zone": (0.0, 5.0, 4.0, 1.0, 26),
+        "zigzag": (1.2, 6.0, 6.0, 0.6, 30),        # [GUESS] a bent lane, same numbers as lane
+        "ring": (1.2, 4.0, 0.0, 3.0, 32)}          # [GUESS] ring-with-gap around the Guardian; slower recover = time to use the gap
 def kind(a):
-    if a.get("shape") in ("lane", "arc"): return a["shape"]
+    if a.get("shape") in ("lane", "arc", "zigzag"): return a["shape"]
+    if a.get("shape") == "ring-with-gap": return "ring"
     if "zone" in a: return "zone"
     return "melee" if a is a.get("_first") else "circles"
 def boss_design(b, A):
@@ -205,13 +208,12 @@ def load_bosses():
     out = []
     for fn in sorted(os.listdir(BOSS_DIR)):
         b = json.load(open(os.path.join(BOSS_DIR, fn))); b["_file"] = fn
-        if TIERS[b["tier"]] > 5: continue
         b["attacks"][0]["_first"] = b["attacks"][0]
         b["_kinds"] = {x["name"]: kind(x) for x in b["attacks"]}
         out.append(b)
     return sorted(out, key=lambda b: TIERS[b["tier"]])
 def section5(A):
-    print("\n== 5. Guardians tiers 1-5, phase by phase (band 40-80 hits, KO >= 5; phase share of hits = band x phase slice) ==")
+    print("\n== 5. Guardians tiers 1-10, phase by phase (BASE numbers vs the #188 Artist; runtime multiplier per R-BAL-12) (band 40-80 hits, KO >= 5; phase share of hits = band x phase slice) ==")
     res = {}
     for b in load_bosses():
         a = A[TIERS[b["tier"]]]
@@ -227,5 +229,20 @@ def section5(A):
     print(f"\n   cloudlet (brown-black, small): H{c[0]} P{c[1]} G{c[2]} -> beat {chk[0]}/{chk[1]} KO {chk[2]}/{chk[3]} {'PASS' if chk[4] else 'OUT'}")
     return res, c
 
+SHARED = {"radius": 0.85, "moveSpeedTilesPerSecond": 1.6, "sightRange": 20, "parSeconds": 25}   # [GUESS] as tiers 1-5
+def write_bosses(res):
+    """Fill only TODO fields (stats, shared fields, attack numbers). Never touches wind-ups or filled values."""
+    for b in load_bosses():
+        p = os.path.join(BOSS_DIR, b["_file"]); raw = json.load(open(p)); H, P, G = res[b["id"]]
+        for k, v in {"maxHealth": H, "power": P, "guard": G, **SHARED}.items():
+            if raw.get(k) == "TODO": raw[k] = v
+        for a, ra in zip(b["attacks"], raw["attacks"]):
+            st, sr, re_, ar, rc = KIND[b["_kinds"][a["name"]]]
+            for k, v in {"strength": st, "startRange": sr, "reach": re_, "areaRadius": ar, "recoverTicks": rc}.items():
+                if ra.get(k) == "TODO": ra[k] = v
+        open(p, "w").write(json.dumps(raw, indent=2, ensure_ascii=False) + "\n")
+
 if __name__ == "__main__":
-    section5(main())
+    import sys
+    res, _ = section5(main())
+    if "--write" in sys.argv: write_bosses(res)

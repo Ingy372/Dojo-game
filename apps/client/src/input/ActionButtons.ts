@@ -1,3 +1,4 @@
+import { reducedMotion } from '../game/motion';
 import Phaser from 'phaser';
 import { COMBAT, activeForm, strikeCost, type PlayerAction, type PlayerState } from '@dojo/sim';
 import { view, DPR } from '../ui/theme';
@@ -111,6 +112,13 @@ export class ActionButtons {
     this.dashPulse = on;
   }
   private dashPulse = false;
+
+  /** K24b: COUNTER flashes while an attack on the player is in its Counter window (steady glow with Reduced motion). */
+  counterWindow(open: boolean): void {
+    const flash = open && (reducedMotion() || Math.sin(this.scene.time.now / 70) > 0);
+    this.counter.face.setStrokeStyle(open ? 7 : 4, open ? 0xffd166 : 0xffffff, open ? 1 : 0.8);
+    this.counter.face.setFillStyle(flash ? 0x6fa8ff : 0x3a7bd5, 0.9);
+  }
 
   /** Shows whether each button is ready, from the player's current state. */
   update(p: PlayerState): void {

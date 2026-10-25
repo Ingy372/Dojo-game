@@ -749,9 +749,16 @@ Programmer calls:
 
 ## K24c Closer tower view and full retina sharpness (2026-10-24)
 
-Manager call: the Manager okayed K24a's two tradeoffs as built (see "K24a Tutorial tips wait for the player" above).
+Manager calls:
+- **K24a's two tradeoffs are okayed:** (1) on the tutorial floor every enemy sees the player (`seeAll`); (2) the paused tip can cover the health bar when the hero is near the bottom of the screen. That's fine, since health can't drop below 1 there.
+- **Keep the 3× cap** on retina sharpness (DPR capped at 3).
 
 Programmer calls:
 - **Closer view.** The tower now shows about 6.75 tiles top to bottom instead of 8 (`VISIBLE_ROWS`), so the characters and enemies look bigger.
 - **Full "retina" sharpness.** The game now draws at the phone's real pixel count, not its basic screen resolution. The canvas has DPR real pixels per screen point (DPR is the phone's pixel ratio, capped at 3) and is shown shrunk back to the screen size. Every camera is zoomed by DPR, so the layout code still works in screen points through a new `view()` helper, and tap positions are divided by DPR where code reads them directly. Nothing looks different except sharper.
 - **Cost.** It draws 4 to 9 times as many pixels. In the build box's browser (software drawing, no graphics chip) the frame rate went from about 36 to about 13 frames per second at 844×390 at 3×, and memory went from 81 MB to 86 MB. Real phones draw with their graphics chip, so this box can't show real phone speed. If Jay's phone feels slower, set the cap to 2 (one line in ui/theme.ts).
+
+## K24b — attack wind-up cue + COUNTER window (2026-10-24)
+- Before an enemy attacks it shows a cue drawn in code: a "!" in a ring that fills from the top (red), turning gold and full during the counter window.
+- During the counter window the COUNTER button gets a gold ring and flashes. With Reduced motion there's no pulse or flash; the cue and a steady bright COUNTER stay. No art changes.
+- The Sensei tip box avoids the cue so it never hides it.
