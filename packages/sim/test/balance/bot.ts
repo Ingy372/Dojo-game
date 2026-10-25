@@ -74,6 +74,8 @@ export interface RoomStats {
   peakCrowd: number;
   winded: number;
   grade: string | null;
+  /** B-T3-TUNE-2c: rules ticks spent in boss phase pauses (not in `ticks`, which stops during them). */
+  holdTicks?: number;
 }
 
 export interface RunStats {
@@ -113,6 +115,7 @@ export function playRoom(content: Content, run: RunState, world: WorldState, roo
       if (ev.kind === 'hit') stats.hits++;
       if (ev.kind === 'playerAttack' && ev.move === 'strike') stats.strikes++;
       if (ev.kind === 'winded') stats.winded++;
+      if (ev.kind === 'phaseHold') stats.holdTicks = (stats.holdTicks ?? 0) + ev.ticks;
     }
     const alive = world.enemies.filter((e) => e.mode !== 'defeated');
     if (alive.length > 0) {
