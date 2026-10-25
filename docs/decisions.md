@@ -824,6 +824,63 @@ What is in the code:
 - **Guard:** `test/r-bal-12-bands.test.ts` checks every live enemy, belt, student, Standard and Challenge, and fails if a new live enemy file is not listed. Against the old scale, 131 of its cases fail.
 - **Open:** the drafted C13 enemies (drafts/content/enemies) are built for each belt's Artist. If they go live as they are, this scale would double-count. They need white-base numbers, or their own scale, when they land.
 
+## K28: K25 feel fixes (from the K25 QA report)
+- **Real time.** The wind-up sound length and the warning timer use `ticksToRealMs` (realMsPerTick), so they match the slower tempo (B1, B2).
+- **Challenge timers.** "60 s" now means 60 real seconds. Both the on-screen clock and the in-time check use `realSecondsToTicks` (about 1056 ticks instead of 1200) (B3). Par seconds for grades are unchanged.
+- **Belt gate by rank.** The shake rule now checks belt rank: tier 8 and up, which is Brown in the standard 10-belt order. It no longer looks for the id 'brown', so a school with different belt ids still gets the shake from rank 8 (B4). A school with fewer than 8 belts gets the shake only on Challenge.
+- **Named-monster wind-up shakes** (the Brute stamp) follow the hit-shake rule, through the same helper (`hurtShakeScale`): Brown rank and up or Challenge, at 65%, and never with Reduced motion (the Manager's answer to the K25 QA's DECIDE 2).
+- **Removed `eventShakeScale`** and its test (k25b-block-no-shake.test.ts). Nothing used it after K28. The K25b rule that a Block never shakes is unchanged; it is part of the one shake rule, `hurtShakeScale({ kind: 'block', … })`, which always returns 0. Test: k28-real-time-rank.test.ts.
+- **Manager call:** a school with fewer than 8 belts gets the hit and wind-up shake only on Challenge. That's fine for now.
+- **Manager call:** par times for room grades stay in game time (rules seconds), not real seconds.
+## K27: tutorial fixes from Q5 (2026-10-24, plan approved by the Manager)
+- **Closing line (Manager's call; Jay will see it).** The door tip's last line was "What was your favorite part?", which a child can't answer. It is now "Great job! You finished the training floor." (content/tutorial/tutorial-floor.json).
+- **Chest and boss tips wait for their own room.** The chest tip shows only in the vault and the boss tip only in the boss room (Q5 B2: the chest tip showed in room 1).
+- **Boss tip closes on Got it.** "A big one!" no longer stays over the boss for the whole fight (Q5 B1).
+- **The "!" cue stays below the boss bar.** While a boss bar shows, a wind-up cue is never drawn higher than just under the bar and the boss's name (Q5 B1).
+- **Tutorial tip placement.** The tip and its Got it take the first spot clear of the hero, the doors and their labels (HOME), the chest, the boss and the action buttons. If no centred spot is clear, the box slides to the left edge, away from the buttons (Q5 B3, B4). If nothing is clear at all, it sits in the bottom-left corner. Tutorial tips wrap narrower (screen width minus 260 px) so they fit beside the buttons on a 667 px screen. The tip box opacity is unchanged.
+- **COUNTER's gold ring only when it's ready.** The gold ring and flash show only while COUNTER can be pressed, so a gold ring never sits on a dimmed button (Q5 B5).
+- 2026-10-24, Manager (K27 retest): the boss "!" must be full strength above the boss, or beside it if there's no room, clear of HOME and the health bar. Done by trying above, then right, then left of the enemy, and keeping the first spot clear of the boss bar and every door label.
+
+## K29: end-of-run clock in real seconds (2026-10-25, approved by the Manager)
+- The clocks a player reads after a run (room-clear line, Last run "Time", Fastest floor) now show real seconds, using the same ticks-to-real-ms conversion as the K28 Challenge timer (`realClock` in packages/sim/src/config.ts). They read about 12% short before.
+- Manager's call: par times and room grades stay in game time.
+- Note: 1200 rules ticks are 60 s of game time, which is about 68 real seconds at tempo 0.88; 60 real seconds is `realSecondsToTicks(60)` = 1056 ticks. The test checks both.
+- Note for other dojos: the hit-shake cut-off (`SCREEN_SHAKE.hurtFromTier`, rank 8 = Brown) assumes the standard 10-belt order. A school with a different number of belts will need that rank mapped onto its own belts (for now, schools with fewer than 8 belts only get these shakes on Challenge, Manager's call in K28).
+
+## K30: HOME label clear of the boss (2026-10-25, approved by the Manager)
+- Found in the K27 retest: in the boss room the HOME door label sat on the boss's head and its health bar.
+- Simplest fix: each frame, if a door label overlaps a live boss's head, health bar or name, it slides sideways to the far side of its door from the boss. Otherwise it stays centred on its door. Same place as the existing keep-under-the-top-bar rule.
+
+## K31: boss name and small health bar as one pair (2026-10-25, approved by the Manager)
+
+- One shared rule, `bossTagLayout` (packages/sim/src/bossTag.ts): the name, a fixed 4 px gap, then the small bar, stacked above the boss's head. If the stack would rise into the top HUD strip (above HUD_BOTTOM + 4, under the player's bars) (boss near the top of the screen), both move below the boss's feet together. The pair is always clamped on screen and the gap never changes.
+- The name now follows the boss instead of sitting fixed under the big top bar, so the pair can't be pulled apart. The big boss bar stays where it is.
+- HOME and other door labels: the name slides sideways off a label it would overlap. The combo counter is a keep-clear box too: if the pair would touch it, the same rule runs with the combo's bottom as the floor. The boss '!' cue (`windupCueSpot`) treats the pair's box as a keep-clear area, like door labels.
+
+## K31 follow-up: name follows the boss (2026-10-25, Manager call)
+
+- Manager call: OK for the boss's name to follow the boss (as part of the name + small bar pair) instead of sitting fixed under the big top bar.
+- After merging K30: K30's `keepLabelOffBoss` also keeps door labels off the pair's box (`bossTagWorld`, including when the pair sits below the boss), and K31's `placeBossTag` still slides the name off any door label. The label moves first in the frame, then the name, so they don't fight.
+
+## K31 QA fixes (2026-10-25)
+
+- `bossTagLayout` now takes one input object (boss x/head/feet, the pair's half width, the screen band, and boxes to avoid) and returns ONE x for the pair. The name and the bar both use it, so they can't split. The pair is clamped on screen as a unit at the left and right edges.
+- Keep-clear boxes: door labels (HOME), COMBO and its "+N% power" line. The pair first slides sideways off a box (away from the box's centre, towards the boss); if that can't clear it, it drops below the box. This applies to the above spot and the below-the-feet spot.
+- Unit tests cover the edge clamp, the HOME slide, and the below spot with COMBO + power line.
+- The boss '!' cue refreshes the pair's box for the current frame before choosing its spot (no extra padding). Root cause of the last 667 miss: while the pair slid sideways off COMBO as it faded in, the pair covered both side spots, so the cue fell back to a fixed spot on top of it. Now, when the side spots are blocked, the cue goes just past the pair's edge, or under it.
+
+## K32 gear icons (2026-10-25)
+
+- Manager calls (K32 GO, 2026-10-25):
+  - (a) The #212 slot + rarity icons replace the Batch 8 per-item icons everywhere gear shows: the Gear screen worn slots and bag cards, the results list, the first-floor reward line and the in-run loot note. Two items in the same slot and rarity now share one icon; the name tells them apart.
+  - (b) The worn-slot icon grows from 22 px to 40 px, on the left of the box, as long as it fits at 667.
+  - (c) Importing #212 is approved: the 15 sprites are copied as-is from incoming-art/gear-drop-icons/sprites/ to assets/art/gear-drop/.
+  - (d) The legendary icons stay, though legendary gear doesn't drop yet. The jade charm's red cord is not touched here (#214).
+- The icons are plain images keyed `gear:<slot>:<rarity>` (`loadGearIcons` / `addGearIcon` in apps/client/src/art/gearIcons.ts), not an art pack: they are 128x128 each and the frame already carries the rarity, so there's no tint.
+- A results-list line now stays on one line (it shrinks the text, down to 10 px), so its icon always lines up with it.
+- Manager call on #226 (2026-10-25): keep the 40 px worn-slot icon, and wrap long worn-item names onto 2 lines with no ellipsis, so the full name shows at 667. To give the name room, the icon sits top-left with the slot and stats beside it, and the name spans the box's full width below. `twoLines` shrinks the name (13 px down to 10) until it fits in 2 lines with no word past the edge. All three boxes grow to the tallest one, and the bag fits the rows that are left.
+- Manager call on #226 after QA (2026-10-25): it's OK for a charm's effect text in a worn slot to end in '…' when it doesn't fit. The full text shows on the bag card and in the detail line.
+
 ## R-BAL-12d Gain words (2026-10-24)
 - Show training gains as plain "+N Stat" words on the moments a kid already sees (sign-off, sign-offs list, stripe). Each gain uses the belt it was earned at. No new screen, no counters, no "missing" or "next time" words. Wording is in content/ so Jay can change it without code. A test bans nag/guilt/streak words and caps lines at 8 words.
 

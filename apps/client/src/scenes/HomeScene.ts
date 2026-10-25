@@ -3,7 +3,7 @@ import playTimeText from '../../../../content/settings/play-time.json';
 import {
   BLESSING,
   GEAR_SLOTS,
-  TICKS_PER_SECOND,
+  realClock,
   compareGear,
   describeItem,
   describeVirtue,
@@ -37,6 +37,7 @@ import { currentTraining, selectProfile, shortDate } from '../game/student';
 import { startTowerRun } from '../game/tower';
 import { isPlayTimeUp } from '../game/playTime';
 import { addIcon, ICON_PACK } from '../art/icons';
+import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { loadArt } from '../art/art';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
@@ -44,7 +45,7 @@ import { Celebrations } from '../ui/Celebrations';
 import { GoalsCard } from '../ui/GoalsCard';
 import { localDay, takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
-import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css, view, hiDpi } from '../ui/theme';
+import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, crisp, css, view, hiDpi } from '../ui/theme';
 import type { GameSceneData } from './GameScene';
 
 /** How Home was opened: after a run (cleared, lost, or rested at the play limit) the next goals may show. */
@@ -92,6 +93,7 @@ export class HomeScene extends Phaser.Scene {
 
   preload(): void {
     loadArt(this, [...playerPacks(), ICON_PACK]);
+    loadGearIcons(this);
   }
 
   init(data: HomeSceneData): void {
@@ -189,7 +191,15 @@ export class HomeScene extends Phaser.Scene {
     const best = s.items.slice().sort((a, b) => RARITY_ORDER(b) - RARITY_ORDER(a))[0];
     const deco = [...(s.decorations ?? []), ...(this.profile.lastRun!.earned ?? [])][0];
     const reward = best ? `You found: ${best.name}` : deco ? `For your dojo: ${decorationDef(CONTENT.dojo, deco).name}` : '';
-    if (reward) label(cx, top + h * 0.6, reward, 17, best ? css(RARITY_COLOR[best.rarity]) : '#ffd166');
+    if (reward) {
+      const t = label(cx, top + h * 0.6, reward, 17, best ? css(RARITY_COLOR[best.rarity]) : '#ffd166');
+      const icon = best ? addGearIcon(this, best, 0, t.y, 32) : null;
+      if (icon) {
+        // K32: the item's slot + rarity icon sits left of the line; the pair stays centred.
+        add(icon.setX(cx - (t.width + 38) / 2 + 16));
+        t.setX(cx + 19);
+      }
+    }
     const bw = 160;
     const by = top + h - 58;
     const btn = add(this.add.rectangle(cx - bw / 2, by, bw, 42, 0xd5713a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35));
@@ -344,7 +354,7 @@ export class HomeScene extends Phaser.Scene {
       cx += 36;
     }
     y += 40;
-    this.text(x, y, `Perfect Counters ${s.perfects}   Best combo ${s.bestCombo}   Time ${clock(s.ticks, TICKS_PER_SECOND)}`, 14, '#f2e9d8', false, FONT, w);
+    this.text(x, y, `Perfect Counters ${s.perfects}   Best combo ${s.bestCombo}   Time ${realClock(s.ticks)}`, 14, '#f2e9d8', false, FONT, w);
     y += 22;
     if (last.xp) {
       const xp = last.xp;
@@ -365,7 +375,10 @@ export class HomeScene extends Phaser.Scene {
     const fit = Math.max(1, Math.floor((this.panelBottom(h) - 50 - y) / lineH));
     const items = s.items.slice().sort((a, b) => RARITY_ORDER(b) - RARITY_ORDER(a));
     items.slice(0, fit).forEach((it) => {
-      this.text(x, y, `${rarityName(it.rarity)}: ${it.name}  (${describeItem(it)})`, 14, css(RARITY_COLOR[it.rarity]), false, FONT, w);
+      const icon = addGearIcon(this, it, x + 8, y + 9, 18);
+      if (icon) this.ui.add(icon);
+      const tx = icon ? x + 22 : x;
+      this.oneLine(this.text(tx, y, `${rarityName(it.rarity)}: ${it.name}  (${describeItem(it)})`, 14, css(RARITY_COLOR[it.rarity]), false), w - (tx - x), 10);
       y += lineH;
     });
     if (items.length > fit) this.text(x, y, `+${items.length - fit} more in your Gear`, 13, '#b9ad99');
@@ -383,7 +396,7 @@ export class HomeScene extends Phaser.Scene {
     const newBests = new Set(this.profile.lastRun?.newBests ?? []);
     this.text(x, y, 'Personal bests', 13, '#ffd166', true);
     const rows: Array<[BestKey, string]> = [
-      ['fastestClearTicks', b.fastestClearTicks === null ? '—' : clock(b.fastestClearTicks, TICKS_PER_SECOND)],
+      ['fastestClearTicks', b.fastestClearTicks === null ? '—' : realClock(b.fastestClearTicks)],
       ['mostPerfects', `${b.mostPerfects}`],
       ['longestCombo', `${b.longestCombo}`],
       ['mostSGrades', `${b.mostSGrades}`],
@@ -555,21 +568,28 @@ export class HomeScene extends Phaser.Scene {
   }
 
   private renderGear(x: number, y: number, w: number, h: number): void {
-    // Worn gear: one box per slot.
+    // Worn gear: one box per slot. K32: long names wrap to two lines (no ellipsis); every box grows to the tallest.
     const slotW = (w - 16) / 3;
-    GEAR_SLOTS.forEach((slot, i) => {
+    let boxH = 54;
+    const boxes = GEAR_SLOTS.map((slot, i) => {
       const item = wornItem(this.profile, slot);
       const bx = x + i * (slotW + 8);
-      this.ui.add(this.add.rectangle(bx, y, slotW, 54, 0x221d2e).setOrigin(0).setStrokeStyle(2, item ? RARITY_COLOR[item.rarity] : 0x3a3150));
-      // A small icon beside the slot name, so the item name keeps the full width on small phones.
-      const icon = item ? addIcon(this, item.base, bx + slotW - 15, y + 12, 22) : null;
+      const box = this.add.rectangle(bx, y, slotW, boxH, 0x221d2e).setOrigin(0).setStrokeStyle(2, item ? RARITY_COLOR[item.rarity] : 0x3a3150);
+      this.ui.add(box);
+      // K32: 40 px icon top-left with the slot and stats beside it; the name gets the box's full width below.
+      const icon = item ? addGearIcon(this, item, bx + 25, y + 25, 40) : null;
       if (icon) this.ui.add(icon);
-      const tw = slotW - 10;
-      this.text(bx + 6, y + 4, SLOT_NAME[slot], 11, '#b9ad99');
-      this.oneLine(this.text(bx + 6, y + 18, item ? item.name : 'Nothing', 13, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true), tw, 10);
-      if (item) this.oneLine(this.text(bx + 6, y + 36, describeItem(item), 11, '#f2e9d8'), tw, 9);
+      const tx = icon ? bx + 50 : bx + 6;
+      const tw = slotW - (tx - bx) - 4;
+      this.text(tx, y + 6, SLOT_NAME[slot], 11, '#b9ad99');
+      if (item) this.oneLine(this.text(tx, y + 24, describeItem(item), 11, '#f2e9d8'), tw, 9);
+      const name = this.twoLines(this.text(bx + 6, y + 48, item ? item.name : 'Nothing', 13, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true, FONT, slotW - 12), slotW - 12, 10);
+      boxH = Math.max(boxH, name.y + name.height - y + 5);
+      return box;
     });
-    y += 64;
+    boxes.forEach((box) => box.setSize(slotW, boxH));
+    const wornH = boxH + 10;
+    y += wornH;
 
     const bag = this.profile.inventory
       .filter((it) => this.profile.equipped[it.slot] !== it.uid)
@@ -583,7 +603,7 @@ export class HomeScene extends Phaser.Scene {
     const detailH = selected ? 64 : 0;
     const cols = 2;
     const cardH = 42;
-    const rows = Math.max(1, Math.floor((h - 64 - detailH - 34) / (cardH + 6)));
+    const rows = Math.max(1, Math.floor((h - wornH - detailH - 34) / (cardH + 6)));
     const perPage = rows * cols;
     const pages = Math.max(1, Math.ceil(bag.length / perPage));
     this.page = Math.min(this.page, pages - 1);
@@ -601,7 +621,7 @@ export class HomeScene extends Phaser.Scene {
       this.text(bx + 8, by + cardH / 2, arrow, 18, arrowColor, true).setOrigin(0, 0.5);
       // Narrow cards (667-wide phones) get a smaller icon so the name and stats fit on their lines.
       const iconSize = cardW < 300 ? 28 : 34;
-      const icon = addIcon(this, it.base, bx + 26 + iconSize / 2, by + cardH / 2, iconSize);
+      const icon = addGearIcon(this, it, bx + 26 + iconSize / 2, by + cardH / 2, iconSize);
       if (icon) this.ui.add(icon);
       const tx = icon ? bx + 32 + iconSize : bx + 30;
       const tw = cardW - (tx - bx) - 6;
@@ -764,6 +784,14 @@ export class HomeScene extends Phaser.Scene {
    * Keeps a text on one line inside maxW: shrinks the font (not below minSize), then
    * cuts the end with "…". Narrow phones (667 wide) would otherwise wrap names onto the line below.
    */
+  /** K32: a wrapped text shrinks (down to minSize) until it fits in two lines and no word runs past maxW. */
+  private twoLines(t: Phaser.GameObjects.Text, maxW: number, minSize: number): Phaser.GameObjects.Text {
+    let size = parseInt(String(t.style.fontSize), 10);
+    const fits = () => t.width <= maxW + 0.5 && t.getWrappedText().length <= 2;
+    while (!fits() && size > minSize) t.setFontSize(--size);
+    return t;
+  }
+
   private oneLine(t: Phaser.GameObjects.Text, maxW: number, minSize: number): Phaser.GameObjects.Text {
     let size = parseInt(String(t.style.fontSize), 10);
     while (t.width > maxW && size > minSize) t.setFontSize(--size);
