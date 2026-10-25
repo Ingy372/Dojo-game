@@ -206,3 +206,19 @@ export function signOffsTitle(list: readonly Pick<RequirementStatus, 'legacy'>[]
 export function litGateLock(t: Pick<TrainingState, 'gate'>, r: Pick<RequirementStatus, 'id' | 'legacy'>): boolean {
   return !r.legacy && t.gate.locks.some((l) => l.id === r.id);
 }
+
+/**
+ * P-MENU-d (Manager call): one row on the many-techniques card. When the card mixes real
+ * sign-offs and counted ones, a real sign-off keeps the green ✓ and a counted one gets a
+ * plain ○ and "(practiced)", so you can tell which rows Sensei really signed off.
+ */
+export function signOffsRow(r: Pick<RequirementStatus, 'name' | 'legacy'>, ability: string, mixed: boolean): { text: string; real: boolean } {
+  const real = !r.legacy;
+  if (!mixed || real) return { text: `✓ ${r.name}: ${ability}`, real };
+  return { text: `○ ${r.name}: ${ability} (practiced)`, real };
+}
+
+/** True when a many-techniques card has both real sign-offs and counted ones. */
+export function signOffsMixed(list: readonly Pick<RequirementStatus, 'legacy'>[]): boolean {
+  return list.some((r) => r.legacy) && list.some((r) => !r.legacy);
+}

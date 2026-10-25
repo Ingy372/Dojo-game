@@ -4,7 +4,7 @@
 
 import Phaser from 'phaser';
 import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState } from '@dojo/sim';
-import { gainText, litGateLock, signOffCardText, signOffGain, signOffLines, signOffsTitle, stripeGain } from '@dojo/sim';
+import { gainText, litGateLock, signOffCardText, signOffGain, signOffLines, signOffsMixed, signOffsRow, signOffsTitle, stripeGain } from '@dojo/sim';
 import GAINS from '../../../../content/settings/training-gains.json';
 import { sfx } from '../audio/Sfx';
 import { shortDate } from '../game/student';
@@ -260,14 +260,17 @@ export class Celebrations {
         const cols = m.list.length > 6 ? 2 : 1;
         const colW = cols === 1 ? Math.min(400, width - 40) : Math.min(390, (width - 32 - gap) / 2);
         const left = cx - (cols * colW + (cols - 1) * gap) / 2;
-        const label = (s: (typeof m.list)[number]) => `✓ ${s.requirement.name}: ${s.ability.split(' (')[0]}`;
+        // P-MENU-d: on a mixed card, real sign-offs are green ✓ rows and counted ones say "(practiced)".
+        const mixed = signOffsMixed(m.list.map((x) => x.requirement));
+        const row = (s: (typeof m.list)[number]) => signOffsRow(s.requirement, s.ability.split(' (')[0], mixed);
         const layout = (size: number, shown: number) => {
           const rows = Math.ceil(shown / cols);
           const ys = Array.from({ length: cols }, () => top);
           const made: Phaser.GameObjects.Text[] = [];
           for (let i = 0; i < shown; i++) {
             const col = Math.floor(i / rows);
-            const t = this.text(left + col * (colW + gap), ys[col], label(m.list[i]), size, '#f2e9d8', false, FONT, colW);
+            const r = row(m.list[i]);
+            const t = this.text(left + col * (colW + gap), ys[col], r.text, size, mixed && r.real ? '#5cd65c' : '#f2e9d8', mixed && r.real, FONT, colW);
             ys[col] += t.height + 3;
             made.push(t);
           }
