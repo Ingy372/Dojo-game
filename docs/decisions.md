@@ -939,3 +939,4 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
   - The grown-up gate moved into `ui/grownUpGate.ts` so outside links can share it. `openOutsideLink()` is the only allowed way to leave the game, and a Vitest source scan fails on any other `window.open` or `location` change. The game has no outside links today.
   - After a wipe the app reloads, so every scene and module reads the empty save. The first-launch note shows again.
   - The wipe button sits in the play-time screen's bottom-left corner, away from #246's "Belt & stripes" and Done buttons, so the two PRs merge in either order.
+- Manager call on #249 (2026-10-25): the "Saved on this phone" card uses the privacy wording from #240 (`drafts/planning/BETA-privacy-page.md`, "The short version"), word for word, and the PLACEHOLDER marker is gone. If the privacy page changes, `content/settings/safety.json` changes too.
