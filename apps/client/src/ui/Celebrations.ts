@@ -10,6 +10,7 @@ import { sfx } from '../audio/Sfx';
 import { shortDate } from '../game/student';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook } from '../game/look';
+import { reducedMotion } from '../game/motion';
 import { hex } from './belt';
 import { FONT, crisp, view } from './theme';
 
@@ -339,6 +340,7 @@ export class Celebrations {
 
   /** Confetti bursting out from a point. */
   private burst(x: number, y: number, colors: number[], count: number): void {
+    if (reducedMotion()) return; // Reduced motion: no confetti.
     for (let i = 0; i < count; i++) {
       const c = this.scene.add.rectangle(x, y, 6, 10, colors[i % colors.length]).setAngle(Math.random() * 360);
       this.layer.add(c);
@@ -367,7 +369,7 @@ export class Celebrations {
     g.setPosition(x, y).setAlpha(0);
     this.layer.addAt(g, 0);
     this.scene.tweens.add({ targets: g, alpha: 1, duration: 500 });
-    this.scene.tweens.add({ targets: g, angle: 360, duration: 20000, repeat: -1 });
+    if (!reducedMotion()) this.scene.tweens.add({ targets: g, angle: 360, duration: 20000, repeat: -1 }); // Reduced motion: the rays stay still.
   }
 }
 
