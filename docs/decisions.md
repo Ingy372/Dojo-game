@@ -1137,3 +1137,9 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **Builder choices (not in the spec):** Cat's dash cooldown is floor(30 × 0.75) = 22 ticks, matching the 22 in the spec. For Horse, guarding and standing still both count as still; walking or dashing resets the count. Stance power adds to gear powerScale.
 - Kata to stance order is positional (Basic Form 1 → Cat, Basic Form 2 → Front, then Fighting, Horse) until d2.
 - The golden run was re-captured. Only the stance ids and the "rooted" case changed: Cat's +1 window replaces Rooted's +3.
+- **Manager confirmations (#293 review, Oct 25):**
+  - Horse counts guarding as standing still.
+  - Stance power stacks with gear power.
+  - Cat's dash cooldown is 22 ticks.
+  - "Beginner's Stance" stays until Jay decides.
+  - The in-game one-liners (what each stance does) come in a follow-up.
