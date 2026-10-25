@@ -216,6 +216,8 @@ export function gearCapsForTier(tier: number): (typeof GEAR_CAPS)[keyof typeof G
 export const PROGRESSION = {
   /** Each belt tier adds this many levels to the cap (white belt: cap 10). */
   levelsPerTier: 10,
+  /** R-BAL-5 (D3): each level step's weight is step + this, so later steps grow gently (last step ≤ 10 runs). Tier total unchanged. */
+  xpStepSoften: 11,
   /** Each level above 1 adds this much Health and Power. */
   healthPerLevel: 3,
   powerPerLevel: 0.4,

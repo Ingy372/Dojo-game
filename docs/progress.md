@@ -557,6 +557,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## R-BAL-4 Bad-luck counter test
 - New test locks `guaranteedRareOnRun` at 5 or lower. Checked it fails when set to 6.
+## R-BAL-5 XP step weights (k+11)
+- Done: progression.ts uses weights step+11. Matches balance-sim.py section 3; no step goes over 10 runs.
 ## K25 Slower tempo and calmer shake
 - Game runs about 12% slower (one `TEMPO.speed` value); wind-ups and counter windows are longer in real time, never shorter.
 - No screen shake on the player's own attacks. The being-hit shake only happens at Brown belt and up or on Challenge, at 65% strength, and never with Reduced motion.
