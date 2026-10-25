@@ -868,3 +868,13 @@ What is in the code:
 - Keep-clear boxes: door labels (HOME), COMBO and its "+N% power" line. The pair first slides sideways off a box (away from the box's centre, towards the boss); if that can't clear it, it drops below the box. This applies to the above spot and the below-the-feet spot.
 - Unit tests cover the edge clamp, the HOME slide, and the below spot with COMBO + power line.
 - The boss '!' cue refreshes the pair's box for the current frame before choosing its spot (no extra padding). Root cause of the last 667 miss: while the pair slid sideways off COMBO as it faded in, the pair covered both side spots, so the cue fell back to a fixed spot on top of it. Now, when the side spots are blocked, the cue goes just past the pair's edge, or under it.
+
+## K32 gear icons (2026-10-25)
+
+- Manager calls (K32 GO, 2026-10-25):
+  - (a) The #212 slot + rarity icons replace the Batch 8 per-item icons everywhere gear shows: the Gear screen worn slots and bag cards, the results list, the first-floor reward line and the in-run loot note. Two items in the same slot and rarity now share one icon; the name tells them apart.
+  - (b) The worn-slot icon grows from 22 px to 40 px, on the left of the box, as long as it fits at 667.
+  - (c) Importing #212 is approved: the 15 sprites are copied as-is from incoming-art/gear-drop-icons/sprites/ to assets/art/gear-drop/.
+  - (d) The legendary icons stay, though legendary gear doesn't drop yet. The jade charm's red cord is not touched here (#214).
+- The icons are plain images keyed `gear:<slot>:<rarity>` (`loadGearIcons` / `addGearIcon` in apps/client/src/art/gearIcons.ts), not an art pack: they are 128x128 each and the frame already carries the rarity, so there's no tint.
+- A results-list line now stays on one line (it shrinks the text, down to 10 px), so its icon always lines up with it.

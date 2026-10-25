@@ -606,3 +606,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 - One x for the name + bar pair (edge clamp, HOME slide together); below spot avoids COMBO and "+N% power". Re-ran the Tester's /workspace/qa/k31/run/tag.mjs against this build.
 - 2026-10-25: K31 last fix: '!' cue no longer falls back onto the sliding name + bar; 8 px padding removed. tag.mjs 0 bad spots at 667 (RM off/on) and 844 (RM off/on).
+
+## K32 gear icons (2026-10-25)
+
+- Imported the 15 #212 gear icons to assets/art/gear-drop/ and wired them into the Gear screen, results, first-floor card and loot note. Test: packages/sim/test/gear-icons.test.ts (every GEAR_SLOTS x RARITIES has a file; checked that it fails when one is missing). Shots and overlap/clip reports in /workspace/k32-shots/ (667x375 and 844x390, reduced motion off/on).
