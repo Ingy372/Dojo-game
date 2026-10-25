@@ -51,9 +51,9 @@ K = {
    11:["turn.180","block.overhead","catch","kick.front","punch.straight"],12:["pivot","stance.attention","break.double-choke"]}),
 }
 MOVES = {"pivot":"Pivot","turn.180":"Half turn","turn":"Turn","turn.big-special":"Big special turn","stance.cat":"Cat stance","stance.front":"Front stance","stance.attention":"Attention",
- "block.downward":"Low block","block.reverse-inside":"Inside block","block.overhead":"High block","block.double-knife-hand":"Double knife-hand block",
+ "block.downward":"Low block","block.reverse-inside":"Inside block","block.overhead":"High block","block.double-knife-hand":"Knife-hand block",
  "punch.straight":"Straight punch","punch.reverse":"Reverse punch","strike.backfist":"Backfist","kick.reverse":"Reverse kick",
- "kick.straight":"Straight kick","kick.front":"Front kick","chamber":"Chamber","catch":"Catch","break.double-choke":"Choke break"}
+ "kick.straight":"Straight kick","kick.front":"Front kick","chamber":"Chamber","catch":"Catch","break.double-choke":"Choke break","shout.kiai":"Kiai!"}
 OUT.mkdir(exist_ok=True)
 for kid, k in K.items():
     steps, notes, finish = parse(k["md"])

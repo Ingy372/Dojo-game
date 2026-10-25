@@ -1,0 +1,57 @@
+{
+  "notes": "DRAFT for R-STANCE-e. The dojo stance list Jay approved (J1, Oct 25). Descriptions use only what the repo already says: the kata sheets and self-defense.md. How to stand in each stance (feet, weight, hands) is not written anywhere in the repo, so it is a jayQuestion, never a guess. Game benefits are in drafts/planning/R-STANCE-stances-and-kata-rewards.md, not here.",
+  "stances": [
+    {
+      "id": "stance.attention",
+      "name": "Ready",
+      "moveIds": [
+        "stance.attention"
+      ],
+      "description": "Where every kata starts and ends.",
+      "source": "Kata finishes: 'ready stance', 'move to attention & bow out'.",
+      "howToStand": null,
+      "jayQuestion": "Are Ready stance and Attention one stance or two? The sheets name both ('ready stance', then 'move to attention'). What does each look like, in one short line?"
+    },
+    {
+      "id": "stance.cat",
+      "name": "Cat",
+      "moveIds": [
+        "stance.cat"
+      ],
+      "description": "A short step back. It shows up in every kata so far.",
+      "source": "Basic Form 1-2, Keon, David and Goliath: 'short stepping to rear w/RF into cat stance'.",
+      "howToStand": null,
+      "jayQuestion": "One short line on how to stand in cat stance, for kids."
+    },
+    {
+      "id": "stance.front",
+      "name": "Front",
+      "moveIds": [
+        "stance.front"
+      ],
+      "description": "Step forward into it, ready to block and punch.",
+      "source": "Keon #3 and #9: 'step forward w/LF into front stance'.",
+      "howToStand": null,
+      "jayQuestion": "One short line on how to stand in front stance, for kids."
+    },
+    {
+      "id": "stance.fighting",
+      "name": "Fighting",
+      "moveIds": [],
+      "description": "Jump into it to face a weapon, ready to kick.",
+      "source": "self-defense.md #13-14: 'Jump to a fighting stance'.",
+      "howToStand": null,
+      "jayQuestion": "One short line on how to stand in fighting stance, for kids. Is it used in any kata?"
+    },
+    {
+      "id": "stance.horse",
+      "name": "Horse",
+      "moveIds": [],
+      "description": "A rooted stance.",
+      "source": "Jay (Oct 25): 'horse stance is rooted stance'. Not in any sheet in the repo.",
+      "howToStand": null,
+      "jayQuestion": "One short line on how to stand in horse stance, for kids. Which kata or belt teaches it?"
+    }
+  ],
+  "jayQuestion": "Are there other stances taught at the dojo (for example a back stance), and at which belt?"
+}
