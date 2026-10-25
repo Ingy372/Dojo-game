@@ -7,7 +7,7 @@ import type { Effect } from './effects';
 import type { FeedBelt } from './feed';
 import { playerStats, type Profile } from './profile';
 import type { RunSummary } from './run';
-import { unlockedForms, virtueTitle, type TrainingState, type VirtueInfo } from './training';
+import { trainingStats, unlockedForms, virtueTitle, type TrainingState, type VirtueInfo } from './training';
 import type { PlayerSetup, VirtueSetup } from './world';
 
 /** Total experience for one belt tier's levels, from the school's typical time in rank. */
@@ -121,11 +121,13 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
   const gear = playerStats(profile);
   const level = effectiveLevel(profile, training);
   const earned = training.abilities.filter((a) => a.unlocked && a.perk).map((a) => a.perk!.effect);
+  // R-BAL-12: real training adds whole-number stats on top of gear and level.
+  const trained = trainingStats(training);
   return {
     level,
-    maxHealth: gear.maxHealth + (level - 1) * PROGRESSION.healthPerLevel,
-    power: Math.round((gear.power + (level - 1) * PROGRESSION.powerPerLevel) * 10) / 10,
-    guard: gear.guard,
+    maxHealth: gear.maxHealth + (level - 1) * PROGRESSION.healthPerLevel + trained.maxHealth,
+    power: Math.round((gear.power + (level - 1) * PROGRESSION.powerPerLevel + trained.power) * 10) / 10,
+    guard: gear.guard + trained.guard,
     effects: [...earned, ...gear.effects],
     forms: unlockedForms(training, abilities),
     virtue: virtueSetup(training),

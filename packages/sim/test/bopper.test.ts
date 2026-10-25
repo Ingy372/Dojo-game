@@ -7,9 +7,9 @@ const content = testContent();
 const bopper = loadEnemy(bopperData);
 
 describe('Bouncy Bopper (A5)', () => {
-  it('has the decided numbers: 110 Health, 16 power, disarmed push 8 (#102, #118)', () => {
-    expect(bopper.maxHealth).toBe(110);
-    expect(bopper.power).toBe(16);
+  it('has the decided base numbers: 66 Health, 11 power, disarmed push 8 (#102, #118; R-BAL-12 option B)', () => {
+    expect(bopper.maxHealth).toBe(66);
+    expect(bopper.power).toBe(11);
     expect(bopper.weapon).toEqual({ id: 'padded-staff', disarmedPower: 8 });
     expect(bopper.attacks[0].telegraphTicks).toBe(16);
     expect(bopper.attacks[0].recoverTicks).toBe(18);
@@ -32,8 +32,8 @@ describe('Bouncy Bopper (A5)', () => {
     return -1;
   };
 
-  it('bonks for 16 with the staff, and pushes for 8 when disarmed', () => {
-    expect(hitDamage(0)).toBe(damage(16, 1, 0));
+  it('bonks for 11 with the staff, and pushes for 8 when disarmed', () => {
+    expect(hitDamage(0)).toBe(damage(11, 1, 0));
     expect(hitDamage(0.5)).toBe(damage(8, 1, 0));
   });
 

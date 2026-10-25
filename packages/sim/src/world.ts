@@ -314,6 +314,8 @@ export interface WorldOptions {
   minHealth?: number;
   /** The tutorial floor's easy boss (M7-P2): bosses have this share of their health and call in no helpers. */
   easyBossHealth?: number;
+  /** R-BAL-12: multiply enemy Health and Power (then round) for the run's belt. Default: none. */
+  enemyScale?: { maxHealth: number; power: number };
 }
 
 export interface PlayerSetup {
@@ -388,8 +390,12 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
   const enemyTypes: Record<string, EnemyDef> = {};
   if (options.enemyTypes) {
     const typeOf = (id: string): EnemyDef => {
-      const def = options.enemyTypes![id];
-      if (!def) throw new Error(`Room "${room.id}" uses enemy "${id}", but no such enemy type was loaded`);
+      const base = options.enemyTypes![id];
+      if (!base) throw new Error(`Room "${room.id}" uses enemy "${id}", but no such enemy type was loaded`);
+      // R-BAL-12: content holds BASE numbers; the run's belt scales Health and Power (whole numbers).
+      // Guard and timings never scale.
+      const sc = options.enemyScale;
+      const def = sc ? { ...base, maxHealth: Math.max(1, Math.round(base.maxHealth * sc.maxHealth)), power: Math.round(base.power * sc.power) } : base;
       if (def.boss && options.easyBossHealth !== undefined) return { ...def, maxHealth: Math.max(1, Math.round(def.maxHealth * options.easyBossHealth)), summon: null };
       return def;
     };
