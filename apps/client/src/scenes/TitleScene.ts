@@ -1,5 +1,6 @@
 import SCREENS from '../../../../content/settings/screens.json';
 import Phaser from 'phaser';
+import { hiDpi, view } from '../ui/theme';
 
 declare const __BUILD_TIME__: string;
 import { loadArt } from '../art/art';
@@ -19,7 +20,8 @@ export class TitleScene extends Phaser.Scene {
 
   preload(): void {
     // The character's art is used everywhere, so it loads first (with a small note while it does).
-    const { width, height } = this.scale.gameSize;
+    hiDpi(this.cameras.main);
+    const { width, height } = view(this);
     const note = this.add
       .text(width / 2, height / 2, 'Loading…', { fontFamily: 'system-ui, sans-serif', fontSize: '18px', color: '#b9ad99' })
       .setOrigin(0.5)
@@ -29,6 +31,7 @@ export class TitleScene extends Phaser.Scene {
   }
 
   create(): void {
+    hiDpi(this.cameras.main);
     const crisp = window.devicePixelRatio || 1;
 
     this.title = this.add
@@ -89,14 +92,15 @@ export class TitleScene extends Phaser.Scene {
       else this.scene.start('Dojo');
     });
 
-    this.layout(this.scale.gameSize);
+    this.layout();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     });
   }
 
-  private layout(size: Phaser.Structs.Size): void {
+  private layout(): void {
+    const size = view(this);
     const { width, height } = size;
     const cx = width / 2;
     const cy = height / 2;

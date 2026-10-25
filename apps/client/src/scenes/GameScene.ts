@@ -89,7 +89,7 @@ import { DIFFICULTY_TEXT, localToday } from '../game/difficulty';
 import { startTowerRun } from '../game/tower';
 import { LESSONS, noteLessonSeen, takeLesson } from '../game/lessons';
 import { bankRun, saveRunInProgress } from '../game/runSave';
-import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css } from '../ui/theme';
+import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css, view, DPR, hiDpi } from '../ui/theme';
 import { ActionButtons } from '../input/ActionButtons';
 import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
@@ -106,7 +106,7 @@ const BOSS_BAR_Y = 16;
 /** The bottom of the health and Focus bars (screen px). */
 const HUD_BOTTOM = 56;
 /** How many tiles tall the view is, whatever the phone's size. */
-const VISIBLE_ROWS = 8;
+const VISIBLE_ROWS = 6.75;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 /** Never run more than this many ticks in one frame (e.g. after a long pause). */
 const MAX_TICKS_PER_FRAME = 5;
@@ -396,6 +396,7 @@ export class GameScene extends Phaser.Scene {
     const cam = this.cameras.main;
     cam.startFollow(this.player, true);
     this.uiCamera = this.cameras.add(0, 0, this.scale.width, this.scale.height);
+    hiDpi(this.uiCamera);
     // The Guarding tether is world art too, or the screen camera draws a ghost copy (elites QA bug 1).
     this.uiCamera.ignore([...roomGfx, ...objects, this.tether, this.danger, this.marker, this.player]);
 
@@ -416,7 +417,7 @@ export class GameScene extends Phaser.Scene {
     if (this.run && this.run.depth === 0 && !this.run.bowed) this.askForBow();
     else this.introduceRoom();
 
-    this.layout(this.scale.gameSize);
+    this.layout();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     // Let go of everything if the app goes to the background mid-touch.
     const release = () => {
@@ -706,8 +707,8 @@ export class GameScene extends Phaser.Scene {
       ...Object.values(this.world.players).map((p) => p.pos),
     ].map((o) => ({ x: (o.x - e.pos.x) * TILE, y: (o.y - e.pos.y) * TILE }));
     const cam = this.cameras.main;
-    const feetOnScreen = (e.pos.y * TILE - cam.worldView.y) * cam.zoom;
-    n.layout(others, (feetOnScreen - HUD_BOTTOM) / cam.zoom, e.mode === 'defeated');
+    const feetOnScreen = (e.pos.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
+    n.layout(others, (feetOnScreen - HUD_BOTTOM) / (cam.zoom / DPR), e.mode === 'defeated');
     const windupSec = e.mode === 'windup' ? Math.min(e.windupTotal, e.windupTotal - e.modeTicks + blend) / TICKS_PER_SECOND : null;
     if (n.update(e, now, windupSec, frame, TILE).clank) sfx.clank();
   }
@@ -932,12 +933,13 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.chainText, this.message, this.screenFlash, this.roomLabel, this.timerText, this.bossName]);
   }
 
-  private layout(size: Phaser.Structs.Size): void {
-    const { width, height } = size;
+  private layout(): void {
+    const { width, height } = view(this);
     const cam = this.cameras.main;
-    cam.setSize(width, height);
+    cam.setSize(width * DPR, height * DPR);
     const zoom = height / (VISIBLE_ROWS * TILE);
-    cam.setZoom(zoom);
+    // The camera zoom also carries DPR (full sharpness); `zoom` stays in screen points.
+    cam.setZoom(zoom * DPR);
     // Camera limits: a strip above the top wall keeps doors clear of the health bars,
     // and rooms smaller than the screen sit in the middle.
     const viewW = width / zoom;
@@ -948,7 +950,7 @@ export class GameScene extends Phaser.Scene {
     const bw = Math.max(roomW, viewW);
     const bh = Math.max(roomH, viewH);
     cam.setBounds((roomW - bw) / 2, top - (bh - roomH) / 2, bw, bh);
-    this.uiCamera.setSize(width, height);
+    this.uiCamera.setSize(width * DPR, height * DPR);
     this.controls.layout();
     this.buttons.layout();
     this.comboText.setX(width / 2);
@@ -1597,7 +1599,7 @@ export class GameScene extends Phaser.Scene {
     const lines = [...(lead ? [lead] : []), ...step.screens, ...(step.advance === 'tap' && step.success ? [step.success] : [])];
     this.senseiSay([lines.join('\n')]);
     this.menuOpen = true;
-    const { width } = this.scale.gameSize;
+    const { width } = view(this);
     const btn = this.add
       .text(width / 2, 0, 'Got it', {
         fontFamily: 'system-ui, sans-serif',
@@ -1668,7 +1670,7 @@ export class GameScene extends Phaser.Scene {
 
   /** The big middle message, moved down under the twist banner while one is showing. */
   private placeMessage(): void {
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const y = this.messageTop ? Math.max(height * 0.4, this.messageTop + this.message.height / 2) : height * 0.4;
     this.message.setPosition(width / 2, y);
   }
@@ -1682,7 +1684,7 @@ export class GameScene extends Phaser.Scene {
     this.twistBadge = null;
     const twist = this.world.twist;
     if (!twist) return 0;
-    const { width } = this.scale.gameSize;
+    const { width } = view(this);
     // Near the top, just under the health and Focus bars, so it never covers the fight or a warning circle.
     const banner = twistBanner(this, twist, width, 0);
     const BANNER_Y = 58 + banner.height / 2;
@@ -1786,7 +1788,7 @@ export class GameScene extends Phaser.Scene {
       // Keep the label below the top bar (health, Focus, "Room 1 of 8"): in small rooms
       // the top doors sit right under it on a 667-wide phone.
       const cam = this.cameras.main;
-      d.label.setY(Math.max((d.at.y + 0.55) * TILE, cam.worldView.y + HUD_TOP_PX / cam.zoom));
+      d.label.setY(Math.max((d.at.y + 0.55) * TILE, cam.worldView.y + HUD_TOP_PX / (cam.zoom / DPR)));
     }
 
     // The chest appears once the room is clear: a glinting chest, then (once opened)
@@ -1830,7 +1832,7 @@ export class GameScene extends Phaser.Scene {
     const boss = this.world.enemies.find((e) => e.def.boss);
     const g = this.hud;
     if (boss && boss.mode !== 'defeated') {
-      const { width } = this.scale.gameSize;
+      const { width } = view(this);
       const w = Math.max(140, Math.min(300, width - 450));
       const x = width / 2 - w / 2;
       const y = BOSS_BAR_Y;
@@ -1849,7 +1851,7 @@ export class GameScene extends Phaser.Scene {
    * moves under the player's bars on the left so both stay readable (K10).
    */
   private placeCombo(bossUp: boolean): void {
-    const { width } = this.scale.gameSize;
+    const { width } = view(this);
     if (bossUp) {
       this.comboText.setOrigin(0, 0).setPosition(16, HUD_TOP_PX + 4);
       this.comboBonusText.setOrigin(0, 0).setPosition(18, HUD_TOP_PX + 36);
@@ -1866,7 +1868,7 @@ export class GameScene extends Phaser.Scene {
   private placeSensei(): void {
     const t = this.senseiText;
     if (!t?.active) return;
-    const { height } = this.scale.gameSize;
+    const { height } = view(this);
     let top = this.senseiTop(height);
     const left = t.x - t.width / 2;
     const right = t.x + t.width / 2;
@@ -1883,10 +1885,10 @@ export class GameScene extends Phaser.Scene {
     if (this.run?.tutorial) {
       const cam = this.cameras.main;
       const p = this.world.players[this.me].pos;
-      const py = (p.y * TILE - cam.worldView.y) * cam.zoom;
-      const px = (p.x * TILE - cam.worldView.x) * cam.zoom;
-      const r = TILE * cam.zoom * 1.2;
-      const H = this.scale.gameSize.height;
+      const py = (p.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
+      const px = (p.x * TILE - cam.worldView.x) * (cam.zoom / DPR);
+      const r = TILE * (cam.zoom / DPR) * 1.2;
+      const H = view(this).height;
       if (px + r > left && px - r < right && py + r > top && py - r < top + h) {
         // Under the hero when it fits, otherwise above them; the Got it button always stays on screen.
         top = py + r + 6 + h <= H - 8 ? py + r + 6 : Math.max(8, py - r - 6 - h);
@@ -1905,10 +1907,10 @@ export class GameScene extends Phaser.Scene {
   private protectedBoxes(withMessage: boolean): { x0: number; x1: number; y0: number; y1: number }[] {
     const cam = this.cameras.main;
     const toScreen = (x0: number, y0: number, x1: number, y1: number) => ({
-      x0: (x0 - cam.worldView.x) * cam.zoom,
-      x1: (x1 - cam.worldView.x) * cam.zoom,
-      y0: (y0 - cam.worldView.y) * cam.zoom,
-      y1: (y1 - cam.worldView.y) * cam.zoom,
+      x0: (x0 - cam.worldView.x) * (cam.zoom / DPR),
+      x1: (x1 - cam.worldView.x) * (cam.zoom / DPR),
+      y0: (y0 - cam.worldView.y) * (cam.zoom / DPR),
+      y1: (y1 - cam.worldView.y) * (cam.zoom / DPR),
     });
     const boxes: { x0: number; x1: number; y0: number; y1: number }[] = [];
     for (const d of this.doorViews) {
@@ -1935,7 +1937,7 @@ export class GameScene extends Phaser.Scene {
     this.tweens.add({ targets: orb, alpha: 0, scale: 1.6, delay: 760, duration: 220, onComplete: () => orb.destroy() });
     if (rank >= 2) this.ring(at, color, 1.6);
 
-    const { width } = this.scale.gameSize;
+    const { width } = view(this);
     const y = 64 + this.toastY * 26;
     this.toastY++;
     const t = this.add
@@ -1963,7 +1965,7 @@ export class GameScene extends Phaser.Scene {
     sfx.loot(2);
     this.ring(at, COLORS.gold, 1.4);
     this.floatText(at, surprise ? 'A surprise!' : 'For your dojo!', '#ffd166', 16, 1.2);
-    const { width } = this.scale.gameSize;
+    const { width } = view(this);
     const y = 64 + this.toastY * 26;
     this.toastY++;
     const t = this.add
@@ -2014,7 +2016,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private showGrade(grade: 'S' | 'A' | 'B', perfects: number, damage: number, ticks: number, inTime: boolean | null): void {
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     sfx.grade(grade);
     const letter = this.add
       .text(width / 2, height * 0.36, grade, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '84px', color: GRADE_COLOR[grade], stroke: '#14121c', strokeThickness: 9 })
@@ -2195,7 +2197,7 @@ export class GameScene extends Phaser.Scene {
   /** Shows Sensei's read-aloud lines one after another at the top of the screen. */
   private senseiSay(lines: string[], holdMs = 1400): void {
     this.senseiText?.destroy();
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const t = this.add
       .text(width / 2, this.senseiTop(height), '', {
         fontFamily: 'system-ui, sans-serif',
@@ -2246,7 +2248,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private popWord(text: string, color: string, size: number): void {
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const t = this.add
       .text(width / 2, height * 0.3, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${size}px`, color, stroke: '#14121c', strokeThickness: 8 })
       .setOrigin(0.5)

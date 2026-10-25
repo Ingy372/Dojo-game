@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { COMBAT, activeForm, strikeCost, type PlayerAction, type PlayerState } from '@dojo/sim';
+import { view, DPR } from '../ui/theme';
 
 const COUNTER_RADIUS = 48;
 const STRIKE_RADIUS = 38;
@@ -79,7 +80,7 @@ export class ActionButtons {
   }
 
   layout(): void {
-    const { width, height } = this.scene.scale.gameSize;
+    const { width, height } = view(this.scene);
     const cx = width - COUNTER_RADIUS - MARGIN;
     const cy = height - COUNTER_RADIUS - MARGIN;
     this.counter.container.setPosition(cx, cy);
@@ -189,7 +190,7 @@ export class ActionButtons {
 
   private onDown(pointer: Phaser.Input.Pointer): void {
     for (const b of this.all()) {
-      if (this.hit(b, pointer.x, pointer.y)) {
+      if (this.hit(b, (pointer.x / DPR), (pointer.y / DPR))) {
         this.onTouch();
         this.pending = b.action;
         this.scene.tweens.add({ targets: b.face, scale: 0.88, duration: 50, yoyo: true });

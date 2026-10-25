@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import type { InsightDef } from '@dojo/sim';
 import { addIcon, INSIGHT_ACCENT } from '../art/icons';
-import { FAMILY_COLOR, FONT, crisp, css } from './theme';
+import { FAMILY_COLOR, FONT, crisp, css, view } from './theme';
 
 /** Taps are ignored for this long after the cards appear, so a tap meant for the fight doesn't pick a card. */
 const ARM_MS = 450;
@@ -14,7 +14,7 @@ export class InsightPicker {
   readonly container: Phaser.GameObjects.Container;
 
   constructor(scene: Phaser.Scene, insights: InsightDef[], onPick: (id: string) => void) {
-    const { width, height } = scene.scale.gameSize;
+    const { width, height } = view(scene);
     const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.78).setOrigin(0).setInteractive();
     const title = scene.add
       .text(width / 2, height * 0.1, 'Choose an Insight', { fontFamily: FONT, fontStyle: 'bold', fontSize: '26px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 5 })

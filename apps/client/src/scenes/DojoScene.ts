@@ -63,7 +63,7 @@ import { makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { bowPrompt, playBow } from '../ui/bow';
 import { Celebrations } from '../ui/Celebrations';
-import { FONT, crisp } from '../ui/theme';
+import { FONT, crisp, view, DPR, hiDpi } from '../ui/theme';
 import { NAMED_PACK } from '../game/named';
 import { openMonsterJournal } from '../ui/MonsterJournal';
 import { isOpen, systemForToday } from '../game/unlocks';
@@ -166,6 +166,7 @@ export class DojoScene extends Phaser.Scene {
   }
 
   create(): void {
+    hiDpi(this.cameras.main);
     this.profile = loadSave();
     this.dojo = homeDojo(this.profile);
     this.training = currentTraining();
@@ -343,7 +344,7 @@ export class DojoScene extends Phaser.Scene {
 
   /** A gentle card with a title, a few short lines and one button. */
   private card(title: string, lines: string[], button: string, onClose: () => void): void {
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const w = Math.min(460, width - 40);
     const box = this.add.container(0, 0).setDepth(70);
     box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.6).setOrigin(0).setInteractive());
@@ -429,7 +430,7 @@ export class DojoScene extends Phaser.Scene {
   /** "Your dojo is resting for today" at the Tower door, when today's play time is up. */
   private showResting(): void {
     if (this.restingNote?.active) return;
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const pt = PLAY_TIME_TEXT;
     const t = this.add
       .text(width / 2, height * 0.3, `${pt.doorResting}\n${pt.doorRestingLine}`, { fontFamily: FONT, fontStyle: 'bold', fontSize: '18px', color: '#fff6e0', align: 'center', stroke: '#14121c', strokeThickness: 5 })
@@ -447,7 +448,7 @@ export class DojoScene extends Phaser.Scene {
     const p = this.world.players.p1.pos;
     this.ring(p, CALM, 2.2);
     this.sparkle(p, 14, CALM);
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const runs = this.dojo.calmMindRuns;
     const t = this.add
       .text(width / 2, height * 0.3, `Spotless!  Calm Mind\nFocus builds faster for your next ${runs} Tower runs`, {
@@ -567,12 +568,12 @@ export class DojoScene extends Phaser.Scene {
   }
 
   private onDecoDown(pointer: Phaser.Input.Pointer): void {
-    if (this.mode !== 'decorate' || this.drag || this.pan || this.onUi(pointer.x, pointer.y)) return;
-    const tile = this.toTile(pointer.x, pointer.y);
+    if (this.mode !== 'decorate' || this.drag || this.pan || this.onUi((pointer.x / DPR), (pointer.y / DPR))) return;
+    const tile = this.toTile((pointer.x / DPR), (pointer.y / DPR));
     const it = this.itemAt(tile);
     if (!it) {
       // Empty floor: drag to look around, or tap to move the selected decoration here.
-      this.pan = { pointerId: pointer.id, last: { x: pointer.x, y: pointer.y }, moved: false };
+      this.pan = { pointerId: pointer.id, last: { x: (pointer.x / DPR), y: (pointer.y / DPR) }, moved: false };
       return;
     }
     sfx.place(false);
@@ -585,11 +586,11 @@ export class DojoScene extends Phaser.Scene {
   private onDecoMove(pointer: Phaser.Input.Pointer): void {
     const pan = this.pan;
     if (pan && pointer.id === pan.pointerId && pointer.isDown) {
-      const dx = pointer.x - pan.last.x;
-      const dy = pointer.y - pan.last.y;
-      if (!pan.moved && Math.hypot(pointer.x - pointer.downX, pointer.y - pointer.downY) < 12) return;
+      const dx = (pointer.x / DPR) - pan.last.x;
+      const dy = (pointer.y / DPR) - pan.last.y;
+      if (!pan.moved && Math.hypot((pointer.x / DPR) - (pointer.downX / DPR), (pointer.y / DPR) - (pointer.downY / DPR)) < 12) return;
       pan.moved = true;
-      pan.last = { x: pointer.x, y: pointer.y };
+      pan.last = { x: (pointer.x / DPR), y: (pointer.y / DPR) };
       this.cam.x -= dx / (this.zoom * TILE);
       this.cam.y -= dy / (this.zoom * TILE);
       this.panned = true;
@@ -598,7 +599,7 @@ export class DojoScene extends Phaser.Scene {
     }
     const d = this.drag;
     if (!d || pointer.id !== d.pointerId || !pointer.isDown) return;
-    const tile = this.toTile(pointer.x, pointer.y);
+    const tile = this.toTile((pointer.x / DPR), (pointer.y / DPR));
     const col = Math.floor(tile.x - d.grab.x + 0.5);
     const row = Math.floor(tile.y - d.grab.y + 0.5);
     if (col === d.col && row === d.row) return;
@@ -612,7 +613,7 @@ export class DojoScene extends Phaser.Scene {
     const pan = this.pan;
     if (pan && pointer.id === pan.pointerId) {
       this.pan = null;
-      if (!pan.moved && this.selected && this.moveStyle === 'tap') this.moveSelectedTo(this.toTile(pointer.x, pointer.y));
+      if (!pan.moved && this.selected && this.moveStyle === 'tap') this.moveSelectedTo(this.toTile((pointer.x / DPR), (pointer.y / DPR)));
       return;
     }
     const d = this.drag;
@@ -841,7 +842,7 @@ export class DojoScene extends Phaser.Scene {
   private renderUi(): void {
     this.ui.removeAll(true);
     this.uiRects = [];
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const pad = 12;
 
     // A dark strip behind the title and buttons (the room scrolls underneath).
@@ -944,7 +945,7 @@ export class DojoScene extends Phaser.Scene {
     const back = this.mode;
     this.mode = 'menu';
     this.controls.reset();
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
     box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.85).setOrigin(0).setInteractive());
     const close = (reopen = false) => {
@@ -1027,7 +1028,7 @@ export class DojoScene extends Phaser.Scene {
     const back = this.mode;
     this.mode = 'menu';
     this.controls.reset();
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
     const dim = this.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive();
     box.add(dim);
@@ -1104,7 +1105,7 @@ export class DojoScene extends Phaser.Scene {
   private openGrownUpGate(back: Mode): void {
     const pt = PLAY_TIME_TEXT;
     const q = makeGateQuestion(Math.random);
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
     box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.96).setOrigin(0).setInteractive());
     const leave = () => {
@@ -1141,7 +1142,7 @@ export class DojoScene extends Phaser.Scene {
     const run = savedRun();
     if (!run) return;
     const t = RESUME_TEXT;
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const back = this.mode === 'arriving' ? 'play' : this.mode;
     this.mode = 'menu';
     const box = this.add.container(0, 0).setDepth(80);
@@ -1188,7 +1189,7 @@ export class DojoScene extends Phaser.Scene {
   /** Grown-up setting: the play-time limit (off / 15 / 30 / 45 / 60 minutes). */
   private openPlayLimit(back: Mode): void {
     const pt = PLAY_TIME_TEXT;
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
     box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.85).setOrigin(0).setInteractive());
     const close = () => {
@@ -1235,7 +1236,7 @@ export class DojoScene extends Phaser.Scene {
   private chooseMoveStyle(then?: () => void): void {
     const back = this.mode;
     this.mode = 'menu';
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
     box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.75).setOrigin(0).setInteractive());
     const title = this.add
@@ -1326,7 +1327,7 @@ export class DojoScene extends Phaser.Scene {
     const before = this.mode;
     this.mode = 'menu';
     this.controls.reset();
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(90);
     box.add(this.add.rectangle(0, 0, width, height, 0x0d0b14, 0.96).setOrigin(0).setInteractive());
     const add = <T extends Phaser.GameObjects.GameObject>(o: T) => (box.add(o), o);
@@ -1413,7 +1414,7 @@ export class DojoScene extends Phaser.Scene {
 
   /** Zooms in so the view is VIEW_ROWS tiles tall, like the Tower. */
   private layout(): void {
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     this.zoom = height / (VIEW_ROWS * TILE);
     this.worldLayer.setScale(this.zoom);
     this.choreButton.setPosition(width - CHORE_RADIUS - 24, height - CHORE_RADIUS - 24);
@@ -1426,7 +1427,7 @@ export class DojoScene extends Phaser.Scene {
    * decorating (unless the player dragged the view). The room's edges stay on screen.
    */
   private updateCamera(snap: boolean): void {
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const room = CONTENT.dojo.room;
     const t = TILE * this.zoom;
     let target: Vec2 = this.cam;
@@ -1487,7 +1488,7 @@ export class DojoScene extends Phaser.Scene {
   }
 
   private toast(message: string): void {
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const t = this.add
       .text(width / 2, height * 0.5, message, { fontFamily: FONT, fontStyle: 'bold', fontSize: '15px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 5, align: 'center', wordWrap: { width: width - 60 } })
       .setOrigin(0.5)
