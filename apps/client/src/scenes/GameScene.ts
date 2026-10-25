@@ -45,6 +45,7 @@ import {
   characterSetup,
   modsFrom,
   rarityRank,
+  type GearItem,
   strikeCost,
   runEffects,
   setPlayerMods,
@@ -81,6 +82,7 @@ const TUTORIAL = loadTutorialLines(tutorialData);
 import { type PackName, addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { ICON_PACK } from '../art/icons';
+import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { ENEMY_PACKS, auraId, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
@@ -333,6 +335,8 @@ export class GameScene extends Phaser.Scene {
     const tier = currentTraining().belt.tier;
     const auras = testAura() || new URLSearchParams(window.location.search).has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
     loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...new Set(Object.values(ENEMY_PACKS).map((p) => p.pack))]);
+
+    loadGearIcons(this);
   }
 
   /** K25: character art plays at the game tempo (read by LayeredSprite). */
@@ -1345,7 +1349,7 @@ export class GameScene extends Phaser.Scene {
     for (const ev of events) {
       switch (ev.kind) {
         case 'loot':
-          this.afterChestBurst(() => this.showLoot(ev.item.name, ev.item.rarity, ev.at));
+          this.afterChestBurst(() => this.showLoot(ev.item, ev.at));
           break;
         case 'decoration':
           this.afterChestBurst(() => this.showDecoration(ev.id, ev.at, true));
@@ -2016,7 +2020,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** A dropped item: a glowing orb that pops out, then a note at the top of the screen. */
-  private showLoot(name: string, rarity: Parameters<typeof rarityRank>[0], at: Vec2): void {
+  private showLoot(item: GearItem, at: Vec2): void {
+    const { name, rarity } = item;
     const color = RARITY_COLOR[rarity];
     const rank = rarityRank(rarity);
     sfx.loot(rank);
@@ -2033,15 +2038,21 @@ export class GameScene extends Phaser.Scene {
       .setOrigin(1, 0)
       .setResolution(crisp())
       .setAlpha(0);
-    this.cameras.main.ignore(t);
-    this.tweens.add({ targets: t, alpha: 1, x: { from: width + 40, to: width - 16 }, duration: 220, ease: 'Back.Out' });
+    // K32: the item's slot + rarity icon rides left of the note.
+    const icon = addGearIcon(this, item, 0, y + t.height / 2, 24);
+    const parts = icon ? [t, icon] : [t];
+    this.cameras.main.ignore(parts);
+    const slideX = (o: Phaser.GameObjects.Components.Transform & Phaser.GameObjects.GameObject, to: number) =>
+      this.tweens.add({ targets: o, alpha: 1, x: { from: to + 56, to }, duration: 220, ease: 'Back.Out' });
+    slideX(t, width - 16);
+    if (icon) slideX(icon.setAlpha(0), width - 16 - t.width - 16);
     this.tweens.add({
-      targets: t,
+      targets: parts,
       alpha: 0,
       delay: 2600,
       duration: 400,
       onComplete: () => {
-        t.destroy();
+        parts.forEach((o) => o.destroy());
         this.toastY = Math.max(0, this.toastY - 1);
       },
     });
