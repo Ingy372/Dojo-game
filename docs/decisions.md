@@ -762,3 +762,6 @@ Programmer calls:
 - Before an enemy attacks it shows a cue drawn in code: a "!" in a ring that fills from the top (red), turning gold and full during the counter window.
 - During the counter window the COUNTER button gets a gold ring and flashes. With Reduced motion there's no pulse or flash; the cue and a steady bright COUNTER stay. No art changes.
 - The Sensei tip box avoids the cue so it never hides it.
+
+## R-BAL-4 — bad-luck counter locked (2026-10-24)
+- A test (packages/sim/test/r-bal-4-bad-luck.test.ts) fails if `LOOT.guaranteedRareOnRun` is above 5, so a rare is always promised by run 5 at the latest.
