@@ -883,3 +883,15 @@ What is in the code:
 
 ## R-BAL-12d Gain words (2026-10-24)
 - Show training gains as plain "+N Stat" words on the moments a kid already sees (sign-off, sign-offs list, stripe). Each gain uses the belt it was earned at. No new screen, no counters, no "missing" or "next time" words. Wording is in content/ so Jay can change it without code. A test bans nag/guilt/streak words and caps lines at 8 words.
+
+## P-MENU-a shared button + motion tokens (2026-10-25)
+
+- Manager calls (2026-10-25):
+  - P-MENU-a has the go, built as the plan in drafts/planning/P-MENU-menu-polish.md §2.
+  - Item d: keep K32's 40 px worn-slot icon and 2-line names; the empty-bag icon is drawn in code (no art file).
+  - Item f: the first lit Seal plays the bow bell once; it stays silent when sound is off.
+- Tokens (spacing, type, corners, 44 pt tap size, motion) live in apps/client/src/ui/tokens.ts with no Phaser import, so Vitest can check them; theme.ts re-exports them.
+- The shared rounded button (ui/button.ts) acts on finger-up inside, cancels on slide-off, and has an invisible tap area of at least 44 x 44 around the drawing. A finger that slides onto a button and lifts does nothing.
+- Reduced motion: buttons don't scale; they brighten at once and fade back over 120 ms. The Blessing glow stays still.
+- The soft tap sound is made in code (Sfx.tap), so no sound file and no new dependency.
+- Practice room moved down 2 pt (8 pt gap) so its 44 pt tap area doesn't touch ENTER THE TOWER's.

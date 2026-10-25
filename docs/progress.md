@@ -616,3 +616,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Sign-off card, multi sign-off list and Character Stripe screen now show what real training gave, in green/gold: "You got stronger! +1 Power, +4 Health", "You got tougher! +7 Guard". Gains only, no nag, no streaks, nothing about what's missing.
 - Words in content/settings/training-gains.json (for Jay's review). Sim helpers signOffGain / stripeGain / gainText use each piece's own belt. New test r-bal-12d-gain-words.test.ts (4). Screens at 667 and 844: /workspace/qa/r-bal-12d/.
 - Delivery Note: depends on #208 (R-BAL-12); PR base is bot-code/R-BAL-12.
+
+## P-MENU-a shared button + motion tokens
+- Training Board buttons now use one shared rounded button: press down (0.96, brighter, soft tap), spring back, act on finger-up, cancel on slide-off, 44 x 44 tap area at least.
+- Blessing glow is a slow breath (2400 ms, alpha 0.25 to 0.15, no scale), still with Reduced motion on.
+- Vitest checks the 44 x 44 rule for every HomeScene button. Screenshots at 667x375 and 844x390, Reduced motion off and on: no tap-area, button or label overlaps.

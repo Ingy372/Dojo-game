@@ -1,4 +1,7 @@
 import Phaser from 'phaser';
+import { button } from '../ui/button';
+import { MOTION, S2 } from '../ui/tokens';
+import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import {
   BLESSING,
@@ -243,9 +246,10 @@ export class HomeScene extends Phaser.Scene {
 
     const cy = pad + 58;
     if (t.blessed) {
-      const glow = this.add.circle(pad + 24, cy, 32, 0x6fb7ff, 0.25);
+      const glow = this.add.circle(pad + 24, cy, 32, 0x6fb7ff, MOTION.breath.from);
       this.ui.add(glow);
-      this.tweens.add({ targets: glow, scale: 1.15, alpha: 0.1, duration: 1100, yoyo: true, repeat: -1 });
+      // P-MENU-a: a slow breath (alpha only, no scale); still with Reduced motion on.
+      if (!reducedMotion()) this.tweens.add({ targets: glow, alpha: MOTION.breath.to, duration: MOTION.breath.ms, ease: 'Sine.InOut', yoyo: true, repeat: -1 });
     }
     this.ui.add(makeStandingCharacter(this, pad + 24, cy, 22, t.belt, t.stripesThisBelt, loadLook()).container);
     this.text(pad + 58, cy - 22, t.displayName, 17, '#f2e9d8', true);
@@ -272,9 +276,9 @@ export class HomeScene extends Phaser.Scene {
     y += 20;
 
     this.button(pad, y, leftW, 46, 'ENTER THE TOWER', 0xd5713a, 19, () => this.enterTower());
-    y += 52;
+    y += 46 + S2; // P-MENU-a: an 8 pt gap, so the two 44 pt tap areas don't touch.
     this.button(pad, y, leftW, 30, 'Practice room', 0x3a3a4a, 14, () => this.goTo('Game', {}));
-    y += 38;
+    y += 36;
     this.renderPath(pad, y, leftW, height - y - pad);
 
     // ---- right: tabs
@@ -804,13 +808,7 @@ export class HomeScene extends Phaser.Scene {
   }
 
   private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void): void {
-    const bg = this.add.rectangle(x, y, w, h, color).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35);
-    this.ui.add(bg);
-    this.text(x + w / 2, y + h / 2, label, size, '#ffffff', true).setOrigin(0.5);
-    bg.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-      sfx.unlock();
-      onTap();
-    });
+    button(this, { x, y, w, h, label, color, size, onTap }, this.ui);
   }
 }
 
