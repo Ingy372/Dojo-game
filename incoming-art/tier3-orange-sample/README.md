@@ -14,3 +14,5 @@ Previews: `preview/lineup.png` (scale vs player, tier 1, #207 sample; tier 3 mar
 Sprites: `<enemy>/sprites/`. Blend files: `source/t3_<enemy>.blend`-style files beside the builder.
 
 Red check: dough 0 px; spark/ladle hits are only dark-brown shading (~#50 2e 1e), not red. No red outside telegraphs. Nothing above heads.
+
+Update (B-ART3 group A): the spark is re-rendered in #ff8a3d; see tier3-orange-enemies/README.md.
