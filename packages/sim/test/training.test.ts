@@ -100,9 +100,9 @@ describe('white belt with 3 sign-offs and a stripe', () => {
   it('unlocks the Stance, and a Technique Seal per self-defense sign-off', () => {
     const unlocked = t.abilities.filter((a) => a.unlocked);
     expect(unlocked.map((a) => a.requirement.name)).toEqual(['Basic Form 1', 'Self-Defense #1', 'Self-Defense #3']);
-    expect(unlocked.map((a) => a.stance?.name ?? a.perk?.name)).toEqual(['Rooted Stance', 'Off-Balance', 'Sweep']);
+    expect(unlocked.map((a) => a.stance?.name ?? a.perk?.name)).toEqual(['Cat Stance', 'Off-Balance', 'Sweep']);
     expect(unlocked[2].requirement.signedOffBy).toBe('Sensei Jay');
-    expect(unlockedStances(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance", 'Rooted Stance']);
+    expect(unlockedStances(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance", 'Cat Stance']);
   });
   it('turns the Respect stripe into the Shield of Respect', () => {
     expect(t.virtue?.def.name).toBe('Shield of Respect');
@@ -155,7 +155,7 @@ describe('yellow belt', () => {
     expect(t.virtue?.def.name).toBe('Shield of Respect');
   });
   it('switches between three Stances', () => {
-    expect(unlockedStances(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance", 'Rooted Stance', 'Flowing Stance']);
+    expect(unlockedStances(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance", 'Cat Stance', 'Front Stance']);
   });
 });
 
@@ -178,7 +178,7 @@ describe('reward moments', () => {
     if (first.kind === 'signOff') {
       expect(first.requirement.name).toBe('Basic Form 1');
       expect(first.requirement.signedOffBy).toBe('Sensei Jay');
-      expect(first.ability).toBe('Stance: Rooted Stance');
+      expect(first.ability).toBe('Stance: Cat Stance');
     }
   });
 

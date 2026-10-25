@@ -132,12 +132,16 @@ export interface Loadout {
 
 const LOADOUT_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-/** R-STANCE-a: the ids Stances had while they were called Forms. Only the save migration reads these. */
-const OLD_STANCE_IDS: Readonly<Record<string, string>> = { 'rooted-form': 'rooted-stance', 'flowing-form': 'flowing-stance' };
+/**
+ * Retired Stance ids. R-STANCE-a renamed Forms to Stances; R-STANCE-d1 replaced Rooted and
+ * Flowing with Cat, Front, Fighting and Horse. A pick of any of these goes back to Ready (null,
+ * the default), per the Manager's call. Only the save migration reads these.
+ */
+const OLD_STANCE_IDS: Readonly<Record<string, null>> = { 'rooted-form': null, 'flowing-form': null, 'rooted-stance': null, 'flowing-stance': null };
 
 /**
  * R-STANCE-a save migration: saves from before the rename keep the pick under `form`, with the
- * old ids. `stance` wins when both keys are there; `form` is dropped either way. Running it on
+ * old ids. Retired ids become null (Ready). `stance` wins when both keys are there; `form` is dropped either way. Running it on
  * its own output changes nothing.
  */
 export function migrateLoadout(data: unknown): unknown {
@@ -155,7 +159,11 @@ export function readLoadout(data: unknown): Loadout | null {
   // name every object has built in ("constructor", "toString", "__proto__"), is dropped.
   const id = (v: unknown) => (typeof v === 'string' && LOADOUT_ID.test(v) && !(v in Object.prototype) ? v : null);
   const out = { stance: id(l.stance), virtue: id(l.virtue) };
-  return out.stance || out.virtue ? out : null;
+  // R-STANCE-d1 (Manager): an old Form save keeps its migrated stance even with no virtue, so
+  // { form: 'rooted-form' } becomes { stance: null (Ready), virtue: null (default) }, not null.
+  const raw = data as Record<string, unknown>;
+  const hadStance = 'form' in raw || raw.stance === null || (typeof raw.stance === 'string' && Object.prototype.hasOwnProperty.call(OLD_STANCE_IDS, raw.stance));
+  return out.stance || out.virtue || hadStance ? out : null;
 }
 
 export interface StreetSmartsSave {

@@ -4,8 +4,8 @@ import { buildTraining, characterSetup, counterWindowTicks, createRunWorld, curr
 import { testContent } from './load-content';
 import abilities from '../../../content/abilities/abilities.json';
 
-/** The Rooted Stance's Perfect Counter bonus, read from content (its counterWindow). */
-const ROOTED_BONUS = abilities.stances.find((f) => f.id === 'rooted-stance')!.counterWindow;
+/** Cat Stance's (Rooted until R-STANCE-d1) Perfect Counter bonus, read from content (its counterWindow). */
+const ROOTED_BONUS = abilities.stances.find((f) => f.id === 'cat-stance')!.counterWindow;
 import { SKILLS, playRun } from './balance/bot';
 import white from '../../../fixtures/1-white-belt-new.json';
 import white3 from '../../../fixtures/2-white-belt-3-signoffs.json';
@@ -28,7 +28,7 @@ function training(data: unknown) {
  */
 function rootedCase(): unknown {
   const setup = characterSetup(newProfile(), training(yellow), content.abilities);
-  const rootedAt = setup.stances!.findIndex((f) => f.id === 'rooted-stance');
+  const rootedAt = setup.stances!.findIndex((f) => f.id === 'cat-stance');
   const out: Record<string, unknown> = { rootedAt };
   for (const d of ['guided', 'standard', 'challenge'] as Difficulty[]) {
     const run = startRun(content, { seed: 2001, dryRuns: 0, difficulty: d });
