@@ -1,0 +1,35 @@
+{
+ "about": "icons2 samples (Forms / Strikes / Virtues). Medallion icons; labels are drawn by the game.",
+ "sprites": {
+  "icon-rooted-form-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icon-rooted-form-64.png",
+   "group": "Forms",
+   "ring": "form",
+   "note": "Rooted Form = the wide fighting stance (A2 option A), side view facing right. Technique: feet about two shoulder-widths apart, both knees bent, front knee over the front foot, back straight, weight low and centred, guard up (lead fist forward at chin height, rear fist by the chin)."
+  },
+  "icon-follow-up-kick-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icon-follow-up-kick-64.png",
+   "group": "Strikes",
+   "ring": "strike",
+   "note": "Follow-up Kick = Strike adds a second kick. Side view facing right. Technique (front kick): support leg slightly bent with the foot flat, hips forward, kicking leg extended at chest height striking with the ball of the foot (toes pulled back), guard kept up. The first, lower kick is a soft ghost; a curved arrow shows the follow-up rising to the second."
+  },
+  "icon-shield-of-respect-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icon-shield-of-respect-64.png",
+   "group": "Virtues",
+   "ring": "virtue",
+   "note": "Shield of Respect = a gold shield with a student bowing (rei). Technique (standing bow): heels together, legs straight, bend about 30 degrees at the waist with a straight back, hands flat at the sides of the thighs, eyes down."
+  }
+ }
+}
