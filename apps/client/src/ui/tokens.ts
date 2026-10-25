@@ -155,6 +155,10 @@ export const BOARD = {
   slot: { w: 140, h: 120 },
   tile: 72,
   ribbonH: 40,
+  /** 2-row Trophy Case pages: a slimmer ribbon, smaller cubbies (never under cubbyMin), arrows at the sides. */
+  ribbonCompact: 28,
+  cubbyMin: 72,
+  dotsH: 14,
 } as const;
 
 /** P-MENU2-a: the two Abilities parts. */
@@ -171,4 +175,22 @@ export function abilitiesSwitch(w: number): { x0: number; segW: number; h: numbe
 export function cubbySize(shelfW: number): number {
   const { large, gap } = BOARD.cubby;
   return shelfW >= large * 4 + gap * 3 ? large : BOARD.cubby.small;
+}
+
+/** P-MENU2-b: kata step colours. onPaper is for the cream detail sheet (at least 4.5:1 on BOARD_PAPER). */
+export const BOARD_PAPER = 0xf2e3c4;
+export const KATA_INK = {
+  onDark: { num: '#ffffff', arrow: 0x9fd3ff },
+  onPaper: { num: '#3a2618', arrow: 0x1d4690 },
+} as const;
+export type KataInk = (typeof KATA_INK)[keyof typeof KATA_INK];
+
+/** WCAG contrast ratio between two 0xRRGGBB colours. */
+export function contrast(a: number, b: number): number {
+  const lum = (c: number) => {
+    const ch = [16, 8, 0].map((s) => ((c >> s) & 255) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+  };
+  const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
 }

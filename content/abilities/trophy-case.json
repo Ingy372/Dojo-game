@@ -1,0 +1,14 @@
+{
+  "parts": { "trophy": "🏆 Trophy Case", "style": "⚔ Fighting Style" },
+  "shelves": { "katas": "Katas", "kicks": "Kicks", "selfDefense": "Self-defense", "stripes": "Stripes" },
+  "notYet": "Learn this at the dojo",
+  "askSensei": "Ask Sensei about this one",
+  "signedAt": "Signed at {belt}",
+  "stripe": "{word} stripe",
+  "comingLater": "Its power arrives in a later update.",
+  "kataSteps": "Kata steps",
+  "close": "Close",
+  "empty": "Your first trophy comes from the dojo.",
+  "styleTitle": "Your fighting style",
+  "styleSoon": "Soon you can pick your stance and your stripe here."
+}

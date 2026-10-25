@@ -1006,3 +1006,22 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Placeholder art only, drawn in code (wood frame, switch colours in `theme.ts` WOOD). No image files until Jay OKs the Artist's samples.
 - New sizes (`BOARD`, `abilitiesSwitch`, `cubbySize`) live in `ui/tokens.ts` and are re-exported from `theme.ts`, so Vitest can test them without Phaser. No existing token changed.
 - Abilities opens on Trophy Case for now; "open on Trophy Case after a new unlock, else Fighting Style" waits for the unlock tracking in P-MENU2-c and a real Fighting Style (P-MENU2-e).
+
+## P-MENU2-b: Trophy Case (2026-10-25)
+- Built on P-MENU2-a (#264), using the Manager's go, mood A (warm dojo wood) and D2-D6 as the planner recommended.
+- The Trophy Case now replaces the old list. It has a belt ribbon with one knot per belt (earned belts in colour, the current belt glowing with its stripes, later belts drawn as paper outlines) and four shelves: Katas/Forms, Kicks/Strikes, Self-defense/Seals and Character stripes/Virtues. Earned items come first on each shelf.
+- Cubbies are 96 or 112 wide (`cubbySize` rule), with up to 4 per row, built on `button()`. Pages show as dots between 44-tall ◀ ▶ buttons, with no "n / m".
+- An earned cubby is a wood card with a red seal stamp, and its sheet says "Signed at <belt>". A not-yet cubby is a paper card with the icon at 30% alpha, a lantern and "Learn this at the dojo" in 12 pt, and its sheet says "Ask Sensei about this one". There are no locks and no counts.
+- The detail sheet shows the icon, the real name, one line on what it does, the status line and, for earned katas, the kata arrows. It slides up, or fades in when Reduced motion is on.
+- All wording lives in `content/abilities/trophy-case.json`, including the switch labels from A. The model is in `apps/client/src/ui/trophyCase.ts`, which has no Phaser, so Vitest can test it.
+- All art is placeholder, drawn in code (seal, lantern, ribbon). No new images were added; the existing icon set is reused.
+
+## P-MENU2-b follow-up: Manager calls (2026-10-25)
+- **2 shelf rows per page.** When 2 rows fit, a Trophy Case page shows 2 shelf rows: a slimmer 28-tall ribbon, 44-tall ◀ ▶ at the sides of the shelves, and dots in a slim strip below. On these pages cubbies may shrink below 96, but never under `BOARD.cubbyMin` (72). When 2 rows don't fit, the page falls back to 1 row with the 40-tall ribbon and the 44-tall ◀ dots ▶ pager. Result: 1 row at 667x375 (5 dots), 2 rows at 844x390 and 932x430 (3 dots).
+- **Darker kata arrows.** On the cream sheet the arrows now use the token `KATA_INK.onPaper` in tokens.ts. Arrows are #1d4690 (7.1:1 on paper #f2e3c4) and the step numbers are #3a2618. Before this, the arrows were #9fd3ff (1.25:1) and the numbers were white. The dark board keeps `KATA_INK.onDark`. A test checks that both colours reach at least 4.5:1.
+- Merged main (#267, which untracks apps/client/node_modules) into P-MENU2-a and P-MENU2-b with normal merges.
+
+## P-MENU2-b: Tester fixes and polish (2026-10-25)
+- **Packed shelves.** A short shelf now shares its row with the next one. Each shelf keeps its own label, and every row but the last is full. With 8 cubbies the case takes 1 page at 844x390 and 932x430 (2 rows × 4) and 3 pages at 667x375 (1 row × 3). The test asserts ≤ 2 pages at 844 and 932.
+- **Kata steps on the cream sheet.** Step numbers are `WOOD.ink` (#3a2618, 11.3:1). Arrows are `KATA_INK.onPaper.arrow` (#1d4690, 7.1:1).
+- **Polish.** The grid is centred in the frame. Earned stripe cubbies show the short Virtue name; the sheet keeps the full name. The shelf label "Character stripes" is now "Stripes" so it fits over a single cubby without "…".
