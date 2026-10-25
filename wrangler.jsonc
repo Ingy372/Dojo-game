@@ -6,5 +6,7 @@
   "assets": {
     "directory": "./apps/client/dist"
   },
-  "preview_urls": true
+  "preview_urls": true,
+  // Needed by the dashboard deploy command `wrangler preview` (wrangler 4.152+).
+  "previews": {}
 }
