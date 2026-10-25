@@ -664,3 +664,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## practiced-cards
 - The full-screen sign-off cards (and the welcome cascade on the first trip home) say "practiced" for techniques counted from an earlier rank, and keep "signed off" with who signed it for real sign-offs.
+
+- P-MENU-d: Gear tab rebuilt. 56 pt button() cards with ▲▼= marks, a fixed grid, a slide-up detail sheet (Wear / Let go with a confirm), page dots, a Wear pop, an empty-bag icon and a mixed sign-off ✓. Seeded 33-item screenshots at 667/844/932 with Reduced motion on and off.

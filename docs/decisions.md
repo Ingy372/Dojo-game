@@ -969,3 +969,9 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 ## practiced-cards (2026-10-25)
 - Manager call (follow-up to #250): one counted technique shows "PRACTICED!" / "You practiced X!". The many-techniques title says "N techniques practiced!", or "R signed off, C practiced!" for a mix. Real sign-offs are unchanged. Built on bot-code/fix-celebrate-rm (reuses its rewards.ts helpers), so #250 merges first.
 - Manager call (Oct 25): "Gate lock lit." shows on a one-technique card only when that sign-off lit a lock on the Gate, meaning a real sign-off of one of the current rank's techniques (`litGateLock`). It is hidden for counted (legacy) and catch-up techniques.
+
+## P-MENU-d (2026-10-25)
+- Manager extra: on a mixed sign-off card, rows that were really signed off show a green bold ✓. Counted practiced rows show "○ … (practiced)". (`signOffsRow` / `signOffsMixed`, tested in mixed-signoffs.test.ts.)
+- DECIDE (K32): kept the 40 px worn-slot icon. Worn names wrap to two lines and end in "…" if they still don't fit.
+- The Gear grid's rows depend only on panel space (`gearGrid`). The detail sheet lays over the panel and moves to the top when the picked card is in the bottom rows, so a pick never moves or hides a card.
+- Merged origin/main (#249, #254) normally; docs conflicts kept both sides with main first. #252 (practiced-cards) is still unmerged and is carried in this branch.
