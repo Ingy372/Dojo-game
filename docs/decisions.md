@@ -1114,3 +1114,10 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 4. **Hearth Cook 549/17 (Researcher #280):** White-belt base maxHealth 543 → 549 and power 16 → 17; nothing else changed. R-BAL-12 stays green (belt 3–10: Challenge hits to beat 76–80, knock-out ≥ 5).
 5. **Timer label (#282 review, Oct 25):** when time runs out the timer shows only the short `outOfTimeShort` word ("Time's up!" in Supper Rush; "Out of time" elsewhere), on one line at the timer's normal size. The full sentence stays on the room-clear line, so the timer no longer wraps over the door labels at 667.
 - **B-T3-TUNE door labels vs timer (#282 Tester, Oct 25):** door labels now stop at screen y 72 (`DOOR_LABEL_TOP_PX`) instead of 56. This keeps them at least 8 px under the Challenge timer (top 36, bottom ~64) for any camera position and width. The timer itself doesn't move.
+
+## P-MENU2-i: menu2 art in Trophies, Gear and Last run (2026-10-25)
+- Jay OK'd the #265 art; the Manager gave the go. Only Trophies, Gear and Last run use it.
+- My Style's art (slot-card, tray-tile, tray-equipped-badge, switch, glyph) is held, not imported. A test checks no quoted My Style frame names are used.
+- The @2x files are packed untrimmed ("ui" source type) and drawn at 0.5. Every art draw falls back to the code-drawn version when a frame, page or pack is missing, so no code paths were deleted.
+- Legendary uses the Epic art. Stat-tile words switch to dark ink on the paper tile; the "Everyday" word on the common bag tile uses #6b5a48 so it can be read on paper.
+- The lantern shows on the next cubby only (the code lantern stays in the fallback).

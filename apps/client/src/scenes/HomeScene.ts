@@ -47,6 +47,8 @@ import { isPlayTimeUp } from '../game/playTime';
 import { addIcon, ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { loadArt } from '../art/art';
+import { hasMenu2, menu2Frames, menu2Image, menu2Slice, skinButton } from '../art/menu2';
+import { MENU2_PACK, artRarity } from '../art/menu2Frames';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
@@ -71,6 +73,12 @@ type Tab = 'run' | 'gear' | 'abilities' | 'gate';
  * their real belt, level and Blessing, the Path card, starting a run, the last run's
  * summary, gear, abilities, and the Gate.
  */
+/** P-MENU2-i: the A-MENU2 stat icons (Rooms has none, so it shows its number only). */
+const STAT_ICON: Record<string, string | undefined> = { perfects: 'stat-perfect', combo: 'stat-combo', time: 'stat-clock', xp: 'stat-xp' };
+
+/** A-MENU2: only the Black belt gets the full knot sheen. */
+const isBlack = (c: number): boolean => ((c >> 16) & 255) < 48 && ((c >> 8) & 255) < 48 && (c & 255) < 48;
+
 export class HomeScene extends Phaser.Scene {
   private profile!: Profile;
   private training!: TrainingState;
@@ -125,7 +133,7 @@ export class HomeScene extends Phaser.Scene {
   }
 
   preload(): void {
-    loadArt(this, [...playerPacks(), ICON_PACK]);
+    loadArt(this, [...playerPacks(), ICON_PACK, MENU2_PACK]);
     loadGearIcons(this);
   }
 
@@ -520,14 +528,26 @@ export class HomeScene extends Phaser.Scene {
     const countDelay = m.chips.length * LASTRUN_MOTION.chipStepMs;
     L.tiles.forEach((b, i) => {
       const st = m.stats[i];
-      const tg = this.add.graphics();
-      tg.fillStyle(WOOD.frame).fillRoundedRect(X(b.x), Y(b.y), b.w, b.h, RADIUS.button);
-      tg.lineStyle(2, WOOD.frameDark).strokeRoundedRect(X(b.x), Y(b.y), b.w, b.h, RADIUS.button);
-      this.ui.add(tg);
+      // P-MENU2-i: the A-MENU2 stat tile (9-slice 16) with its icon at x 12; code tile if missing.
+      const tileArt = menu2Slice(this, 'stat-tile', X(b.x), Y(b.y), b.w, b.h);
+      // On the paper tile the words are dark ink (white on wood stays for the code tile).
+      const ink = tileArt ? { num: st.key === 'xp' ? '#2f6f9a' : WOOD.ink, label: '#5a3e28' } : { num: st.key === 'xp' ? '#9ad1ff' : '#fff6e6', label: '#f2e3c4' };
+      if (tileArt) {
+        this.ui.add(tileArt);
+        const iconArt = STAT_ICON[st.key];
+        const is = Math.min(20, b.h / 3);
+        const ic = iconArt && b.w >= 88 ? menu2Image(this, iconArt, X(b.x + S1 + 4 + is / 2), Y(b.y + S1 + TYPE.heading / 2 + 2), is, is) : null;
+        if (ic) this.ui.add(ic);
+      } else {
+        const tg = this.add.graphics();
+        tg.fillStyle(WOOD.frame).fillRoundedRect(X(b.x), Y(b.y), b.w, b.h, RADIUS.button);
+        tg.lineStyle(2, WOOD.frameDark).strokeRoundedRect(X(b.x), Y(b.y), b.w, b.h, RADIUS.button);
+        this.ui.add(tg);
+      }
       const big = b.h >= 56 ? TYPE.heading : TYPE.title;
-      const num = this.text(X(b.x + b.w / 2), Y(b.y + S1), st.format(count ? 0 : st.value), big, st.key === 'xp' ? '#9ad1ff' : '#fff6e6', true).setOrigin(0.5, 0);
+      const num = this.text(X(b.x + b.w / 2), Y(b.y + S1), st.format(count ? 0 : st.value), big, ink.num, true).setOrigin(0.5, 0);
       num.setData('stat', st.key);
-      this.oneLine(this.text(X(b.x + b.w / 2), Y(b.y + b.h - S1 - TYPE.label - 2), st.label, TYPE.label, '#f2e3c4', true).setOrigin(0.5, 0), b.w - 2 * S2, TYPE.label);
+      this.oneLine(this.text(X(b.x + b.w / 2), Y(b.y + b.h - S1 - TYPE.label - 2), st.label, TYPE.label, ink.label, true).setOrigin(0.5, 0), b.w - 2 * S2, TYPE.label);
       if (count) {
         const v = { t: 0 };
         this.tweens.add({ targets: v, t: 1, delay: countDelay, duration: LASTRUN_MOTION.countMs, onUpdate: () => num.setText(st.format(countAt(st.value, v.t))), onComplete: () => num.setText(st.format(st.value)) });
@@ -543,7 +563,23 @@ export class HomeScene extends Phaser.Scene {
     const from = m.levelsGained > 0 ? 0 : Math.max(0, share - (last.xp?.gained ?? 0) / next);
     const bar = this.add.graphics();
     this.ui.add(bar);
+    // P-MENU2-i: the A-MENU2 bar (3-slice frame, fill tinted #f2c14e, gloss on top); code bar if missing.
+    const frameArt = menu2Slice(this, 'xp-bar-frame', X(0), Y(L.bar.y) - 2, cw, L.bar.h + 4);
+    const inset = ((L.bar.h + 4) * 4) / 20;
+    const fillH = ((L.bar.h + 4) * 11) / 20;
+    const fillArt = frameArt ? menu2Slice(this, 'xp-bar-fill', X(inset), Y(L.bar.y) - 2 + inset, cw - 2 * inset, fillH) : null;
+    const glossArt = fillArt ? menu2Slice(this, 'xp-bar-gloss', X(inset), Y(L.bar.y) - 2 + inset, cw - 2 * inset, fillH) : null;
+    if (frameArt && fillArt) {
+      fillArt.setTint(atCap ? 0xffd166 : 0xf2c14e);
+      this.ui.add([frameArt, fillArt, ...(glossArt ? [glossArt] : [])]);
+    } else frameArt?.destroy();
     const drawBar = (s: number) => {
+      if (frameArt?.active && fillArt) {
+        const fw = Math.max(12, (cw - 2 * inset) * s);
+        fillArt.setVisible(s > 0).setSize(fw * 2, fillArt.height);
+        glossArt?.setVisible(s > 0).setSize(fw * 2, glossArt.height);
+        return;
+      }
       bar.clear();
       bar.fillStyle(WOOD.frameDark, 0.5).fillRoundedRect(X(0), Y(L.bar.y), cw, L.bar.h, L.bar.h / 2);
       if (s > 0) bar.fillStyle(atCap ? 0xffd166 : 0x4a90c2).fillRoundedRect(X(0), Y(L.bar.y), Math.max(L.bar.h, cw * s), L.bar.h, L.bar.h / 2);
@@ -571,6 +607,10 @@ export class HomeScene extends Phaser.Scene {
       const stroke = f.kind === 'item' ? RARITY_COLOR[f.item.rarity] : 0xffd166;
       const b = button(this, { x: fx, y: fy, w: s, h: s, label: '', color: WOOD.frameDark, size: TYPE.label, stroke, onTap: () => this.openFound(f) }, this.ui);
       b.visual.setData('found', f.kind === 'item' ? f.item.uid : f.id);
+      // P-MENU2-i: the rarity found tile (52 tile in a 60 file); dojo pieces use the Rare (gold) frame.
+      const foundArt = `found-tile-${f.kind === 'item' ? artRarity(f.item.rarity) : 'rare'}`;
+      const fSkin = menu2Image(this, foundArt, 0, 0, (s * 60) / 52, (s * 60) / 52);
+      if (fSkin) skinButton(this, b, fSkin, foundArt);
       if (f.kind === 'item') {
         const icon = addGearIcon(this, f.item, 0, 0, s - 12);
         if (icon) b.visual.add(icon);
@@ -897,6 +937,7 @@ export class HomeScene extends Phaser.Scene {
     const fresh = newTrophies(this.profile, cubbies.filter((c) => c.earned).map((c) => c.id), shown);
     if (fresh.length || migrating) writeSave(this.profile);
     if (fresh.length) sfx.seal();
+    const nextId = cubbies.find((c) => !c.earned)?.id;
     let ry = top;
     if (cubbies.length === 0) this.text(x + w / 2, ry + S3, TROPHY_WORDS.empty, TYPE.body, '#f2e3c4', false, FONT, w).setOrigin(0.5, 0).setAlign('center');
     for (const row of pages[this.page]) {
@@ -907,7 +948,11 @@ export class HomeScene extends Phaser.Scene {
         this.oneLine(this.text(sx + slot * step, ry, seg.title, TYPE.label, '#e8c48a', true), seg.cubbies.length * step - BOARD.cubby.gap, 10);
         slot += seg.cubbies.length;
       }
-      row.segments.flatMap((seg) => seg.cubbies).forEach((c, i) => this.cubby(sx + i * step, cy, L.cubby, c, fresh.includes(c.id)));
+      const rowCubbies = row.segments.flatMap((seg) => seg.cubbies);
+      // P-MENU2-i: the shelf plank the cubbies stand on (their bottoms sit 4 px down into it). Art only.
+      const plank = menu2Slice(this, 'shelf-plank', sx - S1, cy + L.cubby - 4, rowCubbies.length * step - BOARD.cubby.gap + 2 * S1, 20);
+      if (plank) this.ui.add(plank);
+      rowCubbies.forEach((c, i) => this.cubby(sx + i * step, cy, L.cubby, c, fresh.includes(c.id), c.id === nextId));
       ry += L.rowH;
     }
     if (pages.length <= 1) return;
@@ -949,6 +994,34 @@ export class HomeScene extends Phaser.Scene {
     const kw = Math.min(40, slot - 4);
     const kh = 16;
     const ky = y + (rh - kh) / 2;
+    this.ui.add(g);
+    // P-MENU2-i: the belt cord and layered knots (README order); code-drawn knots if the art is missing.
+    const ks = Math.min(40, slot, rh + 8);
+    if (hasMenu2(this, 'belt-knot-band') && hasMenu2(this, 'belt-knot-rim')) {
+      const cord = menu2Slice(this, 'belt-cord', x + S1, y + rh / 2 - 10, w - S2, 20);
+      if (cord) this.ui.add(cord);
+      t.belts.forEach((b, i) => {
+        const kx = x + S1 + i * slot + slot / 2;
+        const ky2 = y + rh / 2;
+        const future = i > cur;
+        const knot = this.add.container(kx, ky2).setAlpha(future ? 0.4 : 1);
+        if (i === cur) knot.add(this.add.circle(0, 0, ks / 2, 0xffd166, 0.3));
+        const layer = (name: string, tint?: number, alpha = 1) => {
+          const im = menu2Image(this, name, 0, 0, ks, ks);
+          if (!im) return;
+          if (tint !== undefined) im.setTint(tint);
+          knot.add(im.setAlpha(alpha));
+        };
+        layer('belt-knot-shadow');
+        layer('belt-knot-band', future ? WOOD.paper : hex(b.color));
+        if (!future && b.color2) layer('belt-knot-center', hex(b.color2));
+        layer('belt-knot-sheen', undefined, !future && !b.color2 && isBlack(hex(b.color)) ? 1 : 0.25);
+        layer('belt-knot-rim');
+        if (i === cur) for (let s = 0; s < t.stripesThisBelt; s++) knot.add(this.add.rectangle(ks / 2 - 6 - s * 5, 0, 3, kh - 4, 0x222222));
+        this.ui.add(knot);
+      });
+      return;
+    }
     t.belts.forEach((b, i) => {
       const kx = x + S1 + i * slot + (slot - kw) / 2;
       if (i > cur) {
@@ -961,7 +1034,6 @@ export class HomeScene extends Phaser.Scene {
       g.lineStyle(1, 0x000000, 0.35).strokeRoundedRect(kx, ky, kw, kh, 4);
       if (i === cur) for (let s = 0; s < t.stripesThisBelt; s++) g.fillStyle(0x222222).fillRect(kx + kw - 6 - s * 5, ky + 2, 3, kh - 4);
     });
-    this.ui.add(g);
   }
 
   /** B-POLISH-2: a cubby's label, wrapped to the padded inner width (after its 2 px stroke). */
@@ -976,10 +1048,20 @@ export class HomeScene extends Phaser.Scene {
   }
 
   /** P-MENU2-b: one cubby, drawn in code on a button() so it presses like every other button. */
-  private cubby(x: number, y: number, size: number, c: Cubby, unlock = false): void {
-    const btn = button(this, { x, y, w: size, h: size, label: '', color: c.earned ? 0xa8703f : WOOD.paper, size: TYPE.label, selected: false, stroke: c.earned ? 0xffd166 : WOOD.grain, onTap: () => this.openCubby(c) }, this.ui);
+  private cubby(x: number, y: number, size: number, c: Cubby, unlock = false, next = false): void {
+    let shine: (() => void) | null = null;
+    const btn = button(this, { x, y, w: size, h: size, label: '', color: c.earned ? 0xa8703f : WOOD.paper, size: TYPE.label, selected: false, stroke: c.earned ? 0xffd166 : WOOD.grain, onTap: () => { shine?.(); this.openCubby(c); } }, this.ui);
     const v = btn.visual;
     const half = size / 2;
+    // P-MENU2-i: the A-MENU2 cubby (9-slice; the -96 cut for small cubbies), its pressed twin on press.
+    const cut = size < 104 ? '-96' : '';
+    const base = c.earned ? 'cubby-earned' : 'cubby-notyet';
+    const skin = menu2Slice(this, base + cut, -half, -half, size, size);
+    if (skin) skinButton(this, btn, skin, base + cut, `${base}-pressed${cut}`);
+    if (skin && next) {
+      const glow = menu2Image(this, 'cubby-next-glow' + cut, 0, 0, size, size);
+      if (glow) v.addAt(glow, 2);
+    }
     // B-POLISH-2: every icon is full size; 3-line labels fit by tight top/gap/bottom space.
     const iconS = cubbyIconSize(size);
     const txt = this.cubbyLabel(c, size);
@@ -989,7 +1071,17 @@ export class HomeScene extends Phaser.Scene {
     if (icon) v.add(icon.setAlpha(c.earned ? 1 : 0.3));
     else v.add(this.add.circle(0, iy, iconS / 2, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.3));
     v.add(txt);
-    if (c.earned) {
+    const seal = c.earned && skin ? menu2Image(this, 'cubby-seal', half - 12, -half + 12, 24, 24) : null;
+    const lantern = !c.earned && skin ? (next ? menu2Image(this, 'cubby-lantern-0', half - 14, -half + 16, 18, 24) : undefined) : null;
+    if (seal) v.add(seal);
+    else if (lantern !== null) {
+      // A-MENU2: the lantern hangs on the next cubby only, flickering (still with Reduced motion).
+      if (lantern) {
+        v.add(lantern);
+        const fr = menu2Frames(this, ['cubby-lantern-0', 'cubby-lantern-1']);
+        if (fr && fr.length === 2 && !reducedMotion()) this.time.addEvent({ delay: 333, loop: true, callback: () => lantern.active && lantern.setTexture(...fr[lantern.frame.name === fr[0][1] ? 1 : 0]).setDisplaySize(18, 24) });
+      }
+    } else if (c.earned) {
       // Sensei's seal: a small red stamp in the corner (placeholder, no text).
       v.add(this.add.circle(half - 12, -half + 12, 8, 0xc0392b).setStrokeStyle(2, 0xffe2b0, 0.9));
     } else {
@@ -1000,14 +1092,35 @@ export class HomeScene extends Phaser.Scene {
       lg.lineStyle(1, WOOD.ink === '#3a2618' ? 0x3a2618 : 0x000000, 0.8).lineBetween(half - 13, -half + 4, half - 13, -half + 8);
       v.add(lg);
     }
-    if (unlock) this.unlockMoment(v, size);
+    if (c.earned && skin) shine = () => this.playOver(v, 'cubby-earned-shine', 6, size);
+    if (unlock) this.unlockMoment(v, size, !!skin);
+  }
+
+  /** P-MENU2-i: plays an A-MENU2 overlay once (16 fps) over a cubby, centred. Skipped under Reduced motion. */
+  private playOver(v: Phaser.GameObjects.Container, stem: string, n: number, size: number, canvas = 112): void {
+    if (reducedMotion() || !v.active) return;
+    const fr = menu2Frames(this, Array.from({ length: n }, (_, i) => `${stem}-${i}`));
+    if (!fr) return;
+    const d = (size * canvas) / 112;
+    const im = this.add.image(0, 0, ...fr[0]).setDisplaySize(d, d);
+    v.add(im);
+    let i = 0;
+    this.time.addEvent({
+      delay: 1000 / 16,
+      repeat: fr.length - 1,
+      callback: () => {
+        if (!im.active) return;
+        if (++i >= fr.length) im.destroy();
+        else im.setTexture(...fr[i]).setDisplaySize(d, d);
+      },
+    });
   }
 
   /**
    * P-MENU2-c: a just-earned cubby's unlock moment: a paper cover sweeps off the wood left to
    * right, then a small pop. Reduced motion: a plain fade in. (The bell rings once per view.)
    */
-  private unlockMoment(v: Phaser.GameObjects.Container, size: number): void {
+  private unlockMoment(v: Phaser.GameObjects.Container, size: number, art = false): void {
     if (reducedMotion()) {
       v.setAlpha(0);
       this.tweens.add({ targets: v, alpha: 1, duration: MOTION.reducedFade.ms * 3 });
@@ -1023,6 +1136,7 @@ export class HomeScene extends Phaser.Scene {
       ease: MOTION.unlockSweep.ease,
       onComplete: () => {
         cover.destroy();
+        if (art) this.playOver(v, 'unlock-sweep', 8, size, 128);
         const [, peak, rest] = unlockPopScales();
         this.tweens.add({
           targets: v,
@@ -1233,6 +1347,10 @@ export class HomeScene extends Phaser.Scene {
     this.gearTiles = {};
     // The paper doll: the student, with a ring per slot.
     const t = this.training;
+    // P-MENU2-i: the doll's paper backing (A-MENU2), behind the student. Art only.
+    const backW = Math.min(L.figureR * 4, 2 * (L.figureX - GEAR_BOARD.ring - S1));
+    const backing = menu2Image(this, 'doll-backing', x + L.figureX, y + L.figureY + L.figureR * 0.75, backW, (backW * 128) / 96);
+    if (backing) this.ui.add(backing);
     const glow = this.add.ellipse(x + L.figureX, y + L.figureY + L.figureR * 0.9, L.figureR * 2.6, L.figureR * 3.4, 0xffd166, 0);
     this.ui.add(glow);
     this.gearDollGlow = glow;
@@ -1244,7 +1362,12 @@ export class HomeScene extends Phaser.Scene {
       const cy = y + L.ringYs[i];
       const b = button(this, { x: cx - R / 2, y: cy - R / 2, w: R, h: R, label: '', color: on ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: on, stroke: WOOD.grain, onTap: () => this.filterGear(slot) }, this.ui);
       const v = b.visual.setData('gearRing', slot);
-      v.add(this.add.circle(0, 0, R / 2 - 5, BOARD_PAPER, item ? 0.95 : 0.4).setStrokeStyle(3, item ? RARITY_COLOR[item.rarity] : WOOD.grain, 1));
+      // P-MENU2-i: the rarity ring (glow while it filters), 56 art for a 48 ring; code ring if missing.
+      const ringArt = `gear-ring-${artRarity(item?.rarity ?? 'common')}`;
+      const ring = menu2Image(this, ringArt + (on ? '-glow' : ''), 0, 0, (R * 56) / 48, (R * 56) / 48);
+      if (ring) skinButton(this, b, ring, ringArt + (on ? '-glow' : ''), `${ringArt}-pressed`);
+      else v.add(this.add.circle(0, 0, R / 2 - 5, BOARD_PAPER, item ? 0.95 : 0.4).setStrokeStyle(3, item ? RARITY_COLOR[item.rarity] : WOOD.grain, 1));
+      if (ring && !item) ring.setAlpha(0.6);
       const icon = item ? addGearIcon(this, item, 0, 0, R - 18) : null;
       if (icon) v.add(icon);
       else v.add(slotGlyph(this, slot, 0, 0, R - 22, item ? 0x3a2618 : 0x6b5440));
@@ -1304,6 +1427,10 @@ export class HomeScene extends Phaser.Scene {
       if (sel) pickedBottom = ty + box.h;
       const b = button(this, { x: tx, y: ty, w: box.w, h: box.h, label: '', color: sel ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: sel, stroke: RARITY_COLOR[it.rarity], onTap: () => this.pick(it.uid) }, grid);
       const v = b.visual.setData('gearTile', it.uid);
+      // P-MENU2-i: the rarity frame (72 x 88 tile in an 84 x 100 file); Selected art while picked.
+      const tileArt = sel ? 'bag-tile-selected' : `bag-tile-${artRarity(it.rarity)}`;
+      const tileSkin = menu2Image(this, tileArt, 0, 0, (box.w * 84) / 72, (box.h * 100) / 88);
+      if (tileSkin) skinButton(this, b, tileSkin, tileArt, 'bag-tile-pressed');
       // Icon above, the small rarity word under it (12 px, ≥8 px side padding, B-POLISH-2 wrap rules).
       const lh = GEAR_BOARD.labelH;
       const iconS = Math.min(GEAR_BOARD.iconMax, box.h - lh - 3 * S1 - 4);
@@ -1313,7 +1440,7 @@ export class HomeScene extends Phaser.Scene {
       else v.add(slotGlyph(this, it.slot, 0, iy, iconS - 8, RARITY_COLOR[it.rarity]));
       const tw = cubbyTextW(box.w);
       const word = rarityName(it.rarity);
-      const lab = this.add.text(0, box.h / 2 - S1 - 1, word, { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold', color: css(RARITY_COLOR[it.rarity]), align: 'center', wordWrap: { width: tw } }).setOrigin(0.5, 1).setResolution(crisp()).setData('rarityWord', true);
+      const lab = this.add.text(0, box.h / 2 - S1 - 1, word, { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold', color: tileSkin && it.rarity === 'common' ? '#6b5a48' : css(RARITY_COLOR[it.rarity]), align: 'center', wordWrap: { width: tw } }).setOrigin(0.5, 1).setResolution(crisp()).setData('rarityWord', true);
       v.add(wrapLikeCubby(lab, word, tw).setMaxLines(1));
       if (cmp.overall === 'worn') {
         v.add(this.add.circle(-box.w / 2 + 9, -box.h / 2 + 9, 7, 0xffd166));
