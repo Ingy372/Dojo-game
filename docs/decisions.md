@@ -1136,5 +1136,7 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 ### B-MASHER-2 — Mash guard fades after 3 Perfect Counters (2026-10-25)
 - **Manager go (Oct 25):** E3 from drafts/planning/B-MASHER-2-mash-guard-tune.md (#296).
 - Mash guard works until the room has `COMBAT.counter.mashGuardPerfects` (3) Perfect Counters, then is off for the rest of that room; every new room starts it again. The sim sends `mashGuardOff` at the 3rd.
-- The first time in a run, Sensei says the line from content/settings/mash-guard.json (wording from #296: "Sensei's help steps back once you show you can Counter.") with a gold ring that grows and fades around the player. With `dojo.reducedMotion` 'on': the same line, no fade-in, and a steady gold halo for 1.2 s. Text 20–26 px, padding 16/8 px.
+- The first time in a run, Sensei says the line from content/settings/mash-guard.json (final wording from the Content Designer: "Three perfect counters! Your timing can fly on its own now.") with a gold ring that grows and fades around the player. With `dojo.reducedMotion` 'on': the same line, no fade-in, and a steady gold halo for 1.2 s. Text 20–26 px, padding 16/8 px.
 - The golden run was re-captured again (outcomes only).
+- **Manager call on B-MASHER-2 (Oct 25):** the 16–18% drop in smart-bot damage taken (vs 911ce19: −17.8% typical, −15.7% trainsMore, −17.1% playsOnly) is accepted for the beta. Smart bots still win 200/200 and the bands pass 293/293.
+- **Mash guard wording (Content Designer, Oct 25):** "Three perfect counters! Your timing can fly on its own now." (the Sensei box adds "Sensei:").

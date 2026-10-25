@@ -786,4 +786,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Mash guard turns off after a room's 3rd Perfect Counter and resets each room; "Sensei steps back" shows once per run.
 - Kid gate: wins 113/200 (56.5%), room-1 KOs 0/200. Smart damage per room vs 911ce19: 28.60 → 23.51 (−17.8%), 26.23 → 22.10 (−15.7%), 28.65 → 23.74 (−17.1%).
 **Next**
-- Manager: smart damage misses the ≤15% target by 0.7–2.8 points (not tuned).
+- Manager: smart damage −16 to −18% accepted for the beta (200/200 smart wins, bands 293/293). Final mash-guard wording from the Content Designer landed; shots in b-masher-shots/v3.
