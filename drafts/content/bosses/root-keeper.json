@@ -1,0 +1,111 @@
+{
+  "id": "root-keeper",
+  "name": "The Root Keeper",
+  "notes": "DRAFT for C13-6 (bestiary-plan.md; lore from drafts/content/lore/guardians-and-relics.json, unchanged). Brown Guardian on floor 5. Same shape as content/enemies/floor-keeper.json, plus phases (66% and 33%, Manager's call). Stats are TODO for the Researcher. Faith tie-ins stay out until Jay decides; see faithOverlayKey.",
+  "color": "#7a5a3a",
+  "boss": true,
+  "guardian": true,
+  "tier": "brown",
+  "band": "F5",
+  "form": "Nihanchi",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attacks": [
+    {
+      "name": "branch tap",
+      "strength": "TODO",
+      "startRange": "TODO",
+      "reach": "TODO",
+      "areaRadius": "TODO",
+      "telegraphTicks": 20,
+      "recoverTicks": "TODO"
+    },
+    {
+      "name": "page storm",
+      "strength": "TODO",
+      "startRange": "TODO",
+      "reach": "TODO",
+      "areaRadius": "TODO",
+      "telegraphTicks": 20,
+      "recoverTicks": "TODO",
+      "note": "Pages float down into small red circles, one after another."
+    },
+    {
+      "name": "root ring",
+      "strength": "TODO",
+      "startRange": "TODO",
+      "reach": "TODO",
+      "areaRadius": "TODO",
+      "telegraphTicks": 24,
+      "recoverTicks": "TODO",
+      "dashOnly": true,
+      "shape": "ring-with-gap",
+      "shapeCue": "ring-with-gap",
+      "tell": "purple-and-white stripes + '!!' + whoosh",
+      "counterable": false,
+      "answer": "dash",
+      "overlapOnGuided": false,
+      "noOverlapWithRedCircle": false,
+      "overlapFromFloor": 3,
+      "minOffsetFromRedCircleTicks": 10
+    }
+  ],
+  "signature": "Root Ring",
+  "phases": [
+    {
+      "id": "tap",
+      "atHealthFraction": 1.0,
+      "attacks": [
+        "branch tap"
+      ],
+      "tell": "A branch creaks back; red circle.",
+      "counterplay": "COUNTER the tap.",
+      "senseiLine": "Old branches creak first. Listen."
+    },
+    {
+      "id": "pages",
+      "atHealthFraction": 0.66,
+      "attacks": [
+        "branch tap",
+        "page storm"
+      ],
+      "tell": "Pages float up and glow.",
+      "counterplay": "Step out of each small circle.",
+      "senseiLine": "Read the room. One page at a time."
+    },
+    {
+      "id": "ring",
+      "atHealthFraction": 0.33,
+      "attacks": [
+        "page storm",
+        "root ring"
+      ],
+      "tell": "A striped ring of roots with one gap, and double marks.",
+      "counterplay": "DASH through the gap.",
+      "senseiLine": "Find the gap. Roots hold, but they open."
+    }
+  ],
+  "parSeconds": "TODO",
+  "lines": {
+    "intro": "So many books, and no one to share them with.",
+    "freed": "Take a book, little one. Your story belongs here too.",
+    "senseiAfter": "Strong roots keep you standing."
+  },
+  "description": "The Root Keeper taps with its branches, flutters glowing pages, then grows a striped ring of roots with one gap.",
+  "bestiary": {
+    "tip": "Look for the gap in the roots.",
+    "lore": {
+      "brown": "A wise old tree who reads every book. The shadow made it forget how to share them. Free it, and its light comes home."
+    }
+  },
+  "faithOverlayKey": "root-keeper",
+  "summon": {
+    "enemy": "page-flutter",
+    "count": 2,
+    "atHealthFraction": 0.66
+  }
+}

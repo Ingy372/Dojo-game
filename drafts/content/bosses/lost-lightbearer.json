@@ -1,0 +1,139 @@
+{
+  "id": "lost-lightbearer",
+  "name": "The Lost Lightbearer",
+  "notes": "DRAFT for C13-6 (bestiary-plan.md; lore from drafts/content/lore/guardians-and-relics.json, unchanged). Black Guardian on floor 5. Same shape as content/enemies/floor-keeper.json, plus phases (66% and 33%, Manager's call). Stats are TODO for the Researcher. Faith tie-ins stay out until Jay decides; see faithOverlayKey. The Black belt form name is a PLACEHOLDER until the curriculum names it.",
+  "color": "#f2e6b8",
+  "boss": true,
+  "guardian": true,
+  "tier": "black",
+  "band": "F5",
+  "form": "PLACEHOLDER: Black belt form (not named yet)",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attacks": [
+    {
+      "name": "cloud swirl",
+      "strength": "TODO",
+      "startRange": "TODO",
+      "reach": "TODO",
+      "areaRadius": "TODO",
+      "telegraphTicks": 18,
+      "recoverTicks": "TODO"
+    },
+    {
+      "name": "tired glow",
+      "strength": "TODO",
+      "startRange": "TODO",
+      "reach": "TODO",
+      "areaRadius": "TODO",
+      "telegraphTicks": 20,
+      "recoverTicks": "TODO",
+      "note": "The light piece pulses; soft red circles ripple out, never two at once."
+    },
+    {
+      "name": "light lane",
+      "strength": "TODO",
+      "startRange": "TODO",
+      "reach": "TODO",
+      "areaRadius": "TODO",
+      "telegraphTicks": 22,
+      "recoverTicks": "TODO",
+      "dashOnly": true,
+      "shape": "lane",
+      "shapeCue": "lane",
+      "tell": "purple-and-white stripes + '!!' + whoosh",
+      "counterable": false,
+      "answer": "dash",
+      "overlapOnGuided": false,
+      "noOverlapWithRedCircle": false,
+      "overlapFromFloor": 3,
+      "minOffsetFromRedCircleTicks": 10
+    },
+    {
+      "name": "storm ring",
+      "strength": "TODO",
+      "startRange": "TODO",
+      "reach": "TODO",
+      "areaRadius": "TODO",
+      "telegraphTicks": 24,
+      "recoverTicks": "TODO",
+      "dashOnly": true,
+      "shape": "ring-with-gap",
+      "shapeCue": "ring-with-gap",
+      "tell": "purple-and-white stripes + '!!' + whoosh",
+      "counterable": false,
+      "answer": "dash",
+      "overlapOnGuided": false,
+      "noOverlapWithRedCircle": false,
+      "overlapFromFloor": 3,
+      "minOffsetFromRedCircleTicks": 10
+    }
+  ],
+  "signature": "Last Light",
+  "phases": [
+    {
+      "id": "swirl",
+      "atHealthFraction": 1.0,
+      "attacks": [
+        "cloud swirl"
+      ],
+      "tell": "Storm clouds spin around them; red circle.",
+      "counterplay": "COUNTER the swirl.",
+      "senseiLine": "They are not angry. Only tired."
+    },
+    {
+      "id": "glow",
+      "atHealthFraction": 0.66,
+      "attacks": [
+        "cloud swirl",
+        "tired glow",
+        "light lane"
+      ],
+      "tell": "The light pulses; a striped lane and double marks.",
+      "counterplay": "Step out of the circles, DASH out of the lane.",
+      "senseiLine": "They are holding on so tight. Keep going."
+    },
+    {
+      "id": "ring",
+      "atHealthFraction": 0.33,
+      "attacks": [
+        "tired glow",
+        "storm ring"
+      ],
+      "tell": "A striped ring with one gap, and double marks.",
+      "counterplay": "DASH through the gap toward them.",
+      "senseiLine": "Go to them. You came this far."
+    }
+  ],
+  "parSeconds": "TODO",
+  "lines": {
+    "intro": "Someone is up here, holding the last light.",
+    "freed": "You came all this way to help? Now we can finish together.",
+    "senseiAfter": "Love brought the light home, and it brought them home too.",
+    "freedScene": [
+      "The storm clouds thin and drift away.",
+      "The traveler looks up, still holding the last piece.",
+      "\"You came all this way to help? Now we can finish together.\"",
+      "Together, you lift the piece onto the empty stand.",
+      "The Great Lamp shines over the whole town again."
+    ]
+  },
+  "description": "The Lost Lightbearer swirls storm clouds, pulses tired light, then circles a striped storm ring with one gap.",
+  "bestiary": {
+    "tip": "They are tired, not angry. Go to them.",
+    "lore": {
+      "black": "The traveler, wrapped in storm clouds. They are tired from holding the last piece. Free them, and the light comes home."
+    }
+  },
+  "faithOverlayKey": "lost-lightbearer",
+  "formPlaceholder": true,
+  "summon": {
+    "enemy": "storm-wisp",
+    "count": 2,
+    "atHealthFraction": 0.66
+  }
+}
