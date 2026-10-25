@@ -232,15 +232,15 @@ Jay's standing story rule: "For our dojo's version of this game, tie in Christia
 | Guardian | Tier's promotion verse (school sign) | Theme reference | Idea | Where it's found |
 |---|---|---|---|---|
 | The Lamp Keeper | John 3:16 | John 1:5 | Light shining in the dark | A hidden scroll in the Lantern Halls |
-| The Sun Gardener | Romans 3:10 | Galatians 5:22-23 | Good fruit grows slowly | A scroll under a garden bench |
-| The Hearth Cook | Romans 3:23 | Acts 2:46 | Sharing a meal together | A scroll tucked by the supper table |
-| The Stone Giant | Romans 6:23 | 1 Samuel 17 | David and Goliath, the tier's own form | A sling-stone relic on the Giant's Steps |
-| The River Watcher | Romans 5:8 | Psalm 23:2 | Still waters and seeing clearly | A scroll in the reeds |
+| The Sun Gardener | Romans 3:10 | Galatians 5:22-23 | The good fruit of the Spirit | A scroll under a garden bench |
+| The Hearth Cook | Romans 3:23 | John 6:35 | Jesus, the bread of life | A scroll tucked by the supper table |
+| The Stone Giant | Romans 6:23 | 1 Samuel 17:47 | David and Goliath, the tier's own form | A sling-stone relic on the Giant's Steps |
+| The River Watcher | Romans 5:8 | Psalm 23:2 | Rest by still waters | A scroll in the reeds |
 | The Ember Knight | 1 John 1:9 | Joshua 1:9 | Courage without fear | A scroll on the forge anvil |
-| The Echo Mask | John 3:17 | Hebrews 13:5 | Never alone | A scroll that echoes back kindly |
+| The Echo Mask | John 3:17 | Hebrews 13:5 (part) | Never alone | A scroll that echoes back kindly |
 | The Root Keeper | John 3:3 | Psalm 1:3 | A tree planted by the water | A book on the Library's top shelf |
 | The Storm Herald | John 3:5-8 | Mark 4:39 | Calm in the storm | A scroll that stays still in the wind |
-| The Lost Lightbearer | John 6:40 | Romans 8:37; Matthew 5:14-16 | More than a conqueror; light of the world | The last piece of light, found together |
+| The Lost Lightbearer | John 6:40 | Romans 8:37; John 8:12 | More than a conqueror; Jesus, the light of the world | The last piece of light, found together |
 
 ## Proposed PR split
 

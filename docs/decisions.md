@@ -884,6 +884,13 @@ What is in the code:
 ## R-BAL-12d Gain words (2026-10-24)
 - Show training gains as plain "+N Stat" words on the moments a kid already sees (sign-off, sign-offs list, stripe). Each gain uses the belt it was earned at. No new screen, no counters, no "missing" or "next time" words. Wording is in content/ so Jay can change it without code. A test bans nag/guilt/streak words and caps lines at 8 words.
 
+## R-BAL-12e: enemy weapon disarmedPower scales too (2026-10-24)
+A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt Power scale as the enemy's Power, rounded to a whole number. The content file keeps the BASE number (8). A disarmed push still hits softer than a normal swing at every belt. Test: r-bal-12e-disarmed-power.test.ts.
+
+
+## K26 Sign-off list layout (2026-10-24)
+- Fix the root cause (no column width) instead of shortening names: fixed column width + word wrap, measured row heights. Text floor is 12 px; past that we show "…and N more" (positive, points to the Board) rather than shrinking further.
+
 ## P-MENU-a shared button + motion tokens (2026-10-25)
 
 - Manager calls (2026-10-25):
@@ -896,3 +903,7 @@ What is in the code:
 - The soft tap sound is made in code (Sfx.tap), so no sound file and no new dependency.
 - Practice room moved down 2 pt (8 pt gap) so its 44 pt tap area doesn't touch ENTER THE TOWER's.
 - Manager call on #228 (2026-10-25): the tap sound is fine as is; Jay tunes it at the menu check.
+- Manager call on #228 after QA PASS (2026-10-25, /workspace/qa/2026-10-25-pmenu-a.md):
+  - Fix the Blessing glow so the alpha you see breathes 0.25 to 0.15. Before, the tween ran over a 0.25 fill, so it showed about 0.04. The circle now has a full fill and the object's alpha carries the breath.
+  - The first-floor summary card's Continue uses the shared button() at 44 tall.
+  - Gear cards are left for P-MENU-b.

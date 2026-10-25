@@ -205,13 +205,11 @@ export class HomeScene extends Phaser.Scene {
     }
     const bw = 160;
     const by = top + h - 58;
-    const btn = add(this.add.rectangle(cx - bw / 2, by, bw, 42, 0xd5713a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35));
-    label(cx, by + 21, 'Continue', 19, '#ffffff');
-    btn.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-      sfx.unlock();
+    // P-MENU-a: the shared button (press feedback, slide-off cancel), 44 tall.
+    button(this, { x: cx - bw / 2, y: by, w: bw, h: 44, label: 'Continue', color: 0xd5713a, size: 19, onTap: () => {
       card.destroy();
       onDone();
-    });
+    } }, card);
   }
 
   /** The three next goals (M7-P10), after the run summary and any celebrations, at most once a day. */
@@ -246,7 +244,8 @@ export class HomeScene extends Phaser.Scene {
 
     const cy = pad + 58;
     if (t.blessed) {
-      const glow = this.add.circle(pad + 24, cy, 32, 0x6fb7ff, MOTION.breath.from);
+      // Full fill, so the object's alpha is the alpha you see (0.25 to 0.15).
+      const glow = this.add.circle(pad + 24, cy, 32, 0x6fb7ff, 1).setAlpha(MOTION.breath.from);
       this.ui.add(glow);
       // P-MENU-a: a slow breath (alpha only, no scale); still with Reduced motion on.
       if (!reducedMotion()) this.tweens.add({ targets: glow, alpha: MOTION.breath.to, duration: MOTION.breath.ms, ease: 'Sine.InOut', yoyo: true, repeat: -1 });
