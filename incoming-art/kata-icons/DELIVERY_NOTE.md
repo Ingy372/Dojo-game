@@ -20,11 +20,13 @@
 4. Big special turn: no set angle (loop + gold star stays).
 6. Kata rim colour: wood #b07a3a stays.
 7. Hand icons: simplified (see v2 above).
+8. DECIDED (Jay): label names. "Kiai!" is correct and its flag is removed; "Double knife-hand block" is renamed "Knife-hand block" (labels.json, README table, labeled sheet and labeled PNGs re-made). The icon id `kata-block-double-knife-hand` is unchanged. The other names stay as they are in moves.json.
 5. DECIDED (Jay): Front stays at the top of the direction pictures (Left = left side, student in the middle facing Front). Marker letters/words are game text.
 
 **DECIDE (Jay):**
 2. Technique reads — please check each matches the school: cat stance (back foot flat & turned out, front foot on toes), front stance (back foot ~30° out), attention (heels together, toes in V), low block (sweeping down/out), inside block, high block, double knife-hand, front kick vs straight kick (rising arc vs straight line) and reverse punch/kick (curved hip arrow = back hand/leg).
 3. Choke break redrawn (v3): two open hands pushing out through a broken ring, outward arrows. Does it read now?
-8. Label names: all placeholders from moves.json, pending the Content Designer (shorter name for "Double knife-hand block"? add kiai to moves.json as "Kiai!"?).
+
+**v4 (Jay's label answers, Oct 25):** re-ran `make_kata_labels.py`; only labels changed, no icon art changed.
 
 **NEXT:** Manager review, then Jay's OK; after that the Programmer wires them (README). Any DECIDE changes = rebuild with the commands in the README.

@@ -1,5 +1,5 @@
 {
-  "_note": "PLACEHOLDER names pending the Content Designer; taken from drafts/content/katas/moves.json. The game draws the label as text under the icon.",
+  "_note": "Names from drafts/content/katas/moves.json (placeholders pending the Content Designer), except Knife-hand block and Kiai! (DECIDED by Jay, Oct 25). The game draws the label as text under the icon.",
   "labels": {
     "kata-pivot": {
       "moveId": "pivot",
@@ -53,8 +53,8 @@
     },
     "kata-block-double-knife-hand": {
       "moveId": "block.double-knife-hand",
-      "name": "Double knife-hand block",
-      "flag": "long (23 chars)"
+      "name": "Knife-hand block",
+      "flag": ""
     },
     "kata-punch-straight": {
       "moveId": "punch.straight",
@@ -104,7 +104,7 @@
     "kata-kiai": {
       "moveId": null,
       "name": "Kiai!",
-      "flag": "missing from moves.json"
+      "flag": ""
     }
   }
 }

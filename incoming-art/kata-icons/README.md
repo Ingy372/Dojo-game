@@ -15,7 +15,7 @@ Not imported yet: Manager review first, then Jay's OK.
 
 ## Labels (game text under each icon)
 Draw the name as **game text under the icon** (not baked into the art), so it can be changed or translated.
-Names are taken from `drafts/content/katas/moves.json`. **All of them are placeholders pending the Content Designer.**
+Names are taken from `drafts/content/katas/moves.json`. **All of them are placeholders pending the Content Designer, except Knife-hand block and Kiai!, which Jay decided (Oct 25).** The icon ids do not change.
 The same table is in `sprites/labels.json`.
 
 | Icon file (no .png) | moves.json id | Label | Status |
@@ -30,7 +30,7 @@ The same table is in `sprites/labels.json`.
 | `kata-block-downward` | `block.downward` | Low block | PLACEHOLDER |
 | `kata-block-reverse-inside` | `block.reverse-inside` | Inside block | PLACEHOLDER |
 | `kata-block-overhead` | `block.overhead` | High block | PLACEHOLDER |
-| `kata-block-double-knife-hand` | `block.double-knife-hand` | Double knife-hand block | PLACEHOLDER - long (23 chars) |
+| `kata-block-double-knife-hand` | `block.double-knife-hand` | Knife-hand block | DECIDED (Jay) |
 | `kata-punch-straight` | `punch.straight` | Straight punch | PLACEHOLDER |
 | `kata-punch-reverse` | `punch.reverse` | Reverse punch | PLACEHOLDER |
 | `kata-strike-backfist` | `strike.backfist` | Backfist | PLACEHOLDER |
@@ -40,7 +40,7 @@ The same table is in `sprites/labels.json`.
 | `kata-chamber` | `chamber` | Chamber | PLACEHOLDER |
 | `kata-catch` | `catch` | Catch | PLACEHOLDER |
 | `kata-break-double-choke` | `break.double-choke` | Choke break | PLACEHOLDER |
-| `kata-kiai` | `(none)` | Kiai! | PLACEHOLDER - missing from moves.json |
+| `kata-kiai` | `(none)` | Kiai! | DECIDED (Jay) |
 
 Optional: `sprites/labeled/kata-<move>-labeled.png` = icon + label in one PNG (168 x 182, DejaVu Sans Bold, preview font).
 Only use these if drawing text is not possible; they must be re-made whenever a name changes.
