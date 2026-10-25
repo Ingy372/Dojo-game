@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { PROGRESSION } from '../src/config';
 import { tierXp, xpToNext } from '../src/progression';
-import type { FeedBelt } from '../src/training';
+type FeedBelt = Parameters<typeof tierXp>[0];
 
 // R-BAL-5 (D3): level steps weighted step + 11, matching drafts/planning/balance-sim.py section 3.
 const belt = { typicalMonthsInRank: 3 } as FeedBelt;
