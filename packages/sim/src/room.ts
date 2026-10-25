@@ -51,8 +51,8 @@ export interface Room {
   /** The lowest belt tier that can get this room (1 = White belt, 2 = Yellow belt). */
   minBeltTier: number;
   /**
-   * B-T3: a tier's own room set ("ember-kitchens" = Orange belt). A run at that belt or above uses only
-   * the newest set it has reached; rooms without a set are the shared White/Yellow rooms.
+   * B-T3: a tier's own room set ("ember-kitchens" = Orange belt). A run at exactly that belt uses only
+   * its set; other belts use the shared rooms (no set) until they get their own.
    */
   floorSet: string | null;
   /** Where the glowing spot is (tutorial rooms only), or null. */
