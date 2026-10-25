@@ -22,3 +22,22 @@ Rebuild (repo root):
     blender -b -P incoming-art/bestiary-sample/source/build_sample.py -- --enemy wick|dust|sentry --out X.blend
     blender -b X.blend -P incoming-art/tools/render_sprites.py -- --out DIR --name wick --size 128 --ortho 1.6 --anims idle,move,windup,attack
     python3 incoming-art/bestiary-sample/source/make_bestiary_lineup.py --out lineup.png
+
+## v2 - distinct look (Jay's review, 24 Oct 2026)
+Jay asked for each of the three to have its own outline/silhouette and its own colour, and a darker slate Sentry.
+In `source/build_sample.py`, shape and colour only (same rig, animations, timings and layers):
+
+| Enemy | Silhouette | Body | Rim / outline glow |
+|---|---|---|---|
+| Wick Wisp | tall and slim: a narrow teardrop, a bigger flame tip (H 0.46 -> 0.56) | violet #3b2878 | gold #ffd36b |
+| Dust Bunny | wide and low: big ears splayed out to the sides, fluff all round | dusty mauve #5b5083, cream fluff tips #efe3cf | soft pink #f3d6e4 |
+| Sleepy Sentry | square: a blocky rounded-box stone body, flat cap | darker slate #343d4a, stone plates #6f7c8a | cool teal-grey #9fc9d2 |
+
+So you can tell them apart by outline shape (tall / wide / square), body colour (violet / mauve / slate) and rim colour
+(gold / pink / teal) even in greyscale. All sheets, GIFs, contact sheets and `preview/lineup.png` are re-rendered.
+
+Second pass (v2): checked every contact sheet in 8 directions; red-pixel check on all body and glow sheets = 0 (red only
+in the preview telegraph tint, the game's danger colour); nothing above the head (the ears are now lower, at the sides);
+the Sentry's box body animates cleanly through the yawn and stomp; feet on the ground line in the lineup.
+DECIDE item 1 is answered by this change (bodies now take their own colour; Wick stays in the shadow-violet family).
+

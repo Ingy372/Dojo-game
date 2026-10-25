@@ -180,7 +180,7 @@
   "name": "Wick Wisp",
   "sizeTiles": {
     "bodyWidth": 0.3,
-    "bodyHeight": 0.46,
+    "bodyHeight": 0.56,
     "radiusInData": 0.3
   },
   "tintGuidance": {

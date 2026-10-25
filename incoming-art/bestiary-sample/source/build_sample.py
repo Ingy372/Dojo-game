@@ -51,12 +51,12 @@ SPEC = {
     "brute":   dict(W=0.48, H=0.72, arm=1.7, eye=0.78, color="#36204f", belly="#523a7a", accent="#e8337a", glow="#ff5c9d",
                     eye_c="#ffb3d6", eye_z=0.6, eye_y=0.95, eye_dx=0.3, sh=0.6, arm_x=1.12),
     # A-BEST samples. The accent colour comes from each enemy's draft "color"; the body stays in the indigo family.
-    "wick":    dict(W=0.30, H=0.46, arm=0.7, eye=1.15, color="#2c2766", belly="#43409a", accent="#f6d77a", glow="#ffe39a",
+    "wick":    dict(W=0.30, H=0.56, arm=0.7, eye=1.15, color="#3b2878", belly="#5a46a8", accent="#f6d77a", glow="#ffd36b",
                     eye_c="#fff1bf", eye_z=0.42, eye_y=0.95, eye_dx=0.36, sh=0.42, arm_x=0.95),
-    "dust":    dict(W=0.35, H=0.40, arm=0.7, eye=1.05, color="#34305e", belly="#4a4676", accent="#b9b2a6", glow="#d9d2c6",
+    "dust":    dict(W=0.35, H=0.40, arm=0.7, eye=1.05, color="#5b5083", belly="#776b9e", accent="#efe3cf", glow="#f3d6e4",
                     eye_c="#eeeae2", eye_z=0.55, eye_y=0.98, eye_dx=0.34, sh=0.45, arm_x=0.98),
-    "sentry":  dict(W=0.45, H=0.70, arm=1.2, eye=0.9, color="#2a3058", belly="#3c4674", accent="#8f9aa6", glow="#b8c2cc",
-                    eye_c="#dfe8f2", eye_z=0.70, eye_y=0.88, eye_dx=0.3, sh=0.58, arm_x=1.0),
+    "sentry":  dict(W=0.45, H=0.70, arm=1.2, eye=0.9, color="#343d4a", belly="#4a5564", accent="#6f7c8a", glow="#9fc9d2",
+                    eye_c="#d8f0ff", eye_z=0.70, eye_y=0.88, eye_dx=0.3, sh=0.58, arm_x=1.0),
     "keeper":  dict(W=0.85, H=1.30, arm=1.5, eye=0.82, color="#241e52", belly="#3a3278", accent="#ffc83d", glow="#ffd86b",
                     eye_c="#fff0b0", eye_z=0.71, eye_y=0.8, eye_dx=0.2, sh=0.58, arm_x=0.85),
 }[E]
@@ -166,10 +166,10 @@ elif E == "brute":      # hulk: wide and low, a shoulder hump, a brow, a soft ox
         M_(f"horn{x}", tube((x * R * 0.5, -R * 0.2, H * 0.78), (x * R * 1.02, -R * 0.3, H * 1.06), R * 0.2, R * 0.11, segs=12), MAT["horn"], glow=True)
         M_(f"horntip{x}", ellipsoid((x * R * 1.04, -R * 0.3, H * 1.08), (R * 0.13, R * 0.13, R * 0.13)), MAT["accent"])
 elif E == "wick":       # a lost candle flame: a soft teardrop body, a little wax collar, a warm flame lick on top
-    M_("body", ellipsoid((0, 0, H * 0.40), (R, R * 0.92, H * 0.36), segs=24, rings=14), MAT["body"], glow=True)
-    M_("taper", ellipsoid((0, R * 0.05, H * 0.70), (R * 0.55, R * 0.5, H * 0.2), rot=(-8, 0, 0)), MAT["body"], glow=True)
-    M_("flame", ellipsoid((0, R * 0.05, H * 0.86), (R * 0.3, R * 0.26, H * 0.15), rot=(-10, 0, 0)), MAT["accent"])
-    M_("flamecore", ellipsoid((0, -R * 0.2, H * 0.84), (R * 0.14, R * 0.08, H * 0.08), rot=(-10, 0, 0)), MAT["eye_hi"], outline=False)
+    M_("body", ellipsoid((0, 0, H * 0.36), (R * 0.86, R * 0.82, H * 0.32), segs=24, rings=14), MAT["body"], glow=True)
+    M_("taper", ellipsoid((0, R * 0.05, H * 0.64), (R * 0.5, R * 0.46, H * 0.2), rot=(-8, 0, 0)), MAT["body"], glow=True)
+    M_("flame", ellipsoid((0, R * 0.05, H * 0.84), (R * 0.4, R * 0.34, H * 0.17), rot=(-10, 0, 0)), MAT["accent"], glow=True)
+    M_("flamecore", ellipsoid((0, -R * 0.26, H * 0.82), (R * 0.18, R * 0.08, H * 0.09), rot=(-10, 0, 0)), MAT["eye_hi"], outline=False)
     M_("collar", tube((0, 0, H * 0.10), (0, 0, H * 0.16), R * 0.62, R * 0.7, segs=20), MAT["mask"])
     for k in range(3):   # three soft wax drips on the collar
         a = math.pi * (0.35 + 0.15 * k)
@@ -185,11 +185,11 @@ elif E == "dust":       # a fluffy dust ball with two soft floppy ears and puffs
         if k % 2 == 0:
             M_(f"fluffti{k}", ellipsoid((math.cos(a) * rr * 1.08, math.sin(a) * rr * 1.03, zz + R * 0.05), (R * 0.1, R * 0.1, R * 0.08)), MAT["accent"], outline=False)
     for x in (1, -1):    # floppy ears, leaning out to the sides and back (they stay at head height)
-        M_(f"ear{x}", ellipsoid((x * R * 0.55, R * 0.2, H * 0.92), (R * 0.17, R * 0.12, H * 0.22), rot=(25, x * 35, 0)), MAT["body"], glow=True)
-        M_(f"earin{x}", ellipsoid((x * R * 0.56, R * 0.12, H * 0.92), (R * 0.08, R * 0.05, H * 0.14), rot=(25, x * 35, 0)), MAT["accent"], outline=False)
+        M_(f"ear{x}", ellipsoid((x * R * 0.95, R * 0.1, H * 0.8), (R * 0.2, R * 0.13, H * 0.3), rot=(15, x * 62, 0)), MAT["body"], glow=True)
+        M_(f"earin{x}", ellipsoid((x * R * 0.97, R * 0.02, H * 0.8), (R * 0.1, R * 0.05, H * 0.2), rot=(15, x * 62, 0)), MAT["accent"], outline=False)
     M_("nose", ellipsoid((0, -R * 1.0, H * 0.42), (R * 0.08, R * 0.05, R * 0.06)), MAT["cheek"], outline=False)
 elif E == "sentry":     # a drowsy little stone guard: a rounded block body, stone plates, a flat stone cap
-    M_("body", ellipsoid((0, 0, H * 0.48), (R * 0.95, R * 0.85, H * 0.47), segs=24, rings=14), MAT["body"], glow=True)
+    M_("body", box((0, 0, H * 0.46), (R * 1.8, R * 1.55, H * 0.8), bevel=R * 0.22), MAT["body"], glow=True)   # a blocky stone body: square silhouette
     M_("chest", ellipsoid((0, -R * 0.55, H * 0.42), (R * 0.6, R * 0.35, H * 0.22)), MAT["accent"])
     M_("chestmark", ellipsoid((0, -R * 0.88, H * 0.44), (R * 0.16, R * 0.04, R * 0.16)), MAT["body"], outline=False)
     M_("cap", tube((0, 0, H * 0.86), (0, 0, H * 0.95), R * 0.82, R * 0.72, segs=20), MAT["accent"])
