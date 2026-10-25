@@ -983,3 +983,8 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Manager call (Oct 25): P-MENU-e approved as written: Gate and Dojo popups use the shared rounded button(), the resume offer and other square Dojo panels become rounded, CreateScene buttons drawn at least 44 tall. Keep the Boy / Girl labels exactly as they are (still an open question for Jay).
 - The Gate tab's READY chip now pops once (MOTION.pop) instead of blinking forever, and the sundial and Sensei's Seal sit on two equal rounded cards. The rest of work-board section 3c (lock sizes, label sizes, first-lit Seal bell) is not in this PR.
 - #257 (P-MENU-d) was still open, so bot-code/P-MENU-d is merged into this branch (a normal merge); #257 must merge first.
+
+## P-MENU-f (2026-10-25)
+- Manager call (Oct 25): the rest of work-board 3c becomes P-MENU-f (lock and label sizes, 96-tall Seal cards, the Seal's first-lit pop and bell). Plan approved, with one condition: the new "seal seen" save field must load old saves cleanly, defaulting to already-seen for Seals that are already lit (no flood of bells for returning players), with a test.
+- Built that way: `Profile.sealsSeen` (belt ids). Old saves load it as null; the first Gate view fills it with the Seal already lit, silently. It only ever adds ids. The bell is `sfx.seal()`, the bow's bell alone, made in code (no sound file) and following the sound volume. Reduced motion skips the pop, not the bell.
+- The square testing panel stays square (Manager: developers only).

@@ -679,7 +679,9 @@ export class HomeScene extends Phaser.Scene {
     }
     this.ui.add(cards);
     const sy = cardY + GATE.cardH / 2;
-    const textW = cardW - sr * 2 - 3 * S2 - S2;
+    const titleY = cardY + 12;
+    const lineY = titleY + TYPE.title + 4;
+    const textW = cardW - sr * 2 - 3 * S2 - 4;
     const sx = x + S2 + 4 + sr;
     const dial = this.add.graphics();
     dial.fillStyle(0x221d2e).fillCircle(sx, sy, sr);
@@ -689,8 +691,8 @@ export class HomeScene extends Phaser.Scene {
     dial.lineStyle(3, 0x6b6478).strokeCircle(sx, sy, sr);
     this.ui.add(dial);
     const tx = sx + sr + S2 + 2;
-    this.oneLine(this.text(tx, sy - TYPE.title - 2, 'Time in rank', TYPE.title, '#f2e9d8', true), textW, TYPE.body);
-    this.text(tx, sy + 2, `${Math.min(g.classesInRank, g.classesBeforeTest)} of ${g.classesBeforeTest} classes`, TYPE.body, '#b9ad99', false, FONT, textW).setMaxLines(2);
+    this.oneLine(this.text(tx, titleY, 'Time in rank', TYPE.title, '#f2e9d8', true), textW, TYPE.label);
+    this.text(tx, lineY, `${Math.min(g.classesInRank, g.classesBeforeTest)} of ${g.classesBeforeTest} classes`, TYPE.body, '#b9ad99', false, FONT, textW).setMaxLines(2);
 
     const kx = x + cardW + GATE.cardGap + S2 + 4 + sr;
     const seal = this.add.container(kx, sy);
@@ -710,10 +712,12 @@ export class HomeScene extends Phaser.Scene {
       }
     }
     const kt = kx + sr + S2 + 2;
-    this.oneLine(this.text(kt, sy - TYPE.title - 2, "Sensei's Seal", TYPE.title, '#f2e9d8', true), textW, TYPE.body);
+    this.oneLine(this.text(kt, titleY, "Sensei's Seal", TYPE.title, '#f2e9d8', true), textW, TYPE.label);
     // Never shows or guesses a reason when the Seal isn't lit.
     const sealText = g.sealLit ? (g.testDate ? `Test day: ${shortDate(g.testDate)}` : 'Approved to test!') : 'Lights when Sensei approves you to test.';
-    this.text(kt, sy + 2, sealText, TYPE.body, g.sealLit ? '#ffd166' : '#b9ad99', g.sealLit, FONT, textW).setMaxLines(2);
+    // The full words always show: shrink toward 12 until they fit the card (no cut-off reason).
+    const st = this.text(kt, lineY, sealText, TYPE.body, g.sealLit ? '#ffd166' : '#b9ad99', g.sealLit, FONT, textW);
+    for (let size = TYPE.body; st.height > cardY + GATE.cardH - 6 - lineY && size > TYPE.label; ) st.setFontSize(--size);
   }
 
   private renderGear(x: number, y: number, w: number, h: number): void {
