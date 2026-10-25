@@ -639,3 +639,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## node-22
 - The repo now asks for Node 22+ (`engines`, `.nvmrc`), the same as Capacitor 8. No CI workflows exist yet. Typecheck, Vitest and the web build pass on Node 22.23.4.
+
+## B-SAFE kid-safety items
+- Outside links go through the grown-up gate (`openOutsideLink`). There are no outside links yet; a Vitest scan blocks any other way to open one.
+- Grown-ups get an "Erase progress" button on the play-time screen, behind the gate, with an Erase / Keep confirm. Erase removes every saved key and restarts fresh.
+- First launch shows a "Saved on this phone" note (PLACEHOLDER text) until it's tapped.
+- `npm run build:beta` makes a beta build with every URL test flag, the dev day offset and the hidden testing screens off. I checked this on the built files: in the normal build `?street=` opens Street Smarts; in the beta build it's ignored.
+- 7 new Vitest tests (`packages/sim/test/b-safe.test.ts`). Screenshots at 667x375 and 844x390, Reduced motion off and on.
