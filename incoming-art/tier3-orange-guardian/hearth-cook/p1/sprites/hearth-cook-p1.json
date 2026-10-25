@@ -1,0 +1,229 @@
+{
+  "character": "hearth-cook-p1",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "anchor": {
+    "x": 128.0,
+    "y": 209.92,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 80.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 3.2,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "directionVectors": {
+    "N": [
+      0,
+      -1
+    ],
+    "NE": [
+      0.7071,
+      -0.7071
+    ],
+    "E": [
+      1,
+      0
+    ],
+    "SE": [
+      0.7071,
+      0.7071
+    ],
+    "S": [
+      0,
+      1
+    ],
+    "SW": [
+      -0.7071,
+      0.7071
+    ],
+    "W": [
+      -1,
+      0
+    ],
+    "NW": [
+      -0.7071,
+      -0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "body",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "glow",
+      "order": 1,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "telegraph",
+      "order": 2,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "light",
+      "order": 3,
+      "tint": false,
+      "optional": false
+    }
+  ],
+  "animations": {
+    "idle": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "hearth-cook-p1_body_idle.png",
+        "glow": "hearth-cook-p1_glow_idle.png",
+        "telegraph": "hearth-cook-p1_telegraph_idle.png",
+        "light": "hearth-cook-p1_light_idle.png"
+      },
+      "note": "cosy breathing sway, 1 s loop"
+    },
+    "move": {
+      "frames": 6,
+      "fps": 8,
+      "durationSec": 0.75,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "hearth-cook-p1_body_move.png",
+        "glow": "hearth-cook-p1_glow_move.png",
+        "telegraph": "hearth-cook-p1_telegraph_move.png",
+        "light": "hearth-cook-p1_light_move.png"
+      },
+      "designSpeedTilesPerSecond": 1.6,
+      "note": "heavy friendly waddle; play at any move speed"
+    },
+    "windup_bonk": {
+      "frames": 10,
+      "fps": 10,
+      "durationSec": 1.0,
+      "loop": false,
+      "tags": {
+        "telegraph": "0-9"
+      },
+      "sheets": {
+        "body": "hearth-cook-p1_body_windup_bonk.png",
+        "glow": "hearth-cook-p1_glow_windup_bonk.png",
+        "telegraph": "hearth-cook-p1_telegraph_windup_bonk.png",
+        "light": "hearth-cook-p1_light_windup_bonk.png"
+      },
+      "telegraphSeconds": 1.0,
+      "telegraphTicks": 20,
+      "telegraphIntensity": [
+        0.25,
+        0.273,
+        0.338,
+        0.437,
+        0.56,
+        0.69,
+        0.812,
+        0.912,
+        0.977,
+        1.0
+      ],
+      "note": "lasts exactly the telegraph (20 ticks). In Guided mode the wind-up holds: hold the last frame (intensity 1). telegraphIntensity: per-frame alpha (0..1) for the telegraph layer. It ramps up through the wind-up and fades smoothly through the first half of the attack (no hard cut). Multiply it into the tinted layer's alpha"
+    },
+    "bonk": {
+      "frames": 13,
+      "fps": 10,
+      "durationSec": 1.3,
+      "loop": false,
+      "tags": {
+        "impact": "0",
+        "recover": "2-12"
+      },
+      "sheets": {
+        "body": "hearth-cook-p1_body_bonk.png",
+        "glow": "hearth-cook-p1_glow_bonk.png",
+        "telegraph": "hearth-cook-p1_telegraph_bonk.png",
+        "light": "hearth-cook-p1_light_bonk.png"
+      },
+      "keyFrames": {
+        "impact": 0
+      },
+      "recoverSeconds": 1.1,
+      "telegraphIntensity": [
+        1.0,
+        0.95,
+        0.812,
+        0.611,
+        0.389,
+        0.188,
+        0.05,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "note": "ladle bonk in front; the red circle is drawn by the game"
+    },
+    "hit": {
+      "frames": 3,
+      "fps": 12,
+      "durationSec": 0.25,
+      "loop": false,
+      "tags": {
+        "recoil": "0"
+      },
+      "sheets": {
+        "body": "hearth-cook-p1_body_hit.png",
+        "glow": "hearth-cook-p1_glow_hit.png",
+        "telegraph": "hearth-cook-p1_telegraph_hit.png",
+        "light": "hearth-cook-p1_light_hit.png"
+      }
+    },
+    "stagger": {
+      "frames": 8,
+      "fps": 10,
+      "durationSec": 0.8,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "hearth-cook-p1_body_stagger.png",
+        "glow": "hearth-cook-p1_glow_stagger.png",
+        "telegraph": "hearth-cook-p1_telegraph_stagger.png",
+        "light": "hearth-cook-p1_light_stagger.png"
+      },
+      "note": "dizzy wobble; loop for as long as the stagger lasts"
+    }
+  },
+  "enemy": "hearth-cook",
+  "name": "The Hearth Cook",
+  "phase": 1,
+  "sizeTiles": {
+    "bodyWidth": 0.85,
+    "bodyHeight": 1.25,
+    "radiusInData": 0.85
+  },
+  "tintGuidance": {
+    "mode": "multiply (Phaser setTint)",
+    "body": "no tint",
+    "glow": "no tint, always drawn (soft rim)",
+    "telegraph": "optional: draw only during the wind-up, tinted (e.g. #ff3b30 red, or #ffd36b gold in Guided mode) and flashed / pulsed in alpha",
+    "light": "no tint, always drawn (only the defeat has anything in it)"
+  }
+}
