@@ -898,9 +898,10 @@ export class GameScene extends Phaser.Scene {
     }
     for (const e of this.world.enemies) {
       // B-T3: a phase boss swaps to its next rig when it crosses a phase (not while it is being beaten).
+      // It waits until the current wind-up and attack are over: the next rig may not have that attack's art.
       const v = this.enemyViews.get(e.id);
       const rig = enemyArt(e.def.id, e.health / e.def.maxHealth)?.id;
-      if (v && rig && v.rig !== rig && e.mode !== 'defeated') {
+      if (v && rig && v.rig !== rig && e.mode !== 'defeated' && e.mode !== 'windup' && e.mode !== 'recover') {
         v.container.destroy();
         this.enemyViews.delete(e.id);
       }

@@ -715,3 +715,16 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 - B-POLISH-2 (2nd Tester fix + #272 merge): the stroke-aware cubby padding, full-size icons with 3-line labels fitting inside the stroke, and the Fighting Style polish (hint, 2-line title, locked names, placeholder perk icon, re-tap no-op). Vitest 645 passed, 1 skipped; typecheck and build clean.
 - B-POLISH-2: Fighting Style tray labels now use the cubby padding and wrap rules (2 tiles at 667). Smallest tray gap is 8.0 px. Vitest 646 passed, 1 skipped.
+
+## B-T3 — tier 3 Ember Kitchens, Orange belt (2026-10-25)
+
+**Done**
+- 8 Ember rooms, 6 Orange enemies and the Hearth Cook Guardian (3 phases), with tier 3 art and client wiring.
+- Supper Rush Challenge 90 s from PR #275 (pending Jay).
+- Guardian sim check: Orange typical, 30 seeds, Standard and Challenge, reaches and beats the Guardian. Vitest 801 passed, 1 skipped; typecheck and build clean.
+- Screenshots of every room and the Guardian (3 phases) at 667, 844 and 932, Reduced motion on and off.
+
+**Next**
+- Rolling pin: replace the round danger area with the real lane shape.
+- Guardian may be too easy: probes at 40 seeds beat it every time, taking about 4–18% damage in about 9–12 s.
+- Re-check Supper Rush against #275 once Jay decides.

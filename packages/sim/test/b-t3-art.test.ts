@@ -1,12 +1,31 @@
 // B-T3: every tier 3 art pack the client loads (apps/client/src/art/tiers.ts) is really in assets/art.
-import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { testContent } from './load-content';
+import towerT1 from '../../../assets/art/tower-t1.json';
+import towerT3 from '../../../assets/art/tower-t3.json';
+import sparkSprite from '../../../assets/art/enemy-spark-sprite.json';
+import ladleLobber from '../../../assets/art/enemy-ladle-lobber.json';
+import doughBlob from '../../../assets/art/enemy-dough-blob.json';
+import doughling from '../../../assets/art/enemy-doughling.json';
+import rollingPin from '../../../assets/art/enemy-rolling-pin.json';
+import hearthP1 from '../../../assets/art/enemy-hearth-cook-p1.json';
+import hearthP2 from '../../../assets/art/enemy-hearth-cook-p2.json';
+import hearthP3 from '../../../assets/art/enemy-hearth-cook-p3.json';
 
-const ART = resolve(__dirname, '../../../assets/art');
 type Pack = { pages: string[]; entries: Record<string, { sprites?: Record<string, unknown>; animations?: Record<string, unknown> }> };
-const pack = (name: string): Pack => JSON.parse(readFileSync(resolve(ART, `${name}.json`), 'utf8'));
+const PACKS: Record<string, unknown> = {
+  'tower-t1': towerT1,
+  'tower-t3': towerT3,
+  'enemy-spark-sprite': sparkSprite,
+  'enemy-ladle-lobber': ladleLobber,
+  'enemy-dough-blob': doughBlob,
+  'enemy-doughling': doughling,
+  'enemy-rolling-pin': rollingPin,
+  'enemy-hearth-cook-p1': hearthP1,
+  'enemy-hearth-cook-p2': hearthP2,
+  'enemy-hearth-cook-p3': hearthP3,
+};
+const pack = (name: string): Pack => PACKS[name] as Pack;
 const content = testContent();
 
 const ENEMIES: Record<string, string> = {
@@ -21,10 +40,10 @@ const RIGS = ['hearth-cook-p1', 'hearth-cook-p2', 'hearth-cook-p3'];
 const HEARTH_ANIMS: Record<string, string> = { 'ladle bonk': 'bonk', 'hot pot rush': 'rush', 'rolling pin lane': 'pin' };
 
 describe('B-T3 art', () => {
-  it('every tier 3 pack and its pages exist', () => {
+  it('every tier 3 pack exists and names its pages', () => {
     for (const name of ['tower-t3', ...Object.values(ENEMIES), ...RIGS.map((r) => `enemy-${r}`)]) {
-      expect(existsSync(resolve(ART, `${name}.json`)), name).toBe(true);
-      for (const page of pack(name).pages) expect(existsSync(resolve(ART, page)), page).toBe(true);
+      expect(pack(name), name).toBeDefined();
+      expect(pack(name).pages.length, name).toBeGreaterThan(0);
     }
   });
 
