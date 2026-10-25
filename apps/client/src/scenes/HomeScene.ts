@@ -568,22 +568,28 @@ export class HomeScene extends Phaser.Scene {
   }
 
   private renderGear(x: number, y: number, w: number, h: number): void {
-    // Worn gear: one box per slot.
+    // Worn gear: one box per slot. K32: long names wrap to two lines (no ellipsis); every box grows to the tallest.
     const slotW = (w - 16) / 3;
-    GEAR_SLOTS.forEach((slot, i) => {
+    let boxH = 54;
+    const boxes = GEAR_SLOTS.map((slot, i) => {
       const item = wornItem(this.profile, slot);
       const bx = x + i * (slotW + 8);
-      this.ui.add(this.add.rectangle(bx, y, slotW, 54, 0x221d2e).setOrigin(0).setStrokeStyle(2, item ? RARITY_COLOR[item.rarity] : 0x3a3150));
-      // K32: a 40 px slot + rarity icon on the left; the text gets the rest of the box.
-      const icon = item ? addGearIcon(this, item, bx + 25, y + 27, 40) : null;
+      const box = this.add.rectangle(bx, y, slotW, boxH, 0x221d2e).setOrigin(0).setStrokeStyle(2, item ? RARITY_COLOR[item.rarity] : 0x3a3150);
+      this.ui.add(box);
+      // K32: 40 px icon top-left with the slot and stats beside it; the name gets the box's full width below.
+      const icon = item ? addGearIcon(this, item, bx + 25, y + 25, 40) : null;
       if (icon) this.ui.add(icon);
       const tx = icon ? bx + 50 : bx + 6;
       const tw = slotW - (tx - bx) - 4;
-      this.text(tx, y + 4, SLOT_NAME[slot], 11, '#b9ad99');
-      this.oneLine(this.text(tx, y + 18, item ? item.name : 'Nothing', 13, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true), tw, 10);
-      if (item) this.oneLine(this.text(tx, y + 36, describeItem(item), 11, '#f2e9d8'), tw, 9);
+      this.text(tx, y + 6, SLOT_NAME[slot], 11, '#b9ad99');
+      if (item) this.oneLine(this.text(tx, y + 24, describeItem(item), 11, '#f2e9d8'), tw, 9);
+      const name = this.twoLines(this.text(bx + 6, y + 48, item ? item.name : 'Nothing', 13, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true, FONT, slotW - 12), slotW - 12, 10);
+      boxH = Math.max(boxH, name.y + name.height - y + 5);
+      return box;
     });
-    y += 64;
+    boxes.forEach((box) => box.setSize(slotW, boxH));
+    const wornH = boxH + 10;
+    y += wornH;
 
     const bag = this.profile.inventory
       .filter((it) => this.profile.equipped[it.slot] !== it.uid)
@@ -597,7 +603,7 @@ export class HomeScene extends Phaser.Scene {
     const detailH = selected ? 64 : 0;
     const cols = 2;
     const cardH = 42;
-    const rows = Math.max(1, Math.floor((h - 64 - detailH - 34) / (cardH + 6)));
+    const rows = Math.max(1, Math.floor((h - wornH - detailH - 34) / (cardH + 6)));
     const perPage = rows * cols;
     const pages = Math.max(1, Math.ceil(bag.length / perPage));
     this.page = Math.min(this.page, pages - 1);
@@ -778,6 +784,14 @@ export class HomeScene extends Phaser.Scene {
    * Keeps a text on one line inside maxW: shrinks the font (not below minSize), then
    * cuts the end with "…". Narrow phones (667 wide) would otherwise wrap names onto the line below.
    */
+  /** K32: a wrapped text shrinks (down to minSize) until it fits in two lines and no word runs past maxW. */
+  private twoLines(t: Phaser.GameObjects.Text, maxW: number, minSize: number): Phaser.GameObjects.Text {
+    let size = parseInt(String(t.style.fontSize), 10);
+    const fits = () => t.width <= maxW + 0.5 && t.getWrappedText().length <= 2;
+    while (!fits() && size > minSize) t.setFontSize(--size);
+    return t;
+  }
+
   private oneLine(t: Phaser.GameObjects.Text, maxW: number, minSize: number): Phaser.GameObjects.Text {
     let size = parseInt(String(t.style.fontSize), 10);
     while (t.width > maxW && size > minSize) t.setFontSize(--size);

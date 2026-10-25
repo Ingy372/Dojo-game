@@ -878,3 +878,4 @@ What is in the code:
   - (d) The legendary icons stay, though legendary gear doesn't drop yet. The jade charm's red cord is not touched here (#214).
 - The icons are plain images keyed `gear:<slot>:<rarity>` (`loadGearIcons` / `addGearIcon` in apps/client/src/art/gearIcons.ts), not an art pack: they are 128x128 each and the frame already carries the rarity, so there's no tint.
 - A results-list line now stays on one line (it shrinks the text, down to 10 px), so its icon always lines up with it.
+- Manager call on #226 (2026-10-25): keep the 40 px worn-slot icon, and wrap long worn-item names onto 2 lines with no ellipsis, so the full name shows at 667. To give the name room, the icon sits top-left with the slot and stats beside it, and the name spans the box's full width below. `twoLines` shrinks the name (13 px down to 10) until it fits in 2 lines with no word past the edge. All three boxes grow to the tallest one, and the bag fits the rows that are left.
