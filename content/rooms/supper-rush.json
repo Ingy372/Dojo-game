@@ -5,11 +5,7 @@
   "minBeltTier": 3,
   "floorSet": "ember-kitchens",
   "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
-  "challenge": {
-    "seconds": 110,
-    "text": "Clear the room before the soup cools: 110 seconds for a better chest!",
-    "note": "PLACEHOLDER: 110 s until the Researcher gives the real number (B-T3, Manager Oct 25)."
-  },
+  "challenge": { "seconds": 90, "text": "Clear the room in 90 seconds for a better chest!" },
   "tiles": [
     "####D#####D#####D###",
     "#..................#",
