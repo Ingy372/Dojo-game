@@ -61,6 +61,9 @@ import {
   type WorldState,
   type CharacterSetup,
   type TrainingState,
+  TEMPO,
+  SCREEN_SHAKE,
+  hurtShakeScale,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
@@ -323,7 +326,11 @@ export class GameScene extends Phaser.Scene {
     loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...new Set(Object.values(ENEMY_PACKS).map((p) => p.pack))]);
   }
 
+  /** K25: character art plays at the game tempo (read by LayeredSprite). */
+  readonly animTempo: number = TEMPO.speed;
+
   create(): void {
+    this.tweens.timeScale = TEMPO.speed;
     this.training = currentTraining();
     this.setup = characterSetup(loadSave(), this.training, CONTENT.abilities);
     if (this.run) {
@@ -448,7 +455,7 @@ export class GameScene extends Phaser.Scene {
       this.hitStopMs -= delta;
     } else {
       // Run the rules at a fixed 20 ticks per second, whatever the screen's frame rate.
-      this.elapsed = Math.min(this.elapsed + delta * this.guideSpeed(), TICK_MS * MAX_TICKS_PER_FRAME);
+      this.elapsed = Math.min(this.elapsed + delta * this.guideSpeed() * TEMPO.speed, TICK_MS * MAX_TICKS_PER_FRAME);
       while (this.elapsed >= TICK_MS) {
         this.savePrevious();
         const move = this.controls.takeInput();
@@ -1059,7 +1066,7 @@ export class GameScene extends Phaser.Scene {
           if (ev.playerId === this.me) this.tutorialDid('counter');
           const p = this.world.players[ev.playerId];
           sfx.block();
-          this.impact(FEEL.block);
+          this.impact(FEEL.block, this.hurtShake());
           this.ring(p.pos, COLORS.shield, 1.2);
           this.sparks(p.pos, 6, COLORS.shield);
           this.floatText(p.pos, `BLOCK  -${ev.damage}`, '#9ad1ff', 22);
@@ -1070,7 +1077,7 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.hurt();
           this.heroDo('hit');
-          this.impact(FEEL.hurt);
+          this.impact(FEEL.hurt, this.hurtShake());
           this.playerFlashUntil = this.time.now + 160;
           this.flashScreen(0xff2a1a, 0.3, 200);
           this.floatText(p.pos, `-${ev.damage}`, '#ff6b5b', 26);
@@ -2078,9 +2085,16 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** A short freeze plus a small screen shake. */
-  private impact(feel: { stopMs: number; shakeMs: number; shake: number }): void {
+  /** K25: the player's own attacks never shake the screen (scale defaults to SCREEN_SHAKE.playerAttackScale). */
+  private impact(feel: { stopMs: number; shakeMs: number; shake: number }, scale: number = SCREEN_SHAKE.playerAttackScale): void {
     this.hitStopMs = Math.max(this.hitStopMs, feel.stopMs);
-    if (!reducedMotion()) this.cameras.main.shake(feel.shakeMs, feel.shake);
+    if (scale > 0 && !reducedMotion()) this.cameras.main.shake(feel.shakeMs, feel.shake * scale);
+  }
+
+  /** K25: being hit shakes only at Brown belt and up or on Challenge, softer, never with Reduced motion. */
+  private hurtShake(): number {
+    const t = currentTraining();
+    return hurtShakeScale({ beltIds: t.belts.map((b) => b.id), beltId: t.belt.id, difficulty: this.world.difficulty, reducedMotion: reducedMotion() });
   }
 
   private addWorld<T extends Phaser.GameObjects.GameObject>(obj: T): T {
