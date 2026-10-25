@@ -71,6 +71,7 @@ import {
   ticksToRealMs,
   bossTagLayout,
   BOSS_TAG,
+  lidUp,
   type TagBox,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
@@ -212,6 +213,8 @@ interface EnemyView {
   top: number;
   prev: Vec2;
   flashUntil: number;
+  /** B-T3-TUNE-2a: a short grey tint when a hit clangs off the pot lid, until this time. */
+  clangUntil: number;
   /** The mode drawn last frame, to start animations when it changes. */
   lastMode: string;
   /** The attack being wound up (its animation plays when it lands). */
@@ -734,7 +737,9 @@ export class GameScene extends Phaser.Scene {
     s.setLayer('shield-broken', !e.shieldUp);
     // Reduced motion (K12): no white hit flash.
     const hitFlash = now < v.flashUntil && !reducedMotion();
-    s.flash(hitFlash ? 0xffffff : tint, hitFlash);
+    // B-T3-TUNE-2a: a clang on the pot lid tints it grey for a moment (none with reduced motion).
+    const clang = now < v.clangUntil && !reducedMotion();
+    s.flash(hitFlash ? 0xffffff : clang ? 0x8c8c8c : tint, hitFlash);
     s.update();
     if (v.named) this.drawNamed(e, v.named, now, blend, s.frame);
     v.container.setAlpha(alpha * Math.min(1, (now - this.enemiesAt) / 450));
@@ -781,7 +786,14 @@ export class GameScene extends Phaser.Scene {
 
   /** The first of these animations the creature has (e.g. the boss's "windup_slam", else "windup"). */
   private enemyAnim(s: LayeredSprite, wanted: string, fallback: string): string {
-    return s.has(wanted) ? wanted : fallback;
+    if (s.has(wanted)) return wanted;
+    if (s.has(fallback)) return fallback;
+    // B-T3-TUNE-2a: a phase rig may lack an attack another phase draws (e.g. the Hearth Cook's
+    // rolling pin in phase 1). Stand in with an attack it does have; the warning shape is code-drawn.
+    const windup = Object.keys(s.art.animations).find((n) => n.startsWith('windup_'));
+    if (windup && wanted.startsWith('windup')) return windup;
+    if (windup && s.has(windup.slice('windup_'.length))) return windup.slice('windup_'.length);
+    return 'idle';
   }
 
   private drawHud(): void {
@@ -947,6 +959,7 @@ export class GameScene extends Phaser.Scene {
       top,
       prev: { ...e.pos },
       flashUntil: 0,
+      clangUntil: 0,
       lastMode: e.mode,
       attack: '',
       pushing: false,
@@ -1345,6 +1358,29 @@ export class GameScene extends Phaser.Scene {
         case 'shieldRegrow': {
           const e = this.enemy(ev.enemyId);
           if (e) this.ring(e.pos, 0xc9d6e8, 0.9, 0.6);
+          break;
+        }
+        case 'clang': {
+          // B-T3-TUNE-2a: the hit bounced off the pot lid: no damage number, just a grey tint and a clank.
+          const v = this.enemyViews.get(ev.enemyId);
+          if (v) v.clangUntil = this.time.now + 140;
+          sfx.clank();
+          break;
+        }
+        case 'phaseHold': {
+          // B-T3-TUNE-2c: the boss roars and glows while everything holds still, and Sensei gives the tip.
+          const e = this.enemy(ev.enemyId);
+          const ms = ticksToRealMs(ev.ticks);
+          if (e) {
+            this.floatText({ x: e.pos.x, y: e.pos.y - 1.2 }, 'ROAR!', '#ffb627', 28);
+            if (!reducedMotion()) {
+              const glow = this.addWorld(this.add.image(e.pos.x * TILE, (e.pos.y - 0.4) * TILE, this.softGlow()).setDepth(8));
+              glow.setTint(0xff7a3c).setScale(0.6).setAlpha(0.9);
+              this.tweens.add({ targets: glow, scale: 2.4, alpha: 0, duration: ms, ease: 'Cubic.Out', onComplete: () => glow.destroy() });
+            }
+          }
+          sfx.appear();
+          if (ev.senseiLine) this.senseiSay([ev.senseiLine], Math.max(1200, ms));
           break;
         }
         case 'summon': {
@@ -1926,6 +1962,14 @@ export class GameScene extends Phaser.Scene {
       const y = BOSS_BAR_Y;
       g.fillStyle(0x000000, 0.55).fillRoundedRect(x - 3, y - 3, w + 6, 16, 5);
       g.fillStyle(0xb046a0).fillRoundedRect(x, y, Math.max(6, w * (boss.health / boss.def.maxHealth)), 10, 3);
+      // B-T3-TUNE-2a: placeholder pot lid (code-drawn) while its helpers keep the lid up: the bar greys over.
+      if (boss.def.lidWhileHelpers && lidUp(this.world)) {
+        g.fillStyle(0x8c96a0, 0.6).fillRoundedRect(x, y, w, 10, 3);
+        const lx = x + w + 18;
+        g.fillStyle(0x000000, 0.55).fillRoundedRect(lx - 16, y - 6, 32, 22, 6);
+        g.fillStyle(0xc9d1d9).fillRoundedRect(lx - 12, y + 2, 24, 10, { tl: 10, tr: 10, bl: 2, br: 2 });
+        g.fillStyle(0xc9d1d9).fillRoundedRect(lx - 4, y - 3, 8, 5, 2);
+      }
       this.bossName.setText(boss.def.name).setVisible(true);
       this.placeBossTag(boss);
     } else {

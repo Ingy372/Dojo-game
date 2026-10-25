@@ -6,7 +6,7 @@ import type { TwistDef } from './twist';
 import type { StanceDef, VirtueKind } from './abilities';
 import { pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
-import { BOW, COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, type Difficulty } from './config';
+import { BOW, COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, realSecondsToTicks, type Difficulty } from './config';
 import { noMods, type PlayerMods } from './effects';
 import { namedDef, type NamedRules, type NamedSpawn } from './named';
 import { eliteDef, eliteWindup, type EliteKind, type EliteRules, type EliteSpawn } from './elite';
@@ -144,6 +144,9 @@ export interface EnemyState {
   summoned: boolean;
   /** True once a boss has called in its helpers. */
   summonDone: boolean;
+  /** B-T3-TUNE-2: phased bosses: the phase it is in and its place in that phase's attack pattern. */
+  phase?: number;
+  phaseStep?: number;
   /** B-T3: already split into its smaller enemies (Dough Blob). */
   splitDone?: boolean;
   /** Which way it circles while waiting its turn to attack: 1 or -1. */
@@ -192,6 +195,10 @@ export type CombatEvent =
   | { kind: 'shieldBreak'; playerId: PlayerId; enemyId: EnemyId }
   | { kind: 'shieldRegrow'; enemyId: EnemyId }
   | { kind: 'summon'; enemyId: EnemyId; summoned: EnemyId[] }
+  /** B-T3-TUNE-2a: a hit bounced off the boss's pot lid (its helpers are still up); no damage. */
+  | { kind: 'clang'; playerId: PlayerId; enemyId: EnemyId }
+  /** B-T3-TUNE-2c: a boss reached a new phase; the game holds still for `ticks` (roar, glow, Sensei's line). */
+  | { kind: 'phaseHold'; enemyId: EnemyId; phase: number; ticks: number; senseiLine: string | null }
   | { kind: 'speedBurst'; playerId: PlayerId }
   | { kind: 'stanceChange'; playerId: PlayerId; stance: number }
   | { kind: 'virtue'; playerId: PlayerId; virtue: VirtueKind; healed: number }
@@ -246,6 +253,8 @@ export interface WorldState {
   goal: GoalState | null;
   /** Tutorial floor (K24a): the enemies stand still until Sensei's step lets them go. */
   enemyHold: boolean;
+  /** B-T3-TUNE-2c: ticks left in a boss phase pause (0 = none). Like the guide hold, nothing moves. */
+  phaseHoldTicks: number;
   /** Tutorial floor (K24a): later waves come only through releaseWave, never on their own. */
   waveHold: boolean;
   /** Tutorial floor: enemies always see the player, so none waits out of sight (K24a). */
@@ -447,6 +456,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     minHealth: Math.max(0, options.minHealth ?? 0),
     goal: room.goal ? { pos: { ...room.goal }, reached: false } : null,
     enemyHold: false,
+    phaseHoldTicks: 0,
     waveHold: false,
     seeAll: false,
     guide: (options.guideStep ?? GUIDE_DONE) < GUIDE_DONE ? { step: options.guideStep!, enemyId: null, waiting: false, waitTicks: 0 } : null,
@@ -518,6 +528,11 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
     }
     guide.waiting = false;
     guide.waitTicks = 0;
+  }
+  // B-T3-TUNE-2c: a boss phase pause holds the same way (nothing moves, nothing is hurt), then ends by itself.
+  if (world.phaseHoldTicks > 0) {
+    world.phaseHoldTicks--;
+    return;
   }
   for (const id of ids) {
     stepPlayer(world, world.players[id], room, inputs[id] ?? NO_INPUT);
@@ -603,8 +618,22 @@ export function phaseAttacks(e: EnemyState): number[] | null {
 function nextAttackIndex(e: EnemyState): number {
   const list = phaseAttacks(e);
   if (!list) return (e.attackIndex + 1) % e.def.attacks.length;
-  return list[(list.indexOf(e.attackIndex) + 1) % list.length];
+  // A pattern may name an attack twice (bonk, pin, pin), so keep the place in the pattern.
+  e.phaseStep = ((e.phaseStep ?? 0) + 1) % list.length;
+  return list[e.phaseStep];
 }
+
+/** B-T3-TUNE-2: which phase a phased boss is in at its current health (0 = first). */
+export function phaseIndex(e: EnemyState): number {
+  let k = 0;
+  (e.def.phases ?? []).forEach((ph, i) => {
+    if (e.health <= e.def.maxHealth * ph.atHealthFraction) k = i;
+  });
+  return k;
+}
+
+/** B-T3-TUNE-2c: the phase pause, in rules ticks (about 1 real second). */
+export const PHASE_HOLD_TICKS = realSecondsToTicks(1);
 
 /** True when every enemy in the room is beaten (and none will come back). */
 export function allEnemiesBeaten(world: WorldState): boolean {
@@ -837,6 +866,11 @@ function hurtEnemy(world: WorldState, p: PlayerState, e: EnemyState, move: Attac
   // Guarding aura: a protected enemy takes less from every kind of player damage. Applied last,
   // after all bonuses, rounded, at least 1.
   if (e.guardedBy && world.elites) dmg = Math.max(1, Math.round(dmg * world.elites.guarding.damageScale));
+  // B-T3-TUNE-2a: the pot lid is up while any called helper is still up: the hit clangs off.
+  if (e.def.lidWhileHelpers && lidUp(world)) {
+    world.events.push({ kind: 'clang', playerId: p.id, enemyId: e.id });
+    return;
+  }
   e.health = Math.max(0, e.health - dmg);
   const defeated = e.health === 0;
   if (defeated) {
@@ -852,6 +886,11 @@ function hurtEnemy(world: WorldState, p: PlayerState, e: EnemyState, move: Attac
     p.focus = Math.min(COMBAT.focus.max, p.focus + world.elites.reward.focus);
     world.events.push({ kind: 'eliteFocus', playerId: p.id, enemyId: e.id, focus: p.focus - before });
   }
+}
+
+/** B-T3-TUNE-2a: true while any called helper (e.g. a Spark Sprite) is still in the fight. */
+export function lidUp(world: WorldState): boolean {
+  return world.enemies.some((o) => o.summoned && o.mode !== 'defeated');
 }
 
 function nearestEnemy(world: WorldState, p: PlayerState, maxGap: number): EnemyState | null {
@@ -989,6 +1028,21 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
     }
     const s = e.def.summon;
     if (s && !e.summonDone && e.health <= e.def.maxHealth * s.atHealthFraction) summonHelpers(world, e, room);
+    // B-T3-TUNE-2: a phased boss entering a new phase starts its pattern over, and the game pauses once.
+    if (e.def.phases) {
+      const k = phaseIndex(e);
+      if (k > (e.phase ?? 0)) {
+        e.phase = k;
+        // Mid wind-up: finish that attack, then start the new pattern from its first attack.
+        if (e.mode === 'windup') e.phaseStep = -1;
+        else {
+          e.phaseStep = 0;
+          e.attackIndex = e.def.phases[k].attacks[0];
+        }
+        world.phaseHoldTicks = PHASE_HOLD_TICKS;
+        world.events.push({ kind: 'phaseHold', enemyId: e.id, phase: k, ticks: PHASE_HOLD_TICKS, senseiLine: e.def.phases[k].senseiLine });
+      }
+    }
   }
   if (e.mode === 'defeated' && e.def.split && !e.splitDone) splitEnemy(world, e, room);
   switch (e.mode) {
@@ -1013,9 +1067,6 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
       }
       return;
     case 'chase': {
-      // A phased boss that just changed phase starts on its new phase's first attack.
-      const list = phaseAttacks(e);
-      if (list && !list.includes(e.attackIndex)) e.attackIndex = list[0];
       chase(world, e, room);
       return;
     }
@@ -1311,6 +1362,8 @@ function resetEnemy(world: WorldState, e: EnemyState): void {
   e.shieldUp = e.def.shield !== null;
   e.shieldRegrow = 0;
   e.summonDone = false;
+  e.phase = 0;
+  e.phaseStep = 0;
   e.splitDone = false;
   e.chaseTicks = 0;
   e.disarmed = 0;

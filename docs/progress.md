@@ -763,3 +763,13 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Challenge timer keeps sim ticks; the per-frame cap is 10 ticks. In-time and out-of-time words live in each challenge room's content; Supper Rush says "Time's up! The soup cooled, but you still earned a chest."
 **Next**
 - Manager: other challenge rooms could get their own out-of-time lines.
+
+## B-T3-TUNE-2a+2c — Hearth Cook pot lid and phase pause (2026-10-25)
+
+**Done**
+- Hearth Cook takes no damage while its sparks are up (clang, no number); new phase patterns with pins in every phase.
+- About a 1 s pause at 66% and 33% with a roar, glow and Sensei's line.
+- Bot check (Orange gear, great-hearth, 60 seeds) in packages/sim/test/b-t3-tune-2-boss-levers.test.ts: typical 60/60, masher 46/56 (82%) on Standard; typical fight 13.3 s without pauses, 15.1 s with.
+
+**Next**
+- Jay to OK real lid / clang / roar art and sound (placeholders now).
