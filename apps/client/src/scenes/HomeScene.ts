@@ -280,9 +280,18 @@ export class HomeScene extends Phaser.Scene {
     }
     this.ui.add(makeStandingCharacter(this, pad + 24, cy, 22, t.belt, t.stripesThisBelt, loadLook()).container);
     const textX = pad + 64;
-    this.oneLine(this.text(textX, cy - S1 / 2, t.displayName, TYPE.title, '#f2e9d8', true).setOrigin(0, 1), leftW - 64, TYPE.label);
+    const textW = leftW - 64;
+    // With a Blessing, a third 12 pt line joins the stack (keeps the column short enough for 375 pt).
+    const stackH = TYPE.title + S1 + TYPE.body + (t.blessed ? S1 + TYPE.label : 0);
+    let sy = cy - stackH / 2 - 2;
+    this.oneLine(this.text(textX, sy, t.displayName, TYPE.title, '#f2e9d8', true), textW, TYPE.label);
+    sy += TYPE.title + S1;
     const stripeText = t.stripesThisBelt ? `  ·  ${t.stripesThisBelt} stripe${t.stripesThisBelt > 1 ? 's' : ''}` : '';
-    this.oneLine(this.text(textX, cy + S1 / 2, `${t.belt.name}${stripeText}`, TYPE.body, beltTextColor(t.belt.color), true), leftW - 64, TYPE.label);
+    this.oneLine(this.text(textX, sy, `${t.belt.name}${stripeText}`, TYPE.body, beltTextColor(t.belt.color), true), textW, TYPE.label);
+    if (t.blessed) {
+      const hours = Math.max(1, Math.round(((t.blessingEndsMs ?? 0) - Date.now()) / 3600000));
+      this.oneLine(this.text(textX, sy + TYPE.body + S1 + 2, `✦ Blessing +${Math.round(BLESSING.xpBonus * 100)}% XP · ${hours}h left`, TYPE.label, '#9ad1ff', true), textW, 10);
+    }
 
     // Level and experience (capped by the real belt): label and cap on one line, a 10 pt bar 8 below.
     const level = effectiveLevel(this.profile, t);
@@ -294,11 +303,6 @@ export class HomeScene extends Phaser.Scene {
     const share = atCap ? 1 : Math.min(1, this.profile.xp / xpToNext(level, t.belts));
     this.xpBar(pad, y, leftW, share, level, atCap);
     y += 10 + S2;
-    if (t.blessed) {
-      const hours = Math.max(1, Math.round(((t.blessingEndsMs ?? 0) - Date.now()) / 3600000));
-      this.oneLine(this.text(pad, y, `✦ Dojo Blessing: +${Math.round(BLESSING.xpBonus * 100)}% experience (${hours}h left)`, TYPE.label, '#9ad1ff', true), leftW, 10);
-      y += TYPE.label + S2;
-    }
 
     // Buttons: ENTER 52 tall, Practice room 44, 8 apart.
     this.button(pad, y, leftW, 52, 'ENTER THE TOWER', 0xd5713a, 19, () => this.enterTower());
@@ -375,14 +379,16 @@ export class HomeScene extends Phaser.Scene {
     card.fillStyle(0x221d2e).fillRoundedRect(x, y, w, h, RADIUS.panel);
     card.lineStyle(2, 0xffd166, 0.5).strokeRoundedRect(x, y, w, h, RADIUS.panel);
     this.ui.add(card);
-    const px = x + S3;
-    const pw = w - 2 * S3;
-    let ty = y + S3;
+    // A short phone (375 pt tall) gets 12 pt padding so the step still fits.
+    const padP = h >= 16 + TYPE.label + S2 + TYPE.title + 16 ? S3 : 12;
+    const px = x + padP;
+    const pw = w - 2 * padP;
+    let ty = y + padP;
     this.text(px, ty, 'YOUR NEXT STEP', TYPE.label, '#ffd166', true);
-    ty += TYPE.label + S2;
+    ty += TYPE.label + (padP === S3 ? S2 : 4);
     if (p.next) {
       // The video library arrives with the real DojoForge connection.
-      const video = this.text(x + w - S3, ty + 3, '▶ Video soon', TYPE.label, '#6b6478').setOrigin(1, 0);
+      const video = this.text(x + w - padP, ty + 3, '▶ Video soon', TYPE.label, '#6b6478').setOrigin(1, 0);
       this.oneLine(this.text(px, ty, p.next.name, TYPE.title, '#ffffff', true), pw - video.width - S2, TYPE.body);
       ty += TYPE.title + S2;
       if (p.next.catchUp) {

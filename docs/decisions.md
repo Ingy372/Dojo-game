@@ -955,3 +955,9 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
   - After a wipe the app reloads, so every scene and module reads the empty save. The first-launch note shows again.
   - The wipe button sits in the play-time screen's bottom-left corner, away from #246's "Belt & stripes" and Done buttons, so the two PRs merge in either order.
 - Manager call on #249 (2026-10-25): the "Saved on this phone" card uses the privacy wording from #240 (`drafts/planning/BETA-privacy-page.md`, "The short version"), word for word, and the PLACEHOLDER marker is gone. If the privacy page changes, `content/settings/safety.json` changes too.
+## P-MENU-c
+- Manager call (2026-10-25): P-MENU-c approved as planned. Merge order: #253, #249, #250, #252, then P-MENU-c. #249 (B-SAFE) was still open, so `bot-code/B-SAFE` is merged into this branch (a normal merge) so the gate and play-time buttons exist; #249 must merge first.
+- `button()` gained `selected` (3 pt gold outline), `disabled` (35% and not tappable), `stroke`, `labelColor`, `labelWrap` and `labelDx`. The tap zone is added last to the given container, so it always sits above that container's dim layer.
+- On a 375 pt tall phone the left column did not fit §3a's sizes with a Blessing line under the bar. The Blessing moved into the character block as a third 12 pt line, and the Path card uses 12 pt padding (not 16) when it is shorter than 69 pt.
+- The XP bar remembers what it last showed (`dojo.xpBarShown` in localStorage). After a run it fills from that to the new value (from empty after a level-up). Nothing remembered means no animation.
+- CreateScene's round colour dots keep their own handler (circles with 44 pt hit areas); they are not square buttons.
