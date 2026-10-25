@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, panelSwap, xpFillFrom, type PanelChange } from '../ui/tokens';
+import { GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, gearGrid, pageDots, panelSwap, xpFillFrom, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import {
@@ -82,6 +82,11 @@ export class HomeScene extends Phaser.Scene {
   /** The bag item being looked at, if any. */
   private selected: string | null = null;
   private confirmLetGo = false;
+  /** P-MENU-d: the gear detail sheet and what Wear pops. */
+  private sheet: Phaser.GameObjects.Container | null = null;
+  private sheetOpening = false;
+  private gearGridBox: Phaser.GameObjects.Container | null = null;
+  private wornCards: Partial<Record<GearSlot, { c: Phaser.GameObjects.Container; w: number; h: number }>> = {};
   /** Where the draw helpers add things: the shell, the tab bar or the panel (P-MENU-b). */
   private ui!: Phaser.GameObjects.Container;
   /** P-MENU-b: background, left column and panel frame. Redrawn on create, refresh and resize. */
@@ -684,87 +689,182 @@ export class HomeScene extends Phaser.Scene {
   }
 
   private renderGear(x: number, y: number, w: number, h: number): void {
-    // Worn gear: one box per slot. K32: long names wrap to two lines (no ellipsis); every box grows to the tallest.
+    const panelBottom = y + h;
+    // Worn gear: one rounded card per slot. K32: 40 px icon top-left with the slot and stats
+    // beside it; long names wrap to two lines (no ellipsis) under it; every card grows to the tallest.
     const slotW = (w - 16) / 3;
-    let boxH = 54;
-    const boxes = GEAR_SLOTS.map((slot, i) => {
+    let boxH = 56;
+    const worn = GEAR_SLOTS.map((slot, i) => {
       const item = wornItem(this.profile, slot);
       const bx = x + i * (slotW + 8);
-      const box = this.add.rectangle(bx, y, slotW, boxH, 0x221d2e).setOrigin(0).setStrokeStyle(2, item ? RARITY_COLOR[item.rarity] : 0x3a3150);
-      this.ui.add(box);
-      // K32: 40 px icon top-left with the slot and stats beside it; the name gets the box's full width below.
-      const icon = item ? addGearIcon(this, item, bx + 25, y + 25, 40) : null;
-      if (icon) this.ui.add(icon);
-      const tx = icon ? bx + 50 : bx + 6;
-      const tw = slotW - (tx - bx) - 4;
-      this.text(tx, y + 6, SLOT_NAME[slot], 11, '#b9ad99');
-      if (item) this.oneLine(this.text(tx, y + 24, describeItem(item), 11, '#f2e9d8'), tw, 9);
-      const name = this.twoLines(this.text(bx + 6, y + 48, item ? item.name : 'Nothing', 13, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true, FONT, slotW - 12), slotW - 12, 10);
-      boxH = Math.max(boxH, name.y + name.height - y + 5);
-      return box;
+      const c = this.add.container(bx + slotW / 2, y);
+      this.ui.add(c);
+      const g = this.add.graphics();
+      c.add(g);
+      const add = <T extends Phaser.GameObjects.GameObject>(o: T): T => {
+        (o as unknown as { x: number }).x -= bx + slotW / 2;
+        (o as unknown as { y: number }).y -= y;
+        this.ui.remove(o);
+        c.add(o);
+        return o;
+      };
+      const icon = item ? addGearIcon(this, item, bx + 6 + GEAR.wornIcon / 2, y + 6 + GEAR.wornIcon / 2, GEAR.wornIcon) : null;
+      if (icon) add(icon);
+      const tx = icon ? bx + 12 + GEAR.wornIcon : bx + 8;
+      const tw = slotW - (tx - bx) - 6;
+      add(this.text(tx, y + 6, SLOT_NAME[slot], TYPE.label, '#b9ad99'));
+      if (item) add(this.oneLine(this.text(tx, y + 24, describeItem(item), 11, '#f2e9d8'), tw, 9));
+      const name = add(this.twoLines(this.text(bx + 8, y + 50, item ? item.name : 'Nothing', 12, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true, FONT, slotW - 16), slotW - 16, 11));
+      boxH = Math.max(boxH, name.y + name.height + 6);
+      return { slot, c, g, stroke: item ? RARITY_COLOR[item.rarity] : 0x3a3150 };
     });
-    boxes.forEach((box) => box.setSize(slotW, boxH));
-    const wornH = boxH + 10;
-    y += wornH;
+    for (const s of worn) {
+      s.g.fillStyle(0x221d2e).fillRoundedRect(-slotW / 2, 0, slotW, boxH, RADIUS.panel);
+      s.g.lineStyle(2, s.stroke).strokeRoundedRect(-slotW / 2, 0, slotW, boxH, RADIUS.panel);
+      this.wornCards[s.slot] = { c: s.c, w: slotW, h: boxH };
+    }
+    y += boxH + S2;
 
     const bag = this.profile.inventory
       .filter((it) => this.profile.equipped[it.slot] !== it.uid)
       .sort((a, b) => GEAR_SLOTS.indexOf(a.slot) - GEAR_SLOTS.indexOf(b.slot) || gearScore(b) - gearScore(a));
     if (bag.length === 0) {
-      this.text(x, y + 6, 'Your bag is empty. Items you find in the Tower appear here.', 14, '#b9ad99', false, FONT, w);
+      // P-MENU-d: a faint bag drawn in code above the same words, centred in the space left.
+      const midY = (y + panelBottom) / 2;
+      this.ui.add(bagIcon(this, x + w / 2, midY - 26));
+      this.text(x + w / 2, midY + 6, 'Your bag is empty. Items you find in the Tower appear here.', TYPE.body, '#b9ad99', false, FONT, w - 32).setOrigin(0.5, 0).setAlign('center');
       return;
     }
 
-    const selected = bag.find((it) => it.uid === this.selected) ?? null;
-    const detailH = selected ? 64 : 0;
+    // P-MENU-d: the grid never depends on the picked card; the sheet lays over it.
     const cols = 2;
-    const cardH = 42;
-    const rows = Math.max(1, Math.floor((h - wornH - detailH - 34) / (cardH + 6)));
-    const perPage = rows * cols;
+    const { perPage } = gearGrid(panelBottom - y, cols);
     const pages = Math.max(1, Math.ceil(bag.length / perPage));
     this.page = Math.min(this.page, pages - 1);
-    const cardW = (w - 8) / cols;
+    const cardW = (w - GEAR.gap) / cols;
+    const grid = this.add.container(0, 0);
+    this.ui.add(grid);
+    this.gearGridBox = grid;
+    let pickedBottom = -1;
 
     bag.slice(this.page * perPage, (this.page + 1) * perPage).forEach((it, i) => {
-      const bx = x + (i % cols) * (cardW + 8);
-      const by = y + Math.floor(i / cols) * (cardH + 6);
+      const bx = x + (i % cols) * (cardW + GEAR.gap);
+      const by = y + Math.floor(i / cols) * (GEAR.cardH + GEAR.gap);
       const isSel = it.uid === this.selected;
-      const bg = this.add.rectangle(bx, by, cardW, cardH, isSel ? 0x3a3150 : 0x221d2e).setOrigin(0).setStrokeStyle(2, RARITY_COLOR[it.rarity], isSel ? 1 : 0.6);
-      this.ui.add(bg);
+      if (isSel) pickedBottom = by + GEAR.cardH;
+      // #228 press style: the shared rounded button (0.96 press, soft tap, no pick on slide-on).
+      const b = button(this, { x: bx, y: by, w: cardW, h: GEAR.cardH, label: '', color: isSel ? 0x3a3150 : 0x221d2e, size: 12, stroke: RARITY_COLOR[it.rarity], selected: isSel, onTap: () => this.pick(it.uid) }, grid);
+      b.visual.setData('uid', it.uid);
+      const lx = -cardW / 2;
+      const icon = addGearIcon(this, it, 0, 0, 36);
+      if (icon) b.visual.addAt(icon.setPosition(lx + 8 + 18, 0), 2);
       const cmp = compareGear(it, wornItem(this.profile, it.slot));
-      const arrow = cmp === 'up' ? '▲' : cmp === 'down' ? '▼' : '=';
-      const arrowColor = cmp === 'up' ? '#5cd65c' : cmp === 'down' ? '#e0533d' : '#b9ad99';
-      this.text(bx + 8, by + cardH / 2, arrow, 18, arrowColor, true).setOrigin(0, 0.5);
-      // Narrow cards (667-wide phones) get a smaller icon so the name and stats fit on their lines.
-      const iconSize = cardW < 300 ? 28 : 34;
-      const icon = addGearIcon(this, it, bx + 26 + iconSize / 2, by + cardH / 2, iconSize);
-      if (icon) this.ui.add(icon);
-      const tx = icon ? bx + 32 + iconSize : bx + 30;
-      const tw = cardW - (tx - bx) - 6;
-      this.oneLine(this.text(tx, by + 4, it.name, 13, css(RARITY_COLOR[it.rarity]), true), tw, 10);
-      this.oneLine(this.text(tx, by + 22, `${SLOT_NAME[it.slot]} · ${describeItem(it)}`, 11, '#f2e9d8'), tw, 9);
-      bg.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-        this.selected = isSel ? null : it.uid;
-        this.confirmLetGo = false;
-        this.renderPanel('none'); // P-MENU-b: a gear pick stays instant (the grid still moves until P-MENU-d).
-      });
+      const markColor = cmp === 'up' ? 0x3aa57a : cmp === 'down' ? 0xc0453a : 0x5a5468;
+      const mx = cardW / 2 - 8 - 14;
+      b.visual.add(this.add.circle(mx, 0, 14, markColor));
+      b.visual.add(this.add.text(mx, 0, cmp === 'up' ? '▲' : cmp === 'down' ? '▼' : '=', { fontFamily: FONT, fontSize: '13px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5).setResolution(crisp()));
+      const tx = lx + 8 + 36 + 8;
+      const tw = mx - 14 - 6 - tx;
+      const nm = this.oneLine(this.add.text(tx, -2, it.name, { fontFamily: FONT, fontSize: `${TYPE.body}px`, color: css(RARITY_COLOR[it.rarity]), fontStyle: 'bold' }).setOrigin(0, 1).setResolution(crisp()), tw, 10);
+      const st = this.oneLine(this.add.text(tx, 2, `${SLOT_NAME[it.slot]} · ${describeItem(it)}`, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e9d8' }).setResolution(crisp()), tw, 9);
+      b.visual.add([nm, st]);
     });
 
-    const pagerY = y + rows * (cardH + 6);
+    // Paging: 44 x 56 arrows with one 8 pt dot per page between them (the current one gold).
+    const pagerY = panelBottom - GEAR.pagerH;
     if (pages > 1) {
-      this.button(x, pagerY, 70, 28, '◀', 0x2a2536, 15, () => this.turn(-1));
-      this.text(x + w / 2, pagerY + 14, `${this.page + 1} / ${pages}`, 13, '#b9ad99').setOrigin(0.5);
-      this.button(x + w - 70, pagerY, 70, 28, '▶', 0x2a2536, 15, () => this.turn(1));
+      const prev = button(this, { x, y: pagerY, w: GEAR.arrowW, h: GEAR.pagerH, label: '◀', color: 0x2a2536, size: 17, disabled: this.page === 0, onTap: () => this.turn(-1) }, this.ui);
+      const next = button(this, { x: x + w - GEAR.arrowW, y: pagerY, w: GEAR.arrowW, h: GEAR.pagerH, label: '▶', color: 0x2a2536, size: 17, disabled: this.page >= pages - 1, onTap: () => this.turn(1) }, this.ui);
+      void prev;
+      void next;
+      const room = w - 2 * GEAR.arrowW - 2 * S2;
+      const dots = pageDots(pages, room);
+      const left = x + GEAR.arrowW + S2;
+      if (dots) {
+        const g = this.add.graphics();
+        for (let p = 0; p < pages; p++) g.fillStyle(p === this.page ? 0xffd166 : 0x5a5468).fillCircle(left + dots.x0 + p * dots.step, pagerY + GEAR.pagerH / 2, GEAR.dot / 2);
+        this.ui.add(g);
+      } else this.text(x + w / 2, pagerY + GEAR.pagerH / 2, `${this.page + 1} / ${pages}`, TYPE.label, '#b9ad99').setOrigin(0.5);
     }
 
-    if (selected) {
-      const dy = pagerY + 34;
-      const worn = wornItem(this.profile, selected.slot);
-      this.text(x, dy, `${rarityName(selected.rarity)} ${SLOT_NAME[selected.slot]}: ${describeItem(selected)}`, 13, css(RARITY_COLOR[selected.rarity]), true, FONT, w);
-      this.text(x, dy + 17, worn ? `Now wearing: ${worn.name} (${describeItem(worn)})` : 'Nothing worn in this slot', 12, '#b9ad99', false, FONT, w);
-      this.button(x, dy + 36, 110, 30, 'Wear', 0x3aa57a, 15, () => this.wear(selected));
-      this.button(x + 118, dy + 36, 120, 30, this.confirmLetGo ? 'Sure? Tap again' : 'Let go', 0x6b3a3a, 13, () => this.letGo(selected));
+    const selected = bag.find((it) => it.uid === this.selected) ?? null;
+    if (selected) this.renderSheet(selected, x, y - boxH - S2, w, panelBottom, pickedBottom);
+  }
+
+  /**
+   * P-MENU-d: the detail sheet. It slides up over the bottom of the panel (over the top when
+   * the picked card is in the bottom rows, so the card stays in view). Tapping outside closes it.
+   */
+  private renderSheet(item: GearItem, x: number, top: number, w: number, bottom: number, pickedBottom: number): void {
+    const sh = GEAR.sheetH;
+    const atTop = pickedBottom > bottom - sh;
+    const sy = atTop ? top : bottom - sh;
+    const closer = this.add.zone(x - 8, top - 8, w + 16, bottom - top + 16).setOrigin(0).setInteractive();
+    closer.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.closeSheet());
+    this.ui.add(closer);
+    const sheet = this.add.container(0, 0);
+    this.ui.add(sheet);
+    this.sheet = sheet;
+    const bg = this.add.graphics();
+    bg.fillStyle(0x2a2340, 0.98).fillRoundedRect(x, sy, w, sh, RADIUS.panel);
+    bg.lineStyle(2, RARITY_COLOR[item.rarity], 0.9).strokeRoundedRect(x, sy, w, sh, RADIUS.panel);
+    // Swallow taps on the sheet itself so they don't close it.
+    const block = this.add.zone(x, sy, w, sh).setOrigin(0).setInteractive();
+    sheet.add([bg, block]);
+    const pad = 12;
+    const half = (w - 3 * pad) / 2;
+    // Row 1: the item and "Now wearing", side by side; each stays on one line (… when long).
+    const mini = (mx: number, it: GearItem | null, head: string) => {
+      const ic = it ? addGearIcon(this, it, mx + 16, sy + pad + 18, 32) : null;
+      if (ic) sheet.add(ic);
+      const tx = ic ? mx + 38 : mx;
+      const tw = half - (tx - mx);
+      const t1 = this.oneLine(this.add.text(tx, sy + pad, head, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#b9ad99' }).setResolution(crisp()), tw, 10);
+      const t2 = this.oneLine(this.add.text(tx, sy + pad + 15, it ? it.name : 'Nothing', { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: it ? css(RARITY_COLOR[it.rarity]) : '#6b6478' }).setResolution(crisp()), tw, TYPE.label);
+      sheet.add([t1, t2]);
+      if (it) sheet.add(this.oneLine(this.add.text(tx, sy + pad + 33, describeItem(it), { fontFamily: FONT, fontSize: '11px', color: '#f2e9d8' }).setResolution(crisp()), tw, 9));
+    };
+    const now = wornItem(this.profile, item.slot);
+    mini(x + pad, item, `${rarityName(item.rarity)} ${SLOT_NAME[item.slot]}`);
+    mini(x + 2 * pad + half, now, 'Now wearing');
+    // Row 2: Wear (green, wide) and Let go (quieter). Let go asks again here.
+    const by = sy + sh - pad - 44;
+    if (!this.confirmLetGo) {
+      button(this, { x: x + pad, y: by, w: half + 40, h: 44, label: 'Wear', color: 0x3aa57a, size: 16, onTap: () => this.wear(item) }, sheet);
+      button(this, { x: x + 2 * pad + half + 40, y: by, w: half - 40, h: 44, label: 'Let go', color: 0x3a3448, size: TYPE.body, labelColor: '#e8b4b4', onTap: () => this.letGo(item) }, sheet);
+    } else {
+      const bw = Math.min(100, (w - 4 * pad) / 3);
+      const q = this.add.text(x + pad, by + 22, 'Let it go?', { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: '#ffd166' }).setOrigin(0, 0.5).setResolution(crisp());
+      sheet.add(q);
+      button(this, { x: x + w - pad - 2 * bw - 8, y: by, w: bw, h: 44, label: 'Yes', color: 0x8a2a35, size: 15, onTap: () => this.letGo(item) }, sheet);
+      button(this, { x: x + w - pad - bw, y: by, w: bw, h: 44, label: 'Keep', color: 0x3aa57a, size: 15, onTap: () => { this.confirmLetGo = false; this.renderPanel('none'); } }, sheet);
     }
+    if (this.sheetOpening) {
+      this.sheetOpening = false;
+      const rm = reducedMotion();
+      sheet.setAlpha(rm ? 0 : 1).setY(rm ? 0 : atTop ? -12 : sh);
+      this.tweens.add({ targets: sheet, y: 0, alpha: 1, duration: rm ? MOTION.reducedFade.ms : MOTION.sheet.ms, ease: rm ? 'Linear' : MOTION.sheet.ease });
+    }
+  }
+
+  private pick(uid: string): void {
+    if (this.selected === uid) return this.closeSheet();
+    this.sheetOpening = this.selected === null;
+    this.selected = uid;
+    this.confirmLetGo = false;
+    this.renderPanel('none'); // the grid itself never moves
+  }
+
+  private closeSheet(): void {
+    const sheet = this.sheet;
+    this.selected = null;
+    this.confirmLetGo = false;
+    if (!sheet || !sheet.active || reducedMotion()) return this.renderPanel('none');
+    this.input.enabled = false;
+    this.tweens.add({ targets: sheet, alpha: 0, y: 24, duration: MOTION.sheet.outMs, ease: MOTION.sheet.outEase, onComplete: () => {
+      this.input.enabled = true;
+      this.renderPanel('none');
+    } });
   }
 
   // ---------------------------------------------------------------- actions
@@ -859,7 +959,21 @@ export class HomeScene extends Phaser.Scene {
     writeSave(this.profile);
     sfx.insight();
     this.selected = null;
+    this.confirmLetGo = false;
     this.renderPanel('none');
+    // P-MENU-d: the slot card pops with a short gold flash; the re-sorted bag fades in (180 ms).
+    const slot = this.wornCards[item.slot];
+    if (this.gearGridBox) {
+      this.gearGridBox.setAlpha(0);
+      this.tweens.add({ targets: this.gearGridBox, alpha: 1, duration: reducedMotion() ? MOTION.reducedFade.ms : MOTION.swap.ms });
+    }
+    if (!slot || reducedMotion()) return;
+    const flash = this.add.graphics();
+    flash.fillStyle(0xffd166, 0.55).fillRoundedRect(-slot.w / 2, 0, slot.w, slot.h, RADIUS.panel);
+    slot.c.add(flash);
+    slot.c.setScale(0.9);
+    this.tweens.add({ targets: slot.c, scale: 1, duration: MOTION.pop.ms, ease: MOTION.pop.ease });
+    this.tweens.add({ targets: flash, alpha: 0, duration: 360, onComplete: () => flash.destroy() });
   }
 
   private letGo(item: GearItem): void {
@@ -908,6 +1022,11 @@ export class HomeScene extends Phaser.Scene {
     let size = parseInt(String(t.style.fontSize), 10);
     const fits = () => t.width <= maxW + 0.5 && t.getWrappedText().length <= 2;
     while (!fits() && size > minSize) t.setFontSize(--size);
+    // Still more than two lines at the smallest size: keep two lines and end with "…".
+    if (t.getWrappedText().length > 2) {
+      const words = t.text.split(' ');
+      while (words.length > 1 && t.getWrappedText().length > 2) { words.pop(); t.setText(words.join(' ') + '…'); }
+    }
     return t;
   }
 
@@ -925,6 +1044,16 @@ export class HomeScene extends Phaser.Scene {
   private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void): void {
     button(this, { x, y, w, h, label, color, size, onTap }, this.ui);
   }
+}
+
+/** P-MENU-d: a faint bag drawn in code (no art file): body, flap and drawstring. */
+function bagIcon(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.Graphics {
+  const g = scene.add.graphics({ x, y }).setAlpha(0.35);
+  g.fillStyle(0x8a7a5c).fillRoundedRect(-18, -10, 36, 30, 10);
+  g.fillStyle(0x6b5d45).fillRoundedRect(-12, -18, 24, 12, 5);
+  g.lineStyle(2, 0xd8c8a0).lineBetween(-12, -8, 12, -8);
+  g.lineStyle(2, 0xd8c8a0).strokeCircle(0, -22, 4);
+  return g;
 }
 
 /** A tiny treasure chest drawn in code (no art file): lid, box, band and lock. */
