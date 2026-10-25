@@ -42,7 +42,7 @@ def check(path):
         if dz.get("counterable") is not False or dz.get("answer")!="dash": e.append("dashOnlyAttack must be counterable:false, answer:'dash'")
         if dz.get("shape") not in ("lane","arc","ring-with-gap"): e.append("dashOnlyAttack.shape must be lane, arc or ring-with-gap (never colour alone)")
         tk=dz.get("telegraphTicks"); lo=26 if t in ("white","yellow","orange") else 20
-        if not isinstance(tk,int) or not (lo<=tk<=(30 if lo==26 else 999)): e.append(f"dashOnlyAttack.telegraphTicks must be {lo}-30 in tiers 1-3 (>=20 later)")
+        if not isinstance(tk,int) or not (lo<=tk<=(30 if lo==26 else 999)): e.append("dashOnlyAttack.telegraphTicks must be 26-30 in tiers 1-3" if lo==26 else "dashOnlyAttack.telegraphTicks must be >= 20 from tier 4")
         if t in ("white","yellow","orange") and dz.get("noOverlapWithRedCircle") is not True: e.append("tiers 1-3: noOverlapWithRedCircle must be true")
         if dz.get("noOverlapWithRedCircle") is False:
             if not isinstance(dz.get("minOffsetFromRedCircleTicks"),int) or dz["minOffsetFromRedCircleTicks"]<10: e.append("overlap needs minOffsetFromRedCircleTicks >= 10")
