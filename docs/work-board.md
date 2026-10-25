@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-25 6:00 PM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#286.
+Last updated: 2026-10-25 7:58 PM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#299.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -35,7 +35,8 @@ Last updated: 2026-10-25 6:00 PM EDT by Dojo-ascent Manager. Catch-up covers PRs
 | B-QA | Dojo-Ascent Game Logic/systems Tester | Full beta pass on a small and a large phone, both platforms (or web). | A QA report says READY with no blocking bugs. | B-T3-TUNE-2 done (B-BELT, B-SAFE, B-T3 done) |
 | B-T3-TUNE-2a | Dojo-Ascent Programmer | **Done (PR #285).** Pot lid blocks hits while sparks are out (from 66% health), rolling pin every phase. | As in `drafts/planning/B-T3-TUNE-2-boss-levers.md` (PR #284). | — |
 | B-T3-TUNE-2c | Dojo-Ascent Programmer | **Done (PR #285).** About 1 s hold at 66% and 33%. | As in the plan. | — |
-| B-T3-TUNE-2b | Dojo-Ascent Programmer | Client: pot lid look/tint and "clang" sound (no damage number), lid icon on the boss bar. **Placeholder:** code-drawn lid until Jay OKs real lid art. | Screenshot: lid up with sparks out; Reduced motion keeps the lid icon. | after #286 conflict fix |
+| B-T3-TUNE-2b | Dojo-Ascent Programmer | **Unblocked (#286 merged). Assigned Oct 25, 7:58 PM.** Client: pot lid look/tint and "clang" sound (no damage number), lid icon on the boss bar. **Placeholder:** code-drawn lid and icon until Jay OKs the #299 art; swap the art in after his OK. | Screenshot: lid up with sparks out; Reduced motion keeps the lid icon. | — |
+| B-T3-TUNE-2b-art | Dojo-ascent Artist | **Delivered (PR #299, art only).** Hearth Cook lid-up look, lid icon, pin and bonk wind-ups. Manager first pass: lid kept off the face in all 8 directions, no game code. | Jay OKs the look (lid colour, rolling pin vs ladle for the P3 bonk, lid icon), then merge; the Programmer swaps it in. | Jay's OK on #299 |
 | B-T3-TUNE-2d | Dojo-Ascent Game Logic/systems Tester | Replay tier 3 with Orange gear, plus one Guided/young run if possible. | QA note reports time, HP lost and wins against the plan's target, and whether every hit felt fair. | — (#285 merged) |
 | B-SEND | Jay | Freeze Dec 4. Invite testers Dec 7. Fall back to the web link where needed. (Manager runs it; Jay owns it) | Every tester family has the game installed and opened by Dec 15. | B-QA, B-TESTERS, B-BETAREV |
 | B-FEEDBACK | Jay | Collect beta feedback into one place, weekly from Dec 15. (Manager runs it; Jay owns it) | One feedback file with each note, its date and an owner. | B-SEND |
@@ -63,18 +64,29 @@ Last updated: 2026-10-25 6:00 PM EDT by Dojo-ascent Manager. Catch-up covers PRs
 | P-MENU2-f | Dojo-Ascent Programmer | **Done (PR #273).** Gear paper-doll, 3-column tiles, compare arrows. | As in the plan. | — |
 | P-MENU2-g | Dojo-Ascent Programmer | **Done (PR #274).** Last run "Scroll of the Climb". | As in the plan. | — |
 | P-MENU2-h | Dojo-ascent Artist | **Done: Jay approved Oct 25, merged #265.** Art swap-in is P-MENU2-i-art (PR #286). A1–A13 in mood A; premium full set, no rush. | Jay approves the samples; atlases in `incoming-art/`. | — |
-| P-MENU2-i-art | Dojo-Ascent Programmer | **Delivered (PR #286); needs main merged in (conflict), then QA.** #265 art in Trophies, Gear and Last run, with code-drawn fallbacks. **Manager OK'd the 4 calls:** Legendary uses Epic art; dark ink on paper stat tiles; "Everyday" in #6b5a48; lantern on the next cubby only. My Style art still held. | QA passes; tests pass. | Conflict fix on #286, then QA |
-| P-MENU2-i | Dojo-Ascent Game Logic/systems Tester | Phone pass on the new tabs (include #286 art): small and large, Reduced motion on/off, kid-tap test. | No missed tap in 10 tries; no text under 12; no guilt words. | #286 conflict fix |
-| ICONS2 | Dojo-ascent Artist | **PR #277: all 8 Forms/Strikes/Virtues icons; Jay's 3 answers in (Strikes violet, bow kept, front kick); Manager first pass passed.** | Jay gives final OK; then added to the menu2 icons64 set. | Jay's final OK on #277 |
+| P-MENU2-i-art | Dojo-Ascent Programmer | **Done (PR #286, merged Oct 25 after QA retest at 5523ab9). Legendary using the Epic frame goes to Jay as a taste call.** #265 art in Trophies, Gear and Last run, with code-drawn fallbacks. **Manager OK'd the 4 calls:** Legendary uses Epic art; dark ink on paper stat tiles; "Everyday" in #6b5a48; lantern on the next cubby only. My Style art still held. | QA passes; tests pass. | — |
+| P-MENU2-i | Dojo-Ascent Game Logic/systems Tester | Phone pass on the new tabs (include #286 art): small and large, Reduced motion on/off, kid-tap test. | No missed tap in 10 tries; no text under 12; no guilt words. | — (#286 merged; assigned Oct 25, 7:58 PM) |
+| ICONS2 | Dojo-ascent Artist | **PR #277: all 8 Forms/Strikes/Virtues icons (other 5 added Oct 25); Jay's 3 answers in (Strikes violet, bow kept, front kick); Manager first pass passed.** | Jay gives final OK; then added to the menu2 icons64 set. | Jay's final OK on #277 |
 
 ## 0b3. Stances (from `drafts/planning/R-STANCE-stances-and-kata-rewards.md`, PR #281). Jay, Oct 25: 5 stances OK; Fighting keeps full attack speed; stances unlock by Sensei sign-off. **Placeholder:** rename only for the beta; kata powers after (Jay picks them tonight).
 | ID | Owner | What | Done when | Waits on |
 |---|---|---|---|---|
 | R-STANCE-a | Dojo-Ascent Programmer | **Done (PR #283, QA passed).** Forms renamed to Stances; old saves migrate. | As in the plan. | — |
-| R-STANCE-b | Dojo-ascent Artist | Rename the #277 icons to stance ids; draw icons for Cat, Front, Fighting and Horse stances in the #277 style. | Icons in `incoming-art/` with stance ids; Jay's final OK. | — (rename on #277 after Jay's OK) |
-| R-STANCE-c | Dojo-Ascent Researcher & Planner | Numbers for the stances (Fighting keeps full attack speed, shorter Dash), with a sim inside the R-BAL bands. Kata reward numbers after Jay's picks. | Sim passes the band tests; Rooted is capped. | stances: — · kata rewards: Jay's picks |
-| R-STANCE-d | Dojo-Ascent Programmer (+ Nic) | Stance sign-off items in the feed and fixtures; each unlocks through the sign-off cascade. Kata rewards after the beta. | As in the plan. | R-STANCE-c; Nic adds 4 DojoForge sign-off items (Cat, Front, Fighting, Horse) |
-| R-STANCE-e | Learning & Engagement Designer (+ Jay) | Steps and one-line character for Pinon 1–3, Nahanchi, Possi, and the dojo stance list, drafted from `docs/curriculum.md` and the kata files; Jay checks. | Files in `drafts/content/katas/`. | — |
+| R-STANCE-b | Dojo-ascent Artist | **Assigned Oct 25, 7:58 PM (after #299).** Draw icons for Cat, Front, Fighting and Horse stances in the #277 style now; rename the #277 icons to stance ids after Jay's OK on #277. | Icons in `incoming-art/` with stance ids; Jay's final OK. | drawing: — · rename: Jay's OK on #277 |
+| R-STANCE-c | Dojo-Ascent Researcher & Planner | **Stance numbers done (PR #290: Cat softer blocks, Horse cap +10%).** Numbers for the stances (Fighting keeps full attack speed, shorter Dash), with a sim inside the R-BAL bands. Kata reward numbers after Jay's picks. | Sim passes the band tests; Rooted is capped. | stances: — · kata rewards: Jay's picks |
+| R-STANCE-d1 | Dojo-Ascent Programmer | **Done (PR #293, QA passed).** Cat, Front, Fighting and Horse stances with numbers; Horse +10% final; old saves go to Ready; Horse uses the rooted idle; stance lines from R-STANCE-f included. | As in the plan. | — |
+| R-STANCE-d2 | Dojo-Ascent Programmer (+ Nic) | Stance sign-off items in the feed and fixtures; each unlocks through the sign-off cascade. Kata rewards after the beta. Front's push mechanic is a later item. | As in the plan. | Jay: which belt teaches each stance; Nic adds 4 DojoForge sign-off items (Cat, Front, Fighting, Horse) |
+| R-STANCE-e | Dojo-Ascent Content Designer (+ Jay) | **Skeletons and stances.json done (PR #288); Pinon/Nahanchi spelling #289.** Steps and one-line character for Pinon 1–3, Nahanchi, Possi, and the dojo stance list; Jay checks. The repo has no kata steps. | Files in `drafts/content/katas/`. | Jay: photo of the school kata sheet; how to stand in each stance; other stances (back stance?); Ready = Attention? |
+| R-STANCE-f | Dojo-Ascent Content Designer | **Done: lines copied into the game in #293.** PR #294 stays open (its merge was blocked by Auto-review). | Kid-friendly line for each stance. | — |
+| L-STANCE-e-review | Learning & Engagement Designer | Learning-load review of the R-STANCE-e kata drafts. | Short pass/change note. | R-STANCE-e full draft |
+
+## 0b4. Young players losing room 1 (B-MASHER, plan PR #291)
+| ID | Owner | What | Done when | Waits on |
+|---|---|---|---|---|
+| B-MASHER-a/b/c | Dojo-Ascent Programmer | **Done (PRs #295, #296).** Mash guard for all (fades after 3 Perfect Counters in a room, resets each room; "Sensei steps back" once per run), +6 Focus per shield bounce with glow, kid bot gate. | As in the plan. | — |
+| B-MASHER-d | Learning & Engagement Designer (+ Jay) | **Delivered (PR #292), held for Jay.** Kind knock-out flow with "Try again". decisions.md says a knock-out ends the run and goes home, so this is Jay's call, plus the lines. **Placeholder until he answers:** none built; knock-out still goes home. | Jay signs off the flow and lines. | Jay |
+| B-T3-NUDGE | Dojo-Ascent Programmer | **Done (PR #287).** ROAR plus "Help me!" nudge. | — | — |
+| B-CF-BUILD | Dojo-Ascent Programmer | **Done (PRs #297, #298).** Online build fixed; production deploy is `npx wrangler deploy`. | Main builds show Ready. | — |
 
 **Bug fixes from Jay's phone screenshot (Oct 25), all done:** B-GEAR-BUG #261, B-LASTRUN #262, B-POLISH-1 #263, B-NM-FIX #267, B-NM-FIX-2 #268.
 
