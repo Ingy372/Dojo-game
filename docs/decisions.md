@@ -1122,3 +1122,8 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **Phase pause (2c):** at 66% and 33% the game holds still for about 1 real second (`PHASE_HOLD_TICKS` = `realSecondsToTicks(1)`), the same way the guided-Counter hold does: nothing moves, nothing is hurt, the Challenge timer stops. Once per threshold per fight; a reset fight starts over.
 - **Placeholder look until Jay OKs art:** a code-drawn grey lid at the end of the boss bar and a grey wash over the bar while the lid is up; a short grey tint on a clang (reuses the clank sound); at the phase pause a "ROAR!" word, an orange glow and the phase's `senseiLine`. Reduced motion keeps the lid marker and drops the glow and the tint. No new art or sound files.
 - **Art gaps:** the phase rigs don't draw every attack in the new patterns (P1 pin, P2 pin, P3 bonk). The client stands in with another wind-up the rig has; the warning shape is code-drawn. Listed in b-t3-art.test.ts until real art comes.
+
+### B-T3-NUDGE follow-up: phase-pause words keep off the player (2026-10-25)
+- **ROAR!** starts 8 px under Sensei's banner (screen space). If it would cover the player's sprite, it moves above the player's head; if that would push it within 8 px of the banner, it goes 8 px below the player's feet instead.
+- **"Help me!"** (wording unchanged) is the enemy's line, so it sits over the calling enemy's head, not in the centre, so it can't read as the student speaking. It stays at least 8 px under the banner, clear of ROAR!, and gets the same keep-off-the-player move.
+- Shots (`b-t3-tune-2-shots/v4`, reduced motion on/off at 667/844/932): player overlap 0 for both words; "Help me!" centred on the Hearth Cook. Placement makes the speaker clear, so no new wording is needed.

@@ -276,6 +276,22 @@ export class GameScene extends Phaser.Scene {
   private timerText!: Phaser.GameObjects.Text;
   private bossName!: Phaser.GameObjects.Text;
   /** B-T3-NUDGE: the phase pause's ROAR! word (screen space, under the Sensei banner). */
+  /** B-T3-NUDGE: shift a screen-space text stack off the player: above their head, else below their feet; never above minTop. */
+  private keepOffPlayer(stack: Phaser.GameObjects.Text[], minTop: number): void {
+    const cam = this.cameras.main;
+    const w = this.player.getBounds();
+    const z = cam.zoom / DPR;
+    const p = { top: (w.top - cam.worldView.y) * z, bottom: (w.bottom - cam.worldView.y) * z, left: (w.left - cam.worldView.x) * z, right: (w.right - cam.worldView.x) * z };
+    const bs = stack.map((t) => t.getBounds());
+    const top = Math.min(...bs.map((b) => b.top));
+    const bottom = Math.max(...bs.map((b) => b.bottom));
+    const hits = bs.some((b) => b.left < p.right && b.right > p.left) && top < p.bottom && bottom > p.top;
+    if (!hits) return;
+    let newTop = p.top - ROAR_GAP_PX - (bottom - top);
+    if (newTop < minTop) newTop = p.bottom + ROAR_GAP_PX;
+    stack.forEach((t) => (t.y += newTop - top));
+  }
+
   private roarText: Phaser.GameObjects.Text | null = null;
   /** B-T3-NUDGE: the boss's "Help me!" when its helpers come with a phase pause (under ROAR!). */
   private helpText: Phaser.GameObjects.Text | null = null;
@@ -1401,16 +1417,28 @@ export class GameScene extends Phaser.Scene {
             this.roarText = roar;
             const fade = [roar];
             if (events.some((x) => x.kind === 'summon' && x.enemyId === ev.enemyId)) {
-              const r = roar.getBounds();
+              // "Help me!" sits over the calling enemy's head (screen space) so it reads as the enemy's line, not the student's.
+              const cam = this.cameras.main;
+              const z = cam.zoom / DPR;
+              const ex = (e.pos.x * TILE - cam.worldView.x) * z;
+              const headY = ((e.pos.y - 1) * TILE - cam.worldView.y) * z;
               const help = this.add
-                .text(width / 2, r.bottom + ROAR_GAP_PX, 'Help me!', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '22px', color: '#ffd166', stroke: '#2a1408', strokeThickness: 4 })
+                .text(ex, headY, 'Help me!', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '22px', color: '#ffd166', stroke: '#2a1408', strokeThickness: 4 })
                 .setOrigin(0.5, 0)
                 .setDepth(60)
                 .setResolution(window.devicePixelRatio || 1);
               this.cameras.main.ignore(help);
               this.helpText = help;
+              const minTop = banner ? banner.bottom + ROAR_GAP_PX : 0;
+              const hb = help.getBounds();
+              help.setPosition(Phaser.Math.Clamp(ex, hb.width / 2 + ROAR_GAP_PX, width - hb.width / 2 - ROAR_GAP_PX), Math.max(minTop, headY - hb.height - ROAR_GAP_PX));
+              const rb = roar.getBounds();
+              const hb2 = help.getBounds();
+              if (hb2.left < rb.right && hb2.right > rb.left && hb2.top < rb.bottom + ROAR_GAP_PX && hb2.bottom > rb.top) help.y = rb.bottom + ROAR_GAP_PX;
               fade.push(help);
             }
+            this.keepOffPlayer([roar], banner ? banner.bottom + ROAR_GAP_PX : 0);
+            if (this.helpText && fade.includes(this.helpText)) this.keepOffPlayer([this.helpText], banner ? banner.bottom + ROAR_GAP_PX : 0);
             this.tweens.add({ targets: fade, alpha: 0, delay: ms * 0.6, duration: ms * 0.4, onComplete: () => fade.forEach((t) => t.destroy()) });
           }
           break;
