@@ -114,6 +114,8 @@ const TILE = 48;
 const NO_DEFEAT_FADE_MS = 600;
 /** Screen pixels the top bar (health, Focus, "Room 1 of 8") takes up. */
 const HUD_TOP_PX = 56;
+/** Screen y a door label may not rise above: the top bar plus the Challenge timer (top 36, 20 px bold, bottom ~64) and an 8 px gap. */
+const DOOR_LABEL_TOP_PX = 72;
 /** Screen y of the boss health bar; its name sits just under it. */
 // The boss bar sits in the HUD's top strip, between the player's bars and the room label,
 // so it never covers the Keeper (K9: it used to sit over the Keeper's head at y 74).
@@ -124,7 +126,7 @@ const HUD_BOTTOM = 56;
 const VISIBLE_ROWS = 6.75;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 /** Never run more than this many ticks in one frame (e.g. after a long pause). */
-const MAX_TICKS_PER_FRAME = 5;
+const MAX_TICKS_PER_FRAME = 10;
 
 /** Draw order for things standing in the room: lower on screen = in front. */
 function depthAt(yPx: number): number {
@@ -1868,10 +1870,10 @@ export class GameScene extends Phaser.Scene {
         if (!prog.doorsOpen) this.animateStatic('door-boss-glow', d.glow, now / 1000);
       }
       d.label.setAlpha(prog.doorsOpen ? pulse : 0.55);
-      // Keep the label below the top bar (health, Focus, "Room 1 of 8"): in small rooms
+      // Keep the label below the top bar and the Challenge timer (health, Focus, "Room 1 of 8"): in small rooms
       // the top doors sit right under it on a 667-wide phone.
       const cam = this.cameras.main;
-      d.label.setY(Math.max((d.at.y + 0.55) * TILE, cam.worldView.y + HUD_TOP_PX / (cam.zoom / DPR)));
+      d.label.setY(Math.max((d.at.y + 0.55) * TILE, cam.worldView.y + DOOR_LABEL_TOP_PX / (cam.zoom / DPR)));
       this.keepLabelOffBoss(d);
     }
 
@@ -1908,7 +1910,7 @@ export class GameScene extends Phaser.Scene {
       const left = Math.max(0, limit - prog.ticks);
       const done = prog.cleared;
       this.timerText.setVisible(true);
-      this.timerText.setText(done ? (prog.ticks <= limit ? 'In time!' : 'Out of time') : clock(left, realTicksPerSecond()));
+      this.timerText.setText(done ? (prog.ticks <= limit ? ch.inTimeText : ch.outOfTimeShort) : clock(left, realTicksPerSecond()));
       this.timerText.setColor(left > realSecondsToTicks(10) || done ? '#f2e9d8' : '#ff6b5b');
     } else {
       this.timerText.setVisible(false);
@@ -2152,10 +2154,13 @@ export class GameScene extends Phaser.Scene {
       .setAlpha(0);
     // K23: the damage number is dropped (it read as harsh to kids); a clean room still says so.
     const parts = [`${perfects} Perfect`, ...(damage > 0 ? [] : ['no damage']), realClock(ticks)];
-    if (inTime !== null) parts.push(inTime ? 'in time!' : 'out of time');
+    const ch = this.room.challenge;
+    if (ch && inTime) parts.push(ch.inTimeText);
+    // A missed time gets its own line: the full sentence doesn't fit beside the stats at 667.
+    const missed = ch && inTime === false ? `\n${ch.outOfTimeText}` : '';
     const line = this.add
-      .text(width / 2, height * 0.36 + 58, `Room clear!  ${parts.join('  ·  ')}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 })
-      .setOrigin(0.5)
+      .text(width / 2, height * 0.36 + 48, `Room clear!  ${parts.join('  ·  ')}${missed}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4, align: 'center', wordWrap: { width: width - 32 } })
+      .setOrigin(0.5, 0)
       .setResolution(crisp())
       .setAlpha(0);
     this.cameras.main.ignore([letter, line]);

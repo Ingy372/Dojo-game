@@ -756,3 +756,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Golden run unchanged apart from the renamed ids. A new test blocks "Form" in player text outside kata names.
 **Next**
 - R-STANCE-b and later items in the R-STANCE plan.
+
+## B-T3-TUNE — Hearth Cook and Supper Rush polish (2026-10-25)
+**Done**
+- Hearth Cook 549/17 (#280); phases stay 0.66/0.33. The #279 probe is in packages/sim/test; the drafts copy is deleted.
+- Challenge timer keeps sim ticks; the per-frame cap is 10 ticks. In-time and out-of-time words live in each challenge room's content; Supper Rush says "Time's up! The soup cooled, but you still earned a chest."
+**Next**
+- Manager: other challenge rooms could get their own out-of-time lines.

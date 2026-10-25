@@ -1106,3 +1106,11 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - The golden run is the same as before apart from the renamed ids.
 - Button labels are now at least 12 px (the STANCE and VIRTUE labels were 9 and 11 px), and the stance name under the button is 12 px.
 - content/dojo/decorations.json still says "form" in lowercase where it means a kata; left as is.
+
+### B-T3-TUNE — Manager calls (2026-10-25)
+1. **Phase thresholds:** keep 0.66 / 0.33 (bestiary-plan.md: "Each phase starts at a health mark (100%, 66%, 33%)"). No spec says 50%/20%.
+2. **Challenge timer:** stays tick-based, so the timer and the whole game slow together on very slow frames. `MAX_TICKS_PER_FRAME` goes from 5 to 10 (GameScene.ts), so up to 500 ms of game time (about 568 ms real) runs per frame before anything is dropped. It still stops a burst of catch-up after a long pause.
+3. **Challenge words in content:** each challenge room has `inTimeText` and `outOfTimeText` next to its prompt. Supper Rush: "In time!" and "Time's up! The soup cooled, but you still earned a chest." (true: a missed challenge chest still drops `loot.chests.challenge.items` = 2). Gauntlet and Shield Wall keep "In time!" / "Out of time". The room-clear line puts a missed time on its own line, wrapped to the screen width.
+4. **Hearth Cook 549/17 (Researcher #280):** White-belt base maxHealth 543 → 549 and power 16 → 17; nothing else changed. R-BAL-12 stays green (belt 3–10: Challenge hits to beat 76–80, knock-out ≥ 5).
+5. **Timer label (#282 review, Oct 25):** when time runs out the timer shows only the short `outOfTimeShort` word ("Time's up!" in Supper Rush; "Out of time" elsewhere), on one line at the timer's normal size. The full sentence stays on the room-clear line, so the timer no longer wraps over the door labels at 667.
+- **B-T3-TUNE door labels vs timer (#282 Tester, Oct 25):** door labels now stop at screen y 72 (`DOOR_LABEL_TOP_PX`) instead of 56. This keeps them at least 8 px under the Challenge timer (top 36, bottom ~64) for any camera position and width. The timer itself doesn't move.
