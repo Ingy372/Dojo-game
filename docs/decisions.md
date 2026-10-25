@@ -937,3 +937,27 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 
 ## P-MENU-b (2026-10-25)
 - Manager approved the plan. A gear-card pick stays instant (the K32 detail block still shifts the grid until P-MENU-d). Code was only moved, nothing restyled. Gear cards keep their plain tap; press feedback on them moves to P-MENU-d with the new card. A Let go also redraws the tab bar, because the Gear (n) count changes.
+## B-BELT Manager stand-ins (2026-10-25)
+- Manager calls on #246's open questions, standing until Jay decides otherwise:
+  - No sign-off entry in the beta. An entered belt starts with 0 sign-offs and the Seal off.
+  - Entered stripes keep the placeholder words "Respect" and "Great Effort".
+  - No undo for a belt entry. The only way back is the B-SAFE wipe-data button, which resets everything, including the belt.
+
+## B-SAFE kid-safety items (2026-10-25)
+- Manager calls (B-SAFE GO, 2026-10-25):
+  - Wipe clears everything the game saved, by key prefix. That includes the belt entry and the play-time limit (Manager call: the wipe must reset the belt).
+  - Beta builds switch every test flag fully off: all URL flags and the dev day offset. A beta build is made with `npm run build:beta`, which runs `vite build --mode beta` and reads `VITE_BETA=1` from `apps/client/.env.beta`.
+  - The "saved on this phone" text is a PLACEHOLDER in `content/settings/safety.json`, to be aligned with B-DOCS.
+- Choices made while building:
+  - The wipe also removes the older `dojo.` settings keys (Reduced motion, Music and Sound volume). They don't start with `dojo-ascent-`, so a prefix-only wipe would have left them. Renaming them would have reset every player's settings. A Vitest check fails if a new saved key uses neither prefix.
+  - Both hidden 5-tap testing screens (Home and Dojo) are off in beta builds. They let anyone switch fake student profiles and get every decoration, so they count as test flags.
+  - The grown-up gate moved into `ui/grownUpGate.ts` so outside links can share it. `openOutsideLink()` is the only allowed way to leave the game, and a Vitest source scan fails on any other `window.open` or `location` change. The game has no outside links today.
+  - After a wipe the app reloads, so every scene and module reads the empty save. The first-launch note shows again.
+  - The wipe button sits in the play-time screen's bottom-left corner, away from #246's "Belt & stripes" and Done buttons, so the two PRs merge in either order.
+- Manager call on #249 (2026-10-25): the "Saved on this phone" card uses the privacy wording from #240 (`drafts/planning/BETA-privacy-page.md`, "The short version"), word for word, and the PLACEHOLDER marker is gone. If the privacy page changes, `content/settings/safety.json` changes too.
+## P-MENU-c
+- Manager call (2026-10-25): P-MENU-c approved as planned. Merge order: #253, #249, #250, #252, then P-MENU-c. #249 (B-SAFE) was still open, so `bot-code/B-SAFE` is merged into this branch (a normal merge) so the gate and play-time buttons exist; #249 must merge first.
+- `button()` gained `selected` (3 pt gold outline), `disabled` (35% and not tappable), `stroke`, `labelColor`, `labelWrap` and `labelDx`. The tap zone is added last to the given container, so it always sits above that container's dim layer.
+- On a 375 pt tall phone the left column did not fit §3a's sizes with a Blessing line under the bar. The Blessing moved into the character block as a third 12 pt line, and the Path card uses 12 pt padding (not 16) when it is shorter than 69 pt.
+- The XP bar remembers what it last showed (`dojo.xpBarShown` in localStorage). After a run it fills from that to the new value (from empty after a level-up). Nothing remembered means no animation.
+- CreateScene's round colour dots keep their own handler (circles with 44 pt hit areas); they are not square buttons.

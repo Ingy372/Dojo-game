@@ -1,6 +1,7 @@
 // Which art packs a belt tier uses, plus the test links that preview new art.
 
 import type { PackName } from './art';
+import { testFlags } from '../game/beta';
 
 /** Tower art packs, one per belt tier that has art so far (Tier 2 = Yellow belt, "Sunrise Garden"). */
 const TOWER_PACKS: PackName[] = ['tower-t1', 'tower-t2'];
@@ -10,7 +11,7 @@ const TOWER_PACKS: PackName[] = ['tower-t1', 'tower-t2'];
  * use the newest kit. For testing, ?tower=t1 or ?tower=t2 picks one directly.
  */
 export function towerPack(tier: number, search = window.location.search): PackName {
-  const asked = new URLSearchParams(search).get('tower');
+  const asked = testFlags(search).get('tower');
   const forced = asked ? `tower-${asked}` : null;
   if (forced && TOWER_PACKS.includes(forced)) return forced;
   return TOWER_PACKS[Math.min(Math.max(tier, 1), TOWER_PACKS.length) - 1];
@@ -24,7 +25,7 @@ export type AuraKind = 'swift' | 'guarding';
  * that aura on every enemy. It changes only the picture, never the game rules.
  */
 export function testAura(search = window.location.search): AuraKind | null {
-  const asked = new URLSearchParams(search).get('aura');
+  const asked = testFlags(search).get('aura');
   return asked === 'swift' || asked === 'guarding' ? asked : null;
 }
 

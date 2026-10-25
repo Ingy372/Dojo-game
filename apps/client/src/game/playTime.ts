@@ -3,6 +3,7 @@
 
 import { isPlayLimit, playTimeUp, tickPlayClock, type PlayClock, type Profile } from '@dojo/sim';
 import text from '../../../../content/settings/play-time.json';
+import { testFlags } from './beta';
 
 export const PLAY_TIME_TEXT = text;
 const KEY = 'dojo-ascent-play-clock';
@@ -34,7 +35,7 @@ export function touchPlayClock(now = Date.now()): PlayClock {
 
 /** The limit in minutes: a ?playlimit=N test link (any N >= 1), else the grown-up's setting. */
 export function playLimit(profile: Profile): number {
-  const n = Number(new URLSearchParams(window.location.search).get('playlimit'));
+  const n = Number(testFlags().get('playlimit'));
   if (Number.isFinite(n) && n >= 1) return n;
   return isPlayLimit(profile.playLimitMinutes) ? profile.playLimitMinutes : 0;
 }
