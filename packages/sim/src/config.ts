@@ -190,9 +190,25 @@ export const LOOT = {
  * Placeholder gear limits for the white belt tier, until real profiles arrive (milestone 4).
  * Gear stats are capped at these, so gear never outweighs real training.
  */
+// R-BAL-9b (#188, Manager's call): per-tier caps from the cost curve, in belt order.
 export const GEAR_CAPS = {
-  white: { power: 4, maxHealth: 30, guard: 8 },
+  white: { power: 1, maxHealth: 10, guard: 3, powerScale: 0.04 },
+  yellow: { power: 3, maxHealth: 25, guard: 5, powerScale: 0.08 },
+  orange: { power: 6, maxHealth: 41, guard: 8, powerScale: 0.11 },
+  green: { power: 9, maxHealth: 60, guard: 9, powerScale: 0.14 },
+  blue: { power: 12, maxHealth: 81, guard: 11, powerScale: 0.16 },
+  red: { power: 16, maxHealth: 104, guard: 12, powerScale: 0.19 },
+  'red-black': { power: 20, maxHealth: 128, guard: 14, powerScale: 0.21 },
+  brown: { power: 24, maxHealth: 154, guard: 15, powerScale: 0.22 },
+  'brown-black': { power: 29, maxHealth: 182, guard: 16, powerScale: 0.24 },
+  black: { power: 34, maxHealth: 211, guard: 17, powerScale: 0.26 },
 } as const;
+
+/** The gear caps for a belt tier (1 = white); tiers past black use black's. */
+export function gearCapsForTier(tier: number): (typeof GEAR_CAPS)[keyof typeof GEAR_CAPS] {
+  const rows = Object.values(GEAR_CAPS);
+  return rows[Math.max(0, Math.min(rows.length, Math.floor(tier)) - 1)];
+}
 
 // ---------------------------------------------------------------- the training link (milestone 4)
 
@@ -200,6 +216,8 @@ export const GEAR_CAPS = {
 export const PROGRESSION = {
   /** Each belt tier adds this many levels to the cap (white belt: cap 10). */
   levelsPerTier: 10,
+  /** R-BAL-5 (D3): each level step's weight is step + this, so later steps grow gently (last step ≤ 10 runs). Tier total unchanged. */
+  xpStepSoften: 11,
   /** Each level above 1 adds this much Health and Power. */
   healthPerLevel: 3,
   powerPerLevel: 0.4,
@@ -264,18 +282,21 @@ export const TRAINING_POINTS_PER_BELT = 28;
 /**
  * R-BAL-12 (Decision B): enemy files hold BASE numbers; a run at belt tier n multiplies
  * Health and Power by row n-1, then rounds. Guard and timings never scale. Internal only.
+ * Retuned (Manager, option B) so the LIVE enemies (white-belt base numbers from #203) stay in the
+ * #188 bands at every belt for all three model students; pinned by test/r-bal-12-bands.test.ts.
+ * Fit: drafts/planning/r-bal-12f-live-check.py.
  */
 export const ENEMY_TRAINING_SCALE: ReadonlyArray<{ maxHealth: number; power: number }> = [
   { maxHealth: 1.27, power: 1.19 },
-  { maxHealth: 1.57, power: 1.51 },
-  { maxHealth: 1.71, power: 1.74 },
-  { maxHealth: 1.9, power: 1.92 },
-  { maxHealth: 2.11, power: 2.07 },
-  { maxHealth: 2.24, power: 2.18 },
-  { maxHealth: 2.33, power: 2.28 },
-  { maxHealth: 2.45, power: 2.36 },
-  { maxHealth: 2.59, power: 2.43 },
-  { maxHealth: 2.68, power: 2.47 },
+  { maxHealth: 2.14, power: 2.06 },
+  { maxHealth: 3.19, power: 3.14 },
+  { maxHealth: 4.65, power: 4.32 },
+  { maxHealth: 6.56, power: 5.6 },
+  { maxHealth: 8.46, power: 7.06 },
+  { maxHealth: 10.77, power: 8.7 },
+  { maxHealth: 13.1, power: 10.36 },
+  { maxHealth: 15.91, power: 11.94 },
+  { maxHealth: 18.72, power: 13.8 },
 ];
 
 /** The row for a belt tier (1 = white); tiers past the list use the last row. */
@@ -380,4 +401,9 @@ export function hurtShakeScale(o: { beltIds: readonly string[]; beltId: string; 
   const at = o.beltIds.indexOf(o.beltId);
   const ranked = from >= 0 && at >= from;
   return ranked || o.difficulty === 'challenge' ? SCREEN_SHAKE.hurtScale : 0;
+}
+
+/** K25b (Manager): a Block is a success moment, so it never shakes; only being hit does. */
+export function eventShakeScale(kind: 'hurt' | 'block', o: Parameters<typeof hurtShakeScale>[0]): number {
+  return kind === 'block' ? 0 : hurtShakeScale(o);
 }
