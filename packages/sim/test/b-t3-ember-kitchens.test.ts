@@ -23,6 +23,14 @@ describe('B-T3 Ember Kitchens (Orange, tier 3)', () => {
     expect(r.challenge?.text).toBe('Clear the room in 90 seconds for a better chest!');
   });
 
+  it('Supper Rush: in-time and out-of-time words come from content, and a missed time still earns a chest', () => {
+    const r = content.rooms.find((x) => x.id === 'supper-rush')!;
+    expect(r.challenge?.inTimeText).toBe('In time!');
+    expect(r.challenge?.outOfTimeText).toBe("Time's up! The soup cooled, but you still earned a chest.");
+    expect(r.chest).toBeTruthy();
+    expect(content.loot.chests.challenge.items).toBeGreaterThan(0);
+  });
+
   it('Dough Blob splits into Doughlings; Hearth Cook has phases', () => {
     expect(content.enemies['dough-blob'].split).toEqual({ into: 'doughling', count: 2 });
     expect(content.enemies['hearth-cook'].phases?.length).toBeGreaterThan(1);

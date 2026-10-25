@@ -124,7 +124,7 @@ const HUD_BOTTOM = 56;
 const VISIBLE_ROWS = 6.75;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 /** Never run more than this many ticks in one frame (e.g. after a long pause). */
-const MAX_TICKS_PER_FRAME = 5;
+const MAX_TICKS_PER_FRAME = 10;
 
 /** Draw order for things standing in the room: lower on screen = in front. */
 function depthAt(yPx: number): number {
@@ -1033,7 +1033,7 @@ export class GameScene extends Phaser.Scene {
     this.chainText.setX(width / 2);
     this.placeMessage();
     this.roomLabel.setX(width - 16);
-    this.timerText.setX(width - 16);
+    this.timerText.setX(width - 16).setWordWrapWidth(Math.min(440, width * 0.5));
     this.screenFlash.setSize(width, height);
   }
 
@@ -1908,7 +1908,8 @@ export class GameScene extends Phaser.Scene {
       const left = Math.max(0, limit - prog.ticks);
       const done = prog.cleared;
       this.timerText.setVisible(true);
-      this.timerText.setText(done ? (prog.ticks <= limit ? 'In time!' : 'Out of time') : clock(left, realTicksPerSecond()));
+      this.timerText.setText(done ? (prog.ticks <= limit ? ch.inTimeText : ch.outOfTimeText) : clock(left, realTicksPerSecond()));
+      this.timerText.setFontSize(done ? 14 : 20);
       this.timerText.setColor(left > realSecondsToTicks(10) || done ? '#f2e9d8' : '#ff6b5b');
     } else {
       this.timerText.setVisible(false);
@@ -2152,10 +2153,13 @@ export class GameScene extends Phaser.Scene {
       .setAlpha(0);
     // K23: the damage number is dropped (it read as harsh to kids); a clean room still says so.
     const parts = [`${perfects} Perfect`, ...(damage > 0 ? [] : ['no damage']), realClock(ticks)];
-    if (inTime !== null) parts.push(inTime ? 'in time!' : 'out of time');
+    const ch = this.room.challenge;
+    if (ch && inTime) parts.push(ch.inTimeText);
+    // A missed time gets its own line: the full sentence doesn't fit beside the stats at 667.
+    const missed = ch && inTime === false ? `\n${ch.outOfTimeText}` : '';
     const line = this.add
-      .text(width / 2, height * 0.36 + 58, `Room clear!  ${parts.join('  ·  ')}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 })
-      .setOrigin(0.5)
+      .text(width / 2, height * 0.36 + 48, `Room clear!  ${parts.join('  ·  ')}${missed}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4, align: 'center', wordWrap: { width: width - 32 } })
+      .setOrigin(0.5, 0)
       .setResolution(crisp())
       .setAlpha(0);
     this.cameras.main.ignore([letter, line]);

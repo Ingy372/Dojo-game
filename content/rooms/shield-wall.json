@@ -5,7 +5,9 @@
   "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
   "challenge": {
     "seconds": 100,
-    "text": "Clear the room in 100 seconds for a better chest!"
+    "text": "Clear the room in 100 seconds for a better chest!",
+    "inTimeText": "In time!",
+    "outOfTimeText": "Out of time"
   },
   "tiles": [
     "####D#####D#####D###",
