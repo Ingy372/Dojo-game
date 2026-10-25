@@ -1,0 +1,195 @@
+{
+  "character": "dust",
+  "frameWidth": 128,
+  "frameHeight": 128,
+  "anchor": {
+    "x": 64.0,
+    "y": 104.96,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 80.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 1.6,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "directionVectors": {
+    "N": [
+      0,
+      -1
+    ],
+    "NE": [
+      0.7071,
+      -0.7071
+    ],
+    "E": [
+      1,
+      0
+    ],
+    "SE": [
+      0.7071,
+      0.7071
+    ],
+    "S": [
+      0,
+      1
+    ],
+    "SW": [
+      -0.7071,
+      0.7071
+    ],
+    "W": [
+      -1,
+      0
+    ],
+    "NW": [
+      -0.7071,
+      -0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "body",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "glow",
+      "order": 1,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "telegraph",
+      "order": 2,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "light",
+      "order": 3,
+      "tint": false,
+      "optional": false
+    }
+  ],
+  "animations": {
+    "idle": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "dust_body_idle.png",
+        "glow": "dust_glow_idle.png",
+        "telegraph": "dust_telegraph_idle.png",
+        "light": "dust_light_idle.png"
+      },
+      "note": "fluffy breathing wobble, 1 s loop"
+    },
+    "move": {
+      "frames": 6,
+      "fps": 12,
+      "durationSec": 0.5,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "dust_body_move.png",
+        "glow": "dust_glow_move.png",
+        "telegraph": "dust_telegraph_move.png",
+        "light": "dust_light_move.png"
+      },
+      "designSpeedTilesPerSecond": 3.0,
+      "note": "forward roll; play at any move speed"
+    },
+    "windup": {
+      "frames": 8,
+      "fps": 10,
+      "durationSec": 0.8,
+      "loop": false,
+      "tags": {
+        "telegraph": "0-7"
+      },
+      "sheets": {
+        "body": "dust_body_windup.png",
+        "glow": "dust_glow_windup.png",
+        "telegraph": "dust_telegraph_windup.png",
+        "light": "dust_light_windup.png"
+      },
+      "telegraphSeconds": 0.8,
+      "telegraphTicks": 16,
+      "telegraphIntensity": [
+        0.25,
+        0.287,
+        0.391,
+        0.542,
+        0.708,
+        0.859,
+        0.963,
+        1.0
+      ],
+      "note": "wiggle then puff up (16 ticks). telegraphIntensity: per-frame alpha (0..1) for the telegraph layer. It ramps up through the wind-up and fades smoothly through the first half of the attack (no hard cut). Multiply it into the tinted layer's alpha"
+    },
+    "attack": {
+      "frames": 11,
+      "fps": 10,
+      "durationSec": 1.1,
+      "loop": false,
+      "tags": {
+        "impact": "0",
+        "recover": "2-10"
+      },
+      "sheets": {
+        "body": "dust_body_attack.png",
+        "glow": "dust_glow_attack.png",
+        "telegraph": "dust_telegraph_attack.png",
+        "light": "dust_light_attack.png"
+      },
+      "keyFrames": {
+        "impact": 0
+      },
+      "recoverSeconds": 0.9,
+      "telegraphIntensity": [
+        1.0,
+        0.933,
+        0.75,
+        0.5,
+        0.25,
+        0.067,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "note": "the sneeze: a sharp forward squash, eyes shut"
+    }
+  },
+  "enemy": "dust-bunny",
+  "name": "Dust Bunny",
+  "sizeTiles": {
+    "bodyWidth": 0.35,
+    "bodyHeight": 0.4,
+    "radiusInData": 0.35
+  },
+  "tintGuidance": {
+    "mode": "multiply (Phaser setTint)",
+    "body": "no tint",
+    "glow": "no tint, always drawn (soft rim)",
+    "telegraph": "optional: draw only during the wind-up, tinted (e.g. #ff3b30 red, or #ffd36b gold in Guided mode) and flashed / pulsed in alpha",
+    "light": "no tint, always drawn (only the defeat has anything in it)"
+  }
+}
