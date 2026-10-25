@@ -24,6 +24,7 @@ import bruteData from '../../../content/enemies/brute.json';
 import white3 from '../../../fixtures/2-white-belt-3-signoffs.json';
 import yellow from '../../../fixtures/3-yellow-belt.json';
 import { testContent } from './load-content';
+import { holdSwing } from './hold-swing';
 
 const content = testContent();
 const brute = loadEnemy(bruteData);
@@ -130,7 +131,11 @@ describe('Technique Seals and Strike upgrades', () => {
     const hitDamage = (setup?: PlayerSetup) => {
       const w = world(setup);
       counterAt(w, 1);
-      stepUntil(w, room, 'hit');
+      // Measure the full Hit, not a Mash guard Block (B-MASHER-b).
+      for (let i = 0; i < 400 && !w.events.some((ev) => ev.kind === 'hit'); i++) {
+        holdSwing(w.players.p1);
+        stepWorld(w, room, { p1: IDLE });
+      }
       const ev = w.events.find((e) => e.kind === 'hit');
       return ev && ev.kind === 'hit' ? ev.damage : 0;
     };

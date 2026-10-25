@@ -834,8 +834,9 @@ function landHit(
 ): void {
   if (e.shieldUp) {
     if ((move === 'basic' || move === 'ripple') && !p.mods.shieldBreaker) {
-      // Basic attacks bounce off the shield: no damage, no Focus.
+      // Basic attacks bounce off the shield: no damage, but shield sparks give a little Focus (B-MASHER-a).
       p.facing = directionTo(p.pos, e.pos);
+      p.focus = Math.min(COMBAT.focus.max, p.focus + COMBAT.focus.perShieldBounce);
       world.events.push({ kind: 'shieldBlock', playerId: p.id, enemyId: e.id });
       return;
     }
@@ -1177,8 +1178,10 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
           }
         }
       }
-    } else if (guarding && a.counterable !== false) {
+    } else if (a.counterable !== false && (guarding || p.attackCooldown > 0)) {
       // Block: half damage (never against a dash-only attack: dash out instead), no stagger. The combo is kept.
+      // B-MASHER-b Mash guard: a hit that lands during the player's own basic-attack swing (attackCooldown)
+      // counts as the same Block, for everyone.
       p.guardTicks = 0;
       const share = Math.max(0.1, COMBAT.counter.blockDamageMultiplier - p.mods.blockCut);
       const dmg = damage(power, a.strength * share * weak, guardOf(p));

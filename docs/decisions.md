@@ -1122,3 +1122,12 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **Phase pause (2c):** at 66% and 33% the game holds still for about 1 real second (`PHASE_HOLD_TICKS` = `realSecondsToTicks(1)`), the same way the guided-Counter hold does: nothing moves, nothing is hurt, the Challenge timer stops. Once per threshold per fight; a reset fight starts over.
 - **Placeholder look until Jay OKs art:** a code-drawn grey lid at the end of the boss bar and a grey wash over the bar while the lid is up; a short grey tint on a clang (reuses the clank sound); at the phase pause a "ROAR!" word, an orange glow and the phase's `senseiLine`. Reduced motion keeps the lid marker and drops the glow and the tint. No new art or sound files.
 - **Art gaps:** the phase rigs don't draw every attack in the new patterns (P1 pin, P2 pin, P3 bonk). The client stands in with another wind-up the rig has; the warning shape is code-drawn. Listed in b-t3-art.test.ts until real art comes.
+
+### B-MASHER — Shield bounce Focus, mash guard, kid bot (2026-10-25)
+- **Manager go (Oct 25):** drafts/planning/B-MASHER-plan.md (#291), approved calls below. Turning it on for everyone is the Manager's routine tuning call.
+1. **Mash guard:** a counterable enemy attack that lands while the player is mid-swing (basic-attack `attackCooldown` > 0, the 12-tick swing) counts as a Block. Dash-only attacks (`counterable: false`) still hit.
+2. **It is a normal Block:** half damage, gear blockCut and reflect apply, combo and chain kept, same block event. A timed Counter stays strictly better (no damage, a stagger, more Focus).
+3. **Shield bounce Focus:** +6 Focus (`COMBAT.focus.perShieldBounce`, capped at max) for basic and ripple shield bounces. The Hearth Cook pot-lid clang gives none.
+4. **Glow:** a code-drawn soft gold ring for 0.4 s on a bounce. With `dojo.reducedMotion` 'on', a steady 0.4 s tint and no pulse.
+5. **Kid bot:** masher plus an independent 12% roll each tick to press Counter or Strike (50/50) at a random living enemy (seeded rng). The 200-run gate (belts 1–10 × 20 seeds; room-1 KOs ≤ 20, wins ≥ 35%) runs only with BALANCE; a 3-seed kid case runs in CI.
+- **Tests:** older tests that assumed a full Hit or 0 Focus now call `holdSwing` (test/hold-swing.ts) or expect the new values. The golden run was recaptured: only run outcomes changed (blocks, health, perfects), setup identical.

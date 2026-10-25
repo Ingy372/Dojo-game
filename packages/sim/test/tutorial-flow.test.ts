@@ -83,7 +83,8 @@ describe('tutorial health floor and held waves (K24a)', () => {
     while (releaseWave(world));
     for (let t = 0; t < 120 * TICKS_PER_SECOND; t++) {
       stepWorld(world, room, { p1: { kind: 'none' } });
-      hits += world.events.filter((e) => e.kind === 'hit').length;
+      // B-MASHER-b: the auto-swinging player Blocks some hits (Mash guard); both still hurt.
+      hits += world.events.filter((e) => e.kind === 'hit' || e.kind === 'block').length;
       low = Math.min(low, world.players.p1.health);
     }
     expect(world.enemies.filter((e) => e.def.id === 'swarmer').length).toBe(9);

@@ -51,6 +51,8 @@ export const COMBAT = {
     max: 100,
     /** Gained for every hit the player lands. */
     perHit: 5,
+    /** B-MASHER-a: gained when a basic (or ripple) hit bounces off a shield, so mashing still fills a Strike. */
+    perShieldBounce: 6,
     /**
      * Gained for each Perfect Counter in a chain (no Hit taken in between): 1st, 2nd, 3rd,
      * then the last number from then on. A Hit ends the chain; a Block keeps it (S1 change 2).

@@ -773,3 +773,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 **Next**
 - Jay to OK real lid / clang / roar art and sound (placeholders now).
+
+## B-MASHER — Mash guard, shield bounce Focus, kid bot (2026-10-25)
+**Done**
+- Hits that land mid-swing count as a Block; shield bounces give +6 Focus with a gold glow (steady tint in Reduced motion).
+- Kid bot gate (BALANCE): wins 137/200 (68.5%), room-1 KOs 0/200. Masher typical wins 14 → 59/200, room-1 KOs 148 → 0. Smart bot wins 200/200 both ways, run time within 2%.
+**Next**
+- Manager: b-t3-tune-2 boss-levers 15–20 s band misses at 14.86 s (main 15.1 s); smart damage taken per room down ~30%.

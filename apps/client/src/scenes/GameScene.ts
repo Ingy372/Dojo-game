@@ -198,6 +198,10 @@ export interface GameSceneData {
   run?: RunState;
 }
 
+/** B-MASHER-a shield-bounce glow: soft gold, 0.4 s. */
+const SHIELD_GLOW_COLOR = 0xf2c75c;
+const SHIELD_GLOW_MS = 400;
+
 interface EnemyView {
   container: Phaser.GameObjects.Container;
   /** The creature's art (body, glow, warning glow, defeat light, shield). */
@@ -1342,6 +1346,7 @@ export class GameScene extends Phaser.Scene {
           if (e) {
             this.sparks(e.pos, 4, 0xc9d6e8);
             this.floatText(e.pos, 'CLANK', '#c9d6e8', 18);
+            this.shieldGlow(e.pos, e.def.radius);
           }
           break;
         }
@@ -2325,7 +2330,23 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  private ring(at: Vec2, color: number, radiusTiles: number, alpha = 0.9): void {
+/**
+   * B-MASHER-a: a shield bounce gives Focus; a soft gold ring for 0.4 s hints "use your Strike!".
+   * Reduced motion: a steady gold tint for the same 0.4 s, with no pulse.
+   */
+  private shieldGlow(at: Vec2, radiusTiles: number): void {
+    const r = (radiusTiles + 0.15) * TILE;
+    if (reducedMotion()) {
+      const tint = this.addWorld(this.add.circle(at.x * TILE, at.y * TILE, r, SHIELD_GLOW_COLOR, 0.3).setStrokeStyle(4, SHIELD_GLOW_COLOR, 0.8).setDepth(9));
+      this.time.delayedCall(SHIELD_GLOW_MS, () => tint.destroy());
+      return;
+    }
+    const c = this.addWorld(this.add.circle(at.x * TILE, at.y * TILE, r).setStrokeStyle(5, SHIELD_GLOW_COLOR, 0.85).setDepth(9));
+    this.tweens.add({ targets: c, scale: { from: 0.9, to: 1.12 }, duration: SHIELD_GLOW_MS / 2, yoyo: true, ease: 'Sine.InOut' });
+    this.tweens.add({ targets: c, alpha: { from: 0.95, to: 0 }, duration: SHIELD_GLOW_MS, ease: 'Cubic.In', onComplete: () => c.destroy() });
+  }
+
+    private ring(at: Vec2, color: number, radiusTiles: number, alpha = 0.9): void {
     const c = this.addWorld(this.add.circle(at.x * TILE, at.y * TILE, radiusTiles * TILE).setStrokeStyle(5, color, alpha).setDepth(9));
     c.setScale(0.3);
     this.tweens.add({ targets: c, scale: 1, alpha: 0, duration: 300, ease: 'Cubic.Out', onComplete: () => c.destroy() });

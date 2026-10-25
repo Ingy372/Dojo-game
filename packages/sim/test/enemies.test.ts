@@ -70,7 +70,9 @@ describe('shield', () => {
     stepWorld(world, room, { p1: IDLE });
     expect(world.events.some((ev) => ev.kind === 'shieldBlock')).toBe(true);
     expect(e.health).toBe(e.def.maxHealth);
-    expect(p.focus).toBe(0);
+    // B-MASHER-a: shield sparks give a little Focus per bounce.
+    expect(p.focus).toBe(COMBAT.focus.perShieldBounce);
+    expect(COMBAT.focus.perShieldBounce).toBe(6);
 
     p.focus = COMBAT.strike.focusCost;
     p.attackCooldown = 0;
@@ -83,6 +85,18 @@ describe('shield', () => {
     e.pos = { x: 13.5, y: 6.5 };
     for (let i = 0; i < e.def.shield!.regrowTicks + 1; i++) stepWorld(world, room, { p1: IDLE });
     expect(e.shieldUp).toBe(true);
+  });
+
+  it('B-MASHER-a: shield-bounce Focus stops at the Focus cap', () => {
+    const { room, world, p } = arena([{ enemy: 'shield', column: 6, row: 4 }]);
+    const e = world.enemies[0];
+    e.pos = { x: p.pos.x + 0.9, y: p.pos.y };
+    e.mode = 'stagger';
+    e.modeTicks = 1000;
+    p.focus = COMBAT.focus.max - 2;
+    stepWorld(world, room, { p1: IDLE });
+    expect(world.events.some((ev) => ev.kind === 'shieldBlock')).toBe(true);
+    expect(p.focus).toBe(COMBAT.focus.max);
   });
 });
 
