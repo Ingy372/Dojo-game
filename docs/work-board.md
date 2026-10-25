@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-25 12:00 PM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#253.
+Last updated: 2026-10-25 2:00 PM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#270.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -25,9 +25,9 @@ Last updated: 2026-10-25 12:00 PM EDT by Dojo-ascent Manager. Catch-up covers PR
 | B-WRAP | Dojo-Ascent Programmer | **Merged (PR #243, Node 22 in #245; placeholder app id `com.placeholder.dojoascent`). Jay's phone check comes with the first B-CI build.** Capacitor 8 wrap (M8-a): landscape, safe areas, pause in background. | The Android build installs on Jay's phone, plays a full floor, and resumes after switching apps. | — |
 | B-CI | Dojo-Ascent Programmer | Cloud builds: GitHub Actions makes a signed iPhone build (macOS runner) and Android build. | A push makes both builds, and they show up in TestFlight and Play internal testing. | B-ACCT, B-WRAP |
 | B-BELT | Dojo-Ascent Programmer | **Done (PR #246, merged Oct 25; QA evidence on bot-qa).** Grown-up belt entry (D2), behind the grown-up gate. Plays the real reward moments. | A tester enters "Yellow, 2 stripes" after the gate question. The game shows Yellow, unlocks the right things, and still shows it after restarting. | — |
-| B-SAFE | Dojo-Ascent Programmer | **In QA (PR #249).** Kid-safety items: outside links behind the gate, a wipe-data button, a "saved on this phone" note. | Every outside link asks the gate question first. Wipe returns to a fresh start. The note shows on first launch. | — |
-| B-MENU | Dojo-Ascent Programmer | P-MENU-a to e. | Every button is at least 44 pt, shows press feedback, and the grid doesn't jump (P-MENU checks). | P-MENU-a (#228), P-MENU-b to e |
-| B-ART3 | Dojo-ascent Artist | **Samples approved and merged (#241, #242). Full set delivered: enemies #244, Hearth Cook Guardian #247, Ember Kitchens rooms #248; waiting on Jay (doughling look, pin colours).** Tier 3 (Orange) room art, enemies and Guardian. | The art files are in `incoming-art/` and approved by Jay **by Nov 20**. | Jay's OK on #244, #247, #248 |
+| B-SAFE | Dojo-Ascent Programmer | **Done (PR #249, merged Oct 25).** Kid-safety items: outside links behind the gate, a wipe-data button, a "saved on this phone" note. | Every outside link asks the gate question first. Wipe returns to a fresh start. The note shows on first launch. | — |
+| B-MENU | Dojo-Ascent Programmer | **Done (P-MENU-a to f merged Oct 25).** P-MENU-a to e. | Every button is at least 44 pt, shows press feedback, and the grid doesn't jump (P-MENU checks). | P-MENU-a (#228), P-MENU-b to e |
+| B-ART3 | Dojo-ascent Artist | **Samples approved and merged (#241, #242). Full set delivered: enemies #244, Hearth Cook Guardian #247, Ember Kitchens rooms #248; Jay approved Oct 25; all merged.** Tier 3 (Orange) room art, enemies and Guardian. | The art files are in `incoming-art/` and approved by Jay **by Nov 20**. | — |
 | B-T3 | Dojo-Ascent Programmer | Import tier 3, or set the "next floor opens soon" note. | An Orange-belt profile plays tier 3 to its Guardian, or sees the note if B-ART3 slipped. | B-ART3 |
 | B-DOCS | Dojo-Ascent Researcher & Planner | **Delivered (PR #236, merged Oct 25).** Parent beta note (one page), privacy page draft, TestFlight beta description, feedback email text. | All four drafts are in `drafts/planning/` for Jay and the lawyer. | — |
 | B-TESTERS | Jay | Pick 5–10 families. Collect each parent's Apple email (iPhone) or Google email (Android), plus their OK. | A list with names, phone type, email and an OK for each family. | — (B-DOCS done) |
@@ -40,16 +40,31 @@ Last updated: 2026-10-25 12:00 PM EDT by Dojo-ascent Manager. Catch-up covers PR
 | ID | Owner | What | Done when | Waits on |
 |---|---|---|---|---|
 | P-MENU-a | Dojo-Ascent Programmer | **Done (PR #228, merged Oct 25).** Section 2: spacing, type and motion tokens in `theme.ts`; shared `ui/button.ts` with press feedback, 44 pt hit areas and slide-off cancel; reduced-motion path | Every HomeScene tappable is ≥44×44 (a test walks the scene's interactive objects); pressing any button shows the scale-down; reduced motion shows no scale or slide | nothing |
-| P-MENU-b | Dojo-Ascent Programmer | **In QA (PR #253).** Split `render()` into shell and panel; the tab bar with sliding underline; `SWAP` on tab and page change | Tab taps redraw only the panel; the underline slides in 180 ms; a quick double tap never draws two panels | P-MENU-a |
-| P-MENU-c | Dojo-Ascent Programmer | **Delivered (PR #254, merge after #249); waiting on QA.** Section 3a hub left column (header row, character block, bars, buttons, Path card) | Matches the 3a table on 667×375 and 932×430 screenshots | P-MENU-a |
-| P-MENU-d | Dojo-Ascent Programmer | Section 3b Gear: bigger cards, bottom sheet, Wear pop, Let go confirm in the sheet, page dots | Picking a card never moves the grid; Wear pops the slot; screenshots on 667×375 and 932×430 | P-MENU-b |
-| P-MENU-e | Dojo-Ascent Programmer | Section 3c Gate: lock sizes, equal sundial and Seal cards, first-lit Seal pop once, no endless blinking | The Seal card never wraps past 2 lines on 667×375; the READY chip and lit locks don't loop | P-MENU-b |
-| P-MENU-f | Dojo-Ascent Programmer | **Decided:** soft code-made tap sound (logged on #228); bow bell on first lit Seal: yes. Pick a soft tap sound for press and say whether the bow bell is OK for the first lit Seal | Sounds named in decisions.md | P-MENU-a |
+| P-MENU-b | Dojo-Ascent Programmer | **Done (PR #253).** Split `render()` into shell and panel; the tab bar with sliding underline; `SWAP` on tab and page change | Tab taps redraw only the panel; the underline slides in 180 ms; a quick double tap never draws two panels | P-MENU-a |
+| P-MENU-c | Dojo-Ascent Programmer | **Done (PR #254).** Section 3a hub left column (header row, character block, bars, buttons, Path card) | Matches the 3a table on 667×375 and 932×430 screenshots | P-MENU-a |
+| P-MENU-d | Dojo-Ascent Programmer | **Done (PR #257).** Section 3b Gear: bigger cards, bottom sheet, Wear pop, Let go confirm in the sheet, page dots | Picking a card never moves the grid; Wear pops the slot; screenshots on 667×375 and 932×430 | P-MENU-b |
+| P-MENU-e | Dojo-Ascent Programmer | **Done (PRs #258, #260).** Section 3c Gate: lock sizes, equal sundial and Seal cards, first-lit Seal pop once, no endless blinking | The Seal card never wraps past 2 lines on 667×375; the READY chip and lit locks don't loop | P-MENU-b |
+| P-MENU-f | Dojo-Ascent Programmer | **Done (PR #260: 3c sizes, 96-tall Seal cards, first-lit pop + bell).** **Decided:** soft code-made tap sound (logged on #228); bow bell on first lit Seal: yes. Pick a soft tap sound for press and say whether the bow bell is OK for the first lit Seal | Sounds named in decisions.md | P-MENU-a |
 | P-MENU-g | Dojo-Ascent Game Logic/systems Tester | Before and after phone check, small and large phones, reduced motion on and off | Notes posted; no tap missed by a 6-year-old in 10 tries per control | P-MENU-c, d, e |
 | P-MENU-h | Jay | **Jay, Oct 25:** "make it feel premium"; planner/Manager picks accepted, fix on inspection. The taste calls below | Answers in decisions.md | this PR |
 
+## 0b2. Training Board redesign P-MENU2-a to i (from `drafts/planning/P-MENU2-training-board-redesign.md`, PR #259). Jay picked mood A, warm dojo wood (Oct 25).
+| ID | Owner | What | Done when | Waits on |
+|---|---|---|---|---|
+| P-MENU2-a | Dojo-Ascent Programmer | **Done (PR #264).** Tab skins, segmented switch, new tokens. | Abilities shows the 2-part switch, both 44 tall; screenshots 667×375 and 932×430. | — |
+| P-MENU2-b | Dojo-Ascent Programmer | **Done (PR #266).** Trophy Case: belt ribbon, shelves, cubbies, dot pages, detail sheet. | Earned cubbies with seals, not-yet ones with "Learn this at the dojo"; no lock icon, no counts. | — |
+| P-MENU2-c | Dojo-Ascent Programmer | **Done (PR #269, QA passed).** Unlock moment, once per unlock. | Cubby lights once after a new sign-off; no replay; Reduced motion fades only. | — |
+| P-MENU2-d | Dojo-Ascent Programmer | **Delivered (PR #270); waiting on QA.** Fighting Style data: starting Form + chosen Virtue in the profile; default = today's behaviour. | Sim tests: default profile fights exactly as today; a chosen Virtue/Form is used next run. | QA on #270 |
+| P-MENU2-e | Dojo-Ascent Programmer | Fighting Style screen: slot cards, tray, tap-to-equip, drag, preview, "Always with you" row (drag + preview may slip past beta). | A 6-year-old changes the Stance in 2 taps; the choice survives a restart. | P-MENU2-d; A6, A7 (placeholders OK) |
+| P-MENU2-f | Dojo-Ascent Programmer | **After beta.** Gear paper-doll, 3-column tiles, compare arrows. | As in the plan. | A11, A12 |
+| P-MENU2-g | Dojo-Ascent Programmer | **After beta (or beta if a–e finish early).** Last run "Scroll of the Climb". | As in the plan. | A10 |
+| P-MENU2-h | Dojo-ascent Artist | **Samples in PR #265 (Manager first pass: fixing clipped Throw label and red heart); 4 mocks sent to Jay for final OK.** A1–A13 in mood A; premium full set, no rush. | Jay approves the samples; atlases in `incoming-art/`. | Jay's final OK on #265 |
+| P-MENU2-i | Dojo-Ascent Game Logic/systems Tester | Phone pass on the new tabs: small and large, Reduced motion on/off, kid-tap test. | No missed tap in 10 tries; no text under 12; no guilt words. | P-MENU2-e |
+
+**Bug fixes from Jay's phone screenshot (Oct 25), all done:** B-GEAR-BUG #261, B-LASTRUN #262, B-POLISH-1 #263, B-NM-FIX #267, B-NM-FIX-2 #268.
+
 ## 0c. Done Oct 25
-**In QA (merge order #253, #249, #254, #250, #252):** P-MENU-c #254 (after #249), P-MENU-b #253, B-SAFE #249, Reduced-motion Celebrations and 'practiced' wording #250, 'practiced' sign-off cards #252 (after #250).
+P-MENU2-a #264, b #266, c #269, P-MENU2 plan #259, P-MENU-b #253, c #254, d #257, e #258, f #260, B-SAFE #249, Celebrations #250 and #252, Orange art #244 #247 #248, Guardian concepts #211, charms #214, bestiary set 2 #256, kata icons #227, bug fixes #261–#263, #267, #268.
 
 B-WRAP #243, Node 22 #245, B-BELT #246, R-BAL-14b #251, L4 beta-docs review #239 and fixes #240, B-ART3 samples #241 and room brief #242, bestiary set 1 #234 (Jay approved), P-MENU-a #228, B-DOCS #236, R-BAL-14 #237, C7 charm placeholders #233, K27 #218, K28 #219, K29 #220, K30 #221, K31 #222, K32 #226, R-BAL-12d #213, R-BAL-12e #210, K26 #215, R-BAL-13 #224, C14 #217, C13-F #229, A-BEST samples #207, dash telegraphs #209, P-MENU plan #225, Dec 15 replan #230 and beta plan #232. Walk #199 closed (original walk kept).
 
