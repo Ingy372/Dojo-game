@@ -315,8 +315,8 @@ elif E == "hearth-cook":    # a big round cook: pot-belly body, cream apron, low
     M_("capband", tube((0, R * 0.05, H * 0.82), (0, R * 0.05, H * 0.86), R * 0.6, R * 0.62, segs=24), CREAM)
     if A.phase >= 2:     # B-T3-TUNE-2b: the pot lid, held up in front of the left side of the belly like a little shield
         LIDM = toon_material("LID", "#c3c8de"); LIDR = toon_material("LIDRIM", "#8d93b8"); KNOB = toon_material("KNOB", "#f2b84b")
-        lc = (R * 0.42, -R * 1.14, H * 0.48)
-        M_("lid", ellipsoid(lc, (R * 0.72, R * 0.17, R * 0.68), segs=28, rings=14), LIDM, layer="lid")
+        lc = (R * 0.5, -R * 1.12, H * 0.38)
+        M_("lid", ellipsoid(lc, (R * 0.66, R * 0.17, R * 0.6), segs=28, rings=14), LIDM, layer="lid")
         M_("lidknob", ellipsoid((lc[0], lc[1] - R * 0.18, lc[2]), (R * 0.15, R * 0.09, R * 0.15)), KNOB, layer="lid")
         M_("lidshine", ellipsoid((lc[0] - R * 0.22, lc[1] - R * 0.12, lc[2] + R * 0.22), (R * 0.12, R * 0.03, R * 0.07)), toon_material("LIDHI", "#f4f6ff"), layer="lid", outline=False)
     if A.set == "bonk":  # B-T3-TUNE-2b P3 bonk: the rolling pin held by one handle in the right mitt, hanging down like the ladle
