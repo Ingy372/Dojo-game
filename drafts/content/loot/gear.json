@@ -540,7 +540,7 @@
       "effect": {
         "type": "counterWindow"
       },
-      "text": "A little more time to COUNTER",
+      "text": "COUNTER window {pct} longer",
       "description": "A feather that floats still. Wait, watch, then move."
     },
     {
@@ -593,7 +593,7 @@
       "effect": {
         "type": "dashOnBlock"
       },
-      "text": "Blocks fully charge your next DASH",
+      "text": "Blocks charge your next DASH by {pct}",
       "description": "A little lamp. Light grows when it is shared."
     }
   ]
