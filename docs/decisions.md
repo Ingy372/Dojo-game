@@ -958,6 +958,8 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - QA small fixes on #249 (2026-10-25, qa/2026-10-25-b-safe.md):
   - The B-BELT confirm card's cancel button now reads "Not yet" (`content/settings/belt-entry.json` `confirmNo`), so it no longer shares the name "Back" with the screen's own Back button.
   - The outside-link source scan in `b-safe.test.ts` also catches `window.location = …` / `location = …` and any `.href = …` assignment (for example on an `<a>` element). `==`/`===` comparisons don't match. Checked: it passes on current code and fails on planted `window.location =`, `location.href =` and `<a>.href =` lines, which were then removed.
+## fix-celebrate-rm (2026-10-25)
+- Manager call (QA on #246): the Reduced motion Celebrations fix and the "practiced" wording ship in their own small PR, not in #246. "Counted" means `legacy` (already passed that rank); a mix shows the real sign-offs line first, then the practiced line. Square buttons go to P-MENU-c.
 ## P-MENU-c
 - Manager call (2026-10-25): P-MENU-c approved as planned. Merge order: #253, #249, #250, #252, then P-MENU-c. #249 (B-SAFE) was still open, so `bot-code/B-SAFE` is merged into this branch (a normal merge) so the gate and play-time buttons exist; #249 must merge first.
 - `button()` gained `selected` (3 pt gold outline), `disabled` (35% and not tappable), `stroke`, `labelColor`, `labelWrap` and `labelDx`. The tap zone is added last to the given container, so it always sits above that container's dim layer.

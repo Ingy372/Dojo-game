@@ -655,6 +655,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - First launch shows a "Saved on this phone" note (privacy-page wording from #240) until it's tapped.
 - `npm run build:beta` makes a beta build with every URL test flag, the dev day offset and the hidden testing screens off. I checked this on the built files: in the normal build `?street=` opens Street Smarts; in the beta build it's ignored.
 - 7 new Vitest tests (`packages/sim/test/b-safe.test.ts`). Screenshots at 667x375 and 844x390, Reduced motion off and on.
+## fix-celebrate-rm
+- With Reduced motion on, the Celebrations rays stay still and no confetti shows. The Congratulations card says "practiced" for techniques counted from an earlier rank (legacy) and keeps "signed off" for real sign-offs.
 ## P-MENU-c
 - Training Board left column tidied per plan §3a: one 44 pt header row (◀ Dojo 96x44), a 64 pt character block, Level + cap on one line with a 10 pt bar, ENTER 52 and Practice room 44, rounded Path card. The XP bar fills over 400 ms after a run (instant with Reduced motion on).
 - Grown-up gate, play-time (choices, Belt & stripes, Done, Erase progress), wipe confirm, belt entry (chips and Back/Save) and CreateScene now use the shared rounded `button()`.
