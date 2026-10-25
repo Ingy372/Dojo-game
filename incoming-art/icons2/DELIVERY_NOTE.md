@@ -1,10 +1,11 @@
-# icons2: Delivery Note (3 samples)
+# icons2: Delivery Note (all 8 icons)
 
-**ITEM:** follow-up icons for Forms, Strikes and Virtues. These are samples only: 1 icon from each group.
+**ITEM:** follow-up icons for Forms, Strikes and Virtues: all 8 named items (3 Forms, 2 Strikes, 3 Virtues).
 
 **WHAT:**
-- `sprites/icon-rooted-form-64`, `icon-follow-up-kick-64` and `icon-shield-of-respect-64`, each at 64 px with an @2x, plus `sprites/icons2.json`.
-- `preview/icons2-preview-667x375`, showing the icons at 64 pt (real size), 96 pt and 32 pt on a phone-size menu2 panel.
+- `sprites/icon-<id>-64` for beginners-stance, rooted-form, flowing-form, follow-up-kick, quick-combo, shield-of-respect, second-wind and perfect-discipline, each at 64 px with an @2x, plus `sprites/icons2.json`.
+- After Jay's answers, Strikes are recoloured violet and the 5 remaining icons are added in the same style. Their techniques are in the README. In the second pass the Flowing motion marks became wavy lines (they read as ticks before), Quick Combo's arc and chevrons got stronger, and the Perfect Discipline floor ripples became a floor line with side sparkles.
+- `preview/icons2-preview-667x375` (+@2x): all 8 at 64 pt (real size) with a 32 pt strip, on a phone-size menu2 panel.
 - Everything is built by script in `source/`.
 - **Manager first pass:** Rooted Form read as a walking step, so it's redrawn as a symmetric horse-style stance (front view, both knees bent equally, back straight, guard up). In its second pass the thighs are flatter so the bend reads, and the fists sit beside the head, not on it.
 - The earlier pass 2 made these changes:
@@ -32,4 +33,4 @@ I picked the first earned item of each group. The original icons brief says "For
 - **Build method:** flat 2D (PIL), matching the seal medallions, is OK.
 - **Unnamed Forms and Strikes:** wait for names before making icons for the later kata Forms and the Strikes past Kick Combo 2.
 
-**NEXT:** on hold until the Manager says go. After that, I'll do the remaining 5 defined icons: Beginner's Stance, Flowing Form, Quick Combo, Second Wind and Perfect Discipline. Then I'll add all 8 to the menu2 icons64 set.
+**NEXT:** after the OK, I'll add all 8 to the menu2 icons64 set. Later Forms and Strikes are still waiting for names.

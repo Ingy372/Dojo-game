@@ -39,7 +39,9 @@ def icon(iid):
     return Image.open(os.path.join(SP, f'icon-{iid}-64@2x.png')).convert('RGBA')
 
 
-ITEMS = [('rooted-form', 'Forms', 'Rooted Form'), ('follow-up-kick', 'Strikes', 'Follow-up Kick'), ('shield-of-respect', 'Virtues', 'Shield of Respect')]
+ITEMS = [('beginners-stance', 'Forms', "Beginner's Stance"), ('rooted-form', 'Forms', 'Rooted Form'), ('flowing-form', 'Forms', 'Flowing Form'),
+         ('follow-up-kick', 'Strikes', 'Follow-up Kick'), ('quick-combo', 'Strikes', 'Quick Combo'),
+         ('shield-of-respect', 'Virtues', 'Shield of Respect'), ('second-wind', 'Virtues', 'Second Wind'), ('perfect-discipline', 'Virtues', 'Perfect Discipline')]
 
 
 def main():
@@ -50,26 +52,17 @@ def main():
     for x in range(0, W * K, 58 * K):
         d.line([(x, 0), (x, H * K)], fill=(66, 42, 24, 255), width=K)
     img.alpha_composite(nine(spr('panel-frame'), (W - 20) * K, (H - 20) * K, MAN['panel-frame']['nineSlice']), (10 * K, 10 * K))
-    d.text((W / 2 * K, 40 * K), 'icons2 samples at phone size (667×375, 64 pt icons)', font=f(13), fill=INK, anchor='mm')
-    # row 1: icons on tray tiles (selected / normal / equipped), real size 64 on a 72 tile
-    tiles = ['tray-tile-normal', 'tray-tile-selected', 'tray-tile-equipped']
-    x0 = 56
+    d.text((W / 2 * K, 36 * K), 'icons2 at phone size (667×375): 64 pt icons, with a 32 pt strip', font=f(13), fill=INK, anchor='mm')
     for i, (iid, grp, nm) in enumerate(ITEMS):
-        cx = x0 + i * 200
-        tx, ty = cx, 70
-        img.alpha_composite(icon(iid), (int(tx * K), int(ty * K)))
-        d.text(((tx + 74) * K, (ty + 24) * K), grp, font=f(10), fill=SOFT, anchor='lm')
-        d.text(((tx + 74) * K, (ty + 40) * K), nm, font=f(12), fill=INK, anchor='lm')
-    d.text((x0 * K, 150 * K), '64 pt (real size)', font=f(9), fill=SOFT, anchor='lm')
-    # row 2: 3x close-ups (@2x art shown at 3x of 64 = 192 pt is too big; show 1.5x = 96 pt) and a 32 pt small use
+        cx = 60 + (i % 4) * 150 if i < 4 else 60 + (i - 4) * 150 + (0 if i < 8 else 0)
+        y = 52 if i < 4 else 160
+        img.alpha_composite(icon(iid), (int((cx + 11) * K), int(y * K)))
+        d.text(((cx + 43) * K, (y + 74) * K), nm, font=f(10.5), fill=INK, anchor='mm')
+        d.text(((cx + 43) * K, (y + 88) * K), grp, font=f(8.5), fill=SOFT, anchor='mm')
     for i, (iid, grp, nm) in enumerate(ITEMS):
-        cx = x0 + i * 200
-        big = icon(iid).resize((96 * K, 96 * K), Image.LANCZOS)
-        img.alpha_composite(big, (cx * K, 180 * K))
-        small = icon(iid).resize((32 * K, 32 * K), Image.LANCZOS)
-        img.alpha_composite(small, ((cx + 112) * K, (180 + 32) * K))
-        d.text(((cx + 128) * K, 258 * K), '32 pt', font=f(9), fill=SOFT, anchor='mm')
-        d.text(((cx + 48) * K, 288 * K), '96 pt', font=f(9), fill=SOFT, anchor='mm')
+        x = 116 + i * 56
+        img.alpha_composite(icon(iid).resize((32 * K, 32 * K), Image.LANCZOS), (x * K, 270 * K))
+    d.text((W / 2 * K, 314 * K), '32 pt', font=f(9), fill=SOFT, anchor='mm')
     d.text((W / 2 * K, 330 * K), 'Labels are placeholders drawn here for the preview; the game draws them as text.', font=f(9.5), fill=SOFT, anchor='mm')
     img.save(os.path.join(PV, 'icons2-preview-667x375@2x.png'))
     img.resize((W, H), Image.LANCZOS).save(os.path.join(PV, 'icons2-preview-667x375.png'))

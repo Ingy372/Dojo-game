@@ -30,6 +30,56 @@
    "group": "Virtues",
    "ring": "virtue",
    "note": "Shield of Respect = a gold shield with a student bowing (rei). Technique (standing bow): heels together, legs straight, bend about 30 degrees at the waist with a straight back, hands flat at the sides of the thighs, eyes down."
+  },
+  "icon-beginners-stance-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icon-beginners-stance-64.png",
+   "group": "Forms",
+   "ring": "form",
+   "note": "Beginner's Stance = the ready stance, front view: steady and even. Technique: feet shoulder-width apart and parallel, knees soft, back straight, both fists closed in front of the belt, eyes forward."
+  },
+  "icon-flowing-form-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icon-flowing-form-64.png",
+   "group": "Forms",
+   "ring": "form",
+   "note": "Flowing Form = light on your feet. Side view facing right, a light fighting stance. Technique: weight on the balls of the feet with the back heel raised, knees bent, lead hand forward, rear hand by the chin. Soft motion arcs behind show the movement."
+  },
+  "icon-quick-combo-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icon-quick-combo-64.png",
+   "group": "Strikes",
+   "ring": "strike",
+   "note": "Quick Combo = practiced combos flow smoothly (Kick Combo 2: Kick Combo 1 plus 3 jumping spin kicks). Side view facing right: a round kick at middle height striking with the instep, support foot turned, body leaning back for balance, guard up. A sweeping arc shows the kick's path and soft chevrons show speed."
+  },
+  "icon-second-wind-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icon-second-wind-64.png",
+   "group": "Virtues",
+   "ring": "virtue",
+   "note": "Second Wind (Great Effort) = pushing on when you're tired. Side view facing right: the student rises from one knee. Technique: back knee on the floor, front foot flat with the knee over the ankle, back straight, one hand pressing on the front knee to stand. Soft rising swirls show the energy coming back."
+  },
+  "icon-perfect-discipline-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icon-perfect-discipline-64.png",
+   "group": "Virtues",
+   "ring": "virtue",
+   "note": "Perfect Discipline (Self-Discipline) = control and precision. Side view facing right: the student kneels in seiza, calm and still. Technique: kneeling with the shins on the floor and sitting on the heels, back straight, hands flat on the thighs, eyes forward. Soft still-water ripples on the floor show calm control."
   }
  }
 }

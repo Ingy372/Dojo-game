@@ -17,7 +17,7 @@ RIM = (240, 228, 195)
 FACE = (247, 240, 221)
 FAMILY = {  # ring colour, ring highlight, ink, soft ink
     'form':   ((76, 170, 120), (150, 210, 170), (34, 102, 72), (140, 200, 160)),
-    'strike': ((63, 154, 208), (122, 171, 207), (46, 111, 158), (127, 184, 224)),   # same blue as the seal icons
+    'strike': ((134, 96, 196), (186, 162, 228), (78, 50, 134), (182, 160, 222)),    # violet (Jay): distinct from Seal blue, Forms green, Virtue gold
     'virtue': ((226, 172, 52), (250, 214, 120), (122, 78, 16), (232, 196, 110)),
 }
 
@@ -116,7 +116,7 @@ def rooted_form():
 
 
 def follow_up_kick():
-    """Follow-up Kick = Strike adds a second kick. Side view facing right.
+    """Follow-up Kick = Strike adds a second kick (Kick Combo 1: front kick, front kick, inside kick, outside kick, spin kick; the icon shows the front kick). Side view facing right.
     Technique (front kick): support leg slightly bent with the foot flat, hips forward, kicking leg extended at
     chest height striking with the ball of the foot (toes pulled back), guard kept up. The first, lower kick is a
     soft ghost; a curved arrow shows the follow-up rising to the second."""
@@ -189,12 +189,145 @@ def shield_of_respect():
     return fam, I
 
 
-ICONS = [('rooted-form', 'Forms', rooted_form), ('follow-up-kick', 'Strikes', follow_up_kick), ('shield-of-respect', 'Virtues', shield_of_respect)]
+def sym(I, m, pts, w):
+    for sgn in (-1, 1):
+        I.limb(m, [(64 + sgn * (x - 64), y) for x, y in pts], w)
+
+
+def beginners_stance():
+    """Beginner's Stance = the ready stance, front view: steady and even.
+    Technique: feet shoulder-width apart and parallel, knees soft, back straight, both fists closed in front of the
+    belt, eyes forward."""
+    fam = 'form'; ring, ring_hi, ink, soft = FAMILY[fam]
+    I = Ink((1.0, 0, 0))
+    g = I.layer(); I.limb(g, [(40, 89), (88, 89)], 2.2); I.put(g, soft)
+    m = I.layer()
+    I.limb(m, [(64, 64), (64, 46)], 11.5)
+    I.disc(m, 64, 36, 6.2)
+    sym(I, m, [(60.5, 64), (57.5, 75.5), (56.5, 86.5)], 6.6)
+    sym(I, m, [(52.5, 86.8), (59, 86.8)], 4.6)
+    I.put(m, ink)
+    for sgn in (-1, 1):
+        X = lambda x: 64 + sgn * (x - 64)
+        I.arm([(X(58.5), 48), (X(53), 57), (X(59.5), 67)], (X(59.8), 67.5), 4.4, ink, FACE, 3.4)
+    b = I.layer(); I.limb(b, [(58.6, 62.4), (69.4, 62.4)], 2.6); I.put(b, ring_hi)
+    return fam, I
+
+
+def flowing_form():
+    """Flowing Form = light on your feet. Side view facing right, a light fighting stance.
+    Technique: weight on the balls of the feet with the back heel raised, knees bent, lead hand forward, rear hand
+    by the chin. Soft motion arcs behind show the movement."""
+    fam = 'form'; ring, ring_hi, ink, soft = FAMILY[fam]
+    I = Ink((1.0, 2, 0.5))
+    a = I.layer()
+    for y0, x1, ln in ((55, 47, 10), (66, 45, 13), (77, 45, 9)):
+        pts = [(x1 - ln * t, y0 + 1.6 * math.sin(t * math.pi * 2)) for t in [i / 10 for i in range(11)]]
+        I.limb(a, pts, 2.6)
+    I.limb(a, [(40, 89), (86, 89)], 2.2)
+    I.put(a, soft)
+    m = I.layer()
+    hip = (60, 64)
+    I.limb(m, [hip, (61.5, 47)], 9.5)
+    I.disc(m, 62.5, 37, 6.2)
+    I.limb(m, [hip, (68, 75), (72, 86)], 6.4)
+    I.limb(m, [(70, 86.6), (77, 86.6)], 4.6)
+    I.limb(m, [hip, (54, 75), (49.5, 84)], 6.4)
+    I.limb(m, [(49.5, 84), (46, 87)], 4.4)
+    I.put(m, ink)
+    I.arm([(60, 49), (56.5, 56), (65, 51)], (65.5, 50.8), 4.4, ink, FACE, 3.1)
+    I.arm([(63, 48.5), (71, 55), (74.5, 46)], (74.8, 45.6), 4.6, ink, FACE, 3.4)
+    b = I.layer(); I.limb(b, [(55.6, 62.4), (64.4, 63.2)], 2.6); I.put(b, ring_hi)
+    return fam, I
+
+
+def quick_combo():
+    """Quick Combo = practiced combos flow smoothly (Kick Combo 2: Kick Combo 1 plus 3 jumping spin kicks).
+    Side view facing right: a round kick at middle height striking with the instep, support foot turned, body
+    leaning back for balance, guard up. A sweeping arc shows the kick's path and soft chevrons show speed."""
+    fam = 'strike'; ring, ring_hi, ink, soft = FAMILY[fam]
+    I = Ink((1.0, 1, 0.5))
+    a = I.layer()
+    pts = [(60 + 25 * math.cos(t), 62 + 25 * math.sin(t)) for t in [math.radians(80 - i * 7) for i in range(10)]]
+    I.limb(a, pts, 3.4)
+    for cx in (33.5, 40):
+        I.limb(a, [(cx, 58.5), (cx + 4.5, 64), (cx, 69.5)], 3.2)
+    I.limb(a, [(40, 89), (86, 89)], 2.2)
+    I.put(a, (150, 124, 200))
+    m = I.layer()
+    hip = (58, 64)
+    I.limb(m, [hip, (50.5, 48)], 9.5)
+    I.disc(m, 48.5, 38.5, 6.2)
+    I.limb(m, [hip, (58.5, 76), (58, 86.5)], 6.4)
+    I.limb(m, [(53.5, 86.5), (62.5, 86.5)], 4.6)
+    I.limb(m, [hip, (72, 58.5), (84, 58)], 6.4)
+    I.limb(m, [(84, 58), (89, 59.5)], 4.4)
+    I.put(m, ink)
+    I.arm([(50, 50), (45, 56.5), (53.5, 51)], (54, 50.8), 4.4, ink, FACE, 3.1)
+    I.arm([(52, 49.5), (60.5, 55), (63.5, 46.5)], (63.8, 46), 4.6, ink, FACE, 3.4)
+    b = I.layer(); I.limb(b, [(53.6, 61.4), (61.6, 63.6)], 2.6); I.put(b, ring_hi)
+    return fam, I
+
+
+def second_wind():
+    """Second Wind (Great Effort) = pushing on when you're tired. Side view facing right: the student rises from
+    one knee. Technique: back knee on the floor, front foot flat with the knee over the ankle, back straight, one
+    hand pressing on the front knee to stand. Soft rising swirls show the energy coming back."""
+    fam = 'virtue'; ring, ring_hi, ink, soft = FAMILY[fam]
+    I = Ink((1.0, -2, 0))
+    a = I.layer()
+    for x0, h in ((82, 26), (89, 18)):
+        pts = [(x0 + 3 * math.sin(t * 5), 80 - h * t) for t in [i / 10 for i in range(11)]]
+        I.limb(a, pts, 2.6)
+        tp = pts[-1]
+        I.poly(a, [(tp[0] - 3.6, tp[1] + 2), (tp[0], tp[1] - 4), (tp[0] + 3.6, tp[1] + 2)])
+    I.limb(a, [(36, 89), (86, 89)], 2.2)
+    I.put(a, (200, 140, 40))
+    m = I.layer()
+    hip = (57, 71)
+    I.limb(m, [hip, (58.5, 52)], 10)
+    I.disc(m, 59.5, 42, 6.4)
+    I.limb(m, [hip, (71, 71.5), (72, 86)], 6.6)
+    I.limb(m, [(70, 86.6), (78, 86.6)], 4.6)
+    I.limb(m, [hip, (52, 86)], 6.6)
+    I.limb(m, [(52, 86.2), (41, 86.6)], 5.4)
+    I.put(m, ink)
+    I.arm([(59.5, 55), (64.5, 63.5), (70, 69)], (70.2, 69.4), 4.2, ink, (255, 240, 196), 2.8)
+    b = I.layer(); I.limb(b, [(52.6, 68.4), (61.4, 68.8)], 2.6); I.put(b, (250, 214, 120))
+    return fam, I
+
+
+def perfect_discipline():
+    """Perfect Discipline (Self-Discipline) = control and precision. Side view facing right: the student kneels
+    in seiza, calm and still. Technique: kneeling with the shins on the floor and sitting on the heels, back
+    straight, hands flat on the thighs, eyes forward. Soft still-water ripples on the floor show calm control."""
+    fam = 'virtue'; ring, ring_hi, ink, soft = FAMILY[fam]
+    I = Ink((1.0, 0, 0))
+    a = I.layer()
+    I.limb(a, [(38, 90), (86, 90)], 2.2)
+    for x, y in ((78, 56), (84, 66), (77, 74)):     # small calm sparkles beside the figure
+        I.poly(a, [(x, y - 3.6), (x + 1.4, y), (x, y + 3.6), (x - 1.4, y)])
+        I.poly(a, [(x - 3.6, y), (x, y + 1.4), (x + 3.6, y), (x, y - 1.4)])
+    I.put(a, (200, 140, 40))
+    m = I.layer()
+    I.limb(m, [(45, 86), (69, 86)], 6.4)
+    I.limb(m, [(49, 80), (70, 80.5)], 7.6)
+    I.limb(m, [(50.5, 79), (52.5, 54)], 10.5)
+    I.disc(m, 54, 43.5, 6.6)
+    I.put(m, ink)
+    I.arm([(53.5, 57), (58, 67), (66.5, 76.5)], (67, 77), 4.2, ink, (255, 240, 196), 2.6)
+    b = I.layer(); I.limb(b, [(46.6, 72.6), (56.6, 73.6)], 2.6); I.put(b, (250, 214, 120))
+    return fam, I
+
+
+ICONS = [('rooted-form', 'Forms', rooted_form), ('follow-up-kick', 'Strikes', follow_up_kick), ('shield-of-respect', 'Virtues', shield_of_respect),
+         ('beginners-stance', 'Forms', beginners_stance), ('flowing-form', 'Forms', flowing_form), ('quick-combo', 'Strikes', quick_combo),
+         ('second-wind', 'Virtues', second_wind), ('perfect-discipline', 'Virtues', perfect_discipline)]
 
 
 def build():
     os.makedirs(OUT, exist_ok=True)
-    man = {'about': 'icons2 samples (Forms / Strikes / Virtues). Medallion icons; labels are drawn by the game.', 'sprites': {}}
+    man = {'about': 'icons2 (Forms / Strikes / Virtues). Medallion icons; labels are drawn by the game.', 'sprites': {}}
     for iid, group, fn in ICONS:
         fam, I = fn()
         im = medallion(fam)
