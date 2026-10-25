@@ -1176,3 +1176,7 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **"Help me!"** (wording unchanged) is the enemy's line, so it sits over the calling enemy's head, not in the centre, so it can't read as the student speaking. It stays at least 8 px under the banner, clear of ROAR!, and gets the same keep-off-the-player move.
 - Shots (`b-t3-tune-2-shots/v4`, reduced motion on/off at 667/844/932): player overlap 0 for both words; "Help me!" centred on the Hearth Cook. Placement makes the speaker clear, so no new wording is needed.
 - **Name labels too:** "Help me!" also keeps 8 px off every enemy name label (the boss's name + bar pair, named monsters' plates and tags). It nudges up first (stays over the caller), then down; never within 8 px of the banner. v5 shots: 0 overlap with player, banner, labels and ROAR!.
+
+### B-CF-BUILD — npm only, so Cloudflare builds again (2026-10-25)
+- Cloudflare Workers Builds chooses the installer from the lockfile. A near-empty `pnpm-lock.yaml` (added with B-BELT, #246) made it install with pnpm, which installed nothing, so `tsc` was missing and every build since 3022b7b failed.
+- Removed `pnpm-lock.yaml`; root `package.json` now sets `"packageManager": "npm@10.9.2"` (the npm Cloudflare's build image ships; the box has 10.9.9, so we pin Cloudflare's). A test (`b-cf-build.test.ts`) fails if `pnpm-lock.yaml` or `yarn.lock` shows up at the root. No dashboard or account changes.
