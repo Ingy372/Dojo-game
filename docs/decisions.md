@@ -725,9 +725,24 @@ After #167 and #168 merged, S3-P1 took main in with a normal merge commit. Both 
 ## M7-P8 Music and Sound (2026-10-24)
 Jay's call, relayed by the Manager: AI-assisted WAFU music is fine ("I don't care if music is made by ai personally."). That answers shortlist question 1; the pick stays The Mountain Temple (Vol.35) and The Long Road (Vol.29) (drafts/planning/M7-P8a-music-decision.md).
 Manager calls:
-1. **Download WAFU only after Jay's yes.** He has now said yes. The itch.io download button needs a browser, so Jay downloaded the two zips himself through the normal free flow, then I extracted the files. Only these four files are committed, unchanged and not re-encoded: `mountain-temple-loop.ogg` (2.96 MB), `long-road-loop.ogg` (4.42 MB), `LICENSE-WAFU-Vol35.txt` and `LICENSE-WAFU-Vol29.txt`. The zips stay out of the repo. Both licence texts are kept because their wording differs slightly.
+1. **Download WAFU only after Jay's yes.** He has now said yes. The itch.io download button needs a browser, so the Programmer downloaded the two zips through the box browser from WAFU's free itch.io pages (the normal free flow, no login), then extracted the files. Only these four files are committed, unchanged and not re-encoded: `mountain-temple-loop.ogg` (2.96 MB), `long-road-loop.ogg` (4.42 MB), `LICENSE-WAFU-Vol35.txt` and `LICENSE-WAFU-Vol29.txt`. The zips stay out of the repo. Both licence texts are kept because their wording differs slightly.
 2. **The web preview is OK:** the music files are packed inside the app build and so are reachable in the web preview too. WAFU's rule (schools never get the raw WAV or OGG files) is met because we never hand the files over.
 3. **Commit the files directly, no Git LFS.** Only the two seamless-loop OGG files plus WAFU's LICENSE.txt.
 4. **Volume is 0 to 5 in whole steps,** with big − and + buttons and five bars, in Settings and outside the grown-up gate. Saved on the device as `dojo.musicVol` (default 3) and `dojo.sfxVol` (default 5, the same loudness as before).
 5. **Which track from each pack (Manager call).** "The Mountain Temple" and "The Long Road" are pack names, and each pack has 12 tracks. For the temple I used *The Great Hall I* (`Temple_Hall_01_loop.ogg`, 2:12); the pack README marks it for "inside, the hub". For the road I used *The Grass Road I* (`Grass_Road_01_loop.ogg`, 3:21); the README says "if you only use one track from this pack, use this one". Jay can ask for a different track; it is a one-line change in audio.json plus a file swap.
 How it works: content/settings/audio.json maps each screen to a track (Temple for Title, Create, Dojo, Home and Street Smarts; Long Road for the Tower), plus the fade time and the button text. apps/client/src/audio/Music.ts plays on the same audio context as the sound effects. It starts after the first touch, fades between tracks when the screen changes, and pauses when the app goes to the background. A missing or unreadable file just means silence. The files go in **assets/audio/music/** (the game's served folder; vite's publicDir is assets/, so apps/client/public would not be served) as `mountain-temple-loop.ogg` and `long-road-loop.ogg`.
+
+## K24a Tutorial tips wait for the player (2026-10-24)
+
+Manager calls:
+1. The Manager approved the M7-P8 track picks (The Great Hall I for the Dojo, The Grass Road I for the Tower) and gave the go for K24a, then K24b, then K24c.
+2. **New tutorial waves.** Wave 1 is one Brute (guided Counter). Wave 2 is 3 Swarmers plus a Brute. Wave 3 is a small Swarmer group. Wave 4 is Swarmers from two sides, to practise DASH.
+3. **Session 2: lesson-dash is a short reminder** ("Remember: DASH out of a crowd."). It stays a normal lesson; making it a fading follow-up broke 4 session tests.
+4. **Health never drops below 1 anywhere on the tutorial floor**, Swarmers included (minHealth 1 covers all player damage; a test locks it).
+
+Programmer calls:
+- The tips moved from drafts/ to content/tutorial/tutorial-floor.json (13 steps, `advance` 'tap'|'move', `waitFor`), and the game runs from that file.
+- Every tip waits for a **Got it** tap (the game pauses), then waits for the player to try that move before the next tip. All auto-advance timers on the tutorial floor are gone; multi-line tips show together.
+- Enemies and new waves hold (`enemyHold`, `waveHold` in the sim) until the matching tip's Got it. A step that can no longer happen (for example, no enemies left) ends quietly. There's no failing and no countdown.
+- The tip box is about 65% see-through, with an outline and shadow on the text. It keeps off the doors, chest and messages and, on the tutorial floor, off the hero.
+- On the tutorial floor every enemy sees the player (`seeAll`), so no enemy waits off-screen while a tip asks the player to beat it.

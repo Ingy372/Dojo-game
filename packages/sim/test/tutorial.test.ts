@@ -75,13 +75,18 @@ describe('tutorial floor (M7-P2)', () => {
     for (const id of TUTORIAL_STEPS) expect(lines[id].screens.length).toBeGreaterThan(0);
   });
 
-  it('is always the glowing-spot room with one Brute, then the chest, then the boss, then home', () => {
+  it('is always the glowing-spot room (Brute first, then the K24a waves), then the chest, then the boss, then home', () => {
     for (let seed = 1; seed <= 20; seed++) {
       const run = tutorial(seed);
       expect(run.totalRooms).toBe(3);
       const first = currentRoom(content, run);
       expect(first.goal).not.toBeNull();
-      expect(first.enemySpawns.map((s) => s.enemy)).toEqual(['brute']);
+      expect(first.enemySpawns.map((s) => `${s.wave}:${s.enemy}`)).toEqual([
+        '1:brute',
+        '2:swarmer', '2:swarmer', '2:swarmer', '2:brute',
+        '3:swarmer', '3:swarmer',
+        '4:swarmer', '4:swarmer', '4:swarmer', '4:swarmer',
+      ]);
       const { runEvents } = play(run);
       expect(run.status).toBe('cleared');
       expect(run.usedRooms.map((id) => content.rooms.find((r) => r.id === id)!.kind)).toEqual(['battle', 'treasure', 'boss']);

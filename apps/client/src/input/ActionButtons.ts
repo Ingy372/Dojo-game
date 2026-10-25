@@ -105,6 +105,12 @@ export class ActionButtons {
     this.counterPulse = level;
   }
 
+  /** Makes Dash pulse for the tutorial's Dash tip (K24a). */
+  pulseDash(on: boolean): void {
+    this.dashPulse = on;
+  }
+  private dashPulse = false;
+
   /** Shows whether each button is ready, from the player's current state. */
   update(p: PlayerState): void {
     const alive = p.downTicks === 0;
@@ -134,6 +140,7 @@ export class ActionButtons {
       this.dashRing.arc(0, 0, DASH_RADIUS + 4, -Math.PI / 2, -Math.PI / 2 + done * Math.PI * 2);
       this.dashRing.strokePath();
     }
+    this.dash.container.setScale(this.dashPulse ? 1 + Math.abs(Math.sin(this.scene.time.now / 140)) * 0.14 : 1);
     if (strikeReady) this.strike.container.setScale(1 + Math.sin(this.scene.time.now / 160) * 0.04);
     else this.strike.container.setScale(1);
 
