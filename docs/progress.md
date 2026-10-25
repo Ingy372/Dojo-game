@@ -583,3 +583,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 **Next**
 - Tester re-checks Q5.
 - Retest fix (Manager's call after the K27 retest): the boss "!" is drawn at full strength (opaque disc, solid colors) above the boss, or beside it when the boss bar leaves no room above, and never over a door label or the boss bar. Tutorial tips avoid the cue where it actually sits.
+
+## K30 — HOME label clear of the boss (2026-10-25)
+**Done**
+- Door labels slide aside when they would overlap the boss's head, health bar or name (`keepLabelOffBoss`).
+- Checked at 667x375 and 844x390 with Reduced motion off and on (/workspace/k30-shots/).
+**Next**
+- Tester re-check of the boss room.

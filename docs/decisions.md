@@ -840,3 +840,7 @@ What is in the code:
 - **Tutorial tip placement.** The tip and its Got it take the first spot clear of the hero, the doors and their labels (HOME), the chest, the boss and the action buttons. If no centred spot is clear, the box slides to the left edge, away from the buttons (Q5 B3, B4). If nothing is clear at all, it sits in the bottom-left corner. Tutorial tips wrap narrower (screen width minus 260 px) so they fit beside the buttons on a 667 px screen. The tip box opacity is unchanged.
 - **COUNTER's gold ring only when it's ready.** The gold ring and flash show only while COUNTER can be pressed, so a gold ring never sits on a dimmed button (Q5 B5).
 - 2026-10-24, Manager (K27 retest): the boss "!" must be full strength above the boss, or beside it if there's no room, clear of HOME and the health bar. Done by trying above, then right, then left of the enemy, and keeping the first spot clear of the boss bar and every door label.
+
+## K30: HOME label clear of the boss (2026-10-25, approved by the Manager)
+- Found in the K27 retest: in the boss room the HOME door label sat on the boss's head and its health bar.
+- Simplest fix: each frame, if a door label overlaps a live boss's head, health bar or name, it slides sideways to the far side of its door from the boss. Otherwise it stays centred on its door. Same place as the existing keep-under-the-top-bar rule.
