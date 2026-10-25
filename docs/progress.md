@@ -636,3 +636,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - apps/client now has capacitor.config.ts (PLACEHOLDER app id `com.placeholder.dojoascent`, "Dojo Ascent"), plus the generated android/ and ios/ projects. Landscape lock, full screen, and the game loop, music and sound effects pause in the background.
 - To make a debug APK: in apps/client, run `npm run build`, then `npx cap sync android`, then `cd android && ./gradlew assembleDebug`. This needs Node 22+, JDK 21 and the Android SDK.
 - Vitest, typecheck and the web build pass. Web screenshots at 667x375 and 844x390, Reduced motion off and on, show no regressions.
+
+## node-22
+- The repo now asks for Node 22+ (`engines`, `.nvmrc`), the same as Capacitor 8. No CI workflows exist yet. Typecheck, Vitest and the web build pass on Node 22.23.4.
