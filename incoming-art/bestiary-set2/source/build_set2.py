@@ -80,7 +80,7 @@ SPEC = {
     # arms, pebble = small flat oval stone) and own body + rim pairs (plum/peach, deep teal/mint, stone/periwinkle).
     "shell-snail": dict(W=0.42, H=0.46, arm=0.6, eye=1.05, color="#4a3a5c", belly="#6a5680", accent="#c98d5b", glow="#ffcf9a",
                     eye_c="#fff2e0", eye_z=0.62, eye_y=1.0, eye_dx=0.34, sh=0.5, arm_x=0.6),
-    "vine-sweeper": dict(W=0.45, H=0.50, arm=1.0, eye=1.0, color="#1f4a4a", belly="#2f6460", accent="#3f8a4f", glow="#8fe3c0",
+    "vine-sweeper": dict(W=0.45, H=0.50, arm=1.0, eye=1.0, color="#1c3a52", belly="#2a5670", accent="#2f8fa6", glow="#9fe0f5",
                     eye_c="#e8fff4", eye_z=0.6, eye_y=0.95, eye_dx=0.32, sh=0.5, arm_x=0.9),
     "pebble-pal": dict(W=0.30, H=0.26, arm=0.5, eye=1.15, color="#6e655c", belly="#9c8f7e", accent="#b8ad9c", glow="#b8c8ff",
                     eye_c="#f4f6ff", eye_z=0.58, eye_y=0.98, eye_dx=0.36, sh=0.5, arm_x=0.6),

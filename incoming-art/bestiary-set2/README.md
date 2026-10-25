@@ -7,7 +7,7 @@ defeat, render script, camera (`--size 128 --ortho 1.6`), 8 directions and sheet
 | Folder | Plan entry | Data file | Look | Shape | Colours (body / rim) |
 |---|---|---|---|---|---|
 | `shell-snail/` | Shellback Snail (Yellow) | `shell-snail.json` | plum snail with a big round caramel shell and a cream spiral, raised head, short feelers at head level, round friendly eyes and cheeks | long low foot + round shell | plum `#4a3a5c` (belly `#6a5680`), shell caramel `#c98d5b` (data colour), peach rim `#ffcf9a` |
-| `vine-sweeper/` | Vine Sweeper (Yellow) | `vine-sweeper.json` | wide leafy tangle with vine loops, flat leaves lying on top, roots, two long low vine arms with leaf tips, friendly eyes | wide low tangle with long arms | deep teal `#1f4a4a`, vines `#3f8a4f` (data colour), mint rim `#8fe3c0` |
+| `vine-sweeper/` | Vine Sweeper (Yellow) | `vine-sweeper.json` | wide leafy tangle with vine loops, flat leaves lying on top, roots, two long low vine arms with leaf tips, friendly eyes | wide low tangle with long arms | deep blue-teal `#1c3a52` (belly `#2a5670`), vines teal-blue `#2f8fa6`, ice-blue rim `#9fe0f5` (the data colour `#3f8a4f` was moved to teal-blue on the Manager's review, to stand apart from the Thorn Sprout) |
 | `pebble-pal/` | Pebble Pal (Green) | `pebble-pal.json` | small flat speckled pebble with a moss patch at the back, big round eyes | small flat oval | stone `#6e655c` / `#9c8f7e` (data colour), speckles `#b8ad9c`, moss `#7fa35a`, periwinkle rim `#b8c8ff` |
 
 All feelers, leaves and moss stay at or below head height. No red anywhere except the telegraph layer (neutral white; the game tints it).
@@ -16,7 +16,7 @@ All feelers, leaves and moss stay at or below head height. No red anywhere excep
 | | idle | move | windup (= telegraphTicks) | attack (= recoverTicks) |
 |---|---|---|---|---|
 | Shellback Snail | slow breathing sway, feelers bob | slow glide on the foot | draws the head back, 20 ticks | head-bump forward, 18 ticks |
-| Vine Sweeper | vines sway | shuffles on its roots | twists back (yaw -60), 28 ticks, `dashOnly` | 150 degree sweep with both arms over 5 frames, then recovers, 24 ticks |
+| Vine Sweeper | vines sway | shuffles on its roots | twists back (yaw -60), 28 ticks, `dashOnly` | 150 degree sweep (no arc angle set in the plan or data) with both arms over 5 frames, then recovers, 24 ticks |
 | Pebble Pal | little hops | hops forward | crouch, 14 ticks | forward pounce, 16 ticks |
 
 Extra: `shell-snail` also has a looping `hide` anim (pulls into the shell, eyes peek out on frames 3-4). See DECIDE.

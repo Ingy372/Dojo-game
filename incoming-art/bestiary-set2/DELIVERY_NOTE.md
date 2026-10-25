@@ -14,10 +14,16 @@ Red check on all body / glow / light sheets: 0 on the vine and pebble. 98 anti-a
 
 Lineup note: Rolling Pin and Doughling (PR #244) are not on main yet, so they are not in the lineup; the script adds them once merged.
 
+## v2 (Manager review)
+- Vine Sweeper recoloured toward teal-blue so it clearly stands apart from the Thorn Sprout's green: body `#1c3a52`, belly `#2a5670`, vines/leaves `#2f8fa6`, rim `#9fe0f5` (was teal `#1f4a4a` / green `#3f8a4f` / mint `#8fe3c0`). The game's data colour `#3f8a4f` is left alone (drafts are read only); use `#2f8fa6` if it should match the art.
+- Sweep arc: checked `bestiary-plan.md` (Vine Sweeper row: "purple striped arc + '!!', 28 ticks", "Arc width fixed") and `vine-sweeper.json` (`attack` and `dashOnlyAttack`: shape "arc", reach 3.0, areaRadius 0.6, no angle). No arc angle is set anywhere, so the drawn sweep stays at 150 degrees. The arc the player sees is drawn by the game.
+- Re-rendered the vine sheets, contact sheets, GIFs and `preview/lineup.png`. Snail and pebble unchanged.
+- Second pass (v2): checked the vine in 8 directions; leaves still flat and below the head, friendly face, the teal-blue reads clearly apart from the sprout in the lineup. Red check on the vine: 0.
+
 ## DECIDE
-1. Working looks and colours: snail plum + caramel shell + peach rim, vine deep teal + green vines + mint rim, pebble grey stone + moss + periwinkle rim. OK, or other colours? (open, for Jay)
-2. The snail's extra `hide` anim (into the shell, eyes peek out). Keep it (does the game want a hide state?) or drop it?
-3. No hide / extra anim on the Vine Sweeper. OK?
-4. The moss patch on the pebble's back: keep, or plain stone?
-5. The Vine Sweeper's green is close to the Thorn Sprout's green; the teal body and mint rim keep them apart. OK, or move the vine further (e.g. more blue)?
-6. The Vine Sweeper's windup is tagged `dashOnly` (from the data: dash only, 28 ticks), and the sweep is drawn at 150 degrees. Is that the arc the game uses?
+1. Working looks and colours: snail plum + caramel shell + peach rim, vine blue-teal + teal-blue vines + ice-blue rim, pebble grey stone + moss + periwinkle rim. OK, or other colours? (open, for Jay)
+2. DECIDED (Manager): keep the snail's `hide` animation.
+3. DECIDED (Manager): no extra animation for the Vine Sweeper.
+4. DECIDED (Manager): keep the moss on the pebble.
+5. DECIDED (Manager): the vine colour moved to teal-blue (see v2).
+6. Sweep arc: no angle in the plan or data, kept at 150 degrees. Tell me if the game uses a different arc width. (open)
