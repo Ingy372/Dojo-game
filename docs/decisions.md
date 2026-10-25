@@ -762,3 +762,17 @@ Programmer calls:
 - Before an enemy attacks it shows a cue drawn in code: a "!" in a ring that fills from the top (red), turning gold and full during the counter window.
 - During the counter window the COUNTER button gets a gold ring and flashes. With Reduced motion there's no pulse or flash; the cue and a steady bright COUNTER stay. No art changes.
 - The Sensei tip box avoids the cue so it never hides it.
+
+## R-BAL-9c — live enemy numbers (2026-10-24, targets from #188)
+Jay's balance calls (D1–D5, drafts/planning/balance-research.md), recorded here:
+- **D1:** enemies are scaled to the *expected* Artist for each tier, not the actual player.
+- **D2:** the target bands are OK as written (Swarmer 2–4 hits, mid 5–10, Brute 10–20, Floor-keeper 40–80; enemy hits to KO the player: 12 / 8 / 5 / 5 at least).
+- **D3:** XP steps are softened so the last step is ≤ 10 runs, using weights (k+11) (R-BAL-5).
+- **D4:** Endless stays +3% per floor with no cap (R-BAL-6 dropped).
+- **D5:** Challenge is ×1.5 enemy Health and Power.
+
+Live enemy changes (maxHealth / power / guard; nothing else changed):
+- Swarmer 40/8/0 → **20/7/0** (DECIDE-2), Shield 90/15/15 → **66/11/15**, Brute 180/25/25 → **126/17/25**, Floor-keeper 700/26/30 → **495/17/30**.
+- Checked with drafts/planning/r-bal-9c-check.py against #188's expected white Artist (Standard / Challenge ×1.5). Hits to beat: Swarmer 2/3, Shield 6/9, Brute 12/18, Floor-keeper 50/75. Enemy hits to KO the player: 18/13, 12/8, 8/5, 8/5. All in band; the player always survives at least 5 hits.
+- Elite and named Brutes follow the Brute (Guarding Brute 158 Health, Old Thumper 189). Their tests were updated to the new numbers.
+- Not in this PR: R-BAL-9b (per-tier gear caps, including the white gear cut). It waits on DECIDE-1 (R-BAL-9a, Jay), which isn't recorded yet.
