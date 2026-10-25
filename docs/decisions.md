@@ -1069,3 +1069,9 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - The pager row is always reserved, so the grid's y never depends on how many pages there are.
 - The sheet spans the whole Gear panel. At 667, a tile in the second row can be partly covered when the sheet opens at the top. Accepted, because the picked tile is still visible and the sheet is about 150 tall.
 - Fighting Style tray dots reuse pageDots, the Trophy Case rule: dots only, hidden for one page.
+
+### P-MENU2-f — Manager calls on #273 (2026-10-25)
+1. **Worn mark:** keep the gold ✓ on worn tiles (worn items stay in the grid).
+2. **Details toggle:** keep it. The compare shows arrows and words, and numbers only appear behind Details (D6).
+3. **Tiles:** icon tiles with no item names. The name stays in the sheet.
+4. **Rarity word (add-on):** a small rarity word sits under each tile's icon, as in the #265 mock. It is 12 px bold in the rarity colour, with ≥8 px side padding (`cubbyTextW`, `TROPHY_UI`), drawn with `wrapLikeCubby` and capped at 1 line. The words are content `rarityNames`. The widest word among the rarities that can drop (`LOOT.rarityWeights`) sets the minimum tile width, so the grid depends only on panel size and content, never on the bag, a pick, wearing or a filter. There are still at least 3 columns. Resulting layout: 3 columns × 2 rows at 667, 4 × 2 at 844 (was 5) and 5 × 3 at 932 (was 6). The doll column's minimum went from 104 to 102 so 3 tiles of 73 fit at 667. Known gap: "Legendary" is not droppable today but is in the dev seed. At 667 it has only about 3 px of padding, and at 844/932 about 6 px.

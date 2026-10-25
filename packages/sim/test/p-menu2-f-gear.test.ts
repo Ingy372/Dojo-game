@@ -5,8 +5,10 @@
 import { describe, expect, it } from 'vitest';
 import { equip, loadProfile, newProfile, unequip, wornItem, type GearItem } from '../src';
 import words from '../../../content/loot/gear-board.json';
-import { GEAR_BOARD, bagOrder, compareWith, filterBag, gearBoardLayout, gearColumns, tileBox, toggleFilter } from '../../../apps/client/src/ui/gearBoard';
-import { MIN_TAP } from '../../../apps/client/src/ui/tokens';
+import { GEAR_BOARD, tileWForLabel, bagOrder, compareWith, filterBag, gearBoardLayout, gearColumns, tileBox, toggleFilter } from '../../../apps/client/src/ui/gearBoard';
+import { MIN_TAP, TROPHY_UI, cubbyTextW } from '../../../apps/client/src/ui/tokens';
+import { LOOT, RARITIES } from '../src';
+import gearContent from '../../../content/loot/gear.json';
 
 const src = Object.values(import.meta.glob(['../../../apps/client/src/scenes/HomeScene.ts'], { query: '?raw', import: 'default', eager: true }))[0] as string;
 
@@ -146,4 +148,32 @@ describe('P-MENU2-f Fighting Style tray dots', () => {
     const scene = src.slice(src.indexOf('private renderFightingStyle('), src.indexOf('private renderFightingStyle(') + 5000);
     expect(scene).toMatch(/trayDots\(tp\.pages, this\.trayPageNo, L\.leftW\)/);
   });
+});
+
+// Manager add-on (#273): the small rarity word under each tile, 12 px, ≥8 px side padding, from content.
+// Widths are Chromium's bold 12px system-ui measures (the shots), rounded up.
+const WORD_W: Record<string, number> = { Everyday: 55, Special: 42, Rare: 30, Epic: 27 };
+describe('P-MENU2-f rarity word under each tile', () => {
+  const droppable = RARITIES.filter((r) => r in LOOT.rarityWeights);
+  const words = droppable.map((r) => (gearContent.rarityNames as Record<string, string>)[r]);
+  const widest = Math.max(...words.map((w) => WORD_W[w] ?? 99));
+  it('words come from content and the drawing uses the B-POLISH-2 helpers at 12 px', () => {
+    expect(words).toEqual(['Everyday', 'Special', 'Rare', 'Epic']);
+    expect(GEAR_BOARD.labelSize).toBeGreaterThanOrEqual(12);
+    expect(TROPHY_UI.cubbyPadX).toBeGreaterThanOrEqual(8);
+    expect(src).toMatch(/rarityName\(it\.rarity\)/);
+    expect(src).toMatch(/wrapLikeCubby\(lab, word, tw\)/);
+    expect(src).toMatch(/const tw = cubbyTextW\(box\.w\)/);
+  });
+  for (const s of SIZES) {
+    it(`${s.w}x${s.h}: every word fits with 8 px a side, still ≥3 columns, word below the icon`, () => {
+      const L = gearBoardLayout(s.w, s.h, tileWForLabel(widest));
+      expect(L.cols).toBeGreaterThanOrEqual(3);
+      expect(cubbyTextW(L.tileW)).toBeGreaterThanOrEqual(widest);
+      const iconS = Math.min(GEAR_BOARD.iconMax, L.tileH - GEAR_BOARD.labelH - 12 - 4);
+      expect(iconS).toBeGreaterThanOrEqual(28);
+      const last = tileBox(L, L.perPage - 1);
+      expect(last.y + last.h).toBeLessThanOrEqual(L.pagerY);
+    });
+  }
 });

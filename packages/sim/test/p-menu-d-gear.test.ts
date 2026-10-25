@@ -10,7 +10,7 @@ describe('P-MENU-d Gear tab', () => {
     // P-MENU2-f: the grid now comes from gearBoardLayout(w, h) (ui/gearBoard.ts), still space only.
     expect(gearGrid.length).toBeLessThanOrEqual(2);
     expect(gear).not.toMatch(/detailH/);
-    expect(gear).toMatch(/const L = gearBoardLayout\(w, h\);/);
+    expect(gear).toMatch(/const L = gearBoardLayout\(w, h, tileWForLabel\(widest\)\);/);
     const pre = gear.slice(0, gear.indexOf('gearBoardLayout('));
     expect(pre).not.toMatch(/this\.selected/);
     for (const h of [150, 200, 300]) expect(gearGrid(h)).toEqual(gearGrid(h));

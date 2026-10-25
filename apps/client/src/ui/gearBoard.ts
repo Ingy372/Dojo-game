@@ -5,12 +5,12 @@
 // its order ignores what is worn and its box never depends on the filter, sheet or page count.
 import { GEAR_SLOTS, compareGear, gearScore, type GearItem, type GearSlot } from '@dojo/sim';
 import words from '../../../../content/loot/gear-board.json';
-import { MIN_TAP, S1, S2, TYPE } from './tokens';
+import { MIN_TAP, S1, S2, TROPHY_UI, TYPE } from './tokens';
 
 export const GEAR_WORDS = words;
 
 /** Sizes. Tiles are never narrower than tileMin; rings and every tap target are at least 44. */
-export const GEAR_BOARD = { tileMin: 56, tileMax: 76, ring: 48, ringGap: S2, dollMin: 104, dollMax: 150, gap: S2, filterH: MIN_TAP, pagerH: MIN_TAP, sheetH: 150, wearH: 52, flyMs: 220, labelPad: 8, stroke: 2 } as const;
+export const GEAR_BOARD = { tileMin: 56, labelSize: 12, labelH: 15, iconMax: 36, tileMax: 76, ring: 48, ringGap: S2, dollMin: 102, dollMax: 150, gap: S2, filterH: MIN_TAP, pagerH: MIN_TAP, sheetH: 150, wearH: 52, flyMs: 220, labelPad: 8, stroke: 2 } as const;
 
 export interface GearBoardLayout {
   dollW: number;
@@ -36,15 +36,20 @@ export interface GearBoardLayout {
 }
 
 /** Columns that fit in a grid `gridW` wide: as many tiles of at least tileMin as fit, never fewer than 3. */
-export function gearColumns(gridW: number): { cols: number; tileW: number } {
+export function gearColumns(gridW: number, minTileW: number = GEAR_BOARD.tileMin): { cols: number; tileW: number } {
   const g = GEAR_BOARD;
-  const cols = Math.max(3, Math.floor((gridW + g.gap) / (g.tileMin + g.gap)));
+  const min = Math.max(g.tileMin, minTileW);
+  const cols = Math.max(3, Math.floor((gridW + g.gap) / (min + g.gap)));
   const tileW = Math.min(g.tileMax, Math.floor((gridW - (cols - 1) * g.gap) / cols));
   return { cols, tileW };
 }
 
-/** The Gear panel layout for a panel w x h (positions relative to its top-left). */
-export function gearBoardLayout(w: number, h: number): GearBoardLayout {
+/**
+ * The Gear panel layout for a panel w x h (positions relative to its top-left). `minTileW` is the
+ * widest rarity word plus its padding (B-POLISH-2 cubby rules), measured once from content, so the
+ * grid depends only on the panel size and the words, never on a pick, wear or filter.
+ */
+export function gearBoardLayout(w: number, h: number, minTileW: number = GEAR_BOARD.tileMin): GearBoardLayout {
   const g = GEAR_BOARD;
   const dollW = Math.max(g.dollMin, Math.min(g.dollMax, Math.round(w * 0.27)));
   const ringYs = GEAR_SLOTS.map((_, i) => i * (g.ring + g.ringGap));
@@ -58,8 +63,9 @@ export function gearBoardLayout(w: number, h: number): GearBoardLayout {
   const alwaysRows = Math.max(0, Math.floor((h - iconsTop + S1) / (alwaysIcon + S1)));
   const gridX = dollW + S2;
   const gridW = w - gridX;
-  const { cols, tileW } = gearColumns(gridW);
-  const tileH = Math.max(MIN_TAP, Math.min(tileW, 72));
+  const { cols, tileW } = gearColumns(gridW, minTileW);
+  // Room for the icon, the rarity word under it, and padding; fewer rows rather than fewer than 3 columns.
+  const tileH = Math.max(MIN_TAP, GEAR_BOARD.iconMax - 8 + GEAR_BOARD.labelH + 3 * S1 + 6, Math.min(tileW, 72));
   const filterY = 0;
   const gridY = g.filterH + S2;
   const pagerY = h - g.pagerH;
@@ -122,6 +128,11 @@ export function compareWith(item: GearItem, worn: GearItem | null): GearCompare 
 export const COMPARE_COLOR = { up: 0x6fbf8a, down: 0x9a93a8, same: 0x9a93a8 } as const;
 export const COMPARE_CSS = { up: '#6fbf8a', down: '#a59fb2' } as const;
 export const ARROW = { up: '↑', down: '↓' } as const;
+
+/** The width a tile needs for a rarity word `textW` wide: B-POLISH-2 padding (8 a side) plus the stroke. */
+export function tileWForLabel(textW: number): number {
+  return Math.ceil(textW) + 2 * TROPHY_UI.cubbyPadX + TROPHY_UI.stroke;
+}
 
 /** The slot label with {slot} filled in. */
 export function slotEmptyLine(slot: GearSlot): string {

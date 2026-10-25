@@ -719,7 +719,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## P-MENU2-f — Gear polish (2026-10-25)
 **Done**
 - The Gear screen now has a paper doll on the left with one ring per slot (hands, gi, charm) showing what's worn. Tapping a ring, or the matching filter button, shows only that slot. Tapping it again shows everything.
-- The bag is a grid of tiles with as many columns as fit, never fewer than 3 (3, 5 and 6 at 667, 844 and 932). It pages with ◀ ▶ and dots like the Trophy Case. The grid never moves on pick, wear or filter: worn items stay in place with a gold ✓.
+- The bag is a grid of tiles with as many columns as fit, never fewer than 3 (3, 4 and 5 at 667, 844 and 932). Each tile shows its rarity word (from content) under the icon at 12 px. It pages with ◀ ▶ and dots like the Trophy Case. The grid never moves on pick, wear or filter: worn items stay in place with a gold ✓.
 - The sheet shows ↑/↓ per stat in calm colours (no red) and plain words. The numbers sit behind Details. Wear is 52 tall.
 - Wearing flies the item to its ring with a small pop and a glow on the doll. With Reduced motion on, it's a plain swap. The save works as before.
 - Fighting Style: when the tray pages (1 tile per page at 667), page dots now show under it, with no numbers.

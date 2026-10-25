@@ -6,6 +6,8 @@ import playTimeText from '../../../../content/settings/play-time.json';
 import {
   BLESSING,
   GEAR_SLOTS,
+  LOOT,
+  RARITIES,
   realClock,
   describeItem,
   describeVirtue,
@@ -37,7 +39,7 @@ import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
 import { STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
-import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, filterBag, gearBoardLayout, slotEmptyLine, tileBox, toggleFilter } from '../ui/gearBoard';
+import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, slotEmptyLine, tileBox, toggleFilter } from '../ui/gearBoard';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining, selectProfile, shortDate } from '../game/student';
@@ -1094,7 +1096,12 @@ export class HomeScene extends Phaser.Scene {
    * never moves when you pick, wear or filter. Placeholder art drawn in code (no #265 art).
    */
   private renderGear(x: number, y: number, w: number, h: number): void {
-    const L = gearBoardLayout(w, h);
+    // The widest word of the rarities that can drop (content rarityWeights) sets the tiles' minimum
+    // width, so each word fits at 12 px with 8 px padding. It depends on content only, never the bag.
+    const probe = this.add.text(0, 0, '', { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold' });
+    const widest = Math.max(...RARITIES.filter((r) => r in LOOT.rarityWeights).map((r) => probe.setText(rarityName(r)).width));
+    probe.destroy();
+    const L = gearBoardLayout(w, h, tileWForLabel(widest));
     const W = GEAR_WORDS;
     const R = GEAR_BOARD.ring;
     this.gearRings = {};
@@ -1172,9 +1179,17 @@ export class HomeScene extends Phaser.Scene {
       if (sel) pickedBottom = ty + box.h;
       const b = button(this, { x: tx, y: ty, w: box.w, h: box.h, label: '', color: sel ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: sel, stroke: RARITY_COLOR[it.rarity], onTap: () => this.pick(it.uid) }, grid);
       const v = b.visual.setData('gearTile', it.uid);
-      const icon = addGearIcon(this, it, 0, 0, Math.min(40, box.h - 16));
+      // Icon above, the small rarity word under it (12 px, ≥8 px side padding, B-POLISH-2 wrap rules).
+      const lh = GEAR_BOARD.labelH;
+      const iconS = Math.min(GEAR_BOARD.iconMax, box.h - lh - 3 * S1 - 4);
+      const iy = -box.h / 2 + S1 + 2 + iconS / 2;
+      const icon = addGearIcon(this, it, 0, iy, iconS);
       if (icon) v.add(icon);
-      else v.add(slotGlyph(this, it.slot, 0, 0, Math.min(28, box.h - 24), RARITY_COLOR[it.rarity]));
+      else v.add(slotGlyph(this, it.slot, 0, iy, iconS - 8, RARITY_COLOR[it.rarity]));
+      const tw = cubbyTextW(box.w);
+      const word = rarityName(it.rarity);
+      const lab = this.add.text(0, box.h / 2 - S1 - 1, word, { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold', color: css(RARITY_COLOR[it.rarity]), align: 'center', wordWrap: { width: tw } }).setOrigin(0.5, 1).setResolution(crisp()).setData('rarityWord', true);
+      v.add(wrapLikeCubby(lab, word, tw).setMaxLines(1));
       if (cmp.overall === 'worn') {
         v.add(this.add.circle(-box.w / 2 + 9, -box.h / 2 + 9, 7, 0xffd166));
         v.add(this.add.text(-box.w / 2 + 9, -box.h / 2 + 9, '✓', { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#3a2618', fontStyle: 'bold' }).setOrigin(0.5).setResolution(crisp()));
