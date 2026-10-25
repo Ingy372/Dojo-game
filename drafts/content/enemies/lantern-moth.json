@@ -1,7 +1,7 @@
 {
   "id": "lantern-moth",
   "name": "Lantern Moth",
-  "notes": "DRAFT for C13-1 (bestiary-plan.md). Flutters at a distance and tosses soft glow pebbles. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). Flutters at a distance and tosses soft glow pebbles. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
   "color": "#e8c9f0",
   "maxHealth": 68,
   "power": 11,

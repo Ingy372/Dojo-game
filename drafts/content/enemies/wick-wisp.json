@@ -1,7 +1,7 @@
 {
   "id": "wick-wisp",
   "name": "Wick Wisp",
-  "notes": "DRAFT for C13-1 (bestiary-plan.md). A tiny candle flame that drifts in a wavy line and bumps you. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A tiny candle flame that drifts in a wavy line and bumps you. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
   "color": "#f6d77a",
   "maxHealth": 22,
   "power": 8,

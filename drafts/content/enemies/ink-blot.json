@@ -33,6 +33,10 @@
   "zone": {
     "damage": 0,
     "effect": "slow",
-    "maxPuddles": 3
+    "slowPercent": 30,
+    "slowPercentGuided": 15,
+    "endsOnStepOut": true,
+    "maxPuddles": 3,
+    "note": "Mild slow (Manager's call, C13-4); ends the moment you step out."
   }
 }

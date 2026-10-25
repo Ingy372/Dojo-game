@@ -1,7 +1,7 @@
 {
   "id": "ladle-lobber",
   "name": "Ladle Lobber",
-  "notes": "DRAFT for C13-1 (bestiary-plan.md). Flings soft soup splats from the back. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). Flings soft soup splats from the back. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
   "color": "#a0663a",
   "maxHealth": 135,
   "power": 23,

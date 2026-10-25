@@ -52,6 +52,13 @@ def check(path):
         fu=dz.get("followUp")
         if fu and (fu.get("neverSimultaneous") is not True or not isinstance(fu.get("telegraphTicks"),int) or fu["telegraphTicks"]<lo): e.append("followUp must be neverSimultaneous with a fair wind-up")
         if "DASH" not in d.get("senseiLine","")+d["bestiary"].get("tip",""): e.append("dash-only enemies must say DASH in the line or tip")
+    z=d.get("zone")
+    if z and z.get("effect")=="slow":
+        if z.get("damage")!=0 or not (0<z.get("slowPercent",99)<=30) or not (0<z.get("slowPercentGuided",99)<=z["slowPercent"]/2) or z.get("endsOnStepOut") is not True: e.append("slow zone: 0 damage, slowPercent <= 30, Guided <= half, endsOnStepOut true")
+    if d.get("id")=="copycat-shade" and (d.get("minFloor")!=3 or d.get("band")!="F3-4"): e.append("copycat-shade appears only from floor 3 (minFloor 3, band F3-4)")
+    if isinstance(d.get("minFloor"),int) and d["band"].startswith("F1") and d["minFloor"]>=3: e.append("band contradicts minFloor")
+    fu2=(d.get("dashOnlyAttack") or {}).get("followUp")
+    if fu2 and (not isinstance(fu2.get("gapAfterFirstTicks"),int) or fu2["gapAfterFirstTicks"]<20): e.append("followUp needs gapAfterFirstTicks >= 20")
     if "push" in d and "ride" in d["bestiary"].get("tip","").lower(): e.append("push tip stays basic; 'ride the push' belongs in insight")
     if "push" in d and "insight" not in d.get("bestiary",{}): e.append("pushers need an advanced bestiary.insight hint")
     if "push" in d and (d["push"].get("damage")!=0 or d["push"].get("intoHazard") is not False): e.append("push must do 0 damage and never push into a hazard")

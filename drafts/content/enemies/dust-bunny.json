@@ -1,7 +1,7 @@
 {
   "id": "dust-bunny",
   "name": "Dust Bunny",
-  "notes": "DRAFT for C13-1 (bestiary-plan.md). A fluffy dust ball that rolls straight at you, then sneezes. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A fluffy dust ball that rolls straight at you, then sneezes. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
   "color": "#b9b2a6",
   "maxHealth": 63,
   "power": 13,

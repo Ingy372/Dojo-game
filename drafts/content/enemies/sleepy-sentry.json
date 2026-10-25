@@ -1,7 +1,7 @@
 {
   "id": "sleepy-sentry",
   "name": "Sleepy Sentry",
-  "notes": "DRAFT for C13-1 (bestiary-plan.md). A drowsy stone statue. It yawns, then stomps a long purple stripe. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A drowsy stone statue. It yawns, then stomps a long purple stripe. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
   "color": "#8f9aa6",
   "maxHealth": 63,
   "power": 13,

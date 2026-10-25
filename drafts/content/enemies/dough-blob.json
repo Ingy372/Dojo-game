@@ -1,7 +1,7 @@
 {
   "id": "dough-blob",
   "name": "Dough Blob",
-  "notes": "DRAFT for C13-1 (bestiary-plan.md). A wobbly dough ball. When calmed it splits into two Doughlings. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second). When calmed it splits into 2 Doughlings (see variants.doughling; Manager's call, C13-2).",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A wobbly dough ball. When calmed it splits into two Doughlings. Stats set in R-BAL-8 (#183). Doughling variant stats still TODO. Distances in tiles, times in ticks (20 per second). When calmed it splits into 2 Doughlings (see variants.doughling; Manager's call, C13-2).",
   "color": "#f1dcb0",
   "maxHealth": 130,
   "power": 27,

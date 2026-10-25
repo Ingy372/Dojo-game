@@ -1,7 +1,7 @@
 {
   "id": "thorn-sprout",
   "name": "Thorn Sprout",
-  "notes": "DRAFT for C13-1 (bestiary-plan.md). A grumpy sprout that stays put and spits seeds. Stats are TODO for the Researcher (ENEMY_SCALE). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A grumpy sprout that stays put and spits seeds. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
   "color": "#6fae4a",
   "maxHealth": 94,
   "power": 17,
