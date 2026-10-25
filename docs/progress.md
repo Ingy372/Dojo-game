@@ -685,11 +685,20 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 **Next**
 - P-MENU2-d (loadout). Polish later: a few px of side padding on cubby labels at 844 ('Self-Defense #1' and '#3' run edge to edge).
+## P-MENU2-d — Fighting Style data (2026-10-25)
+
+**Done**
+- Profile `loadout` (starting Form + Virtue), read safely from old saves. The fight setup (`characterSetup`) uses it; with no loadout it gives exactly today's setup.
+- Golden test of today's default play (captured from main before the change), plus tests for a chosen Stance, a chosen Virtue, old saves and unearned picks.
+
+**Next**
+- P-MENU2-e: the Fighting Style screen, where students make these picks.
 
 ## B-POLISH-2 — Trophy Case polish (2026-10-25)
 - Unlock pop now scales 1 → 1.06 → 1 (no snap to 0.9 after the sweep). Reduced motion: fade only.
 - Detail sheet description allows 3 lines; Basic Form 1 at 667 shows its full text ending '15% slower.'
 - Cubby labels keep 8 px side padding; 'Self-Defense #1' and '#3' no longer run edge to edge at 844.
+- Removed unused COMBAT.rootedFormBonusTicks; tests read the Rooted bonus from content (golden unchanged).
 - Vitest b-polish-2.test.ts covers the pop keyframes, the line cap and the padding. Screenshots at 667, 844 and 932, Reduced motion on and off.
 
 **Next**
