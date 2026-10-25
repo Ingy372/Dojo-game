@@ -1,0 +1,49 @@
+{
+  "id": "echo-bell",
+  "name": "Echo Bell",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). A bell that rings a striped ring outward with one gap. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#b8a04a",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "ring",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 22,
+    "recoverTicks": "TODO",
+    "dashOnly": true
+  },
+  "parSeconds": "TODO",
+  "tier": "red-black",
+  "band": "F3-4",
+  "tell": "purple striped ring + '!!', the gap glows",
+  "senseiLine": "Find the gap, then DASH through.",
+  "description": "A bell that rings a striped ring outward with one gap.",
+  "bestiary": {
+    "tip": "DASH through the glowing gap.",
+    "lore": {
+      "red-black": "The great bell rang out too loud in the dark. Free it, and it chimes a gentle tune."
+    }
+  },
+  "dashOnlyAttack": {
+    "name": "echo ring",
+    "shape": "ring-with-gap",
+    "telegraphTicks": 22,
+    "recoverTicks": "TODO",
+    "strength": "TODO",
+    "tell": "purple-and-white stripes + '!!' + whoosh",
+    "shapeCue": "ring-with-gap",
+    "counterable": false,
+    "answer": "dash",
+    "noOverlapWithRedCircle": false,
+    "overlapFromFloor": 3,
+    "minOffsetFromRedCircleTicks": 10,
+    "overlapOnGuided": false
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "rumble-brute",
+  "name": "Rumble Brute",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). A big storm-wrapped brute. It gets tired like a Brute. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#4d5466",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "rumble slam",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 16,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "black",
+  "band": "F1-2",
+  "tell": "red circle",
+  "senseiLine": "Big and slow. Wait, then answer.",
+  "description": "A big storm-wrapped brute. It gets tired like a Brute.",
+  "bestiary": {
+    "tip": "COUNTER, or hit it while it's tired.",
+    "lore": {
+      "black": "A mountain guard wrapped in thunder. Calm it, and the rumble fades to a quiet hum."
+    }
+  }
+}

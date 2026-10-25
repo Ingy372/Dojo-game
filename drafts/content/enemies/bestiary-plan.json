@@ -4,7 +4,7 @@
     "look": "Purple-and-white diagonal stripes on the floor, shaped as a lane, an arc or a ring with a gap. Never a circle. A double '!!' over the enemy. A whoosh sound unlike the red circle's drum.",
     "counter": "COUNTER does nothing; the button dims while the stripes show and DASH pulses (first 3 times).",
     "windupTicks": "Never shorter than the blockable tell: at least 20 ticks (Brute's red circle is 16); tiers 1-3 use 26-30.",
-    "stacking": "Tiers 1-3: never at the same moment as a red circle (other wind-ups wait). Tier 4+: may overlap with at least 10 ticks between them; never on Guided.",
+    "stacking": "Tiers 1-3: never at the same moment as a red circle (other wind-ups wait). Tier 4+: floors 1-2 never overlap; from floor 3 they may overlap with at least 10 ticks between them; never on Guided.",
     "firstTaught": "White, floor 4 practice room (Sleepy Sentry), Health never below 1."
   },
   "tiers": [
@@ -312,7 +312,7 @@
           "behaviour": "Pushes a big round boulder down a stripe.",
           "tell": "Dash-only: purple stripe lane + '!!', 24 ticks.",
           "counterplay": "DASH out of the lane.",
-          "scaling": "From here a stripe may overlap a red circle, offset ≥ 10 ticks (never on Guided).",
+          "scaling": "From here, on floor 3+, a stripe may overlap a red circle, offset ≥ 10 ticks (never on Guided).",
           "dashOnly": true,
           "existing": false
         }

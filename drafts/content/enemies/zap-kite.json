@@ -1,0 +1,49 @@
+{
+  "id": "zap-kite",
+  "name": "Zap Kite",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). A kite that drags a zig-zag stripe of lightning. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#f0d040",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "zig-zag",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 20,
+    "recoverTicks": "TODO",
+    "dashOnly": true
+  },
+  "parSeconds": "TODO",
+  "tier": "brown-black",
+  "band": "F3-4",
+  "tell": "purple zig-zag stripe + '!!'",
+  "senseiLine": "Zig-zag stripes? DASH out.",
+  "description": "A kite that drags a zig-zag stripe of lightning.",
+  "bestiary": {
+    "tip": "DASH across or out of the stripe.",
+    "lore": {
+      "brown-black": "A kite that got caught in the storm. Free it, and it flies on a calm string again."
+    }
+  },
+  "dashOnlyAttack": {
+    "name": "lightning trail",
+    "shape": "zigzag",
+    "telegraphTicks": 20,
+    "recoverTicks": "TODO",
+    "strength": "TODO",
+    "tell": "purple-and-white stripes + '!!' + whoosh",
+    "shapeCue": "zigzag",
+    "counterable": false,
+    "answer": "dash",
+    "noOverlapWithRedCircle": false,
+    "overlapFromFloor": 3,
+    "minOffsetFromRedCircleTicks": 10,
+    "overlapOnGuided": false
+  }
+}

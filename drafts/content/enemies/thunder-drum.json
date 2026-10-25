@@ -1,0 +1,33 @@
+{
+  "id": "thunder-drum",
+  "name": "Thunder Drum",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Beats a steady rhythm: boom, boom, BOOM. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#7a5a9e",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "boom",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 20,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "brown-black",
+  "band": "F3-4",
+  "tell": "three red circles in a beat",
+  "senseiLine": "Listen. Boom, boom, then COUNTER.",
+  "description": "Beats a steady rhythm: boom, boom, BOOM.",
+  "bestiary": {
+    "tip": "Learn the beat, then COUNTER the big one.",
+    "lore": {
+      "brown-black": "The storm drum lost its happy beat. Free it, and it plays marching music again."
+    }
+  }
+}

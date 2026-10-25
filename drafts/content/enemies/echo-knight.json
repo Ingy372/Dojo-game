@@ -1,0 +1,33 @@
+{
+  "id": "echo-knight",
+  "name": "Echo Knight",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Remembers every guard trick: shield, turn and copy. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#b0b8c8",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "shield bash",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 18,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "black",
+  "band": "F3-4",
+  "tell": "red circle, shield shines",
+  "senseiLine": "You know every trick. Use them all.",
+  "description": "Remembers every guard trick: shield, turn and copy.",
+  "bestiary": {
+    "tip": "STRIKE, circle round, or change your move.",
+    "lore": {
+      "black": "A knight who learned every trick but forgot why. Free it, and it remembers to protect others."
+    }
+  }
+}

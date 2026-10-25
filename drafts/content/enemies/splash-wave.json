@@ -43,6 +43,7 @@
     "answer": "dash",
     "noOverlapWithRedCircle": false,
     "minOffsetFromRedCircleTicks": 10,
-    "overlapOnGuided": false
+    "overlapOnGuided": false,
+    "overlapFromFloor": 3
   }
 }

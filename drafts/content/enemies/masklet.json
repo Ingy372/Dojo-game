@@ -1,0 +1,33 @@
+{
+  "id": "masklet",
+  "name": "Masklet",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Little floating masks that giggle and gather in groups. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#c7b8e0",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "bump",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 14,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "red-black",
+  "band": "F1-2",
+  "tell": "spin, then red circle",
+  "senseiLine": "Little ones first. Breathe.",
+  "description": "Little floating masks that giggle and gather in groups.",
+  "bestiary": {
+    "tip": "Calm the little ones first.",
+    "lore": {
+      "red-black": "Tiny masks hid real faces when the echoes got loud. Calm them, and they float off smiling."
+    }
+  }
+}

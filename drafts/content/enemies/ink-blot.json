@@ -1,0 +1,38 @@
+{
+  "id": "ink-blot",
+  "name": "Ink Blot",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Leaves sticky ink puddles that slow you down. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#2f3a6b",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "splat",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 18,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "brown",
+  "band": "F3-4",
+  "tell": "a dark blue blot on the floor",
+  "senseiLine": "Clean floor is safe floor.",
+  "description": "Leaves sticky ink puddles that slow you down.",
+  "bestiary": {
+    "tip": "Keep space and stay on clean floor.",
+    "lore": {
+      "brown": "Spilled ink spread in the dark. Calm it, and it rests in its bottle, ready to write stories."
+    }
+  },
+  "zone": {
+    "damage": 0,
+    "effect": "slow",
+    "maxPuddles": 3
+  }
+}
