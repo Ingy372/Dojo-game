@@ -895,3 +895,4 @@ What is in the code:
 - Reduced motion: buttons don't scale; they brighten at once and fade back over 120 ms. The Blessing glow stays still.
 - The soft tap sound is made in code (Sfx.tap), so no sound file and no new dependency.
 - Practice room moved down 2 pt (8 pt gap) so its 44 pt tap area doesn't touch ENTER THE TOWER's.
+- Manager call on #228 (2026-10-25): the tap sound is fine as is; Jay tunes it at the menu check.
