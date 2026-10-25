@@ -7,15 +7,15 @@ import oldSave from '../../../fixtures/saves/old-form-loadout.json';
 const copy = <T>(v: T): T => JSON.parse(JSON.stringify(v));
 
 describe('R-STANCE-a save migration', () => {
-  it('an old save (form only, old id) keeps its stance', () => {
+  it('an old save (form only, old id) goes back to Ready (R-STANCE-d1 retired Flowing)', () => {
     const p = loadProfile(copy(oldSave));
-    expect(p.loadout).toEqual({ stance: 'flowing-stance', virtue: 'second-wind' });
+    expect(p.loadout).toEqual({ stance: null, virtue: 'second-wind' });
     expect(p.loadout).not.toHaveProperty('form');
   });
 
   it('a save with both keys keeps stance and drops form', () => {
-    const both = { ...copy(oldSave), loadout: { form: 'flowing-form', stance: 'rooted-stance', virtue: null } };
-    expect(loadProfile(both).loadout).toEqual({ stance: 'rooted-stance', virtue: null });
+    const both = { ...copy(oldSave), loadout: { form: 'flowing-form', stance: 'cat-stance', virtue: null } };
+    expect(loadProfile(both).loadout).toEqual({ stance: 'cat-stance', virtue: null });
     expect(migrateLoadout({ form: 'rooted-form', stance: null, virtue: 'second-wind' })).toEqual({ stance: null, virtue: 'second-wind' });
   });
 
@@ -28,7 +28,7 @@ describe('R-STANCE-a save migration', () => {
   });
 
   it('leaves new saves and junk alone', () => {
-    expect(migrateLoadout({ stance: 'rooted-stance', virtue: null })).toEqual({ stance: 'rooted-stance', virtue: null });
+    expect(migrateLoadout({ stance: 'cat-stance', virtue: null })).toEqual({ stance: 'cat-stance', virtue: null });
     expect(migrateLoadout(null)).toBeNull();
     expect(migrateLoadout('junk')).toBe('junk');
   });

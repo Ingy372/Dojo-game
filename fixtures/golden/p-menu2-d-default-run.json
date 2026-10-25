@@ -15,7 +15,13 @@
      "attackSpeed": 0,
      "moveSpeed": 0,
      "guardScale": 0,
-     "powerScale": 0
+     "powerScale": 0,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     }
    ],
    "virtue": null
@@ -412,7 +418,13 @@
      "attackSpeed": 0,
      "moveSpeed": 0,
      "guardScale": 0,
-     "powerScale": 0
+     "powerScale": 0,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     }
    ],
    "virtue": null
@@ -819,17 +831,29 @@
      "attackSpeed": 0,
      "moveSpeed": 0,
      "guardScale": 0,
-     "powerScale": 0
+     "powerScale": 0,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     },
     {
-     "id": "rooted-stance",
-     "name": "Rooted Stance",
-     "text": "Feet planted: 2 extra ticks to Perfect Counter and less damage taken, but 15% slower.",
-     "counterWindow": 2,
+     "id": "cat-stance",
+     "name": "Cat Stance",
+     "text": "A short step back. It shows up in every kata so far.",
+     "counterWindow": 1,
      "attackSpeed": 0,
-     "moveSpeed": -0.15,
-     "guardScale": 0.3,
-     "powerScale": 0
+     "moveSpeed": 0,
+     "guardScale": 0,
+     "powerScale": 0,
+     "dashCooldownScale": -0.25,
+     "dashScale": 1,
+     "blockCut": -0.15,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     }
    ],
    "virtue": {
@@ -1275,17 +1299,29 @@
      "attackSpeed": 0,
      "moveSpeed": 0,
      "guardScale": 0,
-     "powerScale": 0
+     "powerScale": 0,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     },
     {
-     "id": "rooted-stance",
-     "name": "Rooted Stance",
-     "text": "Feet planted: 2 extra ticks to Perfect Counter and less damage taken, but 15% slower.",
-     "counterWindow": 2,
+     "id": "cat-stance",
+     "name": "Cat Stance",
+     "text": "A short step back. It shows up in every kata so far.",
+     "counterWindow": 1,
      "attackSpeed": 0,
-     "moveSpeed": -0.15,
-     "guardScale": 0.3,
-     "powerScale": 0
+     "moveSpeed": 0,
+     "guardScale": 0,
+     "powerScale": 0,
+     "dashCooldownScale": -0.25,
+     "dashScale": 1,
+     "blockCut": -0.15,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     }
    ],
    "virtue": {
@@ -1767,27 +1803,45 @@
      "attackSpeed": 0,
      "moveSpeed": 0,
      "guardScale": 0,
-     "powerScale": 0
+     "powerScale": 0,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     },
     {
-     "id": "rooted-stance",
-     "name": "Rooted Stance",
-     "text": "Feet planted: 2 extra ticks to Perfect Counter and less damage taken, but 15% slower.",
-     "counterWindow": 2,
+     "id": "cat-stance",
+     "name": "Cat Stance",
+     "text": "A short step back. It shows up in every kata so far.",
+     "counterWindow": 1,
      "attackSpeed": 0,
-     "moveSpeed": -0.15,
-     "guardScale": 0.3,
-     "powerScale": 0
+     "moveSpeed": 0,
+     "guardScale": 0,
+     "powerScale": 0,
+     "dashCooldownScale": -0.25,
+     "dashScale": 1,
+     "blockCut": -0.15,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     },
     {
-     "id": "flowing-stance",
-     "name": "Flowing Stance",
-     "text": "Light on your feet: move 15% faster and attack 20% faster.",
+     "id": "front-stance",
+     "name": "Front Stance",
+     "text": "Step forward into it, ready to block and punch.",
      "counterWindow": 0,
-     "attackSpeed": 0.2,
-     "moveSpeed": 0.15,
+     "attackSpeed": 0,
+     "moveSpeed": -0.1,
      "guardScale": 0,
-     "powerScale": 0
+     "powerScale": 0.08,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     }
    ],
    "virtue": {
@@ -2269,27 +2323,45 @@
      "attackSpeed": 0,
      "moveSpeed": 0,
      "guardScale": 0,
-     "powerScale": 0
+     "powerScale": 0,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     },
     {
-     "id": "rooted-stance",
-     "name": "Rooted Stance",
-     "text": "Feet planted: 2 extra ticks to Perfect Counter and less damage taken, but 15% slower.",
-     "counterWindow": 2,
+     "id": "cat-stance",
+     "name": "Cat Stance",
+     "text": "A short step back. It shows up in every kata so far.",
+     "counterWindow": 1,
      "attackSpeed": 0,
-     "moveSpeed": -0.15,
-     "guardScale": 0.3,
-     "powerScale": 0
+     "moveSpeed": 0,
+     "guardScale": 0,
+     "powerScale": 0,
+     "dashCooldownScale": -0.25,
+     "dashScale": 1,
+     "blockCut": -0.15,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     },
     {
-     "id": "flowing-stance",
-     "name": "Flowing Stance",
-     "text": "Light on your feet: move 15% faster and attack 20% faster.",
+     "id": "front-stance",
+     "name": "Front Stance",
+     "text": "Step forward into it, ready to block and punch.",
      "counterWindow": 0,
-     "attackSpeed": 0.2,
-     "moveSpeed": 0.15,
+     "attackSpeed": 0,
+     "moveSpeed": -0.1,
      "guardScale": 0,
-     "powerScale": 0
+     "powerScale": 0.08,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     }
    ],
    "virtue": {
@@ -2775,27 +2847,61 @@
      "attackSpeed": 0,
      "moveSpeed": 0,
      "guardScale": 0,
-     "powerScale": 0
+     "powerScale": 0,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     },
     {
-     "id": "rooted-stance",
-     "name": "Rooted Stance",
-     "text": "Feet planted: 2 extra ticks to Perfect Counter and less damage taken, but 15% slower.",
-     "counterWindow": 2,
-     "attackSpeed": 0,
-     "moveSpeed": -0.15,
-     "guardScale": 0.3,
-     "powerScale": 0
-    },
-    {
-     "id": "flowing-stance",
-     "name": "Flowing Stance",
-     "text": "Light on your feet: move 15% faster and attack 20% faster.",
+     "id": "front-stance",
+     "name": "Front Stance",
+     "text": "Step forward into it, ready to block and punch.",
      "counterWindow": 0,
-     "attackSpeed": 0.2,
-     "moveSpeed": 0.15,
+     "attackSpeed": 0,
+     "moveSpeed": -0.1,
      "guardScale": 0,
-     "powerScale": 0
+     "powerScale": 0.08,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
+    },
+    {
+     "id": "fighting-stance",
+     "name": "Fighting Stance",
+     "text": "Jump into it to face a weapon, ready to kick.",
+     "counterWindow": 0,
+     "attackSpeed": 0,
+     "moveSpeed": 0,
+     "guardScale": 0,
+     "powerScale": 0,
+     "dashCooldownScale": 0,
+     "dashScale": 0.8,
+     "blockCut": 0.15,
+     "focusGain": 0.2,
+     "stillPower": 0,
+     "rootTicks": 0
+    },
+    {
+     "id": "horse-stance",
+     "name": "Horse Stance",
+     "text": "A rooted stance.",
+     "counterWindow": 0,
+     "attackSpeed": 0,
+     "moveSpeed": -0.2,
+     "guardScale": 0,
+     "powerScale": 0,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0.1,
+     "rootTicks": 10
     }
    ],
    "virtue": {
@@ -3281,27 +3387,61 @@
      "attackSpeed": 0,
      "moveSpeed": 0,
      "guardScale": 0,
-     "powerScale": 0
+     "powerScale": 0,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
     },
     {
-     "id": "rooted-stance",
-     "name": "Rooted Stance",
-     "text": "Feet planted: 2 extra ticks to Perfect Counter and less damage taken, but 15% slower.",
-     "counterWindow": 2,
-     "attackSpeed": 0,
-     "moveSpeed": -0.15,
-     "guardScale": 0.3,
-     "powerScale": 0
-    },
-    {
-     "id": "flowing-stance",
-     "name": "Flowing Stance",
-     "text": "Light on your feet: move 15% faster and attack 20% faster.",
+     "id": "front-stance",
+     "name": "Front Stance",
+     "text": "Step forward into it, ready to block and punch.",
      "counterWindow": 0,
-     "attackSpeed": 0.2,
-     "moveSpeed": 0.15,
+     "attackSpeed": 0,
+     "moveSpeed": -0.1,
      "guardScale": 0,
-     "powerScale": 0
+     "powerScale": 0.08,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0,
+     "rootTicks": 0
+    },
+    {
+     "id": "fighting-stance",
+     "name": "Fighting Stance",
+     "text": "Jump into it to face a weapon, ready to kick.",
+     "counterWindow": 0,
+     "attackSpeed": 0,
+     "moveSpeed": 0,
+     "guardScale": 0,
+     "powerScale": 0,
+     "dashCooldownScale": 0,
+     "dashScale": 0.8,
+     "blockCut": 0.15,
+     "focusGain": 0.2,
+     "stillPower": 0,
+     "rootTicks": 0
+    },
+    {
+     "id": "horse-stance",
+     "name": "Horse Stance",
+     "text": "A rooted stance.",
+     "counterWindow": 0,
+     "attackSpeed": 0,
+     "moveSpeed": -0.2,
+     "guardScale": 0,
+     "powerScale": 0,
+     "dashCooldownScale": 0,
+     "dashScale": 1,
+     "blockCut": 0,
+     "focusGain": 0,
+     "stillPower": 0.1,
+     "rootTicks": 10
     }
    ],
    "virtue": {
@@ -3724,22 +3864,22 @@
  "rooted": {
   "rootedAt": 1,
   "guided": {
-   "window": 15,
-   "perfects": 6,
-   "blocks": 1,
-   "health": 156
+   "window": 13,
+   "perfects": 8,
+   "blocks": 4,
+   "health": 141
   },
   "standard": {
-   "window": 11,
-   "perfects": 8,
-   "blocks": 3,
-   "health": 113
+   "window": 9,
+   "perfects": 6,
+   "blocks": 2,
+   "health": 127
   },
   "challenge": {
-   "window": 9,
-   "perfects": 8,
+   "window": 7,
+   "perfects": 7,
    "blocks": 3,
-   "health": 191
+   "health": 158
   }
  }
 }

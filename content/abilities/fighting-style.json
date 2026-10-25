@@ -14,8 +14,10 @@
   "askSensei": "Ask Sensei about this one",
   "lines": {
     "beginners-stance": "Steady and even. Good at everything.",
-    "rooted-stance": "Strong feet and tough blocks, but slower.",
-    "flowing-stance": "Faster feet and quicker hands.",
+    "cat-stance": "A short step back. It shows up in every kata so far.",
+    "front-stance": "Step forward into it, ready to block and punch.",
+    "fighting-stance": "Jump into it to face a weapon, ready to kick.",
+    "horse-stance": "A rooted stance.",
     "shield-of-respect": "A shield that soaks up hits for a while.",
     "second-wind": "Brings back Health and some Focus.",
     "perfect-discipline": "For a short time, every Counter is perfect."

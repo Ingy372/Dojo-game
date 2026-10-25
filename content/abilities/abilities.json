@@ -12,24 +12,51 @@
       "powerScale": 0
     },
     {
-      "id": "rooted-stance",
-      "name": "Rooted Stance",
-      "text": "Feet planted: 2 extra ticks to Perfect Counter and less damage taken, but 15% slower.",
-      "counterWindow": 2,
+      "id": "cat-stance",
+      "name": "Cat Stance",
+      "text": "A short step back. It shows up in every kata so far.",
+      "counterWindow": 1,
       "attackSpeed": 0,
-      "moveSpeed": -0.15,
-      "guardScale": 0.3,
-      "powerScale": 0
+      "moveSpeed": 0,
+      "guardScale": 0,
+      "powerScale": 0,
+      "dashCooldownScale": -0.25,
+      "blockCut": -0.15
     },
     {
-      "id": "flowing-stance",
-      "name": "Flowing Stance",
-      "text": "Light on your feet: move 15% faster and attack 20% faster.",
+      "id": "front-stance",
+      "name": "Front Stance",
+      "text": "Step forward into it, ready to block and punch.",
       "counterWindow": 0,
-      "attackSpeed": 0.2,
-      "moveSpeed": 0.15,
+      "attackSpeed": 0,
+      "moveSpeed": -0.1,
       "guardScale": 0,
-      "powerScale": 0
+      "powerScale": 0.08
+    },
+    {
+      "id": "fighting-stance",
+      "name": "Fighting Stance",
+      "text": "Jump into it to face a weapon, ready to kick.",
+      "counterWindow": 0,
+      "attackSpeed": 0,
+      "moveSpeed": 0,
+      "guardScale": 0,
+      "powerScale": 0,
+      "blockCut": 0.15,
+      "focusGain": 0.2,
+      "dashScale": 0.8
+    },
+    {
+      "id": "horse-stance",
+      "name": "Horse Stance",
+      "text": "A rooted stance.",
+      "counterWindow": 0,
+      "attackSpeed": 0,
+      "moveSpeed": -0.2,
+      "guardScale": 0,
+      "powerScale": 0,
+      "stillPower": 0.1,
+      "rootTicks": 10
     }
   ],
   "strikes": [
