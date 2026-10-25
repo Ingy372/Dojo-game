@@ -21,6 +21,11 @@ describe('P-MENU-d Gear tab', () => {
     expect(gear.slice(0, gear.indexOf('private renderSheet('))).not.toMatch(/setInteractive/);
     expect(sheet.match(/h: 44/g)!.length).toBeGreaterThanOrEqual(4);
   });
+  it('worn row is a fixed height, so the grid y never moves after Wear', () => {
+    expect(GEAR.wornH).toBeGreaterThanOrEqual(50 + 2 * 15 + 6);
+    expect(gear).toMatch(/const boxH = GEAR\.wornH;/);
+    expect(gear).not.toMatch(/boxH = Math\.max/);
+  });
   it('one dot per page, falls back to text when too many', () => {
     expect(pageDots(1, 200)).toBeNull();
     const d = pageDots(17, 240)!;

@@ -977,3 +977,4 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - DECIDE (K32): kept the 40 px worn-slot icon. Worn names wrap to two lines and end in "…" if they still don't fit.
 - The Gear grid's rows depend only on panel space (`gearGrid`). The detail sheet lays over the panel and moves to the top when the picked card is in the bottom rows, so a pick never moves or hides a card.
 - Merged origin/main (#249, #254) normally; docs conflicts kept both sides with main first. #252 (practiced-cards) is still unmerged and is carried in this branch.
+- 2026-10-25 — Tester (#257 QA): the worn-gear row is pinned to GEAR.wornH (86) so the bag grid's y never moves after Wear (194 before and after at 667/844/932).

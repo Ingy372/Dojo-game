@@ -72,7 +72,7 @@ export function xpFillFrom(prev: { level: number; share: number } | null, now: {
 }
 
 /** P-MENU-d: Gear tab sizes. */
-export const GEAR = { cardH: 56, gap: S2, pagerH: 56, arrowW: 44, dot: 8, dotGap: 6, sheetH: 120, wornIcon: 40 } as const;
+export const GEAR = { cardH: 56, gap: S2, pagerH: 56, arrowW: 44, dot: 8, dotGap: 6, sheetH: 120, wornIcon: 40, wornH: 86 } as const;
 
 /**
  * P-MENU-d: the bag grid. It depends only on the space left under the worn slots, never on

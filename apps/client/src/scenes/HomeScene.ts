@@ -691,9 +691,10 @@ export class HomeScene extends Phaser.Scene {
   private renderGear(x: number, y: number, w: number, h: number): void {
     const panelBottom = y + h;
     // Worn gear: one rounded card per slot. K32: 40 px icon top-left with the slot and stats
-    // beside it; long names wrap to two lines (no ellipsis) under it; every card grows to the tallest.
+    // beside it; long names wrap to two lines (no ellipsis) under it. The row is a fixed
+    // GEAR.wornH tall so the bag grid's y never moves when worn names change (e.g. after Wear).
     const slotW = (w - 16) / 3;
-    let boxH = 56;
+    const boxH = GEAR.wornH;
     const worn = GEAR_SLOTS.map((slot, i) => {
       const item = wornItem(this.profile, slot);
       const bx = x + i * (slotW + 8);
@@ -714,8 +715,7 @@ export class HomeScene extends Phaser.Scene {
       const tw = slotW - (tx - bx) - 6;
       add(this.text(tx, y + 6, SLOT_NAME[slot], TYPE.label, '#b9ad99'));
       if (item) add(this.oneLine(this.text(tx, y + 24, describeItem(item), 11, '#f2e9d8'), tw, 9));
-      const name = add(this.twoLines(this.text(bx + 8, y + 50, item ? item.name : 'Nothing', 12, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true, FONT, slotW - 16), slotW - 16, 11));
-      boxH = Math.max(boxH, name.y + name.height + 6);
+      add(this.twoLines(this.text(bx + 8, y + 50, item ? item.name : 'Nothing', 12, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true, FONT, slotW - 16), slotW - 16, 11));
       return { slot, c, g, stroke: item ? RARITY_COLOR[item.rarity] : 0x3a3150 };
     });
     for (const s of worn) {
