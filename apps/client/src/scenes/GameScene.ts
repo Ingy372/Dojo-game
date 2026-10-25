@@ -19,6 +19,7 @@ import {
   COMBAT,
   MOVEMENT,
   TICKS_PER_SECOND,
+  realClock,
   TELEGRAPH_NEARLY_FULL,
   counterWindowTicks,
   currentAttack,
@@ -2104,7 +2105,7 @@ export class GameScene extends Phaser.Scene {
       .setScale(2.2)
       .setAlpha(0);
     // K23: the damage number is dropped (it read as harsh to kids); a clean room still says so.
-    const parts = [`${perfects} Perfect`, ...(damage > 0 ? [] : ['no damage']), clock(ticks, TICKS_PER_SECOND)];
+    const parts = [`${perfects} Perfect`, ...(damage > 0 ? [] : ['no damage']), realClock(ticks)];
     if (inTime !== null) parts.push(inTime ? 'in time!' : 'out of time');
     const line = this.add
       .text(width / 2, height * 0.36 + 58, `Room clear!  ${parts.join('  ·  ')}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 })

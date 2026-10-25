@@ -583,3 +583,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 **Next**
 - Tester re-checks Q5.
 - Retest fix (Manager's call after the K27 retest): the boss "!" is drawn at full strength (opaque disc, solid colors) above the boss, or beside it when the boss bar leaves no room above, and never over a door label or the boss bar. Tutorial tips avoid the cue where it actually sits.
+
+## K29 — end-of-run clock in real seconds (2026-10-25)
+**Done**
+- Room-clear line, Last run time and Fastest floor show real seconds (`realClock`, same conversion as the Challenge timer). Par times and grades stay in game time.
+- Test: packages/sim/test/k29-real-clock.test.ts.
+**Next**
+- None; the shake rank mapping for other dojos is noted in decisions.md.

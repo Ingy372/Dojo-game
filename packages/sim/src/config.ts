@@ -419,3 +419,12 @@ export function hurtShakeScale(o: { kind: 'hurt' | 'windup' | 'block'; beltTier:
   if (o.kind === 'block' || o.reducedMotion) return 0;
   return o.beltTier >= SCREEN_SHAKE.hurtFromTier || o.difficulty === 'challenge' ? SCREEN_SHAKE.hurtScale : 0;
 }
+
+/**
+ * K29: "1:05" for a number of rules ticks, in real seconds on screen (same conversion as the
+ * K28 Challenge timer). For clocks the player reads; par times and grades stay in game time.
+ */
+export function realClock(ticks: number): string {
+  const s = Math.floor(ticksToRealMs(ticks) / 1000 + 1e-9);
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+}
