@@ -17,6 +17,10 @@ import {
   type WorldState,
 } from '../src';
 import bruteData from '../../../content/enemies/brute.json';
+import abilities from '../../../content/abilities/abilities.json';
+
+/** The Rooted Form's Perfect Counter bonus, read from content (its counterWindow). */
+const ROOTED_BONUS = abilities.forms.find((f) => f.id === 'rooted-form')!.counterWindow;
 import trainingRoom from '../../../content/rooms/training-room.json';
 
 const brute = loadEnemy(bruteData);
@@ -296,7 +300,7 @@ describe('the counter', () => {
       expect(events.some((ev) => ev.kind === 'block')).toBe(true);
     }
     const rooted = setup();
-    rooted.p.counterBonusTicks = COMBAT.rootedFormBonusTicks;
+    rooted.p.counterBonusTicks = ROOTED_BONUS;
     expect(counterAt(rooted.world, rooted.room, window + 1).some((ev) => ev.kind === 'perfectCounter')).toBe(true);
   });
 
