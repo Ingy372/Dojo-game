@@ -669,7 +669,7 @@ export class GameScene extends Phaser.Scene {
       this.danger.lineStyle(inWindow ? 6 : 3 * glow, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
       this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
       if (inWindow) this.counterWindowOpen = true;
-      this.drawWindupCue(x * TILE, y * TILE - v.top - 38, elapsed / e.windupTotal, inWindow, now);
+      this.drawWindupCue(x * TILE, Math.max(y * TILE - v.top - 38, this.belowBossBar()), elapsed / e.windupTotal, inWindow, now);
     } else if (e.mode === 'recover') {
       // The attack itself (it lands on its first frame), then catching its breath.
       const anim = v.pushing ? this.enemyAnim(s, 'pushpaw', 'attack') : this.enemyAnim(s, v.attack, 'attack');
@@ -1562,9 +1562,12 @@ export class GameScene extends Phaser.Scene {
       case 'tutorial-walk':
       case 'tutorial-space':
       case 'tutorial-tip-tough':
+        this.tutorialTip(id);
+        break;
       case 'tutorial-chest':
       case 'tutorial-boss':
-        this.tutorialTip(id);
+        // K27: each only in its own room (the chest tip once showed in room 1, Q5 B2).
+        if (this.room.kind === (id === 'tutorial-chest' ? 'treasure' : 'boss')) this.tutorialTip(id);
         break;
       case 'tutorial-brute':
         // The guided Counter teaches this step with its own lines, and holds until COUNTER is tapped.
@@ -1659,8 +1662,9 @@ export class GameScene extends Phaser.Scene {
       this.buttons.reset();
       const finished = gotIt(f, TUTORIAL);
       if (!finished) this.startTutorialTry(id);
-      // A tap step needs nothing more, so its banner goes when Got it is tapped.
-      else if (this.senseiText) {
+      // A tap step needs nothing more, so its banner goes when Got it is tapped; so does the
+      // boss tip, which otherwise sat over the boss for the whole fight (K27, Q5 B1).
+      if ((finished || id === 'tutorial-boss') && this.senseiText) {
         this.senseiText.destroy();
         this.senseiText = null;
       }
@@ -1917,19 +1921,43 @@ export class GameScene extends Phaser.Scene {
         top = Math.max(top, b.y1 + 6);
       }
     }
-    // K24a: the tutorial tip keeps off the action too: if it would cover the hero, it goes under them.
+    // K24a/K27: the tutorial tip (with its Got it) keeps off the hero, the doors and their
+    // labels, and the buttons too (Q5 B3, B4): it takes the first spot that is clear of them all.
     if (this.run?.tutorial) {
       const cam = this.cameras.main;
       const p = this.world.players[this.me].pos;
+      const k = TILE * (cam.zoom / DPR);
       const py = (p.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
       const px = (p.x * TILE - cam.worldView.x) * (cam.zoom / DPR);
-      const r = TILE * (cam.zoom / DPR) * 1.2;
       const H = view(this).height;
-      if (px + r > left && px - r < right && py + r > top && py - r < top + h) {
-        // Under the hero when it fits, otherwise above them; the Got it button always stays on screen.
-        top = py + r + 6 + h <= H - 8 ? py + r + 6 : Math.max(8, py - r - 6 - h);
-      }
-      top = Math.min(top, H - h - 8);
+      const keepOff = [
+        ...boxes,
+        { x0: px - k, x1: px + k, y0: py - 1.8 * k, y1: py + 0.8 * k },
+        // The boss too, so "A big one!" doesn't hide it (Q5 B1).
+        ...this.world.enemies
+          .filter((e) => e.def.boss && e.mode !== 'defeated')
+          .map((e) => {
+            const ex = (e.pos.x * TILE - cam.worldView.x) * (cam.zoom / DPR);
+            const ey = (e.pos.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
+            return { x0: ex - 1.5 * k, x1: ex + 1.5 * k, y0: ey - 3 * k, y1: ey + k };
+          }),
+        ...this.buttons.objects.map((o) => {
+          const r = (o as Phaser.GameObjects.Container).getBounds();
+          return { x0: r.left - 8, x1: r.right + 8, y0: r.top - 8, y1: r.bottom + 8 }; // + the gold ring
+        }),
+      ];
+      const spots = [top, ...keepOff.flatMap((b) => [b.y1 + 6, b.y0 - 6 - h])];
+      // Centred first; if nothing is clear there, slid to the left edge, away from the buttons.
+      const fit = [view(this).width / 2, 8 + t.width / 2]
+        .map((x) => {
+          const clear = (y: number) =>
+            y >= 8 && y + h <= H - 8 && !keepOff.some((b) => b.x1 > x - t.width / 2 && b.x0 < x + t.width / 2 && b.y1 > y && b.y0 < y + h);
+          return { x, y: spots.find(clear) };
+        })
+        .find((s) => s.y !== undefined);
+      // No clear spot at all: the bottom-left corner, which is away from the buttons and the doors.
+      t.setX(fit?.x ?? 8 + t.width / 2);
+      top = fit?.y ?? H - h - 8;
     }
     t.setY(top);
     btn?.setPosition(t.x, top + t.height + 8);
@@ -2236,6 +2264,13 @@ export class GameScene extends Phaser.Scene {
     return g.step === 0 ? 0.5 : g.step === 1 ? 0.75 : 1;
   }
 
+  /** K27: the lowest world y a wind-up cue may sit at so it clears the boss bar and name (Q5 B1). */
+  private belowBossBar(): number {
+    const cam = this.cameras.main;
+    const up = this.world.enemies.some((e) => e.def.boss && e.mode !== 'defeated');
+    return up ? cam.worldView.y + ((BOSS_BAR_Y + 34 + 20) * DPR) / cam.zoom : -Infinity;
+  }
+
   /** Top of Sensei's banner: just under the boss bar and its name when a boss is up, so both stay readable. */
   private senseiTop(height: number): number {
     const boss = this.world.enemies.find((e) => e.def.boss && e.mode !== 'defeated');
@@ -2258,7 +2293,8 @@ export class GameScene extends Phaser.Scene {
         ...(this.run?.tutorial ? { stroke: '#120e1c', strokeThickness: 4, shadow: { offsetX: 0, offsetY: 2, color: '#000000', blur: 4, fill: true, stroke: true } } : {}),
         padding: { x: 16, y: 8 },
         align: 'center',
-        wordWrap: { width: Math.min(width - 48, 640), useAdvancedWrap: true },
+        // K27: tutorial tips wrap narrower, so there is room beside the buttons (Q5 B3, B4).
+        wordWrap: { width: Math.min(width - (this.run?.tutorial ? 260 : 48), 640), useAdvancedWrap: true },
       })
       .setOrigin(0.5, 0)
       .setResolution(window.devicePixelRatio || 1);

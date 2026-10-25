@@ -115,6 +115,13 @@ export class ActionButtons {
 
   /** K24b: COUNTER flashes while an attack on the player is in its Counter window (steady glow with Reduced motion). */
   counterWindow(open: boolean): void {
+    this.windowOpen = open;
+  }
+  private windowOpen = false;
+
+  /** The gold ring shows only while COUNTER is ready, so it never looks dimmed while gold (K27, Q5 B5). */
+  private styleCounter(ready: boolean): void {
+    const open = this.windowOpen && ready;
     const flash = open && (reducedMotion() || Math.sin(this.scene.time.now / 70) > 0);
     this.counter.face.setStrokeStyle(open ? 7 : 4, open ? 0xffd166 : 0xffffff, open ? 1 : 0.8);
     this.counter.face.setFillStyle(flash ? 0x6fa8ff : 0x3a7bd5, 0.9);
@@ -125,6 +132,7 @@ export class ActionButtons {
     const alive = p.downTicks === 0;
     const counterReady = alive && p.guardTicks === 0 && p.counterLockout === 0;
     this.counter.container.setAlpha(counterReady ? 1 : 0.45);
+    this.styleCounter(counterReady);
     const pulse = this.counterPulse === 3 ? 0.24 : this.counterPulse === 2 ? 0.14 : this.counterPulse === 1 ? 0.06 : 0;
     this.counter.container.setScale(1 + Math.abs(Math.sin(this.scene.time.now / 140)) * pulse);
 

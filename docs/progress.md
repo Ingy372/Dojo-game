@@ -564,3 +564,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## R-BAL-9b Per-tier gear caps
 - Done: 10-tier GEAR_CAPS, white cut, Jade capped. Test: r-bal-9b-gear-caps.test.ts.
+
+## K27 — tutorial fixes from Q5 (2026-10-24)
+**Done**
+- Q5 B1–B6 fixed: boss "!" clear of the boss bar, boss tip closes on Got it and keeps off the boss; chest tip only in the vault; tip box keeps off HOME, the hero and STRIKE; COUNTER is never dimmed with a gold ring; new closing line (Manager's call).
+- Checked at 667x375 and 844x390 with Reduced motion on and off (headless browser, full tutorial run).
+**Next**
+- Tester re-checks Q5.

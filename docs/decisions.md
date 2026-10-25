@@ -797,3 +797,11 @@ The Manager made the white gear cut from #188 (DECIDE-1, option a) under the bal
 - White loot (content/loot/gear.json): hands Power 1/1/1/1, gi Health 3/5/8/10, gi Guard 1/2/2/3, Jade 1/2/3/4%.
 - Drops are clamped to the tier cap, including the Jade charm's Power share. maxGearScore uses each tier's own caps instead of white × tier.
 - Not done here: ENEMY_SCALE for enemies outside their home tier (spec item 5), because no enemy appears off-tier yet; per-tier loot tables (R-BAL-10); XP steps (R-BAL-5, #204).
+
+## K27: tutorial fixes from Q5 (2026-10-24, plan approved by the Manager)
+- **Closing line (Manager's call; Jay will see it).** The door tip's last line was "What was your favorite part?", which a child can't answer. It is now "Great job! You finished the training floor." (content/tutorial/tutorial-floor.json).
+- **Chest and boss tips wait for their own room.** The chest tip shows only in the vault and the boss tip only in the boss room (Q5 B2: the chest tip showed in room 1).
+- **Boss tip closes on Got it.** "A big one!" no longer stays over the boss for the whole fight (Q5 B1).
+- **The "!" cue stays below the boss bar.** While a boss bar shows, a wind-up cue is never drawn higher than just under the bar and the boss's name (Q5 B1).
+- **Tutorial tip placement.** The tip and its Got it take the first spot clear of the hero, the doors and their labels (HOME), the chest, the boss and the action buttons. If no centred spot is clear, the box slides to the left edge, away from the buttons (Q5 B3, B4). If nothing is clear at all, it sits in the bottom-left corner. Tutorial tips wrap narrower (screen width minus 260 px) so they fit beside the buttons on a 667 px screen. The tip box opacity is unchanged.
+- **COUNTER's gold ring only when it's ready.** The gold ring and flash show only while COUNTER can be pressed, so a gold ring never sits on a dimmed button (Q5 B5).
