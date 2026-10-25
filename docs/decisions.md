@@ -768,6 +768,20 @@ Programmer calls:
 - Earned kata cards are grouped together at the top of Abilities (S3-T1 bug 3) instead of after each Form.
 - No kata directions or step data changed.
 - Manager-okayed K24a tradeoffs (named here as asked): (1) on the tutorial floor every enemy sees the player; (2) the paused tip can cover the health bar when the hero is near the bottom of the screen, which is fine since health can't drop below 1 there.
+
+## R-BAL-9c — live enemy numbers (2026-10-24, targets from #188)
+Jay's balance calls (D1–D5, drafts/planning/balance-research.md), recorded here:
+- **D1:** enemies are scaled to the *expected* Artist for each tier, not the actual player.
+- **D2:** the target bands are OK as written (Swarmer 2–4 hits, mid 5–10, Brute 10–20, Floor-keeper 40–80; enemy hits to KO the player: 12 / 8 / 5 / 5 at least).
+- **D3:** XP steps are softened so the last step is ≤ 10 runs, using weights (k+11) (R-BAL-5).
+- **D4:** Endless stays +3% per floor with no cap (R-BAL-6 dropped).
+- **D5:** Challenge is ×1.5 enemy Health and Power.
+
+Live enemy changes (maxHealth / power / guard; nothing else changed):
+- Swarmer 40/8/0 → **20/7/0** (DECIDE-2), Shield 90/15/15 → **66/11/15**, Brute 180/25/25 → **126/17/25**, Floor-keeper 700/26/30 → **495/17/30**.
+- Checked with drafts/planning/r-bal-9c-check.py against #188's expected white Artist (Standard / Challenge ×1.5). Hits to beat: Swarmer 2/3, Shield 6/9, Brute 12/18, Floor-keeper 50/75. Enemy hits to KO the player: 18/13, 12/8, 8/5, 8/5. All in band; the player always survives at least 5 hits.
+- Elite and named Brutes follow the Brute (Guarding Brute 158 Health, Old Thumper 189). Their tests were updated to the new numbers.
+- Not in this PR: R-BAL-9b (per-tier gear caps, including the white gear cut). It waits on DECIDE-1 (R-BAL-9a, Jay), which isn't recorded yet.
 ## K25 — slower tempo, calmer screen shake (2026-10-24, from Jay's phone playtest via the Manager)
 - **One tempo value.** `TEMPO.speed = 0.88` in packages/sim/src/config.ts (about 12% slower). The rules still count the same ticks; the client plays each tick 1/0.88 times longer. So movement, enemy speed, attacks, character animations (LayeredSprite) and the Game scene's tweens all slow together, and every wind-up and counter window lasts longer in seconds (50 ms → about 57 ms per tick). No tick numbers were edited, so no sim or balance test changed.
 - **No shake on the player's attacks.** Basic hits, Strikes, Perfect Counters and enemy-down hits keep their short freeze (hit-stop) but never shake the screen (`SCREEN_SHAKE.playerAttackScale = 0`).
