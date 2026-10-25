@@ -144,6 +144,8 @@ export interface EnemyState {
   summoned: boolean;
   /** True once a boss has called in its helpers. */
   summonDone: boolean;
+  /** B-T3: already split into its smaller enemies (Dough Blob). */
+  splitDone?: boolean;
   /** Which way it circles while waiting its turn to attack: 1 or -1. */
   orbit: number;
   /** Ticks spent chasing since its last swing (for getting winded). */
@@ -410,6 +412,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
         enemyTypes[spawn.enemy] = def;
       }
       if (def.summon) enemyTypes[def.summon.enemy] = typeOf(def.summon.enemy);
+      if (def.split) enemyTypes[def.split.into] = typeOf(def.split.into);
     });
   }
 
@@ -585,6 +588,22 @@ export function isEnemyPresent(e: EnemyState): boolean {
 /** The attack an enemy is winding up (or will use next). */
 export function currentAttack(e: EnemyState): EnemyAttackDef {
   return e.def.attacks[e.attackIndex % e.def.attacks.length];
+}
+
+/** B-T3: the attacks a phased boss may use at its current health (indexes into its attacks). */
+export function phaseAttacks(e: EnemyState): number[] | null {
+  const phases = e.def.phases;
+  if (!phases) return null;
+  let list = phases[0].attacks;
+  for (const ph of phases) if (e.health <= e.def.maxHealth * ph.atHealthFraction) list = ph.attacks;
+  return list;
+}
+
+/** The attack after this one: in turn, within the current phase for phased bosses. */
+function nextAttackIndex(e: EnemyState): number {
+  const list = phaseAttacks(e);
+  if (!list) return (e.attackIndex + 1) % e.def.attacks.length;
+  return list[(list.indexOf(e.attackIndex) + 1) % list.length];
 }
 
 /** True when every enemy in the room is beaten (and none will come back). */
@@ -971,6 +990,7 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
     const s = e.def.summon;
     if (s && !e.summonDone && e.health <= e.def.maxHealth * s.atHealthFraction) summonHelpers(world, e, room);
   }
+  if (e.mode === 'defeated' && e.def.split && !e.splitDone) splitEnemy(world, e, room);
   switch (e.mode) {
     case 'defeated':
       if (world.respawnEnemies && !e.summoned && --e.modeTicks <= 0) {
@@ -989,12 +1009,16 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
         e.modeTicks = currentAttack(e).recoverTicks;
         resolveAttack(world, e);
         e.attackCenter = null;
-        e.attackIndex = (e.attackIndex + 1) % e.def.attacks.length;
+        e.attackIndex = nextAttackIndex(e);
       }
       return;
-    case 'chase':
+    case 'chase': {
+      // A phased boss that just changed phase starts on its new phase's first attack.
+      const list = phaseAttacks(e);
+      if (list && !list.includes(e.attackIndex)) e.attackIndex = list[0];
       chase(world, e, room);
       return;
+    }
   }
 }
 
@@ -1076,7 +1100,7 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
     const guarding = p.guardTicks > 0;
     // Perfect Discipline: while it lasts, every Counter is a Perfect Counter.
     const disciplined = p.virtue?.kind === 'discipline' && p.virtueTicks > 0;
-    if (guarding && (disciplined || world.tick - p.counterPressedTick < counterWindowTicks(world, p))) {
+    if (guarding && a.counterable !== false && (disciplined || world.tick - p.counterPressedTick < counterWindowTicks(world, p))) {
       // Perfect Counter: no damage, enemy staggered, counter hit for 2x Power, Focus by chain (+25, +30, +35, +40).
       p.guardTicks = 0;
       p.counterChain++;
@@ -1102,8 +1126,8 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
           }
         }
       }
-    } else if (guarding) {
-      // Block: half damage, no stagger. The combo is kept.
+    } else if (guarding && a.counterable !== false) {
+      // Block: half damage (never against a dash-only attack: dash out instead), no stagger. The combo is kept.
       p.guardTicks = 0;
       const share = Math.max(0.1, COMBAT.counter.blockDamageMultiplier - p.mods.blockCut);
       const dmg = damage(power, a.strength * share * weak, guardOf(p));
@@ -1177,6 +1201,27 @@ function summonHelpers(world: WorldState, boss: EnemyState, room: Room): void {
     ids.push(id);
   }
   world.events.push({ kind: 'summon', enemyId: boss.id, summoned: ids });
+}
+
+/** B-T3: a beaten enemy splits into smaller ones where it stood (Dough Blob into 2 Doughlings). */
+function splitEnemy(world: WorldState, parent: EnemyState, room: Room): void {
+  const sp = parent.def.split!;
+  const def = world.enemyTypes[sp.into];
+  parent.splitDone = true;
+  if (!def) return;
+  const ids: EnemyId[] = [];
+  for (let i = 0; i < sp.count; i++) {
+    const angle = (i / sp.count) * Math.PI * 2;
+    const away = def.radius + 0.2;
+    const pos = { x: parent.pos.x + Math.cos(angle) * away, y: parent.pos.y + Math.sin(angle) * away };
+    pushOutOfWalls(room, pos, def.radius);
+    const id = `e${world.nextEnemyNumber++}`;
+    const e = newEnemy(id, def, pos, world.enemies.length);
+    e.summoned = true;
+    world.enemies.push(e);
+    ids.push(id);
+  }
+  world.events.push({ kind: 'summon', enemyId: parent.id, summoned: ids });
 }
 
 /** Tutorial floor (K24a): bring in the next held wave now. False when none is left. */
@@ -1266,6 +1311,7 @@ function resetEnemy(world: WorldState, e: EnemyState): void {
   e.shieldUp = e.def.shield !== null;
   e.shieldRegrow = 0;
   e.summonDone = false;
+  e.splitDone = false;
   e.chaseTicks = 0;
   e.disarmed = 0;
   world.events.push({ kind: 'enemySpawn', enemyId: e.id });

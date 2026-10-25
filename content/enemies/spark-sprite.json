@@ -1,0 +1,33 @@
+{
+  "id": "spark-sprite",
+  "name": "Spark Sprite",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). Tiny warm sparks that dart around the ovens. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
+  "color": "#ff8a3d",
+  "maxHealth": 22,
+  "power": 7,
+  "guard": 0,
+  "radius": 0.3,
+  "moveSpeedTilesPerSecond": 4.0,
+  "sightRange": 12,
+  "attack": {
+    "name": "dart",
+    "strength": 1,
+    "startRange": 0.95,
+    "reach": 0.5,
+    "areaRadius": 0.55,
+    "telegraphTicks": 12,
+    "recoverTicks": 16
+  },
+  "parSeconds": 2.0,
+  "tier": "orange",
+  "band": "F1-2",
+  "tell": "blink, then red circle",
+  "senseiLine": "Quick sparks, steady feet.",
+  "description": "Tiny warm sparks that dart around the ovens.",
+  "bestiary": {
+    "tip": "Calm them first. They're quick but weak.",
+    "lore": {
+      "orange": "These sparks hopped out of the kitchen fire. Calm them, and they settle back into the warm hearth."
+    }
+  }
+}

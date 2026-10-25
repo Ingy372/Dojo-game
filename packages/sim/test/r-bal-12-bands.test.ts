@@ -60,7 +60,21 @@ const LIVE: Record<string, { band: Band; fromBelt: number }> = {
   bopper: { band: MID, fromBelt: 2 },
   brute: { band: HEAVY, fromBelt: 1 },
   'floor-keeper': { band: BOSS, fromBelt: 1 },
+  // B-T3: Orange belt (Ember Kitchens) enemies, White-belt bases from R-BAL-8/11/13.
+  'spark-sprite': { band: SMALL, fromBelt: 3 },
+  doughling: { band: SMALL, fromBelt: 3 },
+  'dough-blob': { band: MID, fromBelt: 3 },
+  'ladle-lobber': { band: MID, fromBelt: 3 },
+  'rolling-pin': { band: MID, fromBelt: 3 },
+  'hearth-cook': { band: BOSS, fromBelt: 3 },
 };
+
+/**
+ * B-T3 exception: the Hearth Cook for the "trains more" student on Challenge goes over the 80-hit top
+ * (R-BAL-12 found 85-89; drafts/planning/R-BAL-12-training-powers-combat.md line 115, accepted because
+ * Challenge is optional; Manager, B-T3). Its Standard hits and every KO check still apply.
+ */
+const CHALLENGE_TOP_EXCEPTIONS = [{ id: 'hearth-cook', student: 'trainsMore' }];
 
 const content = testContent();
 
@@ -84,10 +98,11 @@ describe('R-BAL-12: live enemies stay in the #188 bands at every belt', () => {
       for (const student of Object.keys(ARTISTS)) {
         it(`${id} at belt ${belt} for ${student}`, () => {
           const r = bandCheck(id, belt, student);
-          for (const hits of r.beat) {
+          const excepted = CHALLENGE_TOP_EXCEPTIONS.some((x) => x.id === id && x.student === student);
+          r.beat.forEach((hits, i) => {
             expect(hits).toBeGreaterThanOrEqual(band.hits[0]);
-            expect(hits).toBeLessThanOrEqual(band.hits[1]);
-          }
+            if (!(excepted && i === 1)) expect(hits).toBeLessThanOrEqual(band.hits[1]);
+          });
           for (const ko of r.ko) expect(ko).toBeGreaterThanOrEqual(band.koMin);
         });
       }

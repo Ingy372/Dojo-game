@@ -1,0 +1,66 @@
+{
+  "id": "long-table-hall",
+  "name": "Long Table Hall",
+  "kind": "battle",
+  "minBeltTier": 3,
+  "floorSet": "ember-kitchens",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..######..######..#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "earliestRoom": 3,
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "ladle-lobber",
+      "column": 9,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 5,
+      "row": 6,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 6,
+      "wave": 1
+    },
+    {
+      "enemy": "dough-blob",
+      "column": 10,
+      "row": 6,
+      "wave": 2
+    },
+    {
+      "enemy": "ladle-lobber",
+      "column": 15,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 4,
+      "row": 2,
+      "wave": 2
+    }
+  ],
+  "artProps": "The empty long table runs across the middle as a wall with gaps; benches tucked under it.",
+  "signs": [
+    "Everyone gets a seat."
+  ]
+}

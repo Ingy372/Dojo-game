@@ -1,0 +1,65 @@
+{
+  "id": "oven-row",
+  "name": "Oven Row",
+  "kind": "battle",
+  "minBeltTier": 3,
+  "floorSet": "ember-kitchens",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#....##......##....#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "spark-sprite",
+      "column": 4,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 9,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 15,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "dough-blob",
+      "column": 6,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "dough-blob",
+      "column": 13,
+      "row": 3,
+      "wave": 2
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 10,
+      "row": 4,
+      "wave": 2
+    }
+  ],
+  "artProps": "Three cold brick ovens set into the top wall; one starts to glow as the room clears.",
+  "signs": [
+    "Warm ovens, warm hearts."
+  ]
+}

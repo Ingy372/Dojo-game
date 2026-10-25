@@ -50,6 +50,11 @@ export interface Room {
   earliestRoom: number;
   /** The lowest belt tier that can get this room (1 = White belt, 2 = Yellow belt). */
   minBeltTier: number;
+  /**
+   * B-T3: a tier's own room set ("ember-kitchens" = Orange belt). A run at that belt or above uses only
+   * the newest set it has reached; rooms without a set are the shared White/Yellow rooms.
+   */
+  floorSet: string | null;
   /** Where the glowing spot is (tutorial rooms only), or null. */
   goal: Vec2 | null;
   /** A tutorial floor room (M7-P2): only the tutorial floor uses it, never a normal floor. */
@@ -189,8 +194,10 @@ export function loadRoom(data: unknown): Room {
   }
   if (raw.tutorial !== undefined && typeof raw.tutorial !== 'boolean') throw new RoomError(id, '"tutorial" must be true or false');
   const tutorial = raw.tutorial === true;
+  if (raw.floorSet !== undefined && (typeof raw.floorSet !== 'string' || raw.floorSet.length === 0)) throw new RoomError(id, '"floorSet" must be a non-empty text');
+  const floorSet = typeof raw.floorSet === 'string' ? raw.floorSet : null;
   if (goal && !tutorial) throw new RoomError(id, 'only tutorial rooms can have a glowing spot "G"');
-  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns, kind, doors, chest, shrine, parSeconds, challenge, earliestRoom, minBeltTier, goal, tutorial };
+  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns, kind, doors, chest, shrine, parSeconds, challenge, earliestRoom, minBeltTier, floorSet, goal, tutorial };
 }
 
 /**

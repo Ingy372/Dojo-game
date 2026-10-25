@@ -1,0 +1,66 @@
+{
+  "id": "pin-lanes",
+  "name": "Baking Lanes",
+  "kind": "battle",
+  "minBeltTier": 3,
+  "floorSet": "ember-kitchens",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..###........###..#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "earliestRoom": 3,
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "rolling-pin",
+      "column": 10,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 5,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "rolling-pin",
+      "column": 5,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "ladle-lobber",
+      "column": 14,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "dough-blob",
+      "column": 10,
+      "row": 4,
+      "wave": 2
+    }
+  ],
+  "artProps": "Long floured counters (walls) split the room into three wide lanes.",
+  "signs": [
+    "Clean as you go."
+  ]
+}

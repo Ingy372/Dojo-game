@@ -542,6 +542,17 @@ export function currentTwist(content: Content, run: RunState): TwistDef | null {
   return content.twists.twists.find((t) => t.id === run.twist) ?? null;
 }
 
+/**
+ * B-T3: the rooms a floor at this belt tier is built from. A tier with its own room set (floorSet,
+ * e.g. Ember Kitchens at Orange = tier 3) uses only that set, Guardian room included. Every other
+ * tier keeps the shared rooms exactly as before (Green and up too, until their own sets arrive).
+ */
+export function floorRooms(content: Content, tier: number): Room[] {
+  const open = content.rooms.filter((r) => !r.tutorial && r.minBeltTier <= tier);
+  const own = open.filter((r) => r.floorSet !== null && r.minBeltTier === tier);
+  return own.length > 0 ? own : open.filter((r) => r.floorSet === null);
+}
+
 function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
   // Harder rooms wait until later in the floor (depth 0 is room 1), and some wait for a higher belt.
   if (run.tutorial) {
@@ -550,7 +561,10 @@ function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
     return room;
   }
   // Tutorial rooms are only ever used by the tutorial floor.
-  const all = content.rooms.filter((r) => !r.tutorial && r.kind === kind && r.earliestRoom <= run.depth + 1 && r.minBeltTier <= run.tier);
+  const rooms = floorRooms(content, run.tier);
+  let all = rooms.filter((r) => r.kind === kind && r.earliestRoom <= run.depth + 1);
+  // A tier's own set may have no room of this kind yet this early (Supper Rush waits for room 4): fight instead.
+  if (all.length === 0) all = rooms.filter((r) => r.kind === 'battle' && r.earliestRoom <= run.depth + 1);
   let fresh = all.filter((r) => !run.usedRooms.includes(r.id));
   // ?named= test runs (K12): from the earliest room, battle rooms with the asked-for type come
   // first, and a challenge room can have it too, so the link always gives that monster
