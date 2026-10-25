@@ -693,6 +693,15 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 **Next**
 - P-MENU2-e: the Fighting Style screen, where students make these picks.
+## P-MENU2-e — Fighting Style screen (2026-10-25)
+
+**Done**
+- The Fighting Style tab: Stance and Virtue slot cards, a tray to tap to equip, a preview in plain words, and the "Always with you" row. Not-yet picks open a "Ask Sensei" sheet.
+- Picks save to the loadout and survive a restart. With no pick, today's default play is unchanged (the golden test still passes).
+- Screenshots at 667, 844 and 932 wide, Reduced motion on and off.
+
+**Next**
+- Read-aloud (after beta). Real art from #265 when it is approved. A long preview title (e.g. "Beginner's Stance" at 667) shows "…".
 
 ## B-POLISH-2 — Trophy Case polish (2026-10-25)
 - Unlock pop now scales 1 → 1.06 → 1 (no snap to 0.9 after the sweep). Reduced motion: fade only.

@@ -1031,20 +1031,24 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **Save field is `trophiesSeen`** (cubby ids), not `seen`, because `profile.seen` already holds the reward-moment snapshot. It follows the `sealsSeen` pattern: `newTrophies()` in packages/sim records an id the first time it is drawn, so a cubby on another page waits for its page.
 - **Old saves.** A save without `trophiesSeen` loads as null; the first Trophy Case view marks every already-earned cubby as seen silently, so returning players see no replays. New profiles start with [] so a new student's first earned cubbies play once.
 - The "POP" is the card's scale pop (no on-screen word, no new copy). No new art or wording; all drawn in code.
-<<<<<<< HEAD
-
-## B-POLISH-2: Trophy Case polish (2026-10-25)
-- **Manager approved** doing the Tester's 3 polish items as one small PR. Done when: the pop goes 1 → 1.06 → 1, the 667 sheet allows 3 lines (Basic Form 1 shows '15% slower.'), and the Self-Defense cards have even side padding at 844.
-- Tokens live in `TROPHY_UI` (ui/tokens.ts): `popPeak` 1.06, `effectLines` 3, `cubbyPadX` 8. The pop is two chained tweens (up, then settle), not a yoyo, so the P-MENU2-c "no endless tweens" check still holds. Reduced motion stays a fade.
-- A cubby label that is one long word ("Self-Defense") can't wrap, so its font steps down (to 10 px minimum) until it clears 8 px on each side.
-- Manager: mid-fight Form switching after a loadout pick is fine; P-MENU2-e explains it simply on that screen.
-=======
 ## P-MENU2-d: Fighting Style data (2026-10-25)
 - **Two picks only (D2, the Manager's go).** The profile has an optional `loadout` with a starting Form (Stance) and a chosen Virtue. Strikes and Seals stay always on.
 - **No loadout = today's play.** New profiles and old saves get `loadout: null`. A pick the student hasn't earned (or an unknown id) is ignored and that slot falls back to today's default. Nothing else in the sim changes.
 - **Starting Form.** The chosen Form starts the fight. The other earned Forms follow in their usual order, so the Form button still cycles through all of them.
 - **Golden test.** `packages/sim/test/p-menu2-d-golden.test.ts` compares the character setup and three seeded bot runs for 4 fixture students (new profile and old save) against `fixtures/golden/p-menu2-d-default-run.json`, captured from main (7e99af0) before any change. The Manager approved this plan with no Jay go needed, because the golden test protects today's play.
 - **Tester follow-ups (merged main 5d56802 normally, no rebase).** The golden test now has a Rooted Form case (the Counter window on each difficulty, plus a seeded room in Rooted Form with `COMBAT.rootedFormBonusTicks`), captured by running `test/golden-capture.ts` on origin/main 5d56802. Changing the Rooted bonus from 2 to 3 makes it fail. `readLoadout` now keeps only ability-style ids (lowercase words joined by hyphens) and drops built-in object names like `toString`, `constructor` and `__proto__`.
->>>>>>> origin/main
+## P-MENU2-e: Fighting Style screen (2026-10-25)
+- **Manager approved the plan.** Mood A (warm dojo wood). Two slot cards (Stance, Virtue). Under them is a tray of picks for the chosen slot, and a plain-words preview card is on the right (D2, D6: no numbers). Strikes and Seals sit in an "Always with you" row. They are shown there, not picked.
+- **Tap to equip (D4).** Tap a slot card, then tap a tray tile. The pick is saved right away to `profile.loadout` and the card pops (no pop with Reduced motion). There is no drag and no "Use this" button.
+- **Not-yet picks (D3).** These are Forms or Virtues from content that the student hasn't earned yet. They show as paper tiles with a lantern and "Learn this at the dojo". There is no lock and no count. Tapping one opens the cubby sheet with "Ask Sensei about this one". It never equips anything.
+- **Art.** Glyphs and the lantern are drawn in code. No #265 art is imported. All wording is in `content/abilities/fighting-style.json`. Read-aloud waits until after beta (D5).
+- **Fit.** Every tap target is at least 44 px tall (tested at the 667, 844 and 932 panel sizes). Slot names wrap to two lines instead of being cut. The hint line only shows when it fits.
+
+
+## B-POLISH-2: Trophy Case polish (2026-10-25)
+- **Manager approved** doing the Tester's 3 polish items as one small PR. Done when: the pop goes 1 → 1.06 → 1, the 667 sheet allows 3 lines (Basic Form 1 shows '15% slower.'), and the Self-Defense cards have even side padding at 844.
+- Tokens live in `TROPHY_UI` (ui/tokens.ts): `popPeak` 1.06, `effectLines` 3, `cubbyPadX` 8. The pop is two chained tweens (up, then settle), not a yoyo, so the P-MENU2-c "no endless tweens" check still holds. Reduced motion stays a fade.
+- A cubby label that is one long word ("Self-Defense") can't wrap, so its font steps down (to 10 px minimum) until it clears 8 px on each side.
+- Manager: mid-fight Form switching after a loadout pick is fine; P-MENU2-e explains it simply on that screen.
 - **Extra scope (Manager-approved):** removed the unused `COMBAT.rootedFormBonusTicks`. combat.test.ts and the P-MENU2-d golden capture now read the Rooted bonus from `counterWindow` in content/abilities/abilities.json. The golden output is unchanged; setting counterWindow to 3 makes the golden test fail, as it should.
 - **Tester fix (#271 retest):** the 10 px step-down left only ~4 px at 844, so it's gone. A label too wide for the padded width (cubby − 2×8 px) now breaks after its hyphen ("Self-" / "Defense #1"), and cubby labels allow 3 lines at 12 px; the icon shrinks (`cubbyIconSize`, min 20 px) to make room. "Learn this at the dojo" now fits in full. Wording unchanged. Measured text width vs inner width: at least 8.5 px clear each side at 667/844/932.

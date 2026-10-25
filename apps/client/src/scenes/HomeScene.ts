@@ -36,7 +36,8 @@ import {
   kataArrows,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
-import { KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
+import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
+import { STYLE_WORDS, buildStyle, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
@@ -83,6 +84,8 @@ export class HomeScene extends Phaser.Scene {
   private tab: Tab = 'run';
   /** P-MENU2-a: which part of Abilities is showing. */
   private part: AbilitiesPart = 'trophy';
+  /** P-MENU2-e: the chosen Fighting Style slot (tap 1 of 2). */
+  private styleSlot: StyleSlot = 'stance';
   /** P-MENU2-b: the open cubby sheet, and how many Trophy Case pages there are. */
   private cubbySheet: Phaser.GameObjects.Container | null = null;
   trophyPages = 1;
@@ -584,14 +587,127 @@ export class HomeScene extends Phaser.Scene {
     else this.renderTrophyCase(x, top, w, h - (top - y));
   }
 
-  /** P-MENU2-a: placeholder until P-MENU2-e builds the Stance and Virtue slots. */
+  /**
+   * P-MENU2-e: Fighting Style. Two slot cards (Stance, Virtue), the tray of picks for the chosen
+   * slot, a plain-words preview, and the "Always with you" row. Tap a slot, then a pick (D4); the
+   * pick is saved at once. Not-yet picks say "Learn this at the dojo" and open their sheet.
+   * Placeholder art drawn in code until Jay OKs the #265 art.
+   */
   private renderFightingStyle(x: number, y: number, w: number, h: number): void {
-    const g = this.add.graphics();
-    g.fillStyle(WOOD.paper, 0.12).fillRoundedRect(x, y, w, h, RADIUS.panel);
-    g.lineStyle(2, WOOD.grain, 0.6).strokeRoundedRect(x, y, w, h, RADIUS.panel);
-    this.ui.add(g);
-    this.text(x + w / 2, y + h / 2 - TYPE.title, TROPHY_WORDS.styleTitle, TYPE.title, '#f2e3c4', true).setOrigin(0.5);
-    this.text(x + w / 2, y + h / 2 + S2, TROPHY_WORDS.styleSoon, TYPE.body, '#d9c6a3', false, FONT, w - 2 * S3).setOrigin(0.5, 0).setAlign('center');
+    const m = this.styleModel();
+    const L = styleLayout(w, h);
+    const ink = WOOD.ink;
+    (['stance', 'virtue'] as const).forEach((slot, i) => {
+      const pick = m.current[slot];
+      const on = this.styleSlot === slot;
+      const b = button(this, { x: x + i * (L.slotW + S2), y, w: L.slotW, h: L.slotH, label: '', color: on ? WOOD.switchOn : WOOD.frameDark, size: TYPE.body, selected: on, stroke: WOOD.grain, onTap: () => this.pickSlot(slot) }, this.ui);
+      const v = b.visual.setData('styleSlot', slot);
+      const top = -L.slotH / 2;
+      const glyphR = Math.min(18, Math.max(12, (L.slotH - 52) / 2));
+      v.add(this.add.circle(0, top + 6 + glyphR, glyphR, BOARD_PAPER, 0.95).setStrokeStyle(2, 0xffd166, on ? 1 : 0.5));
+      v.add(this.add.text(0, top + 6 + glyphR, STYLE_WORDS.glyphs[slot], { fontFamily: FONT, fontSize: `${Math.round(glyphR * 1.1)}px`, color: ink }).setOrigin(0.5).setResolution(crisp()));
+      const ny = top + 6 + 2 * glyphR + 2;
+      v.add(this.add.text(0, ny, STYLE_WORDS.slots[slot].toUpperCase(), { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e3c4', fontStyle: 'bold' }).setOrigin(0.5, 0).setResolution(crisp()));
+      const name = this.add.text(0, ny + TYPE.label + 2, pick ? pick.name : STYLE_WORDS.noVirtue, { fontFamily: FONT, fontSize: `${TYPE.body}px`, color: '#fff6e6', fontStyle: 'bold', align: 'center', wordWrap: { width: L.slotW - 2 * S2 } }).setOrigin(0.5, 0).setResolution(crisp());
+      // Names wrap to two lines instead of being cut; shrink only if two lines still don't fit.
+      const room = L.slotH / 2 - (ny + TYPE.label + 2) - 4;
+      if (name.height > room) name.setFontSize(TYPE.label);
+      v.add(name);
+    });
+
+    // The tray: picks for the chosen slot, earned first. Equipped one is gold-outlined.
+    const ty = y + L.slotH + S2;
+    const tray = m.trays[this.styleSlot].slice(0, L.perTray);
+    const cur = m.current[this.styleSlot];
+    tray.forEach((p, i) => {
+      const equipped = p.earned && cur?.id === p.id;
+      button(this, {
+        x: x + i * (L.tileW + S2), y: ty, w: L.tileW, h: L.tileH,
+        label: p.earned ? p.name : STYLE_WORDS.notYet, labelWrap: L.tileW - 8, size: TYPE.label,
+        color: p.earned ? WOOD.frame : BOARD_PAPER, labelColor: p.earned ? '#fff6e6' : ink, stroke: WOOD.grain, selected: equipped,
+        onTap: () => (p.earned ? this.equipStyle(p) : this.openStylePick(p)),
+      }, this.ui);
+      if (!p.earned) {
+        // The lantern: something to look forward to (no lock, no count).
+        const lg = this.add.graphics();
+        lg.fillStyle(0xffb347, 0.35).fillCircle(x + i * (L.tileW + S2) + L.tileW - 10, ty + 11, 7);
+        lg.fillStyle(0xe8743b).fillRoundedRect(x + i * (L.tileW + S2) + L.tileW - 14, ty + 5, 8, 11, 3);
+        this.ui.add(lg);
+      }
+    });
+
+    // The preview card: the chosen slot's pick in plain words (D6), plus the switch line for Stance.
+    const px = x + L.previewX;
+    const pg = this.add.graphics();
+    pg.fillStyle(BOARD_PAPER).fillRoundedRect(px, y, L.previewW, L.previewH, RADIUS.panel);
+    pg.lineStyle(2, WOOD.grain).strokeRoundedRect(px, y, L.previewW, L.previewH, RADIUS.panel);
+    this.ui.add(pg);
+    const pw = L.previewW - 2 * S2;
+    let py = y + S2;
+    const title = this.text(px + L.previewW / 2, py, cur ? cur.name : STYLE_WORDS.noVirtue, TYPE.title, ink, true).setOrigin(0.5, 0);
+    this.oneLine(title, pw, TYPE.body);
+    py += title.height + S1;
+    const body = this.text(px + L.previewW / 2, py, cur ? cur.line : STYLE_WORDS.noVirtueLine, TYPE.body, '#5a3e28', false, FONT, pw).setOrigin(0.5, 0).setAlign('center');
+    py += body.height + S2;
+    const foot = this.styleSlot === 'stance' ? STYLE_WORDS.switchLine : STYLE_WORDS.virtueLine;
+    const f = this.text(px + L.previewW / 2, py, foot, TYPE.label, '#7a4a22', true, FONT, pw).setOrigin(0.5, 0).setAlign('center');
+    const hintText = this.text(px + L.previewW / 2, 0, STYLE_WORDS.hint, TYPE.label, '#7a5a3a', false, FONT, pw).setOrigin(0.5, 0).setAlign('center');
+    const hy = y + L.previewH - S2 - hintText.height;
+    if (f.y + f.height + S1 <= hy) hintText.setY(hy);
+    else hintText.destroy();
+
+    // "Always with you": Strikes and Seals are always on, so they are shown, not picked.
+    const ay = y + L.alwaysY;
+    this.text(x, ay, STYLE_WORDS.always, TYPE.label, '#f2e3c4', true);
+    const iy = ay + TYPE.label + S1;
+    if (!m.always.length) this.text(x, iy + (L.icon - TYPE.body) / 2, STYLE_WORDS.alwaysEmpty, TYPE.body, '#d9c6a3');
+    m.always.slice(0, L.perAlways).forEach((a, i) => {
+      const cx = x + i * (L.icon + S1) + L.icon / 2;
+      const cy = iy + L.icon / 2;
+      const g = this.add.graphics();
+      g.fillStyle(0xffd166, 0.25).fillRoundedRect(cx - L.icon / 2, iy, L.icon, L.icon, RADIUS.button);
+      g.lineStyle(2, 0xffd166, 0.8).strokeRoundedRect(cx - L.icon / 2, iy, L.icon, L.icon, RADIUS.button);
+      this.ui.add(g);
+      const icon = addIcon(this, a.id, cx, cy, L.icon - 8);
+      if (icon) this.ui.add(icon);
+      else this.text(cx, cy, a.name.charAt(0), TYPE.title, '#fff6e6', true).setOrigin(0.5);
+    });
+  }
+
+  private styleModel(): StyleModel {
+    return buildStyle(this.training, CONTENT.abilities, this.profile.loadout);
+  }
+
+  /** Tap 1: choose the slot. */
+  pickSlot(slot: StyleSlot): void {
+    if (slot === this.styleSlot) return;
+    this.styleSlot = slot;
+    this.renderPanel('none');
+  }
+
+  /** Tap 2: put an earned pick in the chosen slot. Saved at once, so it survives a restart. */
+  equipStyle(p: StylePick): void {
+    const next = equipPick(this.profile.loadout, this.styleSlot, p);
+    if (next === this.profile.loadout) return;
+    this.profile.loadout = next;
+    writeSave(this.profile);
+    this.renderPanel('none');
+    // The slot card pops 1 -> 1.06 -> 1 (Reduced motion: no scale).
+    if (reducedMotion()) return;
+    const card = this.panel?.list.find((c) => c instanceof Phaser.GameObjects.Container && (c as Phaser.GameObjects.Container).getData?.('styleSlot') === this.styleSlot);
+    if (card) this.tweens.add({ targets: card, scale: 1.06, duration: MOTION.pop.ms / 2, yoyo: true, ease: 'Sine.Out' });
+  }
+
+  /** A not-yet pick: its sheet says "Ask Sensei about this one" (D3). */
+  private openStylePick(p: StylePick): void {
+    const fromCase = p.requirementId ? this.trophyCubbies().find((c) => c.id === p.requirementId) : undefined;
+    this.openCubby(fromCase ?? { id: p.id, shelf: 'stripes', name: p.name, earned: false, effect: p.line, status: STYLE_WORDS.askSensei });
+  }
+
+  /** Screenshot/test hook: tap tray item i in the chosen slot. */
+  tapStyleTile(i: number): void {
+    const p = this.styleModel().trays[this.styleSlot][i];
+    if (p) (p.earned ? this.equipStyle(p) : this.openStylePick(p));
   }
 
   /**
