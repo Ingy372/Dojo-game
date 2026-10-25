@@ -180,3 +180,21 @@ export function signOffLines(list: readonly Pick<RequirementStatus, 'name' | 'le
     group.length === 0 ? [] : group.length === 1 ? [`✓ ${group[0].name} ${word}`] : [`✓ ${group.length} techniques ${word}`];
   return [...line(real, 'signed off'), ...line(counted, 'practiced')];
 }
+
+/**
+ * Full-screen card words for one technique. A real sign-off says who signed it off; a
+ * technique counted from an earlier rank (legacy) says "practiced".
+ */
+export function signOffCardText(r: Pick<RequirementStatus, 'name' | 'legacy' | 'signedOffBy'>): { badge: string; line: string } {
+  if (r.legacy) return { badge: 'PRACTICED!', line: `You practiced ${r.name}!` };
+  return { badge: 'SIGNED OFF!', line: `${r.signedOffBy ?? 'Sensei'} signed off ${r.name}!` };
+}
+
+/** Title for the many-techniques card: "signed off" for real sign-offs, "practiced" for counted ones. */
+export function signOffsTitle(list: readonly Pick<RequirementStatus, 'legacy'>[]): string {
+  const counted = list.filter((r) => r.legacy).length;
+  const real = list.length - counted;
+  if (counted === 0) return `${real} techniques signed off!`;
+  if (real === 0) return `${counted} techniques practiced!`;
+  return `${real} signed off, ${counted} practiced!`;
+}

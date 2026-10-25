@@ -4,7 +4,7 @@
 
 import Phaser from 'phaser';
 import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState } from '@dojo/sim';
-import { gainText, signOffGain, signOffLines, stripeGain } from '@dojo/sim';
+import { gainText, signOffCardText, signOffGain, signOffLines, signOffsTitle, stripeGain } from '@dojo/sim';
 import GAINS from '../../../../content/settings/training-gains.json';
 import { sfx } from '../audio/Sfx';
 import { shortDate } from '../game/student';
@@ -238,10 +238,10 @@ export class Celebrations {
       case 'signOff': {
         sfx.signOff();
         const r = m.requirement;
-        const who = r.signedOffBy ?? 'Sensei';
+        const words = signOffCardText(r);
         this.card(cx, height * 0.45, Math.min(520, width - 40), 220);
-        this.text(cx, height * 0.45 - 62, 'SIGNED OFF!', 16, '#5cd65c', true).setOrigin(0.5);
-        this.text(cx, height * 0.45 - 28, `${who} signed off ${r.name}!`, 22, '#ffffff', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
+        this.text(cx, height * 0.45 - 62, words.badge, 16, '#5cd65c', true).setOrigin(0.5);
+        this.text(cx, height * 0.45 - 28, words.line, 22, '#ffffff', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
         this.text(cx, height * 0.45 + 18, `New ${m.ability}`, 18, '#ffd166', true).setOrigin(0.5);
         this.text(cx, height * 0.45 + 52, gainText(GAINS.signOff, signOffGain(this.training, [r])), 17, '#5cd65c', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
         this.text(cx, height * 0.45 + 84, 'Gate lock lit.', 14, '#b9ad99').setOrigin(0.5);
@@ -250,7 +250,7 @@ export class Celebrations {
       }
       case 'signOffs': {
         sfx.signOff();
-        this.text(cx, height * 0.1, `${m.list.length} techniques signed off!`, 26, '#5cd65c', true).setOrigin(0.5);
+        this.text(cx, height * 0.1, signOffsTitle(m.list.map((x) => x.requirement)), 26, '#5cd65c', true).setOrigin(0.5);
         this.text(cx, height - 64, gainText(GAINS.signOffs, signOffGain(this.training, m.list.map((s) => s.requirement))), 17, '#ffd166', true, FONT, width - 40).setOrigin(0.5).setAlign('center');
         // K26: each column has a fixed width and long names wrap inside it, so they never run into the other column.
         // If the list is too tall, try 13 then 12 px (still readable); if it still doesn't fit, show what fits plus an "and N more" line.

@@ -642,3 +642,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## fix-celebrate-rm
 - With Reduced motion on, the Celebrations rays stay still and no confetti shows. The Congratulations card says "practiced" for techniques counted from an earlier rank (legacy) and keeps "signed off" for real sign-offs.
+
+## practiced-cards
+- The full-screen sign-off cards (and the welcome cascade on the first trip home) say "practiced" for techniques counted from an earlier rank, and keep "signed off" with who signed it for real sign-offs.
