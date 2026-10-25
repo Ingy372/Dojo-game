@@ -25,7 +25,7 @@ describe('P-MENU2-d loadout', () => {
 
   it('drops ids that are not ability ids, like built-in object names', () => {
     const old = JSON.parse(JSON.stringify(newProfile()));
-    for (const bad of ['toString', 'constructor', '__proto__', 'hasOwnProperty', 'valueOf', 'Rooted Stance', 'rooted-stance ', '-x']) {
+    for (const bad of ['toString', 'constructor', '__proto__', 'hasOwnProperty', 'valueOf', 'Cat Stance', 'cat-stance ', '-x']) {
       expect(loadProfile({ ...old, loadout: { stance: bad, virtue: bad } }).loadout).toBeNull();
     }
     expect(loadProfile({ ...old, loadout: { stance: 'constructor', virtue: 'second-wind' } }).loadout).toEqual({ stance: null, virtue: 'second-wind' });
@@ -33,19 +33,19 @@ describe('P-MENU2-d loadout', () => {
 
   it('a saved loadout survives a save and load', () => {
     const p = newProfile();
-    p.loadout = { stance: 'flowing-stance', virtue: null };
-    expect(loadProfile(JSON.parse(JSON.stringify(p))).loadout).toEqual({ stance: 'flowing-stance', virtue: null });
+    p.loadout = { stance: 'front-stance', virtue: null };
+    expect(loadProfile(JSON.parse(JSON.stringify(p))).loadout).toEqual({ stance: 'front-stance', virtue: null });
   });
 
   it('a chosen Stance starts the next run; switching still cycles through all earned Stances', () => {
     const t = training(yellow);
     const p = newProfile();
-    p.loadout = { stance: 'flowing-stance', virtue: null };
+    p.loadout = { stance: 'front-stance', virtue: null };
     const setup = characterSetup(p, t, content.abilities);
-    expect(setup.stances!.map((f) => f.id)).toEqual(['flowing-stance', 'beginners-stance', 'rooted-stance']);
+    expect(setup.stances!.map((f) => f.id)).toEqual(['front-stance', 'beginners-stance', 'cat-stance']);
     const run = startRun(content, { seed: 5, dryRuns: 0 });
     const world = createRunWorld(content, run, setup, setup.effects);
-    expect(activeStance(world.players.p1).id).toBe('flowing-stance');
+    expect(activeStance(world.players.p1).id).toBe('front-stance');
   });
 
   it('a chosen Virtue is used in the next run', () => {
@@ -63,7 +63,7 @@ describe('P-MENU2-d loadout', () => {
     const t = training(white);
     const base = characterSetup(newProfile(), t, content.abilities);
     const p = newProfile();
-    p.loadout = { stance: 'flowing-stance', virtue: 'perfect-discipline' };
+    p.loadout = { stance: 'front-stance', virtue: 'perfect-discipline' };
     expect(characterSetup(p, t, content.abilities)).toEqual(base);
     p.loadout = { stance: 'no-such-stance', virtue: 'no-such-virtue' };
     expect(characterSetup(p, training(yellow), content.abilities)).toEqual(characterSetup(newProfile(), training(yellow), content.abilities));

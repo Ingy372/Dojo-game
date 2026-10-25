@@ -774,6 +774,15 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 **Next**
 - Jay to OK real lid / clang / roar art and sound (placeholders now).
 
+## R-STANCE-d1 — Cat, Front, Fighting and Horse stances (2026-10-25)
+
+**Done**
+- The four real stances replace Rooted and Flowing, using the #290 numbers and the #288 one-liners.
+- Old saves with Rooted or Flowing move to Beginner's Stance. A stance that isn't unlocked is dropped from the loadout.
+- Horse shows the approved rooted idle. The golden run was re-captured.
+
+**Next**
+- R-STANCE-d2: sign-off unlocks. R-STANCE-b: stance icons. Jay's howToStand questions are still open.
 ## B-MASHER — Mash guard, shield bounce Focus, kid bot (2026-10-25)
 **Done**
 - Hits that land mid-swing count as a Block; shield bounces give +6 Focus with a gold glow (steady tint in Reduced motion).

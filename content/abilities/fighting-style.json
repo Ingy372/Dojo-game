@@ -14,8 +14,10 @@
   "askSensei": "Ask Sensei about this one",
   "lines": {
     "beginners-stance": "Steady and even. Good at everything.",
-    "rooted-stance": "Strong feet and tough blocks, but slower.",
-    "flowing-stance": "Faster feet and quicker hands.",
+    "cat-stance": "Quicker Counters and Dash, but softer blocks.",
+    "front-stance": "Hit harder, but move a little slower.",
+    "fighting-stance": "Strong blocks and fast Focus, but a shorter Dash.",
+    "horse-stance": "Stand still to hit harder, but move slower.",
     "shield-of-respect": "A shield that soaks up hits for a while.",
     "second-wind": "Brings back Health and some Focus.",
     "perfect-discipline": "For a short time, every Counter is perfect."

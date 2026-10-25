@@ -93,11 +93,22 @@ export interface StyleLayout {
   perAlways: number;
 }
 
+/** The left (slots + tray) share of the Fighting Style panel; the preview card gets the rest. */
+export const STYLE_LEFT_SHARE = 0.58;
+/** R-STANCE-d1: the narrowest left share tried when the preview card's words need more width (667). */
+export const STYLE_LEFT_SHARE_MIN = 0.46;
+
 /** Sizes for a Fighting Style panel w x h (below the switch). Every tap target is at least 44.
  * B-POLISH-2: `minTileW` is the narrowest tray tile that still holds its widest word with 8 px clear
  * each side (stroke counted); when 3 tiles would be narrower, the tray shows 2 wider tiles. */
-export function styleLayout(w: number, h: number, minTileW = 0): StyleLayout {
-  const leftW = Math.round(w * 0.58);
+/**
+ * R-STANCE-d1 QA: the panel content box ends 4 px inside the wood frame's inner edge (and the card's
+ * 2 px stroke reaches 1 px further), so the card's right edge sits 5 px further in for an 8 px gap.
+ */
+export const STYLE_RIM_PAD = 5;
+
+export function styleLayout(w: number, h: number, minTileW = 0, leftShare = STYLE_LEFT_SHARE): StyleLayout {
+  const leftW = Math.round(w * leftShare);
   const slotW = Math.floor((leftW - S2) / 2);
   const alwaysH = TYPE.label + S1 + MIN_TAP;
   const room = h - alwaysH - 2 * S2;
@@ -108,7 +119,7 @@ export function styleLayout(w: number, h: number, minTileW = 0): StyleLayout {
   const icon = MIN_TAP;
   return {
     leftW, slotW, slotH, tileW, tileH, perTray,
-    previewX, previewW: w - previewX, previewH: slotH + S2 + tileH,
+    previewX, previewW: w - previewX - STYLE_RIM_PAD, previewH: slotH + S2 + tileH,
     alwaysY: slotH + S2 + tileH + S2,
     icon, perAlways: Math.max(1, Math.floor((w + S1) / (icon + S1))),
   };

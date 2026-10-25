@@ -25,22 +25,22 @@ describe('P-MENU2-e Fighting Style', () => {
     const m = buildStyle(t, content.abilities, null);
     expect(m.current.stance?.id).toBe('beginners-stance');
     expect(m.current.virtue?.id).toBe(t.virtue?.def.id);
-    expect(m.trays.stance.filter((p) => p.earned).map((p) => p.id)).toEqual(['beginners-stance', 'rooted-stance', 'flowing-stance']);
+    expect(m.trays.stance.filter((p) => p.earned).map((p) => p.id)).toEqual(['beginners-stance', 'cat-stance', 'front-stance']);
   });
 
   it('tap Stance, tap a pick: the loadout changes and the next fight starts in it', () => {
     const p = newProfile();
     const m = buildStyle(t, content.abilities, p.loadout);
-    const flowing = m.trays.stance.find((x) => x.id === 'flowing-stance')!;
+    const flowing = m.trays.stance.find((x) => x.id === 'front-stance')!;
     p.loadout = equipPick(p.loadout, 'stance', flowing);
-    expect(p.loadout).toEqual({ stance: 'flowing-stance', virtue: null });
-    expect(buildStyle(t, content.abilities, p.loadout).current.stance?.id).toBe('flowing-stance');
-    expect(characterSetup(p, t, content.abilities).stances![0].id).toBe('flowing-stance');
+    expect(p.loadout).toEqual({ stance: 'front-stance', virtue: null });
+    expect(buildStyle(t, content.abilities, p.loadout).current.stance?.id).toBe('front-stance');
+    expect(characterSetup(p, t, content.abilities).stances![0].id).toBe('front-stance');
   });
 
   it('re-tapping the equipped pick returns the same loadout (no re-save, no pop)', () => {
     const m = buildStyle(t, content.abilities, null);
-    const flowing = m.trays.stance.find((x) => x.id === 'flowing-stance')!;
+    const flowing = m.trays.stance.find((x) => x.id === 'front-stance')!;
     const once = equipPick(null, 'stance', flowing);
     expect(equipPick(once, 'stance', flowing)).toBe(once);
     // The screen's equipStyle() returns early on that same object, before writeSave or the pop.
@@ -49,19 +49,19 @@ describe('P-MENU2-e Fighting Style', () => {
   });
 
   it('tap Virtue, tap a pick: only the Virtue changes', () => {
-    const m = buildStyle(t, content.abilities, { stance: 'rooted-stance', virtue: null });
+    const m = buildStyle(t, content.abilities, { stance: 'cat-stance', virtue: null });
     const other = m.trays.virtue.find((x) => x.earned && x.id !== t.virtue?.def.id)!;
-    const l = equipPick({ stance: 'rooted-stance', virtue: null }, 'virtue', other);
-    expect(l).toEqual({ stance: 'rooted-stance', virtue: other.id });
+    const l = equipPick({ stance: 'cat-stance', virtue: null }, 'virtue', other);
+    expect(l).toEqual({ stance: 'cat-stance', virtue: other.id });
   });
 
   it('the pick survives a save and load (a restart)', () => {
     const p = newProfile();
     const m = buildStyle(t, content.abilities, null);
-    p.loadout = equipPick(p.loadout, 'stance', m.trays.stance.find((x) => x.id === 'rooted-stance')!);
+    p.loadout = equipPick(p.loadout, 'stance', m.trays.stance.find((x) => x.id === 'cat-stance')!);
     const restored = loadProfile(JSON.parse(JSON.stringify(p)));
-    expect(restored.loadout).toEqual({ stance: 'rooted-stance', virtue: null });
-    expect(buildStyle(t, content.abilities, restored.loadout).current.stance?.id).toBe('rooted-stance');
+    expect(restored.loadout).toEqual({ stance: 'cat-stance', virtue: null });
+    expect(buildStyle(t, content.abilities, restored.loadout).current.stance?.id).toBe('cat-stance');
   });
 
   it('not-yet picks invite but change nothing; the wrong slot changes nothing', () => {

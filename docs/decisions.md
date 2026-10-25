@@ -1123,6 +1123,32 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **Placeholder look until Jay OKs art:** a code-drawn grey lid at the end of the boss bar and a grey wash over the bar while the lid is up; a short grey tint on a clang (reuses the clank sound); at the phase pause a "ROAR!" word, an orange glow and the phase's `senseiLine`. Reduced motion keeps the lid marker and drops the glow and the tint. No new art or sound files.
 - **Art gaps:** the phase rigs don't draw every attack in the new patterns (P1 pin, P2 pin, P3 bonk). The client stands in with another wind-up the rig has; the warning shape is code-drawn. Listed in b-t3-art.test.ts until real art comes.
 
+### R-STANCE-d1 — The four real stances and their numbers (2026-10-25)
+- **Manager go (Oct 25):** R-STANCE-d is split. d1 covers the stances and their numbers (drafts/planning/R-STANCE-c-stance-numbers.md, #290). d2 covers sign-off unlocks.
+- Content stances: Beginner's Stance (unchanged), Cat (+1 counter window, dash cooldown −25%, takes 15% more through a block), Front (+8% power, −10% move speed), Fighting (blocks 15% more, Focus gain ×1.2, dash distance ×0.8), Horse (+10% power after 10 still ticks, −20% move speed).
+- **Manager calls:**
+  1. Horse is +10%, final.
+  2. Old `rooted-*` / `flowing-*` saves go to Ready (stance null). The migration stays idempotent. `normalizeLoadout` drops any stance that isn't unlocked.
+  3. No Front push and no strikePush field.
+  4. The picker and the `unlockedStances` logic stay as they are (Ready plus the newest 3); only the ids changed.
+  5. Horse uses the approved stance_rooted idle (approved.json `rooted-form` → `horse-stance`). Cat, Front and Fighting use Ready's idle. No new art.
+  6. Stance text is the #288 one-liners from drafts/content/katas/stances.json. No story text was written.
+- New StanceDef fields: dashCooldownScale, dashScale (defaults to 1), blockCut, focusGain, stillPower and rootTicks. The content check fails if powerScale or stillPower is outside 0 to 0.12, or if guardScale is below 0.
+- **Builder choices (not in the spec):** Cat's dash cooldown is floor(30 × 0.75) = 22 ticks, matching the 22 in the spec. For Horse, guarding and standing still both count as still; walking or dashing resets the count. Stance power adds to gear powerScale.
+- Kata to stance order is positional (Basic Form 1 → Cat, Basic Form 2 → Front, then Fighting, Horse) until d2.
+- The golden run was re-captured. Only the stance ids and the "rooted" case changed: Cat's +1 window replaces Rooted's +3.
+- **Manager confirmations (#293 review, Oct 25):**
+  - Horse counts guarding as standing still.
+  - Stance power stacks with gear power.
+  - Cat's dash cooldown is 22 ticks.
+  - "Beginner's Stance" stays until Jay decides.
+  - The in-game one-liners (what each stance does) come in a follow-up.
+
+## R-STANCE-d1: old Form saves with no virtue keep their loadout (Oct 25, 2026)
+- Manager's call: a save with `loadout.form` and no virtue keeps its migrated stance, and the virtue stays empty (the default). The loadout is not nulled and the stance is not reset.
+- Before: `{ form: 'rooted-form' }` (or flowing-form, rooted-stance, flowing-stance) migrated to `{ stance: null, virtue: null }`, which `readLoadout` then turned into `loadout: null`. A fight played the same (Ready first, today's virtue), but the saved loadout was gone.
+- Now: `readLoadout` keeps `{ stance: null, virtue: null }` for an old Form save or an explicit `stance: null`, and `normalizeLoadout` no longer nulls a loadout whose stance isn't unlocked. Rooted and Flowing still map to Ready. Junk loadouts still load as null.
+- Test: packages/sim/test/r-stance-d1-stances.test.ts ("old Form save with no virtue").
 ### B-MASHER — Shield bounce Focus, mash guard, kid bot (2026-10-25)
 - **Manager go (Oct 25):** drafts/planning/B-MASHER-plan.md (#291), approved calls below. Turning it on for everyone is the Manager's routine tuning call.
 1. **Mash guard:** a counterable enemy attack that lands while the player is mid-swing (basic-attack `attackCooldown` > 0, the 12-tick swing) counts as a Block. Dash-only attacks (`counterable: false`) still hit.
@@ -1143,3 +1169,5 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **Manager call (Oct 25): the once-per-run "Sensei steps back" line stays seen after a reload.** It's saved with the run (`RunState.mashGuardSeen`, saved as soon as the line shows); runs saved before this load as not seen.
 - **Manager call (Oct 25): in co-op, Perfect Counters and Mash guard are per player.** `PlayerState.perfects` counts each player's Perfect Counters in the room; `mashGuardOn(p)` and `mashGuardOff` use it. `world.progress.perfects` still counts the room total for grades.
 - **QA on #295 (layout only):** the stepped-back banner keeps off every player's sprite (its usual spot, then the top edge, then the bottom; clear of the buttons and doors when it can be, and of the players always, re-checked while it holds). Its two lines are balanced, so no word sits alone (20 px at 667, 26 px wider).
+- **Manager call (Oct 25): at 667 the stepped-back banner may cover the CHALLENGE door label** (the only spot there clear of the player and the buttons). Accepted as is.
+- **Manager call (Oct 25): in co-op the "Sensei steps back" line shows once per player.** `RunState.mashGuardSeen` is now the list of player ids who have seen it this run, saved with the run (a reload doesn't show it again to anyone who saw it).

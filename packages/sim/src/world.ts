@@ -74,6 +74,8 @@ export interface PlayerState {
   stance: number;
   /** Ticks before the Stance can be switched again. */
   stanceCooldown: number;
+  /** Ticks in a row the player has stood still (no walking, no dash); for Horse Stance. */
+  stillTicks: number;
   /** The Virtue taken into the fight (from a character stripe), or null. */
   virtue: VirtueSetup | null;
   /** Ticks left of a lasting Virtue (shield, discipline). */
@@ -346,7 +348,7 @@ export interface PlayerSetup {
 }
 
 /** The Beginner's Stance: no changes. Used when the player has no Stances. */
-export const NO_STANCE: StanceDef = { id: 'none', name: "Beginner's Stance", text: '', counterWindow: 0, attackSpeed: 0, moveSpeed: 0, guardScale: 0, powerScale: 0 };
+export const NO_STANCE: StanceDef = { id: 'none', name: "Beginner's Stance", text: '', counterWindow: 0, attackSpeed: 0, moveSpeed: 0, guardScale: 0, powerScale: 0, dashCooldownScale: 0, dashScale: 1, blockCut: 0, focusGain: 0, stillPower: 0, rootTicks: 0 };
 
 const NO_INPUT: PlayerInput = { kind: 'none' };
 const BASE_STEP = MOVEMENT.speedTilesPerSecond / TICKS_PER_SECOND;
@@ -388,6 +390,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       stances: (options.player?.stances ?? []).map((f) => ({ ...f })),
       stance: 0,
       stanceCooldown: 0,
+      stillTicks: 0,
       virtue: options.player?.virtue ? { ...options.player.virtue } : null,
       virtueTicks: 0,
       virtueShield: 0,
@@ -736,6 +739,8 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   } else {
     movePlayer(p, room, input);
   }
+  // Horse Stance: count ticks standing still; any walk or dash starts over.
+  p.stillTicks = p.moving || p.dashTicks > 0 ? 0 : p.stillTicks + 1;
 
   if (p.dashTicks === 0 && p.guardTicks === 0 && p.strikeRecovery === 0 && p.attackCooldown === 0) {
     const target = nearestEnemy(world, p, COMBAT.basicAttack.reach);
@@ -745,6 +750,22 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
       landHit(world, p, target, 'basic', COMBAT.basicAttack.strength, COMBAT.focus.perHit);
     }
   }
+}
+
+/** Dash recharge ticks with the active Stance (Cat: 30 -> 22, rounded down). */
+export function dashCooldownTicks(p: PlayerState): number {
+  return Math.floor(COMBAT.dash.cooldownTicks * (1 + activeStance(p).dashCooldownScale));
+}
+
+/** The share of a hit a Block lets through: 0.5 less gear and Stance block cuts, never under 0.1. */
+export function blockShare(p: PlayerState): number {
+  return Math.max(0.1, COMBAT.counter.blockDamageMultiplier - p.mods.blockCut - activeStance(p).blockCut);
+}
+
+/** Power bonus share from the active Stance, including Horse's stand-still bonus once rooted. */
+export function stancePowerScale(p: PlayerState): number {
+  const s = activeStance(p);
+  return s.powerScale + (s.stillPower > 0 && p.stillTicks >= s.rootTicks ? s.stillPower : 0);
 }
 
 /** Dash: toward the stick if it's pushed, otherwise the way the player faces. */
@@ -759,14 +780,14 @@ function startDash(world: WorldState, p: PlayerState, input: PlayerInput): void 
   p.dashDir = { x: dir.x, y: dir.y };
   p.facing = { x: dir.x, y: dir.y };
   p.dashTicks = COMBAT.dash.ticks;
-  p.dashCooldown = COMBAT.dash.cooldownTicks;
+  p.dashCooldown = dashCooldownTicks(p);
   p.path = null;
   world.events.push({ kind: 'dash', playerId: p.id });
 }
 
 function dashStep(world: WorldState, p: PlayerState, room: Room): void {
   // Slippery Floor twist: the dash slides farther.
-  const step = (COMBAT.dash.distanceTiles * (world.twist?.dashScale ?? 1)) / COMBAT.dash.ticks;
+  const step = (COMBAT.dash.distanceTiles * (world.twist?.dashScale ?? 1) * activeStance(p).dashScale) / COMBAT.dash.ticks;
   p.pos.x += p.dashDir.x * step;
   p.pos.y += p.dashDir.y * step;
   pushOutOfWalls(room, p.pos, R);
@@ -854,7 +875,7 @@ function landHit(
     comboBonus(p.combo) +
     (e.mode === 'stagger' ? p.mods.staggerBonus : 0) +
     (e.mode === 'winded' && e.def.winded ? e.def.winded.damageBonus : 0);
-  const dmg = damage(p.power * (1 + p.mods.powerScale + activeStance(p).powerScale), strength, e.def.guard, bonus);
+  const dmg = damage(p.power * (1 + p.mods.powerScale + stancePowerScale(p)), strength, e.def.guard, bonus);
   p.combo++;
   if (p.combo > world.progress.bestCombo) world.progress.bestCombo = p.combo;
   if (p.mods.comboSpeedEvery > 0 && p.combo % p.mods.comboSpeedEvery === 0) {
@@ -862,7 +883,7 @@ function landHit(
     world.events.push({ kind: 'speedBurst', playerId: p.id });
   }
   const lowHealth = p.health < p.maxHealth * p.mods.lowHealthBelow;
-  p.focus = Math.min(COMBAT.focus.max, p.focus + focusGain * (1 + p.mods.focusGain) * (lowHealth ? p.mods.lowHealthFocusScale : 1));
+  p.focus = Math.min(COMBAT.focus.max, p.focus + focusGain * (1 + p.mods.focusGain + activeStance(p).focusGain) * (lowHealth ? p.mods.lowHealthFocusScale : 1));
   p.facing = directionTo(p.pos, e.pos);
   hurtEnemy(world, p, e, move, dmg);
 }
@@ -1190,7 +1211,7 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       // B-MASHER-b Mash guard: a hit that lands during the player's own basic-attack swing (attackCooldown)
       // counts as the same Block, for everyone. B-MASHER-2 (E3): only until the room's 3rd Perfect Counter.
       p.guardTicks = 0;
-      const share = Math.max(0.1, COMBAT.counter.blockDamageMultiplier - p.mods.blockCut);
+      const share = blockShare(p);
       const dmg = damage(power, a.strength * share * weak, guardOf(p));
       world.events.push({ kind: 'block', playerId: p.id, enemyId: e.id, damage: dmg });
       if (p.mods.dashOnBlock) p.dashCooldown = 0;

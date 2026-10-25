@@ -203,7 +203,7 @@ export interface GameSceneData {
 const SHIELD_GLOW_COLOR = 0xf2c75c;
 const SHIELD_GLOW_MS = 400;
 /** B-MASHER-2: stands for "this run" in rooms played without a run (the training room). */
-const NO_RUN_KEY = {};
+const NO_RUN_KEY: { mashGuardSeen: string[] } = { mashGuardSeen: [] };
 
 interface EnemyView {
   container: Phaser.GameObjects.Container;
@@ -2344,7 +2344,7 @@ export class GameScene extends Phaser.Scene {
    */
   /** B-MASHER-2: once per run, a proud moment when Mash guard steps back (3 Perfect Counters in a room). */
   private senseiStepsBack(playerId: PlayerId): void {
-    if (!takeMashGuardMoment(this.run ?? NO_RUN_KEY)) return;
+    if (!takeMashGuardMoment(this.run ?? NO_RUN_KEY, playerId)) return;
     // The Manager's call: "seen" is saved with the run, so a reload doesn't show it again.
     if (this.run) saveRunInProgress(this.run);
     this.senseiSay([MASH_GUARD_LINE], 2200);

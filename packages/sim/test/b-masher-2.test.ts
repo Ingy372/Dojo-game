@@ -11,10 +11,10 @@ describe('B-MASHER-2 Sensei steps back', () => {
   it('shows once per run, again in a new run', () => {
     const runA = {};
     const runB = {};
-    expect(takeMashGuardMoment(runA)).toBe(true);
-    expect(takeMashGuardMoment(runA)).toBe(false);
-    expect(takeMashGuardMoment(runA)).toBe(false);
-    expect(takeMashGuardMoment(runB)).toBe(true);
+    expect(takeMashGuardMoment(runA, 'p1')).toBe(true);
+    expect(takeMashGuardMoment(runA, 'p1')).toBe(false);
+    expect(takeMashGuardMoment(runA, 'p1')).toBe(false);
+    expect(takeMashGuardMoment(runB, 'p1')).toBe(true);
   });
 
   it('uses the content line, not text in code, and has a Reduced motion path', () => {
@@ -28,18 +28,32 @@ describe('B-MASHER-2 Sensei steps back', () => {
     expect(body).toContain('this.senseiSay([MASH_GUARD_LINE]');
   });
 
+  it('co-op: once per player, saved with the run (Manager\'s call)', () => {
+    const content = testContent();
+    const run = startRun(content, { seed: 11, dryRuns: 0 });
+    expect(takeMashGuardMoment(run, 'p1')).toBe(true);
+    expect(takeMashGuardMoment(run, 'p1')).toBe(false);
+    const back = restoreRun(content, JSON.parse(JSON.stringify(run)))!;
+    expect(back.mashGuardSeen).toEqual(['p1']);
+    expect(takeMashGuardMoment(back, 'p1')).toBe(false);
+    expect(takeMashGuardMoment(back, 'p2')).toBe(true);
+    const again = restoreRun(content, JSON.parse(JSON.stringify(back)))!;
+    expect(takeMashGuardMoment(again, 'p1')).toBe(false);
+    expect(takeMashGuardMoment(again, 'p2')).toBe(false);
+  });
+
   it('stays seen after a reload: saved with the run (Manager\'s call)', () => {
     const content = testContent();
     const run = startRun(content, { seed: 11, dryRuns: 0 });
-    expect(run.mashGuardSeen).toBe(false);
-    expect(takeMashGuardMoment(run)).toBe(true);
+    expect(run.mashGuardSeen).toEqual([]);
+    expect(takeMashGuardMoment(run, 'p1')).toBe(true);
     const back = restoreRun(content, JSON.parse(JSON.stringify(run)))!;
-    expect(back.mashGuardSeen).toBe(true);
-    expect(takeMashGuardMoment(back)).toBe(false);
+    expect(back.mashGuardSeen).toEqual(['p1']);
+    expect(takeMashGuardMoment(back, 'p1')).toBe(false);
     // Runs saved before this field still load, with the line not yet seen.
     const old = JSON.parse(JSON.stringify(startRun(content, { seed: 12, dryRuns: 0 })));
     delete old.mashGuardSeen;
-    expect(takeMashGuardMoment(restoreRun(content, old)!)).toBe(true);
+    expect(takeMashGuardMoment(restoreRun(content, old)!, 'p1')).toBe(true);
   });
 
   it('co-op: each player has their own Perfect Counters and Mash guard (Manager\'s call)', () => {
