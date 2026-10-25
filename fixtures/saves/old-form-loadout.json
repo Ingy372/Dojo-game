@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "nextItemId": 1,
+  "inventory": [],
+  "equipped": {
+    "hands": null,
+    "gi": null,
+    "charm": null
+  },
+  "dryRuns": 0,
+  "bests": {
+    "fastestClearTicks": null,
+    "mostPerfects": 0,
+    "longestCombo": 0,
+    "mostSGrades": 0
+  },
+  "runsPlayed": 0,
+  "floorsCleared": 0,
+  "floorsByTier": {},
+  "lastRun": null,
+  "level": 1,
+  "xp": 0,
+  "seen": null,
+  "dojo": null,
+  "look": null,
+  "guideStep": 0,
+  "streetSmarts": {
+    "best": {},
+    "grownup": null
+  },
+  "difficulty": null,
+  "difficultyChosenByPlayer": false,
+  "playLimitMinutes": 0,
+  "beltEntry": null,
+  "floorLosses": null,
+  "guidedOfferedOn": null,
+  "difficultyLineShown": false,
+  "monsterJournal": {},
+  "decorEarning": {
+    "classesCounted": null,
+    "classesToward": 0,
+    "countedCheckIns": [],
+    "classPiecesGiven": 0,
+    "given": []
+  },
+  "runsStarted": 0,
+  "lessons": {
+    "seen": [],
+    "sessionDays": []
+  },
+  "welcomeWeek": {
+    "existing": null,
+    "introduced": []
+  },
+  "goalsShownOn": null,
+  "sealsSeen": [],
+  "trophiesSeen": [],
+  "loadout": {
+    "form": "flowing-form",
+    "virtue": "second-wind"
+  }
+}

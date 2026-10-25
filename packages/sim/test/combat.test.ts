@@ -19,8 +19,8 @@ import {
 import bruteData from '../../../content/enemies/brute.json';
 import abilities from '../../../content/abilities/abilities.json';
 
-/** The Rooted Form's Perfect Counter bonus, read from content (its counterWindow). */
-const ROOTED_BONUS = abilities.forms.find((f) => f.id === 'rooted-form')!.counterWindow;
+/** The Rooted Stance's Perfect Counter bonus, read from content (its counterWindow). */
+const ROOTED_BONUS = abilities.stances.find((f) => f.id === 'rooted-stance')!.counterWindow;
 import trainingRoom from '../../../content/rooms/training-room.json';
 
 const brute = loadEnemy(bruteData);
@@ -288,7 +288,7 @@ describe('the counter', () => {
     }
   });
 
-  it('uses the right window on each difficulty, plus the Rooted Form bonus', () => {
+  it('uses the right window on each difficulty, plus the Rooted Stance bonus', () => {
     for (const d of ['guided', 'standard', 'challenge'] as Difficulty[]) {
       const w = DIFFICULTY[d].counterWindowTicks;
       const inside = setup(d);

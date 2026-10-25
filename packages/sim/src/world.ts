@@ -3,7 +3,7 @@
 // over the network later for visits and co-op.
 
 import type { TwistDef } from './twist';
-import type { FormDef, VirtueKind } from './abilities';
+import type { StanceDef, VirtueKind } from './abilities';
 import { pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
 import { BOW, COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, type Difficulty } from './config';
@@ -50,7 +50,7 @@ export interface PlayerState {
   guardTicks: number;
   /** Ticks before Counter can be pressed again after a guard that countered nothing. */
   counterLockout: number;
-  /** Extra Perfect Counter window ticks (the Rooted Form adds some later). */
+  /** Extra Perfect Counter window ticks (the Rooted Stance adds some later). */
   counterBonusTicks: number;
   /** Ticks of dash movement left (0 = not dashing). */
   dashTicks: number;
@@ -66,12 +66,12 @@ export interface PlayerState {
   mods: PlayerMods;
   /** Ticks of speed burst left (Wind Step). */
   speedBoostTicks: number;
-  /** Forms to switch between (from kata sign-offs); forms[0] is the Beginner's Stance. */
-  forms: FormDef[];
-  /** Which Form is active. */
-  form: number;
-  /** Ticks before the Form can be switched again. */
-  formCooldown: number;
+  /** Stances to switch between (from kata sign-offs); stances[0] is the Beginner's Stance. */
+  stances: StanceDef[];
+  /** Which Stance is active. */
+  stance: number;
+  /** Ticks before the Stance can be switched again. */
+  stanceCooldown: number;
   /** The Virtue taken into the fight (from a character stripe), or null. */
   virtue: VirtueSetup | null;
   /** Ticks left of a lasting Virtue (shield, discipline). */
@@ -193,7 +193,7 @@ export type CombatEvent =
   | { kind: 'shieldRegrow'; enemyId: EnemyId }
   | { kind: 'summon'; enemyId: EnemyId; summoned: EnemyId[] }
   | { kind: 'speedBurst'; playerId: PlayerId }
-  | { kind: 'formChange'; playerId: PlayerId; form: number }
+  | { kind: 'stanceChange'; playerId: PlayerId; stance: number }
   | { kind: 'virtue'; playerId: PlayerId; virtue: VirtueKind; healed: number }
   | { kind: 'virtueEnd'; playerId: PlayerId }
   | { kind: 'virtueRefused'; playerId: PlayerId }
@@ -288,7 +288,7 @@ export type MoveInput =
   | { kind: 'moveTo'; x: number; y: number };
 
 /** What a player asks for on one tick: movement, plus a button press if any. */
-export type PlayerAction = 'strike' | 'counter' | 'dash' | 'form' | 'virtue';
+export type PlayerAction = 'strike' | 'counter' | 'dash' | 'stance' | 'virtue';
 export type PlayerInput = MoveInput & { action?: PlayerAction };
 
 export interface WorldOptions {
@@ -327,13 +327,13 @@ export interface PlayerSetup {
   /** Health carried over from the last room (defaults to full). */
   health?: number;
   mods?: PlayerMods;
-  /** Forms to switch between; the first is active at the start. Defaults to none (Beginner's Stance). */
-  forms?: FormDef[];
+  /** Stances to switch between; the first is active at the start. Defaults to none (Beginner's Stance). */
+  stances?: StanceDef[];
   virtue?: VirtueSetup | null;
 }
 
-/** The Beginner's Stance: no changes. Used when the player has no Forms. */
-export const NO_FORM: FormDef = { id: 'none', name: "Beginner's Stance", text: '', counterWindow: 0, attackSpeed: 0, moveSpeed: 0, guardScale: 0, powerScale: 0 };
+/** The Beginner's Stance: no changes. Used when the player has no Stances. */
+export const NO_STANCE: StanceDef = { id: 'none', name: "Beginner's Stance", text: '', counterWindow: 0, attackSpeed: 0, moveSpeed: 0, guardScale: 0, powerScale: 0 };
 
 const NO_INPUT: PlayerInput = { kind: 'none' };
 const BASE_STEP = MOVEMENT.speedTilesPerSecond / TICKS_PER_SECOND;
@@ -371,9 +371,9 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       out: false,
       mods: { ...mods },
       speedBoostTicks: 0,
-      forms: (options.player?.forms ?? []).map((f) => ({ ...f })),
-      form: 0,
-      formCooldown: 0,
+      stances: (options.player?.stances ?? []).map((f) => ({ ...f })),
+      stance: 0,
+      stanceCooldown: 0,
       virtue: options.player?.virtue ? { ...options.player.virtue } : null,
       virtueTicks: 0,
       virtueShield: 0,
@@ -622,14 +622,14 @@ export function telegraphTicks(attack: EnemyAttackDef, difficulty: Difficulty): 
   return Math.round(fill * d.fillScale) + d.counterWindowTicks;
 }
 
-/** The Perfect Counter window for a player, in ticks (Forms and Technique Seals can widen it). */
+/** The Perfect Counter window for a player, in ticks (Stances and Technique Seals can widen it). */
 export function counterWindowTicks(world: WorldState, p: PlayerState): number {
-  return DIFFICULTY[world.difficulty].counterWindowTicks + p.counterBonusTicks + p.mods.counterWindow + activeForm(p).counterWindow;
+  return DIFFICULTY[world.difficulty].counterWindowTicks + p.counterBonusTicks + p.mods.counterWindow + activeStance(p).counterWindow;
 }
 
-/** The Form in use. */
-export function activeForm(p: PlayerState): FormDef {
-  return p.forms[p.form] ?? NO_FORM;
+/** The Stance in use. */
+export function activeStance(p: PlayerState): StanceDef {
+  return p.stances[p.stance] ?? NO_STANCE;
 }
 
 /** Focus a Strike costs this player (Strike upgrades can lower it). */
@@ -637,9 +637,9 @@ export function strikeCost(p: PlayerState): number {
   return Math.max(10, COMBAT.strike.focusCost - p.mods.strikeCostCut);
 }
 
-/** The player's Guard with the active Form. */
+/** The player's Guard with the active Stance. */
 function guardOf(p: PlayerState): number {
-  return p.guard * (1 + activeForm(p).guardScale);
+  return p.guard * (1 + activeStance(p).guardScale);
 }
 
 // ---------------------------------------------------------------- players
@@ -666,7 +666,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   if (p.strikeRecovery > 0) p.strikeRecovery--;
   if (p.counterLockout > 0) p.counterLockout--;
   if (p.dashCooldown > 0) p.dashCooldown--;
-  if (p.formCooldown > 0) p.formCooldown--;
+  if (p.stanceCooldown > 0) p.stanceCooldown--;
   if (p.virtueTicks > 0 && --p.virtueTicks === 0) {
     p.virtueShield = 0;
     world.events.push({ kind: 'virtueEnd', playerId: p.id });
@@ -686,10 +686,10 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
     world.events.push({ kind: 'counterPressed', playerId: p.id });
   } else if (input.action === 'strike' && p.guardTicks === 0 && p.dashTicks === 0 && p.strikeRecovery === 0) {
     tryStrike(world, p, room);
-  } else if (input.action === 'form' && p.forms.length > 1 && p.formCooldown === 0) {
-    p.form = (p.form + 1) % p.forms.length;
-    p.formCooldown = COMBAT.formSwitchTicks;
-    world.events.push({ kind: 'formChange', playerId: p.id, form: p.form });
+  } else if (input.action === 'stance' && p.stances.length > 1 && p.stanceCooldown === 0) {
+    p.stance = (p.stance + 1) % p.stances.length;
+    p.stanceCooldown = COMBAT.stanceSwitchTicks;
+    world.events.push({ kind: 'stanceChange', playerId: p.id, stance: p.stance });
   } else if (input.action === 'virtue' && p.virtue) {
     useVirtue(world, p);
   }
@@ -706,7 +706,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   if (p.dashTicks === 0 && p.guardTicks === 0 && p.strikeRecovery === 0 && p.attackCooldown === 0) {
     const target = nearestEnemy(world, p, COMBAT.basicAttack.reach);
     if (target) {
-      const speed = Math.min(0.6, p.mods.attackSpeed + activeForm(p).attackSpeed);
+      const speed = Math.min(0.6, p.mods.attackSpeed + activeStance(p).attackSpeed);
       p.attackCooldown = Math.max(1, Math.round(COMBAT.basicAttack.cooldownTicks * (1 - speed)));
       landHit(world, p, target, 'basic', COMBAT.basicAttack.strength, COMBAT.focus.perHit);
     }
@@ -819,7 +819,7 @@ function landHit(
     comboBonus(p.combo) +
     (e.mode === 'stagger' ? p.mods.staggerBonus : 0) +
     (e.mode === 'winded' && e.def.winded ? e.def.winded.damageBonus : 0);
-  const dmg = damage(p.power * (1 + p.mods.powerScale + activeForm(p).powerScale), strength, e.def.guard, bonus);
+  const dmg = damage(p.power * (1 + p.mods.powerScale + activeStance(p).powerScale), strength, e.def.guard, bonus);
   p.combo++;
   if (p.combo > world.progress.bestCombo) world.progress.bestCombo = p.combo;
   if (p.mods.comboSpeedEvery > 0 && p.combo % p.mods.comboSpeedEvery === 0) {
@@ -896,7 +896,7 @@ function returnToStart(world: WorldState, p: PlayerState, room: Room): void {
 
 function movePlayer(p: PlayerState, room: Room, input: MoveInput): void {
   const before = { x: p.pos.x, y: p.pos.y };
-  const STEP = BASE_STEP * (p.speedBoostTicks > 0 ? 1 + p.mods.comboSpeedBonus : 1) * (1 + activeForm(p).moveSpeed);
+  const STEP = BASE_STEP * (p.speedBoostTicks > 0 ? 1 + p.mods.comboSpeedBonus : 1) * (1 + activeStance(p).moveSpeed);
 
   if (input.kind === 'stick') {
     p.path = null;

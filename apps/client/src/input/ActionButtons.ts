@@ -1,13 +1,13 @@
 import { reducedMotion } from '../game/motion';
 import Phaser from 'phaser';
-import { COMBAT, activeForm, strikeCost, type PlayerAction, type PlayerState } from '@dojo/sim';
+import { COMBAT, activeStance, strikeCost, type PlayerAction, type PlayerState } from '@dojo/sim';
 import { view, DPR } from '../ui/theme';
 
 const COUNTER_RADIUS = 48;
 const STRIKE_RADIUS = 38;
 const DASH_RADIUS = 32;
 const VIRTUE_RADIUS = 30;
-const FORM_RADIUS = 26;
+const STANCE_RADIUS = 26;
 const MARGIN = 26;
 
 interface Button {
@@ -20,7 +20,7 @@ interface Button {
 
 /**
  * The Strike, Counter and Dash buttons in the bottom-right corner, plus Virtue (once a
- * stripe is earned) and Form (once a kata is signed off). A button acts the moment a
+ * stripe is earned) and Stance (once a kata is signed off). A button acts the moment a
  * finger touches it (not on release), so Counter timing is exact.
  */
 export class ActionButtons {
@@ -37,15 +37,15 @@ export class ActionButtons {
   private readonly virtue: Button | null = null;
   /** Ring around Virtue showing Focus filling toward full. */
   private readonly virtueRing: Phaser.GameObjects.Graphics | null = null;
-  private readonly form: Button | null = null;
-  /** The active Form's name, under the Form button. */
-  private readonly formName: Phaser.GameObjects.Text | null = null;
+  private readonly stance: Button | null = null;
+  /** The active Stance's name, under the Stance button. */
+  private readonly stanceName: Phaser.GameObjects.Text | null = null;
 
   constructor(
     private readonly scene: Phaser.Scene,
     /** Called on every button touch (used to switch on sound). */
     private readonly onTouch: () => void,
-    has: { forms: boolean; virtue: boolean } = { forms: false, virtue: false },
+    has: { stances: boolean; virtue: boolean } = { stances: false, virtue: false },
   ) {
     this.counter = this.makeButton('counter', 'COUNTER', COUNTER_RADIUS, 0x3a7bd5);
     this.strike = this.makeButton('strike', 'STRIKE', STRIKE_RADIUS, 0xd5713a);
@@ -59,13 +59,13 @@ export class ActionButtons {
       this.virtueRing = scene.add.graphics();
       this.virtue.container.add(this.virtueRing);
     }
-    if (has.forms) {
-      this.form = this.makeButton('form', 'FORM', FORM_RADIUS, 0x3a5a8a);
-      this.formName = scene.add
-        .text(0, FORM_RADIUS + 10, '', { fontFamily: 'system-ui, sans-serif', fontSize: '11px', color: '#9ad1ff', stroke: '#14121c', strokeThickness: 3 })
+    if (has.stances) {
+      this.stance = this.makeButton('stance', 'STANCE', STANCE_RADIUS, 0x3a5a8a);
+      this.stanceName = scene.add
+        .text(0, STANCE_RADIUS + 10, '', { fontFamily: 'system-ui, sans-serif', fontSize: '12px', color: '#9ad1ff', stroke: '#14121c', strokeThickness: 3 })
         .setOrigin(0.5, 0)
         .setResolution(window.devicePixelRatio || 1);
-      this.form.container.add(this.formName);
+      this.stance.container.add(this.stanceName);
     }
     this.layout();
     scene.input.on(Phaser.Input.Events.POINTER_DOWN, this.onDown, this);
@@ -88,7 +88,7 @@ export class ActionButtons {
     this.strike.container.setPosition(cx - COUNTER_RADIUS - STRIKE_RADIUS - 22, cy - 34);
     this.dash.container.setPosition(cx + 6, cy - COUNTER_RADIUS - DASH_RADIUS - 24);
     this.virtue?.container.setPosition(cx - COUNTER_RADIUS - STRIKE_RADIUS - 30, cy - 34 - STRIKE_RADIUS - VIRTUE_RADIUS - 18);
-    this.form?.container.setPosition(cx - COUNTER_RADIUS - STRIKE_RADIUS * 2 - FORM_RADIUS - 46, cy - 6);
+    this.stance?.container.setPosition(cx - COUNTER_RADIUS - STRIKE_RADIUS * 2 - STANCE_RADIUS - 46, cy - 6);
   }
 
   /** The button pressed since the last tick, if any (sent once). */
@@ -172,9 +172,9 @@ export class ActionButtons {
       this.virtueRing.strokePath();
       this.virtue.container.setScale(full ? 1 + Math.sin(this.scene.time.now / 120) * 0.07 : 1);
     }
-    if (this.form && this.formName) {
-      this.form.container.setAlpha(alive && p.formCooldown === 0 ? 1 : 0.6);
-      this.formName.setText(activeForm(p).name);
+    if (this.stance && this.stanceName) {
+      this.stance.container.setAlpha(alive && p.stanceCooldown === 0 ? 1 : 0.6);
+      this.stanceName.setText(activeStance(p).name);
     }
   }
 
@@ -188,7 +188,7 @@ export class ActionButtons {
   private makeButton(action: Button['action'], text: string, radius: number, color: number): Button {
     const face = this.scene.add.circle(0, 0, radius, color, 0.9).setStrokeStyle(4, 0xffffff, 0.8);
     const label = this.scene.add
-      .text(0, 0, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${Math.round(radius * 0.36)}px`, color: '#ffffff' })
+      .text(0, 0, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${Math.max(12, Math.round(radius * 0.36))}px`, color: '#ffffff' })
       .setOrigin(0.5)
       .setResolution(window.devicePixelRatio || 1);
     const container = this.scene.add.container(0, 0, [face, label]);
@@ -196,7 +196,7 @@ export class ActionButtons {
   }
 
   private all(): Button[] {
-    return [this.counter, this.strike, this.dash, this.virtue, this.form].filter((b): b is Button => b !== null);
+    return [this.counter, this.strike, this.dash, this.virtue, this.stance].filter((b): b is Button => b !== null);
   }
 
   private hit(b: Button, x: number, y: number): boolean {

@@ -2,7 +2,7 @@
 // Virtue, D2), a tray of picks for the chosen slot, and the "Always with you" row. Tap a slot,
 // then tap a pick (D4). Wording comes from content/abilities/fighting-style.json.
 
-import { unlockedForms, virtueTitle, type AbilityContent, type Loadout, type TrainingState } from '@dojo/sim';
+import { unlockedStances, virtueTitle, type AbilityContent, type Loadout, type TrainingState } from '@dojo/sim';
 import words from '../../../../content/abilities/fighting-style.json';
 import { MIN_TAP, S1, S2, TYPE, pageDots } from './tokens';
 
@@ -17,7 +17,7 @@ export interface StylePick {
   /** One plain line, no numbers (D6). */
   line: string;
   earned: boolean;
-  /** Not-yet Forms: the Trophy Case requirement, so its sheet can open. */
+  /** Not-yet Stances: the Trophy Case requirement, so its sheet can open. */
   requirementId?: string;
 }
 
@@ -37,14 +37,14 @@ export interface StyleModel {
 const line = (id: string): string => (words.lines as Record<string, string>)[id] ?? words.lineFallback;
 
 export function buildStyle(training: TrainingState, abilities: AbilityContent, loadout: Loadout | null): StyleModel {
-  const forms = unlockedForms(training, abilities);
-  const earnedForms: StylePick[] = forms.map((f) => ({ id: f.id, slot: 'stance', name: f.name, line: line(f.id), earned: true }));
-  const have = new Set(forms.map((f) => f.id));
-  const lockedForms: StylePick[] = [];
+  const stances = unlockedStances(training, abilities);
+  const earnedStances: StylePick[] = stances.map((f) => ({ id: f.id, slot: 'stance', name: f.name, line: line(f.id), earned: true }));
+  const have = new Set(stances.map((f) => f.id));
+  const lockedStances: StylePick[] = [];
   for (const a of training.abilities) {
-    if (a.kind !== 'form' || a.unlocked || !a.form || have.has(a.form.id)) continue;
-    have.add(a.form.id);
-    lockedForms.push({ id: a.form.id, slot: 'stance', name: a.form.name, line: line(a.form.id), earned: false, requirementId: a.requirement.id });
+    if (a.kind !== 'stance' || a.unlocked || !a.stance || have.has(a.stance.id)) continue;
+    have.add(a.stance.id);
+    lockedStances.push({ id: a.stance.id, slot: 'stance', name: a.stance.name, line: line(a.stance.id), earned: false, requirementId: a.requirement.id });
   }
 
   // The first entry per Virtue is the one a fight uses (loadoutAbilities uses find()).
@@ -57,8 +57,8 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
   }
   const lockedVirtues: StylePick[] = abilities.virtues.filter((d) => !vHave.has(d.id)).map((d) => ({ id: d.id, slot: 'virtue', name: d.name, line: line(d.id), earned: false }));
 
-  // The same defaults a fight uses: the chosen Form if earned, else the first; the chosen Virtue if earned, else today's pick.
-  const stance = earnedForms.find((p) => p.id === loadout?.form) ?? earnedForms[0] ?? null;
+  // The same defaults a fight uses: the chosen Stance if earned, else the first; the chosen Virtue if earned, else today's pick.
+  const stance = earnedStances.find((p) => p.id === loadout?.stance) ?? earnedStances[0] ?? null;
   const defaultVirtue = training.virtue ? earnedVirtues.find((p) => p.id === training.virtue!.def.id) : undefined;
   const virtue = earnedVirtues.find((p) => p.id === loadout?.virtue) ?? defaultVirtue ?? earnedVirtues[0] ?? null;
 
@@ -66,16 +66,16 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
     .filter((a) => (a.kind === 'strike' || a.kind === 'seal') && a.unlocked && a.perk)
     .map((a) => ({ id: a.perk!.id, name: a.perk!.name }));
 
-  return { current: { stance, virtue }, trays: { stance: [...earnedForms, ...lockedForms], virtue: [...earnedVirtues, ...lockedVirtues] }, always };
+  return { current: { stance, virtue }, trays: { stance: [...earnedStances, ...lockedStances], virtue: [...earnedVirtues, ...lockedVirtues] }, always };
 }
 
 /** The loadout after tapping `pick` with `slot` chosen. Not-yet picks and the wrong slot change nothing. */
 export function equipPick(loadout: Loadout | null, slot: StyleSlot, pick: StylePick): Loadout | null {
   if (!pick.earned || pick.slot !== slot) return loadout;
   // B-POLISH-2: re-tapping the equipped pick changes nothing (same object: no re-save, no pop).
-  if ((slot === 'stance' ? loadout?.form : loadout?.virtue) === pick.id) return loadout;
-  const base: Loadout = { form: loadout?.form ?? null, virtue: loadout?.virtue ?? null };
-  return slot === 'stance' ? { ...base, form: pick.id } : { ...base, virtue: pick.id };
+  if ((slot === 'stance' ? loadout?.stance : loadout?.virtue) === pick.id) return loadout;
+  const base: Loadout = { stance: loadout?.stance ?? null, virtue: loadout?.virtue ?? null };
+  return slot === 'stance' ? { ...base, stance: pick.id } : { ...base, virtue: pick.id };
 }
 
 export interface StyleLayout {

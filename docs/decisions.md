@@ -1098,6 +1098,14 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **Client:** the Hearth Cook rig follows its phase (p1 ≥ 0.66 health, p2 ≥ 0.33, else p3, from the phase data). It swaps only between attacks, because the next rig may not have the current attack's art (this crashed in screenshots before the fix). Art without a defeat animation fades out over 600 ms (visual only).
 
 - Hearth Cook tuning (#279) deferred to B-T3-TUNE; 575/20 failed R-BAL-12 at belts 4–10 (Manager, Oct 25).
+## R-STANCE-a — Forms renamed to Stances (2026-10-25)
+- **Manager go (Oct 25):** R-STANCE-a is a rename only, as a beta placeholder (drafts/planning/R-STANCE-stances-and-kata-rewards.md §1). No new stances, no Fighting stance, no kata powers.
+- Form/form became Stance/stance everywhere: content (`stances`, ids `rooted-stance` and `flowing-stance`, the kata `stance` field), sim (`StanceDef`, `activeStance`, `stanceSwitchTicks`, the `stance` action), client UI (the HUD button says STANCE) and the sprite tags in approved.json and assets/art/player-a/b.json. Kata names such as "Basic Form 1" keep "Form". No old aliases are kept.
+- **Save migration (idempotent):** `migrateLoadout` in profile.ts runs on every load. If a save has `loadout.form` and no `stance`, the value moves to `stance`; if it has both, `stance` wins; `form` is always dropped. Old ids (`rooted-form`, `flowing-form`) map to the new ones, so an old save keeps its pick. Running it again changes nothing.
+- A test fails if any content string or game-code string says "Form"/"FORM" outside a kata name.
+- The golden run is the same as before apart from the renamed ids.
+- Button labels are now at least 12 px (the STANCE and VIRTUE labels were 9 and 11 px), and the stance name under the button is 12 px.
+- content/dojo/decorations.json still says "form" in lowercase where it means a kata; left as is.
 
 ### B-T3-TUNE — Manager calls (2026-10-25)
 1. **Phase thresholds:** keep 0.66 / 0.33 (bestiary-plan.md: "Each phase starts at a health mark (100%, 66%, 33%)"). No spec says 50%/20%.
@@ -1105,3 +1113,4 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 3. **Challenge words in content:** each challenge room has `inTimeText` and `outOfTimeText` next to its prompt. Supper Rush: "In time!" and "Time's up! The soup cooled, but you still earned a chest." (true: a missed challenge chest still drops `loot.chests.challenge.items` = 2). Gauntlet and Shield Wall keep "In time!" / "Out of time". The room-clear line puts a missed time on its own line, wrapped to the screen width.
 4. **Hearth Cook 549/17 (Researcher #280):** White-belt base maxHealth 543 → 549 and power 16 → 17; nothing else changed. R-BAL-12 stays green (belt 3–10: Challenge hits to beat 76–80, knock-out ≥ 5).
 5. **Timer label (#282 review, Oct 25):** when time runs out the timer shows only the short `outOfTimeShort` word ("Time's up!" in Supper Rush; "Out of time" elsewhere), on one line at the timer's normal size. The full sentence stays on the room-clear line, so the timer no longer wraps over the door labels at 667.
+- **B-T3-TUNE door labels vs timer (#282 Tester, Oct 25):** door labels now stop at screen y 72 (`DOOR_LABEL_TOP_PX`) instead of 56. This keeps them at least 8 px under the Challenge timer (top 36, bottom ~64) for any camera position and width. The timer itself doesn't move.

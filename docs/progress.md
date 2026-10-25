@@ -749,6 +749,13 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Rolling pin: replace the round danger area with the real lane shape.
 - Guardian may be too easy: probes at 40 seeds beat it every time, taking about 4–18% damage in about 9–12 s.
 - Re-check Supper Rush against #275 once Jay decides.
+## R-STANCE-a — Forms are now Stances (2026-10-25)
+**Done**
+- Rename only: Rooted Stance and Flowing Stance, a STANCE button in runs, "Stance" in My Style and rewards. Kata names keep "Form".
+- Old saves load with their stance (idempotent migration, tested with fixtures/saves/old-form-loadout.json).
+- Golden run unchanged apart from the renamed ids. A new test blocks "Form" in player text outside kata names.
+**Next**
+- R-STANCE-b and later items in the R-STANCE plan.
 
 ## B-T3-TUNE — Hearth Cook and Supper Rush polish (2026-10-25)
 **Done**

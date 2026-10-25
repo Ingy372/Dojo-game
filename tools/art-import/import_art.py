@@ -29,6 +29,9 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 CONFIG = os.path.join(os.path.dirname(__file__), 'approved.json')
 PAGE = 2048  # largest page size every phone can load safely
 PAD = 2  # transparent gap between frames so neighbours never bleed in
+# R-STANCE-a: renders tag a stance idle with `form` and the old ids; the game reads `stance`.
+# approved.json's "stanceIds" maps the delivered ids to the game's ids (filled in by main()).
+STANCE_IDS: dict[str, str] = {}
 
 
 def rel(*p: str) -> str:
@@ -105,7 +108,7 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
                    only_layers: list[str] | None = None, merge: list[str] | None = None) -> dict:
     d = json.load(open(json_path))
     base = os.path.dirname(json_path)
-    # Extra animations delivered later for the same rig (e.g. A2 Form stances): same frame and anchor.
+    # Extra animations delivered later for the same rig (e.g. the A2 stance idles): same frame and anchor.
     for extra_path in merge or []:
         e = json.load(open(extra_path))
         if (e['frameWidth'], e['frameHeight'], e['anchor']) != (d['frameWidth'], d['frameHeight'], d['anchor']):
@@ -125,7 +128,9 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
     for name, a in d['animations'].items():
         if only_anims and name not in only_anims:
             continue
-        info = {k: v for k, v in a.items() if k not in ('sheets',)}
+        info = {k: v for k, v in a.items() if k not in ('sheets', 'form')}
+        if a.get('form'):
+            info['stance'] = STANCE_IDS.get(a['form'], a['form'])
         info['layers'] = {}
         for layer in layers:
             sheet = a['sheets'].get(layer['name'])
@@ -205,6 +210,7 @@ def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | 
 
 def main() -> None:
     cfg = json.load(open(CONFIG))
+    STANCE_IDS.update(cfg.get('stanceIds', {}))
     out_dir = rel(cfg['outDir'])
     os.makedirs(out_dir, exist_ok=True)
     only = sys.argv[1:]

@@ -1,11 +1,11 @@
-// Abilities that real training unlocks (framework section 5): Forms (kata), Strike
+// Abilities that real training unlocks (framework section 5): Stances (kata), Strike
 // upgrades (kick combos), Technique Seals (self-defense) and Virtues (stripes).
 // Defined in content/abilities/abilities.json and checked here.
 
 import { loadEffect, type Effect } from './effects';
 
 /** A stance the player switches between in a fight. Its numbers apply while it's active. */
-export interface FormDef {
+export interface StanceDef {
   id: string;
   name: string;
   text: string;
@@ -46,8 +46,8 @@ export interface VirtueDef {
 }
 
 export interface AbilityContent {
-  /** forms[0] is the Beginner's Stance everyone starts with. */
-  forms: FormDef[];
+  /** stances[0] is the Beginner's Stance everyone starts with. */
+  stances: StanceDef[];
   strikes: PerkDef[];
   seals: PerkDef[];
   virtues: VirtueDef[];
@@ -88,9 +88,9 @@ export function loadAbilities(data: unknown): AbilityContent {
     return s;
   };
 
-  const forms = listOf('forms').map((f, i) => {
-    const w = `forms[${i + 1}]`;
-    const form: FormDef = {
+  const stances = listOf('stances').map((f, i) => {
+    const w = `stances[${i + 1}]`;
+    const stance: StanceDef = {
       id: id(f.id, `${w}.id`),
       name: str(f.name, `${w}.name`),
       text: str(f.text, `${w}.text`),
@@ -100,10 +100,10 @@ export function loadAbilities(data: unknown): AbilityContent {
       guardScale: num(f.guardScale, `${w}.guardScale`),
       powerScale: num(f.powerScale, `${w}.powerScale`),
     };
-    if (form.moveSpeed <= -0.5 || form.attackSpeed < 0 || form.counterWindow < 0) fail(`${w} has numbers out of range`);
-    return form;
+    if (stance.moveSpeed <= -0.5 || stance.attackSpeed < 0 || stance.counterWindow < 0) fail(`${w} has numbers out of range`);
+    return stance;
   });
-  if (forms.length === 0) fail('"forms" needs at least the Beginner\'s Stance');
+  if (stances.length === 0) fail('"stances" needs at least the Beginner\'s Stance');
 
   const perks = (key: 'strikes' | 'seals'): PerkDef[] =>
     listOf(key).map((p, i) => {
@@ -137,5 +137,5 @@ export function loadAbilities(data: unknown): AbilityContent {
     };
   });
 
-  return { forms, strikes: perks('strikes'), seals: perks('seals'), virtues };
+  return { stances, strikes: perks('strikes'), seals: perks('seals'), virtues };
 }

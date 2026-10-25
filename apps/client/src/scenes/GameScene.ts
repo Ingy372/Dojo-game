@@ -41,7 +41,7 @@ import {
   chooseDifficulty,
   markGuidedOffered,
   shouldOfferGuided,
-  activeForm,
+  activeStance,
   characterSetup,
   modsFrom,
   rarityRank,
@@ -435,7 +435,7 @@ export class GameScene extends Phaser.Scene {
     for (const e of this.world.enemies) this.makeEnemy(e);
 
     const p0 = this.world.players[this.me];
-    this.buttons = new ActionButtons(this, () => sfx.unlock(), { forms: p0.forms.length > 1, virtue: !!p0.virtue });
+    this.buttons = new ActionButtons(this, () => sfx.unlock(), { stances: p0.stances.length > 1, virtue: !!p0.virtue });
     this.controls = new TouchControls(
       this,
       cam,
@@ -585,7 +585,7 @@ export class GameScene extends Phaser.Scene {
       if (a && (s.current !== a || s.finished) && !(a === 'counter' && p.guardTicks > 0)) this.heroAction = null;
       if (!this.heroAction) {
         const speed = Math.hypot(p.pos.x - this.prevPos.x, p.pos.y - this.prevPos.y) * TICKS_PER_SECOND;
-        playLocomotion(s, p.moving ? speed : 0, activeForm(p).id);
+        playLocomotion(s, p.moving ? speed : 0, activeStance(p).id);
       }
     }
     s.flash(now < this.playerFlashUntil ? 0xff8a80 : null);
@@ -1193,11 +1193,11 @@ export class GameScene extends Phaser.Scene {
           this.dashTrail(p.pos);
           break;
         }
-        case 'formChange': {
+        case 'stanceChange': {
           const p = this.world.players[ev.playerId];
           sfx.insight();
           this.ring(p.pos, 0x6fb7ff, 1.2);
-          this.floatText(p.pos, activeForm(p).name, '#9ad1ff', 22, 1);
+          this.floatText(p.pos, activeStance(p).name, '#9ad1ff', 22, 1);
           break;
         }
         case 'virtue': {

@@ -13,7 +13,7 @@ import {
   shiftFeedDates,
   snapshot,
   tierXp,
-  unlockedForms,
+  unlockedStances,
   xpToNext,
   type Now,
   type StudentFeed,
@@ -78,7 +78,7 @@ describe('brand-new white belt', () => {
   it('has nothing unlocked, and every ability says how to unlock it', () => {
     expect(t.abilities).toHaveLength(7);
     expect(t.abilities.every((a) => !a.unlocked)).toBe(true);
-    expect(unlockedForms(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance"]);
+    expect(unlockedStances(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance"]);
     expect(t.virtue).toBeNull();
   });
   it('has an unlit Gate and points to the kata on the Path card', () => {
@@ -97,12 +97,12 @@ describe('brand-new white belt', () => {
 
 describe('white belt with 3 sign-offs and a stripe', () => {
   const t = train(white3);
-  it('unlocks the Form, and a Technique Seal per self-defense sign-off', () => {
+  it('unlocks the Stance, and a Technique Seal per self-defense sign-off', () => {
     const unlocked = t.abilities.filter((a) => a.unlocked);
     expect(unlocked.map((a) => a.requirement.name)).toEqual(['Basic Form 1', 'Self-Defense #1', 'Self-Defense #3']);
-    expect(unlocked.map((a) => a.form?.name ?? a.perk?.name)).toEqual(['Rooted Form', 'Off-Balance', 'Sweep']);
+    expect(unlocked.map((a) => a.stance?.name ?? a.perk?.name)).toEqual(['Rooted Stance', 'Off-Balance', 'Sweep']);
     expect(unlocked[2].requirement.signedOffBy).toBe('Sensei Jay');
-    expect(unlockedForms(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance", 'Rooted Form']);
+    expect(unlockedStances(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance", 'Rooted Stance']);
   });
   it('turns the Respect stripe into the Shield of Respect', () => {
     expect(t.virtue?.def.name).toBe('Shield of Respect');
@@ -154,8 +154,8 @@ describe('yellow belt', () => {
     ]);
     expect(t.virtue?.def.name).toBe('Shield of Respect');
   });
-  it('switches between three Forms', () => {
-    expect(unlockedForms(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance", 'Rooted Form', 'Flowing Form']);
+  it('switches between three Stances', () => {
+    expect(unlockedStances(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance", 'Rooted Stance', 'Flowing Stance']);
   });
 });
 
@@ -178,7 +178,7 @@ describe('reward moments', () => {
     if (first.kind === 'signOff') {
       expect(first.requirement.name).toBe('Basic Form 1');
       expect(first.requirement.signedOffBy).toBe('Sensei Jay');
-      expect(first.ability).toBe('Form: Rooted Form');
+      expect(first.ability).toBe('Stance: Rooted Stance');
     }
   });
 
