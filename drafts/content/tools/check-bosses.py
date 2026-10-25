@@ -8,7 +8,10 @@ CORE = [k for k in FK if k not in ("summon",)]
 ATTACK = list(FK["attacks"][0].keys())
 TIERS = ["white","yellow","orange","green","blue","red","red-black","brown","brown-black","black"]
 EARLY = TIERS[:3]
-LORE = {t["guardian"]["id"]: t["guardian"] for t in json.loads((R/"drafts/content/lore/guardians-and-relics.json").read_text())["tiers"]}
+_LT = json.loads((R/"drafts/content/lore/guardians-and-relics.json").read_text())["tiers"]
+LORE = {t["guardian"]["id"]: t["guardian"] for t in _LT}
+FORM = {t["guardian"]["id"]: t["form"] for t in _LT}
+FINAL = "lost-lightbearer"
 BANNED = re.compile(r"\b(kill|killed|dead|die|dies|blood|gore|destroy|destroyed|evil|hate|stupid)\b", re.I)
 FAITH = re.compile(r"\b(God|Jesus|Lord|Christ|Bible|Scripture|verse|John|Romans|Psalm|Samuel)\b|\d+:\d+")
 def num_or_todo(v): return v == "TODO" or (isinstance(v,(int,float)) and not isinstance(v,bool))
@@ -47,6 +50,7 @@ def check(p):
     ph=d.get("phases",[])
     if not 2<=len(ph)<=3: e.append("needs 2-3 phases")
     if ph and ph[0].get("atHealthFraction")!=1.0: e.append("first phase starts at 1.0")
+    if [x.get("atHealthFraction") for x in ph][1:] not in ([0.66],[0.66,0.33]): e.append("phase changes are at 0.66 and 0.33 (Manager's call)")
     if [x.get("atHealthFraction") for x in ph]!=sorted([x.get("atHealthFraction") for x in ph],reverse=True): e.append("phases must go down in health")
     texts={}
     for x in ph:
@@ -61,6 +65,15 @@ def check(p):
     else:
         if d.get("name")!=g["name"]: e.append("name must match the lore")
         if L.get("freed")!=g["freed"] or L.get("senseiAfter")!=g["senseiAfter"]: e.append("freed and senseiAfter must be copied from the lore")
+    if "form" in d:
+        if d.get("tier")=="black":
+            if d.get("formPlaceholder") is not True or "PLACEHOLDER" not in d["form"]: e.append("the Black belt form must stay marked as a placeholder")
+        elif g and d["form"]!=FORM.get(d["id"]): e.append("form must match the lore")
+    if d.get("id")==FINAL:
+        sc=L.get("freedScene") or []
+        if not sc or not any(g and g["freed"] in b for b in sc): e.append("the final freed scene must include the lore's freed line")
+        for i,b in enumerate(sc):
+            if not (g and g["freed"] in b): texts[f"freedScene {i+1}"]=(b,12)
     texts["intro"]=(L.get("intro",""),12); texts["description"]=(d.get("description",""),25)
     texts["tip"]=(d.get("bestiary",{}).get("tip",""),15)
     lore=d.get("bestiary",{}).get("lore",{})
