@@ -111,6 +111,12 @@ export interface Profile {
    * with the Seal that is already lit, silently (see sealBell).
    */
   sealsSeen: string[] | null;
+  /**
+   * P-MENU2-c: the Trophy Case cubby ids whose unlock moment has played (each plays once).
+   * null = an old save from before this field; the first Trophy Case view fills it in with
+   * every cubby already earned, silently (see newTrophies).
+   */
+  trophiesSeen: string[] | null;
 }
 
 export interface StreetSmartsSave {
@@ -151,6 +157,7 @@ export function newProfile(): Profile {
     welcomeWeek: newWelcomeWeekLog(),
     goalsShownOn: null,
     sealsSeen: [],
+    trophiesSeen: [],
   };
 }
 
@@ -166,7 +173,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null, sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null, sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {
@@ -367,6 +374,22 @@ export function getsTutorialFloor(profile: Pick<Profile, 'runsStarted' | 'runsPl
  * the Seal for `beltId` is seen lit. An old save (sealsSeen null) is migrated silently: a Seal
  * that is already lit counts as seen, so returning players get no bell. Only ever adds ids.
  */
+/**
+ * P-MENU2-c: which of the cubbies on screen (`shown`, earned ids) should play their unlock
+ * moment now. Each plays once and is saved as seen. An old save (trophiesSeen null) is migrated
+ * silently: everything in `earned` counts as seen, so returning players get no replays.
+ */
+export function newTrophies(profile: Profile, earned: readonly string[], shown: readonly string[]): string[] {
+  if (profile.trophiesSeen === null) {
+    profile.trophiesSeen = [...earned];
+    return [];
+  }
+  const seen = profile.trophiesSeen;
+  const fresh = shown.filter((id, i) => !seen.includes(id) && shown.indexOf(id) === i);
+  seen.push(...fresh);
+  return fresh;
+}
+
 export function sealBell(profile: Profile, beltId: string, lit: boolean): boolean {
   const old = profile.sealsSeen === null;
   const seen = profile.sealsSeen ?? [];
