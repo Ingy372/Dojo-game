@@ -551,6 +551,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## S3-P1b Kata cards
 - Bigger drawn kata arrows (same height as the step numbers) and a Kata group at the top of Abilities. Screens: /workspace/qa/s3p1b/final/.
+
+## R-BAL-9c Live enemy numbers
+- Swarmer, Shield, Brute and Floor-keeper set to the #188 numbers; all in band on Standard and Challenge (drafts/planning/r-bal-9c-check.py). D1–D5 logged as Jay's calls.
 ## K25 Slower tempo and calmer shake
 - Game runs about 12% slower (one `TEMPO.speed` value); wind-ups and counter windows are longer in real time, never shorter.
 - No screen shake on the player's own attacks. The being-hit shake only happens at Brown belt and up or on Challenge, at 65% strength, and never with Reduced motion.
@@ -558,6 +561,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## K25b Block never shakes
 - Done: Block gives 0 shake; being hit is unchanged. Test added.
+
+## R-BAL-9b Per-tier gear caps
+- Done: 10-tier GEAR_CAPS, white cut, Jade capped. Test: r-bal-9b-gear-caps.test.ts.
 
 ## R-BAL-12 Training powers combat
 - Done: training stats, stripesByBelt migration (never lowers), per-belt enemy scale. UI words (12d) are still open.

@@ -190,9 +190,25 @@ export const LOOT = {
  * Placeholder gear limits for the white belt tier, until real profiles arrive (milestone 4).
  * Gear stats are capped at these, so gear never outweighs real training.
  */
+// R-BAL-9b (#188, Manager's call): per-tier caps from the cost curve, in belt order.
 export const GEAR_CAPS = {
-  white: { power: 4, maxHealth: 30, guard: 8 },
+  white: { power: 1, maxHealth: 10, guard: 3, powerScale: 0.04 },
+  yellow: { power: 3, maxHealth: 25, guard: 5, powerScale: 0.08 },
+  orange: { power: 6, maxHealth: 41, guard: 8, powerScale: 0.11 },
+  green: { power: 9, maxHealth: 60, guard: 9, powerScale: 0.14 },
+  blue: { power: 12, maxHealth: 81, guard: 11, powerScale: 0.16 },
+  red: { power: 16, maxHealth: 104, guard: 12, powerScale: 0.19 },
+  'red-black': { power: 20, maxHealth: 128, guard: 14, powerScale: 0.21 },
+  brown: { power: 24, maxHealth: 154, guard: 15, powerScale: 0.22 },
+  'brown-black': { power: 29, maxHealth: 182, guard: 16, powerScale: 0.24 },
+  black: { power: 34, maxHealth: 211, guard: 17, powerScale: 0.26 },
 } as const;
+
+/** The gear caps for a belt tier (1 = white); tiers past black use black's. */
+export function gearCapsForTier(tier: number): (typeof GEAR_CAPS)[keyof typeof GEAR_CAPS] {
+  const rows = Object.values(GEAR_CAPS);
+  return rows[Math.max(0, Math.min(rows.length, Math.floor(tier)) - 1)];
+}
 
 // ---------------------------------------------------------------- the training link (milestone 4)
 

@@ -63,14 +63,14 @@ function basicHitOn(world: WorldState, room: ReturnType<typeof arena>['room'], t
 }
 
 describe('elite stats', () => {
-  it('an elite has 1.25x Health (a Guarding Brute has 225), the same Power and Guard', () => {
+  it('an elite has 1.25x Health (a Guarding Brute has 158 after R-BAL-9c), the same Power and Guard', () => {
     const brute = content.enemies.brute;
     const g = eliteDef(brute, 'guarding', rules);
-    expect(g.maxHealth).toBe(225);
+    expect(g.maxHealth).toBe(158);
     expect(g.power).toBe(brute.power);
     expect(g.guard).toBe(brute.guard);
     const { world } = arena([{ enemy: 'brute', column: 10, row: 4 }], [{ spawn: 0, kind: 'guarding' }]);
-    expect(world.enemies[0].health).toBe(225);
+    expect(world.enemies[0].health).toBe(158);
     expect(world.enemies[0].elite).toBe('guarding');
   });
 
@@ -384,7 +384,7 @@ describe('which enemy is the elite (PR #54, Done-when 8b)', () => {
     for (let i = 0; i < 200 && world.enemies.length < 2; i++) stepWorld(world, room, { p1: IDLE });
     const brute = world.enemies.find((e) => e.def.id === 'brute');
     expect(brute?.elite).toBe('guarding');
-    expect(brute?.health).toBe(225);
+    expect(brute?.health).toBe(158);
   });
 });
 
