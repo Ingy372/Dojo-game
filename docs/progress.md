@@ -545,3 +545,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - New waves: 3 Swarmers plus a Brute, a small Swarmer group, Swarmers from two sides. DASH pulses on the dash tip.
 - Session 2: lesson-dash is a short reminder.
 - Sim: enemyHold/waveHold/releaseWave plus the tutorial flow API, with 7 new tests (step flow, health floor at 1).
+
+- K24b: wind-up "!" + fill ring before enemy attacks; COUNTER flashes/rings gold in the counter window; Reduced motion respected. Screens: /workspace/qa/k24b/.
