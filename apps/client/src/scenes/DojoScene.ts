@@ -1303,7 +1303,7 @@ export class DojoScene extends Phaser.Scene {
     const t = SAFE_TEXT;
     const { width, height } = view(this);
     const card = this.add.container(0, 0).setDepth(90);
-    card.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.92).setOrigin(0).setInteractive());
+    card.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
     const w = Math.min(460, width - 40);
     const title = this.add.text(width / 2, height * 0.16, t.wipeTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
     const help = this.add.text(width / 2, title.y + title.height + 12, t.wipeHelp, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
