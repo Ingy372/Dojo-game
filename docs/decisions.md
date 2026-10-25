@@ -1061,3 +1061,11 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Tray tiles use the cubby rules: text width = tile − 2·8 − 2 (stroke), up to 3 lines with a tight line gap, and a hyphenated word breaks after its hyphen. If 3 tiles can't hold the widest tray word ("Beginner's", 67 px) with that padding, the tray shows 2 wider tiles. That happens at 667, where 3 would be 61 px. The smallest measured tray gap is 8.0 px ("Rooted Form" at 667). Trade-off: at 667 the third pick in a tray is not shown (the tray was already capped at 3).
 - Tray paging (Manager call: never hide an earned pick). When a tray has more picks than fit, the row gets the Trophy Case's ◀ ▶ arrows: button(), WOOD.switchOff, 15 pt, 44 wide, the tile's height, greyed at the first and last page. The tray pages; it resets to page 1 when the slot changes. Tiles keep the cubby padding (≥ 8 px, stroke counted).
 - Geometry at 667: the row is 199 wide. Two tiles of at least 87 px plus two 44 px arrows need 274 px, so a paged tray at 667 shows 1 tile per page between the arrows (95 wide). A tray that fits without arrows still shows 2 tiles. At 844 and 932 a paged tray shows 2 per page. A test pages through 1–12 picks at all three widths and reaches every one.
+
+## P-MENU2-f — Gear polish (2026-10-25)
+- Worn items stay in the bag grid, marked ✓, instead of being taken out. The bag order is slot, then strongest, then id, and ignores what's worn, so wearing never moves a tile.
+- Tiles have no text labels: an icon, a rarity border and a small ↑/↓ badge. That keeps them narrow and works for pre-readers. The name is in the sheet.
+- The compare shows arrows and words only. Numbers are behind a Details toggle (D6). Down uses a soft grey, never red.
+- The pager row is always reserved, so the grid's y never depends on how many pages there are.
+- The sheet spans the whole Gear panel. At 667, a tile in the second row can be partly covered when the sheet opens at the top. Accepted, because the picked tile is still visible and the sheet is about 150 tall.
+- Fighting Style tray dots reuse pageDots, the Trophy Case rule: dots only, hidden for one page.
