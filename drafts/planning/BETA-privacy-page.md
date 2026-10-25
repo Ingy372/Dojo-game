@@ -26,7 +26,7 @@ The game does **not** ask for or store your child's name, birthday, photo, locat
 
 ## What the game sends over the internet
 - **From the game code: nothing about your child.** The only network request in the code loads the game's own music files from the game's own files.
-- **Read-aloud:** Street Smarts stories can be read aloud using the device's built-in voice (the Web Speech API). **[UNKNOWN: on some devices the voice provider may process text online. The text is the story script, not anything about your child. Lawyer and Programmer to check.]**
+- **Read-aloud:** if read-aloud is on, Street Smarts stories are read aloud by your phone's built-in voice feature. The game itself sends nothing. Depending on your phone and voice settings, that voice feature may use Apple or Google servers to make the speech, under their own privacy policies. Only the game's story text is spoken, never anything about your child. [TBD-BUILD: Bible verses read aloud (J9), once verses are in the game.]
 - **Web version only:** when the game is played at the web link, our host, Cloudflare, receives normal web-request information such as IP address, as any website does. [Link to Cloudflare's privacy policy; lawyer to check.]
 
 ## The beta (TestFlight and Google Play testing)
@@ -40,7 +40,7 @@ This data is handled under Apple's and Google's own privacy policies: [links]. W
 
 ## Children's privacy
 - The game is made for children ages 6+ and collects no personal information from them.
-- A grown-up question guards settings such as the play-time limit and belt entry.
+- A grown-up question (an addition sum with four choices) guards the play-time limit, and belt entry once it's built [TBD-BUILD: B-BELT].
 - To delete everything, delete the app (or clear site data for the web link). [In-app "wipe data" button, planned under B-SAFE.]
 
 ## Changes and contact
@@ -53,5 +53,5 @@ If we start collecting anything (for example, a future link to DojoForge account
 2. **Who is the "operator":** Tarnished Labs, Action Zone or Jay? That decides the name at the top.
 3. **Apple:** iOS apps must have a Privacy Policy URL ([App information](https://developer.apple.com/help/app-store-connect/reference/app-information/app-information/)). **Kids Category** rules (guidelines 1.3 and 5.1.4, [guidelines](https://developer.apple.com/app-store/review/guidelines/)). Note that once an app marked "Made for Kids" is approved, Apple says **that choice can't be changed** (same App information page). (D8)
 4. **Google Families** policy and the Data safety form ([Families](https://support.google.com/googleplay/android-developer/answer/9893335)). Internal tests are exempt from the Data safety section ([testing help](https://support.google.com/googleplay/android-developer/answer/9845334)), but the store launch isn't.
-5. **Read-aloud voices** (see UNKNOWN above) and **Cloudflare logs** for the web link.
+5. **Read-aloud voices:** the game calls the browser's Web Speech API (`speechSynthesis`), not a native plugin. Apple says its speech synthesis runs on the device. Chrome's Google voices send the text to Google. Android voices can be network voices. Sources and wording are in the B-DOCS PR. Please confirm the wording. and **Cloudflare logs** for the web link.
 6. **The future DojoForge link** (accounts, server saves) needs a new review and parent consent through DojoForge.

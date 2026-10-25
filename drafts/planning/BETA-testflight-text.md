@@ -35,7 +35,7 @@
 - **Review notes:**
 > Dojo Ascent is a game for children (ages 6+) at one martial-arts school, Action Zone. This build is for a small family beta.
 > - No login, accounts, ads, in-app purchases, chat, analytics or third-party SDKs. All progress is stored on the device.
-> - Grown-up gate: Settings is behind a math question that a young child is unlikely to answer (for example, a multiplication). Answer it to reach the play-time limit and belt entry.
+> - Grown-up gate: in Settings, the play-time limit is behind a grown-up question, an addition sum such as 14 + 7 with four choices. A wrong answer quietly goes back. [TBD-BUILD: belt entry behind the same gate, B-BELT.]
 > - To see higher content: after the gate, enter a belt (for example, Orange, 2 stripes). [Exact steps once B-BELT is built.]
 > - Without a belt entered, the game starts at White belt with a short tutorial floor.
 > - Read-aloud in the Street Smarts story uses the device's built-in voice.
