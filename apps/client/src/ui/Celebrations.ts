@@ -251,14 +251,41 @@ export class Celebrations {
         sfx.signOff();
         this.text(cx, height * 0.1, `${m.list.length} techniques signed off!`, 26, '#5cd65c', true).setOrigin(0.5);
         this.text(cx, height - 64, gainText(GAINS.signOffs, signOffGain(this.training, m.list.map((s) => s.requirement))), 17, '#ffd166', true, FONT, width - 40).setOrigin(0.5).setAlign('center');
-        let y = height * 0.1 + 36;
+        // K26: each column has a fixed width and long names wrap inside it, so they never run into the other column.
+        // If the list is too tall, try 13 then 12 px (still readable); if it still doesn't fit, show what fits plus an "and N more" line.
+        const top = height * 0.1 + 36;
+        const bottom = height - 84;
+        const gap = 16;
         const cols = m.list.length > 6 ? 2 : 1;
-        const rows = Math.ceil(m.list.length / cols);
-        const lineH = Math.min(24, (height - y - 84) / rows);
-        m.list.forEach((s, i) => {
-          const col = Math.floor(i / rows);
-          const x = cols === 1 ? cx - 180 : cx - Math.min(380, width / 2 - 16) + col * Math.min(390, width / 2);
-          const t = this.text(x, y + (i % rows) * lineH, `✓ ${s.requirement.name}: ${s.ability.split(' (')[0]}`, 14, '#f2e9d8').setAlpha(0);
+        const colW = cols === 1 ? Math.min(400, width - 40) : Math.min(390, (width - 32 - gap) / 2);
+        const left = cx - (cols * colW + (cols - 1) * gap) / 2;
+        const label = (s: (typeof m.list)[number]) => `✓ ${s.requirement.name}: ${s.ability.split(' (')[0]}`;
+        const layout = (size: number, shown: number) => {
+          const rows = Math.ceil(shown / cols);
+          const ys = Array.from({ length: cols }, () => top);
+          const made: Phaser.GameObjects.Text[] = [];
+          for (let i = 0; i < shown; i++) {
+            const col = Math.floor(i / rows);
+            const t = this.text(left + col * (colW + gap), ys[col], label(m.list[i]), size, '#f2e9d8', false, FONT, colW);
+            ys[col] += t.height + 3;
+            made.push(t);
+          }
+          return { made, fits: Math.max(...ys) <= bottom };
+        };
+        let shown = m.list.length;
+        let size = 14;
+        let res = layout(size, shown);
+        while (!res.fits) {
+          res.made.forEach((t) => t.destroy());
+          if (size > 12) size--;
+          else shown -= cols;
+          res = layout(size, Math.max(cols, shown - (shown < m.list.length ? 1 : 0)));
+          if (shown <= cols) break;
+        }
+        const extra = m.list.length - res.made.length;
+        if (extra > 0) this.text(cx, bottom + 2, `…and ${extra} more! See them all on the Board.`, size, '#b9ad99').setOrigin(0.5, 0);
+        res.made.forEach((t, i) => {
+          t.setAlpha(0);
           this.scene.tweens.add({ targets: t, alpha: 1, delay: i * 70, duration: 200 });
         });
         this.burst(cx, height * 0.1, [0x5cd65c, GOLD], 24);
