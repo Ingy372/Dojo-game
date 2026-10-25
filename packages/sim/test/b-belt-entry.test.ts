@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { rewardMoments, snapshot, applyBeltEntry, buildTraining, feedEntry, loadFeed, loadProfile, newProfile, recordBeltEntry } from '../src';
+import { rewardMoments, snapshot, applyBeltEntry, buildTraining, feedEntry, loadFeed, loadProfile, newProfile, recordBeltEntry, pickBelt } from '../src';
 import { testContent } from './load-content';
 
 const files = import.meta.glob('../../../fixtures/*.json', { eager: true, import: 'default' });
@@ -20,6 +20,18 @@ describe('B-BELT: a grown-up enters the belt and stripes', () => {
     expect(whiteItems.every((r) => r.signedOff)).toBe(true);
     expect(t.gate.locks.every((r) => r.belt === 'yellow' && !r.signedOff)).toBe(true);
     expect(t.gate.sealLit).toBe(false);
+  });
+
+  it('changing the belt chip resets stripes to 0, but not below the saved floor', () => {
+    expect(pickBelt(belts, { belt: 'white', stripes: 0 }, 'green')).toEqual({ belt: 'green', stripes: 0 });
+    expect(pickBelt(belts, { belt: 'yellow', stripes: 2 }, 'orange')).toEqual({ belt: 'orange', stripes: 0 });
+    expect(pickBelt(belts, { belt: 'yellow', stripes: 2 }, 'yellow')).toEqual({ belt: 'yellow', stripes: 2 });
+  });
+
+  it('Save asks "Are you sure?" first, with the shared button', () => {
+    const dojo = Object.values(import.meta.glob('../../../apps/client/src/scenes/DojoScene.ts', { query: '?raw', import: 'default', eager: true }))[0] as string;
+    expect(dojo).toMatch(/button\(width \/ 2 \+ 8, t\.save, 0x3aa57a, \(\) => this\.confirmBeltEntry\(/);
+    expect(dojo).toMatch(/confirmBeltEntry[\s\S]*roundButton\([\s\S]*confirmYes[\s\S]*save\(\)/);
   });
 
   it('the next visit celebrates it as a promotion', () => {

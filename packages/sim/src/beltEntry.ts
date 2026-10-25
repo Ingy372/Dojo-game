@@ -67,3 +67,9 @@ export function applyBeltEntry(feed: StudentFeed, entry: BeltEntry | null): Stud
     testing: { approved: false, testDate: null },
   };
 }
+
+/** Tapping a belt chip: stripes go back to 0, but never below the saved floor on that same belt. */
+export function pickBelt(belts: readonly FeedBelt[], floor: BeltEntry, belt: string): BeltEntry {
+  const pick = { belt, stripes: 0 };
+  return entryRank(belts, pick) < entryRank(belts, floor) ? { belt, stripes: floor.stripes } : pick;
+}

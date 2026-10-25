@@ -8,5 +8,12 @@
   "back": "Back",
   "saved": "Saved: {belt}, {n} stripes",
   "savedOne": "Saved: {belt}, 1 stripe",
-  "savedNone": "Saved: {belt}"
+  "savedNone": "Saved: {belt}",
+  "confirmTitle": "Are you sure?",
+  "confirmHelp": "Save {entry}? Belts here can only go up, so this can't be lowered later.",
+  "confirmYes": "Yes, save",
+  "confirmNo": "Back",
+  "entryStripes": "{belt}, {n} stripes",
+  "entryOne": "{belt}, 1 stripe",
+  "entryNone": "{belt}"
 }

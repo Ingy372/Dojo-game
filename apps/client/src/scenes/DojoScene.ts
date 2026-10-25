@@ -55,7 +55,8 @@ import MOTION_TEXT from '../../../../content/settings/motion.json';
 import streetUi from '../../../../content/street-smarts/ui.json';
 import { baseFeed, currentTraining } from '../game/student';
 import BELT_TEXT from '../../../../content/settings/belt-entry.json';
-import { applyBeltEntry, entryRank, feedEntry, recordBeltEntry, type BeltEntry } from '@dojo/sim';
+import { applyBeltEntry, entryRank, feedEntry, pickBelt, recordBeltEntry, type BeltEntry } from '@dojo/sim';
+import { button as roundButton } from '../ui/button';
 import { startTowerRun } from '../game/tower';
 import { LESSONS, addDevDays, devDayOffset, lessonTitle, localDay, takeLesson } from '../game/lessons';
 import { TouchControls } from '../input/TouchControls';
@@ -1280,8 +1281,7 @@ export class DojoScene extends Phaser.Scene {
         const y = top + Math.floor(i / cols) * (ch + gap);
         const ok = entryRank(belts, { belt: b.id, stripes: 2 }) >= entryRank(belts, floor);
         chip(x, y, cw, b.name, Number.parseInt(b.color.replace('#', ''), 16) || 0xffffff, b.id === pick.belt, ok, () => {
-          pick.belt = b.id;
-          if (entryRank(belts, pick) < entryRank(belts, floor)) pick.stripes = floor.stripes;
+          Object.assign(pick, pickBelt(belts, floor, b.id));
         });
       });
       box.add(this.add.text(left, sy + ch / 2, t.stripes, { fontFamily: FONT, fontStyle: 'bold', fontSize: '15px', color: '#e8d9b5' }).setOrigin(0, 0.5).setResolution(crisp()).setData('pick', true));
@@ -1299,7 +1299,7 @@ export class DojoScene extends Phaser.Scene {
       bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, tap);
     };
     button(width / 2 - bw - 8, t.back, 0x4a4a55, close);
-    button(width / 2 + 8, t.save, 0x3aa57a, () => {
+    button(width / 2 + 8, t.save, 0x3aa57a, () => this.confirmBeltEntry(belts, pick, () => {
       sfx.place(true);
       this.profile.beltEntry = recordBeltEntry(belts, this.profile.beltEntry, pick);
       writeSave(this.profile);
@@ -1307,7 +1307,25 @@ export class DojoScene extends Phaser.Scene {
       const line = pick.stripes === 0 ? t.savedNone : pick.stripes === 1 ? t.savedOne : t.saved;
       close();
       this.toast(line.replace('{belt}', name).replace('{n}', String(pick.stripes)));
-    });
+    }));
+  }
+
+  /** "Are you sure?" before a belt entry is saved: saves only go up, so it can't be lowered later. */
+  private confirmBeltEntry(belts: readonly { id: string; name: string }[], pick: BeltEntry, save: () => void): void {
+    const t = BELT_TEXT;
+    const { width, height } = view(this);
+    const card = this.add.container(0, 0).setDepth(90);
+    card.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
+    const name = belts.find((b) => b.id === pick.belt)!.name;
+    const entry = (pick.stripes === 0 ? t.entryNone : pick.stripes === 1 ? t.entryOne : t.entryStripes).replace('{belt}', name).replace('{n}', String(pick.stripes));
+    const w = Math.min(460, width - 40);
+    const title = this.add.text(width / 2, height * 0.16, t.confirmTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp());
+    const help = this.add.text(width / 2, title.y + title.height + 12, t.confirmHelp.replace('{entry}', entry), { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
+    card.add([title, help]);
+    const bw = 140;
+    const by = Math.min(height - 12 - 44, help.y + help.height + 22);
+    roundButton(this, { x: width / 2 - bw - 8, y: by, w: bw, h: 44, label: t.confirmNo, color: 0x4a4a55, size: 16, onTap: () => card.destroy() }, card);
+    roundButton(this, { x: width / 2 + 8, y: by, w: bw, h: 44, label: t.confirmYes, color: 0x3aa57a, size: 16, onTap: () => { card.destroy(); save(); } }, card);
   }
 
   /** Asks how the player likes to move decorations: tap the spot, or an arrow pad. */
