@@ -9,7 +9,7 @@ import uiData from '../../../../content/street-smarts/ui.json';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { sfx } from '../audio/Sfx';
-import { FONT, crisp } from '../ui/theme';
+import { FONT, crisp, view, hiDpi } from '../ui/theme';
 
 const SCENARIOS: Record<string, Scenario> = { [storeData.id]: loadScenario(storeData) };
 const UI = uiData as typeof uiData & { speakers: Record<string, string> };
@@ -36,6 +36,7 @@ export class StreetSmartsScene extends Phaser.Scene {
   }
 
   create(): void {
+    hiDpi(this.cameras.main);
     this.profile = loadSave();
     this.player = currentTraining().firstName;
     this.speak = loadSpeak(this.sc.ageBand);
@@ -56,7 +57,7 @@ export class StreetSmartsScene extends Phaser.Scene {
 
   private render(): void {
     this.ui.removeAll(true);
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const pad = 12;
     this.add.rectangle(0, 0, width, height, 0x1c1826).setOrigin(0).setDepth(-1);
     this.text(pad, 12, UI.title, 18, '#ffd166', true);

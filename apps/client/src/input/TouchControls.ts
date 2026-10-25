@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import type { MoveInput } from '@dojo/sim';
+import { view, DPR } from '../ui/theme';
 
 /** How far (in screen pixels) the stick knob can travel from its center. */
 const STICK_RADIUS = 56;
@@ -52,7 +53,7 @@ export class TouchControls {
 
   /** Called on resize: puts the resting stick hint in the bottom-left corner. */
   layout(): void {
-    const { height } = this.scene.scale.gameSize;
+    const { height } = view(this.scene);
     this.hint.setPosition(STICK_RADIUS + 36, height - STICK_RADIUS - 36);
   }
 
@@ -79,19 +80,19 @@ export class TouchControls {
   }
 
   private inStickZone(x: number, y: number): boolean {
-    const { width, height } = this.scene.scale.gameSize;
+    const { width, height } = view(this.scene);
     return x < width * 0.4 && y > height * 0.4;
   }
 
   private onDown(pointer: Phaser.Input.Pointer): void {
-    if (this.isButton(pointer.x, pointer.y)) return;
-    if (this.stickPointer === null && this.inStickZone(pointer.x, pointer.y)) {
+    if (this.isButton((pointer.x / DPR), (pointer.y / DPR))) return;
+    if (this.stickPointer === null && this.inStickZone((pointer.x / DPR), (pointer.y / DPR))) {
       this.stickPointer = pointer.id;
       // Keep the whole stick on screen even if the thumb lands near the edge.
-      const { height } = this.scene.scale.gameSize;
+      const { height } = view(this.scene);
       this.stickCenter.set(
-        Math.max(pointer.x, STICK_RADIUS + 8),
-        Math.min(pointer.y, height - STICK_RADIUS - 8),
+        Math.max((pointer.x / DPR), STICK_RADIUS + 8),
+        Math.min((pointer.y / DPR), height - STICK_RADIUS - 8),
       );
       this.updateStick(pointer);
       this.showStick(true);
@@ -119,8 +120,8 @@ export class TouchControls {
   }
 
   private updateStick(pointer: Phaser.Input.Pointer): void {
-    const dx = pointer.x - this.stickCenter.x;
-    const dy = pointer.y - this.stickCenter.y;
+    const dx = (pointer.x / DPR) - this.stickCenter.x;
+    const dy = (pointer.y / DPR) - this.stickCenter.y;
     const dist = Math.hypot(dx, dy);
     const scale = dist > STICK_RADIUS ? STICK_RADIUS / dist : 1;
     this.stickVector.set((dx * scale) / STICK_RADIUS, (dy * scale) / STICK_RADIUS);

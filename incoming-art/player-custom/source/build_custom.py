@@ -99,9 +99,10 @@ if A.body == "b":
             for v in bm.verts: v.co += v.normal * OUTLINE_W
             bmesh.ops.reverse_faces(bm, faces=bm.faces[:])
         remesh(nm, bm)
-    for side in ("L", "R"):
-        for nm in (f"ear.{side}", f"ear.{side}_outline"):
-            ob = bpy.data.objects[nm]; ob.scale = (0.85, 0.85, 0.85)
+    for side in ("L", "R"):   # smaller ears, scaled about the ear's own centre (an object scale shrinks toward the rig origin
+        c = sum((v.co for v in bpy.data.objects[f"ear.{side}"].data.vertices), Vector()) / len(bpy.data.objects[f"ear.{side}"].data.vertices)
+        for nm in (f"ear.{side}", f"ear.{side}_outline"):   # and dropped the ears onto the shoulders: Jay's bug report)
+            for v in bpy.data.objects[nm].data.vertices: v.co = c + (v.co - c) * 0.85
     for x, sd in ((1, "L"), (-1, "R")):          # soft round cheeks (skin)
         put(skin, f"cheek.{sd}", ellipsoid((0.085 * x, -0.1, 1.06), (0.07, 0.03, 0.055), segs=12, rings=8), SKIN_N, outline=False)
         for k, (dx, dz, rz) in enumerate(((-0.006, 0.012, -15), (0.006, 0.0, -35), (0.014, -0.015, -60))):   # three longer lash flicks at the outer corner

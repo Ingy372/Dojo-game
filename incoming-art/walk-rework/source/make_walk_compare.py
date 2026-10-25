@@ -48,17 +48,17 @@ def cell(meta, info, comp, dn, f, sec):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--old", required=True); ap.add_argument("--new", required=True)
-    ap.add_argument("--label", default="new"); ap.add_argument("--dirs", default="S,E,N,SE")
+    ap.add_argument("--label", default="new"); ap.add_argument("--mid", default=""); ap.add_argument("--mid-label", default="Arms 1"); ap.add_argument("--dirs", default="S,E,N,SE")
     ap.add_argument("--gif", required=True); ap.add_argument("--strip", default="")
     ap.add_argument("--scale", type=int, default=2); ap.add_argument("--seconds", type=float, default=2.0)
     a = ap.parse_args(); S = a.scale
-    sides = [(*load(a.old), "current walk"), (*load(a.new), a.label)]
+    sides = [(*load(a.old), "current walk")] + ([(*load(a.mid), a.mid_label)] if a.mid else []) + [(*load(a.new), a.label)]; R = len(sides)
     dirs = a.dirs.split(","); W, H = sides[0][0]["frameWidth"], sides[0][0]["frameHeight"]
     LAB, TOP = 30, 18
     frames = []
     for t in range(int(a.seconds * 30)):
         sec = t / 30
-        cv = Image.new("RGB", (LAB + len(dirs) * W * S, TOP + 2 * (H * S + 16)), (24, 22, 32)); d = ImageDraw.Draw(cv)
+        cv = Image.new("RGB", (LAB + len(dirs) * W * S, TOP + R * (H * S + 16)), (24, 22, 32)); d = ImageDraw.Draw(cv)
         for r, (meta, info, comp, lab) in enumerate(sides):
             f = int(sec * info["fps"]) % info["frames"]; y = TOP + r * (H * S + 16)
             d.text((LAB, y - 14), f"{lab}  (frame {f + 1}/{info['frames']})", fill=(255, 220, 120))
@@ -69,10 +69,10 @@ def main():
     frames[0].save(a.gif, save_all=True, append_images=frames[1:], duration=33, loop=0)
     if a.strip:
         n = sides[0][1]["frames"]
-        img = Image.new("RGB", (LAB + n * W, len(dirs) * 2 * (H + 14)), (24, 22, 32)); d = ImageDraw.Draw(img)
+        img = Image.new("RGB", (LAB + n * W, len(dirs) * R * (H + 14)), (24, 22, 32)); d = ImageDraw.Draw(img)
         for k, dn in enumerate(dirs):
             for r, (meta, info, comp, lab) in enumerate(sides):
-                y = (k * 2 + r) * (H + 14)
+                y = (k * R + r) * (H + 14)
                 d.text((4, y + 2), f"{dn}  {lab}", fill=(255, 220, 120))
                 for f in range(info["frames"]):
                     img.paste(cell(meta, info, comp, dn, f, f / info["fps"]).convert("RGB"), (LAB + f * W, y + 14))

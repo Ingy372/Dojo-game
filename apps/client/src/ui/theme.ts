@@ -1,3 +1,4 @@
+import Phaser from 'phaser';
 // Shared placeholder colors and text styles (until an art pack is chosen).
 
 import { CONTENT } from '../game/content';
@@ -32,6 +33,24 @@ export function css(color: number): string {
 
 export function crisp(): number {
   return window.devicePixelRatio || 1;
+}
+
+/**
+ * K24c: the game draws at the phone's full ("retina") sharpness. The canvas has
+ * DPR real pixels per screen point; every camera is zoomed by DPR, so all layout
+ * code keeps working in screen points via view(). Capped at 3 to keep memory sane.
+ */
+export const DPR = Math.min(Math.max(window.devicePixelRatio || 1, 1), 3);
+
+/** The screen size in points (what layout code should use). */
+export function view(scene: Phaser.Scene): { width: number; height: number } {
+  const g = scene.scale.gameSize;
+  return { width: g.width / DPR, height: g.height / DPR };
+}
+
+/** A camera that shows the scene 1:1 in screen points at full sharpness. */
+export function hiDpi(cam: Phaser.Cameras.Scene2D.Camera): void {
+  cam.setOrigin(0, 0).setZoom(DPR);
 }
 
 /** "1:05" for a number of ticks. */

@@ -5,7 +5,7 @@ import Phaser from 'phaser';
 import { BOW } from '@dojo/sim';
 import type { LayeredSprite } from '../art/LayeredSprite';
 import { sfx } from '../audio/Sfx';
-import { FONT, crisp } from './theme';
+import { FONT, crisp, view } from './theme';
 
 /**
  * A soft dimmed screen with a big "Bow" button. Calls `onBow` once when the button is tapped
@@ -13,7 +13,7 @@ import { FONT, crisp } from './theme';
  * Returns the container (screen space) so a zoomed camera can ignore it.
  */
 export function bowPrompt(scene: Phaser.Scene, line: string, onBow: () => void): Phaser.GameObjects.Container {
-  const { width, height } = scene.scale.gameSize;
+  const { width, height } = view(scene);
   const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.45).setOrigin(0).setInteractive();
   const r = Math.min(54, height * 0.14);
   const cx = width / 2;

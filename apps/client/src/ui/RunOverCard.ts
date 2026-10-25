@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import type { RunSummary } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
-import { FONT, crisp } from './theme';
+import { FONT, crisp, view } from './theme';
 import playTimeText from '../../../../content/settings/play-time.json';
 
 /** Taps are ignored for a moment after the card appears, so a tap meant for the fight doesn't press a button. */
@@ -19,7 +19,7 @@ export function runOverCard(
   onRetry: () => void,
   onHome: () => void,
 ): Phaser.GameObjects.Container {
-  const { width, height } = scene.scale.gameSize;
+  const { width, height } = view(scene);
   const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive();
   const cardW = Math.min(440, width - 40);
   const btnH = Math.min(52, height * 0.13);
@@ -79,7 +79,7 @@ export function runOverCard(
  */
 export function restCard(scene: Phaser.Scene, onHome: () => void): Phaser.GameObjects.Container {
   const t = playTimeText;
-  const { width, height } = scene.scale.gameSize;
+  const { width, height } = view(scene);
   const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive();
   const cardW = Math.min(440, width - 40);
   const btnH = Math.min(52, height * 0.13);
@@ -132,7 +132,7 @@ export function choiceCard(
   yesLabel: string,
   onAnswer: (yes: boolean) => void,
 ): Phaser.GameObjects.Container {
-  const { width, height } = scene.scale.gameSize;
+  const { width, height } = view(scene);
   const cardW = Math.min(460, width - 40);
   const btnH = Math.min(50, height * 0.13);
   const cardH = Math.min(150 + btnH, height - 20);

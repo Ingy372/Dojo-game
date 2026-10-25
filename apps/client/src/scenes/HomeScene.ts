@@ -44,7 +44,7 @@ import { Celebrations } from '../ui/Celebrations';
 import { GoalsCard } from '../ui/GoalsCard';
 import { localDay, takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
-import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css } from '../ui/theme';
+import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css, view, hiDpi } from '../ui/theme';
 import type { GameSceneData } from './GameScene';
 
 /** How Home was opened: after a run (cleared, lost, or rested at the play limit) the next goals may show. */
@@ -100,6 +100,7 @@ export class HomeScene extends Phaser.Scene {
   }
 
   create(): void {
+    hiDpi(this.cameras.main);
     this.profile = loadSave();
     this.tab = this.profile.lastRun ? 'run' : 'gate';
     this.page = 0;
@@ -170,7 +171,7 @@ export class HomeScene extends Phaser.Scene {
   /** K23: the first floor's results for a 6-year-old: the grade, one reward and Continue. */
   private firstFloorCard(onDone: () => void): void {
     const s = this.profile.lastRun!.summary;
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const card = this.add.container(0, 0).setDepth(50);
     const add = <T extends Phaser.GameObjects.GameObject>(o: T): T => (card.add(o), o);
     const label = (x: number, y: number, str: string, size: number, color: string, family = FONT) =>
@@ -216,7 +217,7 @@ export class HomeScene extends Phaser.Scene {
 
   private render(): void {
     this.ui.removeAll(true);
-    const { width, height } = this.scale.gameSize;
+    const { width, height } = view(this);
     const pad = 16;
     const leftW = Math.min(300, width * 0.38);
     const t = this.training;
