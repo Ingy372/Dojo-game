@@ -93,7 +93,7 @@ Jay's idea (docs/decisions.md, 'Dodge-only attacks'): an attack that can't be CO
 | Name | Role | Band | Behaviour | Tell | Counterplay | Scaling |
 |---|---|---|---|---|---|---|
 | Masklet | swarm | F1-2 | Little floating masks that giggle and gather. | Spin, then red circle. | Clear first. | Group size by band. |
-| Copycat Shade | mirror | F1-2 | Copies your last move a moment later. | Your move's shape in red, then it hits. | Do something different; COUNTER its copy. | Copy delay fixed. |
+| Copycat Shade | mirror | F3-4 (floor 3+ only) | Copies your last move a moment later. | Your move's shape in red, then it hits. | Do something different; COUNTER its copy. | Copy delay fixed. |
 | Hush Guard | guard | F3-4 | Silent shield-bearer who turns to face you. | Red circle; shield turns. | Circle round, or STRIKE. | Turn speed fixed. |
 | Echo Bell **[dash-only]** | dash-only | F3-4 | A bell that rings a purple striped ring outward with one gap. | Dash-only: striped ring + '!!', 22 ticks; gap glows. | DASH through the gap or out of the room edge. | Ring count 1 → 2 at F5. |
 
@@ -103,7 +103,7 @@ Jay's idea (docs/decisions.md, 'Dodge-only attacks'): an attack that can't be CO
 |---|---|---|---|---|---|---|
 | Page Flutter | swarm | F1-2 | Loose pages that flap like birds. | Rustle, then red circle. | Clear first. | Group size by band. |
 | Bookworm | burrower | F1-2 | Tunnels under the floor and pops up. | A dirt bump moves toward you; red circle. | Step off the bump; calm it when it pops up. | Tunnel speed fixed. |
-| Ink Blot | zoner | F3-4 | Leaves sticky ink puddles that slow you (no damage). | Puddle drawn as a dark blue blot. | Keep space; fight on clean floor. | Puddle count by band; max 3. |
+| Ink Blot | zoner | F3-4 | Leaves sticky ink puddles that slow you about 30% (15% on Guided; no damage; ends when you step out). | Puddle drawn as a dark blue blot. | Keep space; fight on clean floor. | Puddle count by band; max 3. |
 | Root Snapper **[dash-only]** | dash-only | F3-4 | Roots poke up along a line, one after another. | Dash-only: purple stripe lane + '!!', 20 ticks. | DASH out. | Line length by band. |
 
 ### Brown/Black: The Storm Stair
@@ -122,7 +122,7 @@ Jay's idea (docs/decisions.md, 'Dodge-only attacks'): an attack that can't be CO
 | Storm Wisp | swarm | F1-2 | Quick storm-cloud wisps. | Crackle, then red circle. | Clear first. | Top of ENEMY_SCALE; soft-cap ×1.5. |
 | Rumble Brute | heavy | F1-2 | A big storm-wrapped brute; gets winded like a Brute. | Red circle (16 ticks). | COUNTER, or hit while winded. | Health/power by ENEMY_SCALE. |
 | Echo Knight | guard | F3-4 | Remembers every guard trick: shield, turn and copy. | Red circle; shield shines. | STRIKE, circle round, change your move. | Mixes three tells; each stays readable. |
-| Sky Sweeper **[dash-only]** | dash-only | F3-4 | A gust that sweeps an arc, then a lane. | Dash-only: arc then lane, each + '!!', 20 ticks. | DASH twice. | Two in a row, never at the same time. |
+| Sky Sweeper **[dash-only]** | dash-only | F3-4 | A gust that sweeps an arc, then a lane. | Dash-only: arc then lane, each + '!!', 20 ticks. | DASH twice. | Two in a row, at least 20 ticks apart, never at the same time. |
 
 Floor Keeper *(existing boss rank)* guards floors 1-4 of every tier. Proposal: one tier-skinned Floor Keeper per tier, same moves plus that tier's swarm as helpers (see DECIDE).
 
