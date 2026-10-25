@@ -702,3 +702,16 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 **Next**
 - Read-aloud (after beta). Real art from #265 when it is approved. A long preview title (e.g. "Beginner's Stance" at 667) shows "…".
+
+## B-POLISH-2 — Trophy Case polish (2026-10-25)
+- Unlock pop now scales 1 → 1.06 → 1 (no snap to 0.9 after the sweep). Reduced motion: fade only.
+- Detail sheet description allows 3 lines; Basic Form 1 at 667 shows its full text ending '15% slower.'
+- Cubby labels keep 8 px side padding: a too-wide hyphenated label breaks after the hyphen, labels allow 3 lines at 12 px and the icon shrinks to fit, so "Learn this at the dojo" shows in full.
+- Removed unused COMBAT.rootedFormBonusTicks; tests read the Rooted bonus from content (golden unchanged).
+- Vitest b-polish-2.test.ts covers the pop keyframes, the line cap and the padding. Screenshots at 667, 844 and 932, Reduced motion on and off.
+
+**Next**
+- P-MENU2-e, once #270 is in.
+
+- B-POLISH-2 (2nd Tester fix + #272 merge): the stroke-aware cubby padding, full-size icons with 3-line labels fitting inside the stroke, and the Fighting Style polish (hint, 2-line title, locked names, placeholder perk icon, re-tap no-op). Vitest 645 passed, 1 skipped; typecheck and build clean.
+- B-POLISH-2: Fighting Style tray labels now use the cubby padding and wrap rules (2 tiles at 667). Smallest tray gap is 8.0 px. Vitest 646 passed, 1 skipped.

@@ -43,8 +43,6 @@ export type Difficulty = keyof typeof DIFFICULTY;
 /** Combat numbers. Starting values from core-design section 4; tune from playtesting. */
 export const COMBAT = {
   defaultDifficulty: 'standard' as Difficulty,
-  /** The Rooted Form adds this many ticks to the Perfect Counter window. */
-  rootedFormBonusTicks: 2,
 
   /** Starting player stats (later these come from the student's profile). */
   player: { maxHealth: 100, power: 10, guard: 0 },

@@ -31,6 +31,25 @@ export const MOTION = {
   breath: { ms: 2400, from: 0.25, to: 0.15 },
 } as const;
 
+/**
+ * B-POLISH-2: Trophy Case polish. The unlock pop peaks at popPeak and settles to 1 (never
+ * below 1); the detail sheet's description may run effectLines lines; cubby labels keep
+ * cubbyPadX clear on each side (a hyphenated word breaks after its hyphen), up to cubbyLines lines.
+ */
+export const TROPHY_UI = { popPeak: 1.06, effectLines: 3, cubbyPadX: 8, cubbyLines: 3, cubbyLineGap: -3, cubbyTop: 0, cubbyGap: -1, cubbyBottom: 1, stroke: 2 } as const;
+
+/** The unlock pop's scale keyframes: 1 → peak → 1. */
+export const unlockPopScales = (): readonly number[] => [1, TROPHY_UI.popPeak, 1];
+
+/** Width a cubby label may use: even side padding inside the 2 px stroke. */
+export const cubbyTextW = (size: number): number => size - 2 * TROPHY_UI.cubbyPadX - TROPHY_UI.stroke;
+
+/** A cubby's icon: always full size (42% of the cubby), the same for every trophy. */
+export const cubbyIconSize = (size: number): number => Math.round(size * 0.42);
+
+/** Label room below the icon: size less the 2 px stroke (1 px a side), top, icon, gap and bottom space. */
+export const cubbyLabelRoom = (size: number): number => size - TROPHY_UI.stroke - TROPHY_UI.cubbyTop - cubbyIconSize(size) - TROPHY_UI.cubbyGap - TROPHY_UI.cubbyBottom;
+
 /** How much a pressed button brightens (a white overlay at this alpha, about +10%). */
 export const PRESS_BRIGHTEN = 0.1;
 

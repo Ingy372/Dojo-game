@@ -4,7 +4,7 @@
 
 import { unlockedForms, virtueTitle, type AbilityContent, type Loadout, type TrainingState } from '@dojo/sim';
 import words from '../../../../content/abilities/fighting-style.json';
-import { MIN_TAP, S1, S2, TYPE } from './tokens';
+import { MIN_TAP, S1, S2, TYPE, pageDots } from './tokens';
 
 export const STYLE_WORDS = words;
 
@@ -72,6 +72,8 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
 /** The loadout after tapping `pick` with `slot` chosen. Not-yet picks and the wrong slot change nothing. */
 export function equipPick(loadout: Loadout | null, slot: StyleSlot, pick: StylePick): Loadout | null {
   if (!pick.earned || pick.slot !== slot) return loadout;
+  // B-POLISH-2: re-tapping the equipped pick changes nothing (same object: no re-save, no pop).
+  if ((slot === 'stance' ? loadout?.form : loadout?.virtue) === pick.id) return loadout;
   const base: Loadout = { form: loadout?.form ?? null, virtue: loadout?.virtue ?? null };
   return slot === 'stance' ? { ...base, form: pick.id } : { ...base, virtue: pick.id };
 }
@@ -91,16 +93,17 @@ export interface StyleLayout {
   perAlways: number;
 }
 
-/** Sizes for a Fighting Style panel w x h (below the switch). Every tap target is at least 44. */
-export function styleLayout(w: number, h: number): StyleLayout {
+/** Sizes for a Fighting Style panel w x h (below the switch). Every tap target is at least 44.
+ * B-POLISH-2: `minTileW` is the narrowest tray tile that still holds its widest word with 8 px clear
+ * each side (stroke counted); when 3 tiles would be narrower, the tray shows 2 wider tiles. */
+export function styleLayout(w: number, h: number, minTileW = 0): StyleLayout {
   const leftW = Math.round(w * 0.58);
   const slotW = Math.floor((leftW - S2) / 2);
   const alwaysH = TYPE.label + S1 + MIN_TAP;
   const room = h - alwaysH - 2 * S2;
   const tileH = Math.max(MIN_TAP + 8, Math.min(72, Math.round(room * 0.4)));
   const slotH = Math.max(MIN_TAP, room - tileH);
-  const perTray = 3;
-  const tileW = Math.floor((leftW - (perTray - 1) * S2) / perTray);
+  const { perPage: perTray, tileW } = trayPaging(leftW, minTileW, 0);
   const previewX = leftW + S2;
   const icon = MIN_TAP;
   return {
@@ -109,4 +112,36 @@ export function styleLayout(w: number, h: number): StyleLayout {
     alwaysY: slotH + S2 + tileH + S2,
     icon, perAlways: Math.max(1, Math.floor((w + S1) / (icon + S1))),
   };
+}
+
+/** B-POLISH-2: how a tray of `count` picks pages in a row `rowW` wide. Tiles are never narrower
+ * than `minTileW` (widest word + 8 px each side + stroke). When the picks don't all fit, the row
+ * gets the Trophy Case's ◀ ▶ arrows (MIN_TAP wide) and pages, so every pick can be reached. */
+export interface TrayPaging { perPage: number; tileW: number; arrows: boolean; pages: number; tilesX: number }
+export function trayPaging(rowW: number, minTileW: number, count: number, maxPerPage = 3): TrayPaging {
+  const fit = (room: number): { n: number; tw: number } => {
+    for (let n = maxPerPage; n > 1; n--) { const tw = Math.floor((room - (n - 1) * S2) / n); if (tw >= minTileW) return { n, tw }; }
+    return { n: 1, tw: Math.max(MIN_TAP, room) };
+  };
+  const plain = fit(rowW);
+  if (count <= plain.n) return { perPage: plain.n, tileW: plain.tw, arrows: false, pages: 1, tilesX: 0 };
+  const paged = fit(rowW - 2 * (MIN_TAP + S2));
+  return { perPage: paged.n, tileW: paged.tw, arrows: true, pages: Math.ceil(count / paged.n), tilesX: MIN_TAP + S2 };
+}
+
+/** The picks on tray page `page` (clamped). */
+export function trayPage<T>(picks: T[], paging: TrayPaging, page: number): T[] {
+  const p = Math.max(0, Math.min(paging.pages - 1, page));
+  return picks.slice(p * paging.perPage, (p + 1) * paging.perPage);
+}
+
+/**
+ * P-MENU2-f: the tray's page dots (like the Trophy Case: dots only, never numbers), so kids can
+ * see there are more picks. One dot per page, the current one lit. Empty when there's one page
+ * or the dots wouldn't fit in `room`.
+ */
+export function trayDots(pages: number, page: number, room: number): { x: number; on: boolean }[] {
+  const d = pageDots(pages, room);
+  if (!d) return [];
+  return Array.from({ length: pages }, (_, i) => ({ x: d.x0 + i * d.step, on: i === page }));
 }

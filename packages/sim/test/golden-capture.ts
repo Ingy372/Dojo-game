@@ -1,7 +1,11 @@
 // P-MENU2-d golden capture: today's default play, written only with APIs that already
 // existed on main, so the same code can be run on main to capture the expected output.
-import { COMBAT, buildTraining, characterSetup, counterWindowTicks, createRunWorld, currentRoom, loadFeed, loadProfile, newProfile, startRun, stepWorld, type Difficulty } from '../src';
+import { buildTraining, characterSetup, counterWindowTicks, createRunWorld, currentRoom, loadFeed, loadProfile, newProfile, startRun, stepWorld, type Difficulty } from '../src';
 import { testContent } from './load-content';
+import abilities from '../../../content/abilities/abilities.json';
+
+/** The Rooted Form's Perfect Counter bonus, read from content (its counterWindow). */
+const ROOTED_BONUS = abilities.forms.find((f) => f.id === 'rooted-form')!.counterWindow;
 import { SKILLS, playRun } from './balance/bot';
 import white from '../../../fixtures/1-white-belt-new.json';
 import white3 from '../../../fixtures/2-white-belt-3-signoffs.json';
@@ -19,7 +23,7 @@ function training(data: unknown) {
 
 /**
  * Rooted Form: the Perfect Counter window on each difficulty, and a seeded room where the
- * player stands in Rooted Form (with the Rooted bonus, COMBAT.rootedFormBonusTicks) pressing
+ * player stands in Rooted Form (with the Rooted bonus, ROOTED_BONUS) pressing
  * Counter. Any change to the Rooted numbers changes this output.
  */
 function rootedCase(): unknown {
@@ -31,7 +35,7 @@ function rootedCase(): unknown {
     const world = createRunWorld(content, run, setup, setup.effects);
     const p = world.players.p1;
     p.form = rootedAt;
-    p.counterBonusTicks = COMBAT.rootedFormBonusTicks;
+    p.counterBonusTicks = ROOTED_BONUS;
     const room = currentRoom(content, run);
     let perfects = 0;
     let blocks = 0;

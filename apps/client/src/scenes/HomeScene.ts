@@ -34,8 +34,8 @@ import {
   kataArrows,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
-import { BOARD_PAPER, KATA_INK, MIN_TAP, type KataInk } from '../ui/tokens';
-import { STYLE_WORDS, buildStyle, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
+import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
+import { STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, filterBag, gearBoardLayout, slotEmptyLine, tileBox, toggleFilter } from '../ui/gearBoard';
 import { CONTENT, KATAS } from '../game/content';
@@ -84,6 +84,8 @@ export class HomeScene extends Phaser.Scene {
   private part: AbilitiesPart = 'trophy';
   /** P-MENU2-e: the chosen Fighting Style slot (tap 1 of 2). */
   private styleSlot: StyleSlot = 'stance';
+  /** B-POLISH-2: which page of the tray is showing (reset when the slot changes). */
+  private trayPageNo = 0;
   /** P-MENU2-b: the open cubby sheet, and how many Trophy Case pages there are. */
   private cubbySheet: Phaser.GameObjects.Container | null = null;
   trophyPages = 1;
@@ -597,7 +599,12 @@ export class HomeScene extends Phaser.Scene {
    */
   private renderFightingStyle(x: number, y: number, w: number, h: number): void {
     const m = this.styleModel();
-    const L = styleLayout(w, h);
+    // B-POLISH-2: tray tiles must hold their widest word (hyphens break) at 12 px with cubby padding.
+    const widest = Math.max(...[...m.trays.stance, ...m.trays.virtue].flatMap((p) => p.name.split(/\s+|(?<=-)/)).map((word) => {
+      const probe = this.add.text(0, 0, word, { fontFamily: FONT, fontSize: `${TYPE.label}px`, fontStyle: 'bold' });
+      const wd = probe.width; probe.destroy(); return wd;
+    }));
+    const L = styleLayout(w, h, Math.ceil(widest) + 2 * TROPHY_UI.cubbyPadX + TROPHY_UI.stroke);
     const ink = WOOD.ink;
     (['stance', 'virtue'] as const).forEach((slot, i) => {
       const pick = m.current[slot];
@@ -619,21 +626,36 @@ export class HomeScene extends Phaser.Scene {
 
     // The tray: picks for the chosen slot, earned first. Equipped one is gold-outlined.
     const ty = y + L.slotH + S2;
-    const tray = m.trays[this.styleSlot].slice(0, L.perTray);
+    const picks = m.trays[this.styleSlot];
+    const minTileW = Math.ceil(widest) + 2 * TROPHY_UI.cubbyPadX + TROPHY_UI.stroke;
+    const tp = trayPaging(L.leftW, minTileW, picks.length);
+    this.trayPageNo = Math.max(0, Math.min(tp.pages - 1, this.trayPageNo));
+    const tray = trayPage(picks, tp, this.trayPageNo);
     const cur = m.current[this.styleSlot];
+    if (tp.arrows) {
+      // The Trophy Case's arrows: ◀ ▶ in switch-off wood, 15 pt, a full 44 wide; greyed at the ends.
+      button(this, { x, y: ty, w: MIN_TAP, h: L.tileH, label: '◀', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo === 0, onTap: () => this.turnTray(-1) }, this.ui);
+      button(this, { x: x + L.leftW - MIN_TAP, y: ty, w: MIN_TAP, h: L.tileH, label: '▶', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo >= tp.pages - 1, onTap: () => this.turnTray(1) }, this.ui);
+    }
+    // P-MENU2-f: page dots under the tray (in the gap before "Always with you"), no numbers.
+    for (const d of trayDots(tp.pages, this.trayPageNo, L.leftW)) this.ui.add(this.add.circle(x + d.x, ty + L.tileH + S2 / 2, 3, d.on ? 0xffd166 : WOOD.paper, d.on ? 1 : 0.35).setData('trayDot', d.on));
+    // Tiles are centred in the room between the arrows (or the whole row).
+    const room = L.leftW - 2 * tp.tilesX;
+    const tx0 = x + tp.tilesX + (room - (tray.length * tp.tileW + (tray.length - 1) * S2)) / 2;
     tray.forEach((p, i) => {
       const equipped = p.earned && cur?.id === p.id;
-      button(this, {
-        x: x + i * (L.tileW + S2), y: ty, w: L.tileW, h: L.tileH,
-        label: p.earned ? p.name : STYLE_WORDS.notYet, labelWrap: L.tileW - 8, size: TYPE.label,
+      const tile = button(this, {
+        x: tx0 + i * (tp.tileW + S2), y: ty, w: tp.tileW, h: L.tileH,
+        label: p.name, labelWrap: cubbyTextW(tp.tileW), size: TYPE.label,
         color: p.earned ? WOOD.frame : BOARD_PAPER, labelColor: p.earned ? '#fff6e6' : ink, stroke: WOOD.grain, selected: equipped,
         onTap: () => (p.earned ? this.equipStyle(p) : this.openStylePick(p)),
-      }, this.ui);
+      }, this.ui).visual.list[2] as Phaser.GameObjects.Text;
+      wrapLikeCubby(tile, p.name, cubbyTextW(tp.tileW));
       if (!p.earned) {
         // The lantern: something to look forward to (no lock, no count).
         const lg = this.add.graphics();
-        lg.fillStyle(0xffb347, 0.35).fillCircle(x + i * (L.tileW + S2) + L.tileW - 10, ty + 11, 7);
-        lg.fillStyle(0xe8743b).fillRoundedRect(x + i * (L.tileW + S2) + L.tileW - 14, ty + 5, 8, 11, 3);
+        lg.fillStyle(0xffb347, 0.35).fillCircle(tx0 + i * (tp.tileW + S2) + tp.tileW - 10, ty + 11, 7);
+        lg.fillStyle(0xe8743b).fillRoundedRect(tx0 + i * (tp.tileW + S2) + tp.tileW - 14, ty + 5, 8, 11, 3);
         this.ui.add(lg);
       }
     });
@@ -645,18 +667,25 @@ export class HomeScene extends Phaser.Scene {
     pg.lineStyle(2, WOOD.grain).strokeRoundedRect(px, y, L.previewW, L.previewH, RADIUS.panel);
     this.ui.add(pg);
     const pw = L.previewW - 2 * S2;
-    let py = y + S2;
-    const title = this.text(px + L.previewW / 2, py, cur ? cur.name : STYLE_WORDS.noVirtue, TYPE.title, ink, true).setOrigin(0.5, 0);
-    this.oneLine(title, pw, TYPE.body);
-    py += title.height + S1;
-    const body = this.text(px + L.previewW / 2, py, cur ? cur.line : STYLE_WORDS.noVirtueLine, TYPE.body, '#5a3e28', false, FONT, pw).setOrigin(0.5, 0).setAlign('center');
-    py += body.height + S2;
-    const foot = this.styleSlot === 'stance' ? STYLE_WORDS.switchLine : STYLE_WORDS.virtueLine;
-    const f = this.text(px + L.previewW / 2, py, foot, TYPE.label, '#7a4a22', true, FONT, pw).setOrigin(0.5, 0).setAlign('center');
-    const hintText = this.text(px + L.previewW / 2, 0, STYLE_WORDS.hint, TYPE.label, '#7a5a3a', false, FONT, pw).setOrigin(0.5, 0).setAlign('center');
+    // B-POLISH-2: the hint always shows (bottom of the card); the title wraps to 2 lines (no "…"),
+    // and the title/body step down a size if the words would otherwise reach the hint.
+    const hintText = this.text(px + L.previewW / 2, 0, STYLE_WORDS.hint, TYPE.label, '#7a5a3a', false, FONT, L.previewW - S2).setOrigin(0.5, 0).setAlign('center');
     const hy = y + L.previewH - S2 - hintText.height;
-    if (f.y + f.height + S1 <= hy) hintText.setY(hy);
-    else hintText.destroy();
+    hintText.setY(hy);
+    const foot = this.styleSlot === 'stance' ? STYLE_WORDS.switchLine : STYLE_WORDS.virtueLine;
+    const title = this.text(px + L.previewW / 2, 0, cur ? cur.name : STYLE_WORDS.noVirtue, TYPE.title, ink, true, FONT, pw).setOrigin(0.5, 0).setAlign('center').setMaxLines(2);
+    const body = this.text(px + L.previewW / 2, 0, cur ? cur.line : STYLE_WORDS.noVirtueLine, TYPE.body, '#5a3e28', false, FONT, pw).setOrigin(0.5, 0).setAlign('center');
+    const f = this.text(px + L.previewW / 2, 0, foot, TYPE.label, '#7a4a22', true, FONT, pw).setOrigin(0.5, 0).setAlign('center');
+    const place = (gap: number): number => {
+      let py = y + gap;
+      title.setY(py);
+      py += title.height + S1;
+      body.setY(py);
+      py += body.height + gap;
+      f.setY(py);
+      return py + f.height + S1;
+    };
+    if (place(S2) > hy) { title.setFontSize(TYPE.body); body.setFontSize(TYPE.label); if (place(S2) > hy) place(S1); }
 
     // "Always with you": Strikes and Seals are always on, so they are shown, not picked.
     const ay = y + L.alwaysY;
@@ -672,7 +701,8 @@ export class HomeScene extends Phaser.Scene {
       this.ui.add(g);
       const icon = addIcon(this, a.id, cx, cy, L.icon - 8);
       if (icon) this.ui.add(icon);
-      else this.text(cx, cy, a.name.charAt(0), TYPE.title, '#fff6e6', true).setOrigin(0.5);
+      // B-POLISH-2: no art yet: a code-drawn placeholder (a small gold star), never a letter.
+      else this.ui.add(this.add.star(cx, cy, 5, (L.icon - 8) / 5, (L.icon - 8) / 2.4, 0xffd166).setStrokeStyle(2, 0xa8703f));
     });
   }
 
@@ -684,6 +714,7 @@ export class HomeScene extends Phaser.Scene {
   pickSlot(slot: StyleSlot): void {
     if (slot === this.styleSlot) return;
     this.styleSlot = slot;
+    this.trayPageNo = 0;
     this.renderPanel('none');
   }
 
@@ -707,6 +738,12 @@ export class HomeScene extends Phaser.Scene {
   }
 
   /** Screenshot/test hook: tap tray item i in the chosen slot. */
+  /** B-POLISH-2: page the tray. */
+  turnTray(by: number): void {
+    this.trayPageNo += by;
+    this.renderPanel('none');
+  }
+
   tapStyleTile(i: number): void {
     const p = this.styleModel().trays[this.styleSlot][i];
     if (p) (p.earned ? this.equipStyle(p) : this.openStylePick(p));
@@ -741,9 +778,9 @@ export class HomeScene extends Phaser.Scene {
       let slot = 0;
       for (const seg of row.segments) {
         this.oneLine(this.text(sx + slot * step, ry, seg.title, TYPE.label, '#e8c48a', true), seg.cubbies.length * step - BOARD.cubby.gap, 10);
-        seg.cubbies.forEach((c, i) => this.cubby(sx + (slot + i) * step, cy, L.cubby, c, fresh.includes(c.id)));
         slot += seg.cubbies.length;
       }
+      row.segments.flatMap((seg) => seg.cubbies).forEach((c, i) => this.cubby(sx + i * step, cy, L.cubby, c, fresh.includes(c.id)));
       ry += L.rowH;
     }
     if (pages.length <= 1) return;
@@ -800,24 +837,30 @@ export class HomeScene extends Phaser.Scene {
     this.ui.add(g);
   }
 
+  /** B-POLISH-2: a cubby's label, wrapped to the padded inner width (after its 2 px stroke). */
+  private cubbyLabel(c: Cubby, size: number): Phaser.GameObjects.Text {
+    const tw = cubbyTextW(size);
+    const label = c.earned ? (c.short ?? c.name) : TROPHY_WORDS.notYet;
+    const txt = this.add
+      .text(0, 0, label, { fontFamily: FONT, fontSize: `${c.earned ? (size >= 112 ? TYPE.body : TYPE.label) : TYPE.label}px`, color: c.earned ? '#fff6e6' : WOOD.ink, fontStyle: c.earned ? 'bold' : 'normal', align: 'center', wordWrap: { width: tw } })
+      .setResolution(crisp())
+      .setOrigin(0.5, 0)
+    return wrapLikeCubby(txt, label, tw);
+  }
+
   /** P-MENU2-b: one cubby, drawn in code on a button() so it presses like every other button. */
   private cubby(x: number, y: number, size: number, c: Cubby, unlock = false): void {
     const btn = button(this, { x, y, w: size, h: size, label: '', color: c.earned ? 0xa8703f : WOOD.paper, size: TYPE.label, selected: false, stroke: c.earned ? 0xffd166 : WOOD.grain, onTap: () => this.openCubby(c) }, this.ui);
     const v = btn.visual;
     const half = size / 2;
-    const iconS = Math.round(size * 0.42);
-    const iy = -half + 8 + iconS / 2;
+    // B-POLISH-2: every icon is full size; 3-line labels fit by tight top/gap/bottom space.
+    const iconS = cubbyIconSize(size);
+    const txt = this.cubbyLabel(c, size);
+    const iy = -half + TROPHY_UI.stroke / 2 + TROPHY_UI.cubbyTop + iconS / 2;
+    txt.setY(iy + iconS / 2 + TROPHY_UI.cubbyGap);
     const icon = c.icon ? addIcon(this, c.icon, 0, iy, iconS) : null;
     if (icon) v.add(icon.setAlpha(c.earned ? 1 : 0.3));
     else v.add(this.add.circle(0, iy, iconS / 2, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.3));
-    const tw = size - 10;
-    const ty = iy + iconS / 2 + 4;
-    const label = c.earned ? (c.short ?? c.name) : TROPHY_WORDS.notYet;
-    const txt = this.add
-      .text(0, ty, label, { fontFamily: FONT, fontSize: `${c.earned ? (size >= 112 ? TYPE.body : TYPE.label) : TYPE.label}px`, color: c.earned ? '#fff6e6' : WOOD.ink, fontStyle: c.earned ? 'bold' : 'normal', align: 'center', wordWrap: { width: tw } })
-      .setResolution(crisp())
-      .setOrigin(0.5, 0)
-      .setMaxLines(2);
     v.add(txt);
     if (c.earned) {
       // Sensei's seal: a small red stamp in the corner (placeholder, no text).
@@ -853,8 +896,14 @@ export class HomeScene extends Phaser.Scene {
       ease: MOTION.unlockSweep.ease,
       onComplete: () => {
         cover.destroy();
-        v.setScale(0.9);
-        this.tweens.add({ targets: v, scale: 1, duration: MOTION.pop.ms, ease: MOTION.pop.ease });
+        const [, peak, rest] = unlockPopScales();
+        this.tweens.add({
+          targets: v,
+          scale: peak,
+          duration: MOTION.pop.ms / 2,
+          ease: 'Sine.Out',
+          onComplete: () => this.tweens.add({ targets: v, scale: rest, duration: MOTION.pop.ms / 2, ease: 'Sine.InOut' }),
+        });
       },
     });
   }
@@ -890,7 +939,7 @@ export class HomeScene extends Phaser.Scene {
     const sx = rx + f;
     const tw = sw - 2 * pad - 56 - S2;
     const kataH = c.kata ? TYPE.label + 4 + kataLines(c.kata, sw - 2 * pad) * KATA_LINE : 0;
-    const sh = Math.min(panelH - 2 * f, Math.max((panelH - 2 * f) / 2, pad + TYPE.title + 4 + TYPE.body * 2 + 8 + TYPE.body + 8 + kataH + 44 + pad));
+    const sh = Math.min(panelH - 2 * f, Math.max((panelH - 2 * f) / 2, pad + TYPE.title + 4 + TYPE.body * TROPHY_UI.effectLines + 8 + TYPE.body + 8 + kataH + 44 + pad));
     const sy = top + panelH - f - sh;
     const body = this.add.container(0, 0);
     sheet.add(body);
@@ -907,7 +956,7 @@ export class HomeScene extends Phaser.Scene {
     let ty = sy + pad;
     this.oneLine(this.text(tx, ty, c.name, TYPE.title, WOOD.ink, true), tw, TYPE.body);
     ty += TYPE.title + 4;
-    const eff = this.text(tx, ty, c.effect, TYPE.body, '#5a3e28', false, FONT, tw).setMaxLines(2);
+    const eff = this.text(tx, ty, c.effect, TYPE.body, '#5a3e28', false, FONT, tw).setMaxLines(TROPHY_UI.effectLines);
     ty += eff.height + 6;
     this.text(tx, ty, c.status, TYPE.body, c.earned ? '#a0522d' : '#7a5a3a', true, FONT, tw);
     ty = Math.max(ty + TYPE.body + 8, sy + pad + 56 + S2);
@@ -1574,4 +1623,12 @@ function slotGlyph(scene: Phaser.Scene, slot: GearSlot, x: number, y: number, si
     g.lineStyle(2, color, 1).lineBetween(0, -s, 0, -s * 1.15);
   }
   return g;
+}
+
+/** B-POLISH-2: the cubby wrap rules: 3 lines max, tight line gap, and a hyphenated word too wide
+ * for the padded width breaks after its hyphen ("Self-" / "Defense #1"). */
+function wrapLikeCubby(txt: Phaser.GameObjects.Text, label: string, tw: number): Phaser.GameObjects.Text {
+  txt.setLineSpacing(TROPHY_UI.cubbyLineGap).setMaxLines(TROPHY_UI.cubbyLines);
+  if (txt.width > tw) txt.setText(label.replace(/-(?=\S)/g, '-\n'));
+  return txt;
 }

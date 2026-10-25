@@ -128,3 +128,22 @@ describe('P-MENU2-f wearing is saved', () => {
     expect(wear).toMatch(/reducedMotion\(\)\) return;/);
   });
 });
+
+describe('P-MENU2-f Fighting Style tray dots', () => {
+  it('one dot per page, the current one lit, no dots for a single page', async () => {
+    const { trayDots, trayPaging } = await import('../../../apps/client/src/ui/fightingStyle');
+    // 667: the tray row is narrow, so it pages 1 tile at a time.
+    const tp = trayPaging(150, 100, 5);
+    expect(tp.perPage).toBe(1);
+    for (let page = 0; page < tp.pages; page++) {
+      const d = trayDots(tp.pages, page, 150);
+      expect(d).toHaveLength(tp.pages);
+      expect(d.filter((x) => x.on)).toHaveLength(1);
+      expect(d.findIndex((x) => x.on)).toBe(page);
+      expect(d[d.length - 1].x).toBeLessThanOrEqual(150);
+    }
+    expect(trayDots(1, 0, 150)).toEqual([]);
+    const scene = src.slice(src.indexOf('private renderFightingStyle('), src.indexOf('private renderFightingStyle(') + 5000);
+    expect(scene).toMatch(/trayDots\(tp\.pages, this\.trayPageNo, L\.leftW\)/);
+  });
+});
