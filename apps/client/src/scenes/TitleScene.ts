@@ -7,6 +7,8 @@ import { loadArt } from '../art/art';
 import { hasLook, playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
 import { reducedMotion } from '../game/motion';
+import { markSavedNoteSeen, needsSavedNote, testFlags } from '../game/beta';
+import SAFE_TEXT from '../../../../content/settings/safety.json';
 
 export class TitleScene extends Phaser.Scene {
   private title!: Phaser.GameObjects.Text;
@@ -78,12 +80,20 @@ export class TitleScene extends Phaser.Scene {
       .setResolution(crisp);
 
     let started = false;
+    // B-SAFE: on first launch, a note that progress is saved only on this phone. A tap closes it.
+    let note = needsSavedNote() ? this.savedNote() : null;
     this.input.on(Phaser.Input.Events.POINTER_UP, () => {
+      if (note) {
+        note.destroy();
+        note = null;
+        markSavedNoteSeen();
+        return;
+      }
       if (started) return;
       started = true;
       // Phones only allow sound after a touch, so switch it on here.
       sfx.unlock();
-      const params = new URLSearchParams(window.location.search);
+      const params = testFlags();
       if (params.get('room') === 'training') this.scene.start('Game');
       // Test link: ?street=store-separated opens a Street Smarts scenario straight away.
       else if (params.get('street')) this.scene.start('StreetSmarts', { id: params.get('street') });
@@ -97,6 +107,21 @@ export class TitleScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     });
+  }
+
+  private savedNote(): Phaser.GameObjects.Container {
+    const t = SAFE_TEXT;
+    const { width, height } = view(this);
+    const box = this.add.container(0, 0).setDepth(100);
+    const w = Math.min(460, width - 40);
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0));
+    const title = this.add.text(width / 2, height * 0.18, t.savedNoteTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '22px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(window.devicePixelRatio || 1);
+    const body = this.add.text(width / 2, title.y + title.height + 14, t.savedNoteLines.join('\n\n'), { fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(window.devicePixelRatio || 1);
+    const by = Math.min(height - 12 - 44, body.y + body.height + 20);
+    const ok = this.add.rectangle(width / 2 - 70, by, 140, 44, 0x3aa57a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4);
+    const okText = this.add.text(width / 2, by + 22, t.savedNoteButton, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(window.devicePixelRatio || 1);
+    box.add([title, body, ok, okText]);
+    return box;
   }
 
   private layout(): void {
