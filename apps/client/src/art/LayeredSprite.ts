@@ -92,7 +92,9 @@ export class LayeredSprite {
 
   /** Seconds since the current animation started. */
   get seconds(): number {
-    return (this.scene.time.now - this.startedAt) / 1000;
+    // K25: a scene can play its art slower (the Game scene runs at TEMPO.speed).
+    const tempo = (this.scene as { animTempo?: number }).animTempo ?? 1;
+    return ((this.scene.time.now - this.startedAt) / 1000) * tempo;
   }
 
   /** Faces a direction given as a vector (screen space: +y is down). */
