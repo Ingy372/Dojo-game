@@ -601,3 +601,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## K31 — boss name and small bar never touch (2026-10-25)
 
 - Added `bossTagLayout` + `BOSS_TAG` in sim, wired in GameScene (`placeBossTag`), cue avoids the pair. Test: packages/sim/test/k31-boss-tag.test.ts. Shots in /workspace/k31-shots/ (`*-top-*` frames teleport the boss to the top wall).
+
+## K31 QA fixes (2026-10-25)
+
+- One x for the name + bar pair (edge clamp, HOME slide together); below spot avoids COMBO and "+N% power". Re-ran the Tester's /workspace/qa/k31/run/tag.mjs against this build.

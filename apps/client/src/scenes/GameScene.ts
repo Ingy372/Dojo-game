@@ -70,6 +70,7 @@ import {
   ticksToRealMs,
   bossTagLayout,
   BOSS_TAG,
+  type TagBox,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
@@ -2318,41 +2319,47 @@ export class GameScene extends Phaser.Scene {
     if (!v) return;
     const cam = this.cameras.main;
     const k = cam.zoom / DPR;
-    const toScreenY = (wy: number) => (wy - cam.worldView.y) * k;
-    const toWorldY = (sy: number) => cam.worldView.y + sy / k;
+    const sx = (wx: number) => (wx - cam.worldView.x) * k;
+    const sy = (wy: number) => (wy - cam.worldView.y) * k;
+    const toWorldX = (x: number) => cam.worldView.x + x / k;
+    const toWorldY = (y: number) => cam.worldView.y + y / k;
     const { width, height } = view(this);
-    const minY = HUD_BOTTOM + 4;
-    const headY = toScreenY(v.container.y - v.top);
-    const feetY = toScreenY(v.container.y);
-    let t = bossTagLayout(headY, feetY, minY, height - 4);
-    // The combo counter also lives up here: if the pair would touch it, the same rule runs again with its bottom as the floor.
-    const bxs = (v.container.x - cam.worldView.x) * k;
-    const span = Math.max(this.bossName.width / 2, v.hpBack.width * k / 2) + 4;
-    if (this.comboText.visible && this.comboText.alpha > 0.05) {
-      const c = this.comboText.getBounds();
-      const pairBottom = t.barY + BOSS_TAG.barH / 2;
-      if (t.nameTop < c.bottom + 4 && pairBottom > c.top - 4 && bxs - span < c.right && bxs + span > c.left) t = bossTagLayout(headY, feetY, c.bottom + 4, height - 4);
-    }
-    const barLocal = toWorldY(t.barY) - v.container.y;
-    v.hpBack.y = barLocal;
-    v.hpFill.y = barLocal;
-    const bx = (v.container.x - cam.worldView.x) * k;
-    const half = this.bossName.width / 2;
-    let nx = Phaser.Math.Clamp(bx, half + 4, width - half - 4);
+    const avoid: TagBox[] = [];
     for (const d of this.doorViews) {
       if (!d.label.visible) continue;
       const b = d.label.getBounds();
-      const lb = { left: (b.left - cam.worldView.x) * k, right: (b.right - cam.worldView.x) * k, top: toScreenY(b.top), bottom: toScreenY(b.bottom) };
-      const overlapY = t.nameTop < lb.bottom + 4 && t.nameTop + BOSS_TAG.nameH > lb.top - 4;
-      if (overlapY && nx + half > lb.left - 4 && nx - half < lb.right + 4) {
-        nx = (lb.left + lb.right) / 2 < bx ? lb.right + 4 + half : lb.left - 4 - half;
-        nx = Phaser.Math.Clamp(nx, half + 4, width - half - 4);
-      }
+      avoid.push({ left: sx(b.left), right: sx(b.right), top: sy(b.top), bottom: sy(b.bottom) });
     }
-    this.bossName.setPosition(nx, t.nameTop);
-    const wl = cam.worldView.x + (Math.min(nx - half, bx) - 4) / k;
-    const wr = cam.worldView.x + (Math.max(nx + half, bx) + 4) / k;
-    this.bossTagWorld = { left: wl, right: wr, top: toWorldY(t.nameTop) - 2, bottom: toWorldY(t.barY + BOSS_TAG.barH / 2) + 2 };
+    // COMBO and its "+N% power" line live in HUD (screen) space already.
+    for (const t of [this.comboText, this.comboBonusText]) {
+      if (!t.visible || t.alpha < 0.05 || !t.text) continue;
+      const b = t.getBounds();
+      avoid.push({ left: b.left, right: b.right, top: b.top, bottom: b.bottom });
+    }
+    const barHalf = (v.hpBack.width * k) / 2;
+    const halfW = Math.max(this.bossName.width / 2, barHalf);
+    const t = bossTagLayout({
+      bossX: sx(v.container.x),
+      headY: sy(v.container.y - v.top),
+      feetY: sy(v.container.y),
+      halfW,
+      screenW: width,
+      minY: HUD_BOTTOM + 4,
+      maxY: height - 4,
+      avoid,
+    });
+    // One x for the pair: the name and the bar share it.
+    this.bossName.setPosition(t.x, t.nameTop);
+    const barX = toWorldX(t.x) - v.container.x;
+    const barY = toWorldY(t.barY) - v.container.y;
+    v.hpBack.setPosition(barX, barY);
+    v.hpFill.setPosition(barX - v.hpBack.width / 2 + 2, barY);
+    this.bossTagWorld = {
+      left: toWorldX(t.x - halfW - 4),
+      right: toWorldX(t.x + halfW + 4),
+      top: toWorldY(t.nameTop) - 2,
+      bottom: toWorldY(t.barY + BOSS_TAG.barH / 2) + 2,
+    };
   }
 
   /**
