@@ -66,33 +66,33 @@ function counterAt(w: WorldState, early: number): CombatEvent[] {
 
 const standard = DIFFICULTY.standard.counterWindowTicks;
 
-describe('Forms', () => {
-  it('starts in the Beginner\'s Stance and switches to Rooted Form with the Form button', () => {
+describe('Stances', () => {
+  it('starts in the Beginner\'s Stance and switches to Rooted Stance with the Stance button', () => {
     const w = world(character(white3));
     const p = w.players.p1;
-    expect(p.forms.map((f) => f.name)).toEqual(["Beginner's Stance", 'Rooted Form']);
-    expect(p.form).toBe(0);
-    stepWorld(w, room, { p1: { kind: 'none', action: 'form' } });
-    expect(p.form).toBe(1);
-    expect(w.events).toContainEqual({ kind: 'formChange', playerId: 'p1', form: 1 });
+    expect(p.stances.map((f) => f.name)).toEqual(["Beginner's Stance", 'Rooted Stance']);
+    expect(p.stance).toBe(0);
+    stepWorld(w, room, { p1: { kind: 'none', action: 'stance' } });
+    expect(p.stance).toBe(1);
+    expect(w.events).toContainEqual({ kind: 'stanceChange', playerId: 'p1', stance: 1 });
     // Can't switch again straight away.
-    stepWorld(w, room, { p1: { kind: 'none', action: 'form' } });
-    expect(p.form).toBe(1);
+    stepWorld(w, room, { p1: { kind: 'none', action: 'stance' } });
+    expect(p.stance).toBe(1);
   });
 
-  it('Rooted Form widens the Perfect Counter window by 2 ticks', () => {
+  it('Rooted Stance widens the Perfect Counter window by 2 ticks', () => {
     const plain = world();
     expect(counterAt(plain, standard + 1).some((e) => e.kind === 'perfectCounter')).toBe(false);
     const rooted = world({ ...character(white3), mods: undefined });
-    rooted.players.p1.form = 1;
+    rooted.players.p1.stance = 1;
     expect(counterAt(rooted, standard + 1).some((e) => e.kind === 'perfectCounter')).toBe(true);
   });
 
-  it('Rooted Form is slower on its feet, Flowing Form faster', () => {
+  it('Rooted Stance is slower on its feet, Flowing Stance faster', () => {
     const y = character(yellow);
-    const speeds = [0, 1, 2].map((form) => {
+    const speeds = [0, 1, 2].map((stance) => {
       const w = world({ ...y, mods: undefined });
-      w.players.p1.form = form;
+      w.players.p1.stance = stance;
       w.enemies.length = 0;
       const x0 = w.players.p1.pos.x;
       stepWorld(w, room, { p1: { kind: 'stick', x: 1, y: 0 } });

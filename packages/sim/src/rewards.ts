@@ -69,7 +69,7 @@ export type RewardMoment =
   | { kind: 'blessing' };
 
 export interface WelcomePreview {
-  /** The Form everyone starts with (forms[0]). */
+  /** The Stance everyone starts with (stances[0]). */
   stance: string;
   /** The next technique to get signed off, and what it unlocks. */
   next: RequirementStatus | null;
@@ -98,8 +98,8 @@ function stripeKeys(t: TrainingState): string[] {
 export function abilityLabel(t: TrainingState, id: string): string {
   const a = t.abilities.find((x) => x.requirement.id === id);
   if (!a) return '';
-  const kind = a.kind === 'form' ? 'Form' : a.kind === 'strike' ? 'Strike upgrade' : 'Technique Seal';
-  const name = a.form?.name ?? a.perk?.name;
+  const kind = a.kind === 'stance' ? 'Stance' : a.kind === 'strike' ? 'Strike upgrade' : 'Technique Seal';
+  const name = a.stance?.name ?? a.perk?.name;
   return name ? `${kind}: ${name}` : `${kind} (power arrives in a later update)`;
 }
 

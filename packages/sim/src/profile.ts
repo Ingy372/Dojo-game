@@ -118,7 +118,7 @@ export interface Profile {
    */
   trophiesSeen: string[] | null;
   /**
-   * P-MENU2-d: the Fighting Style the student picked (starting Form and Virtue), or null for
+   * P-MENU2-d: the Fighting Style the student picked (starting Stance and Virtue), or null for
    * today's default (Beginner's Stance first, strongest Virtue). Strikes and Seals are always on.
    */
   loadout: Loadout | null;
@@ -126,21 +126,36 @@ export interface Profile {
 
 /** P-MENU2-d: two picks only (D2). Each is an id, or null for the default. Unearned picks are ignored. */
 export interface Loadout {
-  form: string | null;
+  stance: string | null;
   virtue: string | null;
 }
 
 const LOADOUT_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
+/** R-STANCE-a: the ids Stances had while they were called Forms. Only the save migration reads these. */
+const OLD_STANCE_IDS: Readonly<Record<string, string>> = { 'rooted-form': 'rooted-stance', 'flowing-form': 'flowing-stance' };
+
+/**
+ * R-STANCE-a save migration: saves from before the rename keep the pick under `form`, with the
+ * old ids. `stance` wins when both keys are there; `form` is dropped either way. Running it on
+ * its own output changes nothing.
+ */
+export function migrateLoadout(data: unknown): unknown {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return data;
+  const { form, ...rest } = data as Record<string, unknown>;
+  const stance = 'stance' in rest ? rest.stance : form;
+  return { ...rest, stance: typeof stance === 'string' && Object.prototype.hasOwnProperty.call(OLD_STANCE_IDS, stance) ? OLD_STANCE_IDS[stance] : stance };
+}
+
 /** A saved loadout if it has the right shape, otherwise null (today's default). */
 export function readLoadout(data: unknown): Loadout | null {
-  const l = data as Loadout;
+  const l = migrateLoadout(data) as Loadout;
   if (!l || typeof l !== 'object') return null;
-  // Ability ids are lowercase words joined by hyphens ("rooted-form"). Anything else, or a
+  // Ability ids are lowercase words joined by hyphens ("rooted-stance"). Anything else, or a
   // name every object has built in ("constructor", "toString", "__proto__"), is dropped.
   const id = (v: unknown) => (typeof v === 'string' && LOADOUT_ID.test(v) && !(v in Object.prototype) ? v : null);
-  const out = { form: id(l.form), virtue: id(l.virtue) };
-  return out.form || out.virtue ? out : null;
+  const out = { stance: id(l.stance), virtue: id(l.virtue) };
+  return out.stance || out.virtue ? out : null;
 }
 
 export interface StreetSmartsSave {

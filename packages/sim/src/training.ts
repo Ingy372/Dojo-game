@@ -3,7 +3,7 @@
 // abilities, Virtues, the Gate, the Path card and the Dojo Blessing.
 // Pure: "now" is passed in, never read from a clock.
 
-import type { AbilityContent, FormDef, PerkDef, VirtueDef } from './abilities';
+import type { AbilityContent, StanceDef, PerkDef, VirtueDef } from './abilities';
 import { BLESSING, byTier, POWER, PROGRESSION, TRAINING_POINTS, TRAINING_POINTS_PER_BELT, TRAINING_STATS } from './config';
 import { DAY_NAMES, type FeedBelt, type FeedStripe, type RequirementType, type StudentFeed } from './feed';
 
@@ -13,8 +13,8 @@ export interface Now {
   weekday: number;
 }
 
-export type AbilityKind = 'form' | 'strike' | 'seal';
-const KIND_OF: Record<RequirementType, AbilityKind> = { kata: 'form', kickCombo: 'strike', selfDefense: 'seal' };
+export type AbilityKind = 'stance' | 'strike' | 'seal';
+const KIND_OF: Record<RequirementType, AbilityKind> = { kata: 'stance', kickCombo: 'strike', selfDefense: 'seal' };
 
 /** One real requirement and where the student stands on it. */
 export interface RequirementStatus {
@@ -34,12 +34,12 @@ export interface RequirementStatus {
   videoId: string | null;
 }
 
-/** A requirement's game ability (a Form, a Strike upgrade, or a Technique Seal). */
+/** A requirement's game ability (a Stance, a Strike upgrade, or a Technique Seal). */
 export interface AbilityInfo {
   requirement: RequirementStatus;
   kind: AbilityKind;
   /** The game power it maps to; null when it arrives in a later update. */
-  form: FormDef | null;
+  stance: StanceDef | null;
   perk: PerkDef | null;
   unlocked: boolean;
 }
@@ -177,16 +177,16 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
     }
   }
 
-  // Each kata unlocks the next Form, each kick combo the next Strike upgrade, each
+  // Each kata unlocks the next Stance, each kick combo the next Strike upgrade, each
   // self-defense technique the next Technique Seal, in curriculum order.
-  const seen: Record<AbilityKind, number> = { form: 0, strike: 0, seal: 0 };
+  const seen: Record<AbilityKind, number> = { stance: 0, strike: 0, seal: 0 };
   const abilityList: AbilityInfo[] = requirements.map((r) => {
     const kind = KIND_OF[r.type];
     const n = seen[kind]++;
     return {
       requirement: r,
       kind,
-      form: kind === 'form' ? abilities.forms[n + 1] ?? null : null,
+      stance: kind === 'stance' ? abilities.stances[n + 1] ?? null : null,
       perk: kind === 'strike' ? abilities.strikes[n] ?? null : kind === 'seal' ? abilities.seals[n] ?? null : null,
       unlocked: r.signedOff,
     };
@@ -275,10 +275,10 @@ export function nextClassDay(classDays: readonly string[], weekday: number): str
   return null;
 }
 
-/** The Forms the player can switch between: the Beginner's Stance plus up to 3 earned Forms (newest first). */
-export function unlockedForms(training: TrainingState, abilities: AbilityContent): FormDef[] {
-  const earned = training.abilities.filter((a) => a.kind === 'form' && a.unlocked && a.form).map((a) => a.form!);
-  return [abilities.forms[0], ...earned.slice(-3)];
+/** The Stances the player can switch between: the Beginner's Stance plus up to 3 earned Stances (newest first). */
+export function unlockedStances(training: TrainingState, abilities: AbilityContent): StanceDef[] {
+  const earned = training.abilities.filter((a) => a.kind === 'stance' && a.unlocked && a.stance).map((a) => a.stance!);
+  return [abilities.stances[0], ...earned.slice(-3)];
 }
 
 /** "Shield of Respect II" */

@@ -15,7 +15,7 @@ const train = (data: unknown) => {
   const now: Now = { ms: Date.parse(feed.asOf), weekday: new Date(feed.asOf).getUTCDay() };
   return buildTraining(feed, content.abilities, now);
 };
-const STANCE = content.abilities.forms[0].name;
+const STANCE = content.abilities.stances[0].name;
 const step = (m: RewardMoment): string =>
   m.kind === 'signOff' ? `signOff:${m.requirement.name}` : m.kind === 'stripe' ? `stripe:${m.word}` : m.kind;
 
@@ -26,8 +26,8 @@ describe('unlock cascade (M7-P4)', () => {
     const w = m[0];
     expect(w.kind === 'welcome' && w.count).toBe(4);
     expect(w.kind === 'welcome' && w.preview).toBeNull();
-    const form = m[2];
-    expect(form.kind === 'signOff' && form.ability).toBe('Form: Rooted Form');
+    const stance = m[2];
+    expect(stance.kind === 'signOff' && stance.ability).toBe('Stance: Rooted Stance');
   });
 
   it("profile 1 (nothing signed off yet) sees the preview: the Beginner's Stance and what the first sign-off unlocks", () => {

@@ -113,8 +113,8 @@ export const COMBAT = {
     cooldownTicks: 30,
   },
 
-  /** Ticks before the Form can be switched again (half a second). */
-  formSwitchTicks: 10,
+  /** Ticks before the Stance can be switched again (half a second). */
+  stanceSwitchTicks: 10,
   /** Second Wind (the Great Effort Virtue) gives back this share of the Focus it used. */
   secondWindFocusBack: 0.5,
 

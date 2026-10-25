@@ -170,7 +170,7 @@ export class HomeScene extends Phaser.Scene {
       return;
     }
     this.training = currentTraining();
-    const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.forms[0].name);
+    const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.stances[0].name);
     // First return home after the tutorial floor: Sensei's welcome line, once, then the
     // unlock cascade (M7-P4, Manager call: both play here, the line first).
     const sensei: string[] = [];

@@ -9,7 +9,7 @@ export const TROPHY_WORDS = words;
 
 export type ShelfId = 'katas' | 'kicks' | 'selfDefense' | 'stripes';
 const SHELF_ORDER: readonly ShelfId[] = ['katas', 'kicks', 'selfDefense', 'stripes'];
-const KIND_SHELF = { form: 'katas', strike: 'kicks', seal: 'selfDefense' } as const;
+const KIND_SHELF = { stance: 'katas', strike: 'kicks', seal: 'selfDefense' } as const;
 
 export interface Cubby {
   id: string;
@@ -62,10 +62,10 @@ export function buildCubbies(t: TrophyInput): Cubby[] {
       shelf: KIND_SHELF[a.kind],
       name: r.name,
       earned: a.unlocked,
-      icon: a.form?.id ?? a.perk?.id,
-      effect: a.form?.text ?? a.perk?.text ?? words.comingLater,
+      icon: a.stance?.id ?? a.perk?.id,
+      effect: a.stance?.text ?? a.perk?.text ?? words.comingLater,
       status: a.unlocked ? fill(words.signedAt, 'belt', r.beltName) : words.askSensei,
-      kata: a.kind === 'form' && a.unlocked ? t.kataLine(r.id) : undefined,
+      kata: a.kind === 'stance' && a.unlocked ? t.kataLine(r.id) : undefined,
     });
   }
   for (const v of t.virtues) {

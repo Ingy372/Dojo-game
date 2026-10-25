@@ -2,9 +2,13 @@
   "about": "Art Jay has approved, and how it is packed. Only add a source here after Jay approves it.",
   "outDir": "assets/art",
   "scale": 0.6,
+  "stanceIds": {
+    "rooted-form": "rooted-stance",
+    "flowing-form": "flowing-stance"
+  },
   "packs": {
     "player-a": {
-      "note": "Body A: the base layers (body, skin, gi, belt, props). Form stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations.",
+      "note": "Body A: the base layers (body, skin, gi, belt, props). Stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations.",
       "sources": [
         {
           "id": "player",
@@ -269,7 +273,7 @@
       ]
     },
     "player-b": {
-      "note": "Body B: the base layers (body, skin, gi, belt, props). Form stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations.",
+      "note": "Body B: the base layers (body, skin, gi, belt, props). Stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations.",
       "sources": [
         {
           "id": "player",
