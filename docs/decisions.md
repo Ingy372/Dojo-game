@@ -846,3 +846,7 @@ What is in the code:
 - Manager's call: par times and room grades stay in game time.
 - Note: 1200 rules ticks are 60 s of game time, which is about 68 real seconds at tempo 0.88; 60 real seconds is `realSecondsToTicks(60)` = 1056 ticks. The test checks both.
 - Note for other dojos: the hit-shake cut-off (`SCREEN_SHAKE.hurtFromTier`, rank 8 = Brown) assumes the standard 10-belt order. A school with a different number of belts will need that rank mapped onto its own belts (for now, schools with fewer than 8 belts only get these shakes on Challenge, Manager's call in K28).
+
+## K30: HOME label clear of the boss (2026-10-25, approved by the Manager)
+- Found in the K27 retest: in the boss room the HOME door label sat on the boss's head and its health bar.
+- Simplest fix: each frame, if a door label overlaps a live boss's head, health bar or name, it slides sideways to the far side of its door from the boss. Otherwise it stays centred on its door. Same place as the existing keep-under-the-top-bar rule.

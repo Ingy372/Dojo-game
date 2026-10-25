@@ -590,3 +590,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Test: packages/sim/test/k29-real-clock.test.ts.
 **Next**
 - None; the shake rank mapping for other dojos is noted in decisions.md.
+
+## K30 — HOME label clear of the boss (2026-10-25)
+**Done**
+- Door labels slide aside when they would overlap the boss's head, health bar or name (`keepLabelOffBoss`).
+- Checked at 667x375 and 844x390 with Reduced motion off and on (/workspace/k30-shots/).
+**Next**
+- Tester re-check of the boss room.
