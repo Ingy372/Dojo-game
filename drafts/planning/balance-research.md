@@ -89,12 +89,12 @@ Ask (Jay, via Manager): "Nothing should be on guesses, it should be hard science
   | Floor-keeper | 40–80 (basic hits; Strike and Counter shorten this) | ≥ 5 |
 
   These are taken from today's level-1 numbers, which the existing balance bot already plays.
-- Endless +3%: keep it only as a **soft cap**. Floors grow 3% (guess) up to a ceiling such as ×1.5 (guess), so the Tower never outruns training. This is a design choice; there is no science for a per-floor rate.
+- Endless +3%: **decided (D4): +3% per floor with no cap.** Maths note only (not the plan): a soft cap such as ×1.5 would stop growth at floor 14; with no cap, floor 25 is ×2.1 and floor 50 is ×4.4 (sim section 5). There is no science for a per-floor rate.
 
 **4. Change (Programmer).**
 - Add `ENEMY_SCALE` by tier to `config.ts`, applied when an enemy spawns.
 - Keep wind-ups as they are: never scale ticks (wind-up ≥ 10 ticks).
-- Challenge multiplier stays at 1.3× (guess), the low end of §12.
+- Challenge multiplier is **1.5× (decided, D5)**, the high end of §12.
 
 **5. Test.**
 - Extend `balance-sim.py` with the multiplier table.
@@ -128,7 +128,7 @@ Ask (Jay, via Manager): "Nothing should be on guesses, it should be hard science
 
 **1. Now.**
 - `progression.ts:14-34`: tier XP = months in rank × 4.35 × 0.75 × 8 runs × 110 XP. Inside a tier, step k needs tierXp·k/55, so XP grows in a straight line.
-- Sim section 3: 3 months in rank (guess; the real value comes from the school feed) gives 8,613 XP, about 9.8 weeks to the cap. Steps run from 1.4 to 14.2 runs.
+- Sim section 3: 3 months in rank (confirmed by Jay as the typical case; the real value still comes from the school feed) gives 8,613 XP, about 9.8 weeks to the cap. Steps run from 1.4 to 14.2 runs.
 - The catch-up rule doubles XP (×2) (`config.ts:200-221`).
 
 **2. Cited options.**
@@ -141,7 +141,7 @@ Ask (Jay, via Manager): "Nothing should be on guesses, it should be hard science
 - The last step (14 runs, about 1.8 weeks) is a long wait for a 6-year-old. **[TARGET]** last step ≤ 10 runs. This is a playtest call; the ratio is a design choice.
 - The catch-up ×2 follows the same idea as Pokémon's level-difference XP (S5) and is a sourced pattern.
 
-**4. Change (optional, Jay decides).** Soften the step weights from k to (k+5) (guess), so steps run from about 6 to 10 runs.
+**4. Change (decided, D3).** The last step must be ≤ 10 runs. Soften the step weights from k to (k+11) (guess); steps then run from 5.7 to 10.0 runs (sim section 3). Note: the earlier idea of (k+5) still gives an 11.2-run last step, so it is not enough.
 
 **5. Test.** Sim section 3. Pass:
 - No step over 10 runs.
@@ -212,7 +212,8 @@ Ask (Jay, via Manager): "Nothing should be on guesses, it should be hard science
 | Guided clear rate | ≥ 90% |
 | Longest level step | ≤ 10 runs |
 | Worst case for a Rare | ≤ 5 runs |
-| Endless soft cap | ×1.5 |
+| Endless | +3% per floor, no cap (D4) |
+| Challenge | ×1.5 enemy Health and Power (D5) |
 
 All of these are (guess) until kids play.
 
@@ -220,21 +221,22 @@ All of these are (guess) until kids play.
 
 | ID | Owner | What | Done when | Waits on | Scope (April 2027) |
 |---|---|---|---|---|---|
-| R-BAL-1 | Jay | Approve the approach: expected-Artist scaling, the target bands, keeping the damage formula | Jay says yes or changes the bands | this PR | Launch |
+| R-BAL-1 | Jay | Approve the approach: expected-Artist scaling, the target bands, keeping the damage formula | **Done: approved Oct 24 (D1, D2)** | this PR | Launch |
 | R-BAL-2 | Programmer | Add per-tier enemy scaling (`ENEMY_SCALE`) and per-tier gear caps; no tick scaling | Sim and `npm run balance` show every tier inside its bands | R-BAL-1 | Launch |
 | R-BAL-3 | Tester | Balance fixtures for each tier; `npm run balance` reports per tier | A table of win %, deaths and room times for tiers 1–10 is in the PR | R-BAL-2 | Launch |
 | R-BAL-4 | Programmer | Test that locks the bad-luck counter (guaranteed on run ≤ 5) | Test fails if `guaranteedRareOnRun` > 5 | none | Launch |
-| R-BAL-5 | Jay | Decide on softening the XP step weights | Yes or no recorded in decisions.md | R-BAL-1 | Launch (one config line) |
-| R-BAL-6 | Programmer | Endless soft cap | Sim shows Endless never above ×cap | R-BAL-1, Endless being in scope | After launch unless Endless ships at launch |
+| R-BAL-5 | Programmer | Soften XP step weights to (k+11) (D3) | Sim section 3 shows no step over 10 runs and the tier total unchanged | none (decided) | Launch (one config line) |
+| R-BAL-8 | Researcher | Fill C13 enemy stats with expected-Artist scaling, Challenge 1.5×, Endless uncapped | Every new enemy inside its bands on Standard and Challenge | D1–D5 | Launch (tiers 1–3 first, 4–6 in C13-2) |
 | R-BAL-7 | Tester | Kid playtest against the targets | Clear rates logged for each difficulty and compared with the targets | R-BAL-3 | Launch |
 
-## Open decisions for Jay
+## Decided (Jay via Manager, Oct 24)
 
-1. **D1:** Scale enemies to the *expected* Artist (recommended) or the *actual* Artist?
-2. **D2:** Target bands: OK as written, or adjust?
-3. **D3:** Soften XP steps (last step ≤ 10 runs)?
-4. **D4:** Endless: soft cap ×1.5 (guess), or keep +3% with no cap?
-5. **D5:** Challenge multiplier: 1.3× or 1.5×?
+1. **D1:** Scale enemies to the *expected* Artist for each tier, not the actual Artist.
+2. **D2:** The target bands in System 2 are OK as written.
+3. **D3:** Soften XP steps so the last step is ≤ 10 runs. Plan: weights (k+11) (guess), which gives 5.7 to 10.0 runs per step.
+4. **Months in rank:** 3 months is confirmed as the typical case.
+5. **D4:** Endless keeps +3% per floor with **no cap**. The soft cap is dropped as a plan (R-BAL-6 removed); its maths stays only as a note in System 2.
+6. **D5:** Challenge multiplier is 1.5×.
 
 ## How to run the check
 
@@ -258,17 +260,20 @@ level       swarmer        shield        bopper         brute  floor-keeper
 == 3. XP per belt tier (typical 3 months in rank) ==
 tier XP 8613, about 9.8 weeks at 8 runs/week to reach the cap
 XP per level step (tier 2+): [157, 313, 470, 626, 783, 940, 1096, 1253, 1409, 1566]  runs per step: [1.4, 2.8, 4.3, 5.7, 7.1, 8.5, 10.0, 11.4, 12.8, 14.2]
+softened (k+11): [626, 679, 731, 783, 835, 887, 940, 992, 1044, 1096]  runs per step: [5.7, 6.2, 6.6, 7.1, 7.6, 8.1, 8.5, 9.0, 9.5, 10.0]
+D3 check (no step over 10 runs, total unchanged): PASS
 
 == 4. Bad-luck counter: runs until the first Rare-or-better ==
 2 rolls/run  no counter: mean 6.49, 90% by 14, worst 58   with counter: mean 3.34, 90% by 5, worst 5
 4 rolls/run  no counter: mean 3.54, 90% by 7, worst 27   with counter: mean 2.53, 90% by 5, worst 5
 6 rolls/run  no counter: mean 2.54, 90% by 5, worst 21   with counter: mean 2.07, 90% by 4, worst 5
 
-== 5. Endless Ascent: 3% stronger per floor (core-design §12) ==
+== 5. Endless Ascent: 3% stronger per floor, no cap (D4 decided) ==
 floor  10: x1.3
 floor  25: x2.1
 floor  50: x4.4
 floor 100: x19.2
+Challenge (D5): enemy Health and Power x1.5; Endless and Challenge multiply.
 
 == 6. Effective health (EHP = Health x (1 + Guard/100)), exact for our damage formula ==
      swarmer: 40
