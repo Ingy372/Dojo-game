@@ -405,8 +405,11 @@ export class HomeScene extends Phaser.Scene {
       color: number;
       /** Icon id (Batch 8), if it has one. */
       icon?: string;
+      /** S3-P1b: kata arrows are drawn at the step-number size (13px bold), not 11px. */
+      big?: boolean;
     }
     const rows: Row[] = [];
+    const kataRows: Row[] = [];
     for (const v of t.virtues) {
       const inUse = v === t.virtue;
       const belts = v.earned.map((s) => t.belts.find((b) => b.id === s.belt)?.name ?? s.belt).join(', ');
@@ -437,21 +440,23 @@ export class HomeScene extends Phaser.Scene {
       // step (a step whose direction is still an open question gets no arrow).
       const kata = a.kind === 'form' && a.unlocked ? KATAS.get(r.id) : undefined;
       if (kata)
-        rows.push({ tag: 'Kata', title: kata.name, text: `${kata.steps.length} steps`, status: kataArrows(kata), unlocked: true, color: 0x9fd3ff });
+        kataRows.push({ tag: 'Kata', title: kata.name, text: `${kata.steps.length} steps`, status: kataArrows(kata), unlocked: true, color: 0x9fd3ff, big: true });
     }
+    // S3-P1b: earned katas are grouped together at the top of Abilities.
+    rows.unshift(...kataRows);
 
     // Descriptions and status lines wrap (K22b), so each card is as tall as its text and a
     // page holds as many cards as fit.
     const iconSize = w < 560 ? 32 : 40;
     const gap = 6;
     const textW = (row: Row): number => w - (row.icon ? iconSize + 12 : 8) - 8;
-    const measure = (str: string, width: number): number => {
-      const t = this.add.text(0, 0, str, { fontFamily: FONT, fontSize: '11px', wordWrap: { width } });
+    const measure = (str: string, width: number, big = false): number => {
+      const t = this.add.text(0, 0, str, { fontFamily: FONT, fontSize: big ? '13px' : '11px', fontStyle: big ? 'bold' : 'normal', wordWrap: { width } });
       const hh = t.height;
       t.destroy();
       return hh;
     };
-    const heights = rows.map((row) => Math.max(48, 20 + measure(row.text, textW(row)) + measure(row.status, textW(row)) + 6));
+    const heights = rows.map((row) => Math.max(48, 20 + measure(row.text, textW(row)) + measure(row.status, textW(row), row.big) + 6));
     const avail = h - 34;
     const pageStarts: number[] = [0];
     let used = 0;
@@ -477,7 +482,7 @@ export class HomeScene extends Phaser.Scene {
       const tw = textW(row);
       this.oneLine(this.text(tx, by + 4, `${row.unlocked ? '' : '🔒 '}${row.tag}: ${row.title}`, 13, row.unlocked ? css(row.color) : '#8a8296', true), tw, 10);
       const desc = this.text(tx, by + 20, row.text, 11, c, false, FONT, tw);
-      this.text(tx, desc.y + desc.height, row.status, 11, row.unlocked ? '#b9ad99' : '#ffd166', false, FONT, tw);
+      this.text(tx, desc.y + desc.height, row.status, row.big ? 13 : 11, row.big ? '#ffffff' : row.unlocked ? '#b9ad99' : '#ffd166', !!row.big, FONT, tw);
       by += boxH + gap;
     });
     if (rows.length === 0) this.text(x, y, 'No abilities yet.', 14, '#b9ad99');
