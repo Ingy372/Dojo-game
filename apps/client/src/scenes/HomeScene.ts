@@ -75,7 +75,7 @@ type Tab = 'run' | 'gear' | 'abilities' | 'gate';
  */
 /** P-MENU2-i: the A-MENU2 stat icons (Rooms has none, so it shows its number only). */
 /** QA: rarity words on the paper tiles, darkened to at least 4.5:1 on the paper (#efe0c4). */
-const RARITY_INK: Record<GearItem['rarity'], string> = { common: '#6b5a48', uncommon: '#245a24', rare: '#174a7d', epic: '#5e2696', legendary: '#8a4a12' };
+const RARITY_INK: Record<GearItem['rarity'], string> = { common: '#6b5a48', uncommon: '#245a24', rare: '#174a7d', epic: '#5e2696', legendary: '#5a2e08' };
 /** QA: the painted wood rim of the stat tile at k 0.5 (12 of its 32 @2x slice px; half at k 0.25), and the space kept inside it. */
 const STAT_RIM = 6;
 const STAT_PAD = S2;
@@ -592,8 +592,10 @@ export class HomeScene extends Phaser.Scene {
     this.ui.add(bar);
     // P-MENU2-i: the A-MENU2 bar (3-slice frame, fill tinted #f2c14e, gloss on top); code bar if missing.
     // QA: the rail is only 1 px taller than the bar each way, so it stays clear of the tiles above and Found / dots / New for you below.
-    const railH = L.bar.h + 2;
+    // QA round 2: the rail bottom stays at least 8 px above Found / dots / New for you (drawn thinner when tight).
     const railY = Y(L.bar.y) - 1;
+    const railLimit = Math.min(Y(L.foundLabelY), Y(L.newLabelY)) - 8;
+    const railH = Math.max(6, Math.min(L.bar.h + 2, railLimit - railY));
     const frameArt = menu2Slice(this, 'xp-bar-frame', X(0), railY, cw, railH);
     frameArt?.setData('xpRail', true);
     const inset = (railH * 4) / 20;
