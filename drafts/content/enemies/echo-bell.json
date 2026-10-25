@@ -1,7 +1,7 @@
 {
   "id": "echo-bell",
   "name": "Echo Bell",
-  "notes": "DRAFT for C13-3 (bestiary-plan.md). A bell that rings a striped ring outward with one gap. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). A bell that rings a striped ring outward with one gap. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
   "color": "#b8a04a",
   "maxHealth": 302,
   "power": 63,

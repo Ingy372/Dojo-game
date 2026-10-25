@@ -1,7 +1,7 @@
 {
   "id": "rumble-brute",
   "name": "Rumble Brute",
-  "notes": "DRAFT for C13-3 (bestiary-plan.md). A big storm-wrapped brute. It gets tired like a Brute. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). A big storm-wrapped brute. It gets tired like a Brute. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
   "color": "#4d5466",
   "maxHealth": 770,
   "power": 150,

@@ -31,7 +31,7 @@ for s in d["floorSteps"]:
     for k in ("success","retry"):
         if s.get(k): line_ok(f"{s['id']} {k}", s[k])
 allt = " ".join(" ".join(l["screens"]) for l in d["lessons"])
-for need in ("striped lane", "two marks", "can't be COUNTERed", "DASH", "red circle"):
+for need in ("striped lane", "double marks", "can't be COUNTERed", "DASH", "red circle"):
     if need.lower() not in allt.lower(): bad.append(("lessons", "must teach", need))
 for b in bad: print(b)
 print("ok" if not bad else "FAIL", len(d["lessons"]), "lessons,", len(d["floorSteps"]), "floor steps"); sys.exit(1 if bad else 0)

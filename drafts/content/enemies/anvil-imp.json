@@ -1,7 +1,7 @@
 {
   "id": "anvil-imp",
   "name": "Anvil Imp",
-  "notes": "DRAFT for C13-2 (bestiary-plan.md). A small, strong worker who taps a big hammer. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). A small, strong worker who taps a big hammer. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
   "color": "#8a8f99",
   "maxHealth": 494,
   "power": 81,

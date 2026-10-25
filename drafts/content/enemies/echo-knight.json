@@ -1,7 +1,7 @@
 {
   "id": "echo-knight",
   "name": "Echo Knight",
-  "notes": "DRAFT for C13-3 (bestiary-plan.md). Remembers every guard trick: shield, turn and copy. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Remembers every guard trick: shield, turn and copy. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
   "color": "#b0b8c8",
   "maxHealth": 385,
   "power": 98,

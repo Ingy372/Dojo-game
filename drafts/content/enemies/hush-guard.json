@@ -1,7 +1,7 @@
 {
   "id": "hush-guard",
   "name": "Hush Guard",
-  "notes": "DRAFT for C13-3 (bestiary-plan.md). A quiet shield-bearer who turns to face you. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). A quiet shield-bearer who turns to face you. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
   "color": "#6c6f8a",
   "maxHealth": 280,
   "power": 63,

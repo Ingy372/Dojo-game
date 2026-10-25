@@ -1,7 +1,7 @@
 {
   "id": "boulder-roller",
   "name": "Boulder Roller",
-  "notes": "DRAFT for C13-2 (bestiary-plan.md). Pushes a big round boulder down a striped lane. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). Pushes a big round boulder down a striped lane. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
   "color": "#8b7355",
   "maxHealth": 192,
   "power": 35,

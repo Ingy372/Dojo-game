@@ -1,7 +1,7 @@
 {
   "id": "pebble-pal",
   "name": "Pebble Pal",
-  "notes": "DRAFT for C13-2 (bestiary-plan.md). Little pebbles that hop after you in groups. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). Little pebbles that hop after you in groups. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
   "color": "#9c8f7e",
   "maxHealth": 57,
   "power": 22,

@@ -245,7 +245,7 @@ Jay's standing story rule: "For our dojo's version of this game, tie in Christia
 ## Proposed PR split
 
 1. **C13 plan** (this PR).
-2. **C13-1:** tiers 1-3 enemy JSON in `drafts/content/enemies/`, same shape as `content/enemies/*.json` (id, name, notes, color, maxHealth, power, guard, radius, moveSpeedTilesPerSecond, sightRange, attack{…}, parSeconds) plus a proposed `dashOnly` attack block. Stats as TODO for the Researcher.
+2. **C13-1:** tiers 1-3 enemy JSON in `drafts/content/enemies/`, same shape as `content/enemies/*.json` (id, name, notes, color, maxHealth, power, guard, radius, moveSpeedTilesPerSecond, sightRange, attack{…}, parSeconds) plus a proposed `dashOnly` attack block. Stats were filled in by the Researcher (R-BAL-8).
 3. **C13-2:** tiers 4-6 enemy JSON.
 4. **C13-3:** tiers 7-10 enemy JSON.
 5. **C13-F:** faith overlay file for the Guardians (`drafts/content/faith/`), verse text checked word for word.

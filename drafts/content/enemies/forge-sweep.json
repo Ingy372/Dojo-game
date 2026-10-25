@@ -1,7 +1,7 @@
 {
   "id": "forge-sweep",
   "name": "Forge Sweeper",
-  "notes": "DRAFT for C13-2 (bestiary-plan.md). A big glowing broom that sweeps a wide arc. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). A big glowing broom that sweeps a wide arc. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
   "color": "#e0a03a",
   "maxHealth": 264,
   "power": 53,
