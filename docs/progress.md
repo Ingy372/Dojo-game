@@ -549,13 +549,31 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - K24c: tower view 6.75 tiles tall; game draws at full retina sharpness (DPR camera zoom + view() helper). Screens: /workspace/qa/k24c/ (sharp-844.png is before/after).
 - K24b: wind-up "!" + fill ring before enemy attacks; COUNTER flashes/rings gold in the counter window; Reduced motion respected. Screens: /workspace/qa/k24b/.
 
+## S3-P1b Kata cards
+- Bigger drawn kata arrows (same height as the step numbers) and a Kata group at the top of Abilities. Screens: /workspace/qa/s3p1b/final/.
+
+## R-BAL-9c Live enemy numbers
+- Swarmer, Shield, Brute and Floor-keeper set to the #188 numbers; all in band on Standard and Challenge (drafts/planning/r-bal-9c-check.py). D1–D5 logged as Jay's calls.
+
+## R-BAL-4 Bad-luck counter test
+- New test locks `guaranteedRareOnRun` at 5 or lower. Checked it fails when set to 6.
+## R-BAL-5 XP step weights (k+11)
+- Done: progression.ts uses weights step+11. Matches balance-sim.py section 3; no step goes over 10 runs.
 ## K25 Slower tempo and calmer shake
 - Game runs about 12% slower (one `TEMPO.speed` value); wind-ups and counter windows are longer in real time, never shorter.
 - No screen shake on the player's own attacks. The being-hit shake only happens at Brown belt and up or on Challenge, at 65% strength, and never with Reduced motion.
 - New tests: packages/sim/test/k25-tempo-shake.test.ts (6). Preview playthroughs at 667 and 844: /workspace/qa/k25/.
 
+## K25b Block never shakes
+- Done: Block gives 0 shake; being hit is unchanged. Test added.
+
+## R-BAL-9b Per-tier gear caps
+- Done: 10-tier GEAR_CAPS, white cut, Jade capped. Test: r-bal-9b-gear-caps.test.ts.
+
 ## R-BAL-12 Training powers combat
 - Done: training stats, stripesByBelt migration (never lowers), per-belt enemy scale. UI words (12d) are still open.
+- Enemy scale retuned (Manager option B): live enemies are in the #188 bands at all 10 belts for all three model students; Bopper base is now 66/11. Test: r-bal-12-bands.test.ts.
+
 
 ## R-BAL-12e disarmedPower scaled
 - Done (stacked on #208).

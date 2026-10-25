@@ -182,7 +182,8 @@ export function makeItem(rng: Rng, tables: LootTables, rarity: Rarity, uid: stri
   let effect: Effect | null = null;
   let effectText = '';
   if (base.slot === 'charm') {
-    const amount = base.amounts[i];
+    // R-BAL-9b: the Jade charm's Power share is capped by tier too.
+    const amount = base.effectType === 'powerScale' ? Math.min(cap.powerScale, base.amounts[i]) : base.amounts[i];
     effect = { type: base.effectType!, amount };
     effectText = base.text.replace('{pct}', `${Math.round(amount * 100)}%`).replace('{n}', `${amount}`);
   } else {

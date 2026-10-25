@@ -2,7 +2,7 @@
 // views and balancing only. Each belt tier's max is split between sources, and each
 // source has its own ceiling, so nobody can out-power their real rank.
 
-import { GEAR_CAPS, POWER, TRAINING_POINTS } from './config';
+import { gearCapsForTier, POWER, TRAINING_POINTS } from './config';
 import { GEAR_SLOTS, gearScore, type GearItem } from './loot';
 import { effectiveLevel } from './progression';
 import { wornItem, type Profile } from './profile';
@@ -30,7 +30,7 @@ export interface PowerRating {
 
 /** The best possible gear score at this tier (every slot at the gear cap, an Epic charm). */
 export function maxGearScore(tier: number): number {
-  const cap = GEAR_CAPS.white;
+  const cap = gearCapsForTier(tier);
   const item = (slot: GearItem['slot'], stats: GearItem['stats'], effect: GearItem['effect']): GearItem => ({
     uid: '',
     base: '',
@@ -44,9 +44,9 @@ export function maxGearScore(tier: number): number {
   const best =
     gearScore(item('hands', { power: cap.power, maxHealth: 0, guard: 0 }, null)) +
     gearScore(item('gi', { power: 0, maxHealth: cap.maxHealth, guard: cap.guard }, null)) +
-    gearScore(item('charm', { power: 0, maxHealth: 0, guard: 0 }, { type: 'powerScale', amount: 0 }));
-  // Gear caps grow with each tier (placeholder until per-tier gear arrives in milestone 10).
-  return best * tier;
+    gearScore(item('charm', { power: 0, maxHealth: 0, guard: 0 }, { type: 'powerScale', amount: cap.powerScale }));
+  // R-BAL-9b: each tier has its own caps (no more × tier).
+  return best;
 }
 
 export function powerRating(t: TrainingState, profile: Profile): PowerRating {

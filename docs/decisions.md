@@ -763,11 +763,45 @@ Programmer calls:
 - During the counter window the COUNTER button gets a gold ring and flashes. With Reduced motion there's no pulse or flash; the cue and a steady bright COUNTER stay. No art changes.
 - The Sensei tip box avoids the cue so it never hides it.
 
+## S3-P1b — kata cards readable (2026-10-24)
+- Kata step arrows are drawn as thick shapes as tall as the bold 13px step numbers, so they no longer shrink to dots at 844 (S3-T1 bug 1–2). Steps wrap one whole step at a time.
+- Earned kata cards are grouped together at the top of Abilities (S3-T1 bug 3) instead of after each Form.
+- No kata directions or step data changed.
+- Manager-okayed K24a tradeoffs (named here as asked): (1) on the tutorial floor every enemy sees the player; (2) the paused tip can cover the health bar when the hero is near the bottom of the screen, which is fine since health can't drop below 1 there.
+
+## R-BAL-9c — live enemy numbers (2026-10-24, targets from #188)
+Jay's balance calls (D1–D5, drafts/planning/balance-research.md), recorded here:
+- **D1:** enemies are scaled to the *expected* Artist for each tier, not the actual player.
+- **D2:** the target bands are OK as written (Swarmer 2–4 hits, mid 5–10, Brute 10–20, Floor-keeper 40–80; enemy hits to KO the player: 12 / 8 / 5 / 5 at least).
+- **D3:** XP steps are softened so the last step is ≤ 10 runs, using weights (k+11) (R-BAL-5).
+- **D4:** Endless stays +3% per floor with no cap (R-BAL-6 dropped).
+- **D5:** Challenge is ×1.5 enemy Health and Power.
+
+Live enemy changes (maxHealth / power / guard; nothing else changed):
+- Swarmer 40/8/0 → **20/7/0** (DECIDE-2), Shield 90/15/15 → **66/11/15**, Brute 180/25/25 → **126/17/25**, Floor-keeper 700/26/30 → **495/17/30**.
+- Checked with drafts/planning/r-bal-9c-check.py against #188's expected white Artist (Standard / Challenge ×1.5). Hits to beat: Swarmer 2/3, Shield 6/9, Brute 12/18, Floor-keeper 50/75. Enemy hits to KO the player: 18/13, 12/8, 8/5, 8/5. All in band; the player always survives at least 5 hits.
+- Elite and named Brutes follow the Brute (Guarding Brute 158 Health, Old Thumper 189). Their tests were updated to the new numbers.
+- Not in this PR: R-BAL-9b (per-tier gear caps, including the white gear cut). It waits on DECIDE-1 (R-BAL-9a, Jay), which isn't recorded yet.
+
+## R-BAL-4 — bad-luck counter locked (2026-10-24)
+- A test (packages/sim/test/r-bal-4-bad-luck.test.ts) fails if `LOOT.guaranteedRareOnRun` is above 5, so a rare is always promised by run 5 at the latest.
+## R-BAL-5 Softer XP steps (D3)
+Jay's D3: level steps are weighted step + 11 (PROGRESSION.xpStepSoften), so a 3-month tier goes from 1.4–14.2 runs per step to 5.7–10.0. The tier total is unchanged, so the time to reach the cap is the same; early levels just come a bit slower and late levels a lot faster. Test: packages/sim/test/r-bal-5-xp-steps.test.ts.
 ## K25 — slower tempo, calmer screen shake (2026-10-24, from Jay's phone playtest via the Manager)
 - **One tempo value.** `TEMPO.speed = 0.88` in packages/sim/src/config.ts (about 12% slower). The rules still count the same ticks; the client plays each tick 1/0.88 times longer. So movement, enemy speed, attacks, character animations (LayeredSprite) and the Game scene's tweens all slow together, and every wind-up and counter window lasts longer in seconds (50 ms → about 57 ms per tick). No tick numbers were edited, so no sim or balance test changed.
 - **No shake on the player's attacks.** Basic hits, Strikes, Perfect Counters and enemy-down hits keep their short freeze (hit-stop) but never shake the screen (`SCREEN_SHAKE.playerAttackScale = 0`).
 - **Being-hit shake only for older students.** The shake when the player is hit is on only at Brown belt and up, or on Challenge, at 65% of its old strength, and always off with Reduced motion (`SCREEN_SHAKE`, `hurtShakeScale`). Programmer call: a Block (hit while guarding) follows the same rule as a hit.
 - Named-monster tell shakes (content timing) are unchanged; they already respect Reduced motion.
+
+## K25b: a Block never shakes (Manager's call, 2026-10-24)
+A Block is a success moment, so it never shakes the screen, at any belt or difficulty. Only being hit shakes (K25 rules: Brown and up or Challenge, 65%, off with Reduced motion). `eventShakeScale('block', …)` is always 0. This answers the K25 open question about Block. Test: packages/sim/test/k25b-block-no-shake.test.ts.
+
+## R-BAL-9b: per-tier gear caps; white gear cut (Manager's call, 2026-10-24)
+The Manager made the white gear cut from #188 (DECIDE-1, option a) under the balance calls Jay delegated to the Manager. The game hasn't launched, so no kid loses anything.
+- GEAR_CAPS has all 10 tiers (Power / Health / Guard / Jade): white 1/10/3/4% … black 34/211/17/26%. Before, white was 4/30/8/12%.
+- White loot (content/loot/gear.json): hands Power 1/1/1/1, gi Health 3/5/8/10, gi Guard 1/2/2/3, Jade 1/2/3/4%.
+- Drops are clamped to the tier cap, including the Jade charm's Power share. maxGearScore uses each tier's own caps instead of white × tier.
+- Not done here: ENEMY_SCALE for enemies outside their home tier (spec item 5), because no enemy appears off-tier yet; per-tier loot tables (R-BAL-10); XP steps (R-BAL-5, #204).
 
 ## R-BAL-12: real training powers combat (2026-10-24; #193, #195, drafts/planning/R-BAL-12-training-powers-combat.md)
 Jay's Decisions A and C and the Manager's Decision B, from the R-BAL-12 doc:
@@ -781,6 +815,14 @@ What is in the code:
 - Save migration: `TrainingState.stripesByBelt` is rebuilt by `migrateStripesByBelt`. Extra stripes from an old save that kept only a count go on the oldest belts with room, then on the current belt. It never removes anything.
 - Test file: r-bal-12-training-stats.test.ts.
 - Not done here: UI gain words (R-BAL-12d); the weapon's disarmedPower isn't scaled.
+
+## R-BAL-12 enemy scale retune (Manager call, option B, Oct 24)
+- **Manager, option B:** re-run the band check on #203's lowered base numbers × `ENEMY_TRAINING_SCALE`, and retune the scale so every live enemy stays inside the #188 bands at every belt.
+- **What the check found:** the old scale (yellow and up) was a ratio against the #188 Artist of each belt. It assumed enemy files built for that belt. The live enemies have white-belt base numbers and appear at every belt, so from yellow up they were far too easy. Swarmer took 1 hit, and the Floor-keeper fell in 7–33 hits instead of 40–80. White was already in band.
+- **New rows (Health × / Power ×), white to black:** 1.27/1.19, 2.14/2.06, 3.19/3.14, 4.65/4.32, 6.56/5.6, 8.46/7.06, 10.77/8.7, 13.1/10.36, 15.91/11.94, 18.72/13.8. White is unchanged. Each row passes for all three model students (typical, trains more, plays only) on Standard and Challenge ×1.5. Each row also keeps the typical student's hits and KO counts as close to white's as the bands allow. Fit: drafts/planning/r-bal-12f-live-check.py.
+- **Bopper base 110/16 → 66/11** (Guard 10 and disarmed push 8 kept). No scale row could keep the Bopper in the mid band alongside the other four. Its Challenge KO fell below 8 at every belt. This changes the A5 numbers from #102/#118.
+- **Guard:** `test/r-bal-12-bands.test.ts` checks every live enemy, belt, student, Standard and Challenge, and fails if a new live enemy file is not listed. Against the old scale, 131 of its cases fail.
+- **Open:** the drafted C13 enemies (drafts/content/enemies) are built for each belt's Artist. If they go live as they are, this scale would double-count. They need white-base numbers, or their own scale, when they land.
 
 ## R-BAL-12e: enemy weapon disarmedPower scales too (2026-10-24)
 A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt Power scale as the enemy's Power, rounded to a whole number. The content file keeps the BASE number (8). A disarmed push still hits softer than a normal swing at every belt. Test: r-bal-12e-disarmed-power.test.ts.
