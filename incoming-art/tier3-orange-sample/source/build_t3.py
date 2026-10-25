@@ -79,7 +79,7 @@ SPEC = {
                     eye_c="#f2ffd8", eye_z=0.5, eye_y=0.95, eye_dx=0.32, sh=0.68, arm_x=0.7),
     # Tier 3 sample. Silhouettes: spark = small bright ball with round flicks at the sides, dough = big lumpy dome,
     # ladle = round copper bowl with a handle out the back (low). Colours: bright orange/cream, cream/toast, copper/mint.
-    "spark-sprite": dict(W=0.30, H=0.34, arm=0.5, eye=1.2, color="#f08a2a", belly="#ffc46a", accent="#ffd98a", glow="#ffe2a6",
+    "spark-sprite": dict(W=0.30, H=0.34, arm=0.5, eye=1.2, color="#ff8a3d", belly="#ffc46a", accent="#ffd98a", glow="#ffe2a6",
                     eye_c="#4a2a24", eye_z=0.6, eye_y=0.98, eye_dx=0.36, sh=0.6, arm_x=0.6),
     "dough-blob": dict(W=0.45, H=0.55, arm=0.8, eye=1.0, color="#f1dcb0", belly="#fff3dc", accent="#d9b27a", glow="#d99a5c",
                     eye_c="#4a3040", eye_z=0.6, eye_y=0.95, eye_dx=0.3, sh=0.5, arm_x=0.95),
