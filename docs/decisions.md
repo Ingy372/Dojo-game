@@ -880,3 +880,6 @@ What is in the code:
 - A results-list line now stays on one line (it shrinks the text, down to 10 px), so its icon always lines up with it.
 - Manager call on #226 (2026-10-25): keep the 40 px worn-slot icon, and wrap long worn-item names onto 2 lines with no ellipsis, so the full name shows at 667. To give the name room, the icon sits top-left with the slot and stats beside it, and the name spans the box's full width below. `twoLines` shrinks the name (13 px down to 10) until it fits in 2 lines with no word past the edge. All three boxes grow to the tallest one, and the bag fits the rows that are left.
 - Manager call on #226 after QA (2026-10-25): it's OK for a charm's effect text in a worn slot to end in '…' when it doesn't fit. The full text shows on the bag card and in the detail line.
+
+## R-BAL-12d Gain words (2026-10-24)
+- Show training gains as plain "+N Stat" words on the moments a kid already sees (sign-off, sign-offs list, stripe). Each gain uses the belt it was earned at. No new screen, no counters, no "missing" or "next time" words. Wording is in content/ so Jay can change it without code. A test bans nag/guilt/streak words and caps lines at 8 words.
