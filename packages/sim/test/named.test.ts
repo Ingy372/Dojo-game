@@ -11,6 +11,7 @@ import {
   type RunOptions,
   type RunState,
   type WorldState,
+  ENEMY_TRAINING_SCALE,
 } from '../src';
 import { testContent } from './load-content';
 
@@ -137,7 +138,8 @@ describe('where named monsters appear (1,000 floors at tier 2)', () => {
     expect(run.named?.id).toBe('old-thumper');
     const world = createRunWorld(content, run, PLAYER);
     const e = world.enemies.find((x) => x.named === 'old-thumper')!;
-    expect(e.health).toBe(270);
+    // R-BAL-12: the white belt's enemy scale applies before the named x1.5.
+    expect(e.health).toBe(Math.round(Math.round(180 * ENEMY_TRAINING_SCALE[0].maxHealth) * 1.5));
     expect(e.elite).toBeNull();
     expect(world.enemies.filter((x) => x.named).length).toBe(1);
   });

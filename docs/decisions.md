@@ -768,3 +768,16 @@ Programmer calls:
 - **No shake on the player's attacks.** Basic hits, Strikes, Perfect Counters and enemy-down hits keep their short freeze (hit-stop) but never shake the screen (`SCREEN_SHAKE.playerAttackScale = 0`).
 - **Being-hit shake only for older students.** The shake when the player is hit is on only at Brown belt and up, or on Challenge, at 65% of its old strength, and always off with Reduced motion (`SCREEN_SHAKE`, `hurtShakeScale`). Programmer call: a Block (hit while guarding) follows the same rule as a hit.
 - Named-monster tell shakes (content timing) are unchanged; they already respect Reduced motion.
+
+## R-BAL-12: real training powers combat (2026-10-24; #193, #195, drafts/planning/R-BAL-12-training-powers-combat.md)
+Jay's Decisions A and C and the Manager's Decision B, from the R-BAL-12 doc:
+- **A (Jay):** training gives 40–60% of a typical student's power. The sim gives 51–54% at every belt.
+- **B (Manager):** one enemy multiplier per belt (`ENEMY_TRAINING_SCALE`, internal), and every stat a kid sees is a whole number. Content files keep BASE numbers. A run scales Health and Power with `Math.round`; Guard and timings never scale.
+- **C (Jay):** a class-only kid being a little weaker is OK. No nag or guilt messages; training only adds, never takes away. No timers, streaks or decay.
+
+What is in the code:
+- `TRAINING_STATS` per belt: a sign-off adds Power + Health, a Training Point adds Health (counted up to 28 × tier), a stripe adds Guard. A piece keeps the value of the belt it was earned at.
+- `trainingStats()` feeds `characterSetup`.
+- Save migration: `TrainingState.stripesByBelt` is rebuilt by `migrateStripesByBelt`. Extra stripes from an old save that kept only a count go on the oldest belts with room, then on the current belt. It never removes anything.
+- Test file: r-bal-12-training-stats.test.ts.
+- Not done here: UI gain words (R-BAL-12d); the weapon's disarmedPower isn't scaled.

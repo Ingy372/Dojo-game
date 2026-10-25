@@ -3,7 +3,7 @@
 // plain data and uses the seeded random number generator, so a run can be saved
 // and replayed exactly.
 
-import { BLESSING, COMBAT, DOJO, FLOOR, GRADES, LOOT, TICKS_PER_SECOND, type Difficulty, type Rarity } from './config';
+import { BLESSING, byTier, COMBAT, ENEMY_TRAINING_SCALE, DOJO, FLOOR, GRADES, LOOT, TICKS_PER_SECOND, type Difficulty, type Rarity } from './config';
 import type { Content } from './content';
 import { modsFrom, type Effect } from './effects';
 import { chance, makeItem, rarityRank, rollRarity, type GearItem } from './loot';
@@ -260,6 +260,7 @@ export function createRunWorld(
     doorCount: run.doors.length,
     twist: currentTwist(content, run),
     guideStep,
+    enemyScale: byTier(ENEMY_TRAINING_SCALE, run.tier),
     ...(run.tutorial ? { minHealth: TUTORIAL_FLOOR.minHealth, easyBossHealth: TUTORIAL_FLOOR.bossHealth } : {}),
     player: {
       ...player,
