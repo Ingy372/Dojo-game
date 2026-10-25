@@ -62,7 +62,7 @@
       "name": "Rally",
       "family": "virtue",
       "text": "Focus fills twice as fast when your health is below half.",
-      "effect": { "type": "lowHealthFocus", "amount": 2, "below": 0.5 }
+      "effect": { "type": "lowHealthFocus", "amount": 1, "below": 0.5 }
     }
   ]
 }

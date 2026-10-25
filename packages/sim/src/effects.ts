@@ -149,7 +149,8 @@ export function modsFrom(effects: readonly Effect[], ticksPerSecond: number): Pl
         break;
       case 'lowHealthFocus':
         m.lowHealthBelow = Math.max(m.lowHealthBelow, e.below ?? 0.5);
-        m.lowHealthFocusScale *= e.amount;
+        // R-BAL-14b: amount is the extra share (Kind Stone 0.25 = x1.25; Rally 1 = x2).
+        m.lowHealthFocusScale *= 1 + e.amount;
         break;
       case 'startFocus':
         m.startFocus += e.amount;
