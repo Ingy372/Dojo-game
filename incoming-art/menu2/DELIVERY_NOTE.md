@@ -1,6 +1,6 @@
 # A-MENU2: Delivery Note (full set, plan #259 A1–A13)
 
-**What's here:** 103 sprites (1x + @2x) and a `sprites/menu2.json` manifest with sizes, 9-slice margins, states and notes. There are 8 phone mocks (Trophies, Style, Gear and Last run, each at 932×430 and 667×375, plus @2x), close-ups, and before/after images against v2. Everything is built by script (`source/`). Research notes are in `MENU-RESEARCH.md`. Usage is in `README.md`.
+**What's here:** 113 sprites (1x + @2x) and a `sprites/menu2.json` manifest with sizes, 9-slice margins, states and notes. There are 8 phone mocks (Trophies, Style, Gear and Last run, each at 932×430 and 667×375, plus @2x), close-ups, and before/after images against v2. Everything is built by script (`source/`). Research notes are in `MENU-RESEARCH.md`. Usage is in `README.md`.
 
 **Kept as decided:** mood A, gold seal, faint ghost not-yet icon, lantern only on the next cubby, taller slot card, belt cord, neutral belt layers.
 
