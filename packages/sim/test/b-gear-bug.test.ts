@@ -6,23 +6,25 @@ import { equip, unequip, wornItem, type GearItem, type Profile } from '../src/in
 // no sheet, no Take off. These lock in that the worn row is tappable and the sheet offers Take off.
 const src = Object.values(import.meta.glob(['../../../apps/client/src/scenes/HomeScene.ts'], { query: '?raw', import: 'default', eager: true }))[0] as string;
 const gear = src.slice(src.indexOf('private renderGear('), src.indexOf('private renderSheet('));
-const worn = gear.slice(0, gear.indexOf('const bag ='));
+
 const sheet = src.slice(src.indexOf('private renderSheet('), src.indexOf('private pick('));
 
 describe('B-GEAR-BUG worn gear can be taken off and swapped', () => {
-  it('each worn card is a shared button() that picks the worn item', () => {
-    expect(worn).toMatch(/button\(this, \{[^}]*h: boxH[^}]*onTap: \(\) => this\.pick\(item\.uid\)/);
+  it('worn items stay in the bag grid (marked ✓) as tiles that pick them', () => {
+    // P-MENU2-f: worn gear is no longer hidden from the grid, so it can always be picked.
+    expect(gear).toMatch(/const bag = filterBag\(this\.profile\.inventory, this\.gearFilter\);/);
+    expect(gear).toMatch(/button\(this, \{[^}]*onTap: \(\) => this\.pick\(it\.uid\)/);
+    expect(gear).toMatch(/cmp\.overall === 'worn'/);
   });
   it('the sheet opens for a worn item (looked up in the whole bag, not just the grid)', () => {
-    expect(gear).toMatch(/const selected = this\.pickedItem\(\);/);
+    expect(gear).toMatch(/const picked = this\.pickedItem\(\);/);
     expect(src).toMatch(/private pickedItem\(\): GearItem \| null \{\s*return this\.profile\.inventory\.find\(\(it\) => it\.uid === this\.selected\)/);
     expect(gear).not.toMatch(/bag\.find\(\(it\) => it\.uid === this\.selected\)/);
-    // An empty bag (everything worn) must still show the sheet.
-    const empty = gear.slice(gear.indexOf('if (bag.length === 0)'), gear.indexOf('return;', gear.indexOf('if (bag.length === 0)')));
-    expect(empty).toMatch(/renderSheet\(selected/);
+    // The sheet is drawn whatever the bag shows (even a filter with no tiles).
+    expect(gear).toMatch(/if \(picked\) this\.renderSheet\(picked/);
   });
   it('a worn item gets Take off, which calls unequip', () => {
-    expect(sheet).toMatch(/now\?\.uid === item\.uid[\s\S]*label: 'Take off'[\s\S]*this\.takeOff\(item\)/);
+    expect(sheet).toMatch(/now\?\.uid === item\.uid[\s\S]*label: W\.takeOff[\s\S]*this\.takeOff\(item\)/);
     expect(src).toMatch(/private takeOff\(item: GearItem\): void \{\s*unequip\(this\.profile, item\.slot\);\s*writeSave/);
   });
   it('rules: equip swaps within a slot, unequip empties it', () => {
