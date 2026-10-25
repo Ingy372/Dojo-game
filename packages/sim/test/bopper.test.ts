@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { holdSwing } from './hold-swing';
 import { activeDoorSlots, chooseInsight, createRunWorld, createWorld, currentRoom, damage, loadEnemy, loadRoom, startRun, stepWorld, updateRun, type RunState } from '../src';
 import bopperData from '../../../content/enemies/bopper.json';
 import { testContent } from './load-content';
@@ -25,6 +26,7 @@ describe('Bouncy Bopper (A5)', () => {
     const w = createWorld(room, ['p1'], { enemyTypes: { bopper }, player: { maxHealth: 100, power: 10, guard: 0 } });
     w.enemies[0].disarmed = disarmed;
     for (let t = 0; t < 200; t++) {
+      holdSwing(w.players.p1); // measure the full Hit, not a Mash guard Block (B-MASHER-b)
       stepWorld(w, room, { p1: { kind: 'none' } });
       const ev = w.events.find((e) => e.kind === 'hit');
       if (ev && ev.kind === 'hit') return ev.damage;

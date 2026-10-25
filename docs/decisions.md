@@ -1149,6 +1149,28 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Before: `{ form: 'rooted-form' }` (or flowing-form, rooted-stance, flowing-stance) migrated to `{ stance: null, virtue: null }`, which `readLoadout` then turned into `loadout: null`. A fight played the same (Ready first, today's virtue), but the saved loadout was gone.
 - Now: `readLoadout` keeps `{ stance: null, virtue: null }` for an old Form save or an explicit `stance: null`, and `normalizeLoadout` no longer nulls a loadout whose stance isn't unlocked. Rooted and Flowing still map to Ready. Junk loadouts still load as null.
 - Test: packages/sim/test/r-stance-d1-stances.test.ts ("old Form save with no virtue").
+### B-MASHER — Shield bounce Focus, mash guard, kid bot (2026-10-25)
+- **Manager go (Oct 25):** drafts/planning/B-MASHER-plan.md (#291), approved calls below. Turning it on for everyone is the Manager's routine tuning call.
+1. **Mash guard:** a counterable enemy attack that lands while the player is mid-swing (basic-attack `attackCooldown` > 0, the 12-tick swing) counts as a Block. Dash-only attacks (`counterable: false`) still hit.
+2. **It is a normal Block:** half damage, gear blockCut and reflect apply, combo and chain kept, same block event. A timed Counter stays strictly better (no damage, a stagger, more Focus).
+3. **Shield bounce Focus:** +6 Focus (`COMBAT.focus.perShieldBounce`, capped at max) for basic and ripple shield bounces. The Hearth Cook pot-lid clang gives none.
+4. **Glow:** a code-drawn soft gold ring for 0.4 s on a bounce. With `dojo.reducedMotion` 'on', a steady 0.4 s tint and no pulse.
+5. **Kid bot:** masher plus an independent 12% roll each tick to press Counter or Strike (50/50) at a random living enemy (seeded rng). The 200-run gate (belts 1–10 × 20 seeds; room-1 KOs ≤ 20, wins ≥ 35%) runs only with BALANCE; a 3-seed kid case runs in CI.
+- **Tests:** older tests that assumed a full Hit or 0 Focus now call `holdSwing` (test/hold-swing.ts) or expect the new values. The golden run was recaptured: only run outcomes changed (blocks, health, perfects), setup identical.
+- **Manager calls on #295 (Oct 25):** (1) the b-t3-tune-2 boss-levers "with pauses" floor drops from 15 s to 14 s; (2) the drop in smart-bot damage taken is accepted for now; (3) the golden re-capture is OK.
+
+### B-MASHER-2 — Mash guard fades after 3 Perfect Counters (2026-10-25)
+- **Manager go (Oct 25):** E3 from drafts/planning/B-MASHER-2-mash-guard-tune.md (#296).
+- Mash guard works until the room has `COMBAT.counter.mashGuardPerfects` (3) Perfect Counters, then is off for the rest of that room; every new room starts it again. The sim sends `mashGuardOff` at the 3rd.
+- The first time in a run, Sensei says the line from content/settings/mash-guard.json (final wording from the Content Designer: "Three perfect counters! Your timing can fly on its own now.") with a gold ring that grows and fades around the player. With `dojo.reducedMotion` 'on': the same line, no fade-in, and a steady gold halo for 1.2 s. Text 20–26 px, padding 16/8 px.
+- The golden run was re-captured again (outcomes only).
+- **Manager call on B-MASHER-2 (Oct 25):** the 16–18% drop in smart-bot damage taken (vs 911ce19: −17.8% typical, −15.7% trainsMore, −17.1% playsOnly) is accepted for the beta. Smart bots still win 200/200 and the bands pass 293/293.
+- **Mash guard wording (Content Designer, Oct 25):** "Three perfect counters! Your timing can fly on its own now." (the Sensei box adds "Sensei:").
+- **Manager call (Oct 25): the once-per-run "Sensei steps back" line stays seen after a reload.** It's saved with the run (`RunState.mashGuardSeen`, saved as soon as the line shows); runs saved before this load as not seen.
+- **Manager call (Oct 25): in co-op, Perfect Counters and Mash guard are per player.** `PlayerState.perfects` counts each player's Perfect Counters in the room; `mashGuardOn(p)` and `mashGuardOff` use it. `world.progress.perfects` still counts the room total for grades.
+- **QA on #295 (layout only):** the stepped-back banner keeps off every player's sprite (its usual spot, then the top edge, then the bottom; clear of the buttons and doors when it can be, and of the players always, re-checked while it holds). Its two lines are balanced, so no word sits alone (20 px at 667, 26 px wider).
+- **Manager call (Oct 25): at 667 the stepped-back banner may cover the CHALLENGE door label** (the only spot there clear of the player and the buttons). Accepted as is.
+- **Manager call (Oct 25): in co-op the "Sensei steps back" line shows once per player.** `RunState.mashGuardSeen` is now the list of player ids who have seen it this run, saved with the run (a reload doesn't show it again to anyone who saw it).
 ### B-T3-NUDGE follow-up: phase-pause words keep off the player (2026-10-25)
 - **ROAR!** starts 8 px under Sensei's banner (screen space). If it would cover the player's sprite, it moves above the player's head; if that would push it within 8 px of the banner, it goes 8 px below the player's feet instead.
 - **"Help me!"** (wording unchanged) is the enemy's line, so it sits over the calling enemy's head, not in the centre, so it can't read as the student speaking. It stays at least 8 px under the banner, clear of ROAR!, and gets the same keep-off-the-player move.
