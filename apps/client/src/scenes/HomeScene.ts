@@ -1,12 +1,11 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { GATE, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, gearGrid, lastRunItemsFit, lastRunMoreLabel, showEmptyBagHint, pageDots, panelSwap, xpFillFrom, gateLockR, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
+import { GATE, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, gearGrid, showEmptyBagHint, pageDots, panelSwap, xpFillFrom, gateLockR, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import {
   BLESSING,
   GEAR_SLOTS,
-  realClock,
   compareGear,
   describeItem,
   describeVirtue,
@@ -27,7 +26,6 @@ import {
   sealBell,
   newTrophies,
   xpToNext,
-  type BestKey,
   type GearItem,
   type GearSlot,
   type Profile,
@@ -38,6 +36,7 @@ import {
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
 import { STYLE_WORDS, buildStyle, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
+import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, runId, takeCountUp, type FoundTile, type KeyStore } from '../ui/lastRun';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
@@ -64,12 +63,6 @@ export interface HomeSceneData {
 }
 
 const SLOT_NAME: Record<GearSlot, string> = { hands: 'Hands', gi: 'Gi', charm: 'Charm' };
-const BEST_NAME: Record<BestKey, string> = {
-  fastestClearTicks: 'Fastest floor',
-  mostPerfects: 'Most Perfect Counters',
-  longestCombo: 'Longest combo',
-  mostSGrades: 'Most S grades',
-};
 const KIND_MARK: Record<string, string> = { rest: '+' };
 
 type Tab = 'run' | 'gear' | 'abilities' | 'gate';
@@ -119,6 +112,9 @@ export class HomeScene extends Phaser.Scene {
   /** Came here straight from a run, and the next goals haven't been considered yet. */
   private fromRun = false;
   private firstFloorDone = false;
+  /** P-MENU2-g: the Found strip's page, and whether this view counted up (test hook). */
+  private foundPageNo = 0;
+  lastRunCounted = false;
 
   constructor() {
     super('Home');
@@ -460,116 +456,245 @@ export class HomeScene extends Phaser.Scene {
   }
 
 
+  /**
+   * P-MENU2-g: the Last run "Scroll of the Climb". A paper scroll (rolled wood ends drawn in
+   * code): a banner in kind words with Bests, room chips, stat tiles that count up once per run,
+   * an XP fill, the Found strip (every tile opens its sheet), "Always with you", "New for you"
+   * (only when there is one) and a big Again! button. Positions come from lastRunLayout().
+   */
   private renderRun(x: number, y: number, w: number, h: number): void {
-    // B-LASTRUN: every block stacks below the measured bottom of the one before; Personal bests
-    // sit on the panel's real bottom edge and the item list only takes the room left between.
-    const bottom = y + h;
+    const g = this.add.graphics();
+    g.fillStyle(WOOD.paper).fillRoundedRect(x - 4, y + 2, w + 8, h - 4, RADIUS.panel);
+    g.lineStyle(2, WOOD.grain, 0.8).strokeRoundedRect(x - 4, y + 2, w + 8, h - 4, RADIUS.panel);
+    // The rolled ends: two wooden rods with knobs.
+    for (const ry of [y - 2, y + h - 6]) {
+      g.fillStyle(WOOD.frame).fillRoundedRect(x - 8, ry, w + 16, 8, 4);
+      g.fillStyle(WOOD.frameDark).fillCircle(x - 8, ry + 4, 5).fillCircle(x + w + 8, ry + 4, 5);
+    }
+    this.ui.add(g);
     const last = this.profile.lastRun;
+    const cx0 = x + S2;
+    const cy0 = y + 6 + S1;
+    const cw = w - 2 * S2;
+    const ch = h - 2 * (6 + S1);
     if (!last) {
-      const t = this.text(x, y, 'No runs yet. Tap Enter the Tower to climb!', 16, '#f2e9d8', false, FONT, w);
-      this.renderBests(x, Math.max(y + t.height + S2, bottom - this.bestsHeight(w)), w);
+      this.text(cx0, cy0 + S2, LASTRUN_WORDS.none, TYPE.body, WOOD.ink, true, FONT, cw - 96 - S2);
+      button(this, { x: cx0 + cw - 96, y: cy0, w: 96, h: MIN_TAP, label: LASTRUN_WORDS.bests, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.openBests() }, this.ui);
       return;
     }
-    const s = last.summary;
-    const headline = s.result === 'cleared' ? 'Floor cleared!' : s.result === 'rested' ? playTimeText.homeHeadline : `You reached room ${Math.min(s.totalRooms, s.roomsCleared + 1)} of ${s.totalRooms}`;
-    const head = this.text(x, y, headline, 20, s.result !== 'lost' ? '#ffd166' : '#f2e9d8', true, FONT, w);
-    y += head.height + S1;
+    const m = buildLastRun(last, playTimeText.homeHeadline);
+    const L = lastRunLayout(cw, ch, m.chips.length, m.stats.length, m.found.length);
+    const X = (v: number) => cx0 + v;
+    const Y = (v: number) => cy0 + v;
+    const count = takeCountUp(safeStore(), runId(this.profile), reducedMotion());
+    this.lastRunCounted = count;
 
-    // One chip per room: its grade, or a mark for treasure and rest rooms. Wraps onto a new row.
-    let cx = x;
-    for (const r of s.results) {
-      if (cx + 30 > x + w) {
-        cx = x;
-        y += 36;
+    // Banner: the result in kind words, gold for a clear.
+    const head = this.text(X(0), Y(L.banner.h / 2), m.headline, TYPE.heading, m.cleared ? '#a0522d' : WOOD.ink, true).setOrigin(0, 0.5);
+    this.oneLine(head, L.banner.w, TYPE.body);
+    button(this, { ...L.bests, x: X(L.bests.x), y: Y(L.bests.y), label: LASTRUN_WORDS.bests, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.openBests() }, this.ui);
+
+    // Room chips: grade, a drawn chest for treasure, or a mark.
+    m.chips.forEach((r, i) => {
+      const s = L.chip;
+      const px = X(i * L.chipStep);
+      const py = Y(L.chipsY);
+      const color = r.grade ? GRADE_COLOR[r.grade] : '#7a5a3a';
+      const chip = this.add.graphics();
+      chip.fillStyle(WOOD.frameDark).fillRoundedRect(px, py, s, s, 6);
+      chip.lineStyle(2, r.kind === 'treasure' && !r.grade ? 0xffd166 : Phaser.Display.Color.HexStringToColor(color).color).strokeRoundedRect(px, py, s, s, 6);
+      this.ui.add(chip);
+      if (r.kind === 'treasure' && !r.grade) this.ui.add(chestIcon(this, px + s / 2, py + s / 2, 0xffd166));
+      else this.text(px + s / 2, py + s / 2, r.grade ?? KIND_MARK[r.kind] ?? '·', s >= 30 ? TYPE.title : TYPE.body, r.grade ? GRADE_COLOR[r.grade] : '#f2e3c4', true).setOrigin(0.5);
+      if (count) {
+        chip.setAlpha(0);
+        this.tweens.add({ targets: chip, alpha: 1, delay: i * LASTRUN_MOTION.chipStepMs, duration: MOTION.reducedFade.ms });
       }
-      if (r.kind === 'treasure' && !r.grade) {
-        // K23: a small drawn chest (no "$", which read like money).
-        this.ui.add(this.add.rectangle(cx, y, 30, 30, 0x221d2e).setOrigin(0).setStrokeStyle(2, 0xffd166));
-        this.ui.add(chestIcon(this, cx + 15, y + 15, 0xffd166));
-        cx += 36;
-        continue;
-      }
-      const label = r.grade ?? KIND_MARK[r.kind] ?? '·';
-      const color = r.grade ? GRADE_COLOR[r.grade] : '#b9ad99';
-      this.ui.add(this.add.rectangle(cx, y, 30, 30, 0x221d2e).setOrigin(0).setStrokeStyle(2, Phaser.Display.Color.HexStringToColor(color).color));
-      this.text(cx + 15, y + 15, label, 17, color, true).setOrigin(0.5);
-      cx += 36;
-    }
-    y += 30 + S2;
-    const stats = this.text(x, y, `Perfect Counters ${s.perfects}   Best combo ${s.bestCombo}   Time ${realClock(s.ticks)}`, 14, '#f2e9d8', false, FONT, w);
-    y += stats.height + S1;
-    if (last.xp) {
-      const xp = last.xp;
-      const extras = [xp.blessed ? 'Dojo Blessing' : '', xp.catchUp ? 'catch-up x2' : ''].filter(Boolean).join(', ');
-      const lvl = xp.levelsGained > 0 ? `   Level up! (+${xp.levelsGained})` : xp.atCap ? '   (level cap)' : '';
-      const xt = this.text(x, y, `+${xp.gained} experience${extras ? ` (${extras})` : ''}${lvl}`, 14, '#9ad1ff', true, FONT, w);
-      y += xt.height + S1;
-    }
-
-    const lineH = 19;
-    const bestsTop = Math.max(y, bottom - this.bestsHeight(w));
-    const decos = [...(s.decorations ?? []), ...(last.earned ?? [])];
-    if (decos.length > 0) {
-      const line = this.text(x, y, `For your dojo: ${decos.map((id) => decorationDef(CONTENT.dojo, id).name).join(', ')}`, 14, '#ffd166', true, FONT, w);
-      // Long trophy lists are capped above the item heading so they never reach Personal bests.
-      const maxH = Math.max(18, bestsTop - S2 - y - 22 - S1 - lineH);
-      if (line.height > maxH) {
-        const perLine = line.height / Math.max(1, line.getWrappedText().length);
-        const keep = line.getWrappedText().slice(0, Math.max(1, Math.floor(maxH / perLine)));
-        keep[keep.length - 1] = keep[keep.length - 1].replace(/[\s,]*\S{0,3}$/, '') + '…';
-        line.setWordWrapWidth(null).setText(keep.join('\n'));
-      }
-      y += line.height + S1;
-    }
-    if (y + 20 <= bestsTop - S2) {
-      const heading = this.text(x, y, `Items found (${s.items.length})`, 15, '#ffd166', true);
-      y += heading.height + S1;
-      const items = s.items.slice().sort((a, b) => RARITY_ORDER(b) - RARITY_ORDER(a));
-      const fit = lastRunItemsFit(y, bestsTop, lineH, items.length);
-      items.slice(0, fit).forEach((it) => {
-        const icon = addGearIcon(this, it, x + 8, y + 9, 18);
-        if (icon) this.ui.add(icon);
-        const tx = icon ? x + 22 : x;
-        this.oneLine(this.text(tx, y, `${rarityName(it.rarity)}: ${it.name}  (${describeItem(it)})`, 14, css(RARITY_COLOR[it.rarity]), false), w - (tx - x), 10);
-        y += lineH;
-      });
-      const more = lastRunMoreLabel(items.length, fit);
-      if (more && y + lineH <= bestsTop - S2) this.oneLine(this.text(x, y, more, 13, '#b9ad99'), w, 10);
-      if (items.length === 0) this.oneLine(this.text(x, y, 'None this time. Beat enemies and open chests!', 14, '#b9ad99'), w, 10);
-    }
-    this.renderBests(x, bestsTop, w);
-  }
-
-  private bestsRows(): Array<{ key: BestKey; str: string; isNew: boolean }> {
-    const b = this.profile.bests;
-    const newBests = new Set(this.profile.lastRun?.newBests ?? []);
-    const rows: Array<[BestKey, string]> = [
-      ['fastestClearTicks', b.fastestClearTicks === null ? '—' : realClock(b.fastestClearTicks)],
-      ['mostPerfects', `${b.mostPerfects}`],
-      ['longestCombo', `${b.longestCombo}`],
-      ['mostSGrades', `${b.mostSGrades}`],
-    ];
-    return rows.map(([key, value]) => ({ key, isNew: newBests.has(key), str: `${BEST_NAME[key]}: ${value}${newBests.has(key) ? ' NEW!' : ''}` }));
-  }
-
-  /** Two columns only when every row fits in half the width; otherwise one row per line. */
-  private bestsCols(w: number): number {
-    const probe = this.add.text(0, 0, '', { fontFamily: FONT, fontSize: `${TYPE.label}px` });
-    const widest = Math.max(...this.bestsRows().map((r) => probe.setText(r.str).width));
-    probe.destroy();
-    return widest <= w / 2 - S2 ? 2 : 1;
-  }
-
-  private bestsHeight(w: number): number {
-    return 17 + Math.ceil(4 / this.bestsCols(w)) * 16;
-  }
-
-  private renderBests(x: number, y: number, w: number): void {
-    const cols = this.bestsCols(w);
-    this.text(x, y, 'Personal bests', 13, '#ffd166', true);
-    this.bestsRows().forEach((r, i) => {
-      this.oneLine(this.text(x + (i % cols) * (w / cols), y + 17 + Math.floor(i / cols) * 16, r.str, TYPE.label, r.isNew ? '#ffd166' : '#f2e9d8'), w / cols - S1, TYPE.label);
     });
+
+    // Stat tiles: a big number over a 12 pt label; they count up once per run.
+    const countDelay = m.chips.length * LASTRUN_MOTION.chipStepMs;
+    L.tiles.forEach((b, i) => {
+      const st = m.stats[i];
+      const tg = this.add.graphics();
+      tg.fillStyle(WOOD.frame).fillRoundedRect(X(b.x), Y(b.y), b.w, b.h, RADIUS.button);
+      tg.lineStyle(2, WOOD.frameDark).strokeRoundedRect(X(b.x), Y(b.y), b.w, b.h, RADIUS.button);
+      this.ui.add(tg);
+      const big = b.h >= 56 ? TYPE.heading : TYPE.title;
+      const num = this.text(X(b.x + b.w / 2), Y(b.y + S1), st.format(count ? 0 : st.value), big, st.key === 'xp' ? '#9ad1ff' : '#fff6e6', true).setOrigin(0.5, 0);
+      num.setData('stat', st.key);
+      this.oneLine(this.text(X(b.x + b.w / 2), Y(b.y + b.h - S1 - TYPE.label - 2), st.label, TYPE.label, '#f2e3c4', true).setOrigin(0.5, 0), b.w - 2 * S2, TYPE.label);
+      if (count) {
+        const v = { t: 0 };
+        this.tweens.add({ targets: v, t: 1, delay: countDelay, duration: LASTRUN_MOTION.countMs, onUpdate: () => num.setText(st.format(countAt(st.value, v.t))), onComplete: () => num.setText(st.format(st.value)) });
+      }
+    });
+
+    // XP fill toward the next level.
+    const t = this.training;
+    const level = effectiveLevel(this.profile, t);
+    const atCap = level >= t.levelCap;
+    const next = xpToNext(level, t.belts);
+    const share = atCap ? 1 : Math.min(1, this.profile.xp / next);
+    const from = m.levelsGained > 0 ? 0 : Math.max(0, share - (last.xp?.gained ?? 0) / next);
+    const bar = this.add.graphics();
+    this.ui.add(bar);
+    const drawBar = (s: number) => {
+      bar.clear();
+      bar.fillStyle(WOOD.frameDark, 0.5).fillRoundedRect(X(0), Y(L.bar.y), cw, L.bar.h, L.bar.h / 2);
+      if (s > 0) bar.fillStyle(atCap ? 0xffd166 : 0x4a90c2).fillRoundedRect(X(0), Y(L.bar.y), Math.max(L.bar.h, cw * s), L.bar.h, L.bar.h / 2);
+    };
+    if (count) {
+      drawBar(from);
+      const v = { s: from };
+      this.tweens.add({ targets: v, s: share, delay: countDelay + LASTRUN_MOTION.countMs, duration: LASTRUN_MOTION.fillMs, ease: XP_FILL.ease, onUpdate: () => drawBar(v.s) });
+    } else drawBar(share);
+
+    // Found: every item and dojo piece from this run, each a 44+ tile that opens its sheet.
+    this.text(X(0), Y(L.foundLabelY), LASTRUN_WORDS.found, TYPE.label, WOOD.ink, true);
+    if (!m.found.length) this.text(X(0), Y(L.found.y + S1), LASTRUN_WORDS.foundNone, TYPE.label, '#7a5a3a', false, FONT, L.found.w);
+    const fp = foundPage(m.found, L.foundPerPage, this.foundPageNo);
+    this.foundPageNo = fp.page;
+    if (L.arrows) {
+      button(this, { x: X(L.found.x + L.found.w + S1), y: Y(L.found.y), w: MIN_TAP, h: MIN_TAP, label: '▶', color: WOOD.switchOff, size: TYPE.body, onTap: () => this.turnFound(1) }, this.ui);
+      const d = pageDots(fp.pages, L.found.w + MIN_TAP - 64);
+      if (d) for (let i = 0; i < fp.pages; i++) this.ui.add(this.add.circle(X(L.found.x + 64 + d.x0 + i * d.step), Y(L.foundLabelY + TYPE.label / 2 + 1), GEAR.dot / 2, i === fp.page ? 0xa8703f : WOOD.grain, i === fp.page ? 1 : 0.5).setData('foundDot', i));
+    }
+    fp.tiles.forEach((f, i) => {
+      const s = L.foundTile;
+      const fx = X(L.found.x + i * (s + S1));
+      const fy = Y(L.found.y);
+      const stroke = f.kind === 'item' ? RARITY_COLOR[f.item.rarity] : 0xffd166;
+      const b = button(this, { x: fx, y: fy, w: s, h: s, label: '', color: WOOD.frameDark, size: TYPE.label, stroke, onTap: () => this.openFound(f) }, this.ui);
+      b.visual.setData('found', f.kind === 'item' ? f.item.uid : f.id);
+      if (f.kind === 'item') {
+        const icon = addGearIcon(this, f.item, 0, 0, s - 12);
+        if (icon) b.visual.add(icon);
+        else b.visual.add(this.add.circle(0, 0, (s - 12) / 2, stroke, 0.8));
+      } else b.visual.add(houseIcon(this, 0, 0, s - 16));
+    });
+
+    // Always with you: what's always on (shown, not picked).
+    if (L.perAlways > 0) {
+      this.text(X(0), Y(L.alwaysLabelY), LASTRUN_WORDS.always, TYPE.label, WOOD.ink, true);
+      this.styleModel().always.slice(0, L.perAlways).forEach((a, i) => {
+        const s = L.alwaysIcon;
+        const ax = X(i * (s + S1));
+        const ay = Y(L.alwaysY);
+        const ag = this.add.graphics();
+        ag.fillStyle(0xffd166, 0.35).fillRoundedRect(ax, ay, s, s, RADIUS.button);
+        ag.lineStyle(2, 0xa8703f, 0.9).strokeRoundedRect(ax, ay, s, s, RADIUS.button);
+        this.ui.add(ag);
+        const icon = addIcon(this, a.id, ax + s / 2, ay + s / 2, s - 8);
+        if (icon) this.ui.add(icon);
+        else this.ui.add(this.add.star(ax + s / 2, ay + s / 2, 5, (s - 8) / 5, (s - 8) / 2.4, 0xffd166).setStrokeStyle(2, 0xa8703f));
+      });
+    }
+
+    // New for you: the newest trophy not yet looked at, with a sparkle. Only when there is one.
+    const fresh = newForYou(this.trophyCubbies(), this.profile.trophiesSeen);
+    if (fresh) {
+      const nc = L.newCard;
+      this.text(X(nc.x), Y(L.newLabelY), LASTRUN_WORDS.newForYou, TYPE.label, '#a0522d', true);
+      const b = button(this, { x: X(nc.x), y: Y(nc.y), w: nc.w, h: nc.h, label: '', color: 0xa8703f, size: TYPE.label, stroke: 0xffd166, onTap: () => this.openNewForYou() }, this.ui);
+      b.visual.setData('newForYou', fresh.id);
+      const tall = nc.h >= 80;
+      const is = tall ? Math.min(40, nc.h - 2 * S2 - TYPE.label - S1) : Math.min(32, nc.h - 2 * S1);
+      const ix = tall ? 0 : -nc.w / 2 + S2 + is / 2;
+      const iy = tall ? -nc.h / 2 + S2 + is / 2 : 0;
+      const icon = fresh.icon ? addIcon(this, fresh.icon, ix, iy, is) : null;
+      b.visual.add(icon ?? this.add.circle(ix, iy, is / 2, 0xffd166, 0.9));
+      const tw = tall ? nc.w - 2 * S2 : nc.w - 3 * S2 - is;
+      const label = this.add.text(tall ? 0 : ix + is / 2 + S2, tall ? iy + is / 2 + S1 : 0, fresh.short ?? fresh.name, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#fff6e6', fontStyle: 'bold', align: tall ? 'center' : 'left', wordWrap: { width: tw } }).setResolution(crisp()).setOrigin(tall ? 0.5 : 0, tall ? 0 : 0.5);
+      b.visual.add(wrapLikeCubby(label, fresh.short ?? fresh.name, tw));
+      // The sparkle: three small code-drawn stars that twinkle (still with Reduced motion).
+      [[nc.w / 2 - 10, -nc.h / 2 + 10, 5], [nc.w / 2 - 22, -nc.h / 2 + 6, 3], [-nc.w / 2 + 8, nc.h / 2 - 9, 3]].forEach(([sx, sy, r], i) => {
+        const star = this.add.star(sx, sy, 4, r / 2.5, r, 0xfff3b0);
+        b.visual.add(star);
+        if (!reducedMotion()) this.tweens.add({ targets: star, alpha: 0.25, scale: 0.7, yoyo: true, repeat: -1, duration: 700, delay: i * 230, ease: 'Sine.InOut' });
+      });
+    }
+
+    // Again!: start another climb.
+    button(this, { ...L.again, x: X(L.again.x), y: Y(L.again.y), label: LASTRUN_WORDS.again, color: 0xd5713a, size: TYPE.title, onTap: () => this.enterTower() }, this.ui);
+  }
+
+  private turnFound(by: number): void {
+    this.foundPageNo += by;
+    this.renderPanel('none');
+  }
+
+  /** A found tile: an item still in the bag opens its Gear sheet; anything else opens a small sheet here. */
+  openFound(f: FoundTile): void {
+    if (f.kind === 'item' && this.profile.inventory.some((it) => it.uid === f.item.uid)) {
+      this.tab = 'gear';
+      this.selected = f.item.uid;
+      this.sheetOpening = true;
+      this.confirmLetGo = false;
+      this.renderTabs(true);
+      this.renderPanel('tab');
+      return;
+    }
+    if (f.kind === 'item') this.openRunSheet(f.item.name, [[`${rarityName(f.item.rarity)} ${SLOT_NAME[f.item.slot]}`, css(RARITY_COLOR[f.item.rarity]), true], [describeItem(f.item), '#5a3e28', false], [LASTRUN_WORDS.notInBag, '#7a5a3a', false]]);
+    else this.openRunSheet(decorationDef(CONTENT.dojo, f.id).name, [[LASTRUN_WORDS.forDojo, '#a0522d', true]]);
+  }
+
+  /** "New for you": opens the Trophy Case, where the unlock moment plays and it is marked seen. */
+  private openNewForYou(): void {
+    this.part = 'trophy';
+    this.page = 0;
+    this.setTab('abilities');
+  }
+
+  /** The Bests sheet: the student's own bests only (no comparing, no streaks). */
+  private openBests(): void {
+    const rows = lastRunBests(this.profile.bests, this.profile.lastRun?.newBests ?? []);
+    this.openRunSheet(LASTRUN_WORDS.bestsTitle, [[LASTRUN_WORDS.bestsLine, '#7a5a3a', false], ...rows.map((r): [string, string, boolean] => [`${r.name}: ${r.value}${r.isNew ? `   ${LASTRUN_WORDS.bestNew}` : ''}`, r.isNew ? '#a0522d' : WOOD.ink, r.isNew])]);
+  }
+
+  /** A paper sheet over the panel (like the cubby sheet): a title, lines, and Close. */
+  private openRunSheet(title: string, lines: Array<[string, string, boolean]>): void {
+    this.closeCubby(true);
+    const { rx, top, rw, panelH } = this.panelBox;
+    const f = BOARD.frame;
+    const sheet = this.add.container(0, 0);
+    this.cubbySheet = sheet;
+    const prevUi = this.ui;
+    const dim = this.add.rectangle(rx + f, top + f, rw - 2 * f, panelH - 2 * f, 0x000000, 0.45).setOrigin(0).setInteractive();
+    dim.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.closeCubby());
+    sheet.add(dim);
+    const pad = S3;
+    const sw = rw - 2 * f;
+    const sx = rx + f;
+    const sh = Math.min(panelH - 2 * f, pad + TYPE.title + S2 + lines.length * (TYPE.body + 6) + S2 + MIN_TAP + pad);
+    const sy = top + panelH - f - sh;
+    const body = this.add.container(0, 0);
+    sheet.add(body);
+    this.ui = body;
+    const bg = this.add.graphics();
+    bg.fillStyle(WOOD.paper).fillRoundedRect(sx, sy, sw, sh, RADIUS.panel);
+    bg.lineStyle(3, 0xffd166).strokeRoundedRect(sx, sy, sw, sh, RADIUS.panel);
+    bg.setInteractive(new Phaser.Geom.Rectangle(sx, sy, sw, sh), Phaser.Geom.Rectangle.Contains);
+    body.add(bg);
+    let ty = sy + pad;
+    this.oneLine(this.text(sx + pad, ty, title, TYPE.title, WOOD.ink, true), sw - 2 * pad, TYPE.body);
+    ty += TYPE.title + S2;
+    for (const [str, color, bold] of lines) {
+      this.oneLine(this.text(sx + pad, ty, str, TYPE.body, color, bold), sw - 2 * pad, TYPE.label);
+      ty += TYPE.body + 6;
+    }
+    button(this, { x: sx + sw - pad - 96, y: sy + sh - pad - MIN_TAP, w: 96, h: MIN_TAP, label: LASTRUN_WORDS.close, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.closeCubby() }, body);
+    this.ui = prevUi;
+    this.panel?.add(sheet);
+    if (reducedMotion()) {
+      sheet.setAlpha(0);
+      this.tweens.add({ targets: sheet, alpha: 1, duration: MOTION.reducedFade.ms });
+    } else {
+      body.setY(sh);
+      dim.setAlpha(0);
+      this.tweens.add({ targets: body, y: 0, duration: MOTION.sheet.ms, ease: MOTION.sheet.ease });
+      this.tweens.add({ targets: dim, alpha: 1, duration: MOTION.sheet.ms });
+    }
   }
 
   /** Every earned and not-yet-earned ability, named after the real technique. */
@@ -1508,6 +1633,25 @@ function bagIcon(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.
 }
 
 /** A tiny treasure chest drawn in code (no art file): lid, box, band and lock. */
+/** P-MENU2-g: localStorage, or null in private mode. */
+function safeStore(): KeyStore | null {
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
+/** P-MENU2-g: a small house drawn in code (a dojo piece in the Found strip). */
+function houseIcon(scene: Phaser.Scene, x: number, y: number, size: number): Phaser.GameObjects.Graphics {
+  const g = scene.add.graphics({ x, y });
+  const h = size / 2;
+  g.fillStyle(0xc0392b).fillTriangle(-h, -h * 0.1, h, -h * 0.1, 0, -h);
+  g.fillStyle(0xffd166).fillRect(-h * 0.7, -h * 0.1, h * 1.4, h * 1.1);
+  g.fillStyle(0x3a2618).fillRect(-h * 0.2, h * 0.35, h * 0.4, h * 0.65);
+  return g;
+}
+
 function chestIcon(scene: Phaser.Scene, x: number, y: number, color: number): Phaser.GameObjects.Graphics {
   const g = scene.add.graphics({ x, y });
   g.fillStyle(0x8a5a35).fillRoundedRect(-10, -8, 20, 7, { tl: 4, tr: 4, bl: 0, br: 0 });
