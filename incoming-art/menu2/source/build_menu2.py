@@ -797,6 +797,113 @@ def button(state, w=160, h=52, seed=141):
 
 
 # ======================= build =======================
+
+# ======================= Trophy detail sheet (new) =======================
+SKY = (127, 184, 224)
+SKY_D = (70, 120, 168)
+
+
+def sheet_well(n=104, seed=151):
+    """recessed paper circle with a brass ring, for the big trophy icon."""
+    img = canvas(n, n)
+    W = S(n)
+    o = ell(W, W, [S(3), S(2), W - S(3), W - S(4)])
+    drop_shadow(img, o, dy=1.6, blur_px=2.2, alpha=0.45)
+    tex(img, brass(W, W), o)
+    bevel(img, o, 1.0, 0.8, hi_a=0.7, lo_a=0.45)
+    i = ell(W, W, [S(9), S(8), W - S(9), W - S(10)])
+    paper_face(img, i, seed)
+    lacquer(img, o, 0.2, 0.4, 0.35)
+    return img
+
+
+def sheet_chip(w=120, h=28, seed=153):
+    """small honey-wood pill for the 'where it was learned' line. 3-slice along x."""
+    img = canvas(w, h)
+    m = plate_mask(w, h, [2, 2, 3, 2], (h - 5) / 2)
+    drop_shadow(img, m, dy=1.2, blur_px=1.4, alpha=0.4)
+    wood_plate(img, m, seed, HONEY, WOOD_M, HONEY_L, gloss=0.8)
+    return img
+
+
+def kata_arrow(direction, n=28, seed=155):
+    """brass arrow on a small paper tile (kata step). Polygons, no glyphs."""
+    img = canvas(n, n)
+    W = S(n)
+    m = rr(W, W, [S(1.5), S(1), W - S(1.5), W - S(2.5)], S(6))
+    drop_shadow(img, m, dy=1.0, blur_px=1.2, alpha=0.4)
+    paper_face(img, m, seed)
+    outline(img, m, WOOD_D, 0.8)
+    c = W / 2
+    pts = [(0, -.32), (.28, .02), (.11, .02), (.11, .3), (-.11, .3), (-.11, .02), (-.28, .02)]
+    rot = {'up': 0, 'right': 90, 'down': 180, 'left': 270}[direction] * math.pi / 180
+    pp = [(c + (x * math.cos(rot) - y * math.sin(rot)) * W, c - S(.7) + (x * math.sin(rot) + y * math.cos(rot)) * W) for x, y in pts]
+    am = Image.new('L', (W, W), 0)
+    ImageDraw.Draw(am).polygon(pp, fill=255)
+    drop_shadow(img, am, dy=.6, blur_px=.5, alpha=.5)
+    tex(img, brass(W, W), am)
+    bevel(img, am, .6, .5, hi_a=.7, lo_a=.4)
+    outline(img, am, GOLD_D, .6)
+    return img
+
+
+def hint_strip(w=200, h=36, seed=157):
+    """soft sky-washi strip for the 'Ask Sensei about this one' line (not-yet items). 3-slice along x."""
+    img = canvas(w, h)
+    m = plate_mask(w, h, [2, 2, 3, 2], 9)
+    drop_shadow(img, m, dy=1.2, blur_px=1.6, alpha=0.35)
+    W, H = img.size
+    tex(img, paper(W, H, seed, (226, 240, 250), (190, 214, 234), vignette=0.3), m)
+    inner_shadow(img, m, 1.2, 1.4, 0.18)
+    outline(img, m, SKY_D, 0.8, 0.8)
+    # little brush dots at the left cap (decor only)
+    d = ImageDraw.Draw(img)
+    for k, (dx, r) in enumerate([(10, 2.2), (16, 1.6), (21, 1.1)]):
+        cy = H / 2
+        d.ellipse([S(dx) - S(r), cy - S(r), S(dx) + S(r), cy + S(r)], fill=C(SKY_D, 200))
+    return img
+
+
+def sheet_close(n=32, seed=159):
+    img = canvas(n, n)
+    W = S(n)
+    m = ell(W, W, [S(2), S(1.5), W - S(2), W - S(3)])
+    drop_shadow(img, m, dy=1.2, blur_px=1.4, alpha=0.45)
+    wood_plate(img, m, seed)
+    x = Image.new('L', (W, W), 0)
+    dd = ImageDraw.Draw(x)
+    c, r = W / 2, S(5.5)
+    dd.line([(c - r, c - r - S(.7)), (c + r, c + r - S(.7))], fill=255, width=S(3))
+    dd.line([(c - r, c + r - S(.7)), (c + r, c - r - S(.7))], fill=255, width=S(3))
+    fill(img, PAPER_L, x)
+    return img
+
+
+def sheet_scrim(n=8):
+    img = Image.new('RGBA', (S(n), S(n)), (30, 18, 10, 140))
+    return img
+
+
+def heart_amber():
+    """steady-breath icon recoloured: red heart -> warm amber. Source icon in incoming-art/icons is untouched."""
+    import colorsys
+    im = Image.open(os.path.join(ART, 'icons', 'sprites', 'icon-steady-breath.png')).convert('RGBA')
+    a = np.array(im).astype(np.float32) / 255
+    out = a.copy()
+    for y in range(a.shape[0]):
+        for x in range(a.shape[1]):
+            r, g, b, al = a[y, x]
+            h, l, sa = colorsys.rgb_to_hls(r, g, b)
+            if al > 0 and sa > 0.25 and (h < 0.06 or h > 0.9):
+                nr, ng, nb = colorsys.hls_to_rgb(0.105, min(1, l * 1.12), min(1, sa * 0.95))
+                out[y, x, :3] = (nr, ng, nb)
+            elif al > 0 and sa > 0.15 and h < 0.09 and r > b:
+                # anti-aliased fringe between heart and cream: pull to amber hue too
+                nr, ng, nb = colorsys.hls_to_rgb(0.11, l, sa)
+                out[y, x, :3] = (nr, ng, nb)
+    return Image.fromarray((out * 255).astype(np.uint8), 'RGBA')
+
+
 def build():
     panel_frame()
 
@@ -891,6 +998,20 @@ def build():
         im.resize((64, 64), Image.LANCZOS).save(os.path.join(d, f'icon-{s}-64.png'))
         im.save(os.path.join(d, f'icon-{s}-64@2x.png'))
         MAN["sprites"][f'icon-{s}-64'] = {"size": [64, 64], "file": f"icons64/icon-{s}-64.png", "note": "A5 seal icon at 64 (from incoming-art/icons)."}
+
+    hb = heart_amber()
+    hb.resize((64, 64), Image.LANCZOS).save(os.path.join(d, 'icon-steady-breath-64.png'))
+    hb.save(os.path.join(d, 'icon-steady-breath-64@2x.png'))
+    MAN["sprites"]['icon-steady-breath-64'] = {"size": [64, 64], "file": "icons64/icon-steady-breath-64.png", "note": "A5 seal icon at 64. Recoloured for menu2: the heart is warm amber (was red). Breath wisps stay sky-blue. The source in incoming-art/icons is unchanged."}
+
+    # Trophy detail sheet
+    save('sheet', 'sheet-icon-well', sheet_well(), 104, 104, note="NEW (detail sheet): recessed paper circle with brass ring, holds the big trophy icon (icon ~72 centred, 2 px above centre).")
+    save('sheet', 'sheet-chip', sheet_chip(), 120, 28, nineSlice=[0, 13, 0, 13], note="NEW (detail sheet): honey pill for 'where it was learned'. 3-slice along x. Text by the game in #462a16.")
+    for dr in ('up', 'right', 'down', 'left'):
+        save('sheet', f'kata-arrow-{dr}', kata_arrow(dr), 28, 28, note="NEW (detail sheet): kata step arrow, brass on paper tile. Shown only when the trophy has kata.")
+    save('sheet', 'sheet-hint-strip', hint_strip(), 200, 36, nineSlice=[0, 26, 0, 14], note="NEW (detail sheet): sky-washi strip for the 'Ask Sensei about this one' line on not-yet items. 3-slice; left cap 26 holds brush dots. Text by the game in #2f5476.")
+    save('sheet', 'sheet-close', sheet_close(), 32, 32, note="NEW (detail sheet): round wood close button with a cream X (shape, not text).")
+    save('sheet', 'sheet-scrim', sheet_scrim(), 8, 8, nineSlice=[0, 0, 0, 0], note="NEW (detail sheet): warm dim layer behind the sheet; stretch to screen.")
 
     with open(os.path.join(OUT, 'menu2.json'), 'w') as fh:
         json.dump(MAN, fh, indent=1)

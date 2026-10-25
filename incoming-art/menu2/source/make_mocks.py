@@ -193,14 +193,14 @@ def belt_ribbon(M, x, y, w, n_earned, small):
 def cubby_at(M, x, y, n, state, ic, name, small, lamp=False):
     sfx = '' if n == 112 else '-96'
     M.put(f'cubby-{state}{sfx}', x, y)
-    im = icon(ICON(ic), 56 if n == 112 else 46)
+    im = icon(ICON(ic), 56 if n == 112 else 40)
     if state == 'notyet':
         if lamp:
             M.put(f'cubby-next-glow{sfx}', x, y)
         im = ghost(im)
-    isz = 56 if n == 112 else 46
-    M.put(im, x + (n - isz) / 2, y + n * 0.36 - isz / 2)
-    M.text(x + n / 2, y + n * 0.79, name, 11 if n == 112 else 10, INK if state == 'earned' else INK_SOFT, 'mm', 'ExtraBold')
+    isz = 56 if n == 112 else 40
+    M.put(im, x + (n - isz) / 2, y + n * (0.36 if n == 112 else 0.37) - isz / 2)
+    M.text(x + n / 2, y + n * (0.79 if n == 112 else 0.70), name, 11 if n == 112 else 10, INK if state == 'earned' else INK_SOFT, 'mm', 'ExtraBold')
     if state == 'earned':
         M.put('cubby-seal', x + n - 30, y + 4)
     if lamp:
@@ -413,11 +413,65 @@ def lastrun(small):
     M.put('cubby-earned' if not small else 'cubby-earned-96', ax, y + 10, alpha=1) if False else None
     cubby_at(M, ax, y + 12, 96, 'earned', 'throw', 'Throw', small)
     M.put('unlock-sweep-5', ax + 48 - 64, y + 12 + 35 - 64)
+    # label redrawn above the sweep sparkles so it stays readable
+    lx, ly = ax + 48, y + 12 + 96 * 0.70
+    M.text(lx, ly, 'Throw', 10, INK, 'mm', 'ExtraBold')
     M.put('cubby-earned-shine-3', ax, y + 12, alpha=1) if False else None
     bw = 160
     M.put('button-primary-normal', x1 - bw, H - 4 - 22 - 52, bw, 52)
     M.text(x1 - bw / 2, H - 4 - 22 - 28, 'Again!', 15, INK, 'mm', 'ExtraBold')
     M.save(f'mock-lastrun-{"small-667x375" if small else "large-932x430"}')
+
+
+def detail(small):
+    """Trophy detail sheet, earned + not-yet examples side by side over the dimmed Trophies screen."""
+    W, H = (667, 375) if small else (932, 430)
+    M = Mock(W, H)
+    name = f'mock-trophies-{"small-667x375" if small else "large-932x430"}@2x.png'
+    M.img = Image.open(os.path.join(PV, name)).convert('RGBA')
+    M.put('sheet-scrim', 0, 0, W, H)
+    sw = 290 if not small else 236
+    sh = 300 if not small else 264
+    gap = 24 if not small else 16
+    sx0 = (W - 2 * sw - gap) / 2
+    sy = (H - sh) / 2
+    ex = [('earned', 'sweep', 'Sweep', 'Learned on floor 3', ['right', 'down', 'right']),
+          ('notyet', 'disarm', 'Disarm', 'Not yet', None)]
+    for k, (st, ic, nm, where, kata) in enumerate(ex):
+        x = sx0 + k * (sw + gap)
+        M.put('panel-frame', x, sy, sw, sh)
+        M.put('sheet-close', x + sw - 32 - 14, sy + 14)
+        wn = 104 if not small else 84
+        wx, wy = x + (sw - wn) / 2, sy + (22 if not small else 18)
+        M.put('sheet-icon-well', wx, wy, wn, wn)
+        isz = int(wn * 0.66)
+        im = icon(ICON(ic), isz)
+        if st == 'notyet':
+            im = ghost(im)
+        M.put(im, wx + (wn - isz) / 2, wy + (wn - isz) / 2 - 2)
+        if st == 'earned':
+            M.put('cubby-seal', wx + wn - 26, wy + 2)
+            M.put('unlock-sweep-5', wx + wn / 2 - 64, wy + wn / 2 - 64, alpha=.85)
+        y = wy + wn + (20 if not small else 16)
+        M.text(x + sw / 2, y, nm, 18 if not small else 15, INK if st == 'earned' else INK_SOFT, 'mm', 'ExtraBold')
+        y += 26 if not small else 21
+        cw = 170 if not small else 140
+        M.put('sheet-chip', x + (sw - cw) / 2, y - 14, cw, 28)
+        M.text(x + sw / 2, y - 1, where, 11 if not small else 10, INK, 'mm', 'Bold')
+        y += 30 if not small else 24
+        if kata:
+            M.text(x + sw / 2, y, 'Kata', 11 if not small else 10, INK_SOFT, 'mm', 'ExtraBold')
+            y += 10
+            n = len(kata)
+            az = 28 if not small else 24
+            ax = x + (sw - (n * az + (n - 1) * 6)) / 2
+            for i, dr in enumerate(kata):
+                M.put(f'kata-arrow-{dr}', ax + i * (az + 6), y, az, az)
+        else:
+            hw = sw - 48
+            M.put('sheet-hint-strip', x + 24, y - 4, hw, 36)
+            M.text(x + 24 + 30, y + 13, 'Ask Sensei about this one', 11 if not small else 10, (47, 84, 118), 'lm', 'ExtraBold')
+    M.save(f'mock-detail-{"small-667x375" if small else "large-932x430"}')
 
 
 def board(name, items, scale=3, bg=(92, 66, 48), label=None, pad=14):
@@ -544,6 +598,6 @@ def closeups():
 
 if __name__ == '__main__':
     for sm in (False, True):
-        trophy(sm); style(sm); gear(sm); lastrun(sm)
+        trophy(sm); style(sm); gear(sm); lastrun(sm); detail(sm)
     closeups()
     print('ok')

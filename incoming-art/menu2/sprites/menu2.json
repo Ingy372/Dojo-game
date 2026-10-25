@@ -1213,6 +1213,104 @@
    ],
    "file": "icons64/icon-follow-through-64.png",
    "note": "A5 seal icon at 64 (from incoming-art/icons)."
+  },
+  "icon-steady-breath-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icons64/icon-steady-breath-64.png",
+   "note": "A5 seal icon at 64. Recoloured for menu2: the heart is warm amber (was red). Breath wisps stay sky-blue. The source in incoming-art/icons is unchanged."
+  },
+  "sheet-icon-well": {
+   "size": [
+    104,
+    104
+   ],
+   "file": "sheet/sheet-icon-well.png",
+   "note": "NEW (detail sheet): recessed paper circle with brass ring, holds the big trophy icon (icon ~72 centred, 2 px above centre)."
+  },
+  "sheet-chip": {
+   "size": [
+    120,
+    28
+   ],
+   "file": "sheet/sheet-chip.png",
+   "nineSlice": [
+    0,
+    13,
+    0,
+    13
+   ],
+   "note": "NEW (detail sheet): honey pill for 'where it was learned'. 3-slice along x. Text by the game in #462a16."
+  },
+  "kata-arrow-up": {
+   "size": [
+    28,
+    28
+   ],
+   "file": "sheet/kata-arrow-up.png",
+   "note": "NEW (detail sheet): kata step arrow, brass on paper tile. Shown only when the trophy has kata."
+  },
+  "kata-arrow-right": {
+   "size": [
+    28,
+    28
+   ],
+   "file": "sheet/kata-arrow-right.png",
+   "note": "NEW (detail sheet): kata step arrow, brass on paper tile. Shown only when the trophy has kata."
+  },
+  "kata-arrow-down": {
+   "size": [
+    28,
+    28
+   ],
+   "file": "sheet/kata-arrow-down.png",
+   "note": "NEW (detail sheet): kata step arrow, brass on paper tile. Shown only when the trophy has kata."
+  },
+  "kata-arrow-left": {
+   "size": [
+    28,
+    28
+   ],
+   "file": "sheet/kata-arrow-left.png",
+   "note": "NEW (detail sheet): kata step arrow, brass on paper tile. Shown only when the trophy has kata."
+  },
+  "sheet-hint-strip": {
+   "size": [
+    200,
+    36
+   ],
+   "file": "sheet/sheet-hint-strip.png",
+   "nineSlice": [
+    0,
+    26,
+    0,
+    14
+   ],
+   "note": "NEW (detail sheet): sky-washi strip for the 'Ask Sensei about this one' line on not-yet items. 3-slice; left cap 26 holds brush dots. Text by the game in #2f5476."
+  },
+  "sheet-close": {
+   "size": [
+    32,
+    32
+   ],
+   "file": "sheet/sheet-close.png",
+   "note": "NEW (detail sheet): round wood close button with a cream X (shape, not text)."
+  },
+  "sheet-scrim": {
+   "size": [
+    8,
+    8
+   ],
+   "file": "sheet/sheet-scrim.png",
+   "nineSlice": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "note": "NEW (detail sheet): warm dim layer behind the sheet; stretch to screen."
   }
  }
 }

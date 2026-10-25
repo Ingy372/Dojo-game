@@ -13,10 +13,13 @@ python3 incoming-art/menu2/source/make_mocks.py    # preview/ mocks + close-ups
 - **9-slice margins** use CSS order `[top, right, bottom, left]` in 1x px. `[0,c,0,c]` means a 3-slice along x. At @2x, double them.
 - **Shadow margin:** sprites with `shadowMargin` have a soft drop shadow baked into that many px of transparent edge. Lay them out by the inner box.
 - **States:** `normal`, `selected`, `pressed` and `disabled`/`notyet` are separate files of the same size, so you can swap them without moving anything. Pressed is the same art moved down 1 px and darkened about 8%.
-- **Overlays** (`cubby-next-glow`, `*-shine-N`, `unlock-sweep-N`, `xp-bar-gloss`) are additive or alpha layers drawn on top of the base and centred on it. Shine is optional: 6 frames at 16 fps, played once.
+- **Overlays** (`cubby-next-glow`, `*-shine-N`, `unlock-sweep-N`, `xp-bar-gloss`) are additive or alpha layers drawn on top of the base and centred on it. Shine: 6 frames at 16 fps, played once (decided: used; the code skips it under Reduced motion).
 - **Belt knot layers**, drawn bottom to top: `belt-knot-shadow`, then `belt-knot-band` (multiply by beltStyles colour), then `belt-knot-center` (only for Red/Black and Brown/Black), then `belt-knot-sheen` (Black only; other belts use white at 25%), then `belt-knot-rim`. The art layers are neutral grey, so the game tints them. The previews leave out Red and Red/Black so they stay red-free; the game tints those.
 - **XP fill** is neutral. Multiply-tint it in the game (the mock uses #f2c14e).
 - No baked text, nothing above heads, and no red outside danger or warning. All names and numbers in the mocks are placeholders.
+
+## Trophy detail sheet
+Draw order: `sheet-scrim` (stretched to the screen), then `panel-frame` (9-slice), `sheet-close` (top-right), `sheet-icon-well` with the icon (ghosted if not yet; seal + optional `unlock-sweep` if earned), the name, `sheet-chip` (where it was learned), then either the `kata-arrow-*` row (only if the trophy has kata) or `sheet-hint-strip` ('Ask Sensei about this one', not-yet items only). All text is drawn by the game.
 
 ## Sprites
 | sprite | size (1x) | 9-slice [t,r,b,l] | notes |
@@ -124,3 +127,13 @@ python3 incoming-art/menu2/source/make_mocks.py    # preview/ mocks + close-ups
 | `icon-disarm-64` | 64×64 | — | A5 seal icon at 64 (from incoming-art/icons). |
 | `icon-throw-64` | 64×64 | — | A5 seal icon at 64 (from incoming-art/icons). |
 | `icon-follow-through-64` | 64×64 | — | A5 seal icon at 64 (from incoming-art/icons). |
+| `icon-steady-breath-64` | 64×64 | — | A5 seal icon at 64. Recoloured for menu2: the heart is warm amber (was red). Breath wisps stay sky-blue. The source in incoming-art/icons is unchanged. |
+| `sheet-icon-well` | 104×104 | — | NEW (detail sheet): recessed paper circle with brass ring, holds the big trophy icon (icon ~72 centred, 2 px above centre). |
+| `sheet-chip` | 120×28 | [0, 13, 0, 13] | NEW (detail sheet): honey pill for 'where it was learned'. 3-slice along x. Text by the game in #462a16. |
+| `kata-arrow-up` | 28×28 | — | NEW (detail sheet): kata step arrow, brass on paper tile. Shown only when the trophy has kata. |
+| `kata-arrow-right` | 28×28 | — | NEW (detail sheet): kata step arrow, brass on paper tile. Shown only when the trophy has kata. |
+| `kata-arrow-down` | 28×28 | — | NEW (detail sheet): kata step arrow, brass on paper tile. Shown only when the trophy has kata. |
+| `kata-arrow-left` | 28×28 | — | NEW (detail sheet): kata step arrow, brass on paper tile. Shown only when the trophy has kata. |
+| `sheet-hint-strip` | 200×36 | [0, 26, 0, 14] | NEW (detail sheet): sky-washi strip for the 'Ask Sensei about this one' line on not-yet items. 3-slice; left cap 26 holds brush dots. Text by the game in #2f5476. |
+| `sheet-close` | 32×32 | — | NEW (detail sheet): round wood close button with a cream X (shape, not text). |
+| `sheet-scrim` | 8×8 | [0, 0, 0, 0] | NEW (detail sheet): warm dim layer behind the sheet; stretch to screen. |

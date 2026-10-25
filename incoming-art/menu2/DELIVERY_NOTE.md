@@ -6,14 +6,21 @@
 
 **Set:** panel-frame / panel-inset / shelf-plank (A1); cubbies earned/notyet/pressed at 112 + 96, next-glow, seal, lantern ×2, shine ×6 (A2); belt knot layers + cord (A3); slot cards normal/selected/pressed + shine (A4–A6); tray tiles normal/selected/equipped/pressed + badge (A7); switch track + left/right on/off/pressed + trophy/swords glyphs (A8); stat icons ×4 + XP bar frame/fill/gloss (A9); found tiles ×4 (A10); gear rings ×4 + glow/pressed, bag tiles ×4 + selected/pressed, doll backing (A11); unlock sweep ×8 (A12); 9 seal icons at 64 (A13).
 
-## DECIDE
-1. **Legendary rarity:** it isn't in the 4-rarity table, so there's no frame yet. Should I add one?
-2. **Missing icons:** Forms, Strikes and Virtues have no icons yet. The mocks reuse existing seals as placeholders.
-3. **steady-breath icon:** its heart is red, so it's left out of icons64. Should I recolour it, or keep it?
-4. **Red and Red/Black belts:** these are tinted only in the game (the previews skip them to stay red-free). OK?
-5. **Extras not in A1–A13:** title-plaque, button-primary (Wear) normal/pressed/disabled, stat-tile, panel-inset. Keep or drop them?
-6. **Placeholders:** all names, numbers and text in the mocks are placeholders. Nothing is baked into the sprites.
-7. **Small phone gear screen:** at 667×375 the bag shows 1 row and scrolls. Is that OK, or should the tiles be smaller?
-8. **Shine frames:** the optional shine frames (cubby/slot, 6 frames at 16 fps) are cheap. Use them, or leave them off?
-9. **Trophy detail sheet:** what goes in it? The mock shows icon, name, a hint line and a sparkle, with no action button.
-10. **Not done here:** a1, tf and a7 were left alone as asked.
+**Fixes after Manager review:**
+- **Steady-breath:** the heart is now warm amber, and the icon is added to icons64. The source icon in incoming-art/icons is unchanged.
+- **Last run:** the 'Throw' label on the New-for-you cubby is no longer clipped in either size. The 96 cubby label now sits higher, with a smaller icon.
+- **Trophy detail sheet:** new mock `preview/mock-detail-{large,small}` showing an earned and a not-yet example, plus new sprites in `sprites/sheet/`: icon well, chip, kata arrows ×4, hint strip, close button, scrim.
+
+## Decided
+- **Rarity:** no Legendary frame; 4 rarities only.
+- **Forms, Strikes and Virtues icons:** a separate follow-up.
+- **Extras:** keep them all (title plaque, Wear button, stat tile, panel-inset).
+- **Small phone gear:** one scrolling bag row is OK.
+- **Shine frames:** used. The code turns them off with Reduced motion.
+- **Trophy detail sheet contents:** icon, name, where it was learned, kata arrows when the trophy has them, and 'Ask Sensei about this one' for not-yet items. Text is a placeholder, drawn by the game.
+- **Steady-breath heart:** recoloured to amber (done).
+
+## Still open
+- **Red and Red/Black belts** are tinted only in the game; the previews skip them to stay red-free. OK?
+- **Placeholder text:** all names, numbers and text in the mocks are placeholders.
+- **Leftovers:** a1, tf and a7 were left alone as asked.
