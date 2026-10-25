@@ -92,3 +92,27 @@ export function pageDots(pages: number, room: number): { x0: number; step: numbe
   if (total > room) return null;
   return { x0: (room - total) / 2 + GEAR.dot / 2, step };
 }
+
+/**
+ * B-LASTRUN: the Last run panel stacks each block below the measured bottom of the one before.
+ * Returns how many item rows fit between itemsTop and the Personal bests block (which sits on
+ * the panel's bottom edge), keeping a row free for "+N more" when not every item fits.
+ */
+export function lastRunItemsFit(itemsTop: number, bestsTop: number, lineH: number, count: number): number {
+  const room = bestsTop - S2 - itemsTop;
+  if (room < 0) return 0;
+  const all = Math.floor(room / lineH);
+  if (all >= count) return count;
+  return Math.max(0, Math.floor((room - lineH) / lineH));
+}
+
+/** B-LASTRUN: tops for blocks of the given heights, each S1 below the previous bottom. */
+export function stackTops(top: number, heights: readonly number[], gap: number = S1): number[] {
+  const tops: number[] = [];
+  let y = top;
+  for (const h of heights) {
+    tops.push(y);
+    y += h + gap;
+  }
+  return tops;
+}
