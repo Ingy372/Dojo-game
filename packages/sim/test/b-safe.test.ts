@@ -52,7 +52,7 @@ describe('B-SAFE', () => {
   it('outside links open only through the gate helper', () => {
     for (const [name, text] of Object.entries(src)) {
       if (name.endsWith('ui/grownUpGate.ts')) continue;
-      expect(text, name).not.toMatch(/window\.open\(|location\.(href|assign|replace)\s*[=(]|Browser\.open/);
+      expect(text, name).not.toMatch(/window\.open\(|location\.(href|assign|replace)\s*[=(]|\blocation\s*=[^=]|\.href\s*=[^=]|Browser\.open/);
     }
     expect(file('ui/grownUpGate.ts')).toMatch(/openOutsideLink[\s\S]*showGrownUpGate\(scene, \(\) => \{\s*window\.open/);
   });
