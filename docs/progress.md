@@ -640,6 +640,12 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## node-22
 - The repo now asks for Node 22+ (`engines`, `.nvmrc`), the same as Capacitor 8. No CI workflows exist yet. Typecheck, Vitest and the web build pass on Node 22.23.4.
 
+## B-BELT grown-up belt entry
+- A grown-up can set the real belt and stripes: For grown-ups, answer the sum, then Belt & stripes. "Yellow, 2 stripes" shows Yellow with 2 stripes and unlocks the White items, and the next visit plays the promotion ceremony. It stays after a restart and can only go up.
+- Vitest covers entry, saving and loading, and never lowering (8 tests). Screenshots at 667x375 and 844x390, Reduced motion off and on: no text overlaps on either screen. The entry lasts through a reload, and a lower pick is ignored.
+
+## R-BAL-14b
+- Charm amounts wired: Kind Stone multiplies low-health Focus by 1 + amount (Rally stays x2), Great Lamp and Feather tested, and check-c7 passes again.
 ## fix-celebrate-rm
 - With Reduced motion on, the Celebrations rays stay still and no confetti shows. The Congratulations card says "practiced" for techniques counted from an earlier rank (legacy) and keeps "signed off" for real sign-offs.
 
