@@ -16,6 +16,8 @@ export interface Cubby {
   shelf: ShelfId;
   /** The real technique name (or the Virtue and its stripe word). */
   name: string;
+  /** Shorter label for the cubby itself, when the full name is long (the sheet shows the full name). */
+  short?: string;
   earned: boolean;
   /** Icon id, if the icon set has one. */
   icon?: string;
@@ -27,10 +29,16 @@ export interface Cubby {
   kata?: string;
 }
 
-export interface ShelfRow {
+/** One shelf's run of cubbies inside a row. */
+export interface ShelfSegment {
   shelf: ShelfId;
   title: string;
   cubbies: Cubby[];
+}
+
+/** A row of up to perRow cubbies; short shelves share a row, each with its own label. */
+export interface ShelfRow {
+  segments: ShelfSegment[];
 }
 
 const fill = (s: string, k: string, v: string): string => s.replace(`{${k}}`, v);
@@ -65,6 +73,7 @@ export function buildCubbies(t: TrophyInput): Cubby[] {
       id: `virtue-${v.def.id}-${v.rank}`,
       shelf: 'stripes',
       name: `${t.virtueName(v)} · ${fill(words.stripe, 'word', v.word)}`,
+      short: t.virtueName(v),
       earned: true,
       effect: t.virtueEffect(v),
       status: fill(words.signedAt, 'belt', t.beltName(v.earned[0]?.belt ?? '')),
@@ -76,13 +85,30 @@ export function buildCubbies(t: TrophyInput): Cubby[] {
   });
 }
 
-/** Shelf rows of at most perRow cubbies (a long shelf wraps to more rows with the same title). */
+/**
+ * Pack cubbies into rows of perRow slots in shelf order. A short shelf shares its row with the
+ * next shelf; a long one wraps to the next row (same title), so no slot is wasted.
+ */
 export function shelfRows(cubbies: readonly Cubby[], perRow: number): ShelfRow[] {
   const rows: ShelfRow[] = [];
+  let row: ShelfRow = { segments: [] };
+  let used = 0;
   for (const s of SHELF_ORDER) {
     const on = cubbies.filter((c) => c.shelf === s);
-    for (let i = 0; i < on.length; i += perRow) rows.push({ shelf: s, title: words.shelves[s], cubbies: on.slice(i, i + perRow) });
+    let i = 0;
+    while (i < on.length) {
+      if (used === perRow) {
+        rows.push(row);
+        row = { segments: [] };
+        used = 0;
+      }
+      const take = on.slice(i, i + perRow - used);
+      row.segments.push({ shelf: s, title: words.shelves[s], cubbies: take });
+      used += take.length;
+      i += take.length;
+    }
   }
+  if (row.segments.length) rows.push(row);
   return rows;
 }
 

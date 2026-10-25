@@ -1,6 +1,6 @@
 {
   "parts": { "trophy": "🏆 Trophy Case", "style": "⚔ Fighting Style" },
-  "shelves": { "katas": "Katas", "kicks": "Kicks", "selfDefense": "Self-defense", "stripes": "Character stripes" },
+  "shelves": { "katas": "Katas", "kicks": "Kicks", "selfDefense": "Self-defense", "stripes": "Stripes" },
   "notYet": "Learn this at the dojo",
   "askSensei": "Ask Sensei about this one",
   "signedAt": "Signed at {belt}",

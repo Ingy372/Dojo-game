@@ -606,13 +606,19 @@ export class HomeScene extends Phaser.Scene {
     this.trophyPages = pages.length;
     this.page = Math.min(this.page, pages.length - 1);
     const top = y + L.ribbonH + (L.sideArrows ? S1 : S2);
-    const sx = x + L.shelfX;
+    // Centre the grid (full rows) so the shelves sit square in the frame.
+    const sx = x + L.shelfX + Math.max(0, Math.floor((L.shelfW - (L.perRow * (L.cubby + BOARD.cubby.gap) - BOARD.cubby.gap)) / 2));
     let ry = top;
     if (cubbies.length === 0) this.text(x + w / 2, ry + S3, TROPHY_WORDS.empty, TYPE.body, '#f2e3c4', false, FONT, w).setOrigin(0.5, 0).setAlign('center');
     for (const row of pages[this.page]) {
-      this.text(sx, ry, row.title, TYPE.label, '#e8c48a', true);
       const cy = ry + TYPE.label + 4;
-      row.cubbies.forEach((c, i) => this.cubby(sx + i * (L.cubby + BOARD.cubby.gap), cy, L.cubby, c));
+      const step = L.cubby + BOARD.cubby.gap;
+      let slot = 0;
+      for (const seg of row.segments) {
+        this.oneLine(this.text(sx + slot * step, ry, seg.title, TYPE.label, '#e8c48a', true), seg.cubbies.length * step - BOARD.cubby.gap, 10);
+        seg.cubbies.forEach((c, i) => this.cubby(sx + (slot + i) * step, cy, L.cubby, c));
+        slot += seg.cubbies.length;
+      }
       ry += L.rowH;
     }
     if (pages.length <= 1) return;
@@ -624,7 +630,7 @@ export class HomeScene extends Phaser.Scene {
     const midY = top + (L.rowsPerPage * L.rowH) / 2 - MIN_TAP / 2;
     this.button(x, midY, MIN_TAP, MIN_TAP, '◀', WOOD.switchOff, 15, () => this.turn(-1));
     this.button(x + w - MIN_TAP, midY, MIN_TAP, MIN_TAP, '▶', WOOD.switchOff, 15, () => this.turn(1));
-    this.pageDotsRow(sx, y + h - L.pagerH / 2, L.shelfW, pages.length);
+    this.pageDotsRow(x + L.shelfX, y + h - L.pagerH / 2, L.shelfW, pages.length);
   }
 
   /** P-MENU2-b: the Trophy Case cubbies for this student. */
@@ -681,7 +687,7 @@ export class HomeScene extends Phaser.Scene {
     else v.add(this.add.circle(0, iy, iconS / 2, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.3));
     const tw = size - 10;
     const ty = iy + iconS / 2 + 4;
-    const label = c.earned ? c.name : TROPHY_WORDS.notYet;
+    const label = c.earned ? (c.short ?? c.name) : TROPHY_WORDS.notYet;
     const txt = this.add
       .text(0, ty, label, { fontFamily: FONT, fontSize: `${c.earned ? (size >= 112 ? TYPE.body : TYPE.label) : TYPE.label}px`, color: c.earned ? '#fff6e6' : WOOD.ink, fontStyle: c.earned ? 'bold' : 'normal', align: 'center', wordWrap: { width: tw } })
       .setResolution(crisp())
@@ -756,7 +762,7 @@ export class HomeScene extends Phaser.Scene {
     if (c.kata) {
       this.text(sx + pad, ty, TROPHY_WORDS.kataSteps, TYPE.label, '#7a5a3a', true);
       ty += TYPE.label + 4;
-      this.kataSteps(sx + pad, ty, c.kata, sw - 2 * pad, KATA_INK.onPaper);
+      this.kataSteps(sx + pad, ty, c.kata, sw - 2 * pad, { num: WOOD.ink, arrow: KATA_INK.onPaper.arrow });
     }
     button(this, { x: sx + sw - pad - 96, y: sy + sh - pad - 44 + 8, w: 96, h: 44, label: TROPHY_WORDS.close, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.closeCubby() }, body);
     this.ui = prevUi;

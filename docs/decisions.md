@@ -1020,3 +1020,8 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **2 shelf rows per page.** When 2 rows fit, a Trophy Case page shows 2 shelf rows: a slimmer 28-tall ribbon, 44-tall ◀ ▶ at the sides of the shelves, and dots in a slim strip below. On these pages cubbies may shrink below 96, but never under `BOARD.cubbyMin` (72). When 2 rows don't fit, the page falls back to 1 row with the 40-tall ribbon and the 44-tall ◀ dots ▶ pager. Result: 1 row at 667x375 (5 dots), 2 rows at 844x390 and 932x430 (3 dots).
 - **Darker kata arrows.** On the cream sheet the arrows now use the token `KATA_INK.onPaper` in tokens.ts. Arrows are #1d4690 (7.1:1 on paper #f2e3c4) and the step numbers are #3a2618. Before this, the arrows were #9fd3ff (1.25:1) and the numbers were white. The dark board keeps `KATA_INK.onDark`. A test checks that both colours reach at least 4.5:1.
 - Merged main (#267, which untracks apps/client/node_modules) into P-MENU2-a and P-MENU2-b with normal merges.
+
+## P-MENU2-b: Tester fixes and polish (2026-10-25)
+- **Packed shelves.** A short shelf now shares its row with the next one. Each shelf keeps its own label, and every row but the last is full. With 8 cubbies the case takes 1 page at 844x390 and 932x430 (2 rows × 4) and 3 pages at 667x375 (1 row × 3). The test asserts ≤ 2 pages at 844 and 932.
+- **Kata steps on the cream sheet.** Step numbers are `WOOD.ink` (#3a2618, 12.0:1). Arrows are `KATA_INK.onPaper.arrow` (#1d4690, 7.1:1).
+- **Polish.** The grid is centred in the frame. Earned stripe cubbies show the short Virtue name; the sheet keeps the full name. The shelf label "Character stripes" is now "Stripes" so it fits over a single cubby without "…".

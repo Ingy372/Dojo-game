@@ -64,7 +64,17 @@ describe('P-MENU2-b Trophy Case (White + 2 stripes)', () => {
       expect(L.shelfX + L.perRow * L.cubby + (L.perRow - 1) * BOARD.cubby.gap).toBeLessThanOrEqual(w - (L.sideArrows ? MIN_TAP : 0));
       expect(L.ribbonH + L.rowsPerPage * L.rowH + L.pagerH).toBeLessThanOrEqual(h);
       const pages = trophyPages(shelfRows(cubbies, L.perRow), L.rowsPerPage);
-      expect(pages.flat().flatMap((r) => r.cubbies)).toHaveLength(cubbies.length);
+      expect(pages.flat().flatMap((r) => r.segments.flatMap((g) => g.cubbies))).toHaveLength(cubbies.length);
+    }
+    // Packed: 8 cubbies fit on 2 pages or fewer at 844 and 932, every row full but the last.
+    expect(cubbies.length).toBeGreaterThanOrEqual(8);
+    for (const [w, h] of [[470, 239], [550, 284]]) {
+      const L = trophyLayout(w, h);
+      const rows = shelfRows(cubbies.slice(0, 8), L.perRow);
+      expect(trophyPages(rows, L.rowsPerPage).length).toBeLessThanOrEqual(2);
+      const sizes = rows.map((r) => r.segments.reduce((n, g) => n + g.cubbies.length, 0));
+      for (const n of sizes.slice(0, -1)) expect(n).toBe(L.perRow);
+      expect(trophyPages(shelfRows(cubbies, L.perRow), L.rowsPerPage).length).toBeLessThanOrEqual(2);
     }
     const one = trophyPages(shelfRows(cubbies, 4), 1).length;
     const two = trophyPages(shelfRows(cubbies, 4), 2).length;
