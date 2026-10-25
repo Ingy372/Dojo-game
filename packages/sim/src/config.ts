@@ -237,6 +237,53 @@ export const TRAINING_POINTS = {
 } as const;
 
 /**
+ * R-BAL-12 (#193/#195, drafts/planning/R-BAL-12-training-powers-combat.md): real training adds
+ * whole-number combat stats, for good. Index = belt tier - 1 (white … black); belts past the
+ * list use the last row. A piece keeps the value of the belt it was earned at.
+ */
+export const TRAINING_STATS: ReadonlyArray<{
+  signOff: { power: number; maxHealth: number };
+  trainingPoint: { maxHealth: number };
+  stripe: { guard: number };
+}> = [
+  { signOff: { power: 1, maxHealth: 4 }, trainingPoint: { maxHealth: 1 }, stripe: { guard: 7 } }, // white
+  { signOff: { power: 1, maxHealth: 5 }, trainingPoint: { maxHealth: 1 }, stripe: { guard: 5 } }, // yellow
+  { signOff: { power: 1, maxHealth: 5 }, trainingPoint: { maxHealth: 1 }, stripe: { guard: 3 } }, // orange
+  { signOff: { power: 2, maxHealth: 6 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 3 } }, // green
+  { signOff: { power: 2, maxHealth: 6 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 2 } }, // blue
+  { signOff: { power: 2, maxHealth: 6 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 2 } }, // red
+  { signOff: { power: 2, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 2 } }, // red-black
+  { signOff: { power: 3, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 1 } }, // brown
+  { signOff: { power: 3, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 1 } }, // brown-black
+  { signOff: { power: 3, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 1 } }, // black
+];
+
+/** Training Points that count toward stats per belt tier (power.ts uses the same 28). */
+export const TRAINING_POINTS_PER_BELT = 28;
+
+/**
+ * R-BAL-12 (Decision B): enemy files hold BASE numbers; a run at belt tier n multiplies
+ * Health and Power by row n-1, then rounds. Guard and timings never scale. Internal only.
+ */
+export const ENEMY_TRAINING_SCALE: ReadonlyArray<{ maxHealth: number; power: number }> = [
+  { maxHealth: 1.27, power: 1.19 },
+  { maxHealth: 1.57, power: 1.51 },
+  { maxHealth: 1.71, power: 1.74 },
+  { maxHealth: 1.9, power: 1.92 },
+  { maxHealth: 2.11, power: 2.07 },
+  { maxHealth: 2.24, power: 2.18 },
+  { maxHealth: 2.33, power: 2.28 },
+  { maxHealth: 2.45, power: 2.36 },
+  { maxHealth: 2.59, power: 2.43 },
+  { maxHealth: 2.68, power: 2.47 },
+];
+
+/** The row for a belt tier (1 = white); tiers past the list use the last row. */
+export function byTier<T>(rows: readonly T[], tier: number): T {
+  return rows[Math.max(0, Math.min(rows.length, Math.floor(tier)) - 1)];
+}
+
+/**
  * Power Rating (core-design section 12). Never shown to players: staff and the system only.
  * Each belt tier adds 1,000 to the max; each black belt degree adds 500.
  * Each source's share of the tier max is its own ceiling.
