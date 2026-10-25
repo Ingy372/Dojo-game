@@ -984,6 +984,10 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - The Gate tab's READY chip now pops once (MOTION.pop) instead of blinking forever, and the sundial and Sensei's Seal sit on two equal rounded cards. The rest of work-board section 3c (lock sizes, label sizes, first-lit Seal bell) is not in this PR.
 - #257 (P-MENU-d) was still open, so bot-code/P-MENU-d is merged into this branch (a normal merge); #257 must merge first.
 
+## B-GEAR-BUG (2026-10-25)
+- Manager call (Oct 25): urgent bug from Jay's iPhone (Safari, landscape): gear can't be taken off or changed. Goes before P-MENU-f; keep it small, since a full Abilities and Gear redesign is planned.
+- Root cause: worn gear is left out of the bag grid, and the worn-slot cards were plain drawings with no tap. A worn item could never be picked, so there was no sheet and no way to take it off (`unequip()` existed in sim but the client never called it). Touch input, depth and the sheet's close/block zones were checked and are fine: Wear and Let go fire on a real touch tap at 844x390 and 932x430.
+- Fix: each filled worn card is a shared button() that opens the detail sheet for that item; for a worn item the sheet's first button is "Take off" (unequip, item goes back into the bag). The sheet also shows when the bag is empty (everything worn).
 ## P-MENU-f (2026-10-25)
 - Manager call (Oct 25): the rest of work-board 3c becomes P-MENU-f (lock and label sizes, 96-tall Seal cards, the Seal's first-lit pop and bell). Plan approved, with one condition: the new "seal seen" save field must load old saves cleanly, defaulting to already-seen for Seals that are already lit (no flood of bells for returning players), with a test.
 - Built that way: `Profile.sealsSeen` (belt ids). Old saves load it as null; the first Gate view fills it with the Seal already lit, silently. It only ever adds ids. The bell is `sfx.seal()`, the bow's bell alone, made in code (no sound file) and following the sound volume. Reduced motion skips the pop, not the bell.
