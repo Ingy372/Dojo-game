@@ -1,17 +1,16 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { GATE, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, gearGrid, showEmptyBagHint, pageDots, panelSwap, xpFillFrom, gateLockR, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
+import { GATE, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, gateLockR, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import {
   BLESSING,
   GEAR_SLOTS,
-  compareGear,
+  RARITIES,
   describeItem,
   describeVirtue,
   effectiveLevel,
   equip,
-  gearScore,
   letGo,
   unequip,
   goalsDue,
@@ -35,9 +34,10 @@ import {
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
-import { STYLE_WORDS, buildStyle, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
+import { STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
 import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, runId, takeCountUp, type FoundTile, type KeyStore } from '../ui/lastRun';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
+import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, slotEmptyLine, tileBox, toggleFilter } from '../ui/gearBoard';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining, selectProfile, shortDate } from '../game/student';
@@ -91,8 +91,12 @@ export class HomeScene extends Phaser.Scene {
   /** P-MENU-d: the gear detail sheet and what Wear pops. */
   private sheet: Phaser.GameObjects.Container | null = null;
   private sheetOpening = false;
-  private gearGridBox: Phaser.GameObjects.Container | null = null;
-  private wornCards: Partial<Record<GearSlot, { c: Phaser.GameObjects.Container; w: number; h: number }>> = {};
+  /** P-MENU2-f: the bag filter (null = everything), the Details toggle, and where rings/tiles are (for the wear flight). */
+  private gearFilter: GearSlot | null = null;
+  private gearDetails = false;
+  private gearRings: Partial<Record<GearSlot, { visual: Phaser.GameObjects.Container; x: number; y: number; icon: Phaser.GameObjects.Image | null }>> = {};
+  private gearTiles: Record<string, { x: number; y: number }> = {};
+  private gearDollGlow: Phaser.GameObjects.Ellipse | null = null;
   /** Where the draw helpers add things: the shell, the tab bar or the panel (P-MENU-b). */
   private ui!: Phaser.GameObjects.Container;
   /** P-MENU-b: background, left column and panel frame. Redrawn on create, refresh and resize. */
@@ -760,6 +764,8 @@ export class HomeScene extends Phaser.Scene {
       button(this, { x, y: ty, w: MIN_TAP, h: L.tileH, label: '◀', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo === 0, onTap: () => this.turnTray(-1) }, this.ui);
       button(this, { x: x + L.leftW - MIN_TAP, y: ty, w: MIN_TAP, h: L.tileH, label: '▶', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo >= tp.pages - 1, onTap: () => this.turnTray(1) }, this.ui);
     }
+    // P-MENU2-f: page dots under the tray (in the gap before "Always with you"), no numbers.
+    for (const d of trayDots(tp.pages, this.trayPageNo, L.leftW)) this.ui.add(this.add.circle(x + d.x, ty + L.tileH + S2 / 2, 3, d.on ? 0xffd166 : WOOD.paper, d.on ? 1 : 0.35).setData('trayDot', d.on));
     // Tiles are centred in the room between the arrows (or the whole row).
     const room = L.leftW - 2 * tp.tilesX;
     const tx0 = x + tp.tilesX + (room - (tray.length * tp.tileW + (tray.length - 1) * S2)) / 2;
@@ -1208,127 +1214,127 @@ export class HomeScene extends Phaser.Scene {
     for (let size = TYPE.body; st.height > cardY + GATE.cardH - 6 - lineY && size > TYPE.label; ) st.setFontSize(--size);
   }
 
+  /**
+   * P-MENU2-f: Gear. A paper doll on the left with one ring per slot (what's worn); tapping a ring
+   * filters the bag to that slot, tapping it again shows everything. The bag is a tile grid that
+   * uses as many columns as fit (at least 3) and pages with ◀ ▶ like the Trophy Case. The grid
+   * never moves when you pick, wear or filter. Placeholder art drawn in code (no #265 art).
+   */
   private renderGear(x: number, y: number, w: number, h: number): void {
-    const panelBottom = y + h;
-    // Worn gear: one rounded card per slot. K32: 40 px icon top-left with the slot and stats
-    // beside it; long names wrap to two lines (no ellipsis) under it. The row is a fixed
-    // GEAR.wornH tall so the bag grid's y never moves when worn names change (e.g. after Wear).
-    const slotW = (w - 16) / 3;
-    const boxH = GEAR.wornH;
-    const worn = GEAR_SLOTS.map((slot, i) => {
+    // The widest rarity word (Legendary) sets the tiles' minimum width, so every word fits at 12 px
+    // with 8 px padding inside the border. It depends on content only, never the bag.
+    const probe = this.add.text(0, 0, '', { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold' });
+    const widest = Math.max(...RARITIES.map((r) => probe.setText(rarityName(r)).width));
+    probe.destroy();
+    const L = gearBoardLayout(w, h, tileWForLabel(widest));
+    const W = GEAR_WORDS;
+    const R = GEAR_BOARD.ring;
+    this.gearRings = {};
+    this.gearTiles = {};
+    // The paper doll: the student, with a ring per slot.
+    const t = this.training;
+    const glow = this.add.ellipse(x + L.figureX, y + L.figureY + L.figureR * 0.9, L.figureR * 2.6, L.figureR * 3.4, 0xffd166, 0);
+    this.ui.add(glow);
+    this.gearDollGlow = glow;
+    this.ui.add(makeStandingCharacter(this, x + L.figureX, y + L.figureY, L.figureR, t.belt, t.stripesThisBelt, loadLook()).container);
+    GEAR_SLOTS.forEach((slot, i) => {
       const item = wornItem(this.profile, slot);
-      const bx = x + i * (slotW + 8);
-      const c = this.add.container(bx + slotW / 2, y);
-      this.ui.add(c);
-      const g = this.add.graphics();
-      c.add(g);
-      const add = <T extends Phaser.GameObjects.GameObject>(o: T): T => {
-        (o as unknown as { x: number }).x -= bx + slotW / 2;
-        (o as unknown as { y: number }).y -= y;
-        this.ui.remove(o);
-        c.add(o);
-        return o;
-      };
-      const icon = item ? addGearIcon(this, item, bx + 6 + GEAR.wornIcon / 2, y + 6 + GEAR.wornIcon / 2, GEAR.wornIcon) : null;
-      if (icon) add(icon);
-      const tx = icon ? bx + 12 + GEAR.wornIcon : bx + 8;
-      const tw = slotW - (tx - bx) - 6;
-      add(this.text(tx, y + 6, SLOT_NAME[slot], TYPE.label, '#b9ad99'));
-      if (item) add(this.oneLine(this.text(tx, y + 24, describeItem(item), 11, '#f2e9d8'), tw, 9));
-      add(this.twoLines(this.text(bx + 8, y + 50, item ? item.name : 'Nothing', 12, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true, FONT, slotW - 16), slotW - 16, 11));
-      // B-GEAR-BUG: a worn card is a button too, so worn gear can be taken off (it isn't in the bag).
-      if (item) {
-        const b = button(this, { x: bx, y, w: slotW, h: boxH, label: '', color: 0x221d2e, size: 12, stroke: RARITY_COLOR[item.rarity], onTap: () => this.pick(item.uid) }, this.ui);
-        this.ui.remove(c);
-        b.visual.add(c.setPosition(0, -boxH / 2));
-      }
-      return { slot, c, g, stroke: item ? RARITY_COLOR[item.rarity] : 0x3a3150, item };
+      const on = this.gearFilter === slot;
+      const cx = x + L.ringX;
+      const cy = y + L.ringYs[i];
+      const b = button(this, { x: cx - R / 2, y: cy - R / 2, w: R, h: R, label: '', color: on ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: on, stroke: WOOD.grain, onTap: () => this.filterGear(slot) }, this.ui);
+      const v = b.visual.setData('gearRing', slot);
+      v.add(this.add.circle(0, 0, R / 2 - 5, BOARD_PAPER, item ? 0.95 : 0.4).setStrokeStyle(3, item ? RARITY_COLOR[item.rarity] : WOOD.grain, 1));
+      const icon = item ? addGearIcon(this, item, 0, 0, R - 18) : null;
+      if (icon) v.add(icon);
+      else v.add(slotGlyph(this, slot, 0, 0, R - 22, item ? 0x3a2618 : 0x6b5440));
+      this.gearRings[slot] = { visual: v, x: cx, y: cy, icon };
     });
-    for (const s of worn) {
-      this.wornCards[s.slot] = { c: s.c, w: slotW, h: boxH };
-      if (s.item) continue; // drawn by its button
-      s.g.fillStyle(0x221d2e).fillRoundedRect(-slotW / 2, 0, slotW, boxH, RADIUS.panel);
-      s.g.lineStyle(2, s.stroke).strokeRoundedRect(-slotW / 2, 0, slotW, boxH, RADIUS.panel);
-    }
-    y += boxH + S2;
-    // B-GEAR-BUG: the picked item may be worn (from the worn row), so look in the whole bag.
-    const selected = this.pickedItem();
-
-    const bag = this.profile.inventory
-      .filter((it) => this.profile.equipped[it.slot] !== it.uid)
-      .sort((a, b) => GEAR_SLOTS.indexOf(a.slot) - GEAR_SLOTS.indexOf(b.slot) || gearScore(b) - gearScore(a));
-    if (bag.length === 0) {
-      // P-MENU-d: a faint bag drawn in code above the same words, centred in the space left.
-      // B-POLISH-1: hidden while a worn-item sheet is open, so it doesn't show faintly behind it.
-      if (showEmptyBagHint(bag.length, !!selected)) {
-        const midY = (y + panelBottom) / 2;
-        this.ui.add(bagIcon(this, x + w / 2, midY - 26));
-        this.text(x + w / 2, midY + 6, 'Your bag is empty. Items you find in the Tower appear here.', TYPE.body, '#b9ad99', false, FONT, w - 32).setOrigin(0.5, 0).setAlign('center');
-      }
-      if (selected) this.renderSheet(selected, x, y - boxH - S2, w, panelBottom, -1);
-      return;
+    // "Always with you": Strikes and Seals are always on, so they are shown here too.
+    const ay = y + L.alwaysY;
+    if (L.alwaysRows > 0) {
+      const always = this.styleModel().always;
+      this.oneLine(this.text(x, ay, W.always, TYPE.label, '#f2e3c4', true), L.dollW, TYPE.label);
+      const iy = ay + TYPE.label + S1;
+      const n = L.alwaysIcon;
+      if (!always.length) this.twoLines(this.text(x, iy, W.alwaysEmpty, TYPE.label, '#d9c6a3', false, FONT, L.dollW), L.dollW, TYPE.label);
+      always.slice(0, L.perAlwaysRow * L.alwaysRows).forEach((a, i) => {
+        const ix = x + (i % L.perAlwaysRow) * (n + S1);
+        const iyy = iy + Math.floor(i / L.perAlwaysRow) * (n + S1);
+        const g = this.add.graphics();
+        g.fillStyle(0xffd166, 0.25).fillRoundedRect(ix, iyy, n, n, RADIUS.button);
+        g.lineStyle(2, 0xffd166, 0.8).strokeRoundedRect(ix, iyy, n, n, RADIUS.button);
+        this.ui.add(g);
+        const ic = addIcon(this, a.id, ix + n / 2, iyy + n / 2, n - 8);
+        if (ic) this.ui.add(ic);
+        else this.text(ix + n / 2, iyy + n / 2, a.name.charAt(0), TYPE.title, '#fff6e6', true).setOrigin(0.5);
+      });
     }
 
-    // P-MENU-d: the grid never depends on the picked card; the sheet lays over it.
-    const cols = 2;
-    const { perPage } = gearGrid(panelBottom - y, cols);
-    const pages = Math.max(1, Math.ceil(bag.length / perPage));
+    // The filter row: one 44 button per slot (same as the rings), plus the filter's name.
+    const gx = x + L.gridX;
+    GEAR_SLOTS.forEach((slot, i) => {
+      const on = this.gearFilter === slot;
+      const b = button(this, { x: gx + i * (MIN_TAP + S1), y: y + L.filterY, w: MIN_TAP, h: GEAR_BOARD.filterH, label: '', color: on ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: on, stroke: WOOD.grain, onTap: () => this.filterGear(slot) }, this.ui);
+      b.visual.setData('gearFilter', slot).add(slotGlyph(this, slot, 0, 0, 22, on ? 0xfff6e6 : 0xd9c6a3));
+    });
+    const fx = gx + 3 * (MIN_TAP + S1) + S1;
+    this.oneLine(this.text(fx, y + L.filterY + GEAR_BOARD.filterH / 2, this.gearFilter ? W.slots[this.gearFilter] : '', TYPE.body, '#f2e3c4', true).setOrigin(0, 0.5), x + w - fx, TYPE.label);
+
+    // The bag grid. Order ignores what's worn, so wearing never moves a tile; worn ones get a gold ✓.
+    const bag = filterBag(this.profile.inventory, this.gearFilter);
+    const pages = Math.max(1, Math.ceil(bag.length / L.perPage));
     this.page = Math.min(this.page, pages - 1);
-    const cardW = (w - GEAR.gap) / cols;
     const grid = this.add.container(0, 0);
     this.ui.add(grid);
-    this.gearGridBox = grid;
-    let pickedBottom = -1;
-
-    bag.slice(this.page * perPage, (this.page + 1) * perPage).forEach((it, i) => {
-      const bx = x + (i % cols) * (cardW + GEAR.gap);
-      const by = y + Math.floor(i / cols) * (GEAR.cardH + GEAR.gap);
-      const isSel = it.uid === this.selected;
-      if (isSel) pickedBottom = by + GEAR.cardH;
-      // #228 press style: the shared rounded button (0.96 press, soft tap, no pick on slide-on).
-      const b = button(this, { x: bx, y: by, w: cardW, h: GEAR.cardH, label: '', color: isSel ? 0x3a3150 : 0x221d2e, size: 12, stroke: RARITY_COLOR[it.rarity], selected: isSel, onTap: () => this.pick(it.uid) }, grid);
-      b.visual.setData('uid', it.uid);
-      const lx = -cardW / 2;
-      const icon = addGearIcon(this, it, 0, 0, 36);
-      if (icon) b.visual.addAt(icon.setPosition(lx + 8 + 18, 0), 2);
-      const cmp = compareGear(it, wornItem(this.profile, it.slot));
-      const markColor = cmp === 'up' ? 0x3aa57a : cmp === 'down' ? 0xc0453a : 0x5a5468;
-      const mx = cardW / 2 - 8 - 14;
-      b.visual.add(this.add.circle(mx, 0, 14, markColor));
-      b.visual.add(this.add.text(mx, 0, cmp === 'up' ? '▲' : cmp === 'down' ? '▼' : '=', { fontFamily: FONT, fontSize: '13px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5).setResolution(crisp()));
-      const tx = lx + 8 + 36 + 8;
-      const tw = mx - 14 - 6 - tx;
-      const nm = this.oneLine(this.add.text(tx, -2, it.name, { fontFamily: FONT, fontSize: `${TYPE.body}px`, color: css(RARITY_COLOR[it.rarity]), fontStyle: 'bold' }).setOrigin(0, 1).setResolution(crisp()), tw, 10);
-      const st = this.oneLine(this.add.text(tx, 2, `${SLOT_NAME[it.slot]} · ${describeItem(it)}`, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e9d8' }).setResolution(crisp()), tw, 9);
-      b.visual.add([nm, st]);
-    });
-
-    // Paging: 44 x 56 arrows with one 8 pt dot per page between them (the current one gold).
-    const pagerY = panelBottom - GEAR.pagerH;
-    if (pages > 1) {
-      const prev = button(this, { x, y: pagerY, w: GEAR.arrowW, h: GEAR.pagerH, label: '◀', color: 0x2a2536, size: 17, disabled: this.page === 0, onTap: () => this.turn(-1) }, this.ui);
-      const next = button(this, { x: x + w - GEAR.arrowW, y: pagerY, w: GEAR.arrowW, h: GEAR.pagerH, label: '▶', color: 0x2a2536, size: 17, disabled: this.page >= pages - 1, onTap: () => this.turn(1) }, this.ui);
-      void prev;
-      void next;
-      const room = w - 2 * GEAR.arrowW - 2 * S2;
-      const dots = pageDots(pages, room);
-      const left = x + GEAR.arrowW + S2;
-      if (dots) {
-        const g = this.add.graphics();
-        for (let p = 0; p < pages; p++) g.fillStyle(p === this.page ? 0xffd166 : 0x5a5468).fillCircle(left + dots.x0 + p * dots.step, pagerY + GEAR.pagerH / 2, GEAR.dot / 2);
-        this.ui.add(g);
-      } else this.text(x + w / 2, pagerY + GEAR.pagerH / 2, `${this.page + 1} / ${pages}`, TYPE.label, '#b9ad99').setOrigin(0.5);
+    if (!bag.length) {
+      const msg = this.gearFilter ? slotEmptyLine(this.gearFilter) : W.bagEmpty;
+      const midY = y + L.gridY + (L.pagerY - L.gridY) / 2;
+      if (!this.gearFilter) this.ui.add(bagIcon(this, gx + L.gridW / 2, midY - 26));
+      this.twoLines(this.text(gx + L.gridW / 2, midY + 8, msg, TYPE.body, '#d9c6a3', false, FONT, L.gridW - 2 * GEAR_BOARD.labelPad).setOrigin(0.5, 0).setAlign('center'), L.gridW - 2 * GEAR_BOARD.labelPad, TYPE.label);
     }
+    let pickedBottom = 0;
+    bag.slice(this.page * L.perPage, (this.page + 1) * L.perPage).forEach((it, i) => {
+      const box = tileBox(L, i);
+      const tx = x + box.x;
+      const ty = y + box.y;
+      const worn = wornItem(this.profile, it.slot);
+      const cmp = compareWith(it, worn);
+      const sel = this.selected === it.uid;
+      if (sel) pickedBottom = ty + box.h;
+      const b = button(this, { x: tx, y: ty, w: box.w, h: box.h, label: '', color: sel ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: sel, stroke: RARITY_COLOR[it.rarity], onTap: () => this.pick(it.uid) }, grid);
+      const v = b.visual.setData('gearTile', it.uid);
+      // Icon above, the small rarity word under it (12 px, ≥8 px side padding, B-POLISH-2 wrap rules).
+      const lh = GEAR_BOARD.labelH;
+      const iconS = Math.min(GEAR_BOARD.iconMax, box.h - lh - 3 * S1 - 4);
+      const iy = -box.h / 2 + S1 + 2 + iconS / 2;
+      const icon = addGearIcon(this, it, 0, iy, iconS);
+      if (icon) v.add(icon);
+      else v.add(slotGlyph(this, it.slot, 0, iy, iconS - 8, RARITY_COLOR[it.rarity]));
+      const tw = cubbyTextW(box.w);
+      const word = rarityName(it.rarity);
+      const lab = this.add.text(0, box.h / 2 - S1 - 1, word, { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold', color: css(RARITY_COLOR[it.rarity]), align: 'center', wordWrap: { width: tw } }).setOrigin(0.5, 1).setResolution(crisp()).setData('rarityWord', true);
+      v.add(wrapLikeCubby(lab, word, tw).setMaxLines(1));
+      if (cmp.overall === 'worn') {
+        v.add(this.add.circle(-box.w / 2 + 9, -box.h / 2 + 9, 7, 0xffd166));
+        v.add(this.add.text(-box.w / 2 + 9, -box.h / 2 + 9, '✓', { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#3a2618', fontStyle: 'bold' }).setOrigin(0.5).setResolution(crisp()));
+      } else if (cmp.overall === 'up' || cmp.overall === 'down') {
+        v.add(this.add.circle(box.w / 2 - 9, -box.h / 2 + 9, 7, COMPARE_COLOR[cmp.overall]));
+        v.add(this.add.text(box.w / 2 - 9, -box.h / 2 + 9, ARROW[cmp.overall], { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#1e1a2b', fontStyle: 'bold' }).setOrigin(0.5).setResolution(crisp()));
+      }
+      this.gearTiles[it.uid] = { x: tx + box.w / 2, y: ty + box.h / 2 };
+    });
+    // ◀ dots ▶ always has its row reserved, so the grid never shifts when pages appear.
+    if (pages > 1) this.trophyPager(gx, y + L.pagerY, L.gridW, pages);
 
-    if (selected) this.renderSheet(selected, x, y - boxH - S2, w, panelBottom, pickedBottom);
+    const picked = this.pickedItem();
+    if (picked) this.renderSheet(picked, x, y, w, y + h, pickedBottom);
   }
 
-  /**
-   * P-MENU-d: the detail sheet. It slides up over the bottom of the panel (over the top when
-   * the picked card is in the bottom rows, so the card stays in view). Tapping outside closes it.
-   */
+  /** P-MENU2-f: the sheet: the item and what's worn, ↑ / ↓ in calm colours with plain words, numbers behind Details. */
   private renderSheet(item: GearItem, x: number, top: number, w: number, bottom: number, pickedBottom: number): void {
-    const sh = GEAR.sheetH;
+    const W = GEAR_WORDS;
+    const sh = GEAR_BOARD.sheetH;
     const atTop = pickedBottom > bottom - sh;
     const sy = atTop ? top : bottom - sh;
     const closer = this.add.zone(x - 8, top - 8, w + 16, bottom - top + 16).setOrigin(0).setInteractive();
@@ -1340,37 +1346,60 @@ export class HomeScene extends Phaser.Scene {
     const bg = this.add.graphics();
     bg.fillStyle(0x2a2340, 0.98).fillRoundedRect(x, sy, w, sh, RADIUS.panel);
     bg.lineStyle(2, RARITY_COLOR[item.rarity], 0.9).strokeRoundedRect(x, sy, w, sh, RADIUS.panel);
-    // Swallow taps on the sheet itself so they don't close it.
     const block = this.add.zone(x, sy, w, sh).setOrigin(0).setInteractive();
     sheet.add([bg, block]);
     const pad = 12;
     const half = (w - 3 * pad) / 2;
-    // Row 1: the item and "Now wearing", side by side; each stays on one line (… when long).
-    const mini = (mx: number, it: GearItem | null, head: string) => {
-      const ic = it ? addGearIcon(this, it, mx + 16, sy + pad + 18, 32) : null;
+    const now = wornItem(this.profile, item.slot);
+    // Row 1: the item and "Now wearing", side by side; a long name wraps to a second line.
+    const mini = (mx: number, it: GearItem | null, head: string): number => {
+      const ic = it ? addGearIcon(this, it, mx + 16, sy + pad + 16, 32) : null;
       if (ic) sheet.add(ic);
       const tx = ic ? mx + 38 : mx;
       const tw = half - (tx - mx);
-      const t1 = this.oneLine(this.add.text(tx, sy + pad, head, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#b9ad99' }).setResolution(crisp()), tw, 10);
-      const t2 = this.oneLine(this.add.text(tx, sy + pad + 15, it ? it.name : 'Nothing', { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: it ? css(RARITY_COLOR[it.rarity]) : '#6b6478' }).setResolution(crisp()), tw, TYPE.label);
+      const t1 = this.oneLine(this.add.text(tx, sy + pad, head, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#b9ad99' }).setResolution(crisp()), tw, TYPE.label);
+      const t2 = this.twoLines(this.add.text(tx, sy + pad + 15, it ? it.name : W.nothing, { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: it ? css(RARITY_COLOR[it.rarity]) : '#8a8296', wordWrap: { width: tw } }).setLineSpacing(-3).setResolution(crisp()), tw, TYPE.label);
       sheet.add([t1, t2]);
-      if (it) sheet.add(this.oneLine(this.add.text(tx, sy + pad + 33, describeItem(it), { fontFamily: FONT, fontSize: '11px', color: '#f2e9d8' }).setResolution(crisp()), tw, 9));
+      return Math.max(t2.y + t2.height, sy + pad + 32);
     };
-    const now = wornItem(this.profile, item.slot);
-    mini(x + pad, item, `${rarityName(item.rarity)} ${SLOT_NAME[item.slot]}`);
-    mini(x + 2 * pad + half, now, 'Now wearing');
-    // Row 2: Wear (green, wide) and Let go (quieter). Let go asks again here.
-    const by = sy + sh - pad - 44;
+    const row1 = Math.max(mini(x + pad, item, `${rarityName(item.rarity)} ${W.slots[item.slot]}`), mini(x + 2 * pad + half, now, W.nowWearing));
+
+    // Row 2: ↑ / ↓ per stat (no numbers) and the plain-words line; Details shows the numbers (D6).
+    const cmp = compareWith(item, now);
+    const ry = row1 + 6;
+    const textW = w - 2 * pad;
+    if (this.gearDetails) {
+      const nums = `${describeItem(item)}`;
+      const was = now && now.uid !== item.uid ? `${W.nowWearing}: ${describeItem(now)}` : '';
+      sheet.add(this.twoLines(this.add.text(x + pad, ry, was ? `${nums}\n${was}` : nums, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e9d8', wordWrap: { width: textW } }).setResolution(crisp()), textW, TYPE.label));
+    } else {
+      let ax = x + pad;
+      for (const s of cmp.stats) {
+        const a = this.add.text(ax, ry, `${ARROW[s.dir]} ${W.stats[s.stat]}`, { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: COMPARE_CSS[s.dir] }).setResolution(crisp());
+        if (ax + a.width > x + pad + textW) { a.destroy(); break; }
+        sheet.add(a);
+        ax += a.width + S3;
+      }
+      const ly = cmp.stats.length ? ry + 19 : ry + 6;
+      sheet.add(this.twoLines(this.add.text(x + pad, ly, cmp.line, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e9d8', wordWrap: { width: textW } }).setLineSpacing(-3).setResolution(crisp()), textW, TYPE.label));
+    }
+
+    // Row 3: Wear (green, widest, 52 tall), Let go (quieter; it asks again here) and Details, 8 px apart.
+    const bh = GEAR_BOARD.wearH;
+    const by = sy + sh - pad - bh;
     if (!this.confirmLetGo) {
-      if (now?.uid === item.uid) button(this, { x: x + pad, y: by, w: half + 40, h: 44, label: 'Take off', color: 0x3a5f8a, size: 16, onTap: () => this.takeOff(item) }, sheet);
-      else button(this, { x: x + pad, y: by, w: half + 40, h: 44, label: 'Wear', color: 0x3aa57a, size: 16, onTap: () => this.wear(item) }, sheet);
-      button(this, { x: x + 2 * pad + half + 40, y: by, w: half - 40, h: 44, label: 'Let go', color: 0x3a3448, size: TYPE.body, labelColor: '#e8b4b4', onTap: () => this.letGo(item) }, sheet);
+      const detailsW = 76;
+      const wearW = Math.round((textW - detailsW - 2 * S2) * 0.6);
+      const letGoW = textW - detailsW - 2 * S2 - wearW;
+      if (now?.uid === item.uid) button(this, { x: x + pad, y: by, w: wearW, h: bh, label: W.takeOff, color: 0x3a5f8a, size: 16, onTap: () => this.takeOff(item) }, sheet);
+      else button(this, { x: x + pad, y: by, w: wearW, h: bh, label: W.wear, color: 0x3aa57a, size: 16, onTap: () => this.wear(item) }, sheet);
+      button(this, { x: x + pad + wearW + S2, y: by, w: letGoW, h: bh, label: W.letGo, color: 0x3a3448, size: TYPE.body, labelColor: '#e8d4b4', onTap: () => this.letGo(item) }, sheet);
+      button(this, { x: x + w - pad - detailsW, y: by, w: detailsW, h: bh, label: this.gearDetails ? W.hideDetails : W.details, color: 0x3a3448, size: TYPE.label, labelColor: '#d9c6a3', onTap: () => { this.gearDetails = !this.gearDetails; this.renderPanel('none'); } }, sheet);
     } else {
       const bw = Math.min(100, (w - 4 * pad) / 3);
-      const q = this.add.text(x + pad, by + 22, 'Let it go?', { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: '#ffd166' }).setOrigin(0, 0.5).setResolution(crisp());
-      sheet.add(q);
-      button(this, { x: x + w - pad - 2 * bw - 8, y: by, w: bw, h: 44, label: 'Yes', color: 0x8a2a35, size: 15, onTap: () => this.letGo(item) }, sheet);
-      button(this, { x: x + w - pad - bw, y: by, w: bw, h: 44, label: 'Keep', color: 0x3aa57a, size: 15, onTap: () => { this.confirmLetGo = false; this.renderPanel('none'); } }, sheet);
+      sheet.add(this.add.text(x + pad, by + bh / 2, W.letGoAsk, { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: '#ffd166' }).setOrigin(0, 0.5).setResolution(crisp()));
+      button(this, { x: x + w - pad - 2 * bw - 8, y: by, w: bw, h: bh, label: W.yes, color: 0x5e4a6e, size: 15, onTap: () => this.letGo(item) }, sheet);
+      button(this, { x: x + w - pad - bw, y: by, w: bw, h: bh, label: W.keep, color: 0x3aa57a, size: 15, onTap: () => { this.confirmLetGo = false; this.renderPanel('none'); } }, sheet);
     }
     if (this.sheetOpening) {
       this.sheetOpening = false;
@@ -1378,6 +1407,15 @@ export class HomeScene extends Phaser.Scene {
       sheet.setAlpha(rm ? 0 : 1).setY(rm ? 0 : atTop ? -12 : sh);
       this.tweens.add({ targets: sheet, y: 0, alpha: 1, duration: rm ? MOTION.reducedFade.ms : MOTION.sheet.ms, ease: rm ? 'Linear' : MOTION.sheet.ease });
     }
+  }
+
+  /** P-MENU2-f: tap a ring or filter button: show that slot; tap it again: show everything. */
+  private filterGear(slot: GearSlot): void {
+    this.gearFilter = toggleFilter(this.gearFilter, slot);
+    this.page = 0;
+    this.selected = null;
+    this.confirmLetGo = false;
+    this.renderPanel('none');
   }
 
   private pickedItem(): GearItem | null {
@@ -1388,6 +1426,7 @@ export class HomeScene extends Phaser.Scene {
     if (this.selected === uid) return this.closeSheet();
     this.sheetOpening = this.selected === null;
     this.selected = uid;
+    this.gearDetails = false;
     this.confirmLetGo = false;
     this.renderPanel('none'); // the grid itself never moves
   }
@@ -1499,25 +1538,31 @@ export class HomeScene extends Phaser.Scene {
   }
 
   private wear(item: GearItem): void {
+    const from = this.gearTiles[item.uid];
     equip(this.profile, item.uid);
     writeSave(this.profile);
     sfx.insight();
     this.selected = null;
     this.confirmLetGo = false;
     this.renderPanel('none');
-    // P-MENU-d: the slot card pops with a short gold flash; the re-sorted bag fades in (180 ms).
-    const slot = this.wornCards[item.slot];
-    if (this.gearGridBox) {
-      this.gearGridBox.setAlpha(0);
-      this.tweens.add({ targets: this.gearGridBox, alpha: 1, duration: reducedMotion() ? MOTION.reducedFade.ms : MOTION.swap.ms });
-    }
-    if (!slot || reducedMotion()) return;
-    const flash = this.add.graphics();
-    flash.fillStyle(0xffd166, 0.55).fillRoundedRect(-slot.w / 2, 0, slot.w, slot.h, RADIUS.panel);
-    slot.c.add(flash);
-    slot.c.setScale(0.9);
-    this.tweens.add({ targets: slot.c, scale: 1, duration: MOTION.pop.ms, ease: MOTION.pop.ease });
-    this.tweens.add({ targets: flash, alpha: 0, duration: 360, onComplete: () => flash.destroy() });
+    // P-MENU2-f: the tile's icon flies to its ring, then the ring pops and the doll glows.
+    // Reduced motion: a plain swap (the ring just shows the new item). The grid never moves.
+    const ring = this.gearRings[item.slot];
+    if (!ring || !from || reducedMotion()) return;
+    const fly = addGearIcon(this, item, from.x, from.y, 36);
+    if (ring.icon) ring.icon.setAlpha(0);
+    const land = () => {
+      if (ring.icon?.active) ring.icon.setAlpha(1);
+      this.tweens.add({ targets: ring.visual, scale: 1.06, duration: MOTION.pop.ms / 2, yoyo: true, ease: 'Sine.Out' });
+      const glow = this.gearDollGlow;
+      if (glow?.active) {
+        glow.setFillStyle(0xffd166, 0.35);
+        this.tweens.add({ targets: glow, fillAlpha: 0, duration: 360 });
+      }
+    };
+    if (!fly) return land();
+    this.ui.add(fly);
+    this.tweens.add({ targets: fly, x: ring.x, y: ring.y, scale: fly.scale * 0.8, duration: GEAR_BOARD.flyMs, ease: 'Cubic.In', onComplete: () => { fly.destroy(); land(); } });
   }
 
   /** B-GEAR-BUG: take worn gear off; it goes back into the bag. */
@@ -1718,6 +1763,27 @@ function drawArrow(g: Phaser.GameObjects.Graphics, cx: number, cy: number, d: 'u
   const [px, py] = [-dy, dx];
   g.lineStyle(3, color, 1).lineBetween(cx - dx * r, cy - dy * r, cx + dx * (r - 4), cy + dy * (r - 4));
   g.fillStyle(color, 1).fillTriangle(cx + dx * r, cy + dy * r, cx + dx * (r - 6) + px * 5, cy + dy * (r - 6) + py * 5, cx + dx * (r - 6) - px * 5, cy + dy * (r - 6) - py * 5);
+}
+
+/** P-MENU2-f: a placeholder slot shape drawn in code: a fist (hands), a gi collar (gi) or a charm. */
+function slotGlyph(scene: Phaser.Scene, slot: GearSlot, x: number, y: number, size: number, color: number): Phaser.GameObjects.Graphics {
+  const g = scene.add.graphics({ x, y });
+  const s = size / 2;
+  g.fillStyle(color, 1);
+  if (slot === 'hands') {
+    g.fillRoundedRect(-s * 0.8, -s * 0.5, s * 1.6, s * 1.2, s * 0.35);
+    g.fillRoundedRect(-s * 0.8, -s * 0.9, s * 1.6, s * 0.5, s * 0.2);
+  } else if (slot === 'gi') {
+    g.fillTriangle(-s, -s * 0.7, -s * 0.15, -s * 0.7, -s * 0.15, s);
+    g.fillTriangle(s, -s * 0.7, s * 0.15, -s * 0.7, s * 0.15, s);
+    g.fillRect(-s, -s * 0.7, s * 0.35, s * 1.7);
+    g.fillRect(s * 0.65, -s * 0.7, s * 0.35, s * 1.7);
+  } else {
+    g.fillTriangle(0, -s, s * 0.7, 0, -s * 0.7, 0);
+    g.fillTriangle(0, s, s * 0.7, 0, -s * 0.7, 0);
+    g.lineStyle(2, color, 1).lineBetween(0, -s, 0, -s * 1.15);
+  }
+  return g;
 }
 
 /** B-POLISH-2: the cubby wrap rules: 3 lines max, tight line gap, and a hyphenated word too wide
