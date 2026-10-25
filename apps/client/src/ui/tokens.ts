@@ -55,3 +55,40 @@ export function panelSwap(change: PanelChange, reduced: boolean): { dx: number; 
   const dx = change === 'tab' ? 12 : change === 'pageNext' ? 24 : -24;
   return { dx, fromAlpha: 0, ms: MOTION.swap.ms, ease: MOTION.swap.ease };
 }
+
+/** P-MENU-c: the XP bar fills from the old value to the new one over 400 ms after a run. */
+export const XP_FILL = { ms: 400, ease: 'Cubic.Out' } as const;
+
+/**
+ * P-MENU-c: where the XP bar starts filling from. `prev` is what the bar last showed. Same
+ * level, more XP: from the old share. A new level: from empty. Nothing new (or nothing
+ * remembered): null, so the bar is drawn full-size at once.
+ */
+export function xpFillFrom(prev: { level: number; share: number } | null, now: { level: number; share: number }): number | null {
+  if (!prev) return null;
+  if (now.level > prev.level) return 0;
+  if (now.level === prev.level && now.share > prev.share) return prev.share;
+  return null;
+}
+
+/** P-MENU-d: Gear tab sizes. */
+export const GEAR = { cardH: 56, gap: S2, pagerH: 56, arrowW: 44, dot: 8, dotGap: 6, sheetH: 120, wornIcon: 40, wornH: 86 } as const;
+
+/**
+ * P-MENU-d: the bag grid. It depends only on the space left under the worn slots, never on
+ * whether a card is picked (the detail sheet lays over the panel instead), so picking a card
+ * never moves the grid or changes how many cards a page holds.
+ */
+export function gearGrid(space: number, cols = 2): { rows: number; perPage: number } {
+  const rows = Math.max(1, Math.floor((space - GEAR.pagerH + GEAR.gap) / (GEAR.cardH + GEAR.gap)));
+  return { rows, perPage: rows * cols };
+}
+
+/** P-MENU-d: page dots fit between the arrows (one 8 pt dot per page); null means show "n / m" text. */
+export function pageDots(pages: number, room: number): { x0: number; step: number } | null {
+  if (pages < 2) return null;
+  const step = GEAR.dot + GEAR.dotGap;
+  const total = pages * GEAR.dot + (pages - 1) * GEAR.dotGap;
+  if (total > room) return null;
+  return { x0: (room - total) / 2 + GEAR.dot / 2, step };
+}
