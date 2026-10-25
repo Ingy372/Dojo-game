@@ -4,7 +4,7 @@
 
 import Phaser from 'phaser';
 import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState } from '@dojo/sim';
-import { gainText, signOffCardText, signOffGain, signOffLines, signOffsTitle, stripeGain } from '@dojo/sim';
+import { gainText, litGateLock, signOffCardText, signOffGain, signOffLines, signOffsTitle, stripeGain } from '@dojo/sim';
 import GAINS from '../../../../content/settings/training-gains.json';
 import { sfx } from '../audio/Sfx';
 import { shortDate } from '../game/student';
@@ -244,7 +244,7 @@ export class Celebrations {
         this.text(cx, height * 0.45 - 28, words.line, 22, '#ffffff', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
         this.text(cx, height * 0.45 + 18, `New ${m.ability}`, 18, '#ffd166', true).setOrigin(0.5);
         this.text(cx, height * 0.45 + 52, gainText(GAINS.signOff, signOffGain(this.training, [r])), 17, '#5cd65c', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
-        this.text(cx, height * 0.45 + 84, 'Gate lock lit.', 14, '#b9ad99').setOrigin(0.5);
+        if (litGateLock(this.training, r)) this.text(cx, height * 0.45 + 84, 'Gate lock lit.', 14, '#b9ad99').setOrigin(0.5);
         this.burst(cx, height * 0.45 - 28, [0x5cd65c, GOLD], 20);
         break;
       }

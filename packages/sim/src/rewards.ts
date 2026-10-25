@@ -198,3 +198,11 @@ export function signOffsTitle(list: readonly Pick<RequirementStatus, 'legacy'>[]
   if (real === 0) return `${counted} techniques practiced!`;
   return `${real} signed off, ${counted} practiced!`;
 }
+
+/**
+ * True when this sign-off lit a Gate lock: the technique is one of the current rank's locks
+ * and was really signed off. Counted (legacy) and catch-up items never light a lock.
+ */
+export function litGateLock(t: Pick<TrainingState, 'gate'>, r: Pick<RequirementStatus, 'id' | 'legacy'>): boolean {
+  return !r.legacy && t.gate.locks.some((l) => l.id === r.id);
+}

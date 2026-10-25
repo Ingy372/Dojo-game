@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { signOffCardText, signOffsTitle } from '../src';
+import { litGateLock, signOffCardText, signOffsTitle } from '../src';
 
 const src = Object.values(import.meta.glob('../../../apps/client/src/ui/Celebrations.ts', { query: '?raw', import: 'default', eager: true }))[0] as string;
 const real = (name: string, by: string | null = 'Sensei Kim') => ({ name, legacy: false, signedOffBy: by });
@@ -22,5 +22,19 @@ describe('full-screen sign-off cards: "practiced" for counted techniques', () =>
     expect(src).toMatch(/const words = signOffCardText\(r\);/);
     expect(src).toMatch(/signOffsTitle\(m\.list\.map/);
     expect(src).not.toMatch(/'SIGNED OFF!'|techniques signed off!`/);
+  });
+});
+
+describe('"Gate lock lit." only when a Gate lock lit', () => {
+  const t = { gate: { locks: [{ id: 'cur-1' }, { id: 'cur-2' }] } } as never;
+  it('a real sign-off of a current-rank lock lit it', () => {
+    expect(litGateLock(t, { id: 'cur-1', legacy: false })).toBe(true);
+  });
+  it('a counted technique or a catch-up item lit nothing', () => {
+    expect(litGateLock(t, { id: 'old-1', legacy: true })).toBe(false);
+    expect(litGateLock(t, { id: 'catch-1', legacy: false })).toBe(false);
+  });
+  it('the card shows the line only behind the check', () => {
+    expect(src).toMatch(/if \(litGateLock\(this\.training, r\)\) this\.text\([^;]*'Gate lock lit\.'/);
   });
 });
