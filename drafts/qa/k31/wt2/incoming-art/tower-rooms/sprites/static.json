@@ -1,0 +1,533 @@
+{
+  "pixelsPerTile": 80,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "facing": "north (the one game view)"
+  },
+  "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+  "sprites": {
+    "floor-big": {
+      "size": [
+        80,
+        80
+      ],
+      "layers": [
+        "floor-big"
+      ],
+      "files": {
+        "floor-big": "floor-big_floor-big.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        0,
+        0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "floor tile, exactly 80 x 80 px; anchorPx = top-left corner of the cell"
+    },
+    "floor-quad": {
+      "size": [
+        80,
+        80
+      ],
+      "layers": [
+        "floor-quad"
+      ],
+      "files": {
+        "floor-quad": "floor-quad_floor-quad.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        0,
+        0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "floor tile, exactly 80 x 80 px; anchorPx = top-left corner of the cell"
+    },
+    "floor-worn": {
+      "size": [
+        80,
+        80
+      ],
+      "layers": [
+        "floor-worn"
+      ],
+      "files": {
+        "floor-worn": "floor-worn_floor-worn.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        0,
+        0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "floor tile, exactly 80 x 80 px; anchorPx = top-left corner of the cell"
+    },
+    "wall-face": {
+      "size": [
+        80,
+        104
+      ],
+      "layers": [
+        "wall-face"
+      ],
+      "files": {
+        "wall-face": "wall-face_wall-face.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.3,
+      "anchorPx": [
+        0,
+        24.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "the outer top wall: one per '#' cell in the top row (tiles left to right); anchorPx = the cell's top-left corner"
+    },
+    "wall-block": {
+      "size": [
+        80,
+        114
+      ],
+      "layers": [
+        "wall-block"
+      ],
+      "files": {
+        "wall-block": "wall-block_wall-block.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.4295760221444959,
+      "anchorPx": [
+        0,
+        34.4
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "any other '#' cell (side and bottom walls, inner walls): a low stone block seen from above; tiles side by side; anchorPx = top-left of its cell; sort by the cell's bottom row"
+    },
+    "pillar": {
+      "size": [
+        88,
+        224
+      ],
+      "layers": [
+        "pillar"
+      ],
+      "files": {
+        "pillar": "pillar_pillar.png"
+      },
+      "groundRect": {
+        "col0": -0.05,
+        "row0": 0,
+        "col1": 1.05,
+        "row1": 1.05,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.75,
+      "anchorPx": [
+        44.0,
+        220.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "a round stone pillar for a single '#' cell inside a room (draw instead of wall-block if you like); anchorPx = bottom-centre of its cell"
+    },
+    "door-battle": {
+      "size": [
+        96,
+        156
+      ],
+      "layers": [
+        "door-battle"
+      ],
+      "files": {
+        "door-battle": "door-battle_door-battle.png"
+      },
+      "groundRect": {
+        "col0": -0.1,
+        "row0": 0,
+        "col1": 1.1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.95,
+      "anchorPx": [
+        48.0,
+        156.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 2,
+      "frameWidth": 96,
+      "fps": 1,
+      "loop": false,
+      "note": "Battle door for a 'D' slot in the top wall: frame 0 closed, frame 1 open (doors slide apart, the doorway glows). anchorPx = bottom-centre of the door cell. The icon plaque rises above the wall"
+    },
+    "icon-battle": {
+      "size": [
+        48,
+        64
+      ],
+      "layers": [
+        "icon-battle"
+      ],
+      "files": {
+        "icon-battle": "icon-battle_icon-battle.png"
+      },
+      "groundRect": {
+        "col0": 5.2,
+        "row0": 1.047152872702092,
+        "col1": 5.8,
+        "row1": 1.2471528727020922,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        24.0,
+        64
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "the door's icon on its round medallion, on its own (for labels, the floor map or buttons)"
+    },
+    "door-challenge": {
+      "size": [
+        96,
+        156
+      ],
+      "layers": [
+        "door-challenge"
+      ],
+      "files": {
+        "door-challenge": "door-challenge_door-challenge.png"
+      },
+      "groundRect": {
+        "col0": -0.1,
+        "row0": 0,
+        "col1": 1.1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.95,
+      "anchorPx": [
+        48.0,
+        156.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 2,
+      "frameWidth": 96,
+      "fps": 1,
+      "loop": false,
+      "note": "Challenge door for a 'D' slot in the top wall: frame 0 closed, frame 1 open (doors slide apart, the doorway glows). anchorPx = bottom-centre of the door cell. The icon plaque rises above the wall"
+    },
+    "icon-challenge": {
+      "size": [
+        48,
+        64
+      ],
+      "layers": [
+        "icon-challenge"
+      ],
+      "files": {
+        "icon-challenge": "icon-challenge_icon-challenge.png"
+      },
+      "groundRect": {
+        "col0": 6.2,
+        "row0": 1.047152872702092,
+        "col1": 6.8,
+        "row1": 1.2471528727020922,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        24.0,
+        64
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "the door's icon on its round medallion, on its own (for labels, the floor map or buttons)"
+    },
+    "door-treasure": {
+      "size": [
+        96,
+        156
+      ],
+      "layers": [
+        "door-treasure"
+      ],
+      "files": {
+        "door-treasure": "door-treasure_door-treasure.png"
+      },
+      "groundRect": {
+        "col0": -0.1,
+        "row0": 0,
+        "col1": 1.1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.95,
+      "anchorPx": [
+        48.0,
+        156.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 2,
+      "frameWidth": 96,
+      "fps": 1,
+      "loop": false,
+      "note": "Treasure door for a 'D' slot in the top wall: frame 0 closed, frame 1 open (doors slide apart, the doorway glows). anchorPx = bottom-centre of the door cell. The icon plaque rises above the wall"
+    },
+    "icon-treasure": {
+      "size": [
+        48,
+        64
+      ],
+      "layers": [
+        "icon-treasure"
+      ],
+      "files": {
+        "icon-treasure": "icon-treasure_icon-treasure.png"
+      },
+      "groundRect": {
+        "col0": 7.2,
+        "row0": 1.047152872702092,
+        "col1": 7.8,
+        "row1": 1.2471528727020922,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        24.0,
+        64
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "the door's icon on its round medallion, on its own (for labels, the floor map or buttons)"
+    },
+    "door-rest": {
+      "size": [
+        96,
+        156
+      ],
+      "layers": [
+        "door-rest"
+      ],
+      "files": {
+        "door-rest": "door-rest_door-rest.png"
+      },
+      "groundRect": {
+        "col0": -0.1,
+        "row0": 0,
+        "col1": 1.1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.95,
+      "anchorPx": [
+        48.0,
+        156.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 2,
+      "frameWidth": 96,
+      "fps": 1,
+      "loop": false,
+      "note": "Rest door for a 'D' slot in the top wall: frame 0 closed, frame 1 open (doors slide apart, the doorway glows). anchorPx = bottom-centre of the door cell. The icon plaque rises above the wall"
+    },
+    "icon-rest": {
+      "size": [
+        48,
+        64
+      ],
+      "layers": [
+        "icon-rest"
+      ],
+      "files": {
+        "icon-rest": "icon-rest_icon-rest.png"
+      },
+      "groundRect": {
+        "col0": 8.2,
+        "row0": 1.047152872702092,
+        "col1": 8.8,
+        "row1": 1.2471528727020922,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        24.0,
+        64
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "the door's icon on its round medallion, on its own (for labels, the floor map or buttons)"
+    },
+    "shrine": {
+      "size": [
+        104,
+        168
+      ],
+      "layers": [
+        "shrine",
+        "shrine-glow"
+      ],
+      "files": {
+        "shrine": "shrine_shrine.png",
+        "shrine-glow": "shrine_shrine-glow.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.0,
+      "anchorPx": [
+        52.0,
+        160.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 8,
+      "frameWidth": 104,
+      "fps": 8,
+      "loop": true,
+      "note": "the rest shrine for an 'S' spot: shrine layer (still; every frame is the same) + shrine-glow layer (8-frame loop at 8 fps = 1 s, a gentle swell). The game can also pulse shrine-glow's alpha"
+    },
+    "chest-closed": {
+      "size": [
+        128,
+        160
+      ],
+      "layers": [
+        "chest",
+        "chest-glow",
+        "chest-fx"
+      ],
+      "files": {
+        "chest": "chest-closed_chest.png",
+        "chest-glow": "chest-closed_chest-glow.png",
+        "chest-fx": "chest-closed_chest-fx.png"
+      },
+      "groundRect": {
+        "col0": -0.3,
+        "row0": 0,
+        "col1": 1.3,
+        "row1": 1.2,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.8,
+      "anchorPx": [
+        64.0,
+        144.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 12,
+      "frameWidth": 128,
+      "fps": 12,
+      "loop": true,
+      "note": "closed chest idle loop (1 s at 12 fps): a glint slides down the gold bands. Layers bottom to top: chest, chest-glow, chest-fx"
+    },
+    "chest-open": {
+      "size": [
+        128,
+        280
+      ],
+      "layers": [
+        "chest",
+        "chest-glow",
+        "chest-fx"
+      ],
+      "files": {
+        "chest": "chest-open_chest.png",
+        "chest-glow": "chest-open_chest-glow.png",
+        "chest-fx": "chest-open_chest-fx.png"
+      },
+      "groundRect": {
+        "col0": -0.3,
+        "row0": 0,
+        "col1": 1.3,
+        "row1": 1.2,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 2.3,
+      "anchorPx": [
+        64.0,
+        264.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 30,
+      "frameWidth": 128,
+      "fps": 12,
+      "loop": false,
+      "note": "opening, once (2.5 s at 12 fps), then play chest-opened. 0-11 wiggle and light in the seams (a rising sound), 12 the lid bursts open (pop / chime), 12-25 the light beam fades, 13-29 stars and sparkles rise",
+      "keyFrames": {
+        "anticipation": "0-11",
+        "lidBurst": 12,
+        "beamPeak": 14,
+        "starsRise": "13-29",
+        "glowPulse": 16,
+        "settled": 29
+      }
+    },
+    "chest-opened": {
+      "size": [
+        128,
+        280
+      ],
+      "layers": [
+        "chest",
+        "chest-glow",
+        "chest-fx"
+      ],
+      "files": {
+        "chest": "chest-opened_chest.png",
+        "chest-glow": "chest-opened_chest-glow.png",
+        "chest-fx": "chest-opened_chest-fx.png"
+      },
+      "groundRect": {
+        "col0": -0.3,
+        "row0": 0,
+        "col1": 1.3,
+        "row1": 1.2,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 2.3,
+      "anchorPx": [
+        64.0,
+        264.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "frames": 12,
+      "frameWidth": 128,
+      "fps": 12,
+      "loop": true,
+      "note": "open chest idle loop (1 s at 12 fps): soft shimmering light and twinkles. Same size and anchor as chest-open, so it follows seamlessly"
+    }
+  }
+}

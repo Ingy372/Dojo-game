@@ -1,0 +1,38 @@
+{
+  "notes": "C10: display names and one short story line for the A6 decorations (PR #122, incoming-art/decor-pool-a6/). Fields follow content/dojo/decorations.json (id, name, description). Only the 6 entries under 'samples' have real ids from PR #122's sprites/static.json. Entries under 'tier1Kinds' and 'classPieces' use PROPOSED ids (marked proposed: true) because PR #122 has no art or ids for them yet; the Programmer or Artist can swap in final ids. Decorations are looks only and give no power. Names avoid existing decoration names (Stone Lantern, Bonsai Tree, Dojo Banner, Calligraphy Scroll, etc.) and approved names (Glowing Scroll Shelf, Dojo Trim).",
+  "samples": [
+    { "id": "decor-a6-class-scroll", "name": "Sunrise Class Scroll", "description": "A sun over the hills for every class you trained." },
+    { "id": "decor-a6-kick-pad", "name": "Bright Target Pad", "description": "Every kick you practiced left this pad a little proud." },
+    { "id": "decor-a6-keeper-statue", "name": "Floor Keeper Statue", "description": "A friendly keeper, thankful you brought light back to its floor." },
+    { "id": "decor-a6-journal-trophy", "name": "Journal Friend Trophy", "description": "A friend you freed from the shadow, smiling on a stand." },
+    { "id": "decor-a6-fan-stand", "name": "Breeze Fan", "description": "A paper fan that waves hello to every guest." },
+    { "id": "decor-a6-folding-screen", "name": "Quiet Garden Screen", "description": "A calm painted screen for a peaceful corner of your dojo." }
+  ],
+  "tier1Kinds": [
+    { "id": "decor-a6-fan-stand", "kind": "fan", "sameAs": "samples", "name": "Breeze Fan", "description": "A paper fan that waves hello to every guest." },
+    { "id": "decor-a6-lantern-small", "kind": "lantern", "proposed": true, "name": "Little Light Lantern", "description": "A small lantern that keeps a bit of the Tower's light." },
+    { "id": "decor-a6-bonsai-small", "kind": "bonsai", "proposed": true, "name": "Patient Bonsai", "description": "It grows slowly and steadily, just like your training." },
+    { "id": "decor-a6-cushion", "kind": "cushion", "proposed": true, "name": "Rest Cushion", "description": "A soft seat for a calm breath after practice." },
+    { "id": "decor-a6-banner-small", "kind": "banner", "proposed": true, "name": "Climber's Pennant", "description": "A little flag that cheers every step up the Tower." }
+  ],
+  "classPieces": {
+    "scrolls_note": "Seven variants of decor-a6-class-scroll (mount colour + picture swap). Subjects use the White to Orange curriculum names from docs/curriculum.md; the pictures stay wordless.",
+    "scrolls": [
+      { "id": "decor-a6-class-scroll-bow", "proposed": true, "name": "Scroll of the Bow", "description": "Every class starts and ends with a respectful bow." },
+      { "id": "decor-a6-class-scroll-form1", "proposed": true, "name": "Basic Form 1 Scroll", "description": "Your very first form, one careful step at a time." },
+      { "id": "decor-a6-class-scroll-form2", "proposed": true, "name": "Basic Form 2 Scroll", "description": "A second form, practiced until your feet remember." },
+      { "id": "decor-a6-class-scroll-key-on", "proposed": true, "name": "Key On Scroll", "description": "The Key On form, ready to open the next door." },
+      { "id": "decor-a6-class-scroll-kicks", "proposed": true, "name": "First Kicks Scroll", "description": "Front kick, inside kick, outside kick, then a spin!" },
+      { "id": "decor-a6-class-scroll-defense", "proposed": true, "name": "Safe and Smart Scroll", "description": "Self-defense practice helps you stay calm and safe." },
+      { "id": "decor-a6-class-scroll-kindness", "proposed": true, "name": "Helping Hands Scroll", "description": "Strong hands are best for helping others up." }
+    ],
+    "gear": [
+      { "id": "decor-a6-kick-pad", "sameAs": "samples", "name": "Bright Target Pad", "description": "Every kick you practiced left this pad a little proud." },
+      { "id": "decor-a6-focus-mitt", "proposed": true, "name": "Focus Mitt", "description": "Eyes on the mitt, and your aim gets sharper." },
+      { "id": "decor-a6-belt-rack", "proposed": true, "name": "Belt Ladder Rack", "description": "A place for every belt you earned on the climb." },
+      { "id": "decor-a6-sparring-helmet", "proposed": true, "name": "Safe Sparring Helmet", "description": "Good partners keep each other safe in practice." },
+      { "id": "decor-a6-water-bottle", "proposed": true, "name": "Class Water Bottle", "description": "A cool sip between rounds helps you keep going." },
+      { "id": "decor-a6-bow-mat", "proposed": true, "name": "Bow Mat", "description": "Stand here, bow to Sensei, and begin with respect." }
+    ]
+  }
+}

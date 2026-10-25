@@ -1,0 +1,14 @@
+{
+  "item": "C11",
+  "notes": "Unique name and one hopeful line per keeper statue and Journal trophy from content/dojo/decorations.json (#131). Ids unchanged. 'Floor Keeper Statue' and 'Journal Friend Trophy' can stay as group names. Each line is one sentence under 80 characters, ages 6-9.",
+  "decorations": [
+    { "id": "decor-a6-keeper-statue-floor1", "name": "Brave Lion-Dog Statue", "description": "This lion-dog guarded the Lantern Halls and cheers when you are brave." },
+    { "id": "decor-a6-keeper-statue-floor2", "name": "Patient Turtle Statue", "description": "Slow and steady, this turtle waited for light and reminds you to be patient." },
+    { "id": "decor-a6-keeper-statue-floor3", "name": "Peaceful Crane Statue", "description": "This crane stands tall and calm, showing you how to move with grace." },
+    { "id": "decor-a6-journal-trophy-swarmer", "name": "Speedy Swarmer Trophy", "description": "The quick little Swarmer zips happily now that the shadow is gone." },
+    { "id": "decor-a6-journal-trophy-shield", "name": "Shield Guard Trophy", "description": "The Shield Guard now holds its shield up to keep its friends safe." },
+    { "id": "decor-a6-journal-trophy-brute", "name": "Gentle Brute Trophy", "description": "The big, strong Brute is a gentle helper now, waving from its stand." },
+    { "id": "decor-a6-journal-trophy-keeper", "name": "Kind Keeper Trophy", "description": "The Floor Keeper is free again and keeps a warm light glowing for you." },
+    { "id": "decor-a6-journal-trophy-bopper", "name": "Bouncy Bopper Trophy", "description": "Bopper bounces in the light again, foam staff held up high." }
+  ]
+}

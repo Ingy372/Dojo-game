@@ -1,0 +1,127 @@
+{
+  "notes": "DRAFT for C13-4. The dash-only Sensei's Lesson (first-session-lessons.json keys) plus the White floor 4 practice room steps (tutorial-floor.json keys: advance 'tap'/'move', waitFor). Taught once, on White floor 4 with the Sleepy Sentry; health never drops below 1 in this room, and the stripe never overlaps a red circle. Every line teaches the shape cue (striped lane + '!!'), never colour alone: purple-and-white stripes + '!!' can't be COUNTERed, so DASH out; red circle + '!' is COUNTERed. One sentence per screen, under 12 words; tools/check-lessons.py checks it.",
+  "speaker": "sensei",
+  "lessons": [
+    {
+      "id": "lesson-dash-only",
+      "triggerKey": "firstDashOnlyStripe",
+      "order": 1,
+      "trigger": "White floor 4: the Sleepy Sentry's first stripe lane appears (game slows)",
+      "screens": [
+        "See the striped lane and the double marks!",
+        "Stripes can't be COUNTERed.",
+        "DASH out of the stripes!"
+      ],
+      "practice": "DASH out of the striped lane.",
+      "success": "Quick feet! You read the stripes.",
+      "retry": "That's okay. The stripes will come again.",
+      "slowdown": true,
+      "nudge": "Take your time. Tap the glowing DASH button!",
+      "earliestSession": 1,
+      "ignoresSessionLimit": true,
+      "fadingFollowUp": false
+    },
+    {
+      "id": "lesson-dash-only-hint-2",
+      "triggerKey": "secondDashOnlyStripe",
+      "order": 2,
+      "trigger": "The second stripe lane (no slowdown; COUNTER dims, DASH pulses)",
+      "screens": [
+        "Stripes again, so DASH!"
+      ],
+      "practice": "DASH out of the striped lane.",
+      "success": "You saw it right away!",
+      "retry": "That's okay. The stripes will come again.",
+      "slowdown": false,
+      "earliestSession": 1,
+      "ignoresSessionLimit": true,
+      "fadingFollowUp": true
+    },
+    {
+      "id": "lesson-circle-or-stripes",
+      "triggerKey": "firstRedCircleAfterStripes",
+      "order": 3,
+      "trigger": "First red circle after the stripe lesson (a Wick Wisp joins; never at the same time as a stripe)",
+      "screens": [
+        "A red circle with a single mark means COUNTER.",
+        "A striped lane with double marks means DASH."
+      ],
+      "practice": "COUNTER the circle. DASH out of stripes.",
+      "success": "You knew both!",
+      "retry": "That's okay. Watch the shape, then choose.",
+      "slowdown": false,
+      "earliestSession": 1,
+      "ignoresSessionLimit": true,
+      "fadingFollowUp": false
+    }
+  ],
+  "floorSteps": [
+    {
+      "id": "f4-enter",
+      "trigger": "White floor 4 practice room opens; the Sleepy Sentry is dozing",
+      "screens": [
+        "This stone guard is very sleepy."
+      ],
+      "success": null,
+      "earliestRun": 1,
+      "advance": "tap",
+      "waitFor": null,
+      "order": 1
+    },
+    {
+      "id": "f4-first-stripes",
+      "trigger": "The Sentry yawns and stomps; uses lesson-dash-only",
+      "screens": [
+        "Watch the floor, not just its face."
+      ],
+      "success": "Quick feet! You read the stripes.",
+      "retry": "That's okay. The stripes will come again.",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "dashOutOfStripes",
+      "order": 2,
+      "usesLesson": "lesson-dash-only"
+    },
+    {
+      "id": "f4-again",
+      "trigger": "Second and third stripes, a little apart; uses lesson-dash-only-hint-2",
+      "screens": [
+        "Here it comes again, and you've got this."
+      ],
+      "success": "Steady and quick. Nice.",
+      "retry": "That's okay. The stripes will come again.",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "dashOutOfStripesTwice",
+      "order": 3,
+      "usesLesson": "lesson-dash-only-hint-2"
+    },
+    {
+      "id": "f4-both",
+      "trigger": "A Wick Wisp joins; its red circle never overlaps a stripe; uses lesson-circle-or-stripes",
+      "screens": [
+        "Now watch the shape, then choose."
+      ],
+      "success": "You knew both.",
+      "retry": "That's okay. Watch the shape, then choose.",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "calmSentry",
+      "order": 4,
+      "usesLesson": "lesson-circle-or-stripes"
+    },
+    {
+      "id": "f4-freed",
+      "trigger": "Sleepy Sentry calmed; it wakes and stands watch",
+      "screens": [
+        "It's awake now, and it's glad you came."
+      ],
+      "success": "What did the stripes look like?",
+      "earliestRun": 1,
+      "advance": "tap",
+      "waitFor": null,
+      "order": 5
+    }
+  ],
+  "maxNewLessonsPerRoom": 1
+}
