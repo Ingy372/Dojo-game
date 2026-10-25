@@ -32,3 +32,4 @@ export * from './earning';
 export * from './unlocks';
 export * from './audio';
 export * from './bossTag';
+export * from './safety';
