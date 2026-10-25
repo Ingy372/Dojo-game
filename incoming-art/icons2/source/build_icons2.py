@@ -92,8 +92,8 @@ def rooted_form():
     I = Ink((1.0, 0, 0.5))
     g = I.layer()  # ground + root marks (soft ink), symmetric
     I.limb(g, [(38, 89), (90, 89)], 2.2)
-    for x in (42.5, 47.5):
-        I.limb(g, [(x, 92), (x - 1, 95.5)], 2.2)
+    for x in (41.5, 46.5):
+        I.limb(g, [(x, 92), (x - 1, 95.5)], 2.4)
         I.limb(g, [(128 - x, 92), (128 - x + 1, 95.5)], 2.2)
     I.put(g, soft)
     m = I.layer()
