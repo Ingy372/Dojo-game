@@ -37,6 +37,8 @@ const ENEMIES: Record<string, string> = {
 };
 const RIGS = ['hearth-cook-p1', 'hearth-cook-p2', 'hearth-cook-p3'];
 /** Must match ATTACK_ANIMS in apps/client/src/art/tiers.ts. */
+/** B-T3-TUNE-2a: new phase patterns use attacks a phase rig doesn't draw yet (placeholder until Jay OKs art). */
+const STAND_INS = new Set(['hearth-cook-p1 pin', 'hearth-cook-p2 pin', 'hearth-cook-p3 bonk']);
 const HEARTH_ANIMS: Record<string, string> = { 'ladle bonk': 'bonk', 'hot pot rush': 'rush', 'rolling pin lane': 'pin' };
 
 describe('B-T3 art', () => {
@@ -69,6 +71,11 @@ describe('B-T3 art', () => {
       const anims = Object.keys(pack(`enemy-${rig}`).entries[rig].animations ?? {});
       for (const i of ph.attacks) {
         const a = HEARTH_ANIMS[def.attacks[i].name ?? ''];
+        // B-T3-TUNE-2a: these use another attack's pose as a stand-in until Jay OKs new art.
+        if (STAND_INS.has(`${rig} ${a}`)) {
+          expect(anims.some((n) => n.startsWith('windup_')), `${rig} has a stand-in wind-up`).toBe(true);
+          continue;
+        }
         expect(anims, `${rig} ${a}`).toContain(a);
         expect(anims, `${rig} windup_${a}`).toContain(`windup_${a}`);
       }

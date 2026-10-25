@@ -26,6 +26,8 @@ export interface EnemyAttackDef {
 export interface EnemyPhaseDef {
   atHealthFraction: number;
   attacks: number[];
+  /** B-T3-TUNE-2c: what Sensei says when this phase starts (shown during the phase pause). */
+  senseiLine: string | null;
 }
 
 /** B-T3: when beaten, it splits into smaller enemies (Dough Blob into 2 Doughlings). */
@@ -80,6 +82,8 @@ export interface EnemyDef {
   /** Bosses may be bigger than one tile and should only be placed in open rooms. */
   boss: boolean;
   summon: EnemySummonDef | null;
+  /** B-T3-TUNE-2a: player hits do 0 (a "clang") while any helper it called is still up. */
+  lidWhileHelpers?: boolean;
   /** B-T3: boss phases, highest health first (null or missing = all attacks in turn). */
   phases?: EnemyPhaseDef[] | null;
   /** B-T3: splits into smaller enemies when beaten. */
@@ -222,7 +226,7 @@ export function loadEnemy(data: unknown): EnemyDef {
         if (k < 0) throw new EnemyError(id, `"phases[${i + 1}]" names attack "${String(n)}", which isn't in "attacks"`);
         return k;
       });
-      return { atHealthFraction: at, attacks: list };
+      return { atHealthFraction: at, attacks: list, senseiLine: typeof o.senseiLine === 'string' ? o.senseiLine : null };
     });
     if (phases[0].atHealthFraction !== 1) throw new EnemyError(id, '"phases[1].atHealthFraction" must be 1');
   }
@@ -252,6 +256,7 @@ export function loadEnemy(data: unknown): EnemyDef {
     shield,
     boss,
     summon,
+    lidWhileHelpers: raw.lidWhileHelpers === true,
     phases,
     split,
     winded,
