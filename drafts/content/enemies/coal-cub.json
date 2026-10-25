@@ -1,7 +1,7 @@
 {
   "id": "coal-cub",
   "name": "Coal Cub",
-  "notes": "DRAFT for C13-2 (bestiary-plan.md). Warm, playful little coal pups that pounce in groups. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). Warm, playful little coal pups that pounce in groups. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
   "color": "#4a3b36",
   "maxHealth": 80,
   "power": 33,

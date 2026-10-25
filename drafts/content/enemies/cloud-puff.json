@@ -1,7 +1,7 @@
 {
   "id": "cloud-puff",
   "name": "Cloud Puff",
-  "notes": "DRAFT for C13-3 (bestiary-plan.md). Fluffy clouds. A big one splits into two small ones. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Fluffy clouds. A big one splits into two small ones. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
   "color": "#e4ecf2",
   "maxHealth": 114,
   "power": 53,
@@ -37,7 +37,7 @@
   "variants": {
     "cloudlet": {
       "name": "Cloudlet",
-      "notes": "Smaller Cloud Puff from the split. Stats TODO (R-BAL-8). Never splits again.",
+      "notes": "Smaller Cloud Puff from the split. Stats still TODO (R-BAL-8 filled the parent but not this variant). Never splits again.",
       "color": "#f3f7fa",
       "maxHealth": "TODO",
       "power": "TODO",

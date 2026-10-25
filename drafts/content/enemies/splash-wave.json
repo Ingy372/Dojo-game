@@ -1,7 +1,7 @@
 {
   "id": "splash-wave",
   "name": "Splash Wave",
-  "notes": "DRAFT for C13-2 (bestiary-plan.md). A rolling wave splashes across one lane of the river. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). A rolling wave splashes across one lane of the river. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
   "color": "#5b8fd1",
   "maxHealth": 226,
   "power": 43,

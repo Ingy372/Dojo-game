@@ -1,7 +1,7 @@
 {
   "id": "storm-wisp",
   "name": "Storm Wisp",
-  "notes": "DRAFT for C13-3 (bestiary-plan.md). Quick little storm-cloud wisps in groups. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Quick little storm-cloud wisps in groups. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
   "color": "#8c96b0",
   "maxHealth": 126,
   "power": 61,

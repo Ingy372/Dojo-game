@@ -8,7 +8,7 @@
       "order": 1,
       "trigger": "White floor 4: the Sleepy Sentry's first stripe lane appears (game slows)",
       "screens": [
-        "See the striped lane and the two marks!",
+        "See the striped lane and the double marks!",
         "Stripes can't be COUNTERed.",
         "DASH out of the stripes!"
       ],
@@ -43,8 +43,8 @@
       "order": 3,
       "trigger": "First red circle after the stripe lesson (a Wick Wisp joins; never at the same time as a stripe)",
       "screens": [
-        "A red circle with one mark means COUNTER.",
-        "A striped lane with two marks means DASH."
+        "A red circle with a single mark means COUNTER.",
+        "A striped lane with double marks means DASH."
       ],
       "practice": "COUNTER the circle. DASH out of stripes.",
       "success": "You knew both!",

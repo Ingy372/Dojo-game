@@ -1,7 +1,7 @@
 {
   "id": "stack-golem",
   "name": "Stack Golem",
-  "notes": "DRAFT for C13-2 (bestiary-plan.md). A tower of stones. Each hit knocks one off and it gets smaller. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). A tower of stones. Each hit knocks one off and it gets smaller. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
   "color": "#7d756a",
   "maxHealth": 345,
   "power": 53,

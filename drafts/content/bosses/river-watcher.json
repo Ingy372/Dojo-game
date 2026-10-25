@@ -1,0 +1,112 @@
+{
+  "id": "river-watcher",
+  "name": "The River Watcher",
+  "notes": "DRAFT for C13-5 (bestiary-plan.md; lore from drafts/content/lore/guardians-and-relics.json, unchanged). Blue Guardian on floor 5. Same shape as content/enemies/floor-keeper.json, plus phases. Stats are TODO for the Researcher (the scaling guide puts a Guardian at about 90% of the tier max; hits-to-beat in the 40-80 boss band). Faith tie-ins stay out until Jay decides; see faithOverlayKey.",
+  "color": "#5aa0d6",
+  "boss": true,
+  "guardian": true,
+  "tier": "blue",
+  "band": "F5",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attacks": [
+    {
+      "name": "beak peck",
+      "strength": "TODO",
+      "startRange": "TODO",
+      "reach": "TODO",
+      "areaRadius": "TODO",
+      "telegraphTicks": 18,
+      "recoverTicks": "TODO"
+    },
+    {
+      "name": "muddy splash",
+      "strength": "TODO",
+      "startRange": "TODO",
+      "reach": "TODO",
+      "areaRadius": "TODO",
+      "telegraphTicks": 20,
+      "recoverTicks": "TODO",
+      "zone": {
+        "damage": 0,
+        "effect": "slow",
+        "slowPercent": 30,
+        "slowPercentGuided": 15,
+        "endsOnStepOut": true,
+        "maxPuddles": 2
+      }
+    },
+    {
+      "name": "river wave",
+      "strength": "TODO",
+      "startRange": "TODO",
+      "reach": "TODO",
+      "areaRadius": "TODO",
+      "telegraphTicks": 24,
+      "recoverTicks": "TODO",
+      "dashOnly": true,
+      "shape": "lane",
+      "shapeCue": "lane",
+      "tell": "purple-and-white stripes + '!!' + whoosh",
+      "counterable": false,
+      "answer": "dash",
+      "overlapOnGuided": false,
+      "noOverlapWithRedCircle": false,
+      "overlapFromFloor": 3,
+      "minOffsetFromRedCircleTicks": 10
+    }
+  ],
+  "signature": "River Wave",
+  "phases": [
+    {
+      "id": "peck",
+      "atHealthFraction": 1.0,
+      "attacks": [
+        "beak peck"
+      ],
+      "tell": "It pulls its long neck back; red circle.",
+      "counterplay": "COUNTER the peck.",
+      "senseiLine": "The neck pulls back first. Ready."
+    },
+    {
+      "id": "splash",
+      "atHealthFraction": 0.66,
+      "attacks": [
+        "beak peck",
+        "muddy splash"
+      ],
+      "tell": "Muddy puddles splash onto the floor.",
+      "counterplay": "Keep to clean water.",
+      "senseiLine": "Clean water is safe water."
+    },
+    {
+      "id": "wave",
+      "atHealthFraction": 0.33,
+      "attacks": [
+        "muddy splash",
+        "river wave"
+      ],
+      "tell": "A striped wave lane and double marks.",
+      "counterplay": "DASH out of the wave.",
+      "senseiLine": "The river rises. DASH out."
+    }
+  ],
+  "parSeconds": "TODO",
+  "lines": {
+    "intro": "The water is muddy. It can't see who you are.",
+    "freed": "The water is clear. I can see you now, friend.",
+    "senseiAfter": "You stayed calm in deep water."
+  },
+  "description": "The River Watcher pecks, splashes muddy puddles that slow you a little, then rolls a striped wave down a lane.",
+  "bestiary": {
+    "tip": "Stay calm in deep water.",
+    "lore": {
+      "blue": "A heron made of water. The shadow muddied its eyes, so it cannot see who is friend or foe. Free it, and its light comes home."
+    }
+  },
+  "faithOverlayKey": "river-watcher"
+}
