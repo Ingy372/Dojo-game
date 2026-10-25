@@ -1193,29 +1193,24 @@ export class DojoScene extends Phaser.Scene {
       choices.forEach((n, i) => {
         const on = this.profile.playLimitMinutes === n;
         const x = x0 + i * (bw + gap);
-        const bg = this.add.rectangle(x, by, bw, bh, on ? 0x3aa57a : 0x2a2536).setOrigin(0).setStrokeStyle(on ? 3 : 2, on ? 0xffd166 : 0xffffff, on ? 1 : 0.35).setInteractive().setData('choice', true);
-        const label = this.add.text(x + bw / 2, by + bh / 2, n === 0 ? pt.off : pt.minutes.replace('{n}', String(n)), { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp()).setData('choice', true);
-        bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+        const b = roundButton(this, { x, y: by, w: bw, h: bh, label: n === 0 ? pt.off : pt.minutes.replace('{n}', String(n)), color: on ? 0x3aa57a : 0x2a2536, size: 16, selected: on, onTap: () => {
           sfx.place(true);
           this.profile.playLimitMinutes = n;
           writeSave(this.profile);
           draw();
-        });
-        box.add([bg, label]);
+        } }, box);
+        b.visual.setData('choice', true);
+        b.hit.setData('choice', true);
       });
     };
     draw();
     const dw = 140;
     const dy = Math.min(height - 12 - 44, by + bh + 22);
-    const belt = this.add.rectangle(width / 2 - dw - 8, dy, dw, 44, 0x2a2536).setOrigin(0).setStrokeStyle(2, 0xffd166, 0.8).setInteractive();
-    box.add([belt, this.add.text(width / 2 - dw / 2 - 8, dy + 22, BELT_TEXT.open, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffd166' }).setOrigin(0.5).setResolution(crisp())]);
-    belt.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+    roundButton(this, { x: width / 2 - dw - 8, y: dy, w: dw, h: 44, label: BELT_TEXT.open, color: 0x2a2536, size: 16, stroke: 0xffd166, labelColor: '#ffd166', onTap: () => {
       box.destroy();
       this.openBeltEntry(back);
-    });
-    const done = this.add.rectangle(width / 2 + 8, dy, dw, 44, 0x3aa57a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
-    box.add([done, this.add.text(width / 2 + 8 + dw / 2, dy + 22, pt.done, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
-    done.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, close);
+    } }, box);
+    roundButton(this, { x: width / 2 + 8, y: dy, w: dw, h: 44, label: pt.done, color: 0x3aa57a, size: 16, onTap: close }, box);
   }
 
   /** Grown-up setting (B-BELT): the real belt and stripes. Choices below what's saved are greyed out. */
@@ -1247,12 +1242,11 @@ export class DojoScene extends Phaser.Scene {
     const draw = () => {
       box.list.filter((o) => o.getData('pick')).forEach((o) => o.destroy());
       const chip = (x: number, y: number, cw2: number, label: string, swatch: number | null, on: boolean, ok: boolean, tap: () => void) => {
-        const bg = this.add.rectangle(x, y, cw2, ch, on ? 0x3aa57a : 0x2a2536).setOrigin(0).setStrokeStyle(on ? 3 : 2, on ? 0xffd166 : 0xffffff, on ? 1 : 0.35).setAlpha(ok ? 1 : 0.35).setData('pick', true);
-        const parts: Phaser.GameObjects.GameObject[] = [bg];
-        if (swatch !== null) parts.push(this.add.rectangle(x + 6, y + ch / 2 - 7, 14, 14, swatch).setOrigin(0).setStrokeStyle(1, 0xffffff, 0.6).setAlpha(ok ? 1 : 0.35).setData('pick', true));
-        parts.push(this.add.text(x + (swatch !== null ? cw2 / 2 + 8 : cw2 / 2), y + ch / 2, label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: '#ffffff', align: 'center', wordWrap: { width: cw2 - (swatch !== null ? 26 : 8) } }).setOrigin(0.5).setAlpha(ok ? 1 : 0.35).setResolution(crisp()).setData('pick', true));
-        if (ok) bg.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => { sfx.place(true); tap(); draw(); });
-        box.add(parts);
+        // P-MENU-c: the shared rounded button; the picked chip is `selected`, a too-low choice `disabled`.
+        const b = roundButton(this, { x, y, w: cw2, h: ch, label, color: on ? 0x3aa57a : 0x2a2536, size: 13, selected: on, disabled: !ok, labelWrap: cw2 - (swatch !== null ? 26 : 8), labelDx: swatch !== null ? 8 : 0, onTap: () => { sfx.place(true); tap(); draw(); } }, box);
+        if (swatch !== null) b.visual.addAt(this.add.rectangle(-cw2 / 2 + 6, -7, 14, 14, swatch).setOrigin(0).setStrokeStyle(1, 0xffffff, 0.6), 2);
+        b.visual.setData('pick', true);
+        b.hit.setData('pick', true);
       };
       belts.forEach((b, i) => {
         const x = left + (i % cols) * (cw + gap);
@@ -1272,9 +1266,7 @@ export class DojoScene extends Phaser.Scene {
     const bw = 120;
     const byy = Math.min(height - 10 - 44, sy + ch + 14);
     const button = (x: number, label: string, color: number, tap: () => void) => {
-      const bg = this.add.rectangle(x, byy, bw, 44, color).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
-      box.add([bg, this.add.text(x + bw / 2, byy + 22, label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
-      bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, tap);
+      roundButton(this, { x, y: byy, w: bw, h: 44, label, color, size: 16, onTap: tap }, box);
     };
     button(width / 2 - bw - 8, t.back, 0x4a4a55, close);
     button(width / 2 + 8, t.save, 0x3aa57a, () => this.confirmBeltEntry(belts, pick, () => {
@@ -1391,9 +1383,9 @@ export class DojoScene extends Phaser.Scene {
     const t = SAFE_TEXT;
     const { height } = view(this);
     const label = this.add.text(12 + 8, height - 12 - 22, t.wipeButton, { fontFamily: FONT, fontSize: '14px', color: '#ff9f9f' }).setOrigin(0, 0.5).setResolution(crisp());
-    const bg = this.add.rectangle(12, height - 12 - 44, label.width + 16, 44, 0x2a1a20).setOrigin(0).setStrokeStyle(1, 0xff9f9f, 0.5).setInteractive();
-    box.add([bg, label]);
-    bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.confirmWipe());
+    const w = label.width + 16;
+    label.destroy();
+    roundButton(this, { x: 12, y: height - 12 - 44, w, h: 44, label: t.wipeButton, color: 0x2a1a20, size: 14, stroke: 0xff9f9f, labelColor: '#ff9f9f', onTap: () => this.confirmWipe() }, box);
   }
 
   private confirmWipe(): void {
@@ -1407,18 +1399,12 @@ export class DojoScene extends Phaser.Scene {
     card.add([title, help]);
     const bw = 140;
     const by = Math.min(height - 12 - 44, help.y + help.height + 22);
-    const keep = this.add.rectangle(width / 2 - bw - 8, by, bw, 44, 0x3aa57a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
-    const erase = this.add.rectangle(width / 2 + 8, by, bw, 44, 0x8a2a35).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
-    card.add([
-      keep, this.add.text(width / 2 - bw / 2 - 8, by + 22, t.wipeCancel, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp()),
-      erase, this.add.text(width / 2 + 8 + bw / 2, by + 22, t.wipeConfirm, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp()),
-    ]);
-    keep.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => card.destroy());
-    erase.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+    roundButton(this, { x: width / 2 - bw - 8, y: by, w: bw, h: 44, label: t.wipeCancel, color: 0x3aa57a, size: 16, onTap: () => card.destroy() }, card);
+    roundButton(this, { x: width / 2 + 8, y: by, w: bw, h: 44, label: t.wipeConfirm, color: 0x8a2a35, size: 16, onTap: () => {
       wipeAllData();
       // A fresh start: reload so every scene and module reads the empty save.
       window.location.reload();
-    });
+    } }, card);
   }
 
   // ---------------------------------------------------------------- hidden testing screen

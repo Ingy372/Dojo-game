@@ -5,6 +5,7 @@ import Phaser from 'phaser';
 import { makeGateQuestion } from '@dojo/sim';
 import { PLAY_TIME_TEXT } from '../game/playTime';
 import { FONT, crisp, view } from './theme';
+import { button } from './button';
 
 /** Shows the gate. A right answer runs `pass`; a wrong answer or Back runs `leave`. */
 export function showGrownUpGate(scene: Phaser.Scene, pass: () => void, leave: () => void, depth = 70): void {
@@ -25,15 +26,11 @@ export function showGrownUpGate(scene: Phaser.Scene, pass: () => void, leave: ()
   const x0 = width / 2 - (q.choices.length * bw + (q.choices.length - 1) * gap) / 2;
   q.choices.forEach((n, i) => {
     const x = x0 + i * (bw + gap);
-    const bg = scene.add.rectangle(x, by, bw, bh, 0x2a2536).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35).setInteractive();
-    box.add([bg, scene.add.text(x + bw / 2, by + bh / 2, String(n), { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
-    bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => out(n === q.answer ? pass : leave));
+    button(scene, { x, y: by, w: bw, h: bh, label: String(n), color: 0x2a2536, size: 20, onTap: () => out(n === q.answer ? pass : leave) }, box);
   });
   const cw = 120;
   const cy = by + bh + 24;
-  const cancel = scene.add.rectangle(width / 2 - cw / 2, cy, cw, 38, 0x4a4a55).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.35).setInteractive();
-  box.add([cancel, scene.add.text(width / 2, cy + 19, pt.gateCancel, { fontFamily: FONT, fontStyle: 'bold', fontSize: '15px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
-  cancel.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => out(leave));
+  button(scene, { x: width / 2 - cw / 2, y: cy, w: cw, h: 44, label: pt.gateCancel, color: 0x4a4a55, size: 15, onTap: () => out(leave) }, box);
 }
 
 /** The only way to open a page outside the game: the gate question first, then a new tab. */

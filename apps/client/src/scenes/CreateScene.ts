@@ -14,6 +14,7 @@ import { loadSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
 import { FONT, crisp, view, hiDpi } from '../ui/theme';
+import { button } from '../ui/button';
 
 export interface CreateSceneData {
   /** True the first time: a welcome, and no way back until the character is made. */
@@ -198,16 +199,8 @@ export class CreateScene extends Phaser.Scene {
   }
 
   private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void, on = false): void {
-    const bg = this.add
-      .rectangle(x, y, w, h, color)
-      .setOrigin(0)
-      .setStrokeStyle(on ? 3 : 2, on ? GOLD : 0xffffff, on ? 1 : 0.3);
-    this.ui.add(bg);
-    this.text(x + w / 2, y + h / 2, label, size, '#ffffff', true).setOrigin(0.5);
-    bg.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-      sfx.unlock();
-      onTap();
-    });
+    // P-MENU-c: the shared rounded button (press feedback, 44 pt tap area); `on` is the picked choice.
+    button(this, { x, y, w, h, label, color, size, onTap, selected: on }, this.ui);
   }
 
   private text(x: number, y: number, s: string, size: number, color: string, bold = false, family = FONT): Phaser.GameObjects.Text {
