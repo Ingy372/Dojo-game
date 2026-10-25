@@ -1,6 +1,6 @@
 # Tier 8: Brown Belt, The Root Library
 
-**Belt form:** Nihanchi  
+**Belt form:** Nahanchi  
 **Guardian:** The Root Keeper
 
 ## The Tower's history

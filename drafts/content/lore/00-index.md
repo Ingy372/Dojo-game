@@ -22,10 +22,10 @@ Long ago, God gave the town a great light. It shone at the top of the Tower and 
 | 2 | Yellow | Basic Form 2 | [The Sunrise Garden](02-yellow.md) | The Sun Gardener | The pieces of light fell in a circle around the Tower. Someone was standing in the middle, trying to catch them. |
 | 3 | Orange | Keon | [The Ember Kitchens](03-orange.md) | The Hearth Cook | The night the storm came, one student left supper and ran up the Tower to help. |
 | 4 | Green | David and Goliath | [The Giant's Steps](04-green.md) | The Stone Giant | The shadow is not one monster. It is made of many little fears, all stacked together. |
-| 5 | Blue | Penon 1 | [The Quiet River](05-blue.md) | The River Watcher | A boat's log says one brave traveler carried the great light through the rain. |
-| 6 | Red | Penon 2 | [The Forge of Courage](06-red.md) | The Ember Knight | The traveler who carried the light wore red. Their shield kept the rain off it. |
-| 7 | Red/Black | Penon 3 | [The Hall of Echoes](07-red-black.md) | The Echo Mask | The echoes told the traveler to give up. The traveler kept holding on. |
-| 8 | Brown | Nihanchi | [The Root Library](08-brown.md) | The Root Keeper | The last book has a page about the traveler. It says they were once a student of this very Tower. |
+| 5 | Blue | Pinon 1 | [The Quiet River](05-blue.md) | The River Watcher | A boat's log says one brave traveler carried the great light through the rain. |
+| 6 | Red | Pinon 2 | [The Forge of Courage](06-red.md) | The Ember Knight | The traveler who carried the light wore red. Their shield kept the rain off it. |
+| 7 | Red/Black | Pinon 3 | [The Hall of Echoes](07-red-black.md) | The Echo Mask | The echoes told the traveler to give up. The traveler kept holding on. |
+| 8 | Brown | Nahanchi | [The Root Library](08-brown.md) | The Root Keeper | The last book has a page about the traveler. It says they were once a student of this very Tower. |
 | 9 | Brown/Black | Possi | [The Storm Stair](09-brown-black.md) | The Storm Herald | The storm still spins at the top. The traveler is there, holding the last of the light. |
 | 10 | Black | (not named in the data yet) | [The Summit](10-black.md) | The Lost Lightbearer | A storm broke the light, and a brave student tried to save it. No one is to blame. Together, you bring it home. |
 

@@ -161,7 +161,7 @@
       "tier": "blue",
       "order": 5,
       "belt": "Blue",
-      "form": "Penon 1",
+      "form": "Pinon 1",
       "place": "The Quiet River",
       "clue": "A boat's log says one brave traveler carried the great light through the rain.",
       "guardian": {
@@ -200,7 +200,7 @@
       "tier": "red",
       "order": 6,
       "belt": "Red",
-      "form": "Penon 2",
+      "form": "Pinon 2",
       "place": "The Forge of Courage",
       "clue": "The traveler who carried the light wore red. Their shield kept the rain off it.",
       "guardian": {
@@ -239,7 +239,7 @@
       "tier": "red-black",
       "order": 7,
       "belt": "Red/Black",
-      "form": "Penon 3",
+      "form": "Pinon 3",
       "place": "The Hall of Echoes",
       "clue": "The echoes told the traveler to give up. The traveler kept holding on.",
       "guardian": {
@@ -278,7 +278,7 @@
       "tier": "brown",
       "order": 8,
       "belt": "Brown",
-      "form": "Nihanchi",
+      "form": "Nahanchi",
       "place": "The Root Library",
       "clue": "The last book has a page about the traveler. It says they were once a student of this very Tower.",
       "guardian": {
