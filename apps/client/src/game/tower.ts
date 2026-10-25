@@ -6,10 +6,11 @@ import { ensureDifficulty } from './difficulty';
 import { homeDojo, setBowDue } from './dojo';
 import { localDay } from './lessons';
 import { writeSave } from './save';
+import { testFlags } from './beta';
 
 /** `replayTutorial`: the Lesson Scroll's "Replay the tutorial floor" (M7-P5). */
 export function startTowerRun(profile: Profile, training: TrainingState, opts: { replayTutorial?: boolean } = {}): RunState {
-  const params = new URLSearchParams(window.location.search);
+  const params = testFlags();
   const seedParam = Number(params.get('seed'));
   const seed = Number.isFinite(seedParam) && seedParam > 0 ? seedParam : Math.floor(Math.random() * 2147483647) + 1;
   const firstRoomId = params.get('room') ?? undefined;

@@ -12,7 +12,7 @@
   "confirmTitle": "Are you sure?",
   "confirmHelp": "Save {entry}? Belts here can only go up, so this can't be lowered later.",
   "confirmYes": "Yes, save",
-  "confirmNo": "Back",
+  "confirmNo": "Not yet",
   "entryStripes": "{belt}, {n} stripes",
   "entryOne": "{belt}, 1 stripe",
   "entryNone": "{belt}"

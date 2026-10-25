@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "npm run dev -w @dojo/client",
     "build": "npm run build -w @dojo/client",
+    "build:beta": "npm run build:beta -w @dojo/client",
     "test": "npm test -w @dojo/sim",
     "typecheck": "npm run typecheck -w @dojo/sim && npm run typecheck -w @dojo/client"
   },
