@@ -19,6 +19,7 @@ import {
   COMBAT,
   MOVEMENT,
   TICKS_PER_SECOND,
+  realClock,
   TELEGRAPH_NEARLY_FULL,
   counterWindowTicks,
   currentAttack,
@@ -44,6 +45,7 @@ import {
   characterSetup,
   modsFrom,
   rarityRank,
+  type GearItem,
   strikeCost,
   runEffects,
   setPlayerMods,
@@ -63,7 +65,13 @@ import {
   type TrainingState,
   TEMPO,
   SCREEN_SHAKE,
-  eventShakeScale,
+  hurtShakeScale,
+  realSecondsToTicks,
+  realTicksPerSecond,
+  ticksToRealMs,
+  bossTagLayout,
+  BOSS_TAG,
+  type TagBox,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
@@ -74,6 +82,7 @@ const TUTORIAL = loadTutorialLines(tutorialData);
 import { type PackName, addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { ICON_PACK } from '../art/icons';
+import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { ENEMY_PACKS, auraId, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
@@ -245,6 +254,8 @@ export class GameScene extends Phaser.Scene {
   private leaving = false;
   private picker: InsightPicker | null = null;
   private doorViews: DoorView[] = [];
+  /** K31: world box of the boss's name + small bar, for the '!' cue to avoid. */
+  private bossTagWorld: { left: number; right: number; top: number; bottom: number } | null = null;
   private chestImgs: Phaser.GameObjects.Image[] = [];
   private shrineImgs: Phaser.GameObjects.Image[] = [];
   /** When the chest started opening (its 2.5 s opening plays once), or null. */
@@ -324,6 +335,8 @@ export class GameScene extends Phaser.Scene {
     const tier = currentTraining().belt.tier;
     const auras = testAura() || new URLSearchParams(window.location.search).has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
     loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...new Set(Object.values(ENEMY_PACKS).map((p) => p.pack))]);
+
+    loadGearIcons(this);
   }
 
   /** K25: character art plays at the game tempo (read by LayeredSprite). */
@@ -400,7 +413,7 @@ export class GameScene extends Phaser.Scene {
     // Guarding tethers sit just under the red danger shapes.
     this.tether = this.add.graphics().setDepth(dim ? 9.5 : 0.9);
     this.danger = this.add.graphics().setDepth(dim ? 10 : 1);
-    this.cues = this.add.graphics().setDepth(9);
+    this.cues = this.add.graphics().setDepth(9.5);
     this.marker = this.add.circle(0, 0, TILE * 0.22).setStrokeStyle(3, COLORS.marker, 0.9).setVisible(false).setDepth(2);
     this.player = this.makePlayer();
 
@@ -581,9 +594,11 @@ export class GameScene extends Phaser.Scene {
     const g = this.cues;
     const pulse = inWindow && !reducedMotion() ? 1 + 0.15 * Math.abs(Math.sin(now / 90)) : 1;
     const r = 15 * pulse;
-    const color = inWindow ? 0xffd166 : 0xff8a80;
-    g.fillStyle(0x1b1530, 0.75).fillCircle(x, y, r + 3);
-    g.lineStyle(4, 0xffffff, 0.25).strokeCircle(x, y, r);
+    // K27 fix 2: always full strength (opaque disc, solid colors) so it never reads faint over art.
+    const color = inWindow ? 0xffd166 : 0xff5a4f;
+    g.fillStyle(0x1b1530, 1).fillCircle(x, y, r + 4);
+    g.lineStyle(2, 0xffffff, 1).strokeCircle(x, y, r + 4);
+    g.lineStyle(4, 0x4a4060, 1).strokeCircle(x, y, r);
     g.lineStyle(5, color, 1).beginPath();
     g.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Phaser.Math.Clamp(inWindow ? 1 : fill, 0.02, 1), false);
     g.strokePath();
@@ -669,7 +684,8 @@ export class GameScene extends Phaser.Scene {
       this.danger.lineStyle(inWindow ? 6 : 3 * glow, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
       this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
       if (inWindow) this.counterWindowOpen = true;
-      this.drawWindupCue(x * TILE, y * TILE - v.top - 38, elapsed / e.windupTotal, inWindow, now);
+      const at = this.windupCueSpot(x * TILE, y * TILE, v.top, e.def.radius * TILE);
+      this.drawWindupCue(at.x, at.y, elapsed / e.windupTotal, inWindow, now);
     } else if (e.mode === 'recover') {
       // The attack itself (it lands on its first frame), then catching its breath.
       const anim = v.pushing ? this.enemyAnim(s, 'pushpaw', 'attack') : this.enemyAnim(s, v.attack, 'attack');
@@ -746,7 +762,7 @@ export class GameScene extends Phaser.Scene {
     const feetOnScreen = (e.pos.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
     n.layout(others, (feetOnScreen - HUD_BOTTOM) / (cam.zoom / DPR), e.mode === 'defeated');
     const windupSec = e.mode === 'windup' ? Math.min(e.windupTotal, e.windupTotal - e.modeTicks + blend) / TICKS_PER_SECOND : null;
-    if (n.update(e, now, windupSec, frame, TILE).clank) sfx.clank();
+    if (n.update(e, now, windupSec, frame, TILE, this.shakeScale('windup')).clank) sfx.clank();
   }
 
   /** The first of these animations the creature has (e.g. the boss's "windup_slam", else "windup"). */
@@ -1066,7 +1082,7 @@ export class GameScene extends Phaser.Scene {
           if (ev.playerId === this.me) this.tutorialDid('counter');
           const p = this.world.players[ev.playerId];
           sfx.block();
-          this.impact(FEEL.block, this.hurtShake('block'));
+          this.impact(FEEL.block, this.shakeScale('block'));
           this.ring(p.pos, COLORS.shield, 1.2);
           this.sparks(p.pos, 6, COLORS.shield);
           this.floatText(p.pos, `BLOCK  -${ev.damage}`, '#9ad1ff', 22);
@@ -1077,7 +1093,7 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.hurt();
           this.heroDo('hit');
-          this.impact(FEEL.hurt, this.hurtShake('hurt'));
+          this.impact(FEEL.hurt, this.shakeScale('hurt'));
           this.playerFlashUntil = this.time.now + 160;
           this.flashScreen(0xff2a1a, 0.3, 200);
           this.floatText(p.pos, `-${ev.damage}`, '#ff6b5b', 26);
@@ -1119,14 +1135,14 @@ export class GameScene extends Phaser.Scene {
           // A warning is coming: the twist banner gets out of the way so it never covers one.
           if (this.twistBannerView?.active) this.tweens.add({ targets: this.twistBannerView, alpha: 0.25, duration: 150 });
           const e = this.enemy(ev.enemyId);
-          sfx.windup(ev.ticks / TICKS_PER_SECOND);
+          sfx.windup(ticksToRealMs(ev.ticks) / 1000);
           if (e) this.floatText({ x: e.pos.x, y: e.pos.y - e.def.radius - 0.3 }, '!', '#ff3b30', 40, 0.4);
           // Sensei's Lessons: a second warning while another is still filling is two attacks at once.
           const now = this.time.now;
           if ([...this.warnings].some(([id, w]) => id !== ev.enemyId && w.until > now)) this.lesson('twoAttacksAtOnce');
           const me = this.world.players[this.me];
           const inside = !!(e?.attackCenter && me && Math.hypot(me.pos.x - e.attackCenter.x, me.pos.y - e.attackCenter.y) <= currentAttack(e).areaRadius);
-          this.warnings.set(ev.enemyId, { until: now + (ev.ticks / TICKS_PER_SECOND) * 1000, inside });
+          this.warnings.set(ev.enemyId, { until: now + ticksToRealMs(ev.ticks), inside });
           break;
         }
         case 'enemySwing': {
@@ -1333,7 +1349,7 @@ export class GameScene extends Phaser.Scene {
     for (const ev of events) {
       switch (ev.kind) {
         case 'loot':
-          this.afterChestBurst(() => this.showLoot(ev.item.name, ev.item.rarity, ev.at));
+          this.afterChestBurst(() => this.showLoot(ev.item, ev.at));
           break;
         case 'decoration':
           this.afterChestBurst(() => this.showDecoration(ev.id, ev.at, true));
@@ -1562,9 +1578,12 @@ export class GameScene extends Phaser.Scene {
       case 'tutorial-walk':
       case 'tutorial-space':
       case 'tutorial-tip-tough':
+        this.tutorialTip(id);
+        break;
       case 'tutorial-chest':
       case 'tutorial-boss':
-        this.tutorialTip(id);
+        // K27: each only in its own room (the chest tip once showed in room 1, Q5 B2).
+        if (this.room.kind === (id === 'tutorial-chest' ? 'treasure' : 'boss')) this.tutorialTip(id);
         break;
       case 'tutorial-brute':
         // The guided Counter teaches this step with its own lines, and holds until COUNTER is tapped.
@@ -1659,8 +1678,9 @@ export class GameScene extends Phaser.Scene {
       this.buttons.reset();
       const finished = gotIt(f, TUTORIAL);
       if (!finished) this.startTutorialTry(id);
-      // A tap step needs nothing more, so its banner goes when Got it is tapped.
-      else if (this.senseiText) {
+      // A tap step needs nothing more, so its banner goes when Got it is tapped; so does the
+      // boss tip, which otherwise sat over the boss for the whole fight (K27, Q5 B1).
+      if ((finished || id === 'tutorial-boss') && this.senseiText) {
         this.senseiText.destroy();
         this.senseiText = null;
       }
@@ -1825,6 +1845,7 @@ export class GameScene extends Phaser.Scene {
       // the top doors sit right under it on a 667-wide phone.
       const cam = this.cameras.main;
       d.label.setY(Math.max((d.at.y + 0.55) * TILE, cam.worldView.y + HUD_TOP_PX / (cam.zoom / DPR)));
+      this.keepLabelOffBoss(d);
     }
 
     // The chest appears once the room is clear: a glinting chest, then (once opened)
@@ -1855,11 +1876,13 @@ export class GameScene extends Phaser.Scene {
     // Challenge timer.
     const ch = this.room.challenge;
     if (ch) {
-      const left = Math.max(0, ch.seconds * TICKS_PER_SECOND - prog.ticks);
+      // K28: Challenge timers count real seconds (the game runs slower than the rules' ticks).
+      const limit = realSecondsToTicks(ch.seconds);
+      const left = Math.max(0, limit - prog.ticks);
       const done = prog.cleared;
       this.timerText.setVisible(true);
-      this.timerText.setText(done ? (prog.ticks <= ch.seconds * TICKS_PER_SECOND ? 'In time!' : 'Out of time') : clock(left, TICKS_PER_SECOND));
-      this.timerText.setColor(left > 10 * TICKS_PER_SECOND || done ? '#f2e9d8' : '#ff6b5b');
+      this.timerText.setText(done ? (prog.ticks <= limit ? 'In time!' : 'Out of time') : clock(left, realTicksPerSecond()));
+      this.timerText.setColor(left > realSecondsToTicks(10) || done ? '#f2e9d8' : '#ff6b5b');
     } else {
       this.timerText.setVisible(false);
     }
@@ -1874,9 +1897,11 @@ export class GameScene extends Phaser.Scene {
       const y = BOSS_BAR_Y;
       g.fillStyle(0x000000, 0.55).fillRoundedRect(x - 3, y - 3, w + 6, 16, 5);
       g.fillStyle(0xb046a0).fillRoundedRect(x, y, Math.max(6, w * (boss.health / boss.def.maxHealth)), 10, 3);
-      this.bossName.setText(boss.def.name).setPosition(width / 2, y + 14).setVisible(true);
+      this.bossName.setText(boss.def.name).setVisible(true);
+      this.placeBossTag(boss);
     } else {
       this.bossName.setVisible(false);
+      this.bossTagWorld = null;
     }
     this.placeCombo(!!boss && boss.mode !== 'defeated');
     this.placeSensei();
@@ -1917,19 +1942,43 @@ export class GameScene extends Phaser.Scene {
         top = Math.max(top, b.y1 + 6);
       }
     }
-    // K24a: the tutorial tip keeps off the action too: if it would cover the hero, it goes under them.
+    // K24a/K27: the tutorial tip (with its Got it) keeps off the hero, the doors and their
+    // labels, and the buttons too (Q5 B3, B4): it takes the first spot that is clear of them all.
     if (this.run?.tutorial) {
       const cam = this.cameras.main;
       const p = this.world.players[this.me].pos;
+      const k = TILE * (cam.zoom / DPR);
       const py = (p.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
       const px = (p.x * TILE - cam.worldView.x) * (cam.zoom / DPR);
-      const r = TILE * (cam.zoom / DPR) * 1.2;
       const H = view(this).height;
-      if (px + r > left && px - r < right && py + r > top && py - r < top + h) {
-        // Under the hero when it fits, otherwise above them; the Got it button always stays on screen.
-        top = py + r + 6 + h <= H - 8 ? py + r + 6 : Math.max(8, py - r - 6 - h);
-      }
-      top = Math.min(top, H - h - 8);
+      const keepOff = [
+        ...boxes,
+        { x0: px - k, x1: px + k, y0: py - 1.8 * k, y1: py + 0.8 * k },
+        // The boss too, so "A big one!" doesn't hide it (Q5 B1).
+        ...this.world.enemies
+          .filter((e) => e.def.boss && e.mode !== 'defeated')
+          .map((e) => {
+            const ex = (e.pos.x * TILE - cam.worldView.x) * (cam.zoom / DPR);
+            const ey = (e.pos.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
+            return { x0: ex - 1.5 * k, x1: ex + 1.5 * k, y0: ey - 3 * k, y1: ey + k };
+          }),
+        ...this.buttons.objects.map((o) => {
+          const r = (o as Phaser.GameObjects.Container).getBounds();
+          return { x0: r.left - 8, x1: r.right + 8, y0: r.top - 8, y1: r.bottom + 8 }; // + the gold ring
+        }),
+      ];
+      const spots = [top, ...keepOff.flatMap((b) => [b.y1 + 6, b.y0 - 6 - h])];
+      // Centred first; if nothing is clear there, slid to the left edge, away from the buttons.
+      const fit = [view(this).width / 2, 8 + t.width / 2]
+        .map((x) => {
+          const clear = (y: number) =>
+            y >= 8 && y + h <= H - 8 && !keepOff.some((b) => b.x1 > x - t.width / 2 && b.x0 < x + t.width / 2 && b.y1 > y && b.y0 < y + h);
+          return { x, y: spots.find(clear) };
+        })
+        .find((s) => s.y !== undefined);
+      // No clear spot at all: the bottom-left corner, which is away from the buttons and the doors.
+      t.setX(fit?.x ?? 8 + t.width / 2);
+      top = fit?.y ?? H - h - 8;
     }
     t.setY(top);
     btn?.setPosition(t.x, top + t.height + 8);
@@ -1959,7 +2008,9 @@ export class GameScene extends Phaser.Scene {
     // K24b: the wind-up cue ("!" in a ring) over an enemy about to attack.
     for (const e of this.world.enemies) {
       const v = e.mode === 'windup' ? this.enemyViews.get(e.id) : undefined;
-      if (v) boxes.push(toScreen(v.container.x - 20, v.container.y - v.top - 58, v.container.x + 20, v.container.y - v.top - 18));
+      if (!v) continue;
+      const at = this.windupCueSpot(v.container.x, v.container.y, v.top, e.def.radius * TILE);
+      boxes.push(toScreen(at.x - 22, at.y - 22, at.x + 22, at.y + 22));
     }
     if (withMessage && this.message.visible) {
       const m = this.message.getBounds();
@@ -1969,7 +2020,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** A dropped item: a glowing orb that pops out, then a note at the top of the screen. */
-  private showLoot(name: string, rarity: Parameters<typeof rarityRank>[0], at: Vec2): void {
+  private showLoot(item: GearItem, at: Vec2): void {
+    const { name, rarity } = item;
     const color = RARITY_COLOR[rarity];
     const rank = rarityRank(rarity);
     sfx.loot(rank);
@@ -1986,15 +2038,21 @@ export class GameScene extends Phaser.Scene {
       .setOrigin(1, 0)
       .setResolution(crisp())
       .setAlpha(0);
-    this.cameras.main.ignore(t);
-    this.tweens.add({ targets: t, alpha: 1, x: { from: width + 40, to: width - 16 }, duration: 220, ease: 'Back.Out' });
+    // K32: the item's slot + rarity icon rides left of the note.
+    const icon = addGearIcon(this, item, 0, y + t.height / 2, 24);
+    const parts = icon ? [t, icon] : [t];
+    this.cameras.main.ignore(parts);
+    const slideX = (o: Phaser.GameObjects.Components.Transform & Phaser.GameObjects.GameObject, to: number) =>
+      this.tweens.add({ targets: o, alpha: 1, x: { from: to + 56, to }, duration: 220, ease: 'Back.Out' });
+    slideX(t, width - 16);
+    if (icon) slideX(icon.setAlpha(0), width - 16 - t.width - 16);
     this.tweens.add({
-      targets: t,
+      targets: parts,
       alpha: 0,
       delay: 2600,
       duration: 400,
       onComplete: () => {
-        t.destroy();
+        parts.forEach((o) => o.destroy());
         this.toastY = Math.max(0, this.toastY - 1);
       },
     });
@@ -2066,7 +2124,7 @@ export class GameScene extends Phaser.Scene {
       .setScale(2.2)
       .setAlpha(0);
     // K23: the damage number is dropped (it read as harsh to kids); a clean room still says so.
-    const parts = [`${perfects} Perfect`, ...(damage > 0 ? [] : ['no damage']), clock(ticks, TICKS_PER_SECOND)];
+    const parts = [`${perfects} Perfect`, ...(damage > 0 ? [] : ['no damage']), realClock(ticks)];
     if (inTime !== null) parts.push(inTime ? 'in time!' : 'out of time');
     const line = this.add
       .text(width / 2, height * 0.36 + 58, `Room clear!  ${parts.join('  ·  ')}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 })
@@ -2092,9 +2150,10 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** K25: being hit shakes only at Brown belt and up or on Challenge, softer, never with Reduced motion. */
-  private hurtShake(kind: 'hurt' | 'block'): number {
-    const t = currentTraining();
-    return eventShakeScale(kind, { beltIds: t.belts.map((b) => b.id), beltId: t.belt.id, difficulty: this.world.difficulty, reducedMotion: reducedMotion() });
+
+  /** K28: the one shake rule (hits and named-monster wind-ups): Brown rank and up or Challenge, 65%, never with Reduced motion. */
+  private shakeScale(kind: 'hurt' | 'windup' | 'block'): number {
+    return hurtShakeScale({ kind, beltTier: currentTraining().belt.tier, difficulty: this.world.difficulty, reducedMotion: reducedMotion() });
   }
 
   private addWorld<T extends Phaser.GameObjects.GameObject>(obj: T): T {
@@ -2236,6 +2295,131 @@ export class GameScene extends Phaser.Scene {
     return g.step === 0 ? 0.5 : g.step === 1 ? 0.75 : 1;
   }
 
+  /**
+   * K27 fix 2: where a wind-up cue goes. Above the enemy when that clears the boss bar and every
+   * door label; otherwise beside it (right, then left), then lower beside it. Never on the body.
+   */
+  private windupCueSpot(x: number, y: number, top: number, radius: number): { x: number; y: number } {
+    const R = 21;
+    const minY = this.belowBossBar() + R;
+    const labels: { left: number; right: number; top: number; bottom: number }[] = [...this.doorViews.filter((d) => d.label.visible).map((d) => d.label.getBounds())];
+    // Refresh the name + bar box for this frame first, so the cue never reads last frame's spot.
+    const bossUp = this.world.enemies.find((e) => e.def.boss && e.mode !== 'defeated');
+    if (bossUp && this.bossName.visible) this.placeBossTag(bossUp);
+    const tg = this.bossTagWorld;
+    if (tg) labels.push(tg);
+    const clear = (cx: number, cy: number) =>
+      cy >= minY && labels.every((b) => cx + R < b.left - 4 || cx - R > b.right + 4 || cy + R < b.top - 4 || cy - R > b.bottom + 4);
+    const side = Math.max(radius, 24) + R + 8;
+    const bodyY = y - top / 2;
+    const spots = [
+      { x, y: y - top - 38 },
+      { x: x + side, y: bodyY },
+      { x: x - side, y: bodyY },
+      { x: x + side, y },
+      { x: x - side, y },
+      { x: x + side, y: Math.max(bodyY, minY) },
+      { x: x - side, y: Math.max(bodyY, minY) },
+    ];
+    // While the name + bar slide (e.g. off COMBO as it fades in) they can cover both side spots.
+    // Then the cue goes just past the pair's own edge, or under it, instead of on top of it.
+    if (tg) {
+      const ty = Math.max(bodyY, minY);
+      spots.push({ x: tg.right + R + 6, y: ty }, { x: tg.left - R - 6, y: ty }, { x, y: tg.bottom + R + 6 });
+    }
+    return spots.find((p) => clear(p.x, p.y)) ?? spots[5];
+  }
+
+  /**
+   * K31: the boss's name and its small health bar move as one pair (bossTagLayout): name, a fixed gap, bar.
+   * Above the head when there is room under the top bar, else both below the feet. The name slides sideways
+   * off any door label (HOME), and the pair's world box is kept so the '!' cue (windupCueSpot) avoids it.
+   */
+  private placeBossTag(boss: EnemyState): void {
+    const v = this.enemyViews.get(boss.id);
+    if (!v) return;
+    const cam = this.cameras.main;
+    const k = cam.zoom / DPR;
+    const sx = (wx: number) => (wx - cam.worldView.x) * k;
+    const sy = (wy: number) => (wy - cam.worldView.y) * k;
+    const toWorldX = (x: number) => cam.worldView.x + x / k;
+    const toWorldY = (y: number) => cam.worldView.y + y / k;
+    const { width, height } = view(this);
+    const avoid: TagBox[] = [];
+    for (const d of this.doorViews) {
+      if (!d.label.visible) continue;
+      const b = d.label.getBounds();
+      avoid.push({ left: sx(b.left), right: sx(b.right), top: sy(b.top), bottom: sy(b.bottom) });
+    }
+    // COMBO and its "+N% power" line live in HUD (screen) space already.
+    for (const t of [this.comboText, this.comboBonusText]) {
+      if (!t.visible || t.alpha < 0.05 || !t.text) continue;
+      const b = t.getBounds();
+      avoid.push({ left: b.left, right: b.right, top: b.top, bottom: b.bottom });
+    }
+    const barHalf = (v.hpBack.width * k) / 2;
+    const halfW = Math.max(this.bossName.width / 2, barHalf);
+    const t = bossTagLayout({
+      bossX: sx(v.container.x),
+      headY: sy(v.container.y - v.top),
+      feetY: sy(v.container.y),
+      halfW,
+      screenW: width,
+      minY: HUD_BOTTOM + 4,
+      maxY: height - 4,
+      avoid,
+    });
+    // One x for the pair: the name and the bar share it.
+    this.bossName.setPosition(t.x, t.nameTop);
+    const barX = toWorldX(t.x) - v.container.x;
+    const barY = toWorldY(t.barY) - v.container.y;
+    v.hpBack.setPosition(barX, barY);
+    v.hpFill.setPosition(barX - v.hpBack.width / 2 + 2, barY);
+    this.bossTagWorld = {
+      left: toWorldX(t.x - halfW - 4),
+      right: toWorldX(t.x + halfW + 4),
+      top: toWorldY(t.nameTop) - 2,
+      bottom: toWorldY(t.barY + BOSS_TAG.barH / 2) + 2,
+    };
+  }
+
+  /**
+   * K30: a door label never sits on the boss's head, health bar or name. If it would, it slides
+   * sideways to the far side of the door from the boss (the label still reads as that door's).
+   */
+  private keepLabelOffBoss(d: { label: Phaser.GameObjects.Text; at: Vec2 }): void {
+    const home = d.at.x * TILE;
+    d.label.setX(home);
+    for (const e of this.world.enemies) {
+      if (!e.def.boss || e.mode === 'defeated') continue;
+      const v = this.enemyViews.get(e.id);
+      if (!v || !v.container.visible) continue;
+      const r = e.def.radius * TILE;
+      const hx0 = v.container.x - r - 6;
+      const hx1 = v.container.x + r + 6;
+      const hy0 = v.container.y - v.top - 34; // health bar and name above the head
+      const hy1 = v.container.y - v.top * 0.4; // the head and shoulders
+      const b = d.label.getBounds();
+      // K31: the name and small bar may sit below the boss; keep the label off that pair too.
+      const tag = this.bossTagWorld;
+      if (tag && !(b.right < tag.left || b.left > tag.right || b.bottom < tag.top || b.top > tag.bottom)) {
+        const half = b.width / 2 + 6;
+        d.label.setX(v.container.x >= home ? Math.min(home, tag.left - half) : Math.max(home, tag.right + half));
+        continue;
+      }
+      if (b.right < hx0 || b.left > hx1 || b.bottom < hy0 || b.top > hy1) continue;
+      const half = b.width / 2 + 6;
+      d.label.setX(v.container.x >= home ? Math.min(home, hx0 - half) : Math.max(home, hx1 + half));
+    }
+  }
+
+  /** K27: the lowest world y a wind-up cue may sit at so it clears the boss bar and name (Q5 B1). */
+  private belowBossBar(): number {
+    const cam = this.cameras.main;
+    const up = this.world.enemies.some((e) => e.def.boss && e.mode !== 'defeated');
+    return up ? cam.worldView.y + ((BOSS_BAR_Y + 34 + 20) * DPR) / cam.zoom : -Infinity;
+  }
+
   /** Top of Sensei's banner: just under the boss bar and its name when a boss is up, so both stay readable. */
   private senseiTop(height: number): number {
     const boss = this.world.enemies.find((e) => e.def.boss && e.mode !== 'defeated');
@@ -2258,7 +2442,8 @@ export class GameScene extends Phaser.Scene {
         ...(this.run?.tutorial ? { stroke: '#120e1c', strokeThickness: 4, shadow: { offsetX: 0, offsetY: 2, color: '#000000', blur: 4, fill: true, stroke: true } } : {}),
         padding: { x: 16, y: 8 },
         align: 'center',
-        wordWrap: { width: Math.min(width - 48, 640), useAdvancedWrap: true },
+        // K27: tutorial tips wrap narrower, so there is room beside the buttons (Q5 B3, B4).
+        wordWrap: { width: Math.min(width - (this.run?.tutorial ? 260 : 48), 640), useAdvancedWrap: true },
       })
       .setOrigin(0.5, 0)
       .setResolution(window.devicePixelRatio || 1);

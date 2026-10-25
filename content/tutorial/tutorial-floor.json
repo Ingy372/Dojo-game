@@ -157,7 +157,7 @@
       "screens": [
         "The door home is open."
       ],
-      "success": "What was your favorite part?",
+      "success": "Great job! You finished the training floor.",
       "earliestRun": 1,
       "advance": "tap",
       "waitFor": null,

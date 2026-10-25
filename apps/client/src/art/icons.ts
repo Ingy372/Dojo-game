@@ -1,4 +1,4 @@
-// Batch 8 icons for gear, Insights and Technique Seals (the "icons" pack, kept at full size).
+// Batch 8 icons for Insights and Technique Seals (the "icons" pack, kept at full size). Gear uses gearIcons.ts (K32).
 
 import Phaser from 'phaser';
 import { frameOf, staticArt } from './art';
