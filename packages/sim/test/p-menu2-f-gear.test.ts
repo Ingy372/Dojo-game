@@ -152,7 +152,7 @@ describe('P-MENU2-f Fighting Style tray dots', () => {
 
 // Manager add-on (#273): the small rarity word under each tile, 12 px, ≥8 px side padding, from content.
 // Widths are Chromium's bold 12px system-ui measures (the shots), rounded up.
-const WORD_W: Record<string, number> = { Everyday: 55, Special: 42, Rare: 30, Epic: 27 };
+const WORD_W: Record<string, number> = { Everyday: 55, Special: 42, Rare: 30, Epic: 27, Legendary: 64 };
 describe('P-MENU2-f rarity word under each tile', () => {
   const droppable = RARITIES.filter((r) => r in LOOT.rarityWeights);
   const words = droppable.map((r) => (gearContent.rarityNames as Record<string, string>)[r]);
@@ -176,4 +176,25 @@ describe('P-MENU2-f rarity word under each tile', () => {
       expect(last.y + last.h).toBeLessThanOrEqual(L.pagerY);
     });
   }
+});
+
+// Guard (Manager, #273): Legendary's word doesn't fit at 667 today and that's accepted only because
+// it can't drop. If any rarity whose word doesn't fit with ≥8 px padding becomes droppable, fail.
+describe('P-MENU2-f guard: droppable rarity words fit their Gear tiles', () => {
+  it('every rarity with weight > 0 fits with ≥8 px padding at 667, 844 and 932', () => {
+    const weights = LOOT.rarityWeights as Partial<Record<string, number>>;
+    const droppable = RARITIES.filter((r) => (weights[r] ?? 0) > 0);
+    const names = gearContent.rarityNames as Record<string, string>;
+    const wordW = (r: string) => WORD_W[names[r]] ?? Infinity;
+    const widest = Math.max(...droppable.map(wordW));
+    for (const s of SIZES) {
+      const L = gearBoardLayout(s.w, s.h, tileWForLabel(widest));
+      for (const r of droppable) {
+        const room = cubbyTextW(L.tileW);
+        if (wordW(r) > room) {
+          throw new Error(`Rarity "${r}" ("${names[r]}", ${wordW(r)} px) is droppable but doesn't fit a ${L.tileW} px Gear tile at ${s.w}x${s.h} (room ${room} px with 8 px padding). Resize the Gear tiles (GEAR_BOARD / gearBoardLayout in ui/gearBoard.ts) before letting it drop. If the word is new, add its measured width to WORD_W.`);
+        }
+      }
+    }
+  });
 });
