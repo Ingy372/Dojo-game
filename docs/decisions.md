@@ -763,11 +763,19 @@ Programmer calls:
 - During the counter window the COUNTER button gets a gold ring and flashes. With Reduced motion there's no pulse or flash; the cue and a steady bright COUNTER stay. No art changes.
 - The Sensei tip box avoids the cue so it never hides it.
 
+## S3-P1b — kata cards readable (2026-10-24)
+- Kata step arrows are drawn as thick shapes as tall as the bold 13px step numbers, so they no longer shrink to dots at 844 (S3-T1 bug 1–2). Steps wrap one whole step at a time.
+- Earned kata cards are grouped together at the top of Abilities (S3-T1 bug 3) instead of after each Form.
+- No kata directions or step data changed.
+- Manager-okayed K24a tradeoffs (named here as asked): (1) on the tutorial floor every enemy sees the player; (2) the paused tip can cover the health bar when the hero is near the bottom of the screen, which is fine since health can't drop below 1 there.
 ## K25 — slower tempo, calmer screen shake (2026-10-24, from Jay's phone playtest via the Manager)
 - **One tempo value.** `TEMPO.speed = 0.88` in packages/sim/src/config.ts (about 12% slower). The rules still count the same ticks; the client plays each tick 1/0.88 times longer. So movement, enemy speed, attacks, character animations (LayeredSprite) and the Game scene's tweens all slow together, and every wind-up and counter window lasts longer in seconds (50 ms → about 57 ms per tick). No tick numbers were edited, so no sim or balance test changed.
 - **No shake on the player's attacks.** Basic hits, Strikes, Perfect Counters and enemy-down hits keep their short freeze (hit-stop) but never shake the screen (`SCREEN_SHAKE.playerAttackScale = 0`).
 - **Being-hit shake only for older students.** The shake when the player is hit is on only at Brown belt and up, or on Challenge, at 65% of its old strength, and always off with Reduced motion (`SCREEN_SHAKE`, `hurtShakeScale`). Programmer call: a Block (hit while guarding) follows the same rule as a hit.
 - Named-monster tell shakes (content timing) are unchanged; they already respect Reduced motion.
+
+## K25b: a Block never shakes (Manager's call, 2026-10-24)
+A Block is a success moment, so it never shakes the screen, at any belt or difficulty. Only being hit shakes (K25 rules: Brown and up or Challenge, 65%, off with Reduced motion). `eventShakeScale('block', …)` is always 0. This answers the K25 open question about Block. Test: packages/sim/test/k25b-block-no-shake.test.ts.
 
 ## R-BAL-9b: per-tier gear caps; white gear cut (Manager's call, 2026-10-24)
 The Manager made the white gear cut from #188 (DECIDE-1, option a) under the balance calls Jay delegated to the Manager. The game hasn't launched, so no kid loses anything.

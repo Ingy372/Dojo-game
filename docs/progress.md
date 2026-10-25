@@ -549,10 +549,15 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - K24c: tower view 6.75 tiles tall; game draws at full retina sharpness (DPR camera zoom + view() helper). Screens: /workspace/qa/k24c/ (sharp-844.png is before/after).
 - K24b: wind-up "!" + fill ring before enemy attacks; COUNTER flashes/rings gold in the counter window; Reduced motion respected. Screens: /workspace/qa/k24b/.
 
+## S3-P1b Kata cards
+- Bigger drawn kata arrows (same height as the step numbers) and a Kata group at the top of Abilities. Screens: /workspace/qa/s3p1b/final/.
 ## K25 Slower tempo and calmer shake
 - Game runs about 12% slower (one `TEMPO.speed` value); wind-ups and counter windows are longer in real time, never shorter.
 - No screen shake on the player's own attacks. The being-hit shake only happens at Brown belt and up or on Challenge, at 65% strength, and never with Reduced motion.
 - New tests: packages/sim/test/k25-tempo-shake.test.ts (6). Preview playthroughs at 667 and 844: /workspace/qa/k25/.
+
+## K25b Block never shakes
+- Done: Block gives 0 shake; being hit is unchanged. Test added.
 
 ## R-BAL-9b Per-tier gear caps
 - Done: 10-tier GEAR_CAPS, white cut, Jade capped. Test: r-bal-9b-gear-caps.test.ts.
