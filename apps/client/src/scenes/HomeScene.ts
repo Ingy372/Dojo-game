@@ -6,7 +6,6 @@ import playTimeText from '../../../../content/settings/play-time.json';
 import {
   BLESSING,
   GEAR_SLOTS,
-  LOOT,
   RARITIES,
   realClock,
   describeItem,
@@ -1096,10 +1095,10 @@ export class HomeScene extends Phaser.Scene {
    * never moves when you pick, wear or filter. Placeholder art drawn in code (no #265 art).
    */
   private renderGear(x: number, y: number, w: number, h: number): void {
-    // The widest word of the rarities that can drop (content rarityWeights) sets the tiles' minimum
-    // width, so each word fits at 12 px with 8 px padding. It depends on content only, never the bag.
+    // The widest rarity word (Legendary) sets the tiles' minimum width, so every word fits at 12 px
+    // with 8 px padding inside the border. It depends on content only, never the bag.
     const probe = this.add.text(0, 0, '', { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold' });
-    const widest = Math.max(...RARITIES.filter((r) => r in LOOT.rarityWeights).map((r) => probe.setText(rarityName(r)).width));
+    const widest = Math.max(...RARITIES.map((r) => probe.setText(rarityName(r)).width));
     probe.destroy();
     const L = gearBoardLayout(w, h, tileWForLabel(widest));
     const W = GEAR_WORDS;
@@ -1108,10 +1107,12 @@ export class HomeScene extends Phaser.Scene {
     this.gearTiles = {};
     // The paper doll: the student, with a ring per slot.
     const t = this.training;
-    const glow = this.add.ellipse(x + L.figureX, y + L.figureY + L.figureR * 0.9, L.figureR * 2.6, L.figureR * 3.4, 0xffd166, 0);
-    this.ui.add(glow);
-    this.gearDollGlow = glow;
-    this.ui.add(makeStandingCharacter(this, x + L.figureX, y + L.figureY, L.figureR, t.belt, t.stripesThisBelt, loadLook()).container);
+    if (L.showFigure) {
+      const glow = this.add.ellipse(x + L.figureX, y + L.figureY + L.figureR * 0.9, L.figureR * 2.6, L.figureR * 3.4, 0xffd166, 0);
+      this.ui.add(glow);
+      this.gearDollGlow = glow;
+      this.ui.add(makeStandingCharacter(this, x + L.figureX, y + L.figureY, L.figureR, t.belt, t.stripesThisBelt, loadLook()).container);
+    }
     GEAR_SLOTS.forEach((slot, i) => {
       const item = wornItem(this.profile, slot);
       const on = this.gearFilter === slot;
@@ -1129,8 +1130,10 @@ export class HomeScene extends Phaser.Scene {
     const ay = y + L.alwaysY;
     if (L.alwaysRows > 0) {
       const always = this.styleModel().always;
-      this.oneLine(this.text(x, ay, W.always, TYPE.label, '#f2e3c4', true), L.dollW, TYPE.label);
-      const iy = ay + TYPE.label + S1;
+      const head = this.text(x, ay, W.always, TYPE.label, '#f2e3c4', true, FONT, L.alwaysLines > 1 ? L.dollW : undefined);
+      if (L.alwaysLines > 1) this.twoLines(head.setLineSpacing(-3), L.dollW, TYPE.label);
+      else this.oneLine(head, L.dollW, TYPE.label);
+      const iy = ay + L.alwaysLines * TYPE.label + S1;
       const n = L.alwaysIcon;
       if (!always.length) this.twoLines(this.text(x, iy, W.alwaysEmpty, TYPE.label, '#d9c6a3', false, FONT, L.dollW), L.dollW, TYPE.label);
       always.slice(0, L.perAlwaysRow * L.alwaysRows).forEach((a, i) => {
@@ -1226,24 +1229,23 @@ export class HomeScene extends Phaser.Scene {
     const pad = 12;
     const half = (w - 3 * pad) / 2;
     const now = wornItem(this.profile, item.slot);
-    // Row 1: the item and "Now wearing", side by side; each stays on one line (… when long).
-    const mini = (mx: number, it: GearItem | null, head: string) => {
+    // Row 1: the item and "Now wearing", side by side; a long name wraps to a second line.
+    const mini = (mx: number, it: GearItem | null, head: string): number => {
       const ic = it ? addGearIcon(this, it, mx + 16, sy + pad + 16, 32) : null;
       if (ic) sheet.add(ic);
       const tx = ic ? mx + 38 : mx;
       const tw = half - (tx - mx);
       const t1 = this.oneLine(this.add.text(tx, sy + pad, head, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#b9ad99' }).setResolution(crisp()), tw, TYPE.label);
-      const t2 = this.oneLine(this.add.text(tx, sy + pad + 15, it ? it.name : W.nothing, { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: it ? css(RARITY_COLOR[it.rarity]) : '#8a8296' }).setResolution(crisp()), tw, TYPE.label);
+      const t2 = this.twoLines(this.add.text(tx, sy + pad + 15, it ? it.name : W.nothing, { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: it ? css(RARITY_COLOR[it.rarity]) : '#8a8296', wordWrap: { width: tw } }).setLineSpacing(-3).setResolution(crisp()), tw, TYPE.label);
       sheet.add([t1, t2]);
+      return Math.max(t2.y + t2.height, sy + pad + 32);
     };
-    mini(x + pad, item, `${rarityName(item.rarity)} ${W.slots[item.slot]}`);
-    mini(x + 2 * pad + half, now, W.nowWearing);
+    const row1 = Math.max(mini(x + pad, item, `${rarityName(item.rarity)} ${W.slots[item.slot]}`), mini(x + 2 * pad + half, now, W.nowWearing));
 
     // Row 2: ↑ / ↓ per stat (no numbers) and the plain-words line; Details shows the numbers (D6).
     const cmp = compareWith(item, now);
-    const ry = sy + pad + 38;
-    const detailsW = 76;
-    const textW = w - 3 * pad - detailsW;
+    const ry = row1 + 6;
+    const textW = w - 2 * pad;
     if (this.gearDetails) {
       const nums = `${describeItem(item)}`;
       const was = now && now.uid !== item.uid ? `${W.nowWearing}: ${describeItem(now)}` : '';
@@ -1257,17 +1259,20 @@ export class HomeScene extends Phaser.Scene {
         ax += a.width + S3;
       }
       const ly = cmp.stats.length ? ry + 19 : ry + 6;
-      sheet.add(this.oneLine(this.add.text(x + pad, ly, cmp.line, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e9d8' }).setResolution(crisp()), textW, TYPE.label));
+      sheet.add(this.twoLines(this.add.text(x + pad, ly, cmp.line, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e9d8', wordWrap: { width: textW } }).setLineSpacing(-3).setResolution(crisp()), textW, TYPE.label));
     }
-    button(this, { x: x + w - pad - detailsW, y: ry - 4, w: detailsW, h: MIN_TAP, label: this.gearDetails ? W.hideDetails : W.details, color: 0x3a3448, size: TYPE.label, labelColor: '#d9c6a3', onTap: () => { this.gearDetails = !this.gearDetails; this.renderPanel('none'); } }, sheet);
 
-    // Row 3: Wear (green, wide, 52 tall) and Let go (quieter). Let go asks again here.
+    // Row 3: Wear (green, widest, 52 tall), Let go (quieter; it asks again here) and Details, 8 px apart.
     const bh = GEAR_BOARD.wearH;
     const by = sy + sh - pad - bh;
     if (!this.confirmLetGo) {
-      if (now?.uid === item.uid) button(this, { x: x + pad, y: by, w: half + 40, h: bh, label: W.takeOff, color: 0x3a5f8a, size: 16, onTap: () => this.takeOff(item) }, sheet);
-      else button(this, { x: x + pad, y: by, w: half + 40, h: bh, label: W.wear, color: 0x3aa57a, size: 16, onTap: () => this.wear(item) }, sheet);
-      button(this, { x: x + 2 * pad + half + 40, y: by, w: half - 40, h: bh, label: W.letGo, color: 0x3a3448, size: TYPE.body, labelColor: '#e8d4b4', onTap: () => this.letGo(item) }, sheet);
+      const detailsW = 76;
+      const wearW = Math.round((textW - detailsW - 2 * S2) * 0.6);
+      const letGoW = textW - detailsW - 2 * S2 - wearW;
+      if (now?.uid === item.uid) button(this, { x: x + pad, y: by, w: wearW, h: bh, label: W.takeOff, color: 0x3a5f8a, size: 16, onTap: () => this.takeOff(item) }, sheet);
+      else button(this, { x: x + pad, y: by, w: wearW, h: bh, label: W.wear, color: 0x3aa57a, size: 16, onTap: () => this.wear(item) }, sheet);
+      button(this, { x: x + pad + wearW + S2, y: by, w: letGoW, h: bh, label: W.letGo, color: 0x3a3448, size: TYPE.body, labelColor: '#e8d4b4', onTap: () => this.letGo(item) }, sheet);
+      button(this, { x: x + w - pad - detailsW, y: by, w: detailsW, h: bh, label: this.gearDetails ? W.hideDetails : W.details, color: 0x3a3448, size: TYPE.label, labelColor: '#d9c6a3', onTap: () => { this.gearDetails = !this.gearDetails; this.renderPanel('none'); } }, sheet);
     } else {
       const bw = Math.min(100, (w - 4 * pad) / 3);
       sheet.add(this.add.text(x + pad, by + bh / 2, W.letGoAsk, { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: '#ffd166' }).setOrigin(0, 0.5).setResolution(crisp()));

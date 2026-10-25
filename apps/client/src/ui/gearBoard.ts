@@ -10,7 +10,7 @@ import { MIN_TAP, S1, S2, TROPHY_UI, TYPE } from './tokens';
 export const GEAR_WORDS = words;
 
 /** Sizes. Tiles are never narrower than tileMin; rings and every tap target are at least 44. */
-export const GEAR_BOARD = { tileMin: 56, labelSize: 12, labelH: 15, iconMax: 36, tileMax: 76, ring: 48, ringGap: S2, dollMin: 102, dollMax: 150, gap: S2, filterH: MIN_TAP, pagerH: MIN_TAP, sheetH: 150, wearH: 52, flyMs: 220, labelPad: 8, stroke: 2 } as const;
+export const GEAR_BOARD = { tileMin: 56, labelSize: 12, labelH: 15, iconMax: 36, tileMax: 76, ring: 48, ringGap: S2, dollMin: 102, dollMax: 150, gap: S2, filterH: MIN_TAP, pagerH: MIN_TAP, sheetH: 172, wearH: 52, flyMs: 220, labelPad: 8, stroke: 2 } as const;
 
 export interface GearBoardLayout {
   dollW: number;
@@ -19,6 +19,8 @@ export interface GearBoardLayout {
   figureX: number;
   figureY: number;
   figureR: number;
+  showFigure: boolean;
+  alwaysLines: number;
   alwaysY: number;
   alwaysIcon: number;
   perAlwaysRow: number;
@@ -40,7 +42,7 @@ export function gearColumns(gridW: number, minTileW: number = GEAR_BOARD.tileMin
   const g = GEAR_BOARD;
   const min = Math.max(g.tileMin, minTileW);
   const cols = Math.max(3, Math.floor((gridW + g.gap) / (min + g.gap)));
-  const tileW = Math.min(g.tileMax, Math.floor((gridW - (cols - 1) * g.gap) / cols));
+  const tileW = Math.min(Math.max(g.tileMax, min), Math.floor((gridW - (cols - 1) * g.gap) / cols));
   return { cols, tileW };
 }
 
@@ -51,15 +53,21 @@ export function gearColumns(gridW: number, minTileW: number = GEAR_BOARD.tileMin
  */
 export function gearBoardLayout(w: number, h: number, minTileW: number = GEAR_BOARD.tileMin): GearBoardLayout {
   const g = GEAR_BOARD;
-  const dollW = Math.max(g.dollMin, Math.min(g.dollMax, Math.round(w * 0.27)));
+  // The bag gets the columns that fit beside the smallest doll (at least 3), and the doll gets what is
+  // left. When that's too narrow for the figure (667), the doll is just the rings.
+  const min = Math.max(g.tileMin, minTileW);
+  const fitCols = Math.max(3, Math.floor((w - S2 - g.dollMin + g.gap) / (min + g.gap)));
+  const dollW = Math.max(g.ring, Math.min(g.dollMax, Math.round(w * 0.27), w - S2 - fitCols * min - (fitCols - 1) * g.gap));
   const ringYs = GEAR_SLOTS.map((_, i) => i * (g.ring + g.ringGap));
   const dollH = ringYs[ringYs.length - 1] + g.ring;
   const figW = dollW - g.ring - S2;
-  const figureR = Math.max(14, Math.min(30, Math.min(figW / 2.2, dollH / 3.6)));
+  const figureR = Math.min(30, figW / 2.2, dollH / 3.6);
+  const showFigure = figureR >= 14;
   const alwaysY = dollH + S2;
   const alwaysIcon = MIN_TAP;
   const perAlwaysRow = Math.max(1, Math.floor((dollW + S1) / (alwaysIcon + S1)));
-  const iconsTop = alwaysY + TYPE.label + S1;
+  const alwaysLines = showFigure ? 1 : 2;
+  const iconsTop = alwaysY + alwaysLines * TYPE.label + S1;
   const alwaysRows = Math.max(0, Math.floor((h - iconsTop + S1) / (alwaysIcon + S1)));
   const gridX = dollW + S2;
   const gridW = w - gridX;
@@ -71,7 +79,7 @@ export function gearBoardLayout(w: number, h: number, minTileW: number = GEAR_BO
   const pagerY = h - g.pagerH;
   const rows = Math.max(1, Math.floor((pagerY - S1 - gridY + g.gap) / (tileH + g.gap)));
   return {
-    dollW, ringX: g.ring / 2, ringYs: ringYs.map((y) => y + g.ring / 2), figureX: g.ring + S2 + figW / 2, figureY: dollH / 2 - figureR * 0.4, figureR,
+    dollW, ringX: g.ring / 2, ringYs: ringYs.map((y) => y + g.ring / 2), figureX: g.ring + S2 + figW / 2, figureY: dollH / 2 - figureR * 0.4, figureR, showFigure, alwaysLines,
     alwaysY, alwaysIcon, perAlwaysRow, alwaysRows, gridX, gridW, filterY, gridY, cols, rows, perPage: cols * rows, tileW, tileH, pagerY,
   };
 }
@@ -129,9 +137,14 @@ export const COMPARE_COLOR = { up: 0x6fbf8a, down: 0x9a93a8, same: 0x9a93a8 } as
 export const COMPARE_CSS = { up: '#6fbf8a', down: '#a59fb2' } as const;
 export const ARROW = { up: '↑', down: '↓' } as const;
 
-/** The width a tile needs for a rarity word `textW` wide: B-POLISH-2 padding (8 a side) plus the stroke. */
+/** The width a tile needs for a rarity word `textW` wide: 8 px padding a side, past the 2 px border on each side. */
 export function tileWForLabel(textW: number): number {
-  return Math.ceil(textW) + 2 * TROPHY_UI.cubbyPadX + TROPHY_UI.stroke;
+  return Math.ceil(textW) + 2 * (TROPHY_UI.cubbyPadX + TROPHY_UI.stroke);
+}
+
+/** The clear space each side of a centred word `textW` wide in a tile `tileW` wide, inside its 2 px border. */
+export function labelPadding(tileW: number, textW: number): number {
+  return (tileW - textW) / 2 - TROPHY_UI.stroke;
 }
 
 /** The slot label with {slot} filled in. */

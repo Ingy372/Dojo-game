@@ -5,9 +5,9 @@
 import { describe, expect, it } from 'vitest';
 import { equip, loadProfile, newProfile, unequip, wornItem, type GearItem } from '../src';
 import words from '../../../content/loot/gear-board.json';
-import { GEAR_BOARD, tileWForLabel, bagOrder, compareWith, filterBag, gearBoardLayout, gearColumns, tileBox, toggleFilter } from '../../../apps/client/src/ui/gearBoard';
-import { MIN_TAP, TROPHY_UI, cubbyTextW } from '../../../apps/client/src/ui/tokens';
-import { LOOT, RARITIES } from '../src';
+import { GEAR_BOARD, tileWForLabel, labelPadding, bagOrder, compareWith, filterBag, gearBoardLayout, gearColumns, tileBox, toggleFilter } from '../../../apps/client/src/ui/gearBoard';
+import { MIN_TAP } from '../../../apps/client/src/ui/tokens';
+import { RARITIES } from '../src';
 import gearContent from '../../../content/loot/gear.json';
 
 const src = Object.values(import.meta.glob(['../../../apps/client/src/scenes/HomeScene.ts'], { query: '?raw', import: 'default', eager: true }))[0] as string;
@@ -17,13 +17,16 @@ const mk = (uid: string, slot: GearItem['slot'], power: number, guard = 0, maxHe
 
 const bag = (): GearItem[] => [mk('h1', 'hands', 1), mk('g1', 'gi', 0, 2), mk('h2', 'hands', 3), mk('c1', 'charm', 0), mk('g2', 'gi', 0, 1, 4), mk('h3', 'hands', 2, 1)];
 
-// The Gear area (panel minus its 10px inset) at 667x375, 844x390 and 932x430.
-const SIZES = [{ w: 345, h: 277, cols: 3 }, { w: 476, h: 292, cols: 5 }, { w: 564, h: 332, cols: 6 }];
+// The Gear area (panel minus its 10px inset) at 667x375, 844x390 and 932x430, and the columns there (3 / 4 / 5).
+const SIZES = [{ w: 345, h: 277, cols: 3 }, { w: 476, h: 292, cols: 4 }, { w: 564, h: 332, cols: 5 }];
+// Widths are Chromium's bold 12px system-ui measures (the shots), rounded up.
+const WORD_W: Record<string, number> = { Everyday: 55, Special: 42, Rare: 30, Epic: 27, Legendary: 64 };
+const MIN_TILE = tileWForLabel(WORD_W.Legendary);
 
 describe('P-MENU2-f layout', () => {
   for (const s of SIZES) {
     it(`${s.w}x${s.h}: at least 3 columns, they fit, tiles and rings are ≥44`, () => {
-      const L = gearBoardLayout(s.w, s.h);
+      const L = gearBoardLayout(s.w, s.h, MIN_TILE);
       expect(L.cols).toBeGreaterThanOrEqual(3);
       expect(L.cols).toBe(s.cols);
       const last = tileBox(L, L.perPage - 1);
@@ -150,51 +153,30 @@ describe('P-MENU2-f Fighting Style tray dots', () => {
   });
 });
 
-// Manager add-on (#273): the small rarity word under each tile, 12 px, ≥8 px side padding, from content.
-// Widths are Chromium's bold 12px system-ui measures (the shots), rounded up.
-const WORD_W: Record<string, number> = { Everyday: 55, Special: 42, Rare: 30, Epic: 27, Legendary: 64 };
+// Manager add-on (#273): the small rarity word under each tile, 12 px, from content. Tester (#273):
+// every word, Legendary included, needs ≥8 px clear each side inside the 2 px border, at all 3 widths.
 describe('P-MENU2-f rarity word under each tile', () => {
-  const droppable = RARITIES.filter((r) => r in LOOT.rarityWeights);
-  const words = droppable.map((r) => (gearContent.rarityNames as Record<string, string>)[r]);
-  const widest = Math.max(...words.map((w) => WORD_W[w] ?? 99));
-  it('words come from content and the drawing uses the B-POLISH-2 helpers at 12 px', () => {
-    expect(words).toEqual(['Everyday', 'Special', 'Rare', 'Epic']);
+  const names = gearContent.rarityNames as Record<string, string>;
+  const words = RARITIES.map((r) => names[r]);
+  const widest = Math.max(...words.map((w) => WORD_W[w]));
+  it('words come from content, Legendary is the longest, and the drawing uses the cubby helpers at 12 px', () => {
+    expect(words).toEqual(['Everyday', 'Special', 'Rare', 'Epic', 'Legendary']);
+    expect(widest).toBe(WORD_W.Legendary);
     expect(GEAR_BOARD.labelSize).toBeGreaterThanOrEqual(12);
-    expect(TROPHY_UI.cubbyPadX).toBeGreaterThanOrEqual(8);
-    expect(src).toMatch(/rarityName\(it\.rarity\)/);
+    expect(src).toMatch(/RARITIES\.map\(\(r\) => probe\.setText\(rarityName\(r\)\)\.width\)/);
     expect(src).toMatch(/wrapLikeCubby\(lab, word, tw\)/);
-    expect(src).toMatch(/const tw = cubbyTextW\(box\.w\)/);
   });
   for (const s of SIZES) {
-    it(`${s.w}x${s.h}: every word fits with 8 px a side, still ≥3 columns, word below the icon`, () => {
+    it(`${s.w}x${s.h}: Legendary has ≥8 px padding each side, ${s.cols} columns, word below the icon`, () => {
       const L = gearBoardLayout(s.w, s.h, tileWForLabel(widest));
-      expect(L.cols).toBeGreaterThanOrEqual(3);
-      expect(cubbyTextW(L.tileW)).toBeGreaterThanOrEqual(widest);
-      const iconS = Math.min(GEAR_BOARD.iconMax, L.tileH - GEAR_BOARD.labelH - 12 - 4);
-      expect(iconS).toBeGreaterThanOrEqual(28);
+      expect(L.cols).toBe(s.cols);
+      expect(labelPadding(L.tileW, WORD_W.Everyday)).toBeGreaterThanOrEqual(8);
+      expect(labelPadding(L.tileW, WORD_W.Legendary)).toBeGreaterThanOrEqual(8);
       const last = tileBox(L, L.perPage - 1);
+      expect(last.x + last.w).toBeLessThanOrEqual(s.w);
       expect(last.y + last.h).toBeLessThanOrEqual(L.pagerY);
+      expect(Math.min(GEAR_BOARD.iconMax, L.tileH - GEAR_BOARD.labelH - 12 - 4)).toBeGreaterThanOrEqual(28);
+      expect(L.ringYs[L.ringYs.length - 1] + GEAR_BOARD.ring / 2).toBeLessThanOrEqual(s.h);
     });
   }
-});
-
-// Guard (Manager, #273): Legendary's word doesn't fit at 667 today and that's accepted only because
-// it can't drop. If any rarity whose word doesn't fit with ≥8 px padding becomes droppable, fail.
-describe('P-MENU2-f guard: droppable rarity words fit their Gear tiles', () => {
-  it('every rarity with weight > 0 fits with ≥8 px padding at 667, 844 and 932', () => {
-    const weights = LOOT.rarityWeights as Partial<Record<string, number>>;
-    const droppable = RARITIES.filter((r) => (weights[r] ?? 0) > 0);
-    const names = gearContent.rarityNames as Record<string, string>;
-    const wordW = (r: string) => WORD_W[names[r]] ?? Infinity;
-    const widest = Math.max(...droppable.map(wordW));
-    for (const s of SIZES) {
-      const L = gearBoardLayout(s.w, s.h, tileWForLabel(widest));
-      for (const r of droppable) {
-        const room = cubbyTextW(L.tileW);
-        if (wordW(r) > room) {
-          throw new Error(`Rarity "${r}" ("${names[r]}", ${wordW(r)} px) is droppable but doesn't fit a ${L.tileW} px Gear tile at ${s.w}x${s.h} (room ${room} px with 8 px padding). Resize the Gear tiles (GEAR_BOARD / gearBoardLayout in ui/gearBoard.ts) before letting it drop. If the word is new, add its measured width to WORD_W.`);
-        }
-      }
-    }
-  });
 });

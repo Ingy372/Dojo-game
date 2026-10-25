@@ -725,4 +725,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Fighting Style: when the tray pages (1 tile per page at 667), page dots now show under it, with no numbers.
 - The art is placeholder drawn in code. No #265 art is used. The words are in content/loot/gear-board.json.
 **Next**
+- **#273 Tester fixes (2026-10-25):** every rarity word, Legendary included, now has 8 px clear each side inside the 2 px border (tiles 84 wide, still 3/4/5 columns). At 667 the doll shrinks to its rings (the figure is hidden) to make room. The sheet is 172 tall: long names wrap to 2 lines, the compare line wraps, and Details moved to the button row, 8 px from Let go (all 52 tall). The Vitest test checks Legendary padding at all 3 widths.
 - Swap in the real art once Jay OKs #265.
