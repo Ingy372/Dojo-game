@@ -395,7 +395,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       // R-BAL-12: content holds BASE numbers; the run's belt scales Health and Power (whole numbers).
       // Guard and timings never scale.
       const sc = options.enemyScale;
-      const def = sc ? { ...base, maxHealth: Math.max(1, Math.round(base.maxHealth * sc.maxHealth)), power: Math.round(base.power * sc.power) } : base;
+      const def = sc ? { ...base, maxHealth: Math.max(1, Math.round(base.maxHealth * sc.maxHealth)), power: Math.round(base.power * sc.power), weapon: base.weapon ? { ...base.weapon, disarmedPower: Math.round(base.weapon.disarmedPower * sc.power) } : base.weapon } : base;
       if (def.boss && options.easyBossHealth !== undefined) return { ...def, maxHealth: Math.max(1, Math.round(def.maxHealth * options.easyBossHealth)), summon: null };
       return def;
     };

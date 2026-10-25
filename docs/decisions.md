@@ -781,3 +781,6 @@ What is in the code:
 - Save migration: `TrainingState.stripesByBelt` is rebuilt by `migrateStripesByBelt`. Extra stripes from an old save that kept only a count go on the oldest belts with room, then on the current belt. It never removes anything.
 - Test file: r-bal-12-training-stats.test.ts.
 - Not done here: UI gain words (R-BAL-12d); the weapon's disarmedPower isn't scaled.
+
+## R-BAL-12e: enemy weapon disarmedPower scales too (2026-10-24)
+A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt Power scale as the enemy's Power, rounded to a whole number. The content file keeps the BASE number (8). A disarmed push still hits softer than a normal swing at every belt. Test: r-bal-12e-disarmed-power.test.ts.

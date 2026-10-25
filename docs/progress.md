@@ -556,3 +556,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## R-BAL-12 Training powers combat
 - Done: training stats, stripesByBelt migration (never lowers), per-belt enemy scale. UI words (12d) are still open.
+
+## R-BAL-12e disarmedPower scaled
+- Done (stacked on #208).
