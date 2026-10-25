@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyBeltEntry, buildTraining, feedEntry, loadFeed, loadProfile, newProfile, recordBeltEntry } from '../src';
+import { rewardMoments, snapshot, applyBeltEntry, buildTraining, feedEntry, loadFeed, loadProfile, newProfile, recordBeltEntry } from '../src';
 import { testContent } from './load-content';
 
 const files = import.meta.glob('../../../fixtures/*.json', { eager: true, import: 'default' });
@@ -20,6 +20,12 @@ describe('B-BELT: a grown-up enters the belt and stripes', () => {
     expect(whiteItems.every((r) => r.signedOff)).toBe(true);
     expect(t.gate.locks.every((r) => r.belt === 'yellow' && !r.signedOff)).toBe(true);
     expect(t.gate.sealLit).toBe(false);
+  });
+
+  it('the next visit celebrates it as a promotion', () => {
+    const before = snapshot(buildTraining(white, abilities, now));
+    const after = buildTraining(applyBeltEntry(white, { belt: 'yellow', stripes: 2 }), abilities, now);
+    expect(rewardMoments(before, after).some((m) => m.kind === 'promotion')).toBe(true);
   });
 
   it('stripes on the same belt add to the feed without changing its sign-offs', () => {
