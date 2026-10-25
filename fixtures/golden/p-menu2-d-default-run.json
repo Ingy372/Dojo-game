@@ -10,7 +10,7 @@
     {
      "id": "beginners-stance",
      "name": "Beginner's Stance",
-     "text": "Balanced. No strengths, no weaknesses.",
+     "text": "Steady and even. Good at everything.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -413,7 +413,7 @@
     {
      "id": "beginners-stance",
      "name": "Beginner's Stance",
-     "text": "Balanced. No strengths, no weaknesses.",
+     "text": "Steady and even. Good at everything.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -826,7 +826,7 @@
     {
      "id": "beginners-stance",
      "name": "Beginner's Stance",
-     "text": "Balanced. No strengths, no weaknesses.",
+     "text": "Steady and even. Good at everything.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -842,7 +842,7 @@
     {
      "id": "cat-stance",
      "name": "Cat Stance",
-     "text": "A short step back. It shows up in every kata so far.",
+     "text": "Quicker Counters and Dash, but softer blocks.",
      "counterWindow": 1,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -1294,7 +1294,7 @@
     {
      "id": "beginners-stance",
      "name": "Beginner's Stance",
-     "text": "Balanced. No strengths, no weaknesses.",
+     "text": "Steady and even. Good at everything.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -1310,7 +1310,7 @@
     {
      "id": "cat-stance",
      "name": "Cat Stance",
-     "text": "A short step back. It shows up in every kata so far.",
+     "text": "Quicker Counters and Dash, but softer blocks.",
      "counterWindow": 1,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -1798,7 +1798,7 @@
     {
      "id": "beginners-stance",
      "name": "Beginner's Stance",
-     "text": "Balanced. No strengths, no weaknesses.",
+     "text": "Steady and even. Good at everything.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -1814,7 +1814,7 @@
     {
      "id": "cat-stance",
      "name": "Cat Stance",
-     "text": "A short step back. It shows up in every kata so far.",
+     "text": "Quicker Counters and Dash, but softer blocks.",
      "counterWindow": 1,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -1830,7 +1830,7 @@
     {
      "id": "front-stance",
      "name": "Front Stance",
-     "text": "Step forward into it, ready to block and punch.",
+     "text": "Hit harder, but move a little slower.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": -0.1,
@@ -2318,7 +2318,7 @@
     {
      "id": "beginners-stance",
      "name": "Beginner's Stance",
-     "text": "Balanced. No strengths, no weaknesses.",
+     "text": "Steady and even. Good at everything.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -2334,7 +2334,7 @@
     {
      "id": "cat-stance",
      "name": "Cat Stance",
-     "text": "A short step back. It shows up in every kata so far.",
+     "text": "Quicker Counters and Dash, but softer blocks.",
      "counterWindow": 1,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -2350,7 +2350,7 @@
     {
      "id": "front-stance",
      "name": "Front Stance",
-     "text": "Step forward into it, ready to block and punch.",
+     "text": "Hit harder, but move a little slower.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": -0.1,
@@ -2842,7 +2842,7 @@
     {
      "id": "beginners-stance",
      "name": "Beginner's Stance",
-     "text": "Balanced. No strengths, no weaknesses.",
+     "text": "Steady and even. Good at everything.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -2858,7 +2858,7 @@
     {
      "id": "front-stance",
      "name": "Front Stance",
-     "text": "Step forward into it, ready to block and punch.",
+     "text": "Hit harder, but move a little slower.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": -0.1,
@@ -2874,7 +2874,7 @@
     {
      "id": "fighting-stance",
      "name": "Fighting Stance",
-     "text": "Jump into it to face a weapon, ready to kick.",
+     "text": "Strong blocks and fast Focus, but a shorter Dash.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -2890,7 +2890,7 @@
     {
      "id": "horse-stance",
      "name": "Horse Stance",
-     "text": "A rooted stance.",
+     "text": "Stand still to hit harder, but move slower.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": -0.2,
@@ -3382,7 +3382,7 @@
     {
      "id": "beginners-stance",
      "name": "Beginner's Stance",
-     "text": "Balanced. No strengths, no weaknesses.",
+     "text": "Steady and even. Good at everything.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -3398,7 +3398,7 @@
     {
      "id": "front-stance",
      "name": "Front Stance",
-     "text": "Step forward into it, ready to block and punch.",
+     "text": "Hit harder, but move a little slower.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": -0.1,
@@ -3414,7 +3414,7 @@
     {
      "id": "fighting-stance",
      "name": "Fighting Stance",
-     "text": "Jump into it to face a weapon, ready to kick.",
+     "text": "Strong blocks and fast Focus, but a shorter Dash.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": 0,
@@ -3430,7 +3430,7 @@
     {
      "id": "horse-stance",
      "name": "Horse Stance",
-     "text": "A rooted stance.",
+     "text": "Stand still to hit harder, but move slower.",
      "counterWindow": 0,
      "attackSpeed": 0,
      "moveSpeed": -0.2,

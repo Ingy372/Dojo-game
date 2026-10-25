@@ -21,6 +21,7 @@ import {
   type WorldState,
 } from '../src';
 import abilitiesData from '../../../content/abilities/abilities.json';
+import styleWords from '../../../content/abilities/fighting-style.json';
 import bruteData from '../../../content/enemies/brute.json';
 import white3 from '../../../fixtures/2-white-belt-3-signoffs.json';
 import oldSave from '../../../fixtures/saves/old-form-loadout.json';
@@ -146,5 +147,23 @@ describe('R-STANCE-d1 save migration', () => {
     expect(normalizeLoadout({ stance: 'horse-stance', virtue: 'second-wind' }, t, content.abilities)).toEqual({ stance: null, virtue: 'second-wind' });
     expect(normalizeLoadout({ stance: 'horse-stance', virtue: null }, t, content.abilities)).toBeNull();
     expect(normalizeLoadout(null, t, content.abilities)).toBeNull();
+  });
+});
+
+// #294 gameLine texts (drafts/content/katas/stances.json), copied exactly.
+describe('R-STANCE-d1 in-game lines', () => {
+  const lines: Record<string, string> = {
+    'beginners-stance': 'Steady and even. Good at everything.',
+    'cat-stance': 'Quicker Counters and Dash, but softer blocks.',
+    'front-stance': 'Hit harder, but move a little slower.',
+    'fighting-stance': 'Strong blocks and fast Focus, but a shorter Dash.',
+    'horse-stance': 'Stand still to hit harder, but move slower.',
+  };
+  it('each stance uses its #294 line in abilities and the Fighting Style screen', () => {
+    for (const [id, line] of Object.entries(lines)) {
+      const st = (abilitiesData as { stances: Array<{ id: string; text: string }> }).stances.find((s) => s.id === id);
+      expect(st?.text).toBe(line);
+      expect((styleWords as unknown as { lines: Record<string, string> }).lines[id]).toBe(line);
+    }
   });
 });
