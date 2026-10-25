@@ -1,0 +1,19 @@
+{
+  "_note": "B-BELT. A grown-up enters the student's real belt and stripes behind the grown-up gate. Saved only on this phone. It can only go up: lower choices are greyed out.",
+  "open": "Belt & stripes",
+  "title": "Belt and stripes",
+  "help": "Pick your child's belt and stripes from the real dojo. This stays on this phone, and it can only go up.",
+  "stripes": "Stripes",
+  "save": "Save",
+  "back": "Back",
+  "saved": "Saved: {belt}, {n} stripes",
+  "savedOne": "Saved: {belt}, 1 stripe",
+  "savedNone": "Saved: {belt}",
+  "confirmTitle": "Are you sure?",
+  "confirmHelp": "Save {entry}? Belts here can only go up, so this can't be lowered later.",
+  "confirmYes": "Yes, save",
+  "confirmNo": "Back",
+  "entryStripes": "{belt}, {n} stripes",
+  "entryOne": "{belt}, 1 stripe",
+  "entryNone": "{belt}"
+}

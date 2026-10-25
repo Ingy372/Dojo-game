@@ -41,3 +41,17 @@ export function tapArea(w: number, h: number): { x: number; y: number; w: number
   const th = Math.max(h, MIN_TAP);
   return { x: -tw / 2, y: -th / 2, w: tw, h: th };
 }
+
+/** P-MENU-b: how a new panel comes in. A tab slides 12 pt; a page turn 24 pt in the turn's direction. */
+export type PanelChange = 'none' | 'tab' | 'pageNext' | 'pagePrev';
+
+/**
+ * P-MENU-b: the panel's entrance. `none` (first draw, resize, gear pick, Wear, Let go) is instant.
+ * Reduced motion: no slide, just a 120 ms fade.
+ */
+export function panelSwap(change: PanelChange, reduced: boolean): { dx: number; fromAlpha: number; ms: number; ease: string } | null {
+  if (change === 'none') return null;
+  if (reduced) return { dx: 0, fromAlpha: 0, ms: MOTION.reducedFade.ms, ease: 'Linear' };
+  const dx = change === 'tab' ? 12 : change === 'pageNext' ? 24 : -24;
+  return { dx, fromAlpha: 0, ms: MOTION.swap.ms, ease: MOTION.swap.ease };
+}

@@ -921,5 +921,21 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 
 ## node-22 (2026-10-25)
 - Manager call: the repo's Node version matches Capacitor 8, whose CLI needs Node 22+. `engines.node` is now `>=22` (package.json and the lockfile's root entry). `.nvmrc` already said 22. The repo has no CI workflows yet, so there was no CI Node version to bump; B-CI should use Node 22.
+
+## B-BELT grown-up belt entry (2026-10-25)
+- Manager call (BETA-DEC15 D2): until the DojoForge feed sends it, a grown-up types in the real belt and stripes behind the existing grown-up gate. The sum question leads to the play-time screen, which now has a "Belt & stripes" button. Nothing leaves the phone.
+- The entry is saved in the profile (`beltEntry`, in the same localStorage save), so it survives a restart. Saves without it load with `null`.
+- It never lowers anything. The saved entry only goes up (belt first, then stripes), and the game uses it only when it is above what the feed shows. Lower choices are greyed out on the screen.
+- A higher belt begins like a fresh promotion. Earlier belts count as passed (the existing legacy grant unlocks their items). The new belt has no sign-offs and 0 classes in rank, and Sensei's Seal is off. Stripes on lower belts from the feed are kept. Entered stripes use the words Respect and Great Effort, because a grown-up enters how many stripes there are, not which ones.
+- Scope: belt and stripes only. Entering sign-offs (also in D2) is a follow-up.
+
+- 2026-10-25 — Manager call on #246 (QA fixes): changing the belt chip resets the stripe pick to 0 (never below the saved floor on that belt) via sim `pickBelt`; Save now opens an "Are you sure?" card (shared `button()`) because saves only go up; origin/main merged normally. Promotion still plays at the next dojo visit. Celebrations reduced motion and "practiced" wording moved to bot-code/fix-celebrate-rm; square buttons go to P-MENU-c.
+
+## R-BAL-14b (2026-10-25)
+- Manager call: wire the #237 charm amounts. `lowHealthFocus` amounts are now the extra share (game multiplier = 1 + amount), so Kind Stone 0.25 = x1.25. Rally's Insight amount goes from 2 to 1 so it stays x2. Great Lamp 1 = full DASH recharge and Feather 1 = +1 COUNTER tick; the code already did both, so they only got tests. check-c7 accepts plain kid text for COUNTER-window charms whose amounts are whole ticks.
+- The live content/loot/gear.json has only the 3 white charms. Lotus and Crane already match #237. Jade stays at the #188 white amounts (R-BAL-9 DECIDE-1 is still open). The 9 tier charms are not in the live file yet, because live loot has no per-tier drops; they come in with the tier-2+ gear import.
+
+## P-MENU-b (2026-10-25)
+- Manager approved the plan. A gear-card pick stays instant (the K32 detail block still shifts the grid until P-MENU-d). Code was only moved, nothing restyled. Gear cards keep their plain tap; press feedback on them moves to P-MENU-d with the new card. A Let go also redraws the tab bar, because the Gear (n) count changes.
 ## fix-celebrate-rm (2026-10-25)
 - Manager call (QA on #246): the Reduced motion Celebrations fix and the "practiced" wording ship in their own small PR, not in #246. "Counted" means `legacy` (already passed that rank); a mix shows the real sign-offs line first, then the practiced line. Square buttons go to P-MENU-c.

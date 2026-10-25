@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { MOTION, S2 } from '../ui/tokens';
+import { MOTION, S2, panelSwap, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import {
@@ -81,7 +81,18 @@ export class HomeScene extends Phaser.Scene {
   /** The bag item being looked at, if any. */
   private selected: string | null = null;
   private confirmLetGo = false;
+  /** Where the draw helpers add things: the shell, the tab bar or the panel (P-MENU-b). */
   private ui!: Phaser.GameObjects.Container;
+  /** P-MENU-b: background, left column and panel frame. Redrawn on create, refresh and resize. */
+  private shell!: Phaser.GameObjects.Container;
+  /** P-MENU-b: the tab buttons; redrawn on a tab change (colours, Gear count). */
+  private tabBar!: Phaser.GameObjects.Container;
+  /** P-MENU-b: the sliding underline under the picked tab. */
+  private underline!: Phaser.GameObjects.Rectangle;
+  /** P-MENU-b: the panel contents only. Tab, page and gear taps redraw just this. */
+  private panel: Phaser.GameObjects.Container | null = null;
+  private panelBox = { rx: 0, top: 0, rw: 0, panelH: 0 };
+  private tabBox = { rx: 0, y: 0, tabW: 0 };
   private testing: TestingPanel | null = null;
   private celebrating = false;
   /** Times the title was tapped recently (5 quick taps open the hidden testing screen). */
@@ -113,7 +124,11 @@ export class HomeScene extends Phaser.Scene {
     this.testing = null;
     this.celebrating = false;
     this.titleTaps = [];
-    this.ui = this.add.container(0, 0);
+    this.shell = this.add.container(0, 0);
+    this.tabBar = this.add.container(0, 0);
+    this.underline = this.add.rectangle(0, 0, 0, 3, 0xffd166).setOrigin(0).setVisible(false);
+    this.panel = null;
+    this.ui = this.shell;
     this.refresh();
     this.cameras.main.fadeIn(400, 10, 8, 16);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.render, this);
@@ -226,8 +241,17 @@ export class HomeScene extends Phaser.Scene {
     });
   }
 
+  /** Everything: the shell, the tab bar and the panel. */
   private render(): void {
-    this.ui.removeAll(true);
+    this.renderShell();
+    this.renderTabs(false);
+    this.renderPanel('none');
+  }
+
+  /** P-MENU-b: the frame (background, left column, panel box). Not the tabs or the panel contents. */
+  private renderShell(): void {
+    this.shell.removeAll(true);
+    this.ui = this.shell;
     const { width, height } = view(this);
     const pad = 16;
     const leftW = Math.min(300, width * 0.38);
@@ -283,23 +307,61 @@ export class HomeScene extends Phaser.Scene {
     // ---- right: tabs
     const rx = pad * 2 + leftW;
     const rw = width - rx - pad;
+    const top = pad + 46;
+    const panelH = height - top - pad;
+    this.ui.add(this.add.rectangle(rx, top, rw, panelH, 0x14121c, 0.65).setOrigin(0).setStrokeStyle(2, 0x3a3150));
+    this.panelBox = { rx, top, rw, panelH };
+    this.tabBox = { rx, y: pad, tabW: (rw - 6 * 3) / 4 };
+  }
+
+  /** P-MENU-b: the tab buttons, and the underline slides to the picked tab (jumps with Reduced motion). */
+  private renderTabs(slide: boolean): void {
+    this.tabBar.removeAll(true);
+    this.ui = this.tabBar;
+    const t = this.training;
+    const { rx, y: pad } = this.tabBox;
     const tabs: Array<[Tab, string]> = [
       ['run', 'Last run'],
       ['gear', `Gear (${this.profile.inventory.length})`],
       ['abilities', 'Abilities'],
       ['gate', t.gate.ready ? 'Gate ✦' : 'Gate'],
     ];
-    const tabW = (rw - 6 * (tabs.length - 1)) / tabs.length;
+    const tabW = this.tabBox.tabW;
     tabs.forEach(([tab, label], i) => {
       this.button(rx + i * (tabW + 6), pad, tabW, 34, label, this.tab === tab ? 0x4a3f63 : 0x2a2536, 14, () => this.setTab(tab));
     });
-    const top = pad + 46;
-    const panelH = height - top - pad;
-    this.ui.add(this.add.rectangle(rx, top, rw, panelH, 0x14121c, 0.65).setOrigin(0).setStrokeStyle(2, 0x3a3150));
+    const i = tabs.findIndex(([tab]) => tab === this.tab);
+    const ux = rx + i * (tabW + 6) + 8;
+    const uy = pad + 34 + 3;
+    this.children.bringToTop(this.underline);
+    this.tweens.killTweensOf(this.underline);
+    this.underline.setVisible(true).setSize(tabW - 16, 3);
+    if (slide && !reducedMotion()) this.tweens.add({ targets: this.underline, x: ux, y: uy, duration: MOTION.swap.ms, ease: MOTION.swap.ease });
+    else this.underline.setPosition(ux, uy);
+  }
+
+  /**
+   * P-MENU-b: only the panel contents, in their own container. The old panel goes first (its
+   * tweens killed), so a quick double tap can never leave two panels.
+   */
+  private renderPanel(change: PanelChange): void {
+    if (this.panel) {
+      this.tweens.killTweensOf(this.panel);
+      this.panel.destroy(true);
+    }
+    const panel = this.add.container(0, 0);
+    this.panel = panel;
+    this.ui = panel;
+    const { rx, top, rw, panelH } = this.panelBox;
     if (this.tab === 'run') this.renderRun(rx + 12, top + 10, rw - 24, panelH - 20);
     else if (this.tab === 'gear') this.renderGear(rx + 10, top + 10, rw - 20, panelH - 20);
     else if (this.tab === 'abilities') this.renderAbilities(rx + 10, top + 10, rw - 20, panelH - 20);
     else this.renderGate(rx + 12, top + 10, rw - 24, panelH - 20);
+    const swap = panelSwap(change, reducedMotion());
+    if (swap) {
+      panel.setPosition(swap.dx, 0).setAlpha(swap.fromAlpha);
+      this.tweens.add({ targets: panel, x: 0, alpha: 1, duration: swap.ms, ease: swap.ease });
+    }
   }
 
   /** The Path card: the next real step, always visible (core-design section 9). */
@@ -633,7 +695,7 @@ export class HomeScene extends Phaser.Scene {
       bg.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
         this.selected = isSel ? null : it.uid;
         this.confirmLetGo = false;
-        this.render();
+        this.renderPanel('none'); // P-MENU-b: a gear pick stays instant (the grid still moves until P-MENU-d).
       });
     });
 
@@ -730,13 +792,14 @@ export class HomeScene extends Phaser.Scene {
   private setTab(tab: Tab): void {
     this.tab = tab;
     this.selected = null;
-    this.render();
+    this.renderTabs(true);
+    this.renderPanel('tab');
   }
 
   private turn(by: number): void {
     this.page = Math.max(0, this.page + by);
     this.selected = null;
-    this.render();
+    this.renderPanel(by > 0 ? 'pageNext' : 'pagePrev');
   }
 
   private wear(item: GearItem): void {
@@ -744,20 +807,21 @@ export class HomeScene extends Phaser.Scene {
     writeSave(this.profile);
     sfx.insight();
     this.selected = null;
-    this.render();
+    this.renderPanel('none');
   }
 
   private letGo(item: GearItem): void {
     if (!this.confirmLetGo) {
       this.confirmLetGo = true;
-      this.render();
+      this.renderPanel('none');
       return;
     }
     letGo(this.profile, item.uid);
     writeSave(this.profile);
     this.selected = null;
     this.confirmLetGo = false;
-    this.render();
+    this.renderTabs(false); // the Gear (n) count changed
+    this.renderPanel('none');
   }
 
   // ---------------------------------------------------------------- helpers
