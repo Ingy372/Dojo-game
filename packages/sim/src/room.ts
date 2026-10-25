@@ -30,6 +30,8 @@ export interface RoomChallenge {
   inTimeText: string;
   /** Shown when the time ran out (a chest is still earned). */
   outOfTimeText: string;
+  /** The timer's short word when time runs out (the full sentence is on the room-clear line). */
+  outOfTimeShort: string;
 }
 
 export interface Room {
@@ -175,10 +177,10 @@ export function loadRoom(data: unknown): Room {
   let challenge: RoomChallenge | null = null;
   if (kind === 'challenge') {
     const c = raw.challenge as Record<string, unknown> | undefined;
-    if (!c || typeof c.seconds !== 'number' || !(c.seconds > 0) || typeof c.text !== 'string' || typeof c.inTimeText !== 'string' || typeof c.outOfTimeText !== 'string') {
-      throw new RoomError(id, 'a challenge room needs "challenge": { "seconds": number, "text": "...", "inTimeText": "...", "outOfTimeText": "..." }');
+    if (!c || typeof c.seconds !== 'number' || !(c.seconds > 0) || typeof c.text !== 'string' || typeof c.inTimeText !== 'string' || typeof c.outOfTimeText !== 'string' || typeof c.outOfTimeShort !== 'string') {
+      throw new RoomError(id, 'a challenge room needs "challenge": { "seconds": number, "text": "...", "inTimeText": "...", "outOfTimeText": "...", "outOfTimeShort": "..." }');
     }
-    challenge = { seconds: c.seconds, text: c.text, inTimeText: c.inTimeText, outOfTimeText: c.outOfTimeText };
+    challenge = { seconds: c.seconds, text: c.text, inTimeText: c.inTimeText, outOfTimeText: c.outOfTimeText, outOfTimeShort: c.outOfTimeShort };
   }
 
   let earliestRoom = 1;

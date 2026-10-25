@@ -1033,7 +1033,7 @@ export class GameScene extends Phaser.Scene {
     this.chainText.setX(width / 2);
     this.placeMessage();
     this.roomLabel.setX(width - 16);
-    this.timerText.setX(width - 16).setWordWrapWidth(Math.min(440, width * 0.5));
+    this.timerText.setX(width - 16);
     this.screenFlash.setSize(width, height);
   }
 
@@ -1908,8 +1908,7 @@ export class GameScene extends Phaser.Scene {
       const left = Math.max(0, limit - prog.ticks);
       const done = prog.cleared;
       this.timerText.setVisible(true);
-      this.timerText.setText(done ? (prog.ticks <= limit ? ch.inTimeText : ch.outOfTimeText) : clock(left, realTicksPerSecond()));
-      this.timerText.setFontSize(done ? 14 : 20);
+      this.timerText.setText(done ? (prog.ticks <= limit ? ch.inTimeText : ch.outOfTimeShort) : clock(left, realTicksPerSecond()));
       this.timerText.setColor(left > realSecondsToTicks(10) || done ? '#f2e9d8' : '#ff6b5b');
     } else {
       this.timerText.setVisible(false);

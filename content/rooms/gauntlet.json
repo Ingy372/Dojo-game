@@ -7,7 +7,7 @@
     "seconds": 120,
     "text": "Clear the room in 2 minutes for a better chest!",
     "inTimeText": "In time!",
-    "outOfTimeText": "Out of time"
+    "outOfTimeText": "Out of time", "outOfTimeShort": "Out of time"
   },
   "tiles": [
     "#####D#####D#####D####",

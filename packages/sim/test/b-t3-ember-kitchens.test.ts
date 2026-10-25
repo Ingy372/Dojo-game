@@ -27,6 +27,7 @@ describe('B-T3 Ember Kitchens (Orange, tier 3)', () => {
     const r = content.rooms.find((x) => x.id === 'supper-rush')!;
     expect(r.challenge?.inTimeText).toBe('In time!');
     expect(r.challenge?.outOfTimeText).toBe("Time's up! The soup cooled, but you still earned a chest.");
+    expect(r.challenge?.outOfTimeShort).toBe("Time's up!");
     expect(r.chest).toBeTruthy();
     expect(content.loot.chests.challenge.items).toBeGreaterThan(0);
   });

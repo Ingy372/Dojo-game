@@ -5,7 +5,7 @@
   "minBeltTier": 3,
   "floorSet": "ember-kitchens",
   "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
-  "challenge": { "seconds": 90, "text": "Clear the room in 90 seconds for a better chest!", "inTimeText": "In time!", "outOfTimeText": "Time's up! The soup cooled, but you still earned a chest." },
+  "challenge": { "seconds": 90, "text": "Clear the room in 90 seconds for a better chest!", "inTimeText": "In time!", "outOfTimeText": "Time's up! The soup cooled, but you still earned a chest.", "outOfTimeShort": "Time's up!" },
   "tiles": [
     "####D#####D#####D###",
     "#..................#",
