@@ -573,3 +573,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## R-BAL-12 Training powers combat
 - Done: training stats, stripesByBelt migration (never lowers), per-belt enemy scale. UI words (12d) are still open.
 - Enemy scale retuned (Manager option B): live enemies are in the #188 bands at all 10 belts for all three model students; Bopper base is now 66/11. Test: r-bal-12-bands.test.ts.
+
+## K28 K25 feel fixes (QA B1–B4)
+- Done: the wind-up sound and the "two attacks at once" warning timer use real time (realMsPerTick). Challenge timers are 60 real seconds. The shake rule checks belt rank (tier 8 = Brown and up), not the id 'brown'. Named-monster wind-up shakes (Brute stamp) follow the same rule. Test: k28-real-time-rank.test.ts.

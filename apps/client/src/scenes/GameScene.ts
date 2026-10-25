@@ -63,7 +63,10 @@ import {
   type TrainingState,
   TEMPO,
   SCREEN_SHAKE,
-  eventShakeScale,
+  hurtShakeScale,
+  realSecondsToTicks,
+  realTicksPerSecond,
+  ticksToRealMs,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
@@ -746,7 +749,7 @@ export class GameScene extends Phaser.Scene {
     const feetOnScreen = (e.pos.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
     n.layout(others, (feetOnScreen - HUD_BOTTOM) / (cam.zoom / DPR), e.mode === 'defeated');
     const windupSec = e.mode === 'windup' ? Math.min(e.windupTotal, e.windupTotal - e.modeTicks + blend) / TICKS_PER_SECOND : null;
-    if (n.update(e, now, windupSec, frame, TILE).clank) sfx.clank();
+    if (n.update(e, now, windupSec, frame, TILE, this.shakeScale('windup')).clank) sfx.clank();
   }
 
   /** The first of these animations the creature has (e.g. the boss's "windup_slam", else "windup"). */
@@ -1066,7 +1069,7 @@ export class GameScene extends Phaser.Scene {
           if (ev.playerId === this.me) this.tutorialDid('counter');
           const p = this.world.players[ev.playerId];
           sfx.block();
-          this.impact(FEEL.block, this.hurtShake('block'));
+          this.impact(FEEL.block, this.shakeScale('block'));
           this.ring(p.pos, COLORS.shield, 1.2);
           this.sparks(p.pos, 6, COLORS.shield);
           this.floatText(p.pos, `BLOCK  -${ev.damage}`, '#9ad1ff', 22);
@@ -1077,7 +1080,7 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.hurt();
           this.heroDo('hit');
-          this.impact(FEEL.hurt, this.hurtShake('hurt'));
+          this.impact(FEEL.hurt, this.shakeScale('hurt'));
           this.playerFlashUntil = this.time.now + 160;
           this.flashScreen(0xff2a1a, 0.3, 200);
           this.floatText(p.pos, `-${ev.damage}`, '#ff6b5b', 26);
@@ -1119,14 +1122,14 @@ export class GameScene extends Phaser.Scene {
           // A warning is coming: the twist banner gets out of the way so it never covers one.
           if (this.twistBannerView?.active) this.tweens.add({ targets: this.twistBannerView, alpha: 0.25, duration: 150 });
           const e = this.enemy(ev.enemyId);
-          sfx.windup(ev.ticks / TICKS_PER_SECOND);
+          sfx.windup(ticksToRealMs(ev.ticks) / 1000);
           if (e) this.floatText({ x: e.pos.x, y: e.pos.y - e.def.radius - 0.3 }, '!', '#ff3b30', 40, 0.4);
           // Sensei's Lessons: a second warning while another is still filling is two attacks at once.
           const now = this.time.now;
           if ([...this.warnings].some(([id, w]) => id !== ev.enemyId && w.until > now)) this.lesson('twoAttacksAtOnce');
           const me = this.world.players[this.me];
           const inside = !!(e?.attackCenter && me && Math.hypot(me.pos.x - e.attackCenter.x, me.pos.y - e.attackCenter.y) <= currentAttack(e).areaRadius);
-          this.warnings.set(ev.enemyId, { until: now + (ev.ticks / TICKS_PER_SECOND) * 1000, inside });
+          this.warnings.set(ev.enemyId, { until: now + ticksToRealMs(ev.ticks), inside });
           break;
         }
         case 'enemySwing': {
@@ -1855,11 +1858,13 @@ export class GameScene extends Phaser.Scene {
     // Challenge timer.
     const ch = this.room.challenge;
     if (ch) {
-      const left = Math.max(0, ch.seconds * TICKS_PER_SECOND - prog.ticks);
+      // K28: Challenge timers count real seconds (the game runs slower than the rules' ticks).
+      const limit = realSecondsToTicks(ch.seconds);
+      const left = Math.max(0, limit - prog.ticks);
       const done = prog.cleared;
       this.timerText.setVisible(true);
-      this.timerText.setText(done ? (prog.ticks <= ch.seconds * TICKS_PER_SECOND ? 'In time!' : 'Out of time') : clock(left, TICKS_PER_SECOND));
-      this.timerText.setColor(left > 10 * TICKS_PER_SECOND || done ? '#f2e9d8' : '#ff6b5b');
+      this.timerText.setText(done ? (prog.ticks <= limit ? 'In time!' : 'Out of time') : clock(left, realTicksPerSecond()));
+      this.timerText.setColor(left > realSecondsToTicks(10) || done ? '#f2e9d8' : '#ff6b5b');
     } else {
       this.timerText.setVisible(false);
     }
@@ -2092,9 +2097,10 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** K25: being hit shakes only at Brown belt and up or on Challenge, softer, never with Reduced motion. */
-  private hurtShake(kind: 'hurt' | 'block'): number {
-    const t = currentTraining();
-    return eventShakeScale(kind, { beltIds: t.belts.map((b) => b.id), beltId: t.belt.id, difficulty: this.world.difficulty, reducedMotion: reducedMotion() });
+
+  /** K28: the one shake rule (hits and named-monster wind-ups): Brown rank and up or Challenge, 65%, never with Reduced motion. */
+  private shakeScale(kind: 'hurt' | 'windup' | 'block'): number {
+    return hurtShakeScale({ kind, beltTier: currentTraining().belt.tier, difficulty: this.world.difficulty, reducedMotion: reducedMotion() });
   }
 
   private addWorld<T extends Phaser.GameObjects.GameObject>(obj: T): T {
