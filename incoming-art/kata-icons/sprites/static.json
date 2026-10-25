@@ -1,0 +1,713 @@
+{
+  "pixelsPerTile": 80,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "facing": "north (the one game view)"
+  },
+  "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+  "sprites": {
+    "kata-pivot": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-pivot"
+      ],
+      "files": {
+        "kata-pivot": "kata-pivot.png"
+      },
+      "groundRect": {
+        "col0": 1.1920928910669204e-08,
+        "row0": -2.6656735929719844e-08,
+        "col1": 1.600000011920929,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Pivot: one foot turning in place on the ball of the foot. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-turn-180": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-turn-180"
+      ],
+      "files": {
+        "kata-turn-180": "kata-turn-180.png"
+      },
+      "groundRect": {
+        "col0": 2.9999999523162844,
+        "row0": -2.6656735929719844e-08,
+        "col1": 4.599999952316284,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Half turn: a half-circle arrow. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-turn": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-turn"
+      ],
+      "files": {
+        "kata-turn": "kata-turn.png"
+      },
+      "groundRect": {
+        "col0": 6.0000001907348635,
+        "row0": -2.6656735929719844e-08,
+        "col1": 7.600000190734863,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Turn: a quarter-turn arrow. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-turn-big-special": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-turn-big-special"
+      ],
+      "files": {
+        "kata-turn-big-special": "kata-turn-big-special.png"
+      },
+      "groundRect": {
+        "col0": 9.000000190734863,
+        "row0": -2.6656735929719844e-08,
+        "col1": 10.600000190734864,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Big special turn: an almost full circle arrow with a gold sparkle. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-stance-cat": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-stance-cat"
+      ],
+      "files": {
+        "kata-stance-cat": "kata-stance-cat.png"
+      },
+      "groundRect": {
+        "col0": 12.000000190734863,
+        "row0": -2.6656735929719844e-08,
+        "col1": 13.600000190734864,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Cat stance: back foot flat (turned out), front foot just touching with the toes. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-stance-front": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-stance-front"
+      ],
+      "files": {
+        "kata-stance-front": "kata-stance-front.png"
+      },
+      "groundRect": {
+        "col0": 15.000000190734863,
+        "row0": -2.6656735929719844e-08,
+        "col1": 16.600000190734864,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Front stance: long stance, front foot points forward, back foot turned out a little. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-stance-attention": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-stance-attention"
+      ],
+      "files": {
+        "kata-stance-attention": "kata-stance-attention.png"
+      },
+      "groundRect": {
+        "col0": 17.999999237060546,
+        "row0": -2.6656735929719844e-08,
+        "col1": 19.599999237060548,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Attention: heels together, toes turned out in a small V. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-block-downward": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-block-downward"
+      ],
+      "files": {
+        "kata-block-downward": "kata-block-downward.png"
+      },
+      "groundRect": {
+        "col0": 20.999999237060546,
+        "row0": -2.6656735929719844e-08,
+        "col1": 22.599999237060548,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Low block: bold forearm sweeping down and out, one arrow down. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-block-reverse-inside": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-block-reverse-inside"
+      ],
+      "files": {
+        "kata-block-reverse-inside": "kata-block-reverse-inside.png"
+      },
+      "groundRect": {
+        "col0": 23.999999237060546,
+        "row0": -2.6656735929719844e-08,
+        "col1": 25.599999237060548,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Inside block: bold forearm up, one arrow sweeping in. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-block-overhead": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-block-overhead"
+      ],
+      "files": {
+        "kata-block-overhead": "kata-block-overhead.png"
+      },
+      "groundRect": {
+        "col0": 26.999999237060546,
+        "row0": -2.6656735929719844e-08,
+        "col1": 28.599999237060548,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: High block: bold forearm across the top, one arrow up. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-block-double-knife-hand": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-block-double-knife-hand"
+      ],
+      "files": {
+        "kata-block-double-knife-hand": "kata-block-double-knife-hand.png"
+      },
+      "groundRect": {
+        "col0": 1.1920928910669204e-08,
+        "row0": 1.7207292140207626,
+        "col1": 1.600000011920929,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Double knife-hand block: two bold open knife hands, one forward and one guarding. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-punch-straight": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-punch-straight"
+      ],
+      "files": {
+        "kata-punch-straight": "kata-punch-straight.png"
+      },
+      "groundRect": {
+        "col0": 2.9999999523162844,
+        "row0": 1.7207292140207626,
+        "col1": 4.599999952316284,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Straight punch: bold fist going straight forward, one arrow. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-punch-reverse": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-punch-reverse"
+      ],
+      "files": {
+        "kata-punch-reverse": "kata-punch-reverse.png"
+      },
+      "groundRect": {
+        "col0": 6.0000001907348635,
+        "row0": 1.7207292140207626,
+        "col1": 7.600000190734863,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Reverse punch: bold fist forward, curved hip arrow (back hand). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-strike-backfist": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-strike-backfist"
+      ],
+      "files": {
+        "kata-strike-backfist": "kata-strike-backfist.png"
+      },
+      "groundRect": {
+        "col0": 9.000000190734863,
+        "row0": 1.7207292140207626,
+        "col1": 10.600000190734864,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Backfist: bold fist snapping out in one arc. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-kick-reverse": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-kick-reverse"
+      ],
+      "files": {
+        "kata-kick-reverse": "kata-kick-reverse.png"
+      },
+      "groundRect": {
+        "col0": 12.000000190734863,
+        "row0": 1.7207292140207626,
+        "col1": 13.600000190734864,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Reverse kick: straight kick with the back leg, hip turning (curved arrow). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-kick-straight": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-kick-straight"
+      ],
+      "files": {
+        "kata-kick-straight": "kata-kick-straight.png"
+      },
+      "groundRect": {
+        "col0": 15.000000190734863,
+        "row0": 1.7207292140207626,
+        "col1": 16.600000190734864,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Straight kick: leg straight out, speed lines. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-kick-front": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-kick-front"
+      ],
+      "files": {
+        "kata-kick-front": "kata-kick-front.png"
+      },
+      "groundRect": {
+        "col0": 17.999999237060546,
+        "row0": 1.7207292140207626,
+        "col1": 19.599999237060548,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Front kick: knee up then the foot snaps up and forward (rising arrow). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-chamber": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-chamber"
+      ],
+      "files": {
+        "kata-chamber": "kata-chamber.png"
+      },
+      "groundRect": {
+        "col0": 20.999999237060546,
+        "row0": 1.7207292140207626,
+        "col1": 22.599999237060548,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Chamber: fist pulled back to the hip, palm up. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-catch": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-catch"
+      ],
+      "files": {
+        "kata-catch": "kata-catch.png"
+      },
+      "groundRect": {
+        "col0": 23.999999237060546,
+        "row0": 1.7207292140207626,
+        "col1": 25.599999237060548,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Catch: both hands caught together on the hip. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-break-double-choke": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-break-double-choke"
+      ],
+      "files": {
+        "kata-break-double-choke": "kata-break-double-choke.png"
+      },
+      "groundRect": {
+        "col0": 26.999999237060546,
+        "row0": 1.7207292140207626,
+        "col1": 28.599999237060548,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Choke break (v3): two open hands push OUT through a soft orange ring (the grip) that is broken at the sides, with outward arrows; no neck, no grabbing. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-kiai": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "kata-kiai"
+      ],
+      "files": {
+        "kata-kiai": "kata-kiai.png"
+      },
+      "groundRect": {
+        "col0": 1.1920928910669204e-08,
+        "row0": 3.4414585230739014,
+        "col1": 1.600000011920929,
+        "row1": 5.041458523073901,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "kata move icon: Kiai: a big shout burst with sound waves (no letters). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "kata-dir-map": {
+      "size": [
+        192,
+        192
+      ],
+      "layers": [
+        "kata-dir-map"
+      ],
+      "files": {
+        "kata-dir-map": "kata-dir-map.png"
+      },
+      "groundRect": {
+        "col0": -0.399999988079071,
+        "row0": 6.482917141180177,
+        "col1": 2.000000011920929,
+        "row1": 8.882917141180178,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        96.0,
+        96.0
+      ],
+      "anchorNote": "anchor = centre of the 192 x 192 image",
+      "note": "direction picture: school-map base, Front at the top. 192 x 192, anchor = centre",
+      "frames": 1
+    },
+    "kata-dir-front": {
+      "size": [
+        192,
+        192
+      ],
+      "layers": [
+        "kata-dir-front"
+      ],
+      "files": {
+        "kata-dir-front": "kata-dir-front.png"
+      },
+      "groundRect": {
+        "col0": 2.599999952316284,
+        "row0": 6.482917141180177,
+        "col1": 4.999999952316284,
+        "row1": 8.882917141180178,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        96.0,
+        96.0
+      ],
+      "anchorNote": "anchor = centre of the 192 x 192 image",
+      "note": "facing Front (up). 192 x 192, anchor = centre",
+      "frames": 1
+    },
+    "kata-dir-back": {
+      "size": [
+        192,
+        192
+      ],
+      "layers": [
+        "kata-dir-back"
+      ],
+      "files": {
+        "kata-dir-back": "kata-dir-back.png"
+      },
+      "groundRect": {
+        "col0": 5.600000190734863,
+        "row0": 6.482917141180177,
+        "col1": 8.000000190734863,
+        "row1": 8.882917141180178,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        96.0,
+        96.0
+      ],
+      "anchorNote": "anchor = centre of the 192 x 192 image",
+      "note": "facing Back (down). 192 x 192, anchor = centre",
+      "frames": 1
+    },
+    "kata-dir-left": {
+      "size": [
+        192,
+        192
+      ],
+      "layers": [
+        "kata-dir-left"
+      ],
+      "files": {
+        "kata-dir-left": "kata-dir-left.png"
+      },
+      "groundRect": {
+        "col0": 8.600000190734864,
+        "row0": 6.482917141180177,
+        "col1": 11.000000190734863,
+        "row1": 8.882917141180178,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        96.0,
+        96.0
+      ],
+      "anchorNote": "anchor = centre of the 192 x 192 image",
+      "note": "facing Left. 192 x 192, anchor = centre",
+      "frames": 1
+    },
+    "kata-dir-right": {
+      "size": [
+        192,
+        192
+      ],
+      "layers": [
+        "kata-dir-right"
+      ],
+      "files": {
+        "kata-dir-right": "kata-dir-right.png"
+      },
+      "groundRect": {
+        "col0": 11.600000190734864,
+        "row0": 6.482917141180177,
+        "col1": 14.000000190734863,
+        "row1": 8.882917141180178,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        96.0,
+        96.0
+      ],
+      "anchorNote": "anchor = centre of the 192 x 192 image",
+      "note": "facing Right. 192 x 192, anchor = centre",
+      "frames": 1
+    }
+  }
+}
