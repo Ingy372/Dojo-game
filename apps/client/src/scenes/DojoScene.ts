@@ -52,7 +52,10 @@ import { bankRun, savedRun } from '../game/runSave';
 import RESUME_TEXT from '../../../../content/settings/run-resume.json';
 import MOTION_TEXT from '../../../../content/settings/motion.json';
 import streetUi from '../../../../content/street-smarts/ui.json';
-import { currentTraining } from '../game/student';
+import { baseFeed, currentTraining } from '../game/student';
+import BELT_TEXT from '../../../../content/settings/belt-entry.json';
+import { applyBeltEntry, entryRank, feedEntry, pickBelt, recordBeltEntry, type BeltEntry } from '@dojo/sim';
+import { button as roundButton } from '../ui/button';
 import { startTowerRun } from '../game/tower';
 import { LESSONS, addDevDays, devDayOffset, lessonTitle, localDay, takeLesson } from '../game/lessons';
 import { TouchControls } from '../input/TouchControls';
@@ -1203,10 +1206,104 @@ export class DojoScene extends Phaser.Scene {
     };
     draw();
     const dw = 140;
-    const dy = Math.min(height - 12 - 40, by + bh + 22);
-    const done = this.add.rectangle(width / 2 - dw / 2, dy, dw, 40, 0x3aa57a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
-    box.add([done, this.add.text(width / 2, dy + 20, pt.done, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
+    const dy = Math.min(height - 12 - 44, by + bh + 22);
+    const belt = this.add.rectangle(width / 2 - dw - 8, dy, dw, 44, 0x2a2536).setOrigin(0).setStrokeStyle(2, 0xffd166, 0.8).setInteractive();
+    box.add([belt, this.add.text(width / 2 - dw / 2 - 8, dy + 22, BELT_TEXT.open, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffd166' }).setOrigin(0.5).setResolution(crisp())]);
+    belt.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+      box.destroy();
+      this.openBeltEntry(back);
+    });
+    const done = this.add.rectangle(width / 2 + 8, dy, dw, 44, 0x3aa57a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
+    box.add([done, this.add.text(width / 2 + 8 + dw / 2, dy + 22, pt.done, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
     done.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, close);
+  }
+
+  /** Grown-up setting (B-BELT): the real belt and stripes. Choices below what's saved are greyed out. */
+  private openBeltEntry(back: Mode): void {
+    const t = BELT_TEXT;
+    const { width, height } = view(this);
+    const feed = baseFeed();
+    const belts = feed.school.belts;
+    const floor = feedEntry(applyBeltEntry(feed, this.profile.beltEntry));
+    const pick: BeltEntry = { ...floor };
+    const box = this.add.container(0, 0).setDepth(70);
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.9).setOrigin(0).setInteractive());
+    const close = () => {
+      box.destroy();
+      this.training = currentTraining();
+      this.mode = back === 'menu' ? 'play' : back;
+      this.renderUi();
+    };
+    const w = Math.min(600, width - 32);
+    box.add(this.add.text(width / 2, 10, t.title, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
+    box.add(this.add.text(width / 2, 38, t.help, { fontFamily: FONT, fontSize: '14px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp()));
+    const cols = 5;
+    const gap = 8;
+    const cw = (w - gap * (cols - 1)) / cols;
+    const ch = 44;
+    const top = 84;
+    const left = (width - w) / 2;
+    const sy = top + 2 * (ch + gap) + 6;
+    const draw = () => {
+      box.list.filter((o) => o.getData('pick')).forEach((o) => o.destroy());
+      const chip = (x: number, y: number, cw2: number, label: string, swatch: number | null, on: boolean, ok: boolean, tap: () => void) => {
+        const bg = this.add.rectangle(x, y, cw2, ch, on ? 0x3aa57a : 0x2a2536).setOrigin(0).setStrokeStyle(on ? 3 : 2, on ? 0xffd166 : 0xffffff, on ? 1 : 0.35).setAlpha(ok ? 1 : 0.35).setData('pick', true);
+        const parts: Phaser.GameObjects.GameObject[] = [bg];
+        if (swatch !== null) parts.push(this.add.rectangle(x + 6, y + ch / 2 - 7, 14, 14, swatch).setOrigin(0).setStrokeStyle(1, 0xffffff, 0.6).setAlpha(ok ? 1 : 0.35).setData('pick', true));
+        parts.push(this.add.text(x + (swatch !== null ? cw2 / 2 + 8 : cw2 / 2), y + ch / 2, label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '13px', color: '#ffffff', align: 'center', wordWrap: { width: cw2 - (swatch !== null ? 26 : 8) } }).setOrigin(0.5).setAlpha(ok ? 1 : 0.35).setResolution(crisp()).setData('pick', true));
+        if (ok) bg.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => { sfx.place(true); tap(); draw(); });
+        box.add(parts);
+      };
+      belts.forEach((b, i) => {
+        const x = left + (i % cols) * (cw + gap);
+        const y = top + Math.floor(i / cols) * (ch + gap);
+        const ok = entryRank(belts, { belt: b.id, stripes: 2 }) >= entryRank(belts, floor);
+        chip(x, y, cw, b.name, Number.parseInt(b.color.replace('#', ''), 16) || 0xffffff, b.id === pick.belt, ok, () => {
+          Object.assign(pick, pickBelt(belts, floor, b.id));
+        });
+      });
+      box.add(this.add.text(left, sy + ch / 2, t.stripes, { fontFamily: FONT, fontStyle: 'bold', fontSize: '15px', color: '#e8d9b5' }).setOrigin(0, 0.5).setResolution(crisp()).setData('pick', true));
+      [0, 1, 2].forEach((n) => {
+        const ok = entryRank(belts, { belt: pick.belt, stripes: n }) >= entryRank(belts, floor);
+        chip(left + 90 + n * (64 + gap), sy, 64, String(n), null, pick.stripes === n, ok, () => { pick.stripes = n; });
+      });
+    };
+    draw();
+    const bw = 120;
+    const byy = Math.min(height - 10 - 44, sy + ch + 14);
+    const button = (x: number, label: string, color: number, tap: () => void) => {
+      const bg = this.add.rectangle(x, byy, bw, 44, color).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4).setInteractive();
+      box.add([bg, this.add.text(x + bw / 2, byy + 22, label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(crisp())]);
+      bg.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, tap);
+    };
+    button(width / 2 - bw - 8, t.back, 0x4a4a55, close);
+    button(width / 2 + 8, t.save, 0x3aa57a, () => this.confirmBeltEntry(belts, pick, () => {
+      sfx.place(true);
+      this.profile.beltEntry = recordBeltEntry(belts, this.profile.beltEntry, pick);
+      writeSave(this.profile);
+      const name = belts.find((b) => b.id === pick.belt)!.name;
+      const line = pick.stripes === 0 ? t.savedNone : pick.stripes === 1 ? t.savedOne : t.saved;
+      close();
+      this.toast(line.replace('{belt}', name).replace('{n}', String(pick.stripes)));
+    }));
+  }
+
+  /** "Are you sure?" before a belt entry is saved: saves only go up, so it can't be lowered later. */
+  private confirmBeltEntry(belts: readonly { id: string; name: string }[], pick: BeltEntry, save: () => void): void {
+    const t = BELT_TEXT;
+    const { width, height } = view(this);
+    const card = this.add.container(0, 0).setDepth(90);
+    card.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
+    const name = belts.find((b) => b.id === pick.belt)!.name;
+    const entry = (pick.stripes === 0 ? t.entryNone : pick.stripes === 1 ? t.entryOne : t.entryStripes).replace('{belt}', name).replace('{n}', String(pick.stripes));
+    const w = Math.min(460, width - 40);
+    const title = this.add.text(width / 2, height * 0.16, t.confirmTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp());
+    const help = this.add.text(width / 2, title.y + title.height + 12, t.confirmHelp.replace('{entry}', entry), { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
+    card.add([title, help]);
+    const bw = 140;
+    const by = Math.min(height - 12 - 44, help.y + help.height + 22);
+    roundButton(this, { x: width / 2 - bw - 8, y: by, w: bw, h: 44, label: t.confirmNo, color: 0x4a4a55, size: 16, onTap: () => card.destroy() }, card);
+    roundButton(this, { x: width / 2 + 8, y: by, w: bw, h: 44, label: t.confirmYes, color: 0x3aa57a, size: 16, onTap: () => { card.destroy(); save(); } }, card);
   }
 
   /** Asks how the player likes to move decorations: tap the spot, or an arrow pad. */

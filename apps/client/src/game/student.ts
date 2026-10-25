@@ -2,8 +2,9 @@
 // from the fake profiles in fixtures/, picked on the hidden testing screen. Their dates
 // are moved so each profile looks "fresh" (its last update is now).
 
-import { buildTraining, loadFeed, shiftFeedDates, type StudentFeed, type TrainingState } from '@dojo/sim';
+import { applyBeltEntry, buildTraining, loadFeed, shiftFeedDates, type StudentFeed, type TrainingState } from '@dojo/sim';
 import { CONTENT } from './content';
+import { loadSave } from './save';
 
 const files = import.meta.glob('../../../../fixtures/*.json', { eager: true, import: 'default' });
 
@@ -46,6 +47,11 @@ export function selectProfile(key: string): void {
 }
 
 /** The student's progress right now, worked out from the selected fake profile. */
+/** The fake profile's feed, before any grown-up belt entry. */
+export function baseFeed(): StudentFeed {
+  return FAKE_PROFILES.find((p) => p.key === selectedProfileKey())!.feed;
+}
+
 export function currentTraining(): TrainingState {
   const fake = FAKE_PROFILES.find((p) => p.key === selectedProfileKey())!;
   const now = new Date();
@@ -54,7 +60,8 @@ export function currentTraining(): TrainingState {
   const DAY = 24 * 60 * 60 * 1000;
   const asOf = Date.parse(fake.feed.asOf);
   const feed = shiftFeedDates(fake.feed, new Date(asOf + Math.floor((now.getTime() - asOf) / DAY) * DAY).toISOString());
-  return buildTraining(feed, CONTENT.abilities, { ms: now.getTime(), weekday: now.getDay() });
+  // B-BELT: the grown-up's belt entry, when it is above the feed (it never lowers anything).
+  return buildTraining(applyBeltEntry(feed, loadSave().beltEntry), CONTENT.abilities, { ms: now.getTime(), weekday: now.getDay() });
 }
 
 /** "Sat, Mar 27" for a "YYYY-MM-DD" date. */
