@@ -640,7 +640,11 @@ export class HomeScene extends Phaser.Scene {
     this.text(x, y, `The Gate to ${g.toBelt.name}`, 19, '#f2e9d8', true, 'Georgia, serif');
     if (g.ready) {
       const chip = this.text(x + w, y + 2, ' READY ', 15, '#14121c', true).setOrigin(1, 0).setBackgroundColor('#ffd166');
-      this.tweens.add({ targets: chip, alpha: 0.6, duration: 800, yoyo: true, repeat: -1 });
+      // P-MENU-e: one pop when the tab opens, then still (no endless blinking).
+      if (!reducedMotion()) {
+        chip.setScale(0.9);
+        this.tweens.add({ targets: chip, scale: 1, duration: MOTION.pop.ms, ease: MOTION.pop.ease });
+      }
     }
     this.text(x, y + 26, `${g.lit} of ${g.locks.length} locks lit. A real promotion opens the Gate.`, 12, '#b9ad99', false, FONT, w);
 
@@ -669,6 +673,13 @@ export class HomeScene extends Phaser.Scene {
     const half = w / 2;
     const sx = x + sr + 2;
     const sy = by + sr;
+    // P-MENU-e: the sundial and the Seal sit on two equal rounded cards.
+    const cards = this.add.graphics();
+    for (const cx of [x, x + half + S1]) {
+      cards.fillStyle(0x221d2e, 0.6).fillRoundedRect(cx - 6, sy - sr - 8, half - S1 - 2, sr * 2 + 16, RADIUS.panel);
+      cards.lineStyle(2, 0x3a3150).strokeRoundedRect(cx - 6, sy - sr - 8, half - S1 - 2, sr * 2 + 16, RADIUS.panel);
+    }
+    this.ui.add(cards);
     const dial = this.add.graphics();
     dial.fillStyle(0x221d2e).fillCircle(sx, sy, sr);
     if (g.sundial > 0) {

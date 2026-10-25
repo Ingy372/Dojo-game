@@ -978,3 +978,8 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - The Gear grid's rows depend only on panel space (`gearGrid`). The detail sheet lays over the panel and moves to the top when the picked card is in the bottom rows, so a pick never moves or hides a card.
 - Merged origin/main (#249, #254) normally; docs conflicts kept both sides with main first. #252 (practiced-cards) is still unmerged and is carried in this branch.
 - 2026-10-25 — Tester (#257 QA): the worn-gear row is pinned to GEAR.wornH (86) so the bag grid's y never moves after Wear (194 before and after at 667/844/932).
+
+## P-MENU-e (2026-10-25)
+- Manager call (Oct 25): P-MENU-e approved as written: Gate and Dojo popups use the shared rounded button(), the resume offer and other square Dojo panels become rounded, CreateScene buttons drawn at least 44 tall. Keep the Boy / Girl labels exactly as they are (still an open question for Jay).
+- The Gate tab's READY chip now pops once (MOTION.pop) instead of blinking forever, and the sundial and Sensei's Seal sit on two equal rounded cards. The rest of work-board section 3c (lock sizes, label sizes, first-lit Seal bell) is not in this PR.
+- #257 (P-MENU-d) was still open, so bot-code/P-MENU-d is merged into this branch (a normal merge); #257 must merge first.
