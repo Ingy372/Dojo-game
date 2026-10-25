@@ -271,6 +271,10 @@ export class GameScene extends Phaser.Scene {
   private playerFlashUntil = 0;
   private marker!: Phaser.GameObjects.Arc;
   private danger!: Phaser.GameObjects.Graphics;
+  /** K24b: the wind-up cues (a big "!" and a filling ring) above each enemy about to attack. */
+  private cues!: Phaser.GameObjects.Graphics;
+  /** True this frame when an attack aimed at the player is in its Counter window. */
+  private counterWindowOpen = false;
   private tether!: Phaser.GameObjects.Graphics;
   private enemyViews = new Map<string, EnemyView>();
 
@@ -389,6 +393,7 @@ export class GameScene extends Phaser.Scene {
     // Guarding tethers sit just under the red danger shapes.
     this.tether = this.add.graphics().setDepth(dim ? 9.5 : 0.9);
     this.danger = this.add.graphics().setDepth(dim ? 10 : 1);
+    this.cues = this.add.graphics().setDepth(9);
     this.marker = this.add.circle(0, 0, TILE * 0.22).setStrokeStyle(3, COLORS.marker, 0.9).setVisible(false).setDepth(2);
     this.player = this.makePlayer();
 
@@ -397,7 +402,7 @@ export class GameScene extends Phaser.Scene {
     cam.startFollow(this.player, true);
     this.uiCamera = this.cameras.add(0, 0, this.scale.width, this.scale.height);
     // The Guarding tether is world art too, or the screen camera draws a ghost copy (elites QA bug 1).
-    this.uiCamera.ignore([...roomGfx, ...objects, this.tether, this.danger, this.marker, this.player]);
+    this.uiCamera.ignore([...roomGfx, ...objects, this.tether, this.danger, this.cues, this.marker, this.player]);
 
     for (const e of this.world.enemies) this.makeEnemy(e);
 
@@ -510,9 +515,12 @@ export class GameScene extends Phaser.Scene {
     }
 
     this.danger.clear();
+    this.cues.clear();
+    this.counterWindowOpen = false;
     this.drawTethers(now);
     this.syncEnemyViews();
     for (const e of this.world.enemies) this.drawEnemy(e, blend, now);
+    this.buttons.counterWindow(this.counterWindowOpen);
 
     this.buttons.update(p);
     this.drawHud();
@@ -557,6 +565,25 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** Starts a one-off move on the character (frames `from`..`to` of the animation). */
+  /**
+   * K24b: the wind-up cue, drawn in code. A big "!" in a ring that fills as the attack winds up.
+   * In the Counter window the ring is full and gold, and (unless Reduced motion) the "!" gently pulses.
+   */
+  private drawWindupCue(x: number, y: number, fill: number, inWindow: boolean, now: number): void {
+    const g = this.cues;
+    const pulse = inWindow && !reducedMotion() ? 1 + 0.15 * Math.abs(Math.sin(now / 90)) : 1;
+    const r = 15 * pulse;
+    const color = inWindow ? 0xffd166 : 0xff8a80;
+    g.fillStyle(0x1b1530, 0.75).fillCircle(x, y, r + 3);
+    g.lineStyle(4, 0xffffff, 0.25).strokeCircle(x, y, r);
+    g.lineStyle(5, color, 1).beginPath();
+    g.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Phaser.Math.Clamp(inWindow ? 1 : fill, 0.02, 1), false);
+    g.strokePath();
+    // The "!": a rounded bar and a dot.
+    g.fillStyle(color, 1).fillRoundedRect(x - 3 * pulse, y - 10 * pulse, 6 * pulse, 13 * pulse, 3 * pulse);
+    g.fillCircle(x, y + 7 * pulse, 3.2 * pulse);
+  }
+
   private heroDo(name: string, from?: number, to?: number): void {
     this.heroAction = name;
     this.hero.play(name, { restart: true, from, to });
@@ -633,6 +660,8 @@ export class GameScene extends Phaser.Scene {
       this.danger.fillStyle(COLORS.danger, 0.16 * glow).fillCircle(cx, cy, area);
       this.danger.lineStyle(inWindow ? 6 : 3 * glow, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
       this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
+      if (inWindow) this.counterWindowOpen = true;
+      this.drawWindupCue(x * TILE, y * TILE - v.top - 38, elapsed / e.windupTotal, inWindow, now);
     } else if (e.mode === 'recover') {
       // The attack itself (it lands on its first frame), then catching its breath.
       const anim = v.pushing ? this.enemyAnim(s, 'pushpaw', 'attack') : this.enemyAnim(s, v.attack, 'attack');
@@ -1918,6 +1947,11 @@ export class GameScene extends Phaser.Scene {
     }
     const c = this.room.chest;
     if (c && this.chestImgs[0]?.alpha) boxes.push(toScreen((c.x - 0.6) * TILE, (c.y - 0.7) * TILE, (c.x + 0.6) * TILE, (c.y + 0.6) * TILE));
+    // K24b: the wind-up cue ("!" in a ring) over an enemy about to attack.
+    for (const e of this.world.enemies) {
+      const v = e.mode === 'windup' ? this.enemyViews.get(e.id) : undefined;
+      if (v) boxes.push(toScreen(v.container.x - 20, v.container.y - v.top - 58, v.container.x + 20, v.container.y - v.top - 18));
+    }
     if (withMessage && this.message.visible) {
       const m = this.message.getBounds();
       boxes.push({ x0: m.left, x1: m.right, y0: m.top, y1: m.bottom });
