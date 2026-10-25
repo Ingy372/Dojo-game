@@ -1025,3 +1025,9 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **Packed shelves.** A short shelf now shares its row with the next one. Each shelf keeps its own label, and every row but the last is full. With 8 cubbies the case takes 1 page at 844x390 and 932x430 (2 rows × 4) and 3 pages at 667x375 (1 row × 3). The test asserts ≤ 2 pages at 844 and 932.
 - **Kata steps on the cream sheet.** Step numbers are `WOOD.ink` (#3a2618, 11.3:1). Arrows are `KATA_INK.onPaper.arrow` (#1d4690, 7.1:1).
 - **Polish.** The grid is centred in the frame. Earned stripe cubbies show the short Virtue name; the sheet keeps the full name. The shelf label "Character stripes" is now "Stripes" so it fits over a single cubby without "…".
+
+## P-MENU2-d: Fighting Style data (2026-10-25)
+- **Two picks only (D2, the Manager's go).** The profile has an optional `loadout` with a starting Form (Stance) and a chosen Virtue. Strikes and Seals stay always on.
+- **No loadout = today's play.** New profiles and old saves get `loadout: null`. A pick the student hasn't earned (or an unknown id) is ignored and that slot falls back to today's default. Nothing else in the sim changes.
+- **Starting Form.** The chosen Form starts the fight. The other earned Forms follow in their usual order, so the Form button still cycles through all of them.
+- **Golden test.** `packages/sim/test/p-menu2-d-golden.test.ts` compares the character setup and three seeded bot runs for 4 fixture students (new profile and old save) against `fixtures/golden/p-menu2-d-default-run.json`, captured from main (7e99af0) before any change. The Manager approved this plan with no Jay go needed, because the golden test protects today's play.

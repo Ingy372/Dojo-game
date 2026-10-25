@@ -1,8 +1,7 @@
 // P-MENU2-d golden test: a profile with no loadout must fight exactly as before the
 // loadout existed. The expected output was captured from origin/main (7e99af0) before
 // any P-MENU2-d change, and is stored in fixtures/golden/p-menu2-d-default-run.json.
-// To re-capture (only if play is meant to change): GOLDEN_CAPTURE=1 npm test.
-import { writeFileSync } from 'node:fs';
+// If play is ever meant to change, re-capture it on purpose and say so in the PR.
 import { describe, expect, it } from 'vitest';
 import { buildTraining, characterSetup, loadFeed, loadProfile, newProfile } from '../src';
 import { testContent } from './load-content';
@@ -35,10 +34,6 @@ function capture(): Record<string, unknown> {
 describe('P-MENU2-d golden: no loadout plays exactly as today', () => {
   it('matches the output captured from main before the loadout existed', () => {
     const now = capture();
-    if ((import.meta.env as Record<string, string | undefined>).GOLDEN_CAPTURE) {
-      writeFileSync(new URL('../../../fixtures/golden/p-menu2-d-default-run.json', import.meta.url), JSON.stringify(now, null, 1) + '\n');
-      return;
-    }
     expect(now).toEqual(golden);
   });
 });

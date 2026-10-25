@@ -675,3 +675,12 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - B-POLISH-1: empty-bag hint hidden behind an open worn-item sheet; Last run says "N items in your Gear" when no item row fits. Vitest for both; screenshots at 667x375, 844x390, 932x430 with Reduced motion on and off.
 - P-MENU2-a: warm-wood mood frame (code-drawn) on the Training Board panel; Abilities gets a Trophy Case | Fighting Style switch (2 x button(), 44 tall, at most 120 wide); Fighting Style is a placeholder card; BOARD cubby/slot/tile/ribbon tokens; Vitest. Screenshots at 667x375, 844x390, 932x430 with Reduced motion on and off, overlap/clipping/tap-size checked.
 - 2026-10-25 P-MENU2-b: Trophy Case (ribbon, shelves, cubbies, page dots, detail sheet). Wording in content/abilities/trophy-case.json; test p-menu2-b-trophy-case.
+
+## P-MENU2-d — Fighting Style data (2026-10-25)
+
+**Done**
+- Profile `loadout` (starting Form + Virtue), read safely from old saves. The fight setup (`characterSetup`) uses it; with no loadout it gives exactly today's setup.
+- Golden test of today's default play (captured from main before the change), plus tests for a chosen Stance, a chosen Virtue, old saves and unearned picks.
+
+**Next**
+- P-MENU2-e: the Fighting Style screen, where students make these picks.
