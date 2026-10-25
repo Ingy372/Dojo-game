@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, gearGrid, pageDots, panelSwap, xpFillFrom, type PanelChange } from '../ui/tokens';
+import { GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, gearGrid, lastRunItemsFit, pageDots, panelSwap, xpFillFrom, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import {
@@ -447,20 +447,27 @@ export class HomeScene extends Phaser.Scene {
 
 
   private renderRun(x: number, y: number, w: number, h: number): void {
+    // B-LASTRUN: every block stacks below the measured bottom of the one before; Personal bests
+    // sit on the panel's real bottom edge and the item list only takes the room left between.
+    const bottom = y + h;
     const last = this.profile.lastRun;
     if (!last) {
-      this.text(x, y, 'No runs yet. Tap Enter the Tower to climb!', 16, '#f2e9d8', false, FONT, w);
-      this.renderBests(x, y + h - 44, w);
+      const t = this.text(x, y, 'No runs yet. Tap Enter the Tower to climb!', 16, '#f2e9d8', false, FONT, w);
+      this.renderBests(x, Math.max(y + t.height + S2, bottom - this.bestsHeight(w)), w);
       return;
     }
     const s = last.summary;
     const headline = s.result === 'cleared' ? 'Floor cleared!' : s.result === 'rested' ? playTimeText.homeHeadline : `You reached room ${Math.min(s.totalRooms, s.roomsCleared + 1)} of ${s.totalRooms}`;
-    this.text(x, y, headline, 20, s.result !== 'lost' ? '#ffd166' : '#f2e9d8', true);
-    y += 30;
+    const head = this.text(x, y, headline, 20, s.result !== 'lost' ? '#ffd166' : '#f2e9d8', true, FONT, w);
+    y += head.height + S1;
 
-    // One chip per room: its grade, or a mark for treasure and rest rooms.
+    // One chip per room: its grade, or a mark for treasure and rest rooms. Wraps onto a new row.
     let cx = x;
     for (const r of s.results) {
+      if (cx + 30 > x + w) {
+        cx = x;
+        y += 36;
+      }
       if (r.kind === 'treasure' && !r.grade) {
         // K23: a small drawn chest (no "$", which read like money).
         this.ui.add(this.add.rectangle(cx, y, 30, 30, 0x221d2e).setOrigin(0).setStrokeStyle(2, 0xffd166));
@@ -474,57 +481,79 @@ export class HomeScene extends Phaser.Scene {
       this.text(cx + 15, y + 15, label, 17, color, true).setOrigin(0.5);
       cx += 36;
     }
-    y += 40;
-    this.text(x, y, `Perfect Counters ${s.perfects}   Best combo ${s.bestCombo}   Time ${realClock(s.ticks)}`, 14, '#f2e9d8', false, FONT, w);
-    y += 22;
+    y += 30 + S2;
+    const stats = this.text(x, y, `Perfect Counters ${s.perfects}   Best combo ${s.bestCombo}   Time ${realClock(s.ticks)}`, 14, '#f2e9d8', false, FONT, w);
+    y += stats.height + S1;
     if (last.xp) {
       const xp = last.xp;
       const extras = [xp.blessed ? 'Dojo Blessing' : '', xp.catchUp ? 'catch-up x2' : ''].filter(Boolean).join(', ');
       const lvl = xp.levelsGained > 0 ? `   Level up! (+${xp.levelsGained})` : xp.atCap ? '   (level cap)' : '';
-      this.text(x, y, `+${xp.gained} experience${extras ? ` (${extras})` : ''}${lvl}`, 14, '#9ad1ff', true, FONT, w);
-      y += 22;
+      const xt = this.text(x, y, `+${xp.gained} experience${extras ? ` (${extras})` : ''}${lvl}`, 14, '#9ad1ff', true, FONT, w);
+      y += xt.height + S1;
     }
 
+    const lineH = 19;
+    const bestsTop = Math.max(y, bottom - this.bestsHeight(w));
     const decos = [...(s.decorations ?? []), ...(last.earned ?? [])];
     if (decos.length > 0) {
       const line = this.text(x, y, `For your dojo: ${decos.map((id) => decorationDef(CONTENT.dojo, id).name).join(', ')}`, 14, '#ffd166', true, FONT, w);
-      y += line.height + 5;
+      // Long trophy lists are capped above the item heading so they never reach Personal bests.
+      const maxH = Math.max(18, bestsTop - S2 - y - 22 - S1 - lineH);
+      if (line.height > maxH) {
+        const perLine = line.height / Math.max(1, line.getWrappedText().length);
+        const keep = line.getWrappedText().slice(0, Math.max(1, Math.floor(maxH / perLine)));
+        keep[keep.length - 1] = keep[keep.length - 1].replace(/[\s,]*\S{0,3}$/, '') + '…';
+        line.setWordWrapWidth(null).setText(keep.join('\n'));
+      }
+      y += line.height + S1;
     }
-    this.text(x, y, `Items found (${s.items.length})`, 15, '#ffd166', true);
-    y += 22;
-    const lineH = 19;
-    const fit = Math.max(1, Math.floor((this.panelBottom(h) - 50 - y) / lineH));
-    const items = s.items.slice().sort((a, b) => RARITY_ORDER(b) - RARITY_ORDER(a));
-    items.slice(0, fit).forEach((it) => {
-      const icon = addGearIcon(this, it, x + 8, y + 9, 18);
-      if (icon) this.ui.add(icon);
-      const tx = icon ? x + 22 : x;
-      this.oneLine(this.text(tx, y, `${rarityName(it.rarity)}: ${it.name}  (${describeItem(it)})`, 14, css(RARITY_COLOR[it.rarity]), false), w - (tx - x), 10);
-      y += lineH;
-    });
-    if (items.length > fit) this.text(x, y, `+${items.length - fit} more in your Gear`, 13, '#b9ad99');
-    if (items.length === 0) this.text(x, y, 'None this time. Beat enemies and open chests!', 14, '#b9ad99');
-    this.renderBests(x, this.panelBottom(h) - 44, w);
+    if (y + 20 <= bestsTop - S2) {
+      const heading = this.text(x, y, `Items found (${s.items.length})`, 15, '#ffd166', true);
+      y += heading.height + S1;
+      const items = s.items.slice().sort((a, b) => RARITY_ORDER(b) - RARITY_ORDER(a));
+      const fit = lastRunItemsFit(y, bestsTop, lineH, items.length);
+      items.slice(0, fit).forEach((it) => {
+        const icon = addGearIcon(this, it, x + 8, y + 9, 18);
+        if (icon) this.ui.add(icon);
+        const tx = icon ? x + 22 : x;
+        this.oneLine(this.text(tx, y, `${rarityName(it.rarity)}: ${it.name}  (${describeItem(it)})`, 14, css(RARITY_COLOR[it.rarity]), false), w - (tx - x), 10);
+        y += lineH;
+      });
+      if (items.length > fit && y + lineH <= bestsTop - S2) this.oneLine(this.text(x, y, `+${items.length - fit} more in your Gear`, 13, '#b9ad99'), w, 10);
+      if (items.length === 0) this.oneLine(this.text(x, y, 'None this time. Beat enemies and open chests!', 14, '#b9ad99'), w, 10);
+    }
+    this.renderBests(x, bestsTop, w);
   }
 
-  /** The y where the right panel's content ends. */
-  private panelBottom(h: number): number {
-    return 16 + 46 + 10 + h;
-  }
-
-  private renderBests(x: number, y: number, w: number): void {
+  private bestsRows(): Array<{ key: BestKey; str: string; isNew: boolean }> {
     const b = this.profile.bests;
     const newBests = new Set(this.profile.lastRun?.newBests ?? []);
-    this.text(x, y, 'Personal bests', 13, '#ffd166', true);
     const rows: Array<[BestKey, string]> = [
       ['fastestClearTicks', b.fastestClearTicks === null ? '—' : realClock(b.fastestClearTicks)],
       ['mostPerfects', `${b.mostPerfects}`],
       ['longestCombo', `${b.longestCombo}`],
       ['mostSGrades', `${b.mostSGrades}`],
     ];
-    rows.forEach(([key, value], i) => {
-      const isNew = newBests.has(key);
-      this.text(x + (i % 2) * (w / 2), y + 17 + Math.floor(i / 2) * 15, `${BEST_NAME[key]}: ${value}${isNew ? ' NEW!' : ''}`, 12, isNew ? '#ffd166' : '#f2e9d8');
+    return rows.map(([key, value]) => ({ key, isNew: newBests.has(key), str: `${BEST_NAME[key]}: ${value}${newBests.has(key) ? ' NEW!' : ''}` }));
+  }
+
+  /** Two columns only when every row fits in half the width; otherwise one row per line. */
+  private bestsCols(w: number): number {
+    const probe = this.add.text(0, 0, '', { fontFamily: FONT, fontSize: `${TYPE.label}px` });
+    const widest = Math.max(...this.bestsRows().map((r) => probe.setText(r.str).width));
+    probe.destroy();
+    return widest <= w / 2 - S2 ? 2 : 1;
+  }
+
+  private bestsHeight(w: number): number {
+    return 17 + Math.ceil(4 / this.bestsCols(w)) * 16;
+  }
+
+  private renderBests(x: number, y: number, w: number): void {
+    const cols = this.bestsCols(w);
+    this.text(x, y, 'Personal bests', 13, '#ffd166', true);
+    this.bestsRows().forEach((r, i) => {
+      this.oneLine(this.text(x + (i % cols) * (w / cols), y + 17 + Math.floor(i / cols) * 16, r.str, TYPE.label, r.isNew ? '#ffd166' : '#f2e9d8'), w / cols - S1, TYPE.label);
     });
   }
 

@@ -983,3 +983,7 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Manager call (Oct 25): P-MENU-e approved as written: Gate and Dojo popups use the shared rounded button(), the resume offer and other square Dojo panels become rounded, CreateScene buttons drawn at least 44 tall. Keep the Boy / Girl labels exactly as they are (still an open question for Jay).
 - The Gate tab's READY chip now pops once (MOTION.pop) instead of blinking forever, and the sundial and Sensei's Seal sit on two equal rounded cards. The rest of work-board section 3c (lock sizes, label sizes, first-lit Seal bell) is not in this PR.
 - #257 (P-MENU-d) was still open, so bot-code/P-MENU-d is merged into this branch (a normal merge); #257 must merge first.
+## B-LASTRUN (2026-10-25)
+- Manager call (Oct 25): urgent fix from Jay's iPhone test (Safari, landscape). The Last run panel must never overlap at landscape phone sizes; keep it small, an Abilities/Gear redesign is planned.
+- Every block stacks below the measured height of the one before (ui/tokens.ts S1/S2). Personal bests sit on the panel's real bottom edge (or just below the content, whichever is lower), and the item list only gets the rows left between, with "+N more in your Gear" for the rest.
+- A very long "For your dojo" list is cut with "…" so at least the item heading and one row stay visible; the full list is in the Dojo. Personal bests drop to one column when a row doesn't fit in half the width.
