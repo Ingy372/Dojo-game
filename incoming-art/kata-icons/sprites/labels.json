@@ -1,0 +1,110 @@
+{
+  "_note": "PLACEHOLDER names pending the Content Designer; taken from drafts/content/katas/moves.json. The game draws the label as text under the icon.",
+  "labels": {
+    "kata-pivot": {
+      "moveId": "pivot",
+      "name": "Pivot",
+      "flag": ""
+    },
+    "kata-turn-180": {
+      "moveId": "turn.180",
+      "name": "Half turn",
+      "flag": ""
+    },
+    "kata-turn": {
+      "moveId": "turn",
+      "name": "Turn",
+      "flag": ""
+    },
+    "kata-turn-big-special": {
+      "moveId": "turn.big-special",
+      "name": "Big special turn",
+      "flag": ""
+    },
+    "kata-stance-cat": {
+      "moveId": "stance.cat",
+      "name": "Cat stance",
+      "flag": ""
+    },
+    "kata-stance-front": {
+      "moveId": "stance.front",
+      "name": "Front stance",
+      "flag": ""
+    },
+    "kata-stance-attention": {
+      "moveId": "stance.attention",
+      "name": "Attention",
+      "flag": ""
+    },
+    "kata-block-downward": {
+      "moveId": "block.downward",
+      "name": "Low block",
+      "flag": ""
+    },
+    "kata-block-reverse-inside": {
+      "moveId": "block.reverse-inside",
+      "name": "Inside block",
+      "flag": ""
+    },
+    "kata-block-overhead": {
+      "moveId": "block.overhead",
+      "name": "High block",
+      "flag": ""
+    },
+    "kata-block-double-knife-hand": {
+      "moveId": "block.double-knife-hand",
+      "name": "Double knife-hand block",
+      "flag": "long (23 chars)"
+    },
+    "kata-punch-straight": {
+      "moveId": "punch.straight",
+      "name": "Straight punch",
+      "flag": ""
+    },
+    "kata-punch-reverse": {
+      "moveId": "punch.reverse",
+      "name": "Reverse punch",
+      "flag": ""
+    },
+    "kata-strike-backfist": {
+      "moveId": "strike.backfist",
+      "name": "Backfist",
+      "flag": ""
+    },
+    "kata-kick-reverse": {
+      "moveId": "kick.reverse",
+      "name": "Reverse kick",
+      "flag": ""
+    },
+    "kata-kick-straight": {
+      "moveId": "kick.straight",
+      "name": "Straight kick",
+      "flag": ""
+    },
+    "kata-kick-front": {
+      "moveId": "kick.front",
+      "name": "Front kick",
+      "flag": ""
+    },
+    "kata-chamber": {
+      "moveId": "chamber",
+      "name": "Chamber",
+      "flag": ""
+    },
+    "kata-catch": {
+      "moveId": "catch",
+      "name": "Catch",
+      "flag": ""
+    },
+    "kata-break-double-choke": {
+      "moveId": "break.double-choke",
+      "name": "Choke break",
+      "flag": ""
+    },
+    "kata-kiai": {
+      "moveId": null,
+      "name": "Kiai!",
+      "flag": "missing from moves.json"
+    }
+  }
+}

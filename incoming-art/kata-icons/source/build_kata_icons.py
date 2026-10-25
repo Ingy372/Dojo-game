@@ -121,8 +121,11 @@ def _(D): leg(D, 0.06, 0.06, 25, 0.8, ball=True); turn_arrow(D, 0.42, 225, 300, 
 def _(D): hip(D, -0.22); fist(D, 0.02, -0.06, 180, 0.88); D.arrow(0.1, 0.18, -0.22, 0.18, 0.06, INKM)
 @mv("catch", "Catch: both hands caught together on the hip")
 def _(D): hip(D, -0.22); fist(D, 0.0, -0.06, 180, 0.82); knife(D, -0.04, 0.08, 200, 0.7)
-@mv("break-double-choke", "Choke break: both forearms push up and out from the middle")
-def _(D): fist(D, -0.1, 0.0, 110, 0.8); fist(D, 0.1, 0.0, 70, 0.8); D.arrow(-0.22, -0.26, -0.33, -0.12, 0.06, INKM); D.arrow(0.22, -0.26, 0.33, -0.12, 0.06, INKM)
+@mv("break-double-choke", "Choke break (v3): two open hands push OUT through a soft orange ring (the grip) that is broken at the sides, with outward arrows; no neck, no grabbing")
+def _(D):
+    for a0, a1 in ((35, 145), (215, 325)): D.arc(0.0, 0.0, 0.27, 0.055, a0, a1, HIT, n=20)    # the grip ring, broken left and right
+    knife(D, -0.1, -0.02, 98, 0.66, flip=True); knife(D, 0.1, -0.02, 82, 0.66)               # two open hands, fingers up, back to back
+    D.arrow(-0.15, 0.04, -0.3, 0.04, 0.07, INKM); D.arrow(0.15, 0.04, 0.3, 0.04, 0.07, INKM)   # pushing out through the breaks
 @mv("kiai", "Kiai: a big shout burst with sound waves (no letters)")
 def _(D):
     D.star(-0.06, 0.0, 0.27, HIT, pts=10, inner=0.7, rot=0); D.star(-0.06, 0.0, 0.2, "#ffe48a", pts=10, inner=0.72, rot=0)
