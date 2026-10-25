@@ -21,6 +21,8 @@ import {
   type WorldState,
 } from '../src';
 import abilitiesData from '../../../content/abilities/abilities.json';
+import { STYLE_LEFT_SHARE, STYLE_LEFT_SHARE_MIN, styleLayout } from '../../../apps/client/src/ui/fightingStyle';
+import { TROPHY_UI, cubbyTextW } from '../../../apps/client/src/ui/tokens';
 import styleWords from '../../../content/abilities/fighting-style.json';
 import bruteData from '../../../content/enemies/brute.json';
 import white3 from '../../../fixtures/2-white-belt-3-signoffs.json';
@@ -164,6 +166,32 @@ describe('R-STANCE-d1 in-game lines', () => {
       const st = (abilitiesData as { stances: Array<{ id: string; text: string }> }).stances.find((s) => s.id === id);
       expect(st?.text).toBe(line);
       expect((styleWords as unknown as { lines: Record<string, string> }).lines[id]).toBe(line);
+    }
+  });
+});
+
+// R-STANCE-d1 (#293): the preview card may take width from the left side so every gap is 8 px.
+// Text heights need a browser, so the gaps themselves are measured in the screenshot run
+// (/workspace/r-stance-d1-shots/v3); this checks the layout part.
+describe('R-STANCE-d1 Fighting Style preview width', () => {
+  const min = 67 + 2 * TROPHY_UI.cubbyPadX + TROPHY_UI.stroke;
+  const panels = [[343, 300], [472, 310], [560, 350]]; // 667, 844, 932
+  it('the default share is the layout from before', () => {
+    expect(STYLE_LEFT_SHARE).toBe(0.58);
+    for (const [w, h] of panels) {
+      expect(styleLayout(w, h, min)).toEqual(styleLayout(w, h, min, STYLE_LEFT_SHARE));
+      expect(styleLayout(w, h, min).leftW).toBe(Math.round(w * 0.58));
+    }
+  });
+  it('the narrowest share keeps heights, tap sizes and tray padding, and widens only the card', () => {
+    for (const [w, h] of panels) {
+      const a = styleLayout(w, h, min);
+      const b = styleLayout(w, h, min, STYLE_LEFT_SHARE_MIN);
+      expect(b.previewW).toBeGreaterThan(a.previewW);
+      expect([b.previewH, b.slotH, b.tileH, b.alwaysY, b.perAlways]).toEqual([a.previewH, a.slotH, a.tileH, a.alwaysY, a.perAlways]);
+      expect(b.slotW).toBeGreaterThanOrEqual(44);
+      expect(cubbyTextW(b.tileW)).toBeGreaterThanOrEqual(67);
+      expect((b.tileW - TROPHY_UI.stroke - cubbyTextW(b.tileW)) / 2).toBeGreaterThanOrEqual(8);
     }
   });
 });
