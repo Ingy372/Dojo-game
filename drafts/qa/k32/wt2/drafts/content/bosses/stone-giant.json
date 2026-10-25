@@ -1,0 +1,111 @@
+{
+  "id": "stone-giant",
+  "name": "The Stone Giant",
+  "notes": "DRAFT for C13-5 (bestiary-plan.md; lore from drafts/content/lore/guardians-and-relics.json, unchanged). Green Guardian on floor 5. Same shape as content/enemies/floor-keeper.json, plus phases. Stats are TODO for the Researcher (the scaling guide puts a Guardian at about 90% of the tier max; hits-to-beat in the 40-80 boss band). Faith tie-ins stay out until Jay decides; see faithOverlayKey.",
+  "color": "#8a8178",
+  "boss": true,
+  "guardian": true,
+  "tier": "green",
+  "band": "F5",
+  "maxHealth": 532,
+  "power": 16,
+  "guard": 30,
+  "radius": 0.85,
+  "moveSpeedTilesPerSecond": 1.6,
+  "sightRange": 20,
+  "attacks": [
+    {
+      "name": "giant stomp",
+      "strength": 1.0,
+      "startRange": 1.9,
+      "reach": 1.1,
+      "areaRadius": 1.3,
+      "telegraphTicks": 20,
+      "recoverTicks": 22
+    },
+    {
+      "name": "stone toss",
+      "strength": 0.8,
+      "startRange": 6.0,
+      "reach": 5.0,
+      "areaRadius": 0.9,
+      "telegraphTicks": 20,
+      "recoverTicks": 26,
+      "note": "Tosses stones that land in red circles."
+    },
+    {
+      "name": "rock slide",
+      "strength": 1.2,
+      "startRange": 6.0,
+      "reach": 6.0,
+      "areaRadius": 0.6,
+      "telegraphTicks": 24,
+      "recoverTicks": 30,
+      "dashOnly": true,
+      "shape": "lane",
+      "shapeCue": "lane",
+      "tell": "purple-and-white stripes + '!!' + whoosh",
+      "counterable": false,
+      "answer": "dash",
+      "overlapOnGuided": false,
+      "noOverlapWithRedCircle": false,
+      "overlapFromFloor": 3,
+      "minOffsetFromRedCircleTicks": 10,
+      "followUp": {
+        "shape": "lane",
+        "telegraphTicks": 24,
+        "neverSimultaneous": true,
+        "gapAfterFirstTicks": 20
+      }
+    }
+  ],
+  "signature": "Rock Slide",
+  "phases": [
+    {
+      "id": "stomp",
+      "atHealthFraction": 1.0,
+      "attacks": [
+        "giant stomp"
+      ],
+      "tell": "It lifts one huge foot; big red circle.",
+      "counterplay": "COUNTER, or step out of the big circle.",
+      "senseiLine": "Big feet are slow feet. Wait."
+    },
+    {
+      "id": "toss",
+      "atHealthFraction": 0.66,
+      "attacks": [
+        "giant stomp",
+        "stone toss"
+      ],
+      "tell": "It picks up stones; circles show where they land.",
+      "counterplay": "Step out, then come back close.",
+      "senseiLine": "Watch where they land. Then move."
+    },
+    {
+      "id": "slide",
+      "atHealthFraction": 0.33,
+      "attacks": [
+        "stone toss",
+        "rock slide"
+      ],
+      "tell": "Two striped lanes, one after the other, each with double marks.",
+      "counterplay": "DASH out, then DASH again.",
+      "senseiLine": "Two slides. One DASH, then another."
+    }
+  ],
+  "parSeconds": 25,
+  "lines": {
+    "intro": "So tall and so loud. But are those only stones?",
+    "freed": "I was only stones and worry. Thank you for not running away.",
+    "senseiAfter": "Big things can still fall to a brave, small heart."
+  },
+  "description": "The Stone Giant stomps, tosses stones, then sends two rock slides down striped lanes, one after the other.",
+  "bestiary": {
+    "tip": "It looks big. Stay brave and steady.",
+    "lore": {
+      "green": "Very tall and very loud. Inside, it is only a pile of stones the shadow stacked up. Free it, and its light comes home."
+    }
+  },
+  "faithOverlayKey": "stone-giant"
+}

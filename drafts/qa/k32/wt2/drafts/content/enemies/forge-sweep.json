@@ -1,0 +1,49 @@
+{
+  "id": "forge-sweep",
+  "name": "Forge Sweeper",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). A big glowing broom that sweeps a wide arc. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#e0a03a",
+  "maxHealth": 69,
+  "power": 11,
+  "guard": 10,
+  "radius": 0.45,
+  "moveSpeedTilesPerSecond": 1.0,
+  "sightRange": 10,
+  "attack": {
+    "name": "sweep",
+    "strength": 1,
+    "startRange": 2.5,
+    "reach": 3.0,
+    "areaRadius": 0.6,
+    "telegraphTicks": 22,
+    "recoverTicks": 24,
+    "dashOnly": true
+  },
+  "parSeconds": 4.0,
+  "tier": "red",
+  "band": "F3-4",
+  "tell": "purple striped arc + '!!'",
+  "senseiLine": "The stripes show the sweep. DASH out.",
+  "description": "A big glowing broom that sweeps a wide arc.",
+  "bestiary": {
+    "tip": "DASH out of the arc.",
+    "lore": {
+      "red": "This broom kept the forge floor tidy. Free it, and it sweeps up the ashes again."
+    }
+  },
+  "dashOnlyAttack": {
+    "name": "wide sweep",
+    "shape": "arc",
+    "telegraphTicks": 22,
+    "recoverTicks": 24,
+    "strength": 1,
+    "tell": "purple-and-white stripes + '!!' + whoosh",
+    "shapeCue": "arc",
+    "counterable": false,
+    "answer": "dash",
+    "noOverlapWithRedCircle": false,
+    "minOffsetFromRedCircleTicks": 10,
+    "overlapOnGuided": false,
+    "overlapFromFloor": 3
+  }
+}

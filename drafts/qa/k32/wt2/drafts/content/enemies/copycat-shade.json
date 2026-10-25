@@ -1,0 +1,34 @@
+{
+  "id": "copycat-shade",
+  "name": "Copycat Shade",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Copies your last move a moment later. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second). Appears only from floor 3 of its tier (Manager's call, C13-4).",
+  "color": "#5d5470",
+  "maxHealth": 67,
+  "power": 11,
+  "guard": 10,
+  "radius": 0.38,
+  "moveSpeedTilesPerSecond": 2.6,
+  "sightRange": 12,
+  "attack": {
+    "name": "copy",
+    "strength": 1,
+    "startRange": 1.2,
+    "reach": 0.8,
+    "areaRadius": 0.7,
+    "telegraphTicks": 20,
+    "recoverTicks": 18
+  },
+  "parSeconds": 4.0,
+  "tier": "red-black",
+  "band": "F3-4",
+  "tell": "your move's shape in red, then it copies",
+  "senseiLine": "It copies you. Surprise it kindly.",
+  "description": "Copies your last move a moment later.",
+  "bestiary": {
+    "tip": "Try a different move, then COUNTER its copy.",
+    "lore": {
+      "red-black": "A shadow that only knew how to copy. Free it, and it finds its own way to move."
+    }
+  },
+  "minFloor": 3
+}

@@ -1,0 +1,107 @@
+{
+  "id": "ember-knight",
+  "name": "The Ember Knight",
+  "notes": "DRAFT for C13-6 (bestiary-plan.md; lore from drafts/content/lore/guardians-and-relics.json, unchanged). Red Guardian on floor 5. Same shape as content/enemies/floor-keeper.json, plus phases (66% and 33%, Manager's call). Stats are TODO for the Researcher. Faith tie-ins stay out until Jay decides; see faithOverlayKey.",
+  "color": "#d9532b",
+  "boss": true,
+  "guardian": true,
+  "tier": "red",
+  "band": "F5",
+  "form": "Penon 2",
+  "maxHealth": 521,
+  "power": 16,
+  "guard": 30,
+  "radius": 0.85,
+  "moveSpeedTilesPerSecond": 1.6,
+  "sightRange": 20,
+  "attacks": [
+    {
+      "name": "ember slash",
+      "strength": 1.0,
+      "startRange": 1.9,
+      "reach": 1.1,
+      "areaRadius": 1.3,
+      "telegraphTicks": 18,
+      "recoverTicks": 22
+    },
+    {
+      "name": "shield bash",
+      "strength": 0.8,
+      "startRange": 6.0,
+      "reach": 5.0,
+      "areaRadius": 0.9,
+      "telegraphTicks": 18,
+      "recoverTicks": 26,
+      "note": "Raises its shield, then bumps forward in a short red circle."
+    },
+    {
+      "name": "shield rush",
+      "strength": 1.2,
+      "startRange": 6.0,
+      "reach": 6.0,
+      "areaRadius": 0.6,
+      "telegraphTicks": 22,
+      "recoverTicks": 30,
+      "dashOnly": true,
+      "shape": "lane",
+      "shapeCue": "lane",
+      "tell": "purple-and-white stripes + '!!' + whoosh",
+      "counterable": false,
+      "answer": "dash",
+      "overlapOnGuided": false,
+      "noOverlapWithRedCircle": false,
+      "overlapFromFloor": 3,
+      "minOffsetFromRedCircleTicks": 10
+    }
+  ],
+  "signature": "Shield Rush",
+  "phases": [
+    {
+      "id": "slash",
+      "atHealthFraction": 1.0,
+      "attacks": [
+        "ember slash",
+        "shield bash"
+      ],
+      "tell": "Its blade glows bright; red circle.",
+      "counterplay": "COUNTER the slash.",
+      "senseiLine": "Glow first, then the swing. Wait."
+    },
+    {
+      "id": "rush",
+      "atHealthFraction": 0.66,
+      "attacks": [
+        "shield bash",
+        "shield rush"
+      ],
+      "tell": "It lowers its shield; a striped lane and double marks.",
+      "counterplay": "DASH to the side.",
+      "senseiLine": "A shield can't turn fast. DASH."
+    },
+    {
+      "id": "forge",
+      "atHealthFraction": 0.33,
+      "attacks": [
+        "ember slash",
+        "shield rush"
+      ],
+      "tell": "Sparks fly; the lane comes right after a slash.",
+      "counterplay": "COUNTER, then get ready to DASH.",
+      "senseiLine": "One answer, then the next. Steady."
+    }
+  ],
+  "parSeconds": 25,
+  "lines": {
+    "intro": "The forge is hot. Its knight stands guard alone.",
+    "freed": "I was guarding the wrong thing. Shields are for helping.",
+    "senseiAfter": "Strength is best used to protect others."
+  },
+  "description": "The Ember Knight slashes with a glowing blade, bashes with its shield, then rushes down a striped lane.",
+  "bestiary": {
+    "tip": "Glow means COUNTER. Stripes mean DASH.",
+    "lore": {
+      "red": "A knight of glowing metal. The shadow told it to protect the forge from everyone. Free it, and its light comes home."
+    }
+  },
+  "faithOverlayKey": "ember-knight"
+}

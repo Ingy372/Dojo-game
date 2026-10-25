@@ -1,0 +1,33 @@
+{
+  "id": "hush-guard",
+  "name": "Hush Guard",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). A quiet shield-bearer who turns to face you. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#6c6f8a",
+  "maxHealth": 61,
+  "power": 11,
+  "guard": 20,
+  "radius": 0.42,
+  "moveSpeedTilesPerSecond": 1.4,
+  "sightRange": 10,
+  "attack": {
+    "name": "shield push",
+    "strength": 1,
+    "startRange": 1.15,
+    "reach": 0.75,
+    "areaRadius": 0.8,
+    "telegraphTicks": 18,
+    "recoverTicks": 18
+  },
+  "parSeconds": 4.0,
+  "tier": "red-black",
+  "band": "F3-4",
+  "tell": "red circle, shield turns",
+  "senseiLine": "Quiet feet. Go around.",
+  "description": "A quiet shield-bearer who turns to face you.",
+  "bestiary": {
+    "tip": "Circle round, or STRIKE the shield.",
+    "lore": {
+      "red-black": "It guarded the hall so long it forgot to speak. Calm it, and it says a soft hello."
+    }
+  }
+}

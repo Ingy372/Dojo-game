@@ -1,0 +1,33 @@
+{
+  "id": "buzz-bee",
+  "name": "Buzzy Bee",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). Busy little bees in groups of 3-4 that zip in and out. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
+  "color": "#f2c230",
+  "maxHealth": 21,
+  "power": 7,
+  "guard": 0,
+  "radius": 0.3,
+  "moveSpeedTilesPerSecond": 4.0,
+  "sightRange": 12,
+  "attack": {
+    "name": "zip",
+    "strength": 1,
+    "startRange": 0.95,
+    "reach": 0.5,
+    "areaRadius": 0.55,
+    "telegraphTicks": 14,
+    "recoverTicks": 16
+  },
+  "parSeconds": 2.0,
+  "tier": "yellow",
+  "band": "F1-2",
+  "tell": "short hover, then red circle",
+  "senseiLine": "Little ones first. Then breathe.",
+  "description": "Busy little bees in groups of 3-4 that zip in and out.",
+  "bestiary": {
+    "tip": "Calm the little ones first. DASH out if they crowd you.",
+    "lore": {
+      "yellow": "The garden bees got mixed up in the shadow. Calm them, and they go back to the flowers."
+    }
+  }
+}

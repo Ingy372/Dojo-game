@@ -1,0 +1,33 @@
+{
+  "id": "masklet",
+  "name": "Masklet",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Little floating masks that giggle and gather in groups. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#c7b8e0",
+  "maxHealth": 20,
+  "power": 7,
+  "guard": 0,
+  "radius": 0.3,
+  "moveSpeedTilesPerSecond": 4.0,
+  "sightRange": 12,
+  "attack": {
+    "name": "bump",
+    "strength": 1,
+    "startRange": 0.95,
+    "reach": 0.5,
+    "areaRadius": 0.55,
+    "telegraphTicks": 14,
+    "recoverTicks": 16
+  },
+  "parSeconds": 2.0,
+  "tier": "red-black",
+  "band": "F1-2",
+  "tell": "spin, then red circle",
+  "senseiLine": "Little ones first. Breathe.",
+  "description": "Little floating masks that giggle and gather in groups.",
+  "bestiary": {
+    "tip": "Calm the little ones first.",
+    "lore": {
+      "red-black": "Tiny masks hid real faces when the echoes got loud. Calm them, and they float off smiling."
+    }
+  }
+}

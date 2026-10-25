@@ -1,0 +1,49 @@
+{
+  "id": "splash-wave",
+  "name": "Splash Wave",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). A rolling wave splashes across one lane of the river. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#5b8fd1",
+  "maxHealth": 69,
+  "power": 11,
+  "guard": 10,
+  "radius": 0.45,
+  "moveSpeedTilesPerSecond": 1.0,
+  "sightRange": 10,
+  "attack": {
+    "name": "wave",
+    "strength": 1,
+    "startRange": 2.5,
+    "reach": 3.0,
+    "areaRadius": 0.6,
+    "telegraphTicks": 24,
+    "recoverTicks": 24,
+    "dashOnly": true
+  },
+  "parSeconds": 4.0,
+  "tier": "blue",
+  "band": "F3-4",
+  "tell": "purple striped wave lane + '!!'",
+  "senseiLine": "Purple stripes? DASH out of the wave.",
+  "description": "A rolling wave splashes across one lane of the river.",
+  "bestiary": {
+    "tip": "DASH out of the wave lane.",
+    "lore": {
+      "blue": "The river forgot how to flow gently. Free it, and the water runs calm and clear again."
+    }
+  },
+  "dashOnlyAttack": {
+    "name": "rolling wave",
+    "shape": "lane",
+    "telegraphTicks": 24,
+    "recoverTicks": 24,
+    "strength": 1,
+    "tell": "purple-and-white stripes + '!!' + whoosh",
+    "shapeCue": "lane",
+    "counterable": false,
+    "answer": "dash",
+    "noOverlapWithRedCircle": false,
+    "minOffsetFromRedCircleTicks": 10,
+    "overlapOnGuided": false,
+    "overlapFromFloor": 3
+  }
+}

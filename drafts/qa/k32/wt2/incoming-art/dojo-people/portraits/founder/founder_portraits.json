@@ -1,0 +1,232 @@
+{
+ "character": "founder",
+ "frameWidth": 512,
+ "frameHeight": 512,
+ "pixelsPerTile": 565.558,
+ "camera": {
+  "projection": "orthographic",
+  "elevationDeg": 5.0,
+  "orthoScaleTiles": 0.9053,
+  "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+ },
+ "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+ "layers": [
+  {
+   "name": "body",
+   "order": 0,
+   "tint": false,
+   "optional": false
+  },
+  {
+   "name": "gi",
+   "order": 1,
+   "tint": true,
+   "optional": false
+  },
+  {
+   "name": "belt",
+   "order": 2,
+   "tint": true,
+   "optional": false
+  },
+  {
+   "name": "belt-sheen",
+   "order": 3,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "belt-center",
+   "order": 4,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "belt-center-edge",
+   "order": 5,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "belt-rim",
+   "order": 6,
+   "tint": true,
+   "optional": false
+  },
+  {
+   "name": "belt-tape1-edge",
+   "order": 7,
+   "tint": false,
+   "optional": true
+  },
+  {
+   "name": "belt-tape1",
+   "order": 8,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "belt-tape2-edge",
+   "order": 9,
+   "tint": false,
+   "optional": true
+  },
+  {
+   "name": "belt-tape2",
+   "order": 10,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "headband",
+   "order": 11,
+   "tint": false,
+   "optional": true
+  }
+ ],
+ "tintGuidance": {
+  "mode": "multiply (Phaser setTint); untinted layers are drawn as they are",
+  "gi": "multiply by this character's gi colour; suggested placeholder #f2f2f2",
+  "belt": "the profile's belt.color; a dark (black) belt.color is drawn as #26272f",
+  "belt-center": "two-colour belts only: belt.color2; a dark (black) color2 is drawn as deep black #111116 (it sits between two coloured bands, not next to the outline)",
+  "belt-tape1 / belt-tape2": "tape colour: #f4f1ea on dark belts, #1a1a1a on light belts (rule in apps/client/src/ui/belt.ts)",
+  "belt-tape1-edge / belt-tape2-edge": "no tint; draw each with its stripe (stripes >= 1 / >= 2)",
+  "belt-sheen": "dark (black) belt.color only: tint #a2a6b6, a bright top edge so black reads as a belt, not as outline; skip on other belts",
+  "belt-center-edge": "optional separator around the centre stripe; NOT used in the chosen style (skip it). Tint #ece6d8 if a future style wants it",
+  "belt-rim": "ALWAYS draw it, after belt-center: tint #2e2a3a (dark rim) on every belt except a dark (black) belt.color, which gets light #c9ccd6"
+ },
+ "beltStyles": {
+  "note": "chosen belt style (belt revision, option C): tint per layer for each Action Zone belt (fixtures/); a layer that is not listed is not drawn (belt-center-edge is never drawn in this style). Tape stripes keep the belt.ts rule",
+  "White": {
+   "belt": "#f4f1ea",
+   "belt-rim": "#2e2a3a"
+  },
+  "Yellow": {
+   "belt": "#f5d22e",
+   "belt-rim": "#2e2a3a"
+  },
+  "Orange": {
+   "belt": "#f08a24",
+   "belt-rim": "#2e2a3a"
+  },
+  "Green": {
+   "belt": "#3aa655",
+   "belt-rim": "#2e2a3a"
+  },
+  "Blue": {
+   "belt": "#2f6fd6",
+   "belt-rim": "#2e2a3a"
+  },
+  "Red": {
+   "belt": "#d8352a",
+   "belt-rim": "#2e2a3a"
+  },
+  "Red/Black": {
+   "belt": "#d8352a",
+   "belt-center": "#111116",
+   "belt-rim": "#2e2a3a"
+  },
+  "Brown": {
+   "belt": "#7a4a26",
+   "belt-rim": "#2e2a3a"
+  },
+  "Brown/Black": {
+   "belt": "#7a4a26",
+   "belt-center": "#111116",
+   "belt-rim": "#2e2a3a"
+  },
+  "Black": {
+   "belt": "#26272f",
+   "belt-sheen": "#a2a6b6",
+   "belt-rim": "#c9ccd6"
+  }
+ },
+ "suggested": {
+  "gi": "#f2f2f2",
+  "belt": "Black",
+  "note": "default look (approved by Jay); the game can set another belt (beltStyles) and gi colour"
+ },
+ "lookNote": "older adult (about 60), about Sensei's height; a friendly cartoon likeness of the school's founder, based on reference photos provided by Jay (not stored in the repo): tanned olive skin, short wavy dark hair going grey (grey at the temples), a grey-and-dark moustache with light stubble, a broad warm toothy smile with crinkly eyes and smile lines; white gi; black belt; optional red headband as its own overlay layer (headband)",
+ "optionalLayers": {
+  "headband": {
+   "default": false,
+   "note": "the founder's red headband; OFF by default (Jay, samples 3). Draw it only when the game switches it on"
+  }
+ },
+ "proportions": {
+  "rigScale": 1.26,
+  "headScale": 0.81,
+  "note": "the whole rig is scaled; the head bone is scaled back so heads stay a similar size"
+ },
+ "expressions": {
+  "neutral": {
+   "flattened": "founder_portrait_neutral.png",
+   "layers": {
+    "body": "layers/founder_portrait_neutral_body.png",
+    "gi": "layers/founder_portrait_neutral_gi.png",
+    "belt": "layers/founder_portrait_neutral_belt.png",
+    "belt-sheen": "layers/founder_portrait_neutral_belt-sheen.png",
+    "belt-center": "layers/founder_portrait_neutral_belt-center.png",
+    "belt-center-edge": "layers/founder_portrait_neutral_belt-center-edge.png",
+    "belt-rim": "layers/founder_portrait_neutral_belt-rim.png",
+    "belt-tape1-edge": "layers/founder_portrait_neutral_belt-tape1-edge.png",
+    "belt-tape1": "layers/founder_portrait_neutral_belt-tape1.png",
+    "belt-tape2-edge": "layers/founder_portrait_neutral_belt-tape2-edge.png",
+    "belt-tape2": "layers/founder_portrait_neutral_belt-tape2.png",
+    "headband": "layers/founder_portrait_neutral_headband.png"
+   }
+  },
+  "happy": {
+   "flattened": "founder_portrait_happy.png",
+   "layers": {
+    "body": "layers/founder_portrait_happy_body.png",
+    "gi": "layers/founder_portrait_happy_gi.png",
+    "belt": "layers/founder_portrait_happy_belt.png",
+    "belt-sheen": "layers/founder_portrait_happy_belt-sheen.png",
+    "belt-center": "layers/founder_portrait_happy_belt-center.png",
+    "belt-center-edge": "layers/founder_portrait_happy_belt-center-edge.png",
+    "belt-rim": "layers/founder_portrait_happy_belt-rim.png",
+    "belt-tape1-edge": "layers/founder_portrait_happy_belt-tape1-edge.png",
+    "belt-tape1": "layers/founder_portrait_happy_belt-tape1.png",
+    "belt-tape2-edge": "layers/founder_portrait_happy_belt-tape2-edge.png",
+    "belt-tape2": "layers/founder_portrait_happy_belt-tape2.png",
+    "headband": "layers/founder_portrait_happy_headband.png"
+   }
+  },
+  "proud": {
+   "flattened": "founder_portrait_proud.png",
+   "layers": {
+    "body": "layers/founder_portrait_proud_body.png",
+    "gi": "layers/founder_portrait_proud_gi.png",
+    "belt": "layers/founder_portrait_proud_belt.png",
+    "belt-sheen": "layers/founder_portrait_proud_belt-sheen.png",
+    "belt-center": "layers/founder_portrait_proud_belt-center.png",
+    "belt-center-edge": "layers/founder_portrait_proud_belt-center-edge.png",
+    "belt-rim": "layers/founder_portrait_proud_belt-rim.png",
+    "belt-tape1-edge": "layers/founder_portrait_proud_belt-tape1-edge.png",
+    "belt-tape1": "layers/founder_portrait_proud_belt-tape1.png",
+    "belt-tape2-edge": "layers/founder_portrait_proud_belt-tape2-edge.png",
+    "belt-tape2": "layers/founder_portrait_proud_belt-tape2.png",
+    "headband": "layers/founder_portrait_proud_headband.png"
+   }
+  },
+  "thinking": {
+   "flattened": "founder_portrait_thinking.png",
+   "layers": {
+    "body": "layers/founder_portrait_thinking_body.png",
+    "gi": "layers/founder_portrait_thinking_gi.png",
+    "belt": "layers/founder_portrait_thinking_belt.png",
+    "belt-sheen": "layers/founder_portrait_thinking_belt-sheen.png",
+    "belt-center": "layers/founder_portrait_thinking_belt-center.png",
+    "belt-center-edge": "layers/founder_portrait_thinking_belt-center-edge.png",
+    "belt-rim": "layers/founder_portrait_thinking_belt-rim.png",
+    "belt-tape1-edge": "layers/founder_portrait_thinking_belt-tape1-edge.png",
+    "belt-tape1": "layers/founder_portrait_thinking_belt-tape1.png",
+    "belt-tape2-edge": "layers/founder_portrait_thinking_belt-tape2-edge.png",
+    "belt-tape2": "layers/founder_portrait_thinking_belt-tape2.png",
+    "headband": "layers/founder_portrait_thinking_headband.png"
+   }
+  }
+ },
+ "note": "512 x 512 transparent speech-card portraits. The flattened PNG uses the default gi and belt (headband off); the layers stack and tint exactly like the sprites (multiply on the tinted layers)."
+}

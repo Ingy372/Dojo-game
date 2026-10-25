@@ -1,0 +1,33 @@
+{
+  "id": "shell-snail",
+  "name": "Shellback Snail",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A slow snail that hides in its shell when hit too often. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
+  "color": "#c98d5b",
+  "maxHealth": 67,
+  "power": 12,
+  "guard": 20,
+  "radius": 0.42,
+  "moveSpeedTilesPerSecond": 1.4,
+  "sightRange": 10,
+  "attack": {
+    "name": "head-bump",
+    "strength": 1,
+    "startRange": 1.15,
+    "reach": 0.75,
+    "areaRadius": 0.8,
+    "telegraphTicks": 20,
+    "recoverTicks": 18
+  },
+  "parSeconds": 4.0,
+  "tier": "yellow",
+  "band": "F3-4",
+  "tell": "red circle before its head-bump",
+  "senseiLine": "Patience. It always peeks out again.",
+  "description": "A slow snail that hides in its shell when hit too often.",
+  "bestiary": {
+    "tip": "Wait for it to peek out, or STRIKE the shell.",
+    "lore": {
+      "yellow": "It hid in its shell when the shadow came, and it forgot how to come out. Be patient, and it peeks out calm again."
+    }
+  }
+}

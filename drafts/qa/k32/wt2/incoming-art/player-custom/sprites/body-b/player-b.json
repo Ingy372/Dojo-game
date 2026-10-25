@@ -1,0 +1,1090 @@
+{
+  "character": "player-b",
+  "frameWidth": 128,
+  "frameHeight": 160,
+  "anchor": {
+    "x": 64.0,
+    "y": 136.96,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 80.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 1.6,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "directionVectors": {
+    "N": [
+      0,
+      -1
+    ],
+    "NE": [
+      0.7071,
+      -0.7071
+    ],
+    "E": [
+      1,
+      0
+    ],
+    "SE": [
+      0.7071,
+      0.7071
+    ],
+    "S": [
+      0,
+      1
+    ],
+    "SW": [
+      -0.7071,
+      0.7071
+    ],
+    "W": [
+      -1,
+      0
+    ],
+    "NW": [
+      -0.7071,
+      -0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "body",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "skin",
+      "order": 1,
+      "tint": true,
+      "optional": false
+    },
+    {
+      "name": "gi",
+      "order": 2,
+      "tint": true,
+      "optional": false
+    },
+    {
+      "name": "belt",
+      "order": 3,
+      "tint": true,
+      "optional": false
+    },
+    {
+      "name": "belt-sheen",
+      "order": 4,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "belt-center",
+      "order": 5,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "belt-center-edge",
+      "order": 6,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "belt-rim",
+      "order": 7,
+      "tint": true,
+      "optional": false
+    },
+    {
+      "name": "belt-tape1-edge",
+      "order": 8,
+      "tint": false,
+      "optional": true
+    },
+    {
+      "name": "belt-tape1",
+      "order": 9,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "belt-tape2-edge",
+      "order": 10,
+      "tint": false,
+      "optional": true
+    },
+    {
+      "name": "belt-tape2",
+      "order": 11,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "prop-broom",
+      "order": 12,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "prop-rag",
+      "order": 13,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "face-01",
+      "order": 14,
+      "tint": false,
+      "optional": false,
+      "group": "face"
+    },
+    {
+      "name": "face-02",
+      "order": 15,
+      "tint": false,
+      "optional": false,
+      "group": "face"
+    },
+    {
+      "name": "face-03",
+      "order": 16,
+      "tint": false,
+      "optional": false,
+      "group": "face"
+    },
+    {
+      "name": "face-04",
+      "order": 17,
+      "tint": false,
+      "optional": false,
+      "group": "face"
+    },
+    {
+      "name": "face-05",
+      "order": 18,
+      "tint": false,
+      "optional": false,
+      "group": "face"
+    },
+    {
+      "name": "face-06",
+      "order": 19,
+      "tint": false,
+      "optional": false,
+      "group": "face"
+    },
+    {
+      "name": "hair-01",
+      "order": 20,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-02",
+      "order": 21,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-03",
+      "order": 22,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-04",
+      "order": 23,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-05",
+      "order": 24,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-06",
+      "order": 25,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-07",
+      "order": 26,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-08",
+      "order": 27,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-09",
+      "order": 28,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-10",
+      "order": 29,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-11",
+      "order": 30,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    },
+    {
+      "name": "hair-12",
+      "order": 31,
+      "tint": true,
+      "optional": false,
+      "group": "hair"
+    }
+  ],
+  "animations": {
+    "idle": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "player-b_body_idle.png",
+        "skin": "player-b_skin_idle.png",
+        "gi": "player-b_gi_idle.png",
+        "belt": "player-b_belt_idle.png",
+        "belt-sheen": "player-b_belt-sheen_idle.png",
+        "belt-center": "player-b_belt-center_idle.png",
+        "belt-center-edge": "player-b_belt-center-edge_idle.png",
+        "belt-rim": "player-b_belt-rim_idle.png",
+        "belt-tape1-edge": "player-b_belt-tape1-edge_idle.png",
+        "belt-tape1": "player-b_belt-tape1_idle.png",
+        "belt-tape2-edge": "player-b_belt-tape2-edge_idle.png",
+        "belt-tape2": "player-b_belt-tape2_idle.png",
+        "prop-broom": "player-b_prop-broom_idle.png",
+        "prop-rag": "player-b_prop-rag_idle.png",
+        "face-01": "player-b_face-01_idle.png",
+        "face-02": "player-b_face-02_idle.png",
+        "face-03": "player-b_face-03_idle.png",
+        "face-04": "player-b_face-04_idle.png",
+        "face-05": "player-b_face-05_idle.png",
+        "face-06": "player-b_face-06_idle.png",
+        "hair-01": "player-b_hair-01_idle.png",
+        "hair-02": "player-b_hair-02_idle.png",
+        "hair-03": "player-b_hair-03_idle.png",
+        "hair-04": "player-b_hair-04_idle.png",
+        "hair-05": "player-b_hair-05_idle.png",
+        "hair-06": "player-b_hair-06_idle.png",
+        "hair-07": "player-b_hair-07_idle.png",
+        "hair-08": "player-b_hair-08_idle.png",
+        "hair-09": "player-b_hair-09_idle.png",
+        "hair-10": "player-b_hair-10_idle.png",
+        "hair-11": "player-b_hair-11_idle.png",
+        "hair-12": "player-b_hair-12_idle.png"
+      }
+    },
+    "walk": {
+      "frames": 10,
+      "fps": 30,
+      "durationSec": 0.3333,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "player-b_body_walk.png",
+        "skin": "player-b_skin_walk.png",
+        "gi": "player-b_gi_walk.png",
+        "belt": "player-b_belt_walk.png",
+        "belt-sheen": "player-b_belt-sheen_walk.png",
+        "belt-center": "player-b_belt-center_walk.png",
+        "belt-center-edge": "player-b_belt-center-edge_walk.png",
+        "belt-rim": "player-b_belt-rim_walk.png",
+        "belt-tape1-edge": "player-b_belt-tape1-edge_walk.png",
+        "belt-tape1": "player-b_belt-tape1_walk.png",
+        "belt-tape2-edge": "player-b_belt-tape2-edge_walk.png",
+        "belt-tape2": "player-b_belt-tape2_walk.png",
+        "prop-broom": "player-b_prop-broom_walk.png",
+        "prop-rag": "player-b_prop-rag_walk.png",
+        "face-01": "player-b_face-01_walk.png",
+        "face-02": "player-b_face-02_walk.png",
+        "face-03": "player-b_face-03_walk.png",
+        "face-04": "player-b_face-04_walk.png",
+        "face-05": "player-b_face-05_walk.png",
+        "face-06": "player-b_face-06_walk.png",
+        "hair-01": "player-b_hair-01_walk.png",
+        "hair-02": "player-b_hair-02_walk.png",
+        "hair-03": "player-b_hair-03_walk.png",
+        "hair-04": "player-b_hair-04_walk.png",
+        "hair-05": "player-b_hair-05_walk.png",
+        "hair-06": "player-b_hair-06_walk.png",
+        "hair-07": "player-b_hair-07_walk.png",
+        "hair-08": "player-b_hair-08_walk.png",
+        "hair-09": "player-b_hair-09_walk.png",
+        "hair-10": "player-b_hair-10_walk.png",
+        "hair-11": "player-b_hair-11_walk.png",
+        "hair-12": "player-b_hair-12_walk.png"
+      },
+      "groundMotion": {
+        "strideTilesPerLoop": 1.5,
+        "stridePxPerLoop": 120.0,
+        "designSpeedTilesPerSec": 4.5,
+        "fpsPerTilePerSec": 6.6667,
+        "note": "planted feet stay still when fps = speed (tiles/s) * fpsPerTilePerSec; at the design speed that is the fps above"
+      }
+    },
+    "strike": {
+      "frames": 8,
+      "fps": 16,
+      "durationSec": 0.5,
+      "loop": false,
+      "tags": {
+        "impact": "4"
+      },
+      "sheets": {
+        "body": "player-b_body_strike.png",
+        "skin": "player-b_skin_strike.png",
+        "gi": "player-b_gi_strike.png",
+        "belt": "player-b_belt_strike.png",
+        "belt-sheen": "player-b_belt-sheen_strike.png",
+        "belt-center": "player-b_belt-center_strike.png",
+        "belt-center-edge": "player-b_belt-center-edge_strike.png",
+        "belt-rim": "player-b_belt-rim_strike.png",
+        "belt-tape1-edge": "player-b_belt-tape1-edge_strike.png",
+        "belt-tape1": "player-b_belt-tape1_strike.png",
+        "belt-tape2-edge": "player-b_belt-tape2-edge_strike.png",
+        "belt-tape2": "player-b_belt-tape2_strike.png",
+        "prop-broom": "player-b_prop-broom_strike.png",
+        "prop-rag": "player-b_prop-rag_strike.png",
+        "face-01": "player-b_face-01_strike.png",
+        "face-02": "player-b_face-02_strike.png",
+        "face-03": "player-b_face-03_strike.png",
+        "face-04": "player-b_face-04_strike.png",
+        "face-05": "player-b_face-05_strike.png",
+        "face-06": "player-b_face-06_strike.png",
+        "hair-01": "player-b_hair-01_strike.png",
+        "hair-02": "player-b_hair-02_strike.png",
+        "hair-03": "player-b_hair-03_strike.png",
+        "hair-04": "player-b_hair-04_strike.png",
+        "hair-05": "player-b_hair-05_strike.png",
+        "hair-06": "player-b_hair-06_strike.png",
+        "hair-07": "player-b_hair-07_strike.png",
+        "hair-08": "player-b_hair-08_strike.png",
+        "hair-09": "player-b_hair-09_strike.png",
+        "hair-10": "player-b_hair-10_strike.png",
+        "hair-11": "player-b_hair-11_strike.png",
+        "hair-12": "player-b_hair-12_strike.png"
+      },
+      "keyFrames": {
+        "impact": 4
+      },
+      "note": "Batch 1: small lunge, hips and shoulders turn so it reads from the front"
+    },
+    "counter": {
+      "frames": 12,
+      "fps": 16,
+      "durationSec": 0.75,
+      "loop": false,
+      "tags": {
+        "block": "0-7",
+        "block_hold": "3-7",
+        "counter_hit": "8"
+      },
+      "sheets": {
+        "body": "player-b_body_counter.png",
+        "skin": "player-b_skin_counter.png",
+        "gi": "player-b_gi_counter.png",
+        "belt": "player-b_belt_counter.png",
+        "belt-sheen": "player-b_belt-sheen_counter.png",
+        "belt-center": "player-b_belt-center_counter.png",
+        "belt-center-edge": "player-b_belt-center-edge_counter.png",
+        "belt-rim": "player-b_belt-rim_counter.png",
+        "belt-tape1-edge": "player-b_belt-tape1-edge_counter.png",
+        "belt-tape1": "player-b_belt-tape1_counter.png",
+        "belt-tape2-edge": "player-b_belt-tape2-edge_counter.png",
+        "belt-tape2": "player-b_belt-tape2_counter.png",
+        "prop-broom": "player-b_prop-broom_counter.png",
+        "prop-rag": "player-b_prop-rag_counter.png",
+        "face-01": "player-b_face-01_counter.png",
+        "face-02": "player-b_face-02_counter.png",
+        "face-03": "player-b_face-03_counter.png",
+        "face-04": "player-b_face-04_counter.png",
+        "face-05": "player-b_face-05_counter.png",
+        "face-06": "player-b_face-06_counter.png",
+        "hair-01": "player-b_hair-01_counter.png",
+        "hair-02": "player-b_hair-02_counter.png",
+        "hair-03": "player-b_hair-03_counter.png",
+        "hair-04": "player-b_hair-04_counter.png",
+        "hair-05": "player-b_hair-05_counter.png",
+        "hair-06": "player-b_hair-06_counter.png",
+        "hair-07": "player-b_hair-07_counter.png",
+        "hair-08": "player-b_hair-08_counter.png",
+        "hair-09": "player-b_hair-09_counter.png",
+        "hair-10": "player-b_hair-10_counter.png",
+        "hair-11": "player-b_hair-11_counter.png",
+        "hair-12": "player-b_hair-12_counter.png"
+      }
+    },
+    "jab": {
+      "frames": 6,
+      "fps": 20,
+      "durationSec": 0.3,
+      "loop": false,
+      "tags": {
+        "impact": "2"
+      },
+      "sheets": {
+        "body": "player-b_body_jab.png",
+        "skin": "player-b_skin_jab.png",
+        "gi": "player-b_gi_jab.png",
+        "belt": "player-b_belt_jab.png",
+        "belt-sheen": "player-b_belt-sheen_jab.png",
+        "belt-center": "player-b_belt-center_jab.png",
+        "belt-center-edge": "player-b_belt-center-edge_jab.png",
+        "belt-rim": "player-b_belt-rim_jab.png",
+        "belt-tape1-edge": "player-b_belt-tape1-edge_jab.png",
+        "belt-tape1": "player-b_belt-tape1_jab.png",
+        "belt-tape2-edge": "player-b_belt-tape2-edge_jab.png",
+        "belt-tape2": "player-b_belt-tape2_jab.png",
+        "prop-broom": "player-b_prop-broom_jab.png",
+        "prop-rag": "player-b_prop-rag_jab.png",
+        "face-01": "player-b_face-01_jab.png",
+        "face-02": "player-b_face-02_jab.png",
+        "face-03": "player-b_face-03_jab.png",
+        "face-04": "player-b_face-04_jab.png",
+        "face-05": "player-b_face-05_jab.png",
+        "face-06": "player-b_face-06_jab.png",
+        "hair-01": "player-b_hair-01_jab.png",
+        "hair-02": "player-b_hair-02_jab.png",
+        "hair-03": "player-b_hair-03_jab.png",
+        "hair-04": "player-b_hair-04_jab.png",
+        "hair-05": "player-b_hair-05_jab.png",
+        "hair-06": "player-b_hair-06_jab.png",
+        "hair-07": "player-b_hair-07_jab.png",
+        "hair-08": "player-b_hair-08_jab.png",
+        "hair-09": "player-b_hair-09_jab.png",
+        "hair-10": "player-b_hair-10_jab.png",
+        "hair-11": "player-b_hair-11_jab.png",
+        "hair-12": "player-b_hair-12_jab.png"
+      },
+      "keyFrames": {
+        "impact": 2
+      },
+      "repeatEverySec": 0.6,
+      "endsOn": "guard",
+      "note": "basic attack: play once per attack (0.3 s); the last frame flows back into idle frame 0"
+    },
+    "bow": {
+      "frames": 22,
+      "fps": 16,
+      "durationSec": 1.375,
+      "loop": false,
+      "tags": {
+        "feet_together": "3",
+        "bow_down": "5-9",
+        "bow_hold": "9-13",
+        "rise": "14-18",
+        "upright": "18"
+      },
+      "sheets": {
+        "body": "player-b_body_bow.png",
+        "skin": "player-b_skin_bow.png",
+        "gi": "player-b_gi_bow.png",
+        "belt": "player-b_belt_bow.png",
+        "belt-sheen": "player-b_belt-sheen_bow.png",
+        "belt-center": "player-b_belt-center_bow.png",
+        "belt-center-edge": "player-b_belt-center-edge_bow.png",
+        "belt-rim": "player-b_belt-rim_bow.png",
+        "belt-tape1-edge": "player-b_belt-tape1-edge_bow.png",
+        "belt-tape1": "player-b_belt-tape1_bow.png",
+        "belt-tape2-edge": "player-b_belt-tape2-edge_bow.png",
+        "belt-tape2": "player-b_belt-tape2_bow.png",
+        "prop-broom": "player-b_prop-broom_bow.png",
+        "prop-rag": "player-b_prop-rag_bow.png",
+        "face-01": "player-b_face-01_bow.png",
+        "face-02": "player-b_face-02_bow.png",
+        "face-03": "player-b_face-03_bow.png",
+        "face-04": "player-b_face-04_bow.png",
+        "face-05": "player-b_face-05_bow.png",
+        "face-06": "player-b_face-06_bow.png",
+        "hair-01": "player-b_hair-01_bow.png",
+        "hair-02": "player-b_hair-02_bow.png",
+        "hair-03": "player-b_hair-03_bow.png",
+        "hair-04": "player-b_hair-04_bow.png",
+        "hair-05": "player-b_hair-05_bow.png",
+        "hair-06": "player-b_hair-06_bow.png",
+        "hair-07": "player-b_hair-07_bow.png",
+        "hair-08": "player-b_hair-08_bow.png",
+        "hair-09": "player-b_hair-09_bow.png",
+        "hair-10": "player-b_hair-10_bow.png",
+        "hair-11": "player-b_hair-11_bow.png",
+        "hair-12": "player-b_hair-12_bow.png"
+      },
+      "keyFrames": {
+        "feet_together": 3,
+        "bow_down": "5-9",
+        "bow_hold": "9-13",
+        "rise": "14-18",
+        "upright": 18
+      },
+      "note": "22 frames = 1.375 s; legs straight (knees soft, not locked) once the feet are together, the 30-degree bend is only from the hips; the head stays up, eyes on the partner; frames 0-3 step the feet together, 19-21 return to the guard. For the game's current 0.9 s, play frames 3-18 at 16 fps (1.0 s) or the whole bow at 24 fps"
+    },
+    "defeat": {
+      "frames": 16,
+      "fps": 12,
+      "durationSec": 1.3333,
+      "loop": false,
+      "tags": {
+        "ouch": "1",
+        "sink": "5-10",
+        "hold": "15"
+      },
+      "sheets": {
+        "body": "player-b_body_defeat.png",
+        "skin": "player-b_skin_defeat.png",
+        "gi": "player-b_gi_defeat.png",
+        "belt": "player-b_belt_defeat.png",
+        "belt-sheen": "player-b_belt-sheen_defeat.png",
+        "belt-center": "player-b_belt-center_defeat.png",
+        "belt-center-edge": "player-b_belt-center-edge_defeat.png",
+        "belt-rim": "player-b_belt-rim_defeat.png",
+        "belt-tape1-edge": "player-b_belt-tape1-edge_defeat.png",
+        "belt-tape1": "player-b_belt-tape1_defeat.png",
+        "belt-tape2-edge": "player-b_belt-tape2-edge_defeat.png",
+        "belt-tape2": "player-b_belt-tape2_defeat.png",
+        "prop-broom": "player-b_prop-broom_defeat.png",
+        "prop-rag": "player-b_prop-rag_defeat.png",
+        "face-01": "player-b_face-01_defeat.png",
+        "face-02": "player-b_face-02_defeat.png",
+        "face-03": "player-b_face-03_defeat.png",
+        "face-04": "player-b_face-04_defeat.png",
+        "face-05": "player-b_face-05_defeat.png",
+        "face-06": "player-b_face-06_defeat.png",
+        "hair-01": "player-b_hair-01_defeat.png",
+        "hair-02": "player-b_hair-02_defeat.png",
+        "hair-03": "player-b_hair-03_defeat.png",
+        "hair-04": "player-b_hair-04_defeat.png",
+        "hair-05": "player-b_hair-05_defeat.png",
+        "hair-06": "player-b_hair-06_defeat.png",
+        "hair-07": "player-b_hair-07_defeat.png",
+        "hair-08": "player-b_hair-08_defeat.png",
+        "hair-09": "player-b_hair-09_defeat.png",
+        "hair-10": "player-b_hair-10_defeat.png",
+        "hair-11": "player-b_hair-11_defeat.png",
+        "hair-12": "player-b_hair-12_defeat.png"
+      },
+      "keyFrames": {
+        "ouch": 1,
+        "sink": "5-10",
+        "kneel": 11,
+        "hold": 15
+      },
+      "holdLastFrame": true,
+      "note": "play once, then hold the last frame during the fade and 'Ouch! Back to the start.'"
+    },
+    "dash": {
+      "frames": 8,
+      "fps": 20,
+      "durationSec": 0.4,
+      "loop": false,
+      "tags": {
+        "push": "1",
+        "travel": "1-5",
+        "land": "5",
+        "recover": "6-7"
+      },
+      "sheets": {
+        "body": "player-b_body_dash.png",
+        "skin": "player-b_skin_dash.png",
+        "gi": "player-b_gi_dash.png",
+        "belt": "player-b_belt_dash.png",
+        "belt-sheen": "player-b_belt-sheen_dash.png",
+        "belt-center": "player-b_belt-center_dash.png",
+        "belt-center-edge": "player-b_belt-center-edge_dash.png",
+        "belt-rim": "player-b_belt-rim_dash.png",
+        "belt-tape1-edge": "player-b_belt-tape1-edge_dash.png",
+        "belt-tape1": "player-b_belt-tape1_dash.png",
+        "belt-tape2-edge": "player-b_belt-tape2-edge_dash.png",
+        "belt-tape2": "player-b_belt-tape2_dash.png",
+        "prop-broom": "player-b_prop-broom_dash.png",
+        "prop-rag": "player-b_prop-rag_dash.png",
+        "face-01": "player-b_face-01_dash.png",
+        "face-02": "player-b_face-02_dash.png",
+        "face-03": "player-b_face-03_dash.png",
+        "face-04": "player-b_face-04_dash.png",
+        "face-05": "player-b_face-05_dash.png",
+        "face-06": "player-b_face-06_dash.png",
+        "hair-01": "player-b_hair-01_dash.png",
+        "hair-02": "player-b_hair-02_dash.png",
+        "hair-03": "player-b_hair-03_dash.png",
+        "hair-04": "player-b_hair-04_dash.png",
+        "hair-05": "player-b_hair-05_dash.png",
+        "hair-06": "player-b_hair-06_dash.png",
+        "hair-07": "player-b_hair-07_dash.png",
+        "hair-08": "player-b_hair-08_dash.png",
+        "hair-09": "player-b_hair-09_dash.png",
+        "hair-10": "player-b_hair-10_dash.png",
+        "hair-11": "player-b_hair-11_dash.png",
+        "hair-12": "player-b_hair-12_dash.png"
+      },
+      "keyFrames": {
+        "push": 1,
+        "travel": "1-5",
+        "land": 5,
+        "recover": "6-7"
+      },
+      "note": "8 frames = 0.4 s. Played in place; the game moves him 2.5 tiles during frames 1-5 (0.25 s). Ends on the guard"
+    },
+    "hit": {
+      "frames": 5,
+      "fps": 20,
+      "durationSec": 0.25,
+      "loop": false,
+      "tags": {
+        "recoil": "1",
+        "back": "4"
+      },
+      "sheets": {
+        "body": "player-b_body_hit.png",
+        "skin": "player-b_skin_hit.png",
+        "gi": "player-b_gi_hit.png",
+        "belt": "player-b_belt_hit.png",
+        "belt-sheen": "player-b_belt-sheen_hit.png",
+        "belt-center": "player-b_belt-center_hit.png",
+        "belt-center-edge": "player-b_belt-center-edge_hit.png",
+        "belt-rim": "player-b_belt-rim_hit.png",
+        "belt-tape1-edge": "player-b_belt-tape1-edge_hit.png",
+        "belt-tape1": "player-b_belt-tape1_hit.png",
+        "belt-tape2-edge": "player-b_belt-tape2-edge_hit.png",
+        "belt-tape2": "player-b_belt-tape2_hit.png",
+        "prop-broom": "player-b_prop-broom_hit.png",
+        "prop-rag": "player-b_prop-rag_hit.png",
+        "face-01": "player-b_face-01_hit.png",
+        "face-02": "player-b_face-02_hit.png",
+        "face-03": "player-b_face-03_hit.png",
+        "face-04": "player-b_face-04_hit.png",
+        "face-05": "player-b_face-05_hit.png",
+        "face-06": "player-b_face-06_hit.png",
+        "hair-01": "player-b_hair-01_hit.png",
+        "hair-02": "player-b_hair-02_hit.png",
+        "hair-03": "player-b_hair-03_hit.png",
+        "hair-04": "player-b_hair-04_hit.png",
+        "hair-05": "player-b_hair-05_hit.png",
+        "hair-06": "player-b_hair-06_hit.png",
+        "hair-07": "player-b_hair-07_hit.png",
+        "hair-08": "player-b_hair-08_hit.png",
+        "hair-09": "player-b_hair-09_hit.png",
+        "hair-10": "player-b_hair-10_hit.png",
+        "hair-11": "player-b_hair-11_hit.png",
+        "hair-12": "player-b_hair-12_hit.png"
+      },
+      "keyFrames": {
+        "recoil": 1,
+        "back": 4
+      },
+      "note": "hit flinch, 5 frames = 0.25 s, small head/shoulder recoil, ends on the guard"
+    },
+    "sweep": {
+      "frames": 8,
+      "fps": 10,
+      "durationSec": 0.8,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "player-b_body_sweep.png",
+        "skin": "player-b_skin_sweep.png",
+        "gi": "player-b_gi_sweep.png",
+        "belt": "player-b_belt_sweep.png",
+        "belt-sheen": "player-b_belt-sheen_sweep.png",
+        "belt-center": "player-b_belt-center_sweep.png",
+        "belt-center-edge": "player-b_belt-center-edge_sweep.png",
+        "belt-rim": "player-b_belt-rim_sweep.png",
+        "belt-tape1-edge": "player-b_belt-tape1-edge_sweep.png",
+        "belt-tape1": "player-b_belt-tape1_sweep.png",
+        "belt-tape2-edge": "player-b_belt-tape2-edge_sweep.png",
+        "belt-tape2": "player-b_belt-tape2_sweep.png",
+        "prop-broom": "player-b_prop-broom_sweep.png",
+        "prop-rag": "player-b_prop-rag_sweep.png",
+        "face-01": "player-b_face-01_sweep.png",
+        "face-02": "player-b_face-02_sweep.png",
+        "face-03": "player-b_face-03_sweep.png",
+        "face-04": "player-b_face-04_sweep.png",
+        "face-05": "player-b_face-05_sweep.png",
+        "face-06": "player-b_face-06_sweep.png",
+        "hair-01": "player-b_hair-01_sweep.png",
+        "hair-02": "player-b_hair-02_sweep.png",
+        "hair-03": "player-b_hair-03_sweep.png",
+        "hair-04": "player-b_hair-04_sweep.png",
+        "hair-05": "player-b_hair-05_sweep.png",
+        "hair-06": "player-b_hair-06_sweep.png",
+        "hair-07": "player-b_hair-07_sweep.png",
+        "hair-08": "player-b_hair-08_sweep.png",
+        "hair-09": "player-b_hair-09_sweep.png",
+        "hair-10": "player-b_hair-10_sweep.png",
+        "hair-11": "player-b_hair-11_sweep.png",
+        "hair-12": "player-b_hair-12_sweep.png"
+      },
+      "props": [
+        "prop-broom"
+      ],
+      "note": "loop, 0.8 s; draw prop-broom (no tint). One loop = two strokes"
+    },
+    "wipe": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "player-b_body_wipe.png",
+        "skin": "player-b_skin_wipe.png",
+        "gi": "player-b_gi_wipe.png",
+        "belt": "player-b_belt_wipe.png",
+        "belt-sheen": "player-b_belt-sheen_wipe.png",
+        "belt-center": "player-b_belt-center_wipe.png",
+        "belt-center-edge": "player-b_belt-center-edge_wipe.png",
+        "belt-rim": "player-b_belt-rim_wipe.png",
+        "belt-tape1-edge": "player-b_belt-tape1-edge_wipe.png",
+        "belt-tape1": "player-b_belt-tape1_wipe.png",
+        "belt-tape2-edge": "player-b_belt-tape2-edge_wipe.png",
+        "belt-tape2": "player-b_belt-tape2_wipe.png",
+        "prop-broom": "player-b_prop-broom_wipe.png",
+        "prop-rag": "player-b_prop-rag_wipe.png",
+        "face-01": "player-b_face-01_wipe.png",
+        "face-02": "player-b_face-02_wipe.png",
+        "face-03": "player-b_face-03_wipe.png",
+        "face-04": "player-b_face-04_wipe.png",
+        "face-05": "player-b_face-05_wipe.png",
+        "face-06": "player-b_face-06_wipe.png",
+        "hair-01": "player-b_hair-01_wipe.png",
+        "hair-02": "player-b_hair-02_wipe.png",
+        "hair-03": "player-b_hair-03_wipe.png",
+        "hair-04": "player-b_hair-04_wipe.png",
+        "hair-05": "player-b_hair-05_wipe.png",
+        "hair-06": "player-b_hair-06_wipe.png",
+        "hair-07": "player-b_hair-07_wipe.png",
+        "hair-08": "player-b_hair-08_wipe.png",
+        "hair-09": "player-b_hair-09_wipe.png",
+        "hair-10": "player-b_hair-10_wipe.png",
+        "hair-11": "player-b_hair-11_wipe.png",
+        "hair-12": "player-b_hair-12_wipe.png"
+      },
+      "props": [
+        "prop-rag"
+      ],
+      "note": "loop, 1.0 s, one circle per loop; draw prop-rag (no tint). Play while the player taps Wipe"
+    },
+    "straighten": {
+      "frames": 14,
+      "fps": 12,
+      "durationSec": 1.1667,
+      "loop": false,
+      "tags": {
+        "reach": "3-4",
+        "adjust": "4-7",
+        "nod": "10"
+      },
+      "sheets": {
+        "body": "player-b_body_straighten.png",
+        "skin": "player-b_skin_straighten.png",
+        "gi": "player-b_gi_straighten.png",
+        "belt": "player-b_belt_straighten.png",
+        "belt-sheen": "player-b_belt-sheen_straighten.png",
+        "belt-center": "player-b_belt-center_straighten.png",
+        "belt-center-edge": "player-b_belt-center-edge_straighten.png",
+        "belt-rim": "player-b_belt-rim_straighten.png",
+        "belt-tape1-edge": "player-b_belt-tape1-edge_straighten.png",
+        "belt-tape1": "player-b_belt-tape1_straighten.png",
+        "belt-tape2-edge": "player-b_belt-tape2-edge_straighten.png",
+        "belt-tape2": "player-b_belt-tape2_straighten.png",
+        "prop-broom": "player-b_prop-broom_straighten.png",
+        "prop-rag": "player-b_prop-rag_straighten.png",
+        "face-01": "player-b_face-01_straighten.png",
+        "face-02": "player-b_face-02_straighten.png",
+        "face-03": "player-b_face-03_straighten.png",
+        "face-04": "player-b_face-04_straighten.png",
+        "face-05": "player-b_face-05_straighten.png",
+        "face-06": "player-b_face-06_straighten.png",
+        "hair-01": "player-b_hair-01_straighten.png",
+        "hair-02": "player-b_hair-02_straighten.png",
+        "hair-03": "player-b_hair-03_straighten.png",
+        "hair-04": "player-b_hair-04_straighten.png",
+        "hair-05": "player-b_hair-05_straighten.png",
+        "hair-06": "player-b_hair-06_straighten.png",
+        "hair-07": "player-b_hair-07_straighten.png",
+        "hair-08": "player-b_hair-08_straighten.png",
+        "hair-09": "player-b_hair-09_straighten.png",
+        "hair-10": "player-b_hair-10_straighten.png",
+        "hair-11": "player-b_hair-11_straighten.png",
+        "hair-12": "player-b_hair-12_straighten.png"
+      },
+      "keyFrames": {
+        "reach": "3-4",
+        "adjust": "4-7",
+        "nod": 10
+      },
+      "note": "one-shot, 14 frames = 1.17 s: reach out at chest height and set the item level (weapon rack), ends on the guard"
+    },
+    "celebrate": {
+      "frames": 24,
+      "fps": 16,
+      "durationSec": 1.5,
+      "loop": false,
+      "tags": {
+        "jump": "4-7",
+        "arms_up": "4-12",
+        "proud": "18"
+      },
+      "sheets": {
+        "body": "player-b_body_celebrate.png",
+        "skin": "player-b_skin_celebrate.png",
+        "gi": "player-b_gi_celebrate.png",
+        "belt": "player-b_belt_celebrate.png",
+        "belt-sheen": "player-b_belt-sheen_celebrate.png",
+        "belt-center": "player-b_belt-center_celebrate.png",
+        "belt-center-edge": "player-b_belt-center-edge_celebrate.png",
+        "belt-rim": "player-b_belt-rim_celebrate.png",
+        "belt-tape1-edge": "player-b_belt-tape1-edge_celebrate.png",
+        "belt-tape1": "player-b_belt-tape1_celebrate.png",
+        "belt-tape2-edge": "player-b_belt-tape2-edge_celebrate.png",
+        "belt-tape2": "player-b_belt-tape2_celebrate.png",
+        "prop-broom": "player-b_prop-broom_celebrate.png",
+        "prop-rag": "player-b_prop-rag_celebrate.png",
+        "face-01": "player-b_face-01_celebrate.png",
+        "face-02": "player-b_face-02_celebrate.png",
+        "face-03": "player-b_face-03_celebrate.png",
+        "face-04": "player-b_face-04_celebrate.png",
+        "face-05": "player-b_face-05_celebrate.png",
+        "face-06": "player-b_face-06_celebrate.png",
+        "hair-01": "player-b_hair-01_celebrate.png",
+        "hair-02": "player-b_hair-02_celebrate.png",
+        "hair-03": "player-b_hair-03_celebrate.png",
+        "hair-04": "player-b_hair-04_celebrate.png",
+        "hair-05": "player-b_hair-05_celebrate.png",
+        "hair-06": "player-b_hair-06_celebrate.png",
+        "hair-07": "player-b_hair-07_celebrate.png",
+        "hair-08": "player-b_hair-08_celebrate.png",
+        "hair-09": "player-b_hair-09_celebrate.png",
+        "hair-10": "player-b_hair-10_celebrate.png",
+        "hair-11": "player-b_hair-11_celebrate.png",
+        "hair-12": "player-b_hair-12_celebrate.png"
+      },
+      "keyFrames": {
+        "arms_up": "4-12",
+        "hop_top": 5,
+        "proud": 18
+      },
+      "holdLastFrame": true,
+      "note": "promotion ceremony, 24 frames = 1.5 s, then hold the last frame (proud stance, fists at the hips so the new belt is in full view)"
+    }
+  },
+  "tintGuidance": {
+    "mode": "multiply (Phaser setTint); untinted layers are drawn as they are",
+    "gi": "gi colour (current placeholder #f2e9d8)",
+    "belt": "the profile's belt.color; a dark (black) belt.color is drawn as #26272f",
+    "belt-center": "two-colour belts only: belt.color2; a dark (black) color2 is drawn as deep black #111116 (it sits between two coloured bands, not next to the outline)",
+    "belt-tape1 / belt-tape2": "tape colour: #f4f1ea on dark belts, #1a1a1a on light belts (rule in apps/client/src/ui/belt.ts)",
+    "belt-tape1-edge / belt-tape2-edge": "no tint; draw each with its stripe (stripes >= 1 / >= 2)",
+    "belt-sheen": "dark (black) belt.color only: tint #a2a6b6, a bright top edge so black reads as a belt, not as outline; skip on other belts",
+    "belt-center-edge": "optional separator around the centre stripe; NOT used in the chosen style (skip it). Tint #ece6d8 if a future style wants it",
+    "belt-rim": "ALWAYS draw it, after belt-center: tint #2e2a3a (dark rim) on every belt except a dark (black) belt.color, which gets light #c9ccd6",
+    "skin": "multiply by a palettes.skin colour (the layer is a light neutral grey)",
+    "hair": "multiply every hair-* layer by a palettes.hair colour (light neutral grey)"
+  },
+  "beltStyles": {
+    "note": "chosen belt style (belt revision, option C): tint per layer for each Action Zone belt (fixtures/); a layer that is not listed is not drawn (belt-center-edge is never drawn in this style). Tape stripes keep the belt.ts rule",
+    "White": {
+      "belt": "#f4f1ea",
+      "belt-rim": "#2e2a3a"
+    },
+    "Yellow": {
+      "belt": "#f5d22e",
+      "belt-rim": "#2e2a3a"
+    },
+    "Orange": {
+      "belt": "#f08a24",
+      "belt-rim": "#2e2a3a"
+    },
+    "Green": {
+      "belt": "#3aa655",
+      "belt-rim": "#2e2a3a"
+    },
+    "Blue": {
+      "belt": "#2f6fd6",
+      "belt-rim": "#2e2a3a"
+    },
+    "Red": {
+      "belt": "#d8352a",
+      "belt-rim": "#2e2a3a"
+    },
+    "Red/Black": {
+      "belt": "#d8352a",
+      "belt-center": "#111116",
+      "belt-rim": "#2e2a3a"
+    },
+    "Brown": {
+      "belt": "#7a4a26",
+      "belt-rim": "#2e2a3a"
+    },
+    "Brown/Black": {
+      "belt": "#7a4a26",
+      "belt-center": "#111116",
+      "belt-rim": "#2e2a3a"
+    },
+    "Black": {
+      "belt": "#26272f",
+      "belt-sheen": "#a2a6b6",
+      "belt-rim": "#c9ccd6"
+    }
+  },
+  "palettes": {
+    "skin": [
+      "#f6d7c3",
+      "#efc3a4",
+      "#e0a984",
+      "#c98e65",
+      "#b07650",
+      "#946042",
+      "#7a4b32",
+      "#603926",
+      "#4a2c1f",
+      "#38221a"
+    ],
+    "hair": [
+      "#34303f",
+      "#3a2519",
+      "#5c3a22",
+      "#8a5f3b",
+      "#d9b26a",
+      "#b5482a",
+      "#8a3a26",
+      "#9a9aa2",
+      "#3f6fd1",
+      "#7d4cc2"
+    ],
+    "gi": [
+      "#f2f2f2",
+      "#4a4a55",
+      "#24345e",
+      "#3a6ea5",
+      "#b8322a",
+      "#8a8d99",
+      "#3f7a4a",
+      "#e9dfc9",
+      "#7fb2e0",
+      "#7a2a33"
+    ],
+    "note": "Recommended swatches (hex), shown by the game in this order. They are multiply tints for the tinted layers (skin, hair-*, gi). Skin runs from light to deep. The ids in palettesDraftLabels are placeholders for the Content Writer, not names"
+  },
+  "palettesDraftLabels": {
+    "skin": [
+      "skin-01",
+      "skin-02",
+      "skin-03",
+      "skin-04",
+      "skin-05",
+      "skin-06",
+      "skin-07",
+      "skin-08",
+      "skin-09",
+      "skin-10"
+    ],
+    "hair": [
+      "black",
+      "dark-brown",
+      "brown",
+      "light-brown",
+      "blonde",
+      "red",
+      "auburn",
+      "grey",
+      "blue",
+      "purple"
+    ],
+    "gi": [
+      "white",
+      "charcoal",
+      "navy",
+      "blue",
+      "red",
+      "grey",
+      "green",
+      "unbleached",
+      "sky",
+      "maroon"
+    ]
+  },
+  "groups": {
+    "face": [
+      "face-01",
+      "face-02",
+      "face-03",
+      "face-04",
+      "face-05",
+      "face-06"
+    ],
+    "hair": [
+      "hair-01",
+      "hair-02",
+      "hair-03",
+      "hair-04",
+      "hair-05",
+      "hair-06",
+      "hair-07",
+      "hair-08",
+      "hair-09",
+      "hair-10",
+      "hair-11",
+      "hair-12"
+    ],
+    "note": "draw exactly one layer of each group, after the base layers (face, then hair)"
+  },
+  "optionNotes": {
+    "face-01": "the approved face of Batch 1: oval eyes with a shine, friendly brows, a small smile",
+    "face-02": "big round eyes, soft high brows, a wider smile",
+    "face-03": "calm almond eyes, straight brows, a small smile",
+    "face-04": "oval eyes with small lashes at the outer corner, a happy smile",
+    "face-05": "bold thick brows, determined but friendly",
+    "face-06": "oval eyes and freckles across the cheeks",
+    "hair-01": "very short (close crop): a thin cap that follows the head",
+    "hair-02": "short: the approved Batch 1 hair (cap, back, sideburns, a short fringe and a tuft)",
+    "hair-03": "curly: a rounder cap made of soft curls",
+    "hair-04": "afro: a rounded shape built from soft coil clumps with light tops, a natural hairline above the brows",
+    "hair-05": "braids: a smooth cap with two braids hanging behind the ears to the shoulders",
+    "hair-06": "ponytail: cap pulled back to a tie at the back of the head, a short tail (above the belt)",
+    "hair-07": "bun: cap with a round bun on top towards the back",
+    "hair-08": "tied back: smooth hair combed back to a low knot at the nape",
+    "hair-09": "two puffs: hair parted down the middle and gathered into two round coil puffs high on the head",
+    "hair-10": "short twists: a soft cap covered in short, rounded twists that point up and out (they never reach the eyes)",
+    "hair-11": "cornrows into braids: neat raised rows from the hairline to the back, ending in braids that hang behind the shoulders",
+    "hair-12": "high-top fade: short faded sides and a tall rounded flat-top of tight coils"
+  }
+}

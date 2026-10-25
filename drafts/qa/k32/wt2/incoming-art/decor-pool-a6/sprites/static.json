@@ -1,0 +1,216 @@
+{
+  "pixelsPerTile": 80,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "facing": "north (the one game view)"
+  },
+  "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+  "sprites": {
+    "decor-a6-class-scroll": {
+      "size": [
+        80,
+        128
+      ],
+      "layers": [
+        "decor-a6-class-scroll"
+      ],
+      "files": {
+        "decor-a6-class-scroll": "decor-a6-class-scroll_decor-a6-class-scroll.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1,
+        "row1": 1,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        40.0,
+        128.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "wall",
+      "note": "wall item: anchorPx = bottom-centre of its top-wall cell (where the wall meets the floor)",
+      "info": {
+        "source": "class piece (S7-rev A)",
+        "swap": "scroll mount colour"
+      }
+    },
+    "decor-a6-kick-pad": {
+      "size": [
+        104,
+        186
+      ],
+      "layers": [
+        "decor-a6-kick-pad"
+      ],
+      "files": {
+        "decor-a6-kick-pad": "decor-a6-kick-pad_decor-a6-kick-pad.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.2,
+      "anchorPx": [
+        52.0,
+        176.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+      "info": {
+        "source": "class piece, dojo gear (S7-rev A)"
+      }
+    },
+    "decor-a6-keeper-statue": {
+      "size": [
+        104,
+        182
+      ],
+      "layers": [
+        "decor-a6-keeper-statue"
+      ],
+      "files": {
+        "decor-a6-keeper-statue": "decor-a6-keeper-statue_decor-a6-keeper-statue.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.15,
+      "anchorPx": [
+        52.0,
+        172.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+      "info": {
+        "source": "first floor clear (S7-rev B)"
+      }
+    },
+    "decor-a6-journal-trophy": {
+      "size": [
+        104,
+        170
+      ],
+      "layers": [
+        "decor-a6-journal-trophy"
+      ],
+      "files": {
+        "decor-a6-journal-trophy": "decor-a6-journal-trophy_decor-a6-journal-trophy.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.0,
+      "anchorPx": [
+        52.0,
+        160.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+      "info": {
+        "source": "Monster Journal trophy (S7-rev C)"
+      }
+    },
+    "decor-a6-fan-stand": {
+      "size": [
+        104,
+        162
+      ],
+      "layers": [
+        "decor-a6-fan-stand"
+      ],
+      "files": {
+        "decor-a6-fan-stand": "decor-a6-fan-stand_decor-a6-fan-stand.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 1.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.9,
+      "anchorPx": [
+        52.0,
+        152.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        1,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+      "info": {
+        "source": "random bonus pool, colour 1 of 2"
+      }
+    },
+    "decor-a6-folding-screen": {
+      "size": [
+        184,
+        194
+      ],
+      "layers": [
+        "decor-a6-folding-screen"
+      ],
+      "files": {
+        "decor-a6-folding-screen": "decor-a6-folding-screen_decor-a6-folding-screen.png"
+      },
+      "groundRect": {
+        "col0": -0.15,
+        "row0": 0,
+        "col1": 2.15,
+        "row1": 1.12,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.3,
+      "anchorPx": [
+        92.0,
+        184.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "footprint": [
+        2,
+        1
+      ],
+      "place": "floor",
+      "note": "anchorPx = bottom-centre of the footprint; sort by the footprint's bottom row",
+      "info": {
+        "source": "random bonus pool, colour 1 of 2"
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "swarmer",
+  "name": "Swarmer",
+  "notes": "Small, fast and weak; comes in groups. Moves faster than the brute (Jay's note). Distances in tiles, times in ticks (20 per second).",
+  "color": "#4f8a3c",
+  "maxHealth": 40,
+  "power": 8,
+  "guard": 0,
+  "radius": 0.3,
+  "moveSpeedTilesPerSecond": 4.0,
+  "sightRange": 12,
+  "attack": {
+    "name": "jab",
+    "strength": 1,
+    "startRange": 0.95,
+    "reach": 0.5,
+    "areaRadius": 0.55,
+    "telegraphTicks": 12,
+    "recoverTicks": 16
+  },
+  "parSeconds": 2.5,
+  "description": "Little shadow scraps that dart in groups. Watch for the quick jab, then answer it.",
+  "bestiary": {
+    "tip": "Swarmers move fast, but they always show their jab first.",
+    "lore": {
+      "white": "When the light broke, tiny bits of shadow scattered like dust. They are fast, but they are not brave alone.",
+      "yellow": "Higher up, the shadow scraps learn to move together. Stay calm and face them one at a time.",
+      "orange": "The swiftest scraps live here. They are quick, but a steady student is quicker."
+    }
+  }
+}

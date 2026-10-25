@@ -1,0 +1,23 @@
+{
+  "_note": "M7-P9. Play-time limit per day (a grown-up setting), resets at local midnight. Default off. Time away from the game counts only up to maxGapSeconds. Wording: no guilt, no pressure, no countdowns shown to the child.",
+  "maxGapSeconds": 60,
+  "grownUpButton": "For grown-ups",
+  "gateText": "Grown-ups: what is {a} + {b}?",
+  "title": "Play-time limit",
+  "help": "Play time adds up through the day and starts fresh at midnight. When it's up, your child finishes the room they're in. Then the game praises their training and returns to the dojo. No new climb starts until tomorrow. Nothing they found is lost.",
+  "off": "Off",
+  "minutes": "{n} min",
+  "done": "Done",
+  "wrapUpLine": "Nice work, let's finish this room and rest!",
+  "restTitle": "Great training today!",
+  "restLines": [
+    "You trained hard today!",
+    "Rest now, or show a grown-up your moves.",
+    "Everything you found is safe in your dojo."
+  ],
+  "restButton": "Back to my dojo",
+  "homeHeadline": "Great training today!",
+  "gateCancel": "Back",
+  "doorResting": "Your dojo is resting for today",
+  "doorRestingLine": "More training tomorrow!"
+}

@@ -1,0 +1,112 @@
+{
+  "id": "storm-herald",
+  "name": "The Storm Herald",
+  "notes": "DRAFT for C13-6 (bestiary-plan.md; lore from drafts/content/lore/guardians-and-relics.json, unchanged). Brown-Black Guardian on floor 5. Same shape as content/enemies/floor-keeper.json, plus phases (66% and 33%, Manager's call). Stats are TODO for the Researcher. Faith tie-ins stay out until Jay decides; see faithOverlayKey.",
+  "color": "#6c7fb8",
+  "boss": true,
+  "guardian": true,
+  "tier": "brown-black",
+  "band": "F5",
+  "form": "Possi",
+  "maxHealth": 510,
+  "power": 16,
+  "guard": 30,
+  "radius": 0.85,
+  "moveSpeedTilesPerSecond": 1.6,
+  "sightRange": 20,
+  "attacks": [
+    {
+      "name": "gust push",
+      "strength": 1.0,
+      "startRange": 1.9,
+      "reach": 1.1,
+      "areaRadius": 1.3,
+      "telegraphTicks": 18,
+      "recoverTicks": 22
+    },
+    {
+      "name": "thunder clap",
+      "strength": 0.8,
+      "startRange": 6.0,
+      "reach": 5.0,
+      "areaRadius": 0.9,
+      "telegraphTicks": 20,
+      "recoverTicks": 26,
+      "note": "Claps once; a big red circle, then a short calm."
+    },
+    {
+      "name": "lightning zigzag",
+      "strength": 1.2,
+      "startRange": 6.0,
+      "reach": 6.0,
+      "areaRadius": 0.6,
+      "telegraphTicks": 22,
+      "recoverTicks": 30,
+      "dashOnly": true,
+      "shape": "zigzag",
+      "shapeCue": "zigzag",
+      "tell": "purple-and-white stripes + '!!' + whoosh",
+      "counterable": false,
+      "answer": "dash",
+      "overlapOnGuided": false,
+      "noOverlapWithRedCircle": false,
+      "overlapFromFloor": 3,
+      "minOffsetFromRedCircleTicks": 10,
+      "followUp": {
+        "shape": "lane",
+        "telegraphTicks": 22,
+        "neverSimultaneous": true,
+        "gapAfterFirstTicks": 20
+      }
+    }
+  ],
+  "signature": "Thunder Zigzag",
+  "phases": [
+    {
+      "id": "gust",
+      "atHealthFraction": 1.0,
+      "attacks": [
+        "gust push"
+      ],
+      "tell": "Its cloak puffs out; red circle.",
+      "counterplay": "COUNTER the gust.",
+      "senseiLine": "Wind shouts. You stay calm."
+    },
+    {
+      "id": "clap",
+      "atHealthFraction": 0.66,
+      "attacks": [
+        "gust push",
+        "thunder clap"
+      ],
+      "tell": "Its hands rise high; big red circle.",
+      "counterplay": "Step out, then wait for the calm.",
+      "senseiLine": "After the thunder comes a quiet beat."
+    },
+    {
+      "id": "zigzag",
+      "atHealthFraction": 0.33,
+      "attacks": [
+        "thunder clap",
+        "lightning zigzag"
+      ],
+      "tell": "A striped zigzag, then a lane, each with double marks.",
+      "counterplay": "DASH out, then DASH again.",
+      "senseiLine": "Loud is not the same as strong. DASH."
+    }
+  ],
+  "parSeconds": 25,
+  "lines": {
+    "intro": "The storm is so loud. Can you hear the calm?",
+    "freed": "The wind is still. Listen. Someone is calling from the top.",
+    "senseiAfter": "You stayed steady inside the storm."
+  },
+  "description": "The Storm Herald pushes with wind, claps thunder, then zigzags striped lightning followed by one lane.",
+  "bestiary": {
+    "tip": "Wait for the quiet beat between the storms.",
+    "lore": {
+      "brown-black": "A tall figure of wind and lightning. It shouts the storm louder so no one hears the calm. Free it, and its light comes home."
+    }
+  },
+  "faithOverlayKey": "storm-herald"
+}

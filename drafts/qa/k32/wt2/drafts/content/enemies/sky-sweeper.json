@@ -1,0 +1,55 @@
+{
+  "id": "sky-sweeper",
+  "name": "Sky Sweeper",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). A gust that sweeps an arc, then a lane. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second). At least 20 ticks between the two stripes (Manager's call, C13-4).",
+  "color": "#9fb4e8",
+  "maxHealth": 67,
+  "power": 11,
+  "guard": 10,
+  "radius": 0.45,
+  "moveSpeedTilesPerSecond": 1.0,
+  "sightRange": 10,
+  "attack": {
+    "name": "double sweep",
+    "strength": 1,
+    "startRange": 2.5,
+    "reach": 3.0,
+    "areaRadius": 0.6,
+    "telegraphTicks": 20,
+    "recoverTicks": 24,
+    "dashOnly": true
+  },
+  "parSeconds": 4.0,
+  "tier": "black",
+  "band": "F3-4",
+  "tell": "purple striped arc, then lane, each + '!!'",
+  "senseiLine": "Two stripes. DASH, then DASH again.",
+  "description": "A gust that sweeps an arc, then a lane.",
+  "bestiary": {
+    "tip": "DASH out twice.",
+    "lore": {
+      "black": "The summit wind forgot how to rest. Free it, and it becomes a soft breeze."
+    }
+  },
+  "dashOnlyAttack": {
+    "name": "arc sweep",
+    "shape": "arc",
+    "telegraphTicks": 20,
+    "recoverTicks": 24,
+    "strength": 1,
+    "tell": "purple-and-white stripes + '!!' + whoosh",
+    "shapeCue": "arc",
+    "counterable": false,
+    "answer": "dash",
+    "noOverlapWithRedCircle": false,
+    "overlapFromFloor": 3,
+    "minOffsetFromRedCircleTicks": 10,
+    "overlapOnGuided": false,
+    "followUp": {
+      "shape": "lane",
+      "telegraphTicks": 20,
+      "neverSimultaneous": true,
+      "gapAfterFirstTicks": 20
+    }
+  }
+}
