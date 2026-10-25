@@ -1,0 +1,1316 @@
+{
+ "about": "A-MENU2 full set, mood A. Made by source/build_menu2.py; do not edit by hand. Sizes are 1x px; every file has an @2x twin.",
+ "sprites": {
+  "panel-frame": {
+   "size": [
+    192,
+    192
+   ],
+   "file": "panel/panel-frame.png",
+   "nineSlice": [
+    48,
+    48,
+    48,
+    48
+   ],
+   "shadowMargin": 6,
+   "note": "A1. 9-slice, 48 px corners on all sides (brass brackets live in the corners). Top/bottom rails stretch along x; side rails stretch along y (their grain runs that way). Content area starts 22 px in (6 shadow + 14 rail + 2 lip)."
+  },
+  "panel-inset": {
+   "size": [
+    96,
+    96
+   ],
+   "file": "panel/panel-inset.png",
+   "nineSlice": [
+    24,
+    24,
+    24,
+    24
+   ],
+   "note": "Recessed paper well for sub-areas (tray, stat strip, found strip). 9-slice 24."
+  },
+  "title-plaque": {
+   "size": [
+    160,
+    40
+   ],
+   "file": "panel/title-plaque.png",
+   "nineSlice": [
+    0,
+    22,
+    0,
+    22
+   ],
+   "state": "single",
+   "note": "EXTRA (not in A1-A13): lacquered honey plaque for screen titles; 3-slice along x (22 px caps). Text drawn by the game in dark ink #462a16."
+  },
+  "shelf-plank": {
+   "size": [
+    192,
+    20
+   ],
+   "file": "panel/shelf-plank.png",
+   "nineSlice": [
+    0,
+    12,
+    0,
+    12
+   ],
+   "note": "Shelf the cubbies stand on; 3-slice along x. The cubby bottoms sit at y = 4."
+  },
+  "cubby-earned": {
+   "size": [
+    112,
+    112
+   ],
+   "file": "cubby/cubby-earned.png",
+   "nineSlice": [
+    24,
+    24,
+    24,
+    24
+   ],
+   "anchor": "item icon centred in the opening, centre y = 52/112 of the height",
+   "state": "normal",
+   "note": "A2 earned. Shadow inside the file (3 px sides, 6 px bottom). Pressed = 2 px lower, darker, short shadow."
+  },
+  "cubby-earned-pressed": {
+   "size": [
+    112,
+    112
+   ],
+   "file": "cubby/cubby-earned-pressed.png",
+   "nineSlice": [
+    24,
+    24,
+    24,
+    24
+   ],
+   "anchor": "item icon centred in the opening, centre y = 52/112 of the height",
+   "state": "pressed",
+   "note": "A2 earned. Shadow inside the file (3 px sides, 6 px bottom). Pressed = 2 px lower, darker, short shadow."
+  },
+  "cubby-notyet": {
+   "size": [
+    112,
+    112
+   ],
+   "file": "cubby/cubby-notyet.png",
+   "nineSlice": [
+    24,
+    24,
+    24,
+    24
+   ],
+   "anchor": "item icon centred in the opening, centre y = 52/112 of the height",
+   "state": "normal",
+   "note": "A2 notyet. Shadow inside the file (3 px sides, 6 px bottom). Pressed = 2 px lower, darker, short shadow."
+  },
+  "cubby-notyet-pressed": {
+   "size": [
+    112,
+    112
+   ],
+   "file": "cubby/cubby-notyet-pressed.png",
+   "nineSlice": [
+    24,
+    24,
+    24,
+    24
+   ],
+   "anchor": "item icon centred in the opening, centre y = 52/112 of the height",
+   "state": "pressed",
+   "note": "A2 notyet. Shadow inside the file (3 px sides, 6 px bottom). Pressed = 2 px lower, darker, short shadow."
+  },
+  "cubby-next-glow": {
+   "size": [
+    112,
+    112
+   ],
+   "file": "cubby/cubby-next-glow.png",
+   "layer": "overlay on cubby-notyet",
+   "note": "A2/A9: warm lantern spill for the next cubby only. Draw over cubby-notyet, then the lantern."
+  },
+  "cubby-earned-shine-0": {
+   "size": [
+    112,
+    112
+   ],
+   "file": "cubby/cubby-earned-shine-0.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "OPTIONAL: one shine sweep across an earned cubby when it is first earned or tapped. 6 frames, 16 fps, play once; frame 0 is empty."
+  },
+  "cubby-earned-shine-1": {
+   "size": [
+    112,
+    112
+   ],
+   "file": "cubby/cubby-earned-shine-1.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "OPTIONAL: one shine sweep across an earned cubby when it is first earned or tapped. 6 frames, 16 fps, play once; frame 0 is empty."
+  },
+  "cubby-earned-shine-2": {
+   "size": [
+    112,
+    112
+   ],
+   "file": "cubby/cubby-earned-shine-2.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "OPTIONAL: one shine sweep across an earned cubby when it is first earned or tapped. 6 frames, 16 fps, play once; frame 0 is empty."
+  },
+  "cubby-earned-shine-3": {
+   "size": [
+    112,
+    112
+   ],
+   "file": "cubby/cubby-earned-shine-3.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "OPTIONAL: one shine sweep across an earned cubby when it is first earned or tapped. 6 frames, 16 fps, play once; frame 0 is empty."
+  },
+  "cubby-earned-shine-4": {
+   "size": [
+    112,
+    112
+   ],
+   "file": "cubby/cubby-earned-shine-4.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "OPTIONAL: one shine sweep across an earned cubby when it is first earned or tapped. 6 frames, 16 fps, play once; frame 0 is empty."
+  },
+  "cubby-earned-shine-5": {
+   "size": [
+    112,
+    112
+   ],
+   "file": "cubby/cubby-earned-shine-5.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "OPTIONAL: one shine sweep across an earned cubby when it is first earned or tapped. 6 frames, 16 fps, play once; frame 0 is empty."
+  },
+  "cubby-earned-96": {
+   "size": [
+    96,
+    96
+   ],
+   "file": "cubby/cubby-earned-96.png",
+   "nineSlice": [
+    20,
+    20,
+    20,
+    20
+   ],
+   "anchor": "item icon centred in the opening, centre y = 52/112 of the height",
+   "state": "normal",
+   "note": "A2 earned. Shadow inside the file (3 px sides, 6 px bottom). Pressed = 2 px lower, darker, short shadow."
+  },
+  "cubby-earned-pressed-96": {
+   "size": [
+    96,
+    96
+   ],
+   "file": "cubby/cubby-earned-pressed-96.png",
+   "nineSlice": [
+    20,
+    20,
+    20,
+    20
+   ],
+   "anchor": "item icon centred in the opening, centre y = 52/112 of the height",
+   "state": "pressed",
+   "note": "A2 earned. Shadow inside the file (3 px sides, 6 px bottom). Pressed = 2 px lower, darker, short shadow."
+  },
+  "cubby-notyet-96": {
+   "size": [
+    96,
+    96
+   ],
+   "file": "cubby/cubby-notyet-96.png",
+   "nineSlice": [
+    20,
+    20,
+    20,
+    20
+   ],
+   "anchor": "item icon centred in the opening, centre y = 52/112 of the height",
+   "state": "normal",
+   "note": "A2 notyet. Shadow inside the file (3 px sides, 6 px bottom). Pressed = 2 px lower, darker, short shadow."
+  },
+  "cubby-notyet-pressed-96": {
+   "size": [
+    96,
+    96
+   ],
+   "file": "cubby/cubby-notyet-pressed-96.png",
+   "nineSlice": [
+    20,
+    20,
+    20,
+    20
+   ],
+   "anchor": "item icon centred in the opening, centre y = 52/112 of the height",
+   "state": "pressed",
+   "note": "A2 notyet. Shadow inside the file (3 px sides, 6 px bottom). Pressed = 2 px lower, darker, short shadow."
+  },
+  "cubby-next-glow-96": {
+   "size": [
+    96,
+    96
+   ],
+   "file": "cubby/cubby-next-glow-96.png",
+   "layer": "overlay on cubby-notyet",
+   "note": "A2/A9: warm lantern spill for the next cubby only. Draw over cubby-notyet, then the lantern."
+  },
+  "cubby-seal": {
+   "size": [
+    24,
+    24
+   ],
+   "file": "cubby/cubby-seal.png",
+   "anchor": "top-right of the cubby, centre at (n-18, 16)",
+   "note": "A4 gold check seal (decided). Embossed check, no text."
+  },
+  "cubby-lantern-0": {
+   "size": [
+    24,
+    32
+   ],
+   "file": "cubby/cubby-lantern-0.png",
+   "fps": 3,
+   "anchor": "hangs from the cubby top-right, top of file at y=-6",
+   "note": "A9 lantern, 2-frame flicker (ping-pong, ~3 fps). Only on the next cubby to learn (decided)."
+  },
+  "cubby-lantern-1": {
+   "size": [
+    24,
+    32
+   ],
+   "file": "cubby/cubby-lantern-1.png",
+   "fps": 3,
+   "anchor": "hangs from the cubby top-right, top of file at y=-6",
+   "note": "A9 lantern, 2-frame flicker (ping-pong, ~3 fps). Only on the next cubby to learn (decided)."
+  },
+  "slot-card-normal": {
+   "size": [
+    156,
+    148
+   ],
+   "file": "slot/slot-card-normal.png",
+   "nineSlice": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "drawRect": [
+    8,
+    8,
+    140,
+    132
+   ],
+   "iconWell": {
+    "centre": [
+     78,
+     52
+    ],
+    "radius": 33,
+    "iconSize": 64
+   },
+   "textLines": {
+    "slot": 92,
+    "item": 109,
+    "effect": 125,
+    "note": "baseline-centre y in the 156 x 148 file (8 px glow margin)"
+   },
+   "state": "normal",
+   "note": "A6 slot card 140 x 132 (decided), drawn in a 156 x 148 file with 8 px for the glow. Not stretched."
+  },
+  "slot-card-selected": {
+   "size": [
+    156,
+    148
+   ],
+   "file": "slot/slot-card-selected.png",
+   "nineSlice": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "drawRect": [
+    8,
+    8,
+    140,
+    132
+   ],
+   "iconWell": {
+    "centre": [
+     78,
+     52
+    ],
+    "radius": 33,
+    "iconSize": 64
+   },
+   "textLines": {
+    "slot": 92,
+    "item": 109,
+    "effect": 125,
+    "note": "baseline-centre y in the 156 x 148 file (8 px glow margin)"
+   },
+   "state": "selected",
+   "note": "A6 slot card 140 x 132 (decided), drawn in a 156 x 148 file with 8 px for the glow. Not stretched."
+  },
+  "slot-card-pressed": {
+   "size": [
+    156,
+    148
+   ],
+   "file": "slot/slot-card-pressed.png",
+   "nineSlice": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "drawRect": [
+    8,
+    8,
+    140,
+    132
+   ],
+   "iconWell": {
+    "centre": [
+     78,
+     52
+    ],
+    "radius": 33,
+    "iconSize": 64
+   },
+   "textLines": {
+    "slot": 92,
+    "item": 109,
+    "effect": 125,
+    "note": "baseline-centre y in the 156 x 148 file (8 px glow margin)"
+   },
+   "state": "pressed",
+   "note": "A6 slot card 140 x 132 (decided), drawn in a 156 x 148 file with 8 px for the glow. Not stretched."
+  },
+  "slot-card-shine-0": {
+   "size": [
+    156,
+    148
+   ],
+   "file": "slot/slot-card-shine-0.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "OPTIONAL: shine across the selected card when it becomes selected. 6 frames, play once."
+  },
+  "slot-card-shine-1": {
+   "size": [
+    156,
+    148
+   ],
+   "file": "slot/slot-card-shine-1.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "OPTIONAL: shine across the selected card when it becomes selected. 6 frames, play once."
+  },
+  "slot-card-shine-2": {
+   "size": [
+    156,
+    148
+   ],
+   "file": "slot/slot-card-shine-2.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "OPTIONAL: shine across the selected card when it becomes selected. 6 frames, play once."
+  },
+  "slot-card-shine-3": {
+   "size": [
+    156,
+    148
+   ],
+   "file": "slot/slot-card-shine-3.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "OPTIONAL: shine across the selected card when it becomes selected. 6 frames, play once."
+  },
+  "slot-card-shine-4": {
+   "size": [
+    156,
+    148
+   ],
+   "file": "slot/slot-card-shine-4.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "OPTIONAL: shine across the selected card when it becomes selected. 6 frames, play once."
+  },
+  "slot-card-shine-5": {
+   "size": [
+    156,
+    148
+   ],
+   "file": "slot/slot-card-shine-5.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "OPTIONAL: shine across the selected card when it becomes selected. 6 frames, play once."
+  },
+  "tray-tile-normal": {
+   "size": [
+    84,
+    84
+   ],
+   "file": "tray/tray-tile-normal.png",
+   "drawRect": [
+    6,
+    6,
+    72,
+    72
+   ],
+   "state": "normal",
+   "note": "A7 tray tile 72 (file 84 with 6 px glow margin). Icon 52-56 centred."
+  },
+  "tray-tile-selected": {
+   "size": [
+    84,
+    84
+   ],
+   "file": "tray/tray-tile-selected.png",
+   "drawRect": [
+    6,
+    6,
+    72,
+    72
+   ],
+   "state": "selected",
+   "note": "A7 tray tile 72 (file 84 with 6 px glow margin). Icon 52-56 centred."
+  },
+  "tray-tile-equipped": {
+   "size": [
+    84,
+    84
+   ],
+   "file": "tray/tray-tile-equipped.png",
+   "drawRect": [
+    6,
+    6,
+    72,
+    72
+   ],
+   "state": "equipped",
+   "note": "A7 tray tile 72 (file 84 with 6 px glow margin). Icon 52-56 centred."
+  },
+  "tray-tile-pressed": {
+   "size": [
+    84,
+    84
+   ],
+   "file": "tray/tray-tile-pressed.png",
+   "drawRect": [
+    6,
+    6,
+    72,
+    72
+   ],
+   "state": "pressed",
+   "note": "A7 tray tile 72 (file 84 with 6 px glow margin). Icon 52-56 centred."
+  },
+  "tray-equipped-badge": {
+   "size": [
+    20,
+    20
+   ],
+   "file": "tray/tray-equipped-badge.png",
+   "anchor": "top-right corner of the tile, centre at (72, 12) in the 84 file",
+   "note": "Gold check seal for equipped tiles (same seal as A4)."
+  },
+  "bag-tile-common": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-common.png",
+   "drawRect": [
+    6,
+    6,
+    72,
+    88
+   ],
+   "state": "normal",
+   "note": "A11 rarity frame, gear bag tile 72 x 88 (file 84 x 100). Rare gets 2 stars, epic 4. Icon 56 at top, centred x, centre y 40."
+  },
+  "found-tile-common": {
+   "size": [
+    60,
+    60
+   ],
+   "file": "found/found-tile-common.png",
+   "drawRect": [
+    4,
+    4,
+    52,
+    52
+   ],
+   "note": "Last run found tile 52 (file 60). Icon 40."
+  },
+  "bag-tile-uncommon": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-uncommon.png",
+   "drawRect": [
+    6,
+    6,
+    72,
+    88
+   ],
+   "state": "normal",
+   "note": "A11 rarity frame, gear bag tile 72 x 88 (file 84 x 100). Rare gets 2 stars, epic 4. Icon 56 at top, centred x, centre y 40."
+  },
+  "found-tile-uncommon": {
+   "size": [
+    60,
+    60
+   ],
+   "file": "found/found-tile-uncommon.png",
+   "drawRect": [
+    4,
+    4,
+    52,
+    52
+   ],
+   "note": "Last run found tile 52 (file 60). Icon 40."
+  },
+  "bag-tile-rare": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-rare.png",
+   "drawRect": [
+    6,
+    6,
+    72,
+    88
+   ],
+   "state": "normal",
+   "note": "A11 rarity frame, gear bag tile 72 x 88 (file 84 x 100). Rare gets 2 stars, epic 4. Icon 56 at top, centred x, centre y 40."
+  },
+  "found-tile-rare": {
+   "size": [
+    60,
+    60
+   ],
+   "file": "found/found-tile-rare.png",
+   "drawRect": [
+    4,
+    4,
+    52,
+    52
+   ],
+   "note": "Last run found tile 52 (file 60). Icon 40."
+  },
+  "bag-tile-epic": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-epic.png",
+   "drawRect": [
+    6,
+    6,
+    72,
+    88
+   ],
+   "state": "normal",
+   "note": "A11 rarity frame, gear bag tile 72 x 88 (file 84 x 100). Rare gets 2 stars, epic 4. Icon 56 at top, centred x, centre y 40."
+  },
+  "found-tile-epic": {
+   "size": [
+    60,
+    60
+   ],
+   "file": "found/found-tile-epic.png",
+   "drawRect": [
+    4,
+    4,
+    52,
+    52
+   ],
+   "note": "Last run found tile 52 (file 60). Icon 40."
+  },
+  "bag-tile-selected": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-selected.png",
+   "drawRect": [
+    6,
+    6,
+    72,
+    88
+   ],
+   "state": "selected",
+   "note": "Bag tile selected/pressed (replaces the rarity frame while selected; draw the rarity stars on top if wanted)."
+  },
+  "bag-tile-pressed": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-pressed.png",
+   "drawRect": [
+    6,
+    6,
+    72,
+    88
+   ],
+   "state": "pressed",
+   "note": "Bag tile selected/pressed (replaces the rarity frame while selected; draw the rarity stars on top if wanted)."
+  },
+  "switch-track": {
+   "size": [
+    240,
+    52
+   ],
+   "file": "switch/switch-track.png",
+   "nineSlice": [
+    0,
+    24,
+    0,
+    24
+   ],
+   "note": "Track behind the two segments; 3-slice along x. Segments sit at x=0 and x=120, y=4."
+  },
+  "switch-left-on": {
+   "size": [
+    120,
+    44
+   ],
+   "file": "switch/switch-left-on.png",
+   "state": "on",
+   "note": "A8 segmented switch, 120 x 44. on = raised honey lacquer; off = sunk into the track; pressed = on, 1 px lower."
+  },
+  "switch-left-off": {
+   "size": [
+    120,
+    44
+   ],
+   "file": "switch/switch-left-off.png",
+   "state": "off",
+   "note": "A8 segmented switch, 120 x 44. on = raised honey lacquer; off = sunk into the track; pressed = on, 1 px lower."
+  },
+  "switch-left-pressed": {
+   "size": [
+    120,
+    44
+   ],
+   "file": "switch/switch-left-pressed.png",
+   "state": "pressed",
+   "note": "A8 segmented switch, 120 x 44. on = raised honey lacquer; off = sunk into the track; pressed = on, 1 px lower."
+  },
+  "switch-right-on": {
+   "size": [
+    120,
+    44
+   ],
+   "file": "switch/switch-right-on.png",
+   "state": "on",
+   "note": "A8 segmented switch, 120 x 44. on = raised honey lacquer; off = sunk into the track; pressed = on, 1 px lower."
+  },
+  "switch-right-off": {
+   "size": [
+    120,
+    44
+   ],
+   "file": "switch/switch-right-off.png",
+   "state": "off",
+   "note": "A8 segmented switch, 120 x 44. on = raised honey lacquer; off = sunk into the track; pressed = on, 1 px lower."
+  },
+  "switch-right-pressed": {
+   "size": [
+    120,
+    44
+   ],
+   "file": "switch/switch-right-pressed.png",
+   "state": "pressed",
+   "note": "A8 segmented switch, 120 x 44. on = raised honey lacquer; off = sunk into the track; pressed = on, 1 px lower."
+  },
+  "glyph-trophy": {
+   "size": [
+    32,
+    32
+   ],
+   "file": "switch/glyph-trophy.png",
+   "note": "A8 Trophy Case glyph. On 'off' segments draw at 70% alpha."
+  },
+  "glyph-swords": {
+   "size": [
+    32,
+    32
+   ],
+   "file": "switch/glyph-swords.png",
+   "note": "A8 Fighting Style glyph: crossed wooden practice swords (round, no edges)."
+  },
+  "stat-perfect": {
+   "size": [
+    32,
+    32
+   ],
+   "file": "stats/stat-perfect.png",
+   "note": "A10 stat icon: perfect."
+  },
+  "stat-combo": {
+   "size": [
+    32,
+    32
+   ],
+   "file": "stats/stat-combo.png",
+   "note": "A10 stat icon: combo."
+  },
+  "stat-clock": {
+   "size": [
+    32,
+    32
+   ],
+   "file": "stats/stat-clock.png",
+   "note": "A10 stat icon: clock."
+  },
+  "stat-xp": {
+   "size": [
+    32,
+    32
+   ],
+   "file": "stats/stat-xp.png",
+   "note": "A10 stat icon: xp."
+  },
+  "stat-tile": {
+   "size": [
+    96,
+    64
+   ],
+   "file": "stats/stat-tile.png",
+   "nineSlice": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "note": "EXTRA: stat tile 64 tall, 9-slice 16. Icon at left (x 12), number by the game."
+  },
+  "xp-bar-frame": {
+   "size": [
+    200,
+    20
+   ],
+   "file": "stats/xp-bar-frame.png",
+   "nineSlice": [
+    0,
+    10,
+    0,
+    10
+   ],
+   "note": "XP bar frame, full width x 20, 3-slice along x (10 px caps). Fill area x 4..w-4, y 4..15."
+  },
+  "xp-bar-fill": {
+   "size": [
+    192,
+    11
+   ],
+   "file": "stats/xp-bar-fill.png",
+   "nineSlice": [
+    0,
+    6,
+    0,
+    6
+   ],
+   "layer": "tint (multiply); mock uses #f2c14e",
+   "note": "Neutral fill, tint in game. 3-slice; clip to the progress width."
+  },
+  "xp-bar-gloss": {
+   "size": [
+    192,
+    11
+   ],
+   "file": "stats/xp-bar-gloss.png",
+   "nineSlice": [
+    0,
+    6,
+    0,
+    6
+   ],
+   "layer": "over the fill, untinted",
+   "note": "Gloss over the fill."
+  },
+  "gear-ring-common": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-common.png",
+   "state": "normal",
+   "note": "A11 gear ring 56. Icon 36 centred. 'glow' = the slot that a picked bag item would go into."
+  },
+  "gear-ring-common-glow": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-common-glow.png",
+   "state": "glow",
+   "note": "A11 gear ring 56. Icon 36 centred. 'glow' = the slot that a picked bag item would go into."
+  },
+  "gear-ring-common-pressed": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-common-pressed.png",
+   "state": "pressed",
+   "note": "A11 gear ring 56. Icon 36 centred. 'glow' = the slot that a picked bag item would go into."
+  },
+  "gear-ring-uncommon": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-uncommon.png",
+   "state": "normal",
+   "note": "A11 gear ring 56. Icon 36 centred. 'glow' = the slot that a picked bag item would go into."
+  },
+  "gear-ring-uncommon-glow": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-uncommon-glow.png",
+   "state": "glow",
+   "note": "A11 gear ring 56. Icon 36 centred. 'glow' = the slot that a picked bag item would go into."
+  },
+  "gear-ring-uncommon-pressed": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-uncommon-pressed.png",
+   "state": "pressed",
+   "note": "A11 gear ring 56. Icon 36 centred. 'glow' = the slot that a picked bag item would go into."
+  },
+  "gear-ring-rare": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-rare.png",
+   "state": "normal",
+   "note": "A11 gear ring 56. Icon 36 centred. 'glow' = the slot that a picked bag item would go into."
+  },
+  "gear-ring-rare-glow": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-rare-glow.png",
+   "state": "glow",
+   "note": "A11 gear ring 56. Icon 36 centred. 'glow' = the slot that a picked bag item would go into."
+  },
+  "gear-ring-rare-pressed": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-rare-pressed.png",
+   "state": "pressed",
+   "note": "A11 gear ring 56. Icon 36 centred. 'glow' = the slot that a picked bag item would go into."
+  },
+  "gear-ring-epic": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-epic.png",
+   "state": "normal",
+   "note": "A11 gear ring 56. Icon 36 centred. 'glow' = the slot that a picked bag item would go into."
+  },
+  "gear-ring-epic-glow": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-epic-glow.png",
+   "state": "glow",
+   "note": "A11 gear ring 56. Icon 36 centred. 'glow' = the slot that a picked bag item would go into."
+  },
+  "gear-ring-epic-pressed": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-epic-pressed.png",
+   "state": "pressed",
+   "note": "A11 gear ring 56. Icon 36 centred. 'glow' = the slot that a picked bag item would go into."
+  },
+  "doll-backing": {
+   "size": [
+    96,
+    128
+   ],
+   "file": "gear/doll-backing.png",
+   "anchor": "player-a-big S idle at scale 0.75, feet on the dais centre (48, 113)",
+   "note": "A12: backing niche + tatami dais. Reuse player-a-big (128 x 160 frames) at 0.75 on top; it fits (body ~38 x 99 -> ~29 x 74)."
+  },
+  "unlock-sweep-0": {
+   "size": [
+    128,
+    128
+   ],
+   "file": "fx/unlock-sweep-0.png",
+   "fps": 16,
+   "note": "A13 gold sweep + a few sparkles, 8 frames, 16 fps, play once, additive or normal blend; centre over the earned item."
+  },
+  "unlock-sweep-1": {
+   "size": [
+    128,
+    128
+   ],
+   "file": "fx/unlock-sweep-1.png",
+   "fps": 16,
+   "note": "A13 gold sweep + a few sparkles, 8 frames, 16 fps, play once, additive or normal blend; centre over the earned item."
+  },
+  "unlock-sweep-2": {
+   "size": [
+    128,
+    128
+   ],
+   "file": "fx/unlock-sweep-2.png",
+   "fps": 16,
+   "note": "A13 gold sweep + a few sparkles, 8 frames, 16 fps, play once, additive or normal blend; centre over the earned item."
+  },
+  "unlock-sweep-3": {
+   "size": [
+    128,
+    128
+   ],
+   "file": "fx/unlock-sweep-3.png",
+   "fps": 16,
+   "note": "A13 gold sweep + a few sparkles, 8 frames, 16 fps, play once, additive or normal blend; centre over the earned item."
+  },
+  "unlock-sweep-4": {
+   "size": [
+    128,
+    128
+   ],
+   "file": "fx/unlock-sweep-4.png",
+   "fps": 16,
+   "note": "A13 gold sweep + a few sparkles, 8 frames, 16 fps, play once, additive or normal blend; centre over the earned item."
+  },
+  "unlock-sweep-5": {
+   "size": [
+    128,
+    128
+   ],
+   "file": "fx/unlock-sweep-5.png",
+   "fps": 16,
+   "note": "A13 gold sweep + a few sparkles, 8 frames, 16 fps, play once, additive or normal blend; centre over the earned item."
+  },
+  "unlock-sweep-6": {
+   "size": [
+    128,
+    128
+   ],
+   "file": "fx/unlock-sweep-6.png",
+   "fps": 16,
+   "note": "A13 gold sweep + a few sparkles, 8 frames, 16 fps, play once, additive or normal blend; centre over the earned item."
+  },
+  "unlock-sweep-7": {
+   "size": [
+    128,
+    128
+   ],
+   "file": "fx/unlock-sweep-7.png",
+   "fps": 16,
+   "note": "A13 gold sweep + a few sparkles, 8 frames, 16 fps, play once, additive or normal blend; centre over the earned item."
+  },
+  "belt-knot-band": {
+   "size": [
+    40,
+    40
+   ],
+   "file": "belt/belt-knot-band.png",
+   "layer": "belt",
+   "note": "A3 knot layer, neutral. Tint with multiply from player.json beltStyles (same layer names). Draw: shadow, band, center (only if listed), sheen (if listed, else white @25%), rim."
+  },
+  "belt-knot-center": {
+   "size": [
+    40,
+    40
+   ],
+   "file": "belt/belt-knot-center.png",
+   "layer": "belt-center",
+   "note": "A3 knot layer, neutral. Tint with multiply from player.json beltStyles (same layer names). Draw: shadow, band, center (only if listed), sheen (if listed, else white @25%), rim."
+  },
+  "belt-knot-sheen": {
+   "size": [
+    40,
+    40
+   ],
+   "file": "belt/belt-knot-sheen.png",
+   "layer": "belt-sheen",
+   "note": "A3 knot layer, neutral. Tint with multiply from player.json beltStyles (same layer names). Draw: shadow, band, center (only if listed), sheen (if listed, else white @25%), rim."
+  },
+  "belt-knot-rim": {
+   "size": [
+    40,
+    40
+   ],
+   "file": "belt/belt-knot-rim.png",
+   "layer": "belt-rim",
+   "note": "A3 knot layer, neutral. Tint with multiply from player.json beltStyles (same layer names). Draw: shadow, band, center (only if listed), sheen (if listed, else white @25%), rim."
+  },
+  "belt-knot-shadow": {
+   "size": [
+    40,
+    40
+   ],
+   "file": "belt/belt-knot-shadow.png",
+   "layer": "belt-shadow",
+   "note": "A3 knot layer, neutral. Tint with multiply from player.json beltStyles (same layer names). Draw: shadow, band, center (only if listed), sheen (if listed, else white @25%), rim."
+  },
+  "belt-cord": {
+   "size": [
+    320,
+    40
+   ],
+   "file": "belt/belt-cord.png",
+   "nineSlice": [
+    0,
+    20,
+    0,
+    20
+   ],
+   "layer": "tint #d9b47a (decided)",
+   "note": "The decided ribbon cord, neutral, 3-slice along x."
+  },
+  "button-primary-normal": {
+   "size": [
+    160,
+    52
+   ],
+   "file": "button/button-primary-normal.png",
+   "nineSlice": [
+    0,
+    24,
+    0,
+    24
+   ],
+   "state": "normal",
+   "note": "EXTRA (plan's Wear button, 52 tall): honey-gold lacquer button, 3-slice along x. Label by the game in #462a16. Disabled = matte pale wood (not grey, not red)."
+  },
+  "button-primary-pressed": {
+   "size": [
+    160,
+    52
+   ],
+   "file": "button/button-primary-pressed.png",
+   "nineSlice": [
+    0,
+    24,
+    0,
+    24
+   ],
+   "state": "pressed",
+   "note": "EXTRA (plan's Wear button, 52 tall): honey-gold lacquer button, 3-slice along x. Label by the game in #462a16. Disabled = matte pale wood (not grey, not red)."
+  },
+  "button-primary-disabled": {
+   "size": [
+    160,
+    52
+   ],
+   "file": "button/button-primary-disabled.png",
+   "nineSlice": [
+    0,
+    24,
+    0,
+    24
+   ],
+   "state": "disabled",
+   "note": "EXTRA (plan's Wear button, 52 tall): honey-gold lacquer button, 3-slice along x. Label by the game in #462a16. Disabled = matte pale wood (not grey, not red)."
+  },
+  "icon-off-balance-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icons64/icon-off-balance-64.png",
+   "note": "A5 seal icon at 64 (from incoming-art/icons)."
+  },
+  "icon-escape-step-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icons64/icon-escape-step-64.png",
+   "note": "A5 seal icon at 64 (from incoming-art/icons)."
+  },
+  "icon-sweep-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icons64/icon-sweep-64.png",
+   "note": "A5 seal icon at 64 (from incoming-art/icons)."
+  },
+  "icon-strong-block-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icons64/icon-strong-block-64.png",
+   "note": "A5 seal icon at 64 (from incoming-art/icons)."
+  },
+  "icon-sharp-eyes-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icons64/icon-sharp-eyes-64.png",
+   "note": "A5 seal icon at 64 (from incoming-art/icons)."
+  },
+  "icon-create-distance-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icons64/icon-create-distance-64.png",
+   "note": "A5 seal icon at 64 (from incoming-art/icons)."
+  },
+  "icon-disarm-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icons64/icon-disarm-64.png",
+   "note": "A5 seal icon at 64 (from incoming-art/icons)."
+  },
+  "icon-throw-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icons64/icon-throw-64.png",
+   "note": "A5 seal icon at 64 (from incoming-art/icons)."
+  },
+  "icon-follow-through-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icons64/icon-follow-through-64.png",
+   "note": "A5 seal icon at 64 (from incoming-art/icons)."
+  },
+  "icon-steady-breath-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icons64/icon-steady-breath-64.png",
+   "note": "A5 seal icon at 64. Recoloured for menu2: the heart is warm amber (was red). Breath wisps stay sky-blue. The source in incoming-art/icons is unchanged."
+  },
+  "sheet-icon-well": {
+   "size": [
+    104,
+    104
+   ],
+   "file": "sheet/sheet-icon-well.png",
+   "note": "NEW (detail sheet): recessed paper circle with brass ring, holds the big trophy icon (icon ~72 centred, 2 px above centre)."
+  },
+  "sheet-chip": {
+   "size": [
+    120,
+    28
+   ],
+   "file": "sheet/sheet-chip.png",
+   "nineSlice": [
+    0,
+    13,
+    0,
+    13
+   ],
+   "note": "NEW (detail sheet): honey pill for 'where it was learned'. 3-slice along x. Text by the game in #462a16."
+  },
+  "kata-arrow-up": {
+   "size": [
+    28,
+    28
+   ],
+   "file": "sheet/kata-arrow-up.png",
+   "note": "NEW (detail sheet): kata step arrow, brass on paper tile. Shown only when the trophy has kata."
+  },
+  "kata-arrow-right": {
+   "size": [
+    28,
+    28
+   ],
+   "file": "sheet/kata-arrow-right.png",
+   "note": "NEW (detail sheet): kata step arrow, brass on paper tile. Shown only when the trophy has kata."
+  },
+  "kata-arrow-down": {
+   "size": [
+    28,
+    28
+   ],
+   "file": "sheet/kata-arrow-down.png",
+   "note": "NEW (detail sheet): kata step arrow, brass on paper tile. Shown only when the trophy has kata."
+  },
+  "kata-arrow-left": {
+   "size": [
+    28,
+    28
+   ],
+   "file": "sheet/kata-arrow-left.png",
+   "note": "NEW (detail sheet): kata step arrow, brass on paper tile. Shown only when the trophy has kata."
+  },
+  "sheet-hint-strip": {
+   "size": [
+    200,
+    36
+   ],
+   "file": "sheet/sheet-hint-strip.png",
+   "nineSlice": [
+    0,
+    26,
+    0,
+    14
+   ],
+   "note": "NEW (detail sheet): sky-washi strip for the 'Ask Sensei about this one' line on not-yet items. 3-slice; left cap 26 holds brush dots. Text by the game in #2f5476."
+  },
+  "sheet-close": {
+   "size": [
+    32,
+    32
+   ],
+   "file": "sheet/sheet-close.png",
+   "note": "NEW (detail sheet): round wood close button with a cream X (shape, not text)."
+  },
+  "sheet-scrim": {
+   "size": [
+    8,
+    8
+   ],
+   "file": "sheet/sheet-scrim.png",
+   "nineSlice": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "note": "NEW (detail sheet): warm dim layer behind the sheet; stretch to screen."
+  }
+ }
+}
