@@ -552,6 +552,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## S3-P1b Kata cards
 - Bigger drawn kata arrows (same height as the step numbers) and a Kata group at the top of Abilities. Screens: /workspace/qa/s3p1b/final/.
 
+## R-BAL-9c Live enemy numbers
+- Swarmer, Shield, Brute and Floor-keeper set to the #188 numbers; all in band on Standard and Challenge (drafts/planning/r-bal-9c-check.py). D1–D5 logged as Jay's calls.
+
 ## R-BAL-4 Bad-luck counter test
 - New test locks `guaranteedRareOnRun` at 5 or lower. Checked it fails when set to 6.
 ## K25 Slower tempo and calmer shake
@@ -561,3 +564,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## K25b Block never shakes
 - Done: Block gives 0 shake; being hit is unchanged. Test added.
+
+## R-BAL-9b Per-tier gear caps
+- Done: 10-tier GEAR_CAPS, white cut, Jade capped. Test: r-bal-9b-gear-caps.test.ts.
