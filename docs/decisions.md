@@ -1031,3 +1031,9 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - **Save field is `trophiesSeen`** (cubby ids), not `seen`, because `profile.seen` already holds the reward-moment snapshot. It follows the `sealsSeen` pattern: `newTrophies()` in packages/sim records an id the first time it is drawn, so a cubby on another page waits for its page.
 - **Old saves.** A save without `trophiesSeen` loads as null; the first Trophy Case view marks every already-earned cubby as seen silently, so returning players see no replays. New profiles start with [] so a new student's first earned cubbies play once.
 - The "POP" is the card's scale pop (no on-screen word, no new copy). No new art or wording; all drawn in code.
+
+## B-POLISH-2: Trophy Case polish (2026-10-25)
+- **Manager approved** doing the Tester's 3 polish items as one small PR. Done when: the pop goes 1 → 1.06 → 1, the 667 sheet allows 3 lines (Basic Form 1 shows '15% slower.'), and the Self-Defense cards have even side padding at 844.
+- Tokens live in `TROPHY_UI` (ui/tokens.ts): `popPeak` 1.06, `effectLines` 3, `cubbyPadX` 8. The pop is two chained tweens (up, then settle), not a yoyo, so the P-MENU2-c "no endless tweens" check still holds. Reduced motion stays a fade.
+- A cubby label that is one long word ("Self-Defense") can't wrap, so its font steps down (to 10 px minimum) until it clears 8 px on each side.
+- Manager: mid-fight Form switching after a loadout pick is fine; P-MENU2-e explains it simply on that screen.

@@ -36,7 +36,7 @@ import {
   kataArrows,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
-import { KATA_INK, MIN_TAP, type KataInk } from '../ui/tokens';
+import { KATA_INK, MIN_TAP, TROPHY_UI, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
@@ -692,7 +692,7 @@ export class HomeScene extends Phaser.Scene {
     const icon = c.icon ? addIcon(this, c.icon, 0, iy, iconS) : null;
     if (icon) v.add(icon.setAlpha(c.earned ? 1 : 0.3));
     else v.add(this.add.circle(0, iy, iconS / 2, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.3));
-    const tw = size - 10;
+    const tw = cubbyTextW(size);
     const ty = iy + iconS / 2 + 4;
     const label = c.earned ? (c.short ?? c.name) : TROPHY_WORDS.notYet;
     const txt = this.add
@@ -700,6 +700,8 @@ export class HomeScene extends Phaser.Scene {
       .setResolution(crisp())
       .setOrigin(0.5, 0)
       .setMaxLines(2);
+    // B-POLISH-2: a long word ("Self-Defense") can't wrap, so step the font down until it clears the padding.
+    for (let fs = parseInt(String(txt.style.fontSize), 10); txt.width > tw && fs > 10; ) txt.setFontSize(--fs);
     v.add(txt);
     if (c.earned) {
       // Sensei's seal: a small red stamp in the corner (placeholder, no text).
@@ -735,8 +737,14 @@ export class HomeScene extends Phaser.Scene {
       ease: MOTION.unlockSweep.ease,
       onComplete: () => {
         cover.destroy();
-        v.setScale(0.9);
-        this.tweens.add({ targets: v, scale: 1, duration: MOTION.pop.ms, ease: MOTION.pop.ease });
+        const [, peak, rest] = unlockPopScales();
+        this.tweens.add({
+          targets: v,
+          scale: peak,
+          duration: MOTION.pop.ms / 2,
+          ease: 'Sine.Out',
+          onComplete: () => this.tweens.add({ targets: v, scale: rest, duration: MOTION.pop.ms / 2, ease: 'Sine.InOut' }),
+        });
       },
     });
   }
@@ -772,7 +780,7 @@ export class HomeScene extends Phaser.Scene {
     const sx = rx + f;
     const tw = sw - 2 * pad - 56 - S2;
     const kataH = c.kata ? TYPE.label + 4 + kataLines(c.kata, sw - 2 * pad) * KATA_LINE : 0;
-    const sh = Math.min(panelH - 2 * f, Math.max((panelH - 2 * f) / 2, pad + TYPE.title + 4 + TYPE.body * 2 + 8 + TYPE.body + 8 + kataH + 44 + pad));
+    const sh = Math.min(panelH - 2 * f, Math.max((panelH - 2 * f) / 2, pad + TYPE.title + 4 + TYPE.body * TROPHY_UI.effectLines + 8 + TYPE.body + 8 + kataH + 44 + pad));
     const sy = top + panelH - f - sh;
     const body = this.add.container(0, 0);
     sheet.add(body);
@@ -789,7 +797,7 @@ export class HomeScene extends Phaser.Scene {
     let ty = sy + pad;
     this.oneLine(this.text(tx, ty, c.name, TYPE.title, WOOD.ink, true), tw, TYPE.body);
     ty += TYPE.title + 4;
-    const eff = this.text(tx, ty, c.effect, TYPE.body, '#5a3e28', false, FONT, tw).setMaxLines(2);
+    const eff = this.text(tx, ty, c.effect, TYPE.body, '#5a3e28', false, FONT, tw).setMaxLines(TROPHY_UI.effectLines);
     ty += eff.height + 6;
     this.text(tx, ty, c.status, TYPE.body, c.earned ? '#a0522d' : '#7a5a3a', true, FONT, tw);
     ty = Math.max(ty + TYPE.body + 8, sy + pad + 56 + S2);
