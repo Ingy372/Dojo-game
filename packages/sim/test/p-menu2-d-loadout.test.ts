@@ -23,6 +23,14 @@ describe('P-MENU2-d loadout', () => {
     expect(loadProfile({ ...old, loadout: { form: 7, virtue: '' } }).loadout).toBeNull();
   });
 
+  it('drops ids that are not ability ids, like built-in object names', () => {
+    const old = JSON.parse(JSON.stringify(newProfile()));
+    for (const bad of ['toString', 'constructor', '__proto__', 'hasOwnProperty', 'valueOf', 'Rooted Form', 'rooted-form ', '-x']) {
+      expect(loadProfile({ ...old, loadout: { form: bad, virtue: bad } }).loadout).toBeNull();
+    }
+    expect(loadProfile({ ...old, loadout: { form: 'constructor', virtue: 'second-wind' } }).loadout).toEqual({ form: null, virtue: 'second-wind' });
+  });
+
   it('a saved loadout survives a save and load', () => {
     const p = newProfile();
     p.loadout = { form: 'flowing-form', virtue: null };

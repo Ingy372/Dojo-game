@@ -3720,5 +3720,26 @@
     "items": 13
    }
   ]
+ },
+ "rooted": {
+  "rootedAt": 1,
+  "guided": {
+   "window": 15,
+   "perfects": 6,
+   "blocks": 1,
+   "health": 156
+  },
+  "standard": {
+   "window": 11,
+   "perfects": 8,
+   "blocks": 3,
+   "health": 113
+  },
+  "challenge": {
+   "window": 9,
+   "perfects": 8,
+   "blocks": 3,
+   "health": 191
+  }
  }
 }
