@@ -16,7 +16,7 @@ Each sheet is 256 px per frame and has 8 rows (N, NE, E, SE, S, SW, W, NW). Each
 
 ## Import notes
 - **Pin stand-ins (P1/P2):** draw the `*-pin` sheets only during `windup_pin` and `pin`. In these sheets the ladle is put away and the rolling pin is in both mitts. All other states keep the #247 sheets.
-- **Bonk (P3):** draw `p3-bonk` during `windup_bonk` and `bonk`. The pin is swung from the side at head height, never above the head.
+- **Bonk (P3):** draw `p3-bonk` during `windup_bonk` and `bonk`. The pin is swung from the side at head height, never above the head. In these sheets the lid is edge-on at the left hip, so it stays off the face in every direction.
 - **Lid up:** while `lidWhileHelpers` is active, draw the matching `lid/pN` sheet (same anim, direction and frame) on top of the body. For pin and bonk, use the `lid` layer inside those sheets. Then show the `icon-lid` icon at the end of the boss bar, replacing the code lid. Keep the grey wash.
 - **Telegraph:** the game tints it. In the previews the pin is shown purple and the bonk red. Red is for danger only.
 
