@@ -65,9 +65,11 @@ export function gearBoardLayout(w: number, h: number, minTileW: number = GEAR_BO
   const perAlwaysRow = Math.max(1, Math.floor((dollW + S1) / (alwaysIcon + S1)));
   const iconsTop = alwaysY + TYPE.label + S1;
   const alwaysRows = Math.max(0, Math.floor((h - iconsTop + S1) / (alwaysIcon + S1)));
-  const gridX = dollW + S2;
-  const gridW = w - gridX;
-  const { cols, tileW } = gearColumns(gridW, minTileW);
+  const area = w - dollW - S2;
+  const { cols, tileW } = gearColumns(area, minTileW);
+  // Tiles, arrows and dots share one centred strip so any spare width splits evenly.
+  const gridW = Math.min(area, cols * tileW + (cols - 1) * g.gap);
+  const gridX = dollW + S2 + Math.floor((area - gridW) / 2);
   // Room for the icon, the rarity word under it, and padding; fewer rows rather than fewer than 3 columns.
   const tileH = Math.max(MIN_TAP, GEAR_BOARD.iconMax - 8 + GEAR_BOARD.labelH + 3 * S1 + 6, Math.min(tileW, 72));
   const filterY = 0;

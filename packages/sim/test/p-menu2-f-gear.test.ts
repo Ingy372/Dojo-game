@@ -40,6 +40,12 @@ describe('P-MENU2-f layout', () => {
       expect(L.pagerY + GEAR_BOARD.pagerH).toBeLessThanOrEqual(s.h);
       expect(L.ringYs[L.ringYs.length - 1] + GEAR_BOARD.ring / 2).toBeLessThanOrEqual(s.h);
       expect(L.gridX).toBeGreaterThanOrEqual(L.dollW);
+      // Tiles centred in the bag area: spare width splits evenly (within 1 px).
+      const used = L.cols * L.tileW + (L.cols - 1) * GEAR_BOARD.gap;
+      expect(L.gridW).toBe(used);
+      const left = L.gridX - (L.dollW + 8);
+      const right = s.w - (L.gridX + L.gridW);
+      expect(Math.abs(left - right)).toBeLessThanOrEqual(1);
     });
   }
   it('paging reaches every item exactly once at each size', () => {
