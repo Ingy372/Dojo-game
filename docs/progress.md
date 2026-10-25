@@ -657,3 +657,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - 7 new Vitest tests (`packages/sim/test/b-safe.test.ts`). Screenshots at 667x375 and 844x390, Reduced motion off and on.
 ## fix-celebrate-rm
 - With Reduced motion on, the Celebrations rays stay still and no confetti shows. The Congratulations card says "practiced" for techniques counted from an earlier rank (legacy) and keeps "signed off" for real sign-offs.
+## fix-celebrate-rm
+- With Reduced motion on, the Celebrations rays stay still and no confetti shows. The Congratulations card says "practiced" for techniques counted from an earlier rank (legacy) and keeps "signed off" for real sign-offs.
+
+## practiced-cards
+- The full-screen sign-off cards (and the welcome cascade on the first trip home) say "practiced" for techniques counted from an earlier rank, and keep "signed off" with who signed it for real sign-offs.
