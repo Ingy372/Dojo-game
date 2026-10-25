@@ -93,15 +93,18 @@ export interface StyleLayout {
   perAlways: number;
 }
 
-/** Sizes for a Fighting Style panel w x h (below the switch). Every tap target is at least 44. */
-export function styleLayout(w: number, h: number): StyleLayout {
+/** Sizes for a Fighting Style panel w x h (below the switch). Every tap target is at least 44.
+ * B-POLISH-2: `minTileW` is the narrowest tray tile that still holds its widest word with 8 px clear
+ * each side (stroke counted); when 3 tiles would be narrower, the tray shows 2 wider tiles. */
+export function styleLayout(w: number, h: number, minTileW = 0): StyleLayout {
   const leftW = Math.round(w * 0.58);
   const slotW = Math.floor((leftW - S2) / 2);
   const alwaysH = TYPE.label + S1 + MIN_TAP;
   const room = h - alwaysH - 2 * S2;
   const tileH = Math.max(MIN_TAP + 8, Math.min(72, Math.round(room * 0.4)));
   const slotH = Math.max(MIN_TAP, room - tileH);
-  const perTray = 3;
+  const fits = (n: number): boolean => Math.floor((leftW - (n - 1) * S2) / n) >= minTileW;
+  const perTray = fits(3) ? 3 : 2;
   const tileW = Math.floor((leftW - (perTray - 1) * S2) / perTray);
   const previewX = leftW + S2;
   const icon = MIN_TAP;

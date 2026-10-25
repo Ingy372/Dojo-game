@@ -595,7 +595,12 @@ export class HomeScene extends Phaser.Scene {
    */
   private renderFightingStyle(x: number, y: number, w: number, h: number): void {
     const m = this.styleModel();
-    const L = styleLayout(w, h);
+    // B-POLISH-2: tray tiles must hold their widest word (hyphens break) at 12 px with cubby padding.
+    const widest = Math.max(...[...m.trays.stance, ...m.trays.virtue].flatMap((p) => p.name.split(/\s+|(?<=-)/)).map((word) => {
+      const probe = this.add.text(0, 0, word, { fontFamily: FONT, fontSize: `${TYPE.label}px`, fontStyle: 'bold' });
+      const wd = probe.width; probe.destroy(); return wd;
+    }));
+    const L = styleLayout(w, h, Math.ceil(widest) + 2 * TROPHY_UI.cubbyPadX + TROPHY_UI.stroke);
     const ink = WOOD.ink;
     (['stance', 'virtue'] as const).forEach((slot, i) => {
       const pick = m.current[slot];
@@ -621,12 +626,13 @@ export class HomeScene extends Phaser.Scene {
     const cur = m.current[this.styleSlot];
     tray.forEach((p, i) => {
       const equipped = p.earned && cur?.id === p.id;
-      button(this, {
+      const tile = button(this, {
         x: x + i * (L.tileW + S2), y: ty, w: L.tileW, h: L.tileH,
-        label: p.name, labelWrap: L.tileW - 8, size: TYPE.label,
+        label: p.name, labelWrap: cubbyTextW(L.tileW), size: TYPE.label,
         color: p.earned ? WOOD.frame : BOARD_PAPER, labelColor: p.earned ? '#fff6e6' : ink, stroke: WOOD.grain, selected: equipped,
         onTap: () => (p.earned ? this.equipStyle(p) : this.openStylePick(p)),
-      }, this.ui);
+      }, this.ui).visual.list[2] as Phaser.GameObjects.Text;
+      wrapLikeCubby(tile, p.name, cubbyTextW(L.tileW));
       if (!p.earned) {
         // The lantern: something to look forward to (no lock, no count).
         const lg = this.add.graphics();
@@ -814,11 +820,7 @@ export class HomeScene extends Phaser.Scene {
       .text(0, 0, label, { fontFamily: FONT, fontSize: `${c.earned ? (size >= 112 ? TYPE.body : TYPE.label) : TYPE.label}px`, color: c.earned ? '#fff6e6' : WOOD.ink, fontStyle: c.earned ? 'bold' : 'normal', align: 'center', wordWrap: { width: tw } })
       .setResolution(crisp())
       .setOrigin(0.5, 0)
-      .setLineSpacing(TROPHY_UI.cubbyLineGap)
-      .setMaxLines(TROPHY_UI.cubbyLines);
-    // A hyphenated word too wide for the padded width breaks after its hyphen ("Self-" / "Defense #1").
-    if (txt.width > tw) txt.setText(label.replace(/-(?=\S)/g, '-\n'));
-    return txt;
+    return wrapLikeCubby(txt, label, tw);
   }
 
   /** P-MENU2-b: one cubby, drawn in code on a button() so it presses like every other button. */
@@ -1551,4 +1553,12 @@ function drawArrow(g: Phaser.GameObjects.Graphics, cx: number, cy: number, d: 'u
   const [px, py] = [-dy, dx];
   g.lineStyle(3, color, 1).lineBetween(cx - dx * r, cy - dy * r, cx + dx * (r - 4), cy + dy * (r - 4));
   g.fillStyle(color, 1).fillTriangle(cx + dx * r, cy + dy * r, cx + dx * (r - 6) + px * 5, cy + dy * (r - 6) + py * 5, cx + dx * (r - 6) - px * 5, cy + dy * (r - 6) - py * 5);
+}
+
+/** B-POLISH-2: the cubby wrap rules: 3 lines max, tight line gap, and a hyphenated word too wide
+ * for the padded width breaks after its hyphen ("Self-" / "Defense #1"). */
+function wrapLikeCubby(txt: Phaser.GameObjects.Text, label: string, tw: number): Phaser.GameObjects.Text {
+  txt.setLineSpacing(TROPHY_UI.cubbyLineGap).setMaxLines(TROPHY_UI.cubbyLines);
+  if (txt.width > tw) txt.setText(label.replace(/-(?=\S)/g, '-\n'));
+  return txt;
 }
