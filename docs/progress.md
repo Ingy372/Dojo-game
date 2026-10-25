@@ -574,6 +574,43 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Done: training stats, stripesByBelt migration (never lowers), per-belt enemy scale. UI words (12d) are still open.
 - Enemy scale retuned (Manager option B): live enemies are in the #188 bands at all 10 belts for all three model students; Bopper base is now 66/11. Test: r-bal-12-bands.test.ts.
 
+## K28 K25 feel fixes (QA B1–B4)
+- Done: the wind-up sound and the "two attacks at once" warning timer use real time (realMsPerTick). Challenge timers are 60 real seconds. The shake rule checks belt rank (tier 8 = Brown and up), not the id 'brown'. Named-monster wind-up shakes (Brute stamp) follow the same rule. Test: k28-real-time-rank.test.ts.
+## K27 — tutorial fixes from Q5 (2026-10-24)
+**Done**
+- Q5 B1–B6 fixed: boss "!" clear of the boss bar, boss tip closes on Got it and keeps off the boss; chest tip only in the vault; tip box keeps off HOME, the hero and STRIKE; COUNTER is never dimmed with a gold ring; new closing line (Manager's call).
+- Checked at 667x375 and 844x390 with Reduced motion on and off (headless browser, full tutorial run).
+**Next**
+- Tester re-checks Q5.
+- Retest fix (Manager's call after the K27 retest): the boss "!" is drawn at full strength (opaque disc, solid colors) above the boss, or beside it when the boss bar leaves no room above, and never over a door label or the boss bar. Tutorial tips avoid the cue where it actually sits.
+
+## K29 — end-of-run clock in real seconds (2026-10-25)
+**Done**
+- Room-clear line, Last run time and Fastest floor show real seconds (`realClock`, same conversion as the Challenge timer). Par times and grades stay in game time.
+- Test: packages/sim/test/k29-real-clock.test.ts.
+**Next**
+- None; the shake rank mapping for other dojos is noted in decisions.md.
+
+## K30 — HOME label clear of the boss (2026-10-25)
+**Done**
+- Door labels slide aside when they would overlap the boss's head, health bar or name (`keepLabelOffBoss`).
+- Checked at 667x375 and 844x390 with Reduced motion off and on (/workspace/k30-shots/).
+**Next**
+- Tester re-check of the boss room.
+
+## K31 — boss name and small bar never touch (2026-10-25)
+
+- Added `bossTagLayout` + `BOSS_TAG` in sim, wired in GameScene (`placeBossTag`), cue avoids the pair. Test: packages/sim/test/k31-boss-tag.test.ts. Shots in /workspace/k31-shots/ (`*-top-*` frames teleport the boss to the top wall).
+
+## K31 QA fixes (2026-10-25)
+
+- One x for the name + bar pair (edge clamp, HOME slide together); below spot avoids COMBO and "+N% power". Re-ran the Tester's /workspace/qa/k31/run/tag.mjs against this build.
+- 2026-10-25: K31 last fix: '!' cue no longer falls back onto the sliding name + bar; 8 px padding removed. tag.mjs 0 bad spots at 667 (RM off/on) and 844 (RM off/on).
+
+## K32 gear icons (2026-10-25)
+
+- Imported the 15 #212 gear icons to assets/art/gear-drop/ and wired them into the Gear screen, results, first-floor card and loot note. Test: packages/sim/test/gear-icons.test.ts (every GEAR_SLOTS x RARITIES has a file; checked that it fails when one is missing). Shots and overlap/clip reports in /workspace/k32-shots/ (667x375 and 844x390, reduced motion off/on).
+
 
 ## R-BAL-12e disarmedPower scaled
 - Done (stacked on #208).
