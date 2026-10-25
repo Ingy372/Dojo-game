@@ -277,6 +277,8 @@ export class GameScene extends Phaser.Scene {
   private bossName!: Phaser.GameObjects.Text;
   /** B-T3-NUDGE: the phase pause's ROAR! word (screen space, under the Sensei banner). */
   private roarText: Phaser.GameObjects.Text | null = null;
+  /** B-T3-NUDGE: the boss's "Help me!" when its helpers come with a phase pause (under ROAR!). */
+  private helpText: Phaser.GameObjects.Text | null = null;
   private toastY = 0;
   /** Decoration labels on screen and where they'd like to be (K12). */
   private decoToasts: Array<{ t: Phaser.GameObjects.Text; y: number }> = [];
@@ -1395,15 +1397,30 @@ export class GameScene extends Phaser.Scene {
               .setResolution(window.devicePixelRatio || 1);
             this.cameras.main.ignore(roar);
             this.roarText?.destroy();
+            this.helpText?.destroy();
             this.roarText = roar;
-            this.tweens.add({ targets: roar, alpha: 0, delay: ms * 0.6, duration: ms * 0.4, onComplete: () => roar.destroy() });
+            const fade = [roar];
+            if (events.some((x) => x.kind === 'summon' && x.enemyId === ev.enemyId)) {
+              const r = roar.getBounds();
+              const help = this.add
+                .text(width / 2, r.bottom + ROAR_GAP_PX, 'Help me!', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '22px', color: '#ffd166', stroke: '#2a1408', strokeThickness: 4 })
+                .setOrigin(0.5, 0)
+                .setDepth(60)
+                .setResolution(window.devicePixelRatio || 1);
+              this.cameras.main.ignore(help);
+              this.helpText = help;
+              fade.push(help);
+            }
+            this.tweens.add({ targets: fade, alpha: 0, delay: ms * 0.6, duration: ms * 0.4, onComplete: () => fade.forEach((t) => t.destroy()) });
           }
           break;
         }
         case 'summon': {
           const e = this.enemy(ev.enemyId);
           sfx.appear();
-          if (e) this.floatText({ x: e.pos.x, y: e.pos.y - 1 }, 'Help me!', '#ffd166', 24);
+          // B-T3-NUDGE: with a phase pause in the same tick, "Help me!" goes under ROAR! instead (clear of the banner).
+          const paused = events.some((x) => x.kind === 'phaseHold' && x.enemyId === ev.enemyId);
+          if (e && !paused) this.floatText({ x: e.pos.x, y: e.pos.y - 1 }, 'Help me!', '#ffd166', 24);
           const caller = this.enemyViews.get(ev.enemyId);
           if (caller) caller.callUntil = this.time.now + 1000;
           this.syncEnemyViews();
