@@ -1,0 +1,847 @@
+{
+ "p": "1-white-belt-new",
+ "W": 844,
+ "minHp": 1,
+ "errs": [],
+ "cues": [
+  {
+   "wk": "red",
+   "wind": "0/16",
+   "cwin": false,
+   "after": "2/16",
+   "afterWin": false,
+   "f": "q5-rm-1-white-belt-new-844-06-cue-red.png"
+  },
+  {
+   "wk": "gold",
+   "wind": "10/16",
+   "cwin": true,
+   "after": "12/16",
+   "afterWin": true,
+   "f": "q5-rm-1-white-belt-new-844-07-cue-gold.png"
+  },
+  {
+   "wk": "red",
+   "wind": "8/16",
+   "cwin": false,
+   "after": "11/16",
+   "afterWin": true,
+   "f": "q5-rm-1-white-belt-new-844-11-cue-red.png"
+  },
+  {
+   "wk": "gold",
+   "wind": "13/16",
+   "cwin": true,
+   "after": "",
+   "afterWin": false,
+   "f": "q5-rm-1-white-belt-new-844-12-cue-gold.png"
+  },
+  {
+   "wk": "gold",
+   "wind": "15/16",
+   "cwin": true,
+   "after": "",
+   "afterWin": false,
+   "f": "q5-rm-1-white-belt-new-844-14-cue-gold.png"
+  },
+  {
+   "wk": "red",
+   "wind": "0/12",
+   "cwin": false,
+   "after": "4/12",
+   "afterWin": false,
+   "f": "q5-rm-1-white-belt-new-844-17-cue-red.png"
+  },
+  {
+   "wk": "gold",
+   "wind": "7/12",
+   "cwin": true,
+   "after": "11/12,3/12",
+   "afterWin": true,
+   "f": "q5-rm-1-white-belt-new-844-18-cue-gold.png"
+  },
+  {
+   "wk": "red",
+   "wind": "5/12",
+   "cwin": false,
+   "after": "9/12",
+   "afterWin": true,
+   "f": "q5-rm-1-white-belt-new-844-19-cue-red.png"
+  },
+  {
+   "wk": "gold",
+   "wind": "11/12",
+   "cwin": true,
+   "after": "",
+   "afterWin": false,
+   "f": "q5-rm-1-white-belt-new-844-20-cue-gold.png"
+  },
+  {
+   "wk": "red",
+   "wind": "1/12",
+   "cwin": false,
+   "after": "0/12,5/12",
+   "afterWin": false,
+   "f": "q5-rm-1-white-belt-new-844-21-cue-red.png"
+  },
+  {
+   "wk": "gold",
+   "wind": "3/12,8/12",
+   "cwin": true,
+   "after": "7/12",
+   "afterWin": true,
+   "f": "q5-rm-1-white-belt-new-844-22-cue-gold.png"
+  },
+  {
+   "wk": "red",
+   "wind": "0/16",
+   "cwin": false,
+   "after": "4/16",
+   "afterWin": false,
+   "f": "q5-rm-1-white-belt-new-844-25-cue-red.png"
+  }
+ ],
+ "stages": [
+  {
+   "t": "5",
+   "room": "tutorial-hall",
+   "tflow": null,
+   "sensei": null,
+   "gotIt": false,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "brute",
+   "coverHero": null,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": true,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 100,
+   "hpLow": 100,
+   "senseiAfterIdle": null,
+   "shot": "q5-rm-1-white-belt-new-844-00-tutorial-hall-nosensei.png"
+  },
+  {
+   "t": "7",
+   "room": "tutorial-hall",
+   "tflow": null,
+   "sensei": null,
+   "gotIt": false,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "brute",
+   "coverHero": null,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": {
+    "after": "1.0",
+    "to": "tutorial-hall|{\"index\":1,\"phase\":\"tip\"}|true|false|1"
+   },
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 100,
+   "hpLow": 100,
+   "senseiAfterIdle": "Sensei: Nice bow. Let's go in.\nTap where you want to go, or use the stick.",
+   "shot": "q5-rm-1-white-belt-new-844-01-tutorial-hall-nosensei.png"
+  },
+  {
+   "t": "9",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":1,\"phase\":\"trying\"}",
+   "sensei": "Sensei: Nice bow. Let's go in.\nTap where you want to go, or use the stick.",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "brute",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 100,
+   "hpLow": 100,
+   "senseiAfterIdle": "Sensei: Nice bow. Let's go in.\nTap where you want to go, or use the stick.",
+   "shot": "q5-rm-1-white-belt-new-844-02-tutorial-hall-SenseiNicebowLetsgoi.png"
+  },
+  {
+   "t": "12",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":2,\"phase\":\"tip\"}",
+   "sensei": "Sensei: You found it!\nThis room is big. Use all of it.",
+   "gotIt": true,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "brute",
+   "coverHero": true,
+   "coverProt": true,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 100,
+   "hpLow": 100,
+   "senseiAfterIdle": "Sensei: You found it!\nThis room is big. Use all of it.",
+   "shot": "q5-rm-1-white-belt-new-844-03-tutorial-hall-SenseiYoufounditThis.png"
+  },
+  {
+   "t": "14",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":2,\"phase\":\"trying\"}",
+   "sensei": "Sensei: You found it!\nThis room is big. Use all of it.",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "brute",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 100,
+   "hpLow": 100,
+   "senseiAfterIdle": "Sensei: You found it!\nThis room is big. Use all of it.",
+   "shot": "q5-rm-1-white-belt-new-844-04-tutorial-hall-SenseiYoufounditThis.png"
+  },
+  {
+   "t": "21",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":3,\"phase\":\"trying\"}",
+   "sensei": "Sensei: Lots of room to move!",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "brute",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": true,
+   "hpStart": 100,
+   "hpLow": 100,
+   "senseiAfterIdle": "Sensei: Lots of room to move!",
+   "shot": "q5-rm-1-white-belt-new-844-05-tutorial-hall-SenseiLotsofroomtomo.png"
+  },
+  {
+   "t": "31",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":3,\"phase\":\"trying\"}",
+   "sensei": "Sensei: Tap COUNTER... now!",
+   "gotIt": false,
+   "waiting": true,
+   "wave": 1,
+   "kinds": "brute",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 2,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 100,
+   "hpLow": 100,
+   "senseiAfterIdle": "Sensei: Tap COUNTER... now!",
+   "shot": "q5-rm-1-white-belt-new-844-08-tutorial-hall-SenseiTapCOUNTERnow.png"
+  },
+  {
+   "t": "33",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":3,\"phase\":\"trying\"}",
+   "sensei": "Sensei: Tap COUNTER... now!",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "brute",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 2,
+   "bow": false,
+   "idleChanged": {
+    "after": "0.5",
+    "to": "tutorial-hall|{\"index\":4,\"phase\":\"tip\"}|true|false|1"
+   },
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 100,
+   "hpLow": 100,
+   "senseiAfterIdle": null,
+   "shot": "q5-rm-1-white-belt-new-844-09-tutorial-hall-SenseiTapCOUNTERnow.png"
+  },
+  {
+   "t": "34",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":4,\"phase\":\"trying\"}",
+   "sensei": null,
+   "gotIt": false,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "brute",
+   "coverHero": null,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 100,
+   "hpLow": 100,
+   "senseiAfterIdle": "Sensei: Wait for it... COUNTER!",
+   "shot": "q5-rm-1-white-belt-new-844-10-tutorial-hall-nosensei.png"
+  },
+  {
+   "t": "37",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":5,\"phase\":\"ready\"}",
+   "sensei": "Sensei: That's okay. Try again whenever you're ready.",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "brute",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 87,
+   "hpLow": 87,
+   "senseiAfterIdle": "Sensei: COUNTER!",
+   "shot": "q5-rm-1-white-belt-new-844-13-tutorial-hall-SenseiThatsokayTryag.png"
+  },
+  {
+   "t": "40",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":5,\"phase\":\"tip\"}",
+   "sensei": "Sensei: Little Swarmers first. Then it gets calmer.",
+   "gotIt": true,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "",
+   "coverHero": false,
+   "coverProt": true,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 87,
+   "hpLow": 87,
+   "senseiAfterIdle": "Sensei: Little Swarmers first. Then it gets calmer.",
+   "shot": "q5-rm-1-white-belt-new-844-15-tutorial-hall-SenseiLittleSwarmers.png"
+  },
+  {
+   "t": "42",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":5,\"phase\":\"trying\"}",
+   "sensei": "Sensei: Little Swarmers first. Then it gets calmer.",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 2,
+   "kinds": "swarmer,swarmer,swarmer,brute",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": true,
+   "hpStart": 87,
+   "hpLow": 87,
+   "senseiAfterIdle": "Sensei: Little Swarmers first. Then it gets calmer.",
+   "shot": "q5-rm-1-white-belt-new-844-16-tutorial-hall-SenseiLittleSwarmers.png"
+  },
+  {
+   "t": "49",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":6,\"phase\":\"tip\"}",
+   "sensei": "Sensei: Fewer Swarmers, fewer worries!\nNow the Brute. You can focus on it.",
+   "gotIt": true,
+   "waiting": false,
+   "wave": 2,
+   "kinds": "brute",
+   "coverHero": true,
+   "coverProt": true,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 75,
+   "hpLow": 75,
+   "senseiAfterIdle": "Sensei: Fewer Swarmers, fewer worries!\nNow the Brute. You can focus on it.",
+   "shot": "q5-rm-1-white-belt-new-844-23-tutorial-hall-SenseiFewerSwarmersf.png"
+  },
+  {
+   "t": "51",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":6,\"phase\":\"trying\"}",
+   "sensei": "Sensei: Fewer Swarmers, fewer worries!\nNow the Brute. You can focus on it.",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 2,
+   "kinds": "brute",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": true,
+   "hpStart": 75,
+   "hpLow": 75,
+   "senseiAfterIdle": "Sensei: Fewer Swarmers, fewer worries!\nNow the Brute. You can focus on it.",
+   "shot": "q5-rm-1-white-belt-new-844-24-tutorial-hall-SenseiFewerSwarmersf.png"
+  },
+  {
+   "t": "66",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":7,\"phase\":\"tip\"}",
+   "sensei": "Sensei: Calm and steady. Well done!\nKeep some space. Step back if it gets busy.",
+   "gotIt": true,
+   "waiting": false,
+   "wave": 2,
+   "kinds": "",
+   "coverHero": true,
+   "coverProt": true,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 1,
+   "hpLow": 1,
+   "senseiAfterIdle": "Sensei: Calm and steady. Well done!\nKeep some space. Step back if it gets busy.",
+   "shot": "q5-rm-1-white-belt-new-844-26-tutorial-hall-SenseiCalmandsteadyW.png"
+  },
+  {
+   "t": "69",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":7,\"phase\":\"trying\"}",
+   "sensei": "Sensei: Calm and steady. Well done!\nKeep some space. Step back if it gets busy.",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 3,
+   "kinds": "swarmer,swarmer",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": true,
+   "hpStart": 1,
+   "hpLow": 1,
+   "senseiAfterIdle": "Sensei: Calm and steady. Well done!\nKeep some space. Step back if it gets busy.",
+   "shot": "q5-rm-1-white-belt-new-844-27-tutorial-hall-SenseiCalmandsteadyW.png"
+  },
+  {
+   "t": "73",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":8,\"phase\":\"tip\"}",
+   "sensei": "Sensei: You kept your space!\nCrowded? DASH out to open space.",
+   "gotIt": true,
+   "waiting": false,
+   "wave": 3,
+   "kinds": "",
+   "coverHero": true,
+   "coverProt": true,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 1,
+   "hpLow": 1,
+   "senseiAfterIdle": "Sensei: You kept your space!\nCrowded? DASH out to open space.",
+   "shot": "q5-rm-1-white-belt-new-844-28-tutorial-hall-SenseiYoukeptyourspa.png"
+  },
+  {
+   "t": "75",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":8,\"phase\":\"trying\"}",
+   "sensei": "Sensei: You kept your space!\nCrowded? DASH out to open space.",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 4,
+   "kinds": "swarmer,swarmer,swarmer,swarmer",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": true,
+   "hpStart": 1,
+   "hpLow": 1,
+   "senseiAfterIdle": "Sensei: You kept your space!\nCrowded? DASH out to open space.",
+   "shot": "q5-rm-1-white-belt-new-844-29-tutorial-hall-SenseiYoukeptyourspa.png"
+  },
+  {
+   "t": "80",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":9,\"phase\":\"ready\"}",
+   "sensei": "Sensei: Quick feet!",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 4,
+   "kinds": "swarmer,swarmer,swarmer,swarmer",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 3,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": true,
+   "hpStart": 1,
+   "hpLow": 1,
+   "senseiAfterIdle": "Sensei: Quick feet!",
+   "shot": "q5-rm-1-white-belt-new-844-30-tutorial-hall-SenseiQuickfeet.png"
+  },
+  {
+   "t": "89",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":10,\"phase\":\"tip\"}",
+   "sensei": "Sensei: A treasure chest! Walk up to open it.",
+   "gotIt": true,
+   "waiting": false,
+   "wave": 4,
+   "kinds": "",
+   "coverHero": false,
+   "coverProt": true,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 16,
+   "hpLow": 16,
+   "senseiAfterIdle": "Sensei: A treasure chest! Walk up to open it.",
+   "shot": "q5-rm-1-white-belt-new-844-31-tutorial-hall-SenseiAtreasurechest.png"
+  },
+  {
+   "t": "91",
+   "room": "tutorial-hall",
+   "tflow": "{\"index\":10,\"phase\":\"trying\"}",
+   "sensei": "Sensei: A treasure chest! Walk up to open it.",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 4,
+   "kinds": "",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 16,
+   "hpLow": 16,
+   "senseiAfterIdle": "Sensei: A treasure chest! Walk up to open it.",
+   "shot": "q5-rm-1-white-belt-new-844-32-tutorial-hall-SenseiAtreasurechest.png"
+  },
+  {
+   "t": "95",
+   "room": "tutorial-vault",
+   "tflow": "{\"index\":10,\"phase\":\"tip\"}",
+   "sensei": "Sensei: A treasure chest! Walk up to open it.",
+   "gotIt": true,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 16,
+   "hpLow": 16,
+   "senseiAfterIdle": "Sensei: A treasure chest! Walk up to open it.",
+   "shot": "q5-rm-1-white-belt-new-844-33-tutorial-vault-SenseiAtreasurechest.png"
+  },
+  {
+   "t": "97",
+   "room": "tutorial-vault",
+   "tflow": "{\"index\":10,\"phase\":\"trying\"}",
+   "sensei": "Sensei: A treasure chest! Walk up to open it.",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 2,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 16,
+   "hpLow": 16,
+   "senseiAfterIdle": "Sensei: A treasure chest! Walk up to open it.",
+   "shot": "q5-rm-1-white-belt-new-844-34-tutorial-vault-SenseiAtreasurechest.png"
+  },
+  {
+   "t": "100",
+   "room": "tutorial-vault",
+   "tflow": "{\"index\":11,\"phase\":\"ready\"}",
+   "sensei": "Sensei: Look what you found!",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 2,
+   "bow": false,
+   "idleChanged": {
+    "after": "0.5",
+    "to": "tutorial-keep|{\"index\":11,\"phase\":\"tip\"}|true|false|1"
+   },
+   "enemiesMovedWhileIdle": true,
+   "hpStart": 16,
+   "hpLow": 16,
+   "senseiAfterIdle": "Sensei: A big one! Watch the circles, like before.",
+   "shot": "q5-rm-1-white-belt-new-844-35-tutorial-vault-SenseiLookwhatyoufou.png"
+  },
+  {
+   "t": "102",
+   "room": "tutorial-keep",
+   "tflow": "{\"index\":11,\"phase\":\"trying\"}",
+   "sensei": "Sensei: A big one! Watch the circles, like before.",
+   "gotIt": false,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "floor-keeper",
+   "coverHero": false,
+   "coverProt": false,
+   "nprot": 1,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": true,
+   "hpStart": 16,
+   "hpLow": 16,
+   "senseiAfterIdle": "Sensei: A big one! Watch the circles, like before.",
+   "shot": "q5-rm-1-white-belt-new-844-36-tutorial-keep-SenseiAbigoneWatchth.png"
+  },
+  {
+   "t": "118",
+   "room": "tutorial-keep",
+   "tflow": "{\"index\":12,\"phase\":\"tip\"}",
+   "sensei": "Sensei: The door home is open.\nWhat was your favorite part?",
+   "gotIt": true,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "",
+   "coverHero": true,
+   "coverProt": true,
+   "nprot": 2,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 16,
+   "hpLow": 16,
+   "senseiAfterIdle": "Sensei: The door home is open.\nWhat was your favorite part?",
+   "shot": "q5-rm-1-white-belt-new-844-37-tutorial-keep-SenseiThedoorhomeiso.png"
+  },
+  {
+   "t": "120",
+   "room": "tutorial-keep",
+   "tflow": "{\"index\":13,\"phase\":\"ready\"}",
+   "sensei": null,
+   "gotIt": false,
+   "waiting": false,
+   "wave": 1,
+   "kinds": "",
+   "coverHero": null,
+   "coverProt": false,
+   "nprot": 2,
+   "bow": false,
+   "idleChanged": null,
+   "enemiesMovedWhileIdle": false,
+   "hpStart": 16,
+   "hpLow": 16,
+   "senseiAfterIdle": null,
+   "shot": "q5-rm-1-white-belt-new-844-38-tutorial-keep-nosensei.png"
+  },
+  {
+   "after": "Home",
+   "texts": "Training Board | ◀ Dojo | Sam T. | White Belt | Level 1 | cap 10 | ENTER THE TOWER | Practice room | YOUR NEXT STEP | Basic Form 1 | ▶ Video soon | Next class: Monday | Last run | Gear (6) | Abilities | Gate | Floor cleared! | B | B | Perfect Counters 5   Best combo 19   Time 1:14 | +76 experience | For your dojo: Gentle Brute Trophy, Speedy Swarmer Trophy, Kind Keeper Trophy, Brave Lion-Dog Statu"
+  }
+ ],
+ "last": {
+  "act": [
+   "Home"
+  ],
+  "texts": [
+   {
+    "t": "Training Board",
+    "x": 89,
+    "y": 24
+   },
+   {
+    "t": "◀ Dojo",
+    "x": 274,
+    "y": 27
+   },
+   {
+    "t": "Sam T.",
+    "x": 101.5,
+    "y": 62.5
+   },
+   {
+    "t": "White Belt",
+    "x": 110.5,
+    "y": 82.5
+   },
+   {
+    "t": "Level 1",
+    "x": 42,
+    "y": 115
+   },
+   {
+    "t": "cap 10",
+    "x": 297.5,
+    "y": 114
+   },
+   {
+    "t": "ENTER THE TOWER",
+    "x": 166,
+    "y": 183
+   },
+   {
+    "t": "Practice room",
+    "x": 166,
+    "y": 227
+   },
+   {
+    "t": "YOUR NEXT STEP",
+    "x": 71.5,
+    "y": 264
+   },
+   {
+    "t": "Basic Form 1",
+    "x": 76.5,
+    "y": 282.5
+   },
+   {
+    "t": "▶ Video soon",
+    "x": 271.5,
+    "y": 282
+   },
+   {
+    "t": "Next class: Monday",
+    "x": 80.5,
+    "y": 302
+   },
+   {
+    "t": "Last run",
+    "x": 391.75,
+    "y": 33
+   },
+   {
+    "t": "Gear (6)",
+    "x": 517.25,
+    "y": 33
+   },
+   {
+    "t": "Abilities",
+    "x": 642.75,
+    "y": 33
+   },
+   {
+    "t": "Gate",
+    "x": 768.25,
+    "y": 33
+   },
+   {
+    "t": "Floor cleared!",
+    "x": 412,
+    "y": 84
+   },
+   {
+    "t": "B",
+    "x": 359,
+    "y": 117
+   },
+   {
+    "t": "B",
+    "x": 431,
+    "y": 117
+   },
+   {
+    "t": "Perfect Counters 5   Best combo 19   Time 1:14",
+    "x": 497,
+    "y": 150.5
+   },
+   {
+    "t": "+76 experience",
+    "x": 396.5,
+    "y": 172.5
+   },
+   {
+    "t": "For your dojo: Gentle Brute Trophy, Speedy Swarmer Trophy, Kind Keeper Trophy, Brave Lion-Dog Statue",
+    "x": 573.5,
+    "y": 203
+   },
+   {
+    "t": "Items found (6)",
+    "x": 401.5,
+    "y": 234
+   },
+   {
+    "t": "Rare: Jade Charm  (+9% Power)",
+    "x": 445,
+    "y": 255.5
+   },
+   {
+    "t": "Rare: Mountain Gi  (+20 Health  +5 Guard)",
+    "x": 480.5,
+    "y": 274.5
+   },
+   {
+    "t": "Special: Training Gi  (+14 Health  +3 Guard)",
+    "x": 483.5,
+    "y": 293.5
+   },
+   {
+    "t": "+3 more in your Gear",
+    "x": 409,
+    "y": 312
+   },
+   {
+    "t": "Personal bests",
+    "x": 391.5,
+    "y": 328.5
+   },
+   {
+    "t": "Fastest floor: 1:14 NEW!",
+    "x": 411,
+    "y": 344
+   },
+   {
+    "t": "Most Perfect Counters: 5 NEW!",
+    "x": 666.5,
+    "y": 344
+   },
+   {
+    "t": "Longest combo: 19 NEW!",
+    "x": 414.5,
+    "y": 359
+   },
+   {
+    "t": "Most S grades: 0",
+    "x": 626.5,
+    "y": 359
+   },
+   {
+    "t": "Floor cleared!",
+    "x": 422,
+    "y": 81
+   },
+   {
+    "t": "B",
+    "x": 422,
+    "y": 155.8
+   },
+   {
+    "t": "You found: Jade Charm",
+    "x": 422,
+    "y": 223
+   },
+   {
+    "t": "Continue",
+    "x": 422,
+    "y": 298
+   }
+  ],
+  "w": null
+ }
+}

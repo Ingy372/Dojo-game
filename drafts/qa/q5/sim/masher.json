@@ -1,0 +1,612 @@
+[
+ {
+  "seed": 1,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 51,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ],
+  "waves": [
+   "tutorial-hall t182: swarmer@x4,swarmer@x10,swarmer@x16,brute@x16",
+   "tutorial-hall t504: swarmer@x5,swarmer@x15",
+   "tutorial-hall t595: swarmer@x2,swarmer@x2,swarmer@x18,swarmer@x18"
+  ]
+ },
+ {
+  "seed": 2,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 53,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ],
+  "waves": [
+   "tutorial-hall t182: swarmer@x4,swarmer@x10,swarmer@x16,brute@x16",
+   "tutorial-hall t504: swarmer@x5,swarmer@x15",
+   "tutorial-hall t595: swarmer@x2,swarmer@x2,swarmer@x18,swarmer@x18"
+  ]
+ },
+ {
+  "seed": 3,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 4,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 5,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 53,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 6,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 7,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 52,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 8,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 9,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 10,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 11,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 12,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 52,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 13,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 14,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 15,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 52,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 16,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 52,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 17,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 18,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 51,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 19,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 20,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 53,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 21,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 51,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 22,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 23,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 53,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 24,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 53,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 25,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 26,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 53,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 27,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 28,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 29,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 52,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 30,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 31,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 32,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 52,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 33,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 34,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 35,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 36,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 37,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 53,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 38,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 39,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 40,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 41,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 42,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 52,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 43,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 44,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 45,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 46,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 47,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 48,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 49,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ },
+ {
+  "seed": 50,
+  "minHp": 1,
+  "hits": 0,
+  "status": "cleared",
+  "secs": 55,
+  "rooms": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ]
+ }
+]
