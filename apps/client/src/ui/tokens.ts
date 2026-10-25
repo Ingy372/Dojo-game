@@ -55,3 +55,18 @@ export function panelSwap(change: PanelChange, reduced: boolean): { dx: number; 
   const dx = change === 'tab' ? 12 : change === 'pageNext' ? 24 : -24;
   return { dx, fromAlpha: 0, ms: MOTION.swap.ms, ease: MOTION.swap.ease };
 }
+
+/** P-MENU-c: the XP bar fills from the old value to the new one over 400 ms after a run. */
+export const XP_FILL = { ms: 400, ease: 'Cubic.Out' } as const;
+
+/**
+ * P-MENU-c: where the XP bar starts filling from. `prev` is what the bar last showed. Same
+ * level, more XP: from the old share. A new level: from empty. Nothing new (or nothing
+ * remembered): null, so the bar is drawn full-size at once.
+ */
+export function xpFillFrom(prev: { level: number; share: number } | null, now: { level: number; share: number }): number | null {
+  if (!prev) return null;
+  if (now.level > prev.level) return 0;
+  if (now.level === prev.level && now.share > prev.share) return prev.share;
+  return null;
+}

@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { MOTION, S2, panelSwap, type PanelChange } from '../ui/tokens';
+import { MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, panelSwap, xpFillFrom, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import {
@@ -262,12 +262,15 @@ export class HomeScene extends Phaser.Scene {
     this.ui.add(this.add.rectangle(0, 0, width, height, 0x1e1a14).setOrigin(0));
     for (let x = 0; x < width; x += 48) this.ui.add(this.add.rectangle(x, 0, 2, height, 0x2a241c).setOrigin(0));
 
-    // ---- left: title, character, level, Blessing, Enter the Tower, the Path card
-    const title = this.text(pad, pad - 4, 'Training Board', 22, '#f2e9d8', true, 'Georgia, serif');
+    // ---- left (P-MENU-c §3a): header row, character block, level + bar, buttons, the Path card
+    // Header: the title and ◀ Dojo on one 44 pt row.
+    const title = this.text(pad, pad + 22, 'Training Board', TYPE.heading, '#f2e9d8', true, 'Georgia, serif').setOrigin(0, 0.5);
     title.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.tapTitle());
-    this.button(pad + leftW - 84, pad - 4, 84, 30, '◀ Dojo', 0x8a5a35, 14, () => this.backToDojo());
+    this.button(pad + leftW - 96, pad, 96, 44, '◀ Dojo', 0x8a5a35, TYPE.body, () => this.backToDojo());
 
-    const cy = pad + 58;
+    // Character block: a 64 pt row; name and belt stacked 4 pt apart, centred on the avatar.
+    const rowTop = pad + 44 + S2;
+    const cy = rowTop + 32;
     if (t.blessed) {
       // Full fill, so the object's alpha is the alpha you see (0.25 to 0.15).
       const glow = this.add.circle(pad + 24, cy, 32, 0x6fb7ff, 1).setAlpha(MOTION.breath.from);
@@ -276,33 +279,32 @@ export class HomeScene extends Phaser.Scene {
       if (!reducedMotion()) this.tweens.add({ targets: glow, alpha: MOTION.breath.to, duration: MOTION.breath.ms, ease: 'Sine.InOut', yoyo: true, repeat: -1 });
     }
     this.ui.add(makeStandingCharacter(this, pad + 24, cy, 22, t.belt, t.stripesThisBelt, loadLook()).container);
-    this.text(pad + 58, cy - 22, t.displayName, 17, '#f2e9d8', true);
+    const textX = pad + 64;
+    this.oneLine(this.text(textX, cy - S1 / 2, t.displayName, TYPE.title, '#f2e9d8', true).setOrigin(0, 1), leftW - 64, TYPE.label);
     const stripeText = t.stripesThisBelt ? `  ·  ${t.stripesThisBelt} stripe${t.stripesThisBelt > 1 ? 's' : ''}` : '';
-    this.text(pad + 58, cy, `${t.belt.name}${stripeText}`, 14, beltTextColor(t.belt.color), true);
+    this.oneLine(this.text(textX, cy + S1 / 2, `${t.belt.name}${stripeText}`, TYPE.body, beltTextColor(t.belt.color), true), leftW - 64, TYPE.label);
 
-    // Level and experience (capped by the real belt).
+    // Level and experience (capped by the real belt): label and cap on one line, a 10 pt bar 8 below.
     const level = effectiveLevel(this.profile, t);
     const atCap = level >= t.levelCap;
-    let y = cy + 32;
-    this.text(pad, y, `Level ${level}`, 15, '#f2e9d8', true);
-    this.text(pad + leftW, y + 1, atCap ? 'Level cap! The Gate shows how to go higher.' : `cap ${t.levelCap}`, atCap ? 11 : 12, atCap ? '#ffd166' : '#b9ad99').setOrigin(1, 0);
-    y += 20;
+    let y = rowTop + 64 + S2;
+    this.text(pad, y, `Level ${level}`, TYPE.body, '#f2e9d8', true);
+    this.oneLine(this.text(pad + leftW, y + 1, atCap ? 'Level cap! The Gate shows how to go higher.' : `cap ${t.levelCap}`, TYPE.label, atCap ? '#ffd166' : '#b9ad99').setOrigin(1, 0), leftW - 70, 10);
+    y += TYPE.body + 4 + S2;
     const share = atCap ? 1 : Math.min(1, this.profile.xp / xpToNext(level, t.belts));
-    const bar = this.add.graphics();
-    bar.fillStyle(0x000000, 0.5).fillRoundedRect(pad, y, leftW, 8, 3);
-    if (share > 0) bar.fillStyle(atCap ? 0xffd166 : 0x9ad1ff).fillRoundedRect(pad, y, Math.max(6, leftW * share), 8, 3);
-    this.ui.add(bar);
-    y += 14;
+    this.xpBar(pad, y, leftW, share, level, atCap);
+    y += 10 + S2;
     if (t.blessed) {
       const hours = Math.max(1, Math.round(((t.blessingEndsMs ?? 0) - Date.now()) / 3600000));
-      this.text(pad, y, `✦ Dojo Blessing: +${Math.round(BLESSING.xpBonus * 100)}% experience (${hours}h left)`, 12, '#9ad1ff', true);
+      this.oneLine(this.text(pad, y, `✦ Dojo Blessing: +${Math.round(BLESSING.xpBonus * 100)}% experience (${hours}h left)`, TYPE.label, '#9ad1ff', true), leftW, 10);
+      y += TYPE.label + S2;
     }
-    y += 20;
 
-    this.button(pad, y, leftW, 46, 'ENTER THE TOWER', 0xd5713a, 19, () => this.enterTower());
-    y += 46 + S2; // P-MENU-a: an 8 pt gap, so the two 44 pt tap areas don't touch.
-    this.button(pad, y, leftW, 30, 'Practice room', 0x3a3a4a, 14, () => this.goTo('Game', {}));
-    y += 36;
+    // Buttons: ENTER 52 tall, Practice room 44, 8 apart.
+    this.button(pad, y, leftW, 52, 'ENTER THE TOWER', 0xd5713a, 19, () => this.enterTower());
+    y += 52 + S2;
+    this.button(pad, y, leftW, 44, 'Practice room', 0x3a3a4a, TYPE.body, () => this.goTo('Game', {}));
+    y += 44 + S2;
     this.renderPath(pad, y, leftW, height - y - pad);
 
     // ---- right: tabs
@@ -367,29 +369,71 @@ export class HomeScene extends Phaser.Scene {
 
   /** The Path card: the next real step, always visible (core-design section 9). */
   private renderPath(x: number, y: number, w: number, h: number): void {
+    // P-MENU-c: padding 16, radius 10; label 12 bold gold, step 17 bold, details 14.
     const p = this.training.path;
-    this.ui.add(this.add.rectangle(x, y, w, h, 0x221d2e).setOrigin(0).setStrokeStyle(2, 0xffd166, 0.5));
-    let ty = y + 7;
-    this.text(x + 10, ty, 'YOUR NEXT STEP', 11, '#ffd166', true);
-    ty += 16;
+    const card = this.add.graphics();
+    card.fillStyle(0x221d2e).fillRoundedRect(x, y, w, h, RADIUS.panel);
+    card.lineStyle(2, 0xffd166, 0.5).strokeRoundedRect(x, y, w, h, RADIUS.panel);
+    this.ui.add(card);
+    const px = x + S3;
+    const pw = w - 2 * S3;
+    let ty = y + S3;
+    this.text(px, ty, 'YOUR NEXT STEP', TYPE.label, '#ffd166', true);
+    ty += TYPE.label + S2;
     if (p.next) {
-      this.text(x + 10, ty, p.next.name, 16, '#ffffff', true);
       // The video library arrives with the real DojoForge connection.
-      this.text(x + w - 10, ty + 2, '▶ Video soon', 11, '#6b6478').setOrigin(1, 0);
-      ty += 22;
+      const video = this.text(x + w - S3, ty + 3, '▶ Video soon', TYPE.label, '#6b6478').setOrigin(1, 0);
+      this.oneLine(this.text(px, ty, p.next.name, TYPE.title, '#ffffff', true), pw - video.width - S2, TYPE.body);
+      ty += TYPE.title + S2;
       if (p.next.catchUp) {
-        this.text(x + 10, ty, `Catch-up from ${p.next.beltName}`, 11, '#ffd166');
-        ty += 16;
+        this.text(px, ty, `Catch-up from ${p.next.beltName}`, TYPE.label, '#ffd166');
+        ty += TYPE.label + S2;
       }
     } else {
-      this.text(x + 10, ty, 'Everything is signed off. Keep training!', 14, '#5cd65c', true, FONT, w - 20);
-      ty += 20;
+      const done = this.text(px, ty, 'Everything is signed off. Keep training!', TYPE.body, '#5cd65c', true, FONT, pw);
+      ty += done.height + S2;
     }
     const bits: string[] = [];
     if (p.nextClassDay) bits.push(`Next class: ${p.nextClassDay}`);
     if (p.testDate) bits.push(`Test day: ${shortDate(p.testDate)}`);
-    if (bits.length && ty < y + h - 14) this.text(x + 10, ty, bits.join('   ·   '), 12, '#f2e9d8', false, FONT, w - 20);
+    if (bits.length && ty + TYPE.body <= y + h - S2) this.text(px, ty, bits.join('   ·   '), TYPE.body, '#f2e9d8', false, FONT, pw);
   }
+
+  /**
+   * P-MENU-c: the XP bar, 10 tall, radius 5. After a run it fills from what it last showed to
+   * the new value over 400 ms (Cubic.Out); with Reduced motion on it is drawn full-size at once.
+   */
+  private xpBar(x: number, y: number, w: number, share: number, level: number, atCap: boolean): void {
+    const bg = this.add.graphics();
+    bg.fillStyle(0x000000, 0.5).fillRoundedRect(x, y, w, 10, 5);
+    const fill = this.add.graphics();
+    this.ui.add([bg, fill]);
+    const draw = (s: number) => {
+      fill.clear();
+      if (s > 0) fill.fillStyle(atCap ? 0xffd166 : 0x9ad1ff).fillRoundedRect(x, y, Math.max(10, w * s), 10, 5);
+    };
+    const key = 'dojo.xpBarShown';
+    let prev: { level: number; share: number } | null = null;
+    try {
+      prev = JSON.parse(localStorage.getItem(key) ?? 'null');
+    } catch {
+      prev = null;
+    }
+    const from = this.fromRun ? xpFillFrom(prev, { level, share }) : null;
+    try {
+      localStorage.setItem(key, JSON.stringify({ level, share }));
+    } catch {
+      /* private mode: the bar just doesn't animate */
+    }
+    if (from === null || reducedMotion()) {
+      draw(share);
+      return;
+    }
+    draw(from);
+    const v = { s: from };
+    this.tweens.add({ targets: v, s: share, duration: XP_FILL.ms, ease: XP_FILL.ease, onUpdate: () => draw(v.s) });
+  }
+
 
   private renderRun(x: number, y: number, w: number, h: number): void {
     const last = this.profile.lastRun;
