@@ -1,0 +1,23 @@
+{
+  "id": "spice-cupboard",
+  "name": "Spice Cupboard",
+  "kind": "treasure",
+  "minBeltTier": 3,
+  "floorSet": "ember-kitchens",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#..#.....#..#",
+    "#.....C.....#",
+    "#..#.....#..#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "Rows of little spice jars; the chest is an old bread box.",
+  "signs": [
+    "A little goes a long way."
+  ]
+}

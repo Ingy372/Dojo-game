@@ -737,3 +737,15 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - **#273 Tester fixes (2026-10-25):** every rarity word, Legendary included, now has 8 px clear each side inside the 2 px border (tiles 84 wide). Manager: at 667 the bag is 2 columns with ◀ ▶ paging so the student figure stays; 844 and 932 keep 4 and 5. The sheet is 172 tall: long names wrap to 2 lines, the compare line wraps, and Details moved to the button row, 8 px from Let go (all 52 tall). The Vitest test checks Legendary padding at all 3 widths.
 **Next**
 - Swap in the real art once Jay OKs #265.
+## B-T3 — tier 3 Ember Kitchens, Orange belt (2026-10-25)
+
+**Done**
+- 8 Ember rooms, 6 Orange enemies and the Hearth Cook Guardian (3 phases), with tier 3 art and client wiring.
+- Supper Rush Challenge 90 s from PR #275 (pending Jay).
+- Guardian sim check: Orange typical, 30 seeds, Standard and Challenge, reaches and beats the Guardian. Vitest 801 passed, 1 skipped; typecheck and build clean.
+- Screenshots of every room and the Guardian (3 phases) at 667, 844 and 932, Reduced motion on and off.
+
+**Next**
+- Rolling pin: replace the round danger area with the real lane shape.
+- Guardian may be too easy: probes at 40 seeds beat it every time, taking about 4–18% damage in about 9–12 s.
+- Re-check Supper Rush against #275 once Jay decides.

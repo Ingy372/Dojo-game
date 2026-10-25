@@ -190,7 +190,15 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
     const first = active[0];
     const second = active[1];
     const overlap = second && second.impact - first.impact < 8;
-    if (overlap && now >= second.noticeAt && p.dashCooldown === 0) {
+    const firstEnemy = alive.find((x) => x.id === first.enemyId)!;
+    const dashOnly = currentAttack(firstEnemy).counterable === false;
+    if (dashOnly && now >= first.noticeAt && p.dashCooldown === 0) {
+      // B-T3: can't be Countered or blocked (rolling pin), so dash out.
+      escape = awayFrom(p.pos, [firstEnemy.attackCenter!], room);
+      action = 'dash';
+    } else if (dashOnly) {
+      escape = awayFrom(p.pos, [firstEnemy.attackCenter!], room);
+    } else if (overlap && now >= second.noticeAt && p.dashCooldown === 0) {
       // Dash away from the danger areas.
       escape = awayFrom(p.pos, active.map((pl) => alive.find((x) => x.id === pl.enemyId)!.attackCenter!), room);
       action = 'dash';

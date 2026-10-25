@@ -1,0 +1,79 @@
+{
+  "id": "supper-rush",
+  "name": "Supper Rush",
+  "kind": "challenge",
+  "minBeltTier": 3,
+  "floorSet": "ember-kitchens",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "challenge": { "seconds": 90, "text": "Clear the room in 90 seconds for a better chest!" },
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#.........C........#",
+    "#..##..........##..#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..##..........##..#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "earliestRoom": 4,
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "spark-sprite",
+      "column": 4,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 8,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 12,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 16,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "dough-blob",
+      "column": 10,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "ladle-lobber",
+      "column": 15,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "rolling-pin",
+      "column": 5,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 5,
+      "wave": 3
+    }
+  ],
+  "artProps": "A kitchen clock over the door; serving carts parked at the edges.",
+  "signs": [
+    "Supper is better together."
+  ]
+}

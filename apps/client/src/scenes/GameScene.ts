@@ -84,7 +84,7 @@ import { type PackName, addStatic, characterArt, characterTop, loadArt, setStati
 import { LayeredSprite } from '../art/LayeredSprite';
 import { ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
-import { ENEMY_PACKS, auraId, testAura, towerPack } from '../art/tiers';
+import { ENEMY_ART_PACKS, attackAnim, auraId, enemyArt, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
@@ -110,6 +110,8 @@ import type { HomeSceneData } from './HomeScene';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
+/** B-T3: how long an enemy whose art has no defeat animation takes to fade out (ms; a visual choice, not balance). */
+const NO_DEFEAT_FADE_MS = 600;
 /** Screen pixels the top bar (health, Focus, "Room 1 of 8") takes up. */
 const HUD_TOP_PX = 56;
 /** Screen y of the boss health bar; its name sits just under it. */
@@ -197,6 +199,8 @@ interface EnemyView {
   container: Phaser.GameObjects.Container;
   /** The creature's art (body, glow, warning glow, defeat light, shield). */
   sprite: LayeredSprite;
+  /** B-T3: the art id it was built with (a phase boss is rebuilt when its rig changes). */
+  rig: string | undefined;
   hpFill: Phaser.GameObjects.Rectangle;
   hpBack: Phaser.GameObjects.Rectangle;
   stars: Phaser.GameObjects.Arc[];
@@ -335,7 +339,7 @@ export class GameScene extends Phaser.Scene {
     // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
     const tier = currentTraining().belt.tier;
     const auras = testAura() || testFlags().has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
-    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...new Set(Object.values(ENEMY_PACKS).map((p) => p.pack))]);
+    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS]);
 
     loadGearIcons(this);
   }
@@ -618,8 +622,10 @@ export class GameScene extends Phaser.Scene {
     if (!v) return;
     const s = v.sprite;
     // Beaten: dissolve into light (a hopeful "set free"), then disappear.
-    const defeat = s.art.animations.defeat;
-    const dissolving = e.mode === 'defeated' && v.defeatAt !== null && now - v.defeatAt < (defeat.frames / defeat.fps) * 1000;
+    // Art without a defeat animation (B-T3 Orange enemies) fades out over the same kind of time instead.
+    const defeat = s.art.animations.defeat as { frames: number; fps: number } | undefined;
+    const defeatMs = defeat ? (defeat.frames / defeat.fps) * 1000 : NO_DEFEAT_FADE_MS;
+    const dissolving = e.mode === 'defeated' && v.defeatAt !== null && now - v.defeatAt < defeatMs;
     // Before the bow, the room's enemies haven't arrived yet.
     v.container.setVisible((e.mode !== 'defeated' || dissolving) && this.enemiesAt !== null);
     if ((e.mode === 'defeated' && !dissolving) || this.enemiesAt === null) {
@@ -646,9 +652,14 @@ export class GameScene extends Phaser.Scene {
     let tint: number | null = null;
 
     if (e.mode === 'defeated') {
-      if (started || s.current !== 'defeat') s.play('defeat', { restart: true });
+      const t = Phaser.Math.Clamp((now - (v.defeatAt ?? now)) / defeatMs, 0, 1);
+      if (defeat) {
+        if (started || s.current !== 'defeat') s.play('defeat', { restart: true });
+      } else {
+        s.play(this.enemyAnim(s, 'hit', 'idle'));
+        alpha = 1 - t;
+      }
       // The dissolve is drawn a little bigger and glowing, and its shadow fades with it.
-      const t = Phaser.Math.Clamp((now - (v.defeatAt ?? now)) / ((defeat.frames / defeat.fps) * 1000), 0, 1);
       s.container.setScale(1 + 0.3 * Math.min(1, t * 3));
       (s.container.list[0] as Phaser.GameObjects.Ellipse | undefined)?.setAlpha(1 - t);
     } else if (e.mode === 'waiting') {
@@ -668,7 +679,7 @@ export class GameScene extends Phaser.Scene {
       const progress = inWindow
         ? TELEGRAPH_NEARLY_FULL + (1 - TELEGRAPH_NEARLY_FULL) * ((elapsed - fillTicks) / window)
         : TELEGRAPH_NEARLY_FULL * (elapsed / fillTicks);
-      v.attack = currentAttack(e).name ?? '';
+      v.attack = attackAnim(currentAttack(e).name ?? '');
       // Disarmed (A5): same wind-up and warning, but the staff is gone and it pushes.
       v.pushing = !!e.def.weapon && e.disarmed > 0;
       const anim = this.enemyAnim(s, `windup_${v.attack}`, 'windup');
@@ -693,15 +704,15 @@ export class GameScene extends Phaser.Scene {
       if (started) s.play(anim, { restart: true });
       telegraph = s.art.animations[anim].telegraphIntensity?.[s.frame] ?? 0;
     } else if (e.mode === 'stagger') {
-      s.play('stagger');
+      s.play(this.enemyAnim(s, 'stagger', 'idle'));
     } else if (e.mode === 'winded') {
       // Out of breath: pale, slumped, and breathing hard.
-      s.play(this.enemyAnim(s, 'winded', 'stagger'));
+      s.play(this.enemyAnim(s, 'winded', this.enemyAnim(s, 'stagger', 'idle')));
       tint = 0xd8d0c4;
     } else if (now < v.callUntil) {
       s.play(this.enemyAnim(s, 'call', 'idle'));
     } else if (now < v.hitUntil) {
-      s.play('hit');
+      s.play(this.enemyAnim(s, 'hit', 'idle'));
     } else {
       // Chasing or circling: walk while moving, at a pace matched to its speed.
       const speed = Math.hypot(e.pos.x - v.prev.x, e.pos.y - v.prev.y) * TICKS_PER_SECOND;
@@ -885,13 +896,23 @@ export class GameScene extends Phaser.Scene {
         this.enemyViews.delete(id);
       }
     }
-    for (const e of this.world.enemies) if (!this.enemyViews.has(e.id)) this.makeEnemy(e);
+    for (const e of this.world.enemies) {
+      // B-T3: a phase boss swaps to its next rig when it crosses a phase (not while it is being beaten).
+      // It waits until the current wind-up and attack are over: the next rig may not have that attack's art.
+      const v = this.enemyViews.get(e.id);
+      const rig = enemyArt(e.def.id, e.health / e.def.maxHealth)?.id;
+      if (v && rig && v.rig !== rig && e.mode !== 'defeated' && e.mode !== 'windup' && e.mode !== 'recover') {
+        v.container.destroy();
+        this.enemyViews.delete(e.id);
+      }
+      if (!this.enemyViews.has(e.id)) this.makeEnemy(e);
+    }
   }
 
   private makeEnemy(e: EnemyState): void {
     const r = e.def.radius * TILE;
     const color = Phaser.Display.Color.HexStringToColor(e.def.color).color;
-    const own = ENEMY_PACKS[e.def.id];
+    const own = enemyArt(e.def.id, e.health / e.def.maxHealth);
     const art = (own && characterArt(this, own.pack, own.id)) || characterArt(this, 'enemies-t1', e.def.id)!;
     const sprite = new LayeredSprite(this, art);
     sprite.container.addAt(addShadow(this, r * 2.2), 0);
@@ -904,7 +925,7 @@ export class GameScene extends Phaser.Scene {
     // Nothing goes above the head.
     const kind = testAura() ?? e.elite;
     const id = kind ? auraId(kind, e.def.id) : '';
-    const [back, front] = kind ? addStatic(this, 'auras-t1', id, 0, 0) : [];
+    const [back, front] = kind && staticArt(this, 'auras-t1', id) ? addStatic(this, 'auras-t1', id, 0, 0) : [];
     const aura = back && front ? { id, back: [back], front: [front] } : null;
     // Named monster (M7-N1): its ground tell under it, sparkles, name plate and tag over it. Never an elite aura.
     const namedDef = e.named ? CONTENT.named.monsters.find((m) => m.id === e.named) : undefined;
@@ -916,6 +937,7 @@ export class GameScene extends Phaser.Scene {
     this.enemyViews.set(e.id, {
       container,
       sprite,
+      rig: own?.id,
       hpBack,
       hpFill,
       stars,
@@ -1523,7 +1545,11 @@ export class GameScene extends Phaser.Scene {
     if (this.room.challenge) lines.push(this.room.challenge.text);
     else if (this.room.kind === 'rest') lines.push('Walk to the shrine to rest.');
     else if (this.room.kind === 'treasure') lines.push('Open the chest!');
-    else if (this.room.kind === 'boss') lines.push('The Floor Keeper awaits.');
+    else if (this.room.kind === 'boss') {
+      // B-T3: the room's own Guardian (the Hearth Cook on the Orange floor).
+      const boss = this.room.enemySpawns.map((sp) => CONTENT.enemies[sp.enemy]).find((d) => d?.boss);
+      lines.push(`${boss?.name ?? 'The Floor Keeper'} awaits.`);
+    }
     const bannerBottom = this.showTwist();
     this.message.setText(lines.join('\n')).setFontSize(this.room.challenge ? 22 : 26).setVisible(true).setAlpha(1);
     // With a twist banner at the top, the room name and goal sit just under it so nothing overlaps.

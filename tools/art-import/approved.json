@@ -680,6 +680,96 @@
           "json": "incoming-art/enemy-padded-weapon/sprites/padded.json"
         }
       ]
+    },
+    "tower-t3": {
+      "note": "Orange belt Tower kit (Ember Kitchens, B-T3; Jay approved #244/#247/#248). Same sprite ids as tower-t1, plus kitchen decor.",
+      "sources": [
+        {
+          "id": "tower",
+          "type": "static",
+          "json": "incoming-art/tier3-ember-kitchens/sprites/static.json"
+        }
+      ]
+    },
+    "enemy-spark-sprite": {
+      "note": "Orange Spark Sprite (#241, Jay approved).",
+      "sources": [
+        {
+          "id": "spark-sprite",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-sample/spark-sprite/sprites/spark-sprite.json"
+        }
+      ]
+    },
+    "enemy-ladle-lobber": {
+      "note": "Orange Ladle Lobber (#241, Jay approved; B-T3).",
+      "sources": [
+        {
+          "id": "ladle-lobber",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-sample/ladle-lobber/sprites/ladle-lobber.json"
+        }
+      ]
+    },
+    "enemy-dough-blob": {
+      "note": "Orange Dough Blob (#241, Jay approved; B-T3).",
+      "sources": [
+        {
+          "id": "dough-blob",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-sample/dough-blob/sprites/dough-blob.json"
+        }
+      ]
+    },
+    "enemy-doughling": {
+      "note": "Orange Doughling stand-in (Jay approved; B-T3).",
+      "sources": [
+        {
+          "id": "doughling",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-enemies/doughling/sprites/doughling.json"
+        }
+      ]
+    },
+    "enemy-rolling-pin": {
+      "note": "Orange Rolling Pin (Jay approved; B-T3).",
+      "sources": [
+        {
+          "id": "rolling-pin",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-enemies/rolling-pin/sprites/rolling-pin.json"
+        }
+      ]
+    },
+    "enemy-hearth-cook-p1": {
+      "note": "Hearth Cook Guardian, phase 1 rig (Jay approved; B-T3).",
+      "sources": [
+        {
+          "id": "hearth-cook-p1",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p1/sprites/hearth-cook-p1.json"
+        }
+      ]
+    },
+    "enemy-hearth-cook-p2": {
+      "note": "Hearth Cook Guardian, phase 2 rig (Jay approved; B-T3).",
+      "sources": [
+        {
+          "id": "hearth-cook-p2",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p2/sprites/hearth-cook-p2.json"
+        }
+      ]
+    },
+    "enemy-hearth-cook-p3": {
+      "note": "Hearth Cook Guardian, phase 3 rig (Jay approved; B-T3).",
+      "sources": [
+        {
+          "id": "hearth-cook-p3",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p3/sprites/hearth-cook-p3.json"
+        }
+      ]
     }
   }
 }

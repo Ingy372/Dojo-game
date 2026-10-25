@@ -1,0 +1,23 @@
+{
+  "id": "warm-hearth",
+  "name": "Warm Hearth",
+  "kind": "rest",
+  "minBeltTier": 3,
+  "floorSet": "ember-kitchens",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "###D###D###D#",
+    "#...........#",
+    "#..#.....#..#",
+    "#.....S.....#",
+    "#..#.....#..#",
+    "#...........#",
+    "#.....P.....#",
+    "#...........#",
+    "#############"
+  ],
+  "artProps": "A small fire that still glows, with a kettle and two cushions.",
+  "signs": [
+    "Rest here. You are welcome."
+  ]
+}
