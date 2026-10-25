@@ -649,3 +649,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## P-MENU-b
 - The Training Board is split into a shell (background, left column, panel frame), a tab bar and a panel. Tab, page, gear-pick, Wear and Let go taps redraw only the panel. The tab underline slides in 180 ms and the panel slides in: 12 pt for a tab, 24 pt for a page. With Reduced motion on there is no slide, just a 120 ms fade. A gear pick stays instant. Code was only moved, nothing restyled.
+## B-SAFE kid-safety items
+- Outside links go through the grown-up gate (`openOutsideLink`). There are no outside links yet; a Vitest scan blocks any other way to open one.
+- Grown-ups get an "Erase progress" button on the play-time screen, behind the gate, with an Erase / Keep confirm. Erase removes every saved key and restarts fresh.
+- First launch shows a "Saved on this phone" note (privacy-page wording from #240) until it's tapped.
+- `npm run build:beta` makes a beta build with every URL test flag, the dev day offset and the hidden testing screens off. I checked this on the built files: in the normal build `?street=` opens Street Smarts; in the beta build it's ignored.
+- 7 new Vitest tests (`packages/sim/test/b-safe.test.ts`). Screenshots at 667x375 and 844x390, Reduced motion off and on.

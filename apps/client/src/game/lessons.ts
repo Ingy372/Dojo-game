@@ -3,6 +3,7 @@
 import { lessonFor, loadLessons, markLessonSeen, systemIntroducedOn, type SenseiLesson } from '@dojo/sim';
 import lessonsData from '../../../../content/tutorial/first-session-lessons.json';
 import { loadSave, writeSave } from './save';
+import { BETA } from './beta';
 
 export const LESSONS = loadLessons(lessonsData);
 
@@ -10,12 +11,14 @@ const DAY_OFFSET_KEY = 'dojo-ascent-dev-day-offset';
 
 /** Days added by the dojo testing screen's "+1 day" (dev/test only; 0 for real players). */
 export function devDayOffset(): number {
+  if (BETA) return 0; // B-SAFE: off in beta builds.
   const n = Number(localStorage.getItem(DAY_OFFSET_KEY) ?? 0);
   return Number.isInteger(n) && n > 0 ? n : 0;
 }
 
 /** The testing screen's "+1 day": the session day really moves on (Manager call, M7-P7). */
 export function addDevDays(days: number): void {
+  if (BETA) return;
   localStorage.setItem(DAY_OFFSET_KEY, String(devDayOffset() + days));
 }
 

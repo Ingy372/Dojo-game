@@ -48,6 +48,7 @@ import { Celebrations } from '../ui/Celebrations';
 import { GoalsCard } from '../ui/GoalsCard';
 import { localDay, takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
+import { BETA } from '../game/beta';
 import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, crisp, css, view, hiDpi } from '../ui/theme';
 import type { GameSceneData } from './GameScene';
 
@@ -735,6 +736,7 @@ export class HomeScene extends Phaser.Scene {
   // ---------------------------------------------------------------- hidden testing screen
 
   private tapTitle(): void {
+    if (BETA) return; // B-SAFE: no hidden testing screen in beta builds.
     if (this.celebrating) return;
     const now = this.time.now;
     this.titleTaps = [...this.titleTaps.filter((t) => now - t < 2500), now];

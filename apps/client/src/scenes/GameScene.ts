@@ -76,6 +76,7 @@ import {
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
 import tutorialData from '../../../../content/tutorial/tutorial-floor.json';
+import { testFlags } from '../game/beta';
 
 /** The tutorial floor's lines (M7-P2). */
 const TUTORIAL = loadTutorialLines(tutorialData);
@@ -333,7 +334,7 @@ export class GameScene extends Phaser.Scene {
     this.towerPack = towerPack(currentTraining().belt.tier);
     // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
     const tier = currentTraining().belt.tier;
-    const auras = testAura() || new URLSearchParams(window.location.search).has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
+    const auras = testAura() || testFlags().has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
     loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...new Set(Object.values(ENEMY_PACKS).map((p) => p.pack))]);
 
     loadGearIcons(this);
@@ -2514,12 +2515,12 @@ export class GameScene extends Phaser.Scene {
 
 /** For testing: ?guide=0 starts Sensei's guided Counter from the beginning, whatever the save says. */
 function testGuide(): number | undefined {
-  const asked = new URLSearchParams(window.location.search).get('guide');
+  const asked = testFlags().get('guide');
   return asked !== null && /^[0-3]$/.test(asked) ? Number(asked) : undefined;
 }
 
 /** Practice room only: ?difficulty=guided (or challenge). Tower runs carry their own difficulty (runDifficulty). */
 function testDifficulty(): Difficulty | undefined {
-  const asked = new URLSearchParams(window.location.search).get('difficulty');
+  const asked = testFlags().get('difficulty');
   return asked && asked in DIFFICULTY ? (asked as Difficulty) : undefined;
 }

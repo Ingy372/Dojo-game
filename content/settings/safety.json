@@ -1,0 +1,15 @@
+{
+  "_note": "B-SAFE. Saved-note lines use the privacy wording from #240 (drafts/planning/BETA-privacy-page.md, 'The short version'). If that page changes, change these too.",
+  "savedNoteTitle": "Saved on this phone",
+  "savedNoteLines": [
+    "Your child's progress is saved only on your device.",
+    "We don't collect any personal information from the game.",
+    "There are no accounts, no ads, no purchases, no chat and no tracking tools."
+  ],
+  "savedNoteButton": "OK",
+  "wipeButton": "Erase progress",
+  "wipeTitle": "Erase all progress on this phone?",
+  "wipeHelp": "This removes the dojo, belt, gear and settings. It can't be undone. The game starts fresh.",
+  "wipeConfirm": "Erase",
+  "wipeCancel": "Keep"
+}
