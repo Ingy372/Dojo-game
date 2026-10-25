@@ -625,3 +625,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Several-sign-offs screen: each column now has a fixed width and long names wrap inside it, so no name runs into the other column. If the list is too tall it steps 14 → 13 → 12 px (no smaller); if it still doesn't fit it shows what fits plus "…and N more! See them all on the Board."
 - Checked by script at 667×375 and 844×390 with the yellow (13) and green (24) profiles, which include the longest real names ("Self-Defense #7: Technique Seal: Create Distance", "#10 … Follow Through"): zero overlapping boxes, nothing off-screen. Screens: /workspace/qa/k26/.
 - Delivery Note: same layout as #213, so cut from bot-code/R-BAL-12d and based on it (depends on #213 → #208).
+
+## P-MENU-a shared button + motion tokens
+- Training Board buttons now use one shared rounded button: press down (0.96, brighter, soft tap), spring back, act on finger-up, cancel on slide-off, 44 x 44 tap area at least.
+- Blessing glow is a slow breath (2400 ms, alpha 0.25 to 0.15, no scale), still with Reduced motion on.
+- Vitest checks the 44 x 44 rule for every HomeScene button. Screenshots at 667x375 and 844x390, Reduced motion off and on: no tap-area, button or label overlaps.
+- P-MENU-a QA follow-up: the Blessing glow alpha you see now really breathes 0.25 to 0.15. The summary card's Continue is the shared 44-tall button. Checked at 667x375 and 844x390.

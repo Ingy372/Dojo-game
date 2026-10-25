@@ -890,3 +890,20 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 
 ## K26 Sign-off list layout (2026-10-24)
 - Fix the root cause (no column width) instead of shortening names: fixed column width + word wrap, measured row heights. Text floor is 12 px; past that we show "…and N more" (positive, points to the Board) rather than shrinking further.
+
+## P-MENU-a shared button + motion tokens (2026-10-25)
+
+- Manager calls (2026-10-25):
+  - P-MENU-a has the go, built as the plan in drafts/planning/P-MENU-menu-polish.md §2.
+  - Item d: keep K32's 40 px worn-slot icon and 2-line names; the empty-bag icon is drawn in code (no art file).
+  - Item f: the first lit Seal plays the bow bell once; it stays silent when sound is off.
+- Tokens (spacing, type, corners, 44 pt tap size, motion) live in apps/client/src/ui/tokens.ts with no Phaser import, so Vitest can check them; theme.ts re-exports them.
+- The shared rounded button (ui/button.ts) acts on finger-up inside, cancels on slide-off, and has an invisible tap area of at least 44 x 44 around the drawing. A finger that slides onto a button and lifts does nothing.
+- Reduced motion: buttons don't scale; they brighten at once and fade back over 120 ms. The Blessing glow stays still.
+- The soft tap sound is made in code (Sfx.tap), so no sound file and no new dependency.
+- Practice room moved down 2 pt (8 pt gap) so its 44 pt tap area doesn't touch ENTER THE TOWER's.
+- Manager call on #228 (2026-10-25): the tap sound is fine as is; Jay tunes it at the menu check.
+- Manager call on #228 after QA PASS (2026-10-25, /workspace/qa/2026-10-25-pmenu-a.md):
+  - Fix the Blessing glow so the alpha you see breathes 0.25 to 0.15. Before, the tween ran over a 0.25 fill, so it showed about 0.04. The circle now has a full fill and the object's alpha carries the breath.
+  - The first-floor summary card's Continue uses the shared button() at 44 tall.
+  - Gear cards are left for P-MENU-b.

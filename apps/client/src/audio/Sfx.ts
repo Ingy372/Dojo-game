@@ -234,6 +234,14 @@ class SoundMaker {
     this.tone(200, 400, 0.25, 'sine', 0.12);
   }
 
+  // ---- menus
+
+  /** P-MENU-a: a soft, short tap for a button press (made in code, quiet). */
+  tap(): void {
+    this.tone(1400, 1100, 0.035, 'sine', 0.05);
+    this.tone(700, 650, 0.05, 'triangle', 0.03);
+  }
+
   // ---- the Home Dojo
 
   /** The bow: a soft wooden clack and a low, calm bell. */

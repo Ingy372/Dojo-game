@@ -4,6 +4,8 @@ import Phaser from 'phaser';
 import { CONTENT } from '../game/content';
 import type { Grade, InsightFamily, Rarity } from '@dojo/sim';
 
+export { S1, S2, S3, S4, TYPE, RADIUS, MIN_TAP, MOTION, tapArea } from './tokens';
+
 export const FONT = 'system-ui, sans-serif';
 
 export const RARITY_COLOR: Record<Rarity, number> = {
