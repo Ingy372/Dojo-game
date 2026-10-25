@@ -52,7 +52,10 @@ for i in g:
     if i.get("tier") not in B: errs.append(f"{w}: bad tier")
     chk(w,"name",i.get("name"),22); chk(w,"description",i.get("description"),80)
     if i["slot"] == "charm":
-        if not re.search(r"\{(n|pct)\}", i.get("text","")): errs.append(f"{w}: charm text needs {{n}} or {{pct}}")
+        ticks = i["effect"]["type"] == "counterWindow" and all(isinstance(a, int) and a >= 1 for a in i.get("amounts", []))
+        # R-BAL-14b: COUNTER-window charms add whole ticks; a {pct} would differ by difficulty, so plain kid text is fine.
+        if not ticks and not re.search(r"\{(n|pct)\}", i.get("text","")): errs.append(f"{w}: charm text needs {{n}} or {{pct}}")
+        if i["effect"]["type"] == "counterWindow" and not ticks: errs.append(f"{w}: COUNTER window amounts must be whole ticks (1 or more)")
         if i["tier"] in EFF and i["effect"]["type"] != EFF[i["tier"]]: errs.append(f"{w}: effect should be {EFF[i['tier']]}")
 m = json.load(open(C+"loot/materials.json"))["materials"]
 if sorted(x["tier"] for x in m) != sorted(B): errs.append("materials: need exactly one per tier")
