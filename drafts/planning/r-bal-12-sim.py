@@ -4,7 +4,7 @@ Shows each source's share of combat strength by tier for three students, and the
 Plain Python 3, no packages, no game code. Run: python3 drafts/planning/r-bal-12-sim.py
 Labels: [CODE] from main, [DECIDED] Jay/Manager, [FITTED] chosen to hit a target, [GUESS] needs playtest.
 """
-import importlib.util, itertools, math, os, random, sys
+import importlib.util, json, itertools, math, os, random, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 spec = importlib.util.spec_from_file_location("r9", os.path.join(HERE, "r-bal-9-sim.py"))
@@ -17,9 +17,11 @@ STRIPES_PER_BELT = 2       # [CODE] config.ts:257 stripesPerBelt
 # Split of the training budget, from the Power Rating shares .40/.17/.10 (config.ts:248-250) [CODE ratio]
 TRAIN_SPLIT = {"signOffs": 0.40 / 0.67, "trainingPoints": 0.17 / 0.67, "virtues": 0.10 / 0.67}
 # Each source's stat mix in ln-FS units [GUESS, flavour]: technique -> Power+Health, practice -> Health+Power, character -> Guard
-STAT_MIX = {"signOffs": {"power": 0.6, "maxHealth": 0.4}, "trainingPoints": {"power": 0.3, "maxHealth": 0.7},
+STAT_MIX = {"signOffs": {"power": 0.6, "maxHealth": 0.4}, "trainingPoints": {"maxHealth": 1.0},  # R-BAL-12 tune: TP Power rounds to 0, so Health only
             "virtues": {"guard": 1.0}}
-K_TRAIN = 1.0              # [FITTED] full training at a tier is worth K x (levels + gear at the tier cap)
+K_TRAIN = {t: 1.0 for t in range(1, 11)}   # [FITTED] per belt by fit_k() below (Jay: 40-60%, aim 50-55%)
+TARGET = 0.525
+ROUND = True               # [DECIDED] Manager: whole numbers for kids
 TIERS = range(1, 11)
 RUNS = len(r9.level_timeline(1))   # runs in a 3-month belt for the typical student
 
@@ -40,7 +42,7 @@ def typical_series(trials=200, seed=9):
     return lv, [{k: v / trials for k, v in x.items()} for x in gear]
 
 def budget(t):  # ln-FS that full training at belt t is worth
-    return K_TRAIN * (r9.level_value(10 * t) + r9.caps(t)[1])
+    return K_TRAIN[t] * (r9.level_value(10 * t) + r9.caps(t)[1])
 
 def ref_stats(t):  # level + full gear at the tier cap: the base the training budget is turned into stats on
     c, _ = r9.caps(t); p, h = r9.lvl_stats(10 * t)
@@ -62,9 +64,28 @@ def per_unit():
     res = {}
     for t in TIERS:
         now, prev = totals(t), (totals(t - 1) if t > 1 else None)
-        res[t] = {s: {k: (now[s][k] - (prev[s][k] if prev else 0)) / units[s] for k in now[s]} for s in now}
+        res[t] = {s: {k: max(0, (now[s][k] - (prev[s][k] if prev else 0)) / units[s]) for k in now[s]} for s in now}
+        if ROUND: res[t] = {s: {k: round(v) for k, v in d.items()} for s, d in res[t].items()}
     return res
 PU = per_unit()
+
+SCALE, ALPHA = 1.0, 0.0      # [FITTED] by fit_k(): unit(t) = round(U1(t) x SCALE x t^-ALPHA), U1 = K=1 values
+def per_unit_smooth():
+    global ROUND
+    ROUND = False; base = per_unit(); ROUND = True
+    return {t: {s_: {k: round(v * SCALE * t ** -ALPHA) for k, v in d.items()} for s_, d in base[t].items()} for t in TIERS}
+def fit_k(lv, gear):
+    """Two numbers for all belts (smooth, whole-number units): typical training share nearest TARGET at every belt."""
+    global PU, SCALE, ALPHA
+    best = None
+    for sc in [x / 10 for x in range(6, 31)]:
+        for al in [x / 20 for x in range(0, 21)]:
+            SCALE, ALPHA = sc, al; PU = per_unit_smooth()
+            rows = student_runs(lv, gear, STUDENTS["typical"])
+            sh = [avg_artist(rows, t)[1]["training"] for t in TIERS]
+            err = max(abs(x - TARGET) for x in sh)
+            if best is None or err < best[0]: best = (err, sc, al)
+    _, SCALE, ALPHA = best; PU = per_unit_smooth()
 
 def student_runs(lv_typ, gear_typ, st):
     """Per typical-run time step: level, gear, and training stats for one student."""
@@ -116,14 +137,15 @@ def avg_artist(rows, t):
     return {"power": P, "health": H, "guard": G}, {k: v / tot for k, v in S.items()}
 
 def main():
-    lv, gear = typical_series()
+    lv, gear = typical_series(); fit_k(lv, gear)
+    print(f"K=1 shape, SCALE {SCALE} x belt^-{ALPHA} [FITTED], rounded to whole numbers")
     print("== 1. Value of one piece of real training, by the belt it is earned at (flat stats, adds only) ==")
-    print(f"K_TRAIN = {K_TRAIN} [FITTED]; split sign-offs/TP/virtues = " + "/".join(f"{v:.0%}" for v in TRAIN_SPLIT.values()) + " [CODE ratio]")
+    print(f"split sign-offs/TP/virtues = " + "/".join(f"{v:.0%}" for v in TRAIN_SPLIT.values()) + " [CODE ratio]")
     print(f"{'belt':>11}  {'sign-off: Power Health':>22}  {'1 TP: Power Health':>19}  {'stripe: Guard':>13}   full belt adds P/H/G")
     for name, t in r9.TIERS.items():
         u = PU[t]; s, p, v = u["signOffs"], u["trainingPoints"], u["virtues"]
         fb = [7 * s[k] + 28 * p[k] + 2 * v[k] for k in ("power", "maxHealth", "guard")]
-        print(f"{name:>11}  {s['power']:>10.2f} {s['maxHealth']:>10.1f}  {p['power']:>8.2f} {p['maxHealth']:>9.2f}  {v['guard']:>13.1f}   {fb[0]:.1f}/{fb[1]:.0f}/{fb[2]:.1f}")
+        print(f"{name:>11}  {s['power']:>10} {s['maxHealth']:>10}  {p['power']:>8} {p['maxHealth']:>9}  {v['guard']:>13}   {fb[0]:.1f}/{fb[1]:.0f}/{fb[2]:.1f}")
     res = {}
     for sname, st in STUDENTS.items():
         rows = student_runs(lv, gear, st); res[sname] = {t: avg_artist(rows, t) for t in TIERS}
@@ -134,11 +156,12 @@ def main():
             a, s = res[sname][t]
             print(f"{name:>11} {a['power']:>6.1f} {a['health']:>6.0f} {a['guard']:>5.1f}   {s['training']:>7.0%} {s['level']:>7.0%} {s['gear']:>5.0%}")
     A9 = r9.expected_artists()
-    print("\n== 3. Enemy re-scale vs the #188 expected Artist (typical student), Health x and Power x ==")
+    print("\n== 3. Enemy multiplier per belt vs the #188 Artist: Health x follows the typical student, Power x the least-tough student ==")
     scale = {}
     for name, t in r9.TIERS.items():
-        a = res["typical"][t][0]; o = A9[t]
-        hx = a["power"] / o["power"]; px = a["health"] * (1 + a["guard"] / 100) / (o["health"] * (1 + o["guard"] / 100))
+        o = A9[t]   # [DECIDED here] size to the weakest student on each axis, so nobody is pushed out of band
+        hx = res["typical"][t][0]["power"] / o["power"]
+        px = min(res[s_][t][0]["health"] * (1 + res[s_][t][0]["guard"] / 100) for s_ in STUDENTS) / (o["health"] * (1 + o["guard"] / 100))
         scale[t] = (hx, px); print(f"{name:>11}  Health x{hx:.2f}  Power x{px:.2f}")
     print("\n== 4. A mid enemy built for the typical student (5 hits, KO 12), faced by each student, Standard ==")
     print(f"{'belt':>11}  " + "  ".join(f"{s[:24]:>24}" for s in STUDENTS))
@@ -149,5 +172,46 @@ def main():
             cells.append(f"beat {b[0]:>2} KO {b[2]:>2} {'in' if r9.ess.BANDS['mid']['hits'][0] <= b[0] <= r9.ess.BANDS['mid']['hits'][1] and b[2] >= 8 else 'OUT'}")
         print(f"{name:>11}  " + "  ".join(f"{c:>24}" for c in cells))
 
+    return res, scale
+
+def section5(res, scale):
+    """Every drafted enemy + live enemy + filled Guardian: file = BASE stats; runtime = round(base x belt multiplier)."""
+    ess = r9.ess; M = {t: (round(h, 2), round(p, 2)) for t, (h, p) in scale.items()}   # multipliers kept to 2 decimals (internal)
+    print("\n== 5. All enemies and Guardians with the belt multiplier (whole-number final stats), Standard + Challenge x1.5 ==")
+    print("   result per student: typical / trains more / plays only.  'beat' = Artist hits S/C, 'KO' = enemy hits S/C")
+    out = {s_: [] for s_ in STUDENTS}; n = 0
+    ids = [i for i in ess.PLAN if i not in ess.EXISTING] + sorted(ess.EXISTING)
+    for eid in ids:
+        base, _, var = eid.partition("/")
+        e = json.load(open(os.path.join(ess.ENEMY_DIR, base + ".json")))
+        if var: e = e["variants"][var]
+        if eid in ess.EXISTING: tier, role = "white", {"swarmer": "swarm", "shield": "guard", "brute": "heavy", "floor-keeper": "boss"}[eid]
+        else: tier, role = ess.PLAN[eid]
+        if any(not isinstance(e.get(k), int) for k in ("maxHealth", "power", "guard")): continue
+        t = r9.TIERS[tier]; hx, px = M[t]
+        F = (round(e["maxHealth"] * hx), round(e["power"] * px), e["guard"])
+        st = e.get("attack", {}).get("strength", 1); st = st if isinstance(st, (int, float)) else 1
+        band = {"hits": (40, 80), "ko_min": 5} if role == "boss" else ess.BANDS[ess.ROLE_BAND.get(role, "mid")]
+        cells = []
+        for s_ in STUDENTS:
+            c = r9.check(F, res[s_][t][0], band, st); cells.append(f"{c[0]}/{c[1]} KO {c[2]}/{c[3]} {'ok' if c[4] else 'OUT'}")
+            if not c[4]: out[s_].append(eid)
+        n += 1
+        print(f"{eid:>20} {tier:>11} H{F[0]:>5} P{F[1]:>4} G{F[2]:>3}  " + " | ".join(f"{x:<20}" for x in cells))
+    for b in r9.load_bosses():
+        if not isinstance(b["maxHealth"], int): continue
+        t = r9.TIERS[b["tier"]]; hx, px = M[t]
+        F = (round(b["maxHealth"] * hx), round(b["power"] * px), b["guard"]); cells = []
+        for s_ in STUDENTS:
+            rows, ok = r9.phase_check(b, F, res[s_][t][0])
+            tot = [math.ceil(F[0] * m / r9.damage(res[s_][t][0]["power"], 1, F[2])) for m in (1, r9.CHALLENGE)]
+            k = min(min(r[3][0][1], r[3][1][1]) for r in rows)
+            cells.append(f"{tot[0]}/{tot[1]} minKO {k} {'ok' if ok else 'OUT'}")
+            if not ok: out[s_].append(b["id"])
+        n += 1
+        print(f"{b['id']:>20} {b['tier']:>11} H{F[0]:>5} P{F[1]:>4} G{F[2]:>3}  " + " | ".join(f"{x:<20}" for x in cells))
+    print(f"\nchecked {n} enemies/Guardians")
+    for s_ in STUDENTS: print(f"   out of band, {s_}: " + (", ".join(out[s_]) or "none"))
+
 if __name__ == "__main__":
-    main()
+    section5(*main())
