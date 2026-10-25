@@ -548,3 +548,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 - K24c: tower view 6.75 tiles tall; game draws at full retina sharpness (DPR camera zoom + view() helper). Screens: /workspace/qa/k24c/ (sharp-844.png is before/after).
 - K24b: wind-up "!" + fill ring before enemy attacks; COUNTER flashes/rings gold in the counter window; Reduced motion respected. Screens: /workspace/qa/k24b/.
+
+## R-BAL-5 XP step weights (k+11)
+- Done: progression.ts uses weights step+11. Matches balance-sim.py section 3; no step goes over 10 runs.
