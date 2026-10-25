@@ -846,3 +846,9 @@ What is in the code:
 - Manager's call: par times and room grades stay in game time.
 - Note: 1200 rules ticks are 60 s of game time, which is about 68 real seconds at tempo 0.88; 60 real seconds is `realSecondsToTicks(60)` = 1056 ticks. The test checks both.
 - Note for other dojos: the hit-shake cut-off (`SCREEN_SHAKE.hurtFromTier`, rank 8 = Brown) assumes the standard 10-belt order. A school with a different number of belts will need that rank mapped onto its own belts (for now, schools with fewer than 8 belts only get these shakes on Challenge, Manager's call in K28).
+
+## K31: boss name and small health bar as one pair (2026-10-25, approved by the Manager)
+
+- One shared rule, `bossTagLayout` (packages/sim/src/bossTag.ts): the name, a fixed 4 px gap, then the small bar, stacked above the boss's head. If the stack would rise into the top HUD strip (above HUD_BOTTOM + 4, under the player's bars) (boss near the top of the screen), both move below the boss's feet together. The pair is always clamped on screen and the gap never changes.
+- The name now follows the boss instead of sitting fixed under the big top bar, so the pair can't be pulled apart. The big boss bar stays where it is.
+- HOME and other door labels: the name slides sideways off a label it would overlap. The combo counter is a keep-clear box too: if the pair would touch it, the same rule runs with the combo's bottom as the floor. The boss '!' cue (`windupCueSpot`) treats the pair's box as a keep-clear area, like door labels.

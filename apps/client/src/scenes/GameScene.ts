@@ -68,6 +68,8 @@ import {
   realSecondsToTicks,
   realTicksPerSecond,
   ticksToRealMs,
+  bossTagLayout,
+  BOSS_TAG,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
@@ -249,6 +251,8 @@ export class GameScene extends Phaser.Scene {
   private leaving = false;
   private picker: InsightPicker | null = null;
   private doorViews: DoorView[] = [];
+  /** K31: world box of the boss's name + small bar, for the '!' cue to avoid. */
+  private bossTagWorld: { left: number; right: number; top: number; bottom: number } | null = null;
   private chestImgs: Phaser.GameObjects.Image[] = [];
   private shrineImgs: Phaser.GameObjects.Image[] = [];
   /** When the chest started opening (its 2.5 s opening plays once), or null. */
@@ -1887,9 +1891,11 @@ export class GameScene extends Phaser.Scene {
       const y = BOSS_BAR_Y;
       g.fillStyle(0x000000, 0.55).fillRoundedRect(x - 3, y - 3, w + 6, 16, 5);
       g.fillStyle(0xb046a0).fillRoundedRect(x, y, Math.max(6, w * (boss.health / boss.def.maxHealth)), 10, 3);
-      this.bossName.setText(boss.def.name).setPosition(width / 2, y + 14).setVisible(true);
+      this.bossName.setText(boss.def.name).setVisible(true);
+      this.placeBossTag(boss);
     } else {
       this.bossName.setVisible(false);
+      this.bossTagWorld = null;
     }
     this.placeCombo(!!boss && boss.mode !== 'defeated');
     this.placeSensei();
@@ -2283,7 +2289,8 @@ export class GameScene extends Phaser.Scene {
   private windupCueSpot(x: number, y: number, top: number, radius: number): { x: number; y: number } {
     const R = 21;
     const minY = this.belowBossBar() + R;
-    const labels = this.doorViews.filter((d) => d.label.visible).map((d) => d.label.getBounds());
+    const labels: { left: number; right: number; top: number; bottom: number }[] = [...this.doorViews.filter((d) => d.label.visible).map((d) => d.label.getBounds())];
+    if (this.bossTagWorld) labels.push(this.bossTagWorld);
     const clear = (cx: number, cy: number) =>
       cy >= minY && labels.every((b) => cx + R < b.left - 4 || cx - R > b.right + 4 || cy + R < b.top - 4 || cy - R > b.bottom + 4);
     const side = Math.max(radius, 24) + R + 8;
@@ -2298,6 +2305,53 @@ export class GameScene extends Phaser.Scene {
       { x: x - side, y: Math.max(bodyY, minY) },
     ];
     return spots.find((p) => clear(p.x, p.y)) ?? spots[5];
+  }
+
+  /**
+   * K31: the boss's name and its small health bar move as one pair (bossTagLayout): name, a fixed gap, bar.
+   * Above the head when there is room under the top bar, else both below the feet. The name slides sideways
+   * off any door label (HOME), and the pair's world box is kept so the '!' cue (windupCueSpot) avoids it.
+   */
+  private placeBossTag(boss: EnemyState): void {
+    const v = this.enemyViews.get(boss.id);
+    if (!v) return;
+    const cam = this.cameras.main;
+    const k = cam.zoom / DPR;
+    const toScreenY = (wy: number) => (wy - cam.worldView.y) * k;
+    const toWorldY = (sy: number) => cam.worldView.y + sy / k;
+    const { width, height } = view(this);
+    const minY = HUD_BOTTOM + 4;
+    const headY = toScreenY(v.container.y - v.top);
+    const feetY = toScreenY(v.container.y);
+    let t = bossTagLayout(headY, feetY, minY, height - 4);
+    // The combo counter also lives up here: if the pair would touch it, the same rule runs again with its bottom as the floor.
+    const bxs = (v.container.x - cam.worldView.x) * k;
+    const span = Math.max(this.bossName.width / 2, v.hpBack.width * k / 2) + 4;
+    if (this.comboText.visible && this.comboText.alpha > 0.05) {
+      const c = this.comboText.getBounds();
+      const pairBottom = t.barY + BOSS_TAG.barH / 2;
+      if (t.nameTop < c.bottom + 4 && pairBottom > c.top - 4 && bxs - span < c.right && bxs + span > c.left) t = bossTagLayout(headY, feetY, c.bottom + 4, height - 4);
+    }
+    const barLocal = toWorldY(t.barY) - v.container.y;
+    v.hpBack.y = barLocal;
+    v.hpFill.y = barLocal;
+    const bx = (v.container.x - cam.worldView.x) * k;
+    const half = this.bossName.width / 2;
+    let nx = Phaser.Math.Clamp(bx, half + 4, width - half - 4);
+    for (const d of this.doorViews) {
+      if (!d.label.visible) continue;
+      const b = d.label.getBounds();
+      const lb = { left: (b.left - cam.worldView.x) * k, right: (b.right - cam.worldView.x) * k, top: toScreenY(b.top), bottom: toScreenY(b.bottom) };
+      const overlapY = t.nameTop < lb.bottom + 4 && t.nameTop + BOSS_TAG.nameH > lb.top - 4;
+      if (overlapY && nx + half > lb.left - 4 && nx - half < lb.right + 4) {
+        nx = (lb.left + lb.right) / 2 < bx ? lb.right + 4 + half : lb.left - 4 - half;
+        nx = Phaser.Math.Clamp(nx, half + 4, width - half - 4);
+      }
+    }
+    this.bossName.setPosition(nx, t.nameTop);
+    const wl = cam.worldView.x + (Math.min(nx - half, bx) - 4) / k;
+    const wr = cam.worldView.x + (Math.max(nx + half, bx) + 4) / k;
+    this.bossTagWorld = { left: wl, right: wr, top: toWorldY(t.nameTop) - 2, bottom: toWorldY(t.barY + BOSS_TAG.barH / 2) + 2 };
   }
 
   /** K27: the lowest world y a wind-up cue may sit at so it clears the boss bar and name (Q5 B1). */

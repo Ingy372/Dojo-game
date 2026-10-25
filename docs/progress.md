@@ -590,3 +590,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Test: packages/sim/test/k29-real-clock.test.ts.
 **Next**
 - None; the shake rank mapping for other dojos is noted in decisions.md.
+
+## K31 — boss name and small bar never touch (2026-10-25)
+
+- Added `bossTagLayout` + `BOSS_TAG` in sim, wired in GameScene (`placeBossTag`), cue avoids the pair. Test: packages/sim/test/k31-boss-tag.test.ts. Shots in /workspace/k31-shots/ (`*-top-*` frames teleport the boss to the top wall).
