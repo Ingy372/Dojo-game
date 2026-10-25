@@ -4,7 +4,41 @@
 // promotion, then stripes, then sign-offs, then Sensei's Seal, then the Blessing.
 
 import type { BeltInfo, RequirementStatus, TrainingState, VirtueInfo } from './training';
+import { byTier, TRAINING_STATS } from './config';
 import { virtueTitle } from './training';
+
+/** R-BAL-12d: what a piece of real training gave (whole numbers, gains only). */
+export interface TrainingGain {
+  power: number;
+  health: number;
+  guard: number;
+}
+
+const tierOfBelt = (t: Pick<TrainingState, 'belts' | 'tier'>, belt: string) => {
+  const i = t.belts.findIndex((b) => b.id === belt || b.name === belt);
+  return i < 0 ? t.tier : i + 1;
+};
+
+/** What these sign-offs added (each at the belt it belongs to). */
+export function signOffGain(t: Pick<TrainingState, 'belts' | 'tier'>, reqs: ReadonlyArray<{ belt: string }>): TrainingGain {
+  const g = { power: 0, health: 0, guard: 0 };
+  for (const r of reqs) {
+    const v = byTier(TRAINING_STATS, tierOfBelt(t, r.belt)).signOff;
+    g.power += v.power;
+    g.health += v.maxHealth;
+  }
+  return g;
+}
+
+/** What one stripe earned at `belt` (id or name) added. */
+export function stripeGain(t: Pick<TrainingState, 'belts' | 'tier'>, belt: string): TrainingGain {
+  return { power: 0, health: 0, guard: byTier(TRAINING_STATS, tierOfBelt(t, belt)).stripe.guard };
+}
+
+/** Fills a gain line from content/settings/training-gains.json. */
+export function gainText(template: string, g: TrainingGain): string {
+  return template.replace('{power}', `${g.power}`).replace('{health}', `${g.health}`).replace('{guard}', `${g.guard}`);
+}
 
 export interface ProgressSnapshot {
   studentId: string;

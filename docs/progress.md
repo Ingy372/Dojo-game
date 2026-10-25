@@ -612,5 +612,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Imported the 15 #212 gear icons to assets/art/gear-drop/ and wired them into the Gear screen, results, first-floor card and loot note. Test: packages/sim/test/gear-icons.test.ts (every GEAR_SLOTS x RARITIES has a file; checked that it fails when one is missing). Shots and overlap/clip reports in /workspace/k32-shots/ (667x375 and 844x390, reduced motion off/on).
 
 
+## R-BAL-12d Gain words after real training
+- Sign-off card, multi sign-off list and Character Stripe screen now show what real training gave, in green/gold: "You got stronger! +1 Power, +4 Health", "You got tougher! +7 Guard". Gains only, no nag, no streaks, nothing about what's missing.
+- Words in content/settings/training-gains.json (for Jay's review). Sim helpers signOffGain / stripeGain / gainText use each piece's own belt. New test r-bal-12d-gain-words.test.ts (4). Screens at 667 and 844: /workspace/qa/r-bal-12d/.
+- Delivery Note: depends on #208 (R-BAL-12); PR base is bot-code/R-BAL-12.
+
 ## R-BAL-12e disarmedPower scaled
 - Done (stacked on #208).

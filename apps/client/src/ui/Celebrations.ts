@@ -4,6 +4,8 @@
 
 import Phaser from 'phaser';
 import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState } from '@dojo/sim';
+import { gainText, signOffGain, stripeGain } from '@dojo/sim';
+import GAINS from '../../../../content/settings/training-gains.json';
 import { sfx } from '../audio/Sfx';
 import { shortDate } from '../game/student';
 import { makeStandingCharacter } from '../art/player';
@@ -228,6 +230,7 @@ export class Celebrations {
         const def = this.training.virtues.find((v) => v.word === m.word)?.def;
         if (def) this.text(cx, height * 0.67, m.rank > 1 ? 'Earned again: your Virtue grew stronger!' : 'Use it in a fight when your Focus is full.', 15, '#f2e9d8').setOrigin(0.5);
         this.text(cx, height * 0.75, `Earned at ${m.belt}`, 13, '#b9ad99').setOrigin(0.5);
+        this.text(cx, height * 0.83, gainText(GAINS.stripe, stripeGain(this.training, m.belt)), 18, '#5cd65c', true, FONT, width - 40).setOrigin(0.5).setAlign('center');
         this.burst(cx, height * 0.38, [GOLD, 0xffffff], 45);
         break;
       }
@@ -235,21 +238,23 @@ export class Celebrations {
         sfx.signOff();
         const r = m.requirement;
         const who = r.signedOffBy ?? 'Sensei';
-        this.card(cx, height * 0.45, Math.min(520, width - 40), 190);
+        this.card(cx, height * 0.45, Math.min(520, width - 40), 220);
         this.text(cx, height * 0.45 - 62, 'SIGNED OFF!', 16, '#5cd65c', true).setOrigin(0.5);
         this.text(cx, height * 0.45 - 28, `${who} signed off ${r.name}!`, 22, '#ffffff', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
         this.text(cx, height * 0.45 + 18, `New ${m.ability}`, 18, '#ffd166', true).setOrigin(0.5);
-        this.text(cx, height * 0.45 + 52, 'Gate lock lit.', 14, '#b9ad99').setOrigin(0.5);
+        this.text(cx, height * 0.45 + 52, gainText(GAINS.signOff, signOffGain(this.training, [r])), 17, '#5cd65c', true, FONT, Math.min(480, width - 60)).setOrigin(0.5).setAlign('center');
+        this.text(cx, height * 0.45 + 84, 'Gate lock lit.', 14, '#b9ad99').setOrigin(0.5);
         this.burst(cx, height * 0.45 - 28, [0x5cd65c, GOLD], 20);
         break;
       }
       case 'signOffs': {
         sfx.signOff();
         this.text(cx, height * 0.1, `${m.list.length} techniques signed off!`, 26, '#5cd65c', true).setOrigin(0.5);
+        this.text(cx, height - 64, gainText(GAINS.signOffs, signOffGain(this.training, m.list.map((s) => s.requirement))), 17, '#ffd166', true, FONT, width - 40).setOrigin(0.5).setAlign('center');
         let y = height * 0.1 + 36;
         const cols = m.list.length > 6 ? 2 : 1;
         const rows = Math.ceil(m.list.length / cols);
-        const lineH = Math.min(24, (height - y - 50) / rows);
+        const lineH = Math.min(24, (height - y - 84) / rows);
         m.list.forEach((s, i) => {
           const col = Math.floor(i / rows);
           const x = cols === 1 ? cx - 180 : cx - Math.min(380, width / 2 - 16) + col * Math.min(390, width / 2);
