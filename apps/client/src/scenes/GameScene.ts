@@ -114,6 +114,8 @@ const TILE = 48;
 const NO_DEFEAT_FADE_MS = 600;
 /** Screen pixels the top bar (health, Focus, "Room 1 of 8") takes up. */
 const HUD_TOP_PX = 56;
+/** Screen y a door label may not rise above: the top bar plus the Challenge timer (top 36, 20 px bold, bottom ~64) and an 8 px gap. */
+const DOOR_LABEL_TOP_PX = 72;
 /** Screen y of the boss health bar; its name sits just under it. */
 // The boss bar sits in the HUD's top strip, between the player's bars and the room label,
 // so it never covers the Keeper (K9: it used to sit over the Keeper's head at y 74).
@@ -1868,10 +1870,10 @@ export class GameScene extends Phaser.Scene {
         if (!prog.doorsOpen) this.animateStatic('door-boss-glow', d.glow, now / 1000);
       }
       d.label.setAlpha(prog.doorsOpen ? pulse : 0.55);
-      // Keep the label below the top bar (health, Focus, "Room 1 of 8"): in small rooms
+      // Keep the label below the top bar and the Challenge timer (health, Focus, "Room 1 of 8"): in small rooms
       // the top doors sit right under it on a 667-wide phone.
       const cam = this.cameras.main;
-      d.label.setY(Math.max((d.at.y + 0.55) * TILE, cam.worldView.y + HUD_TOP_PX / (cam.zoom / DPR)));
+      d.label.setY(Math.max((d.at.y + 0.55) * TILE, cam.worldView.y + DOOR_LABEL_TOP_PX / (cam.zoom / DPR)));
       this.keepLabelOffBoss(d);
     }
 
