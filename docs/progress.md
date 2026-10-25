@@ -555,6 +555,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## R-BAL-9c Live enemy numbers
 - Swarmer, Shield, Brute and Floor-keeper set to the #188 numbers; all in band on Standard and Challenge (drafts/planning/r-bal-9c-check.py). D1–D5 logged as Jay's calls.
 
+## R-BAL-4 Bad-luck counter test
+- New test locks `guaranteedRareOnRun` at 5 or lower. Checked it fails when set to 6.
 ## R-BAL-5 XP step weights (k+11)
 - Done: progression.ts uses weights step+11. Matches balance-sim.py section 3; no step goes over 10 runs.
 ## K25 Slower tempo and calmer shake
