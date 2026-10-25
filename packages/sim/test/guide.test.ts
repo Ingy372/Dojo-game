@@ -10,6 +10,8 @@ const room = loadRoom({
   tiles: ['############', '#..........#', '#..........#', '#..P.......#', '#..........#', '#..........#', '############'],
   enemies: [{ enemy: 'brute', column: 5, row: 4 }],
 });
+import { holdSwing } from './hold-swing';
+
 const IDLE: PlayerInput = { kind: 'none' };
 const COUNTER: PlayerInput = { kind: 'none', action: 'counter' };
 
@@ -32,7 +34,10 @@ describe('guided first Counter', () => {
   it('is off unless asked for, so a player who never taps Counter gets hit', () => {
     const w = world();
     expect(w.guide).toBeNull();
-    expect(untilSwing(w)).toContain('hit');
+    // Standing next to the brute the player auto-swings, so the Mash guard (B-MASHER-b) makes it a Block.
+    expect(untilSwing(w)).toContain('block');
+    const still = world();
+    expect(untilSwing(still, (x) => (holdSwing(x.players.p1), IDLE))).toContain('hit');
   });
 
   it('holds still with the circle nearly full until Counter is tapped', () => {

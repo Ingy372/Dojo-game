@@ -20,6 +20,8 @@ export type EnemyId = string;
 
 export interface PlayerState {
   id: PlayerId;
+  /** B-MASHER-2: this player's Perfect Counters in this room (co-op: per player, Manager's call). */
+  perfects: number;
   pos: Vec2;
   /** Which way the character faces, as a direction of length 1. */
   facing: Vec2;
@@ -185,6 +187,8 @@ export type CombatEvent =
   | { kind: 'guideDone'; step: number; success: boolean }
   | { kind: 'enemySwing'; enemyId: EnemyId }
   | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId; chain: number }
+  /** B-MASHER-2: this room's Perfect Counters reached COMBAT.counter.mashGuardPerfects, so Mash guard is off until the next room. */
+  | { kind: 'mashGuardOff'; playerId: PlayerId }
   | { kind: 'block'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'hit'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'counterPressed'; playerId: PlayerId }
@@ -369,6 +373,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       focus: Math.min(COMBAT.focus.max, mods.startFocus),
       combo: 0,
       counterChain: 0,
+      perfects: 0,
       attackCooldown: 0,
       strikeRecovery: 0,
       counterPressedTick: -1,
@@ -855,8 +860,9 @@ function landHit(
 ): void {
   if (e.shieldUp) {
     if ((move === 'basic' || move === 'ripple') && !p.mods.shieldBreaker) {
-      // Basic attacks bounce off the shield: no damage, no Focus.
+      // Basic attacks bounce off the shield: no damage, but shield sparks give a little Focus (B-MASHER-a).
       p.facing = directionTo(p.pos, e.pos);
+      p.focus = Math.min(COMBAT.focus.max, p.focus + COMBAT.focus.perShieldBounce);
       world.events.push({ kind: 'shieldBlock', playerId: p.id, enemyId: e.id });
       return;
     }
@@ -1177,7 +1183,9 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       p.guardTicks = 0;
       p.counterChain++;
       world.progress.perfects++;
+      p.perfects++;
       world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id, chain: p.counterChain });
+      if (p.perfects === COMBAT.counter.mashGuardPerfects) world.events.push({ kind: 'mashGuardOff', playerId: p.id });
       // Bell Room twist: each Perfect Counter rings a bell, up to the number needed.
       const bellsNeeded = world.twist?.bells ?? 0;
       if (world.bells < bellsNeeded) world.events.push({ kind: 'bell', count: ++world.bells, of: bellsNeeded });
@@ -1198,8 +1206,10 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
           }
         }
       }
-    } else if (guarding && a.counterable !== false) {
+    } else if (a.counterable !== false && (guarding || (p.attackCooldown > 0 && mashGuardOn(p)))) {
       // Block: half damage (never against a dash-only attack: dash out instead), no stagger. The combo is kept.
+      // B-MASHER-b Mash guard: a hit that lands during the player's own basic-attack swing (attackCooldown)
+      // counts as the same Block, for everyone. B-MASHER-2 (E3): only until the room's 3rd Perfect Counter.
       p.guardTicks = 0;
       const share = blockShare(p);
       const dmg = damage(power, a.strength * share * weak, guardOf(p));
@@ -1490,4 +1500,9 @@ function directionTo(from: Vec2, to: Vec2): Vec2 {
   const dy = to.y - from.y;
   const d = length(dx, dy);
   return d > 0 ? { x: dx / d, y: dy / d } : { x: 0, y: 1 };
+}
+
+/** B-MASHER-2 (E3): Mash guard helps a player until they make COMBAT.counter.mashGuardPerfects Perfect Counters in this room; each new room starts it again. In co-op each player has their own. */
+export function mashGuardOn(p: PlayerState): boolean {
+  return p.perfects < COMBAT.counter.mashGuardPerfects;
 }
