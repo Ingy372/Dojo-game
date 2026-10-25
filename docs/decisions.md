@@ -1143,3 +1143,9 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
   - Cat's dash cooldown is 22 ticks.
   - "Beginner's Stance" stays until Jay decides.
   - The in-game one-liners (what each stance does) come in a follow-up.
+
+## R-STANCE-d1: old Form saves with no virtue keep their loadout (Oct 25, 2026)
+- Manager's call: a save with `loadout.form` and no virtue keeps its migrated stance, and the virtue stays empty (the default). The loadout is not nulled and the stance is not reset.
+- Before: `{ form: 'rooted-form' }` (or flowing-form, rooted-stance, flowing-stance) migrated to `{ stance: null, virtue: null }`, which `readLoadout` then turned into `loadout: null`. A fight played the same (Ready first, today's virtue), but the saved loadout was gone.
+- Now: `readLoadout` keeps `{ stance: null, virtue: null }` for an old Form save or an explicit `stance: null`, and `normalizeLoadout` no longer nulls a loadout whose stance isn't unlocked. Rooted and Flowing still map to Ready. Junk loadouts still load as null.
+- Test: packages/sim/test/r-stance-d1-stances.test.ts ("old Form save with no virtue").

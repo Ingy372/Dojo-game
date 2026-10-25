@@ -11,6 +11,7 @@ import {
   loadEnemy,
   loadFeed,
   loadProfile,
+  newProfile,
   loadRoom,
   migrateLoadout,
   normalizeLoadout,
@@ -147,7 +148,7 @@ describe('R-STANCE-d1 save migration', () => {
     const t = buildTraining(feed, content.abilities, { ms: Date.parse(feed.asOf), weekday: 3 });
     expect(normalizeLoadout({ stance: 'cat-stance', virtue: null }, t, content.abilities)).toEqual({ stance: 'cat-stance', virtue: null });
     expect(normalizeLoadout({ stance: 'horse-stance', virtue: 'second-wind' }, t, content.abilities)).toEqual({ stance: null, virtue: 'second-wind' });
-    expect(normalizeLoadout({ stance: 'horse-stance', virtue: null }, t, content.abilities)).toBeNull();
+    expect(normalizeLoadout({ stance: 'horse-stance', virtue: null }, t, content.abilities)).toEqual({ stance: null, virtue: null });
     expect(normalizeLoadout(null, t, content.abilities)).toBeNull();
   });
 });
@@ -193,5 +194,19 @@ describe('R-STANCE-d1 Fighting Style preview width', () => {
       expect(cubbyTextW(b.tileW)).toBeGreaterThanOrEqual(67);
       expect((b.tileW - TROPHY_UI.stroke - cubbyTextW(b.tileW)) / 2).toBeGreaterThanOrEqual(8);
     }
+  });
+});
+
+// R-STANCE-d1 (Manager, Oct 25): an old Form save with no virtue keeps its migrated stance
+// (Ready for Rooted/Flowing) and an empty virtue; the loadout is not nulled.
+describe('R-STANCE-d1 old Form save with no virtue', () => {
+  it('keeps the migrated stance and leaves the virtue empty, and loading again changes nothing', () => {
+    const base = JSON.parse(JSON.stringify(newProfile()));
+    for (const form of ['rooted-form', 'flowing-form', 'rooted-stance', 'flowing-stance']) {
+      const once = loadProfile({ ...base, loadout: { form } });
+      expect(once.loadout).toEqual({ stance: null, virtue: null });
+      expect(loadProfile(JSON.parse(JSON.stringify(once))).loadout).toEqual({ stance: null, virtue: null });
+    }
+    expect(loadProfile({ ...base, loadout: { form: 'front-stance' } }).loadout).toEqual({ stance: 'front-stance', virtue: null });
   });
 });

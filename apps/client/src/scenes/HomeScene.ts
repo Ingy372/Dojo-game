@@ -805,6 +805,7 @@ export class HomeScene extends Phaser.Scene {
     // B-POLISH-2: the hint always shows (bottom of the card); the title wraps to 2 lines (no "…"),
     // and the title/body step down a size if the words would otherwise reach the hint.
     const hintText = this.text(px + L.previewW / 2, 0, STYLE_WORDS.hint, TYPE.label, '#7a5a3a', false, FONT, L.previewW - S2).setOrigin(0.5, 0).setAlign('center');
+    balanceWrap(hintText, L.previewW - S2);
     const hy = y + L.previewH - S2 - hintText.height;
     hintText.setY(hy);
     const foot = this.styleSlot === 'stance' ? STYLE_WORDS.switchLine : STYLE_WORDS.virtueLine;
@@ -1815,4 +1816,21 @@ function wrapLikeCubby(txt: Phaser.GameObjects.Text, label: string, tw: number):
   txt.setLineSpacing(TROPHY_UI.cubbyLineGap).setMaxLines(TROPHY_UI.cubbyLines);
   if (txt.width > tw) txt.setText(label.replace(/-(?=\S)/g, '-\n'));
   return txt;
+}
+
+/**
+ * R-STANCE-d1 QA: wrap a centred text to the narrowest width that keeps the same number of lines,
+ * so the lines come out even and one word ("pick.") is never left alone on the last line.
+ */
+function balanceWrap(t: Phaser.GameObjects.Text, maxW: number): void {
+  t.setWordWrapWidth(maxW);
+  const lines = t.getWrappedText().length;
+  if (lines < 2) return;
+  let lo = 1, hi = Math.ceil(maxW);
+  while (lo < hi) {
+    const mid = Math.floor((lo + hi) / 2);
+    t.setWordWrapWidth(mid);
+    if (t.getWrappedText().length <= lines) hi = mid; else lo = mid + 1;
+  }
+  t.setWordWrapWidth(hi);
 }

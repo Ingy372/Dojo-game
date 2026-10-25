@@ -140,8 +140,8 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
 export function normalizeLoadout(loadout: Loadout | null, training: TrainingState, abilities: AbilityContent): Loadout | null {
   if (!loadout) return null;
   const ok = loadout.stance !== null && unlockedStances(training, abilities).some((s) => s.id === loadout.stance);
-  const out = { stance: ok ? loadout.stance : null, virtue: loadout.virtue };
-  return out.stance || out.virtue ? out : null;
+  // A stance that isn't unlocked goes to Ready (null); the loadout and its virtue are kept.
+  return { stance: ok ? loadout.stance : null, virtue: loadout.virtue };
 }
 
 /**

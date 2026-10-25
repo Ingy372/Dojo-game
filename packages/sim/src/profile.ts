@@ -159,7 +159,11 @@ export function readLoadout(data: unknown): Loadout | null {
   // name every object has built in ("constructor", "toString", "__proto__"), is dropped.
   const id = (v: unknown) => (typeof v === 'string' && LOADOUT_ID.test(v) && !(v in Object.prototype) ? v : null);
   const out = { stance: id(l.stance), virtue: id(l.virtue) };
-  return out.stance || out.virtue ? out : null;
+  // R-STANCE-d1 (Manager): an old Form save keeps its migrated stance even with no virtue, so
+  // { form: 'rooted-form' } becomes { stance: null (Ready), virtue: null (default) }, not null.
+  const raw = data as Record<string, unknown>;
+  const hadStance = 'form' in raw || raw.stance === null || (typeof raw.stance === 'string' && Object.prototype.hasOwnProperty.call(OLD_STANCE_IDS, raw.stance));
+  return out.stance || out.virtue || hadStance ? out : null;
 }
 
 export interface StreetSmartsSave {
