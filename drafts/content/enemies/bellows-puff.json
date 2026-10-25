@@ -1,0 +1,38 @@
+{
+  "id": "bellows-puff",
+  "name": "Bellows Puff",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). Huffs gusts that nudge you across the room. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#c46a4a",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "gust",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 20,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "red",
+  "band": "F3-4",
+  "tell": "puffs up, then a pale gust arrow",
+  "senseiLine": "The wind only pushes. Use it.",
+  "description": "Huffs gusts that nudge you across the room.",
+  "bestiary": {
+    "tip": "Stand side-on, or ride the push to escape.",
+    "lore": {
+      "red": "It used to fan the forge fire. Calm it, and it breathes gently to keep the forge warm."
+    }
+  },
+  "push": {
+    "damage": 0,
+    "intoHazard": false,
+    "note": "No-damage push (Manager OK, C13). Push strength fixed; never into a hazard or off a ledge."
+  }
+}

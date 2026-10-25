@@ -1,0 +1,33 @@
+{
+  "id": "stack-golem",
+  "name": "Stack Golem",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). A tower of stones. Each hit knocks one off and it gets smaller. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#7d756a",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "topple",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 20,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "green",
+  "band": "F3-4",
+  "tell": "wobbles, then red circle",
+  "senseiLine": "Big things are made of small pieces.",
+  "description": "A tower of stones. Each hit knocks one off and it gets smaller.",
+  "bestiary": {
+    "tip": "Keep going. It gets smaller and quicker.",
+    "lore": {
+      "green": "A pile of steps stacked itself up in the shadow. Calm it, and the stones rest as stairs again."
+    }
+  }
+}

@@ -44,7 +44,19 @@ def check(path):
         tk=dz.get("telegraphTicks"); lo=26 if t in ("white","yellow","orange") else 20
         if not isinstance(tk,int) or not (lo<=tk<=(30 if lo==26 else 999)): e.append(f"dashOnlyAttack.telegraphTicks must be {lo}-30 in tiers 1-3 (>=20 later)")
         if t in ("white","yellow","orange") and dz.get("noOverlapWithRedCircle") is not True: e.append("tiers 1-3: noOverlapWithRedCircle must be true")
+        if dz.get("noOverlapWithRedCircle") is False:
+            if not isinstance(dz.get("minOffsetFromRedCircleTicks"),int) or dz["minOffsetFromRedCircleTicks"]<10: e.append("overlap needs minOffsetFromRedCircleTicks >= 10")
+            if dz.get("overlapOnGuided") is not False: e.append("overlapOnGuided must be false")
         if "DASH" not in d.get("senseiLine","")+d["bestiary"].get("tip",""): e.append("dash-only enemies must say DASH in the line or tip")
+    if "push" in d and (d["push"].get("damage")!=0 or d["push"].get("intoHazard") is not False): e.append("push must do 0 damage and never push into a hazard")
+    for vid,v in d.get("variants",{}).items():
+        for k in CORE[2:]:
+            if k not in v: e.append(f"variants.{vid} missing {k}")
+        for k in ATTACK:
+            if k not in v.get("attack",{}): e.append(f"variants.{vid}.attack.{k} missing")
+        for k,s_ in [("senseiLine",v.get("senseiLine","")),("tell",v.get("tell","")),("tip",v.get("bestiary",{}).get("tip",""))]+[("lore",x) for x in v.get("bestiary",{}).get("lore",{}).values()]:
+            if not s_ or words(s_)>LIMITS[k] or BANNED.search(s_): e.append(f"variants.{vid}.{k} empty, too long or unsuitable")
+    if "split" in d and d["split"].get("into") not in d.get("variants",{}): e.append("split.into must name a variant in this file")
     return e
 files=sys.argv[1:] or [p for p in sorted(glob.glob("drafts/content/enemies/*.json")) if "tier" in json.load(open(p))]
 bad=0

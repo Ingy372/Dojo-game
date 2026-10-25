@@ -1,0 +1,33 @@
+{
+  "id": "coal-cub",
+  "name": "Coal Cub",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). Warm, playful little coal pups that pounce in groups. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#4a3b36",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "pounce",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 14,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "red",
+  "band": "F1-2",
+  "tell": "wiggle, then red circle",
+  "senseiLine": "Playful pups. Little ones first.",
+  "description": "Warm, playful little coal pups that pounce in groups.",
+  "bestiary": {
+    "tip": "Calm the little ones first.",
+    "lore": {
+      "red": "The forge pups got too wild in the smoky dark. Calm them, and they curl up warm by the fire."
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "forge-sweep",
+  "name": "Forge Sweeper",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). A big glowing broom that sweeps a wide arc. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#e0a03a",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "sweep",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 22,
+    "recoverTicks": "TODO",
+    "dashOnly": true
+  },
+  "parSeconds": "TODO",
+  "tier": "red",
+  "band": "F3-4",
+  "tell": "purple striped arc + '!!'",
+  "senseiLine": "The stripes show the sweep. DASH out.",
+  "description": "A big glowing broom that sweeps a wide arc.",
+  "bestiary": {
+    "tip": "DASH out of the arc.",
+    "lore": {
+      "red": "This broom kept the forge floor tidy. Free it, and it sweeps up the ashes again."
+    }
+  },
+  "dashOnlyAttack": {
+    "name": "wide sweep",
+    "shape": "arc",
+    "telegraphTicks": 22,
+    "recoverTicks": "TODO",
+    "strength": "TODO",
+    "tell": "purple-and-white stripes + '!!' + whoosh",
+    "shapeCue": "arc",
+    "counterable": false,
+    "answer": "dash",
+    "noOverlapWithRedCircle": false,
+    "minOffsetFromRedCircleTicks": 10,
+    "overlapOnGuided": false
+  }
+}

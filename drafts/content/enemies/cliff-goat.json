@@ -1,0 +1,33 @@
+{
+  "id": "cliff-goat",
+  "name": "Cliff Goat",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). Lowers its horns and charges in a straight line. Stats are TODO for the Researcher (R-BAL-8). Distances in tiles, times in ticks (20 per second).",
+  "color": "#d8d2c4",
+  "maxHealth": "TODO",
+  "power": "TODO",
+  "guard": "TODO",
+  "radius": "TODO",
+  "moveSpeedTilesPerSecond": "TODO",
+  "sightRange": "TODO",
+  "attack": {
+    "name": "charge",
+    "strength": "TODO",
+    "startRange": "TODO",
+    "reach": "TODO",
+    "areaRadius": "TODO",
+    "telegraphTicks": 20,
+    "recoverTicks": "TODO"
+  },
+  "parSeconds": "TODO",
+  "tier": "green",
+  "band": "F1-2",
+  "tell": "stamps, then long red circle at the line's end",
+  "senseiLine": "It stamps before it charges. Get ready.",
+  "description": "Lowers its horns and charges in a straight line.",
+  "bestiary": {
+    "tip": "Step aside, or COUNTER at the end.",
+    "lore": {
+      "green": "This goat once skipped happily up the cliffs. Calm it, and it bounds back to the high rocks."
+    }
+  }
+}
