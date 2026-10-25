@@ -8,7 +8,7 @@ Labels: **[CODE]** read from main today, **[PLAN]** proposed, **[GUESS]** needs 
 - **WHAT:** A layout for a landscape phone for three tabs, an art list with 3 first samples, 9 board items (P-MENU2-a to i), 3 mood mock-ups and 6 DECIDE items.
 - **WHY:** Today Abilities is one long paged list of same-looking text cards. Nothing says "you earned this in real life", and there is nothing to pick. Gear and Last run are text-heavy.
 - **DECIDE:** D1 to D6, at the end.
-- **NEXT:** Jay picks a mood (D1). The Artist makes the 3 samples. The Programmer starts P-MENU2-a/b after P-MENU-d lands.
+- **NEXT:** Jay picked mood A, warm dojo wood (D1, decided). The Artist makes the 3 samples. The Programmer starts P-MENU2-a/b after P-MENU-d lands.
 
 ## 0. What's there today, and how this builds on P-MENU (#225)
 **[CODE]** `apps/client/src/scenes/HomeScene.ts`:
@@ -146,9 +146,17 @@ P-MENU-d's sheet and stable grid stay. Added on top:
 ## 2. Art for the Artist
 Sizes are 1× with a 2× export. Webp atlases, as in `assets/art/`.
 
+**Mood A look (Jay's pick for the beta):** warm dojo wood and paper, like the real Action Zone wall.
+- **Wood:** honey/oak frames and shelves, mid `#B07A45`, dark grain and edges `#6B4423`, highlight `#D9A66B`.
+- **Paper:** rice-paper panels and the not-yet outline, `#F3E9D2`, with a soft shadow `#D8C8A8`.
+- **Ink:** text and outlines `#2B1D14` on paper (keeps contrast at 4.5:1 or better). Use white text only on dark wood.
+- **Accents:** sensei-seal red `#B23A2E`, lantern/unlock gold `#E8B04B`. Belt colours stay as in content.
+- **Light:** warm, soft, daytime. Glow effects become a warm gold sheen rather than neon.
+- **[PLAN]** These hex values are starting points for the Artist. Final values go into `theme.ts` tokens with P-MENU2-a.
+
 | # | Asset | Size (1×) | Notes |
 |---|---|---|---|
-| A1 | Panel frame, 9-slice (mood skin) | 48×48 corners | Wood, scroll or book edge per mood |
+| A1 | Panel frame, 9-slice (mood A skin) | 48×48 corners | Warm wood frame with a pale paper (shoji) inset |
 | A2 | Cubby, earned and not-yet states | 112×112 | 9-slice friendly. The not-yet state is a paper outline + lantern |
 | A3 | Belt ribbon knots ×10 colours + stripe mark | 40×40 each | Matches the belt colours in content |
 | A4 | Sensei seal stamp | 24×24 | Red, simple, no text |
@@ -163,9 +171,9 @@ Sizes are 1× with a 2× export. Webp atlases, as in `assets/art/`.
 | A13 | Gold sweep / unlock sparkle | 128×128, 8 frames | For the unlock moment |
 
 **3 samples to make first for Jay:**
-1. **A2 cubby**, earned + not yet, with one A5 icon, in the chosen mood.
+1. **A2 cubby**, earned (wood cubby) + not yet (paper outline + lantern), with one A5 icon, in mood A.
 2. **A6 Stance slot card**, selected and normal.
-3. **A1 + A3 together:** the panel frame with the belt ribbon (white, yellow, orange, the rest outlined).
+3. **A1 + A3 together:** the wood panel frame with the belt ribbon (white, yellow, orange, the rest outlined).
 
 These three set the look for the whole screen.
 
@@ -173,14 +181,14 @@ These three set the look for the whole screen.
 Beta freeze is **Dec 4**.
 | ID | Owner | Work | Done when (a tester checks) | Waits on | Beta? |
 |---|---|---|---|---|---|
-| P-MENU2-a | Programmer | Tab skins: a mood frame on the panel, the segmented switch, new tokens (cubby, slot, tile sizes) in `theme.ts` | Abilities shows the 2-part switch. Both parts are 44 tall. Screenshots at 667×375 and 932×430 | P-MENU-b merged; D1; art A1, A8 (placeholder boxes OK) | **Beta** |
+| P-MENU2-a | Programmer | Tab skins: the mood A wood/paper frame on the panel, the segmented switch, new tokens (cubby, slot, tile sizes) in `theme.ts` | Abilities shows the 2-part switch. Both parts are 44 tall. Screenshots at 667×375 and 932×430 | P-MENU-b merged; D1; art A1, A8 (placeholder boxes OK) | **Beta** |
 | P-MENU2-b | Programmer | Trophy Case: belt ribbon, shelves, earned/not-yet cubbies, dot pages, detail sheet with kata arrows | A White+2-stripe test profile shows earned cubbies with seals and not-yet ones with "Learn this at the dojo"; no lock icon, no counts; tapping opens the sheet | P-MENU2-a; A2, A3, A4, A5 (placeholders OK) | **Beta** |
 | P-MENU2-c | Programmer | Unlock moment in the Trophy Case: paper→wood sweep + `POP` + bell, once per unlock (saved in `seen`) | After a new sign-off (B-BELT), the cubby lights up once; a reopen shows no replay; Reduced motion fades only | P-MENU2-b; B-BELT; A13 | **Beta if time**, else after |
 | P-MENU2-d | Programmer (sim + client) | Fighting Style data: save the starting Form + chosen Virtue in the profile; sim uses them (default = today's behaviour); tests | Sim tests: the default profile fights exactly as today; a chosen Virtue/Form is used in the next run | — | **Beta** (small; risk below) |
 | P-MENU2-e | Programmer | Fighting Style screen: slot cards, tray, tap-to-equip, drag, preview card, "Always with you" row | A 6-year-old (or tester acting as one) changes the Stance in 2 taps; drag also works; the choice survives a restart | P-MENU2-d; A6, A7 | **Beta** (drag + preview may slip to after) |
 | P-MENU2-f | Programmer | Gear extends P-MENU-d: paper-doll rings, 3-column tiles, slot filter, compare arrows, fly-to-ring | Wearing an item flies it to its ring; arrows show ↑/↓ with no red; the grid never jumps | P-MENU-d merged; A11, A12 | **After beta** |
 | P-MENU2-g | Programmer | Last run "Scroll of the Climb": banner, path chips, stat tiles, XP fill, found strip, Bests sheet | After a run, the tiles count up once; no text under 12; every found item is tappable | P-MENU-b; A10 | **After beta** (or beta if a–e finish early) |
-| P-MENU2-h | Artist | A1–A13 in the picked mood; the 3 samples first | Jay approves the 3 samples; the atlases are in `incoming-art/` | D1 | Samples by **Nov 8**; rest after |
+| P-MENU2-h | Artist | A1–A13 in mood A (warm dojo wood); the 3 samples first | Jay approves the 3 samples; the atlases are in `incoming-art/` | D1 | Samples by **Nov 8**; rest after |
 | P-MENU2-i | Tester | Phone pass: small and large, Reduced motion on and off, kid-tap test | No missed tap in 10 tries per control; no text under 12; no guilt words (checked against the R-BAL-12 rule) | b, e (+ f, g later) | **Beta** for b–e |
 
 **Scope risk (honest):**
@@ -200,8 +208,10 @@ Beta freeze is **Dec 4**.
 
 The generator invented words in the mock-ups ("Trophy Wall", names such as "Flame Burst", mottos). They are **not** proposed text. The real names come from content.
 
-## 5. DECIDE (for Jay)
-- **D1. Which mood?** I recommend **B (night temple)**: it feels the most special, it fits the current dark colours, and it costs the least art change. Borrow A's shelves for the Trophy Case.
+**Picked: A** (Jay). **Proposal, not launch scope:** after the beta, B (night temple) and C (storybook) could come back in an update as an optional "Board style" picker in Settings. That would only re-skin A1, A2, A6, A7 and A8 through `theme.ts` tokens, with no gameplay change. It needs its own art budget and approval.
+
+## 5. DECIDE (for Jay). D1 decided; D2–D6 go with the recommendations below
+- **D1. Which mood? DECIDED by Jay: A (warm dojo wood and paper)** for the beta. (I had recommended B.) A costs a bit more art change because it moves away from today's dark colours; the A1/A8 placeholders in P-MENU2-a cover that. B/C are a possible post-beta selectable style (proposal above).
 - **D2. A loadout with 2 picks only (Stance + Virtue)?** I recommend **yes**. Strikes and Seals stay always-on. More slots would mean new combat rules and balance work.
 - **D3. Wording for locked items:** "Learn this at the dojo" plus "Ask Sensei about this one" in the sheet? I recommend **yes**. No locks, no counts.
 - **D4. Tap-to-equip first, drag as a bonus?** I recommend **yes**. Drag is hard for small hands, and tap always works.

@@ -1062,6 +1062,16 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Tray paging (Manager call: never hide an earned pick). When a tray has more picks than fit, the row gets the Trophy Case's ◀ ▶ arrows: button(), WOOD.switchOff, 15 pt, 44 wide, the tile's height, greyed at the first and last page. The tray pages; it resets to page 1 when the slot changes. Tiles keep the cubby padding (≥ 8 px, stroke counted).
 - Geometry at 667: the row is 199 wide. Two tiles of at least 87 px plus two 44 px arrows need 274 px, so a paged tray at 667 shows 1 tile per page between the arrows (95 wide). A tray that fits without arrows still shows 2 tiles. At 844 and 932 a paged tray shows 2 per page. A test pages through 1–12 picks at all three widths and reaches every one.
 
+## P-MENU2-g: Last run "Scroll of the Climb" (2026-10-25)
+
+- Layout follows the #265 Last run mock (layout only; no #265 art). All art is drawn in code: the paper scroll with rolled wood ends, room chips, stat tiles, a house badge for dojo pieces, the sparkle stars.
+- Model and layout live in `apps/client/src/ui/lastRun.ts` (no Phaser); words in `content/settings/last-run.json`. No sim changes; the golden test is unchanged.
+- Banner in kind words ("Floor cleared!" / "You reached room N of M!" / the rested line). Bests moved from the bottom of the panel into a Bests sheet: the student's own four bests, "New best!" on the ones set this run, no comparisons, streaks or guilt words.
+- Stat tiles: Rooms, Perfect, Combo, Time (real seconds); a 5th XP tile (+n) when the content is at least 420 wide (844 and 932). At 667 the XP gain shows only as the fill bar.
+- Count-up runs once per run: the run id (`runsPlayed:ticks:perfects:items`) is stored in localStorage `dojo.lastRunCounted` the first time the scroll is drawn, so reopening or switching tabs shows final values. Reduced motion: final values at once (and the run is still marked shown). Chips fade in 60 ms apart, tiles count 400 ms, then the XP bar fills 600 ms Cubic.Out.
+- Found strip: every item (rarest first) and every dojo piece is a 44 px tile. An item still in the bag opens its Gear sheet (switches to Gear with it picked); an item no longer in the bag, or a dojo piece, opens a small paper sheet here. When more than fit, one ▶ at the end of the strip turns the page and wraps; page dots sit beside the "Found" label (never "n / m").
+- "New for you": the first earned Trophy Case cubby not in `trophiesSeen`, with three twinkling code-drawn stars (they stay still with Reduced motion). Hidden when there is none, and on old saves where `trophiesSeen` is null. Tapping it opens Abilities → Trophy Case, where the unlock moment plays and it is marked seen.
+- Short phones (content under 300 tall): 24 px chips, 44 px tiles and 4 px gaps so everything fits at 667×375 and 844×390.
 ## P-MENU2-f — Gear polish (2026-10-25)
 - Worn items stay in the bag grid, marked ✓, instead of being taken out. The bag order is slot, then strongest, then id, and ignores what's worn, so wearing never moves a tile.
 - Tiles have no text labels: an icon, a rarity border and a small ↑/↓ badge. That keeps them narrow and works for pre-readers. The name is in the sheet.

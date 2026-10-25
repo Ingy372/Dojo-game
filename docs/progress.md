@@ -716,6 +716,16 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - B-POLISH-2 (2nd Tester fix + #272 merge): the stroke-aware cubby padding, full-size icons with 3-line labels fitting inside the stroke, and the Fighting Style polish (hint, 2-line title, locked names, placeholder perk icon, re-tap no-op). Vitest 645 passed, 1 skipped; typecheck and build clean.
 - B-POLISH-2: Fighting Style tray labels now use the cubby padding and wrap rules (2 tiles at 667). Smallest tray gap is 8.0 px. Vitest 646 passed, 1 skipped.
 
+## P-MENU2-g — Last run "Scroll of the Climb" (2026-10-25)
+
+**Done**
+- New Last run screen: paper scroll, banner in kind words, room chips, 4–5 stat tiles that count up once per run, XP fill toward the next level, Found strip (every tile opens its sheet), "Always with you", "New for you" (only when there is one) and a big Again! that starts a climb. Bests is a sheet of personal bests only.
+- `ui/lastRun.ts` (model + layout) and `content/settings/last-run.json` (words). No sim changes.
+- Vitest `p-menu2-g-lastrun.test.ts`: count-up once (and never with Reduced motion), every found item reachable and tappable across pages, layout fits with taps ≥ 44 at 667/844/932, no text under 12, "New for you" only when earned and unseen, kind words. `b-lastrun-layout.test.ts` updated for the new layout.
+- Screenshots at 667, 844 and 932, Reduced motion on and off: first open (counting), new trophy, reopen, Bests sheet, found item sheets, 24 found items (2 pages), nothing found.
+
+**Next**
+- Manager: confirm "New for you" = the newest unseen Trophy Case cubby (runs don't earn techniques), or switch it to this run's dojo pieces.
 ## P-MENU2-f — Gear polish (2026-10-25)
 **Done**
 - The Gear screen now has a paper doll on the left with one ring per slot (hands, gi, charm) showing what's worn. Tapping a ring, or the matching filter button, shows only that slot. Tapping it again shows everything.
