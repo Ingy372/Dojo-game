@@ -38,7 +38,7 @@ describe('K25 tempo', () => {
 });
 
 describe('K25 being-hit shake', () => {
-  const s = (beltId: string, difficulty: Difficulty, reducedMotion = false) => hurtShakeScale({ beltTier: BELTS.indexOf(beltId) + 1, difficulty, reducedMotion });
+  const s = (beltId: string, difficulty: Difficulty, reducedMotion = false) => hurtShakeScale({ kind: 'hurt', beltTier: BELTS.indexOf(beltId) + 1, difficulty, reducedMotion });
   it('is off below Brown belt on Guided and Standard', () => {
     for (const b of BELTS.slice(0, 7)) for (const d of ['guided', 'standard'] as const) expect(s(b, d)).toBe(0);
   });

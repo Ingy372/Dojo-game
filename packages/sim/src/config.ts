@@ -410,8 +410,12 @@ export function realSecondsToTicks(seconds: number): number {
  */
 export const SCREEN_SHAKE = { playerAttackScale: 0, hurtScale: 0.65, hurtFromTier: 8 } as const;
 
-/** K28: one shake rule. How strong a shake is (0 = none) for this belt rank (1 = first belt), difficulty and motion setting. */
-export function hurtShakeScale(o: { beltTier: number; difficulty: Difficulty; reducedMotion: boolean }): number {
-  if (o.reducedMotion) return 0;
+/**
+ * K28: the one shake rule. How strong a shake is (0 = none) for what happened (being hit, a named
+ * monster's wind-up, or a Block), the belt rank (1 = first belt), difficulty and motion setting.
+ * K25b (Manager): a Block is a success moment, so it never shakes.
+ */
+export function hurtShakeScale(o: { kind: 'hurt' | 'windup' | 'block'; beltTier: number; difficulty: Difficulty; reducedMotion: boolean }): number {
+  if (o.kind === 'block' || o.reducedMotion) return 0;
   return o.beltTier >= SCREEN_SHAKE.hurtFromTier || o.difficulty === 'challenge' ? SCREEN_SHAKE.hurtScale : 0;
 }

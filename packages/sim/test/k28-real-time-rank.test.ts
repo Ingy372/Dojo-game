@@ -16,11 +16,22 @@ describe('K28 real-time conversion', () => {
 
 describe('K28 shake rule by belt rank, not belt id', () => {
   const s = (beltTier: number, difficulty: 'guided' | 'standard' | 'challenge' = 'standard', reducedMotion = false) =>
-    hurtShakeScale({ beltTier, difficulty, reducedMotion });
+    hurtShakeScale({ kind: 'hurt', beltTier, difficulty, reducedMotion });
   it('is off below rank 8 (Brown in the standard order) and on from it, whatever the ids are', () => {
     expect(s(7)).toBe(0);
     expect(s(8)).toBeCloseTo(0.65);
     expect(s(12)).toBeCloseTo(0.65);
+  });
+  it('a Block never shakes, at every rank, difficulty and motion setting (K25b)', () => {
+    for (let beltTier = 1; beltTier <= 12; beltTier++)
+      for (const difficulty of ['guided', 'standard', 'challenge'] as const)
+        for (const reducedMotion of [false, true]) expect(hurtShakeScale({ kind: 'block', beltTier, difficulty, reducedMotion })).toBe(0);
+  });
+  it('a named wind-up follows the same rule as being hit', () => {
+    for (let beltTier = 1; beltTier <= 12; beltTier++)
+      for (const difficulty of ['guided', 'standard', 'challenge'] as const)
+        for (const reducedMotion of [false, true])
+          expect(hurtShakeScale({ kind: 'windup', beltTier, difficulty, reducedMotion })).toBe(hurtShakeScale({ kind: 'hurt', beltTier, difficulty, reducedMotion }));
   });
   it('is on at any rank on Challenge, and never with Reduced motion', () => {
     expect(s(1, 'challenge')).toBeCloseTo(0.65);
