@@ -15,6 +15,7 @@ import {
   type Difficulty,
   type PlayerInput,
   type WorldState,
+  mashGuardOn,
 } from '../src';
 import bruteData from '../../../content/enemies/brute.json';
 import abilities from '../../../content/abilities/abilities.json';
@@ -318,6 +319,42 @@ describe('the counter', () => {
       expect(counter.e.mode).toBe('stagger');
       expect(mash.e.mode).not.toBe('stagger');
       expect(counter.p.focus - focusBeforeImpact).toBeGreaterThan(mash.p.focus - focusBeforeImpact);
+    });
+  });
+
+  describe('Mash guard fades (B-MASHER-2, E3)', () => {
+    const tough = () => {
+      const s = setup();
+      s.e.health = 100000;
+      return s;
+    };
+    it('turns off after the room\'s 3rd Perfect Counter: a mid-swing hit is then a full Hit', () => {
+      const { room, world, p } = tough();
+      for (let i = 0; i < COMBAT.counter.mashGuardPerfects; i++) {
+        expect(mashGuardOn(world)).toBe(true);
+        const ev = counterAt(world, room, 0);
+        expect(ev.some((x) => x.kind === 'perfectCounter')).toBe(true);
+        expect(ev.some((x) => x.kind === 'mashGuardOff')).toBe(i === COMBAT.counter.mashGuardPerfects - 1);
+      }
+      expect(COMBAT.counter.mashGuardPerfects).toBe(3);
+      expect(mashGuardOn(world)).toBe(false);
+      const events = counterAt(world, room, null);
+      expect(p.attackCooldown).toBeGreaterThan(0);
+      expect(events.some((x) => x.kind === 'hit')).toBe(true);
+      expect(events.some((x) => x.kind === 'block')).toBe(false);
+      // A pressed Counter still Blocks or Perfects as before.
+      const late = counterAt(world, room, window + 1);
+      expect(late.some((x) => x.kind === 'block')).toBe(true);
+    });
+
+    it('two Perfect Counters keep it on; each new room starts it again', () => {
+      const a = tough();
+      for (let i = 0; i < 2; i++) counterAt(a.world, a.room, 0);
+      expect(mashGuardOn(a.world)).toBe(true);
+      expect(counterAt(a.world, a.room, null).some((x) => x.kind === 'block')).toBe(true);
+      const next = tough();
+      expect(mashGuardOn(next.world)).toBe(true);
+      expect(counterAt(next.world, next.room, null).some((x) => x.kind === 'block')).toBe(true);
     });
   });
 

@@ -77,6 +77,7 @@ import {
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
 import tutorialData from '../../../../content/tutorial/tutorial-floor.json';
+import { MASH_GUARD_LINE, takeMashGuardMoment } from '../game/mashGuardMoment';
 import { testFlags } from '../game/beta';
 
 /** The tutorial floor's lines (M7-P2). */
@@ -201,6 +202,8 @@ export interface GameSceneData {
 /** B-MASHER-a shield-bounce glow: soft gold, 0.4 s. */
 const SHIELD_GLOW_COLOR = 0xf2c75c;
 const SHIELD_GLOW_MS = 400;
+/** B-MASHER-2: stands for "this run" in rooms played without a run (the training room). */
+const NO_RUN_KEY = {};
 
 interface EnemyView {
   container: Phaser.GameObjects.Container;
@@ -1340,6 +1343,9 @@ export class GameScene extends Phaser.Scene {
           }
           break;
         }
+        case 'mashGuardOff':
+          this.senseiStepsBack(ev.playerId);
+          break;
         case 'shieldBlock': {
           const e = this.enemy(ev.enemyId);
           sfx.clank();
@@ -2334,6 +2340,25 @@ export class GameScene extends Phaser.Scene {
    * B-MASHER-a: a shield bounce gives Focus; a soft gold ring for 0.4 s hints "use your Strike!".
    * Reduced motion: a steady gold tint for the same 0.4 s, with no pulse.
    */
+  /** B-MASHER-2: once per run, a proud moment when Mash guard steps back (3 Perfect Counters in a room). */
+  private senseiStepsBack(playerId: PlayerId): void {
+    if (!takeMashGuardMoment(this.run ?? NO_RUN_KEY)) return;
+    this.senseiSay([MASH_GUARD_LINE], 2200);
+    const p = this.world.players[playerId];
+    if (!p) return;
+    const r = 0.9 * TILE;
+    if (reducedMotion()) {
+      // Steady gold halo, no movement.
+      const halo = this.addWorld(this.add.circle(p.pos.x * TILE, p.pos.y * TILE, r, SHIELD_GLOW_COLOR, 0.25).setStrokeStyle(4, SHIELD_GLOW_COLOR, 0.8).setDepth(9));
+      this.time.delayedCall(1200, () => halo.destroy());
+      return;
+    }
+    const t = this.senseiText;
+    if (t) this.tweens.add({ targets: t, alpha: { from: 0, to: 1 }, duration: 250 });
+    const c = this.addWorld(this.add.circle(p.pos.x * TILE, p.pos.y * TILE, r).setStrokeStyle(5, SHIELD_GLOW_COLOR, 0.9).setDepth(9));
+    this.tweens.add({ targets: c, scale: { from: 0.6, to: 1.4 }, alpha: { from: 1, to: 0 }, duration: 1000, ease: 'Cubic.Out', onComplete: () => c.destroy() });
+  }
+
   private shieldGlow(at: Vec2, radiusTiles: number): void {
     const r = (radiusTiles + 0.15) * TILE;
     if (reducedMotion()) {

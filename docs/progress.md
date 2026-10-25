@@ -780,3 +780,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Kid bot gate (BALANCE): wins 137/200 (68.5%), room-1 KOs 0/200. Masher typical wins 14 → 59/200, room-1 KOs 148 → 0. Smart bot wins 200/200 both ways, run time within 2%.
 **Next**
 - Manager: b-t3-tune-2 boss-levers 15–20 s band misses at 14.86 s (main 15.1 s); smart damage taken per room down ~30%.
+
+## B-MASHER-2 — Mash guard fades after 3 Perfect Counters (2026-10-25)
+**Done**
+- Mash guard turns off after a room's 3rd Perfect Counter and resets each room; "Sensei steps back" shows once per run.
+- Kid gate: wins 113/200 (56.5%), room-1 KOs 0/200. Smart damage per room vs 911ce19: 28.60 → 23.51 (−17.8%), 26.23 → 22.10 (−15.7%), 28.65 → 23.74 (−17.1%).
+**Next**
+- Manager: smart damage misses the ≤15% target by 0.7–2.8 points (not tuned).

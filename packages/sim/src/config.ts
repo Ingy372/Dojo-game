@@ -89,6 +89,8 @@ export const COMBAT = {
   },
 
   counter: {
+    /** B-MASHER-2 (E3): Mash guard stops for the rest of a room once this many Perfect Counters land in it. */
+    mashGuardPerfects: 3,
     /** After pressing Counter, the player holds a guard pose this many ticks (no walking). */
     guardTicks: 10,
     /** The guard pose always lasts at least this long past the Perfect window, so a slightly early press is still a Block. */

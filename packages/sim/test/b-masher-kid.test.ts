@@ -27,12 +27,12 @@ describe('B-MASHER-c kid bot', () => {
     expect(kidRuns([1], 1)[0]).toEqual(runs[0]);
   }, 120000);
 
-  it.runIf(balance)('gate: belts 1-10 x 20 seeds: room-1 KOs <= 20/200, wins >= 35%', () => {
+  it.runIf(balance)('gate: belts 1-10 x 20 seeds: room-1 KOs 0/200, wins >= 50% (B-MASHER-2)', () => {
     const runs = kidRuns([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 20);
     const wins = runs.filter((r) => r.won).length;
     const kos = room1Kos(runs);
     (globalThis as { console?: { log(s: string): void } }).console?.log(`B-MASHER-c gate: kid wins ${wins}/${runs.length} (${((100 * wins) / runs.length).toFixed(1)}%), room-1 KOs ${kos}/${runs.length}`);
-    expect(kos).toBeLessThanOrEqual(20);
-    expect(wins / runs.length).toBeGreaterThanOrEqual(0.35);
+    expect(kos).toBe(0);
+    expect(wins / runs.length).toBeGreaterThanOrEqual(0.5);
   }, 1800000);
 });

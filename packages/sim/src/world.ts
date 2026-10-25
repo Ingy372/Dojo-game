@@ -183,6 +183,8 @@ export type CombatEvent =
   | { kind: 'guideDone'; step: number; success: boolean }
   | { kind: 'enemySwing'; enemyId: EnemyId }
   | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId; chain: number }
+  /** B-MASHER-2: this room's Perfect Counters reached COMBAT.counter.mashGuardPerfects, so Mash guard is off until the next room. */
+  | { kind: 'mashGuardOff'; playerId: PlayerId }
   | { kind: 'block'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'hit'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'counterPressed'; playerId: PlayerId }
@@ -1158,6 +1160,7 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       p.counterChain++;
       world.progress.perfects++;
       world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id, chain: p.counterChain });
+      if (world.progress.perfects === COMBAT.counter.mashGuardPerfects) world.events.push({ kind: 'mashGuardOff', playerId: p.id });
       // Bell Room twist: each Perfect Counter rings a bell, up to the number needed.
       const bellsNeeded = world.twist?.bells ?? 0;
       if (world.bells < bellsNeeded) world.events.push({ kind: 'bell', count: ++world.bells, of: bellsNeeded });
@@ -1178,10 +1181,10 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
           }
         }
       }
-    } else if (a.counterable !== false && (guarding || p.attackCooldown > 0)) {
+    } else if (a.counterable !== false && (guarding || (p.attackCooldown > 0 && mashGuardOn(world)))) {
       // Block: half damage (never against a dash-only attack: dash out instead), no stagger. The combo is kept.
       // B-MASHER-b Mash guard: a hit that lands during the player's own basic-attack swing (attackCooldown)
-      // counts as the same Block, for everyone.
+      // counts as the same Block, for everyone. B-MASHER-2 (E3): only until the room's 3rd Perfect Counter.
       p.guardTicks = 0;
       const share = Math.max(0.1, COMBAT.counter.blockDamageMultiplier - p.mods.blockCut);
       const dmg = damage(power, a.strength * share * weak, guardOf(p));
@@ -1472,4 +1475,9 @@ function directionTo(from: Vec2, to: Vec2): Vec2 {
   const dy = to.y - from.y;
   const d = length(dx, dy);
   return d > 0 ? { x: dx / d, y: dy / d } : { x: 0, y: 1 };
+}
+
+/** B-MASHER-2 (E3): Mash guard helps until this room has COMBAT.counter.mashGuardPerfects Perfect Counters; each new room starts it again. */
+export function mashGuardOn(world: WorldState): boolean {
+  return world.progress.perfects < COMBAT.counter.mashGuardPerfects;
 }
