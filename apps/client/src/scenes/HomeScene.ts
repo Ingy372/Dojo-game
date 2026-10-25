@@ -623,9 +623,9 @@ export class HomeScene extends Phaser.Scene {
       let slot = 0;
       for (const seg of row.segments) {
         this.oneLine(this.text(sx + slot * step, ry, seg.title, TYPE.label, '#e8c48a', true), seg.cubbies.length * step - BOARD.cubby.gap, 10);
-        seg.cubbies.forEach((c, i) => this.cubby(sx + (slot + i) * step, cy, L.cubby, c, fresh.includes(c.id)));
         slot += seg.cubbies.length;
       }
+      row.segments.flatMap((seg) => seg.cubbies).forEach((c, i) => this.cubby(sx + i * step, cy, L.cubby, c, fresh.includes(c.id)));
       ry += L.rowH;
     }
     if (pages.length <= 1) return;
@@ -682,11 +682,8 @@ export class HomeScene extends Phaser.Scene {
     this.ui.add(g);
   }
 
-  /** P-MENU2-b: one cubby, drawn in code on a button() so it presses like every other button. */
-  private cubby(x: number, y: number, size: number, c: Cubby, unlock = false): void {
-    const btn = button(this, { x, y, w: size, h: size, label: '', color: c.earned ? 0xa8703f : WOOD.paper, size: TYPE.label, selected: false, stroke: c.earned ? 0xffd166 : WOOD.grain, onTap: () => this.openCubby(c) }, this.ui);
-    const v = btn.visual;
-    const half = size / 2;
+  /** B-POLISH-2: a cubby's label, wrapped to the padded inner width (after its 2 px stroke). */
+  private cubbyLabel(c: Cubby, size: number): Phaser.GameObjects.Text {
     const tw = cubbyTextW(size);
     const label = c.earned ? (c.short ?? c.name) : TROPHY_WORDS.notYet;
     const txt = this.add
@@ -695,11 +692,20 @@ export class HomeScene extends Phaser.Scene {
       .setOrigin(0.5, 0)
       .setLineSpacing(TROPHY_UI.cubbyLineGap)
       .setMaxLines(TROPHY_UI.cubbyLines);
-    // B-POLISH-2: a hyphenated word too wide for the padded width breaks after its hyphen ("Self-" / "Defense #1").
+    // A hyphenated word too wide for the padded width breaks after its hyphen ("Self-" / "Defense #1").
     if (txt.width > tw) txt.setText(label.replace(/-(?=\S)/g, '-\n'));
-    // The icon gives up room so up to 3 label lines fit in full (never cut "the dojo").
-    const iconS = cubbyIconSize(size, txt.height);
-    const iy = -half + TROPHY_UI.cubbyTop + iconS / 2;
+    return txt;
+  }
+
+  /** P-MENU2-b: one cubby, drawn in code on a button() so it presses like every other button. */
+  private cubby(x: number, y: number, size: number, c: Cubby, unlock = false): void {
+    const btn = button(this, { x, y, w: size, h: size, label: '', color: c.earned ? 0xa8703f : WOOD.paper, size: TYPE.label, selected: false, stroke: c.earned ? 0xffd166 : WOOD.grain, onTap: () => this.openCubby(c) }, this.ui);
+    const v = btn.visual;
+    const half = size / 2;
+    // B-POLISH-2: every icon is full size; 3-line labels fit by tight top/gap/bottom space.
+    const iconS = cubbyIconSize(size);
+    const txt = this.cubbyLabel(c, size);
+    const iy = -half + TROPHY_UI.stroke / 2 + TROPHY_UI.cubbyTop + iconS / 2;
     txt.setY(iy + iconS / 2 + TROPHY_UI.cubbyGap);
     const icon = c.icon ? addIcon(this, c.icon, 0, iy, iconS) : null;
     if (icon) v.add(icon.setAlpha(c.earned ? 1 : 0.3));
