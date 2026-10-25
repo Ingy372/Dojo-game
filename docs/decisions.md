@@ -1015,3 +1015,8 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - The detail sheet shows the icon, the real name, one line on what it does, the status line and, for earned katas, the kata arrows. It slides up, or fades in when Reduced motion is on.
 - All wording lives in `content/abilities/trophy-case.json`, including the switch labels from A. The model is in `apps/client/src/ui/trophyCase.ts`, which has no Phaser, so Vitest can test it.
 - All art is placeholder, drawn in code (seal, lantern, ribbon). No new images were added; the existing icon set is reused.
+
+## P-MENU2-b follow-up: Manager calls (2026-10-25)
+- **2 shelf rows per page.** When 2 rows fit, a Trophy Case page shows 2 shelf rows: a slimmer 28-tall ribbon, 44-tall ◀ ▶ at the sides of the shelves, and dots in a slim strip below. On these pages cubbies may shrink below 96, but never under `BOARD.cubbyMin` (72). When 2 rows don't fit, the page falls back to 1 row with the 40-tall ribbon and the 44-tall ◀ dots ▶ pager. Result: 1 row at 667x375 (5 dots), 2 rows at 844x390 and 932x430 (3 dots).
+- **Darker kata arrows.** On the cream sheet the arrows now use the token `KATA_INK.onPaper` in tokens.ts. Arrows are #1d4690 (7.1:1 on paper #f2e3c4) and the step numbers are #3a2618. Before this, the arrows were #9fd3ff (1.25:1) and the numbers were white. The dark board keeps `KATA_INK.onDark`. A test checks that both colours reach at least 4.5:1.
+- Merged main (#267, which untracks apps/client/node_modules) into P-MENU2-a and P-MENU2-b with normal merges.

@@ -5,7 +5,7 @@ import { buildTraining, loadFeed, type Now, type TrainingState } from '../src';
 import white3 from '../../../fixtures/2-white-belt-3-signoffs.json';
 import words from '../../../content/abilities/trophy-case.json';
 import { buildCubbies, shelfRows, trophyLayout, trophyPages } from '../../../apps/client/src/ui/trophyCase';
-import { BOARD, MIN_TAP } from '../../../apps/client/src/ui/tokens';
+import { BOARD, BOARD_PAPER, KATA_INK, MIN_TAP, contrast } from '../../../apps/client/src/ui/tokens';
 import { testContent } from './load-content';
 
 const content = testContent();
@@ -53,15 +53,26 @@ describe('P-MENU2-b Trophy Case (White + 2 stripes)', () => {
     expect(visible).not.toMatch(/🔒|unlock|locked|\d+\s*(\/|of)\s*\d+|hurry|missed|last chance/i);
   });
 
-  it('pages rows of up to 4 cubbies, each 44+ and fitting the smallest phone', () => {
-    for (const [w, h] of [[300, 240], [560, 300]]) {
+  it('shows 2 shelf rows per page when they fit, 1 only on the smallest phone, all 44+', () => {
+    // Trophy Case area (w x h) under the switch at 667x375, 844x390 and 932x430.
+    const areas: Array<[number, number, number]> = [[340, 228, 1], [470, 239, 2], [550, 284, 2]];
+    for (const [w, h, rows] of areas) {
       const L = trophyLayout(w, h);
+      expect(L.rowsPerPage).toBe(rows);
       expect(L.perRow).toBeLessThanOrEqual(4);
-      expect(L.cubby).toBeGreaterThanOrEqual(MIN_TAP);
-      expect(L.perRow * L.cubby + (L.perRow - 1) * BOARD.cubby.gap).toBeLessThanOrEqual(w);
-      expect(BOARD.ribbonH + L.rowsPerPage * L.rowH + L.pagerH).toBeLessThanOrEqual(h);
+      expect(L.cubby).toBeGreaterThanOrEqual(rows === 2 ? BOARD.cubbyMin : MIN_TAP);
+      expect(L.shelfX + L.perRow * L.cubby + (L.perRow - 1) * BOARD.cubby.gap).toBeLessThanOrEqual(w - (L.sideArrows ? MIN_TAP : 0));
+      expect(L.ribbonH + L.rowsPerPage * L.rowH + L.pagerH).toBeLessThanOrEqual(h);
       const pages = trophyPages(shelfRows(cubbies, L.perRow), L.rowsPerPage);
       expect(pages.flat().flatMap((r) => r.cubbies)).toHaveLength(cubbies.length);
     }
+    const one = trophyPages(shelfRows(cubbies, 4), 1).length;
+    const two = trophyPages(shelfRows(cubbies, 4), 2).length;
+    expect(two).toBeLessThan(one);
+  });
+
+  it('kata arrows on the cream sheet are a token with at least 4.5:1 contrast', () => {
+    expect(contrast(KATA_INK.onPaper.arrow, BOARD_PAPER)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(parseInt(KATA_INK.onPaper.num.slice(1), 16), BOARD_PAPER)).toBeGreaterThanOrEqual(4.5);
   });
 });

@@ -35,6 +35,7 @@ import {
   kataArrows,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
+import { KATA_INK, MIN_TAP, type KataInk } from '../ui/tokens';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
@@ -598,21 +599,32 @@ export class HomeScene extends Phaser.Scene {
    * No locks, no counts. Tapping a cubby opens its detail sheet.
    */
   private renderTrophyCase(x: number, y: number, w: number, h: number): void {
-    this.beltRibbon(x, y, w);
-    const cubbies = this.trophyCubbies();
     const L = trophyLayout(w, h);
+    this.beltRibbon(x, y, w, L.ribbonH);
+    const cubbies = this.trophyCubbies();
     const pages = trophyPages(shelfRows(cubbies, L.perRow), L.rowsPerPage);
     this.trophyPages = pages.length;
     this.page = Math.min(this.page, pages.length - 1);
-    let ry = y + BOARD.ribbonH + S2;
+    const top = y + L.ribbonH + (L.sideArrows ? S1 : S2);
+    const sx = x + L.shelfX;
+    let ry = top;
     if (cubbies.length === 0) this.text(x + w / 2, ry + S3, TROPHY_WORDS.empty, TYPE.body, '#f2e3c4', false, FONT, w).setOrigin(0.5, 0).setAlign('center');
     for (const row of pages[this.page]) {
-      this.text(x, ry, row.title, TYPE.label, '#e8c48a', true);
+      this.text(sx, ry, row.title, TYPE.label, '#e8c48a', true);
       const cy = ry + TYPE.label + 4;
-      row.cubbies.forEach((c, i) => this.cubby(x + i * (L.cubby + BOARD.cubby.gap), cy, L.cubby, c));
+      row.cubbies.forEach((c, i) => this.cubby(sx + i * (L.cubby + BOARD.cubby.gap), cy, L.cubby, c));
       ry += L.rowH;
     }
-    if (pages.length > 1) this.trophyPager(x, y + h - L.pagerH, w, pages.length);
+    if (pages.length <= 1) return;
+    if (!L.sideArrows) {
+      this.trophyPager(x, y + h - L.pagerH, w, pages.length);
+      return;
+    }
+    // 2-row pages: ◀ ▶ centred on the shelves, dots in the slim strip below.
+    const midY = top + (L.rowsPerPage * L.rowH) / 2 - MIN_TAP / 2;
+    this.button(x, midY, MIN_TAP, MIN_TAP, '◀', WOOD.switchOff, 15, () => this.turn(-1));
+    this.button(x + w - MIN_TAP, midY, MIN_TAP, MIN_TAP, '▶', WOOD.switchOff, 15, () => this.turn(1));
+    this.pageDotsRow(sx, y + h - L.pagerH / 2, L.shelfW, pages.length);
   }
 
   /** P-MENU2-b: the Trophy Case cubbies for this student. */
@@ -632,16 +644,16 @@ export class HomeScene extends Phaser.Scene {
   }
 
   /** P-MENU2-b: one knot per belt. Earned in full colour, the current one glows with its stripes, future ones are a paper outline. */
-  private beltRibbon(x: number, y: number, w: number): void {
+  private beltRibbon(x: number, y: number, w: number, rh: number): void {
     const t = this.training;
     const n = t.belts.length;
     const cur = t.belts.findIndex((b) => b.id === t.belt.id);
     const g = this.add.graphics();
-    g.fillStyle(WOOD.frameDark, 0.6).fillRoundedRect(x, y, w, BOARD.ribbonH, RADIUS.button);
+    g.fillStyle(WOOD.frameDark, 0.6).fillRoundedRect(x, y, w, rh, RADIUS.button);
     const slot = (w - S2) / Math.max(1, n);
     const kw = Math.min(40, slot - 4);
     const kh = 16;
-    const ky = y + (BOARD.ribbonH - kh) / 2;
+    const ky = y + (rh - kh) / 2;
     t.belts.forEach((b, i) => {
       const kx = x + S1 + i * slot + (slot - kw) / 2;
       if (i > cur) {
@@ -693,10 +705,14 @@ export class HomeScene extends Phaser.Scene {
   private trophyPager(x: number, y: number, w: number, pages: number): void {
     this.button(x, y, GEAR.arrowW, 44, '◀', WOOD.switchOff, 15, () => this.turn(-1));
     this.button(x + w - GEAR.arrowW, y, GEAR.arrowW, 44, '▶', WOOD.switchOff, 15, () => this.turn(1));
-    const room = w - 2 * GEAR.arrowW;
-    const d = pageDots(pages, room);
+    this.pageDotsRow(x + GEAR.arrowW, y + 22, w - 2 * GEAR.arrowW, pages);
+  }
+
+  /** Page dots centred in a strip (never "n / m"). */
+  private pageDotsRow(x: number, cy: number, w: number, pages: number): void {
+    const d = pageDots(pages, w);
     if (!d) return;
-    for (let i = 0; i < pages; i++) this.ui.add(this.add.circle(x + GEAR.arrowW + d.x0 + i * d.step, y + 22, GEAR.dot / 2, i === this.page ? 0xffd166 : WOOD.paper, i === this.page ? 1 : 0.35));
+    for (let i = 0; i < pages; i++) this.ui.add(this.add.circle(x + d.x0 + i * d.step, cy, GEAR.dot / 2, i === this.page ? 0xffd166 : WOOD.paper, i === this.page ? 1 : 0.35));
   }
 
   /** P-MENU2-b: the detail sheet: icon, real name, one line of what it does, the status line and kata arrows. */
@@ -740,7 +756,7 @@ export class HomeScene extends Phaser.Scene {
     if (c.kata) {
       this.text(sx + pad, ty, TROPHY_WORDS.kataSteps, TYPE.label, '#7a5a3a', true);
       ty += TYPE.label + 4;
-      this.kataSteps(sx + pad, ty, c.kata, sw - 2 * pad);
+      this.kataSteps(sx + pad, ty, c.kata, sw - 2 * pad, KATA_INK.onPaper);
     }
     button(this, { x: sx + sw - pad - 96, y: sy + sh - pad - 44 + 8, w: 96, h: 44, label: TROPHY_WORDS.close, color: WOOD.switchOn, size: TYPE.body, onTap: () => this.closeCubby() }, body);
     this.ui = prevUi;
@@ -1205,12 +1221,12 @@ export class HomeScene extends Phaser.Scene {
    * S3-P1b: a kata's steps, each the step number (bold 13px) followed by its arrow(s) drawn as
    * thick shapes as tall as the number, so they never shrink to dots. Wraps by step.
    */
-  private kataSteps(x: number, y: number, line: string, width: number): void {
+  private kataSteps(x: number, y: number, line: string, width: number, ink: KataInk = KATA_INK.onDark): void {
     const g = this.add.graphics();
     this.ui.add(g);
     for (const c of kataLayout(line, width)) {
-      this.text(x + c.x, y + c.y + 2, c.n, 13, '#ffffff', true);
-      c.arrows.forEach((d, k) => drawArrow(g, x + c.x + numW(c.n) + k * KATA_ARROW_W + KATA_ARROW_W / 2, y + c.y + 11, d));
+      this.text(x + c.x, y + c.y + 2, c.n, 13, ink.num, true);
+      c.arrows.forEach((d, k) => drawArrow(g, x + c.x + numW(c.n) + k * KATA_ARROW_W + KATA_ARROW_W / 2, y + c.y + 11, d, ink.arrow));
     }
   }
 
@@ -1349,10 +1365,10 @@ function kataLines(line: string, width: number): number {
   return cells.length ? cells[cells.length - 1].y / KATA_LINE + 1 : 1;
 }
 /** A thick arrow about 14 points long centred on (cx, cy). */
-function drawArrow(g: Phaser.GameObjects.Graphics, cx: number, cy: number, d: 'up' | 'down' | 'left' | 'right'): void {
+function drawArrow(g: Phaser.GameObjects.Graphics, cx: number, cy: number, d: 'up' | 'down' | 'left' | 'right', color: number = KATA_INK.onDark.arrow): void {
   const r = 7;
   const [dx, dy] = d === 'up' ? [0, -1] : d === 'down' ? [0, 1] : d === 'left' ? [-1, 0] : [1, 0];
   const [px, py] = [-dy, dx];
-  g.lineStyle(3, 0x9fd3ff, 1).lineBetween(cx - dx * r, cy - dy * r, cx + dx * (r - 4), cy + dy * (r - 4));
-  g.fillStyle(0x9fd3ff, 1).fillTriangle(cx + dx * r, cy + dy * r, cx + dx * (r - 6) + px * 5, cy + dy * (r - 6) + py * 5, cx + dx * (r - 6) - px * 5, cy + dy * (r - 6) - py * 5);
+  g.lineStyle(3, color, 1).lineBetween(cx - dx * r, cy - dy * r, cx + dx * (r - 4), cy + dy * (r - 4));
+  g.fillStyle(color, 1).fillTriangle(cx + dx * r, cy + dy * r, cx + dx * (r - 6) + px * 5, cy + dy * (r - 6) + py * 5, cx + dx * (r - 6) - px * 5, cy + dy * (r - 6) - py * 5);
 }

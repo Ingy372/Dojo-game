@@ -3,7 +3,7 @@
 
 import type { AbilityInfo, VirtueInfo } from '@dojo/sim';
 import words from '../../../../content/abilities/trophy-case.json';
-import { BOARD, MIN_TAP, S2, TYPE } from './tokens';
+import { BOARD, MIN_TAP, S1, S2, TYPE } from './tokens';
 
 export const TROPHY_WORDS = words;
 
@@ -86,18 +86,40 @@ export function shelfRows(cubbies: readonly Cubby[], perRow: number): ShelfRow[]
   return rows;
 }
 
-/** Trophy Case layout for a w x h area under the switch. */
-export function trophyLayout(w: number, h: number): { cubby: number; perRow: number; rowsPerPage: number; rowH: number; pagerH: number } {
+export interface TrophyLayout {
+  rowsPerPage: number;
+  cubby: number;
+  perRow: number;
+  rowH: number;
+  ribbonH: number;
+  /** 2-row pages: ◀ ▶ sit at the sides of the shelves and the dots get a slim strip below. */
+  sideArrows: boolean;
+  /** Height of the bottom strip: the 44-tall pager (1 row) or the dots (2 rows). */
+  pagerH: number;
+  /** Where the shelves start inside the area, and how wide they are. */
+  shelfX: number;
+  shelfW: number;
+}
+
+const LABEL_H = TYPE.label + 4;
+
+/** Trophy Case layout for a w x h area under the switch: 2 shelf rows per page when they fit, else 1. */
+export function trophyLayout(w: number, h: number): TrophyLayout {
   const gap = BOARD.cubby.gap;
-  const pagerH = MIN_TAP;
-  const labelH = TYPE.label + 4;
-  const room = h - BOARD.ribbonH - S2 - pagerH - S2;
-  let cubby = Math.min(4 * BOARD.cubby.large + 3 * gap <= w ? BOARD.cubby.large : BOARD.cubby.small, room - labelH);
-  cubby = Math.max(cubby, MIN_TAP);
-  const perRow = Math.max(1, Math.min(4, Math.floor((w + gap) / (cubby + gap))));
-  const rowH = labelH + cubby + gap;
-  const rowsPerPage = Math.max(1, Math.floor((room + gap) / rowH));
-  return { cubby, perRow, rowsPerPage, rowH, pagerH };
+  const sized = (shelfW: number) => (4 * BOARD.cubby.large + 3 * gap <= shelfW ? BOARD.cubby.large : BOARD.cubby.small);
+  const perRowFor = (shelfW: number, c: number) => Math.max(1, Math.min(4, Math.floor((shelfW + gap) / (c + gap))));
+  // Two rows: slim ribbon, arrows at the sides, dots below.
+  const side = MIN_TAP + S2;
+  const w2 = w - 2 * side;
+  const room2 = h - BOARD.ribbonCompact - S1 - BOARD.dotsH;
+  const c2 = Math.min(sized(w2), Math.floor(room2 / 2 - LABEL_H - gap));
+  if (c2 >= BOARD.cubbyMin) {
+    return { rowsPerPage: 2, cubby: c2, perRow: perRowFor(w2, c2), rowH: LABEL_H + c2 + gap, ribbonH: BOARD.ribbonCompact, sideArrows: true, pagerH: BOARD.dotsH, shelfX: side, shelfW: w2 };
+  }
+  // One row: full ribbon, the 44-tall ◀ dots ▶ pager below.
+  const room = h - BOARD.ribbonH - S2 - MIN_TAP - S2;
+  const c = Math.max(MIN_TAP, Math.min(sized(w), room - LABEL_H));
+  return { rowsPerPage: 1, cubby: c, perRow: perRowFor(w, c), rowH: LABEL_H + c + gap, ribbonH: BOARD.ribbonH, sideArrows: false, pagerH: MIN_TAP, shelfX: 0, shelfW: w };
 }
 
 /** Rows split into pages (shown as dots, never "n / m"). */
