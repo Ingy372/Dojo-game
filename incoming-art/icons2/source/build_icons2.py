@@ -85,30 +85,32 @@ def medallion(fam):
 
 
 def rooted_form():
-    """Rooted Form = the wide fighting stance (A2 option A), side view facing right.
-    Technique: feet about two shoulder-widths apart, both knees bent, front knee over the front foot, back straight,
-    weight low and centred, guard up (lead fist forward at chin height, rear fist by the chin)."""
+    """Rooted Form = a wide, even, symmetric horse-style stance, front view.
+    Technique: feet about two shoulder-widths apart and parallel, both knees bent equally and pushed out over the
+    toes, hips low and level, back straight and upright, guard up (both fists in front at chin height, elbows down)."""
     fam = 'form'; ring, ring_hi, ink, soft = FAMILY[fam]
-    I = Ink((1.0, -1.0, 0.5))
-    g = I.layer()  # ground + root marks (soft ink)
+    I = Ink((1.0, 0, 0.5))
+    g = I.layer()  # ground + root marks (soft ink), symmetric
     I.limb(g, [(38, 89), (90, 89)], 2.2)
-    for x in (43, 47.5, 77, 81.5):
-        I.limb(g, [(x, 92), (x - 1 if x < 60 else x + 1, 95.5)], 2.2)
+    for x in (42.5, 47.5):
+        I.limb(g, [(x, 92), (x - 1, 95.5)], 2.2)
+        I.limb(g, [(128 - x, 92), (128 - x + 1, 95.5)], 2.2)
     I.put(g, soft)
     m = I.layer()
-    hip, sh = (63, 65), (64, 47)
-    I.limb(m, [hip, sh], 9.5)                                  # torso, upright
-    I.disc(m, 66.5, 37.5, 6.2)                                 # head
-    I.limb(m, [hip, (75, 74), (78, 86.5)], 6.4)                 # front leg: knee over foot
-    I.limb(m, [(78, 86.5), (85.5, 86.5)], 4.6)                  # front foot, toes forward
-    I.limb(m, [hip, (52, 75), (45, 86.5)], 6.4)                 # back leg, bent
-    I.limb(m, [(45, 86.5), (50.5, 86.5)], 4.6)                  # back foot, flat
+    I.limb(m, [(64, 64), (64, 47)], 11.5)                       # torso, upright
+    I.disc(m, 64, 37, 6.2)                                     # head
+    for sgn in (-1, 1):
+        X = lambda x: 64 + sgn * (x - 64)
+        I.limb(m, [(X(59.5), 64), (X(46), 69), (X(44.5), 86.5)], 6.6)   # thigh near level, shin vertical
+        I.limb(m, [(X(41), 86.8), (X(48.5), 86.8)], 4.6)                 # foot flat, pointing forward
     I.put(m, ink)
-    I.arm([(63, 49.5), (60, 57), (70, 50)], (70.5, 49.5), 4.4, ink, FACE, 3.2)        # rear arm, fist by the chin
-    I.arm([(65, 48.5), (75, 55.5), (81, 46)], (81.5, 45.5), 4.6, ink, FACE, 3.5)      # lead arm, fist forward at chin height
-    b = I.layer()                                              # belt knot accent
-    I.limb(b, [(58.6, 63), (67.6, 63)], 2.6)
-    I.limb(b, [(63, 63.5), (60.5, 68.5)], 1.8)
+    for sgn in (-1, 1):
+        X = lambda x: 64 + sgn * (x - 64)
+        I.arm([(X(58.5), 48.5), (X(50.5), 56), (X(53), 47.5)], (X(53), 47.2), 4.4, ink, FACE, 3.4)  # guard, fist at chin height
+    b = I.layer()                                              # belt + knot
+    I.limb(b, [(58.6, 62.6), (69.4, 62.6)], 2.6)
+    I.limb(b, [(64, 63), (62, 68)], 1.8)
+    I.limb(b, [(64, 63), (66, 68)], 1.8)
     I.put(b, ring_hi)
     return fam, I
 
