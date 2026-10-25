@@ -1,0 +1,18 @@
+# Delivery Note: bestiary set 1 (Lantern Moth, Buzzy Bee, Thorn Sprout)
+
+Delivered: sheets, blends, build script, contact sheets, GIFs and a line-up with all 6 bestiary enemies (plus the
+player and Tier 1). Built exactly like #207 v2. Only `incoming-art/bestiary-set1/` is touched; no game code. The rest
+of the plan is not started; it waits for this set to be approved.
+
+Second pass: checked every contact sheet in 8 directions; lowered the sprout leaves and bee/moth wings so nothing goes
+above the head, swept the moth wings and sprout leaves back a little so the side views are not paper-thin, and gave the
+bee a dark face patch (its first pass read like a muzzle). Red-pixel check on all body and glow sheets: 0 in moth and sprout; 15 anti-aliased tan edge pixels on the bee (rgb ~189,131,101, honey shading, not visible as red). Red only in the telegraph layer.
+
+## DECIDE
+1. Working looks and colours: moth navy + lilac, bee honey + sky-blue rim, sprout deep green + lime. OK, or other colours?
+2. Bee file id: the plan says "Buzzy Bee", the data file is `buzz-bee.json` (id `buzz-bee`). The sprite folder/name is
+   `bee` for now. Which id should the art use when it is imported?
+3. Thorn Sprout: the data has no thorns that hurt, so I drew soft round nubs, not points. OK? The lore says it "opens a
+   tiny flower"; I kept the bud closed and used the shared defeat (in the blend, like #207). Should the bud open into a flower on defeat (extra frames)?
+4. Bee: no stinger (kept kid-friendly, a round tail nub instead). OK?
+5. Flyers (moth, bee) hover a little above the ground line. OK, or should they sit lower?
