@@ -19,8 +19,8 @@ import {
 import bruteData from '../../../content/enemies/brute.json';
 import abilities from '../../../content/abilities/abilities.json';
 
-/** The Rooted Stance's Perfect Counter bonus, read from content (its counterWindow). */
-const ROOTED_BONUS = abilities.stances.find((f) => f.id === 'rooted-stance')!.counterWindow;
+/** The Cat Stance's (was Rooted) Perfect Counter bonus, read from content (its counterWindow). */
+const ROOTED_BONUS = abilities.stances.find((f) => f.id === 'cat-stance')!.counterWindow;
 import trainingRoom from '../../../content/rooms/training-room.json';
 
 const brute = loadEnemy(bruteData);
@@ -288,7 +288,7 @@ describe('the counter', () => {
     }
   });
 
-  it('uses the right window on each difficulty, plus the Rooted Stance bonus', () => {
+  it('uses the right window on each difficulty, plus the Cat Stance bonus', () => {
     for (const d of ['guided', 'standard', 'challenge'] as Difficulty[]) {
       const w = DIFFICULTY[d].counterWindowTicks;
       const inside = setup(d);
@@ -301,7 +301,7 @@ describe('the counter', () => {
     }
     const rooted = setup();
     rooted.p.counterBonusTicks = ROOTED_BONUS;
-    expect(counterAt(rooted.world, rooted.room, window + 1).some((ev) => ev.kind === 'perfectCounter')).toBe(true);
+    expect(counterAt(rooted.world, rooted.room, window + ROOTED_BONUS - 1).some((ev) => ev.kind === 'perfectCounter')).toBe(true);
   });
 
   it('cannot be spammed: a guard that counters nothing rests the button', () => {

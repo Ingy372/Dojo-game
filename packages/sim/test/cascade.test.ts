@@ -27,7 +27,7 @@ describe('unlock cascade (M7-P4)', () => {
     expect(w.kind === 'welcome' && w.count).toBe(4);
     expect(w.kind === 'welcome' && w.preview).toBeNull();
     const stance = m[2];
-    expect(stance.kind === 'signOff' && stance.ability).toBe('Stance: Rooted Stance');
+    expect(stance.kind === 'signOff' && stance.ability).toBe('Stance: Cat Stance');
   });
 
   it("profile 1 (nothing signed off yet) sees the preview: the Beginner's Stance and what the first sign-off unlocks", () => {

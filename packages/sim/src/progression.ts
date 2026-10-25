@@ -134,11 +134,23 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
 }
 
 /**
+ * R-STANCE-d1: a loadout with any Stance the student hasn't unlocked dropped (back to Ready,
+ * null). The Virtue pick is left as is. Returns null when nothing is left.
+ */
+export function normalizeLoadout(loadout: Loadout | null, training: TrainingState, abilities: AbilityContent): Loadout | null {
+  if (!loadout) return null;
+  const ok = loadout.stance !== null && unlockedStances(training, abilities).some((s) => s.id === loadout.stance);
+  // A stance that isn't unlocked goes to Ready (null); the loadout and its virtue are kept.
+  return { stance: ok ? loadout.stance : null, virtue: loadout.virtue };
+}
+
+/**
  * P-MENU2-d: the Stances and Virtue for a fight, with the student's loadout applied. No loadout
  * (or a pick not earned) gives exactly today's setup. A chosen Stance starts the fight; the
  * others follow in their usual order, so switching Stances still works.
  */
-export function loadoutAbilities(loadout: Loadout | null, training: TrainingState, abilities: AbilityContent): Pick<PlayerSetup, 'stances' | 'virtue'> {
+export function loadoutAbilities(saved: Loadout | null, training: TrainingState, abilities: AbilityContent): Pick<PlayerSetup, 'stances' | 'virtue'> {
+  const loadout = normalizeLoadout(saved, training, abilities);
   let stances = unlockedStances(training, abilities);
   const at = loadout?.stance ? stances.findIndex((f) => f.id === loadout.stance) : -1;
   if (at > 0) stances = [...stances.slice(at), ...stances.slice(0, at)];
