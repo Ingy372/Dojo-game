@@ -3,7 +3,7 @@
 // plain data and uses the seeded random number generator, so a run can be saved
 // and replayed exactly.
 
-import { BLESSING, byTier, COMBAT, ENEMY_TRAINING_SCALE, DOJO, FLOOR, GRADES, LOOT, TICKS_PER_SECOND, type Difficulty, type Rarity } from './config';
+import { realSecondsToTicks, BLESSING, byTier, COMBAT, ENEMY_TRAINING_SCALE, DOJO, FLOOR, GRADES, LOOT, TICKS_PER_SECOND, type Difficulty, type Rarity } from './config';
 import type { Content } from './content';
 import { modsFrom, type Effect } from './effects';
 import { chance, makeItem, rarityRank, rollRarity, type GearItem } from './loot';
@@ -611,7 +611,7 @@ function roomResult(room: Room, world: WorldState): RoomResult {
     ticks: prog.ticks,
     perfects: prog.perfects,
     damageTaken: prog.damageTaken,
-    inTime: room.challenge ? prog.ticks <= room.challenge.seconds * TICKS_PER_SECOND : null,
+    inTime: room.challenge ? prog.ticks <= realSecondsToTicks(room.challenge.seconds) : null,
   };
 }
 

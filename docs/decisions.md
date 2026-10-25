@@ -823,3 +823,9 @@ What is in the code:
 - **Bopper base 110/16 → 66/11** (Guard 10 and disarmed push 8 kept). No scale row could keep the Bopper in the mid band alongside the other four. Its Challenge KO fell below 8 at every belt. This changes the A5 numbers from #102/#118.
 - **Guard:** `test/r-bal-12-bands.test.ts` checks every live enemy, belt, student, Standard and Challenge, and fails if a new live enemy file is not listed. Against the old scale, 131 of its cases fail.
 - **Open:** the drafted C13 enemies (drafts/content/enemies) are built for each belt's Artist. If they go live as they are, this scale would double-count. They need white-base numbers, or their own scale, when they land.
+
+## K28: K25 feel fixes (from the K25 QA report)
+- **Real time.** The wind-up sound length and the warning timer use `ticksToRealMs` (realMsPerTick), so they match the slower tempo (B1, B2).
+- **Challenge timers.** "60 s" now means 60 real seconds. Both the on-screen clock and the in-time check use `realSecondsToTicks` (about 1056 ticks instead of 1200) (B3). Par seconds for grades are unchanged.
+- **Belt gate by rank.** The shake rule now checks belt rank: tier 8 and up, which is Brown in the standard 10-belt order. It no longer looks for the id 'brown', so a school with different belt ids still gets the shake from rank 8 (B4). A school with fewer than 8 belts gets the shake only on Challenge.
+- **Named-monster wind-up shakes** (the Brute stamp) follow the hit-shake rule, through the same helper (`hurtShakeScale`): Brown rank and up or Challenge, at 65%, and never with Reduced motion (the Manager's answer to the K25 QA's DECIDE 2).

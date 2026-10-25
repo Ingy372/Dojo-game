@@ -387,20 +387,33 @@ export function realMsPerTick(): number {
   return 1000 / TICKS_PER_SECOND / TEMPO.speed;
 }
 
+/** K28: real milliseconds that a number of rules ticks lasts on screen. */
+export function ticksToRealMs(ticks: number): number {
+  return ticks * realMsPerTick();
+}
+
+/** K28: rules ticks per real second (about 17.6), so "60 seconds" on screen is 60 real seconds. */
+export function realTicksPerSecond(): number {
+  return 1000 / realMsPerTick();
+}
+
+/** K28: how many rules ticks fit in a number of real seconds (e.g. a Challenge's 60 s). */
+export function realSecondsToTicks(seconds: number): number {
+  return Math.round(seconds * realTicksPerSecond());
+}
+
 /**
- * K25 screen shake. No shake when the player attacks. The shake when the player is hit is
- * only at hurtFromBelt and up, or on Challenge, at hurtScale of its old strength, and never
+ * K25 screen shake. No shake when the player attacks. The shake when the player is hit (and,
+ * since K28, a named monster's wind-up shake) is only from belt rank hurtFromTier up (Brown in
+ * the standard 10-belt order), or on Challenge, at hurtScale of its old strength, and never
  * with Reduced motion.
  */
-export const SCREEN_SHAKE = { playerAttackScale: 0, hurtScale: 0.65, hurtFromBelt: 'brown' } as const;
+export const SCREEN_SHAKE = { playerAttackScale: 0, hurtScale: 0.65, hurtFromTier: 8 } as const;
 
-/** How strong the being-hit shake is (0 = none) for this belt, difficulty and motion setting. */
-export function hurtShakeScale(o: { beltIds: readonly string[]; beltId: string; difficulty: Difficulty; reducedMotion: boolean }): number {
+/** K28: one shake rule. How strong a shake is (0 = none) for this belt rank (1 = first belt), difficulty and motion setting. */
+export function hurtShakeScale(o: { beltTier: number; difficulty: Difficulty; reducedMotion: boolean }): number {
   if (o.reducedMotion) return 0;
-  const from = o.beltIds.indexOf(SCREEN_SHAKE.hurtFromBelt);
-  const at = o.beltIds.indexOf(o.beltId);
-  const ranked = from >= 0 && at >= from;
-  return ranked || o.difficulty === 'challenge' ? SCREEN_SHAKE.hurtScale : 0;
+  return o.beltTier >= SCREEN_SHAKE.hurtFromTier || o.difficulty === 'challenge' ? SCREEN_SHAKE.hurtScale : 0;
 }
 
 /** K25b (Manager): a Block is a success moment, so it never shakes; only being hit does. */

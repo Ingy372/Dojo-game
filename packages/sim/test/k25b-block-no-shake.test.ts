@@ -2,12 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { eventShakeScale, hurtShakeScale } from '../src/config';
 
 // K25b (Manager's call): a Block is a success moment and never shakes the screen.
-const beltIds = ['white', 'yellow', 'brown', 'black'];
 const cases = [
-  { beltIds, beltId: 'white', difficulty: 'standard' as const, reducedMotion: false },
-  { beltIds, beltId: 'black', difficulty: 'standard' as const, reducedMotion: false },
-  { beltIds, beltId: 'white', difficulty: 'challenge' as const, reducedMotion: false },
-  { beltIds, beltId: 'brown', difficulty: 'challenge' as const, reducedMotion: false },
+  { beltTier: 1, difficulty: 'standard' as const, reducedMotion: false },
+  { beltTier: 10, difficulty: 'standard' as const, reducedMotion: false },
+  { beltTier: 1, difficulty: 'challenge' as const, reducedMotion: false },
+  { beltTier: 8, difficulty: 'challenge' as const, reducedMotion: false },
 ];
 
 describe('K25b block never shakes', () => {
