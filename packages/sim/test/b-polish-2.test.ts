@@ -4,8 +4,9 @@ import { TROPHY_UI, cubbyIconSize, cubbyLabelRoom, cubbyTextW, unlockPopScales }
 
 // Cubby sizes the Trophy Case uses at 667, 844 and 932 wide.
 const SIZES = [73, 93, 96];
-// 3 lines of 12 px text: ~13 px per line in the client font, less the (negative) line gap.
-const threeLines = 3 * 13 + 2 * TROPHY_UI.cubbyLineGap;
+// 3 lines of 12 px text: Phaser's measured box is ~15 px per line in the client font (42 px for
+// 3 lines at a -2 gap, measured at 844), less the (negative) line gap, plus 1 px to spare.
+const threeLines = 3 * 15 + 2 * TROPHY_UI.cubbyLineGap + 1;
 
 describe('B-POLISH-2 Trophy Case polish', () => {
   it('pops 1 → 1.06 → 1 and never dips below 1', () => {

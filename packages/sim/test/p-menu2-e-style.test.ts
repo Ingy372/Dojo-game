@@ -38,6 +38,16 @@ describe('P-MENU2-e Fighting Style', () => {
     expect(characterSetup(p, t, content.abilities).forms![0].id).toBe('flowing-form');
   });
 
+  it('re-tapping the equipped pick returns the same loadout (no re-save, no pop)', () => {
+    const m = buildStyle(t, content.abilities, null);
+    const flowing = m.trays.stance.find((x) => x.id === 'flowing-form')!;
+    const once = equipPick(null, 'stance', flowing);
+    expect(equipPick(once, 'stance', flowing)).toBe(once);
+    // The screen's equipStyle() returns early on that same object, before writeSave or the pop.
+    const scene = Object.values(import.meta.glob(['../../../apps/client/src/scenes/HomeScene.ts'], { query: '?raw', import: 'default', eager: true }))[0] as string;
+    expect(scene).toMatch(/if \(next === this\.profile\.loadout\) return;\s*this\.profile\.loadout = next;\s*writeSave/);
+  });
+
   it('tap Virtue, tap a pick: only the Virtue changes', () => {
     const m = buildStyle(t, content.abilities, { form: 'rooted-form', virtue: null });
     const other = m.trays.virtue.find((x) => x.earned && x.id !== t.virtue?.def.id)!;

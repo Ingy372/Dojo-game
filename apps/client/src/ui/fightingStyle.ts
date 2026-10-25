@@ -72,6 +72,8 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
 /** The loadout after tapping `pick` with `slot` chosen. Not-yet picks and the wrong slot change nothing. */
 export function equipPick(loadout: Loadout | null, slot: StyleSlot, pick: StylePick): Loadout | null {
   if (!pick.earned || pick.slot !== slot) return loadout;
+  // B-POLISH-2: re-tapping the equipped pick changes nothing (same object: no re-save, no pop).
+  if ((slot === 'stance' ? loadout?.form : loadout?.virtue) === pick.id) return loadout;
   const base: Loadout = { form: loadout?.form ?? null, virtue: loadout?.virtue ?? null };
   return slot === 'stance' ? { ...base, form: pick.id } : { ...base, virtue: pick.id };
 }

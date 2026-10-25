@@ -623,7 +623,7 @@ export class HomeScene extends Phaser.Scene {
       const equipped = p.earned && cur?.id === p.id;
       button(this, {
         x: x + i * (L.tileW + S2), y: ty, w: L.tileW, h: L.tileH,
-        label: p.earned ? p.name : STYLE_WORDS.notYet, labelWrap: L.tileW - 8, size: TYPE.label,
+        label: p.name, labelWrap: L.tileW - 8, size: TYPE.label,
         color: p.earned ? WOOD.frame : BOARD_PAPER, labelColor: p.earned ? '#fff6e6' : ink, stroke: WOOD.grain, selected: equipped,
         onTap: () => (p.earned ? this.equipStyle(p) : this.openStylePick(p)),
       }, this.ui);
@@ -643,18 +643,25 @@ export class HomeScene extends Phaser.Scene {
     pg.lineStyle(2, WOOD.grain).strokeRoundedRect(px, y, L.previewW, L.previewH, RADIUS.panel);
     this.ui.add(pg);
     const pw = L.previewW - 2 * S2;
-    let py = y + S2;
-    const title = this.text(px + L.previewW / 2, py, cur ? cur.name : STYLE_WORDS.noVirtue, TYPE.title, ink, true).setOrigin(0.5, 0);
-    this.oneLine(title, pw, TYPE.body);
-    py += title.height + S1;
-    const body = this.text(px + L.previewW / 2, py, cur ? cur.line : STYLE_WORDS.noVirtueLine, TYPE.body, '#5a3e28', false, FONT, pw).setOrigin(0.5, 0).setAlign('center');
-    py += body.height + S2;
-    const foot = this.styleSlot === 'stance' ? STYLE_WORDS.switchLine : STYLE_WORDS.virtueLine;
-    const f = this.text(px + L.previewW / 2, py, foot, TYPE.label, '#7a4a22', true, FONT, pw).setOrigin(0.5, 0).setAlign('center');
-    const hintText = this.text(px + L.previewW / 2, 0, STYLE_WORDS.hint, TYPE.label, '#7a5a3a', false, FONT, pw).setOrigin(0.5, 0).setAlign('center');
+    // B-POLISH-2: the hint always shows (bottom of the card); the title wraps to 2 lines (no "…"),
+    // and the title/body step down a size if the words would otherwise reach the hint.
+    const hintText = this.text(px + L.previewW / 2, 0, STYLE_WORDS.hint, TYPE.label, '#7a5a3a', false, FONT, L.previewW - S2).setOrigin(0.5, 0).setAlign('center');
     const hy = y + L.previewH - S2 - hintText.height;
-    if (f.y + f.height + S1 <= hy) hintText.setY(hy);
-    else hintText.destroy();
+    hintText.setY(hy);
+    const foot = this.styleSlot === 'stance' ? STYLE_WORDS.switchLine : STYLE_WORDS.virtueLine;
+    const title = this.text(px + L.previewW / 2, 0, cur ? cur.name : STYLE_WORDS.noVirtue, TYPE.title, ink, true, FONT, pw).setOrigin(0.5, 0).setAlign('center').setMaxLines(2);
+    const body = this.text(px + L.previewW / 2, 0, cur ? cur.line : STYLE_WORDS.noVirtueLine, TYPE.body, '#5a3e28', false, FONT, pw).setOrigin(0.5, 0).setAlign('center');
+    const f = this.text(px + L.previewW / 2, 0, foot, TYPE.label, '#7a4a22', true, FONT, pw).setOrigin(0.5, 0).setAlign('center');
+    const place = (gap: number): number => {
+      let py = y + gap;
+      title.setY(py);
+      py += title.height + S1;
+      body.setY(py);
+      py += body.height + gap;
+      f.setY(py);
+      return py + f.height + S1;
+    };
+    if (place(S2) > hy) { title.setFontSize(TYPE.body); body.setFontSize(TYPE.label); if (place(S2) > hy) place(S1); }
 
     // "Always with you": Strikes and Seals are always on, so they are shown, not picked.
     const ay = y + L.alwaysY;
@@ -670,7 +677,8 @@ export class HomeScene extends Phaser.Scene {
       this.ui.add(g);
       const icon = addIcon(this, a.id, cx, cy, L.icon - 8);
       if (icon) this.ui.add(icon);
-      else this.text(cx, cy, a.name.charAt(0), TYPE.title, '#fff6e6', true).setOrigin(0.5);
+      // B-POLISH-2: no art yet: a code-drawn placeholder (a small gold star), never a letter.
+      else this.ui.add(this.add.star(cx, cy, 5, (L.icon - 8) / 5, (L.icon - 8) / 2.4, 0xffd166).setStrokeStyle(2, 0xa8703f));
     });
   }
 

@@ -36,7 +36,7 @@ export const MOTION = {
  * below 1); the detail sheet's description may run effectLines lines; cubby labels keep
  * cubbyPadX clear on each side (a hyphenated word breaks after its hyphen), up to cubbyLines lines.
  */
-export const TROPHY_UI = { popPeak: 1.06, effectLines: 3, cubbyPadX: 8, cubbyLines: 3, cubbyLineGap: -2, cubbyTop: 1, cubbyGap: 1, cubbyBottom: 2, stroke: 2 } as const;
+export const TROPHY_UI = { popPeak: 1.06, effectLines: 3, cubbyPadX: 8, cubbyLines: 3, cubbyLineGap: -3, cubbyTop: 0, cubbyGap: -1, cubbyBottom: 1, stroke: 2 } as const;
 
 /** The unlock pop's scale keyframes: 1 → peak → 1. */
 export const unlockPopScales = (): readonly number[] => [1, TROPHY_UI.popPeak, 1];

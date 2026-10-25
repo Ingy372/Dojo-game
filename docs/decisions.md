@@ -1052,3 +1052,9 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Manager: mid-fight Form switching after a loadout pick is fine; P-MENU2-e explains it simply on that screen.
 - **Extra scope (Manager-approved):** removed the unused `COMBAT.rootedFormBonusTicks`. combat.test.ts and the P-MENU2-d golden capture now read the Rooted bonus from `counterWindow` in content/abilities/abilities.json. The golden output is unchanged; setting counterWindow to 3 makes the golden test fail, as it should.
 - **Tester fix (#271 retest):** the 10 px step-down left only ~4 px at 844, so it's gone. A label too wide for the padded width (cubby − 2×8 px) now breaks after its hyphen ("Self-" / "Defense #1"), and cubby labels allow 3 lines at 12 px; the icon shrinks (`cubbyIconSize`, min 20 px) to make room. "Learn this at the dojo" now fits in full. Wording unchanged. Measured text width vs inner width: at least 8.5 px clear each side at 667/844/932.
+
+### B-POLISH-2 — 2nd Tester fix + Manager scope (#272 merged)
+- Cubby text width counts the 2 px stroke: `tw = size − 2·cubbyPadX − stroke`. Measured: ≥ 8.0 px clear on each side at 667, 844 and 932.
+- Icons stay full size (31 at a 73 cubby, round(size·0.42) everywhere, so one size per row). 3-line labels fit by trimming spacing: line gap −3, top 0, icon→label gap −1, bottom 1. Measured at 844: the tightest label ends 2 px inside the stroke.
+- Fighting Style (#272) polish: the hint always shows. Title and body step down a size, then the gaps tighten, so nothing hides. The title wraps to 2 lines (no "…"). Locked tray tiles show the pick's name. An "Always with you" perk with no art gets a code-drawn gold star instead of its first letter. Re-tapping the equipped pick returns the same loadout object, so there's no re-save and no pop (tested).
+- Manager calls on #272: show all not-yet Virtues as calm tiles; no +n count; no "Use this" button; wrap the title; the empty locked circle is fine for now.
