@@ -34,7 +34,7 @@ for e, n in [("swarmer", "Swarmer"), ("shield", "Shield Guard"), ("brute", "Brut
     f = os.path.join(ROOT, "enemies-tier1", e, "sprites"); cells.append((n, *frame(f, meta(f))))
 for e, n in [("wick", "Wick Wisp*"), ("dust", "Dust Bunny*"), ("sentry", "Sleepy Sentry*")]:
     f = os.path.join(ROOT, "bestiary-sample", e, "sprites"); cells.append((n, *frame(f, meta(f))))
-for e, n in [("moth", "Lantern Moth+"), ("bee", "Buzzy Bee+"), ("sprout", "Thorn Sprout+")]:
+for e, n in [("moth", "Lantern Moth+"), ("buzz-bee", "Buzzy Bee+"), ("sprout", "Thorn Sprout+")]:
     f = os.path.join(ROOT, "bestiary-set1", e, "sprites"); cells.append((n, *frame(f, meta(f))))
 
 def row(s):

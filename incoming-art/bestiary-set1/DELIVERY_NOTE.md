@@ -6,13 +6,18 @@ of the plan is not started; it waits for this set to be approved.
 
 Second pass: checked every contact sheet in 8 directions; lowered the sprout leaves and bee/moth wings so nothing goes
 above the head, swept the moth wings and sprout leaves back a little so the side views are not paper-thin, and gave the
-bee a dark face patch (its first pass read like a muzzle). Red-pixel check on all body and glow sheets: 0 in moth and sprout; 15 anti-aliased tan edge pixels on the bee (rgb ~189,131,101, honey shading, not visible as red). Red only in the telegraph layer.
+bee a dark face patch (its first pass read like a muzzle). Red-pixel check on all body and glow sheets: 0 in moth and sprout; 10 anti-aliased tan edge pixels on the bee (rgb ~180,125,98, honey shading, not visible as red). Red only in the telegraph layer.
+
+## v2 (Manager review)
+- Buzzy Bee friendlier: rounder, bigger eyes; the antennae moved back on the head so they no longer read as frowning
+  brows over the face; stripes set further back; face patch rounder. Still a little spooky (glowing eyes on a dark patch).
+- Bee art id renamed `bee` -> `buzz-bee` (folder, sprite names, `--enemy`), matching `buzz-bee.json`.
+- Second pass (v2): checked the bee contact sheets in 8 directions; no brows from any angle, wings stay below the head; red check unchanged (only tan anti-aliased edge pixels, none visible).
+- Re-rendered the bee sheets, contact sheets, GIFs and `preview/lineup.png`. Moth and sprout unchanged.
 
 ## DECIDE
-1. Working looks and colours: moth navy + lilac, bee honey + sky-blue rim, sprout deep green + lime. OK, or other colours?
-2. Bee file id: the plan says "Buzzy Bee", the data file is `buzz-bee.json` (id `buzz-bee`). The sprite folder/name is
-   `bee` for now. Which id should the art use when it is imported?
-3. Thorn Sprout: the data has no thorns that hurt, so I drew soft round nubs, not points. OK? The lore says it "opens a
-   tiny flower"; I kept the bud closed and used the shared defeat (in the blend, like #207). Should the bud open into a flower on defeat (extra frames)?
-4. Bee: no stinger (kept kid-friendly, a round tail nub instead). OK?
-5. Flyers (moth, bee) hover a little above the ground line. OK, or should they sit lower?
+1. Working looks and colours: moth navy + lilac, bee honey + sky-blue rim, sprout deep green + lime. OK, or other colours? (open, for Jay)
+2. DECIDED (Manager): the bee art id is `buzz-bee`, the same as the data file.
+3. DECIDED (Manager): soft round nubs on the sprout, no points. No flower on defeat for now (shared defeat, bud stays closed).
+4. DECIDED (Manager): no stinger on the bee.
+5. DECIDED (Manager): the flyers (moth, bee) keep hovering a little above the ground line.

@@ -1,5 +1,5 @@
 {
-  "character": "bee",
+  "character": "buzz-bee",
   "frameWidth": 128,
   "frameHeight": 128,
   "anchor": {
@@ -93,10 +93,10 @@
       "loop": true,
       "tags": {},
       "sheets": {
-        "body": "bee_body_idle.png",
-        "glow": "bee_glow_idle.png",
-        "telegraph": "bee_telegraph_idle.png",
-        "light": "bee_light_idle.png"
+        "body": "buzz-bee_body_idle.png",
+        "glow": "buzz-bee_glow_idle.png",
+        "telegraph": "buzz-bee_telegraph_idle.png",
+        "light": "buzz-bee_light_idle.png"
       },
       "note": "busy buzz hover, 0.5 s loop"
     },
@@ -107,10 +107,10 @@
       "loop": true,
       "tags": {},
       "sheets": {
-        "body": "bee_body_move.png",
-        "glow": "bee_glow_move.png",
-        "telegraph": "bee_telegraph_move.png",
-        "light": "bee_light_move.png"
+        "body": "buzz-bee_body_move.png",
+        "glow": "buzz-bee_glow_move.png",
+        "telegraph": "buzz-bee_telegraph_move.png",
+        "light": "buzz-bee_light_move.png"
       },
       "designSpeedTilesPerSecond": 4.0,
       "note": "fast zip; play at any move speed"
@@ -124,10 +124,10 @@
         "telegraph": "0-6"
       },
       "sheets": {
-        "body": "bee_body_windup.png",
-        "glow": "bee_glow_windup.png",
-        "telegraph": "bee_telegraph_windup.png",
-        "light": "bee_light_windup.png"
+        "body": "buzz-bee_body_windup.png",
+        "glow": "buzz-bee_glow_windup.png",
+        "telegraph": "buzz-bee_telegraph_windup.png",
+        "light": "buzz-bee_light_windup.png"
       },
       "telegraphSeconds": 0.7,
       "telegraphTicks": 14,
@@ -152,10 +152,10 @@
         "recover": "2-9"
       },
       "sheets": {
-        "body": "bee_body_attack.png",
-        "glow": "bee_glow_attack.png",
-        "telegraph": "bee_telegraph_attack.png",
-        "light": "bee_light_attack.png"
+        "body": "buzz-bee_body_attack.png",
+        "glow": "buzz-bee_glow_attack.png",
+        "telegraph": "buzz-bee_telegraph_attack.png",
+        "light": "buzz-bee_light_attack.png"
       },
       "keyFrames": {
         "impact": 0

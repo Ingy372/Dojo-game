@@ -2,7 +2,7 @@
 Dojo Ascent - bestiary SET 1 (full bestiary, first 3 after the sample): Lantern Moth, Buzzy Bee, Thorn Sprout.
 A copy of incoming-art/bestiary-sample/source/build_sample.py (#207 v2, approved): same rig, eyes, layers, defeat,
 timings and render settings, with three new types added (the sample's three are kept so the file stays one family).
-    blender -b -P incoming-art/bestiary-set1/source/build_set1.py -- --enemy moth|bee|sprout --out <file>.blend
+    blender -b -P incoming-art/bestiary-set1/source/build_set1.py -- --enemy moth|buzz-bee|sprout --out <file>.blend
 Data: drafts/content/enemies/{lantern-moth,buzz-bee,thorn-sprout}.json.
 
 Sample notes: Wick Wisp, Dust Bunny, Sleepy Sentry. A copy of
@@ -30,7 +30,7 @@ from toon_kit import srgb, toon_material, outline_material, hull_material, add_h
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 ap = argparse.ArgumentParser()
-ap.add_argument("--enemy", required=True, choices=["wick", "dust", "sentry", "moth", "bee", "sprout"])
+ap.add_argument("--enemy", required=True, choices=["wick", "dust", "sentry", "moth", "buzz-bee", "sprout"])
 ap.add_argument("--out", required=True)
 ap.add_argument("--broken", action="store_true")
 A = ap.parse_args(argv)
@@ -67,8 +67,8 @@ SPEC = {
     # leaves) and its own body + rim colour pair (navy/lilac, honey/sky, green/lime), all different from the sample three.
     "moth":    dict(W=0.36, H=0.50, arm=1.0, eye=1.1, color="#24406e", belly="#3a5a8e", accent="#d9c2ef", glow="#e8c9f0",
                     eye_c="#f6eaff", eye_z=0.62, eye_y=0.95, eye_dx=0.34, sh=0.62, arm_x=0.55),
-    "bee":     dict(W=0.30, H=0.36, arm=0.6, eye=1.15, color="#c98a1e", belly="#e8b23a", accent="#3a2a22", glow="#bfe6ff",
-                    eye_c="#fffbe8", eye_z=0.74, eye_y=1.0, eye_dx=0.36, sh=0.75, arm_x=0.6),
+    "buzz-bee": dict(W=0.30, H=0.36, arm=0.6, eye=1.25, color="#c98a1e", belly="#e8b23a", accent="#3a2a22", glow="#bfe6ff",
+                    eye_c="#fffbe8", eye_tall=0.22, eye_z=0.72, eye_y=1.0, eye_dx=0.36, sh=0.75, arm_x=0.6),
     "sprout":  dict(W=0.40, H=0.58, arm=0.7, eye=1.0, color="#2f5a3a", belly="#3f7448", accent="#6fae4a", glow="#c8ec8a",
                     eye_c="#f2ffd8", eye_z=0.5, eye_y=0.95, eye_dx=0.32, sh=0.68, arm_x=0.7),
     "keeper":  dict(W=0.85, H=1.30, arm=1.5, eye=0.82, color="#241e52", belly="#3a3278", accent="#ffc83d", glow="#ffd86b",
@@ -219,17 +219,17 @@ elif E == "moth":       # a soft moth: slim fuzzy body, a fluffy collar, two sho
     for x in (1, -1):    # antennae stay at head height, leaning out to the sides
         M_(f"ant{x}", tube((x * R * 0.22, -R * 0.2, H * 0.86), (x * R * 0.75, -R * 0.3, H * 0.94), 0.016, 0.012, segs=8), MAT["body"])
         M_(f"antf{x}", ellipsoid((x * R * 0.8, -R * 0.3, H * 0.94), (R * 0.17, R * 0.05, R * 0.09), rot=(0, x * -15, 0)), MAT["accent"])
-elif E == "bee":        # a round fuzzy bee: an egg-shaped honey body with two soft dark stripes, a round tail nub, tiny antennae
+elif E == "buzz-bee":        # a round fuzzy bee: an egg-shaped honey body with two soft dark stripes, a round tail nub, tiny antennae
     cy, ry = R * 0.15, R * 1.05
     M_("body", ellipsoid((0, cy, H * 0.5), (R * 0.95, ry, H * 0.46), segs=24, rings=14), MAT["body"], glow=True)
-    M_("face", ellipsoid((0, -R * 0.6, H * 0.7), (R * 0.68, R * 0.34, H * 0.24)), MAT["accent"], outline=False)   # dark face patch so the eyes glow like the rest of the family
-    for k, y in enumerate((R * 0.42, R * 0.78)):
+    M_("face", ellipsoid((0, -R * 0.62, H * 0.68), (R * 0.66, R * 0.32, H * 0.26), segs=24), MAT["accent"], outline=False)   # dark face patch so the eyes glow like the rest of the family
+    for k, y in enumerate((R * 0.55, R * 0.88)):   # set back so they never read as brows over the face
         f = math.sqrt(max(0.05, 1 - ((y - cy) / ry) ** 2))
         M_(f"stripe{k}", ellipsoid((0, y, H * 0.5), (R * 0.97 * f, R * 0.1, H * 0.475 * f), segs=24), MAT["accent"], outline=False)
     M_("tail", ellipsoid((0, R * 1.18, H * 0.46), (R * 0.2, R * 0.16, R * 0.2)), MAT["accent"])
     for x in (1, -1):
-        M_(f"ant{x}", tube((x * R * 0.2, -R * 0.4, H * 0.9), (x * R * 0.48, -R * 0.6, H * 0.99), 0.012, 0.01, segs=8), MAT["accent"])
-        M_(f"antb{x}", ellipsoid((x * R * 0.5, -R * 0.62, H * 1.0), (0.02, 0.02, 0.02)), MAT["accent"])
+        M_(f"ant{x}", tube((x * R * 0.28, R * 0.05, H * 0.93), (x * R * 0.68, -R * 0.15, H * 0.99), 0.011, 0.009, segs=8), MAT["accent"])
+        M_(f"antb{x}", ellipsoid((x * R * 0.7, -R * 0.16, H * 0.99), (0.02, 0.02, 0.02)), MAT["accent"])
 elif E == "sprout":     # a grumpy little sprout: a round green bulb on a soil mound with root nubs, a soft closed bud on top
     M_("body", ellipsoid((0, 0, H * 0.44), (R * 0.78, R * 0.72, H * 0.36), segs=24, rings=14), MAT["body"], glow=True)
     M_("belly", ellipsoid((0, -R * 0.42, H * 0.36), (R * 0.48, R * 0.35, H * 0.2)), MAT["belly"], outline=False)
@@ -258,10 +258,10 @@ else:                   # keeper: tall body, a flowing cape, a pale mask, a gold
 # glowing eyes on their own bone (they squint, widen, blink)
 es = SPEC["eye"]; ey = SPEC["eye_y"]; ex = SPEC["eye_dx"]
 for x in (1, -1):
-    M_(f"eye{x}", ellipsoid((x * R * ex * 1.0, -R * ey, EYE_Z), (R * 0.2 * es, R * 0.08, R * 0.27 * es), segs=16, rings=10), MAT["eye"], "eyes")
+    M_(f"eye{x}", ellipsoid((x * R * ex * 1.0, -R * ey, EYE_Z), (R * 0.2 * es, R * 0.08, R * SPEC.get("eye_tall", 0.27) * es), segs=16, rings=10), MAT["eye"], "eyes")
     M_(f"eyehi{x}", ellipsoid((x * R * ex - R * 0.06, -R * (ey + 0.08), EYE_Z + R * 0.09 * es), (R * 0.06 * es, R * 0.03, R * 0.07 * es)),
        MAT["eye_hi"], "eyes", outline=False)
-    if E in ("swarmer", "shield", "wick", "dust", "moth", "bee", "sprout"):
+    if E in ("swarmer", "shield", "wick", "dust", "moth", "buzz-bee", "sprout"):
         M_(f"cheek{x}", ellipsoid((x * R * 0.6, -R * (ey - 0.1), EYE_Z - R * 0.32), (R * 0.12, R * 0.05, R * 0.07)), MAT["cheek"], outline=False)
 # arms: little nubs (swarmer), stubby arms (shield), huge fists with magenta bands (brute), long arms with gold cuffs (keeper)
 am = SPEC["arm"]; ax = SPEC["arm_x"]
@@ -273,7 +273,7 @@ for s_, x in (("L", 1), ("R", -1)):
         M_(f"wspot{s_}", ellipsoid((x * R * 1.2, R * 0.11, H * 0.66), (R * 0.2, R * 0.02, R * 0.2), rot=(0, 0, x * 28)), MAT["belly"], f"arm.{s_}", outline=False)
         M_(f"wdot{s_}", ellipsoid((x * R * 1.2, R * 0.09, H * 0.66), (R * 0.09, R * 0.02, R * 0.09), rot=(0, 0, x * 28)), MAT["eye"], f"arm.{s_}", outline=False)
         continue
-    if E == "bee":       # arms = two small pale wings out to the sides and back (never above the head)
+    if E == "buzz-bee":       # arms = two small pale wings out to the sides and back (never above the head)
         M_(f"wing{s_}", ellipsoid((x * R * 1.05, R * 0.45, H * 0.7), (R * 0.55, R * 0.38, R * 0.07), rot=(0, x * -12, x * 20)), WING, f"arm.{s_}", glow=True)
         continue
     if E == "sprout":    # arms = two leaves at the sides of the bulb
@@ -373,7 +373,7 @@ def action(name, poses, fps, loop, tags="", info=None):
 
 ease = lambda x: 0.5 - 0.5 * math.cos(math.pi * max(0, min(1, x)))
 DATA = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "drafts", "content", "enemies",
-                                   {"wick": "wick-wisp", "dust": "dust-bunny", "sentry": "sleepy-sentry", "moth": "lantern-moth", "bee": "buzz-bee", "sprout": "thorn-sprout"}[E] + ".json")))
+                                   {"wick": "wick-wisp", "dust": "dust-bunny", "sentry": "sleepy-sentry", "moth": "lantern-moth", "buzz-bee": "buzz-bee", "sprout": "thorn-sprout"}[E] + ".json")))
 TICK = 1 / 20
 FPS = 10
 REST = P()
@@ -382,7 +382,7 @@ GUARD = {"wick": P(body=B(pitch=4), arm_l=(20, 14), arm_r=(20, 14)),
          "dust": P(body=B(pitch=6), arm_l=(10, 10), arm_r=(10, 10)),
          "sentry": P(body=B(pitch=6), eyes=(1, 0.35), arm_l=(6, 8), arm_r=(6, 8)),
          "moth": P(body=B(dz=0.06, pitch=2), arm_l=(0, 25), arm_r=(0, 25)),
-         "bee": P(body=B(dz=0.1, pitch=8), arm_l=(0, 5), arm_r=(0, 5)),
+         "buzz-bee": P(body=B(dz=0.1, pitch=8), arm_l=(0, 5), arm_r=(0, 5)),
          "sprout": P(body=B(pitch=4), eyes=(1, 0.7), arm_l=(0, 8), arm_r=(0, 8)),
          "swarmer": P(body=B(pitch=10), arm_l=(30, 12), arm_r=(30, 12)),
          "shield":  P(body=B(pitch=0), arm_l=(40, 10), arm_r=(20, 16)),
@@ -424,7 +424,7 @@ elif E == "moth":       # a slow flutter: wings open and close, the body bobs ge
         b = math.sin(2 * math.pi * i / 8)
         idle.append(g(body=gb(dz=0.06 + 0.025 * b, pitch=gp), eyes=(1, 0.15 if i == 5 else 1), arm_l=(0, 25 + 22 * b), arm_r=(0, 25 + 22 * b)))
     action("idle", idle, 10, True, info={"note": "slow flutter and hover, 0.8 s loop"})
-elif E == "bee":        # a busy buzz: quick wing beats every frame, a little hover bob, one blink
+elif E == "buzz-bee":        # a busy buzz: quick wing beats every frame, a little hover bob, one blink
     for i in range(6):
         b = math.sin(2 * math.pi * i / 6)
         w = 18 if i % 2 else -8
@@ -470,7 +470,7 @@ for i in range(6):
         move.append(g(body=gb(dz=0.02 * H * up + c * (1 - math.cos(th)), dy=-c * math.sin(th), pitch=60 * i, sw=1 + 0.03 * (1 - up), sh=1 - 0.03 * (1 - up)), eyes=(1, 0.8)))
     elif E == "moth":   # flutters along: big wing flaps, rising on each beat, leaning into the flight
         move.append(g(body=gb(dz=0.06 + 0.04 * (1 + math.cos(ph)) / 2, pitch=12, roll=3 * sn), arm_l=(0, 25 + 35 * math.cos(ph)), arm_r=(0, 25 + 35 * math.cos(ph))))
-    elif E == "bee":    # zips: leans well forward, fast wing beats, tiny bob
+    elif E == "buzz-bee":    # zips: leans well forward, fast wing beats, tiny bob
         w = 18 if i % 2 else -8
         move.append(g(body=gb(dz=0.1 + 0.015 * math.cos(2 * ph), pitch=22, roll=2 * sn), arm_l=(0, w), arm_r=(0, w)))
     elif E == "sprout": # rooted (speed 0): a tiny grumpy wiggle in place
@@ -490,9 +490,9 @@ for i in range(6):
     else:               # a smooth glide, the cape trailing (no steps)
         move.append(g(body=gb(dz=0.025 * H * (1 + math.sin(ph)) / 2, pitch=6, roll=2 * sn), arm_l=(-10, 18), arm_r=(-10, 18),
                       foot_l=(0, 0, 0.012 * H * (1 + math.sin(ph))), foot_r=(0, 0, 0.012 * H * (1 + math.sin(ph)))))
-mfps = {"moth": 10, "bee": 12, "sprout": 6, "wick": 10, "dust": 12, "sentry": 6, "swarmer": 12, "shield": 10, "brute": 10, "keeper": 8}[E]
+mfps = {"moth": 10, "buzz-bee": 12, "sprout": 6, "wick": 10, "dust": 12, "sentry": 6, "swarmer": 12, "shield": 10, "brute": 10, "keeper": 8}[E]
 action("move", move, mfps, True, info={"designSpeedTilesPerSecond": DATA["moveSpeedTilesPerSecond"],
-       "note": {"moth": "flutter flight", "bee": "fast zip", "sprout": "wiggle in place (rooted, speed 0)", "wick": "wavy drift", "dust": "forward roll", "sentry": "shuffle in place (speed 0)", "swarmer": "quick bouncing hops", "shield": "steady march", "brute": "heavy stomps", "keeper": "smooth glide"}[E] + "; play at any move speed"})
+       "note": {"moth": "flutter flight", "buzz-bee": "fast zip", "sprout": "wiggle in place (rooted, speed 0)", "wick": "wavy drift", "dust": "forward roll", "sentry": "shuffle in place (speed 0)", "swarmer": "quick bouncing hops", "shield": "steady march", "brute": "heavy stomps", "keeper": "smooth glide"}[E] + "; play at any move speed"})
 
 def ramp(n):
     """Telegraph intensity through a wind-up: starts soft and builds to full on the last frame."""
@@ -540,7 +540,7 @@ if E == "moth":         # rears back with both wings raised high, then a forward
     telegraph_action("windup", MW, at["telegraphTicks"])
     MH = P(body=B(dz=0.05, dy=-0.12 * W, pitch=18, sw=1.06, sh=0.94), eyes=(1.1, 0.7), arm_l=(45, -5), arm_r=(45, -5))
     attack_action("attack", MH, at["recoverTicks"], {"note": "the toss: wings sweep forward; the glow pebble and its landing circle are drawn by the game"})
-if E == "bee":          # a short hover, drawing back with the wings a blur, then a quick zip forward
+if E == "buzz-bee":          # a short hover, drawing back with the wings a blur, then a quick zip forward
     at = DATA["attack"]
     BW_ = P(body=B(dz=0.12, dy=0.1 * W, pitch=-14, sw=0.92, sh=1.12), eyes=(1.15, 1.3), arm_l=(0, 20), arm_r=(0, 20))
     telegraph_action("windup", BW_, at["telegraphTicks"])

@@ -7,7 +7,7 @@ light), defeat, render script, camera (`--size 128 --ortho 1.6`), 8 directions a
 | Folder | Plan entry | Data file | Look | Shape | Colours (body / rim) |
 |---|---|---|---|---|---|
 | `moth/` | Lantern Moth (White, ranged) | `lantern-moth.json` | soft fuzzy moth, wide wings with a pale spot, short feathery antennae swept to the sides | wide "bow" of wings | navy `#24406e` / lilac `#e8c9f0` (data colour) |
-| `bee/` | Buzzy Bee (Yellow, swarm) | `buzz-bee.json` | small round honey bee, two soft dark stripes, dark face patch with glowing eyes, round tail nub (no stinger), small pale wings | small egg | honey `#c98a1e` / sky `#bfe6ff` |
+| `buzz-bee/` | Buzzy Bee (Yellow, swarm) | `buzz-bee.json` | small round honey bee, two soft dark stripes, dark face patch with big round glowing eyes and soft antennae set back on the head (no brows), round tail nub (no stinger), small pale wings | small egg | honey `#c98a1e` / sky `#bfe6ff` |
 | `sprout/` | Thorn Sprout (Yellow, turret) | `thorn-sprout.json` | grumpy green bulb with a closed bud, rounded nubs (no points), two side leaves, sitting in a soil mound with roots | bulb in a mound | deep green `#2f5a3a` / lime `#c8ec8a`, leaves `#6fae4a` (data colour) |
 
 Sample three for comparison: tall flame (violet / gold), wide fluffball (mauve / pink), square block (slate / teal).
@@ -17,12 +17,13 @@ All wings, leaves and antennae stay at the sides, at or below head height. No re
 | | idle | move | windup (= telegraphTicks) | attack (= recoverTicks) |
 |---|---|---|---|---|
 | Moth | slow flutter + hover, 8 f @ 10 fps | flutter flight, wings flap | rears back, wings raised, 18 ticks | wing sweep forward = the toss, 20 ticks |
-| Bee | busy buzz, 6 f @ 12 fps | leans forward, fast wing beats | short hover drawing back, 14 ticks | quick stretchy zip forward, 16 ticks |
+| Buzzy Bee (`buzz-bee`) | busy buzz, 6 f @ 12 fps | leans forward, fast wing beats | short hover drawing back, 14 ticks | quick stretchy zip forward, 16 ticks |
 | Sprout | grumpy sway, 8 f @ 8 fps | wiggle in place (speed 0, rooted) | puffs its cheeks (bulb swells), 18 ticks | leans forward = seed spit, 20 ticks |
 
 The glow pebble, the seed and their landing circles are drawn by the game, not in these sheets.
 
 ## Files
+- Art ids (folders, sprite names, `--enemy`): `moth`, `buzz-bee` (matches `buzz-bee.json`), `sprout`.
 - `<enemy>/sprites/` sheets + JSON (same format as `bestiary-sample/`).
 - `source/build_set1.py` (copy of `bestiary-sample/source/build_sample.py` with the three new types), `source/bs1_<enemy>.blend`.
 - `source/make_set1_lineup.py` -> `preview/lineup.png` (player, Tier 1, the sample three, the new three; 1x and 2x).
