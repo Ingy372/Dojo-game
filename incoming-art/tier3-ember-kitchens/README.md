@@ -18,7 +18,7 @@ This kit follows `drafts/content/rooms/ember-kitchens-brief.md` and `ember-kitch
 - **Red check:**
   - The floor and props are clean.
   - **wall-block:** flagged because of the brick-brown top (#a0684a, hue 20°), which is brown and not red.
-  - **door-battle and icon-battle:** red is carried over from the T2 door trims (see DECIDE).
+  - **Doors:** the battle door is now T3 amber #e8902e with amber gloves (#f0a23a / #f7c066), and the challenge door is indigo #4a4fa0. They have no red now (icon-boss has 2 px of edge pixels). See `preview/doors-t3.png`.
 - **Second pass done:**
   - Fixed the wall row offset.
   - Shadows are smaller and lighter.

@@ -132,19 +132,19 @@ def pillar(lay):   # a round brick chimney column with copper bands and a honey 
 pillar("pillar")
 # ------------------------------------------------------------------ the battle door, from the Tier 1 kit, in the theme's wall
 DOORS = {
-    "battle":    dict(trim="#c8553d", icon="fists",  label="Battle"),
-    "challenge": dict(trim="#7b5cc4", icon="star",   label="Challenge"),
+    "battle":    dict(trim="#e8902e", icon="fists",  label="Battle"),
+    "challenge": dict(trim="#4a4fa0", icon="star",   label="Challenge"),
     "treasure":  dict(trim="#d9a441", icon="chest",  label="Treasure"),
     "rest":      dict(trim="#3f9a7a", icon="leaf",   label="Rest"),
 }
 def icon(lay, kind, c, s, parent=None):
     """Kid-readable icons on a round plaque: fists bump, a star, a little chest, a leaf."""
     y = c.y - 0.05
-    if kind == "fists":   # two red sparring gloves, crossed, with white cuffs
+    if kind == "fists":   # two amber sparring gloves, crossed, with white cuffs
         for sx in (-1, 1):
             p = Vector((c.x + sx * 0.07 * s, y - (0.01 if sx > 0 else 0), c.z + 0.03 * s))
-            oell(lay, f"{lay}_glove{sx}", p, (0.085 * s, 0.05, 0.1 * s), "#d8352a", rot=(0, sx * 32, 0), parent=parent)
-            oell(lay, f"{lay}_thumb{sx}", p + Vector((-sx * 0.06 * s, -0.03, -0.01 * s)), (0.03 * s, 0.03, 0.05 * s), "#e5503f", rot=(0, sx * 32, 0), parent=parent)
+            oell(lay, f"{lay}_glove{sx}", p, (0.085 * s, 0.05, 0.1 * s), "#f0a23a", rot=(0, sx * 32, 0), parent=parent)
+            oell(lay, f"{lay}_thumb{sx}", p + Vector((-sx * 0.06 * s, -0.03, -0.01 * s)), (0.03 * s, 0.03, 0.05 * s), "#f7c066", rot=(0, sx * 32, 0), parent=parent)
             q = p + Vector((sx * 0.07 * s, 0, -0.1 * s))
             obox(lay, f"{lay}_cuff{sx}", q, (0.1 * s, 0.05, 0.05 * s), "#f6efdc", rot=(0, sx * 32, 0), parent=parent)
         for k in (-1, 1):
