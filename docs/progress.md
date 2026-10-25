@@ -576,3 +576,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## K28 K25 feel fixes (QA B1–B4)
 - Done: the wind-up sound and the "two attacks at once" warning timer use real time (realMsPerTick). Challenge timers are 60 real seconds. The shake rule checks belt rank (tier 8 = Brown and up), not the id 'brown'. Named-monster wind-up shakes (Brute stamp) follow the same rule. Test: k28-real-time-rank.test.ts.
+## K27 — tutorial fixes from Q5 (2026-10-24)
+**Done**
+- Q5 B1–B6 fixed: boss "!" clear of the boss bar, boss tip closes on Got it and keeps off the boss; chest tip only in the vault; tip box keeps off HOME, the hero and STRIKE; COUNTER is never dimmed with a gold ring; new closing line (Manager's call).
+- Checked at 667x375 and 844x390 with Reduced motion on and off (headless browser, full tutorial run).
+**Next**
+- Tester re-checks Q5.
+- Retest fix (Manager's call after the K27 retest): the boss "!" is drawn at full strength (opaque disc, solid colors) above the boss, or beside it when the boss bar leaves no room above, and never over a door label or the boss bar. Tutorial tips avoid the cue where it actually sits.

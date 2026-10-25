@@ -832,3 +832,11 @@ What is in the code:
 - **Removed `eventShakeScale`** and its test (k25b-block-no-shake.test.ts). Nothing used it after K28. The K25b rule that a Block never shakes is unchanged; it is part of the one shake rule, `hurtShakeScale({ kind: 'block', … })`, which always returns 0. Test: k28-real-time-rank.test.ts.
 - **Manager call:** a school with fewer than 8 belts gets the hit and wind-up shake only on Challenge. That's fine for now.
 - **Manager call:** par times for room grades stay in game time (rules seconds), not real seconds.
+## K27: tutorial fixes from Q5 (2026-10-24, plan approved by the Manager)
+- **Closing line (Manager's call; Jay will see it).** The door tip's last line was "What was your favorite part?", which a child can't answer. It is now "Great job! You finished the training floor." (content/tutorial/tutorial-floor.json).
+- **Chest and boss tips wait for their own room.** The chest tip shows only in the vault and the boss tip only in the boss room (Q5 B2: the chest tip showed in room 1).
+- **Boss tip closes on Got it.** "A big one!" no longer stays over the boss for the whole fight (Q5 B1).
+- **The "!" cue stays below the boss bar.** While a boss bar shows, a wind-up cue is never drawn higher than just under the bar and the boss's name (Q5 B1).
+- **Tutorial tip placement.** The tip and its Got it take the first spot clear of the hero, the doors and their labels (HOME), the chest, the boss and the action buttons. If no centred spot is clear, the box slides to the left edge, away from the buttons (Q5 B3, B4). If nothing is clear at all, it sits in the bottom-left corner. Tutorial tips wrap narrower (screen width minus 260 px) so they fit beside the buttons on a 667 px screen. The tip box opacity is unchanged.
+- **COUNTER's gold ring only when it's ready.** The gold ring and flash show only while COUNTER can be pressed, so a gold ring never sits on a dimmed button (Q5 B5).
+- 2026-10-24, Manager (K27 retest): the boss "!" must be full strength above the boss, or beside it if there's no room, clear of HOME and the health bar. Done by trying above, then right, then left of the enemy, and keeping the first spot clear of the boss bar and every door label.
