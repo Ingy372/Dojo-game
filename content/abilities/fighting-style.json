@@ -1,0 +1,24 @@
+{
+  "notes": "P-MENU2-e: words for the Fighting Style screen. Plain words, no numbers (D6). Locked items invite, never lock (D3).",
+  "slots": { "stance": "Stance", "virtue": "Virtue" },
+  "glyphs": { "stance": "👣", "virtue": "✦" },
+  "choose": { "stance": "Pick a Stance", "virtue": "Pick a Virtue" },
+  "hint": "Tap a card, then tap a pick.",
+  "always": "Always with you",
+  "alwaysEmpty": "Strikes and Seals you earn show up here.",
+  "noVirtue": "Your first stripe",
+  "noVirtueLine": "Your first Virtue comes from a stripe at the dojo.",
+  "switchLine": "You can still switch Stance during a fight.",
+  "virtueLine": "Comes out when your Focus is full.",
+  "notYet": "Learn this at the dojo",
+  "askSensei": "Ask Sensei about this one",
+  "lines": {
+    "beginners-stance": "Steady and even. Good at everything.",
+    "rooted-form": "Strong feet and tough blocks, but slower.",
+    "flowing-form": "Faster feet and quicker hands.",
+    "shield-of-respect": "A shield that soaks up hits for a while.",
+    "second-wind": "Brings back Health and some Focus.",
+    "perfect-discipline": "For a short time, every Counter is perfect."
+  },
+  "lineFallback": "A move from your training."
+}
