@@ -631,3 +631,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Blessing glow is a slow breath (2400 ms, alpha 0.25 to 0.15, no scale), still with Reduced motion on.
 - Vitest checks the 44 x 44 rule for every HomeScene button. Screenshots at 667x375 and 844x390, Reduced motion off and on: no tap-area, button or label overlaps.
 - P-MENU-a QA follow-up: the Blessing glow alpha you see now really breathes 0.25 to 0.15. The summary card's Continue is the shared 44-tall button. Checked at 667x375 and 844x390.
+
+## B-WRAP Capacitor 8 wrap
+- apps/client now has capacitor.config.ts (PLACEHOLDER app id `com.placeholder.dojoascent`, "Dojo Ascent"), plus the generated android/ and ios/ projects. Landscape lock, full screen, and the game loop, music and sound effects pause in the background.
+- To make a debug APK: in apps/client, run `npm run build`, then `npx cap sync android`, then `cd android && ./gradlew assembleDebug`. This needs Node 22+, JDK 21 and the Android SDK.
+- Vitest, typecheck and the web build pass. Web screenshots at 667x375 and 844x390, Reduced motion off and on, show no regressions.

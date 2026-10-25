@@ -5,7 +5,11 @@ import { GameScene } from './scenes/GameScene';
 import { HomeScene } from './scenes/HomeScene';
 import { StreetSmartsScene } from './scenes/StreetSmartsScene';
 import { TitleScene } from './scenes/TitleScene';
+import { App } from '@capacitor/app';
+import { Capacitor } from '@capacitor/core';
+import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { music } from './audio/Music';
+import { sfx } from './audio/Sfx';
 import { DPR } from './ui/theme';
 
 /** The game area's size in screen points (the #game box fills the safe area). */
@@ -50,13 +54,24 @@ window.addEventListener('resize', fit);
 window.addEventListener('orientationchange', fit);
 
 // Pause when the app goes to the background (or a call comes in), and resume cleanly.
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    game.loop.sleep();
-  } else {
-    game.loop.wake();
-  }
-});
+// The game loop, music and sound effects all stop (music and effects share one audio context).
+let away = false;
+const setAway = (now: boolean): void => {
+  if (now === away) return;
+  away = now;
+  if (away) game.loop.sleep();
+  else game.loop.wake();
+  const ctx = sfx.context();
+  if (ctx) void (away ? ctx.suspend() : ctx.resume());
+};
+document.addEventListener('visibilitychange', () => setAway(document.hidden));
+
+// B-WRAP: inside the phone app, also follow the app's own background/foreground events,
+// and lock the screen sideways.
+if (Capacitor.isNativePlatform()) {
+  void App.addListener('appStateChange', ({ isActive }) => setAway(!isActive));
+  void ScreenOrientation.lock({ orientation: 'landscape' }).catch(() => {});
+}
 
 // Developer builds only (never in the published game): lets automated checks reach the game.
 if (import.meta.env.DEV) (window as unknown as { game: Phaser.Game }).game = game;
