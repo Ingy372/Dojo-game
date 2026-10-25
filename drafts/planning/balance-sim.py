@@ -41,6 +41,14 @@ print(f"tier XP {tier_xp}, about {weeks:.1f} weeks at {RUNS_PER_WEEK} runs/week 
 steps = 10; tot = steps * (steps + 1) / 2
 per = [round(tier_xp * s / tot) for s in range(1, steps + 1)]
 print("XP per level step (tier 2+):", per, " runs per step:", [round(x / RUN_XP, 1) for x in per])
+# D3 (decided): last step <= 10 runs. Soften weights k -> k+SOFTEN (guess); tier total unchanged.
+SOFTEN = 11
+tot2 = sum(s + SOFTEN for s in range(1, steps + 1))
+per2 = [round(tier_xp * (s + SOFTEN) / tot2) for s in range(1, steps + 1)]
+runs2 = [round(x / RUN_XP, 1) for x in per2]
+print(f"softened (k+{SOFTEN}):", per2, " runs per step:", runs2)
+print("D3 check (no step over 10 runs, total unchanged):",
+      "PASS" if max(runs2) <= 10 and abs(sum(per2) - tier_xp) <= steps else "FAIL")
 
 print("\n== 4. Bad-luck counter: runs until the first Rare-or-better ==")
 def roll(dry):
@@ -70,9 +78,10 @@ for rolls in (2, 4, 6):   # rolls per run: a guess, the real number depends on t
     print(f"{rolls} rolls/run  no counter: mean {a[0]:.2f}, 90% by {a[1]}, worst {a[2]}   "
           f"with counter: mean {b[0]:.2f}, 90% by {b[1]}, worst {b[2]}")
 
-print("\n== 5. Endless Ascent: 3% stronger per floor (core-design §12) ==")
+print("\n== 5. Endless Ascent: 3% stronger per floor, no cap (D4 decided) ==")
 for f in (10, 25, 50, 100):
     print(f"floor {f:>3}: x{1.03 ** f:.1f}")
+print("Challenge (D5): enemy Health and Power x1.5; Endless and Challenge multiply.")
 
 print("\n== 6. Effective health (EHP = Health x (1 + Guard/100)), exact for our damage formula ==")
 for n, (h, _, g, _) in ENEMIES.items():
