@@ -37,7 +37,7 @@ import {
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
-import { STYLE_WORDS, buildStyle, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
+import { STYLE_WORDS, buildStyle, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
@@ -86,6 +86,8 @@ export class HomeScene extends Phaser.Scene {
   private part: AbilitiesPart = 'trophy';
   /** P-MENU2-e: the chosen Fighting Style slot (tap 1 of 2). */
   private styleSlot: StyleSlot = 'stance';
+  /** B-POLISH-2: which page of the tray is showing (reset when the slot changes). */
+  private trayPageNo = 0;
   /** P-MENU2-b: the open cubby sheet, and how many Trophy Case pages there are. */
   private cubbySheet: Phaser.GameObjects.Container | null = null;
   trophyPages = 1;
@@ -622,22 +624,34 @@ export class HomeScene extends Phaser.Scene {
 
     // The tray: picks for the chosen slot, earned first. Equipped one is gold-outlined.
     const ty = y + L.slotH + S2;
-    const tray = m.trays[this.styleSlot].slice(0, L.perTray);
+    const picks = m.trays[this.styleSlot];
+    const minTileW = Math.ceil(widest) + 2 * TROPHY_UI.cubbyPadX + TROPHY_UI.stroke;
+    const tp = trayPaging(L.leftW, minTileW, picks.length);
+    this.trayPageNo = Math.max(0, Math.min(tp.pages - 1, this.trayPageNo));
+    const tray = trayPage(picks, tp, this.trayPageNo);
     const cur = m.current[this.styleSlot];
+    if (tp.arrows) {
+      // The Trophy Case's arrows: ◀ ▶ in switch-off wood, 15 pt, a full 44 wide; greyed at the ends.
+      button(this, { x, y: ty, w: MIN_TAP, h: L.tileH, label: '◀', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo === 0, onTap: () => this.turnTray(-1) }, this.ui);
+      button(this, { x: x + L.leftW - MIN_TAP, y: ty, w: MIN_TAP, h: L.tileH, label: '▶', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo >= tp.pages - 1, onTap: () => this.turnTray(1) }, this.ui);
+    }
+    // Tiles are centred in the room between the arrows (or the whole row).
+    const room = L.leftW - 2 * tp.tilesX;
+    const tx0 = x + tp.tilesX + (room - (tray.length * tp.tileW + (tray.length - 1) * S2)) / 2;
     tray.forEach((p, i) => {
       const equipped = p.earned && cur?.id === p.id;
       const tile = button(this, {
-        x: x + i * (L.tileW + S2), y: ty, w: L.tileW, h: L.tileH,
-        label: p.name, labelWrap: cubbyTextW(L.tileW), size: TYPE.label,
+        x: tx0 + i * (tp.tileW + S2), y: ty, w: tp.tileW, h: L.tileH,
+        label: p.name, labelWrap: cubbyTextW(tp.tileW), size: TYPE.label,
         color: p.earned ? WOOD.frame : BOARD_PAPER, labelColor: p.earned ? '#fff6e6' : ink, stroke: WOOD.grain, selected: equipped,
         onTap: () => (p.earned ? this.equipStyle(p) : this.openStylePick(p)),
       }, this.ui).visual.list[2] as Phaser.GameObjects.Text;
-      wrapLikeCubby(tile, p.name, cubbyTextW(L.tileW));
+      wrapLikeCubby(tile, p.name, cubbyTextW(tp.tileW));
       if (!p.earned) {
         // The lantern: something to look forward to (no lock, no count).
         const lg = this.add.graphics();
-        lg.fillStyle(0xffb347, 0.35).fillCircle(x + i * (L.tileW + S2) + L.tileW - 10, ty + 11, 7);
-        lg.fillStyle(0xe8743b).fillRoundedRect(x + i * (L.tileW + S2) + L.tileW - 14, ty + 5, 8, 11, 3);
+        lg.fillStyle(0xffb347, 0.35).fillCircle(tx0 + i * (tp.tileW + S2) + tp.tileW - 10, ty + 11, 7);
+        lg.fillStyle(0xe8743b).fillRoundedRect(tx0 + i * (tp.tileW + S2) + tp.tileW - 14, ty + 5, 8, 11, 3);
         this.ui.add(lg);
       }
     });
@@ -696,6 +710,7 @@ export class HomeScene extends Phaser.Scene {
   pickSlot(slot: StyleSlot): void {
     if (slot === this.styleSlot) return;
     this.styleSlot = slot;
+    this.trayPageNo = 0;
     this.renderPanel('none');
   }
 
@@ -719,6 +734,12 @@ export class HomeScene extends Phaser.Scene {
   }
 
   /** Screenshot/test hook: tap tray item i in the chosen slot. */
+  /** B-POLISH-2: page the tray. */
+  turnTray(by: number): void {
+    this.trayPageNo += by;
+    this.renderPanel('none');
+  }
+
   tapStyleTile(i: number): void {
     const p = this.styleModel().trays[this.styleSlot][i];
     if (p) (p.earned ? this.equipStyle(p) : this.openStylePick(p));

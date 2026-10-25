@@ -1,6 +1,6 @@
 // B-POLISH-2: unlock pop 1 → 1.06 → 1, a 3-line sheet description, cubby label padding and fit.
 import { describe, expect, it } from 'vitest';
-import { styleLayout } from '../../../apps/client/src/ui/fightingStyle';
+import { styleLayout, trayPage, trayPaging } from '../../../apps/client/src/ui/fightingStyle';
 import { TROPHY_UI, cubbyIconSize, cubbyLabelRoom, cubbyTextW, unlockPopScales } from '../../../apps/client/src/ui/tokens';
 
 // Cubby sizes the Trophy Case uses at 667, 844 and 932 wide.
@@ -36,7 +36,25 @@ describe('B-POLISH-2 Trophy Case polish', () => {
       expect(cubbyTextW(L.tileW)).toBeGreaterThanOrEqual(67);
     }
     const src = Object.values(import.meta.glob(['../../../apps/client/src/scenes/HomeScene.ts'], { query: '?raw', import: 'default', eager: true }))[0] as string;
-    expect(src).toMatch(/labelWrap: cubbyTextW\(L\.tileW\)/);
-    expect(src).toMatch(/wrapLikeCubby\(tile, p\.name, cubbyTextW\(L\.tileW\)\)/);
+    expect(src).toMatch(/labelWrap: cubbyTextW\(tp\.tileW\)/);
+    expect(src).toMatch(/wrapLikeCubby\(tile, p\.name, cubbyTextW\(tp\.tileW\)\)/);
+  });
+  it('pages the tray so every earned and not-yet pick can be reached at 667, 844 and 932', () => {
+    const min = 67 + 2 * TROPHY_UI.cubbyPadX + TROPHY_UI.stroke;
+    for (const [w, h] of [[343, 300], [472, 310], [560, 350]]) {
+      const L = styleLayout(w, h, min);
+      for (let count = 1; count <= 12; count++) {
+        const picks = Array.from({ length: count }, (_, i) => i);
+        const pg = trayPaging(L.leftW, min, count);
+        const seen = new Set<number>();
+        for (let p = 0; p < pg.pages; p++) trayPage(picks, pg, p).forEach((i) => seen.add(i));
+        expect(seen.size).toBe(count);
+        // Tiles keep the cubby padding; arrows are 44 wide and the row still fits.
+        expect((pg.tileW - TROPHY_UI.stroke - cubbyTextW(pg.tileW)) / 2).toBeGreaterThanOrEqual(8);
+        expect(cubbyTextW(pg.tileW)).toBeGreaterThanOrEqual(67);
+        expect(2 * pg.tilesX + pg.perPage * pg.tileW + (pg.perPage - 1) * 8).toBeLessThanOrEqual(L.leftW);
+        if (count > L.perTray) expect(pg.arrows).toBe(true);
+      }
+    }
   });
 });
