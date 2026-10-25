@@ -12,6 +12,6 @@
     "typecheck": "npm run typecheck -w @dojo/sim && npm run typecheck -w @dojo/client"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   }
 }
