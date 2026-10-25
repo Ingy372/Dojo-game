@@ -23,6 +23,7 @@ describe('B-SAFE', () => {
     const limit = dojo.slice(dojo.indexOf('private openPlayLimit'));
     expect(limit.slice(0, 600)).toContain('this.addWipeButton(box)');
     expect(dojo).toMatch(/confirmWipe[\s\S]*wipeAllData\(\);\s*\/\/[^\n]*\n\s*window\.location\.reload\(\)/);
+    expect(file('src/main.ts')).toMatch(/finishPendingWipe\(\);[\s\S]*new Phaser\.Game/);
     expect(dojo).toMatch(/showGrownUpGate\(this, \(\) => \{\s*sfx\.place\(true\);\s*this\.openPlayLimit\(back\)/);
   });
 
