@@ -4,233 +4,258 @@ Status: proposal for Jay and the Programmer. No game code, content or work board
 Proof: `python3 drafts/planning/r-bal-12-sim.py` (imports `r-bal-9-sim.py`). Output pasted at the end.
 Labels: **[CODE]** from main, **[DECIDED]** Jay/Manager, **[FITTED]** chosen to hit a target, **[GUESS]** needs a playtest.
 
+## Decisions (recorded)
+
+- **Decision A [DECIDED, Jay]:** training is 40-60% of a typical student's power at every belt, aiming for about 50-55%. Result: **51-54%** at every belt (table in section 3).
+- **Decision B [DECIDED, Manager]:** one runtime multiplier per belt (`ENEMY_TRAINING_SCALE`), and every stat a kid sees is a whole number. Training values are whole numbers. The multiplier itself is internal (2 decimals); the final enemy stat is `Math.round(base × multiplier)`.
+- **Decision C [DECIDED, Jay]:** a class-only kid being a bit weaker is OK. There are no nag or guilt messages, only a positive pull.
+- **Rule: no nag or guilt messages [DECIDED].** The game never says "you didn't practice", never shows what a kid "missed" or "lost", never compares kids, and never sends reminders about home practice. It may only show what a kid **gained** (for example "+1 Power, +4 Health" on a signed item). Training only adds, never takes away. No timers, streaks or decay.
+- **Enemy files hold BASE numbers [DECIDED here, follows B].** Files (42 drafts, Guardians, Cloudlet) stay designed against the #188 Artist. The runtime multiplies them. No file needs a second edit when training values change.
+
 ## Read this first
 
-- **Today, real training gives no combat stats.** `characterSetup` (`packages/sim/src/progression.ts:118-130`) builds Health and Power from gear plus level, and Guard from gear only. Training reaches combat only through:
-  - perks from sign-offs (`training.ts:181-190`)
-  - Forms (no Power or Health; `content/abilities/abilities.json` forms have powerScale 0)
-  - the Virtue button (`world.ts:711-730`).
-
-  Training Points are counted (`training.ts:259`) but used only in the hidden Power Rating (`power.ts:66-67`). So in combat, levels are about 70% of strength today.
-- **Plan:** every piece of real training adds a small flat stat, for good. Nothing is ever taken away. No timers, no streaks, no decay.
+- **Today, real training gives no combat stats.** `characterSetup` (`packages/sim/src/progression.ts:118-130`) builds Health and Power from gear plus level, and Guard from gear only. Training Points are counted (`training.ts:259`) but used only in the hidden Power Rating (`power.ts:66-67`).
+- **Plan:** every piece of real training adds a small whole-number stat, for good. Nothing is ever taken away.
 
   | Real training | Adds |
   |---|---|
-  | **Sign-off** (one requirement: kata, self-defense, kick combo) | Power + Health |
-  | **Training Point** (15 approved home minutes) | Health + a little Power |
+  | **Sign-off** (one requirement) | Power + Health |
+  | **Training Point** (15 approved home minutes) | Health only (the Power part rounded to 0, so it was moved to Health) |
   | **Character stripe** (Virtue) | Guard |
 
-- **Result (typical student):** training is the biggest source at every belt. It is 47% of combat strength at white (levels 34%, gear 20%), 55% at yellow, and 65% at black.
-  - **Trains more, plays less** (half the runs, 45 min/week): 60-72% training. They are as strong as the typical student, with more Health.
-  - **Plays only** (class sign-offs, no home practice): still 43-64% training, because class sign-offs are real training. They stay in band (a mid enemy takes 5 hits; they get knocked out in 10-11 hits, against a floor of 8).
-- **Cost:** the expected Artist gets stronger, so enemies must scale up by one multiplier per belt (Health ×1.22 to ×5.70, Power ×1.24 to ×6.11). That can be a runtime multiplier, so the 42 draft files from #191 don't need editing again.
+## 1. Method (tune)
 
-## 1. Method
+- **Shape:** the K = 1.0 per-unit values from the first R-BAL-12 PR, times `SCALE × belt^-ALPHA`, then rounded to whole numbers. Two numbers for all belts, so values grow smoothly and never jump around.
+  - SCALE 1.1 and ALPHA 0.6 **[FITTED]**: the pair whose worst belt is nearest 52.5% training for the typical student.
+  - A per-belt K fitted one belt at a time was tried first. It hit the shares too, but gave zig-zag values (brown-black gave 0), so it was dropped.
+- **Split** sign-offs 60% / TP 25% / virtues 15% **[CODE ratio]** (`config.ts:248-250`). **Stat mix** sign-offs P .6 / H .4; TP Health 1.0; stripes Guard 1.0 **[GUESS, flavour]**.
+- **Units per belt:** 7 requirements, 28 TP (`power.ts:66`), 2 stripes (`config.ts:257`) **[CODE]**. A unit keeps the value of the belt it was earned at.
+- **Students [GUESS]:** typical 8 runs/week + 20 min/week; trains more 4 runs/week + 45 min/week; plays only 8 runs/week + 0. All sign off 7 items and earn 2 stripes per belt in class.
+- **Enemy multiplier per belt [FITTED]:** Health × = typical Artist Power ÷ #188 Artist Power. Power × = the **least tough** of the three students (Health × (1+Guard/100)) ÷ #188 Artist. So the class-only kid still gets knocked out no faster than the band allows.
 
-- **Budget:** full training at belt t is worth `K × (levels at the belt cap + gear budget)`, in the same shared unit as #188 (ln of Power × Health × (1 + Guard/100)).
-  - K = 1.0 **[FITTED]**. It is the smallest round value where training beats levels and gear at white and is over 50% from yellow on.
-  - K = 0.8 gives 41% at white, which ties with levels.
-- **Split between sources:** sign-offs 60%, Training Points 25%, virtues 15%. These are the Power Rating shares .40/.17/.10 (`config.ts:248-250`) **[CODE ratio]**.
-- **Stat mix** **[GUESS, flavour]**:
-
-  | Source | Power | Health | Guard |
-  |---|---|---|---|
-  | Sign-offs | 60% | 40% | |
-  | Training Points | 30% | 70% | |
-  | Stripes | | | 100% |
-
-- **Turned into flat stats** on the level-plus-full-gear Artist at the belt cap. The value of one unit = (cumulative total at belt t − at belt t−1) ÷ units per belt.
-- **Units per belt:**
-  - 7 requirements (fixtures) **[CODE]**
-  - 28 Training Points, the cap from `power.ts:66` (`requirements × upgradesPerAbility 4`) **[CODE]**
-  - 2 stripes (`config.ts:257`) **[CODE]**
-- **Earlier belts count as signed:** legacy requirements of earlier belts count as signed (`training.ts:163`). A transfer student starting at green gets white-to-yellow training stats at once (no catch-up punishment).
-- **Shares** are fair shares (average over all orders of adding levels, gear and training), averaged over the belt.
-- **Student guesses:**
-
-  | Student | Home practice | Runs |
-  |---|---|---|
-  | Typical | 20 min/week | 8 a week |
-  | Trains more, plays less | 45 min/week | 4 a week |
-  | Plays only | 0 | 8 a week |
-
-  Everyone signs off 7 requirements across the belt and earns 2 stripes **[GUESS]**. Catch-up XP ×2 below the expected level (`config.ts:220`) **[CODE]**.
-
-## 2. Values
+## 2. Values (whole numbers)
 
 | Belt | Sign-off: Power | Sign-off: Health | 1 TP: Power | 1 TP: Health | Stripe: Guard | Full belt adds P / H / G |
 |---|---|---|---|---|---|---|
-| white | 0.71 | 4.1 | 0.03 | 0.74 | 6.4 | 5.9 / 49 / 12.9 |
-| yellow | 1.49 | 6.9 | 0.06 | 1.20 | 6.4 | 12.1 / 82 / 12.8 |
-| orange | 2.44 | 9.2 | 0.09 | 1.57 | 6.1 | 19.5 / 109 / 12.2 |
-| green | 3.41 | 11.8 | 0.11 | 1.96 | 5.4 | 27.0 / 137 / 10.8 |
-| blue | 4.35 | 14.3 | 0.13 | 2.33 | 5.3 | 34.1 / 165 / 10.7 |
-| red | 5.91 | 16.9 | 0.16 | 2.71 | 4.9 | 46.0 / 194 / 9.7 |
-| red-black | 7.03 | 19.3 | 0.18 | 3.05 | 5.0 | 54.3 / 220 / 10.0 |
-| brown | 8.05 | 21.9 | 0.19 | 3.43 | 4.5 | 61.8 / 249 / 9.0 |
-| brown-black | 10.17 | 24.6 | 0.24 | 3.80 | 4.4 | 77.9 / 279 / 8.7 |
-| black | 11.72 | 27.1 | 0.26 | 4.14 | 4.3 | 89.3 / 306 / 8.5 |
+| white | 1 | 4 | 0 | 1 | 7 | 7.0/56/14.0 |
+| yellow | 1 | 5 | 0 | 1 | 5 | 7.0/63/10.0 |
+| orange | 1 | 5 | 0 | 1 | 3 | 7.0/63/6.0 |
+| green | 2 | 6 | 0 | 2 | 3 | 14.0/98/6.0 |
+| blue | 2 | 6 | 0 | 2 | 2 | 14.0/98/4.0 |
+| red | 2 | 6 | 0 | 2 | 2 | 14.0/98/4.0 |
+| red-black | 2 | 7 | 0 | 2 | 2 | 14.0/105/4.0 |
+| brown | 3 | 7 | 0 | 2 | 1 | 21.0/105/2.0 |
+| brown-black | 3 | 7 | 0 | 2 | 1 | 21.0/105/2.0 |
+| black | 3 | 7 | 0 | 2 | 1 | 21.0/105/2.0 |
 
-All values are **[FITTED]** (K, split, mix). A unit keeps the value of the belt it was earned at.
+All **[FITTED]**. Full belt = 7 sign-offs + 28 TP + 2 stripes.
 
-## 3. Shares by belt (sim)
+## 3. Shares by belt (training / levels / gear, %)
 
-| Belt | Typical (training / levels / gear) | Trains more, plays less | Plays only |
+| Belt | Typical | Trains more, plays less | Plays only (class) |
 |---|---|---|---|
-| white | 47 / 34 / 20 | 60 / 20 / 20 | 43 / 36 / 21 |
-| yellow | 55 / 29 / 17 | 72 / 19 / 9 | 51 / 31 / 18 |
-| green | 61 / 23 / 16 | 72 / 17 / 11 | 59 / 24 / 17 |
-| red | 64 / 20 / 16 | 71 / 17 / 13 | 62 / 21 / 17 |
-| black | 65 / 17 / 17 | 69 / 16 / 15 | 64 / 18 / 18 |
+
+
+- Typical: 51-54% at every belt (Decision A met).
+- Plays only is still 47-51% training, because class sign-offs and stripes are real training.
+- Trains more is 59-70%.
 
 ## 4. Programmer-ready
 
-1. **`packages/sim/src/config.ts`** (after `TRAINING_POINTS`, line 233): add `TRAINING_STATS` and `ENEMY_TRAINING_SCALE`:
+1. **`packages/sim/src/config.ts`** (after `TRAINING_POINTS`, line 233):
 ```ts
 export const TRAINING_STATS = {
-  'white': { signOff: { power: 0.71, maxHealth: 4.1 }, trainingPoint: { power: 0.03, maxHealth: 0.74 }, stripe: { guard: 6.4 } },
-  'yellow': { signOff: { power: 1.49, maxHealth: 6.9 }, trainingPoint: { power: 0.06, maxHealth: 1.20 }, stripe: { guard: 6.4 } },
-  'orange': { signOff: { power: 2.44, maxHealth: 9.2 }, trainingPoint: { power: 0.09, maxHealth: 1.57 }, stripe: { guard: 6.1 } },
-  'green': { signOff: { power: 3.41, maxHealth: 11.8 }, trainingPoint: { power: 0.11, maxHealth: 1.96 }, stripe: { guard: 5.4 } },
-  'blue': { signOff: { power: 4.35, maxHealth: 14.3 }, trainingPoint: { power: 0.13, maxHealth: 2.33 }, stripe: { guard: 5.3 } },
-  'red': { signOff: { power: 5.91, maxHealth: 16.9 }, trainingPoint: { power: 0.16, maxHealth: 2.71 }, stripe: { guard: 4.9 } },
-  'red-black': { signOff: { power: 7.03, maxHealth: 19.3 }, trainingPoint: { power: 0.18, maxHealth: 3.05 }, stripe: { guard: 5.0 } },
-  'brown': { signOff: { power: 8.05, maxHealth: 21.9 }, trainingPoint: { power: 0.19, maxHealth: 3.43 }, stripe: { guard: 4.5 } },
-  'brown-black': { signOff: { power: 10.17, maxHealth: 24.6 }, trainingPoint: { power: 0.24, maxHealth: 3.80 }, stripe: { guard: 4.4 } },
-  'black': { signOff: { power: 11.72, maxHealth: 27.1 }, trainingPoint: { power: 0.26, maxHealth: 4.14 }, stripe: { guard: 4.3 } },
+  'white': { signOff: { power: 1, maxHealth: 4 }, trainingPoint: { maxHealth: 1 }, stripe: { guard: 7 } },
+  'yellow': { signOff: { power: 1, maxHealth: 5 }, trainingPoint: { maxHealth: 1 }, stripe: { guard: 5 } },
+  'orange': { signOff: { power: 1, maxHealth: 5 }, trainingPoint: { maxHealth: 1 }, stripe: { guard: 3 } },
+  'green': { signOff: { power: 2, maxHealth: 6 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 3 } },
+  'blue': { signOff: { power: 2, maxHealth: 6 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 2 } },
+  'red': { signOff: { power: 2, maxHealth: 6 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 2 } },
+  'red-black': { signOff: { power: 2, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 2 } },
+  'brown': { signOff: { power: 3, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 1 } },
+  'brown-black': { signOff: { power: 3, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 1 } },
+  'black': { signOff: { power: 3, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 1 } },
 } as const;
+// internal only; final enemy stats = Math.round(base * scale)
 export const ENEMY_TRAINING_SCALE = {
-  white: { maxHealth: 1.22, power: 1.24 },
-  yellow: { maxHealth: 1.60, power: 1.70 },
-  orange: { maxHealth: 2.04, power: 2.22 },
-  green: { maxHealth: 2.52, power: 2.74 },
-  blue: { maxHealth: 3.02, power: 3.29 },
-  red: { maxHealth: 3.52, power: 3.85 },
-  'red-black': { maxHealth: 4.05, power: 4.40 },
-  brown: { maxHealth: 4.58, power: 4.96 },
-  'brown-black': { maxHealth: 5.12, power: 5.54 },
-  black: { maxHealth: 5.70, power: 6.11 },
+  'white': { maxHealth: 1.27, power: 1.19 },
+  'yellow': { maxHealth: 1.57, power: 1.51 },
+  'orange': { maxHealth: 1.71, power: 1.74 },
+  'green': { maxHealth: 1.90, power: 1.92 },
+  'blue': { maxHealth: 2.11, power: 2.07 },
+  'red': { maxHealth: 2.24, power: 2.18 },
+  'red-black': { maxHealth: 2.33, power: 2.28 },
+  'brown': { maxHealth: 2.45, power: 2.36 },
+  'brown-black': { maxHealth: 2.59, power: 2.43 },
+  'black': { maxHealth: 2.68, power: 2.47 },
 } as const;
 ```
-2. **New `trainingStats(training)` in `packages/sim/src/training.ts`** (pure function), returning `{ power, maxHealth, guard }`:
-   - **Sign-offs:** for each `training.requirements` entry with `signedOff` true (legacy counts), add `TRAINING_STATS[r.belt].signOff`.
-   - **Stripes:** for each feed stripe, add `TRAINING_STATS[s.belt].stripe`, at most `POWER.stripesPerBelt` per belt (the same limit as `training.ts:232`). Store the stripe list or the per-belt counts on `TrainingState` (today only `totalStripes`, line 251).
-   - **Training Points:** the n-th point (1-based) belongs to belt `ceil(n / 28)`. Count only points up to `28 × tier` (the same cap as `power.ts:66`).
-3. **`progression.ts:122-126` `characterSetup`:** add `trainingStats` to `maxHealth`, `power` and `guard`. Keep the existing `Math.round(…×10)/10` on power, and round health and guard the same way.
-4. **Enemy spawn** (where `e.def.maxHealth` / `power` are read in `world.ts`): multiply by `ENEMY_TRAINING_SCALE[tier]` for the run's belt tier. Wind-ups never scale. Or, instead, multiply the draft and live enemy files (DECIDE-B).
-5. **Power Rating:** no change. `power.ts:63-71` already counts the same three sources.
-6. **UI:** the Training screen shows "+0.7 Power, +4 Health" on each signed requirement, "+6 Guard" on each stripe, and the Training Point total. Words only, no meters that drain.
-7. **Tests:**
-   - Training stats never go down when the feed adds an item.
-   - A legacy belt gives the full belt values.
-   - TP above the cap adds nothing.
-   - The plays-only fixture still clears a mid enemy in 5 hits on Standard.
+2. **New `trainingStats(training)` in `packages/sim/src/training.ts`** (pure), returning `{ power, maxHealth, guard }`:
+   - **Sign-offs:** each `requirements` entry with `signedOff` true (legacy counts, `training.ts:163`) adds `TRAINING_STATS[r.belt].signOff`.
+   - **Stripes:** add `TRAINING_STATS[belt].stripe` per stripe, at most `POWER.stripesPerBelt` per belt.
+   - **Training Points:** the n-th point belongs to belt `ceil(n / 28)`; count only up to `28 × tier` (`power.ts:66`).
+3. **`TrainingState` must store stripes per belt, not just a count.** Today it has only `totalStripes` (`training.ts:251`), but feed stripes carry `s.belt` (`training.ts:232`). Add `stripesByBelt: Record<Belt, number>`.
+   - **Save migration that never lowers anything:** rebuild `stripesByBelt` from the feed. If the feed is missing or gives fewer than `totalStripes`, put the extra stripes on the oldest belts that have room (at most 2 each), then on the current belt. After migration, `trainingStats` and `totalStripes` must be `>=` what the old save showed. Never remove a stripe, sign-off or point. Test it.
+4. **`progression.ts:122-126` `characterSetup`:** add `trainingStats` to `maxHealth`, `power` and `guard`. All training values are whole numbers.
+5. **Enemy spawn** (where `e.def.maxHealth` / `power` are read in `world.ts`): `Math.round(def.maxHealth × scale.maxHealth)` and `Math.round(def.power × scale.power)` for the run's belt. Guard and wind-ups never scale. Content files stay BASE numbers.
+6. **UI:** show only gains: "+1 Power, +4 Health" on a signed item, "+7 Guard" on a stripe. No meters that drain, no "missed" counts, no reminders (no-nag rule).
+7. **Tests:** stats never go down when the feed adds an item; migration never lowers; a legacy belt gives full values; TP above the cap adds nothing; all spawned enemy stats are integers.
 
 ## 5. Board items (for the Manager; work board not edited)
 
 | ID | Owner | Task | Done when | Waits on |
 |---|---|---|---|---|
-| R-BAL-12a | Jay | Pick DECIDE-A/B/C | Answers in decisions.md | this PR |
-| R-BAL-12b | Programmer | Section 4 items 1-3, 5, 7 | Tests pass; a white fixture with 7 sign-offs + 2 stripes shows +5 Power, +29 Health, +13 Guard over none | R-BAL-12a |
-| R-BAL-12c | Programmer | Enemy scale (item 4) | `npm run balance` in band for the typical fixture at every belt | R-BAL-12b |
-| R-BAL-12d | Artist/UI | Item 6 words on the Training screen | Every signed item shows its gift | R-BAL-12b |
-| R-BAL-7 | Tester | Kid playtest, now with training stats | Clear rates in the targets for typical and plays-only kids | R-BAL-12c |
-
-## 6. Decisions for Jay
-
-- **DECIDE-A, how big is training?**
-  - K = 1.0 (recommended): training is the top source at every belt.
-  - K = 0.8: training ties levels at white and leads from yellow on.
-  - K = 1.6: about 60-73% training, but enemy numbers grow about 16× by black.
-- **DECIDE-B, how enemies keep up:** a runtime `ENEMY_TRAINING_SCALE` (recommended, one place to tune), or multiply the 42 draft and 4 live files.
-- **DECIDE-C, kids with no home practice:** they stay in band (knocked out in 10 hits against a floor of 8, mid enemy). Do we want that gap at all? Guided difficulty (`config.ts:33`) is there for any kid who needs it. Nothing is taken from anyone.
+| R-BAL-12b | Programmer | Section 4 items 1-4, 7 | Tests pass; a white fixture with 7 sign-offs + 2 stripes shows +7 Power, +28 Health, +14 Guard over none | this PR |
+| R-BAL-12c | Programmer | Enemy scale (item 5) | `npm run balance` in band for typical and plays-only fixtures | R-BAL-12b |
+| R-BAL-12d | Artist/UI | Item 6 words | Every signed item shows its gift, nothing shows a loss | R-BAL-12b |
+| R-BAL-7 | Tester | Kid playtest with training stats | Clear rates in target | R-BAL-12c |
 
 ## Flags
 
-- Training stat values have decimals at white (+0.71 Power). Show rounded numbers to kids.
-- Gear's share rises to about 16-20% here (from about 30% in #188), because training is added in. Levels drop from about 70% to about 20-35%.
-- These are **[GUESS]**: 20 min/week typical practice, sign-offs spread evenly across the belt, stripes at months 1 and 2.
-- The "plays less" gear model reuses the typical drop timeline at half speed.
-- Feed stripes have a `belt` field (`training.ts:232`), but `TrainingState` keeps only the count. The Programmer must keep the per-belt counts.
+- **Trains more, Challenge, Guardians:** 85-89 hits on Challenge, over the 80 top (Standard is fine). They have fewer runs, so less Power. Fix options: Guardian hit target 50 → 45, or accept it (Challenge is optional). Same kid: Stack Golem is 21 hits on Challenge (top 20).
+- **4 live enemies** (swarmer, shield, brute, floor-keeper) are out of band with or without the multiplier. They are not C13 files and were not touched; they need their own refill.
+- Levels still give +0.4 Power each (code). Power on screen should be rounded.
+- The mid enemy check (section 4 of the output) sizes a fresh enemy for the typical kid only; section 5 is the real check.
+- **[GUESS]:** practice minutes, run counts, sign-offs spread evenly, stripes at months 1 and 2.
 
 ## Sim output
 
 ```
+K=1 shape, SCALE 1.1 x belt^-0.6 [FITTED], rounded to whole numbers
 == 1. Value of one piece of real training, by the belt it is earned at (flat stats, adds only) ==
-K_TRAIN = 1.0 [FITTED]; split sign-offs/TP/virtues = 60%/25%/15% [CODE ratio]
+split sign-offs/TP/virtues = 60%/25%/15% [CODE ratio]
        belt  sign-off: Power Health   1 TP: Power Health  stripe: Guard   full belt adds P/H/G
-      white        0.71        4.1      0.03      0.74            6.4   5.9/49/12.9
-     yellow        1.49        6.9      0.06      1.20            6.4   12.1/82/12.8
-     orange        2.44        9.2      0.09      1.57            6.1   19.5/109/12.2
-      green        3.41       11.8      0.11      1.96            5.4   27.0/137/10.8
-       blue        4.35       14.3      0.13      2.33            5.3   34.1/165/10.7
-        red        5.91       16.9      0.16      2.71            4.9   46.0/194/9.7
-  red-black        7.03       19.3      0.18      3.05            5.0   54.3/220/10.0
-      brown        8.05       21.9      0.19      3.43            4.5   61.8/249/9.0
-brown-black       10.17       24.6      0.24      3.80            4.4   77.9/279/8.7
-      black       11.72       27.1      0.26      4.14            4.3   89.3/306/8.5
+      white           1          4         0         1              7   7.0/56/14.0
+     yellow           1          5         0         1              5   7.0/63/10.0
+     orange           1          5         0         1              3   7.0/63/6.0
+      green           2          6         0         2              3   14.0/98/6.0
+       blue           2          6         0         2              2   14.0/98/4.0
+        red           2          6         0         2              2   14.0/98/4.0
+  red-black           2          7         0         2              2   14.0/105/4.0
+      brown           3          7         0         2              1   21.0/105/2.0
+brown-black           3          7         0         2              1   21.0/105/2.0
+      black           3          7         0         2              1   21.0/105/2.0
 
 == 2. typical: runs x1.0, 20 approved min/week [GUESS] — belt-average Artist and share of strength ==
        belt  Power Health Guard   training  levels  gear
-      white   16.3    145   8.8       47%     34%   20%
-     yellow   31.3    238  23.4       55%     29%   17%
-     orange   54.8    357  38.4       59%     25%   16%
-      green   87.1    499  51.2       61%     23%   16%
-       blue  128.3    664  63.4       63%     21%   16%
-        red  182.7    854  74.9       64%     20%   16%
-  red-black  250.4   1066  86.2       64%     19%   17%
-      brown  327.6   1303  97.1       65%     18%   17%
-brown-black  421.3   1564 107.0       65%     18%   17%
-      black  533.7   1847 116.7       65%     17%   17%
+      white   17.0    147   9.3       51%     31%   18%
+     yellow   30.7    237  23.1       54%     29%   17%
+     orange   45.9    333  33.5       53%     29%   18%
+      green   65.6    434  40.9       54%     27%   19%
+       blue   89.9    541  47.3       54%     26%   19%
+        red  116.2    661  52.6       54%     26%   20%
+  red-black  143.8    792  58.0       54%     25%   21%
+      brown  175.2    928  62.4       54%     24%   22%
+brown-black  212.6   1067  65.5       54%     24%   22%
+      black  251.3   1206  68.5       54%     23%   23%
 
 == 2. trains more, plays less: runs x0.5, 45 approved min/week [GUESS] — belt-average Artist and share of strength ==
        belt  Power Health Guard   training  levels  gear
-      white   15.4    144   8.6       60%     20%   20%
-     yellow   28.1    238  22.0       72%     19%    9%
-     orange   51.0    377  36.0       72%     18%   10%
-      green   83.3    542  49.7       72%     17%   11%
-       blue  125.4    740  61.8       71%     17%   12%
-        red  180.1    970  73.3       71%     17%   13%
-  red-black  249.0   1229  84.5       70%     16%   13%
-      brown  330.6   1519  95.3       70%     16%   14%
-brown-black  427.4   1842 105.7       69%     16%   15%
-      black  542.6   2192 115.4       69%     16%   15%
+      white   15.9    148   9.2       63%     18%   18%
+     yellow   26.0    234  21.7       70%     20%   10%
+     orange   38.8    334  31.2       66%     22%   12%
+      green   56.7    466  39.4       65%     21%   14%
+       blue   79.8    605  45.7       64%     21%   15%
+        red  103.8    748  51.0       63%     21%   16%
+  red-black  129.7    897  56.3       61%     22%   17%
+      brown  161.5   1052  60.7       60%     21%   18%
+brown-black  197.5   1210  64.1       59%     21%   19%
+      black  234.6   1368  67.2       59%     21%   20%
 
 == 2. plays only (class, no home practice): runs x1.0, 0 approved min/week [GUESS] — belt-average Artist and share of strength ==
        belt  Power Health Guard   training  levels  gear
-      white   16.0    139   8.8       43%     36%   21%
-     yellow   30.4    219  23.4       51%     31%   18%
-     orange   52.8    318  38.4       56%     27%   17%
-      green   83.8    438  51.2       59%     24%   17%
-       blue  123.2    576  63.4       61%     23%   17%
-        red  175.5    735  74.9       62%     21%   17%
-  red-black  240.8    912  86.2       62%     20%   17%
-      brown  315.2   1109  97.1       63%     19%   18%
-brown-black  405.8   1327 107.0       63%     19%   18%
-      black  514.5   1563 116.7       64%     18%   18%
+      white   17.0    139   9.3       47%     33%   19%
+     yellow   30.7    212  23.1       50%     32%   18%
+     orange   45.9    290  33.5       50%     31%   19%
+      green   65.6    374  40.9       50%     30%   20%
+       blue   89.9    463  47.3       51%     28%   21%
+        red  116.2    555  52.6       51%     27%   22%
+  red-black  143.8    651  58.0       51%     27%   22%
+      brown  175.2    753  62.4       51%     26%   23%
+brown-black  212.6    857  65.5       51%     26%   24%
+      black  251.3    962  68.5       51%     25%   24%
 
-== 3. Enemy re-scale vs the #188 expected Artist (typical student), Health x and Power x ==
-      white  Health x1.22  Power x1.24
-     yellow  Health x1.60  Power x1.70
-     orange  Health x2.04  Power x2.22
-      green  Health x2.52  Power x2.74
-       blue  Health x3.02  Power x3.29
-        red  Health x3.52  Power x3.85
-  red-black  Health x4.05  Power x4.40
-      brown  Health x4.58  Power x4.96
-brown-black  Health x5.12  Power x5.54
-      black  Health x5.70  Power x6.11
+== 3. Enemy multiplier per belt vs the #188 Artist: Health x follows the typical student, Power x the least-tough student ==
+      white  Health x1.27  Power x1.19
+     yellow  Health x1.57  Power x1.51
+     orange  Health x1.71  Power x1.74
+      green  Health x1.90  Power x1.92
+       blue  Health x2.11  Power x2.07
+        red  Health x2.24  Power x2.18
+  red-black  Health x2.33  Power x2.28
+      brown  Health x2.45  Power x2.36
+brown-black  Health x2.59  Power x2.43
+      black  Health x2.68  Power x2.47
 
 == 4. A mid enemy built for the typical student (5 hits, KO 12), faced by each student, Standard ==
        belt                   typical   trains more, plays less  plays only (class, no ho
       white          beat  5 KO 12 in          beat  5 KO 12 in          beat  5 KO 11 in
-     yellow          beat  5 KO 12 in          beat  5 KO 12 in          beat  5 KO 11 in
-     orange          beat  5 KO 12 in          beat  5 KO 12 in          beat  5 KO 11 in
-      green          beat  5 KO 12 in          beat  5 KO 13 in          beat  5 KO 10 in
-       blue          beat  5 KO 12 in          beat  5 KO 13 in          beat  5 KO 10 in
-        red          beat  5 KO 12 in          beat  5 KO 13 in          beat  5 KO 10 in
-  red-black          beat  5 KO 12 in          beat  5 KO 14 in          beat  5 KO 10 in
-      brown          beat  5 KO 12 in          beat  5 KO 14 in          beat  5 KO 10 in
+     yellow          beat  5 KO 12 in          beat  6 KO 12 in          beat  5 KO 11 in
+     orange          beat  5 KO 12 in          beat  6 KO 12 in          beat  5 KO 10 in
+      green          beat  5 KO 12 in          beat  6 KO 13 in          beat  5 KO 10 in
+       blue          beat  5 KO 12 in          beat  6 KO 13 in          beat  5 KO 10 in
+        red          beat  5 KO 12 in          beat  6 KO 13 in          beat  5 KO 10 in
+  red-black          beat  5 KO 12 in          beat  5 KO 13 in          beat  5 KO 10 in
+      brown          beat  5 KO 12 in          beat  5 KO 13 in          beat  5 KO 10 in
 brown-black          beat  5 KO 12 in          beat  5 KO 14 in          beat  5 KO 10 in
-      black          beat  5 KO 12 in          beat  5 KO 14 in          beat  5 KO 10 in
+      black          beat  5 KO 12 in          beat  5 KO 13 in          beat  5 KO 10 in
+
+== 5. All enemies and Guardians with the belt multiplier (whole-number final stats), Standard + Challenge x1.5 ==
+   result per student: typical / trains more / plays only.  'beat' = Artist hits S/C, 'KO' = enemy hits S/C
+           wick-wisp       white H   25 P   8 G  0  2/3 KO 21/14 ok      | 2/3 KO 22/14 ok      | 2/3 KO 20/13 ok     
+          dust-bunny       white H   74 P  13 G  5  5/7 KO 13/9 ok       | 5/8 KO 13/9 ok       | 5/7 KO 12/8 ok      
+        lantern-moth       white H   86 P  13 G  0  6/8 KO 13/9 ok       | 6/9 KO 13/9 ok       | 6/8 KO 12/8 ok      
+       sleepy-sentry       white H   69 P  13 G 10  5/7 KO 13/9 ok       | 5/8 KO 13/9 ok       | 5/7 KO 12/8 ok      
+              bopper      yellow H  155 P  23 G 10  6/9 KO 13/9 ok       | 7/10 KO 13/9 ok      | 6/9 KO 12/8 ok      
+            buzz-bee      yellow H   47 P  14 G  0  2/3 KO 22/14 ok      | 2/3 KO 20/14 ok      | 2/3 KO 20/13 ok     
+        thorn-sprout      yellow H  127 P  20 G 10  5/7 KO 15/10 ok      | 6/8 KO 15/10 ok      | 5/7 KO 14/9 ok      
+         shell-snail      yellow H  138 P  23 G 20  6/8 KO 13/9 ok       | 7/10 KO 13/9 ok      | 6/8 KO 12/8 ok      
+        vine-sweeper      yellow H  155 P  23 G 10  6/9 KO 13/9 ok       | 7/10 KO 13/9 ok      | 6/9 KO 12/8 ok      
+        spark-sprite      orange H   68 P  21 G  0  2/3 KO 21/14 ok      | 2/3 KO 21/14 ok      | 2/3 KO 19/13 ok     
+          dough-blob      orange H  200 P  33 G  5  5/7 KO 14/9 ok       | 6/9 KO 14/9 ok       | 5/7 KO 12/8 ok      
+        ladle-lobber      orange H  209 P  28 G  0  5/7 KO 16/11 ok      | 6/9 KO 16/11 ok      | 5/7 KO 14/10 ok     
+         rolling-pin      orange H  226 P  33 G 10  6/9 KO 14/9 ok       | 7/10 KO 14/9 ok      | 6/9 KO 12/8 ok      
+          pebble-pal       green H   99 P  29 G  0  2/3 KO 21/15 ok      | 2/3 KO 23/16 ok      | 2/3 KO 18/13 ok     
+          cliff-goat       green H  281 P  46 G  5  5/7 KO 14/9 ok       | 6/8 KO 15/10 ok      | 5/7 KO 12/8 ok      
+         stack-golem       green H  612 P  71 G 25  12/18 KO 9/6 ok      | 14/21 KO 10/7 OUT    | 12/18 KO 8/5 ok     
+      boulder-roller       green H  323 P  46 G 10  6/9 KO 14/9 ok       | 7/10 KO 15/10 ok     | 6/9 KO 12/8 ok      
+         puddle-frog        blue H  380 P  60 G  5  5/7 KO 14/9 ok       | 5/8 KO 15/10 ok      | 5/7 KO 12/8 ok      
+           mist-wisp        blue H  409 P  60 G  0  5/7 KO 14/9 ok       | 6/8 KO 15/10 ok      | 5/7 KO 12/8 ok      
+           side-crab        blue H  405 P  60 G 20  6/9 KO 14/9 ok       | 7/10 KO 15/10 ok     | 6/9 KO 12/8 ok      
+         splash-wave        blue H  452 P  60 G 10  6/9 KO 14/9 ok       | 7/10 KO 15/10 ok     | 6/9 KO 12/8 ok      
+            coal-cub         red H  175 P  46 G  0  2/3 KO 23/15 ok      | 2/3 KO 25/17 ok      | 2/3 KO 19/13 ok     
+           anvil-imp         red H 1057 P 113 G 25  12/18 KO 9/6 ok      | 13/20 KO 10/7 ok     | 12/18 KO 8/5 ok     
+        bellows-puff         red H  556 P  74 G 15  6/9 KO 14/10 ok      | 7/10 KO 16/11 ok     | 6/9 KO 12/8 ok      
+         forge-sweep         red H  578 P  74 G 10  6/9 KO 14/10 ok      | 7/10 KO 16/11 ok     | 6/9 KO 12/8 ok      
+             masklet   red-black H  217 P  55 G  0  2/3 KO 23/16 ok      | 2/3 KO 26/17 ok      | 2/3 KO 19/13 ok     
+       copycat-shade   red-black H  718 P  89 G 10  6/9 KO 15/10 ok      | 7/10 KO 16/11 ok     | 6/9 KO 12/8 ok      
+          hush-guard   red-black H  666 P  89 G 20  6/9 KO 15/10 ok      | 7/10 KO 16/11 ok     | 6/9 KO 12/8 ok      
+           echo-bell   red-black H  718 P  89 G 10  6/9 KO 15/10 ok      | 7/10 KO 16/11 ok     | 6/9 KO 12/8 ok      
+        page-flutter       brown H  265 P  66 G  0  2/3 KO 23/16 ok      | 2/3 KO 26/17 ok      | 2/3 KO 19/13 ok     
+            bookworm       brown H  684 P 106 G 15  5/7 KO 15/10 ok      | 5/8 KO 16/11 ok      | 5/7 KO 12/8 ok      
+            ink-blot       brown H  750 P  90 G  5  5/7 KO 17/12 ok      | 5/8 KO 19/13 ok      | 5/7 KO 14/10 ok     
+        root-snapper       brown H  877 P 106 G 10  6/9 KO 15/10 ok      | 6/9 KO 16/11 ok      | 6/9 KO 12/8 ok      
+          cloud-puff brown-black H  319 P  78 G  0  2/3 KO 23/16 ok      | 2/3 KO 26/18 ok      | 2/3 KO 19/13 ok     
+         gust-sprite brown-black H 1026 P 124 G 15  6/9 KO 15/10 ok      | 6/9 KO 16/11 ok      | 6/9 KO 12/8 ok      
+        thunder-drum brown-black H  875 P 104 G 10  5/7 KO 17/12 ok      | 5/8 KO 20/13 ok      | 5/7 KO 14/10 ok     
+            zap-kite brown-black H 1067 P 124 G 10  6/9 KO 15/10 ok      | 6/9 KO 16/11 ok      | 6/9 KO 12/8 ok      
+          storm-wisp       black H  378 P  86 G  0  2/3 KO 24/16 ok      | 2/3 KO 27/18 ok      | 2/3 KO 19/13 ok     
+        rumble-brute       black H 2310 P 215 G 25  12/18 KO 10/7 ok     | 13/19 KO 11/8 ok     | 12/18 KO 8/6 ok     
+         echo-knight       black H 1150 P 141 G 20  6/9 KO 15/10 ok      | 6/9 KO 17/11 ok      | 6/9 KO 12/8 ok      
+         sky-sweeper       black H 1254 P 141 G 10  6/9 KO 15/10 ok      | 6/9 KO 17/11 ok      | 6/9 KO 12/8 ok      
+dough-blob/doughling      orange H   68 P  21 G  0  2/3 KO 21/14 ok      | 2/3 KO 21/14 ok      | 2/3 KO 19/13 ok     
+               brute       white H  229 P  30 G 25  17/25 KO 6/4 OUT     | 18/27 KO 6/4 OUT     | 17/25 KO 6/4 OUT    
+        floor-keeper       white H  889 P  31 G 30  69/103 KO 6/4 OUT    | 75/112 KO 6/4 OUT    | 69/103 KO 5/4 OUT   
+              shield       white H  114 P  18 G 15  8/12 KO 10/6 OUT     | 9/13 KO 10/6 OUT     | 8/12 KO 9/6 OUT     
+             swarmer       white H   51 P  10 G  0  3/5 KO 17/11 OUT     | 4/5 KO 17/11 OUT     | 3/5 KO 16/10 OUT    
+         lamp-keeper       white H  629 P  17 G 30  49/73 minKO 6 ok     | 53/79 minKO 6 ok     | 49/73 minKO 5 ok    
+        sun-gardener      yellow H 1165 P  29 G 30  49/73 minKO 6 ok     | 59/88 minKO 6 OUT    | 49/73 minKO 6 ok    
+         hearth-cook      orange H 1778 P  44 G 30  51/77 minKO 6 ok     | 60/89 minKO 6 OUT    | 51/77 minKO 5 ok    
+         stone-giant       green H 2538 P  60 G 30  51/77 minKO 6 ok     | 58/87 minKO 7 OUT    | 51/77 minKO 5 ok    
+       river-watcher        blue H 3448 P  77 G 30  50/75 minKO 6 ok     | 57/85 minKO 7 OUT    | 50/75 minKO 5 ok    
+
+checked 51 enemies/Guardians
+   out of band, typical: brute, floor-keeper, shield, swarmer
+   out of band, trains more, plays less: stack-golem, brute, floor-keeper, shield, swarmer, sun-gardener, hearth-cook, stone-giant, river-watcher
+   out of band, plays only (class, no home practice): brute, floor-keeper, shield, swarmer
 ```
