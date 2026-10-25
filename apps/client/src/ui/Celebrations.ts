@@ -4,12 +4,13 @@
 
 import Phaser from 'phaser';
 import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState } from '@dojo/sim';
-import { gainText, signOffGain, stripeGain } from '@dojo/sim';
+import { gainText, signOffGain, signOffLines, stripeGain } from '@dojo/sim';
 import GAINS from '../../../../content/settings/training-gains.json';
 import { sfx } from '../audio/Sfx';
 import { shortDate } from '../game/student';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook } from '../game/look';
+import { reducedMotion } from '../game/motion';
 import { hex } from './belt';
 import { FONT, crisp, view } from './theme';
 
@@ -161,10 +162,10 @@ export class Celebrations {
     const stripes = new Map<string, number>();
     for (const e of extras) if (e.kind === 'stripe') stripes.set(e.word, Math.max(stripes.get(e.word) ?? 0, e.rank));
     for (const [word, rank] of stripes) earned.push({ line: `★ ${word} stripe${rank > 1 ? ', earned again' : ''}`, color: '#ffd166' });
+    const signed = extras.flatMap((e) => (e.kind === 'signOff' ? [e.requirement] : e.kind === 'signOffs' ? e.list.map((x) => x.requirement) : []));
+    for (const line of signOffLines(signed)) earned.push({ line, color: '#5cd65c' });
     for (const e of extras) {
-      if (e.kind === 'stripe') continue;
-      else if (e.kind === 'signOff') earned.push({ line: `✓ ${e.requirement.name} signed off`, color: '#5cd65c' });
-      else if (e.kind === 'signOffs') earned.push({ line: `✓ ${e.list.length} techniques signed off`, color: '#5cd65c' });
+      if (e.kind === 'stripe' || e.kind === 'signOff' || e.kind === 'signOffs') continue;
       else if (e.kind === 'testApproved') earned.push({ line: `Sensei's Seal is lit${e.testDate ? `: test day ${shortDate(e.testDate)}` : ''}`, color: '#ffd166' });
       else if (e.kind === 'blessing') earned.push({ line: 'Dojo Blessing for 48 hours', color: '#9ad1ff' });
     }
@@ -339,6 +340,7 @@ export class Celebrations {
 
   /** Confetti bursting out from a point. */
   private burst(x: number, y: number, colors: number[], count: number): void {
+    if (reducedMotion()) return; // Reduced motion: no confetti.
     for (let i = 0; i < count; i++) {
       const c = this.scene.add.rectangle(x, y, 6, 10, colors[i % colors.length]).setAngle(Math.random() * 360);
       this.layer.add(c);
@@ -367,7 +369,7 @@ export class Celebrations {
     g.setPosition(x, y).setAlpha(0);
     this.layer.addAt(g, 0);
     this.scene.tweens.add({ targets: g, alpha: 1, duration: 500 });
-    this.scene.tweens.add({ targets: g, angle: 360, duration: 20000, repeat: -1 });
+    if (!reducedMotion()) this.scene.tweens.add({ targets: g, angle: 360, duration: 20000, repeat: -1 }); // Reduced motion: the rays stay still.
   }
 }
 

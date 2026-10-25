@@ -168,3 +168,15 @@ export function unlockCascade(t: TrainingState, stance: string): RewardMoment[] 
   out.push(...stripes);
   return out;
 }
+
+/**
+ * Congratulations-card lines for sign-offs. Real sign-offs say "signed off"; techniques only
+ * counted because the student already passed that rank (legacy) say "practiced".
+ */
+export function signOffLines(list: readonly Pick<RequirementStatus, 'name' | 'legacy'>[]): string[] {
+  const real = list.filter((r) => !r.legacy);
+  const counted = list.filter((r) => r.legacy);
+  const line = (group: typeof list, word: string) =>
+    group.length === 0 ? [] : group.length === 1 ? [`✓ ${group[0].name} ${word}`] : [`✓ ${group.length} techniques ${word}`];
+  return [...line(real, 'signed off'), ...line(counted, 'practiced')];
+}
