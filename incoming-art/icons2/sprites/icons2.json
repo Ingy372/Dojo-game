@@ -1,5 +1,5 @@
 {
- "about": "icons2 samples (Forms / Strikes / Virtues). Medallion icons; labels are drawn by the game.",
+ "about": "icons2 (Forms / Strikes / Virtues). Medallion icons; labels are drawn by the game.",
  "sprites": {
   "icon-rooted-form-64": {
    "size": [
@@ -19,7 +19,7 @@
    "file": "icon-follow-up-kick-64.png",
    "group": "Strikes",
    "ring": "strike",
-   "note": "Follow-up Kick = Strike adds a second kick. Side view facing right. Technique (front kick): support leg slightly bent with the foot flat, hips forward, kicking leg extended at chest height striking with the ball of the foot (toes pulled back), guard kept up. The first, lower kick is a soft ghost; a curved arrow shows the follow-up rising to the second."
+   "note": "Follow-up Kick = Strike adds a second kick (Kick Combo 1: front kick, front kick, inside kick, outside kick, spin kick; the icon shows the front kick). Side view facing right. Technique (front kick): support leg slightly bent with the foot flat, hips forward, kicking leg extended at chest height striking with the ball of the foot (toes pulled back), guard kept up. The first, lower kick is a soft ghost; a curved arrow shows the follow-up rising to the second."
   },
   "icon-shield-of-respect-64": {
    "size": [

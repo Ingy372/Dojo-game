@@ -23,10 +23,10 @@
 
 I picked the first earned item of each group. The original icons brief says "Forms = the character in the stance, Virtues = gold", so the Forms icon shows the stance (Rooted, after the Manager's first pass: a wide, even, symmetric horse-style stance, front view) and the Virtues medallion is gold.
 
-**DECIDE:**
-1. **Family ring colours:** Forms jade green, Strikes seal blue (the same as Technique Seals), Virtues gold. Should Strikes get their own colour so they don't read as Seals? One option is warm amber.
-2. **Shield of Respect symbol:** a standing bow (rei) on the shield. The other option is the fist-in-palm salute, which is harder to read at 64.
-3. **Follow-up Kick:** it's shown as a front kick, with a ghost first kick plus an arrow. Which kicks are in the school's actual Kick Combo 1? That isn't in the repo, so the kick type is a placeholder.
+**DECIDED (Jay, 2026-10-25):**
+1. **Strikes ring colour:** Strikes get their own colour, violet, which reads best at 64 px. It's clearly distinct from the Seal blue, Forms green and Virtue gold. No amber and no red.
+2. **Shield of Respect:** the standing bow is fine.
+3. **Follow-up Kick:** Kick Combo 1 is front kick, front kick, inside kick, outside kick, spin kick (this matches `docs/curriculum.md`). The icon keeps the front kick.
 
 **DECIDED (Manager):**
 - **Build method:** flat 2D (PIL), matching the seal medallions, is OK.
