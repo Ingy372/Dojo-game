@@ -930,3 +930,7 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Scope: belt and stripes only. Entering sign-offs (also in D2) is a follow-up.
 
 - 2026-10-25 — Manager call on #246 (QA fixes): changing the belt chip resets the stripe pick to 0 (never below the saved floor on that belt) via sim `pickBelt`; Save now opens an "Are you sure?" card (shared `button()`) because saves only go up; origin/main merged normally. Promotion still plays at the next dojo visit. Celebrations reduced motion and "practiced" wording moved to bot-code/fix-celebrate-rm; square buttons go to P-MENU-c.
+
+## R-BAL-14b (2026-10-25)
+- Manager call: wire the #237 charm amounts. `lowHealthFocus` amounts are now the extra share (game multiplier = 1 + amount), so Kind Stone 0.25 = x1.25. Rally's Insight amount goes from 2 to 1 so it stays x2. Great Lamp 1 = full DASH recharge and Feather 1 = +1 COUNTER tick; the code already did both, so they only got tests. check-c7 accepts plain kid text for COUNTER-window charms whose amounts are whole ticks.
+- The live content/loot/gear.json has only the 3 white charms. Lotus and Crane already match #237. Jade stays at the #188 white amounts (R-BAL-9 DECIDE-1 is still open). The 9 tier charms are not in the live file yet, because live loot has no per-tier drops; they come in with the tier-2+ gear import.
