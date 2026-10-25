@@ -1,6 +1,6 @@
 # Tier 7: Red/Black Belt, The Hall of Echoes
 
-**Belt form:** Penon 3  
+**Belt form:** Pinon 3  
 **Guardian:** The Echo Mask
 
 ## The Tower's history

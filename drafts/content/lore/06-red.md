@@ -1,6 +1,6 @@
 # Tier 6: Red Belt, The Forge of Courage
 
-**Belt form:** Penon 2  
+**Belt form:** Pinon 2  
 **Guardian:** The Ember Knight
 
 ## The Tower's history
