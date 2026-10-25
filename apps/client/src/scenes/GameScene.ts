@@ -276,6 +276,45 @@ export class GameScene extends Phaser.Scene {
   private timerText!: Phaser.GameObjects.Text;
   private bossName!: Phaser.GameObjects.Text;
   /** B-T3-NUDGE: the phase pause's ROAR! word (screen space, under the Sensei banner). */
+  /** A world box in screen points. */
+  private toScreen(w: { left: number; right: number; top: number; bottom: number }): { left: number; right: number; top: number; bottom: number } {
+    const cam = this.cameras.main;
+    const z = cam.zoom / DPR;
+    return { left: (w.left - cam.worldView.x) * z, right: (w.right - cam.worldView.x) * z, top: (w.top - cam.worldView.y) * z, bottom: (w.bottom - cam.worldView.y) * z };
+  }
+
+  private playerOnScreen() {
+    return this.toScreen(this.player.getBounds());
+  }
+
+  /** Every enemy name label on screen: the boss's name + bar pair and named monsters' plates and tags. */
+  private nameLabelsOnScreen() {
+    const boss = this.world.enemies.find((e) => e.def.boss && e.mode !== 'defeated');
+    if (boss && this.bossName.visible) this.placeBossTag(boss);
+    const world = [...(this.bossName.visible && this.bossTagWorld ? [this.bossTagWorld] : []), ...[...this.enemyViews.values()].flatMap((v) => v.named?.labelBounds() ?? [])];
+    return world.map((b) => this.toScreen(b));
+  }
+
+  /** B-T3-NUDGE: nudge a screen text vertically (down first, then up) until it is 8 px clear of every box and never above minTop. */
+  private nudgeClear(t: Phaser.GameObjects.Text, boxes: { left: number; right: number; top: number; bottom: number }[], minTop: number): void {
+    const { height } = view(this);
+    const b = t.getBounds();
+    const h = b.height;
+    const xs = boxes.filter((o) => b.left < o.right && b.right > o.left);
+    const hits = (top: number) => xs.find((o) => top < o.bottom + ROAR_GAP_PX && top + h > o.top - ROAR_GAP_PX);
+    const tryDir = (dir: 1 | -1): number | null => {
+      let top = Math.max(minTop, b.top);
+      for (let i = 0; i < 12; i++) {
+        const o = hits(top);
+        if (!o) return top >= minTop && top + h <= height ? top : null;
+        top = dir > 0 ? o.bottom + ROAR_GAP_PX : o.top - ROAR_GAP_PX - h;
+      }
+      return null;
+    };
+    const top = tryDir(-1) ?? tryDir(1);
+    if (top !== null) t.y += top - b.top;
+  }
+
   /** B-T3-NUDGE: shift a screen-space text stack off the player: above their head, else below their feet; never above minTop. */
   private keepOffPlayer(stack: Phaser.GameObjects.Text[], minTop: number): void {
     const cam = this.cameras.main;
@@ -1432,13 +1471,11 @@ export class GameScene extends Phaser.Scene {
               const minTop = banner ? banner.bottom + ROAR_GAP_PX : 0;
               const hb = help.getBounds();
               help.setPosition(Phaser.Math.Clamp(ex, hb.width / 2 + ROAR_GAP_PX, width - hb.width / 2 - ROAR_GAP_PX), Math.max(minTop, headY - hb.height - ROAR_GAP_PX));
-              const rb = roar.getBounds();
-              const hb2 = help.getBounds();
-              if (hb2.left < rb.right && hb2.right > rb.left && hb2.top < rb.bottom + ROAR_GAP_PX && hb2.bottom > rb.top) help.y = rb.bottom + ROAR_GAP_PX;
+              this.nudgeClear(help, [roar.getBounds(), this.playerOnScreen(), ...this.nameLabelsOnScreen()], minTop);
               fade.push(help);
             }
             this.keepOffPlayer([roar], banner ? banner.bottom + ROAR_GAP_PX : 0);
-            if (this.helpText && fade.includes(this.helpText)) this.keepOffPlayer([this.helpText], banner ? banner.bottom + ROAR_GAP_PX : 0);
+            if (this.helpText && fade.includes(this.helpText)) this.nudgeClear(this.helpText, [roar.getBounds(), this.playerOnScreen(), ...this.nameLabelsOnScreen()], banner ? banner.bottom + ROAR_GAP_PX : 0);
             this.tweens.add({ targets: fade, alpha: 0, delay: ms * 0.6, duration: ms * 0.4, onComplete: () => fade.forEach((t) => t.destroy()) });
           }
           break;
