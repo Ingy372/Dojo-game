@@ -14,6 +14,7 @@ import {
   equip,
   gearScore,
   letGo,
+  unequip,
   goalsDue,
   markGoalsShown,
   nextGoals,
@@ -756,14 +757,23 @@ export class HomeScene extends Phaser.Scene {
       add(this.text(tx, y + 6, SLOT_NAME[slot], TYPE.label, '#b9ad99'));
       if (item) add(this.oneLine(this.text(tx, y + 24, describeItem(item), 11, '#f2e9d8'), tw, 9));
       add(this.twoLines(this.text(bx + 8, y + 50, item ? item.name : 'Nothing', 12, item ? css(RARITY_COLOR[item.rarity]) : '#6b6478', true, FONT, slotW - 16), slotW - 16, 11));
-      return { slot, c, g, stroke: item ? RARITY_COLOR[item.rarity] : 0x3a3150 };
+      // B-GEAR-BUG: a worn card is a button too, so worn gear can be taken off (it isn't in the bag).
+      if (item) {
+        const b = button(this, { x: bx, y, w: slotW, h: boxH, label: '', color: 0x221d2e, size: 12, stroke: RARITY_COLOR[item.rarity], onTap: () => this.pick(item.uid) }, this.ui);
+        this.ui.remove(c);
+        b.visual.add(c.setPosition(0, -boxH / 2));
+      }
+      return { slot, c, g, stroke: item ? RARITY_COLOR[item.rarity] : 0x3a3150, item };
     });
     for (const s of worn) {
+      this.wornCards[s.slot] = { c: s.c, w: slotW, h: boxH };
+      if (s.item) continue; // drawn by its button
       s.g.fillStyle(0x221d2e).fillRoundedRect(-slotW / 2, 0, slotW, boxH, RADIUS.panel);
       s.g.lineStyle(2, s.stroke).strokeRoundedRect(-slotW / 2, 0, slotW, boxH, RADIUS.panel);
-      this.wornCards[s.slot] = { c: s.c, w: slotW, h: boxH };
     }
     y += boxH + S2;
+    // B-GEAR-BUG: the picked item may be worn (from the worn row), so look in the whole bag.
+    const selected = this.pickedItem();
 
     const bag = this.profile.inventory
       .filter((it) => this.profile.equipped[it.slot] !== it.uid)
@@ -773,6 +783,7 @@ export class HomeScene extends Phaser.Scene {
       const midY = (y + panelBottom) / 2;
       this.ui.add(bagIcon(this, x + w / 2, midY - 26));
       this.text(x + w / 2, midY + 6, 'Your bag is empty. Items you find in the Tower appear here.', TYPE.body, '#b9ad99', false, FONT, w - 32).setOrigin(0.5, 0).setAlign('center');
+      if (selected) this.renderSheet(selected, x, y - boxH - S2, w, panelBottom, -1);
       return;
     }
 
@@ -827,7 +838,6 @@ export class HomeScene extends Phaser.Scene {
       } else this.text(x + w / 2, pagerY + GEAR.pagerH / 2, `${this.page + 1} / ${pages}`, TYPE.label, '#b9ad99').setOrigin(0.5);
     }
 
-    const selected = bag.find((it) => it.uid === this.selected) ?? null;
     if (selected) this.renderSheet(selected, x, y - boxH - S2, w, panelBottom, pickedBottom);
   }
 
@@ -870,7 +880,8 @@ export class HomeScene extends Phaser.Scene {
     // Row 2: Wear (green, wide) and Let go (quieter). Let go asks again here.
     const by = sy + sh - pad - 44;
     if (!this.confirmLetGo) {
-      button(this, { x: x + pad, y: by, w: half + 40, h: 44, label: 'Wear', color: 0x3aa57a, size: 16, onTap: () => this.wear(item) }, sheet);
+      if (now?.uid === item.uid) button(this, { x: x + pad, y: by, w: half + 40, h: 44, label: 'Take off', color: 0x3a5f8a, size: 16, onTap: () => this.takeOff(item) }, sheet);
+      else button(this, { x: x + pad, y: by, w: half + 40, h: 44, label: 'Wear', color: 0x3aa57a, size: 16, onTap: () => this.wear(item) }, sheet);
       button(this, { x: x + 2 * pad + half + 40, y: by, w: half - 40, h: 44, label: 'Let go', color: 0x3a3448, size: TYPE.body, labelColor: '#e8b4b4', onTap: () => this.letGo(item) }, sheet);
     } else {
       const bw = Math.min(100, (w - 4 * pad) / 3);
@@ -885,6 +896,10 @@ export class HomeScene extends Phaser.Scene {
       sheet.setAlpha(rm ? 0 : 1).setY(rm ? 0 : atTop ? -12 : sh);
       this.tweens.add({ targets: sheet, y: 0, alpha: 1, duration: rm ? MOTION.reducedFade.ms : MOTION.sheet.ms, ease: rm ? 'Linear' : MOTION.sheet.ease });
     }
+  }
+
+  private pickedItem(): GearItem | null {
+    return this.profile.inventory.find((it) => it.uid === this.selected) ?? null;
   }
 
   private pick(uid: string): void {
@@ -1014,6 +1029,15 @@ export class HomeScene extends Phaser.Scene {
     slot.c.setScale(0.9);
     this.tweens.add({ targets: slot.c, scale: 1, duration: MOTION.pop.ms, ease: MOTION.pop.ease });
     this.tweens.add({ targets: flash, alpha: 0, duration: 360, onComplete: () => flash.destroy() });
+  }
+
+  /** B-GEAR-BUG: take worn gear off; it goes back into the bag. */
+  private takeOff(item: GearItem): void {
+    unequip(this.profile, item.slot);
+    writeSave(this.profile);
+    this.selected = null;
+    this.confirmLetGo = false;
+    this.renderPanel('none');
   }
 
   private letGo(item: GearItem): void {

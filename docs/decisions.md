@@ -983,6 +983,11 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Manager call (Oct 25): P-MENU-e approved as written: Gate and Dojo popups use the shared rounded button(), the resume offer and other square Dojo panels become rounded, CreateScene buttons drawn at least 44 tall. Keep the Boy / Girl labels exactly as they are (still an open question for Jay).
 - The Gate tab's READY chip now pops once (MOTION.pop) instead of blinking forever, and the sundial and Sensei's Seal sit on two equal rounded cards. The rest of work-board section 3c (lock sizes, label sizes, first-lit Seal bell) is not in this PR.
 - #257 (P-MENU-d) was still open, so bot-code/P-MENU-d is merged into this branch (a normal merge); #257 must merge first.
+
+## B-GEAR-BUG (2026-10-25)
+- Manager call (Oct 25): urgent bug from Jay's iPhone (Safari, landscape): gear can't be taken off or changed. Goes before P-MENU-f; keep it small, since a full Abilities and Gear redesign is planned.
+- Root cause: worn gear is left out of the bag grid, and the worn-slot cards were plain drawings with no tap. A worn item could never be picked, so there was no sheet and no way to take it off (`unequip()` existed in sim but the client never called it). Touch input, depth and the sheet's close/block zones were checked and are fine: Wear and Let go fire on a real touch tap at 844x390 and 932x430.
+- Fix: each filled worn card is a shared button() that opens the detail sheet for that item; for a worn item the sheet's first button is "Take off" (unequip, item goes back into the bag). The sheet also shows when the bag is empty (everything worn).
 ## B-LASTRUN (2026-10-25)
 - Manager call (Oct 25): urgent fix from Jay's iPhone test (Safari, landscape). The Last run panel must never overlap at landscape phone sizes; keep it small, an Abilities/Gear redesign is planned.
 - Every block stacks below the measured height of the one before (ui/tokens.ts S1/S2). Personal bests sit on the panel's real bottom edge (or just below the content, whichever is lower), and the item list only gets the rows left between, with "+N more in your Gear" for the rest.
