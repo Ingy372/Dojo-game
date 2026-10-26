@@ -12,7 +12,7 @@
 //              presses every button.
 // It uses its own seeded random numbers, so results repeat exactly.
 
-import type { EliteKind } from '../../src';
+import type { EliteKind, StanceDef } from '../../src';
 import {
   COMBAT,
   GUIDE_DONE,
@@ -73,6 +73,9 @@ export interface RoomStats {
   hits: number;
   /** Strikes the player landed. */
   strikes: number;
+  /** R-STANCE-READY-NUM: damage the player's attacks dealt, and enemies they defeated. */
+  dealt: number;
+  kos: number;
   died: boolean;
   /** Average number of enemies within 2.5 tiles of the player while fighting. */
   crowd: number;
@@ -107,7 +110,7 @@ interface Plan {
 export function playRoom(content: Content, run: RunState, world: WorldState, room: Room, style: Style, skill: Skill, rng: Rng): RoomStats {
   const p = world.players.p1;
   const plans = new Map<string, Plan>();
-  const stats: RoomStats = { roomId: room.id, kind: room.kind, ticks: 0, damage: 0, perfects: 0, blocks: 0, hits: 0, strikes: 0, died: false, crowd: 0, peakCrowd: 0, winded: 0, grade: null };
+  const stats: RoomStats = { roomId: room.id, kind: room.kind, ticks: 0, damage: 0, perfects: 0, blocks: 0, hits: 0, strikes: 0, dealt: 0, kos: 0, died: false, crowd: 0, peakCrowd: 0, winded: 0, grade: null };
   let crowdSum = 0;
   let crowdN = 0;
   const limit = 20 * 60 * 6;
@@ -120,6 +123,7 @@ export function playRoom(content: Content, run: RunState, world: WorldState, roo
       if (ev.kind === 'block') stats.blocks++;
       if (ev.kind === 'hit') stats.hits++;
       if (ev.kind === 'playerAttack' && ev.move === 'strike') stats.strikes++;
+      if (ev.kind === 'playerAttack') { stats.dealt += ev.damage; if (ev.defeated) stats.kos++; }
       if (ev.kind === 'winded') stats.winded++;
       if (ev.kind === 'phaseHold') stats.holdTicks = (stats.holdTicks ?? 0) + ev.ticks;
     }
@@ -321,7 +325,7 @@ function awayFrom(pos: Vec2, from: Vec2[], room: Room): Vec2 {
 }
 
 /** Plays a whole run. */
-export function playRun(content: Content, seed: number, style: Style, skill: Skill, difficulty: Difficulty = 'standard', base = { maxHealth: 100, power: 10, guard: 0 }, guideStep?: number, elites: { tier?: number; forcedElite?: EliteKind } = {}): RunStats {
+export function playRun(content: Content, seed: number, style: Style, skill: Skill, difficulty: Difficulty = 'standard', base: { maxHealth: number; power: number; guard: number; stances?: StanceDef[] } = { maxHealth: 100, power: 10, guard: 0 }, guideStep?: number, elites: { tier?: number; forcedElite?: EliteKind } = {}): RunStats {
   const run = startRun(content, { seed, dryRuns: 0, difficulty, ...elites });
   const rng = createRng(seed * 7919 + 13);
   const rooms: RoomStats[] = [];
