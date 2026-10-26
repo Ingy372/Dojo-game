@@ -1,0 +1,471 @@
+{
+  "notes": "L-PREMIUM-a: one 'how to earn it' line per locked Trophy Case cubby, Home Dojo decoration and Monster Journal card. Shown on tap and read aloud. Keyed by content id. Starter decorations and Beginner's Stance are never locked; Virtue stripes only show once earned, so they have no hint. Checked by drafts/content/tools/check-locked-hints.py.",
+  "rules": {
+    "maxWords": 7,
+    "banned": [
+      "only",
+      "missing",
+      "lost",
+      "perfect"
+    ]
+  },
+  "trophies": [
+    {
+      "id": "ready-stance",
+      "shelf": "katas",
+      "hint": "Show Sensei your Open Leg Stance!",
+      "unlock": "Its own teacher sign-off (signOffId PLACEHOLDER-dojoforge-stance-ready).",
+      "source": "content/abilities/abilities.json notes"
+    },
+    {
+      "id": "cat-stance",
+      "shelf": "katas",
+      "hint": "Show Sensei your next kata in class!",
+      "unlock": "Teacher sign-off on belt 2's kata (stances[2]).",
+      "source": "content/abilities/abilities.json notes",
+      "question": "abilities.json notes say belt N's kata unlocks stances[N], but stances[1] has its own sign-off. Is belt 1's kata tied to cat-stance or to nothing? Wording holds either way."
+    },
+    {
+      "id": "front-stance",
+      "shelf": "katas",
+      "hint": "Show Sensei your next kata in class!",
+      "unlock": "Teacher sign-off on belt 3's kata (stances[3]).",
+      "source": "content/abilities/abilities.json notes",
+      "question": "abilities.json notes say belt N's kata unlocks stances[N], but stances[1] has its own sign-off. Is belt 1's kata tied to cat-stance or to nothing? Wording holds either way."
+    },
+    {
+      "id": "fighting-stance",
+      "shelf": "katas",
+      "hint": "Show Sensei your next kata in class!",
+      "unlock": "Teacher sign-off on belt 4's kata (stances[4]).",
+      "source": "content/abilities/abilities.json notes",
+      "question": "abilities.json notes say belt N's kata unlocks stances[N], but stances[1] has its own sign-off. Is belt 1's kata tied to cat-stance or to nothing? Wording holds either way."
+    },
+    {
+      "id": "horse-stance",
+      "shelf": "katas",
+      "hint": "Show Sensei your next kata in class!",
+      "unlock": "Teacher sign-off on belt 5's kata (stances[5]).",
+      "source": "content/abilities/abilities.json notes",
+      "question": "abilities.json notes say belt N's kata unlocks stances[N], but stances[1] has its own sign-off. Is belt 1's kata tied to cat-stance or to nothing? Wording holds either way."
+    },
+    {
+      "id": "follow-up-kick",
+      "shelf": "kicks",
+      "hint": "Show Sensei your kick combo in class!",
+      "unlock": "Teacher sign-off on the belt's kick combo (next strike in order).",
+      "source": "content/abilities/abilities.json notes"
+    },
+    {
+      "id": "quick-combo",
+      "shelf": "kicks",
+      "hint": "Show Sensei your kick combo in class!",
+      "unlock": "Teacher sign-off on the belt's kick combo (next strike in order).",
+      "source": "content/abilities/abilities.json notes"
+    },
+    {
+      "id": "off-balance",
+      "shelf": "selfDefense",
+      "hint": "Show Sensei a self-defense move in class!",
+      "unlock": "Teacher sign-off on a self-defense technique (next seal, 5 per belt).",
+      "source": "content/abilities/abilities.json notes"
+    },
+    {
+      "id": "escape-step",
+      "shelf": "selfDefense",
+      "hint": "Show Sensei a self-defense move in class!",
+      "unlock": "Teacher sign-off on a self-defense technique (next seal, 5 per belt).",
+      "source": "content/abilities/abilities.json notes"
+    },
+    {
+      "id": "sweep",
+      "shelf": "selfDefense",
+      "hint": "Show Sensei a self-defense move in class!",
+      "unlock": "Teacher sign-off on a self-defense technique (next seal, 5 per belt).",
+      "source": "content/abilities/abilities.json notes"
+    },
+    {
+      "id": "steady-breath",
+      "shelf": "selfDefense",
+      "hint": "Show Sensei a self-defense move in class!",
+      "unlock": "Teacher sign-off on a self-defense technique (next seal, 5 per belt).",
+      "source": "content/abilities/abilities.json notes"
+    },
+    {
+      "id": "strong-block",
+      "shelf": "selfDefense",
+      "hint": "Show Sensei a self-defense move in class!",
+      "unlock": "Teacher sign-off on a self-defense technique (next seal, 5 per belt).",
+      "source": "content/abilities/abilities.json notes"
+    },
+    {
+      "id": "sharp-eyes",
+      "shelf": "selfDefense",
+      "hint": "Show Sensei a self-defense move in class!",
+      "unlock": "Teacher sign-off on a self-defense technique (next seal, 5 per belt).",
+      "source": "content/abilities/abilities.json notes"
+    },
+    {
+      "id": "create-distance",
+      "shelf": "selfDefense",
+      "hint": "Show Sensei a self-defense move in class!",
+      "unlock": "Teacher sign-off on a self-defense technique (next seal, 5 per belt).",
+      "source": "content/abilities/abilities.json notes"
+    },
+    {
+      "id": "disarm",
+      "shelf": "selfDefense",
+      "hint": "Show Sensei a self-defense move in class!",
+      "unlock": "Teacher sign-off on a self-defense technique (next seal, 5 per belt).",
+      "source": "content/abilities/abilities.json notes"
+    },
+    {
+      "id": "throw",
+      "shelf": "selfDefense",
+      "hint": "Show Sensei a self-defense move in class!",
+      "unlock": "Teacher sign-off on a self-defense technique (next seal, 5 per belt).",
+      "source": "content/abilities/abilities.json notes"
+    },
+    {
+      "id": "follow-through",
+      "shelf": "selfDefense",
+      "hint": "Show Sensei a self-defense move in class!",
+      "unlock": "Teacher sign-off on a self-defense technique (next seal, 5 per belt).",
+      "source": "content/abilities/abilities.json notes"
+    }
+  ],
+  "decorations": [
+    {
+      "id": "practice-mat",
+      "name": "Practice Mat",
+      "source": "tower",
+      "hint": "Keep climbing! It hides in Tower chests.",
+      "unlock": "Found in Tower chests (boss 5%, treasure 4%, challenge 3%)."
+    },
+    {
+      "id": "punching-bag",
+      "name": "Punching Bag",
+      "source": "tower",
+      "hint": "Keep climbing! It hides in Tower chests.",
+      "unlock": "Found in Tower chests (boss 5%, treasure 4%, challenge 3%)."
+    },
+    {
+      "id": "stone-lantern",
+      "name": "Stone Lantern",
+      "source": "tower",
+      "hint": "Keep climbing! It hides in Tower chests.",
+      "unlock": "Found in Tower chests (boss 5%, treasure 4%, challenge 3%)."
+    },
+    {
+      "id": "bonsai-tree",
+      "name": "Bonsai Tree",
+      "source": "tower",
+      "hint": "Keep climbing! It hides in Tower chests.",
+      "unlock": "Found in Tower chests (boss 5%, treasure 4%, challenge 3%)."
+    },
+    {
+      "id": "bamboo-pot",
+      "name": "Potted Bamboo",
+      "source": "tower",
+      "hint": "Keep climbing! It hides in Tower chests.",
+      "unlock": "Found in Tower chests (boss 5%, treasure 4%, challenge 3%)."
+    },
+    {
+      "id": "taiko-drum",
+      "name": "Taiko Drum",
+      "source": "tower",
+      "hint": "Keep climbing! It hides in Tower chests.",
+      "unlock": "Found in Tower chests (boss 5%, treasure 4%, challenge 3%)."
+    },
+    {
+      "id": "wooden-bench",
+      "name": "Wooden Bench",
+      "source": "tower",
+      "hint": "Keep climbing! It hides in Tower chests.",
+      "unlock": "Found in Tower chests (boss 5%, treasure 4%, challenge 3%)."
+    },
+    {
+      "id": "calligraphy-scroll",
+      "name": "Calligraphy Scroll",
+      "source": "tower",
+      "hint": "Keep climbing! It hides in Tower chests.",
+      "unlock": "Found in Tower chests (boss 5%, treasure 4%, challenge 3%)."
+    },
+    {
+      "id": "sticker-brute",
+      "name": "Old Thumper Sticker",
+      "source": "named",
+      "hint": "Free Old Thumper in the Sunrise Garden!",
+      "unlock": "First win against named monster old-thumper (belt tier 2+, rare)."
+    },
+    {
+      "id": "sticker-swarmer",
+      "name": "Zippy Zoom Sticker",
+      "source": "named",
+      "hint": "Free Zippy Zoom in the Sunrise Garden!",
+      "unlock": "First win against named monster zippy-zoom (belt tier 2+, rare)."
+    },
+    {
+      "id": "sticker-shield",
+      "name": "Captain Clank Sticker",
+      "source": "named",
+      "hint": "Free Captain Clank in the Sunrise Garden!",
+      "unlock": "First win against named monster captain-clank (belt tier 2+, rare)."
+    },
+    {
+      "id": "decor-a6-fan-stand",
+      "name": "Breeze Fan",
+      "source": "random",
+      "hint": "A surprise waiting in a Tower chest!",
+      "unlock": "Random pool in Tower chests (same drop chances)."
+    },
+    {
+      "id": "decor-a6-lantern-small",
+      "name": "Little Light Lantern",
+      "source": "random",
+      "hint": "A surprise waiting in a Tower chest!",
+      "unlock": "Random pool in Tower chests (same drop chances)."
+    },
+    {
+      "id": "decor-a6-bonsai-small",
+      "name": "Patient Bonsai",
+      "source": "random",
+      "hint": "A surprise waiting in a Tower chest!",
+      "unlock": "Random pool in Tower chests (same drop chances)."
+    },
+    {
+      "id": "decor-a6-cushion",
+      "name": "Rest Cushion",
+      "source": "random",
+      "hint": "A surprise waiting in a Tower chest!",
+      "unlock": "Random pool in Tower chests (same drop chances)."
+    },
+    {
+      "id": "decor-a6-banner-small",
+      "name": "Climber's Pennant",
+      "source": "random",
+      "hint": "A surprise waiting in a Tower chest!",
+      "unlock": "Random pool in Tower chests (same drop chances)."
+    },
+    {
+      "id": "decor-a6-class-scroll-bow",
+      "name": "Scroll of the Bow",
+      "source": "class",
+      "hint": "Your dojo classes bring this one home!",
+      "unlock": "Class pieces: one every 2 real classes at White belt, then every 3, in file order (earning.ts).",
+      "question": "Class pieces come in a fixed order, so only the next one is truly 'next'. Same hint for all, OK?"
+    },
+    {
+      "id": "decor-a6-class-scroll-form1",
+      "name": "Basic Form 1 Scroll",
+      "source": "class",
+      "hint": "Your dojo classes bring this one home!",
+      "unlock": "Class pieces: one every 2 real classes at White belt, then every 3, in file order (earning.ts).",
+      "question": "Class pieces come in a fixed order, so only the next one is truly 'next'. Same hint for all, OK?"
+    },
+    {
+      "id": "decor-a6-class-scroll-form2",
+      "name": "Basic Form 2 Scroll",
+      "source": "class",
+      "hint": "Your dojo classes bring this one home!",
+      "unlock": "Class pieces: one every 2 real classes at White belt, then every 3, in file order (earning.ts).",
+      "question": "Class pieces come in a fixed order, so only the next one is truly 'next'. Same hint for all, OK?"
+    },
+    {
+      "id": "decor-a6-class-scroll-key-on",
+      "name": "Keon Scroll",
+      "source": "class",
+      "hint": "Your dojo classes bring this one home!",
+      "unlock": "Class pieces: one every 2 real classes at White belt, then every 3, in file order (earning.ts).",
+      "question": "Class pieces come in a fixed order, so only the next one is truly 'next'. Same hint for all, OK?"
+    },
+    {
+      "id": "decor-a6-class-scroll-kicks",
+      "name": "First Kicks Scroll",
+      "source": "class",
+      "hint": "Your dojo classes bring this one home!",
+      "unlock": "Class pieces: one every 2 real classes at White belt, then every 3, in file order (earning.ts).",
+      "question": "Class pieces come in a fixed order, so only the next one is truly 'next'. Same hint for all, OK?"
+    },
+    {
+      "id": "decor-a6-class-scroll-defense",
+      "name": "Safe and Smart Scroll",
+      "source": "class",
+      "hint": "Your dojo classes bring this one home!",
+      "unlock": "Class pieces: one every 2 real classes at White belt, then every 3, in file order (earning.ts).",
+      "question": "Class pieces come in a fixed order, so only the next one is truly 'next'. Same hint for all, OK?"
+    },
+    {
+      "id": "decor-a6-class-scroll-kindness",
+      "name": "Helping Hands Scroll",
+      "source": "class",
+      "hint": "Your dojo classes bring this one home!",
+      "unlock": "Class pieces: one every 2 real classes at White belt, then every 3, in file order (earning.ts).",
+      "question": "Class pieces come in a fixed order, so only the next one is truly 'next'. Same hint for all, OK?"
+    },
+    {
+      "id": "decor-a6-kick-pad",
+      "name": "Bright Target Pad",
+      "source": "class",
+      "hint": "Your dojo classes bring this one home!",
+      "unlock": "Class pieces: one every 2 real classes at White belt, then every 3, in file order (earning.ts).",
+      "question": "Class pieces come in a fixed order, so only the next one is truly 'next'. Same hint for all, OK?"
+    },
+    {
+      "id": "decor-a6-focus-mitt",
+      "name": "Focus Mitt",
+      "source": "class",
+      "hint": "Your dojo classes bring this one home!",
+      "unlock": "Class pieces: one every 2 real classes at White belt, then every 3, in file order (earning.ts).",
+      "question": "Class pieces come in a fixed order, so only the next one is truly 'next'. Same hint for all, OK?"
+    },
+    {
+      "id": "decor-a6-belt-rack",
+      "name": "Belt Ladder Rack",
+      "source": "class",
+      "hint": "Your dojo classes bring this one home!",
+      "unlock": "Class pieces: one every 2 real classes at White belt, then every 3, in file order (earning.ts).",
+      "question": "Class pieces come in a fixed order, so only the next one is truly 'next'. Same hint for all, OK?"
+    },
+    {
+      "id": "decor-a6-sparring-helmet",
+      "name": "Safe Sparring Helmet",
+      "source": "class",
+      "hint": "Your dojo classes bring this one home!",
+      "unlock": "Class pieces: one every 2 real classes at White belt, then every 3, in file order (earning.ts).",
+      "question": "Class pieces come in a fixed order, so only the next one is truly 'next'. Same hint for all, OK?"
+    },
+    {
+      "id": "decor-a6-water-bottle",
+      "name": "Class Water Bottle",
+      "source": "class",
+      "hint": "Your dojo classes bring this one home!",
+      "unlock": "Class pieces: one every 2 real classes at White belt, then every 3, in file order (earning.ts).",
+      "question": "Class pieces come in a fixed order, so only the next one is truly 'next'. Same hint for all, OK?"
+    },
+    {
+      "id": "decor-a6-bow-mat",
+      "name": "Bow Mat",
+      "source": "class",
+      "hint": "Your dojo classes bring this one home!",
+      "unlock": "Class pieces: one every 2 real classes at White belt, then every 3, in file order (earning.ts).",
+      "question": "Class pieces come in a fixed order, so only the next one is truly 'next'. Same hint for all, OK?"
+    },
+    {
+      "id": "decor-a6-keeper-statue-floor1",
+      "name": "Brave Lion-Dog Statue",
+      "source": "keeper",
+      "hint": "Free the Guardian of Tower floor 1!",
+      "unlock": "First time a floor Guardian (floor-keeper or hearth-cook) is beaten at belt tier 1."
+    },
+    {
+      "id": "decor-a6-keeper-statue-floor2",
+      "name": "Patient Turtle Statue",
+      "source": "keeper",
+      "hint": "Free the Guardian of Tower floor 2!",
+      "unlock": "First time a floor Guardian (floor-keeper or hearth-cook) is beaten at belt tier 2."
+    },
+    {
+      "id": "decor-a6-keeper-statue-floor3",
+      "name": "Peaceful Crane Statue",
+      "source": "keeper",
+      "hint": "Free the Guardian of Tower floor 3!",
+      "unlock": "First time a floor Guardian (floor-keeper or hearth-cook) is beaten at belt tier 3."
+    },
+    {
+      "id": "decor-a6-journal-trophy-swarmer",
+      "name": "Speedy Swarmer Trophy",
+      "source": "trophy",
+      "hint": "Free a Swarmer in the Tower!",
+      "unlock": "First defeat of swarmer (win or loss)."
+    },
+    {
+      "id": "decor-a6-journal-trophy-shield",
+      "name": "Shield Guard Trophy",
+      "source": "trophy",
+      "hint": "Free a Shield Guard in the Tower!",
+      "unlock": "First defeat of shield (win or loss)."
+    },
+    {
+      "id": "decor-a6-journal-trophy-brute",
+      "name": "Gentle Brute Trophy",
+      "source": "trophy",
+      "hint": "Free a Brute in the Tower!",
+      "unlock": "First defeat of brute (win or loss)."
+    },
+    {
+      "id": "decor-a6-journal-trophy-keeper",
+      "name": "Kind Keeper Trophy",
+      "source": "trophy",
+      "hint": "Free the Floor Keeper in the Tower!",
+      "unlock": "First defeat of floor-keeper (win or loss)."
+    },
+    {
+      "id": "decor-a6-journal-trophy-bopper",
+      "name": "Bouncy Bopper Trophy",
+      "source": "trophy",
+      "hint": "Free a Bouncy Bopper in the Tower!",
+      "unlock": "First defeat of bopper (win or loss)."
+    },
+    {
+      "id": "decor-a6-folding-screen",
+      "name": "Quiet Garden Screen",
+      "source": "bonus",
+      "hint": "Earn all four first-page Journal trophies!",
+      "unlock": "Every journalTier 1 trophy earned."
+    }
+  ],
+  "journal": [
+    {
+      "id": "kind:swarmer",
+      "hint": "Free a Swarmer for this page!",
+      "unlock": "Trophy decor-a6-journal-trophy-swarmer given (first defeat).",
+      "source": "earning.ts journalKinds"
+    },
+    {
+      "id": "kind:shield",
+      "hint": "Free a Shield Guard for this page!",
+      "unlock": "Trophy decor-a6-journal-trophy-shield given (first defeat).",
+      "source": "earning.ts journalKinds"
+    },
+    {
+      "id": "kind:brute",
+      "hint": "Free a Brute for this page!",
+      "unlock": "Trophy decor-a6-journal-trophy-brute given (first defeat).",
+      "source": "earning.ts journalKinds"
+    },
+    {
+      "id": "kind:floor-keeper",
+      "hint": "Free the Floor Keeper for this page!",
+      "unlock": "Trophy decor-a6-journal-trophy-keeper given (first defeat).",
+      "source": "earning.ts journalKinds"
+    },
+    {
+      "id": "kind:bopper",
+      "hint": "Free a Bouncy Bopper for this page!",
+      "unlock": "Trophy decor-a6-journal-trophy-bopper given (first defeat).",
+      "source": "earning.ts journalKinds"
+    },
+    {
+      "id": "named:old-thumper",
+      "hint": "A rare friend glows in the garden.",
+      "unlock": "First win against Old Thumper (rare, belt tier 2+; about 1 in 30 runs).",
+      "source": "content/named/named.json",
+      "note": "Name hidden on purpose: the card shows '?' until met."
+    },
+    {
+      "id": "named:zippy-zoom",
+      "hint": "A rare friend glows in the garden.",
+      "unlock": "First win against Zippy Zoom (rare, belt tier 2+; about 1 in 30 runs).",
+      "source": "content/named/named.json",
+      "note": "Name hidden on purpose: the card shows '?' until met."
+    },
+    {
+      "id": "named:captain-clank",
+      "hint": "A rare friend glows in the garden.",
+      "unlock": "First win against Captain Clank (rare, belt tier 2+; about 1 in 30 runs).",
+      "source": "content/named/named.json",
+      "note": "Name hidden on purpose: the card shows '?' until met."
+    }
+  ]
+}
