@@ -44,6 +44,7 @@ import { currentTraining, selectProfile, shortDate } from '../game/student';
 import { hex } from '../ui/belt';
 import { startTowerRun } from '../game/tower';
 import { isPlayTimeUp } from '../game/playTime';
+import { KO, homePointer } from '../game/knockout';
 import { addIcon, ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { loadArt } from '../art/art';
@@ -63,6 +64,8 @@ import type { GameSceneData } from './GameScene';
 /** How Home was opened: after a run (cleared, lost, or rested at the play limit) the next goals may show. */
 export interface HomeSceneData {
   fromRun?: boolean;
+  /** B-MASHER-d1: home after a knock-out ('run') or when play time ended ('rested'): Screen 3's welcome shows. */
+  knockout?: 'run' | 'rested';
 }
 
 const SLOT_NAME: Record<GearSlot, string> = { hands: 'Hands', gi: 'Gi', charm: 'Charm' };
@@ -152,6 +155,7 @@ export class HomeScene extends Phaser.Scene {
   private titleTaps: number[] = [];
   /** Came here straight from a run, and the next goals haven't been considered yet. */
   private fromRun = false;
+  private knockout: HomeSceneData['knockout'] | null = null;
   private firstFloorDone = false;
   /** P-MENU2-g: the Found strip's page, and whether this view counted up (test hook). */
   private foundPageNo = 0;
@@ -168,6 +172,7 @@ export class HomeScene extends Phaser.Scene {
 
   init(data: HomeSceneData): void {
     this.fromRun = data?.fromRun === true;
+    this.knockout = data?.knockout ?? null;
     this.firstFloorDone = false;
   }
 
@@ -185,7 +190,15 @@ export class HomeScene extends Phaser.Scene {
     this.underline = this.add.rectangle(0, 0, 0, 3, 0xffd166).setOrigin(0).setVisible(false);
     this.panel = null;
     this.ui = this.shell;
-    this.refresh();
+    if (this.knockout) {
+      // B-MASHER-d1 Screen 3: "Welcome home!" and one pointer first; the rest of the
+      // homecoming (celebrations, goals) follows once it fades.
+      const resting = this.knockout === 'rested';
+      this.knockout = null;
+      this.training = currentTraining();
+      this.render();
+      this.welcomeHome(homePointer(this.training.path.nextClassDay, resting || isPlayTimeUp(this.profile)), () => this.refresh());
+    } else this.refresh();
     this.cameras.main.fadeIn(400, 10, 8, 16);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.render, this);
     this.listenPanelScroll();
@@ -243,6 +256,38 @@ export class HomeScene extends Phaser.Scene {
       },
       sensei,
     );
+  }
+
+  /** B-MASHER-d1 Screen 3: a soft bell, "Welcome home!" and one pointer; fades after about 4 s or on a tap. */
+  private welcomeHome(pointer: string | null, onDone: () => void): void {
+    const { width, height } = view(this);
+    const still = reducedMotion();
+    const box = this.add.container(0, 0).setDepth(60);
+    const w = Math.min(420, width - 40);
+    const h = pointer ? 92 : 60;
+    const cy = height * 0.42;
+    const shade = this.add.rectangle(0, 0, width, height, 0x000000, 0.35).setOrigin(0).setInteractive();
+    box.add([shade, this.add.rectangle(width / 2, cy, w, h, 0x221d2e).setStrokeStyle(3, 0xffd166)]);
+    const line = (y: number, str: string, size: number, color: string) =>
+      box.add(
+        this.add
+          .text(width / 2, y, str, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color, align: 'center', wordWrap: { width: w - 24 } })
+          .setOrigin(0.5)
+          .setResolution(crisp()),
+      );
+    line(cy - (pointer ? 18 : 0), KO.welcome, 22, '#ffd166');
+    if (pointer) line(cy + 20, pointer, 16, '#f2e9d8');
+    sfx.seal();
+    let done = false;
+    const close = () => {
+      if (done) return;
+      done = true;
+      this.tweens.add({ targets: box, alpha: 0, duration: still ? 0 : 300, onComplete: () => (box.destroy(), onDone()) });
+    };
+    shade.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, close);
+    this.time.delayedCall(KO.pointerMs, close);
+    box.setAlpha(0);
+    this.tweens.add({ targets: box, alpha: 1, duration: still ? 0 : 300 });
   }
 
   /** K23: the first floor's results for a 6-year-old: the grade, one reward and Continue. */

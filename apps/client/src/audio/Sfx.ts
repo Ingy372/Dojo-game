@@ -243,9 +243,9 @@ class SoundMaker {
     [523, 659, 784].forEach((f, i) => this.tone(f, f, 0.18, 'triangle', 0.2, i * 0.08));
   }
 
-  /** The player is defeated. */
+  /** The hero is knocked out (B-MASHER-d1): a warm, rising chime, never a sad sound. */
   playerDown(): void {
-    [392, 330, 262].forEach((f, i) => this.tone(f, f * 0.95, 0.25, 'triangle', 0.2, i * 0.15));
+    [523, 659, 784].forEach((f, i) => this.tone(f, f, 0.5, 'sine', 0.12, i * 0.18));
   }
 
   /** The enemy appears. */

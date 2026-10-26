@@ -1,0 +1,15 @@
+{
+  "_note": "B-MASHER-d1. The knock-out flow, word for word from Jay's signed spec (drafts/learning/b-masher-d-knockout-flow.md, #292). Screen 1: Sensei helps the hero up. Screen 2: what they kept, one Head home button. Screen 3: Home's welcome and one pointer. Lines stay 7 words or fewer; no loss words.",
+  "helpUp": "Sensei helps you up.",
+  "helpUpSensei": "Every fall is part of training.",
+  "helpUpMs": 2500,
+  "keptTitle": "You kept everything you found!",
+  "keptNone": "You learned this room!",
+  "keptSensei": "Let's rest at the dojo.",
+  "restingLine": "Great training today! Your dojo is resting.",
+  "headHome": "Head home",
+  "welcome": "Welcome home!",
+  "pointerClass": "Train in class to grow stronger!",
+  "pointerNext": "The Tower is ready when you are.",
+  "pointerMs": 4000
+}
