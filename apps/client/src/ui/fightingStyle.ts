@@ -41,10 +41,11 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
   const earnedStances: StylePick[] = stances.map((f) => ({ id: f.id, slot: 'stance', name: f.name, line: line(f.id), earned: true }));
   const have = new Set(stances.map((f) => f.id));
   const lockedStances: StylePick[] = [];
-  for (const a of training.abilities) {
-    if (a.kind !== 'stance' || a.unlocked || !a.stance || have.has(a.stance.id)) continue;
-    have.add(a.stance.id);
-    lockedStances.push({ id: a.stance.id, slot: 'stance', name: a.stance.name, line: line(a.stance.id), earned: false, requirementId: a.requirement.id });
+  // R-STANCE-d2: every Stance shows; ones without a teacher's sign-off yet are not-yet cards.
+  for (const st of training.stances) {
+    if (st.unlocked || have.has(st.def.id)) continue;
+    have.add(st.def.id);
+    lockedStances.push({ id: st.def.id, slot: 'stance', name: st.def.name, line: line(st.def.id), earned: false });
   }
 
   // The first entry per Virtue is the one a fight uses (loadoutAbilities uses find()).
