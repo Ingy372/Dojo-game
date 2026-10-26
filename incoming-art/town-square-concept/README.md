@@ -40,3 +40,8 @@ python3 make_concept.py --far render_far@2x.png --town render_town@2x.png --outd
 - **Dusk**: a deep indigo-to-rose sky and the scene dimmed toward blue-violet. Windows, door glows and lanterns are kept at full warm brightness with a soft glow, using an emission mask (`--part lights`), and the Tower light glows.
 - Statue unchanged (generic).
 - Dusk: `python3 make_concept.py --far render_far@2x.png --town render_town@2x.png --lights render_lights@2x.png --outdir ../concept --variant dusk`
+
+## A4-3 update (Jay's notes)
+- **Day, livelier:** a little river runs through the square from a waterfall in the hills. It has stone banks, ripples and sparkles, lily pads with white and yellow flowers, and orange, white and gold koi (no red), plus a small arched wooden bridge with lanterns at each end. Behind the town is a world to explore: rolling hills with winding paths, a windmill, a striped lighthouse, a waterfall with a pool and a footbridge, soft pink cherry trees, banners, a glimpse of a little village, kites and a few birds. The far layer is now rendered 1.4x wider so it fills the whole skyline.
+- **Evening, cozier:** warm pools of light on the ground under every lantern, lamp and window, warm lantern reflections on the river, and about 34 fireflies.
+- Main dojo unchanged (photos pending). The shop, the placeholder and the statue are unchanged. No characters, no text, no red.

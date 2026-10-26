@@ -33,3 +33,16 @@ DECIDE:
 - How dark dusk should be, and whether the Tower glow should be stronger.
 - Not decided here (per brief): layout, scrolling, door count.
 NEXT: Remodel the main dojo when the Action Zone photos arrive. Then Jay picks the shop and placeholder direction.
+
+---
+## UPDATE A4-3
+ITEM: A4-3, town square, day livelier and evening cozier (same branch / PR #301).
+WHAT: Day: a river with an arched bridge, koi, lily pads and sparkle; a busy background with hills and paths, a waterfall, a footbridge, a windmill, a lighthouse, cherry trees, banners, a village glimpse, kites and birds. Dusk: ground light pools, river reflections and fireflies. Red check: 0 px.
+WHY: Jay wants kids to think "WOW, I'd love to explore over there", and wants an even cozier evening.
+DECIDE:
+- Whether the river stays in the square and where it runs. It sits between the statue and the placeholder, and it cuts into walkable space.
+- Whether the windmill and lighthouse stay with the Tower, or compete with it.
+- Which background landmarks should become real areas.
+- How many fireflies.
+- Not decided here: layout, scrolling, door count.
+NEXT: Remodel the main dojo when the Action Zone photos arrive.
