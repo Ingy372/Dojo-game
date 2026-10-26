@@ -28,8 +28,7 @@ for r in json.load(open('boxes.json')):
         else: check(wf, 'tap zone found', False)
         if Z: check(wf, 'label >= 8 px inside its button', min(L['l'] - Z['l'], Z['r'] - L['r']) >= 8, f"{min(L['l'] - Z['l'], Z['r'] - L['r']):.0f}")
         if f == 'end':
-            tol = 14 if r['name'] == 'dash' else 8  # DASH is drawn slightly see-through over the floor
-            check(wf, 'button fill is GREEN #277a56 (pixel)', near(bg, GREEN, tol), '#%02x%02x%02x' % bg)
+            check(wf, 'button fill is GREEN #277a56 (pixel)', near(bg, GREEN), '#%02x%02x%02x' % bg)
             check(wf, 'old #3aa57a not on the button', not near(bg, OLD, 4))
             check(wf, 'label contrast >= 4.5:1 (pixels)', c >= 4.5, f"{c:.2f}:1 #%02x%02x%02x on #%02x%02x%02x" % (fg + bg))
         else: check(wf, 'frame recorded (colour and contrast are checked on the settled end frame)', True, f"alpha {fr['alpha']:.2f}, {c:.2f}:1 #%02x%02x%02x on #%02x%02x%02x" % (fg + bg))
