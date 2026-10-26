@@ -1208,8 +1208,15 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 
 ## P-MENU2-SPACE: Training Board fits short landscape phones (2026-10-25)
 - Jay's iPhone Safari landscape leaves about 290–320 pt of height. The board now lays out from the real viewport height instead of assuming 375.
-- **Left column:** under 369 pt tall (the full column with the Path card at its smallest), it goes compact: 8 pt edges, the "Level N · cap" line moves beside the avatar, ENTER is 44 tall. If the Path card still has less than its full-card height, it becomes one row (label and step name). Under 36 pt it is left out.
+- **Left column:** under 369 pt tall (the full column with the Path card at its smallest), it goes compact: 8 pt edges, the "Level N · cap" line moves beside the avatar, ENTER is 44 tall. If the Path card still has less than its full-card height, it becomes one row (label and step name). (Round 2: it is never left out; see below.)
 - **Panel:** each tab gets at least the height it has at 667x375 (277 pt for Last run, My Style and the Gate; Gear and the Trophy Case already fit). When the panel is shorter, the contents scroll inside it: masked to the frame, a thin wood thumb on the right, drag or wheel. A drag of more than 8 pt cancels the button it started on. Buttons scrolled out of view are switched off. Sheets don't scroll. Scroll position is kept while you stay on the tab.
 - We chose scrolling over shrinking: text stays at 12+ px and taps at 44+ pt. A 39 pt scroll at 667x320 is less of a change than restacking every tab.
 - **Stat tiles:** 52/64 tall (was 44/56), so the number and its label have 12–13 px of ink between them (was 4.5–6). The icon keeps 8 pt from the final number: the number slides right if the tile has room, otherwise the icon is left out (at 932 the clock is left out next to "14:46"; the gem sits 8 pt from "+180").
 - My Style slot name starts under the label's real line height (it overlapped by 1 px).
+- **Round 2 (after the Tester's fail, Manager's calls):**
+  - A short scroll inside the panel is OK. Leaving the clock icon out at 932 is OK.
+  - Taps are clipped to the visible window. Each button's hit area is cut to the part you can see, so a touch outside the window never fires. Proof: `edgetap.mjs` touches every cut button 2 pt outside the window (no events) and 3 pt inside its visible part (it presses).
+  - The Path card always shows. On short screens it is at least a one-line row (label and step name), including at 800x290. The left column gives it the space first.
+  - The scroll cue is a soft dark fade at each edge with more content, plus a small gold chevron on a dark pill. The thumb is 6 pt on a faint track. All drawn in code.
+  - A tab scrolls only when its content really overflows. The empty Last run, Gear and the Trophy Case don't scroll. The Gate's minimum height is worked out from its locks, its 3-line labels and its cards, not a fixed 277.
+  - Gate labels get 3 lines ("David / and / Goliath" in a slot about 50 pt wide), so the label shows in full and the cards sit right under it.

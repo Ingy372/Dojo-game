@@ -808,5 +808,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 **Done**
 - Left column compacts below 369 pt; panel contents scroll inside the frame when the screen is short; stat number/label gap 12–13 px; stat icons 8+ pt from the number; My Style slot label overlap fixed.
 - Measured at 667x375, 667x320, 800x290, 844x390, 932x430 with Reduced motion on and off: no text overlaps, nothing within 8 px of the screen edge, 0 console errors. Shots in docs/shots/p-menu2-space.
+- Round 2: taps clipped to the visible window (edge-tap script: 0 fails), Path card always shows, fade and chevron scroll cue, empty Last run doesn't scroll, Gate label shows in full at 667x320.
 **Next**
 - Jay to try it on his iPhone in Safari landscape.
