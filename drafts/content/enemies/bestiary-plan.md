@@ -146,7 +146,7 @@ One per tier, on floor 5, Guardian rank (≈ 90% of tier max PR). Names and line
 - **Phase 1:** Thorn whip: red circle
 - **Phase 2:** Seed rain: red circles fall
 - **Phase 3:** Vine sweep (dash-only): purple arc
-- **Freed (lore line):** "The thorns are gone. My flowers can open again."
+- **Freed (lore line):** "The thorns are gone. The storm wasn't my fault!"
 
 ### The Hearth Cook (Orange, The Ember Kitchens)
 
@@ -164,7 +164,7 @@ One per tier, on floor 5, Guardian rank (≈ 90% of tier max PR). Names and line
 - **Phase 1:** Giant stomp: big red circle
 - **Phase 2:** Stone toss: red circles
 - **Phase 3:** Rock slide (dash-only): two lanes, one after the other
-- **Freed (lore line):** "I was only stones and worry. Thank you for not running away."
+- **Freed (lore line):** "I was stones and worry. Thank you for staying!"
 
 ### The River Watcher (Blue, The Quiet River)
 
@@ -191,7 +191,7 @@ One per tier, on floor 5, Guardian rank (≈ 90% of tier max PR). Names and line
 - **Phase 1:** Copy strike: copies your move
 - **Phase 2:** Echo crowd: Masklets join
 - **Phase 3:** Echo ring (dash-only): striped ring with a gap
-- **Freed (lore line):** "I only copied what I heard. I would like to hear kind words now."
+- **Freed (lore line):** "I copied what I heard. Now I hear kindness."
 
 ### The Root Keeper (Brown, The Root Library)
 

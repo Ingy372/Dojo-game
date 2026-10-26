@@ -52,7 +52,7 @@
         "name": "The Sun Gardener",
         "tier": "yellow",
         "description": "A tall, gentle gardener made of vines. The shadow wrapped it in thorns, but its roots still reach for the sun.",
-        "freed": "The thorns are gone. My flowers can open again.",
+        "freed": "The thorns are gone. The storm wasn't my fault!",
         "senseiAfter": "You moved light on your feet. The garden noticed."
       },
       "relics": [
@@ -130,7 +130,7 @@
         "name": "The Stone Giant",
         "tier": "green",
         "description": "Very tall and very loud. Inside, it is only a pile of stones the shadow stacked up.",
-        "freed": "I was only stones and worry. Thank you for not running away.",
+        "freed": "I was stones and worry. Thank you for staying!",
         "senseiAfter": "Big things can still fall to a brave, small heart."
       },
       "relics": [
@@ -247,7 +247,7 @@
         "name": "The Echo Mask",
         "tier": "red-black",
         "description": "A floating mask that copies your moves. Under the mask, it is lonely.",
-        "freed": "I only copied what I heard. I would like to hear kind words now.",
+        "freed": "I copied what I heard. Now I hear kindness.",
         "senseiAfter": "You chose your own words, not the echo's."
       },
       "relics": [

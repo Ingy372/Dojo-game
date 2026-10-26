@@ -190,7 +190,7 @@
           "Seed rain: red circles fall",
           "Vine sweep (dash-only): purple arc"
         ],
-        "freed": "The thorns are gone. My flowers can open again.",
+        "freed": "The thorns are gone. The storm wasn't my fault!",
         "story": "A tall, gentle gardener made of vines. The shadow wrapped it in thorns, but its roots still reach for the sun."
       }
     },
@@ -328,7 +328,7 @@
           "Stone toss: red circles",
           "Rock slide (dash-only): two lanes, one after the other"
         ],
-        "freed": "I was only stones and worry. Thank you for not running away.",
+        "freed": "I was stones and worry. Thank you for staying!",
         "story": "Very tall and very loud. Inside, it is only a pile of stones the shadow stacked up."
       }
     },
@@ -535,7 +535,7 @@
           "Echo crowd: Masklets join",
           "Echo ring (dash-only): striped ring with a gap"
         ],
-        "freed": "I only copied what I heard. I would like to hear kind words now.",
+        "freed": "I copied what I heard. Now I hear kindness.",
         "story": "A floating mask that copies your moves. Under the mask, it is lonely."
       }
     },
