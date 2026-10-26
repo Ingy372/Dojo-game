@@ -903,3 +903,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## Q-PREM-TRY fix (2026-10-26)
 - Retry line in the 10 lessons is now "Nice work. Let's keep practicing."; test updated.
+- lesson-counter-guided retry: "So close! Let's keep practicing."; test bans 'try again' in all lessons; shots include the guided line.

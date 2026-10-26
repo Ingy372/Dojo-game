@@ -28,7 +28,7 @@
       ],
       "practice": "Tap COUNTER when Sensei says now.",
       "success": "You did it! Great!",
-      "retry": "So close! Let's try again.",
+      "retry": "So close! Let's keep practicing.",
       "slowdown": true,
       "nudge": "Take your time. Tap the glowing COUNTER button!",
       "fadingFollowUp": false,

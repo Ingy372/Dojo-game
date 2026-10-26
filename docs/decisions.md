@@ -1327,3 +1327,4 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 
 ## Q-PREM-TRY fix — keep-practicing line (2026-10-26)
 - QA found play continues after the retry line (GameScene.ts guideDone -> senseiDone only shows the line; world.ts stepGuide just moves to the next hint), so "Let's rest at the dojo." didn't fit. The 10 lessons now say "Nice work. Let's keep practicing." (Manager's call; no 'try again' wording). lesson-counter-guided unchanged.
+- lesson-counter-guided's retry is now "So close! Let's keep practicing." (the guided Counter repeats after it); no lesson says 'try again'.

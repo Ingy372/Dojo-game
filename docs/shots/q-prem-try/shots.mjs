@@ -1,6 +1,6 @@
 import { chromium } from 'playwright'; import fs from 'fs';
-const [W, H] = [+process.argv[2], +process.argv[3]]; const tag = `try-${W}x${H}`;
-const line = JSON.parse(fs.readFileSync('/workspace/q-prem-try/content/tutorial/first-session-lessons.json', 'utf8')).lessons.find((l) => l.id === 'lesson-warning').retry;
+const [W, H] = [+process.argv[2], +process.argv[3]]; const which = process.argv[4] || 'lesson-warning'; const tag = `try-${which === 'lesson-warning' ? '' : 'guided-'}${W}x${H}`;
+const line = JSON.parse(fs.readFileSync('/workspace/q-prem-try/content/tutorial/first-session-lessons.json', 'utf8')).lessons.find((l) => l.id === which).retry;
 const out = []; const log = (s) => { out.push(s); console.log(s); };
 const b = await chromium.launch(); const ctx = await b.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 2, hasTouch: true, isMobile: true });
 await ctx.addInitScript(() => { if (!sessionStorage.getItem('init')) { localStorage.clear(); sessionStorage.setItem('init', '1'); } localStorage.setItem('dojo-ascent-test-student', '4-green-belt'); });
