@@ -35,7 +35,7 @@ import {
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
 import { STYLE_LEFT_SHARE, STYLE_LEFT_SHARE_MIN, STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
-import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, pinnedAgain, runId, takeCountUp, type FoundTile, type KeyStore } from '../ui/lastRun';
+import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, pinnedAgain, runId, headingSparkle, sparkleStars, SPARKLE_W, statStack, takeCountUp, type FoundTile, type KeyStore } from '../ui/lastRun';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, slotEmptyLine, tileBox, toggleFilter } from '../ui/gearBoard';
 import { CONTENT, KATAS } from '../game/content';
@@ -754,6 +754,15 @@ export class HomeScene extends Phaser.Scene {
       const inset = tileArt ? rim + STAT_PAD : S1 + 2;
       const lab = this.text(X(b.x + b.w / 2), Y(b.y + b.h - inset), st.label, TYPE.label, ink.label, true).setOrigin(0.5, 1);
       this.oneLine(lab, b.w - 2 * (tileArt ? rim + STAT_PAD : S2), TYPE.label);
+      // Q-PREM-F10: a short tile (47 at 667x320 / 667x375) can't keep 8 px under the label and still
+      // part it from the number; centre the two inside the rim, 4 px apart (number to 12 if needed).
+      if (b.h < 56) {
+        const r = tileArt ? rim : 2;
+        let st2 = statStack(b.h, r, num.height, lab.height);
+        if (!st2) { num.setFontSize(TYPE.label); st2 = statStack(b.h, r, num.height, lab.height); }
+        if (st2) { num.y = Y(b.y + st2.numY); lab.setOrigin(0.5, 0); lab.y = Y(b.y + st2.labY); }
+        this.ui.list.filter((o) => o.getData?.('statIcon') === st.key).forEach((o) => ((o as Phaser.GameObjects.Image).y = num.y + num.height / 2));
+      }
       if (tileArt) {
         lab.setData('statLabel', st.key);
         tileArt.setData('statTile', st.key).setData('rim', rim);
@@ -855,7 +864,7 @@ export class HomeScene extends Phaser.Scene {
     const fresh = newForYou(this.trophyCubbies(), this.profile.trophiesSeen);
     if (fresh) {
       const nc = L.newCard;
-      this.text(X(nc.x), Y(L.newLabelY), LASTRUN_WORDS.newForYou, TYPE.label, '#8a4a12', true).setData('newLabel', true);
+      const head = this.text(X(nc.x), Y(L.newLabelY), LASTRUN_WORDS.newForYou, TYPE.label, '#8a4a12', true).setData('newLabel', true);
       const b = button(this, { x: X(nc.x), y: Y(nc.y), w: nc.w, h: nc.h, label: '', color: 0xa8703f, size: TYPE.label, stroke: 0xffd166, onTap: () => this.openNewForYou() }, this.ui);
       b.visual.setData('newForYou', fresh.id);
       const tall = nc.h >= 80;
@@ -868,9 +877,13 @@ export class HomeScene extends Phaser.Scene {
       const label = this.add.text(tall ? 0 : ix + is / 2 + S2, tall ? iy + is / 2 + S1 : 0, fresh.short ?? fresh.name, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#fff6e6', fontStyle: 'bold', align: tall ? 'center' : 'left', wordWrap: { width: tw } }).setResolution(crisp()).setOrigin(tall ? 0.5 : 0, tall ? 0 : 0.5);
       b.visual.add(wrapLikeCubby(label, fresh.short ?? fresh.name, tw));
       // The sparkle: three small code-drawn stars that twinkle (still with Reduced motion).
-      [[nc.w / 2 - 10, -nc.h / 2 + 10, 5], [nc.w / 2 - 22, -nc.h / 2 + 6, 3], [-nc.w / 2 + 8, nc.h / 2 - 9, 3]].forEach(([sx, sy, r], i) => {
-        const star = this.add.star(sx, sy, 4, r / 2.5, r, 0xfff3b0);
-        b.visual.add(star);
+      // Q-PREM-F10: the short card has no room beside its label (and the card is flush with the
+      // content's right edge), so its sparkle sits just before the heading, in the gap after Found.
+      const sx0 = head.x - S1 - SPARKLE_W;
+      const stars = tall ? sparkleStars(nc.w, nc.h) : headingSparkle(sx0, head.y + head.height / 2);
+      stars.forEach(([sx, sy, r], i) => {
+        const star = this.add.star(sx, sy, 4, r / 2.5, r, tall ? 0xfff3b0 : 0xe0a020);
+        (tall ? b.visual : this.ui).add(star.setData('sparkle', true));
         if (!reducedMotion()) this.tweens.add({ targets: star, alpha: 0.25, scale: 0.7, yoyo: true, repeat: -1, duration: 700, delay: i * 230, ease: 'Sine.InOut' });
       });
     }
