@@ -11,8 +11,9 @@ python3 incoming-art/icons2/source/make_preview.py   # preview/icons2-preview-66
 |---|---|---|---|
 | `icon-rooted-form-64` | Forms | Rooted Form | jade green |
 | `icon-follow-up-kick-64` | Strikes | Follow-up Kick | violet |
-| `icon-beginners-stance-64` | Forms | Beginner's Stance | jade green |
-| `icon-flowing-form-64` | Forms | Flowing Form | jade green |
+| `icon-beginners-stance-64` | Forms | Beginner's Stance (NEW drawing, 2026-10-25: relaxed standing) | jade green |
+| `icon-stance-ready-64` | Forms | Ready (open leg stance; pixel-identical copy of the old Beginner's Stance art) | jade green |
+| `icon-flowing-form-64` | Forms | Flowing Form: **RETIRED** (replaced by Fighting, `incoming-art/stances`, #300). File kept until renames are decided. | jade green |
 | `icon-quick-combo-64` | Strikes | Quick Combo | violet |
 | `icon-second-wind-64` | Virtues | Second Wind | gold |
 | `icon-perfect-discipline-64` | Virtues | Perfect Discipline | gold |
@@ -29,8 +30,9 @@ python3 incoming-art/icons2/source/make_preview.py   # preview/icons2-preview-66
 **Strikes ring colour:** violet (Jay, 2026-10-25). It's distinct from the Seal blue, Forms green and Virtue gold, and it isn't amber or red.
 
 **The other 5 icons (techniques):**
-- **Beginner's Stance:** the ready stance, front view. Feet shoulder-width apart and parallel, knees soft, back straight, both fists closed in front of the belt.
-- **Flowing Form:** a light fighting stance, side view. Weight on the balls of the feet with the back heel raised, knees bent, lead hand forward, rear hand by the chin. Soft wavy lines behind show the movement.
+- **Beginner's Stance (redrawn, Jay 2026-10-25):** plain relaxed standing, front view. Feet close together in a natural stand with the toes slightly out, legs straight but not locked, back straight, arms hanging loosely at the sides with open hands by the thighs.
+- **Ready (`icon-stance-ready-64`):** Jay: Ready = the open leg stance. Feet shoulder-width apart and parallel, knees soft, back straight, both fists closed in front of the stomach. This is the drawing that used to be Beginner's Stance, copied pixel for pixel.
+- **Flowing Form (retired):** a light fighting stance, side view. Weight on the balls of the feet with the back heel raised, knees bent, lead hand forward, rear hand by the chin. Soft wavy lines behind show the movement.
 - **Quick Combo** (Kick Combo 2 is Combo 1 plus 3 jumping spin kicks): a middle round kick striking with the instep. The body leans back for balance and the guard stays up. A sweeping arc shows the kick's path and soft chevrons show speed.
 - **Second Wind** (Great Effort): rising from one knee. The back knee is down, the front foot is flat with the knee over the ankle, the back is straight, and one hand presses the front knee. Rising swirls show the energy coming back.
 - **Perfect Discipline** (Self-Discipline): kneeling in seiza. The student sits on the heels with a straight back and hands flat on the thighs, with small calm sparkles beside them (none above the head).

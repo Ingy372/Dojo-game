@@ -194,10 +194,10 @@ def sym(I, m, pts, w):
         I.limb(m, [(64 + sgn * (x - 64), y) for x, y in pts], w)
 
 
-def beginners_stance():
-    """Beginner's Stance = the ready stance, front view: steady and even.
+def ready_stance():
+    """Ready = the open leg stance, front view (Jay, 2026-10-25; this is the drawing that was #277's Beginner's Stance).
     Technique: feet shoulder-width apart and parallel, knees soft, back straight, both fists closed in front of the
-    belt, eyes forward."""
+    stomach/belt, eyes forward."""
     fam = 'form'; ring, ring_hi, ink, soft = FAMILY[fam]
     I = Ink((1.0, 0, 0))
     g = I.layer(); I.limb(g, [(40, 89), (88, 89)], 2.2); I.put(g, soft)
@@ -214,8 +214,30 @@ def beginners_stance():
     return fam, I
 
 
+def beginners_stance():
+    """Beginner's Stance = plain relaxed standing, front view (Jay, 2026-10-25). Not the ready stance.
+    Technique: feet together-ish in a natural stand (heels a little apart, toes slightly out), legs straight but
+    not locked, back straight, shoulders relaxed, arms hanging loosely at the sides with open hands by the thighs,
+    eyes forward."""
+    fam = 'form'; ring, ring_hi, ink, soft = FAMILY[fam]
+    I = Ink((1.0, 0, 0))
+    g = I.layer(); I.limb(g, [(46, 89), (82, 89)], 2.2); I.put(g, soft)
+    m = I.layer()
+    I.limb(m, [(64, 64), (64, 46)], 11.5)
+    I.disc(m, 64, 36, 6.2)
+    sym(I, m, [(60.4, 63), (60.0, 75.5), (59.8, 86.0)], 5.4)      # straight, natural legs, close together
+    sym(I, m, [(55.6, 87.4), (61.2, 86.8)], 4.4)                   # feet, toes turned slightly out
+    I.put(m, ink)
+    for sgn in (-1, 1):
+        X = lambda x: 64 + sgn * (x - 64)
+        I.arm([(X(57.8), 48.5), (X(53.2), 57.5), (X(52.6), 67.5)], (X(52.5), 69.2), 4.2, ink, FACE, 3.0)   # relaxed arm, open hand by the thigh
+    b = I.layer(); I.limb(b, [(58.6, 62.4), (69.4, 62.4)], 2.6); I.put(b, ring_hi)
+    return fam, I
+
+
 def flowing_form():
-    """Flowing Form = light on your feet. Side view facing right, a light fighting stance.
+    """RETIRED (Jay, 2026-10-25): replaced by Fighting stance (incoming-art/stances, #300). Kept until renames are decided.
+    Flowing Form = light on your feet. Side view facing right, a light fighting stance.
     Technique: weight on the balls of the feet with the back heel raised, knees bent, lead hand forward, rear hand
     by the chin. Soft motion arcs behind show the movement."""
     fam = 'form'; ring, ring_hi, ink, soft = FAMILY[fam]
@@ -321,7 +343,7 @@ def perfect_discipline():
 
 
 ICONS = [('rooted-form', 'Forms', rooted_form), ('follow-up-kick', 'Strikes', follow_up_kick), ('shield-of-respect', 'Virtues', shield_of_respect),
-         ('beginners-stance', 'Forms', beginners_stance), ('flowing-form', 'Forms', flowing_form), ('quick-combo', 'Strikes', quick_combo),
+         ('beginners-stance', 'Forms', beginners_stance), ('stance-ready', 'Forms', ready_stance), ('flowing-form', 'Forms', flowing_form), ('quick-combo', 'Strikes', quick_combo),
          ('second-wind', 'Virtues', second_wind), ('perfect-discipline', 'Virtues', perfect_discipline)]
 
 

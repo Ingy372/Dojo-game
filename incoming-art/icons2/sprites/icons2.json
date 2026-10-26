@@ -39,7 +39,17 @@
    "file": "icon-beginners-stance-64.png",
    "group": "Forms",
    "ring": "form",
-   "note": "Beginner's Stance = the ready stance, front view: steady and even. Technique: feet shoulder-width apart and parallel, knees soft, back straight, both fists closed in front of the belt, eyes forward."
+   "note": "Beginner's Stance = plain relaxed standing, front view (Jay, 2026-10-25). Not the ready stance. Technique: feet together-ish in a natural stand (heels a little apart, toes slightly out), legs straight but not locked, back straight, shoulders relaxed, arms hanging loosely at the sides with open hands by the thighs, eyes forward."
+  },
+  "icon-stance-ready-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icon-stance-ready-64.png",
+   "group": "Forms",
+   "ring": "form",
+   "note": "Ready = the open leg stance, front view (Jay, 2026-10-25; this is the drawing that was #277's Beginner's Stance). Technique: feet shoulder-width apart and parallel, knees soft, back straight, both fists closed in front of the stomach/belt, eyes forward."
   },
   "icon-flowing-form-64": {
    "size": [
@@ -49,7 +59,7 @@
    "file": "icon-flowing-form-64.png",
    "group": "Forms",
    "ring": "form",
-   "note": "Flowing Form = light on your feet. Side view facing right, a light fighting stance. Technique: weight on the balls of the feet with the back heel raised, knees bent, lead hand forward, rear hand by the chin. Soft motion arcs behind show the movement."
+   "note": "RETIRED (Jay, 2026-10-25): replaced by Fighting stance (incoming-art/stances, #300). Kept until renames are decided. Flowing Form = light on your feet. Side view facing right, a light fighting stance. Technique: weight on the balls of the feet with the back heel raised, knees bent, lead hand forward, rear hand by the chin. Soft motion arcs behind show the movement."
   },
   "icon-quick-combo-64": {
    "size": [

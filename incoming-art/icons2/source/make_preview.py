@@ -39,7 +39,7 @@ def icon(iid):
     return Image.open(os.path.join(SP, f'icon-{iid}-64@2x.png')).convert('RGBA')
 
 
-ITEMS = [('beginners-stance', 'Forms', "Beginner's Stance"), ('rooted-form', 'Forms', 'Rooted Form'), ('flowing-form', 'Forms', 'Flowing Form'),
+ITEMS = [('beginners-stance', 'Forms', "Beginner's Stance"), ('stance-ready', 'Forms', 'Ready'), ('rooted-form', 'Forms', 'Rooted Form'), ('flowing-form', 'Forms', 'Flowing (retired)'),
          ('follow-up-kick', 'Strikes', 'Follow-up Kick'), ('quick-combo', 'Strikes', 'Quick Combo'),
          ('shield-of-respect', 'Virtues', 'Shield of Respect'), ('second-wind', 'Virtues', 'Second Wind'), ('perfect-discipline', 'Virtues', 'Perfect Discipline')]
 
@@ -54,13 +54,13 @@ def main():
     img.alpha_composite(nine(spr('panel-frame'), (W - 20) * K, (H - 20) * K, MAN['panel-frame']['nineSlice']), (10 * K, 10 * K))
     d.text((W / 2 * K, 36 * K), 'icons2 at phone size (667×375): 64 pt icons, with a 32 pt strip', font=f(13), fill=INK, anchor='mm')
     for i, (iid, grp, nm) in enumerate(ITEMS):
-        cx = 60 + (i % 4) * 150 if i < 4 else 60 + (i - 4) * 150 + (0 if i < 8 else 0)
-        y = 52 if i < 4 else 160
+        cx = 38 + (i % 5) * 120 if i < 5 else 89 + (i - 5) * 122
+        y = 52 if i < 5 else 160
         img.alpha_composite(icon(iid), (int((cx + 11) * K), int(y * K)))
         d.text(((cx + 43) * K, (y + 74) * K), nm, font=f(10.5), fill=INK, anchor='mm')
         d.text(((cx + 43) * K, (y + 88) * K), grp, font=f(8.5), fill=SOFT, anchor='mm')
     for i, (iid, grp, nm) in enumerate(ITEMS):
-        x = 116 + i * 56
+        x = 88 + i * 56
         img.alpha_composite(icon(iid).resize((32 * K, 32 * K), Image.LANCZOS), (x * K, 270 * K))
     d.text((W / 2 * K, 314 * K), '32 pt', font=f(9), fill=SOFT, anchor='mm')
     d.text((W / 2 * K, 330 * K), 'Labels are placeholders drawn here for the preview; the game draws them as text.', font=f(9.5), fill=SOFT, anchor='mm')

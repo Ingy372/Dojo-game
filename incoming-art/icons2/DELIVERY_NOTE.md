@@ -33,4 +33,17 @@ I picked the first earned item of each group. The original icons brief says "For
 - **Build method:** flat 2D (PIL), matching the seal medallions, is OK.
 - **Unnamed Forms and Strikes:** wait for names before making icons for the later kata Forms and the Strikes past Kick Combo 2.
 
+**UPDATE (Jay via Manager, 2026-10-25): Ready, Beginner's Stance and Flowing**
+- `icon-stance-ready-64` (+@2x) is new. It is a pixel-identical copy of the old Beginner's Stance art, which shows the open leg stance (Jay: that is Ready). It is built from the same code (`ready_stance()`), and a diff against the old PNGs is empty.
+- `icon-beginners-stance-64` (+@2x) is a new drawing: plain relaxed standing, front view, feet together and natural, arms relaxed at the sides with open hands.
+  - Second pass: the legs were narrowed so a gap shows between them, and the arms sit clear of the body with a halo.
+  - At 64 px it reads clearly differently from Ready (hands down at the sides vs. fists in front, narrow feet vs. wide feet).
+- **Flowing Form is RETIRED.** Fighting (#300) replaces it. Its file is kept, and the preview labels it "(retired)".
+- The preview is updated with all 9 icons. Red check: 0 px.
+- No files deleted or renamed.
+
+**DECIDE (new):**
+1. Final file names: `icon-stance-ready-64` follows the #300 `icon-stance-*` pattern, while #277 uses `icon-<id>-64`. Should `beginners-stance` become `icon-stance-beginner-64`, and should `flowing-form` be deleted? Renames wait on Jay.
+2. Beginner's Stance: should the feet be fully together (heels touching, like attention), or the natural slight gap as drawn? Open hands as drawn, or loose fists?
+
 **NEXT:** after the OK, I'll add all 8 to the menu2 icons64 set. Later Forms and Strikes are still waiting for names.
