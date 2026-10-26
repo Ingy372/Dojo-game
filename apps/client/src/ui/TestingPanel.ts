@@ -6,6 +6,7 @@ import Phaser from 'phaser';
 import { powerRating, xpToNext, type PowerSource, type Profile, type TrainingState } from '@dojo/sim';
 import { FAKE_PROFILES, selectedProfileKey } from '../game/student';
 import { FONT, crisp, view } from './theme';
+import { GREEN } from './tokens';
 
 const SOURCE_NAME: Record<PowerSource, string> = {
   signOffs: 'Sign-offs',
@@ -58,7 +59,7 @@ export class TestingPanel {
     this.button(pad, y, leftW, 32, 'Forget what I\'ve seen (replay welcome)', 0x4a3f63, 12, actions.forgetSeen);
     y += 38;
     const half = (leftW - 8) / 2;
-    this.button(pad, y, half, 32, '+1 level', 0x3aa57a, 13, actions.addLevel);
+    this.button(pad, y, half, 32, '+1 level', GREEN, 13, actions.addLevel);
     this.button(pad + half + 8, y, half, 32, 'Back to level 1', 0x6b3a3a, 12, actions.resetLevel);
     y += 38;
     this.button(pad, y, leftW, 34, 'Close', 0x5b4a3c, 15, actions.close);

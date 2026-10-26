@@ -15,7 +15,7 @@ import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
 import { FONT, crisp, view, hiDpi } from '../ui/theme';
 import { button } from '../ui/button';
-import { MIN_TAP, RADIUS, S1, S2 } from '../ui/tokens';
+import { GREEN, MIN_TAP, RADIUS, S1, S2 } from '../ui/tokens';
 
 export interface CreateSceneData {
   /** True the first time: a welcome, and no way back until the character is made. */
@@ -125,7 +125,7 @@ export class CreateScene extends Phaser.Scene {
     // ---- bottom: done (and, after the first time, back without changing anything)
     const by = height - pad - MIN_TAP;
     const doneW = Math.min(200, w * 0.5);
-    this.button(width - pad - doneW, by, doneW, MIN_TAP, this.first ? "Let's go!" : 'Done', 0x3aa57a, 18, () => this.finish(true));
+    this.button(width - pad - doneW, by, doneW, MIN_TAP, this.first ? "Let's go!" : 'Done', GREEN, 18, () => this.finish(true));
     if (!this.first) this.button(x0, by, Math.min(120, w * 0.3), MIN_TAP, '◀ Back', 0x5b4a3c, 15, () => this.finish(false));
   }
 

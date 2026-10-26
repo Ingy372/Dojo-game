@@ -30,7 +30,7 @@ describe('B-BELT: a grown-up enters the belt and stripes', () => {
 
   it('Save asks "Are you sure?" first, with the shared button', () => {
     const dojo = Object.values(import.meta.glob('../../../apps/client/src/scenes/DojoScene.ts', { query: '?raw', import: 'default', eager: true }))[0] as string;
-    expect(dojo).toMatch(/button\(width \/ 2 \+ 8, t\.save, 0x3aa57a, \(\) => this\.confirmBeltEntry\(/);
+    expect(dojo).toMatch(/button\(width \/ 2 \+ 8, t\.save, GREEN, \(\) => this\.confirmBeltEntry\(/);
     expect(dojo).toMatch(/confirmBeltEntry[\s\S]*roundButton\([\s\S]*confirmYes[\s\S]*save\(\)/);
   });
 
