@@ -35,9 +35,11 @@ export interface StyleModel {
 }
 
 const line = (id: string): string => (words.lines as Record<string, string>)[id] ?? words.lineFallback;
+/** R-STANCE-g: a not-yet Stance can have its own locked line (#312); otherwise its normal line. */
+const notYetLine = (id: string): string => (words.notYetLines as Record<string, string>)[id] ?? line(id);
 
-export function buildStyle(training: TrainingState, abilities: AbilityContent, loadout: Loadout | null): StyleModel {
-  const stances = unlockedStances(training, abilities);
+export function buildStyle(training: TrainingState, abilities: AbilityContent, loadout: Loadout | null, grandfathered: readonly string[] = []): StyleModel {
+  const stances = unlockedStances(training, abilities, grandfathered);
   const earnedStances: StylePick[] = stances.map((f) => ({ id: f.id, slot: 'stance', name: f.name, line: line(f.id), earned: true }));
   const have = new Set(stances.map((f) => f.id));
   const lockedStances: StylePick[] = [];
@@ -45,7 +47,7 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
   for (const st of training.stances) {
     if (st.unlocked || have.has(st.def.id)) continue;
     have.add(st.def.id);
-    lockedStances.push({ id: st.def.id, slot: 'stance', name: st.def.name, line: line(st.def.id), earned: false });
+    lockedStances.push({ id: st.def.id, slot: 'stance', name: st.def.name, line: notYetLine(st.def.id), earned: false });
   }
 
   // The first entry per Virtue is the one a fight uses (loadoutAbilities uses find()).

@@ -129,18 +129,18 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
     power: Math.round((gear.power + (level - 1) * PROGRESSION.powerPerLevel + trained.power) * 10) / 10,
     guard: gear.guard + trained.guard,
     effects: [...earned, ...gear.effects],
-    ...loadoutAbilities(profile.loadout, training, abilities),
+    ...loadoutAbilities(profile.loadout, training, abilities, profile.grandfatheredStances),
   };
 }
 
 /**
- * R-STANCE-d1: a loadout with any Stance the student hasn't unlocked dropped (back to Ready,
- * null). The Virtue pick is left as is. Returns null when nothing is left.
+ * R-STANCE-d1: a loadout with any Stance the student hasn't unlocked dropped (R-STANCE-g: back to
+ * the Beginner's Stance, null). The Virtue pick is left as is. Returns null when nothing is left.
  */
-export function normalizeLoadout(loadout: Loadout | null, training: TrainingState, abilities: AbilityContent): Loadout | null {
+export function normalizeLoadout(loadout: Loadout | null, training: TrainingState, abilities: AbilityContent, grandfathered: readonly string[] = []): Loadout | null {
   if (!loadout) return null;
-  const ok = loadout.stance !== null && unlockedStances(training, abilities).some((s) => s.id === loadout.stance);
-  // A stance that isn't unlocked goes to Ready (null); the loadout and its virtue are kept.
+  const ok = loadout.stance !== null && unlockedStances(training, abilities, grandfathered).some((s) => s.id === loadout.stance);
+  // A stance that isn't unlocked goes to the Beginner's Stance (null); the loadout and its virtue are kept.
   return { stance: ok ? loadout.stance : null, virtue: loadout.virtue };
 }
 
@@ -149,9 +149,9 @@ export function normalizeLoadout(loadout: Loadout | null, training: TrainingStat
  * (or a pick not earned) gives exactly today's setup. A chosen Stance starts the fight; the
  * others follow in their usual order, so switching Stances still works.
  */
-export function loadoutAbilities(saved: Loadout | null, training: TrainingState, abilities: AbilityContent): Pick<PlayerSetup, 'stances' | 'virtue'> {
-  const loadout = normalizeLoadout(saved, training, abilities);
-  let stances = unlockedStances(training, abilities);
+export function loadoutAbilities(saved: Loadout | null, training: TrainingState, abilities: AbilityContent, grandfathered: readonly string[] = []): Pick<PlayerSetup, 'stances' | 'virtue'> {
+  const loadout = normalizeLoadout(saved, training, abilities, grandfathered);
+  let stances = unlockedStances(training, abilities, grandfathered);
   const at = loadout?.stance ? stances.findIndex((f) => f.id === loadout.stance) : -1;
   if (at > 0) stances = [...stances.slice(at), ...stances.slice(0, at)];
   const picked = loadout?.virtue ? training.virtues.find((v) => v.def.id === loadout.virtue) : undefined;

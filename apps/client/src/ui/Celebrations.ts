@@ -6,6 +6,7 @@ import Phaser from 'phaser';
 import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState } from '@dojo/sim';
 import { gainText, litGateLock, signOffCardText, signOffGain, signOffLines, signOffsMixed, signOffsRow, signOffsTitle, stripeGain } from '@dojo/sim';
 import GAINS from '../../../../content/settings/training-gains.json';
+import STYLE from '../../../../content/abilities/fighting-style.json';
 import { sfx } from '../audio/Sfx';
 import { shortDate } from '../game/student';
 import { makeStandingCharacter } from '../art/player';
@@ -212,7 +213,7 @@ export class Celebrations {
           break;
         }
         // A brand-new white belt: the Beginner's Stance, and a preview of the first sign-off.
-        this.text(cx, y, `You start with the ${m.preview.stance}.`, 18, '#f2e9d8', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
+        this.text(cx, y, STYLE.welcomeStance, 18, '#f2e9d8', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
         if (m.preview.next) {
           this.text(cx, y + 34, `When Sensei signs off ${m.preview.next.name}, you unlock:`, 15, '#b9ad99', false, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
           this.text(cx, y + 60, m.preview.ability, 18, '#ffd166', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');

@@ -1109,7 +1109,7 @@ export class HomeScene extends Phaser.Scene {
   }
 
   private styleModel(): StyleModel {
-    return buildStyle(this.training, CONTENT.abilities, this.profile.loadout);
+    return buildStyle(this.training, CONTENT.abilities, this.profile.loadout, this.profile.grandfatheredStances);
   }
 
   /** Tap 1: choose the slot. */
