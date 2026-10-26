@@ -101,6 +101,7 @@ Last updated: 2026-10-26 7:58 AM EDT by Dojo-ascent Manager. Catch-up covers PRs
 | Q-PREM-F2 | Dojo-Ascent Programmer | **Manager call: routine fix.** Settings gets a clear X or "Done" in the corner, like Look and Scroll. | One tap closes Settings at 667×375 and 667×320 (44 pt target); QA passes. | — |
 | Q-PREM-F1 | Dojo-Ascent Programmer | **Routine fix.** The Bow prompt (dojo entry and "Bow to begin the floor") fires on the first touch tap; taps on top-bar menus while the prompt is up pulse the Bow button. | 10 of 10 single taps bow at 667×375; QA passes. | Q-PREM-F2 |
 | Q-PREM-F4 | Dojo-Ascent Programmer | **Routine fix.** On a boss loss, "Ouch! The run is over." no longer overlaps the "Floor Keeper" label, and the fight controls hide. (Dim vs black and naming the boss bar wait for the art/taste pass.) | Screenshot of `?room=keepers-hall&seed=7&difficulty=guided` loss, Reduced motion on and off, nothing overlaps; QA passes. | Q-PREM-F1 |
+| Q-PREM-F5 | Remove 'Try again' from the run-over card (RunOverCard.ts:68 + GameScene lost branch), leaving only 'Back home', per Jay t438u | Programmer | After Q-PREM-F4 | Done when: no Try again after a knock-out or boss loss; Back home returns to the dojo; Tester retest passes |
 | Q-PREM-RETEST | Dojo-Ascent Game Logic/systems Tester | Check the win screen and a boss win (unverified in Q-PREMIUM), then retest F1, F2 and F4 as they land. | QA note with screenshots. | — (F1/F2/F4 parts wait on those PRs) |
 
 ## 0b5. Jay's renames and art calls (Oct 25 evening)
