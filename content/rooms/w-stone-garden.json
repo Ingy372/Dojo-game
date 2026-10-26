@@ -1,0 +1,99 @@
+{
+  "id": "w-stone-garden",
+  "name": "Stone Garden",
+  "kind": "battle",
+  "minBeltTier": 1,
+  "floorSet": "white-dojo",
+  "mix": "Shield + swarmers, with stones to lead the swarm around.",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#....#........#....#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#....#........#....#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "earliestRoom": 2,
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "swarmer",
+      "column": 3,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "shield",
+      "column": 10,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 3,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 3,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 16,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 8,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 12,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "shield",
+      "column": 10,
+      "row": 5,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 7,
+      "wave": 3
+    }
+  ]
+}

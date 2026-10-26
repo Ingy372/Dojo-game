@@ -1,0 +1,98 @@
+{
+  "id": "w-shield-escort",
+  "name": "Shield Escort",
+  "kind": "battle",
+  "minBeltTier": 1,
+  "floorSet": "white-dojo",
+  "mix": "Shield + swarmers in a wide hall: Dash clear of the swarm, Strike the shield.",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "#####D#####D#####D####",
+    "#....................#",
+    "#....................#",
+    "#....................#",
+    "#...##..........##...#",
+    "#....................#",
+    "#....................#",
+    "#....................#",
+    "#..........P.........#",
+    "#....................#",
+    "######################"
+  ],
+  "earliestRoom": 4,
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 17,
+      "row": 2,
+      "wave": 1
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "shield",
+      "column": 6,
+      "row": 6,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 15,
+      "row": 6,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 11,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "swarmer",
+      "column": 4,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 17,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 8,
+      "row": 6,
+      "wave": 3
+    },
+    {
+      "enemy": "shield",
+      "column": 14,
+      "row": 6,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 10,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "swarmer",
+      "column": 12,
+      "row": 7,
+      "wave": 3
+    }
+  ]
+}

@@ -1394,3 +1394,6 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - The hint is read from `cubbies.kata-cubby`, which #355 added to the draft. content/hints/locked-hints.json is re-copied from main's draft, so it stays an exact copy (no second copy of the hint), and it picks up #355's reworded stance hints.
 ## B-MAIN-TRY11 — fix red main after #355 (2026-10-26)
 - #355 added lesson-counter-guided to C-STORY-TRY's programmerHandoff (11 lessons), so q-prem-try.test.ts now expects 11 and does not count the guided Counter twice. No content change.
+
+## B-W-ROOMS-TESTS — tests for the white-belt rooms (#359, 2026-10-26)
+- White rooms have only swarmers and shields, so: the mixes test checks a white floor has at least 2 mixes using only those (belt 2 keeps the 4-mix check); Old Thumper (brute) is first met at belt 2 in the K12 and old-thumper tests (zippy-zoom and captain-clank stay at belt 1); the p-menu2 golden is re-captured, with only white, white3 and rooted runs moving (capturing without the w- rooms gives the old file exactly). No game stat changes.
