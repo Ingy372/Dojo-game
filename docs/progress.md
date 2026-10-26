@@ -867,3 +867,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - npm test 911 passed, 3 skipped; typecheck and build pass.
 **Next**
 - Q-PREM-F5 (Try again).
+- Follow-up: on playerDown, floating texts and pop words still on screen are removed, new ones are skipped, and the GREAT xN chain clears with the combo, so nothing touches the loss message.
+- verify-ui-shots pass `docs/shots/q-prem-f4/f4-verify.mjs` (log `verify-log.txt`, shots `verify-{fade,card}-{start,mid,end}-*.png`): it freezes the game loop on the first frame of the loss fade and of the card fade-in, reads Reduced motion back before each shot. 274 PASS, 14 FAIL, all on the existing run-over card: Try again text contrast 3.12:1 (all sizes) and card buttons 42 px tall at 667x320. Not changed here (card belongs with F5).
