@@ -19,3 +19,17 @@
 6. Variant: is golden hour wanted as a real time-of-day feature, or should it stay day only?
 
 **NEXT:** Once Jay picks a direction, do the layout at game scale (48 ppt), then work on separate tile and prop sprites.
+
+---
+## UPDATE A4-2
+ITEM: A4-2, town square revision from Jay's feedback (same branch / PR #301).
+WHAT: The left dojo stays as the main dojo, untouched. The middle building is now a friendly shop with no prices and no text. The right building is a neutral placeholder. The Tower is bigger and clearer. Dusk is darker and cozier, with warm windows, lanterns and a glowing Tower light. The statue is unchanged. Red check: 0 px across 7 files.
+WHY: Jay wants the main dojo modelled on the real Action Zone building (photos pending), plus a shop, a stand-in third building, a more visible goal Tower, and a cozier evening.
+DECIDE:
+- Which slot is the main dojo. I used the left one; it could swap with the shop.
+- The shop's look: the awning colours (gold/cream), what it sells (the baskets and jars are generic), and whether the round sign carries a picture icon.
+- The placeholder is plain massing on purpose. What goes there is open.
+- Tower size: about 1.9x the A4 size. Bigger or smaller?
+- How dark dusk should be, and whether the Tower glow should be stronger.
+- Not decided here (per brief): layout, scrolling, door count.
+NEXT: Remodel the main dojo when the Action Zone photos arrive. Then Jay picks the shop and placeholder direction.

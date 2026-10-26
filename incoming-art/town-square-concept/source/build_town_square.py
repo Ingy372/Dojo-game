@@ -31,7 +31,7 @@ def D(rows): return rows * K                   # depth in world units for a span
 
 # ---------------------------------------------------------------- ground
 add("grass_back", box(G(COLS / 2, 4.1, -0.06), (COLS + 4, D(1.6), 0.1)), "#7fbf6f", False)
-if A.part == "town":
+if A.part in ("town", "lights"):
     for k in range(16):   # a soft hedge along the back edge of the town
         add(f"hedge{k}", ellipsoid(G(k * 1.6 - 0.4, 3.35, 0.25), (0.95, D(0.35), 0.42), segs=12, rings=8), "#5f9e55")
 add("plaza_base", box(G(COLS / 2, 7.9, -0.03), (COLS + 2, D(6.6), 0.06)), "#948b7c", False)
@@ -51,17 +51,17 @@ if A.part == "far":
     for c, r, sx, h, col in ((-20, 3.6, 9, 6.0, "#a9cdb8"), (-8, 3.4, 8, 4.6, "#b3d3c2"), (9, 3.5, 9, 5.6, "#a9cdb8"), (22, 3.8, 9, 5.0, "#b3d3c2")):
         add(f"hill{c}", ellipsoid(G(c, r, -0.4), (sx, D(1.0), h), segs=24, rings=12), col, False)
     TC, TR = 0.0, 3.0      # the Tower stands far behind the town, between the 2nd and 3rd dojo
-    HZ = "#b9bfdc"; HZD = "#a3a9c9"
+    HZ = "#a7afd6"; HZD = "#8f97c2"
     z = 0.0
-    for k, (r0, r1, hh) in enumerate(((1.3, 1.1, 6.6), (1.1, 0.95, 5.3), (0.95, 0.8, 4.4), (0.8, 0.62, 3.5))):
-        add(f"tw{k}", tube(G(TC, TR, z), G(TC, TR, z + hh), r0, r1, segs=18), HZ if k % 2 == 0 else "#c3c8e2", True)
+    for k, (r0, r1, hh) in enumerate(((1.85, 1.6, 7.4), (1.6, 1.38, 6.0), (1.38, 1.15, 5.0), (1.15, 0.9, 4.0))):
+        add(f"tw{k}", tube(G(TC, TR, z), G(TC, TR, z + hh), r0, r1, segs=18), HZ if k % 2 == 0 else "#b6bde0", True)
         add(f"twband{k}", tube(G(TC, TR, z + hh - 0.12), G(TC, TR, z + hh + 0.05), r1 + 0.08, r1 + 0.08, segs=18), HZD, False)
         for w in (-0.35, 0.35):   # little warm windows
-            add(f"twin{k}{w}", box(G(TC + w * r1, TR + r1 * 0.95, z + hh * 0.55), (0.14, 0.05, 0.26)), "#ffe9a0", False)
+            add(f"twin{k}{w}", box(G(TC + w * r1, TR + r1 * 0.95, z + hh * 0.55), (0.22, 0.05, 0.4)), "#ffe9a0", False)
         z += hh
-    add("twroof", tube(G(TC, TR, z), G(TC, TR, z + 1.1), 0.78, 0.05, segs=18), "#9aa0c4")
-    add("twlight", ellipsoid(G(TC, TR, z + 1.45), (0.3, 0.3, 0.42), segs=16, rings=10), "#ffe48a", False)   # one restored fragment of light
-    add("twhalo", ellipsoid(G(TC, TR, z + 1.45), (0.55, 0.12, 0.55), segs=20, rings=8), "#fff6c8", False)
+    add("twroof", tube(G(TC, TR, z), G(TC, TR, z + 1.5), 1.12, 0.05, segs=18), "#9aa0c4")
+    add("twlight", ellipsoid(G(TC, TR, z + 1.95), (0.42, 0.42, 0.58), segs=16, rings=10), "#ffe48a", False)   # one restored fragment of light
+    add("twhalo", ellipsoid(G(TC, TR, z + 1.95), (0.8, 0.12, 0.8), segs=20, rings=8), "#fff6c8", False)
 
 
 else:
@@ -92,8 +92,58 @@ else:
         for x in (-0.85, 0.85):      # paper lanterns by the door
             add(name + f"lp{x}", tube(G(cx + x, r - 0.05, 0), G(cx + x, r - 0.05, 0.75), 0.04, 0.04), "#6b4428")
             add(name + f"ln{x}", ellipsoid(G(cx + x, r - 0.05, 0.92), (0.15, 0.15, 0.2), segs=12, rings=8), "#fff6c8")
-    for i, (cx, w, cur) in enumerate(((3.6, 4.4, "#3f9a7a"), (9.3, 4.0, "#7b5cc4"), (19.6, 4.4, "#3a6ea5"))):
-        dojo(cx, w, cur, f"dojo{i}")
+    # A4-2: the left building stays the main dojo exactly as before (it will be remodelled on the real Action Zone
+    # building once photos arrive); the middle one becomes a friendly shop; the right one is a neutral placeholder.
+    dojo(3.6, 4.4, "#3f9a7a", "dojo0")
+    def shop(cx, w, name):
+        r = 4.65; h = 1.55
+        add(name + "base", box(G(cx, r - 0.55, 0.08), (w + 0.3, D(1.2), 0.16)), "#a9adc4")
+        add(name + "wall", box(G(cx, r - 0.75, 0.16 + h / 2), (w, D(1.0), h)), "#f3e7cd")
+        for x in (-w / 2 + 0.08, w / 2 - 0.08):
+            add(name + f"post{x}", box(G(cx + x, r - 0.27, 0.16 + h / 2), (0.14, 0.12, h)), "#7a5232")
+        rf = bpy.data.meshes.new(name + "roof"); import bmesh as B
+        bm = B.new(); y0, y1 = -(r - 0.1) * K, -(r - 1.45) * K; zb = 0.16 + h + 0.02; zt = zb + 0.75
+        v = [bm.verts.new(p) for p in ((cx - w / 2 - 0.3, y0, zb), (cx + w / 2 + 0.3, y0, zb), (cx + w / 2 + 0.3, y1, zb), (cx - w / 2 - 0.3, y1, zb),
+                                       (cx - w / 2 + 0.5, (y0 + y1) / 2, zt), (cx + w / 2 - 0.5, (y0 + y1) / 2, zt))]
+        for f in ((0, 1, 5, 4), (1, 2, 5), (2, 3, 4, 5), (3, 0, 4), (0, 3, 2, 1)): bm.faces.new([v[i] for i in f])
+        add(name + "roof", bm, "#6f8f6a")
+        # a wide open shop front: warm-lit inside, a wooden counter, goods on shelves (no prices, no text)
+        add(name + "inside", box(G(cx, r - 0.3, 0.16 + 0.78), (w - 0.7, 0.05, 1.05)), "#ffe9a0", False)
+        add(name + "shelf", box(G(cx, r - 0.27, 0.16 + 1.0), (w - 0.8, 0.08, 0.06)), "#8a5e38")
+        for k in range(7):
+            gc = ("#6f9fd2", "#ffd36b", "#86c46c", "#b78ae0", "#f7f2e8", "#6f9fd2", "#ffd36b")[k]
+            add(name + f"jar{k}", ellipsoid(G(cx - (w - 1.2) / 2 + k * (w - 1.2) / 6, r - 0.22, 0.16 + 1.13), (0.12, 0.08, 0.14), segs=10, rings=6), gc)
+        add(name + "counter", box(G(cx, r - 0.12, 0.16 + 0.32), (w - 0.6, D(0.3), 0.64)), "#a8743f")
+        add(name + "ctop", box(G(cx, r - 0.12, 0.16 + 0.66), (w - 0.45, D(0.34), 0.06)), "#c99a62")
+        for k, gc in enumerate(("#86c46c", "#ffd36b", "#6f9fd2", "#f7f2e8", "#b78ae0")):   # fruit / goods baskets on the counter
+            x = -1.1 + k * 0.55
+            add(name + f"bk{k}", tube(G(cx + x, r - 0.1, 0.16 + 0.69), G(cx + x, r - 0.1, 0.16 + 0.84), 0.2, 0.22, segs=12), "#c19159")
+            add(name + f"gd{k}", ellipsoid(G(cx + x, r - 0.1, 0.16 + 0.9), (0.17, 0.12, 0.1), segs=10, rings=6), gc, False)
+        # striped awning (gold and cream; no red)
+        n = 8; aw = (w + 0.2) / n
+        for k in range(n):
+            add(name + f"aw{k}", box(G(cx - (w + 0.2) / 2 + aw * (k + 0.5), r + 0.05, 0.16 + h - 0.05), (aw, D(0.55), 0.06), rot=(-22, 0, 0)), "#ffd36b" if k % 2 == 0 else "#fbf3df")
+        add(name + "awedge", box(G(cx, r + 0.28, 0.16 + h - 0.2), (w + 0.2, 0.05, 0.12)), "#e8b84f")
+        # crates and a round blank sign (a picture of a basket, not words)
+        for x, s in ((-w / 2 - 0.1, 0.45), (-w / 2 + 0.35, 0.35), (w / 2 + 0.05, 0.42)):
+            add(name + f"cr{x}", box(G(cx + x, r + 0.35, s / 2), (s, D(s), s)), "#b98a55")
+        add(name + "sign", tube(G(cx, r - 0.2, 0.16 + h + 0.25), G(cx, r - 0.14, 0.16 + h + 0.25), 0.36, 0.36, segs=20, sy=1.0), "#fbf3df")
+        add(name + "signbk", ellipsoid(G(cx, r - 0.1, 0.16 + h + 0.2), (0.17, 0.04, 0.1), segs=10, rings=6), "#c19159", False)
+        for k, x in enumerate((-1.2, 0.0, 1.2)):   # little lanterns hanging from the awning edge
+            add(name + f"ln{k}h", ellipsoid(G(cx + x, r + 0.3, 0.16 + h - 0.42), (0.13, 0.13, 0.16), segs=12, rings=8), "#fff6c8")
+        for x in (-w / 2 - 0.3, w / 2 + 0.3):   # paper lanterns
+            add(name + f"lp{x}", tube(G(cx + x, r + 0.1, 0), G(cx + x, r + 0.1, 0.75), 0.04, 0.04), "#6b4428")
+            add(name + f"ln{x}", ellipsoid(G(cx + x, r + 0.1, 0.92), (0.15, 0.15, 0.2), segs=12, rings=8), "#fff6c8")
+    shop(9.3, 4.0, "shop")
+    def placeholder(cx, w, name):   # deliberately plain massing: a stand-in until the building is decided
+        r = 4.65; h = 1.45
+        add(name + "base", box(G(cx, r - 0.55, 0.08), (w + 0.3, D(1.2), 0.16)), "#a9adc4")
+        add(name + "wall", box(G(cx, r - 0.75, 0.16 + h / 2), (w, D(1.0), h)), "#d8d4cc")
+        add(name + "roof", box(G(cx, r - 0.75, 0.16 + h + 0.12), (w + 0.4, D(1.2), 0.24)), "#9aa0b0")
+        add(name + "door", box(G(cx, r - 0.24, 0.16 + 0.55), (0.9, 0.05, 1.1)), "#a7a39b")
+        for x in (-1.3, 1.3):
+            add(name + f"win{x}", box(G(cx + x, r - 0.24, 0.16 + 0.85), (0.6, 0.05, 0.5)), "#ffe9a0", False)
+    placeholder(19.6, 4.4, "plc")
     # ---------------------------------------------------------------- Student of the Month statue (generic, faceless)
     SC, SR = 11.65, 8.0
     add("pl0", tube(G(SC, SR, 0), G(SC, SR, 0.22), 1.25, 1.25, segs=28, sy=K), "#a9adc4")
@@ -137,6 +187,19 @@ else:
         add(f"lampc{c}", tube(G(c, 9.0, 1.78), G(c, 9.0, 1.95), 0.24, 0.02, segs=4), "#5f3f26")
 
 
+if A.part == "lights":   # an emission mask: lit windows/lanterns white, everything else black (dusk glow pass)
+    import re
+    def em(c):
+        m = bpy.data.materials.new("E" + str(c)); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+        e = nt.nodes.new("ShaderNodeEmission"); e.inputs[0].default_value = (c, c, c, 1); o = nt.nodes.new("ShaderNodeOutputMaterial")
+        nt.links.new(e.outputs[0], o.inputs[0]); return m
+    W_, B_ = em(1.0), em(0.0)
+    LIT = re.compile(r"(glow|ln-?\d|lampb|inside|win|shoji)")
+    for o in bpy.data.objects:
+        if o.type == "MESH" and "_outline" in o.name: o.hide_render = True
+        elif o.type == "MESH":
+            lit = bool(LIT.search(o.name)) and "twin" not in o.name and "_outline" not in o.name
+            for i in range(len(o.material_slots)): o.material_slots[i].material = W_ if lit else B_
 if A.part == "far":   # the far layer keeps only the hills and the Tower
     for o in list(bpy.data.objects):
         if o.type == "MESH" and not (o.name.startswith("hill") or o.name.startswith("tw")):
@@ -150,6 +213,6 @@ cam = bpy.data.objects.new("Cam", cd); coll.objects.link(cam); sc.camera = cam
 cam.rotation_euler = (math.radians(90 - EL), 0, 0)
 from mathutils import Vector, Euler
 d = Euler(cam.rotation_euler).to_matrix() @ Vector((0, 0, -1))
-cam.location = (Vector((0, 4.0 * K, 0)) if A.part == "far" else Vector((COLS / 2, -(ROWS / 2) * K, 0))) - d * 60
+cam.location = (Vector((0, 4.0 * K, 4.0)) if A.part == "far" else Vector((COLS / 2, -(ROWS / 2) * K, 0))) - d * 60
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(HERE, f"town-square_{A.part}.blend"))
 r.filepath = A.out; bpy.ops.render.render(write_still=True)
