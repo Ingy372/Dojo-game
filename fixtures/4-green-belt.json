@@ -90,6 +90,12 @@
   ],
   "stanceSignOffs": [
     {
+      "id": "PLACEHOLDER-dojoforge-stance-ready",
+      "signedOff": true,
+      "signedOffOn": "2026-10-20",
+      "signedOffBy": "Sensei Jay"
+    },
+    {
       "id": "PLACEHOLDER-dojoforge-stance-cat",
       "signedOff": false,
       "signedOffOn": null,

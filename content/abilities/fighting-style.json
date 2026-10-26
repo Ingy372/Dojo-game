@@ -13,7 +13,8 @@
   "notYet": "Learn this at the dojo",
   "askSensei": "Ask Sensei about this one",
   "lines": {
-    "beginners-stance": "Steady and even. Good at everything.",
+    "beginners-stance": "Everyone starts here. Your first stance is waiting at the dojo!",
+    "ready-stance": "Steady and even. Good at everything.",
     "cat-stance": "Quicker Counters and Dash, but softer blocks.",
     "front-stance": "Hit harder, but move a little slower.",
     "fighting-stance": "Strong blocks and fast Focus, but a shorter Dash.",
@@ -22,5 +23,9 @@
     "second-wind": "Brings back Health and some Focus.",
     "perfect-discipline": "For a short time, every Counter is a Great Counter."
   },
+  "notYetLines": {
+    "ready-stance": "Not yet! Learn Open Leg Stance at the dojo, and your teacher will sign it off."
+  },
+  "welcomeStance": "Welcome! You start in Beginner's Stance, just like everyone. Learn stances at the dojo to grow stronger!",
   "lineFallback": "A move from your training."
 }
