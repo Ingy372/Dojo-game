@@ -14,9 +14,9 @@ describe('Q-PREM-TRY', () => {
     expect(new Set(listed).size).toBe(10);
     for (const h of draft.programmerHandoff) expect(h.file).toBe('content/tutorial/first-session-lessons.json');
   });
-  it('every listed lesson has the new retry; no other lesson does', () => {
+  it('every listed lesson has the new retry; plus the guided Counter, and no other lesson', () => {
     for (const id of listed) expect(all.find((l) => l.id === id)?.retry, id).toBe(NEW);
-    expect(all.filter((l) => l.retry === NEW).map((l) => l.id).sort()).toEqual([...listed].sort());
+    expect(all.filter((l) => l.retry === NEW).map((l) => l.id).sort()).toEqual([...listed, 'lesson-counter-guided'].sort());
   });
   it('the old line is gone, no lesson says try again, and the guided Counter shares the line', () => {
     expect(all.some((l) => l.retry === draft.current)).toBe(false);
