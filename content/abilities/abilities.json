@@ -14,6 +14,7 @@
     {
       "id": "cat-stance",
       "name": "Cat Stance",
+      "signOffId": "PLACEHOLDER-dojoforge-stance-cat",
       "text": "Quicker Counters and Dash, but softer blocks.",
       "counterWindow": 1,
       "attackSpeed": 0,
@@ -26,6 +27,7 @@
     {
       "id": "front-stance",
       "name": "Front Stance",
+      "signOffId": "PLACEHOLDER-dojoforge-stance-front",
       "text": "Hit harder, but move a little slower.",
       "counterWindow": 0,
       "attackSpeed": 0,
@@ -36,6 +38,7 @@
     {
       "id": "fighting-stance",
       "name": "Fighting Stance",
+      "signOffId": "PLACEHOLDER-dojoforge-stance-fighting",
       "text": "Strong blocks and fast Focus, but a shorter Dash.",
       "counterWindow": 0,
       "attackSpeed": 0,
@@ -49,6 +52,7 @@
     {
       "id": "horse-stance",
       "name": "Horse Stance",
+      "signOffId": "PLACEHOLDER-dojoforge-stance-horse",
       "text": "Stand still to hit harder, but move slower.",
       "counterWindow": 0,
       "attackSpeed": 0,

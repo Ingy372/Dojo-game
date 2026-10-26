@@ -76,6 +76,32 @@
       "signedOffBy": null
     }
   ],
+  "stanceSignOffs": [
+    {
+      "id": "PLACEHOLDER-dojoforge-stance-cat",
+      "signedOff": true,
+      "signedOffOn": "2026-11-16",
+      "signedOffBy": "Sensei Jay"
+    },
+    {
+      "id": "PLACEHOLDER-dojoforge-stance-front",
+      "signedOff": false,
+      "signedOffOn": null,
+      "signedOffBy": null
+    },
+    {
+      "id": "PLACEHOLDER-dojoforge-stance-fighting",
+      "signedOff": false,
+      "signedOffOn": null,
+      "signedOffBy": null
+    },
+    {
+      "id": "PLACEHOLDER-dojoforge-stance-horse",
+      "signedOff": false,
+      "signedOffOn": null,
+      "signedOffBy": null
+    }
+  ],
   "catchUp": [],
   "stripes": [
     {

@@ -76,6 +76,32 @@
       "signedOffBy": null
     }
   ],
+  "stanceSignOffs": [
+    {
+      "id": "PLACEHOLDER-dojoforge-stance-cat",
+      "signedOff": false,
+      "signedOffOn": null,
+      "signedOffBy": null
+    },
+    {
+      "id": "PLACEHOLDER-dojoforge-stance-front",
+      "signedOff": false,
+      "signedOffOn": null,
+      "signedOffBy": null
+    },
+    {
+      "id": "PLACEHOLDER-dojoforge-stance-fighting",
+      "signedOff": false,
+      "signedOffOn": null,
+      "signedOffBy": null
+    },
+    {
+      "id": "PLACEHOLDER-dojoforge-stance-horse",
+      "signedOff": false,
+      "signedOffOn": null,
+      "signedOffBy": null
+    }
+  ],
   "catchUp": [],
   "stripes": [],
   "attendance": {
