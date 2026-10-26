@@ -94,3 +94,37 @@ I didn't reach a win or room-clear screen (my bot couldn't clear past room 1, an
 **Good, no issue:** Look (character editor) is clean and polished, with clear Back/Done. Journal (Monster Journal with "?" silhouettes) reads well. Street Smarts is clean. The room name card ("Training Yard") works. The lose card ("Good effort! You reached room 2 of 8. You keep everything you found: 1 treasure. +24 experience") is kind and clear. **The 667x320 sweep** fit every screen with no clipping except F6. **Reduced Motion on** turns the toggle "On", I saw no shake or flash, and everything else behaved the same. Load times rose to 2–6 s only while I ran 3–4 sessions in parallel (not a game issue).
 
 **Still not covered:** the win and boss-win screens (see NEXT) and a sound check on a device.
+
+---
+
+## Retest (Q-PREM-RETEST, Mon Oct 26 2026, ~8:30 AM ET)
+
+**Delivery Note**
+- ITEM: Q-PREM-RETEST (room-clear/win screen + Floor Keeper boss win)
+- WHAT: The boss win was reached on current main (42d54ed0) at 667x375 (RM off) and 667x320 (RM on). The win reuses the plain room-clear: a big "A" grade, the line "Room clear! N Great · no damage · 0:16", a loot list and a chest. There is no Floor Keeper victory moment. There is no Power Rating and no guilt. Text overlaps at 667x320. 932x430 was not reached (see Coverage gaps).
+- WHY: Recheck the win moments for premium feel before playtest.
+- DECIDE: Should the boss win get its own celebration ("Floor Keeper defeated!")? Should the "A" grade stay for kids?
+- NEXT: Retest F1/F2/F4 when PRs land. None are open yet.
+
+**Setup and hooks (disclosure)**
+- Build: worktree at origin/main 42d54ed0, vite on 127.0.0.1:5363, URL `?difficulty=guided&room=keepers-hall`.
+- No game code was edited. **There is no win or god-mode hook in the code.** I used the existing DEV-only `window.game` (main.ts) at runtime. Every 150 ms it reset player HP to max and set each living enemy's HP to 1. So the boss **skipped its phases**, and this retest does not judge boss pacing.
+- Work board: section 0b6 is **not on origin/main's docs/work-board.md**. It is only on origin/bot-manager (e5c9be3b). What it lists:
+  - F1: the Bow prompt fires on the first tap, and taps on top-bar menus pulse Bow. Pass bar: 10 of 10 taps.
+  - F2: Settings gets an X or Done button with a 44 pt target at 667×375 and 667×320.
+  - F4: on a boss loss, "Ouch! The run is over." no longer overlaps "Floor Keeper", and the fight controls hide.
+- `gh pr list`: there are **no F1/F2/F4 PRs**. Open PRs are 318, 317, 316, 292, 277 and 216. There was nothing to QA. The F1 bug still reproduces: the Bow still needs 2–3 taps.
+
+**Findings (most serious first)**
+1. **ANNOYING: the boss win has no boss moment.** Beating the Floor Keeper shows the same "A" + "Room clear!" as any room. There's no "Floor Keeper defeated!", no boss name and no fanfare beat. The HUD still reads "Room 1 of 8" (that's because of `?room`). For a kid, the biggest win of the floor feels like a normal room. Shots: rt-W1-5, rt-W1a.
+2. **ANNOYING: the win text overlaps at 667x320 (RM on).** The "A" grade sits on top of the Sensei banner ("Sensei: G… timing!"). The "Room clear!" line runs through the player sprite and the STRIKE button. Shot: rt-W3-6.
+3. **ANNOYING: the "Room clear!" stat line is small, white and fades fast.** It also overlaps the chest and player at 667x375. It's hard to read on the tan floor. Within about 1 s it's semi-transparent (rt-W1a).
+4. **SMALL: the loot list stacks top-right next to DASH.** It shows four lines of green "Special: …" text. It's readable, but it crowds the controls. Loot only showed at 667x375. In the 667x320 run, no list was seen in the captured frames.
+5. **SMALL: stale tips after the win.** "Sensei: Wait for it… COUNTER!" (in the earlier W1 run) and "GREAT x2" (rt-W3a) stay on screen in the empty room after the clear.
+6. **SMALL: the player sprite hides under the STRIKE/COUNTER buttons** near the right wall at 667x375 and 932x430 (rt-W4-9). I can't tell what's happening there mid-fight.
+7. Positive: there's no Power Rating, no guilt or loss language, and the "no damage" and time stats are framed positively. The HOME door with its green badge appears after the clear, and the chest pops.
+
+**Coverage gaps**
+- 932x430 (RM on and off) and 667x375 RM on: my auto-bot stalled at the right wall in wave 2–3 and never reached the win (rt-W5b). So these win screens are **not verified**. They need a manual pass or a real teleport/win hook.
+- A non-boss room-clear was not run separately. The boss win uses the same room-clear UI.
+- I didn't step through the door to the floor-complete screen. My scripted walk didn't reach HOME.
