@@ -3,7 +3,7 @@
   "targetFile": "content/tutorial/first-session-lessons.json",
   "targetId": "lesson-counter-guided",
   "targetField": "retry",
-  "alsoUsedBy": ["lesson-dodge","lesson-counter-hint-3","lesson-strike","lesson-dash","lesson-insights","lesson-decorating","lesson-perfect","lesson-block","lesson-step-out"],
+  "alsoUsedBy": ["lesson-warning","lesson-counter-hint-2","lesson-counter-hint-3","lesson-strike","lesson-dash","lesson-insights","lesson-decorating","lesson-perfect","lesson-block","lesson-step-out"],
   "current": "That's okay. Try again whenever you're ready.",
   "versions": {
     "A": { "retry": "Nice work today. Let's rest at the dojo." },
