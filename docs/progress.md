@@ -897,6 +897,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## Q-PREM-F10 (2026-10-26)
 - Stat tile number and label at least 4 px apart, with nothing overlapping (tile icons, New for you label, icon and sparkle checked against every panel text and picture), at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off. Text is at least 12 px, F8's 12 px above Again! is kept, and a hands-on tap on Again! starts a run. verify-ui-shots: 766 PASS, 0 FAIL (docs/shots/q-prem-f10/verify-log.txt). Test: packages/sim/test/b-lastrun-layout.test.ts (Q-PREM-F10 block).
 
+## Q-PREM-TRY (2026-10-26)
+- Retry line changed in the 10 listed lessons; the test checks them against the draft list; shots at 4 sizes, 20 PASS / 0 FAIL (docs/shots/q-prem-try/verify-log.txt).
 ## B-MASHER-d1 — knock-out flow (2026-10-26)
 **Done**
 - A Tower knock-out is three kind screens: "Sensei helps you up." (tap skips), "You kept everything you found!" with the finds and one Head home button (tap anywhere too, no timer), then "Welcome home!" on the Training Board with one pointer (class first, else the Tower; none when play time is up). Time-limit endings share Screen 2 with the resting line; the old rest card is gone. Guided offer comes after Screen 2. Practice KO gets the kind words and keeps going (controls now come back).
@@ -914,3 +916,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 **Next**
 - Tester: beat the Floor Keeper on a fresh save (moment plays), then again (normal clear). Q-PREM-GRADE next.
 - Q-PREM-F9 QA fix: DASH/STANCE solid dim faces (6.44:1 / 6.89:1), Counter lockout ring, Decorate wall row clear of the 60 px bar. verify-ui-shots 656 PASS, 0 FAIL (4 sizes × Reduced motion on/off).
+
+## Q-PREM-TRY fix (2026-10-26)
+- Retry line in the 10 lessons is now "Nice work. Let's keep practicing."; test updated.
+- lesson-counter-guided retry: "So close! Let's keep practicing."; test bans 'try again' in all lessons; shots include the guided line.
+- All 11 lesson retry lines are "Nice work. Let's keep practicing."; test bans 'So close' and 'try again'.

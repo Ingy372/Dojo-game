@@ -1321,6 +1321,8 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - The short New for you card (~73 px wide) has no room beside its label for stars, and it is flush with the content's right edge. So its sparkle (two stars, `headingSparkle`) now sits 4 px before the "New for you" heading, in the gap after Found. The tall card keeps its three corner stars. The bottom-left star no longer touches the trophy icon.
 - F8's 12 px clear above Again! is unchanged.
 
+## Q-PREM-TRY — go-home retry line (2026-10-26)
+- The 10 lessons in drafts/content/tutorial/C-STORY-TRY.json now say "Nice work today. Let's rest at the dojo." (Jay picked version A). lesson-counter-guided keeps "So close! Let's try again." (it never held the old line, per the draft's notInScope).
 ## B-MASHER-d1 — the knock-out flow (2026-10-26)
 Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager picks:
 - **Screens, words from content/settings/knockout.json only (no new story text):** Screen 1 "Sensei helps you up." with Sensei "Every fall is part of training." (about 2.5 s, `helpUpMs`; a tap skips it; soft fade, Reduced motion fades at once; `sfx.playerDown` is now a warm rising chime, no sad sound). Screen 2 (`keptCard`): "You kept everything you found!" with each find (items, decorations, +XP) and a small sparkle (still under Reduced motion), or "You learned this room!"; Sensei "Let's rest at the dojo."; one Head home button with a drawn door; a tap anywhere also continues; no timer. Screen 3 (Home): "Welcome home!" and one pointer, fading after about 4 s (`pointerMs`) or on a tap, then the usual homecoming (celebrations, goals).
@@ -1346,3 +1348,8 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - The moment is a new Celebrations step (`keeper`): one screen with the character, rays and 40 confetti, "Floor Keeper defeated!" at 28 px. It stays smaller than a promotion (3 screens, 60 confetti, gong), per the hard rule that real achievements get the biggest celebrations. Reduced motion: no confetti, the rays stay still, and the title doesn't pop.
 - Words in content: content/settings/boss-win.json (keeperDefeated, roomClear). "Floor cleared!" now comes from last-run.json `cleared`. No new story text.
 - Q-PREM-F9 QA fix (2026-10-26): DASH and STANCE drop see-through alpha (0.5 / 0.6) for the same solid treatment as COUNTER/STRIKE/VIRTUE: alpha 1, dim face (DASH 0x2f4a3e, STANCE 0x34405a), stroke 0.35, label #d8d2c8 (6.44:1, 6.89:1). A missed Counter's 0.5 s lockout now also draws a refill ring around the dim COUNTER face, so it reads as "wait". Decorate's camera clamps the room top to the 60 px bar (was 48), so wall decorations are never under it. The 32 px row-1 top buttons stay out of scope.
+
+## Q-PREM-TRY fix — keep-practicing line (2026-10-26)
+- QA found play continues after the retry line (GameScene.ts guideDone -> senseiDone only shows the line; world.ts stepGuide just moves to the next hint), so "Let's rest at the dojo." didn't fit. The 10 lessons now say "Nice work. Let's keep practicing." (Manager's call; no 'try again' wording). lesson-counter-guided unchanged.
+- lesson-counter-guided's retry is now "So close! Let's keep practicing." (the guided Counter repeats after it); no lesson says 'try again'.
+- lesson-counter-guided's retry now matches the other 10: "Nice work. Let's keep practicing." (all 11 share it); no lesson says 'So close' or 'try again'.
