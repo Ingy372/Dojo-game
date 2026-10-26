@@ -47,3 +47,9 @@ I picked the first earned item of each group. The original icons brief says "For
 2. Beginner's Stance: should the feet be fully together (heels touching, like attention), or the natural slight gap as drawn? Open hands as drawn, or loose fists?
 
 **NEXT:** after the OK, I'll add all 8 to the menu2 icons64 set. Later Forms and Strikes are still waiting for names.
+
+---
+## NOTE: label renames (Jay, Oct 25)
+- "Ready" is now **Open Leg Stance**. The file is still `icon-stance-ready-*`.
+- "Perfect Discipline" is now **Strong Discipline**.
+Labels are game text, so they are recorded here only. No files were renamed yet. DECIDE: whether to rename the files to match (for example `icon-stance-open-leg`).

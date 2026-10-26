@@ -36,3 +36,5 @@ python3 incoming-art/icons2/source/make_preview.py   # preview/icons2-preview-66
 - **Quick Combo** (Kick Combo 2 is Combo 1 plus 3 jumping spin kicks): a middle round kick striking with the instep. The body leans back for balance and the guard stays up. A sweeping arc shows the kick's path and soft chevrons show speed.
 - **Second Wind** (Great Effort): rising from one knee. The back knee is down, the front foot is flat with the knee over the ankle, the back is straight, and one hand presses the front knee. Rising swirls show the energy coming back.
 - **Perfect Discipline** (Self-Discipline): kneeling in seiza. The student sits on the heels with a straight back and hands flat on the thighs, with small calm sparkles beside them (none above the head).
+
+> Label renames (Jay): Ready -> **Open Leg Stance**, Perfect Discipline -> **Strong Discipline**. Labels only; files not renamed yet.
