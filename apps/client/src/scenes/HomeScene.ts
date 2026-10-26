@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { GATE, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, gateLockR, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
+import { GREEN, GATE, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, gateLockR, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import {
@@ -1799,14 +1799,14 @@ export class HomeScene extends Phaser.Scene {
       const wearW = Math.round((textW - detailsW - 2 * S2) * 0.6);
       const letGoW = textW - detailsW - 2 * S2 - wearW;
       if (now?.uid === item.uid) button(this, { x: x + pad, y: by, w: wearW, h: bh, label: W.takeOff, color: 0x3a5f8a, size: 16, onTap: () => this.takeOff(item) }, sheet);
-      else button(this, { x: x + pad, y: by, w: wearW, h: bh, label: W.wear, color: 0x3aa57a, size: 16, onTap: () => this.wear(item) }, sheet);
+      else button(this, { x: x + pad, y: by, w: wearW, h: bh, label: W.wear, color: GREEN, size: 16, onTap: () => this.wear(item) }, sheet);
       button(this, { x: x + pad + wearW + S2, y: by, w: letGoW, h: bh, label: W.letGo, color: 0x3a3448, size: TYPE.body, labelColor: '#e8d4b4', onTap: () => this.letGo(item) }, sheet);
       button(this, { x: x + w - pad - detailsW, y: by, w: detailsW, h: bh, label: this.gearDetails ? W.hideDetails : W.details, color: 0x3a3448, size: TYPE.label, labelColor: '#d9c6a3', onTap: () => { this.gearDetails = !this.gearDetails; this.renderPanel('none'); } }, sheet);
     } else {
       const bw = Math.min(100, (w - 4 * pad) / 3);
       sheet.add(this.add.text(x + pad, by + bh / 2, W.letGoAsk, { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: '#ffd166' }).setOrigin(0, 0.5).setResolution(crisp()));
       button(this, { x: x + w - pad - 2 * bw - 8, y: by, w: bw, h: bh, label: W.yes, color: 0x5e4a6e, size: 15, onTap: () => this.letGo(item) }, sheet);
-      button(this, { x: x + w - pad - bw, y: by, w: bw, h: bh, label: W.keep, color: 0x3aa57a, size: 15, onTap: () => { this.confirmLetGo = false; this.renderPanel('none'); } }, sheet);
+      button(this, { x: x + w - pad - bw, y: by, w: bw, h: bh, label: W.keep, color: GREEN, size: 15, onTap: () => { this.confirmLetGo = false; this.renderPanel('none'); } }, sheet);
     }
     if (this.sheetOpening) {
       this.sheetOpening = false;

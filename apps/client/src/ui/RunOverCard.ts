@@ -3,6 +3,7 @@ import type { RunSummary } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { FONT, crisp, view } from './theme';
 import playTimeText from '../../../../content/settings/play-time.json';
+import { GREEN } from './tokens';
 
 /** Taps are ignored for a moment after the card appears, so a tap meant for the fight doesn't press a button. */
 const ARM_MS = 600;
@@ -101,7 +102,7 @@ export function restCard(scene: Phaser.Scene, onHome: () => void): Phaser.GameOb
   const opened = scene.time.now;
   const btnW = Math.min(260, cardW - 48);
   const btnY = top + cardH - btnH - 18;
-  const bg = scene.add.rectangle(width / 2 - btnW / 2, btnY, btnW, btnH, 0x3aa57a).setOrigin(0).setStrokeStyle(2, 0xfff6e0, 0.5).setInteractive();
+  const bg = scene.add.rectangle(width / 2 - btnW / 2, btnY, btnW, btnH, GREEN).setOrigin(0).setStrokeStyle(2, 0xfff6e0, 0.5).setInteractive();
   const label = scene.add
     .text(width / 2, btnY + btnH / 2, t.restButton, { fontFamily: FONT, fontStyle: 'bold', fontSize: '19px', color: '#fff6e0' })
     .setOrigin(0.5)
@@ -164,7 +165,7 @@ export function choiceCard(
     });
   };
   button(left + 16, noLabel, 0x4a4a55, false);
-  button(left + 32 + btnW, yesLabel, 0x3aa57a, true);
+  button(left + 32 + btnW, yesLabel, GREEN, true);
   container.setAlpha(0);
   scene.tweens.add({ targets: container, alpha: 1, duration: 260 });
   return container;

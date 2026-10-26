@@ -2,6 +2,7 @@ import { reducedMotion } from '../game/motion';
 import Phaser from 'phaser';
 import { COMBAT, activeStance, strikeCost, type PlayerAction, type PlayerState } from '@dojo/sim';
 import { view, DPR } from '../ui/theme';
+import { GREEN } from '../ui/tokens';
 
 const COUNTER_RADIUS = 48;
 const STRIKE_RADIUS = 38;
@@ -52,7 +53,7 @@ export class ActionButtons {
     this.strike = this.makeButton('strike', 'STRIKE', STRIKE_RADIUS, 0xd5713a);
     this.strikeRing = scene.add.graphics();
     this.strike.container.add(this.strikeRing);
-    this.dash = this.makeButton('dash', 'DASH', DASH_RADIUS, 0x3aa57a);
+    this.dash = this.makeButton('dash', 'DASH', DASH_RADIUS, GREEN);
     this.dashRing = scene.add.graphics();
     this.dash.container.add(this.dashRing);
     if (has.virtue) {
