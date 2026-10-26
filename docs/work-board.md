@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-25 9:55 PM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#308.
+Last updated: 2026-10-26 7:58 AM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#319.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -78,7 +78,7 @@ Last updated: 2026-10-25 9:55 PM EDT by Dojo-ascent Manager. Catch-up covers PRs
 | R-STANCE-d1 | Dojo-Ascent Programmer | **Done (PR #293, QA passed).** Cat, Front, Fighting and Horse stances with numbers; Horse +10% final; old saves go to Ready; Horse uses the rooted idle; stance lines from R-STANCE-f included. | As in the plan. | — |
 | R-STANCE-d2 | Dojo-Ascent Programmer (+ Nic) | **Done (PR #311, merged Oct 26, 12:35 AM, after QA).** Each stance unlocks only by sign-off. **Placeholder:** PLACEHOLDER-dojoforge-stance-* ids until Nic adds real ones. Polish for later: 1 tile per page at 667. | As in the plan. | real ids: Nic |
 | R-STANCE-g | Dojo-Ascent Programmer | **Done (PR #313, merged Oct 26, 12:35 AM; lines from #312).** Beginner's = plain standing, no bonus, start for new players; Open Leg (Ready) needs sign-off; old saves keep Open Leg. | — | — |
-| R-STANCE-READY-NUM | Dojo-Ascent Programmer | **In QA (PR #315; plan #314).** Open Leg gets +3% power, -10% Dash recharge, blocks let 45% through, +8% Focus. Sims: kid 113→139/200, masher 59→85, 0 room-1 KOs. | QA passes. | QA |
+| R-STANCE-READY-NUM | Dojo-Ascent Programmer | **Done (PR #315, merged Oct 26, 12:42 AM, after QA; plan #314).** Old saves keep Open Leg without a sign-off (Jay asked to confirm). Open Leg gets +3% power, -10% Dash recharge, blocks let 45% through, +8% Focus. Sims: kid 113→139/200, masher 59→85, 0 room-1 KOs. | QA passes. | — |
 | R-STANCE-e | Dojo-Ascent Content Designer (+ Jay) | **Skeletons and stances.json done (PR #288); Pinon/Nahanchi spelling #289. Jay's answers in (#303, #305): Open Leg Stance = feet shoulder-width, fists at the stomach; Beginner's Stance = plain standing, the starting stance.** Steps and one-line character for Pinon 1–3, Nahanchi, Possi, and the dojo stance list; Jay checks. The repo has no kata steps. | Files in `drafts/content/katas/`. | Toni Kennerson's kata descriptions (Jay says they're coming); how to stand in Cat, Front, Fighting and Horse; other stances (back stance?) |
 | R-STANCE-f | Dojo-Ascent Content Designer | **Done: lines copied into the game in #293; PR #294 merged Oct 25.** | Kid-friendly line for each stance. | — |
 | L-STANCE-e-review | Learning & Engagement Designer | Learning-load review of the R-STANCE-e kata drafts. | Short pass/change note. | R-STANCE-e full draft |
@@ -87,9 +87,21 @@ Last updated: 2026-10-25 9:55 PM EDT by Dojo-ascent Manager. Catch-up covers PRs
 | ID | Owner | What | Done when | Waits on |
 |---|---|---|---|---|
 | B-MASHER-a/b/c | Dojo-Ascent Programmer | **Done (PRs #295, #296).** Mash guard for all (fades after 3 Great Counters in a room, resets each room; "Sensei steps back" once per run), +6 Focus per shield bounce with glow, kid bot gate. | As in the plan. | — |
-| B-MASHER-d | Learning & Engagement Designer (+ Jay) | **Jay decided (Oct 25): no "Try again". A knock-out ends the run and the player goes home (as decisions.md says).** PR #292 is not merged as is. **Next for L&E (assigned Oct 25, 9:55 PM):** revise #292 into a kind go-home knock-out flow with no Try again, and mark the lines for Jay's sign-off. | Jay signs off the lines. | — (Jay's sign-off after the revision) |
+| B-MASHER-d | Learning & Engagement Designer (+ Jay) | **Jay decided (Oct 25): no "Try again". A knock-out ends the run and the player goes home (as decisions.md says).** **Revised in PR #292 (Oct 26, 5:43 AM): kind go-home knock-out flow, no Try again; lines marked for Jay.** Merge after Jay signs off the lines. | Jay signs off the lines. | — (Jay's sign-off after the revision) |
 | B-T3-NUDGE | Dojo-Ascent Programmer | **Done (PR #287).** ROAR plus "Help me!" nudge. | — | — |
 | B-CF-BUILD | Dojo-Ascent Programmer | **Done (PRs #297, #298).** Online build fixed; production deploy is `npx wrangler deploy`. | Main builds show Ready. | — |
+
+## 0b6. Premium-feel review (Jay asked Oct 26, morning)
+| ID | Owner | What | Done when | Waits on |
+|---|---|---|---|---|
+| R-PREMIUM-audit | Dojo-Ascent Researcher & Planner | **Delivered (PR #318, items a–h; f already done by #315).** Systems polish audit. Questions sent to Jay: Great Counter camera kick + shake slider, recorded vs generated sounds, 56% kid win rate, particles and sound past Dec 15. | Jay answers; the Manager adds build items. | Jay's answers |
+| L-PREMIUM-review | Learning & Engagement Designer | **Delivered (PR #317, items a–e, 5 questions for Jay).** First session, rewards, reasons kids come back. | Jay answers; the Manager adds build items. | Jay's answers |
+| C-STORY-review | Dojo-Ascent Content Designer | **Delivered (PR #316, 12 items, 8 questions for Jay). Main finding: no story is in the game yet.** | Jay answers; the Manager adds build items. | Jay's answers |
+| Q-PREMIUM-pass | Dojo-Ascent Game Logic/systems Tester | **Done (first pass on bot-qa #216; follow-up PR #319 merged Oct 26, 7:55 AM).** Still unverified: win screen and boss win. Jay's calls: a small heal between rooms (F3), a "Room clear!" moment (F3), the tutorial walk-spot fix (#1). | Report in `drafts/qa/Q-PREMIUM-pass.md`. | — |
+| Q-PREM-F2 | Dojo-Ascent Programmer | **Manager call: routine fix.** Settings gets a clear X or "Done" in the corner, like Look and Scroll. | One tap closes Settings at 667×375 and 667×320 (44 pt target); QA passes. | — |
+| Q-PREM-F1 | Dojo-Ascent Programmer | **Routine fix.** The Bow prompt (dojo entry and "Bow to begin the floor") fires on the first touch tap; taps on top-bar menus while the prompt is up pulse the Bow button. | 10 of 10 single taps bow at 667×375; QA passes. | Q-PREM-F2 |
+| Q-PREM-F4 | Dojo-Ascent Programmer | **Routine fix.** On a boss loss, "Ouch! The run is over." no longer overlaps the "Floor Keeper" label, and the fight controls hide. (Dim vs black and naming the boss bar wait for the art/taste pass.) | Screenshot of `?room=keepers-hall&seed=7&difficulty=guided` loss, Reduced motion on and off, nothing overlaps; QA passes. | Q-PREM-F1 |
+| Q-PREM-RETEST | Dojo-Ascent Game Logic/systems Tester | Check the win screen and a boss win (unverified in Q-PREMIUM), then retest F1, F2 and F4 as they land. | QA note with screenshots. | — (F1/F2/F4 parts wait on those PRs) |
 
 ## 0b5. Jay's renames and art calls (Oct 25 evening)
 | ID | Owner | What | Done when | Waits on |
