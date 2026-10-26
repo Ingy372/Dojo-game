@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { lastRunLayout, pinnedAgain } from '../../../apps/client/src/ui/lastRun';
+import { AGAIN_CLEAR, lastRunLayout, pinnedAgain } from '../../../apps/client/src/ui/lastRun';
 import { MIN_TAP, S1, S2 } from '../../../apps/client/src/ui/tokens';
 
 const src = Object.values(import.meta.glob(['../../../apps/client/src/scenes/HomeScene.ts'], { query: '?raw', import: 'default', eager: true }))[0] as string;
 
-// HomeScene: pad = 8 under LEFT_FULL_H tall (else 16), panel top = pad + 46, panelH = height - top - pad,
+// HomeScene (Q-PREM-F6, Q-PREM-F8): pad = 8 under LEFT_FULL_H tall (else 16), panel top = pad + 46, panelH = height - top - pad,
 // the scroll window is panelH - 20, Last run contents get at least PANEL_FULL_H (277), and the scroll
 // sits inside 6 + S1 of rod on each end. Panel widths from the shots (rw - 24 - 2 * S2).
 const SIZES = [
@@ -34,16 +34,40 @@ describe('Q-PREM-F6 Again! is never cut off on the Last run panel', () => {
       // At least 8 from the panel's right edge (contents start S2 inside the scroll).
       expect(z.cw - (pin.again.x + pin.again.w)).toBeGreaterThanOrEqual(0);
       if (ch > visible) {
-        // The scroll window ends S1 above Again!, and scrolling all the way shows the last row there.
-        expect(pin.footer).toBe(16 + pin.again.h + S1);
-        // The window's bottom (visible + 16 - footer) is S1 above Again!'s top.
-        expect(visible + 16 - pin.footer).toBe(pin.again.y - S1);
+        // The scroll window ends AGAIN_CLEAR above Again!, and scrolling all the way shows the last row there.
+        expect(pin.footer).toBe(16 + pin.again.h + AGAIN_CLEAR);
+        // The window's bottom (visible + 16 - footer) is AGAIN_CLEAR above Again!'s top.
+        expect(visible + 16 - pin.footer).toBe(pin.again.y - AGAIN_CLEAR);
         // Scrolled all the way, the last row ends 16 above the window's bottom, as before.
         expect(ch - pin.scrollMax).toBe(visible + 16 - pin.footer - 16);
       } else {
         expect(pin.footer).toBe(0);
         expect(pin.scrollMax).toBe(0);
         expect(pin.again).toEqual(L.again);
+      }
+    });
+
+    it(`${z.name}: Q-PREM-F8 nothing tappable sits within 8 px above Again!, scrolled or not`, () => {
+      const panelH = z.height - (z.pad + 46) - z.pad;
+      const inner = panelH - 20;
+      const ch = Math.max(inner, 277) - ROD;
+      const visible = inner - ROD;
+      const L = lastRunLayout(z.cw, ch, 9, 5, 3);
+      const pin = pinnedAgain(L.again, ch, visible, 16);
+      const a = pin.again;
+      // Every tappable box in the contents (chips row and bar aren't taps): banner, bests, tiles, found, New for you.
+      const taps = [L.banner, L.bests, ...L.tiles, L.found, L.newCard];
+      const over = (b: { x: number; w: number }) => b.x < a.x + a.w && b.x + b.w > a.x;
+      if (ch > visible) {
+        // Scrolled to any y, taps are clipped to the window, whose bottom is at least 8 above Again!.
+        const winBottom = visible + 16 - pin.footer;
+        expect(a.y - winBottom).toBeGreaterThanOrEqual(8);
+        expect(AGAIN_CLEAR).toBeGreaterThan(8);
+      } else {
+        for (const b of taps.filter(over)) {
+          if (b.y >= a.y + a.h) continue;
+          expect(a.y - (b.y + b.h), JSON.stringify(b)).toBeGreaterThanOrEqual(8);
+        }
       }
     });
   }
