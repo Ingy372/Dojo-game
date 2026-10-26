@@ -1,0 +1,31 @@
+{
+  "_note": "M7-P1. Everyone starts on Standard (kids see 'Steady'). After offerAfterLosses lost runs in a row on the same floor, Guided is kindly offered (at most once a day, never mentions losing, never switches by itself). homeLine shows once. Guided can also be picked any time in Settings. Wording: C9 (PR #115); the offer wording is from the Learning Designer review (PR #114). Only fight-button names (COUNTER, STRIKE, DASH) are in caps; menu buttons use normal case.",
+  "offerAfterLosses": 2,
+  "button": "Settings",
+  "title": "How do you like to train?",
+  "footer": "You can change this any time in Settings.",
+  "choices": [
+    {
+      "id": "guided",
+      "name": "Guided",
+      "text": "More time to COUNTER while you learn."
+    },
+    {
+      "id": "standard",
+      "name": "Steady",
+      "text": "The usual pace."
+    },
+    {
+      "id": "challenge",
+      "name": "Challenge",
+      "text": "Faster enemies and less time to COUNTER."
+    }
+  ],
+  "offer": {
+    "title": "Want more time to COUNTER?",
+    "line": "Try Guided, and change it any time in Settings.",
+    "yes": "Try it",
+    "no": "No thanks"
+  },
+  "homeLine": "You're on {name}, and you can change it in Settings."
+}

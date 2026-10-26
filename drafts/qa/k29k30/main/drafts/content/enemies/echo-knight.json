@@ -1,0 +1,33 @@
+{
+  "id": "echo-knight",
+  "name": "Echo Knight",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Remembers every guard trick: shield, turn and copy. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#b0b8c8",
+  "maxHealth": 429,
+  "power": 57,
+  "guard": 20,
+  "radius": 0.42,
+  "moveSpeedTilesPerSecond": 1.4,
+  "sightRange": 10,
+  "attack": {
+    "name": "shield bash",
+    "strength": 1,
+    "startRange": 1.15,
+    "reach": 0.75,
+    "areaRadius": 0.8,
+    "telegraphTicks": 18,
+    "recoverTicks": 18
+  },
+  "parSeconds": 4.0,
+  "tier": "black",
+  "band": "F3-4",
+  "tell": "red circle, shield shines",
+  "senseiLine": "You know every trick. Use them all.",
+  "description": "Remembers every guard trick: shield, turn and copy.",
+  "bestiary": {
+    "tip": "STRIKE, circle round, or change your move.",
+    "lore": {
+      "black": "A knight who learned every trick but forgot why. Free it, and it remembers to protect others."
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "notes": "DRAFT for M7-N1 (named monsters, drafts/planning/named-monster-proposal.md). Tier 2 (yellow, Sunrise Garden): one per enemy type; the Floor Keeper is never named. Like every enemy, each one is a Tower thing the shadow changed (decisions.md #6). Beating it frees it: the shadow lifts and the light comes back, and nothing is evil forever. 'lines.meet' is Sensei's line when it appears, 'lines.senseiTip' points at its unique tell (which only adds to the normal warning), and 'lines.freed' plays when it is beaten. 'journal' is the small one-screen Monster Journal page; 'journal.stampText' shows with the stamp after the first win. Names are the proposal's working names; the Content Designer keeps them for now. One short sentence per line, ages 6-9, never scary or mocking.",
+  "journalUnknown": {
+    "name": "?",
+    "fact": "Keep exploring!"
+  },
+  "monsters": [
+    {
+      "id": "old-thumper",
+      "baseEnemy": "brute",
+      "name": "Old Thumper",
+      "tier": 2,
+      "tell": "Stamps twice before the big swing",
+      "lines": {
+        "meet": "Look, it's Old Thumper!",
+        "senseiTip": "Watch its feet: two stamps, then the swing.",
+        "freed": "The shadow is gone, and Old Thumper can rest."
+      },
+      "journal": {
+        "name": "Old Thumper",
+        "fact": "Old Thumper always stamps twice. Watch its feet!",
+        "lore": "Old Thumper was the garden's oldest statue, and it still remembers the sun.",
+        "stampText": "Freed! Old Thumper smiles in the light."
+      }
+    },
+    {
+      "id": "zippy-zoom",
+      "baseEnemy": "swarmer",
+      "name": "Zippy Zoom",
+      "tier": 2,
+      "tell": "Leaves a sparkle trail along its dash path",
+      "lines": {
+        "meet": "Here comes Zippy Zoom!",
+        "senseiTip": "Follow the sparkles to see where it will go.",
+        "freed": "Zippy Zoom glows bright again!"
+      },
+      "journal": {
+        "name": "Zippy Zoom",
+        "fact": "Zippy Zoom's sparkles show where it will dash next.",
+        "lore": "Zippy Zoom was a little garden light that the shadow made dizzy.",
+        "stampText": "Freed! Zippy Zoom lights the garden path."
+      }
+    },
+    {
+      "id": "captain-clank",
+      "baseEnemy": "shield",
+      "name": "Captain Clank",
+      "tier": 2,
+      "tell": "Taps its shield three times before attacking",
+      "lines": {
+        "meet": "Captain Clank is on guard!",
+        "senseiTip": "Listen: clank, clank, clank, then Counter!",
+        "freed": "Captain Clank lowers its shield and bows."
+      },
+      "journal": {
+        "name": "Captain Clank",
+        "fact": "Captain Clank taps its shield three times before it moves.",
+        "lore": "Captain Clank once guarded the garden gate, and the shadow made it forget its friends.",
+        "stampText": "Freed! Captain Clank guards the gate again."
+      }
+    }
+  ]
+}

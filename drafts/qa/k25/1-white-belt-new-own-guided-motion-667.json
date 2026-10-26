@@ -1,0 +1,15 @@
+{
+ "tag": "1-white-belt-new-own-guided-motion-667",
+ "rmVal": false,
+ "diff": "guided",
+ "impacts": 26,
+ "kinds": {
+  "attack(default 0)": 20,
+  "scale 0": 6
+ },
+ "shakeCalls": [],
+ "framesShaking": 0,
+ "frames": 1029,
+ "maxOffsetPx": 0,
+ "errs": []
+}

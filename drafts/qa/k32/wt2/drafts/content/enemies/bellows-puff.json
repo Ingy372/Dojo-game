@@ -1,0 +1,39 @@
+{
+  "id": "bellows-puff",
+  "name": "Bellows Puff",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). Huffs gusts that nudge you across the room. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#c46a4a",
+  "maxHealth": 66,
+  "power": 11,
+  "guard": 15,
+  "radius": 0.42,
+  "moveSpeedTilesPerSecond": 1.8,
+  "sightRange": 10,
+  "attack": {
+    "name": "gust",
+    "strength": 1,
+    "startRange": 1.6,
+    "reach": 1.0,
+    "areaRadius": 0.9,
+    "telegraphTicks": 20,
+    "recoverTicks": 20
+  },
+  "parSeconds": 4.0,
+  "tier": "red",
+  "band": "F3-4",
+  "tell": "puffs up, then a pale gust arrow",
+  "senseiLine": "The wind only pushes. Use it.",
+  "description": "Huffs gusts that nudge you across the room.",
+  "bestiary": {
+    "tip": "Stand side-on to the gust.",
+    "lore": {
+      "red": "It used to fan the forge fire. Calm it, and it breathes gently to keep the forge warm."
+    },
+    "insight": "Advanced: ride the push to slip away from a crowd."
+  },
+  "push": {
+    "damage": 0,
+    "intoHazard": false,
+    "note": "No-damage push (Manager OK, C13). Push strength fixed; never into a hazard or off a ledge."
+  }
+}

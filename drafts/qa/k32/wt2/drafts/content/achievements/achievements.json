@@ -1,0 +1,907 @@
+{
+  "notes": "C7 text for every S6 achievement ID (drafts/planning/S6-achievements.md). 'reward' repeats S6's codes (T title, CT certified trophy, GT game trophy, D decoration, C cosmetic, B banner). Two entries are templates: ach.dojo.accolade.{slug} (game fills {accolade}) and ach.smarts.location.{place} (for later locations). Certified trophyText ends with 'Earned {date}', filled by the game. Bow names reuse the C2 badges; trims reuse Dojo Trim colours.",
+  "achievements": [
+    {
+      "id": "ach.dojo.promotion.yellow",
+      "reward": "CT",
+      "name": "Yellow Belt Earned",
+      "how": "Earn your Yellow Belt in real class.",
+      "done": "You earned your Yellow Belt!",
+      "trophyName": "Yellow Belt Trophy",
+      "trophyText": "Earned in class with real hard work. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.promotion.orange",
+      "reward": "CT",
+      "name": "Orange Belt Earned",
+      "how": "Earn your Orange Belt in real class.",
+      "done": "You earned your Orange Belt!",
+      "trophyName": "Orange Belt Trophy",
+      "trophyText": "Earned in class with real hard work. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.promotion.green",
+      "reward": "CT",
+      "name": "Green Belt Earned",
+      "how": "Earn your Green Belt in real class.",
+      "done": "You earned your Green Belt!",
+      "trophyName": "Green Belt Trophy",
+      "trophyText": "Earned in class with real hard work. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.promotion.blue",
+      "reward": "CT",
+      "name": "Blue Belt Earned",
+      "how": "Earn your Blue Belt in real class.",
+      "done": "You earned your Blue Belt!",
+      "trophyName": "Blue Belt Trophy",
+      "trophyText": "Earned in class with real hard work. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.promotion.red",
+      "reward": "CT",
+      "name": "Red Belt Earned",
+      "how": "Earn your Red Belt in real class.",
+      "done": "You earned your Red Belt!",
+      "trophyName": "Red Belt Trophy",
+      "trophyText": "Earned in class with real hard work. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.promotion.red-black",
+      "reward": "CT",
+      "name": "Red/Black Belt Earned",
+      "how": "Earn your Red/Black Belt in real class.",
+      "done": "You earned your Red/Black Belt!",
+      "trophyName": "Red/Black Belt Trophy",
+      "trophyText": "Earned in class with real hard work. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.promotion.brown",
+      "reward": "CT",
+      "name": "Brown Belt Earned",
+      "how": "Earn your Brown Belt in real class.",
+      "done": "You earned your Brown Belt!",
+      "trophyName": "Brown Belt Trophy",
+      "trophyText": "Earned in class with real hard work. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.promotion.brown-black",
+      "reward": "CT",
+      "name": "Brown/Black Belt Earned",
+      "how": "Earn your Brown/Black Belt in real class.",
+      "done": "You earned your Brown/Black Belt!",
+      "trophyName": "Brown/Black Belt Trophy",
+      "trophyText": "Earned in class with real hard work. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.promotion.black",
+      "reward": "CT",
+      "name": "Black Belt Earned",
+      "how": "Earn your Black Belt in real class.",
+      "done": "You earned your Black Belt!",
+      "trophyName": "Black Belt Trophy",
+      "trophyText": "Earned in class with real hard work. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.stripes.1",
+      "reward": "CT",
+      "name": "First Stripe",
+      "how": "Earn 1 stripe in real class.",
+      "done": "Your first stripe! Great start.",
+      "trophyName": "Stripe Plaque 1",
+      "trophyText": "Every stripe came from real practice. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.stripes.5",
+      "reward": "CT",
+      "name": "Five Stripes",
+      "how": "Earn 5 stripes in real class.",
+      "done": "Five stripes! You keep growing.",
+      "trophyName": "Stripe Plaque 5",
+      "trophyText": "Every stripe came from real practice. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.stripes.10",
+      "reward": "CT+T",
+      "name": "Ten Stripes",
+      "how": "Earn 10 stripes in real class.",
+      "done": "Ten stripes! Look at you go.",
+      "title": "Stripe Collector",
+      "trophyName": "Stripe Plaque 10",
+      "trophyText": "Every stripe came from real practice. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.stripes.20",
+      "reward": "CT+T",
+      "name": "Twenty Stripes",
+      "how": "Earn 20 stripes in real class.",
+      "done": "Twenty stripes! What a climb.",
+      "title": "Stripe Champion",
+      "trophyName": "Stripe Plaque 20",
+      "trophyText": "Every stripe came from real practice. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.classes.10",
+      "reward": "CT",
+      "name": "10 Classes",
+      "how": "Train in 10 real classes.",
+      "done": "10 classes! Your training is strong.",
+      "trophyName": "Class Medal 10",
+      "trophyText": "You showed up and trained 10 times. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.classes.25",
+      "reward": "CT",
+      "name": "25 Classes",
+      "how": "Train in 25 real classes.",
+      "done": "25 classes! Your training is strong.",
+      "trophyName": "Class Medal 25",
+      "trophyText": "You showed up and trained 25 times. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.classes.50",
+      "reward": "CT",
+      "name": "50 Classes",
+      "how": "Train in 50 real classes.",
+      "done": "50 classes! Your training is strong.",
+      "trophyName": "Class Medal 50",
+      "trophyText": "You showed up and trained 50 times. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.classes.100",
+      "reward": "CT+T",
+      "name": "100 Classes",
+      "how": "Train in 100 real classes.",
+      "done": "100 classes! Your training is strong.",
+      "title": "Faithful Student",
+      "trophyName": "Class Medal 100",
+      "trophyText": "You showed up and trained 100 times. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.classes.250",
+      "reward": "CT+T",
+      "name": "250 Classes",
+      "how": "Train in 250 real classes.",
+      "done": "250 classes! Your training is strong.",
+      "title": "Dojo Regular",
+      "trophyName": "Class Medal 250",
+      "trophyText": "You showed up and trained 250 times. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.classes.500",
+      "reward": "CT+T",
+      "name": "500 Classes",
+      "how": "Train in 500 real classes.",
+      "done": "500 classes! Your training is strong.",
+      "title": "Heart of the Dojo",
+      "trophyName": "Class Medal 500",
+      "trophyText": "You showed up and trained 500 times. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.weeks.5",
+      "reward": "C",
+      "name": "5 Weeks of Training",
+      "how": "Train in real class during 5 weeks.",
+      "done": "5 weeks of training! Your glow grows.",
+      "trophyName": "Glow: Lantern Light",
+      "trophyText": "A softer, brighter glow for your hard work."
+    },
+    {
+      "id": "ach.dojo.weeks.10",
+      "reward": "C",
+      "name": "10 Weeks of Training",
+      "how": "Train in real class during 10 weeks.",
+      "done": "10 weeks of training! Your glow grows.",
+      "trophyName": "Glow: Garden Mint",
+      "trophyText": "A softer, brighter glow for your hard work."
+    },
+    {
+      "id": "ach.dojo.weeks.20",
+      "reward": "C",
+      "name": "20 Weeks of Training",
+      "how": "Train in real class during 20 weeks.",
+      "done": "20 weeks of training! Your glow grows.",
+      "trophyName": "Glow: Evening Lavender",
+      "trophyText": "A softer, brighter glow for your hard work."
+    },
+    {
+      "id": "ach.dojo.weeks.50",
+      "reward": "C+CT",
+      "name": "50 Weeks of Training",
+      "how": "Train in real class during 50 weeks.",
+      "done": "50 weeks of training! Your glow grows.",
+      "trophyName": "50 Weeks Trophy",
+      "trophyText": "50 weeks of real training. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.weeks.100",
+      "reward": "C+CT",
+      "name": "100 Weeks of Training",
+      "how": "Train in real class during 100 weeks.",
+      "done": "100 weeks of training! Your glow grows.",
+      "trophyName": "100 Weeks Trophy",
+      "trophyText": "100 weeks of real training. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.anniversary.1",
+      "reward": "CT",
+      "name": "1 Year of Martial Arts",
+      "how": "Keep training until 1 year after your start.",
+      "done": "Happy 1 year of training!",
+      "trophyName": "1 Year Banner",
+      "trophyText": "1 year on the mat. Thank you for training! Earned {date}"
+    },
+    {
+      "id": "ach.dojo.anniversary.2",
+      "reward": "CT",
+      "name": "2 Years of Martial Arts",
+      "how": "Keep training until 2 years after your start.",
+      "done": "Happy 2 years of training!",
+      "trophyName": "2 Years Banner",
+      "trophyText": "2 years on the mat. Thank you for training! Earned {date}"
+    },
+    {
+      "id": "ach.dojo.anniversary.3",
+      "reward": "CT",
+      "name": "3 Years of Martial Arts",
+      "how": "Keep training until 3 years after your start.",
+      "done": "Happy 3 years of training!",
+      "trophyName": "3 Years Banner",
+      "trophyText": "3 years on the mat. Thank you for training! Earned {date}"
+    },
+    {
+      "id": "ach.dojo.anniversary.5",
+      "reward": "CT+T",
+      "name": "5 Years of Martial Arts",
+      "how": "Keep training until 5 years after your start.",
+      "done": "Happy 5 years of training!",
+      "title": "Five-Year Student",
+      "trophyName": "5 Years Banner",
+      "trophyText": "5 years on the mat. Thank you for training! Earned {date}"
+    },
+    {
+      "id": "ach.dojo.anniversary.10",
+      "reward": "CT+T",
+      "name": "10 Years of Martial Arts",
+      "how": "Keep training until 10 years after your start.",
+      "done": "Happy 10 years of training!",
+      "title": "Ten-Year Student",
+      "trophyName": "10 Years Banner",
+      "trophyText": "10 years on the mat. Thank you for training! Earned {date}"
+    },
+    {
+      "id": "ach.dojo.signoffs.1",
+      "reward": "CT",
+      "name": "1 Sign-off",
+      "how": "Get 1 technique sign-off from your instructor.",
+      "done": "1 sign-off! Your instructor saw your work.",
+      "trophyName": "Sign-off Seal 1",
+      "trophyText": "Checked by your instructor in class. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.signoffs.10",
+      "reward": "GT",
+      "name": "10 Sign-offs",
+      "how": "Get 10 technique sign-offs from your instructor.",
+      "done": "10 sign-offs! Your instructor saw your work.",
+      "trophyName": "Sign-off Seal 10",
+      "trophyText": "Checked by your instructor in class."
+    },
+    {
+      "id": "ach.dojo.signoffs.25",
+      "reward": "GT",
+      "name": "25 Sign-offs",
+      "how": "Get 25 technique sign-offs from your instructor.",
+      "done": "25 sign-offs! Your instructor saw your work.",
+      "trophyName": "Sign-off Seal 25",
+      "trophyText": "Checked by your instructor in class."
+    },
+    {
+      "id": "ach.dojo.signoffs.50",
+      "reward": "CT",
+      "name": "50 Sign-offs",
+      "how": "Get 50 technique sign-offs from your instructor.",
+      "done": "50 sign-offs! Your instructor saw your work.",
+      "trophyName": "Sign-off Seal 50",
+      "trophyText": "Checked by your instructor in class. Earned {date}"
+    },
+    {
+      "id": "ach.dojo.practice.1",
+      "reward": "D",
+      "name": "1 Hour of Practice",
+      "how": "Do 1 hour of home practice your parent approves.",
+      "done": "1 hour of home practice! Well done.",
+      "trophyName": "Practice Mat",
+      "trophyText": "A mat for your dojo, for all that home practice."
+    },
+    {
+      "id": "ach.dojo.practice.5",
+      "reward": "D",
+      "name": "5 Hours of Practice",
+      "how": "Do 5 hours of home practice your parent approves.",
+      "done": "5 hours of home practice! Well done.",
+      "trophyName": "Practice Dummy",
+      "trophyText": "A friendly practice dummy. It never gets tired."
+    },
+    {
+      "id": "ach.dojo.practice.10",
+      "reward": "D",
+      "name": "10 Hours of Practice",
+      "how": "Do 10 hours of home practice your parent approves.",
+      "done": "10 hours of home practice! Well done.",
+      "trophyName": "Water Bottle",
+      "trophyText": "Stay ready. Home practice helps you grow."
+    },
+    {
+      "id": "ach.dojo.practice.25",
+      "reward": "D+T",
+      "name": "25 Hours of Practice",
+      "how": "Do 25 hours of home practice your parent approves.",
+      "done": "25 hours of home practice! Well done.",
+      "title": "Home Practice Hero",
+      "trophyName": "Practice Bag",
+      "trophyText": "A bag that has seen a lot of good kicks."
+    },
+    {
+      "id": "ach.dojo.practice.50",
+      "reward": "D",
+      "name": "50 Hours of Practice",
+      "how": "Do 50 hours of home practice your parent approves.",
+      "done": "50 hours of home practice! Well done.",
+      "trophyName": "Golden Practice Mat",
+      "trophyText": "A golden mat for a student who keeps practicing."
+    },
+    {
+      "id": "ach.dojo.accolade.{slug}",
+      "reward": "CT+T",
+      "name": "{accolade}",
+      "how": "Get this award from your dojo.",
+      "done": "You earned {accolade}!",
+      "title": "{accolade}",
+      "trophyName": "{accolade} Trophy",
+      "trophyText": "Given by your dojo for who you are on the mat. Earned {date}"
+    },
+    {
+      "id": "ach.bow.correct.5",
+      "reward": "D",
+      "name": "Sharp Memory",
+      "how": "Answer 5 of Sensei's questions right.",
+      "done": "You named five techniques right!",
+      "trophyName": "Small Scroll",
+      "trophyText": "A little scroll for your dojo. Your memory is growing."
+    },
+    {
+      "id": "ach.bow.correct.10",
+      "reward": "GT",
+      "name": "Bright Mind",
+      "how": "Answer 10 of Sensei's questions right.",
+      "done": "Ten techniques remembered. Great job!",
+      "trophyName": "Bright Mind Trophy",
+      "trophyText": "Ten techniques remembered!"
+    },
+    {
+      "id": "ach.bow.correct.20",
+      "reward": "C",
+      "name": "Steady Student",
+      "how": "Answer 20 of Sensei's questions right.",
+      "done": "Twenty right! Your training stays with you.",
+      "trophyName": "Dojo Trim: Morning Sky",
+      "trophyText": "A sky-blue trim for a student who remembers."
+    },
+    {
+      "id": "ach.bow.correct.50",
+      "reward": "D",
+      "name": "Lantern of Learning",
+      "how": "Answer 50 of Sensei's questions right.",
+      "done": "Fifty right! Your learning shines bright.",
+      "trophyName": "Glowing Scroll Shelf",
+      "trophyText": "A shelf of glowing scrolls for your dojo."
+    },
+    {
+      "id": "ach.bow.correct.100",
+      "reward": "T+GT",
+      "name": "Heart of Remembering",
+      "how": "Answer 100 of Sensei's questions right.",
+      "done": "One hundred right! You keep what you learn.",
+      "title": "Keeper of Techniques",
+      "trophyName": "Keeper's Trophy",
+      "trophyText": "One hundred techniques remembered."
+    },
+    {
+      "id": "ach.tower.guardian.white",
+      "reward": "GT+T",
+      "name": "Guardian of White",
+      "how": "Free The Lamp Keeper on the White tier.",
+      "done": "You freed The Lamp Keeper!",
+      "title": "White Champion",
+      "trophyName": "White Statue",
+      "trophyText": "The Lamp Keeper is free, and The Lantern Halls shines again."
+    },
+    {
+      "id": "ach.tower.guardian.yellow",
+      "reward": "GT+T",
+      "name": "Guardian of Yellow",
+      "how": "Free The Sun Gardener on the Yellow tier.",
+      "done": "You freed The Sun Gardener!",
+      "title": "Yellow Champion",
+      "trophyName": "Yellow Statue",
+      "trophyText": "The Sun Gardener is free, and The Sunrise Garden shines again."
+    },
+    {
+      "id": "ach.tower.guardian.orange",
+      "reward": "GT+T",
+      "name": "Guardian of Orange",
+      "how": "Free The Hearth Cook on the Orange tier.",
+      "done": "You freed The Hearth Cook!",
+      "title": "Orange Champion",
+      "trophyName": "Orange Statue",
+      "trophyText": "The Hearth Cook is free, and The Ember Kitchens shines again."
+    },
+    {
+      "id": "ach.tower.guardian.green",
+      "reward": "GT+T",
+      "name": "Guardian of Green",
+      "how": "Free The Stone Giant on the Green tier.",
+      "done": "You freed The Stone Giant!",
+      "title": "Green Champion",
+      "trophyName": "Green Statue",
+      "trophyText": "The Stone Giant is free, and The Giant's Steps shines again."
+    },
+    {
+      "id": "ach.tower.guardian.blue",
+      "reward": "GT+T",
+      "name": "Guardian of Blue",
+      "how": "Free The River Watcher on the Blue tier.",
+      "done": "You freed The River Watcher!",
+      "title": "Blue Champion",
+      "trophyName": "Blue Statue",
+      "trophyText": "The River Watcher is free, and The Quiet River shines again."
+    },
+    {
+      "id": "ach.tower.guardian.red",
+      "reward": "GT+T",
+      "name": "Guardian of Red",
+      "how": "Free The Ember Knight on the Red tier.",
+      "done": "You freed The Ember Knight!",
+      "title": "Red Champion",
+      "trophyName": "Red Statue",
+      "trophyText": "The Ember Knight is free, and The Forge of Courage shines again."
+    },
+    {
+      "id": "ach.tower.guardian.red-black",
+      "reward": "GT+T",
+      "name": "Guardian of Red/Black",
+      "how": "Free The Echo Mask on the Red/Black tier.",
+      "done": "You freed The Echo Mask!",
+      "title": "Red/Black Champion",
+      "trophyName": "Red/Black Statue",
+      "trophyText": "The Echo Mask is free, and The Hall of Echoes shines again."
+    },
+    {
+      "id": "ach.tower.guardian.brown",
+      "reward": "GT+T",
+      "name": "Guardian of Brown",
+      "how": "Free The Root Keeper on the Brown tier.",
+      "done": "You freed The Root Keeper!",
+      "title": "Brown Champion",
+      "trophyName": "Brown Statue",
+      "trophyText": "The Root Keeper is free, and The Root Library shines again."
+    },
+    {
+      "id": "ach.tower.guardian.brown-black",
+      "reward": "GT+T",
+      "name": "Guardian of Brown/Black",
+      "how": "Free The Storm Herald on the Brown/Black tier.",
+      "done": "You freed The Storm Herald!",
+      "title": "Brown/Black Champion",
+      "trophyName": "Brown/Black Statue",
+      "trophyText": "The Storm Herald is free, and The Storm Stair shines again."
+    },
+    {
+      "id": "ach.tower.guardian.black",
+      "reward": "GT+T",
+      "name": "Guardian of Black",
+      "how": "Free The Lost Lightbearer on the Black tier.",
+      "done": "You freed The Lost Lightbearer!",
+      "title": "Black Champion",
+      "trophyName": "Black Statue",
+      "trophyText": "The Lost Lightbearer is free, and The Summit shines again."
+    },
+    {
+      "id": "ach.tower.floors.1",
+      "reward": "D",
+      "name": "First Floor Cleared",
+      "how": "Clear 1 floor of the Tower.",
+      "done": "1 floor cleared! Keep climbing.",
+      "trophyName": "First Floor Flag",
+      "trophyText": "Your very first floor. The climb begins!"
+    },
+    {
+      "id": "ach.tower.floors.10",
+      "reward": "GT",
+      "name": "10 Floors Cleared",
+      "how": "Clear 10 floors of the Tower.",
+      "done": "10 floors cleared! Keep climbing.",
+      "trophyName": "Climber's Lantern 10",
+      "trophyText": "10 floors of the Tower, climbed with courage."
+    },
+    {
+      "id": "ach.tower.floors.50",
+      "reward": "GT",
+      "name": "50 Floors Cleared",
+      "how": "Clear 50 floors of the Tower.",
+      "done": "50 floors cleared! Keep climbing.",
+      "trophyName": "Climber's Lantern 50",
+      "trophyText": "50 floors of the Tower, climbed with courage."
+    },
+    {
+      "id": "ach.tower.floors.100",
+      "reward": "GT",
+      "name": "100 Floors Cleared",
+      "how": "Clear 100 floors of the Tower.",
+      "done": "100 floors cleared! Keep climbing.",
+      "trophyName": "Climber's Lantern 100",
+      "trophyText": "100 floors of the Tower, climbed with courage."
+    },
+    {
+      "id": "ach.tower.floors.250",
+      "reward": "GT+T",
+      "name": "250 Floors Cleared",
+      "how": "Clear 250 floors of the Tower.",
+      "done": "250 floors cleared! Keep climbing.",
+      "title": "Tower Climber",
+      "trophyName": "Climber's Lantern 250",
+      "trophyText": "250 floors of the Tower, climbed with courage."
+    },
+    {
+      "id": "ach.tower.perfects.10",
+      "reward": "GT",
+      "name": "10 Perfect Counters",
+      "how": "Land 10 Perfect Counters.",
+      "done": "10 Perfect Counters! Great timing.",
+      "trophyName": "Counter Bell 10",
+      "trophyText": "Ring! Wait, watch, then COUNTER."
+    },
+    {
+      "id": "ach.tower.perfects.100",
+      "reward": "GT",
+      "name": "100 Perfect Counters",
+      "how": "Land 100 Perfect Counters.",
+      "done": "100 Perfect Counters! Great timing.",
+      "trophyName": "Counter Bell 100",
+      "trophyText": "Ring! Wait, watch, then COUNTER."
+    },
+    {
+      "id": "ach.tower.perfects.500",
+      "reward": "GT",
+      "name": "500 Perfect Counters",
+      "how": "Land 500 Perfect Counters.",
+      "done": "500 Perfect Counters! Great timing.",
+      "trophyName": "Counter Bell 500",
+      "trophyText": "Ring! Wait, watch, then COUNTER."
+    },
+    {
+      "id": "ach.tower.perfects.1000",
+      "reward": "GT+C",
+      "name": "1000 Perfect Counters",
+      "how": "Land 1000 Perfect Counters.",
+      "done": "1000 Perfect Counters! Great timing.",
+      "trophyName": "Dojo Trim: Sunrise Gold",
+      "trophyText": "A golden trim for perfect timing."
+    },
+    {
+      "id": "ach.tower.perfects.5000",
+      "reward": "GT+T",
+      "name": "5000 Perfect Counters",
+      "how": "Land 5000 Perfect Counters.",
+      "done": "5000 Perfect Counters! Great timing.",
+      "title": "Counter Master",
+      "trophyName": "Counter Bell 5000",
+      "trophyText": "Ring! Wait, watch, then COUNTER."
+    },
+    {
+      "id": "ach.tower.combo.10",
+      "reward": "GT",
+      "name": "10-Hit Combo",
+      "how": "Land a combo of 10 hits.",
+      "done": "A 10-hit combo! Smooth moves.",
+      "trophyName": "Combo Ribbon 10",
+      "trophyText": "One move flowing into the next."
+    },
+    {
+      "id": "ach.tower.combo.25",
+      "reward": "GT",
+      "name": "25-Hit Combo",
+      "how": "Land a combo of 25 hits.",
+      "done": "A 25-hit combo! Smooth moves.",
+      "trophyName": "Combo Ribbon 25",
+      "trophyText": "One move flowing into the next."
+    },
+    {
+      "id": "ach.tower.combo.50",
+      "reward": "GT",
+      "name": "50-Hit Combo",
+      "how": "Land a combo of 50 hits.",
+      "done": "A 50-hit combo! Smooth moves.",
+      "trophyName": "Combo Ribbon 50",
+      "trophyText": "One move flowing into the next."
+    },
+    {
+      "id": "ach.tower.allS",
+      "reward": "GT+T",
+      "name": "Super Floor",
+      "how": "Get an S in every room on one floor.",
+      "done": "Every room got an S!",
+      "title": "Super Student",
+      "trophyName": "Star Floor Cup",
+      "trophyText": "A whole floor of your best work."
+    },
+    {
+      "id": "ach.tower.elites.1",
+      "reward": "GT",
+      "name": "1 Elite Freed",
+      "how": "Free 1 elite in the Tower.",
+      "done": "1 elite freed! Brave work.",
+      "trophyName": "Elite Shield 1",
+      "trophyText": "The shadow lifted, and a strong friend is free."
+    },
+    {
+      "id": "ach.tower.elites.25",
+      "reward": "GT",
+      "name": "25 Elites Freed",
+      "how": "Free 25 elites in the Tower.",
+      "done": "25 elites freed! Brave work.",
+      "trophyName": "Elite Shield 25",
+      "trophyText": "The shadow lifted, and a strong friend is free."
+    },
+    {
+      "id": "ach.tower.elites.100",
+      "reward": "GT+C",
+      "name": "100 Elites Freed",
+      "how": "Free 100 elites in the Tower.",
+      "done": "100 elites freed! Brave work.",
+      "trophyName": "Gentle Glow: Bright Edge",
+      "trophyText": "A glow with a bright edge for brave work."
+    },
+    {
+      "id": "ach.tower.challenge.1",
+      "reward": "GT",
+      "name": "1 Challenge Floor",
+      "how": "Clear 1 Challenge floor.",
+      "done": "1 Challenge floor! You met the challenge.",
+      "trophyName": "Challenge Flag 1",
+      "trophyText": "You picked the harder path and kept going."
+    },
+    {
+      "id": "ach.tower.challenge.10",
+      "reward": "GT+C",
+      "name": "10 Challenge Floors",
+      "how": "Clear 10 Challenge floors.",
+      "done": "10 Challenge floors! You met the challenge.",
+      "trophyName": "Challenge Trim",
+      "trophyText": "A bold trim for a student who loves a challenge."
+    },
+    {
+      "id": "ach.tower.challenge.50",
+      "reward": "GT",
+      "name": "50 Challenge Floors",
+      "how": "Clear 50 Challenge floors.",
+      "done": "50 Challenge floors! You met the challenge.",
+      "trophyName": "Challenge Flag 50",
+      "trophyText": "You picked the harder path and kept going."
+    },
+    {
+      "id": "ach.journal.entries.5",
+      "reward": "GT",
+      "name": "5 Journal Pages",
+      "how": "Fill 5 pages in your Monster Journal.",
+      "done": "5 pages filled! You know your friends.",
+      "trophyName": "Journal Bookmark 5",
+      "trophyText": "Every page is a friend you helped free."
+    },
+    {
+      "id": "ach.journal.entries.10",
+      "reward": "GT",
+      "name": "10 Journal Pages",
+      "how": "Fill 10 pages in your Monster Journal.",
+      "done": "10 pages filled! You know your friends.",
+      "trophyName": "Journal Bookmark 10",
+      "trophyText": "Every page is a friend you helped free."
+    },
+    {
+      "id": "ach.journal.entries.25",
+      "reward": "GT",
+      "name": "25 Journal Pages",
+      "how": "Fill 25 pages in your Monster Journal.",
+      "done": "25 pages filled! You know your friends.",
+      "trophyName": "Journal Bookmark 25",
+      "trophyText": "Every page is a friend you helped free."
+    },
+    {
+      "id": "ach.journal.master.swarmer",
+      "reward": "T",
+      "name": "Swarmer Expert",
+      "how": "Finish the Swarmer page in your Monster Journal.",
+      "done": "You know all about Swarmer!",
+      "title": "Swarmer Expert"
+    },
+    {
+      "id": "ach.journal.master.shield",
+      "reward": "T",
+      "name": "Shield Guard Expert",
+      "how": "Finish the Shield Guard page in your Monster Journal.",
+      "done": "You know all about Shield Guard!",
+      "title": "Shield Guard Expert"
+    },
+    {
+      "id": "ach.journal.master.brute",
+      "reward": "T",
+      "name": "Brute Expert",
+      "how": "Finish the Brute page in your Monster Journal.",
+      "done": "You know all about Brute!",
+      "title": "Brute Expert"
+    },
+    {
+      "id": "ach.journal.master.floor-keeper",
+      "reward": "T",
+      "name": "Floor Keeper Expert",
+      "how": "Finish the Floor Keeper page in your Monster Journal.",
+      "done": "You know all about Floor Keeper!",
+      "title": "Floor Keeper Expert"
+    },
+    {
+      "id": "ach.journal.master.old-thumper",
+      "reward": "T",
+      "name": "Old Thumper Expert",
+      "how": "Finish the Old Thumper page in your Monster Journal.",
+      "done": "You know all about Old Thumper!",
+      "title": "Old Thumper Expert"
+    },
+    {
+      "id": "ach.journal.master.zippy-zoom",
+      "reward": "T",
+      "name": "Zippy Zoom Expert",
+      "how": "Finish the Zippy Zoom page in your Monster Journal.",
+      "done": "You know all about Zippy Zoom!",
+      "title": "Zippy Zoom Expert"
+    },
+    {
+      "id": "ach.journal.master.captain-clank",
+      "reward": "T",
+      "name": "Captain Clank Expert",
+      "how": "Finish the Captain Clank page in your Monster Journal.",
+      "done": "You know all about Captain Clank!",
+      "title": "Captain Clank Expert"
+    },
+    {
+      "id": "ach.home.placed.5",
+      "reward": "D",
+      "name": "Home Dojo 5",
+      "how": "Place 5 decorations in your dojo.",
+      "done": "5 decorations! Your dojo looks great.",
+      "trophyName": "Paper Lantern",
+      "trophyText": "A warm lantern for a dojo full of good things."
+    },
+    {
+      "id": "ach.home.placed.15",
+      "reward": "D",
+      "name": "Home Dojo 15",
+      "how": "Place 15 decorations in your dojo.",
+      "done": "15 decorations! Your dojo looks great.",
+      "trophyName": "Bonsai Tree",
+      "trophyText": "A tiny tree that grows with care."
+    },
+    {
+      "id": "ach.home.placed.30",
+      "reward": "D",
+      "name": "Home Dojo 30",
+      "how": "Place 30 decorations in your dojo.",
+      "done": "30 decorations! Your dojo looks great.",
+      "trophyName": "Big Dojo Banner",
+      "trophyText": "A banner for a dojo that feels like home."
+    },
+    {
+      "id": "ach.home.tidy.5",
+      "reward": "C",
+      "name": "Sparkling Dojo 5",
+      "how": "Make your dojo sparkle 5 times.",
+      "done": "Sparkle! 5 clean-ups done.",
+      "trophyName": "Bamboo Broom",
+      "trophyText": "A broom for a tidy dojo."
+    },
+    {
+      "id": "ach.home.tidy.20",
+      "reward": "C",
+      "name": "Sparkling Dojo 20",
+      "how": "Make your dojo sparkle 20 times.",
+      "done": "Sparkle! 20 clean-ups done.",
+      "trophyName": "Feather Duster",
+      "trophyText": "Dust flies away. Sparkle!"
+    },
+    {
+      "id": "ach.home.tidy.50",
+      "reward": "C+T",
+      "name": "Sparkling Dojo 50",
+      "how": "Make your dojo sparkle 50 times.",
+      "done": "Sparkle! 50 clean-ups done.",
+      "title": "Dojo Helper",
+      "trophyName": "Golden Broom",
+      "trophyText": "A shiny broom for a dojo kept with love."
+    },
+    {
+      "id": "ach.smarts.location.store",
+      "reward": "B+T",
+      "name": "Store Smart",
+      "how": "Finish every Street Smarts story at the store.",
+      "done": "You know how to stay safe at the store!",
+      "title": "Store Smart",
+      "trophyName": "Store Smart Banner",
+      "trophyText": "You know who can help when you get separated."
+    },
+    {
+      "id": "ach.smarts.location.{place}",
+      "reward": "B+T",
+      "name": "{place} Smart",
+      "how": "Finish every Street Smarts story at the {place}.",
+      "done": "You know how to stay safe at the {place}!",
+      "title": "{place} Smart",
+      "trophyName": "{place} Smart Banner",
+      "trophyText": "You know how to stay safe and find help."
+    },
+    {
+      "id": "ach.smarts.stars.10",
+      "reward": "D",
+      "name": "10 Safety Stars",
+      "how": "Earn 10 stars in Street Smarts.",
+      "done": "10 stars! You make safe choices.",
+      "trophyName": "Safety Star Lamp",
+      "trophyText": "A lamp that shines for smart, safe choices."
+    },
+    {
+      "id": "ach.smarts.stars.25",
+      "reward": "D",
+      "name": "25 Safety Stars",
+      "how": "Earn 25 stars in Street Smarts.",
+      "done": "25 stars! You make safe choices.",
+      "trophyName": "Helper Badge Frame",
+      "trophyText": "A frame for a student who knows who can help."
+    },
+    {
+      "id": "ach.smarts.stars.50",
+      "reward": "D",
+      "name": "50 Safety Stars",
+      "how": "Earn 50 stars in Street Smarts.",
+      "done": "50 stars! You make safe choices.",
+      "trophyName": "Big Safety Star",
+      "trophyText": "A big star for a big safe heart."
+    },
+    {
+      "id": "ach.life.quests.1",
+      "reward": "D",
+      "name": "1 Life Quest",
+      "how": "Finish 1 real-life quest with your parent.",
+      "done": "1 life quest done! Kindness counts.",
+      "trophyName": "Helping Hands Plaque",
+      "trophyText": "You helped at home, and it made a difference."
+    },
+    {
+      "id": "ach.life.quests.5",
+      "reward": "C",
+      "name": "5 Life Quests",
+      "how": "Finish 5 real-life quests with your parent.",
+      "done": "5 life quests done! Kindness counts.",
+      "trophyName": "Bamboo Rake",
+      "trophyText": "A rake for a student who helps out."
+    },
+    {
+      "id": "ach.life.quests.10",
+      "reward": "D+T",
+      "name": "10 Life Quests",
+      "how": "Finish 10 real-life quests with your parent.",
+      "done": "10 life quests done! Kindness counts.",
+      "title": "Kind Helper",
+      "trophyName": "Kind Heart Lantern",
+      "trophyText": "Ten real quests done with a kind heart."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "rumble-brute",
+  "name": "Rumble Brute",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). A big storm-wrapped brute. It gets tired like a Brute. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#4d5466",
+  "maxHealth": 862,
+  "power": 87,
+  "guard": 25,
+  "radius": 0.48,
+  "moveSpeedTilesPerSecond": 1.2,
+  "sightRange": 10,
+  "attack": {
+    "name": "rumble slam",
+    "strength": 1,
+    "startRange": 1.3,
+    "reach": 0.9,
+    "areaRadius": 0.95,
+    "telegraphTicks": 16,
+    "recoverTicks": 18
+  },
+  "parSeconds": 7.0,
+  "tier": "black",
+  "band": "F1-2",
+  "tell": "red circle",
+  "senseiLine": "Big and slow. Wait, then answer.",
+  "description": "A big storm-wrapped brute. It gets tired like a Brute.",
+  "bestiary": {
+    "tip": "COUNTER, or hit it while it's tired.",
+    "lore": {
+      "black": "A mountain guard wrapped in thunder. Calm it, and the rumble fades to a quiet hum."
+    }
+  }
+}

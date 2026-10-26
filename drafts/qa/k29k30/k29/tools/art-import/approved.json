@@ -1,0 +1,685 @@
+{
+  "about": "Art Jay has approved, and how it is packed. Only add a source here after Jay approves it.",
+  "outDir": "assets/art",
+  "scale": 0.6,
+  "packs": {
+    "player-a": {
+      "note": "Body A: the base layers (body, skin, gi, belt, props). Form stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "body",
+            "skin",
+            "gi",
+            "belt",
+            "belt-sheen",
+            "belt-center",
+            "belt-rim",
+            "belt-tape1-edge",
+            "belt-tape1",
+            "belt-tape2-edge",
+            "belt-tape2",
+            "prop-broom",
+            "prop-rag"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-faces": {
+      "note": "All 6 faces (small).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "face-01",
+            "face-02",
+            "face-03",
+            "face-04",
+            "face-05",
+            "face-06"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-01": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-01"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-02": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-02"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-03": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-03"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-04": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-04"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-05": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-05"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-06": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-06"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-07": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-07"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-08": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-08"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-09": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-09"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-10": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-10"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-11": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-11"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-hair-12": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "layers": [
+            "hair-12"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-a/player-a.json"
+          ]
+        }
+      ]
+    },
+    "player-a-big": {
+      "scale": 1.0,
+      "note": "Full detail, facing the camera, every face and hair: for the promotion ceremony and other big moments.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-a/player-a.json",
+          "skipLayers": [
+            "belt-center-edge",
+            "prop-broom",
+            "prop-rag"
+          ],
+          "animations": [
+            "idle",
+            "bow",
+            "celebrate"
+          ],
+          "directions": [
+            "S"
+          ]
+        }
+      ]
+    },
+    "player-b": {
+      "note": "Body B: the base layers (body, skin, gi, belt, props). Form stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "body",
+            "skin",
+            "gi",
+            "belt",
+            "belt-sheen",
+            "belt-center",
+            "belt-rim",
+            "belt-tape1-edge",
+            "belt-tape1",
+            "belt-tape2-edge",
+            "belt-tape2",
+            "prop-broom",
+            "prop-rag"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-faces": {
+      "note": "All 6 faces (small).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "face-01",
+            "face-02",
+            "face-03",
+            "face-04",
+            "face-05",
+            "face-06"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-01": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-01"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-02": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-02"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-03": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-03"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-04": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-04"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-05": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-05"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-06": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-06"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-07": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-07"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-08": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-08"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-09": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-09"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-10": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-10"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-11": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-11"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-hair-12": {
+      "note": "One hair style (only the chosen one is loaded).",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "layers": [
+            "hair-12"
+          ],
+          "mergeAnimations": [
+            "incoming-art/form-stances-a2/sprites/body-b/player-b.json"
+          ]
+        }
+      ]
+    },
+    "player-b-big": {
+      "scale": 1.0,
+      "note": "Full detail, facing the camera, every face and hair: for the promotion ceremony and other big moments.",
+      "sources": [
+        {
+          "id": "player",
+          "type": "character",
+          "json": "incoming-art/player-custom/sprites/body-b/player-b.json",
+          "skipLayers": [
+            "belt-center-edge",
+            "prop-broom",
+            "prop-rag"
+          ],
+          "animations": [
+            "idle",
+            "bow",
+            "celebrate"
+          ],
+          "directions": [
+            "S"
+          ]
+        }
+      ]
+    },
+    "enemies-t1": {
+      "sources": [
+        {
+          "id": "swarmer",
+          "type": "character",
+          "json": "incoming-art/enemies-tier1/swarmer/sprites/swarmer.json"
+        },
+        {
+          "id": "shield",
+          "type": "character",
+          "json": "incoming-art/enemies-tier1/shield/sprites/shield.json"
+        },
+        {
+          "id": "brute",
+          "type": "character",
+          "json": "incoming-art/enemies-tier1/brute/sprites/brute.json"
+        },
+        {
+          "id": "floor-keeper",
+          "type": "character",
+          "json": "incoming-art/enemies-tier1/keeper/sprites/keeper.json"
+        }
+      ]
+    },
+    "tower-t1": {
+      "sources": [
+        {
+          "id": "tower",
+          "type": "static",
+          "json": "incoming-art/tower-rooms/sprites/static.json"
+        },
+        {
+          "id": "boss-door",
+          "type": "static",
+          "json": "incoming-art/boss-door/sprites/static.json"
+        }
+      ]
+    },
+    "dojo": {
+      "sources": [
+        {
+          "id": "dojo",
+          "type": "static",
+          "json": "incoming-art/home-dojo/sprites/static.json"
+        }
+      ]
+    },
+    "decor-tier1": {
+      "note": "A6 Tier 1 decoration set (PR #124/#125): 5 random tinted pieces, 13 class pieces, 3 keeper statues, 5 Journal trophies, the folding screen. decor-pool-a6 is not included.",
+      "sources": [
+        {
+          "id": "decor-tier1",
+          "type": "static",
+          "json": "incoming-art/decor-tier1-a6/sprites/static.json"
+        }
+      ]
+    },
+    "tower-t2": {
+      "note": "Yellow belt Tower kit (Sunrise Garden). Same sprite ids as tower-t1, plus optional decor.",
+      "sources": [
+        {
+          "id": "tower",
+          "type": "static",
+          "json": "incoming-art/tower-rooms-t2/sprites/static.json"
+        }
+      ]
+    },
+    "icons": {
+      "note": "Batch 8: 28 icons for gear, Insights and Seals. Kept at full size (scale 1) so they stay sharp in menus.",
+      "scale": 1,
+      "sources": [
+        {
+          "id": "icons",
+          "type": "static",
+          "json": "incoming-art/icons/sprites/static.json"
+        }
+      ]
+    },
+    "auras-t1": {
+      "note": "S1 #3 elite auras for Tier 1 enemies (Jay approved). Per-enemy entries only; the 256 masters are reference.",
+      "sources": [
+        {
+          "id": "auras",
+          "type": "static",
+          "json": "incoming-art/elite-auras/sprites/static.json",
+          "only": [
+            "aura-swift-swarmer",
+            "aura-swift-shield",
+            "aura-swift-brute",
+            "aura-swift-keeper",
+            "aura-guarding-swarmer",
+            "aura-guarding-shield",
+            "aura-guarding-brute",
+            "aura-guarding-keeper"
+          ]
+        }
+      ]
+    },
+    "named-monster": {
+      "note": "M7-N1 named monsters (Manager approved for Jay, PRs #53/#60): per-enemy sparkles, name plate and tag, the 3 tells, Journal parts, stickers. The 256 master sparkle is reference only. A8 Journal silhouettes for Floor Keeper and Bopper (PR #136).",
+      "sources": [
+        {
+          "id": "named",
+          "type": "static",
+          "json": "incoming-art/named-monster/sprites/static.json",
+          "only": [
+            "named-sparkle-swarmer",
+            "named-sparkle-shield",
+            "named-sparkle-brute",
+            "name-plate",
+            "name-tag",
+            "journal-silhouette-brute",
+            "journal-silhouette-swarmer",
+            "journal-silhouette-shield",
+            "journal-page-frame",
+            "journal-title-banner",
+            "journal-card-met",
+            "journal-card-unmet",
+            "journal-stamp",
+            "sticker-brute",
+            "sticker-swarmer",
+            "sticker-shield",
+            "tell-stamp-dust",
+            "tell-dash-trail",
+            "tell-shield-tap"
+          ]
+        },
+        {
+          "id": "named-a8",
+          "type": "static",
+          "json": "incoming-art/journal-silhouettes-a8/sprites/static.json",
+          "only": [
+            "journal-silhouette-keeper",
+            "journal-silhouette-padded"
+          ]
+        }
+      ]
+    },
+    "enemy-bopper": {
+      "note": "A5 Bouncy Bopper, full set (PR #111; Jay approved the 192 px frame, lime accent, hidden staff for disarmed and push-paw). Asset files keep the `padded` names. Stats are still a DECIDE (#102), so the game only shows it through the ?skin=bopper test link for now.",
+      "sources": [
+        {
+          "id": "bopper",
+          "type": "character",
+          "json": "incoming-art/enemy-padded-weapon/sprites/padded.json"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "page-flutter",
+  "name": "Page Flutter",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Loose pages that flap like birds in groups. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#efe6cf",
+  "maxHealth": 20,
+  "power": 7,
+  "guard": 0,
+  "radius": 0.3,
+  "moveSpeedTilesPerSecond": 4.0,
+  "sightRange": 12,
+  "attack": {
+    "name": "flap",
+    "strength": 1,
+    "startRange": 0.95,
+    "reach": 0.5,
+    "areaRadius": 0.55,
+    "telegraphTicks": 14,
+    "recoverTicks": 16
+  },
+  "parSeconds": 2.0,
+  "tier": "brown",
+  "band": "F1-2",
+  "tell": "rustle, then red circle",
+  "senseiLine": "Little ones first. Steady.",
+  "description": "Loose pages that flap like birds in groups.",
+  "bestiary": {
+    "tip": "Calm the little ones first.",
+    "lore": {
+      "brown": "Pages blew out of their books when the shadow came. Calm them, and they fly back home."
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "_note": "M7-P8. Which music plays on which screen, and the Music / Sound controls in Settings. Tracks: WAFU Sound Works (drafts/planning/M7-P8a-music-decision.md). Files are packed inside the app; schools never get the raw audio. Paths are relative to the game (served from assets/).",
+  "tracks": {
+    "temple": { "name": "The Great Hall I, from The Mountain Temple (WAFU Vol.35), seamless loop", "file": "audio/music/mountain-temple-loop.ogg" },
+    "road": { "name": "The Grass Road I, from The Long Road (WAFU Vol.29), seamless loop", "file": "audio/music/long-road-loop.ogg" }
+  },
+  "scenes": {
+    "Title": "temple",
+    "Create": "temple",
+    "Dojo": "temple",
+    "Home": "temple",
+    "StreetSmarts": "temple",
+    "Game": "road"
+  },
+  "fadeSeconds": 1.2,
+  "music": { "label": "Music", "full": 0.45, "default": 3 },
+  "sound": { "label": "Sound", "full": 0.5, "default": 5 },
+  "down": "−",
+  "up": "+"
+}

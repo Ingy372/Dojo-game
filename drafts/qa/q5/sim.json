@@ -1,0 +1,50 @@
+{
+ "guided": {
+  "seeds": 150,
+  "masherCleared": 150,
+  "masherLost": 0,
+  "masherMinHp": 1,
+  "crashes": [],
+  "idleRooms": 450,
+  "idleMinHp": 1,
+  "idleHitsMed": 47,
+  "roomsSeen": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ],
+  "medSecs": 52
+ },
+ "standard": {
+  "seeds": 150,
+  "masherCleared": 150,
+  "masherLost": 0,
+  "masherMinHp": 1,
+  "crashes": [],
+  "idleRooms": 450,
+  "idleMinHp": 1,
+  "idleHitsMed": 52,
+  "roomsSeen": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ],
+  "medSecs": 53.8
+ },
+ "challenge": {
+  "seeds": 150,
+  "masherCleared": 150,
+  "masherLost": 0,
+  "masherMinHp": 1,
+  "crashes": [],
+  "idleRooms": 450,
+  "idleMinHp": 1,
+  "idleHitsMed": 57,
+  "roomsSeen": [
+   "tutorial-hall",
+   "tutorial-vault",
+   "tutorial-keep"
+  ],
+  "medSecs": 51.9
+ }
+}

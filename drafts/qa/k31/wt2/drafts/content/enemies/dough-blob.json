@@ -1,0 +1,68 @@
+{
+  "id": "dough-blob",
+  "name": "Dough Blob",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A wobbly dough ball. When calmed it splits into two Doughlings. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second). When calmed it splits into 2 Doughlings (see variants.doughling; Manager's call, C13-2).",
+  "color": "#f1dcb0",
+  "maxHealth": 117,
+  "power": 19,
+  "guard": 5,
+  "radius": 0.45,
+  "moveSpeedTilesPerSecond": 1.6,
+  "sightRange": 10,
+  "attack": {
+    "name": "squish",
+    "strength": 1,
+    "startRange": 1.2,
+    "reach": 0.8,
+    "areaRadius": 0.85,
+    "telegraphTicks": 18,
+    "recoverTicks": 18
+  },
+  "parSeconds": 3.5,
+  "tier": "orange",
+  "band": "F1-2",
+  "tell": "squishes down, red circle",
+  "senseiLine": "Two little ones? Calm them quickly.",
+  "description": "A wobbly dough ball. When calmed it splits into two Doughlings.",
+  "bestiary": {
+    "tip": "Calm the little Doughlings fast.",
+    "lore": {
+      "orange": "Dough left out in the shadow puffed up grumpy. Calm it, and it rests, ready to bake into bread."
+    }
+  },
+  "split": {
+    "into": "doughling",
+    "count": 2
+  },
+  "variants": {
+    "doughling": {
+      "name": "Doughling",
+      "notes": "Smaller Dough Blob from the split. Same shape; smaller and quicker than the parent (stats set in R-BAL-8, #185). Never splits again.",
+      "color": "#f6e7c8",
+      "maxHealth": 40,
+      "power": 12,
+      "guard": 0,
+      "radius": 0.32,
+      "moveSpeedTilesPerSecond": 3.4,
+      "sightRange": 12,
+      "attack": {
+        "name": "little squish",
+        "strength": 1,
+        "startRange": 0.95,
+        "reach": 0.5,
+        "areaRadius": 0.55,
+        "telegraphTicks": 16,
+        "recoverTicks": 16
+      },
+      "parSeconds": 2.0,
+      "tell": "tiny squish, then small red circle",
+      "senseiLine": "Two little ones? Calm them quickly.",
+      "bestiary": {
+        "tip": "Small and quick. Calm them before they wander.",
+        "lore": {
+          "orange": "Two little dough rolls, still a bit grumpy. Calm them, and they rest side by side, ready to bake."
+        }
+      }
+    }
+  }
+}

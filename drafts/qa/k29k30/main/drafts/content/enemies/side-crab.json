@@ -1,0 +1,33 @@
+{
+  "id": "side-crab",
+  "name": "Side Crab",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). Holds up a big claw and walks sideways. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#d0603f",
+  "maxHealth": 192,
+  "power": 29,
+  "guard": 20,
+  "radius": 0.42,
+  "moveSpeedTilesPerSecond": 1.4,
+  "sightRange": 10,
+  "attack": {
+    "name": "claw snap",
+    "strength": 1,
+    "startRange": 1.15,
+    "reach": 0.75,
+    "areaRadius": 0.8,
+    "telegraphTicks": 18,
+    "recoverTicks": 18
+  },
+  "parSeconds": 4.0,
+  "tier": "blue",
+  "band": "F3-4",
+  "tell": "claw snap, red circle",
+  "senseiLine": "Its claw guards the front. Try the side.",
+  "description": "Holds up a big claw and walks sideways.",
+  "bestiary": {
+    "tip": "Go around to its back or side.",
+    "lore": {
+      "blue": "This crab guarded the riverbank stones. Calm it, and it scuttles back to keep watch kindly."
+    }
+  }
+}

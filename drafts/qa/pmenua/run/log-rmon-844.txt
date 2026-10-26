@@ -1,0 +1,22 @@
+HOME TEXT: Training Board | ◀ Dojo | Sam T. | White Belt | Level 1 | cap 10 | ENTER THE TOWER | Practice room | YOUR NEXT STEP | Basic Form 1 | ▶ Video soon | Next class: Monday | Last run | Gear (0) | Abilities | Gate | The Gate to Yellow Belt | 0 of 7 locks lit. A real promotion opens the Gate. | 🔒 | Basic Form 1 | 🔒 | SD #1 | 🔒 | SD #2 | 🔒 | SD #3 | 🔒 | SD #4 | 🔒 | SD #5 | 🔒 | Kick 1 | Time in rank | 1 of 24 classes | 師 | Sensei's Seal | Lights when Sensei approves you to test.
+pressure-words: null
+[run] buttons=7 other-interactive=["Text:Training Board"]
+run:◀ Dojo tap=84.0,44.0 vis=84,30 ok=8/10 try7:rm-fade@60ms 0.100 | try9:rm-fade@60ms 0.100
+run:ENTER THE TOWER tap=300.0,46.0 vis=300,46 ok=8/10 try3:rm-fade@60ms 0.100 | try4:rm-fade@60ms 0.100
+run:Practice room tap=300.0,44.0 vis=300,30 ok=2/10 try0:rm-fade@60ms 0.100 | try1:rm-fade@60ms 0.100 | try3:rm-fade@60ms 0.100
+run:Last run tap=119.5,44.0 vis=120,34 ok=4/10 try0:rm-fade@60ms 0.100 | try1:rm-fade@60ms 0.100 | try3:rm-fade@60ms 0.100
+run:Gear (12) tap=119.5,44.0 vis=120,34 ok=9/10 try9:rm-fade@60ms 0.100
+run:Abilities tap=119.5,44.0 vis=120,34 ok=9/10 try5:rm-fade@60ms 0.100
+run:Gate tap=119.5,44.0 vis=120,34 ok=4/10 try1:rm-fade@60ms 0.100 | try4:rm-fade@60ms 0.100 | try5:rm-fade@60ms 0.100
+[gate] buttons=7 other-interactive=["Text:Training Board"]
+gate:Last run tap=119.5,44.0 vis=120,34 ok=0/10 try0:rm-fade@60ms 0.100 | try1:rm-fade@60ms 0.100 | try2:rm-fade@60ms 0.100
+gate:Abilities tap=119.5,44.0 vis=120,34 ok=3/10 try1:rm-fade@60ms 0.100 | try2:rm-fade@60ms 0.100 | try3:rm-fade@60ms 0.100
+[gear] buttons=11 other-interactive=["Text:Training Board","Rectangle:3a3150","Rectangle:221d2e","Rectangle:221d2e","Rectangle:221d2e"]
+gear:Last run tap=119.5,44.0 vis=120,34 ok=3/10 try0:rm-fade@60ms 0.100 | try3:rm-fade@60ms 0.100 | try4:rm-fade@60ms 0.100
+gear:Abilities tap=119.5,44.0 vis=120,34 ok=3/10 try0:rm-fade@60ms 0.100 | try1:rm-fade@60ms 0.100 | try2:rm-fade@60ms 0.100
+gear:◀ tap=70.0,44.0 vis=70,28 ok=1/10 try0:rm-fade@60ms 0.100 | try1:rm-fade@60ms 0.100 | try2:rm-fade@60ms 0.100
+gear:▶ tap=70.0,44.0 vis=70,28 ok=1/10 try0:rm-fade@60ms 0.100 | try1:rm-fade@60ms 0.100 | try2:rm-fade@60ms 0.100
+gear:Wear tap=110.0,44.0 vis=110,30 ok=1/10 try0:rm-fade@60ms 0.100 | try1:rm-fade@60ms 0.100 | try2:rm-fade@60ms 0.100
+gear:Let go tap=120.0,44.0 vis=120,30 ok=9/10 try4:rm-fade@60ms 0.100
+GLOW alpha min=1 max=1 scales=1 peaks@ms= samples=[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+errors: []

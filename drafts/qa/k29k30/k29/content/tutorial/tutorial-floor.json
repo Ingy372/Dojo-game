@@ -1,0 +1,168 @@
+{
+  "notes": "The tutorial floor's lines (M7-P2), played once by a brand-new profile. One line per step; 'success' shows when the step is done. On the brute step the game uses the guided Counter lines from first-session-lessons.json, not this step's screen line (Manager call, M7-P2), so the brute step is kept here only for its retry/nudge text and the order. The Insight step is automatic with no menu; the real Insight choice is taught in session 3 (lesson-insights). Health never drops below 1 on this floor. C12 (Jay playtest: too fast; teach combat ideas), driven by the game since K24a: a space step and four combat tips, each followed by a try before the next. Keys per step: advance ('tap' = tap-to-continue, 'move' = wait for the player's move) and waitFor (the event the game waits for; null on tap steps). Every line is under 12 words; drafts/content/tools/check-tutorial.py checks it. No timers: every tip waits for a Got it tap.",
+  "speaker": "sensei",
+  "lessons": [
+    {
+      "id": "tutorial-bow",
+      "trigger": "Tutorial floor starts: bow at the door",
+      "screens": [
+        "Bow at the door to show respect."
+      ],
+      "success": "Nice bow. Let's go in.",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "bow",
+      "order": 1
+    },
+    {
+      "id": "tutorial-walk",
+      "trigger": "Walk to the glowing spot",
+      "screens": [
+        "Tap where you want to go, or use the stick."
+      ],
+      "success": "You found it!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "reachSpot",
+      "order": 2
+    },
+    {
+      "id": "tutorial-space",
+      "trigger": "Open room; a few practice bags placed near the walls",
+      "screens": [
+        "This room is big. Use all of it."
+      ],
+      "success": "Lots of room to move!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "walkAround",
+      "order": 3
+    },
+    {
+      "id": "tutorial-brute",
+      "trigger": "Slow brute appears and winds up (game slows, COUNTER pulses)",
+      "screens": [
+        "Red circle! Tap COUNTER now!"
+      ],
+      "success": "Perfect! You did it!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "counter",
+      "retry": "Almost! The circle will come again.",
+      "nudge": "Take your time. Tap the glowing COUNTER button!",
+      "order": 4
+    },
+    {
+      "id": "tutorial-tip-warning",
+      "trigger": "Right after the brute step, before the next wave",
+      "screens": [
+        "The red circle warns you first. Then COUNTER."
+      ],
+      "success": "You watched and waited. Nice!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "counter",
+      "retry": "Almost! The circle will come again.",
+      "order": 5
+    },
+    {
+      "id": "tutorial-tip-swarmers",
+      "trigger": "Three Swarmers and one slow Brute enter together",
+      "screens": [
+        "Little Swarmers first. Then it gets calmer."
+      ],
+      "success": "Fewer Swarmers, fewer worries!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "defeatSwarmers",
+      "retry": "That's okay. The Swarmers will come back.",
+      "order": 6
+    },
+    {
+      "id": "tutorial-tip-tough",
+      "trigger": "Only the Brute is left",
+      "screens": [
+        "Now the Brute. You can focus on it."
+      ],
+      "success": "Calm and steady. Well done!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "defeatBrute",
+      "order": 7
+    },
+    {
+      "id": "tutorial-tip-space",
+      "trigger": "A small group of Swarmers enters",
+      "screens": [
+        "Keep some space. Step back if it gets busy."
+      ],
+      "success": "You kept your space!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "keepSpace",
+      "order": 8
+    },
+    {
+      "id": "tutorial-tip-dash",
+      "trigger": "Swarmers close in from two sides (game slows, DASH pulses)",
+      "screens": [
+        "Crowded? DASH out to open space."
+      ],
+      "success": "Quick feet!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "dash",
+      "nudge": "Take your time. Tap the glowing DASH button!",
+      "order": 9
+    },
+    {
+      "id": "tutorial-insight",
+      "trigger": "After the fights: Sensei auto-picks one Insight (no menu, no cards)",
+      "screens": [
+        "Here is an Insight for you!"
+      ],
+      "success": "It will help you until you go home.",
+      "earliestRun": 1,
+      "advance": "tap",
+      "waitFor": null,
+      "order": 10
+    },
+    {
+      "id": "tutorial-chest",
+      "trigger": "Guaranteed Uncommon chest appears",
+      "screens": [
+        "A treasure chest! Walk up to open it."
+      ],
+      "success": "Look what you found!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "openChest",
+      "order": 11
+    },
+    {
+      "id": "tutorial-boss",
+      "trigger": "Easy tutorial boss enters",
+      "screens": [
+        "A big one! Watch the circles, like before."
+      ],
+      "success": "You stayed calm. Well done!",
+      "earliestRun": 1,
+      "advance": "move",
+      "waitFor": "defeatBoss",
+      "order": 12
+    },
+    {
+      "id": "tutorial-door",
+      "trigger": "Boss defeated; door home opens",
+      "screens": [
+        "The door home is open."
+      ],
+      "success": "Great job! You finished the training floor.",
+      "earliestRun": 1,
+      "advance": "tap",
+      "waitFor": null,
+      "order": 13
+    }
+  ],
+  "maxNewLessonsPerRoom": 1
+}

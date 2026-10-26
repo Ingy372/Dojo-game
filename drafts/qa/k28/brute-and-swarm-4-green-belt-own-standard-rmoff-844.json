@@ -1,0 +1,56 @@
+{
+ "tag": "brute-and-swarm-4-green-belt-own-standard-rmoff-844",
+ "diff": "standard",
+ "named": true,
+ "scales": [
+  0,
+  0,
+  0
+ ],
+ "impacts": 18,
+ "impactScales": [
+  null,
+  0
+ ],
+ "shakeCalls": [],
+ "windup": [
+  {
+   "t": 19912,
+   "sec": 0.6818181818181819
+  },
+  {
+   "t": 20314,
+   "sec": 0.6818181818181819
+  },
+  {
+   "t": 22464,
+   "sec": 0.6818181818181819
+  },
+  {
+   "t": 26680,
+   "sec": 0.9090909090909092
+  }
+ ],
+ "warn": [
+  {
+   "t": 19917,
+   "ms": 682
+  },
+  {
+   "t": 20315,
+   "ms": 682
+  },
+  {
+   "t": 22464,
+   "ms": 682
+  },
+  {
+   "t": 26680,
+   "ms": 909
+  }
+ ],
+ "framesShaking": 0,
+ "frames": 490,
+ "maxOffsetPx": 0,
+ "errs": []
+}

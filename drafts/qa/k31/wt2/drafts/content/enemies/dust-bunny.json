@@ -1,0 +1,33 @@
+{
+  "id": "dust-bunny",
+  "name": "Dust Bunny",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A fluffy dust ball that rolls straight at you, then sneezes. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
+  "color": "#b9b2a6",
+  "maxHealth": 58,
+  "power": 11,
+  "guard": 5,
+  "radius": 0.35,
+  "moveSpeedTilesPerSecond": 3.0,
+  "sightRange": 12,
+  "attack": {
+    "name": "sneeze",
+    "strength": 1,
+    "startRange": 1.2,
+    "reach": 0.8,
+    "areaRadius": 0.6,
+    "telegraphTicks": 16,
+    "recoverTicks": 18
+  },
+  "parSeconds": 3.5,
+  "tier": "white",
+  "band": "F1-2",
+  "tell": "wiggles, then red circle at its front",
+  "senseiLine": "It wiggles before it rolls. Watch, then move.",
+  "description": "A fluffy dust ball that rolls straight at you, then sneezes.",
+  "bestiary": {
+    "tip": "Step aside, or COUNTER the sneeze.",
+    "lore": {
+      "white": "Shadow dust gathered in the quiet corners. Calm it, and it puffs away into clean air."
+    }
+  }
+}

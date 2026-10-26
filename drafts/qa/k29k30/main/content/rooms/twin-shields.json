@@ -1,0 +1,55 @@
+{
+  "id": "twin-shields",
+  "name": "Twin Shields",
+  "kind": "battle",
+  "mix": "Two shields: Focus runs out, so win with Perfect Counters, not just Strikes.",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "####D#####D#####D###",
+    "#..................#",
+    "#..................#",
+    "#....#........#....#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#....#........#....#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "earliestRoom": 5,
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "shield",
+      "column": 6,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "shield",
+      "column": 13,
+      "row": 3,
+      "wave": 1
+    },
+    {
+      "enemy": "shield",
+      "column": 10,
+      "row": 2,
+      "wave": 2
+    },
+    {
+      "enemy": "shield",
+      "column": 6,
+      "row": 5,
+      "wave": 3
+    },
+    {
+      "enemy": "shield",
+      "column": 13,
+      "row": 5,
+      "wave": 3
+    }
+  ]
+}

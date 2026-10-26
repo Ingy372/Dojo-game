@@ -1,0 +1,68 @@
+{
+  "id": "cloud-puff",
+  "name": "Cloud Puff",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Fluffy clouds. A big one splits into two small ones. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#e4ecf2",
+  "maxHealth": 123,
+  "power": 32,
+  "guard": 0,
+  "radius": 0.3,
+  "moveSpeedTilesPerSecond": 4.0,
+  "sightRange": 12,
+  "attack": {
+    "name": "puff",
+    "strength": 1,
+    "startRange": 0.95,
+    "reach": 0.5,
+    "areaRadius": 0.55,
+    "telegraphTicks": 16,
+    "recoverTicks": 16
+  },
+  "parSeconds": 2.0,
+  "tier": "brown-black",
+  "band": "F1-2",
+  "tell": "puffs up, then red circle",
+  "senseiLine": "Big cloud, little clouds. Little ones first.",
+  "description": "Fluffy clouds. A big one splits into two small ones.",
+  "bestiary": {
+    "tip": "Calm the small ones first.",
+    "lore": {
+      "brown-black": "Soft clouds bunched up in the storm. Calm them, and they drift off into blue sky."
+    }
+  },
+  "split": {
+    "into": "cloudlet",
+    "count": 2
+  },
+  "variants": {
+    "cloudlet": {
+      "name": "Cloudlet",
+      "notes": "Smaller Cloud Puff from the split. Stats still TODO (R-BAL-8 filled the parent but not this variant). Never splits again.",
+      "color": "#f3f7fa",
+      "maxHealth": 90,
+      "power": 25,
+      "guard": 0,
+      "radius": 0.26,
+      "moveSpeedTilesPerSecond": 3.8,
+      "sightRange": 12,
+      "attack": {
+        "name": "little puff",
+        "strength": 1,
+        "startRange": 0.95,
+        "reach": 0.5,
+        "areaRadius": 0.55,
+        "telegraphTicks": 14,
+        "recoverTicks": 16
+      },
+      "parSeconds": 1.5,
+      "tell": "tiny puff, then small red circle",
+      "senseiLine": "Little clouds. Calm them gently.",
+      "bestiary": {
+        "tip": "Small and quick. Calm them first.",
+        "lore": {
+          "brown-black": "Two little clouds, still a bit stormy. Calm them, and they float away together."
+        }
+      }
+    }
+  }
+}

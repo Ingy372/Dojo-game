@@ -1,0 +1,15 @@
+{
+ "tag": "4-green-belt-own-standard-motion-667",
+ "rmVal": false,
+ "diff": "standard",
+ "impacts": 27,
+ "kinds": {
+  "attack(default 0)": 20,
+  "scale 0": 7
+ },
+ "shakeCalls": [],
+ "framesShaking": 0,
+ "frames": 930,
+ "maxOffsetPx": 0,
+ "errs": []
+}

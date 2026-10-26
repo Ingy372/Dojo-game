@@ -1,0 +1,56 @@
+{
+ "tag": "brute-and-swarm-4-green-belt-own-guided-rmoff-844",
+ "diff": "guided",
+ "named": true,
+ "scales": [
+  0,
+  0,
+  0
+ ],
+ "impacts": 20,
+ "impactScales": [
+  null,
+  0
+ ],
+ "shakeCalls": [],
+ "windup": [
+  {
+   "t": 20046,
+   "sec": 0.9090909090909092
+  },
+  {
+   "t": 20490,
+   "sec": 0.9090909090909092
+  },
+  {
+   "t": 22671,
+   "sec": 0.9090909090909092
+  },
+  {
+   "t": 26646,
+   "sec": 1.1363636363636365
+  }
+ ],
+ "warn": [
+  {
+   "t": 20059,
+   "ms": 909
+  },
+  {
+   "t": 20491,
+   "ms": 909
+  },
+  {
+   "t": 22672,
+   "ms": 909
+  },
+  {
+   "t": 26648,
+   "ms": 1136
+  }
+ ],
+ "framesShaking": 0,
+ "frames": 440,
+ "maxOffsetPx": 0,
+ "errs": []
+}

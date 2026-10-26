@@ -1,0 +1,203 @@
+{
+  "character": "martial-artist",
+  "frameWidth": 128,
+  "frameHeight": 128,
+  "anchor": {
+    "x": 64.0,
+    "y": 104.96,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 80.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 1.6,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "directionVectors": {
+    "N": [
+      0,
+      -1
+    ],
+    "NE": [
+      0.7071,
+      -0.7071
+    ],
+    "E": [
+      1,
+      0
+    ],
+    "SE": [
+      0.7071,
+      0.7071
+    ],
+    "S": [
+      0,
+      1
+    ],
+    "SW": [
+      -0.7071,
+      0.7071
+    ],
+    "W": [
+      -1,
+      0
+    ],
+    "NW": [
+      -0.7071,
+      -0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "body",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "gi",
+      "order": 1,
+      "tint": true,
+      "optional": false
+    },
+    {
+      "name": "belt",
+      "order": 2,
+      "tint": true,
+      "optional": false
+    },
+    {
+      "name": "belt-center",
+      "order": 3,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "belt-tape1-edge",
+      "order": 4,
+      "tint": false,
+      "optional": true
+    },
+    {
+      "name": "belt-tape1",
+      "order": 5,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "belt-tape2-edge",
+      "order": 6,
+      "tint": false,
+      "optional": true
+    },
+    {
+      "name": "belt-tape2",
+      "order": 7,
+      "tint": true,
+      "optional": true
+    }
+  ],
+  "animations": {
+    "idle": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "martial-artist_body_idle.png",
+        "gi": "martial-artist_gi_idle.png",
+        "belt": "martial-artist_belt_idle.png",
+        "belt-center": "martial-artist_belt-center_idle.png",
+        "belt-tape1-edge": "martial-artist_belt-tape1-edge_idle.png",
+        "belt-tape1": "martial-artist_belt-tape1_idle.png",
+        "belt-tape2-edge": "martial-artist_belt-tape2-edge_idle.png",
+        "belt-tape2": "martial-artist_belt-tape2_idle.png"
+      }
+    },
+    "walk": {
+      "frames": 10,
+      "fps": 30,
+      "durationSec": 0.3333,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "martial-artist_body_walk.png",
+        "gi": "martial-artist_gi_walk.png",
+        "belt": "martial-artist_belt_walk.png",
+        "belt-center": "martial-artist_belt-center_walk.png",
+        "belt-tape1-edge": "martial-artist_belt-tape1-edge_walk.png",
+        "belt-tape1": "martial-artist_belt-tape1_walk.png",
+        "belt-tape2-edge": "martial-artist_belt-tape2-edge_walk.png",
+        "belt-tape2": "martial-artist_belt-tape2_walk.png"
+      },
+      "groundMotion": {
+        "strideTilesPerLoop": 1.5,
+        "stridePxPerLoop": 120.0,
+        "designSpeedTilesPerSec": 4.5,
+        "fpsPerTilePerSec": 6.6667,
+        "note": "planted feet stay still when fps = speed (tiles/s) * fpsPerTilePerSec; at the design speed that is the fps above"
+      }
+    },
+    "strike": {
+      "frames": 8,
+      "fps": 16,
+      "durationSec": 0.5,
+      "loop": false,
+      "tags": {
+        "impact": "4"
+      },
+      "sheets": {
+        "body": "martial-artist_body_strike.png",
+        "gi": "martial-artist_gi_strike.png",
+        "belt": "martial-artist_belt_strike.png",
+        "belt-center": "martial-artist_belt-center_strike.png",
+        "belt-tape1-edge": "martial-artist_belt-tape1-edge_strike.png",
+        "belt-tape1": "martial-artist_belt-tape1_strike.png",
+        "belt-tape2-edge": "martial-artist_belt-tape2-edge_strike.png",
+        "belt-tape2": "martial-artist_belt-tape2_strike.png"
+      }
+    },
+    "counter": {
+      "frames": 12,
+      "fps": 16,
+      "durationSec": 0.75,
+      "loop": false,
+      "tags": {
+        "block": "0-7",
+        "block_hold": "3-7",
+        "counter_hit": "8"
+      },
+      "sheets": {
+        "body": "martial-artist_body_counter.png",
+        "gi": "martial-artist_gi_counter.png",
+        "belt": "martial-artist_belt_counter.png",
+        "belt-center": "martial-artist_belt-center_counter.png",
+        "belt-tape1-edge": "martial-artist_belt-tape1-edge_counter.png",
+        "belt-tape1": "martial-artist_belt-tape1_counter.png",
+        "belt-tape2-edge": "martial-artist_belt-tape2-edge_counter.png",
+        "belt-tape2": "martial-artist_belt-tape2_counter.png"
+      }
+    }
+  },
+  "tintGuidance": {
+    "mode": "multiply (Phaser setTint); untinted layers are drawn as they are",
+    "gi": "gi colour (current placeholder #f2e9d8)",
+    "belt": "the profile's belt.color, except very dark colours (black, #1a1a1a): use charcoal #3c3c44 so the belt and its light top edge read against the dark outline",
+    "belt-center": "the profile's belt.color2 (same charcoal rule for black)",
+    "belt-tape1 / belt-tape2": "tape colour: #f4f1ea on dark belts, #1a1a1a on light belts (rule in apps/client/src/ui/belt.ts)",
+    "belt-tape1-edge / belt-tape2-edge": "no tint; draw each with its stripe (stripes >= 1 / >= 2)"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "storm-wisp",
+  "name": "Storm Wisp",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Quick little storm-cloud wisps in groups. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#8c96b0",
+  "maxHealth": 20,
+  "power": 7,
+  "guard": 0,
+  "radius": 0.3,
+  "moveSpeedTilesPerSecond": 4.0,
+  "sightRange": 12,
+  "attack": {
+    "name": "crackle",
+    "strength": 1,
+    "startRange": 0.95,
+    "reach": 0.5,
+    "areaRadius": 0.55,
+    "telegraphTicks": 14,
+    "recoverTicks": 16
+  },
+  "parSeconds": 2.0,
+  "tier": "black",
+  "band": "F1-2",
+  "tell": "crackle, then red circle",
+  "senseiLine": "Little ones first, even at the top.",
+  "description": "Quick little storm-cloud wisps in groups.",
+  "bestiary": {
+    "tip": "Calm the little ones first.",
+    "lore": {
+      "black": "The last bits of storm swirl near the summit. Calm them, and the sky starts to clear."
+    }
+  }
+}

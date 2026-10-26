@@ -1,0 +1,187 @@
+{
+  "id": "david-and-goliath",
+  "name": "David and Goliath",
+  "schoolName": "David and Goliath",
+  "belt": "green-to-blue",
+  "source": "Toni Kennerson, school sheet (David and Goliath.docx via /workspace/katas/david-and-goliath.md)",
+  "approvedBy": null,
+  "form": null,
+  "senseiLine": "Practice your kata with your instructor.",
+  "steps": [
+    {
+      "n": 1,
+      "text": "(New Starting Position) Begin at the position of attention. (Hands at sides, feet w/heels together and toes pointed at 45-degree angles)",
+      "facing": [
+        "F"
+      ],
+      "moves": [
+        "stance.attention"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 2,
+      "text": "Raise both hands up, to the inside of the body and outward into double knife hand blocks with palms facing forward (Breaking a choke/shoulder hold)",
+      "facing": [
+        "F"
+      ],
+      "moves": [
+        "block.double-knife-hand"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 3,
+      "text": "Step forward w/RF, RH backfist to opponent’s face (kiai/spirit yell). Step forward w/LF, LH downward block, then step forward w/ RF, RH straightforward punch to body",
+      "facing": [
+        "F"
+      ],
+      "moves": [
+        "strike.backfist",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": true,
+      "question": null
+    },
+    {
+      "n": 4,
+      "text": "Pivot on the balls of feet, face L w/RF in rear, LL is now forward, LH downward block, then RF step forward, RH straight forward punch",
+      "facing": [
+        "L"
+      ],
+      "moves": [
+        "pivot",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 5,
+      "text": "Raise RH fist (across body) to L ear, look over R shoulder then 180- degree turn (“big special turn”) w/RF leading, end facing R w/RF forward, followed by RH downward block (over RL), LF step forward then LF straightforward punch",
+      "facing": [
+        "R"
+      ],
+      "moves": [
+        "turn.big-special",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null,
+      "jayNote": "Left-hand straight punch (Jay, Oct 24)."
+    },
+    {
+      "n": 6,
+      "text": "Step back w/RF into short cat stance, shoulders now facing the front of the school. Step forward w/ LF, LH backfist to opponent’s face, followed by step forward w/ RF, RH straightforward punch followed by LH reverse punch",
+      "facing": [
+        "F"
+      ],
+      "moves": [
+        "stance.cat",
+        "strike.backfist",
+        "punch.straight",
+        "punch.reverse"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 7,
+      "text": "Pivot on the balls of feet, face L w/RF in rear, LL is now forward. RH reverse inside block then step forward with RF then LH reverse straight forward punch",
+      "facing": [
+        "L"
+      ],
+      "moves": [
+        "pivot",
+        "block.reverse-inside",
+        "punch.reverse"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 8,
+      "text": "Hide L fist behind head/raise to L ear, then look over R shoulder then 180- degree turn w/RF leading, end facing R w/RF forward. LH reverse inside block then step forward with LF then RH reverse straight forward punch",
+      "facing": [
+        "R"
+      ],
+      "moves": [
+        "turn.180",
+        "block.reverse-inside",
+        "punch.reverse"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 9,
+      "text": "Pivot to the rear w/ RF forward, RH backfist to opponent’s face, then step forward w/LF, LH straightforward punch followed by RH reverse straightforward punch to solar plexus, step forward w/RF, LH reverse punch to opponent’s face",
+      "facing": [
+        "B"
+      ],
+      "moves": [
+        "pivot",
+        "strike.backfist",
+        "punch.straight",
+        "punch.reverse"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 10,
+      "text": "**From perspective of facing the rear** Pivot to L w/ LF forward, then LH overhead block, followed by “catching” hands on the R hip, then RF front kick w/ RF landing in front, followed by RH straightforward punch",
+      "facing": [
+        "R"
+      ],
+      "moves": [
+        "pivot",
+        "block.overhead",
+        "catch",
+        "kick.front",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null,
+      "schoolNote": "**R of school=L Pivot: Even though it is the ”R” of the school, it is the student’s ”L” due to the 1st Person point-of-view from facing the rear."
+    },
+    {
+      "n": 11,
+      "text": "**From perspective of facing the rear** Look over R shoulder, then 180- degree turn w/RF leading, end facing R w/RF forward, RH overhead block, followed by “catching” hands on the L hip, then LF front kick w/ LF landing in front, followed by LH straight forward punch",
+      "facing": [
+        "L"
+      ],
+      "moves": [
+        "turn.180",
+        "block.overhead",
+        "catch",
+        "kick.front",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null,
+      "schoolNote": "**L of school=R Pivot: Even though it is the ”L” of the school, it is the student’s ”R” due to 1st Person point-of-view from facing the rear."
+    },
+    {
+      "n": 12,
+      "text": "Pivot towards the front of the school, while dragging your LF to your RF: heels together, toes at slight 45-degree angle, while simultaneously bring both arms up, palms up, in a half-circular motion, then complete the circular motion by bringing arms down sharply, palms down, ending w/ hands slightly to the outside of hips (simulation of breaking a double-handed choke hold attempt)",
+      "facing": [
+        "F"
+      ],
+      "moves": [
+        "pivot",
+        "stance.attention",
+        "break.double-choke"
+      ],
+      "kiai": false,
+      "question": null
+    }
+  ],
+  "finish": "Move to attention & bow out",
+  "finishNote": "Not on the school sheet; Jay confirmed D&G ends with a bow (Oct 24)."
+}

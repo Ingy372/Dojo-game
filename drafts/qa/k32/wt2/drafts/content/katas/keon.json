@@ -1,0 +1,149 @@
+{
+  "id": "keon",
+  "name": "Keon",
+  "schoolName": "Keon",
+  "belt": "orange-to-green",
+  "source": "Toni Kennerson, school sheet (Keon.docx via /workspace/katas/keon.md)",
+  "approvedBy": null,
+  "form": null,
+  "senseiLine": "Practice your kata with your instructor.",
+  "steps": [
+    {
+      "n": 1,
+      "text": "Step forward w/RF, pivot on the balls of feet, face L w/RF in rear, LH downward block (protect (L) front leg), RF step forward, RH straight forward punch",
+      "facing": [
+        "L"
+      ],
+      "moves": [
+        "pivot",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 2,
+      "text": "Raise RH fist (across body) to L ear, look over R shoulder then 180- degree turn w/RF leading, end facing R w/RF forward, followed by RH downward block (over RL), LF step forward then LF straightforward punch",
+      "facing": [
+        "R"
+      ],
+      "moves": [
+        "turn.180",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null,
+      "jayNote": "Left-hand straight punch (Jay, Oct 24)."
+    },
+    {
+      "n": 3,
+      "text": "Raise LH fist (across body) to R ear, while (short) stepping to rear w/RF into cat stance, step forward w/LF into front stance, LH downward block (over LL) then RH straight forward punch.",
+      "facing": [
+        "F"
+      ],
+      "moves": [
+        "stance.cat",
+        "stance.front",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null,
+      "jayNote": "No step: the RH punch is thrown from where they stand (Jay, Oct 24). Facing F is our reading; the sheet gives no direction."
+    },
+    {
+      "n": 4,
+      "text": "Raise LH to L ear, then step w/RF, end facing R, w/ RF forward, LH reverse inside block, step forward with LF then RH reverse straight forward punch",
+      "facing": [
+        "R"
+      ],
+      "moves": [
+        "turn",
+        "block.reverse-inside",
+        "punch.reverse"
+      ],
+      "kiai": false,
+      "question": null,
+      "jayNote": "Same-side ear is correct. 'step w/RF, end facing R' is a turn (Jay, Oct 24)."
+    },
+    {
+      "n": 5,
+      "text": "Raise RH to R ear, look over L shoulder then 180- degree turn w/LF leading, end facing L w/LF forward, RH reverse inside block, step forward with RF then LH reverse straight forward punch",
+      "facing": [
+        "L"
+      ],
+      "moves": [
+        "turn.180",
+        "block.reverse-inside",
+        "punch.reverse"
+      ],
+      "kiai": false,
+      "question": null,
+      "jayNote": "Same-side ear is correct (Jay, Oct 24)."
+    },
+    {
+      "n": 6,
+      "text": "LF Step back into cat stance (now facing forward), then forward w/RF followed by RH downward block (over RL), then LH reverse straightforward punch",
+      "facing": [
+        "F"
+      ],
+      "moves": [
+        "stance.cat",
+        "block.downward",
+        "punch.reverse"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 7,
+      "text": "Pivot to the L, LF forward, LH overhead block, next “catch” both hands on the R hip followed by RF straight forward kick, after kick, place RF down in front and follow with RH straightforward punch",
+      "facing": [
+        "L"
+      ],
+      "moves": [
+        "pivot",
+        "block.overhead",
+        "catch",
+        "kick.straight",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 8,
+      "text": "Look over R shoulder then 180- degree turn w/RF leading, end facing R w/RF forward, RH overhead block, next “catch” both hands on the L hip followed by LF straight forward kick, then place LF down in front and follow with LH straightforward punch",
+      "facing": [
+        "R"
+      ],
+      "moves": [
+        "turn.180",
+        "block.overhead",
+        "catch",
+        "kick.straight",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 9,
+      "text": "Pivot (to face rear) into front stance w/RF in front, RH downward block protecting RL, step forward w/LF followed by LH straightforward punch (kiai/spirit yell)",
+      "facing": [
+        "B"
+      ],
+      "moves": [
+        "pivot",
+        "stance.front",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": true,
+      "question": null
+    }
+  ],
+  "finish": "Bring LF 180 degrees into (front facing) ready stance, move to attention & bow out"
+}

@@ -1,0 +1,33 @@
+{
+  "id": "puddle-frog",
+  "name": "Puddle Frog",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). Hops in an arc and lands with a splash. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#4fa36b",
+  "maxHealth": 180,
+  "power": 29,
+  "guard": 5,
+  "radius": 0.34,
+  "moveSpeedTilesPerSecond": 3.0,
+  "sightRange": 12,
+  "attack": {
+    "name": "splash",
+    "strength": 1,
+    "startRange": 1.3,
+    "reach": 0.8,
+    "areaRadius": 0.65,
+    "telegraphTicks": 18,
+    "recoverTicks": 18
+  },
+  "parSeconds": 3.5,
+  "tier": "blue",
+  "band": "F1-2",
+  "tell": "red circle where it will land",
+  "senseiLine": "Watch where it lands. Then move.",
+  "description": "Hops in an arc and lands with a splash.",
+  "bestiary": {
+    "tip": "Step out, then calm it while it blinks.",
+    "lore": {
+      "blue": "A happy pond frog that got lost in the mist. Calm it, and it hops home to its lily pad."
+    }
+  }
+}

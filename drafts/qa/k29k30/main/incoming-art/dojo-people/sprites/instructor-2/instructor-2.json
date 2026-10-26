@@ -1,0 +1,357 @@
+{
+ "character": "instructor-2",
+ "frameWidth": 128,
+ "frameHeight": 160,
+ "anchor": {
+  "x": 64.0,
+  "y": 136.96,
+  "note": "feet / ground point of the character, in pixels from the frame's top-left"
+ },
+ "pixelsPerTile": 80.0,
+ "camera": {
+  "projection": "orthographic",
+  "elevationDeg": 35.0,
+  "orthoScaleTiles": 1.6,
+  "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+ },
+ "directions": [
+  "N",
+  "NE",
+  "E",
+  "SE",
+  "S",
+  "SW",
+  "W",
+  "NW"
+ ],
+ "directionVectors": {
+  "N": [
+   0,
+   -1
+  ],
+  "NE": [
+   0.7071,
+   -0.7071
+  ],
+  "E": [
+   1,
+   0
+  ],
+  "SE": [
+   0.7071,
+   0.7071
+  ],
+  "S": [
+   0,
+   1
+  ],
+  "SW": [
+   -0.7071,
+   0.7071
+  ],
+  "W": [
+   -1,
+   0
+  ],
+  "NW": [
+   -0.7071,
+   -0.7071
+  ]
+ },
+ "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+ "layers": [
+  {
+   "name": "body",
+   "order": 0,
+   "tint": false,
+   "optional": false
+  },
+  {
+   "name": "gi",
+   "order": 1,
+   "tint": true,
+   "optional": false
+  },
+  {
+   "name": "belt",
+   "order": 2,
+   "tint": true,
+   "optional": false
+  },
+  {
+   "name": "belt-sheen",
+   "order": 3,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "belt-center",
+   "order": 4,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "belt-center-edge",
+   "order": 5,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "belt-rim",
+   "order": 6,
+   "tint": true,
+   "optional": false
+  },
+  {
+   "name": "belt-tape1-edge",
+   "order": 7,
+   "tint": false,
+   "optional": true
+  },
+  {
+   "name": "belt-tape1",
+   "order": 8,
+   "tint": true,
+   "optional": true
+  },
+  {
+   "name": "belt-tape2-edge",
+   "order": 9,
+   "tint": false,
+   "optional": true
+  },
+  {
+   "name": "belt-tape2",
+   "order": 10,
+   "tint": true,
+   "optional": true
+  }
+ ],
+ "animations": {
+  "idle": {
+   "frames": 8,
+   "fps": 8,
+   "durationSec": 1.0,
+   "loop": true,
+   "tags": {},
+   "sheets": {
+    "body": "instructor-2_body_idle.png",
+    "gi": "instructor-2_gi_idle.png",
+    "belt": "instructor-2_belt_idle.png",
+    "belt-sheen": "instructor-2_belt-sheen_idle.png",
+    "belt-center": "instructor-2_belt-center_idle.png",
+    "belt-center-edge": "instructor-2_belt-center-edge_idle.png",
+    "belt-rim": "instructor-2_belt-rim_idle.png",
+    "belt-tape1-edge": "instructor-2_belt-tape1-edge_idle.png",
+    "belt-tape1": "instructor-2_belt-tape1_idle.png",
+    "belt-tape2-edge": "instructor-2_belt-tape2-edge_idle.png",
+    "belt-tape2": "instructor-2_belt-tape2_idle.png"
+   },
+   "note": "relaxed natural standing, loop (sample)"
+  },
+  "walk": {
+   "frames": 12,
+   "fps": 24,
+   "durationSec": 0.5,
+   "loop": true,
+   "tags": {},
+   "sheets": {
+    "body": "instructor-2_body_walk.png",
+    "gi": "instructor-2_gi_walk.png",
+    "belt": "instructor-2_belt_walk.png",
+    "belt-sheen": "instructor-2_belt-sheen_walk.png",
+    "belt-center": "instructor-2_belt-center_walk.png",
+    "belt-center-edge": "instructor-2_belt-center-edge_walk.png",
+    "belt-rim": "instructor-2_belt-rim_walk.png",
+    "belt-tape1-edge": "instructor-2_belt-tape1-edge_walk.png",
+    "belt-tape1": "instructor-2_belt-tape1_walk.png",
+    "belt-tape2-edge": "instructor-2_belt-tape2-edge_walk.png",
+    "belt-tape2": "instructor-2_belt-tape2_walk.png"
+   },
+   "groundMotion": {
+    "strideTilesPerLoop": 1.008,
+    "stridePxPerLoop": 80.64,
+    "designSpeedTilesPerSec": 2.016,
+    "fpsPerTilePerSec": 11.9048,
+    "note": "planted feet stay still when fps = speed (tiles/s) * fpsPerTilePerSec; at the design speed that is the fps above"
+   },
+   "note": "calm walk, loop of 2 steps; about 2.02 tiles/s at 24 fps"
+  },
+  "bow": {
+   "frames": 20,
+   "fps": 16,
+   "durationSec": 1.25,
+   "loop": false,
+   "tags": {
+    "feet_together": "2",
+    "bow_hold": "8-12",
+    "upright": "17"
+   },
+   "sheets": {
+    "body": "instructor-2_body_bow.png",
+    "gi": "instructor-2_gi_bow.png",
+    "belt": "instructor-2_belt_bow.png",
+    "belt-sheen": "instructor-2_belt-sheen_bow.png",
+    "belt-center": "instructor-2_belt-center_bow.png",
+    "belt-center-edge": "instructor-2_belt-center-edge_bow.png",
+    "belt-rim": "instructor-2_belt-rim_bow.png",
+    "belt-tape1-edge": "instructor-2_belt-tape1-edge_bow.png",
+    "belt-tape1": "instructor-2_belt-tape1_bow.png",
+    "belt-tape2-edge": "instructor-2_belt-tape2-edge_bow.png",
+    "belt-tape2": "instructor-2_belt-tape2_bow.png"
+   },
+   "keyFrames": {
+    "feet_together": 2,
+    "bow_down": "4-8",
+    "bow_hold": "8-12",
+    "rise": "13-17",
+    "upright": 17
+   },
+   "note": "standing bow from the relaxed idle, 20 frames = 1.25 s; legs straight once the heels are together, the bend only from the hips, head up, eyes forward"
+  },
+  "talk": {
+   "frames": 16,
+   "fps": 10,
+   "durationSec": 1.6,
+   "loop": true,
+   "tags": {},
+   "sheets": {
+    "body": "instructor-2_body_talk.png",
+    "gi": "instructor-2_gi_talk.png",
+    "belt": "instructor-2_belt_talk.png",
+    "belt-sheen": "instructor-2_belt-sheen_talk.png",
+    "belt-center": "instructor-2_belt-center_talk.png",
+    "belt-center-edge": "instructor-2_belt-center-edge_talk.png",
+    "belt-rim": "instructor-2_belt-rim_talk.png",
+    "belt-tape1-edge": "instructor-2_belt-tape1-edge_talk.png",
+    "belt-tape1": "instructor-2_belt-tape1_talk.png",
+    "belt-tape2-edge": "instructor-2_belt-tape2-edge_talk.png",
+    "belt-tape2": "instructor-2_belt-tape2_talk.png"
+   },
+   "note": "gentle speaking gesture, loop"
+  },
+  "nod": {
+   "frames": 12,
+   "fps": 12,
+   "durationSec": 1.0,
+   "loop": false,
+   "tags": {
+    "down": "4"
+   },
+   "sheets": {
+    "body": "instructor-2_body_nod.png",
+    "gi": "instructor-2_gi_nod.png",
+    "belt": "instructor-2_belt_nod.png",
+    "belt-sheen": "instructor-2_belt-sheen_nod.png",
+    "belt-center": "instructor-2_belt-center_nod.png",
+    "belt-center-edge": "instructor-2_belt-center-edge_nod.png",
+    "belt-rim": "instructor-2_belt-rim_nod.png",
+    "belt-tape1-edge": "instructor-2_belt-tape1-edge_nod.png",
+    "belt-tape1": "instructor-2_belt-tape1_nod.png",
+    "belt-tape2-edge": "instructor-2_belt-tape2-edge_nod.png",
+    "belt-tape2": "instructor-2_belt-tape2_nod.png"
+   },
+   "keyFrames": {
+    "down": 4,
+    "second_down": 8
+   },
+   "note": "approving nod, once"
+  },
+  "point": {
+   "frames": 14,
+   "fps": 12,
+   "durationSec": 1.1667,
+   "loop": false,
+   "tags": {
+    "pointing": "8"
+   },
+   "sheets": {
+    "body": "instructor-2_body_point.png",
+    "gi": "instructor-2_gi_point.png",
+    "belt": "instructor-2_belt_point.png",
+    "belt-sheen": "instructor-2_belt-sheen_point.png",
+    "belt-center": "instructor-2_belt-center_point.png",
+    "belt-center-edge": "instructor-2_belt-center-edge_point.png",
+    "belt-rim": "instructor-2_belt-rim_point.png",
+    "belt-tape1-edge": "instructor-2_belt-tape1-edge_point.png",
+    "belt-tape1": "instructor-2_belt-tape1_point.png",
+    "belt-tape2-edge": "instructor-2_belt-tape2-edge_point.png",
+    "belt-tape2": "instructor-2_belt-tape2_point.png"
+   },
+   "keyFrames": {
+    "pointing": 8,
+    "hold": "8-14"
+   },
+   "holdLastFrame": true,
+   "note": "points forward-right (his/her right), once; hold the last frame"
+  }
+ },
+ "tintGuidance": {
+  "mode": "multiply (Phaser setTint); untinted layers are drawn as they are",
+  "gi": "multiply by this character's gi colour; suggested placeholder #3f7fd0",
+  "belt": "the profile's belt.color; a dark (black) belt.color is drawn as #26272f",
+  "belt-center": "two-colour belts only: belt.color2; a dark (black) color2 is drawn as deep black #111116 (it sits between two coloured bands, not next to the outline)",
+  "belt-tape1 / belt-tape2": "tape colour: #f4f1ea on dark belts, #1a1a1a on light belts (rule in apps/client/src/ui/belt.ts)",
+  "belt-tape1-edge / belt-tape2-edge": "no tint; draw each with its stripe (stripes >= 1 / >= 2)",
+  "belt-sheen": "dark (black) belt.color only: tint #a2a6b6, a bright top edge so black reads as a belt, not as outline; skip on other belts",
+  "belt-center-edge": "optional separator around the centre stripe; NOT used in the chosen style (skip it). Tint #ece6d8 if a future style wants it",
+  "belt-rim": "ALWAYS draw it, after belt-center: tint #2e2a3a (dark rim) on every belt except a dark (black) belt.color, which gets light #c9ccd6"
+ },
+ "beltStyles": {
+  "note": "chosen belt style (belt revision, option C): tint per layer for each Action Zone belt (fixtures/); a layer that is not listed is not drawn (belt-center-edge is never drawn in this style). Tape stripes keep the belt.ts rule",
+  "White": {
+   "belt": "#f4f1ea",
+   "belt-rim": "#2e2a3a"
+  },
+  "Yellow": {
+   "belt": "#f5d22e",
+   "belt-rim": "#2e2a3a"
+  },
+  "Orange": {
+   "belt": "#f08a24",
+   "belt-rim": "#2e2a3a"
+  },
+  "Green": {
+   "belt": "#3aa655",
+   "belt-rim": "#2e2a3a"
+  },
+  "Blue": {
+   "belt": "#2f6fd6",
+   "belt-rim": "#2e2a3a"
+  },
+  "Red": {
+   "belt": "#d8352a",
+   "belt-rim": "#2e2a3a"
+  },
+  "Red/Black": {
+   "belt": "#d8352a",
+   "belt-center": "#111116",
+   "belt-rim": "#2e2a3a"
+  },
+  "Brown": {
+   "belt": "#7a4a26",
+   "belt-rim": "#2e2a3a"
+  },
+  "Brown/Black": {
+   "belt": "#7a4a26",
+   "belt-center": "#111116",
+   "belt-rim": "#2e2a3a"
+  },
+  "Black": {
+   "belt": "#26272f",
+   "belt-sheen": "#a2a6b6",
+   "belt-rim": "#c9ccd6"
+  }
+ },
+ "suggested": {
+  "gi": "#3f7fd0",
+  "belt": "Black",
+  "note": "default look (approved by Jay); the game can set another belt (beltStyles) and gi colour"
+ },
+ "lookNote": "adult (young), between Senpai and Sensei in height; a friendly cartoon likeness of Jay's wife, based on reference photos provided by Jay (not stored in the repo): fair skin with light freckles, dark brown hair in a low ponytail at the back of the head, the ponytail purple (her request, Batch 7 full set), blue-grey eyes, a big warm smile; medium blue gi (samples 3); black belt (Jay confirmed)",
+ "proportions": {
+  "rigScale": 1.2,
+  "headScale": 0.84,
+  "note": "the whole rig is scaled; the head bone is scaled back so heads stay a similar size"
+ }
+}

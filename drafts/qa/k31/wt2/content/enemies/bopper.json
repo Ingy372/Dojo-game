@@ -1,0 +1,27 @@
+{
+  "id": "bopper",
+  "name": "Bouncy Bopper",
+  "shortName": "Bopper",
+  "notes": "A5 (#102, #118). Padded staff with a long reach. From Yellow belt (rooms with minBeltTier 2). Base 66 Health and 11 power (R-BAL-12 option B, Manager: was 110/16, which was out of the #188 mid band at every belt once ENEMY_TRAINING_SCALE applies). Disarmed (Perfect Counter with Disarm), it drops the staff and its next attack is a weak push: same wind-up and warning, power 8. Distances in tiles, times in ticks (20 per second).",
+  "color": "#9bd14a",
+  "maxHealth": 66,
+  "power": 11,
+  "guard": 10,
+  "radius": 0.38,
+  "moveSpeedTilesPerSecond": 2.2,
+  "sightRange": 10,
+  "attack": {
+    "name": "bonk",
+    "strength": 1,
+    "startRange": 1.5,
+    "reach": 1.0,
+    "areaRadius": 0.7,
+    "telegraphTicks": 16,
+    "recoverTicks": 18
+  },
+  "weapon": {
+    "id": "padded-staff",
+    "disarmedPower": 8
+  },
+  "parSeconds": 6
+}

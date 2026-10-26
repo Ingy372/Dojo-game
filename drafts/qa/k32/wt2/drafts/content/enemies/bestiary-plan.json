@@ -1,0 +1,826 @@
+{
+  "_note": "C13 PLAN (milestone 10, not launch). Text only; ids proposed, Programmer may adjust. Bands: F1-2, F3-4, F5 (+ Guardian). Scaling: balance-research.md System 2 (ENEMY_SCALE per tier; floor 1 ~50% -> floor 5 ~85% of tier max PR, Guardian ~90%); wind-up ticks never scale (>=10).",
+  "dashOnlyTell": {
+    "look": "Purple-and-white diagonal stripes on the floor, shaped as a lane, an arc or a ring with a gap. Never a circle. A double '!!' over the enemy. A whoosh sound unlike the red circle's drum.",
+    "counter": "COUNTER does nothing; the button dims while the stripes show and DASH pulses (first 3 times).",
+    "windupTicks": "Never shorter than the blockable tell: at least 20 ticks (Brute's red circle is 16); tiers 1-3 use 26-30.",
+    "stacking": "Tiers 1-3: never at the same moment as a red circle (other wind-ups wait). Tier 4+: floors 1-2 never overlap; from floor 3 they may overlap with at least 10 ticks between them; never on Guided.",
+    "firstTaught": "White, floor 4 practice room (Sleepy Sentry), Health never below 1."
+  },
+  "tiers": [
+    {
+      "tier": "white",
+      "belt": "White",
+      "place": "The Lantern Halls",
+      "enemies": [
+        {
+          "id": "swarmer",
+          "name": "Swarmer",
+          "role": "swarm",
+          "firstBand": "F1-2",
+          "behaviour": "Small, fast, comes in groups; jabs.",
+          "tell": "Red circle (12 ticks).",
+          "counterplay": "Clear them first (C12 tip), or COUNTER.",
+          "scaling": "Health and power by ENEMY_SCALE; group size grows by band, not speed.",
+          "dashOnly": false,
+          "existing": true
+        },
+        {
+          "id": "brute",
+          "name": "Brute",
+          "role": "heavy",
+          "firstBand": "F1-2",
+          "behaviour": "Big and slow; gets winded after chasing 4 s.",
+          "tell": "Red circle (16 ticks).",
+          "counterplay": "COUNTER, or hit it while it's winded.",
+          "scaling": "ENEMY_SCALE on health/power; winded timing never scaled.",
+          "dashOnly": false,
+          "existing": true
+        },
+        {
+          "id": "shield",
+          "name": "Shield Guard",
+          "role": "guard",
+          "firstBand": "F3-4",
+          "behaviour": "Basic hits bounce off its shield.",
+          "tell": "Red circle (14 ticks); shield shines.",
+          "counterplay": "STRIKE or a Perfect Counter breaks the shield.",
+          "scaling": "Shield regrow time fixed at 6 s.",
+          "dashOnly": false,
+          "existing": true
+        },
+        {
+          "id": "wick-wisp",
+          "name": "Wick Wisp",
+          "role": "flier",
+          "firstBand": "F1-2",
+          "behaviour": "A tiny lost candle flame that drifts in a wavy line and bumps you.",
+          "tell": "Flickers bright, then a small red circle.",
+          "counterplay": "Punch it or COUNTER the bump.",
+          "scaling": "Weakest enemy; health only.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "dust-bunny",
+          "name": "Dust Bunny",
+          "role": "charger",
+          "firstBand": "F1-2",
+          "behaviour": "A fluffy dust ball that rolls straight at you, then sneezes.",
+          "tell": "Wiggles in place, then a red circle at its front.",
+          "counterplay": "Step aside or COUNTER.",
+          "scaling": "Roll speed fixed; health/power by ENEMY_SCALE.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "lantern-moth",
+          "name": "Lantern Moth",
+          "role": "ranged",
+          "firstBand": "F3-4",
+          "behaviour": "Flutters at a distance and tosses soft glow pebbles.",
+          "tell": "Red circle where the pebble lands.",
+          "counterplay": "Step out of the circle, then close in.",
+          "scaling": "Pebble count 1 → 2 at F5; never faster.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "sleepy-sentry",
+          "name": "Sleepy Sentry",
+          "role": "dash-teacher",
+          "firstBand": "F4 (practice floor)",
+          "behaviour": "A drowsy stone statue. It yawns and stomps a long purple stripe.",
+          "tell": "Dash-only: purple stripe lane + '!!', 30 ticks.",
+          "counterplay": "DASH out of the stripe. It can't be COUNTERed.",
+          "scaling": "Used only to teach; stays easy at every tier.",
+          "dashOnly": true,
+          "existing": false
+        }
+      ],
+      "guardian": {
+        "id": "lamp-keeper",
+        "name": "The Lamp Keeper",
+        "rank": "Guardian",
+        "floor": "F5",
+        "signature": "Wick Wake",
+        "phases": [
+          "Lantern sway: swings its lamp in a red circle",
+          "Wick wake: lamps light one by one",
+          "Dim stripe (dash-only, 30 ticks): one slow purple lane"
+        ],
+        "freed": "A spark... I had forgotten how warm it feels.",
+        "story": "Once it kept the Tower's first lamp lit. The shadow made it forget, but it never stopped hoping."
+      }
+    },
+    {
+      "tier": "yellow",
+      "belt": "Yellow",
+      "place": "The Sunrise Garden",
+      "enemies": [
+        {
+          "id": "bopper",
+          "name": "Bouncy Bopper",
+          "role": "bonker",
+          "firstBand": "F1-2",
+          "behaviour": "Bonks with a padded foam staff.",
+          "tell": "Raises the staff and glows; red circle.",
+          "counterplay": "COUNTER; a Perfect Counter disarms it (staff hidden).",
+          "scaling": "Stats set in R-BAL-8 (#183).",
+          "dashOnly": false,
+          "existing": true
+        },
+        {
+          "id": "buzz-bee",
+          "name": "Buzzy Bee",
+          "role": "swarm",
+          "firstBand": "F1-2",
+          "behaviour": "Busy little bees in groups of 3-4 that zip in and out.",
+          "tell": "Short hover, then red circle.",
+          "counterplay": "Clear them first; DASH out if they crowd you.",
+          "scaling": "Group size grows by band.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "thorn-sprout",
+          "name": "Thorn Sprout",
+          "role": "turret",
+          "firstBand": "F1-2",
+          "behaviour": "A grumpy sprout that stays put and spits seeds.",
+          "tell": "Puffs its cheeks; red circle where the seed lands.",
+          "counterplay": "Walk around the seeds and calm it up close.",
+          "scaling": "Rooted; fire rate fixed.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "shell-snail",
+          "name": "Shellback Snail",
+          "role": "guard",
+          "firstBand": "F3-4",
+          "behaviour": "Slow snail that hides in its shell when hit too often.",
+          "tell": "Red circle before its head-bump.",
+          "counterplay": "Wait for it to peek out, or STRIKE the shell.",
+          "scaling": "Hide time fixed; health by ENEMY_SCALE.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "vine-sweeper",
+          "name": "Vine Sweeper",
+          "role": "dash-only",
+          "firstBand": "F3-4",
+          "behaviour": "A tangle of vines that swings one long sweep.",
+          "tell": "Dash-only: purple striped arc + '!!', 28 ticks.",
+          "counterplay": "DASH out of the arc.",
+          "scaling": "Arc width fixed; never paired with a red circle in tiers 1-3.",
+          "dashOnly": true,
+          "existing": false
+        }
+      ],
+      "guardian": {
+        "id": "sun-gardener",
+        "name": "The Sun Gardener",
+        "rank": "Guardian",
+        "floor": "F5",
+        "signature": "Seed Rain",
+        "phases": [
+          "Thorn whip: red circle",
+          "Seed rain: red circles fall",
+          "Vine sweep (dash-only): purple arc"
+        ],
+        "freed": "The thorns are gone. My flowers can open again.",
+        "story": "A tall, gentle gardener made of vines. The shadow wrapped it in thorns, but its roots still reach for the sun."
+      }
+    },
+    {
+      "tier": "orange",
+      "belt": "Orange",
+      "place": "The Ember Kitchens",
+      "enemies": [
+        {
+          "id": "spark-sprite",
+          "name": "Spark Sprite",
+          "role": "swarm",
+          "firstBand": "F1-2",
+          "behaviour": "Tiny warm sparks that dart around the ovens.",
+          "tell": "Blink, then red circle.",
+          "counterplay": "Clear first; they're quick but weak.",
+          "scaling": "Group size grows by band.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "dough-blob",
+          "name": "Dough Blob",
+          "role": "splitter",
+          "firstBand": "F1-2",
+          "behaviour": "A wobbly dough ball. When calmed it splits into two Doughlings.",
+          "tell": "Squishes down; red circle.",
+          "counterplay": "Calm the little Doughlings fast.",
+          "scaling": "Split count stays 2.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "ladle-lobber",
+          "name": "Ladle Lobber",
+          "role": "ranged",
+          "firstBand": "F3-4",
+          "behaviour": "Flings soft soup splats from the back.",
+          "tell": "Red circle where it lands.",
+          "counterplay": "Step out, then reach it behind the others.",
+          "scaling": "Splat count 1 → 2 at F5.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "rolling-pin",
+          "name": "Rolling Pin",
+          "role": "dash-only",
+          "firstBand": "F3-4",
+          "behaviour": "A giant rolling pin that rolls down a lane.",
+          "tell": "Dash-only: purple stripe lane + '!!', 26 ticks.",
+          "counterplay": "DASH out of the lane.",
+          "scaling": "Lane count 1 → 2 at F5 (never together early).",
+          "dashOnly": true,
+          "existing": false
+        }
+      ],
+      "guardian": {
+        "id": "hearth-cook",
+        "name": "The Hearth Cook",
+        "rank": "Guardian",
+        "floor": "F5",
+        "signature": "Hot Pot Rush",
+        "phases": [
+          "Ladle bonk: red circle",
+          "Hot pot rush: Spark Sprites join",
+          "Rolling pin lane (dash-only)"
+        ],
+        "freed": "Is it supper time? I would love some company.",
+        "story": "A big, round cook with a ladle. The shadow made it guard the cold ovens alone."
+      }
+    },
+    {
+      "tier": "green",
+      "belt": "Green",
+      "place": "The Giant's Steps",
+      "enemies": [
+        {
+          "id": "pebble-pal",
+          "name": "Pebble Pal",
+          "role": "swarm",
+          "firstBand": "F1-2",
+          "behaviour": "Little pebbles that hop after you.",
+          "tell": "Hop, then red circle.",
+          "counterplay": "Clear first.",
+          "scaling": "Elites from this tier (elites.json).",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "cliff-goat",
+          "name": "Cliff Goat",
+          "role": "charger",
+          "firstBand": "F1-2",
+          "behaviour": "Lowers its horns and charges in a line.",
+          "tell": "Stamps, then a long red circle at the line's end.",
+          "counterplay": "COUNTER at the end, or step aside.",
+          "scaling": "Charge speed fixed.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "stack-golem",
+          "name": "Stack Golem",
+          "role": "heavy",
+          "firstBand": "F3-4",
+          "behaviour": "A tower of stones; each hit knocks one off and it shrinks.",
+          "tell": "Wobbles; red circle.",
+          "counterplay": "Keep hitting; it gets smaller and faster.",
+          "scaling": "Stone count by band (3 → 5).",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "boulder-roller",
+          "name": "Boulder Roller",
+          "role": "dash-only",
+          "firstBand": "F3-4",
+          "behaviour": "Pushes a big round boulder down a stripe.",
+          "tell": "Dash-only: purple stripe lane + '!!', 24 ticks.",
+          "counterplay": "DASH out of the lane.",
+          "scaling": "From here, on floor 3+, a stripe may overlap a red circle, offset ≥ 10 ticks (never on Guided).",
+          "dashOnly": true,
+          "existing": false
+        }
+      ],
+      "guardian": {
+        "id": "stone-giant",
+        "name": "The Stone Giant",
+        "rank": "Guardian",
+        "floor": "F5",
+        "signature": "Rock Slide",
+        "phases": [
+          "Giant stomp: big red circle",
+          "Stone toss: red circles",
+          "Rock slide (dash-only): two lanes, one after the other"
+        ],
+        "freed": "I was only stones and worry. Thank you for not running away.",
+        "story": "Very tall and very loud. Inside, it is only a pile of stones the shadow stacked up."
+      }
+    },
+    {
+      "tier": "blue",
+      "belt": "Blue",
+      "place": "The Quiet River",
+      "enemies": [
+        {
+          "id": "puddle-frog",
+          "name": "Puddle Frog",
+          "role": "hopper",
+          "firstBand": "F1-2",
+          "behaviour": "Hops in an arc and lands with a splash.",
+          "tell": "Red circle where it will land.",
+          "counterplay": "Step out, then calm it while it blinks.",
+          "scaling": "Hop count by band.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "mist-wisp",
+          "name": "Mist Wisp",
+          "role": "sneak",
+          "firstBand": "F1-2",
+          "behaviour": "Fades into mist, then reappears nearby.",
+          "tell": "Always shimmers before it appears; red circle.",
+          "counterplay": "Watch the shimmer, then COUNTER.",
+          "scaling": "Never fully invisible.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "side-crab",
+          "name": "Side Crab",
+          "role": "guard",
+          "firstBand": "F3-4",
+          "behaviour": "Holds up its big claw and walks sideways.",
+          "tell": "Claw snap: red circle.",
+          "counterplay": "Hit it from the back or side.",
+          "scaling": "Guard by ENEMY_SCALE.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "splash-wave",
+          "name": "Splash Wave",
+          "role": "dash-only",
+          "firstBand": "F3-4",
+          "behaviour": "A rolling wave across a lane of the river.",
+          "tell": "Dash-only: purple striped wave lane + '!!', 24 ticks.",
+          "counterplay": "DASH out.",
+          "scaling": "Lane count by band.",
+          "dashOnly": true,
+          "existing": false
+        }
+      ],
+      "guardian": {
+        "id": "river-watcher",
+        "name": "The River Watcher",
+        "rank": "Guardian",
+        "floor": "F5",
+        "signature": "River Wave",
+        "phases": [
+          "Beak peck: red circle",
+          "Muddy splash: puddles",
+          "River wave (dash-only): striped wave lane"
+        ],
+        "freed": "The water is clear. I can see you now, friend.",
+        "story": "A heron made of water. The shadow muddied its eyes, so it cannot see who is friend or foe."
+      }
+    },
+    {
+      "tier": "red",
+      "belt": "Red",
+      "place": "The Forge of Courage",
+      "enemies": [
+        {
+          "id": "coal-cub",
+          "name": "Coal Cub",
+          "role": "swarm",
+          "firstBand": "F1-2",
+          "behaviour": "Warm, playful little coal pups that pounce.",
+          "tell": "Wiggle, then red circle.",
+          "counterplay": "Clear first.",
+          "scaling": "Group size by band.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "anvil-imp",
+          "name": "Anvil Imp",
+          "role": "heavy",
+          "firstBand": "F1-2",
+          "behaviour": "A small strong worker who taps a big hammer.",
+          "tell": "Hammer up; red circle.",
+          "counterplay": "COUNTER the tap.",
+          "scaling": "Health/power by ENEMY_SCALE.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "bellows-puff",
+          "name": "Bellows Puff",
+          "role": "pusher",
+          "firstBand": "F3-4",
+          "behaviour": "Huffs gusts that nudge you across the room.",
+          "tell": "Inflates; a pale gust arrow (no damage).",
+          "counterplay": "Stand side-on, or use the push to escape.",
+          "scaling": "Push strength fixed; never into a hazard.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "forge-sweep",
+          "name": "Forge Sweeper",
+          "role": "dash-only",
+          "firstBand": "F3-4",
+          "behaviour": "A big glowing broom that sweeps a wide arc.",
+          "tell": "Dash-only: purple striped arc + '!!', 22 ticks.",
+          "counterplay": "DASH out of the arc.",
+          "scaling": "Arc 120° → 180° at F5.",
+          "dashOnly": true,
+          "existing": false
+        }
+      ],
+      "guardian": {
+        "id": "ember-knight",
+        "name": "The Ember Knight",
+        "rank": "Guardian",
+        "floor": "F5",
+        "signature": "Spark Shield",
+        "phases": [
+          "Knight's swing: red circle",
+          "Spark shield: STRIKE to break",
+          "Forge sweep (dash-only): striped arc"
+        ],
+        "freed": "I was guarding the wrong thing. Shields are for helping.",
+        "story": "A knight of glowing metal. The shadow told it to protect the forge from everyone."
+      }
+    },
+    {
+      "tier": "red-black",
+      "belt": "Red/Black",
+      "place": "The Hall of Echoes",
+      "enemies": [
+        {
+          "id": "masklet",
+          "name": "Masklet",
+          "role": "swarm",
+          "firstBand": "F1-2",
+          "behaviour": "Little floating masks that giggle and gather.",
+          "tell": "Spin, then red circle.",
+          "counterplay": "Clear first.",
+          "scaling": "Group size by band.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "copycat-shade",
+          "name": "Copycat Shade",
+          "role": "mirror",
+          "firstBand": "F3-4",
+          "behaviour": "Copies your last move a moment later.",
+          "tell": "Your move's shape in red, then it hits.",
+          "counterplay": "Do something different; COUNTER its copy.",
+          "scaling": "Copy delay fixed. Appears from floor 3 only.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "hush-guard",
+          "name": "Hush Guard",
+          "role": "guard",
+          "firstBand": "F3-4",
+          "behaviour": "Silent shield-bearer who turns to face you.",
+          "tell": "Red circle; shield turns.",
+          "counterplay": "Circle round, or STRIKE.",
+          "scaling": "Turn speed fixed.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "echo-bell",
+          "name": "Echo Bell",
+          "role": "dash-only",
+          "firstBand": "F3-4",
+          "behaviour": "A bell that rings a purple striped ring outward with one gap.",
+          "tell": "Dash-only: striped ring + '!!', 22 ticks; gap glows.",
+          "counterplay": "DASH through the gap or out of the room edge.",
+          "scaling": "Ring count 1 → 2 at F5.",
+          "dashOnly": true,
+          "existing": false
+        }
+      ],
+      "guardian": {
+        "id": "echo-mask",
+        "name": "The Echo Mask",
+        "rank": "Guardian",
+        "floor": "F5",
+        "signature": "Copy Strike",
+        "phases": [
+          "Copy strike: copies your move",
+          "Echo crowd: Masklets join",
+          "Echo ring (dash-only): striped ring with a gap"
+        ],
+        "freed": "I only copied what I heard. I would like to hear kind words now.",
+        "story": "A floating mask that copies your moves. Under the mask, it is lonely."
+      }
+    },
+    {
+      "tier": "brown",
+      "belt": "Brown",
+      "place": "The Root Library",
+      "enemies": [
+        {
+          "id": "page-flutter",
+          "name": "Page Flutter",
+          "role": "swarm",
+          "firstBand": "F1-2",
+          "behaviour": "Loose pages that flap like birds.",
+          "tell": "Rustle, then red circle.",
+          "counterplay": "Clear first.",
+          "scaling": "Group size by band.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "bookworm",
+          "name": "Bookworm",
+          "role": "burrower",
+          "firstBand": "F1-2",
+          "behaviour": "Tunnels under the floor and pops up.",
+          "tell": "A dirt bump moves toward you; red circle.",
+          "counterplay": "Step off the bump; calm it when it pops up.",
+          "scaling": "Tunnel speed fixed.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "ink-blot",
+          "name": "Ink Blot",
+          "role": "zoner",
+          "firstBand": "F3-4",
+          "behaviour": "Leaves sticky ink puddles that slow you about 30% (15% on Guided; no damage; ends when you step out).",
+          "tell": "Puddle drawn as a dark blue blot.",
+          "counterplay": "Keep space; fight on clean floor.",
+          "scaling": "Puddle count by band; max 3.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "root-snapper",
+          "name": "Root Snapper",
+          "role": "dash-only",
+          "firstBand": "F3-4",
+          "behaviour": "Roots poke up along a line, one after another.",
+          "tell": "Dash-only: purple stripe lane + '!!', 20 ticks.",
+          "counterplay": "DASH out.",
+          "scaling": "Line length by band.",
+          "dashOnly": true,
+          "existing": false
+        }
+      ],
+      "guardian": {
+        "id": "root-keeper",
+        "name": "The Root Keeper",
+        "rank": "Guardian",
+        "floor": "F5",
+        "signature": "Root Line",
+        "phases": [
+          "Branch tap: red circle",
+          "Flying pages: Page Flutters join",
+          "Root line (dash-only): striped lane"
+        ],
+        "freed": "Take a book, little one. Your story belongs here too.",
+        "story": "A wise old tree who reads every book. The shadow made it forget how to share them."
+      }
+    },
+    {
+      "tier": "brown-black",
+      "belt": "Brown/Black",
+      "place": "The Storm Stair",
+      "enemies": [
+        {
+          "id": "cloud-puff",
+          "name": "Cloud Puff",
+          "role": "swarm",
+          "firstBand": "F1-2",
+          "behaviour": "Fluffy clouds; a big one splits into two small ones.",
+          "tell": "Puff up, then red circle.",
+          "counterplay": "Clear small ones first.",
+          "scaling": "Split count stays 2.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "gust-sprite",
+          "name": "Gust Sprite",
+          "role": "pusher",
+          "firstBand": "F1-2",
+          "behaviour": "Spins and blows you sideways.",
+          "tell": "Spins; pale gust arrow (no damage).",
+          "counterplay": "Brace side-on or use it to escape.",
+          "scaling": "Never pushes into a hazard.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "thunder-drum",
+          "name": "Thunder Drum",
+          "role": "turret",
+          "firstBand": "F3-4",
+          "behaviour": "Beats a steady rhythm: boom, boom, BOOM.",
+          "tell": "Three red circles in a beat.",
+          "counterplay": "Learn the beat; COUNTER the big one.",
+          "scaling": "Beat tempo fixed.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "zap-kite",
+          "name": "Zap Kite",
+          "role": "dash-only",
+          "firstBand": "F3-4",
+          "behaviour": "A kite that drags a zig-zag lightning stripe.",
+          "tell": "Dash-only: purple zig-zag stripe + '!!', 20 ticks.",
+          "counterplay": "DASH across or out.",
+          "scaling": "Zig-zag count by band.",
+          "dashOnly": true,
+          "existing": false
+        }
+      ],
+      "guardian": {
+        "id": "storm-herald",
+        "name": "The Storm Herald",
+        "rank": "Guardian",
+        "floor": "F5",
+        "signature": "Zig-Zag Bolt",
+        "phases": [
+          "Thunder clap: red circle",
+          "Gust push",
+          "Zig-zag bolt (dash-only)"
+        ],
+        "freed": "The wind is still. Listen. Someone is calling from the top.",
+        "story": "A tall figure of wind and lightning. It shouts the storm louder so no one hears the calm."
+      }
+    },
+    {
+      "tier": "black",
+      "belt": "Black",
+      "place": "The Summit",
+      "enemies": [
+        {
+          "id": "storm-wisp",
+          "name": "Storm Wisp",
+          "role": "swarm",
+          "firstBand": "F1-2",
+          "behaviour": "Quick storm-cloud wisps.",
+          "tell": "Crackle, then red circle.",
+          "counterplay": "Clear first.",
+          "scaling": "Top of ENEMY_SCALE. Endless: +3% per floor, no cap (Jay's call).",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "rumble-brute",
+          "name": "Rumble Brute",
+          "role": "heavy",
+          "firstBand": "F1-2",
+          "behaviour": "A big storm-wrapped brute; gets winded like a Brute.",
+          "tell": "Red circle (16 ticks).",
+          "counterplay": "COUNTER, or hit while winded.",
+          "scaling": "Health/power by ENEMY_SCALE.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "echo-knight",
+          "name": "Echo Knight",
+          "role": "guard",
+          "firstBand": "F3-4",
+          "behaviour": "Remembers every guard trick: shield, turn and copy.",
+          "tell": "Red circle; shield shines.",
+          "counterplay": "STRIKE, circle round, change your move.",
+          "scaling": "Mixes three tells; each stays readable.",
+          "dashOnly": false,
+          "existing": false
+        },
+        {
+          "id": "sky-sweeper",
+          "name": "Sky Sweeper",
+          "role": "dash-only",
+          "firstBand": "F3-4",
+          "behaviour": "A gust that sweeps an arc, then a lane.",
+          "tell": "Dash-only: arc then lane, each + '!!', 20 ticks.",
+          "counterplay": "DASH twice.",
+          "scaling": "Two in a row, at least 20 ticks apart, never at the same time.",
+          "dashOnly": true,
+          "existing": false
+        }
+      ],
+      "guardian": {
+        "id": "lost-lightbearer",
+        "name": "The Lost Lightbearer",
+        "rank": "Guardian",
+        "floor": "F5",
+        "signature": "Echoes of the Climb",
+        "phases": [
+          "Storm swing: red circle",
+          "Shadow echoes of earlier Guardians, one move each",
+          "Storm sweep (dash-only): arc then lane"
+        ],
+        "freed": "You came all this way to help? Now we can finish together.",
+        "story": "The traveler, wrapped in storm clouds. They are tired from holding the last piece."
+      }
+    }
+  ],
+  "faithOverlay": {
+    "schoolId": "action-zone",
+    "note": "Optional Action Zone faith layer, kept apart from core text so other dojos can swap it. References only (KJV, as on the school signs); verse text comes from drafts/content/faith/creed-and-verses.json or is checked word for word in a later PR. Found as hidden scrolls and lore, never a lecture or a lock.",
+    "guardians": [
+      {
+        "guardian": "lamp-keeper",
+        "tierVerse": "John 3:16",
+        "theme": "John 1:5",
+        "idea": "Light shining in the dark",
+        "discovery": "A hidden scroll in the Lantern Halls"
+      },
+      {
+        "guardian": "sun-gardener",
+        "tierVerse": "Romans 3:10",
+        "theme": "Galatians 5:22-23",
+        "idea": "Good fruit grows slowly",
+        "discovery": "A scroll under a garden bench"
+      },
+      {
+        "guardian": "hearth-cook",
+        "tierVerse": "Romans 3:23",
+        "theme": "Acts 2:46",
+        "idea": "Sharing a meal together",
+        "discovery": "A scroll tucked by the supper table"
+      },
+      {
+        "guardian": "stone-giant",
+        "tierVerse": "Romans 6:23",
+        "theme": "1 Samuel 17",
+        "idea": "David and Goliath, the tier's own form",
+        "discovery": "A sling-stone relic on the Giant's Steps"
+      },
+      {
+        "guardian": "river-watcher",
+        "tierVerse": "Romans 5:8",
+        "theme": "Psalm 23:2",
+        "idea": "Still waters and seeing clearly",
+        "discovery": "A scroll in the reeds"
+      },
+      {
+        "guardian": "ember-knight",
+        "tierVerse": "1 John 1:9",
+        "theme": "Joshua 1:9",
+        "idea": "Courage without fear",
+        "discovery": "A scroll on the forge anvil"
+      },
+      {
+        "guardian": "echo-mask",
+        "tierVerse": "John 3:17",
+        "theme": "Hebrews 13:5",
+        "idea": "Never alone",
+        "discovery": "A scroll that echoes back kindly"
+      },
+      {
+        "guardian": "root-keeper",
+        "tierVerse": "John 3:3",
+        "theme": "Psalm 1:3",
+        "idea": "A tree planted by the water",
+        "discovery": "A book on the Library's top shelf"
+      },
+      {
+        "guardian": "storm-herald",
+        "tierVerse": "John 3:5-8",
+        "theme": "Mark 4:39",
+        "idea": "Calm in the storm",
+        "discovery": "A scroll that stays still in the wind"
+      },
+      {
+        "guardian": "lost-lightbearer",
+        "tierVerse": "John 6:40",
+        "theme": "Romans 8:37; Matthew 5:14-16",
+        "idea": "More than a conqueror; light of the world",
+        "discovery": "The last piece of light, found together"
+      }
+    ]
+  }
+}

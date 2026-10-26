@@ -1,0 +1,1663 @@
+{
+  "notes": "DRAFT full scripts for C4 (part 2). Same shape as quests-skeleton.json / dialogue/milestone-6.json: id, kind, name, belt, trigger, honor, lines, branches. Additions: a line that holds choices has an 'id'; 'retry' names the choice id to return to (as in street-smarts); 'next' on the last line of a branch continues into another branch; 'reward' lists placeholder Honor, decoration, badge or title (names approved by the Manager). A weaker choice is honor 0, never negative; Sensei reflects with a question and the player retries the missed choice. One sentence per screen, ages 6-9. {player} = display name. Characters use roles only. 'rival' is a generic kid from another dojo (no name). Faith line in quest-culture-jesus-way is the creed's first line exactly as in faith/creed-and-verses.json. Held back: quest-culture-belt-colors (needs Jay's belt colour meanings).",
+  "characters": [
+    {
+      "id": "rival",
+      "role": "Rival",
+      "name": null,
+      "title": null,
+      "belt": "yellow",
+      "note": "Kid from another dojo. Teases at first, can end friendly."
+    }
+  ],
+  "quests": [
+    {
+      "id": "quest-manners-greeting",
+      "kind": "manners",
+      "name": "Good Morning, Sensei",
+      "belt": "white",
+      "trigger": "Quest board, white belt or higher",
+      "honor": 1,
+      "reward": {
+        "honor": 1,
+        "decoration": "Welcome Mat"
+      },
+      "learning": "Greeting the teacher by title, with a bow, is respect.",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "You walk into the Home Dojo."
+        },
+        {
+          "speaker": "sensei",
+          "text": "Sensei is sweeping the floor.",
+          "expression": "neutral",
+          "animation": "idle"
+        },
+        {
+          "speaker": "kohai",
+          "text": "Kohai zooms past without a word.",
+          "expression": "happy",
+          "animation": "walk"
+        },
+        {
+          "speaker": "narrator",
+          "text": "How will you greet Sensei?",
+          "id": "choice-greet",
+          "choices": [
+            {
+              "text": "Bow and say \"Good morning, Sensei!\"",
+              "honor": 1,
+              "next": "bow"
+            },
+            {
+              "text": "Give a quick wave.",
+              "honor": 0,
+              "next": "wave"
+            },
+            {
+              "text": "Say nothing.",
+              "honor": 0,
+              "next": "nothing"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "bow": [
+          {
+            "speaker": "player",
+            "text": "Good morning, Sensei!",
+            "animation": "bow"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Good morning, {player}!",
+            "expression": "happy",
+            "animation": "bow"
+          },
+          {
+            "speaker": "sensei",
+            "text": "A warm hello starts a good day.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "kohai",
+            "text": "Kohai stops and turns around.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "kohai",
+            "text": "Good morning, Sensei!",
+            "expression": "happy",
+            "animation": "bow"
+          },
+          {
+            "speaker": "narrator",
+            "text": "You earned the Welcome Mat for your dojo!"
+          }
+        ],
+        "wave": [
+          {
+            "speaker": "sensei",
+            "text": "Hello!",
+            "expression": "happy",
+            "animation": "nod"
+          },
+          {
+            "speaker": "sensei",
+            "text": "What else could we say with a bow?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-greet"
+          }
+        ],
+        "nothing": [
+          {
+            "speaker": "sensei",
+            "text": "I'm glad you're here.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "sensei",
+            "text": "How could we say hello in the dojo?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-greet"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-manners-line-up",
+      "kind": "manners",
+      "name": "Line Up!",
+      "belt": "white",
+      "trigger": "Quest board, white belt or higher",
+      "honor": 1,
+      "reward": {
+        "honor": 1
+      },
+      "learning": "Lining up by rank, and every rank has a place.",
+      "lines": [
+        {
+          "speaker": "sensei",
+          "text": "Sensei claps once.",
+          "expression": "neutral",
+          "animation": "demonstrate"
+        },
+        {
+          "speaker": "senpai",
+          "text": "Time to line up!",
+          "expression": "happy",
+          "animation": "point"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Higher belts stand at the front."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Where will you stand?",
+          "id": "choice-spot",
+          "choices": [
+            {
+              "text": "My spot, by my belt.",
+              "honor": 1,
+              "next": "rank"
+            },
+            {
+              "text": "Rush to the front.",
+              "honor": 0,
+              "next": "front"
+            },
+            {
+              "text": "Next to my friend.",
+              "honor": 0,
+              "next": "friend"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "rank": [
+          {
+            "speaker": "sensei",
+            "text": "Everyone has a place.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Yours is right here.",
+            "expression": "proud",
+            "animation": "point"
+          },
+          {
+            "speaker": "narrator",
+            "text": "The whole class bows in together.",
+            "animation": "bow"
+          }
+        ],
+        "front": [
+          {
+            "speaker": "sensei",
+            "text": "The front is where the higher belts stand.",
+            "expression": "neutral"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Where do you think your spot is?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-spot"
+          }
+        ],
+        "friend": [
+          {
+            "speaker": "sensei",
+            "text": "Friends are great to have.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Where does your belt stand?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-spot"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-manners-gear-rack",
+      "kind": "manners",
+      "name": "Back on the Rack",
+      "belt": "white",
+      "trigger": "Quest board, white belt or higher",
+      "honor": 1,
+      "reward": {
+        "honor": 1,
+        "decoration": "Gear Rack"
+      },
+      "learning": "Caring for equipment; tidiness keeps others safe.",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Practice is over."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Pads and targets are all over the floor."
+        },
+        {
+          "speaker": "kohai",
+          "text": "Whoa, wobble!",
+          "expression": "thinking",
+          "animation": "walk"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Kohai almost trips, but is okay."
+        },
+        {
+          "speaker": "narrator",
+          "text": "What will you do with the gear?",
+          "id": "choice-gear",
+          "choices": [
+            {
+              "text": "Put it all away.",
+              "honor": 1,
+              "next": "away"
+            },
+            {
+              "text": "Leave it for later.",
+              "honor": 0,
+              "next": "later"
+            },
+            {
+              "text": "Help Kohai put theirs away too.",
+              "honor": 1,
+              "next": "help"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "away": [
+          {
+            "speaker": "narrator",
+            "text": "Drag each pad to the rack."
+          },
+          {
+            "speaker": "sensei",
+            "text": "A tidy dojo keeps everyone safe.",
+            "expression": "happy",
+            "animation": "nod"
+          },
+          {
+            "speaker": "narrator",
+            "text": "You earned the Gear Rack for your dojo!"
+          }
+        ],
+        "help": [
+          {
+            "speaker": "kohai",
+            "text": "Let's do it together!",
+            "expression": "happy"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Drag each pad to the rack."
+          },
+          {
+            "speaker": "sensei",
+            "text": "Two helpers, half the time!",
+            "expression": "proud",
+            "animation": "nod"
+          },
+          {
+            "speaker": "narrator",
+            "text": "You earned the Gear Rack for your dojo!"
+          }
+        ],
+        "later": [
+          {
+            "speaker": "sensei",
+            "text": "Hmm.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "What happened when Kohai walked by?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-gear"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-manners-yes-sensei",
+      "kind": "manners",
+      "name": "Yes, Sensei",
+      "belt": "yellow",
+      "trigger": "Quest board, yellow belt or higher",
+      "honor": 1,
+      "reward": {
+        "honor": 1
+      },
+      "learning": "Addressing the teacher by title and listening first. A curious question is never wrong.",
+      "lines": [
+        {
+          "speaker": "sensei",
+          "text": "{player}, take three steps, then stop.",
+          "expression": "neutral",
+          "animation": "demonstrate"
+        },
+        {
+          "speaker": "narrator",
+          "text": "How will you answer?",
+          "id": "choice-answer",
+          "choices": [
+            {
+              "text": "Yes, Sensei!",
+              "honor": 1,
+              "next": "yes"
+            },
+            {
+              "text": "Okay.",
+              "honor": 0,
+              "next": "okay"
+            },
+            {
+              "text": "Why?",
+              "honor": 0,
+              "next": "why"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "yes": [
+          {
+            "speaker": "player",
+            "text": "Yes, Sensei!",
+            "animation": "bow"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Clear and ready.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "sensei",
+            "text": "I can hear you're listening.",
+            "expression": "proud",
+            "animation": "nod"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Tap to take three steps, then stop."
+          }
+        ],
+        "okay": [
+          {
+            "speaker": "sensei",
+            "text": "I hear you.",
+            "expression": "neutral",
+            "animation": "nod"
+          },
+          {
+            "speaker": "sensei",
+            "text": "How do we answer in the dojo?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-answer"
+          }
+        ],
+        "why": [
+          {
+            "speaker": "sensei",
+            "text": "Good question!",
+            "expression": "happy"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Let's try it first, then you can ask.",
+            "expression": "happy",
+            "animation": "nod"
+          },
+          {
+            "speaker": "sensei",
+            "text": "How do we answer in the dojo?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-answer"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-manners-senpai-help",
+      "kind": "manners",
+      "name": "Senpai's Help",
+      "belt": "yellow",
+      "trigger": "Quest board, yellow belt or higher",
+      "honor": 1,
+      "reward": {
+        "honor": 1
+      },
+      "learning": "Respect for senior students; accepting help gracefully.",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Uh-oh, your belt knot came loose!"
+        },
+        {
+          "speaker": "senpai",
+          "text": "Here, let me show you.",
+          "expression": "happy",
+          "animation": "demonstrate"
+        },
+        {
+          "speaker": "senpai",
+          "text": "Over, under, and pull tight.",
+          "expression": "happy",
+          "animation": "demonstrate"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Your belt is tied again."
+        },
+        {
+          "speaker": "narrator",
+          "text": "What will you say to Senpai?",
+          "id": "choice-thanks",
+          "choices": [
+            {
+              "text": "Bow and say \"Thank you, Senpai!\"",
+              "honor": 1,
+              "next": "thank"
+            },
+            {
+              "text": "Run off without a word.",
+              "honor": 0,
+              "next": "run"
+            },
+            {
+              "text": "Say \"I can do it myself!\"",
+              "honor": 0,
+              "next": "myself"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "thank": [
+          {
+            "speaker": "player",
+            "text": "Thank you, Senpai!",
+            "animation": "bow"
+          },
+          {
+            "speaker": "senpai",
+            "text": "You're welcome!",
+            "expression": "happy",
+            "animation": "bow"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Thank you is a small word that does big things.",
+            "expression": "happy"
+          }
+        ],
+        "run": [
+          {
+            "speaker": "sensei",
+            "text": "Senpai helped you just now.",
+            "expression": "neutral"
+          },
+          {
+            "speaker": "sensei",
+            "text": "What could you tell them?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-thanks"
+          }
+        ],
+        "myself": [
+          {
+            "speaker": "sensei",
+            "text": "Trying on your own is good.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Getting help is good too.",
+            "expression": "neutral",
+            "animation": "nod"
+          },
+          {
+            "speaker": "sensei",
+            "text": "What could you tell Senpai?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-thanks"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-culture-dojo-words",
+      "kind": "culture",
+      "name": "Dojo Words",
+      "belt": "white",
+      "trigger": "Quest board, white belt or higher",
+      "honor": 1,
+      "reward": {
+        "honor": 1,
+        "badge": "Dojo Words"
+      },
+      "learning": "The school's terms, and that everyone grows.",
+      "lines": [
+        {
+          "speaker": "kohai",
+          "text": "Sensei, Senpai, Kohai...",
+          "expression": "thinking"
+        },
+        {
+          "speaker": "kohai",
+          "text": "So many names!",
+          "expression": "thinking"
+        },
+        {
+          "speaker": "sensei",
+          "text": "Sensei means teacher.",
+          "expression": "happy",
+          "animation": "bow"
+        },
+        {
+          "speaker": "senpai",
+          "text": "Senpai means older student.",
+          "expression": "happy",
+          "animation": "bow"
+        },
+        {
+          "speaker": "kohai",
+          "text": "And Kohai means newer student!",
+          "expression": "happy"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Match each word to what it means.",
+          "minigame": "match-words",
+          "pairs": [
+            [
+              "Sensei",
+              "teacher"
+            ],
+            [
+              "Senpai",
+              "older student"
+            ],
+            [
+              "Kohai",
+              "newer student"
+            ]
+          ]
+        },
+        {
+          "speaker": "kohai",
+          "text": "Am I a Kohai forever?",
+          "expression": "thinking",
+          "id": "choice-forever",
+          "choices": [
+            {
+              "text": "One day you'll be a Senpai!",
+              "honor": 1,
+              "next": "someday"
+            },
+            {
+              "text": "Yes, forever.",
+              "honor": 0,
+              "next": "forever"
+            },
+            {
+              "text": "Let's ask Sensei.",
+              "honor": 1,
+              "next": "ask"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "someday": [
+          {
+            "speaker": "kohai",
+            "text": "Wow, really?",
+            "expression": "happy"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Every Senpai was a Kohai once.",
+            "expression": "proud",
+            "animation": "nod"
+          }
+        ],
+        "ask": [
+          {
+            "speaker": "kohai",
+            "text": "Sensei, am I a Kohai forever?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Great idea to ask.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Every Senpai was a Kohai once.",
+            "expression": "proud",
+            "animation": "nod"
+          }
+        ],
+        "forever": [
+          {
+            "speaker": "kohai",
+            "text": "Oh.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Hmm, who was Senpai before?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-forever"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-culture-jesus-way",
+      "kind": "culture",
+      "name": "Jesus' Way",
+      "belt": "yellow",
+      "trigger": "Quest board, yellow belt or higher",
+      "honor": 1,
+      "reward": {
+        "honor": 1,
+        "badge": "Jesus' Way"
+      },
+      "learning": "The school's name, and that faith is part of its story. Kept light.",
+      "lines": [
+        {
+          "speaker": "kohai",
+          "text": "What do the words on the dojo sign say?",
+          "expression": "thinking",
+          "animation": "point"
+        },
+        {
+          "speaker": "sensei",
+          "text": "They say Yeshua's Ryu.",
+          "expression": "happy"
+        },
+        {
+          "speaker": "sensei",
+          "text": "It means Jesus' Way.",
+          "expression": "happy",
+          "animation": "nod"
+        },
+        {
+          "speaker": "kohai",
+          "text": "What should we ask next?",
+          "expression": "thinking",
+          "id": "choice-ask",
+          "choices": [
+            {
+              "text": "Why \"Jesus' Way\"?",
+              "honor": 1,
+              "next": "why"
+            },
+            {
+              "text": "What's a creed?",
+              "honor": 1,
+              "next": "creed"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "why": [
+          {
+            "speaker": "sensei",
+            "text": "We train our bodies, and we grow our hearts.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Want to see the Creed Wall?",
+            "expression": "happy",
+            "animation": "point",
+            "next": "wall"
+          }
+        ],
+        "creed": [
+          {
+            "speaker": "sensei",
+            "text": "A creed is words we say together and live by.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Want to see the Creed Wall?",
+            "expression": "happy",
+            "animation": "point",
+            "next": "wall"
+          }
+        ],
+        "wall": [
+          {
+            "speaker": "narrator",
+            "text": "You walk to the Creed Wall."
+          },
+          {
+            "speaker": "narrator",
+            "text": "Our class says this creed together."
+          },
+          {
+            "speaker": "narrator",
+            "text": "I intend to live by the code of the black belt.",
+            "voice": "computer",
+            "source": "faith/creed-and-verses.json creed line 1"
+          },
+          {
+            "speaker": "sensei",
+            "text": "What do you think that line means to you?",
+            "expression": "thinking"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-culture-faith-does",
+      "kind": "culture",
+      "name": "Letters on the Wall",
+      "belt": "yellow",
+      "trigger": "Quest board, yellow belt or higher",
+      "honor": 1,
+      "reward": {
+        "honor": 1
+      },
+      "learning": "FAITH DOES life words; the first word, Forgiveness, practiced. The letter itself comes from the real promotion, not this quest.",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Something glows on the Creed Wall."
+        },
+        {
+          "speaker": "narrator",
+          "text": "It's a letter F!"
+        },
+        {
+          "speaker": "sensei",
+          "text": "F stands for Forgiveness.",
+          "expression": "happy",
+          "animation": "point"
+        },
+        {
+          "speaker": "kohai",
+          "text": "There are empty spaces too.",
+          "expression": "thinking",
+          "animation": "point"
+        },
+        {
+          "speaker": "kohai",
+          "text": "I wonder what comes next!",
+          "expression": "happy"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Crash!"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Kohai bumped your decoration by accident."
+        },
+        {
+          "speaker": "kohai",
+          "text": "Oh no, I'm sorry!",
+          "expression": "thinking",
+          "id": "choice-forgive",
+          "choices": [
+            {
+              "text": "It's okay, I forgive you.",
+              "honor": 1,
+              "next": "forgive"
+            },
+            {
+              "text": "Be more careful!",
+              "honor": 0,
+              "next": "careful"
+            },
+            {
+              "text": "Let's fix it together.",
+              "honor": 1,
+              "next": "fix"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "forgive": [
+          {
+            "speaker": "kohai",
+            "text": "Thank you!",
+            "expression": "happy"
+          },
+          {
+            "speaker": "sensei",
+            "text": "That's F, right there.",
+            "expression": "proud",
+            "animation": "nod"
+          }
+        ],
+        "fix": [
+          {
+            "speaker": "narrator",
+            "text": "You fix the decoration together."
+          },
+          {
+            "speaker": "sensei",
+            "text": "Forgiveness with helping hands!",
+            "expression": "proud",
+            "animation": "nod"
+          }
+        ],
+        "careful": [
+          {
+            "speaker": "kohai",
+            "text": "Kohai looks down.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Kohai feels bad.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "What could help?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-forgive"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-life-empty-seat",
+      "kind": "lifeLesson",
+      "name": "The Empty Seat",
+      "belt": "white",
+      "trigger": "Quest board, white belt or higher",
+      "honor": 2,
+      "reward": {
+        "honor": 2,
+        "decoration": "Friendship Bench"
+      },
+      "learning": "Noticing others; kindness is an action.",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A new kid sits alone by the wall."
+        },
+        {
+          "speaker": "senpai",
+          "text": "Senpai's group is playing a pad game.",
+          "expression": "happy",
+          "animation": "demonstrate"
+        },
+        {
+          "speaker": "narrator",
+          "text": "What will you do?",
+          "id": "choice-1",
+          "choices": [
+            {
+              "text": "Invite them to play.",
+              "honor": 2,
+              "next": "invite"
+            },
+            {
+              "text": "Keep playing.",
+              "honor": 0,
+              "next": "keep"
+            },
+            {
+              "text": "Wave from far away.",
+              "honor": 0,
+              "next": "wave"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "invite": [
+          {
+            "speaker": "player",
+            "text": "Want to play with us?"
+          },
+          {
+            "speaker": "narrator",
+            "text": "The new kid smiles and joins in."
+          },
+          {
+            "speaker": "sensei",
+            "text": "One invite can change someone's whole day.",
+            "expression": "happy",
+            "next": "nextday"
+          }
+        ],
+        "keep": [
+          {
+            "speaker": "narrator",
+            "text": "The new kid looks down."
+          },
+          {
+            "speaker": "sensei",
+            "text": "How do you think they felt?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-1"
+          }
+        ],
+        "wave": [
+          {
+            "speaker": "narrator",
+            "text": "The new kid gives a small smile."
+          },
+          {
+            "speaker": "sensei",
+            "text": "A wave is a start.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "narrator",
+            "text": "What will you do next?",
+            "id": "choice-2",
+            "choices": [
+              {
+                "text": "Walk over and invite them.",
+                "honor": 2,
+                "next": "invite"
+              },
+              {
+                "text": "Leave it there.",
+                "honor": 0,
+                "next": "leave"
+              }
+            ]
+          }
+        ],
+        "leave": [
+          {
+            "speaker": "narrator",
+            "text": "The new kid keeps sitting alone."
+          },
+          {
+            "speaker": "sensei",
+            "text": "What could come after a wave?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-2"
+          }
+        ],
+        "nextday": [
+          {
+            "speaker": "narrator",
+            "text": "The next day, the new kid waves to you first!",
+            "animation": "bow"
+          },
+          {
+            "speaker": "narrator",
+            "text": "You earned the Friendship Bench for your dojo!"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-life-try-again",
+      "kind": "lifeLesson",
+      "name": "Try Again Tomorrow",
+      "belt": "white",
+      "trigger": "Quest board, white belt or higher",
+      "honor": 2,
+      "reward": {
+        "honor": 2,
+        "badge": "Get Back Up"
+      },
+      "learning": "Mistakes are part of learning; real practice in class is how you get stronger. Story scene only, not real progress.",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "That floor was really hard today."
+        },
+        {
+          "speaker": "narrator",
+          "text": "You're back home at the dojo."
+        },
+        {
+          "speaker": "kohai",
+          "text": "Is that floor too hard?",
+          "expression": "thinking"
+        },
+        {
+          "speaker": "narrator",
+          "text": "What will you say?",
+          "id": "choice-try",
+          "choices": [
+            {
+              "text": "I'll practice and try again.",
+              "honor": 2,
+              "next": "practice"
+            },
+            {
+              "text": "I quit.",
+              "honor": 0,
+              "next": "quit"
+            },
+            {
+              "text": "That floor is dumb.",
+              "honor": 0,
+              "next": "dumb"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "practice": [
+          {
+            "speaker": "sensei",
+            "text": "Falling down is part of learning to stand.",
+            "expression": "proud",
+            "next": "board"
+          }
+        ],
+        "quit": [
+          {
+            "speaker": "sensei",
+            "text": "That felt hard.",
+            "expression": "neutral"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Want to rest, then try?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-try"
+          }
+        ],
+        "dumb": [
+          {
+            "speaker": "sensei",
+            "text": "It's okay to feel frustrated.",
+            "expression": "neutral",
+            "animation": "nod"
+          },
+          {
+            "speaker": "sensei",
+            "text": "What would help?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-try"
+          }
+        ],
+        "board": [
+          {
+            "speaker": "sensei",
+            "text": "Look at your Training Board.",
+            "expression": "happy",
+            "animation": "point"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Your practice in class is what makes you stronger.",
+            "expression": "happy"
+          },
+          {
+            "speaker": "narrator",
+            "text": "You earned the Get Back Up badge!"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-life-teasing-rival",
+      "kind": "lifeLesson",
+      "name": "The Teasing Rival",
+      "belt": "yellow",
+      "trigger": "Quest board, yellow belt or higher",
+      "honor": 2,
+      "reward": {
+        "honor": 2
+      },
+      "learning": "Self-control; breathing to calm down; words can cool or heat things.",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A kid from another dojo walks up."
+        },
+        {
+          "speaker": "rival",
+          "text": "Your kicks are slow!",
+          "expression": "neutral",
+          "animation": "point"
+        },
+        {
+          "speaker": "narrator",
+          "text": "You feel your face get hot.",
+          "visual": "anger-meter-wobble"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Tap slowly three times to breathe.",
+          "minigame": "breathe-3"
+        },
+        {
+          "speaker": "narrator",
+          "text": "What will you do?",
+          "id": "choice-rival",
+          "choices": [
+            {
+              "text": "Say \"Let's have a good match.\"",
+              "honor": 2,
+              "next": "match"
+            },
+            {
+              "text": "Tease them back.",
+              "honor": 0,
+              "next": "tease"
+            },
+            {
+              "text": "Walk away calmly.",
+              "honor": 2,
+              "next": "walk"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "match": [
+          {
+            "speaker": "player",
+            "text": "Let's have a good match."
+          },
+          {
+            "speaker": "narrator",
+            "text": "You have a fun match."
+          },
+          {
+            "speaker": "rival",
+            "text": "Good match!",
+            "expression": "happy",
+            "animation": "bow"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Calm is a strong place to stand.",
+            "expression": "proud",
+            "animation": "nod"
+          }
+        ],
+        "walk": [
+          {
+            "speaker": "narrator",
+            "text": "You walk away calmly."
+          },
+          {
+            "speaker": "sensei",
+            "text": "Walking away can be brave too.",
+            "expression": "proud",
+            "animation": "nod"
+          }
+        ],
+        "tease": [
+          {
+            "speaker": "narrator",
+            "text": "The kid gets even louder."
+          },
+          {
+            "speaker": "narrator",
+            "text": "Take a slow breath."
+          },
+          {
+            "speaker": "sensei",
+            "text": "Did that make it better?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-rival"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-life-sorry-kohai",
+      "kind": "lifeLesson",
+      "name": "Sorry, Kohai",
+      "belt": "yellow",
+      "trigger": "Quest board, yellow belt or higher",
+      "honor": 2,
+      "reward": {
+        "honor": 2,
+        "decoration": "Paper Lantern"
+      },
+      "learning": "Forgiving others, and owning your own mistakes. Honor 1 + 1 across the two parts = 2.",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "Your paper lantern is torn."
+        },
+        {
+          "speaker": "kohai",
+          "text": "I bumped it by accident.",
+          "expression": "thinking"
+        },
+        {
+          "speaker": "kohai",
+          "text": "I'm sorry.",
+          "expression": "thinking"
+        },
+        {
+          "speaker": "narrator",
+          "text": "What will you say?",
+          "id": "choice-1",
+          "choices": [
+            {
+              "text": "It's okay, I forgive you.",
+              "honor": 1,
+              "next": "forgive"
+            },
+            {
+              "text": "You ruined it!",
+              "honor": 0,
+              "next": "ruined"
+            },
+            {
+              "text": "Let's make a new one.",
+              "honor": 1,
+              "next": "newone"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "forgive": [
+          {
+            "speaker": "kohai",
+            "text": "Thank you!",
+            "expression": "happy"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Forgiving makes room for a friend.",
+            "expression": "happy",
+            "next": "part2"
+          }
+        ],
+        "newone": [
+          {
+            "speaker": "narrator",
+            "text": "You make a new lantern together."
+          },
+          {
+            "speaker": "sensei",
+            "text": "Forgiveness with helping hands.",
+            "expression": "proud",
+            "next": "part2"
+          }
+        ],
+        "ruined": [
+          {
+            "speaker": "narrator",
+            "text": "Kohai looks sad."
+          },
+          {
+            "speaker": "sensei",
+            "text": "It was an accident.",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "sensei",
+            "text": "What could help now?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-1"
+          }
+        ],
+        "part2": [
+          {
+            "speaker": "narrator",
+            "text": "Next time at the dojo..."
+          },
+          {
+            "speaker": "narrator",
+            "text": "Oops, you bumped Senpai's water bottle over!"
+          },
+          {
+            "speaker": "narrator",
+            "text": "What will you do?",
+            "id": "choice-2",
+            "choices": [
+              {
+                "text": "Say \"Sorry, Senpai! I'll clean it up.\"",
+                "honor": 1,
+                "next": "sorry"
+              },
+              {
+                "text": "Pretend it didn't happen.",
+                "honor": 0,
+                "next": "pretend"
+              }
+            ]
+          }
+        ],
+        "sorry": [
+          {
+            "speaker": "senpai",
+            "text": "Thanks for telling me!",
+            "expression": "happy"
+          },
+          {
+            "speaker": "sensei",
+            "text": "Saying sorry is strong too.",
+            "expression": "proud",
+            "animation": "nod"
+          },
+          {
+            "speaker": "narrator",
+            "text": "You earned the Paper Lantern for your dojo!"
+          }
+        ],
+        "pretend": [
+          {
+            "speaker": "narrator",
+            "text": "Senpai slips a little, but is okay."
+          },
+          {
+            "speaker": "sensei",
+            "text": "What could you say now?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-life-big-win",
+      "kind": "lifeLesson",
+      "name": "The Big Win",
+      "belt": "orange",
+      "trigger": "Quest board, orange belt or higher",
+      "honor": 2,
+      "reward": {
+        "honor": 2,
+        "title": "Good Sport"
+      },
+      "learning": "Humility; winning and losing gracefully.",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "It's the friendly target-kick contest!"
+        },
+        {
+          "speaker": "narrator",
+          "text": "You hit the most targets!"
+        },
+        {
+          "speaker": "narrator",
+          "text": "Kohai finished last and looks sad."
+        },
+        {
+          "speaker": "narrator",
+          "text": "What will you do?",
+          "id": "choice-win",
+          "choices": [
+            {
+              "text": "Say \"Great job, Kohai! Want to practice together?\"",
+              "honor": 2,
+              "next": "encourage"
+            },
+            {
+              "text": "Shout \"I'm the best!\"",
+              "honor": 0,
+              "next": "best"
+            },
+            {
+              "text": "Bow to everyone.",
+              "honor": 2,
+              "next": "bow"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "encourage": [
+          {
+            "speaker": "sensei",
+            "text": "Lifting others up is a winner's best move.",
+            "expression": "proud",
+            "next": "tip"
+          }
+        ],
+        "bow": [
+          {
+            "speaker": "narrator",
+            "text": "Everyone bows back.",
+            "animation": "bow"
+          },
+          {
+            "speaker": "sensei",
+            "text": "A bow says thank you to everyone who played.",
+            "expression": "happy",
+            "next": "tip"
+          }
+        ],
+        "best": [
+          {
+            "speaker": "narrator",
+            "text": "Kohai walks away."
+          },
+          {
+            "speaker": "sensei",
+            "text": "How did Kohai look just now?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-win"
+          }
+        ],
+        "tip": [
+          {
+            "speaker": "kohai",
+            "text": "Can you give me a tip?",
+            "expression": "happy"
+          },
+          {
+            "speaker": "player",
+            "text": "Keep your eyes on the target!",
+            "animation": "demonstrate"
+          },
+          {
+            "speaker": "narrator",
+            "text": "You earned the title Good Sport!"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-life-room-for-everyone",
+      "kind": "lifeLesson",
+      "name": "Room for Everyone",
+      "belt": "orange",
+      "trigger": "Quest board, orange belt or higher",
+      "honor": 2,
+      "reward": {
+        "honor": 2,
+        "badge": "Room for Everyone"
+      },
+      "learning": "Acceptance; curiosity instead of teasing.",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "A new student is practicing kicks."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Their kicks look different from yours."
+        },
+        {
+          "speaker": "narrator",
+          "text": "They learned at another school."
+        },
+        {
+          "speaker": "narrator",
+          "text": "Some kids start to giggle."
+        },
+        {
+          "speaker": "narrator",
+          "text": "What will you do?",
+          "id": "choice-accept",
+          "choices": [
+            {
+              "text": "Say \"That's different. Can you show me?\"",
+              "honor": 2,
+              "next": "learn"
+            },
+            {
+              "text": "Giggle along.",
+              "honor": 0,
+              "next": "giggle"
+            },
+            {
+              "text": "Say nothing.",
+              "honor": 0,
+              "next": "nothing"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "learn": [
+          {
+            "speaker": "narrator",
+            "text": "The new student smiles big."
+          },
+          {
+            "speaker": "sensei",
+            "text": "Different can be a gift.",
+            "expression": "happy",
+            "animation": "nod"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Later, the new student shows you a cool stretch."
+          },
+          {
+            "speaker": "narrator",
+            "text": "You earned the Room for Everyone badge!"
+          }
+        ],
+        "giggle": [
+          {
+            "speaker": "narrator",
+            "text": "The new student's face falls."
+          },
+          {
+            "speaker": "sensei",
+            "text": "How would that feel if it were you?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-accept"
+          }
+        ],
+        "nothing": [
+          {
+            "speaker": "sensei",
+            "text": "You didn't laugh.",
+            "expression": "neutral"
+          },
+          {
+            "speaker": "sensei",
+            "text": "What could you add?",
+            "expression": "thinking"
+          },
+          {
+            "speaker": "narrator",
+            "text": "Let's try that again.",
+            "retry": "choice-accept"
+          }
+        ]
+      }
+    }
+  ]
+}

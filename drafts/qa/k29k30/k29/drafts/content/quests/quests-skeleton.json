@@ -1,0 +1,665 @@
+{
+  "notes": "SKELETON for C4 outlines. Same quest shape as drafts/content/dialogue/milestone-6.json (id, kind, name, trigger, honor, lines, branches). Added: 'belt' (tier gate) and 'retry' (return to the choice, as in street-smarts). content/ has no quest format yet. Honor never goes below 0 for a choice.",
+  "quests": [
+    {
+      "id": "quest-manners-greeting",
+      "kind": "manners",
+      "name": "Good Morning, Sensei",
+      "belt": "white",
+      "trigger": "Quest board, white belt or higher",
+      "honor": 1,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 1,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-manners-line-up",
+      "kind": "manners",
+      "name": "Line Up!",
+      "belt": "white",
+      "trigger": "Quest board, white belt or higher",
+      "honor": 1,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 1,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-manners-gear-rack",
+      "kind": "manners",
+      "name": "Back on the Rack",
+      "belt": "white",
+      "trigger": "Quest board, white belt or higher",
+      "honor": 1,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 1,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-manners-yes-sensei",
+      "kind": "manners",
+      "name": "Yes, Sensei",
+      "belt": "yellow",
+      "trigger": "Quest board, yellow belt or higher",
+      "honor": 1,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 1,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-manners-senpai-help",
+      "kind": "manners",
+      "name": "Senpai's Help",
+      "belt": "yellow",
+      "trigger": "Quest board, yellow belt or higher",
+      "honor": 1,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 1,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-culture-dojo-words",
+      "kind": "culture",
+      "name": "Dojo Words",
+      "belt": "white",
+      "trigger": "Quest board, white belt or higher",
+      "honor": 1,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 1,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-culture-belt-colors",
+      "kind": "culture",
+      "name": "Colors of the Climb",
+      "belt": "white",
+      "trigger": "Quest board, white belt or higher",
+      "honor": 1,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 1,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-culture-jesus-way",
+      "kind": "culture",
+      "name": "Jesus' Way",
+      "belt": "yellow",
+      "trigger": "Quest board, yellow belt or higher",
+      "honor": 1,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 1,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-culture-faith-does",
+      "kind": "culture",
+      "name": "Letters on the Wall",
+      "belt": "yellow",
+      "trigger": "Quest board, yellow belt or higher",
+      "honor": 1,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 1,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-life-empty-seat",
+      "kind": "lifeLesson",
+      "name": "The Empty Seat",
+      "belt": "white",
+      "trigger": "Quest board, white belt or higher",
+      "honor": 2,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 2,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-life-try-again",
+      "kind": "lifeLesson",
+      "name": "Try Again Tomorrow",
+      "belt": "white",
+      "trigger": "Quest board, white belt or higher",
+      "honor": 2,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 2,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-life-teasing-rival",
+      "kind": "lifeLesson",
+      "name": "The Teasing Rival",
+      "belt": "yellow",
+      "trigger": "Quest board, yellow belt or higher",
+      "honor": 2,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 2,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-life-sorry-kohai",
+      "kind": "lifeLesson",
+      "name": "Sorry, Kohai",
+      "belt": "yellow",
+      "trigger": "Quest board, yellow belt or higher",
+      "honor": 2,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 2,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-life-big-win",
+      "kind": "lifeLesson",
+      "name": "The Big Win",
+      "belt": "orange",
+      "trigger": "Quest board, orange belt or higher",
+      "honor": 2,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 2,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "quest-life-room-for-everyone",
+      "kind": "lifeLesson",
+      "name": "Room for Everyone",
+      "belt": "orange",
+      "trigger": "Quest board, orange belt or higher",
+      "honor": 2,
+      "outline": "See quests/*.md",
+      "lines": [
+        {
+          "speaker": "narrator",
+          "text": "TODO: script after Jay approves the outline.",
+          "choices": [
+            {
+              "text": "TODO",
+              "honor": 2,
+              "next": "good"
+            },
+            {
+              "text": "TODO",
+              "honor": 0,
+              "next": "reflect"
+            }
+          ]
+        }
+      ],
+      "branches": {
+        "good": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflection.",
+            "expression": "happy"
+          }
+        ],
+        "reflect": [
+          {
+            "speaker": "sensei",
+            "text": "TODO: one-sentence reflective question.",
+            "expression": "thinking",
+            "retry": true
+          }
+        ]
+      }
+    }
+  ]
+}

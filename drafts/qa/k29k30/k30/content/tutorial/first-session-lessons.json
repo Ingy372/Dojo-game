@@ -1,0 +1,200 @@
+{
+  "_note": "The only lesson file (promoted in M7-P2; content/tutorial/sensei-lessons.json is retired). lesson-move was dropped (Manager call, M7-P2): the tutorial floor's walk step teaches moving.",
+  "notes": "Written for M7-P6, revised after the M7-P13 review (PR #46). Session 1 (the tutorial, run 1) teaches only Move, the '!' warning, the guided Counter and Strike. The warning and guided Counter lines, plus 'slowdown'/'nudge', are copied exactly from content/tutorial/sensei-lessons.json. lesson-counter-hint-2 and -3 are fading follow-ups (fadingFollowUp: true) and don't count as new lessons. Bow is taught once, by the tutorial floor's tutorial-bow step, so there is no second Bow lesson at home (review S1). After session 1, at most one new lesson per session: Dash (2), Insights (3), Decorating (4). Perfect Counter, Block and Step-out have ignoresSessionLimit: true and show right away the first time they come up. Keys: id, order, trigger, screens, practice, success, retry, earliestSession, ignoresSessionLimit, fadingFollowUp, plus optional slowdown/nudge. One sentence per screen; button names match the UI. line-welcome-home is a plain greeting on the first return home, not a lesson. It has no practice room and doesn't count toward the session limit. {player} is the profile's display name. triggerKey is the event the game fires for the lesson (M7-P5, Manager call). scroll: false keeps a line off the Lesson Scroll (the fading follow-ups and line-welcome-home, Manager call). A session is a calendar day with at least one run (Manager call); earliestSession counts those days.",
+  "speaker": "sensei",
+  "lessons": [
+    {
+      "id": "lesson-warning",
+      "triggerKey": "firstWarning",
+      "trigger": "First '!' and red circle seen (game slows for the guided Counter)",
+      "screens": [
+        "Look! A red circle.",
+        "It's coming!"
+      ],
+      "practice": "Watch for the red circle.",
+      "retry": "That's okay. Try again whenever you're ready.",
+      "slowdown": true,
+      "fadingFollowUp": false,
+      "order": 2,
+      "earliestSession": 1,
+      "ignoresSessionLimit": false
+    },
+    {
+      "id": "lesson-counter-guided",
+      "triggerKey": "guidedCounter",
+      "trigger": "During the slowdown, as the circle nears full; Counter button pulses",
+      "screens": [
+        "Tap COUNTER... now!"
+      ],
+      "practice": "Tap COUNTER when Sensei says now.",
+      "success": "You did it! Perfect!",
+      "retry": "So close! Let's try again.",
+      "slowdown": true,
+      "nudge": "Take your time. Tap the glowing COUNTER button!",
+      "fadingFollowUp": false,
+      "order": 3,
+      "earliestSession": 1,
+      "ignoresSessionLimit": false
+    },
+    {
+      "id": "lesson-counter-hint-2",
+      "triggerKey": "secondWarning",
+      "scroll": false,
+      "trigger": "Second '!' seen (smaller slowdown or none, Counter still pulses)",
+      "screens": [
+        "Wait for it... COUNTER!"
+      ],
+      "practice": "Tap COUNTER again.",
+      "success": "Great timing!",
+      "retry": "That's okay. Try again whenever you're ready.",
+      "fadingFollowUp": true,
+      "order": 4,
+      "earliestSession": 1,
+      "ignoresSessionLimit": false
+    },
+    {
+      "id": "lesson-counter-hint-3",
+      "triggerKey": "thirdWarning",
+      "scroll": false,
+      "trigger": "Third '!' seen (no slowdown; small pulse only)",
+      "screens": [
+        "COUNTER!"
+      ],
+      "practice": "Tap COUNTER on your own.",
+      "success": "Yes!",
+      "retry": "That's okay. Try again whenever you're ready.",
+      "fadingFollowUp": true,
+      "order": 5,
+      "earliestSession": 1,
+      "ignoresSessionLimit": false
+    },
+    {
+      "id": "lesson-strike",
+      "triggerKey": "focusFull",
+      "order": 6,
+      "trigger": "Strike button fills and pulses",
+      "screens": [
+        "Your STRIKE button is glowing.",
+        "Tap it for a big, strong hit."
+      ],
+      "practice": "STRIKE the practice bag.",
+      "success": "What a hit!",
+      "retry": "That's okay. Try again whenever you're ready.",
+      "earliestSession": 1,
+      "ignoresSessionLimit": false,
+      "fadingFollowUp": false
+    },
+    {
+      "id": "line-welcome-home",
+      "triggerKey": "firstHomeReturn",
+      "scroll": false,
+      "trigger": "First return to the Home Dojo, right after the tutorial's door home (plain line, not a lesson; no practice room)",
+      "screens": [
+        "Welcome home, {player}! I'm glad you're back."
+      ],
+      "practice": "",
+      "retry": "",
+      "earliestSession": 1,
+      "ignoresSessionLimit": true,
+      "fadingFollowUp": true,
+      "order": 7
+    },
+    {
+      "id": "lesson-dash",
+      "triggerKey": "twoAttacksAtOnce",
+      "order": 8,
+      "trigger": "First time two attacks will land together (session 2 reminder: Dash is taught on the tutorial floor, K24a)",
+      "screens": [
+        "Remember: DASH out of a crowd."
+      ],
+      "success": "Quick feet!",
+      "retry": "That's okay. Try again whenever you're ready.",
+      "earliestSession": 2,
+      "ignoresSessionLimit": false,
+      "fadingFollowUp": false,
+      "practice": "DASH out of the circle."
+    },
+    {
+      "id": "lesson-insights",
+      "triggerKey": "firstInsightChoice",
+      "order": 9,
+      "trigger": "First Insight choice",
+      "screens": [
+        "After a fight, you can pick one Insight.",
+        "It helps you until you go home."
+      ],
+      "practice": "Pick any Insight you like.",
+      "success": "Good choice. Which one did you pick?",
+      "retry": "That's okay. Try again whenever you're ready.",
+      "earliestSession": 3,
+      "ignoresSessionLimit": false,
+      "fadingFollowUp": false
+    },
+    {
+      "id": "lesson-decorating",
+      "triggerKey": "firstDecoration",
+      "order": 10,
+      "trigger": "First decoration found",
+      "screens": [
+        "You found something for your dojo!",
+        "Drag it to any spot you like."
+      ],
+      "practice": "Place your new decoration.",
+      "success": "Your dojo looks more like you now.",
+      "retry": "That's okay. Try again whenever you're ready.",
+      "earliestSession": 4,
+      "ignoresSessionLimit": false,
+      "fadingFollowUp": false
+    },
+    {
+      "id": "lesson-perfect",
+      "triggerKey": "firstPerfectUnaided",
+      "order": 11,
+      "trigger": "First occurrence in play (shows right away): the first Perfect Counter without help",
+      "screens": [
+        "Tap when the circle is almost full.",
+        "That is a Perfect Counter.",
+        "It fills your Focus fast!"
+      ],
+      "practice": "Tap COUNTER when the circle is almost full.",
+      "success": "Perfect! How did that feel?",
+      "retry": "That's okay. Try again whenever you're ready.",
+      "earliestSession": 5,
+      "ignoresSessionLimit": true,
+      "fadingFollowUp": false
+    },
+    {
+      "id": "lesson-block",
+      "triggerKey": "firstBlock",
+      "order": 12,
+      "trigger": "First occurrence in play (shows right away): the first Block (COUNTER pressed a little early)",
+      "screens": [
+        "That was a Block. Good guarding!",
+        "Wait a tiny bit longer for Perfect."
+      ],
+      "practice": "Wait a tiny bit, then tap COUNTER.",
+      "success": "You waited. Nice!",
+      "retry": "That's okay. Try again whenever you're ready.",
+      "earliestSession": 6,
+      "ignoresSessionLimit": true,
+      "fadingFollowUp": false
+    },
+    {
+      "id": "lesson-step-out",
+      "triggerKey": "firstStepOut",
+      "order": 13,
+      "trigger": "First occurrence in play (shows right away): the player walks out of a red circle",
+      "screens": [
+        "Smart! Stepping out works too."
+      ],
+      "practice": "Walk out of the red circle.",
+      "success": "You stayed safe!",
+      "retry": "That's okay. Try again whenever you're ready.",
+      "earliestSession": 7,
+      "ignoresSessionLimit": true,
+      "fadingFollowUp": false
+    }
+  ],
+  "maxNewLessonsPerRoom": 1,
+  "maxNewLessonsPerSession": 1
+}

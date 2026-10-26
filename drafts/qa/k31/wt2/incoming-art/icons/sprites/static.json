@@ -1,0 +1,767 @@
+{
+  "pixelsPerTile": 80,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "facing": "north (the one game view)"
+  },
+  "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+  "sprites": {
+    "icon-cloth-wraps": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-cloth-wraps"
+      ],
+      "files": {
+        "icon-cloth-wraps": "icon-cloth-wraps.png"
+      },
+      "groundRect": {
+        "col0": 1.1920928910669204e-08,
+        "row0": -2.6656735929719844e-08,
+        "col1": 1.600000011920929,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "gear (hands): Cloth Hand Wraps, a rolled cream cloth wrap. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-leather-wraps": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-leather-wraps"
+      ],
+      "files": {
+        "icon-leather-wraps": "icon-leather-wraps.png"
+      },
+      "groundRect": {
+        "col0": 2.9999999523162844,
+        "row0": -2.6656735929719844e-08,
+        "col1": 4.599999952316284,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "gear (hands): Leather Hand Wraps, a rolled brown leather wrap with light stitching. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-tiger-wraps": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-tiger-wraps"
+      ],
+      "files": {
+        "icon-tiger-wraps": "icon-tiger-wraps.png"
+      },
+      "groundRect": {
+        "col0": 6.0000001907348635,
+        "row0": -2.6656735929719844e-08,
+        "col1": 7.600000190734863,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "gear (hands): Tiger Stripe Wraps, a rolled orange wrap with dark tiger stripes. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-training-gi": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-training-gi"
+      ],
+      "files": {
+        "icon-training-gi": "icon-training-gi.png"
+      },
+      "groundRect": {
+        "col0": 9.000000190734863,
+        "row0": -2.6656735929719844e-08,
+        "col1": 10.600000190734864,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "gear (gi): Training Gi, a folded plain white gi. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-padded-gi": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-padded-gi"
+      ],
+      "files": {
+        "icon-padded-gi": "icon-padded-gi.png"
+      },
+      "groundRect": {
+        "col0": 12.000000190734863,
+        "row0": -2.6656735929719844e-08,
+        "col1": 13.600000190734864,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "gear (gi): Padded Gi, a folded white gi with quilted padding and light blue trim. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-mountain-gi": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-mountain-gi"
+      ],
+      "files": {
+        "icon-mountain-gi": "icon-mountain-gi.png"
+      },
+      "groundRect": {
+        "col0": 15.000000190734863,
+        "row0": -2.6656735929719844e-08,
+        "col1": 16.600000190734864,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "gear (gi): Mountain Gi, a folded slate-blue gi with a small snowy mountain. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-jade-charm": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-jade-charm"
+      ],
+      "files": {
+        "icon-jade-charm": "icon-jade-charm.png"
+      },
+      "groundRect": {
+        "col0": 17.999999237060546,
+        "row0": -2.6656735929719844e-08,
+        "col1": 19.599999237060548,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "gear (charm): Jade Charm, a round green jade disc on a red cord with a tassel. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-lotus-charm": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-lotus-charm"
+      ],
+      "files": {
+        "icon-lotus-charm": "icon-lotus-charm.png"
+      },
+      "groundRect": {
+        "col0": 20.999999237060546,
+        "row0": -2.6656735929719844e-08,
+        "col1": 22.599999237060548,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "gear (charm): Lotus Charm, a small pink lotus flower charm on a red cord. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-crane-charm": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-crane-charm"
+      ],
+      "files": {
+        "icon-crane-charm": "icon-crane-charm.png"
+      },
+      "groundRect": {
+        "col0": 23.999999237060546,
+        "row0": -2.6656735929719844e-08,
+        "col1": 25.599999237060548,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "gear (charm): Crane Charm, a folded red-pink paper crane (wings up, long neck) on a gold cord. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-ripple-counter": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-ripple-counter"
+      ],
+      "files": {
+        "icon-ripple-counter": "icon-ripple-counter.png"
+      },
+      "groundRect": {
+        "col0": 26.999999237060546,
+        "row0": -2.6656735929719844e-08,
+        "col1": 28.599999237060548,
+        "row1": 1.5999999733432642,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Insight: Ripple Counter, ripples spreading from one point. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-iron-skin": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-iron-skin"
+      ],
+      "files": {
+        "icon-iron-skin": "icon-iron-skin.png"
+      },
+      "groundRect": {
+        "col0": 1.1920928910669204e-08,
+        "row0": 1.7207292140207626,
+        "col1": 1.600000011920929,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Insight: Iron Skin, a steel shield with an arrow bouncing back off it. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-wind-step": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-wind-step"
+      ],
+      "files": {
+        "icon-wind-step": "icon-wind-step.png"
+      },
+      "groundRect": {
+        "col0": 2.9999999523162844,
+        "row0": 1.7207292140207626,
+        "col1": 4.599999952316284,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Insight: Wind Step, a footprint with wind streaks (a burst of speed). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-double-strike": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-double-strike"
+      ],
+      "files": {
+        "icon-double-strike": "icon-double-strike.png"
+      },
+      "groundRect": {
+        "col0": 6.0000001907348635,
+        "row0": 1.7207292140207626,
+        "col1": 7.600000190734863,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Insight: Double Strike, two hit bursts, one after the other. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-quick-hands": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-quick-hands"
+      ],
+      "files": {
+        "icon-quick-hands": "icon-quick-hands.png"
+      },
+      "groundRect": {
+        "col0": 9.000000190734863,
+        "row0": 1.7207292140207626,
+        "col1": 10.600000190734864,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Insight: Quick Hands, a fist with speed lines. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-press-the-advantage": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-press-the-advantage"
+      ],
+      "files": {
+        "icon-press-the-advantage": "icon-press-the-advantage.png"
+      },
+      "groundRect": {
+        "col0": 12.000000190734863,
+        "row0": 1.7207292140207626,
+        "col1": 13.600000190734864,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Insight: Press the Advantage, two red chevrons charging at a dizzy target (hit harder while they are staggered). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-shield-breaker": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-shield-breaker"
+      ],
+      "files": {
+        "icon-shield-breaker": "icon-shield-breaker.png"
+      },
+      "groundRect": {
+        "col0": 15.000000190734863,
+        "row0": 1.7207292140207626,
+        "col1": 16.600000190734864,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Insight: Shield Breaker, a cracked shield. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-heavy-hands": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-heavy-hands"
+      ],
+      "files": {
+        "icon-heavy-hands": "icon-heavy-hands.png"
+      },
+      "groundRect": {
+        "col0": 17.999999237060546,
+        "row0": 1.7207292140207626,
+        "col1": 19.599999237060548,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Insight: Heavy Hands, a big fist in front of a hit burst (more power). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-rally": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-rally"
+      ],
+      "files": {
+        "icon-rally": "icon-rally.png"
+      },
+      "groundRect": {
+        "col0": 20.999999237060546,
+        "row0": 1.7207292140207626,
+        "col1": 22.599999237060548,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Insight: Rally, a heart with a golden up arrow (Focus fills faster when health is low). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-off-balance": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-off-balance"
+      ],
+      "files": {
+        "icon-off-balance": "icon-off-balance.png"
+      },
+      "groundRect": {
+        "col0": 23.999999237060546,
+        "row0": 1.7207292140207626,
+        "col1": 25.599999237060548,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Seal: Off-balance, a little round fighter tipping over, wobble lines and a dizzy swirl (the attacker stays off-balance longer). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-escape-step": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-escape-step"
+      ],
+      "files": {
+        "icon-escape-step": "icon-escape-step.png"
+      },
+      "groundRect": {
+        "col0": 26.999999237060546,
+        "row0": 1.7207292140207626,
+        "col1": 28.599999237060548,
+        "row1": 3.320729214020763,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Seal: Escape Step, a footprint hopping back along a curved arrow (a Block recharges Dash). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-sweep": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-sweep"
+      ],
+      "files": {
+        "icon-sweep": "icon-sweep.png"
+      },
+      "groundRect": {
+        "col0": 1.1920928910669204e-08,
+        "row0": 3.4414585230739014,
+        "col1": 1.600000011920929,
+        "row1": 5.041458523073901,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Seal: Sweep, a foot sweeping low along the floor, with a curved arrow. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-steady-breath": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-steady-breath"
+      ],
+      "files": {
+        "icon-steady-breath": "icon-steady-breath.png"
+      },
+      "groundRect": {
+        "col0": 2.9999999523162844,
+        "row0": 3.4414585230739014,
+        "col1": 4.599999952316284,
+        "row1": 5.041458523073901,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Seal: Steady Breath, a heart with soft breath wisps (Perfect Counters restore Health). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-strong-block": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-strong-block"
+      ],
+      "files": {
+        "icon-strong-block": "icon-strong-block.png"
+      },
+      "groundRect": {
+        "col0": 6.0000001907348635,
+        "row0": 3.4414585230739014,
+        "col1": 7.600000190734863,
+        "row1": 5.041458523073901,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Seal: Strong Block, a gi-sleeved forearm raised in a rising block, fist closed, a hit bouncing off the top. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-sharp-eyes": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-sharp-eyes"
+      ],
+      "files": {
+        "icon-sharp-eyes": "icon-sharp-eyes.png"
+      },
+      "groundRect": {
+        "col0": 9.000000190734863,
+        "row0": 3.4414585230739014,
+        "col1": 10.600000190734864,
+        "row1": 5.041458523073901,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Seal: Sharp Eyes, a wide-open eye (the Perfect Counter window is longer). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-create-distance": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-create-distance"
+      ],
+      "files": {
+        "icon-create-distance": "icon-create-distance.png"
+      },
+      "groundRect": {
+        "col0": 12.000000190734863,
+        "row0": 3.4414585230739014,
+        "col1": 13.600000190734864,
+        "row1": 5.041458523073901,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Seal: Create Distance, two arrows pushing apart. 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-disarm": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-disarm"
+      ],
+      "files": {
+        "icon-disarm": "icon-disarm.png"
+      },
+      "groundRect": {
+        "col0": 15.000000190734863,
+        "row0": 3.4414585230739014,
+        "col1": 16.600000190734864,
+        "row1": 5.041458523073901,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Seal: Disarm, a fist with a down arrow (the attacker's next hit is weaker). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-throw": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-throw"
+      ],
+      "files": {
+        "icon-throw": "icon-throw.png"
+      },
+      "groundRect": {
+        "col0": 17.999999237060546,
+        "row0": 3.4414585230739014,
+        "col1": 19.599999237060548,
+        "row1": 5.041458523073901,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Seal: Throw, a big arrow arcing over the top (Perfect Counter hits are stronger). 128 x 128, anchor = centre",
+      "frames": 1
+    },
+    "icon-follow-through": {
+      "size": [
+        128,
+        128
+      ],
+      "layers": [
+        "icon-follow-through"
+      ],
+      "files": {
+        "icon-follow-through": "icon-follow-through.png"
+      },
+      "groundRect": {
+        "col0": 20.999999237060546,
+        "row0": 3.4414585230739014,
+        "col1": 22.599999237060548,
+        "row1": 5.041458523073901,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0,
+      "anchorPx": [
+        64.0,
+        64.0
+      ],
+      "anchorNote": "anchor = centre of the 128 x 128 image",
+      "note": "Seal: Follow-through, a fist that keeps going after the hit: a long swoosh trail through a burst (off-balance enemies take more damage). 128 x 128, anchor = centre",
+      "frames": 1
+    }
+  }
+}

@@ -1,0 +1,22 @@
+HOME TEXT: Training Board | ◀ Dojo | Sam T. | White Belt | Level 1 | cap 10 | ENTER THE TOWER | Practice room | YOUR NEXT STEP | Basic Form 1 | ▶ Video soon | Next class: Monday | Last run | Gear (0) | Abilities | Gate | The Gate to Yellow Belt | 0 of 7 locks lit. A real promotion opens the Gate. | 🔒 | Basic Form 1 | 🔒 | SD #1 | 🔒 | SD #2 | 🔒 | SD #3 | 🔒 | SD #4 | 🔒 | SD #5 | 🔒 | Kick 1 | Time in rank | 1 of 24 classes | 師 | Sensei's Seal | Lights when Sensei approves you to test.
+pressure-words: null
+[run] buttons=7 other-interactive=["Text:Training Board"]
+run:◀ Dojo tap=84.0,44.0 vis=84,30 ok=10/10 
+run:ENTER THE TOWER tap=253.5,46.0 vis=253,46 ok=10/10 
+run:Practice room tap=253.5,44.0 vis=253,30 ok=10/10 
+run:Last run tap=86.9,44.0 vis=87,34 ok=10/10 
+run:Gear (12) tap=86.9,44.0 vis=87,34 ok=10/10 
+run:Abilities tap=86.9,44.0 vis=87,34 ok=10/10 
+run:Gate tap=86.9,44.0 vis=87,34 ok=10/10 
+[gate] buttons=7 other-interactive=["Text:Training Board"]
+gate:Last run tap=86.9,44.0 vis=87,34 ok=10/10 
+gate:Abilities tap=86.9,44.0 vis=87,34 ok=10/10 
+[gear] buttons=11 other-interactive=["Text:Training Board","Rectangle:3a3150","Rectangle:221d2e","Rectangle:221d2e","Rectangle:221d2e"]
+gear:Last run tap=86.9,44.0 vis=87,34 ok=10/10 
+gear:Abilities tap=86.9,44.0 vis=87,34 ok=10/10 
+gear:◀ tap=70.0,44.0 vis=70,28 ok=10/10 
+gear:▶ tap=70.0,44.0 vis=70,28 ok=10/10 
+gear:Wear tap=110.0,44.0 vis=110,30 ok=10/10 
+gear:Let go tap=120.0,44.0 vis=120,30 ok=10/10 
+GLOW alpha min=0.154 max=0.995 scales=1 peaks@ms=4386 samples=[0.965,0.874,0.757,0.609,0.459,0.328,0.219,0.159,0.157,0.207,0.299,0.435,0.588,0.736,0.855,0.949,0.995,0.991,0.938,0.845,0.724,0.567,0.429,0.305,0.201,0.154]
+errors: []

@@ -1,0 +1,42 @@
+{
+  "id": "ink-blot",
+  "name": "Ink Blot",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Leaves sticky ink puddles that slow you down. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#2f3a6b",
+  "maxHealth": 306,
+  "power": 38,
+  "guard": 5,
+  "radius": 0.4,
+  "moveSpeedTilesPerSecond": 1.2,
+  "sightRange": 12,
+  "attack": {
+    "name": "splat",
+    "strength": 1,
+    "startRange": 3.0,
+    "reach": 3.0,
+    "areaRadius": 1.1,
+    "telegraphTicks": 18,
+    "recoverTicks": 22
+  },
+  "parSeconds": 3.5,
+  "tier": "brown",
+  "band": "F3-4",
+  "tell": "a dark blue blot on the floor",
+  "senseiLine": "Clean floor is safe floor.",
+  "description": "Leaves sticky ink puddles that slow you down.",
+  "bestiary": {
+    "tip": "Keep space and stay on clean floor.",
+    "lore": {
+      "brown": "Spilled ink spread in the dark. Calm it, and it rests in its bottle, ready to write stories."
+    }
+  },
+  "zone": {
+    "damage": 0,
+    "effect": "slow",
+    "slowPercent": 30,
+    "slowPercentGuided": 15,
+    "endsOnStepOut": true,
+    "maxPuddles": 3,
+    "note": "Mild slow (Manager's call, C13-4); ends the moment you step out."
+  }
+}

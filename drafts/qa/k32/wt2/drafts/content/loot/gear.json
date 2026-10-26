@@ -1,0 +1,600 @@
+{
+  "notes": "Gear that drops on the white belt tier. Stat lists are per rarity: [common, uncommon, rare, epic]. Charms have a small effect instead of stats (effect types are in packages/sim/src/effects.ts). C7 (drafts): items for tiers 2-10 added per S2; ids keep S2's <belt>-<slot>-<n> placeholders; every item has a tier. Charm amounts are not set here (balance, not text).",
+  "tier": "all",
+  "slotStats": {
+    "hands": {
+      "power": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "gi": {
+      "maxHealth": [
+        8,
+        14,
+        20,
+        28
+      ],
+      "guard": [
+        2,
+        3,
+        5,
+        7
+      ]
+    }
+  },
+  "items": [
+    {
+      "id": "cloth-wraps",
+      "name": "Cloth Hand Wraps",
+      "slot": "hands",
+      "description": "Simple cloth wraps. Every journey starts with the first step.",
+      "tier": "white"
+    },
+    {
+      "id": "leather-wraps",
+      "name": "Leather Hand Wraps",
+      "slot": "hands",
+      "description": "Tough leather wraps that help your hands stay strong.",
+      "tier": "white"
+    },
+    {
+      "id": "tiger-wraps",
+      "name": "Tiger Stripe Wraps",
+      "slot": "hands",
+      "description": "Bold striped wraps. They remind you to be brave.",
+      "tier": "white"
+    },
+    {
+      "id": "training-gi",
+      "name": "Training Gi",
+      "slot": "gi",
+      "description": "A plain white gi, ready for hard work.",
+      "tier": "white"
+    },
+    {
+      "id": "padded-gi",
+      "name": "Padded Gi",
+      "slot": "gi",
+      "description": "A gi with soft padding to help you take a hit.",
+      "tier": "white"
+    },
+    {
+      "id": "mountain-gi",
+      "name": "Mountain Gi",
+      "slot": "gi",
+      "description": "A sturdy gi that stands firm, like a mountain.",
+      "tier": "white"
+    },
+    {
+      "id": "jade-charm",
+      "name": "Jade Charm",
+      "slot": "charm",
+      "text": "+{pct} Power",
+      "effect": {
+        "type": "powerScale"
+      },
+      "amounts": [
+        0.04,
+        0.06,
+        0.09,
+        0.12
+      ],
+      "description": "A smooth green stone that fills your hits with strength.",
+      "tier": "white"
+    },
+    {
+      "id": "lotus-charm",
+      "name": "Lotus Charm",
+      "slot": "charm",
+      "text": "Start each room with {n} Focus",
+      "effect": {
+        "type": "startFocus"
+      },
+      "amounts": [
+        10,
+        15,
+        20,
+        30
+      ],
+      "description": "A lotus grows bright even in muddy water. Start each room ready.",
+      "tier": "white"
+    },
+    {
+      "id": "crane-charm",
+      "name": "Crane Charm",
+      "slot": "charm",
+      "text": "Perfect Counters heal {n} health",
+      "effect": {
+        "type": "healOnPerfect"
+      },
+      "amounts": [
+        2,
+        3,
+        4,
+        6
+      ],
+      "description": "The crane waits, then moves at the perfect time.",
+      "tier": "white"
+    },
+    {
+      "id": "yellow-hands-1",
+      "tier": "yellow",
+      "slot": "hands",
+      "name": "Sunrise Wraps",
+      "description": "Warm yellow wraps, bright like the morning sun."
+    },
+    {
+      "id": "yellow-hands-2",
+      "tier": "yellow",
+      "slot": "hands",
+      "name": "Vine Wraps",
+      "description": "Soft green wraps that hold on like garden vines."
+    },
+    {
+      "id": "yellow-hands-3",
+      "tier": "yellow",
+      "slot": "hands",
+      "name": "Petal Wraps",
+      "description": "Light wraps that float like petals in the breeze."
+    },
+    {
+      "id": "yellow-gi-1",
+      "tier": "yellow",
+      "slot": "gi",
+      "name": "Garden Gi",
+      "description": "A gi the color of new leaves, ready to grow."
+    },
+    {
+      "id": "yellow-gi-2",
+      "tier": "yellow",
+      "slot": "gi",
+      "name": "Gardener's Gi",
+      "description": "A sturdy gi with deep pockets for seeds."
+    },
+    {
+      "id": "yellow-gi-3",
+      "tier": "yellow",
+      "slot": "gi",
+      "name": "Sunflower Gi",
+      "description": "A gi that stands tall and faces the light."
+    },
+    {
+      "id": "yellow-charm-1",
+      "tier": "yellow",
+      "slot": "charm",
+      "name": "Seed Charm",
+      "effect": {
+        "type": "focusGain"
+      },
+      "text": "+{pct} Focus from every hit",
+      "description": "A tiny glowing seed. Little by little, your Focus grows."
+    },
+    {
+      "id": "orange-hands-1",
+      "tier": "orange",
+      "slot": "hands",
+      "name": "Oven Mitt Wraps",
+      "description": "Thick, cozy wraps from the Ember Kitchens."
+    },
+    {
+      "id": "orange-hands-2",
+      "tier": "orange",
+      "slot": "hands",
+      "name": "Ladle Wraps",
+      "description": "Wraps with a stirring spoon stitched on top."
+    },
+    {
+      "id": "orange-hands-3",
+      "tier": "orange",
+      "slot": "hands",
+      "name": "Ember Wraps",
+      "description": "Wraps that stay warm, like a friendly fire."
+    },
+    {
+      "id": "orange-gi-1",
+      "tier": "orange",
+      "slot": "gi",
+      "name": "Apron Gi",
+      "description": "A gi with a cook's apron. Ready to help!"
+    },
+    {
+      "id": "orange-gi-2",
+      "tier": "orange",
+      "slot": "gi",
+      "name": "Hearth Gi",
+      "description": "A warm gi that feels like supper with friends."
+    },
+    {
+      "id": "orange-gi-3",
+      "tier": "orange",
+      "slot": "gi",
+      "name": "Spice Gi",
+      "description": "A bright orange gi with a little zing."
+    },
+    {
+      "id": "orange-charm-1",
+      "tier": "orange",
+      "slot": "charm",
+      "name": "Kettle Charm",
+      "effect": {
+        "type": "blockCut"
+      },
+      "text": "Blocks soften hits by {pct}",
+      "description": "A tiny kettle. It keeps calm when things get hot."
+    },
+    {
+      "id": "green-hands-1",
+      "tier": "green",
+      "slot": "hands",
+      "name": "Pebble Wraps",
+      "description": "Wraps with smooth pebbles sewn in for steady hands."
+    },
+    {
+      "id": "green-hands-2",
+      "tier": "green",
+      "slot": "hands",
+      "name": "Moss Wraps",
+      "description": "Soft green wraps, gentle as moss on a stone."
+    },
+    {
+      "id": "green-hands-3",
+      "tier": "green",
+      "slot": "hands",
+      "name": "Giant Step Wraps",
+      "description": "Big, bold wraps for climbing big steps."
+    },
+    {
+      "id": "green-gi-1",
+      "tier": "green",
+      "slot": "gi",
+      "name": "Stone Gi",
+      "description": "A gray gi that stands firm, like a strong wall."
+    },
+    {
+      "id": "green-gi-2",
+      "tier": "green",
+      "slot": "gi",
+      "name": "Mossy Gi",
+      "description": "A green gi that is soft but strong."
+    },
+    {
+      "id": "green-gi-3",
+      "tier": "green",
+      "slot": "gi",
+      "name": "Mountain Path Gi",
+      "description": "A gi for a climber who takes one step at a time."
+    },
+    {
+      "id": "green-charm-1",
+      "tier": "green",
+      "slot": "charm",
+      "name": "Water Jar Charm",
+      "effect": {
+        "type": "attackSpeed"
+      },
+      "text": "+{pct} attack speed",
+      "description": "A helper's little jar. Faithful hands move quickly."
+    },
+    {
+      "id": "blue-hands-1",
+      "tier": "blue",
+      "slot": "hands",
+      "name": "River Wraps",
+      "description": "Cool blue wraps that move like water."
+    },
+    {
+      "id": "blue-hands-2",
+      "tier": "blue",
+      "slot": "hands",
+      "name": "Oar Wraps",
+      "description": "Wraps made for hands that row together."
+    },
+    {
+      "id": "blue-hands-3",
+      "tier": "blue",
+      "slot": "hands",
+      "name": "Heron Wraps",
+      "description": "Light wraps for quick, careful moves."
+    },
+    {
+      "id": "blue-gi-1",
+      "tier": "blue",
+      "slot": "gi",
+      "name": "Rain Gi",
+      "description": "A blue gi that stays calm in the rain."
+    },
+    {
+      "id": "blue-gi-2",
+      "tier": "blue",
+      "slot": "gi",
+      "name": "Boat Gi",
+      "description": "A gi with a little anchor stitched on."
+    },
+    {
+      "id": "blue-gi-3",
+      "tier": "blue",
+      "slot": "gi",
+      "name": "Deep Water Gi",
+      "description": "A dark blue gi, steady and calm."
+    },
+    {
+      "id": "blue-charm-1",
+      "tier": "blue",
+      "slot": "charm",
+      "name": "Clear Drop Charm",
+      "effect": {
+        "type": "staggerBonus"
+      },
+      "text": "+{pct} Stagger on big ones",
+      "description": "A drop that never dries. See clearly, then act."
+    },
+    {
+      "id": "red-hands-1",
+      "tier": "red",
+      "slot": "hands",
+      "name": "Forge Wraps",
+      "description": "Red wraps for strong hands and a kind heart."
+    },
+    {
+      "id": "red-hands-2",
+      "tier": "red",
+      "slot": "hands",
+      "name": "Hammer Wraps",
+      "description": "Wraps with a little hammer stitched on."
+    },
+    {
+      "id": "red-hands-3",
+      "tier": "red",
+      "slot": "hands",
+      "name": "Spark Wraps",
+      "description": "Bright wraps that glow with brave effort."
+    },
+    {
+      "id": "red-gi-1",
+      "tier": "red",
+      "slot": "gi",
+      "name": "Smith's Gi",
+      "description": "A tough gi from the Forge of Courage."
+    },
+    {
+      "id": "red-gi-2",
+      "tier": "red",
+      "slot": "gi",
+      "name": "Knight's Gi",
+      "description": "A gi with a shield on the back. Shields help others."
+    },
+    {
+      "id": "red-gi-3",
+      "tier": "red",
+      "slot": "gi",
+      "name": "Courage Gi",
+      "description": "A bold red gi for a brave heart."
+    },
+    {
+      "id": "red-charm-1",
+      "tier": "red",
+      "slot": "charm",
+      "name": "Forge Song Charm",
+      "effect": {
+        "type": "comboSpeed"
+      },
+      "text": "Combos flow {pct} faster",
+      "description": "It hums the smiths' song: strong hands, kind heart."
+    },
+    {
+      "id": "red-black-hands-1",
+      "tier": "red-black",
+      "slot": "hands",
+      "name": "Echo Wraps",
+      "description": "Wraps that remind you to choose kind words."
+    },
+    {
+      "id": "red-black-hands-2",
+      "tier": "red-black",
+      "slot": "hands",
+      "name": "Mask Wraps",
+      "description": "Red and black wraps with a smiling mask on top."
+    },
+    {
+      "id": "red-black-hands-3",
+      "tier": "red-black",
+      "slot": "hands",
+      "name": "Whisper Wraps",
+      "description": "Quiet wraps for calm, careful hands."
+    },
+    {
+      "id": "red-black-gi-1",
+      "tier": "red-black",
+      "slot": "gi",
+      "name": "Echo Hall Gi",
+      "description": "A red and black gi for a student who stays true."
+    },
+    {
+      "id": "red-black-gi-2",
+      "tier": "red-black",
+      "slot": "gi",
+      "name": "Two-Tone Gi",
+      "description": "Half red, half black. The same student inside and out."
+    },
+    {
+      "id": "red-black-gi-3",
+      "tier": "red-black",
+      "slot": "gi",
+      "name": "Kind Word Gi",
+      "description": "A gi with \"You are loved\" stitched inside."
+    },
+    {
+      "id": "red-black-charm-1",
+      "tier": "red-black",
+      "slot": "charm",
+      "name": "Kind Stone Charm",
+      "effect": {
+        "type": "lowHealthFocus"
+      },
+      "text": "+{pct} Focus when health is low",
+      "description": "It whispers, \"You are loved,\" when things get hard."
+    },
+    {
+      "id": "brown-hands-1",
+      "tier": "brown",
+      "slot": "hands",
+      "name": "Root Wraps",
+      "description": "Earthy wraps for hands that hold on."
+    },
+    {
+      "id": "brown-hands-2",
+      "tier": "brown",
+      "slot": "hands",
+      "name": "Bookmark Wraps",
+      "description": "Wraps with a ribbon, like a favorite book."
+    },
+    {
+      "id": "brown-hands-3",
+      "tier": "brown",
+      "slot": "hands",
+      "name": "Oak Wraps",
+      "description": "Strong wraps, like the bark of an old tree."
+    },
+    {
+      "id": "brown-gi-1",
+      "tier": "brown",
+      "slot": "gi",
+      "name": "Library Gi",
+      "description": "A brown gi for a student who loves to learn."
+    },
+    {
+      "id": "brown-gi-2",
+      "tier": "brown",
+      "slot": "gi",
+      "name": "Old Oak Gi",
+      "description": "A gi with deep roots. It keeps you standing."
+    },
+    {
+      "id": "brown-gi-3",
+      "tier": "brown",
+      "slot": "gi",
+      "name": "Storyteller Gi",
+      "description": "A gi stitched with tiny stories of helpers."
+    },
+    {
+      "id": "brown-charm-1",
+      "tier": "brown",
+      "slot": "charm",
+      "name": "Root Ring Charm",
+      "effect": {
+        "type": "strikeCost"
+      },
+      "text": "STRIKE costs {n} less Focus",
+      "description": "A ring of wood that grows a little as you learn."
+    },
+    {
+      "id": "brown-black-hands-1",
+      "tier": "brown-black",
+      "slot": "hands",
+      "name": "Calm Feather Wraps",
+      "description": "Light wraps that stay still in strong wind."
+    },
+    {
+      "id": "brown-black-hands-2",
+      "tier": "brown-black",
+      "slot": "hands",
+      "name": "Cloud Wraps",
+      "description": "Soft gray wraps, like clouds after rain."
+    },
+    {
+      "id": "brown-black-hands-3",
+      "tier": "brown-black",
+      "slot": "hands",
+      "name": "Rainbow Wraps",
+      "description": "Wraps with a thin rainbow stripe of hope."
+    },
+    {
+      "id": "brown-black-gi-1",
+      "tier": "brown-black",
+      "slot": "gi",
+      "name": "Storm Stair Gi",
+      "description": "A brown and black gi for climbing steady steps."
+    },
+    {
+      "id": "brown-black-gi-2",
+      "tier": "brown-black",
+      "slot": "gi",
+      "name": "Raincoat Gi",
+      "description": "A gi that keeps you dry and calm."
+    },
+    {
+      "id": "brown-black-gi-3",
+      "tier": "brown-black",
+      "slot": "gi",
+      "name": "Steady Wind Gi",
+      "description": "A gi for a student who stays calm inside."
+    },
+    {
+      "id": "brown-black-charm-1",
+      "tier": "brown-black",
+      "slot": "charm",
+      "name": "Feather Charm",
+      "effect": {
+        "type": "counterWindow"
+      },
+      "text": "A little more time to COUNTER",
+      "description": "A feather that floats still. Wait, watch, then move."
+    },
+    {
+      "id": "black-hands-1",
+      "tier": "black",
+      "slot": "hands",
+      "name": "Summit Wraps",
+      "description": "Black wraps for a student near the top."
+    },
+    {
+      "id": "black-hands-2",
+      "tier": "black",
+      "slot": "hands",
+      "name": "Lightbearer Wraps",
+      "description": "Wraps that glow softly, like a shared light."
+    },
+    {
+      "id": "black-hands-3",
+      "tier": "black",
+      "slot": "hands",
+      "name": "Bell Wraps",
+      "description": "Wraps with a tiny bell. Ring, you made it!"
+    },
+    {
+      "id": "black-gi-1",
+      "tier": "black",
+      "slot": "gi",
+      "name": "Summit Gi",
+      "description": "A black gi for a student who climbed far."
+    },
+    {
+      "id": "black-gi-2",
+      "tier": "black",
+      "slot": "gi",
+      "name": "Sunrise Summit Gi",
+      "description": "A black gi with a gold edge, like dawn at the top."
+    },
+    {
+      "id": "black-gi-3",
+      "tier": "black",
+      "slot": "gi",
+      "name": "Homecoming Gi",
+      "description": "A gi for helping a friend finish the climb."
+    },
+    {
+      "id": "black-charm-1",
+      "tier": "black",
+      "slot": "charm",
+      "name": "Great Lamp Charm",
+      "effect": {
+        "type": "dashOnBlock"
+      },
+      "text": "Blocks fully charge your next DASH",
+      "description": "A little lamp. Light grows when it is shared."
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "_note": "DRAFT for C8 (A5 padded-weapon enemy, art in PR #95). Text only. Every stat and behaviour field is TODO: PR #95 says its script numbers are placeholders, and speed, damage, timings, tier and seals are still open. Like every enemy, it is a Tower thing the shadow dimmed, not evil; beating it frees it and the light comes back. First appears at Yellow, so there is no White lore; the Orange line is later lore.",
+  "id": "bopper",
+  "name": "Bouncy Bopper",
+  "notes": "Carries a padded foam training staff (own art layer). Raises the staff over its shoulder and glows before a soft overhead bonk (the tell). Disarmed = staff layer hidden. Behaviour, disarm rules and seals: TODO (PR #70 / PR #95 DECIDE).",
+  "color": "TODO (art: navy body, lime accents)",
+  "maxHealth": 72,
+  "power": 12,
+  "guard": 10,
+  "radius": 0.38,
+  "moveSpeedTilesPerSecond": 2.2,
+  "sightRange": 10,
+  "attack": {
+    "name": "staff bonk",
+    "strength": 1,
+    "startRange": 1.5,
+    "reach": 1.0,
+    "areaRadius": 0.7,
+    "telegraphTicks": 16,
+    "recoverTicks": 18
+  },
+  "parSeconds": 4.0,
+  "description": "A bouncy shadow with a soft foam staff. Watch it lift the staff, then move!",
+  "bestiary": {
+    "tip": "When the staff goes up and glows, get ready.",
+    "lore": {
+      "yellow": "It still bounces like it wants to play. A little light helps it remember.",
+      "orange": "Its staff was always soft. It was a friend before the storm, and it can be again."
+    }
+  },
+  "lines": {
+    "meet": "Here comes Bouncy Bopper!",
+    "senseiTip": "Staff up means it's coming. Be ready!",
+    "disarmed": "The staff is gone. Bopper just wants to play!",
+    "freed": "The shadow is gone, and Bopper bounces in the light!",
+    "_disarmedNote": "Disarmed means the staff art layer is hidden."
+  }
+}

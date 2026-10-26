@@ -1,0 +1,33 @@
+{
+  "id": "pebble-pal",
+  "name": "Pebble Pal",
+  "notes": "DRAFT for C13-2 (bestiary-plan.md). Little pebbles that hop after you in groups. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "color": "#9c8f7e",
+  "maxHealth": 21,
+  "power": 7,
+  "guard": 0,
+  "radius": 0.3,
+  "moveSpeedTilesPerSecond": 4.0,
+  "sightRange": 12,
+  "attack": {
+    "name": "hop",
+    "strength": 1,
+    "startRange": 0.95,
+    "reach": 0.5,
+    "areaRadius": 0.55,
+    "telegraphTicks": 14,
+    "recoverTicks": 16
+  },
+  "parSeconds": 2.0,
+  "tier": "green",
+  "band": "F1-2",
+  "tell": "hop, then red circle",
+  "senseiLine": "Little ones first. Steady feet.",
+  "description": "Little pebbles that hop after you in groups.",
+  "bestiary": {
+    "tip": "Calm the little ones first.",
+    "lore": {
+      "green": "Tiny pebbles shook loose from the Giant's Steps. Calm them, and they settle back into the path."
+    }
+  }
+}

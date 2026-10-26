@@ -1,0 +1,41 @@
+{
+  "notes": "Gear that drops on the white belt tier. Stat lists are per rarity: [common, uncommon, rare, epic]. rarityNames are the names kids see (C7, PR #92); the ids stay as they are. Charms have a small effect instead of stats (effect types are in packages/sim/src/effects.ts).",
+  "rarityNames": { "common": "Everyday", "uncommon": "Special", "rare": "Rare", "epic": "Epic", "legendary": "Legendary" },
+  "tier": "white",
+  "slotStats": {
+    "hands": { "power": [1, 1, 1, 1] },
+    "gi": { "maxHealth": [3, 5, 8, 10], "guard": [1, 2, 2, 3] }
+  },
+  "items": [
+    { "id": "cloth-wraps", "name": "Cloth Hand Wraps", "slot": "hands" },
+    { "id": "leather-wraps", "name": "Leather Hand Wraps", "slot": "hands" },
+    { "id": "tiger-wraps", "name": "Tiger Stripe Wraps", "slot": "hands" },
+    { "id": "training-gi", "name": "Training Gi", "slot": "gi" },
+    { "id": "padded-gi", "name": "Padded Gi", "slot": "gi" },
+    { "id": "mountain-gi", "name": "Mountain Gi", "slot": "gi" },
+    {
+      "id": "jade-charm",
+      "name": "Jade Charm",
+      "slot": "charm",
+      "text": "+{pct} Power",
+      "effect": { "type": "powerScale" },
+      "amounts": [0.01, 0.02, 0.03, 0.04]
+    },
+    {
+      "id": "lotus-charm",
+      "name": "Lotus Charm",
+      "slot": "charm",
+      "text": "Start each room with {n} Focus",
+      "effect": { "type": "startFocus" },
+      "amounts": [10, 15, 20, 30]
+    },
+    {
+      "id": "crane-charm",
+      "name": "Crane Charm",
+      "slot": "charm",
+      "text": "Perfect Counters heal {n} health",
+      "effect": { "type": "healOnPerfect" },
+      "amounts": [2, 3, 4, 6]
+    }
+  ]
+}

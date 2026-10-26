@@ -1,0 +1,126 @@
+{
+  "id": "basic-form-1",
+  "name": "Basic Form 1",
+  "schoolName": "Basic Form One",
+  "belt": "white-to-yellow",
+  "source": "Toni Kennerson, school sheet (Basic Form One.docx via /workspace/katas/basic-form-1.md)",
+  "approvedBy": null,
+  "form": "rooted-form",
+  "senseiLine": "Practice your kata with your instructor.",
+  "steps": [
+    {
+      "n": 1,
+      "text": "Step forward w/RF, pivot on the balls of feet, face L w/RF in rear, LH downward block (protect (L) front leg), followed by RF step forward, RH straight forward punch",
+      "facing": [
+        "L"
+      ],
+      "moves": [
+        "pivot",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 2,
+      "text": "Raise RH fist (across body) to L ear, look over R shoulder then 180- degree turn w/RF leading (big special turn), end facing R w/RF forward, followed by RH downward block (over RL), then LF step forward then LF straightforward punch",
+      "facing": [
+        "R"
+      ],
+      "moves": [
+        "turn.big-special",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null,
+      "jayNote": "Left-hand straight punch (Jay, Oct 24)."
+    },
+    {
+      "n": 3,
+      "text": "Raise LH fist (across body) to R ear, while (short) stepping to rear w/RF into cat stance, step forward w/LF, LH downward block (over LL), then RF step forward RH straight forward punch, LF step forward LH straight forward punch, RF step forward RH straight forward punch (kiai)",
+      "facing": [
+        "R"
+      ],
+      "moves": [
+        "stance.cat",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": true,
+      "question": null
+    },
+    {
+      "n": 4,
+      "text": "With LF step (behind) 180-degrees now facing L w/LF forward, LH downward block, followed by step forward w/RF, RH straight forward punch",
+      "facing": [
+        "L"
+      ],
+      "moves": [
+        "turn.180",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 5,
+      "text": "With RF step (behind) 180-degree now facing R w/RF forward, RH downward block, followed by step forward w/LF, LH straight forward punch",
+      "facing": [
+        "R"
+      ],
+      "moves": [
+        "turn.180",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 6,
+      "text": "Raise LH fist (across body) to R ear while short stepping to rear w/RF into cat stance, followed by step forward w/LF, LH downward block, then RF step forward RH straight forward punch, LF step forward, LH straight forward punch, RF step forward, RH straight forward punch (kiai)",
+      "facing": [
+        "R"
+      ],
+      "moves": [
+        "stance.cat",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": true,
+      "question": null
+    },
+    {
+      "n": 7,
+      "text": "With LF step (behind) 180-degree end facing L, w/LF forward, LH downward block, step forward w/RF, RH straight forward punch",
+      "facing": [
+        "L"
+      ],
+      "moves": [
+        "turn.180",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null
+    },
+    {
+      "n": 8,
+      "text": "Step (behind) 180-degree w/RF end facing right w/RF forward, RH downward block, step forward LF, LH straight forward punch",
+      "facing": [
+        "R"
+      ],
+      "moves": [
+        "turn.180",
+        "block.downward",
+        "punch.straight"
+      ],
+      "kiai": false,
+      "question": null
+    }
+  ],
+  "finish": "Bring LF 180 degrees into (front facing) ready stance, move to attention & bow out"
+}

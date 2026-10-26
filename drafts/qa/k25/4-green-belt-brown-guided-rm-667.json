@@ -1,0 +1,15 @@
+{
+ "tag": "4-green-belt-brown-guided-rm-667",
+ "rmVal": true,
+ "diff": "guided",
+ "impacts": 26,
+ "kinds": {
+  "attack(default 0)": 20,
+  "scale 0": 6
+ },
+ "shakeCalls": [],
+ "framesShaking": 0,
+ "frames": 890,
+ "maxOffsetPx": 0,
+ "errs": []
+}

@@ -1,0 +1,395 @@
+{
+  "notes": "DRAFT for C3 (lore bible). Same shape as the 'guardian' and 'relics' entries in story/chapter-1.json (id, name, tier, description; relics add sensei). Added fields: tier.place, tier.form (the real belt form name from docs/curriculum.md), tier.clue (the mystery piece this tier reveals), guardian.freed and guardian.senseiAfter (one line each). The white tier's Guardian and Relics are copied unchanged from chapter-1.json. Text only; code is needed to show it.",
+  "tiers": [
+    {
+      "tier": "white",
+      "order": 1,
+      "belt": "White",
+      "form": "Basic Form 1",
+      "place": "The Lantern Halls",
+      "clue": "The light was not lost. It broke into pieces, and the pieces are still here.",
+      "guardian": {
+        "id": "lamp-keeper",
+        "name": "The Lamp Keeper",
+        "tier": "white",
+        "description": "Once it kept the Tower's first lamp lit. The shadow made it forget, but it never stopped hoping.",
+        "freed": "A spark... I had forgotten how warm it feels.",
+        "senseiAfter": "Watch, wait, then answer. You did just that."
+      },
+      "relics": [
+        {
+          "id": "cracked-lamp-glass",
+          "name": "Cracked Lamp Glass",
+          "tier": "white",
+          "description": "A curved piece of glass, still warm. It came from something very big and very bright.",
+          "sensei": "Something this warm was never meant to stay in the dark."
+        },
+        {
+          "id": "faded-map",
+          "name": "Faded Map",
+          "tier": "white",
+          "description": "An old map of the Tower. Someone circled the very top floor.",
+          "sensei": "Someone else climbed before you. You are not alone on this path."
+        },
+        {
+          "id": "lamp-wick",
+          "name": "Little Wick",
+          "tier": "white",
+          "description": "A tiny wick, still glowing. Even a small light can fill a dark room.",
+          "sensei": "A small light still matters. So do you."
+        }
+      ]
+    },
+    {
+      "tier": "yellow",
+      "order": 2,
+      "belt": "Yellow",
+      "form": "Basic Form 2",
+      "place": "The Sunrise Garden",
+      "clue": "The pieces of light fell in a circle around the Tower. Someone was standing in the middle, trying to catch them.",
+      "guardian": {
+        "id": "sun-gardener",
+        "name": "The Sun Gardener",
+        "tier": "yellow",
+        "description": "A tall, gentle gardener made of vines. The shadow wrapped it in thorns, but its roots still reach for the sun.",
+        "freed": "The thorns are gone. My flowers can open again.",
+        "senseiAfter": "You moved light on your feet. The garden noticed."
+      },
+      "relics": [
+        {
+          "id": "sunrise-seed",
+          "name": "Sunrise Seed",
+          "tier": "yellow",
+          "description": "A seed that glows at dawn. It grew near the light for a long time.",
+          "sensei": "Good things grow slowly. So does skill."
+        },
+        {
+          "id": "bent-garden-gate-key",
+          "name": "Bent Gate Key",
+          "tier": "yellow",
+          "description": "Captain Clank's old key. It was bent the night the light broke.",
+          "sensei": "Even a bent key can still open a door."
+        },
+        {
+          "id": "glowing-petal",
+          "name": "Glowing Petal",
+          "tier": "yellow",
+          "description": "A petal that fell upward. It points to the top of the Tower.",
+          "sensei": "The light is calling you home."
+        }
+      ]
+    },
+    {
+      "tier": "orange",
+      "order": 3,
+      "belt": "Orange",
+      "form": "Keon",
+      "place": "The Ember Kitchens",
+      "clue": "The night the storm came, one student left supper and ran up the Tower to help.",
+      "guardian": {
+        "id": "hearth-cook",
+        "name": "The Hearth Cook",
+        "tier": "orange",
+        "description": "A big, round cook with a ladle. The shadow made it guard the cold ovens alone.",
+        "freed": "Is it supper time? I would love some company.",
+        "senseiAfter": "You kept going, one step at a time."
+      },
+      "relics": [
+        {
+          "id": "empty-bowl",
+          "name": "Empty Bowl",
+          "tier": "orange",
+          "description": "A bowl with a name scratched off. Someone left before supper.",
+          "sensei": "A table is warmer when everyone is welcome."
+        },
+        {
+          "id": "cold-ember",
+          "name": "Cold Ember",
+          "tier": "orange",
+          "description": "It glows faintly when you hold it close. Warmth was here once.",
+          "sensei": "Warmth comes back when we share it."
+        },
+        {
+          "id": "recipe-card",
+          "name": "Old Recipe Card",
+          "tier": "orange",
+          "description": "\"Soup for everyone. Save a bowl for the one who is late.\"",
+          "sensei": "Someone was always remembered here."
+        }
+      ]
+    },
+    {
+      "tier": "green",
+      "order": 4,
+      "belt": "Green",
+      "form": "David and Goliath",
+      "place": "The Giant's Steps",
+      "clue": "The shadow is not one monster. It is made of many little fears, all stacked together.",
+      "guardian": {
+        "id": "stone-giant",
+        "name": "The Stone Giant",
+        "tier": "green",
+        "description": "Very tall and very loud. Inside, it is only a pile of stones the shadow stacked up.",
+        "freed": "I was only stones and worry. Thank you for not running away.",
+        "senseiAfter": "Big things can still fall to a brave, small heart."
+      },
+      "relics": [
+        {
+          "id": "smooth-stone",
+          "name": "Smooth River Stone",
+          "tier": "green",
+          "description": "A small, smooth stone. It fits perfectly in your hand.",
+          "sensei": "Small and ready is enough."
+        },
+        {
+          "id": "water-jar",
+          "name": "Little Water Jar",
+          "tier": "green",
+          "description": "A helper's jar, still half full. They kept carrying water after dark.",
+          "sensei": "Faithful work matters, even when no one sees."
+        },
+        {
+          "id": "giant-pebble",
+          "name": "Pebble of Worry",
+          "tier": "green",
+          "description": "It looks heavy. It is light as air when you pick it up.",
+          "sensei": "Some worries are smaller than they look."
+        }
+      ]
+    },
+    {
+      "tier": "blue",
+      "order": 5,
+      "belt": "Blue",
+      "form": "Penon 1",
+      "place": "The Quiet River",
+      "clue": "A boat's log says one brave traveler carried the great light through the rain.",
+      "guardian": {
+        "id": "river-watcher",
+        "name": "The River Watcher",
+        "tier": "blue",
+        "description": "A heron made of water. The shadow muddied its eyes, so it cannot see who is friend or foe.",
+        "freed": "The water is clear. I can see you now, friend.",
+        "senseiAfter": "You stayed calm in deep water."
+      },
+      "relics": [
+        {
+          "id": "boat-log",
+          "name": "Boat Log Page",
+          "tier": "blue",
+          "description": "\"Tonight one traveler carried the light to keep it dry. The storm was coming.\"",
+          "sensei": "Helping can be very brave."
+        },
+        {
+          "id": "clear-drop",
+          "name": "Clear Drop",
+          "tier": "blue",
+          "description": "A drop of water that never dries. You can see the stars inside it.",
+          "sensei": "Clear water shows the way."
+        },
+        {
+          "id": "oar-handle",
+          "name": "Worn Oar Handle",
+          "tier": "blue",
+          "description": "Smooth from many hands rowing together.",
+          "sensei": "Many hands make the river easy."
+        }
+      ]
+    },
+    {
+      "tier": "red",
+      "order": 6,
+      "belt": "Red",
+      "form": "Penon 2",
+      "place": "The Forge of Courage",
+      "clue": "The traveler who carried the light wore red. Their shield kept the rain off it.",
+      "guardian": {
+        "id": "ember-knight",
+        "name": "The Ember Knight",
+        "tier": "red",
+        "description": "A knight of glowing metal. The shadow told it to protect the forge from everyone.",
+        "freed": "I was guarding the wrong thing. Shields are for helping.",
+        "senseiAfter": "Strength is best used to protect others."
+      },
+      "relics": [
+        {
+          "id": "cracked-shield",
+          "name": "Cracked Red Shield",
+          "tier": "red",
+          "description": "A traveler's shield, cracked down the middle. They used it to cover the light.",
+          "sensei": "Even strong people need help sometimes."
+        },
+        {
+          "id": "forge-song",
+          "name": "Forge Song Sheet",
+          "tier": "red",
+          "description": "The smiths' old song. It starts: \"Strong hands, kind heart.\"",
+          "sensei": "Strong hands, kind heart."
+        },
+        {
+          "id": "cool-ember",
+          "name": "Cool Ember",
+          "tier": "red",
+          "description": "A coal that glows but does not burn you.",
+          "sensei": "Power can be gentle."
+        }
+      ]
+    },
+    {
+      "tier": "red-black",
+      "order": 7,
+      "belt": "Red/Black",
+      "form": "Penon 3",
+      "place": "The Hall of Echoes",
+      "clue": "The echoes told the traveler to give up. The traveler kept holding on.",
+      "guardian": {
+        "id": "echo-mask",
+        "name": "The Echo Mask",
+        "tier": "red-black",
+        "description": "A floating mask that copies your moves. Under the mask, it is lonely.",
+        "freed": "I only copied what I heard. I would like to hear kind words now.",
+        "senseiAfter": "You chose your own words, not the echo's."
+      },
+      "relics": [
+        {
+          "id": "traveler-note",
+          "name": "Traveler's Note",
+          "tier": "red-black",
+          "description": "\"I will hold the light until help comes.\"",
+          "sensei": "Help is on the way."
+        },
+        {
+          "id": "kind-word-stone",
+          "name": "Kind Word Stone",
+          "tier": "red-black",
+          "description": "When you whisper to it, it whispers back: \"You are loved.\"",
+          "sensei": "You are loved."
+        },
+        {
+          "id": "half-mask",
+          "name": "Half Mask",
+          "tier": "red-black",
+          "description": "A mask cut in two. One side smiles.",
+          "sensei": "Be the same person inside and out."
+        }
+      ]
+    },
+    {
+      "tier": "brown",
+      "order": 8,
+      "belt": "Brown",
+      "form": "Nihanchi",
+      "place": "The Root Library",
+      "clue": "The last book has a page about the traveler. It says they were once a student of this very Tower.",
+      "guardian": {
+        "id": "root-keeper",
+        "name": "The Root Keeper",
+        "tier": "brown",
+        "description": "A wise old tree who reads every book. The shadow made it forget how to share them.",
+        "freed": "Take a book, little one. Your story belongs here too.",
+        "senseiAfter": "Strong roots keep you standing."
+      },
+      "relics": [
+        {
+          "id": "dusty-book",
+          "name": "Dusty Story Book",
+          "tier": "brown",
+          "description": "A book of helpers. The last page is blank, waiting for a new story.",
+          "sensei": "Your story is still being written."
+        },
+        {
+          "id": "student-sash",
+          "name": "Faded Student Sash",
+          "tier": "brown",
+          "description": "An old practice sash with a name too faded to read.",
+          "sensei": "Every master was once a beginner."
+        },
+        {
+          "id": "root-ring",
+          "name": "Root Ring",
+          "tier": "brown",
+          "description": "A ring of wood that grows a little each time you read.",
+          "sensei": "Learning grows deep before it grows tall."
+        }
+      ]
+    },
+    {
+      "tier": "brown-black",
+      "order": 9,
+      "belt": "Brown/Black",
+      "form": "Possi",
+      "place": "The Storm Stair",
+      "clue": "The storm still spins at the top. The traveler is there, holding the last of the light.",
+      "guardian": {
+        "id": "storm-herald",
+        "name": "The Storm Herald",
+        "tier": "brown-black",
+        "description": "A tall figure of wind and lightning. It shouts the storm louder so no one hears the calm.",
+        "freed": "The wind is still. Listen. Someone is calling from the top.",
+        "senseiAfter": "You stayed steady inside the storm."
+      },
+      "relics": [
+        {
+          "id": "calm-feather",
+          "name": "Calm Feather",
+          "tier": "brown-black",
+          "description": "It floats still, even in the strongest wind.",
+          "sensei": "Peace can be inside you, even in a storm."
+        },
+        {
+          "id": "summit-letter",
+          "name": "Unsent Letter",
+          "tier": "brown-black",
+          "description": "\"I saved what I could. Please come help me finish.\"",
+          "sensei": "No one has to finish alone."
+        },
+        {
+          "id": "rainbow-shard",
+          "name": "Rainbow Shard",
+          "tier": "brown-black",
+          "description": "A piece of the great light, shining every color.",
+          "sensei": "After the storm comes a promise."
+        }
+      ]
+    },
+    {
+      "tier": "black",
+      "order": 10,
+      "belt": "Black",
+      "form": "(not named in the data yet)",
+      "place": "The Summit",
+      "clue": "A storm broke the light, and a brave student tried to save it. No one is to blame. Together, you bring it home.",
+      "guardian": {
+        "id": "lost-lightbearer",
+        "name": "The Lost Lightbearer",
+        "tier": "black",
+        "description": "The traveler, wrapped in storm clouds. They are tired from holding the last piece.",
+        "freed": "You came all this way to help? Now we can finish together.",
+        "senseiAfter": "Love brought the light home, and it brought them home too."
+      },
+      "relics": [
+        {
+          "id": "whole-lamp",
+          "name": "The Great Lamp",
+          "tier": "black",
+          "description": "Every piece, together again. It shines on the whole town.",
+          "sensei": "The light was a gift, and gifts are meant to be shared."
+        },
+        {
+          "id": "traveler-sash",
+          "name": "The Traveler's Sash",
+          "tier": "black",
+          "description": "The traveler's old sash, now clean. They want to train again.",
+          "sensei": "It is never too late to begin again."
+        },
+        {
+          "id": "summit-bell",
+          "name": "Summit Bell",
+          "tier": "black",
+          "description": "When it rings, the whole town hears it.",
+          "sensei": "Look how far you have come."
+        }
+      ]
+    }
+  ]
+}

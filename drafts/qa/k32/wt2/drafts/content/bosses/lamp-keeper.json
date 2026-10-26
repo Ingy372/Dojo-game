@@ -1,0 +1,103 @@
+{
+  "id": "lamp-keeper",
+  "name": "The Lamp Keeper",
+  "notes": "DRAFT for C13-5 (bestiary-plan.md; lore from drafts/content/lore/guardians-and-relics.json, unchanged). White Guardian on floor 5. Same shape as content/enemies/floor-keeper.json, plus phases. Stats are TODO for the Researcher (the scaling guide puts a Guardian at about 90% of the tier max; hits-to-beat in the 40-80 boss band). Faith tie-ins stay out until Jay decides; see faithOverlayKey.",
+  "color": "#f4c95d",
+  "boss": true,
+  "guardian": true,
+  "tier": "white",
+  "band": "F5",
+  "maxHealth": 507,
+  "power": 15,
+  "guard": 30,
+  "radius": 0.85,
+  "moveSpeedTilesPerSecond": 1.6,
+  "sightRange": 20,
+  "attacks": [
+    {
+      "name": "lantern sway",
+      "strength": 1.0,
+      "startRange": 1.9,
+      "reach": 1.1,
+      "areaRadius": 1.3,
+      "telegraphTicks": 20,
+      "recoverTicks": 22
+    },
+    {
+      "name": "wick wake",
+      "strength": 0.8,
+      "startRange": 6.0,
+      "reach": 5.0,
+      "areaRadius": 0.9,
+      "telegraphTicks": 22,
+      "recoverTicks": 26,
+      "note": "Lamps around the room light one by one; each lit lamp drops a small red circle, never two at once."
+    },
+    {
+      "name": "dim stripe",
+      "strength": 1.2,
+      "startRange": 6.0,
+      "reach": 6.0,
+      "areaRadius": 0.6,
+      "telegraphTicks": 30,
+      "recoverTicks": 30,
+      "dashOnly": true,
+      "shape": "lane",
+      "shapeCue": "lane",
+      "tell": "purple-and-white stripes + '!!' + whoosh",
+      "counterable": false,
+      "answer": "dash",
+      "overlapOnGuided": false,
+      "noOverlapWithRedCircle": true
+    }
+  ],
+  "signature": "Wick Wake",
+  "phases": [
+    {
+      "id": "sway",
+      "atHealthFraction": 1.0,
+      "attacks": [
+        "lantern sway"
+      ],
+      "tell": "It lifts its lamp; red circle.",
+      "counterplay": "COUNTER the sway.",
+      "senseiLine": "Watch the lamp, then answer."
+    },
+    {
+      "id": "wake",
+      "atHealthFraction": 0.66,
+      "attacks": [
+        "lantern sway",
+        "wick wake"
+      ],
+      "tell": "Lamps flicker on, one at a time.",
+      "counterplay": "Step out of each small circle.",
+      "senseiLine": "One lamp at a time. Breathe."
+    },
+    {
+      "id": "dim",
+      "atHealthFraction": 0.33,
+      "attacks": [
+        "wick wake",
+        "dim stripe"
+      ],
+      "tell": "A slow striped lane and double marks.",
+      "counterplay": "DASH out of the lane.",
+      "senseiLine": "Stripes now. You know this."
+    }
+  ],
+  "parSeconds": 25,
+  "lines": {
+    "intro": "The old lamp flickers. Someone is still inside.",
+    "freed": "A spark... I had forgotten how warm it feels.",
+    "senseiAfter": "Watch, wait, then answer. You did just that."
+  },
+  "description": "The Lamp Keeper sways its lamp, lights the room one lamp at a time, then dims a slow striped lane.",
+  "bestiary": {
+    "tip": "Watch the lamp. When the stripes come, DASH.",
+    "lore": {
+      "white": "Once it kept the Tower's first lamp lit. The shadow made it forget, but it never stopped hoping. Free it, and its light comes home."
+    }
+  },
+  "faithOverlayKey": "lamp-keeper"
+}
