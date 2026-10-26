@@ -1176,7 +1176,7 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
     if (distance(p.pos, center) > a.areaRadius + R * 0.5) continue;
 
     const guarding = p.guardTicks > 0;
-    // Perfect Discipline: while it lasts, every Counter is a Perfect Counter.
+    // Strong Discipline: while it lasts, every Counter is a Great Counter.
     const disciplined = p.virtue?.kind === 'discipline' && p.virtueTicks > 0;
     if (guarding && a.counterable !== false && (disciplined || world.tick - p.counterPressedTick < counterWindowTicks(world, p))) {
       // Perfect Counter: no damage, enemy staggered, counter hit for 2x Power, Focus by chain (+25, +30, +35, +40).

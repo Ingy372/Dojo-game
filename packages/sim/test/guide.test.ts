@@ -74,7 +74,7 @@ describe('guided first Counter', () => {
   it('uses the lesson text from content', () => {
     const lessons = loadLessons(lessonsData);
     expect(lessons[GUIDE_LESSONS[0]].screens).toEqual(['Tap COUNTER... now!']);
-    expect(lessons[GUIDE_LESSONS[0]].success).toBe('You did it! Perfect!');
+    expect(lessons[GUIDE_LESSONS[0]].success).toBe('You did it! Great!');
     expect(() => loadLessons({ lessons: [] })).toThrow(/missing/);
   });
 
