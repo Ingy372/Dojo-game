@@ -1,5 +1,5 @@
 {
-  "notes": "DRAFT for R-STANCE-g. Short UI lines for ages 6+ about Beginner's Stance, a locked Open Leg Stance, and the new-player welcome. Each slot has one main pick and alternates for Jay/Manager to choose. No 'perfect', no guilt or pressure; real dojo training is what unlocks stances. Replaces placeholder 'Just standing. Learn a stance at the dojo!'",
+  "notes": "DRAFT for R-STANCE-g. Short UI lines for ages 6+ about Beginner's Stance, a locked Open Leg Stance, and the new-player welcome. Each slot has one main pick and alternates for Jay/Manager to choose. No banned words, no guilt or pressure; real dojo training is what unlocks stances. Replaces placeholder 'Just standing. Learn a stance at the dojo!'",
   "lines": [
     {
       "key": "stance.beginner.oneLiner",

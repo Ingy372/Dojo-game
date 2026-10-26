@@ -6,4 +6,4 @@ Lines for the Programmer's R-STANCE-g build. Data: `stance-lines-g.json`.
 - **Open Leg Stance "not yet"** says to learn it at the dojo and have the teacher sign it off. Real training is what unlocks it.
 - **Welcome line** says new players start in Beginner's Stance like everyone else.
 
-Rules followed: ages 6+, short, hopeful, no "perfect", no guilt or pressure, no invented facts (for example, no claim that every kata starts in a stance). The approved #303 gameLine for Beginner's in `stances.json` is unchanged.
+Rules followed: ages 6+, short, hopeful, no words Jay dislikes, no guilt or pressure, no invented facts (for example, no claim that every kata starts in a stance). The approved #303 gameLine for Beginner's in `stances.json` is unchanged.
