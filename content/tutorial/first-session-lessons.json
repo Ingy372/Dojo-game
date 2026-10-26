@@ -12,7 +12,7 @@
         "It's coming!"
       ],
       "practice": "Watch for the red circle.",
-      "retry": "That's okay. Try again whenever you're ready.",
+      "retry": "Nice work. Let's keep practicing.",
       "slowdown": true,
       "fadingFollowUp": false,
       "order": 2,
@@ -28,7 +28,7 @@
       ],
       "practice": "Tap COUNTER when Sensei says now.",
       "success": "You did it! Great!",
-      "retry": "So close! Let's try again.",
+      "retry": "Nice work. Let's keep practicing.",
       "slowdown": true,
       "nudge": "Take your time. Tap the glowing COUNTER button!",
       "fadingFollowUp": false,
@@ -46,7 +46,7 @@
       ],
       "practice": "Tap COUNTER again.",
       "success": "Great timing!",
-      "retry": "That's okay. Try again whenever you're ready.",
+      "retry": "Nice work. Let's keep practicing.",
       "fadingFollowUp": true,
       "order": 4,
       "earliestSession": 1,
@@ -62,7 +62,7 @@
       ],
       "practice": "Tap COUNTER on your own.",
       "success": "Yes!",
-      "retry": "That's okay. Try again whenever you're ready.",
+      "retry": "Nice work. Let's keep practicing.",
       "fadingFollowUp": true,
       "order": 5,
       "earliestSession": 1,
@@ -79,7 +79,7 @@
       ],
       "practice": "STRIKE the practice bag.",
       "success": "What a hit!",
-      "retry": "That's okay. Try again whenever you're ready.",
+      "retry": "Nice work. Let's keep practicing.",
       "earliestSession": 1,
       "ignoresSessionLimit": false,
       "fadingFollowUp": false
@@ -108,7 +108,7 @@
         "Remember: DASH out of a crowd."
       ],
       "success": "Quick feet!",
-      "retry": "That's okay. Try again whenever you're ready.",
+      "retry": "Nice work. Let's keep practicing.",
       "earliestSession": 2,
       "ignoresSessionLimit": false,
       "fadingFollowUp": false,
@@ -125,7 +125,7 @@
       ],
       "practice": "Pick any Insight you like.",
       "success": "Good choice. Which one did you pick?",
-      "retry": "That's okay. Try again whenever you're ready.",
+      "retry": "Nice work. Let's keep practicing.",
       "earliestSession": 3,
       "ignoresSessionLimit": false,
       "fadingFollowUp": false
@@ -141,7 +141,7 @@
       ],
       "practice": "Place your new decoration.",
       "success": "Your dojo looks more like you now.",
-      "retry": "That's okay. Try again whenever you're ready.",
+      "retry": "Nice work. Let's keep practicing.",
       "earliestSession": 4,
       "ignoresSessionLimit": false,
       "fadingFollowUp": false
@@ -158,7 +158,7 @@
       ],
       "practice": "Tap COUNTER when the circle is almost full.",
       "success": "Great! How did that feel?",
-      "retry": "That's okay. Try again whenever you're ready.",
+      "retry": "Nice work. Let's keep practicing.",
       "earliestSession": 5,
       "ignoresSessionLimit": true,
       "fadingFollowUp": false
@@ -174,7 +174,7 @@
       ],
       "practice": "Wait a tiny bit, then tap COUNTER.",
       "success": "You waited. Nice!",
-      "retry": "That's okay. Try again whenever you're ready.",
+      "retry": "Nice work. Let's keep practicing.",
       "earliestSession": 6,
       "ignoresSessionLimit": true,
       "fadingFollowUp": false
@@ -189,7 +189,7 @@
       ],
       "practice": "Walk out of the red circle.",
       "success": "You stayed safe!",
-      "retry": "That's okay. Try again whenever you're ready.",
+      "retry": "Nice work. Let's keep practicing.",
       "earliestSession": 7,
       "ignoresSessionLimit": true,
       "fadingFollowUp": false
