@@ -1,0 +1,2882 @@
+[
+ {
+  "where": "title 667x320 rm=on",
+  "name": "title",
+  "W": 667,
+  "H": 320,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-title-start-667x320-rm-on.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 321.5,
+     "t": 242.1,
+     "r": 345.5,
+     "b": 261.1
+    },
+    "zone": {
+     "l": 263.5,
+     "t": 229.6,
+     "r": 403.5,
+     "b": 273.6
+    },
+    "scene": "Title"
+   },
+   "mid": {
+    "file": "color-title-mid-667x320-rm-on.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 321.5,
+     "t": 242.1,
+     "r": 345.5,
+     "b": 261.1
+    },
+    "zone": {
+     "l": 263.5,
+     "t": 229.6,
+     "r": 403.5,
+     "b": 273.6
+    },
+    "scene": "Title"
+   },
+   "end": {
+    "file": "color-title-end-667x320-rm-on.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 321.5,
+     "t": 242.1,
+     "r": 345.5,
+     "b": 261.1
+    },
+    "zone": {
+     "l": 263.5,
+     "t": 229.6,
+     "r": 403.5,
+     "b": 273.6
+    },
+    "scene": "Title"
+   }
+  },
+  "tap": "note closed",
+  "errs": []
+ },
+ {
+  "where": "create 667x320 rm=on",
+  "name": "create",
+  "W": 667,
+  "H": 320,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-create-start-667x320-rm-on.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 521,
+     "t": 273,
+     "r": 596,
+     "b": 295
+    },
+    "zone": {
+     "l": 464,
+     "t": 262,
+     "r": 653,
+     "b": 306
+    },
+    "scene": "Create"
+   },
+   "mid": {
+    "file": "color-create-mid-667x320-rm-on.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 521,
+     "t": 273,
+     "r": 596,
+     "b": 295
+    },
+    "zone": {
+     "l": 464,
+     "t": 262,
+     "r": 653,
+     "b": 306
+    },
+    "scene": "Create"
+   },
+   "end": {
+    "file": "color-create-end-667x320-rm-on.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 521,
+     "t": 273,
+     "r": 596,
+     "b": 295
+    },
+    "zone": {
+     "l": 464,
+     "t": 262,
+     "r": 653,
+     "b": 306
+    },
+    "scene": "Create"
+   }
+  },
+  "tap": "",
+  "errs": []
+ },
+ {
+  "where": "street 667x320 rm=on",
+  "name": "street",
+  "W": 667,
+  "H": 320,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-street-start-667x320-rm-on.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 207.5,
+     "t": 162.5,
+     "r": 263.5,
+     "b": 189.5
+    },
+    "zone": {
+     "l": 145.5,
+     "t": 144,
+     "r": 325.5,
+     "b": 208
+    },
+    "scene": "StreetSmarts"
+   },
+   "mid": {
+    "file": "color-street-mid-667x320-rm-on.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 207.5,
+     "t": 162.5,
+     "r": 263.5,
+     "b": 189.5
+    },
+    "zone": {
+     "l": 145.5,
+     "t": 144,
+     "r": 325.5,
+     "b": 208
+    },
+    "scene": "StreetSmarts"
+   },
+   "end": {
+    "file": "color-street-end-667x320-rm-on.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 207.5,
+     "t": 162.5,
+     "r": 263.5,
+     "b": 189.5
+    },
+    "zone": {
+     "l": 145.5,
+     "t": 144,
+     "r": 325.5,
+     "b": 208
+    },
+    "scene": "StreetSmarts"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "rest 667x320 rm=on",
+  "name": "rest",
+  "W": 667,
+  "H": 320,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-rest-start-667x320-rm-on.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 0,
+    "label": {
+     "l": 257.5,
+     "t": 220.50000000000003,
+     "r": 409.5,
+     "b": 243.50000000000003
+    },
+    "zone": {
+     "l": 203.5,
+     "t": 211.20000000000002,
+     "r": 463.5,
+     "b": 252.8
+    },
+    "scene": "Home"
+   },
+   "mid": {
+    "file": "color-rest-mid-667x320-rm-on.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 257.5,
+     "t": 220.50000000000003,
+     "r": 409.5,
+     "b": 243.50000000000003
+    },
+    "zone": {
+     "l": 203.5,
+     "t": 211.20000000000002,
+     "r": 463.5,
+     "b": 252.8
+    },
+    "scene": "Home"
+   },
+   "end": {
+    "file": "color-rest-end-667x320-rm-on.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 257.5,
+     "t": 220.50000000000003,
+     "r": 409.5,
+     "b": 243.50000000000003
+    },
+    "zone": {
+     "l": 203.5,
+     "t": 211.20000000000002,
+     "r": 463.5,
+     "b": 252.8
+    },
+    "scene": "Home"
+   }
+  },
+  "tap": "1",
+  "errs": []
+ },
+ {
+  "where": "dash 667x320 rm=on",
+  "name": "dash",
+  "W": 667,
+  "H": 320,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-dash-start-667x320-rm-on.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 582.5,
+     "t": 134.5,
+     "r": 615.5,
+     "b": 149.5
+    },
+    "zone": {
+     "l": 567,
+     "t": 110,
+     "r": 631,
+     "b": 174
+    },
+    "scene": "Game"
+   },
+   "mid": {
+    "file": "color-dash-mid-667x320-rm-on.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 582.5,
+     "t": 134.5,
+     "r": 615.5,
+     "b": 149.5
+    },
+    "zone": {
+     "l": 567,
+     "t": 110,
+     "r": 631,
+     "b": 174
+    },
+    "scene": "Game"
+   },
+   "end": {
+    "file": "color-dash-end-667x320-rm-on.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 582.5,
+     "t": 134.5,
+     "r": 615.5,
+     "b": 149.5
+    },
+    "zone": {
+     "l": 567,
+     "t": 110,
+     "r": 631,
+     "b": 174
+    },
+    "scene": "Game"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "title 667x320 rm=off",
+  "name": "title",
+  "W": 667,
+  "H": 320,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-title-start-667x320-rm-off.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 321.5,
+     "t": 242.1,
+     "r": 345.5,
+     "b": 261.1
+    },
+    "zone": {
+     "l": 263.5,
+     "t": 229.6,
+     "r": 403.5,
+     "b": 273.6
+    },
+    "scene": "Title"
+   },
+   "mid": {
+    "file": "color-title-mid-667x320-rm-off.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 321.5,
+     "t": 242.1,
+     "r": 345.5,
+     "b": 261.1
+    },
+    "zone": {
+     "l": 263.5,
+     "t": 229.6,
+     "r": 403.5,
+     "b": 273.6
+    },
+    "scene": "Title"
+   },
+   "end": {
+    "file": "color-title-end-667x320-rm-off.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 321.5,
+     "t": 242.1,
+     "r": 345.5,
+     "b": 261.1
+    },
+    "zone": {
+     "l": 263.5,
+     "t": 229.6,
+     "r": 403.5,
+     "b": 273.6
+    },
+    "scene": "Title"
+   }
+  },
+  "tap": "note closed",
+  "errs": []
+ },
+ {
+  "where": "create 667x320 rm=off",
+  "name": "create",
+  "W": 667,
+  "H": 320,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-create-start-667x320-rm-off.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 521,
+     "t": 273,
+     "r": 596,
+     "b": 295
+    },
+    "zone": {
+     "l": 464,
+     "t": 262,
+     "r": 653,
+     "b": 306
+    },
+    "scene": "Create"
+   },
+   "mid": {
+    "file": "color-create-mid-667x320-rm-off.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 521,
+     "t": 273,
+     "r": 596,
+     "b": 295
+    },
+    "zone": {
+     "l": 464,
+     "t": 262,
+     "r": 653,
+     "b": 306
+    },
+    "scene": "Create"
+   },
+   "end": {
+    "file": "color-create-end-667x320-rm-off.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 521,
+     "t": 273,
+     "r": 596,
+     "b": 295
+    },
+    "zone": {
+     "l": 464,
+     "t": 262,
+     "r": 653,
+     "b": 306
+    },
+    "scene": "Create"
+   }
+  },
+  "tap": "",
+  "errs": []
+ },
+ {
+  "where": "street 667x320 rm=off",
+  "name": "street",
+  "W": 667,
+  "H": 320,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-street-start-667x320-rm-off.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 207.5,
+     "t": 162.5,
+     "r": 263.5,
+     "b": 189.5
+    },
+    "zone": {
+     "l": 145.5,
+     "t": 144,
+     "r": 325.5,
+     "b": 208
+    },
+    "scene": "StreetSmarts"
+   },
+   "mid": {
+    "file": "color-street-mid-667x320-rm-off.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 207.5,
+     "t": 162.5,
+     "r": 263.5,
+     "b": 189.5
+    },
+    "zone": {
+     "l": 145.5,
+     "t": 144,
+     "r": 325.5,
+     "b": 208
+    },
+    "scene": "StreetSmarts"
+   },
+   "end": {
+    "file": "color-street-end-667x320-rm-off.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 207.5,
+     "t": 162.5,
+     "r": 263.5,
+     "b": 189.5
+    },
+    "zone": {
+     "l": 145.5,
+     "t": 144,
+     "r": 325.5,
+     "b": 208
+    },
+    "scene": "StreetSmarts"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "rest 667x320 rm=off",
+  "name": "rest",
+  "W": 667,
+  "H": 320,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-rest-start-667x320-rm-off.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 0.2,
+    "label": {
+     "l": 257.5,
+     "t": 220.50000000000003,
+     "r": 409.5,
+     "b": 243.50000000000003
+    },
+    "zone": {
+     "l": 203.5,
+     "t": 211.20000000000002,
+     "r": 463.5,
+     "b": 252.8
+    },
+    "scene": "Home"
+   },
+   "mid": {
+    "file": "color-rest-mid-667x320-rm-off.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 257.5,
+     "t": 220.50000000000003,
+     "r": 409.5,
+     "b": 243.50000000000003
+    },
+    "zone": {
+     "l": 203.5,
+     "t": 211.20000000000002,
+     "r": 463.5,
+     "b": 252.8
+    },
+    "scene": "Home"
+   },
+   "end": {
+    "file": "color-rest-end-667x320-rm-off.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 257.5,
+     "t": 220.50000000000003,
+     "r": 409.5,
+     "b": 243.50000000000003
+    },
+    "zone": {
+     "l": 203.5,
+     "t": 211.20000000000002,
+     "r": 463.5,
+     "b": 252.8
+    },
+    "scene": "Home"
+   }
+  },
+  "tap": "1",
+  "errs": []
+ },
+ {
+  "where": "dash 667x320 rm=off",
+  "name": "dash",
+  "W": 667,
+  "H": 320,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-dash-start-667x320-rm-off.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 582.5,
+     "t": 134.5,
+     "r": 615.5,
+     "b": 149.5
+    },
+    "zone": {
+     "l": 567,
+     "t": 110,
+     "r": 631,
+     "b": 174
+    },
+    "scene": "Game"
+   },
+   "mid": {
+    "file": "color-dash-mid-667x320-rm-off.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 582.5,
+     "t": 134.5,
+     "r": 615.5,
+     "b": 149.5
+    },
+    "zone": {
+     "l": 567,
+     "t": 110,
+     "r": 631,
+     "b": 174
+    },
+    "scene": "Game"
+   },
+   "end": {
+    "file": "color-dash-end-667x320-rm-off.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 582.5,
+     "t": 134.5,
+     "r": 615.5,
+     "b": 149.5
+    },
+    "zone": {
+     "l": 567,
+     "t": 110,
+     "r": 631,
+     "b": 174
+    },
+    "scene": "Game"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "title 667x375 rm=on",
+  "name": "title",
+  "W": 667,
+  "H": 375,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-title-start-667x375-rm-on.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 321.5,
+     "t": 252,
+     "r": 345.5,
+     "b": 271
+    },
+    "zone": {
+     "l": 263.5,
+     "t": 239.5,
+     "r": 403.5,
+     "b": 283.5
+    },
+    "scene": "Title"
+   },
+   "mid": {
+    "file": "color-title-mid-667x375-rm-on.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 321.5,
+     "t": 252,
+     "r": 345.5,
+     "b": 271
+    },
+    "zone": {
+     "l": 263.5,
+     "t": 239.5,
+     "r": 403.5,
+     "b": 283.5
+    },
+    "scene": "Title"
+   },
+   "end": {
+    "file": "color-title-end-667x375-rm-on.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 321.5,
+     "t": 252,
+     "r": 345.5,
+     "b": 271
+    },
+    "zone": {
+     "l": 263.5,
+     "t": 239.5,
+     "r": 403.5,
+     "b": 283.5
+    },
+    "scene": "Title"
+   }
+  },
+  "tap": "note closed",
+  "errs": []
+ },
+ {
+  "where": "create 667x375 rm=on",
+  "name": "create",
+  "W": 667,
+  "H": 375,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-create-start-667x375-rm-on.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 521,
+     "t": 328,
+     "r": 596,
+     "b": 350
+    },
+    "zone": {
+     "l": 464,
+     "t": 317,
+     "r": 653,
+     "b": 361
+    },
+    "scene": "Create"
+   },
+   "mid": {
+    "file": "color-create-mid-667x375-rm-on.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 521,
+     "t": 328,
+     "r": 596,
+     "b": 350
+    },
+    "zone": {
+     "l": 464,
+     "t": 317,
+     "r": 653,
+     "b": 361
+    },
+    "scene": "Create"
+   },
+   "end": {
+    "file": "color-create-end-667x375-rm-on.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 521,
+     "t": 328,
+     "r": 596,
+     "b": 350
+    },
+    "zone": {
+     "l": 464,
+     "t": 317,
+     "r": 653,
+     "b": 361
+    },
+    "scene": "Create"
+   }
+  },
+  "tap": "",
+  "errs": []
+ },
+ {
+  "where": "street 667x375 rm=on",
+  "name": "street",
+  "W": 667,
+  "H": 375,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-street-start-667x375-rm-on.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 207.5,
+     "t": 187.25,
+     "r": 263.5,
+     "b": 214.25
+    },
+    "zone": {
+     "l": 145.5,
+     "t": 168.75,
+     "r": 325.5,
+     "b": 232.75
+    },
+    "scene": "StreetSmarts"
+   },
+   "mid": {
+    "file": "color-street-mid-667x375-rm-on.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 207.5,
+     "t": 187.25,
+     "r": 263.5,
+     "b": 214.25
+    },
+    "zone": {
+     "l": 145.5,
+     "t": 168.75,
+     "r": 325.5,
+     "b": 232.75
+    },
+    "scene": "StreetSmarts"
+   },
+   "end": {
+    "file": "color-street-end-667x375-rm-on.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 207.5,
+     "t": 187.25,
+     "r": 263.5,
+     "b": 214.25
+    },
+    "zone": {
+     "l": 145.5,
+     "t": 168.75,
+     "r": 325.5,
+     "b": 232.75
+    },
+    "scene": "StreetSmarts"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "rest 667x375 rm=on",
+  "name": "rest",
+  "W": 667,
+  "H": 375,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-rest-start-667x375-rm-on.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 0,
+    "label": {
+     "l": 257.5,
+     "t": 248,
+     "r": 409.5,
+     "b": 271
+    },
+    "zone": {
+     "l": 203.5,
+     "t": 235.125,
+     "r": 463.5,
+     "b": 283.875
+    },
+    "scene": "Home"
+   },
+   "mid": {
+    "file": "color-rest-mid-667x375-rm-on.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 257.5,
+     "t": 248,
+     "r": 409.5,
+     "b": 271
+    },
+    "zone": {
+     "l": 203.5,
+     "t": 235.125,
+     "r": 463.5,
+     "b": 283.875
+    },
+    "scene": "Home"
+   },
+   "end": {
+    "file": "color-rest-end-667x375-rm-on.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 257.5,
+     "t": 248,
+     "r": 409.5,
+     "b": 271
+    },
+    "zone": {
+     "l": 203.5,
+     "t": 235.125,
+     "r": 463.5,
+     "b": 283.875
+    },
+    "scene": "Home"
+   }
+  },
+  "tap": "1",
+  "errs": []
+ },
+ {
+  "where": "dash 667x375 rm=on",
+  "name": "dash",
+  "W": 667,
+  "H": 375,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-dash-start-667x375-rm-on.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 582.5,
+     "t": 189.5,
+     "r": 615.5,
+     "b": 204.5
+    },
+    "zone": {
+     "l": 567,
+     "t": 165,
+     "r": 631,
+     "b": 229
+    },
+    "scene": "Game"
+   },
+   "mid": {
+    "file": "color-dash-mid-667x375-rm-on.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 582.5,
+     "t": 189.5,
+     "r": 615.5,
+     "b": 204.5
+    },
+    "zone": {
+     "l": 567,
+     "t": 165,
+     "r": 631,
+     "b": 229
+    },
+    "scene": "Game"
+   },
+   "end": {
+    "file": "color-dash-end-667x375-rm-on.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 582.5,
+     "t": 189.5,
+     "r": 615.5,
+     "b": 204.5
+    },
+    "zone": {
+     "l": 567,
+     "t": 165,
+     "r": 631,
+     "b": 229
+    },
+    "scene": "Game"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "title 667x375 rm=off",
+  "name": "title",
+  "W": 667,
+  "H": 375,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-title-start-667x375-rm-off.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 321.5,
+     "t": 252,
+     "r": 345.5,
+     "b": 271
+    },
+    "zone": {
+     "l": 263.5,
+     "t": 239.5,
+     "r": 403.5,
+     "b": 283.5
+    },
+    "scene": "Title"
+   },
+   "mid": {
+    "file": "color-title-mid-667x375-rm-off.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 321.5,
+     "t": 252,
+     "r": 345.5,
+     "b": 271
+    },
+    "zone": {
+     "l": 263.5,
+     "t": 239.5,
+     "r": 403.5,
+     "b": 283.5
+    },
+    "scene": "Title"
+   },
+   "end": {
+    "file": "color-title-end-667x375-rm-off.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 321.5,
+     "t": 252,
+     "r": 345.5,
+     "b": 271
+    },
+    "zone": {
+     "l": 263.5,
+     "t": 239.5,
+     "r": 403.5,
+     "b": 283.5
+    },
+    "scene": "Title"
+   }
+  },
+  "tap": "note closed",
+  "errs": []
+ },
+ {
+  "where": "create 667x375 rm=off",
+  "name": "create",
+  "W": 667,
+  "H": 375,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-create-start-667x375-rm-off.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 521,
+     "t": 328,
+     "r": 596,
+     "b": 350
+    },
+    "zone": {
+     "l": 464,
+     "t": 317,
+     "r": 653,
+     "b": 361
+    },
+    "scene": "Create"
+   },
+   "mid": {
+    "file": "color-create-mid-667x375-rm-off.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 521,
+     "t": 328,
+     "r": 596,
+     "b": 350
+    },
+    "zone": {
+     "l": 464,
+     "t": 317,
+     "r": 653,
+     "b": 361
+    },
+    "scene": "Create"
+   },
+   "end": {
+    "file": "color-create-end-667x375-rm-off.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 521,
+     "t": 328,
+     "r": 596,
+     "b": 350
+    },
+    "zone": {
+     "l": 464,
+     "t": 317,
+     "r": 653,
+     "b": 361
+    },
+    "scene": "Create"
+   }
+  },
+  "tap": "",
+  "errs": []
+ },
+ {
+  "where": "street 667x375 rm=off",
+  "name": "street",
+  "W": 667,
+  "H": 375,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-street-start-667x375-rm-off.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 207.5,
+     "t": 187.25,
+     "r": 263.5,
+     "b": 214.25
+    },
+    "zone": {
+     "l": 145.5,
+     "t": 168.75,
+     "r": 325.5,
+     "b": 232.75
+    },
+    "scene": "StreetSmarts"
+   },
+   "mid": {
+    "file": "color-street-mid-667x375-rm-off.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 207.5,
+     "t": 187.25,
+     "r": 263.5,
+     "b": 214.25
+    },
+    "zone": {
+     "l": 145.5,
+     "t": 168.75,
+     "r": 325.5,
+     "b": 232.75
+    },
+    "scene": "StreetSmarts"
+   },
+   "end": {
+    "file": "color-street-end-667x375-rm-off.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 207.5,
+     "t": 187.25,
+     "r": 263.5,
+     "b": 214.25
+    },
+    "zone": {
+     "l": 145.5,
+     "t": 168.75,
+     "r": 325.5,
+     "b": 232.75
+    },
+    "scene": "StreetSmarts"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "rest 667x375 rm=off",
+  "name": "rest",
+  "W": 667,
+  "H": 375,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-rest-start-667x375-rm-off.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 0.18846153846153846,
+    "label": {
+     "l": 257.5,
+     "t": 248,
+     "r": 409.5,
+     "b": 271
+    },
+    "zone": {
+     "l": 203.5,
+     "t": 235.125,
+     "r": 463.5,
+     "b": 283.875
+    },
+    "scene": "Home"
+   },
+   "mid": {
+    "file": "color-rest-mid-667x375-rm-off.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 257.5,
+     "t": 248,
+     "r": 409.5,
+     "b": 271
+    },
+    "zone": {
+     "l": 203.5,
+     "t": 235.125,
+     "r": 463.5,
+     "b": 283.875
+    },
+    "scene": "Home"
+   },
+   "end": {
+    "file": "color-rest-end-667x375-rm-off.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 257.5,
+     "t": 248,
+     "r": 409.5,
+     "b": 271
+    },
+    "zone": {
+     "l": 203.5,
+     "t": 235.125,
+     "r": 463.5,
+     "b": 283.875
+    },
+    "scene": "Home"
+   }
+  },
+  "tap": "1",
+  "errs": []
+ },
+ {
+  "where": "dash 667x375 rm=off",
+  "name": "dash",
+  "W": 667,
+  "H": 375,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-dash-start-667x375-rm-off.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 582.5,
+     "t": 189.5,
+     "r": 615.5,
+     "b": 204.5
+    },
+    "zone": {
+     "l": 567,
+     "t": 165,
+     "r": 631,
+     "b": 229
+    },
+    "scene": "Game"
+   },
+   "mid": {
+    "file": "color-dash-mid-667x375-rm-off.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 582.5,
+     "t": 189.5,
+     "r": 615.5,
+     "b": 204.5
+    },
+    "zone": {
+     "l": 567,
+     "t": 165,
+     "r": 631,
+     "b": 229
+    },
+    "scene": "Game"
+   },
+   "end": {
+    "file": "color-dash-end-667x375-rm-off.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 582.5,
+     "t": 189.5,
+     "r": 615.5,
+     "b": 204.5
+    },
+    "zone": {
+     "l": 567,
+     "t": 165,
+     "r": 631,
+     "b": 229
+    },
+    "scene": "Game"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "title 844x390 rm=on",
+  "name": "title",
+  "W": 844,
+  "H": 390,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-title-start-844x390-rm-on.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 410,
+     "t": 254.7,
+     "r": 434,
+     "b": 273.7
+    },
+    "zone": {
+     "l": 352,
+     "t": 242.2,
+     "r": 492,
+     "b": 286.2
+    },
+    "scene": "Title"
+   },
+   "mid": {
+    "file": "color-title-mid-844x390-rm-on.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 410,
+     "t": 254.7,
+     "r": 434,
+     "b": 273.7
+    },
+    "zone": {
+     "l": 352,
+     "t": 242.2,
+     "r": 492,
+     "b": 286.2
+    },
+    "scene": "Title"
+   },
+   "end": {
+    "file": "color-title-end-844x390-rm-on.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 410,
+     "t": 254.7,
+     "r": 434,
+     "b": 273.7
+    },
+    "zone": {
+     "l": 352,
+     "t": 242.2,
+     "r": 492,
+     "b": 286.2
+    },
+    "scene": "Title"
+   }
+  },
+  "tap": "note closed",
+  "errs": []
+ },
+ {
+  "where": "create 844x390 rm=on",
+  "name": "create",
+  "W": 844,
+  "H": 390,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-create-start-844x390-rm-on.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 692.5,
+     "t": 343,
+     "r": 767.5,
+     "b": 365
+    },
+    "zone": {
+     "l": 630,
+     "t": 332,
+     "r": 830,
+     "b": 376
+    },
+    "scene": "Create"
+   },
+   "mid": {
+    "file": "color-create-mid-844x390-rm-on.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 692.5,
+     "t": 343,
+     "r": 767.5,
+     "b": 365
+    },
+    "zone": {
+     "l": 630,
+     "t": 332,
+     "r": 830,
+     "b": 376
+    },
+    "scene": "Create"
+   },
+   "end": {
+    "file": "color-create-end-844x390-rm-on.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 692.5,
+     "t": 343,
+     "r": 767.5,
+     "b": 365
+    },
+    "zone": {
+     "l": 630,
+     "t": 332,
+     "r": 830,
+     "b": 376
+    },
+    "scene": "Create"
+   }
+  },
+  "tap": "",
+  "errs": []
+ },
+ {
+  "where": "street 844x390 rm=on",
+  "name": "street",
+  "W": 844,
+  "H": 390,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-street-start-844x390-rm-on.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 296,
+     "t": 194,
+     "r": 352,
+     "b": 221
+    },
+    "zone": {
+     "l": 234,
+     "t": 175.5,
+     "r": 414,
+     "b": 239.5
+    },
+    "scene": "StreetSmarts"
+   },
+   "mid": {
+    "file": "color-street-mid-844x390-rm-on.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 296,
+     "t": 194,
+     "r": 352,
+     "b": 221
+    },
+    "zone": {
+     "l": 234,
+     "t": 175.5,
+     "r": 414,
+     "b": 239.5
+    },
+    "scene": "StreetSmarts"
+   },
+   "end": {
+    "file": "color-street-end-844x390-rm-on.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 296,
+     "t": 194,
+     "r": 352,
+     "b": 221
+    },
+    "zone": {
+     "l": 234,
+     "t": 175.5,
+     "r": 414,
+     "b": 239.5
+    },
+    "scene": "StreetSmarts"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "rest 844x390 rm=on",
+  "name": "rest",
+  "W": 844,
+  "H": 390,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-rest-start-844x390-rm-on.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 0,
+    "label": {
+     "l": 346,
+     "t": 255.50000000000006,
+     "r": 498,
+     "b": 278.50000000000006
+    },
+    "zone": {
+     "l": 292,
+     "t": 241.65000000000003,
+     "r": 552,
+     "b": 292.35
+    },
+    "scene": "Home"
+   },
+   "mid": {
+    "file": "color-rest-mid-844x390-rm-on.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 346,
+     "t": 255.50000000000006,
+     "r": 498,
+     "b": 278.50000000000006
+    },
+    "zone": {
+     "l": 292,
+     "t": 241.65000000000003,
+     "r": 552,
+     "b": 292.35
+    },
+    "scene": "Home"
+   },
+   "end": {
+    "file": "color-rest-end-844x390-rm-on.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 346,
+     "t": 255.50000000000006,
+     "r": 498,
+     "b": 278.50000000000006
+    },
+    "zone": {
+     "l": 292,
+     "t": 241.65000000000003,
+     "r": 552,
+     "b": 292.35
+    },
+    "scene": "Home"
+   }
+  },
+  "tap": "1",
+  "errs": []
+ },
+ {
+  "where": "dash 844x390 rm=on",
+  "name": "dash",
+  "W": 844,
+  "H": 390,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-dash-start-844x390-rm-on.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 759.5,
+     "t": 204.5,
+     "r": 792.5,
+     "b": 219.5
+    },
+    "zone": {
+     "l": 744,
+     "t": 180,
+     "r": 808,
+     "b": 244
+    },
+    "scene": "Game"
+   },
+   "mid": {
+    "file": "color-dash-mid-844x390-rm-on.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 759.5,
+     "t": 204.5,
+     "r": 792.5,
+     "b": 219.5
+    },
+    "zone": {
+     "l": 744,
+     "t": 180,
+     "r": 808,
+     "b": 244
+    },
+    "scene": "Game"
+   },
+   "end": {
+    "file": "color-dash-end-844x390-rm-on.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 759.5,
+     "t": 204.5,
+     "r": 792.5,
+     "b": 219.5
+    },
+    "zone": {
+     "l": 744,
+     "t": 180,
+     "r": 808,
+     "b": 244
+    },
+    "scene": "Game"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "title 844x390 rm=off",
+  "name": "title",
+  "W": 844,
+  "H": 390,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-title-start-844x390-rm-off.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 410,
+     "t": 254.7,
+     "r": 434,
+     "b": 273.7
+    },
+    "zone": {
+     "l": 352,
+     "t": 242.2,
+     "r": 492,
+     "b": 286.2
+    },
+    "scene": "Title"
+   },
+   "mid": {
+    "file": "color-title-mid-844x390-rm-off.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 410,
+     "t": 254.7,
+     "r": 434,
+     "b": 273.7
+    },
+    "zone": {
+     "l": 352,
+     "t": 242.2,
+     "r": 492,
+     "b": 286.2
+    },
+    "scene": "Title"
+   },
+   "end": {
+    "file": "color-title-end-844x390-rm-off.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 410,
+     "t": 254.7,
+     "r": 434,
+     "b": 273.7
+    },
+    "zone": {
+     "l": 352,
+     "t": 242.2,
+     "r": 492,
+     "b": 286.2
+    },
+    "scene": "Title"
+   }
+  },
+  "tap": "note closed",
+  "errs": []
+ },
+ {
+  "where": "create 844x390 rm=off",
+  "name": "create",
+  "W": 844,
+  "H": 390,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-create-start-844x390-rm-off.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 692.5,
+     "t": 343,
+     "r": 767.5,
+     "b": 365
+    },
+    "zone": {
+     "l": 630,
+     "t": 332,
+     "r": 830,
+     "b": 376
+    },
+    "scene": "Create"
+   },
+   "mid": {
+    "file": "color-create-mid-844x390-rm-off.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 692.5,
+     "t": 343,
+     "r": 767.5,
+     "b": 365
+    },
+    "zone": {
+     "l": 630,
+     "t": 332,
+     "r": 830,
+     "b": 376
+    },
+    "scene": "Create"
+   },
+   "end": {
+    "file": "color-create-end-844x390-rm-off.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 692.5,
+     "t": 343,
+     "r": 767.5,
+     "b": 365
+    },
+    "zone": {
+     "l": 630,
+     "t": 332,
+     "r": 830,
+     "b": 376
+    },
+    "scene": "Create"
+   }
+  },
+  "tap": "",
+  "errs": []
+ },
+ {
+  "where": "street 844x390 rm=off",
+  "name": "street",
+  "W": 844,
+  "H": 390,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-street-start-844x390-rm-off.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 296,
+     "t": 194,
+     "r": 352,
+     "b": 221
+    },
+    "zone": {
+     "l": 234,
+     "t": 175.5,
+     "r": 414,
+     "b": 239.5
+    },
+    "scene": "StreetSmarts"
+   },
+   "mid": {
+    "file": "color-street-mid-844x390-rm-off.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 296,
+     "t": 194,
+     "r": 352,
+     "b": 221
+    },
+    "zone": {
+     "l": 234,
+     "t": 175.5,
+     "r": 414,
+     "b": 239.5
+    },
+    "scene": "StreetSmarts"
+   },
+   "end": {
+    "file": "color-street-end-844x390-rm-off.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 296,
+     "t": 194,
+     "r": 352,
+     "b": 221
+    },
+    "zone": {
+     "l": 234,
+     "t": 175.5,
+     "r": 414,
+     "b": 239.5
+    },
+    "scene": "StreetSmarts"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "rest 844x390 rm=off",
+  "name": "rest",
+  "W": 844,
+  "H": 390,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-rest-start-844x390-rm-off.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 0.20384615384615384,
+    "label": {
+     "l": 346,
+     "t": 255.50000000000006,
+     "r": 498,
+     "b": 278.50000000000006
+    },
+    "zone": {
+     "l": 292,
+     "t": 241.65000000000003,
+     "r": 552,
+     "b": 292.35
+    },
+    "scene": "Home"
+   },
+   "mid": {
+    "file": "color-rest-mid-844x390-rm-off.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 346,
+     "t": 255.50000000000006,
+     "r": 498,
+     "b": 278.50000000000006
+    },
+    "zone": {
+     "l": 292,
+     "t": 241.65000000000003,
+     "r": 552,
+     "b": 292.35
+    },
+    "scene": "Home"
+   },
+   "end": {
+    "file": "color-rest-end-844x390-rm-off.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 346,
+     "t": 255.50000000000006,
+     "r": 498,
+     "b": 278.50000000000006
+    },
+    "zone": {
+     "l": 292,
+     "t": 241.65000000000003,
+     "r": 552,
+     "b": 292.35
+    },
+    "scene": "Home"
+   }
+  },
+  "tap": "1",
+  "errs": []
+ },
+ {
+  "where": "dash 844x390 rm=off",
+  "name": "dash",
+  "W": 844,
+  "H": 390,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-dash-start-844x390-rm-off.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 759.5,
+     "t": 204.5,
+     "r": 792.5,
+     "b": 219.5
+    },
+    "zone": {
+     "l": 744,
+     "t": 180,
+     "r": 808,
+     "b": 244
+    },
+    "scene": "Game"
+   },
+   "mid": {
+    "file": "color-dash-mid-844x390-rm-off.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 759.5,
+     "t": 204.5,
+     "r": 792.5,
+     "b": 219.5
+    },
+    "zone": {
+     "l": 744,
+     "t": 180,
+     "r": 808,
+     "b": 244
+    },
+    "scene": "Game"
+   },
+   "end": {
+    "file": "color-dash-end-844x390-rm-off.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 759.5,
+     "t": 204.5,
+     "r": 792.5,
+     "b": 219.5
+    },
+    "zone": {
+     "l": 744,
+     "t": 180,
+     "r": 808,
+     "b": 244
+    },
+    "scene": "Game"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "title 932x430 rm=on",
+  "name": "title",
+  "W": 932,
+  "H": 430,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-title-start-932x430-rm-on.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 454,
+     "t": 261.9,
+     "r": 478,
+     "b": 280.9
+    },
+    "zone": {
+     "l": 396,
+     "t": 249.39999999999998,
+     "r": 536,
+     "b": 293.4
+    },
+    "scene": "Title"
+   },
+   "mid": {
+    "file": "color-title-mid-932x430-rm-on.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 454,
+     "t": 261.9,
+     "r": 478,
+     "b": 280.9
+    },
+    "zone": {
+     "l": 396,
+     "t": 249.39999999999998,
+     "r": 536,
+     "b": 293.4
+    },
+    "scene": "Title"
+   },
+   "end": {
+    "file": "color-title-end-932x430-rm-on.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 454,
+     "t": 261.9,
+     "r": 478,
+     "b": 280.9
+    },
+    "zone": {
+     "l": 396,
+     "t": 249.39999999999998,
+     "r": 536,
+     "b": 293.4
+    },
+    "scene": "Title"
+   }
+  },
+  "tap": "note closed",
+  "errs": []
+ },
+ {
+  "where": "create 932x430 rm=on",
+  "name": "create",
+  "W": 932,
+  "H": 430,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-create-start-932x430-rm-on.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 780.5,
+     "t": 383,
+     "r": 855.5,
+     "b": 405
+    },
+    "zone": {
+     "l": 718,
+     "t": 372,
+     "r": 918,
+     "b": 416
+    },
+    "scene": "Create"
+   },
+   "mid": {
+    "file": "color-create-mid-932x430-rm-on.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 780.5,
+     "t": 383,
+     "r": 855.5,
+     "b": 405
+    },
+    "zone": {
+     "l": 718,
+     "t": 372,
+     "r": 918,
+     "b": 416
+    },
+    "scene": "Create"
+   },
+   "end": {
+    "file": "color-create-end-932x430-rm-on.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 780.5,
+     "t": 383,
+     "r": 855.5,
+     "b": 405
+    },
+    "zone": {
+     "l": 718,
+     "t": 372,
+     "r": 918,
+     "b": 416
+    },
+    "scene": "Create"
+   }
+  },
+  "tap": "",
+  "errs": []
+ },
+ {
+  "where": "street 932x430 rm=on",
+  "name": "street",
+  "W": 932,
+  "H": 430,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-street-start-932x430-rm-on.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 340,
+     "t": 212,
+     "r": 396,
+     "b": 239
+    },
+    "zone": {
+     "l": 278,
+     "t": 193.5,
+     "r": 458,
+     "b": 257.5
+    },
+    "scene": "StreetSmarts"
+   },
+   "mid": {
+    "file": "color-street-mid-932x430-rm-on.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 340,
+     "t": 212,
+     "r": 396,
+     "b": 239
+    },
+    "zone": {
+     "l": 278,
+     "t": 193.5,
+     "r": 458,
+     "b": 257.5
+    },
+    "scene": "StreetSmarts"
+   },
+   "end": {
+    "file": "color-street-end-932x430-rm-on.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 340,
+     "t": 212,
+     "r": 396,
+     "b": 239
+    },
+    "zone": {
+     "l": 278,
+     "t": 193.5,
+     "r": 458,
+     "b": 257.5
+    },
+    "scene": "StreetSmarts"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "rest 932x430 rm=on",
+  "name": "rest",
+  "W": 932,
+  "H": 430,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-rest-start-932x430-rm-on.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 0,
+    "label": {
+     "l": 390,
+     "t": 281.5,
+     "r": 542,
+     "b": 304.5
+    },
+    "zone": {
+     "l": 336,
+     "t": 267,
+     "r": 596,
+     "b": 319
+    },
+    "scene": "Home"
+   },
+   "mid": {
+    "file": "color-rest-mid-932x430-rm-on.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 390,
+     "t": 281.5,
+     "r": 542,
+     "b": 304.5
+    },
+    "zone": {
+     "l": 336,
+     "t": 267,
+     "r": 596,
+     "b": 319
+    },
+    "scene": "Home"
+   },
+   "end": {
+    "file": "color-rest-end-932x430-rm-on.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 390,
+     "t": 281.5,
+     "r": 542,
+     "b": 304.5
+    },
+    "zone": {
+     "l": 336,
+     "t": 267,
+     "r": 596,
+     "b": 319
+    },
+    "scene": "Home"
+   }
+  },
+  "tap": "1",
+  "errs": []
+ },
+ {
+  "where": "dash 932x430 rm=on",
+  "name": "dash",
+  "W": 932,
+  "H": 430,
+  "rm": "on",
+  "rmNow": "on",
+  "frames": {
+   "start": {
+    "file": "color-dash-start-932x430-rm-on.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 847.5,
+     "t": 244.5,
+     "r": 880.5,
+     "b": 259.5
+    },
+    "zone": {
+     "l": 832,
+     "t": 220,
+     "r": 896,
+     "b": 284
+    },
+    "scene": "Game"
+   },
+   "mid": {
+    "file": "color-dash-mid-932x430-rm-on.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 847.5,
+     "t": 244.5,
+     "r": 880.5,
+     "b": 259.5
+    },
+    "zone": {
+     "l": 832,
+     "t": 220,
+     "r": 896,
+     "b": 284
+    },
+    "scene": "Game"
+   },
+   "end": {
+    "file": "color-dash-end-932x430-rm-on.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 847.5,
+     "t": 244.5,
+     "r": 880.5,
+     "b": 259.5
+    },
+    "zone": {
+     "l": 832,
+     "t": 220,
+     "r": 896,
+     "b": 284
+    },
+    "scene": "Game"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "title 932x430 rm=off",
+  "name": "title",
+  "W": 932,
+  "H": 430,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-title-start-932x430-rm-off.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 454,
+     "t": 261.9,
+     "r": 478,
+     "b": 280.9
+    },
+    "zone": {
+     "l": 396,
+     "t": 249.39999999999998,
+     "r": 536,
+     "b": 293.4
+    },
+    "scene": "Title"
+   },
+   "mid": {
+    "file": "color-title-mid-932x430-rm-off.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 454,
+     "t": 261.9,
+     "r": 478,
+     "b": 280.9
+    },
+    "zone": {
+     "l": 396,
+     "t": 249.39999999999998,
+     "r": 536,
+     "b": 293.4
+    },
+    "scene": "Title"
+   },
+   "end": {
+    "file": "color-title-end-932x430-rm-off.png",
+    "text": "OK",
+    "size": 16,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 454,
+     "t": 261.9,
+     "r": 478,
+     "b": 280.9
+    },
+    "zone": {
+     "l": 396,
+     "t": 249.39999999999998,
+     "r": 536,
+     "b": 293.4
+    },
+    "scene": "Title"
+   }
+  },
+  "tap": "note closed",
+  "errs": []
+ },
+ {
+  "where": "create 932x430 rm=off",
+  "name": "create",
+  "W": 932,
+  "H": 430,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-create-start-932x430-rm-off.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 780.5,
+     "t": 383,
+     "r": 855.5,
+     "b": 405
+    },
+    "zone": {
+     "l": 718,
+     "t": 372,
+     "r": 918,
+     "b": 416
+    },
+    "scene": "Create"
+   },
+   "mid": {
+    "file": "color-create-mid-932x430-rm-off.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 780.5,
+     "t": 383,
+     "r": 855.5,
+     "b": 405
+    },
+    "zone": {
+     "l": 718,
+     "t": 372,
+     "r": 918,
+     "b": 416
+    },
+    "scene": "Create"
+   },
+   "end": {
+    "file": "color-create-end-932x430-rm-off.png",
+    "text": "Let's go!",
+    "size": 18,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 780.5,
+     "t": 383,
+     "r": 855.5,
+     "b": 405
+    },
+    "zone": {
+     "l": 718,
+     "t": 372,
+     "r": 918,
+     "b": 416
+    },
+    "scene": "Create"
+   }
+  },
+  "tap": "",
+  "errs": []
+ },
+ {
+  "where": "street 932x430 rm=off",
+  "name": "street",
+  "W": 932,
+  "H": 430,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-street-start-932x430-rm-off.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 340,
+     "t": 212,
+     "r": 396,
+     "b": 239
+    },
+    "zone": {
+     "l": 278,
+     "t": 193.5,
+     "r": 458,
+     "b": 257.5
+    },
+    "scene": "StreetSmarts"
+   },
+   "mid": {
+    "file": "color-street-mid-932x430-rm-off.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 340,
+     "t": 212,
+     "r": 396,
+     "b": 239
+    },
+    "zone": {
+     "l": 278,
+     "t": 193.5,
+     "r": 458,
+     "b": 257.5
+    },
+    "scene": "StreetSmarts"
+   },
+   "end": {
+    "file": "color-street-end-932x430-rm-off.png",
+    "text": "Mom",
+    "size": 22,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 340,
+     "t": 212,
+     "r": 396,
+     "b": 239
+    },
+    "zone": {
+     "l": 278,
+     "t": 193.5,
+     "r": 458,
+     "b": 257.5
+    },
+    "scene": "StreetSmarts"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ },
+ {
+  "where": "rest 932x430 rm=off",
+  "name": "rest",
+  "W": 932,
+  "H": 430,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-rest-start-932x430-rm-off.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 0.2153846153846154,
+    "label": {
+     "l": 390,
+     "t": 281.5,
+     "r": 542,
+     "b": 304.5
+    },
+    "zone": {
+     "l": 336,
+     "t": 267,
+     "r": 596,
+     "b": 319
+    },
+    "scene": "Home"
+   },
+   "mid": {
+    "file": "color-rest-mid-932x430-rm-off.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 390,
+     "t": 281.5,
+     "r": 542,
+     "b": 304.5
+    },
+    "zone": {
+     "l": 336,
+     "t": 267,
+     "r": 596,
+     "b": 319
+    },
+    "scene": "Home"
+   },
+   "end": {
+    "file": "color-rest-end-932x430-rm-off.png",
+    "text": "Back to my dojo",
+    "size": 19,
+    "color": "#fff6e0",
+    "alpha": 1,
+    "label": {
+     "l": 390,
+     "t": 281.5,
+     "r": 542,
+     "b": 304.5
+    },
+    "zone": {
+     "l": 336,
+     "t": 267,
+     "r": 596,
+     "b": 319
+    },
+    "scene": "Home"
+   }
+  },
+  "tap": "1",
+  "errs": []
+ },
+ {
+  "where": "dash 932x430 rm=off",
+  "name": "dash",
+  "W": 932,
+  "H": 430,
+  "rm": "off",
+  "rmNow": "off",
+  "frames": {
+   "start": {
+    "file": "color-dash-start-932x430-rm-off.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 847.5,
+     "t": 244.5,
+     "r": 880.5,
+     "b": 259.5
+    },
+    "zone": {
+     "l": 832,
+     "t": 220,
+     "r": 896,
+     "b": 284
+    },
+    "scene": "Game"
+   },
+   "mid": {
+    "file": "color-dash-mid-932x430-rm-off.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 847.5,
+     "t": 244.5,
+     "r": 880.5,
+     "b": 259.5
+    },
+    "zone": {
+     "l": 832,
+     "t": 220,
+     "r": 896,
+     "b": 284
+    },
+    "scene": "Game"
+   },
+   "end": {
+    "file": "color-dash-end-932x430-rm-off.png",
+    "text": "DASH",
+    "size": 12,
+    "color": "#ffffff",
+    "alpha": 1,
+    "label": {
+     "l": 847.5,
+     "t": 244.5,
+     "r": 880.5,
+     "b": 259.5
+    },
+    "zone": {
+     "l": 832,
+     "t": 220,
+     "r": 896,
+     "b": 284
+    },
+    "scene": "Game"
+   }
+  },
+  "tap": "n/a",
+  "errs": []
+ }
+]

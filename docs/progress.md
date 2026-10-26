@@ -883,3 +883,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - npm test 911 passed, 3 skipped; typecheck and build pass. Shots and touch scripts: docs/shots/q-prem-f1/.
 **Next**
 - Tester: retest (c) on a real phone. Real-phone repro needed if a bow tap still misses.
+
+## Q-PREM-COLOR (2026-10-26)
+- Shared GREEN #277a56 in all 26 places. verify-ui-shots on Title OK, Create "Let's go!", Street Smarts choices, rest card "Back home" and DASH at 667x320, 667x375, 844x390, 932x430, Reduced motion on/off, pixel-sampled (docs/shots/q-prem-color/verify-log.txt). Test: packages/sim/test/q-prem-color-green.test.ts.
