@@ -81,14 +81,12 @@ const STAT_RIM = 6;
 const STAT_PAD = S2;
 /** P-MENU2-SPACE: the full left column's height (edges 16, Path card at its 57 pt minimum); shorter screens go compact. */
 const LEFT_FULL_H = 369;
-/** P-MENU2-SPACE: the Path card's smallest full card (12 pad, label, step, 12 pad) and its one-row form. */
+/** P-MENU2-SPACE: the Path card's smallest full card (12 pad, label, step, 12 pad); shorter, it is one row. */
 const PATH_MIN_H = 12 + TYPE.label + 4 + TYPE.title + 12;
-const PATH_ROW_H = S2 + 20 + S2;
-/**
- * P-MENU2-SPACE: the least height each tab's contents need (what they get inside the panel at
- * 667x375, where every tab is clean). A shorter panel scrolls its contents instead of squeezing them.
- */
-const PANEL_MIN_H: Record<string, number> = { run: 277, gear: 0, trophy: 0, style: 277, gate: 277 };
+/** P-MENU2-SPACE: the height Last run and My Style get at 667x375, where they are clean; shorter panels scroll. */
+const PANEL_FULL_H = 277;
+/** A 12 pt Gate label line (the Text's real line height). */
+const GATE_LINE_H = 15;
 const STAT_ICON: Record<string, string | undefined> = { perfects: 'stat-perfect', combo: 'stat-combo', time: 'stat-clock', xp: 'stat-xp' };
 
 /** A-MENU2: only the Black belt gets the full knot sheen. */
@@ -329,7 +327,7 @@ export class HomeScene extends Phaser.Scene {
     const levelLine = `Level ${level}  ·  ${atCap ? 'Level cap! The Gate shows how to go higher.' : `cap ${t.levelCap}`}`;
     // Compact: the stack gains the level line (and keeps the Blessing line), so the row grows to fit it.
     const stackH = TYPE.title + S1 + TYPE.body + (t.blessed ? S1 + TYPE.label : 0) + (short ? S1 + TYPE.label + 2 : 0);
-    const rowH = short ? Math.max(56, stackH + S2) : 64;
+    const rowH = short ? Math.max(56, stackH + S1) : 64;
     const cy = rowTop + rowH / 2;
     if (t.blessed) {
       // Full fill, so the object's alpha is the alpha you see (0.25 to 0.15).
@@ -433,7 +431,7 @@ export class HomeScene extends Phaser.Scene {
     this.panelContent = content;
     this.ui = content;
     const inner = panelH - 20;
-    const h = Math.max(inner, PANEL_MIN_H[this.tab === 'abilities' ? this.part : this.tab]);
+    const h = Math.max(inner, this.panelMinH(rw - 24));
     if (this.tab === 'run') this.renderRun(rx + 12, top + 10, rw - 24, h);
     else if (this.tab === 'gear') this.renderGear(rx + 10, top + 10, rw - 20, h);
     else if (this.tab === 'abilities') this.renderAbilities(rx + 10, top + 10, rw - 20, h);
@@ -444,6 +442,22 @@ export class HomeScene extends Phaser.Scene {
       panel.setPosition(swap.dx, 0).setAlpha(swap.fromAlpha);
       this.tweens.add({ targets: panel, x: 0, alpha: 1, duration: swap.ms, ease: swap.ease });
     }
+  }
+
+  /**
+   * P-MENU2-SPACE: the least height the tab's contents need. Only real content counts: the empty
+   * Last run, Gear and the Trophy Case fit any panel; the Gate needs its locks, 3-line labels and cards.
+   */
+  private panelMinH(w: number): number {
+    if (this.tab === 'run') return this.profile.lastRun ? PANEL_FULL_H : 0;
+    if (this.tab === 'abilities') return this.part === 'style' ? PANEL_FULL_H : 0;
+    if (this.tab === 'gate') {
+      const g = this.training.gate;
+      if (!g.toBelt) return 0;
+      const r = gateLockR(w / g.locks.length);
+      return 52 + 2 * r + 4 + GATE.labelLines * GATE_LINE_H + S2 + GATE.cardH;
+    }
+    return 0;
   }
 
   /**
@@ -463,10 +477,33 @@ export class HomeScene extends Phaser.Scene {
     const shape = this.make.graphics({}, false).fillStyle(0xffffff).fillRect(rx + 2, win.top, rw - 4, win.bottom - win.top);
     content.setMask(shape.createGeometryMask());
     content.once(Phaser.GameObjects.Events.DESTROY, () => shape.destroy());
+    // The cue: a soft dark fade and a small gold chevron on a dark pill at each edge that has more beyond it,
+    // and a 6 pt thumb on a faint track.
     const trackH = panelH - 24;
     const thumbH = Math.max(24, (trackH * (panelH - 20)) / (panelH - 20 + max));
-    const thumb = this.add.rectangle(rx + rw - 7, 0, 4, thumbH, 0xc08a2e, 0.9).setOrigin(0.5, 0);
-    this.panel?.add(thumb);
+    const track = this.add.rectangle(rx + rw - 8, top + 12, 6, trackH, 0x000000, 0.18).setOrigin(0.5, 0);
+    const thumb = this.add.rectangle(rx + rw - 8, 0, 6, thumbH, 0xc08a2e, 0.95).setOrigin(0.5, 0);
+    const cue = this.add.graphics();
+    this.panel?.add([cue, track, thumb]);
+    const FADE = 20;
+    const drawCue = (y: number) => {
+      cue.clear();
+      const fx = rx + 4;
+      const fw = rw - 8;
+      const cx = rx + rw / 2;
+      if (y > 0) {
+        cue.fillGradientStyle(0x14121c, 0x14121c, 0x14121c, 0x14121c, 0.5, 0.5, 0, 0).fillRect(fx, win.top, fw, FADE);
+        cue.fillStyle(0x14121c, 0.8).fillRoundedRect(cx - 14, win.top + 1, 28, 14, 7);
+        cue.fillStyle(0xffd166, 0.95).lineStyle(1.5, 0x3a2618, 0.9);
+        cue.fillTriangle(cx - 7, win.top + 11, cx + 7, win.top + 11, cx, win.top + 4).strokeTriangle(cx - 7, win.top + 11, cx + 7, win.top + 11, cx, win.top + 4);
+      }
+      if (y < max) {
+        cue.fillGradientStyle(0x14121c, 0x14121c, 0x14121c, 0x14121c, 0, 0, 0.5, 0.5).fillRect(fx, win.bottom - FADE, fw, FADE);
+        cue.fillStyle(0x14121c, 0.8).fillRoundedRect(cx - 14, win.bottom - 15, 28, 14, 7);
+        cue.fillStyle(0xffd166, 0.95).lineStyle(1.5, 0x3a2618, 0.9);
+        cue.fillTriangle(cx - 7, win.bottom - 11, cx + 7, win.bottom - 11, cx, win.bottom - 4).strokeTriangle(cx - 7, win.bottom - 11, cx + 7, win.bottom - 11, cx, win.bottom - 4);
+      }
+    };
     const taps: Phaser.GameObjects.GameObject[] = [];
     const walk = (list: Phaser.GameObjects.GameObject[]) => list.forEach((o) => (o instanceof Phaser.GameObjects.Container ? walk(o.list) : o.input && taps.push(o)));
     walk(content.list);
@@ -478,10 +515,20 @@ export class HomeScene extends Phaser.Scene {
         this.scrollY = state.y;
         content.y = -state.y;
         thumb.y = top + 12 + ((trackH - thumbH) * state.y) / max;
+        drawCue(state.y);
+        // Each tap area is clipped to the visible window: a partly hidden button answers only
+        // where it shows, and a touch outside the window never reaches it.
         for (const o of taps) {
-          if (!o.input) continue;
+          const input = o.input;
+          if (!input || !(input.hitArea instanceof Phaser.Geom.Rectangle)) continue;
+          const full = (o.getData('fullHit') as Phaser.Geom.Rectangle | undefined) ?? Phaser.Geom.Rectangle.Clone(input.hitArea);
+          o.setData('fullHit', full);
           const b = (o as Phaser.GameObjects.Zone).getBounds();
-          o.input.enabled = b.centerY >= win.top && b.centerY <= win.bottom;
+          const visTop = Math.max(b.top, win.top);
+          const visBottom = Math.min(b.bottom, win.bottom);
+          const k = full.height / b.height;
+          input.enabled = visBottom > visTop;
+          input.hitArea.setTo(full.x, full.y + (visTop - b.top) * k, full.width, Math.max(0, visBottom - visTop) * k);
         }
       },
     };
@@ -520,7 +567,6 @@ export class HomeScene extends Phaser.Scene {
   private renderPath(x: number, y: number, w: number, h: number): void {
     // P-MENU-c: padding 16, radius 10; label 12 bold gold, step 17 bold, details 14.
     const p = this.training.path;
-    if (h < PATH_ROW_H) return;
     const card = this.add.graphics();
     card.fillStyle(0x221d2e).fillRoundedRect(x, y, w, h, RADIUS.panel);
     card.lineStyle(2, 0xffd166, 0.5).strokeRoundedRect(x, y, w, h, RADIUS.panel);
@@ -1448,7 +1494,7 @@ export class HomeScene extends Phaser.Scene {
     }
     this.text(x, y + 28, `${g.lit} of ${g.locks.length} locks lit. A real promotion opens the Gate.`, TYPE.label, '#b9ad99', false, FONT, w);
 
-    // The locks. P-MENU-f: radius 22 (at least 18), labels 12, at most 2 lines, centred.
+    // The locks. P-MENU-f: radius 22 (at least 18), labels 12, at most 3 lines (P-MENU2-SPACE: "David and Goliath" needs 3 in a narrow slot), centred.
     const n = g.locks.length;
     const slot = w / n;
     const r = gateLockR(slot);

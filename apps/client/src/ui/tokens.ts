@@ -115,7 +115,7 @@ export function pageDots(pages: number, room: number): { x0: number; step: numbe
 }
 
 /** P-MENU-f: Gate tab sizes (drafts/planning/P-MENU-menu-polish.md §3c). */
-export const GATE = { lockR: 22, lockMinR: 18, label: TYPE.label, labelLines: 2, cardH: 96, cardGap: S2, sealR: 28, ring: { w: 4, alpha: 0.35 } } as const;
+export const GATE = { lockR: 22, lockMinR: 18, label: TYPE.label, labelLines: 3, cardH: 96, cardGap: S2, sealR: 28, ring: { w: 4, alpha: 0.35 } } as const;
 
 /** P-MENU-f: lock radius for a slot of this width: 22, smaller on tiny phones, never under 18. */
 export function gateLockR(slot: number): number {
