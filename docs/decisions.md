@@ -1275,3 +1275,8 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - Cap: +3% plus the kata max of +4% (#302) = +7%, under the +12% cap.
 - Sims: new BALANCE-gated report `packages/sim/test/balance/ready-stance.test.ts` plays smart, kid and masher with each stance. The bot now also counts damage dealt (`dealt`) and enemies defeated (`kos`) per room. The existing balance report passes no stance, so it does not move. It uses the B-MASHER-c kid gate setup (belts 1-10 x 20 seeds, typical student stats per belt, belt tier, novice, standard; Mash guard and +6 Focus per shield bounce on as in play). A first version ran a bare 100 HP / 10 power character with no belt or tier, so the kid and masher lost room 1 every run; that was the report's setup, not the gate. Its "before" kid row (113/200, room-1 KOs 0/200) matches the gate on main (5254097), R-STANCE-g and this branch. The 137/200 in progress.md is from B-MASHER; B-MASHER-2 lowered it to 113 on purpose. Numbers are in the PR.
 - Golden re-captured on purpose: Open Leg's numbers show in the yellow and green stance lists, and each room records the new `dealt`/`kos`. Players start in Beginner's Stance, so every run plays the same.
+
+## Q-PREM-F2 — Settings gets a Done button (2026-10-26)
+- QA (Q-PREMIUM F2) found no visible way out of Settings; only a tap on the dim background closed it. The Manager approved a corner button labelled "Done".
+- Green `roundButton` (Scroll's Close colour), 96×44 in the top-right corner, 12 px from the edges, 16 px text. It calls the same `close()` as the background tap. The background tap still closes, too.
+- It sits above the cards (cards start at 10% height + 44 px), so nothing else moved at 667×320.

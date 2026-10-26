@@ -852,3 +852,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - npm test 911 passed, 3 skipped; typecheck and build pass. Golden re-captured on purpose (runs unchanged).
 **Next**
 - Manager confirmed all 4 bonuses, no downside. Real DojoForge id for the Open Leg sign-off.
+
+## Q-PREM-F2 — Done button in Settings (2026-10-26)
+**Done**
+- Settings (dojo → Settings) has a green "Done" button in the top-right corner (96×44); one tap closes it.
+- Touch script `docs/shots/q-prem-f2/f2-touch.mjs`: 3 single taps each (centre and two inner corners) at 667x375, 667x320, 844x390 and 932x430, Reduced motion on and off: 24 of 24 closed Settings in one tap. Logs `tap-*.txt`, shots `settings-*.png`.
+- npm test 911 passed, 3 skipped; typecheck and build pass.
+**Next**
+- Q-PREM-F1 (Bow on first tap).

@@ -1,0 +1,3 @@
+trial 1: opened mode=menu, Done at 872,34 (96x44 zone x 824-920, y 12-56), tapped 872,34, one tap -> mode=play panels=0 OK
+trial 2: opened mode=menu, Done at 872,34 (96x44 zone x 824-920, y 12-56), tapped 828,16, one tap -> mode=play panels=0 OK
+trial 3: opened mode=menu, Done at 872,34 (96x44 zone x 824-920, y 12-56), tapped 916,52, one tap -> mode=play panels=0 OK
