@@ -2,7 +2,7 @@ import { reducedMotion } from '../game/motion';
 import Phaser from 'phaser';
 import { COMBAT, activeStance, strikeCost, type PlayerAction, type PlayerState } from '@dojo/sim';
 import { view, DPR } from '../ui/theme';
-import { ACTION_COLORS as AC, ACTION_LABEL } from '../ui/tokens';
+import { ACTION_COLORS as AC, ACTION_LABEL, GREEN } from '../ui/tokens';
 
 /** Q-PREM-COLOR: button faces are solid so white labels keep their contrast over any floor (were 0.9, letting the floor tint through). */
 const FACE_ALPHA = 1;
@@ -60,7 +60,7 @@ export class ActionButtons {
     this.strike = this.makeButton('strike', 'STRIKE', STRIKE_RADIUS, AC.strike.ready);
     this.strikeRing = scene.add.graphics();
     this.strike.container.add(this.strikeRing);
-    this.dash = this.makeButton('dash', 'DASH', DASH_RADIUS, AC.dash.ready);
+    this.dash = this.makeButton('dash', 'DASH', DASH_RADIUS, GREEN);
     this.dashRing = scene.add.graphics();
     this.dash.container.add(this.dashRing);
     if (has.virtue) {
