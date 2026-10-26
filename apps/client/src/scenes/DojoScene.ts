@@ -1029,6 +1029,10 @@ export class DojoScene extends Phaser.Scene {
     };
     dim.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, close);
     const t = DIFFICULTY_TEXT;
+    // Q-PREM-F2: a clear Done in the top-right corner (green, like Scroll's Close), so a young
+    // child can see how to leave. Tapping the dim background still closes too.
+    const doneW = 96;
+    roundButton(this, { x: width - 12 - doneW, y: 12, w: doneW, h: MIN_TAP, label: 'Done', color: 0x3aa57a, size: 16, onTap: () => close() }, box);
     box.add(this.add.text(width / 2, height * 0.1, t.title, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
     const gap = 12;
     const n = t.choices.length;
