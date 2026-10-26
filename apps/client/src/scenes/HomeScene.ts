@@ -1435,13 +1435,16 @@ export class HomeScene extends Phaser.Scene {
     const icon = c.icon ? addIcon(this, c.icon, sx + pad + 28, sy + pad + 28, 56) : null;
     if (icon) body.add(icon.setAlpha(c.earned ? 1 : 0.4));
     else if (!c.hideBlankIcon) body.add(this.add.circle(sx + pad + 28, sy + pad + 28, 26, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.35));
-    const tx = sx + pad + 56 + S2;
+    // R-STANCE-READY-NUM: no icon and no circle, so the text starts at the left edge (no blank gap).
+    const iconW = icon || !c.hideBlankIcon ? 56 + S2 : 0;
+    const tx = sx + pad + iconW;
+    const textW = tw + 56 + S2 - iconW;
     let ty = sy + pad;
-    this.oneLine(this.text(tx, ty, c.name, TYPE.title, WOOD.ink, true), tw, TYPE.body);
+    this.oneLine(this.text(tx, ty, c.name, TYPE.title, WOOD.ink, true), textW, TYPE.body);
     ty += TYPE.title + 4;
-    const eff = this.text(tx, ty, c.effect, TYPE.body, '#5a3e28', false, FONT, tw).setMaxLines(TROPHY_UI.effectLines);
+    const eff = this.text(tx, ty, c.effect, TYPE.body, '#5a3e28', false, FONT, textW).setMaxLines(TROPHY_UI.effectLines);
     ty += eff.height + 6;
-    this.text(tx, ty, c.status, TYPE.body, c.earned ? '#a0522d' : '#7a5a3a', true, FONT, tw);
+    this.text(tx, ty, c.status, TYPE.body, c.earned ? '#a0522d' : '#7a5a3a', true, FONT, textW);
     ty = Math.max(ty + TYPE.body + 8, sy + pad + 56 + S2);
     if (c.kata) {
       this.text(sx + pad, ty, TROPHY_WORDS.kataSteps, TYPE.label, '#7a5a3a', true);

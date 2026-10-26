@@ -20,7 +20,10 @@
       "attackSpeed": 0,
       "moveSpeed": 0,
       "guardScale": 0,
-      "powerScale": 0
+      "powerScale": 0.03,
+      "dashCooldownScale": -0.1,
+      "blockCut": 0.05,
+      "focusGain": 0.08
     },
     {
       "id": "cat-stance",

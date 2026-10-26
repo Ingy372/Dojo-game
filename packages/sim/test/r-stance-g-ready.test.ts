@@ -26,10 +26,10 @@ const main = (key: string) => MAIN_312[key];
 const ZERO = { counterWindow: 0, attackSpeed: 0, moveSpeed: 0, guardScale: 0, powerScale: 0, dashCooldownScale: 0, dashScale: 1, blockCut: 0, focusGain: 0, stillPower: 0, rootTicks: 0 };
 
 describe('R-STANCE-g content', () => {
-  it('Beginner is first, all 0, no sign-off; Open Leg is second with its own sign-off and the same 0 numbers', () => {
+  it('Beginner is first, all 0, no sign-off; Open Leg is second with its own sign-off and the 4 bonuses from #314 (R-STANCE-READY-NUM)', () => {
     const [b, r] = content.abilities.stances;
     expect(b).toMatchObject({ id: 'beginners-stance', name: "Beginner's Stance", signOffId: null, ...ZERO });
-    expect(r).toMatchObject({ id: READY_STANCE_ID, name: 'Open Leg Stance', signOffId: 'PLACEHOLDER-dojoforge-stance-ready', text: 'The open leg stance.', ...ZERO });
+    expect(r).toMatchObject({ id: READY_STANCE_ID, name: 'Open Leg Stance', signOffId: 'PLACEHOLDER-dojoforge-stance-ready', text: 'The open leg stance.', ...ZERO, powerScale: 0.03, dashCooldownScale: -0.1, blockCut: 0.05, focusGain: 0.08 });
   });
   it('the lines come from #312 main picks, in content, not code', () => {
     const w = styleWords as unknown as { lines: Record<string, string>; notYetLines: Record<string, string>; welcomeStance: string };
