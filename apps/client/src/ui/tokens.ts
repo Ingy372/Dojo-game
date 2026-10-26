@@ -218,3 +218,16 @@ export function contrast(a: number, b: number): number {
   const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
   return (hi + 0.05) / (lo + 0.05);
 }
+
+/**
+ * Q-PREM-F9: fight action button faces and labels, each ready colour at least 4.5:1 with its label.
+ * Same colour families Jay picked, just darker (COUNTER 3a7bd5 -> 2f74d3, STRIKE d5713a -> b75a27).
+ * VIRTUE's gold and COUNTER's flash stay bright and take a dark label instead. Not ready: a solid
+ * dim face with a soft light label (the button is no longer see-through, so the floor can't wash it out).
+ */
+export const ACTION_COLORS = {
+  counter: { ready: 0x2f74d3, flash: 0x6fa8ff, dim: 0x2e3c55 },
+  strike: { ready: 0xb75a27, dim: 0x5a4a44 },
+  virtue: { ready: 0xffb02e, dim: 0x5a4a34 },
+} as const;
+export const ACTION_LABEL = { light: '#ffffff', dark: '#14121c', dim: '#d8d2c8' } as const;

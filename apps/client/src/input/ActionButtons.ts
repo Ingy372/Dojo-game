@@ -2,7 +2,7 @@ import { reducedMotion } from '../game/motion';
 import Phaser from 'phaser';
 import { COMBAT, activeStance, strikeCost, type PlayerAction, type PlayerState } from '@dojo/sim';
 import { view, DPR } from '../ui/theme';
-import { GREEN } from '../ui/tokens';
+import { ACTION_COLORS as AC, ACTION_LABEL, GREEN } from '../ui/tokens';
 
 /** Q-PREM-COLOR: button faces are solid so white labels keep their contrast over any floor (were 0.9, letting the floor tint through). */
 const FACE_ALPHA = 1;
@@ -52,15 +52,15 @@ export class ActionButtons {
     private readonly onTouch: () => void,
     has: { stances: boolean; virtue: boolean } = { stances: false, virtue: false },
   ) {
-    this.counter = this.makeButton('counter', 'COUNTER', COUNTER_RADIUS, 0x3a7bd5);
-    this.strike = this.makeButton('strike', 'STRIKE', STRIKE_RADIUS, 0xd5713a);
+    this.counter = this.makeButton('counter', 'COUNTER', COUNTER_RADIUS, AC.counter.ready);
+    this.strike = this.makeButton('strike', 'STRIKE', STRIKE_RADIUS, AC.strike.ready);
     this.strikeRing = scene.add.graphics();
     this.strike.container.add(this.strikeRing);
     this.dash = this.makeButton('dash', 'DASH', DASH_RADIUS, GREEN);
     this.dashRing = scene.add.graphics();
     this.dash.container.add(this.dashRing);
     if (has.virtue) {
-      this.virtue = this.makeButton('virtue', 'VIRTUE', VIRTUE_RADIUS, 0xb08a3c);
+      this.virtue = this.makeButton('virtue', 'VIRTUE', VIRTUE_RADIUS, AC.virtue.ready);
       this.virtueRing = scene.add.graphics();
       this.virtue.container.add(this.virtueRing);
     }
@@ -136,23 +136,27 @@ export class ActionButtons {
   private styleCounter(ready: boolean): void {
     const open = this.windowOpen && ready;
     const flash = open && (reducedMotion() || Math.sin(this.scene.time.now / 70) > 0);
-    this.counter.face.setStrokeStyle(open ? 7 : 4, open ? 0xffd166 : 0xffffff, open ? 1 : 0.8);
-    this.counter.face.setFillStyle(flash ? 0x6fa8ff : 0x3a7bd5, FACE_ALPHA);
+    this.counter.face.setStrokeStyle(open ? 7 : 4, open ? 0xffd166 : 0xffffff, ready ? (open ? 1 : 0.8) : 0.35);
+    this.counter.face.setFillStyle(flash ? AC.counter.flash : ready ? AC.counter.ready : AC.counter.dim, FACE_ALPHA);
+    labelColor(this.counter, flash ? ACTION_LABEL.dark : ready ? ACTION_LABEL.light : ACTION_LABEL.dim);
   }
 
   /** Shows whether each button is ready, from the player's current state. */
   update(p: PlayerState): void {
     const alive = p.downTicks === 0;
     const counterReady = alive && p.guardTicks === 0 && p.counterLockout === 0;
-    this.counter.container.setAlpha(counterReady ? 1 : 0.45);
+    // Q-PREM-F9: not ready is a solid dim face + soft label (was alpha 0.45 over the floor).
+    this.counter.container.setAlpha(1);
     this.styleCounter(counterReady);
     const pulse = this.counterPulse === 3 ? 0.24 : this.counterPulse === 2 ? 0.14 : this.counterPulse === 1 ? 0.06 : 0;
     this.counter.container.setScale(1 + Math.abs(Math.sin(this.scene.time.now / 140)) * pulse);
 
     const cost = strikeCost(p);
     const strikeReady = alive && p.focus >= cost;
-    this.strike.container.setAlpha(strikeReady ? 1 : 0.55);
-    this.strike.face.setFillStyle(strikeReady ? 0xd5713a : 0x5a4a44, FACE_ALPHA);
+    this.strike.container.setAlpha(1);
+    this.strike.face.setFillStyle(strikeReady ? AC.strike.ready : AC.strike.dim, FACE_ALPHA);
+    this.strike.face.setStrokeStyle(4, 0xffffff, strikeReady ? 0.8 : 0.35);
+    labelColor(this.strike, strikeReady ? ACTION_LABEL.light : ACTION_LABEL.dim);
     const fill = Math.min(1, p.focus / cost);
     this.strikeRing.clear();
     this.strikeRing.lineStyle(5, strikeReady ? 0xffd166 : 0x9ad1ff, strikeReady ? 1 : 0.8);
@@ -176,8 +180,10 @@ export class ActionButtons {
 
     if (this.virtue && this.virtueRing) {
       const full = alive && p.focus >= COMBAT.focus.max && p.virtueTicks === 0;
-      this.virtue.container.setAlpha(full ? 1 : 0.5);
-      this.virtue.face.setFillStyle(full ? 0xffb02e : 0x5a4a34, FACE_ALPHA);
+      this.virtue.container.setAlpha(1);
+      this.virtue.face.setFillStyle(full ? AC.virtue.ready : AC.virtue.dim, FACE_ALPHA);
+      this.virtue.face.setStrokeStyle(4, 0xffffff, full ? 0.8 : 0.35);
+      labelColor(this.virtue, full ? ACTION_LABEL.dark : ACTION_LABEL.dim);
       this.virtueRing.clear();
       this.virtueRing.lineStyle(4, full ? 0xffffff : 0xffd166, 0.85);
       this.virtueRing.beginPath();
@@ -228,4 +234,9 @@ export class ActionButtons {
       }
     }
   }
+}
+
+/** Q-PREM-F9: change a label's colour only when it differs (setColor redraws the text). */
+function labelColor(b: Button, color: string): void {
+  if (b.label.style.color !== color) b.label.setColor(color);
 }
