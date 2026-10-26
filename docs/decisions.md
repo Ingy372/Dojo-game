@@ -1268,3 +1268,9 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - Base: branched from bot-code/R-STANCE-d2 (#311 was not yet on main).
 
 - 2026-10-26 (R-STANCE-g): Manager call: Ready uses #303's approved line "Steady and even, ready for anything." Ready stays at zero numbers until the Researcher proposes a bonus (follow-up).
+
+## R-STANCE-READY-NUM — Open Leg Stance numbers (2026-10-26)
+- Manager spec, mapped exactly as #314's table: `ready-stance` gets `powerScale: 0.03` (power +3%), `dashCooldownScale: -0.1` (Dash recharge 30 → 27 ticks), `blockCut: 0.05` (blocks let max(0.1, 0.5 − 0.05) = 45% through, per `abilities.ts`), `focusGain: 0.08` (Focus +8%). `counterWindow` stays 0 (the smallest step, 1 tick, would equal Cat). No standing bonus, no downside. Each bonus is weaker than the matching specialist (#314). Beginner's Stance stays the default and all 0.
+- Cap: +3% plus the kata max of +4% (#302) = +7%, under the +12% cap.
+- Sims: new BALANCE-gated report `packages/sim/test/balance/ready-stance.test.ts` plays smart, kid and masher with each stance. The bot now also counts damage dealt (`dealt`) and enemies defeated (`kos`) per room. The existing balance report passes no stance, so it does not move. Numbers are in the PR.
+- Golden re-captured on purpose: Open Leg's numbers show in the yellow and green stance lists, and each room records the new `dealt`/`kos`. Players start in Beginner's Stance, so every run plays the same.

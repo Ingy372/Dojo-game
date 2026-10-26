@@ -844,3 +844,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Shots at 667x375, 667x320, 844x390, 932x430, Reduced motion on and off, 0 console errors: docs/shots/r-stance-g.
 **Next**
 - Open Leg plays the same as Beginner (both all 0) until the Researcher or Jay gives it numbers. Stance-tagged idle art. Real DojoForge id for the Open Leg sign-off.
+
+## R-STANCE-READY-NUM — Open Leg Stance numbers (2026-10-26)
+**Done**
+- Open Leg (`ready-stance`): power +3%, Dash recharge −10%, blocks let 45% through, Focus +8%; counter window 0, no downside (#314). Beginner stays default and all 0.
+- New BALANCE-gated sim report (smart, kid, masher × Beginner vs Open Leg): `packages/sim/test/balance/ready-stance.test.ts`. Novice smart, standard: win 92% → 97%; no win-rate change elsewhere (smart 100%, kid and masher 0% either way).
+- npm test 911 passed, 3 skipped; typecheck and build pass. Golden re-captured on purpose (runs unchanged).
+**Next**
+- Jay/Manager: keep all 4 bonuses? Is no downside OK? Real DojoForge id for the Open Leg sign-off.
