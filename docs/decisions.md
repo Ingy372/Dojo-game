@@ -1368,3 +1368,4 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 ## Q-PREM-F11 QA fix — no accidental Home on a mash (2026-10-26)
 - QA: mashing through the KO sent the player Home in 7/8 runs (first pointerdown 100–300 ms after Screen 2).
 - Screen 2 now ignores every tap (shade and Head home) for 500 ms after it appears (`ARM_MS = 500`), timed on the wall clock with the tap's own `pointer.downTime`, so a tap made inside the window but handled a frame late is still ignored.
+- B-TUNE-GUIDED: scaled enemy Power floors at 1 (if it was above 0) on the belt-scale path as well; before, it could round to 0.
