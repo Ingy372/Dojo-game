@@ -337,3 +337,11 @@ Re-import, same file names and JSON as before (no layout change):
 - `form-stances-a2/sprites/body-a/` and `body-b/`: the `face-0N` sheets of `stance_rooted` and `stance_flowing`.
 - `dojo-people/sprites/kohai/`: the `kohai_body_*` sheets; `dojo-people/portraits/kohai/`: the 4 flattened portraits and the 4 `*_body` layers.
 Don't import `walk-rework/arms-*` yet: Jay hasn't picked one.
+
+## Audio: staged SFX (`incoming-art/audio/sfx/`) [SAMPLES, do not wire until Jay approves]
+- The event-to-file mapping is in `audio/sfx/README.md`. Formats: Kenney `.ogg` and 512-pack `.wav` (44.1 kHz, 16-bit mono).
+- All files are CC0, and a credit is not required. A courtesy credit for "Kenney (kenney.nl)" and "SubspaceAudio / Juhani Junkala" is appreciated.
+- Copy the chosen files into the game's audio folder when wiring. Do not load them from `incoming-art/`.
+- Set gain per group: the 8-bit files are about -8 to -10 dB hotter than the rest. Raise `jingles_SAX03` by about +6 dB. Keep headroom on the UI bus because the Kenney UI clips peak near 0 dBFS.
+- For hit variants, pick at random among the `_000/_001/_002` files to avoid repetition.
+- Keep it kid-friendly: do not add sounds from the scream, explosion, weapon or alarm folders of the 512 pack.
