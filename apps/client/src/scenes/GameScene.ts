@@ -73,10 +73,14 @@ import {
   BOSS_TAG,
   lidUp,
   type TagBox,
+  keeperWin,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
 import tutorialData from '../../../../content/tutorial/tutorial-floor.json';
+import { Celebrations } from '../ui/Celebrations';
+import BOSS_WIN from '../../../../content/settings/boss-win.json';
+import LAST_RUN from '../../../../content/settings/last-run.json';
 import { MASH_GUARD_LINE, takeMashGuardMoment } from '../game/mashGuardMoment';
 import { testFlags } from '../game/beta';
 
@@ -1673,9 +1677,24 @@ export class GameScene extends Phaser.Scene {
       };
       return;
     }
+    // Q-PREM-BOSSWIN: the first real Floor Keeper clear gets its one big moment, saved so it plays once.
+    const bossId = this.room.enemySpawns.map((sp) => sp.enemy).find((id) => CONTENT.enemies[id]?.boss);
+    if (keeperWin(profile, this.run, status, bossId)) {
+      writeSave(profile);
+      this.showKeeperWin(() => leave('Home', { fromRun: true }));
+      return;
+    }
     sfx.floorClear();
-    this.message.setText('Floor cleared!').setVisible(true);
+    this.message.setText(LAST_RUN.cleared).setVisible(true);
     this.time.delayedCall(200, () => leave('Home', { fromRun: true }));
+  }
+
+  /** Q-PREM-BOSSWIN: 'Floor Keeper defeated!' over the room, then onDone (home). */
+  private showKeeperWin(onDone: () => void): void {
+    this.message.setVisible(false);
+    this.menuOpen = true;
+    const c = new Celebrations(this, [], this.training, onDone, [], BOSS_WIN.keeperDefeated);
+    this.cameras.main.ignore(c.root);
   }
 
   /** The bow at the start of the floor: the fight waits, then a small Focus head start. */
@@ -2346,7 +2365,7 @@ export class GameScene extends Phaser.Scene {
     // A missed time gets its own line: the full sentence doesn't fit beside the stats at 667.
     const missed = ch && inTime === false ? `\n${ch.outOfTimeText}` : '';
     const line = this.add
-      .text(width / 2, height * 0.36 + 48, `Room clear!  ${parts.join('  ·  ')}${missed}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4, align: 'center', wordWrap: { width: width - 32 } })
+      .text(width / 2, height * 0.36 + 48, `${BOSS_WIN.roomClear}  ${parts.join('  ·  ')}${missed}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4, align: 'center', wordWrap: { width: width - 32 } })
       .setOrigin(0.5, 0)
       .setResolution(crisp())
       .setAlpha(0);

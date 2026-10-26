@@ -901,4 +901,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Grade letters, the grade sound, Last run grade chips, the tutorial card letter and "Most S grades" now show on Challenge only (`showGrades`). Run summaries save their difficulty. verify-ui-shots: 4 sizes × guided/standard/challenge, 72 PASS / 0 FAIL (docs/shots/q-prem-grade/verify-log.txt). Test: packages/sim/test/q-prem-grade.test.ts.
 **Next**
 - Tester: clear rooms on Standard (no letters, no grade chime, "Room clear!" stays) and on Challenge (letters back).
+## Q-PREM-BOSSWIN (2026-10-26)
+- First real Floor Keeper clear shows "Floor Keeper defeated!" once per save; old saves count as celebrated only when the last run was a real (non-tutorial) Floor Keeper clear; a tutorial-only save still gets it. verify-ui-shots at 667x375, 844x390, 932x430, 1024x768, Reduced motion on/off, frames 0/600/1500 ms, hands-on tap continues: 224 PASS / 0 FAIL (docs/shots/q-prem-bosswin/verify-log.txt). Test: packages/sim/test/q-prem-bosswin.test.ts.
+**Next**
+- Tester: beat the Floor Keeper on a fresh save (moment plays), then again (normal clear). Q-PREM-GRADE next.
 - Q-PREM-F9 QA fix: DASH/STANCE solid dim faces (6.44:1 / 6.89:1), Counter lockout ring, Decorate wall row clear of the 60 px bar. verify-ui-shots 656 PASS, 0 FAIL (4 sizes × Reduced motion on/off).
