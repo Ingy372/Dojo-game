@@ -1,0 +1,177 @@
+{
+  "notes": "DRAFT for C-STORY-g (spec: drafts/content/C-STORY-review.md). Deeper Bestiary text for every Tier 1-3 regular enemy (bestiary-plan.json) and named monster (named-monsters.json); Guardians are covered by story/guardian-arcs.json. Same idea as the enemy files' bestiary.lore, gathered in one file so no enemy file changes. kidLine: ages 6-9, 8-12 words. olderReaderLine: ages 12-14, unlocked at the entry's tier belt, at most 2 short sentences, never past that tier's mystery-ladder.json fact. Behaviour matches the data; no new technique or mechanics. Checked by tools/check-bestiary-lines.py.",
+  "id": "bestiary-tiers-1-3",
+  "entries": [
+    {
+      "id": "swarmer",
+      "name": "Swarmer",
+      "tier": "white",
+      "kind": "enemy",
+      "kidLine": "Swarmers zip around in groups. Clear them first, then breathe!",
+      "olderReaderLine": "They rush because they are scared of the dark. Every crack of light in these halls calms them a little.",
+      "unlockBelt": "White"
+    },
+    {
+      "id": "brute",
+      "name": "Brute",
+      "tier": "white",
+      "kind": "enemy",
+      "kidLine": "The Brute is big and slow, and gets tired after chasing.",
+      "olderReaderLine": "It chases until it runs out of breath, then stands there, puzzled. Even big things need a rest.",
+      "unlockBelt": "White"
+    },
+    {
+      "id": "shield",
+      "name": "Shield Guard",
+      "tier": "white",
+      "kind": "enemy",
+      "kidLine": "Shield Guard blocks small hits. A strong Strike breaks through!",
+      "olderReaderLine": "It still guards a door, though it can't remember whose. Some habits outlast the reason for them.",
+      "unlockBelt": "White"
+    },
+    {
+      "id": "wick-wisp",
+      "name": "Wick Wisp",
+      "tier": "white",
+      "kind": "enemy",
+      "kidLine": "A tiny candle flame that wobbles along and bumps into you.",
+      "olderReaderLine": "A small flame drifting from the broken light. It bumps into you as if it wants to be carried home.",
+      "unlockBelt": "White"
+    },
+    {
+      "id": "dust-bunny",
+      "name": "Dust Bunny",
+      "tier": "white",
+      "kind": "enemy",
+      "kidLine": "A fluffy dust ball that rolls at you, then sneezes. Achoo!",
+      "olderReaderLine": "Dust gathers where no one has swept in a long time. These halls were busy once, and could be again.",
+      "unlockBelt": "White"
+    },
+    {
+      "id": "lantern-moth",
+      "name": "Lantern Moth",
+      "tier": "white",
+      "kind": "enemy",
+      "kidLine": "Lantern Moths toss glowing pebbles. Step out of the circle!",
+      "olderReaderLine": "Moths fly toward light. These ones circle the halls, looking for a lamp that broke into pieces.",
+      "unlockBelt": "White"
+    },
+    {
+      "id": "sleepy-sentry",
+      "name": "Sleepy Sentry",
+      "tier": "white",
+      "kind": "enemy",
+      "kidLine": "A sleepy stone statue that yawns, then stomps. Dash away!",
+      "olderReaderLine": "It fell asleep on watch long ago. When the light comes back, it might wake up glad.",
+      "unlockBelt": "White"
+    },
+    {
+      "id": "bopper",
+      "name": "Bouncy Bopper",
+      "tier": "yellow",
+      "kind": "enemy",
+      "kidLine": "Bouncy Bopper bonks with a soft foam staff. Staff up, get ready!",
+      "olderReaderLine": "Its staff was always padded, made for practice, not for hurting. The storm shook it, but it still wants to play.",
+      "unlockBelt": "Yellow"
+    },
+    {
+      "id": "buzz-bee",
+      "name": "Buzzy Bee",
+      "tier": "yellow",
+      "kind": "enemy",
+      "kidLine": "Buzzy Bees zip in and out in groups of three or four.",
+      "olderReaderLine": "The storm scattered their hive, so they buzz at everyone. Bees settle when the flowers open again.",
+      "unlockBelt": "Yellow"
+    },
+    {
+      "id": "thorn-sprout",
+      "name": "Thorn Sprout",
+      "tier": "yellow",
+      "kind": "enemy",
+      "kidLine": "A grumpy little sprout that puffs its cheeks and spits seeds.",
+      "olderReaderLine": "It grew thorns after the storm, as if to keep the next one away. Under the grumpy face, it is still a seed.",
+      "unlockBelt": "Yellow"
+    },
+    {
+      "id": "shell-snail",
+      "name": "Shellback Snail",
+      "tier": "yellow",
+      "kind": "enemy",
+      "kidLine": "A slow snail that hides in its shell when things get busy.",
+      "olderReaderLine": "When too much happens at once, it hides. Nobody blames it; storms make everyone want a shell.",
+      "unlockBelt": "Yellow"
+    },
+    {
+      "id": "vine-sweeper",
+      "name": "Vine Sweeper",
+      "tier": "yellow",
+      "kind": "enemy",
+      "kidLine": "Vine Sweeper swings one long vine. Watch the stripes and dash!",
+      "olderReaderLine": "The vines were tangled by a storm that nobody chose. Untangled, they would climb toward the sun.",
+      "unlockBelt": "Yellow"
+    },
+    {
+      "id": "old-thumper",
+      "name": "Old Thumper",
+      "tier": "yellow",
+      "kind": "named",
+      "kidLine": "Old Thumper stamps two times before it swings. Watch its feet!",
+      "olderReaderLine": "The garden's oldest statue stamps like it is keeping time. It remembers mornings before the storm, and waits for one more.",
+      "unlockBelt": "Yellow"
+    },
+    {
+      "id": "zippy-zoom",
+      "name": "Zippy Zoom",
+      "tier": "yellow",
+      "kind": "named",
+      "kidLine": "Zippy Zoom leaves sparkles that show where it will zoom next.",
+      "olderReaderLine": "A garden light the storm spun around until it was dizzy. It was never trying to hide its path.",
+      "unlockBelt": "Yellow"
+    },
+    {
+      "id": "captain-clank",
+      "name": "Captain Clank",
+      "tier": "yellow",
+      "kind": "named",
+      "kidLine": "Captain Clank taps its shield three times, then attacks. Listen!",
+      "olderReaderLine": "It once guarded the garden gate for its friends. The storm wasn't its fault, and it can still find its way back.",
+      "unlockBelt": "Yellow"
+    },
+    {
+      "id": "spark-sprite",
+      "name": "Spark Sprite",
+      "tier": "orange",
+      "kind": "enemy",
+      "kidLine": "Tiny warm sparks blink, then dart around the big ovens.",
+      "olderReaderLine": "Sparks from a kitchen that never quite went cold. They hop between ovens, as if checking who is still coming.",
+      "unlockBelt": "Orange"
+    },
+    {
+      "id": "dough-blob",
+      "name": "Dough Blob",
+      "tier": "orange",
+      "kind": "enemy",
+      "kidLine": "A wobbly dough ball that splits into two little Doughlings!",
+      "olderReaderLine": "Bread dough rises and waits. This one has been waiting a long time for someone to bake for.",
+      "unlockBelt": "Orange"
+    },
+    {
+      "id": "ladle-lobber",
+      "name": "Ladle Lobber",
+      "tier": "orange",
+      "kind": "enemy",
+      "kidLine": "Ladle Lobber flings soft soup splats from the back. Step aside!",
+      "olderReaderLine": "It keeps serving soup to anyone who walks by. It never fills one bowl, as if saving it for someone.",
+      "unlockBelt": "Orange"
+    },
+    {
+      "id": "rolling-pin",
+      "name": "Rolling Pin",
+      "tier": "orange",
+      "kind": "enemy",
+      "kidLine": "A giant rolling pin rolls down its lane. Dash away!",
+      "olderReaderLine": "It rolls the same lane over and over, like a cook getting supper ready for a full table.",
+      "unlockBelt": "Orange"
+    }
+  ]
+}
