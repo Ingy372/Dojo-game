@@ -1369,3 +1369,21 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - QA: mashing through the KO sent the player Home in 7/8 runs (first pointerdown 100–300 ms after Screen 2).
 - Screen 2 now ignores every tap (shade and Head home) for 500 ms after it appears (`ARM_MS = 500`), timed on the wall clock with the tap's own `pointer.downTime`, so a tap made inside the window but handled a frame late is still ignored.
 - B-TUNE-GUIDED: scaled enemy Power floors at 1 (if it was above 0) on the belt-scale path as well; before, it could round to 0.
+## L-PREMIUM-b — Counter hint (2026-10-26)
+- A miss is only a counterable hit with no Counter press lately and no dash; Blocks and dashes never count.
+- After 2 misses in a battle/boss room the sim emits `counterHint`; the client shows `LESSONS[GUIDE_LESSONS[0]].nudge` as a placed tip (never over HUD, red circles or buttons) and pulses COUNTER; tip fades after 3 s.
+- Max 1 per room; off in the tutorial, on Challenge, while Sensei's guide is active, and after 3 Great Counters in the run. Limits in content/settings/counter-hint.json.
+- Reduced motion: still gold outline on COUNTER instead of the pulse; tip removed without fade.
+- The mash guard turns most mashing hits into Blocks, so a mashing kid rarely sees the tip.
+
+## L-PREMIUM-b QA fix — the tip shows in real play (2026-10-26)
+- QA: 0 tips in 1,391 real rooms, because the Mash guard turns unanswered swings into Blocks and only Hits counted; the old tests hid it with perfects=3 / perfectsLeft=99.
+- DECIDED (Manager confirmed): a Block made by the Mash guard (no Counter press lately, no Dash) counts as a miss. A real Block from a Counter press, or a Dash, never does.
+- missesBeforeHint is 3, per the spec.
+- While the tip pulses COUNTER, STRIKE's ring stays blue and still, so COUNTER is the only gold.
+## Q-PREM-F11 QA fix — no accidental Home on a mash (2026-10-26)
+- QA: mashing through the KO sent the player Home in 7/8 runs (first pointerdown 100–300 ms after Screen 2).
+- Screen 2 now ignores every tap (shade and Head home) for 500 ms after it appears (`ARM_MS = 500`), timed on the wall clock with the tap's own `pointer.downTime`, so a tap made inside the window but handled a frame late is still ignored.
+
+## B-MAIN-TRY11 — fix red main after #355 (2026-10-26)
+- #355 added lesson-counter-guided to C-STORY-TRY's programmerHandoff (11 lessons), so q-prem-try.test.ts now expects 11 and does not count the guided Counter twice. No content change.

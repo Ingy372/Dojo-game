@@ -56,6 +56,42 @@
       "column": 13,
       "row": 5,
       "wave": 2
+    },
+    {
+      "enemy": "brute",
+      "column": 5,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 9,
+      "row": 4,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 5,
+      "row": 2,
+      "wave": 4
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 2,
+      "wave": 4
+    },
+    {
+      "enemy": "rolling-pin",
+      "column": 9,
+      "row": 4,
+      "wave": 4
     }
   ],
   "artProps": "Shelves of jars along the walls; two flour-sack piles (walls) near the middle.",

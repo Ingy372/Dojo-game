@@ -1,0 +1,107 @@
+L-PREMIUM-b verify-ui-shots 2026-10-26T21:06:55.739Z
+PASS  667x375-rm-off  Reduced motion read back = off
+PASS  667x375-rm-off  the run room has the Counter tip on  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":0,"given":false})
+PASS  667x375-rm-off  tip shows after Counter windows pass with no answer  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":3,"given":true})
+PASS  667x375-rm-off  tip never covers a red attack circle  (25 visible samples of 26, 0 over)
+PASS  667x375-rm-off  tip never covers COUNTER (or any button)
+PASS  667x375-rm-off  tip text >= 12 px, on screen  (16px 8,62,279,116)
+PASS  667x375-rm-off  tip contrast >= 4.5:1  (14.7:1 on #2a2440)
+PASS  667x375-rm-off  COUNTER tap target >= 44 px  (109 px)
+PASS  667x375-rm-off  Counter pulses  (1.121 1.133 1.059 1.055 1.132)
+PASS  667x375-rm-off  tip fades on its own (text gone, pulse off) after about 3 s  (level 0)
+PASS  667x375-rm-off  at most one tip in the room (none in the next 6 s)
+PASS  667x375-rm-off  hands-on: tapping COUNTER after the tip guards
+PASS  667x375-rm-off  no page errors
+PASS  667x375-rm-on  Reduced motion read back = on
+PASS  667x375-rm-on  the run room has the Counter tip on  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":0,"given":false})
+PASS  667x375-rm-on  tip shows after Counter windows pass with no answer  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":3,"given":true})
+PASS  667x375-rm-on  tip never covers a red attack circle  (22 visible samples of 26, 0 over)
+PASS  667x375-rm-on  tip never covers COUNTER (or any button)
+PASS  667x375-rm-on  tip text >= 12 px, on screen  (16px 8,62,279,116)
+PASS  667x375-rm-on  tip contrast >= 4.5:1  (14.7:1 on #2a2440)
+PASS  667x375-rm-on  COUNTER tap target >= 44 px  (96 px)
+PASS  667x375-rm-on  Reduced motion: Counter does not move (still outline)  (1.000)
+PASS  667x375-rm-on  tip fades on its own (text gone, pulse off) after about 3 s  (level 0)
+PASS  667x375-rm-on  at most one tip in the room (none in the next 6 s)
+PASS  667x375-rm-on  hands-on: tapping COUNTER after the tip guards
+PASS  667x375-rm-on  no page errors
+PASS  667x320-rm-off  Reduced motion read back = off
+PASS  667x320-rm-off  the run room has the Counter tip on  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":0,"given":false})
+PASS  667x320-rm-off  tip shows after Counter windows pass with no answer  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":3,"given":true})
+PASS  667x320-rm-off  tip never covers a red attack circle  (25 visible samples of 26, 0 over)
+PASS  667x320-rm-off  tip never covers COUNTER (or any button)
+PASS  667x320-rm-off  tip text >= 12 px, on screen  (16px 8,62,279,116)
+PASS  667x320-rm-off  tip contrast >= 4.5:1  (14.7:1 on #2a2440)
+PASS  667x320-rm-off  COUNTER tap target >= 44 px  (101 px)
+PASS  667x320-rm-off  Counter pulses  (1.077 1.034 1.124 1.132 1.054)
+PASS  667x320-rm-off  tip fades on its own (text gone, pulse off) after about 3 s  (level 0)
+PASS  667x320-rm-off  at most one tip in the room (none in the next 6 s)
+PASS  667x320-rm-off  hands-on: tapping COUNTER after the tip guards
+PASS  667x320-rm-off  no page errors
+PASS  667x320-rm-on  Reduced motion read back = on
+PASS  667x320-rm-on  the run room has the Counter tip on  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":0,"given":false})
+PASS  667x320-rm-on  tip shows after Counter windows pass with no answer  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":3,"given":true})
+PASS  667x320-rm-on  tip never covers a red attack circle  (15 visible samples of 26, 0 over)
+PASS  667x320-rm-on  tip never covers COUNTER (or any button)
+PASS  667x320-rm-on  tip text >= 12 px, on screen  (16px 8,62,279,116)
+PASS  667x320-rm-on  tip contrast >= 4.5:1  (14.7:1 on #2a2440)
+PASS  667x320-rm-on  COUNTER tap target >= 44 px  (96 px)
+PASS  667x320-rm-on  Reduced motion: Counter does not move (still outline)  (1.000)
+PASS  667x320-rm-on  tip fades on its own (text gone, pulse off) after about 3 s  (level 0)
+PASS  667x320-rm-on  at most one tip in the room (none in the next 6 s)
+PASS  667x320-rm-on  hands-on: tapping COUNTER after the tip guards
+PASS  667x320-rm-on  no page errors
+PASS  844x390-rm-off  Reduced motion read back = off
+PASS  844x390-rm-off  the run room has the Counter tip on  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":0,"given":false})
+PASS  844x390-rm-off  tip shows after Counter windows pass with no answer  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":3,"given":true})
+PASS  844x390-rm-off  tip never covers a red attack circle  (13 visible samples of 26, 0 over)
+PASS  844x390-rm-off  tip never covers COUNTER (or any button)
+PASS  844x390-rm-off  tip text >= 12 px, on screen  (18px 8,62,309,122)
+PASS  844x390-rm-off  tip contrast >= 4.5:1  (14.7:1 on #2a2440)
+PASS  844x390-rm-off  COUNTER tap target >= 44 px  (104 px)
+PASS  844x390-rm-off  Counter pulses  (1.133 1.061 1.081 1.140 1.036)
+PASS  844x390-rm-off  tip fades on its own (text gone, pulse off) after about 3 s  (level 0)
+PASS  844x390-rm-off  at most one tip in the room (none in the next 6 s)
+PASS  844x390-rm-off  hands-on: tapping COUNTER after the tip guards
+PASS  844x390-rm-off  no page errors
+PASS  844x390-rm-on  Reduced motion read back = on
+PASS  844x390-rm-on  the run room has the Counter tip on  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":0,"given":false})
+PASS  844x390-rm-on  tip shows after Counter windows pass with no answer  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":3,"given":true})
+PASS  844x390-rm-on  tip never covers a red attack circle  (19 visible samples of 26, 0 over)
+PASS  844x390-rm-on  tip never covers COUNTER (or any button)
+PASS  844x390-rm-on  tip text >= 12 px, on screen  (18px 8,62,309,122)
+PASS  844x390-rm-on  tip contrast >= 4.5:1  (14.7:1 on #2a2440)
+PASS  844x390-rm-on  COUNTER tap target >= 44 px  (96 px)
+PASS  844x390-rm-on  Reduced motion: Counter does not move (still outline)  (1.000)
+PASS  844x390-rm-on  tip fades on its own (text gone, pulse off) after about 3 s  (level 0)
+PASS  844x390-rm-on  at most one tip in the room (none in the next 6 s)
+PASS  844x390-rm-on  hands-on: tapping COUNTER after the tip guards
+PASS  844x390-rm-on  no page errors
+PASS  932x430-rm-off  Reduced motion read back = off
+PASS  932x430-rm-off  the run room has the Counter tip on  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":0,"given":false})
+PASS  932x430-rm-off  tip shows after Counter windows pass with no answer  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":3,"given":true})
+PASS  932x430-rm-off  tip never covers a red attack circle  (22 visible samples of 26, 0 over)
+PASS  932x430-rm-off  tip never covers COUNTER (or any button)
+PASS  932x430-rm-off  tip text >= 12 px, on screen  (18px 8,62,309,122)
+PASS  932x430-rm-off  tip contrast >= 4.5:1  (14.7:1 on #2a2440)
+PASS  932x430-rm-off  COUNTER tap target >= 44 px  (102 px)
+PASS  932x430-rm-off  Counter pulses  (1.006 1.096 1.135 1.065 1.063)
+PASS  932x430-rm-off  tip fades on its own (text gone, pulse off) after about 3 s  (level 0)
+PASS  932x430-rm-off  at most one tip in the room (none in the next 6 s)
+PASS  932x430-rm-off  hands-on: tapping COUNTER after the tip guards
+PASS  932x430-rm-off  no page errors
+PASS  932x430-rm-on  Reduced motion read back = on
+PASS  932x430-rm-on  the run room has the Counter tip on  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":0,"given":false})
+PASS  932x430-rm-on  tip shows after Counter windows pass with no answer  ({"missesBeforeHint":3,"perfectsLeft":3,"misses":3,"given":true})
+PASS  932x430-rm-on  tip never covers a red attack circle  (15 visible samples of 26, 0 over)
+PASS  932x430-rm-on  tip never covers COUNTER (or any button)
+PASS  932x430-rm-on  tip text >= 12 px, on screen  (18px 8,62,309,122)
+PASS  932x430-rm-on  tip contrast >= 4.5:1  (14.7:1 on #2a2440)
+PASS  932x430-rm-on  COUNTER tap target >= 44 px  (96 px)
+PASS  932x430-rm-on  Reduced motion: Counter does not move (still outline)  (1.000)
+PASS  932x430-rm-on  tip fades on its own (text gone, pulse off) after about 3 s  (level 0)
+PASS  932x430-rm-on  at most one tip in the room (none in the next 6 s)
+PASS  932x430-rm-on  hands-on: tapping COUNTER after the tip guards
+PASS  932x430-rm-on  no page errors
+
+104 PASS, 0 FAIL

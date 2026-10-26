@@ -57,6 +57,42 @@
       "column": 4,
       "row": 2,
       "wave": 2
+    },
+    {
+      "enemy": "brute",
+      "column": 9,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 5,
+      "row": 6,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 6,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 9,
+      "row": 2,
+      "wave": 4
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 5,
+      "row": 6,
+      "wave": 4
+    },
+    {
+      "enemy": "rolling-pin",
+      "column": 14,
+      "row": 6,
+      "wave": 4
     }
   ],
   "artProps": "The empty long table runs across the middle as a wall with gaps; benches tucked under it.",

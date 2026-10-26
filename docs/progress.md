@@ -925,5 +925,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - All 11 lesson retry lines are "Nice work. Let's keep practicing."; test bans 'So close' and 'try again'.
 
 - 2026-10-26 B-TUNE-GUIDED: Guided enemy Power ×0.75 via DIFFICULTY.enemyPowerScale; "Orange typical" testing fixture (6-orange-typical, pinned 333/46/34). Kid bot on Guided 78% -> 95% overall, white belt 57% -> 90%; Standard and Challenge unchanged.
+## L-PREMIUM-b (2026-10-26)
+- Counter hint built: sim event + rules, client tip/pulse, 7 tests (200-run kid ≤1/room, smart 0, Challenge 0), shots in docs/shots/l-premium-b (104 PASS, 0 FAIL).
+
+## L-PREMIUM-b QA fix (2026-10-26)
+- Mash-guard Blocks count as misses; threshold 3; test overrides removed. No-override 200-run sim: kid 164 tips in 1,228 rooms (max 1 per room), smart 0 in 1,600, Challenge 0 in 939. Shots 104 PASS, 0 FAIL.
 ## Q-PREM-F11 QA fix (2026-10-26)
 - 500 ms tap guard on Screen 2; source test + shot check (mash inside the window stays, a tap after goes Home), 112 PASS, 0 FAIL at 4 sizes, RM on/off.
+- B-MAIN-TRY11: q-prem-try test updated for the 11-lesson draft from #355; main green again.
