@@ -883,3 +883,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - npm test 911 passed, 3 skipped; typecheck and build pass. Shots and touch scripts: docs/shots/q-prem-f1/.
 **Next**
 - Tester: retest (c) on a real phone. Real-phone repro needed if a bow tap still misses.
+
+## Q-PREM-F6 (2026-10-26)
+- Again! fully visible at 667x320, 667x375, 844x390, 932x430; Reduced motion on/off; hands-on tap starts Game. verify-ui-shots 244 PASS / 0 FAIL (docs/shots/q-prem-f6/verify-log.txt). Test: packages/sim/test/q-prem-f6-again.test.ts.
