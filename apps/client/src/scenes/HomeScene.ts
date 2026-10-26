@@ -1140,7 +1140,8 @@ export class HomeScene extends Phaser.Scene {
   /** A not-yet pick: its sheet says "Ask Sensei about this one" (D3). */
   private openStylePick(p: StylePick): void {
     const fromCase = p.requirementId ? this.trophyCubbies().find((c) => c.id === p.requirementId) : undefined;
-    this.openCubby(fromCase ?? { id: p.id, shelf: 'stripes', name: p.name, earned: false, effect: p.line, status: STYLE_WORDS.askSensei });
+    // R-STANCE-d2: the stance's icon if the set has one; otherwise no empty circle (no new art).
+    this.openCubby(fromCase ?? { id: p.id, shelf: 'stripes', name: p.name, earned: false, icon: p.id, hideBlankIcon: true, effect: p.line, status: STYLE_WORDS.askSensei });
   }
 
   /** Screenshot/test hook: tap tray item i in the chosen slot. */
@@ -1433,7 +1434,7 @@ export class HomeScene extends Phaser.Scene {
     body.add(bg);
     const icon = c.icon ? addIcon(this, c.icon, sx + pad + 28, sy + pad + 28, 56) : null;
     if (icon) body.add(icon.setAlpha(c.earned ? 1 : 0.4));
-    else body.add(this.add.circle(sx + pad + 28, sy + pad + 28, 26, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.35));
+    else if (!c.hideBlankIcon) body.add(this.add.circle(sx + pad + 28, sy + pad + 28, 26, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.35));
     const tx = sx + pad + 56 + S2;
     let ty = sy + pad;
     this.oneLine(this.text(tx, ty, c.name, TYPE.title, WOOD.ink, true), tw, TYPE.body);
