@@ -1324,3 +1324,6 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 ## Q-PREM-TRY — go-home retry line (2026-10-26)
 - The 10 lessons in drafts/content/tutorial/C-STORY-TRY.json now say "Nice work today. Let's rest at the dojo." (Jay picked version A). lesson-counter-guided keeps "So close! Let's try again." (it never held the old line, per the draft's notInScope).
 - Q-PREM-F9 QA fix (2026-10-26): DASH and STANCE drop see-through alpha (0.5 / 0.6) for the same solid treatment as COUNTER/STRIKE/VIRTUE: alpha 1, dim face (DASH 0x2f4a3e, STANCE 0x34405a), stroke 0.35, label #d8d2c8 (6.44:1, 6.89:1). A missed Counter's 0.5 s lockout now also draws a refill ring around the dim COUNTER face, so it reads as "wait". Decorate's camera clamps the room top to the 60 px bar (was 48), so wall decorations are never under it. The 32 px row-1 top buttons stay out of scope.
+
+## Q-PREM-TRY fix — keep-practicing line (2026-10-26)
+- QA found play continues after the retry line (GameScene.ts guideDone -> senseiDone only shows the line; world.ts stepGuide just moves to the next hint), so "Let's rest at the dojo." didn't fit. The 10 lessons now say "Nice work. Let's keep practicing." (Manager's call; no 'try again' wording). lesson-counter-guided unchanged.

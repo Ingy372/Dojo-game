@@ -900,3 +900,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## Q-PREM-TRY (2026-10-26)
 - Retry line changed in the 10 listed lessons; the test checks them against the draft list; shots at 4 sizes, 20 PASS / 0 FAIL (docs/shots/q-prem-try/verify-log.txt).
 - Q-PREM-F9 QA fix: DASH/STANCE solid dim faces (6.44:1 / 6.89:1), Counter lockout ring, Decorate wall row clear of the 60 px bar. verify-ui-shots 656 PASS, 0 FAIL (4 sizes × Reduced motion on/off).
+
+## Q-PREM-TRY fix (2026-10-26)
+- Retry line in the 10 lessons is now "Nice work. Let's keep practicing."; test updated.
