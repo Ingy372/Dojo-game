@@ -7,6 +7,7 @@ import { testContent } from './load-content';
 import orange from '../../../fixtures/6-orange-typical.json';
 import green from '../../../fixtures/4-green-belt.json';
 import { ARTISTS } from './r-bal-12-artists';
+import { playRun, SKILLS } from './balance/bot';
 
 const brute = loadEnemy(bruteData);
 const bopper = loadEnemy(bopperData);
@@ -82,4 +83,17 @@ describe('B-TUNE-GUIDED "Orange typical" testing fixture', () => {
   it('rejects bad testStats', () => {
     expect(() => loadFeed({ ...orange, testStats: { maxHealth: -1, power: 46, guard: 34 } })).toThrow(/testStats/);
   });
+});
+
+describe('B-TUNE-GUIDED kid bot on White belt (R-T3-TUNE-3 target: white >= 75% on Guided)', () => {
+  const content = testContent();
+  const a = ARTISTS.typical[0];
+  const wins = (d: Difficulty) =>
+    Array.from({ length: 20 }, (_, i) => playRun(content, 1000 + i, 'kid', SKILLS.novice, d, { maxHealth: a.health, power: a.power, guard: a.guard }, undefined, { tier: 1 })).filter((r) => r.won).length;
+
+  it('wins at least 75% on Guided, and more than on Standard', () => {
+    const g = wins('guided');
+    expect(g).toBeGreaterThanOrEqual(15);
+    expect(g).toBeGreaterThan(wins('standard'));
+  }, 120_000);
 });
