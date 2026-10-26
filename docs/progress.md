@@ -894,3 +894,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## Q-PREM-F10 (2026-10-26)
 - Stat tile number and label at least 4 px apart, with nothing overlapping (tile icons, New for you label, icon and sparkle checked against every panel text and picture), at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off. Text is at least 12 px, F8's 12 px above Again! is kept, and a hands-on tap on Again! starts a run. verify-ui-shots: 766 PASS, 0 FAIL (docs/shots/q-prem-f10/verify-log.txt). Test: packages/sim/test/b-lastrun-layout.test.ts (Q-PREM-F10 block).
+
+## Q-PREM-TRY (2026-10-26)
+- Retry line changed in the 10 listed lessons; the test checks them against the draft list; shots at 4 sizes, 20 PASS / 0 FAIL (docs/shots/q-prem-try/verify-log.txt).

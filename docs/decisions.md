@@ -1316,3 +1316,6 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - At 47 px tiles (667x320, 667x375) the 14 px number (17 drawn) and 12 px label (15 drawn) can't keep the label 8 px inside the rim and still stay apart. On short tiles (< 56) they are now one stack, centred inside the rim and 4 px apart (`statStack` in ui/lastRun.ts). The label sits ~2.5 px inside the rim instead of 8. If a tile ever gets too short for that (44), the number steps down to 12 px. Tall tiles are unchanged.
 - The short New for you card (~73 px wide) has no room beside its label for stars, and it is flush with the content's right edge. So its sparkle (two stars, `headingSparkle`) now sits 4 px before the "New for you" heading, in the gap after Found. The tall card keeps its three corner stars. The bottom-left star no longer touches the trophy icon.
 - F8's 12 px clear above Again! is unchanged.
+
+## Q-PREM-TRY — go-home retry line (2026-10-26)
+- The 10 lessons in drafts/content/tutorial/C-STORY-TRY.json now say "Nice work today. Let's rest at the dojo." (Jay picked version A). lesson-counter-guided keeps "So close! Let's try again." (it never held the old line, per the draft's notInScope).

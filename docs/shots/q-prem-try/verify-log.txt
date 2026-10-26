@@ -1,0 +1,21 @@
+PASS try-1024x768 line on screen
+PASS try-1024x768 size>=12 (26px)
+PASS try-1024x768 inside view (198-826 of 2048, 128-176 of 1536)
+PASS try-1024x768 one-piece text "Sensei: Nice work today. Let's rest at the dojo."
+PASS try-1024x768 no page errors
+PASS try-667x375 line on screen
+PASS try-667x375 size>=12 (20px)
+PASS try-667x375 inside view (88-579 of 1334, 102-142 of 750)
+PASS try-667x375 one-piece text "Sensei: Nice work today. Let's rest at the dojo."
+PASS try-667x375 no page errors
+PASS try-844x390 line on screen
+PASS try-844x390 size>=12 (26px)
+PASS try-844x390 inside view (108-736 of 1688, 103-151 of 780)
+PASS try-844x390 one-piece text "Sensei: Nice work today. Let's rest at the dojo."
+PASS try-844x390 no page errors
+PASS try-932x430 line on screen
+PASS try-932x430 size>=12 (26px)
+PASS try-932x430 inside view (152-780 of 1864, 106-154 of 860)
+PASS try-932x430 one-piece text "Sensei: Nice work today. Let's rest at the dojo."
+PASS try-932x430 no page errors
+Eyeballed try-667x375.png: the line fits on one row at the top, nothing covers it.
