@@ -128,6 +128,8 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
     maxHealth: gear.maxHealth + (level - 1) * PROGRESSION.healthPerLevel + trained.maxHealth,
     power: Math.round((gear.power + (level - 1) * PROGRESSION.powerPerLevel + trained.power) * 10) / 10,
     guard: gear.guard + trained.guard,
+    // B-TUNE-GUIDED: a testing fixture's pinned stats replace the worked-out ones.
+    ...training.pinnedStats,
     effects: [...earned, ...gear.effects],
     ...loadoutAbilities(profile.loadout, training, abilities, profile.grandfatheredStances),
   };

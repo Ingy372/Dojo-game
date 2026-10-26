@@ -1,8 +1,12 @@
 // B-TUNE-GUIDED: Guided enemies hit softer (Power x0.75, rounded, at least 1). Health never changes.
 import { describe, expect, it } from 'vitest';
-import { DIFFICULTY, createWorld, loadEnemy, loadRoom, type Difficulty } from '../src';
+import { DIFFICULTY, buildTraining, characterSetup, createWorld, loadEnemy, loadFeed, loadRoom, newProfile, type Difficulty } from '../src';
 import bruteData from '../../../content/enemies/brute.json';
 import bopperData from '../../../content/enemies/bopper.json';
+import { testContent } from './load-content';
+import orange from '../../../fixtures/6-orange-typical.json';
+import green from '../../../fixtures/4-green-belt.json';
+import { ARTISTS } from './r-bal-12-artists';
 
 const brute = loadEnemy(bruteData);
 const bopper = loadEnemy(bopperData);
@@ -49,5 +53,33 @@ describe('B-TUNE-GUIDED enemyPowerScale', () => {
   it('scales a disarmed weapon too', () => {
     const w = enemyOn('guided', { brute: bopper }).weapon!;
     expect(w.disarmedPower).toBe(Math.max(1, Math.round(bopper.weapon!.disarmedPower * 0.75)));
+  });
+});
+
+
+describe('B-TUNE-GUIDED "Orange typical" testing fixture', () => {
+  const content = testContent();
+  const setupOf = (data: unknown) => {
+    const feed = loadFeed(data);
+    return characterSetup(newProfile(), buildTraining(feed, content.abilities, { ms: Date.parse(feed.asOf), weekday: 3 }), content.abilities);
+  };
+
+  it('is an Orange belt with the belt-3 typical stats pinned (333 Health / 46 Power / 34 Guard)', () => {
+    const a = ARTISTS.typical[2];
+    expect(orange.testStats).toEqual({ maxHealth: Math.round(a.health), power: Math.round(a.power), guard: Math.round(a.guard) });
+    const feed = loadFeed(orange);
+    expect(feed.rank.currentBelt).toBe('orange');
+    const s = setupOf(orange);
+    expect([s.maxHealth, s.power, s.guard]).toEqual([333, 46, 34]);
+  });
+
+  it('a fixture without testStats is worked out as before', () => {
+    expect('testStats' in loadFeed(green)).toBe(false);
+    const s = setupOf(green);
+    expect(s.maxHealth).not.toBe(333);
+  });
+
+  it('rejects bad testStats', () => {
+    expect(() => loadFeed({ ...orange, testStats: { maxHealth: -1, power: 46, guard: 34 } })).toThrow(/testStats/);
   });
 });
