@@ -4,12 +4,12 @@
 - **ITEM:** B-MASHER-d (plan: merged PR #291, `drafts/planning/B-MASHER-plan.md`, step 3).
 - **WHAT:** A kind send-home moment for a knock-out (KO). Sensei helps you up, you keep everything you found, you head home, and the Home Dojo welcomes you with a gentle pointer to what's next. Exact text, Sensei lines, buttons, timing and alternates for every line, plus the play-time path, accessibility and evidence. Design only, no game code.
 - **WHY:** Young players get knocked out in room 1 a lot (#291). The run still ends (Jay's rule in `docs/decisions.md`: "the run ends and the player goes home with everything found so far"), but it should feel like the end of a good training day, not a failure, so they come back.
-- **DECIDE (Jay):** sign off each line marked ✅ (main or Alt A/B). No open questions remain.
-- **NEXT:** After sign-off, the Programmer builds it, and QA checks it in B-MASHER-e with a 6–8 year-old.
-
-### Decided (Manager, Oct 26)
-- The in-room reset line "Ouch! Back to the start." is retired. A knock-out always ends the run.
-- Pointer order on the Home Dojo arrival: an upgrade ready first, then real class, then the next run.
+- **Decided:**
+  - All lines marked ✅ use the main wording, signed off by Jay (relayed by the Manager: "Sure", Oct 26). The alternates are kept for reference only.
+  - A knock-out always ends the run and sends the player home. There's no Try again (`docs/decisions.md`).
+  - The in-room reset line is retired.
+  - Pointer order: an upgrade ready, then real class, then the next run.
+- **NEXT:** Build-ready. See the board items at the end.
 
 ## Word rules
 - Never: died, dead, game over, failed, fail, lost, lose, defeat (on screen), try harder, don't give up, only, almost, so close, hurry, should have.
@@ -83,3 +83,10 @@ I checked these by web search and the DOI or publisher pages on Oct 25, 2026. I 
 | Very small wording changes matter. 4-year-olds praised with "You did a good job drawing" coped better with later mistakes than those told "You are a good drawer". This supports describing actions, not labelling the child. | Cimpian, A., Arce, H.-M. C., Markman, E. M., & Dweck, C. S. (2007). Subtle linguistic cues affect children's motivation. *Psychological Science, 18*(4), 314–316. https://doi.org/10.1111/j.1467-9280.2007.01896.x | MODERATE (right age, but a short report with 24 children) |
 | When parents see failure as harmful, their children tend to believe ability is fixed. This is indirect support for framing a fall as part of learning ("Every fall is part of training"). | Haimovitz, K., & Dweck, C. S. (2016). Parents' views of failure predict children's fixed and growth intelligence mind-sets. *Psychological Science, 27*(6), 859–869. https://doi.org/10.1177/0956797616639727 | WEAK for this use (indirect, about parents) |
 | A countdown or auto-continue adds pressure for young kids. | Design reasoning only, no study cited | WEAK |
+
+## Build-ready board items
+| Item | Owner | Done when |
+|---|---|---|
+| B-MASHER-d1 Build the KO flow | Programmer | Health 0 plays Screens 1 → 2 → 3 with the signed-off main lines, taken from content data, not code. The K23b line "Ouch! The run is over" is removed everywhere (a search of the code and content finds it 0 times). Everything found is banked (the same path as finishRun). There's no timer or auto-continue, and a tap anywhere or "Head home" continues. If the play-time limit is reached, the resting line and the resting door show, and the "Next run" pointer is skipped. The pointer follows the decided order. A test covers each path. |
+| B-MASHER-d2 Sensei help-up visual (only if needed) | Artist | Either the Programmer confirms that existing Sensei frames plus a fade are enough (noted in the PR), or a short help-up sheet (Sensei's hand offered, player stands) is imported at 8 directions or the single facing used, with a Reduced-motion fallback of a fade only. |
+| B-MASHER-d3 QA the KO flow | Tester | At 667×375 and 844×390, with Reduced motion on and off: (1) no countdown, timer bar or auto-advance after 60 s idle; (2) a tap anywhere continues on Screen 2; (3) with `?playlimit=1` the KO shows the resting line and the resting door, with no "Next run" pointer; (4) the pointer order is right with fixtures for an upgrade ready, real class and neither; (5) every line is read aloud and the replay button works; (6) no banned word appears on any screen (list in "Word rules"); (7) tap targets are at least 48 dp. |
