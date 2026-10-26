@@ -63,32 +63,45 @@ Every Gate plays the same beat: "the Gate opens, and the piece of light rises" (
 
 ---
 
-## Proposed fixes (board items)
+## Jay's answers (Oct 26)
 
-Owner is the Content Writer unless marked. Nothing here adds launch scope. Bigger ideas are marked **post-launch proposal**.
+Relayed by the Manager (t513u).
 
-| ID | Goal | Owner | Done when |
-| --- | --- | --- | --- |
-| **C-STORY-a** | Fix Chapter 1's John 1:5 line: plain story line in the main text, the exact KJV verse in the faith layer. | Content Writer | `story/chapter-1.json` screen 15 has no paraphrased verse; the KJV John 1:5 line lives only in `drafts/content/faith/`; the faith checker passes; Jay approves. |
-| **C-STORY-b** | Spread the mystery out so the ending can't be guessed by Green. Each tier adds one *new* fact, not "the traveler held on" again. | Content Writer | `lore/00-index.md` clue table rewritten as a draft; no two clues repeat a fact; the "who" isn't clear before Brown; Jay approves. |
-| **C-STORY-c** | Give the shadow a clearer shape for older kids (still made of fears, not a person, never evil forever), with one deeper line per tier in the Relics or Bestiary. | Content Writer, after Jay's Q1 | One "older reader" line per tier in the drafts, marked as Bestiary or Relic text; Jay approves the tone. |
-| **C-STORY-d** | Make every Guardian feel different: each gets its own small want and a different way of being freed (not just thank you). | Content Writer | All 10 `drafts/content/bosses/*.json` "when freed" beats are different in kind; reviewed against the lore pages. |
-| **C-STORY-e** | Write a short Gate scene (3–4 screens) for each tier, each saying one visible thing that changes. | Content Writer, then Programmer to wire | 9 Gate scene drafts in `drafts/content/story/`; each names one change the game can show with what already exists (dojo or Tower look); Jay approves. |
-| **C-STORY-f** | Show the "world gets brighter" payoff using what we already have (for example a window in the Home Dojo or the Tower art by tier, `docs/decisions.md` "Tower art by belt tier"). A real town is a **post-launch proposal**. | Manager to decide, Programmer to build | The Manager picks one in-scope option; the core-design town line is marked post-launch or matched to the pick in decisions.md. |
-| **C-STORY-g** | Write deeper Bestiary entries (a kid line plus an older-reader line unlocked by belt) for the Tier 1–3 enemies first. | Content Writer | Bestiary text in drafts for every Tier 1–3 enemy; no invented technique; reading level checked. |
-| **C-STORY-h** | Tie the dojo characters to the Tower story with one or two lines (for example, Sensei remembers the storm night) and no new systems. | Content Writer, after Jay's Q4 | Lines drafted in `dialogue/` and the lore pages; no real names; Jay approves. |
-| **C-STORY-i** | Let freed Guardians show up again in a small way (for example, a cheering line or a cameo in a later tier's Relic text). Visiting Guardians in the dojo is a **post-launch proposal**. | Content Writer | Each tier from 2 up has one text nod to an earlier Guardian; no new code needed. |
-| **C-STORY-j** | Clear up the "ten pieces" count and name what the summit piece is. | Content Writer | `lore/00-index.md` and `lore/10-black.md` agree on the count, written on purpose. |
-| **C-STORY-k** | Get the story into the game: plan which drafts go first (Chapter 1, White Relics, the Lamp Keeper's freed line). | Manager to plan, Programmer to build | A board item exists for wiring Chapter 1, with the Jay approvals listed. |
-| **C-STORY-l** | Give the player a light personal arc: Sensei's reflections across the belts follow one thread (from "you only have to begin" to "look how far you have come"). | Content Writer | One Sensei reflection per Gate forms a readable path in the drafts; no lectures; Jay approves. |
+1. **Shadow:** "Not crazy dark but most of these kids have read the bible. Keep things age appropriate but also still appealing to ages 12-14."
+2. **Faith layer:** "It can be as clear as you want it to be but it can also have under-tones or a message that has to be interpreted."
+3. **Sign wording vs KJV:** not answered. **PLACEHOLDER - awaiting Jay:** the faith layer uses KJV. The school's sign wording (`docs/faith-and-creed.md`) is noted as the alternative.
+4. **Lightbearer and the dojo:** "Yours to decide." See writer decision W1.
+5. **When the ending is guessable:** "Yours to decide." See writer decision W2.
+6. **Town vs smaller sign:** still open. The Manager is re-asking Jay in plain words.
+7. **Black belt form:** "a whole separate thing to cover. Let's worry about building up to black belt." Black belt and summit work is **out of scope** for now.
+8. **Place names:** not answered. **PLACEHOLDER - awaiting Jay:** keep the proposed names (Lantern Halls, Ember Kitchens, Giant's Steps and so on).
 
-## Questions for Jay (your call on tone)
+### Writer decisions (Jay: "Yours to decide")
 
-1. **How dark can the shadow be?** Should it stay "many little fears" with no face, or can older kids meet a stronger presence (still not a person, still freed in the end)?
-2. **How clear should the faith layer be?** Should verses only appear in the faith layer (Relics, Sensei after a fight), or can the main story say "Yeshua" and "God" out loud like Chapter 1 does now?
-3. **Which verse wording wins?** For the school's promotion verses, should the game use the exact sign wording (`docs/faith-and-creed.md`) or the KJV?
-4. **Who is the Lost Lightbearer to the dojo?** Should Sensei or Senpai have known them, or should it stay a stranger the player discovers alone?
-5. **When should older players be able to guess the ending?** Around Brown, or should it stay hidden until the summit?
-6. **Is a real town in the plan?** Is a visible town a must for launch, or is a smaller "brighter" sign (like a dojo window) enough until later?
-7. **What's the Black belt form?** What's its name, so the summit page can use it?
-8. **Do you approve the place names?** Do the proposed names (Lantern Halls, Ember Kitchens, Giant's Steps and so on) work, or do you want different ones?
+- **W1. Sensei once knew the Lost Lightbearer.** They trained together long ago, before the storm night. Sensei doesn't say so early on, only small hints (a quiet pause, an old lantern in the dojo). It is revealed late, after Brown, as a hopeful moment: Sensei never stopped hoping they would come home. No blame, no guilt, and no real names.
+- **W2. Attentive older players can guess the ending around Brown.** Clues through Green add new facts without giving away the "who". From Brown, the clues line up for a careful 12-14 reader, while a 6-year-old still enjoys the surprise. The reveal is still at the top of the climb.
+
+## Proposed fixes (board items, final)
+
+Status key: **Unblocked** = can start now. **Waiting** = needs Jay or the Manager first. **Out of scope** = not for now.
+
+| ID | Item | Owner | Status | Done when |
+|---|---|---|---|---|
+| **C-STORY-a** | Fix Chapter 1's John 1:5 line: plain story line in the main text, the exact KJV verse in the faith layer (KJV is a placeholder until Jay answers on sign wording). | Content Writer | Unblocked | `story/chapter-1.json` screen 15 has no paraphrased verse; the KJV John 1:5 line lives only in `drafts/content/faith/`; the faith checker passes; Jay approves. |
+| **C-STORY-b** | Spread the mystery out: each tier adds one *new* fact. Following W2, the "who" can be guessed around Brown, not before. | Content Writer | Unblocked | `lore/00-index.md` clue table rewritten as a draft; no two clues repeat a fact; the "who" isn't guessable before Brown; Jay approves. |
+| **C-STORY-c** | Give the shadow a stronger presence for older kids: still not a person, freed or overcome at the end, never evil forever. Add Bible-echo undertones teens can pick up on (for example darkness that can't overcome light, a storm that's stilled, fear that loses to love), kept age-appropriate and "not crazy dark". One deeper line per tier in the Relics or Bestiary. | Content Writer | Unblocked | One "older reader" line per tier (White to Brown) in the drafts, marked as Bestiary or Relic text; any echoed verse is KJV with a reference in `drafts/content/faith/`; no gore or terror; Jay approves the tone. |
+| **C-STORY-d** | Make every Guardian feel different: each gets its own small want and a different way of being freed. | Content Writer | Unblocked | All 10 `drafts/content/bosses/*.json` "when freed" beats are different in kind; reviewed against the lore pages. |
+| **C-STORY-e** | Write a short Gate scene (3–4 screens) for each tier up to Brown, each saying one visible thing that changes. The Black/summit scene is out of scope for now. | Content Writer, then Programmer to wire | Unblocked (visible change waits on C-STORY-f) | Gate scene drafts for each tier through Brown in `drafts/content/story/`; each names one change the game can show; Jay approves. |
+| **C-STORY-f** | Show the "world gets brighter" payoff. A real town is a **post-launch proposal** unless Jay says otherwise. | Manager to decide (with Jay), Programmer to build | Waiting on Jay (town vs smaller sign) | Jay answers the plain-words question; the pick is recorded in decisions.md; the core-design town line matches it. |
+| **C-STORY-g** | Deeper Bestiary entries (a kid line plus an older-reader line unlocked by belt) for Tier 1–3 enemies first; older lines may carry faith undertones. | Content Writer | Unblocked | Bestiary text in drafts for every Tier 1–3 enemy; no invented technique; reading level checked. |
+| **C-STORY-h** | Tie the dojo characters to the Tower story following W1: small Sensei hints early, the reveal after Brown. No new systems. | Content Writer | Unblocked | Hint lines drafted in `dialogue/` for at least 3 tiers plus one late reveal scene draft; no real names; hopeful, no guilt; Jay approves. |
+| **C-STORY-i** | Let freed Guardians show up again in a small way (cheering line or cameo in Relic text). Dojo visits are a **post-launch proposal**. | Content Writer | Unblocked | Each tier from 2 up has one text nod to an earlier Guardian; no new code needed. |
+| **C-STORY-j** | Clear up the "ten pieces" count and name the summit piece. | Content Writer | **Out of scope** (Black belt deferred by Jay) | Revisit when Black belt work starts. |
+| **C-STORY-k** | Get the story into the game: plan which drafts go first (Chapter 1, White Relics, the Lamp Keeper's freed line). | Manager to plan, Programmer to build | Unblocked (after C-STORY-a) | A board item exists for wiring Chapter 1, with the Jay approvals listed. |
+| **C-STORY-l** | A light personal arc: Sensei's reflections across the belts follow one thread, from "you only have to begin" to "look how far you have come". Through Brown for now. | Content Writer | Unblocked | One Sensei reflection per Gate through Brown forms a readable path in the drafts; no lectures; Jay approves. |
+
+## Still open for Jay
+
+- **Town vs smaller sign** (plain words for Jay): "When kids earn a belt, should they see a whole town light up, or is it enough for now that something small gets brighter, like the dojo window?"
+- **PLACEHOLDER - awaiting Jay:** place names (proposed names kept).
+- **PLACEHOLDER - awaiting Jay:** promotion verses use KJV; the school's sign wording is the alternative.
