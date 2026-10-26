@@ -20,14 +20,17 @@ const step = (m: RewardMoment): string =>
   m.kind === 'signOff' ? `signOff:${m.requirement.name}` : m.kind === 'stripe' ? `stripe:${m.word}` : m.kind;
 
 describe('unlock cascade (M7-P4)', () => {
-  it('profile 2 sees the opening card, then its 3 sign-offs in the order earned, then the stripe', () => {
+  it('profile 2 sees the opening card, then its 4 sign-offs (3 belt + the Cat Stance sign-off) in one card in the order earned, then the stripe', () => {
+    // R-STANCE-d2: fixture 2 now also has a Cat Stance sign-off, so 4 sign-offs group into one card.
     const m = rewardMoments(null, train(white3), STANCE);
-    expect(m.map(step)).toEqual(['welcome', 'signOff:Self-Defense #1', 'signOff:Basic Form 1', 'signOff:Self-Defense #3', expect.stringMatching(/^stripe:/)]);
+    expect(m.map(step)).toEqual(['welcome', 'signOffs', expect.stringMatching(/^stripe:/)]);
     const w = m[0];
-    expect(w.kind === 'welcome' && w.count).toBe(4);
+    expect(w.kind === 'welcome' && w.count).toBe(5);
     expect(w.kind === 'welcome' && w.preview).toBeNull();
-    const stance = m[2];
-    expect(stance.kind === 'signOff' && stance.ability).toBe('Stance: Cat Stance');
+    const list = m[1];
+    if (list.kind !== 'signOffs') throw new Error('expected a sign-offs card');
+    expect(list.list.map((x) => x.requirement.name)).toEqual(['Self-Defense #1', 'Basic Form 1', 'Cat Stance', 'Self-Defense #3']);
+    expect(list.list[2].ability).toBe('Stance: Cat Stance');
   });
 
   it("profile 1 (nothing signed off yet) sees the preview: the Beginner's Stance and what the first sign-off unlocks", () => {

@@ -97,10 +97,12 @@ describe('brand-new white belt', () => {
 
 describe('white belt with 3 sign-offs and a stripe', () => {
   const t = train(white3);
-  it('unlocks the Stance, and a Technique Seal per self-defense sign-off', () => {
+  it('unlocks the Cat Stance from its own sign-off, and a Technique Seal per self-defense sign-off', () => {
     const unlocked = t.abilities.filter((a) => a.unlocked);
     expect(unlocked.map((a) => a.requirement.name)).toEqual(['Basic Form 1', 'Self-Defense #1', 'Self-Defense #3']);
-    expect(unlocked.map((a) => a.stance?.name ?? a.perk?.name)).toEqual(['Cat Stance', 'Off-Balance', 'Sweep']);
+    // R-STANCE-d2: the kata unlocks no stance; the Cat Stance sign-off does.
+    expect(unlocked.map((a) => a.stance?.name ?? a.perk?.name ?? null)).toEqual([null, 'Off-Balance', 'Sweep']);
+    expect(t.stances.filter((s) => s.unlocked).map((s) => s.def.name)).toEqual(['Cat Stance']);
     expect(unlocked[2].requirement.signedOffBy).toBe('Sensei Jay');
     expect(unlockedStances(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance", 'Cat Stance']);
   });
@@ -168,18 +170,20 @@ describe('reward moments', () => {
     const m = rewardMoments(null, c);
     expect(m[0].kind).toBe('welcome');
     const signOffs = m.find((x) => x.kind === 'signOffs');
-    expect(signOffs?.kind === 'signOffs' && signOffs.list).toHaveLength(13);
+    // R-STANCE-d2: 13 belt sign-offs + the Cat and Front Stance sign-offs.
+    expect(signOffs?.kind === 'signOffs' && signOffs.list).toHaveLength(15);
   });
 
   it('celebrates new progress, the stripe before the sign-offs', () => {
     const m = rewardMoments(snapshot(a), b);
-    expect(m.map((x) => x.kind)).toEqual(['stripe', 'signOff', 'signOff', 'signOff', 'blessing']);
-    const first = m[1];
-    if (first.kind === 'signOff') {
-      expect(first.requirement.name).toBe('Basic Form 1');
-      expect(first.requirement.signedOffBy).toBe('Sensei Jay');
-      expect(first.ability).toBe('Stance: Cat Stance');
-    }
+    // R-STANCE-d2: 3 belt sign-offs + the Cat Stance sign-off group into one card.
+    expect(m.map((x) => x.kind)).toEqual(['stripe', 'signOffs', 'blessing']);
+    const card = m[1];
+    if (card.kind !== 'signOffs') throw new Error('expected a sign-offs card');
+    expect(card.list[0].requirement.name).toBe('Basic Form 1');
+    expect(card.list[0].requirement.signedOffBy).toBe('Sensei Jay');
+    expect(card.list[0].ability).toBe('Kata (its reward arrives in a later update)');
+    expect(card.list.find((x) => x.requirement.name === 'Cat Stance')?.ability).toBe('Stance: Cat Stance');
   });
 
   it('puts the promotion ceremony first', () => {

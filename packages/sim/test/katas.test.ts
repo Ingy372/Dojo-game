@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { kataArrows, parseKata } from '../src/katas';
-import abilities from '../../../content/abilities/abilities.json';
 import fixture from '../../../fixtures/1-white-belt-new.json';
 
 const files = import.meta.glob('../../../content/katas/*.json', { eager: true, import: 'default' });
@@ -14,13 +13,10 @@ describe('kata cards (S3-P1)', () => {
     for (const k of katas) expect(kataReqs.get(k.requirement)).toBe(k.name);
   });
 
-  it('Basic Form 1 links to Cat Stance and Basic Form 2 to Front Stance, matching abilities.json', () => {
-    expect(byReq.get('white-kata')?.stance).toBe('cat-stance');
-    expect(byReq.get('yellow-kata')?.stance).toBe('front-stance');
-    // abilities.json: the 1st belt's kata unlocks stances[1], the 2nd stances[2].
-    expect(abilities.stances[1].id).toBe('cat-stance');
-    expect(abilities.stances[2].id).toBe('front-stance');
-    for (const k of katas) if (k.stance) expect(abilities.stances.map((f) => f.id)).toContain(k.stance);
+  it('R-STANCE-d2: katas unlock no stance for the beta (stances come from their own teacher sign-offs)', () => {
+    expect(byReq.get('white-kata')?.stance).toBeNull();
+    expect(byReq.get('yellow-kata')?.stance).toBeNull();
+    for (const k of katas) expect(k.stance).toBeNull();
   });
 
   it('shows an arrow only on steps whose direction is known', () => {
