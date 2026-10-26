@@ -10,7 +10,9 @@
       "description": "Where every kata starts and ends.",
       "source": "Kata finishes: 'ready stance', 'move to attention & bow out'.",
       "howToStand": null,
-      "jayQuestion": "Are Ready stance and Attention one stance or two? The sheets name both ('ready stance', then 'move to attention'). What does each look like, in one short line?"
+      "jayQuestion": "Are Ready stance and Attention one stance or two? The sheets name both ('ready stance', then 'move to attention'). What does each look like, in one short line?",
+      "gameId": "beginners-stance",
+      "gameLine": "Steady and even. Good at everything."
     },
     {
       "id": "stance.cat",
@@ -21,7 +23,9 @@
       "description": "A short step back. It shows up in every kata so far.",
       "source": "Basic Form 1-2, Keon, David and Goliath: 'short stepping to rear w/RF into cat stance'.",
       "howToStand": null,
-      "jayQuestion": "One short line on how to stand in cat stance, for kids."
+      "jayQuestion": "One short line on how to stand in cat stance, for kids.",
+      "gameId": "cat-stance",
+      "gameLine": "Quicker Counters and Dash, but softer blocks."
     },
     {
       "id": "stance.front",
@@ -32,7 +36,9 @@
       "description": "Step forward into it, ready to block and punch.",
       "source": "Keon #3 and #9: 'step forward w/LF into front stance'.",
       "howToStand": null,
-      "jayQuestion": "One short line on how to stand in front stance, for kids."
+      "jayQuestion": "One short line on how to stand in front stance, for kids.",
+      "gameId": "front-stance",
+      "gameLine": "Hit harder, but move a little slower."
     },
     {
       "id": "stance.fighting",
@@ -41,7 +47,9 @@
       "description": "Jump into it to face a weapon, ready to kick.",
       "source": "self-defense.md #13-14: 'Jump to a fighting stance'.",
       "howToStand": null,
-      "jayQuestion": "One short line on how to stand in fighting stance, for kids. Is it used in any kata?"
+      "jayQuestion": "One short line on how to stand in fighting stance, for kids. Is it used in any kata?",
+      "gameId": "fighting-stance",
+      "gameLine": "Strong blocks and fast Focus, but a shorter Dash."
     },
     {
       "id": "stance.horse",
@@ -50,8 +58,11 @@
       "description": "A rooted stance.",
       "source": "Jay (Oct 25): 'horse stance is rooted stance'. Not in any sheet in the repo.",
       "howToStand": null,
-      "jayQuestion": "One short line on how to stand in horse stance, for kids. Which kata or belt teaches it?"
+      "jayQuestion": "One short line on how to stand in horse stance, for kids. Which kata or belt teaches it?",
+      "gameId": "horse-stance",
+      "gameLine": "Stand still to hit harder, but move slower."
     }
   ],
-  "jayQuestion": "Are there other stances taught at the dojo (for example a back stance), and at which belt?"
+  "jayQuestion": "Are there other stances taught at the dojo (for example a back stance), and at which belt?",
+  "gameLineNote": "R-STANCE-f: player-facing lines for the Fighting Style screen, saying what each stance does in the game (numbers from #290). They are meant for content/abilities/fighting-style.json `lines[gameId]` (the field #293 wires). #293 is still open, so they wait here to avoid a conflict; copy them across once it merges. Ready keeps its current line (#290: the plain stance, all 0)."
 }
