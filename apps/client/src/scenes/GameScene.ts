@@ -267,6 +267,8 @@ export class GameScene extends Phaser.Scene {
   private menuOpen = false;
   /** The hero is down (the run is over): no boss tag or bar, no fight buttons or stick (Q-PREM-F4). */
   private downed = false;
+  /** Live floating texts and pop words, cleared when the hero goes down (Q-PREM-F4). */
+  private popups = new Set<Phaser.GameObjects.Text>();
   /** Tutorial floor (K24a): where the step flow is, the tip's Got it button, and the success line to lead the next tip. */
   private tflow: TutorialFlow | null = null;
   private gotItBtn: Phaser.GameObjects.Text | null = null;
@@ -467,6 +469,7 @@ export class GameScene extends Phaser.Scene {
     this.gradeLine = null;
     this.menuOpen = false;
     this.downed = false;
+    this.popups.clear();
     this.leaving = false;
     this.picker = null;
     this.doorViews = [];
@@ -915,13 +918,15 @@ export class GameScene extends Phaser.Scene {
       this.comboBonusText.setVisible(combo >= 2);
     }
 
-    if (p.counterChain !== this.shownChain) {
-      const grew = p.counterChain > this.shownChain;
-      this.shownChain = p.counterChain;
-      if (p.counterChain >= 2) {
+    // Q-PREM-F4: the GREAT chain clears with the combo when the fight ends, so it never sits on the loss message.
+    const chain = fightOver ? 0 : p.counterChain;
+    if (chain !== this.shownChain) {
+      const grew = chain > this.shownChain;
+      this.shownChain = chain;
+      if (chain >= 2) {
         // Brighter glow as the chain grows (it stops growing at x5).
-        const glow = Math.min(p.counterChain, 5);
-        this.chainText.setText(`GREAT x${p.counterChain}`).setShadow(0, 0, '#ffd166', 4 + glow * 4, true, true);
+        const glow = Math.min(chain, 5);
+        this.chainText.setText(`GREAT x${chain}`).setShadow(0, 0, '#ffd166', 4 + glow * 4, true, true);
         this.chainText.setColor(glow >= 4 ? '#fff6d5' : '#ffd166');
         if (grew) {
           this.tweens.killTweensOf(this.chainText);
@@ -929,7 +934,7 @@ export class GameScene extends Phaser.Scene {
           this.tweens.add({ targets: this.chainText, scale: 1, duration: 160, ease: 'Back.Out' });
         }
       }
-      this.chainText.setVisible(p.counterChain >= 2);
+      this.chainText.setVisible(chain >= 2);
     }
   }
 
@@ -1336,6 +1341,8 @@ export class GameScene extends Phaser.Scene {
           this.bossName.setVisible(false);
           this.lidIcon?.setVisible(false);
           this.bossTagWorld = null;
+          for (const t of [...this.popups]) this.dropPopup(t);
+          this.chainText.setVisible(false);
           this.cameras.main.fade(900, 10, 8, 16);
           this.message.setText(this.run ? 'Ouch! The run is over.\nYou keep everything you found.' : 'Ouch!\nBack to the start.').setVisible(true);
           break;
@@ -2588,6 +2595,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private floatText(at: Vec2, text: string, color: string, size: number, rise = 0.8): void {
+    if (this.downed) return;
     const t = this.addWorld(
       this.add
         .text(at.x * TILE + (Math.random() - 0.5) * 16, (at.y - 0.6) * TILE, text, {
@@ -2602,7 +2610,8 @@ export class GameScene extends Phaser.Scene {
         .setResolution(window.devicePixelRatio || 1)
         .setDepth(11),
     );
-    this.tweens.add({ targets: t, y: t.y - rise * TILE, alpha: 0, duration: 650, ease: 'Cubic.Out', onComplete: () => t.destroy() });
+    this.popups.add(t);
+    this.tweens.add({ targets: t, y: t.y - rise * TILE, alpha: 0, duration: 650, ease: 'Cubic.Out', onComplete: () => this.dropPopup(t) });
   }
 
   /** A big word in the middle of the screen (for Perfect Counters). */
@@ -2799,6 +2808,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private popWord(text: string, color: string, size: number): void {
+    if (this.downed) return;
     const { width, height } = view(this);
     const t = this.add
       .text(width / 2, height * 0.3, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${size}px`, color, stroke: '#14121c', strokeThickness: 8 })
@@ -2819,7 +2829,14 @@ export class GameScene extends Phaser.Scene {
       }
     t.setY(top + 20 + t.height / 2);
     this.tweens.add({ targets: t, scale: 1, duration: 160, ease: 'Back.Out' });
-    this.tweens.add({ targets: t, alpha: 0, y: t.y - 20, delay: 450, duration: 300, onComplete: () => t.destroy() });
+    this.popups.add(t);
+    this.tweens.add({ targets: t, alpha: 0, y: t.y - 20, delay: 450, duration: 300, onComplete: () => this.dropPopup(t) });
+  }
+
+  private dropPopup(t: Phaser.GameObjects.Text): void {
+    this.popups.delete(t);
+    this.tweens.killTweensOf(t);
+    t.destroy();
   }
 
   private flashScreen(color: number, alpha: number, ms: number): void {
