@@ -1,6 +1,6 @@
 {
-  "_note": "L-PREMIUM-b. The Counter tip: after this many Counter windows pass with no answer at all (a Block or Dash isn't a miss), Counter pulses and Sensei's nudge line shows, at most once per room. Off on the tutorial floor and on Challenge. Stops for the run after stopAfterGreatCounters Great Counters.",
-  "missesBeforeHint": 2,
+  "_note": "L-PREMIUM-b. The Counter tip: after this many Counter windows pass with no answer at all (a Block made by the Mash guard counts; a real Block from a Counter press, or a Dash, isn't a miss), Counter pulses and Sensei's nudge line shows, at most once per room. Off on the tutorial floor and on Challenge. Stops for the run after stopAfterGreatCounters Great Counters.",
+  "missesBeforeHint": 3,
   "stopAfterGreatCounters": 3,
   "tipMs": 3000
 }

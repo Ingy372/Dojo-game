@@ -1360,3 +1360,9 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - Max 1 per room; off in the tutorial, on Challenge, while Sensei's guide is active, and after 3 Great Counters in the run. Limits in content/settings/counter-hint.json.
 - Reduced motion: still gold outline on COUNTER instead of the pulse; tip removed without fade.
 - The mash guard turns most mashing hits into Blocks, so a mashing kid rarely sees the tip.
+
+## L-PREMIUM-b QA fix — the tip shows in real play (2026-10-26)
+- QA: 0 tips in 1,391 real rooms, because the Mash guard turns unanswered swings into Blocks and only Hits counted; the old tests hid it with perfects=3 / perfectsLeft=99.
+- DECIDED (Manager confirmed): a Block made by the Mash guard (no Counter press lately, no Dash) counts as a miss. A real Block from a Counter press, or a Dash, never does.
+- missesBeforeHint is 3, per the spec.
+- While the tip pulses COUNTER, STRIKE's ring stays blue and still, so COUNTER is the only gold.

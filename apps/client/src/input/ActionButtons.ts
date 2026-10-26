@@ -189,7 +189,10 @@ export class ActionButtons {
     labelColor(this.strike, strikeReady ? ACTION_LABEL.light : ACTION_LABEL.dim);
     const fill = Math.min(1, p.focus / cost);
     this.strikeRing.clear();
-    this.strikeRing.lineStyle(5, strikeReady ? 0xffd166 : 0x9ad1ff, strikeReady ? 1 : 0.8);
+    // L-PREMIUM-b QA: while the Counter tip shows, STRIKE's ring stays blue and still, so the only gold on screen is COUNTER.
+    const tipOn = this.counterPulse === 4;
+    const strikeGold = strikeReady && !tipOn;
+    this.strikeRing.lineStyle(5, strikeGold ? 0xffd166 : 0x9ad1ff, strikeGold ? 1 : 0.8);
     this.strikeRing.beginPath();
     this.strikeRing.arc(0, 0, STRIKE_RADIUS + 5, -Math.PI / 2, -Math.PI / 2 + fill * Math.PI * 2);
     this.strikeRing.strokePath();
@@ -209,7 +212,7 @@ export class ActionButtons {
       this.dashRing.strokePath();
     }
     this.dash.container.setScale(this.dashPulse ? 1 + Math.abs(Math.sin(this.scene.time.now / 140)) * 0.14 : 1);
-    if (strikeReady) this.strike.container.setScale(1 + Math.sin(this.scene.time.now / 160) * 0.04);
+    if (strikeGold) this.strike.container.setScale(1 + Math.sin(this.scene.time.now / 160) * 0.04);
     else this.strike.container.setScale(1);
 
     if (this.virtue && this.virtueRing) {

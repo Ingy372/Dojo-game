@@ -1245,6 +1245,9 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       const dmg = damage(power, a.strength * share * weak, guardOf(p));
       world.events.push({ kind: 'block', playerId: p.id, enemyId: e.id, damage: dmg });
       if (p.mods.dashOnBlock) p.dashCooldown = 0;
+      // L-PREMIUM-b (Manager, decided): a Block made by the Mash guard, not by a Counter press, is a
+      // Counter window with no answer, so it is a miss. A real Block (guarding) or a Dash never is.
+      if (!guarding && !counterPressedLately(world, p) && p.dashTicks === 0) noteCounterMiss(world, p);
       hurt(world, p, dmg);
       // Iron Skin: part of the full hit bounces back (shields stop it, unless Shield Breaker).
       if (p.mods.blockReflect > 0 && isEnemyPresent(e) && (!e.shieldUp || p.mods.shieldBreaker)) {
@@ -1258,11 +1261,15 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       p.counterChain = 0;
       world.events.push({ kind: 'hit', playerId: p.id, enemyId: e.id, damage: dmg });
       // L-PREMIUM-b: a Counter window with no answer at all (no recent Counter press, no Dash) is a miss.
-      const pressedLately = p.counterPressedTick >= 0 && world.tick - p.counterPressedTick <= Math.max(COMBAT.counter.guardTicks, counterWindowTicks(world, p) + COMBAT.counter.blockTicksAfterWindow) + COMBAT.counter.missLockoutTicks;
-      if (a.counterable !== false && !pressedLately && p.dashTicks === 0) noteCounterMiss(world, p);
+      if (a.counterable !== false && !counterPressedLately(world, p) && p.dashTicks === 0) noteCounterMiss(world, p);
       hurt(world, p, dmg);
     }
   }
+}
+
+/** L-PREMIUM-b: the player pressed Counter recently enough that this swing was answered (guard, window and lockout). */
+function counterPressedLately(world: WorldState, p: PlayerState): boolean {
+  return p.counterPressedTick >= 0 && world.tick - p.counterPressedTick <= Math.max(COMBAT.counter.guardTicks, counterWindowTicks(world, p) + COMBAT.counter.blockTicksAfterWindow) + COMBAT.counter.missLockoutTicks;
 }
 
 function noteCounterMiss(world: WorldState, p: PlayerState): void {

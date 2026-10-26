@@ -44,8 +44,8 @@ for (const [W, H] of sizes) for (const rm of ['off', 'on']) {
   check(tag, `Reduced motion read back = ${rm}`, (await rmNow(pg)) === rm);
   let st = await state(pg);
   check(tag, 'the run room has the Counter tip on', !!st.hint, JSON.stringify(st.hint));
-  // Make swings land as Hits (as if Mash guard had stepped back) and keep the tip allowed; the hero just stands. Sensei's guided Counter (this test student hasn't finished it) is switched off, since the tip waits for it.
-  await pg.evaluate(() => { const s = window.game.scene.getScene('Game'); const p = s.world.players[s.me]; s.world.counterHint && (s.world.counterHint.perfectsLeft = 99); s.world.guide = null; s.buttons.pulseCounter(0); window.__lpb = setInterval(() => { p.perfects = 3; p.health = Math.max(p.health, p.maxHealth * 0.8); p.attackCooldown = 99; for (const e of s.world.enemies) if (e.mode === 'chase' && Math.hypot(e.pos.x - p.pos.x, e.pos.y - p.pos.y) > 2) e.pos = { x: p.pos.x + 0.9, y: p.pos.y }; }, 30); });
+  // QA fix: no overrides on the tip or the Mash guard. The hero just stands (auto swings, so Mash-guard Blocks); enemies are kept close and health topped up. Sensei's guided Counter (this test student hasn't finished it) is switched off, since the tip waits for it.
+  await pg.evaluate(() => { const s = window.game.scene.getScene('Game'); const p = s.world.players[s.me]; s.world.guide = null; s.buttons.pulseCounter(0); window.__lpb = setInterval(() => { p.health = Math.max(p.health, p.maxHealth * 0.8); for (const e of s.world.enemies) if (e.mode === 'chase' && Math.hypot(e.pos.x - p.pos.x, e.pos.y - p.pos.y) > 2) e.pos = { x: p.pos.x + 0.9, y: p.pos.y }; }, 30); });
   let t0 = 0; for (let i = 0; i < 300 && !t0; i++) { await pg.waitForTimeout(100); st = await state(pg); if (st.level === 4 && st.text) t0 = Date.now(); }
   check(tag, 'tip shows after Counter windows pass with no answer', !!t0, JSON.stringify(st.hint));
   if (t0) {

@@ -924,3 +924,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## L-PREMIUM-b (2026-10-26)
 - Counter hint built: sim event + rules, client tip/pulse, 7 tests (200-run kid ≤1/room, smart 0, Challenge 0), shots in docs/shots/l-premium-b (104 PASS, 0 FAIL).
+
+## L-PREMIUM-b QA fix (2026-10-26)
+- Mash-guard Blocks count as misses; threshold 3; test overrides removed. No-override 200-run sim: kid 164 tips in 1,228 rooms (max 1 per room), smart 0 in 1,600, Challenge 0 in 939. Shots 104 PASS, 0 FAIL.
