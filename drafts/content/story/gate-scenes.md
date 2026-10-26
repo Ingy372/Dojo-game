@@ -53,7 +53,7 @@ Visible change (placeholder): a lantern lights over the dojo door
 ## red-black (echo-mask)
 Visible change (placeholder): dojo window glows brighter
 
-25. **narrator**: Your new belt from the dojo opens the red and black Gate.
+25. **narrator**: Your new belt opens the red and black Gate.
 26. **guardian**: I copied what I heard. Now I hear kindness.
 27. **narrator**: Sensei rereads an old note, then tucks it away.
 28. **sensei**: Keep climbing.
@@ -69,7 +69,7 @@ Visible change (placeholder): a lamp lights on the dojo bookshelf
 ## brown-black (storm-herald)
 Visible change (placeholder): the whole dojo glows warm
 
-33. **narrator**: Your new belt from the dojo opens the brown and black Gate.
+33. **narrator**: Your new belt opens the brown and black Gate.
 34. **guardian**: The wind is still. Listen. Someone is calling from the top.
 35. **sensei**: They were my friend. Let's bring them home together. *(faith: gate-brown-black-screen-35)*
 36. **narrator**: The light rises, and the whole dojo glows warm.
