@@ -37,7 +37,7 @@ describe('R-STANCE-g content', () => {
     expect((abilitiesData as { stances: Array<{ id: string; text: string }> }).stances[0].text).toBe(main('stance.beginner.oneLiner'));
     expect(w.notYetLines[READY_STANCE_ID]).toBe(main('stance.ready.notYet'));
     expect(w.welcomeStance).toBe(main('welcome.beginnerStance'));
-    expect(w.lines[READY_STANCE_ID]).toBe('Steady and even. Good at everything.');
+    expect(w.lines[READY_STANCE_ID]).toBe('Steady and even, ready for anything.');
     const m = buildStyle(train(newWhite), content.abilities, null);
     expect(m.trays.stance.find((p) => p.id === READY_STANCE_ID)).toMatchObject({ earned: false, line: main('stance.ready.notYet') });
   });

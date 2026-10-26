@@ -1255,3 +1255,5 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - The welcome card now stacks the preview below the (two-line) welcome line so they don't overlap.
 - Golden run re-captured on purpose: Open Leg joins the yellow and green stance lists, Beginner's text is the #312 line, and the Cat case index moves 1 → 2. Every run result is the same.
 - Base: branched from bot-code/R-STANCE-d2 (#311 was not yet on main).
+
+- 2026-10-26 (R-STANCE-g): Manager call: Ready uses #303's approved line "Steady and even, ready for anything." Ready stays at zero numbers until the Researcher proposes a bonus (follow-up).
