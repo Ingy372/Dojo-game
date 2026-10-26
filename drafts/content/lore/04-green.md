@@ -15,7 +15,7 @@ The shadow piled up into a giant made of stone and worry. It blocks the steps an
 
 Very tall and very loud. Inside, it is only a pile of stones the shadow stacked up.
 
-- **When freed:** "I was only stones and worry. Thank you for not running away."
+- **When freed:** "I was stones and worry. Thank you for staying!"
 - **Sensei, after:** "Big things can still fall to a brave, small heart."
 - **The light piece** rises only when the real belt opens the Gate.
 

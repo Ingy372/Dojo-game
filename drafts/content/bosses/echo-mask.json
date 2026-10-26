@@ -92,7 +92,7 @@
   "parSeconds": 25,
   "lines": {
     "intro": "Your own steps echo back. Who is copying whom?",
-    "freed": "I only copied what I heard. I would like to hear kind words now.",
+    "freed": "I copied what I heard. Now I hear kindness.",
     "senseiAfter": "You chose your own words, not the echo's."
   },
   "description": "The Echo Mask swipes, copies your last move back at you, then sends a striped echo down a lane.",

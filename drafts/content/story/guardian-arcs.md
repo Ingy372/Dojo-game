@@ -19,11 +19,11 @@ Data: `guardian-arcs.json`. Spec: `C-STORY-review.md` (C-STORY-d). Stacked on C-
 | storm-herald | brown-black | Grows quiet | It wants to be heard over the storm. | The wind is still. Listen. Someone is calling from the top. | 9 |
 The 9 ways are all different: remembered, grows, welcomed, worries fall away, sees, lowers its shield, hears a new voice, shares, grows quiet.
 
-## Suggested changes to existing draft lines (not applied)
+## Freed-line changes (applied, Manager approved)
 
-Same text in `bosses/<id>.json` `lines.freed` and `lore/guardians-and-relics.json` `freed`:
+Applied in `bosses/<id>.json` `lines.freed` and `lore/guardians-and-relics.json` `freed`, plus `enemies/bestiary-plan.*` and `lore/0*.md`:
 
-| Guardian | Now | Suggested | Why |
+| Guardian | Was | Now | Why |
 |---|---|---|---|
 | sun-gardener | The thorns are gone. My flowers can open again. | The thorns are gone. The storm wasn't my fault! | Carries ladder fact 2 (no blame) in the freeing moment. |
 | stone-giant | I was only stones and worry. Thank you for not running away. | I was stones and worry. Thank you for staying! | Drops "only" and the negative framing; keeps the meaning. |
