@@ -938,3 +938,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - 500 ms tap guard on Screen 2; source test + shot check (mash inside the window stays, a tap after goes Home), 112 PASS, 0 FAIL at 4 sizes, RM on/off.
 - B-MAIN-TRY11: q-prem-try test updated for the 11-lesson draft from #355; main green again.
 - B-W-ROOMS-TESTS: #359 tests fit the white rooms (mixes, K12, old-thumper at belt 2, golden re-captured for white runs only).
+- B-BRIDGE-GOLDENS: p-menu2 golden re-captured for the #361 bridge swarmer move (revert proof passes).

@@ -1397,3 +1397,6 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 
 ## B-W-ROOMS-TESTS — tests for the white-belt rooms (#359, 2026-10-26)
 - White rooms have only swarmers and shields, so: the mixes test checks a white floor has at least 2 mixes using only those (belt 2 keeps the 4-mix check); Old Thumper (brute) is first met at belt 2 in the K12 and old-thumper tests (zippy-zoom and captain-clank stay at belt 1); the p-menu2 golden is re-captured, with only white, white3 and rooted runs moving (capturing without the w- rooms gives the old file exactly). No game stat changes.
+
+## B-BRIDGE-GOLDENS — golden after the bridge swarmer move (#361, 2026-10-26)
+- The p-menu2 golden is re-captured because one Narrow Bridge swarmer (white and belt rooms) moved from (17,4) to (17,3). Only the 5 runs that visit the bridge change, from the bridge room on (the white run 1 bridge room goes 224 -> 251 ticks, A -> S); the bot keeps playing on after a different fight, so later rooms in those runs differ too. Moving the swarmer back gives the old file exactly. No stat or content changes.
