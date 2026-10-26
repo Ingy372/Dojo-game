@@ -12,7 +12,7 @@
 //              presses every button.
 // It uses its own seeded random numbers, so results repeat exactly.
 
-import type { EliteKind, StanceDef } from '../../src';
+import type { CounterHintRules, EliteKind, StanceDef } from '../../src';
 import {
   COMBAT,
   GUIDE_DONE,
@@ -85,6 +85,8 @@ export interface RoomStats {
   grade: string | null;
   /** B-T3-TUNE-2c: rules ticks spent in boss phase pauses (not in `ticks`, which stops during them). */
   holdTicks?: number;
+  /** L-PREMIUM-b: Counter tips shown (only when playRun gets hint rules). */
+  hints?: number;
 }
 
 export interface RunStats {
@@ -125,6 +127,7 @@ export function playRoom(content: Content, run: RunState, world: WorldState, roo
       if (ev.kind === 'playerAttack' && ev.move === 'strike') stats.strikes++;
       if (ev.kind === 'playerAttack') { stats.dealt += ev.damage; if (ev.defeated) stats.kos++; }
       if (ev.kind === 'winded') stats.winded++;
+      if (ev.kind === 'counterHint') stats.hints = (stats.hints ?? 0) + 1;
       if (ev.kind === 'phaseHold') stats.holdTicks = (stats.holdTicks ?? 0) + ev.ticks;
     }
     const alive = world.enemies.filter((e) => e.mode !== 'defeated');
@@ -325,14 +328,14 @@ function awayFrom(pos: Vec2, from: Vec2[], room: Room): Vec2 {
 }
 
 /** Plays a whole run. */
-export function playRun(content: Content, seed: number, style: Style, skill: Skill, difficulty: Difficulty = 'standard', base: { maxHealth: number; power: number; guard: number; stances?: StanceDef[] } = { maxHealth: 100, power: 10, guard: 0 }, guideStep?: number, elites: { tier?: number; forcedElite?: EliteKind } = {}): RunStats {
+export function playRun(content: Content, seed: number, style: Style, skill: Skill, difficulty: Difficulty = 'standard', base: { maxHealth: number; power: number; guard: number; stances?: StanceDef[] } = { maxHealth: 100, power: 10, guard: 0 }, guideStep?: number, elites: { tier?: number; forcedElite?: EliteKind } = {}, hintRules?: CounterHintRules): RunStats {
   const run = startRun(content, { seed, dryRuns: 0, difficulty, ...elites });
   const rng = createRng(seed * 7919 + 13);
   const rooms: RoomStats[] = [];
   let ticks = 0;
   while (run.status === 'playing' && rooms.length < 20) {
     const room = currentRoom(content, run);
-    const world = createRunWorld(content, run, base, [], difficulty, guideStep);
+    const world = createRunWorld(content, run, base, [], difficulty, guideStep, hintRules);
     const elite = run.elites[0]?.kind ?? null;
     const played = playRoom(content, run, world, room, style, skill, rng);
     played.elite = elite;
