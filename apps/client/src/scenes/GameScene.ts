@@ -1343,6 +1343,8 @@ export class GameScene extends Phaser.Scene {
           this.bossTagWorld = null;
           for (const t of [...this.popups]) this.dropPopup(t);
           this.chainText.setVisible(false);
+          this.senseiText?.destroy();
+          this.senseiText = null;
           this.cameras.main.fade(900, 10, 8, 16);
           this.message.setText(this.run ? 'Ouch! The run is over.\nYou keep everything you found.' : 'Ouch!\nBack to the start.').setVisible(true);
           break;
@@ -2755,6 +2757,7 @@ export class GameScene extends Phaser.Scene {
 
   /** Shows Sensei's read-aloud lines one after another at the top of the screen. */
   private senseiSay(lines: string[], holdMs = 1400): void {
+    if (this.downed) return; // Q-PREM-F4: no new Sensei bubble over the loss message; the next run starts fresh.
     this.senseiText?.destroy();
     const { width, height } = view(this);
     const t = this.add
