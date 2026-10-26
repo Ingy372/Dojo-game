@@ -82,7 +82,7 @@ import { testFlags } from '../game/beta';
 
 /** The tutorial floor's lines (M7-P2). */
 const TUTORIAL = loadTutorialLines(tutorialData);
-import { type PackName, addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
+import { type PackName, addStatic, characterArt, characterTop, frameOf, loadArt, setStaticFrame, staticArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
@@ -244,6 +244,8 @@ interface EnemyView {
 
 /** The warning glow's colour while a creature winds up (matches the danger circle). */
 const TELEGRAPH_TINT = 0xff3b30;
+/** B-T3-TUNE-2b: the Hearth Cook's boss-bar lid icon (#299). */
+const LID_ICON_PACK = 'hearth-cook-lid-icon';
 
 /**
  * The room. The rules package decides what happens, 20 times a second;
@@ -376,6 +378,7 @@ export class GameScene extends Phaser.Scene {
 
   // Top-left bars, combo counter and messages (drawn by the screen camera).
   private hud!: Phaser.GameObjects.Graphics;
+  private lidIcon: Phaser.GameObjects.Image | null = null;
   private comboText!: Phaser.GameObjects.Text;
   private comboBonusText!: Phaser.GameObjects.Text;
   private shownCombo = 0;
@@ -412,7 +415,7 @@ export class GameScene extends Phaser.Scene {
     // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
     const tier = currentTraining().belt.tier;
     const auras = testAura() || testFlags().has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
-    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS]);
+    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS, LID_ICON_PACK]);
 
     loadGearIcons(this);
   }
@@ -803,6 +806,8 @@ export class GameScene extends Phaser.Scene {
     // Shield guards: the shield while it's up, the cracked one once broken.
     s.setLayer('shield', e.shieldUp);
     s.setLayer('shield-broken', !e.shieldUp);
+    // B-T3-TUNE-2b: the Hearth Cook's pot lid (#299 art) shows while its sparks keep the lid up.
+    s.setLayer('lid', !!e.def.lidWhileHelpers && lidUp(this.world));
     // Reduced motion (K12): no white hit flash.
     const hitFlash = now < v.flashUntil && !reducedMotion();
     // B-T3-TUNE-2a: a clang on the pot lid tints it grey for a moment (none with reduced motion).
@@ -852,15 +857,18 @@ export class GameScene extends Phaser.Scene {
     if (n.update(e, now, windupSec, frame, TILE, this.shakeScale('windup')).clank) sfx.clank();
   }
 
+  /** B-T3-TUNE-2b: the boss-bar lid icon (24 px), drawn on the HUD; null when its art isn't loaded. */
+  private makeLidIcon(): Phaser.GameObjects.Image | null {
+    const s = staticArt(this, LID_ICON_PACK, 'icon-lid');
+    const f = s && frameOf(this, LID_ICON_PACK, Object.values(s.layers)[0][0]);
+    if (!s || !f) return null;
+    return this.add.image(0, 0, f[0], f[1]).setOrigin(s.anchor[0] / s.frameWidth, s.anchor[1] / s.frameHeight).setScale(24 / s.frameWidth).setDepth(this.hud.depth + 1).setVisible(false);
+  }
+
   /** The first of these animations the creature has (e.g. the boss's "windup_slam", else "windup"). */
   private enemyAnim(s: LayeredSprite, wanted: string, fallback: string): string {
     if (s.has(wanted)) return wanted;
     if (s.has(fallback)) return fallback;
-    // B-T3-TUNE-2a: a phase rig may lack an attack another phase draws (e.g. the Hearth Cook's
-    // rolling pin in phase 1). Stand in with an attack it does have; the warning shape is code-drawn.
-    const windup = Object.keys(s.art.animations).find((n) => n.startsWith('windup_'));
-    if (windup && wanted.startsWith('windup')) return windup;
-    if (windup && s.has(windup.slice('windup_'.length))) return windup.slice('windup_'.length);
     return 'idle';
   }
 
@@ -998,7 +1006,7 @@ export class GameScene extends Phaser.Scene {
     const art = (own && characterArt(this, own.pack, own.id)) || characterArt(this, 'enemies-t1', e.def.id)!;
     const sprite = new LayeredSprite(this, art);
     sprite.container.addAt(addShadow(this, r * 2.2), 0);
-    sprite.setLayer('telegraph', false).setLayerTint('telegraph', TELEGRAPH_TINT);
+    sprite.setLayer('telegraph', false).setLayerTint('telegraph', TELEGRAPH_TINT).setLayer('lid', false);
     const top = characterTop(this, art);
     const hpBack = this.add.rectangle(0, -top - 8, r * 2, 8, 0x000000, 0.6);
     const hpFill = this.add.rectangle(-r + 2, -top - 8, r * 2 - 4, 4, COLORS.healthLow).setOrigin(0, 0.5);
@@ -1088,7 +1096,8 @@ export class GameScene extends Phaser.Scene {
     this.bossName = this.add.text(0, 0, '', { ...small, fontSize: '13px' }).setOrigin(0.5, 0).setResolution(crisp()).setVisible(false);
     const calm = this.add.text(16, 55, 'Calm Mind', { ...small, fontSize: '12px', color: '#bff5ec' }).setResolution(crisp()).setVisible(!!this.run?.calmMind);
     this.cameras.main.ignore(calm);
-    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.chainText, this.message, this.screenFlash, this.roomLabel, this.timerText, this.bossName]);
+    this.lidIcon = this.makeLidIcon();
+    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.chainText, this.message, this.screenFlash, this.roomLabel, this.timerText, this.bossName, ...(this.lidIcon ? [this.lidIcon] : [])]);
   }
 
   private layout(): void {
@@ -2072,18 +2081,25 @@ export class GameScene extends Phaser.Scene {
       const y = BOSS_BAR_Y;
       g.fillStyle(0x000000, 0.55).fillRoundedRect(x - 3, y - 3, w + 6, 16, 5);
       g.fillStyle(0xb046a0).fillRoundedRect(x, y, Math.max(6, w * (boss.health / boss.def.maxHealth)), 10, 3);
-      // B-T3-TUNE-2a: placeholder pot lid (code-drawn) while its helpers keep the lid up: the bar greys over.
-      if (boss.def.lidWhileHelpers && lidUp(this.world)) {
+      // B-T3-TUNE-2a: while its helpers keep the lid up, the bar greys over and the lid shows at its end.
+      // B-T3-TUNE-2b: the lid is the #299 icon, 24 px (the code-drawn lid stays as the fallback).
+      const lid = !!boss.def.lidWhileHelpers && lidUp(this.world);
+      if (lid) {
         g.fillStyle(0x8c96a0, 0.6).fillRoundedRect(x, y, w, 10, 3);
         const lx = x + w + 18;
-        g.fillStyle(0x000000, 0.55).fillRoundedRect(lx - 16, y - 6, 32, 22, 6);
-        g.fillStyle(0xc9d1d9).fillRoundedRect(lx - 12, y + 2, 24, 10, { tl: 10, tr: 10, bl: 2, br: 2 });
-        g.fillStyle(0xc9d1d9).fillRoundedRect(lx - 4, y - 3, 8, 5, 2);
+        g.fillStyle(0x000000, 0.55).fillRoundedRect(lx - 16, y - 7, 32, 24, 6);
+        if (this.lidIcon) this.lidIcon.setPosition(lx, y + 5);
+        else {
+          g.fillStyle(0xc9d1d9).fillRoundedRect(lx - 12, y + 2, 24, 10, { tl: 10, tr: 10, bl: 2, br: 2 });
+          g.fillStyle(0xc9d1d9).fillRoundedRect(lx - 4, y - 3, 8, 5, 2);
+        }
       }
+      this.lidIcon?.setVisible(lid);
       this.bossName.setText(boss.def.name).setVisible(true);
       this.placeBossTag(boss);
     } else {
       this.bossName.setVisible(false);
+      this.lidIcon?.setVisible(false);
       this.bossTagWorld = null;
     }
     this.placeCombo(!!boss && boss.mode !== 'defeated');

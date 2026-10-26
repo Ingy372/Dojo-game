@@ -11,6 +11,8 @@ import rollingPin from '../../../assets/art/enemy-rolling-pin.json';
 import hearthP1 from '../../../assets/art/enemy-hearth-cook-p1.json';
 import hearthP2 from '../../../assets/art/enemy-hearth-cook-p2.json';
 import hearthP3 from '../../../assets/art/enemy-hearth-cook-p3.json';
+import lidIcon from '../../../assets/art/hearth-cook-lid-icon.json';
+import { TICKS_PER_SECOND } from '../src/config';
 
 type Pack = { pages: string[]; entries: Record<string, { sprites?: Record<string, unknown>; animations?: Record<string, unknown> }> };
 const PACKS: Record<string, unknown> = {
@@ -37,8 +39,6 @@ const ENEMIES: Record<string, string> = {
 };
 const RIGS = ['hearth-cook-p1', 'hearth-cook-p2', 'hearth-cook-p3'];
 /** Must match ATTACK_ANIMS in apps/client/src/art/tiers.ts. */
-/** B-T3-TUNE-2a: new phase patterns use attacks a phase rig doesn't draw yet (placeholder until Jay OKs art). */
-const STAND_INS = new Set(['hearth-cook-p1 pin', 'hearth-cook-p2 pin', 'hearth-cook-p3 bonk']);
 const HEARTH_ANIMS: Record<string, string> = { 'ladle bonk': 'bonk', 'hot pot rush': 'rush', 'rolling pin lane': 'pin' };
 
 describe('B-T3 art', () => {
@@ -71,14 +71,43 @@ describe('B-T3 art', () => {
       const anims = Object.keys(pack(`enemy-${rig}`).entries[rig].animations ?? {});
       for (const i of ph.attacks) {
         const a = HEARTH_ANIMS[def.attacks[i].name ?? ''];
-        // B-T3-TUNE-2a: these use another attack's pose as a stand-in until Jay OKs new art.
-        if (STAND_INS.has(`${rig} ${a}`)) {
-          expect(anims.some((n) => n.startsWith('windup_')), `${rig} has a stand-in wind-up`).toBe(true);
-          continue;
-        }
         expect(anims, `${rig} ${a}`).toContain(a);
         expect(anims, `${rig} windup_${a}`).toContain(`windup_${a}`);
       }
     }
+  });
+
+  // B-T3-TUNE-2b: the #299 art (Jay OK'd) replaces the borrowed wind-ups.
+  type Anim = { frames: number; fps: number; telegraphTicks?: number; layers: Record<string, unknown> };
+  const anim = (rig: string, name: string) => (pack(`enemy-${rig}`).entries[rig].animations as Record<string, Anim>)[name];
+
+  it('each phase draws its own wind-up, and the wind-up lasts exactly the attack\'s warning', () => {
+    const def = content.enemies['hearth-cook'];
+    const ticks = (name: string) => def.attacks.find((a) => a.name === name)!.telegraphTicks;
+    for (const [rig, a, name, want] of [
+      ['hearth-cook-p1', 'pin', 'rolling pin lane', 26],
+      ['hearth-cook-p2', 'pin', 'rolling pin lane', 26],
+      ['hearth-cook-p3', 'bonk', 'ladle bonk', 20],
+    ] as const) {
+      const w = anim(rig, `windup_${a}`);
+      expect(ticks(name), name).toBe(want);
+      expect((w.frames / w.fps) * TICKS_PER_SECOND, `${rig} windup_${a}`).toBeCloseTo(want, 5);
+      expect(w.telegraphTicks, `${rig} windup_${a}`).toBe(want);
+      expect(anim(rig, a), `${rig} ${a}`).toBeDefined();
+    }
+  });
+
+  it('the lid layer is in every phase 2 and 3 animation except the defeat', () => {
+    for (const rig of ['hearth-cook-p2', 'hearth-cook-p3']) {
+      const anims = pack(`enemy-${rig}`).entries[rig].animations as Record<string, Anim>;
+      for (const [name, a] of Object.entries(anims)) if (name !== 'defeat') expect(Object.keys(a.layers), `${rig} ${name}`).toContain('lid');
+    }
+    expect(Object.keys(anim('hearth-cook-p1', 'pin').layers)).not.toContain('lid');
+  });
+
+  it('the boss-bar lid icon is imported', () => {
+    const p = lidIcon as unknown as Pack;
+    expect(p.pages.length).toBeGreaterThan(0);
+    expect(p.entries['hearth-cook-lid-icon'].sprites?.['icon-lid']).toBeDefined();
   });
 });
