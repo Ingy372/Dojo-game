@@ -20,9 +20,11 @@ const tierOfBelt = (t: Pick<TrainingState, 'belts' | 'tier'>, belt: string) => {
 };
 
 /** What these sign-offs added (each at the belt it belongs to). */
-export function signOffGain(t: Pick<TrainingState, 'belts' | 'tier'>, reqs: ReadonlyArray<{ belt: string }>): TrainingGain {
+export function signOffGain(t: Pick<TrainingState, 'belts' | 'tier'>, reqs: ReadonlyArray<{ belt: string; type?: string }>): TrainingGain {
   const g = { power: 0, health: 0, guard: 0 };
   for (const r of reqs) {
+    // R-STANCE-d2: a stance sign-off unlocks the stance only; it adds no stats.
+    if (r.type === 'stance') continue;
     const v = byTier(TRAINING_STATS, tierOfBelt(t, r.belt)).signOff;
     g.power += v.power;
     g.health += v.maxHealth;
@@ -83,7 +85,8 @@ export function snapshot(t: TrainingState): ProgressSnapshot {
     studentId: t.studentId,
     belt: t.belt.id,
     tier: t.tier,
-    signed: t.requirements.filter((r) => r.signedOff).map((r) => r.id),
+    // R-STANCE-d2: stance sign-offs are remembered too, so a new one plays its reward moment.
+    signed: [...t.requirements, ...t.stances.map((s) => s.requirement)].filter((r) => r.signedOff).map((r) => r.id),
     stripes: stripeKeys(t),
     approved: t.gate.sealLit,
     lastClass: t.lastClass,
@@ -96,8 +99,12 @@ function stripeKeys(t: TrainingState): string[] {
 
 /** The ability a sign-off unlocks, in words: "Technique Seal: Sweep". */
 export function abilityLabel(t: TrainingState, id: string): string {
+  const st = t.stances.find((s) => s.requirement.id === id);
+  if (st) return `Stance: ${st.def.name}`;
   const a = t.abilities.find((x) => x.requirement.id === id);
   if (!a) return '';
+  // R-STANCE-d2: katas unlock nothing for the beta.
+  if (a.requirement.type === 'kata') return 'Kata (its reward arrives in a later update)';
   const kind = a.kind === 'stance' ? 'Stance' : a.kind === 'strike' ? 'Strike upgrade' : 'Technique Seal';
   const name = a.stance?.name ?? a.perk?.name;
   return name ? `${kind}: ${name}` : `${kind} (power arrives in a later update)`;
@@ -132,7 +139,7 @@ export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState, s
   }
 
   const oldSigned = new Set(prev.signed);
-  const fresh = t.requirements.filter((r) => r.signedOff && !oldSigned.has(r.id)).map((r) => ({ requirement: r, ability: abilityLabel(t, r.id) }));
+  const fresh = [...t.requirements, ...t.stances.map((s) => s.requirement)].filter((r) => r.signedOff && !oldSigned.has(r.id)).map((r) => ({ requirement: r, ability: abilityLabel(t, r.id) }));
   if (fresh.length > MAX_SINGLE_SIGNOFFS) out.push({ kind: 'signOffs', list: fresh });
   else for (const f of fresh) out.push({ kind: 'signOff', ...f });
 
@@ -151,7 +158,7 @@ function titleAtRank(v: VirtueInfo, rank: number): string {
  * (more than 3 are shown together), then each stripe. Nothing earned yet: the preview.
  */
 export function unlockCascade(t: TrainingState, stance: string): RewardMoment[] {
-  const signed = t.requirements
+  const signed = [...t.requirements, ...t.stances.map((s) => s.requirement)]
     .filter((r) => r.signedOff)
     .map((r, i) => ({ r, i }))
     .sort((a, b) => (a.r.signedOffOn ?? '9999').localeCompare(b.r.signedOffOn ?? '9999') || a.i - b.i)

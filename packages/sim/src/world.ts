@@ -348,7 +348,7 @@ export interface PlayerSetup {
 }
 
 /** The Beginner's Stance: no changes. Used when the player has no Stances. */
-export const NO_STANCE: StanceDef = { id: 'none', name: "Beginner's Stance", text: '', counterWindow: 0, attackSpeed: 0, moveSpeed: 0, guardScale: 0, powerScale: 0, dashCooldownScale: 0, dashScale: 1, blockCut: 0, focusGain: 0, stillPower: 0, rootTicks: 0 };
+export const NO_STANCE: StanceDef = { id: 'none', name: "Beginner's Stance", signOffId: null, text: '', counterWindow: 0, attackSpeed: 0, moveSpeed: 0, guardScale: 0, powerScale: 0, dashCooldownScale: 0, dashScale: 1, blockCut: 0, focusGain: 0, stillPower: 0, rootTicks: 0 };
 
 const NO_INPUT: PlayerInput = { kind: 'none' };
 const BASE_STEP = MOVEMENT.speedTilesPerSecond / TICKS_PER_SECOND;

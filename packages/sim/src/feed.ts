@@ -46,6 +46,19 @@ export interface FeedRequirement {
   videoId: string | null;
 }
 
+/**
+ * R-STANCE-d2: a teacher's sign-off on one stance. `id` is the DojoForge item id, matched to a
+ * stance's `signOffId` in content/abilities/abilities.json (placeholder ids until Nic's are set).
+ * Stance sign-offs are separate from belt requirements: they never count for the Gate or the
+ * Power Rating, and there is no legacy grant (any belt, real sign-off only).
+ */
+export interface FeedStanceSignOff {
+  id: string;
+  signedOff: boolean;
+  signedOffOn: string | null;
+  signedOffBy: string | null;
+}
+
 export interface FeedStripe {
   word: string;
   belt: string;
@@ -68,6 +81,8 @@ export interface StudentFeed {
   requirements: FeedRequirement[];
   /** Unfinished (or finished) items from earlier ranks. They never block testing. */
   catchUp: FeedRequirement[];
+  /** R-STANCE-d2: stance sign-offs (optional in the feed; none = only Ready). */
+  stanceSignOffs: FeedStanceSignOff[];
   stripes: FeedStripe[];
   attendance: {
     /** Recent class check-ins (ISO date and time), newest last. */
@@ -197,6 +212,19 @@ export function loadFeed(data: unknown): StudentFeed {
     beltRef(r.belt, `requirement "${r.id}" belt`);
   }
 
+  const stanceSignOffs = list(f.stanceSignOffs ?? [], '"stanceSignOffs"').map((v, i): FeedStanceSignOff => {
+    const where = `"stanceSignOffs[${i + 1}]"`;
+    const o = obj(v, where);
+    const signedOff = o.signedOff === true;
+    return {
+      id: text(o.id, `${where}.id`),
+      signedOff,
+      signedOffOn: signedOff ? date(o.signedOffOn, `${where}.signedOffOn`) : null,
+      signedOffBy: signedOff ? textOrNull(o.signedOffBy, `${where}.signedOffBy`) : null,
+    };
+  });
+  if (new Set(stanceSignOffs.map((s) => s.id)).size !== stanceSignOffs.length) fail('two stance sign-offs use the same id');
+
   const stripes = list(f.stripes ?? [], '"stripes"').map((v, i) => {
     const o = obj(v, `"stripes[${i + 1}]"`);
     return { word: text(o.word, `"stripes[${i + 1}].word"`), belt: beltRef(o.belt, `"stripes[${i + 1}].belt"`), earnedOn: date(o.earnedOn, `"stripes[${i + 1}].earnedOn"`) };
@@ -225,6 +253,7 @@ export function loadFeed(data: unknown): StudentFeed {
     rank: { currentBelt, trainingStartDate: date(rank.trainingStartDate, '"rank.trainingStartDate"'), history },
     requirements,
     catchUp,
+    stanceSignOffs,
     stripes,
     attendance: {
       recentClasses: list(att.recentClasses ?? [], '"attendance.recentClasses"').map((d, i) => date(d, `"attendance.recentClasses[${i + 1}]"`)),
@@ -271,6 +300,7 @@ export function shiftFeedDates(feed: StudentFeed, nowIso: string): StudentFeed {
     rank: { ...feed.rank, trainingStartDate: move(feed.rank.trainingStartDate), history: feed.rank.history.map((h) => ({ ...h, earnedOn: move(h.earnedOn) })) },
     requirements: feed.requirements.map(req),
     catchUp: feed.catchUp.map(req),
+    stanceSignOffs: feed.stanceSignOffs.map((s) => ({ ...s, signedOffOn: moveOrNull(s.signedOffOn) })),
     stripes: feed.stripes.map((s) => ({ ...s, earnedOn: move(s.earnedOn) })),
     attendance: { ...feed.attendance, recentClasses: feed.attendance.recentClasses.map(move) },
     testing: { ...feed.testing, testDate: moveOrNull(feed.testing.testDate) },

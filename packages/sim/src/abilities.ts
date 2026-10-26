@@ -7,6 +7,11 @@ import { loadEffect, type Effect } from './effects';
 /** A stance the player switches between in a fight. Its numbers apply while it's active. */
 export interface StanceDef {
   id: string;
+  /**
+   * R-STANCE-d2: the DojoForge sign-off item that unlocks this stance; null for the Beginner's
+   * Stance (always there). Placeholder ids for now (PLACEHOLDER-…), until Nic sets the real ones.
+   */
+  signOffId: string | null;
   name: string;
   text: string;
   /** Extra Perfect Counter window ticks. */
@@ -108,6 +113,7 @@ export function loadAbilities(data: unknown): AbilityContent {
     const stance: StanceDef = {
       id: id(f.id, `${w}.id`),
       name: str(f.name, `${w}.name`),
+      signOffId: f.signOffId === undefined || f.signOffId === null ? null : str(f.signOffId, `${w}.signOffId`),
       text: str(f.text, `${w}.text`),
       counterWindow: num(f.counterWindow, `${w}.counterWindow`),
       attackSpeed: num(f.attackSpeed, `${w}.attackSpeed`),
@@ -129,6 +135,9 @@ export function loadAbilities(data: unknown): AbilityContent {
     return stance;
   });
   if (stances.length === 0) fail('"stances" needs at least the Beginner\'s Stance');
+  if (stances[0].signOffId !== null) fail('stances[1] (the Beginner\'s Stance) is always there and has no signOffId');
+  stances.slice(1).forEach((s, i) => { if (s.signOffId === null) fail(`stances[${i + 2}] needs a signOffId (the DojoForge sign-off that unlocks it)`); });
+  if (new Set(stances.map((s) => s.signOffId).filter(Boolean)).size !== stances.length - 1) fail('two stances use the same signOffId');
 
   const perks = (key: 'strikes' | 'seals'): PerkDef[] =>
     listOf(key).map((p, i) => {
