@@ -1,13 +1,97 @@
 {
   "item": "C-STORY-TRY",
-  "targetFile": "content/tutorial/first-session-lessons.json",
-  "targetId": "lesson-counter-guided",
-  "targetField": "retry",
-  "alsoUsedBy": ["lesson-warning","lesson-counter-hint-2","lesson-counter-hint-3","lesson-strike","lesson-dash","lesson-insights","lesson-decorating","lesson-perfect","lesson-block","lesson-step-out"],
+  "decided": {
+    "version": "A",
+    "text": "Nice work today. Let's rest at the dojo.",
+    "by": "Jay",
+    "ref": "t513u (via the Manager), Oct 26",
+    "scope": "everywhere the old retry string appears"
+  },
   "current": "That's okay. Try again whenever you're ready.",
   "versions": {
-    "A": { "retry": "Nice work today. Let's rest at the dojo." },
-    "B": { "retry": "You learned a lot. Home we go!" }
+    "A": {
+      "retry": "Nice work today. Let's rest at the dojo."
+    },
+    "B": {
+      "retry": "You learned a lot. Home we go!"
+    }
   },
-  "signOff": "Jay, together with #292"
+  "programmerHandoff": [
+    {
+      "file": "content/tutorial/first-session-lessons.json",
+      "lessonId": "lesson-warning",
+      "field": "retry",
+      "old": "That's okay. Try again whenever you're ready.",
+      "new": "Nice work today. Let's rest at the dojo."
+    },
+    {
+      "file": "content/tutorial/first-session-lessons.json",
+      "lessonId": "lesson-counter-hint-2",
+      "field": "retry",
+      "old": "That's okay. Try again whenever you're ready.",
+      "new": "Nice work today. Let's rest at the dojo."
+    },
+    {
+      "file": "content/tutorial/first-session-lessons.json",
+      "lessonId": "lesson-counter-hint-3",
+      "field": "retry",
+      "old": "That's okay. Try again whenever you're ready.",
+      "new": "Nice work today. Let's rest at the dojo."
+    },
+    {
+      "file": "content/tutorial/first-session-lessons.json",
+      "lessonId": "lesson-strike",
+      "field": "retry",
+      "old": "That's okay. Try again whenever you're ready.",
+      "new": "Nice work today. Let's rest at the dojo."
+    },
+    {
+      "file": "content/tutorial/first-session-lessons.json",
+      "lessonId": "lesson-dash",
+      "field": "retry",
+      "old": "That's okay. Try again whenever you're ready.",
+      "new": "Nice work today. Let's rest at the dojo."
+    },
+    {
+      "file": "content/tutorial/first-session-lessons.json",
+      "lessonId": "lesson-insights",
+      "field": "retry",
+      "old": "That's okay. Try again whenever you're ready.",
+      "new": "Nice work today. Let's rest at the dojo."
+    },
+    {
+      "file": "content/tutorial/first-session-lessons.json",
+      "lessonId": "lesson-decorating",
+      "field": "retry",
+      "old": "That's okay. Try again whenever you're ready.",
+      "new": "Nice work today. Let's rest at the dojo."
+    },
+    {
+      "file": "content/tutorial/first-session-lessons.json",
+      "lessonId": "lesson-perfect",
+      "field": "retry",
+      "old": "That's okay. Try again whenever you're ready.",
+      "new": "Nice work today. Let's rest at the dojo."
+    },
+    {
+      "file": "content/tutorial/first-session-lessons.json",
+      "lessonId": "lesson-block",
+      "field": "retry",
+      "old": "That's okay. Try again whenever you're ready.",
+      "new": "Nice work today. Let's rest at the dojo."
+    },
+    {
+      "file": "content/tutorial/first-session-lessons.json",
+      "lessonId": "lesson-step-out",
+      "field": "retry",
+      "old": "That's okay. Try again whenever you're ready.",
+      "new": "Nice work today. Let's rest at the dojo."
+    }
+  ],
+  "notInScope": {
+    "lessonId": "lesson-counter-guided",
+    "field": "retry",
+    "current": "So close! Let's try again.",
+    "note": "Correction: this lesson never held the old string. Its retry is the in-practice line during the slowdown, not a go-home line, so it stays as is unless the Manager says otherwise."
+  }
 }
