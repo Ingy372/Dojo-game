@@ -56,6 +56,48 @@
       "column": 10,
       "row": 4,
       "wave": 2
+    },
+    {
+      "enemy": "brute",
+      "column": 4,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 9,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 15,
+      "row": 2,
+      "wave": 3
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 4,
+      "row": 2,
+      "wave": 4
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 9,
+      "row": 2,
+      "wave": 4
+    },
+    {
+      "enemy": "rolling-pin",
+      "column": 15,
+      "row": 2,
+      "wave": 4
+    },
+    {
+      "enemy": "ladle-lobber",
+      "column": 9,
+      "row": 3,
+      "wave": 4
     }
   ],
   "artProps": "Three cold brick ovens set into the top wall; one starts to glow as the room clears.",
