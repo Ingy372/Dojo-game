@@ -932,3 +932,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## Q-PREM-F11 QA fix (2026-10-26)
 - 500 ms tap guard on Screen 2; source test + shot check (mash inside the window stays, a tap after goes Home), 112 PASS, 0 FAIL at 4 sizes, RM on/off.
 - B-MAIN-TRY11: q-prem-try test updated for the 11-lesson draft from #355; main green again.
+- B-W-ROOMS-TESTS: #359 tests fit the white rooms (mixes, K12, old-thumper at belt 2, golden re-captured for white runs only).

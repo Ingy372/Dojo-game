@@ -92,7 +92,8 @@ describe('where named monsters appear (1,000 floors at tier 2)', () => {
   it('K12: ?named=X without &room= always gives X (every monster, 200 seeds each)', () => {
     for (const m of named.monsters) {
       for (let seed = 1; seed <= 200; seed++) {
-        const at = walkFloor({ seed, tier: 1, forcedNamed: m.id }).rooms.find((r) => r.named);
+        // C-B1-ROOMS: white rooms have no brute, so the brute-based Old Thumper is first met at belt 2.
+        const at = walkFloor({ seed, tier: m.baseEnemy === 'brute' ? 2 : 1, forcedNamed: m.id }).rooms.find((r) => r.named);
         expect(at?.named?.id).toBe(m.id);
         expect(at!.enemy).toBe(m.baseEnemy);
       }
@@ -126,7 +127,7 @@ describe('where named monsters appear (1,000 floors at tier 2)', () => {
   it('?named=old-thumper comes in the first battle room from room 3 as a 189-Health brute', () => {
     let seen = 0;
     for (let seed = 1; seed <= 50; seed++) {
-      const { rooms } = walkFloor({ seed, tier: 1, forcedNamed: 'old-thumper' });
+      const { rooms } = walkFloor({ seed, tier: 2, forcedNamed: 'old-thumper' });
       const first = rooms.find((r) => (r.kind === 'battle' || r.kind === 'challenge') && r.depth + 1 >= named.rules.earliestRoom);
       const at = rooms.find((r) => r.named);
       if (!first) continue;
