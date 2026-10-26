@@ -1,0 +1,127 @@
+{
+ "tag": "844x390-rmoff",
+ "errs": [],
+ "states": {
+  "picker": [
+   {
+    "id": "beginners-stance",
+    "earned": true
+   },
+   {
+    "id": "front-stance",
+    "earned": true
+   },
+   {
+    "id": "fighting-stance",
+    "earned": true
+   },
+   {
+    "id": "horse-stance",
+    "earned": true
+   },
+   {
+    "id": "cat-stance",
+    "earned": false
+   }
+  ],
+  "pickerTexts": [
+   "◀ Dojo",
+   "STANCE",
+   "Beginner's Stance",
+   "Beginner's Stance",
+   "Front Stance",
+   "Beginner's Stance",
+   "You can still switch Stance during a fight."
+  ],
+  "lastPageTexts": [
+   "Beginner's Stance",
+   "Cat Stance",
+   "Beginner's Stance",
+   "You can still switch Stance during a fight."
+  ],
+  "lockedTexts": [
+   "Training Board",
+   "◀ Dojo",
+   "Kai M.",
+   "Green Belt  ·  1 stripe",
+   "Level 1",
+   "cap 40",
+   "ENTER THE TOWER",
+   "Practice room",
+   "YOUR NEXT STEP",
+   "▶ Video soon",
+   "Self-Defense #18",
+   "Last run",
+   "Gear (0)",
+   "Abilities",
+   "Gate",
+   "🏆 Trophy Case",
+   "⚔ Fighting Style",
+   "",
+   "👣",
+   "STANCE",
+   "Beginner's Stance",
+   "",
+   "✦",
+   "VIRTUE",
+   "Shield of Respect",
+   "◀",
+   "▶",
+   "Cat Stance",
+   "Tap a card, then tap a pick.",
+   "Beginner's Stance",
+   "Steady and even. Good at everything.",
+   "You can still switch Stance during a fight.",
+   "Always with you",
+   "Cat Stance",
+   "Quicker Counters and Dash, but softer blocks.",
+   "Ask Sensei about this one",
+   "Close"
+  ],
+  "rewardTexts": [
+   "Training Board",
+   "◀ Dojo",
+   "Sam T.",
+   "Yellow Belt  ·  1 stripe",
+   "Level 1",
+   "cap 20",
+   "ENTER THE TOWER",
+   "Practice room",
+   "YOUR NEXT STEP",
+   "▶ Video soon",
+   "Self-Defense #4",
+   "Catch-up from White Belt",
+   "Last run",
+   "Gear (0)",
+   "Abilities",
+   "Gate ✦",
+   "The Gate to Orange Belt",
+   " READY ",
+   "7 of 7 locks lit. A real promotion opens the Gate.",
+   "✓",
+   "Basic Form 2",
+   "✓",
+   "SD #6",
+   "✓",
+   "SD #7",
+   "✓",
+   "SD #8",
+   "✓",
+   "SD #9",
+   "✓",
+   "SD #10",
+   "✓",
+   "Kick 2",
+   "Time in rank",
+   "22 of 24 classes",
+   "師",
+   "Sensei's Seal",
+   "Test day: Wed, Nov 11",
+   "SIGNED OFF!",
+   "Sensei Jay signed off Front Stance!",
+   "New Stance: Front Stance",
+   "Tap to continue"
+  ]
+ },
+ "reducedMotionFlag": "off"
+}

@@ -820,3 +820,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Shots at 667x375, 667x320, 844x390, 932x430, Reduced motion on and off, 0 console errors: docs/shots/b-t3-tune-2b.
 **Next**
 - Tester pass on a phone; art author may want to look at the lid hidden on the P3 bonk facing E.
+## R-STANCE-d2 — stance sign-off unlocks (2026-10-25)
+**Done**
+- Stances unlock only from their own teacher sign-off in the feed (`stanceSignOffs`, placeholder DojoForge ids in content and fixtures). No legacy grant, not in the Gate or Power Rating, katas unlock nothing. Picker shows Ready plus all 4; unsigned ones show the not-yet card.
+- New test packages/sim/test/r-stance-d2-signoffs.test.ts (9 tests, including the idempotent load). npm test 902 passed, 2 skipped; typecheck and build pass.
+- Shots at 667x375, 667x320, 844x390, 932x430, Reduced motion on and off, 0 console errors: docs/shots/r-stance-d2.
+**Next**
+- Swap the placeholder ids for the real DojoForge ids when DojoForge adds stance sign-offs.
