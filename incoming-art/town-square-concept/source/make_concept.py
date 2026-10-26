@@ -73,6 +73,11 @@ if A.variant == "dusk":   # A4-2: darker and cozier - scene dimmed toward blue-v
         x = random.uniform(14.0, 17.3) * PPT; y = random.uniform(4.2, 10.6) * PPT + SHIFT - random.uniform(0.2, 0.9) * PPT
         rad = random.uniform(0.045, 0.07) * PPT
         fd.ellipse((x - 4 * rad, y - 4 * rad, x + 4 * rad, y + 4 * rad), fill=120); cdd.ellipse((x - rad, y - rad, x + rad, y + rad), fill=255)
+    # A4-5: a few more, scattered and subtle (hedges, trees, practice yard, bridge)
+    for c, rr in ((1.2, 3.9), (6.2, 3.8), (12.8, 3.9), (21.4, 4.0), (6.9, 5.4), (17.9, 5.5), (1.3, 6.8), (22.0, 6.9),
+                  (2.9, 7.1), (5.0, 7.6), (14.3, 7.6), (17.0, 7.8)):
+        x = c * PPT; y = rr * PPT + SHIFT; rad = 0.045 * PPT
+        fd.ellipse((x - 3 * rad, y - 3 * rad, x + 3 * rad, y + 3 * rad), fill=90); cdd.ellipse((x - rad, y - rad, x + rad, y + rad), fill=200)
     ff = ff.filter(ImageFilter.GaussianBlur(int(0.12 * PPT)))
     out = Image.composite(Image.new("RGB", out.size, (236, 255, 160)), out, ff.point(lambda v: v * 0.7))
     out = Image.composite(Image.new("RGB", out.size, (250, 255, 215)), out, core.filter(ImageFilter.GaussianBlur(1)))

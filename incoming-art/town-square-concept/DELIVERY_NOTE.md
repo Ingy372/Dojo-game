@@ -58,3 +58,11 @@ DECIDE:
 - Whether the waterfall should glow at night (currently no).
 - Firefly count (16).
 NEXT: Remodel the main dojo when the Action Zone photos arrive.
+
+---
+## UPDATE A4-5
+ITEM: A4-5, town square dusk final tweak (same branch / PR #301). Day is approved by Jay.
+WHAT: 12 more subtle fireflies scattered by the hedges, trees, practice yard and bridge (28 in total). Every other glow is still sourced. Dusk re-rendered only. Red check: 0 px.
+WHY: Jay asked for a few fireflies scattered around, not only by the water.
+DECIDE: Nothing new.
+NEXT: Remodel the main dojo when the Action Zone photos arrive.

@@ -56,3 +56,7 @@ python3 make_concept.py --far render_far@2x.png --town render_town@2x.png --outd
 - **Night:** every light now has a source. Light pools sit under the dojo lanterns and door, the shop lanterns and front, the placeholder windows, the two lamp posts and the bridge lanterns. The bridge lanterns now stand on the banks, and their reflections fall straight below them. There are 16 fireflies, all near the water. I removed the lighthouse glow, the extra pool on the river and the river sparkles (the town is rendered with `--night`, which leaves them out). The Tower light is kept.
 - Dusk build: `blender -b -P build_town_square.py -- --part town --night --out render_town_night@2x.png` and `--part lights --night`. Then pass `--town render_town_night@2x.png` to make_concept.py.
 - Main dojo, shop, placeholder and statue are unchanged. No characters, no text, no red.
+
+## A4-5 status
+- **Day: approved by Jay.** Unchanged in this update.
+- **Dusk: final tweak.** Added 12 subtle fireflies across the square, by the hedges, trees, practice yard and bridge, on top of the 16 by the water (28 in total). Every other glow still comes from a real source. Only the dusk image was re-rendered (1x and @2x).
