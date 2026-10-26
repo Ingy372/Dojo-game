@@ -1,0 +1,7 @@
+gate: scroll max=0
+style: scroll max=0
+trophies: scroll max=0
+gear: scroll max=0
+run-empty: scroll max=0
+run: scroll max=0
+edge taps: 0 checks, 0 failed

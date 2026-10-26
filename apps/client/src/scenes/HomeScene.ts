@@ -79,6 +79,14 @@ const RARITY_INK: Record<GearItem['rarity'], string> = { common: '#6b5a48', unco
 /** QA: the painted wood rim of the stat tile at k 0.5 (12 of its 32 @2x slice px; half at k 0.25), and the space kept inside it. */
 const STAT_RIM = 6;
 const STAT_PAD = S2;
+/** P-MENU2-SPACE: the full left column's height (edges 16, Path card at its 57 pt minimum); shorter screens go compact. */
+const LEFT_FULL_H = 369;
+/** P-MENU2-SPACE: the Path card's smallest full card (12 pad, label, step, 12 pad); shorter, it is one row. */
+const PATH_MIN_H = 12 + TYPE.label + 4 + TYPE.title + 12;
+/** P-MENU2-SPACE: the height Last run and My Style get at 667x375, where they are clean; shorter panels scroll. */
+const PANEL_FULL_H = 277;
+/** A 12 pt Gate label line (the Text's real line height). */
+const GATE_LINE_H = 15;
 const STAT_ICON: Record<string, string | undefined> = { perfects: 'stat-perfect', combo: 'stat-combo', time: 'stat-clock', xp: 'stat-xp' };
 
 /** A-MENU2: only the Black belt gets the full knot sheen. */
@@ -121,6 +129,13 @@ export class HomeScene extends Phaser.Scene {
   /** P-MENU-b: the panel contents only. Tab, page and gear taps redraw just this. */
   private panel: Phaser.GameObjects.Container | null = null;
   private panelBox = { rx: 0, top: 0, rw: 0, panelH: 0 };
+  /** P-MENU2-SPACE: the scrolling part of the panel, and how far it scrolls (0 = it all fits). */
+  private panelContent: Phaser.GameObjects.Container | null = null;
+  private panelScroll: { max: number; y: number; to: (y: number) => void } | null = null;
+  /** Which tab the kept scroll belongs to, so a redraw in the same tab stays where it was. */
+  private scrollKey = '';
+  private scrollY = 0;
+  private drag: { startY: number; from: number; moved: boolean } | null = null;
   /** P-MENU2-i: the code-drawn panel frame, hidden while the panel-frame art is drawn. */
   private codeFrame: Phaser.GameObjects.Graphics | null = null;
   private tabBox = { rx: 0, y: 0, tabW: 0 };
@@ -166,6 +181,7 @@ export class HomeScene extends Phaser.Scene {
     this.refresh();
     this.cameras.main.fadeIn(400, 10, 8, 16);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.render, this);
+    this.listenPanelScroll();
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.render, this));
   }
 
@@ -287,7 +303,10 @@ export class HomeScene extends Phaser.Scene {
     this.shell.removeAll(true);
     this.ui = this.shell;
     const { width, height } = view(this);
-    const pad = 16;
+    // P-MENU2-SPACE: a short screen (iPhone Safari landscape with its bars, ~320 tall) can't hold
+    // the full left column, so it goes compact: 8 pt edges, the level line beside the avatar, a 44 pt ENTER.
+    const short = height < LEFT_FULL_H;
+    const pad = short ? S2 : 16;
     const leftW = Math.min(300, width * 0.38);
     const t = this.training;
 
@@ -303,7 +322,13 @@ export class HomeScene extends Phaser.Scene {
 
     // Character block: a 64 pt row; name and belt stacked 4 pt apart, centred on the avatar.
     const rowTop = pad + 44 + S2;
-    const cy = rowTop + 32;
+    const level = effectiveLevel(this.profile, t);
+    const atCap = level >= t.levelCap;
+    const levelLine = `Level ${level}  ·  ${atCap ? 'Level cap! The Gate shows how to go higher.' : `cap ${t.levelCap}`}`;
+    // Compact: the stack gains the level line (and keeps the Blessing line), so the row grows to fit it.
+    const stackH = TYPE.title + S1 + TYPE.body + (t.blessed ? S1 + TYPE.label : 0) + (short ? S1 + TYPE.label + 2 : 0);
+    const rowH = short ? Math.max(56, stackH + S1) : 64;
+    const cy = rowTop + rowH / 2;
     if (t.blessed) {
       // Full fill, so the object's alpha is the alpha you see (0.25 to 0.15).
       const glow = this.add.circle(pad + 24, cy, 32, 0x6fb7ff, 1).setAlpha(MOTION.breath.from);
@@ -315,7 +340,6 @@ export class HomeScene extends Phaser.Scene {
     const textX = pad + 64;
     const textW = leftW - 64;
     // With a Blessing, a third 12 pt line joins the stack (keeps the column short enough for 375 pt).
-    const stackH = TYPE.title + S1 + TYPE.body + (t.blessed ? S1 + TYPE.label : 0);
     let sy = cy - stackH / 2 - 2;
     this.oneLine(this.text(textX, sy, t.displayName, TYPE.title, '#f2e9d8', true), textW, TYPE.label);
     sy += TYPE.title + S1;
@@ -324,22 +348,25 @@ export class HomeScene extends Phaser.Scene {
     if (t.blessed) {
       const hours = Math.max(1, Math.round(((t.blessingEndsMs ?? 0) - Date.now()) / 3600000));
       this.oneLine(this.text(textX, sy + TYPE.body + S1 + 2, `✦ Blessing +${Math.round(BLESSING.xpBonus * 100)}% XP · ${hours}h left`, TYPE.label, '#9ad1ff', true), textW, 10);
+      sy += S1 + TYPE.label + 2;
     }
+    if (short) this.oneLine(this.text(textX, sy + TYPE.body + S1 + 2, levelLine, TYPE.label, atCap ? '#ffd166' : '#b9ad99', true), textW, TYPE.label);
 
     // Level and experience (capped by the real belt): label and cap on one line, a 10 pt bar 8 below.
-    const level = effectiveLevel(this.profile, t);
-    const atCap = level >= t.levelCap;
-    let y = rowTop + 64 + S2;
-    this.text(pad, y, `Level ${level}`, TYPE.body, '#f2e9d8', true);
-    this.oneLine(this.text(pad + leftW, y + 1, atCap ? 'Level cap! The Gate shows how to go higher.' : `cap ${t.levelCap}`, TYPE.label, atCap ? '#ffd166' : '#b9ad99').setOrigin(1, 0), leftW - 70, 10);
-    y += TYPE.body + 4 + S2;
+    let y = rowTop + rowH + S2;
+    if (!short) {
+      this.text(pad, y, `Level ${level}`, TYPE.body, '#f2e9d8', true);
+      this.oneLine(this.text(pad + leftW, y + 1, atCap ? 'Level cap! The Gate shows how to go higher.' : `cap ${t.levelCap}`, TYPE.label, atCap ? '#ffd166' : '#b9ad99').setOrigin(1, 0), leftW - 70, 10);
+      y += TYPE.body + 4 + S2;
+    }
     const share = atCap ? 1 : Math.min(1, this.profile.xp / xpToNext(level, t.belts));
     this.xpBar(pad, y, leftW, share, level, atCap);
     y += 10 + S2;
 
-    // Buttons: ENTER 52 tall, Practice room 44, 8 apart.
-    this.button(pad, y, leftW, 52, 'ENTER THE TOWER', 0xd5713a, 19, () => this.enterTower());
-    y += 52 + S2;
+    // Buttons: ENTER 52 tall (44 when short), Practice room 44, 8 apart.
+    const enterH = short ? MIN_TAP : 52;
+    this.button(pad, y, leftW, enterH, 'ENTER THE TOWER', 0xd5713a, 19, () => this.enterTower());
+    y += enterH + S2;
     this.button(pad, y, leftW, 44, 'Practice room', 0x3a3a4a, TYPE.body, () => this.goTo('Game', {}));
     y += 44 + S2;
     this.renderPath(pad, y, leftW, height - y - pad);
@@ -397,15 +424,143 @@ export class HomeScene extends Phaser.Scene {
     this.ui = panel;
     const { rx, top, rw, panelH } = this.panelBox;
     this.panelFrameArt(rx, top, rw, panelH);
-    if (this.tab === 'run') this.renderRun(rx + 12, top + 10, rw - 24, panelH - 20);
-    else if (this.tab === 'gear') this.renderGear(rx + 10, top + 10, rw - 20, panelH - 20);
-    else if (this.tab === 'abilities') this.renderAbilities(rx + 10, top + 10, rw - 20, panelH - 20);
-    else this.renderGate(rx + 12, top + 10, rw - 24, panelH - 20);
+    // P-MENU2-SPACE: the contents get at least their minimum height; anything taller than the
+    // panel scrolls inside it (sheets still go on `panel`, so they stay put).
+    const content = this.add.container(0, 0);
+    panel.add(content);
+    this.panelContent = content;
+    this.ui = content;
+    const inner = panelH - 20;
+    const h = Math.max(inner, this.panelMinH(rw - 24));
+    if (this.tab === 'run') this.renderRun(rx + 12, top + 10, rw - 24, h);
+    else if (this.tab === 'gear') this.renderGear(rx + 10, top + 10, rw - 20, h);
+    else if (this.tab === 'abilities') this.renderAbilities(rx + 10, top + 10, rw - 20, h);
+    else this.renderGate(rx + 12, top + 10, rw - 24, h);
+    this.panelScroll = this.makePanelScroll(content, h - inner);
     const swap = panelSwap(change, reducedMotion());
     if (swap) {
       panel.setPosition(swap.dx, 0).setAlpha(swap.fromAlpha);
       this.tweens.add({ targets: panel, x: 0, alpha: 1, duration: swap.ms, ease: swap.ease });
     }
+  }
+
+  /**
+   * P-MENU2-SPACE: the least height the tab's contents need. Only real content counts: the empty
+   * Last run, Gear and the Trophy Case fit any panel; the Gate needs its locks, 3-line labels and cards.
+   */
+  private panelMinH(w: number): number {
+    if (this.tab === 'run') return this.profile.lastRun ? PANEL_FULL_H : 0;
+    if (this.tab === 'abilities') return this.part === 'style' ? PANEL_FULL_H : 0;
+    if (this.tab === 'gate') {
+      const g = this.training.gate;
+      if (!g.toBelt) return 0;
+      const r = gateLockR(w / g.locks.length);
+      return 52 + 2 * r + 4 + GATE.labelLines * GATE_LINE_H + S2 + GATE.cardH;
+    }
+    return 0;
+  }
+
+  /**
+   * P-MENU2-SPACE: lets the panel contents scroll up by `max` (masked to the panel, a thin gold
+   * thumb on the right). Taps on parts scrolled out of view are switched off.
+   */
+  private makePanelScroll(content: Phaser.GameObjects.Container, max: number): { max: number; y: number; to: (y: number) => void } | null {
+    const key = `${this.tab}/${this.part}`;
+    if (key !== this.scrollKey) this.scrollY = 0;
+    this.scrollKey = key;
+    if (max <= 0) {
+      this.scrollY = 0;
+      return null;
+    }
+    const { rx, top, rw, panelH } = this.panelBox;
+    const win = { top: top + 4, bottom: top + panelH - 4 };
+    const shape = this.make.graphics({}, false).fillStyle(0xffffff).fillRect(rx + 2, win.top, rw - 4, win.bottom - win.top);
+    content.setMask(shape.createGeometryMask());
+    content.once(Phaser.GameObjects.Events.DESTROY, () => shape.destroy());
+    // The cue: a soft dark fade and a small gold chevron on a dark pill at each edge that has more beyond it,
+    // and a 6 pt thumb on a faint track.
+    const trackH = panelH - 24;
+    const thumbH = Math.max(24, (trackH * (panelH - 20)) / (panelH - 20 + max));
+    const track = this.add.rectangle(rx + rw - 8, top + 12, 6, trackH, 0x000000, 0.18).setOrigin(0.5, 0);
+    const thumb = this.add.rectangle(rx + rw - 8, 0, 6, thumbH, 0xc08a2e, 0.95).setOrigin(0.5, 0);
+    const cue = this.add.graphics();
+    this.panel?.add([cue, track, thumb]);
+    const FADE = 20;
+    const drawCue = (y: number) => {
+      cue.clear();
+      const fx = rx + 4;
+      const fw = rw - 8;
+      const cx = rx + rw / 2;
+      if (y > 0) {
+        cue.fillGradientStyle(0x14121c, 0x14121c, 0x14121c, 0x14121c, 0.5, 0.5, 0, 0).fillRect(fx, win.top, fw, FADE);
+        cue.fillStyle(0x14121c, 0.8).fillRoundedRect(cx - 14, win.top + 1, 28, 14, 7);
+        cue.fillStyle(0xffd166, 0.95).lineStyle(1.5, 0x3a2618, 0.9);
+        cue.fillTriangle(cx - 7, win.top + 11, cx + 7, win.top + 11, cx, win.top + 4).strokeTriangle(cx - 7, win.top + 11, cx + 7, win.top + 11, cx, win.top + 4);
+      }
+      if (y < max) {
+        cue.fillGradientStyle(0x14121c, 0x14121c, 0x14121c, 0x14121c, 0, 0, 0.5, 0.5).fillRect(fx, win.bottom - FADE, fw, FADE);
+        cue.fillStyle(0x14121c, 0.8).fillRoundedRect(cx - 14, win.bottom - 15, 28, 14, 7);
+        cue.fillStyle(0xffd166, 0.95).lineStyle(1.5, 0x3a2618, 0.9);
+        cue.fillTriangle(cx - 7, win.bottom - 11, cx + 7, win.bottom - 11, cx, win.bottom - 4).strokeTriangle(cx - 7, win.bottom - 11, cx + 7, win.bottom - 11, cx, win.bottom - 4);
+      }
+    };
+    const taps: Phaser.GameObjects.GameObject[] = [];
+    const walk = (list: Phaser.GameObjects.GameObject[]) => list.forEach((o) => (o instanceof Phaser.GameObjects.Container ? walk(o.list) : o.input && taps.push(o)));
+    walk(content.list);
+    const state = {
+      max,
+      y: 0,
+      to: (y: number) => {
+        state.y = Math.max(0, Math.min(max, y));
+        this.scrollY = state.y;
+        content.y = -state.y;
+        thumb.y = top + 12 + ((trackH - thumbH) * state.y) / max;
+        drawCue(state.y);
+        // Each tap area is clipped to the visible window: a partly hidden button answers only
+        // where it shows, and a touch outside the window never reaches it.
+        for (const o of taps) {
+          const input = o.input;
+          if (!input || !(input.hitArea instanceof Phaser.Geom.Rectangle)) continue;
+          const full = (o.getData('fullHit') as Phaser.Geom.Rectangle | undefined) ?? Phaser.Geom.Rectangle.Clone(input.hitArea);
+          o.setData('fullHit', full);
+          const b = (o as Phaser.GameObjects.Zone).getBounds();
+          const visTop = Math.max(b.top, win.top);
+          const visBottom = Math.min(b.bottom, win.bottom);
+          const k = full.height / b.height;
+          input.enabled = visBottom > visTop;
+          input.hitArea.setTo(full.x, full.y + (visTop - b.top) * k, full.width, Math.max(0, visBottom - visTop) * k);
+        }
+      },
+    };
+    state.to(this.scrollY);
+    return state;
+  }
+
+  /** P-MENU2-SPACE: drag (or wheel) inside the panel scrolls it; a drag of more than 8 pt cancels the press it began on. */
+  private listenPanelScroll(): void {
+    const inside = (p: Phaser.Input.Pointer): boolean => {
+      const { rx, top, rw, panelH } = this.panelBox;
+      return p.worldX >= rx && p.worldX <= rx + rw && p.worldY >= top && p.worldY <= top + panelH;
+    };
+    this.input.on(Phaser.Input.Events.POINTER_DOWN, (p: Phaser.Input.Pointer) => {
+      this.drag = this.panelScroll && inside(p) ? { startY: p.worldY, from: this.panelScroll.y, moved: false } : null;
+    });
+    this.input.on(Phaser.Input.Events.POINTER_MOVE, (p: Phaser.Input.Pointer) => {
+      const d = this.drag;
+      if (!d || !p.isDown || !this.panelScroll || !this.panelContent) return;
+      const dy = p.worldY - d.startY;
+      if (!d.moved && Math.abs(dy) <= S2) return;
+      if (!d.moved) {
+        d.moved = true;
+        // The button under the finger lets go without acting (as if the finger slid off it).
+        for (const o of this.input.hitTestPointer(p)) o.emit(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, p);
+      }
+      this.panelScroll.to(d.from - dy);
+    });
+    this.input.on(Phaser.Input.Events.POINTER_UP, () => (this.drag = null));
+    this.input.on(Phaser.Input.Events.POINTER_WHEEL, (p: Phaser.Input.Pointer, _o: unknown, _dx: number, dy: number) => {
+      if (this.panelScroll && inside(p)) this.panelScroll.to(this.panelScroll.y + dy);
+    });
   }
 
   /** The Path card: the next real step, always visible (core-design section 9). */
@@ -418,6 +573,14 @@ export class HomeScene extends Phaser.Scene {
     this.ui.add(card);
     // A short phone (375 pt tall) gets 12 pt padding so the step still fits.
     const padP = h >= 16 + TYPE.label + S2 + TYPE.title + 16 ? S3 : 12;
+    if (h < PATH_MIN_H) {
+      // P-MENU2-SPACE: too short for the card: the label and the step share one row.
+      const my = y + h / 2;
+      const lab = this.text(x + S2 + 4, my, 'YOUR NEXT STEP', TYPE.label, '#ffd166', true).setOrigin(0, 0.5);
+      const step = p.next ? p.next.name : 'Everything is signed off. Keep training!';
+      this.oneLine(this.text(lab.x + lab.width + S2, my, step, p.next ? TYPE.body : TYPE.label, p.next ? '#ffffff' : '#5cd65c', true).setOrigin(0, 0.5), w - (lab.width + 3 * S2 + 4), TYPE.label);
+      return;
+    }
     const px = x + padP;
     const pw = w - 2 * padP;
     let ty = y + padP;
@@ -553,10 +716,6 @@ export class HomeScene extends Phaser.Scene {
       const ink = tileArt ? { num: st.key === 'xp' ? '#245a80' : WOOD.ink, label: '#5a3e28' } : { num: st.key === 'xp' ? '#9ad1ff' : '#fff6e6', label: '#f2e3c4' };
       if (tileArt) {
         this.ui.add(tileArt);
-        const iconArt = STAT_ICON[st.key];
-        const is = Math.min(20, b.h / 3);
-        const ic = iconArt && b.w >= 88 ? menu2Image(this, iconArt, X(b.x + S1 + 4 + is / 2), Y(b.y + S1 + TYPE.heading / 2 + 2), is, is) : null;
-        if (ic) this.ui.add(ic);
       } else {
         const tg = this.add.graphics();
         tg.fillStyle(WOOD.frame).fillRoundedRect(X(b.x), Y(b.y), b.w, b.h, RADIUS.button);
@@ -567,6 +726,22 @@ export class HomeScene extends Phaser.Scene {
       const big = b.h >= 56 ? TYPE.heading : tileArt ? TYPE.body : TYPE.title;
       const num = this.text(X(b.x + b.w / 2), Y(b.y + S1), st.format(count ? 0 : st.value), big, ink.num, true).setOrigin(0.5, 0);
       num.setData('stat', st.key);
+      // P-MENU2-SPACE: the icon keeps 8 pt from the final number: the number slides right if the
+      // tile has room (its right edge stays 8 pt inside the rim), otherwise the icon is left out.
+      const iconArt = tileArt ? STAT_ICON[st.key] : undefined;
+      const is = Math.min(20, b.h / 3);
+      if (iconArt && b.w >= 88) {
+        const numW = num.setText(st.format(st.value)).width;
+        num.setText(st.format(count ? 0 : st.value));
+        const iconR = b.x + S1 + 4 + is;
+        const need = iconR + S2 - (b.x + b.w / 2 - numW / 2);
+        const room = b.x + b.w - rim - STAT_PAD - (b.x + b.w / 2 + numW / 2);
+        if (need <= room) {
+          if (need > 0) num.x += need;
+          const ic = menu2Image(this, iconArt, X(b.x + S1 + 4 + is / 2), Y(b.y + S1 + TYPE.heading / 2 + 2), is, is);
+          if (ic) this.ui.add(ic.setData('statIcon', st.key));
+        }
+      }
       // QA: on the art the label keeps 8 px inside the painted rim (bottom and sides).
       const inset = tileArt ? rim + STAT_PAD : S1 + 2;
       const lab = this.text(X(b.x + b.w / 2), Y(b.y + b.h - inset), st.label, TYPE.label, ink.label, true).setOrigin(0.5, 1);
@@ -823,10 +998,13 @@ export class HomeScene extends Phaser.Scene {
       v.add(this.add.circle(0, top + 6 + glyphR, glyphR, BOARD_PAPER, 0.95).setStrokeStyle(2, 0xffd166, on ? 1 : 0.5));
       v.add(this.add.text(0, top + 6 + glyphR, STYLE_WORDS.glyphs[slot], { fontFamily: FONT, fontSize: `${Math.round(glyphR * 1.1)}px`, color: ink }).setOrigin(0.5).setResolution(crisp()));
       const ny = top + 6 + 2 * glyphR + 2;
-      v.add(this.add.text(0, ny, STYLE_WORDS.slots[slot].toUpperCase(), { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e3c4', fontStyle: 'bold' }).setOrigin(0.5, 0).setResolution(crisp()));
-      const name = this.add.text(0, ny + TYPE.label + 2, pick ? pick.name : STYLE_WORDS.noVirtue, { fontFamily: FONT, fontSize: `${TYPE.body}px`, color: '#fff6e6', fontStyle: 'bold', align: 'center', wordWrap: { width: L.slotW - 2 * S2 } }).setOrigin(0.5, 0).setResolution(crisp());
+      const slotLabel = this.add.text(0, ny, STYLE_WORDS.slots[slot].toUpperCase(), { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e3c4', fontStyle: 'bold' }).setOrigin(0.5, 0).setResolution(crisp());
+      v.add(slotLabel);
+      // P-MENU2-SPACE: the name starts under the label's real line height (12 + 2 overlapped it by 1).
+      const nameY = ny + slotLabel.height + 2;
+      const name = this.add.text(0, nameY, pick ? pick.name : STYLE_WORDS.noVirtue, { fontFamily: FONT, fontSize: `${TYPE.body}px`, color: '#fff6e6', fontStyle: 'bold', align: 'center', wordWrap: { width: L.slotW - 2 * S2 } }).setOrigin(0.5, 0).setResolution(crisp());
       // Names wrap to two lines instead of being cut; shrink only if two lines still don't fit.
-      const room = L.slotH / 2 - (ny + TYPE.label + 2) - 4;
+      const room = L.slotH / 2 - nameY - 4;
       if (name.height > room) name.setFontSize(TYPE.label);
       v.add(name);
     });
@@ -951,7 +1129,7 @@ export class HomeScene extends Phaser.Scene {
     this.renderPanel('none');
     // The slot card pops 1 -> 1.06 -> 1 (Reduced motion: no scale).
     if (reducedMotion()) return;
-    const card = this.panel?.list.find((c) => c instanceof Phaser.GameObjects.Container && (c as Phaser.GameObjects.Container).getData?.('styleSlot') === this.styleSlot);
+    const card = this.panelContent?.list.find((c) => c instanceof Phaser.GameObjects.Container && (c as Phaser.GameObjects.Container).getData?.('styleSlot') === this.styleSlot);
     if (card) this.tweens.add({ targets: card, scale: 1.06, duration: MOTION.pop.ms / 2, yoyo: true, ease: 'Sine.Out' });
   }
 
@@ -1316,7 +1494,7 @@ export class HomeScene extends Phaser.Scene {
     }
     this.text(x, y + 28, `${g.lit} of ${g.locks.length} locks lit. A real promotion opens the Gate.`, TYPE.label, '#b9ad99', false, FONT, w);
 
-    // The locks. P-MENU-f: radius 22 (at least 18), labels 12, at most 2 lines, centred.
+    // The locks. P-MENU-f: radius 22 (at least 18), labels 12, at most 3 lines (P-MENU2-SPACE: "David and Goliath" needs 3 in a narrow slot), centred.
     const n = g.locks.length;
     const slot = w / n;
     const r = gateLockR(slot);

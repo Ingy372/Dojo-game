@@ -7,7 +7,7 @@ const gate = src.slice(src.indexOf('private renderGate('), src.indexOf('private 
 
 describe('P-MENU-f Gate sizes', () => {
   it('uses the 3c sizes', () => {
-    expect(GATE).toMatchObject({ lockR: 22, lockMinR: 18, label: 12, labelLines: 2, cardH: 96, sealR: 28 });
+    expect(GATE).toMatchObject({ lockR: 22, lockMinR: 18, label: 12, labelLines: 3, cardH: 96, sealR: 28 });
     expect(GATE.label).toBeGreaterThanOrEqual(TYPE.label);
     expect(GATE.cardH).toBeGreaterThanOrEqual(MIN_TAP);
   });

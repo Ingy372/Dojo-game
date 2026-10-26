@@ -147,7 +147,7 @@ export function lastRunLayout(w: number, h: number, chipCount: number, statCount
   const bests = { x: w - bestsW, y: 0, w: bestsW, h: MIN_TAP };
   const chipsY = MIN_TAP + S1;
   const chipStep = Math.min(MIN_TAP, Math.floor(w / Math.max(1, chipCount)));
-  // Short phones (under 300 tall inside the scroll) get 24 pt chips, 44 pt tiles and 4 pt gaps.
+  // Short phones (under 300 tall inside the scroll) get 24 pt chips, 52 pt tiles and 4 pt gaps.
   const compact = h < 300;
   const gap = compact ? S1 : S2;
   const chipH = compact ? 24 : 32;
@@ -155,7 +155,8 @@ export function lastRunLayout(w: number, h: number, chipCount: number, statCount
   const tilesY = chipsY + chipH + gap;
   // 4 tiles under ~420 wide (the XP gain is the fill bar), 5 above.
   const nTiles = Math.min(statCount, w < 420 ? 4 : 5);
-  const tileH = compact ? MIN_TAP : 56;
+  // P-MENU2-SPACE: 52/64 (was 44/56) so the number and its label sit more than 8 pt apart.
+  const tileH = compact ? 52 : 64;
   const tileW = (w - (nTiles - 1) * S2) / nTiles;
   const tiles = Array.from({ length: nTiles }, (_, i) => ({ x: i * (tileW + S2), y: tilesY, w: tileW, h: tileH }));
   const bar = { x: 0, y: tilesY + tileH + gap, w, h: compact ? 10 : 12 };
