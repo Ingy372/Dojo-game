@@ -125,7 +125,7 @@ describe('P-MENU2-g words', () => {
     expect(m.headline).toBe('You reached room 4 of 6!');
     const all = JSON.stringify(LASTRUN_WORDS).toLowerCase();
     for (const bad of ['fail', 'lost', 'lose', 'streak', 'rank', 'friends', 'others', 'beat your', 'don\'t miss']) expect(all.replace(/"notes":"[^"]*"/, '')).not.toMatch(new RegExp(`\\b${bad}`));
-    const rows = bestsRows(withRun([]).bests, ['mostPerfects']);
+    const rows = bestsRows(withRun([]).bests, ['mostPerfects'], true);
     expect(rows.map((r) => r.key)).toEqual(['fastestClearTicks', 'mostPerfects', 'longestCombo', 'mostSGrades']);
     expect(rows.find((r) => r.isNew)?.key).toBe('mostPerfects');
     expect(run).toMatch(/LASTRUN_WORDS\.again[^\n]*this\.enterTower\(\)/);

@@ -83,6 +83,10 @@ const MAX_TICKS_PER_FRAME = 5;
 const HOUR = 3_600_000;
 /** Screen space taken by the title bar, and by the storage tray while decorating. */
 const TOP = 48;
+/** Q-PREM-F9: Decorate's top bar fits 44 pt buttons (8 + 44 + 8). */
+const DECOR_TOP = 60;
+/** Q-PREM-F9: the second button row (Street Smarts, Journal, Scroll) is 44 pt tall, 8 below the first row's tap zones. */
+const ROW2_Y = 60;
 const TRAY = 70;
 /** How many tiles tall the view is (the camera follows the character, like in the Tower). */
 const VIEW_ROWS = 6.5;
@@ -857,7 +861,7 @@ export class DojoScene extends Phaser.Scene {
     const pad = 12;
 
     // A dark strip behind the title and buttons (the room scrolls underneath).
-    this.ui.add(this.add.rectangle(0, 0, width, TOP, 0x14121c, 0.7).setOrigin(0));
+    this.ui.add(this.add.rectangle(0, 0, width, this.mode === 'decorate' ? DECOR_TOP : TOP, 0x14121c, 0.7).setOrigin(0));
     const title = this.text(pad, 8, 'Home Dojo', 20, '#f2e9d8', true, 'Georgia, serif');
     title.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.tapTitle());
     this.uiRects.push(title.getBounds());
@@ -873,13 +877,13 @@ export class DojoScene extends Phaser.Scene {
       const arrows = this.moveStyle === 'arrows';
       // The arrows go first, so the top buttons (Done, Put away) always sit above them.
       if (this.selected && arrows) this.renderArrows(width, height);
-      this.button(width - pad - 90, 8, 90, 32, 'Done', GREEN, 15, () => this.setDecorating(false));
+      this.button(width - pad - 90, 8, 90, MIN_TAP, 'Done', GREEN, 15, () => this.setDecorating(false));
       const hint = !this.selected ? 'Tap a decoration to pick it' : arrows ? 'Use the arrows to move it' : 'Now tap where it should go';
-      this.button(width - pad - 90 - 8 - 110 - 8 - 130, 8, 130, 32, arrows ? 'Move: Arrows ⇄' : 'Move: Tap ⇄', 0x3a3a4a, 13, () => this.chooseMoveStyle());
+      this.button(width - pad - 90 - 8 - 110 - 8 - 130, 8, 130, MIN_TAP, arrows ? 'Move: Arrows ⇄' : 'Move: Tap ⇄', 0x3a3a4a, 13, () => this.chooseMoveStyle());
       if (this.selected) {
-        this.button(width - pad - 90 - 8 - 110, 8, 110, 32, 'Put away', 0x6b3a3a, 14, () => this.putAway());
+        this.button(width - pad - 90 - 8 - 110, 8, 110, MIN_TAP, 'Put away', 0x6b3a3a, 14, () => this.putAway());
       }
-      this.text(width / 2, TOP + 6, hint, 14, '#fff6e0', true).setOrigin(0.5, 0).setStroke('#14121c', 5);
+      this.text(width / 2, DECOR_TOP + 6, hint, 14, '#fff6e0', true).setOrigin(0.5, 0).setStroke('#14121c', 5);
       this.renderTray(width, height);
     } else if (this.mode === 'play') {
       this.button(width - pad - 80, 8, 80, 32, 'Board', 0x4a3f63, 14, () => this.goBoard());
@@ -890,22 +894,22 @@ export class DojoScene extends Phaser.Scene {
       if (!this.profile.difficultyLineShown && this.profile.difficulty) {
         const name = DIFFICULTY_TEXT.choices.find((c) => c.id === this.profile.difficulty)?.name ?? '';
         // Below the second button row (Scroll, Journal, Street Smarts) so nothing covers it.
-        this.text(pad, 46 + 32 + 8, DIFFICULTY_TEXT.homeLine.replace('{name}', name), 14, '#fff6e0', true).setStroke('#14121c', 5);
+        this.text(pad, ROW2_Y + MIN_TAP + 8, DIFFICULTY_TEXT.homeLine.replace('{name}', name), 14, '#fff6e0', true).setStroke('#14121c', 5);
         this.profile.difficultyLineShown = true;
         writeSave(this.profile);
       }
       // Welcome Week (M7-P7): an existing student's systems show once Sensei has introduced them.
       const street = streetSmartsOpen(this.training.tier, streetUi.unlockTier) && isOpen(this.profile, this.training, 'street-smarts');
       const journal = this.training.tier >= CONTENT.named.rules.minBeltTier && isOpen(this.profile, this.training, 'journal');
-      if (street) this.button(width - pad - 130, 46, 130, 32, streetUi.button, GREEN, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
+      if (street) this.button(width - pad - 130, ROW2_Y, 130, MIN_TAP, streetUi.button, GREEN, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
       // The Monster Journal, from the belt where named monsters start showing up.
       if (journal) {
         const x = width - pad - (street ? 130 + 8 : 0) - 100;
-        this.button(x, 46, 100, 32, CONTENT.named.journalButton, 0x6b5a2a, 14, () => this.openJournal());
+        this.button(x, ROW2_Y, 100, MIN_TAP, CONTENT.named.journalButton, 0x6b5a2a, 14, () => this.openJournal());
       }
       // Sensei's Scroll (M7-P5): every lesson seen so far, and the tutorial floor, to replay any time.
       const rowLeft = (street ? 130 + 8 : 0) + (journal ? 100 + 8 : 0);
-      if (isOpen(this.profile, this.training, 'scroll')) this.button(width - pad - rowLeft - 90, 46, 90, 32, 'Scroll', 0x7a4a6a, 14, () => this.openScroll());
+      if (isOpen(this.profile, this.training, 'scroll')) this.button(width - pad - rowLeft - 90, ROW2_Y, 90, MIN_TAP, 'Scroll', 0x7a4a6a, 14, () => this.openScroll());
     }
   }
 
@@ -919,7 +923,7 @@ export class DojoScene extends Phaser.Scene {
     const m = 14;
     const a = ARROW;
     const bottom = height - TRAY - 10;
-    const cross = bottom - (3 * a + 2 * gap) - m >= TOP + 30;
+    const cross = bottom - (3 * a + 2 * gap) - m >= DECOR_TOP + 30;
     const it = this.dojo.items.find((x) => x.uid === this.selected);
     const wall = it ? decorationDef(CONTENT.dojo, it.id).place === 'wall' : false;
     const buttons: Array<[number, number, string, number, number]> = [];
@@ -1528,7 +1532,9 @@ export class DojoScene extends Phaser.Scene {
     const clamp = (v: number, lo: number, hi: number) => (lo > hi ? (lo + hi) / 2 : Math.max(lo, Math.min(hi, v)));
     const bottom = (this.mode === 'decorate' ? TRAY : 0) / t;
     const tx = clamp(target.x, viewW / 2, room.width - viewW / 2);
-    const ty = clamp(target.y, viewH / 2 - TOP / t, room.height + bottom - viewH / 2);
+    // Q-PREM-F9: Decorate's top bar is 60 tall, so the top wall (and its decorations) stays below it.
+    const top = (this.mode === 'decorate' ? DECOR_TOP : TOP) / t;
+    const ty = clamp(target.y, viewH / 2 - top, room.height + bottom - viewH / 2);
     this.cam = { x: this.cam.x + (tx - this.cam.x) * k, y: this.cam.y + (ty - this.cam.y) * k };
     this.offX = width / 2 - this.cam.x * t;
     this.offY = height / 2 - this.cam.y * t;

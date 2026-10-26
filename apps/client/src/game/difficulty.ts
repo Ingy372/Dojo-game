@@ -14,6 +14,15 @@ export const DIFFICULTY_TEXT = settings as {
   offer: { title: string; line: string; yes: string; no: string };
 };
 
+/**
+ * Q-PREM-GRADE: room grade letters (S/A/B), their sound, and the "Most S grades" best show on
+ * Challenge only. The sim still grades every room (the S-grade bonus loot stays); it's just not shown.
+ * Missing difficulty (old run summaries) means hidden.
+ */
+export function showGrades(difficulty: Difficulty | null | undefined): boolean {
+  return difficulty === 'challenge';
+}
+
 /** Gives a new profile its starting difficulty (once). Returns true if it set one. */
 export function ensureDifficulty(profile: Profile): boolean {
   return settleDifficulty(profile);
