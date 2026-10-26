@@ -10,13 +10,14 @@ import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { sfx } from '../audio/Sfx';
 import { FONT, crisp, view, hiDpi } from '../ui/theme';
+import { GREEN } from '../ui/tokens';
 
 const SCENARIOS: Record<string, Scenario> = { [storeData.id]: loadScenario(storeData) };
 const UI = uiData as typeof uiData & { speakers: Record<string, string> };
 const SPEAK_KEY = 'dojo-ascent-street-speak';
 
 /** Placeholder picture colours per speaker (until Street Smarts art arrives). */
-const SPEAKER_COLOR: Record<string, number> = { sensei: 0xd9a066, worker: 0x3aa57a, grownup: 0xff8fa3, shopper: 0x8a8fa8, player: 0x4ea3ff, narrator: 0x6f6658 };
+const SPEAKER_COLOR: Record<string, number> = { sensei: 0xd9a066, worker: GREEN, grownup: 0xff8fa3, shopper: 0x8a8fa8, player: 0x4ea3ff, narrator: 0x6f6658 };
 
 export class StreetSmartsScene extends Phaser.Scene {
   private sc!: Scenario;
@@ -87,7 +88,7 @@ export class StreetSmartsScene extends Phaser.Scene {
     const by = height - btnArea - pad + 4;
     if (!choices.length) {
       const w = Math.min(260, width - pad * 2);
-      this.button((width - w) / 2, by, w, btnH, `${UI.next} ▶`, 0x3aa57a, 18, () => this.next());
+      this.button((width - w) / 2, by, w, btnH, `${UI.next} ▶`, GREEN, 18, () => this.next());
     } else {
       const colW = (width - pad * 2 - (cols - 1) * 8) / cols;
       choices.forEach((c, i) => {
@@ -126,7 +127,7 @@ export class StreetSmartsScene extends Phaser.Scene {
     this.text(width / 2, height * 0.3, UI.pickGrownup, 22, '#ffffff', true, width - 24).setOrigin(0.5).setAlign('center');
     const w = Math.min(180, (width - 48) / 2);
     UI.grownups.forEach((g, i) => {
-      this.button(width / 2 + (i === 0 ? -w - 8 : 8), height * 0.45, w, 64, g, 0x3aa57a, 22, () => {
+      this.button(width / 2 + (i === 0 ? -w - 8 : 8), height * 0.45, w, 64, g, GREEN, 22, () => {
         this.profile.streetSmarts.grownup = g as 'Mom' | 'Dad';
         writeSave(this.profile);
         this.picking = false;
@@ -148,7 +149,7 @@ export class StreetSmartsScene extends Phaser.Scene {
       this.st = startScenario();
       this.render();
     });
-    this.button(width / 2 + 8, height * 0.62, w, 56, UI.back, 0x3aa57a, 17, () => this.leave());
+    this.button(width / 2 + 8, height * 0.62, w, 56, UI.back, GREEN, 17, () => this.leave());
     this.sayText(msg);
   }
 

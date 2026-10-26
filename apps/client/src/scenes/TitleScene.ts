@@ -9,6 +9,7 @@ import { sfx } from '../audio/Sfx';
 import { reducedMotion } from '../game/motion';
 import { markSavedNoteSeen, needsSavedNote, testFlags } from '../game/beta';
 import SAFE_TEXT from '../../../../content/settings/safety.json';
+import { GREEN } from '../ui/tokens';
 
 export class TitleScene extends Phaser.Scene {
   private title!: Phaser.GameObjects.Text;
@@ -118,7 +119,7 @@ export class TitleScene extends Phaser.Scene {
     const title = this.add.text(width / 2, height * 0.18, t.savedNoteTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '22px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(window.devicePixelRatio || 1);
     const body = this.add.text(width / 2, title.y + title.height + 14, t.savedNoteLines.join('\n\n'), { fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(window.devicePixelRatio || 1);
     const by = Math.min(height - 12 - 44, body.y + body.height + 20);
-    const ok = this.add.rectangle(width / 2 - 70, by, 140, 44, 0x3aa57a).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4);
+    const ok = this.add.rectangle(width / 2 - 70, by, 140, 44, GREEN).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.4);
     const okText = this.add.text(width / 2, by + 22, t.savedNoteButton, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '16px', color: '#ffffff' }).setOrigin(0.5).setResolution(window.devicePixelRatio || 1);
     box.add([title, body, ok, okText]);
     return box;

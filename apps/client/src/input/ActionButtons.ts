@@ -2,6 +2,10 @@ import { reducedMotion } from '../game/motion';
 import Phaser from 'phaser';
 import { COMBAT, activeStance, strikeCost, type PlayerAction, type PlayerState } from '@dojo/sim';
 import { view, DPR } from '../ui/theme';
+import { GREEN } from '../ui/tokens';
+
+/** Q-PREM-COLOR: button faces are solid so white labels keep their contrast over any floor (were 0.9, letting the floor tint through). */
+const FACE_ALPHA = 1;
 
 const COUNTER_RADIUS = 48;
 const STRIKE_RADIUS = 38;
@@ -52,7 +56,7 @@ export class ActionButtons {
     this.strike = this.makeButton('strike', 'STRIKE', STRIKE_RADIUS, 0xd5713a);
     this.strikeRing = scene.add.graphics();
     this.strike.container.add(this.strikeRing);
-    this.dash = this.makeButton('dash', 'DASH', DASH_RADIUS, 0x3aa57a);
+    this.dash = this.makeButton('dash', 'DASH', DASH_RADIUS, GREEN);
     this.dashRing = scene.add.graphics();
     this.dash.container.add(this.dashRing);
     if (has.virtue) {
@@ -133,7 +137,7 @@ export class ActionButtons {
     const open = this.windowOpen && ready;
     const flash = open && (reducedMotion() || Math.sin(this.scene.time.now / 70) > 0);
     this.counter.face.setStrokeStyle(open ? 7 : 4, open ? 0xffd166 : 0xffffff, open ? 1 : 0.8);
-    this.counter.face.setFillStyle(flash ? 0x6fa8ff : 0x3a7bd5, 0.9);
+    this.counter.face.setFillStyle(flash ? 0x6fa8ff : 0x3a7bd5, FACE_ALPHA);
   }
 
   /** Shows whether each button is ready, from the player's current state. */
@@ -148,7 +152,7 @@ export class ActionButtons {
     const cost = strikeCost(p);
     const strikeReady = alive && p.focus >= cost;
     this.strike.container.setAlpha(strikeReady ? 1 : 0.55);
-    this.strike.face.setFillStyle(strikeReady ? 0xd5713a : 0x5a4a44, 0.9);
+    this.strike.face.setFillStyle(strikeReady ? 0xd5713a : 0x5a4a44, FACE_ALPHA);
     const fill = Math.min(1, p.focus / cost);
     this.strikeRing.clear();
     this.strikeRing.lineStyle(5, strikeReady ? 0xffd166 : 0x9ad1ff, strikeReady ? 1 : 0.8);
@@ -173,7 +177,7 @@ export class ActionButtons {
     if (this.virtue && this.virtueRing) {
       const full = alive && p.focus >= COMBAT.focus.max && p.virtueTicks === 0;
       this.virtue.container.setAlpha(full ? 1 : 0.5);
-      this.virtue.face.setFillStyle(full ? 0xffb02e : 0x5a4a34, 0.9);
+      this.virtue.face.setFillStyle(full ? 0xffb02e : 0x5a4a34, FACE_ALPHA);
       this.virtueRing.clear();
       this.virtueRing.lineStyle(4, full ? 0xffffff : 0xffd166, 0.85);
       this.virtueRing.beginPath();
@@ -195,7 +199,7 @@ export class ActionButtons {
   }
 
   private makeButton(action: Button['action'], text: string, radius: number, color: number): Button {
-    const face = this.scene.add.circle(0, 0, radius, color, 0.9).setStrokeStyle(4, 0xffffff, 0.8);
+    const face = this.scene.add.circle(0, 0, radius, color, FACE_ALPHA).setStrokeStyle(4, 0xffffff, 0.8);
     const label = this.scene.add
       .text(0, 0, text, { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: `${Math.max(12, Math.round(radius * 0.36))}px`, color: '#ffffff' })
       .setOrigin(0.5)
