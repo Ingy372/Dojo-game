@@ -50,3 +50,4 @@ Notes:
 - Kenney **Interface Sounds**: https://kenney.nl/assets/interface-sounds (CC0; `audio/sfx/kenney-interface/License.txt`)
 - Kenney **Music Jingles**: https://kenney.nl/assets/music-jingles (CC0; `audio/sfx/kenney-jingles/License.txt`)
 - **512 Sound Effects (8-bit style)** by SubspaceAudio (Juhani Junkala), OpenGameArt: https://opengameart.org/content/512-sound-effects-8-bit-style (CC0; `audio/sfx/oga-512-8bit/INFO-license.txt`)
+- Kenney **RPG Audio**: https://kenney.nl/assets/rpg-audio (CC0, re-checked 2026-10-26 on the page and in the zip `License.txt`; licence copy: `audio/sfx/kenney-rpg/License.txt`). Used: `cloth1.ogg`, `cloth2.ogg`, `cloth3.ogg` (whiff). No knife or blade sounds were used.
