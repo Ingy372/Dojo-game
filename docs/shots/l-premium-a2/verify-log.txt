@@ -1,14 +1,3 @@
-PASS kata-1024x768-rmoff reduced motion reads back off
-PASS kata-1024x768-rmoff hint shown "Show Sensei your next kata in class!"
-PASS kata-1024x768-rmoff hint size>=12 (14)
-PASS kata-1024x768-rmoff hint >=8 px inside the sheet (80)
-PASS kata-1024x768-rmoff no text overlaps (none)
-PASS kata-1024x768-rmoff all sheet text inside the sheet
-PASS kata-1024x768-rmoff sheet inside view
-PASS kata-1024x768-rmoff Close tap >=44 (96x44)
-PASS kata-1024x768-rmoff Close label below the hint
-PASS kata-1024x768-rmoff not crowded (text to 29% of sheet)
-PASS kata-1024x768-rmoff Close shuts the sheet
 PASS kick-1024x768-rmoff reduced motion reads back off
 PASS kick-1024x768-rmoff hint shown "Show Sensei your kick combo in class!"
 PASS kick-1024x768-rmoff hint size>=12 (14)
@@ -32,17 +21,6 @@ PASS self-1024x768-rmoff Close label below the hint
 PASS self-1024x768-rmoff not crowded (text to 29% of sheet)
 PASS self-1024x768-rmoff Close shuts the sheet
 PASS 1024x768-rmoff no page errors
-PASS kata-1024x768-rmon reduced motion reads back on
-PASS kata-1024x768-rmon hint shown "Show Sensei your next kata in class!"
-PASS kata-1024x768-rmon hint size>=12 (14)
-PASS kata-1024x768-rmon hint >=8 px inside the sheet (80)
-PASS kata-1024x768-rmon no text overlaps (none)
-PASS kata-1024x768-rmon all sheet text inside the sheet
-PASS kata-1024x768-rmon sheet inside view
-PASS kata-1024x768-rmon Close tap >=44 (96x44)
-PASS kata-1024x768-rmon Close label below the hint
-PASS kata-1024x768-rmon not crowded (text to 29% of sheet)
-PASS kata-1024x768-rmon Close shuts the sheet
 PASS kick-1024x768-rmon reduced motion reads back on
 PASS kick-1024x768-rmon hint shown "Show Sensei your kick combo in class!"
 PASS kick-1024x768-rmon hint size>=12 (14)
@@ -66,17 +44,6 @@ PASS self-1024x768-rmon Close label below the hint
 PASS self-1024x768-rmon not crowded (text to 29% of sheet)
 PASS self-1024x768-rmon Close shuts the sheet
 PASS 1024x768-rmon no page errors
-PASS kata-667x375-rmoff reduced motion reads back off
-PASS kata-667x375-rmoff hint shown "Show Sensei your next kata in class!"
-PASS kata-667x375-rmoff hint size>=12 (14)
-PASS kata-667x375-rmoff hint >=8 px inside the sheet (39)
-PASS kata-667x375-rmoff no text overlaps (none)
-PASS kata-667x375-rmoff all sheet text inside the sheet
-PASS kata-667x375-rmoff sheet inside view
-PASS kata-667x375-rmoff Close tap >=44 (96x44)
-PASS kata-667x375-rmoff Close label below the hint
-PASS kata-667x375-rmoff not crowded (text to 46% of sheet)
-PASS kata-667x375-rmoff Close shuts the sheet
 PASS kick-667x375-rmoff reduced motion reads back off
 PASS kick-667x375-rmoff hint shown "Show Sensei your kick combo in class!"
 PASS kick-667x375-rmoff hint size>=12 (14)
@@ -100,17 +67,6 @@ PASS self-667x375-rmoff Close label below the hint
 PASS self-667x375-rmoff not crowded (text to 63% of sheet)
 PASS self-667x375-rmoff Close shuts the sheet
 PASS 667x375-rmoff no page errors
-PASS kata-667x375-rmon reduced motion reads back on
-PASS kata-667x375-rmon hint shown "Show Sensei your next kata in class!"
-PASS kata-667x375-rmon hint size>=12 (14)
-PASS kata-667x375-rmon hint >=8 px inside the sheet (39)
-PASS kata-667x375-rmon no text overlaps (none)
-PASS kata-667x375-rmon all sheet text inside the sheet
-PASS kata-667x375-rmon sheet inside view
-PASS kata-667x375-rmon Close tap >=44 (96x44)
-PASS kata-667x375-rmon Close label below the hint
-PASS kata-667x375-rmon not crowded (text to 46% of sheet)
-PASS kata-667x375-rmon Close shuts the sheet
 PASS kick-667x375-rmon reduced motion reads back on
 PASS kick-667x375-rmon hint shown "Show Sensei your kick combo in class!"
 PASS kick-667x375-rmon hint size>=12 (14)
@@ -134,17 +90,6 @@ PASS self-667x375-rmon Close label below the hint
 PASS self-667x375-rmon not crowded (text to 63% of sheet)
 PASS self-667x375-rmon Close shuts the sheet
 PASS 667x375-rmon no page errors
-PASS kata-844x390-rmoff reduced motion reads back off
-PASS kata-844x390-rmoff hint shown "Show Sensei your next kata in class!"
-PASS kata-844x390-rmoff hint size>=12 (14)
-PASS kata-844x390-rmoff hint >=8 px inside the sheet (80)
-PASS kata-844x390-rmoff no text overlaps (none)
-PASS kata-844x390-rmoff all sheet text inside the sheet
-PASS kata-844x390-rmoff sheet inside view
-PASS kata-844x390-rmoff Close tap >=44 (96x44)
-PASS kata-844x390-rmoff Close label below the hint
-PASS kata-844x390-rmoff not crowded (text to 46% of sheet)
-PASS kata-844x390-rmoff Close shuts the sheet
 PASS kick-844x390-rmoff reduced motion reads back off
 PASS kick-844x390-rmoff hint shown "Show Sensei your kick combo in class!"
 PASS kick-844x390-rmoff hint size>=12 (14)
@@ -168,17 +113,6 @@ PASS self-844x390-rmoff Close label below the hint
 PASS self-844x390-rmoff not crowded (text to 55% of sheet)
 PASS self-844x390-rmoff Close shuts the sheet
 PASS 844x390-rmoff no page errors
-PASS kata-844x390-rmon reduced motion reads back on
-PASS kata-844x390-rmon hint shown "Show Sensei your next kata in class!"
-PASS kata-844x390-rmon hint size>=12 (14)
-PASS kata-844x390-rmon hint >=8 px inside the sheet (80)
-PASS kata-844x390-rmon no text overlaps (none)
-PASS kata-844x390-rmon all sheet text inside the sheet
-PASS kata-844x390-rmon sheet inside view
-PASS kata-844x390-rmon Close tap >=44 (96x44)
-PASS kata-844x390-rmon Close label below the hint
-PASS kata-844x390-rmon not crowded (text to 46% of sheet)
-PASS kata-844x390-rmon Close shuts the sheet
 PASS kick-844x390-rmon reduced motion reads back on
 PASS kick-844x390-rmon hint shown "Show Sensei your kick combo in class!"
 PASS kick-844x390-rmon hint size>=12 (14)
@@ -202,17 +136,6 @@ PASS self-844x390-rmon Close label below the hint
 PASS self-844x390-rmon not crowded (text to 55% of sheet)
 PASS self-844x390-rmon Close shuts the sheet
 PASS 844x390-rmon no page errors
-PASS kata-932x430-rmoff reduced motion reads back off
-PASS kata-932x430-rmoff hint shown "Show Sensei your next kata in class!"
-PASS kata-932x430-rmoff hint size>=12 (14)
-PASS kata-932x430-rmoff hint >=8 px inside the sheet (80)
-PASS kata-932x430-rmoff no text overlaps (none)
-PASS kata-932x430-rmoff all sheet text inside the sheet
-PASS kata-932x430-rmoff sheet inside view
-PASS kata-932x430-rmoff Close tap >=44 (96x44)
-PASS kata-932x430-rmoff Close label below the hint
-PASS kata-932x430-rmoff not crowded (text to 46% of sheet)
-PASS kata-932x430-rmoff Close shuts the sheet
 PASS kick-932x430-rmoff reduced motion reads back off
 PASS kick-932x430-rmoff hint shown "Show Sensei your kick combo in class!"
 PASS kick-932x430-rmoff hint size>=12 (14)
@@ -236,17 +159,6 @@ PASS self-932x430-rmoff Close label below the hint
 PASS self-932x430-rmoff not crowded (text to 46% of sheet)
 PASS self-932x430-rmoff Close shuts the sheet
 PASS 932x430-rmoff no page errors
-PASS kata-932x430-rmon reduced motion reads back on
-PASS kata-932x430-rmon hint shown "Show Sensei your next kata in class!"
-PASS kata-932x430-rmon hint size>=12 (14)
-PASS kata-932x430-rmon hint >=8 px inside the sheet (80)
-PASS kata-932x430-rmon no text overlaps (none)
-PASS kata-932x430-rmon all sheet text inside the sheet
-PASS kata-932x430-rmon sheet inside view
-PASS kata-932x430-rmon Close tap >=44 (96x44)
-PASS kata-932x430-rmon Close label below the hint
-PASS kata-932x430-rmon not crowded (text to 46% of sheet)
-PASS kata-932x430-rmon Close shuts the sheet
 PASS kick-932x430-rmon reduced motion reads back on
 PASS kick-932x430-rmon hint shown "Show Sensei your kick combo in class!"
 PASS kick-932x430-rmon hint size>=12 (14)
@@ -269,4 +181,100 @@ PASS self-932x430-rmon Close tap >=44 (96x44)
 PASS self-932x430-rmon Close label below the hint
 PASS self-932x430-rmon not crowded (text to 46% of sheet)
 PASS self-932x430-rmon Close shuts the sheet
+PASS 932x430-rmon no page errors
+PASS kata-1024x768-rmoff reduced motion reads back off
+PASS kata-1024x768-rmoff hint shown "Learn a kata in class with Sensei!"
+PASS kata-1024x768-rmoff hint size>=12 (14)
+PASS kata-1024x768-rmoff hint >=8 px inside the sheet (80)
+PASS kata-1024x768-rmoff no text overlaps (none)
+PASS kata-1024x768-rmoff all sheet text inside the sheet
+PASS kata-1024x768-rmoff sheet inside view
+PASS kata-1024x768-rmoff Close tap >=44 (96x44)
+PASS kata-1024x768-rmoff Close label below the hint
+PASS kata-1024x768-rmoff not crowded (text to 29% of sheet)
+PASS kata-1024x768-rmoff Close shuts the sheet
+PASS 1024x768-rmoff no page errors
+PASS kata-1024x768-rmon reduced motion reads back on
+PASS kata-1024x768-rmon hint shown "Learn a kata in class with Sensei!"
+PASS kata-1024x768-rmon hint size>=12 (14)
+PASS kata-1024x768-rmon hint >=8 px inside the sheet (80)
+PASS kata-1024x768-rmon no text overlaps (none)
+PASS kata-1024x768-rmon all sheet text inside the sheet
+PASS kata-1024x768-rmon sheet inside view
+PASS kata-1024x768-rmon Close tap >=44 (96x44)
+PASS kata-1024x768-rmon Close label below the hint
+PASS kata-1024x768-rmon not crowded (text to 29% of sheet)
+PASS kata-1024x768-rmon Close shuts the sheet
+PASS 1024x768-rmon no page errors
+PASS kata-667x375-rmoff reduced motion reads back off
+PASS kata-667x375-rmoff hint shown "Learn a kata in class with Sensei!"
+PASS kata-667x375-rmoff hint size>=12 (14)
+PASS kata-667x375-rmoff hint >=8 px inside the sheet (60)
+PASS kata-667x375-rmoff no text overlaps (none)
+PASS kata-667x375-rmoff all sheet text inside the sheet
+PASS kata-667x375-rmoff sheet inside view
+PASS kata-667x375-rmoff Close tap >=44 (96x44)
+PASS kata-667x375-rmoff Close label below the hint
+PASS kata-667x375-rmoff not crowded (text to 46% of sheet)
+PASS kata-667x375-rmoff Close shuts the sheet
+PASS 667x375-rmoff no page errors
+PASS kata-667x375-rmon reduced motion reads back on
+PASS kata-667x375-rmon hint shown "Learn a kata in class with Sensei!"
+PASS kata-667x375-rmon hint size>=12 (14)
+PASS kata-667x375-rmon hint >=8 px inside the sheet (60)
+PASS kata-667x375-rmon no text overlaps (none)
+PASS kata-667x375-rmon all sheet text inside the sheet
+PASS kata-667x375-rmon sheet inside view
+PASS kata-667x375-rmon Close tap >=44 (96x44)
+PASS kata-667x375-rmon Close label below the hint
+PASS kata-667x375-rmon not crowded (text to 46% of sheet)
+PASS kata-667x375-rmon Close shuts the sheet
+PASS 667x375-rmon no page errors
+PASS kata-844x390-rmoff reduced motion reads back off
+PASS kata-844x390-rmoff hint shown "Learn a kata in class with Sensei!"
+PASS kata-844x390-rmoff hint size>=12 (14)
+PASS kata-844x390-rmoff hint >=8 px inside the sheet (80)
+PASS kata-844x390-rmoff no text overlaps (none)
+PASS kata-844x390-rmoff all sheet text inside the sheet
+PASS kata-844x390-rmoff sheet inside view
+PASS kata-844x390-rmoff Close tap >=44 (96x44)
+PASS kata-844x390-rmoff Close label below the hint
+PASS kata-844x390-rmoff not crowded (text to 46% of sheet)
+PASS kata-844x390-rmoff Close shuts the sheet
+PASS 844x390-rmoff no page errors
+PASS kata-844x390-rmon reduced motion reads back on
+PASS kata-844x390-rmon hint shown "Learn a kata in class with Sensei!"
+PASS kata-844x390-rmon hint size>=12 (14)
+PASS kata-844x390-rmon hint >=8 px inside the sheet (80)
+PASS kata-844x390-rmon no text overlaps (none)
+PASS kata-844x390-rmon all sheet text inside the sheet
+PASS kata-844x390-rmon sheet inside view
+PASS kata-844x390-rmon Close tap >=44 (96x44)
+PASS kata-844x390-rmon Close label below the hint
+PASS kata-844x390-rmon not crowded (text to 46% of sheet)
+PASS kata-844x390-rmon Close shuts the sheet
+PASS 844x390-rmon no page errors
+PASS kata-932x430-rmoff reduced motion reads back off
+PASS kata-932x430-rmoff hint shown "Learn a kata in class with Sensei!"
+PASS kata-932x430-rmoff hint size>=12 (14)
+PASS kata-932x430-rmoff hint >=8 px inside the sheet (80)
+PASS kata-932x430-rmoff no text overlaps (none)
+PASS kata-932x430-rmoff all sheet text inside the sheet
+PASS kata-932x430-rmoff sheet inside view
+PASS kata-932x430-rmoff Close tap >=44 (96x44)
+PASS kata-932x430-rmoff Close label below the hint
+PASS kata-932x430-rmoff not crowded (text to 46% of sheet)
+PASS kata-932x430-rmoff Close shuts the sheet
+PASS 932x430-rmoff no page errors
+PASS kata-932x430-rmon reduced motion reads back on
+PASS kata-932x430-rmon hint shown "Learn a kata in class with Sensei!"
+PASS kata-932x430-rmon hint size>=12 (14)
+PASS kata-932x430-rmon hint >=8 px inside the sheet (80)
+PASS kata-932x430-rmon no text overlaps (none)
+PASS kata-932x430-rmon all sheet text inside the sheet
+PASS kata-932x430-rmon sheet inside view
+PASS kata-932x430-rmon Close tap >=44 (96x44)
+PASS kata-932x430-rmon Close label below the hint
+PASS kata-932x430-rmon not crowded (text to 46% of sheet)
+PASS kata-932x430-rmon Close shuts the sheet
 PASS 932x430-rmon no page errors

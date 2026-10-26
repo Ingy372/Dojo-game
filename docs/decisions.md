@@ -1365,3 +1365,7 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 ## Q-PREM-F11 QA fix — no accidental Home on a mash (2026-10-26)
 - QA: mashing through the KO sent the player Home in 7/8 runs (first pointerdown 100–300 ms after Screen 2).
 - Screen 2 now ignores every tap (shade and Head home) for 500 ms after it appears (`ARM_MS = 500`), timed on the wall clock with the tap's own `pointer.downTime`, so a tap made inside the window but handled a frame late is still ignored.
+
+### L-PREMIUM-a2 follow-up — kata cubby hint (2026-10-26)
+- Kata cubbies now use the shared kata-cubby hint "Learn a kata in class with Sensei!" instead of the stance fallback (stances unlock by their own sign-off since R-STANCE-d2).
+- The hint is read from `cubbies.kata-cubby`, which #355 added to the draft. content/hints/locked-hints.json is re-copied from main's draft, so it stays an exact copy (no second copy of the hint), and it picks up #355's reworded stance hints.

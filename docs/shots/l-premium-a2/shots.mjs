@@ -23,7 +23,7 @@ const measure = () => pg.evaluate(() => {
   return { panel, ts, view: { w: h.scale.width, h: h.scale.height } };
 });
 const cases = await pg.evaluate(() => { const h = window.game.scene.getScene('Home'); const cs = h.trophyCubbies(); const pick = (s) => cs.findIndex((c) => !c.earned && c.shelf === s); return { kata: pick('katas'), kick: pick('kicks'), self: pick('selfDefense') }; });
-for (const [name, idx] of Object.entries(cases)) {
+for (const [name, idx] of Object.entries(cases).filter(([n]) => !process.env.ONLY || process.env.ONLY === n)) {
   const tag = `${name}-${W}x${H}-rm${RM}`;
   ok(tag, `reduced motion reads back ${rm}`, rm === RM);
   if (idx < 0) { ok(tag, 'a locked cubby exists', false); continue; }

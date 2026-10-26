@@ -927,3 +927,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - 2026-10-26 L-PREMIUM-a2: locked Trophy Case cubbies show a one-line hint (content/hints/locked-hints.json). Tests in packages/sim/test/l-premium-a2-hints.test.ts; shots in docs/shots/l-premium-a2.
 ## Q-PREM-F11 QA fix (2026-10-26)
 - 500 ms tap guard on Screen 2; source test + shot check (mash inside the window stays, a tap after goes Home), 112 PASS, 0 FAIL at 4 sizes, RM on/off.
+- 2026-10-26 L-PREMIUM-a2: kata cubbies show "Learn a kata in class with Sensei!" (cubbies.kata-cubby); kata sheet shots re-run.

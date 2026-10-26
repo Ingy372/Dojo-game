@@ -9,7 +9,7 @@ import abilities from '../../../content/abilities/abilities.json';
 import hints from '../../../content/hints/locked-hints.json';
 import draft from '../../../drafts/content/hints/locked-hints.json';
 import { buildCubbies } from '../../../apps/client/src/ui/trophyCase';
-import { HINT_RULES, TROPHY_HINTS, hintAbilityId } from '../../../apps/client/src/ui/lockedHints';
+import { CUBBY_HINTS, HINT_RULES, TROPHY_HINTS, hintAbilityId, lockedHint } from '../../../apps/client/src/ui/lockedHints';
 import { BOARD_PAPER, contrast } from '../../../apps/client/src/ui/tokens';
 import { testContent } from './load-content';
 
@@ -22,8 +22,9 @@ const cubbiesFor = (profile: Parameters<typeof loadFeed>[0]) => {
 };
 
 describe('L-PREMIUM-a2 locked hints', () => {
-  it('the content copy matches the #333 draft', () => {
+  it('the content copy matches the draft (with #355\'s cubbies list)', () => {
     expect(hints).toEqual(draft);
+    expect(hints.cubbies).toEqual([expect.objectContaining({ id: 'kata-cubby', shelf: 'katas', hint: 'Learn a kata in class with Sensei!' })]);
   });
 
   it('every stance, strike and seal (but the Beginner\'s Stance) has a hint', () => {
@@ -38,18 +39,20 @@ describe('L-PREMIUM-a2 locked hints', () => {
       if (name !== 'Green') expect(locked.length).toBeGreaterThan(0);
       for (const c of locked) expect(c.hint, c.id).toBeTruthy();
       for (const c of cubbies.filter((x) => x.earned)) expect(c.hint, c.id).toBeUndefined();
+      for (const c of locked.filter((x) => x.shelf === 'katas')) expect(c.hint, c.id).toBe('Learn a kata in class with Sensei!');
     });
   }
 
-  it('kata cubbies fall back to the stance hint; past the end of a list the last hint is used', () => {
-    expect(hintAbilityId('stance', 0)).toBe('cat-stance');
-    expect(hintAbilityId('stance', 99)).toBe('horse-stance');
+  it('kata cubbies use the kata-cubby hint; past the end of a list the last hint is used', () => {
+    expect(hintAbilityId('stance', 0)).toBe('kata-cubby');
+    expect(hintAbilityId('stance', 99)).toBe('kata-cubby');
+    expect(lockedHint('stance', 3)).toBe('Learn a kata in class with Sensei!');
     expect(hintAbilityId('strike', 99)).toBe('quick-combo');
     expect(hintAbilityId('seal', 0, 'off-balance')).toBe('off-balance');
   });
 
   it('hints follow the rules: at most maxWords words, no banned word', () => {
-    for (const [id, h] of TROPHY_HINTS) {
+    for (const [id, h] of [...TROPHY_HINTS, ...CUBBY_HINTS]) {
       expect(h.split(/\s+/).length, id).toBeLessThanOrEqual(HINT_RULES.maxWords);
       for (const b of HINT_RULES.banned) expect(new RegExp(`\\b${b}\\b`, 'i').test(h), `${id}: ${b}`).toBe(false);
     }

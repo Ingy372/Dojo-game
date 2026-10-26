@@ -9,26 +9,29 @@ export type HintKind = 'stance' | 'strike' | 'seal';
 
 export const TROPHY_HINTS: ReadonlyMap<string, string> = new Map(hints.trophies.map((t) => [t.id, t.hint]));
 export const HINT_RULES = hints.rules;
+/** #355: hints for cubbies with no ability of their own, keyed by cubby id (kata-cubby). */
+export const CUBBY_HINTS: ReadonlyMap<string, string> = new Map(hints.cubbies.map((c) => [c.id, c.hint]));
 
 const ids = (list: readonly { id: string }[]) => list.map((x) => x.id);
-/** Ability ids each shelf kind can map to, in curriculum order. Katas skip the Beginner's and Open Leg stances. */
-const ORDER: Record<HintKind, readonly string[]> = {
-  stance: ids(abilities.stances).slice(2),
+/** Ability ids kicks and self-defense map to, in curriculum order. */
+const ORDER: Record<Exclude<HintKind, 'stance'>, readonly string[]> = {
   strike: ids(abilities.strikes),
   seal: ids(abilities.seals),
 };
 
 /**
- * The ability id a cubby's hint comes from: its own power if it has one, else the nth of its kind
- * (katas carry no power, so the nth kata falls back to the nth earnable stance's hint). Past the end
+ * The hint id a cubby uses: its own power if it has a hint, else for a kata (no power since
+ * R-STANCE-d2) the shared kata-cubby hint, else the nth kick or self-defense power. Past the end
  * of a list, the last one's hint is used (every hint of a kind says the same thing).
  */
 export function hintAbilityId(kind: HintKind, n: number, ownId?: string): string {
   if (ownId && TROPHY_HINTS.has(ownId)) return ownId;
+  if (kind === 'stance') return 'kata-cubby';
   const list = ORDER[kind];
   return list[Math.min(n, list.length - 1)];
 }
 
 export function lockedHint(kind: HintKind, n: number, ownId?: string): string | undefined {
-  return TROPHY_HINTS.get(hintAbilityId(kind, n, ownId));
+  const id = hintAbilityId(kind, n, ownId);
+  return TROPHY_HINTS.get(id) ?? CUBBY_HINTS.get(id);
 }
