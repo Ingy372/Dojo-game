@@ -15,6 +15,10 @@ describe('Q-PREM-F9 action button contrast', () => {
     ['STRIKE not ready', ACTION_COLORS.strike.dim, ACTION_LABEL.dim],
     ['VIRTUE ready', ACTION_COLORS.virtue.ready, ACTION_LABEL.dark],
     ['VIRTUE not ready', ACTION_COLORS.virtue.dim, ACTION_LABEL.dim],
+    ['DASH ready', ACTION_COLORS.dash.ready, ACTION_LABEL.light],
+    ['DASH not ready', ACTION_COLORS.dash.dim, ACTION_LABEL.dim],
+    ['STANCE ready', ACTION_COLORS.stance.ready, ACTION_LABEL.light],
+    ['STANCE not ready', ACTION_COLORS.stance.dim, ACTION_LABEL.dim],
   ];
   for (const [name, face, label] of pairs) it(`${name} label is at least 4.5:1`, () => expect(contrast(face, hex(label))).toBeGreaterThanOrEqual(4.5));
 
@@ -28,7 +32,11 @@ describe('Q-PREM-F9 action button contrast', () => {
   it('ActionButtons uses the tokens (no old faces) and no longer dims by see-through alpha', () => {
     const t = src('input/ActionButtons.ts');
     expect(t).not.toMatch(/0x3a7bd5|0xd5713a|0xb08a3c|0xffb02e|0x5a4a44|0x5a4a34/);
-    expect(t).not.toMatch(/(counter|strike|virtue)\.container\.setAlpha\([^1]/);
+    expect(t).not.toMatch(/(counter|strike|virtue|dash|stance)\.container\.setAlpha\([^1]/);
+  });
+
+  it('a missed Counter lockout draws a refill ring', () => {
+    expect(src('input/ActionButtons.ts')).toMatch(/p\.counterLockout \/ COMBAT\.counter\.missLockoutTicks/);
   });
 });
 
@@ -46,5 +54,8 @@ describe('Q-PREM-F9 Dojo top buttons are at least 44 px tall', () => {
     expect(MIN_TAP).toBe(44);
     expect(t()).toMatch(/const DECOR_TOP = 60;/);
     expect(t()).toMatch(/const ROW2_Y = 60;/);
+  });
+  it('the Decorate camera keeps the top wall below the 60 px bar', () => {
+    expect(t()).toMatch(/this\.mode === 'decorate' \? DECOR_TOP : TOP\) \/ t/);
   });
 });

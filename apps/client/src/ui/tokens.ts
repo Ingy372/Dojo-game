@@ -229,5 +229,7 @@ export const ACTION_COLORS = {
   counter: { ready: 0x2f74d3, flash: 0x6fa8ff, dim: 0x2e3c55 },
   strike: { ready: 0xb75a27, dim: 0x5a4a44 },
   virtue: { ready: 0xffb02e, dim: 0x5a4a34 },
+  dash: { ready: 0x277a56, dim: 0x2f4a3e },
+  stance: { ready: 0x3a5a8a, dim: 0x34405a },
 } as const;
 export const ACTION_LABEL = { light: '#ffffff', dark: '#14121c', dim: '#d8d2c8' } as const;

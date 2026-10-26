@@ -1532,7 +1532,9 @@ export class DojoScene extends Phaser.Scene {
     const clamp = (v: number, lo: number, hi: number) => (lo > hi ? (lo + hi) / 2 : Math.max(lo, Math.min(hi, v)));
     const bottom = (this.mode === 'decorate' ? TRAY : 0) / t;
     const tx = clamp(target.x, viewW / 2, room.width - viewW / 2);
-    const ty = clamp(target.y, viewH / 2 - TOP / t, room.height + bottom - viewH / 2);
+    // Q-PREM-F9: Decorate's top bar is 60 tall, so the top wall (and its decorations) stays below it.
+    const top = (this.mode === 'decorate' ? DECOR_TOP : TOP) / t;
+    const ty = clamp(target.y, viewH / 2 - top, room.height + bottom - viewH / 2);
     this.cam = { x: this.cam.x + (tx - this.cam.x) * k, y: this.cam.y + (ty - this.cam.y) * k };
     this.offX = width / 2 - this.cam.x * t;
     this.offY = height / 2 - this.cam.y * t;
