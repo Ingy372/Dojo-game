@@ -1,0 +1,120 @@
+texts while prompt up: [{"s":"Dojo","t":"BOARD","x":334,"y":-132,"d":0},{"s":"Dojo","t":"Home Dojo","x":61,"y":20,"d":20},{"s":"Dojo","t":"✓ Spotless","x":157,"y":22,"d":20},{"s":"Dojo","t":"Board","x":615,"y":24,"d":20},{"s":"Dojo","t":"Decorate","x":517,"y":24,"d":20},{"s":"Dojo","t":"Look","x":424,"y":24,"d":20},{"s":"Dojo","t":"Settings","x":336,"y":24,"d":20},{"s":"Dojo","t":"Bow","x":334,"y":248,"d":80}]
+dojo 667x375 tap "Home Dojo" @61,20: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "✓ Spotless" @157,22: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "Board" @615,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "Decorate" @517,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "Look" @424,24: Bow pulse max scale 1.10 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "Settings" @336,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "top-right corner" @637,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "top-left corner" @30,24: Bow pulse max scale 1.11 -> PULSED; prompt still up; texts 12->12
+(b) dojo 667x375 rm=off: 8/8 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Dojo","t":"BOARD","x":334,"y":-132,"d":0},{"s":"Dojo","t":"Home Dojo","x":61,"y":20,"d":20},{"s":"Dojo","t":"✓ Spotless","x":157,"y":22,"d":20},{"s":"Dojo","t":"Board","x":615,"y":24,"d":20},{"s":"Dojo","t":"Decorate","x":517,"y":24,"d":20},{"s":"Dojo","t":"Look","x":424,"y":24,"d":20},{"s":"Dojo","t":"Settings","x":336,"y":24,"d":20},{"s":"Dojo","t":"Bow","x":334,"y":248,"d":80}]
+dojo 667x375 tap "Home Dojo" @61,20: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "✓ Spotless" @157,22: Bow pulse max scale 1.11 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "Board" @615,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "Decorate" @517,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "Look" @424,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "Settings" @336,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "top-right corner" @637,24: Bow pulse max scale 1.11 -> PULSED; prompt still up; texts 12->12
+dojo 667x375 tap "top-left corner" @30,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+(b) dojo 667x375 rm=on: 8/8 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Dojo","t":"BOARD","x":334,"y":-113,"d":0},{"s":"Dojo","t":"Home Dojo","x":61,"y":20,"d":20},{"s":"Dojo","t":"✓ Spotless","x":157,"y":22,"d":20},{"s":"Dojo","t":"Board","x":615,"y":24,"d":20},{"s":"Dojo","t":"Decorate","x":517,"y":24,"d":20},{"s":"Dojo","t":"Look","x":424,"y":24,"d":20},{"s":"Dojo","t":"Settings","x":336,"y":24,"d":20},{"s":"Dojo","t":"Bow","x":334,"y":211,"d":80}]
+dojo 667x320 tap "Home Dojo" @61,20: Bow pulse max scale 1.10 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "✓ Spotless" @157,22: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "Board" @615,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "Decorate" @517,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "Look" @424,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "Settings" @336,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "top-right corner" @637,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "top-left corner" @30,24: Bow pulse max scale 1.10 -> PULSED; prompt still up; texts 12->12
+(b) dojo 667x320 rm=off: 8/8 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Dojo","t":"BOARD","x":334,"y":-113,"d":0},{"s":"Dojo","t":"Home Dojo","x":61,"y":20,"d":20},{"s":"Dojo","t":"✓ Spotless","x":157,"y":22,"d":20},{"s":"Dojo","t":"Board","x":615,"y":24,"d":20},{"s":"Dojo","t":"Decorate","x":517,"y":24,"d":20},{"s":"Dojo","t":"Look","x":424,"y":24,"d":20},{"s":"Dojo","t":"Settings","x":336,"y":24,"d":20},{"s":"Dojo","t":"Bow","x":334,"y":211,"d":80}]
+dojo 667x320 tap "Home Dojo" @61,20: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "✓ Spotless" @157,22: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "Board" @615,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "Decorate" @517,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "Look" @424,24: Bow pulse max scale 1.11 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "Settings" @336,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "top-right corner" @637,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 667x320 tap "top-left corner" @30,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+(b) dojo 667x320 rm=on: 8/8 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Dojo","t":"BOARD","x":422,"y":-137,"d":0},{"s":"Dojo","t":"Home Dojo","x":61,"y":20,"d":20},{"s":"Dojo","t":"✓ Spotless","x":157,"y":22,"d":20},{"s":"Dojo","t":"Board","x":792,"y":24,"d":20},{"s":"Dojo","t":"Decorate","x":694,"y":24,"d":20},{"s":"Dojo","t":"Look","x":601,"y":24,"d":20},{"s":"Dojo","t":"Settings","x":513,"y":24,"d":20},{"s":"Dojo","t":"Bow","x":422,"y":257,"d":80}]
+dojo 844x390 tap "Home Dojo" @61,20: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "✓ Spotless" @157,22: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "Board" @792,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "Decorate" @694,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "Look" @601,24: Bow pulse max scale 1.11 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "Settings" @513,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "top-right corner" @814,24: Bow pulse max scale 1.11 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "top-left corner" @30,24: Bow pulse max scale 1.08 -> PULSED; prompt still up; texts 12->12
+(b) dojo 844x390 rm=off: 8/8 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Dojo","t":"BOARD","x":422,"y":-137,"d":0},{"s":"Dojo","t":"Home Dojo","x":61,"y":20,"d":20},{"s":"Dojo","t":"✓ Spotless","x":157,"y":22,"d":20},{"s":"Dojo","t":"Board","x":792,"y":24,"d":20},{"s":"Dojo","t":"Decorate","x":694,"y":24,"d":20},{"s":"Dojo","t":"Look","x":601,"y":24,"d":20},{"s":"Dojo","t":"Settings","x":513,"y":24,"d":20},{"s":"Dojo","t":"Bow","x":422,"y":257,"d":80}]
+dojo 844x390 tap "Home Dojo" @61,20: Bow pulse max scale 1.09 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "✓ Spotless" @157,22: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "Board" @792,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "Decorate" @694,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "Look" @601,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "Settings" @513,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "top-right corner" @814,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 844x390 tap "top-left corner" @30,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+(b) dojo 844x390 rm=on: 8/8 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Dojo","t":"BOARD","x":466,"y":-152,"d":0},{"s":"Dojo","t":"Home Dojo","x":61,"y":20,"d":20},{"s":"Dojo","t":"✓ Spotless","x":157,"y":22,"d":20},{"s":"Dojo","t":"Board","x":880,"y":24,"d":20},{"s":"Dojo","t":"Decorate","x":782,"y":24,"d":20},{"s":"Dojo","t":"Look","x":689,"y":24,"d":20},{"s":"Dojo","t":"Settings","x":601,"y":24,"d":20},{"s":"Dojo","t":"Bow","x":466,"y":284,"d":80}]
+dojo 932x430 tap "Home Dojo" @61,20: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "✓ Spotless" @157,22: Bow pulse max scale 1.09 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "Board" @880,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "Decorate" @782,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "Look" @689,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "Settings" @601,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "top-right corner" @902,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "top-left corner" @30,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+(b) dojo 932x430 rm=off: 8/8 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Dojo","t":"BOARD","x":466,"y":-152,"d":0},{"s":"Dojo","t":"Home Dojo","x":61,"y":20,"d":20},{"s":"Dojo","t":"✓ Spotless","x":157,"y":22,"d":20},{"s":"Dojo","t":"Board","x":880,"y":24,"d":20},{"s":"Dojo","t":"Decorate","x":782,"y":24,"d":20},{"s":"Dojo","t":"Look","x":689,"y":24,"d":20},{"s":"Dojo","t":"Settings","x":601,"y":24,"d":20},{"s":"Dojo","t":"Bow","x":466,"y":284,"d":80}]
+dojo 932x430 tap "Home Dojo" @61,20: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "✓ Spotless" @157,22: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "Board" @880,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "Decorate" @782,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "Look" @689,24: Bow pulse max scale 1.09 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "Settings" @601,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "top-right corner" @902,24: Bow pulse max scale 1.09 -> PULSED; prompt still up; texts 12->12
+dojo 932x430 tap "top-left corner" @30,24: Bow pulse max scale 1.10 -> PULSED; prompt still up; texts 12->12
+(b) dojo 932x430 rm=on: 8/8 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Game","t":"Room 1 of 3  ·  Wave 1 o","x":556,"y":25,"d":0},{"s":"Game","t":"Bow","x":334,"y":248,"d":80}]
+floor 667x375 tap "Room 1 of 3  ·  Wave 1 o" @556,25: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+floor 667x375 tap "top-right corner" @637,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+floor 667x375 tap "top-left corner" @30,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+(b) floor 667x375 rm=off: 3/3 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Game","t":"Room 1 of 3  ·  Wave 1 o","x":556,"y":25,"d":0},{"s":"Game","t":"Bow","x":334,"y":248,"d":80}]
+floor 667x375 tap "Room 1 of 3  ·  Wave 1 o" @556,25: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+floor 667x375 tap "top-right corner" @637,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+floor 667x375 tap "top-left corner" @30,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+(b) floor 667x375 rm=on: 3/3 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Game","t":"Room 1 of 3  ·  Wave 1 o","x":556,"y":25,"d":0},{"s":"Game","t":"Bow","x":334,"y":211,"d":80}]
+floor 667x320 tap "Room 1 of 3  ·  Wave 1 o" @556,25: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+floor 667x320 tap "top-right corner" @637,24: Bow pulse max scale 1.11 -> PULSED; prompt still up; texts 10->10
+floor 667x320 tap "top-left corner" @30,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+(b) floor 667x320 rm=off: 3/3 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Game","t":"Room 1 of 3  ·  Wave 1 o","x":556,"y":25,"d":0},{"s":"Game","t":"Bow","x":334,"y":211,"d":80}]
+floor 667x320 tap "Room 1 of 3  ·  Wave 1 o" @556,25: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+floor 667x320 tap "top-right corner" @637,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+floor 667x320 tap "top-left corner" @30,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+(b) floor 667x320 rm=on: 3/3 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Game","t":"Room 1 of 3  ·  Wave 1 o","x":733,"y":25,"d":0},{"s":"Game","t":"Bow","x":422,"y":257,"d":80}]
+floor 844x390 tap "Room 1 of 3  ·  Wave 1 o" @733,25: Bow pulse max scale 1.10 -> PULSED; prompt still up; texts 10->10
+floor 844x390 tap "top-right corner" @814,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+floor 844x390 tap "top-left corner" @30,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+(b) floor 844x390 rm=off: 3/3 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Game","t":"Room 1 of 3  ·  Wave 1 o","x":733,"y":25,"d":0},{"s":"Game","t":"Bow","x":422,"y":257,"d":80}]
+floor 844x390 tap "Room 1 of 3  ·  Wave 1 o" @733,25: Bow pulse max scale 1.10 -> PULSED; prompt still up; texts 10->10
+floor 844x390 tap "top-right corner" @814,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+floor 844x390 tap "top-left corner" @30,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+(b) floor 844x390 rm=on: 3/3 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Game","t":"Room 1 of 3  ·  Wave 1 o","x":821,"y":25,"d":0},{"s":"Game","t":"Bow","x":466,"y":284,"d":80}]
+floor 932x430 tap "Room 1 of 3  ·  Wave 1 o" @821,25: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+floor 932x430 tap "top-right corner" @902,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+floor 932x430 tap "top-left corner" @30,24: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+(b) floor 932x430 rm=off: 3/3 top-bar taps pulsed Bow
+texts while prompt up: [{"s":"Game","t":"Room 1 of 3  ·  Wave 1 o","x":821,"y":25,"d":0},{"s":"Game","t":"Bow","x":466,"y":284,"d":80}]
+floor 932x430 tap "Room 1 of 3  ·  Wave 1 o" @821,25: Bow pulse max scale 1.12 -> PULSED; prompt still up; texts 10->10
+floor 932x430 tap "top-right corner" @902,24: Bow pulse max scale 1.08 -> PULSED; prompt still up; texts 10->10
+floor 932x430 tap "top-left corner" @30,24: Bow pulse max scale 1.09 -> PULSED; prompt still up; texts 10->10
+(b) floor 932x430 rm=on: 3/3 top-bar taps pulsed Bow

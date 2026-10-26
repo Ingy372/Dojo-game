@@ -871,3 +871,15 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - verify-ui-shots pass `docs/shots/q-prem-f4/f4-verify.mjs` (log `verify-log.txt`, shots `verify-{fade,card}-{start,mid,end}-*.png`): it freezes the game loop on the first frame of the loss fade and of the card fade-in, reads Reduced motion back before each shot. 274 PASS, 14 FAIL, all on the existing run-over card: Try again text contrast 3.12:1 (all sizes) and card buttons 42 px tall at 667x320. Not changed here (card belongs with F5).
 
 - Q-PREM-F4 QA fix: Sensei bubble cleared on a natural loss. `docs/shots/q-prem-f4/f4-natural.mjs` checks a natural standard-difficulty loss with a Sensei bubble up at all 4 sizes × Reduced motion on/off (log in natural-log.txt).
+## Q-PREM-F5 — Back home only (2026-10-26)
+**Done**
+- The "Good effort!" card after a lost run shows one button, Back home, at least 44 px tall at every size.
+- verify-ui-shots `docs/shots/q-prem-f5/f5-verify.mjs` (log `verify-log.txt`, shots `card-{start,mid,end}-*.png`) at 844x390, 667x375, 667x320, 932x430, Reduced motion on/off (read back before each shot): 216 PASS, 0 FAIL, including one Back home tap going Home in all 8 runs.
+- npm test 911 passed, 3 skipped; typecheck and build pass.
+## Q-PREM-F1 — First-tap bow and arrival tap-through (2026-10-26)
+**Done**
+- "Tap to continue" at the end of the dojo arrival can't move the hero or start a run: a press echoed within 450 ms after the last card is dropped (DojoScene). 40/40 at 667x375, 667x320, 844x390 and 932x430, Reduced motion on and off; it was 30/36 on main.
+- Bow: 10/10 single taps bowed on the dojo entry and the floor at 667x375. Top-bar taps while the prompt is up pulse Bow and open nothing, at all 4 sizes (dojo 8/8, floor 3/3). Both already held on main, so bow.ts is unchanged.
+- npm test 911 passed, 3 skipped; typecheck and build pass. Shots and touch scripts: docs/shots/q-prem-f1/.
+**Next**
+- Tester: retest (c) on a real phone. Real-phone repro needed if a bow tap still misses.
