@@ -877,7 +877,9 @@ export class HomeScene extends Phaser.Scene {
 
     // Again!: start another climb. Q-PREM-F6: pinned to the bottom of the visible panel (on the
     // panel, not the scrolling contents), so it is never cut off on a short phone.
-    const pin = pinnedAgain(L.again, ch, visibleH - 2 * (6 + S1));
+    // The visible contents end 6 + S1 above the scroll's bottom (rod and pad, both ends), and the
+    // scroll window's bottom is 4 above the panel's: so the window ends 2 * (6 + S1) - 4 below them.
+    const pin = pinnedAgain(L.again, ch, visibleH - 2 * (6 + S1), 2 * (6 + S1) - 4);
     this.runFooter = pin.footer;
     const again = pin.again;
     woodSkin(this, button(this, { ...again, x: X(again.x), y: Y(again.y), label: LASTRUN_WORDS.again, color: 0xd5713a, size: TYPE.title, onTap: () => this.enterTower() }, this.panel ?? this.ui), again.w, again.h);

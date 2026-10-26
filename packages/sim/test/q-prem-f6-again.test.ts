@@ -24,7 +24,8 @@ describe('Q-PREM-F6 Again! is never cut off on the Last run panel', () => {
       const ch = h - ROD;
       const visible = inner - ROD;
       const L = lastRunLayout(z.cw, ch, 9, 5, 3);
-      const pin = pinnedAgain(L.again, ch, visible);
+      // The scroll window's bottom is 16 below the visible contents' bottom (HomeScene: panel - 4 vs rods).
+      const pin = pinnedAgain(L.again, ch, visible, 16);
       // Fully visible: top at or below 0, bottom at or above the visible bottom.
       expect(pin.again.y).toBeGreaterThanOrEqual(0);
       expect(pin.again.y + pin.again.h).toBeLessThanOrEqual(visible);
@@ -34,9 +35,11 @@ describe('Q-PREM-F6 Again! is never cut off on the Last run panel', () => {
       expect(z.cw - (pin.again.x + pin.again.w)).toBeGreaterThanOrEqual(0);
       if (ch > visible) {
         // The scroll window ends S1 above Again!, and scrolling all the way shows the last row there.
-        expect(pin.footer).toBe(pin.again.h + S1);
-        expect(visible - pin.footer).toBeLessThanOrEqual(pin.again.y);
-        expect(ch - pin.scrollMax).toBe(visible - pin.footer);
+        expect(pin.footer).toBe(16 + pin.again.h + S1);
+        // The window's bottom (visible + 16 - footer) is S1 above Again!'s top.
+        expect(visible + 16 - pin.footer).toBe(pin.again.y - S1);
+        // Scrolled all the way, the last row ends 16 above the window's bottom, as before.
+        expect(ch - pin.scrollMax).toBe(visible + 16 - pin.footer - 16);
       } else {
         expect(pin.footer).toBe(0);
         expect(pin.scrollMax).toBe(0);
@@ -48,12 +51,12 @@ describe('Q-PREM-F6 Again! is never cut off on the Last run panel', () => {
   it('667x320 is the short one: the contents scroll and Again! stays put', () => {
     const visible = 320 - 54 - 8 - 20 - ROD;
     const ch = 277 - ROD;
-    expect(pinnedAgain(lastRunLayout(375, ch, 9, 5, 3).again, ch, visible).scrollMax).toBeGreaterThan(0);
+    expect(pinnedAgain(lastRunLayout(375, ch, 9, 5, 3).again, ch, visible, 16).scrollMax).toBeGreaterThan(0);
     expect(S2).toBe(8);
   });
 
   it('HomeScene draws Again! on the panel (not the scrolling contents) and passes the footer to the scroll', () => {
-    expect(src).toMatch(/pinnedAgain\(L\.again, ch, visibleH/);
+    expect(src).toMatch(/pinnedAgain\(L\.again, ch, visibleH - 2 \* \(6 \+ S1\), /);
     expect(src).toMatch(/onTap: \(\) => this\.enterTower\(\) \}, this\.panel \?\? this\.ui\)/);
     expect(src).toMatch(/makePanelScroll\(content, h > inner \? h - inner \+ this\.runFooter : 0, this\.runFooter\)/);
   });

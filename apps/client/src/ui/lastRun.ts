@@ -225,11 +225,12 @@ export interface PinnedAgain {
 /**
  * Q-PREM-F6: Again! sits at the bottom of the visible panel and never scrolls away. When the
  * contents (contentH) are taller than what shows (visibleH), the scroll window ends S1 above Again!
- * and the contents can scroll far enough to show their last row in that window.
+ * and the contents can scroll far enough to show their last row in that window. `edge` is how far
+ * the scroll window's bottom sits below the visible contents' bottom (the rolled end of the scroll).
  */
-export function pinnedAgain(again: Box, contentH: number, visibleH: number): PinnedAgain {
+export function pinnedAgain(again: Box, contentH: number, visibleH: number, edge = 0): PinnedAgain {
   const scrolls = contentH > visibleH;
   const y = Math.min(contentH, visibleH) - again.h;
-  const footer = scrolls ? again.h + S1 : 0;
+  const footer = scrolls ? edge + again.h + S1 : 0;
   return { again: { ...again, y }, footer, scrollMax: scrolls ? contentH - visibleH + footer : 0 };
 }
