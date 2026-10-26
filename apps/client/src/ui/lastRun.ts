@@ -211,3 +211,25 @@ export function newForYou<C extends { id: string; earned: boolean }>(cubbies: re
   if (!seen) return null;
   return cubbies.find((c) => c.earned && !seen.includes(c.id)) ?? null;
 }
+
+/** Q-PREM-F6: where Again! goes, and how the Last run contents scroll above it. */
+export interface PinnedAgain {
+  /** Again! in content coordinates; it is drawn on the panel, not the scrolling contents. */
+  again: Box;
+  /** Height kept clear at the bottom of the scroll window (0 when nothing scrolls). */
+  footer: number;
+  /** How far the contents scroll (0 when they fit). */
+  scrollMax: number;
+}
+
+/**
+ * Q-PREM-F6: Again! sits at the bottom of the visible panel and never scrolls away. When the
+ * contents (contentH) are taller than what shows (visibleH), the scroll window ends S1 above Again!
+ * and the contents can scroll far enough to show their last row in that window.
+ */
+export function pinnedAgain(again: Box, contentH: number, visibleH: number): PinnedAgain {
+  const scrolls = contentH > visibleH;
+  const y = Math.min(contentH, visibleH) - again.h;
+  const footer = scrolls ? again.h + S1 : 0;
+  return { again: { ...again, y }, footer, scrollMax: scrolls ? contentH - visibleH + footer : 0 };
+}
