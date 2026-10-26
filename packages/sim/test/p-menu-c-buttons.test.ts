@@ -50,10 +50,11 @@ describe('P-MENU-c: every swapped button is at least 44 pt (button() also pads t
       }
     });
   }
-  it('Training Board left column: ◀ Dojo 96x44, ENTER 52, Practice room 44', () => {
+  it('Training Board left column: ◀ Dojo 96x44, ENTER 52 (44 on a short screen), Practice room 44', () => {
     const home = method(raw('/scenes/HomeScene.ts'), 'renderShell');
     expect(home).toMatch(/96, 44, '◀ Dojo'/);
-    expect(home).toMatch(/leftW, 52, 'ENTER THE TOWER'/);
+    expect(home).toMatch(/const enterH = short \? MIN_TAP : 52;/);
+    expect(home).toMatch(/leftW, enterH, 'ENTER THE TOWER'/);
     expect(home).toMatch(/leftW, 44, 'Practice room'/);
   });
 });
