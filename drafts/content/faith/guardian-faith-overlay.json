@@ -197,6 +197,79 @@
         }
       ],
       "notes": "C-STORY-a: the main story line stays plain; this verse shows with screen 15 when the faith layer is on. KJV checked against bible-api.com (translation=kjv) on 2026-10-26. KJV is a placeholder until Jay answers sign wording vs KJV."
+    },
+    {
+      "faithOverlayKey": "gate-green-screen-16",
+      "story": "drafts/content/story/gate-scenes.json",
+      "screen": 16,
+      "speaker": "sensei",
+      "theme": "Facing fear with trust",
+      "verses": [
+        {
+          "reference": "Psalms 56:3",
+          "text": "What time I am afraid, I will trust in thee."
+        }
+      ],
+      "notes": "C-STORY-e: the story line stays plain; the verse shows with this screen when the faith layer is on. KJV checked against bible-api.com (translation=kjv) on 2026-10-26; same verse as story/mystery-ladder.json. KJV is a placeholder until Jay answers sign wording vs KJV."
+    },
+    {
+      "faithOverlayKey": "gate-blue-screen-20",
+      "story": "drafts/content/story/gate-scenes.json",
+      "screen": 20,
+      "speaker": "sensei",
+      "theme": "Never alone in deep water",
+      "verses": [
+        {
+          "reference": "Isaiah 43:2 (part)",
+          "text": "When thou passest through the waters, I will be with thee; and through the rivers, they shall not overflow thee:",
+          "partial": true
+        }
+      ],
+      "notes": "C-STORY-e: the story line stays plain; the verse shows with this screen when the faith layer is on. KJV checked against bible-api.com (translation=kjv) on 2026-10-26; same verse as story/mystery-ladder.json. KJV is a placeholder until Jay answers sign wording vs KJV."
+    },
+    {
+      "faithOverlayKey": "gate-red-screen-24",
+      "story": "drafts/content/story/gate-scenes.json",
+      "screen": 24,
+      "speaker": "sensei",
+      "theme": "A shield that helps",
+      "verses": [
+        {
+          "reference": "Psalms 28:7 (part)",
+          "text": "The LORD is my strength and my shield; my heart trusted in him, and I am helped:",
+          "partial": true
+        }
+      ],
+      "notes": "C-STORY-e: the story line stays plain; the verse shows with this screen when the faith layer is on. KJV checked against bible-api.com (translation=kjv) on 2026-10-26; same verse as story/mystery-ladder.json. KJV is a placeholder until Jay answers sign wording vs KJV."
+    },
+    {
+      "faithOverlayKey": "gate-brown-screen-32",
+      "story": "drafts/content/story/gate-scenes.json",
+      "screen": 32,
+      "speaker": "sensei",
+      "theme": "A lamp for every student's path",
+      "verses": [
+        {
+          "reference": "Psalms 119:105",
+          "text": "Thy word is a lamp unto my feet, and a light unto my path."
+        }
+      ],
+      "notes": "C-STORY-e: the story line stays plain; the verse shows with this screen when the faith layer is on. KJV checked against bible-api.com (translation=kjv) on 2026-10-26; same verse as story/mystery-ladder.json. KJV is a placeholder until Jay answers sign wording vs KJV."
+    },
+    {
+      "faithOverlayKey": "gate-brown-black-screen-35",
+      "story": "drafts/content/story/gate-scenes.json",
+      "screen": 35,
+      "speaker": "sensei",
+      "theme": "Watching the road for a friend",
+      "verses": [
+        {
+          "reference": "Luke 15:20 (part)",
+          "text": "But when he was yet a great way off, his father saw him, and had compassion, and ran, and fell on his neck, and kissed him.",
+          "partial": true
+        }
+      ],
+      "notes": "C-STORY-e: the story line stays plain; the verse shows with this screen when the faith layer is on. KJV checked against bible-api.com (translation=kjv) on 2026-10-26; same verse as story/mystery-ladder.json. KJV is a placeholder until Jay answers sign wording vs KJV."
     }
   ]
 }
