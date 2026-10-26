@@ -906,3 +906,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 **Next**
 - Tester: beat the Floor Keeper on a fresh save (moment plays), then again (normal clear). Q-PREM-GRADE next.
 - Q-PREM-F9 QA fix: DASH/STANCE solid dim faces (6.44:1 / 6.89:1), Counter lockout ring, Decorate wall row clear of the 60 px bar. verify-ui-shots 656 PASS, 0 FAIL (4 sizes × Reduced motion on/off).
+## R-PREMIUM-b3 (2026-10-26)
+- 13 sound events play CC0 files (20 files plus licences, 349 KB) with per-file gains from `tools/audio-sfx/build.mjs`; the rest stay made in code, and each file event falls back to code. "perfect" is now `greatCounter()`. Loudness at the speakers: all peaks −7 dBFS or lower, 0 errors (docs/shots/r-premium-b3/loudness.txt). Hands-on: 80 real taps in training, files played for hit, dash and insight, 0 missing files, 0 errors (hands-on.txt). Test: packages/sim/test/r-premium-b3-sfx.test.ts.
+**Next**
+- Jay: listen on the preview link before merge. Decide whether something should call the level-up sound.

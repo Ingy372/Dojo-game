@@ -1194,7 +1194,7 @@ export class GameScene extends Phaser.Scene {
         case 'perfectCounter': {
           if (ev.playerId === this.me) this.tutorialDid('counter');
           const p = this.world.players[ev.playerId];
-          sfx.perfect();
+          sfx.greatCounter();
           this.heroDo('counter', 8); // the counter punch
           this.impact(FEEL.perfect);
           this.flashScreen(0xffffff, 0.55, 220);
