@@ -210,22 +210,29 @@ def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | 
     return {'kind': 'static', 'sprites': sprites}
 
 
-def load_ui(packer: Packer, json_path: str, only: list[str] | None) -> dict:
+def load_ui(packer: Packer, json_path: str, only: list[str] | None, merge: list[str] | None = None) -> dict:
     """P-MENU2-i: menu art (A-MENU2). Packs each sprite's @2x file untrimmed, so 9-slice edges stay
-    exact, and keeps its 1x size, nineSlice [t, r, b, l] (1x) and shadowMargin. Drawn at 0.5 scale."""
-    d = json.load(open(json_path))
-    base = os.path.dirname(json_path)
+    exact, and keeps its 1x size, nineSlice [t, r, b, l] (1x) and shadowMargin. Drawn at 0.5 scale.
+    A-LEGENDARY-wire: `merge` adds sprites from more sheets in the same format (e.g. the Legendary
+    frame); a name in two sheets stops the import. A sheet's `slice` is read as nineSlice."""
     sprites = {}
-    for name, s in d['sprites'].items():
-        if only and name not in only:
-            continue
-        stem, ext = os.path.splitext(s['file'])
-        im = Image.open(os.path.join(base, stem + '@2x' + ext)).convert('RGBA')
-        entry = {'frame': packer.add(im, trim=False), 'size': s['size']}
-        for k in ('nineSlice', 'shadowMargin'):
-            if k in s:
-                entry[k] = s[k]
-        sprites[name] = entry
+    for path in [json_path, *(merge or [])]:
+        d = json.load(open(path))
+        base = os.path.dirname(path)
+        for name, s in d['sprites'].items():
+            if only and name not in only:
+                continue
+            if name in sprites:
+                raise SystemExit(f'{path}: {name} is already in another sheet')
+            stem, ext = os.path.splitext(s['file'])
+            im = Image.open(os.path.join(base, stem + '@2x' + ext)).convert('RGBA')
+            entry = {'frame': packer.add(im, trim=False), 'size': s['size']}
+            if 'slice' in s and 'nineSlice' not in s:
+                entry['nineSlice'] = s['slice']
+            for k in ('nineSlice', 'shadowMargin'):
+                if k in s:
+                    entry[k] = s[k]
+            sprites[name] = entry
     missing = sorted(set(only or []) - set(sprites))
     if missing:
         raise SystemExit(f'{json_path}: not in the source: {missing}')
@@ -252,7 +259,7 @@ def main() -> None:
                                                     src.get('layers'),
                                                     [rel(p) for p in src.get('mergeAnimations', [])])
             elif src['type'] == 'ui':
-                entries[src['id']] = load_ui(packer, path, src.get('only'))
+                entries[src['id']] = load_ui(packer, path, src.get('only'), [rel(p) for p in src.get('mergeSprites', [])])
             else:
                 entries[src['id']] = load_static(packer, path, scale, src.get('only'))
         pages = packer.pack()
