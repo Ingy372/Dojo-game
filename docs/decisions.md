@@ -1355,7 +1355,15 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - **Formats and size:** the files ship as they came (.ogg and .wav, no conversion), 348,564 bytes in all.
 - **Level up has no caller yet:** there is no Celebrations level-up event in the code. `sfx.levelUp()` now plays STEEL00, but nothing calls it; wiring it (for example to the Home screen's levels gained) is a separate choice for Jay.
 - **Phones:** iOS Safari before 17.4 may not decode .ogg; those sounds then fall back to the code sound, the same as the music today.
+## Q-PREM-F11 — KO tap skip and Head home size (2026-10-26)
+- A tap on KO Screen 1 (after the 300 ms mash guard) now calls the sim's `skipDown`, which sets `downTicks` to 1, so `playerOut` fires on the next tick and Screen 2 shows at once. Before this, the tap only skipped the client wait, and the sim's 30 down ticks (about 1.75 s) still held Screen 2 back. `skipDown` does nothing in the practice room (`respawnEnemies`) or when the player isn't down.
+- The Screen 2 fade stays 260 ms, and 0 with Reduced motion.
+- The Head home button is `max(48, min(52, height*0.13))` tall, so it is never under 48 px; it is 48 at 667x320.
 ## Q-PREM-TRY fix — keep-practicing line (2026-10-26)
 - QA found play continues after the retry line (GameScene.ts guideDone -> senseiDone only shows the line; world.ts stepGuide just moves to the next hint), so "Let's rest at the dojo." didn't fit. The 10 lessons now say "Nice work. Let's keep practicing." (Manager's call; no 'try again' wording). lesson-counter-guided unchanged.
 - lesson-counter-guided's retry is now "So close! Let's keep practicing." (the guided Counter repeats after it); no lesson says 'try again'.
 - lesson-counter-guided's retry now matches the other 10: "Nice work. Let's keep practicing." (all 11 share it); no lesson says 'So close' or 'try again'.
+
+## Q-PREM-F11 QA fix — no accidental Home on a mash (2026-10-26)
+- QA: mashing through the KO sent the player Home in 7/8 runs (first pointerdown 100–300 ms after Screen 2).
+- Screen 2 now ignores every tap (shade and Head home) for 500 ms after it appears (`ARM_MS = 500`), timed on the wall clock with the tap's own `pointer.downTime`, so a tap made inside the window but handled a frame late is still ignored.

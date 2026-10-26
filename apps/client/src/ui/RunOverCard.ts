@@ -5,8 +5,12 @@ import { KO, keptText } from '../game/knockout';
 import { reducedMotion } from '../game/motion';
 import { GREEN } from './tokens';
 
-/** Taps are ignored for a moment after the card appears, so a tap meant for the fight doesn't press a button. */
-const ARM_MS = 600;
+/**
+ * Q-PREM-F11 fix: every tap on Screen 2 (the shade and Head home) is ignored for 500 ms after it
+ * appears, so a kid mashing through the knock-out doesn't go Home by accident. Wall clock, not the
+ * scene clock, so the guard holds whatever the scene's time is doing.
+ */
+export const ARM_MS = 500;
 
 /**
  * B-MASHER-d1 Screen 2, after a knock-out or when play time ends (M7-P9): what they kept,
@@ -25,7 +29,7 @@ export function keptCard(
   const { width, height } = view(scene);
   const small = height < 420;
   const cardW = Math.min(440, width - 40);
-  const btnH = Math.max(44, Math.min(52, height * 0.13)); // never under a 44 px tap
+  const btnH = Math.max(48, Math.min(52, height * 0.13)); // Q-PREM-F11: Head home is never under 48 px
   const rowH = small ? 22 : 26;
   const text = (x: number, y: number, s: string, size: number, color: string, bold = false) =>
     scene.add
@@ -57,10 +61,12 @@ export function keptCard(
   const lineY = top + below + 2 + shown.length * rowH + 6;
   container.add(text(width / 2, lineY, words.sensei, small ? 15 : 17, '#f2e9d8'));
 
-  const opened = scene.time.now;
+  const opened = performance.now();
   let gone = false;
-  const go = () => {
-    if (gone || scene.time.now - opened < ARM_MS) return;
+  // The tap's own time (pointer.downTime, same clock as performance.now) is used, so a tap made
+  // inside the 500 ms but handled a frame later is still ignored.
+  const go = (pointer?: Phaser.Input.Pointer) => {
+    if (gone || (pointer?.downTime ?? performance.now()) - opened < ARM_MS) return;
     gone = true;
     sfx.unlock();
     container.each((o: Phaser.GameObjects.GameObject) => o.disableInteractive());
@@ -119,7 +125,7 @@ export function choiceCard(
       text(top + 52, line, 15, '#f2e9d8'),
     ])
     .setDepth(110);
-  const opened = scene.time.now;
+  const opened = performance.now();
   const btnW = (cardW - 48) / 2;
   const btnY = top + cardH - btnH - 16;
   const button = (x: number, label: string, color: number, yes: boolean) => {

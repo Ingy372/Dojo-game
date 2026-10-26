@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""L-PREMIUM-a: every lockable Trophy, Decoration and Journal id has exactly one hint of 7 words
+"""L-PREMIUM-a: every lockable Trophy, Decoration and Journal id (plus the kata cubby, C-STORY-TRY-rec) has exactly one hint of 7 words
 or fewer, with no banned word. Ids come from content/ data, so new items fail until hinted."""
 import json, re, sys, pathlib
 R = pathlib.Path(__file__).resolve().parents[3]
@@ -8,7 +8,8 @@ h = L("drafts/content/hints/locked-hints.json"); A = L("content/abilities/abilit
 D = L("content/dojo/decorations.json")["decorations"]; N = L("content/named/named.json")["monsters"]
 want = {"trophies": [x["id"] for k in ("stances","strikes","seals") for x in A[k] if x["id"] != "beginners-stance"],
         "decorations": [d["id"] for d in D if d["source"] != "starter"],
-        "journal": ["kind:"+d["monster"] for d in D if d["source"]=="trophy"] + ["named:"+n["id"] for n in N]}
+        "journal": ["kind:"+d["monster"] for d in D if d["source"]=="trophy"] + ["named:"+n["id"] for n in N],
+        "cubbies": ["kata-cubby"]}
 BAN = re.compile(r"\b(only|missing|lost|perfect)\b", re.I); e = []
 for cat, ids in want.items():
     got = [x["id"] for x in h.get(cat, [])]
