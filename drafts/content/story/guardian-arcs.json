@@ -1,0 +1,213 @@
+{
+  "notes": "DRAFT for C-STORY-d (spec: drafts/content/C-STORY-review.md). One entry per Guardian through Brown/Black; Lost Lightbearer (Black) is out of scope. Each freeingKind is different. howFreed only describes existing attacks, phases and C14 form shifts; no mechanics change. Ties follow story/mystery-ladder.json (stacked on C-STORY-b, #335). Faith notes reuse the merged overlay verses, re-checked against bible-api.com (KJV). No Scripture in kid lines. Nothing shipped or existing is changed; see guardian-arcs.md for suggested line changes.",
+  "id": "guardian-arcs",
+  "guardians": [
+    {
+      "id": "lamp-keeper",
+      "tier": "white",
+      "freeingKind": "remember",
+      "freeingName": "Remembered",
+      "wants": "It wants to keep the Tower's lamps glowing.",
+      "whyConfused": "It kept the first lamp so long it forgot why. The dark didn't take its light; it took the memory of warmth.",
+      "howFreed": "During Wick Wake its lamps light one by one. When it's beaten, the last lamp stays lit, and the Keeper looks at it and remembers.",
+      "freedLine": "A spark... I had forgotten how warm it feels.",
+      "ladderTie": {
+        "order": 1,
+        "tier": "white",
+        "fact": "It holds the Cracked Lamp Glass: the light broke, but the pieces are still here."
+      },
+      "mechanicsChanged": false,
+      "faithNote": {
+        "reference": "John 1:5",
+        "text": "And the light shineth in darkness; and the darkness comprehended it not.",
+        "partial": false,
+        "source": "faith/guardian-faith-overlay.json",
+        "checkedOn": "bible-api.com translation=kjv, 2026-10-26"
+      }
+    },
+    {
+      "id": "sun-gardener",
+      "tier": "yellow",
+      "freeingKind": "grow",
+      "freeingName": "Grows toward the sun",
+      "wants": "It wants its flowers to open again.",
+      "whyConfused": "The storm tangled it in thorns, and it blamed itself. Nobody broke the light on purpose.",
+      "howFreed": "At its 33% glow it becomes the Bloom Gardener: the thorns fall off as it reaches for the sun. When beaten, every flower opens at once.",
+      "freedLine": "The thorns are gone. The storm wasn't my fault!",
+      "ladderTie": {
+        "order": 2,
+        "tier": "yellow",
+        "fact": "Its freed Bestiary page tells of the storm that broke the light, and that it was no one's fault."
+      },
+      "mechanicsChanged": false,
+      "faithNote": {
+        "reference": "Galatians 5:22-23",
+        "text": "But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith, Meekness, temperance: against such there is no law.",
+        "partial": false,
+        "source": "faith/guardian-faith-overlay.json",
+        "checkedOn": "bible-api.com translation=kjv, 2026-10-26"
+      }
+    },
+    {
+      "id": "hearth-cook",
+      "tier": "orange",
+      "freeingKind": "welcome",
+      "freeingName": "Welcomed to the table",
+      "wants": "It wants someone to share supper with.",
+      "whyConfused": "It kept cooking for a table that stayed empty. Lonely isn't the same as forgotten.",
+      "howFreed": "Its Spark Sprites stop hopping and settle into the cold ovens, which warm up again. You sit down, and it sets out bowls, plus one kept warm.",
+      "freedLine": "Is it supper time? I would love some company.",
+      "ladderTie": {
+        "order": 3,
+        "tier": "orange",
+        "fact": "It keeps the Empty Bowl: one seat at supper was left empty on the storm night."
+      },
+      "mechanicsChanged": false,
+      "faithNote": {
+        "reference": "John 6:35",
+        "text": "And Jesus said unto them, I am the bread of life: he that cometh to me shall never hunger; and he that believeth on me shall never thirst.",
+        "partial": false,
+        "source": "faith/guardian-faith-overlay.json",
+        "checkedOn": "bible-api.com translation=kjv, 2026-10-26"
+      }
+    },
+    {
+      "id": "stone-giant",
+      "tier": "green",
+      "freeingKind": "unstack",
+      "freeingName": "Worries fall away",
+      "wants": "It wants to feel brave on the inside.",
+      "whyConfused": "The shadow stacked worry on worry until it looked like a giant. Underneath was someone small and scared.",
+      "howFreed": "At its 33% glow the worry stones tumble off, leaving Pebble Heart. You stayed; when beaten, the last stone rolls away.",
+      "freedLine": "I was stones and worry. Thank you for staying!",
+      "ladderTie": {
+        "order": 4,
+        "tier": "green",
+        "fact": "Its older-reader page says the shadow is many small fears stacked up, not one monster."
+      },
+      "mechanicsChanged": false,
+      "faithNote": {
+        "reference": "1 Samuel 17:47",
+        "text": "And all this assembly shall know that the LORD saveth not with sword and spear: for the battle is the LORD'S, and he will give you into our hands.",
+        "partial": false,
+        "source": "faith/guardian-faith-overlay.json",
+        "checkedOn": "bible-api.com translation=kjv, 2026-10-26"
+      }
+    },
+    {
+      "id": "river-watcher",
+      "tier": "blue",
+      "freeingKind": "see",
+      "freeingName": "Sees clearly",
+      "wants": "It wants clear water, so it can see its friends.",
+      "whyConfused": "Muddy water made every shape look like a stranger. It isn't fierce; it couldn't see.",
+      "howFreed": "Its muddy puddles stop spreading and settle. When beaten, the river goes still and clear, and it sees you for the first time.",
+      "freedLine": "The water is clear. I can see you now, friend.",
+      "ladderTie": {
+        "order": 5,
+        "tier": "blue",
+        "fact": "On the storm night it watched someone carry the light up through the rain (Boat Log)."
+      },
+      "mechanicsChanged": false,
+      "faithNote": {
+        "reference": "Psalm 23:2",
+        "text": "He maketh me to lie down in green pastures: he leadeth me beside the still waters.",
+        "partial": false,
+        "source": "faith/guardian-faith-overlay.json",
+        "checkedOn": "bible-api.com translation=kjv, 2026-10-26"
+      }
+    },
+    {
+      "id": "ember-knight",
+      "tier": "red",
+      "freeingKind": "trust",
+      "freeingName": "Lowers its shield",
+      "wants": "It wants to keep everyone safe.",
+      "whyConfused": "It was told to guard the forge from everyone, so it guarded against the very people it was made to help.",
+      "howFreed": "During Shield Rush it holds its shield up the whole time. When beaten, it lowers the shield and steps aside to let you pass.",
+      "freedLine": "I was guarding the wrong thing. Shields are for helping.",
+      "ladderTie": {
+        "order": 6,
+        "tier": "red",
+        "fact": "It knows the Cracked Shield: someone used a shield to cover the light, and it held."
+      },
+      "mechanicsChanged": false,
+      "faithNote": {
+        "reference": "Joshua 1:9",
+        "text": "Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest.",
+        "partial": false,
+        "source": "faith/guardian-faith-overlay.json",
+        "checkedOn": "bible-api.com translation=kjv, 2026-10-26"
+      }
+    },
+    {
+      "id": "echo-mask",
+      "tier": "red-black",
+      "freeingKind": "answer",
+      "freeingName": "Hears a new voice",
+      "wants": "It wants to hear kind words.",
+      "whyConfused": "It copied every voice it heard, and in the dark the only voices said 'give up'. It needed someone to answer differently.",
+      "howFreed": "It copies your moves with Echo Copy. You keep choosing your own path, and when it's beaten it echoes your kind words, not the shadow's.",
+      "freedLine": "I copied what I heard. Now I hear kindness.",
+      "ladderTie": {
+        "order": 7,
+        "tier": "red-black",
+        "fact": "It guards the Traveler's Note: one voice kept answering, 'I will hold the light until help comes.'"
+      },
+      "mechanicsChanged": false,
+      "faithNote": {
+        "reference": "Hebrews 13:5 (part)",
+        "text": "I will never leave thee, nor forsake thee.",
+        "partial": true,
+        "source": "faith/guardian-faith-overlay.json",
+        "checkedOn": "bible-api.com translation=kjv, 2026-10-26"
+      }
+    },
+    {
+      "id": "root-keeper",
+      "tier": "brown",
+      "freeingKind": "share",
+      "freeingName": "Shares again",
+      "wants": "It wants someone to read its books with.",
+      "whyConfused": "It kept every story safe and forgot that stories are for sharing. One page in its library belongs to an old student.",
+      "howFreed": "Its Page Flutters stop swirling and land in your hands. When beaten, the root ring opens wide and it hands you a book.",
+      "freedLine": "Take a book, little one. Your story belongs here too.",
+      "ladderTie": {
+        "order": 8,
+        "tier": "brown",
+        "fact": "Its library holds the Student Sash page: the carrier was once a student who trained these same forms."
+      },
+      "mechanicsChanged": false,
+      "faithNote": {
+        "reference": "Psalm 1:3",
+        "text": "And he shall be like a tree planted by the rivers of water, that bringeth forth his fruit in his season; his leaf also shall not wither; and whatsoever he doeth shall prosper.",
+        "partial": false,
+        "source": "faith/guardian-faith-overlay.json",
+        "checkedOn": "bible-api.com translation=kjv, 2026-10-26"
+      }
+    },
+    {
+      "id": "storm-herald",
+      "tier": "brown-black",
+      "freeingKind": "quiet",
+      "freeingName": "Grows quiet",
+      "wants": "It wants to be heard over the storm.",
+      "whyConfused": "It shouted louder and louder so no one would notice it was scared. Under the noise, it was listening for one voice.",
+      "howFreed": "At its 33% glow it shrinks into the Quiet Thunderhead. When beaten, the thunder stops, and in the calm you both hear someone calling.",
+      "freedLine": "The wind is still. Listen. Someone is calling from the top.",
+      "ladderTie": {
+        "order": 9,
+        "tier": "brown-black",
+        "fact": "Its calm leads into Sensei's reveal: Sensei trained with the carrier long ago and kept hoping they'd come home."
+      },
+      "mechanicsChanged": false,
+      "faithNote": {
+        "reference": "Mark 4:39",
+        "text": "And he arose, and rebuked the wind, and said unto the sea, Peace, be still. And the wind ceased, and there was a great calm.",
+        "partial": false,
+        "source": "faith/guardian-faith-overlay.json",
+        "checkedOn": "bible-api.com translation=kjv, 2026-10-26"
+      }
+    }
+  ]
+}
