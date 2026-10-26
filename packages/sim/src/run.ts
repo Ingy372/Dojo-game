@@ -10,7 +10,7 @@ import { chance, makeItem, rarityRank, rollRarity, type GearItem } from './loot'
 import type { Vec2 } from './math';
 import { createRng, nextFloat, nextInt, pick, pickWeighted, shuffled, type Rng } from './rng';
 import type { Room, RoomKind } from './room';
-import { createWorld, type PlayerSetup, type WorldState } from './world';
+import { counterHintFor, createWorld, type CounterHintRules, type PlayerSetup, type WorldState } from './world';
 import type { TwistDef } from './twist';
 import { namedForTier, type NamedSpawn } from './named';
 import { elitesAllowed, type EliteKind, type EliteSpawn } from './elite';
@@ -250,8 +250,12 @@ export function createRunWorld(
   difficulty?: Difficulty,
   /** Sensei's guided Counter step from the profile (see GUIDE_DONE); off by default. */
   guideStep?: number,
+  /** L-PREMIUM-b: Counter tip rules (content/settings/counter-hint.json); off when absent. */
+  hintRules?: CounterHintRules,
 ): WorldState {
   const room = currentRoom(content, run);
+  const d = difficulty ?? run.difficulty;
+  const hintOn = !!hintRules && !run.tutorial && d !== 'challenge' && !room.challenge && (room.kind === 'battle' || room.kind === 'boss');
   return createWorld(room, ['p1'], {
     enemyTypes: content.enemies,
     difficulty: difficulty ?? run.difficulty,
@@ -263,6 +267,7 @@ export function createRunWorld(
     doorCount: run.doors.length,
     twist: currentTwist(content, run),
     guideStep,
+    counterHint: hintRules ? counterHintFor(hintRules, run.perfects, hintOn) : null,
     enemyScale: byTier(ENEMY_TRAINING_SCALE, run.tier),
     ...(run.tutorial ? { minHealth: TUTORIAL_FLOOR.minHealth, easyBossHealth: TUTORIAL_FLOOR.bossHealth } : {}),
     player: {
