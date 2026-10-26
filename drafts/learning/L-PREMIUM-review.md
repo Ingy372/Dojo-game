@@ -4,8 +4,11 @@
 - **ITEM:** L-PREMIUM-review.
 - **WHAT:** I compared Dojo Ascent's first session, onboarding, reward moments, home loop and reasons to come back with **Archero** (Habby, mobile) and two mobile Pokémon titles: **Pokémon GO** (Niantic) and **Pokémon Quest** (Game Freak; mobile and Switch). I did not use Pokémon Café Mix/ReMix because I found no design write-up of it I could cite. For each area the review covers what those games do well (from cited reviews and help pages), where we stand (from `docs/progress.md`), the gap, and the dark patterns we must not copy. It ends with 5 proposed board items (L-PREMIUM-a to e) and questions for Jay.
 - **WHY:** Players will compare us with these games. We can copy their polish (fast first win, a mentor character, clear "how to earn this", a warm home) without their pressure (energy timers, paid revives, 7-day streaks, mood decay, gacha).
-- **DECIDE (Jay):** the questions at the end. None of the items adds launch scope: 3 are marked launch-polish (small changes to systems we already have) and 2 are post-launch proposals.
-- **NEXT:** After Jay's answers, the Manager can put the approved items on the work board. I can write short specs for them. No game code was touched.
+- **Decided:**
+  - a, b and c are approved as launch-polish (the Manager's call, Oct 26, because Jay didn't answer them separately).
+  - e is approved by Jay (relayed by the Manager: "Sure, not a bad idea") and stays post-launch. It's not in core-design §13 launch scope, and the Manager decides when it's scheduled.
+  - d is still waiting on Jay (question 4).
+- **NEXT:** The Manager adds a, b and c to the work board in the build order below. e waits for post-launch scheduling, and d waits for Jay. No game code was touched.
 
 Competitor facts are brief context, taken from the sources cited. Numbers can change with game updates, so they are marked please check where noted.
 
@@ -67,48 +70,47 @@ Research (verified in PR #292 unless noted):
 
 ---
 
-## Proposed board items
+## Board items (final)
 
-### L-PREMIUM-a: "How to earn it" on every locked thing — launch-polish
-- **Idea:** every locked trophy, decoration slot and Journal card shows one plain line when tapped, using the same "Show Sensei {X} in class" or "Clear {floor}" templates as the locked ability cards. Copies GO's locked-badge hint [S6].
-- **Helps:** points kids to real training. The curiosity about a locked thing becomes a class goal.
-- **Evidence:** visible goals and the closest-goal line (L3 audit), which is design reasoning (WEAK). Competence support in games: Ryan, Rigby & Przybylski 2006 (MODERATE).
-- **Cost:** small. **Owner:** Content Designer (lines), then Programmer.
-- **Done when:** tapping any locked item in Trophies, Decorations or the Journal shows one line of 7 words or fewer, read aloud, with no "only" or "missing" wording.
+**Build order:** a → b → c (c waits for #292 to be built: B-MASHER-d1) → later e (post-launch). d is on hold until Jay answers.
+a and b don't depend on anything, so they can be built side by side.
 
-### L-PREMIUM-b: Idle hint in real fights — launch-polish
-- **Idea:** if a COUNTER-ready moment passes 3 times in one room with no tap, the COUNTER button gives one soft pulse plus the existing tip. It happens once per room, never in Challenge mode, and is off once the player has 3 Perfect Counters that run. Copies GO's idle throw-path cue [S6].
-- **Helps:** teaches the real skill (Counter) to the kid bot style of player (#291), so they need the Mash guard less.
-- **Evidence:** in-context teaching beats front-loaded tutorials (UX reviews [S6, S7], WEAK). Masher sim data in #291 (MODERATE for the need).
-- **Cost:** small. **Owner:** Programmer, Tester.
-- **Done when:** the kid bot sees at most 1 pulse per room, a smart bot sees none, and Reduced motion swaps the pulse for an outline.
+### L-PREMIUM-a: "How to earn it" on every locked thing — APPROVED, launch-polish
+- **Idea:** every locked trophy, decoration slot and Journal card shows one line when tapped, using the locked-ability templates ("Show Sensei {X} in class", "Clear {floor}"). Copies GO's locked-badge hint [S6].
+- **Helps:** turns curiosity into a real-class goal.
+- **Evidence:** Ryan, Rigby & Przybylski 2006 on competence support (MODERATE); the L3 closest-goal reasoning (WEAK).
+- **Cost:** small. **Owners:** Content Designer (lines) → Programmer (build) → Tester.
+- **Done when:** in a test over all 5 fixtures, every locked item in Trophies, Decorations and the Journal returns one non-empty hint line of 7 words or fewer, from content data. No line has "only", "missing" or "lost" (checked by a test). The line is read aloud on tap. Checked at 667×375 with no wrap past 2 lines.
 
-### L-PREMIUM-c: A warm "finds come home" moment for every run — launch-polish
-- **Idea:** reuse the B-MASHER-d arrival (#292) for every run end: the finds drop into the dojo with a soft bell, then one pointer line in the decided order (an upgrade ready, then real class, then the next run). One flow for all run ends.
-- **Helps:** a calm end that points to class, not to another run.
-- **Evidence:** process wording, not trait praise (Mueller & Dweck 1998, STRONG; Cimpian et al. 2007, MODERATE).
-- **Cost:** small (shares the #292 build). **Owner:** Programmer, Artist (drop and settle frames).
-- **Done when:** clearing, resting and knock-out all end in the same arrival. It's skippable with a tap and shows one line.
+### L-PREMIUM-b: Idle COUNTER hint in real fights — APPROVED, launch-polish
+- **Idea:** after 3 missed Counter windows in one room (no Counter tap during a telegraph), the COUNTER button pulses once and the existing tip shows. It happens at most once per room, never in Challenge mode, and is off for the rest of the run after 3 Perfect Counters. Copies GO's idle throw cue [S6].
+- **Helps:** teaches the real skill instead of leaning on the Mash guard.
+- **Evidence:** UX reviews of in-context teaching [S6, S7] (WEAK); the masher sim data in #291 (MODERATE for the need).
+- **Cost:** small. **Owners:** Programmer → Tester.
+- **Done when:** a sim test shows the kid bot gets 1 or fewer hints per room and the smart bot gets 0 hints in 200 runs. Challenge mode gets 0 hints. Reduced motion swaps the pulse for a static outline. Tester confirms on a phone that the hint never covers the enemy's red circle.
 
-### L-PREMIUM-d: Class piece progress on the Home Dojo — post-launch proposal
-- **Idea:** an empty display spot on the wall shows a soft outline and "2 more classes" until the next class piece arrives. Progress is counted in real classes, like Quest counts cooking in expeditions [S11]. There's no timer, and it never goes down.
-- **Helps:** makes the link between real class and the game visible every day.
-- **Evidence:** an expected tangible reward can reduce interest (Deci, Koestner & Ryan 1999, STRONG, please check pages). So the piece should stay a surprise of *which* piece, and the count should be shown softly, not as a task.
-- **Cost:** medium. **Owner:** Programmer, Artist; Learning reviews the wording.
-- **Done when:** the outline shows the right count from the fixtures, counts only up, and has no notification.
+### L-PREMIUM-c: "Finds come home" for every run end — APPROVED, launch-polish (depends on #292)
+- **Idea:** reuse the B-MASHER-d Screen 3 arrival for every run end: the finds drop into the dojo with a soft bell, then one pointer line in the decided order.
+- **Helps:** a calm end that points to class, not straight into another run.
+- **Evidence:** Mueller & Dweck 1998 (STRONG for the effect); Cimpian et al. 2007 (MODERATE).
+- **Cost:** small. **Owners:** Programmer → Artist (only if the drop frames are new) → Tester.
+- **Depends on:** B-MASHER-d1 (#292) being built first. c reuses its arrival code and lines.
+- **Done when:** clearing a floor, resting (the play-time limit or "Rest for now") and a knock-out all end in the same arrival component (one code path, checked by a test). It's skippable with a tap, shows exactly one pointer line, and skips the "Next run" pointer when the play-time limit is reached.
 
-### L-PREMIUM-e: Sensei's "Today in the dojo" card, with no decay — post-launch proposal
-- **Idea:** a small card like GO's "Today's Activities" [S8] showing 3 optional dojo things (bow, clean a spot, a run), each lighting up when done. Nothing ever dims, there's no mood or hunger, and nothing is held over to the next day.
-- **Helps:** a gentle shape for a short visit. The bow ties into the creed recall (Proposal 2).
-- **Evidence:** autonomy and competence support (Ryan et al. 2006, MODERATE). The no-decay rule comes from our own guidelines; risk of turning into a chore (WEAK, reasoning).
-- **Cost:** medium. **Owner:** Researcher & Planner (spec), then Programmer.
-- **Done when:** a playtest (Tester) shows kids don't describe it as "I have to". There's no reward for doing all 3, and no count of days.
+### L-PREMIUM-d: Class piece progress on the wall — WAITING ON JAY (post-launch proposal)
+- **Idea:** an empty wall spot shows a soft outline and "2 more classes" until the next class piece. It counts only up and has no timer.
+- **Evidence:** Deci, Koestner & Ryan 1999 (STRONG, please check pages). It warns against expected tangible rewards, so *which* piece arrives stays a surprise.
+- **Cost:** medium. **Owners (if approved):** Programmer, Artist; Learning reviews the wording.
+- **Done when (if approved):** the count matches the fixtures' classes to the next piece, never goes down, and sends no notification.
 
----
+### L-PREMIUM-e: Sensei's "Today in the dojo" card — APPROVED by Jay, post-launch (the Manager schedules it)
+- **Idea:** a small card with 3 optional dojo things (bow, clean a spot, a run) that light up when done. Copies GO's "Today's Activities" shape [S8] without its mood or hunger decay.
+- **Required guardrails:** it never dims or gets worse; there's no day count or streak; there's no bonus for doing all 3; nothing carries over to the next day.
+- **Evidence:** Ryan et al. 2006 (MODERATE); the risk that it turns into a chore is reasoning only (WEAK).
+- **Cost:** medium. **Owners:** Researcher & Planner (spec) → Content Designer (lines) → Programmer → Tester.
+- **Done when:** tests show no visual state that dims, no stored day count, and the same rewards whether 0 or 3 are done. A Tester playtest with kids aged 6–9 finds no child describes it as something they "have to" do.
 
 ## Questions for Jay
-1. Should every locked trophy and decoration say how to earn it (item a), even if that spoils a few surprises?
-2. Can the COUNTER button pulse once in a room if a young player keeps missing Counters (item b)? Or should hints stay only in the tutorial?
-3. Should every run end with the same warm "finds come home" moment as the knock-out flow (item c)?
-4. After launch, would you like the wall to show "2 more classes" toward the next class piece (item d)? Or should class pieces stay a full surprise?
-5. After launch, is a "Today in the dojo" card with 3 optional things OK (item e), as long as it never dims, never counts days and gives nothing extra for doing all 3? Or does it feel too much like a daily chore?
+1. (Still open, item d) After launch, would you like the wall to show "2 more classes" toward the next class piece? Or should class pieces stay a full surprise?
+
+Answered: a, b and c (approved by the Manager), and e (approved by Jay: "Sure, not a bad idea").
