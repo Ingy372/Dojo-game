@@ -18,8 +18,8 @@
       "moveIds": [
         "stance.attention"
       ],
-      "description": "The open leg stance. Every kata starts and ends here.",
-      "source": "Jay (Oct 25, via Manager): Ready is the 'open leg stance', feet shoulder-width apart, fists in front of the stomach. Kata sheets: 'ready stance'.",
+      "description": "The open leg stance.",
+      "source": "Jay (Oct 25, via Manager): Ready is the 'open leg stance', feet shoulder-width apart, fists in front of the stomach.",
       "howToStand": "Feet shoulder-width apart, fists in front of your stomach.",
       "gameId": "ready-stance",
       "gameLine": "Steady and even, ready for anything.",
@@ -85,11 +85,13 @@
   ],
   "jayQuestion": "Are there other stances taught at the dojo (for example a back stance)?",
   "gameLineNote": "R-STANCE-f: player-facing lines for the Fighting Style screen, saying what each stance does in the game (numbers from #290). They are meant for content/abilities/fighting-style.json `lines[gameId]` (the field #293 wires). #293 is still open, so they wait here to avoid a conflict; copy them across once it merges. Ready keeps its current line (#290: the plain stance, all 0).",
-  "idMappingNote": "PROPOSAL (C-STANCE-READY). In the game, beginners-stance has every number at 0 and is stances[0], the one everyone starts with (abilities.json). #293 used it for Ready. Now Ready and Beginner's are two stances. Proposed: (1) beginners-stance stays the game id for the new Beginner's Stance: same id, same 0 numbers, and its line changes to the gameLine above. (2) Ready gets a new game id, ready-stance, unlocked by white-belt sign-off like the others. #290 gives Ready only 'everything 0', so Ready and Beginner's would play the same until the Researcher or Jay gives Ready its own numbers. Open call: should Ready be a pickable battle stance at all, or only the kata start/finish pose? No existing id is renamed.",
+  "idMappingNote": "APPROVED (Manager, Oct 25). beginners-stance stays the game id for the new Beginner's Stance, with the same 0 numbers and the Beginner's gameLine. Ready gets a new game id, ready-stance, unlocked by white-belt sign-off like the others. #290 gives Ready only 'everything 0', so it plays the same as Beginner's until the Researcher or Jay gives it its own numbers. Closed: Ready stays a stance players can pick in a fight. No existing id is renamed.",
   "signOff": {
-    "note": "Shown when a teacher signs off a stance. {stance} is the stance name, e.g. 'Cat Stance' (same placeholder style as difficulty.json's {name}). Pick one at random.",
+    "note": "Shown when a teacher signs off a stance. {stance} is the stance name, e.g. 'Cat Stance' (same placeholder style as difficulty.json's {name}).",
     "line": "You learned {stance}! Your teacher saw your hard work.",
-    "alternates": [
+    "chosen": true,
+    "chosenBy": "Manager review of #303 (Oct 25)",
+    "alternatesRecord": [
       "{stance} is yours now. Be proud of yourself!",
       "Your teacher signed off on {stance}. Great training!"
     ]
