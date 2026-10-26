@@ -14,7 +14,7 @@
     },
     {
       "id": "stance.attention",
-      "name": "Ready",
+      "name": "Open Leg",
       "moveIds": [
         "stance.attention"
       ],
@@ -24,7 +24,9 @@
       "gameId": "ready-stance",
       "gameLine": "Steady and even, ready for anything.",
       "belt": "white",
-      "beltSource": "Jay (Oct 25, via Manager): all stances are learned at white belt."
+      "beltSource": "Jay (Oct 25, via Manager): all stances are learned at white belt.",
+      "gameName": "Open Leg Stance",
+      "nameSource": "Jay (C-RENAME-2, Oct 25): ready-stance's display name is 'Open Leg Stance'. The curriculum term 'ready stance' in kata steps is unchanged."
     },
     {
       "id": "stance.cat",
