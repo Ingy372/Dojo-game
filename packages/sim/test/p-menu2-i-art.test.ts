@@ -106,8 +106,9 @@ describe('P-MENU2-i menu2 art', () => {
     const out = pack.entries[MENU2_PACK].sprites!;
     for (const n of MENU2_FRAMES.legendary) expect(out[n], n).toBeDefined();
     expect(out['bag-tile-legendary-9slice'].nineSlice).toEqual([20, 20, 20, 20]);
-    // The bag tile is the 9-slice with the crest on top; the Selected art still wins while picked.
-    expect(home).toMatch(/!sel && it\.rarity === 'legendary' \? menu2Slice\(this, 'bag-tile-legendary-9slice'/);
+    // The bag tile is the 9-slice with the crest on top, picked or not (the highlight is drawn over it).
+    expect(home).toMatch(/const legend = it\.rarity === 'legendary' \? menu2Slice\(this, 'bag-tile-legendary-9slice'/);
+    expect(home).toMatch(/if \(sel\) \{\s*const hl = this\.add\.graphics\(\)\.setData\('legendSelected'/);
     expect(home).toMatch(/menu2Image\(this, 'bag-tile-legendary-crest'/);
     // Only the Legendary frame came in from the A-LEGENDARY sheet (no shine, no ready-made tile).
     const names = Object.keys(out).filter((n) => n.includes('legendary'));
