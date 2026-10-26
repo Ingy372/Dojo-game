@@ -921,3 +921,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Retry line in the 10 lessons is now "Nice work. Let's keep practicing."; test updated.
 - lesson-counter-guided retry: "So close! Let's keep practicing."; test bans 'try again' in all lessons; shots include the guided line.
 - All 11 lesson retry lines are "Nice work. Let's keep practicing."; test bans 'So close' and 'try again'.
+
+- 2026-10-26 B-TUNE-GUIDED: Guided enemy Power ×0.75 via DIFFICULTY.enemyPowerScale; "Orange typical" testing fixture (6-orange-typical, pinned 333/46/34). Kid bot on Guided 78% -> 95% overall, white belt 57% -> 90%; Standard and Challenge unchanged.

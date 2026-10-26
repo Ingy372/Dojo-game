@@ -1353,3 +1353,11 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - QA found play continues after the retry line (GameScene.ts guideDone -> senseiDone only shows the line; world.ts stepGuide just moves to the next hint), so "Let's rest at the dojo." didn't fit. The 10 lessons now say "Nice work. Let's keep practicing." (Manager's call; no 'try again' wording). lesson-counter-guided unchanged.
 - lesson-counter-guided's retry is now "So close! Let's keep practicing." (the guided Counter repeats after it); no lesson says 'try again'.
 - lesson-counter-guided's retry now matches the other 10: "Nice work. Let's keep practicing." (all 11 share it); no lesson says 'So close' or 'try again'.
+
+## B-TUNE-GUIDED — Guided enemy Power ×0.75 (2026-10-26)
+- From R-T3-TUNE-3 (#352). DIFFICULTY gets `enemyPowerScale`: Guided 0.75, Standard and Challenge 1.0. Enemy Health is never scaled by the setting.
+- Applies in every fight (Tower, practice room, tutorial), on top of the belt scale. Scaled Power rounds to a whole number, at least 1 (a 0-Power enemy stays 0). Disarmed weapon Power scales too.
+- The setting is read when a world is made, so a change takes effect from the next run.
+- New testing fixture `fixtures/6-orange-typical.json` pins fight stats with an optional feed `testStats` (333 Health / 46 Power / 34 Guard = ARTISTS.typical belt 3), so the Tester plays the sims' numbers. Real feeds never send it.
+- Out of scope: Challenge tuning and the belt-3 floor content.
+- Golden: only rooted/guided changed (player Health 141 -> 154); every Standard and Challenge value is byte-identical.
