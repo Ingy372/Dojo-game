@@ -36,7 +36,7 @@ Jay's idea (docs/decisions.md, 'Dodge-only attacks'): an attack that can't be CO
 |---|---|---|---|---|---|---|
 | Swarmer *(existing)* | swarm | F1-2 | Small, fast, comes in groups; jabs. | Red circle (12 ticks). | Clear them first (C12 tip), or COUNTER. | Health and power by ENEMY_SCALE; group size grows by band, not speed. |
 | Brute *(existing)* | heavy | F1-2 | Big and slow; gets winded after chasing 4 s. | Red circle (16 ticks). | COUNTER, or hit it while it's winded. | ENEMY_SCALE on health/power; winded timing never scaled. |
-| Shield Guard *(existing)* | guard | F3-4 | Basic hits bounce off its shield. | Red circle (14 ticks); shield shines. | STRIKE or a Perfect Counter breaks the shield. | Shield regrow time fixed at 6 s. |
+| Shield Guard *(existing)* | guard | F3-4 | Basic hits bounce off its shield. | Red circle (14 ticks); shield shines. | STRIKE or a Great Counter breaks the shield. | Shield regrow time fixed at 6 s. |
 | Wick Wisp | flier | F1-2 | A tiny lost candle flame that drifts in a wavy line and bumps you. | Flickers bright, then a small red circle. | Punch it or COUNTER the bump. | Weakest enemy; health only. |
 | Dust Bunny | charger | F1-2 | A fluffy dust ball that rolls straight at you, then sneezes. | Wiggles in place, then a red circle at its front. | Step aside or COUNTER. | Roll speed fixed; health/power by ENEMY_SCALE. |
 | Lantern Moth | ranged | F3-4 | Flutters at a distance and tosses soft glow pebbles. | Red circle where the pebble lands. | Step out of the circle, then close in. | Pebble count 1 → 2 at F5; never faster. |
@@ -46,7 +46,7 @@ Jay's idea (docs/decisions.md, 'Dodge-only attacks'): an attack that can't be CO
 
 | Name | Role | Band | Behaviour | Tell | Counterplay | Scaling |
 |---|---|---|---|---|---|---|
-| Bouncy Bopper *(existing)* | bonker | F1-2 | Bonks with a padded foam staff. | Raises the staff and glows; red circle. | COUNTER; a Perfect Counter disarms it (staff hidden). | Stats set in R-BAL-8 (#183). |
+| Bouncy Bopper *(existing)* | bonker | F1-2 | Bonks with a padded foam staff. | Raises the staff and glows; red circle. | COUNTER; a Great Counter disarms it (staff hidden). | Stats set in R-BAL-8 (#183). |
 | Buzzy Bee | swarm | F1-2 | Busy little bees in groups of 3-4 that zip in and out. | Short hover, then red circle. | Clear them first; DASH out if they crowd you. | Group size grows by band. |
 | Thorn Sprout | turret | F1-2 | A grumpy sprout that stays put and spits seeds. | Puffs its cheeks; red circle where the seed lands. | Walk around the seeds and calm it up close. | Rooted; fire rate fixed. |
 | Shellback Snail | guard | F3-4 | Slow snail that hides in its shell when hit too often. | Red circle before its head-bump. | Wait for it to peek out, or STRIKE the shell. | Hide time fixed; health by ENEMY_SCALE. |
