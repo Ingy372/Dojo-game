@@ -118,6 +118,11 @@ export interface Profile {
    */
   trophiesSeen: string[] | null;
   /**
+   * Q-PREM-BOSSWIN: the one-time 'Floor Keeper defeated!' moment has played. An old save from
+   * before this field counts as celebrated when it has already cleared a floor (no late replay).
+   */
+  keeperCelebrated: boolean;
+  /**
    * P-MENU2-d: the Fighting Style the student picked (starting Stance and Virtue), or null for
    * today's default (Beginner's Stance first, strongest Virtue). Strikes and Seals are always on.
    */
@@ -212,6 +217,7 @@ export function newProfile(): Profile {
     goalsShownOn: null,
     sealsSeen: [],
     trophiesSeen: [],
+    keeperCelebrated: false,
     loadout: null,
     grandfatheredStances: [],
     stanceMigrated: true,
@@ -250,7 +256,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null, sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, ...migrateReadyStance(p, readLoadout(p.loadout)) };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null, sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, keeperCelebrated: typeof p.keeperCelebrated === 'boolean' ? p.keeperCelebrated : oldKeeperWin(p.lastRun), ...migrateReadyStance(p, readLoadout(p.loadout)) };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {
@@ -465,6 +471,36 @@ export function newTrophies(profile: Profile, earned: readonly string[], shown: 
   const fresh = shown.filter((id, i) => !seen.includes(id) && shown.indexOf(id) === i);
   seen.push(...fresh);
   return fresh;
+}
+
+/** Q-PREM-BOSSWIN: the only boss whose first clear gets the big moment (not the Hearth Cook). */
+/**
+ * Old saves (no keeperCelebrated): the only proof of a real Floor Keeper win in the save is the
+ * last run's summary (a cleared, non-tutorial, non-test floor that beat the floor-keeper).
+ * floorsCleared, floorsByTier and the keeper trophy all count the tutorial keep too, so they
+ * can't tell. No proof means not celebrated, so the moment still plays.
+ */
+function oldKeeperWin(last: unknown): boolean {
+  const s = (last as { summary?: Partial<RunSummary> } | null | undefined)?.summary;
+  return !!s && s.result === 'cleared' && s.tutorial !== true && s.test !== true && Array.isArray(s.defeated) && s.defeated.includes(FLOOR_KEEPER_ID);
+}
+
+export const FLOOR_KEEPER_ID = 'floor-keeper';
+
+/**
+ * Q-PREM-BOSSWIN: should this finished floor play the one-time 'Floor Keeper defeated!' moment?
+ * Only a cleared real floor whose boss is the Floor Keeper counts: not the tutorial keep, not a
+ * test link, not the Hearth Cook. Plays once per save: a yes also marks it as celebrated.
+ */
+export function keeperWin(
+  profile: Profile,
+  run: { tutorial: boolean; test: boolean },
+  result: 'cleared' | 'lost' | 'rested',
+  bossId: string | undefined,
+): boolean {
+  if (profile.keeperCelebrated || result !== 'cleared' || run.tutorial || run.test || bossId !== FLOOR_KEEPER_ID) return false;
+  profile.keeperCelebrated = true;
+  return true;
 }
 
 export function sealBell(profile: Profile, beltId: string, lit: boolean): boolean {
