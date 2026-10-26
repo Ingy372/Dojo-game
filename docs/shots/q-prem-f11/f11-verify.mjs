@@ -55,6 +55,33 @@ for (const [W, H] of sizes) for (const rm of ['off', 'on']) {
     }
     check(tag, 'no page errors', pg.errs.length === 0, pg.errs.join(' | '));
     await ctx.close(); }
+  // 3) QA fix: a mash right after Screen 2 appears does not go Home; a tap after 500 ms does.
+  { const { ctx, pg } = await open(W, H, rm); await startRun(pg); await knockDown(pg);
+    // Mash through Screen 1 and on into Screen 2: a real touch every 40 ms (sent in the page so the
+    // timing is exact) at the centre and on Head home, stopping before 440 ms after Screen 2 appears.
+    const r = await pg.evaluate(() => new Promise((done) => {
+      const g = window.game; const cv = g.canvas; const s = g.scene.getScene('Game'); let keptAt = 0, n = 0, inWin = 0, id = 1, last = 0;
+      const card = () => s.children.list.find((c) => c.list && c.depth === 110 && c.list.some((o) => o.type === 'Text' && o.text === 'Head home'));
+      const touch = (x, y) => { const r = cv.getBoundingClientRect(); const t = new Touch({ identifier: id++, target: cv, clientX: r.left + x, clientY: r.top + y }); cv.dispatchEvent(new TouchEvent('touchstart', { touches: [t], targetTouches: [t], changedTouches: [t], bubbles: true, cancelable: true })); cv.dispatchEvent(new TouchEvent('touchend', { touches: [], targetTouches: [], changedTouches: [t], bubbles: true, cancelable: true })); };
+      const iv = setInterval(() => {
+        const c = card(); if (c && !keptAt) keptAt = performance.now();
+        if (keptAt && performance.now() - keptAt >= 440) { clearInterval(iv); setTimeout(() => done({ keptAt, n, inWin, kept: !!card(), interactive: !!card()?.list[0].input?.enabled, last }), 30); return; }
+        const W = cv.clientWidth, H = cv.clientHeight; let x = W / 2, y = H / 2;
+        if (c && n % 2) { const btn = c.list.filter((o) => o.type === 'Rectangle')[2].getBounds(); const z = cv.clientWidth / g.scale.width; x = (btn.centerX) * z; y = btn.centerY * z; }
+        touch(x, y); n++; if (keptAt) { inWin++; last = performance.now() - keptAt; }
+        if (n > 400) { clearInterval(iv); done({ keptAt: 0, n }); }
+      }, 40);
+    }));
+    let k = await keptCard(pg);
+    await pg.screenshot({ path: `${OUT}/f11-3-mash-${tag}.png` });
+    check(tag, 'mash within 500 ms of Screen 2 (shade and Head home) does not go Home', r.keptAt > 0 && r.kept && r.interactive && r.inWin >= 3, `kept=${r.kept} int=${r.interactive} ${r.n} taps, ${r.inWin} after Screen 2 appeared, last at ${Math.round(r.last ?? 0)} ms; card still up`);
+    await pg.waitForTimeout(150);
+    await pg.touchscreen.tap(W / 2, Math.max(10, (k?.card[1] ?? 40) / 2)); await pg.waitForTimeout(900);
+    const offer = (await texts(pg)).find((x) => x.t === 'No thanks'); if (offer) { await pg.waitForTimeout(700); await pg.touchscreen.tap(offer.x, offer.y); }
+    let home = false; for (let i = 0; i < 50 && !home; i++) { await pg.waitForTimeout(100); home = (await texts(pg)).some((x) => x.t === 'Welcome home!'); }
+    check(tag, 'a tap after the 500 ms goes Home', home);
+    check(tag, 'no page errors (mash)', pg.errs.length === 0, pg.errs.join(' | '));
+    await ctx.close(); }
   // 2) With no tap, Screen 1 still stays its full time.
   { const { ctx, pg } = await open(W, H, rm); await startRun(pg); await knockDown(pg); const t0 = Date.now();
     let k = null; for (let i = 0; i < 80 && !k; i++) { await pg.waitForTimeout(100); k = await keptCard(pg); }

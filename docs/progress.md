@@ -923,3 +923,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Retry line in the 10 lessons is now "Nice work. Let's keep practicing."; test updated.
 - lesson-counter-guided retry: "So close! Let's keep practicing."; test bans 'try again' in all lessons; shots include the guided line.
 - All 11 lesson retry lines are "Nice work. Let's keep practicing."; test bans 'So close' and 'try again'.
+
+## Q-PREM-F11 QA fix (2026-10-26)
+- 500 ms tap guard on Screen 2; source test + shot check (mash inside the window stays, a tap after goes Home), 112 PASS, 0 FAIL at 4 sizes, RM on/off.

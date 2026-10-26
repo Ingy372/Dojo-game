@@ -49,3 +49,20 @@ describe('Q-PREM-F11: a tap on KO Screen 1 goes straight to Screen 2', () => {
     expect(card).toMatch(/duration: still \? 0 : 260/);
   });
 });
+
+describe('Q-PREM-F11 QA fix: a mash right after Screen 2 appears does not go Home', () => {
+  it('both the shade and Head home use one guard that ignores taps for 500 ms on the wall clock', () => {
+    expect(card).toMatch(/export const ARM_MS = 500;/);
+    expect(card).toMatch(/const opened = performance\.now\(\);/);
+    expect(card).toMatch(/if \(gone \|\| \(pointer\?\.downTime \?\? performance\.now\(\)\) - opened < ARM_MS\) return;/);
+    expect(card).toMatch(/bg\.on\(Phaser\.Input\.Events\.GAMEOBJECT_POINTER_DOWN, go\);/);
+    expect(card).toMatch(/shade\.on\(Phaser\.Input\.Events\.GAMEOBJECT_POINTER_DOWN, go\);/);
+  });
+  it('a tap inside the 500 ms is ignored and one after it goes Home', () => {
+    // Mirror of `go`: the guard decision as a function of the time since the card appeared.
+    const m = card.match(/export const ARM_MS = (\d+);/)!;
+    const goesHome = (ms: number) => !(ms < +m[1]);
+    for (const ms of [0, 100, 200, 300, 499]) expect(goesHome(ms), `${ms}`).toBe(false);
+    for (const ms of [500, 600, 1500]) expect(goesHome(ms), `${ms}`).toBe(true);
+  });
+});
