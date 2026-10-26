@@ -1362,6 +1362,17 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - Stance hints wired as written (Content Designer will reword later). Kata cubbies fall back to the stance hint by kata order (stances[n+2], clamped); past the end of any list uses the last hint.
 - Trophy Case cubby sheet only; no read-aloud. Hint shows as its own line under "Ask Sensei about this one".
 - Hints copied to content/hints/locked-hints.json; the draft stays, and check-locked-hints.py is kept and still reads drafts/.
+## B-TUNE-GUIDED — Guided enemy Power ×0.75 (2026-10-26)
+- From R-T3-TUNE-3 (#352). DIFFICULTY gets `enemyPowerScale`: Guided 0.75, Standard and Challenge 1.0. Enemy Health is never scaled by the setting.
+- Applies in every fight (Tower, practice room, tutorial), on top of the belt scale. Scaled Power rounds to a whole number, at least 1 (a 0-Power enemy stays 0). Disarmed weapon Power scales too.
+- The setting is read when a world is made, so a change takes effect from the next run.
+- New testing fixture `fixtures/6-orange-typical.json` pins fight stats with an optional feed `testStats` (333 Health / 46 Power / 34 Guard = ARTISTS.typical belt 3), so the Tester plays the sims' numbers. Real feeds never send it.
+- Out of scope: Challenge tuning and the belt-3 floor content.
+- Golden: only rooted/guided changed (player Health 141 -> 154); every Standard and Challenge value is byte-identical.
+## Q-PREM-F11 QA fix — no accidental Home on a mash (2026-10-26)
+- QA: mashing through the KO sent the player Home in 7/8 runs (first pointerdown 100–300 ms after Screen 2).
+- Screen 2 now ignores every tap (shade and Head home) for 500 ms after it appears (`ARM_MS = 500`), timed on the wall clock with the tap's own `pointer.downTime`, so a tap made inside the window but handled a frame late is still ignored.
+- B-TUNE-GUIDED: scaled enemy Power floors at 1 (if it was above 0) on the belt-scale path as well; before, it could round to 0.
 ## L-PREMIUM-b — Counter hint (2026-10-26)
 - A miss is only a counterable hit with no Counter press lately and no dash; Blocks and dashes never count.
 - After 2 misses in a battle/boss room the sim emits `counterHint`; the client shows `LESSONS[GUIDE_LESSONS[0]].nudge` as a placed tip (never over HUD, red circles or buttons) and pulses COUNTER; tip fades after 3 s.

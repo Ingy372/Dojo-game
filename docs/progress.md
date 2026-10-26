@@ -928,6 +928,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## Q-PREM-F11 QA fix (2026-10-26)
 - 500 ms tap guard on Screen 2; source test + shot check (mash inside the window stays, a tap after goes Home), 112 PASS, 0 FAIL at 4 sizes, RM on/off.
 - 2026-10-26 L-PREMIUM-a2: kata cubbies show "Learn a kata in class with Sensei!" (cubbies.kata-cubby); kata sheet shots re-run.
+- 2026-10-26 B-TUNE-GUIDED: Guided enemy Power ×0.75 via DIFFICULTY.enemyPowerScale; "Orange typical" testing fixture (6-orange-typical, pinned 333/46/34). Kid bot on Guided 78% -> 95% overall, white belt 57% -> 90%; Standard and Challenge unchanged.
 ## L-PREMIUM-b (2026-10-26)
 - Counter hint built: sim event + rules, client tip/pulse, 7 tests (200-run kid ≤1/room, smart 0, Challenge 0), shots in docs/shots/l-premium-b (104 PASS, 0 FAIL).
 
