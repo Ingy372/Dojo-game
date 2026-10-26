@@ -1,0 +1,115 @@
+Q-PREM-F11 verify-ui-shots 2026-10-26T21:01:05.826Z
+PASS  667x375-rm-off  hero went down
+PASS  667x375-rm-off  Reduced motion read back = off
+PASS  667x375-rm-off  a tap shows Screen 2 at once (was about 1.75 s)  (124 ms after the tap)
+PASS  667x375-rm-off  Screen 2 fades in within 0.3 s  (alpha 1.00 at first frame, 1.00 at 300 ms)
+PASS  667x375-rm-off  Head home >= 48 px tall and >= 44 wide  (240x49)
+PASS  667x375-rm-off  card on screen, text >= 12 px, no overlap, padding >= 8  (card 114,107,440,162 15px pad 16.0)
+PASS  667x375-rm-off  the skip tap does not also press Head home
+PASS  667x375-rm-off  hands-on: Head home goes Home
+PASS  667x375-rm-off  no page errors
+PASS  667x375-rm-off  mash within 500 ms of Screen 2 (shade and Head home) does not go Home  (kept=true int=true 6 taps, 5 after Screen 2 appeared, last at 423 ms; card still up)
+PASS  667x375-rm-off  a tap after the 500 ms goes Home
+PASS  667x375-rm-off  no page errors (mash)
+PASS  667x375-rm-off  no tap: Screen 2 after the full Screen 1 (about 2.5 s)  (2494 ms)
+PASS  667x375-rm-off  no page errors (no tap)
+PASS  667x375-rm-on  hero went down
+PASS  667x375-rm-on  Reduced motion read back = on
+PASS  667x375-rm-on  a tap shows Screen 2 at once (was about 1.75 s)  (87 ms after the tap)
+PASS  667x375-rm-on  Reduced motion: Screen 2 is fully shown at once (no fade)  (alpha 1.00 at first frame, 1.00 at 300 ms)
+PASS  667x375-rm-on  Head home >= 48 px tall and >= 44 wide  (240x49)
+PASS  667x375-rm-on  card on screen, text >= 12 px, no overlap, padding >= 8  (card 114,96,440,184 15px pad 16.0)
+PASS  667x375-rm-on  the skip tap does not also press Head home
+PASS  667x375-rm-on  hands-on: Head home goes Home
+PASS  667x375-rm-on  no page errors
+PASS  667x375-rm-on  mash within 500 ms of Screen 2 (shade and Head home) does not go Home  (kept=true int=true 13 taps, 8 after Screen 2 appeared, last at 382 ms; card still up)
+PASS  667x375-rm-on  a tap after the 500 ms goes Home
+PASS  667x375-rm-on  no page errors (mash)
+PASS  667x375-rm-on  no tap: Screen 2 after the full Screen 1 (about 2.5 s)  (2361 ms)
+PASS  667x375-rm-on  no page errors (no tap)
+PASS  667x320-rm-off  hero went down
+PASS  667x320-rm-off  Reduced motion read back = off
+PASS  667x320-rm-off  a tap shows Screen 2 at once (was about 1.75 s)  (119 ms after the tap)
+PASS  667x320-rm-off  Screen 2 fades in within 0.3 s  (alpha 1.00 at first frame, 1.00 at 300 ms)
+PASS  667x320-rm-off  Head home >= 48 px tall and >= 44 wide  (240x48)
+PASS  667x320-rm-off  card on screen, text >= 12 px, no overlap, padding >= 8  (card 114,69,440,183 15px pad 16.0)
+PASS  667x320-rm-off  the skip tap does not also press Head home
+PASS  667x320-rm-off  hands-on: Head home goes Home
+PASS  667x320-rm-off  no page errors
+PASS  667x320-rm-off  mash within 500 ms of Screen 2 (shade and Head home) does not go Home  (kept=true int=true 8 taps, 5 after Screen 2 appeared, last at 388 ms; card still up)
+PASS  667x320-rm-off  a tap after the 500 ms goes Home
+PASS  667x320-rm-off  no page errors (mash)
+PASS  667x320-rm-off  no tap: Screen 2 after the full Screen 1 (about 2.5 s)  (2553 ms)
+PASS  667x320-rm-off  no page errors (no tap)
+PASS  667x320-rm-on  hero went down
+PASS  667x320-rm-on  Reduced motion read back = on
+PASS  667x320-rm-on  a tap shows Screen 2 at once (was about 1.75 s)  (110 ms after the tap)
+PASS  667x320-rm-on  Reduced motion: Screen 2 is fully shown at once (no fade)  (alpha 1.00 at first frame, 1.00 at 300 ms)
+PASS  667x320-rm-on  Head home >= 48 px tall and >= 44 wide  (240x48)
+PASS  667x320-rm-on  card on screen, text >= 12 px, no overlap, padding >= 8  (card 114,69,440,183 15px pad 16.0)
+PASS  667x320-rm-on  the skip tap does not also press Head home
+PASS  667x320-rm-on  hands-on: Head home goes Home
+PASS  667x320-rm-on  no page errors
+PASS  667x320-rm-on  mash within 500 ms of Screen 2 (shade and Head home) does not go Home  (kept=true int=true 10 taps, 6 after Screen 2 appeared, last at 383 ms; card still up)
+PASS  667x320-rm-on  a tap after the 500 ms goes Home
+PASS  667x320-rm-on  no page errors (mash)
+PASS  667x320-rm-on  no tap: Screen 2 after the full Screen 1 (about 2.5 s)  (2457 ms)
+PASS  667x320-rm-on  no page errors (no tap)
+PASS  844x390-rm-off  hero went down
+PASS  844x390-rm-off  Reduced motion read back = off
+PASS  844x390-rm-off  a tap shows Screen 2 at once (was about 1.75 s)  (104 ms after the tap)
+PASS  844x390-rm-off  Screen 2 fades in within 0.3 s  (alpha 1.00 at first frame, 1.00 at 300 ms)
+PASS  844x390-rm-off  Head home >= 48 px tall and >= 44 wide  (240x51)
+PASS  844x390-rm-off  card on screen, text >= 12 px, no overlap, padding >= 8  (card 202,113,440,164 15px pad 16.0)
+PASS  844x390-rm-off  the skip tap does not also press Head home
+PASS  844x390-rm-off  hands-on: Head home goes Home
+PASS  844x390-rm-off  no page errors
+PASS  844x390-rm-off  mash within 500 ms of Screen 2 (shade and Head home) does not go Home  (kept=true int=true 6 taps, 5 after Screen 2 appeared, last at 375 ms; card still up)
+PASS  844x390-rm-off  a tap after the 500 ms goes Home
+PASS  844x390-rm-off  no page errors (mash)
+PASS  844x390-rm-off  no tap: Screen 2 after the full Screen 1 (about 2.5 s)  (2394 ms)
+PASS  844x390-rm-off  no page errors (no tap)
+PASS  844x390-rm-on  hero went down
+PASS  844x390-rm-on  Reduced motion read back = on
+PASS  844x390-rm-on  a tap shows Screen 2 at once (was about 1.75 s)  (111 ms after the tap)
+PASS  844x390-rm-on  Reduced motion: Screen 2 is fully shown at once (no fade)  (alpha 1.00 at first frame, 1.00 at 300 ms)
+PASS  844x390-rm-on  Head home >= 48 px tall and >= 44 wide  (240x51)
+PASS  844x390-rm-on  card on screen, text >= 12 px, no overlap, padding >= 8  (card 202,102,440,186 15px pad 16.0)
+PASS  844x390-rm-on  the skip tap does not also press Head home
+PASS  844x390-rm-on  hands-on: Head home goes Home
+PASS  844x390-rm-on  no page errors
+PASS  844x390-rm-on  mash within 500 ms of Screen 2 (shade and Head home) does not go Home  (kept=true int=true 15 taps, 9 after Screen 2 appeared, last at 410 ms; card still up)
+PASS  844x390-rm-on  a tap after the 500 ms goes Home
+PASS  844x390-rm-on  no page errors (mash)
+PASS  844x390-rm-on  no tap: Screen 2 after the full Screen 1 (about 2.5 s)  (2483 ms)
+PASS  844x390-rm-on  no page errors (no tap)
+PASS  932x430-rm-off  hero went down
+PASS  932x430-rm-off  Reduced motion read back = off
+PASS  932x430-rm-off  a tap shows Screen 2 at once (was about 1.75 s)  (160 ms after the tap)
+PASS  932x430-rm-off  Screen 2 fades in within 0.3 s  (alpha 1.00 at first frame, 1.00 at 300 ms)
+PASS  932x430-rm-off  Head home >= 48 px tall and >= 44 wide  (240x52)
+PASS  932x430-rm-off  card on screen, text >= 12 px, no overlap, padding >= 8  (card 246,117,440,196 17px pad 16.0)
+PASS  932x430-rm-off  the skip tap does not also press Head home
+PASS  932x430-rm-off  hands-on: Head home goes Home
+PASS  932x430-rm-off  no page errors
+PASS  932x430-rm-off  mash within 500 ms of Screen 2 (shade and Head home) does not go Home  (kept=true int=true 8 taps, 5 after Screen 2 appeared, last at 392 ms; card still up)
+PASS  932x430-rm-off  a tap after the 500 ms goes Home
+PASS  932x430-rm-off  no page errors (mash)
+PASS  932x430-rm-off  no tap: Screen 2 after the full Screen 1 (about 2.5 s)  (2512 ms)
+PASS  932x430-rm-off  no page errors (no tap)
+PASS  932x430-rm-on  hero went down
+PASS  932x430-rm-on  Reduced motion read back = on
+PASS  932x430-rm-on  a tap shows Screen 2 at once (was about 1.75 s)  (124 ms after the tap)
+PASS  932x430-rm-on  Reduced motion: Screen 2 is fully shown at once (no fade)  (alpha 1.00 at first frame, 1.00 at 300 ms)
+PASS  932x430-rm-on  Head home >= 48 px tall and >= 44 wide  (240x52)
+PASS  932x430-rm-on  card on screen, text >= 12 px, no overlap, padding >= 8  (card 246,130,440,170 17px pad 16.0)
+PASS  932x430-rm-on  the skip tap does not also press Head home
+PASS  932x430-rm-on  hands-on: Head home goes Home
+PASS  932x430-rm-on  no page errors
+PASS  932x430-rm-on  mash within 500 ms of Screen 2 (shade and Head home) does not go Home  (kept=true int=true 15 taps, 11 after Screen 2 appeared, last at 421 ms; card still up)
+PASS  932x430-rm-on  a tap after the 500 ms goes Home
+PASS  932x430-rm-on  no page errors (mash)
+PASS  932x430-rm-on  no tap: Screen 2 after the full Screen 1 (about 2.5 s)  (2421 ms)
+PASS  932x430-rm-on  no page errors (no tap)
+
+112 PASS, 0 FAIL
