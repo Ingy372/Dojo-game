@@ -102,7 +102,8 @@ import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { bowPrompt, playBow } from '../ui/bow';
 import { InsightPicker } from '../ui/InsightPicker';
-import { choiceCard, restCard, runOverCard } from '../ui/RunOverCard';
+import { choiceCard, keptCard } from '../ui/RunOverCard';
+import { KO } from '../game/knockout';
 import { PLAY_TIME_TEXT, isPlayTimeUp } from '../game/playTime';
 import { DIFFICULTY_TEXT, localToday, showGrades } from '../game/difficulty';
 import { LESSONS, noteLessonSeen, takeLesson } from '../game/lessons';
@@ -270,6 +271,10 @@ export class GameScene extends Phaser.Scene {
   private menuOpen = false;
   /** The hero is down (the run is over): no boss tag or bar, no fight buttons or stick (Q-PREM-F4). */
   private downed = false;
+  /** B-MASHER-d1: when the hero went down, whether a tap skipped Screen 1, and what runs after it. */
+  private downAt = 0;
+  private helpUpSkipped = false;
+  private afterHelpUp: (() => void) | null = null;
   /** Live floating texts and pop words, cleared when the hero goes down (Q-PREM-F4). */
   private popups = new Set<Phaser.GameObjects.Text>();
   /** Tutorial floor (K24a): where the step flow is, the tip's Got it button, and the success line to lead the next tip. */
@@ -472,6 +477,14 @@ export class GameScene extends Phaser.Scene {
     this.gradeLine = null;
     this.menuOpen = false;
     this.downed = false;
+    this.helpUpSkipped = false;
+    this.afterHelpUp = null;
+    // B-MASHER-d1: a tap anywhere skips Screen 1 (Sensei helping the hero up) on a run.
+    this.input.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      if (!this.downed || !this.run || this.helpUpSkipped || this.time.now - this.downAt < 300) return;
+      this.helpUpSkipped = true;
+      this.afterHelpUp?.();
+    });
     this.popups.clear();
     this.leaving = false;
     this.picker = null;
@@ -1335,10 +1348,13 @@ export class GameScene extends Phaser.Scene {
           }
           break;
         case 'playerDown':
+          // B-MASHER-d1 Screen 1: a soft fade, a warm chime, and Sensei helps the hero up.
+          // In the practice room the same kind words show, and the room simply starts over.
           sfx.playerDown();
           this.heroDo('defeat');
-          // Clear the screen for the loss message: no boss tag or bar, no fight buttons or stick.
           this.downed = true;
+          this.downAt = this.time.now;
+          this.helpUpSkipped = false;
           this.buttons.disable();
           this.controls.disable();
           this.bossName.setVisible(false);
@@ -1346,10 +1362,9 @@ export class GameScene extends Phaser.Scene {
           this.bossTagWorld = null;
           for (const t of [...this.popups]) this.dropPopup(t);
           this.chainText.setVisible(false);
-          this.senseiText?.destroy();
-          this.senseiText = null;
-          this.cameras.main.fade(900, 10, 8, 16);
-          this.message.setText(this.run ? 'Ouch! The run is over.\nYou keep everything you found.' : 'Ouch!\nBack to the start.').setVisible(true);
+          this.cameras.main.fade(reducedMotion() ? 0 : 900, 10, 8, 16, true);
+          this.message.setText(KO.helpUp).setVisible(true);
+          this.senseiSay([KO.helpUpSensei], 1400, true);
           break;
         case 'wave':
           sfx.wave();
@@ -1426,6 +1441,14 @@ export class GameScene extends Phaser.Scene {
           this.cameras.main.resetFX();
           this.cameras.main.fadeIn(400, 10, 8, 16);
           this.message.setVisible(false);
+          if (!this.run) {
+            // The practice room: nothing ends. The hero is back up and can train on.
+            this.downed = false;
+            this.senseiText?.destroy();
+            this.senseiText = null;
+            this.buttons.enable();
+            this.controls.enable();
+          }
           break;
         case 'enemySpawn': {
           const e = this.enemy(ev.enemyId);
@@ -1627,30 +1650,38 @@ export class GameScene extends Phaser.Scene {
       this.cameras.main.fadeOut(600, 10, 8, 16);
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start(scene, data));
     };
-    if (status === 'rested') {
-      // Play time is up (M7-P9): a kind card, then home. Everything found is already saved.
-      sfx.floorClear();
-      this.time.delayedCall(500, () => {
-        const card = restCard(this, () => {
-          this.uiCamera.fadeOut(400, 10, 8, 16);
-          this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home', { fromRun: true }));
-        });
-        this.cameras.main.ignore(card);
-      });
-      return;
-    }
-    if (status === 'lost') {
-      // A soft card with what they keep, then Back home. After losses in a row on
-      // this floor, Guided is kindly offered first, at most once a day (M7-P1).
+    if (status === 'lost' || status === 'rested') {
+      // B-MASHER-d1: Screen 2 (what they kept, Head home), then Home's welcome (Screen 3).
+      // A knock-out first waits for Screen 1 (about 2.5 s, a tap skips it). When play time
+      // is up (M7-P9), Screen 2 uses the resting line and Home skips the next-run pointer.
+      const resting = status === 'rested' || isPlayTimeUp(profile);
+      const finds = [
+        ...summary.items.map((i) => i.name),
+        ...summary.decorations.map((d) => decorationDef(CONTENT.dojo, d).name),
+        ...(xp.gained > 0 ? [`+${xp.gained} experience`] : []),
+      ];
+      // After losses in a row on this floor, Guided is kindly offered, now after Screen 2,
+      // at most once a day (M7-P1). Never after a rested ending.
       const tier = this.run.tier;
-      const offer = shouldOfferGuided(profile, tier, DIFFICULTY_TEXT, localToday());
+      const offer = status === 'lost' && shouldOfferGuided(profile, tier, DIFFICULTY_TEXT, localToday());
       if (offer) {
         markGuidedOffered(profile, localToday());
         writeSave(profile);
       }
-      this.time.delayedCall(1400, () => {
+      const home = () => {
+        this.uiCamera.fadeOut(400, 10, 8, 16);
+        this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () =>
+          this.scene.start('Home', { fromRun: true, knockout: resting ? 'rested' : 'run' } satisfies HomeSceneData),
+        );
+      };
+      const showKept = () => {
+        this.afterHelpUp = null;
         this.message.setVisible(false);
-        if (offer) {
+        this.senseiText?.destroy();
+        this.senseiText = null;
+        const card = keptCard(this, finds, resting, () => {
+          if (!offer) return home();
+          card.destroy();
           const o = DIFFICULTY_TEXT.offer;
           const ask = choiceCard(this, o.title, o.line, o.no, o.yes, (yes) => {
             if (yes) {
@@ -1658,23 +1689,23 @@ export class GameScene extends Phaser.Scene {
               chooseDifficulty(p, 'guided');
               writeSave(p);
             }
-            showCard();
+            home();
           });
           this.cameras.main.ignore(ask);
-        } else showCard();
-      });
-      const showCard = () => {
-        const card = runOverCard(
-          this,
-          summary,
-          xp.gained,
-          () => {
-            this.uiCamera.fadeOut(400, 10, 8, 16);
-            this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home', { fromRun: true }));
-          },
-        );
+        });
         this.cameras.main.ignore(card);
       };
+      if (status === 'rested') {
+        sfx.floorClear();
+        this.time.delayedCall(500, showKept);
+        return;
+      }
+      const wait = this.helpUpSkipped ? 0 : Math.max(0, KO.helpUpMs - (this.time.now - this.downAt));
+      if (wait === 0) showKept();
+      else {
+        this.afterHelpUp = showKept;
+        this.time.delayedCall(wait, () => this.afterHelpUp?.());
+      }
       return;
     }
     // Q-PREM-BOSSWIN: the first real Floor Keeper clear gets its one big moment, saved so it plays once.
@@ -2219,7 +2250,7 @@ export class GameScene extends Phaser.Scene {
 
   /**
    * Screen boxes that pop-ups keep off: each door (its tile plus the label under it, K23),
-   * the chest once it shows, and (if asked) the big centre message such as "Ouch! The run is over." (K23b).
+   * the chest once it shows, and (if asked) the big centre message such as "Sensei helps you up." (K23b, B-MASHER-d1).
    */
   private protectedBoxes(withMessage: boolean): { x0: number; x1: number; y0: number; y1: number }[] {
     const cam = this.cameras.main;
@@ -2771,8 +2802,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** Shows Sensei's read-aloud lines one after another at the top of the screen. */
-  private senseiSay(lines: string[], holdMs = 1400): void {
-    if (this.downed) return; // Q-PREM-F4: no new Sensei bubble over the loss message; the next run starts fresh.
+  private senseiSay(lines: string[], holdMs = 1400, helpUp = false): void {
+    // Q-PREM-F4: once the hero is down, only Sensei's help-up line shows (B-MASHER-d1, Jay's signed spec #292).
+    if (this.downed && !helpUp) return;
     this.senseiText?.destroy();
     const { width, height } = view(this);
     const t = this.add
