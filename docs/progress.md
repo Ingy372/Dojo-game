@@ -860,3 +860,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - npm test 911 passed, 3 skipped; typecheck and build pass.
 **Next**
 - Q-PREM-F1 (Bow on first tap).
+
+## Q-PREM-F5 — Back home only (2026-10-26)
+**Done**
+- The "Good effort!" card after a lost run shows one button, Back home, at least 44 px tall at every size.
+- verify-ui-shots `docs/shots/q-prem-f5/f5-verify.mjs` (log `verify-log.txt`, shots `card-{start,mid,end}-*.png`) at 844x390, 667x375, 667x320, 932x430, Reduced motion on/off (read back before each shot): 216 PASS, 0 FAIL, including one Back home tap going Home in all 8 runs.
+- npm test 911 passed, 3 skipped; typecheck and build pass.

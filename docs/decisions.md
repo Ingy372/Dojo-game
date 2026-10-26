@@ -1280,3 +1280,7 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - QA (Q-PREMIUM F2) found no visible way out of Settings; only a tap on the dim background closed it. The Manager approved a corner button labelled "Done".
 - Green `roundButton` (Scroll's Close colour), 96×44 in the top-right corner, 12 px from the edges, 16 px text. It calls the same `close()` as the background tap. The background tap still closes, too.
 - It sits above the cards (cards start at 10% height + 44 px), so nothing else moved at 667×320.
+
+## Q-PREM-F5 — The run-over card has only Back home (2026-10-26)
+- The Manager approved removing Try again from the lost-run card. `runOverCard` no longer takes `onRetry`; GameScene's retry callback (fade out, then Dojo if play time is up, else a new Tower run) and its comment are gone, along with the now-unused `startTowerRun` import.
+- Back home is centred, same width and colours (#fff6e0 on #4a4a55, 8.12:1). Its height is `max(44, min(52, 13% of height))`, so it is 44 px at 667x320 (was 42). The card's wording and the Back home path are unchanged. No tests covered retry.
