@@ -265,6 +265,8 @@ export class GameScene extends Phaser.Scene {
   private virtueAura!: Phaser.GameObjects.Arc;
   /** True while a menu (like the Insight choice) is open: the fight is paused. */
   private menuOpen = false;
+  /** The hero is down (the run is over): no boss tag or bar, no fight buttons or stick (Q-PREM-F4). */
+  private downed = false;
   /** Tutorial floor (K24a): where the step flow is, the tip's Got it button, and the success line to lead the next tip. */
   private tflow: TutorialFlow | null = null;
   private gotItBtn: Phaser.GameObjects.Text | null = null;
@@ -464,6 +466,7 @@ export class GameScene extends Phaser.Scene {
     this.senseiText = null;
     this.gradeLine = null;
     this.menuOpen = false;
+    this.downed = false;
     this.leaving = false;
     this.picker = null;
     this.doorViews = [];
@@ -1326,6 +1329,13 @@ export class GameScene extends Phaser.Scene {
         case 'playerDown':
           sfx.playerDown();
           this.heroDo('defeat');
+          // Clear the screen for the loss message: no boss tag or bar, no fight buttons or stick.
+          this.downed = true;
+          this.buttons.disable();
+          this.controls.disable();
+          this.bossName.setVisible(false);
+          this.lidIcon?.setVisible(false);
+          this.bossTagWorld = null;
           this.cameras.main.fade(900, 10, 8, 16);
           this.message.setText(this.run ? 'Ouch! The run is over.\nYou keep everything you found.' : 'Ouch!\nBack to the start.').setVisible(true);
           break;
@@ -2074,7 +2084,7 @@ export class GameScene extends Phaser.Scene {
     // Boss health bar (top strip, between the player's bars and the room label).
     const boss = this.world.enemies.find((e) => e.def.boss);
     const g = this.hud;
-    if (boss && boss.mode !== 'defeated') {
+    if (boss && boss.mode !== 'defeated' && !this.downed) {
       const { width } = view(this);
       const w = Math.max(140, Math.min(300, width - 450));
       const x = width / 2 - w / 2;

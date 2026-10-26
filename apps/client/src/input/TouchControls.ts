@@ -17,6 +17,7 @@ export class TouchControls {
   private stickVector = new Phaser.Math.Vector2();
   private tapPointer: number | null = null;
   private pendingTap: { x: number; y: number } | null = null;
+  private off = false;
 
   private readonly base: Phaser.GameObjects.Arc;
   private readonly knob: Phaser.GameObjects.Arc;
@@ -79,12 +80,20 @@ export class TouchControls {
     this.showStick(false);
   }
 
+  /** Lets go, hides the stick and its hint, and ignores new touches (Q-PREM-F4: once the hero is down). */
+  disable(): void {
+    this.reset();
+    this.off = true;
+    for (const o of this.objects) (o as unknown as { setVisible(v: boolean): void }).setVisible(false);
+  }
+
   private inStickZone(x: number, y: number): boolean {
     const { width, height } = view(this.scene);
     return x < width * 0.4 && y > height * 0.4;
   }
 
   private onDown(pointer: Phaser.Input.Pointer): void {
+    if (this.off) return;
     if (this.isButton((pointer.x / DPR), (pointer.y / DPR))) return;
     if (this.stickPointer === null && this.inStickZone((pointer.x / DPR), (pointer.y / DPR))) {
       this.stickPointer = pointer.id;
