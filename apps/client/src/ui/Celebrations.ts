@@ -213,10 +213,12 @@ export class Celebrations {
           break;
         }
         // A brand-new white belt: the Beginner's Stance, and a preview of the first sign-off.
-        this.text(cx, y, STYLE.welcomeStance, 18, '#f2e9d8', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
+        // R-STANCE-g: the welcome line (#312) can wrap to two lines, so the preview stacks below it.
+        const intro = this.text(cx, y, STYLE.welcomeStance, 17, '#f2e9d8', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
         if (m.preview.next) {
-          this.text(cx, y + 34, `When Sensei signs off ${m.preview.next.name}, you unlock:`, 15, '#b9ad99', false, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
-          this.text(cx, y + 60, m.preview.ability, 18, '#ffd166', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
+          const y2 = y + intro.height + 10;
+          this.text(cx, y2, `When Sensei signs off ${m.preview.next.name}, you unlock:`, 15, '#b9ad99', false, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
+          this.text(cx, y2 + 26, m.preview.ability, 17, '#ffd166', true, FONT, wrap).setOrigin(0.5, 0).setAlign('center');
         }
         break;
       }
