@@ -894,3 +894,12 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## Q-PREM-F10 (2026-10-26)
 - Stat tile number and label at least 4 px apart, with nothing overlapping (tile icons, New for you label, icon and sparkle checked against every panel text and picture), at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off. Text is at least 12 px, F8's 12 px above Again! is kept, and a hands-on tap on Again! starts a run. verify-ui-shots: 766 PASS, 0 FAIL (docs/shots/q-prem-f10/verify-log.txt). Test: packages/sim/test/b-lastrun-layout.test.ts (Q-PREM-F10 block).
+
+## B-MASHER-d1 — knock-out flow (2026-10-26)
+**Done**
+- A Tower knock-out is three kind screens: "Sensei helps you up." (tap skips), "You kept everything you found!" with the finds and one Head home button (tap anywhere too, no timer), then "Welcome home!" on the Training Board with one pointer (class first, else the Tower; none when play time is up). Time-limit endings share Screen 2 with the resting line; the old rest card is gone. Guided offer comes after Screen 2. Practice KO gets the kind words and keeps going (controls now come back).
+- "Ouch! The run is over" / "Back to the start": 0 in client and content (test: packages/sim/test/b-masher-d1-knockout.test.ts).
+- npm test 953 passed, 3 skipped; typecheck and build pass. verify-ui-shots at 667x320, 667x375, 844x390, 932x430, Reduced motion on/off: docs/shots/b-masher-d1/verify-log.txt.
+**Next**
+- Tester: play a Tower knock-out and a play-time-up ending on a phone.
+- Read-aloud of these screens is a separate item.

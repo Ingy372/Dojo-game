@@ -115,6 +115,13 @@ export class ActionButtons {
     for (const b of this.all()) b.container.setVisible(false);
   }
 
+  /** Shows the buttons again (B-MASHER-d1: the practice room goes on after a fall). */
+  enable(): void {
+    this.off = false;
+    this.pending = null;
+    for (const b of this.all()) b.container.setVisible(true);
+  }
+
   /** Makes Counter pulse for Sensei's guide (0 none, 1 small, 2 big, 3 nudge). */
   pulseCounter(level: number): void {
     this.counterPulse = level;

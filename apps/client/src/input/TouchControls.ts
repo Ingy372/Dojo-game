@@ -87,6 +87,12 @@ export class TouchControls {
     for (const o of this.objects) (o as unknown as { setVisible(v: boolean): void }).setVisible(false);
   }
 
+  /** Takes touches again, stick hidden and its hint showing (B-MASHER-d1: practice goes on after a fall). */
+  enable(): void {
+    this.off = false;
+    this.reset();
+  }
+
   private inStickZone(x: number, y: number): boolean {
     const { width, height } = view(this.scene);
     return x < width * 0.4 && y > height * 0.4;

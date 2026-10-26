@@ -1,0 +1,66 @@
+PASS  844x390-rm-off  run: hero went down
+PASS  844x390-rm-off  Screen 1 Reduced motion read back = off
+PASS  844x390-rm-off  Screen 1: "Sensei helps you up." and Sensei's line  (Sensei helps you up. | Room 1 of 8  ·  Wave 2 of 3 | Sensei: Every fall is part of training. | HOME)
+PASS  844x390-rm-off  Screen 1: no loss words on screen
+PASS  844x390-rm-off  Screen 1 lines fit the screen, <= 2 lines  (1L 278-566, 1L 178-667)
+PASS  844x390-rm-off  Screen 2 appears after Screen 1 (about 2.5 s from the fall)  (2304 ms after the fall)
+PASS  844x390-rm-off  Screen 2 Reduced motion read back = off
+PASS  844x390-rm-off  Screen 2 title is a signed line  (You kept everything you found! | Crane Charm | Sensei: Let's rest at the dojo. | Head home)
+PASS  844x390-rm-off  Screen 2 has Sensei: Let's rest at the dojo.
+PASS  844x390-rm-off  Head home >= 44x44  (240x51)
+PASS  844x390-rm-off  card text >= 12 px, <= 2 lines  (15 px, 1 lines)
+PASS  844x390-rm-off  card text does not overlap, padding >= 8  ( pad 16.0)
+PASS  844x390-rm-off  card on screen
+PASS  844x390-rm-off  no loss words on Screen 2
+PASS  844x390-rm-off  Screen 2 has no timer (still up after 6 s)
+PASS  844x390-rm-off  Guided offer after Screen 2 (not due)
+PASS  844x390-rm-off  Screen 3 Reduced motion read back = off
+PASS  844x390-rm-off  Head home goes to Home: "Welcome home!"
+PASS  844x390-rm-off  Screen 3 pointer is a signed line, fits, >= 12 px  (Train in class to grow stronger!)
+PASS  844x390-rm-off  Screen 3 fades by itself after about 4 s
+PASS  844x390-rm-off  no page errors (run)
+PASS  844x390-rm-off  a tap skips Screen 1  (996 ms after the tap)
+PASS  844x390-rm-off  the skip tap does not also press Head home
+PASS  844x390-rm-off  rested: Screen 2 shows the resting line  (You learned this room! | Great training today! Your dojo is resting. | Head home)
+PASS  844x390-rm-off  rested card text <= 2 lines, no overlap  (1 lines)
+PASS  844x390-rm-off  rested: Welcome home!, no next-run pointer  (Welcome home! | Train in class to grow stronger!)
+PASS  844x390-rm-off  no page errors (rested)
+PASS  844x390-rm-off  practice: kind words (practice=true, down=true)
+PASS  844x390-rm-off  practice: nothing ends, buttons back, no card  ({"downed":false,"buttons":5,"card":false,"scenes":"Game"})
+PASS  844x390-rm-off  no page errors (practice)
+PASS  844x390-rm-on  run: hero went down
+PASS  844x390-rm-on  Screen 1 Reduced motion read back = on
+PASS  844x390-rm-on  Screen 1: "Sensei helps you up." and Sensei's line  (Sensei helps you up. | Room 1 of 8  ·  Wave 2 of 3 | Sensei: Every fall is part of training. | HOME)
+PASS  844x390-rm-on  Screen 1: no loss words on screen
+PASS  844x390-rm-on  Screen 1 lines fit the screen, <= 2 lines  (1L 278-566, 1L 178-667)
+PASS  844x390-rm-on  Screen 2 appears after Screen 1 (about 2.5 s from the fall)  (2289 ms after the fall)
+PASS  844x390-rm-on  Screen 2 Reduced motion read back = on
+PASS  844x390-rm-on  Screen 2 title is a signed line  (You kept everything you found! | Crane Charm | Sensei: Let's rest at the dojo. | Head home)
+PASS  844x390-rm-on  Screen 2 has Sensei: Let's rest at the dojo.
+PASS  844x390-rm-on  Head home >= 44x44  (240x51)
+PASS  844x390-rm-on  card text >= 12 px, <= 2 lines  (15 px, 1 lines)
+PASS  844x390-rm-on  card text does not overlap, padding >= 8  ( pad 16.0)
+PASS  844x390-rm-on  card on screen
+PASS  844x390-rm-on  no loss words on Screen 2
+PASS  844x390-rm-on  Screen 2 has no timer (still up after 6 s)
+PASS  844x390-rm-on  Guided offer after Screen 2 (not due)
+PASS  844x390-rm-on  Screen 3 Reduced motion read back = on
+PASS  844x390-rm-on  a tap anywhere goes to Home: "Welcome home!"
+PASS  844x390-rm-on  Screen 3 pointer is a signed line, fits, >= 12 px  (Train in class to grow stronger!)
+PASS  844x390-rm-on  Screen 3 fades by itself after about 4 s
+PASS  844x390-rm-on  no page errors (run)
+PASS  844x390-rm-on  a tap skips Screen 1  (1006 ms after the tap)
+PASS  844x390-rm-on  the skip tap does not also press Head home
+PASS  844x390-rm-on  rested: Screen 2 shows the resting line  (You learned this room! | Great training today! Your dojo is resting. | Head home)
+PASS  844x390-rm-on  rested card text <= 2 lines, no overlap  (1 lines)
+PASS  844x390-rm-on  rested: Welcome home!, no next-run pointer  (Welcome home! | Train in class to grow stronger!)
+PASS  844x390-rm-on  no page errors (rested)
+PASS  844x390-rm-on  practice: kind words (practice=true, down=true)
+PASS  844x390-rm-on  practice: nothing ends, buttons back, no card  ({"downed":false,"buttons":5,"card":false,"scenes":"Game"})
+PASS  844x390-rm-on  no page errors (practice)
+PASS  all  contrast card text >= 4.5:1  (13.58:1)
+PASS  all  contrast titles >= 4.5:1  (11.35:1)
+PASS  all  contrast Head home >= 4.5:1  (4.87:1)
+PASS  all  contrast Screen 1 message >= 4.5:1  (15.38:1)
+
+64 PASS, 0 FAIL

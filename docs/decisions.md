@@ -44,7 +44,7 @@ Anything waiting on Jay's answer goes here. When he answers, the answer moves in
 - **Counter timing:** pressing Counter starts a short guard pose (0.5 s, no walking). If the attack lands within the window after the press, it's a Perfect Counter; if it lands later in the guard pose, it's a Block. If the guard pose ends with nothing to counter, the button rests for 0.5 s, so tapping it nonstop doesn't work.
 - **Strike (for now):** costs 30 Focus; one heavy hit (2.5× a basic hit) with a short lunge. The "tap in rhythm for a 3–5 hit chain" version comes with more abilities later.
 - **Automatic basic attacks** hit the nearest enemy in reach every 0.6 s, even while walking.
-- **Defeat:** a soft fade and "Ouch! Back to the start.", then the player is back at the room start with full health. Focus and combo reset, and the room's enemies reset too. Nothing is lost.
+- **Defeat in the practice room:** a soft fade and Sensei helping the hero up ("Sensei helps you up." / "Every fall is part of training.", B-MASHER-d1; was "Ouch! Back to the start."), then the player is back at the room start with full health. Focus and combo reset, and the room's enemies reset too. Nothing is lost and nothing ends. A Tower run's knock-out is the B-MASHER-d1 flow below.
 - **Beaten enemies come back after 4 seconds**, so there's always something to practice on.
 - **Game feel lives in the game, not the rules:** the short freeze on impact, screen shake, flashes, sparks, damage numbers and sounds are in `apps/client`. The freeze pauses the game for a split second on this phone only; in co-op later it will become a visual-only freeze so players stay in sync.
 - **Sounds are generated in code** with the phone's built-in sound system (no sound files, no new libraries). Sound switches on at the first tap, as phones require.
@@ -1316,3 +1316,18 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - At 47 px tiles (667x320, 667x375) the 14 px number (17 drawn) and 12 px label (15 drawn) can't keep the label 8 px inside the rim and still stay apart. On short tiles (< 56) they are now one stack, centred inside the rim and 4 px apart (`statStack` in ui/lastRun.ts). The label sits ~2.5 px inside the rim instead of 8. If a tile ever gets too short for that (44), the number steps down to 12 px. Tall tiles are unchanged.
 - The short New for you card (~73 px wide) has no room beside its label for stars, and it is flush with the content's right edge. So its sparkle (two stars, `headingSparkle`) now sits 4 px before the "New for you" heading, in the gap after Found. The tall card keeps its three corner stars. The bottom-left star no longer touches the trophy icon.
 - F8's 12 px clear above Again! is unchanged.
+
+## B-MASHER-d1 — the knock-out flow (2026-10-26)
+Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager picks:
+- **Screens, words from content/settings/knockout.json only (no new story text):** Screen 1 "Sensei helps you up." with Sensei "Every fall is part of training." (about 2.5 s, `helpUpMs`; a tap skips it; soft fade, Reduced motion fades at once; `sfx.playerDown` is now a warm rising chime, no sad sound). Screen 2 (`keptCard`): "You kept everything you found!" with each find (items, decorations, +XP) and a small sparkle (still under Reduced motion), or "You learned this room!"; Sensei "Let's rest at the dojo."; one Head home button with a drawn door; a tap anywhere also continues; no timer. Screen 3 (Home): "Welcome home!" and one pointer, fading after about 4 s (`pointerMs`) or on a tap, then the usual homecoming (celebrations, goals).
+- **Replaces Q-PREM-F4's no-bubble rule:** once the hero is down, `senseiSay` still ignores every line except the help-up line. "Good effort!", "You reached room N of M." and "Every climb makes you stronger." (runOverCard) are gone; "Ouch! The run is over" is found 0 times in apps/client/src and content (test).
+- **Guided offer (M7-P1) stays,** now shown after Screen 2 (on Head home), lost runs only.
+- **Home is the Training Board** (HomeScene), told by `knockout: 'run' | 'rested'`.
+- **Resting line covers time-limit endings too:** a 'rested' ending (M7-P9) and a knock-out while play time is up both show Screen 2 with "Great training today! Your dojo is resting." in place of Sensei's line. The old rest card (restCard, play-time.json restTitle/restLines/restButton) is removed. The resting door itself is unchanged (DojoScene, M7-P9).
+- **Pointer order:** a real class first (training nextClassDay) "Train in class to grow stronger!", else "The Tower is ready when you are."; the next-run pointer is skipped when play time is up. No "upgrade ready" pointer.
+- **No read-aloud** (a separate item). **Practice-room KO:** the same kind Screen 1 words, and nothing ends; the fight buttons and stick now come back on playerReturn (they stayed hidden after F4).
+- **Persistence:** the screens live only while the app stays loaded; banking is unchanged (bankRun once, same as finishRun), so a reload mid-screen loses nothing found.
+- Screen 2 measures its title first, so a title that wraps (932x430 caught it) pushes the rows down.
+- **K23b banner (line ~704) re-checked:** the centre message is still `this.message`, now "Sensei helps you up.", so the banner placement still keeps off it; in the shots the Sensei line sits under it with no overlap.
+- Lines are 7 words or fewer, no banned words (test), and fit 667x375 in at most 2 lines (verify-ui-shots).
+
