@@ -1,0 +1,35 @@
+{
+  "notes": "DRAFT for R-STANCE-g. Short UI lines for ages 6+ about Beginner's Stance, a locked Open Leg Stance, and the new-player welcome. Each slot has one main pick and alternates for Jay/Manager to choose. No 'perfect', no guilt or pressure; real dojo training is what unlocks stances. Replaces placeholder 'Just standing. Learn a stance at the dojo!'",
+  "lines": [
+    {
+      "key": "stance.beginner.oneLiner",
+      "gameId": "beginners-stance",
+      "use": "One-liner shown for Beginner's Stance (plain standing, no bonus).",
+      "main": "Everyone starts here. Your first stance is waiting at the dojo!",
+      "alternates": [
+        "Just you, standing tall. Your teacher can show you a stance!",
+        "This is where every student begins. Stances come from the dojo."
+      ]
+    },
+    {
+      "key": "stance.ready.notYet",
+      "gameId": "ready-stance",
+      "gameName": "Open Leg Stance",
+      "use": "Shown when Open Leg Stance is locked.",
+      "main": "Not yet! Learn Open Leg Stance at the dojo, and your teacher will sign it off.",
+      "alternates": [
+        "Coming soon! Practice Open Leg Stance with your teacher to unlock it.",
+        "Learn this one at the dojo. When your teacher signs it off, it's yours!"
+      ]
+    },
+    {
+      "key": "welcome.beginnerStance",
+      "use": "New-player welcome about starting in Beginner's Stance.",
+      "main": "Welcome! You start in Beginner's Stance, just like everyone. Learn stances at the dojo to grow stronger!",
+      "alternates": [
+        "Welcome to the climb! Every student starts in Beginner's Stance.",
+        "Hello, new student! You begin in Beginner's Stance. Your teacher will help you learn more."
+      ]
+    }
+  ]
+}
