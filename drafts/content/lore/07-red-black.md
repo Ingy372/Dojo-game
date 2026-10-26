@@ -15,7 +15,7 @@ Now it only echoes unkind words and fears. The shadow loves to repeat them.
 
 A floating mask that copies your moves. Under the mask, it is lonely.
 
-- **When freed:** "I only copied what I heard. I would like to hear kind words now."
+- **When freed:** "I copied what I heard. Now I hear kindness."
 - **Sensei, after:** "You chose your own words, not the echo's."
 - **The light piece** rises only when the real belt opens the Gate.
 

@@ -15,7 +15,7 @@ The shadow made the garden sleepy and confused. Old Thumper, Zippy Zoom and Capt
 
 A tall, gentle gardener made of vines. The shadow wrapped it in thorns, but its roots still reach for the sun.
 
-- **When freed:** "The thorns are gone. My flowers can open again."
+- **When freed:** "The thorns are gone. The storm wasn't my fault!"
 - **Sensei, after:** "You moved light on your feet. The garden noticed."
 - **The light piece** rises only when the real belt opens the Gate.
 
