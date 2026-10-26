@@ -20,7 +20,7 @@ await pg.evaluate(() => { const h = window.game.scene.getScene('Home'); h.childr
 const report = { tag, errs, states: {} };
 const probe = () => pg.evaluate(() => { const h = window.game.scene.getScene('Home'); const o = { legendTiles: [], rings: [] }; const z = h.cameras.main.zoom / window.devicePixelRatio;
   const walk = (l) => l.forEach((c) => { if (c.list) walk(c.list); if (c.getData?.('gearTile')) { const it = h.profile.inventory.find((i) => i.uid === c.getData('gearTile')); const lab = c.list.find((x) => x.getData?.('rarityWord')); const sk = c.list[1]; const bb = lab?.getBounds();
-      o.legendTiles.push({ uid: it.uid, rarity: it.rarity, legendFrame: !!c.getData('legendFrame'), crest: c.list.some((x) => x.getData?.('legendCrest')), skin: sk?.frame?.name ?? null, skinType: sk?.type, word: lab?.text, ink: lab?.style.color, fontPx: lab ? parseFloat(lab.style.fontSize) : null, wordBox: bb ? { x: bb.x * z, y: bb.y * z, w: bb.width * z, h: bb.height * z } : null }); }
+      const hb = c.getBounds(); o.legendTiles.push({ uid: it.uid, selHl: c.list.some((x) => x.getData?.('legendSelected')), tileBox: { x: hb.x * z, y: hb.y * z, w: hb.width * z, h: hb.height * z }, rarity: it.rarity, legendFrame: !!c.getData('legendFrame'), crest: c.list.some((x) => x.getData?.('legendCrest')), skin: sk?.frame?.name ?? null, skinType: sk?.type, word: lab?.text, ink: lab?.style.color, fontPx: lab ? parseFloat(lab.style.fontSize) : null, wordBox: bb ? { x: bb.x * z, y: bb.y * z, w: bb.width * z, h: bb.height * z } : null }); }
     if (c.getData?.('gearRing')) o.rings.push({ slot: c.getData('gearRing'), skin: c.list[1]?.frame?.name ?? null }); }); walk(h.children.list); return o; });
 async function shot(name, fn) { await pg.evaluate(fn); await pg.waitForTimeout(1800); report.states[name] = await probe(); await pg.screenshot({ path: `${PRE}/${tag}-${name}.png` }); }
 await shot('gear', () => { const h = window.game.scene.getScene('Home'); h.tab = 'gear'; h.render(); });
@@ -28,6 +28,8 @@ await shot('gear', () => { const h = window.game.scene.getScene('Home'); h.tab =
 await pg.evaluate(() => { const h = window.game.scene.getScene('Home'); const w = (l) => l.forEach((c) => { if (c.list) w(c.list); if (c.getData?.('rarityWord')) c.setVisible(false); }); w(h.children.list); }); await pg.waitForTimeout(300);
 await pg.screenshot({ path: `${PRE}/${tag}-gear-nowords.png` });
 await shot('gear-picked', () => { const h = window.game.scene.getScene('Home'); h.selected = 'L2'; h.render(); });
+await pg.evaluate(() => { const h = window.game.scene.getScene('Home'); const w = (l) => l.forEach((c) => { if (c.list) w(c.list); if (c.getData?.('rarityWord')) c.setVisible(false); }); w(h.children.list); }); await pg.waitForTimeout(300);
+await pg.screenshot({ path: `${PRE}/${tag}-gear-picked-nowords.png` });
 await shot('run', () => { const h = window.game.scene.getScene('Home'); const inv = h.profile.inventory;
   const results = Array.from({ length: 9 }, (_, i) => i === 3 ? { kind: 'treasure' } : i === 6 ? { kind: 'rest' } : { kind: 'fight', grade: ['S','A','B','S','B','A','S','B','S'][i] });
   h.profile.lastRun = { summary: { result: 'cleared', roomsCleared: 9, totalRooms: 9, results, items: [inv[1], inv[2], inv[3]], perfects: 7, bestCombo: 12, ticks: 60 * 260, sGrades: 4, insights: [], decorations: [], decorationColours: [], defeated: [], test: false, tier: 1, tutorial: false }, newBests: [], xp: { gained: 180, blessed: false, catchUp: false, levelsGained: 0, atCap: false }, earned: [] };
