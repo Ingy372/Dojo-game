@@ -19,7 +19,8 @@ const KIND_OF: Record<RequirementType, AbilityKind> = { kata: 'stance', kickComb
 /** One real requirement and where the student stands on it. */
 export interface RequirementStatus {
   id: string;
-  type: RequirementType;
+  /** 'stance' only for R-STANCE-d2 stance sign-offs (TrainingState.stances), never in `requirements`. */
+  type: RequirementType | 'stance';
   /** The real technique name, as taught at the school. */
   name: string;
   belt: string;
@@ -41,6 +42,14 @@ export interface AbilityInfo {
   /** The game power it maps to; null when it arrives in a later update. */
   stance: StanceDef | null;
   perk: PerkDef | null;
+  unlocked: boolean;
+}
+
+/** R-STANCE-d2: one stance and its teacher sign-off. Separate from belt requirements. */
+export interface StanceUnlock {
+  def: StanceDef;
+  /** The sign-off, shaped like a requirement (type 'stance', current belt, never legacy or catch-up). */
+  requirement: RequirementStatus;
   unlocked: boolean;
 }
 
@@ -104,6 +113,8 @@ export interface TrainingState {
   expectedLevel: number;
   requirements: RequirementStatus[];
   abilities: AbilityInfo[];
+  /** R-STANCE-d2: every Stance after Ready and whether a teacher signed it off. */
+  stances: StanceUnlock[];
   virtues: VirtueInfo[];
   /** The Virtue taken into fights (highest rank, then the most recent). */
   virtue: VirtueInfo | null;
@@ -177,16 +188,32 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
     }
   }
 
-  // Each kata unlocks the next Stance, each kick combo the next Strike upgrade, each
-  // self-defense technique the next Technique Seal, in curriculum order.
+  // R-STANCE-d2: each Stance unlocks by its own teacher sign-off, at any belt, with no legacy
+  // grant. Katas unlock nothing for the beta (their rewards come later).
+  const signOffs = new Map(feed.stanceSignOffs.map((s) => [s.id, s]));
+  const stanceList: StanceUnlock[] = abilities.stances.slice(1).map((def) => {
+    const s = signOffs.get(def.signOffId!);
+    const signedOff = s?.signedOff ?? false;
+    return {
+      def,
+      requirement: {
+        id: def.signOffId!, type: 'stance', name: def.name, belt: belt.id, beltName: belt.name,
+        signedOff, signedOffOn: s?.signedOffOn ?? null, signedOffBy: s?.signedOffBy ?? null, legacy: false, catchUp: false, videoId: null,
+      },
+      unlocked: signedOff,
+    };
+  });
+
+  // Each kick combo unlocks the next Strike upgrade, each self-defense technique the next
+  // Technique Seal, in curriculum order. Katas keep their place (kind 'stance') but carry no power.
   const seen: Record<AbilityKind, number> = { stance: 0, strike: 0, seal: 0 };
   const abilityList: AbilityInfo[] = requirements.map((r) => {
-    const kind = KIND_OF[r.type];
+    const kind = KIND_OF[r.type as RequirementType];
     const n = seen[kind]++;
     return {
       requirement: r,
       kind,
-      stance: kind === 'stance' ? abilities.stances[n + 1] ?? null : null,
+      stance: null,
       perk: kind === 'strike' ? abilities.strikes[n] ?? null : kind === 'seal' ? abilities.seals[n] ?? null : null,
       unlocked: r.signedOff,
     };
@@ -247,6 +274,7 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
     expectedLevel: tier === 1 ? 1 : levelCapFor(tier - 1),
     requirements,
     abilities: abilityList,
+    stances: stanceList,
     virtues,
     virtue,
     stripesThisBelt,
@@ -275,10 +303,9 @@ export function nextClassDay(classDays: readonly string[], weekday: number): str
   return null;
 }
 
-/** The Stances the player can switch between: the Beginner's Stance plus up to 3 earned Stances (newest first). */
+/** The Stances the player can switch between: the Beginner's Stance plus every signed-off Stance, in content order (R-STANCE-d2). */
 export function unlockedStances(training: TrainingState, abilities: AbilityContent): StanceDef[] {
-  const earned = training.abilities.filter((a) => a.kind === 'stance' && a.unlocked && a.stance).map((a) => a.stance!);
-  return [abilities.stances[0], ...earned.slice(-3)];
+  return [abilities.stances[0], ...training.stances.filter((s) => s.unlocked).map((s) => s.def)];
 }
 
 /** "Shield of Respect II" */

@@ -2,7 +2,8 @@
 // loadout existed. The expected output (fixtures/golden/p-menu2-d-default-run.json) was
 // captured by running test/golden-capture.ts on origin/main code, before any P-MENU2-d change
 // (7e99af0; the Rooted Stance case on 5d56802). R-STANCE-d1 re-captured it on purpose: the
-// stance lists in each setup and the stance case (now Cat, +1 window) changed; every run is the same. If play is ever meant to change, re-capture it
+// stance lists in each setup and the stance case (now Cat, +1 window) changed; every run is the same. R-STANCE-d2 re-captured it again: the only change is the new
+// signOffId field on each stance; stances come from fixture stance sign-offs set to match, and every run is the same. If play is ever meant to change, re-capture it
 // on purpose and say so in the PR.
 import { describe, expect, it } from 'vitest';
 import { captureGolden } from './golden-capture';
