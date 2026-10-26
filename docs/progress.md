@@ -917,9 +917,13 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Tester: beat the Floor Keeper on a fresh save (moment plays), then again (normal clear). Q-PREM-GRADE next.
 - Q-PREM-F9 QA fix: DASH/STANCE solid dim faces (6.44:1 / 6.89:1), Counter lockout ring, Decorate wall row clear of the 60 px bar. verify-ui-shots 656 PASS, 0 FAIL (4 sizes × Reduced motion on/off).
 
+## 2026-10-26 — Q-PREM-F11
+- A tap on KO Screen 1 goes straight to Screen 2 (90–275 ms after the tap, was about 1.75 s). Head home is ≥48 px at every size. New test: packages/sim/test/q-prem-f11-ko.test.ts. Shots and log: docs/shots/q-prem-f11 (88 PASS, 0 FAIL, 4 sizes × RM on/off).
 ## Q-PREM-TRY fix (2026-10-26)
 - Retry line in the 10 lessons is now "Nice work. Let's keep practicing."; test updated.
 - lesson-counter-guided retry: "So close! Let's keep practicing."; test bans 'try again' in all lessons; shots include the guided line.
 - All 11 lesson retry lines are "Nice work. Let's keep practicing."; test bans 'So close' and 'try again'.
 
 - 2026-10-26 L-PREMIUM-a2: locked Trophy Case cubbies show a one-line hint (content/hints/locked-hints.json). Tests in packages/sim/test/l-premium-a2-hints.test.ts; shots in docs/shots/l-premium-a2.
+## Q-PREM-F11 QA fix (2026-10-26)
+- 500 ms tap guard on Screen 2; source test + shot check (mash inside the window stays, a tap after goes Home), 112 PASS, 0 FAIL at 4 sizes, RM on/off.
