@@ -21,6 +21,8 @@ export interface Cubby {
   earned: boolean;
   /** Icon id, if the icon set has one. */
   icon?: string;
+  /** R-STANCE-d2: with no icon art, leave the sheet's placeholder circle out (not-yet Stance card). */
+  hideBlankIcon?: boolean;
   /** What it does in the game, one line. */
   effect: string;
   /** "Signed at White Belt" when earned; "Ask Sensei about this one" when not yet. */

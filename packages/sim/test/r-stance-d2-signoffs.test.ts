@@ -12,6 +12,7 @@ import {
   powerRating,
   rewardMoments,
   signOffGain,
+  signOffsRow,
   snapshot,
   unlockedStances,
 } from '../src';
@@ -130,5 +131,14 @@ describe('R-STANCE-d2 stance sign-offs add no stats', () => {
     expect(signOffGain(t, [cat])).toEqual({ power: 0, health: 0, guard: 0 });
     const kata = t.requirements.find((r) => r.name === 'Basic Form 1')!;
     expect(signOffGain(t, [kata, cat])).toEqual(signOffGain(t, [kata]));
+  });
+
+  it('a stance row in the sign-offs cascade names the stance once', () => {
+    const m = rewardMoments(null, train(green));
+    const list = m.find((x) => x.kind === 'signOffs');
+    const rows = list?.kind === 'signOffs' ? list.list.map((r) => signOffsRow(r.requirement, r.ability.split(' (')[0], false).text) : [];
+    expect(rows).toContain('✓ Stance: Front Stance');
+    expect(rows.some((t) => /Stance: .*Stance: /.test(t) || t.startsWith('✓ Front Stance:'))).toBe(false);
+    expect(rows).toContain('✓ Basic Form 1: Kata');
   });
 });

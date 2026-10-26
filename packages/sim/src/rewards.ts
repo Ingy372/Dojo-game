@@ -221,8 +221,10 @@ export function litGateLock(t: Pick<TrainingState, 'gate'>, r: Pick<RequirementS
  */
 export function signOffsRow(r: Pick<RequirementStatus, 'name' | 'legacy'>, ability: string, mixed: boolean): { text: string; real: boolean } {
   const real = !r.legacy;
-  if (!mixed || real) return { text: `✓ ${r.name}: ${ability}`, real };
-  return { text: `○ ${r.name}: ${ability} (practiced)`, real };
+  // R-STANCE-d2: a Stance sign-off's label already names it ("Stance: Front Stance"), so it reads once.
+  const label = ability.endsWith(`: ${r.name}`) ? ability : `${r.name}: ${ability}`;
+  if (!mixed || real) return { text: `✓ ${label}`, real };
+  return { text: `○ ${label} (practiced)`, real };
 }
 
 /** True when a many-techniques card has both real sign-offs and counted ones. */

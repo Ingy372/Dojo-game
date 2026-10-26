@@ -6,6 +6,7 @@ export const MENU2_PACK = 'menu2';
 
 const range = (stem: string, n: number) => Array.from({ length: n }, (_, i) => `${stem}-${i}`);
 const RARITY4 = ['common', 'uncommon', 'rare', 'epic'] as const;
+const RARITY5 = [...RARITY4, 'legendary'] as const;
 
 /** Every frame the client draws, by screen. tools/art-import/approved.json imports exactly these. */
 export const MENU2_FRAMES = {
@@ -27,14 +28,19 @@ export const MENU2_FRAMES = {
     ...RARITY4.map((r) => `found-tile-${r}`),
   ],
   /** Shared by all three screens: the panel frame, the title plaque and the wood buttons (tabs, Bests, Again, Close, page arrows). */
+  /** A-LEGENDARY-wire: the golden-orange Legendary frame (Jay OK'd #304), from incoming-art/legendary-frame. The bag tile is the 9-slice with the gem crest laid on top. */
+  legendary: [
+    'gear-ring-legendary', 'gear-ring-legendary-glow', 'gear-ring-legendary-pressed',
+    'bag-tile-legendary-9slice', 'bag-tile-legendary-crest', 'found-tile-legendary',
+  ],
   shared: ['panel-frame', 'title-plaque', 'button-primary-normal', 'button-primary-pressed', 'button-primary-disabled'],
 } as const;
 
 export const MENU2_ALL: readonly string[] = Object.values(MENU2_FRAMES).flat();
 
-/** The art has four rarities; Legendary uses the Epic art (the code still draws its own colour word). */
-export function artRarity(r: string): (typeof RARITY4)[number] {
-  return (RARITY4 as readonly string[]).includes(r) ? (r as (typeof RARITY4)[number]) : 'epic';
+/** The art's rarity name. All five rarities have their own frames (A-LEGENDARY-wire); anything unknown falls back to Common. */
+export function artRarity(r: string): (typeof RARITY5)[number] {
+  return (RARITY5 as readonly string[]).includes(r) ? (r as (typeof RARITY5)[number]) : 'common';
 }
 
 export interface UiSprite {

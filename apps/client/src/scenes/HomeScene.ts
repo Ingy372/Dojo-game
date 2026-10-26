@@ -75,6 +75,10 @@ type Tab = 'run' | 'gear' | 'abilities' | 'gate';
  */
 /** P-MENU2-i: the A-MENU2 stat icons (Rooms has none, so it shows its number only). */
 /** QA: rarity words on the paper tiles, darkened to at least 4.5:1 on the paper (#efe0c4). */
+/** A-LEGENDARY-wire: where the 9-slice's gold rim ends inside the tile box (CSS px; frame drawn 6 px outside the box at k 0.5): sides 22/2 - 6, bottom 33/2 - 6 (+0.5 for the inner highlight). */
+const LEGEND_RIM = { side: 5, bottom: 11 } as const;
+/** Clear paper between the rarity word (descenders included) and the rim. */
+const LEGEND_CLEAR = 8;
 const RARITY_INK: Record<GearItem['rarity'], string> = { common: '#6b5a48', uncommon: '#245a24', rare: '#174a7d', epic: '#5e2696', legendary: '#5a2e08' };
 /** QA: the painted wood rim of the stat tile at k 0.5 (12 of its 32 @2x slice px; half at k 0.25), and the space kept inside it. */
 const STAT_RIM = 6;
@@ -1136,7 +1140,8 @@ export class HomeScene extends Phaser.Scene {
   /** A not-yet pick: its sheet says "Ask Sensei about this one" (D3). */
   private openStylePick(p: StylePick): void {
     const fromCase = p.requirementId ? this.trophyCubbies().find((c) => c.id === p.requirementId) : undefined;
-    this.openCubby(fromCase ?? { id: p.id, shelf: 'stripes', name: p.name, earned: false, effect: p.line, status: STYLE_WORDS.askSensei });
+    // R-STANCE-d2: the stance's icon if the set has one; otherwise no empty circle (no new art).
+    this.openCubby(fromCase ?? { id: p.id, shelf: 'stripes', name: p.name, earned: false, icon: p.id, hideBlankIcon: true, effect: p.line, status: STYLE_WORDS.askSensei });
   }
 
   /** Screenshot/test hook: tap tray item i in the chosen slot. */
@@ -1429,7 +1434,7 @@ export class HomeScene extends Phaser.Scene {
     body.add(bg);
     const icon = c.icon ? addIcon(this, c.icon, sx + pad + 28, sy + pad + 28, 56) : null;
     if (icon) body.add(icon.setAlpha(c.earned ? 1 : 0.4));
-    else body.add(this.add.circle(sx + pad + 28, sy + pad + 28, 26, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.35));
+    else if (!c.hideBlankIcon) body.add(this.add.circle(sx + pad + 28, sy + pad + 28, 26, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.35));
     const tx = sx + pad + 56 + S2;
     let ty = sy + pad;
     this.oneLine(this.text(tx, ty, c.name, TYPE.title, WOOD.ink, true), tw, TYPE.body);
@@ -1577,7 +1582,10 @@ export class HomeScene extends Phaser.Scene {
     const probe = this.add.text(0, 0, '', { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold' });
     const widest = Math.max(...RARITIES.map((r) => probe.setText(rarityName(r)).width));
     probe.destroy();
-    const L = gearBoardLayout(w, h, tileWForLabel(widest));
+    // A-LEGENDARY-wire: the gold rim sits LEGEND_RIM.side in from the tile edge (the code border is 2 px), so
+    // tiles grow to keep the word 8 px clear of it at the sides.
+    const legendGrow = hasMenu2(this, 'bag-tile-legendary-9slice') ? 2 * (LEGEND_RIM.side + LEGEND_CLEAR) - 2 * (TROPHY_UI.cubbyPadX + TROPHY_UI.stroke) : 0;
+    const L = gearBoardLayout(w, h, tileWForLabel(widest) + legendGrow);
     const W = GEAR_WORDS;
     const R = GEAR_BOARD.ring;
     this.gearRings = {};
@@ -1667,9 +1675,27 @@ export class HomeScene extends Phaser.Scene {
       // P-MENU2-i: the rarity frame (72 x 88 tile in an 84 x 100 file); Selected art while picked.
       const tileArt = sel ? 'bag-tile-selected' : `bag-tile-${artRarity(it.rarity)}`;
       // QA: one uniform scale (fit to the width, the plain middle cropped out), never stretched.
-      const halves = menu2Fit(this, tileArt, box.w, box.h, 6);
-      const tileSkin = halves?.[0] ?? null;
-      if (halves) {
+      // A-LEGENDARY-wire: Legendary is a 9-slice (true-size corners at any tile size) with the gem crest on the top rail, unstretched.
+      const legend = it.rarity === 'legendary' ? menu2Slice(this, 'bag-tile-legendary-9slice', -box.w / 2 - 6, -box.h / 2 - 6, box.w + 12, box.h + 12) : null;
+      const halves = legend ? null : menu2Fit(this, tileArt, box.w, box.h, 6);
+      const tileSkin = legend ?? halves?.[0] ?? null;
+      if (legend) {
+        skinButton(this, b, legend, 'bag-tile-legendary-9slice');
+        const crest = menu2Image(this, 'bag-tile-legendary-crest', 0, -box.h / 2 - 6, 84, 100);
+        if (crest) v.addAt(crest.setOrigin(0.5, 0).setData('legendCrest', true), 2);
+        v.setData('legendFrame', true);
+        // Manager's call: a picked Legendary keeps its frame and crest; the selected highlight is drawn on top (cream ring just inside the gold rim, honey glow outside it).
+        if (sel) {
+          const hl = this.add.graphics().setData('legendSelected', true);
+          hl.lineStyle(3, 0xffd166, 0.9).strokeRoundedRect(-box.w / 2 - 3, -box.h / 2 - 3, box.w + 6, box.h + 6, 10);
+          hl.lineStyle(2, 0xfff6d8, 1).strokeRoundedRect(-box.w / 2 + LEGEND_RIM.side + 1, -box.h / 2 + LEGEND_RIM.side + 1, box.w - 2 * LEGEND_RIM.side - 2, box.h - 2 * LEGEND_RIM.side - 2, 6);
+          v.add(hl);
+        }
+        b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => legend.setTint(0xd8c8b0));
+        const up = () => legend.active && legend.clearTint();
+        b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, up);
+        b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, up);
+      } else if (halves) {
         skinButton(this, b, halves[0], tileArt, 'bag-tile-pressed');
         halves.slice(1).forEach((hb) => {
           v.addAt(hb, 2);
@@ -1682,14 +1708,16 @@ export class HomeScene extends Phaser.Scene {
       }
       // Icon above, the small rarity word under it (12 px, ≥8 px side padding, B-POLISH-2 wrap rules).
       const lh = GEAR_BOARD.labelH;
-      const iconS = Math.min(GEAR_BOARD.iconMax, box.h - lh - 3 * S1 - 4);
+      // A-LEGENDARY-wire: on the Legendary frame the word sits 8 px above the gold rim (descenders included), so the icon gives up the height.
+      const wordBottom = legend ? box.h / 2 - LEGEND_RIM.bottom - LEGEND_CLEAR : box.h / 2 - S1 - 1;
+      const iconS = legend ? Math.min(GEAR_BOARD.iconMax, wordBottom - lh - S1 - (-box.h / 2 + S1 + 2)) : Math.min(GEAR_BOARD.iconMax, box.h - lh - 3 * S1 - 4);
       const iy = -box.h / 2 + S1 + 2 + iconS / 2;
       const icon = addGearIcon(this, it, 0, iy, iconS);
       if (icon) v.add(icon);
       else v.add(slotGlyph(this, it.slot, 0, iy, iconS - 8, RARITY_COLOR[it.rarity]));
       const tw = cubbyTextW(box.w);
       const word = rarityName(it.rarity);
-      const lab = this.add.text(0, box.h / 2 - S1 - 1, word, { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold', color: tileSkin ? RARITY_INK[it.rarity] : css(RARITY_COLOR[it.rarity]), align: 'center', wordWrap: { width: tw } }).setOrigin(0.5, 1).setResolution(crisp()).setData('rarityWord', true);
+      const lab = this.add.text(0, wordBottom, word, { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold', color: tileSkin ? RARITY_INK[it.rarity] : css(RARITY_COLOR[it.rarity]), align: 'center', wordWrap: { width: tw } }).setOrigin(0.5, 1).setResolution(crisp()).setData('rarityWord', true);
       v.add(wrapLikeCubby(lab, word, tw).setMaxLines(1));
       if (cmp.overall === 'worn') {
         v.add(this.add.circle(-box.w / 2 + 9, -box.h / 2 + 9, 7, 0xffd166));
