@@ -891,3 +891,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## Q-PREM-F8 (2026-10-26)
 - Nothing tappable within 8 px above Again! (12 px measured) at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off, scrolled to the top, halfway and the end. Hands-on touches 2, 4 and 6 px above Again! open nothing, and Again! still starts Game. verify-ui-shots: 308 PASS, 0 FAIL (docs/shots/q-prem-f8/verify-log.txt). Test: packages/sim/test/q-prem-f6-again.test.ts (F8 gap check at all 4 sizes).
+
+## Q-PREM-F9 (2026-10-26)
+- COUNTER, STRIKE and VIRTUE ready, not-ready and flash labels all reach 4.5:1 or more (pixel-sampled). Decorate's Done and Street Smarts are 44 px at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off. Hands-on: each action button queues its action, Done returns to play, and Street Smarts opens its scene. verify-ui-shots: 488 PASS, 0 FAIL (docs/shots/q-prem-f9/verify-log.txt). Test: packages/sim/test/q-prem-f9-actions.test.ts.
