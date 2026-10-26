@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Checks drafts/content/faith/guardian-faith-overlay.json (C13-F): every faithOverlayKey used in
 drafts/content/bosses/*.json and drafts/content/enemies/guardian-form-shifts.json has exactly one entry,
-and every entry has a relic, at least one verse with a reference and text, and a single short Sensei line."""
+and every entry has a relic, at least one verse with a reference and text, and a single short Sensei line.
+Also checks storyScreens (C-STORY-b): unique key, story file exists, screen n exists with the same speaker,
+at least one verse with a valid reference and text, and the story screen text itself carries no verse reference."""
 import json, re, sys, glob, pathlib
 R = pathlib.Path(__file__).resolve().parents[3]
 keys = set()
@@ -38,6 +40,27 @@ for k in sorted(keys - seen.keys()): e.append(f"missing entry for faithOverlayKe
 for k in sorted(seen.keys() - keys): e.append(f"entry {k} matches no faithOverlayKey")
 for k, n in seen.items():
     if n > 1: e.append(f"{k}: {n} entries")
+ss = d.get("storyScreens")
+if not isinstance(ss, list): e.append("storyScreens must be a list"); ss = []
+sk = set()
+for s in ss:
+    k = s.get("faithOverlayKey")
+    if not k: e.append("storyScreens entry needs faithOverlayKey"); continue
+    if k in sk or k in seen: e.append(f"{k}: duplicate key")
+    sk.add(k)
+    sp = R/str(s.get("story", ""))
+    if not s.get("story") or not sp.is_file(): e.append(f"{k}: story file {s.get('story')!r} not found"); continue
+    scr = {x.get("n"): x for x in json.loads(sp.read_text()).get("screens", [])}
+    t = scr.get(s.get("screen"))
+    if t is None: e.append(f"{k}: screen {s.get('screen')!r} not in {s['story']}"); continue
+    if s.get("speaker") and s["speaker"] != t.get("speaker"): e.append(f"{k}: speaker {s['speaker']!r} but screen has {t.get('speaker')!r}")
+    if re.search(r"\b\d+:\d+\b|shineth|comprehended", t.get("text", "")): e.append(f"{k}: verse text belongs in the faith layer, not the story screen")
+    vs = s.get("verses") or []
+    if not vs: e.append(f"{k}: needs at least one verse")
+    for v in vs:
+        if not REF.match(v.get("reference", "")): e.append(f"{k}: bad reference {v.get('reference')!r}")
+        if v.get("reference","").endswith("(part)") != (v.get("partial") is True): e.append(f"{k}: '(part)' reference and partial: true go together")
+        if not v.get("text"): e.append(f"{k}: verse {v.get('reference')} has no text")
 for x in e: print("FAIL", x)
-print(f"{len(seen)} entries, {len(keys)} keys, {len(e)} problems")
+print(f"{len(seen)} entries, {len(keys)} keys, {len(ss)} story screens, {len(e)} problems")
 sys.exit(1 if e else 0)
