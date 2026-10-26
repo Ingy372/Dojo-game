@@ -1205,3 +1205,11 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Stat labels sit 8 px inside the painted wood rim (bottom and sides). On 44-tall tiles the rim is drawn at k 0.25 and the number is 14 px, so it clears the label.
 - menu2-0.webp is saved as lossy WebP at quality 90, with alpha kept exact (`webpQuality` in approved.json). It went from 838 KB to 268 KB, with RGB PSNR 35 dB.
 - QA round 2: the XP rail is drawn thinner where space is tight. Its bottom stays at least 8 px above Found, the dots and "New for you" (7 px tall at 667/844, 13 px at 932). The Legendary rarity ink is #5a2e08 (6.69:1 on its tile; #8a4a12 measured 4.05).
+
+## P-MENU2-SPACE: Training Board fits short landscape phones (2026-10-25)
+- Jay's iPhone Safari landscape leaves about 290–320 pt of height. The board now lays out from the real viewport height instead of assuming 375.
+- **Left column:** under 369 pt tall (the full column with the Path card at its smallest), it goes compact: 8 pt edges, the "Level N · cap" line moves beside the avatar, ENTER is 44 tall. If the Path card still has less than its full-card height, it becomes one row (label and step name). Under 36 pt it is left out.
+- **Panel:** each tab gets at least the height it has at 667x375 (277 pt for Last run, My Style and the Gate; Gear and the Trophy Case already fit). When the panel is shorter, the contents scroll inside it: masked to the frame, a thin wood thumb on the right, drag or wheel. A drag of more than 8 pt cancels the button it started on. Buttons scrolled out of view are switched off. Sheets don't scroll. Scroll position is kept while you stay on the tab.
+- We chose scrolling over shrinking: text stays at 12+ px and taps at 44+ pt. A 39 pt scroll at 667x320 is less of a change than restacking every tab.
+- **Stat tiles:** 52/64 tall (was 44/56), so the number and its label have 12–13 px of ink between them (was 4.5–6). The icon keeps 8 pt from the final number: the number slides right if the tile has room, otherwise the icon is left out (at 932 the clock is left out next to "14:46"; the gem sits 8 pt from "+180").
+- My Style slot name starts under the label's real line height (it overlapped by 1 px).
