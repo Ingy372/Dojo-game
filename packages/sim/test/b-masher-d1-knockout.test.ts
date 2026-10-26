@@ -57,7 +57,7 @@ describe('B-MASHER-d1 Screen 2 paths', () => {
   it('one Head home button with a door, a tap anywhere also continues, never under 44 px, no timer', () => {
     const card = src('ui/RunOverCard.ts');
     const kept = card.slice(card.indexOf('export function keptCard('), card.indexOf('export function choiceCard('));
-    expect(kept).toMatch(/const btnH = Math\.max\(44,/);
+    expect(kept).toMatch(/const btnH = Math\.max\(48,/);
     expect(kept).toMatch(/KO\.headHome/);
     expect(kept).toMatch(/const door = scene\.add\.graphics\(\)/);
     expect(kept).toMatch(/bg\.on\(Phaser\.Input\.Events\.GAMEOBJECT_POINTER_DOWN, go\)/);
@@ -89,7 +89,7 @@ describe('B-MASHER-d1 GameScene flow', () => {
   });
   it('Screen 1 lasts about 2.5 s and a tap skips it', () => {
     expect(endRun).toMatch(/KO\.helpUpMs - \(this\.time\.now - this\.downAt\)/);
-    expect(game).toMatch(/this\.helpUpSkipped = true;\s*this\.afterHelpUp\?\.\(\);/);
+    expect(game).toMatch(/this\.helpUpSkipped = true;[\s\S]*?skipDown\(this\.world, this\.me\);\s*this\.afterHelpUp\?\.\(\);/);
   });
   it('lost and rested both bank once through bankRun (the finishRun path), then the kept card', () => {
     expect((endRun.match(/bankRun\(/g) ?? []).length).toBe(1);

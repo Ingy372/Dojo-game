@@ -126,9 +126,13 @@ export class ActionButtons {
     for (const b of this.all()) b.container.setVisible(true);
   }
 
-  /** Makes Counter pulse for Sensei's guide (0 none, 1 small, 2 big, 3 nudge). */
+  /** Makes Counter pulse for Sensei's guide (0 none, 1 small, 2 big, 3 nudge, 4 L-PREMIUM-b Counter tip: a pulse, or a still outline with Reduced motion). */
   pulseCounter(level: number): void {
     this.counterPulse = level;
+  }
+
+  counterPulseLevel(): number {
+    return this.counterPulse;
   }
 
   /** Makes Dash pulse for the tutorial's Dash tip (K24a). */
@@ -168,7 +172,13 @@ export class ActionButtons {
       this.counterRing.arc(0, 0, COUNTER_RADIUS + 4, -Math.PI / 2, -Math.PI / 2 + done * Math.PI * 2);
       this.counterRing.strokePath();
     }
-    const pulse = this.counterPulse === 3 ? 0.24 : this.counterPulse === 2 ? 0.14 : this.counterPulse === 1 ? 0.06 : 0;
+    // L-PREMIUM-b: the Counter tip. Reduced motion: a still gold outline instead of the pulse.
+    const tipStill = this.counterPulse === 4 && reducedMotion();
+    if (tipStill) {
+      this.counterRing.lineStyle(5, 0xffd166, 1);
+      this.counterRing.strokeCircle(0, 0, COUNTER_RADIUS + 9);
+    }
+    const pulse = tipStill ? 0 : this.counterPulse === 4 ? 0.14 : this.counterPulse === 3 ? 0.24 : this.counterPulse === 2 ? 0.14 : this.counterPulse === 1 ? 0.06 : 0;
     this.counter.container.setScale(1 + Math.abs(Math.sin(this.scene.time.now / 140)) * pulse);
 
     const cost = strikeCost(p);
@@ -179,7 +189,10 @@ export class ActionButtons {
     labelColor(this.strike, strikeReady ? ACTION_LABEL.light : ACTION_LABEL.dim);
     const fill = Math.min(1, p.focus / cost);
     this.strikeRing.clear();
-    this.strikeRing.lineStyle(5, strikeReady ? 0xffd166 : 0x9ad1ff, strikeReady ? 1 : 0.8);
+    // L-PREMIUM-b QA: while the Counter tip shows, STRIKE's ring stays blue and still, so the only gold on screen is COUNTER.
+    const tipOn = this.counterPulse === 4;
+    const strikeGold = strikeReady && !tipOn;
+    this.strikeRing.lineStyle(5, strikeGold ? 0xffd166 : 0x9ad1ff, strikeGold ? 1 : 0.8);
     this.strikeRing.beginPath();
     this.strikeRing.arc(0, 0, STRIKE_RADIUS + 5, -Math.PI / 2, -Math.PI / 2 + fill * Math.PI * 2);
     this.strikeRing.strokePath();
@@ -199,7 +212,7 @@ export class ActionButtons {
       this.dashRing.strokePath();
     }
     this.dash.container.setScale(this.dashPulse ? 1 + Math.abs(Math.sin(this.scene.time.now / 140)) * 0.14 : 1);
-    if (strikeReady) this.strike.container.setScale(1 + Math.sin(this.scene.time.now / 160) * 0.04);
+    if (strikeGold) this.strike.container.setScale(1 + Math.sin(this.scene.time.now / 160) * 0.04);
     else this.strike.container.setScale(1);
 
     if (this.virtue && this.virtueRing) {

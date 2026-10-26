@@ -1349,7 +1349,30 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - Words in content: content/settings/boss-win.json (keeperDefeated, roomClear). "Floor cleared!" now comes from last-run.json `cleared`. No new story text.
 - Q-PREM-F9 QA fix (2026-10-26): DASH and STANCE drop see-through alpha (0.5 / 0.6) for the same solid treatment as COUNTER/STRIKE/VIRTUE: alpha 1, dim face (DASH 0x2f4a3e, STANCE 0x34405a), stroke 0.35, label #d8d2c8 (6.44:1, 6.89:1). A missed Counter's 0.5 s lockout now also draws a refill ring around the dim COUNTER face, so it reads as "wait". Decorate's camera clamps the room top to the 60 px bar (was 48), so wall decorations are never under it. The 32 px row-1 top buttons stay out of scope.
 
+## Q-PREM-F11 — KO tap skip and Head home size (2026-10-26)
+- A tap on KO Screen 1 (after the 300 ms mash guard) now calls the sim's `skipDown`, which sets `downTicks` to 1, so `playerOut` fires on the next tick and Screen 2 shows at once. Before this, the tap only skipped the client wait, and the sim's 30 down ticks (about 1.75 s) still held Screen 2 back. `skipDown` does nothing in the practice room (`respawnEnemies`) or when the player isn't down.
+- The Screen 2 fade stays 260 ms, and 0 with Reduced motion.
+- The Head home button is `max(48, min(52, height*0.13))` tall, so it is never under 48 px; it is 48 at 667x320.
 ## Q-PREM-TRY fix — keep-practicing line (2026-10-26)
 - QA found play continues after the retry line (GameScene.ts guideDone -> senseiDone only shows the line; world.ts stepGuide just moves to the next hint), so "Let's rest at the dojo." didn't fit. The 10 lessons now say "Nice work. Let's keep practicing." (Manager's call; no 'try again' wording). lesson-counter-guided unchanged.
 - lesson-counter-guided's retry is now "So close! Let's keep practicing." (the guided Counter repeats after it); no lesson says 'try again'.
 - lesson-counter-guided's retry now matches the other 10: "Nice work. Let's keep practicing." (all 11 share it); no lesson says 'So close' or 'try again'.
+
+## L-PREMIUM-b — Counter hint (2026-10-26)
+- A miss is only a counterable hit with no Counter press lately and no dash; Blocks and dashes never count.
+- After 2 misses in a battle/boss room the sim emits `counterHint`; the client shows `LESSONS[GUIDE_LESSONS[0]].nudge` as a placed tip (never over HUD, red circles or buttons) and pulses COUNTER; tip fades after 3 s.
+- Max 1 per room; off in the tutorial, on Challenge, while Sensei's guide is active, and after 3 Great Counters in the run. Limits in content/settings/counter-hint.json.
+- Reduced motion: still gold outline on COUNTER instead of the pulse; tip removed without fade.
+- The mash guard turns most mashing hits into Blocks, so a mashing kid rarely sees the tip.
+
+## L-PREMIUM-b QA fix — the tip shows in real play (2026-10-26)
+- QA: 0 tips in 1,391 real rooms, because the Mash guard turns unanswered swings into Blocks and only Hits counted; the old tests hid it with perfects=3 / perfectsLeft=99.
+- DECIDED (Manager confirmed): a Block made by the Mash guard (no Counter press lately, no Dash) counts as a miss. A real Block from a Counter press, or a Dash, never does.
+- missesBeforeHint is 3, per the spec.
+- While the tip pulses COUNTER, STRIKE's ring stays blue and still, so COUNTER is the only gold.
+## Q-PREM-F11 QA fix — no accidental Home on a mash (2026-10-26)
+- QA: mashing through the KO sent the player Home in 7/8 runs (first pointerdown 100–300 ms after Screen 2).
+- Screen 2 now ignores every tap (shade and Head home) for 500 ms after it appears (`ARM_MS = 500`), timed on the wall clock with the tap's own `pointer.downTime`, so a tap made inside the window but handled a frame late is still ignored.
+
+## B-MAIN-TRY11 — fix red main after #355 (2026-10-26)
+- #355 added lesson-counter-guided to C-STORY-TRY's programmerHandoff (11 lessons), so q-prem-try.test.ts now expects 11 and does not count the guided Counter twice. No content change.
