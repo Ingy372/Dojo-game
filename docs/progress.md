@@ -804,3 +804,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## P-MENU2-i (2026-10-25)
 - menu2 art imported (61 frames, 1 page) and drawn in Trophies (cubbies, shelf, seal, lantern, shine, unlock sweep, belt knots), Gear (doll backing, rings, bag tiles) and Last run (stat tiles and icons, XP bar, found tiles). Code-drawn fallback kept everywhere.
 - New test packages/sim/test/p-menu2-i-art.test.ts (7 tests). npm test: 857 passed, 1 skipped.
+## C-RENAME-3-code (2026-10-25)
+- Code strings now say Great Counter / GREAT x / GREAT! / "N Great". Two tests that still asserted #307's old content lines updated (main was red on them).

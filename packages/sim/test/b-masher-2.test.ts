@@ -19,7 +19,7 @@ describe('B-MASHER-2 Sensei steps back', () => {
 
   it('uses the content line, not text in code, and has a Reduced motion path', () => {
     expect(MASH_GUARD_LINE).toBe(mashGuardText.steppedBackLine);
-    expect(MASH_GUARD_LINE).toBe('Three perfect counters! Your timing can fly on its own now.');
+    expect(MASH_GUARD_LINE).toBe('Three great counters! Your timing can fly on its own now.');
     expect(MASH_GUARD_LINE.startsWith('Sensei')).toBe(false);
     expect(src).not.toContain(mashGuardText.steppedBackLine);
     const body = src.slice(src.indexOf('private senseiStepsBack('), src.indexOf('private shieldGlow('));

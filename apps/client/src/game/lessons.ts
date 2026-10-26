@@ -61,7 +61,7 @@ const TITLES: Record<string, string> = {
   'lesson-dash': 'Dash',
   'lesson-insights': 'Insights',
   'lesson-decorating': 'Decorating',
-  'lesson-perfect': 'Perfect Counter',
+  'lesson-perfect': 'Great Counter',
   'lesson-block': 'Block',
   'lesson-step-out': 'Stepping out',
 };

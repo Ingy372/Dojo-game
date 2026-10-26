@@ -910,7 +910,7 @@ export class GameScene extends Phaser.Scene {
       if (p.counterChain >= 2) {
         // Brighter glow as the chain grows (it stops growing at x5).
         const glow = Math.min(p.counterChain, 5);
-        this.chainText.setText(`PERFECT x${p.counterChain}`).setShadow(0, 0, '#ffd166', 4 + glow * 4, true, true);
+        this.chainText.setText(`GREAT x${p.counterChain}`).setShadow(0, 0, '#ffd166', 4 + glow * 4, true, true);
         this.chainText.setColor(glow >= 4 ? '#fff6d5' : '#ffd166');
         if (grew) {
           this.tweens.killTweensOf(this.chainText);
@@ -1179,7 +1179,7 @@ export class GameScene extends Phaser.Scene {
           this.impact(FEEL.perfect);
           this.flashScreen(0xffffff, 0.55, 220);
           this.ring(p.pos, COLORS.gold, 2.2);
-          this.popWord('PERFECT!', '#ffd166', 54);
+          this.popWord('GREAT!', '#ffd166', 54);
           if (ev.playerId === this.me && !this.world.guide) this.lesson('firstPerfectUnaided');
           break;
         }
@@ -2309,7 +2309,7 @@ export class GameScene extends Phaser.Scene {
       .setScale(2.2)
       .setAlpha(0);
     // K23: the damage number is dropped (it read as harsh to kids); a clean room still says so.
-    const parts = [`${perfects} Perfect`, ...(damage > 0 ? [] : ['no damage']), realClock(ticks)];
+    const parts = [`${perfects} Great`, ...(damage > 0 ? [] : ['no damage']), realClock(ticks)];
     const ch = this.room.challenge;
     if (ch && inTime) parts.push(ch.inTimeText);
     // A missed time gets its own line: the full sentence doesn't fit beside the stats at 667.
