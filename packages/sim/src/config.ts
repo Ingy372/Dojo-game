@@ -30,9 +30,10 @@ export const MOVEMENT = {
  */
 export const DIFFICULTY = {
   // Guided: same fill speed as Standard, then a 0.5 s window (Jay, 2026-10-06).
-  guided: { counterWindowTicks: 10, fillScale: 1 },
-  standard: { counterWindowTicks: 6, fillScale: 1 },
-  challenge: { counterWindowTicks: 4, fillScale: 0.8 },
+  // B-TUNE-GUIDED: enemyPowerScale multiplies every enemy's Power (Health never changes).
+  guided: { counterWindowTicks: 10, fillScale: 1, enemyPowerScale: 0.75 },
+  standard: { counterWindowTicks: 6, fillScale: 1, enemyPowerScale: 1 },
+  challenge: { counterWindowTicks: 4, fillScale: 0.8, enemyPowerScale: 1 },
 } as const;
 
 /** How full the danger circle is (0 to 1) when the Perfect Counter window opens. */
