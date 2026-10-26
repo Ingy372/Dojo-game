@@ -2,7 +2,7 @@
   "id": "twin-shields",
   "name": "Twin Shields",
   "kind": "battle",
-  "mix": "Two shields: Focus runs out, so win with Perfect Counters, not just Strikes.",
+  "mix": "Two shields: Focus runs out, so win with Great Counters, not just Strikes.",
   "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
   "tiles": [
     "####D#####D#####D###",

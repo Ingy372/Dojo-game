@@ -1206,6 +1206,9 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - menu2-0.webp is saved as lossy WebP at quality 90, with alpha kept exact (`webpQuality` in approved.json). It went from 838 KB to 268 KB, with RGB PSNR 35 dB.
 - QA round 2: the XP rail is drawn thinner where space is tight. Its bottom stays at least 8 px above Found, the dots and "New for you" (7 px tall at 667/844, 13 px at 932). The Legendary rarity ink is #5a2e08 (6.69:1 on its tile; #8a4a12 measured 4.05).
 
+## C-RENAME-3-code — "Great Counter" in code (2026-10-25)
+- Jay picked "Great Counter" to replace "Perfect Counter" in kid-visible text. Data/content was renamed in #307; this PR renames the code strings (lesson name, `GREAT x` chain, `GREAT!` pop word, Last run "N Great") and the world.ts comment.
+- Internal keys (`perfectCounter` event, `mostPerfects`, `healOnPerfect`, `firstPerfectUnaided`, `lesson-perfect`) stay as-is so saves and content keys don't break.
 ## P-MENU2-SPACE: Training Board fits short landscape phones (2026-10-25)
 - Jay's iPhone Safari landscape leaves about 290–320 pt of height. The board now lays out from the real viewport height instead of assuming 375.
 - **Left column:** under 369 pt tall (the full column with the Path card at its smallest), it goes compact: 8 pt edges, the "Level N · cap" line moves beside the avatar, ENTER is 44 tall. If the Path card still has less than its full-card height, it becomes one row (label and step name). (Round 2: it is never left out; see below.)

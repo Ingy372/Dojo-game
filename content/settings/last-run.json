@@ -4,7 +4,7 @@
   "cleared": "Floor cleared!",
   "reached": "You reached room {room} of {total}!",
   "none": "No runs yet. Tap Enter the Tower to climb!",
-  "stats": { "rooms": "Rooms", "perfects": "Perfect", "combo": "Combo", "time": "Time", "xp": "XP" },
+  "stats": { "rooms": "Rooms", "perfects": "Great", "combo": "Combo", "time": "Time", "xp": "XP" },
   "levelUp": "Level up!",
   "found": "Found",
   "foundNone": "Beat foes and open chests to find things.",
@@ -18,7 +18,7 @@
   "bestNew": "New best!",
   "bestNames": {
     "fastestClearTicks": "Fastest floor",
-    "mostPerfects": "Most Perfect Counters",
+    "mostPerfects": "Most Great Counters",
     "longestCombo": "Longest combo",
     "mostSGrades": "Most S grades"
   },

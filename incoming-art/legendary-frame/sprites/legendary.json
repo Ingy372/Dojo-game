@@ -1,0 +1,210 @@
+{
+ "about": "A-LEGENDARY frames, P-MENU2 family. Made by source/build_legendary.py; do not edit by hand. Sizes are 1x px; every file has an @2x twin.",
+ "sprites": {
+  "bag-tile-legendary": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-legendary.png",
+   "drawRect": [
+    6,
+    6,
+    72,
+    88
+   ],
+   "state": "normal",
+   "note": "A-LEGENDARY rarity frame, gear bag tile 72 x 88 (file 84 x 100), same layout as bag-tile-epic. Gilded frame, white-gold rim, radiant halo in the 6 px margin, 4 white-gold corner stars + crown sparkle. Icon 56 at top, centred x, centre y 40."
+  },
+  "bag-tile-legendary-shine-0": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-legendary-shine-0.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "EXTRA/OPTIONAL (epic has no shine): sweep across the legendary bag tile when it is first found or shown. 6 frames, 16 fps, play once; skip under Reduced motion."
+  },
+  "bag-tile-legendary-shine-1": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-legendary-shine-1.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "EXTRA/OPTIONAL (epic has no shine): sweep across the legendary bag tile when it is first found or shown. 6 frames, 16 fps, play once; skip under Reduced motion."
+  },
+  "bag-tile-legendary-shine-2": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-legendary-shine-2.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "EXTRA/OPTIONAL (epic has no shine): sweep across the legendary bag tile when it is first found or shown. 6 frames, 16 fps, play once; skip under Reduced motion."
+  },
+  "bag-tile-legendary-shine-3": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-legendary-shine-3.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "EXTRA/OPTIONAL (epic has no shine): sweep across the legendary bag tile when it is first found or shown. 6 frames, 16 fps, play once; skip under Reduced motion."
+  },
+  "bag-tile-legendary-shine-4": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-legendary-shine-4.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "EXTRA/OPTIONAL (epic has no shine): sweep across the legendary bag tile when it is first found or shown. 6 frames, 16 fps, play once; skip under Reduced motion."
+  },
+  "bag-tile-legendary-shine-5": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-legendary-shine-5.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "EXTRA/OPTIONAL (epic has no shine): sweep across the legendary bag tile when it is first found or shown. 6 frames, 16 fps, play once; skip under Reduced motion."
+  },
+  "bag-tile-legendary-9slice": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-legendary-9slice.png",
+   "drawRect": [
+    6,
+    6,
+    72,
+    88
+   ],
+   "slice": [
+    20,
+    20,
+    20,
+    20
+   ],
+   "note": "9-slice-safe legendary bag tile: insets 20 px each side (1x). Stretch the middle; add bag-tile-legendary-crest on top, centred x, top-aligned."
+  },
+  "bag-tile-legendary-crest": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-legendary-crest.png",
+   "layer": "overlay",
+   "note": "Crest + rays overlay for the 9-slice tile. Keep it centred x at the top edge; do not stretch."
+  },
+  "found-tile-legendary": {
+   "size": [
+    60,
+    60
+   ],
+   "file": "found/found-tile-legendary.png",
+   "drawRect": [
+    4,
+    4,
+    52,
+    52
+   ],
+   "note": "Last run found tile 52 (file 60), legendary. Icon 40."
+  },
+  "found-tile-legendary-shine-0": {
+   "size": [
+    60,
+    60
+   ],
+   "file": "found/found-tile-legendary-shine-0.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "EXTRA/OPTIONAL shine, as above."
+  },
+  "found-tile-legendary-shine-1": {
+   "size": [
+    60,
+    60
+   ],
+   "file": "found/found-tile-legendary-shine-1.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "EXTRA/OPTIONAL shine, as above."
+  },
+  "found-tile-legendary-shine-2": {
+   "size": [
+    60,
+    60
+   ],
+   "file": "found/found-tile-legendary-shine-2.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "EXTRA/OPTIONAL shine, as above."
+  },
+  "found-tile-legendary-shine-3": {
+   "size": [
+    60,
+    60
+   ],
+   "file": "found/found-tile-legendary-shine-3.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "EXTRA/OPTIONAL shine, as above."
+  },
+  "found-tile-legendary-shine-4": {
+   "size": [
+    60,
+    60
+   ],
+   "file": "found/found-tile-legendary-shine-4.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "EXTRA/OPTIONAL shine, as above."
+  },
+  "found-tile-legendary-shine-5": {
+   "size": [
+    60,
+    60
+   ],
+   "file": "found/found-tile-legendary-shine-5.png",
+   "layer": "optional overlay",
+   "fps": 16,
+   "note": "EXTRA/OPTIONAL shine, as above."
+  },
+  "gear-ring-legendary": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-legendary.png",
+   "state": "normal",
+   "note": "A11 gear ring 56, legendary. Icon 36 centred. Radiant rays + white-gold studs. 'glow' = target slot (honey glow, as other rarities)."
+  },
+  "gear-ring-legendary-glow": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-legendary-glow.png",
+   "state": "glow",
+   "note": "A11 gear ring 56, legendary. Icon 36 centred. Radiant rays + white-gold studs. 'glow' = target slot (honey glow, as other rarities)."
+  },
+  "gear-ring-legendary-pressed": {
+   "size": [
+    56,
+    56
+   ],
+   "file": "gear/gear-ring-legendary-pressed.png",
+   "state": "pressed",
+   "note": "A11 gear ring 56, legendary. Icon 36 centred. Radiant rays + white-gold studs. 'glow' = target slot (honey glow, as other rarities)."
+  }
+ }
+}

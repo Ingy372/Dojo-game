@@ -44,7 +44,7 @@
       "screens": [
         "Red circle! Tap COUNTER now!"
       ],
-      "success": "Perfect! You did it!",
+      "success": "Great! You did it!",
       "earliestRun": 1,
       "advance": "move",
       "waitFor": "counter",

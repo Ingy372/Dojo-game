@@ -33,7 +33,7 @@
       "id": "crane-charm",
       "name": "Crane Charm",
       "slot": "charm",
-      "text": "Perfect Counters heal {n} health",
+      "text": "Great Counters heal {n} health",
       "effect": { "type": "healOnPerfect" },
       "amounts": [2, 3, 4, 6]
     }

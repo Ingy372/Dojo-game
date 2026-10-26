@@ -62,7 +62,7 @@
   "strikes": [
     {
       "id": "follow-up-kick",
-      "name": "Follow-up Kick",
+      "name": "Spin Kick Finish",
       "text": "Your STRIKE adds a second kick.",
       "effect": {
         "type": "strikeExtraHit",
@@ -71,7 +71,7 @@
     },
     {
       "id": "quick-combo",
-      "name": "Quick Combo",
+      "name": "Butterfly Flow",
       "text": "Practiced combos flow smoothly: each STRIKE costs 8 less Focus.",
       "effect": {
         "type": "strikeCost",
@@ -83,7 +83,7 @@
     {
       "id": "off-balance",
       "name": "Off-Balance",
-      "text": "Perfect Counters leave the attacker off-balance half a second longer.",
+      "text": "Great Counters leave the attacker off-balance half a second longer.",
       "effect": {
         "type": "staggerTicks",
         "amount": 10
@@ -100,7 +100,7 @@
     {
       "id": "sweep",
       "name": "Sweep",
-      "text": "Perfect Counters also knock into enemies close by.",
+      "text": "Great Counters also knock into enemies close by.",
       "effect": {
         "type": "rippleCounter",
         "amount": 0.6,
@@ -110,7 +110,7 @@
     {
       "id": "steady-breath",
       "name": "Steady Breath",
-      "text": "Each Perfect Counter restores 3 Health.",
+      "text": "Each Great Counter restores 3 Health.",
       "effect": {
         "type": "healOnPerfect",
         "amount": 3
@@ -128,7 +128,7 @@
     {
       "id": "sharp-eyes",
       "name": "Sharp Eyes",
-      "text": "The Perfect Counter window is 1 tick longer.",
+      "text": "The Great Counter window is 1 tick longer.",
       "effect": {
         "type": "counterWindow",
         "amount": 1
@@ -146,7 +146,7 @@
     {
       "id": "disarm",
       "name": "Disarm",
-      "text": "After a Perfect Counter, that attacker's next attack does half damage.",
+      "text": "After a Great Counter, that attacker's next attack does half damage.",
       "effect": {
         "type": "disarm",
         "amount": 0.5
@@ -155,7 +155,7 @@
     {
       "id": "throw",
       "name": "Throw",
-      "text": "Perfect Counter hits are 25% stronger.",
+      "text": "Great Counter hits are 25% stronger.",
       "effect": {
         "type": "counterStrength",
         "amount": 0.5
@@ -196,12 +196,12 @@
     },
     {
       "id": "perfect-discipline",
-      "name": "Perfect Discipline",
+      "name": "Strong Discipline",
       "words": [
         "Self-Discipline"
       ],
       "kind": "discipline",
-      "text": "For {s} seconds, every COUNTER is a Perfect Counter.",
+      "text": "For {s} seconds, every COUNTER is a Great Counter.",
       "amount": 0,
       "seconds": 3
     }
