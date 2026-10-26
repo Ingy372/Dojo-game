@@ -852,3 +852,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - npm test 911 passed, 3 skipped; typecheck and build pass. Golden re-captured on purpose (runs unchanged).
 **Next**
 - Manager confirmed all 4 bonuses, no downside. Real DojoForge id for the Open Leg sign-off.
+
+## Q-PREM-F1 — First-tap bow and arrival tap-through (2026-10-26)
+**Done**
+- "Tap to continue" at the end of the dojo arrival can't move the hero or start a run: a press echoed within 450 ms after the last card is dropped (DojoScene). 40/40 at 667x375, 667x320, 844x390 and 932x430, Reduced motion on and off; it was 30/36 on main.
+- Bow: 10/10 single taps bowed on the dojo entry and the floor at 667x375. Top-bar taps while the prompt is up pulse Bow and open nothing, at all 4 sizes (dojo 8/8, floor 3/3). Both already held on main, so bow.ts is unchanged.
+- npm test 911 passed, 3 skipped; typecheck and build pass. Shots and touch scripts: docs/shots/q-prem-f1/.
+**Next**
+- Tester: retest (c) on a real phone. Real-phone repro needed if a bow tap still misses.

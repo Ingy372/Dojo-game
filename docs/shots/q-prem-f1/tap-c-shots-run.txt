@@ -1,0 +1,41 @@
+667x375 rm=off: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=off: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=off: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=off: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=off last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+667x375 rm=on: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=on: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=on: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=on: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=on last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+667x320 rm=off: Tap to continue @334,298 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x320 rm=off: Tap to continue @334,298 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x320 rm=off: Tap to continue @334,298 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x320 rm=off: Tap to continue @334,298 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x320 rm=off last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+667x320 rm=on: Tap to continue @334,298 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x320 rm=on: Tap to continue @334,298 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x320 rm=on: Tap to continue @334,298 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x320 rm=on: Tap to continue @334,298 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x320 rm=on last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+844x390 rm=off: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=off: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=off: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=off: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=off last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+844x390 rm=on: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=on: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=on: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=on: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=on last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+932x430 rm=off: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=off: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=off: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=off: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=off last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+932x430 rm=on: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=on: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=on: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=on: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=on last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+(c) 40/40 Tap to continue taps left the hero still with no run
