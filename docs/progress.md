@@ -921,3 +921,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Retry line in the 10 lessons is now "Nice work. Let's keep practicing."; test updated.
 - lesson-counter-guided retry: "So close! Let's keep practicing."; test bans 'try again' in all lessons; shots include the guided line.
 - All 11 lesson retry lines are "Nice work. Let's keep practicing."; test bans 'So close' and 'try again'.
+
+## L-PREMIUM-b (2026-10-26)
+- Counter hint built: sim event + rules, client tip/pulse, 7 tests (200-run kid ≤1/room, smart 0, Challenge 0), shots in docs/shots/l-premium-b (104 PASS, 0 FAIL).

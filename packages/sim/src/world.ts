@@ -189,6 +189,8 @@ export type CombatEvent =
   | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId; chain: number }
   /** B-MASHER-2: this room's Perfect Counters reached COMBAT.counter.mashGuardPerfects, so Mash guard is off until the next room. */
   | { kind: 'mashGuardOff'; playerId: PlayerId }
+  /** L-PREMIUM-b: the player let Counter windows pass with no answer, so the client shows the Counter tip (at most once per room). */
+  | { kind: 'counterHint'; playerId: PlayerId }
   | { kind: 'block'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'hit'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'counterPressed'; playerId: PlayerId }
@@ -253,6 +255,8 @@ export interface WorldState {
   bells: number;
   /** Sensei's guided first Counter, or null when it's finished or off. */
   guide: GuideState | null;
+  /** L-PREMIUM-b: this room's Counter tip, or null when off. */
+  counterHint: CounterHintRoom | null;
   /** Health never drops below this (1 on the tutorial floor, else 0). */
   minHealth: number;
   /** The tutorial floor's glowing spot, or null. */
@@ -333,6 +337,31 @@ export interface WorldOptions {
   easyBossHealth?: number;
   /** R-BAL-12: multiply enemy Health and Power (then round) for the run's belt. Default: none. */
   enemyScale?: { maxHealth: number; power: number };
+  /** L-PREMIUM-b: the Counter tip for this room, or null/absent for none (tutorial, Challenge, practice room, or the run is past its limit). */
+  counterHint?: CounterHintRoom | null;
+}
+
+/** L-PREMIUM-b rules, from content/settings/counter-hint.json. */
+export interface CounterHintRules {
+  /** Missed Counter windows (no answer at all) in a room before the tip shows. */
+  missesBeforeHint: number;
+  /** The tip stops for the run after this many Great (Perfect) Counters. */
+  stopAfterGreatCounters: number;
+}
+
+/** One room's Counter tip state. */
+export interface CounterHintRoom {
+  missesBeforeHint: number;
+  /** Great Counters still allowed in this run before the tip stops (the room's own count included). */
+  perfectsLeft: number;
+  misses: number;
+  given: boolean;
+}
+
+/** L-PREMIUM-b: the room's Counter tip, or null when it is off. */
+export function counterHintFor(rules: CounterHintRules, runPerfects: number, on: boolean): CounterHintRoom | null {
+  const left = rules.stopAfterGreatCounters - runPerfects;
+  return on && left > 0 ? { missesBeforeHint: rules.missesBeforeHint, perfectsLeft: left, misses: 0, given: false } : null;
 }
 
 export interface PlayerSetup {
@@ -467,6 +496,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     phaseHoldTicks: 0,
     waveHold: false,
     seeAll: false,
+    counterHint: options.counterHint ? { ...options.counterHint } : null,
     guide: (options.guideStep ?? GUIDE_DONE) < GUIDE_DONE ? { step: options.guideStep!, enemyId: null, waiting: false, waitTicks: 0 } : null,
   };
 }
@@ -1227,9 +1257,20 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       p.combo = 0;
       p.counterChain = 0;
       world.events.push({ kind: 'hit', playerId: p.id, enemyId: e.id, damage: dmg });
+      // L-PREMIUM-b: a Counter window with no answer at all (no recent Counter press, no Dash) is a miss.
+      const pressedLately = p.counterPressedTick >= 0 && world.tick - p.counterPressedTick <= Math.max(COMBAT.counter.guardTicks, counterWindowTicks(world, p) + COMBAT.counter.blockTicksAfterWindow) + COMBAT.counter.missLockoutTicks;
+      if (a.counterable !== false && !pressedLately && p.dashTicks === 0) noteCounterMiss(world, p);
       hurt(world, p, dmg);
     }
   }
+}
+
+function noteCounterMiss(world: WorldState, p: PlayerState): void {
+  const h = world.counterHint;
+  if (!h || h.given || world.guide || p.perfects >= h.perfectsLeft) return;
+  if (++h.misses < h.missesBeforeHint) return;
+  h.given = true;
+  world.events.push({ kind: 'counterHint', playerId: p.id });
 }
 
 /** Focus for the nth Perfect Counter in a chain (1 = first). */

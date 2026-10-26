@@ -1353,3 +1353,10 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - QA found play continues after the retry line (GameScene.ts guideDone -> senseiDone only shows the line; world.ts stepGuide just moves to the next hint), so "Let's rest at the dojo." didn't fit. The 10 lessons now say "Nice work. Let's keep practicing." (Manager's call; no 'try again' wording). lesson-counter-guided unchanged.
 - lesson-counter-guided's retry is now "So close! Let's keep practicing." (the guided Counter repeats after it); no lesson says 'try again'.
 - lesson-counter-guided's retry now matches the other 10: "Nice work. Let's keep practicing." (all 11 share it); no lesson says 'So close' or 'try again'.
+
+## L-PREMIUM-b — Counter hint (2026-10-26)
+- A miss is only a counterable hit with no Counter press lately and no dash; Blocks and dashes never count.
+- After 2 misses in a battle/boss room the sim emits `counterHint`; the client shows `LESSONS[GUIDE_LESSONS[0]].nudge` as a placed tip (never over HUD, red circles or buttons) and pulses COUNTER; tip fades after 3 s.
+- Max 1 per room; off in the tutorial, on Challenge, while Sensei's guide is active, and after 3 Great Counters in the run. Limits in content/settings/counter-hint.json.
+- Reduced motion: still gold outline on COUNTER instead of the pulse; tip removed without fade.
+- The mash guard turns most mashing hits into Blocks, so a mashing kid rarely sees the tip.
