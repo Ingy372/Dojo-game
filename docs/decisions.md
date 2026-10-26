@@ -1287,3 +1287,5 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - `ActionButtons.disable()` / `TouchControls.disable()` hide every part and ignore later touches (`onDown` returns early, `contains()` is false), so taps after the loss do nothing. The scene restarts for the next run, which builds fresh controls.
 - Try again is untouched (that is Q-PREM-F5).
 - Follow-up: popups (`floatText`, `popWord`) are tracked in a set and dropped on playerDown; both return early once down. The counter chain uses the same `fightOver` rule as the combo.
+
+- Q-PREM-F4 (QA fix): on playerDown, the Sensei bubble is destroyed and senseiSay does nothing for the rest of that run, so no bubble sits over "Ouch! The run is over." The scene restart resets `downed`, so the bubble comes back on the next run.
