@@ -28,6 +28,24 @@
       "column": 10,
       "row": 3,
       "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 6,
+      "row": 4,
+      "wave": 1
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 6,
+      "row": 5,
+      "wave": 2
+    },
+    {
+      "enemy": "spark-sprite",
+      "column": 14,
+      "row": 5,
+      "wave": 2
     }
   ],
   "artProps": "The big cold oven on the top wall; a huge pot beside it; the long table pushed to the walls.",
