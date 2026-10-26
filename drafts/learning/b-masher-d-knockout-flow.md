@@ -4,12 +4,12 @@
 - **ITEM:** B-MASHER-d (plan: merged PR #291, `drafts/planning/B-MASHER-plan.md`, step 3).
 - **WHAT:** A kind send-home moment for a knock-out (KO). Sensei helps you up, you keep everything you found, you head home, and the Home Dojo welcomes you with a gentle pointer to what's next. Exact text, Sensei lines, buttons, timing and alternates for every line, plus the play-time path, accessibility and evidence. Design only, no game code.
 - **WHY:** Young players get knocked out in room 1 a lot (#291). The run still ends (Jay's rule in `docs/decisions.md`: "the run ends and the player goes home with everything found so far"), but it should feel like the end of a good training day, not a failure, so they come back.
-- **DECIDE (Jay):** sign off each line marked ✅ (main or Alt A/B). Open questions are below.
+- **DECIDE (Jay):** sign off each line marked ✅ (main or Alt A/B). No open questions remain.
 - **NEXT:** After sign-off, the Programmer builds it, and QA checks it in B-MASHER-e with a 6–8 year-old.
 
-### Open questions
-1. `docs/decisions.md` also has an older in-room rule: "Defeat: a soft fade and 'Ouch! Back to the start.', then the player is back at the room start with full health." Jay's later rule ends the run instead. Is the in-room reset retired? If it still applies anywhere (for example in the tutorial), use the replacement line in Screen 0. If not, delete Screen 0.
-2. Which pointer wins on the Home Dojo arrival if more than one applies? I propose this order: an upgrade ready, then real class, then the next run.
+### Decided (Manager, Oct 26)
+- The in-room reset line "Ouch! Back to the start." is retired. A knock-out always ends the run.
+- Pointer order on the Home Dojo arrival: an upgrade ready first, then real class, then the next run.
 
 ## Word rules
 - Never: died, dead, game over, failed, fail, lost, lose, defeat (on screen), try harder, don't give up, only, almost, so close, hurry, should have.
@@ -49,7 +49,7 @@
 - ✅ **Sensei greets:** "Welcome home!"
   - Alt A: "Good to see you home."
   - Alt B: "The dojo is glad you're back."
-- ✅ **Pointer line** (one only, see open question 2). It's a hint, never a task:
+- ✅ **Pointer line** (one only, in the decided order: upgrade ready, then real class, then next run). It's a hint, never a task:
   - Upgrade ready: "Your new gear is ready to try!"
     - Alt A: "Something new is ready for you."
     - Alt B: "Let's look at your new finds."
@@ -67,12 +67,6 @@
   - Alt A: "Time to rest. See you tomorrow!"
   - Alt B: "What a day! Rest well, student."
 - No "time's up" or clock wording, and no hint of what they "could have" done.
-
-## Screen 0 (only if open question 1 keeps the in-room reset)
-- Replaces "Ouch! Back to the start.":
-- ✅ "Sensei helps you up. Back to the start!"
-  - Alt A: "Up you get! Let's start the room."
-  - Alt B: "Catch your breath. Here we go!"
 
 ## Accessibility
 - Every line is read aloud by the phone's voice (the same voice as the verses), with a speaker button to replay it. Text stays on screen until tapped (except the fading pointer line, which stays while it's being read).
