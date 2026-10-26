@@ -1346,3 +1346,8 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - The moment is a new Celebrations step (`keeper`): one screen with the character, rays and 40 confetti, "Floor Keeper defeated!" at 28 px. It stays smaller than a promotion (3 screens, 60 confetti, gong), per the hard rule that real achievements get the biggest celebrations. Reduced motion: no confetti, the rays stay still, and the title doesn't pop.
 - Words in content: content/settings/boss-win.json (keeperDefeated, roomClear). "Floor cleared!" now comes from last-run.json `cleared`. No new story text.
 - Q-PREM-F9 QA fix (2026-10-26): DASH and STANCE drop see-through alpha (0.5 / 0.6) for the same solid treatment as COUNTER/STRIKE/VIRTUE: alpha 1, dim face (DASH 0x2f4a3e, STANCE 0x34405a), stroke 0.35, label #d8d2c8 (6.44:1, 6.89:1). A missed Counter's 0.5 s lockout now also draws a refill ring around the dim COUNTER face, so it reads as "wait". Decorate's camera clamps the room top to the 60 px bar (was 48), so wall decorations are never under it. The 32 px row-1 top buttons stay out of scope.
+
+## Q-PREM-F11 — KO tap skip and Head home size (2026-10-26)
+- A tap on KO Screen 1 (after the 300 ms mash guard) now calls the sim's `skipDown`, which sets `downTicks` to 1, so `playerOut` fires on the next tick and Screen 2 shows at once. Before this, the tap only skipped the client wait, and the sim's 30 down ticks (about 1.75 s) still held Screen 2 back. `skipDown` does nothing in the practice room (`respawnEnemies`) or when the player isn't down.
+- The Screen 2 fade stays 260 ms, and 0 with Reduced motion.
+- The Head home button is `max(48, min(52, height*0.13))` tall, so it is never under 48 px; it is 48 at 667x320.

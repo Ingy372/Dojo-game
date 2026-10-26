@@ -914,3 +914,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 **Next**
 - Tester: beat the Floor Keeper on a fresh save (moment plays), then again (normal clear). Q-PREM-GRADE next.
 - Q-PREM-F9 QA fix: DASH/STANCE solid dim faces (6.44:1 / 6.89:1), Counter lockout ring, Decorate wall row clear of the 60 px bar. verify-ui-shots 656 PASS, 0 FAIL (4 sizes × Reduced motion on/off).
+
+## 2026-10-26 — Q-PREM-F11
+- A tap on KO Screen 1 goes straight to Screen 2 (90–275 ms after the tap, was about 1.75 s). Head home is ≥48 px at every size. New test: packages/sim/test/q-prem-f11-ko.test.ts. Shots and log: docs/shots/q-prem-f11 (88 PASS, 0 FAIL, 4 sizes × RM on/off).

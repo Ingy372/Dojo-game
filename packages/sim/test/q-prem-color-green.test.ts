@@ -38,6 +38,6 @@ describe('Q-PREM-COLOR follow-ups', () => {
     expect(text).not.toMatch(/(circle\(0, 0, radius, color|setFillStyle\([^;]*), 0\.9\)/);
   });
   it("the kept card's Head home (lost and rested runs) is never under a 44 px tap", () => {
-    expect(src('ui/RunOverCard.ts')).toMatch(/function keptCard[\s\S]*?const btnH = Math\.max\(44, Math\.min\(52, height \* 0\.13\)\)/);
+    expect(src('ui/RunOverCard.ts')).toMatch(/function keptCard[\s\S]*?const btnH = Math\.max\(48, Math\.min\(52, height \* 0\.13\)\)/);
   });
 });

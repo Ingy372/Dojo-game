@@ -25,7 +25,7 @@ export function keptCard(
   const { width, height } = view(scene);
   const small = height < 420;
   const cardW = Math.min(440, width - 40);
-  const btnH = Math.max(44, Math.min(52, height * 0.13)); // never under a 44 px tap
+  const btnH = Math.max(48, Math.min(52, height * 0.13)); // Q-PREM-F11: Head home is never under 48 px
   const rowH = small ? 22 : 26;
   const text = (x: number, y: number, s: string, size: number, color: string, bold = false) =>
     scene.add
