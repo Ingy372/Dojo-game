@@ -270,6 +270,21 @@
         }
       ],
       "notes": "C-STORY-e: the story line stays plain; the verse shows with this screen when the faith layer is on. KJV checked against bible-api.com (translation=kjv) on 2026-10-26; same verse as story/mystery-ladder.json. KJV is a placeholder until Jay answers sign wording vs KJV."
+    },
+    {
+      "faithOverlayKey": "dojo-ties-reveal-screen-2",
+      "story": "drafts/content/story/dojo-ties.json",
+      "screen": 2,
+      "speaker": "sensei",
+      "theme": "A friend through the storm",
+      "verses": [
+        {
+          "reference": "Proverbs 17:17",
+          "text": "A friend loveth at all times, and a brother is born for adversity.",
+          "partial": false
+        }
+      ],
+      "notes": "C-STORY-h: the story line stays plain; the verse shows with this screen when the faith layer is on. KJV checked against bible-api.com (translation=kjv) on 2026-10-26. KJV is a placeholder until Jay answers sign wording vs KJV."
     }
   ]
 }

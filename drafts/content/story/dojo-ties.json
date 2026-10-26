@@ -1,0 +1,150 @@
+{
+  "notes": "DRAFT for C-STORY-h (spec: drafts/content/C-STORY-review.md, writer decision W1). Ties Sensei, Senpai and Kohai (characters from dialogue/milestone-6.json, roles only, no real names) to the Tower story. dojoLines: 1-2 short dojo-side lines per tier, White to Brown/Black; Sensei hints reused from story/mystery-ladder.json (approved for reuse). Kohai's role: the small new student who grows braver and helps, and asks the question that opens the reveal. reveal: 6 screens, plays at the dojo after the Brown/Black Gate scene (gate-scenes.json); it follows gate-scenes.json screen 35 (\"They were my friend. Let's bring them home together.\") and tells the story behind that line without repeating it. No blame, no guilt. Verses live only in faith/guardian-faith-overlay.json storyScreens (KJV, checked on bible-api.com 2026-10-26; KJV is a placeholder until Jay answers sign wording vs KJV). Nothing shipped is changed.",
+  "id": "dojo-ties",
+  "characters": [
+    "sensei",
+    "senpai",
+    "kohai"
+  ],
+  "dojoLines": [
+    {
+      "id": "tie-white-1",
+      "tier": "white",
+      "speaker": "sensei",
+      "text": "Sensei glances at an old lantern, then smiles. \"Let's train.\"",
+      "plays": "Dojo visit after this tier's Gate opens",
+      "source": "reused: mystery-ladder white senseiHint"
+    },
+    {
+      "id": "tie-white-2",
+      "tier": "white",
+      "speaker": "kohai",
+      "text": "I'm new too! Can we start together?",
+      "plays": "Dojo visit after this tier's Gate opens"
+    },
+    {
+      "id": "tie-yellow-3",
+      "tier": "yellow",
+      "speaker": "senpai",
+      "text": "A storm broke the light, but nobody did it on purpose.",
+      "plays": "Dojo visit after this tier's Gate opens"
+    },
+    {
+      "id": "tie-yellow-4",
+      "tier": "yellow",
+      "speaker": "kohai",
+      "text": "I'm not scared of storms when we train together.",
+      "plays": "Dojo visit after this tier's Gate opens"
+    },
+    {
+      "id": "tie-orange-5",
+      "tier": "orange",
+      "speaker": "sensei",
+      "text": "Sensei sets out one extra cup of tea, just in case.",
+      "plays": "Dojo visit after this tier's Gate opens",
+      "source": "reused: mystery-ladder orange senseiHint"
+    },
+    {
+      "id": "tie-green-6",
+      "tier": "green",
+      "speaker": "sensei",
+      "text": "Worries feel smaller when we name them.",
+      "plays": "Dojo visit after this tier's Gate opens",
+      "source": "reused: gate-scenes green Sensei line"
+    },
+    {
+      "id": "tie-green-7",
+      "tier": "green",
+      "speaker": "kohai",
+      "text": "My worry was the big kick. Now I can do it!",
+      "plays": "Dojo visit after this tier's Gate opens"
+    },
+    {
+      "id": "tie-blue-8",
+      "tier": "blue",
+      "speaker": "senpai",
+      "text": "Sensei used to climb with a friend. Sensei never says who.",
+      "plays": "Dojo visit after this tier's Gate opens",
+      "source": "reused: mystery-ladder blue senseiHint (Jay asked if too early; still open)"
+    },
+    {
+      "id": "tie-red-9",
+      "tier": "red",
+      "speaker": "kohai",
+      "text": "Sensei fixed an old cracked shield today. I helped hold it!",
+      "plays": "Dojo visit after this tier's Gate opens"
+    },
+    {
+      "id": "tie-red-black-10",
+      "tier": "red-black",
+      "speaker": "sensei",
+      "text": "Sensei rereads an old note, then tucks it away. \"Keep climbing.\"",
+      "plays": "Dojo visit after this tier's Gate opens",
+      "source": "reused: mystery-ladder red-black senseiHint"
+    },
+    {
+      "id": "tie-brown-11",
+      "tier": "brown",
+      "speaker": "kohai",
+      "text": "Look! This old sash is just like ours.",
+      "plays": "Dojo visit after this tier's Gate opens"
+    },
+    {
+      "id": "tie-brown-12",
+      "tier": "brown",
+      "speaker": "sensei",
+      "text": "Sensei is quiet for a moment. \"Every student starts in the same place.\"",
+      "plays": "Dojo visit after this tier's Gate opens"
+    },
+    {
+      "id": "tie-brown-black-13",
+      "tier": "brown-black",
+      "speaker": "narrator",
+      "text": "Sensei is waiting for you at the dojo door.",
+      "plays": "Dojo visit after this tier's Gate opens"
+    }
+  ],
+  "reveal": {
+    "id": "reveal-brown-black",
+    "tier": "brown-black",
+    "plays": "At the dojo, right after the Brown/Black Gate scene."
+  },
+  "screens": [
+    {
+      "n": 1,
+      "scene": "reveal-brown-black",
+      "speaker": "narrator",
+      "text": "Back at the dojo, Sensei holds the old lantern from the shelf."
+    },
+    {
+      "n": 2,
+      "scene": "reveal-brown-black",
+      "speaker": "sensei",
+      "text": "Long ago, I trained here with a friend. We climbed side by side."
+    },
+    {
+      "n": 3,
+      "scene": "reveal-brown-black",
+      "speaker": "kohai",
+      "text": "Is your friend the one keeping the light safe?"
+    },
+    {
+      "n": 4,
+      "scene": "reveal-brown-black",
+      "speaker": "sensei",
+      "text": "Yes. On the storm night, my friend carried the light up to keep it safe."
+    },
+    {
+      "n": 5,
+      "scene": "reveal-brown-black",
+      "speaker": "sensei",
+      "text": "I lit this lantern every night, hoping they would come home."
+    },
+    {
+      "n": 6,
+      "scene": "reveal-brown-black",
+      "speaker": "sensei",
+      "text": "I never stopped hoping. Now we hope together. Let's climb!"
+    }
+  ]
+}
