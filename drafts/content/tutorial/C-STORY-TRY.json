@@ -2,10 +2,10 @@
   "item": "C-STORY-TRY",
   "decided": {
     "version": "A",
-    "text": "Nice work today. Let's rest at the dojo.",
+    "text": "Nice work. Let's keep practicing.",
     "by": "Jay",
-    "ref": "t513u (via the Manager), Oct 26",
-    "scope": "everywhere the old retry string appears"
+    "ref": "t513u (via the Manager), Oct 26; revised Oct 26 (C-STORY-TRY-rec, via the Manager): tutorial play continues, so the line keeps practicing instead of going home",
+    "scope": "all 11 tutorial lessons, including lesson-counter-guided"
   },
   "current": "That's okay. Try again whenever you're ready.",
   "versions": {
@@ -14,6 +14,9 @@
     },
     "B": {
       "retry": "You learned a lot. Home we go!"
+    },
+    "A-rec": {
+      "retry": "Nice work. Let's keep practicing."
     }
   },
   "programmerHandoff": [
@@ -22,76 +25,78 @@
       "lessonId": "lesson-warning",
       "field": "retry",
       "old": "That's okay. Try again whenever you're ready.",
-      "new": "Nice work today. Let's rest at the dojo."
+      "new": "Nice work. Let's keep practicing."
     },
     {
       "file": "content/tutorial/first-session-lessons.json",
       "lessonId": "lesson-counter-hint-2",
       "field": "retry",
       "old": "That's okay. Try again whenever you're ready.",
-      "new": "Nice work today. Let's rest at the dojo."
+      "new": "Nice work. Let's keep practicing."
     },
     {
       "file": "content/tutorial/first-session-lessons.json",
       "lessonId": "lesson-counter-hint-3",
       "field": "retry",
       "old": "That's okay. Try again whenever you're ready.",
-      "new": "Nice work today. Let's rest at the dojo."
+      "new": "Nice work. Let's keep practicing."
     },
     {
       "file": "content/tutorial/first-session-lessons.json",
       "lessonId": "lesson-strike",
       "field": "retry",
       "old": "That's okay. Try again whenever you're ready.",
-      "new": "Nice work today. Let's rest at the dojo."
+      "new": "Nice work. Let's keep practicing."
     },
     {
       "file": "content/tutorial/first-session-lessons.json",
       "lessonId": "lesson-dash",
       "field": "retry",
       "old": "That's okay. Try again whenever you're ready.",
-      "new": "Nice work today. Let's rest at the dojo."
+      "new": "Nice work. Let's keep practicing."
     },
     {
       "file": "content/tutorial/first-session-lessons.json",
       "lessonId": "lesson-insights",
       "field": "retry",
       "old": "That's okay. Try again whenever you're ready.",
-      "new": "Nice work today. Let's rest at the dojo."
+      "new": "Nice work. Let's keep practicing."
     },
     {
       "file": "content/tutorial/first-session-lessons.json",
       "lessonId": "lesson-decorating",
       "field": "retry",
       "old": "That's okay. Try again whenever you're ready.",
-      "new": "Nice work today. Let's rest at the dojo."
+      "new": "Nice work. Let's keep practicing."
     },
     {
       "file": "content/tutorial/first-session-lessons.json",
       "lessonId": "lesson-perfect",
       "field": "retry",
       "old": "That's okay. Try again whenever you're ready.",
-      "new": "Nice work today. Let's rest at the dojo."
+      "new": "Nice work. Let's keep practicing."
     },
     {
       "file": "content/tutorial/first-session-lessons.json",
       "lessonId": "lesson-block",
       "field": "retry",
       "old": "That's okay. Try again whenever you're ready.",
-      "new": "Nice work today. Let's rest at the dojo."
+      "new": "Nice work. Let's keep practicing."
     },
     {
       "file": "content/tutorial/first-session-lessons.json",
       "lessonId": "lesson-step-out",
       "field": "retry",
       "old": "That's okay. Try again whenever you're ready.",
-      "new": "Nice work today. Let's rest at the dojo."
+      "new": "Nice work. Let's keep practicing."
+    },
+    {
+      "file": "content/tutorial/first-session-lessons.json",
+      "lessonId": "lesson-counter-guided",
+      "field": "retry",
+      "old": "So close! Let's try again.",
+      "new": "Nice work. Let's keep practicing."
     }
   ],
-  "notInScope": {
-    "lessonId": "lesson-counter-guided",
-    "field": "retry",
-    "current": "So close! Let's try again.",
-    "note": "Correction: this lesson never held the old string. Its retry is the in-practice line during the slowdown, not a go-home line, so it stays as is unless the Manager says otherwise."
-  }
+  "notes": "Revised: lesson-counter-guided is now in scope (was 'So close! Let's try again.'). All 11 lessons use the same line."
 }
