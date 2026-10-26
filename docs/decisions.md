@@ -1311,3 +1311,8 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - When New for you (min 44) can't keep 12 px at a size, the stat tiles give up the shortfall (never under 44). At 667x375 the tiles go 52 → 47; other sizes are unchanged. Chosen over raising the minimum height, which would make 667x375 scroll.
 - Why: at 667x320 a 4 px strip of New for you sat just above Again!, so a tap that landed a little high opened Abilities.
 - Follow-up: action-button faces (DASH, COUNTER, STRIKE, VIRTUE) were all filled at 0.9 alpha, so the floor tinted through (DASH label fell to 4.51:1). All are solid now (`FACE_ALPHA = 1` in input/ActionButtons.ts); the dimmed not-ready states (container alpha) are unchanged. The rest card's Back home now uses Math.max(44, …) like the run-over card (F5).
+
+## Q-PREM-F10 — short stat tiles and the New for you sparkle (2026-10-26)
+- At 47 px tiles (667x320, 667x375) the 14 px number (17 drawn) and 12 px label (15 drawn) can't keep the label 8 px inside the rim and still stay apart. On short tiles (< 56) they are now one stack, centred inside the rim and 4 px apart (`statStack` in ui/lastRun.ts). The label sits ~2.5 px inside the rim instead of 8. If a tile ever gets too short for that (44), the number steps down to 12 px. Tall tiles are unchanged.
+- The short New for you card (~73 px wide) has no room beside its label for stars, and it is flush with the content's right edge. So its sparkle (two stars, `headingSparkle`) now sits 4 px before the "New for you" heading, in the gap after Found. The tall card keeps its three corner stars. The bottom-left star no longer touches the trophy icon.
+- F8's 12 px clear above Again! is unchanged.
