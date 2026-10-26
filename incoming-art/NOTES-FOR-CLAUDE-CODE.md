@@ -340,8 +340,16 @@ Don't import `walk-rework/arms-*` yet: Jay hasn't picked one.
 
 ## Audio: staged SFX (`incoming-art/audio/sfx/`) [SAMPLES, do not wire until Jay approves]
 - The event-to-file mapping is in `audio/sfx/README.md`. Formats: Kenney `.ogg` and 512-pack `.wav` (44.1 kHz, 16-bit mono).
-- All files are CC0, and a credit is not required. A courtesy credit for "Kenney (kenney.nl)" and "SubspaceAudio / Juhani Junkala" is appreciated.
+- All files are CC0, and a credit is not required. A courtesy credit for "Kenney (kenney.nl)" and "SubspaceAudio / Juhani Junkala" is appreciated. Kenney RPG Audio (cloth whooshes) is also CC0.
 - Copy the chosen files into the game's audio folder when wiring. Do not load them from `incoming-art/`.
-- Set gain per group: the 8-bit files are about -8 to -10 dB hotter than the rest. Raise `jingles_SAX03` by about +6 dB. Keep headroom on the UI bus because the Kenney UI clips peak near 0 dBFS.
+- **Loudness: balance in the game's mixer. The files are untouched on purpose (no volume edits in the repo).** Measured with ffmpeg volumedetect (mean / peak):
+  - 8-bit `sfx_sounds_powerup2.wav` (-7.5 / -6.0 dB) and `sfx_movement_jump1.wav` (-7.3 / -6.0 dB) are about 8-10 dB louder than the Kenney sounds. Trim them by about 8-10 dB.
+  - `jingles_SAX03.ogg` is quiet (-20.0 / -10.6 dB peak; the other jingles peak at -1 to -6 dB). Raise it by about +6 dB.
+  - `sfx_coin_double1.wav` is quiet (peak -11.8 dB, versus -6.0 dB for `sfx_coin_single1`). Raise it by about +5 dB or match it to coin_single1.
+  - The Kenney UI clicks and impacts peak near 0 dBFS (-0.0 to -1.4 dB; `pluck_001` peaks at -0.0 dB). Keep headroom on the UI/SFX bus to avoid clipping when sounds stack.
+  - Kenney mean levels span about 15 dB (`click_001` -26.4 dB to `confirmation_001` -11.3 dB). Normalize per event group.
+  - The cloth whooshes (`kenney-rpg/cloth1-3`) are quiet: mean -24.6 to -29.3 dB, peak -3.5 to -10.1 dB. Raise the whiff group to taste.
+  - Duration: `click_002.ogg` is only 0.01 s long and can sound like a tick, so prefer `click_001` for taps. `scroll_001.ogg` is 1.0 s long, which is long for a UI cue, so cut it off or fade it out on stop.
+- Whiff picks a random file from `kenney-rpg/cloth1-3`. Level-up and belt-up use the STEEL jingles (`jingles_STEEL00` / `jingles_STEEL04`).
 - For hit variants, pick at random among the `_000/_001/_002` files to avoid repetition.
 - Keep it kid-friendly: do not add sounds from the scream, explosion, weapon or alarm folders of the 512 pack.
