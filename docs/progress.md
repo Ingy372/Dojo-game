@@ -892,5 +892,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## Q-PREM-F8 (2026-10-26)
 - Nothing tappable within 8 px above Again! (12 px measured) at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off, scrolled to the top, halfway and the end. Hands-on touches 2, 4 and 6 px above Again! open nothing, and Again! still starts Game. verify-ui-shots: 308 PASS, 0 FAIL (docs/shots/q-prem-f8/verify-log.txt). Test: packages/sim/test/q-prem-f6-again.test.ts (F8 gap check at all 4 sizes).
 
+## Q-PREM-F9 (2026-10-26)
+- COUNTER, STRIKE and VIRTUE ready, not-ready and flash labels all reach 4.5:1 or more (pixel-sampled). Decorate's Done and Street Smarts are 44 px at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off. Hands-on: each action button queues its action, Done returns to play, and Street Smarts opens its scene. verify-ui-shots: 488 PASS, 0 FAIL (docs/shots/q-prem-f9/verify-log.txt). Test: packages/sim/test/q-prem-f9-actions.test.ts.
 ## Q-PREM-F10 (2026-10-26)
 - Stat tile number and label at least 4 px apart, with nothing overlapping (tile icons, New for you label, icon and sparkle checked against every panel text and picture), at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off. Text is at least 12 px, F8's 12 px above Again! is kept, and a hands-on tap on Again! starts a run. verify-ui-shots: 766 PASS, 0 FAIL (docs/shots/q-prem-f10/verify-log.txt). Test: packages/sim/test/b-lastrun-layout.test.ts (Q-PREM-F10 block).
+
+- Q-PREM-F9 QA fix: DASH/STANCE solid dim faces (6.44:1 / 6.89:1), Counter lockout ring, Decorate wall row clear of the 60 px bar. verify-ui-shots 656 PASS, 0 FAIL (4 sizes × Reduced motion on/off).
