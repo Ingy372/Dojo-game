@@ -1280,3 +1280,9 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - QA (Q-PREMIUM F2) found no visible way out of Settings; only a tap on the dim background closed it. The Manager approved a corner button labelled "Done".
 - Green `roundButton` (Scroll's Close colour), 96×44 in the top-right corner, 12 px from the edges, 16 px text. It calls the same `close()` as the background tap. The background tap still closes, too.
 - It sits above the cards (cards start at 10% height + 44 px), so nothing else moved at 667×320.
+
+## Q-PREM-F1 — First-tap bow and arrival tap-through (2026-10-26)
+- Cause of the tap-through, proven on main (8d83a95) before any change: the last arrival card ("Tap to continue" on the celebration, when nothing comes after it) closes on pointer-up and turns the dojo to play in the same moment. A second press from the same gesture (a phone's copy-of-a-tap mouse event, or a quick double tap) then lands in play and walks the hero (main: 6/6 echo taps moved the hero at 667, 844 and 932, Reduced motion on and off; docs/shots/q-prem-f1/baseline-c-main.txt).
+- Fix: when the arrival steps end, DojoScene resets the touch controls and ignores new presses for `ARRIVAL_QUIET_MS` = 450 ms. After that, taps walk as usual (each run has a control tap that still moves the hero). bow.ts and Celebrations.ts are unchanged.
+- Bow (a) and pulse (b): on main the touch script could not make a single tap miss (centre, edges ±45-50 px, 6-20 px drift, tap as soon as it shows, second finger held down), and every top-bar tap pulsed Bow with no menu opening. So bow.ts was not changed; the script stays as the regression check. If the Tester still sees misses on a real phone, we need a device repro (which phone, where the finger landed).
+- The floor case was tested on this profile's first Tower floor, which is the tutorial floor ("Bow at the door to show respect."). It uses the same `bowPrompt()` as "Bow to begin the floor".
