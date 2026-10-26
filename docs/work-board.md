@@ -95,7 +95,7 @@ Last updated: 2026-10-25 9:55 PM EDT by Dojo-ascent Manager. Catch-up covers PRs
 | C-RENAME-2 | Dojo-Ascent Content Designer | **Done (PR #305).** Open Leg Stance; Strong Discipline. | — | — |
 | C-RENAME-3 | Dojo-Ascent Content Designer + Programmer | **Done (PRs #307 data, #308 code).** Spin Kick Finish, Butterfly Flow, Perfect Counter → Great Counter. Jay doesn't like "perfect" in game text. | — | — |
 | A-LEGENDARY | Dojo-ascent Artist | **Done (PR #304; Jay approved the golden-orange Legendary frame).** | — | — |
-| A-LEGENDARY-swap | Dojo-Ascent Programmer | **In QA (PR #310, round 2 at 069e594).** The word is moved off the rim, and a picked Legendary keeps the orange frame and crest. Merge when QA passes. | Legendary items show the golden-orange frame wherever Epic did; screenshots at 667×375; QA passes. | QA retest |
+| A-LEGENDARY-swap | Dojo-Ascent Programmer | **Done (PR #310, merged Oct 25, 11:58 PM, after QA passed).** Polish for later: the halo on a held ring, the 28 px icon, and 4 columns at 932. | Legendary items show the golden-orange frame wherever Epic did; screenshots at 667×375; QA passes. | — |
 | A4 | Dojo-ascent Artist | **Done (PR #301; Jay approved day and dusk, Oct 25).** | — | — |
 | A4-DOJO | Dojo-ascent Artist | Main dojo building modelled on the real Action Zone dojo, inside and out. **Placeholder:** the plain dojo in #301 stays until then. The shop building is a shop; the third building stays a plain placeholder until Jay decides. | Jay approves the building. | Jay's Action Zone photos (expected the morning of Oct 26) |
 
