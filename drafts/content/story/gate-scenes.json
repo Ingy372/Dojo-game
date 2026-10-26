@@ -1,0 +1,319 @@
+{
+  "notes": "DRAFT for C-STORY-e (spec: drafts/content/C-STORY-review.md). One 4-screen Gate scene per tier, White to Brown/Black; Black/summit is out of scope (Jay). Format follows story/chapter-1.json; screens are one flat list (n unique) so check-faith-overlay.py can validate storyScreens, and each screen names its scene. speaker: narrator, sensei, guardian, senpai (new speaker, used once for the Blue hint from mystery-ladder.json). Only the real belt earned at the dojo opens the Gate. Guardian lines are the freedLine from story/guardian-arcs.json; Sensei/Senpai hints are reused from story/mystery-ladder.json. The White scene overlaps chapter-1 screens 14-17; the Programmer should use one or the other, not both. visibleChange is a PLACEHOLDER waiting on C-STORY-f (town vs sign). Verses live only in faith/guardian-faith-overlay.json storyScreens. Nothing shipped is changed.",
+  "id": "gate-scenes",
+  "scenes": [
+    {
+      "id": "gate-white",
+      "tier": "white",
+      "guardian": "lamp-keeper",
+      "plays": "When the real belt earned at the dojo opens this tier's Gate, after the Guardian is freed.",
+      "screensFrom": 1,
+      "screensTo": 4,
+      "visibleChange": "dojo window glows a little",
+      "visibleChangeStatus": "PLACEHOLDER - waiting on C-STORY-f (town vs sign)"
+    },
+    {
+      "id": "gate-yellow",
+      "tier": "yellow",
+      "guardian": "sun-gardener",
+      "plays": "When the real belt earned at the dojo opens this tier's Gate, after the Guardian is freed.",
+      "screensFrom": 5,
+      "screensTo": 8,
+      "visibleChange": "flowers open in the dojo window box",
+      "visibleChangeStatus": "PLACEHOLDER - waiting on C-STORY-f (town vs sign)"
+    },
+    {
+      "id": "gate-orange",
+      "tier": "orange",
+      "guardian": "hearth-cook",
+      "plays": "When the real belt earned at the dojo opens this tier's Gate, after the Guardian is freed.",
+      "screensFrom": 9,
+      "screensTo": 12,
+      "visibleChange": "a warm lamp lights in the dojo kitchen",
+      "visibleChangeStatus": "PLACEHOLDER - waiting on C-STORY-f (town vs sign)"
+    },
+    {
+      "id": "gate-green",
+      "tier": "green",
+      "guardian": "stone-giant",
+      "plays": "When the real belt earned at the dojo opens this tier's Gate, after the Guardian is freed.",
+      "screensFrom": 13,
+      "screensTo": 16,
+      "visibleChange": "dojo window glows brighter",
+      "visibleChangeStatus": "PLACEHOLDER - waiting on C-STORY-f (town vs sign)"
+    },
+    {
+      "id": "gate-blue",
+      "tier": "blue",
+      "guardian": "river-watcher",
+      "plays": "When the real belt earned at the dojo opens this tier's Gate, after the Guardian is freed.",
+      "screensFrom": 17,
+      "screensTo": 20,
+      "visibleChange": "the dojo pond turns clear and bright",
+      "visibleChangeStatus": "PLACEHOLDER - waiting on C-STORY-f (town vs sign)"
+    },
+    {
+      "id": "gate-red",
+      "tier": "red",
+      "guardian": "ember-knight",
+      "plays": "When the real belt earned at the dojo opens this tier's Gate, after the Guardian is freed.",
+      "screensFrom": 21,
+      "screensTo": 24,
+      "visibleChange": "a lantern lights over the dojo door",
+      "visibleChangeStatus": "PLACEHOLDER - waiting on C-STORY-f (town vs sign)"
+    },
+    {
+      "id": "gate-red-black",
+      "tier": "red-black",
+      "guardian": "echo-mask",
+      "plays": "When the real belt earned at the dojo opens this tier's Gate, after the Guardian is freed.",
+      "screensFrom": 25,
+      "screensTo": 28,
+      "visibleChange": "dojo window glows brighter",
+      "visibleChangeStatus": "PLACEHOLDER - waiting on C-STORY-f (town vs sign)"
+    },
+    {
+      "id": "gate-brown",
+      "tier": "brown",
+      "guardian": "root-keeper",
+      "plays": "When the real belt earned at the dojo opens this tier's Gate, after the Guardian is freed.",
+      "screensFrom": 29,
+      "screensTo": 32,
+      "visibleChange": "a lamp lights on the dojo bookshelf",
+      "visibleChangeStatus": "PLACEHOLDER - waiting on C-STORY-f (town vs sign)"
+    },
+    {
+      "id": "gate-brown-black",
+      "tier": "brown-black",
+      "guardian": "storm-herald",
+      "plays": "When the real belt earned at the dojo opens this tier's Gate, after the Guardian is freed.",
+      "screensFrom": 33,
+      "screensTo": 36,
+      "visibleChange": "the whole dojo glows warm",
+      "visibleChangeStatus": "PLACEHOLDER - waiting on C-STORY-f (town vs sign)"
+    }
+  ],
+  "screens": [
+    {
+      "n": 1,
+      "scene": "gate-white",
+      "speaker": "narrator",
+      "text": "Your new belt from the dojo opens the white Gate."
+    },
+    {
+      "n": 2,
+      "scene": "gate-white",
+      "speaker": "narrator",
+      "text": "The first piece of light rises up the Tower."
+    },
+    {
+      "n": 3,
+      "scene": "gate-white",
+      "speaker": "narrator",
+      "text": "Sensei glances at an old lantern, then smiles."
+    },
+    {
+      "n": 4,
+      "scene": "gate-white",
+      "speaker": "sensei",
+      "text": "Let's train."
+    },
+    {
+      "n": 5,
+      "scene": "gate-yellow",
+      "speaker": "narrator",
+      "text": "Your new belt from the dojo opens the yellow Gate."
+    },
+    {
+      "n": 6,
+      "scene": "gate-yellow",
+      "speaker": "guardian",
+      "text": "The thorns are gone. The storm wasn't my fault!"
+    },
+    {
+      "n": 7,
+      "scene": "gate-yellow",
+      "speaker": "narrator",
+      "text": "Flowers open along the stairs as the light rises."
+    },
+    {
+      "n": 8,
+      "scene": "gate-yellow",
+      "speaker": "sensei",
+      "text": "Nobody broke it on purpose. How does that feel?"
+    },
+    {
+      "n": 9,
+      "scene": "gate-orange",
+      "speaker": "narrator",
+      "text": "Your new belt from the dojo opens the orange Gate."
+    },
+    {
+      "n": 10,
+      "scene": "gate-orange",
+      "speaker": "guardian",
+      "text": "Is it supper time? I would love some company."
+    },
+    {
+      "n": 11,
+      "scene": "gate-orange",
+      "speaker": "narrator",
+      "text": "Sensei sets out one extra cup of tea, just in case."
+    },
+    {
+      "n": 12,
+      "scene": "gate-orange",
+      "speaker": "sensei",
+      "text": "Who would you save a seat for?"
+    },
+    {
+      "n": 13,
+      "scene": "gate-green",
+      "speaker": "narrator",
+      "text": "Your new belt from the dojo opens the green Gate."
+    },
+    {
+      "n": 14,
+      "scene": "gate-green",
+      "speaker": "guardian",
+      "text": "I was stones and worry. Thank you for staying!"
+    },
+    {
+      "n": 15,
+      "scene": "gate-green",
+      "speaker": "narrator",
+      "text": "One by one, the worry stones roll away."
+    },
+    {
+      "n": 16,
+      "scene": "gate-green",
+      "speaker": "sensei",
+      "text": "Worries feel smaller when we name them.",
+      "faithOverlayKey": "gate-green-screen-16"
+    },
+    {
+      "n": 17,
+      "scene": "gate-blue",
+      "speaker": "narrator",
+      "text": "Your new belt from the dojo opens the blue Gate."
+    },
+    {
+      "n": 18,
+      "scene": "gate-blue",
+      "speaker": "guardian",
+      "text": "The water is clear. I can see you now, friend."
+    },
+    {
+      "n": 19,
+      "scene": "gate-blue",
+      "speaker": "senpai",
+      "text": "Sensei used to climb with a friend. Sensei never says who."
+    },
+    {
+      "n": 20,
+      "scene": "gate-blue",
+      "speaker": "sensei",
+      "text": "Clear water helps you see who is beside you.",
+      "faithOverlayKey": "gate-blue-screen-20"
+    },
+    {
+      "n": 21,
+      "scene": "gate-red",
+      "speaker": "narrator",
+      "text": "Your new belt from the dojo opens the red Gate."
+    },
+    {
+      "n": 22,
+      "scene": "gate-red",
+      "speaker": "guardian",
+      "text": "I was guarding the wrong thing. Shields are for helping."
+    },
+    {
+      "n": 23,
+      "scene": "gate-red",
+      "speaker": "narrator",
+      "text": "The Ember Knight steps aside, and the light rises."
+    },
+    {
+      "n": 24,
+      "scene": "gate-red",
+      "speaker": "sensei",
+      "text": "What are you strong enough to protect?",
+      "faithOverlayKey": "gate-red-screen-24"
+    },
+    {
+      "n": 25,
+      "scene": "gate-red-black",
+      "speaker": "narrator",
+      "text": "Your new belt from the dojo opens the red and black Gate."
+    },
+    {
+      "n": 26,
+      "scene": "gate-red-black",
+      "speaker": "guardian",
+      "text": "I copied what I heard. Now I hear kindness."
+    },
+    {
+      "n": 27,
+      "scene": "gate-red-black",
+      "speaker": "narrator",
+      "text": "Sensei rereads an old note, then tucks it away."
+    },
+    {
+      "n": 28,
+      "scene": "gate-red-black",
+      "speaker": "sensei",
+      "text": "Keep climbing."
+    },
+    {
+      "n": 29,
+      "scene": "gate-brown",
+      "speaker": "narrator",
+      "text": "Your new belt from the dojo opens the brown Gate."
+    },
+    {
+      "n": 30,
+      "scene": "gate-brown",
+      "speaker": "guardian",
+      "text": "Take a book, little one. Your story belongs here too."
+    },
+    {
+      "n": 31,
+      "scene": "gate-brown",
+      "speaker": "narrator",
+      "text": "An old sash rests in the book, its name too faded to read."
+    },
+    {
+      "n": 32,
+      "scene": "gate-brown",
+      "speaker": "sensei",
+      "text": "Look how far you have come.",
+      "faithOverlayKey": "gate-brown-screen-32"
+    },
+    {
+      "n": 33,
+      "scene": "gate-brown-black",
+      "speaker": "narrator",
+      "text": "Your new belt from the dojo opens the brown and black Gate."
+    },
+    {
+      "n": 34,
+      "scene": "gate-brown-black",
+      "speaker": "guardian",
+      "text": "The wind is still. Listen. Someone is calling from the top."
+    },
+    {
+      "n": 35,
+      "scene": "gate-brown-black",
+      "speaker": "sensei",
+      "text": "They were my friend. Let's bring them home together.",
+      "faithOverlayKey": "gate-brown-black-screen-35"
+    },
+    {
+      "n": 36,
+      "scene": "gate-brown-black",
+      "speaker": "narrator",
+      "text": "The light rises, and the whole dojo glows warm."
+    }
+  ]
+}
