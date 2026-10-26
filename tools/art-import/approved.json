@@ -808,7 +808,7 @@
       ]
     },
     "menu2": {
-      "note": "P-MENU2-i: A-MENU2 menu art for Trophies, Gear and Last run only (Jay OK'd the #265 art; Manager go). @2x files packed untrimmed, drawn at 0.5. Shared pieces (panel frame, title plaque, wood buttons) added on the Manager's call. My Style art (slot-card, tray-tile, switch, glyph) is held.",
+      "note": "P-MENU2-i: A-MENU2 menu art for Trophies, Gear and Last run only (Jay OK'd the #265 art; Manager go). @2x files packed untrimmed, drawn at 0.5. Shared pieces (panel frame, title plaque, wood buttons) added on the Manager's call. My Style art (slot-card, tray-tile, switch, glyph) is held. A-LEGENDARY-wire: the golden-orange Legendary frame (Jay OK'd #304) merged in: rings, 9-slice bag tile + crest, found tile. No shine, no fixed bag tile.",
       "scale": 1,
       "webpQuality": 90,
       "sources": [
@@ -886,7 +886,16 @@
             "title-plaque",
             "button-primary-normal",
             "button-primary-pressed",
-            "button-primary-disabled"
+            "button-primary-disabled",
+            "gear-ring-legendary",
+            "gear-ring-legendary-glow",
+            "gear-ring-legendary-pressed",
+            "bag-tile-legendary-9slice",
+            "bag-tile-legendary-crest",
+            "found-tile-legendary"
+          ],
+          "mergeSprites": [
+            "incoming-art/legendary-frame/sprites/legendary.json"
           ]
         }
       ]

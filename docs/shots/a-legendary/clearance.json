@@ -1,0 +1,408 @@
+{
+ "after-667x320-rmoff": [
+  {
+   "state": "gear",
+   "uid": "L3",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  }
+ ],
+ "after-667x320-rmon": [
+  {
+   "state": "gear",
+   "uid": "L3",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  }
+ ],
+ "after-667x375-rmoff": [
+  {
+   "state": "gear",
+   "uid": "L3",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear",
+   "uid": "L1",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear",
+   "uid": "L2",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear-picked",
+   "uid": "L2",
+   "sel": true,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  }
+ ],
+ "after-667x375-rmon": [
+  {
+   "state": "gear",
+   "uid": "L3",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear",
+   "uid": "L1",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear",
+   "uid": "L2",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear-picked",
+   "uid": "L2",
+   "sel": true,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  }
+ ],
+ "after-844x390-rmoff": [
+  {
+   "state": "gear",
+   "uid": "L3",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear",
+   "uid": "L1",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear",
+   "uid": "L2",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear-picked",
+   "uid": "L2",
+   "sel": true,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  }
+ ],
+ "after-844x390-rmon": [
+  {
+   "state": "gear",
+   "uid": "L3",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear",
+   "uid": "L1",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear",
+   "uid": "L2",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear-picked",
+   "uid": "L2",
+   "sel": true,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  }
+ ],
+ "after-932x430-rmoff": [
+  {
+   "state": "gear",
+   "uid": "L3",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear",
+   "uid": "L1",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear",
+   "uid": "L2",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear-picked",
+   "uid": "L2",
+   "sel": true,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  }
+ ],
+ "after-932x430-rmon": [
+  {
+   "state": "gear",
+   "uid": "L3",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear",
+   "uid": "L1",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear",
+   "uid": "L2",
+   "sel": false,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  },
+  {
+   "state": "gear-picked",
+   "uid": "L2",
+   "sel": true,
+   "tile": [
+    102,
+    100
+   ],
+   "below": 9.5,
+   "left": 9.5,
+   "right": 9.0,
+   "contrastMedian": 9.27,
+   "contrastP5": 9.1,
+   "contrastMin": 8.96
+  }
+ ]
+}

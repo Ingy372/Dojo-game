@@ -820,6 +820,14 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Shots at 667x375, 667x320, 844x390, 932x430, Reduced motion on and off, 0 console errors: docs/shots/b-t3-tune-2b.
 **Next**
 - Tester pass on a phone; art author may want to look at the lid hidden on the P3 bonk facing E.
+## A-LEGENDARY-wire — Legendary frame wired in (2026-10-25)
+**Done**
+- Legendary gear uses the golden-orange frame (Jay OK'd #304) instead of the Epic stand-in: Gear bag tiles (9-slice + gem crest), doll rings (normal/glow/pressed) and Last run found tiles. Imported via tools/art-import (menu2 pack, +6 frames).
+- Word "Legendary" lifted 4 px on its tile: #5a2e08 ≥4.52:1 on every glyph pixel (median 9.28:1).
+- Before/after shots with forced Legendary items at 667x375, 667x320, 844x390, 932x430, Reduced motion on/off, 0 console errors: docs/shots/a-legendary.
+- Round 2: the word clears the rim by ≥8 px below and at the sides (9.5 / 9.5 / 9.0 px at DPR 2, all sizes, Reduced motion on/off; contrast ≥8.96:1). A picked Legendary keeps its frame and crest, with the highlight drawn on top.
+**Next**
+- Optional: the Legendary shine overlay (6 frames, once, skipped under Reduced motion) as its own item.
 ## R-STANCE-d2 — stance sign-off unlocks (2026-10-25)
 **Done**
 - Stances unlock only from their own teacher sign-off in the feed (`stanceSignOffs`, placeholder DojoForge ids in content and fixtures). No legacy grant, not in the Gate or Power Rating, katas unlock nothing. Picker shows Ready plus all 4; unsigned ones show the not-yet card.

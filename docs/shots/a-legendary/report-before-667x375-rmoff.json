@@ -1,0 +1,197 @@
+{
+ "tag": "before-667x375-rmoff",
+ "errs": [],
+ "states": {
+  "gear": {
+   "legendTiles": [
+    {
+     "uid": "L3",
+     "rarity": "legendary",
+     "legendFrame": false,
+     "crest": false,
+     "skin": "26",
+     "skinType": "Image",
+     "word": "Legendary",
+     "ink": "#5a2e08",
+     "fontPx": 12,
+     "wordBox": {
+      "x": 444.4599914550781,
+      "y": 176,
+      "w": 64,
+      "h": 15
+     }
+    },
+    {
+     "uid": "R1",
+     "rarity": "rare",
+     "legendFrame": false,
+     "crest": false,
+     "skin": "24",
+     "skinType": "Image",
+     "word": "Rare",
+     "ink": "#174a7d",
+     "fontPx": 12,
+     "wordBox": {
+      "x": 554.4600219726562,
+      "y": 176,
+      "w": 28,
+      "h": 15
+     }
+    },
+    {
+     "uid": "L1",
+     "rarity": "legendary",
+     "legendFrame": false,
+     "crest": false,
+     "skin": "26",
+     "skinType": "Image",
+     "word": "Legendary",
+     "ink": "#5a2e08",
+     "fontPx": 12,
+     "wordBox": {
+      "x": 444.4599914550781,
+      "y": 256,
+      "w": 64,
+      "h": 15
+     }
+    },
+    {
+     "uid": "L2",
+     "rarity": "legendary",
+     "legendFrame": false,
+     "crest": false,
+     "skin": "26",
+     "skinType": "Image",
+     "word": "Legendary",
+     "ink": "#5a2e08",
+     "fontPx": 12,
+     "wordBox": {
+      "x": 536.4600219726562,
+      "y": 256,
+      "w": 64,
+      "h": 15
+     }
+    }
+   ],
+   "rings": [
+    {
+     "slot": "hands",
+     "skin": "44"
+    },
+    {
+     "slot": "gi",
+     "skin": "47"
+    },
+    {
+     "slot": "charm",
+     "skin": "38"
+    }
+   ]
+  },
+  "gear-picked": {
+   "legendTiles": [
+    {
+     "uid": "L3",
+     "rarity": "legendary",
+     "legendFrame": false,
+     "crest": false,
+     "skin": "26",
+     "skinType": "Image",
+     "word": "Legendary",
+     "ink": "#5a2e08",
+     "fontPx": 12,
+     "wordBox": {
+      "x": 444.4599914550781,
+      "y": 176,
+      "w": 64,
+      "h": 15
+     }
+    },
+    {
+     "uid": "R1",
+     "rarity": "rare",
+     "legendFrame": false,
+     "crest": false,
+     "skin": "24",
+     "skinType": "Image",
+     "word": "Rare",
+     "ink": "#174a7d",
+     "fontPx": 12,
+     "wordBox": {
+      "x": 554.4600219726562,
+      "y": 176,
+      "w": 28,
+      "h": 15
+     }
+    },
+    {
+     "uid": "L1",
+     "rarity": "legendary",
+     "legendFrame": false,
+     "crest": false,
+     "skin": "26",
+     "skinType": "Image",
+     "word": "Legendary",
+     "ink": "#5a2e08",
+     "fontPx": 12,
+     "wordBox": {
+      "x": 444.4599914550781,
+      "y": 256,
+      "w": 64,
+      "h": 15
+     }
+    },
+    {
+     "uid": "L2",
+     "rarity": "legendary",
+     "legendFrame": false,
+     "crest": false,
+     "skin": "28",
+     "skinType": "Image",
+     "word": "Legendary",
+     "ink": "#5a2e08",
+     "fontPx": 12,
+     "wordBox": {
+      "x": 536.4600219726562,
+      "y": 256,
+      "w": 64,
+      "h": 15
+     }
+    }
+   ],
+   "rings": [
+    {
+     "slot": "hands",
+     "skin": "44"
+    },
+    {
+     "slot": "gi",
+     "skin": "47"
+    },
+    {
+     "slot": "charm",
+     "skin": "38"
+    }
+   ]
+  },
+  "run": {
+   "legendTiles": [],
+   "rings": []
+  }
+ },
+ "foundSkins": [
+  {
+   "id": "L2",
+   "skin": "27"
+  },
+  {
+   "id": "E1",
+   "skin": "27"
+  },
+  {
+   "id": "R1",
+   "skin": "25"
+  }
+ ],
+ "reducedMotion": false
+}
