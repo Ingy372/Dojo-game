@@ -5,7 +5,7 @@
 // stance lists in each setup and the stance case (now Cat, +1 window) changed; every run is the same. R-STANCE-d2 re-captured it again: the only change is the new
 // signOffId field on each stance; stances come from fixture stance sign-offs set to match, and every run is the same. R-STANCE-g re-captured it on purpose: Open Leg (ready-stance, all 0) joins the yellow and green
 // stance lists (fixtures 3 and 4 sign it off), the Beginner's Stance text is #312's line, and the Cat case index moves 1 -> 2; every run is the same. R-STANCE-READY-NUM re-captured it on purpose: Open Leg's 4 bonuses (#314) show in the yellow and green stance lists, and each room now also records
-// dealt and kos (the bot's new damage-dealt and enemies-defeated counts); players start in Beginner's Stance, so every run is the same. If play is ever meant to change, re-capture it
+// dealt and kos (the bot's new damage-dealt and enemies-defeated counts); players start in Beginner's Stance, so every run is the same. B-TUNE-GUIDED re-captured only rooted/guided on purpose: Guided enemy Power x0.75 leaves the player at 154 Health instead of 141; every Standard and Challenge value is byte-identical. If play is ever meant to change, re-capture it
 // on purpose and say so in the PR.
 import { describe, expect, it } from 'vitest';
 import { captureGolden } from './golden-capture';

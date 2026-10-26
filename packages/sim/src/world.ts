@@ -413,8 +413,13 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       if (!base) throw new Error(`Room "${room.id}" uses enemy "${id}", but no such enemy type was loaded`);
       // R-BAL-12: content holds BASE numbers; the run's belt scales Health and Power (whole numbers).
       // Guard and timings never scale.
+      // B-TUNE-GUIDED: the setting's enemyPowerScale also multiplies Power, in every fight.
+      // Scaled Power rounds to a whole number, at least 1 (a 0-Power enemy stays 0).
       const sc = options.enemyScale;
-      const def = sc ? { ...base, maxHealth: Math.max(1, Math.round(base.maxHealth * sc.maxHealth)), power: Math.round(base.power * sc.power), weapon: base.weapon ? { ...base.weapon, disarmedPower: Math.round(base.weapon.disarmedPower * sc.power) } : base.weapon } : base;
+      const ps = (sc?.power ?? 1) * DIFFICULTY[options.difficulty ?? COMBAT.defaultDifficulty].enemyPowerScale;
+      const pow = (v: number) => (v > 0 ? Math.max(1, Math.round(v * ps)) : v);
+      const scaled = sc || ps !== 1;
+      const def = scaled ? { ...base, maxHealth: sc ? Math.max(1, Math.round(base.maxHealth * sc.maxHealth)) : base.maxHealth, power: pow(base.power), weapon: base.weapon ? { ...base.weapon, disarmedPower: pow(base.weapon.disarmedPower) } : base.weapon } : base;
       if (def.boss && options.easyBossHealth !== undefined) return { ...def, maxHealth: Math.max(1, Math.round(def.maxHealth * options.easyBossHealth)), summon: null };
       return def;
     };
