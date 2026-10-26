@@ -9,20 +9,19 @@ const ARM_MS = 600;
 
 /**
  * The card after a lost run: warm words, how far the player got, what they keep,
- * and two big buttons. Never a punishment: everything found is kept.
+ * and one big Back home button. Never a punishment: everything found is kept.
  * Returns the container (screen space) so the zoomed room camera can ignore it.
  */
 export function runOverCard(
   scene: Phaser.Scene,
   summary: RunSummary,
   xpGained: number,
-  onRetry: () => void,
   onHome: () => void,
 ): Phaser.GameObjects.Container {
   const { width, height } = view(scene);
   const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive();
   const cardW = Math.min(440, width - 40);
-  const btnH = Math.min(52, height * 0.13);
+  const btnH = Math.max(44, Math.min(52, height * 0.13)); // Q-PREM-F5: never under a 44 px tap
   const cardH = Math.min((xpGained > 0 ? 146 : 122) + btnH + 22, height - 20);
   const left = (width - cardW) / 2;
   const top = (height - cardH) / 2;
@@ -65,8 +64,7 @@ export function runOverCard(
       onTap();
     });
   };
-  button(left + 16, 'Try again', 0xd5713a, onRetry);
-  button(left + 32 + btnW, 'Back home', 0x4a4a55, onHome);
+  button((width - btnW) / 2, 'Back home', 0x4a4a55, onHome);
 
   container.setAlpha(0);
   scene.tweens.add({ targets: container, alpha: 1, duration: 260 });
