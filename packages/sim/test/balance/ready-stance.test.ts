@@ -1,41 +1,44 @@
 /// <reference types="vite/client" />
-// R-STANCE-READY-NUM: smart, kid and masher bots with Beginner's Stance vs Open Leg (ready-stance).
-// Not part of the normal tests. Run it with:  BALANCE=1 npx vitest run test/balance/ready-stance
+// R-STANCE-READY-NUM: smart, kid and masher bots in Open Leg (ready-stance) before (all 0) and after
+// (#314's 4 bonuses). Same setup as the B-MASHER-c kid gate (test/b-masher-kid.test.ts): belts 1-10 x 20
+// seeds, the typical model student's stats for each belt, that belt's tier, novice skill, standard;
+// Mash guard and shield-bounce Focus are on as in play. Not part of the normal tests. Run it with:
+//   BALANCE=1 npx vitest run test/balance/ready-stance   (in packages/sim)
 import { describe, it } from 'vitest';
-import type { Difficulty } from '../../src';
+import type { StanceDef } from '../../src';
 import { testContent } from '../load-content';
+import { ARTISTS } from '../r-bal-12-artists';
 import { SKILLS, playRun, type RunStats, type Style } from './bot';
 
 declare const console: { log(...args: unknown[]): void };
 const env = import.meta.env as Record<string, string | undefined>;
-const RUNS = Number(env.RUNS ?? 60);
+const SEEDS = Number(env.RUNS ?? 20);
+const BELTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
 
-function row(label: string, runs: RunStats[]): string {
-  const rooms = runs.flatMap((r) => r.rooms);
+function runs(style: Style, stance: StanceDef): RunStats[] {
+  return BELTS.flatMap((tier) => {
+    const a = ARTISTS.typical[tier - 1];
+    return Array.from({ length: SEEDS }, (_, i) => playRun(testContent(), 1000 + i, style, SKILLS.novice, 'standard', { maxHealth: a.health, power: a.power, guard: a.guard, stances: [stance] }, undefined, { tier }));
+  });
+}
+
+function row(label: string, rs: RunStats[]): string {
+  const rooms = rs.flatMap((r) => r.rooms);
   const fights = rooms.filter((r) => ['battle', 'challenge', 'boss'].includes(r.kind));
-  const win = Math.round((100 * runs.filter((r) => r.won).length) / runs.length);
-  const kos = rooms.reduce((a, r) => a + r.kos, 0) / runs.length;
-  const downs = rooms.filter((r) => r.died).length / runs.length;
-  const dealt = avg(fights.map((r) => r.dealt));
-  const taken = avg(fights.map((r) => r.damage));
-  const secs = avg(fights.map((r) => r.ticks / 20));
-  return `${label.padEnd(34)} win ${String(win).padStart(3)}%  KOs/run ${kos.toFixed(1).padStart(5)}  player downs/run ${downs.toFixed(2)}  dealt/fight ${dealt.toFixed(0).padStart(4)}  taken/fight ${taken.toFixed(1).padStart(5)}  secs/fight ${secs.toFixed(1)}`;
+  const wins = rs.filter((r) => r.won).length;
+  const room1 = rs.filter((r) => r.rooms[0]?.died).length;
+  const kos = rooms.reduce((a, r) => a + r.kos, 0) / rs.length;
+  return `${label.padEnd(26)} wins ${String(wins).padStart(3)}/${rs.length}  room-1 KOs ${room1}/${rs.length}  enemy KOs/run ${kos.toFixed(1)}  dealt/fight ${avg(fights.map((r) => r.dealt)).toFixed(0)}  taken/fight ${avg(fights.map((r) => r.damage)).toFixed(1)}`;
 }
 
 describe.skipIf(!env.BALANCE)('ready-stance report', () => {
-  it('plays smart, kid and masher with each stance', () => {
-    const content = testContent();
-    const stances = content.abilities.stances.filter((s) => s.id === 'beginners-stance' || s.id === 'ready-stance');
-    const cases: Array<[string, Difficulty]> = [['sharp', 'standard'], ['typical', 'standard'], ['novice', 'standard'], ['novice', 'guided']];
-    for (const [skill, difficulty] of cases) {
-      console.log(`\n=== ${skill}, ${difficulty} (${RUNS} runs each) ===`);
-      for (const style of ['smart', 'kid', 'masher'] as Style[]) {
-        for (const st of stances) {
-          const runs = Array.from({ length: RUNS }, (_, i) => playRun(content, 1000 + i, style, SKILLS[skill], difficulty, { maxHealth: 100, power: 10, guard: 0, stances: [st] }));
-          console.log(row(`${style} / ${st.name}`, runs));
-        }
-      }
+  it('plays smart, kid and masher in Open Leg before and after', () => {
+    const ready = testContent().abilities.stances.find((s) => s.id === 'ready-stance')!;
+    const before: StanceDef = { ...ready, powerScale: 0, dashCooldownScale: 0, blockCut: 0, focusGain: 0 };
+    for (const style of ['smart', 'kid', 'masher'] as Style[]) {
+      console.log(row(`${style} / before (all 0)`, runs(style, before)));
+      console.log(row(`${style} / after (#314)`, runs(style, ready)));
     }
-  }, 900000);
+  }, 1800000);
 });
