@@ -83,7 +83,8 @@
     {
       "n": 15,
       "speaker": "sensei",
-      "text": "The light of Yeshua shines in the darkness, and the darkness cannot put it out."
+      "text": "Even a small light shines in the dark.",
+      "faithOverlayKey": "chapter-1-screen-15"
     },
     {
       "n": 16,
