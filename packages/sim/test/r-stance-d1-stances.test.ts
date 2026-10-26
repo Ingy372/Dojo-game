@@ -66,7 +66,7 @@ function focusAfterHit(id: string): number {
 
 describe('R-STANCE-d1 stances', () => {
   it('content holds Ready plus Cat, Front, Fighting and Horse; Rooted and Flowing are gone', () => {
-    expect(content.abilities.stances.map((s) => s.id)).toEqual(['beginners-stance', 'cat-stance', 'front-stance', 'fighting-stance', 'horse-stance']);
+    expect(content.abilities.stances.map((s) => s.id)).toEqual(['beginners-stance', 'ready-stance', 'cat-stance', 'front-stance', 'fighting-stance', 'horse-stance']);
   });
 
   it('Cat: counter window +1, blocks let 65% through, dash recharges in 22 ticks', () => {
@@ -156,7 +156,6 @@ describe('R-STANCE-d1 save migration', () => {
 // #294 gameLine texts (drafts/content/katas/stances.json), copied exactly.
 describe('R-STANCE-d1 in-game lines', () => {
   const lines: Record<string, string> = {
-    'beginners-stance': 'Steady and even. Good at everything.',
     'cat-stance': 'Quicker Counters and Dash, but softer blocks.',
     'front-stance': 'Hit harder, but move a little slower.',
     'fighting-stance': 'Strong blocks and fast Focus, but a shorter Dash.',

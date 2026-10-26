@@ -25,7 +25,7 @@ describe('P-MENU2-e Fighting Style', () => {
     const m = buildStyle(t, content.abilities, null);
     expect(m.current.stance?.id).toBe('beginners-stance');
     expect(m.current.virtue?.id).toBe(t.virtue?.def.id);
-    expect(m.trays.stance.filter((p) => p.earned).map((p) => p.id)).toEqual(['beginners-stance', 'cat-stance', 'front-stance']);
+    expect(m.trays.stance.filter((p) => p.earned).map((p) => p.id)).toEqual(['beginners-stance', 'ready-stance', 'cat-stance', 'front-stance']);
   });
 
   it('tap Stance, tap a pick: the loadout changes and the next fight starts in it', () => {

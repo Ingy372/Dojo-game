@@ -78,6 +78,12 @@
   ],
   "stanceSignOffs": [
     {
+      "id": "PLACEHOLDER-dojoforge-stance-ready",
+      "signedOff": false,
+      "signedOffOn": null,
+      "signedOffBy": null
+    },
+    {
       "id": "PLACEHOLDER-dojoforge-stance-cat",
       "signedOff": false,
       "signedOffOn": null,

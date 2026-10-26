@@ -41,10 +41,11 @@ const names = (data: unknown) => unlockedStances(train(data), content.abilities)
 describe('R-STANCE-d2 stance sign-offs', () => {
   it('a stance sign-off unlocks that stance; the rest show as not-yet in the picker', () => {
     expect(names(white3)).toEqual(['beginners-stance', 'cat-stance']);
-    expect(names(green)).toEqual(['beginners-stance', 'front-stance', 'fighting-stance', 'horse-stance']);
+    expect(names(green)).toEqual(['beginners-stance', 'ready-stance', 'front-stance', 'fighting-stance', 'horse-stance']);
     const m = buildStyle(train(green), content.abilities, null);
     expect(m.trays.stance.map((p) => [p.id, p.earned])).toEqual([
       ['beginners-stance', true],
+      ['ready-stance', true],
       ['front-stance', true],
       ['fighting-stance', true],
       ['horse-stance', true],
@@ -102,6 +103,7 @@ describe('R-STANCE-d2 stance sign-offs', () => {
     const ids = content.abilities.stances.map((s) => s.signOffId);
     expect(ids[0]).toBeNull();
     expect(ids.slice(1)).toEqual([
+      'PLACEHOLDER-dojoforge-stance-ready',
       'PLACEHOLDER-dojoforge-stance-cat',
       'PLACEHOLDER-dojoforge-stance-front',
       'PLACEHOLDER-dojoforge-stance-fighting',

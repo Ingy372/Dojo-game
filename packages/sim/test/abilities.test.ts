@@ -91,7 +91,8 @@ describe('Stances', () => {
 
   it('Cat Stance walks at normal speed, Front Stance slower', () => {
     const y = character(yellow);
-    const speeds = [0, 1, 2].map((stance) => {
+    // R-STANCE-g: yellow has Beginner, Open Leg, Cat, Front.
+    const speeds = [0, 2, 3].map((stance) => {
       const w = world({ ...y, mods: undefined });
       w.players.p1.stance = stance;
       w.enemies.length = 0;

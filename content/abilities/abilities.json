@@ -1,10 +1,21 @@
 {
-  "notes": "Game abilities that real sign-offs unlock (framework section 5). The real technique names come from the school's curriculum; these are the generic powers they map to, in belt order. The 1st belt's kata unlocks stances[1], the 2nd belt's stances[2], and so on; each belt's kick combo unlocks the next strike; each self-defense technique unlocks the next seal (5 per belt). stances[0] is the Beginner's Stance everyone starts with. Belts beyond the end of a list still unlock their ability, with its power arriving in a later update. Effect types are listed in packages/sim/src/effects.ts. Virtues: each stripe word maps to one Virtue. The reason behind each choice is in docs/decisions.md (milestone 4).",
+  "notes": "Game abilities that real sign-offs unlock (framework section 5). The real technique names come from the school's curriculum; these are the generic powers they map to, in belt order. The 1st belt's kata unlocks stances[1], the 2nd belt's stances[2], and so on; each belt's kick combo unlocks the next strike; each self-defense technique unlocks the next seal (5 per belt). stances[0] is the Beginner's Stance everyone starts with (plain standing, all 0). stances[1] is the Open Leg (Ready) Stance, unlocked by its own sign-off; students who played before R-STANCE-g keep it without one. Belts beyond the end of a list still unlock their ability, with its power arriving in a later update. Effect types are listed in packages/sim/src/effects.ts. Virtues: each stripe word maps to one Virtue. The reason behind each choice is in docs/decisions.md (milestone 4).",
   "stances": [
     {
       "id": "beginners-stance",
       "name": "Beginner's Stance",
-      "text": "Steady and even. Good at everything.",
+      "text": "Everyone starts here. Your first stance is waiting at the dojo!",
+      "counterWindow": 0,
+      "attackSpeed": 0,
+      "moveSpeed": 0,
+      "guardScale": 0,
+      "powerScale": 0
+    },
+    {
+      "id": "ready-stance",
+      "name": "Open Leg Stance",
+      "signOffId": "PLACEHOLDER-dojoforge-stance-ready",
+      "text": "The open leg stance.",
       "counterWindow": 0,
       "attackSpeed": 0,
       "moveSpeed": 0,

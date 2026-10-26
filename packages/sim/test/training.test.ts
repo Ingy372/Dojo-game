@@ -157,7 +157,7 @@ describe('yellow belt', () => {
     expect(t.virtue?.def.name).toBe('Shield of Respect');
   });
   it('switches between three Stances', () => {
-    expect(unlockedStances(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance", 'Cat Stance', 'Front Stance']);
+    expect(unlockedStances(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance", 'Open Leg Stance', 'Cat Stance', 'Front Stance']);
   });
 });
 
@@ -170,8 +170,8 @@ describe('reward moments', () => {
     const m = rewardMoments(null, c);
     expect(m[0].kind).toBe('welcome');
     const signOffs = m.find((x) => x.kind === 'signOffs');
-    // R-STANCE-d2: 13 belt sign-offs + the Cat and Front Stance sign-offs.
-    expect(signOffs?.kind === 'signOffs' && signOffs.list).toHaveLength(15);
+    // R-STANCE-d2: 13 belt sign-offs + the Cat and Front Stance sign-offs; R-STANCE-g: + Open Leg.
+    expect(signOffs?.kind === 'signOffs' && signOffs.list).toHaveLength(16);
   });
 
   it('celebrates new progress, the stripe before the sign-offs', () => {

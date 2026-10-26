@@ -303,9 +303,13 @@ export function nextClassDay(classDays: readonly string[], weekday: number): str
   return null;
 }
 
-/** The Stances the player can switch between: the Beginner's Stance plus every signed-off Stance, in content order (R-STANCE-d2). */
-export function unlockedStances(training: TrainingState, abilities: AbilityContent): StanceDef[] {
-  return [abilities.stances[0], ...training.stances.filter((s) => s.unlocked).map((s) => s.def)];
+/**
+ * The Stances the player can switch between: the Beginner's Stance plus every signed-off Stance, in
+ * content order (R-STANCE-d2). R-STANCE-g: `grandfathered` ids (Open Leg for students who played
+ * before it needed a sign-off) count as unlocked too.
+ */
+export function unlockedStances(training: TrainingState, abilities: AbilityContent, grandfathered: readonly string[] = []): StanceDef[] {
+  return [abilities.stances[0], ...training.stances.filter((s) => s.unlocked || grandfathered.includes(s.def.id)).map((s) => s.def)];
 }
 
 /** "Shield of Respect II" */
