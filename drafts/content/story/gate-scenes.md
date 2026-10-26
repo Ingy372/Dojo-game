@@ -2,7 +2,9 @@
 
 Data: `gate-scenes.json`. One short sentence per screen, ages 6-9. The real belt earned at the dojo opens each Gate. Guardian lines come from `guardian-arcs.json` and Sensei/Senpai hints from `mystery-ladder.json`. **visibleChange is a PLACEHOLDER waiting on C-STORY-f (town vs sign).** Black/summit is out of scope.
 
-## white (lamp-keeper)
+## white (lamp-keeper): UNUSED ALTERNATE
+
+> Not in play. The Manager decided to keep chapter-1 screens 14-17 for the White Gate. This scene stays only as an alternate draft (`status: unused-alternate`). It has no faith storyScreens entry.
 Visible change (placeholder): dojo window glows a little
 
 1. **narrator**: Your new belt from the dojo opens the white Gate.
@@ -79,5 +81,5 @@ Verses on green, blue, red, brown and brown/black screens are in `faith/guardian
 
 ## Notes for review
 - New speaker `senpai` (Blue screen 19); the Programmer may need to support it.
-- White scene overlaps chapter-1 screens 14-17; use one.
+- White scene is marked `unused-alternate`; chapter-1 screens 14-17 are used instead (Manager decision), so nothing duplicates.
 - Open for Jay: the Blue Senpai hint timing (asked in #335).

@@ -1,5 +1,5 @@
 {
-  "notes": "DRAFT for C-STORY-e (spec: drafts/content/C-STORY-review.md). One 4-screen Gate scene per tier, White to Brown/Black; Black/summit is out of scope (Jay). Format follows story/chapter-1.json; screens are one flat list (n unique) so check-faith-overlay.py can validate storyScreens, and each screen names its scene. speaker: narrator, sensei, guardian, senpai (new speaker, used once for the Blue hint from mystery-ladder.json). Only the real belt earned at the dojo opens the Gate. Guardian lines are the freedLine from story/guardian-arcs.json; Sensei/Senpai hints are reused from story/mystery-ladder.json. The White scene overlaps chapter-1 screens 14-17; the Programmer should use one or the other, not both. visibleChange is a PLACEHOLDER waiting on C-STORY-f (town vs sign). Verses live only in faith/guardian-faith-overlay.json storyScreens. Nothing shipped is changed.",
+  "notes": "DRAFT for C-STORY-e (spec: drafts/content/C-STORY-review.md). One 4-screen Gate scene per tier, White to Brown/Black; Black/summit is out of scope (Jay). Format follows story/chapter-1.json; screens are one flat list (n unique) so check-faith-overlay.py can validate storyScreens, and each screen names its scene. speaker: narrator, sensei, guardian, senpai (new speaker, used once for the Blue hint from mystery-ladder.json). Only the real belt earned at the dojo opens the Gate. Guardian lines are the freedLine from story/guardian-arcs.json; Sensei/Senpai hints are reused from story/mystery-ladder.json. The White scene (gate-white, screens 1-4) is an UNUSED ALTERNATE: the Manager decided to keep chapter-1 screens 14-17, so do not play gate-white; it has no faith storyScreens entry. visibleChange is a PLACEHOLDER waiting on C-STORY-f (town vs sign). Verses live only in faith/guardian-faith-overlay.json storyScreens. Nothing shipped is changed.",
   "id": "gate-scenes",
   "scenes": [
     {
@@ -9,6 +9,8 @@
       "plays": "When the real belt earned at the dojo opens this tier's Gate, after the Guardian is freed.",
       "screensFrom": 1,
       "screensTo": 4,
+      "status": "unused-alternate",
+      "statusNote": "Not in play. chapter-1.json screens 14-17 are used for the White Gate instead (Manager decision). Kept only as an alternate draft; screens 1-4 belong to this unused scene.",
       "visibleChange": "dojo window glows a little",
       "visibleChangeStatus": "PLACEHOLDER - waiting on C-STORY-f (town vs sign)"
     },
