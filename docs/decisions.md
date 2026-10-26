@@ -1297,3 +1297,7 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - Fix: when the arrival steps end, DojoScene resets the touch controls and ignores new presses for `ARRIVAL_QUIET_MS` = 450 ms. After that, taps walk as usual (each run has a control tap that still moves the hero). bow.ts and Celebrations.ts are unchanged.
 - Bow (a) and pulse (b): on main the touch script could not make a single tap miss (centre, edges ±45-50 px, 6-20 px drift, tap as soon as it shows, second finger held down), and every top-bar tap pulsed Bow with no menu opening. So bow.ts was not changed; the script stays as the regression check. If the Tester still sees misses on a real phone, we need a device repro (which phone, where the finger landed).
 - The floor case was tested on this profile's first Tower floor, which is the tutorial floor ("Bow at the door to show respect."). It uses the same `bowPrompt()` as "Bow to begin the floor".
+
+## Q-PREM-F6 — Again! pinned to the Last run panel (2026-10-26)
+- Again! is pinned to the bottom of the visible panel (`pinnedAgain` in ui/lastRun.ts); when the contents scroll, the scroll window ends S1 above it (footer = edge 16 + 44 + S1), so nothing scrolls under it.
+- Why: at 667x320 the panel inside (238) is below the Last run minimum (277), so Again! sat in the scrolled-off part and was clipped.

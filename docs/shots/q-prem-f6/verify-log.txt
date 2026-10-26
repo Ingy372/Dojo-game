@@ -1,0 +1,246 @@
+PASS  f6-swap-start-844x390-rm-on.png  Reduced motion read back = on  (read on)
+PASS  f6-swap-start-844x390-rm-on.png  Again! is there and tappable
+PASS  f6-swap-start-844x390-rm-on.png  Again! fully inside the visible panel (not clipped)  (zone y 310.0-354.0, panel 62-374)
+PASS  f6-swap-start-844x390-rm-on.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-start-844x390-rm-on.png  Again! tap >= 44x44  (155x44)
+PASS  f6-swap-start-844x390-rm-on.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-start-844x390-rm-on.png  nothing overlaps Again!
+PASS  f6-swap-start-844x390-rm-on.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-mid-844x390-rm-on.png  Reduced motion read back = on  (read on)
+PASS  f6-swap-mid-844x390-rm-on.png  Again! is there and tappable
+PASS  f6-swap-mid-844x390-rm-on.png  Again! fully inside the visible panel (not clipped)  (zone y 310.0-354.0, panel 62-374)
+PASS  f6-swap-mid-844x390-rm-on.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-mid-844x390-rm-on.png  Again! tap >= 44x44  (155x44)
+PASS  f6-swap-mid-844x390-rm-on.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-mid-844x390-rm-on.png  nothing overlaps Again!
+PASS  f6-swap-mid-844x390-rm-on.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-844x390-rm-on.png  Reduced motion read back = on  (read on)
+PASS  f6-swap-end-844x390-rm-on.png  Again! is there and tappable
+PASS  f6-swap-end-844x390-rm-on.png  Again! fully inside the visible panel (not clipped)  (zone y 310.0-354.0, panel 62-374)
+PASS  f6-swap-end-844x390-rm-on.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-end-844x390-rm-on.png  Again! tap >= 44x44  (155x44)
+PASS  f6-swap-end-844x390-rm-on.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-end-844x390-rm-on.png  nothing overlaps Again!
+PASS  f6-swap-end-844x390-rm-on.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-844x390-rm-on.png  Again! label contrast >= 4.5:1  (#462a16 on #f3c059 = 7.79:1)
+PASS  844x390 rm=on  panel fits: nothing scrolls  (no scroll)
+PASS  844x390 rm=on  hands-on: Again! starts a run  (scenes Game)
+PASS  844x390 rm=on  no page errors
+PASS  f6-swap-start-844x390-rm-off.png  Reduced motion read back = off  (read off)
+PASS  f6-swap-start-844x390-rm-off.png  Again! is there and tappable
+PASS  f6-swap-start-844x390-rm-off.png  Again! fully inside the visible panel (not clipped)  (zone y 310.0-354.0, panel 62-374)
+PASS  f6-swap-start-844x390-rm-off.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-start-844x390-rm-off.png  Again! tap >= 44x44  (155x44)
+PASS  f6-swap-start-844x390-rm-off.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-start-844x390-rm-off.png  nothing overlaps Again!
+PASS  f6-swap-start-844x390-rm-off.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-mid-844x390-rm-off.png  Reduced motion read back = off  (read off)
+PASS  f6-swap-mid-844x390-rm-off.png  Again! is there and tappable
+PASS  f6-swap-mid-844x390-rm-off.png  Again! fully inside the visible panel (not clipped)  (zone y 310.0-354.0, panel 62-374)
+PASS  f6-swap-mid-844x390-rm-off.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-mid-844x390-rm-off.png  Again! tap >= 44x44  (155x44)
+PASS  f6-swap-mid-844x390-rm-off.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-mid-844x390-rm-off.png  nothing overlaps Again!
+PASS  f6-swap-mid-844x390-rm-off.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-844x390-rm-off.png  Reduced motion read back = off  (read off)
+PASS  f6-swap-end-844x390-rm-off.png  Again! is there and tappable
+PASS  f6-swap-end-844x390-rm-off.png  Again! fully inside the visible panel (not clipped)  (zone y 310.0-354.0, panel 62-374)
+PASS  f6-swap-end-844x390-rm-off.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-end-844x390-rm-off.png  Again! tap >= 44x44  (155x44)
+PASS  f6-swap-end-844x390-rm-off.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-end-844x390-rm-off.png  nothing overlaps Again!
+PASS  f6-swap-end-844x390-rm-off.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-844x390-rm-off.png  Again! label contrast >= 4.5:1  (#462a16 on #f3c059 = 7.79:1)
+PASS  844x390 rm=off  panel fits: nothing scrolls  (no scroll)
+PASS  844x390 rm=off  hands-on: Again! starts a run  (scenes Game)
+PASS  844x390 rm=off  no page errors
+PASS  f6-swap-start-667x375-rm-on.png  Reduced motion read back = on  (read on)
+PASS  f6-swap-start-667x375-rm-on.png  Again! is there and tappable
+PASS  f6-swap-start-667x375-rm-on.png  Again! fully inside the visible panel (not clipped)  (zone y 295.0-339.0, panel 62-359)
+PASS  f6-swap-start-667x375-rm-on.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-start-667x375-rm-on.png  Again! tap >= 44x44  (112x44)
+PASS  f6-swap-start-667x375-rm-on.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-start-667x375-rm-on.png  nothing overlaps Again!
+PASS  f6-swap-start-667x375-rm-on.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-mid-667x375-rm-on.png  Reduced motion read back = on  (read on)
+PASS  f6-swap-mid-667x375-rm-on.png  Again! is there and tappable
+PASS  f6-swap-mid-667x375-rm-on.png  Again! fully inside the visible panel (not clipped)  (zone y 295.0-339.0, panel 62-359)
+PASS  f6-swap-mid-667x375-rm-on.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-mid-667x375-rm-on.png  Again! tap >= 44x44  (112x44)
+PASS  f6-swap-mid-667x375-rm-on.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-mid-667x375-rm-on.png  nothing overlaps Again!
+PASS  f6-swap-mid-667x375-rm-on.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-667x375-rm-on.png  Reduced motion read back = on  (read on)
+PASS  f6-swap-end-667x375-rm-on.png  Again! is there and tappable
+PASS  f6-swap-end-667x375-rm-on.png  Again! fully inside the visible panel (not clipped)  (zone y 295.0-339.0, panel 62-359)
+PASS  f6-swap-end-667x375-rm-on.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-end-667x375-rm-on.png  Again! tap >= 44x44  (112x44)
+PASS  f6-swap-end-667x375-rm-on.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-end-667x375-rm-on.png  nothing overlaps Again!
+PASS  f6-swap-end-667x375-rm-on.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-667x375-rm-on.png  Again! label contrast >= 4.5:1  (#462a16 on #f3c057 = 7.79:1)
+PASS  667x375 rm=on  panel fits: nothing scrolls  (no scroll)
+PASS  667x375 rm=on  hands-on: Again! starts a run  (scenes Game)
+PASS  667x375 rm=on  no page errors
+PASS  f6-swap-start-667x375-rm-off.png  Reduced motion read back = off  (read off)
+PASS  f6-swap-start-667x375-rm-off.png  Again! is there and tappable
+PASS  f6-swap-start-667x375-rm-off.png  Again! fully inside the visible panel (not clipped)  (zone y 295.0-339.0, panel 62-359)
+PASS  f6-swap-start-667x375-rm-off.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-start-667x375-rm-off.png  Again! tap >= 44x44  (112x44)
+PASS  f6-swap-start-667x375-rm-off.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-start-667x375-rm-off.png  nothing overlaps Again!
+PASS  f6-swap-start-667x375-rm-off.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-mid-667x375-rm-off.png  Reduced motion read back = off  (read off)
+PASS  f6-swap-mid-667x375-rm-off.png  Again! is there and tappable
+PASS  f6-swap-mid-667x375-rm-off.png  Again! fully inside the visible panel (not clipped)  (zone y 295.0-339.0, panel 62-359)
+PASS  f6-swap-mid-667x375-rm-off.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-mid-667x375-rm-off.png  Again! tap >= 44x44  (112x44)
+PASS  f6-swap-mid-667x375-rm-off.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-mid-667x375-rm-off.png  nothing overlaps Again!
+PASS  f6-swap-mid-667x375-rm-off.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-667x375-rm-off.png  Reduced motion read back = off  (read off)
+PASS  f6-swap-end-667x375-rm-off.png  Again! is there and tappable
+PASS  f6-swap-end-667x375-rm-off.png  Again! fully inside the visible panel (not clipped)  (zone y 295.0-339.0, panel 62-359)
+PASS  f6-swap-end-667x375-rm-off.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-end-667x375-rm-off.png  Again! tap >= 44x44  (112x44)
+PASS  f6-swap-end-667x375-rm-off.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-end-667x375-rm-off.png  nothing overlaps Again!
+PASS  f6-swap-end-667x375-rm-off.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-667x375-rm-off.png  Again! label contrast >= 4.5:1  (#462a16 on #f3c057 = 7.79:1)
+PASS  667x375 rm=off  panel fits: nothing scrolls  (no scroll)
+PASS  667x375 rm=off  hands-on: Again! starts a run  (scenes Game)
+PASS  667x375 rm=off  no page errors
+PASS  f6-swap-start-667x320-rm-on.png  Reduced motion read back = on  (read on)
+PASS  f6-swap-start-667x320-rm-on.png  Again! is there and tappable
+PASS  f6-swap-start-667x320-rm-on.png  Again! fully inside the visible panel (not clipped)  (zone y 248.0-292.0, panel 54-312)
+PASS  f6-swap-start-667x320-rm-on.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-start-667x320-rm-on.png  Again! tap >= 44x44  (119x44)
+PASS  f6-swap-start-667x320-rm-on.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-start-667x320-rm-on.png  nothing overlaps Again!
+PASS  f6-swap-start-667x320-rm-on.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-mid-667x320-rm-on.png  Reduced motion read back = on  (read on)
+PASS  f6-swap-mid-667x320-rm-on.png  Again! is there and tappable
+PASS  f6-swap-mid-667x320-rm-on.png  Again! fully inside the visible panel (not clipped)  (zone y 248.0-292.0, panel 54-312)
+PASS  f6-swap-mid-667x320-rm-on.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-mid-667x320-rm-on.png  Again! tap >= 44x44  (119x44)
+PASS  f6-swap-mid-667x320-rm-on.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-mid-667x320-rm-on.png  nothing overlaps Again!
+PASS  f6-swap-mid-667x320-rm-on.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-667x320-rm-on.png  Reduced motion read back = on  (read on)
+PASS  f6-swap-end-667x320-rm-on.png  Again! is there and tappable
+PASS  f6-swap-end-667x320-rm-on.png  Again! fully inside the visible panel (not clipped)  (zone y 248.0-292.0, panel 54-312)
+PASS  f6-swap-end-667x320-rm-on.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-end-667x320-rm-on.png  Again! tap >= 44x44  (119x44)
+PASS  f6-swap-end-667x320-rm-on.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-end-667x320-rm-on.png  nothing overlaps Again!
+PASS  f6-swap-end-667x320-rm-on.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-667x320-rm-on.png  Again! label contrast >= 4.5:1  (#462a16 on #f3c057 = 7.79:1)
+PASS  f6-scrolled-667x320-rm-on.png  Reduced motion read back = on  (read on)
+PASS  f6-scrolled-667x320-rm-on.png  Again! is there and tappable
+PASS  f6-scrolled-667x320-rm-on.png  Again! fully inside the visible panel (not clipped)  (zone y 248.0-292.0, panel 54-312)
+PASS  f6-scrolled-667x320-rm-on.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-scrolled-667x320-rm-on.png  Again! tap >= 44x44  (119x44)
+PASS  f6-scrolled-667x320-rm-on.png  text >= 12 px  (smallest 12 px)
+PASS  f6-scrolled-667x320-rm-on.png  nothing overlaps Again!
+PASS  f6-scrolled-667x320-rm-on.png  not crowded: >= 4 px clear above Again!  (68.0 px)
+PASS  f6-scrolled-667x320-rm-on.png  Again! label contrast >= 4.5:1  (#462a16 on #f3c057 = 7.79:1)
+PASS  667x320 rm=on  scrolled: Again! did not move  (248.0 vs 248.0)
+PASS  667x320 rm=on  scrolled: the last row of the contents shows above Again!  (lowest 196.0, window bottom 244.0)
+PASS  667x320 rm=on  hands-on: Again! starts a run  (scenes Game)
+PASS  667x320 rm=on  no page errors
+PASS  f6-swap-start-667x320-rm-off.png  Reduced motion read back = off  (read off)
+PASS  f6-swap-start-667x320-rm-off.png  Again! is there and tappable
+PASS  f6-swap-start-667x320-rm-off.png  Again! fully inside the visible panel (not clipped)  (zone y 248.0-292.0, panel 54-312)
+PASS  f6-swap-start-667x320-rm-off.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-start-667x320-rm-off.png  Again! tap >= 44x44  (119x44)
+PASS  f6-swap-start-667x320-rm-off.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-start-667x320-rm-off.png  nothing overlaps Again!
+PASS  f6-swap-start-667x320-rm-off.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-mid-667x320-rm-off.png  Reduced motion read back = off  (read off)
+PASS  f6-swap-mid-667x320-rm-off.png  Again! is there and tappable
+PASS  f6-swap-mid-667x320-rm-off.png  Again! fully inside the visible panel (not clipped)  (zone y 248.0-292.0, panel 54-312)
+PASS  f6-swap-mid-667x320-rm-off.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-mid-667x320-rm-off.png  Again! tap >= 44x44  (119x44)
+PASS  f6-swap-mid-667x320-rm-off.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-mid-667x320-rm-off.png  nothing overlaps Again!
+PASS  f6-swap-mid-667x320-rm-off.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-667x320-rm-off.png  Reduced motion read back = off  (read off)
+PASS  f6-swap-end-667x320-rm-off.png  Again! is there and tappable
+PASS  f6-swap-end-667x320-rm-off.png  Again! fully inside the visible panel (not clipped)  (zone y 248.0-292.0, panel 54-312)
+PASS  f6-swap-end-667x320-rm-off.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-end-667x320-rm-off.png  Again! tap >= 44x44  (119x44)
+PASS  f6-swap-end-667x320-rm-off.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-end-667x320-rm-off.png  nothing overlaps Again!
+PASS  f6-swap-end-667x320-rm-off.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-667x320-rm-off.png  Again! label contrast >= 4.5:1  (#462a16 on #f3c057 = 7.79:1)
+PASS  f6-scrolled-667x320-rm-off.png  Reduced motion read back = off  (read off)
+PASS  f6-scrolled-667x320-rm-off.png  Again! is there and tappable
+PASS  f6-scrolled-667x320-rm-off.png  Again! fully inside the visible panel (not clipped)  (zone y 248.0-292.0, panel 54-312)
+PASS  f6-scrolled-667x320-rm-off.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-scrolled-667x320-rm-off.png  Again! tap >= 44x44  (119x44)
+PASS  f6-scrolled-667x320-rm-off.png  text >= 12 px  (smallest 12 px)
+PASS  f6-scrolled-667x320-rm-off.png  nothing overlaps Again!
+PASS  f6-scrolled-667x320-rm-off.png  not crowded: >= 4 px clear above Again!  (68.0 px)
+PASS  f6-scrolled-667x320-rm-off.png  Again! label contrast >= 4.5:1  (#462a16 on #f3c057 = 7.79:1)
+PASS  667x320 rm=off  scrolled: Again! did not move  (248.0 vs 248.0)
+PASS  667x320 rm=off  scrolled: the last row of the contents shows above Again!  (lowest 196.0, window bottom 244.0)
+PASS  667x320 rm=off  hands-on: Again! starts a run  (scenes Game)
+PASS  667x320 rm=off  no page errors
+PASS  f6-swap-start-932x430-rm-on.png  Reduced motion read back = on  (read on)
+PASS  f6-swap-start-932x430-rm-on.png  Again! is there and tappable
+PASS  f6-swap-start-932x430-rm-on.png  Again! fully inside the visible panel (not clipped)  (zone y 350.0-394.0, panel 62-414)
+PASS  f6-swap-start-932x430-rm-on.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-start-932x430-rm-on.png  Again! tap >= 44x44  (185x44)
+PASS  f6-swap-start-932x430-rm-on.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-start-932x430-rm-on.png  nothing overlaps Again!
+PASS  f6-swap-start-932x430-rm-on.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-mid-932x430-rm-on.png  Reduced motion read back = on  (read on)
+PASS  f6-swap-mid-932x430-rm-on.png  Again! is there and tappable
+PASS  f6-swap-mid-932x430-rm-on.png  Again! fully inside the visible panel (not clipped)  (zone y 350.0-394.0, panel 62-414)
+PASS  f6-swap-mid-932x430-rm-on.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-mid-932x430-rm-on.png  Again! tap >= 44x44  (185x44)
+PASS  f6-swap-mid-932x430-rm-on.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-mid-932x430-rm-on.png  nothing overlaps Again!
+PASS  f6-swap-mid-932x430-rm-on.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-932x430-rm-on.png  Reduced motion read back = on  (read on)
+PASS  f6-swap-end-932x430-rm-on.png  Again! is there and tappable
+PASS  f6-swap-end-932x430-rm-on.png  Again! fully inside the visible panel (not clipped)  (zone y 350.0-394.0, panel 62-414)
+PASS  f6-swap-end-932x430-rm-on.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-end-932x430-rm-on.png  Again! tap >= 44x44  (185x44)
+PASS  f6-swap-end-932x430-rm-on.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-end-932x430-rm-on.png  nothing overlaps Again!
+PASS  f6-swap-end-932x430-rm-on.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-932x430-rm-on.png  Again! label contrast >= 4.5:1  (#462a16 on #f3c057 = 7.79:1)
+PASS  932x430 rm=on  panel fits: nothing scrolls  (no scroll)
+PASS  932x430 rm=on  hands-on: Again! starts a run  (scenes Game)
+PASS  932x430 rm=on  no page errors
+PASS  f6-swap-start-932x430-rm-off.png  Reduced motion read back = off  (read off)
+PASS  f6-swap-start-932x430-rm-off.png  Again! is there and tappable
+PASS  f6-swap-start-932x430-rm-off.png  Again! fully inside the visible panel (not clipped)  (zone y 350.0-394.0, panel 62-414)
+PASS  f6-swap-start-932x430-rm-off.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-start-932x430-rm-off.png  Again! tap >= 44x44  (185x44)
+PASS  f6-swap-start-932x430-rm-off.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-start-932x430-rm-off.png  nothing overlaps Again!
+PASS  f6-swap-start-932x430-rm-off.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-mid-932x430-rm-off.png  Reduced motion read back = off  (read off)
+PASS  f6-swap-mid-932x430-rm-off.png  Again! is there and tappable
+PASS  f6-swap-mid-932x430-rm-off.png  Again! fully inside the visible panel (not clipped)  (zone y 350.0-394.0, panel 62-414)
+PASS  f6-swap-mid-932x430-rm-off.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-mid-932x430-rm-off.png  Again! tap >= 44x44  (185x44)
+PASS  f6-swap-mid-932x430-rm-off.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-mid-932x430-rm-off.png  nothing overlaps Again!
+PASS  f6-swap-mid-932x430-rm-off.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-932x430-rm-off.png  Reduced motion read back = off  (read off)
+PASS  f6-swap-end-932x430-rm-off.png  Again! is there and tappable
+PASS  f6-swap-end-932x430-rm-off.png  Again! fully inside the visible panel (not clipped)  (zone y 350.0-394.0, panel 62-414)
+PASS  f6-swap-end-932x430-rm-off.png  Again! >= 8 px from the panel edge (right, bottom)  (right 20.0, bottom 20.0)
+PASS  f6-swap-end-932x430-rm-off.png  Again! tap >= 44x44  (185x44)
+PASS  f6-swap-end-932x430-rm-off.png  text >= 12 px  (smallest 12 px)
+PASS  f6-swap-end-932x430-rm-off.png  nothing overlaps Again!
+PASS  f6-swap-end-932x430-rm-off.png  not crowded: >= 4 px clear above Again!  (4.0 px)
+PASS  f6-swap-end-932x430-rm-off.png  Again! label contrast >= 4.5:1  (#462a16 on #f3c057 = 7.79:1)
+PASS  932x430 rm=off  panel fits: nothing scrolls  (no scroll)
+PASS  932x430 rm=off  hands-on: Again! starts a run  (scenes Game)
+PASS  932x430 rm=off  no page errors
+
+244 PASS, 0 FAIL
