@@ -9,13 +9,6 @@
   "minutes": "{n} min",
   "done": "Done",
   "wrapUpLine": "Nice work, let's finish this room and rest!",
-  "restTitle": "Great training today!",
-  "restLines": [
-    "You trained hard today!",
-    "Rest now, or show a grown-up your moves.",
-    "Everything you found is safe in your dojo."
-  ],
-  "restButton": "Back to my dojo",
   "homeHeadline": "Great training today!",
   "gateCancel": "Back",
   "doorResting": "Your dojo is resting for today",
