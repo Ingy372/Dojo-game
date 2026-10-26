@@ -861,6 +861,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 **Next**
 - Q-PREM-F1 (Bow on first tap).
 
+## Q-PREM-F5 — Back home only (2026-10-26)
+**Done**
+- The "Good effort!" card after a lost run shows one button, Back home, at least 44 px tall at every size.
+- verify-ui-shots `docs/shots/q-prem-f5/f5-verify.mjs` (log `verify-log.txt`, shots `card-{start,mid,end}-*.png`) at 844x390, 667x375, 667x320, 932x430, Reduced motion on/off (read back before each shot): 216 PASS, 0 FAIL, including one Back home tap going Home in all 8 runs.
+- npm test 911 passed, 3 skipped; typecheck and build pass.
 ## Q-PREM-F1 — First-tap bow and arrival tap-through (2026-10-26)
 **Done**
 - "Tap to continue" at the end of the dojo arrival can't move the hero or start a run: a press echoed within 450 ms after the last card is dropped (DojoScene). 40/40 at 667x375, 667x320, 844x390 and 932x430, Reduced motion on and off; it was 30/36 on main.

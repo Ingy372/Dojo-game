@@ -1,0 +1,216 @@
+PASS  844x390 rm=on  hero went down
+PASS  844x390 rm=on  run-over card appears
+PASS  844x390 rm=on  card has one button, Back home, no Try again  (Good effort! / You reached room 1 of 8. / Every climb makes you stronger. / Back home)
+PASS  card-start-844x390-rm-on.png  Reduced motion read back = on  (read on)
+PASS  card-start-844x390-rm-on.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.00)
+PASS  card-start-844x390-rm-on.png  card buttons >= 44x44  (196x51)
+PASS  card-start-844x390-rm-on.png  card text does not overlap
+PASS  card-start-844x390-rm-on.png  card not crowded (text uses <= 80% of card height)  (74%)
+PASS  card-start-844x390-rm-on.png  card text >= 12 px  (smallest 15 px)
+PASS  card-mid-844x390-rm-on.png  Reduced motion read back = on  (read on)
+PASS  card-mid-844x390-rm-on.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.74)
+PASS  card-mid-844x390-rm-on.png  card buttons >= 44x44  (196x51)
+PASS  card-mid-844x390-rm-on.png  card text does not overlap
+PASS  card-mid-844x390-rm-on.png  card not crowded (text uses <= 80% of card height)  (74%)
+PASS  card-mid-844x390-rm-on.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-844x390-rm-on.png  Reduced motion read back = on  (read on)
+PASS  card-end-844x390-rm-on.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 1.00)
+PASS  card-end-844x390-rm-on.png  card buttons >= 44x44  (196x51)
+PASS  card-end-844x390-rm-on.png  card text does not overlap
+PASS  card-end-844x390-rm-on.png  card not crowded (text uses <= 80% of card height)  (74%)
+PASS  card-end-844x390-rm-on.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-844x390-rm-on.png  contrast card text >= 4.5:1  (13.58:1, )
+PASS  card-end-844x390-rm-on.png  contrast Good effort! >= 4.5:1  (11.35:1, )
+PASS  card-end-844x390-rm-on.png  contrast +experience >= 4.5:1  (10.08:1, )
+PASS  card-end-844x390-rm-on.png  contrast Back home >= 4.5:1  (8.12:1, )
+PASS  844x390 rm=on  hands-on: one Back home tap goes Home  (scenes Home)
+PASS  844x390 rm=on  no page errors
+PASS  844x390 rm=off  hero went down
+PASS  844x390 rm=off  run-over card appears
+PASS  844x390 rm=off  card has one button, Back home, no Try again  (Good effort! / You reached room 1 of 8. / Every climb makes you stronger. / Back home)
+PASS  card-start-844x390-rm-off.png  Reduced motion read back = off  (read off)
+PASS  card-start-844x390-rm-off.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.00)
+PASS  card-start-844x390-rm-off.png  card buttons >= 44x44  (196x51)
+PASS  card-start-844x390-rm-off.png  card text does not overlap
+PASS  card-start-844x390-rm-off.png  card not crowded (text uses <= 80% of card height)  (74%)
+PASS  card-start-844x390-rm-off.png  card text >= 12 px  (smallest 15 px)
+PASS  card-mid-844x390-rm-off.png  Reduced motion read back = off  (read off)
+PASS  card-mid-844x390-rm-off.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.67)
+PASS  card-mid-844x390-rm-off.png  card buttons >= 44x44  (196x51)
+PASS  card-mid-844x390-rm-off.png  card text does not overlap
+PASS  card-mid-844x390-rm-off.png  card not crowded (text uses <= 80% of card height)  (74%)
+PASS  card-mid-844x390-rm-off.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-844x390-rm-off.png  Reduced motion read back = off  (read off)
+PASS  card-end-844x390-rm-off.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 1.00)
+PASS  card-end-844x390-rm-off.png  card buttons >= 44x44  (196x51)
+PASS  card-end-844x390-rm-off.png  card text does not overlap
+PASS  card-end-844x390-rm-off.png  card not crowded (text uses <= 80% of card height)  (74%)
+PASS  card-end-844x390-rm-off.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-844x390-rm-off.png  contrast card text >= 4.5:1  (13.58:1, )
+PASS  card-end-844x390-rm-off.png  contrast Good effort! >= 4.5:1  (11.35:1, )
+PASS  card-end-844x390-rm-off.png  contrast +experience >= 4.5:1  (10.08:1, )
+PASS  card-end-844x390-rm-off.png  contrast Back home >= 4.5:1  (8.12:1, )
+PASS  844x390 rm=off  hands-on: one Back home tap goes Home  (scenes Home)
+PASS  844x390 rm=off  no page errors
+PASS  667x375 rm=on  hero went down
+PASS  667x375 rm=on  run-over card appears
+PASS  667x375 rm=on  card has one button, Back home, no Try again  (Good effort! / You reached room 1 of 8. / You keep everything you found: 1 treasure. / Back home)
+PASS  card-start-667x375-rm-on.png  Reduced motion read back = on  (read on)
+PASS  card-start-667x375-rm-on.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.00)
+PASS  card-start-667x375-rm-on.png  card buttons >= 44x44  (196x49)
+PASS  card-start-667x375-rm-on.png  card text does not overlap
+PASS  card-start-667x375-rm-on.png  card not crowded (text uses <= 80% of card height)  (75%)
+PASS  card-start-667x375-rm-on.png  card text >= 12 px  (smallest 15 px)
+PASS  card-mid-667x375-rm-on.png  Reduced motion read back = on  (read on)
+PASS  card-mid-667x375-rm-on.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.63)
+PASS  card-mid-667x375-rm-on.png  card buttons >= 44x44  (196x49)
+PASS  card-mid-667x375-rm-on.png  card text does not overlap
+PASS  card-mid-667x375-rm-on.png  card not crowded (text uses <= 80% of card height)  (75%)
+PASS  card-mid-667x375-rm-on.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-667x375-rm-on.png  Reduced motion read back = on  (read on)
+PASS  card-end-667x375-rm-on.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 1.00)
+PASS  card-end-667x375-rm-on.png  card buttons >= 44x44  (196x49)
+PASS  card-end-667x375-rm-on.png  card text does not overlap
+PASS  card-end-667x375-rm-on.png  card not crowded (text uses <= 80% of card height)  (75%)
+PASS  card-end-667x375-rm-on.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-667x375-rm-on.png  contrast card text >= 4.5:1  (13.58:1, )
+PASS  card-end-667x375-rm-on.png  contrast Good effort! >= 4.5:1  (11.35:1, )
+PASS  card-end-667x375-rm-on.png  contrast +experience >= 4.5:1  (10.08:1, )
+PASS  card-end-667x375-rm-on.png  contrast Back home >= 4.5:1  (8.12:1, )
+PASS  667x375 rm=on  hands-on: one Back home tap goes Home  (scenes Home)
+PASS  667x375 rm=on  no page errors
+PASS  667x375 rm=off  hero went down
+PASS  667x375 rm=off  run-over card appears
+PASS  667x375 rm=off  card has one button, Back home, no Try again  (Good effort! / You reached room 1 of 8. / Every climb makes you stronger. / Back home)
+PASS  card-start-667x375-rm-off.png  Reduced motion read back = off  (read off)
+PASS  card-start-667x375-rm-off.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.00)
+PASS  card-start-667x375-rm-off.png  card buttons >= 44x44  (196x49)
+PASS  card-start-667x375-rm-off.png  card text does not overlap
+PASS  card-start-667x375-rm-off.png  card not crowded (text uses <= 80% of card height)  (75%)
+PASS  card-start-667x375-rm-off.png  card text >= 12 px  (smallest 15 px)
+PASS  card-mid-667x375-rm-off.png  Reduced motion read back = off  (read off)
+PASS  card-mid-667x375-rm-off.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.60)
+PASS  card-mid-667x375-rm-off.png  card buttons >= 44x44  (196x49)
+PASS  card-mid-667x375-rm-off.png  card text does not overlap
+PASS  card-mid-667x375-rm-off.png  card not crowded (text uses <= 80% of card height)  (75%)
+PASS  card-mid-667x375-rm-off.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-667x375-rm-off.png  Reduced motion read back = off  (read off)
+PASS  card-end-667x375-rm-off.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 1.00)
+PASS  card-end-667x375-rm-off.png  card buttons >= 44x44  (196x49)
+PASS  card-end-667x375-rm-off.png  card text does not overlap
+PASS  card-end-667x375-rm-off.png  card not crowded (text uses <= 80% of card height)  (75%)
+PASS  card-end-667x375-rm-off.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-667x375-rm-off.png  contrast card text >= 4.5:1  (13.58:1, )
+PASS  card-end-667x375-rm-off.png  contrast Good effort! >= 4.5:1  (11.35:1, )
+PASS  card-end-667x375-rm-off.png  contrast +experience >= 4.5:1  (10.08:1, )
+PASS  card-end-667x375-rm-off.png  contrast Back home >= 4.5:1  (8.12:1, )
+PASS  667x375 rm=off  hands-on: one Back home tap goes Home  (scenes Home)
+PASS  667x375 rm=off  no page errors
+PASS  667x320 rm=on  hero went down
+PASS  667x320 rm=on  run-over card appears
+PASS  667x320 rm=on  card has one button, Back home, no Try again  (Good effort! / You reached room 1 of 8. / You keep everything you found: 1 treasure. / Back home)
+PASS  card-start-667x320-rm-on.png  Reduced motion read back = on  (read on)
+PASS  card-start-667x320-rm-on.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.00)
+PASS  card-start-667x320-rm-on.png  card buttons >= 44x44  (196x44)
+PASS  card-start-667x320-rm-on.png  card text does not overlap
+PASS  card-start-667x320-rm-on.png  card not crowded (text uses <= 80% of card height)  (75%)
+PASS  card-start-667x320-rm-on.png  card text >= 12 px  (smallest 15 px)
+PASS  card-mid-667x320-rm-on.png  Reduced motion read back = on  (read on)
+PASS  card-mid-667x320-rm-on.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.57)
+PASS  card-mid-667x320-rm-on.png  card buttons >= 44x44  (196x44)
+PASS  card-mid-667x320-rm-on.png  card text does not overlap
+PASS  card-mid-667x320-rm-on.png  card not crowded (text uses <= 80% of card height)  (75%)
+PASS  card-mid-667x320-rm-on.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-667x320-rm-on.png  Reduced motion read back = on  (read on)
+PASS  card-end-667x320-rm-on.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 1.00)
+PASS  card-end-667x320-rm-on.png  card buttons >= 44x44  (196x44)
+PASS  card-end-667x320-rm-on.png  card text does not overlap
+PASS  card-end-667x320-rm-on.png  card not crowded (text uses <= 80% of card height)  (75%)
+PASS  card-end-667x320-rm-on.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-667x320-rm-on.png  contrast card text >= 4.5:1  (13.58:1, )
+PASS  card-end-667x320-rm-on.png  contrast Good effort! >= 4.5:1  (11.35:1, )
+PASS  card-end-667x320-rm-on.png  contrast +experience >= 4.5:1  (10.08:1, )
+PASS  card-end-667x320-rm-on.png  contrast Back home >= 4.5:1  (8.12:1, )
+PASS  667x320 rm=on  hands-on: one Back home tap goes Home  (scenes Home)
+PASS  667x320 rm=on  no page errors
+PASS  667x320 rm=off  hero went down
+PASS  667x320 rm=off  run-over card appears
+PASS  667x320 rm=off  card has one button, Back home, no Try again  (Good effort! / You reached room 1 of 8. / You keep everything you found: 1 treasure. / Back home)
+PASS  card-start-667x320-rm-off.png  Reduced motion read back = off  (read off)
+PASS  card-start-667x320-rm-off.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.00)
+PASS  card-start-667x320-rm-off.png  card buttons >= 44x44  (196x44)
+PASS  card-start-667x320-rm-off.png  card text does not overlap
+PASS  card-start-667x320-rm-off.png  card not crowded (text uses <= 80% of card height)  (75%)
+PASS  card-start-667x320-rm-off.png  card text >= 12 px  (smallest 15 px)
+PASS  card-mid-667x320-rm-off.png  Reduced motion read back = off  (read off)
+PASS  card-mid-667x320-rm-off.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.53)
+PASS  card-mid-667x320-rm-off.png  card buttons >= 44x44  (196x44)
+PASS  card-mid-667x320-rm-off.png  card text does not overlap
+PASS  card-mid-667x320-rm-off.png  card not crowded (text uses <= 80% of card height)  (75%)
+PASS  card-mid-667x320-rm-off.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-667x320-rm-off.png  Reduced motion read back = off  (read off)
+PASS  card-end-667x320-rm-off.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 1.00)
+PASS  card-end-667x320-rm-off.png  card buttons >= 44x44  (196x44)
+PASS  card-end-667x320-rm-off.png  card text does not overlap
+PASS  card-end-667x320-rm-off.png  card not crowded (text uses <= 80% of card height)  (75%)
+PASS  card-end-667x320-rm-off.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-667x320-rm-off.png  contrast card text >= 4.5:1  (13.58:1, )
+PASS  card-end-667x320-rm-off.png  contrast Good effort! >= 4.5:1  (11.35:1, )
+PASS  card-end-667x320-rm-off.png  contrast +experience >= 4.5:1  (10.08:1, )
+PASS  card-end-667x320-rm-off.png  contrast Back home >= 4.5:1  (8.12:1, )
+PASS  667x320 rm=off  hands-on: one Back home tap goes Home  (scenes Home)
+PASS  667x320 rm=off  no page errors
+PASS  932x430 rm=on  hero went down
+PASS  932x430 rm=on  run-over card appears
+PASS  932x430 rm=on  card has one button, Back home, no Try again  (Good effort! / You reached room 1 of 8. / You keep everything you found: 1 treasure. / Back home)
+PASS  card-start-932x430-rm-on.png  Reduced motion read back = on  (read on)
+PASS  card-start-932x430-rm-on.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.00)
+PASS  card-start-932x430-rm-on.png  card buttons >= 44x44  (196x52)
+PASS  card-start-932x430-rm-on.png  card text does not overlap
+PASS  card-start-932x430-rm-on.png  card not crowded (text uses <= 80% of card height)  (74%)
+PASS  card-start-932x430-rm-on.png  card text >= 12 px  (smallest 15 px)
+PASS  card-mid-932x430-rm-on.png  Reduced motion read back = on  (read on)
+PASS  card-mid-932x430-rm-on.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.66)
+PASS  card-mid-932x430-rm-on.png  card buttons >= 44x44  (196x52)
+PASS  card-mid-932x430-rm-on.png  card text does not overlap
+PASS  card-mid-932x430-rm-on.png  card not crowded (text uses <= 80% of card height)  (74%)
+PASS  card-mid-932x430-rm-on.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-932x430-rm-on.png  Reduced motion read back = on  (read on)
+PASS  card-end-932x430-rm-on.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 1.00)
+PASS  card-end-932x430-rm-on.png  card buttons >= 44x44  (196x52)
+PASS  card-end-932x430-rm-on.png  card text does not overlap
+PASS  card-end-932x430-rm-on.png  card not crowded (text uses <= 80% of card height)  (74%)
+PASS  card-end-932x430-rm-on.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-932x430-rm-on.png  contrast card text >= 4.5:1  (13.58:1, )
+PASS  card-end-932x430-rm-on.png  contrast Good effort! >= 4.5:1  (11.35:1, )
+PASS  card-end-932x430-rm-on.png  contrast +experience >= 4.5:1  (10.08:1, )
+PASS  card-end-932x430-rm-on.png  contrast Back home >= 4.5:1  (8.12:1, )
+PASS  932x430 rm=on  hands-on: one Back home tap goes Home  (scenes Home)
+PASS  932x430 rm=on  no page errors
+PASS  932x430 rm=off  hero went down
+PASS  932x430 rm=off  run-over card appears
+PASS  932x430 rm=off  card has one button, Back home, no Try again  (Good effort! / You reached room 1 of 8. / Every climb makes you stronger. / Back home)
+PASS  card-start-932x430-rm-off.png  Reduced motion read back = off  (read off)
+PASS  card-start-932x430-rm-off.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.00)
+PASS  card-start-932x430-rm-off.png  card buttons >= 44x44  (196x52)
+PASS  card-start-932x430-rm-off.png  card text does not overlap
+PASS  card-start-932x430-rm-off.png  card not crowded (text uses <= 80% of card height)  (74%)
+PASS  card-start-932x430-rm-off.png  card text >= 12 px  (smallest 15 px)
+PASS  card-mid-932x430-rm-off.png  Reduced motion read back = off  (read off)
+PASS  card-mid-932x430-rm-off.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 0.69)
+PASS  card-mid-932x430-rm-off.png  card buttons >= 44x44  (196x52)
+PASS  card-mid-932x430-rm-off.png  card text does not overlap
+PASS  card-mid-932x430-rm-off.png  card not crowded (text uses <= 80% of card height)  (74%)
+PASS  card-mid-932x430-rm-off.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-932x430-rm-off.png  Reduced motion read back = off  (read off)
+PASS  card-end-932x430-rm-off.png  card padding >= 8 px (text to card edge)  (18.0 px, alpha 1.00)
+PASS  card-end-932x430-rm-off.png  card buttons >= 44x44  (196x52)
+PASS  card-end-932x430-rm-off.png  card text does not overlap
+PASS  card-end-932x430-rm-off.png  card not crowded (text uses <= 80% of card height)  (74%)
+PASS  card-end-932x430-rm-off.png  card text >= 12 px  (smallest 15 px)
+PASS  card-end-932x430-rm-off.png  contrast card text >= 4.5:1  (13.58:1, )
+PASS  card-end-932x430-rm-off.png  contrast Good effort! >= 4.5:1  (11.35:1, )
+PASS  card-end-932x430-rm-off.png  contrast +experience >= 4.5:1  (10.08:1, )
+PASS  card-end-932x430-rm-off.png  contrast Back home >= 4.5:1  (8.12:1, )
+PASS  932x430 rm=off  hands-on: one Back home tap goes Home  (scenes Home)
+PASS  932x430 rm=off  no page errors

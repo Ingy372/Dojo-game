@@ -101,7 +101,6 @@ import { InsightPicker } from '../ui/InsightPicker';
 import { choiceCard, restCard, runOverCard } from '../ui/RunOverCard';
 import { PLAY_TIME_TEXT, isPlayTimeUp } from '../game/playTime';
 import { DIFFICULTY_TEXT, localToday } from '../game/difficulty';
-import { startTowerRun } from '../game/tower';
 import { LESSONS, noteLessonSeen, takeLesson } from '../game/lessons';
 import { bankRun, saveRunInProgress } from '../game/runSave';
 import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css, view, DPR, hiDpi } from '../ui/theme';
@@ -1618,7 +1617,7 @@ export class GameScene extends Phaser.Scene {
       return;
     }
     if (status === 'lost') {
-      // A soft card with what they keep, then Try again or Back home. After losses in a row on
+      // A soft card with what they keep, then Back home. After losses in a row on
       // this floor, Guided is kindly offered first, at most once a day (M7-P1).
       const tier = this.run.tier;
       const offer = shouldOfferGuided(profile, tier, DIFFICULTY_TEXT, localToday());
@@ -1646,12 +1645,6 @@ export class GameScene extends Phaser.Scene {
           this,
           summary,
           xp.gained,
-          () => {
-            this.uiCamera.fadeOut(400, 10, 8, 16);
-            this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () =>
-              isPlayTimeUp(loadSave()) ? this.scene.start('Dojo') : this.scene.start('Game', { run: startTowerRun(loadSave(), this.training) }),
-            );
-          },
           () => {
             this.uiCamera.fadeOut(400, 10, 8, 16);
             this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home', { fromRun: true }));

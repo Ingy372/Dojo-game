@@ -1281,6 +1281,9 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - Green `roundButton` (Scroll's Close colour), 96×44 in the top-right corner, 12 px from the edges, 16 px text. It calls the same `close()` as the background tap. The background tap still closes, too.
 - It sits above the cards (cards start at 10% height + 44 px), so nothing else moved at 667×320.
 
+## Q-PREM-F5 — The run-over card has only Back home (2026-10-26)
+- The Manager approved removing Try again from the lost-run card. `runOverCard` no longer takes `onRetry`; GameScene's retry callback (fade out, then Dojo if play time is up, else a new Tower run) and its comment are gone, along with the now-unused `startTowerRun` import.
+- Back home is centred, same width and colours (#fff6e0 on #4a4a55, 8.12:1). Its height is `max(44, min(52, 13% of height))`, so it is 44 px at 667x320 (was 42). The card's wording and the Back home path are unchanged. No tests covered retry.
 ## Q-PREM-F1 — First-tap bow and arrival tap-through (2026-10-26)
 - Cause of the tap-through, proven on main (8d83a95) before any change: the last arrival card ("Tap to continue" on the celebration, when nothing comes after it) closes on pointer-up and turns the dojo to play in the same moment. A second press from the same gesture (a phone's copy-of-a-tap mouse event, or a quick double tap) then lands in play and walks the hero (main: 6/6 echo taps moved the hero at 667, 844 and 932, Reduced motion on and off; docs/shots/q-prem-f1/baseline-c-main.txt).
 - Fix: when the arrival steps end, DojoScene resets the touch controls and ignores new presses for `ARRIVAL_QUIET_MS` = 450 ms. After that, taps walk as usual (each run has a control tap that still moves the hero). bow.ts and Celebrations.ts are unchanged.
