@@ -133,6 +133,8 @@ export interface TrainingState {
   classCheckIns: string[];
   /** Lifetime classes from the feed, or null if the feed doesn't send it. */
   classesTotal: number | null;
+  /** B-TUNE-GUIDED: fight stats pinned by a testing fixture (feed testStats); absent otherwise. */
+  pinnedStats?: { maxHealth: number; power: number; guard: number };
   trainingPoints: number;
   approvedMinutes: number;
 }
@@ -287,6 +289,7 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
     lastClass: last === null ? null : feed.attendance.recentClasses.find((d) => Date.parse(d) === last) ?? null,
     classCheckIns: feed.attendance.recentClasses.filter((d) => Date.parse(d) <= now.ms),
     classesTotal: feed.attendance.classesTotal,
+    ...(feed.testStats ? { pinnedStats: { ...feed.testStats } } : {}),
     trainingPoints: Math.floor(feed.homePractice.approvedMinutes / TRAINING_POINTS.minutesPerPoint),
     approvedMinutes: feed.homePractice.approvedMinutes,
   };
