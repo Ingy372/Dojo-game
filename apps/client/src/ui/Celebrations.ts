@@ -18,6 +18,8 @@ import { FONT, crisp, view } from './theme';
 type Step =
   /** Sensei's welcome-home line, before the cascade (M7-P4, Manager call). */
   | { kind: 'sensei'; lines: string[] }
+  /** Q-PREM-BOSSWIN: the first real Floor Keeper clear (once per save). A game-only moment, so it stays smaller than a promotion: one screen. */
+  | { kind: 'keeper'; title: string }
   | { kind: 'moment'; moment: Exclude<RewardMoment, { kind: 'promotion' }> }
   | { kind: 'bow'; from: BeltInfo; to: BeltInfo }
   | { kind: 'gate'; to: BeltInfo }
@@ -31,7 +33,7 @@ const GOLD = 0xffd166;
 export class Celebrations {
   private readonly steps: Step[] = [];
   private index = -1;
-  private readonly root: Phaser.GameObjects.Container;
+  readonly root: Phaser.GameObjects.Container;
   private layer!: Phaser.GameObjects.Container;
   /** Taps are ignored for a moment after each step appears, so nothing is skipped by accident. */
   private readyAt = 0;
@@ -42,7 +44,9 @@ export class Celebrations {
     private readonly training: TrainingState,
     private readonly onDone: () => void,
     sensei: string[] = [],
+    keeperTitle?: string,
   ) {
+    if (keeperTitle) this.steps.push({ kind: 'keeper', title: keeperTitle });
     if (sensei.length) this.steps.push({ kind: 'sensei', lines: sensei });
     // The promotion ceremony is 3 screens (QA, 2026-10-18: 8 in a row was too many):
     // the bow and new belt, the Gate opens, then one screen with everything new.
@@ -93,6 +97,9 @@ export class Celebrations {
         break;
       case 'sensei':
         this.sensei(step.lines);
+        break;
+      case 'keeper':
+        wait = this.keeper(step.title);
         break;
     }
     this.readyAt = this.scene.time.now + wait;
@@ -317,6 +324,30 @@ export class Celebrations {
         break;
       }
     }
+  }
+
+  /**
+   * Q-PREM-BOSSWIN: 'Floor Keeper defeated!' with the player's character, rays and confetti.
+   * Smaller than the promotion (one screen, fewer pieces, no gong). Reduced motion: no confetti,
+   * and the rays stay still (burst and rays handle it).
+   */
+  private keeper(title: string): number {
+    const { width, height } = this.size();
+    const cx = width / 2;
+    sfx.floorClear();
+    const r = Math.min(48, height * 0.12);
+    const cy = height * 0.6;
+    this.rays(cx, cy, 0x9ad1ff);
+    const ch = makeStandingCharacter(this.scene, cx, cy, r, this.training.belt, this.training.stripesThisBelt, loadLook());
+    this.layer.add(ch.container);
+    if (ch.sprite) ch.sprite.play('celebrate', { restart: true });
+    const t = this.text(cx, height * 0.2, title, 28, '#ffd166', true, 'Georgia, serif', width - 40).setOrigin(0.5).setAlign('center');
+    if (!reducedMotion()) {
+      t.setScale(0.5);
+      this.scene.tweens.add({ targets: t, scale: 1, duration: 420, ease: 'Back.Out' });
+    }
+    this.burst(cx, height * 0.2, [GOLD, 0x9ad1ff, 0xffffff], 40);
+    return 1200;
   }
 
   /** Sensei's welcome-home line (M7-P5), the first screen of the first return home. */

@@ -894,3 +894,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## Q-PREM-F10 (2026-10-26)
 - Stat tile number and label at least 4 px apart, with nothing overlapping (tile icons, New for you label, icon and sparkle checked against every panel text and picture), at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off. Text is at least 12 px, F8's 12 px above Again! is kept, and a hands-on tap on Again! starts a run. verify-ui-shots: 766 PASS, 0 FAIL (docs/shots/q-prem-f10/verify-log.txt). Test: packages/sim/test/b-lastrun-layout.test.ts (Q-PREM-F10 block).
+
+## Q-PREM-BOSSWIN (2026-10-26)
+- First real Floor Keeper clear shows "Floor Keeper defeated!" once per save; old saves with a cleared floor are treated as celebrated. verify-ui-shots at 667x375, 844x390, 932x430, 1024x768, Reduced motion on/off, frames 0/600/1500 ms, hands-on tap continues: 224 PASS / 0 FAIL (docs/shots/q-prem-bosswin/verify-log.txt). Test: packages/sim/test/q-prem-bosswin.test.ts.
+**Next**
+- Tester: beat the Floor Keeper on a fresh save (moment plays), then again (normal clear). Q-PREM-GRADE next.

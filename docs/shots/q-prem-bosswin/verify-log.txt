@@ -1,0 +1,226 @@
+PASS	bosswin-1024x768-rmoff	Reduced motion read back = off	bosswin-1024x768-rmoff-0ms.png
+PASS	bosswin-1024x768-rmoff	title shown	bosswin-1024x768-rmoff-0ms.png
+PASS	bosswin-1024x768-rmoff	text >= 12 px	bosswin-1024x768-rmoff-0ms.png
+PASS	bosswin-1024x768-rmoff	inside screen with >= 8 px padding	bosswin-1024x768-rmoff-0ms.png
+PASS	bosswin-1024x768-rmoff	confetti present (RM off)	bosswin-1024x768-rmoff-0ms.png
+PASS	bosswin-1024x768-rmoff	rays turning (RM off)	bosswin-1024x768-rmoff-0ms.png
+PASS	bosswin-1024x768-rmoff	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-1024x768-rmoff-0ms.png
+PASS	bosswin-1024x768-rmoff	tap target >= 44x44 (whole screen continues)	bosswin-1024x768-rmoff-0ms.png
+PASS	bosswin-1024x768-rmoff	title shown	bosswin-1024x768-rmoff-600ms.png
+PASS	bosswin-1024x768-rmoff	text >= 12 px	bosswin-1024x768-rmoff-600ms.png
+PASS	bosswin-1024x768-rmoff	inside screen with >= 8 px padding	bosswin-1024x768-rmoff-600ms.png
+PASS	bosswin-1024x768-rmoff	title and Tap line do not overlap	bosswin-1024x768-rmoff-600ms.png
+PASS	bosswin-1024x768-rmoff	confetti present (RM off)	bosswin-1024x768-rmoff-600ms.png
+PASS	bosswin-1024x768-rmoff	rays turning (RM off)	bosswin-1024x768-rmoff-600ms.png
+PASS	bosswin-1024x768-rmoff	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-1024x768-rmoff-600ms.png
+PASS	bosswin-1024x768-rmoff	tap target >= 44x44 (whole screen continues)	bosswin-1024x768-rmoff-600ms.png
+PASS	bosswin-1024x768-rmoff	title shown	bosswin-1024x768-rmoff-1500ms.png
+PASS	bosswin-1024x768-rmoff	Tap to continue shown	bosswin-1024x768-rmoff-1500ms.png
+PASS	bosswin-1024x768-rmoff	text >= 12 px	bosswin-1024x768-rmoff-1500ms.png
+PASS	bosswin-1024x768-rmoff	inside screen with >= 8 px padding	bosswin-1024x768-rmoff-1500ms.png
+PASS	bosswin-1024x768-rmoff	title and Tap line do not overlap	bosswin-1024x768-rmoff-1500ms.png
+PASS	bosswin-1024x768-rmoff	confetti present (RM off)	bosswin-1024x768-rmoff-1500ms.png
+PASS	bosswin-1024x768-rmoff	rays turning (RM off)	bosswin-1024x768-rmoff-1500ms.png
+PASS	bosswin-1024x768-rmoff	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-1024x768-rmoff-1500ms.png
+PASS	bosswin-1024x768-rmoff	tap target >= 44x44 (whole screen continues)	bosswin-1024x768-rmoff-1500ms.png
+PASS	bosswin-1024x768-rmoff	rays after 2.5 s still turning	bosswin-1024x768-rmoff-1500ms.png
+PASS	bosswin-1024x768-rmoff	hands-on: one tap continues home once (onDone=1)	bosswin-1024x768-rmoff-1500ms.png
+PASS	bosswin-1024x768-rmoff	no page errors	-
+PASS	bosswin-1024x768-rmon	Reduced motion read back = on	bosswin-1024x768-rmon-0ms.png
+PASS	bosswin-1024x768-rmon	title shown	bosswin-1024x768-rmon-0ms.png
+PASS	bosswin-1024x768-rmon	text >= 12 px	bosswin-1024x768-rmon-0ms.png
+PASS	bosswin-1024x768-rmon	inside screen with >= 8 px padding	bosswin-1024x768-rmon-0ms.png
+PASS	bosswin-1024x768-rmon	confetti none (RM on)	bosswin-1024x768-rmon-0ms.png
+PASS	bosswin-1024x768-rmon	rays still at 0 deg (RM on)	bosswin-1024x768-rmon-0ms.png
+PASS	bosswin-1024x768-rmon	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-1024x768-rmon-0ms.png
+PASS	bosswin-1024x768-rmon	tap target >= 44x44 (whole screen continues)	bosswin-1024x768-rmon-0ms.png
+PASS	bosswin-1024x768-rmon	title shown	bosswin-1024x768-rmon-600ms.png
+PASS	bosswin-1024x768-rmon	text >= 12 px	bosswin-1024x768-rmon-600ms.png
+PASS	bosswin-1024x768-rmon	inside screen with >= 8 px padding	bosswin-1024x768-rmon-600ms.png
+PASS	bosswin-1024x768-rmon	title and Tap line do not overlap	bosswin-1024x768-rmon-600ms.png
+PASS	bosswin-1024x768-rmon	confetti none (RM on)	bosswin-1024x768-rmon-600ms.png
+PASS	bosswin-1024x768-rmon	rays still at 0 deg (RM on)	bosswin-1024x768-rmon-600ms.png
+PASS	bosswin-1024x768-rmon	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-1024x768-rmon-600ms.png
+PASS	bosswin-1024x768-rmon	tap target >= 44x44 (whole screen continues)	bosswin-1024x768-rmon-600ms.png
+PASS	bosswin-1024x768-rmon	title shown	bosswin-1024x768-rmon-1500ms.png
+PASS	bosswin-1024x768-rmon	Tap to continue shown	bosswin-1024x768-rmon-1500ms.png
+PASS	bosswin-1024x768-rmon	text >= 12 px	bosswin-1024x768-rmon-1500ms.png
+PASS	bosswin-1024x768-rmon	inside screen with >= 8 px padding	bosswin-1024x768-rmon-1500ms.png
+PASS	bosswin-1024x768-rmon	title and Tap line do not overlap	bosswin-1024x768-rmon-1500ms.png
+PASS	bosswin-1024x768-rmon	confetti none (RM on)	bosswin-1024x768-rmon-1500ms.png
+PASS	bosswin-1024x768-rmon	rays still at 0 deg (RM on)	bosswin-1024x768-rmon-1500ms.png
+PASS	bosswin-1024x768-rmon	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-1024x768-rmon-1500ms.png
+PASS	bosswin-1024x768-rmon	tap target >= 44x44 (whole screen continues)	bosswin-1024x768-rmon-1500ms.png
+PASS	bosswin-1024x768-rmon	rays after 2.5 s still	bosswin-1024x768-rmon-1500ms.png
+PASS	bosswin-1024x768-rmon	hands-on: one tap continues home once (onDone=1)	bosswin-1024x768-rmon-1500ms.png
+PASS	bosswin-1024x768-rmon	no page errors	-
+PASS	bosswin-667x375-rmoff	Reduced motion read back = off	bosswin-667x375-rmoff-0ms.png
+PASS	bosswin-667x375-rmoff	title shown	bosswin-667x375-rmoff-0ms.png
+PASS	bosswin-667x375-rmoff	text >= 12 px	bosswin-667x375-rmoff-0ms.png
+PASS	bosswin-667x375-rmoff	inside screen with >= 8 px padding	bosswin-667x375-rmoff-0ms.png
+PASS	bosswin-667x375-rmoff	confetti present (RM off)	bosswin-667x375-rmoff-0ms.png
+PASS	bosswin-667x375-rmoff	rays turning (RM off)	bosswin-667x375-rmoff-0ms.png
+PASS	bosswin-667x375-rmoff	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-667x375-rmoff-0ms.png
+PASS	bosswin-667x375-rmoff	tap target >= 44x44 (whole screen continues)	bosswin-667x375-rmoff-0ms.png
+PASS	bosswin-667x375-rmoff	title shown	bosswin-667x375-rmoff-600ms.png
+PASS	bosswin-667x375-rmoff	text >= 12 px	bosswin-667x375-rmoff-600ms.png
+PASS	bosswin-667x375-rmoff	inside screen with >= 8 px padding	bosswin-667x375-rmoff-600ms.png
+PASS	bosswin-667x375-rmoff	title and Tap line do not overlap	bosswin-667x375-rmoff-600ms.png
+PASS	bosswin-667x375-rmoff	confetti present (RM off)	bosswin-667x375-rmoff-600ms.png
+PASS	bosswin-667x375-rmoff	rays turning (RM off)	bosswin-667x375-rmoff-600ms.png
+PASS	bosswin-667x375-rmoff	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-667x375-rmoff-600ms.png
+PASS	bosswin-667x375-rmoff	tap target >= 44x44 (whole screen continues)	bosswin-667x375-rmoff-600ms.png
+PASS	bosswin-667x375-rmoff	title shown	bosswin-667x375-rmoff-1500ms.png
+PASS	bosswin-667x375-rmoff	Tap to continue shown	bosswin-667x375-rmoff-1500ms.png
+PASS	bosswin-667x375-rmoff	text >= 12 px	bosswin-667x375-rmoff-1500ms.png
+PASS	bosswin-667x375-rmoff	inside screen with >= 8 px padding	bosswin-667x375-rmoff-1500ms.png
+PASS	bosswin-667x375-rmoff	title and Tap line do not overlap	bosswin-667x375-rmoff-1500ms.png
+PASS	bosswin-667x375-rmoff	confetti present (RM off)	bosswin-667x375-rmoff-1500ms.png
+PASS	bosswin-667x375-rmoff	rays turning (RM off)	bosswin-667x375-rmoff-1500ms.png
+PASS	bosswin-667x375-rmoff	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-667x375-rmoff-1500ms.png
+PASS	bosswin-667x375-rmoff	tap target >= 44x44 (whole screen continues)	bosswin-667x375-rmoff-1500ms.png
+PASS	bosswin-667x375-rmoff	rays after 2.5 s still turning	bosswin-667x375-rmoff-1500ms.png
+PASS	bosswin-667x375-rmoff	hands-on: one tap continues home once (onDone=1)	bosswin-667x375-rmoff-1500ms.png
+PASS	bosswin-667x375-rmoff	no page errors	-
+PASS	bosswin-667x375-rmon	Reduced motion read back = on	bosswin-667x375-rmon-0ms.png
+PASS	bosswin-667x375-rmon	title shown	bosswin-667x375-rmon-0ms.png
+PASS	bosswin-667x375-rmon	text >= 12 px	bosswin-667x375-rmon-0ms.png
+PASS	bosswin-667x375-rmon	inside screen with >= 8 px padding	bosswin-667x375-rmon-0ms.png
+PASS	bosswin-667x375-rmon	confetti none (RM on)	bosswin-667x375-rmon-0ms.png
+PASS	bosswin-667x375-rmon	rays still at 0 deg (RM on)	bosswin-667x375-rmon-0ms.png
+PASS	bosswin-667x375-rmon	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-667x375-rmon-0ms.png
+PASS	bosswin-667x375-rmon	tap target >= 44x44 (whole screen continues)	bosswin-667x375-rmon-0ms.png
+PASS	bosswin-667x375-rmon	title shown	bosswin-667x375-rmon-600ms.png
+PASS	bosswin-667x375-rmon	text >= 12 px	bosswin-667x375-rmon-600ms.png
+PASS	bosswin-667x375-rmon	inside screen with >= 8 px padding	bosswin-667x375-rmon-600ms.png
+PASS	bosswin-667x375-rmon	title and Tap line do not overlap	bosswin-667x375-rmon-600ms.png
+PASS	bosswin-667x375-rmon	confetti none (RM on)	bosswin-667x375-rmon-600ms.png
+PASS	bosswin-667x375-rmon	rays still at 0 deg (RM on)	bosswin-667x375-rmon-600ms.png
+PASS	bosswin-667x375-rmon	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-667x375-rmon-600ms.png
+PASS	bosswin-667x375-rmon	tap target >= 44x44 (whole screen continues)	bosswin-667x375-rmon-600ms.png
+PASS	bosswin-667x375-rmon	title shown	bosswin-667x375-rmon-1500ms.png
+PASS	bosswin-667x375-rmon	Tap to continue shown	bosswin-667x375-rmon-1500ms.png
+PASS	bosswin-667x375-rmon	text >= 12 px	bosswin-667x375-rmon-1500ms.png
+PASS	bosswin-667x375-rmon	inside screen with >= 8 px padding	bosswin-667x375-rmon-1500ms.png
+PASS	bosswin-667x375-rmon	title and Tap line do not overlap	bosswin-667x375-rmon-1500ms.png
+PASS	bosswin-667x375-rmon	confetti none (RM on)	bosswin-667x375-rmon-1500ms.png
+PASS	bosswin-667x375-rmon	rays still at 0 deg (RM on)	bosswin-667x375-rmon-1500ms.png
+PASS	bosswin-667x375-rmon	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-667x375-rmon-1500ms.png
+PASS	bosswin-667x375-rmon	tap target >= 44x44 (whole screen continues)	bosswin-667x375-rmon-1500ms.png
+PASS	bosswin-667x375-rmon	rays after 2.5 s still	bosswin-667x375-rmon-1500ms.png
+PASS	bosswin-667x375-rmon	hands-on: one tap continues home once (onDone=1)	bosswin-667x375-rmon-1500ms.png
+PASS	bosswin-667x375-rmon	no page errors	-
+PASS	bosswin-844x390-rmoff	Reduced motion read back = off	bosswin-844x390-rmoff-0ms.png
+PASS	bosswin-844x390-rmoff	title shown	bosswin-844x390-rmoff-0ms.png
+PASS	bosswin-844x390-rmoff	text >= 12 px	bosswin-844x390-rmoff-0ms.png
+PASS	bosswin-844x390-rmoff	inside screen with >= 8 px padding	bosswin-844x390-rmoff-0ms.png
+PASS	bosswin-844x390-rmoff	confetti present (RM off)	bosswin-844x390-rmoff-0ms.png
+PASS	bosswin-844x390-rmoff	rays turning (RM off)	bosswin-844x390-rmoff-0ms.png
+PASS	bosswin-844x390-rmoff	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-844x390-rmoff-0ms.png
+PASS	bosswin-844x390-rmoff	tap target >= 44x44 (whole screen continues)	bosswin-844x390-rmoff-0ms.png
+PASS	bosswin-844x390-rmoff	title shown	bosswin-844x390-rmoff-600ms.png
+PASS	bosswin-844x390-rmoff	text >= 12 px	bosswin-844x390-rmoff-600ms.png
+PASS	bosswin-844x390-rmoff	inside screen with >= 8 px padding	bosswin-844x390-rmoff-600ms.png
+PASS	bosswin-844x390-rmoff	title and Tap line do not overlap	bosswin-844x390-rmoff-600ms.png
+PASS	bosswin-844x390-rmoff	confetti present (RM off)	bosswin-844x390-rmoff-600ms.png
+PASS	bosswin-844x390-rmoff	rays turning (RM off)	bosswin-844x390-rmoff-600ms.png
+PASS	bosswin-844x390-rmoff	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-844x390-rmoff-600ms.png
+PASS	bosswin-844x390-rmoff	tap target >= 44x44 (whole screen continues)	bosswin-844x390-rmoff-600ms.png
+PASS	bosswin-844x390-rmoff	title shown	bosswin-844x390-rmoff-1500ms.png
+PASS	bosswin-844x390-rmoff	Tap to continue shown	bosswin-844x390-rmoff-1500ms.png
+PASS	bosswin-844x390-rmoff	text >= 12 px	bosswin-844x390-rmoff-1500ms.png
+PASS	bosswin-844x390-rmoff	inside screen with >= 8 px padding	bosswin-844x390-rmoff-1500ms.png
+PASS	bosswin-844x390-rmoff	title and Tap line do not overlap	bosswin-844x390-rmoff-1500ms.png
+PASS	bosswin-844x390-rmoff	confetti present (RM off)	bosswin-844x390-rmoff-1500ms.png
+PASS	bosswin-844x390-rmoff	rays turning (RM off)	bosswin-844x390-rmoff-1500ms.png
+PASS	bosswin-844x390-rmoff	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-844x390-rmoff-1500ms.png
+PASS	bosswin-844x390-rmoff	tap target >= 44x44 (whole screen continues)	bosswin-844x390-rmoff-1500ms.png
+PASS	bosswin-844x390-rmoff	rays after 2.5 s still turning	bosswin-844x390-rmoff-1500ms.png
+PASS	bosswin-844x390-rmoff	hands-on: one tap continues home once (onDone=1)	bosswin-844x390-rmoff-1500ms.png
+PASS	bosswin-844x390-rmoff	no page errors	-
+PASS	bosswin-844x390-rmon	Reduced motion read back = on	bosswin-844x390-rmon-0ms.png
+PASS	bosswin-844x390-rmon	title shown	bosswin-844x390-rmon-0ms.png
+PASS	bosswin-844x390-rmon	text >= 12 px	bosswin-844x390-rmon-0ms.png
+PASS	bosswin-844x390-rmon	inside screen with >= 8 px padding	bosswin-844x390-rmon-0ms.png
+PASS	bosswin-844x390-rmon	confetti none (RM on)	bosswin-844x390-rmon-0ms.png
+PASS	bosswin-844x390-rmon	rays still at 0 deg (RM on)	bosswin-844x390-rmon-0ms.png
+PASS	bosswin-844x390-rmon	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-844x390-rmon-0ms.png
+PASS	bosswin-844x390-rmon	tap target >= 44x44 (whole screen continues)	bosswin-844x390-rmon-0ms.png
+PASS	bosswin-844x390-rmon	title shown	bosswin-844x390-rmon-600ms.png
+PASS	bosswin-844x390-rmon	text >= 12 px	bosswin-844x390-rmon-600ms.png
+PASS	bosswin-844x390-rmon	inside screen with >= 8 px padding	bosswin-844x390-rmon-600ms.png
+PASS	bosswin-844x390-rmon	title and Tap line do not overlap	bosswin-844x390-rmon-600ms.png
+PASS	bosswin-844x390-rmon	confetti none (RM on)	bosswin-844x390-rmon-600ms.png
+PASS	bosswin-844x390-rmon	rays still at 0 deg (RM on)	bosswin-844x390-rmon-600ms.png
+PASS	bosswin-844x390-rmon	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-844x390-rmon-600ms.png
+PASS	bosswin-844x390-rmon	tap target >= 44x44 (whole screen continues)	bosswin-844x390-rmon-600ms.png
+PASS	bosswin-844x390-rmon	title shown	bosswin-844x390-rmon-1500ms.png
+PASS	bosswin-844x390-rmon	Tap to continue shown	bosswin-844x390-rmon-1500ms.png
+PASS	bosswin-844x390-rmon	text >= 12 px	bosswin-844x390-rmon-1500ms.png
+PASS	bosswin-844x390-rmon	inside screen with >= 8 px padding	bosswin-844x390-rmon-1500ms.png
+PASS	bosswin-844x390-rmon	title and Tap line do not overlap	bosswin-844x390-rmon-1500ms.png
+PASS	bosswin-844x390-rmon	confetti none (RM on)	bosswin-844x390-rmon-1500ms.png
+PASS	bosswin-844x390-rmon	rays still at 0 deg (RM on)	bosswin-844x390-rmon-1500ms.png
+PASS	bosswin-844x390-rmon	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-844x390-rmon-1500ms.png
+PASS	bosswin-844x390-rmon	tap target >= 44x44 (whole screen continues)	bosswin-844x390-rmon-1500ms.png
+PASS	bosswin-844x390-rmon	rays after 2.5 s still	bosswin-844x390-rmon-1500ms.png
+PASS	bosswin-844x390-rmon	hands-on: one tap continues home once (onDone=1)	bosswin-844x390-rmon-1500ms.png
+PASS	bosswin-844x390-rmon	no page errors	-
+PASS	bosswin-932x430-rmoff	Reduced motion read back = off	bosswin-932x430-rmoff-0ms.png
+PASS	bosswin-932x430-rmoff	title shown	bosswin-932x430-rmoff-0ms.png
+PASS	bosswin-932x430-rmoff	text >= 12 px	bosswin-932x430-rmoff-0ms.png
+PASS	bosswin-932x430-rmoff	inside screen with >= 8 px padding	bosswin-932x430-rmoff-0ms.png
+PASS	bosswin-932x430-rmoff	confetti present (RM off)	bosswin-932x430-rmoff-0ms.png
+PASS	bosswin-932x430-rmoff	rays turning (RM off)	bosswin-932x430-rmoff-0ms.png
+PASS	bosswin-932x430-rmoff	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-932x430-rmoff-0ms.png
+PASS	bosswin-932x430-rmoff	tap target >= 44x44 (whole screen continues)	bosswin-932x430-rmoff-0ms.png
+PASS	bosswin-932x430-rmoff	title shown	bosswin-932x430-rmoff-600ms.png
+PASS	bosswin-932x430-rmoff	text >= 12 px	bosswin-932x430-rmoff-600ms.png
+PASS	bosswin-932x430-rmoff	inside screen with >= 8 px padding	bosswin-932x430-rmoff-600ms.png
+PASS	bosswin-932x430-rmoff	title and Tap line do not overlap	bosswin-932x430-rmoff-600ms.png
+PASS	bosswin-932x430-rmoff	confetti present (RM off)	bosswin-932x430-rmoff-600ms.png
+PASS	bosswin-932x430-rmoff	rays turning (RM off)	bosswin-932x430-rmoff-600ms.png
+PASS	bosswin-932x430-rmoff	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-932x430-rmoff-600ms.png
+PASS	bosswin-932x430-rmoff	tap target >= 44x44 (whole screen continues)	bosswin-932x430-rmoff-600ms.png
+PASS	bosswin-932x430-rmoff	title shown	bosswin-932x430-rmoff-1500ms.png
+PASS	bosswin-932x430-rmoff	Tap to continue shown	bosswin-932x430-rmoff-1500ms.png
+PASS	bosswin-932x430-rmoff	text >= 12 px	bosswin-932x430-rmoff-1500ms.png
+PASS	bosswin-932x430-rmoff	inside screen with >= 8 px padding	bosswin-932x430-rmoff-1500ms.png
+PASS	bosswin-932x430-rmoff	title and Tap line do not overlap	bosswin-932x430-rmoff-1500ms.png
+PASS	bosswin-932x430-rmoff	confetti present (RM off)	bosswin-932x430-rmoff-1500ms.png
+PASS	bosswin-932x430-rmoff	rays turning (RM off)	bosswin-932x430-rmoff-1500ms.png
+PASS	bosswin-932x430-rmoff	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-932x430-rmoff-1500ms.png
+PASS	bosswin-932x430-rmoff	tap target >= 44x44 (whole screen continues)	bosswin-932x430-rmoff-1500ms.png
+PASS	bosswin-932x430-rmoff	rays after 2.5 s still turning	bosswin-932x430-rmoff-1500ms.png
+PASS	bosswin-932x430-rmoff	hands-on: one tap continues home once (onDone=1)	bosswin-932x430-rmoff-1500ms.png
+PASS	bosswin-932x430-rmoff	no page errors	-
+PASS	bosswin-932x430-rmon	Reduced motion read back = on	bosswin-932x430-rmon-0ms.png
+PASS	bosswin-932x430-rmon	title shown	bosswin-932x430-rmon-0ms.png
+PASS	bosswin-932x430-rmon	text >= 12 px	bosswin-932x430-rmon-0ms.png
+PASS	bosswin-932x430-rmon	inside screen with >= 8 px padding	bosswin-932x430-rmon-0ms.png
+PASS	bosswin-932x430-rmon	confetti none (RM on)	bosswin-932x430-rmon-0ms.png
+PASS	bosswin-932x430-rmon	rays still at 0 deg (RM on)	bosswin-932x430-rmon-0ms.png
+PASS	bosswin-932x430-rmon	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-932x430-rmon-0ms.png
+PASS	bosswin-932x430-rmon	tap target >= 44x44 (whole screen continues)	bosswin-932x430-rmon-0ms.png
+PASS	bosswin-932x430-rmon	title shown	bosswin-932x430-rmon-600ms.png
+PASS	bosswin-932x430-rmon	text >= 12 px	bosswin-932x430-rmon-600ms.png
+PASS	bosswin-932x430-rmon	inside screen with >= 8 px padding	bosswin-932x430-rmon-600ms.png
+PASS	bosswin-932x430-rmon	title and Tap line do not overlap	bosswin-932x430-rmon-600ms.png
+PASS	bosswin-932x430-rmon	confetti none (RM on)	bosswin-932x430-rmon-600ms.png
+PASS	bosswin-932x430-rmon	rays still at 0 deg (RM on)	bosswin-932x430-rmon-600ms.png
+PASS	bosswin-932x430-rmon	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-932x430-rmon-600ms.png
+PASS	bosswin-932x430-rmon	tap target >= 44x44 (whole screen continues)	bosswin-932x430-rmon-600ms.png
+PASS	bosswin-932x430-rmon	title shown	bosswin-932x430-rmon-1500ms.png
+PASS	bosswin-932x430-rmon	Tap to continue shown	bosswin-932x430-rmon-1500ms.png
+PASS	bosswin-932x430-rmon	text >= 12 px	bosswin-932x430-rmon-1500ms.png
+PASS	bosswin-932x430-rmon	inside screen with >= 8 px padding	bosswin-932x430-rmon-1500ms.png
+PASS	bosswin-932x430-rmon	title and Tap line do not overlap	bosswin-932x430-rmon-1500ms.png
+PASS	bosswin-932x430-rmon	confetti none (RM on)	bosswin-932x430-rmon-1500ms.png
+PASS	bosswin-932x430-rmon	rays still at 0 deg (RM on)	bosswin-932x430-rmon-1500ms.png
+PASS	bosswin-932x430-rmon	contrast >= 4.5:1 (title #ffd166 ~7.9:1; Tap #b9ad99 ~5.2:1 worst case on a gold ray)	bosswin-932x430-rmon-1500ms.png
+PASS	bosswin-932x430-rmon	tap target >= 44x44 (whole screen continues)	bosswin-932x430-rmon-1500ms.png
+PASS	bosswin-932x430-rmon	rays after 2.5 s still	bosswin-932x430-rmon-1500ms.png
+PASS	bosswin-932x430-rmon	hands-on: one tap continues home once (onDone=1)	bosswin-932x430-rmon-1500ms.png
+PASS	bosswin-932x430-rmon	no page errors	-
+
+TOTAL 224 PASS / 0 FAIL
