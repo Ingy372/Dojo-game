@@ -18,10 +18,10 @@ describe('Q-PREM-TRY', () => {
     for (const id of listed) expect(all.find((l) => l.id === id)?.retry, id).toBe(NEW);
     expect(all.filter((l) => l.retry === NEW).map((l) => l.id).sort()).toEqual([...listed].sort());
   });
-  it('the old line is gone, no lesson says try again, and the guided Counter keeps practicing', () => {
+  it('the old line is gone, no lesson says try again, and the guided Counter shares the line', () => {
     expect(all.some((l) => l.retry === draft.current)).toBe(false);
     expect(all.some((l) => /rest at the dojo/i.test(l.retry ?? ''))).toBe(false);
-    expect(all.find((l) => l.id === 'lesson-counter-guided')?.retry).toBe("So close! Let's keep practicing.");
-    expect(JSON.stringify(lessons)).not.toMatch(/try again/i);
+    expect(all.find((l) => l.id === 'lesson-counter-guided')?.retry).toBe(NEW);
+    expect(JSON.stringify(lessons)).not.toMatch(/try again|so close/i);
   });
 });
