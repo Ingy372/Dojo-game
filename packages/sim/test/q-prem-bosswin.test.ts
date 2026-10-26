@@ -32,20 +32,27 @@ describe('Q-PREM-BOSSWIN: Floor Keeper defeated! plays once per save', () => {
 });
 
 describe('Q-PREM-BOSSWIN: old saves', () => {
-  const old = (floorsCleared: number) => {
+  const summary = (o: Record<string, unknown>) => ({ result: 'cleared', tutorial: false, test: false, defeated: ['floor-keeper'], results: [], items: [], ...o });
+  const old = (floorsCleared: number, last: Record<string, unknown> | null) => {
     const p = newProfile() as Partial<ReturnType<typeof newProfile>>;
     delete p.keeperCelebrated;
-    return loadProfile(JSON.parse(JSON.stringify({ ...p, floorsCleared })));
+    return loadProfile(JSON.parse(JSON.stringify({ ...p, floorsCleared, lastRun: last ? { summary: summary(last), newBests: [] } : null })));
   };
-  it('a save that already cleared a floor counts as celebrated (no late replay)', () => {
-    const p = old(3);
+  it('a last run that cleared a real floor and beat the Keeper counts as celebrated', () => {
+    const p = old(3, {});
     expect(p.keeperCelebrated).toBe(true);
     expect(keeperWin(p, real, 'cleared', FLOOR_KEEPER_ID)).toBe(false);
   });
-  it('a save with no floor cleared still gets the moment', () => {
-    const p = old(0);
+  it('a tutorial-only clear does not use up the moment', () => {
+    const p = old(1, { tutorial: true });
     expect(p.keeperCelebrated).toBe(false);
     expect(keeperWin(p, real, 'cleared', FLOOR_KEEPER_ID)).toBe(true);
+  });
+  it('no proof in the save (floors cleared, but the last run was a loss, a test, or another boss) means it still plays', () => {
+    for (const last of [{ result: 'lost' }, { test: true }, { defeated: ['hearth-cook'] }, null]) expect(old(4, last).keeperCelebrated).toBe(false);
+  });
+  it('a save with no floor cleared still gets the moment', () => {
+    expect(old(0, null).keeperCelebrated).toBe(false);
   });
 });
 
