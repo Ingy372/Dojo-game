@@ -2,15 +2,29 @@
   "notes": "DRAFT for R-STANCE-e. The dojo stance list Jay approved (J1, Oct 25). Descriptions use only what the repo already says: the kata sheets and self-defense.md. How to stand in each stance (feet, weight, hands) is not written anywhere in the repo, so it is a jayQuestion, never a guess. Game benefits are in drafts/planning/R-STANCE-stances-and-kata-rewards.md, not here.",
   "stances": [
     {
+      "id": "stance.beginner",
+      "name": "Beginner's",
+      "moveIds": [],
+      "description": "Plain standing, before you know a stance.",
+      "source": "Jay (Oct 25, via Manager): Beginner's Stance is plain standing; the kid doesn't know a stance yet.",
+      "howToStand": "Just stand the way you normally do.",
+      "belt": "none (where everyone starts)",
+      "gameId": "beginners-stance",
+      "gameLine": "Everyone starts here, and your teacher can teach you stances."
+    },
+    {
       "id": "stance.attention",
       "name": "Ready",
       "moveIds": [
         "stance.attention"
       ],
-      "description": "Where every kata starts and ends.",
-      "source": "Kata finishes: 'ready stance', 'move to attention & bow out'.",
-      "howToStand": null,
-      "jayQuestion": "Are Ready stance and Attention one stance or two? The sheets name both ('ready stance', then 'move to attention'). What does each look like, in one short line?"
+      "description": "The open leg stance.",
+      "source": "Jay (Oct 25, via Manager): Ready is the 'open leg stance', feet shoulder-width apart, fists in front of the stomach.",
+      "howToStand": "Feet shoulder-width apart, fists in front of your stomach.",
+      "gameId": "ready-stance",
+      "gameLine": "Steady and even, ready for anything.",
+      "belt": "white",
+      "beltSource": "Jay (Oct 25, via Manager): all stances are learned at white belt."
     },
     {
       "id": "stance.cat",
@@ -21,7 +35,11 @@
       "description": "A short step back. It shows up in every kata so far.",
       "source": "Basic Form 1-2, Keon, David and Goliath: 'short stepping to rear w/RF into cat stance'.",
       "howToStand": null,
-      "jayQuestion": "One short line on how to stand in cat stance, for kids."
+      "jayQuestion": "One short line on how to stand in cat stance, for kids.",
+      "gameId": "cat-stance",
+      "gameLine": "Quicker Counters and Dash, but softer blocks.",
+      "belt": "white",
+      "beltSource": "Jay (Oct 25, via Manager): all stances are learned at white belt."
     },
     {
       "id": "stance.front",
@@ -32,7 +50,11 @@
       "description": "Step forward into it, ready to block and punch.",
       "source": "Keon #3 and #9: 'step forward w/LF into front stance'.",
       "howToStand": null,
-      "jayQuestion": "One short line on how to stand in front stance, for kids."
+      "jayQuestion": "One short line on how to stand in front stance, for kids.",
+      "gameId": "front-stance",
+      "gameLine": "Hit harder, but move a little slower.",
+      "belt": "white",
+      "beltSource": "Jay (Oct 25, via Manager): all stances are learned at white belt."
     },
     {
       "id": "stance.fighting",
@@ -41,7 +63,11 @@
       "description": "Jump into it to face a weapon, ready to kick.",
       "source": "self-defense.md #13-14: 'Jump to a fighting stance'.",
       "howToStand": null,
-      "jayQuestion": "One short line on how to stand in fighting stance, for kids. Is it used in any kata?"
+      "jayQuestion": "One short line on how to stand in fighting stance, for kids. Is it used in any kata?",
+      "gameId": "fighting-stance",
+      "gameLine": "Strong blocks and fast Focus, but a shorter Dash.",
+      "belt": "white",
+      "beltSource": "Jay (Oct 25, via Manager): all stances are learned at white belt."
     },
     {
       "id": "stance.horse",
@@ -50,8 +76,24 @@
       "description": "A rooted stance.",
       "source": "Jay (Oct 25): 'horse stance is rooted stance'. Not in any sheet in the repo.",
       "howToStand": null,
-      "jayQuestion": "One short line on how to stand in horse stance, for kids. Which kata or belt teaches it?"
+      "jayQuestion": "One short line on how to stand in horse stance, for kids. Is it in any kata?",
+      "gameId": "horse-stance",
+      "gameLine": "Stand still to hit harder, but move slower.",
+      "belt": "white",
+      "beltSource": "Jay (Oct 25, via Manager): all stances are learned at white belt."
     }
   ],
-  "jayQuestion": "Are there other stances taught at the dojo (for example a back stance), and at which belt?"
+  "jayQuestion": "Are there other stances taught at the dojo (for example a back stance)?",
+  "gameLineNote": "R-STANCE-f: player-facing lines for the Fighting Style screen, saying what each stance does in the game (numbers from #290). They are meant for content/abilities/fighting-style.json `lines[gameId]` (the field #293 wires). #293 is still open, so they wait here to avoid a conflict; copy them across once it merges. Ready keeps its current line (#290: the plain stance, all 0).",
+  "idMappingNote": "APPROVED (Manager, Oct 25). beginners-stance stays the game id for the new Beginner's Stance, with the same 0 numbers and the Beginner's gameLine. Ready gets a new game id, ready-stance, unlocked by white-belt sign-off like the others. #290 gives Ready only 'everything 0', so it plays the same as Beginner's until the Researcher or Jay gives it its own numbers. Closed: Ready stays a stance players can pick in a fight. No existing id is renamed.",
+  "signOff": {
+    "note": "Shown when a teacher signs off a stance. {stance} is the stance name, e.g. 'Cat Stance' (same placeholder style as difficulty.json's {name}).",
+    "line": "You learned {stance}! Your teacher saw your hard work.",
+    "chosen": true,
+    "chosenBy": "Manager review of #303 (Oct 25)",
+    "alternatesRecord": [
+      "{stance} is yours now. Be proud of yourself!",
+      "Your teacher signed off on {stance}. Great training!"
+    ]
+  }
 }
