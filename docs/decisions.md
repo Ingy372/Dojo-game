@@ -1240,3 +1240,4 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
 - Saves: a picked stance that is not signed off loads as Ready and keeps the Virtue (normalizeLoadout); running it again changes nothing.
 - Fixtures were given stance sign-offs that match what their katas used to grant, so play is unchanged: 2 white = Cat; 3 yellow = Cat, Front; 4 green = Front, Fighting, Horse (Cat locked); 1 and 5 none. The golden run was re-captured only to add the new `signOffId` field; every setup and run is otherwise identical (checked by stripping the field).
 - Fixture 2 now has 4 fresh sign-offs on first visit, so the M7-P4 cascade groups them into one card (it was 3 single cards). Tests updated to say so.
+- Manager's call (after review): keep the grouped sign-offs card for fixture 2's first visit; fixture 2 keeps its Cat Stance sign-off.
