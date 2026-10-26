@@ -1,0 +1,134 @@
+{
+  "notes": "DRAFT for C-STORY-b (spec: drafts/content/C-STORY-review.md). One new fact per tier, White to Brown/Black. Black is out of scope (Jay). W2: the 'who' (the Lost Lightbearer was a student, Sensei's friend) is guessable for attentive 12-14 readers around Brown, not before. W1: Sensei hints at White, Orange, Blue, Red/Black; reveal after Brown (brown-black tier). kidLine = ages 6+, read aloud. olderReaderLine = Bestiary/Relic deeper text. faithNote = swappable faith layer only; KJV checked against bible-api.com (translation=kjv) 2026-10-26; KJV is a placeholder until Jay answers sign wording vs KJV. Place names are PLACEHOLDERs awaiting Jay. Nothing shipped is changed; see mystery-ladder.md for suggested line changes.",
+  "id": "mystery-ladder",
+  "tiers": [
+    {
+      "tier": "white",
+      "order": 1,
+      "factRevealed": "The light broke into pieces, and the pieces are still in the Tower.",
+      "foundIn": "Relic: Cracked Lamp Glass",
+      "kidLine": "The light broke, but it is still here!",
+      "olderReaderLine": "Glass this warm was never meant for the dark. Light that broken still shines.",
+      "senseiHint": {
+        "where": "Dojo: an old lantern on Sensei's shelf",
+        "line": "Sensei glances at an old lantern, then smiles. \"Let's train.\""
+      },
+      "faithNote": {
+        "reference": "John 1:5",
+        "text": "And the light shineth in darkness; and the darkness comprehended it not.",
+        "partial": false,
+        "undertone": "Light still shines in the dark; the shadow can't put it out."
+      }
+    },
+    {
+      "tier": "yellow",
+      "order": 2,
+      "factRevealed": "A storm broke the light. Nobody broke it on purpose.",
+      "foundIn": "Bestiary: Sun Gardener (freed)",
+      "kidLine": "A big storm broke the light. It was no one's fault.",
+      "olderReaderLine": "Storms don't choose. Only what we do after them is ours."
+    },
+    {
+      "tier": "orange",
+      "order": 3,
+      "factRevealed": "On the storm night, one seat at supper was left empty.",
+      "foundIn": "Relic: Empty Bowl + Recipe Card",
+      "kidLine": "Someone left supper early. A bowl is saved for them.",
+      "olderReaderLine": "Soup for everyone, and one bowl kept warm. Someone here is still expected home.",
+      "senseiHint": {
+        "where": "Dojo: Sensei after the Orange Gate",
+        "line": "Sensei sets out one extra cup of tea, just in case."
+      }
+    },
+    {
+      "tier": "green",
+      "order": 4,
+      "factRevealed": "The shadow is many small fears stacked up, not one monster.",
+      "foundIn": "Bestiary: Stone Giant (older-reader entry)",
+      "kidLine": "The shadow is made of little worries.",
+      "olderReaderLine": "Fear grows when you stack it alone. Name each one, and the stack falls.",
+      "faithNote": {
+        "reference": "Psalms 56:3",
+        "text": "What time I am afraid, I will trust in thee.",
+        "partial": false,
+        "undertone": "Fear is answered with trust, not with more fear."
+      }
+    },
+    {
+      "tier": "blue",
+      "order": 5,
+      "factRevealed": "The light was not lost. Someone carried it up through the rain to keep it safe.",
+      "foundIn": "Relic: Boat Log",
+      "kidLine": "Someone is keeping the light safe!",
+      "olderReaderLine": "The log has one line for that night: carried, not lost. Someone chose the stairs over shelter.",
+      "senseiHint": {
+        "where": "Dojo: Senpai's line after the Blue Gate",
+        "line": "Senpai: \"Sensei used to climb with a friend. Sensei never says who.\""
+      },
+      "faithNote": {
+        "reference": "Isaiah 43:2 (part)",
+        "text": "When thou passest through the waters, I will be with thee; and through the rivers, they shall not overflow thee:",
+        "partial": true,
+        "undertone": "Through deep water, someone is never alone."
+      }
+    },
+    {
+      "tier": "red",
+      "order": 6,
+      "factRevealed": "The carrier used a shield to cover the light, and the shield cracked.",
+      "foundIn": "Relic: Cracked Shield",
+      "kidLine": "They kept the light safe with a shield.",
+      "olderReaderLine": "A cracked shield means it held. Someone took the rain so the light wouldn't.",
+      "faithNote": {
+        "reference": "Psalms 28:7 (part)",
+        "text": "The LORD is my strength and my shield; my heart trusted in him, and I am helped:",
+        "partial": true,
+        "undertone": "A shield that protects, and a heart that trusts."
+      }
+    },
+    {
+      "tier": "red-black",
+      "order": 7,
+      "factRevealed": "The carrier is still up there, holding on and waiting for help.",
+      "foundIn": "Relic: Traveler's Note",
+      "kidLine": "They are waiting for help. Let's keep climbing!",
+      "olderReaderLine": "The echoes said give up. One voice kept answering: \"I will hold the light until help comes.\"",
+      "senseiHint": {
+        "where": "Dojo: Sensei after the Red/Black Gate",
+        "line": "Sensei rereads an old note, then tucks it away. \"Keep climbing.\""
+      }
+    },
+    {
+      "tier": "brown",
+      "order": 8,
+      "factRevealed": "The carrier was once a student of this Tower, who trained the same forms you do.",
+      "foundIn": "Relic: Student Sash + Root Library page",
+      "kidLine": "The helper was a student, just like you!",
+      "olderReaderLine": "An old practice sash, its name too faded to read. Same forms, same stairs, same door you came in by.",
+      "faithNote": {
+        "reference": "Psalms 119:105",
+        "text": "Thy word is a lamp unto my feet, and a light unto my path.",
+        "partial": false,
+        "undertone": "A lamp for the path, for every student who climbs."
+      }
+    },
+    {
+      "tier": "brown-black",
+      "order": 9,
+      "factRevealed": "Sensei trained with the carrier long ago, and has hoped every day they would come home.",
+      "foundIn": "Sensei scene after the Brown/Black Gate (C-STORY-h)",
+      "kidLine": "Sensei knows them! Sensei kept hoping.",
+      "olderReaderLine": "\"We trained side by side. I kept a lantern lit for them every night.\"",
+      "senseiHint": {
+        "where": "Dojo: reveal scene",
+        "line": "Sensei: \"They were my friend. Let's bring them home together.\""
+      },
+      "faithNote": {
+        "reference": "Luke 15:20 (part)",
+        "text": "But when he was yet a great way off, his father saw him, and had compassion, and ran, and fell on his neck, and kissed him.",
+        "partial": true,
+        "undertone": "Someone watching the road for a friend to come home; no blame, only welcome."
+      }
+    }
+  ]
+}

@@ -23,7 +23,9 @@
       "hint": "Show Sensei your next kata in class!",
       "unlock": "Teacher sign-off on belt 2's kata (stances[2]).",
       "source": "content/abilities/abilities.json notes",
-      "question": "abilities.json notes say belt N's kata unlocks stances[N], but stances[1] has its own sign-off. Is belt 1's kata tied to cat-stance or to nothing? Wording holds either way."
+      "question": "abilities.json notes say belt N's kata unlocks stances[N], but stances[1] has its own sign-off. Is belt 1's kata tied to cat-stance or to nothing? Wording holds either way.",
+      "placeholder": true,
+      "placeholderNote": "PLACEHOLDER - waiting on Toni's kata details (which kata unlocks Cat Stance)."
     },
     {
       "id": "front-stance",
