@@ -848,7 +848,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## R-STANCE-READY-NUM — Open Leg Stance numbers (2026-10-26)
 **Done**
 - Open Leg (`ready-stance`): power +3%, Dash recharge −10%, blocks let 45% through, Focus +8%; counter window 0, no downside (#314). Beginner stays default and all 0.
-- New BALANCE-gated sim report (smart, kid, masher × Beginner vs Open Leg): `packages/sim/test/balance/ready-stance.test.ts`. Novice smart, standard: win 92% → 97%; no win-rate change elsewhere (smart 100%, kid and masher 0% either way).
+- New BALANCE-gated sim report (smart, kid, masher × Beginner vs Open Leg): `packages/sim/test/balance/ready-stance.test.ts`. Same setup as the kid gate (belts 1-10 x 20 seeds). Wins before → after: smart 200 → 200, kid 113 → 139, masher 59 → 85 (of 200); room-1 KOs 0/200 throughout.
 - npm test 911 passed, 3 skipped; typecheck and build pass. Golden re-captured on purpose (runs unchanged).
 **Next**
-- Jay/Manager: keep all 4 bonuses? Is no downside OK? Real DojoForge id for the Open Leg sign-off.
+- Manager confirmed all 4 bonuses, no downside. Real DojoForge id for the Open Leg sign-off.
