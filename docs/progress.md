@@ -827,3 +827,12 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Shots at 667x375, 667x320, 844x390, 932x430, Reduced motion on and off, 0 console errors: docs/shots/r-stance-d2.
 **Next**
 - Swap the placeholder ids for the real DojoForge ids when DojoForge adds stance sign-offs.
+
+## R-STANCE-g — Beginner's Stance and Open Leg (2026-10-26)
+**Done**
+- Beginner's Stance (plain standing, all 0) is where new players start. Ready is now Open Leg Stance (`ready-stance`, stances[1]) with its own sign-off; old players keep it through a one-time, idempotent save migration. Unsigned picks fall back to Beginner.
+- Beginner, locked Open Leg and welcome lines from #312, in content/abilities/fighting-style.json.
+- New test packages/sim/test/r-stance-g-ready.test.ts (8 tests). npm test 910 passed, 2 skipped; typecheck and build pass. Golden re-captured on purpose (runs unchanged).
+- Shots at 667x375, 667x320, 844x390, 932x430, Reduced motion on and off, 0 console errors: docs/shots/r-stance-g.
+**Next**
+- Open Leg plays the same as Beginner (both all 0) until the Researcher or Jay gives it numbers. Stance-tagged idle art. Real DojoForge id for the Open Leg sign-off.
