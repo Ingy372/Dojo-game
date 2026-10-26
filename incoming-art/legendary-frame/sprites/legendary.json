@@ -76,6 +76,35 @@
    "fps": 16,
    "note": "EXTRA/OPTIONAL (epic has no shine): sweep across the legendary bag tile when it is first found or shown. 6 frames, 16 fps, play once; skip under Reduced motion."
   },
+  "bag-tile-legendary-9slice": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-legendary-9slice.png",
+   "drawRect": [
+    6,
+    6,
+    72,
+    88
+   ],
+   "slice": [
+    20,
+    20,
+    20,
+    20
+   ],
+   "note": "9-slice-safe legendary bag tile: insets 20 px each side (1x). Stretch the middle; add bag-tile-legendary-crest on top, centred x, top-aligned."
+  },
+  "bag-tile-legendary-crest": {
+   "size": [
+    84,
+    100
+   ],
+   "file": "gear/bag-tile-legendary-crest.png",
+   "layer": "overlay",
+   "note": "Crest + rays overlay for the 9-slice tile. Keep it centred x at the top edge; do not stretch."
+  },
   "found-tile-legendary": {
    "size": [
     60,

@@ -22,3 +22,11 @@
 5. **Drop icons:** the `drop-*-legendary` icons from gear-drop-icons used in the mock already have their own gold styling. Is that OK inside a gold frame, or should the icons drop their own frames?
 
 **NEXT:** Once Jay approves, the game adds `legendary` to its rarity table, using `bag-tile-legendary`, `found-tile-legendary` and `gear-ring-legendary*`.
+
+---
+## UPDATE v2 (Jay's notes)
+ITEM: A-LEGENDARY v2.
+WHAT: Recoloured to golden orange with a dark warm outline. Stronger radiance (rays, stars, inner glow), an amber gem crest, and a 9-slice variant plus a crest overlay. Mock and close-up rebuilt. Red check: 0 px.
+WHY: Yellow was hard to see on the cream panel and did not feel special.
+DECIDE: Whether the gem crest also goes on the found tiles and rings (it is on all of them now). Whether the game uses the 9-slice tile or the fixed tile. How orange is too orange.
+NEXT: Jay reviews the mock at phone size.

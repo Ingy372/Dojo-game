@@ -30,3 +30,9 @@ python3 incoming-art/legendary-frame/source/make_preview.py
 ```
 
 Red check (HSV: hue <0.03 or >0.97, saturation >0.6, value >0.4, alpha >20): 0 px across 37 PNGs.
+
+## v2 (Jay): golden orange
+- The frame is now a deep golden-orange rim with a dark warm outline, instead of yellow. Every hue stays at 0.06 or above, and the red check finds 0 px.
+- The radiance is stronger: an orange halo, an inner glow along the inside edge, 12 rays at the top, and bigger corner stars with dark outlines. The ring has 24 rays.
+- An amber diamond gem crest sits on the top rail of the tiles and the ring.
+- **9-slice:** `gear/bag-tile-legendary-9slice` has 20 px insets on every side (1x) and no crest. Lay `gear/bag-tile-legendary-crest` on top, centred, without stretching it. `bag-tile-legendary` is still the ready-made 84x100 tile.
