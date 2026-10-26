@@ -1305,4 +1305,9 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 ## Q-PREM-F6 — Again! pinned to the Last run panel (2026-10-26)
 - Again! is pinned to the bottom of the visible panel (`pinnedAgain` in ui/lastRun.ts); when the contents scroll, the scroll window ends S1 above it (footer = edge 16 + 44 + S1), so nothing scrolls under it.
 - Why: at 667x320 the panel inside (238) is below the Last run minimum (277), so Again! sat in the scrolled-off part and was clipped.
+
+## Q-PREM-F8 — 12 px clear above Again! (2026-10-26)
+- New `AGAIN_CLEAR = S2 + S1` (12) in ui/lastRun.ts replaces S1 (4) in two places: the scroll window's bottom (pinnedAgain footer = 16 + 44 + 12) and the gap under New for you when the panel doesn't scroll.
+- When New for you (min 44) can't keep 12 px at a size, the stat tiles give up the shortfall (never under 44). At 667x375 the tiles go 52 → 47; other sizes are unchanged. Chosen over raising the minimum height, which would make 667x375 scroll.
+- Why: at 667x320 a 4 px strip of New for you sat just above Again!, so a tap that landed a little high opened Abilities.
 - Follow-up: action-button faces (DASH, COUNTER, STRIKE, VIRTUE) were all filled at 0.9 alpha, so the floor tinted through (DASH label fell to 4.51:1). All are solid now (`FACE_ALPHA = 1` in input/ActionButtons.ts); the dimmed not-ready states (container alpha) are unchanged. The rest card's Back home now uses Math.max(44, …) like the run-over card (F5).

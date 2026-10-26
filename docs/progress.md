@@ -888,3 +888,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Shared GREEN #277a56 in all 26 places. verify-ui-shots on Title OK, Create "Let's go!", Street Smarts choices, rest card "Back home" and DASH at 667x320, 667x375, 844x390, 932x430, Reduced motion on/off, pixel-sampled (docs/shots/q-prem-color/verify-log.txt). Test: packages/sim/test/q-prem-color-green.test.ts.
 ## Q-PREM-F6 (2026-10-26)
 - Again! fully visible at 667x320, 667x375, 844x390, 932x430; Reduced motion on/off; hands-on tap starts Game. verify-ui-shots 244 PASS / 0 FAIL (docs/shots/q-prem-f6/verify-log.txt). Test: packages/sim/test/q-prem-f6-again.test.ts.
+
+## Q-PREM-F8 (2026-10-26)
+- Nothing tappable within 8 px above Again! (12 px measured) at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off, scrolled to the top, halfway and the end. Hands-on touches 2, 4 and 6 px above Again! open nothing, and Again! still starts Game. verify-ui-shots: 308 PASS, 0 FAIL (docs/shots/q-prem-f8/verify-log.txt). Test: packages/sim/test/q-prem-f6-again.test.ts (F8 gap check at all 4 sizes).
