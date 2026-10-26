@@ -34,14 +34,16 @@ for (const [W, H] of sizes) for (const rm of ['on', 'off']) {
       const sample = sampler(pg);
       // Freeze the loop; style the buttons for a state, then stop update() from overwriting it.
       await pg.evaluate(() => { const g = window.game; g.loop.sleep(); window.__t = performance.now(); window.__step = (n) => { for (let k = 0; k < n; k++) { window.__t += 16; g.step(window.__t, 16); } }; const s = g.scene.getScene('Game'); window.__upd = s.buttons.update.bind(s.buttons); s.buttons.update = () => {}; });
-      const states = { ready: { downTicks: 0, guardTicks: 0, counterLockout: 0, focus: 999, virtueTicks: 0 }, 'not-ready': { downTicks: 0, guardTicks: 30, counterLockout: 30, focus: 0, virtueTicks: 0 }, flash: { downTicks: 0, guardTicks: 0, counterLockout: 0, focus: 999, virtueTicks: 0, window: true } };
+      const states = { ready: { downTicks: 0, guardTicks: 0, counterLockout: 0, focus: 999, virtueTicks: 0, dashCooldown: 0, stanceCooldown: 0 }, 'not-ready': { downTicks: 0, guardTicks: 30, counterLockout: 30, focus: 0, virtueTicks: 0, dashCooldown: 20, stanceCooldown: 20 }, lockout: { downTicks: 0, guardTicks: 0, counterLockout: 5, focus: 999, virtueTicks: 0, dashCooldown: 0, stanceCooldown: 0 }, flash: { downTicks: 0, guardTicks: 0, counterLockout: 0, focus: 999, virtueTicks: 0, window: true } };
       for (const [st, over] of Object.entries(states)) {
         const info = await pg.evaluate((o) => { const s = window.game.scene.getScene('Game'); const B = s.buttons; const p = { ...s.world.players[s.me], ...o }; for (let k = 0; k < 40; k++) { B.counterWindow(!!o.window); window.__upd(p); if (!o.window || B.counter.face.fillColor === 0x6fa8ff) break; s.time.now += 35; } window.__step(1);
-          const out = {}; for (const k of ['counter', 'strike', 'virtue']) { const btn = B[k]; if (!btn) continue; const lb = btn.label.getBounds(); const m = btn.container.getWorldTransformMatrix(); out[k] = { color: btn.label.style.color, size: parseFloat(btn.label.style.fontSize), l: lb.left, t: lb.top, r: lb.right, b: lb.bottom, cx: m.tx, cy: m.ty, r0: btn.radius, alpha: btn.container.alpha, fill: btn.face.fillColor.toString(16).padStart(6, '0') }; } return out; }, over).catch((e) => ({ err: String(e) }));
+          const out = {}; for (const k of ['counter', 'strike', 'virtue', 'dash', 'stance']) { const btn = B[k]; if (!btn) continue; const lb = btn.label.getBounds(); const m = btn.container.getWorldTransformMatrix(); out[k] = { ring: k === 'counter' ? B.counterRing.commandBuffer.length : 0, color: btn.label.style.color, size: parseFloat(btn.label.style.fontSize), l: lb.left, t: lb.top, r: lb.right, b: lb.bottom, cx: m.tx, cy: m.ty, r0: btn.radius, alpha: btn.container.alpha, fill: btn.face.fillColor.toString(16).padStart(6, '0') }; } return out; }, over).catch((e) => ({ err: String(e) }));
         if (info.err) { check(where, `state ${st}`, false, info.err); continue; }
         const file = `f9-fight-${st}-${W}x${H}-rm-${rm}.png`; const buf = await pg.screenshot({ path: file });
         for (const [k, v] of Object.entries(info)) {
-          if (st === 'flash' && k !== 'counter') continue;
+          if ((st === 'flash' || st === 'lockout') && k !== 'counter') continue;
+          if (st === 'lockout') check(file, `COUNTER lockout: dim face #${v.fill} and a refill ring`, v.fill === '2e3c55' && v.ring > 0, `ring cmds ${v.ring}`);
+          if (st === 'ready' && k === 'counter') check(file, 'COUNTER ready: no lockout ring', v.ring === 0);
           const bg = await sample(buf, (v.l + v.r) / 2, v.t - 3); const r = contrast(v.color, bg);
           check(file, `${k.toUpperCase()} ${st}: label ${v.color} on face (sampled ${bg}, fill #${v.fill}) >= 4.5:1`, r >= 4.5, `${r.toFixed(2)}:1`);
           check(file, `${k.toUpperCase()} ${st}: solid (container alpha 1), text >= 12 px, tap >= 44`, v.alpha === 1 && v.size >= 12 && v.r0 * 2 >= 44, `alpha ${v.alpha}, ${v.size} px, ${v.r0 * 2} px`);
@@ -117,6 +119,11 @@ for (const [W, H] of sizes) for (const rm of ['on', 'off']) {
     for (const [f, ms] of [['start', 0], ['mid', 150], ['end', 1050]]) {
       await pg.waitForTimeout(ms); file = `f9-dojo-decorate-${f}-${W}x${H}-rm-${rm}.png`; buf = await pg.screenshot({ path: file });
     }
+    // QA SMALL: the top wall (wall decorations) sits below the 60 px Decorate bar, even scrolled to the top.
+    const wallTop = await pg.evaluate(async () => { const d = window.game.scene.getScene('Dojo'); d.panned = true; d.cam = { x: d.cam.x, y: -50 }; d.updateCamera(true); return d.offY; });
+    check(file, 'Decorate: room top (wall row 0) at or below the 60 px bar', wallTop >= 60 - 0.5, `room top y ${wallTop.toFixed(1)}`);
+    const wallPick = await pg.evaluate(() => { const d = window.game.scene.getScene('Dojo'); const t = d.zoom * 48; return { y: d.offY + 0.5 * t, t }; }).catch(() => null);
+    if (wallPick) { check(file, 'Decorate: wall row 0 is clear of the bar (row centre below 60)', wallPick.y > 60, `row 0 centre y ${wallPick.y.toFixed(1)}`); }
     const dec = await measure(['Done', 'Move:']);
     await btnCheck(file, buf, dec, ['Done', 'Move:']);
     const hint = await pg.evaluate(() => { const d = window.game.scene.getScene('Dojo'); let h = null; const walk = (l) => { for (const c of l) { if (c.list) walk(c.list); else if (c.type === 'Text' && /Tap a decoration|arrows|tap where/.test(c.text)) h = c.getBounds().top; } }; walk(d.children.list); return h; });
