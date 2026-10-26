@@ -1275,3 +1275,39 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - Cap: +3% plus the kata max of +4% (#302) = +7%, under the +12% cap.
 - Sims: new BALANCE-gated report `packages/sim/test/balance/ready-stance.test.ts` plays smart, kid and masher with each stance. The bot now also counts damage dealt (`dealt`) and enemies defeated (`kos`) per room. The existing balance report passes no stance, so it does not move. It uses the B-MASHER-c kid gate setup (belts 1-10 x 20 seeds, typical student stats per belt, belt tier, novice, standard; Mash guard and +6 Focus per shield bounce on as in play). A first version ran a bare 100 HP / 10 power character with no belt or tier, so the kid and masher lost room 1 every run; that was the report's setup, not the gate. Its "before" kid row (113/200, room-1 KOs 0/200) matches the gate on main (5254097), R-STANCE-g and this branch. The 137/200 in progress.md is from B-MASHER; B-MASHER-2 lowered it to 113 on purpose. Numbers are in the PR.
 - Golden re-captured on purpose: Open Leg's numbers show in the yellow and green stance lists, and each room records the new `dealt`/`kos`. Players start in Beginner's Stance, so every run plays the same.
+
+## Q-PREM-F2 — Settings gets a Done button (2026-10-26)
+- QA (Q-PREMIUM F2) found no visible way out of Settings; only a tap on the dim background closed it. The Manager approved a corner button labelled "Done".
+- Green `roundButton` (Scroll's Close colour), 96×44 in the top-right corner, 12 px from the edges, 16 px text. It calls the same `close()` as the background tap. The background tap still closes, too.
+- It sits above the cards (cards start at 10% height + 44 px), so nothing else moved at 667×320.
+
+## Q-PREM-F4 — Clear the screen on the loss (2026-10-26)
+- QA saw the boss name tag, the boss bar, the fight buttons and the joystick over "Ouch! The run is over." The Manager approved hiding them on playerDown.
+- On `playerDown` GameScene sets `downed`, calls `buttons.disable()` and `controls.disable()`, hides the boss tag and lid icon, and skips the boss bar in drawHud.
+- `ActionButtons.disable()` / `TouchControls.disable()` hide every part and ignore later touches (`onDown` returns early, `contains()` is false), so taps after the loss do nothing. The scene restarts for the next run, which builds fresh controls.
+- Try again is untouched (that is Q-PREM-F5).
+- Follow-up: popups (`floatText`, `popWord`) are tracked in a set and dropped on playerDown; both return early once down. The counter chain uses the same `fightOver` rule as the combo.
+
+- Q-PREM-F4 (QA fix): on playerDown, the Sensei bubble is destroyed and senseiSay does nothing for the rest of that run, so no bubble sits over "Ouch! The run is over." The scene restart resets `downed`, so the bubble comes back on the next run.
+## Q-PREM-F5 — The run-over card has only Back home (2026-10-26)
+- The Manager approved removing Try again from the lost-run card. `runOverCard` no longer takes `onRetry`; GameScene's retry callback (fade out, then Dojo if play time is up, else a new Tower run) and its comment are gone, along with the now-unused `startTowerRun` import.
+- Back home is centred, same width and colours (#fff6e0 on #4a4a55, 8.12:1). Its height is `max(44, min(52, 13% of height))`, so it is 44 px at 667x320 (was 42). The card's wording and the Back home path are unchanged. No tests covered retry.
+## Q-PREM-F1 — First-tap bow and arrival tap-through (2026-10-26)
+- Cause of the tap-through, proven on main (8d83a95) before any change: the last arrival card ("Tap to continue" on the celebration, when nothing comes after it) closes on pointer-up and turns the dojo to play in the same moment. A second press from the same gesture (a phone's copy-of-a-tap mouse event, or a quick double tap) then lands in play and walks the hero (main: 6/6 echo taps moved the hero at 667, 844 and 932, Reduced motion on and off; docs/shots/q-prem-f1/baseline-c-main.txt).
+- Fix: when the arrival steps end, DojoScene resets the touch controls and ignores new presses for `ARRIVAL_QUIET_MS` = 450 ms. After that, taps walk as usual (each run has a control tap that still moves the hero). bow.ts and Celebrations.ts are unchanged.
+- Bow (a) and pulse (b): on main the touch script could not make a single tap miss (centre, edges ±45-50 px, 6-20 px drift, tap as soon as it shows, second finger held down), and every top-bar tap pulsed Bow with no menu opening. So bow.ts was not changed; the script stays as the regression check. If the Tester still sees misses on a real phone, we need a device repro (which phone, where the finger landed).
+- The floor case was tested on this profile's first Tower floor, which is the tutorial floor ("Bow at the door to show respect."). It uses the same `bowPrompt()` as "Bow to begin the floor".
+
+## Q-PREM-COLOR — one shared darker green (2026-10-26)
+- `GREEN = 0x277a56` in ui/tokens.ts replaces the faint `0x3aa57a` in all 26 uses (8 files), including fills with no text (chore circle, Street Smarts worker colour) and the dev TestingPanel, so there is one green.
+- Why: #3aa57a behind white text was 3.07:1 (2.85:1 behind cream). #277a56 is 5.24:1 behind white and 4.87:1 behind cream; #2e8a61 was too light (4.26:1).
+- Guard: packages/sim/test/q-prem-color-green.test.ts fails if #3aa57a comes back anywhere in apps/client/src.
+## Q-PREM-F6 — Again! pinned to the Last run panel (2026-10-26)
+- Again! is pinned to the bottom of the visible panel (`pinnedAgain` in ui/lastRun.ts); when the contents scroll, the scroll window ends S1 above it (footer = edge 16 + 44 + S1), so nothing scrolls under it.
+- Why: at 667x320 the panel inside (238) is below the Last run minimum (277), so Again! sat in the scrolled-off part and was clipped.
+
+## Q-PREM-F8 — 12 px clear above Again! (2026-10-26)
+- New `AGAIN_CLEAR = S2 + S1` (12) in ui/lastRun.ts replaces S1 (4) in two places: the scroll window's bottom (pinnedAgain footer = 16 + 44 + 12) and the gap under New for you when the panel doesn't scroll.
+- When New for you (min 44) can't keep 12 px at a size, the stat tiles give up the shortfall (never under 44). At 667x375 the tiles go 52 → 47; other sizes are unchanged. Chosen over raising the minimum height, which would make 667x375 scroll.
+- Why: at 667x320 a 4 px strip of New for you sat just above Again!, so a tap that landed a little high opened Abilities.
+- Follow-up: action-button faces (DASH, COUNTER, STRIKE, VIRTUE) were all filled at 0.9 alpha, so the floor tinted through (DASH label fell to 4.51:1). All are solid now (`FACE_ALPHA = 1` in input/ActionButtons.ts); the dimmed not-ready states (container alpha) are unchanged. The rest card's Back home now uses Math.max(44, …) like the run-over card (F5).

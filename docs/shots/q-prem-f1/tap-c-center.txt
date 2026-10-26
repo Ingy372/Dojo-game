@@ -1,0 +1,43 @@
+667x375 rm=off: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=off: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=off: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=off: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=off last-step [touch]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+667x375 rm=off last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+667x375 rm=off control tap in play: {"x":7.5,"y":8.5} -> {"x":8.54,"y":6.057} (should move; proves the check can see a walk)
+667x375 rm=on: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=on: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=on: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=on: Tap to continue @334,353 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+667x375 rm=on last-step [touch]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+667x375 rm=on last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+667x375 rm=on control tap in play: {"x":7.5,"y":8.5} -> {"x":8.54,"y":6.057} (should move; proves the check can see a walk)
+844x390 rm=off: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=off: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=off: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=off: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=off last-step [touch]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+844x390 rm=off last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+844x390 rm=off control tap in play: {"x":7.5,"y":8.5} -> {"x":8.5,"y":6.083} (should move; proves the check can see a walk)
+844x390 rm=on: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=on: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=on: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=on: Tap to continue @422,368 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+844x390 rm=on last-step [touch]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+844x390 rm=on last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+844x390 rm=on control tap in play: {"x":7.5,"y":8.5} -> {"x":8.5,"y":6.083} (should move; proves the check can see a walk)
+932x430 rm=off: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=off: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=off: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=off: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=off last-step [touch]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+932x430 rm=off last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+932x430 rm=off control tap in play: {"x":7.5,"y":8.5} -> {"x":8.407,"y":6.145} (should move; proves the check can see a walk)
+932x430 rm=on: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=on: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=on: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=on: Tap to continue @466,408 pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=arriving => ok
+932x430 rm=on last-step [touch]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+932x430 rm=on last-step [touch+compat-mouse]: last of 3 taps pos {"x":7.5,"y":8.5} -> {"x":7.5,"y":8.5} scenes=Dojo mode=play => ok
+932x430 rm=on control tap in play: {"x":7.5,"y":8.5} -> {"x":8.407,"y":6.145} (should move; proves the check can see a walk)
+(c) 36/36 Tap to continue taps left the hero still with no run

@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { GATE, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, gateLockR, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
+import { GREEN, GATE, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, gateLockR, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import {
@@ -35,7 +35,7 @@ import {
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
 import { STYLE_LEFT_SHARE, STYLE_LEFT_SHARE_MIN, STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
-import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, runId, takeCountUp, type FoundTile, type KeyStore } from '../ui/lastRun';
+import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, pinnedAgain, runId, takeCountUp, type FoundTile, type KeyStore } from '../ui/lastRun';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, slotEmptyLine, tileBox, toggleFilter } from '../ui/gearBoard';
 import { CONTENT, KATAS } from '../game/content';
@@ -133,6 +133,8 @@ export class HomeScene extends Phaser.Scene {
   /** P-MENU-b: the panel contents only. Tab, page and gear taps redraw just this. */
   private panel: Phaser.GameObjects.Container | null = null;
   private panelBox = { rx: 0, top: 0, rw: 0, panelH: 0 };
+  /** Q-PREM-F6: height pinned under the scroll window (Last run's Again!), 0 for other tabs. */
+  private runFooter = 0;
   /** P-MENU2-SPACE: the scrolling part of the panel, and how far it scrolls (0 = it all fits). */
   private panelContent: Phaser.GameObjects.Container | null = null;
   private panelScroll: { max: number; y: number; to: (y: number) => void } | null = null;
@@ -436,11 +438,13 @@ export class HomeScene extends Phaser.Scene {
     this.ui = content;
     const inner = panelH - 20;
     const h = Math.max(inner, this.panelMinH(rw - 24));
-    if (this.tab === 'run') this.renderRun(rx + 12, top + 10, rw - 24, h);
+    this.runFooter = 0;
+    if (this.tab === 'run') this.renderRun(rx + 12, top + 10, rw - 24, h, inner);
     else if (this.tab === 'gear') this.renderGear(rx + 10, top + 10, rw - 20, h);
     else if (this.tab === 'abilities') this.renderAbilities(rx + 10, top + 10, rw - 20, h);
     else this.renderGate(rx + 12, top + 10, rw - 24, h);
-    this.panelScroll = this.makePanelScroll(content, h - inner);
+    // Q-PREM-F6: a pinned footer (Last run's Again!) keeps the scroll window clear above it.
+    this.panelScroll = this.makePanelScroll(content, h > inner ? h - inner + this.runFooter : 0, this.runFooter);
     const swap = panelSwap(change, reducedMotion());
     if (swap) {
       panel.setPosition(swap.dx, 0).setAlpha(swap.fromAlpha);
@@ -468,7 +472,7 @@ export class HomeScene extends Phaser.Scene {
    * P-MENU2-SPACE: lets the panel contents scroll up by `max` (masked to the panel, a thin gold
    * thumb on the right). Taps on parts scrolled out of view are switched off.
    */
-  private makePanelScroll(content: Phaser.GameObjects.Container, max: number): { max: number; y: number; to: (y: number) => void } | null {
+  private makePanelScroll(content: Phaser.GameObjects.Container, max: number, footer = 0): { max: number; y: number; to: (y: number) => void } | null {
     const key = `${this.tab}/${this.part}`;
     if (key !== this.scrollKey) this.scrollY = 0;
     this.scrollKey = key;
@@ -477,7 +481,7 @@ export class HomeScene extends Phaser.Scene {
       return null;
     }
     const { rx, top, rw, panelH } = this.panelBox;
-    const win = { top: top + 4, bottom: top + panelH - 4 };
+    const win = { top: top + 4, bottom: top + panelH - 4 - footer };
     const shape = this.make.graphics({}, false).fillStyle(0xffffff).fillRect(rx + 2, win.top, rw - 4, win.bottom - win.top);
     content.setMask(shape.createGeometryMask());
     content.once(Phaser.GameObjects.Events.DESTROY, () => shape.destroy());
@@ -651,7 +655,7 @@ export class HomeScene extends Phaser.Scene {
    * an XP fill, the Found strip (every tile opens its sheet), "Always with you", "New for you"
    * (only when there is one) and a big Again! button. Positions come from lastRunLayout().
    */
-  private renderRun(x: number, y: number, w: number, h: number): void {
+  private renderRun(x: number, y: number, w: number, h: number, visibleH = h): void {
     const g = this.add.graphics();
     g.fillStyle(WOOD.paper).fillRoundedRect(x - 4, y + 2, w + 8, h - 4, RADIUS.panel);
     g.lineStyle(2, WOOD.grain, 0.8).strokeRoundedRect(x - 4, y + 2, w + 8, h - 4, RADIUS.panel);
@@ -871,8 +875,14 @@ export class HomeScene extends Phaser.Scene {
       });
     }
 
-    // Again!: start another climb.
-    woodSkin(this, button(this, { ...L.again, x: X(L.again.x), y: Y(L.again.y), label: LASTRUN_WORDS.again, color: 0xd5713a, size: TYPE.title, onTap: () => this.enterTower() }, this.ui), L.again.w, L.again.h);
+    // Again!: start another climb. Q-PREM-F6: pinned to the bottom of the visible panel (on the
+    // panel, not the scrolling contents), so it is never cut off on a short phone.
+    // The visible contents end 6 + S1 above the scroll's bottom (rod and pad, both ends), and the
+    // scroll window's bottom is 4 above the panel's: so the window ends 2 * (6 + S1) - 4 below them.
+    const pin = pinnedAgain(L.again, ch, visibleH - 2 * (6 + S1), 2 * (6 + S1) - 4);
+    this.runFooter = pin.footer;
+    const again = pin.again;
+    woodSkin(this, button(this, { ...again, x: X(again.x), y: Y(again.y), label: LASTRUN_WORDS.again, color: 0xd5713a, size: TYPE.title, onTap: () => this.enterTower() }, this.panel ?? this.ui), again.w, again.h);
   }
 
   private turnFound(by: number): void {
@@ -1799,14 +1809,14 @@ export class HomeScene extends Phaser.Scene {
       const wearW = Math.round((textW - detailsW - 2 * S2) * 0.6);
       const letGoW = textW - detailsW - 2 * S2 - wearW;
       if (now?.uid === item.uid) button(this, { x: x + pad, y: by, w: wearW, h: bh, label: W.takeOff, color: 0x3a5f8a, size: 16, onTap: () => this.takeOff(item) }, sheet);
-      else button(this, { x: x + pad, y: by, w: wearW, h: bh, label: W.wear, color: 0x3aa57a, size: 16, onTap: () => this.wear(item) }, sheet);
+      else button(this, { x: x + pad, y: by, w: wearW, h: bh, label: W.wear, color: GREEN, size: 16, onTap: () => this.wear(item) }, sheet);
       button(this, { x: x + pad + wearW + S2, y: by, w: letGoW, h: bh, label: W.letGo, color: 0x3a3448, size: TYPE.body, labelColor: '#e8d4b4', onTap: () => this.letGo(item) }, sheet);
       button(this, { x: x + w - pad - detailsW, y: by, w: detailsW, h: bh, label: this.gearDetails ? W.hideDetails : W.details, color: 0x3a3448, size: TYPE.label, labelColor: '#d9c6a3', onTap: () => { this.gearDetails = !this.gearDetails; this.renderPanel('none'); } }, sheet);
     } else {
       const bw = Math.min(100, (w - 4 * pad) / 3);
       sheet.add(this.add.text(x + pad, by + bh / 2, W.letGoAsk, { fontFamily: FONT, fontSize: `${TYPE.body}px`, fontStyle: 'bold', color: '#ffd166' }).setOrigin(0, 0.5).setResolution(crisp()));
       button(this, { x: x + w - pad - 2 * bw - 8, y: by, w: bw, h: bh, label: W.yes, color: 0x5e4a6e, size: 15, onTap: () => this.letGo(item) }, sheet);
-      button(this, { x: x + w - pad - bw, y: by, w: bw, h: bh, label: W.keep, color: 0x3aa57a, size: 15, onTap: () => { this.confirmLetGo = false; this.renderPanel('none'); } }, sheet);
+      button(this, { x: x + w - pad - bw, y: by, w: bw, h: bh, label: W.keep, color: GREEN, size: 15, onTap: () => { this.confirmLetGo = false; this.renderPanel('none'); } }, sheet);
     }
     if (this.sheetOpening) {
       this.sheetOpening = false;

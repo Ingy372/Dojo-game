@@ -852,3 +852,42 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - npm test 911 passed, 3 skipped; typecheck and build pass. Golden re-captured on purpose (runs unchanged).
 **Next**
 - Manager confirmed all 4 bonuses, no downside. Real DojoForge id for the Open Leg sign-off.
+
+## Q-PREM-F2 — Done button in Settings (2026-10-26)
+**Done**
+- Settings (dojo → Settings) has a green "Done" button in the top-right corner (96×44); one tap closes it.
+- Touch script `docs/shots/q-prem-f2/f2-touch.mjs`: 3 single taps each (centre and two inner corners) at 667x375, 667x320, 844x390 and 932x430, Reduced motion on and off: 24 of 24 closed Settings in one tap. Logs `tap-*.txt`, shots `settings-*.png`.
+- npm test 911 passed, 3 skipped; typecheck and build pass.
+**Next**
+- Q-PREM-F1 (Bow on first tap).
+
+## Q-PREM-F4 — Nothing over the loss message (2026-10-26)
+- When the hero goes down, the boss tag and bar, the fight buttons and the joystick disappear and stop taking taps.
+- Script `docs/shots/q-prem-f4/f4-loss.mjs` (`?room=keepers-hall&seed=7&difficulty=guided`, test profile 4-green-belt; it sets health 1 and the floor's minHealth 0 to force the loss): 8 of 8 runs (667x375, 667x320, 844x390, 932x430 × Reduced motion on/off) show no boss name, 0 fight buttons, 0 stick parts, and taps after the loss give no action or move. Log `tap-loss.txt`, shots `loss-down-*.png` and `loss-card-*.png`.
+- npm test 911 passed, 3 skipped; typecheck and build pass.
+**Next**
+- Q-PREM-F5 (Try again).
+- Follow-up: on playerDown, floating texts and pop words still on screen are removed, new ones are skipped, and the GREAT xN chain clears with the combo, so nothing touches the loss message.
+- verify-ui-shots pass `docs/shots/q-prem-f4/f4-verify.mjs` (log `verify-log.txt`, shots `verify-{fade,card}-{start,mid,end}-*.png`): it freezes the game loop on the first frame of the loss fade and of the card fade-in, reads Reduced motion back before each shot. 274 PASS, 14 FAIL, all on the existing run-over card: Try again text contrast 3.12:1 (all sizes) and card buttons 42 px tall at 667x320. Not changed here (card belongs with F5).
+
+- Q-PREM-F4 QA fix: Sensei bubble cleared on a natural loss. `docs/shots/q-prem-f4/f4-natural.mjs` checks a natural standard-difficulty loss with a Sensei bubble up at all 4 sizes × Reduced motion on/off (log in natural-log.txt).
+## Q-PREM-F5 — Back home only (2026-10-26)
+**Done**
+- The "Good effort!" card after a lost run shows one button, Back home, at least 44 px tall at every size.
+- verify-ui-shots `docs/shots/q-prem-f5/f5-verify.mjs` (log `verify-log.txt`, shots `card-{start,mid,end}-*.png`) at 844x390, 667x375, 667x320, 932x430, Reduced motion on/off (read back before each shot): 216 PASS, 0 FAIL, including one Back home tap going Home in all 8 runs.
+- npm test 911 passed, 3 skipped; typecheck and build pass.
+## Q-PREM-F1 — First-tap bow and arrival tap-through (2026-10-26)
+**Done**
+- "Tap to continue" at the end of the dojo arrival can't move the hero or start a run: a press echoed within 450 ms after the last card is dropped (DojoScene). 40/40 at 667x375, 667x320, 844x390 and 932x430, Reduced motion on and off; it was 30/36 on main.
+- Bow: 10/10 single taps bowed on the dojo entry and the floor at 667x375. Top-bar taps while the prompt is up pulse Bow and open nothing, at all 4 sizes (dojo 8/8, floor 3/3). Both already held on main, so bow.ts is unchanged.
+- npm test 911 passed, 3 skipped; typecheck and build pass. Shots and touch scripts: docs/shots/q-prem-f1/.
+**Next**
+- Tester: retest (c) on a real phone. Real-phone repro needed if a bow tap still misses.
+
+## Q-PREM-COLOR (2026-10-26)
+- Shared GREEN #277a56 in all 26 places. verify-ui-shots on Title OK, Create "Let's go!", Street Smarts choices, rest card "Back home" and DASH at 667x320, 667x375, 844x390, 932x430, Reduced motion on/off, pixel-sampled (docs/shots/q-prem-color/verify-log.txt). Test: packages/sim/test/q-prem-color-green.test.ts.
+## Q-PREM-F6 (2026-10-26)
+- Again! fully visible at 667x320, 667x375, 844x390, 932x430; Reduced motion on/off; hands-on tap starts Game. verify-ui-shots 244 PASS / 0 FAIL (docs/shots/q-prem-f6/verify-log.txt). Test: packages/sim/test/q-prem-f6-again.test.ts.
+
+## Q-PREM-F8 (2026-10-26)
+- Nothing tappable within 8 px above Again! (12 px measured) at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off, scrolled to the top, halfway and the end. Hands-on touches 2, 4 and 6 px above Again! open nothing, and Again! still starts Game. verify-ui-shots: 308 PASS, 0 FAIL (docs/shots/q-prem-f8/verify-log.txt). Test: packages/sim/test/q-prem-f6-again.test.ts (F8 gap check at all 4 sizes).

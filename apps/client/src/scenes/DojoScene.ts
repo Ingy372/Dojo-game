@@ -56,7 +56,7 @@ import { baseFeed, currentTraining } from '../game/student';
 import BELT_TEXT from '../../../../content/settings/belt-entry.json';
 import { applyBeltEntry, entryRank, feedEntry, pickBelt, recordBeltEntry, type BeltEntry } from '@dojo/sim';
 import { button as roundButton } from '../ui/button';
-import { MIN_TAP, RADIUS } from '../ui/tokens';
+import { GREEN, MIN_TAP, RADIUS } from '../ui/tokens';
 import { startTowerRun } from '../game/tower';
 import { LESSONS, addDevDays, devDayOffset, lessonTitle, localDay, takeLesson } from '../game/lessons';
 import { TouchControls } from '../input/TouchControls';
@@ -115,6 +115,9 @@ interface Drag {
  * The notice board opens the training board (Tower, gear, abilities, Gate); the door
  * leads to the Tower. The whole room fits on screen.
  */
+/** How long after the arrival cards close a new press is ignored (Q-PREM-F1). */
+const ARRIVAL_QUIET_MS = 450;
+
 export class DojoScene extends Phaser.Scene {
   private profile!: Profile;
   private dojo!: DojoState;
@@ -122,6 +125,8 @@ export class DojoScene extends Phaser.Scene {
   private room!: Room;
   private world!: WorldState;
   private mode: Mode = 'play';
+  /** Taps that land before this time are ignored, so the gesture that closed the last arrival card can't walk the hero (Q-PREM-F1). */
+  private quietUntil = 0;
 
   private worldLayer!: Phaser.GameObjects.Container;
   private decoLayer!: Phaser.GameObjects.Container;
@@ -220,7 +225,7 @@ export class DojoScene extends Phaser.Scene {
       this,
       this.cameras.main,
       (x, y) => this.toTile(x, y),
-      (x, y) => this.mode !== 'play' || this.onUi(x, y),
+      (x, y) => this.mode !== 'play' || this.time.now < this.quietUntil || this.onUi(x, y),
     );
     this.ui = this.add.container(0, 0).setDepth(20);
     this.makeChoreButton();
@@ -341,6 +346,10 @@ export class DojoScene extends Phaser.Scene {
       const step = steps[i++];
       if (step) step();
       else {
+        // The tap that closed the last card can echo as a second press (a phone's copy-of-a-tap
+        // mouse event, or a quick double tap). Drop it so it can't walk the hero or open the door.
+        this.controls.reset();
+        this.quietUntil = this.time.now + ARRIVAL_QUIET_MS;
         this.mode = 'play';
         this.renderUi();
       }
@@ -370,7 +379,7 @@ export class DojoScene extends Phaser.Scene {
     body.setY(top + 52);
     box.add(body);
     const by = top + h - 56;
-    roundButton(this, { x: width / 2 - 95, y: by, w: 190, h: MIN_TAP, label: button, color: 0x3aa57a, size: 16, onTap: () => {
+    roundButton(this, { x: width / 2 - 95, y: by, w: 190, h: MIN_TAP, label: button, color: GREEN, size: 16, onTap: () => {
       box.destroy();
       onClose();
     } }, box);
@@ -864,7 +873,7 @@ export class DojoScene extends Phaser.Scene {
       const arrows = this.moveStyle === 'arrows';
       // The arrows go first, so the top buttons (Done, Put away) always sit above them.
       if (this.selected && arrows) this.renderArrows(width, height);
-      this.button(width - pad - 90, 8, 90, 32, 'Done', 0x3aa57a, 15, () => this.setDecorating(false));
+      this.button(width - pad - 90, 8, 90, 32, 'Done', GREEN, 15, () => this.setDecorating(false));
       const hint = !this.selected ? 'Tap a decoration to pick it' : arrows ? 'Use the arrows to move it' : 'Now tap where it should go';
       this.button(width - pad - 90 - 8 - 110 - 8 - 130, 8, 130, 32, arrows ? 'Move: Arrows ⇄' : 'Move: Tap ⇄', 0x3a3a4a, 13, () => this.chooseMoveStyle());
       if (this.selected) {
@@ -888,7 +897,7 @@ export class DojoScene extends Phaser.Scene {
       // Welcome Week (M7-P7): an existing student's systems show once Sensei has introduced them.
       const street = streetSmartsOpen(this.training.tier, streetUi.unlockTier) && isOpen(this.profile, this.training, 'street-smarts');
       const journal = this.training.tier >= CONTENT.named.rules.minBeltTier && isOpen(this.profile, this.training, 'journal');
-      if (street) this.button(width - pad - 130, 46, 130, 32, streetUi.button, 0x3aa57a, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
+      if (street) this.button(width - pad - 130, 46, 130, 32, streetUi.button, GREEN, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
       // The Monster Journal, from the belt where named monsters start showing up.
       if (journal) {
         const x = width - pad - (street ? 130 + 8 : 0) - 100;
@@ -981,7 +990,7 @@ export class DojoScene extends Phaser.Scene {
       roundButton(this, { x, y, w, h, label: e.label, color: e.color, size: 15, stroke: 0xffd166, onTap: e.onTap }, box);
     });
     const cw = 120;
-    roundButton(this, { x: width / 2 - cw / 2, y: height - 12 - MIN_TAP, w: cw, h: MIN_TAP, label: 'Close', color: 0x3aa57a, size: 16, onTap: () => close() }, box);
+    roundButton(this, { x: width / 2 - cw / 2, y: height - 12 - MIN_TAP, w: cw, h: MIN_TAP, label: 'Close', color: GREEN, size: 16, onTap: () => close() }, box);
   }
 
   /** A lesson again: one screen per tap as a Sensei card, then its practice line. */
@@ -1029,6 +1038,10 @@ export class DojoScene extends Phaser.Scene {
     };
     dim.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, close);
     const t = DIFFICULTY_TEXT;
+    // Q-PREM-F2: a clear Done in the top-right corner (green, like Scroll's Close), so a young
+    // child can see how to leave. Tapping the dim background still closes too.
+    const doneW = 96;
+    roundButton(this, { x: width - 12 - doneW, y: 12, w: doneW, h: MIN_TAP, label: 'Done', color: 0x277a56, size: 16, onTap: () => close() }, box);
     box.add(this.add.text(width / 2, height * 0.1, t.title, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
     const gap = 12;
     const n = t.choices.length;
@@ -1132,7 +1145,7 @@ export class DojoScene extends Phaser.Scene {
         this.renderUi();
       }
     });
-    choice(left + 32 + bw, t.continue, 0x3aa57a, () => {
+    choice(left + 32 + bw, t.continue, GREEN, () => {
       this.leaving = true;
       this.cameras.main.fadeOut(400, 10, 8, 16);
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Game', { run }));
@@ -1166,7 +1179,7 @@ export class DojoScene extends Phaser.Scene {
       choices.forEach((n, i) => {
         const on = this.profile.playLimitMinutes === n;
         const x = x0 + i * (bw + gap);
-        const b = roundButton(this, { x, y: by, w: bw, h: bh, label: n === 0 ? pt.off : pt.minutes.replace('{n}', String(n)), color: on ? 0x3aa57a : 0x2a2536, size: 16, selected: on, onTap: () => {
+        const b = roundButton(this, { x, y: by, w: bw, h: bh, label: n === 0 ? pt.off : pt.minutes.replace('{n}', String(n)), color: on ? GREEN : 0x2a2536, size: 16, selected: on, onTap: () => {
           sfx.place(true);
           this.profile.playLimitMinutes = n;
           writeSave(this.profile);
@@ -1183,7 +1196,7 @@ export class DojoScene extends Phaser.Scene {
       box.destroy();
       this.openBeltEntry(back);
     } }, box);
-    roundButton(this, { x: width / 2 + 8, y: dy, w: dw, h: 44, label: pt.done, color: 0x3aa57a, size: 16, onTap: close }, box);
+    roundButton(this, { x: width / 2 + 8, y: dy, w: dw, h: 44, label: pt.done, color: GREEN, size: 16, onTap: close }, box);
   }
 
   /** Grown-up setting (B-BELT): the real belt and stripes. Choices below what's saved are greyed out. */
@@ -1216,7 +1229,7 @@ export class DojoScene extends Phaser.Scene {
       box.list.filter((o) => o.getData('pick')).forEach((o) => o.destroy());
       const chip = (x: number, y: number, cw2: number, label: string, swatch: number | null, on: boolean, ok: boolean, tap: () => void) => {
         // P-MENU-c: the shared rounded button; the picked chip is `selected`, a too-low choice `disabled`.
-        const b = roundButton(this, { x, y, w: cw2, h: ch, label, color: on ? 0x3aa57a : 0x2a2536, size: 13, selected: on, disabled: !ok, labelWrap: cw2 - (swatch !== null ? 26 : 8), labelDx: swatch !== null ? 8 : 0, onTap: () => { sfx.place(true); tap(); draw(); } }, box);
+        const b = roundButton(this, { x, y, w: cw2, h: ch, label, color: on ? GREEN : 0x2a2536, size: 13, selected: on, disabled: !ok, labelWrap: cw2 - (swatch !== null ? 26 : 8), labelDx: swatch !== null ? 8 : 0, onTap: () => { sfx.place(true); tap(); draw(); } }, box);
         if (swatch !== null) b.visual.addAt(this.add.rectangle(-cw2 / 2 + 6, -7, 14, 14, swatch).setOrigin(0).setStrokeStyle(1, 0xffffff, 0.6), 2);
         b.visual.setData('pick', true);
         b.hit.setData('pick', true);
@@ -1242,7 +1255,7 @@ export class DojoScene extends Phaser.Scene {
       roundButton(this, { x, y: byy, w: bw, h: 44, label, color, size: 16, onTap: tap }, box);
     };
     button(width / 2 - bw - 8, t.back, 0x4a4a55, close);
-    button(width / 2 + 8, t.save, 0x3aa57a, () => this.confirmBeltEntry(belts, pick, () => {
+    button(width / 2 + 8, t.save, GREEN, () => this.confirmBeltEntry(belts, pick, () => {
       sfx.place(true);
       this.profile.beltEntry = recordBeltEntry(belts, this.profile.beltEntry, pick);
       writeSave(this.profile);
@@ -1268,7 +1281,7 @@ export class DojoScene extends Phaser.Scene {
     const bw = 140;
     const by = Math.min(height - 12 - 44, help.y + help.height + 22);
     roundButton(this, { x: width / 2 - bw - 8, y: by, w: bw, h: 44, label: t.confirmNo, color: 0x4a4a55, size: 16, onTap: () => card.destroy() }, card);
-    roundButton(this, { x: width / 2 + 8, y: by, w: bw, h: 44, label: t.confirmYes, color: 0x3aa57a, size: 16, onTap: () => { card.destroy(); save(); } }, card);
+    roundButton(this, { x: width / 2 + 8, y: by, w: bw, h: 44, label: t.confirmYes, color: GREEN, size: 16, onTap: () => { card.destroy(); save(); } }, card);
   }
 
   /** Asks how the player likes to move decorations: tap the spot, or an arrow pad. */
@@ -1337,7 +1350,7 @@ export class DojoScene extends Phaser.Scene {
   }
 
   private makeChoreButton(): void {
-    const face = this.add.circle(0, 0, CHORE_RADIUS, 0x3aa57a).setStrokeStyle(4, 0xffffff, 0.6);
+    const face = this.add.circle(0, 0, CHORE_RADIUS, GREEN).setStrokeStyle(4, 0xffffff, 0.6);
     this.choreLabel = this.add
       .text(0, 0, '', { fontFamily: FONT, fontStyle: 'bold', fontSize: '14px', color: '#ffffff', align: 'center' })
       .setOrigin(0.5)
@@ -1372,7 +1385,7 @@ export class DojoScene extends Phaser.Scene {
     card.add([title, help]);
     const bw = 140;
     const by = Math.min(height - 12 - 44, help.y + help.height + 22);
-    roundButton(this, { x: width / 2 - bw - 8, y: by, w: bw, h: 44, label: t.wipeCancel, color: 0x3aa57a, size: 16, onTap: () => card.destroy() }, card);
+    roundButton(this, { x: width / 2 - bw - 8, y: by, w: bw, h: 44, label: t.wipeCancel, color: GREEN, size: 16, onTap: () => card.destroy() }, card);
     roundButton(this, { x: width / 2 + 8, y: by, w: bw, h: 44, label: t.wipeConfirm, color: 0x8a2a35, size: 16, onTap: () => {
       wipeAllData();
       // A fresh start: reload so every scene and module reads the empty save.
@@ -1433,7 +1446,7 @@ export class DojoScene extends Phaser.Scene {
     btn(pad + w + 8, y, w, '+3 days away', 0x3a7bd5, () => away(72));
     btn(pad + (w + 8) * 2, y, w, '+1 week away', 0x3a7bd5, () => away(168));
     y += 46;
-    btn(pad, y, w, 'Clean everything', 0x3aa57a, () => {
+    btn(pad, y, w, 'Clean everything', GREEN, () => {
       const calm = cleanAll(this.dojo);
       writeSave(this.profile);
       this.redrawDecorations();

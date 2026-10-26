@@ -141,6 +141,9 @@ export interface LastRunLayout {
  * Panel coordinates (0,0 = the panel's top-left inside its padding). Everything sits inside w×h
  * at 667×375, 844×390 and 932×430; every tap is at least 44 on each side.
  */
+/** Q-PREM-F8: clear space above Again! (12). Nothing tappable sits within 8 px above it, scrolled or not. */
+export const AGAIN_CLEAR = S2 + S1;
+
 export function lastRunLayout(w: number, h: number, chipCount: number, statCount: number, foundCount: number): LastRunLayout {
   const bestsW = 96;
   const banner = { x: 0, y: 0, w: w - bestsW - S2, h: MIN_TAP };
@@ -156,10 +159,16 @@ export function lastRunLayout(w: number, h: number, chipCount: number, statCount
   // 4 tiles under ~420 wide (the XP gain is the fill bar), 5 above.
   const nTiles = Math.min(statCount, w < 420 ? 4 : 5);
   // P-MENU2-SPACE: 52/64 (was 44/56) so the number and its label sit more than 8 pt apart.
-  const tileH = compact ? 52 : 64;
+  const baseTileH = compact ? 52 : 64;
+  // Q-PREM-F8: if New for you (at least MIN_TAP) can't keep AGAIN_CLEAR above Again!, the tiles
+  // give up the shortfall (never under MIN_TAP). At 667x375 that's 5 px: 52 -> 47.
+  const barH = compact ? 10 : 12;
+  const roughNewTop = tilesY + baseTileH + gap + barH + gap + TYPE.label + S1;
+  const short = Math.max(0, roughNewTop + MIN_TAP + AGAIN_CLEAR - (h - MIN_TAP));
+  const tileH = Math.max(MIN_TAP, baseTileH - short);
   const tileW = (w - (nTiles - 1) * S2) / nTiles;
   const tiles = Array.from({ length: nTiles }, (_, i) => ({ x: i * (tileW + S2), y: tilesY, w: tileW, h: tileH }));
-  const bar = { x: 0, y: tilesY + tileH + gap, w, h: compact ? 10 : 12 };
+  const bar = { x: 0, y: tilesY + tileH + gap, w, h: barH };
   const lowerY = bar.y + bar.h + gap;
 
   const rightW = Math.max(112, Math.min(200, Math.round(w * 0.34)));
@@ -167,7 +176,7 @@ export function lastRunLayout(w: number, h: number, chipCount: number, statCount
   const again = { x: w - rightW, y: h - MIN_TAP, w: rightW, h: MIN_TAP };
   const newLabelY = lowerY;
   const newTop = lowerY + TYPE.label + S1;
-  const newH = Math.max(MIN_TAP, Math.min(96, again.y - S1 - newTop));
+  const newH = Math.max(MIN_TAP, Math.min(96, again.y - AGAIN_CLEAR - newTop));
   const newCard = { x: w - rightW, y: newTop, w: Math.min(rightW, Math.max(newH, 96)), h: newH };
 
   const foundTile = MIN_TAP;
@@ -210,4 +219,27 @@ export function bestsRows(bests: Profile['bests'], newBests: readonly BestKey[])
 export function newForYou<C extends { id: string; earned: boolean }>(cubbies: readonly C[], seen: readonly string[] | null): C | null {
   if (!seen) return null;
   return cubbies.find((c) => c.earned && !seen.includes(c.id)) ?? null;
+}
+
+/** Q-PREM-F6: where Again! goes, and how the Last run contents scroll above it. */
+export interface PinnedAgain {
+  /** Again! in content coordinates; it is drawn on the panel, not the scrolling contents. */
+  again: Box;
+  /** Height kept clear at the bottom of the scroll window (0 when nothing scrolls). */
+  footer: number;
+  /** How far the contents scroll (0 when they fit). */
+  scrollMax: number;
+}
+
+/**
+ * Q-PREM-F6: Again! sits at the bottom of the visible panel and never scrolls away. When the
+ * contents (contentH) are taller than what shows (visibleH), the scroll window ends S1 above Again!
+ * and the contents can scroll far enough to show their last row in that window. `edge` is how far
+ * the scroll window's bottom sits below the visible contents' bottom (the rolled end of the scroll).
+ */
+export function pinnedAgain(again: Box, contentH: number, visibleH: number, edge = 0): PinnedAgain {
+  const scrolls = contentH > visibleH;
+  const y = Math.min(contentH, visibleH) - again.h;
+  const footer = scrolls ? edge + again.h + AGAIN_CLEAR : 0;
+  return { again: { ...again, y }, footer, scrollMax: scrolls ? contentH - visibleH + footer : 0 };
 }
