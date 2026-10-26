@@ -860,3 +860,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - npm test 911 passed, 3 skipped; typecheck and build pass.
 **Next**
 - Q-PREM-F1 (Bow on first tap).
+
+## Q-PREM-F4 — Nothing over the loss message (2026-10-26)
+- When the hero goes down, the boss tag and bar, the fight buttons and the joystick disappear and stop taking taps.
+- Script `docs/shots/q-prem-f4/f4-loss.mjs` (`?room=keepers-hall&seed=7&difficulty=guided`, test profile 4-green-belt; it sets health 1 and the floor's minHealth 0 to force the loss): 8 of 8 runs (667x375, 667x320, 844x390, 932x430 × Reduced motion on/off) show no boss name, 0 fight buttons, 0 stick parts, and taps after the loss give no action or move. Log `tap-loss.txt`, shots `loss-down-*.png` and `loss-card-*.png`.
+- npm test 911 passed, 3 skipped; typecheck and build pass.
+**Next**
+- Q-PREM-F5 (Try again).

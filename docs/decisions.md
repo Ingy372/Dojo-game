@@ -1280,3 +1280,9 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - QA (Q-PREMIUM F2) found no visible way out of Settings; only a tap on the dim background closed it. The Manager approved a corner button labelled "Done".
 - Green `roundButton` (Scroll's Close colour), 96×44 in the top-right corner, 12 px from the edges, 16 px text. It calls the same `close()` as the background tap. The background tap still closes, too.
 - It sits above the cards (cards start at 10% height + 44 px), so nothing else moved at 667×320.
+
+## Q-PREM-F4 — Clear the screen on the loss (2026-10-26)
+- QA saw the boss name tag, the boss bar, the fight buttons and the joystick over "Ouch! The run is over." The Manager approved hiding them on playerDown.
+- On `playerDown` GameScene sets `downed`, calls `buttons.disable()` and `controls.disable()`, hides the boss tag and lid icon, and skips the boss bar in drawHud.
+- `ActionButtons.disable()` / `TouchControls.disable()` hide every part and ignore later touches (`onDown` returns early, `contains()` is false), so taps after the loss do nothing. The scene restarts for the next run, which builds fresh controls.
+- Try again is untouched (that is Q-PREM-F5).
