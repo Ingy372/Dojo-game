@@ -1503,6 +1503,18 @@ function directionTo(from: Vec2, to: Vec2): Vec2 {
 }
 
 /** B-MASHER-2 (E3): Mash guard helps a player until they make COMBAT.counter.mashGuardPerfects Perfect Counters in this room; each new room starts it again. In co-op each player has their own. */
+/**
+ * Q-PREM-F11: a tap on KO Screen 1 skips the rest of the knock-out pause, so on a floor
+ * room the next tick ends the run (playerOut) right away. The practice room, which starts
+ * the player over instead, is left alone. Returns true when it shortened the pause.
+ */
+export function skipDown(world: WorldState, playerId: PlayerId): boolean {
+  const p = world.players[playerId];
+  if (!p || p.downTicks <= 1 || world.respawnEnemies) return false;
+  p.downTicks = 1;
+  return true;
+}
+
 export function mashGuardOn(p: PlayerState): boolean {
   return p.perfects < COMBAT.counter.mashGuardPerfects;
 }

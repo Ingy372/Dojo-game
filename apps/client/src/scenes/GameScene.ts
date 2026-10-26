@@ -74,6 +74,7 @@ import {
   lidUp,
   type TagBox,
   keeperWin,
+  skipDown,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
@@ -483,6 +484,8 @@ export class GameScene extends Phaser.Scene {
     this.input.on(Phaser.Input.Events.POINTER_DOWN, () => {
       if (!this.downed || !this.run || this.helpUpSkipped || this.time.now - this.downAt < 300) return;
       this.helpUpSkipped = true;
+      // Q-PREM-F11: end the knock-out pause now, so Screen 2 comes on the next tick, not ~1.75 s later.
+      skipDown(this.world, this.me);
       this.afterHelpUp?.();
     });
     this.popups.clear();
