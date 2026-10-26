@@ -243,3 +243,24 @@ export function pinnedAgain(again: Box, contentH: number, visibleH: number, edge
   const footer = scrolls ? edge + again.h + AGAIN_CLEAR : 0;
   return { again: { ...again, y }, footer, scrollMax: scrolls ? contentH - visibleH + footer : 0 };
 }
+
+/** Q-PREM-F10: on a short stat tile, the number and label as one stack, centred inside the rim
+ * with S1 (4) between them. numH / labH are the drawn text heights. Returns their tops (tile-relative)
+ * or null when even that won't fit (the caller then steps the number down to TYPE.label). */
+export function statStack(h: number, rim: number, numH: number, labH: number): { numY: number; labY: number } | null {
+  const free = h - 2 * rim - (numH + S1 + labH);
+  if (free < 0) return null;
+  const numY = rim + free / 2;
+  return { numY, labY: numY + numH + S1 };
+}
+
+/** Q-PREM-F10: width of the short card's sparkle row (a 10 px star, 3 px gap, a 6 px star). */
+export const SPARKLE_W = 19;
+/** The tall New for you card's sparkle, [x, y, r] around the card centre (three corners). */
+export function sparkleStars(w: number, h: number): [number, number, number][] {
+  return [[w / 2 - 10, -h / 2 + 10, 5], [w / 2 - 22, -h / 2 + 6, 3], [-w / 2 + 8, h / 2 - 9, 3]];
+}
+/** The short card's sparkle: two stars in a row starting at x0 (left edge), centred on y. */
+export function headingSparkle(x0: number, y: number): [number, number, number][] {
+  return [[x0 + 5, y, 5], [x0 + 10 + 3 + 3, y - 3, 3]];
+}
