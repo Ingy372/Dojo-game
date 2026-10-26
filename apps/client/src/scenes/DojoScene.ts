@@ -115,6 +115,9 @@ interface Drag {
  * The notice board opens the training board (Tower, gear, abilities, Gate); the door
  * leads to the Tower. The whole room fits on screen.
  */
+/** How long after the arrival cards close a new press is ignored (Q-PREM-F1). */
+const ARRIVAL_QUIET_MS = 450;
+
 export class DojoScene extends Phaser.Scene {
   private profile!: Profile;
   private dojo!: DojoState;
@@ -122,6 +125,8 @@ export class DojoScene extends Phaser.Scene {
   private room!: Room;
   private world!: WorldState;
   private mode: Mode = 'play';
+  /** Taps that land before this time are ignored, so the gesture that closed the last arrival card can't walk the hero (Q-PREM-F1). */
+  private quietUntil = 0;
 
   private worldLayer!: Phaser.GameObjects.Container;
   private decoLayer!: Phaser.GameObjects.Container;
@@ -220,7 +225,7 @@ export class DojoScene extends Phaser.Scene {
       this,
       this.cameras.main,
       (x, y) => this.toTile(x, y),
-      (x, y) => this.mode !== 'play' || this.onUi(x, y),
+      (x, y) => this.mode !== 'play' || this.time.now < this.quietUntil || this.onUi(x, y),
     );
     this.ui = this.add.container(0, 0).setDepth(20);
     this.makeChoreButton();
@@ -341,6 +346,10 @@ export class DojoScene extends Phaser.Scene {
       const step = steps[i++];
       if (step) step();
       else {
+        // The tap that closed the last card can echo as a second press (a phone's copy-of-a-tap
+        // mouse event, or a quick double tap). Drop it so it can't walk the hero or open the door.
+        this.controls.reset();
+        this.quietUntil = this.time.now + ARRIVAL_QUIET_MS;
         this.mode = 'play';
         this.renderUi();
       }
