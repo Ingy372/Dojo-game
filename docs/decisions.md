@@ -1223,3 +1223,11 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
   - The scroll cue is a soft dark fade at each edge with more content, plus a small gold chevron on a dark pill. The thumb is 6 pt on a faint track. All drawn in code.
   - A tab scrolls only when its content really overflows. The empty Last run, Gear and the Trophy Case don't scroll. The Gate's minimum height is worked out from its locks, its 3-line labels and its cards, not a fixed 277.
   - Gate labels get 3 lines ("David / and / Goliath" in a slot about 50 pt wide), so the label shows in full and the cards sit right under it.
+
+## A-LEGENDARY-wire: Legendary gets its own frame (2026-10-25)
+- Jay OK'd the golden-orange Legendary frame (#304, incoming-art/legendary-frame). It replaces the Epic stand-in everywhere Legendary gear is framed: Gear bag tiles, Gear doll rings (normal, glow, pressed) and Last run found tiles. `artRarity('legendary')` is now 'legendary'.
+- Imported through tools/art-import into the existing menu2 pack (one page, 72 frames). The ui loader gained `mergeSprites` so a second sheet in the menu2 format adds to the same entry; a name in two sheets stops the import. The sheet's `slice` is read as nineSlice.
+- Only six frames came in: the three rings, `bag-tile-legendary-9slice`, `bag-tile-legendary-crest` and `found-tile-legendary`.
+- **Bag tile = 9-slice + crest**, not the ready-made 84x100 tile: tile boxes vary by screen, and the 9-slice keeps the gold corners and stars true-size where menu2Fit would crop or scale them. The crest (amber gem) is laid on the top rail, unstretched. While picked, the Selected art still wins (same as every rarity). Pressed darkens the frame with a tint (there is no Legendary pressed tile).
+- **Shine left out.** The 6-frame shine is optional extra art; Epic has none. It can follow as its own item (skipped under Reduced motion).
+- **Contrast:** the gold rim and corner stars are thicker than the other frames and the word "Legendary" sat on them (lowest pixel 2.11:1). The word is lifted 4 px on Legendary tiles only. Ink #5a2e08 under the glyphs now measures median 9.28:1, 5th percentile 8.89:1, lowest pixel 4.52:1 (average background #f2e0be: 8.85:1), the same at 667x375, 667x320, 844x390 and 932x430. The Epic stand-in measured median 6.54:1, lowest 3.43:1.

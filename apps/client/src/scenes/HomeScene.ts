@@ -1700,7 +1700,8 @@ export class HomeScene extends Phaser.Scene {
       else v.add(slotGlyph(this, it.slot, 0, iy, iconS - 8, RARITY_COLOR[it.rarity]));
       const tw = cubbyTextW(box.w);
       const word = rarityName(it.rarity);
-      const lab = this.add.text(0, box.h / 2 - S1 - 1, word, { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold', color: tileSkin ? RARITY_INK[it.rarity] : css(RARITY_COLOR[it.rarity]), align: 'center', wordWrap: { width: tw } }).setOrigin(0.5, 1).setResolution(crisp()).setData('rarityWord', true);
+      // A-LEGENDARY-wire: the gold rim and corner stars are thicker than the other frames; lift the word 4 px so it sits on the paper (≥4.5:1).
+      const lab = this.add.text(0, box.h / 2 - S1 - 1 - (legend ? 4 : 0), word, { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold', color: tileSkin ? RARITY_INK[it.rarity] : css(RARITY_COLOR[it.rarity]), align: 'center', wordWrap: { width: tw } }).setOrigin(0.5, 1).setResolution(crisp()).setData('rarityWord', true);
       v.add(wrapLikeCubby(lab, word, tw).setMaxLines(1));
       if (cmp.overall === 'worn') {
         v.add(this.add.circle(-box.w / 2 + 9, -box.h / 2 + 9, 7, 0xffd166));

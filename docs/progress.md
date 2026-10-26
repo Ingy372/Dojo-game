@@ -813,3 +813,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Round 2: taps clipped to the visible window (edge-tap script: 0 fails), Path card always shows, fade and chevron scroll cue, empty Last run doesn't scroll, Gate label shows in full at 667x320.
 **Next**
 - Jay to try it on his iPhone in Safari landscape.
+## A-LEGENDARY-wire — Legendary frame wired in (2026-10-25)
+**Done**
+- Legendary gear uses the golden-orange frame (Jay OK'd #304) instead of the Epic stand-in: Gear bag tiles (9-slice + gem crest), doll rings (normal/glow/pressed) and Last run found tiles. Imported via tools/art-import (menu2 pack, +6 frames).
+- Word "Legendary" lifted 4 px on its tile: #5a2e08 ≥4.52:1 on every glyph pixel (median 9.28:1).
+- Before/after shots with forced Legendary items at 667x375, 667x320, 844x390, 932x430, Reduced motion on/off, 0 console errors: docs/shots/a-legendary.
+**Next**
+- Optional: the Legendary shine overlay (6 frames, once, skipped under Reduced motion) as its own item.
