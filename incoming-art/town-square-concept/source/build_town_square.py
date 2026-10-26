@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.join(HERE, "..", "..", "tools"))
 from toon_kit import *
 
 ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); ap.add_argument("--samples", type=int, default=24)
-ap.add_argument("--ppt", type=int, default=80); ap.add_argument("--part", default="town")
+ap.add_argument("--ppt", type=int, default=80); ap.add_argument("--part", default="town"); ap.add_argument("--night", action="store_true")
 A = ap.parse_args(sys.argv[sys.argv.index("--") + 1:])
 EL = 35.0; K = 1 / math.sin(math.radians(EL))
 COLS, ROWS = 23.3, 10.75                      # 1864 x 860 at 80 px per tile
@@ -78,30 +78,19 @@ if A.part == "far":
         for i in range(44):
             t = i / 43; z = 0.3 + t * (zt - 0.3)
             x = x0 + (x1 - x0) * (0.5 + 0.5 * math.sin(t * math.pi * turns))
-            add(f"path{nm}{i}", ellipsoid(G(x, front(Hh, x, z), z), (0.32, 0.05, 0.18), segs=8, rings=4), "#f1e3bd", False)
-    # windmill on hill b
-    Hb = HL["b"]; wx = -17; wz = top(Hb, wx) - 0.7; wr = front(Hb, wx, wz) - 0.6
-    add("wm_body", tube(G(wx, wr, wz - 0.3), G(wx, wr, wz + 3.2), 0.85, 0.55, segs=14), "#f7f0e0")
-    add("wm_roof", tube(G(wx, wr, wz + 3.2), G(wx, wr, wz + 4.2), 0.7, 0.05, segs=14), "#5f6f92")
-    add("wm_door", box(G(wx, wr + 0.8, wz + 0.4), (0.4, 0.05, 0.7)), "#8a5e38", False)
-    hub = G(wx, wr + 0.9, wz + 3.0)
-    add("wm_hub", ellipsoid(hub, (0.2, 0.2, 0.2), segs=10, rings=6), "#6b4428")
-    for k in range(4):
-        a = 20 + k * 90
-        ca, sa = math.cos(math.radians(a)), math.sin(math.radians(a))
-        add(f"wm_bl{k}", box((hub[0] + ca * 1.25, hub[1] - 0.1, hub[2] + sa * 1.25), (2.3, 0.06, 0.55), rot=(0, -a, 0)), "#fbf3df")
-    # banners on poles along the path of hill b (blue, green, yellow)
+            add(f"path{nm}{i}", ellipsoid(G(x, front(Hh, x, z), z), (0.32, 0.05, 0.18), segs=8, rings=4), "#e4dcc4", False)
+    Hb = HL["b"]
+    # A4-4: dojo banners (plain cloth, no text) on poles along the path of hill b
     for k, x in enumerate((-22.0, -20.0, -13.5, -11.8)):
         z = top(Hb, x) if abs(x - Hb[0]) < Hb[2] else 0.0
         z = max(z - 0.4, 0.0); rr = front(Hb, x, z)
         add(f"bp{k}", tube(G(x, rr, z), G(x, rr, z + 2.0), 0.06, 0.06), "#6b4428")
-        add(f"bn{k}", box(G(x + 0.45, rr, z + 1.65), (0.85, 0.05, 0.6)), ("#4f8fd6", "#57b26a", "#ffcf4a", "#8f7cd6")[k], False)
-    # lighthouse on hill e (white and soft blue stripes, warm lamp)
-    He = HL["e"]; lx = 15.5; lz = top(He, lx) - 1.0; lr = front(He, lx, lz) - 0.5
-    for k in range(4):
-        add(f"lh{k}", tube(G(lx, lr, lz + k * 0.85), G(lx, lr, lz + (k + 1) * 0.85), 0.75 - k * 0.07, 0.68 - k * 0.07, segs=14), ("#f7f2e8", "#6f9fd2")[k % 2])
-    add("lh_lamp", tube(G(lx, lr, lz + 3.4), G(lx, lr, lz + 4.0), 0.42, 0.42, segs=12), "#ffe48a", False)
-    add("lh_cap", tube(G(lx, lr, lz + 4.0), G(lx, lr, lz + 4.6), 0.55, 0.05, segs=12), "#5f6f92")
+        add(f"bn{k}", box(G(x + 0.45, rr, z + 1.65), (0.85, 0.05, 0.6)), ("#4f6fa6", "#3f9a7a", "#4f6fa6", "#3f9a7a")[k], False)
+    # A4-4: a small hilltop practice pavilion on hill e (open sides, dark roof) replaces the lighthouse
+    He = HL["e"]; lx = 15.5; lz = top(He, lx) * 0.55; lr = front(He, lx, lz) - 0.3
+    add("pvfloor", box(G(lx, lr, lz + 0.15), (2.6, 1.2, 0.3)), "#c99a62")
+    for x in (-1.1, 1.1): add(f"pvpost{x}", box(G(lx + x, lr + 0.5, lz + 1.0), (0.18, 0.18, 1.5)), "#7a5232")
+    add("pvroof", tube(G(lx, lr, lz + 1.75), G(lx, lr, lz + 2.6), 2.1, 0.1, segs=4), "#5f6f92")
     # waterfall down hill d into a pool, with a little arched footbridge below it
     Hd = HL["d"]; fx = 4.6; fz = top(Hd, fx) * 0.8
     for k in range(3):
@@ -115,18 +104,11 @@ if A.part == "far":
         add(f"fb{k}", box(G(x, br, z), (0.56, D(0.3), 0.12), rot=(0, -math.degrees(math.atan(0.9 * math.pi / 4.4 * math.cos(t * math.pi))), 0)), "#c99a62")
         add(f"fbr{k}", tube(G(x, br + 0.15, z), G(x, br + 0.15, z + 0.45), 0.04, 0.04), "#8a5e38", False)
     # cherry trees (soft pink, never red) dotted over the hills
-    for k, (nm, x) in enumerate((("a", -30), ("a", -25), ("b", -13), ("c", -9.5), ("c", -3.5), ("d", 2.5), ("d", 9.5), ("e", 12.5), ("e", 19))):
+    for k, (nm, x) in enumerate((("a", -26), ("c", -5), ("d", 9.5), ("e", 19))):
         Hh = HL[nm]; z = top(Hh, x) * 0.78; rr = front(Hh, x, z)
         add(f"ct{k}", tube(G(x, rr, z), G(x, rr, z + 0.9), 0.12, 0.08), "#7a5232", False)
         add(f"cb{k}", ellipsoid(G(x, rr, z + 1.35), (0.85, 0.4, 0.7), segs=14, rings=8), "#f6c3d6", False)
         add(f"cb2{k}", ellipsoid(G(x - 0.3, rr + 0.2, z + 1.6), (0.45, 0.3, 0.38), segs=10, rings=6), "#fbdbe6", False)
-    # a glimpse of a little village on hill c (other areas to visit)
-    Hc = HL["c"]
-    for k, (x, col) in enumerate(((-5.6, "#efe3c6"), (-4.2, "#f3e7cd"), (-2.9, "#e8dcc0"))):
-        z = top(Hc, x) * 0.55; rr = front(Hc, x, z) - 0.2
-        add(f"vh{k}", box(G(x, rr, z + 0.45), (1.1, 0.6, 0.9)), col)
-        add(f"vr{k}", tube(G(x, rr, z + 0.9), G(x, rr, z + 1.5), 0.85, 0.05, segs=4), ("#5f6f92", "#6f8f6a", "#8f7cd6")[k])
-        add(f"vw{k}", box(G(x, rr + 0.32, z + 0.5), (0.3, 0.04, 0.3)), "#ffe9a0", False)
     TC, TR = 0.0, 3.0      # the Tower stands far behind the town, between the 2nd and 3rd dojo
     HZ = "#a7afd6"; HZD = "#8f97c2"
     z = 0.0
@@ -273,7 +255,7 @@ else:
     for k in range(26):   # ripples + sparkles
         x = RV0 + 0.2 + _r.random() * (RV1 - RV0 - 0.4); rr = 3.6 + _r.random() * 8.2
         add(f"rip{k}", box(G(x, rr, 0.03), (0.35 + _r.random() * 0.3, D(0.04), 0.01)), "#b5e3f5", False)
-    for k in range(14):
+    for k in range(0 if A.night else 14):   # day sparkles only (no sourceless sparkle at night)
         x = RV0 + 0.2 + _r.random() * (RV1 - RV0 - 0.4); rr = 3.6 + _r.random() * 8.2
         add(f"spk{k}", ellipsoid(G(x, rr, 0.04), (0.06, D(0.06), 0.02), segs=6, rings=3), "#ffffff", False)
     for k, (x, rr) in enumerate(((15.2, 5.3), (15.9, 6.2), (15.25, 9.6), (16.0, 10.3))):   # lily pads, white/yellow flowers
@@ -294,9 +276,39 @@ else:
         pts = [G(RV0 - 0.55 + BL * t / 10, side, 0.52 + 0.42 * math.sin(t / 10 * math.pi)) for t in range(11)]
         for k in range(10):
             add(f"brr{side}{k}", tube(pts[k], pts[k + 1], 0.045, 0.045), "#a8743f", False)
-    for x in (RV0 - 0.7, RV1 + 0.7):   # lanterns at the bridge ends
+    for x in (RV0 - 0.25, RV1 + 0.25):   # lanterns at the bridge ends, right on the banks so they reflect in the water
         add(f"brlp{x}", tube(G(x, 8.55, 0), G(x, 8.55, 0.7), 0.04, 0.04), "#6b4428")
         add(f"brln{x}", ellipsoid(G(x, 8.55, 0.85), (0.13, 0.13, 0.17), segs=12, rings=8), "#fff6c8")
+
+
+    # ---------------------------------------------------------------- A4-4: martial-arts touches (all wood / padded, no blades)
+    YC, YR = 3.9, 7.7                      # a practice yard: a raised wooden floor with a sand border
+    add("yd_sand", box(G(YC, YR, 0.01), (3.6, D(2.1), 0.04)), "#e9d7a8", False)
+    add("yd_floor", box(G(YC, YR, 0.06), (3.0, D(1.6), 0.1), bevel=0.03), "#c99a62")
+    for k in range(6): add(f"yd_plank{k}", box(G(YC - 1.25 + k * 0.5, YR, 0.115), (0.03, D(1.55), 0.01)), "#a8743f", False)
+    for k, x in enumerate((-1.0, 0.0, 1.0)):   # makiwara: wooden posts with a padded straw top
+        add(f"mk{k}", box(G(YC + x, YR - 0.55, 0.12 + 0.55), (0.16, D(0.12), 1.1)), "#8a5e38")
+        add(f"mkpad{k}", box(G(YC + x, YR - 0.5, 0.12 + 0.9), (0.22, D(0.1), 0.34)), "#e4cf8f")
+        for zz in (0.8, 1.0): add(f"mkb{k}{zz}", box(G(YC + x, YR - 0.46, 0.12 + zz), (0.24, D(0.04), 0.04)), "#7a5232", False)
+    for k, x in enumerate((-1.7, 1.7)):   # dojo nobori banners (plain cloth, no text, no red)
+        add(f"nbp{k}", tube(G(YC + x, YR - 0.8, 0), G(YC + x, YR - 0.8, 1.9), 0.04, 0.04), "#6b4428")
+        add(f"nbb{k}", box(G(YC + x + 0.2, YR - 0.8, 1.25), (0.32, 0.04, 1.1)), ("#4f6fa6", "#3f9a7a")[k])
+        add(f"nbm{k}", ellipsoid(G(YC + x + 0.2, YR - 0.76, 1.45), (0.1, 0.03, 0.1), segs=10, rings=4), "#fbf3df", False)
+    # balance beam beside the yard
+    add("bm_beam", box(G(YC - 0.4, YR + 1.45, 0.32), (2.4, D(0.12), 0.1)), "#c19159")
+    for x in (-1.0, 1.0): add(f"bm_leg{x}", box(G(YC - 0.4 + x, YR + 1.45, 0.14), (0.1, D(0.1), 0.28)), "#6b4428")
+    # a weapons rack with wooden staffs and padded practice gear only, by the placeholder side
+    RX, RR = 20.2, 7.2
+    add("rk_base", box(G(RX, RR, 0.06), (1.7, D(0.35), 0.12)), "#7a5232")
+    for x in (-0.75, 0.75): add(f"rk_post{x}", box(G(RX + x, RR, 0.65), (0.12, D(0.12), 1.2)), "#6b4428")
+    add("rk_bar", box(G(RX, RR - 0.05, 1.15), (1.65, D(0.08), 0.08)), "#8a5e38")
+    for k in range(5):   # bo staffs (plain wood)
+        add(f"rk_bo{k}", tube(G(RX - 0.5 + k * 0.25, RR - 0.1, 0.12), G(RX - 0.5 + k * 0.25, RR - 0.1, 1.5), 0.035, 0.035), ("#c99a62", "#b98a55")[k % 2])
+    for k, col in enumerate(("#4f6fa6", "#3f9a7a")):   # padded practice shields / mitts
+        add(f"rk_pad{k}", box(G(RX + 0.95 + k * 0.4, RR + 0.1, 0.3), (0.32, D(0.14), 0.5), bevel=0.06), col)
+    # stepping stones across the river (downstream of the bridge)
+    for k, x in enumerate((15.05, 15.6, 16.15)):
+        add(f"ss{k}", ellipsoid(G(x, 10.6 + (0.12 if k % 2 else 0), 0.05), (0.24, D(0.18), 0.07), segs=12, rings=4), "#cfc8ba")
 
 
 if A.part == "lights":   # an emission mask: lit windows/lanterns white, everything else black (dusk glow pass)
@@ -312,7 +324,7 @@ if A.part == "lights":   # an emission mask: lit windows/lanterns white, everyth
         elif o.type == "MESH":
             lit = bool(LIT.search(o.name)) and "twin" not in o.name and "_outline" not in o.name
             for i in range(len(o.material_slots)): o.material_slots[i].material = W_ if lit else B_
-FAR_KEEP = ("hill", "tw", "cap", "path", "wm_", "bp", "bn", "lh", "fall", "pool", "mist", "fb", "ct", "cb", "vh", "vr", "vw")
+FAR_KEEP = ("hill", "tw", "cap", "path", "bp", "bn", "pv", "fall", "pool", "mist", "fb", "ct", "cb")
 if A.part == "far":   # the far layer keeps only the hills and the Tower
     for o in list(bpy.data.objects):
         if o.type == "MESH" and not (o.name.startswith(FAR_KEEP)):

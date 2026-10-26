@@ -46,3 +46,15 @@ DECIDE:
 - How many fireflies.
 - Not decided here: layout, scrolling, door count.
 NEXT: Remodel the main dojo when the Action Zone photos arrive.
+
+---
+## UPDATE A4-4
+ITEM: A4-4, town square: more dojo game and honest night light (same branch / PR #301).
+WHAT: Removed the fantasy extras (windmill, lighthouse, kites, village glimpse). Added a practice yard with makiwara, a balance beam, a padded and wooden weapons rack, stepping stones and plain dojo banners. At night, every glow comes from a lantern, a window or door, the Tower or a firefly, and pools and reflections sit under their sources. Red check: 0 px.
+WHY: Jay wants it to feel like a dojo game, and wants night light that makes sense.
+DECIDE:
+- Where the yard and the rack sit, and their size.
+- Whether the hill pavilion stays.
+- Whether the waterfall should glow at night (currently no).
+- Firefly count (16).
+NEXT: Remodel the main dojo when the Action Zone photos arrive.

@@ -45,3 +45,14 @@ python3 make_concept.py --far render_far@2x.png --town render_town@2x.png --outd
 - **Day, livelier:** a little river runs through the square from a waterfall in the hills. It has stone banks, ripples and sparkles, lily pads with white and yellow flowers, and orange, white and gold koi (no red), plus a small arched wooden bridge with lanterns at each end. Behind the town is a world to explore: rolling hills with winding paths, a windmill, a striped lighthouse, a waterfall with a pool and a footbridge, soft pink cherry trees, banners, a glimpse of a little village, kites and a few birds. The far layer is now rendered 1.4x wider so it fills the whole skyline.
 - **Evening, cozier:** warm pools of light on the ground under every lantern, lamp and window, warm lantern reflections on the river, and about 34 fireflies.
 - Main dojo unchanged (photos pending). The shop, the placeholder and the statue are unchanged. No characters, no text, no red.
+
+## A4-4 update (Jay's notes): more dojo game, every night light has a source
+- **Day:** removed the windmill, lighthouse, kites and village glimpse. Kept fewer cherry trees and made the hill paths quieter. Plain dojo banners on the hill (no text). A small practice pavilion sits on the right hill, mostly behind the placeholder. Kept the river, bridge, koi, lily pads and waterfall.
+- **New martial-arts touches:**
+  - A practice yard with a wooden floor and sand border, three makiwara posts with padded tops, and two plain nobori banners (no text).
+  - A balance beam.
+  - A weapons rack with wooden bo staffs and padded mitts only (no blades).
+  - Stepping stones across the river.
+- **Night:** every light now has a source. Light pools sit under the dojo lanterns and door, the shop lanterns and front, the placeholder windows, the two lamp posts and the bridge lanterns. The bridge lanterns now stand on the banks, and their reflections fall straight below them. There are 16 fireflies, all near the water. I removed the lighthouse glow, the extra pool on the river and the river sparkles (the town is rendered with `--night`, which leaves them out). The Tower light is kept.
+- Dusk build: `blender -b -P build_town_square.py -- --part town --night --out render_town_night@2x.png` and `--part lights --night`. Then pass `--town render_town_night@2x.png` to make_concept.py.
+- Main dojo, shop, placeholder and statue are unchanged. No characters, no text, no red.
