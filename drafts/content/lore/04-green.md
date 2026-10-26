@@ -23,7 +23,7 @@ Very tall and very loud. Inside, it is only a pile of stones the shadow stacked 
 
 | Relic | What the player reads | Sensei |
 | --- | --- | --- |
-| Smooth River Stone | A small, smooth stone. It fits perfectly in your hand. | Small and ready is enough. |
+| Smooth River Stone | A small, smooth stone. It fits just right in your hand. | Small and ready is enough. |
 | Little Water Jar | A helper's jar, still half full. They kept carrying water after dark. | Faithful work matters, even when no one sees. |
 | Pebble of Worry | It looks heavy. It is light as air when you pick it up. | Some worries are smaller than they look. |
 

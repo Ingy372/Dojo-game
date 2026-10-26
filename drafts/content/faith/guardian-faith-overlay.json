@@ -150,7 +150,7 @@
       "relic": {
         "id": "storm-herald-faith-relic",
         "name": "Still Scroll",
-        "description": "A scroll that stays perfectly still in the wind."
+        "description": "A scroll that stays still in the wind."
       },
       "theme": "Calm in the storm",
       "verses": [
