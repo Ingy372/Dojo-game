@@ -1353,3 +1353,8 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - QA found play continues after the retry line (GameScene.ts guideDone -> senseiDone only shows the line; world.ts stepGuide just moves to the next hint), so "Let's rest at the dojo." didn't fit. The 10 lessons now say "Nice work. Let's keep practicing." (Manager's call; no 'try again' wording). lesson-counter-guided unchanged.
 - lesson-counter-guided's retry is now "So close! Let's keep practicing." (the guided Counter repeats after it); no lesson says 'try again'.
 - lesson-counter-guided's retry now matches the other 10: "Nice work. Let's keep practicing." (all 11 share it); no lesson says 'So close' or 'try again'.
+
+## L-PREMIUM-a2 — locked-ability hints in the Trophy Case (2026-10-26)
+- Stance hints wired as written (Content Designer will reword later). Kata cubbies fall back to the stance hint by kata order (stances[n+2], clamped); past the end of any list uses the last hint.
+- Trophy Case cubby sheet only; no read-aloud. Hint shows as its own line under "Ask Sensei about this one".
+- Hints copied to content/hints/locked-hints.json; the draft stays, and check-locked-hints.py is kept and still reads drafts/.

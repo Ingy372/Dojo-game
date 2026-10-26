@@ -3,6 +3,7 @@
 
 import type { AbilityInfo, VirtueInfo } from '@dojo/sim';
 import words from '../../../../content/abilities/trophy-case.json';
+import { lockedHint } from './lockedHints';
 import { BOARD, MIN_TAP, S1, S2, TYPE } from './tokens';
 
 export const TROPHY_WORDS = words;
@@ -27,6 +28,8 @@ export interface Cubby {
   effect: string;
   /** "Signed at White Belt" when earned; "Ask Sensei about this one" when not yet. */
   status: string;
+  /** L-PREMIUM-a2: not-yet cubbies, the "how to earn it" line shown on tap. */
+  hint?: string;
   /** Earned katas: the kataArrows line for the sheet. */
   kata?: string;
 }
@@ -57,8 +60,10 @@ export interface TrophyInput {
 /** Every cubby, by shelf, earned first (curriculum order kept inside each half). */
 export function buildCubbies(t: TrophyInput): Cubby[] {
   const out: Cubby[] = [];
+  const seen = { stance: 0, strike: 0, seal: 0 };
   for (const a of t.abilities) {
     const r = a.requirement;
+    const n = seen[a.kind]++;
     out.push({
       id: r.id,
       shelf: KIND_SHELF[a.kind],
@@ -67,6 +72,7 @@ export function buildCubbies(t: TrophyInput): Cubby[] {
       icon: a.stance?.id ?? a.perk?.id,
       effect: a.stance?.text ?? a.perk?.text ?? words.comingLater,
       status: a.unlocked ? fill(words.signedAt, 'belt', r.beltName) : words.askSensei,
+      hint: a.unlocked ? undefined : lockedHint(a.kind, n, a.stance?.id ?? a.perk?.id),
       kata: a.kind === 'stance' && a.unlocked ? t.kataLine(r.id) : undefined,
     });
   }

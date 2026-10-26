@@ -921,3 +921,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Retry line in the 10 lessons is now "Nice work. Let's keep practicing."; test updated.
 - lesson-counter-guided retry: "So close! Let's keep practicing."; test bans 'try again' in all lessons; shots include the guided line.
 - All 11 lesson retry lines are "Nice work. Let's keep practicing."; test bans 'So close' and 'try again'.
+
+- 2026-10-26 L-PREMIUM-a2: locked Trophy Case cubbies show a one-line hint (content/hints/locked-hints.json). Tests in packages/sim/test/l-premium-a2-hints.test.ts; shots in docs/shots/l-premium-a2.
