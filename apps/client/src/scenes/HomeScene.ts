@@ -1490,8 +1490,10 @@ export class HomeScene extends Phaser.Scene {
     const sw = rw - 2 * f;
     const sx = rx + f;
     const tw = sw - 2 * pad - 56 - S2;
+    // L-PREMIUM-a2: a not-yet cubby says how to earn it, under its status line.
+    const hintH = c.hint ? 2 * (TYPE.body + 4) + 4 : 0;
     const kataH = c.kata ? TYPE.label + 4 + kataLines(c.kata, sw - 2 * pad) * KATA_LINE : 0;
-    const sh = Math.min(panelH - 2 * f, Math.max((panelH - 2 * f) / 2, pad + TYPE.title + 4 + TYPE.body * TROPHY_UI.effectLines + 8 + TYPE.body + 8 + kataH + 44 + pad));
+    const sh = Math.min(panelH - 2 * f, Math.max((panelH - 2 * f) / 2, pad + TYPE.title + 4 + TYPE.body * TROPHY_UI.effectLines + 8 + TYPE.body + 8 + hintH + kataH + 44 + pad));
     const sy = top + panelH - f - sh;
     const body = this.add.container(0, 0);
     sheet.add(body);
@@ -1514,6 +1516,12 @@ export class HomeScene extends Phaser.Scene {
     const eff = this.text(tx, ty, c.effect, TYPE.body, '#5a3e28', false, FONT, textW).setMaxLines(TROPHY_UI.effectLines);
     ty += eff.height + 6;
     this.text(tx, ty, c.status, TYPE.body, c.earned ? '#a0522d' : '#7a5a3a', true, FONT, textW);
+    if (c.hint) {
+      ty += TYPE.body + 6;
+      const hint = this.text(tx, ty, c.hint, TYPE.body, '#5a3e28', false, FONT, textW).setMaxLines(2);
+      hint.setData('lockedHint', true);
+      ty += hint.height - TYPE.body - 6;
+    }
     ty = Math.max(ty + TYPE.body + 8, sy + pad + 56 + S2);
     if (c.kata) {
       this.text(sx + pad, ty, TROPHY_WORDS.kataSteps, TYPE.label, '#7a5a3a', true);
