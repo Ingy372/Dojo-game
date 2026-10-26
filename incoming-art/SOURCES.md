@@ -44,3 +44,9 @@ Notes:
 
 ## A3c school mark (`badges-trophies-a3c/`)
 - `badges-trophies-a3c/source/jay-logo/logo-white.jpg` and `logo-black.png`: **Jay's own school logo**, supplied by Jay (24 Oct 2026). Only the red cross and the kicking figure are used in `seal-mark-school.png`; the ring text and the name plate are left out.
+
+## Audio SFX (R-PREMIUM-b2, `audio/sfx/`), all CC0 1.0, licences re-checked 2026-10-26
+- Kenney **Impact Sounds**: https://kenney.nl/assets/impact-sounds (CC0; licence: `audio/sfx/kenney-impact/License.txt`, https://creativecommons.org/publicdomain/zero/1.0/)
+- Kenney **Interface Sounds**: https://kenney.nl/assets/interface-sounds (CC0; `audio/sfx/kenney-interface/License.txt`)
+- Kenney **Music Jingles**: https://kenney.nl/assets/music-jingles (CC0; `audio/sfx/kenney-jingles/License.txt`)
+- **512 Sound Effects (8-bit style)** by SubspaceAudio (Juhani Junkala), OpenGameArt: https://opengameart.org/content/512-sound-effects-8-bit-style (CC0; `audio/sfx/oga-512-8bit/INFO-license.txt`)
