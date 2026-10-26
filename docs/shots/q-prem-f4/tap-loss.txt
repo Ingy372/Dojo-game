@@ -1,0 +1,8 @@
+667x375 rm=off: down=true bossName="" visibleFightButtons=0 visibleStick=0 afterTaps action=null move=none card=Try again errors=0
+667x375 rm=on: down=true bossName="" visibleFightButtons=0 visibleStick=0 afterTaps action=null move=none card=Try again errors=0
+667x320 rm=off: down=true bossName="" visibleFightButtons=0 visibleStick=0 afterTaps action=null move=none card=Try again errors=0
+667x320 rm=on: down=true bossName="" visibleFightButtons=0 visibleStick=0 afterTaps action=null move=none card=Try again errors=0
+844x390 rm=off: down=true bossName="" visibleFightButtons=0 visibleStick=0 afterTaps action=null move=none card=Try again errors=0
+844x390 rm=on: down=true bossName="" visibleFightButtons=0 visibleStick=0 afterTaps action=null move=none card=Try again errors=0
+932x430 rm=off: down=true bossName="" visibleFightButtons=0 visibleStick=0 afterTaps action=null move=none card=Try again errors=0
+932x430 rm=on: down=true bossName="" visibleFightButtons=0 visibleStick=0 afterTaps action=null move=none card=Try again errors=0

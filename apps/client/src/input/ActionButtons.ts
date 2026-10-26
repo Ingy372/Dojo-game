@@ -25,6 +25,7 @@ interface Button {
  */
 export class ActionButtons {
   private pending: PlayerAction | null = null;
+  private off = false;
   /** Sensei's guide: 0 none, 1 small, 2 big, 3 stronger nudge pulse on Counter. */
   private counterPulse = 0;
   private readonly counter: Button;
@@ -77,6 +78,7 @@ export class ActionButtons {
 
   /** True if a screen point is on a button (so it isn't treated as tap-to-move or the stick). */
   contains(x: number, y: number): boolean {
+    if (this.off) return false;
     return this.all().some((b) => this.hit(b, x, y));
   }
 
@@ -100,6 +102,13 @@ export class ActionButtons {
 
   reset(): void {
     this.pending = null;
+  }
+
+  /** Hides the buttons and ignores presses on them (Q-PREM-F4: once the hero is down). */
+  disable(): void {
+    this.off = true;
+    this.pending = null;
+    for (const b of this.all()) b.container.setVisible(false);
   }
 
   /** Makes Counter pulse for Sensei's guide (0 none, 1 small, 2 big, 3 nudge). */
@@ -205,6 +214,7 @@ export class ActionButtons {
   }
 
   private onDown(pointer: Phaser.Input.Pointer): void {
+    if (this.off) return;
     for (const b of this.all()) {
       if (this.hit(b, (pointer.x / DPR), (pointer.y / DPR))) {
         this.onTouch();

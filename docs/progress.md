@@ -861,6 +861,16 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 **Next**
 - Q-PREM-F1 (Bow on first tap).
 
+## Q-PREM-F4 — Nothing over the loss message (2026-10-26)
+- When the hero goes down, the boss tag and bar, the fight buttons and the joystick disappear and stop taking taps.
+- Script `docs/shots/q-prem-f4/f4-loss.mjs` (`?room=keepers-hall&seed=7&difficulty=guided`, test profile 4-green-belt; it sets health 1 and the floor's minHealth 0 to force the loss): 8 of 8 runs (667x375, 667x320, 844x390, 932x430 × Reduced motion on/off) show no boss name, 0 fight buttons, 0 stick parts, and taps after the loss give no action or move. Log `tap-loss.txt`, shots `loss-down-*.png` and `loss-card-*.png`.
+- npm test 911 passed, 3 skipped; typecheck and build pass.
+**Next**
+- Q-PREM-F5 (Try again).
+- Follow-up: on playerDown, floating texts and pop words still on screen are removed, new ones are skipped, and the GREAT xN chain clears with the combo, so nothing touches the loss message.
+- verify-ui-shots pass `docs/shots/q-prem-f4/f4-verify.mjs` (log `verify-log.txt`, shots `verify-{fade,card}-{start,mid,end}-*.png`): it freezes the game loop on the first frame of the loss fade and of the card fade-in, reads Reduced motion back before each shot. 274 PASS, 14 FAIL, all on the existing run-over card: Try again text contrast 3.12:1 (all sizes) and card buttons 42 px tall at 667x320. Not changed here (card belongs with F5).
+
+- Q-PREM-F4 QA fix: Sensei bubble cleared on a natural loss. `docs/shots/q-prem-f4/f4-natural.mjs` checks a natural standard-difficulty loss with a Sensei bubble up at all 4 sizes × Reduced motion on/off (log in natural-log.txt).
 ## Q-PREM-F5 — Back home only (2026-10-26)
 **Done**
 - The "Good effort!" card after a lost run shows one button, Back home, at least 44 px tall at every size.
