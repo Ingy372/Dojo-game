@@ -56,6 +56,7 @@ import { GoalsCard } from '../ui/GoalsCard';
 import { localDay, takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
 import { BETA } from '../game/beta';
+import { showGrades } from '../game/difficulty';
 import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, crisp, css, view, hiDpi, WOOD } from '../ui/theme';
 import type { GameSceneData } from './GameScene';
 
@@ -261,7 +262,7 @@ export class HomeScene extends Phaser.Scene {
     label(cx, top + 26, 'Floor cleared!', 24, '#ffd166', 'Georgia, serif');
     const order = ['S', 'A', 'B'] as const;
     const grade = order.find((g) => s.results.some((r) => r.grade === g));
-    if (grade) label(cx, top + h * 0.36, grade, 64, GRADE_COLOR[grade], 'Georgia, serif');
+    if (grade && showGrades(s.difficulty)) label(cx, top + h * 0.36, grade, 64, GRADE_COLOR[grade], 'Georgia, serif');
     const best = s.items.slice().sort((a, b) => RARITY_ORDER(b) - RARITY_ORDER(a))[0];
     const deco = [...(s.decorations ?? []), ...(this.profile.lastRun!.earned ?? [])][0];
     const reward = best ? `You found: ${best.name}` : deco ? `For your dojo: ${decorationDef(CONTENT.dojo, deco).name}` : '';
@@ -927,7 +928,7 @@ export class HomeScene extends Phaser.Scene {
 
   /** The Bests sheet: the student's own bests only (no comparing, no streaks). */
   private openBests(): void {
-    const rows = lastRunBests(this.profile.bests, this.profile.lastRun?.newBests ?? []);
+    const rows = lastRunBests(this.profile.bests, this.profile.lastRun?.newBests ?? [], showGrades(this.profile.difficulty));
     this.openRunSheet(LASTRUN_WORDS.bestsTitle, [[LASTRUN_WORDS.bestsLine, '#7a5a3a', false], ...rows.map((r): [string, string, boolean] => [`${r.name}: ${r.value}${r.isNew ? `   ${LASTRUN_WORDS.bestNew}` : ''}`, r.isNew ? '#a0522d' : WOOD.ink, r.isNew])]);
   }
 

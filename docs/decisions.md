@@ -1316,3 +1316,9 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - At 47 px tiles (667x320, 667x375) the 14 px number (17 drawn) and 12 px label (15 drawn) can't keep the label 8 px inside the rim and still stay apart. On short tiles (< 56) they are now one stack, centred inside the rim and 4 px apart (`statStack` in ui/lastRun.ts). The label sits ~2.5 px inside the rim instead of 8. If a tile ever gets too short for that (44), the number steps down to 12 px. Tall tiles are unchanged.
 - The short New for you card (~73 px wide) has no room beside its label for stars, and it is flush with the content's right edge. So its sparkle (two stars, `headingSparkle`) now sits 4 px before the "New for you" heading, in the gap after Found. The tall card keeps its three corner stars. The bottom-left star no longer touches the trophy icon.
 - F8's 12 px clear above Again! is unchanged.
+
+## Q-PREM-GRADE — room grades show on Challenge only (2026-10-26)
+- One helper, `showGrades(difficulty)` in apps/client/src/game/difficulty.ts, is true only for `challenge`; missing means hidden.
+- Off Challenge: GameScene hides the big S/A/B letter and skips `sfx.grade`, but keeps the "Room clear!" line and stats (gradeLine bounds still used by the ability pop-up). The HomeScene tutorial card drops its letter. Last run chips show the room mark instead of a letter. Bests drops "Most S grades".
+- Last run and the tutorial card decide by the difficulty the run was played on: RunSummary now has optional `difficulty` (set in summarizeRun). Old summaries without it are hidden. Bests is a lifetime list, so it uses the player's current difficulty.
+- Sim rules unchanged: rooms are still graded, the S-grade bonus loot stays, and sGrades / mostSGrades are still tracked, just not shown.

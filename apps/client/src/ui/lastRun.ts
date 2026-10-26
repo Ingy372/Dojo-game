@@ -5,6 +5,7 @@
 
 import { realClock, ticksToRealMs, type BestKey, type GearItem, type Profile, type RoomResult } from '@dojo/sim';
 import words from '../../../../content/settings/last-run.json';
+import { showGrades } from '../game/difficulty';
 import { MIN_TAP, S1, S2, S3, TYPE } from './tokens';
 
 export const LASTRUN_WORDS = words;
@@ -59,7 +60,8 @@ export function buildLastRun(last: NonNullable<Profile['lastRun']>, restedWords:
   return {
     headline: headline(s, restedWords),
     cleared: s.result === 'cleared',
-    chips: s.results,
+    // Q-PREM-GRADE: grade letters only for a run played on Challenge (old summaries: hidden).
+    chips: showGrades(s.difficulty) ? s.results : s.results.map((r) => ({ ...r, grade: null })),
     stats,
     found: [...items.map((item): FoundTile => ({ kind: 'item', item })), ...decos.map((id): FoundTile => ({ kind: 'deco', id }))],
     levelsGained: last.xp?.levelsGained ?? 0,
@@ -203,8 +205,9 @@ export function foundPage<T>(found: T[], perPage: number, page: number): { tiles
 }
 
 /** The Bests sheet rows: the student's own bests only (no ranks, no others, no streaks). */
-export function bestsRows(bests: Profile['bests'], newBests: readonly BestKey[]): Array<{ key: BestKey; name: string; value: string; isNew: boolean }> {
-  const keys: BestKey[] = ['fastestClearTicks', 'mostPerfects', 'longestCombo', 'mostSGrades'];
+export function bestsRows(bests: Profile['bests'], newBests: readonly BestKey[], grades: boolean): Array<{ key: BestKey; name: string; value: string; isNew: boolean }> {
+  // Q-PREM-GRADE: "Most S grades" only on Challenge (still tracked underneath).
+  const keys: BestKey[] = ['fastestClearTicks', 'mostPerfects', 'longestCombo', ...(grades ? (['mostSGrades'] as const) : [])];
   return keys.map((key) => {
     const v = bests[key];
     const value = key === 'fastestClearTicks' ? (v === null ? '—' : realClock(v as number)) : String(v);

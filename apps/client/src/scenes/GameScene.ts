@@ -100,7 +100,7 @@ import { bowPrompt, playBow } from '../ui/bow';
 import { InsightPicker } from '../ui/InsightPicker';
 import { choiceCard, restCard, runOverCard } from '../ui/RunOverCard';
 import { PLAY_TIME_TEXT, isPlayTimeUp } from '../game/playTime';
-import { DIFFICULTY_TEXT, localToday } from '../game/difficulty';
+import { DIFFICULTY_TEXT, localToday, showGrades } from '../game/difficulty';
 import { LESSONS, noteLessonSeen, takeLesson } from '../game/lessons';
 import { bankRun, saveRunInProgress } from '../game/runSave';
 import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css, view, DPR, hiDpi } from '../ui/theme';
@@ -2329,13 +2329,16 @@ export class GameScene extends Phaser.Scene {
 
   private showGrade(grade: 'S' | 'A' | 'B', perfects: number, damage: number, ticks: number, inTime: boolean | null): void {
     const { width, height } = view(this);
-    sfx.grade(grade);
+    // Q-PREM-GRADE: the big letter and its sound are Challenge only; the Room clear! line always shows.
+    const graded = showGrades(this.world.difficulty);
+    if (graded) sfx.grade(grade);
     const letter = this.add
       .text(width / 2, height * 0.36, grade, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '84px', color: GRADE_COLOR[grade], stroke: '#14121c', strokeThickness: 9 })
       .setOrigin(0.5)
       .setResolution(crisp())
       .setScale(2.2)
-      .setAlpha(0);
+      .setAlpha(0)
+      .setVisible(graded);
     // K23: the damage number is dropped (it read as harsh to kids); a clean room still says so.
     const parts = [`${perfects} Great`, ...(damage > 0 ? [] : ['no damage']), realClock(ticks)];
     const ch = this.room.challenge;

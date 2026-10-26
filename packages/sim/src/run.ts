@@ -416,6 +416,8 @@ export interface RunSummary {
   tier: number;
   /** The tutorial floor (M7-P2). */
   tutorial: boolean;
+  /** Q-PREM-GRADE: the difficulty the run was played on (missing on old saves). */
+  difficulty?: Difficulty;
 }
 
 export function summarizeRun(run: RunState): RunSummary {
@@ -436,6 +438,7 @@ export function summarizeRun(run: RunState): RunSummary {
     test: run.test,
     tier: run.tier,
     tutorial: run.tutorial,
+    difficulty: run.difficulty,
   };
 }
 
