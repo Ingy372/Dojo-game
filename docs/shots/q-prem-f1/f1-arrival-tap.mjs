@@ -25,19 +25,31 @@ for (const [W, H] of sizes) for (const rm of ['off', 'on']) {
     if (p) { await pg.touchscreen.tap(p.x, p.y); continue; }
     if ((await st()).mode === 'play') break;
   }
-  // (c-last) Replay the celebration as the LAST arrival step (no Sensei card or resume after it), the real-phone case.
+  // (c-last) Run the real arrival again with only the celebration left (welcomed, no time away, Sensei card already seen, no saved run),
+  // so its 'Tap to continue' is the LAST step and closing it starts play: the case a phone hits.
   if ((await st()).mode === 'play') for (const variant of (process.env.VARIANTS || 'touch,touch+compat-mouse,control-play-tap').split(',')) {
     if (variant === 'control-play-tap') { const b0 = await st(); await pg.touchscreen.tap(W / 2 + 60, H / 2 - 40); await pg.waitForTimeout(1500); const a0 = await st(); out.push(`${W}x${H} rm=${rm} control tap in play: ${JSON.stringify(b0.pos)} -> ${JSON.stringify(a0.pos)} (should move; proves the check can see a walk)`); continue; }
-    const ok = await pg.evaluate(async () => { const g = window.game; const d = g.scene.getScene('Dojo'); const sim = await import('/@fs/workspace/q-prem-f1/packages/sim/src/index.ts'); const C = (await import('/src/ui/Celebrations.ts')).Celebrations; let m = sim.rewardMoments(null, d.training); if (!m.length) return 'no moments'; d.mode = 'arriving'; d.renderUi(); new C(d, m.slice(0, 1), d.training, () => { d.mode = 'play'; d.renderUi(); }); return 'ok ' + m.length; });
+    const ok = await pg.evaluate(() => { const d = window.game.scene.getScene('Dojo'); d.profile.seen = null; d.mode = 'arriving'; d.renderUi(); d.arrive(0); return 'ok'; });
     if (!ok.startsWith('ok')) { out.push(`${W}x${H} rm=${rm} last-step: ${ok}`); break; }
-    let tc = null; for (let k = 0; k < 20 && !tc; k++) { await pg.waitForTimeout(300); tc = (await T()).find((x) => x.t === 'Tap to continue' && x.d >= 60); }
-    await pg.waitForTimeout(1600);
-    const before = await st(); const y = process.env.TAP === 'center' ? H / 2 : (tc ? tc.y : H - 22);
-    await pg.touchscreen.tap(W / 2, y);
-    if (variant !== 'touch') { await pg.mouse.move(W / 2, y); await pg.mouse.down(); await pg.mouse.up(); }
-    await pg.waitForTimeout(1500); const after = await st();
+    // Tap through the celebration; judge the tap that ends the arrival (mode turns 'play').
+    let tc = null, before = null, after = null, y = 0, steps = 0;
+    for (let k = 0; k < 60; k++) {
+      await pg.waitForTimeout(300);
+      const t = await T(); tc = t.find((x) => x.t === 'Tap to continue' && x.d >= 60);
+      const card = t.find((x) => /^(Let's go!|Got it|OK|Continue|Thank you!|Nice!|Okay!|Not now)$/.test(x.t) && x.d >= 60);
+      if (card) { steps++; await pg.touchscreen.tap(card.x, card.y); continue; }
+      if (!tc) break;
+      await pg.waitForTimeout(1300);
+      before = await st(); y = process.env.TAP === 'center' ? H / 2 : tc.y;
+      await pg.touchscreen.tap(W / 2, y);
+      if (variant !== 'touch') { await pg.mouse.move(W / 2, y); await pg.mouse.down(); await pg.mouse.up(); }
+      await pg.waitForTimeout(1500); after = await st(); steps++;
+      if (after.mode === 'play') break;
+    }
+    if (!after || after.mode !== 'play') { out.push(`${W}x${H} rm=${rm} last-step [${variant}]: arrival did not end (${after?.mode})`); continue; }
+    tc = { last: (await T()).length };
     const moved = Math.hypot(after.pos.x - before.pos.x, after.pos.y - before.pos.y) > 0.01; const run = /Game/.test(after.scenes) || (await pg.evaluate(() => window.game.scene.getScene('Dojo').leaving)); total++; if (moved || run) bad++;
-    out.push(`${W}x${H} rm=${rm} last-step [${variant}]: hint ${tc ? 'seen' : 'NOT seen'} pos ${JSON.stringify(before.pos)} -> ${JSON.stringify(after.pos)} scenes=${after.scenes} mode=${after.mode} => ${moved || run ? 'FAIL (moved/run)' : 'ok'}`);
+    out.push(`${W}x${H} rm=${rm} last-step [${variant}]: last of ${steps} taps pos ${JSON.stringify(before.pos)} -> ${JSON.stringify(after.pos)} scenes=${after.scenes} mode=${after.mode} => ${moved || run ? 'FAIL (moved/run)' : 'ok'}`);
   }
   if (!saw) out.push(`${W}x${H} rm=${rm}: no 'Tap to continue' seen`);
   if (process.env.SHOTS) await pg.screenshot({ path: `${process.env.SHOTS}/arrival-${W}x${H}-rm-${rm}.png` });
