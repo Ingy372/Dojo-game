@@ -745,32 +745,65 @@
       ]
     },
     "enemy-hearth-cook-p1": {
-      "note": "Hearth Cook Guardian, phase 1 rig (Jay approved; B-T3).",
+      "note": "Hearth Cook Guardian, phase 1 rig (Jay approved; B-T3). B-T3-TUNE-2b (#299, Jay OK'd): pin wind-up and pin merged in.",
       "sources": [
         {
           "id": "hearth-cook-p1",
           "type": "character",
-          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p1/sprites/hearth-cook-p1.json"
+          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p1/sprites/hearth-cook-p1.json",
+          "mergeAnimations": [
+            "incoming-art/hearth-cook-2b/p1-pin/sprites/hearth-cook-p1-pin.json"
+          ]
         }
       ]
     },
     "enemy-hearth-cook-p2": {
-      "note": "Hearth Cook Guardian, phase 2 rig (Jay approved; B-T3).",
+      "note": "Hearth Cook Guardian, phase 2 rig (Jay approved; B-T3). B-T3-TUNE-2b (#299, Jay OK'd): pin wind-up and attack plus the lid layer merged in.",
       "sources": [
         {
           "id": "hearth-cook-p2",
           "type": "character",
-          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p2/sprites/hearth-cook-p2.json"
+          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p2/sprites/hearth-cook-p2.json",
+          "mergeAnimations": [
+            "incoming-art/hearth-cook-2b/p2-pin/sprites/hearth-cook-p2-pin.json",
+            "incoming-art/hearth-cook-2b/lid/p2/hearth-cook-p2.json"
+          ]
         }
       ]
     },
     "enemy-hearth-cook-p3": {
-      "note": "Hearth Cook Guardian, phase 3 rig (Jay approved; B-T3).",
+      "note": "Hearth Cook Guardian, phase 3 rig (Jay approved; B-T3). B-T3-TUNE-2b (#299, Jay OK'd): bonk wind-up and attack plus the lid layer merged in.",
       "sources": [
         {
           "id": "hearth-cook-p3",
           "type": "character",
-          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p3/sprites/hearth-cook-p3.json"
+          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p3/sprites/hearth-cook-p3.json",
+          "mergeAnimations": [
+            "incoming-art/hearth-cook-2b/p3-bonk/sprites/hearth-cook-p3-bonk.json",
+            "incoming-art/hearth-cook-2b/lid/p3/hearth-cook-p3.json"
+          ]
+        }
+      ]
+    },
+    "hearth-cook-lid-icon": {
+      "note": "B-T3-TUNE-2b (#299, Jay OK'd): the Hearth Cook's boss-bar lid icon. The 24 px icon's @2x file, drawn at 24 px.",
+      "scale": 1,
+      "sources": [
+        {
+          "id": "hearth-cook-lid-icon",
+          "type": "static",
+          "json": "incoming-art/hearth-cook-2b/icon",
+          "sprites": {
+            "icon-lid": {
+              "size": [
+                48,
+                48
+              ],
+              "files": {
+                "icon": "icon-lid-24@2x.png"
+              }
+            }
+          }
         }
       ]
     },

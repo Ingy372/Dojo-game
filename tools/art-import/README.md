@@ -16,6 +16,8 @@ python3 tools/art-import/import_art.py dojo       # just one pack
 1. Jay approves the art (never before).
 2. Add it to `approved.json`, in an existing pack or a new one. A **character** source points at the bot's character JSON (`<name>.json`, 8 directions, layers, animations). A **static** source points at a `static.json` (rooms, props, doors).
    - Extra animations for a rig that's already imported (e.g. the A2 Form stances) go in the character source's `mergeAnimations` list: JSONs with the same frame size and anchor whose animations are added to the main JSON's. A clash stops the import.
+     - An overlay (e.g. the Hearth Cook's `lid/p2` sheets) may reuse an animation name the rig already has: it then only adds new layers to that animation, with the same frame count. New layers are added to the rig's layer list. Anything else that clashes still stops the import.
+   - A static source with no `static.json` can list its sprites inline (`"sprites": {...}`, the same shape as in a static.json); its `json` is then the folder holding the PNGs.
 3. Run the script and commit `assets/art/`.
 
 ## What it does

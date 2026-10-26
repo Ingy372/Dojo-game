@@ -1223,3 +1223,11 @@ A weapon's `disarmedPower` (the Bouncy Bopper's push) now uses the same per-belt
   - The scroll cue is a soft dark fade at each edge with more content, plus a small gold chevron on a dark pill. The thumb is 6 pt on a faint track. All drawn in code.
   - A tab scrolls only when its content really overflows. The empty Last run, Gear and the Trophy Case don't scroll. The Gate's minimum height is worked out from its locks, its 3-line labels and its cards, not a fixed 277.
   - Gate labels get 3 lines ("David / and / Goliath" in a slot about 50 pt wide), so the label shows in full and the cards sit right under it.
+
+## B-T3-TUNE-2b — Hearth Cook #299 art in place of the stand-ins (2026-10-25)
+- Jay OK'd the #299 art. Only that art is imported: P1 pin, P2 pin and P3 bonk sheets, the lid overlays for P2/P3, and the boss-bar lid icon (`hearth-cook-lid-icon`, from `icon-lid-24@2x.png`).
+- The new sheets and lid overlays merge into each phase rig (`mergeAnimations`), so a phase is still one LayeredSprite. The lid is a layer: hidden by default and shown while `lidWhileHelpers && lidUp(world)`. The art leaves the lid out in some facings (behind the body, e.g. N/NE, and E on the P3 bonk, where it sits edge-on at the hip); that is by design.
+- The borrowed wind-up stand-in in `enemyAnim` (B-T3-TUNE-2a) is removed: every phase now draws its own attacks.
+- Telegraph tint unchanged (Manager's call): every wind-up keeps `TELEGRAPH_TINT` #ff3b30. The bonk reads red; the pin keeps the same tint.
+- Boss bar: the grey wash stays; the code-drawn lid is replaced by the icon at 24 px on its dark pill. The code lid stays only as a fallback if the icon pack is missing.
+- Timing: windup_pin is 13 frames at 10 fps = 26 ticks and windup_bonk 10 frames = 20 ticks, matching the sim's telegraphTicks. The wind-up frame still follows the sim clock (elapsed / windupTotal). A test checks frames, fps and telegraphTicks against the content.
