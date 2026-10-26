@@ -69,3 +69,28 @@ In game I saw "GREAT x4" and "Great" (Last run tile). **I found no player-visibl
 
 ## Not covered
 I didn't reach a win or room-clear screen (my bot couldn't clear past room 1, and I ran out of time). Also not covered: the stance picker, Settings/Look/Decorate/Scroll, Practice room, the other rooms through `?room=`, a 667x320 check, a Reduced Motion 'on' pass, and sound.
+
+## Follow-up pass (Oct 26, 2026, about 6:40–7:20 AM ET)
+
+**Delivery Note**
+- **ITEM:** Q-PREMIUM follow-up pass of the live build.
+- **WHAT:** Covered Settings, Look, Decorate, Scroll, Journal, Street Smarts, Trophy Case, the stance picker (Fighting Style), the Practice room, a full 667x320 sweep with Reduced Motion **on**, a tower run into room 2, and the keepers-hall boss with RM on. 9 new items: 0 BLOCKS PLAY, 4 ANNOYING, 5 SMALL. **Not reached: the win screen and a full boss win.** My scripted player beat room 1 on guided, then lost in room 2 and lost to the Floor Keeper both times.
+- **WHY:** These areas were left uncovered by the first pass.
+- **DECIDE:** Should Settings get a visible Close/Back button (#F2)? Should a "Room clear!" beat be added (#F3)?
+- **NEXT:** The win screen and boss win need a human playtest or a DEV-build run with `window.game`. I can't drive the counter timing well enough on the live build.
+
+| # | Sev | Where | Repro | What feels off | Premium version | Shot |
+|---|---|---|---|---|---|---|
+| F1 | ANNOYING | "Bow" prompt (dojo entry and "Bow to begin the floor") | Load the dojo and tap Bow once | A single touch tap often does nothing. I needed 2–3 taps every time at 667. While the bow prompt is up, every top-bar menu (Settings, Look, Board…) is dead with no feedback. | Bow fires on the first tap. Menu taps under the shade should nudge the Bow button (they pulse it now only if you tap the shade, not the menus). | fu-bow-ignored.jpg, fu-bow-3taps.jpg |
+| F2 | ANNOYING | Settings | Dojo → Settings | No visible Close/Back/X. The panel floats over a half-visible dojo top bar. A 6-year-old may not know how to leave. | A clear X or "Done" in the corner, as on Look and Scroll. | fu-settings-667.jpg, fu-settings-320-rm.jpg |
+| F3 | ANNOYING | Room clear → exit | Clear room 1 on guided | No "Room clear!" banner or fanfare. Door labels just sit at the walls (one was off-screen to the right). The player only left room 1 by walking blindly right. Health is not topped up between rooms, so room 2 starts in the red and ends fast. | A clear banner, the doors light up with an arrow, and an optional small heal at a Rest door. | fu-room1-cleared.jpg, fu-room1-exit-right.jpg, fu-room2-ouch.jpg |
+| F4 | ANNOYING | Boss loss with RM on | `?room=keepers-hall&seed=7&difficulty=guided`, Reduced Motion on | "Ouch! The run is over." overlaps the "Floor Keeper" label. The screen turns black with the controls still bright and tappable-looking. (A purple boss HP bar does exist at the top, which is an improvement on my first-pass note #6, but it has no name or icon.) | Dim instead of black, hide the controls, name the boss bar. | fu-boss-intro-rm.jpg, fu-boss-lose-rm.jpg |
+| F5 | SMALL | Decorate | Dojo → Decorate | The first-time "How do you like to move decorations?" chooser is see-through. The text behind it ("Tap a decoration to pick it", "In storage tap to place") shows through, and there's no back button. | An opaque panel and a Back option. | fu-decorate-667.jpg, fu-decorate-320-rm.jpg |
+| F6 | SMALL | Trophy Case → kata | Board → Abilities → tap a kata | "Its power arrives in a later update" is placeholder text. At 667x320, "David and Goliath" spills out of its tile. The belt strip is still tiny. | Hide unfinished text. Fit labels inside tiles. | fu-kata-placeholder.jpg, fu-trophy-320-rm.jpg |
+| F7 | SMALL | Practice room | Board → Practice room | No intro or goal text. It drops you into a bare room with dark pits and one enemy, plus a "Home" button. | A one-line "Practice your Counter, no score here" banner and a dummy target. | fu-practice-667.jpg, fu-practice2-320-rm.jpg |
+| F8 | SMALL | Scroll | Dojo → Scroll | Three buttons in a large empty dark panel. It feels unfinished. | Illustrated scroll cards with a short preview. | fu-scroll-667.jpg |
+| F9 | SMALL | Stance picker | Board → Abilities → Fighting Style | Clear text ("Tap a card, then tap a pick"), but the cards are small (about 45 px) at 667, and only Beginner's Stance is available, with no locked-preview of later stances. | Bigger cards, plus silhouettes of upcoming stances. | fu-stance-667.jpg |
+
+**Good, no issue:** Look (character editor) is clean and polished, with clear Back/Done. Journal (Monster Journal with "?" silhouettes) reads well. Street Smarts is clean. The room name card ("Training Yard") works. The lose card ("Good effort! You reached room 2 of 8. You keep everything you found: 1 treasure. +24 experience") is kind and clear. **The 667x320 sweep** fit every screen with no clipping except F6. **Reduced Motion on** turns the toggle "On", I saw no shake or flash, and everything else behaved the same. Load times rose to 2–6 s only while I ran 3–4 sessions in parallel (not a game issue).
+
+**Still not covered:** the win and boss-win screens (see NEXT) and a sound check on a device.
