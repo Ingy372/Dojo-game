@@ -1667,9 +1667,20 @@ export class HomeScene extends Phaser.Scene {
       // P-MENU2-i: the rarity frame (72 x 88 tile in an 84 x 100 file); Selected art while picked.
       const tileArt = sel ? 'bag-tile-selected' : `bag-tile-${artRarity(it.rarity)}`;
       // QA: one uniform scale (fit to the width, the plain middle cropped out), never stretched.
-      const halves = menu2Fit(this, tileArt, box.w, box.h, 6);
-      const tileSkin = halves?.[0] ?? null;
-      if (halves) {
+      // A-LEGENDARY-wire: Legendary is a 9-slice (true-size corners at any tile size) with the gem crest on the top rail, unstretched.
+      const legend = !sel && it.rarity === 'legendary' ? menu2Slice(this, 'bag-tile-legendary-9slice', -box.w / 2 - 6, -box.h / 2 - 6, box.w + 12, box.h + 12) : null;
+      const halves = legend ? null : menu2Fit(this, tileArt, box.w, box.h, 6);
+      const tileSkin = legend ?? halves?.[0] ?? null;
+      if (legend) {
+        skinButton(this, b, legend, 'bag-tile-legendary-9slice');
+        const crest = menu2Image(this, 'bag-tile-legendary-crest', 0, -box.h / 2 - 6, 84, 100);
+        if (crest) v.addAt(crest.setOrigin(0.5, 0).setData('legendCrest', true), 2);
+        v.setData('legendFrame', true);
+        b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => legend.setTint(0xd8c8b0));
+        const up = () => legend.active && legend.clearTint();
+        b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, up);
+        b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, up);
+      } else if (halves) {
         skinButton(this, b, halves[0], tileArt, 'bag-tile-pressed');
         halves.slice(1).forEach((hb) => {
           v.addAt(hb, 2);

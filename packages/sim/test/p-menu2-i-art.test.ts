@@ -3,6 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { MENU2_ALL, MENU2_FRAMES, MENU2_PACK, artRarity, pickUi, type UiPack } from '../../../apps/client/src/art/menu2Frames';
 import source from '../../../incoming-art/menu2/sprites/menu2.json';
+import legendary from '../../../incoming-art/legendary-frame/sprites/legendary.json';
 import packed from '../../../assets/art/menu2.json';
 import approved from '../../../tools/art-import/approved.json';
 
@@ -15,7 +16,7 @@ const MY_STYLE = /['"`](?:slot-card|tray-tile|tray-equipped-badge|switch-|glyph-
 
 describe('P-MENU2-i menu2 art', () => {
   it('every frame the client uses is in the source sheet and the packed menu2.json', () => {
-    const src = Object.keys((source as { sprites: Record<string, unknown> }).sprites);
+    const src = [source, legendary].flatMap((d) => Object.keys((d as { sprites: Record<string, unknown> }).sprites));
     const out = Object.keys(pack.entries[MENU2_PACK].sprites!);
     for (const n of MENU2_ALL) {
       expect(src, n).toContain(n);
@@ -98,8 +99,18 @@ describe('P-MENU2-i menu2 art', () => {
     expect(bytes).toBeLessThan(400 * 1024);
   });
 
-  it('Legendary uses the Epic art', () => {
-    expect(artRarity('legendary')).toBe('epic');
+  it('Legendary has its own art (A-LEGENDARY-wire), not the Epic stand-in', () => {
+    expect(artRarity('legendary')).toBe('legendary');
+    expect(artRarity('epic')).toBe('epic');
     expect(artRarity('rare')).toBe('rare');
+    const out = pack.entries[MENU2_PACK].sprites!;
+    for (const n of MENU2_FRAMES.legendary) expect(out[n], n).toBeDefined();
+    expect(out['bag-tile-legendary-9slice'].nineSlice).toEqual([20, 20, 20, 20]);
+    // The bag tile is the 9-slice with the crest on top; the Selected art still wins while picked.
+    expect(home).toMatch(/!sel && it\.rarity === 'legendary' \? menu2Slice\(this, 'bag-tile-legendary-9slice'/);
+    expect(home).toMatch(/menu2Image\(this, 'bag-tile-legendary-crest'/);
+    // Only the Legendary frame came in from the A-LEGENDARY sheet (no shine, no ready-made tile).
+    const names = Object.keys(out).filter((n) => n.includes('legendary'));
+    expect(names.sort()).toEqual([...MENU2_FRAMES.legendary].sort());
   });
 });
