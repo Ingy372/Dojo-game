@@ -44,7 +44,7 @@
           "firstBand": "F3-4",
           "behaviour": "Basic hits bounce off its shield.",
           "tell": "Red circle (14 ticks); shield shines.",
-          "counterplay": "STRIKE or a Perfect Counter breaks the shield.",
+          "counterplay": "STRIKE or a Great Counter breaks the shield.",
           "scaling": "Shield regrow time fixed at 6 s.",
           "dashOnly": false,
           "existing": true
@@ -125,7 +125,7 @@
           "firstBand": "F1-2",
           "behaviour": "Bonks with a padded foam staff.",
           "tell": "Raises the staff and glows; red circle.",
-          "counterplay": "COUNTER; a Perfect Counter disarms it (staff hidden).",
+          "counterplay": "COUNTER; a Great Counter disarms it (staff hidden).",
           "scaling": "Stats set in R-BAL-8 (#183).",
           "dashOnly": false,
           "existing": true

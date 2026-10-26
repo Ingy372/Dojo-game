@@ -5,7 +5,7 @@
       "id": "ripple-counter",
       "name": "Ripple Counter",
       "family": "rooted",
-      "text": "Perfect Counters also hit every enemy near you.",
+      "text": "Great Counters also hit every enemy near you.",
       "effect": { "type": "rippleCounter", "amount": 1.5, "radius": 2.2 }
     },
     {
