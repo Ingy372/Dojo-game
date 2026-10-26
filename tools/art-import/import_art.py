@@ -116,10 +116,19 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
         if (e['frameWidth'], e['frameHeight'], e['anchor']) != (d['frameWidth'], d['frameHeight'], d['anchor']):
             raise SystemExit(f'{extra_path}: frame size or anchor differs from {json_path}')
         ebase = os.path.dirname(extra_path)
+        # New layers (e.g. the Hearth Cook's lid) join the rig's layer list.
+        names = {l['name'] for l in d['layers']}
+        d['layers'] += [l for l in e.get('layers', []) if l['name'] not in names]
         for name, a in e['animations'].items():
+            sheets = {k: os.path.join(ebase, v) for k, v in a['sheets'].items()}
             if name in d['animations']:
-                raise SystemExit(f'{extra_path}: animation "{name}" is already in {json_path}')
-            d['animations'][name] = {**a, 'sheets': {k: os.path.join(ebase, v) for k, v in a['sheets'].items()}}
+                # An overlay for an animation the rig has: only new layers, frame for frame.
+                main = d['animations'][name]
+                if set(sheets) & set(main['sheets']) or a['frames'] != main['frames']:
+                    raise SystemExit(f'{extra_path}: animation "{name}" is already in {json_path}')
+                main['sheets'] = {**main['sheets'], **sheets}
+                continue
+            d['animations'][name] = {**a, 'sheets': sheets}
     fw, fh = d['frameWidth'], d['frameHeight']
     ndir = len(d['directions'])
     sw, sh = round(fw * scale), round(fh * scale)
@@ -171,9 +180,11 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
     return out
 
 
-def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | None) -> dict:
-    d = json.load(open(json_path))
-    base = os.path.dirname(json_path)
+def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | None, inline: dict | None = None) -> dict:
+    # A source may list its sprites inline (B-T3-TUNE-2b: the lid icon came as plain PNGs, no static.json);
+    # then "json" is the folder the files are in.
+    d = {'sprites': inline} if inline else json.load(open(json_path))
+    base = json_path if inline else os.path.dirname(json_path)
     sprites = {}
     for name, s in d['sprites'].items():
         if only and name not in only:
@@ -261,7 +272,7 @@ def main() -> None:
             elif src['type'] == 'ui':
                 entries[src['id']] = load_ui(packer, path, src.get('only'), [rel(p) for p in src.get('mergeSprites', [])])
             else:
-                entries[src['id']] = load_static(packer, path, scale, src.get('only'))
+                entries[src['id']] = load_static(packer, path, scale, src.get('only'), src.get('sprites'))
         pages = packer.pack()
         names = []
         for old in os.listdir(out_dir):

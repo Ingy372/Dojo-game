@@ -813,6 +813,13 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Round 2: taps clipped to the visible window (edge-tap script: 0 fails), Path card always shows, fade and chevron scroll cue, empty Last run doesn't scroll, Gate label shows in full at 667x320.
 **Next**
 - Jay to try it on his iPhone in Safari landscape.
+## B-T3-TUNE-2b — Hearth Cook wind-ups, lid and lid icon (2026-10-25)
+**Done**
+- Imported the #299 Hearth Cook art (P1/P2 pin, P3 bonk, P2/P3 lid overlay, 24 px lid icon). The importer now merges overlay layers and reads inline static sprites.
+- Lid layer follows lidUp; the boss bar shows the lid icon at 24 px over the grey wash; stand-in wind-ups removed. Tests: b-t3-art (frames/fps = 26 and 20 ticks, lid layer, icon).
+- Shots at 667x375, 667x320, 844x390, 932x430, Reduced motion on and off, 0 console errors: docs/shots/b-t3-tune-2b.
+**Next**
+- Tester pass on a phone; art author may want to look at the lid hidden on the P3 bonk facing E.
 ## A-LEGENDARY-wire — Legendary frame wired in (2026-10-25)
 **Done**
 - Legendary gear uses the golden-orange frame (Jay OK'd #304) instead of the Epic stand-in: Gear bag tiles (9-slice + gem crest), doll rings (normal/glow/pressed) and Last run found tiles. Imported via tools/art-import (menu2 pack, +6 frames).

@@ -1,0 +1,173 @@
+{
+ "errs": [],
+ "shots": [
+  {
+   "label": "p1-pin-windup",
+   "reducedMotion": true,
+   "mode": "windup",
+   "attack": "rolling pin lane",
+   "modeTicks": 7,
+   "windupTotal": 26,
+   "share": 0.9,
+   "rig": "hearth-cook-p1",
+   "anim": "windup_pin",
+   "lidLayerVisible": null,
+   "lidDrawnThisFrame": null,
+   "dir": 2,
+   "helpers": 0,
+   "icon": {
+    "visible": false
+   }
+  },
+  {
+   "label": "p1-pin-attack",
+   "reducedMotion": true,
+   "mode": "recover",
+   "attack": "ladle bonk",
+   "modeTicks": 25,
+   "windupTotal": 26,
+   "share": 0.9,
+   "rig": "hearth-cook-p1",
+   "anim": "pin",
+   "lidLayerVisible": null,
+   "lidDrawnThisFrame": null,
+   "dir": 2,
+   "helpers": 0,
+   "icon": {
+    "visible": false
+   }
+  },
+  {
+   "label": "p2-lid",
+   "reducedMotion": true,
+   "mode": "recover",
+   "attack": "hot pot rush",
+   "modeTicks": 22,
+   "windupTotal": 26,
+   "share": 0.5,
+   "rig": "hearth-cook-p2",
+   "anim": "pin",
+   "lidLayerVisible": true,
+   "lidDrawnThisFrame": true,
+   "dir": 2,
+   "helpers": 2,
+   "icon": {
+    "visible": true,
+    "w": 24,
+    "h": 24,
+    "x": 622,
+    "y": 9
+   }
+  },
+  {
+   "label": "p2-pin-windup",
+   "reducedMotion": true,
+   "mode": "windup",
+   "attack": "rolling pin lane",
+   "modeTicks": 11,
+   "windupTotal": 26,
+   "share": 0.5,
+   "rig": "hearth-cook-p2",
+   "anim": "windup_pin",
+   "lidLayerVisible": true,
+   "lidDrawnThisFrame": true,
+   "dir": 2,
+   "helpers": 2,
+   "icon": {
+    "visible": true,
+    "w": 24,
+    "h": 24,
+    "x": 622,
+    "y": 9
+   }
+  },
+  {
+   "label": "p2-pin-attack",
+   "reducedMotion": true,
+   "mode": "recover",
+   "attack": "rolling pin lane",
+   "modeTicks": 25,
+   "windupTotal": 26,
+   "share": 0.5,
+   "rig": "hearth-cook-p2",
+   "anim": "pin",
+   "lidLayerVisible": true,
+   "lidDrawnThisFrame": true,
+   "dir": 2,
+   "helpers": 2,
+   "icon": {
+    "visible": true,
+    "w": 24,
+    "h": 24,
+    "x": 622,
+    "y": 9
+   }
+  },
+  {
+   "label": "p3-bonk-windup",
+   "reducedMotion": true,
+   "mode": "windup",
+   "attack": "ladle bonk",
+   "modeTicks": 9,
+   "windupTotal": 20,
+   "share": 0.2,
+   "rig": "hearth-cook-p3",
+   "anim": "windup_bonk",
+   "lidLayerVisible": true,
+   "lidDrawnThisFrame": true,
+   "dir": 4,
+   "helpers": 2,
+   "icon": {
+    "visible": true,
+    "w": 24,
+    "h": 24,
+    "x": 622,
+    "y": 9
+   }
+  },
+  {
+   "label": "p3-bonk-attack",
+   "reducedMotion": true,
+   "mode": "recover",
+   "attack": "ladle bonk",
+   "modeTicks": 19,
+   "windupTotal": 20,
+   "share": 0.2,
+   "rig": "hearth-cook-p3",
+   "anim": "bonk",
+   "lidLayerVisible": true,
+   "lidDrawnThisFrame": true,
+   "dir": 4,
+   "helpers": 2,
+   "icon": {
+    "visible": true,
+    "w": 24,
+    "h": 24,
+    "x": 622,
+    "y": 9
+   }
+  },
+  {
+   "label": "p3-lid",
+   "reducedMotion": true,
+   "mode": "recover",
+   "attack": "ladle bonk",
+   "modeTicks": 9,
+   "windupTotal": 20,
+   "share": 0.2,
+   "rig": "hearth-cook-p3",
+   "anim": "bonk",
+   "lidLayerVisible": true,
+   "lidDrawnThisFrame": true,
+   "dir": 4,
+   "helpers": 2,
+   "icon": {
+    "visible": true,
+    "w": 24,
+    "h": 24,
+    "x": 622,
+    "y": 9
+   }
+  }
+ ]
+}
