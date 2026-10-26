@@ -4,7 +4,43 @@
 // promotion, then stripes, then sign-offs, then Sensei's Seal, then the Blessing.
 
 import type { BeltInfo, RequirementStatus, TrainingState, VirtueInfo } from './training';
+import { byTier, TRAINING_STATS } from './config';
 import { virtueTitle } from './training';
+
+/** R-BAL-12d: what a piece of real training gave (whole numbers, gains only). */
+export interface TrainingGain {
+  power: number;
+  health: number;
+  guard: number;
+}
+
+const tierOfBelt = (t: Pick<TrainingState, 'belts' | 'tier'>, belt: string) => {
+  const i = t.belts.findIndex((b) => b.id === belt || b.name === belt);
+  return i < 0 ? t.tier : i + 1;
+};
+
+/** What these sign-offs added (each at the belt it belongs to). */
+export function signOffGain(t: Pick<TrainingState, 'belts' | 'tier'>, reqs: ReadonlyArray<{ belt: string; type?: string }>): TrainingGain {
+  const g = { power: 0, health: 0, guard: 0 };
+  for (const r of reqs) {
+    // R-STANCE-d2: a stance sign-off unlocks the stance only; it adds no stats.
+    if (r.type === 'stance') continue;
+    const v = byTier(TRAINING_STATS, tierOfBelt(t, r.belt)).signOff;
+    g.power += v.power;
+    g.health += v.maxHealth;
+  }
+  return g;
+}
+
+/** What one stripe earned at `belt` (id or name) added. */
+export function stripeGain(t: Pick<TrainingState, 'belts' | 'tier'>, belt: string): TrainingGain {
+  return { power: 0, health: 0, guard: byTier(TRAINING_STATS, tierOfBelt(t, belt)).stripe.guard };
+}
+
+/** Fills a gain line from content/settings/training-gains.json. */
+export function gainText(template: string, g: TrainingGain): string {
+  return template.replace('{power}', `${g.power}`).replace('{health}', `${g.health}`).replace('{guard}', `${g.guard}`);
+}
 
 export interface ProgressSnapshot {
   studentId: string;
@@ -35,7 +71,7 @@ export type RewardMoment =
   | { kind: 'blessing' };
 
 export interface WelcomePreview {
-  /** The Form everyone starts with (forms[0]). */
+  /** The Stance everyone starts with (stances[0]). */
   stance: string;
   /** The next technique to get signed off, and what it unlocks. */
   next: RequirementStatus | null;
@@ -49,7 +85,8 @@ export function snapshot(t: TrainingState): ProgressSnapshot {
     studentId: t.studentId,
     belt: t.belt.id,
     tier: t.tier,
-    signed: t.requirements.filter((r) => r.signedOff).map((r) => r.id),
+    // R-STANCE-d2: stance sign-offs are remembered too, so a new one plays its reward moment.
+    signed: [...t.requirements, ...t.stances.map((s) => s.requirement)].filter((r) => r.signedOff).map((r) => r.id),
     stripes: stripeKeys(t),
     approved: t.gate.sealLit,
     lastClass: t.lastClass,
@@ -62,10 +99,14 @@ function stripeKeys(t: TrainingState): string[] {
 
 /** The ability a sign-off unlocks, in words: "Technique Seal: Sweep". */
 export function abilityLabel(t: TrainingState, id: string): string {
+  const st = t.stances.find((s) => s.requirement.id === id);
+  if (st) return `Stance: ${st.def.name}`;
   const a = t.abilities.find((x) => x.requirement.id === id);
   if (!a) return '';
-  const kind = a.kind === 'form' ? 'Form' : a.kind === 'strike' ? 'Strike upgrade' : 'Technique Seal';
-  const name = a.form?.name ?? a.perk?.name;
+  // R-STANCE-d2: katas unlock nothing for the beta.
+  if (a.requirement.type === 'kata') return 'Kata (its reward arrives in a later update)';
+  const kind = a.kind === 'stance' ? 'Stance' : a.kind === 'strike' ? 'Strike upgrade' : 'Technique Seal';
+  const name = a.stance?.name ?? a.perk?.name;
   return name ? `${kind}: ${name}` : `${kind} (power arrives in a later update)`;
 }
 
@@ -98,7 +139,7 @@ export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState, s
   }
 
   const oldSigned = new Set(prev.signed);
-  const fresh = t.requirements.filter((r) => r.signedOff && !oldSigned.has(r.id)).map((r) => ({ requirement: r, ability: abilityLabel(t, r.id) }));
+  const fresh = [...t.requirements, ...t.stances.map((s) => s.requirement)].filter((r) => r.signedOff && !oldSigned.has(r.id)).map((r) => ({ requirement: r, ability: abilityLabel(t, r.id) }));
   if (fresh.length > MAX_SINGLE_SIGNOFFS) out.push({ kind: 'signOffs', list: fresh });
   else for (const f of fresh) out.push({ kind: 'signOff', ...f });
 
@@ -117,7 +158,7 @@ function titleAtRank(v: VirtueInfo, rank: number): string {
  * (more than 3 are shown together), then each stripe. Nothing earned yet: the preview.
  */
 export function unlockCascade(t: TrainingState, stance: string): RewardMoment[] {
-  const signed = t.requirements
+  const signed = [...t.requirements, ...t.stances.map((s) => s.requirement)]
     .filter((r) => r.signedOff)
     .map((r, i) => ({ r, i }))
     .sort((a, b) => (a.r.signedOffOn ?? '9999').localeCompare(b.r.signedOffOn ?? '9999') || a.i - b.i)
@@ -133,4 +174,60 @@ export function unlockCascade(t: TrainingState, stance: string): RewardMoment[] 
   else for (const f of signed) out.push({ kind: 'signOff', ...f });
   out.push(...stripes);
   return out;
+}
+
+/**
+ * Congratulations-card lines for sign-offs. Real sign-offs say "signed off"; techniques only
+ * counted because the student already passed that rank (legacy) say "practiced".
+ */
+export function signOffLines(list: readonly Pick<RequirementStatus, 'name' | 'legacy'>[]): string[] {
+  const real = list.filter((r) => !r.legacy);
+  const counted = list.filter((r) => r.legacy);
+  const line = (group: typeof list, word: string) =>
+    group.length === 0 ? [] : group.length === 1 ? [`✓ ${group[0].name} ${word}`] : [`✓ ${group.length} techniques ${word}`];
+  return [...line(real, 'signed off'), ...line(counted, 'practiced')];
+}
+
+/**
+ * Full-screen card words for one technique. A real sign-off says who signed it off; a
+ * technique counted from an earlier rank (legacy) says "practiced".
+ */
+export function signOffCardText(r: Pick<RequirementStatus, 'name' | 'legacy' | 'signedOffBy'>): { badge: string; line: string } {
+  if (r.legacy) return { badge: 'PRACTICED!', line: `You practiced ${r.name}!` };
+  return { badge: 'SIGNED OFF!', line: `${r.signedOffBy ?? 'Sensei'} signed off ${r.name}!` };
+}
+
+/** Title for the many-techniques card: "signed off" for real sign-offs, "practiced" for counted ones. */
+export function signOffsTitle(list: readonly Pick<RequirementStatus, 'legacy'>[]): string {
+  const counted = list.filter((r) => r.legacy).length;
+  const real = list.length - counted;
+  if (counted === 0) return `${real} techniques signed off!`;
+  if (real === 0) return `${counted} techniques practiced!`;
+  return `${real} signed off, ${counted} practiced!`;
+}
+
+/**
+ * True when this sign-off lit a Gate lock: the technique is one of the current rank's locks
+ * and was really signed off. Counted (legacy) and catch-up items never light a lock.
+ */
+export function litGateLock(t: Pick<TrainingState, 'gate'>, r: Pick<RequirementStatus, 'id' | 'legacy'>): boolean {
+  return !r.legacy && t.gate.locks.some((l) => l.id === r.id);
+}
+
+/**
+ * P-MENU-d (Manager call): one row on the many-techniques card. When the card mixes real
+ * sign-offs and counted ones, a real sign-off keeps the green ✓ and a counted one gets a
+ * plain ○ and "(practiced)", so you can tell which rows Sensei really signed off.
+ */
+export function signOffsRow(r: Pick<RequirementStatus, 'name' | 'legacy'>, ability: string, mixed: boolean): { text: string; real: boolean } {
+  const real = !r.legacy;
+  // R-STANCE-d2: a Stance sign-off's label already names it ("Stance: Front Stance"), so it reads once.
+  const label = ability.endsWith(`: ${r.name}`) ? ability : `${r.name}: ${ability}`;
+  if (!mixed || real) return { text: `✓ ${label}`, real };
+  return { text: `○ ${label} (practiced)`, real };
+}
+
+/** True when a many-techniques card has both real sign-offs and counted ones. */
+export function signOffsMixed(list: readonly Pick<RequirementStatus, 'legacy'>[]): boolean {
+  return list.some((r) => r.legacy) && list.some((r) => !r.legacy);
 }

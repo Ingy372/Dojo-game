@@ -26,6 +26,12 @@ export interface RoomChallenge {
   seconds: number;
   /** What the player is told, e.g. "Clear the room in 60 seconds!" */
   text: string;
+  /** Shown when the room is cleared in time, e.g. "In time!" */
+  inTimeText: string;
+  /** Shown when the time ran out (a chest is still earned). */
+  outOfTimeText: string;
+  /** The timer's short word when time runs out (the full sentence is on the room-clear line). */
+  outOfTimeShort: string;
 }
 
 export interface Room {
@@ -50,6 +56,11 @@ export interface Room {
   earliestRoom: number;
   /** The lowest belt tier that can get this room (1 = White belt, 2 = Yellow belt). */
   minBeltTier: number;
+  /**
+   * B-T3: a tier's own room set ("ember-kitchens" = Orange belt). A run at exactly that belt uses only
+   * its set; other belts use the shared rooms (no set) until they get their own.
+   */
+  floorSet: string | null;
   /** Where the glowing spot is (tutorial rooms only), or null. */
   goal: Vec2 | null;
   /** A tutorial floor room (M7-P2): only the tutorial floor uses it, never a normal floor. */
@@ -166,10 +177,10 @@ export function loadRoom(data: unknown): Room {
   let challenge: RoomChallenge | null = null;
   if (kind === 'challenge') {
     const c = raw.challenge as Record<string, unknown> | undefined;
-    if (!c || typeof c.seconds !== 'number' || !(c.seconds > 0) || typeof c.text !== 'string') {
-      throw new RoomError(id, 'a challenge room needs "challenge": { "seconds": number, "text": "..." }');
+    if (!c || typeof c.seconds !== 'number' || !(c.seconds > 0) || typeof c.text !== 'string' || typeof c.inTimeText !== 'string' || typeof c.outOfTimeText !== 'string' || typeof c.outOfTimeShort !== 'string') {
+      throw new RoomError(id, 'a challenge room needs "challenge": { "seconds": number, "text": "...", "inTimeText": "...", "outOfTimeText": "...", "outOfTimeShort": "..." }');
     }
-    challenge = { seconds: c.seconds, text: c.text };
+    challenge = { seconds: c.seconds, text: c.text, inTimeText: c.inTimeText, outOfTimeText: c.outOfTimeText, outOfTimeShort: c.outOfTimeShort };
   }
 
   let earliestRoom = 1;
@@ -189,8 +200,10 @@ export function loadRoom(data: unknown): Room {
   }
   if (raw.tutorial !== undefined && typeof raw.tutorial !== 'boolean') throw new RoomError(id, '"tutorial" must be true or false');
   const tutorial = raw.tutorial === true;
+  if (raw.floorSet !== undefined && (typeof raw.floorSet !== 'string' || raw.floorSet.length === 0)) throw new RoomError(id, '"floorSet" must be a non-empty text');
+  const floorSet = typeof raw.floorSet === 'string' ? raw.floorSet : null;
   if (goal && !tutorial) throw new RoomError(id, 'only tutorial rooms can have a glowing spot "G"');
-  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns, kind, doors, chest, shrine, parSeconds, challenge, earliestRoom, minBeltTier, goal, tutorial };
+  return { id, name: raw.name, width, height, walls, playerStart, enemySpawns, kind, doors, chest, shrine, parSeconds, challenge, earliestRoom, minBeltTier, floorSet, goal, tutorial };
 }
 
 /**

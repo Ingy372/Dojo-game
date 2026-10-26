@@ -1,0 +1,45 @@
+{
+ "about": "R-STANCE-b stance icons, #277 icons2 Forms style. Ids follow drafts/content/katas/stances.json. Labels are drawn by the game.",
+ "sprites": {
+  "icon-stance-cat-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icon-stance-cat-64.png",
+   "stanceId": "stance.cat",
+   "ring": "form",
+   "note": "Cat stance, side view facing right. Technique: short stance, almost all the weight on the bent back leg (hips straight over the back foot, back foot flat), front foot resting lightly on its ball with the heel up, knees bent, back upright, open hands up in front. A dark ground mark under the back foot shows where the weight is."
+  },
+  "icon-stance-front-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icon-stance-front-64.png",
+   "stanceId": "stance.front",
+   "ring": "form",
+   "note": "Front stance, side view facing right. Technique: long forward stance; front knee bent over the ankle, back leg straight with the back foot flat, hips low, back upright. Rear fist punches straight forward at chest height, lead fist pulled back to the hip."
+  },
+  "icon-stance-fighting-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icon-stance-fighting-64.png",
+   "stanceId": "stance.fighting",
+   "ring": "form",
+   "note": "Fighting stance, side view facing right (side-on). Technique: medium stance, knees bent, weight even and light, back heel raised, lead side toward the opponent, both fists up at chin height with elbows down. Small soft ticks by the feet show it is light and bouncy (no motion arcs, so it does not clash with Flowing)."
+  },
+  "icon-stance-horse-64": {
+   "size": [
+    64,
+    64
+   ],
+   "file": "icon-stance-horse-64.png",
+   "stanceId": "stance.horse",
+   "ring": "form",
+   "note": "Horse (= #277 Rooted Form, reused unchanged) = a wide, even, symmetric horse-style stance, front view. Technique: feet about two shoulder-widths apart and parallel, both knees bent equally and pushed out over the toes, hips low and level, back straight and upright, guard up (both fists in front at chin height, elbows down)."
+  }
+ }
+}

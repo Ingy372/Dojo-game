@@ -1,5 +1,5 @@
 {
-  "notes": "Gear that drops on the white belt tier. Stat lists are per rarity: [common, uncommon, rare, epic]. Charms have a small effect instead of stats (effect types are in packages/sim/src/effects.ts). C7 (drafts): items for tiers 2-10 added per S2; ids keep S2's <belt>-<slot>-<n> placeholders; every item has a tier. Charm amounts are not set here (balance, not text).",
+  "notes": "Gear that drops on the white belt tier. Stat lists are per rarity: [common, uncommon, rare, epic]. Charms have a small effect instead of stats (effect types are in packages/sim/src/effects.ts). C7 (drafts): items for tiers 2-10 added per S2; ids keep S2's <belt>-<slot>-<n> placeholders; every item has a tier. Charm amounts set in R-BAL-14 (drafts/planning/R-BAL-14-charm-amounts.md). Kind Stone amounts are the extra share (game multiplier = 1 + amount). Feather amounts are extra COUNTER ticks. Great Lamp 1 = full DASH recharge.",
   "tier": "all",
   "slotStats": {
     "hands": {
@@ -106,7 +106,7 @@
       "id": "crane-charm",
       "name": "Crane Charm",
       "slot": "charm",
-      "text": "Perfect Counters heal {n} health",
+      "text": "Great Counters heal {n} health",
       "effect": {
         "type": "healOnPerfect"
       },
@@ -170,7 +170,13 @@
         "type": "focusGain"
       },
       "text": "+{pct} Focus from every hit",
-      "description": "A tiny glowing seed. Little by little, your Focus grows."
+      "description": "A tiny glowing seed. Little by little, your Focus grows.",
+      "amounts": [
+        0.05,
+        0.1,
+        0.15,
+        0.2
+      ]
     },
     {
       "id": "orange-hands-1",
@@ -223,7 +229,13 @@
         "type": "blockCut"
       },
       "text": "Blocks soften hits by {pct}",
-      "description": "A tiny kettle. It keeps calm when things get hot."
+      "description": "A tiny kettle. It keeps calm when things get hot.",
+      "amounts": [
+        0.05,
+        0.1,
+        0.15,
+        0.2
+      ]
     },
     {
       "id": "green-hands-1",
@@ -276,7 +288,13 @@
         "type": "attackSpeed"
       },
       "text": "+{pct} attack speed",
-      "description": "A helper's little jar. Faithful hands move quickly."
+      "description": "A helper's little jar. Faithful hands move quickly.",
+      "amounts": [
+        0.04,
+        0.08,
+        0.12,
+        0.17
+      ]
     },
     {
       "id": "blue-hands-1",
@@ -329,7 +347,13 @@
         "type": "staggerBonus"
       },
       "text": "+{pct} Stagger on big ones",
-      "description": "A drop that never dries. See clearly, then act."
+      "description": "A drop that never dries. See clearly, then act.",
+      "amounts": [
+        0.08,
+        0.15,
+        0.22,
+        0.3
+      ]
     },
     {
       "id": "red-hands-1",
@@ -379,10 +403,18 @@
       "slot": "charm",
       "name": "Forge Song Charm",
       "effect": {
-        "type": "comboSpeed"
+        "type": "comboSpeed",
+        "everyHits": 10,
+        "seconds": 3
       },
       "text": "Combos flow {pct} faster",
-      "description": "It hums the smiths' song: strong hands, kind heart."
+      "description": "It hums the smiths' song: strong hands, kind heart.",
+      "amounts": [
+        0.08,
+        0.15,
+        0.22,
+        0.3
+      ]
     },
     {
       "id": "red-black-hands-1",
@@ -432,10 +464,17 @@
       "slot": "charm",
       "name": "Kind Stone Charm",
       "effect": {
-        "type": "lowHealthFocus"
+        "type": "lowHealthFocus",
+        "below": 0.5
       },
       "text": "+{pct} Focus when health is low",
-      "description": "It whispers, \"You are loved,\" when things get hard."
+      "description": "It whispers, \"You are loved,\" when things get hard.",
+      "amounts": [
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ]
     },
     {
       "id": "brown-hands-1",
@@ -488,7 +527,13 @@
         "type": "strikeCost"
       },
       "text": "STRIKE costs {n} less Focus",
-      "description": "A ring of wood that grows a little as you learn."
+      "description": "A ring of wood that grows a little as you learn.",
+      "amounts": [
+        3,
+        5,
+        8,
+        10
+      ]
     },
     {
       "id": "brown-black-hands-1",
@@ -540,8 +585,14 @@
       "effect": {
         "type": "counterWindow"
       },
-      "text": "A little more time to COUNTER",
-      "description": "A feather that floats still. Wait, watch, then move."
+      "text": "COUNTER window lasts a little longer",
+      "description": "A feather that floats still. Wait, watch, then move.",
+      "amounts": [
+        1,
+        1,
+        1,
+        1
+      ]
     },
     {
       "id": "black-hands-1",
@@ -593,8 +644,14 @@
       "effect": {
         "type": "dashOnBlock"
       },
-      "text": "Blocks fully charge your next DASH",
-      "description": "A little lamp. Light grows when it is shared."
+      "text": "Blocks charge your next DASH by {pct}",
+      "description": "A little lamp. Light grows when it is shared.",
+      "amounts": [
+        1,
+        1,
+        1,
+        1
+      ]
     }
   ]
 }

@@ -18,6 +18,22 @@ export interface EnemyAttackDef {
   telegraphTicks: number;
   /** Pause after swinging before it can move or attack again. */
   recoverTicks: number;
+  /** B-T3: false for dash-only attacks (the Rolling Pin's roll). A Counter does nothing; the answer is to dash out. */
+  counterable?: boolean;
+}
+
+/** B-T3: a boss phase. From this share of health down, only these attacks (indexes into attacks) are used, in turn. */
+export interface EnemyPhaseDef {
+  atHealthFraction: number;
+  attacks: number[];
+  /** B-T3-TUNE-2c: what Sensei says when this phase starts (shown during the phase pause). */
+  senseiLine: string | null;
+}
+
+/** B-T3: when beaten, it splits into smaller enemies (Dough Blob into 2 Doughlings). */
+export interface EnemySplitDef {
+  into: string;
+  count: number;
 }
 
 export interface EnemyShieldDef {
@@ -66,6 +82,12 @@ export interface EnemyDef {
   /** Bosses may be bigger than one tile and should only be placed in open rooms. */
   boss: boolean;
   summon: EnemySummonDef | null;
+  /** B-T3-TUNE-2a: player hits do 0 (a "clang") while any helper it called is still up. */
+  lidWhileHelpers?: boolean;
+  /** B-T3: boss phases, highest health first (null or missing = all attacks in turn). */
+  phases?: EnemyPhaseDef[] | null;
+  /** B-T3: splits into smaller enemies when beaten. */
+  split?: EnemySplitDef | null;
   winded: EnemyWindedDef | null;
   weapon: EnemyWeaponDef | null;
   /** A good time to beat it, in seconds; a room's par time for grades adds these up. */
@@ -115,6 +137,8 @@ function loadAttack(data: unknown, id: string, where: string): EnemyAttackDef {
     telegraphTicks: wholeTicks(a, 'telegraphTicks', id, `${where}.`),
     recoverTicks: wholeTicks(a, 'recoverTicks', id, `${where}.`),
   };
+  if (a.counterable !== undefined && typeof a.counterable !== 'boolean') throw new EnemyError(id, `"${where}.counterable" must be true or false`);
+  if (a.counterable === false || a.dashOnly === true) attack.counterable = false;
   // Every attack must be telegraphed: at least half a second of warning on Standard.
   if (attack.telegraphTicks < 10) {
     throw new EnemyError(id, `"${where}.telegraphTicks" must be at least 10 (half a second of warning)`);
@@ -187,6 +211,35 @@ export function loadEnemy(data: unknown): EnemyDef {
     weapon = { id: w.id, disarmedPower: positiveNumber(w, 'disarmedPower', id, 'weapon.') };
   }
 
+  let phases: EnemyPhaseDef[] | null = null;
+  if (raw.phases !== undefined) {
+    if (!Array.isArray(raw.phases) || raw.phases.length === 0) throw new EnemyError(id, '"phases" must list at least one phase');
+    let last = Infinity;
+    phases = raw.phases.map((ph: unknown, i: number) => {
+      const o = (typeof ph === 'object' && ph !== null ? ph : {}) as Record<string, unknown>;
+      const at = positiveNumber(o, 'atHealthFraction', id, `phases[${i + 1}].`);
+      if (at > 1 || at >= last) throw new EnemyError(id, `"phases[${i + 1}].atHealthFraction" must be 1 or less and lower than the phase before`);
+      last = at;
+      if (!Array.isArray(o.attacks) || o.attacks.length === 0) throw new EnemyError(id, `"phases[${i + 1}].attacks" must name at least one attack`);
+      const list = o.attacks.map((n) => {
+        const k = attacks.findIndex((a) => a.name === n);
+        if (k < 0) throw new EnemyError(id, `"phases[${i + 1}]" names attack "${String(n)}", which isn't in "attacks"`);
+        return k;
+      });
+      return { atHealthFraction: at, attacks: list, senseiLine: typeof o.senseiLine === 'string' ? o.senseiLine : null };
+    });
+    if (phases[0].atHealthFraction !== 1) throw new EnemyError(id, '"phases[1].atHealthFraction" must be 1');
+  }
+
+  let split: EnemySplitDef | null = null;
+  if (raw.split !== undefined && raw.split !== null) {
+    const o = raw.split as Record<string, unknown>;
+    if (typeof o.into !== 'string' || !o.into) throw new EnemyError(id, '"split" needs an "into" enemy type');
+    const count = positiveNumber(o, 'count', id, 'split.');
+    if (!Number.isInteger(count)) throw new EnemyError(id, '"split.count" must be a whole number');
+    split = { into: o.into, count };
+  }
+
   const color = typeof raw.color === 'string' && /^#[0-9a-fA-F]{6}$/.test(raw.color) ? raw.color : '#7d3f2f';
 
   return {
@@ -203,6 +256,9 @@ export function loadEnemy(data: unknown): EnemyDef {
     shield,
     boss,
     summon,
+    lidWhileHelpers: raw.lidWhileHelpers === true,
+    phases,
+    split,
     winded,
     weapon,
     parSeconds: raw.parSeconds === undefined ? 4 : positiveNumber(raw, 'parSeconds', id),

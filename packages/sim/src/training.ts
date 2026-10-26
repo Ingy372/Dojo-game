@@ -3,8 +3,8 @@
 // abilities, Virtues, the Gate, the Path card and the Dojo Blessing.
 // Pure: "now" is passed in, never read from a clock.
 
-import type { AbilityContent, FormDef, PerkDef, VirtueDef } from './abilities';
-import { BLESSING, POWER, PROGRESSION, TRAINING_POINTS } from './config';
+import type { AbilityContent, StanceDef, PerkDef, VirtueDef } from './abilities';
+import { BLESSING, byTier, POWER, PROGRESSION, TRAINING_POINTS, TRAINING_POINTS_PER_BELT, TRAINING_STATS } from './config';
 import { DAY_NAMES, type FeedBelt, type FeedStripe, type RequirementType, type StudentFeed } from './feed';
 
 /** The moment the game is looking at the feed: a timestamp (ms) and today's weekday (0 = Sunday, local time). */
@@ -13,13 +13,14 @@ export interface Now {
   weekday: number;
 }
 
-export type AbilityKind = 'form' | 'strike' | 'seal';
-const KIND_OF: Record<RequirementType, AbilityKind> = { kata: 'form', kickCombo: 'strike', selfDefense: 'seal' };
+export type AbilityKind = 'stance' | 'strike' | 'seal';
+const KIND_OF: Record<RequirementType, AbilityKind> = { kata: 'stance', kickCombo: 'strike', selfDefense: 'seal' };
 
 /** One real requirement and where the student stands on it. */
 export interface RequirementStatus {
   id: string;
-  type: RequirementType;
+  /** 'stance' only for R-STANCE-d2 stance sign-offs (TrainingState.stances), never in `requirements`. */
+  type: RequirementType | 'stance';
   /** The real technique name, as taught at the school. */
   name: string;
   belt: string;
@@ -34,13 +35,21 @@ export interface RequirementStatus {
   videoId: string | null;
 }
 
-/** A requirement's game ability (a Form, a Strike upgrade, or a Technique Seal). */
+/** A requirement's game ability (a Stance, a Strike upgrade, or a Technique Seal). */
 export interface AbilityInfo {
   requirement: RequirementStatus;
   kind: AbilityKind;
   /** The game power it maps to; null when it arrives in a later update. */
-  form: FormDef | null;
+  stance: StanceDef | null;
   perk: PerkDef | null;
+  unlocked: boolean;
+}
+
+/** R-STANCE-d2: one stance and its teacher sign-off. Separate from belt requirements. */
+export interface StanceUnlock {
+  def: StanceDef;
+  /** The sign-off, shaped like a requirement (type 'stance', current belt, never legacy or catch-up). */
+  requirement: RequirementStatus;
   unlocked: boolean;
 }
 
@@ -104,12 +113,16 @@ export interface TrainingState {
   expectedLevel: number;
   requirements: RequirementStatus[];
   abilities: AbilityInfo[];
+  /** R-STANCE-d2: every Stance after Ready and whether a teacher signed it off. */
+  stances: StanceUnlock[];
   virtues: VirtueInfo[];
   /** The Virtue taken into fights (highest rank, then the most recent). */
   virtue: VirtueInfo | null;
   /** Stripes earned at the current belt (shown on the character's belt). */
   stripesThisBelt: number;
   totalStripes: number;
+  /** R-BAL-12: stripes per belt id (at most POWER.stripesPerBelt each), rebuilt by migrateStripesByBelt. */
+  stripesByBelt: Record<string, number>;
   gate: GateState;
   path: PathCard;
   blessed: boolean;
@@ -175,16 +188,32 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
     }
   }
 
-  // Each kata unlocks the next Form, each kick combo the next Strike upgrade, each
-  // self-defense technique the next Technique Seal, in curriculum order.
-  const seen: Record<AbilityKind, number> = { form: 0, strike: 0, seal: 0 };
+  // R-STANCE-d2: each Stance unlocks by its own teacher sign-off, at any belt, with no legacy
+  // grant. Katas unlock nothing for the beta (their rewards come later).
+  const signOffs = new Map(feed.stanceSignOffs.map((s) => [s.id, s]));
+  const stanceList: StanceUnlock[] = abilities.stances.slice(1).map((def) => {
+    const s = signOffs.get(def.signOffId!);
+    const signedOff = s?.signedOff ?? false;
+    return {
+      def,
+      requirement: {
+        id: def.signOffId!, type: 'stance', name: def.name, belt: belt.id, beltName: belt.name,
+        signedOff, signedOffOn: s?.signedOffOn ?? null, signedOffBy: s?.signedOffBy ?? null, legacy: false, catchUp: false, videoId: null,
+      },
+      unlocked: signedOff,
+    };
+  });
+
+  // Each kick combo unlocks the next Strike upgrade, each self-defense technique the next
+  // Technique Seal, in curriculum order. Katas keep their place (kind 'stance') but carry no power.
+  const seen: Record<AbilityKind, number> = { stance: 0, strike: 0, seal: 0 };
   const abilityList: AbilityInfo[] = requirements.map((r) => {
-    const kind = KIND_OF[r.type];
+    const kind = KIND_OF[r.type as RequirementType];
     const n = seen[kind]++;
     return {
       requirement: r,
       kind,
-      form: kind === 'form' ? abilities.forms[n + 1] ?? null : null,
+      stance: null,
       perk: kind === 'strike' ? abilities.strikes[n] ?? null : kind === 'seal' ? abilities.seals[n] ?? null : null,
       unlocked: r.signedOff,
     };
@@ -245,10 +274,12 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
     expectedLevel: tier === 1 ? 1 : levelCapFor(tier - 1),
     requirements,
     abilities: abilityList,
+    stances: stanceList,
     virtues,
     virtue,
     stripesThisBelt,
     totalStripes: feed.stripes.length,
+    stripesByBelt: migrateStripesByBelt(belts, feed.stripes, feed.stripes.length, idx),
     gate,
     path: { next: nextStep, nextClassDay: nextClassDay(feed.attendance.classDays, now.weekday), testDate: gate.testDate },
     blessed,
@@ -272,10 +303,13 @@ export function nextClassDay(classDays: readonly string[], weekday: number): str
   return null;
 }
 
-/** The Forms the player can switch between: the Beginner's Stance plus up to 3 earned Forms (newest first). */
-export function unlockedForms(training: TrainingState, abilities: AbilityContent): FormDef[] {
-  const earned = training.abilities.filter((a) => a.kind === 'form' && a.unlocked && a.form).map((a) => a.form!);
-  return [abilities.forms[0], ...earned.slice(-3)];
+/**
+ * The Stances the player can switch between: the Beginner's Stance plus every signed-off Stance, in
+ * content order (R-STANCE-d2). R-STANCE-g: `grandfathered` ids (Open Leg for students who played
+ * before it needed a sign-off) count as unlocked too.
+ */
+export function unlockedStances(training: TrainingState, abilities: AbilityContent, grandfathered: readonly string[] = []): StanceDef[] {
+  return [abilities.stances[0], ...training.stances.filter((s) => s.unlocked || grandfathered.includes(s.def.id)).map((s) => s.def)];
 }
 
 /** "Shield of Respect II" */
@@ -290,5 +324,64 @@ export function roman(n: number): string {
     out += s;
     n -= v;
   }
+  return out;
+}
+
+/**
+ * R-BAL-12 save migration: stripes per belt, from the feed. Never lowers anything: if the
+ * feed names fewer stripes than `totalStripes` (an older save only kept the count), the
+ * extra stripes go on the oldest belts with room (POWER.stripesPerBelt each), then on the
+ * current belt. Stripes on unknown belts count the same way.
+ */
+export function migrateStripesByBelt(
+  belts: readonly FeedBelt[],
+  stripes: readonly { belt: string }[],
+  totalStripes: number,
+  currentIdx: number,
+): Record<string, number> {
+  const cap = POWER.stripesPerBelt;
+  const out: Record<string, number> = {};
+  const last = Math.max(0, Math.min(currentIdx, belts.length - 1));
+  let placed = 0;
+  for (const s of stripes) {
+    const i = belts.findIndex((b) => b.id === s.belt);
+    if (i < 0 || i > last || (out[s.belt] ?? 0) >= cap) continue;
+    out[s.belt] = (out[s.belt] ?? 0) + 1;
+    placed++;
+  }
+  let extra = Math.max(totalStripes, stripes.length) - placed;
+  for (let i = 0; i <= last && extra > 0; i++) {
+    const id = belts[i].id;
+    const room = cap - (out[id] ?? 0);
+    const n = Math.min(room, extra);
+    if (n > 0) out[id] = (out[id] ?? 0) + n;
+    extra -= Math.max(0, n);
+  }
+  if (extra > 0 && belts.length > 0) out[belts[last].id] = (out[belts[last].id] ?? 0) + extra;
+  return out;
+}
+
+export interface TrainingStats {
+  power: number;
+  maxHealth: number;
+  guard: number;
+}
+
+/** R-BAL-12: whole-number stats from real training. Adds only: more training never lowers a stat. */
+export function trainingStats(t: Pick<TrainingState, 'belts' | 'tier' | 'requirements' | 'stripesByBelt' | 'trainingPoints'>): TrainingStats {
+  const out: TrainingStats = { power: 0, maxHealth: 0, guard: 0 };
+  const tierOf = (id: string) => {
+    const i = t.belts.findIndex((b) => b.id === id);
+    return i < 0 ? t.tier : i + 1;
+  };
+  for (const r of t.requirements) {
+    if (!r.signedOff) continue;
+    const v = byTier(TRAINING_STATS, tierOf(r.belt)).signOff;
+    out.power += v.power;
+    out.maxHealth += v.maxHealth;
+  }
+  for (const [belt, n] of Object.entries(t.stripesByBelt)) out.guard += byTier(TRAINING_STATS, tierOf(belt)).stripe.guard * n;
+  const points = Math.min(t.trainingPoints, TRAINING_POINTS_PER_BELT * t.tier);
+  for (let n = 1; n <= points; n++) out.maxHealth += byTier(TRAINING_STATS, Math.ceil(n / TRAINING_POINTS_PER_BELT)).trainingPoint.maxHealth;
   return out;
 }

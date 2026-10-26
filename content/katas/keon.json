@@ -2,7 +2,7 @@
   "id": "keon",
   "name": "Keon",
   "requirement": "orange-kata",
-  "form": null,
+  "stance": null,
   "from": "drafts/content/katas/keon.json (S3-K2). Only names, step counts and directions are shown in the game (D1).",
   "steps": [
     {

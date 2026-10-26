@@ -1,0 +1,6 @@
+{
+  "notes": "R-BAL-12d: words that show what real training GAVE the character. Gains only: never what is missing, no nag, no guilt, no streaks, no timers. Very simple words for ages 6+. {power}, {health} and {guard} are whole numbers. Lines for Jay to review.",
+  "signOff": "You got stronger! +{power} Power, +{health} Health",
+  "signOffs": "You got stronger! +{power} Power, +{health} Health",
+  "stripe": "You got tougher! +{guard} Guard"
+}

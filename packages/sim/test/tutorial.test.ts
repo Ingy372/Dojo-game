@@ -3,6 +3,7 @@ import {
   GUIDE_DONE,
   TICKS_PER_SECOND,
   TUTORIAL_FLOOR,
+  ENEMY_TRAINING_SCALE,
   TUTORIAL_STEPS,
   activeDoorSlots,
   createRunWorld,
@@ -138,7 +139,8 @@ describe('tutorial floor (M7-P2)', () => {
     run.roomId = 'tutorial-keep';
     const w = createRunWorld(content, run, BASE);
     const boss = w.enemies.find((e) => e.def.boss)!;
-    expect(boss.def.maxHealth).toBe(Math.round(content.enemies['floor-keeper'].maxHealth * TUTORIAL_FLOOR.bossHealth));
+    // R-BAL-12: the white belt's enemy scale applies first.
+    expect(boss.def.maxHealth).toBe(Math.round(Math.round(content.enemies['floor-keeper'].maxHealth * ENEMY_TRAINING_SCALE[0].maxHealth) * TUTORIAL_FLOOR.bossHealth));
     expect(boss.def.summon).toBeNull();
     expect(w.enemies).toHaveLength(1);
   });

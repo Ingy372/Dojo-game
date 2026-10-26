@@ -556,45 +556,45 @@
     {
       "id": "ach.tower.perfects.10",
       "reward": "GT",
-      "name": "10 Perfect Counters",
-      "how": "Land 10 Perfect Counters.",
-      "done": "10 Perfect Counters! Great timing.",
+      "name": "10 Great Counters",
+      "how": "Land 10 Great Counters.",
+      "done": "10 Great Counters! Super timing.",
       "trophyName": "Counter Bell 10",
       "trophyText": "Ring! Wait, watch, then COUNTER."
     },
     {
       "id": "ach.tower.perfects.100",
       "reward": "GT",
-      "name": "100 Perfect Counters",
-      "how": "Land 100 Perfect Counters.",
-      "done": "100 Perfect Counters! Great timing.",
+      "name": "100 Great Counters",
+      "how": "Land 100 Great Counters.",
+      "done": "100 Great Counters! Super timing.",
       "trophyName": "Counter Bell 100",
       "trophyText": "Ring! Wait, watch, then COUNTER."
     },
     {
       "id": "ach.tower.perfects.500",
       "reward": "GT",
-      "name": "500 Perfect Counters",
-      "how": "Land 500 Perfect Counters.",
-      "done": "500 Perfect Counters! Great timing.",
+      "name": "500 Great Counters",
+      "how": "Land 500 Great Counters.",
+      "done": "500 Great Counters! Super timing.",
       "trophyName": "Counter Bell 500",
       "trophyText": "Ring! Wait, watch, then COUNTER."
     },
     {
       "id": "ach.tower.perfects.1000",
       "reward": "GT+C",
-      "name": "1000 Perfect Counters",
-      "how": "Land 1000 Perfect Counters.",
-      "done": "1000 Perfect Counters! Great timing.",
+      "name": "1000 Great Counters",
+      "how": "Land 1000 Great Counters.",
+      "done": "1000 Great Counters! Super timing.",
       "trophyName": "Dojo Trim: Sunrise Gold",
-      "trophyText": "A golden trim for perfect timing."
+      "trophyText": "A golden trim for great timing."
     },
     {
       "id": "ach.tower.perfects.5000",
       "reward": "GT+T",
-      "name": "5000 Perfect Counters",
-      "how": "Land 5000 Perfect Counters.",
-      "done": "5000 Perfect Counters! Great timing.",
+      "name": "5000 Great Counters",
+      "how": "Land 5000 Great Counters.",
+      "done": "5000 Great Counters! Super timing.",
       "title": "Counter Master",
       "trophyName": "Counter Bell 5000",
       "trophyText": "Ring! Wait, watch, then COUNTER."

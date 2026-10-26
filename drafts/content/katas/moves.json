@@ -11,7 +11,7 @@
     "block.downward": "Low block",
     "block.reverse-inside": "Inside block",
     "block.overhead": "High block",
-    "block.double-knife-hand": "Double knife-hand block",
+    "block.double-knife-hand": "Knife-hand block",
     "punch.straight": "Straight punch",
     "punch.reverse": "Reverse punch",
     "strike.backfist": "Backfist",
@@ -20,6 +20,7 @@
     "kick.front": "Front kick",
     "chamber": "Chamber",
     "catch": "Catch",
-    "break.double-choke": "Choke break"
+    "break.double-choke": "Choke break",
+    "shout.kiai": "Kiai!"
   }
 }

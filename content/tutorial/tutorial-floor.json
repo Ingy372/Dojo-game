@@ -44,7 +44,7 @@
       "screens": [
         "Red circle! Tap COUNTER now!"
       ],
-      "success": "Perfect! You did it!",
+      "success": "Great! You did it!",
       "earliestRun": 1,
       "advance": "move",
       "waitFor": "counter",
@@ -157,7 +157,7 @@
       "screens": [
         "The door home is open."
       ],
-      "success": "What was your favorite part?",
+      "success": "Great job! You finished the training floor.",
       "earliestRun": 1,
       "advance": "tap",
       "waitFor": null,

@@ -234,6 +234,14 @@ class SoundMaker {
     this.tone(200, 400, 0.25, 'sine', 0.12);
   }
 
+  // ---- menus
+
+  /** P-MENU-a: a soft, short tap for a button press (made in code, quiet). */
+  tap(): void {
+    this.tone(1400, 1100, 0.035, 'sine', 0.05);
+    this.tone(700, 650, 0.05, 'triangle', 0.03);
+  }
+
   // ---- the Home Dojo
 
   /** The bow: a soft wooden clack and a low, calm bell. */
@@ -241,6 +249,12 @@ class SoundMaker {
     this.tone(900, 700, 0.06, 'square', 0.1);
     this.tone(330, 328, 1.1, 'sine', 0.16, 0.25);
     this.tone(495, 492, 0.9, 'sine', 0.07, 0.27);
+  }
+
+  /** P-MENU-f: the Seal's first light: the bow's low, calm bell alone, a little softer. */
+  seal(): void {
+    this.tone(330, 328, 1.1, 'sine', 0.12, 0.05);
+    this.tone(495, 492, 0.9, 'sine', 0.05, 0.07);
   }
 
   /** A sweep of the broom; `n` rises in pitch as a sweeping streak continues. */

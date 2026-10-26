@@ -1,0 +1,27 @@
+{
+  "notes": "P-MENU2-g: words for the Last run 'Scroll of the Climb'. Kind words only: never 'failed' or 'lost'. No streak or guilt words, and Bests are the student's own (no comparing).",
+  "title": "Last run",
+  "cleared": "Floor cleared!",
+  "reached": "You reached room {room} of {total}!",
+  "none": "No runs yet. Tap Enter the Tower to climb!",
+  "stats": { "rooms": "Rooms", "perfects": "Great", "combo": "Combo", "time": "Time", "xp": "XP" },
+  "levelUp": "Level up!",
+  "found": "Found",
+  "foundNone": "Beat foes and open chests to find things.",
+  "forDojo": "For your dojo",
+  "newForYou": "New for you",
+  "always": "Always with you",
+  "again": "Again!",
+  "bests": "Bests",
+  "bestsTitle": "Your bests",
+  "bestsLine": "Your own best climbs so far.",
+  "bestNew": "New best!",
+  "bestNames": {
+    "fastestClearTicks": "Fastest floor",
+    "mostPerfects": "Most Great Counters",
+    "longestCombo": "Longest combo",
+    "mostSGrades": "Most S grades"
+  },
+  "notInBag": "You let this one go.",
+  "close": "Close"
+}

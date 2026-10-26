@@ -2,9 +2,12 @@
   "about": "Art Jay has approved, and how it is packed. Only add a source here after Jay approves it.",
   "outDir": "assets/art",
   "scale": 0.6,
+  "stanceIds": {
+    "rooted-form": "horse-stance"
+  },
   "packs": {
     "player-a": {
-      "note": "Body A: the base layers (body, skin, gi, belt, props). Form stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations.",
+      "note": "Body A: the base layers (body, skin, gi, belt, props). Stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations.",
       "sources": [
         {
           "id": "player",
@@ -269,7 +272,7 @@
       ]
     },
     "player-b": {
-      "note": "Body B: the base layers (body, skin, gi, belt, props). Form stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations.",
+      "note": "Body B: the base layers (body, skin, gi, belt, props). Stance idles (A2, PR #121; Rooted = option A) merged in via mergeAnimations.",
       "sources": [
         {
           "id": "player",
@@ -678,6 +681,222 @@
           "id": "bopper",
           "type": "character",
           "json": "incoming-art/enemy-padded-weapon/sprites/padded.json"
+        }
+      ]
+    },
+    "tower-t3": {
+      "note": "Orange belt Tower kit (Ember Kitchens, B-T3; Jay approved #244/#247/#248). Same sprite ids as tower-t1, plus kitchen decor.",
+      "sources": [
+        {
+          "id": "tower",
+          "type": "static",
+          "json": "incoming-art/tier3-ember-kitchens/sprites/static.json"
+        }
+      ]
+    },
+    "enemy-spark-sprite": {
+      "note": "Orange Spark Sprite (#241, Jay approved).",
+      "sources": [
+        {
+          "id": "spark-sprite",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-sample/spark-sprite/sprites/spark-sprite.json"
+        }
+      ]
+    },
+    "enemy-ladle-lobber": {
+      "note": "Orange Ladle Lobber (#241, Jay approved; B-T3).",
+      "sources": [
+        {
+          "id": "ladle-lobber",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-sample/ladle-lobber/sprites/ladle-lobber.json"
+        }
+      ]
+    },
+    "enemy-dough-blob": {
+      "note": "Orange Dough Blob (#241, Jay approved; B-T3).",
+      "sources": [
+        {
+          "id": "dough-blob",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-sample/dough-blob/sprites/dough-blob.json"
+        }
+      ]
+    },
+    "enemy-doughling": {
+      "note": "Orange Doughling stand-in (Jay approved; B-T3).",
+      "sources": [
+        {
+          "id": "doughling",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-enemies/doughling/sprites/doughling.json"
+        }
+      ]
+    },
+    "enemy-rolling-pin": {
+      "note": "Orange Rolling Pin (Jay approved; B-T3).",
+      "sources": [
+        {
+          "id": "rolling-pin",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-enemies/rolling-pin/sprites/rolling-pin.json"
+        }
+      ]
+    },
+    "enemy-hearth-cook-p1": {
+      "note": "Hearth Cook Guardian, phase 1 rig (Jay approved; B-T3). B-T3-TUNE-2b (#299, Jay OK'd): pin wind-up and pin merged in.",
+      "sources": [
+        {
+          "id": "hearth-cook-p1",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p1/sprites/hearth-cook-p1.json",
+          "mergeAnimations": [
+            "incoming-art/hearth-cook-2b/p1-pin/sprites/hearth-cook-p1-pin.json"
+          ]
+        }
+      ]
+    },
+    "enemy-hearth-cook-p2": {
+      "note": "Hearth Cook Guardian, phase 2 rig (Jay approved; B-T3). B-T3-TUNE-2b (#299, Jay OK'd): pin wind-up and attack plus the lid layer merged in.",
+      "sources": [
+        {
+          "id": "hearth-cook-p2",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p2/sprites/hearth-cook-p2.json",
+          "mergeAnimations": [
+            "incoming-art/hearth-cook-2b/p2-pin/sprites/hearth-cook-p2-pin.json",
+            "incoming-art/hearth-cook-2b/lid/p2/hearth-cook-p2.json"
+          ]
+        }
+      ]
+    },
+    "enemy-hearth-cook-p3": {
+      "note": "Hearth Cook Guardian, phase 3 rig (Jay approved; B-T3). B-T3-TUNE-2b (#299, Jay OK'd): bonk wind-up and attack plus the lid layer merged in.",
+      "sources": [
+        {
+          "id": "hearth-cook-p3",
+          "type": "character",
+          "json": "incoming-art/tier3-orange-guardian/hearth-cook/p3/sprites/hearth-cook-p3.json",
+          "mergeAnimations": [
+            "incoming-art/hearth-cook-2b/p3-bonk/sprites/hearth-cook-p3-bonk.json",
+            "incoming-art/hearth-cook-2b/lid/p3/hearth-cook-p3.json"
+          ]
+        }
+      ]
+    },
+    "hearth-cook-lid-icon": {
+      "note": "B-T3-TUNE-2b (#299, Jay OK'd): the Hearth Cook's boss-bar lid icon. The 24 px icon's @2x file, drawn at 24 px.",
+      "scale": 1,
+      "sources": [
+        {
+          "id": "hearth-cook-lid-icon",
+          "type": "static",
+          "json": "incoming-art/hearth-cook-2b/icon",
+          "sprites": {
+            "icon-lid": {
+              "size": [
+                48,
+                48
+              ],
+              "files": {
+                "icon": "icon-lid-24@2x.png"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "menu2": {
+      "note": "P-MENU2-i: A-MENU2 menu art for Trophies, Gear and Last run only (Jay OK'd the #265 art; Manager go). @2x files packed untrimmed, drawn at 0.5. Shared pieces (panel frame, title plaque, wood buttons) added on the Manager's call. My Style art (slot-card, tray-tile, switch, glyph) is held. A-LEGENDARY-wire: the golden-orange Legendary frame (Jay OK'd #304) merged in: rings, 9-slice bag tile + crest, found tile. No shine, no fixed bag tile.",
+      "scale": 1,
+      "webpQuality": 90,
+      "sources": [
+        {
+          "id": "menu2",
+          "type": "ui",
+          "json": "incoming-art/menu2/sprites/menu2.json",
+          "only": [
+            "shelf-plank",
+            "cubby-earned",
+            "cubby-earned-pressed",
+            "cubby-notyet",
+            "cubby-notyet-pressed",
+            "cubby-next-glow",
+            "cubby-earned-96",
+            "cubby-earned-pressed-96",
+            "cubby-notyet-96",
+            "cubby-notyet-pressed-96",
+            "cubby-next-glow-96",
+            "cubby-earned-shine-0",
+            "cubby-earned-shine-1",
+            "cubby-earned-shine-2",
+            "cubby-earned-shine-3",
+            "cubby-earned-shine-4",
+            "cubby-earned-shine-5",
+            "cubby-seal",
+            "cubby-lantern-0",
+            "cubby-lantern-1",
+            "unlock-sweep-0",
+            "unlock-sweep-1",
+            "unlock-sweep-2",
+            "unlock-sweep-3",
+            "unlock-sweep-4",
+            "unlock-sweep-5",
+            "unlock-sweep-6",
+            "unlock-sweep-7",
+            "belt-knot-shadow",
+            "belt-knot-band",
+            "belt-knot-center",
+            "belt-knot-sheen",
+            "belt-knot-rim",
+            "belt-cord",
+            "doll-backing",
+            "gear-ring-common",
+            "gear-ring-common-glow",
+            "gear-ring-common-pressed",
+            "gear-ring-uncommon",
+            "gear-ring-uncommon-glow",
+            "gear-ring-uncommon-pressed",
+            "gear-ring-rare",
+            "gear-ring-rare-glow",
+            "gear-ring-rare-pressed",
+            "gear-ring-epic",
+            "gear-ring-epic-glow",
+            "gear-ring-epic-pressed",
+            "bag-tile-common",
+            "bag-tile-uncommon",
+            "bag-tile-rare",
+            "bag-tile-epic",
+            "bag-tile-selected",
+            "bag-tile-pressed",
+            "stat-tile",
+            "stat-perfect",
+            "stat-combo",
+            "stat-clock",
+            "stat-xp",
+            "xp-bar-frame",
+            "xp-bar-fill",
+            "xp-bar-gloss",
+            "found-tile-common",
+            "found-tile-uncommon",
+            "found-tile-rare",
+            "found-tile-epic",
+            "panel-frame",
+            "title-plaque",
+            "button-primary-normal",
+            "button-primary-pressed",
+            "button-primary-disabled",
+            "gear-ring-legendary",
+            "gear-ring-legendary-glow",
+            "gear-ring-legendary-pressed",
+            "bag-tile-legendary-9slice",
+            "bag-tile-legendary-crest",
+            "found-tile-legendary"
+          ],
+          "mergeSprites": [
+            "incoming-art/legendary-frame/sprites/legendary.json"
+          ]
         }
       ]
     }

@@ -1,0 +1,192 @@
+{
+  "character": "spark-sprite",
+  "frameWidth": 128,
+  "frameHeight": 128,
+  "anchor": {
+    "x": 64.0,
+    "y": 104.96,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 80.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 1.6,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "directionVectors": {
+    "N": [
+      0,
+      -1
+    ],
+    "NE": [
+      0.7071,
+      -0.7071
+    ],
+    "E": [
+      1,
+      0
+    ],
+    "SE": [
+      0.7071,
+      0.7071
+    ],
+    "S": [
+      0,
+      1
+    ],
+    "SW": [
+      -0.7071,
+      0.7071
+    ],
+    "W": [
+      -1,
+      0
+    ],
+    "NW": [
+      -0.7071,
+      -0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "body",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "glow",
+      "order": 1,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "telegraph",
+      "order": 2,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "light",
+      "order": 3,
+      "tint": false,
+      "optional": false
+    }
+  ],
+  "animations": {
+    "idle": {
+      "frames": 6,
+      "fps": 12,
+      "durationSec": 0.5,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "spark-sprite_body_idle.png",
+        "glow": "spark-sprite_glow_idle.png",
+        "telegraph": "spark-sprite_telegraph_idle.png",
+        "light": "spark-sprite_light_idle.png"
+      },
+      "note": "warm crackle, 0.5 s loop"
+    },
+    "move": {
+      "frames": 6,
+      "fps": 12,
+      "durationSec": 0.5,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "spark-sprite_body_move.png",
+        "glow": "spark-sprite_glow_move.png",
+        "telegraph": "spark-sprite_telegraph_move.png",
+        "light": "spark-sprite_light_move.png"
+      },
+      "designSpeedTilesPerSecond": 4.0,
+      "note": "quick zig-zag darts; play at any move speed"
+    },
+    "windup": {
+      "frames": 6,
+      "fps": 10,
+      "durationSec": 0.6,
+      "loop": false,
+      "tags": {
+        "telegraph": "0-5"
+      },
+      "sheets": {
+        "body": "spark-sprite_body_windup.png",
+        "glow": "spark-sprite_glow_windup.png",
+        "telegraph": "spark-sprite_telegraph_windup.png",
+        "light": "spark-sprite_light_windup.png"
+      },
+      "telegraphSeconds": 0.6,
+      "telegraphTicks": 12,
+      "telegraphIntensity": [
+        0.25,
+        0.322,
+        0.509,
+        0.741,
+        0.928,
+        1.0
+      ],
+      "note": "lasts exactly the telegraph (12 ticks). In Guided mode the wind-up holds: hold the last frame (intensity 1). telegraphIntensity: per-frame alpha (0..1) for the telegraph layer. It ramps up through the wind-up and fades smoothly through the first half of the attack (no hard cut). Multiply it into the tinted layer's alpha"
+    },
+    "attack": {
+      "frames": 10,
+      "fps": 10,
+      "durationSec": 1.0,
+      "loop": false,
+      "tags": {
+        "impact": "0",
+        "recover": "2-9"
+      },
+      "sheets": {
+        "body": "spark-sprite_body_attack.png",
+        "glow": "spark-sprite_glow_attack.png",
+        "telegraph": "spark-sprite_telegraph_attack.png",
+        "light": "spark-sprite_light_attack.png"
+      },
+      "keyFrames": {
+        "impact": 0
+      },
+      "recoverSeconds": 0.8,
+      "telegraphIntensity": [
+        1.0,
+        0.905,
+        0.655,
+        0.345,
+        0.095,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "note": "the dart: a quick stretchy dash forward"
+    }
+  },
+  "enemy": "spark-sprite",
+  "name": "Spark Sprite",
+  "sizeTiles": {
+    "bodyWidth": 0.3,
+    "bodyHeight": 0.34,
+    "radiusInData": 0.3
+  },
+  "tintGuidance": {
+    "mode": "multiply (Phaser setTint)",
+    "body": "no tint",
+    "glow": "no tint, always drawn (soft rim)",
+    "telegraph": "optional: draw only during the wind-up, tinted (e.g. #ff3b30 red, or #ffd36b gold in Guided mode) and flashed / pulsed in alpha",
+    "light": "no tint, always drawn (only the defeat has anything in it)"
+  }
+}

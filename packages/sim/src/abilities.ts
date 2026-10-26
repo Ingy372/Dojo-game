@@ -1,12 +1,17 @@
-// Abilities that real training unlocks (framework section 5): Forms (kata), Strike
+// Abilities that real training unlocks (framework section 5): Stances (kata), Strike
 // upgrades (kick combos), Technique Seals (self-defense) and Virtues (stripes).
 // Defined in content/abilities/abilities.json and checked here.
 
 import { loadEffect, type Effect } from './effects';
 
 /** A stance the player switches between in a fight. Its numbers apply while it's active. */
-export interface FormDef {
+export interface StanceDef {
   id: string;
+  /**
+   * R-STANCE-d2: the DojoForge sign-off item that unlocks this stance; null for the Beginner's
+   * Stance (always there). Placeholder ids for now (PLACEHOLDER-…), until Nic sets the real ones.
+   */
+  signOffId: string | null;
   name: string;
   text: string;
   /** Extra Perfect Counter window ticks. */
@@ -19,7 +24,22 @@ export interface FormDef {
   guardScale: number;
   /** Power raised by this share. */
   powerScale: number;
+  /** R-STANCE-d1: dash recharge changed by this share (-0.25 = a quarter shorter). */
+  dashCooldownScale: number;
+  /** R-STANCE-d1: dash length multiplied by this (1 = normal). */
+  dashScale: number;
+  /** R-STANCE-d1: added to the block cut; blocks let max(0.1, 0.5 - blockCut) through. */
+  blockCut: number;
+  /** R-STANCE-d1: added to the Focus gain modifier. */
+  focusGain: number;
+  /** R-STANCE-d1: extra power after standing still for `rootTicks` ticks; moving or dashing resets it. */
+  stillPower: number;
+  /** R-STANCE-d1: ticks of standing still before `stillPower` applies. */
+  rootTicks: number;
 }
+
+/** Stance content check (R-STANCE-c): power bonuses stay within the band-safe cap. */
+export const STANCE_POWER_CAP = 0.12;
 
 /** A Strike upgrade or a Technique Seal: one always-on effect. */
 export interface PerkDef {
@@ -46,8 +66,8 @@ export interface VirtueDef {
 }
 
 export interface AbilityContent {
-  /** forms[0] is the Beginner's Stance everyone starts with. */
-  forms: FormDef[];
+  /** stances[0] is the Beginner's Stance everyone starts with. */
+  stances: StanceDef[];
   strikes: PerkDef[];
   seals: PerkDef[];
   virtues: VirtueDef[];
@@ -88,22 +108,36 @@ export function loadAbilities(data: unknown): AbilityContent {
     return s;
   };
 
-  const forms = listOf('forms').map((f, i) => {
-    const w = `forms[${i + 1}]`;
-    const form: FormDef = {
+  const stances = listOf('stances').map((f, i) => {
+    const w = `stances[${i + 1}]`;
+    const stance: StanceDef = {
       id: id(f.id, `${w}.id`),
       name: str(f.name, `${w}.name`),
+      signOffId: f.signOffId === undefined || f.signOffId === null ? null : str(f.signOffId, `${w}.signOffId`),
       text: str(f.text, `${w}.text`),
       counterWindow: num(f.counterWindow, `${w}.counterWindow`),
       attackSpeed: num(f.attackSpeed, `${w}.attackSpeed`),
       moveSpeed: num(f.moveSpeed, `${w}.moveSpeed`),
       guardScale: num(f.guardScale, `${w}.guardScale`),
       powerScale: num(f.powerScale, `${w}.powerScale`),
+      dashCooldownScale: f.dashCooldownScale === undefined ? 0 : num(f.dashCooldownScale, `${w}.dashCooldownScale`),
+      dashScale: f.dashScale === undefined ? 1 : num(f.dashScale, `${w}.dashScale`),
+      blockCut: f.blockCut === undefined ? 0 : num(f.blockCut, `${w}.blockCut`),
+      focusGain: f.focusGain === undefined ? 0 : num(f.focusGain, `${w}.focusGain`),
+      stillPower: f.stillPower === undefined ? 0 : num(f.stillPower, `${w}.stillPower`),
+      rootTicks: f.rootTicks === undefined ? 0 : num(f.rootTicks, `${w}.rootTicks`),
     };
-    if (form.moveSpeed <= -0.5 || form.attackSpeed < 0 || form.counterWindow < 0) fail(`${w} has numbers out of range`);
-    return form;
+    if (stance.moveSpeed <= -0.5 || stance.attackSpeed < 0 || stance.counterWindow < 0) fail(`${w} has numbers out of range`);
+    const inCap = (v: number) => v >= 0 && v <= STANCE_POWER_CAP;
+    if (!inCap(stance.powerScale) || !inCap(stance.stillPower)) fail(`${w}: powerScale and stillPower must be from 0 to ${STANCE_POWER_CAP}`);
+    if (stance.guardScale < 0) fail(`${w}: guardScale must be 0 or more`);
+    if (stance.dashCooldownScale <= -1 || stance.dashScale <= 0 || stance.rootTicks < 0) fail(`${w} has dash or root numbers out of range`);
+    return stance;
   });
-  if (forms.length === 0) fail('"forms" needs at least the Beginner\'s Stance');
+  if (stances.length === 0) fail('"stances" needs at least the Beginner\'s Stance');
+  if (stances[0].signOffId !== null) fail('stances[1] (the Beginner\'s Stance) is always there and has no signOffId');
+  stances.slice(1).forEach((s, i) => { if (s.signOffId === null) fail(`stances[${i + 2}] needs a signOffId (the DojoForge sign-off that unlocks it)`); });
+  if (new Set(stances.map((s) => s.signOffId).filter(Boolean)).size !== stances.length - 1) fail('two stances use the same signOffId');
 
   const perks = (key: 'strikes' | 'seals'): PerkDef[] =>
     listOf(key).map((p, i) => {
@@ -137,5 +171,5 @@ export function loadAbilities(data: unknown): AbilityContent {
     };
   });
 
-  return { forms, strikes: perks('strikes'), seals: perks('seals'), virtues };
+  return { stances, strikes: perks('strikes'), seals: perks('seals'), virtues };
 }

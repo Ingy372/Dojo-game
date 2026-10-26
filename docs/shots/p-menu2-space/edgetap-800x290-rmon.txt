@@ -1,0 +1,16 @@
+gate: scroll max=41
+style: scroll max=69
+  scroll 10 zone 54.0–98.0 window 58–278: outside y=56.0 events=0 scenes=Home OK | inside y=61.0: pointerdown=1 OK
+  scroll 10 zone 54.0–98.0 window 58–278: outside y=56.0 events=0 scenes=Home OK | inside y=61.0: pointerdown=1 OK
+  scroll 35 zone 29.0–73.0 window 58–278: outside y=56.0 events=0 scenes=Home OK | inside y=61.0: pointerdown=1 OK
+  scroll 35 zone 29.0–73.0 window 58–278: outside y=56.0 events=0 scenes=Home OK | inside y=61.0: pointerdown=1 OK
+  scroll 69 zone 47.0–136.0 window 58–278: outside y=56.0 events=0 scenes=Home OK | inside y=61.0: pointerdown=1 OK
+  scroll 69 zone 47.0–136.0 window 58–278: outside y=56.0 events=0 scenes=Home OK | inside y=61.0: pointerdown=1 OK
+trophies: scroll max=0
+gear: scroll max=0
+run-empty: scroll max=0
+run: scroll max=69
+  scroll 10 zone 277.0–321.0 window 58–278: outside y=280.0 events=0 scenes=Home OK
+  scroll 35 zone 39.0–83.0 window 58–278: outside y=56.0 events=0 scenes=Home OK | inside y=61.0: pointerdown=1 OK
+  scroll 35 zone 252.0–296.0 window 58–278: outside y=280.0 events=0 scenes=Home OK | inside y=275.0: pointerdown=1 OK
+edge taps: 17 checks, 0 failed

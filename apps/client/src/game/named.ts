@@ -63,6 +63,11 @@ export class NamedView {
   private trailTiles: Phaser.GameObjects.Image[] = [];
   private tileW = 38;
   private trailStart = 0;
+  /** World boxes of the visible plate and tag (B-T3-NUDGE: "Help me!" keeps off them). */
+  labelBounds(): Phaser.Geom.Rectangle[] {
+    return [this.plate, this.tag].filter((c): c is Phaser.GameObjects.Container => !!c && c.visible && c.alpha > 0).map((c) => c.getBounds());
+  }
+
   /** When it was first seen (the plate's 3 seconds start), or null. */
   shownAt: number | null = null;
   /** Tell beats already played in the current wind-up. */
@@ -137,7 +142,8 @@ export class NamedView {
   }
 
   /** Draws this frame. Returns the tell sound/shake beats that start now. */
-  update(e: EnemyState, now: number, windupSec: number | null, windupFrame: number, tilePx: number): { clank: boolean } {
+  /** shakeScale: the K25/K28 shake rule's strength for this player (0 = no wind-up shake). */
+  update(e: EnemyState, now: number, windupSec: number | null, windupFrame: number, tilePx: number, shakeScale: number): { clank: boolean } {
     const a = staticArt(this.scene, NAMED_PACK, this.sparkleId);
     // Reduced motion (K12): no sparkles.
     const calm = reducedMotion();
@@ -176,9 +182,9 @@ export class NamedView {
       this.dust.forEach((d) => d.setVisible(show));
       if (show) setStaticFrame(this.scene, NAMED_PACK, tellId, this.dust, frame);
       const shake = x.timing?.screenShake;
-      if (fresh && shake && !reducedMotion()) {
+      if (fresh && shake && shakeScale > 0) {
         const cam = this.scene.cameras.main;
-        cam.shake(shake.sec * 1000, shake.px / Math.max(cam.width, 1));
+        cam.shake(shake.sec * 1000, (shake.px * shakeScale) / Math.max(cam.width, 1));
       }
     } else if (base === 'shield') {
       const show = frame >= 0 && frame < art.frames;

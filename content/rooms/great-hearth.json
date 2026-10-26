@@ -1,0 +1,38 @@
+{
+  "id": "great-hearth",
+  "name": "The Great Hearth",
+  "kind": "boss",
+  "minBeltTier": 3,
+  "floorSet": "ember-kitchens",
+  "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+  "tiles": [
+    "##########D#########",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........C........#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#.........P........#",
+    "#..................#",
+    "####################"
+  ],
+  "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+  "enemies": [
+    {
+      "enemy": "hearth-cook",
+      "column": 10,
+      "row": 3,
+      "wave": 1
+    }
+  ],
+  "artProps": "The big cold oven on the top wall; a huge pot beside it; the long table pushed to the walls.",
+  "signs": [
+    "Save a bowl for the one who is late.",
+    "Thank the cook!"
+  ]
+}

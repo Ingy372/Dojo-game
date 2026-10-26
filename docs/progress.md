@@ -549,7 +549,306 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - K24c: tower view 6.75 tiles tall; game draws at full retina sharpness (DPR camera zoom + view() helper). Screens: /workspace/qa/k24c/ (sharp-844.png is before/after).
 - K24b: wind-up "!" + fill ring before enemy attacks; COUNTER flashes/rings gold in the counter window; Reduced motion respected. Screens: /workspace/qa/k24b/.
 
+## S3-P1b Kata cards
+- Bigger drawn kata arrows (same height as the step numbers) and a Kata group at the top of Abilities. Screens: /workspace/qa/s3p1b/final/.
+
+## R-BAL-9c Live enemy numbers
+- Swarmer, Shield, Brute and Floor-keeper set to the #188 numbers; all in band on Standard and Challenge (drafts/planning/r-bal-9c-check.py). D1–D5 logged as Jay's calls.
+
+## R-BAL-4 Bad-luck counter test
+- New test locks `guaranteedRareOnRun` at 5 or lower. Checked it fails when set to 6.
+## R-BAL-5 XP step weights (k+11)
+- Done: progression.ts uses weights step+11. Matches balance-sim.py section 3; no step goes over 10 runs.
 ## K25 Slower tempo and calmer shake
 - Game runs about 12% slower (one `TEMPO.speed` value); wind-ups and counter windows are longer in real time, never shorter.
 - No screen shake on the player's own attacks. The being-hit shake only happens at Brown belt and up or on Challenge, at 65% strength, and never with Reduced motion.
 - New tests: packages/sim/test/k25-tempo-shake.test.ts (6). Preview playthroughs at 667 and 844: /workspace/qa/k25/.
+
+## K25b Block never shakes
+- Done: Block gives 0 shake; being hit is unchanged. Test added.
+
+## R-BAL-9b Per-tier gear caps
+- Done: 10-tier GEAR_CAPS, white cut, Jade capped. Test: r-bal-9b-gear-caps.test.ts.
+
+## R-BAL-12 Training powers combat
+- Done: training stats, stripesByBelt migration (never lowers), per-belt enemy scale. UI words (12d) are still open.
+- Enemy scale retuned (Manager option B): live enemies are in the #188 bands at all 10 belts for all three model students; Bopper base is now 66/11. Test: r-bal-12-bands.test.ts.
+
+## K28 K25 feel fixes (QA B1–B4)
+- Done: the wind-up sound and the "two attacks at once" warning timer use real time (realMsPerTick). Challenge timers are 60 real seconds. The shake rule checks belt rank (tier 8 = Brown and up), not the id 'brown'. Named-monster wind-up shakes (Brute stamp) follow the same rule. Test: k28-real-time-rank.test.ts.
+## K27 — tutorial fixes from Q5 (2026-10-24)
+**Done**
+- Q5 B1–B6 fixed: boss "!" clear of the boss bar, boss tip closes on Got it and keeps off the boss; chest tip only in the vault; tip box keeps off HOME, the hero and STRIKE; COUNTER is never dimmed with a gold ring; new closing line (Manager's call).
+- Checked at 667x375 and 844x390 with Reduced motion on and off (headless browser, full tutorial run).
+**Next**
+- Tester re-checks Q5.
+- Retest fix (Manager's call after the K27 retest): the boss "!" is drawn at full strength (opaque disc, solid colors) above the boss, or beside it when the boss bar leaves no room above, and never over a door label or the boss bar. Tutorial tips avoid the cue where it actually sits.
+
+## K29 — end-of-run clock in real seconds (2026-10-25)
+**Done**
+- Room-clear line, Last run time and Fastest floor show real seconds (`realClock`, same conversion as the Challenge timer). Par times and grades stay in game time.
+- Test: packages/sim/test/k29-real-clock.test.ts.
+**Next**
+- None; the shake rank mapping for other dojos is noted in decisions.md.
+
+## K30 — HOME label clear of the boss (2026-10-25)
+**Done**
+- Door labels slide aside when they would overlap the boss's head, health bar or name (`keepLabelOffBoss`).
+- Checked at 667x375 and 844x390 with Reduced motion off and on (/workspace/k30-shots/).
+**Next**
+- Tester re-check of the boss room.
+
+## K31 — boss name and small bar never touch (2026-10-25)
+
+- Added `bossTagLayout` + `BOSS_TAG` in sim, wired in GameScene (`placeBossTag`), cue avoids the pair. Test: packages/sim/test/k31-boss-tag.test.ts. Shots in /workspace/k31-shots/ (`*-top-*` frames teleport the boss to the top wall).
+
+## K31 QA fixes (2026-10-25)
+
+- One x for the name + bar pair (edge clamp, HOME slide together); below spot avoids COMBO and "+N% power". Re-ran the Tester's /workspace/qa/k31/run/tag.mjs against this build.
+- 2026-10-25: K31 last fix: '!' cue no longer falls back onto the sliding name + bar; 8 px padding removed. tag.mjs 0 bad spots at 667 (RM off/on) and 844 (RM off/on).
+
+## K32 gear icons (2026-10-25)
+
+- Imported the 15 #212 gear icons to assets/art/gear-drop/ and wired them into the Gear screen, results, first-floor card and loot note. Test: packages/sim/test/gear-icons.test.ts (every GEAR_SLOTS x RARITIES has a file; checked that it fails when one is missing). Shots and overlap/clip reports in /workspace/k32-shots/ (667x375 and 844x390, reduced motion off/on).
+
+
+## R-BAL-12d Gain words after real training
+- Sign-off card, multi sign-off list and Character Stripe screen now show what real training gave, in green/gold: "You got stronger! +1 Power, +4 Health", "You got tougher! +7 Guard". Gains only, no nag, no streaks, nothing about what's missing.
+- Words in content/settings/training-gains.json (for Jay's review). Sim helpers signOffGain / stripeGain / gainText use each piece's own belt. New test r-bal-12d-gain-words.test.ts (4). Screens at 667 and 844: /workspace/qa/r-bal-12d/.
+- Delivery Note: depends on #208 (R-BAL-12); PR base is bot-code/R-BAL-12.
+
+## R-BAL-12e disarmedPower scaled
+- Done (stacked on #208).
+
+
+## K26 Sign-off list columns never collide
+- Several-sign-offs screen: each column now has a fixed width and long names wrap inside it, so no name runs into the other column. If the list is too tall it steps 14 → 13 → 12 px (no smaller); if it still doesn't fit it shows what fits plus "…and N more! See them all on the Board."
+- Checked by script at 667×375 and 844×390 with the yellow (13) and green (24) profiles, which include the longest real names ("Self-Defense #7: Technique Seal: Create Distance", "#10 … Follow Through"): zero overlapping boxes, nothing off-screen. Screens: /workspace/qa/k26/.
+- Delivery Note: same layout as #213, so cut from bot-code/R-BAL-12d and based on it (depends on #213 → #208).
+
+## P-MENU-a shared button + motion tokens
+- Training Board buttons now use one shared rounded button: press down (0.96, brighter, soft tap), spring back, act on finger-up, cancel on slide-off, 44 x 44 tap area at least.
+- Blessing glow is a slow breath (2400 ms, alpha 0.25 to 0.15, no scale), still with Reduced motion on.
+- Vitest checks the 44 x 44 rule for every HomeScene button. Screenshots at 667x375 and 844x390, Reduced motion off and on: no tap-area, button or label overlaps.
+- P-MENU-a QA follow-up: the Blessing glow alpha you see now really breathes 0.25 to 0.15. The summary card's Continue is the shared 44-tall button. Checked at 667x375 and 844x390.
+
+## B-WRAP Capacitor 8 wrap
+- apps/client now has capacitor.config.ts (PLACEHOLDER app id `com.placeholder.dojoascent`, "Dojo Ascent"), plus the generated android/ and ios/ projects. Landscape lock, full screen, and the game loop, music and sound effects pause in the background.
+- To make a debug APK: in apps/client, run `npm run build`, then `npx cap sync android`, then `cd android && ./gradlew assembleDebug`. This needs Node 22+, JDK 21 and the Android SDK.
+- Vitest, typecheck and the web build pass. Web screenshots at 667x375 and 844x390, Reduced motion off and on, show no regressions.
+
+## node-22
+- The repo now asks for Node 22+ (`engines`, `.nvmrc`), the same as Capacitor 8. No CI workflows exist yet. Typecheck, Vitest and the web build pass on Node 22.23.4.
+
+## B-BELT grown-up belt entry
+- A grown-up can set the real belt and stripes: For grown-ups, answer the sum, then Belt & stripes. "Yellow, 2 stripes" shows Yellow with 2 stripes and unlocks the White items, and the next visit plays the promotion ceremony. It stays after a restart and can only go up.
+- Vitest covers entry, saving and loading, and never lowering (8 tests). Screenshots at 667x375 and 844x390, Reduced motion off and on: no text overlaps on either screen. The entry lasts through a reload, and a lower pick is ignored.
+
+## R-BAL-14b
+- Charm amounts wired: Kind Stone multiplies low-health Focus by 1 + amount (Rally stays x2), Great Lamp and Feather tested, and check-c7 passes again.
+
+## P-MENU-b
+- The Training Board is split into a shell (background, left column, panel frame), a tab bar and a panel. Tab, page, gear-pick, Wear and Let go taps redraw only the panel. The tab underline slides in 180 ms and the panel slides in: 12 pt for a tab, 24 pt for a page. With Reduced motion on there is no slide, just a 120 ms fade. A gear pick stays instant. Code was only moved, nothing restyled.
+## B-SAFE kid-safety items
+- Outside links go through the grown-up gate (`openOutsideLink`). There are no outside links yet; a Vitest scan blocks any other way to open one.
+- Grown-ups get an "Erase progress" button on the play-time screen, behind the gate, with an Erase / Keep confirm. Erase removes every saved key and restarts fresh.
+- First launch shows a "Saved on this phone" note (privacy-page wording from #240) until it's tapped.
+- `npm run build:beta` makes a beta build with every URL test flag, the dev day offset and the hidden testing screens off. I checked this on the built files: in the normal build `?street=` opens Street Smarts; in the beta build it's ignored.
+- 7 new Vitest tests (`packages/sim/test/b-safe.test.ts`). Screenshots at 667x375 and 844x390, Reduced motion off and on.
+## fix-celebrate-rm
+- With Reduced motion on, the Celebrations rays stay still and no confetti shows. The Congratulations card says "practiced" for techniques counted from an earlier rank (legacy) and keeps "signed off" for real sign-offs.
+## P-MENU-c
+- Training Board left column tidied per plan §3a: one 44 pt header row (◀ Dojo 96x44), a 64 pt character block, Level + cap on one line with a 10 pt bar, ENTER 52 and Practice room 44, rounded Path card. The XP bar fills over 400 ms after a run (instant with Reduced motion on).
+- Grown-up gate, play-time (choices, Belt & stripes, Done, Erase progress), wipe confirm, belt entry (chips and Back/Save) and CreateScene now use the shared rounded `button()`.
+- New Vitest file `packages/sim/test/p-menu-c-buttons.test.ts`: no square buttons left in those screens, every button ≥44 pt, tap zones above dim layers, XP fill. Screenshots at 667x375 and 844x390, Reduced motion off and on, no text overlaps, nothing offscreen.
+## fix-celebrate-rm
+- With Reduced motion on, the Celebrations rays stay still and no confetti shows. The Congratulations card says "practiced" for techniques counted from an earlier rank (legacy) and keeps "signed off" for real sign-offs.
+
+## practiced-cards
+- The full-screen sign-off cards (and the welcome cascade on the first trip home) say "practiced" for techniques counted from an earlier rank, and keep "signed off" with who signed it for real sign-offs.
+
+- P-MENU-d: Gear tab rebuilt. 56 pt button() cards with ▲▼= marks, a fixed grid, a slide-up detail sheet (Wear / Let go with a confirm), page dots, a Wear pop, an empty-bag icon and a mixed sign-off ✓. Seeded 33-item screenshots at 667/844/932 with Reduced motion on and off.
+- P-MENU-e: the Dojo's lesson card, Sensei's Scroll, Settings (difficulty cards, Reduced motion, For grown-ups), the resume offer and the Dojo's top buttons use the shared rounded button() at 44 pt; the Gate READY chip pops once; CreateScene buttons are 44 tall. Screenshots at 667/844/932 with Reduced motion on and off.
+- B-GEAR-BUG: worn-slot cards are tappable and open the detail sheet with Take off, so worn gear can be removed or swapped. Touch-tap proof (equip A, swap to B, take off, let go) at 844x390 and 932x430.
+- B-LASTRUN: Last run panel stacks by measured height; no overlaps or clipping at 844x390, 932x430 and 667x375 (bounding-box check, Reduced motion on and off); Vitest layout test.
+- P-MENU-f: Gate locks radius 22 (min 18) with 12 pt labels on at most 2 lines; heading 22; sundial and Seal on two equal 96-tall cards pinned to the panel bottom with a 28 radius circle; the lit Seal gets a soft gold ring, and its first light pops once with a soft code-made bell (once per Seal, saved in sealsSeen; old saves migrate silently). Screenshots at 667/844/932 with Reduced motion on and off.
+- B-POLISH-1: empty-bag hint hidden behind an open worn-item sheet; Last run says "N items in your Gear" when no item row fits. Vitest for both; screenshots at 667x375, 844x390, 932x430 with Reduced motion on and off.
+- P-MENU2-a: warm-wood mood frame (code-drawn) on the Training Board panel; Abilities gets a Trophy Case | Fighting Style switch (2 x button(), 44 tall, at most 120 wide); Fighting Style is a placeholder card; BOARD cubby/slot/tile/ribbon tokens; Vitest. Screenshots at 667x375, 844x390, 932x430 with Reduced motion on and off, overlap/clipping/tap-size checked.
+- 2026-10-25 P-MENU2-b: Trophy Case (ribbon, shelves, cubbies, page dots, detail sheet). Wording in content/abilities/trophy-case.json; test p-menu2-b-trophy-case.
+
+## P-MENU2-c — Trophy Case unlock moment (2026-10-25)
+
+**Done**
+- A newly earned cubby plays a paper-to-wood sweep, a small pop and the Seal bell, once per unlock (saved in `trophiesSeen`). Reduced motion: a plain fade plus the bell.
+- Old saves load fine and never replay past unlocks. Vitest covers once-only, paging, save/load and old saves.
+- Screenshots at 667, 844 and 932 wide, Reduced motion on and off.
+
+**Next**
+- P-MENU2-d (loadout). Polish later: a few px of side padding on cubby labels at 844 ('Self-Defense #1' and '#3' run edge to edge).
+## P-MENU2-d — Fighting Style data (2026-10-25)
+
+**Done**
+- Profile `loadout` (starting Form + Virtue), read safely from old saves. The fight setup (`characterSetup`) uses it; with no loadout it gives exactly today's setup.
+- Golden test of today's default play (captured from main before the change), plus tests for a chosen Stance, a chosen Virtue, old saves and unearned picks.
+
+**Next**
+- P-MENU2-e: the Fighting Style screen, where students make these picks.
+## P-MENU2-e — Fighting Style screen (2026-10-25)
+
+**Done**
+- The Fighting Style tab: Stance and Virtue slot cards, a tray to tap to equip, a preview in plain words, and the "Always with you" row. Not-yet picks open a "Ask Sensei" sheet.
+- Picks save to the loadout and survive a restart. With no pick, today's default play is unchanged (the golden test still passes).
+- Screenshots at 667, 844 and 932 wide, Reduced motion on and off.
+
+**Next**
+- Read-aloud (after beta). Real art from #265 when it is approved. A long preview title (e.g. "Beginner's Stance" at 667) shows "…".
+
+## B-POLISH-2 — Trophy Case polish (2026-10-25)
+- Unlock pop now scales 1 → 1.06 → 1 (no snap to 0.9 after the sweep). Reduced motion: fade only.
+- Detail sheet description allows 3 lines; Basic Form 1 at 667 shows its full text ending '15% slower.'
+- Cubby labels keep 8 px side padding: a too-wide hyphenated label breaks after the hyphen, labels allow 3 lines at 12 px and the icon shrinks to fit, so "Learn this at the dojo" shows in full.
+- Removed unused COMBAT.rootedFormBonusTicks; tests read the Rooted bonus from content (golden unchanged).
+- Vitest b-polish-2.test.ts covers the pop keyframes, the line cap and the padding. Screenshots at 667, 844 and 932, Reduced motion on and off.
+
+**Next**
+- P-MENU2-e, once #270 is in.
+
+- B-POLISH-2 (2nd Tester fix + #272 merge): the stroke-aware cubby padding, full-size icons with 3-line labels fitting inside the stroke, and the Fighting Style polish (hint, 2-line title, locked names, placeholder perk icon, re-tap no-op). Vitest 645 passed, 1 skipped; typecheck and build clean.
+- B-POLISH-2: Fighting Style tray labels now use the cubby padding and wrap rules (2 tiles at 667). Smallest tray gap is 8.0 px. Vitest 646 passed, 1 skipped.
+
+## P-MENU2-g — Last run "Scroll of the Climb" (2026-10-25)
+
+**Done**
+- New Last run screen: paper scroll, banner in kind words, room chips, 4–5 stat tiles that count up once per run, XP fill toward the next level, Found strip (every tile opens its sheet), "Always with you", "New for you" (only when there is one) and a big Again! that starts a climb. Bests is a sheet of personal bests only.
+- `ui/lastRun.ts` (model + layout) and `content/settings/last-run.json` (words). No sim changes.
+- Vitest `p-menu2-g-lastrun.test.ts`: count-up once (and never with Reduced motion), every found item reachable and tappable across pages, layout fits with taps ≥ 44 at 667/844/932, no text under 12, "New for you" only when earned and unseen, kind words. `b-lastrun-layout.test.ts` updated for the new layout.
+- Screenshots at 667, 844 and 932, Reduced motion on and off: first open (counting), new trophy, reopen, Bests sheet, found item sheets, 24 found items (2 pages), nothing found.
+
+**Next**
+- Manager: confirm "New for you" = the newest unseen Trophy Case cubby (runs don't earn techniques), or switch it to this run's dojo pieces.
+## P-MENU2-f — Gear polish (2026-10-25)
+**Done**
+- The Gear screen now has a paper doll on the left with one ring per slot (hands, gi, charm) showing what's worn. Tapping a ring, or the matching filter button, shows only that slot. Tapping it again shows everything.
+- The bag is a grid of tiles with as many columns as fit, never fewer than 3 (3, 4 and 5 at 667, 844 and 932). Each tile shows its rarity word (from content) under the icon at 12 px. It pages with ◀ ▶ and dots like the Trophy Case. The grid never moves on pick, wear or filter: worn items stay in place with a gold ✓.
+- The sheet shows ↑/↓ per stat in calm colours (no red) and plain words. The numbers sit behind Details. Wear is 52 tall.
+- Wearing flies the item to its ring with a small pop and a glow on the doll. With Reduced motion on, it's a plain swap. The save works as before.
+- Fighting Style: when the tray pages (1 tile per page at 667), page dots now show under it, with no numbers.
+- The art is placeholder drawn in code. No #265 art is used. The words are in content/loot/gear-board.json.
+- **#273 Tester fixes (2026-10-25):** every rarity word, Legendary included, now has 8 px clear each side inside the 2 px border (tiles 84 wide). Manager: at 667 the bag is 2 columns with ◀ ▶ paging so the student figure stays; 844 and 932 keep 4 and 5. The sheet is 172 tall: long names wrap to 2 lines, the compare line wraps, and Details moved to the button row, 8 px from Let go (all 52 tall). The Vitest test checks Legendary padding at all 3 widths.
+**Next**
+- Swap in the real art once Jay OKs #265.
+## B-T3 — tier 3 Ember Kitchens, Orange belt (2026-10-25)
+
+**Done**
+- 8 Ember rooms, 6 Orange enemies and the Hearth Cook Guardian (3 phases), with tier 3 art and client wiring.
+- Supper Rush Challenge 90 s from PR #275 (pending Jay).
+- Guardian sim check: Orange typical, 30 seeds, Standard and Challenge, reaches and beats the Guardian. Vitest 801 passed, 1 skipped; typecheck and build clean.
+- Screenshots of every room and the Guardian (3 phases) at 667, 844 and 932, Reduced motion on and off.
+
+**Next**
+- Rolling pin: replace the round danger area with the real lane shape.
+- Guardian may be too easy: probes at 40 seeds beat it every time, taking about 4–18% damage in about 9–12 s.
+- Re-check Supper Rush against #275 once Jay decides.
+## R-STANCE-a — Forms are now Stances (2026-10-25)
+**Done**
+- Rename only: Rooted Stance and Flowing Stance, a STANCE button in runs, "Stance" in My Style and rewards. Kata names keep "Form".
+- Old saves load with their stance (idempotent migration, tested with fixtures/saves/old-form-loadout.json).
+- Golden run unchanged apart from the renamed ids. A new test blocks "Form" in player text outside kata names.
+**Next**
+- R-STANCE-b and later items in the R-STANCE plan.
+
+## B-T3-TUNE — Hearth Cook and Supper Rush polish (2026-10-25)
+**Done**
+- Hearth Cook 549/17 (#280); phases stay 0.66/0.33. The #279 probe is in packages/sim/test; the drafts copy is deleted.
+- Challenge timer keeps sim ticks; the per-frame cap is 10 ticks. In-time and out-of-time words live in each challenge room's content; Supper Rush says "Time's up! The soup cooled, but you still earned a chest."
+**Next**
+- Manager: other challenge rooms could get their own out-of-time lines.
+
+## B-T3-TUNE-2a+2c — Hearth Cook pot lid and phase pause (2026-10-25)
+
+**Done**
+- Hearth Cook takes no damage while its sparks are up (clang, no number); new phase patterns with pins in every phase.
+- About a 1 s pause at 66% and 33% with a roar, glow and Sensei's line.
+- Bot check (Orange gear, great-hearth, 60 seeds) in packages/sim/test/b-t3-tune-2-boss-levers.test.ts: typical 60/60, masher 46/56 (82%) on Standard; typical fight 13.3 s without pauses, 15.1 s with.
+
+**Next**
+- Jay to OK real lid / clang / roar art and sound (placeholders now).
+
+## R-STANCE-d1 — Cat, Front, Fighting and Horse stances (2026-10-25)
+
+**Done**
+- The four real stances replace Rooted and Flowing, using the #290 numbers and the #288 one-liners.
+- Old saves with Rooted or Flowing moved to the default stance (since R-STANCE-g that is Open Leg for those saves, not Beginner's). A stance that isn't unlocked is dropped from the loadout.
+- Horse shows the approved rooted idle. The golden run was re-captured.
+
+**Next**
+- R-STANCE-d2: sign-off unlocks. R-STANCE-b: stance icons. Jay's howToStand questions are still open.
+## B-MASHER — Mash guard, shield bounce Focus, kid bot (2026-10-25)
+**Done**
+- Hits that land mid-swing count as a Block; shield bounces give +6 Focus with a gold glow (steady tint in Reduced motion).
+- Kid bot gate (BALANCE): wins 137/200 (68.5%), room-1 KOs 0/200. Masher typical wins 14 → 59/200, room-1 KOs 148 → 0. Smart bot wins 200/200 both ways, run time within 2%.
+**Next**
+- Manager: b-t3-tune-2 boss-levers 15–20 s band misses at 14.86 s (main 15.1 s); smart damage taken per room down ~30%.
+
+## B-MASHER-2 — Mash guard fades after 3 Perfect Counters (2026-10-25)
+**Done**
+- Mash guard turns off after a room's 3rd Perfect Counter and resets each room; "Sensei steps back" shows once per run.
+- Kid gate: wins 113/200 (56.5%), room-1 KOs 0/200. Smart damage per room vs 911ce19: 28.60 → 23.51 (−17.8%), 26.23 → 22.10 (−15.7%), 28.65 → 23.74 (−17.1%).
+**Next**
+- Manager: smart damage −16 to −18% accepted for the beta (200/200 smart wins, bands 293/293). Final mash-guard wording from the Content Designer landed; shots in b-masher-shots/v3.
+## B-CF-BUILD — Cloudflare build fixed (2026-10-25)
+**Done**
+- Removed the stray `pnpm-lock.yaml` that sent Cloudflare to pnpm (nothing installed, `tsc` not found); pinned `packageManager` to npm@10.9.2; guard test for stray lockfiles.
+**Next**
+- Watch the 'Workers Builds: dojo-ascent' check go green on main after merge.
+## P-MENU2-i (2026-10-25)
+- menu2 art imported (61 frames, 1 page) and drawn in Trophies (cubbies, shelf, seal, lantern, shine, unlock sweep, belt knots), Gear (doll backing, rings, bag tiles) and Last run (stat tiles and icons, XP bar, found tiles). Code-drawn fallback kept everywhere.
+- New test packages/sim/test/p-menu2-i-art.test.ts (7 tests). npm test: 857 passed, 1 skipped.
+## C-RENAME-3-code (2026-10-25)
+- Code strings now say Great Counter / GREAT x / GREAT! / "N Great". Two tests that still asserted #307's old content lines updated (main was red on them).
+## P-MENU2-SPACE — Training Board on short landscape phones (2026-10-25)
+**Done**
+- Left column compacts below 369 pt; panel contents scroll inside the frame when the screen is short; stat number/label gap 12–13 px; stat icons 8+ pt from the number; My Style slot label overlap fixed.
+- Measured at 667x375, 667x320, 800x290, 844x390, 932x430 with Reduced motion on and off: no text overlaps, nothing within 8 px of the screen edge, 0 console errors. Shots in docs/shots/p-menu2-space.
+- Round 2: taps clipped to the visible window (edge-tap script: 0 fails), Path card always shows, fade and chevron scroll cue, empty Last run doesn't scroll, Gate label shows in full at 667x320.
+**Next**
+- Jay to try it on his iPhone in Safari landscape.
+## B-T3-TUNE-2b — Hearth Cook wind-ups, lid and lid icon (2026-10-25)
+**Done**
+- Imported the #299 Hearth Cook art (P1/P2 pin, P3 bonk, P2/P3 lid overlay, 24 px lid icon). The importer now merges overlay layers and reads inline static sprites.
+- Lid layer follows lidUp; the boss bar shows the lid icon at 24 px over the grey wash; stand-in wind-ups removed. Tests: b-t3-art (frames/fps = 26 and 20 ticks, lid layer, icon).
+- Shots at 667x375, 667x320, 844x390, 932x430, Reduced motion on and off, 0 console errors: docs/shots/b-t3-tune-2b.
+**Next**
+- Tester pass on a phone; art author may want to look at the lid hidden on the P3 bonk facing E.
+## A-LEGENDARY-wire — Legendary frame wired in (2026-10-25)
+**Done**
+- Legendary gear uses the golden-orange frame (Jay OK'd #304) instead of the Epic stand-in: Gear bag tiles (9-slice + gem crest), doll rings (normal/glow/pressed) and Last run found tiles. Imported via tools/art-import (menu2 pack, +6 frames).
+- Word "Legendary" lifted 4 px on its tile: #5a2e08 ≥4.52:1 on every glyph pixel (median 9.28:1).
+- Before/after shots with forced Legendary items at 667x375, 667x320, 844x390, 932x430, Reduced motion on/off, 0 console errors: docs/shots/a-legendary.
+- Round 2: the word clears the rim by ≥8 px below and at the sides (9.5 / 9.5 / 9.0 px at DPR 2, all sizes, Reduced motion on/off; contrast ≥8.96:1). A picked Legendary keeps its frame and crest, with the highlight drawn on top.
+**Next**
+- Optional: the Legendary shine overlay (6 frames, once, skipped under Reduced motion) as its own item.
+## R-STANCE-d2 — stance sign-off unlocks (2026-10-25)
+**Done**
+- Stances unlock only from their own teacher sign-off in the feed (`stanceSignOffs`, placeholder DojoForge ids in content and fixtures). No legacy grant, not in the Gate or Power Rating, katas unlock nothing. Picker shows Ready plus all 4; unsigned ones show the not-yet card.
+- New test packages/sim/test/r-stance-d2-signoffs.test.ts (9 tests, including the idempotent load). npm test 902 passed, 2 skipped; typecheck and build pass.
+- Shots at 667x375, 667x320, 844x390, 932x430, Reduced motion on and off, 0 console errors: docs/shots/r-stance-d2.
+**Next**
+- Swap the placeholder ids for the real DojoForge ids when DojoForge adds stance sign-offs.
+
+## R-STANCE-g — Beginner's Stance and Open Leg (2026-10-26)
+**Done**
+- Beginner's Stance (plain standing, all 0) is where new players start. Ready is now Open Leg Stance (`ready-stance`, stances[1]) with its own sign-off; old players keep it through a one-time, idempotent save migration; an old save with a retired pick (Rooted or Flowing) lands in Open Leg. After that, unsigned picks fall back to Beginner.
+- Beginner, locked Open Leg and welcome lines from #312, in content/abilities/fighting-style.json.
+- New test packages/sim/test/r-stance-g-ready.test.ts (8 tests). npm test 910 passed, 2 skipped; typecheck and build pass. Golden re-captured on purpose (runs unchanged).
+- Shots at 667x375, 667x320, 844x390, 932x430, Reduced motion on and off, 0 console errors: docs/shots/r-stance-g.
+**Next**
+- Open Leg plays the same as Beginner (both all 0) until the Researcher or Jay gives it numbers. Stance-tagged idle art. Real DojoForge id for the Open Leg sign-off.
+
+## R-STANCE-READY-NUM — Open Leg Stance numbers (2026-10-26)
+**Done**
+- Open Leg (`ready-stance`): power +3%, Dash recharge −10%, blocks let 45% through, Focus +8%; counter window 0, no downside (#314). Beginner stays default and all 0.
+- New BALANCE-gated sim report (smart, kid, masher × Beginner vs Open Leg): `packages/sim/test/balance/ready-stance.test.ts`. Same setup as the kid gate (belts 1-10 x 20 seeds). Wins before → after: smart 200 → 200, kid 113 → 139, masher 59 → 85 (of 200); room-1 KOs 0/200 throughout.
+- npm test 911 passed, 3 skipped; typecheck and build pass. Golden re-captured on purpose (runs unchanged).
+**Next**
+- Manager confirmed all 4 bonuses, no downside. Real DojoForge id for the Open Leg sign-off.

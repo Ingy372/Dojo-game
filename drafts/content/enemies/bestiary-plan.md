@@ -36,7 +36,7 @@ Jay's idea (docs/decisions.md, 'Dodge-only attacks'): an attack that can't be CO
 |---|---|---|---|---|---|---|
 | Swarmer *(existing)* | swarm | F1-2 | Small, fast, comes in groups; jabs. | Red circle (12 ticks). | Clear them first (C12 tip), or COUNTER. | Health and power by ENEMY_SCALE; group size grows by band, not speed. |
 | Brute *(existing)* | heavy | F1-2 | Big and slow; gets winded after chasing 4 s. | Red circle (16 ticks). | COUNTER, or hit it while it's winded. | ENEMY_SCALE on health/power; winded timing never scaled. |
-| Shield Guard *(existing)* | guard | F3-4 | Basic hits bounce off its shield. | Red circle (14 ticks); shield shines. | STRIKE or a Perfect Counter breaks the shield. | Shield regrow time fixed at 6 s. |
+| Shield Guard *(existing)* | guard | F3-4 | Basic hits bounce off its shield. | Red circle (14 ticks); shield shines. | STRIKE or a Great Counter breaks the shield. | Shield regrow time fixed at 6 s. |
 | Wick Wisp | flier | F1-2 | A tiny lost candle flame that drifts in a wavy line and bumps you. | Flickers bright, then a small red circle. | Punch it or COUNTER the bump. | Weakest enemy; health only. |
 | Dust Bunny | charger | F1-2 | A fluffy dust ball that rolls straight at you, then sneezes. | Wiggles in place, then a red circle at its front. | Step aside or COUNTER. | Roll speed fixed; health/power by ENEMY_SCALE. |
 | Lantern Moth | ranged | F3-4 | Flutters at a distance and tosses soft glow pebbles. | Red circle where the pebble lands. | Step out of the circle, then close in. | Pebble count 1 → 2 at F5; never faster. |
@@ -46,7 +46,7 @@ Jay's idea (docs/decisions.md, 'Dodge-only attacks'): an attack that can't be CO
 
 | Name | Role | Band | Behaviour | Tell | Counterplay | Scaling |
 |---|---|---|---|---|---|---|
-| Bouncy Bopper *(existing)* | bonker | F1-2 | Bonks with a padded foam staff. | Raises the staff and glows; red circle. | COUNTER; a Perfect Counter disarms it (staff hidden). | Stats set in R-BAL-8 (#183). |
+| Bouncy Bopper *(existing)* | bonker | F1-2 | Bonks with a padded foam staff. | Raises the staff and glows; red circle. | COUNTER; a Great Counter disarms it (staff hidden). | Stats set in R-BAL-8 (#183). |
 | Buzzy Bee | swarm | F1-2 | Busy little bees in groups of 3-4 that zip in and out. | Short hover, then red circle. | Clear them first; DASH out if they crowd you. | Group size grows by band. |
 | Thorn Sprout | turret | F1-2 | A grumpy sprout that stays put and spits seeds. | Puffs its cheeks; red circle where the seed lands. | Walk around the seeds and calm it up close. | Rooted; fire rate fixed. |
 | Shellback Snail | guard | F3-4 | Slow snail that hides in its shell when hit too often. | Red circle before its head-bump. | Wait for it to peek out, or STRIKE the shell. | Hide time fixed; health by ENEMY_SCALE. |
@@ -232,15 +232,15 @@ Jay's standing story rule: "For our dojo's version of this game, tie in Christia
 | Guardian | Tier's promotion verse (school sign) | Theme reference | Idea | Where it's found |
 |---|---|---|---|---|
 | The Lamp Keeper | John 3:16 | John 1:5 | Light shining in the dark | A hidden scroll in the Lantern Halls |
-| The Sun Gardener | Romans 3:10 | Galatians 5:22-23 | Good fruit grows slowly | A scroll under a garden bench |
-| The Hearth Cook | Romans 3:23 | Acts 2:46 | Sharing a meal together | A scroll tucked by the supper table |
-| The Stone Giant | Romans 6:23 | 1 Samuel 17 | David and Goliath, the tier's own form | A sling-stone relic on the Giant's Steps |
-| The River Watcher | Romans 5:8 | Psalm 23:2 | Still waters and seeing clearly | A scroll in the reeds |
+| The Sun Gardener | Romans 3:10 | Galatians 5:22-23 | The good fruit of the Spirit | A scroll under a garden bench |
+| The Hearth Cook | Romans 3:23 | John 6:35 | Jesus, the bread of life | A scroll tucked by the supper table |
+| The Stone Giant | Romans 6:23 | 1 Samuel 17:47 | David and Goliath, the tier's own form | A sling-stone relic on the Giant's Steps |
+| The River Watcher | Romans 5:8 | Psalm 23:2 | Rest by still waters | A scroll in the reeds |
 | The Ember Knight | 1 John 1:9 | Joshua 1:9 | Courage without fear | A scroll on the forge anvil |
-| The Echo Mask | John 3:17 | Hebrews 13:5 | Never alone | A scroll that echoes back kindly |
+| The Echo Mask | John 3:17 | Hebrews 13:5 (part) | Never alone | A scroll that echoes back kindly |
 | The Root Keeper | John 3:3 | Psalm 1:3 | A tree planted by the water | A book on the Library's top shelf |
 | The Storm Herald | John 3:5-8 | Mark 4:39 | Calm in the storm | A scroll that stays still in the wind |
-| The Lost Lightbearer | John 6:40 | Romans 8:37; Matthew 5:14-16 | More than a conqueror; light of the world | The last piece of light, found together |
+| The Lost Lightbearer | John 6:40 | Romans 8:37; John 8:12 | More than a conqueror; Jesus, the light of the world | The last piece of light, found together |
 
 ## Proposed PR split
 

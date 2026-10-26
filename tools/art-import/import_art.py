@@ -29,6 +29,9 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 CONFIG = os.path.join(os.path.dirname(__file__), 'approved.json')
 PAGE = 2048  # largest page size every phone can load safely
 PAD = 2  # transparent gap between frames so neighbours never bleed in
+# R-STANCE-a: renders tag a stance idle with `form` and the old ids; the game reads `stance`.
+# approved.json's "stanceIds" maps the delivered ids to the game's ids (filled in by main()).
+STANCE_IDS: dict[str, str] = {}
 
 
 def rel(*p: str) -> str:
@@ -51,11 +54,13 @@ class Packer:
         self.frames: list[list[int]] = []  # [page, x, y, w, h, offX, offY, srcW, srcH]
         self.by_hash: dict[str, int] = {}
 
-    def add(self, im: Image.Image) -> int:
-        """Returns the frame id, or -1 for an empty frame."""
+    def add(self, im: Image.Image, trim: bool = True) -> int:
+        """Returns the frame id, or -1 for an empty frame. trim=False keeps the full canvas (9-slice art)."""
         bbox = im.getchannel('A').point(lambda a: 255 if a > 2 else 0).getbbox()
         if not bbox:
             return -1
+        if not trim:
+            bbox = (0, 0, im.width, im.height)
         crop = im.crop(bbox)
         key = hashlib.md5(crop.tobytes() + bytes(f'{bbox}{im.size}', 'ascii')).hexdigest()
         if key in self.by_hash:
@@ -105,16 +110,25 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
                    only_layers: list[str] | None = None, merge: list[str] | None = None) -> dict:
     d = json.load(open(json_path))
     base = os.path.dirname(json_path)
-    # Extra animations delivered later for the same rig (e.g. A2 Form stances): same frame and anchor.
+    # Extra animations delivered later for the same rig (e.g. the A2 stance idles): same frame and anchor.
     for extra_path in merge or []:
         e = json.load(open(extra_path))
         if (e['frameWidth'], e['frameHeight'], e['anchor']) != (d['frameWidth'], d['frameHeight'], d['anchor']):
             raise SystemExit(f'{extra_path}: frame size or anchor differs from {json_path}')
         ebase = os.path.dirname(extra_path)
+        # New layers (e.g. the Hearth Cook's lid) join the rig's layer list.
+        names = {l['name'] for l in d['layers']}
+        d['layers'] += [l for l in e.get('layers', []) if l['name'] not in names]
         for name, a in e['animations'].items():
+            sheets = {k: os.path.join(ebase, v) for k, v in a['sheets'].items()}
             if name in d['animations']:
-                raise SystemExit(f'{extra_path}: animation "{name}" is already in {json_path}')
-            d['animations'][name] = {**a, 'sheets': {k: os.path.join(ebase, v) for k, v in a['sheets'].items()}}
+                # An overlay for an animation the rig has: only new layers, frame for frame.
+                main = d['animations'][name]
+                if set(sheets) & set(main['sheets']) or a['frames'] != main['frames']:
+                    raise SystemExit(f'{extra_path}: animation "{name}" is already in {json_path}')
+                main['sheets'] = {**main['sheets'], **sheets}
+                continue
+            d['animations'][name] = {**a, 'sheets': sheets}
     fw, fh = d['frameWidth'], d['frameHeight']
     ndir = len(d['directions'])
     sw, sh = round(fw * scale), round(fh * scale)
@@ -125,7 +139,9 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
     for name, a in d['animations'].items():
         if only_anims and name not in only_anims:
             continue
-        info = {k: v for k, v in a.items() if k not in ('sheets',)}
+        info = {k: v for k, v in a.items() if k not in ('sheets', 'form')}
+        if a.get('form'):
+            info['stance'] = STANCE_IDS.get(a['form'], a['form'])
         info['layers'] = {}
         for layer in layers:
             sheet = a['sheets'].get(layer['name'])
@@ -164,9 +180,11 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
     return out
 
 
-def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | None) -> dict:
-    d = json.load(open(json_path))
-    base = os.path.dirname(json_path)
+def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | None, inline: dict | None = None) -> dict:
+    # A source may list its sprites inline (B-T3-TUNE-2b: the lid icon came as plain PNGs, no static.json);
+    # then "json" is the folder the files are in.
+    d = {'sprites': inline} if inline else json.load(open(json_path))
+    base = json_path if inline else os.path.dirname(json_path)
     sprites = {}
     for name, s in d['sprites'].items():
         if only and name not in only:
@@ -203,8 +221,38 @@ def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | 
     return {'kind': 'static', 'sprites': sprites}
 
 
+def load_ui(packer: Packer, json_path: str, only: list[str] | None, merge: list[str] | None = None) -> dict:
+    """P-MENU2-i: menu art (A-MENU2). Packs each sprite's @2x file untrimmed, so 9-slice edges stay
+    exact, and keeps its 1x size, nineSlice [t, r, b, l] (1x) and shadowMargin. Drawn at 0.5 scale.
+    A-LEGENDARY-wire: `merge` adds sprites from more sheets in the same format (e.g. the Legendary
+    frame); a name in two sheets stops the import. A sheet's `slice` is read as nineSlice."""
+    sprites = {}
+    for path in [json_path, *(merge or [])]:
+        d = json.load(open(path))
+        base = os.path.dirname(path)
+        for name, s in d['sprites'].items():
+            if only and name not in only:
+                continue
+            if name in sprites:
+                raise SystemExit(f'{path}: {name} is already in another sheet')
+            stem, ext = os.path.splitext(s['file'])
+            im = Image.open(os.path.join(base, stem + '@2x' + ext)).convert('RGBA')
+            entry = {'frame': packer.add(im, trim=False), 'size': s['size']}
+            if 'slice' in s and 'nineSlice' not in s:
+                entry['nineSlice'] = s['slice']
+            for k in ('nineSlice', 'shadowMargin'):
+                if k in s:
+                    entry[k] = s[k]
+            sprites[name] = entry
+    missing = sorted(set(only or []) - set(sprites))
+    if missing:
+        raise SystemExit(f'{json_path}: not in the source: {missing}')
+    return {'kind': 'ui', 'density': 2, 'sprites': sprites}
+
+
 def main() -> None:
     cfg = json.load(open(CONFIG))
+    STANCE_IDS.update(cfg.get('stanceIds', {}))
     out_dir = rel(cfg['outDir'])
     os.makedirs(out_dir, exist_ok=True)
     only = sys.argv[1:]
@@ -221,17 +269,24 @@ def main() -> None:
                                                     src.get('animations'), src.get('directions'),
                                                     src.get('layers'),
                                                     [rel(p) for p in src.get('mergeAnimations', [])])
+            elif src['type'] == 'ui':
+                entries[src['id']] = load_ui(packer, path, src.get('only'), [rel(p) for p in src.get('mergeSprites', [])])
             else:
-                entries[src['id']] = load_static(packer, path, scale, src.get('only'))
+                entries[src['id']] = load_static(packer, path, scale, src.get('only'), src.get('sprites'))
         pages = packer.pack()
         names = []
         for old in os.listdir(out_dir):
             if old.startswith(pack_name + '-') and old.endswith(('.png', '.webp')):
                 os.remove(os.path.join(out_dir, old))
         for i, page in enumerate(pages):
-            # Lossless WebP: exact pixels, about 40% smaller than PNG.
+            # Lossless WebP by default: exact pixels, about 40% smaller than PNG.
+            # A pack may set "webpQuality" (lossy, alpha kept exact) when lossless is too big.
             fname = f'{pack_name}-{i}.webp'
-            page.save(os.path.join(out_dir, fname), lossless=True, method=6)
+            q = pack.get('webpQuality')
+            if q:
+                page.save(os.path.join(out_dir, fname), quality=q, alpha_quality=100, method=6)
+            else:
+                page.save(os.path.join(out_dir, fname), lossless=True, method=6)
             names.append(fname)
         meta = {
             'about': 'Made by tools/art-import/import_art.py. Do not edit by hand; re-run the script.',

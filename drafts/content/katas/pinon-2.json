@@ -1,0 +1,16 @@
+{
+  "id": "pinon-2",
+  "name": "Pinon 2",
+  "schoolName": "Pinon 2",
+  "belt": "red-to-red-black",
+  "source": "docs/curriculum.md (name and belt only). No school sheet in the repo yet.",
+  "approvedBy": null,
+  "form": null,
+  "senseiLine": "Practice your kata with your instructor.",
+  "character": null,
+  "characterQuestion": "Jay: one short, kid-friendly line on Pinon 2's character (for example 'slow and strong' or 'lots of turns').",
+  "steps": [],
+  "stepsQuestion": "Jay: please send the steps for Pinon 2 (or the school sheet, like Basic Form 1-2, Keon and David and Goliath). For each step: what happens, which way the student faces, any stance named, and where the kiai is.",
+  "finish": null,
+  "finishQuestion": "Jay: how does Pinon 2 end (for example ready stance, attention and bow, like the other katas)?"
+}

@@ -46,6 +46,7 @@ export function loadContent(raw: RawContent): Content {
   }
   for (const e of Object.values(enemies)) {
     if (e.summon && !enemies[e.summon.enemy]) throw new Error(`Enemy "${e.id}" calls in "${e.summon.enemy}", which doesn't exist`);
+    if (e.split && !enemies[e.split.into]) throw new Error(`Enemy "${e.id}" splits into "${e.split.into}", which doesn't exist`);
   }
   const rooms = raw.rooms.map(loadRoom);
   const ids = new Set<string>();

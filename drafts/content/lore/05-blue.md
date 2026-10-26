@@ -1,6 +1,6 @@
 # Tier 5: Blue Belt, The Quiet River
 
-**Belt form:** Penon 1  
+**Belt form:** Pinon 1  
 **Guardian:** The River Watcher
 
 ## The Tower's history

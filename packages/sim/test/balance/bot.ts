@@ -7,9 +7,12 @@
 //   'masher' - a 6-year-old who never Counters: walks at the nearest enemy and Strikes
 //              when it can. With Sensei's guide on, it taps Counter only while the game
 //              holds still and the button pulses.
+//   'kid'    - B-MASHER-c: plays like the masher, but on an independent 12% of ticks presses
+//              Counter or Strike (50/50) at a random living enemy, like a young player who
+//              presses every button.
 // It uses its own seeded random numbers, so results repeat exactly.
 
-import type { EliteKind } from '../../src';
+import type { EliteKind, StanceDef } from '../../src';
 import {
   COMBAT,
   GUIDE_DONE,
@@ -39,7 +42,10 @@ import {
   type WorldState,
 } from '../../src';
 
-export type Style = 'smart' | 'stand' | 'masher';
+export type Style = 'smart' | 'stand' | 'masher' | 'kid';
+
+/** B-MASHER-c: share of ticks on which the kid bot presses a random button. */
+export const KID_RANDOM_PRESS = 0.12;
 
 export interface Skill {
   /** Ticks after a telegraph starts before the bot reacts. */
@@ -67,6 +73,9 @@ export interface RoomStats {
   hits: number;
   /** Strikes the player landed. */
   strikes: number;
+  /** R-STANCE-READY-NUM: damage the player's attacks dealt, and enemies they defeated. */
+  dealt: number;
+  kos: number;
   died: boolean;
   /** Average number of enemies within 2.5 tiles of the player while fighting. */
   crowd: number;
@@ -74,6 +83,8 @@ export interface RoomStats {
   peakCrowd: number;
   winded: number;
   grade: string | null;
+  /** B-T3-TUNE-2c: rules ticks spent in boss phase pauses (not in `ticks`, which stops during them). */
+  holdTicks?: number;
 }
 
 export interface RunStats {
@@ -99,7 +110,7 @@ interface Plan {
 export function playRoom(content: Content, run: RunState, world: WorldState, room: Room, style: Style, skill: Skill, rng: Rng): RoomStats {
   const p = world.players.p1;
   const plans = new Map<string, Plan>();
-  const stats: RoomStats = { roomId: room.id, kind: room.kind, ticks: 0, damage: 0, perfects: 0, blocks: 0, hits: 0, strikes: 0, died: false, crowd: 0, peakCrowd: 0, winded: 0, grade: null };
+  const stats: RoomStats = { roomId: room.id, kind: room.kind, ticks: 0, damage: 0, perfects: 0, blocks: 0, hits: 0, strikes: 0, dealt: 0, kos: 0, died: false, crowd: 0, peakCrowd: 0, winded: 0, grade: null };
   let crowdSum = 0;
   let crowdN = 0;
   const limit = 20 * 60 * 6;
@@ -112,7 +123,9 @@ export function playRoom(content: Content, run: RunState, world: WorldState, roo
       if (ev.kind === 'block') stats.blocks++;
       if (ev.kind === 'hit') stats.hits++;
       if (ev.kind === 'playerAttack' && ev.move === 'strike') stats.strikes++;
+      if (ev.kind === 'playerAttack') { stats.dealt += ev.damage; if (ev.defeated) stats.kos++; }
       if (ev.kind === 'winded') stats.winded++;
+      if (ev.kind === 'phaseHold') stats.holdTicks = (stats.holdTicks ?? 0) + ev.ticks;
     }
     const alive = world.enemies.filter((e) => e.mode !== 'defeated');
     if (alive.length > 0) {
@@ -153,7 +166,11 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
 
   // Sensei holds the game still with Counter pulsing: every style taps it.
   if (world.guide?.waiting) return { kind: 'none', action: 'counter' };
-  if (style === 'masher') {
+  if (style === 'kid' && nextFloat(rng) < KID_RANDOM_PRESS) {
+    const t = pick(rng, alive);
+    return { ...approach(p, t), action: nextFloat(rng) < 0.5 ? 'counter' : 'strike' };
+  }
+  if (style === 'masher' || style === 'kid') {
     const t = nearest(p.pos, alive)!;
     const near = distance(p.pos, t.pos) - t.def.radius - 0.42 <= COMBAT.strike.reach;
     const move = approach(p, t);
@@ -190,7 +207,15 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
     const first = active[0];
     const second = active[1];
     const overlap = second && second.impact - first.impact < 8;
-    if (overlap && now >= second.noticeAt && p.dashCooldown === 0) {
+    const firstEnemy = alive.find((x) => x.id === first.enemyId)!;
+    const dashOnly = currentAttack(firstEnemy).counterable === false;
+    if (dashOnly && now >= first.noticeAt && p.dashCooldown === 0) {
+      // B-T3: can't be Countered or blocked (rolling pin), so dash out.
+      escape = awayFrom(p.pos, [firstEnemy.attackCenter!], room);
+      action = 'dash';
+    } else if (dashOnly) {
+      escape = awayFrom(p.pos, [firstEnemy.attackCenter!], room);
+    } else if (overlap && now >= second.noticeAt && p.dashCooldown === 0) {
       // Dash away from the danger areas.
       escape = awayFrom(p.pos, active.map((pl) => alive.find((x) => x.id === pl.enemyId)!.attackCenter!), room);
       action = 'dash';
@@ -300,7 +325,7 @@ function awayFrom(pos: Vec2, from: Vec2[], room: Room): Vec2 {
 }
 
 /** Plays a whole run. */
-export function playRun(content: Content, seed: number, style: Style, skill: Skill, difficulty: Difficulty = 'standard', base = { maxHealth: 100, power: 10, guard: 0 }, guideStep?: number, elites: { tier?: number; forcedElite?: EliteKind } = {}): RunStats {
+export function playRun(content: Content, seed: number, style: Style, skill: Skill, difficulty: Difficulty = 'standard', base: { maxHealth: number; power: number; guard: number; stances?: StanceDef[] } = { maxHealth: 100, power: 10, guard: 0 }, guideStep?: number, elites: { tier?: number; forcedElite?: EliteKind } = {}): RunStats {
   const run = startRun(content, { seed, dryRuns: 0, difficulty, ...elites });
   const rng = createRng(seed * 7919 + 13);
   const rooms: RoomStats[] = [];

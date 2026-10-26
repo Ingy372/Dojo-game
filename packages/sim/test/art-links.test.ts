@@ -5,16 +5,19 @@ import playerA from '../../../assets/art/player-a.json';
 import playerB from '../../../assets/art/player-b.json';
 import named from '../../../assets/art/named-monster.json';
 
-type Pack = { entries: Record<string, { animations?: Record<string, { form?: string }>; sprites?: Record<string, unknown> }> };
+type Pack = { entries: Record<string, { animations?: Record<string, { stance?: string }>; sprites?: Record<string, unknown> }> };
 const content = testContent();
 
 describe('art links', () => {
-  it('every Form but the Beginner\'s Stance has its own stance idle, on both bodies', () => {
-    const forms = content.abilities.forms.filter((f) => f.id !== 'beginners-stance');
-    expect(forms.length).toBeGreaterThan(0);
+  // R-STANCE-d1 (Manager call): Horse uses the approved rooted idle; Cat, Front and Fighting use Ready's idle.
+  it('Horse Stance has the one stance idle on both bodies; no other Stance is tagged', () => {
+    const stances = content.abilities.stances.filter((f) => f.id === 'horse-stance');
+    const others = content.abilities.stances.filter((f) => f.id !== 'horse-stance');
+    expect(stances.length).toBeGreaterThan(0);
     for (const pack of [playerA, playerB] as Pack[]) {
-      const tagged = Object.values(pack.entries.player.animations ?? {}).map((a) => a.form).filter(Boolean);
-      for (const f of forms) expect(tagged.filter((t) => t === f.id), f.id).toHaveLength(1);
+      const tagged = Object.values(pack.entries.player.animations ?? {}).map((a) => a.stance).filter(Boolean);
+      for (const f of stances) expect(tagged.filter((t) => t === f.id), f.id).toHaveLength(1);
+      for (const f of others) expect(tagged.filter((t) => t === f.id), f.id).toHaveLength(0);
     }
   });
 

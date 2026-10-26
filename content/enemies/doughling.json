@@ -1,0 +1,31 @@
+{
+  "id": "doughling",
+  "name": "Doughling",
+  "notes": "Smaller Dough Blob from the split. Same shape; smaller and quicker than the parent (stats set in R-BAL-8, #185). Never splits again.",
+  "color": "#f6e7c8",
+  "maxHealth": 22,
+  "power": 7,
+  "guard": 0,
+  "radius": 0.32,
+  "moveSpeedTilesPerSecond": 3.4,
+  "sightRange": 12,
+  "attack": {
+    "name": "little squish",
+    "strength": 1,
+    "startRange": 0.95,
+    "reach": 0.5,
+    "areaRadius": 0.55,
+    "telegraphTicks": 16,
+    "recoverTicks": 16
+  },
+  "parSeconds": 2.0,
+  "tell": "tiny squish, then small red circle",
+  "senseiLine": "Two little ones? Calm them quickly.",
+  "bestiary": {
+    "tip": "Small and quick. Calm them before they wander.",
+    "lore": {
+      "orange": "Two little dough rolls, still a bit grumpy. Calm them, and they rest side by side, ready to bake."
+    }
+  },
+  "tier": "orange"
+}

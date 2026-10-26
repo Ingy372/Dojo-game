@@ -14,6 +14,8 @@ import { loadSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { startTowerRun } from '../game/tower';
 import { FONT, crisp, view, hiDpi } from '../ui/theme';
+import { button } from '../ui/button';
+import { MIN_TAP, RADIUS, S1, S2 } from '../ui/tokens';
 
 export interface CreateSceneData {
   /** True the first time: a welcome, and no way back until the character is made. */
@@ -83,10 +85,17 @@ export class CreateScene extends Phaser.Scene {
     const w = width - x0 - pad;
     const labelW = Math.min(96, w * 0.24);
     const top = pad;
-    const bottomH = 50;
-    const rowH = Math.min(52, (height - top - bottomH - pad) / 6);
-    this.ui.add(this.add.rectangle(x0 - 6, top - 6, w + 12, rowH * 6 + 12, PANEL, 0.9).setOrigin(0).setStrokeStyle(2, GOLD, 0.25));
+    // P-MENU-e: Body, Eyes and Hairstyle rows hold buttons, so they are tall enough for
+    // 44 pt buttons; the three colour rows share what is left (their dots tap by the whole cell).
+    const bottomH = MIN_TAP + S2;
+    const btnRowH = MIN_TAP + S1;
+    const dotRowH = Math.min(52, (height - top - bottomH - pad - 12 - 3 * btnRowH) / 3);
+    const panel = this.add.graphics();
+    panel.fillStyle(PANEL, 0.9).fillRoundedRect(x0 - 6, top - 6, w + 12, 3 * (btnRowH + dotRowH) + 12, RADIUS.panel);
+    panel.lineStyle(2, GOLD, 0.25).strokeRoundedRect(x0 - 6, top - 6, w + 12, 3 * (btnRowH + dotRowH) + 12, RADIUS.panel);
+    this.ui.add(panel);
     let y = top;
+    let rowH = btnRowH;
     const row = (label: string) => {
       this.text(x0 + 6, y + rowH / 2, label, 14, '#f2e9d8', true).setOrigin(0, 0.5);
       const at = { x: x0 + labelW, y, w: w - labelW, h: rowH };
@@ -99,7 +108,7 @@ export class CreateScene extends Phaser.Scene {
     const half = (body.w - 8) / 2;
     (['a', 'b'] as const).forEach((b, i) => {
       const on = this.look.body === b;
-      this.button(body.x + i * (half + 8), body.y + 6, half, rowH - 12, b === 'a' ? 'Boy' : 'Girl', on ? 0x3a7bd5 : 0x3a3448, 15, () => this.change({ body: b }), on);
+      this.button(body.x + i * (half + 8), body.y + S1 / 2, half, MIN_TAP, b === 'a' ? 'Boy' : 'Girl', on ? 0x3a7bd5 : 0x3a3448, 15, () => this.change({ body: b }), on);
     });
 
     // Eyes and hairstyle: arrows either side of the option's number.
@@ -107,16 +116,17 @@ export class CreateScene extends Phaser.Scene {
     this.stepper(row('Hairstyle'), rowH, 'Hairstyle', HAIRS, this.look.hair, (hair) => this.change({ hair }));
 
     // Colours: tap a swatch.
+    rowH = dotRowH;
     const pal = characterArt(this, `player-${this.look.body}-big`, 'player')?.palettes ?? {};
     this.swatches(row('Skin'), rowH, pal.skin ?? [], this.look.skin, (skin) => this.change({ skin }));
     this.swatches(row('Hair colour'), rowH, pal.hair ?? [], this.look.hairColor, (hairColor) => this.change({ hairColor }));
     this.swatches(row('Gi'), rowH, pal.gi ?? [], this.look.gi, (gi) => this.change({ gi }));
 
     // ---- bottom: done (and, after the first time, back without changing anything)
-    const by = height - pad - 42;
+    const by = height - pad - MIN_TAP;
     const doneW = Math.min(200, w * 0.5);
-    this.button(width - pad - doneW, by, doneW, 42, this.first ? "Let's go!" : 'Done', 0x3aa57a, 18, () => this.finish(true));
-    if (!this.first) this.button(x0, by, Math.min(120, w * 0.3), 42, '◀ Back', 0x5b4a3c, 15, () => this.finish(false));
+    this.button(width - pad - doneW, by, doneW, MIN_TAP, this.first ? "Let's go!" : 'Done', 0x3aa57a, 18, () => this.finish(true));
+    if (!this.first) this.button(x0, by, Math.min(120, w * 0.3), MIN_TAP, '◀ Back', 0x5b4a3c, 15, () => this.finish(false));
   }
 
   private change(part: Partial<PlayerLook>): void {
@@ -135,11 +145,11 @@ export class CreateScene extends Phaser.Scene {
   /** ◀ "Eyes 3" ▶ */
   private stepper(at: { x: number; y: number; w: number }, rowH: number, name: string, list: string[], cur: string, pick: (v: string) => void): void {
     const i = list.indexOf(cur);
-    const bw = Math.min(56, at.w * 0.25);
-    const h = rowH - 10;
+    const bw = Math.max(MIN_TAP, Math.min(56, at.w * 0.25));
+    const h = MIN_TAP;
     const go = (d: number) => () => pick(list[(i + d + list.length) % list.length]);
-    this.button(at.x, at.y + 5, bw, h, '◀', 0x4a3f63, 20, go(-1));
-    this.button(at.x + at.w - bw, at.y + 5, bw, h, '▶', 0x4a3f63, 20, go(1));
+    this.button(at.x, at.y + (rowH - h) / 2, bw, h, '◀', 0x4a3f63, 20, go(-1));
+    this.button(at.x + at.w - bw, at.y + (rowH - h) / 2, bw, h, '▶', 0x4a3f63, 20, go(1));
     // No words or numbers to read: one dot per option, the chosen one big and gold.
     const n = list.length;
     const gap = Math.min(14, (at.w - 2 * bw - 16) / n);
@@ -198,16 +208,8 @@ export class CreateScene extends Phaser.Scene {
   }
 
   private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void, on = false): void {
-    const bg = this.add
-      .rectangle(x, y, w, h, color)
-      .setOrigin(0)
-      .setStrokeStyle(on ? 3 : 2, on ? GOLD : 0xffffff, on ? 1 : 0.3);
-    this.ui.add(bg);
-    this.text(x + w / 2, y + h / 2, label, size, '#ffffff', true).setOrigin(0.5);
-    bg.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-      sfx.unlock();
-      onTap();
-    });
+    // P-MENU-c: the shared rounded button (press feedback, 44 pt tap area); `on` is the picked choice.
+    button(this, { x, y, w, h, label, color, size, onTap, selected: on }, this.ui);
   }
 
   private text(x: number, y: number, s: string, size: number, color: string, bold = false, family = FONT): Phaser.GameObjects.Text {

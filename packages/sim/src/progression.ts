@@ -1,13 +1,13 @@
 // Levels and experience (core-design sections 10 and 13), and the character that real
-// training plus play produces: stats, Forms, Strike upgrades, Technique Seals and a Virtue.
+// training plus play produces: stats, Stances, Strike upgrades, Technique Seals and a Virtue.
 
 import type { AbilityContent } from './abilities';
 import { BLESSING, PROGRESSION, TICKS_PER_SECOND, VIRTUE_RANK_BONUS } from './config';
 import type { Effect } from './effects';
 import type { FeedBelt } from './feed';
-import { playerStats, type Profile } from './profile';
+import { playerStats, type Loadout, type Profile } from './profile';
 import type { RunSummary } from './run';
-import { unlockedForms, virtueTitle, type TrainingState, type VirtueInfo } from './training';
+import { trainingStats, unlockedStances, virtueTitle, type TrainingState, type VirtueInfo } from './training';
 import type { PlayerSetup, VirtueSetup } from './world';
 
 /** Total experience for one belt tier's levels, from the school's typical time in rank. */
@@ -29,8 +29,10 @@ export function xpToNext(level: number, belts: readonly FeedBelt[]): number {
   // White belt climbs from 1 to 10 (9 steps); every later tier has 10 steps.
   const steps = tier === 1 ? per - 1 : per;
   const step = tier === 1 ? level : level - (tier - 1) * per + 1;
-  const total = (steps * (steps + 1)) / 2;
-  return Math.max(10, Math.round((tierXp(belt) * step) / total));
+  // R-BAL-5 (D3): weights step + k, so the tier's experience is shared more evenly.
+  const k = PROGRESSION.xpStepSoften;
+  const total = (steps * (steps + 1)) / 2 + k * steps;
+  return Math.max(10, Math.round((tierXp(belt) * (step + k)) / total));
 }
 
 /** The level the character plays at: never above the real rank's cap. */
@@ -119,13 +121,39 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
   const gear = playerStats(profile);
   const level = effectiveLevel(profile, training);
   const earned = training.abilities.filter((a) => a.unlocked && a.perk).map((a) => a.perk!.effect);
+  // R-BAL-12: real training adds whole-number stats on top of gear and level.
+  const trained = trainingStats(training);
   return {
     level,
-    maxHealth: gear.maxHealth + (level - 1) * PROGRESSION.healthPerLevel,
-    power: Math.round((gear.power + (level - 1) * PROGRESSION.powerPerLevel) * 10) / 10,
-    guard: gear.guard,
+    maxHealth: gear.maxHealth + (level - 1) * PROGRESSION.healthPerLevel + trained.maxHealth,
+    power: Math.round((gear.power + (level - 1) * PROGRESSION.powerPerLevel + trained.power) * 10) / 10,
+    guard: gear.guard + trained.guard,
     effects: [...earned, ...gear.effects],
-    forms: unlockedForms(training, abilities),
-    virtue: virtueSetup(training),
+    ...loadoutAbilities(profile.loadout, training, abilities, profile.grandfatheredStances),
   };
+}
+
+/**
+ * R-STANCE-d1: a loadout with any Stance the student hasn't unlocked dropped (R-STANCE-g: back to
+ * the Beginner's Stance, null). The Virtue pick is left as is. Returns null when nothing is left.
+ */
+export function normalizeLoadout(loadout: Loadout | null, training: TrainingState, abilities: AbilityContent, grandfathered: readonly string[] = []): Loadout | null {
+  if (!loadout) return null;
+  const ok = loadout.stance !== null && unlockedStances(training, abilities, grandfathered).some((s) => s.id === loadout.stance);
+  // A stance that isn't unlocked goes to the Beginner's Stance (null); the loadout and its virtue are kept.
+  return { stance: ok ? loadout.stance : null, virtue: loadout.virtue };
+}
+
+/**
+ * P-MENU2-d: the Stances and Virtue for a fight, with the student's loadout applied. No loadout
+ * (or a pick not earned) gives exactly today's setup. A chosen Stance starts the fight; the
+ * others follow in their usual order, so switching Stances still works.
+ */
+export function loadoutAbilities(saved: Loadout | null, training: TrainingState, abilities: AbilityContent, grandfathered: readonly string[] = []): Pick<PlayerSetup, 'stances' | 'virtue'> {
+  const loadout = normalizeLoadout(saved, training, abilities, grandfathered);
+  let stances = unlockedStances(training, abilities, grandfathered);
+  const at = loadout?.stance ? stances.findIndex((f) => f.id === loadout.stance) : -1;
+  if (at > 0) stances = [...stances.slice(at), ...stances.slice(0, at)];
+  const picked = loadout?.virtue ? training.virtues.find((v) => v.def.id === loadout.virtue) : undefined;
+  return { stances, virtue: picked ? virtueSetupFor(picked) : virtueSetup(training) };
 }

@@ -3,8 +3,8 @@
   "rarityNames": { "common": "Everyday", "uncommon": "Special", "rare": "Rare", "epic": "Epic", "legendary": "Legendary" },
   "tier": "white",
   "slotStats": {
-    "hands": { "power": [1, 2, 3, 4] },
-    "gi": { "maxHealth": [8, 14, 20, 28], "guard": [2, 3, 5, 7] }
+    "hands": { "power": [1, 1, 1, 1] },
+    "gi": { "maxHealth": [3, 5, 8, 10], "guard": [1, 2, 2, 3] }
   },
   "items": [
     { "id": "cloth-wraps", "name": "Cloth Hand Wraps", "slot": "hands" },
@@ -19,7 +19,7 @@
       "slot": "charm",
       "text": "+{pct} Power",
       "effect": { "type": "powerScale" },
-      "amounts": [0.04, 0.06, 0.09, 0.12]
+      "amounts": [0.01, 0.02, 0.03, 0.04]
     },
     {
       "id": "lotus-charm",
@@ -33,7 +33,7 @@
       "id": "crane-charm",
       "name": "Crane Charm",
       "slot": "charm",
-      "text": "Perfect Counters heal {n} health",
+      "text": "Great Counters heal {n} health",
       "effect": { "type": "healOnPerfect" },
       "amounts": [2, 3, 4, 6]
     }

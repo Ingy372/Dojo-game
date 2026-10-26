@@ -2,7 +2,7 @@
   "id": "basic-form-2",
   "name": "Basic Form 2",
   "requirement": "yellow-kata",
-  "form": "flowing-form",
+  "stance": null,
   "from": "drafts/content/katas/basic-form-2.json (S3-K1). Only names, step counts and directions are shown in the game (D1).",
   "steps": [
     {

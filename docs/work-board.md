@@ -1,12 +1,57 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-24 (7:55 PM EDT) by Dojo-ascent Manager. Catch-up covers PRs #62–#176.
+Last updated: 2026-10-25 12:00 PM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#253.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
 **How it stays current:** Jay marks items done or changes them here. Decisions go into `docs/decisions.md`. If this file and `docs/decisions.md` disagree, `docs/decisions.md` wins.
 
 **Owners:** Jay · Dojo-Ascent Programmer · Dojo-Ascent Researcher & Planner (drafts/planning/) · Learning & Engagement Designer · Content Writer · Art Director · QA & Playability Tester · DojoForge (outside this repository).
+
+---
+
+## 0. Jay decided Oct 25
+- Launch is now a **Dec 15, 2026 beta for 5-10 tester families**; the store launch comes later (mid-January target, D-B4). Plan: `drafts/planning/BETA-DEC15-plan.md` (PR #232; replan PR #230).
+- D1-D8 picks accepted (and the beta D-B1 to D-B5 picks).
+- Faith direction approved; verse picks merged (C13-F, PR #229; cleanup PR #231).
+- Menu polish: "make it feel premium", with the planner's picks; Jay fixes anything on inspection.
+- Walk: Jay keeps the original walk. PR #199 samples closed (J14, A-WALK done).
+
+## 0a. Dec 15 Beta (from `drafts/planning/BETA-DEC15-plan.md`)
+| ID | Owner | What | Done when | Waits on |
+|---|---|---|---|---|
+| B-ACCT | Jay | Ask Nic if Tarnished Labs has Apple Developer and Google Play **organization** accounts. Get access, or enrol new ones. | Jay can sign in to App Store Connect and Play Console and see the team. | — |
+| B-LAW | Jay | Book the lawyer. Show them the parent note and privacy page. | A meeting date is on Jay's calendar, and the lawyer's notes are in `jay/`. | — (B-DOCS done, L4 fixes #240) |
+| B-WRAP | Dojo-Ascent Programmer | **Merged (PR #243, Node 22 in #245; placeholder app id `com.placeholder.dojoascent`). Jay's phone check comes with the first B-CI build.** Capacitor 8 wrap (M8-a): landscape, safe areas, pause in background. | The Android build installs on Jay's phone, plays a full floor, and resumes after switching apps. | — |
+| B-CI | Dojo-Ascent Programmer | Cloud builds: GitHub Actions makes a signed iPhone build (macOS runner) and Android build. | A push makes both builds, and they show up in TestFlight and Play internal testing. | B-ACCT, B-WRAP |
+| B-BELT | Dojo-Ascent Programmer | **Done (PR #246, merged Oct 25; QA evidence on bot-qa).** Grown-up belt entry (D2), behind the grown-up gate. Plays the real reward moments. | A tester enters "Yellow, 2 stripes" after the gate question. The game shows Yellow, unlocks the right things, and still shows it after restarting. | — |
+| B-SAFE | Dojo-Ascent Programmer | **In QA (PR #249).** Kid-safety items: outside links behind the gate, a wipe-data button, a "saved on this phone" note. | Every outside link asks the gate question first. Wipe returns to a fresh start. The note shows on first launch. | — |
+| B-MENU | Dojo-Ascent Programmer | P-MENU-a to e. | Every button is at least 44 pt, shows press feedback, and the grid doesn't jump (P-MENU checks). | P-MENU-a (#228), P-MENU-b to e |
+| B-ART3 | Dojo-ascent Artist | **Samples approved and merged (#241, #242). Full set delivered: enemies #244, Hearth Cook Guardian #247, Ember Kitchens rooms #248; waiting on Jay (doughling look, pin colours).** Tier 3 (Orange) room art, enemies and Guardian. | The art files are in `incoming-art/` and approved by Jay **by Nov 20**. | Jay's OK on #244, #247, #248 |
+| B-T3 | Dojo-Ascent Programmer | Import tier 3, or set the "next floor opens soon" note. | An Orange-belt profile plays tier 3 to its Guardian, or sees the note if B-ART3 slipped. | B-ART3 |
+| B-DOCS | Dojo-Ascent Researcher & Planner | **Delivered (PR #236, merged Oct 25).** Parent beta note (one page), privacy page draft, TestFlight beta description, feedback email text. | All four drafts are in `drafts/planning/` for Jay and the lawyer. | — |
+| B-TESTERS | Jay | Pick 5–10 families. Collect each parent's Apple email (iPhone) or Google email (Android), plus their OK. | A list with names, phone type, email and an OK for each family. | — (B-DOCS done) |
+| B-BETAREV | Dojo-Ascent Programmer | Send the first build to TestFlight external testing (Beta App Review). | App Store Connect shows the build "Approved" for external testing. | B-CI, B-DOCS |
+| B-QA | Dojo-Ascent Game Logic/systems Tester | Full beta pass on a small and a large phone, both platforms (or web). | A QA report says READY with no blocking bugs. | B-BELT, B-SAFE, B-T3 |
+| B-SEND | Jay | Freeze Dec 4. Invite testers Dec 7. Fall back to the web link where needed. (Manager runs it; Jay owns it) | Every tester family has the game installed and opened by Dec 15. | B-QA, B-TESTERS, B-BETAREV |
+| B-FEEDBACK | Jay | Collect beta feedback into one place, weekly from Dec 15. (Manager runs it; Jay owns it) | One feedback file with each note, its date and an owner. | B-SEND |
+
+## 0b. Menu polish P-MENU-a to h (from `drafts/planning/P-MENU-menu-polish.md`)
+| ID | Owner | What | Done when | Waits on |
+|---|---|---|---|---|
+| P-MENU-a | Dojo-Ascent Programmer | **Done (PR #228, merged Oct 25).** Section 2: spacing, type and motion tokens in `theme.ts`; shared `ui/button.ts` with press feedback, 44 pt hit areas and slide-off cancel; reduced-motion path | Every HomeScene tappable is ≥44×44 (a test walks the scene's interactive objects); pressing any button shows the scale-down; reduced motion shows no scale or slide | nothing |
+| P-MENU-b | Dojo-Ascent Programmer | **In QA (PR #253).** Split `render()` into shell and panel; the tab bar with sliding underline; `SWAP` on tab and page change | Tab taps redraw only the panel; the underline slides in 180 ms; a quick double tap never draws two panels | P-MENU-a |
+| P-MENU-c | Dojo-Ascent Programmer | **Delivered (PR #254, merge after #249); waiting on QA.** Section 3a hub left column (header row, character block, bars, buttons, Path card) | Matches the 3a table on 667×375 and 932×430 screenshots | P-MENU-a |
+| P-MENU-d | Dojo-Ascent Programmer | Section 3b Gear: bigger cards, bottom sheet, Wear pop, Let go confirm in the sheet, page dots | Picking a card never moves the grid; Wear pops the slot; screenshots on 667×375 and 932×430 | P-MENU-b |
+| P-MENU-e | Dojo-Ascent Programmer | Section 3c Gate: lock sizes, equal sundial and Seal cards, first-lit Seal pop once, no endless blinking | The Seal card never wraps past 2 lines on 667×375; the READY chip and lit locks don't loop | P-MENU-b |
+| P-MENU-f | Dojo-Ascent Programmer | **Decided:** soft code-made tap sound (logged on #228); bow bell on first lit Seal: yes. Pick a soft tap sound for press and say whether the bow bell is OK for the first lit Seal | Sounds named in decisions.md | P-MENU-a |
+| P-MENU-g | Dojo-Ascent Game Logic/systems Tester | Before and after phone check, small and large phones, reduced motion on and off | Notes posted; no tap missed by a 6-year-old in 10 tries per control | P-MENU-c, d, e |
+| P-MENU-h | Jay | **Jay, Oct 25:** "make it feel premium"; planner/Manager picks accepted, fix on inspection. The taste calls below | Answers in decisions.md | this PR |
+
+## 0c. Done Oct 25
+**In QA (merge order #253, #249, #254, #250, #252):** P-MENU-c #254 (after #249), P-MENU-b #253, B-SAFE #249, Reduced-motion Celebrations and 'practiced' wording #250, 'practiced' sign-off cards #252 (after #250).
+
+B-WRAP #243, Node 22 #245, B-BELT #246, R-BAL-14b #251, L4 beta-docs review #239 and fixes #240, B-ART3 samples #241 and room brief #242, bestiary set 1 #234 (Jay approved), P-MENU-a #228, B-DOCS #236, R-BAL-14 #237, C7 charm placeholders #233, K27 #218, K28 #219, K29 #220, K30 #221, K31 #222, K32 #226, R-BAL-12d #213, R-BAL-12e #210, K26 #215, R-BAL-13 #224, C14 #217, C13-F #229, A-BEST samples #207, dash telegraphs #209, P-MENU plan #225, Dec 15 replan #230 and beta plan #232. Walk #199 closed (original walk kept).
 
 ---
 
@@ -57,9 +102,13 @@ These questions already have answers in the design docs. The bots build on these
 | J11 | ~~Street Smarts safety review~~ **Done (Oct 24):** code word yes, kid says Mom/Dad, the "come with me" line is OK; Manager picked the safe helpers (worker with uniform or name tag, cashier, police officer, grown-up with kids) and a short reunion scene. Applied in PR #58. | ~~C1, K2~~ (unblocked) |
 | J12 | **Not blocking (after-work glance):** the fixed warning moves are now in the game (PR #104). Jay can try them with `?named=old-thumper`, `?named=zippy-zoom` or `?named=captain-clank` on a yellow-belt run and say if anything looks off. | nothing (built) |
 | J13 | **After-work list (not blocking, Jay will do later):** self-defense gaps for S4 (results and categories for #31–35, what "party flex" (#33) means, #36–40 for Brown, the attacks for #3/#4/#5/#15); kick combos 8–12; kata character lines (J3); for the C4 quests, the school's founding story, the arts blended in Yeshua's Ryu and what each belt colour means; whether to ask Nic for a total-classes field (PR #93); quick looks at the cosmetics (PR #78), Insight icons (PR #56) and the padded-staff enemy (PR #95); the A2 Rooted stance pick (PR #121); self-defense #36–40 attacks and student steps. | S3, S4 rest, C4 details |
-| R-BAL-1 | **Balance approach (PR #176, `drafts/planning/balance-research.md`).** D1 scale enemies to the expected player or the actual one (recommended: expected); D2 target bands OK?; D4 Endless soft cap ×1.5 or keep +3% with no cap; D5 Challenge 1.3× or 1.5×. | R-BAL-2, R-BAL-6 |
-| R-BAL-5 | Soften the XP steps (last step 10 runs or fewer)? Yes or no. | one config line |
-| J14 | **Walk, round 3 (Oct 24).** Jay picked Arms 1 (relaxed, PR #175) at 6.5/10; the Artist tries again after studying natural walks in other games. Jay picks from the new samples. Fallback: Arms 1. | A-WALK |
+| R-BAL-1 | **Done (Oct 24, recorded in PR #181):** expected player; bands OK (Standard 60–80% first try, Guided 90%+); Endless +3% per floor, no cap; Challenge 1.5×. | ~~R-BAL-2, R-BAL-6~~ |
+| R-BAL-5 | **Done:** yes, last step 10 runs or fewer; built in PR #204. | — |
+| J14 | **Decided Oct 25:** original walk kept; #199 closed. | — |
+| J15 | **Art OKs (Jay gives final approval on all art):** A-BEST 1 bestiary sample v2 (PR #207), A-BEST 2 dash-only warning art (PR #209), A-BEST 3 Guardian concepts v2 (PR #211, concept only), charms without red (PR #214), ~~bestiary set 1 (PR #234)~~ approved and merged Oct 25; **B-ART3 full Orange set (#244, #247, #248): doughling look and pin colours**; **S3-A1 kata icons (#227): technique match, choke break, Front at top**. ~~Gear icons (PR #212)~~ approved Oct 24, merged Oct 25. | A-BEST full set, imports |
+| J16 | **C14 Guardian form shifts (PR #217):** OK the 4 picks and new-form names (Pebble Heart, Bloom Gardener, Quiet Thunderhead, Cloud Lantern); add Ember Knight as a 5th?; shift at 33% (chosen) or 66%; invulnerable during the 1 s glow? | C14 art, wiring |
+| J17 | **Decided:** lines OK'd; #213, #210, #215 merged. | — |
+| J18 | **Decided Oct 25:** faith direction approved; C13-F merged (#229). | — |
 | J7 | ~~Fonts~~ **Done (Oct 23, Jay delegated to the Manager):** Fredoka for headings + Andika for body text, because Andika is built for early readers (ages 6+). | ~~menu art~~ (unblocked) |
 
 ---
@@ -125,12 +174,22 @@ Start with **M7-P1, M7-P9 and M7-P11**. Full specs are in the plan file under th
 | K20 | **Done (PR #147).** M7-P10 Three next goals at session end (section 3b). One PR. | K19 |
 | K22 | **Done (PRs #153, #154).** M7-P13 Learning Designer fixes. | — |
 | K23 | **Done (PRs #157, #159, #167; QA retest PASS #160).** M7-P12 playtest fixes. | — |
-| K24a | **Next for the Programmer (ready now).** Jay's tutorial feedback: see-through tutorial box (about 65%, easy to read, doesn't block the game), tap to continue, then try the move; slower pace. Use the C12 draft (`drafts/content/tutorial/tutorial-floor.json`, PR #173) with data-driven tips; you may rename the `advance`/`waitFor` fields and set up the new tutorial waves. **Manager calls on C12:** keep "health never drops below 1" on the tutorial floor; lesson-dash becomes a short reminder at session 2 instead of a new lesson. One PR. | nothing |
-| K24b | **After K24a.** Clearer counter: wind-up ring, '!' and a COUNTER flash so kids know when to block (no new art). One PR. | K24a |
-| K24c | **After K24b.** Camera a bit closer (Tower about 6.75 tiles tall, not super zoomed in) at full retina resolution. One PR. | K24b |
-| R-BAL-4 | **After K24c.** Test that locks the bad-luck counter (guaranteed rare on run 5 or sooner). Plan: `drafts/planning/balance-research.md` (PR #176). | K24c |
-| R-BAL-2 | Per-tier enemy scaling and per-tier gear caps, as in the balance plan. | R-BAL-1 (Jay) |
-| R-BAL-6 | Endless soft cap (after launch unless Endless ships at launch). | R-BAL-1 (Jay) |
+| K24a | **Done (PR #192).** Jay's tutorial feedback: see-through tutorial box (about 65%, easy to read, doesn't block the game), tap to continue, then try the move; slower pace. Use the C12 draft (`drafts/content/tutorial/tutorial-floor.json`, PR #173) with data-driven tips; you may rename the `advance`/`waitFor` fields and set up the new tutorial waves. **Manager calls on C12:** keep "health never drops below 1" on the tutorial floor; lesson-dash becomes a short reminder at session 2 instead of a new lesson. One PR. | nothing |
+| K24b | **Done (PR #194).** Clearer counter: wind-up ring, '!' and a COUNTER flash so kids know when to block (no new art). One PR. | K24a |
+| K24c | **Done (PR #197).** Camera a bit closer (Tower about 6.75 tiles tall, not super zoomed in) at full retina resolution. One PR. | K24b |
+| R-BAL-4 | **Done (PR #202).** Test that locks the bad-luck counter (guaranteed rare on run 5 or sooner). Plan: `drafts/planning/balance-research.md` (PR #176). | K24c |
+| R-BAL-2 | **Done (PRs #203, #206, #208).** Per-tier enemy scaling (built at White belt, scaled per belt) and per-tier gear caps. | — |
+| K25 | **Done (PRs #200, #205).** Slower tempo (about 12%), no shake on the player's strikes or Blocks, calmer hit shake. | — |
+| S3-P1b | **Done (PR #201).** Readable kata arrows, kata group at top of Abilities. | — |
+| R-BAL-12 | **Done (PR #208; 12d PR #213, 12e PR #210).** Real training adds Power, Health and Guard. | — |
+| K26 | **Done (PR #215).** Sign-off names never run into the other column. | — |
+| K27 | **Done (PR #218).** Tutorial fixes from Q5. | — |
+| K28 | **Done (PR #219).** K25 feel fixes (wind-up sound timing, real-second timers, belt check by rank order). | — |
+| K29 | **Done (PR #220).** End-of-run clock in real seconds. | — |
+| K30 | **Done (PR #221).** HOME door label clear of the boss. | — |
+| K31 | **Done (PR #222).** Boss name and small health bar kept together as one pair. | — |
+| K32 | **Done (PR #226).** Gear icons in all 5 places; K32-1/K32-2 text cuts accepted. | — |
+| R-BAL-6 | ~~Endless soft cap~~ **Dropped:** Jay kept +3% per floor with no cap (PR #181). | — |
 | K21 | **Later (when the achievements and trophy screens are built).** Use the A3 bow badges as the achievement icons on the Goals page and the award pop-up, with the number drawn under each badge in the UI font; write the short date on the certified trophy's plate. | achievement screens |
 | S4c-P1 | **After launch (first update).** Build the Injured status from break seals #31–40 (`drafts/planning/S4c-injured-status.md`, PR #120). Text is ready (S4c-C1 PR #128, S4c-C2 PR #129) and art is ready (S4c-A1 PRs #126, #130). You may adjust the proposed seal ids at import. | S4 locks built, launch |
 | K3 | Run the balance-testing computer player whenever the QA bot or the Systems Designer asks, and send Jay the report. | requests |
@@ -148,7 +207,7 @@ Start with **M7-P1, M7-P9 and M7-P11**. Full specs are in the plan file under th
 | Q3 | **Delivered (PR #112):** named-monster QA; fixes in K12. Original: Ask Jay for a balance run from Dojo-Ascent Programmer (K3), compare it with your own play, and suggest specific number changes. Note: novice players on Standard currently win only 41% of runs. | K3 |
 | R-BAL-3 | Balance fixtures for each tier; `npm run balance` reports win %, deaths and room times per tier. | R-BAL-2 |
 | R-BAL-7 | Kid playtest against the balance targets. | R-BAL-3 |
-| Q5 | **Next for the Tester (ready now).** Check K24a once merged: tutorial pace, see-through box readable on a phone, every tip waits for the try. | K24a |
+| Q5 | **Done (report PR #216; fixes K27–K31, retests passed).** Check K24a once merged: tutorial pace, see-through box readable on a phone, every tip waits for the try. | K24a |
 
 ---
 
@@ -170,6 +229,9 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | S9–S12 | **Delivered:** S9 closest-goal line, count-up streak and first Mission (PRs #74, #85); S10 cosmetic unlock rules (PRs #87, #96); S11 enemy warnings (PR #98); S12 Journal practice (PR #99). These are specs, not built yet. S13 and S14 are parked. | — |
 | S8 | **Delivered (PRs #91, #94).** **Similar games study.** For each game below, what Dojo Ascent should borrow and what to avoid: Hades, Archero, Soul Knight, Ring Fit Adventure, Pokémon GO, Animal Crossing, Pokémon, Duolingo, Prodigy Math, Punch-Out!!, Sekiro. | nothing |
 | R-BAL | **Done (PR #176).** Sourced balance research and sim; follow-ups R-BAL-1 to R-BAL-7. | — |
+| R-BAL-8 to 12 | **Done (PRs #183, #185, #186, #188, #190, #191, #193, #195).** C13 enemy stats, gear caps, Guardian stats, training-to-power plan. | — |
+| R-BAL-13 | **Done (PR #224).** C13 stats restated as White-belt bases. | — |
+| P-MENU | **Plan done (PR #225).** Build items P-MENU-a to h are in section 0b. | — |
 
 ---
 
@@ -204,6 +266,9 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | C11 | **Delivered (PR #132).** Unique keeper statue and Journal trophy names and lines; in the game via #133. | — |
 | C7 | **Delivered (PRs #90, #96).** Redo the technique callouts so each subtitle matches the real technique in `docs/self-defense.md` (for example, #3 is a spinning back fist, not "Sweep"). Kid-safe subtitles only. | S4 |
 | C12 | **Delivered (PR #173).** Tutorial floor rewrite with combat tips (13 steps). Built under K24a. | — |
+| C13 | **Delivered (PRs #178–#189, #196).** Bestiary: 40 enemies, 10 Guardians, dash-only attacks, Guardian stats. | — |
+| C13-F | **Done (PR #229, cleanup #231).** Faith overlay, KJV. | — |
+| C14 | **Done (PR #217).** Guardian form shifts; Jay approved. | — |
 
 ---
 
@@ -221,7 +286,8 @@ Every proposal from the Dojo-Ascent Researcher & Planner (drafts/planning/) gets
 | A8 | **Done (PR #136).** Monster Journal silhouettes for the Floor Keeper and the Bouncy Bopper. Into the game under K14. | — |
 | A5 | **Full set done (PR #111).** Samples PR #95. Padded-staff enemy (Bouncy Bopper) idle, wind-up and attack. Numbers in PR #102. Next: the full animation set (move, hit, stagger, defeat, staff drop). | nothing |
 | A4 | **Town square concept:** one picture of the dojo town (Student of the Month statue, doors to classmates' dojos, the Tower in the distance) for Jay to approve before any building. | nothing |
-| A-WALK | **Next for the Artist (ready now).** Arms-only walk samples were PR #175 (eyes reverted there). Jay picked Arms 1 but rated it 6.5/10: study natural walks in other games and send new arm samples, legs unchanged. Arms 1 is the fallback. | nothing |
+| A-WALK | **Closed (PR #199).** Jay keeps the original walk. | — |
+| A-BEST | **Items 1–4 delivered:** bestiary sample v2 (PR #207, done), dash warning art (PR #209, done), dash-only warning art (PR #209), Guardian concepts v2 (PR #211), gear icons (PR #212, merged); charms without red (PR #214). Bestiary set 1 (PR #234) approved by Jay and merged; **Manager calls:** use the data id `buzz-bee` on import, soft nubs instead of thorns and no bee stinger are OK (kid-friendly), flyer hover height is OK. **Next for the Artist after B-ART3: the next bestiary set** (sample approved). Guardian concepts #211 and charms #214 still wait on Jay. | nothing (bestiary); J15 (#211, #214) |
 
 ---
 
@@ -244,7 +310,7 @@ The systems design work (S1–S8) moved to the Dojo-Ascent Researcher & Planner 
 | S3-J2 | Jay's character lines for the Key On and D&G Forms. | Jay | nothing | Lines in the plan. |
 | S3-K1 | **Done (PRs #163, #166, #168).** Kata data files; Keon spelling and #3/#4 from Jay. | Content Designer | — | As in the plan. |
 | S3-P1 | **Done (PR #169).** Kata cards on the Abilities tab. | Programmer | — | As in the plan. |
-| S3-A1 | Direction picture and kata icons. | Artist | after the walk samples and A3c | As in the plan. |
+| S3-A1 | **Delivered (PR #227); Manager first pass OK; waiting on Jay's 3 questions (J15).** Direction picture and kata icons. | Artist | nothing (walk samples PR #199 and A3c PR #165 done) | As in the plan. |
 | S3-D1 | Design the two new Forms. | Researcher & Planner | S3-J2 | As in the plan. |
 | S3-P2 | Calm practice room (after launch). | Programmer | launch | As in the plan. |
 | S3-T1 | **Done (PR #174).** Kata cards checked against the sheets. | QA Tester | — | As in the plan. |

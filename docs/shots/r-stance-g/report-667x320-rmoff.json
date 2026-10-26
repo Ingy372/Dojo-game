@@ -1,0 +1,164 @@
+{
+ "tag": "667x320-rmoff",
+ "errs": [],
+ "states": {
+  "newPlayer": {
+   "current": "beginners-stance",
+   "tray": [
+    [
+     "beginners-stance",
+     true
+    ],
+    [
+     "ready-stance",
+     false
+    ],
+    [
+     "cat-stance",
+     false
+    ],
+    [
+     "front-stance",
+     false
+    ],
+    [
+     "fighting-stance",
+     false
+    ],
+    [
+     "horse-stance",
+     false
+    ]
+   ],
+   "loadout": null,
+   "gf": []
+  },
+  "newPlayerTexts": [
+   "◀ Dojo",
+   "STANCE",
+   "Beginner's Stance",
+   "Beginner's Stance",
+   "Beginner's Stance",
+   "Everyone starts here. Your first stance is waiting at the dojo!",
+   "You can still switch Stance during a fight."
+  ],
+  "lockedTexts": [
+   "Training Board",
+   "◀ Dojo",
+   "Sam T.",
+   "White Belt",
+   "Level 1  ·  cap 10",
+   "ENTER THE TOWER",
+   "Practice room",
+   "YOUR NEXT STEP",
+   "▶ Video soon",
+   "Basic Form 1",
+   "Last run",
+   "Gear (0)",
+   "Abilities",
+   "Gate",
+   "🏆 Trophy Case",
+   "⚔ Fighting Style",
+   "",
+   "👣",
+   "STANCE",
+   "Beginner's Stance",
+   "",
+   "✦",
+   "VIRTUE",
+   "Your first stripe",
+   "◀",
+   "▶",
+   "Beginner's Stance",
+   "Tap a card, then tap a pick.",
+   "Beginner's Stance",
+   "Everyone starts here. Your first stance is waiting at the dojo!",
+   "You can still switch Stance during a fight.",
+   "Always with you",
+   "Strikes and Seals you earn show up here.",
+   "Open Leg Stance",
+   "Not yet! Learn Open Leg Stance at the dojo, and your teacher will sign it off.",
+   "Ask Sensei about this one",
+   "Close"
+  ],
+  "oldPlayer": {
+   "current": "ready-stance",
+   "tray": [
+    [
+     "beginners-stance",
+     true
+    ],
+    [
+     "ready-stance",
+     true
+    ],
+    [
+     "cat-stance",
+     false
+    ],
+    [
+     "front-stance",
+     false
+    ],
+    [
+     "fighting-stance",
+     false
+    ],
+    [
+     "horse-stance",
+     false
+    ]
+   ],
+   "loadout": {
+    "stance": "ready-stance",
+    "virtue": null
+   },
+   "gf": [
+    "ready-stance"
+   ]
+  },
+  "welcomeTexts": [
+   "Training Board",
+   "◀ Dojo",
+   "Sam T.",
+   "White Belt",
+   "Level 1  ·  cap 10",
+   "ENTER THE TOWER",
+   "Practice room",
+   "YOUR NEXT STEP",
+   "▶ Video soon",
+   "Basic Form 1",
+   "Last run",
+   "Gear (0)",
+   "Abilities",
+   "Gate",
+   "The Gate to Yellow Belt",
+   "0 of 7 locks lit. A real promotion opens the Gate.",
+   "🔒",
+   "Basic Form 1",
+   "🔒",
+   "SD #1",
+   "🔒",
+   "SD #2",
+   "🔒",
+   "SD #3",
+   "🔒",
+   "SD #4",
+   "🔒",
+   "SD #5",
+   "🔒",
+   "Kick 1",
+   "Time in rank",
+   "1 of 24 classes",
+   "師",
+   "Sensei's Seal",
+   "Lights when Sensei approves you to test.",
+   "Welcome home, Sam!",
+   "Welcome! You start in Beginner's Stance, just like everyone. Learn stances at the dojo to grow stronger!",
+   "When Sensei signs off Basic Form 1, you unlock:",
+   "Kata (its reward arrives in a later update)",
+   "Tap to continue"
+  ]
+ },
+ "reducedMotionFlag": "off"
+}

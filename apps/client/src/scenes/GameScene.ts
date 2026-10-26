@@ -19,6 +19,7 @@ import {
   COMBAT,
   MOVEMENT,
   TICKS_PER_SECOND,
+  realClock,
   TELEGRAPH_NEARLY_FULL,
   counterWindowTicks,
   currentAttack,
@@ -40,10 +41,11 @@ import {
   chooseDifficulty,
   markGuidedOffered,
   shouldOfferGuided,
-  activeForm,
+  activeStance,
   characterSetup,
   modsFrom,
   rarityRank,
+  type GearItem,
   strikeCost,
   runEffects,
   setPlayerMods,
@@ -64,17 +66,27 @@ import {
   TEMPO,
   SCREEN_SHAKE,
   hurtShakeScale,
+  realSecondsToTicks,
+  realTicksPerSecond,
+  ticksToRealMs,
+  bossTagLayout,
+  BOSS_TAG,
+  lidUp,
+  type TagBox,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
 import tutorialData from '../../../../content/tutorial/tutorial-floor.json';
+import { MASH_GUARD_LINE, takeMashGuardMoment } from '../game/mashGuardMoment';
+import { testFlags } from '../game/beta';
 
 /** The tutorial floor's lines (M7-P2). */
 const TUTORIAL = loadTutorialLines(tutorialData);
-import { type PackName, addStatic, characterArt, characterTop, loadArt, setStaticFrame, staticArt } from '../art/art';
+import { type PackName, addStatic, characterArt, characterTop, frameOf, loadArt, setStaticFrame, staticArt } from '../art/art';
 import { LayeredSprite } from '../art/LayeredSprite';
 import { ICON_PACK } from '../art/icons';
-import { ENEMY_PACKS, auraId, testAura, towerPack } from '../art/tiers';
+import { addGearIcon, loadGearIcons } from '../art/gearIcons';
+import { ENEMY_ART_PACKS, attackAnim, auraId, enemyArt, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
@@ -100,8 +112,14 @@ import type { HomeSceneData } from './HomeScene';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
+/** B-T3: how long an enemy whose art has no defeat animation takes to fade out (ms; a visual choice, not balance). */
+const NO_DEFEAT_FADE_MS = 600;
 /** Screen pixels the top bar (health, Focus, "Room 1 of 8") takes up. */
 const HUD_TOP_PX = 56;
+/** Screen y a door label may not rise above: the top bar plus the Challenge timer (top 36, 20 px bold, bottom ~64) and an 8 px gap. */
+const DOOR_LABEL_TOP_PX = 72;
+/** B-T3-NUDGE: gap between Sensei's banner and the ROAR! word. */
+const ROAR_GAP_PX = 8;
 /** Screen y of the boss health bar; its name sits just under it. */
 // The boss bar sits in the HUD's top strip, between the player's bars and the room label,
 // so it never covers the Keeper (K9: it used to sit over the Keeper's head at y 74).
@@ -112,7 +130,7 @@ const HUD_BOTTOM = 56;
 const VISIBLE_ROWS = 6.75;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 /** Never run more than this many ticks in one frame (e.g. after a long pause). */
-const MAX_TICKS_PER_FRAME = 5;
+const MAX_TICKS_PER_FRAME = 10;
 
 /** Draw order for things standing in the room: lower on screen = in front. */
 function depthAt(yPx: number): number {
@@ -183,10 +201,18 @@ export interface GameSceneData {
   run?: RunState;
 }
 
+/** B-MASHER-a shield-bounce glow: soft gold, 0.4 s. */
+const SHIELD_GLOW_COLOR = 0xf2c75c;
+const SHIELD_GLOW_MS = 400;
+/** B-MASHER-2: stands for "this run" in rooms played without a run (the training room). */
+const NO_RUN_KEY: { mashGuardSeen: string[] } = { mashGuardSeen: [] };
+
 interface EnemyView {
   container: Phaser.GameObjects.Container;
   /** The creature's art (body, glow, warning glow, defeat light, shield). */
   sprite: LayeredSprite;
+  /** B-T3: the art id it was built with (a phase boss is rebuilt when its rig changes). */
+  rig: string | undefined;
   hpFill: Phaser.GameObjects.Rectangle;
   hpBack: Phaser.GameObjects.Rectangle;
   stars: Phaser.GameObjects.Arc[];
@@ -196,6 +222,8 @@ interface EnemyView {
   top: number;
   prev: Vec2;
   flashUntil: number;
+  /** B-T3-TUNE-2a: a short grey tint when a hit clangs off the pot lid, until this time. */
+  clangUntil: number;
   /** The mode drawn last frame, to start animations when it changes. */
   lastMode: string;
   /** The attack being wound up (its animation plays when it lands). */
@@ -216,6 +244,8 @@ interface EnemyView {
 
 /** The warning glow's colour while a creature winds up (matches the danger circle). */
 const TELEGRAPH_TINT = 0xff3b30;
+/** B-T3-TUNE-2b: the Hearth Cook's boss-bar lid icon (#299). */
+const LID_ICON_PACK = 'hearth-cook-lid-icon';
 
 /**
  * The room. The rules package decides what happens, 20 times a second;
@@ -245,6 +275,8 @@ export class GameScene extends Phaser.Scene {
   private leaving = false;
   private picker: InsightPicker | null = null;
   private doorViews: DoorView[] = [];
+  /** K31: world box of the boss's name + small bar, for the '!' cue to avoid. */
+  private bossTagWorld: { left: number; right: number; top: number; bottom: number } | null = null;
   private chestImgs: Phaser.GameObjects.Image[] = [];
   private shrineImgs: Phaser.GameObjects.Image[] = [];
   /** When the chest started opening (its 2.5 s opening plays once), or null. */
@@ -252,6 +284,65 @@ export class GameScene extends Phaser.Scene {
   private roomLabel!: Phaser.GameObjects.Text;
   private timerText!: Phaser.GameObjects.Text;
   private bossName!: Phaser.GameObjects.Text;
+  /** B-T3-NUDGE: the phase pause's ROAR! word (screen space, under the Sensei banner). */
+  /** A world box in screen points. */
+  private toScreen(w: { left: number; right: number; top: number; bottom: number }): { left: number; right: number; top: number; bottom: number } {
+    const cam = this.cameras.main;
+    const z = cam.zoom / DPR;
+    return { left: (w.left - cam.worldView.x) * z, right: (w.right - cam.worldView.x) * z, top: (w.top - cam.worldView.y) * z, bottom: (w.bottom - cam.worldView.y) * z };
+  }
+
+  private playerOnScreen() {
+    return this.toScreen(this.player.getBounds());
+  }
+
+  /** Every enemy name label on screen: the boss's name + bar pair and named monsters' plates and tags. */
+  private nameLabelsOnScreen() {
+    const boss = this.world.enemies.find((e) => e.def.boss && e.mode !== 'defeated');
+    if (boss && this.bossName.visible) this.placeBossTag(boss);
+    const world = [...(this.bossName.visible && this.bossTagWorld ? [this.bossTagWorld] : []), ...[...this.enemyViews.values()].flatMap((v) => v.named?.labelBounds() ?? [])];
+    return world.map((b) => this.toScreen(b));
+  }
+
+  /** B-T3-NUDGE: nudge a screen text vertically (down first, then up) until it is 8 px clear of every box and never above minTop. */
+  private nudgeClear(t: Phaser.GameObjects.Text, boxes: { left: number; right: number; top: number; bottom: number }[], minTop: number): void {
+    const { height } = view(this);
+    const b = t.getBounds();
+    const h = b.height;
+    const xs = boxes.filter((o) => b.left < o.right && b.right > o.left);
+    const hits = (top: number) => xs.find((o) => top < o.bottom + ROAR_GAP_PX && top + h > o.top - ROAR_GAP_PX);
+    const tryDir = (dir: 1 | -1): number | null => {
+      let top = Math.max(minTop, b.top);
+      for (let i = 0; i < 12; i++) {
+        const o = hits(top);
+        if (!o) return top >= minTop && top + h <= height ? top : null;
+        top = dir > 0 ? o.bottom + ROAR_GAP_PX : o.top - ROAR_GAP_PX - h;
+      }
+      return null;
+    };
+    const top = tryDir(-1) ?? tryDir(1);
+    if (top !== null) t.y += top - b.top;
+  }
+
+  /** B-T3-NUDGE: shift a screen-space text stack off the player: above their head, else below their feet; never above minTop. */
+  private keepOffPlayer(stack: Phaser.GameObjects.Text[], minTop: number): void {
+    const cam = this.cameras.main;
+    const w = this.player.getBounds();
+    const z = cam.zoom / DPR;
+    const p = { top: (w.top - cam.worldView.y) * z, bottom: (w.bottom - cam.worldView.y) * z, left: (w.left - cam.worldView.x) * z, right: (w.right - cam.worldView.x) * z };
+    const bs = stack.map((t) => t.getBounds());
+    const top = Math.min(...bs.map((b) => b.top));
+    const bottom = Math.max(...bs.map((b) => b.bottom));
+    const hits = bs.some((b) => b.left < p.right && b.right > p.left) && top < p.bottom && bottom > p.top;
+    if (!hits) return;
+    let newTop = p.top - ROAR_GAP_PX - (bottom - top);
+    if (newTop < minTop) newTop = p.bottom + ROAR_GAP_PX;
+    stack.forEach((t) => (t.y += newTop - top));
+  }
+
+  private roarText: Phaser.GameObjects.Text | null = null;
+  /** B-T3-NUDGE: the boss's "Help me!" when its helpers come with a phase pause (under ROAR!). */
+  private helpText: Phaser.GameObjects.Text | null = null;
   private toastY = 0;
   /** Decoration labels on screen and where they'd like to be (K12). */
   private decoToasts: Array<{ t: Phaser.GameObjects.Text; y: number }> = [];
@@ -287,6 +378,7 @@ export class GameScene extends Phaser.Scene {
 
   // Top-left bars, combo counter and messages (drawn by the screen camera).
   private hud!: Phaser.GameObjects.Graphics;
+  private lidIcon: Phaser.GameObjects.Image | null = null;
   private comboText!: Phaser.GameObjects.Text;
   private comboBonusText!: Phaser.GameObjects.Text;
   private shownCombo = 0;
@@ -322,8 +414,10 @@ export class GameScene extends Phaser.Scene {
     this.towerPack = towerPack(currentTraining().belt.tier);
     // Elite auras (S1 #3): needed once elites can appear (4th belt on), or for the test links.
     const tier = currentTraining().belt.tier;
-    const auras = testAura() || new URLSearchParams(window.location.search).has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
-    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...new Set(Object.values(ENEMY_PACKS).map((p) => p.pack))]);
+    const auras = testAura() || testFlags().has('elite') || (this.run && (tier >= 4 || this.run.elites.length > 0));
+    loadArt(this, [...playerPacks(), 'enemies-t1', this.towerPack, ICON_PACK, ...(auras ? ['auras-t1' as const] : []), ...(this.run?.named ? [NAMED_PACK] : []), ...ENEMY_ART_PACKS, LID_ICON_PACK]);
+
+    loadGearIcons(this);
   }
 
   /** K25: character art plays at the game tempo (read by LayeredSprite). */
@@ -400,7 +494,7 @@ export class GameScene extends Phaser.Scene {
     // Guarding tethers sit just under the red danger shapes.
     this.tether = this.add.graphics().setDepth(dim ? 9.5 : 0.9);
     this.danger = this.add.graphics().setDepth(dim ? 10 : 1);
-    this.cues = this.add.graphics().setDepth(9);
+    this.cues = this.add.graphics().setDepth(9.5);
     this.marker = this.add.circle(0, 0, TILE * 0.22).setStrokeStyle(3, COLORS.marker, 0.9).setVisible(false).setDepth(2);
     this.player = this.makePlayer();
 
@@ -415,7 +509,7 @@ export class GameScene extends Phaser.Scene {
     for (const e of this.world.enemies) this.makeEnemy(e);
 
     const p0 = this.world.players[this.me];
-    this.buttons = new ActionButtons(this, () => sfx.unlock(), { forms: p0.forms.length > 1, virtue: !!p0.virtue });
+    this.buttons = new ActionButtons(this, () => sfx.unlock(), { stances: p0.stances.length > 1, virtue: !!p0.virtue });
     this.controls = new TouchControls(
       this,
       cam,
@@ -565,7 +659,7 @@ export class GameScene extends Phaser.Scene {
       if (a && (s.current !== a || s.finished) && !(a === 'counter' && p.guardTicks > 0)) this.heroAction = null;
       if (!this.heroAction) {
         const speed = Math.hypot(p.pos.x - this.prevPos.x, p.pos.y - this.prevPos.y) * TICKS_PER_SECOND;
-        playLocomotion(s, p.moving ? speed : 0, activeForm(p).id);
+        playLocomotion(s, p.moving ? speed : 0, activeStance(p).id);
       }
     }
     s.flash(now < this.playerFlashUntil ? 0xff8a80 : null);
@@ -581,9 +675,11 @@ export class GameScene extends Phaser.Scene {
     const g = this.cues;
     const pulse = inWindow && !reducedMotion() ? 1 + 0.15 * Math.abs(Math.sin(now / 90)) : 1;
     const r = 15 * pulse;
-    const color = inWindow ? 0xffd166 : 0xff8a80;
-    g.fillStyle(0x1b1530, 0.75).fillCircle(x, y, r + 3);
-    g.lineStyle(4, 0xffffff, 0.25).strokeCircle(x, y, r);
+    // K27 fix 2: always full strength (opaque disc, solid colors) so it never reads faint over art.
+    const color = inWindow ? 0xffd166 : 0xff5a4f;
+    g.fillStyle(0x1b1530, 1).fillCircle(x, y, r + 4);
+    g.lineStyle(2, 0xffffff, 1).strokeCircle(x, y, r + 4);
+    g.lineStyle(4, 0x4a4060, 1).strokeCircle(x, y, r);
     g.lineStyle(5, color, 1).beginPath();
     g.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Phaser.Math.Clamp(inWindow ? 1 : fill, 0.02, 1), false);
     g.strokePath();
@@ -602,8 +698,10 @@ export class GameScene extends Phaser.Scene {
     if (!v) return;
     const s = v.sprite;
     // Beaten: dissolve into light (a hopeful "set free"), then disappear.
-    const defeat = s.art.animations.defeat;
-    const dissolving = e.mode === 'defeated' && v.defeatAt !== null && now - v.defeatAt < (defeat.frames / defeat.fps) * 1000;
+    // Art without a defeat animation (B-T3 Orange enemies) fades out over the same kind of time instead.
+    const defeat = s.art.animations.defeat as { frames: number; fps: number } | undefined;
+    const defeatMs = defeat ? (defeat.frames / defeat.fps) * 1000 : NO_DEFEAT_FADE_MS;
+    const dissolving = e.mode === 'defeated' && v.defeatAt !== null && now - v.defeatAt < defeatMs;
     // Before the bow, the room's enemies haven't arrived yet.
     v.container.setVisible((e.mode !== 'defeated' || dissolving) && this.enemiesAt !== null);
     if ((e.mode === 'defeated' && !dissolving) || this.enemiesAt === null) {
@@ -630,9 +728,14 @@ export class GameScene extends Phaser.Scene {
     let tint: number | null = null;
 
     if (e.mode === 'defeated') {
-      if (started || s.current !== 'defeat') s.play('defeat', { restart: true });
+      const t = Phaser.Math.Clamp((now - (v.defeatAt ?? now)) / defeatMs, 0, 1);
+      if (defeat) {
+        if (started || s.current !== 'defeat') s.play('defeat', { restart: true });
+      } else {
+        s.play(this.enemyAnim(s, 'hit', 'idle'));
+        alpha = 1 - t;
+      }
       // The dissolve is drawn a little bigger and glowing, and its shadow fades with it.
-      const t = Phaser.Math.Clamp((now - (v.defeatAt ?? now)) / ((defeat.frames / defeat.fps) * 1000), 0, 1);
       s.container.setScale(1 + 0.3 * Math.min(1, t * 3));
       (s.container.list[0] as Phaser.GameObjects.Ellipse | undefined)?.setAlpha(1 - t);
     } else if (e.mode === 'waiting') {
@@ -652,7 +755,7 @@ export class GameScene extends Phaser.Scene {
       const progress = inWindow
         ? TELEGRAPH_NEARLY_FULL + (1 - TELEGRAPH_NEARLY_FULL) * ((elapsed - fillTicks) / window)
         : TELEGRAPH_NEARLY_FULL * (elapsed / fillTicks);
-      v.attack = currentAttack(e).name ?? '';
+      v.attack = attackAnim(currentAttack(e).name ?? '');
       // Disarmed (A5): same wind-up and warning, but the staff is gone and it pushes.
       v.pushing = !!e.def.weapon && e.disarmed > 0;
       const anim = this.enemyAnim(s, `windup_${v.attack}`, 'windup');
@@ -669,22 +772,23 @@ export class GameScene extends Phaser.Scene {
       this.danger.lineStyle(inWindow ? 6 : 3 * glow, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
       this.danger.fillStyle(COLORS.danger, inWindow ? 0.5 : 0.4).fillCircle(cx, cy, area * progress);
       if (inWindow) this.counterWindowOpen = true;
-      this.drawWindupCue(x * TILE, y * TILE - v.top - 38, elapsed / e.windupTotal, inWindow, now);
+      const at = this.windupCueSpot(x * TILE, y * TILE, v.top, e.def.radius * TILE);
+      this.drawWindupCue(at.x, at.y, elapsed / e.windupTotal, inWindow, now);
     } else if (e.mode === 'recover') {
       // The attack itself (it lands on its first frame), then catching its breath.
       const anim = v.pushing ? this.enemyAnim(s, 'pushpaw', 'attack') : this.enemyAnim(s, v.attack, 'attack');
       if (started) s.play(anim, { restart: true });
       telegraph = s.art.animations[anim].telegraphIntensity?.[s.frame] ?? 0;
     } else if (e.mode === 'stagger') {
-      s.play('stagger');
+      s.play(this.enemyAnim(s, 'stagger', 'idle'));
     } else if (e.mode === 'winded') {
       // Out of breath: pale, slumped, and breathing hard.
-      s.play(this.enemyAnim(s, 'winded', 'stagger'));
+      s.play(this.enemyAnim(s, 'winded', this.enemyAnim(s, 'stagger', 'idle')));
       tint = 0xd8d0c4;
     } else if (now < v.callUntil) {
       s.play(this.enemyAnim(s, 'call', 'idle'));
     } else if (now < v.hitUntil) {
-      s.play('hit');
+      s.play(this.enemyAnim(s, 'hit', 'idle'));
     } else {
       // Chasing or circling: walk while moving, at a pace matched to its speed.
       const speed = Math.hypot(e.pos.x - v.prev.x, e.pos.y - v.prev.y) * TICKS_PER_SECOND;
@@ -702,9 +806,13 @@ export class GameScene extends Phaser.Scene {
     // Shield guards: the shield while it's up, the cracked one once broken.
     s.setLayer('shield', e.shieldUp);
     s.setLayer('shield-broken', !e.shieldUp);
+    // B-T3-TUNE-2b: the Hearth Cook's pot lid (#299 art) shows while its sparks keep the lid up.
+    s.setLayer('lid', !!e.def.lidWhileHelpers && lidUp(this.world));
     // Reduced motion (K12): no white hit flash.
     const hitFlash = now < v.flashUntil && !reducedMotion();
-    s.flash(hitFlash ? 0xffffff : tint, hitFlash);
+    // B-T3-TUNE-2a: a clang on the pot lid tints it grey for a moment (none with reduced motion).
+    const clang = now < v.clangUntil && !reducedMotion();
+    s.flash(hitFlash ? 0xffffff : clang ? 0x8c8c8c : tint, hitFlash);
     s.update();
     if (v.named) this.drawNamed(e, v.named, now, blend, s.frame);
     v.container.setAlpha(alpha * Math.min(1, (now - this.enemiesAt) / 450));
@@ -746,12 +854,22 @@ export class GameScene extends Phaser.Scene {
     const feetOnScreen = (e.pos.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
     n.layout(others, (feetOnScreen - HUD_BOTTOM) / (cam.zoom / DPR), e.mode === 'defeated');
     const windupSec = e.mode === 'windup' ? Math.min(e.windupTotal, e.windupTotal - e.modeTicks + blend) / TICKS_PER_SECOND : null;
-    if (n.update(e, now, windupSec, frame, TILE).clank) sfx.clank();
+    if (n.update(e, now, windupSec, frame, TILE, this.shakeScale('windup')).clank) sfx.clank();
+  }
+
+  /** B-T3-TUNE-2b: the boss-bar lid icon (24 px), drawn on the HUD; null when its art isn't loaded. */
+  private makeLidIcon(): Phaser.GameObjects.Image | null {
+    const s = staticArt(this, LID_ICON_PACK, 'icon-lid');
+    const f = s && frameOf(this, LID_ICON_PACK, Object.values(s.layers)[0][0]);
+    if (!s || !f) return null;
+    return this.add.image(0, 0, f[0], f[1]).setOrigin(s.anchor[0] / s.frameWidth, s.anchor[1] / s.frameHeight).setScale(24 / s.frameWidth).setDepth(this.hud.depth + 1).setVisible(false);
   }
 
   /** The first of these animations the creature has (e.g. the boss's "windup_slam", else "windup"). */
   private enemyAnim(s: LayeredSprite, wanted: string, fallback: string): string {
-    return s.has(wanted) ? wanted : fallback;
+    if (s.has(wanted)) return wanted;
+    if (s.has(fallback)) return fallback;
+    return 'idle';
   }
 
   private drawHud(): void {
@@ -800,7 +918,7 @@ export class GameScene extends Phaser.Scene {
       if (p.counterChain >= 2) {
         // Brighter glow as the chain grows (it stops growing at x5).
         const glow = Math.min(p.counterChain, 5);
-        this.chainText.setText(`PERFECT x${p.counterChain}`).setShadow(0, 0, '#ffd166', 4 + glow * 4, true, true);
+        this.chainText.setText(`GREAT x${p.counterChain}`).setShadow(0, 0, '#ffd166', 4 + glow * 4, true, true);
         this.chainText.setColor(glow >= 4 ? '#fff6d5' : '#ffd166');
         if (grew) {
           this.tweens.killTweensOf(this.chainText);
@@ -868,17 +986,27 @@ export class GameScene extends Phaser.Scene {
         this.enemyViews.delete(id);
       }
     }
-    for (const e of this.world.enemies) if (!this.enemyViews.has(e.id)) this.makeEnemy(e);
+    for (const e of this.world.enemies) {
+      // B-T3: a phase boss swaps to its next rig when it crosses a phase (not while it is being beaten).
+      // It waits until the current wind-up and attack are over: the next rig may not have that attack's art.
+      const v = this.enemyViews.get(e.id);
+      const rig = enemyArt(e.def.id, e.health / e.def.maxHealth)?.id;
+      if (v && rig && v.rig !== rig && e.mode !== 'defeated' && e.mode !== 'windup' && e.mode !== 'recover') {
+        v.container.destroy();
+        this.enemyViews.delete(e.id);
+      }
+      if (!this.enemyViews.has(e.id)) this.makeEnemy(e);
+    }
   }
 
   private makeEnemy(e: EnemyState): void {
     const r = e.def.radius * TILE;
     const color = Phaser.Display.Color.HexStringToColor(e.def.color).color;
-    const own = ENEMY_PACKS[e.def.id];
+    const own = enemyArt(e.def.id, e.health / e.def.maxHealth);
     const art = (own && characterArt(this, own.pack, own.id)) || characterArt(this, 'enemies-t1', e.def.id)!;
     const sprite = new LayeredSprite(this, art);
     sprite.container.addAt(addShadow(this, r * 2.2), 0);
-    sprite.setLayer('telegraph', false).setLayerTint('telegraph', TELEGRAPH_TINT);
+    sprite.setLayer('telegraph', false).setLayerTint('telegraph', TELEGRAPH_TINT).setLayer('lid', false);
     const top = characterTop(this, art);
     const hpBack = this.add.rectangle(0, -top - 8, r * 2, 8, 0x000000, 0.6);
     const hpFill = this.add.rectangle(-r + 2, -top - 8, r * 2 - 4, 4, COLORS.healthLow).setOrigin(0, 0.5);
@@ -887,7 +1015,7 @@ export class GameScene extends Phaser.Scene {
     // Nothing goes above the head.
     const kind = testAura() ?? e.elite;
     const id = kind ? auraId(kind, e.def.id) : '';
-    const [back, front] = kind ? addStatic(this, 'auras-t1', id, 0, 0) : [];
+    const [back, front] = kind && staticArt(this, 'auras-t1', id) ? addStatic(this, 'auras-t1', id, 0, 0) : [];
     const aura = back && front ? { id, back: [back], front: [front] } : null;
     // Named monster (M7-N1): its ground tell under it, sparkles, name plate and tag over it. Never an elite aura.
     const namedDef = e.named ? CONTENT.named.monsters.find((m) => m.id === e.named) : undefined;
@@ -899,6 +1027,7 @@ export class GameScene extends Phaser.Scene {
     this.enemyViews.set(e.id, {
       container,
       sprite,
+      rig: own?.id,
       hpBack,
       hpFill,
       stars,
@@ -906,6 +1035,7 @@ export class GameScene extends Phaser.Scene {
       top,
       prev: { ...e.pos },
       flashUntil: 0,
+      clangUntil: 0,
       lastMode: e.mode,
       attack: '',
       pushing: false,
@@ -966,7 +1096,8 @@ export class GameScene extends Phaser.Scene {
     this.bossName = this.add.text(0, 0, '', { ...small, fontSize: '13px' }).setOrigin(0.5, 0).setResolution(crisp()).setVisible(false);
     const calm = this.add.text(16, 55, 'Calm Mind', { ...small, fontSize: '12px', color: '#bff5ec' }).setResolution(crisp()).setVisible(!!this.run?.calmMind);
     this.cameras.main.ignore(calm);
-    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.chainText, this.message, this.screenFlash, this.roomLabel, this.timerText, this.bossName]);
+    this.lidIcon = this.makeLidIcon();
+    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.chainText, this.message, this.screenFlash, this.roomLabel, this.timerText, this.bossName, ...(this.lidIcon ? [this.lidIcon] : [])]);
   }
 
   private layout(): void {
@@ -1057,7 +1188,7 @@ export class GameScene extends Phaser.Scene {
           this.impact(FEEL.perfect);
           this.flashScreen(0xffffff, 0.55, 220);
           this.ring(p.pos, COLORS.gold, 2.2);
-          this.popWord('PERFECT!', '#ffd166', 54);
+          this.popWord('GREAT!', '#ffd166', 54);
           if (ev.playerId === this.me && !this.world.guide) this.lesson('firstPerfectUnaided');
           break;
         }
@@ -1066,7 +1197,7 @@ export class GameScene extends Phaser.Scene {
           if (ev.playerId === this.me) this.tutorialDid('counter');
           const p = this.world.players[ev.playerId];
           sfx.block();
-          this.impact(FEEL.block, this.hurtShake());
+          this.impact(FEEL.block, this.shakeScale('block'));
           this.ring(p.pos, COLORS.shield, 1.2);
           this.sparks(p.pos, 6, COLORS.shield);
           this.floatText(p.pos, `BLOCK  -${ev.damage}`, '#9ad1ff', 22);
@@ -1077,7 +1208,7 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.hurt();
           this.heroDo('hit');
-          this.impact(FEEL.hurt, this.hurtShake());
+          this.impact(FEEL.hurt, this.shakeScale('hurt'));
           this.playerFlashUntil = this.time.now + 160;
           this.flashScreen(0xff2a1a, 0.3, 200);
           this.floatText(p.pos, `-${ev.damage}`, '#ff6b5b', 26);
@@ -1119,14 +1250,14 @@ export class GameScene extends Phaser.Scene {
           // A warning is coming: the twist banner gets out of the way so it never covers one.
           if (this.twistBannerView?.active) this.tweens.add({ targets: this.twistBannerView, alpha: 0.25, duration: 150 });
           const e = this.enemy(ev.enemyId);
-          sfx.windup(ev.ticks / TICKS_PER_SECOND);
+          sfx.windup(ticksToRealMs(ev.ticks) / 1000);
           if (e) this.floatText({ x: e.pos.x, y: e.pos.y - e.def.radius - 0.3 }, '!', '#ff3b30', 40, 0.4);
           // Sensei's Lessons: a second warning while another is still filling is two attacks at once.
           const now = this.time.now;
           if ([...this.warnings].some(([id, w]) => id !== ev.enemyId && w.until > now)) this.lesson('twoAttacksAtOnce');
           const me = this.world.players[this.me];
           const inside = !!(e?.attackCenter && me && Math.hypot(me.pos.x - e.attackCenter.x, me.pos.y - e.attackCenter.y) <= currentAttack(e).areaRadius);
-          this.warnings.set(ev.enemyId, { until: now + (ev.ticks / TICKS_PER_SECOND) * 1000, inside });
+          this.warnings.set(ev.enemyId, { until: now + ticksToRealMs(ev.ticks), inside });
           break;
         }
         case 'enemySwing': {
@@ -1152,11 +1283,11 @@ export class GameScene extends Phaser.Scene {
           this.dashTrail(p.pos);
           break;
         }
-        case 'formChange': {
+        case 'stanceChange': {
           const p = this.world.players[ev.playerId];
           sfx.insight();
           this.ring(p.pos, 0x6fb7ff, 1.2);
-          this.floatText(p.pos, activeForm(p).name, '#9ad1ff', 22, 1);
+          this.floatText(p.pos, activeStance(p).name, '#9ad1ff', 22, 1);
           break;
         }
         case 'virtue': {
@@ -1282,12 +1413,16 @@ export class GameScene extends Phaser.Scene {
           }
           break;
         }
+        case 'mashGuardOff':
+          this.senseiStepsBack(ev.playerId);
+          break;
         case 'shieldBlock': {
           const e = this.enemy(ev.enemyId);
           sfx.clank();
           if (e) {
             this.sparks(e.pos, 4, 0xc9d6e8);
             this.floatText(e.pos, 'CLANK', '#c9d6e8', 18);
+            this.shieldGlow(e.pos, e.def.radius);
           }
           break;
         }
@@ -1306,10 +1441,71 @@ export class GameScene extends Phaser.Scene {
           if (e) this.ring(e.pos, 0xc9d6e8, 0.9, 0.6);
           break;
         }
+        case 'clang': {
+          // B-T3-TUNE-2a: the hit bounced off the pot lid: no damage number, just a grey tint and a clank.
+          const v = this.enemyViews.get(ev.enemyId);
+          if (v) v.clangUntil = this.time.now + 140;
+          sfx.clank();
+          break;
+        }
+        case 'phaseHold': {
+          // B-T3-TUNE-2c: the boss roars and glows while everything holds still, and Sensei gives the tip.
+          const e = this.enemy(ev.enemyId);
+          const ms = ticksToRealMs(ev.ticks);
+          if (e) {
+            if (!reducedMotion()) {
+              const glow = this.addWorld(this.add.image(e.pos.x * TILE, (e.pos.y - 0.4) * TILE, this.softGlow()).setDepth(8));
+              glow.setTint(0xff7a3c).setScale(0.6).setAlpha(0.9);
+              this.tweens.add({ targets: glow, scale: 2.4, alpha: 0, duration: ms, ease: 'Cubic.Out', onComplete: () => glow.destroy() });
+            }
+          }
+          sfx.appear();
+          if (ev.senseiLine) this.senseiSay([ev.senseiLine], Math.max(1200, ms));
+          // B-T3-NUDGE: ROAR! sits on screen just under Sensei's banner (8 px gap), above everything, so the banner never covers it.
+          if (e) {
+            const { width } = view(this);
+            const banner = this.senseiText?.active ? this.senseiText.getBounds() : null;
+            const roar = this.add
+              .text(width / 2, banner ? banner.bottom + ROAR_GAP_PX : 72, 'ROAR!', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '28px', color: '#ffb627', stroke: '#2a1408', strokeThickness: 5 })
+              .setOrigin(0.5, 0)
+              .setDepth(60)
+              .setResolution(window.devicePixelRatio || 1);
+            this.cameras.main.ignore(roar);
+            this.roarText?.destroy();
+            this.helpText?.destroy();
+            this.roarText = roar;
+            const fade = [roar];
+            if (events.some((x) => x.kind === 'summon' && x.enemyId === ev.enemyId)) {
+              // "Help me!" sits over the calling enemy's head (screen space) so it reads as the enemy's line, not the student's.
+              const cam = this.cameras.main;
+              const z = cam.zoom / DPR;
+              const ex = (e.pos.x * TILE - cam.worldView.x) * z;
+              const headY = ((e.pos.y - 1) * TILE - cam.worldView.y) * z;
+              const help = this.add
+                .text(ex, headY, 'Help me!', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '22px', color: '#ffd166', stroke: '#2a1408', strokeThickness: 4 })
+                .setOrigin(0.5, 0)
+                .setDepth(60)
+                .setResolution(window.devicePixelRatio || 1);
+              this.cameras.main.ignore(help);
+              this.helpText = help;
+              const minTop = banner ? banner.bottom + ROAR_GAP_PX : 0;
+              const hb = help.getBounds();
+              help.setPosition(Phaser.Math.Clamp(ex, hb.width / 2 + ROAR_GAP_PX, width - hb.width / 2 - ROAR_GAP_PX), Math.max(minTop, headY - hb.height - ROAR_GAP_PX));
+              this.nudgeClear(help, [roar.getBounds(), this.playerOnScreen(), ...this.nameLabelsOnScreen()], minTop);
+              fade.push(help);
+            }
+            this.keepOffPlayer([roar], banner ? banner.bottom + ROAR_GAP_PX : 0);
+            if (this.helpText && fade.includes(this.helpText)) this.nudgeClear(this.helpText, [roar.getBounds(), this.playerOnScreen(), ...this.nameLabelsOnScreen()], banner ? banner.bottom + ROAR_GAP_PX : 0);
+            this.tweens.add({ targets: fade, alpha: 0, delay: ms * 0.6, duration: ms * 0.4, onComplete: () => fade.forEach((t) => t.destroy()) });
+          }
+          break;
+        }
         case 'summon': {
           const e = this.enemy(ev.enemyId);
           sfx.appear();
-          if (e) this.floatText({ x: e.pos.x, y: e.pos.y - 1 }, 'Help me!', '#ffd166', 24);
+          // B-T3-NUDGE: with a phase pause in the same tick, "Help me!" goes under ROAR! instead (clear of the banner).
+          const paused = events.some((x) => x.kind === 'phaseHold' && x.enemyId === ev.enemyId);
+          if (e && !paused) this.floatText({ x: e.pos.x, y: e.pos.y - 1 }, 'Help me!', '#ffd166', 24);
           const caller = this.enemyViews.get(ev.enemyId);
           if (caller) caller.callUntil = this.time.now + 1000;
           this.syncEnemyViews();
@@ -1333,7 +1529,7 @@ export class GameScene extends Phaser.Scene {
     for (const ev of events) {
       switch (ev.kind) {
         case 'loot':
-          this.afterChestBurst(() => this.showLoot(ev.item.name, ev.item.rarity, ev.at));
+          this.afterChestBurst(() => this.showLoot(ev.item, ev.at));
           break;
         case 'decoration':
           this.afterChestBurst(() => this.showDecoration(ev.id, ev.at, true));
@@ -1506,7 +1702,11 @@ export class GameScene extends Phaser.Scene {
     if (this.room.challenge) lines.push(this.room.challenge.text);
     else if (this.room.kind === 'rest') lines.push('Walk to the shrine to rest.');
     else if (this.room.kind === 'treasure') lines.push('Open the chest!');
-    else if (this.room.kind === 'boss') lines.push('The Floor Keeper awaits.');
+    else if (this.room.kind === 'boss') {
+      // B-T3: the room's own Guardian (the Hearth Cook on the Orange floor).
+      const boss = this.room.enemySpawns.map((sp) => CONTENT.enemies[sp.enemy]).find((d) => d?.boss);
+      lines.push(`${boss?.name ?? 'The Floor Keeper'} awaits.`);
+    }
     const bannerBottom = this.showTwist();
     this.message.setText(lines.join('\n')).setFontSize(this.room.challenge ? 22 : 26).setVisible(true).setAlpha(1);
     // With a twist banner at the top, the room name and goal sit just under it so nothing overlaps.
@@ -1562,9 +1762,12 @@ export class GameScene extends Phaser.Scene {
       case 'tutorial-walk':
       case 'tutorial-space':
       case 'tutorial-tip-tough':
+        this.tutorialTip(id);
+        break;
       case 'tutorial-chest':
       case 'tutorial-boss':
-        this.tutorialTip(id);
+        // K27: each only in its own room (the chest tip once showed in room 1, Q5 B2).
+        if (this.room.kind === (id === 'tutorial-chest' ? 'treasure' : 'boss')) this.tutorialTip(id);
         break;
       case 'tutorial-brute':
         // The guided Counter teaches this step with its own lines, and holds until COUNTER is tapped.
@@ -1659,8 +1862,9 @@ export class GameScene extends Phaser.Scene {
       this.buttons.reset();
       const finished = gotIt(f, TUTORIAL);
       if (!finished) this.startTutorialTry(id);
-      // A tap step needs nothing more, so its banner goes when Got it is tapped.
-      else if (this.senseiText) {
+      // A tap step needs nothing more, so its banner goes when Got it is tapped; so does the
+      // boss tip, which otherwise sat over the boss for the whole fight (K27, Q5 B1).
+      if ((finished || id === 'tutorial-boss') && this.senseiText) {
         this.senseiText.destroy();
         this.senseiText = null;
       }
@@ -1821,10 +2025,11 @@ export class GameScene extends Phaser.Scene {
         if (!prog.doorsOpen) this.animateStatic('door-boss-glow', d.glow, now / 1000);
       }
       d.label.setAlpha(prog.doorsOpen ? pulse : 0.55);
-      // Keep the label below the top bar (health, Focus, "Room 1 of 8"): in small rooms
+      // Keep the label below the top bar and the Challenge timer (health, Focus, "Room 1 of 8"): in small rooms
       // the top doors sit right under it on a 667-wide phone.
       const cam = this.cameras.main;
-      d.label.setY(Math.max((d.at.y + 0.55) * TILE, cam.worldView.y + HUD_TOP_PX / (cam.zoom / DPR)));
+      d.label.setY(Math.max((d.at.y + 0.55) * TILE, cam.worldView.y + DOOR_LABEL_TOP_PX / (cam.zoom / DPR)));
+      this.keepLabelOffBoss(d);
     }
 
     // The chest appears once the room is clear: a glinting chest, then (once opened)
@@ -1855,11 +2060,13 @@ export class GameScene extends Phaser.Scene {
     // Challenge timer.
     const ch = this.room.challenge;
     if (ch) {
-      const left = Math.max(0, ch.seconds * TICKS_PER_SECOND - prog.ticks);
+      // K28: Challenge timers count real seconds (the game runs slower than the rules' ticks).
+      const limit = realSecondsToTicks(ch.seconds);
+      const left = Math.max(0, limit - prog.ticks);
       const done = prog.cleared;
       this.timerText.setVisible(true);
-      this.timerText.setText(done ? (prog.ticks <= ch.seconds * TICKS_PER_SECOND ? 'In time!' : 'Out of time') : clock(left, TICKS_PER_SECOND));
-      this.timerText.setColor(left > 10 * TICKS_PER_SECOND || done ? '#f2e9d8' : '#ff6b5b');
+      this.timerText.setText(done ? (prog.ticks <= limit ? ch.inTimeText : ch.outOfTimeShort) : clock(left, realTicksPerSecond()));
+      this.timerText.setColor(left > realSecondsToTicks(10) || done ? '#f2e9d8' : '#ff6b5b');
     } else {
       this.timerText.setVisible(false);
     }
@@ -1874,9 +2081,26 @@ export class GameScene extends Phaser.Scene {
       const y = BOSS_BAR_Y;
       g.fillStyle(0x000000, 0.55).fillRoundedRect(x - 3, y - 3, w + 6, 16, 5);
       g.fillStyle(0xb046a0).fillRoundedRect(x, y, Math.max(6, w * (boss.health / boss.def.maxHealth)), 10, 3);
-      this.bossName.setText(boss.def.name).setPosition(width / 2, y + 14).setVisible(true);
+      // B-T3-TUNE-2a: while its helpers keep the lid up, the bar greys over and the lid shows at its end.
+      // B-T3-TUNE-2b: the lid is the #299 icon, 24 px (the code-drawn lid stays as the fallback).
+      const lid = !!boss.def.lidWhileHelpers && lidUp(this.world);
+      if (lid) {
+        g.fillStyle(0x8c96a0, 0.6).fillRoundedRect(x, y, w, 10, 3);
+        const lx = x + w + 18;
+        g.fillStyle(0x000000, 0.55).fillRoundedRect(lx - 16, y - 7, 32, 24, 6);
+        if (this.lidIcon) this.lidIcon.setPosition(lx, y + 5);
+        else {
+          g.fillStyle(0xc9d1d9).fillRoundedRect(lx - 12, y + 2, 24, 10, { tl: 10, tr: 10, bl: 2, br: 2 });
+          g.fillStyle(0xc9d1d9).fillRoundedRect(lx - 4, y - 3, 8, 5, 2);
+        }
+      }
+      this.lidIcon?.setVisible(lid);
+      this.bossName.setText(boss.def.name).setVisible(true);
+      this.placeBossTag(boss);
     } else {
       this.bossName.setVisible(false);
+      this.lidIcon?.setVisible(false);
+      this.bossTagWorld = null;
     }
     this.placeCombo(!!boss && boss.mode !== 'defeated');
     this.placeSensei();
@@ -1917,22 +2141,48 @@ export class GameScene extends Phaser.Scene {
         top = Math.max(top, b.y1 + 6);
       }
     }
-    // K24a: the tutorial tip keeps off the action too: if it would cover the hero, it goes under them.
+    // K24a/K27: the tutorial tip (with its Got it) keeps off the hero, the doors and their
+    // labels, and the buttons too (Q5 B3, B4): it takes the first spot that is clear of them all.
     if (this.run?.tutorial) {
       const cam = this.cameras.main;
       const p = this.world.players[this.me].pos;
+      const k = TILE * (cam.zoom / DPR);
       const py = (p.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
       const px = (p.x * TILE - cam.worldView.x) * (cam.zoom / DPR);
-      const r = TILE * (cam.zoom / DPR) * 1.2;
       const H = view(this).height;
-      if (px + r > left && px - r < right && py + r > top && py - r < top + h) {
-        // Under the hero when it fits, otherwise above them; the Got it button always stays on screen.
-        top = py + r + 6 + h <= H - 8 ? py + r + 6 : Math.max(8, py - r - 6 - h);
-      }
-      top = Math.min(top, H - h - 8);
+      const keepOff = [
+        ...boxes,
+        { x0: px - k, x1: px + k, y0: py - 1.8 * k, y1: py + 0.8 * k },
+        // The boss too, so "A big one!" doesn't hide it (Q5 B1).
+        ...this.world.enemies
+          .filter((e) => e.def.boss && e.mode !== 'defeated')
+          .map((e) => {
+            const ex = (e.pos.x * TILE - cam.worldView.x) * (cam.zoom / DPR);
+            const ey = (e.pos.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
+            return { x0: ex - 1.5 * k, x1: ex + 1.5 * k, y0: ey - 3 * k, y1: ey + k };
+          }),
+        ...this.buttons.objects.map((o) => {
+          const r = (o as Phaser.GameObjects.Container).getBounds();
+          return { x0: r.left - 8, x1: r.right + 8, y0: r.top - 8, y1: r.bottom + 8 }; // + the gold ring
+        }),
+      ];
+      const spots = [top, ...keepOff.flatMap((b) => [b.y1 + 6, b.y0 - 6 - h])];
+      // Centred first; if nothing is clear there, slid to the left edge, away from the buttons.
+      const fit = [view(this).width / 2, 8 + t.width / 2]
+        .map((x) => {
+          const clear = (y: number) =>
+            y >= 8 && y + h <= H - 8 && !keepOff.some((b) => b.x1 > x - t.width / 2 && b.x0 < x + t.width / 2 && b.y1 > y && b.y0 < y + h);
+          return { x, y: spots.find(clear) };
+        })
+        .find((s) => s.y !== undefined);
+      // No clear spot at all: the bottom-left corner, which is away from the buttons and the doors.
+      t.setX(fit?.x ?? 8 + t.width / 2);
+      top = fit?.y ?? H - h - 8;
     }
     t.setY(top);
-    btn?.setPosition(t.x, top + t.height + 8);
+    // QA on #295: the "Sensei steps back" banner never covers a player.
+    if (t.getData('keepOffPlayers')) this.placeOffPlayers(t);
+    btn?.setPosition(t.x, t.y + t.height + 8);
     this.placeDecoToasts();
   }
 
@@ -1959,7 +2209,9 @@ export class GameScene extends Phaser.Scene {
     // K24b: the wind-up cue ("!" in a ring) over an enemy about to attack.
     for (const e of this.world.enemies) {
       const v = e.mode === 'windup' ? this.enemyViews.get(e.id) : undefined;
-      if (v) boxes.push(toScreen(v.container.x - 20, v.container.y - v.top - 58, v.container.x + 20, v.container.y - v.top - 18));
+      if (!v) continue;
+      const at = this.windupCueSpot(v.container.x, v.container.y, v.top, e.def.radius * TILE);
+      boxes.push(toScreen(at.x - 22, at.y - 22, at.x + 22, at.y + 22));
     }
     if (withMessage && this.message.visible) {
       const m = this.message.getBounds();
@@ -1969,7 +2221,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** A dropped item: a glowing orb that pops out, then a note at the top of the screen. */
-  private showLoot(name: string, rarity: Parameters<typeof rarityRank>[0], at: Vec2): void {
+  private showLoot(item: GearItem, at: Vec2): void {
+    const { name, rarity } = item;
     const color = RARITY_COLOR[rarity];
     const rank = rarityRank(rarity);
     sfx.loot(rank);
@@ -1986,15 +2239,21 @@ export class GameScene extends Phaser.Scene {
       .setOrigin(1, 0)
       .setResolution(crisp())
       .setAlpha(0);
-    this.cameras.main.ignore(t);
-    this.tweens.add({ targets: t, alpha: 1, x: { from: width + 40, to: width - 16 }, duration: 220, ease: 'Back.Out' });
+    // K32: the item's slot + rarity icon rides left of the note.
+    const icon = addGearIcon(this, item, 0, y + t.height / 2, 24);
+    const parts = icon ? [t, icon] : [t];
+    this.cameras.main.ignore(parts);
+    const slideX = (o: Phaser.GameObjects.Components.Transform & Phaser.GameObjects.GameObject, to: number) =>
+      this.tweens.add({ targets: o, alpha: 1, x: { from: to + 56, to }, duration: 220, ease: 'Back.Out' });
+    slideX(t, width - 16);
+    if (icon) slideX(icon.setAlpha(0), width - 16 - t.width - 16);
     this.tweens.add({
-      targets: t,
+      targets: parts,
       alpha: 0,
       delay: 2600,
       duration: 400,
       onComplete: () => {
-        t.destroy();
+        parts.forEach((o) => o.destroy());
         this.toastY = Math.max(0, this.toastY - 1);
       },
     });
@@ -2066,11 +2325,14 @@ export class GameScene extends Phaser.Scene {
       .setScale(2.2)
       .setAlpha(0);
     // K23: the damage number is dropped (it read as harsh to kids); a clean room still says so.
-    const parts = [`${perfects} Perfect`, ...(damage > 0 ? [] : ['no damage']), clock(ticks, TICKS_PER_SECOND)];
-    if (inTime !== null) parts.push(inTime ? 'in time!' : 'out of time');
+    const parts = [`${perfects} Great`, ...(damage > 0 ? [] : ['no damage']), realClock(ticks)];
+    const ch = this.room.challenge;
+    if (ch && inTime) parts.push(ch.inTimeText);
+    // A missed time gets its own line: the full sentence doesn't fit beside the stats at 667.
+    const missed = ch && inTime === false ? `\n${ch.outOfTimeText}` : '';
     const line = this.add
-      .text(width / 2, height * 0.36 + 58, `Room clear!  ${parts.join('  ·  ')}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 })
-      .setOrigin(0.5)
+      .text(width / 2, height * 0.36 + 48, `Room clear!  ${parts.join('  ·  ')}${missed}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4, align: 'center', wordWrap: { width: width - 32 } })
+      .setOrigin(0.5, 0)
       .setResolution(crisp())
       .setAlpha(0);
     this.cameras.main.ignore([letter, line]);
@@ -2092,9 +2354,10 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** K25: being hit shakes only at Brown belt and up or on Challenge, softer, never with Reduced motion. */
-  private hurtShake(): number {
-    const t = currentTraining();
-    return hurtShakeScale({ beltIds: t.belts.map((b) => b.id), beltId: t.belt.id, difficulty: this.world.difficulty, reducedMotion: reducedMotion() });
+
+  /** K28: the one shake rule (hits and named-monster wind-ups): Brown rank and up or Challenge, 65%, never with Reduced motion. */
+  private shakeScale(kind: 'hurt' | 'windup' | 'block'): number {
+    return hurtShakeScale({ kind, beltTier: currentTraining().belt.tier, difficulty: this.world.difficulty, reducedMotion: reducedMotion() });
   }
 
   private addWorld<T extends Phaser.GameObjects.GameObject>(obj: T): T {
@@ -2190,7 +2453,111 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  private ring(at: Vec2, color: number, radiusTiles: number, alpha = 0.9): void {
+/**
+   * B-MASHER-a: a shield bounce gives Focus; a soft gold ring for 0.4 s hints "use your Strike!".
+   * Reduced motion: a steady gold tint for the same 0.4 s, with no pulse.
+   */
+  /** B-MASHER-2: once per run, a proud moment when Mash guard steps back (3 Perfect Counters in a room). */
+  private senseiStepsBack(playerId: PlayerId): void {
+    if (!takeMashGuardMoment(this.run ?? NO_RUN_KEY, playerId)) return;
+    // The Manager's call: "seen" is saved with the run, so a reload doesn't show it again.
+    if (this.run) saveRunInProgress(this.run);
+    this.senseiSay([MASH_GUARD_LINE], 2200);
+    this.placeSteppedBack();
+    const p = this.world.players[playerId];
+    if (!p) return;
+    const r = 0.9 * TILE;
+    if (reducedMotion()) {
+      // Steady gold halo, no movement.
+      const halo = this.addWorld(this.add.circle(p.pos.x * TILE, p.pos.y * TILE, r, SHIELD_GLOW_COLOR, 0.25).setStrokeStyle(4, SHIELD_GLOW_COLOR, 0.8).setDepth(9));
+      this.time.delayedCall(1200, () => halo.destroy());
+      return;
+    }
+    const t = this.senseiText;
+    if (t) this.tweens.add({ targets: t, alpha: { from: 0, to: 1 }, duration: 250 });
+    const c = this.addWorld(this.add.circle(p.pos.x * TILE, p.pos.y * TILE, r).setStrokeStyle(5, SHIELD_GLOW_COLOR, 0.9).setDepth(9));
+    this.tweens.add({ targets: c, scale: { from: 0.6, to: 1.4 }, alpha: { from: 1, to: 0 }, duration: 1000, ease: 'Cubic.Out', onComplete: () => c.destroy() });
+  }
+
+  /** QA on #295: every player's sprite on screen, as screen boxes (a little roomy). */
+  private playerScreenBoxes(): { x0: number; x1: number; y0: number; y1: number }[] {
+    const cam = this.cameras.main;
+    const z = cam.zoom / DPR;
+    const k = TILE * z;
+    const boxes = Object.values(this.world.players).map((p) => {
+      const px = (p.pos.x * TILE - cam.worldView.x) * z;
+      const py = (p.pos.y * TILE - cam.worldView.y) * z;
+      return { x0: px - k, x1: px + k, y0: py - 1.8 * k, y1: py + 0.8 * k };
+    });
+    if (this.player?.active) {
+      const r = this.player.getBounds();
+      boxes.push({ x0: (r.left - cam.worldView.x) * z, x1: (r.right - cam.worldView.x) * z, y0: (r.top - cam.worldView.y) * z, y1: (r.bottom - cam.worldView.y) * z });
+    }
+    return boxes;
+  }
+
+  /** Pixels of the Sensei banner that lie over any player sprite (0 = clear). */
+  senseiPlayerOverlap(): number {
+    const t = this.senseiText;
+    if (!t?.active) return 0;
+    const x0 = t.x - t.width / 2, x1 = t.x + t.width / 2, y0 = t.y, y1 = t.y + t.height;
+    return this.playerScreenBoxes().reduce((n, b) => n + Math.max(0, Math.min(x1, b.x1) - Math.max(x0, b.x0)) * Math.max(0, Math.min(y1, b.y1) - Math.max(y0, b.y0)), 0);
+  }
+
+  /**
+   * QA on #295: the "Sensei steps back" banner holds 2.2 s, so it keeps off the players.
+   * Its lines are balanced (no word alone on the last line), and it sits at the first spot
+   * clear of every player: its usual place, the top edge, then the bottom edge.
+   */
+  private placeSteppedBack(): void {
+    const t = this.senseiText;
+    if (!t?.active) return;
+    const { width } = view(this);
+    const maxWrap = Math.min(width - 48, 640);
+    t.setWordWrapWidth(null);
+    const one = t.width - 32; // without the 16 px padding each side
+    const lines = Math.ceil(one / maxWrap);
+    t.setWordWrapWidth(lines > 1 ? Math.min(maxWrap, Math.ceil(one / lines) + 24) : maxWrap, true);
+    t.setData('keepOffPlayers', true);
+    this.placeSensei();
+    // The players move while it holds (2.2 s): if one walks under it, it moves out of the way.
+    this.time.addEvent({ delay: 100, repeat: 24, callback: () => {
+      if (t.active && t === this.senseiText && this.senseiPlayerOverlap() > 0) this.placeOffPlayers(t);
+    } });
+  }
+
+  /** The first spot for the banner clear of every player (and of the doors and messages when it can be). */
+  private placeOffPlayers(t: Phaser.GameObjects.Text): void {
+    const { height } = view(this);
+    const players = this.playerScreenBoxes();
+    const h = t.height;
+    const x0 = t.x - t.width / 2, x1 = t.x + t.width / 2;
+    const hits = (boxes: typeof players) => (y: number) => !boxes.some((b) => b.x1 > x0 && b.x0 < x1 && b.y1 > y && b.y0 < y + h);
+    const buttons = this.buttons.objects.map((o) => {
+      const r = (o as Phaser.GameObjects.Container).getBounds();
+      return { x0: r.left - 8, x1: r.right + 8, y0: r.top - 8, y1: r.bottom + 8 };
+    });
+    const all = [...players, ...buttons, ...this.protectedBoxes(true)];
+    const spots = [t.y, this.senseiTop(height), 8, height - h - 8, ...all.flatMap((b) => [b.y0 - 6 - h, b.y1 + 6])].filter((y) => y >= 8 && y + h <= height - 8);
+    // Clear of everything if it can be; the players always come first.
+    // If nothing is clear of everything, it keeps off the players and stays up top, away from the buttons.
+    const y = spots.find(hits(all)) ?? [this.senseiTop(height), 8, ...spots].find((y) => y >= 8 && y + h <= height - 8 && hits(players)(y));
+    if (y !== undefined) t.setY(y);
+  }
+
+  private shieldGlow(at: Vec2, radiusTiles: number): void {
+    const r = (radiusTiles + 0.15) * TILE;
+    if (reducedMotion()) {
+      const tint = this.addWorld(this.add.circle(at.x * TILE, at.y * TILE, r, SHIELD_GLOW_COLOR, 0.3).setStrokeStyle(4, SHIELD_GLOW_COLOR, 0.8).setDepth(9));
+      this.time.delayedCall(SHIELD_GLOW_MS, () => tint.destroy());
+      return;
+    }
+    const c = this.addWorld(this.add.circle(at.x * TILE, at.y * TILE, r).setStrokeStyle(5, SHIELD_GLOW_COLOR, 0.85).setDepth(9));
+    this.tweens.add({ targets: c, scale: { from: 0.9, to: 1.12 }, duration: SHIELD_GLOW_MS / 2, yoyo: true, ease: 'Sine.InOut' });
+    this.tweens.add({ targets: c, alpha: { from: 0.95, to: 0 }, duration: SHIELD_GLOW_MS, ease: 'Cubic.In', onComplete: () => c.destroy() });
+  }
+
+    private ring(at: Vec2, color: number, radiusTiles: number, alpha = 0.9): void {
     const c = this.addWorld(this.add.circle(at.x * TILE, at.y * TILE, radiusTiles * TILE).setStrokeStyle(5, color, alpha).setDepth(9));
     c.setScale(0.3);
     this.tweens.add({ targets: c, scale: 1, alpha: 0, duration: 300, ease: 'Cubic.Out', onComplete: () => c.destroy() });
@@ -2236,6 +2603,131 @@ export class GameScene extends Phaser.Scene {
     return g.step === 0 ? 0.5 : g.step === 1 ? 0.75 : 1;
   }
 
+  /**
+   * K27 fix 2: where a wind-up cue goes. Above the enemy when that clears the boss bar and every
+   * door label; otherwise beside it (right, then left), then lower beside it. Never on the body.
+   */
+  private windupCueSpot(x: number, y: number, top: number, radius: number): { x: number; y: number } {
+    const R = 21;
+    const minY = this.belowBossBar() + R;
+    const labels: { left: number; right: number; top: number; bottom: number }[] = [...this.doorViews.filter((d) => d.label.visible).map((d) => d.label.getBounds())];
+    // Refresh the name + bar box for this frame first, so the cue never reads last frame's spot.
+    const bossUp = this.world.enemies.find((e) => e.def.boss && e.mode !== 'defeated');
+    if (bossUp && this.bossName.visible) this.placeBossTag(bossUp);
+    const tg = this.bossTagWorld;
+    if (tg) labels.push(tg);
+    const clear = (cx: number, cy: number) =>
+      cy >= minY && labels.every((b) => cx + R < b.left - 4 || cx - R > b.right + 4 || cy + R < b.top - 4 || cy - R > b.bottom + 4);
+    const side = Math.max(radius, 24) + R + 8;
+    const bodyY = y - top / 2;
+    const spots = [
+      { x, y: y - top - 38 },
+      { x: x + side, y: bodyY },
+      { x: x - side, y: bodyY },
+      { x: x + side, y },
+      { x: x - side, y },
+      { x: x + side, y: Math.max(bodyY, minY) },
+      { x: x - side, y: Math.max(bodyY, minY) },
+    ];
+    // While the name + bar slide (e.g. off COMBO as it fades in) they can cover both side spots.
+    // Then the cue goes just past the pair's own edge, or under it, instead of on top of it.
+    if (tg) {
+      const ty = Math.max(bodyY, minY);
+      spots.push({ x: tg.right + R + 6, y: ty }, { x: tg.left - R - 6, y: ty }, { x, y: tg.bottom + R + 6 });
+    }
+    return spots.find((p) => clear(p.x, p.y)) ?? spots[5];
+  }
+
+  /**
+   * K31: the boss's name and its small health bar move as one pair (bossTagLayout): name, a fixed gap, bar.
+   * Above the head when there is room under the top bar, else both below the feet. The name slides sideways
+   * off any door label (HOME), and the pair's world box is kept so the '!' cue (windupCueSpot) avoids it.
+   */
+  private placeBossTag(boss: EnemyState): void {
+    const v = this.enemyViews.get(boss.id);
+    if (!v) return;
+    const cam = this.cameras.main;
+    const k = cam.zoom / DPR;
+    const sx = (wx: number) => (wx - cam.worldView.x) * k;
+    const sy = (wy: number) => (wy - cam.worldView.y) * k;
+    const toWorldX = (x: number) => cam.worldView.x + x / k;
+    const toWorldY = (y: number) => cam.worldView.y + y / k;
+    const { width, height } = view(this);
+    const avoid: TagBox[] = [];
+    for (const d of this.doorViews) {
+      if (!d.label.visible) continue;
+      const b = d.label.getBounds();
+      avoid.push({ left: sx(b.left), right: sx(b.right), top: sy(b.top), bottom: sy(b.bottom) });
+    }
+    // COMBO and its "+N% power" line live in HUD (screen) space already.
+    for (const t of [this.comboText, this.comboBonusText]) {
+      if (!t.visible || t.alpha < 0.05 || !t.text) continue;
+      const b = t.getBounds();
+      avoid.push({ left: b.left, right: b.right, top: b.top, bottom: b.bottom });
+    }
+    const barHalf = (v.hpBack.width * k) / 2;
+    const halfW = Math.max(this.bossName.width / 2, barHalf);
+    const t = bossTagLayout({
+      bossX: sx(v.container.x),
+      headY: sy(v.container.y - v.top),
+      feetY: sy(v.container.y),
+      halfW,
+      screenW: width,
+      minY: HUD_BOTTOM + 4,
+      maxY: height - 4,
+      avoid,
+    });
+    // One x for the pair: the name and the bar share it.
+    this.bossName.setPosition(t.x, t.nameTop);
+    const barX = toWorldX(t.x) - v.container.x;
+    const barY = toWorldY(t.barY) - v.container.y;
+    v.hpBack.setPosition(barX, barY);
+    v.hpFill.setPosition(barX - v.hpBack.width / 2 + 2, barY);
+    this.bossTagWorld = {
+      left: toWorldX(t.x - halfW - 4),
+      right: toWorldX(t.x + halfW + 4),
+      top: toWorldY(t.nameTop) - 2,
+      bottom: toWorldY(t.barY + BOSS_TAG.barH / 2) + 2,
+    };
+  }
+
+  /**
+   * K30: a door label never sits on the boss's head, health bar or name. If it would, it slides
+   * sideways to the far side of the door from the boss (the label still reads as that door's).
+   */
+  private keepLabelOffBoss(d: { label: Phaser.GameObjects.Text; at: Vec2 }): void {
+    const home = d.at.x * TILE;
+    d.label.setX(home);
+    for (const e of this.world.enemies) {
+      if (!e.def.boss || e.mode === 'defeated') continue;
+      const v = this.enemyViews.get(e.id);
+      if (!v || !v.container.visible) continue;
+      const r = e.def.radius * TILE;
+      const hx0 = v.container.x - r - 6;
+      const hx1 = v.container.x + r + 6;
+      const hy0 = v.container.y - v.top - 34; // health bar and name above the head
+      const hy1 = v.container.y - v.top * 0.4; // the head and shoulders
+      const b = d.label.getBounds();
+      // K31: the name and small bar may sit below the boss; keep the label off that pair too.
+      const tag = this.bossTagWorld;
+      if (tag && !(b.right < tag.left || b.left > tag.right || b.bottom < tag.top || b.top > tag.bottom)) {
+        const half = b.width / 2 + 6;
+        d.label.setX(v.container.x >= home ? Math.min(home, tag.left - half) : Math.max(home, tag.right + half));
+        continue;
+      }
+      if (b.right < hx0 || b.left > hx1 || b.bottom < hy0 || b.top > hy1) continue;
+      const half = b.width / 2 + 6;
+      d.label.setX(v.container.x >= home ? Math.min(home, hx0 - half) : Math.max(home, hx1 + half));
+    }
+  }
+
+  /** K27: the lowest world y a wind-up cue may sit at so it clears the boss bar and name (Q5 B1). */
+  private belowBossBar(): number {
+    const cam = this.cameras.main;
+    const up = this.world.enemies.some((e) => e.def.boss && e.mode !== 'defeated');
+    return up ? cam.worldView.y + ((BOSS_BAR_Y + 34 + 20) * DPR) / cam.zoom : -Infinity;
+  }
+
   /** Top of Sensei's banner: just under the boss bar and its name when a boss is up, so both stay readable. */
   private senseiTop(height: number): number {
     const boss = this.world.enemies.find((e) => e.def.boss && e.mode !== 'defeated');
@@ -2258,7 +2750,8 @@ export class GameScene extends Phaser.Scene {
         ...(this.run?.tutorial ? { stroke: '#120e1c', strokeThickness: 4, shadow: { offsetX: 0, offsetY: 2, color: '#000000', blur: 4, fill: true, stroke: true } } : {}),
         padding: { x: 16, y: 8 },
         align: 'center',
-        wordWrap: { width: Math.min(width - 48, 640), useAdvancedWrap: true },
+        // K27: tutorial tips wrap narrower, so there is room beside the buttons (Q5 B3, B4).
+        wordWrap: { width: Math.min(width - (this.run?.tutorial ? 260 : 48), 640), useAdvancedWrap: true },
       })
       .setOrigin(0.5, 0)
       .setResolution(window.devicePixelRatio || 1);
@@ -2329,12 +2822,12 @@ export class GameScene extends Phaser.Scene {
 
 /** For testing: ?guide=0 starts Sensei's guided Counter from the beginning, whatever the save says. */
 function testGuide(): number | undefined {
-  const asked = new URLSearchParams(window.location.search).get('guide');
+  const asked = testFlags().get('guide');
   return asked !== null && /^[0-3]$/.test(asked) ? Number(asked) : undefined;
 }
 
 /** Practice room only: ?difficulty=guided (or challenge). Tower runs carry their own difficulty (runDifficulty). */
 function testDifficulty(): Difficulty | undefined {
-  const asked = new URLSearchParams(window.location.search).get('difficulty');
+  const asked = testFlags().get('difficulty');
   return asked && asked in DIFFICULTY ? (asked as Difficulty) : undefined;
 }

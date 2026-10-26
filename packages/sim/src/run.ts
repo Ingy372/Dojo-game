@@ -3,7 +3,7 @@
 // plain data and uses the seeded random number generator, so a run can be saved
 // and replayed exactly.
 
-import { BLESSING, COMBAT, DOJO, FLOOR, GRADES, LOOT, TICKS_PER_SECOND, type Difficulty, type Rarity } from './config';
+import { realSecondsToTicks, BLESSING, byTier, COMBAT, ENEMY_TRAINING_SCALE, DOJO, FLOOR, GRADES, LOOT, TICKS_PER_SECOND, type Difficulty, type Rarity } from './config';
 import type { Content } from './content';
 import { modsFrom, type Effect } from './effects';
 import { chance, makeItem, rarityRank, rollRarity, type GearItem } from './loot';
@@ -34,6 +34,8 @@ export interface RoomResult {
 
 export interface RunState {
   rng: Rng;
+  /** B-MASHER-2: players who have seen the "Sensei steps back" line this run (once per player in co-op); saved with the run so a reload doesn't show it again. */
+  mashGuardSeen: string[];
   /** Which room of the floor this is (0 = first). */
   depth: number;
   /** Rooms on the floor, boss included. */
@@ -176,6 +178,7 @@ export function startRun(content: Content, options: RunOptions): RunState {
     loot: [],
     results: [],
     perfects: 0,
+    mashGuardSeen: [],
     bestCombo: 0,
     ticks: 0,
     status: 'playing',
@@ -260,6 +263,7 @@ export function createRunWorld(
     doorCount: run.doors.length,
     twist: currentTwist(content, run),
     guideStep,
+    enemyScale: byTier(ENEMY_TRAINING_SCALE, run.tier),
     ...(run.tutorial ? { minHealth: TUTORIAL_FLOOR.minHealth, easyBossHealth: TUTORIAL_FLOOR.bossHealth } : {}),
     player: {
       ...player,
@@ -541,6 +545,17 @@ export function currentTwist(content: Content, run: RunState): TwistDef | null {
   return content.twists.twists.find((t) => t.id === run.twist) ?? null;
 }
 
+/**
+ * B-T3: the rooms a floor at this belt tier is built from. A tier with its own room set (floorSet,
+ * e.g. Ember Kitchens at Orange = tier 3) uses only that set, Guardian room included. Every other
+ * tier keeps the shared rooms exactly as before (Green and up too, until their own sets arrive).
+ */
+export function floorRooms(content: Content, tier: number): Room[] {
+  const open = content.rooms.filter((r) => !r.tutorial && r.minBeltTier <= tier);
+  const own = open.filter((r) => r.floorSet !== null && r.minBeltTier === tier);
+  return own.length > 0 ? own : open.filter((r) => r.floorSet === null);
+}
+
 function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
   // Harder rooms wait until later in the floor (depth 0 is room 1), and some wait for a higher belt.
   if (run.tutorial) {
@@ -549,7 +564,10 @@ function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {
     return room;
   }
   // Tutorial rooms are only ever used by the tutorial floor.
-  const all = content.rooms.filter((r) => !r.tutorial && r.kind === kind && r.earliestRoom <= run.depth + 1 && r.minBeltTier <= run.tier);
+  const rooms = floorRooms(content, run.tier);
+  let all = rooms.filter((r) => r.kind === kind && r.earliestRoom <= run.depth + 1);
+  // A tier's own set may have no room of this kind yet this early (Supper Rush waits for room 4): fight instead.
+  if (all.length === 0) all = rooms.filter((r) => r.kind === 'battle' && r.earliestRoom <= run.depth + 1);
   let fresh = all.filter((r) => !run.usedRooms.includes(r.id));
   // ?named= test runs (K12): from the earliest room, battle rooms with the asked-for type come
   // first, and a challenge room can have it too, so the link always gives that monster
@@ -610,7 +628,7 @@ function roomResult(room: Room, world: WorldState): RoomResult {
     ticks: prog.ticks,
     perfects: prog.perfects,
     damageTaken: prog.damageTaken,
-    inTime: room.challenge ? prog.ticks <= room.challenge.seconds * TICKS_PER_SECOND : null,
+    inTime: room.challenge ? prog.ticks <= realSecondsToTicks(room.challenge.seconds) : null,
   };
 }
 
@@ -683,5 +701,6 @@ export function restoreRun(content: Content, data: unknown): RunState | null {
   restored.decorationColours ??= restored.decorations.map(() => null);
   restored.defeated ??= [];
   restored.tutorial ??= false;
+  if (!Array.isArray(restored.mashGuardSeen)) restored.mashGuardSeen = [];
   return restored;
 }

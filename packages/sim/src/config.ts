@@ -43,8 +43,6 @@ export type Difficulty = keyof typeof DIFFICULTY;
 /** Combat numbers. Starting values from core-design section 4; tune from playtesting. */
 export const COMBAT = {
   defaultDifficulty: 'standard' as Difficulty,
-  /** The Rooted Form adds this many ticks to the Perfect Counter window. */
-  rootedFormBonusTicks: 2,
 
   /** Starting player stats (later these come from the student's profile). */
   player: { maxHealth: 100, power: 10, guard: 0 },
@@ -53,6 +51,8 @@ export const COMBAT = {
     max: 100,
     /** Gained for every hit the player lands. */
     perHit: 5,
+    /** B-MASHER-a: gained when a basic (or ripple) hit bounces off a shield, so mashing still fills a Strike. */
+    perShieldBounce: 6,
     /**
      * Gained for each Perfect Counter in a chain (no Hit taken in between): 1st, 2nd, 3rd,
      * then the last number from then on. A Hit ends the chain; a Block keeps it (S1 change 2).
@@ -89,6 +89,8 @@ export const COMBAT = {
   },
 
   counter: {
+    /** B-MASHER-2 (E3): Mash guard stops for the rest of a room once this many Perfect Counters land in it. */
+    mashGuardPerfects: 3,
     /** After pressing Counter, the player holds a guard pose this many ticks (no walking). */
     guardTicks: 10,
     /** The guard pose always lasts at least this long past the Perfect window, so a slightly early press is still a Block. */
@@ -115,8 +117,8 @@ export const COMBAT = {
     cooldownTicks: 30,
   },
 
-  /** Ticks before the Form can be switched again (half a second). */
-  formSwitchTicks: 10,
+  /** Ticks before the Stance can be switched again (half a second). */
+  stanceSwitchTicks: 10,
   /** Second Wind (the Great Effort Virtue) gives back this share of the Focus it used. */
   secondWindFocusBack: 0.5,
 
@@ -190,9 +192,25 @@ export const LOOT = {
  * Placeholder gear limits for the white belt tier, until real profiles arrive (milestone 4).
  * Gear stats are capped at these, so gear never outweighs real training.
  */
+// R-BAL-9b (#188, Manager's call): per-tier caps from the cost curve, in belt order.
 export const GEAR_CAPS = {
-  white: { power: 4, maxHealth: 30, guard: 8 },
+  white: { power: 1, maxHealth: 10, guard: 3, powerScale: 0.04 },
+  yellow: { power: 3, maxHealth: 25, guard: 5, powerScale: 0.08 },
+  orange: { power: 6, maxHealth: 41, guard: 8, powerScale: 0.11 },
+  green: { power: 9, maxHealth: 60, guard: 9, powerScale: 0.14 },
+  blue: { power: 12, maxHealth: 81, guard: 11, powerScale: 0.16 },
+  red: { power: 16, maxHealth: 104, guard: 12, powerScale: 0.19 },
+  'red-black': { power: 20, maxHealth: 128, guard: 14, powerScale: 0.21 },
+  brown: { power: 24, maxHealth: 154, guard: 15, powerScale: 0.22 },
+  'brown-black': { power: 29, maxHealth: 182, guard: 16, powerScale: 0.24 },
+  black: { power: 34, maxHealth: 211, guard: 17, powerScale: 0.26 },
 } as const;
+
+/** The gear caps for a belt tier (1 = white); tiers past black use black's. */
+export function gearCapsForTier(tier: number): (typeof GEAR_CAPS)[keyof typeof GEAR_CAPS] {
+  const rows = Object.values(GEAR_CAPS);
+  return rows[Math.max(0, Math.min(rows.length, Math.floor(tier)) - 1)];
+}
 
 // ---------------------------------------------------------------- the training link (milestone 4)
 
@@ -200,6 +218,8 @@ export const GEAR_CAPS = {
 export const PROGRESSION = {
   /** Each belt tier adds this many levels to the cap (white belt: cap 10). */
   levelsPerTier: 10,
+  /** R-BAL-5 (D3): each level step's weight is step + this, so later steps grow gently (last step ≤ 10 runs). Tier total unchanged. */
+  xpStepSoften: 11,
   /** Each level above 1 adds this much Health and Power. */
   healthPerLevel: 3,
   powerPerLevel: 0.4,
@@ -235,6 +255,56 @@ export const TRAINING_POINTS = {
   /** Each ability upgrades from level 1 to 5, so it can take this many points. */
   upgradesPerAbility: 4,
 } as const;
+
+/**
+ * R-BAL-12 (#193/#195, drafts/planning/R-BAL-12-training-powers-combat.md): real training adds
+ * whole-number combat stats, for good. Index = belt tier - 1 (white … black); belts past the
+ * list use the last row. A piece keeps the value of the belt it was earned at.
+ */
+export const TRAINING_STATS: ReadonlyArray<{
+  signOff: { power: number; maxHealth: number };
+  trainingPoint: { maxHealth: number };
+  stripe: { guard: number };
+}> = [
+  { signOff: { power: 1, maxHealth: 4 }, trainingPoint: { maxHealth: 1 }, stripe: { guard: 7 } }, // white
+  { signOff: { power: 1, maxHealth: 5 }, trainingPoint: { maxHealth: 1 }, stripe: { guard: 5 } }, // yellow
+  { signOff: { power: 1, maxHealth: 5 }, trainingPoint: { maxHealth: 1 }, stripe: { guard: 3 } }, // orange
+  { signOff: { power: 2, maxHealth: 6 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 3 } }, // green
+  { signOff: { power: 2, maxHealth: 6 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 2 } }, // blue
+  { signOff: { power: 2, maxHealth: 6 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 2 } }, // red
+  { signOff: { power: 2, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 2 } }, // red-black
+  { signOff: { power: 3, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 1 } }, // brown
+  { signOff: { power: 3, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 1 } }, // brown-black
+  { signOff: { power: 3, maxHealth: 7 }, trainingPoint: { maxHealth: 2 }, stripe: { guard: 1 } }, // black
+];
+
+/** Training Points that count toward stats per belt tier (power.ts uses the same 28). */
+export const TRAINING_POINTS_PER_BELT = 28;
+
+/**
+ * R-BAL-12 (Decision B): enemy files hold BASE numbers; a run at belt tier n multiplies
+ * Health and Power by row n-1, then rounds. Guard and timings never scale. Internal only.
+ * Retuned (Manager, option B) so the LIVE enemies (white-belt base numbers from #203) stay in the
+ * #188 bands at every belt for all three model students; pinned by test/r-bal-12-bands.test.ts.
+ * Fit: drafts/planning/r-bal-12f-live-check.py.
+ */
+export const ENEMY_TRAINING_SCALE: ReadonlyArray<{ maxHealth: number; power: number }> = [
+  { maxHealth: 1.27, power: 1.19 },
+  { maxHealth: 2.14, power: 2.06 },
+  { maxHealth: 3.19, power: 3.14 },
+  { maxHealth: 4.65, power: 4.32 },
+  { maxHealth: 6.56, power: 5.6 },
+  { maxHealth: 8.46, power: 7.06 },
+  { maxHealth: 10.77, power: 8.7 },
+  { maxHealth: 13.1, power: 10.36 },
+  { maxHealth: 15.91, power: 11.94 },
+  { maxHealth: 18.72, power: 13.8 },
+];
+
+/** The row for a belt tier (1 = white); tiers past the list use the last row. */
+export function byTier<T>(rows: readonly T[], tier: number): T {
+  return rows[Math.max(0, Math.min(rows.length, Math.floor(tier)) - 1)];
+}
 
 /**
  * Power Rating (core-design section 12). Never shown to players: staff and the system only.
@@ -319,18 +389,44 @@ export function realMsPerTick(): number {
   return 1000 / TICKS_PER_SECOND / TEMPO.speed;
 }
 
+/** K28: real milliseconds that a number of rules ticks lasts on screen. */
+export function ticksToRealMs(ticks: number): number {
+  return ticks * realMsPerTick();
+}
+
+/** K28: rules ticks per real second (about 17.6), so "60 seconds" on screen is 60 real seconds. */
+export function realTicksPerSecond(): number {
+  return 1000 / realMsPerTick();
+}
+
+/** K28: how many rules ticks fit in a number of real seconds (e.g. a Challenge's 60 s). */
+export function realSecondsToTicks(seconds: number): number {
+  return Math.round(seconds * realTicksPerSecond());
+}
+
 /**
- * K25 screen shake. No shake when the player attacks. The shake when the player is hit is
- * only at hurtFromBelt and up, or on Challenge, at hurtScale of its old strength, and never
+ * K25 screen shake. No shake when the player attacks. The shake when the player is hit (and,
+ * since K28, a named monster's wind-up shake) is only from belt rank hurtFromTier up (Brown in
+ * the standard 10-belt order), or on Challenge, at hurtScale of its old strength, and never
  * with Reduced motion.
  */
-export const SCREEN_SHAKE = { playerAttackScale: 0, hurtScale: 0.65, hurtFromBelt: 'brown' } as const;
+export const SCREEN_SHAKE = { playerAttackScale: 0, hurtScale: 0.65, hurtFromTier: 8 } as const;
 
-/** How strong the being-hit shake is (0 = none) for this belt, difficulty and motion setting. */
-export function hurtShakeScale(o: { beltIds: readonly string[]; beltId: string; difficulty: Difficulty; reducedMotion: boolean }): number {
-  if (o.reducedMotion) return 0;
-  const from = o.beltIds.indexOf(SCREEN_SHAKE.hurtFromBelt);
-  const at = o.beltIds.indexOf(o.beltId);
-  const ranked = from >= 0 && at >= from;
-  return ranked || o.difficulty === 'challenge' ? SCREEN_SHAKE.hurtScale : 0;
+/**
+ * K28: the one shake rule. How strong a shake is (0 = none) for what happened (being hit, a named
+ * monster's wind-up, or a Block), the belt rank (1 = first belt), difficulty and motion setting.
+ * K25b (Manager): a Block is a success moment, so it never shakes.
+ */
+export function hurtShakeScale(o: { kind: 'hurt' | 'windup' | 'block'; beltTier: number; difficulty: Difficulty; reducedMotion: boolean }): number {
+  if (o.kind === 'block' || o.reducedMotion) return 0;
+  return o.beltTier >= SCREEN_SHAKE.hurtFromTier || o.difficulty === 'challenge' ? SCREEN_SHAKE.hurtScale : 0;
+}
+
+/**
+ * K29: "1:05" for a number of rules ticks, in real seconds on screen (same conversion as the
+ * K28 Challenge timer). For clocks the player reads; par times and grades stay in game time.
+ */
+export function realClock(ticks: number): string {
+  const s = Math.floor(ticksToRealMs(ticks) / 1000 + 1e-9);
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }

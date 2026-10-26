@@ -1,6 +1,7 @@
 // The player's saved progress from play: gear, personal bests, and bad-luck
 // protection. Plain data (the game stores it on the phone for now; on the server later).
 
+import { readBeltEntry, type BeltEntry } from './beltEntry';
 import { newDecorEarning, readDecorEarning, type DecorEarning } from './earning';
 import { isPlayLimit, type PlayLimit } from './playTime';
 import { COMBAT, DIFFICULTY, LOOT, type Difficulty, type Rarity } from './config';
@@ -82,6 +83,8 @@ export interface Profile {
   difficultyChosenByPlayer: boolean;
   /** Parent setting (M7-P9): play-time limit in minutes, 0 = off (the default). */
   playLimitMinutes: PlayLimit;
+  /** B-BELT: the belt and stripes a grown-up typed in (only ever raised), or null. */
+  beltEntry: BeltEntry | null;
   /** Lost runs in a row on one floor (belt tier), for the kind Guided offer (M7-P1). */
   floorLosses: { tier: number; count: number } | null;
   /** The local date (YYYY-MM-DD) Guided was last offered, or null: at most once a day. */
@@ -102,6 +105,72 @@ export interface Profile {
   welcomeWeek: WelcomeWeekLog;
   /** The local date (YYYY-MM-DD) the three next goals were last shown (M7-P10): at most once a day. */
   goalsShownOn: string | null;
+  /**
+   * P-MENU-f: the belt ids whose Sensei's Seal the player has already seen lit (each rings its
+   * bell once). null = an old save from before this field; the first Gate view fills it in
+   * with the Seal that is already lit, silently (see sealBell).
+   */
+  sealsSeen: string[] | null;
+  /**
+   * P-MENU2-c: the Trophy Case cubby ids whose unlock moment has played (each plays once).
+   * null = an old save from before this field; the first Trophy Case view fills it in with
+   * every cubby already earned, silently (see newTrophies).
+   */
+  trophiesSeen: string[] | null;
+  /**
+   * P-MENU2-d: the Fighting Style the student picked (starting Stance and Virtue), or null for
+   * today's default (Beginner's Stance first, strongest Virtue). Strikes and Seals are always on.
+   */
+  loadout: Loadout | null;
+  /**
+   * R-STANCE-g: Stance ids this student keeps without a teacher's sign-off. Students who played
+   * before Open Leg (Ready) needed a sign-off keep it (Manager Q5 (b)).
+   */
+  grandfatheredStances: string[];
+  /** R-STANCE-g: true once the Open Leg grandfathering check has run (new profiles start true), so it runs once. */
+  stanceMigrated: boolean;
+}
+
+/** P-MENU2-d: two picks only (D2). Each is an id, or null for the default. Unearned picks are ignored. */
+export interface Loadout {
+  stance: string | null;
+  virtue: string | null;
+}
+
+const LOADOUT_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/**
+ * Retired Stance ids. R-STANCE-a renamed Forms to Stances; R-STANCE-d1 replaced Rooted and
+ * Flowing with Cat, Front, Fighting and Horse. A pick of any of these goes back to Ready (null,
+ * the default), per the Manager's call. Only the save migration reads these.
+ */
+const OLD_STANCE_IDS: Readonly<Record<string, null>> = { 'rooted-form': null, 'flowing-form': null, 'rooted-stance': null, 'flowing-stance': null };
+
+/**
+ * R-STANCE-a save migration: saves from before the rename keep the pick under `form`, with the
+ * old ids. Retired ids become null (Ready). `stance` wins when both keys are there; `form` is dropped either way. Running it on
+ * its own output changes nothing.
+ */
+export function migrateLoadout(data: unknown): unknown {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return data;
+  const { form, ...rest } = data as Record<string, unknown>;
+  const stance = 'stance' in rest ? rest.stance : form;
+  return { ...rest, stance: typeof stance === 'string' && Object.prototype.hasOwnProperty.call(OLD_STANCE_IDS, stance) ? OLD_STANCE_IDS[stance] : stance };
+}
+
+/** A saved loadout if it has the right shape, otherwise null (today's default). */
+export function readLoadout(data: unknown): Loadout | null {
+  const l = migrateLoadout(data) as Loadout;
+  if (!l || typeof l !== 'object') return null;
+  // Ability ids are lowercase words joined by hyphens ("rooted-stance"). Anything else, or a
+  // name every object has built in ("constructor", "toString", "__proto__"), is dropped.
+  const id = (v: unknown) => (typeof v === 'string' && LOADOUT_ID.test(v) && !(v in Object.prototype) ? v : null);
+  const out = { stance: id(l.stance), virtue: id(l.virtue) };
+  // R-STANCE-d1 (Manager): an old Form save keeps its migrated stance even with no virtue, so
+  // { form: 'rooted-form' } becomes { stance: null (Ready), virtue: null (default) }, not null.
+  const raw = data as Record<string, unknown>;
+  const hadStance = 'form' in raw || raw.stance === null || (typeof raw.stance === 'string' && Object.prototype.hasOwnProperty.call(OLD_STANCE_IDS, raw.stance));
+  return out.stance || out.virtue || hadStance ? out : null;
 }
 
 export interface StreetSmartsSave {
@@ -131,6 +200,7 @@ export function newProfile(): Profile {
     difficulty: null,
     difficultyChosenByPlayer: false,
     playLimitMinutes: 0,
+    beltEntry: null,
     floorLosses: null,
     guidedOfferedOn: null,
     difficultyLineShown: false,
@@ -140,7 +210,32 @@ export function newProfile(): Profile {
     lessons: newLessonLog(),
     welcomeWeek: newWelcomeWeekLog(),
     goalsShownOn: null,
+    sealsSeen: [],
+    trophiesSeen: [],
+    loadout: null,
+    grandfatheredStances: [],
+    stanceMigrated: true,
   };
+}
+
+/** R-STANCE-g: the Open Leg (Ready) Stance's id. Before R-STANCE-g it was the default every student had. */
+export const READY_STANCE_ID = 'ready-stance';
+
+/**
+ * R-STANCE-g save migration (Manager Q5 (b)), run once per save. A save from before R-STANCE-g that
+ * has played a run, or has a Stance pick at all (d1 already moved Rooted and Flowing picks to
+ * null, which then meant Ready), keeps Open Leg without a sign-off. If its pick was the old default
+ * (null, or the old 'beginners-stance' that played as Ready) it starts in Open Leg. New profiles are
+ * marked done, so this never makes a new player Ready, and running it again changes nothing.
+ */
+export function migrateReadyStance(raw: { runsPlayed?: unknown; stanceMigrated?: unknown; grandfatheredStances?: unknown }, loadout: Loadout | null): Pick<Profile, 'loadout' | 'grandfatheredStances' | 'stanceMigrated'> {
+  const kept = Array.isArray(raw.grandfatheredStances) ? raw.grandfatheredStances.filter((v): v is string => typeof v === 'string') : [];
+  if (raw.stanceMigrated === true) return { loadout, grandfatheredStances: kept, stanceMigrated: true };
+  const played = typeof raw.runsPlayed === 'number' && raw.runsPlayed > 0;
+  if (!played && !loadout) return { loadout, grandfatheredStances: kept, stanceMigrated: true };
+  const grandfatheredStances = kept.includes(READY_STANCE_ID) ? kept : [...kept, READY_STANCE_ID];
+  const wasDefault = !loadout || loadout.stance === null || loadout.stance === 'beginners-stance';
+  return { loadout: wasDefault ? { stance: READY_STANCE_ID, virtue: loadout?.virtue ?? null } : loadout, grandfatheredStances, stanceMigrated: true };
 }
 
 /** Reads a saved profile, falling back to a fresh one if it's missing or damaged. */
@@ -155,7 +250,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null, sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, ...migrateReadyStance(p, readLoadout(p.loadout)) };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {
@@ -349,4 +444,34 @@ export function chooseDifficulty(profile: Profile, difficulty: Difficulty): void
  */
 export function getsTutorialFloor(profile: Pick<Profile, 'runsStarted' | 'runsPlayed'>): boolean {
   return profile.runsStarted === 0 && profile.runsPlayed === 0;
+}
+
+/**
+ * P-MENU-f: should this Gate view ring the Seal's bell (and pop it)? Rings only the first time
+ * the Seal for `beltId` is seen lit. An old save (sealsSeen null) is migrated silently: a Seal
+ * that is already lit counts as seen, so returning players get no bell. Only ever adds ids.
+ */
+/**
+ * P-MENU2-c: which of the cubbies on screen (`shown`, earned ids) should play their unlock
+ * moment now. Each plays once and is saved as seen. An old save (trophiesSeen null) is migrated
+ * silently: everything in `earned` counts as seen, so returning players get no replays.
+ */
+export function newTrophies(profile: Profile, earned: readonly string[], shown: readonly string[]): string[] {
+  if (profile.trophiesSeen === null) {
+    profile.trophiesSeen = [...earned];
+    return [];
+  }
+  const seen = profile.trophiesSeen;
+  const fresh = shown.filter((id, i) => !seen.includes(id) && shown.indexOf(id) === i);
+  seen.push(...fresh);
+  return fresh;
+}
+
+export function sealBell(profile: Profile, beltId: string, lit: boolean): boolean {
+  const old = profile.sealsSeen === null;
+  const seen = profile.sealsSeen ?? [];
+  profile.sealsSeen = seen;
+  if (!lit || seen.includes(beltId)) return false;
+  seen.push(beltId);
+  return !old;
 }

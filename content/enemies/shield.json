@@ -1,10 +1,10 @@
 {
   "id": "shield",
   "name": "Shield Guard",
-  "notes": "Basic attacks bounce off its shield. A Strike or a Perfect Counter breaks the shield; it grows back after 6 seconds.",
+  "notes": "Basic attacks bounce off its shield. A Strike or a Great Counter breaks the shield; it grows back after 6 seconds.",
   "color": "#5a6b85",
-  "maxHealth": 90,
-  "power": 15,
+  "maxHealth": 66,
+  "power": 11,
   "guard": 15,
   "radius": 0.42,
   "moveSpeedTilesPerSecond": 2.4,

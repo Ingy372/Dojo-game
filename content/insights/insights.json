@@ -5,7 +5,7 @@
       "id": "ripple-counter",
       "name": "Ripple Counter",
       "family": "rooted",
-      "text": "Perfect Counters also hit every enemy near you.",
+      "text": "Great Counters also hit every enemy near you.",
       "effect": { "type": "rippleCounter", "amount": 1.5, "radius": 2.2 }
     },
     {
@@ -62,7 +62,7 @@
       "name": "Rally",
       "family": "virtue",
       "text": "Focus fills twice as fast when your health is below half.",
-      "effect": { "type": "lowHealthFocus", "amount": 2, "below": 0.5 }
+      "effect": { "type": "lowHealthFocus", "amount": 1, "below": 0.5 }
     }
   ]
 }

@@ -3,10 +3,10 @@
 // over the network later for visits and co-op.
 
 import type { TwistDef } from './twist';
-import type { FormDef, VirtueKind } from './abilities';
+import type { StanceDef, VirtueKind } from './abilities';
 import { pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
-import { BOW, COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, type Difficulty } from './config';
+import { BOW, COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, realSecondsToTicks, type Difficulty } from './config';
 import { noMods, type PlayerMods } from './effects';
 import { namedDef, type NamedRules, type NamedSpawn } from './named';
 import { eliteDef, eliteWindup, type EliteKind, type EliteRules, type EliteSpawn } from './elite';
@@ -20,6 +20,8 @@ export type EnemyId = string;
 
 export interface PlayerState {
   id: PlayerId;
+  /** B-MASHER-2: this player's Perfect Counters in this room (co-op: per player, Manager's call). */
+  perfects: number;
   pos: Vec2;
   /** Which way the character faces, as a direction of length 1. */
   facing: Vec2;
@@ -50,7 +52,7 @@ export interface PlayerState {
   guardTicks: number;
   /** Ticks before Counter can be pressed again after a guard that countered nothing. */
   counterLockout: number;
-  /** Extra Perfect Counter window ticks (the Rooted Form adds some later). */
+  /** Extra Perfect Counter window ticks (the Rooted Stance adds some later). */
   counterBonusTicks: number;
   /** Ticks of dash movement left (0 = not dashing). */
   dashTicks: number;
@@ -66,12 +68,14 @@ export interface PlayerState {
   mods: PlayerMods;
   /** Ticks of speed burst left (Wind Step). */
   speedBoostTicks: number;
-  /** Forms to switch between (from kata sign-offs); forms[0] is the Beginner's Stance. */
-  forms: FormDef[];
-  /** Which Form is active. */
-  form: number;
-  /** Ticks before the Form can be switched again. */
-  formCooldown: number;
+  /** Stances to switch between (from kata sign-offs); stances[0] is the Beginner's Stance. */
+  stances: StanceDef[];
+  /** Which Stance is active. */
+  stance: number;
+  /** Ticks before the Stance can be switched again. */
+  stanceCooldown: number;
+  /** Ticks in a row the player has stood still (no walking, no dash); for Horse Stance. */
+  stillTicks: number;
   /** The Virtue taken into the fight (from a character stripe), or null. */
   virtue: VirtueSetup | null;
   /** Ticks left of a lasting Virtue (shield, discipline). */
@@ -144,6 +148,11 @@ export interface EnemyState {
   summoned: boolean;
   /** True once a boss has called in its helpers. */
   summonDone: boolean;
+  /** B-T3-TUNE-2: phased bosses: the phase it is in and its place in that phase's attack pattern. */
+  phase?: number;
+  phaseStep?: number;
+  /** B-T3: already split into its smaller enemies (Dough Blob). */
+  splitDone?: boolean;
   /** Which way it circles while waiting its turn to attack: 1 or -1. */
   orbit: number;
   /** Ticks spent chasing since its last swing (for getting winded). */
@@ -178,6 +187,8 @@ export type CombatEvent =
   | { kind: 'guideDone'; step: number; success: boolean }
   | { kind: 'enemySwing'; enemyId: EnemyId }
   | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId; chain: number }
+  /** B-MASHER-2: this room's Perfect Counters reached COMBAT.counter.mashGuardPerfects, so Mash guard is off until the next room. */
+  | { kind: 'mashGuardOff'; playerId: PlayerId }
   | { kind: 'block'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'hit'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'counterPressed'; playerId: PlayerId }
@@ -190,8 +201,12 @@ export type CombatEvent =
   | { kind: 'shieldBreak'; playerId: PlayerId; enemyId: EnemyId }
   | { kind: 'shieldRegrow'; enemyId: EnemyId }
   | { kind: 'summon'; enemyId: EnemyId; summoned: EnemyId[] }
+  /** B-T3-TUNE-2a: a hit bounced off the boss's pot lid (its helpers are still up); no damage. */
+  | { kind: 'clang'; playerId: PlayerId; enemyId: EnemyId }
+  /** B-T3-TUNE-2c: a boss reached a new phase; the game holds still for `ticks` (roar, glow, Sensei's line). */
+  | { kind: 'phaseHold'; enemyId: EnemyId; phase: number; ticks: number; senseiLine: string | null }
   | { kind: 'speedBurst'; playerId: PlayerId }
-  | { kind: 'formChange'; playerId: PlayerId; form: number }
+  | { kind: 'stanceChange'; playerId: PlayerId; stance: number }
   | { kind: 'virtue'; playerId: PlayerId; virtue: VirtueKind; healed: number }
   | { kind: 'virtueEnd'; playerId: PlayerId }
   | { kind: 'virtueRefused'; playerId: PlayerId }
@@ -244,6 +259,8 @@ export interface WorldState {
   goal: GoalState | null;
   /** Tutorial floor (K24a): the enemies stand still until Sensei's step lets them go. */
   enemyHold: boolean;
+  /** B-T3-TUNE-2c: ticks left in a boss phase pause (0 = none). Like the guide hold, nothing moves. */
+  phaseHoldTicks: number;
   /** Tutorial floor (K24a): later waves come only through releaseWave, never on their own. */
   waveHold: boolean;
   /** Tutorial floor: enemies always see the player, so none waits out of sight (K24a). */
@@ -286,7 +303,7 @@ export type MoveInput =
   | { kind: 'moveTo'; x: number; y: number };
 
 /** What a player asks for on one tick: movement, plus a button press if any. */
-export type PlayerAction = 'strike' | 'counter' | 'dash' | 'form' | 'virtue';
+export type PlayerAction = 'strike' | 'counter' | 'dash' | 'stance' | 'virtue';
 export type PlayerInput = MoveInput & { action?: PlayerAction };
 
 export interface WorldOptions {
@@ -314,6 +331,8 @@ export interface WorldOptions {
   minHealth?: number;
   /** The tutorial floor's easy boss (M7-P2): bosses have this share of their health and call in no helpers. */
   easyBossHealth?: number;
+  /** R-BAL-12: multiply enemy Health and Power (then round) for the run's belt. Default: none. */
+  enemyScale?: { maxHealth: number; power: number };
 }
 
 export interface PlayerSetup {
@@ -323,13 +342,13 @@ export interface PlayerSetup {
   /** Health carried over from the last room (defaults to full). */
   health?: number;
   mods?: PlayerMods;
-  /** Forms to switch between; the first is active at the start. Defaults to none (Beginner's Stance). */
-  forms?: FormDef[];
+  /** Stances to switch between; the first is active at the start. Defaults to none (Beginner's Stance). */
+  stances?: StanceDef[];
   virtue?: VirtueSetup | null;
 }
 
-/** The Beginner's Stance: no changes. Used when the player has no Forms. */
-export const NO_FORM: FormDef = { id: 'none', name: "Beginner's Stance", text: '', counterWindow: 0, attackSpeed: 0, moveSpeed: 0, guardScale: 0, powerScale: 0 };
+/** The Beginner's Stance: no changes. Used when the player has no Stances. */
+export const NO_STANCE: StanceDef = { id: 'none', name: "Beginner's Stance", signOffId: null, text: '', counterWindow: 0, attackSpeed: 0, moveSpeed: 0, guardScale: 0, powerScale: 0, dashCooldownScale: 0, dashScale: 1, blockCut: 0, focusGain: 0, stillPower: 0, rootTicks: 0 };
 
 const NO_INPUT: PlayerInput = { kind: 'none' };
 const BASE_STEP = MOVEMENT.speedTilesPerSecond / TICKS_PER_SECOND;
@@ -354,6 +373,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       focus: Math.min(COMBAT.focus.max, mods.startFocus),
       combo: 0,
       counterChain: 0,
+      perfects: 0,
       attackCooldown: 0,
       strikeRecovery: 0,
       counterPressedTick: -1,
@@ -367,9 +387,10 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       out: false,
       mods: { ...mods },
       speedBoostTicks: 0,
-      forms: (options.player?.forms ?? []).map((f) => ({ ...f })),
-      form: 0,
-      formCooldown: 0,
+      stances: (options.player?.stances ?? []).map((f) => ({ ...f })),
+      stance: 0,
+      stanceCooldown: 0,
+      stillTicks: 0,
       virtue: options.player?.virtue ? { ...options.player.virtue } : null,
       virtueTicks: 0,
       virtueShield: 0,
@@ -388,8 +409,12 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
   const enemyTypes: Record<string, EnemyDef> = {};
   if (options.enemyTypes) {
     const typeOf = (id: string): EnemyDef => {
-      const def = options.enemyTypes![id];
-      if (!def) throw new Error(`Room "${room.id}" uses enemy "${id}", but no such enemy type was loaded`);
+      const base = options.enemyTypes![id];
+      if (!base) throw new Error(`Room "${room.id}" uses enemy "${id}", but no such enemy type was loaded`);
+      // R-BAL-12: content holds BASE numbers; the run's belt scales Health and Power (whole numbers).
+      // Guard and timings never scale.
+      const sc = options.enemyScale;
+      const def = sc ? { ...base, maxHealth: Math.max(1, Math.round(base.maxHealth * sc.maxHealth)), power: Math.round(base.power * sc.power), weapon: base.weapon ? { ...base.weapon, disarmedPower: Math.round(base.weapon.disarmedPower * sc.power) } : base.weapon } : base;
       if (def.boss && options.easyBossHealth !== undefined) return { ...def, maxHealth: Math.max(1, Math.round(def.maxHealth * options.easyBossHealth)), summon: null };
       return def;
     };
@@ -404,6 +429,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
         enemyTypes[spawn.enemy] = def;
       }
       if (def.summon) enemyTypes[def.summon.enemy] = typeOf(def.summon.enemy);
+      if (def.split) enemyTypes[def.split.into] = typeOf(def.split.into);
     });
   }
 
@@ -438,6 +464,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     minHealth: Math.max(0, options.minHealth ?? 0),
     goal: room.goal ? { pos: { ...room.goal }, reached: false } : null,
     enemyHold: false,
+    phaseHoldTicks: 0,
     waveHold: false,
     seeAll: false,
     guide: (options.guideStep ?? GUIDE_DONE) < GUIDE_DONE ? { step: options.guideStep!, enemyId: null, waiting: false, waitTicks: 0 } : null,
@@ -510,6 +537,11 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
     guide.waiting = false;
     guide.waitTicks = 0;
   }
+  // B-T3-TUNE-2c: a boss phase pause holds the same way (nothing moves, nothing is hurt), then ends by itself.
+  if (world.phaseHoldTicks > 0) {
+    world.phaseHoldTicks--;
+    return;
+  }
   for (const id of ids) {
     stepPlayer(world, world.players[id], room, inputs[id] ?? NO_INPUT);
   }
@@ -581,6 +613,36 @@ export function currentAttack(e: EnemyState): EnemyAttackDef {
   return e.def.attacks[e.attackIndex % e.def.attacks.length];
 }
 
+/** B-T3: the attacks a phased boss may use at its current health (indexes into its attacks). */
+export function phaseAttacks(e: EnemyState): number[] | null {
+  const phases = e.def.phases;
+  if (!phases) return null;
+  let list = phases[0].attacks;
+  for (const ph of phases) if (e.health <= e.def.maxHealth * ph.atHealthFraction) list = ph.attacks;
+  return list;
+}
+
+/** The attack after this one: in turn, within the current phase for phased bosses. */
+function nextAttackIndex(e: EnemyState): number {
+  const list = phaseAttacks(e);
+  if (!list) return (e.attackIndex + 1) % e.def.attacks.length;
+  // A pattern may name an attack twice (bonk, pin, pin), so keep the place in the pattern.
+  e.phaseStep = ((e.phaseStep ?? 0) + 1) % list.length;
+  return list[e.phaseStep];
+}
+
+/** B-T3-TUNE-2: which phase a phased boss is in at its current health (0 = first). */
+export function phaseIndex(e: EnemyState): number {
+  let k = 0;
+  (e.def.phases ?? []).forEach((ph, i) => {
+    if (e.health <= e.def.maxHealth * ph.atHealthFraction) k = i;
+  });
+  return k;
+}
+
+/** B-T3-TUNE-2c: the phase pause, in rules ticks (about 1 real second). */
+export const PHASE_HOLD_TICKS = realSecondsToTicks(1);
+
 /** True when every enemy in the room is beaten (and none will come back). */
 export function allEnemiesBeaten(world: WorldState): boolean {
   return !world.respawnEnemies && world.pendingSpawns.length === 0 && world.enemies.every((e) => e.mode === 'defeated');
@@ -597,14 +659,14 @@ export function telegraphTicks(attack: EnemyAttackDef, difficulty: Difficulty): 
   return Math.round(fill * d.fillScale) + d.counterWindowTicks;
 }
 
-/** The Perfect Counter window for a player, in ticks (Forms and Technique Seals can widen it). */
+/** The Perfect Counter window for a player, in ticks (Stances and Technique Seals can widen it). */
 export function counterWindowTicks(world: WorldState, p: PlayerState): number {
-  return DIFFICULTY[world.difficulty].counterWindowTicks + p.counterBonusTicks + p.mods.counterWindow + activeForm(p).counterWindow;
+  return DIFFICULTY[world.difficulty].counterWindowTicks + p.counterBonusTicks + p.mods.counterWindow + activeStance(p).counterWindow;
 }
 
-/** The Form in use. */
-export function activeForm(p: PlayerState): FormDef {
-  return p.forms[p.form] ?? NO_FORM;
+/** The Stance in use. */
+export function activeStance(p: PlayerState): StanceDef {
+  return p.stances[p.stance] ?? NO_STANCE;
 }
 
 /** Focus a Strike costs this player (Strike upgrades can lower it). */
@@ -612,9 +674,9 @@ export function strikeCost(p: PlayerState): number {
   return Math.max(10, COMBAT.strike.focusCost - p.mods.strikeCostCut);
 }
 
-/** The player's Guard with the active Form. */
+/** The player's Guard with the active Stance. */
 function guardOf(p: PlayerState): number {
-  return p.guard * (1 + activeForm(p).guardScale);
+  return p.guard * (1 + activeStance(p).guardScale);
 }
 
 // ---------------------------------------------------------------- players
@@ -641,7 +703,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   if (p.strikeRecovery > 0) p.strikeRecovery--;
   if (p.counterLockout > 0) p.counterLockout--;
   if (p.dashCooldown > 0) p.dashCooldown--;
-  if (p.formCooldown > 0) p.formCooldown--;
+  if (p.stanceCooldown > 0) p.stanceCooldown--;
   if (p.virtueTicks > 0 && --p.virtueTicks === 0) {
     p.virtueShield = 0;
     world.events.push({ kind: 'virtueEnd', playerId: p.id });
@@ -661,10 +723,10 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
     world.events.push({ kind: 'counterPressed', playerId: p.id });
   } else if (input.action === 'strike' && p.guardTicks === 0 && p.dashTicks === 0 && p.strikeRecovery === 0) {
     tryStrike(world, p, room);
-  } else if (input.action === 'form' && p.forms.length > 1 && p.formCooldown === 0) {
-    p.form = (p.form + 1) % p.forms.length;
-    p.formCooldown = COMBAT.formSwitchTicks;
-    world.events.push({ kind: 'formChange', playerId: p.id, form: p.form });
+  } else if (input.action === 'stance' && p.stances.length > 1 && p.stanceCooldown === 0) {
+    p.stance = (p.stance + 1) % p.stances.length;
+    p.stanceCooldown = COMBAT.stanceSwitchTicks;
+    world.events.push({ kind: 'stanceChange', playerId: p.id, stance: p.stance });
   } else if (input.action === 'virtue' && p.virtue) {
     useVirtue(world, p);
   }
@@ -677,15 +739,33 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   } else {
     movePlayer(p, room, input);
   }
+  // Horse Stance: count ticks standing still; any walk or dash starts over.
+  p.stillTicks = p.moving || p.dashTicks > 0 ? 0 : p.stillTicks + 1;
 
   if (p.dashTicks === 0 && p.guardTicks === 0 && p.strikeRecovery === 0 && p.attackCooldown === 0) {
     const target = nearestEnemy(world, p, COMBAT.basicAttack.reach);
     if (target) {
-      const speed = Math.min(0.6, p.mods.attackSpeed + activeForm(p).attackSpeed);
+      const speed = Math.min(0.6, p.mods.attackSpeed + activeStance(p).attackSpeed);
       p.attackCooldown = Math.max(1, Math.round(COMBAT.basicAttack.cooldownTicks * (1 - speed)));
       landHit(world, p, target, 'basic', COMBAT.basicAttack.strength, COMBAT.focus.perHit);
     }
   }
+}
+
+/** Dash recharge ticks with the active Stance (Cat: 30 -> 22, rounded down). */
+export function dashCooldownTicks(p: PlayerState): number {
+  return Math.floor(COMBAT.dash.cooldownTicks * (1 + activeStance(p).dashCooldownScale));
+}
+
+/** The share of a hit a Block lets through: 0.5 less gear and Stance block cuts, never under 0.1. */
+export function blockShare(p: PlayerState): number {
+  return Math.max(0.1, COMBAT.counter.blockDamageMultiplier - p.mods.blockCut - activeStance(p).blockCut);
+}
+
+/** Power bonus share from the active Stance, including Horse's stand-still bonus once rooted. */
+export function stancePowerScale(p: PlayerState): number {
+  const s = activeStance(p);
+  return s.powerScale + (s.stillPower > 0 && p.stillTicks >= s.rootTicks ? s.stillPower : 0);
 }
 
 /** Dash: toward the stick if it's pushed, otherwise the way the player faces. */
@@ -700,14 +780,14 @@ function startDash(world: WorldState, p: PlayerState, input: PlayerInput): void 
   p.dashDir = { x: dir.x, y: dir.y };
   p.facing = { x: dir.x, y: dir.y };
   p.dashTicks = COMBAT.dash.ticks;
-  p.dashCooldown = COMBAT.dash.cooldownTicks;
+  p.dashCooldown = dashCooldownTicks(p);
   p.path = null;
   world.events.push({ kind: 'dash', playerId: p.id });
 }
 
 function dashStep(world: WorldState, p: PlayerState, room: Room): void {
   // Slippery Floor twist: the dash slides farther.
-  const step = (COMBAT.dash.distanceTiles * (world.twist?.dashScale ?? 1)) / COMBAT.dash.ticks;
+  const step = (COMBAT.dash.distanceTiles * (world.twist?.dashScale ?? 1) * activeStance(p).dashScale) / COMBAT.dash.ticks;
   p.pos.x += p.dashDir.x * step;
   p.pos.y += p.dashDir.y * step;
   pushOutOfWalls(room, p.pos, R);
@@ -780,8 +860,9 @@ function landHit(
 ): void {
   if (e.shieldUp) {
     if ((move === 'basic' || move === 'ripple') && !p.mods.shieldBreaker) {
-      // Basic attacks bounce off the shield: no damage, no Focus.
+      // Basic attacks bounce off the shield: no damage, but shield sparks give a little Focus (B-MASHER-a).
       p.facing = directionTo(p.pos, e.pos);
+      p.focus = Math.min(COMBAT.focus.max, p.focus + COMBAT.focus.perShieldBounce);
       world.events.push({ kind: 'shieldBlock', playerId: p.id, enemyId: e.id });
       return;
     }
@@ -794,7 +875,7 @@ function landHit(
     comboBonus(p.combo) +
     (e.mode === 'stagger' ? p.mods.staggerBonus : 0) +
     (e.mode === 'winded' && e.def.winded ? e.def.winded.damageBonus : 0);
-  const dmg = damage(p.power * (1 + p.mods.powerScale + activeForm(p).powerScale), strength, e.def.guard, bonus);
+  const dmg = damage(p.power * (1 + p.mods.powerScale + stancePowerScale(p)), strength, e.def.guard, bonus);
   p.combo++;
   if (p.combo > world.progress.bestCombo) world.progress.bestCombo = p.combo;
   if (p.mods.comboSpeedEvery > 0 && p.combo % p.mods.comboSpeedEvery === 0) {
@@ -802,7 +883,7 @@ function landHit(
     world.events.push({ kind: 'speedBurst', playerId: p.id });
   }
   const lowHealth = p.health < p.maxHealth * p.mods.lowHealthBelow;
-  p.focus = Math.min(COMBAT.focus.max, p.focus + focusGain * (1 + p.mods.focusGain) * (lowHealth ? p.mods.lowHealthFocusScale : 1));
+  p.focus = Math.min(COMBAT.focus.max, p.focus + focusGain * (1 + p.mods.focusGain + activeStance(p).focusGain) * (lowHealth ? p.mods.lowHealthFocusScale : 1));
   p.facing = directionTo(p.pos, e.pos);
   hurtEnemy(world, p, e, move, dmg);
 }
@@ -812,6 +893,11 @@ function hurtEnemy(world: WorldState, p: PlayerState, e: EnemyState, move: Attac
   // Guarding aura: a protected enemy takes less from every kind of player damage. Applied last,
   // after all bonuses, rounded, at least 1.
   if (e.guardedBy && world.elites) dmg = Math.max(1, Math.round(dmg * world.elites.guarding.damageScale));
+  // B-T3-TUNE-2a: the pot lid is up while any called helper is still up: the hit clangs off.
+  if (e.def.lidWhileHelpers && lidUp(world)) {
+    world.events.push({ kind: 'clang', playerId: p.id, enemyId: e.id });
+    return;
+  }
   e.health = Math.max(0, e.health - dmg);
   const defeated = e.health === 0;
   if (defeated) {
@@ -827,6 +913,11 @@ function hurtEnemy(world: WorldState, p: PlayerState, e: EnemyState, move: Attac
     p.focus = Math.min(COMBAT.focus.max, p.focus + world.elites.reward.focus);
     world.events.push({ kind: 'eliteFocus', playerId: p.id, enemyId: e.id, focus: p.focus - before });
   }
+}
+
+/** B-T3-TUNE-2a: true while any called helper (e.g. a Spark Sprite) is still in the fight. */
+export function lidUp(world: WorldState): boolean {
+  return world.enemies.some((o) => o.summoned && o.mode !== 'defeated');
 }
 
 function nearestEnemy(world: WorldState, p: PlayerState, maxGap: number): EnemyState | null {
@@ -871,7 +962,7 @@ function returnToStart(world: WorldState, p: PlayerState, room: Room): void {
 
 function movePlayer(p: PlayerState, room: Room, input: MoveInput): void {
   const before = { x: p.pos.x, y: p.pos.y };
-  const STEP = BASE_STEP * (p.speedBoostTicks > 0 ? 1 + p.mods.comboSpeedBonus : 1) * (1 + activeForm(p).moveSpeed);
+  const STEP = BASE_STEP * (p.speedBoostTicks > 0 ? 1 + p.mods.comboSpeedBonus : 1) * (1 + activeStance(p).moveSpeed);
 
   if (input.kind === 'stick') {
     p.path = null;
@@ -964,7 +1055,23 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
     }
     const s = e.def.summon;
     if (s && !e.summonDone && e.health <= e.def.maxHealth * s.atHealthFraction) summonHelpers(world, e, room);
+    // B-T3-TUNE-2: a phased boss entering a new phase starts its pattern over, and the game pauses once.
+    if (e.def.phases) {
+      const k = phaseIndex(e);
+      if (k > (e.phase ?? 0)) {
+        e.phase = k;
+        // Mid wind-up: finish that attack, then start the new pattern from its first attack.
+        if (e.mode === 'windup') e.phaseStep = -1;
+        else {
+          e.phaseStep = 0;
+          e.attackIndex = e.def.phases[k].attacks[0];
+        }
+        world.phaseHoldTicks = PHASE_HOLD_TICKS;
+        world.events.push({ kind: 'phaseHold', enemyId: e.id, phase: k, ticks: PHASE_HOLD_TICKS, senseiLine: e.def.phases[k].senseiLine });
+      }
+    }
   }
+  if (e.mode === 'defeated' && e.def.split && !e.splitDone) splitEnemy(world, e, room);
   switch (e.mode) {
     case 'defeated':
       if (world.respawnEnemies && !e.summoned && --e.modeTicks <= 0) {
@@ -983,12 +1090,13 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
         e.modeTicks = currentAttack(e).recoverTicks;
         resolveAttack(world, e);
         e.attackCenter = null;
-        e.attackIndex = (e.attackIndex + 1) % e.def.attacks.length;
+        e.attackIndex = nextAttackIndex(e);
       }
       return;
-    case 'chase':
+    case 'chase': {
       chase(world, e, room);
       return;
+    }
   }
 }
 
@@ -1068,14 +1176,16 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
     if (distance(p.pos, center) > a.areaRadius + R * 0.5) continue;
 
     const guarding = p.guardTicks > 0;
-    // Perfect Discipline: while it lasts, every Counter is a Perfect Counter.
+    // Strong Discipline: while it lasts, every Counter is a Great Counter.
     const disciplined = p.virtue?.kind === 'discipline' && p.virtueTicks > 0;
-    if (guarding && (disciplined || world.tick - p.counterPressedTick < counterWindowTicks(world, p))) {
+    if (guarding && a.counterable !== false && (disciplined || world.tick - p.counterPressedTick < counterWindowTicks(world, p))) {
       // Perfect Counter: no damage, enemy staggered, counter hit for 2x Power, Focus by chain (+25, +30, +35, +40).
       p.guardTicks = 0;
       p.counterChain++;
       world.progress.perfects++;
+      p.perfects++;
       world.events.push({ kind: 'perfectCounter', playerId: p.id, enemyId: e.id, chain: p.counterChain });
+      if (p.perfects === COMBAT.counter.mashGuardPerfects) world.events.push({ kind: 'mashGuardOff', playerId: p.id });
       // Bell Room twist: each Perfect Counter rings a bell, up to the number needed.
       const bellsNeeded = world.twist?.bells ?? 0;
       if (world.bells < bellsNeeded) world.events.push({ kind: 'bell', count: ++world.bells, of: bellsNeeded });
@@ -1096,10 +1206,12 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
           }
         }
       }
-    } else if (guarding) {
-      // Block: half damage, no stagger. The combo is kept.
+    } else if (a.counterable !== false && (guarding || (p.attackCooldown > 0 && mashGuardOn(p)))) {
+      // Block: half damage (never against a dash-only attack: dash out instead), no stagger. The combo is kept.
+      // B-MASHER-b Mash guard: a hit that lands during the player's own basic-attack swing (attackCooldown)
+      // counts as the same Block, for everyone. B-MASHER-2 (E3): only until the room's 3rd Perfect Counter.
       p.guardTicks = 0;
-      const share = Math.max(0.1, COMBAT.counter.blockDamageMultiplier - p.mods.blockCut);
+      const share = blockShare(p);
       const dmg = damage(power, a.strength * share * weak, guardOf(p));
       world.events.push({ kind: 'block', playerId: p.id, enemyId: e.id, damage: dmg });
       if (p.mods.dashOnBlock) p.dashCooldown = 0;
@@ -1171,6 +1283,27 @@ function summonHelpers(world: WorldState, boss: EnemyState, room: Room): void {
     ids.push(id);
   }
   world.events.push({ kind: 'summon', enemyId: boss.id, summoned: ids });
+}
+
+/** B-T3: a beaten enemy splits into smaller ones where it stood (Dough Blob into 2 Doughlings). */
+function splitEnemy(world: WorldState, parent: EnemyState, room: Room): void {
+  const sp = parent.def.split!;
+  const def = world.enemyTypes[sp.into];
+  parent.splitDone = true;
+  if (!def) return;
+  const ids: EnemyId[] = [];
+  for (let i = 0; i < sp.count; i++) {
+    const angle = (i / sp.count) * Math.PI * 2;
+    const away = def.radius + 0.2;
+    const pos = { x: parent.pos.x + Math.cos(angle) * away, y: parent.pos.y + Math.sin(angle) * away };
+    pushOutOfWalls(room, pos, def.radius);
+    const id = `e${world.nextEnemyNumber++}`;
+    const e = newEnemy(id, def, pos, world.enemies.length);
+    e.summoned = true;
+    world.enemies.push(e);
+    ids.push(id);
+  }
+  world.events.push({ kind: 'summon', enemyId: parent.id, summoned: ids });
 }
 
 /** Tutorial floor (K24a): bring in the next held wave now. False when none is left. */
@@ -1260,6 +1393,9 @@ function resetEnemy(world: WorldState, e: EnemyState): void {
   e.shieldUp = e.def.shield !== null;
   e.shieldRegrow = 0;
   e.summonDone = false;
+  e.phase = 0;
+  e.phaseStep = 0;
+  e.splitDone = false;
   e.chaseTicks = 0;
   e.disarmed = 0;
   world.events.push({ kind: 'enemySpawn', enemyId: e.id });
@@ -1364,4 +1500,9 @@ function directionTo(from: Vec2, to: Vec2): Vec2 {
   const dy = to.y - from.y;
   const d = length(dx, dy);
   return d > 0 ? { x: dx / d, y: dy / d } : { x: 0, y: 1 };
+}
+
+/** B-MASHER-2 (E3): Mash guard helps a player until they make COMBAT.counter.mashGuardPerfects Perfect Counters in this room; each new room starts it again. In co-op each player has their own. */
+export function mashGuardOn(p: PlayerState): boolean {
+  return p.perfects < COMBAT.counter.mashGuardPerfects;
 }

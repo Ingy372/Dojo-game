@@ -1,0 +1,31 @@
+{
+  "notes": "P-MENU2-e: words for the Fighting Style screen. Plain words, no numbers (D6). Locked items invite, never lock (D3).",
+  "slots": { "stance": "Stance", "virtue": "Virtue" },
+  "glyphs": { "stance": "👣", "virtue": "✦" },
+  "choose": { "stance": "Pick a Stance", "virtue": "Pick a Virtue" },
+  "hint": "Tap a card, then tap a pick.",
+  "always": "Always with you",
+  "alwaysEmpty": "Strikes and Seals you earn show up here.",
+  "noVirtue": "Your first stripe",
+  "noVirtueLine": "Your first Virtue comes from a stripe at the dojo.",
+  "switchLine": "You can still switch Stance during a fight.",
+  "virtueLine": "Comes out when your Focus is full.",
+  "notYet": "Learn this at the dojo",
+  "askSensei": "Ask Sensei about this one",
+  "lines": {
+    "beginners-stance": "Everyone starts here. Your first stance is waiting at the dojo!",
+    "ready-stance": "Steady and even, ready for anything.",
+    "cat-stance": "Quicker Counters and Dash, but softer blocks.",
+    "front-stance": "Hit harder, but move a little slower.",
+    "fighting-stance": "Strong blocks and fast Focus, but a shorter Dash.",
+    "horse-stance": "Stand still to hit harder, but move slower.",
+    "shield-of-respect": "A shield that soaks up hits for a while.",
+    "second-wind": "Brings back Health and some Focus.",
+    "perfect-discipline": "For a short time, every Counter is a Great Counter."
+  },
+  "notYetLines": {
+    "ready-stance": "Not yet! Learn Open Leg Stance at the dojo, and your teacher will sign it off."
+  },
+  "welcomeStance": "Welcome! You start in Beginner's Stance, just like everyone. Learn stances at the dojo to grow stronger!",
+  "lineFallback": "A move from your training."
+}

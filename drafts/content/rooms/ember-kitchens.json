@@ -1,0 +1,417 @@
+{
+  "notes": "DRAFT for B-ART3 (Artist brief support). Tier 3 (Orange) room set for the Ember Kitchens, in the content/rooms/ format (same legend and tile letters; no new tile types). 8 rooms to match a floor (7 + boss, decisions.md). Props are art notes only: every prop drawn on '.' must stay walk-through decoration; solid props are already '#'. F3-4 enemies (Ladle Lobber, Rolling Pin) use earliestRoom 3+. The boss room's chest 'C' is where the light piece and the relic appear after the Hearth Cook is freed; faith content is overlay key 'hearth-cook' only. Signs are in signs[]. Not built; code is needed to use these.",
+  "tier": "orange",
+  "place": "The Ember Kitchens",
+  "faithOverlayKey": "hearth-cook",
+  "rooms": [
+    {
+      "id": "ember-pantry",
+      "name": "Pantry Door",
+      "kind": "battle",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#...##........##...#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#...##........##...#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "spark-sprite",
+          "column": 5,
+          "row": 2,
+          "wave": 1
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 14,
+          "row": 2,
+          "wave": 1
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 9,
+          "row": 4,
+          "wave": 1
+        },
+        {
+          "enemy": "dough-blob",
+          "column": 10,
+          "row": 2,
+          "wave": 2
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 6,
+          "row": 5,
+          "wave": 2
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 13,
+          "row": 5,
+          "wave": 2
+        }
+      ],
+      "artProps": "Shelves of jars along the walls; two flour-sack piles (walls) near the middle.",
+      "signs": [
+        "Wash your hands, then help."
+      ]
+    },
+    {
+      "id": "oven-row",
+      "name": "Oven Row",
+      "kind": "battle",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#....##......##....#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "spark-sprite",
+          "column": 4,
+          "row": 2,
+          "wave": 1
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 9,
+          "row": 2,
+          "wave": 1
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 15,
+          "row": 2,
+          "wave": 1
+        },
+        {
+          "enemy": "dough-blob",
+          "column": 6,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "dough-blob",
+          "column": 13,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 10,
+          "row": 4,
+          "wave": 2
+        }
+      ],
+      "artProps": "Three cold brick ovens set into the top wall; one starts to glow as the room clears.",
+      "signs": [
+        "Warm ovens, warm hearts."
+      ]
+    },
+    {
+      "id": "long-table-hall",
+      "name": "Long Table Hall",
+      "kind": "battle",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..######..######..#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "ladle-lobber",
+          "column": 9,
+          "row": 2,
+          "wave": 1
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 5,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 14,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "dough-blob",
+          "column": 10,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "ladle-lobber",
+          "column": 15,
+          "row": 2,
+          "wave": 2
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 4,
+          "row": 2,
+          "wave": 2
+        }
+      ],
+      "artProps": "The empty long table runs across the middle as a wall with gaps; benches tucked under it.",
+      "signs": [
+        "Everyone gets a seat."
+      ]
+    },
+    {
+      "id": "pin-lanes",
+      "name": "Baking Lanes",
+      "kind": "battle",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..###........###..#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "rolling-pin",
+          "column": 10,
+          "row": 2,
+          "wave": 1
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 5,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "rolling-pin",
+          "column": 5,
+          "row": 2,
+          "wave": 2
+        },
+        {
+          "enemy": "ladle-lobber",
+          "column": 14,
+          "row": 2,
+          "wave": 2
+        },
+        {
+          "enemy": "dough-blob",
+          "column": 10,
+          "row": 4,
+          "wave": 2
+        }
+      ],
+      "artProps": "Long floured counters (walls) split the room into three wide lanes.",
+      "signs": [
+        "Clean as you go."
+      ]
+    },
+    {
+      "id": "supper-rush",
+      "name": "Supper Rush",
+      "kind": "challenge",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "challenge": "Clear the room before the soup cools (uses the existing challenge rules).",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..##..........##..#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..##..........##..#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 4,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "spark-sprite",
+          "column": 4,
+          "row": 2,
+          "wave": 1
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 8,
+          "row": 2,
+          "wave": 1
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 12,
+          "row": 2,
+          "wave": 1
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 16,
+          "row": 2,
+          "wave": 1
+        },
+        {
+          "enemy": "dough-blob",
+          "column": 10,
+          "row": 5,
+          "wave": 2
+        },
+        {
+          "enemy": "ladle-lobber",
+          "column": 15,
+          "row": 2,
+          "wave": 2
+        },
+        {
+          "enemy": "rolling-pin",
+          "column": 5,
+          "row": 2,
+          "wave": 3
+        },
+        {
+          "enemy": "spark-sprite",
+          "column": 14,
+          "row": 5,
+          "wave": 3
+        }
+      ],
+      "artProps": "A kitchen clock over the door; serving carts parked at the edges.",
+      "signs": [
+        "Supper is better together."
+      ]
+    },
+    {
+      "id": "spice-cupboard",
+      "name": "Spice Cupboard",
+      "kind": "treasure",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D###D###D#",
+        "#...........#",
+        "#..#.....#..#",
+        "#.....C.....#",
+        "#..#.....#..#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "Rows of little spice jars; the chest is an old bread box.",
+      "signs": [
+        "A little goes a long way."
+      ]
+    },
+    {
+      "id": "warm-hearth",
+      "name": "Warm Hearth",
+      "kind": "rest",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D###D###D#",
+        "#...........#",
+        "#..#.....#..#",
+        "#.....S.....#",
+        "#..#.....#..#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "A small fire that still glows, with a kettle and two cushions.",
+      "signs": [
+        "Rest here. You are welcome."
+      ]
+    },
+    {
+      "id": "great-hearth",
+      "name": "The Great Hearth",
+      "kind": "boss",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "##########D#########",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........C........#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "hearth-cook",
+          "column": 10,
+          "row": 3,
+          "wave": 1
+        }
+      ],
+      "artProps": "The big cold oven on the top wall; a huge pot beside it; the long table pushed to the walls.",
+      "signs": [
+        "Save a bowl for the one who is late.",
+        "Thank the cook!"
+      ]
+    }
+  ]
+}

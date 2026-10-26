@@ -18,6 +18,8 @@ export const CLASSES_PER_PIECE = { white: 2, after: 3 } as const;
 
 /** The Floor Keeper's enemy id: beating it gives the keeper statue for that belt tier. */
 export const KEEPER_ENEMY = 'floor-keeper';
+/** B-T3: every floor's Guardian counts for the keeper statue (the Hearth Cook guards the Orange floor). */
+export const FLOOR_GUARDIANS = [KEEPER_ENEMY, 'hearth-cook'];
 
 export interface DecorEarning {
   /** Classes the game has counted (never goes down), or null until the first sync. */
@@ -130,7 +132,7 @@ export function oneTimeRunPieces(profile: Profile, content: Content, summary: Pi
   };
   const decos = content.dojo.decorations;
   for (const kind of summary.defeated) give(decos.find((d) => d.source === 'trophy' && d.monster === kind));
-  if (summary.defeated.includes(KEEPER_ENEMY)) give(decos.find((d) => d.source === 'keeper' && d.keeperFloor === summary.tier));
+  if (FLOOR_GUARDIANS.some((g) => summary.defeated.includes(g))) give(decos.find((d) => d.source === 'keeper' && d.keeperFloor === summary.tier));
   const tier1 = decos.filter((d) => d.source === 'trophy' && d.journalTier === 1);
   if (tier1.length > 0 && tier1.every((d) => rec.given.includes(d.id))) give(decos.find((d) => d.source === 'bonus'));
   return out;

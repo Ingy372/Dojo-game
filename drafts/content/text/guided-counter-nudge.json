@@ -9,7 +9,7 @@
     "screens": [
       "Tap Counter... now!"
     ],
-    "success": "You did it! Perfect!",
+    "success": "You did it! Great!",
     "retry": "So close! Let's try again.",
     "nudge": "Take your time. Tap the blue COUNTER button!",
     "earliestRun": 1

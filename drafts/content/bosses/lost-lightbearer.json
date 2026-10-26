@@ -1,15 +1,15 @@
 {
   "id": "lost-lightbearer",
   "name": "The Lost Lightbearer",
-  "notes": "DRAFT for C13-6 (bestiary-plan.md; lore from drafts/content/lore/guardians-and-relics.json, unchanged). Black Guardian on floor 5. Same shape as content/enemies/floor-keeper.json, plus phases (66% and 33%, Manager's call). Stats are TODO for the Researcher. Faith tie-ins stay out until Jay decides; see faithOverlayKey. The Black belt form name is a PLACEHOLDER until the curriculum names it.",
+  "notes": "DRAFT for C13-6 (bestiary-plan.md; lore from drafts/content/lore/guardians-and-relics.json, unchanged). Black Guardian on floor 5. Same shape as content/enemies/floor-keeper.json, plus phases (66% and 33%, Manager's call). Stats are TODO for the Researcher. Faith tie-ins stay out until Jay decides; see faithOverlayKey. The Black belt form name is a PLACEHOLDER until the curriculum names it. C14: 66% summons are staggered (one Storm Wisp, then the second about 2 seconds later). Mid-fight form shift at 33% is in drafts/content/enemies/guardian-form-shifts.json.",
   "color": "#f2e6b8",
   "boss": true,
   "guardian": true,
   "tier": "black",
   "band": "F5",
   "form": "PLACEHOLDER: Black belt form (not named yet)",
-  "maxHealth": 3564,
-  "power": 72,
+  "maxHealth": 510,
+  "power": 16,
   "guard": 30,
   "radius": 0.85,
   "moveSpeedTilesPerSecond": 1.6,
@@ -134,6 +134,9 @@
   "summon": {
     "enemy": "storm-wisp",
     "count": 2,
-    "atHealthFraction": 0.66
+    "atHealthFraction": 0.66,
+    "staggered": true,
+    "intervalSeconds": 2,
+    "note": "Manager's call on #189: the two Storm Wisps arrive one at a time, about 2 seconds apart, never together."
   }
 }

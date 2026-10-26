@@ -12,6 +12,7 @@ import {
   newProfile,
   stepWorld,
   strikeCost,
+  trainingStats,
   TICKS_PER_SECOND,
   type CombatEvent,
   type PlayerInput,
@@ -23,6 +24,7 @@ import bruteData from '../../../content/enemies/brute.json';
 import white3 from '../../../fixtures/2-white-belt-3-signoffs.json';
 import yellow from '../../../fixtures/3-yellow-belt.json';
 import { testContent } from './load-content';
+import { holdSwing } from './hold-swing';
 
 const content = testContent();
 const brute = loadEnemy(bruteData);
@@ -65,40 +67,41 @@ function counterAt(w: WorldState, early: number): CombatEvent[] {
 
 const standard = DIFFICULTY.standard.counterWindowTicks;
 
-describe('Forms', () => {
-  it('starts in the Beginner\'s Stance and switches to Rooted Form with the Form button', () => {
+describe('Stances', () => {
+  it('starts in the Beginner\'s Stance and switches to Cat Stance with the Stance button', () => {
     const w = world(character(white3));
     const p = w.players.p1;
-    expect(p.forms.map((f) => f.name)).toEqual(["Beginner's Stance", 'Rooted Form']);
-    expect(p.form).toBe(0);
-    stepWorld(w, room, { p1: { kind: 'none', action: 'form' } });
-    expect(p.form).toBe(1);
-    expect(w.events).toContainEqual({ kind: 'formChange', playerId: 'p1', form: 1 });
+    expect(p.stances.map((f) => f.name)).toEqual(["Beginner's Stance", 'Cat Stance']);
+    expect(p.stance).toBe(0);
+    stepWorld(w, room, { p1: { kind: 'none', action: 'stance' } });
+    expect(p.stance).toBe(1);
+    expect(w.events).toContainEqual({ kind: 'stanceChange', playerId: 'p1', stance: 1 });
     // Can't switch again straight away.
-    stepWorld(w, room, { p1: { kind: 'none', action: 'form' } });
-    expect(p.form).toBe(1);
+    stepWorld(w, room, { p1: { kind: 'none', action: 'stance' } });
+    expect(p.stance).toBe(1);
   });
 
-  it('Rooted Form widens the Perfect Counter window by 2 ticks', () => {
+  it('Cat Stance widens the Perfect Counter window by 1 tick', () => {
     const plain = world();
-    expect(counterAt(plain, standard + 1).some((e) => e.kind === 'perfectCounter')).toBe(false);
-    const rooted = world({ ...character(white3), mods: undefined });
-    rooted.players.p1.form = 1;
-    expect(counterAt(rooted, standard + 1).some((e) => e.kind === 'perfectCounter')).toBe(true);
+    expect(counterAt(plain, standard).some((e) => e.kind === 'perfectCounter')).toBe(false);
+    const cat = world({ ...character(white3), mods: undefined });
+    cat.players.p1.stance = 1;
+    expect(counterAt(cat, standard).some((e) => e.kind === 'perfectCounter')).toBe(true);
   });
 
-  it('Rooted Form is slower on its feet, Flowing Form faster', () => {
+  it('Cat Stance walks at normal speed, Front Stance slower', () => {
     const y = character(yellow);
-    const speeds = [0, 1, 2].map((form) => {
+    // R-STANCE-g: yellow has Beginner, Open Leg, Cat, Front.
+    const speeds = [0, 2, 3].map((stance) => {
       const w = world({ ...y, mods: undefined });
-      w.players.p1.form = form;
+      w.players.p1.stance = stance;
       w.enemies.length = 0;
       const x0 = w.players.p1.pos.x;
       stepWorld(w, room, { p1: { kind: 'stick', x: 1, y: 0 } });
       return w.players.p1.pos.x - x0;
     });
-    expect(speeds[1]).toBeLessThan(speeds[0]);
-    expect(speeds[2]).toBeGreaterThan(speeds[0]);
+    expect(speeds[1]).toBeCloseTo(speeds[0], 9);
+    expect(speeds[2]).toBeLessThan(speeds[0]);
   });
 });
 
@@ -129,11 +132,17 @@ describe('Technique Seals and Strike upgrades', () => {
     const hitDamage = (setup?: PlayerSetup) => {
       const w = world(setup);
       counterAt(w, 1);
-      stepUntil(w, room, 'hit');
+      // Measure the full Hit, not a Mash guard Block (B-MASHER-b).
+      for (let i = 0; i < 400 && !w.events.some((ev) => ev.kind === 'hit'); i++) {
+        holdSwing(w.players.p1);
+        stepWorld(w, room, { p1: IDLE });
+      }
       const ev = w.events.find((e) => e.kind === 'hit');
       return ev && ev.kind === 'hit' ? ev.damage : 0;
     };
-    const y = character(yellow);
+    const y0 = character(yellow);
+    // Keep the enemy alive through the counter: test Disarm without R-BAL-12 training Power.
+    const y = { ...y0, power: y0.power - trainingStats(buildTraining(loadFeed(yellow), content.abilities, { ms: 0, weekday: 3 })).power };
     const plain = hitDamage({ ...y, mods: { ...y.mods, disarm: 0 } });
     const disarmed = hitDamage(y);
     expect(disarmed).toBe(Math.round(plain / 2));

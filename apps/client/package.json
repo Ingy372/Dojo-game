@@ -6,14 +6,21 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc --noEmit && vite build",
+    "build:beta": "tsc --noEmit && vite build --mode beta",
     "preview": "vite preview --host",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@capacitor/android": "8.5.3",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/core": "8.5.3",
+    "@capacitor/ios": "8.5.3",
+    "@capacitor/screen-orientation": "8.0.2",
     "@dojo/sim": "*",
     "phaser": "^3.90.0"
   },
   "devDependencies": {
+    "@capacitor/cli": "8.5.3",
     "typescript": "^7.0.2",
     "vite": "^8.3.2"
   }

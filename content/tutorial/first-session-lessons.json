@@ -1,6 +1,6 @@
 {
   "_note": "The only lesson file (promoted in M7-P2; content/tutorial/sensei-lessons.json is retired). lesson-move was dropped (Manager call, M7-P2): the tutorial floor's walk step teaches moving.",
-  "notes": "Written for M7-P6, revised after the M7-P13 review (PR #46). Session 1 (the tutorial, run 1) teaches only Move, the '!' warning, the guided Counter and Strike. The warning and guided Counter lines, plus 'slowdown'/'nudge', are copied exactly from content/tutorial/sensei-lessons.json. lesson-counter-hint-2 and -3 are fading follow-ups (fadingFollowUp: true) and don't count as new lessons. Bow is taught once, by the tutorial floor's tutorial-bow step, so there is no second Bow lesson at home (review S1). After session 1, at most one new lesson per session: Dash (2), Insights (3), Decorating (4). Perfect Counter, Block and Step-out have ignoresSessionLimit: true and show right away the first time they come up. Keys: id, order, trigger, screens, practice, success, retry, earliestSession, ignoresSessionLimit, fadingFollowUp, plus optional slowdown/nudge. One sentence per screen; button names match the UI. line-welcome-home is a plain greeting on the first return home, not a lesson. It has no practice room and doesn't count toward the session limit. {player} is the profile's display name. triggerKey is the event the game fires for the lesson (M7-P5, Manager call). scroll: false keeps a line off the Lesson Scroll (the fading follow-ups and line-welcome-home, Manager call). A session is a calendar day with at least one run (Manager call); earliestSession counts those days.",
+  "notes": "Written for M7-P6, revised after the M7-P13 review (PR #46). Session 1 (the tutorial, run 1) teaches only Move, the '!' warning, the guided Counter and Strike. The warning and guided Counter lines, plus 'slowdown'/'nudge', are copied exactly from content/tutorial/sensei-lessons.json. lesson-counter-hint-2 and -3 are fading follow-ups (fadingFollowUp: true) and don't count as new lessons. Bow is taught once, by the tutorial floor's tutorial-bow step, so there is no second Bow lesson at home (review S1). After session 1, at most one new lesson per session: Dash (2), Insights (3), Decorating (4). Great Counter, Block and Step-out have ignoresSessionLimit: true and show right away the first time they come up. Keys: id, order, trigger, screens, practice, success, retry, earliestSession, ignoresSessionLimit, fadingFollowUp, plus optional slowdown/nudge. One sentence per screen; button names match the UI. line-welcome-home is a plain greeting on the first return home, not a lesson. It has no practice room and doesn't count toward the session limit. {player} is the profile's display name. triggerKey is the event the game fires for the lesson (M7-P5, Manager call). scroll: false keeps a line off the Lesson Scroll (the fading follow-ups and line-welcome-home, Manager call). A session is a calendar day with at least one run (Manager call); earliestSession counts those days.",
   "speaker": "sensei",
   "lessons": [
     {
@@ -27,7 +27,7 @@
         "Tap COUNTER... now!"
       ],
       "practice": "Tap COUNTER when Sensei says now.",
-      "success": "You did it! Perfect!",
+      "success": "You did it! Great!",
       "retry": "So close! Let's try again.",
       "slowdown": true,
       "nudge": "Take your time. Tap the glowing COUNTER button!",
@@ -150,14 +150,14 @@
       "id": "lesson-perfect",
       "triggerKey": "firstPerfectUnaided",
       "order": 11,
-      "trigger": "First occurrence in play (shows right away): the first Perfect Counter without help",
+      "trigger": "First occurrence in play (shows right away): the first Great Counter without help",
       "screens": [
         "Tap when the circle is almost full.",
-        "That is a Perfect Counter.",
+        "That is a Great Counter.",
         "It fills your Focus fast!"
       ],
       "practice": "Tap COUNTER when the circle is almost full.",
-      "success": "Perfect! How did that feel?",
+      "success": "Great! How did that feel?",
       "retry": "That's okay. Try again whenever you're ready.",
       "earliestSession": 5,
       "ignoresSessionLimit": true,
@@ -170,7 +170,7 @@
       "trigger": "First occurrence in play (shows right away): the first Block (COUNTER pressed a little early)",
       "screens": [
         "That was a Block. Good guarding!",
-        "Wait a tiny bit longer for Perfect."
+        "Wait a tiny bit longer for a Great Counter."
       ],
       "practice": "Wait a tiny bit, then tap COUNTER.",
       "success": "You waited. Nice!",

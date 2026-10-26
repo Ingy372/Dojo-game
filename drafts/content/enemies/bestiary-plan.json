@@ -44,7 +44,7 @@
           "firstBand": "F3-4",
           "behaviour": "Basic hits bounce off its shield.",
           "tell": "Red circle (14 ticks); shield shines.",
-          "counterplay": "STRIKE or a Perfect Counter breaks the shield.",
+          "counterplay": "STRIKE or a Great Counter breaks the shield.",
           "scaling": "Shield regrow time fixed at 6 s.",
           "dashOnly": false,
           "existing": true
@@ -125,7 +125,7 @@
           "firstBand": "F1-2",
           "behaviour": "Bonks with a padded foam staff.",
           "tell": "Raises the staff and glows; red circle.",
-          "counterplay": "COUNTER; a Perfect Counter disarms it (staff hidden).",
+          "counterplay": "COUNTER; a Great Counter disarms it (staff hidden).",
           "scaling": "Stats set in R-BAL-8 (#183).",
           "dashOnly": false,
           "existing": true
@@ -762,20 +762,20 @@
         "guardian": "sun-gardener",
         "tierVerse": "Romans 3:10",
         "theme": "Galatians 5:22-23",
-        "idea": "Good fruit grows slowly",
+        "idea": "The good fruit of the Spirit",
         "discovery": "A scroll under a garden bench"
       },
       {
         "guardian": "hearth-cook",
         "tierVerse": "Romans 3:23",
-        "theme": "Acts 2:46",
-        "idea": "Sharing a meal together",
+        "theme": "John 6:35",
+        "idea": "Jesus, the bread of life",
         "discovery": "A scroll tucked by the supper table"
       },
       {
         "guardian": "stone-giant",
         "tierVerse": "Romans 6:23",
-        "theme": "1 Samuel 17",
+        "theme": "1 Samuel 17:47",
         "idea": "David and Goliath, the tier's own form",
         "discovery": "A sling-stone relic on the Giant's Steps"
       },
@@ -783,7 +783,7 @@
         "guardian": "river-watcher",
         "tierVerse": "Romans 5:8",
         "theme": "Psalm 23:2",
-        "idea": "Still waters and seeing clearly",
+        "idea": "Rest by still waters",
         "discovery": "A scroll in the reeds"
       },
       {
@@ -796,7 +796,7 @@
       {
         "guardian": "echo-mask",
         "tierVerse": "John 3:17",
-        "theme": "Hebrews 13:5",
+        "theme": "Hebrews 13:5 (part)",
         "idea": "Never alone",
         "discovery": "A scroll that echoes back kindly"
       },
@@ -817,8 +817,8 @@
       {
         "guardian": "lost-lightbearer",
         "tierVerse": "John 6:40",
-        "theme": "Romans 8:37; Matthew 5:14-16",
-        "idea": "More than a conqueror; light of the world",
+        "theme": "Romans 8:37; John 8:12",
+        "idea": "More than a conqueror; Jesus, the light of the world",
         "discovery": "The last piece of light, found together"
       }
     ]
