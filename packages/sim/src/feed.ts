@@ -100,6 +100,11 @@ export interface StudentFeed {
   homePractice: { approvedMinutes: number; recent: Array<{ date: string; minutes: number }> };
   accolades: Array<{ name: string; earnedOn: string }>;
   classGoals: Array<{ name: string; status: 'active' | 'completed' }>;
+  /**
+   * B-TUNE-GUIDED: testing fixtures only. Pins the fight stats (Health, Power, Guard) so the
+   * Tester plays the same numbers as the balance sims. Real feeds never send it.
+   */
+  testStats?: { maxHealth: number; power: number; guard: number };
 }
 
 export class FeedError extends Error {
@@ -278,7 +283,13 @@ export function loadFeed(data: unknown): StudentFeed {
       const o = obj(g, `"classGoals[${i + 1}]"`);
       return { name: text(o.name, `"classGoals[${i + 1}].name"`), status: o.status === 'completed' ? 'completed' : 'active' };
     }),
+    ...(f.testStats === undefined ? {} : { testStats: readTestStats(f.testStats) }),
   };
+}
+
+function readTestStats(v: unknown): { maxHealth: number; power: number; guard: number } {
+  const o = obj(v, '"testStats"');
+  return { maxHealth: count(o.maxHealth, '"testStats.maxHealth"'), power: count(o.power, '"testStats.power"'), guard: count(o.guard, '"testStats.guard"') };
 }
 
 /**

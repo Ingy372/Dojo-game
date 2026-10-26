@@ -79,6 +79,8 @@ import {
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
 import tutorialData from '../../../../content/tutorial/tutorial-floor.json';
+// L-PREMIUM-b: the Counter tip's rules.
+import COUNTER_HINT from '../../../../content/settings/counter-hint.json';
 import { Celebrations } from '../ui/Celebrations';
 import BOSS_WIN from '../../../../content/settings/boss-win.json';
 import LAST_RUN from '../../../../content/settings/last-run.json';
@@ -442,7 +444,7 @@ export class GameScene extends Phaser.Scene {
     this.setup = characterSetup(loadSave(), this.training, CONTENT.abilities);
     if (this.run) {
       this.room = currentRoom(CONTENT, this.run);
-      this.world = createRunWorld(CONTENT, this.run, this.setup, this.setup.effects, undefined, testGuide() ?? loadSave().guideStep);
+      this.world = createRunWorld(CONTENT, this.run, this.setup, this.setup.effects, undefined, testGuide() ?? loadSave().guideStep, COUNTER_HINT);
       // K24a: on the tutorial's first room, enemies wait and waves come only when Sensei's step lets them in.
       if (this.run.tutorial && this.room.kind === 'battle') {
         this.world.enemyHold = true;
@@ -475,6 +477,7 @@ export class GameScene extends Phaser.Scene {
       this.time.delayedCall(1500, check);
     }
     this.senseiText = null;
+    this.counterTip = null;
     this.gradeLine = null;
     this.menuOpen = false;
     this.downed = false;
@@ -650,6 +653,7 @@ export class GameScene extends Phaser.Scene {
     this.buttons.counterWindow(this.counterWindowOpen);
 
     this.buttons.update(p);
+    this.placeCounterTip();
     this.drawHud();
     this.drawRunHud(now);
   }
@@ -1265,6 +1269,14 @@ export class GameScene extends Phaser.Scene {
           const nudge = LESSONS[GUIDE_LESSONS[0]].nudge;
           if (nudge) this.senseiSay([nudge]);
           this.buttons.pulseCounter(3);
+          break;
+        }
+        case 'counterHint': {
+          // L-PREMIUM-b: Counter windows went by with no answer. Sensei's nudge shows as a small tip that keeps off
+          // the red circles and the buttons, Counter pulses (a still outline with Reduced motion), and both end on their own.
+          const nudge = LESSONS[GUIDE_LESSONS[0]].nudge;
+          if (!nudge || this.downed) break;
+          this.showCounterTip(nudge);
           break;
         }
         case 'guideDone': {
@@ -2190,6 +2202,81 @@ export class GameScene extends Phaser.Scene {
    * Keeps Sensei's banner under the boss bar and off the door labels (which scroll with the
    * room), every frame, so it stays right when a boss appears or the camera moves (K10).
    */
+  /** L-PREMIUM-b: the Counter tip's text (null when not showing). */
+  private counterTip: Phaser.GameObjects.Text | null = null;
+
+  private showCounterTip(line: string): void {
+    this.counterTip?.destroy();
+    const { width } = view(this);
+    const t = this.add
+      .text(0, 0, `Sensei: ${line}`, {
+        fontFamily: 'system-ui, sans-serif',
+        fontStyle: 'bold',
+        fontSize: width < 720 ? '16px' : '18px',
+        color: '#ffffff',
+        backgroundColor: '#2a2440ee',
+        padding: { x: 12, y: 8 },
+        wordWrap: { width: Math.min(width * 0.4, 300), useAdvancedWrap: true },
+      })
+      .setDepth(60)
+      .setResolution(window.devicePixelRatio || 1);
+    this.cameras.main.ignore(t);
+    this.counterTip = t;
+    this.buttons.pulseCounter(4);
+    this.placeCounterTip();
+    this.time.delayedCall(COUNTER_HINT.tipMs, () => {
+      if (this.buttons.counterPulseLevel() === 4) this.buttons.pulseCounter(0);
+      if (t !== this.counterTip) return;
+      const done = () => {
+        t.destroy();
+        if (this.counterTip === t) this.counterTip = null;
+      };
+      if (reducedMotion()) done();
+      else this.tweens.add({ targets: t, alpha: 0, duration: 400, onComplete: done });
+    });
+  }
+
+  /** Each frame: the tip takes the first spot clear of every red attack circle, the buttons and the HUD; if none is clear, it hides for that frame. */
+  private placeCounterTip(): void {
+    const t = this.counterTip;
+    if (!t?.active) return;
+    if (this.downed) {
+      t.setVisible(false);
+      return;
+    }
+    const { width: W, height: H } = view(this);
+    const cam = this.cameras.main;
+    const z = cam.zoom / DPR;
+    const keepOff = [
+      { x0: 0, x1: W, y0: 0, y1: HUD_BOTTOM },
+      ...this.world.enemies
+        .filter((e) => e.attackCenter && e.mode === 'windup')
+        .map((e) => {
+          const cx = (e.attackCenter!.x * TILE - cam.worldView.x) * z;
+          const cy = (e.attackCenter!.y * TILE - cam.worldView.y) * z;
+          const r = currentAttack(e).areaRadius * TILE * z + 8;
+          return { x0: cx - r, x1: cx + r, y0: cy - r, y1: cy + r };
+        }),
+      ...this.buttons.objects.map((o) => {
+        const r = (o as Phaser.GameObjects.Container).getBounds();
+        return { x0: r.left - 12, x1: r.right + 12, y0: r.top - 12, y1: r.bottom + 12 };
+      }),
+    ];
+    const w = t.width;
+    const h = t.height;
+    const top = HUD_BOTTOM + 6;
+    const spots = [
+      { x: 8, y: top },
+      { x: (W - w) / 2, y: top },
+      { x: 8, y: (H - h) / 2 },
+      { x: 8, y: H - h - 8 },
+      { x: (W - w) / 2, y: H - h - 8 },
+    ];
+    const free = spots.find(({ x, y }) => !keepOff.some((b) => b.x1 > x && b.x0 < x + w && b.y1 > y && b.y0 < y + h));
+    t.setVisible(!!free);
+    if (free) t.setPosition(free.x, free.y);
+  }
+
   private placeSensei(): void {
     const t = this.senseiText;
     if (!t?.active) return;
