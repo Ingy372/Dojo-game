@@ -1,5 +1,5 @@
 {
-  "notes": "L-PREMIUM-a: one 'how to earn it' line per locked Trophy Case cubby, Home Dojo decoration and Monster Journal card. Shown on tap and read aloud. Keyed by content id. Starter decorations and Beginner's Stance are never locked; Virtue stripes only show once earned, so they have no hint. Checked by drafts/content/tools/check-locked-hints.py.",
+  "notes": "L-PREMIUM-a: one 'how to earn it' line per locked Trophy Case cubby, Home Dojo decoration and Monster Journal card. Shown on tap and read aloud. Keyed by content id. Starter decorations and Beginner's Stance are never locked; Virtue stripes only show once earned, so they have no hint. Checked by drafts/content/tools/check-locked-hints.py. Since R-STANCE-d2 each stance unlocks by its own teacher sign-off, not a kata; katas fill their own cubby (cubbies list).",
   "rules": {
     "maxWords": 7,
     "banned": [
@@ -14,40 +14,36 @@
       "id": "ready-stance",
       "shelf": "katas",
       "hint": "Show Sensei your Open Leg Stance!",
-      "unlock": "Its own teacher sign-off (signOffId PLACEHOLDER-dojoforge-stance-ready).",
+      "unlock": "Its own teacher sign-off (signOffId PLACEHOLDER-dojoforge-stance-ready), since R-STANCE-d2.",
       "source": "content/abilities/abilities.json notes"
     },
     {
       "id": "cat-stance",
       "shelf": "katas",
-      "hint": "Show Sensei your next kata in class!",
-      "unlock": "Teacher sign-off on belt 2's kata (stances[2]).",
-      "source": "content/abilities/abilities.json notes",
-      "question": "abilities.json notes say belt N's kata unlocks stances[N], but stances[1] has its own sign-off. Is belt 1's kata tied to cat-stance or to nothing? Wording holds either way."
+      "hint": "Show Sensei your Cat Stance in class!",
+      "unlock": "Its own teacher sign-off (signOffId PLACEHOLDER-dojoforge-stance-cat), since R-STANCE-d2.",
+      "source": "content/abilities/abilities.json notes"
     },
     {
       "id": "front-stance",
       "shelf": "katas",
-      "hint": "Show Sensei your next kata in class!",
-      "unlock": "Teacher sign-off on belt 3's kata (stances[3]).",
-      "source": "content/abilities/abilities.json notes",
-      "question": "abilities.json notes say belt N's kata unlocks stances[N], but stances[1] has its own sign-off. Is belt 1's kata tied to cat-stance or to nothing? Wording holds either way."
+      "hint": "Show Sensei your Front Stance in class!",
+      "unlock": "Its own teacher sign-off (signOffId PLACEHOLDER-dojoforge-stance-front), since R-STANCE-d2.",
+      "source": "content/abilities/abilities.json notes"
     },
     {
       "id": "fighting-stance",
       "shelf": "katas",
-      "hint": "Show Sensei your next kata in class!",
-      "unlock": "Teacher sign-off on belt 4's kata (stances[4]).",
-      "source": "content/abilities/abilities.json notes",
-      "question": "abilities.json notes say belt N's kata unlocks stances[N], but stances[1] has its own sign-off. Is belt 1's kata tied to cat-stance or to nothing? Wording holds either way."
+      "hint": "Show Sensei your Fighting Stance in class!",
+      "unlock": "Its own teacher sign-off (signOffId PLACEHOLDER-dojoforge-stance-fighting), since R-STANCE-d2.",
+      "source": "content/abilities/abilities.json notes"
     },
     {
       "id": "horse-stance",
       "shelf": "katas",
-      "hint": "Show Sensei your next kata in class!",
-      "unlock": "Teacher sign-off on belt 5's kata (stances[5]).",
-      "source": "content/abilities/abilities.json notes",
-      "question": "abilities.json notes say belt N's kata unlocks stances[N], but stances[1] has its own sign-off. Is belt 1's kata tied to cat-stance or to nothing? Wording holds either way."
+      "hint": "Show Sensei your Horse Stance in class!",
+      "unlock": "Its own teacher sign-off (signOffId PLACEHOLDER-dojoforge-stance-horse), since R-STANCE-d2.",
+      "source": "content/abilities/abilities.json notes"
     },
     {
       "id": "follow-up-kick",
@@ -466,6 +462,15 @@
       "unlock": "First win against Captain Clank (rare, belt tier 2+; about 1 in 30 runs).",
       "source": "content/named/named.json",
       "note": "Name hidden on purpose: the card shows '?' until met."
+    }
+  ],
+  "cubbies": [
+    {
+      "id": "kata-cubby",
+      "shelf": "katas",
+      "hint": "Learn a kata in class with Sensei!",
+      "unlock": "Teacher sign-off on a belt's kata (cubby on the katas shelf; no stance attached since R-STANCE-d2).",
+      "source": "C-STORY-TRY-rec"
     }
   ]
 }
