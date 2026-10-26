@@ -1,46 +1,85 @@
-# R-PREMIUM audit: what keeps Dojo Ascent from feeling premium
+# R-PREMIUM audit: final board items
 
-We copy the polish of the big hits, not how they make money. That means no purchases, ads, loot boxes, pressure, streak punishment or guilt. The game is for ages 6+ and stays hopeful. Real training stays the main source of power, wind-ups are never shortened, and the R-BAL-12 bands must keep passing.
+Goal: make it feel premium. Copy the polish of the hit games, never how they make money: no purchases, ads, loot boxes, pressure or guilt. For ages 6+. Wind-ups stay as they are and R-BAL-12 bands must keep passing.
+
+Tester findings are folded in from Q-PREMIUM (`drafts/qa/Q-PREMIUM-pass.md`, PR #319 and its retest). Credit to the Tester. Each item below cites the Tester's number (Q#, or F# for follow-up findings).
+
+Jay's answers (via the Manager, Oct 26):
+- no camera kick on Great Counter; use a motion slider for the hit-flinch instead
+- free sound packs are fine if the license allows selling the app
+- particles (a) and sound (b) may slip past Dec 15
 
 ## How I checked
-- **Live build** (https://dojo-ascent.jay-lindemuth.workers.dev, version "Oct 26, 12:43 AM"): headless Chrome on the box, landscape phone size (844×390). The screenshots are in `r-premium-audit/`.
-  - **Reached:** the privacy screen (1), the title (2), character creation (3), the Bow step (4), and room 1 with Sensei's tip card (5).
-  - **Not reached:** a real fight. After the first card, my scripted taps on "Got it" did nothing (screenshot 5 shows the same card for about 20 s). This may be my tap method rather than a bug, so a Tester should check it on a phone (R-PREMIUM-d).
-- **Repo:** `apps/client` (the game screens) and `packages/sim` (the game rules). The look and feel of hits, music and menus during a fight come only from reading the code.
-- **Systems:** evidence from the merged plans R-BAL-12, R-BAL-9, R-STANCE-c, B-MASHER and B-MASHER-2, plus my open #302 and #314.
+- **Live:** headless Chrome at 844×390 got from the title to room 1 (shots in `r-premium-audit/`). The Tester covered fights, the boss, losing and winning by real touch.
+- **Repo:** main at 66c503f.
+- **Numbers:** the balance-check skill (`/home/box/agent-data/workflows/balance-check/SKILL.md`), run across every belt and difficulty. See the table below.
 
-## Already strong (keep)
-- **Hitstop (a short freeze on hits) scaled by hit strength:** basic 20 ms, Strike 95 ms, Great Counter 180 ms, enemy down 120 ms (`GameScene.ts` lines 143–148). This matches Sakurai's rule that stronger hits freeze longer ([Famitsu column](https://sourcegaming.info/2015/11/11/thoughts-on-hitstop-sakurais-famitsu-column-vol-490-1/)).
-- **Hit feedback:** damage numbers, a hit flash, and kind words such as "BLOCK", "Ding! Bonus prize!" and "WIND STEP!" (`floatText` calls in `GameScene.ts`).
-- **Open Leg Stance now has its reward:** merged in #315 (`content/abilities/abilities.json` `ready-stance`): power +3%, dash recharge −10%, blockCut 0.05, focus +8%. This was item f, now done; the other item letters are kept as they were (no f).
-- **Calm, honest first screen:** "Saved on this phone… no accounts, no ads, no purchases" (screenshot 1). The hits can't say this.
-- **Character creation** is quick and friendly, with Sensei naming your real belt (screenshot 3).
+## Already strong or already fixed (no item)
+- **Hitstop by hit strength:** basic 20 ms, Strike 95 ms, Great Counter 180 ms (`GameScene.ts` lines 143–148). This matches Sakurai ([column](https://sourcegaming.info/2015/11/11/thoughts-on-hitstop-sakurais-famitsu-column-vol-490-1/)).
+- **Damage numbers, hit flash, kind wording** ("Good effort!", "You keep everything you found").
+- **Open Leg Stance reward:** done in #315 (`ready-stance`: power +3%, dash recharge −10%, blockCut 0.05, focus +8%). This was item f.
+- **Settings exit (Tester F2):** a Done button, merged in Q-PREM-F2.
+- **Bow first tap and menu taps pointing at Bow (Tester F1):** fixed in Q-PREM-F1. Tester to retest 10 of 10 taps.
+- **Loss screen shows only Back home with controls hidden (Tester F4, run-over card):** merged in Q-PREM-F4 and F5.
 
-## Gaps, ranked by felt impact per effort
-| # | Gap | Now (evidence) | What the hits do (source) | Item · Owner | Done when | Waits on |
-|---|---|---|---|---|---|---|
-| 1 | **No particles** | No particle or emitter code in `apps/client/src` (search finds 0 hits). A hit is a number, a flash and a freeze only. | "Juice It or Lose It" adds particles as one of its core layers ([GDC Vault](https://gdcvault.com/play/1016789/Juice-It-or-Lose), [summary](https://gdad.wiki/wiki/sources/source-juice-it-or-lose-it)). Nijman's 30 tweaks include impact effects ([Game Developer](https://www.gamedeveloper.com/design/vlambeer-co-founder-shares-advice-on-building-better-action-games)). | **R-PREMIUM-a** · Programmer | Basic hit, Strike, Great Counter, Block and enemy down each show a small spark or dust burst. Great Counter is the biggest. Reduced motion shows fewer. Phone frame rate stays smooth (Tester checks on Jay's phone). | Artist spark sprites (can start with simple shapes) |
-| 2 | **Sounds are all made in code** | `audio/Sfx.ts`: "Simple sounds made in code… no sound files". Only 2 music loops (`assets/audio/music`). | Purho: sound is "the most cost effective thing you can add" (same source as gap 1). | **R-PREMIUM-b** · Artist | A licensed (for example CC0) hit, block, Great Counter, Strike, room-clear and belt-reward sound set replaces the code sounds. Volume settings still work, and licenses are in `assets/audio`. | Question for Jay: keep the soft sounds made in code, or use recorded ones? |
-| 3 | **Your own hits never shake the screen** | K25 (`docs/decisions.md`): no shake when you attack; being hit shakes only at Brown belt and up or on Challenge. This was Jay's call after his phone playtest. | Nijman shakes the screen against your own shots ([talk](https://www.youtube.com/watch?v=AJdEqssNZ-U)). Soul Knight makes shake a setting ([TouchArcade review](https://toucharcade.com/2017/03/10/soul-knight-review), [players on shake levels](https://www.reddit.com/r/SoulKnight/comments/hr0m7k/what_screen_shake_level_do_you_use/)). | **R-PREMIUM-c** · Programmer | A tiny camera kick on a Great Counter only (never on basic hits), off with Reduced motion, plus a Settings slider for shake (off, low, normal). | **Question for Jay** (it reverses part of K25) |
-| 4 | **Onboarding cards stop the action** | First room: a Bow step, then a card, then another card ("This room is big…"). In my headless run the second card wouldn't close (screenshot 5). | Archero teaches with one thumb and no reading: "stop to shoot, move to evade" ([Game Developer: Finding the Fun](https://www.gamedeveloper.com/design/finding-the-fun-archero-part-1---gameplay)). Supercell found extra tutorial steps added friction without improving next-day return ([GrowthBook podcast](https://www.growthbook.io/podcast/episode/1-36)). | **R-PREMIUM-d** · Tester, then Learning & Engagement Designer | Tester: on a real phone, every card closes on the first tap (pass or bug filed). Designer: the first room teaches move, Counter and Strike by doing, with at most 1 card that has to be dismissed. | Tester result |
-| 5 | **Kid bot (age 6) still loses often; masher rarely wins** | B-MASHER-2 (E3, now built): kid bot wins 56.5% with 0 KOs in room 1. Masher bot won 6–8% before the fixes (R-STANCE-c); not yet re-measured after E3. Smart-bot damage is −12% to −15% (target was within about 10%). | Archero's "Angel and Devil" helps weaker players and adds challenge for skilled ones (Finding the Fun, above). | **R-PREMIUM-e** · Tester | A fresh sim (kid, masher, smart bots, belts 1–10) is posted. Jay sees the numbers and picks the kid target. Band test passes. | Question for Jay: is a 56% kid win rate enough, or aim higher? |
-| 6 | **Kata rewards are placeholders** | #302: 9 katas, 2 options each, untested. | — | **R-PREMIUM-g** · Content Designer | Each kata has 1 picked reward with kid words and an icon request. | Toni's kata descriptions; Jay's picks |
-| 7 | **Boss defeat feels like any other enemy** | Enemy down is 120 ms, the same for every enemy (`GameScene.ts` line 148). I found no separate boss moment in the code (unconfirmed). | Sakurai's "boss-stop": freeze and flash the instant a boss falls ([Sakurai on Creating Games](https://en.senkohome.com/sakurai-game-dev-specification/)). | **R-PREMIUM-h** · Programmer | Guardian or boss defeat: a longer freeze (no more than 300 ms), a white flash (soft with Reduced motion) and a cheer line. No timing change before the KO. | none |
+## Balance check (kid 56.5% question)
+**Which difficulty:** the 56.5% was **Standard**, the middle setting, not the easiest.
+- Source: `packages/sim/test/b-masher-kid.test.ts` line 18: `playRun(content, 1000 + i, 'kid', SKILLS.novice, 'standard', student(tier), …)`.
+- The B-MASHER-2 doc says "belts 1–10, 20 seeds, Standard".
+- The settings are guided (easiest), standard and challenge (`config.ts` line 45: default `'standard'`).
 
-## Scope vs the Dec 15 beta
-- **Fits the beta** (small, low risk): c, d (Tester half), h.
-- **Medium:** a, b. Each is a few days and needs an art or sound source.
-- **Scope creep, do after the beta unless Jay says otherwise:** the redesign half of d, plus g, and any new gear or progression systems. I found no evidence from the hits that our gear and progression *structure* is the problem. The R-BAL-9 gear caps hold.
+**My re-run reproduces it exactly** (main at 66c503f, the same bots, 20 seeds per belt, typical student stats per belt). Wins are out of 20 per belt:
 
-## Questions for Jay
-1. **Shake (c):** OK to add a tiny kick on Great Counter only, plus a shake slider? This changes part of K25.
-2. **Sound (b):** recorded sound effects, or keep the soft ones made in code?
-3. **Kid target (e):** is a 56% kid win rate enough?
-4. **Beta scope:** confirm a and b can wait until after Dec 15 if time is short.
+| Difficulty | Bot | B1 | B2 | B3 | B4 | B5 | B6 | B7 | B8 | B9 | B10 | Total | Room-1 KOs | Target | Pass |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Guided | kid | 10 | 17 | 20 | 14 | 15 | 15 | 11 | 13 | 13 | 11 | 69.5% | 0 | none set (untested) | ? |
+| Standard | kid | 4 | 12 | 20 | 10 | 13 | 13 | 9 | 11 | 11 | 10 | **56.5%** | 0 | ≥50%, 0 KOs (B-MASHER-2 gate) | pass overall; **B1 20% fails** |
+| Challenge | kid | 3 | 6 | 20 | 3 | 3 | 3 | 1 | 1 | 3 | 3 | 23.0% | 17 | none set | ? |
+| All three | smart (typical) | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 100% | 0 | none set | ? |
+
+Flags from the check:
+- **The White belt kid wins least.** Belt 1 is 20% on Standard and 50% on Guided, worse than every other belt.
+- **Belt 3 is an outlier:** 20/20 on every setting, including Challenge, where its neighbors win 3–6. These are jumps of more than 2× between neighboring belts.
+- **The smart bot wins 100% everywhere,** so the top of the ramp is flat. That matches R-STANCE-c.
+
+I propose no new numbers. The Guided and Challenge targets are **untested**, because none are defined.
+
+## Final items
+Order: biggest felt impact per effort first. Item letters are kept (no f). New items continue from i.
+
+| ID | What | Owner | Done when (a tester checks) | Waits on | Beta (Dec 15)? |
+|---|---|---|---|---|---|
+| **R-PREMIUM-d** | Tutorial walk step: name the glowing spot in the text ("Walk to the glowing circle"), move it clear of door labels, and add a hint after about 10 s (Tester Q1). | Learning & Engagement Designer | On a fresh profile at 667 and 932 by touch, a new player reaches the spot in under 30 s. The ring touches no label. | none | Beta |
+| **R-PREMIUM-i** | Sensei dialog: one fixed banner spot with a portrait. It never covers the stick, the player or "Room x of y". Lines with no button fade after a few seconds (Tester Q2). | Programmer | In the tutorial and room 1, every Sensei line shows in the same spot. A line with no button is gone within 6 s. Nothing covers the stick. | Artist portrait (a placeholder is fine) | Beta |
+| **R-PREMIUM-j** | Room-clear beat: a readable "Room clear!" banner, exit doors light up with an arrow, door labels stay inside the safe area, and a short fade instead of the black frame between scenes (Tester Q4, Q8, F3, retest 2–3). | Programmer | After clearing room 1 at 667×320 and 932×430: the banner is readable for at least 2 s with no overlap, the doors glow, no label is clipped, and there is no all-black frame on Board → Game. | none | Beta |
+| **R-PREMIUM-h** | Boss presence: an intro card with the name, a named boss bar, a larger sprite, floating text capped and staggered, and a defeat moment (a freeze of no more than 300 ms, a soft flash, "Floor Keeper defeated!"). Timing before the KO is unchanged (Tester Q6, retest 1). Source: Sakurai's boss-stop ([summary](https://en.senkohome.com/sakurai-game-dev-specification/)). | Programmer | In keepers-hall: the name shows on entry and on the bar, at most 3 floating texts at once, and the win shows a boss line, not the plain "Room clear!". The flash is soft with Reduced motion. | Artist larger sprite (the scale can go first) | Beta (sprite may slip) |
+| **R-PREMIUM-n** | Show the letter grade only on Challenge. Right now `showGrade` runs for every graded room on every setting (`GameScene.ts` line 1559; `run.ts` line 26). | Programmer | Clearing a battle room on Guided and Standard shows no letter. On Challenge it does. The "Room clear!" line still shows on all three. | none | Beta |
+| **R-PREMIUM-o** | Hide placeholder text: "(its reward arrives in a later update)", "Its power arrives in a later update" and "▶ Video soon" (Tester Q11, Q12, F6). Fits with g. | Programmer | A search of the player-visible strings in `content/` and `apps/client` finds none of these lines. Welcome card, Board and Trophy Case screenshots are clean. | none | Beta |
+| **R-PREMIUM-l** | First visit: one welcome sequence shown once, instead of 4 pop-ups in a row. Reword "Pick up your climb?" because it contradicts "start again at room 1" (Tester Q7). | Learning & Engagement Designer | On a fresh profile, at most 2 pop-ups before the dojo. The Home Dojo intro doesn't return on the next launch. The wording matches what happens. | none | Beta |
+| **R-PREMIUM-k** | Lose screen: dim the room instead of black, show a Sensei portrait with a cheering pose, and one big "Try again" (Tester Q5, F4). | Artist | A boss loss at 667×375 shows the room dimmed (not black), a portrait and one large button. The wording stays no-guilt. | i (portrait) | Beta |
+| **R-PREMIUM-m** | "What is this for" framing: a one-line goal banner in the Practice room ("Practice your Counter. No score here."), and short preview cards on Scroll (Tester F7, F8). | Content Designer | Opening the Practice room and Scroll each shows one sentence saying what it's for, readable at 667×320. | none | Beta |
+| **R-PREMIUM-c** | Motion slider for the hit-flinch when an enemy hits you (off, low or normal), plus Reduced motion stays fully off. There is no camera kick on your own hits (Jay). Today the hurt-shake is 0 below Brown belt and off-Challenge (`config.ts` line 422, K25b). | Programmer | Settings has the slider. On "off" there is no hurt-shake or flinch. Reduced motion forces it off. The setting survives a reload. | none | Beta |
+| **R-PREMIUM-e** | Balance follow-up from the table: why White belt kids win only 20% on Standard, and why belt 3 wins 20/20 even on Challenge. Report only, no numbers changed. | Tester | A short report explains both, with a re-run of the table above. | none | Beta |
+| **R-PREMIUM-a** | Hit particles: small sparks or dust on basic, Strike, Great Counter, Block and enemy down. There is no particle code in `apps/client/src` today. Sources: "Juice It or Lose It" ([GDC Vault](https://gdcvault.com/play/1016789/Juice-It-or-Lose)) and Nijman ([summary](https://www.gamedeveloper.com/design/vlambeer-co-founder-shares-advice-on-building-better-action-games)). | Programmer | Each of the 5 events shows a burst. Reduced motion shows fewer. Jay's phone stays smooth (Tester). | Artist sprites (simple shapes are fine) | May slip past Dec 15 (Jay OK) |
+| **R-PREMIUM-b** | Recorded sound effects from a license-checked pack (see the sound packs section) to replace the made-in-code ones in `audio/Sfx.ts`. | Artist | Hit, block, Great Counter, Strike, room-clear and reward use pack sounds. The pack's license file is in `assets/audio`. Volume settings still work. | none | May slip past Dec 15 (Jay OK) |
+| **R-PREMIUM-g** | Kata rewards: pick 1 of the 2 options in #302 for each kata, with kid wording. | Content Designer | Each of the 9 katas has one reward in content. Its placeholder line is gone (with o). | Toni's kata text; Jay's picks in #302 | Post-beta (scope creep) |
+
+## Sound packs (licenses read from their own pages, Oct 26)
+| Pack | License (quoted from the source) | Credit needed? | Selling the app OK? | Caveats |
+|---|---|---|---|---|
+| **Kenney** (for example [Impact Sounds](https://kenney.nl/assets/impact-sounds)) | "all game assets on the asset pages are public domain licensed (CC0)… even in commercial projects" ([kenney.nl/support](https://kenney.nl/support)) | No. Optional "Kenney". Don't use the Kenney logo. | Yes | Safe in our public repo. **Best first pick.** |
+| **OpenGameArt**, only items marked CC0 | CC0 means "used in anyway without asking, crediting or notifying"; "commercial use is ok" ([OGA FAQ](https://opengameart.org/content/faq)) | No for CC0. CC-BY, CC-BY-SA and OGA-BY need credit. | Yes for CC0 | Check each item's own license. The FAQ says CC-BY and CC-BY-SA conflict with DRM and Apple's App Store terms. **Use CC0 only.** Preview clips may be "All rights reserved". |
+| **Sonniss #GameAudioGDC** | "royalty-free… for personal and commercial projects without attribution"; may be "sold as incorporated into licensee project" ([license v2.0](https://sonniss.com/gdc-bundle-license/)) | No | Yes, inside the game | You may not "distribute, publish… or otherwise supply the sound effects as sound effects to any other person". **Our repo is public on GitHub,** so committing the raw files could count as supplying them. A Programmer or Jay must decide where the files live before use. No AI training with them. The terms are English law. |
+
+**Kids:** none of these licenses mention children or kids' apps. The only kids caveat is ours: listen to every sound for anything scary or harsh before it ships. I invented no terms; everything above is quoted from the linked pages.
+
+## Questions for Jay (still open)
+1. **Heal between rooms:** health carries over today (`run.ts` line 51; Tester F3: room 2 "starts in the red"). Add a small heal between rooms **on Guided only**? This is a question, not an item.
+2. **Targets for Guided and Challenge:** the balance check found none. What kid win rate do you want on Guided, and does White belt need its own target?
 
 ## Delivery Note
-- **ITEM:** R-PREMIUM-audit
-- **WHAT:** a ranked list of 7 gaps (feel and systems) with sources, owners and "Done when" lines. Live screenshots from the title through the first room, but not a fight.
+- **ITEM:** R-PREMIUM-audit (final)
+- **WHAT:** 14 board items (a–e and g–o, no f), each with one owner, a "Done when" line, what it waits on and whether it fits the beta. Includes the Tester's Q-PREMIUM findings (credited), a balance-check table across every belt and difficulty, and sound-pack licenses verified from their own pages.
 - **WHY:** Jay wants the game to feel premium without copying how the hits make money.
-- **DECIDE:** the 4 questions above.
-- **NEXT:** the Manager puts R-PREMIUM-a to h (no f; f was done in #315) on the board. The Tester runs d first on a real phone.
+- **DECIDE:** the heal on Guided only, and the Guided and Challenge kid targets.
+- **NEXT:** the Manager boards the items, starting with d, i, j and h. Tester runs e. a and b may slip past Dec 15.
