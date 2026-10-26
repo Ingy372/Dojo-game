@@ -42,7 +42,7 @@ describe('P-MENU2-d loadout', () => {
     const p = newProfile();
     p.loadout = { stance: 'front-stance', virtue: null };
     const setup = characterSetup(p, t, content.abilities);
-    expect(setup.stances!.map((f) => f.id)).toEqual(['front-stance', 'beginners-stance', 'cat-stance']);
+    expect(setup.stances!.map((f) => f.id)).toEqual(['front-stance', 'beginners-stance', 'ready-stance', 'cat-stance']);
     const run = startRun(content, { seed: 5, dryRuns: 0 });
     const world = createRunWorld(content, run, setup, setup.effects);
     expect(activeStance(world.players.p1).id).toBe('front-stance');

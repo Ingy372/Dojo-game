@@ -9,7 +9,9 @@ const copy = <T>(v: T): T => JSON.parse(JSON.stringify(v));
 describe('R-STANCE-a save migration', () => {
   it('an old save (form only, old id) goes back to Ready (R-STANCE-d1 retired Flowing)', () => {
     const p = loadProfile(copy(oldSave));
-    expect(p.loadout).toEqual({ stance: null, virtue: 'second-wind' });
+    // R-STANCE-g: Ready is now the Open Leg Stance, kept without a sign-off.
+    expect(p.loadout).toEqual({ stance: 'ready-stance', virtue: 'second-wind' });
+    expect(p.grandfatheredStances).toEqual(['ready-stance']);
     expect(p.loadout).not.toHaveProperty('form');
   });
 
