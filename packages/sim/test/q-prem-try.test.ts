@@ -9,14 +9,16 @@ const all = (lessons as { lessons: Array<{ id: string; retry?: string }> }).less
 
 describe('Q-PREM-TRY', () => {
   const listed = draft.programmerHandoff.map((h) => h.lessonId);
-  it('the draft lists 10 lessons, all in first-session-lessons.json, with the decided text', () => {
-    expect(listed).toHaveLength(10);
-    expect(new Set(listed).size).toBe(10);
+  // #355 added the guided Counter to the draft's list (11 lessons; it already had the line).
+  it('the draft lists 11 lessons, all in first-session-lessons.json, with the decided text', () => {
+    expect(listed).toHaveLength(11);
+    expect(new Set(listed).size).toBe(11);
+    expect(listed).toContain('lesson-counter-guided');
     for (const h of draft.programmerHandoff) expect(h.file).toBe('content/tutorial/first-session-lessons.json');
   });
   it('every listed lesson has the new retry; plus the guided Counter, and no other lesson', () => {
     for (const id of listed) expect(all.find((l) => l.id === id)?.retry, id).toBe(NEW);
-    expect(all.filter((l) => l.retry === NEW).map((l) => l.id).sort()).toEqual([...listed, 'lesson-counter-guided'].sort());
+    expect(all.filter((l) => l.retry === NEW).map((l) => l.id).sort()).toEqual([...new Set([...listed, 'lesson-counter-guided'])].sort());
   });
   it('the old line is gone, no lesson says try again, and the guided Counter shares the line', () => {
     expect(all.some((l) => l.retry === draft.current)).toBe(false);
