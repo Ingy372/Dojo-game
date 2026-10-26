@@ -5,4 +5,4 @@ The guided-loss `retry` line ("That's okay. Try again whenever you're ready.") p
 - **A:** "Nice work today. Let's rest at the dojo." (echoes #292's "Let's rest at the dojo.")
 - **B:** "You learned a lot. Home we go!" (echoes #292's "You learned this room!")
 
-Target: `lesson-counter-guided.retry`. The same string is the `retry` in 9 other lessons; the Programmer may swap all of them at once. No word "perfect", no guilt, no new mechanics.
+Target: `lesson-counter-guided.retry`. The same string is the `retry` in 10 other lessons; the Programmer may swap all of them at once. No word "perfect", no guilt, no new mechanics.
