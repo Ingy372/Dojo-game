@@ -778,7 +778,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 **Done**
 - The four real stances replace Rooted and Flowing, using the #290 numbers and the #288 one-liners.
-- Old saves with Rooted or Flowing move to Beginner's Stance. A stance that isn't unlocked is dropped from the loadout.
+- Old saves with Rooted or Flowing moved to the default stance (since R-STANCE-g that is Open Leg for those saves, not Beginner's). A stance that isn't unlocked is dropped from the loadout.
 - Horse shows the approved rooted idle. The golden run was re-captured.
 
 **Next**
@@ -838,7 +838,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## R-STANCE-g — Beginner's Stance and Open Leg (2026-10-26)
 **Done**
-- Beginner's Stance (plain standing, all 0) is where new players start. Ready is now Open Leg Stance (`ready-stance`, stances[1]) with its own sign-off; old players keep it through a one-time, idempotent save migration. Unsigned picks fall back to Beginner.
+- Beginner's Stance (plain standing, all 0) is where new players start. Ready is now Open Leg Stance (`ready-stance`, stances[1]) with its own sign-off; old players keep it through a one-time, idempotent save migration; an old save with a retired pick (Rooted or Flowing) lands in Open Leg. After that, unsigned picks fall back to Beginner.
 - Beginner, locked Open Leg and welcome lines from #312, in content/abilities/fighting-style.json.
 - New test packages/sim/test/r-stance-g-ready.test.ts (8 tests). npm test 910 passed, 2 skipped; typecheck and build pass. Golden re-captured on purpose (runs unchanged).
 - Shots at 667x375, 667x320, 844x390, 932x430, Reduced motion on and off, 0 console errors: docs/shots/r-stance-g.
