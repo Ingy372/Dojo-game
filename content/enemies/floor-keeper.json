@@ -35,5 +35,44 @@
       "recoverTicks": 26
     }
   ],
-  "parSeconds": 25
+  "parSeconds": 25,
+  "challenge": {
+    "fromBelt": 4,
+    "fromRoom": 2,
+    "attacks": [
+      {
+        "name": "shockwave",
+        "strength": 1,
+        "startRange": 2.5,
+        "reach": 3,
+        "areaRadius": 0.6,
+        "telegraphTicks": 26,
+        "recoverTicks": 26,
+        "dashOnly": true,
+        "noOverlapWithRedCircle": true,
+        "tell": "Lane stripes, a big !! and a whoosh.",
+        "senseiLine": "New move! Dash out of the lane."
+      }
+    ],
+    "phases": [
+      {
+        "atHealthFraction": 1,
+        "attacks": [
+          "slam",
+          "shockwave",
+          "sweep"
+        ]
+      },
+      {
+        "atHealthFraction": 0.5,
+        "attacks": [
+          "slam",
+          "sweep",
+          "slam",
+          "shockwave"
+        ],
+        "senseiLine": "Watch the lane!"
+      }
+    ]
+  }
 }

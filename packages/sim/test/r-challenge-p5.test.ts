@@ -24,7 +24,9 @@ describe('R-CHALLENGE P5: samples are test-only and change nothing off Challenge
   it('the sample blocks load and add Challenge attacks', () => {
     expect(sampled.enemies.brute.challenge!.attacks[0].followUp).toEqual({ strength: 0.6, gapTicks: 20 });
     expect(sampled.enemies.swarmer.challenge!.attacks[0].landing).toBe(true);
-    expect(content.enemies.brute.challenge).toBeUndefined();
+    // The samples replace any real block on a copy; the real content is left as it was.
+    expect(content.enemies.brute.challenge).not.toBe(sampled.enemies.brute.challenge);
+    expect(JSON.stringify(testContent().enemies.brute)).toBe(JSON.stringify(content.enemies.brute));
   });
 
   it('Guided and Standard bot runs are byte-equal with the samples on and off (every bot, belts 4-10)', () => {
