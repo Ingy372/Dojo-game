@@ -1,12 +1,13 @@
 // Starting a Tower run (from the dojo's door or the training board).
 
-import { beltRoomId, firstFloorOfTier, getsTutorialFloor, noteRunDay, runDifficulty, ownedDecorations, startRun, type EliteKind, useCalmMind, type Profile, type RunState, type TrainingState } from '@dojo/sim';
+import { firstFloorOfTier, getsTutorialFloor, noteRunDay, runDifficulty, ownedDecorations, startRun, type EliteKind, useCalmMind, type Profile, type RunState, type TrainingState } from '@dojo/sim';
 import { CONTENT } from './content';
 import { ensureDifficulty } from './difficulty';
 import { homeDojo, setBowDue } from './dojo';
 import { localDay } from './lessons';
 import { writeSave } from './save';
 import { testFlags } from './beta';
+import { testRoom } from './roomParam';
 
 /** `replayTutorial`: the Lesson Scroll's "Replay the tutorial floor" (M7-P5). */
 export function startTowerRun(profile: Profile, training: TrainingState, opts: { replayTutorial?: boolean } = {}): RunState {
@@ -31,8 +32,10 @@ export function startTowerRun(profile: Profile, training: TrainingState, opts: {
   const tier = training.belt.tier;
   // For testing: ?room=X starts in room X. A belt with its own copy of X gets the copy (R-B1-RAMP-2:
   // ?room=brute-and-swarm on a white belt is w-brute-and-swarm); ?room=w-... always gives that copy.
-  const roomParam = params.get('room');
-  const firstRoomId = roomParam ? beltRoomId(CONTENT, roomParam, tier) : undefined;
+  // An unknown id warns in the console (Q-DOOR-LABELS) and a random room starts.
+  const picked = testRoom(CONTENT, params.get('room'), tier);
+  if (picked.warning) console.warn(picked.warning);
+  const firstRoomId = picked.id;
   // Named monsters skip a profile's first few runs: count every real run started.
   const runsStarted = profile.runsStarted;
   // A brand-new profile's first floor is the tutorial floor (M7-P2); ?tutorial=1 shows it again for testing.
