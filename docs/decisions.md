@@ -1446,3 +1446,7 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 ## Q-SWARM-JAB — swarmer jab wind-up on Challenge (2026-10-27)
 - P1's floor (`telegraphTicks`, MIN_WINDUP_TICKS = 10) already gives the 12-tick swarmer jab 10 ticks on Challenge (it was 9), C1's swarmer content included. No game-logic change.
 - Guard: the elites loader now refuses `minWindupTicks` under MIN_WINDUP_TICKS, so an elites.json edit can't push an elite wind-up under half a second.
+## Q-LOCK-CARD — the locked Challenge card answers a tap (2026-10-27)
+- The locked card is solid (no `setAlpha(0.7)`): fill `#1d1a26`, name `#a39bb0` (6.4:1), line `#c9b98f` (8.8:1). It no longer shows the room through it at 667x320.
+- A tap on the locked card plays the existing `sfx.place(false)` (no new sound or art), pulses the unlock line (scale 1.08, 120 ms, yoyo) and shakes the card ±4 px, 3 cycles in 250 ms. With reduced motion on there is no shake; the sound and pulse stay. The card returns to its stored base x, so fast repeat taps don't drift. The tap never picks Challenge or saves.
+- The locked line may hold `{belt}`, filled with the school-data belt name at `CHALLENGE_FROM_TIER` (`lockedLine` in `apps/client/src/ui/lockCard.ts`). Text without `{belt}` shows unchanged, so this works with today's text and with C-LOCK-WORDS. Supersedes the "dimmed, alpha 0.7" note in R-CHALLENGE P6.
