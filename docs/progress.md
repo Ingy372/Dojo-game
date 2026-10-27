@@ -976,3 +976,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - If the heroes plus the banner leave no clear spot, the tip may sit over a hero rather than vanish. Buttons, HUD, circles and the banner stay hard keep-outs.
 - Code: `bannerKeepOut` and `tipSpot` in `ui/senseiPlace.ts`; one changed call in `GameScene.placeCounterTip`. No new dependency.
 - Test: `packages/sim/test/q-tip-banner.test.ts` (both phone sizes, the Tester's two tip/banner size pairs, a sweep of hero positions: 0 overlap, off every button, tip always shown, at or below the floor). Live: 64 trials (667x375 + 844x390, reduced motion on/off, 4 modes, 2 pairs, both orders) — 0 overlapping; the same harness with the fix switched off shows 44/64 overlapping (max 24,656 px²). Shots (`docs/shots/q-tip-banner/`): 876/876 and the #384 shots 164/164 still pass.
+
+## R-INSIGHT-BAL-a — Insight card numbers and rules A/B/C (2026-10-27)
+- New numbers and the Content Designer's text in `content/insights/insights.json`; rules A (Wind Step also speeds basic attacks), B (Press the Advantage also on winded/recovering enemies) and C (Shield Breaker: `focusOnBreak` 7 Focus on a shield break) in `packages/sim/src/world.ts` and `effects.ts`. No new dependency.
+- Tests: `packages/sim/test/r-insight-bal-a.test.ts` (one behaviour test per rule, the card numbers, the Focus cap); `r-bal-14b-charms.test.ts` Rally now x1.75. Golden fixture `fixtures/golden/p-menu2-d-default-run.json` regenerated (approved).
+- Local re-run of the R-INSIGHT-BAL harness (kid, newer, careful, Standard, belts 1-10): the 4b card table and the 4d pairs and routes tables match the spec exactly (every difference 0.0 PE, 0 win points).
+- Still red: `b-t3-tune-2-boss-levers` (masher 55% vs floor 75%, waiting on the Researcher's tune) and `r-challenge-p5` step-out (flipped by 1% at 60 seeds, a wash at 240). Both left unchanged for the Manager.

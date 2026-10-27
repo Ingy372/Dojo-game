@@ -1485,3 +1485,13 @@ The banner's placement is one pure rule (`ui/senseiPlace.ts`, `pickBannerSpot`).
 
 ## Q-TIP-BANNER: the Counter tip yields to a showing Sensei banner (2026-10-27)
 The banner owns the floor (top bar bottom + 6); the tip is the secondary element. `placeCounterTip` adds the banner's box (+6px) to its hard keep-outs (with the buttons, HUD and circles) via `tipSpot`. Heroes are a soft keep-out: if the hard ones leave no spot, the tip may sit over a hero instead of hiding, so a lesson tip is never lost. Covering a button or the banner is never allowed. The tip re-places every frame, so no ordering logic is needed.
+
+## R-INSIGHT-BAL-a: Insight card numbers and three rule tweaks (2026-10-27)
+Numbers from `drafts/planning/R-INSIGHT-BAL.md` 4a, in `content/insights/insights.json`: Ripple Counter 1.2, Iron Skin 1.2, Wind Step 0.3 every 7 hits for 3 s, Double Strike 0.2 (the Manager's call; 0.25 gave a held spread of 12), Quick Hands 0.2, Rally 0.75. Press the Advantage (0.3) and Heavy Hands (0.2) are unchanged. Card text is the Content Designer's (`drafts/content/insights/R-INSIGHT-BAL-c.json`).
+- **Rule A (Wind Step):** while the Wind Step burst is on, basic attacks also speed up by half the burst's bonus (`comboSpeedBonus / 2`, so +15% at 0.3), inside the existing 0.6 attack-speed cap.
+- **Rule B (Press the Advantage):** the bonus also applies to winded and recovering enemies, not only staggered ones.
+- **Rule C (Shield Breaker):** breaking a shield gives Focus. The amount is card data (`focusOnBreak: 7` on the `shieldBreaker` effect), not a config constant, so the text and number stay in content.
+- **Virtue placeholders** (Calm Breath, Steady Start) are after-beta: not added to the pool. The pool stays 9 cards.
+- **Golden fixture regenerated** (Manager approved). The golden bot picks Insights at random, so any card number or rule change moves the run. Even the three code rules alone (with main's JSON) change it.
+- **Open, waiting on the Researcher's tune:** `b-t3-tune-2-boss-levers` (masher at Orange gear, floor 75%) reads 55% (22/40) with these changes. The floor is not lowered. Bisecting from main: at the test's 60 seeds the drop is not one change; the 60-seed sample is tiny (only 31 to 40 runs reach the boss). At 600 seeds the same setup is 73.1% (main 72.4%). Only Quick Hands 0.25 to 0.2 lowers the masher alone (72.4% to 57.1% at 600 seeds); Iron Skin 1.2 raises it (81.2%). Left failing in the branch.
+- **Open, for the Manager:** `r-challenge-p5` "stepping out of landing circles costs less Health" reads 90724 (step out) vs 89763 (Counter) at the test's 60 seeds, so it flipped. It is a wash: at 240 seeds step-out is 383780 vs 384532 (new) and 372981 vs 372249 (main). The test is not changed and still fails.
