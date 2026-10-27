@@ -43,7 +43,7 @@ export interface EliteRules {
 }
 
 function num(v: unknown, where: string, min = 0, max = Infinity): number {
-  if (typeof v !== 'number' || !Number.isFinite(v) || v < min || v > max) throw new Error(`Elites: "${where}" must be a number from ${min} to ${max}`);
+  if (typeof v !== 'number' || !Number.isFinite(v) || v < min || v > max) throw new Error(max === Infinity ? `Elites: "${where}" must be a number, at least ${min}` : `Elites: "${where}" must be a number from ${min} to ${max}`);
   return v;
 }
 
