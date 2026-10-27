@@ -150,18 +150,26 @@ Challenge unlocks at the 4th belt (core-design §13), so patterns are played at 
 | ID | Owner | What | Done when | Waits on |
 |---|---|---|---|---|
 | P1 | Dojo-Ascent Programmer | Loader floor applied after the Challenge formula (swarmer jab and spark-sprite dart go to 10 ticks). | A test shows every Challenge wind-up ≥ 10 ticks; Standard and Guided goldens unchanged. | **Done (PR #365, merged Oct 27).** |
-| P6 | Dojo-Ascent Programmer | Challenge lock: Challenge can only be picked from the 4th belt; below that it plays as Standard and Settings shows Steady. | A test shows Challenge can't start below belt 4; Guided and Standard unchanged. | **PR #367 open, waiting on Tester QA.** |
-| P2 | Dojo-Ascent Programmer | `challenge` block: loader, `mergeChallenge`, pattern stepping, `followUp`, `landing`. | The plan's §3 tests pass; Guided and Standard goldens byte-identical. | **PR #370 open; waits on #367 merging, then main merged in and QA.** |
-| P3 | Dojo-Ascent Programmer | Fairness rules 2 and 5 in world.ts: on-screen check, 1 pattern at a time, lane vs red circle. | Overlap and on-screen tests pass over 1,000 seeded rooms. | P2 |
-| P4 | Dojo-Ascent Programmer | Tells: lane, circle and landing-spot visuals, plus one Sensei line on first sight, using existing sfx where possible. | Each pattern shows its tell at the start of its wind-up at both phone sizes, Motion on and off. | P2, C1 |
-| P5 | Dojo-Ascent Programmer | Bot answers in bot.ts (landing circles, double hits). | A balance run prints the plan's §4 table with patterns on. | P2 |
-| C1 | Dojo-Ascent Content Designer | Write the `challenge` blocks for patterns C1–C5 (fromBelt C1–C3: 4, C4: 5, C5: 6). C6–C10 stay parked. Names, tells and Sensei lines from the plan §1. | All files load; each pattern's Challenge wind-up ≥ 14 ticks. | P2 |
-| C2 | Dojo-Ascent Content Designer | Pair-room and `fromRoom` placement for belts 4–10 (plan C12, C13). | Belt 4 Challenge shows C1–C3, belt 5 adds C4, belt 6 adds C5, belt 7 shows patterns from room 1. | C1 |
-| T1 | Dojo-Ascent Game Logic/systems Tester | Re-run the plan's §4 at 100 seeds with patterns on (Challenge rows belts 4–10). | Every row inside its band, or misses listed with the room causing them. | P1–P6, C1, C2 |
+| P6 | Dojo-Ascent Programmer | Challenge lock: Challenge can only be picked from the 4th belt; below that it plays as Standard and Settings shows Steady. | A test shows Challenge can't start below belt 4; Guided and Standard unchanged. | **Done (PR #367, merged Oct 27).** |
+| P2 | Dojo-Ascent Programmer | `challenge` block: loader, `mergeChallenge`, pattern stepping, `followUp`, `landing`. | The plan's §3 tests pass; Guided and Standard goldens byte-identical. | **Done (PR #370, merged Oct 27).** |
+| P3 | Dojo-Ascent Programmer | Fairness rules 2 and 5 in world.ts: on-screen check, 1 pattern at a time, lane vs red circle. | Overlap and on-screen tests pass over 1,000 seeded rooms. | **Done (PR #371, merged Oct 27).** |
+| P4 | Dojo-Ascent Programmer | Tells: lane, circle and landing-spot visuals, plus one Sensei line on first sight, using existing sfx where possible. | Each pattern shows its tell at the start of its wind-up at both phone sizes, Motion on and off. | **In progress (Programmer), stacked on #375. Jay must OK the new lane and landing-spot look (screenshots in the PR body) before merge.** |
+| P5 | Dojo-Ascent Programmer | Bot answers in bot.ts (landing circles, double hits). | A balance run prints the plan's §4 table with patterns on. | **Done (PR #372, merged Oct 27).** |
+| C1 | Dojo-Ascent Content Designer | Write the `challenge` blocks for patterns C1–C5 (fromBelt C1–C3: 4, C4: 5, C5: 6). C6–C10 stay parked. Names, tells and Sensei lines from the plan §1. | All files load; each pattern's Challenge wind-up ≥ 14 ticks. | **Done (PR #375, setup L+B per #373, merged Oct 27).** |
+| C2 | Dojo-Ascent Content Designer | Pair-room and `fromRoom` placement for belts 4–10 (plan C12, C13). | Belt 4 Challenge shows C1–C3, belt 5 adds C4, belt 6 adds C5, belt 7 shows patterns from room 1. | **On hold (plan C12, C13 parked per #373).** |
+| T1 | Dojo-Ascent Game Logic/systems Tester | Re-run the plan's §4 at 100 seeds with patterns on (Challenge rows belts 4–10). | Kid floor graded; newer and careful rows reported, not graded (#373). | P4, P7 |
 | T2 | Dojo-Ascent Game Logic/systems Tester | Human playtest with the plan's §5 checklist. | Notes from at least 2 testers (one aged 6–8), no "hit from nowhere" reports. | T1 |
+| P7 | Dojo-Ascent Programmer | Balance-bot samples match the L+B setup from #373. | A balance run prints the §4 table using the L+B pattern setup. | P4 (Programmer does it next) |
+| R-CHALLENGE-PLACEMENT | Dojo-Ascent Researcher & Planner | Pattern placement sims and recommended setup. | Plan merged. | **Done (PR #373, merged Oct 27).** |
+| C-LOCK-WORDS | Dojo-Ascent Content Designer | Challenge lock text names the belt ({belt}, "Opens when you earn your Green Belt!"). | QA passes. | **Done (PR #374, merged Oct 27).** |
+| Q-LOCK-CARD | Dojo-Ascent Programmer | Solid locked Challenge card with gentle tap feedback. | QA passes. | **Done (PR #376, merged Oct 27).** |
+| Q-FAIR-EDGE | Dojo-Ascent Programmer | Downed players count as on screen; no red circle under a winding-up flagged lane. | QA passes. | **Done (PR #377, merged Oct 27).** |
+| Q-SWARM-JAB | Dojo-Ascent Programmer | Swarmer jab stays ≥ 10 ticks on Challenge; elites get the loader floor. | QA passes. | **Done (PR #378, merged Oct 27).** |
+| Q-SHAKE-CENTER | Dojo-Ascent Programmer | Low (Tester note on #376): the locked card's shake only moves right; make it shake around its centre. | QA passes. | P7 |
+| Q-BOW-OVER-MENU | Dojo-Ascent Programmer | Low (Tester note on #376): the "Bow as you enter your dojo" prompt draws over the open difficulty menu at 667x320. | QA passes. | Q-SHAKE-CENTER |
 | Q-BETA-CUT | Jay | Which Challenge patterns ship in the Dec 15 beta? | Jay answers; recorded in decisions.md. | **Waits on Jay** (asked Oct 27, 8:30 AM). |
 | Q-DOOR-LABELS | Dojo-Ascent Programmer | Keep door labels on screen; warn on unknown `?room=`. | QA passes. | **Done (PR #366, merged Oct 27).** |
-| Q-DOOR-LABELS-2 | Dojo-Ascent Programmer | Low: label sits too near the edge for 1–2 frames when the camera starts scrolling (Tester note on #366). | QA passes. | **PR #368 open, waiting on Tester QA.** |
+| Q-DOOR-LABELS-2 | Dojo-Ascent Programmer | Low: label sits too near the edge for 1–2 frames when the camera starts scrolling (Tester note on #366). | QA passes. | **Done (PR #368, merged Oct 27).** |
 
 ## 0b5. Jay's renames and art calls (Oct 25 evening)
 | ID | Owner | What | Done when | Waits on |
