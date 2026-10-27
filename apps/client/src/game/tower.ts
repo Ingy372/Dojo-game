@@ -19,7 +19,8 @@ export function startTowerRun(profile: Profile, training: TrainingState, opts: {
   const forcedTwist = CONTENT.twists.twists.some((t) => t.id === twistParam) ? (twistParam ?? undefined) : undefined;
   // One difficulty for the whole run (elites and combat): ?difficulty= test link, else the player's setting, else Standard.
   ensureDifficulty(profile);
-  const difficulty = runDifficulty(profile, params.get('difficulty'));
+  // R-CHALLENGE P6: a Challenge pick below the 4th belt plays as Standard (the choice is kept).
+  const difficulty = runDifficulty(profile, params.get('difficulty'), training.belt.tier);
   // For testing: ?elite=swift or ?elite=guarding puts that elite in every battle and challenge room
   // (the run then doesn't count toward the profile).
   const eliteParam = params.get('elite');

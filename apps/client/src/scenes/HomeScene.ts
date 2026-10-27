@@ -31,6 +31,7 @@ import {
   type RequirementStatus,
   type TrainingState,
   kataArrows,
+  activeDifficulty,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
@@ -973,7 +974,7 @@ export class HomeScene extends Phaser.Scene {
 
   /** The Bests sheet: the student's own bests only (no comparing, no streaks). */
   private openBests(): void {
-    const rows = lastRunBests(this.profile.bests, this.profile.lastRun?.newBests ?? [], showGrades(this.profile.difficulty));
+    const rows = lastRunBests(this.profile.bests, this.profile.lastRun?.newBests ?? [], showGrades(activeDifficulty(this.profile, this.training.belt.tier)));
     this.openRunSheet(LASTRUN_WORDS.bestsTitle, [[LASTRUN_WORDS.bestsLine, '#7a5a3a', false], ...rows.map((r): [string, string, boolean] => [`${r.name}: ${r.value}${r.isNew ? `   ${LASTRUN_WORDS.bestNew}` : ''}`, r.isNew ? '#a0522d' : WOOD.ink, r.isNew])]);
   }
 

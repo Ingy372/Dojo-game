@@ -1427,3 +1427,8 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - Only one pattern wind-up at a time room-wide. While a two-part attack is waiting for, winding up, or landing its 2nd hit, no other enemy starts any attack. The 2nd hit keeps its own full tell.
 - `noOverlapWithRedCircle` is loaded (Hearth Cook lane in `attacks`, Rolling Pin roll from its `dashOnlyAttack` notes block). On Challenge only, a flagged dash lane doesn't start while another enemy's red (counterable) circle covers the player.
 - Guided and Standard are unchanged; the golden file is byte-identical (no Challenge golden row moved).
+## R-CHALLENGE P6 — Challenge difficulty unlocks at the 4th belt (2026-10-27)
+- core-design §13: Challenge can be picked from the 4th belt (`CHALLENGE_FROM_TIER = 4`). Only the difficulty is gated; Challenge rooms still appear at every belt. There is no Sensei unlock line.
+- A Challenge pick saved below the 4th belt plays as Standard but stays stored, so it comes back at the 4th belt (`activeDifficulty`). Settings, the Home line and the Bests grades all use the active difficulty, so a child never sees Challenge selected while playing Standard.
+- Below the 4th belt the Challenge card is dimmed (alpha 0.7, contrast 5.6:1 or better), shows 🔒 and "Unlocks at your 4th belt." (content/settings/difficulty.json `locked.challenge`), and does nothing when tapped.
+- A `?difficulty=challenge` test link still wins at any belt, so the sims and goldens don't change.
