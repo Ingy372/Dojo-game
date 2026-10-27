@@ -25,7 +25,7 @@ Why: the careful bot already wins 100% on Challenge at every belt (#354, #358, a
 | 4–10 | shared rooms (no own sets yet) | swarmer, shield, brute, bopper, Floor Keeper |
 
 - **Existing finding: two Challenge wind-ups are already under the 10-tick floor.** The swarmer `jab` and the spark-sprite `dart` (12 file ticks) come out at 9 ticks (0.45 s) on Challenge. The loader floor only checks the file value. Item P1 fixes this (see the fairness rules below).
-- **§13 conflict:** core-design §13 says *Challenge mode unlocks at the 4th belt*, but the sims and the game currently let Challenge run at every belt. Either way this plan lists patterns for belts 1–3. If Jay keeps the §13 lock, those rows just wait (DECIDE 1).
+- **§13 lock (decided Oct 27, 2026):** core-design §13 says *Challenge mode unlocks at the 4th belt*, and the Manager confirmed it. The sims and the game currently let Challenge run at every belt, so P6 adds the lock. Belt 1–3 rows in this plan only matter if that rule changes later.
 
 ## 1. Patterns per enemy and belt (Challenge only)
 
@@ -52,6 +52,8 @@ So players learn no new button. Each enemy gets **one** new move, and it arrives
 | C11 | elites (swift, guarding) | No new moves. They use their enemy's pattern with the elites.json wind-up values | | | 4 |
 | C12 | belts 4–6 | All of C1–C5. Later the Content Designer may use **pair rooms**: two pattern enemies in one wave, still limited by the overlap cap | | | 4 |
 | C13 | belts 7–10 | Patterns come sooner in a run: from room 1 instead of room 2 (`fromRoom`) | | | 7 |
+
+**With the §13 lock, Challenge is only played at belts 4–10.** Those belts use the shared rooms, so the patterns that matter are C1–C5 (swarmer, shield, Floor Keeper, brute, bopper) plus C11–C13. The "From belt" values of 1–3 above just mean "on from the first Challenge belt". The Ember patterns C6–C10 only appear at belt 3, so they stay dormant unless the lock changes or Ember enemies are placed in belt 4+ rooms later.
 
 Belts 4–10 have no rooms of their own yet, so belt-to-belt steps come from C12 and C13 (room placement), never from stat changes.
 
@@ -161,10 +163,10 @@ Kid skill stays novice.
 | Check | Target | Today | Status |
 |---|---|---|---|
 | Guided and Standard, every bot and belt | **byte-identical** to the table above (same seeds) | n/a | must pass |
-| Challenge, careful bot, every belt | **55–85% win** (Jay's "about 2 in 3" from #354) | 100% | fails today, which is the goal of this item |
-| Challenge, newer bot, every belt | **35–75% win** | 100% | fails today |
-| Challenge, kid bot | ≥ 5% at every belt and not more than 10 points below today's cell (kids aren't Challenge's audience, and they keep Standard) | 10–38% | check after |
-| Belt-to-belt jump, Challenge, all bots | ≤ 2x | ok except b9→b10 kid | check after |
+| Challenge, careful bot, belts 4–10 | **55–85% win** (approved Oct 27, 2026) | 100% | fails today, which is the goal of this item |
+| Challenge, newer bot, belts 4–10 | **35–75% win** | 100% | fails today |
+| Challenge, kid bot | ≥ 5% at belts 4–10 and not more than 10 points below today's cell (kids aren't Challenge's audience, and they keep Standard) | 10–38% | check after |
+| Belt-to-belt jump, Challenge, all bots (belts 4–10) | ≤ 2x | ok except b9→b10 kid | check after |
 | Health lost per fight, careful, Challenge | 10–25% (now 4.4–5.3%) | 5% | check after |
 | R-BAL-12 bands | 40–80 hits to beat a Guardian, ≥ 5 hits to knock out the player | pass | must stay green |
 
@@ -172,7 +174,7 @@ If a belt misses its band, change **pattern placement** (fromBelt, fromRoom, pai
 
 ## 5. Playtest checklist (human testers, Challenge only)
 
-Play each belt you can reach with at least one younger tester (6–8) and one skilled tester. Write yes/no plus one note for each check.
+Play each Challenge belt you can reach (belt 4 and up) with at least one younger tester (6–8) and one skilled tester. Write yes/no plus one note for each check.
 
 1. Before every new move, could you **see** the warning? Could you **hear** it, with sound on?
 2. Did anything hit you that you didn't see coming, or that came from off screen?
@@ -189,23 +191,34 @@ Play each belt you can reach with at least one younger tester (6–8) and one sk
 
 | # | Owner | Work | Done when | Waits on |
 |---|---|---|---|---|
-| P1 | Programmer | Loader floor applied after the Challenge formula (jab and dart → ≥ 10 ticks) | A test shows every Challenge wind-up ≥ 10 ticks. Standard and Guided golden runs are unchanged | Jay's OK (DECIDE 3) |
+| P1 | Programmer | Loader floor applied after the Challenge formula (raise the 9-tick swarmer jab and spark-sprite dart to ≥ 10 ticks) | A test shows every Challenge wind-up ≥ 10 ticks. Standard and Guided golden runs are unchanged | nothing (approved Oct 27, 2026) |
+| P6 | Programmer | Challenge lock: Challenge can only be picked from the 4th belt (core-design §13); sims run Challenge only at belts 4–10 | A test shows Challenge can't start below belt 4. Guided and Standard unchanged | nothing |
 | P2 | Programmer | `challenge` block: loader, `mergeChallenge`, pattern stepping, `followUp`, `landing` | The tests in §3 pass. Guided and Standard golden runs are byte-identical | nothing |
 | P3 | Programmer | Fairness rules 2 and 5 in world.ts: on-screen check, 1 pattern at a time, lane vs red circle | The overlap and on-screen tests pass over 1,000 seeded rooms | P2 |
 | P4 | Programmer | Tells: lane, circle and landing-spot visuals, plus one Sensei line on first sight, using existing sfx where possible | In the browser, each pattern shows its tell at the start of its wind-up at both phone sizes, with Motion on and off | P2, C1 |
 | P5 | Programmer | Bot answers in bot.ts (landing circles, double hits) | A balance run prints the §4 table with patterns on | P2 |
-| C1 | Content Designer | Write the `challenge` blocks for C1–C10, using names, tells and Sensei lines from §1 | All 10 files load, and each pattern's Challenge wind-up is ≥ 14 ticks | P2 |
+| C1 | Content Designer | Write the `challenge` blocks for C1–C5 first (the ones played at belts 4–10), then C6–C10 as dormant data, using names, tells and Sensei lines from §1. Keep the swarmer jab and spark dart at ≥ 10 ticks on Challenge (P1) | All files load, and each pattern's Challenge wind-up is ≥ 14 ticks | P2 |
 | C2 | Content Designer | Pair-room and `fromRoom` placement for belts 4–10 (C12, C13) | A belt 4 Challenge run shows C1–C5, and a belt 7 run shows patterns from room 1 | C1 |
-| T1 | Tester | Re-run §4 at 100 seeds with patterns on | Every row is inside its target band, or the misses are listed with the room causing them | P1–P5, C1, C2 |
+| T1 | Tester | Re-run §4 at 100 seeds with patterns on (Challenge rows: belts 4–10 only) | Every row is inside its target band, or the misses are listed with the room causing them | P1–P6, C1, C2 |
 | T2 | Tester | Human playtest using the §5 checklist | Notes from at least 2 testers (one aged 6–8), with no "hit from nowhere" reports | T1 |
 
-**Scope risk:**
+**Scope risk** (beta cut still pending with Jay)**:**
+- With the §13 lock, belt 1–3 patterns aren't played on Challenge, and the Ember patterns (C6–C10) are dormant. The beta suggestion below was written before the lock; Jay's call on it is still open.
 - **Dec 15, 2026 beta (5–10 testers):**
   - Safe to ship: P1–P3 and P5, plus C1 for **C1, C2, C4 and C3** (belts 1–2 and the Floor Keeper). These reuse circles and lanes that exist today.
   - Risky: the belt 3 Ember patterns (C6–C10) and the pair rooms (C12, C13). They need new tell art and sounds, and sound may already slip past Dec 15 (#318). Suggested: beta has belts 1–2 plus the Floor Keeper, and Ember patterns stay off with `fromBelt: 11`.
 - **April 2027 launch:** everything, after T2. The Challenge band numbers are final only after human playtests (Q-CHALLENGE).
 
-## Decisions for Jay
+## Decisions (Oct 27, 2026)
+
+Jay left the difficulty calls to the Manager, who decided:
+
+1. **§13 lock: yes.** Challenge unlocks at the 4th belt. Belt 1–3 patterns (and the Ember patterns C6–C10) only matter if that rule changes later. Added P6; the balance targets and Tester checks now cover belts 4–10.
+2. **Careful-bot target 55–85% on Challenge: approved.**
+3. **Jab and dart fix: approved.** The 9-tick swarmer jab and spark-sprite dart go to the 10-tick minimum (P1, and noted in C1).
+4. **Beta cut: pending, waiting on Jay.**
+
+## Original questions (answered above, except 4)
 
 1. **§13 lock:** does Challenge unlock at the 4th belt (as §13 says), or stay open at every belt as it is now? If it unlocks at belt 4, rows C1–C10 still apply, because belts 4+ meet those enemies, but belt 1–3 testing waits.
 2. **Careful-bot target:** keep 55–85% (about 2 in 3)?
