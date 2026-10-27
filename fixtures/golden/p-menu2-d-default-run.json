@@ -4413,9 +4413,9 @@
     },
     "challenge": {
       "window": 7,
-      "perfects": 6,
-      "blocks": 2,
-      "health": 146
+      "perfects": 7,
+      "blocks": 4,
+      "health": 191
     }
   }
 }

@@ -1410,3 +1410,7 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 ## Q-DOOR-LABELS — door labels stay on screen; unknown ?room= warns (2026-10-27)
 - Each frame, after the boss slide, a door label's X is clamped so the whole label sits at least 8 px inside the camera view (`clampLabelX`, `DOOR_LABEL_SIDE_PX`). A label for a door that is off screen sits pinned at the nearest edge.
 - An unknown `?room=` id keeps the random-room fallback but logs a console warning (`testRoom`). Nothing shows on screen, because only testers use `?room=`.
+## R-CHALLENGE P1 — 10-tick wind-up floor on Challenge (2026-10-27)
+- The 10-tick minimum (`MIN_WINDUP_TICKS` in config.ts, also used by the enemy loader) now applies after the Challenge formula too, in `telegraphTicks`. Only the swarmer jab and spark-sprite dart change (9 -> 10 ticks on Challenge). Guided and Standard use the exact old formula (tested on every attack).
+- Elites keep their own minimum code (`eliteWindup`); a test checks every elite Challenge wind-up is still at least 10.
+- The p-menu2 golden is re-captured: only `rooted.challenge` moves (perfects 6 -> 7, blocks 2 -> 4, health 146 -> 191) because that room's swarmer jabs are 1 tick longer. Every Guided and Standard value is unchanged. The R-BAL-12 bands test stays green.
