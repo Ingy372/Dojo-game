@@ -1,7 +1,7 @@
 // Enemy types are content (data files in content/enemies), checked here when loaded.
 // Distances are in tiles and times in ticks.
 
-import { TICKS_PER_SECOND } from './config';
+import { MIN_WINDUP_TICKS, TICKS_PER_SECOND } from './config';
 
 export interface EnemyAttackDef {
   /** Optional name, for bosses with several attacks (for example "slam"). */
@@ -140,8 +140,8 @@ function loadAttack(data: unknown, id: string, where: string): EnemyAttackDef {
   if (a.counterable !== undefined && typeof a.counterable !== 'boolean') throw new EnemyError(id, `"${where}.counterable" must be true or false`);
   if (a.counterable === false || a.dashOnly === true) attack.counterable = false;
   // Every attack must be telegraphed: at least half a second of warning on Standard.
-  if (attack.telegraphTicks < 10) {
-    throw new EnemyError(id, `"${where}.telegraphTicks" must be at least 10 (half a second of warning)`);
+  if (attack.telegraphTicks < MIN_WINDUP_TICKS) {
+    throw new EnemyError(id, `"${where}.telegraphTicks" must be at least ${MIN_WINDUP_TICKS} (half a second of warning)`);
   }
   return attack;
 }

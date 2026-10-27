@@ -6,7 +6,7 @@ import type { TwistDef } from './twist';
 import type { StanceDef, VirtueKind } from './abilities';
 import { pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
-import { BOW, COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, realSecondsToTicks, type Difficulty } from './config';
+import { BOW, COMBAT, DIFFICULTY, MIN_WINDUP_TICKS, MOVEMENT, TICKS_PER_SECOND, realSecondsToTicks, type Difficulty } from './config';
 import { noMods, type PlayerMods } from './effects';
 import { namedDef, type NamedRules, type NamedSpawn } from './named';
 import { eliteDef, eliteWindup, type EliteKind, type EliteRules, type EliteSpawn } from './elite';
@@ -686,12 +686,14 @@ export function allEnemiesBeaten(world: WorldState): boolean {
 /**
  * Total wind-up for an enemy's attack on a difficulty. The enemy file's telegraphTicks is the
  * Standard total; its fill part (before the Standard window) is scaled, then this
- * difficulty's window is added.
+ * difficulty's window is added. R-CHALLENGE P1: Challenge never goes under MIN_WINDUP_TICKS
+ * (the 12-tick swarmer jab and spark dart used to come out at 9). Guided and Standard are untouched.
  */
 export function telegraphTicks(attack: EnemyAttackDef, difficulty: Difficulty): number {
   const fill = attack.telegraphTicks - DIFFICULTY.standard.counterWindowTicks;
   const d = DIFFICULTY[difficulty];
-  return Math.round(fill * d.fillScale) + d.counterWindowTicks;
+  const ticks = Math.round(fill * d.fillScale) + d.counterWindowTicks;
+  return difficulty === 'challenge' ? Math.max(MIN_WINDUP_TICKS, ticks) : ticks;
 }
 
 /** The Perfect Counter window for a player, in ticks (Stances and Technique Seals can widen it). */
