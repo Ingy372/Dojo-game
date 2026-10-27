@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-26 7:57 PM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#361.
+Last updated: 2026-10-27 8:00 AM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#361.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -37,7 +37,7 @@ Last updated: 2026-10-26 7:57 PM EDT by Dojo-ascent Manager. Catch-up covers PRs
 | B-T3-TUNE-2c | Dojo-Ascent Programmer | **Done (PR #285).** About 1 s hold at 66% and 33%. | As in the plan. | — |
 | B-T3-TUNE-2b | Dojo-Ascent Programmer | **Done (PR #309, merged Oct 25, 11:42 PM, after QA passed).** The #299 art is in the game. Empty lid frames are intentional (the body hides the lid). Possible later item: lid visible from behind, which would be Jay's choice. | Screenshot: lid up with sparks out; Reduced motion keeps the lid icon. | — |
 | B-T3-TUNE-2b-art | Dojo-ascent Artist | **Done (PR #299; Jay gave a thumbs-up; in the game via #309).** | Jay OKs the look (lid colour, rolling pin vs ladle for the P3 bonk, lid icon); then the Programmer swaps it in. | — |
-| B-T3-TUNE-2d | Dojo-Ascent Game Logic/systems Tester | Replay tier 3 with Orange gear, plus one Guided/young run if possible. | QA note reports time, HP lost and wins against the plan's target, and whether every hit felt fair. | — (#285 merged) |
+| B-T3-TUNE-2d | Dojo-Ascent Game Logic/systems Tester | Replay tier 3 with Orange gear, plus one Guided/young run if possible. | QA note reports time, HP lost and wins against the plan's target, and whether every hit felt fair. | — (#285 merged). **Assigned to the Tester Oct 27, 8:00 AM.** |
 | B-SEND | Jay | Freeze Dec 4. Invite testers Dec 7. Fall back to the web link where needed. (Manager runs it; Jay owns it) | Every tester family has the game installed and opened by Dec 15. | B-QA, B-TESTERS, B-BETAREV |
 | B-FEEDBACK | Jay | Collect beta feedback into one place, weekly from Dec 15. (Manager runs it; Jay owns it) | One feedback file with each note, its date and an owner. | B-SEND |
 
@@ -122,7 +122,7 @@ Last updated: 2026-10-26 7:57 PM EDT by Dojo-ascent Manager. Catch-up covers PRs
 | C-STORY-f | Dojo-Ascent Content Designer | **Delivered (PR #344).** The town grows one visible change per belt (White lamps, Yellow flowers, Orange bakery, Green path, Blue river and dock, Red gold flame banner, Red/Black chime, Brown reading tree, Brown/Black Tower glow and window lantern). After approval the Artist makes 9 overlays. | Jay approves the list and order; merged. | **Waits on Jay** (list, order, gold flame for Red). |
 | R-TOWN-CLUBPENGUIN | Dojo-Ascent Researcher & Planner | **Done (PR #345, merged Oct 26; Jay approved t539u).** Club Penguin as the model for the live town square. | — | — |
 | R-PREMIUM-b | Dojo-ascent Artist | **Jay t513u.** Shortlist free sound packs that fit and whose license allows selling the app. | Shortlist with licenses in incoming-art/audio/; Jay OKs before import. | **Done (PR #332, merged Oct 26).** |
-| Q-PREM-RETEST | Dojo-Ascent Game Logic/systems Tester | Check the win screen and a boss win (unverified in Q-PREMIUM), then retest F1, F2 and F4 as they land. | QA note with screenshots. | — (F1/F2/F4 parts wait on those PRs) |
+| Q-PREM-RETEST | Dojo-Ascent Game Logic/systems Tester | Check the win screen and a boss win (unverified in Q-PREMIUM), then retest F1, F2 and F4 as they land. | QA note with screenshots. | **Done (#320 merged; F1 #322 and F4 #323 merged).** |
 | C-STORY-a | Dojo-Ascent Content Designer | **Delivered (PR #334).** Chapter 1 Sensei line becomes "Even a small light shines in the dark."; KJV John 1:5 moves to the faith layer. Then the Programmer shows storyScreens verses when the faith layer is on. | Jay approves; merged. | **Waits on Jay** |
 | C-STORY-b | Dojo-Ascent Content Designer | **Delivered (PR #335, stacked on #334).** Mystery clue ladder; Sensei revealed at Brown/Black; Senpai's Blue hint. | Jay approves; merged. | **Waits on Jay** |
 | C-STORY-d | Dojo-Ascent Content Designer | **Delivered (PR #337, stacked on #335).** Guardian arcs. | Jay approves; merged. | **Waits on Jay** |
