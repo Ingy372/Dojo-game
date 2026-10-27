@@ -1443,6 +1443,12 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - Below the 4th belt the Challenge card is dimmed (alpha 0.7, contrast 5.6:1 or better), shows 🔒 and "Unlocks at your 4th belt." (content/settings/difficulty.json `locked.challenge`), and does nothing when tapped.
 - A `?difficulty=challenge` test link still wins at any belt, so the sims and goldens don't change.
 
+## R-CHALLENGE P4 — pattern tells and first-sight Sensei lines (2026-10-27)
+- "First time" is per enemy + attack (`floor-keeper:shockwave`), stored in the save as `patternsSeen` (an old save reads as none seen).
+- The Floor Keeper's phase line is skipped if its shockwave line already played that fight.
+- `tell` text is designer-only (not shown in game). Existing art and sounds only: whoosh on a lane wind-up, clank on the double slam.
+- Reduced motion keeps every lane and circle; only the lane's sliding stripes stop.
+- Sensei's guided Counter ("COUNTER!" + pulsing button) now only picks a counterable warning; before, it could pick a dash-only lane (incl. the rolling pin and hearth cook) — a real bug, test added.
 ## Q-SWARM-JAB — swarmer jab wind-up on Challenge (2026-10-27)
 - P1's floor (`telegraphTicks`, MIN_WINDUP_TICKS = 10) already gives the 12-tick swarmer jab 10 ticks on Challenge (it was 9), C1's swarmer content included. No game-logic change.
 - Guard: the elites loader now refuses `minWindupTicks` under MIN_WINDUP_TICKS, so an elites.json edit can't push an elite wind-up under half a second.
@@ -1453,6 +1459,12 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - The locked card is solid (no `setAlpha(0.7)`): fill `#1d1a26`, name `#a39bb0` (6.4:1), line `#c9b98f` (8.8:1). It no longer shows the room through it at 667x320.
 - A tap on the locked card plays the existing `sfx.place(false)` (no new sound or art), pulses the unlock line (scale 1.08, 120 ms, yoyo) and shakes the card ±4 px, 3 cycles in 250 ms. With reduced motion on there is no shake; the sound and pulse stay. The card returns to its stored base x, so fast repeat taps don't drift. The tap never picks Challenge or saves.
 - The locked line may hold `{belt}`, filled with the school-data belt name at `CHALLENGE_FROM_TIER` (`lockedLine` in `apps/client/src/ui/lockCard.ts`). Text without `{belt}` shows unchanged, so this works with today's text and with C-LOCK-WORDS. Supersedes the "dimmed, alpha 0.7" note in R-CHALLENGE P6.
+
+- R-CHALLENGE P4 banner fix: the Sensei banner is placed no higher than the bottom of the top bar (room/wave label, timer, boss bar) + 6px, so at 667x375 it cannot cover the top bar during wind-ups. Shot: docs/shots/r-challenge-p4/667x375-windup-shockwave.png.
+
+- R-CHALLENGE P4 QA: one floor for every Sensei line, `senseiHomeY(senseiTop, topBarBottom) = max(senseiTop, topBarBottom + 6)` (apps/client/src/ui/senseiPlace.ts). The top bar includes the health and Focus bars (bottom y 51), the room/wave label, the timer and the boss bar.
+- Stale COUNTER! root cause: when the guided enemy's wind-up ended without a swing (staggered, hit out of it, beaten), `stepGuide` set `guide.enemyId = null` with no event, so the client's "COUNTER!" banner and Counter pulse (only cleared by guideDone) stayed up over the next wind-up, e.g. the rolling pin's dash-only roll. Now the sim pushes `guideCancel` and the client clears that cue; the client also clears it when a non-counterable wind-up starts while no guided wind-up is live.
+- `?force=<attack>` (e.g. `?force=wide-bonk`) is a test link only (apps/client/src/game/forceAttack.ts): in Practice it swaps the brute for the attack's owner at Challenge with a one-attack pattern; on a run it cuts that enemy's Challenge pattern to the attack. Without the flag nothing changes.
 ## Q-BOW-OVER-MENU — the bow waits for menus to close (2026-10-27)
 - Manager's pick: "wait until the menu closes". In the Home Dojo, a due bow is held while `mode !== 'play'` (menu, decorate, arriving) or any arrival card is open (`cardsOpen`), and polled in `update`. It shows as soon as all are closed, exactly once per scene start (`bowShown`, reset in `create`). The bow itself (prompt, tap, `playBow`, `setBowDue(false)`, `arrive`) is unchanged.
 - Repro (3-yellow): with the arrival "Your Home Dojo" card up, a due bow drew on top of it (depth 80 over 70) and the next card then queued behind it. The Tower floor bow (GameScene `askForBow`) already runs before any menu can open and sets `menuOpen`, so it is not gated.

@@ -193,6 +193,8 @@ export type CombatEvent =
   | { kind: 'guideNudge' }
   /** The taught attack landed or was countered. */
   | { kind: 'guideDone'; step: number; success: boolean }
+  /** Q-P4 QA: the guided wind-up ended with no swing (beaten, staggered, knocked out of it); the cue must go. */
+  | { kind: 'guideCancel'; step: number }
   | { kind: 'enemySwing'; enemyId: EnemyId }
   | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId; chain: number }
   /** B-MASHER-2: this room's Perfect Counters reached COMBAT.counter.mashGuardPerfects, so Mash guard is off until the next room. */
@@ -612,7 +614,12 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
 /** Sensei's guided first Counter: picks the warning to teach, holds still on step 0, and moves on. */
 function stepGuide(world: WorldState, guide: GuideState, ids: string[]): void {
   if (guide.enemyId === null) {
-    const t = world.events.find((ev) => ev.kind === 'telegraph');
+    // R-CHALLENGE P4: only a warning the player can Counter; a dash-only lane never gets "COUNTER!".
+    const t = world.events.find((ev) => {
+      if (ev.kind !== 'telegraph') return false;
+      const e = world.enemies.find((x) => x.id === ev.enemyId);
+      return !!e && currentAttack(e).counterable !== false;
+    });
     if (t?.kind === 'telegraph') {
       guide.enemyId = t.enemyId;
       world.events.push({ kind: 'guideStart', step: guide.step, enemyId: t.enemyId });
@@ -631,6 +638,7 @@ function stepGuide(world: WorldState, guide: GuideState, ids: string[]): void {
   }
   if (!e || e.mode !== 'windup' || !e.attackCenter) {
     guide.enemyId = null; // Beaten or knocked out of its wind-up: wait for the next warning.
+    world.events.push({ kind: 'guideCancel', step: guide.step });
     return;
   }
   // Step 0: with the circle nearly full (inside the Perfect window), hold still for the tap.

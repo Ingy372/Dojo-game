@@ -123,6 +123,11 @@ export interface Profile {
    */
   keeperCelebrated: boolean;
   /**
+   * R-CHALLENGE P4: Challenge pattern attacks (`enemyId:attackName`) whose first-sight Sensei line
+   * has played. An old save starts empty, so each line plays once for everyone.
+   */
+  patternsSeen: string[];
+  /**
    * P-MENU2-d: the Fighting Style the student picked (starting Stance and Virtue), or null for
    * today's default (Beginner's Stance first, strongest Virtue). Strikes and Seals are always on.
    */
@@ -218,6 +223,7 @@ export function newProfile(): Profile {
     sealsSeen: [],
     trophiesSeen: [],
     keeperCelebrated: false,
+    patternsSeen: [],
     loadout: null,
     grandfatheredStances: [],
     stanceMigrated: true,
@@ -256,7 +262,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null, sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, keeperCelebrated: typeof p.keeperCelebrated === 'boolean' ? p.keeperCelebrated : oldKeeperWin(p.lastRun), ...migrateReadyStance(p, readLoadout(p.loadout)) };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null, sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, keeperCelebrated: typeof p.keeperCelebrated === 'boolean' ? p.keeperCelebrated : oldKeeperWin(p.lastRun), patternsSeen: Array.isArray(p.patternsSeen) ? p.patternsSeen.filter((v) => typeof v === 'string') : [], ...migrateReadyStance(p, readLoadout(p.loadout)) };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {
@@ -472,6 +478,13 @@ export function getsTutorialFloor(profile: Pick<Profile, 'runsStarted' | 'runsPl
  * the Seal for `beltId` is seen lit. An old save (sealsSeen null) is migrated silently: a Seal
  * that is already lit counts as seen, so returning players get no bell. Only ever adds ids.
  */
+/** R-CHALLENGE P4: true the first time this save sees the pattern `key` (and marks it seen). */
+export function firstPatternSight(profile: Profile, key: string): boolean {
+  if (profile.patternsSeen.includes(key)) return false;
+  profile.patternsSeen = [...profile.patternsSeen, key];
+  return true;
+}
+
 /**
  * P-MENU2-c: which of the cubbies on screen (`shown`, earned ids) should play their unlock
  * moment now. Each plays once and is saved as seen. An old save (trophiesSeen null) is migrated
