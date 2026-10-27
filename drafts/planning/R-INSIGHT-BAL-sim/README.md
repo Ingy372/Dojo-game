@@ -8,3 +8,10 @@ Supports `drafts/planning/R-INSIGHT-BAL.md` (round 4). Nothing here is compiled 
 - Run one: `BALANCE=1 CONFIGS=SOLO BOTS=kid DIFFS=standard SEEDS=30 OUT=/tmp/x.jsonl npx vitest run test/balance/zz-insight-bal.test.ts` in `packages/sim`.
 - Config names: `none`, `pool`, `pool9` (original 9 cards), `offer:ID`, `start:a+b` (held all run), `pick:lean:a+b+c` (real pick screen, takes the family when offered), `SOLO`, `PAIRS`, `OFFER`, `syn:TYPE:AMT`, `pick:greedy:` / `pick:worst:` (need `SCORES`, see `scoresF.json`).
 - `drv.py` (launcher: `launch`, `batch`, `BASE_OVR` and `NEW` there are the round-3 base; the round-4 overrides are in `full.py` and `prop4.env`), `full.py` and `fullpick.py` (the final validation runs, tags `Fsolo`, `Fpair`, `Froute`, `Fgc`, `Fkata`, `Fpick`), `pe_any.py` and `ssum.py` (PE and win summaries), `pe2.py`, `pe_table.py`, `pairs2.py`, `solo3.py`, `belts.py`, `an.py` (older analysis scripts). Paths point at `/tmp/insight-bal`: unpack `data.tar.gz` there (it holds `r4/` with every round-4 scan and the `F*` validation rows, plus the rulers and round-3 data). The rulers are in `rul/`, `ruler-kid.jsonl` and `solo-*.jsonl`.
+
+## Round 5 additions (B-T3-TUNE-2 masher and P5)
+
+- `zz-masher.test.ts.txt` (env `S0`, `SEEDS`, `COMBOS`, `OVR`, `PER`, `OUT`): per-seed B-T3-TUNE-2 masher runs; `mper.py` (`runper`, `summ`), `mcand.py` (candidate scans), `mscan.py` (seed-count scan). Tune "Tc" = Wind Step `{"amount":0.3,"everyHits":5,"seconds":2}` on top of `prop4.env`.
+- `zz-p5.test.ts.txt` (env `S0`, `SEEDS`, `OUT`, `KEY`, `OVR`, `NOINS`): per-seed P5 on/off damage; `p5.py` (`run`, `stats`), `p5run.py`.
+- `tfull.py` and `tcfull.py`: the full cap battery for the tune (tags `TCsolo`, `TCroute`, `TCpair`, `TCgc`, `TCkata`); `belttab.py`: per-belt table in 4f. The bot hook patch must also be applied for the zz tests.
+- Raw rows are not added (large); re-run with these scripts.
