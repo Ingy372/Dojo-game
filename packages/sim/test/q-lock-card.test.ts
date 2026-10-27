@@ -39,3 +39,23 @@ describe('Q-LOCK-CARD', () => {
     expect(fn).not.toMatch(/chooseDifficulty|writeSave|sound\.load|load\.audio|load\.image/);
   });
 });
+
+// Q-SHAKE-CENTER: the shake is centred on the card's resting spot.
+import { lockShakeOffset, lockShakePath } from '../../../apps/client/src/ui/lockCard';
+describe('Q-SHAKE-CENTER locked-card shake path', () => {
+  it('starts and ends exactly at the resting spot', () => {
+    const p = lockShakePath(60);
+    expect(p[0]).toBe(0);
+    expect(p[p.length - 1]).toBe(0);
+    expect(lockShakeOffset(1.2)).toBe(0);
+  });
+  it('goes the same distance left and right, never past LOCK_SHAKE.px', () => {
+    const p = lockShakePath(600);
+    const max = Math.max(...p), min = Math.min(...p);
+    expect(max).toBeCloseTo(LOCK_SHAKE.px, 3);
+    expect(min).toBeCloseTo(-LOCK_SHAKE.px, 3);
+    // Mirror symmetric in time: offset(t) = -offset(1 - t), so the average spot is the resting spot.
+    for (let i = 0; i <= 600; i++) expect(p[i] + p[600 - i]).toBeCloseTo(0, 9);
+    expect(p.reduce((a, b) => a + b, 0) / p.length).toBeCloseTo(0, 9);
+  });
+});
