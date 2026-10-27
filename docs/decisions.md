@@ -1427,3 +1427,10 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - Only one pattern wind-up at a time room-wide. While a two-part attack is waiting for, winding up, or landing its 2nd hit, no other enemy starts any attack. The 2nd hit keeps its own full tell.
 - `noOverlapWithRedCircle` is loaded (Hearth Cook lane in `attacks`, Rolling Pin roll from its `dashOnlyAttack` notes block). On Challenge only, a flagged dash lane doesn't start while another enemy's red (counterable) circle covers the player.
 - Guided and Standard are unchanged; the golden file is byte-identical (no Challenge golden row moved).
+
+## R-CHALLENGE P5 — the balance bot answers Challenge patterns (2026-10-27)
+
+- **Landing circles:** a typical (newer) bot steps out of a `landing` attack's circle when it can clear the edge with its reaction time to spare; otherwise it Counters as before. A sharp (careful) bot always Counters. Measured over belts 4/6/8/10 x 60 seeds on the samples, stepping out costs less Health than always Countering (test).
+- **Double hits:** typical and sharp bots don't Strike while an enemy's second hit is pending (`followUpStage === 1`), so Counter is ready; the second wind-up is planned like any other. Punishing the winded state after is left for C1.
+- **Kid and novice play are unchanged.** All changes key on Challenge-only attack fields, so Guided and Standard runs are byte-equal with the samples on and off (test), and the golden is byte-identical.
+- **Samples are test-only** (`packages/sim/test/balance/sample-patterns.ts`), shaped like plan rows C1-C5 with placeholder numbers. C13's belt-dependent fromRoom isn't modelled (one block per enemy; fromRoom 2, Floor Keeper 1). No band target is set; the table (`BALANCE=1`, written to `$TMPDIR/r-challenge-p5-table.md`) is for reading, labelled "sample patterns, not C1".
