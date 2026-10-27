@@ -44,9 +44,12 @@ describe('R-CHALLENGE P6: Challenge unlocks at the 4th belt (core-design §13)',
     const dojo = src('scenes/DojoScene.ts');
     expect(dojo).toMatch(/const current = activeDifficulty\(this\.profile, tier\);/);
     expect(dojo).toMatch(/locked = c\.id === 'challenge' && !challengeUnlocked\(tier\)/);
-    expect(dojo).toMatch(/if \(locked\) return;/);
-    expect(dojo).toMatch(/locked \? t\.locked\.challenge : c\.text/);
+    // Q-LOCK-CARD: a locked tap gives feedback and returns before choosing; the line fills {belt}.
+    expect(dojo).toMatch(/if \(locked\) \{\n\s*this\.lockedCardTap\(b\.visual, line!\);\n\s*return;/);
+    expect(dojo).toMatch(/locked \? lockedLine\(t\.locked\.challenge, this\.training\.belts\) : c\.text/);
     expect(dojo).not.toMatch(/this\.profile\.difficulty \?\? 'standard'/);
-    expect(rules.locked.challenge).toBe('Unlocks at your 4th belt.');
+    // The words live in content (designers change them); just check there are some.
+    expect(typeof rules.locked.challenge).toBe('string');
+    expect(rules.locked.challenge.trim().length).toBeGreaterThan(0);
   });
 });

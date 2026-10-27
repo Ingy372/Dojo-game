@@ -949,3 +949,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - R-CHALLENGE P6: Challenge difficulty locked below the 4th belt (plays and shows as Steady, the stored pick is kept); 6 tests; no golden or fixture diff; Settings shots 16 PASS, 0 FAIL at 2 phone sizes, RM on/off, belts 3 and 4.
 
 - 2026-10-27 Q-FAIR-EDGE: downed players count for the pattern on-screen check; red circles no longer start under a winding-up flagged lane (either step order). Tests: packages/sim/test/q-fair-edge.test.ts (downed edge, both step orders, 1,000-room sweep belts 4-10: 0 off-screen, 0 overlaps).
+- Q-LOCK-CARD: locked Challenge card is solid and answers a tap with a sound, a line pulse and a small shake (no shake with reduced motion); `{belt}` placeholder in the locked line from school data; 4 tests; shots 63 PASS, 0 FAIL at 667x320, 667x375, 844x390, RM on/off, plus belt 4 unlocked.
