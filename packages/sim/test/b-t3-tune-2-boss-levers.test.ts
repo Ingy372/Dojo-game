@@ -139,10 +139,12 @@ describe('B-T3-TUNE-2c: phase pause', () => {
 describe('B-T3-TUNE-2: bot fight at Orange gear (great-hearth, tier 3)', () => {
   const gear = { maxHealth: 332.79, power: 45.85, guard: 33.53 };
   const N = 60;
-  const fights = (style: 'smart' | 'masher', skill: 'typical' | 'novice', diff: 'standard' | 'challenge') => {
+  // The masher floor runs on 600 seeds: only about half the runs reach the boss, so at 60 seeds one run moves the rate 2-3 points (SD 5) and the floor test is luck (R-INSIGHT-BAL round 5).
+  const MASHER_N = 600;
+  const fights = (style: 'smart' | 'masher', skill: 'typical' | 'novice', diff: 'standard' | 'challenge', n = N) => {
     const out: RoomStats[] = [];
     let reached = 0;
-    for (let s = 1; s <= N; s++) {
+    for (let s = 1; s <= n; s++) {
       const r = playRun(content, s, style, SKILLS[skill], diff, gear, undefined, { tier: 3 });
       const b = r.rooms.find((x) => x.roomId === 'great-hearth');
       if (!b) continue;
@@ -162,8 +164,8 @@ describe('B-T3-TUNE-2: bot fight at Orange gear (great-hearth, tier 3)', () => {
   it('typical wins every fight; the masher wins at least 75% on Standard; 12-15 s without pauses, 14-20 s with (floor 14: Manager, #295)', () => {
     const lines: string[] = [];
     const typical = fights('smart', 'typical', 'standard');
-    const masher = fights('masher', 'novice', 'standard');
-    for (const [n, r] of [['standard/smart-typical', typical], ['standard/masher-novice', masher], ['standard/smart-novice', fights('smart', 'novice', 'standard')], ['challenge/smart-typical', fights('smart', 'typical', 'challenge')], ['challenge/masher-novice', fights('masher', 'novice', 'challenge')]] as const) {
+    const masher = fights('masher', 'novice', 'standard', MASHER_N);
+    for (const [n, r] of [['standard/smart-typical', typical], [`standard/masher-novice (${MASHER_N} seeds)`, masher], ['standard/smart-novice', fights('smart', 'novice', 'standard')], ['challenge/smart-typical', fights('smart', 'typical', 'challenge')], ['challenge/masher-novice', fights('masher', 'novice', 'challenge')]] as const) {
       lines.push(`${n}: won ${r.won}/${r.reached}, ${r.noHolds.toFixed(1)} s without pauses, ${r.withHolds.toFixed(1)} s with`);
     }
     (globalThis as { console?: { log(s: string): void } }).console?.log(lines.join('\n'));
