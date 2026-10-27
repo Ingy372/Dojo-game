@@ -943,3 +943,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Q-DOOR-LABELS: side door labels clamped 8 px inside the view, unknown ?room= console warning; 8 tests; shots 60 PASS, 0 FAIL at 3 sizes, RM on/off (gauntlet CHALLENGE label moved from -47 px to 8 px at 667x375).
 - R-CHALLENGE P1: Challenge wind-ups never under 10 ticks (jab and dart 9 -> 10); golden moves only in its rooted Challenge row; next Q-DOOR-LABELS, then P6.
 - R-CHALLENGE P2: enemy `challenge` blocks (loader checks, one switch in createWorld, pattern stepping, two-part followUp hits, landing flag); 23 tests with test-only sample enemies; golden byte-identical; no content yet (C1).
+- R-CHALLENGE P6: Challenge difficulty locked below the 4th belt (plays and shows as Steady, the stored pick is kept); 6 tests; no golden or fixture diff; Settings shots 16 PASS, 0 FAIL at 2 phone sizes, RM on/off, belts 3 and 4.
