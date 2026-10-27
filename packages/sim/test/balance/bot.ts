@@ -15,6 +15,8 @@
 import type { CounterHintRules, EliteKind, StanceDef } from '../../src';
 import {
   COMBAT,
+  MOVEMENT,
+  TICKS_PER_SECOND,
   GUIDE_DONE,
   activeDoorSlots,
   chooseInsight,
@@ -53,6 +55,9 @@ export interface Skill {
   /** Spread of Counter timing error, in ticks (about 68% of presses land within this). */
   timingSd: number;
 }
+
+/** R-CHALLENGE P5: the pattern answers, switchable so tests can measure them. */
+export const PATTERN_ANSWERS = { stepOutOfLanding: true, holdStrikeForSecondHit: true };
 
 export const SKILLS: Record<string, Skill> = {
   // Roughly: a sharp teen, a typical 10-12 year old, a younger or newer player.
@@ -109,7 +114,7 @@ interface Plan {
 }
 
 /** Plays one room until it's left (door, defeat, or time limit). */
-export function playRoom(content: Content, run: RunState, world: WorldState, room: Room, style: Style, skill: Skill, rng: Rng): RoomStats {
+export function playRoom(content: Content, run: RunState, world: WorldState, room: Room, style: Style, skill: Skill, rng: Rng, onTick?: (world: WorldState) => void): RoomStats {
   const p = world.players.p1;
   const plans = new Map<string, Plan>();
   const stats: RoomStats = { roomId: room.id, kind: room.kind, ticks: 0, damage: 0, perfects: 0, blocks: 0, hits: 0, strikes: 0, dealt: 0, kos: 0, died: false, crowd: 0, peakCrowd: 0, winded: 0, grade: null };
@@ -120,6 +125,7 @@ export function playRoom(content: Content, run: RunState, world: WorldState, roo
     if (run.insightChoices) chooseInsight(run, pick(rng, run.insightChoices));
     const input = decide(world, room, run, style, skill, rng, plans);
     stepWorld(world, room, { p1: input });
+    onTick?.(world);
     for (const ev of world.events) {
       if (ev.kind === 'perfectCounter') stats.perfects++;
       if (ev.kind === 'block') stats.blocks++;
@@ -212,7 +218,15 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
     const overlap = second && second.impact - first.impact < 8;
     const firstEnemy = alive.find((x) => x.id === first.enemyId)!;
     const dashOnly = currentAttack(firstEnemy).counterable === false;
-    if (dashOnly && now >= first.noticeAt && p.dashCooldown === 0) {
+    // R-CHALLENGE P5: a landing circle (Challenge patterns only): a typical player steps out of it
+    // when they can clear its edge in time (with their reaction time spare); otherwise, and for a
+    // sharp player, it is Countered as before. Novice play is unchanged.
+    const landing = currentAttack(firstEnemy).landing === true && skill === SKILLS.typical && PATTERN_ANSWERS.stepOutOfLanding;
+    const toEdge = landing ? currentAttack(firstEnemy).areaRadius + 0.3 - distance(p.pos, firstEnemy.attackCenter!) : 0;
+    const stepOut = landing && toEdge / (MOVEMENT.speedTilesPerSecond / TICKS_PER_SECOND) + skill.reactTicks < first.impact - now;
+    if (stepOut && now >= first.noticeAt) {
+      escape = awayFrom(p.pos, [firstEnemy.attackCenter!], room);
+    } else if (dashOnly && now >= first.noticeAt && p.dashCooldown === 0) {
       // B-T3: can't be Countered or blocked (rolling pin), so dash out.
       escape = awayFrom(p.pos, [firstEnemy.attackCenter!], room);
       action = 'dash';
@@ -231,7 +245,9 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
   }
 
   // 2. Strike when it helps.
-  if (!action && p.focus >= COMBAT.strike.focusCost && p.guardTicks === 0) {
+  // R-CHALLENGE P5: between the two hits of a double hit, keep Counter ready instead of Striking.
+  const secondComing = PATTERN_ANSWERS.holdStrikeForSecondHit && skill !== SKILLS.novice && alive.some((e) => e.followUpStage === 1);
+  if (!action && !secondComing && p.focus >= COMBAT.strike.focusCost && p.guardTicks === 0) {
     const t = nearest(p.pos, alive);
     if (t && distance(p.pos, t.pos) - t.def.radius - 0.42 <= COMBAT.strike.reach && (style === 'stand' || t.shieldUp || t.mode === 'winded' || t.mode === 'stagger' || p.focus >= 60)) {
       action = 'strike';

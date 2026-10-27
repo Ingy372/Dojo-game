@@ -116,7 +116,8 @@ import { ActionButtons } from '../input/ActionButtons';
 import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
-import { DOOR_LABEL_SIDE_PX, clampLabelX } from '../ui/doorLabel';
+import { clampDoorLabels } from '../ui/doorLabel';
+import { VISIBLE_ROWS, cameraBounds } from '../game/cameraView';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
@@ -134,8 +135,6 @@ const ROAR_GAP_PX = 8;
 const BOSS_BAR_Y = 16;
 /** The bottom of the health and Focus bars (screen px). */
 const HUD_BOTTOM = 56;
-/** How many tiles tall the view is, whatever the phone's size. */
-const VISIBLE_ROWS = 6.75;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 /** Never run more than this many ticks in one frame (e.g. after a long pause). */
 const MAX_TICKS_PER_FRAME = 10;
@@ -530,6 +529,11 @@ export class GameScene extends Phaser.Scene {
     // Two cameras: one follows the character through the room, one holds the on-screen controls.
     const cam = this.cameras.main;
     cam.startFollow(this.player, true);
+    // Q-DOOR-LABELS-2: the side clamp runs after the camera has moved this frame (Phaser emits
+    // FOLLOW_UPDATE in preRender, after the follow scroll and worldView update), so a label is never
+    // closer than 8 px to the edge, even in the first frames of a scroll.
+    cam.on(Phaser.Cameras.Scene2D.Events.FOLLOW_UPDATE, this.clampDoorLabels, this);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => cam.off(Phaser.Cameras.Scene2D.Events.FOLLOW_UPDATE, this.clampDoorLabels, this));
     this.uiCamera = this.cameras.add(0, 0, this.scale.width, this.scale.height);
     hiDpi(this.uiCamera);
     // The Guarding tether is world art too, or the screen camera draws a ghost copy (elites QA bug 1).
@@ -1141,14 +1145,8 @@ export class GameScene extends Phaser.Scene {
     cam.setZoom(zoom * DPR);
     // Camera limits: a strip above the top wall keeps doors clear of the health bars,
     // and rooms smaller than the screen sit in the middle.
-    const viewW = width / zoom;
-    const viewH = height / zoom;
-    const roomW = this.room.width * TILE;
-    const top = -TILE * 1.1;
-    const roomH = this.room.height * TILE - top;
-    const bw = Math.max(roomW, viewW);
-    const bh = Math.max(roomH, viewH);
-    cam.setBounds((roomW - bw) / 2, top - (bh - roomH) / 2, bw, bh);
+    const b = cameraBounds(this.room.width, this.room.height, width / zoom, height / zoom, TILE);
+    cam.setBounds(b.x, b.y, b.width, b.height);
     this.uiCamera.setSize(width * DPR, height * DPR);
     this.controls.layout();
     this.buttons.layout();
@@ -2108,9 +2106,6 @@ export class GameScene extends Phaser.Scene {
       const cam = this.cameras.main;
       d.label.setY(Math.max((d.at.y + 0.55) * TILE, cam.worldView.y + DOOR_LABEL_TOP_PX / (cam.zoom / DPR)));
       this.keepLabelOffBoss(d);
-      // Q-DOOR-LABELS: a door by a side wall keeps its whole label on screen (after the boss slide).
-      const sideMargin = DOOR_LABEL_SIDE_PX / (cam.zoom / DPR);
-      d.label.setX(clampLabelX(d.label.x, d.label.displayWidth, cam.worldView.x, cam.worldView.right, sideMargin));
     }
 
     // The chest appears once the room is clear: a glinting chest, then (once opened)
@@ -2856,6 +2851,11 @@ export class GameScene extends Phaser.Scene {
    * K30: a door label never sits on the boss's head, health bar or name. If it would, it slides
    * sideways to the far side of the door from the boss (the label still reads as that door's).
    */
+  /** Q-DOOR-LABELS: a door by a side wall keeps its whole label on screen (after the boss slide in update). */
+  private clampDoorLabels(cam: Phaser.Cameras.Scene2D.Camera): void {
+    clampDoorLabels(this.doorViews.map((d) => d.label), cam, DPR);
+  }
+
   private keepLabelOffBoss(d: { label: Phaser.GameObjects.Text; at: Vec2 }): void {
     const home = d.at.x * TILE;
     d.label.setX(home);

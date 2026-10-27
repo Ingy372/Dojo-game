@@ -269,6 +269,8 @@ export function createRunWorld(
     guideStep,
     counterHint: hintRules ? counterHintFor(hintRules, run.perfects, hintOn) : null,
     enemyScale: byTier(ENEMY_TRAINING_SCALE, run.tier),
+    // R-CHALLENGE P2: tutorial floors never get Challenge patterns.
+    challengeAt: run.tutorial ? null : { belt: run.tier, room: run.depth + 1 },
     ...(run.tutorial ? { minHealth: TUTORIAL_FLOOR.minHealth, easyBossHealth: TUTORIAL_FLOOR.bossHealth } : {}),
     player: {
       ...player,
