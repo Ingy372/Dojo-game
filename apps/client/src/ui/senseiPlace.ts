@@ -45,6 +45,11 @@ export interface BannerSpot {
   y: number;
 }
 
+/** Q-TIP-BANNER: the box a showing Sensei banner occupies, plus 6 px (the banner's origin is its top centre). */
+export function bannerKeepOut(t: { x: number; y: number; width: number; height: number }): Box {
+  return { x0: t.x - t.width / 2 - 6, x1: t.x + t.width / 2 + 6, y0: t.y - 6, y1: t.y + t.height + 6 };
+}
+
 const overlaps = (a: Box, b: Box) => a.x1 > b.x0 && a.x0 < b.x1 && a.y1 > b.y0 && a.y0 < b.y1;
 
 /**
@@ -57,6 +62,16 @@ export function pickBannerSpot(a: BannerAsk): BannerSpot | null {
   const cands = candidates(a);
   const clear = (keep: Box[]) => cands.find((s) => !keep.some((b) => overlaps(boxAt(a, s), b)));
   return clear([...a.players, ...a.buttons, ...a.others]) ?? clear([...a.players, ...a.buttons]) ?? null;
+}
+
+/**
+ * Q-TIP-BANNER: the Counter tip's spot. The buttons, the HUD, red circles and the Sensei banner (when one is up) are
+ * hard keep-outs; the heroes are kept clear when there is room, else the tip may sit over one rather than vanish.
+ * Null only when nothing is clear of the keep-outs (the tip then hides for that frame).
+ */
+export function tipSpot(a: BannerAsk, banner: Box | null): BannerSpot | null {
+  const hard = { ...a, buttons: banner ? [...a.buttons, banner] : a.buttons };
+  return pickBannerSpot(hard) ?? pickBannerSpot({ ...hard, players: [] });
 }
 
 /** Last resort: over the arena (it may cover a hero) rather than over the buttons. */

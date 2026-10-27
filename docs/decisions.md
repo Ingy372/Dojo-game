@@ -1482,3 +1482,6 @@ The banner's placement is one pure rule (`ui/senseiPlace.ts`, `pickBannerSpot`).
 
 ## Q-VIRTUE-BANNER: all Sensei banners use the one placement rule (2026-10-27)
 `placeSensei` always finishes in `placeOffPlayers` (pickBannerSpot + buttonKeepOut), not only for "steps back" banners. The Counter tip and the twist banner use the same helper. If a tall line has no clear spot, it narrows (taller, thinner) before it may go over the arena; it never goes over an action button.
+
+## Q-TIP-BANNER: the Counter tip yields to a showing Sensei banner (2026-10-27)
+The banner owns the floor (top bar bottom + 6); the tip is the secondary element. `placeCounterTip` adds the banner's box (+6px) to its hard keep-outs (with the buttons, HUD and circles) via `tipSpot`. Heroes are a soft keep-out: if the hard ones leave no spot, the tip may sit over a hero instead of hiding, so a lesson tip is never lost. Covering a button or the banner is never allowed. The tip re-places every frame, so no ordering logic is needed.
