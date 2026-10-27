@@ -951,3 +951,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 - 2026-10-27 Q-FAIR-EDGE: downed players count for the pattern on-screen check; red circles no longer start under a winding-up flagged lane (either step order). Tests: packages/sim/test/q-fair-edge.test.ts (downed edge, both step orders, 1,000-room sweep belts 4-10: 0 off-screen, 0 overlaps).
 - Q-LOCK-CARD: locked Challenge card is solid and answers a tap with a sound, a line pulse and a small shake (no shake with reduced motion); `{belt}` placeholder in the locked line from school data; 4 tests; shots 63 PASS, 0 FAIL at 667x320, 667x375, 844x390, RM on/off, plus belt 4 unlocked.
+
+- R-CHALLENGE P4 banner fix: the Sensei banner is placed no higher than the bottom of the top bar (room/wave label, timer, boss bar) + 6px, so at 667x375 it cannot cover the top bar during wind-ups. Shot: docs/shots/r-challenge-p4/667x375-windup-shockwave.png.

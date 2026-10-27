@@ -2318,7 +2318,8 @@ export class GameScene extends Phaser.Scene {
     const t = this.senseiText;
     if (!t?.active) return;
     const { height } = view(this);
-    let top = this.senseiTop(height);
+    // R-CHALLENGE P4: never over the top bar (health, room and wave, timer, boss bar), e.g. at 667x375.
+    let top = Math.max(this.senseiTop(height), this.topBarBottom() + 6);
     const left = t.x - t.width / 2;
     const right = t.x + t.width / 2;
     const boxes = this.protectedBoxes(true);
@@ -2928,6 +2929,14 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** Top of Sensei's banner: just under the boss bar and its name when a boss is up, so both stay readable. */
+  /** R-CHALLENGE P4: the lowest edge of the top bar's text and bars, in screen pixels. */
+  private topBarBottom(): number {
+    let y = 0;
+    for (const o of [this.roomLabel, this.timerText]) if (o?.active && o.visible) y = Math.max(y, o.getBounds().bottom);
+    if (this.world.enemies.some((e) => e.def.boss && e.mode !== 'defeated')) y = Math.max(y, BOSS_BAR_Y + 18);
+    return y;
+  }
+
   private senseiTop(height: number): number {
     const boss = this.world.enemies.find((e) => e.def.boss && e.mode !== 'defeated');
     return boss ? BOSS_BAR_Y + 34 : height * 0.2 - 22;
