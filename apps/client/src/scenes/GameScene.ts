@@ -1,4 +1,4 @@
-import { leftStripWidth, overArena, pickBannerSpot, senseiFloorY, senseiHomeY, type BannerAsk, type Box } from '../ui/senseiPlace';
+import { bannerKeepOut, leftStripWidth, overArena, pickBannerSpot, senseiFloorY, senseiHomeY, tipSpot, type BannerAsk, type Box } from '../ui/senseiPlace';
 import Phaser from 'phaser';
 import {
   GUIDE_DONE,
@@ -2300,7 +2300,7 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  /** Each frame: the tip takes the first spot clear of every red attack circle, the buttons and the HUD; if none is clear, it hides for that frame. */
+  /** Each frame: the tip takes the first spot clear of every red attack circle, the buttons, the HUD and Sensei's banner; if none is clear, it hides for that frame. */
   private placeCounterTip(): void {
     const t = this.counterTip;
     if (!t?.active) return;
@@ -2329,11 +2329,12 @@ export class GameScene extends Phaser.Scene {
     const w = t.width;
     const h = t.height;
     const top = Math.max(HUD_BOTTOM + 6, this.senseiFloor()); // Q-P4 QA: the same floor as every Sensei line
-    // Q-VIRTUE-BANNER: the one rule (centre x); the buttons, HUD and red circles are all hard keep-outs. None clear: hidden.
-    const free = pickBannerSpot({
+    // Q-TIP-BANNER: the one rule (ui/senseiPlace.ts tipSpot): off the buttons, HUD, red circles and Sensei's banner. None clear: hidden.
+    const banner = this.senseiText?.active && this.senseiText.visible ? bannerKeepOut(this.senseiText) : null;
+    const free = tipSpot({
       viewW: W, viewH: H, floor: top, home: top, w, h, x: 8 + w / 2, y: top,
       players: this.playerScreenBoxes(), buttons: keepOff, others: [],
-    });
+    }, banner);
     t.setVisible(!!free);
     if (free) t.setPosition(free.x - w / 2, free.y);
   }
