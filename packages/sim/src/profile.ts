@@ -4,7 +4,7 @@
 import { readBeltEntry, type BeltEntry } from './beltEntry';
 import { newDecorEarning, readDecorEarning, type DecorEarning } from './earning';
 import { isPlayLimit, type PlayLimit } from './playTime';
-import { COMBAT, DIFFICULTY, LOOT, type Difficulty, type Rarity } from './config';
+import { COMBAT, CHALLENGE_FROM_TIER, DIFFICULTY, LOOT, type Difficulty, type Rarity } from './config';
 import type { Effect } from './effects';
 import { GEAR_SLOTS, rarityRank, type GearItem, type GearSlot } from './loot';
 import type { DojoState } from './dojo';
@@ -394,9 +394,24 @@ function isDifficulty(v: unknown): v is Difficulty {
  * The difficulty a Tower run is played on: a ?difficulty= test link wins, then the player's
  * setting, then Standard. The run passes it to both the elite rules and the room's combat.
  */
-export function runDifficulty(profile: Profile, testLink: string | null = null): Difficulty {
+export function runDifficulty(profile: Profile, testLink: string | null = null, tier?: number): Difficulty {
   if (isDifficulty(testLink)) return testLink;
-  return profile.difficulty ?? COMBAT.defaultDifficulty;
+  return activeDifficulty(profile, tier);
+}
+
+/** R-CHALLENGE P6 (core-design §13): Challenge unlocks at the 4th belt. */
+export function challengeUnlocked(tier: number): boolean {
+  return tier >= CHALLENGE_FROM_TIER;
+}
+
+/**
+ * The difficulty the player is really on: their setting, else Standard. A Challenge pick below
+ * the 4th belt plays (and shows in Settings) as Standard, but the stored choice is kept, so it
+ * comes back at the 4th belt. With no tier given, nothing is locked.
+ */
+export function activeDifficulty(profile: Profile, tier?: number): Difficulty {
+  const d = profile.difficulty ?? COMBAT.defaultDifficulty;
+  return d === 'challenge' && tier !== undefined && !challengeUnlocked(tier) ? 'standard' : d;
 }
 
 /**

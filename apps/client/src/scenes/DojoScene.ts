@@ -35,6 +35,8 @@ import {
   type Vec2,
   type WorldState,
   streetSmartsOpen,
+  activeDifficulty,
+  challengeUnlocked,
   chooseDifficulty,
   PLAY_LIMIT_CHOICES,
   scrollLessons,
@@ -892,7 +894,7 @@ export class DojoScene extends Phaser.Scene {
       this.button(width - pad - 80 - 8 - 100 - 8 - 70 - 8 - 90, 8, 90, 32, DIFFICULTY_TEXT.button, 0x3a3a4a, 14, () => this.openDifficulty());
       // One line says which difficulty they're on, shown once ever (M7-P1).
       if (!this.profile.difficultyLineShown && this.profile.difficulty) {
-        const name = DIFFICULTY_TEXT.choices.find((c) => c.id === this.profile.difficulty)?.name ?? '';
+        const name = DIFFICULTY_TEXT.choices.find((c) => c.id === activeDifficulty(this.profile, this.training.belt.tier))?.name ?? '';
         // Below the second button row (Scroll, Journal, Street Smarts) so nothing covers it.
         this.text(pad, ROW2_Y + MIN_TAP + 8, DIFFICULTY_TEXT.homeLine.replace('{name}', name), 14, '#fff6e0', true).setStroke('#14121c', 5);
         this.profile.difficultyLineShown = true;
@@ -1054,19 +1056,24 @@ export class DojoScene extends Phaser.Scene {
     // Leave room under the cards for the two rows of buttons (Music / Sound, M7-P8).
     const h = Math.min(170, height * 0.5, height - 12 - MIN_TAP * 2 - 8 - 40 - top);
     const x0 = width / 2 - (n * w + (n - 1) * gap) / 2;
-    const current = this.profile.difficulty ?? 'standard';
+    // R-CHALLENGE P6: below the 4th belt a Challenge pick plays as Standard, so Steady shows as selected.
+    const tier = this.training.belt.tier;
+    const current = activeDifficulty(this.profile, tier);
     t.choices.forEach((c, i) => {
       const x = x0 + i * (w + gap);
       const on = current === c.id;
+      const locked = c.id === 'challenge' && !challengeUnlocked(tier);
       // P-MENU-e: a rounded card with the shared press; the name and words ride inside it.
       const b = roundButton(this, { x, y: top, w, h, label: '', color: 0x2a2536, size: 15, selected: on, onTap: () => {
+        if (locked) return;
         sfx.place(true);
         chooseDifficulty(this.profile, c.id);
         writeSave(this.profile);
         close();
       } }, box);
-      b.visual.add(this.add.text(0, 18 - h / 2, (on ? '✓ ' : '') + c.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5, 0).setResolution(crisp()));
-      b.visual.add(this.add.text(0, 54 - h / 2, c.text, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w - 24 } }).setOrigin(0.5, 0).setResolution(crisp()));
+      b.visual.add(this.add.text(0, 18 - h / 2, (on ? '✓ ' : locked ? '🔒 ' : '') + c.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5, 0).setResolution(crisp()));
+      b.visual.add(this.add.text(0, 54 - h / 2, locked ? t.locked.challenge : c.text, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w - 24 } }).setOrigin(0.5, 0).setResolution(crisp()));
+      if (locked) b.visual.setAlpha(0.7);
     });
     box.add(this.add.text(width / 2, top + h + 14, t.footer, { fontFamily: FONT, fontSize: '14px', color: '#b9ad99' }).setOrigin(0.5, 0).setResolution(crisp()));
     // Grown-up settings sit behind a simple sum, so a young child can't open them by accident (M7-P9).
