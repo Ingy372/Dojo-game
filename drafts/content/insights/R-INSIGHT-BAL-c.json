@@ -1,0 +1,47 @@
+{
+  "notes": "R-INSIGHT-BAL-c card text. Paste each object over the card with the same id in content/insights/insights.json. Effects use the numbers in drafts/planning/R-INSIGHT-BAL.md section 4a. Shield Breaker keeps its current effect here: the Programmer adds the 7 Focus field under R-INSIGHT-BAL-a (rule tweak C).",
+  "insights": [
+    {
+      "id": "iron-skin",
+      "name": "Iron Skin",
+      "family": "rooted",
+      "text": "Blocks bounce the hit back at the enemy, with a little extra.",
+      "effect": { "type": "blockReflect", "amount": 1.2 }
+    },
+    {
+      "id": "wind-step",
+      "name": "Wind Step",
+      "family": "flowing",
+      "text": "Every 7 combo hits gives a 3-second burst of speed, and you swing faster too!",
+      "effect": { "type": "comboSpeed", "amount": 0.3, "everyHits": 7, "seconds": 3 }
+    },
+    {
+      "id": "quick-hands",
+      "name": "Quick Hands",
+      "family": "flowing",
+      "text": "Your basic attacks are 20% faster.",
+      "effect": { "type": "attackSpeed", "amount": 0.2 }
+    },
+    {
+      "id": "press-the-advantage",
+      "name": "Press the Advantage",
+      "family": "power",
+      "text": "Enemies that are dizzy, winded or just swung take 30% more damage.",
+      "effect": { "type": "staggerBonus", "amount": 0.3 }
+    },
+    {
+      "id": "shield-breaker",
+      "name": "Shield Breaker",
+      "family": "power",
+      "text": "Any hit breaks shields, and breaking one gives you a little Focus.",
+      "effect": { "type": "shieldBreaker" }
+    },
+    {
+      "id": "rally",
+      "name": "Rally",
+      "family": "virtue",
+      "text": "Hang in there! Focus fills 75% faster when your health is below half.",
+      "effect": { "type": "lowHealthFocus", "amount": 0.75, "below": 0.5 }
+    }
+  ]
+}
