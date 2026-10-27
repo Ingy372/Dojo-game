@@ -25,7 +25,7 @@ Why: the careful bot already wins 100% on Challenge at every belt (#354, #358, a
 | 4–10 | shared rooms (no own sets yet) | swarmer, shield, brute, bopper, Floor Keeper |
 
 - **Existing finding: two Challenge wind-ups are already under the 10-tick floor.** The swarmer `jab` and the spark-sprite `dart` (12 file ticks) come out at 9 ticks (0.45 s) on Challenge. The loader floor only checks the file value. Item P1 fixes this (see the fairness rules below).
-- **§13 lock (decided Oct 27, 2026):** core-design §13 says *Challenge mode unlocks at the 4th belt*, and the Manager confirmed it. The sims and the game currently let Challenge run at every belt, so P6 adds the lock. Belt 1–3 rows in this plan only matter if that rule changes later.
+- **§13 lock (decided Oct 27, 2026):** core-design §13 says *Challenge mode unlocks at the 4th belt*, and the Manager confirmed it. The sims and the game currently let Challenge run at every belt, so P6 adds the lock. Every active row in §1 now starts at belt 4 or later, since the loader rejects `fromBelt` below 4.
 
 ## 1. Patterns per enemy and belt (Challenge only)
 
@@ -39,21 +39,23 @@ So players learn no new button. Each enemy gets **one** new move, and it arrives
 
 | # | Enemy | New pattern | What the player does | Tell (see + hear) | From belt |
 |---|---|---|---|---|---|
-| C1 | swarmer | **Hop-in jab**: hops 1 tile toward the player, then jabs | step back or counter | crouch + small "boing", red circle at the landing spot before the hop | 1 |
-| C2 | shield | **Shield rush**: a 2-tile straight charge (lane), can be countered at the end | dash aside, or counter the bash | shield glows, lane stripes, rising "hmm" | 1 |
-| C3 | Floor Keeper | **Challenge phase at 50%**: slam → sweep → slam, plus a **shockwave lane** (dash-only) that never overlaps a red circle | dash the lane, counter the slams | existing phase pause + roar; lane stripes + "!!" + whoosh (the Hearth Cook's lane look) | 1 |
-| C4 | brute | **Double slam**: two slams in a row. Each has its own full tell; the 2nd hits at strength 0.6. It is winded right after | counter or block twice, then punish | fist raised twice, two thumps | 2 |
-| C5 | bopper | **Wide bonk**: a front arc (areaRadius 1.3) instead of a dot | step behind or counter | staff pulled far back + "whirr" | 2 |
-| C6 | spark-sprite | **Zig-zag dart**: the circle appears, then the sprite darts in from a side angle. It never comes from off screen | counter or block | sparkle trail drawn first + "tik-tik" | 3 |
-| C7 | dough-blob | **Bounce**: jumps and lands on a marked spot | step out of the circle | squash down + shadow circle where it lands + "boing" | 3 |
-| C8 | ladle-lobber | **Two splats**: two splats in a row, at least 20 ticks apart, aimed where the player was | keep moving | ladle lifted twice + "plip, plip" | 3 |
-| C9 | rolling-pin | **Return roll**: rolls back once along the same lane | dash twice | lane stays striped + "whoosh" again | 3 |
-| C10 | Hearth Cook | **Challenge pin phase**: rolling pin lane → ladle bonk, never both at once | dash, then counter | existing phase lines, unchanged | 3 |
+| C1 | swarmer | **Hop-in jab**: hops 1 tile toward the player, then jabs | step back or counter | crouch + small "boing", red circle at the landing spot before the hop | 4 |
+| C2 | shield | **Shield rush**: a 2-tile straight charge (lane), can be countered at the end | dash aside, or counter the bash | shield glows, lane stripes, rising "hmm" | 4 |
+| C3 | Floor Keeper | **Challenge phase at 50%**: slam → sweep → slam, plus a **shockwave lane** (dash-only) that never overlaps a red circle | dash the lane, counter the slams | existing phase pause + roar; lane stripes + "!!" + whoosh (the Hearth Cook's lane look) | 4 |
+| C4 | brute | **Double slam**: two slams in a row. Each has its own full tell; the 2nd hits at strength 0.6. It is winded right after | counter or block twice, then punish | fist raised twice, two thumps | 5 |
+| C5 | bopper | **Wide bonk**: a front arc (areaRadius 1.3) instead of a dot | step behind or counter | staff pulled far back + "whirr" | 6 |
+| C6 | spark-sprite | **Zig-zag dart**: the circle appears, then the sprite darts in from a side angle. It never comes from off screen | counter or block | sparkle trail drawn first + "tik-tik" | parked (unused) |
+| C7 | dough-blob | **Bounce**: jumps and lands on a marked spot | step out of the circle | squash down + shadow circle where it lands + "boing" | parked (unused) |
+| C8 | ladle-lobber | **Two splats**: two splats in a row, at least 20 ticks apart, aimed where the player was | keep moving | ladle lifted twice + "plip, plip" | parked (unused) |
+| C9 | rolling-pin | **Return roll**: rolls back once along the same lane | dash twice | lane stays striped + "whoosh" again | parked (unused) |
+| C10 | Hearth Cook | **Challenge pin phase**: rolling pin lane → ladle bonk, never both at once | dash, then counter | existing phase lines, unchanged | parked (unused) |
 | C11 | elites (swift, guarding) | No new moves. They use their enemy's pattern with the elites.json wind-up values | | | 4 |
-| C12 | belts 4–6 | All of C1–C5. Later the Content Designer may use **pair rooms**: two pattern enemies in one wave, still limited by the overlap cap | | | 4 |
+| C12 | belts 4–6 | C1–C5 step in (C1–C3 at 4, C4 at 5, C5 at 6). Later the Content Designer may use **pair rooms**: two pattern enemies in one wave, still limited by the overlap cap | | | 4 |
 | C13 | belts 7–10 | Patterns come sooner in a run: from room 1 instead of room 2 (`fromRoom`) | | | 7 |
 
-**With the §13 lock, Challenge is only played at belts 4–10.** Those belts use the shared rooms, so the patterns that matter are C1–C5 (swarmer, shield, Floor Keeper, brute, bopper) plus C11–C13. The "From belt" values of 1–3 above just mean "on from the first Challenge belt". The Ember patterns C6–C10 only appear at belt 3, so they stay dormant unless the lock changes or Ember enemies are placed in belt 4+ rooms later.
+**With the §13 lock, Challenge is only played at belts 4–10.** Those belts use the shared rooms, so the patterns that matter are C1–C5 (swarmer, shield, Floor Keeper, brute, bopper) plus C11–C13. **Belt fix (Oct 27, 2026):** the step-up is kept, moved onto real Challenge belts. All five enemies appear in the shared rooms at belts 4–10 (swarmer and shield in most battle rooms, brute in bamboo-hall, gauntlet, training-yard and others, bopper in bopper-yard and staff-and-shield, Floor Keeper in keepers-hall and tutorial-keep). Simpler patterns start at belt 4 (C1 hop-in jab, C2 shield rush, C3 Floor Keeper phase, which reuse today's circles and lanes). The double slam (C4) adds at belt 5 and the wide bonk (C5) at belt 6. No numbers changed.
+
+**Parked: C6–C10 (Ember).** spark-sprite, dough-blob, ladle-lobber, rolling-pin and Hearth Cook only appear in ember-kitchens rooms (minBeltTier 3), so they are never met on Challenge. These rows are kept as unused design data only. They get no `challenge` block in JSON (a `fromBelt` of 3 would fail the loader) until Ember enemies are placed in belt 4+ rooms, which would be a new proposal.
 
 Belts 4–10 have no rooms of their own yet, so belt-to-belt steps come from C12 and C13 (room placement), never from stat changes.
 
@@ -83,7 +85,7 @@ Belts 4–10 have no rooms of their own yet, so belt-to-belt steps come from C12
 
 ```json
 "challenge": {
-  "fromBelt": 2,
+  "fromBelt": 5,
   "fromRoom": 2,
   "attacks": [ { "name": "double slam", "strength": 1, "startRange": 1.3, "reach": 0.9, "areaRadius": 0.95,
                  "telegraphTicks": 20, "recoverTicks": 18, "followUp": { "strength": 0.6, "gapTicks": 18 } } ],
@@ -113,7 +115,7 @@ def = (difficulty === 'challenge' && raw.challenge && beltTier >= challenge.from
 - The `pattern` names exist.
 - Each new attack's Challenge wind-up is ≥ 14 ticks.
 - `strength` ≤ 1.
-- `fromBelt` is 1–10.
+- `fromBelt` is 4–10 (Challenge unlocks at belt 4; anything lower is rejected).
 
 **Rules the world enforces** (in world.ts):
 - The on-screen check (rule 2).
@@ -197,16 +199,16 @@ Play each Challenge belt you can reach (belt 4 and up) with at least one younger
 | P3 | Programmer | Fairness rules 2 and 5 in world.ts: on-screen check, 1 pattern at a time, lane vs red circle | The overlap and on-screen tests pass over 1,000 seeded rooms | P2 |
 | P4 | Programmer | Tells: lane, circle and landing-spot visuals, plus one Sensei line on first sight, using existing sfx where possible | In the browser, each pattern shows its tell at the start of its wind-up at both phone sizes, with Motion on and off | P2, C1 |
 | P5 | Programmer | Bot answers in bot.ts (landing circles, double hits) | A balance run prints the §4 table with patterns on | P2 |
-| C1 | Content Designer | Write the `challenge` blocks for C1–C5 first (the ones played at belts 4–10), then C6–C10 as dormant data, using names, tells and Sensei lines from §1. Keep the swarmer jab and spark dart at ≥ 10 ticks on Challenge (P1) | All files load, and each pattern's Challenge wind-up is ≥ 14 ticks | P2 |
-| C2 | Content Designer | Pair-room and `fromRoom` placement for belts 4–10 (C12, C13) | A belt 4 Challenge run shows C1–C5, and a belt 7 run shows patterns from room 1 | C1 |
+| C1 | Content Designer | Write the `challenge` blocks for C1–C5 first (the ones played at belts 4–10), using the `fromBelt` values in §1 (C1–C3: 4, C4: 5, C5: 6). C6–C10 are parked and not written to JSON. Use names, tells and Sensei lines from §1. Keep the swarmer jab and spark dart at ≥ 10 ticks on Challenge (P1) | All files load, and each pattern's Challenge wind-up is ≥ 14 ticks | P2 |
+| C2 | Content Designer | Pair-room and `fromRoom` placement for belts 4–10 (C12, C13) | A belt 4 Challenge run shows C1–C3, belt 5 adds C4, belt 6 adds C5, and a belt 7 run shows patterns from room 1 | C1 |
 | T1 | Tester | Re-run §4 at 100 seeds with patterns on (Challenge rows: belts 4–10 only) | Every row is inside its target band, or the misses are listed with the room causing them | P1–P6, C1, C2 |
 | T2 | Tester | Human playtest using the §5 checklist | Notes from at least 2 testers (one aged 6–8), with no "hit from nowhere" reports | T1 |
 
 **Scope risk** (beta cut still pending with Jay)**:**
 - With the §13 lock, belt 1–3 patterns aren't played on Challenge, and the Ember patterns (C6–C10) are dormant. The beta suggestion below was written before the lock; Jay's call on it is still open.
 - **Dec 15, 2026 beta (5–10 testers):**
-  - Safe to ship: P1–P3 and P5, plus C1 for **C1, C2, C4 and C3** (belts 1–2 and the Floor Keeper). These reuse circles and lanes that exist today.
-  - Risky: the belt 3 Ember patterns (C6–C10) and the pair rooms (C12, C13). They need new tell art and sounds, and sound may already slip past Dec 15 (#318). Suggested: beta has belts 1–2 plus the Floor Keeper, and Ember patterns stay off with `fromBelt: 11`.
+  - Safe to ship: P1–P3 and P5, plus C1 for **C1, C2, C4 and C3** (written as belts 1–2 and the Floor Keeper; after the belt fix these are C1–C3 at belt 4 and C4 at belt 5). These reuse circles and lanes that exist today.
+  - Risky: the belt 3 Ember patterns (C6–C10) and the pair rooms (C12, C13). They need new tell art and sounds, and sound may already slip past Dec 15 (#318). Suggested: beta has belts 1–2 plus the Floor Keeper, and Ember patterns stay off. *(Superseded by the belt fix: belts 1–2 aren't Challenge belts; Ember patterns are parked with no JSON block.)*
 - **April 2027 launch:** everything, after T2. The Challenge band numbers are final only after human playtests (Q-CHALLENGE).
 
 ## Decisions (Oct 27, 2026)
@@ -220,7 +222,7 @@ Jay left the difficulty calls to the Manager, who decided:
 
 ## Original questions (answered above, except 4)
 
-1. **§13 lock:** does Challenge unlock at the 4th belt (as §13 says), or stay open at every belt as it is now? If it unlocks at belt 4, rows C1–C10 still apply, because belts 4+ meet those enemies, but belt 1–3 testing waits.
+1. **§13 lock:** does Challenge unlock at the 4th belt (as §13 says), or stay open at every belt as it is now? If it unlocks at belt 4, rows C1–C10 still apply, because belts 4+ meet those enemies, but belt 1–3 testing waits. *(Answered: yes. Active rows now start at belt 4+; C6–C10 parked.)*
 2. **Careful-bot target:** keep 55–85% (about 2 in 3)?
 3. **Fix the existing 9-tick jab and dart on Challenge** to the 10-tick floor (P1)? This slightly eases Challenge today.
 4. **Beta cut:** belts 1–2 plus the Floor Keeper patterns for Dec 15, with Ember patterns after?
