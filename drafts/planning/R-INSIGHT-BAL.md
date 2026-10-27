@@ -201,6 +201,16 @@ I ran three rounds. Round 1 had Double Strike 0.35; round 2 added Heavy Hands 0.
 - **Per-belt solo cards (kid, Standard, 30 seeds):** noisy (3–60%, ±8 per cell), belt 3 always high. I judged cards by PE pooled across belts, not per belt. The pool per belt above is the per-belt check.
 - Adding the 2 Virtue cards makes the 11-card pool about 3 points harder than the 9-card pool. That is inside B5.
 
+## 4f. Round 4: closing the gap between routes (INTERIM, full tables follow) [MEASURED, kid, Standard]
+
+Manager decisions recorded: (1) Virtue cards come after the beta, as a placeholder until Jay says otherwise. (2) Press the Advantage and Wind Step may change what they do. (4) Double Strike halved (0.6 to 0.3) and Rally x1.75 approved. (5) "20% faster" text approved. (6) PE 12 kata reserve kept.
+
+Correction: the "Power 40% vs Flowing 59%" quoted earlier mixed rounds. Round 2 (Heavy Hands 0.25) gave Power 40%. The v3 numbers in 4d were Power 23% vs Flowing 56% at 30 seeds; at 100 seeds the same v3 setup reads Rooted 23 / Flowing 59 / Power 31 / Virtue 52.
+
+Setup tested (Heavy Hands untouched at 0.2): Iron Skin 1.2, Wind Step 0.3 every 7 hits for 3 s + tweak A, Double Strike 0.2, Quick Hands 0.2, Press 0.3 + tweak B, new tweak C (Shield Breaker: breaking a shield gives 7 Focus), Calm Breath 0.15, Steady Start 40.
+
+Scan results at 120-200 seeds (win %): held-all-family routes Rooted 28, Flowing 38, Power 32, Virtue 34 (spread 10). Real pick screen (lean picker, 150 seeds, earlier near-final setup): 50 / 47 / 48 / 47 (spread 3). Full validation tables are being re-run and will replace this section.
+
 ## 5. Does Virtue need more cards? Proposal and scope risk
 
 - **Today:** Virtue = 1 card (Rally), skill-gated (PE 0 for skilled bots). A kid who likes Virtue has no choice and no route.
