@@ -21,5 +21,28 @@
     "telegraphTicks": 14,
     "recoverTicks": 18
   },
-  "parSeconds": 5
+  "parSeconds": 5,
+  "challenge": {
+    "fromBelt": 4,
+    "fromRoom": 2,
+    "attacks": [
+      {
+        "name": "shield rush",
+        "strength": 1,
+        "startRange": 2.2,
+        "reach": 2,
+        "areaRadius": 0.7,
+        "telegraphTicks": 20,
+        "recoverTicks": 20,
+        "dashOnly": true,
+        "noOverlapWithRedCircle": true,
+        "tell": "The shield glows and the lane gets stripes.",
+        "senseiLine": "New move! Dash out of the lane."
+      }
+    ],
+    "pattern": [
+      "shield bash",
+      "shield rush"
+    ]
+  }
 }

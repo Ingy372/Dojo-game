@@ -18,5 +18,27 @@
     "telegraphTicks": 12,
     "recoverTicks": 16
   },
-  "parSeconds": 2.5
+  "parSeconds": 2.5,
+  "challenge": {
+    "fromBelt": 4,
+    "fromRoom": 2,
+    "attacks": [
+      {
+        "name": "hop-in jab",
+        "strength": 1,
+        "startRange": 1.9,
+        "reach": 1.5,
+        "areaRadius": 0.6,
+        "telegraphTicks": 20,
+        "recoverTicks": 18,
+        "landing": true,
+        "tell": "Crouch and a little boing. Circle where it lands.",
+        "senseiLine": "New move! Watch where it lands."
+      }
+    ],
+    "pattern": [
+      "jab",
+      "hop-in jab"
+    ]
+  }
 }
