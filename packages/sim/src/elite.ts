@@ -4,7 +4,7 @@
 //   Guarding (blue): protects the 2 closest enemies within 3 tiles (they take 1/3 less from the player).
 // The Perfect Counter window never changes for elites.
 
-import type { Difficulty } from './config';
+import { MIN_WINDUP_TICKS, type Difficulty } from './config';
 import type { EnemyDef } from './enemy';
 
 export type EliteKind = 'swift' | 'guarding';
@@ -82,7 +82,8 @@ export function loadElites(data: unknown): EliteRules {
     kindWeights: { swift: num(d.kindWeights?.swift, 'kindWeights.swift'), guarding: num(d.kindWeights?.guarding, 'kindWeights.guarding') },
     noGuardingOnGuided: d.noGuardingOnGuided === true,
     noGuardingOnFirstFloorOfTier: d.noGuardingOnFirstFloorOfTier === true,
-    minWindupTicks: whole(d.minWindupTicks, 'minWindupTicks', 1),
+    // Q-SWARM-JAB: an elite wind-up can't go under the game's half-second floor.
+    minWindupTicks: whole(d.minWindupTicks, 'minWindupTicks', MIN_WINDUP_TICKS),
     kinds,
     guarding: {
       rangeTiles: num(d.guarding?.rangeTiles, 'guarding.rangeTiles', 0),
