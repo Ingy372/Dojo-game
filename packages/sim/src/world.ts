@@ -10,7 +10,7 @@ import { BOW, COMBAT, DIFFICULTY, MIN_WINDUP_TICKS, MOVEMENT, TICKS_PER_SECOND, 
 import { noMods, type PlayerMods } from './effects';
 import { namedDef, type NamedRules, type NamedSpawn } from './named';
 import { eliteDef, eliteWindup, type EliteKind, type EliteRules, type EliteSpawn } from './elite';
-import type { EnemyAttackDef, EnemyDef } from './enemy';
+import { challengeDef, type ChallengeAt, type EnemyAttackDef, type EnemyDef } from './enemy';
 import { clamp, distance, length, quantize, type Vec2 } from './math';
 import { findPath, standableSpot } from './path';
 import { activeDoorSlots, waveCount, type EnemySpawn, type Room } from './room';
@@ -151,6 +151,10 @@ export interface EnemyState {
   /** B-T3-TUNE-2: phased bosses: the phase it is in and its place in that phase's attack pattern. */
   phase?: number;
   phaseStep?: number;
+  /** R-CHALLENGE P2: place in the def's `pattern` (set only for pattern enemies). */
+  patternStep?: number;
+  /** R-CHALLENGE P2: two-part attacks: 1 = waiting for the second wind-up, 2 = winding up the second hit. */
+  followUpStage?: 1 | 2;
   /** B-T3: already split into its smaller enemies (Dough Blob). */
   splitDone?: boolean;
   /** Which way it circles while waiting its turn to attack: 1 or -1. */
@@ -335,6 +339,8 @@ export interface WorldOptions {
   minHealth?: number;
   /** The tutorial floor's easy boss (M7-P2): bosses have this share of their health and call in no helpers. */
   easyBossHealth?: number;
+  /** R-CHALLENGE P2: the belt and room number, for enemy Challenge blocks. Missing (practice rooms) = no patterns. */
+  challengeAt?: ChallengeAt | null;
   /** R-BAL-12: multiply enemy Health and Power (then round) for the run's belt. Default: none. */
   enemyScale?: { maxHealth: number; power: number };
   /** L-PREMIUM-b: the Counter tip for this room, or null/absent for none (tutorial, Challenge, practice room, or the run is past its limit). */
@@ -438,8 +444,9 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
   const enemyTypes: Record<string, EnemyDef> = {};
   if (options.enemyTypes) {
     const typeOf = (id: string): EnemyDef => {
-      const base = options.enemyTypes![id];
-      if (!base) throw new Error(`Room "${room.id}" uses enemy "${id}", but no such enemy type was loaded`);
+      const file = options.enemyTypes![id];
+      if (!file) throw new Error(`Room "${room.id}" uses enemy "${id}", but no such enemy type was loaded`);
+      const base = challengeDef(file, options.difficulty ?? COMBAT.defaultDifficulty, options.challengeAt);
       // R-BAL-12: content holds BASE numbers; the run's belt scales Health and Power (whole numbers).
       // Guard and timings never scale.
       // B-TUNE-GUIDED: the setting's enemyPowerScale also multiplies Power, in every fight.
@@ -542,7 +549,7 @@ function newEnemy(
     attackCenter: null,
     path: null,
     repathIn: 0,
-    attackIndex: 0,
+    attackIndex: def.pattern ? def.pattern[0] : 0,
     shieldUp: def.shield !== null,
     shieldRegrow: 0,
     summoned: false,
@@ -645,7 +652,10 @@ export function isEnemyPresent(e: EnemyState): boolean {
 
 /** The attack an enemy is winding up (or will use next). */
 export function currentAttack(e: EnemyState): EnemyAttackDef {
-  return e.def.attacks[e.attackIndex % e.def.attacks.length];
+  const a = e.def.attacks[e.attackIndex % e.def.attacks.length];
+  // R-CHALLENGE P2: the second hit of a two-part attack is weaker and has no further follow-up.
+  if (e.followUpStage === 2 && a.followUp) return { ...a, strength: a.strength * a.followUp.strength, followUp: undefined };
+  return a;
 }
 
 /** B-T3: the attacks a phased boss may use at its current health (indexes into its attacks). */
@@ -660,7 +670,15 @@ export function phaseAttacks(e: EnemyState): number[] | null {
 /** The attack after this one: in turn, within the current phase for phased bosses. */
 function nextAttackIndex(e: EnemyState): number {
   const list = phaseAttacks(e);
-  if (!list) return (e.attackIndex + 1) % e.def.attacks.length;
+  if (!list) {
+    // R-CHALLENGE P2: Challenge pattern enemies keep their place in the pattern.
+    const pat = e.def.pattern;
+    if (pat) {
+      e.patternStep = ((e.patternStep ?? 0) + 1) % pat.length;
+      return pat[e.patternStep];
+    }
+    return (e.attackIndex + 1) % e.def.attacks.length;
+  }
   // A pattern may name an attack twice (bonk, pin, pin), so keep the place in the pattern.
   e.phaseStep = ((e.phaseStep ?? 0) + 1) % list.length;
   return list[e.phaseStep];
@@ -1115,18 +1133,37 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
         resetEnemy(world, e);
       }
       return;
-    case 'waiting':
     case 'recover':
+      if (--e.modeTicks <= 0) {
+        e.mode = 'chase';
+        // R-CHALLENGE P2: after the gap, the second hit winds up with its own full tell.
+        if (e.followUpStage === 1) {
+          e.followUpStage = 2;
+          const target = nearestPlayer(world, e);
+          if (target) e.facing = directionTo(e.pos, target.pos);
+          startWindup(world, e);
+        }
+      }
+      return;
+    case 'waiting':
     case 'stagger':
     case 'winded':
       if (--e.modeTicks <= 0) e.mode = 'chase';
       return;
     case 'windup':
       if (--e.modeTicks <= 0) {
+        const done = currentAttack(e);
         e.mode = 'recover';
-        e.modeTicks = currentAttack(e).recoverTicks;
+        e.modeTicks = done.recoverTicks;
         resolveAttack(world, e);
         e.attackCenter = null;
+        if (done.followUp && e.mode === 'recover') {
+          // R-CHALLENGE P2: first hit of a two-part attack: wait the gap, then wind up the second.
+          e.followUpStage = 1;
+          e.modeTicks = done.followUp.gapTicks;
+          return;
+        }
+        e.followUpStage = undefined;
         e.attackIndex = nextAttackIndex(e);
       }
       return;
@@ -1137,6 +1174,20 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
   }
 }
 
+/** Start the telegraph. The danger area is fixed now, so the player can step out of it. */
+function startWindup(world: WorldState, e: EnemyState): void {
+  const a = currentAttack(e);
+  let ticks = telegraphTicks(a, world.difficulty);
+  if (e.elite && world.elites) ticks = eliteWindup(ticks, e.elite, world.difficulty, world.elites, DIFFICULTY[world.difficulty].counterWindowTicks);
+  e.mode = 'windup';
+  e.modeTicks = ticks;
+  e.windupTotal = ticks;
+  e.attackCenter = { x: e.pos.x + e.facing.x * a.reach, y: e.pos.y + e.facing.y * a.reach };
+  e.path = null;
+  e.chaseTicks = 0;
+  world.events.push({ kind: 'telegraph', enemyId: e.id, ticks });
+}
+
 function chase(world: WorldState, e: EnemyState, room: Room): void {
   const target = nearestPlayer(world, e);
   if (!target) {
@@ -1144,20 +1195,13 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
     return;
   }
   e.facing = directionTo(e.pos, target.pos);
+  // A two-part attack cut short (stagger, winded) starts over from its first hit.
+  if (e.followUpStage) e.followUpStage = undefined;
   const a = currentAttack(e);
   const dist = distance(e.pos, target.pos);
   const canAttack = attackersNow(world) < COMBAT.maxAttackersAtOnce;
   if (dist <= a.startRange && canAttack) {
-    // Start the telegraph. The danger area is fixed now, so the player can step out of it.
-    let ticks = telegraphTicks(a, world.difficulty);
-    if (e.elite && world.elites) ticks = eliteWindup(ticks, e.elite, world.difficulty, world.elites, DIFFICULTY[world.difficulty].counterWindowTicks);
-    e.mode = 'windup';
-    e.modeTicks = ticks;
-    e.windupTotal = ticks;
-    e.attackCenter = { x: e.pos.x + e.facing.x * a.reach, y: e.pos.y + e.facing.y * a.reach };
-    e.path = null;
-    e.chaseTicks = 0;
-    world.events.push({ kind: 'telegraph', enemyId: e.id, ticks });
+    startWindup(world, e);
     return;
   }
   const speed = e.def.moveSpeedTilesPerSecond / TICKS_PER_SECOND;
@@ -1444,7 +1488,9 @@ function resetEnemy(world: WorldState, e: EnemyState): void {
   e.attackCenter = null;
   e.path = null;
   e.repathIn = 0;
-  e.attackIndex = 0;
+  e.attackIndex = e.def.pattern ? e.def.pattern[0] : 0;
+  if (e.def.pattern) e.patternStep = 0;
+  e.followUpStage = undefined;
   e.shieldUp = e.def.shield !== null;
   e.shieldRegrow = 0;
   e.summonDone = false;
