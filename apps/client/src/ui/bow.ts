@@ -7,6 +7,8 @@ import type { LayeredSprite } from '../art/LayeredSprite';
 import { sfx } from '../audio/Sfx';
 import { FONT, crisp, view } from './theme';
 
+export { bowGate } from './bowGate';
+
 /**
  * A soft dimmed screen with a big "Bow" button. Calls `onBow` once when the button is tapped
  * (taps elsewhere just make the button pulse).

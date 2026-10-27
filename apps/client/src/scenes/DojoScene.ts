@@ -67,7 +67,7 @@ import { addStatic, addTinted, loadArt } from '../art/art';
 import type { LayeredSprite } from '../art/LayeredSprite';
 import { makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
-import { bowPrompt, playBow } from '../ui/bow';
+import { bowGate, bowPrompt, playBow } from '../ui/bow';
 import { Celebrations } from '../ui/Celebrations';
 import { FONT, crisp, view, DPR, hiDpi } from '../ui/theme';
 import { showGrownUpGate } from '../ui/grownUpGate';
@@ -254,25 +254,44 @@ export class DojoScene extends Phaser.Scene {
     touchPlayClock();
     this.time.addEvent({ delay: 5000, loop: true, callback: () => touchPlayClock() });
 
+    // Scenes are reused on restart, so reset the bow gate here.
+    this.bowShown = false;
+    this.bowHoursAway = null;
+    this.cardsOpen = 0;
     if (!bowIsDue()) this.offerResume();
     if (bowIsDue()) {
-      this.mode = 'arriving';
-      bowPrompt(this, 'Bow as you enter your dojo', () => {
-        this.heroDo('bow', BOW.ms);
-        playBow(
-          this,
-          this.player,
-          () => {
-            setBowDue(false);
-            this.arrive(hoursAway);
-          },
-          this.hero,
-        );
-      });
+      this.bowHoursAway = hoursAway;
+      this.tryBow();
     }
   }
 
+  /** Q-BOW-OVER-MENU: the due bow waits until no menu, panel or arrival sequence is open, then shows once. */
+  private bowHoursAway: number | null = null;
+  private bowShown = false;
+  private cardsOpen = 0;
+  private tryBow(): void {
+    if (this.bowHoursAway === null) return;
+    const gate = bowGate({ due: bowIsDue(), menuOpen: this.mode !== 'play' || this.cardsOpen > 0, shown: this.bowShown });
+    if (gate !== 'show') return;
+    this.bowShown = true;
+    const hoursAway = this.bowHoursAway;
+    this.mode = 'arriving';
+    bowPrompt(this, 'Bow as you enter your dojo', () => {
+      this.heroDo('bow', BOW.ms);
+      playBow(
+        this,
+        this.player,
+        () => {
+          setBowDue(false);
+          this.arrive(hoursAway);
+        },
+        this.hero,
+      );
+    });
+  }
+
   update(time: number, delta: number): void {
+    if (!this.bowShown && this.bowHoursAway !== null) this.tryBow();
     if (this.mode !== 'play' || this.leaving) {
       this.controls.takeInput();
       this.elapsed = 0;
@@ -369,6 +388,8 @@ export class DojoScene extends Phaser.Scene {
     const { width, height } = view(this);
     const w = Math.min(460, width - 40);
     const box = this.add.container(0, 0).setDepth(70);
+    this.cardsOpen++;
+    box.once(Phaser.GameObjects.Events.DESTROY, () => (this.cardsOpen = Math.max(0, this.cardsOpen - 1)));
     box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.6).setOrigin(0).setInteractive());
     const body = this.add
       .text(width / 2, 0, lines.join('\n\n'), { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', align: 'center', wordWrap: { width: w - 36 }, lineSpacing: 2 })
