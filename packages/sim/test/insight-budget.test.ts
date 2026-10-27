@@ -10,14 +10,14 @@ const cards = testContent().insights;
 /**
  * One row per card: the proven cap for each effect number. `max` numbers may not go above it, `min` numbers may not go below it
  * (Wind Step's "every N hits" gets weaker as N grows). Numbers not listed (Ripple Counter's radius) are not capped.
- * A card is allowed to be a bit weaker than its cap; to make one stronger, re-run `BALANCE=1 npm run balance`
- * (insight-budget.test.ts), then update this table with the new PE.
+ * A card is allowed to be a bit weaker than its cap; to make one stronger, run `BALANCE=1 npx vitest run test/balance/insight-budget`
+ * (in packages/sim), then update this table with the new PE.
  */
 type Cap = { type: Effect['type']; max?: Partial<Record<'amount' | 'seconds' | 'focusOnBreak', number>>; min?: Partial<Record<'everyHits', number>> };
 const CAPS: Record<string, Cap> = {
   'ripple-counter': { type: 'rippleCounter', max: { amount: 1.2 } },
   'iron-skin': { type: 'blockReflect', max: { amount: 1.2 } },
-  'wind-step': { type: 'comboSpeed', max: { amount: 0.3, seconds: 3 }, min: { everyHits: 7 } },
+  'wind-step': { type: 'comboSpeed', max: { amount: 0.3, seconds: 2 }, min: { everyHits: 5 } },
   'double-strike': { type: 'strikeExtraHit', max: { amount: 0.2 } },
   'quick-hands': { type: 'attackSpeed', max: { amount: 0.2 } },
   'press-the-advantage': { type: 'staggerBonus', max: { amount: 0.3 } },
@@ -29,7 +29,7 @@ const CAPS: Record<string, Cap> = {
   'steady-start': { type: 'startFocus', max: { amount: 40 } },
 };
 const PLACEHOLDER_IDS = PLACEHOLDER_CARDS.map((c) => c.id);
-const RERUN = 'Re-run `BALANCE=1 npm run balance` (test/balance/insight-budget.test.ts) and update the CAPS table with the new PE.';
+const RERUN = 'Re-run `BALANCE=1 npx vitest run test/balance/insight-budget` (in packages/sim) and update the CAPS table with the new PE.';
 
 describe('R-INSIGHT-BAL layer 1: Insight caps', () => {
   const all: InsightDef[] = [...cards, ...PLACEHOLDER_CARDS.filter((p) => !cards.some((c) => c.id === p.id))];

@@ -1,12 +1,15 @@
 /// <reference types="vite/client" />
 // R-INSIGHT-BAL layer 2: the Insight budget lines B1-B7 and B10 (and B9, printed only), measured by playing runs.
 // Slow, so not in the normal tests. Run it with:  BALANCE=1 npx vitest run test/balance/insight-budget   (in packages/sim),
-// or `npm run balance`. Every line prints a table (card or combo, bot, PE, limit) and fails by naming its line.
+// (`npm run balance` runs it with the other balance reports). Every line prints a table (card or combo, bot, PE, limit) and fails by naming its line.
 //
 // Setup: seeds 1000..1000+N-1 (see SEED_BASE in insight-sim.ts), belts 1-10 pooled, Standard, the typical model student's stats per belt, bots kid / newer / careful.
-// Seeds: singles and pairs 30 as in the spec, routes 150, pool 100 per belt, pickers 60; the PE ruler 100 (it is divided into
-// everything else, so its noise counts most). Noise is about +/-5 PE: if a sim change moves a result by more than 3 PE, re-run
-// at 60 seeds before changing any limit here or in the CAPS table of test/insight-budget.test.ts.
+// Seeds (SEEDS below): the counts the spec tables were measured with, kid 100 singles / 60 pairs / 40 ruler, newer and careful 50 / 30 / 20;
+// routes 150, pool 150 per belt, pickers 60. The runs are seeded, so the same code gives the same numbers every time. Noise against another
+// seed set is about +/-5 PE for the kid and more for newer and careful, whose PE is read from small Health and tick differences (careful
+// Ripple Counter reads 19 with a 20-seed ruler and 26 with a 100-seed ruler). The limits were set on these counts, so keep them: more
+// seeds do not make a line fairer, they just read another sample. If a sim change moves a result by more than 3 PE, re-run at 2x seeds
+// before changing any limit here or in the CAPS table of test/insight-budget.test.ts.
 //
 // Floors for skilled bots are not tested (B1 floor is the kid only). Why a card may read near PE 0 for a skilled bot:
 //  - Rally: skill-gated; it pays only at low Health, which a skilled bot rarely reaches.
@@ -23,12 +26,15 @@ declare const console: { log(...args: unknown[]): void };
 const enabled = !!(import.meta.env as Record<string, string | undefined>).BALANCE;
 const HOUR = 3_600_000;
 
-const SINGLES = 30;
-const PAIRS = 30;
+/** Seeds per belt, the counts the spec tables were measured with: the kid has the noisy win rate, so it gets the most; the ruler is the same for every line. */
+const SEEDS: Record<BotName, { single: number; pair: number; ruler: number }> = {
+  kid: { single: 100, pair: 60, ruler: 40 },
+  newer: { single: 50, pair: 30, ruler: 20 },
+  careful: { single: 50, pair: 30, ruler: 20 },
+};
 const ROUTES = 150;
-const POOL = 100;
+const POOL = 150;
 const PICKERS = 60;
-const RULER = 100;
 const FAMILIES = ['rooted', 'flowing', 'power', 'virtue'] as const;
 /** B5: the kid's pool win % per belt before the rebalance, and its mean. */
 const POOL_BEFORE = [60, 67, 67, 61, 57, 57, 47, 50, 53, 51];
@@ -50,8 +56,8 @@ describe.skipIf(!enabled)('Insight budget (R-INSIGHT-BAL layer 2)', () => {
   const cards: InsightDef[] = allCards(testContent());
   const ids = cards.map((c) => c.id);
   const rulers = {} as Record<BotName, Ruler>;
-  const ruler = (bot: BotName) => (rulers[bot] ??= buildRuler(bot, 'standard', RULER));
-  const solo = (id: string, bot: BotName) => peOf({ kind: 'held', ids: [id] }, bot, 'standard', SINGLES, ruler(bot));
+  const ruler = (bot: BotName) => (rulers[bot] ??= buildRuler(bot, 'standard', SEEDS[bot].ruler));
+  const solo = (id: string, bot: BotName) => peOf({ kind: 'held', ids: [id] }, bot, 'standard', SEEDS[bot].single, ruler(bot));
 
   it('B1 and B2: every single card', () => {
     const rows = ids.flatMap((id) =>
@@ -76,7 +82,7 @@ describe.skipIf(!enabled)('Insight budget (R-INSIGHT-BAL layer 2)', () => {
     for (let i = 0; i < ids.length; i++)
       for (let j = i + 1; j < ids.length; j++)
         for (const bot of BOT_NAMES) {
-          const v = peOf({ kind: 'held', ids: [ids[i], ids[j]] }, bot, 'standard', PAIRS, ruler(bot));
+          const v = peOf({ kind: 'held', ids: [ids[i], ids[j]] }, bot, 'standard', SEEDS[bot].pair, ruler(bot));
           rows.push({ name: pairName(ids[i], ids[j]), bot, value: v, limit: bot === 'kid' ? '20 to 50' : 'max 50', bad: v > 50 || (bot === 'kid' && v < 20) });
         }
     const fails = table(`B3 pairs (${rows.length / 3} pairs)`, HEAD, rows);
@@ -130,7 +136,7 @@ describe.skipIf(!enabled)('Insight budget (R-INSIGHT-BAL layer 2)', () => {
 
   it('B6: best-pick against worst-pick', () => {
     // A pick is scored by our own kid readings: its single-card PE, plus how it combines with the cards already held.
-    const pair = (a: string, b: string) => peOf({ kind: 'held', ids: [a, b] }, 'kid', 'standard', PAIRS, ruler('kid'));
+    const pair = (a: string, b: string) => peOf({ kind: 'held', ids: [a, b] }, 'kid', 'standard', SEEDS.kid.pair, ruler('kid'));
     const score = (held: string[], id: string) => {
       const s = solo(id, 'kid');
       if (!held.length) return s;
