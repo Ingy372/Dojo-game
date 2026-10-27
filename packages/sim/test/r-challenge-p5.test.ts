@@ -82,6 +82,8 @@ describe('R-CHALLENGE P5: the bot answers patterns', () => {
   });
 });
 
+const BALANCE_SEEDS = 100;
+
 describe.skipIf(!balance)('R-CHALLENGE P7: section 4 table with the real C1 patterns (BALANCE=1)', () => {
   it('prints win % / Health lost per fight, belts 4-10', { timeout: 3_600_000 }, () => {
     const warnings: string[] = [];
@@ -93,20 +95,20 @@ describe.skipIf(!balance)('R-CHALLENGE P7: section 4 table with the real C1 patt
         let won = 0;
         let lost = 0;
         let fights = 0;
-        for (let i = 0; i < 40; i++) {
+        for (let i = 0; i < BALANCE_SEEDS; i++) {
           const s = run(content, 1000 + i, bot, d, tier);
           if (s.won) won++;
           for (const r of s.rooms) if (r.kind !== 'rest' && r.kind !== 'shop') { lost += r.damage / student(tier).maxHealth; fights++; }
         }
-        wins.push(Math.round((won / 40) * 100));
-        cells.push(`${Math.round((won / 40) * 100)}/${((lost / Math.max(1, fights)) * 100).toFixed(1)}`);
+        wins.push(Math.round((won / BALANCE_SEEDS) * 100));
+        cells.push(`${Math.round((won / BALANCE_SEEDS) * 100)}/${((lost / Math.max(1, fights)) * 100).toFixed(1)}`);
       }
       if (d === 'challenge') warnings.push(...targetWarnings(bot[0], wins));
       lines.push(`| ${d[0].toUpperCase() + d.slice(1)} | ${bot[0]} | ${cells.join(' | ')} |`);
     }
     // Run with --silent=false to see it.
     const log = (globalThis as unknown as { console: { log(s: string): void; warn(s: string): void } }).console;
-    log.log(['Real C1 content (content/enemies), 40 seeds', ...lines].join('\n'));
+    log.log([`Real C1 content (content/enemies), ${BALANCE_SEEDS} seeds`, ...lines].join('\n'));
     for (const w of warnings) log.warn(w);
     log.log(`${warnings.length} Challenge cell(s) off the §4b L+B row by more than ${TARGET_TOLERANCE} points`);
     expect(lines.length).toBe(11);

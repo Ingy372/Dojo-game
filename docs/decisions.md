@@ -1458,3 +1458,4 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - Target = the §4b "L+B (recommended)" Challenge win % row (belts 4-10, 40 seeds), in `test/balance/challenge-targets.ts`. A cell more than 5 points off prints a `WARN` line; it does not fail the test (T1 grades at 100 seeds). Supersedes the "Samples are test-only" note in P5.
 
 - Q-SHAKE-CENTER: the shake is driven by `lockShakeOffset(t) = px * sin(2*pi*cycles*t)` from a counter tween, not a yoyo tween to +px (which only moved right). A sine is exactly symmetric and 0 at both ends; onComplete/onStop still snap x back to rest.
+- Q-P7-SEEDS: the BALANCE=1 table uses `BALANCE_SEEDS = 100` (matches T1 grading); at 40 seeds kid cells swung enough to raise false WARNs. Targets and the 5-point tolerance are unchanged. Costs ~70s only when BALANCE=1.
