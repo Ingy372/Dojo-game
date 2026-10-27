@@ -19,8 +19,8 @@
       "id": "wind-step",
       "name": "Wind Step",
       "family": "flowing",
-      "text": "Every 7 combo hits gives a 3-second burst of speed, and you swing faster too!",
-      "effect": { "type": "comboSpeed", "amount": 0.3, "everyHits": 7, "seconds": 3 }
+      "text": "Every 5 combo hits gives you a 2-second burst of speed.",
+      "effect": { "type": "comboSpeed", "amount": 0.3, "everyHits": 5, "seconds": 2 }
     },
     {
       "id": "double-strike",

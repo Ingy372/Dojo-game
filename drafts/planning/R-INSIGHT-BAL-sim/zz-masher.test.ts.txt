@@ -1,0 +1,30 @@
+import { describe, it } from 'vitest';
+import { writeFileSync, appendFileSync } from 'node:fs';
+import { testContent } from '../load-content';
+import { playRun, SKILLS } from './bot';
+const env = (globalThis as any).process.env as Record<string, string | undefined>;
+const gear = { maxHealth: 332.79, power: 45.85, guard: 33.53 };
+describe('masher', () => {
+  it('run', () => {
+    const N = Number(env.SEEDS ?? 60);
+    const combos = (env.COMBOS ?? 'masher:novice:standard').split(',');
+    const tag = env.TAG ?? 'x';
+    for (const cb of combos) {
+      const [style, skill, diff] = cb.split(':');
+      let reached = 0, won = 0, ticks = 0, hold = 0;
+      const S0 = Number(env.S0 ?? 1);
+      for (let s = S0; s < S0 + N; s++) {
+        const c = testContent();
+        if (env.OVR) { const o = JSON.parse(env.OVR); for (const i of c.insights as any[]) if (o[i.id]) i.effect = { ...i.effect, ...o[i.id] }; }
+        if (env.DROP) c.insights = (c.insights as any[]).filter((i) => !env.DROP!.split(',').includes(i.id));
+        if (env.ONLY) c.insights = (c.insights as any[]).filter((i) => env.ONLY!.split(',').includes(i.id));
+        const r = playRun(c, s, style as any, (SKILLS as any)[skill], diff as any, gear, undefined, { tier: 3 });
+        const b = r.rooms.find((x: any) => x.roomId === 'great-hearth');
+        if (!b) continue;
+        reached++; if (env.PER) appendFileSync(env.PER, JSON.stringify({ s, won: b.died ? 0 : 1 }) + '\n');
+        if (!b.died) { won++; ticks += b.ticks; hold += b.holdTicks ?? 0; }
+      }
+      appendFileSync(env.OUT ?? '/tmp/masher.jsonl', JSON.stringify({ tag, combo: cb, N, reached, won, pct: +(100 * won / Math.max(1, reached)).toFixed(1), sec: +(ticks / Math.max(1, won) / 20).toFixed(1), secHold: +((ticks + hold) / Math.max(1, won) / 20).toFixed(1) }) + '\n');
+    }
+  }, 3000000);
+});

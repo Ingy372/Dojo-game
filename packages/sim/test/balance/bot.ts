@@ -92,6 +92,10 @@ export interface RoomStats {
   holdTicks?: number;
   /** L-PREMIUM-b: Counter tips shown (only when playRun gets hint rules). */
   hints?: number;
+  /** R-INSIGHT-BAL-a P5: Health lost to landing-circle swings (Hits and Blocks), from the swing's own event damage. */
+  landingDamage?: number;
+  /** R-INSIGHT-BAL-a P5: Health lost to the room's first landing-circle swing (0 if it missed or was Countered; unset if the room had none). */
+  landingFirst?: number;
 }
 
 export interface RunStats {
@@ -123,6 +127,9 @@ export function playRoom(content: Content, run: RunState, world: WorldState, roo
   const stats: RoomStats = { roomId: room.id, kind: room.kind, ticks: 0, damage: 0, perfects: 0, blocks: 0, hits: 0, strikes: 0, dealt: 0, kos: 0, died: false, crowd: 0, peakCrowd: 0, winded: 0, grade: null };
   let crowdSum = 0;
   let crowdN = 0;
+  // Enemies whose current attack is a landing circle, read at the end of each tick (the attack index moves on inside a swing's own tick).
+  let landers = new Set<string>();
+  let firstLandingTick = -1;
   const limit = 20 * 60 * 6;
   for (let t = 0; t < limit && run.status === 'playing'; t++) {
     if (run.insightChoices) chooseInsight(run, pickInsight ? pickInsight(run, run.insightChoices) : pick(rng, run.insightChoices));
@@ -130,6 +137,14 @@ export function playRoom(content: Content, run: RunState, world: WorldState, roo
     stepWorld(world, room, { p1: input });
     onTick?.(world);
     for (const ev of world.events) {
+      if (ev.kind === 'enemySwing' && landers.has(ev.enemyId) && firstLandingTick < 0) {
+        firstLandingTick = world.tick;
+        stats.landingFirst = 0;
+      }
+      if ((ev.kind === 'hit' || ev.kind === 'block') && landers.has(ev.enemyId)) {
+        stats.landingDamage = (stats.landingDamage ?? 0) + ev.damage;
+        if (world.tick === firstLandingTick) stats.landingFirst = (stats.landingFirst ?? 0) + ev.damage;
+      }
       if (ev.kind === 'perfectCounter') stats.perfects++;
       if (ev.kind === 'block') stats.blocks++;
       if (ev.kind === 'hit') stats.hits++;
@@ -149,6 +164,7 @@ export function playRoom(content: Content, run: RunState, world: WorldState, roo
     const evs = updateRun(content, run, world);
     for (const ev of evs) if (ev.kind === 'graded') stats.grade = ev.result.grade;
     if (evs.some((e) => e.kind === 'nextRoom' || e.kind === 'runOver')) break;
+    landers = new Set(world.enemies.filter((e) => currentAttack(e).landing === true).map((e) => e.id));
   }
   stats.ticks = world.progress.ticks;
   stats.damage = world.progress.damageTaken;

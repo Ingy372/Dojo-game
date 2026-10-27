@@ -94,7 +94,7 @@ describe('R-INSIGHT-BAL-a card numbers (4a)', () => {
   it('match the proposal', () => {
     expect(card('ripple-counter').amount).toBe(1.2);
     expect(card('iron-skin').amount).toBe(1.2);
-    expect(card('wind-step')).toMatchObject({ amount: 0.3, everyHits: 7, seconds: 3 });
+    expect(card('wind-step')).toMatchObject({ amount: 0.3, everyHits: 5, seconds: 2 });
     expect(card('double-strike').amount).toBe(0.2);
     expect(card('quick-hands').amount).toBe(0.2);
     expect(card('press-the-advantage').amount).toBe(0.3);

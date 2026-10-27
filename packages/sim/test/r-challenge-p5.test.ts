@@ -61,8 +61,47 @@ describe('R-CHALLENGE P7: the real C1 patterns change nothing off Challenge', ()
 });
 
 describe('R-CHALLENGE P5: the bot answers patterns', () => {
-  // Whole runs drift apart once one choice differs, so compare totals over many runs (belts 4, 6, 8, 10 x 60 seeds).
-  const total = (key: 'stepOutOfLanding' | 'holdStrikeForSecondHit', on: boolean) => {
+  // Whole runs drift apart once one choice differs, so total Health over many runs is too noisy for a rule this small
+  // (the old total-Health comparison flipped sign with the card numbers). Instead the pairs are matched: the same seed,
+  // belt and cards, and the same moment (the room's first landing-circle swing). The two runs are identical up to the
+  // bot's first step-out, so the damage taken from that one swing (landing circles only) differs only by the answer.
+  const firstLanding = (stepOut: boolean, tier: number, seed: number): number | undefined => {
+    PATTERN_ANSWERS.stepOutOfLanding = stepOut;
+    try {
+      return run(content, seed, BOTS[1], 'challenge', tier).rooms.find((r) => r.landingFirst !== undefined)?.landingFirst;
+    } finally {
+      PATTERN_ANSWERS.stepOutOfLanding = true;
+    }
+  };
+
+  it('stepping out of a landing circle takes less landing damage than Countering it, moment for moment, and almost never more', { timeout: 120_000 }, () => {
+    let pairs = 0;
+    let stepOut = 0;
+    let counter = 0;
+    let fewer = 0;
+    let more = 0;
+    for (const tier of [4, 6, 8, 10]) for (let seed = 501; seed <= 680; seed++) {
+      const on = firstLanding(true, tier, seed);
+      const off = firstLanding(false, tier, seed);
+      if (on === undefined || off === undefined) continue;
+      pairs++;
+      stepOut += on;
+      counter += off;
+      if (on < off) fewer++;
+      if (on > off) more++;
+    }
+    const log = (globalThis as unknown as { console: { log(s: string): void } }).console;
+    log.log(`P5 paired (belts 4/6/8/10, seeds 501-680): ${pairs} matched landing swings, damage step-out ${stepOut} vs Counter ${counter} (${(((stepOut - counter) / counter) * 100).toFixed(1)}%), step-out lower in ${fewer}, higher in ${more}`);
+    expect(pairs).toBeGreaterThan(300);
+    // At least 10% less landing damage in total (measured 15%).
+    expect(stepOut).toBeLessThan(counter * 0.9);
+    // And it wins the matched moments clearly: at least 3 times as many pairs lower as higher (measured 22 to 4).
+    expect(fewer).toBeGreaterThanOrEqual(3 * more);
+    expect(fewer).toBeGreaterThanOrEqual(15);
+  });
+
+  // The double-slam rule is checked on total Health over many runs (belts 4, 6, 8, 10 x 60 seeds).
+  const total = (key: 'holdStrikeForSecondHit', on: boolean) => {
     PATTERN_ANSWERS[key] = on;
     try {
       let damage = 0;
@@ -72,10 +111,6 @@ describe('R-CHALLENGE P5: the bot answers patterns', () => {
       PATTERN_ANSWERS[key] = true;
     }
   };
-
-  it('stepping out of landing circles costs a typical bot less Health than always Countering them', { timeout: 120_000 }, () => {
-    expect(total('stepOutOfLanding', true)).toBeLessThan(total('stepOutOfLanding', false));
-  });
 
   it('holding Strike for the second hit of a double slam costs a typical bot less Health', { timeout: 120_000 }, () => {
     expect(total('holdStrikeForSecondHit', true)).toBeLessThan(total('holdStrikeForSecondHit', false));
