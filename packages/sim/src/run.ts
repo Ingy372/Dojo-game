@@ -9,7 +9,7 @@ import { modsFrom, type Effect } from './effects';
 import { chance, makeItem, rarityRank, rollRarity, type GearItem } from './loot';
 import type { Vec2 } from './math';
 import { createRng, nextFloat, nextInt, pick, pickWeighted, shuffled, type Rng } from './rng';
-import type { Room, RoomKind } from './room';
+import { baseRoomId, type Room, type RoomKind } from './room';
 import { counterHintFor, createWorld, type CounterHintRules, type PlayerSetup, type WorldState } from './world';
 import type { TwistDef } from './twist';
 import { namedForTier, type NamedSpawn } from './named';
@@ -562,6 +562,16 @@ export function floorRooms(content: Content, tier: number): Room[] {
   const open = content.rooms.filter((r) => !r.tutorial && r.minBeltTier <= tier);
   const own = open.filter((r) => r.floorSet !== null && r.minBeltTier === tier);
   return own.length > 0 ? own : open.filter((r) => r.floorSet === null);
+}
+
+/**
+ * R-B1-RAMP-2: the room a ?room= test link means at this belt tier. If the tier has its own copy of
+ * the asked-for original (white belt: `brute-and-swarm` -> `w-brute-and-swarm`), the copy, so the link
+ * shows the room that belt really gets. Any other id (a copy asked for by name, an unknown id) is kept.
+ */
+export function beltRoomId(content: Content, id: string, tier: number): string {
+  const copy = floorRooms(content, tier).find((r) => r.id !== id && baseRoomId(r.id) === id);
+  return copy ? copy.id : id;
 }
 
 function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {

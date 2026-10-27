@@ -1364,6 +1364,10 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - lesson-counter-guided's retry is now "So close! Let's keep practicing." (the guided Counter repeats after it); no lesson says 'try again'.
 - lesson-counter-guided's retry now matches the other 10: "Nice work. Let's keep practicing." (all 11 share it); no lesson says 'So close' or 'try again'.
 
+## L-PREMIUM-a2 — locked-ability hints in the Trophy Case (2026-10-26)
+- Stance hints wired as written (Content Designer will reword later). Kata cubbies fall back to the stance hint by kata order (stances[n+2], clamped); past the end of any list uses the last hint.
+- Trophy Case cubby sheet only; no read-aloud. Hint shows as its own line under "Ask Sensei about this one".
+- Hints copied to content/hints/locked-hints.json; the draft stays, and check-locked-hints.py is kept and still reads drafts/.
 ## B-TUNE-GUIDED — Guided enemy Power ×0.75 (2026-10-26)
 - From R-T3-TUNE-3 (#352). DIFFICULTY gets `enemyPowerScale`: Guided 0.75, Standard and Challenge 1.0. Enemy Health is never scaled by the setting.
 - Applies in every fight (Tower, practice room, tutorial), on top of the belt scale. Scaled Power rounds to a whole number, at least 1 (a 0-Power enemy stays 0). Disarmed weapon Power scales too.
@@ -1391,5 +1395,20 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - QA: mashing through the KO sent the player Home in 7/8 runs (first pointerdown 100–300 ms after Screen 2).
 - Screen 2 now ignores every tap (shade and Head home) for 500 ms after it appears (`ARM_MS = 500`), timed on the wall clock with the tap's own `pointer.downTime`, so a tap made inside the window but handled a frame late is still ignored.
 
+### L-PREMIUM-a2 follow-up — kata cubby hint (2026-10-26)
+- Kata cubbies now use the shared kata-cubby hint "Learn a kata in class with Sensei!" instead of the stance fallback (stances unlock by their own sign-off since R-STANCE-d2).
+- The hint is read from `cubbies.kata-cubby`, which #355 added to the draft. content/hints/locked-hints.json is re-copied from main's draft, so it stays an exact copy (no second copy of the hint), and it picks up #355's reworded stance hints.
 ## B-MAIN-TRY11 — fix red main after #355 (2026-10-26)
 - #355 added lesson-counter-guided to C-STORY-TRY's programmerHandoff (11 lessons), so q-prem-try.test.ts now expects 11 and does not count the guided Counter twice. No content change.
+
+## B-W-ROOMS-TESTS — tests for the white-belt rooms (#359, 2026-10-26)
+- White rooms have only swarmers and shields, so: the mixes test checks a white floor has at least 2 mixes using only those (belt 2 keeps the 4-mix check); Old Thumper (brute) is first met at belt 2 in the K12 and old-thumper tests (zippy-zoom and captain-clank stay at belt 1); the p-menu2 golden is re-captured, with only white, white3 and rooted runs moving (capturing without the w- rooms gives the old file exactly). No game stat changes.
+
+## B-BRIDGE-GOLDENS — golden after the bridge swarmer move (#361, 2026-10-26)
+- The p-menu2 golden is re-captured because one Narrow Bridge swarmer (white and belt rooms) moved from (17,4) to (17,3). Only the 5 runs that visit the bridge change, from the bridge room on (the white run 1 bridge room goes 224 -> 251 ticks, A -> S); the bot keeps playing on after a different fight, so later rooms in those runs differ too. Moving the swarmer back gives the old file exactly. No stat or content changes.
+- Correction (R-B1-RAMP-2): #361 changed 8 run entries in the golden, not 5: white/new and white/oldSave run 1, white3/new and white3/oldSave run 1, yellow/new and yellow/oldSave run 1, and yellow/new and yellow/oldSave run 2.
+
+## R-B1-RAMP-2 — white belt room copies stay in step with their originals (2026-10-26)
+- No new content field: a copy is found by its `w-` prefix (`baseRoomId`). Room art comes from the tiles plus the belt's art pack and the Monster Journal goes by enemy, so neither needed a change.
+- `?room=<original>` at white belt now opens the belt's own copy (`beltRoomId`, client only), so old test links keep working.
+- A pin test checks all 15 copies keep their original's layout, doors, chest, shrine and kind. The only text allowed to differ: w-brute-and-swarm's name and mix, and w-stone-garden's mix.

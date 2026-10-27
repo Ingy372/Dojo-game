@@ -1,6 +1,6 @@
 // Starting a Tower run (from the dojo's door or the training board).
 
-import { firstFloorOfTier, getsTutorialFloor, noteRunDay, runDifficulty, ownedDecorations, startRun, type EliteKind, useCalmMind, type Profile, type RunState, type TrainingState } from '@dojo/sim';
+import { beltRoomId, firstFloorOfTier, getsTutorialFloor, noteRunDay, runDifficulty, ownedDecorations, startRun, type EliteKind, useCalmMind, type Profile, type RunState, type TrainingState } from '@dojo/sim';
 import { CONTENT } from './content';
 import { ensureDifficulty } from './difficulty';
 import { homeDojo, setBowDue } from './dojo';
@@ -13,7 +13,6 @@ export function startTowerRun(profile: Profile, training: TrainingState, opts: {
   const params = testFlags();
   const seedParam = Number(params.get('seed'));
   const seed = Number.isFinite(seedParam) && seedParam > 0 ? seedParam : Math.floor(Math.random() * 2147483647) + 1;
-  const firstRoomId = params.get('room') ?? undefined;
   // For testing: ?twist=lantern-dark forces that twist in the next room that can have it.
   const twistParam = params.get('twist');
   const forcedTwist = CONTENT.twists.twists.some((t) => t.id === twistParam) ? (twistParam ?? undefined) : undefined;
@@ -29,6 +28,10 @@ export function startTowerRun(profile: Profile, training: TrainingState, opts: {
   const namedParam = params.get('named');
   const forcedNamed = CONTENT.named.monsters.some((m) => m.id === namedParam) ? (namedParam ?? undefined) : undefined;
   const tier = training.belt.tier;
+  // For testing: ?room=X starts in room X. A belt with its own copy of X gets the copy (R-B1-RAMP-2:
+  // ?room=brute-and-swarm on a white belt is w-brute-and-swarm); ?room=w-... always gives that copy.
+  const roomParam = params.get('room');
+  const firstRoomId = roomParam ? beltRoomId(CONTENT, roomParam, tier) : undefined;
   // Named monsters skip a profile's first few runs: count every real run started.
   const runsStarted = profile.runsStarted;
   // A brand-new profile's first floor is the tutorial floor (M7-P2); ?tutorial=1 shows it again for testing.
