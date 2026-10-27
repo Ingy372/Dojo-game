@@ -169,10 +169,21 @@ Challenge unlocks at the 4th belt (core-design §13), so patterns are played at 
 | Q-BOW-OVER-MENU | Dojo-Ascent Programmer | Low (Tester note on #376): the "Bow as you enter your dojo" prompt draws over the open difficulty menu at 667x320. | QA passes. | **Done (PR #381, merged Oct 27).** |
 | Q-P7-SEEDS | Dojo-Ascent Programmer | BALANCE=1 Challenge table runs 100 seeds per cell (test only). | QA passes. | **Done (PR #383, merged Oct 27).** |
 | Q-STANCE-BANNER | Dojo-Ascent Programmer | The Practice banner hides the Stance button for 2.2 s. | QA passes. | **Done (PR #384, merged Oct 27).** |
-| Q-VIRTUE-BANNER | Dojo-Ascent Programmer | Challenge "New move!" Sensei lines cover the Virtue button; every Sensei banner keeps off every action button. | QA passes. | **PR #385, waits on Tester QA.** |
+| Q-VIRTUE-BANNER | Dojo-Ascent Programmer | Challenge "New move!" Sensei lines cover the Virtue button; every Sensei banner keeps off every action button. | QA passes. | **Done (PR #385, merged Oct 27).** |
+| Q-TIP-BANNER | Dojo-Ascent Programmer | Counter tip avoids a showing Sensei banner (Tester note on #385). | QA passes. | **Done (PR #387, merged Oct 27).** |
 | Q-BETA-CUT | Jay | Which Challenge patterns ship in the Dec 15 beta? | Jay answers; recorded in decisions.md. | **Waits on Jay** (asked Oct 27, 8:30 AM). |
 | Q-DOOR-LABELS | Dojo-Ascent Programmer | Keep door labels on screen; warn on unknown `?room=`. | QA passes. | **Done (PR #366, merged Oct 27).** |
 | Q-DOOR-LABELS-2 | Dojo-Ascent Programmer | Low: label sits too near the edge for 1–2 frames when the camera starts scrolling (Tester note on #366). | QA passes. | **Done (PR #368, merged Oct 27).** |
+
+## 0a3. Insight card balance R-INSIGHT-BAL-a to e (from `drafts/planning/R-INSIGHT-BAL.md`, PR #386, merged Oct 27)
+Card spread: 10 cards held all run, 4 on the pick screen. Double Strike set at 0.2 (Manager call). **Placeholder:** new Virtue cards (Calm Breath, Steady Start) come after the beta.
+| ID | Owner | What | Done when | Waits on |
+|---|---|---|---|---|
+| R-INSIGHT-BAL-a | Dojo-Ascent Programmer | Number changes from plan 4a in `content/insights/insights.json`, rule tweaks A, B, C, and update `r-bal-14b-charms.test.ts`. | `npm test` green; plan 4b and 4d tables reproduce within +/-3 PE / +/-5 win points. | **In progress (assigned Oct 27, 5:40 PM).** |
+| R-INSIGHT-BAL-b | Dojo-Ascent Programmer | Balance test layers 1 and 2 from plan section 7 (incl. B10 route-spread check), with a proper test-only seam. | Layer 1 in normal suite; layer 2 passes under `BALANCE=1`; a deliberate bad number fails the right line. | R-INSIGHT-BAL-a |
+| R-INSIGHT-BAL-c | Dojo-Ascent Content Designer | Card text for the changed cards (beta part). After the beta: Calm Breath and Steady Start text and icon brief, Calm Mind/Bow overlap check. | Texts match 4a. | **Beta part done (PR #388, merged Oct 27).** Virtue part after beta. |
+| R-INSIGHT-BAL-d | Dojo-Ascent Game Logic/systems Tester | Re-run the whole report on the real build plus 150-seed kid route run, and 3+3+3 single-route human playtests. | B1-B10 table passes; the three routes clear about equally often. | R-INSIGHT-BAL-a, R-INSIGHT-BAL-b |
+| R-INSIGHT-BAL-e | Dojo-Ascent Programmer | Layer 3 (kata power stacking) and activated-power rule for the sim bot. | Layer 3 runs once per power from Jay; section 7 budget lines pass or the failing power is named. | Jay's kata powers; R-INSIGHT-BAL-b |
 
 ## 0b5. Jay's renames and art calls (Oct 25 evening)
 | ID | Owner | What | Done when | Waits on |
