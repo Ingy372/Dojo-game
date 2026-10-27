@@ -12,8 +12,8 @@
       "id": "wind-step",
       "name": "Wind Step",
       "family": "flowing",
-      "text": "Every 7 combo hits gives a 3-second burst of speed, and you swing faster too!",
-      "effect": { "type": "comboSpeed", "amount": 0.3, "everyHits": 7, "seconds": 3 }
+      "text": "Every 5 combo hits gives you a 2-second burst of speed.",
+      "effect": { "type": "comboSpeed", "amount": 0.3, "everyHits": 5, "seconds": 2 }
     },
     {
       "id": "quick-hands",
@@ -26,7 +26,7 @@
       "id": "press-the-advantage",
       "name": "Press the Advantage",
       "family": "power",
-      "text": "Enemies that are dizzy, winded or just swung take 30% more damage.",
+      "text": "Hit dizzy or winded enemies 30% harder.",
       "effect": { "type": "staggerBonus", "amount": 0.3 }
     },
     {
@@ -40,7 +40,7 @@
       "id": "rally",
       "name": "Rally",
       "family": "virtue",
-      "text": "Hang in there! Focus fills 75% faster when your health is below half.",
+      "text": "Below half health? Focus fills 75% faster!",
       "effect": { "type": "lowHealthFocus", "amount": 0.75, "below": 0.5 }
     }
   ]
