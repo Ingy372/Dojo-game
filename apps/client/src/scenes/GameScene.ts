@@ -117,6 +117,7 @@ import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
 import { clampDoorLabels } from '../ui/doorLabel';
+import { VISIBLE_ROWS, cameraBounds } from '../game/cameraView';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
@@ -134,8 +135,6 @@ const ROAR_GAP_PX = 8;
 const BOSS_BAR_Y = 16;
 /** The bottom of the health and Focus bars (screen px). */
 const HUD_BOTTOM = 56;
-/** How many tiles tall the view is, whatever the phone's size. */
-const VISIBLE_ROWS = 6.75;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 /** Never run more than this many ticks in one frame (e.g. after a long pause). */
 const MAX_TICKS_PER_FRAME = 10;
@@ -1146,14 +1145,8 @@ export class GameScene extends Phaser.Scene {
     cam.setZoom(zoom * DPR);
     // Camera limits: a strip above the top wall keeps doors clear of the health bars,
     // and rooms smaller than the screen sit in the middle.
-    const viewW = width / zoom;
-    const viewH = height / zoom;
-    const roomW = this.room.width * TILE;
-    const top = -TILE * 1.1;
-    const roomH = this.room.height * TILE - top;
-    const bw = Math.max(roomW, viewW);
-    const bh = Math.max(roomH, viewH);
-    cam.setBounds((roomW - bw) / 2, top - (bh - roomH) / 2, bw, bh);
+    const b = cameraBounds(this.room.width, this.room.height, width / zoom, height / zoom, TILE);
+    cam.setBounds(b.x, b.y, b.width, b.height);
     this.uiCamera.setSize(width * DPR, height * DPR);
     this.controls.layout();
     this.buttons.layout();
