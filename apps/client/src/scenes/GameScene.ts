@@ -116,6 +116,7 @@ import { ActionButtons } from '../input/ActionButtons';
 import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
+import { DOOR_LABEL_SIDE_PX, clampLabelX } from '../ui/doorLabel';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
@@ -2107,6 +2108,9 @@ export class GameScene extends Phaser.Scene {
       const cam = this.cameras.main;
       d.label.setY(Math.max((d.at.y + 0.55) * TILE, cam.worldView.y + DOOR_LABEL_TOP_PX / (cam.zoom / DPR)));
       this.keepLabelOffBoss(d);
+      // Q-DOOR-LABELS: a door by a side wall keeps its whole label on screen (after the boss slide).
+      const sideMargin = DOOR_LABEL_SIDE_PX / (cam.zoom / DPR);
+      d.label.setX(clampLabelX(d.label.x, d.label.displayWidth, cam.worldView.x, cam.worldView.right, sideMargin));
     }
 
     // The chest appears once the room is clear: a glinting chest, then (once opened)

@@ -940,4 +940,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - B-W-ROOMS-TESTS: #359 tests fit the white rooms (mixes, K12, old-thumper at belt 2, golden re-captured for white runs only).
 - B-BRIDGE-GOLDENS: p-menu2 golden re-captured for the #361 bridge swarmer move (revert proof passes).
 - R-B1-RAMP-2: pin test for the 15 white room copies, ?room= link maps to the white copy, background shots match the originals; #361 note corrected to 8 run entries.
+- Q-DOOR-LABELS: side door labels clamped 8 px inside the view, unknown ?room= console warning; 8 tests; shots 60 PASS, 0 FAIL at 3 sizes, RM on/off (gauntlet CHALLENGE label moved from -47 px to 8 px at 667x375).
 - R-CHALLENGE P1: Challenge wind-ups never under 10 ticks (jab and dart 9 -> 10); golden moves only in its rooted Challenge row; next Q-DOOR-LABELS, then P6.
