@@ -20,6 +20,10 @@ for (const n of NEWIDS) FAMILY[n.id] = n.family;
 const IDS = Object.keys(FAMILY);
 
 function picker(spec: string, bot: string): ((run: RunState, c: string[]) => string) | null {
+  if (spec.startsWith('lean:')) {
+    const mine = spec.slice(5).split('+');
+    return (_r, c) => c.find((x) => mine.includes(x)) ?? c[0];
+  }
   if (spec.startsWith('rank:')) {
     const order = spec.slice(5).split('>');
     return (_r, c) => [...c].sort((a, b) => order.indexOf(a) - order.indexOf(b))[0];
@@ -43,7 +47,9 @@ function picker(spec: string, bot: string): ((run: RunState, c: string[]) => str
   return null;
 }
 
-function runOne(cfg: string, botName: string, diff: Difficulty, tier: number, seed: number) {
+function runOne(cfg0: string, botName: string, diff: Difficulty, tier: number, seed: number) {
+  const p9 = cfg0.startsWith('p9:');
+  const cfg = p9 ? cfg0.slice(3) : cfg0;
   const { style, skill } = BOTS[botName];
   const a = ARTISTS.typical[tier - 1];
   const base = { maxHealth: a.health, power: a.power, guard: a.guard };
@@ -51,6 +57,7 @@ function runOne(cfg: string, botName: string, diff: Difficulty, tier: number, se
   if (env.OVR) { const o = JSON.parse(env.OVR) as Record<string, Record<string, number>>; for (const i of c.insights) if (o[i.id]) i.effect = { ...i.effect, ...o[i.id] }; }
   const newCards = env.NEW ? (JSON.parse(env.NEW) as typeof c.insights) : [];
   c.insights.push(...newCards);
+  if (p9) c.insights = c.insights.filter((i) => !newCards.some((n) => n.id === i.id));
   let grant: string[] = [];
   HOOKS.pick = null;
   if (cfg === 'pool9') c.insights = c.insights.filter((i) => !newCards.some((n) => n.id === i.id));

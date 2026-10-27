@@ -1,15 +1,28 @@
 # R-INSIGHT-BAL: Balance the between-room Insight cards
 
-Status: proposal for Jay, the Programmer, the Content Designer and the Tester. No game code, content or work board changed. Sim code stays local; a reference copy is in `R-INSIGHT-BAL-sim/` (section 9).
+Status: proposal for Jay, the Programmer, the Content Designer and the Tester (round 4, updated after the Manager's review of PR #386). No game code, content or work board changed. Sim code stays local; a reference copy is in `R-INSIGHT-BAL-sim/` (section 10).
 Labels: **[MEASURED]** from the sim, **[CODE]** read from main, **[PROPOSED]** my numbers, **[GUESS]** not measured.
 
 ## Read this first
 
 - **The ask:** no Insight family or route should be much stronger than another. Real training stays the main source of power. Nothing here costs money or adds pressure.
-- **What was wrong [MEASURED]:** a kid-bot run with one card held all run is worth **35 Power-points (PE) for Ripple Counter, 33 Double Strike, 31 Quick Hands, 28 Rally**, but **9 for Iron Skin, 5 for Press the Advantage, 2 for Wind Step**. The Power family has no strong card, so the Power route is the weakest. Virtue has only 1 card (Rally).
-- **What I propose [PROPOSED]:** 6 number changes in `content/insights/insights.json` and 2 small rule tweaks (Press the Advantage and Wind Step) so those two cards stop being near-zero. Re-sim: every card lands in **PE 13–22** (target band 12–26), no pair is above PE 50 on any bot, the random pool is as hard as before (**kid Standard 59% → 58%** (57.5) on the 9 old cards, 120 seeds), and the best-vs-worst card picking gap for the kid bot falls from **48 points to 20**.
-- **Virtue:** two new data-only cards (Calm Breath, Steady Start) measure inside the band. They are a **proposal** with a scope risk for the Dec 15 beta and the April 2027 launch (section 5). My advice: do the number changes before the beta, and decide on the new cards after the beta unless the art is cheap.
-- **New fact (after the beta): one kata power in the run.** Each signed-off kata unlocks one power (a passive or a single activated one), and the player brings exactly one into the tower. A white belt only has Basic Form 1; an orange belt picks from 3. Jay will send the powers, so **I did not pick or tune any**. The budgets below keep a reserve for one kata power stacking with the cards (section 6, test in section 7).
+- **Decisions already made by the Manager (recorded):** (1) the Virtue cards come after the beta, as a placeholder until Jay says otherwise; (2) Press the Advantage and Wind Step may change what they do; (4) Double Strike halved (0.6 to 0.3) and Rally x1.75 are approved; (5) the "20% faster" Quick Hands text is approved; (6) the PE 12 kata reserve stays.
+- **What was wrong [MEASURED]:** one card held all run was worth 35 PE (Ripple Counter) down to 2 PE (Wind Step), and the Power route won 10% of kid runs against 53% for Flowing.
+- **Route result, kid, Standard, 150 seeds [MEASURED], Heavy Hands untouched at 0.2:**
+
+| Measure | Rooted | Flowing | Power | Virtue (placeholder) | Spread |
+|---|---|---|---|---|---|
+| Before (main), all family cards held all run | 21% | 53% | 10% | n/a (1 card) | 43 |
+| Round 3 (this PR before today), held (100 seeds) | 23% | 59% | 31% | 52% | 36 |
+| **Now, held all run** | **28%** | **38%** | **32%** | **34%** | **10** |
+| Round 3, real pick screen (lean picker) | 52% | 55% | 53% | 61% | 9 |
+| **Now, real pick screen (lean picker)** | **50%** | **46%** | **47%** | **48%** | **4** |
+
+  The "Power 40% vs Flowing 59%" figure quoted earlier mixed rounds: 40% was the round-2 Power route with Heavy Hands 0.25. The round-3 figures in the old 4d table were Power 23% vs Flowing 56% at 30 seeds; at 100 seeds the same setup reads 31% vs 59%.
+- **How the gap closed (all in-route levers):** Flowing comes down (Wind Step lighter and rarer, Double Strike 0.2); Power goes up through Shield Breaker (new small rule: breaking a shield gives 7 Focus) and the Press the Advantage widening already in round 3; Rooted goes up a little (Iron Skin 1.2); Virtue placeholders go down (Calm Breath 0.15, Steady Start 40).
+- **Caps [MEASURED]:** all 55 pairs under PE 50 on every bot (max kid 43.2, newer 46.5, careful 36.9); kata ceilings 38 / 62 / 67 hold (max 36.1 / 60.0 / 49.5); every card PE 15.4-24.4 for the kid (two cards, Ripple Counter 24.2 and Quick Hands 24.4, sit 1 over the "about 23" line, inside the +/-5 noise); the 9-card pool is 56% (was 59%); Guided pool 96%, Challenge pool 32% (was 96 and 30).
+- **Open items:** (a) held-route spread is 10 only with Double Strike 0.2, a deeper cut than the approved 0.3; with 0.25 it measured 12 and at 0.3 I expect about the same or a little more (not measured). (b) The 11-card pool (with the Virtue placeholders) reads 45%, under the 45-70% band at belts 5-8; stronger placeholders fix that but push the Virtue route above the others (section 4e). Both are in section 8.
+- **New fact (after the beta): one kata power in the run.** Each signed-off kata unlocks one power, and the player brings exactly one into the tower. A white belt only has Basic Form 1; an orange belt picks from 3. Jay will send the powers, so **I did not pick or tune any**. The budgets keep a reserve for one kata power (section 6, test in section 7).
 
 ## 1. Method
 
@@ -25,6 +38,7 @@ Labels: **[MEASURED]** from the sim, **[CODE]** read from main, **[PROPOSED]** m
 - **Careful and newer win 100% almost everywhere.** Win rate cannot separate cards for them, so I used **health lost per fight and ticks per fight** (and rooms cleared where it varies). The kid bot is the only one whose win rate moves, so it carries the win-rate checks.
 - **Power-Equivalent (PE), the ruler [MEASURED]:** I ran synthetic cards of "+10 / 20 / 30 / 40 / 60% Power" on every bot and setting. A card's **PE = the mean of three readings, each looked up on that ruler: rooms cleared, health lost per fight, ticks per fight.** Heavy Hands (+20% Power) is PE 20 by definition. Noise is about **±5 PE** (30–40 seeds × 10 belts). PE tops out at 60 (the ruler's last point); I also ran +80/100/150%: the skilled bots barely move past 60 (newer ticks per fight go 206 → 185 from +60% to +150%, health lost stays flat), so a skilled PE near 60 means "at the ceiling".
 - **"Held" vs "offered":** the PE grid gives the card from the first room (held all run) to measure its size cleanly. The "offered alone" and pool runs use the real pick screen.
+- **Two route measures (new):** (a) **held:** the family's cards are given from room 1 and kept all run (the Manager's measure, an upper bound); (b) **lean picker:** the real pick screen, the bot takes a card of its target family whenever one is offered, otherwise a random card. (b) is fairer to Rooted, which has only 2 cards. Route runs use 150 seeds (kid) because 30-seed route win rates move +/-8 points.
 - **Extra bots:** a **best-pick bot** (greedy: picks the card with the best solo + pair PE for the cards it already holds), a **worst-pick bot** (the reverse) and the random pool (the real game, bots pick randomly).
 
 ## 2. Report (before: main today)
@@ -87,6 +101,7 @@ Rule: **real training stays the main source of power.** All Insights together ar
 | B7 | **Neighbour jump** | no card is more than 2x another card's PE (floor card to top card) | kid, Standard |
 | B8 | **Kata-power reserve** | **PE 12** held back (see section 6). Cards + one kata power must stay under **B1–B3 + 12** | all bots |
 | B9 | Guided and Challenge | informational: single card PE ≤ 32 for the kid | kid |
+| B10 | **Route spread (new)** | kid, Standard, 150 seeds, all family cards held from room 1: highest minus lowest route win rate **about 10 points or less** (noise +/-4, so the test fails above 14). On the real pick screen (lean picker) the spread must also be 10 or less. Heavy Hands stays at 0.2 | kid, Standard |
 
 **Family budget:** a family has no budget of its own beyond B1 and B3 for its cards. B4 keeps the families level against each other. Rooted (2 cards) is judged per card, so it is not punished for having only two.
 
@@ -98,134 +113,137 @@ Rule: **real training stays the main source of power.** All Insights together ar
 - **Calm Breath, Steady Start:** Focus cards; skilled bots read 5–11.
 - A card that falls under 12 on the kid is a FAIL; the only way out is a change to the card, not a waiver.
 
-## 4. Proposed changes and re-sim
+## 4. Proposed changes and re-sim (round 4)
 
 ### 4a. The changes [PROPOSED]
 
-| Card | Before | After | Card text after | Why |
+Numbers in bold are new this round. Heavy Hands is unchanged at 0.2.
+
+| Card | Before (main) | After | Card text after | Why |
 |---|---|---|---|---|
 | Ripple Counter | `amount` 1.5 | **1.2** | unchanged | top card for the kid (PE 35) |
-| Double Strike | `amount` 0.6 | **0.3** | unchanged | second top card, and the strongest Rally partner (PE 33) |
-| Quick Hands | `attackSpeed` 0.25 | **0.2** | "Your basic attacks are 20% faster." | PE 31. Note: the 12-tick attack rounds, so 0.15 and 0.2 are the same speed. 0.2 is the smallest value that changes anything |
-| Rally | `amount` 1 (×2) | **0.75 (×1.75)** | "Focus fills 75% faster when your health is below half." | PE 28 to 22 |
-| Iron Skin | `blockReflect` 0.5 | **1.0** | "Blocks bounce the whole hit back at the attacker." | PE 9, kid-leaning |
-| Wind Step | 0.4 burst, every 10 hits, 3 s | **0.4 burst, every 5 hits, 4 s** + rule tweak A | "Every 5 combo hits gives you a 4-second burst of speed." | PE 2; number changes alone could not lift it |
-| Press the Advantage | `staggerBonus` 0.3 | 0.3 + rule tweak B | "Staggered, winded or recovering enemies take 30% more damage." | PE 5; stagger is rare (only after a Perfect Counter, 20 ticks) |
-| Shield Breaker, Heavy Hands | unchanged | unchanged | unchanged | already inside the band |
-| **Calm Breath** (new, Virtue) | n/a | `focusGain` 0.3 | "Focus fills 30% faster." | proposal, section 5 |
-| **Steady Start** (new, Virtue) | n/a | `startFocus` 70 | "Start each fight with 2 Strikes ready." | proposal, section 5 |
+| Iron Skin | `blockReflect` 0.5 | **1.2** (round 3: 1.0) | "Blocks bounce the hit back at the attacker, and then some." | lifts the Rooted route (28% held); kid-leaning card (PE 0-1 for skilled bots) |
+| Wind Step | 0.4 burst, every 10 hits, 3 s | **0.3 burst, every 7 hits, 3 s** + rule tweak A (round 3: 0.4 / 5 / 4 s) | "Every 7 combo hits gives you a 3-second burst of speed." | with tweak A it is a real card; the lighter number brings the Flowing route down |
+| Double Strike | `amount` 0.6 | **0.2** (approved: 0.3) | unchanged | Flowing route; needs the Manager's OK because it is below the approved 0.3 (section 8) |
+| Quick Hands | `attackSpeed` 0.25 | 0.2 (approved) | "Your basic attacks are 20% faster." | the 12-tick attack rounds, so 0.15 and 0.2 are the same speed (re-checked: identical results) |
+| Rally | `amount` 1 (x2) | 0.75 (x1.75, approved) | "Focus fills 75% faster when your health is below half." | PE 28 to 23 |
+| Press the Advantage | `staggerBonus` 0.3 | 0.3 + rule tweak B | "Staggered, winded or recovering enemies take 30% more damage." | PE 5 to 18 |
+| **Shield Breaker** | no number | **+ rule tweak C: 7 Focus when a hit breaks a shield** | "Any hit breaks shields, and breaking one gives you a little Focus." | PE 14 to 18 and lifts the Power route without touching Heavy Hands |
+| Heavy Hands | unchanged | unchanged (0.2) | unchanged | |
+| **Calm Breath** (placeholder, Virtue, after the beta) | n/a | `focusGain` **0.15** | "Focus fills 15% faster." | route balance (round 3: 0.3) |
+| **Steady Start** (placeholder, Virtue, after the beta) | n/a | `startFocus` **40** | "Start each fight with a Strike ready." (a Strike costs 30 Focus [CODE]) | route balance (round 3: 70) |
 
-**Rule tweaks (code, small) for the Programmer.** Both were measured locally with env switches; the exact lines are in `R-INSIGHT-BAL-sim/experiment-world.patch`.
-- **A. Wind Step:** while the speed burst runs, basic attacks also get half of the burst's bonus (`world.ts`, the attack-speed line around 821).
-- **B. Press the Advantage:** the bonus also applies while the enemy is winded or recovering, not only staggered (`world.ts`, `landHit`, around 949).
+**Rule tweaks (code, small) for the Programmer.** All three were measured locally behind env switches; the exact lines are in `R-INSIGHT-BAL-sim/experiment-world.patch`.
+- **A. Wind Step:** while the speed burst runs, basic attacks also get half of the burst's bonus (`world.ts`, attack-speed line).
+- **B. Press the Advantage:** the bonus also applies while the enemy is winded or recovering, not only staggered (`landHit`).
+- **C. Shield Breaker (new):** when a hit lands on a shielded enemy and the player has Shield Breaker, add 7 Focus (`landHit`, switch `SB_FOCUS=7`). Two other levers, stagger after the break and bonus damage on shielded enemies, are in the patch but not used.
 
-I ran three rounds. Round 1 had Double Strike 0.35; round 2 added Heavy Hands 0.25; round 3 (final) is the table above. Heavy Hands 0.25 lifts the Power route (kid wins 23% to 40% on the Power route) but pushes **Ripple Counter + Heavy Hands to PE 56 for the newer bot**, over B3, so I kept Heavy Hands at 0.2. Double Strike 0.35 (round 1) was cut to 0.3 in rounds 2 and 3 together with the Virtue numbers; I did not test 0.3 on its own.
+**What I tried for the routes and why this setup [MEASURED, kid, Standard, 120-200 seeds, held routes].**
+- Power route: Press 0.3 alone read 31%; Press 0.5 (no Shield Breaker change) read 38%; Press 0.8 read 53%; Shield Breaker Focus 10-15 read 44-47% (too high once Flowing comes down); Focus 5-7 read 32-34%, and Focus 10-15 puts the Shield Breaker card at PE 24, over the line. With 7 Focus the Shield Breaker card is PE 17.7 (before 14).
+- Flowing route: with Wind Step 0.4 / every 5 / 4 s but no tweak A the route read 29% (Wind Step alone PE 3, under the floor), so tweak A is what makes it a card; Wind Step 0.3 / every 7 / 3 s with Double Strike 0.2 read 38%; Double Strike 0.25 read 40%.
+- Rooted route: has only 2 cards and saturates near 28% held (Ripple 1.2-1.3 and Iron Skin 1.15-1.25 all read 24-28%); Iron Skin 1.5 pushes the card past PE 30. The real pick screen is the fairer measure for Rooted (50% there).
+- Virtue placeholders: Calm Breath 0.3 + Steady Start 70 read 52% held; 0.3 + 40 read 47%; 0.25 + 50 read 48%; 0.15 + 40 reads 34%.
+- Heavy Hands 0.25 was rejected in round 2 (Ripple + Heavy Hands reached PE 56 for the newer bot) and is not used.
 
-### 4b. Per card, after, held all run, Standard, PE (win % for the kid) [MEASURED, 30 seeds × 10 belts]
+### 4b. Per card, after, held all run, Standard, PE (win % for the kid) [MEASURED, kid 100 seeds, newer and careful 50 seeds, belts 1-10]
 
-| Card | kid | newer | careful | In band 12–26? |
+| Card | kid | newer | careful | In band? |
 |---|---|---|---|---|
-| Rally | 22.4 (19%) | 0.0 | 0.2 | PASS |
-| Heavy Hands | 21.3 (16%) | 18.0 | 20.3 | PASS |
-| Double Strike | 19.6 (13%) | 17.7 | 18.2 | PASS |
-| Quick Hands | 19.5 (15%) | 2.4 | 6.4 | PASS |
-| Steady Start (new) | 19.4 (8%) | 8.5 | 10.7 | PASS |
-| Ripple Counter | 18.0 (13%) | 21.1 | 20.4 | PASS |
-| Calm Breath (new) | 17.2 (12%) | 9.0 | 4.8 | PASS |
-| Iron Skin | 16.8 (12%) | 1.2 | 0.3 | PASS |
-| Wind Step | 15.3 (14%) | 5.2 | 3.0 | PASS |
-| Press the Advantage | 14.7 (10%) | 11.0 | 22.2 | PASS |
-| Shield Breaker | 12.9 (7%) | 1.8 | 4.1 | PASS (just over 12) |
+| Quick Hands | 24.4 (13%) | 1.1 | 2.6 | PASS (1 over 23, inside noise) |
+| Ripple Counter | 24.2 (14%) | 16.7 | 18.9 | PASS (1 over 23, inside noise) |
+| Iron Skin | 23.2 (14%) | 0.4 | 1.0 | PASS |
+| Rally | 22.7 (17%) | 0.0 | 0.0 | PASS |
+| Heavy Hands | 20.9 (12%) | 16.1 | 16.0 | PASS |
+| Wind Step | 18.3 (12%) | 1.9 | 2.5 | PASS |
+| Shield Breaker | 17.7 (9%) | 3.0 | 4.0 | PASS |
+| Press the Advantage | 17.6 (10%) | 10.6 | 17.6 | PASS |
+| Steady Start (placeholder) | 17.2 (9%) | 4.5 | 5.7 | PASS |
+| Double Strike | 15.9 (10%) | 12.7 | 15.6 | PASS |
+| Calm Breath (placeholder) | 15.4 (9%) | 7.3 | 8.6 | PASS |
 
-- **Kid range 12.9–22.4: biggest ratio 1.7x. B7 PASS.** Before it was 35 to 2 (17x).
-- **Skilled cap B2:** highest is 22.2 (careful, Press). PASS.
-- **Offered alone (the real pick screen), kid, Standard, belts 2/4/6/8/10, 30 seeds:** before 3–30%, after **5–18%** (Ripple 9, Iron Skin 8, Wind Step 10, Double 5, Quick 11, Press 11, Shield Breaker 7, Heavy 7, Rally 18, Calm Breath 9, Steady Start 8).
+- **Kid range 15.4-24.4: biggest ratio 1.6x. B7 PASS.** Before it was 35 to 2 (17x). No card under the PE 12 floor on the kid.
+- **Skilled cap B2:** highest is 18.9 (careful, Ripple Counter). PASS.
 
-### 4c. Per card, Guided and Challenge, after, PE (kid / newer / careful) [MEASURED, informational]
+### 4c. Per card, Guided and Challenge, after, PE (kid / newer / careful) [MEASURED, informational, 60 / 30 / 30 seeds]
 
 | Card | Guided | Challenge |
 |---|---|---|
-| Ripple Counter | 29.5 / 6.6 / 38.5 | 24.4 / 17.4 / 26.6 |
-| Iron Skin | 7.7 / 0.4 / 0.6 | 28.0 / 5.5 / 8.1 |
-| Wind Step | 9.0 / 22.5 / 7.3 | 25.6 / 11.2 / 13.1 |
-| Double Strike | 22.2 / 30.7 / 11.7 | 23.4 / 23.3 / 29.1 |
-| Quick Hands | 26.1 / 20.8 / 5.3 | 28.5 / 20.3 / 11.2 |
-| Press the Advantage | 9.7 / 30.7 / 10.5 | 18.3 / 18.9 / 14.0 |
-| Shield Breaker | 6.6 / 19.4 / 3.8 | 18.0 / 4.9 / 8.4 |
-| Heavy Hands | 20.4 / 30.6 / 10.6 | 21.1 / 23.7 / 14.8 |
-| Rally | 20.0 / 4.6 / 0.6 | 27.1 / 0.5 / 0.0 |
-| Calm Breath | 21.1 / 25.7 / 37.4 | 16.2 / 20.0 / 10.2 |
-| Steady Start | 17.0 / 20.9 / 0.0 | 28.1 / 25.2 / 27.2 |
+| Ripple Counter | 29.1 / 6.6 / 38.5 | 24.0 / 17.4 / 26.6 |
+| Iron Skin | 5.6 / 0.7 / 0.6 | 31.8 / 5.3 / 8.2 |
+| Wind Step | 7.0 / 2.5 / 2.9 | 18.6 / 15.0 / 10.1 |
+| Double Strike | 12.7 / 7.4 / 8.4 | 20.8 / 17.6 / 26.5 |
+| Quick Hands | 22.4 / 20.8 / 5.3 | 30.1 / 20.3 / 11.2 |
+| Press the Advantage | 10.0 / 30.7 / 10.5 | 17.4 / 18.9 / 14.0 |
+| Shield Breaker | 9.0 / 17.9 / 3.2 | 25.7 / 6.6 / 9.8 |
+| Heavy Hands | 16.5 / 30.6 / 10.6 | 21.4 / 23.7 / 14.8 |
+| Rally | 17.8 / 4.6 / 0.6 | 27.7 / 0.5 / 0.0 |
+| Calm Breath | 8.0 / 20.1 / 0.8 | 23.5 / 13.0 / 12.5 |
+| Steady Start | 10.8 / 20.8 / 31.8 | 22.5 / 7.9 / 11.5 |
 
-- **B9 PASS for the kid:** highest 29.5 on Guided and 28.5 on Challenge, both under 32.
-- **Flag:** the careful bot on Guided reads 38.5 (Ripple) and 37.4 (Calm Breath). It loses about 1% Health per fight there, so the reading is mostly noise; Guided is 100% wins for the skilled bots. I did not use it to tune.
-- On Guided the kid pool wins about 95% with or without changes; cards matter little there by design.
+- **B9 PASS for the kid:** highest 29.1 on Guided and 31.8 on Challenge (Iron Skin, 0.2 under the 32 line; Challenge belts 1-3 are locked and informational).
+- **Flag:** careful on Guided reads 38.5 (Ripple) and 31.8 (Steady Start) with about 0.2% Health lost per fight; mostly noise, Guided is 100% wins for the skilled bots. Not used to tune.
+- **Guided and Challenge routes, kid wins (held):** Guided Rooted 77 / Flowing 86 / Power 86 / Virtue 85; Challenge Rooted 16 / Flowing 32 / Power 28 / Virtue 26. Rooted is lowest there too; these tiers are informational.
 
-### 4d. Pairs and routes, after, Standard [MEASURED]
+### 4d. Pairs and routes, after, Standard [MEASURED, pairs: kid 60, newer and careful 30 seeds; routes: 150 / 60 / 60]
 
-| Check | Before | After | Target | Result |
+| Check | Before (main) | After | Target | Result |
 |---|---|---|---|---|
-| Pairs over PE 45, kid | 6 of 36 | **0 of 55** (max 43.5, Wind Step + Quick Hands) | none over 50 | PASS |
-| Highest pair, newer | 57.5 | **49.3** (Double Strike + Heavy Hands) | ≤ 50 | PASS, thin margin |
-| Highest pair, careful | 59.5 | **42.2** | ≤ 50 | PASS |
-| Lowest pair, kid | 3 (Wind Step + Press) | **30** (Iron Skin + Calm Breath) | none under 20 on the kid | PASS |
-| Pair mean, kid | 33.1 | 35.3 | n/a | n/a |
+| Pairs over PE 45, kid | 6 of 36 | **0 of 55** (max 43.2, Ripple + Heavy Hands) | none over 50 | PASS |
+| Highest pair, newer | 57.5 | **46.5** (Double Strike + Heavy Hands) | at most 50 | PASS |
+| Highest pair, careful | 59.5 | **36.9** (Ripple + Heavy Hands) | at most 50 | PASS |
+| Lowest pair, kid | 3 | **22.0** (Double Strike + Steady Start) | none under 20 | PASS |
+| Pair mean, kid | 33.1 | 33.1 | n/a | n/a |
 
 | Route (all cards held) | kid PE (win %) | newer PE | careful PE | kid PE per card |
 |---|---|---|---|---|
-| Rooted (2 cards) | 36.1 (22%) | 21.9 | 20.5 | 18.0 |
-| Flowing (3) | 50.7 (56%) | 38.0 | 27.5 | 16.9 |
-| Power (3) | 39.2 (**23%**) | 27.3 | 26.9 | 13.1 |
-| Virtue (3, with the new cards) | 48.2 (52%) | 15.2 | 21.1 | 16.1 |
+| Rooted (2 cards) | 39 (28%) | 17 | 21 | 19.5 |
+| Flowing (3) | 45 (38%) | 26 | 19 | 15.0 |
+| Power (3) | 45 (32%) | 27 | 27 | 15.0 |
+| Virtue placeholder (3) | 41 (34%) | 10 | 10 | 13.7 |
 
-- **B4:** per-card mean 16.0, so ±25% is 12–20. All four pass; **Power is still lowest (13.1, -18%)** and Flowing is still the best route in kid wins (56% vs 23% on the Power route). Before: Power 10 per card against 16 for Flowing.
-- On Guided and Challenge (kid wins): Flowing route 96% / 40%, Power route 80% / 25%, Virtue route 95% / 39%, Rooted 76% / 15%. Same order, smaller gaps than before.
-- **Remaining gap, honestly:** the Power route is still about half the kid wins of Flowing on Standard (23% vs 56%). Closing it with numbers only breaks B3 (Heavy Hands 0.25). Shield Breaker has no number to turn. This is a taste call (section 8, call 3).
+| Route, real pick screen (lean picker) | kid PE (win %) | newer PE | careful PE |
+|---|---|---|---|
+| Rooted | 39 (50%) | 31 | 24 |
+| Flowing | 36 (46%) | 28 | 23 |
+| Power | 38 (47%) | 33 | 23 |
+| Virtue placeholder | 35 (48%) | 22 | 20 |
 
-### 4e. Random pool and picking, kid, Standard [MEASURED]
+- **B10 held spread: 10 points (28 to 38), PASS at the target (noise +/-4).** Pick-screen spread: 4 points (46 to 50).
+- **B4:** per-card mean 15.8, so +/-25% is 11.9-19.8. All four pass (13.7-19.5), route PE at most 45 (limit 55).
+- **Not reached, said plainly:** no setup inside the limits gets Rooted equal to the others when all family cards are held, because Rooted has 2 cards and no pair under PE 50 with both cards under about 24 gets past 28-30% (Ripple 1.3 and Iron Skin 1.25 were tried). The route spread is closed by bringing the 3-card families down towards it. The held spread of 10 uses Double Strike 0.2; with 0.25 it measured 12.
 
-| Check | Before | After | Target | Result |
-|---|---|---|---|---|
-| Pool, 9 old cards, 120 seeds, win % | 59.1 | **57.5** (11 cards: 54.6) | mean within 6 | PASS |
-| Pool, per belt 1–10 (9 old cards) | 60 / 67 / 67 / 61 / 57 / 57 / 47 / 50 / 53 / 51 | 56 / 55 / 69 / 59 / 53 / 54 / 58 / 53 / 62 / 57 | each within 15, none under 45 | PASS |
-| Pool, per belt 1–10 (11 cards) | n/a | 58 / 52 / 73 / 54 / 50 / 49 / 47 / 51 / 58 / 53 | same | PASS (belt 2 is 15 under, at the edge) |
-| Pool, Guided | 96 | 97 (11 cards: 95) | ≥ 90 | PASS |
-| Pool, Challenge | 30 | 34 (11 cards: 25) | within 10 | PASS |
-| Best-pick win % / PE | 77 / 50 | **64** / 44 | gap ≤ 25 | PASS |
-| Worst-pick win % / PE | 29 / 21 | **44** / 34 | n/a | n/a |
-| Best-vs-worst gap | 48 points | **20 points** | ≤ 25 | PASS |
-| Skilled best-pick PE | 57–60 | 57–60 (ruler ceiling) | n/a | see note |
+### 4e. Random pool and picking, kid, Standard [MEASURED, 150 seeds; pickers 60 seeds]
 
-- The shape got flatter: belts 7–10 got a bit easier (+6 to +9), belt 2 a bit harder. Belt 3 is the already easy belt (#354); it stays easy.
-- **Skilled best-pick sits at the ruler's top (about 57–60).** A skilled player who always picks the best pair gets much more power than a random picker. Their wins are 100% either way and health lost is about 1%, so this is not a difficulty risk. It is the reason B3 exists.
-- **Per-belt solo cards (kid, Standard, 30 seeds):** noisy (3–60%, ±8 per cell), belt 3 always high. I judged cards by PE pooled across belts, not per belt. The pool per belt above is the per-belt check.
-- Adding the 2 Virtue cards makes the 11-card pool about 3 points harder than the 9-card pool. That is inside B5.
+| Check | Before (main) | Round 3 | Round 4 (now) | Target | Result |
+|---|---|---|---|---|---|
+| Pool, 9 old cards, win % | 59.1 | 58 | **56** | mean within 6 of 59 | PASS |
+| Pool, per belt 1-10 (9 old cards) | 60 / 67 / 67 / 61 / 57 / 57 / 47 / 50 / 53 / 51 | n/a | 56 / 59 / 69 / 49 / 55 / 53 / 54 / 53 / 57 / 53 | each within 15 of before, none under 45 | PASS |
+| Pool, 11 cards (with the placeholders), win % | n/a | 55 | **45** | 45-70 | **FAIL at the edge** (belts 5-8 are 35-39) |
+| Pool, per belt 1-10 (11 cards) | n/a | 58 / 52 / 73 / 54 / 50 / 49 / 47 / 51 / 58 / 53 | 47 / 49 / 69 / 45 / 37 / 39 / 35 / 41 / 48 / 41 | same | see below |
+| Pool, Guided (9 / 11 cards) | 96 | 97 / 95 | 96 / 94 | at least 90 | PASS |
+| Pool, Challenge (9 / 11 cards) | 30 | 34 / 25 | 32 / 26 | within 10 of 30 | PASS |
+| Best-pick win % (PE) | 77 (50) | 64 (44) | **58** (41) | gap at most 25 | PASS |
+| Worst-pick win % (PE) | 29 (21) | 44 (34) | **38** (33) | n/a | n/a |
+| Best-vs-worst gap | 48 | 20 | **20** | at most 25 | PASS |
+| Skilled best-pick PE (newer / careful) | 57-60 | 57-60 | 37 / 38 (worst 11 / 8) | n/a | note |
 
-## 4f. Round 4: closing the gap between routes (INTERIM, full tables follow) [MEASURED, kid, Standard]
+- **The beta pool (9 cards) passes every line.** The 11-card pool is a placeholder for after the beta. It reads 45%, 10 under round 3's 55, because Calm Breath and Steady Start are weaker than the cards they replace in the pool, by design (to keep the Virtue route level). Measured alternatives: Calm Breath 0.3 + Steady Start 40 gives pool 48%, but the Virtue route reads 47% held (spread 19); 0.25 + 50 gives pool 48% and Virtue 48%. So the pool and the route spread pull against each other for the placeholders; Jay or the Manager picks when Virtue is designed for real.
+- The shape is flatter: belt 4 got 12 points harder, belts 7-10 a little easier. Belt 3 is the already easy belt (#354); it stays easy.
+- **Skilled best-pick** is now PE 37-38 (before and in round 3: 57-60, from the old 4e table); the pair cap B3 still holds with room (newer max 46.5).
+- Per-belt solo cells are noisy (+/-8); cards are judged by PE pooled across belts.
 
-Manager decisions recorded: (1) Virtue cards come after the beta, as a placeholder until Jay says otherwise. (2) Press the Advantage and Wind Step may change what they do. (4) Double Strike halved (0.6 to 0.3) and Rally x1.75 approved. (5) "20% faster" text approved. (6) PE 12 kata reserve kept.
+## 5. Virtue placeholder: Calm Breath and Steady Start (after the beta)
 
-Correction: the "Power 40% vs Flowing 59%" quoted earlier mixed rounds. Round 2 (Heavy Hands 0.25) gave Power 40%. The v3 numbers in 4d were Power 23% vs Flowing 56% at 30 seeds; at 100 seeds the same v3 setup reads Rooted 23 / Flowing 59 / Power 31 / Virtue 52.
-
-Setup tested (Heavy Hands untouched at 0.2): Iron Skin 1.2, Wind Step 0.3 every 7 hits for 3 s + tweak A, Double Strike 0.2, Quick Hands 0.2, Press 0.3 + tweak B, new tweak C (Shield Breaker: breaking a shield gives 7 Focus), Calm Breath 0.15, Steady Start 40.
-
-Scan results at 120-200 seeds (win %): held-all-family routes Rooted 28, Flowing 38, Power 32, Virtue 34 (spread 10). Real pick screen (lean picker, 150 seeds, earlier near-final setup): 50 / 47 / 48 / 47 (spread 3). Full validation tables are being re-run and will replace this section.
-
-## 5. Does Virtue need more cards? Proposal and scope risk
+**Decision (Manager):** the Virtue cards come after the beta, as a placeholder until Jay says otherwise. The beta ships with 9 cards; every beta number above (pool 9 cards, pairs of the 9, routes Rooted / Flowing / Power) stands without them. The Virtue route and the 11-card pool below are the placeholder.
 
 - **Today:** Virtue = 1 card (Rally), skill-gated (PE 0 for skilled bots). A kid who likes Virtue has no choice and no route.
-- **Proposal (data-only, both effect types already exist [CODE]):**
-  - **Calm Breath:** "Focus fills 30% faster." `focusGain` 0.3. Kid PE 17.2.
-  - **Steady Start:** "Start each fight with 2 Strikes ready." `startFocus` 70 (a Strike costs 30 Focus, max 100 [CODE]). Kid PE 19.4.
-  - With Rally the Virtue route is kid PE 48.2 (52% wins), level with Flowing and Rooted.
-- **Why it is cheap:** no new rule, no new sim code, two JSON entries with a name and text. It is still real content work.
-- **Scope risk [GUESS]:**
-  - **Needs art (icons), names and text, and a client check.** I did not check whether the card art can be reused.
-  - **Tests change:** `packages/sim/test/run.test.ts` line 67 expects exactly 9 Insights (becomes 11); lines 152–155 expect one Insight per fight room.
-  - **Dec 15 beta:** every new card is another thing to playtest before TestFlight.
-  - **April 2027 launch:** none at risk, but it is also not needed for launch.
-- **Overlap to check [GUESS]:** the **Bow** gives +15 Focus at each floor and **Calm Mind** (a dojo reward) gives +20% Focus gain for 3 runs [CODE, `config.ts`]. Calm Breath stacks with Calm Mind (+50% total for those runs), and Steady Start stacks with the Bow. The slow test should cover both stacks. Steady Start at 70 is a lot to *feel* (two Strikes at every fight start), even though it measures at PE 19; Content Designer may want 60 (exactly 2 Strikes).
-- **My recommendation:** ship the 6 number changes and 2 rule tweaks before the beta (they are tuning, not content). Add Calm Breath and Steady Start after the beta, unless art and text are already free. Jay decides (section 8).
+- **Placeholder (data-only, both effect types exist [CODE]):**
+  - **Calm Breath:** "Focus fills 15% faster." `focusGain` 0.15. Kid PE 15.4.
+  - **Steady Start:** "Start each fight with a Strike ready." `startFocus` 40 (a Strike costs 30 Focus, max 100 [CODE]). Kid PE 17.2.
+  - With Rally the Virtue route is kid PE 41 (34% held, 48% on the pick screen), level with the other routes (section 4d).
+- **Why the numbers are lower than round 3 (0.3 / 70):** at 0.3 / 70 the Virtue route read 52% held, 17 points above Rooted. With Flowing and Power brought level, the placeholders had to come down too. The price is the 11-card pool at 45% (section 4e).
+- **Scope risk [GUESS]:** needs art, names, text and a client check; `packages/sim/test/run.test.ts` line 67 expects exactly 9 Insights (becomes 11); every new card is more to playtest. Not needed for the April 2027 launch.
+- **Overlap to check [GUESS]:** the **Bow** gives +15 Focus at each floor and **Calm Mind** (a dojo reward) gives +20% Focus gain for 3 runs [CODE, `config.ts`]. Calm Breath stacks with Calm Mind (+35% total for those runs), and Steady Start stacks with the Bow. The slow test should cover both stacks.
 
 ## 6. Room for one kata power (new, after the beta)
 
@@ -233,24 +251,24 @@ Scan results at 120-200 seeds (win %): held-all-family routes Rooted 28, Flowing
 
 **What I did:**
 - **Reserve [PROPOSED]:** budgets B1–B3 above are for the cards only. B8 holds back **PE 12** for a kata power. That is the R-KATA-POWERS damage cap (+12% for stance and kata together); on the ruler, +12% Power is PE 12 by definition. If Jay's powers are bigger or smaller, only this one number changes. The cards-plus-power ceilings are **single card + power ≤ 38, pair + power ≤ 62, route + power ≤ 67**.
-- **Proxy run [MEASURED, 30 seeds × 10 belts, Standard]:** I added a stand-in "+12% Power" slot to the run (not a real power) and re-ran the key cases. Numbers are PE (kid win %):
+- **Proxy run [MEASURED, round 4 setup, kid 60 seeds, newer and careful 30 seeds, Standard, belts 1-10]:** I added a stand-in "+12% Power" slot to the run (not a real power) and re-ran solos, all pairs, the routes and "no cards". Numbers are PE (kid win %):
 
 | Case | kid, cards only | kid, + slot | newer, cards only | newer, + slot | careful, cards only | careful, + slot |
 |---|---|---|---|---|---|---|
-| Slot alone | 0 | 12.2 (15%) | 0 | 6.9 | 0 | 12.9 |
-| Random pool | 39.8 (55%) | 46.3 (64%) | n/a | 42.2 | n/a | 35.2 |
-| Flowing route | 50.7 (56%) | 54.9 (69%) | 38.0 | 59.6 | 27.5 | 30.0 |
-| Ripple + Heavy Hands | 42.6 (36%) | 49.2 (55%) | 41.4 | **60.0** | 36.9 | **56.8** |
-| Double Strike + Heavy Hands | 31.7 (22%) | 40.7 (37%) | 49.3 | 55.6 | 31.3 | 33.9 |
-| Double Strike + Rally | 41.1 (47%) | 44.4 (53%) | 17.7 | 31.9 | 18.2 | 27.6 |
-| Power route | 39.2 (23%) | 45.8 (49%) | 27.3 | 35.2 | 26.9 | 29.9 |
-| Virtue route | 48.2 (52%) | 53.1 (70%) | 15.2 | 29.6 | 21.1 | 25.2 |
+| Slot alone | 0 | 13.2 (13%) | 0 | 6.9 | 0 | 12.9 |
+| Ripple + Heavy Hands | 43.2 (37%) | 49.0 (51%) | 41.4 | **60.0** | 36.9 | **56.8** |
+| Double Strike + Heavy Hands | 31.9 (20%) | 38.2 (31%) | 46.5 | 48.7 | 28.7 | 32.7 |
+| Double Strike + Rally | 37.7 (44%) | 43.1 (53%) | 15.7 | 26.2 | 17.1 | 24.7 |
+| Rooted route | 39.0 (28%) | 45.9 (42%) | 18.7 | 33.4 | 21.0 | 27.2 |
+| Flowing route | 45.2 (38%) | 48.5 (45%) | 26.1 | 42.8 | 18.8 | 33.9 |
+| Power route | 45.0 (32%) | 49.5 (48%) | 26.9 | 35.9 | 26.5 | 30.8 |
+| Virtue route (placeholder) | 40.6 (34%) | 45.3 (47%) | 10.2 | 23.0 | 10.1 | 19.3 |
 
-  (The random pool "cards only" kid cell is the 11-card pool from the 120-seed run, 54.6% wins by belt average and PE 39.8 over all rows; the "+ slot" cells are 30 seeds.)
+  Highest single card + slot: kid 36.1 (Ripple), newer 31.6, careful 27.3 (limit 38). Highest pair + slot: kid 49.0, newer 60.0, careful 56.8 (limit 62). Highest route + slot: 49.5 (limit 67). With the slot the kid route spread is 42 to 48 wins (6 points). A random-pool run with the slot was not re-run this round.
 - **Read-out:**
-  - The kid pool goes from about 55% to 64% wins with a +12% power. That is about today's Standard pool (59–64%), so a +12% power brings back today's feel rather than making runs easy. (30 seeds, ±3 points.)
-  - **Everything stays under pair + power ≤ 62 for the kid** (top 54.9). **Skilled Ripple + Heavy Hands reaches 57–60, the ruler's top**, so it is the first combo that would break B8 if a power is bigger than +12% or stacks Focus. Lever if it does: lower Ripple Counter from 1.2 (data only; not measured).
-  - The newer bot's jumps (+14 to +22 where the slot should add about 12) are inside the ±5 noise plus the ruler's saturation near 60. They are not a card problem; I flag them so the Tester does not chase them.
+  - **All three ceilings hold** (38 / 62 / 67 for card / pair / route plus power).
+  - **Skilled Ripple + Heavy Hands reaches 60.0 (newer) and 56.8 (careful)**, the ruler's top (60), so it is the first combo that would break B8 if a power is bigger than +12% or stacks Focus. Lever if it does: lower Ripple Counter from 1.2 (data only; not measured).
+  - The newer bot's jumps with the slot (+13 to +19 where the slot should add about 7-12) are inside the +/-5 noise plus the ruler's saturation near 60. They are not a card problem; flagged so the Tester does not chase them.
 - **Not covered, because no powers exist yet [GUESS]:** an **activated** power needs the sim bot to fire it (it can't today); a passive that adds Focus, speed or guard needs its own proxy. Section 7, layer 3 says how.
 
 ## 7. Test spec
@@ -258,7 +276,7 @@ Scan results at 120-200 seeds (win %): held-all-family routes Rooted 28, Flowing
 Tests live in the repo's normal places. Layer 1 runs always; layers 2 and 3 run with `BALANCE=1` like `balance.test.ts`.
 
 **Layer 1: data caps, fast (`packages/sim/test/insight-budget.test.ts`).** No sim.
-1. For each card in `content/insights/insights.json`, the effect amount is **at most the proven cap** in one table in the test (Ripple 1.2, Iron Skin 1.0, Wind Step 0.4 / every 5 / 4 s, Double Strike 0.3, Quick Hands 0.2, Rally 0.75, Heavy Hands 0.2, Press 0.3, Calm Breath 0.3, Steady Start 70). Failure text: "re-run `BALANCE=1 insight-budget-sim` and update the table with the new PE".
+1. For each card in `content/insights/insights.json`, the effect amount is **at most the proven cap** in one table in the test (Ripple 1.2, Iron Skin 1.2, Wind Step 0.3 / every 7 / 3 s, Double Strike 0.2, Quick Hands 0.2, Rally 0.75, Heavy Hands 0.2, Press 0.3, Shield Breaker focus 7, and for the placeholders Calm Breath 0.15, Steady Start 40). Failure text: "re-run `BALANCE=1 insight-budget-sim` and update the table with the new PE".
 2. Every family has **at least 2 cards** (after the Virtue cards ship; before, the test names Virtue as an expected exception).
 3. Card ids are unique and every id in the table exists (and vice versa).
 4. Stacking sanity from `effects.ts`: the sum of all `attackSpeed` stays under the 0.6 cap, and no combination of cards in the family tables can reach a limit (e.g. `disarm` 0.9).
@@ -269,8 +287,8 @@ Tests live in the repo's normal places. Layer 1 runs always; layers 2 and 3 run 
 2. **B1:** every single card: PE ≤ 26 on all bots; PE ≥ 12 on the kid (no waivers) and ≥ 12 on at least one bot. Skilled floors are not tested; the reasons are written in the test file's comments.
 3. **B2:** every single card PE ≤ 30 on newer and careful.
 4. **B3:** all pairs (55 today, `n(n-1)/2`) PE ≤ 50 on all bots, and the kid has no pair under 20.
-5. **B4:** the four family routes: per-card PE within ±25% of the mean, route PE ≤ 55.
-6. **B5:** random pool, kid, 100 seeds per belt (the 30-seed runs are too noisy): mean win % within 6 points of 59, each belt within 15, none under 45.
+5. **B4 and B10:** the four family routes (held all run, kid, 150 seeds): per-card PE within ±25% of the mean, route PE ≤ 55, **and win-rate spread (highest minus lowest) at most 14 (target 10)**. Also the lean-picker routes: spread at most 10. Heavy Hands stays 0.2 in the table.
+6. **B5:** random pool (9 cards for the beta; 11 once Virtue ships), kid, 100 seeds per belt (the 30-seed runs are too noisy): mean win % within 6 points of 59, each belt within 15, none under 45.
 7. **B6:** best-pick bot vs worst-pick bot, kid, gap ≤ 25 points.
 8. **B7:** highest single-card PE ÷ lowest (kid) ≤ 2.
 9. **Failure output:** print the table (card or combo, bot, PE, limit) and name the line that failed.
@@ -291,36 +309,36 @@ Tests live in the repo's normal places. Layer 1 runs always; layers 2 and 3 run 
 - **Passive powers that touch Focus, speed or guard:** add a stand-in effect in the harness for each type (the same way `powerScale` was used here) before the real power is tuned.
 - **Floor and cap:** a power may be skill-gated like Rally, so its skilled-bot floor is not tested (the reason goes in the test file). Its cap is always tested.
 
-## 8. Taste calls for Jay (only these)
+## 8. Taste calls still open (decided ones removed)
 
-1. **Virtue cards now or after the beta?** Calm Breath and Steady Start measure level with the rest. They need art, names and a playtest. My lean: after the beta. Worth adding either way: the Virtue family has 1 card.
-2. **Two identity changes for cards that were near-zero:** Press the Advantage also works on winded or recovering enemies; Wind Step's burst also speeds up basic attacks. Both are small rule tweaks. Without them those two cards stay at PE 2–5 whatever number we pick. OK?
-3. **The Power route is still the weakest (about half the kid wins of Flowing on Standard).** Option: lift Heavy Hands from +20% to +25% Power, which closes most of the gap but makes Ripple Counter + Heavy Hands very strong for skilled players (PE 56). I lean to leave it. Do you want it lifted?
-4. **Rally ×2 to ×1.75 and Double Strike 0.6 to 0.3:** Double Strike's extra hit chance halves. It was the second strongest card; it stays a good card (PE 20) but kids who loved it will notice. Fine?
-5. **Quick Hands text becomes "20% faster"** (a bit smaller than 25%).
-6. **Kata powers:** the PE 12 reserve comes from the R-KATA +12% damage cap. When you send the powers, tell me if you want a bigger reserve; it only moves one number in the test.
+Decided by the Manager and recorded in "Read this first": Virtue after the beta as a placeholder; Press the Advantage and Wind Step may change; Double Strike halved and Rally x1.75; "20% faster" text; kata reserve PE 12. Heavy Hands stays 0.2 (the Manager asked for no Heavy Hands change), so the old call 3 is closed.
+
+1. **Double Strike 0.2 instead of the approved 0.3.** The held-route spread reaches 10 with 0.2 (Flowing 38%). With 0.25 it measured 12, and 0.3 was not measured with the final Wind Step (I expect 12-13). The card text has no number, so kids see no change in text; it is a little weaker (PE 15.9, still above the floor). Keep 0.2, or keep 0.3 and accept a spread of about 12-13?
+2. **Virtue placeholder strength, for when Virtue is designed.** Weak placeholders (Calm Breath 0.15, Steady Start 40) keep the Virtue route level (34% held) but make the 11-card pool 45% (belts 5-8 at 35-39%). Stronger ones (0.25 / 50) give pool 48% and Virtue 48% held, 14 points above Rooted. Nothing to decide before the beta (9 cards pass everything); pick the side when the cards are real.
+
+Also for the Content Designer, not taste calls: new text for Iron Skin, Wind Step, Shield Breaker (section 4a), and the Shield Breaker Focus reward is a small rule tweak the Manager asked me to try.
 
 ## 9. Board items (for the Manager; work board not edited)
 
 | ID | Owner | Task | Done when | Waits on |
 |---|---|---|---|---|
-| R-INSIGHT-BAL-a | Programmer | Apply the 6 number changes in 4a to `content/insights/insights.json` (text too), plus rule tweaks A (Wind Step attack speed) and B (Press also on winded or recovering). Update `r-bal-14b-charms.test.ts` (Rally ×1.75). | `npm test` is green, and the card table in 4b (kid, Standard) reproduces within ±3 PE with the layer-2 harness | Jay's calls 2, 3 and 4 |
-| R-INSIGHT-BAL-b | Programmer | Build layer 1 (`insight-budget.test.ts`) and layer 2 (`balance/insight-budget.test.ts`) from section 7, using `R-INSIGHT-BAL-sim/` as the starting point (no env flags or `HOOKS` patch in the committed code; the pick hook needs a proper test-only seam). | Layer 1 runs in the normal suite; layer 2 passes under `BALANCE=1`; raising any card past its cap makes the right line fail (shown once with a deliberate bad number) | R-INSIGHT-BAL-a |
-| R-INSIGHT-BAL-c | Content Designer | Write card text for the 6 changes (kid-readable, ages 6+, hopeful, no pressure). If Jay says yes to Virtue: names, text and icon brief for Calm Breath and Steady Start, and a check of the Calm Mind and Bow overlap. Consider 60 vs 70 for Steady Start. | Texts match 4a; run.test count updated to 11 if the Virtue cards ship; icon brief handed to the Artist | Jay's call 1 (for the Virtue part only) |
-| R-INSIGHT-BAL-d | Tester | Re-run the whole report on the real build: belts 1–10 × Guided, Standard, Challenge × kid, newer, careful, and a 60-seed kid pool run. Also a human playtest of 3 kid runs picking only Power cards, and 3 picking only Flowing. | The B1–B9 table passes; the Power-only playtest clears at least as often as it did before the changes; any miss is reported with the table | R-INSIGHT-BAL-a, R-INSIGHT-BAL-b |
+| R-INSIGHT-BAL-a | Programmer | Apply the number changes in 4a to `content/insights/insights.json` (text too), plus rule tweaks A (Wind Step attack speed), B (Press also on winded or recovering) and C (Shield Breaker gives 7 Focus when it breaks a shield). Update `r-bal-14b-charms.test.ts` (Rally x1.75). | `npm test` is green, and the card table in 4b and the route table in 4d (kid, Standard) reproduce within +/-3 PE / +/-5 win points with the layer-2 harness | Call 1 in section 8 (Double Strike value) |
+| R-INSIGHT-BAL-b | Programmer | Build layer 1 and layer 2 from section 7 (including the B10 route-spread check), using `R-INSIGHT-BAL-sim/` as the starting point (no env flags or `HOOKS` patch in the committed code; the pick hook needs a proper test-only seam). | Layer 1 runs in the normal suite; layer 2 passes under `BALANCE=1`; raising any card past its cap, or lowering Rooted, makes the right line fail (shown once with a deliberate bad number) | R-INSIGHT-BAL-a |
+| R-INSIGHT-BAL-c | Content Designer | Write card text for the changed cards (kid-readable, ages 6+, hopeful, no pressure): Iron Skin, Wind Step, Shield Breaker, Press the Advantage, Rally, Quick Hands. After the beta: names, text and icon brief for Calm Breath and Steady Start, and a check of the Calm Mind and Bow overlap. | Texts match 4a; run.test count updated to 11 when the Virtue cards ship | Virtue part waits for Jay |
+| R-INSIGHT-BAL-d | Tester | Re-run the whole report on the real build: belts 1-10 x Guided, Standard, Challenge x kid, newer, careful, plus a 150-seed kid route run. Also a human playtest of 3 kid runs picking only Power cards, 3 only Flowing and 3 only Rooted. | The B1-B10 table passes; the three playtests clear about equally often; any miss is reported with the table | R-INSIGHT-BAL-a, R-INSIGHT-BAL-b |
 | R-INSIGHT-BAL-e | Programmer | Layer 3 (kata power stacking) and an activated-power rule for the sim bot. | Layer 3 runs once per power in the list from Jay; the budget lines in section 7 pass or the failing power is named | Jay's kata powers; R-INSIGHT-BAL-b |
 
 ## 10. Reference copy and how to repeat the run
 
-Folder `drafts/planning/R-INSIGHT-BAL-sim/` (not compiled, not part of `packages/`):
-- `zz-insight-bal.test.ts.txt`: the harness (copy to `packages/sim/test/balance/zz-insight-bal.test.ts` to run). Env: `CONFIGS` (`none`, `pool`, `pool9`, `offer:ID`, `start:a+b`, `SOLO`, `PAIRS`, `OFFER`, `syn:TYPE:AMT`, `pick:greedy:` / `pick:worst:` with `SCORES`), `BOTS`, `DIFFS`, `BELTS`, `SEEDS`, `OUT`, `OVR` (overrides), `NEW` (new cards), `KATA` (the stand-in power slot), `BALANCE=1`.
-- `experiment-world.patch` (rule tweaks A and B behind env switches) and `experiment-bot-hook.patch` (the pick hook). Local experiment only.
-- `prop3.sh`: the final proposal as env values. `run3.sh`, `pe2.py`, `pe_table.py`, `pairs2.py`, `solo3.py`, `belts.py`, `an.py`: the analysis scripts (paths point at `/tmp/insight-bal`).
-- `data.tar.gz`: the raw rows (baseline, final proposal, rulers, pickers, offered-alone).
+Folder `drafts/planning/R-INSIGHT-BAL-sim/` (not compiled, not part of `packages/`; see its README):
+- `zz-insight-bal.test.ts.txt`: the harness (copy to `packages/sim/test/balance/zz-insight-bal.test.ts`). Env: `CONFIGS` (`none`, `pool`, `pool9`, `offer:ID`, `start:a+b`, `pick:lean:a+b+c` (the lean picker), `pick:greedy:` / `pick:worst:` with `SCORES`, `SOLO`, `PAIRS`, `OFFER`, `syn:TYPE:AMT`), `BOTS`, `DIFFS`, `BELTS`, `SEEDS`, `OUT`, `OVR`, `NEW`, `KATA`, `BALANCE=1`.
+- `experiment-world.patch`: rule tweaks A, B and C behind `WIND_ATK=1`, `PRESS_WIDE=1`, `SB_FOCUS=7` (plus the unused `SB_DMG`, `SB_STAG`). `experiment-bot-hook.patch`: the pick hook. Local experiment only.
+- `prop4.env`: the round-4 proposal as env values; `drv.py` (launcher), `full.py` and `fullpick.py` (the validation runs), `pe_any.py`, `ssum.py` (summaries), plus the older scripts.
+- `data.tar.gz`: raw rows (rulers, round 3, all round-4 scans and the final validation `F*` files).
 
 ## Delivery Note
 - **ITEM:** R-INSIGHT-BAL
-- **WHAT:** a before/after report on the 9 Insight cards, a power budget per family, 6 number changes and 2 small rule tweaks that bring every card to PE 13–22, a proposal for 2 Virtue cards, a headroom reserve for one kata power, a test spec, and board items. No game code, content or work board changed.
-- **WHY:** Ripple Counter, Double Strike and Quick Hands were worth 6–17x more than Iron Skin, Press and Wind Step, so the Power route won 10% of kid runs against 53% for Flowing, and Virtue had one card.
-- **DECIDE:** (1) Virtue cards now or after the beta. (2) OK to change what Press the Advantage and Wind Step do. (3) Lift Heavy Hands to close the Power route gap, or leave it. (4) OK to halve Double Strike. (5) Quick Hands text "20% faster". (6) The kata power reserve of PE 12 when you send the powers.
-- **NEXT:** after Jay's calls the Programmer applies the changes and builds the tests; the Content Designer writes the text; the Tester re-runs the report on the real build. Jay sends the kata powers and layer 3 gets built then.
+- **WHAT:** updated report, budget (new line B10: route spread), proposal, re-sim tables, kata headroom test spec and board items. The Manager's five decisions are recorded. The route gap is closed without Heavy Hands: kid wins held all run Rooted 28 / Flowing 38 / Power 32 / Virtue placeholder 34 (spread 10, was 43), and on the real pick screen 50 / 46 / 47 / 48 (spread 4). Changes: Iron Skin 1.2, Wind Step 0.3 / every 7 / 3 s, Double Strike 0.2, Calm Breath 0.15, Steady Start 40, a new Shield Breaker rule (7 Focus on a shield break), plus the earlier tweaks A and B. No game code, content or work board changed.
+- **WHY:** Jay wants no route stronger than another; Power won 10% of kid runs against 53% for Flowing before, and 31% against 59% in round 3 when held all run.
+- **DECIDE:** (1) Double Strike 0.2 (below the approved 0.3) for the 10-point spread, or 0.3 with a spread of about 12-13. (2) Virtue placeholder strength, only when Virtue is designed (11-card pool 45% vs Virtue route level).
+- **NEXT:** Programmer applies 4a and builds the tests; Content Designer writes the text; Tester re-runs on the real build; Jay sends the kata powers for layer 3. Caps hold: pairs under 50 (max 46.5), kata ceilings 38 / 62 / 67 (max 36.1 / 60.0 / 49.5), 9-card pool 56%, Guided 96% and Challenge 32%.
