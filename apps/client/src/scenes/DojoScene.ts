@@ -1073,7 +1073,7 @@ export class DojoScene extends Phaser.Scene {
       } }, box);
       b.visual.add(this.add.text(0, 18 - h / 2, (on ? '✓ ' : locked ? '🔒 ' : '') + c.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5, 0).setResolution(crisp()));
       b.visual.add(this.add.text(0, 54 - h / 2, locked ? t.locked.challenge : c.text, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w - 24 } }).setOrigin(0.5, 0).setResolution(crisp()));
-      if (locked) b.visual.setAlpha(0.55);
+      if (locked) b.visual.setAlpha(0.7);
     });
     box.add(this.add.text(width / 2, top + h + 14, t.footer, { fontFamily: FONT, fontSize: '14px', color: '#b9ad99' }).setOrigin(0.5, 0).setResolution(crisp()));
     // Grown-up settings sit behind a simple sum, so a young child can't open them by accident (M7-P9).

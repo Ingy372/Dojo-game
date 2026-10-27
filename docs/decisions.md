@@ -1411,3 +1411,9 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - The 10-tick minimum (`MIN_WINDUP_TICKS` in config.ts, also used by the enemy loader) now applies after the Challenge formula too, in `telegraphTicks`. Only the swarmer jab and spark-sprite dart change (9 -> 10 ticks on Challenge). Guided and Standard use the exact old formula (tested on every attack).
 - Elites keep their own minimum code (`eliteWindup`); a test checks every elite Challenge wind-up is still at least 10.
 - The p-menu2 golden is re-captured: only `rooted.challenge` moves (perfects 6 -> 7, blocks 2 -> 4, health 146 -> 191) because that room's swarmer jabs are 1 tick longer. Every Guided and Standard value is unchanged. The R-BAL-12 bands test stays green.
+
+## R-CHALLENGE P6 — Challenge difficulty unlocks at the 4th belt (2026-10-27)
+- core-design §13: Challenge can be picked from the 4th belt (`CHALLENGE_FROM_TIER = 4`). Only the difficulty is gated; Challenge rooms still appear at every belt. There is no Sensei unlock line.
+- A Challenge pick saved below the 4th belt plays as Standard but stays stored, so it comes back at the 4th belt (`activeDifficulty`). Settings, the Home line and the Bests grades all use the active difficulty, so a child never sees Challenge selected while playing Standard.
+- Below the 4th belt the Challenge card is dimmed (alpha 0.7, contrast 5.6:1 or better), shows 🔒 and "Unlocks at your 4th belt." (content/settings/difficulty.json `locked.challenge`), and does nothing when tapped.
+- A `?difficulty=challenge` test link still wins at any belt, so the sims and goldens don't change.

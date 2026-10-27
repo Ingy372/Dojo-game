@@ -941,3 +941,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - B-BRIDGE-GOLDENS: p-menu2 golden re-captured for the #361 bridge swarmer move (revert proof passes).
 - R-B1-RAMP-2: pin test for the 15 white room copies, ?room= link maps to the white copy, background shots match the originals; #361 note corrected to 8 run entries.
 - R-CHALLENGE P1: Challenge wind-ups never under 10 ticks (jab and dart 9 -> 10); golden moves only in its rooted Challenge row; next Q-DOOR-LABELS, then P6.
+- R-CHALLENGE P6: Challenge difficulty locked below the 4th belt (plays and shows as Steady, the stored pick is kept); 6 tests; no golden or fixture diff; Settings shots 16 PASS, 0 FAIL at 2 phone sizes, RM on/off, belts 3 and 4.
