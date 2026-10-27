@@ -258,6 +258,8 @@ export class DojoScene extends Phaser.Scene {
     this.bowShown = false;
     this.bowHoursAway = null;
     this.cardsOpen = 0;
+    this.arriving = false;
+    this.arrived = false;
     if (!bowIsDue()) this.offerResume();
     if (bowIsDue()) {
       this.bowHoursAway = hoursAway;
@@ -265,13 +267,20 @@ export class DojoScene extends Phaser.Scene {
     }
   }
 
-  /** Q-BOW-OVER-MENU: the due bow waits until no menu, panel or arrival sequence is open, then shows once. */
+  /**
+   * Q-BOW-OVER-MENU: the due bow waits until no menu, panel, card or arrival sequence is open,
+   * then shows once. `arriving` is owned by arrive() itself (not inferred from the mode), so the
+   * "Welcome home" celebrations and every other arrival step hold the bow however arrive() is reached.
+   */
   private bowHoursAway: number | null = null;
   private bowShown = false;
   private cardsOpen = 0;
+  private arriving = false;
+  /** Whether this scene's arrival steps already played (a later bow only bows). */
+  private arrived = false;
   private tryBow(): void {
     if (this.bowHoursAway === null) return;
-    const gate = bowGate({ due: bowIsDue(), menuOpen: this.mode !== 'play' || this.cardsOpen > 0, shown: this.bowShown });
+    const gate = bowGate({ due: bowIsDue(), menuOpen: this.mode !== 'play' || this.cardsOpen > 0, arriving: this.arriving, shown: this.bowShown });
     if (gate !== 'show') return;
     this.bowShown = true;
     const hoursAway = this.bowHoursAway;
@@ -283,7 +292,12 @@ export class DojoScene extends Phaser.Scene {
         this.player,
         () => {
           setBowDue(false);
-          this.arrive(hoursAway);
+          // A bow that came due later (held through the arrival) shows once; after it, a new due bow may show again.
+          this.bowShown = false;
+          if (this.arrived) {
+            this.mode = 'play';
+            this.renderUi();
+          } else this.arrive(hoursAway);
         },
         this.hero,
       );
@@ -313,6 +327,10 @@ export class DojoScene extends Phaser.Scene {
 
   /** After the bow: a welcome card (first visit, or back after a while), then any real celebrations. */
   private arrive(hoursAway: number): void {
+    this.arriving = true;
+    this.arrived = true;
+    this.bowHoursAway ??= hoursAway;
+    this.mode = 'arriving';
     const name = this.training.displayName.split(' ')[0];
     const chores = choresLeft(this.dojo);
     const steps: Array<() => void> = [];
@@ -377,7 +395,9 @@ export class DojoScene extends Phaser.Scene {
         this.controls.reset();
         this.quietUntil = this.time.now + ARRIVAL_QUIET_MS;
         this.mode = 'play';
+        this.arriving = false;
         this.renderUi();
+        this.tryBow();
       }
     };
     next();
