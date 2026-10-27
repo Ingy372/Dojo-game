@@ -63,6 +63,7 @@ describe('Q-PREM-GRADE: scenes', () => {
   it('HomeScene tutorial card letter uses the run difficulty; Bests uses the player difficulty', () => {
     const home = src('HomeScene.ts');
     expect(between(home, 'private firstFloorCard(', 'const best =')).toMatch(/grade && showGrades\(s\.difficulty\)/);
-    expect(home).toMatch(/lastRunBests\([^)]*showGrades\(this\.profile\.difficulty\)\)/);
+    // R-CHALLENGE P6: the player's active difficulty (a Challenge pick below belt 4 is Standard).
+    expect(home).toMatch(/showGrades\(activeDifficulty\(this\.profile, this\.training\.belt\.tier\)\)\)/);
   });
 });
