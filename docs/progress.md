@@ -985,3 +985,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - `b-t3-tune-2-boss-levers`: only the masher floor check runs at 600 seeds (60-seed luck); 348/437 = 79.6%, floor still 75%.
 - `r-challenge-p5` step-out test is paired on landing-circle damage: 477 matched swings, step-out 1933 vs Counter 2278 (-15.1%), lower in 22, higher in 4. Follow-up for the Manager: committing to the step-out once started cuts landing damage about 44% (not adopted).
 - Full suite green: 1148 passed, 4 skipped, about 31 s; typecheck and build pass.
+
+## R-INSIGHT-BAL-b — Insight budget tests, layers 1 and 2 (2026-10-27)
+- Stacked on R-INSIGHT-BAL-a (#389). Layer 1 (`packages/sim/test/insight-budget.test.ts`) runs in the normal suite: caps table, unique ids, family sizes, stacking limits. Layer 2 (`packages/sim/test/balance/insight-budget.test.ts`, `BALANCE=1`): B1-B7 and B10 (route win-rate spread: held at most 14, lean-picker at most 10), B9 printed.
+- Test-only pick seam: `playRoom(..., pickInsight?)` in `balance/bot.ts`. No env flags or HOOKS patch. No new dependency.
+- Results: see the PR's Delivery Note (counts, layer-2 run time, and the deliberate-bad-number demo).
