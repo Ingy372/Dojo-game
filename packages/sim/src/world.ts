@@ -1236,6 +1236,9 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
     }
     // A flagged dash lane never starts while another enemy's red circle covers the player.
     if (canAttack && a.noOverlapWithRedCircle && a.counterable === false && redCircleOn(world, e, target.pos)) canAttack = false;
+    // Q-FAIR-EDGE: and the other way round: no red circle starts where a flagged lane winding up covers
+    // the player, so the order the enemies step in a tick doesn't matter.
+    if (canAttack && a.counterable !== false && flaggedLaneOn(world, e, target.pos)) canAttack = false;
   }
   if (dist <= a.startRange && canAttack) {
     startWindup(world, e);
@@ -1588,11 +1591,15 @@ export function attackBox(pos: Vec2, radius: number, facing: Vec2, a: EnemyAttac
   return box;
 }
 
-/** R-CHALLENGE P3: the attack, aimed now, is fully inside every active player's view. */
+/**
+ * R-CHALLENGE P3: the attack, aimed now, is fully inside the view of every player still in the room.
+ * Q-FAIR-EDGE: a downed player counts too (they get up into this attack), so with everyone down
+ * the check isn't skipped; only players who are out don't count.
+ */
 function patternAttackOnScreen(world: WorldState, room: Room, e: EnemyState, a: EnemyAttackDef): boolean {
   const b = attackBox(e.pos, e.def.radius, e.facing, a);
   for (const p of Object.values(world.players)) {
-    if (!isActive(p)) continue;
+    if (p.out) continue;
     const v = simViewRect(room, p.pos);
     if (b.x0 < v.x0 || b.y0 < v.y0 || b.x1 > v.x1 || b.y1 > v.y1) return false;
   }
@@ -1619,6 +1626,28 @@ function normalAttackIndex(e: EnemyState): number | null {
 /** R-CHALLENGE P3: another enemy's red (counterable) circle, winding up now, covers this spot. */
 function redCircleOn(world: WorldState, e: EnemyState, at: Vec2): boolean {
   return world.enemies.some((o) => o !== e && o.mode === 'windup' && o.attackCenter !== null && currentAttack(o).counterable !== false && distance(at, o.attackCenter) <= currentAttack(o).areaRadius + R * 0.5);
+}
+
+/**
+ * Q-FAIR-EDGE: another enemy's flagged dash lane (noOverlapWithRedCircle), winding up now, covers this
+ * spot: within its area (plus half a body) of the lane from that enemy to its landing point.
+ */
+export function flaggedLaneOn(world: WorldState, e: EnemyState, at: Vec2): boolean {
+  return world.enemies.some((o) => {
+    if (o === e || o.mode !== 'windup' || o.attackCenter === null) return false;
+    const a = currentAttack(o);
+    if (!a.noOverlapWithRedCircle || a.counterable !== false) return false;
+    return segmentDistance(at, o.pos, o.attackCenter) <= a.areaRadius + R * 0.5;
+  });
+}
+
+/** Distance from a point to the segment a-b. */
+function segmentDistance(p: Vec2, a: Vec2, b: Vec2): number {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const len2 = dx * dx + dy * dy;
+  const t = len2 === 0 ? 0 : clamp(((p.x - a.x) * dx + (p.y - a.y) * dy) / len2, 0, 1);
+  return distance(p, { x: a.x + dx * t, y: a.y + dy * t });
 }
 
 /** How many enemies are winding up an attack right now (the "kung fu circle" limit). */
