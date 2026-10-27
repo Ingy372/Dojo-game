@@ -36,6 +36,9 @@ export const DIFFICULTY = {
   challenge: { counterWindowTicks: 4, fillScale: 0.8, enemyPowerScale: 1 },
 } as const;
 
+/** R-CHALLENGE P1: no enemy wind-up is ever shorter than this, on any difficulty (half a second). */
+export const MIN_WINDUP_TICKS = 10;
+
 /** How full the danger circle is (0 to 1) when the Perfect Counter window opens. */
 export const TELEGRAPH_NEARLY_FULL = 0.85;
 
