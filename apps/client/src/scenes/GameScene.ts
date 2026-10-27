@@ -1,4 +1,4 @@
-import { senseiFloorY, senseiHomeY } from '../ui/senseiPlace';
+import { overArena, pickBannerSpot, senseiFloorY, senseiHomeY, type BannerAsk, type Box } from '../ui/senseiPlace';
 import Phaser from 'phaser';
 import {
   GUIDE_DONE,
@@ -2740,34 +2740,45 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** The first spot for the banner clear of every player (and of the doors and messages when it can be). */
-  private placeOffPlayers(t: Phaser.GameObjects.Text, widened = false): void {
-    const { width, height } = view(this);
-    const players = this.playerScreenBoxes();
-    const h = t.height;
-    const x0 = t.x - t.width / 2, x1 = t.x + t.width / 2;
-    const hits = (boxes: typeof players) => (y: number) => !boxes.some((b) => b.x1 > x0 && b.x0 < x1 && b.y1 > y && b.y0 < y + h);
-    const buttons = this.buttons.objects.map((o) => {
+  /**
+   * Keeps a banner off the heroes and, always, off the action buttons (Q-STANCE-BANNER), under the top bar.
+   * One search (ui/senseiPlace.ts pickBannerSpot): clear of everything, else clear of heroes and buttons (the free
+   * space above the bottom button row). No room: the small-phone text size, then again. Still none: over the
+   * arena (clear of the buttons only), never over Stance or another button.
+   */
+  private placeOffPlayers(t: Phaser.GameObjects.Text): void {
+    const ask = (): BannerAsk => {
+      const { width, height } = view(this);
+      return {
+        viewW: width,
+        viewH: height,
+        floor: this.senseiFloor(),
+        home: this.senseiHome(height),
+        w: t.width,
+        h: t.height,
+        x: t.x,
+        y: t.y,
+        players: this.playerScreenBoxes(),
+        buttons: this.buttonKeepOut(),
+        others: this.protectedBoxes(true),
+      };
+    };
+    let spot = pickBannerSpot(ask());
+    if (!spot && Number.parseFloat(String(t.style.fontSize)) > 20) {
+      t.setFontSize(20);
+      t.setWordWrapWidth(Math.min(view(this).width - 48, 640), true);
+      spot = pickBannerSpot(ask());
+    }
+    spot ??= overArena(ask());
+    t.setPosition(spot.x, spot.y);
+  }
+
+  /** Q-STANCE-BANNER: the action buttons (Stance and its name included) plus 8 px, kept clear of Sensei's banner. */
+  buttonKeepOut(): Box[] {
+    return this.buttons.objects.map((o) => {
       const r = (o as Phaser.GameObjects.Container).getBounds();
       return { x0: r.left - 8, x1: r.right + 8, y0: r.top - 8, y1: r.bottom + 8 };
     });
-    const all = [...players, ...buttons, ...this.protectedBoxes(true)];
-    const floor = this.senseiFloor();
-    const spots = [t.y, this.senseiHome(height), floor, height - h - 8, ...all.flatMap((b) => [b.y0 - 6 - h, b.y1 + 6])].filter((y) => y >= floor && y + h <= height - 8);
-    // Clear of everything if it can be; the players always come first.
-    // If nothing is clear of everything, it keeps off the players and stays up top, away from the buttons.
-    const fallback = [this.senseiHome(height), floor, ...spots].filter((y) => y >= floor && y + h <= height - 8);
-    const y = spots.find(hits(all)) ?? fallback.find(hits([...players, ...buttons])) ?? fallback.find(hits(players));
-    if (y !== undefined) {
-      t.setY(y);
-      return;
-    }
-    // Q-P4 QA: under the top bar there may be no room clear of the players for a tall (3-line) banner,
-    // so it goes full width and the small-phone text size (fewer, shorter lines) and tries once more.
-    if (widened) return;
-    t.setFontSize(20);
-    t.setWordWrapWidth(Math.min(width - 48, 640), true);
-    t.setX(width / 2);
-    this.placeOffPlayers(t, true);
   }
 
   private shieldGlow(at: Vec2, radiusTiles: number): void {

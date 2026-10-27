@@ -960,3 +960,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 - Q-SHAKE-CENTER: the locked Challenge card shake is now a sine wave around its resting spot (same 4px left and right, 3 cycles, 250ms), ending exactly where it started; a second tap stops the old shake first. Test in packages/sim/test/q-lock-card.test.ts. verify-ui-shots 26/26 frame by frame at 844x390 and 667x375.
 - 2026-10-27 Q-P7-SEEDS: the BALANCE=1 Challenge table (r-challenge-p5.test.ts) runs 100 seeds per cell instead of 40. Result: Challenge kid 26/39/37/30/32/32/31 (b4-b10), newer and careful 100; 0 WARN lines (the 40-seed b8/b10 warnings were noise). Default npm test unchanged (table is skipped without BALANCE=1).
+
+## Q-STANCE-BANNER — Sensei's banner never covers Stance (2026-10-27)
+- In Practice, when the lesson banner can't sit above the hero, it now goes into free space beside/above the bottom button row (bottom-left strip), never over Stance or any action button. Before: `docs/shots/q-stance-banner/before-667x375-practice.png`; after: `contact-sheet.png`.
+- One rule: `pickBannerSpot` / `overArena` in `ui/senseiPlace.ts`; the action buttons (+8px) are a hard keep-out. No room → shrink to the small-phone size (20px); still none → over the arena, never over buttons.
+- Test: `packages/sim/test/q-stance-banner.test.ts` (both phone sizes + 5,000 random layouts: banner box never overlaps the Stance box). Shots: 667x375 + 844x390, reduced motion on/off, Practice/standard/challenge — 164/164 checks (≥6px under the top bars, clear of the hero, off every button, Stance tap registered while the banner is up).
