@@ -1,4 +1,4 @@
-import { overArena, pickBannerSpot, senseiFloorY, senseiHomeY, type BannerAsk, type Box } from '../ui/senseiPlace';
+import { leftStripWidth, overArena, pickBannerSpot, senseiFloorY, senseiHomeY, type BannerAsk, type Box } from '../ui/senseiPlace';
 import Phaser from 'phaser';
 import {
   GUIDE_DONE,
@@ -2060,8 +2060,16 @@ export class GameScene extends Phaser.Scene {
     const { width } = view(this);
     // Near the top, just under the health and Focus bars, so it never covers the fight or a warning circle.
     const banner = twistBanner(this, twist, width, 0);
-    const BANNER_Y = Math.max(58, this.senseiFloor()) + banner.height / 2; // Q-P4 QA: its Sensei line keeps the same floor
-    banner.setY(BANNER_Y);
+    // Q-P4 QA: its Sensei line keeps the same floor. Q-VIRTUE-BANNER: the one rule, so it never covers a button.
+    const { height } = view(this);
+    const floor = Math.max(58, this.senseiFloor());
+    const twistAsk: BannerAsk = {
+      viewW: width, viewH: height, floor, home: floor, w: banner.width, h: banner.height, x: banner.x, y: floor,
+      players: [], buttons: this.buttonKeepOut(), others: [], // as before: just under the bars unless a button is there
+    };
+    const twistSpot = pickBannerSpot(twistAsk) ?? overArena(twistAsk);
+    const BANNER_Y = twistSpot.y + banner.height / 2;
+    banner.setPosition(twistSpot.x, BANNER_Y);
     this.cameras.main.ignore(banner);
     this.tweens.add({ targets: banner, alpha: { from: 0, to: 1 }, y: { from: BANNER_Y + 20, to: BANNER_Y }, duration: 300, ease: 'Back.Out' });
     this.tweens.add({ targets: banner, alpha: 0, delay: 4200, duration: 500, onComplete: () => banner.destroy() });
@@ -2321,16 +2329,13 @@ export class GameScene extends Phaser.Scene {
     const w = t.width;
     const h = t.height;
     const top = Math.max(HUD_BOTTOM + 6, this.senseiFloor()); // Q-P4 QA: the same floor as every Sensei line
-    const spots = [
-      { x: 8, y: top },
-      { x: (W - w) / 2, y: top },
-      { x: 8, y: (H - h) / 2 },
-      { x: 8, y: H - h - 8 },
-      { x: (W - w) / 2, y: H - h - 8 },
-    ];
-    const free = spots.find(({ x, y }) => !keepOff.some((b) => b.x1 > x && b.x0 < x + w && b.y1 > y && b.y0 < y + h));
+    // Q-VIRTUE-BANNER: the one rule (centre x); the buttons, HUD and red circles are all hard keep-outs. None clear: hidden.
+    const free = pickBannerSpot({
+      viewW: W, viewH: H, floor: top, home: top, w, h, x: 8 + w / 2, y: top,
+      players: this.playerScreenBoxes(), buttons: keepOff, others: [],
+    });
     t.setVisible(!!free);
-    if (free) t.setPosition(free.x, free.y);
+    if (free) t.setPosition(free.x - w / 2, free.y);
   }
 
   private placeSensei(): void {
@@ -2345,6 +2350,7 @@ export class GameScene extends Phaser.Scene {
     const boxes = this.protectedBoxes(true);
     const btn = this.gotItBtn?.active ? this.gotItBtn : null;
     const h = t.height + (btn ? btn.height + 8 : 0);
+    let tutorialExtra: Box[] = [];
     for (let pass = 0; pass < 2; pass++) {
       for (const b of boxes) {
         if (b.x1 < left || b.x0 > right || b.y1 < top || b.y0 > top + h) continue;
@@ -2360,6 +2366,13 @@ export class GameScene extends Phaser.Scene {
       const py = (p.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
       const px = (p.x * TILE - cam.worldView.x) * (cam.zoom / DPR);
       const H = view(this).height;
+      tutorialExtra = this.world.enemies
+        .filter((e) => e.def.boss && e.mode !== 'defeated')
+        .map((e) => {
+          const ex = (e.pos.x * TILE - cam.worldView.x) * (cam.zoom / DPR);
+          const ey = (e.pos.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
+          return { x0: ex - 1.5 * k, x1: ex + 1.5 * k, y0: ey - 3 * k, y1: ey + k };
+        });
       const keepOff = [
         ...boxes,
         { x0: px - k, x1: px + k, y0: py - 1.8 * k, y1: py + 0.8 * k },
@@ -2390,8 +2403,9 @@ export class GameScene extends Phaser.Scene {
       top = fit?.y ?? H - h - 8;
     }
     t.setY(top);
-    // QA on #295: the "Sensei steps back" banner never covers a player.
-    if (t.getData('keepOffPlayers')) this.placeOffPlayers(t);
+    // Q-VIRTUE-BANNER: every Sensei line (New move!, lessons, Counter tip, twists, tutorial) goes through the one
+    // rule, so none covers VIRTUE, STRIKE, Stance or any action button (#295: nor a player when there is room).
+    this.placeOffPlayers(t, btn ? btn.height + 8 : 0, tutorialExtra);
     btn?.setPosition(t.x, t.y + t.height + 8);
     this.placeDecoToasts();
   }
@@ -2746,7 +2760,7 @@ export class GameScene extends Phaser.Scene {
    * space above the bottom button row). No room: the small-phone text size, then again. Still none: over the
    * arena (clear of the buttons only), never over Stance or another button.
    */
-  private placeOffPlayers(t: Phaser.GameObjects.Text): void {
+  private placeOffPlayers(t: Phaser.GameObjects.Text, below = 0, extra: Box[] = []): void {
     const ask = (): BannerAsk => {
       const { width, height } = view(this);
       return {
@@ -2755,12 +2769,12 @@ export class GameScene extends Phaser.Scene {
         floor: this.senseiFloor(),
         home: this.senseiHome(height),
         w: t.width,
-        h: t.height,
+        h: t.height + below,
         x: t.x,
         y: t.y,
         players: this.playerScreenBoxes(),
         buttons: this.buttonKeepOut(),
-        others: this.protectedBoxes(true),
+        others: [...this.protectedBoxes(true), ...extra],
       };
     };
     let spot = pickBannerSpot(ask());
@@ -2768,6 +2782,17 @@ export class GameScene extends Phaser.Scene {
       t.setFontSize(20);
       t.setWordWrapWidth(Math.min(view(this).width - 48, 640), true);
       spot = pickBannerSpot(ask());
+    }
+    // Q-VIRTUE-BANNER: still no room (a tall tip on a small phone): narrow it into the strip left of the buttons.
+    // Then narrower and taller, a step at a time, so it fits beside the hero (or in that strip).
+    if (!spot) {
+      const strip = leftStripWidth(ask());
+      const wraps = [strip, ...Array.from({ length: 6 }, (_, i) => t.width - 40 * (i + 1))].filter((w) => w >= 200 && w < t.width);
+      for (const w of wraps) {
+        t.setWordWrapWidth(w - 32, true);
+        spot = pickBannerSpot(ask());
+        if (spot) break;
+      }
     }
     spot ??= overArena(ask());
     t.setPosition(spot.x, spot.y);
