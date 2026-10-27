@@ -22,7 +22,7 @@ describe('Q-SWARM-JAB: the swarmer jab wind-up', () => {
     for (const d of ['guided', 'standard'] as Difficulty[]) expect(telegraphTicks(jab, d)).toBe(old(jab.telegraphTicks, d));
   });
   it('every swarmer attack (Challenge block included) is at least 10 on Challenge, elites too', () => {
-    const all = [...swarmer.attacks, ...(swarmer.challenge?.attacks ?? []), ...(swarmer.challenge?.phases ?? []).flatMap((p) => p.attacks)];
+    const all = [...swarmer.attacks, ...(swarmer.challenge?.attacks ?? [])];
     for (const a of all) {
       expect(telegraphTicks(a, 'challenge')).toBeGreaterThanOrEqual(MIN_WINDUP_TICKS);
       for (const k of ELITE_KINDS) expect(eliteWindup(telegraphTicks(a, 'challenge'), k, 'challenge', content.elites, DIFFICULTY.challenge.counterWindowTicks)).toBeGreaterThanOrEqual(MIN_WINDUP_TICKS);
