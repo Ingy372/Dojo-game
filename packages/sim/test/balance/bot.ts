@@ -114,7 +114,10 @@ interface Plan {
 }
 
 /** Plays one room until it's left (door, defeat, or time limit). */
-export function playRoom(content: Content, run: RunState, world: WorldState, room: Room, style: Style, skill: Skill, rng: Rng, onTick?: (world: WorldState) => void): RoomStats {
+/** Chooses an Insight from the offered ids. The default is a random one (tests may pass a deliberate picker). */
+export type InsightPicker = (run: RunState, choices: string[]) => string;
+
+export function playRoom(content: Content, run: RunState, world: WorldState, room: Room, style: Style, skill: Skill, rng: Rng, onTick?: (world: WorldState) => void, pickInsight?: InsightPicker): RoomStats {
   const p = world.players.p1;
   const plans = new Map<string, Plan>();
   const stats: RoomStats = { roomId: room.id, kind: room.kind, ticks: 0, damage: 0, perfects: 0, blocks: 0, hits: 0, strikes: 0, dealt: 0, kos: 0, died: false, crowd: 0, peakCrowd: 0, winded: 0, grade: null };
@@ -122,7 +125,7 @@ export function playRoom(content: Content, run: RunState, world: WorldState, roo
   let crowdN = 0;
   const limit = 20 * 60 * 6;
   for (let t = 0; t < limit && run.status === 'playing'; t++) {
-    if (run.insightChoices) chooseInsight(run, pick(rng, run.insightChoices));
+    if (run.insightChoices) chooseInsight(run, pickInsight ? pickInsight(run, run.insightChoices) : pick(rng, run.insightChoices));
     const input = decide(world, room, run, style, skill, rng, plans);
     stepWorld(world, room, { p1: input });
     onTick?.(world);
