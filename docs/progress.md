@@ -939,3 +939,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - B-MAIN-TRY11: q-prem-try test updated for the 11-lesson draft from #355; main green again.
 - B-W-ROOMS-TESTS: #359 tests fit the white rooms (mixes, K12, old-thumper at belt 2, golden re-captured for white runs only).
 - B-BRIDGE-GOLDENS: p-menu2 golden re-captured for the #361 bridge swarmer move (revert proof passes).
+- R-B1-RAMP-2: pin test for the 15 white room copies, ?room= link maps to the white copy, background shots match the originals; #361 note corrected to 8 run entries.
