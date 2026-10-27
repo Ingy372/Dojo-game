@@ -1456,3 +1456,5 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 ## Q-BOW-OVER-MENU — the bow waits for menus to close (2026-10-27)
 - Manager's pick: "wait until the menu closes". In the Home Dojo, a due bow is held while `mode !== 'play'` (menu, decorate, arriving) or any arrival card is open (`cardsOpen`), and polled in `update`. It shows as soon as all are closed, exactly once per scene start (`bowShown`, reset in `create`). The bow itself (prompt, tap, `playBow`, `setBowDue(false)`, `arrive`) is unchanged.
 - Repro (3-yellow): with the arrival "Your Home Dojo" card up, a due bow drew on top of it (depth 80 over 70) and the next card then queued behind it. The Tower floor bow (GameScene `askForBow`) already runs before any menu can open and sets `menuOpen`, so it is not gated.
+
+- Q-SHAKE-CENTER: the shake is driven by `lockShakeOffset(t) = px * sin(2*pi*cycles*t)` from a counter tween, not a yoyo tween to +px (which only moved right). A sine is exactly symmetric and 0 at both ends; onComplete/onStop still snap x back to rest.
