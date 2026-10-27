@@ -1449,3 +1449,10 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - `tell` text is designer-only (not shown in game). Existing art and sounds only: whoosh on a lane wind-up, clank on the double slam.
 - Reduced motion keeps every lane and circle; only the lane's sliding stripes stop.
 - Sensei's guided Counter ("COUNTER!" + pulsing button) now only picks a counterable warning; before, it could pick a dash-only lane (incl. the rolling pin and hearth cook) — a real bug, test added.
+## Q-FAIR-EDGE — two Challenge fairness edges (2026-10-27)
+- The pattern "on screen" check now counts downed players (only players who are out are skipped). Before, with every player down the check passed vacuously, so a 2nd hit could start off screen.
+- The lane/red-circle rule now runs both ways: a counterable (red circle) attack doesn't start where another enemy's flagged dash lane (`noOverlapWithRedCircle`, uncounterable) winding up covers the player (lane from the enemy to its landing point, area + half a body). The step order inside a tick no longer matters. Challenge only; Guided and Standard unchanged.
+## Q-LOCK-CARD — the locked Challenge card answers a tap (2026-10-27)
+- The locked card is solid (no `setAlpha(0.7)`): fill `#1d1a26`, name `#a39bb0` (6.4:1), line `#c9b98f` (8.8:1). It no longer shows the room through it at 667x320.
+- A tap on the locked card plays the existing `sfx.place(false)` (no new sound or art), pulses the unlock line (scale 1.08, 120 ms, yoyo) and shakes the card ±4 px, 3 cycles in 250 ms. With reduced motion on there is no shake; the sound and pulse stay. The card returns to its stored base x, so fast repeat taps don't drift. The tap never picks Challenge or saves.
+- The locked line may hold `{belt}`, filled with the school-data belt name at `CHALLENGE_FROM_TIER` (`lockedLine` in `apps/client/src/ui/lockCard.ts`). Text without `{belt}` shows unchanged, so this works with today's text and with C-LOCK-WORDS. Supersedes the "dimmed, alpha 0.7" note in R-CHALLENGE P6.
