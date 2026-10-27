@@ -1453,5 +1453,8 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - The locked card is solid (no `setAlpha(0.7)`): fill `#1d1a26`, name `#a39bb0` (6.4:1), line `#c9b98f` (8.8:1). It no longer shows the room through it at 667x320.
 - A tap on the locked card plays the existing `sfx.place(false)` (no new sound or art), pulses the unlock line (scale 1.08, 120 ms, yoyo) and shakes the card ±4 px, 3 cycles in 250 ms. With reduced motion on there is no shake; the sound and pulse stay. The card returns to its stored base x, so fast repeat taps don't drift. The tap never picks Challenge or saves.
 - The locked line may hold `{belt}`, filled with the school-data belt name at `CHALLENGE_FROM_TIER` (`lockedLine` in `apps/client/src/ui/lockCard.ts`). Text without `{belt}` shows unchanged, so this works with today's text and with C-LOCK-WORDS. Supersedes the "dimmed, alpha 0.7" note in R-CHALLENGE P6.
+## R-CHALLENGE P7 — the balance table reads the real C1 content (2026-10-27)
+- `test/balance/sample-patterns.ts` is deleted; the P5 tests and the BALANCE=1 table run on `testContent()` (content/enemies with the C1 blocks). The "off" side of the byte-equal checks is a copy with every `challenge` block stripped.
+- Target = the §4b "L+B (recommended)" Challenge win % row (belts 4-10, 40 seeds), in `test/balance/challenge-targets.ts`. A cell more than 5 points off prints a `WARN` line; it does not fail the test (T1 grades at 100 seeds). Supersedes the "Samples are test-only" note in P5.
 
 - Q-SHAKE-CENTER: the shake is driven by `lockShakeOffset(t) = px * sin(2*pi*cycles*t)` from a counter tween, not a yoyo tween to +px (which only moved right). A sine is exactly symmetric and 0 at both ends; onComplete/onStop still snap x back to rest.
