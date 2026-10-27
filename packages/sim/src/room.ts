@@ -210,6 +210,11 @@ export function loadRoom(data: unknown): Room {
  * Which door slots to use when offering `count` doors: spread out evenly
  * (one door uses the middle slot; two use the outer slots).
  */
+/** R-B1-RAMP-2: a belt's own copy of a room is named after it with a prefix (`w-bamboo-hall` copies `bamboo-hall`). The original's id, or the id itself. */
+export function baseRoomId(id: string): string {
+  return id.startsWith('w-') ? id.slice(2) : id;
+}
+
 export function activeDoorSlots(room: Room, count: number): number[] {
   const n = room.doors.length;
   const c = Math.min(count, n);

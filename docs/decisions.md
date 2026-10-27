@@ -1400,3 +1400,9 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 
 ## B-BRIDGE-GOLDENS — golden after the bridge swarmer move (#361, 2026-10-26)
 - The p-menu2 golden is re-captured because one Narrow Bridge swarmer (white and belt rooms) moved from (17,4) to (17,3). Only the 5 runs that visit the bridge change, from the bridge room on (the white run 1 bridge room goes 224 -> 251 ticks, A -> S); the bot keeps playing on after a different fight, so later rooms in those runs differ too. Moving the swarmer back gives the old file exactly. No stat or content changes.
+- Correction (R-B1-RAMP-2): #361 changed 8 run entries in the golden, not 5: white/new and white/oldSave run 1, white3/new and white3/oldSave run 1, yellow/new and yellow/oldSave run 1, and yellow/new and yellow/oldSave run 2.
+
+## R-B1-RAMP-2 — white belt room copies stay in step with their originals (2026-10-26)
+- No new content field: a copy is found by its `w-` prefix (`baseRoomId`). Room art comes from the tiles plus the belt's art pack and the Monster Journal goes by enemy, so neither needed a change.
+- `?room=<original>` at white belt now opens the belt's own copy (`beltRoomId`, client only), so old test links keep working.
+- A pin test checks all 15 copies keep their original's layout, doors, chest, shrine and kind. The only text allowed to differ: w-brute-and-swarm's name and mix, and w-stone-garden's mix.
