@@ -4,7 +4,7 @@ the dash-only stripe rules, line word limits, ages-6+ wording, and that faith te
 import json, re, sys, glob, pathlib
 R = pathlib.Path(__file__).resolve().parents[3]
 FK = json.loads((R/"content/enemies/floor-keeper.json").read_text())
-CORE = [k for k in FK if k not in ("summon",)]
+CORE = [k for k in FK if k not in ("summon", "challenge")]
 ATTACK = list(FK["attacks"][0].keys())
 TIERS = ["white","yellow","orange","green","blue","red","red-black","brown","brown-black","black"]
 EARLY = TIERS[:3]
