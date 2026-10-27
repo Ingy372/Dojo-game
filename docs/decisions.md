@@ -1479,3 +1479,6 @@ Follow-up after QA (#381 FAIL): the arrival sequence is gated with its own `arri
 
 ## Q-STANCE-BANNER: action buttons are a hard keep-out for Sensei's banner (2026-10-27)
 The banner's placement is one pure rule (`ui/senseiPlace.ts`, `pickBannerSpot`). Order: clear of everything → clear of hero + buttons → shrink to 20px and retry → over the arena (still clear of buttons). Covering the hero is acceptable as a last resort; covering a control the player may need during the 2.2 s is not.
+
+## Q-VIRTUE-BANNER: all Sensei banners use the one placement rule (2026-10-27)
+`placeSensei` always finishes in `placeOffPlayers` (pickBannerSpot + buttonKeepOut), not only for "steps back" banners. The Counter tip and the twist banner use the same helper. If a tall line has no clear spot, it narrows (taller, thinner) before it may go over the arena; it never goes over an action button.

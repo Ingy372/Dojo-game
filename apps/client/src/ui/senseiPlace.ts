@@ -65,6 +65,11 @@ export function overArena(a: BannerAsk): BannerSpot {
   return cands.find((s) => !a.buttons.some((b) => overlaps(boxAt(a, s), b))) ?? { x: a.viewW / 2, y: a.floor };
 }
 
+/** Q-VIRTUE-BANNER: the width of the free strip left of the leftmost button (a tall banner fits there when nothing else does). */
+export function leftStripWidth(a: Pick<BannerAsk, 'viewW' | 'buttons'>): number {
+  return Math.min(a.viewW, ...a.buttons.map((b) => b.x0)) - 16;
+}
+
 function boxAt(a: BannerAsk, s: BannerSpot): Box {
   return { x0: s.x - a.w / 2, x1: s.x + a.w / 2, y0: s.y, y1: s.y + a.h };
 }
