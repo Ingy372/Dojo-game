@@ -1412,3 +1412,8 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - No new content field: a copy is found by its `w-` prefix (`baseRoomId`). Room art comes from the tiles plus the belt's art pack and the Monster Journal goes by enemy, so neither needed a change.
 - `?room=<original>` at white belt now opens the belt's own copy (`beltRoomId`, client only), so old test links keep working.
 - A pin test checks all 15 copies keep their original's layout, doors, chest, shrine and kind. The only text allowed to differ: w-brute-and-swarm's name and mix, and w-stone-garden's mix.
+
+## R-CHALLENGE P1 — 10-tick wind-up floor on Challenge (2026-10-27)
+- The 10-tick minimum (`MIN_WINDUP_TICKS` in config.ts, also used by the enemy loader) now applies after the Challenge formula too, in `telegraphTicks`. Only the swarmer jab and spark-sprite dart change (9 -> 10 ticks on Challenge). Guided and Standard use the exact old formula (tested on every attack).
+- Elites keep their own minimum code (`eliteWindup`); a test checks every elite Challenge wind-up is still at least 10.
+- The p-menu2 golden is re-captured: only `rooted.challenge` moves (perfects 6 -> 7, blocks 2 -> 4, health 146 -> 191) because that room's swarmer jabs are 1 tick longer. Every Guided and Standard value is unchanged. The R-BAL-12 bands test stays green.
