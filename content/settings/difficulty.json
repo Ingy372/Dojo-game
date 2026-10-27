@@ -23,7 +23,7 @@
   ],
   "locked": {
     "_note": "R-CHALLENGE P6 (core-design §13): below the 4th belt the Challenge card shows this text, dimmed with a lock, and can't be picked. Steady shows as selected there even if Challenge was picked before; the pick comes back at the 4th belt.",
-    "challenge": "Opens when you earn your Green Belt!"
+    "challenge": "Opens when you earn your {belt}!"
   },
   "offer": {
     "title": "Want more time to COUNTER?",
