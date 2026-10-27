@@ -1443,6 +1443,9 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - Below the 4th belt the Challenge card is dimmed (alpha 0.7, contrast 5.6:1 or better), shows 🔒 and "Unlocks at your 4th belt." (content/settings/difficulty.json `locked.challenge`), and does nothing when tapped.
 - A `?difficulty=challenge` test link still wins at any belt, so the sims and goldens don't change.
 
+## Q-SWARM-JAB — swarmer jab wind-up on Challenge (2026-10-27)
+- P1's floor (`telegraphTicks`, MIN_WINDUP_TICKS = 10) already gives the 12-tick swarmer jab 10 ticks on Challenge (it was 9), C1's swarmer content included. No game-logic change.
+- Guard: the elites loader now refuses `minWindupTicks` under MIN_WINDUP_TICKS, so an elites.json edit can't push an elite wind-up under half a second.
 ## Q-FAIR-EDGE — two Challenge fairness edges (2026-10-27)
 - The pattern "on screen" check now counts downed players (only players who are out are skipped). Before, with every player down the check passed vacuously, so a 2nd hit could start off screen.
 - The lane/red-circle rule now runs both ways: a counterable (red circle) attack doesn't start where another enemy's flagged dash lane (`noOverlapWithRedCircle`, uncounterable) winding up covers the player (lane from the enemy to its landing point, area + half a body). The step order inside a tick no longer matters. Challenge only; Guided and Standard unchanged.
