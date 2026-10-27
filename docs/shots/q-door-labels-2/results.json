@@ -1,0 +1,2558 @@
+[
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmon-gauntlet-left.png",
+  "room": "gauntlet",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 25.89,
+  "firstFrames": [
+   {
+    "scroll": 130,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 25.885877318116975,
+      "r": 720.5905848787446
+     },
+     {
+      "text": "TREASURE",
+      "l": 726.0085592011412,
+      "r": 33.711840228245364
+     }
+    ]
+   },
+   {
+    "scroll": 130,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 25.885877318116975,
+      "r": 720.5905848787446
+     },
+     {
+      "text": "TREASURE",
+      "l": 726.0085592011412,
+      "r": 33.711840228245364
+     }
+    ]
+   },
+   {
+    "scroll": 130,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 25.885877318116975,
+      "r": 720.5905848787446
+     },
+     {
+      "text": "TREASURE",
+      "l": 726.0085592011412,
+      "r": 33.711840228245364
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmon-gauntlet-right.png",
+  "room": "gauntlet",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 25.89,
+  "firstFrames": [
+   {
+    "scroll": 130,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 25.885877318116975,
+      "r": 720.5905848787446
+     },
+     {
+      "text": "TREASURE",
+      "l": 726.0085592011412,
+      "r": 33.711840228245364
+     }
+    ]
+   },
+   {
+    "scroll": 130,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 25.885877318116975,
+      "r": 720.5905848787446
+     },
+     {
+      "text": "TREASURE",
+      "l": 726.0085592011412,
+      "r": 33.711840228245364
+     }
+    ]
+   },
+   {
+    "scroll": 130,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 25.885877318116975,
+      "r": 720.5905848787446
+     },
+     {
+      "text": "TREASURE",
+      "l": 726.0085592011412,
+      "r": 33.711840228245364
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmon-narrow-bridge-left.png",
+  "room": "narrow-bridge",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 83.67760342368045,
+      "r": 662.7988587731811
+     },
+     {
+      "text": "TREASURE",
+      "l": 751.7184681224624,
+      "r": 8.001931306924215
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 83.67760342368045,
+      "r": 662.7988587731811
+     },
+     {
+      "text": "TREASURE",
+      "l": 751.7184681224624,
+      "r": 8.001931306924215
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 83.67760342368045,
+      "r": 662.7988587731811
+     },
+     {
+      "text": "TREASURE",
+      "l": 751.7184681224624,
+      "r": 8.001931306924215
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmon-narrow-bridge-right.png",
+  "room": "narrow-bridge",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 83.67760342368045,
+      "r": 662.7988587731811
+     },
+     {
+      "text": "TREASURE",
+      "l": 751.7184681224624,
+      "r": 8.001931306924215
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 83.67760342368045,
+      "r": 662.7988587731811
+     },
+     {
+      "text": "TREASURE",
+      "l": 751.7184681224624,
+      "r": 8.001931306924215
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 83.67760342368045,
+      "r": 662.7988587731811
+     },
+     {
+      "text": "TREASURE",
+      "l": 751.7184681224624,
+      "r": 8.001931306924215
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmon-w-treasure-vault-left.png",
+  "room": "w-treasure-vault",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 91.5,
+  "firstFrames": [
+   {
+    "scroll": -110,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 199.2610556348074,
+      "r": 547.2154065620542
+     },
+     {
+      "text": "TREASURE",
+      "l": 668.2168330955777,
+      "r": 91.50356633380885
+     }
+    ]
+   },
+   {
+    "scroll": -110,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 199.2610556348074,
+      "r": 547.2154065620542
+     },
+     {
+      "text": "TREASURE",
+      "l": 668.2168330955777,
+      "r": 91.50356633380885
+     }
+    ]
+   },
+   {
+    "scroll": -110,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 199.2610556348074,
+      "r": 547.2154065620542
+     },
+     {
+      "text": "TREASURE",
+      "l": 668.2168330955777,
+      "r": 91.50356633380885
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmon-w-treasure-vault-right.png",
+  "room": "w-treasure-vault",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 91.5,
+  "firstFrames": [
+   {
+    "scroll": -110,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 199.2610556348074,
+      "r": 547.2154065620542
+     },
+     {
+      "text": "TREASURE",
+      "l": 668.2168330955777,
+      "r": 91.50356633380885
+     }
+    ]
+   },
+   {
+    "scroll": -110,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 199.2610556348074,
+      "r": 547.2154065620542
+     },
+     {
+      "text": "TREASURE",
+      "l": 668.2168330955777,
+      "r": 91.50356633380885
+     }
+    ]
+   },
+   {
+    "scroll": -110,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 199.2610556348074,
+      "r": 547.2154065620542
+     },
+     {
+      "text": "TREASURE",
+      "l": 668.2168330955777,
+      "r": 91.50356633380885
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmon-keepers-hall-left.png",
+  "room": "keepers-hall",
+  "doors": 1,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 379.26,
+  "firstFrames": [
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 379.25820256776035,
+      "r": 380.46219686162624
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 379.25820256776035,
+      "r": 380.46219686162624
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 379.25820256776035,
+      "r": 380.46219686162624
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmon-keepers-hall-right.png",
+  "room": "keepers-hall",
+  "doors": 1,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 379.26,
+  "firstFrames": [
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 379.25820256776035,
+      "r": 380.46219686162624
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 379.25820256776035,
+      "r": 380.46219686162624
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 379.25820256776035,
+      "r": 380.46219686162624
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmoff-gauntlet-left.png",
+  "room": "gauntlet",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 25.89,
+  "firstFrames": [
+   {
+    "scroll": 130,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 25.885877318116975,
+      "r": 720.5905848787446
+     },
+     {
+      "text": "TREASURE",
+      "l": 726.0085592011412,
+      "r": 33.711840228245364
+     }
+    ]
+   },
+   {
+    "scroll": 130,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 25.885877318116975,
+      "r": 720.5905848787446
+     },
+     {
+      "text": "TREASURE",
+      "l": 726.0085592011412,
+      "r": 33.711840228245364
+     }
+    ]
+   },
+   {
+    "scroll": 130,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 25.885877318116975,
+      "r": 720.5905848787446
+     },
+     {
+      "text": "TREASURE",
+      "l": 726.0085592011412,
+      "r": 33.711840228245364
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmoff-gauntlet-right.png",
+  "room": "gauntlet",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 25.89,
+  "firstFrames": [
+   {
+    "scroll": 130,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 25.885877318116975,
+      "r": 720.5905848787446
+     },
+     {
+      "text": "TREASURE",
+      "l": 726.0085592011412,
+      "r": 33.711840228245364
+     }
+    ]
+   },
+   {
+    "scroll": 130,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 25.885877318116975,
+      "r": 720.5905848787446
+     },
+     {
+      "text": "TREASURE",
+      "l": 726.0085592011412,
+      "r": 33.711840228245364
+     }
+    ]
+   },
+   {
+    "scroll": 130,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 25.885877318116975,
+      "r": 720.5905848787446
+     },
+     {
+      "text": "TREASURE",
+      "l": 726.0085592011412,
+      "r": 33.711840228245364
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmoff-narrow-bridge-left.png",
+  "room": "narrow-bridge",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 83.67760342368045,
+      "r": 662.7988587731811
+     },
+     {
+      "text": "TREASURE",
+      "l": 751.7184681224624,
+      "r": 8.001931306924215
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 83.67760342368045,
+      "r": 662.7988587731811
+     },
+     {
+      "text": "TREASURE",
+      "l": 751.7184681224624,
+      "r": 8.001931306924215
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 83.67760342368045,
+      "r": 662.7988587731811
+     },
+     {
+      "text": "TREASURE",
+      "l": 751.7184681224624,
+      "r": 8.001931306924215
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmoff-narrow-bridge-right.png",
+  "room": "narrow-bridge",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 83.67760342368045,
+      "r": 662.7988587731811
+     },
+     {
+      "text": "TREASURE",
+      "l": 751.7184681224624,
+      "r": 8.001931306924215
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 83.67760342368045,
+      "r": 662.7988587731811
+     },
+     {
+      "text": "TREASURE",
+      "l": 751.7184681224624,
+      "r": 8.001931306924215
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 83.67760342368045,
+      "r": 662.7988587731811
+     },
+     {
+      "text": "TREASURE",
+      "l": 751.7184681224624,
+      "r": 8.001931306924215
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmoff-w-treasure-vault-left.png",
+  "room": "w-treasure-vault",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 91.5,
+  "firstFrames": [
+   {
+    "scroll": -110,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 199.2610556348074,
+      "r": 547.2154065620542
+     },
+     {
+      "text": "TREASURE",
+      "l": 668.2168330955777,
+      "r": 91.50356633380885
+     }
+    ]
+   },
+   {
+    "scroll": -110,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 199.2610556348074,
+      "r": 547.2154065620542
+     },
+     {
+      "text": "TREASURE",
+      "l": 668.2168330955777,
+      "r": 91.50356633380885
+     }
+    ]
+   },
+   {
+    "scroll": -110,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 199.2610556348074,
+      "r": 547.2154065620542
+     },
+     {
+      "text": "TREASURE",
+      "l": 668.2168330955777,
+      "r": 91.50356633380885
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmoff-w-treasure-vault-right.png",
+  "room": "w-treasure-vault",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 91.5,
+  "firstFrames": [
+   {
+    "scroll": -110,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 199.2610556348074,
+      "r": 547.2154065620542
+     },
+     {
+      "text": "TREASURE",
+      "l": 668.2168330955777,
+      "r": 91.50356633380885
+     }
+    ]
+   },
+   {
+    "scroll": -110,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 199.2610556348074,
+      "r": 547.2154065620542
+     },
+     {
+      "text": "TREASURE",
+      "l": 668.2168330955777,
+      "r": 91.50356633380885
+     }
+    ]
+   },
+   {
+    "scroll": -110,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 199.2610556348074,
+      "r": 547.2154065620542
+     },
+     {
+      "text": "TREASURE",
+      "l": 668.2168330955777,
+      "r": 91.50356633380885
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmoff-keepers-hall-left.png",
+  "room": "keepers-hall",
+  "doors": 1,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 379.26,
+  "firstFrames": [
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 379.25820256776035,
+      "r": 380.46219686162624
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 379.25820256776035,
+      "r": 380.46219686162624
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 379.25820256776035,
+      "r": 380.46219686162624
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/844x390-rmoff-keepers-hall-right.png",
+  "room": "keepers-hall",
+  "doors": 1,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 379.26,
+  "firstFrames": [
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 379.25820256776035,
+      "r": 380.46219686162624
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 379.25820256776035,
+      "r": 380.46219686162624
+     }
+    ]
+   },
+   {
+    "scroll": 82,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 379.25820256776035,
+      "r": 380.46219686162624
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmon-gauntlet-left.png",
+  "room": "gauntlet",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 218,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.003999999999975,
+      "r": 565.199125
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 218,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.003999999999975,
+      "r": 565.199125
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 218,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.003999999999975,
+      "r": 565.199125
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmon-gauntlet-right.png",
+  "room": "gauntlet",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 218,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.003999999999975,
+      "r": 565.199125
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 218,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.003999999999975,
+      "r": 565.199125
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 218,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.003999999999975,
+      "r": 565.199125
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmon-narrow-bridge-left.png",
+  "room": "narrow-bridge",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.684895833333334,
+      "r": 564.5182291666667
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.684895833333334,
+      "r": 564.5182291666667
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.684895833333334,
+      "r": 564.5182291666667
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmon-narrow-bridge-right.png",
+  "room": "narrow-bridge",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.684895833333334,
+      "r": 564.5182291666667
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.684895833333334,
+      "r": 564.5182291666667
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.684895833333334,
+      "r": 564.5182291666667
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmon-w-treasure-vault-left.png",
+  "room": "w-treasure-vault",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 15.05,
+  "firstFrames": [
+   {
+    "scroll": -22,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 119.8515625,
+      "r": 453.3515625
+     },
+     {
+      "text": "TREASURE",
+      "l": 570.8871527777778,
+      "r": 15.053819444444445
+     }
+    ]
+   },
+   {
+    "scroll": -22,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 119.8515625,
+      "r": 453.3515625
+     },
+     {
+      "text": "TREASURE",
+      "l": 570.8871527777778,
+      "r": 15.053819444444445
+     }
+    ]
+   },
+   {
+    "scroll": -22,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 119.8515625,
+      "r": 453.3515625
+     },
+     {
+      "text": "TREASURE",
+      "l": 570.8871527777778,
+      "r": 15.053819444444445
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmon-w-treasure-vault-right.png",
+  "room": "w-treasure-vault",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 15.05,
+  "firstFrames": [
+   {
+    "scroll": -22,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 119.8515625,
+      "r": 453.3515625
+     },
+     {
+      "text": "TREASURE",
+      "l": 570.8871527777778,
+      "r": 15.053819444444445
+     }
+    ]
+   },
+   {
+    "scroll": -22,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 119.8515625,
+      "r": 453.3515625
+     },
+     {
+      "text": "TREASURE",
+      "l": 570.8871527777778,
+      "r": 15.053819444444445
+     }
+    ]
+   },
+   {
+    "scroll": -22,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 119.8515625,
+      "r": 453.3515625
+     },
+     {
+      "text": "TREASURE",
+      "l": 570.8871527777778,
+      "r": 15.053819444444445
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmon-keepers-hall-left.png",
+  "room": "keepers-hall",
+  "doors": 1,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 292.97,
+  "firstFrames": [
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 292.97048611111114,
+      "r": 292.97048611111114
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 292.97048611111114,
+      "r": 292.97048611111114
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 292.97048611111114,
+      "r": 292.97048611111114
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmon-keepers-hall-right.png",
+  "room": "keepers-hall",
+  "doors": 1,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 292.97,
+  "firstFrames": [
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 292.97048611111114,
+      "r": 292.97048611111114
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 292.97048611111114,
+      "r": 292.97048611111114
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 292.97048611111114,
+      "r": 292.97048611111114
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmoff-gauntlet-left.png",
+  "room": "gauntlet",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 218,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.003999999999975,
+      "r": 565.199125
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 218,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.003999999999975,
+      "r": 565.199125
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 218,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.003999999999975,
+      "r": 565.199125
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmoff-gauntlet-right.png",
+  "room": "gauntlet",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 218,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.003999999999975,
+      "r": 565.199125
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 218,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.003999999999975,
+      "r": 565.199125
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 218,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.003999999999975,
+      "r": 565.199125
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmoff-narrow-bridge-left.png",
+  "room": "narrow-bridge",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.684895833333334,
+      "r": 564.5182291666667
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.684895833333334,
+      "r": 564.5182291666667
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.684895833333334,
+      "r": 564.5182291666667
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmoff-narrow-bridge-right.png",
+  "room": "narrow-bridge",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.684895833333334,
+      "r": 564.5182291666667
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.684895833333334,
+      "r": 564.5182291666667
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8.684895833333334,
+      "r": 564.5182291666667
+     },
+     {
+      "text": "TREASURE",
+      "l": 577.9369722222222,
+      "r": 8.00400000000004
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmoff-w-treasure-vault-left.png",
+  "room": "w-treasure-vault",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 15.05,
+  "firstFrames": [
+   {
+    "scroll": -22,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 119.8515625,
+      "r": 453.3515625
+     },
+     {
+      "text": "TREASURE",
+      "l": 570.8871527777778,
+      "r": 15.053819444444445
+     }
+    ]
+   },
+   {
+    "scroll": -22,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 119.8515625,
+      "r": 453.3515625
+     },
+     {
+      "text": "TREASURE",
+      "l": 570.8871527777778,
+      "r": 15.053819444444445
+     }
+    ]
+   },
+   {
+    "scroll": -22,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 119.8515625,
+      "r": 453.3515625
+     },
+     {
+      "text": "TREASURE",
+      "l": 570.8871527777778,
+      "r": 15.053819444444445
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmoff-w-treasure-vault-right.png",
+  "room": "w-treasure-vault",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 15.05,
+  "firstFrames": [
+   {
+    "scroll": -22,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 119.8515625,
+      "r": 453.3515625
+     },
+     {
+      "text": "TREASURE",
+      "l": 570.8871527777778,
+      "r": 15.053819444444445
+     }
+    ]
+   },
+   {
+    "scroll": -22,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 119.8515625,
+      "r": 453.3515625
+     },
+     {
+      "text": "TREASURE",
+      "l": 570.8871527777778,
+      "r": 15.053819444444445
+     }
+    ]
+   },
+   {
+    "scroll": -22,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 119.8515625,
+      "r": 453.3515625
+     },
+     {
+      "text": "TREASURE",
+      "l": 570.8871527777778,
+      "r": 15.053819444444445
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmoff-keepers-hall-left.png",
+  "room": "keepers-hall",
+  "doors": 1,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 292.97,
+  "firstFrames": [
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 292.97048611111114,
+      "r": 292.97048611111114
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 292.97048611111114,
+      "r": 292.97048611111114
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 292.97048611111114,
+      "r": 292.97048611111114
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/667x375-rmoff-keepers-hall-right.png",
+  "room": "keepers-hall",
+  "doors": 1,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 292.97,
+  "firstFrames": [
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 292.97048611111114,
+      "r": 292.97048611111114
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 292.97048611111114,
+      "r": 292.97048611111114
+     }
+    ]
+   },
+   {
+    "scroll": 170,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 292.97048611111114,
+      "r": 292.97048611111114
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmon-gauntlet-left.png",
+  "room": "gauntlet",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 40,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": 40,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": 40,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmon-gauntlet-right.png",
+  "room": "gauntlet",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 40,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": 40,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": 40,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmon-narrow-bridge-left.png",
+  "room": "narrow-bridge",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmon-narrow-bridge-right.png",
+  "room": "narrow-bridge",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmon-w-treasure-vault-left.png",
+  "room": "w-treasure-vault",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": -200,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 74.66666666666666,
+      "r": 757.3333333333333
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -200,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 74.66666666666666,
+      "r": 757.3333333333333
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -200,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 74.66666666666666,
+      "r": 757.3333333333333
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmon-w-treasure-vault-right.png",
+  "room": "w-treasure-vault",
+  "doors": 2,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": -200,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 74.66666666666666,
+      "r": 757.3333333333333
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -200,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 74.66666666666666,
+      "r": 757.3333333333333
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -200,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 74.66666666666666,
+      "r": 757.3333333333333
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmon-keepers-hall-left.png",
+  "room": "keepers-hall",
+  "doors": 1,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 429.04,
+  "firstFrames": [
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 429.037037037037,
+      "r": 429.037037037037
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 429.037037037037,
+      "r": 429.037037037037
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 429.037037037037,
+      "r": 429.037037037037
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmon-keepers-hall-right.png",
+  "room": "keepers-hall",
+  "doors": 1,
+  "rm": "on",
+  "pass": true,
+  "frames": 30,
+  "minGap": 429.04,
+  "firstFrames": [
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 429.037037037037,
+      "r": 429.037037037037
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 429.037037037037,
+      "r": 429.037037037037
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 429.037037037037,
+      "r": 429.037037037037
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmoff-gauntlet-left.png",
+  "room": "gauntlet",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 40,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": 40,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": 40,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmoff-gauntlet-right.png",
+  "room": "gauntlet",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": 40,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": 40,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": 40,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmoff-narrow-bridge-left.png",
+  "room": "narrow-bridge",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmoff-narrow-bridge-right.png",
+  "room": "narrow-bridge",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 8,
+      "r": 824
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmoff-w-treasure-vault-left.png",
+  "room": "w-treasure-vault",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": -200,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 74.66666666666666,
+      "r": 757.3333333333333
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -200,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 74.66666666666666,
+      "r": 757.3333333333333
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -200,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 74.66666666666666,
+      "r": 757.3333333333333
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmoff-w-treasure-vault-right.png",
+  "room": "w-treasure-vault",
+  "doors": 2,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 8,
+  "firstFrames": [
+   {
+    "scroll": -200,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 74.66666666666666,
+      "r": 757.3333333333333
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -200,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 74.66666666666666,
+      "r": 757.3333333333333
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   },
+   {
+    "scroll": -200,
+    "labels": [
+     {
+      "text": "CHALLENGE",
+      "l": 74.66666666666666,
+      "r": 757.3333333333333
+     },
+     {
+      "text": "TREASURE",
+      "l": 850.074074074074,
+      "r": 8
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmoff-keepers-hall-left.png",
+  "room": "keepers-hall",
+  "doors": 1,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 429.04,
+  "firstFrames": [
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 429.037037037037,
+      "r": 429.037037037037
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 429.037037037037,
+      "r": 429.037037037037
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 429.037037037037,
+      "r": 429.037037037037
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "file": "/workspace/q-door-labels-2-shots/1024x768-rmoff-keepers-hall-right.png",
+  "room": "keepers-hall",
+  "doors": 1,
+  "rm": "off",
+  "pass": true,
+  "frames": 30,
+  "minGap": 429.04,
+  "firstFrames": [
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 429.037037037037,
+      "r": 429.037037037037
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 429.037037037037,
+      "r": 429.037037037037
+     }
+    ]
+   },
+   {
+    "scroll": -8,
+    "labels": [
+     {
+      "text": "TREASURE",
+      "l": 429.037037037037,
+      "r": 429.037037037037
+     }
+    ]
+   }
+  ],
+  "errs": []
+ }
+]
