@@ -24,6 +24,10 @@ export interface EnemyAttackDef {
   followUp?: EnemyFollowUpDef;
   /** R-CHALLENGE P2: the danger circle is drawn at the spot it lands on (tells come in P4). */
   landing?: boolean;
+  /** R-CHALLENGE P3: set on attacks from the Challenge block. They must start on screen (see SIM_VIEW). */
+  challenge?: boolean;
+  /** R-CHALLENGE P3: on Challenge, this dash-only lane never starts while another enemy's red circle covers the player. */
+  noOverlapWithRedCircle?: boolean;
 }
 
 /** R-CHALLENGE P2: the second hit of a two-part attack. */
@@ -169,6 +173,8 @@ function loadAttack(data: unknown, id: string, where: string): EnemyAttackDef {
   };
   if (a.counterable !== undefined && typeof a.counterable !== 'boolean') throw new EnemyError(id, `"${where}.counterable" must be true or false`);
   if (a.counterable === false || a.dashOnly === true) attack.counterable = false;
+  if (a.noOverlapWithRedCircle !== undefined && typeof a.noOverlapWithRedCircle !== 'boolean') throw new EnemyError(id, `"${where}.noOverlapWithRedCircle" must be true or false`);
+  if (a.noOverlapWithRedCircle === true) attack.noOverlapWithRedCircle = true;
   // Every attack must be telegraphed: at least half a second of warning on Standard.
   if (attack.telegraphTicks < MIN_WINDUP_TICKS) {
     throw new EnemyError(id, `"${where}.telegraphTicks" must be at least ${MIN_WINDUP_TICKS} (half a second of warning)`);
@@ -202,6 +208,11 @@ export function loadEnemy(data: unknown): EnemyDef {
     attacks = [loadAttack(raw.attack, id, 'attack')];
   } else {
     throw new EnemyError(id, '"attack" is missing');
+  }
+  // R-CHALLENGE P3: the Rolling Pin keeps the no-overlap flag in its "dashOnlyAttack" notes block.
+  const dashNote = raw.dashOnlyAttack as Record<string, unknown> | undefined;
+  if (dashNote && typeof dashNote === 'object' && dashNote.noOverlapWithRedCircle === true) {
+    for (const a of attacks) if (a.name === dashNote.name && a.counterable === false) a.noOverlapWithRedCircle = true;
   }
 
   let shield: EnemyShieldDef | null = null;
@@ -342,6 +353,7 @@ function loadChallenge(data: unknown, base: EnemyAttackDef[], id: string): Enemy
     }
     if (o.landing !== undefined && typeof o.landing !== 'boolean') throw new EnemyError(id, `"${where}.landing" must be true or false`);
     if (o.landing === true) attack.landing = true;
+    attack.challenge = true;
     return attack;
   });
   const all = [...base, ...extra];

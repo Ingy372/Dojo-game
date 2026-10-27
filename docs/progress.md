@@ -943,3 +943,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Q-DOOR-LABELS: side door labels clamped 8 px inside the view, unknown ?room= console warning; 8 tests; shots 60 PASS, 0 FAIL at 3 sizes, RM on/off (gauntlet CHALLENGE label moved from -47 px to 8 px at 667x375).
 - R-CHALLENGE P1: Challenge wind-ups never under 10 ticks (jab and dart 9 -> 10); golden moves only in its rooted Challenge row; next Q-DOOR-LABELS, then P6.
 - R-CHALLENGE P2: enemy `challenge` blocks (loader checks, one switch in createWorld, pattern stepping, two-part followUp hits, landing flag); 23 tests with test-only sample enemies; golden byte-identical; no content yet (C1).
+- R-CHALLENGE P3: Challenge pattern attacks start on screen (SIM_VIEW 9 x 6.75 tiles, tied to the client camera), one pattern wind-up at a time, no other attack during a two-part attack, no flagged lane over a red circle; 10 tests incl. a 1,000-room sweep at belts 4-10; golden byte-identical.
