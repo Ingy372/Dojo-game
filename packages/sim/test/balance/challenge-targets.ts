@@ -1,5 +1,5 @@
 // R-CHALLENGE P7: the §4b "L+B (recommended)" Challenge row (drafts/planning/R-CHALLENGE-PATTERNS.md),
-// win % per belt 4-10 at 40 seeds. The BALANCE=1 table warns when a real-content cell misses it by more than 5.
+// win % per belt 4-10 (drafted at 40 seeds; the BALANCE=1 table runs 100). The BALANCE=1 table warns when a real-content cell misses it by more than 5.
 export const LB_TARGET: Record<'kid' | 'newer' | 'careful', number[]> = {
   kid: [28, 43, 38, 25, 33, 30, 30],
   newer: [100, 100, 100, 100, 100, 100, 100],
