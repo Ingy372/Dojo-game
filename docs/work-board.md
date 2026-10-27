@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-27 8:00 AM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#361.
+Last updated: 2026-10-27 10:00 AM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#370.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -142,7 +142,26 @@ Last updated: 2026-10-27 8:00 AM EDT by Dojo-ascent Manager. Catch-up covers PRs
 | R-B1-RAMP-3 | Dojo-Ascent Game Logic/systems Tester | Re-run belts 1–3 × 3 settings × 3 bots. | Kid Standard b1 is 50–65%, and b1 to b2 is 2x or less. | **Done (Tester rerun after #361: kid Standard 55/67/66%, Guided 95%+).** |
 | Q-FIX-RED | Dojo-Ascent Programmer | Test-only fix for red main after #355 (q-prem-try expects 11 lessons). | Main green. | **Done (PR #360, merged Oct 26).** |
 | C-FIX-BRIDGE | Dojo-Ascent Content Designer | Narrow-bridge swarmer off the wall. | QA passes. | **Done (PR #361, merged Oct 26).** |
-| Q-CHALLENGE | Jay | Kid Challenge wins 28/22/26% at belts 1–3 while the careful bot wins 100%. Should the hardest setting challenge skilled players with new enemy attack patterns, judged in real playtests, instead of bigger numbers? | Jay answers; the Manager adds build items. | **Waits on Jay** (asked Oct 26, about 6 PM). Watch: kid Challenge drops from 15% at belt 6 to 7% at belt 7. |
+| Q-CHALLENGE | Jay | Kid Challenge wins 28/22/26% at belts 1–3 while the careful bot wins 100%. Should the hardest setting use new enemy attack patterns, judged in real playtests, instead of bigger numbers? | Jay answers; the Manager adds build items. | **Done: Jay said yes (Oct 27). Plan merged (#363, belt fix #369); build items in section 0a2.** |
+
+
+## 0a2. Challenge attack patterns (from `drafts/planning/R-CHALLENGE-PATTERNS.md`, PRs #363, #369)
+Challenge unlocks at the 4th belt (core-design §13), so patterns are played at belts 4–10 only. Careful-bot target on Challenge: 55–85%.
+| ID | Owner | What | Done when | Waits on |
+|---|---|---|---|---|
+| P1 | Dojo-Ascent Programmer | Loader floor applied after the Challenge formula (swarmer jab and spark-sprite dart go to 10 ticks). | A test shows every Challenge wind-up ≥ 10 ticks; Standard and Guided goldens unchanged. | **Done (PR #365, merged Oct 27).** |
+| P6 | Dojo-Ascent Programmer | Challenge lock: Challenge can only be picked from the 4th belt; below that it plays as Standard and Settings shows Steady. | A test shows Challenge can't start below belt 4; Guided and Standard unchanged. | **PR #367 open, waiting on Tester QA.** |
+| P2 | Dojo-Ascent Programmer | `challenge` block: loader, `mergeChallenge`, pattern stepping, `followUp`, `landing`. | The plan's §3 tests pass; Guided and Standard goldens byte-identical. | **PR #370 open; waits on #367 merging, then main merged in and QA.** |
+| P3 | Dojo-Ascent Programmer | Fairness rules 2 and 5 in world.ts: on-screen check, 1 pattern at a time, lane vs red circle. | Overlap and on-screen tests pass over 1,000 seeded rooms. | P2 |
+| P4 | Dojo-Ascent Programmer | Tells: lane, circle and landing-spot visuals, plus one Sensei line on first sight, using existing sfx where possible. | Each pattern shows its tell at the start of its wind-up at both phone sizes, Motion on and off. | P2, C1 |
+| P5 | Dojo-Ascent Programmer | Bot answers in bot.ts (landing circles, double hits). | A balance run prints the plan's §4 table with patterns on. | P2 |
+| C1 | Dojo-Ascent Content Designer | Write the `challenge` blocks for patterns C1–C5 (fromBelt C1–C3: 4, C4: 5, C5: 6). C6–C10 stay parked. Names, tells and Sensei lines from the plan §1. | All files load; each pattern's Challenge wind-up ≥ 14 ticks. | P2 |
+| C2 | Dojo-Ascent Content Designer | Pair-room and `fromRoom` placement for belts 4–10 (plan C12, C13). | Belt 4 Challenge shows C1–C3, belt 5 adds C4, belt 6 adds C5, belt 7 shows patterns from room 1. | C1 |
+| T1 | Dojo-Ascent Game Logic/systems Tester | Re-run the plan's §4 at 100 seeds with patterns on (Challenge rows belts 4–10). | Every row inside its band, or misses listed with the room causing them. | P1–P6, C1, C2 |
+| T2 | Dojo-Ascent Game Logic/systems Tester | Human playtest with the plan's §5 checklist. | Notes from at least 2 testers (one aged 6–8), no "hit from nowhere" reports. | T1 |
+| Q-BETA-CUT | Jay | Which Challenge patterns ship in the Dec 15 beta? | Jay answers; recorded in decisions.md. | **Waits on Jay** (asked Oct 27, 8:30 AM). |
+| Q-DOOR-LABELS | Dojo-Ascent Programmer | Keep door labels on screen; warn on unknown `?room=`. | QA passes. | **Done (PR #366, merged Oct 27).** |
+| Q-DOOR-LABELS-2 | Dojo-Ascent Programmer | Low: label sits too near the edge for 1–2 frames when the camera starts scrolling (Tester note on #366). | QA passes. | **PR #368 open, waiting on Tester QA.** |
 
 ## 0b5. Jay's renames and art calls (Oct 25 evening)
 | ID | Owner | What | Done when | Waits on |
