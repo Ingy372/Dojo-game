@@ -1415,6 +1415,9 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - Elites keep their own minimum code (`eliteWindup`); a test checks every elite Challenge wind-up is still at least 10.
 - The p-menu2 golden is re-captured: only `rooted.challenge` moves (perfects 6 -> 7, blocks 2 -> 4, health 146 -> 191) because that room's swarmer jabs are 1 tick longer. Every Guided and Standard value is unchanged. The R-BAL-12 bands test stays green.
 
+## Q-DOOR-LABELS-2 — door label side clamp runs after the camera moves (2026-10-27)
+- The side clamp moved out of `update()` into the camera's `FOLLOW_UPDATE` event (`clampDoorLabels`). Phaser sets `worldView` in `preRender` after `update()`, so the old clamp used last frame's view and a label could sit 2.5 px from the edge for 1-2 frames when a scroll started. The listener is removed on scene shutdown.
+- The top (Y) clamp stays in `update()`: the camera does not scroll far enough vertically in current rooms to show the same lag. Possible follow-up if a tall room shows it.
 ## R-CHALLENGE P6 — Challenge difficulty unlocks at the 4th belt (2026-10-27)
 - core-design §13: Challenge can be picked from the 4th belt (`CHALLENGE_FROM_TIER = 4`). Only the difficulty is gated; Challenge rooms still appear at every belt. There is no Sensei unlock line.
 - A Challenge pick saved below the 4th belt plays as Standard but stays stored, so it comes back at the 4th belt (`activeDifficulty`). Settings, the Home line and the Bests grades all use the active difficulty, so a child never sees Challenge selected while playing Standard.
