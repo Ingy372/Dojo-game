@@ -1,0 +1,22 @@
+diff --git a/packages/sim/src/world.ts b/packages/sim/src/world.ts
+index 2700ce9..e7dab2c 100644
+--- a/packages/sim/src/world.ts
++++ b/packages/sim/src/world.ts
+@@ -818,7 +818,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
+   if (p.dashTicks === 0 && p.guardTicks === 0 && p.strikeRecovery === 0 && p.attackCooldown === 0) {
+     const target = nearestEnemy(world, p, COMBAT.basicAttack.reach);
+     if (target) {
+-      const speed = Math.min(0.6, p.mods.attackSpeed + activeStance(p).attackSpeed);
++      const speed = Math.min(0.6, p.mods.attackSpeed + activeStance(p).attackSpeed + (process.env.WIND_ATK === '1' && p.speedBoostTicks > 0 ? p.mods.comboSpeedBonus * 0.5 : 0));
+       p.attackCooldown = Math.max(1, Math.round(COMBAT.basicAttack.cooldownTicks * (1 - speed)));
+       landHit(world, p, target, 'basic', COMBAT.basicAttack.strength, COMBAT.focus.perHit);
+     }
+@@ -946,7 +946,7 @@ function landHit(
+   }
+   const bonus =
+     comboBonus(p.combo) +
+-    (e.mode === 'stagger' ? p.mods.staggerBonus : 0) +
++    ((e.mode === 'stagger' || (process.env.PRESS_WIDE === '1' && (e.mode === 'recover' || e.mode === 'winded'))) ? p.mods.staggerBonus : 0) +
+     (e.mode === 'winded' && e.def.winded ? e.def.winded.damageBonus : 0);
+   const dmg = damage(p.power * (1 + p.mods.powerScale + stancePowerScale(p)), strength, e.def.guard, bonus);
+   p.combo++;

@@ -1,0 +1,104 @@
+/// <reference types="vite/client" />
+// LOCAL R-INSIGHT-BAL harness (not committed). Env: CONFIGS, BOTS, DIFFS, BELTS, SEEDS, OUT, BALANCE=1
+import { describe, it } from 'vitest';
+import { appendFileSync, readFileSync } from 'node:fs';
+import { testContent } from '../load-content';
+import { ARTISTS } from '../r-bal-12-artists';
+import { SKILLS, HOOKS, playRoom, type RoomStats, type Style, type Skill } from './bot';
+import { createRng, createRunWorld, currentRoom, startRun, type Difficulty, type RunState } from '../../src';
+declare const console: { log(...args: unknown[]): void };
+declare const process: { env: Record<string, string | undefined> };
+const env = process.env;
+const BOTS: Record<string, { style: Style; skill: Skill }> = {
+  kid: { style: 'kid', skill: SKILLS.novice },
+  newer: { style: 'smart', skill: SKILLS.typical },
+  careful: { style: 'smart', skill: SKILLS.sharp },
+};
+const FAMILY: Record<string, string> = { 'ripple-counter': 'rooted', 'iron-skin': 'rooted', 'wind-step': 'flowing', 'double-strike': 'flowing', 'quick-hands': 'flowing', 'press-the-advantage': 'power', 'shield-breaker': 'power', 'heavy-hands': 'power', rally: 'virtue' };
+const NEWIDS = env.NEW ? (JSON.parse(env.NEW) as { id: string; family: string }[]) : [];
+for (const n of NEWIDS) FAMILY[n.id] = n.family;
+const IDS = Object.keys(FAMILY);
+
+function picker(spec: string, bot: string): ((run: RunState, c: string[]) => string) | null {
+  if (spec.startsWith('rank:')) {
+    const order = spec.slice(5).split('>');
+    return (_r, c) => [...c].sort((a, b) => order.indexOf(a) - order.indexOf(b))[0];
+  }
+  if (spec.startsWith('greedy:') || spec.startsWith('worst:')) {
+    const sc = JSON.parse(readFileSync(env.SCORES!, 'utf8'))[bot];
+    const worst = spec.startsWith('worst:');
+    return (r, c) => {
+      const val = (id: string) => {
+        let v = sc.solo[id];
+        if (r.insights.length) {
+          let syn = 0;
+          for (const h of r.insights) { const k = [h, id].sort().join('|'); syn += sc.pair[k] - sc.solo[h] - sc.solo[id]; }
+          v += syn / r.insights.length;
+        }
+        return worst ? -v : v;
+      };
+      return [...c].sort((a, b) => val(b) - val(a))[0];
+    };
+  }
+  return null;
+}
+
+function runOne(cfg: string, botName: string, diff: Difficulty, tier: number, seed: number) {
+  const { style, skill } = BOTS[botName];
+  const a = ARTISTS.typical[tier - 1];
+  const base = { maxHealth: a.health, power: a.power, guard: a.guard };
+  const c = testContent();
+  if (env.OVR) { const o = JSON.parse(env.OVR) as Record<string, Record<string, number>>; for (const i of c.insights) if (o[i.id]) i.effect = { ...i.effect, ...o[i.id] }; }
+  const newCards = env.NEW ? (JSON.parse(env.NEW) as typeof c.insights) : [];
+  c.insights.push(...newCards);
+  let grant: string[] = [];
+  HOOKS.pick = null;
+  if (cfg === 'pool9') c.insights = c.insights.filter((i) => !newCards.some((n) => n.id === i.id));
+  else if (cfg === 'none') c.insights = [];
+  else if (cfg.startsWith('offer:')) c.insights = c.insights.filter((i) => i.id === cfg.slice(6));
+  else if (cfg.startsWith('start:')) { grant = cfg.slice(6).split('+'); c.insights = c.insights.filter((i) => grant.includes(i.id)); }
+  else if (cfg.startsWith('syn:')) { const [, t, amt] = cfg.split(':'); c.insights = [{ id: 'syn', name: 'syn', family: 'power', text: 'syn', effect: { type: t as never, amount: Number(amt) } }]; grant = ['syn']; }
+  else if (cfg.startsWith('multi:')) { const parts = cfg.slice(6).split('+'); c.insights = parts.map((x, i) => { const [t, amt] = x.split(':'); return { id: 'syn' + i, name: 'syn', family: 'power', text: 'syn', effect: { type: t as never, amount: Number(amt) } }; }); grant = c.insights.map((i) => i.id); }
+  else if (cfg.startsWith('pick:')) HOOKS.pick = picker(cfg.slice(5), botName);
+  if (env.KATA) { const k = JSON.parse(env.KATA) as { type: string; amount: number }; c.insights.push({ id: 'kata-slot', name: 'kata', family: 'power', text: 'kata', effect: k as never }); grant.push('kata-slot'); }
+  const run = startRun(c, { seed, dryRuns: 0, difficulty: diff, tier });
+  run.insights.push(...grant);
+  const rng = createRng(seed * 7919 + 13);
+  const rooms: RoomStats[] = [];
+  while (run.status === 'playing' && rooms.length < 20) {
+    const room = currentRoom(c, run);
+    const world = createRunWorld(c, run, base, [], diff, undefined, undefined);
+    rooms.push(playRoom(c, run, world, room, style, skill, rng));
+  }
+  HOOKS.pick = null;
+  const fights = rooms.filter((r) => ['battle', 'challenge', 'boss'].includes(r.kind));
+  return {
+    won: run.status === 'cleared' ? 1 : 0,
+    cleared: rooms.filter((r) => !r.died).length,
+    fights: fights.length,
+    lostPct: fights.reduce((s, r) => s + r.damage, 0) / base.maxHealth,
+    fightTicks: fights.reduce((s, r) => s + r.ticks, 0),
+    dealt: fights.reduce((s, r) => s + r.dealt, 0),
+    picked: run.insights.length,
+  };
+}
+
+describe.skipIf(!env.BALANCE)('insight bal', () => {
+  it('grid', () => {
+    const cfgs = (env.CONFIGS ?? 'none').split(',').flatMap((x) => (x === 'SOLO' ? IDS.map((i) => `start:${i}`) : x === 'OFFER' ? IDS.map((i) => `offer:${i}`) : x === 'PAIRS' ? IDS.flatMap((a, i) => IDS.slice(i + 1).map((b) => `start:${a}+${b}`)) : [x]));
+    const bots = (env.BOTS ?? 'kid,newer,careful').split(',');
+    const diffs = (env.DIFFS ?? 'standard').split(',') as Difficulty[];
+    const belts = (env.BELTS ?? '1,2,3,4,5,6,7,8,9,10').split(',').map(Number);
+    const seeds = Number(env.SEEDS ?? 30);
+    const out = env.OUT ?? '/tmp/insight-bal/out.jsonl';
+    for (const cfg of cfgs) for (const bot of bots) for (const diff of diffs) for (const tier of belts) {
+      const acc = { n: 0, won: 0, cleared: 0, fights: 0, lostPct: 0, fightTicks: 0, dealt: 0, picked: 0 };
+      for (let i = 0; i < seeds; i++) {
+        const r = runOne(cfg, bot, diff, tier, 1000 + i);
+        acc.n++; acc.won += r.won; acc.cleared += r.cleared; acc.fights += r.fights; acc.lostPct += r.lostPct; acc.fightTicks += r.fightTicks; acc.dealt += r.dealt; acc.picked += r.picked;
+      }
+      appendFileSync(out, JSON.stringify({ cfg, bot, diff, tier, ...acc }) + '\n');
+    }
+    console.log('done ' + cfgs.length);
+  }, 6 * 3600 * 1000);
+});
