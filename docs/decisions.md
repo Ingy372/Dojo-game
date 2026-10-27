@@ -1442,3 +1442,10 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - A Challenge pick saved below the 4th belt plays as Standard but stays stored, so it comes back at the 4th belt (`activeDifficulty`). Settings, the Home line and the Bests grades all use the active difficulty, so a child never sees Challenge selected while playing Standard.
 - Below the 4th belt the Challenge card is dimmed (alpha 0.7, contrast 5.6:1 or better), shows 🔒 and "Unlocks at your 4th belt." (content/settings/difficulty.json `locked.challenge`), and does nothing when tapped.
 - A `?difficulty=challenge` test link still wins at any belt, so the sims and goldens don't change.
+
+## R-CHALLENGE P4 — pattern tells and first-sight Sensei lines (2026-10-27)
+- "First time" is per enemy + attack (`floor-keeper:shockwave`), stored in the save as `patternsSeen` (an old save reads as none seen).
+- The Floor Keeper's phase line is skipped if its shockwave line already played that fight.
+- `tell` text is designer-only (not shown in game). Existing art and sounds only: whoosh on a lane wind-up, clank on the double slam.
+- Reduced motion keeps every lane and circle; only the lane's sliding stripes stop.
+- Sensei's guided Counter ("COUNTER!" + pulsing button) now only picks a counterable warning; before, it could pick a dash-only lane (incl. the rolling pin and hearth cook) — a real bug, test added.

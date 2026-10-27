@@ -75,6 +75,9 @@ import {
   type TagBox,
   keeperWin,
   skipDown,
+  patternShape,
+  patternKey,
+  firstPatternSight,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
@@ -101,6 +104,7 @@ import { CONTENT } from '../game/content';
 import { homeDojo } from '../game/dojo';
 import { NAMED_PACK, NamedView } from '../game/named';
 import { reducedMotion } from '../game/motion';
+import { drawPatternTell } from '../game/patternTells';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { bowPrompt, playBow } from '../ui/bow';
@@ -415,6 +419,8 @@ export class GameScene extends Phaser.Scene {
   /** Sensei's Lessons (M7-P5): this run's tag for the one-lesson-per-room limit, and warnings still filling. */
   private runTag = '';
   private warnings = new Map<string, { until: number; inside: boolean }>();
+  /** R-CHALLENGE P4: enemies whose first-sight pattern line played this fight (skips the boss phase line). */
+  private patternLineSaid = new Set<string>();
   private strikeHit = false;
 
   constructor() {
@@ -509,6 +515,7 @@ export class GameScene extends Phaser.Scene {
     this.strikeTaught = false;
     this.runTag ||= `run-${Date.now()}`;
     this.warnings.clear();
+    this.patternLineSaid.clear();
     this.strikeHit = false;
     const roomGfx = this.drawRoom();
     const objects = this.makeRoomObjects();
@@ -801,6 +808,9 @@ export class GameScene extends Phaser.Scene {
       const cy = e.attackCenter.y * TILE;
       const area = currentAttack(e).areaRadius * TILE;
       const glow = this.world.twist?.dim ? 1.6 : 1; // Lantern Dark: warnings glow extra bright
+      // R-CHALLENGE P4: a pattern's lane or landing hop, from the first frame of the wind-up.
+      const shape = patternShape(currentAttack(e));
+      if (shape) drawPatternTell(this.danger, shape, { x: e.pos.x * TILE, y: e.pos.y * TILE }, { x: cx, y: cy }, area, COLORS.danger, elapsed / e.windupTotal, !reducedMotion());
       if (glow > 1) this.danger.lineStyle(10, 0xffd166, 0.35).strokeCircle(cx, cy, area + 4);
       this.danger.fillStyle(COLORS.danger, 0.16 * glow).fillCircle(cx, cy, area);
       this.danger.lineStyle(inWindow ? 6 : 3 * glow, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
@@ -863,6 +873,32 @@ export class GameScene extends Phaser.Scene {
       } else if (winded) {
         const fall = ((now / 600 + i / v.stars.length) % 1) * r * 0.9;
         st.setFillStyle(0x9ad1ff).setScale(1.5).setPosition((i - 1) * r * 0.7, -v.top * 0.8 + fall);
+      }
+    });
+  }
+
+  /**
+   * R-CHALLENGE P4: a pattern attack's wind-up starts. Its own sound on top of the wind-up sound
+   * (lane: whoosh, two-part: clank), and Sensei's line the first time this save sees it.
+   */
+  private patternTellStart(e: EnemyState): void {
+    const a = currentAttack(e);
+    const shape = patternShape(a);
+    if (!shape) return;
+    if (shape === 'lane') sfx.whoosh();
+    else if (a.followUp || e.followUpStage === 2) sfx.clank();
+    if (!a.senseiLine) return;
+    const profile = loadSave();
+    if (!firstPatternSight(profile, patternKey(e.def.id, a))) return;
+    writeSave(profile);
+    this.patternLineSaid.add(e.id);
+    this.senseiSay([a.senseiLine], 1600);
+    // The line goes away on its own, so it doesn't sit over the next warnings.
+    const t = this.senseiText;
+    this.time.delayedCall(2600, () => {
+      if (t && t === this.senseiText) {
+        t.destroy();
+        this.senseiText = null;
       }
     });
   }
@@ -1289,6 +1325,7 @@ export class GameScene extends Phaser.Scene {
           if (this.twistBannerView?.active) this.tweens.add({ targets: this.twistBannerView, alpha: 0.25, duration: 150 });
           const e = this.enemy(ev.enemyId);
           sfx.windup(ticksToRealMs(ev.ticks) / 1000);
+          if (e) this.patternTellStart(e);
           if (e) this.floatText({ x: e.pos.x, y: e.pos.y - e.def.radius - 0.3 }, '!', '#ff3b30', 40, 0.4);
           // Sensei's Lessons: a second warning while another is still filling is two attacks at once.
           const now = this.time.now;
@@ -1519,7 +1556,8 @@ export class GameScene extends Phaser.Scene {
             }
           }
           sfx.appear();
-          if (ev.senseiLine) this.senseiSay([ev.senseiLine], Math.max(1200, ms));
+          // R-CHALLENGE P4: skipped when this boss's first-sight pattern line already played this fight.
+          if (ev.senseiLine && !this.patternLineSaid.has(ev.enemyId)) this.senseiSay([ev.senseiLine], Math.max(1200, ms));
           // B-T3-NUDGE: ROAR! sits on screen just under Sensei's banner (8 px gap), above everything, so the banner never covers it.
           if (e) {
             const { width } = view(this);

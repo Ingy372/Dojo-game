@@ -612,7 +612,12 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
 /** Sensei's guided first Counter: picks the warning to teach, holds still on step 0, and moves on. */
 function stepGuide(world: WorldState, guide: GuideState, ids: string[]): void {
   if (guide.enemyId === null) {
-    const t = world.events.find((ev) => ev.kind === 'telegraph');
+    // R-CHALLENGE P4: only a warning the player can Counter; a dash-only lane never gets "COUNTER!".
+    const t = world.events.find((ev) => {
+      if (ev.kind !== 'telegraph') return false;
+      const e = world.enemies.find((x) => x.id === ev.enemyId);
+      return !!e && currentAttack(e).counterable !== false;
+    });
     if (t?.kind === 'telegraph') {
       guide.enemyId = t.enemyId;
       world.events.push({ kind: 'guideStart', step: guide.step, enemyId: t.enemyId });

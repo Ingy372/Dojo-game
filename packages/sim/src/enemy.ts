@@ -28,6 +28,25 @@ export interface EnemyAttackDef {
   challenge?: boolean;
   /** R-CHALLENGE P3: on Challenge, this dash-only lane never starts while another enemy's red circle covers the player. */
   noOverlapWithRedCircle?: boolean;
+  /** R-CHALLENGE P4: designer note on how the tell looks and sounds (not shown in game). */
+  tell?: string;
+  /** R-CHALLENGE P4: what Sensei says the first time this save meets this attack. */
+  senseiLine?: string;
+}
+
+/** R-CHALLENGE P4: how a pattern attack's danger area is drawn at the start of its wind-up. */
+export type PatternShape = 'lane' | 'landing' | 'circle';
+
+/** R-CHALLENGE P4: the tell shape of a Challenge pattern attack, or null for a normal attack (drawn as today). */
+export function patternShape(a: EnemyAttackDef): PatternShape | null {
+  if (!a.challenge) return null;
+  if (a.counterable === false) return 'lane';
+  return a.landing ? 'landing' : 'circle';
+}
+
+/** R-CHALLENGE P4: the per-save key for "first time this attack is seen" (enemy + attack). */
+export function patternKey(enemyId: string, a: EnemyAttackDef): string {
+  return `${enemyId}:${a.name}`;
 }
 
 /** R-CHALLENGE P2: the second hit of a two-part attack. */
@@ -175,6 +194,11 @@ function loadAttack(data: unknown, id: string, where: string): EnemyAttackDef {
   if (a.counterable === false || a.dashOnly === true) attack.counterable = false;
   if (a.noOverlapWithRedCircle !== undefined && typeof a.noOverlapWithRedCircle !== 'boolean') throw new EnemyError(id, `"${where}.noOverlapWithRedCircle" must be true or false`);
   if (a.noOverlapWithRedCircle === true) attack.noOverlapWithRedCircle = true;
+  for (const k of ['tell', 'senseiLine'] as const) {
+    if (a[k] === undefined) continue;
+    if (typeof a[k] !== 'string' || (a[k] as string).trim() === '') throw new EnemyError(id, `"${where}.${k}" must be some text`);
+    attack[k] = a[k] as string;
+  }
   // Every attack must be telegraphed: at least half a second of warning on Standard.
   if (attack.telegraphTicks < MIN_WINDUP_TICKS) {
     throw new EnemyError(id, `"${where}.telegraphTicks" must be at least ${MIN_WINDUP_TICKS} (half a second of warning)`);
