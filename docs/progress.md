@@ -942,3 +942,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - R-B1-RAMP-2: pin test for the 15 white room copies, ?room= link maps to the white copy, background shots match the originals; #361 note corrected to 8 run entries.
 - Q-DOOR-LABELS: side door labels clamped 8 px inside the view, unknown ?room= console warning; 8 tests; shots 60 PASS, 0 FAIL at 3 sizes, RM on/off (gauntlet CHALLENGE label moved from -47 px to 8 px at 667x375).
 - R-CHALLENGE P1: Challenge wind-ups never under 10 ticks (jab and dart 9 -> 10); golden moves only in its rooted Challenge row; next Q-DOOR-LABELS, then P6.
+- Q-DOOR-LABELS-2: door label side clamp runs after the camera update (FOLLOW_UPDATE), so labels stay 8 px in from the edge on scroll-start frames; tests for the moved view; scroll-start shots 48 PASS, 0 FAIL at 3 sizes, RM on/off (30 frames each).

@@ -1414,3 +1414,7 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - The 10-tick minimum (`MIN_WINDUP_TICKS` in config.ts, also used by the enemy loader) now applies after the Challenge formula too, in `telegraphTicks`. Only the swarmer jab and spark-sprite dart change (9 -> 10 ticks on Challenge). Guided and Standard use the exact old formula (tested on every attack).
 - Elites keep their own minimum code (`eliteWindup`); a test checks every elite Challenge wind-up is still at least 10.
 - The p-menu2 golden is re-captured: only `rooted.challenge` moves (perfects 6 -> 7, blocks 2 -> 4, health 146 -> 191) because that room's swarmer jabs are 1 tick longer. Every Guided and Standard value is unchanged. The R-BAL-12 bands test stays green.
+
+## Q-DOOR-LABELS-2 — door label side clamp runs after the camera moves (2026-10-27)
+- The side clamp moved out of `update()` into the camera's `FOLLOW_UPDATE` event (`clampDoorLabels`). Phaser sets `worldView` in `preRender` after `update()`, so the old clamp used last frame's view and a label could sit 2.5 px from the edge for 1-2 frames when a scroll started. The listener is removed on scene shutdown.
+- The top (Y) clamp stays in `update()`: the camera does not scroll far enough vertically in current rooms to show the same lag. Possible follow-up if a tall room shows it.
