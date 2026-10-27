@@ -82,3 +82,68 @@ describe('R-CHALLENGE P4: no Counter cue for a dash-only wind-up', () => {
     });
   }
 });
+
+describe('Q-P4 QA: a stale "COUNTER!" cue is cleared', () => {
+  // The client opens the cue on guideStart and closes it on guideDone or guideCancel. Before the fix, a guided
+  // wind-up that ended without a swing (staggered here) closed nothing, so "COUNTER!" stayed up over the
+  // rolling pin's next, dash-only roll.
+  it('a staggered guided wind-up sends guideCancel before the dash-only roll winds up', () => {
+    const room = loadRoom({ id: 'arena', name: 'Arena', tiles: ['##############', '#............#', '#............#', '#..P.........#', '#............#', '#............#', '##############'], enemies: [{ enemy: 'rolling-pin', column: 10, row: 2 }, { enemy: 'swarmer', column: 6, row: 4 }] });
+    const w = createWorld(room, ['p1'], { enemyTypes: { 'rolling-pin': loadEnemy(pinData), swarmer: loadEnemy(swarmerData) }, guideStep: 1, difficulty: 'standard' });
+    let cueOpen = false;
+    let staggered = 0;
+    let dashWhileStale = 0;
+    let dashAfterCancel = 0;
+    for (let i = 0; i < 4000; i++) {
+      stepWorld(w, room, { p1: { kind: 'none' } });
+      w.players.p1.health = Math.max(w.players.p1.health, 5);
+      for (const ev of w.events) {
+        if (ev.kind === 'guideStart') {
+          cueOpen = true;
+          // Knock the guided enemy out of its counterable wind-up, as a hit or a stagger does in play.
+          const e = w.enemies.find((x) => x.id === ev.enemyId)!;
+          e.mode = 'stagger';
+          e.modeTicks = 10;
+          staggered++;
+        }
+        if (ev.kind === 'guideDone' || ev.kind === 'guideCancel') cueOpen = false;
+        if (ev.kind === 'telegraph') {
+          const e = w.enemies.find((x) => x.id === ev.enemyId)!;
+          if (currentAttack(e).counterable === false) {
+            if (cueOpen) dashWhileStale++;
+            else if (staggered > 0) dashAfterCancel++;
+          }
+        }
+      }
+    }
+    expect(staggered).toBeGreaterThan(0);
+    expect(dashAfterCancel).toBeGreaterThan(0);
+    expect(dashWhileStale).toBe(0);
+  });
+});
+
+import { forceAttack } from '../../../apps/client/src/game/forceAttack';
+
+describe('Q-P4 QA: ?force=wide-bonk forces the bopper wide bonk (test link only)', () => {
+  const room = loadRoom({ id: 'arena', name: 'Arena', tiles: ['##############', '#............#', '#............#', '#..P.........#', '#............#', '#............#', '##############'], enemies: [{ enemy: 'bopper', column: 5, row: 3 }] });
+  const swings = (def: EnemyDef) => {
+    const w = createWorld(room, ['p1'], { enemyTypes: { bopper: def }, difficulty: 'challenge', challengeAt: { belt: 6, room: 2 } });
+    const names = new Set<string>();
+    for (let i = 0; i < 2400; i++) {
+      stepWorld(w, room, { p1: { kind: 'none' } });
+      w.players.p1.health = Math.max(w.players.p1.health, 5);
+      for (const ev of w.events) if (ev.kind === 'telegraph') names.add(currentAttack(w.enemies.find((x) => x.id === ev.enemyId)!).name);
+    }
+    return [...names].sort();
+  };
+  it('finds the bopper and keeps only wide bonk in its pattern', () => {
+    const f = forceAttack(content.enemies, 'wide-bonk')!;
+    expect(f.id).toBe('bopper');
+    expect(swings(f.def)).toEqual(['wide bonk']);
+  });
+  it('normal play is unchanged: no flag, or an unknown name, forces nothing', () => {
+    expect(forceAttack(content.enemies, null)).toBeNull();
+    expect(forceAttack(content.enemies, 'bonk')).toBeNull(); // a normal attack, not a Challenge one
+    expect(swings(content.enemies.bopper)).toEqual(['bonk', 'wide bonk']);
+  });
+});
