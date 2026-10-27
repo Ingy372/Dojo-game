@@ -1,8 +1,5 @@
 // R-CHALLENGE P5: the balance bot's answers to Challenge patterns (landing circles, double hits),
 // checked on TEST-ONLY sample blocks, and the plan's section 4 table (BALANCE=1 to print it).
-import { writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { Difficulty } from '../src';
 import { PATTERN_ANSWERS, playRun, SKILLS, type RunStats } from './balance/bot';
@@ -89,8 +86,7 @@ describe.skipIf(!balance)('R-CHALLENGE P5: section 4 table with sample patterns 
       }
       lines.push(`| ${d[0].toUpperCase() + d.slice(1)} | ${bot[0]} | ${cells.join(' | ')} |`);
     }
-    // The test runner hides console output, so the table goes to a file too.
-    writeFileSync(join(tmpdir(), 'r-challenge-p5-table.md'), lines.join('\n') + '\n');
+    // Run with --silent=false to see it.
     (globalThis as unknown as { console: { log(s: string): void } }).console.log(lines.join('\n'));
     expect(lines.length).toBe(11);
   });
