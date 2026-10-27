@@ -11,6 +11,7 @@ export const DIFFICULTY_TEXT = settings as {
   footer: string;
   choices: Array<{ id: Difficulty; name: string; text: string }>;
   homeLine: string;
+  locked: { challenge: string };
   offer: { title: string; line: string; yes: string; no: string };
 };
 

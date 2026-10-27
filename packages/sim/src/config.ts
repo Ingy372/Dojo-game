@@ -45,6 +45,9 @@ export const TELEGRAPH_NEARLY_FULL = 0.85;
 export type Difficulty = keyof typeof DIFFICULTY;
 
 /** Combat numbers. Starting values from core-design section 4; tune from playtesting. */
+/** R-CHALLENGE P6 (core-design §13): Challenge difficulty can be picked from this belt tier (4th belt) up. */
+export const CHALLENGE_FROM_TIER = 4;
+
 export const COMBAT = {
   defaultDifficulty: 'standard' as Difficulty,
 
