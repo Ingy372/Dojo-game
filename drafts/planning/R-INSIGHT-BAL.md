@@ -7,6 +7,7 @@ Labels: **[MEASURED]** from the sim, **[CODE]** read from main, **[PROPOSED]** m
 
 - **The ask:** no Insight family or route should be much stronger than another. Real training stays the main source of power. Nothing here costs money or adds pressure.
 - **Decisions already made by the Manager (recorded):** (1) the Virtue cards come after the beta, as a placeholder until Jay says otherwise; (2) Press the Advantage and Wind Step may change what they do; (4) Double Strike halved (0.6 to 0.3) and Rally x1.75 are approved; (5) the "20% faster" Quick Hands text is approved; (6) the PE 12 kata reserve stays.
+- **Round 5 (on PR #389) [MEASURED]:** B-T3-TUNE-2 masher "drop" (83.9 to 55.0% at 60 seeds) is mostly small-sample luck; the true rate is about 74% on main and F. Data-only tune: Wind Step 0.3 / every 5 / 2 s (true rate 81.6%), plus a masher seed count of 600 (floor stays 75%). P5 step-out is a wash on any card numbers; it needs a method or bot fix. See section 4f.
 - **What was wrong [MEASURED]:** one card held all run was worth 35 PE (Ripple Counter) down to 2 PE (Wind Step), and the Power route won 10% of kid runs against 53% for Flowing.
 - **Route result, kid, Standard, 150 seeds [MEASURED], Heavy Hands untouched at 0.2:**
 
@@ -123,7 +124,7 @@ Numbers in bold are new this round. Heavy Hands is unchanged at 0.2.
 |---|---|---|---|---|
 | Ripple Counter | `amount` 1.5 | **1.2** | unchanged | top card for the kid (PE 35) |
 | Iron Skin | `blockReflect` 0.5 | **1.2** (round 3: 1.0) | "Blocks bounce the hit back at the attacker, and then some." | lifts the Rooted route (28% held); kid-leaning card (PE 0-1 for skilled bots) |
-| Wind Step | 0.4 burst, every 10 hits, 3 s | **0.3 burst, every 7 hits, 3 s** + rule tweak A (round 3: 0.4 / 5 / 4 s) | "Every 7 combo hits gives you a 3-second burst of speed." | with tweak A it is a real card; the lighter number brings the Flowing route down |
+| Wind Step | 0.4 burst, every 10 hits, 3 s | **0.3 burst, every 5 hits, 2 s** + rule tweak A (round 4: every 7 / 3 s; round 3: 0.4 / 5 / 4 s) | "Every 5 combo hits gives you a 2-second burst of speed." | with tweak A it is a real card; the lighter number brings the Flowing route down |
 | Double Strike | `amount` 0.6 | **0.2** (approved: 0.3) | unchanged | Flowing route; needs the Manager's OK because it is below the approved 0.3 (section 8) |
 | Quick Hands | `attackSpeed` 0.25 | 0.2 (approved) | "Your basic attacks are 20% faster." | the 12-tick attack rounds, so 0.15 and 0.2 are the same speed (re-checked: identical results) |
 | Rally | `amount` 1 (x2) | 0.75 (x1.75, approved) | "Focus fills 75% faster when your health is below half." | PE 28 to 23 |
@@ -140,7 +141,7 @@ Numbers in bold are new this round. Heavy Hands is unchanged at 0.2.
 
 **What I tried for the routes and why this setup [MEASURED, kid, Standard, 120-200 seeds, held routes].**
 - Power route: Press 0.3 alone read 31%; Press 0.5 (no Shield Breaker change) read 38%; Press 0.8 read 53%; Shield Breaker Focus 10-15 read 44-47% (too high once Flowing comes down); Focus 5-7 read 32-34%, and Focus 10-15 puts the Shield Breaker card at PE 24, over the line. With 7 Focus the Shield Breaker card is PE 17.7 (before 14).
-- Flowing route: with Wind Step 0.4 / every 5 / 4 s but no tweak A the route read 29% (Wind Step alone PE 3, under the floor), so tweak A is what makes it a card; Wind Step 0.3 / every 7 / 3 s with Double Strike 0.2 read 38%; Double Strike 0.25 read 40%.
+- Flowing route: with Wind Step 0.4 / every 5 / 4 s but no tweak A the route read 29% (Wind Step alone PE 3, under the floor), so tweak A is what makes it a card; Wind Step 0.3 / every 7 / 3 s with Double Strike 0.2 read 38% (round 5 setting 0.3 / every 5 / 2 s reads 37%); Double Strike 0.25 read 40%.
 - Rooted route: has only 2 cards and saturates near 28% held (Ripple 1.2-1.3 and Iron Skin 1.15-1.25 all read 24-28%); Iron Skin 1.5 pushes the card past PE 30. The real pick screen is the fairer measure for Rooted (50% there).
 - Virtue placeholders: Calm Breath 0.3 + Steady Start 70 read 52% held; 0.3 + 40 read 47%; 0.25 + 50 read 48%; 0.15 + 40 reads 34%.
 - Heavy Hands 0.25 was rejected in round 2 (Ripple + Heavy Hands reached PE 56 for the newer bot) and is not used.
@@ -154,7 +155,7 @@ Numbers in bold are new this round. Heavy Hands is unchanged at 0.2.
 | Iron Skin | 23.2 (14%) | 0.4 | 1.0 | PASS |
 | Rally | 22.7 (17%) | 0.0 | 0.0 | PASS |
 | Heavy Hands | 20.9 (12%) | 16.1 | 16.0 | PASS |
-| Wind Step | 18.3 (12%) | 1.9 | 2.5 | PASS |
+| Wind Step | 14 (9%) (round 5; round 4 every 7 / 3 s: 18.3) | 2 | 3 | PASS |
 | Shield Breaker | 17.7 (9%) | 3.0 | 4.0 | PASS |
 | Press the Advantage | 17.6 (10%) | 10.6 | 17.6 | PASS |
 | Steady Start (placeholder) | 17.2 (9%) | 4.5 | 5.7 | PASS |
@@ -197,18 +198,18 @@ Numbers in bold are new this round. Heavy Hands is unchanged at 0.2.
 | Route (all cards held) | kid PE (win %) | newer PE | careful PE | kid PE per card |
 |---|---|---|---|---|
 | Rooted (2 cards) | 39 (28%) | 17 | 21 | 19.5 |
-| Flowing (3) | 45 (38%) | 26 | 19 | 15.0 |
+| Flowing (3) | 45 (37%) | 28 | 15 | 15.0 |
 | Power (3) | 45 (32%) | 27 | 27 | 15.0 |
 | Virtue placeholder (3) | 41 (34%) | 10 | 10 | 13.7 |
 
 | Route, real pick screen (lean picker) | kid PE (win %) | newer PE | careful PE |
 |---|---|---|---|
-| Rooted | 39 (50%) | 31 | 24 |
-| Flowing | 36 (46%) | 28 | 23 |
-| Power | 38 (47%) | 33 | 23 |
-| Virtue placeholder | 35 (48%) | 22 | 20 |
+| Rooted | 39 (49%) | 32 | 25 |
+| Flowing | 36 (43%) | 29 | 23 |
+| Power | 38 (49%) | 32 | 26 |
+| Virtue placeholder | 35 (48%) | 24 | 19 |
 
-- **B10 held spread: 10 points (28 to 38), PASS at the target (noise +/-4).** Pick-screen spread: 4 points (46 to 50).
+- **B10 held spread: 9 points (28 to 37), PASS at the target (noise +/-4).** Pick-screen spread: 6 points (43 to 49). (Tables in 4b and 4d show the round 5 Wind Step, 0.3 / every 5 / 2 s; section 4f has the round 4 comparison.)
 - **B4:** per-card mean 15.8, so +/-25% is 11.9-19.8. All four pass (13.7-19.5), route PE at most 45 (limit 55).
 - **Not reached, said plainly:** no setup inside the limits gets Rooted equal to the others when all family cards are held, because Rooted has 2 cards and no pair under PE 50 with both cards under about 24 gets past 28-30% (Ripple 1.3 and Iron Skin 1.25 were tried). The route spread is closed by bringing the 3-card families down towards it. The held spread of 10 uses Double Strike 0.2; with 0.25 it measured 12.
 
@@ -231,6 +232,83 @@ Numbers in bold are new this round. Heavy Hands is unchanged at 0.2.
 - The shape is flatter: belt 4 got 12 points harder, belts 7-10 a little easier. Belt 3 is the already easy belt (#354); it stays easy.
 - **Skilled best-pick** is now PE 37-38 (before and in round 3: 57-60, from the old 4e table); the pair cap B3 still holds with room (newer max 46.5).
 - Per-belt solo cells are noisy (+/-8); cards are judged by PE pooled across belts.
+
+## 4f. Round 5: B-T3-TUNE-2 masher drop and P5 flip [MEASURED]
+
+Found on the Programmer's draft PR #389 (R-INSIGHT-BAL-a, setup "F" = section 4a as merged in #386). Two tests went red: `b-t3-tune-2-boss-levers` (masher 55%, floor 75%) and `r-challenge-p5` (step-out cost 1.1% more Health than Countering). I reproduced both on the real #389 build, and the numbers match my sim to the run (masher 22/40 on #389; 27/38 with the tune below).
+
+**Cause of the masher drop.**
+- The Programmer's one-at-a-time bisect (60 / 600 seeds): main 83.9 / 72.4; Quick Hands 0.2 alone 68.8 / 57.1 (the one real drop); rule A 71.4 / 71.8; Iron Skin 1.2 85.7 / 81.2; all together 55.0 / 73.1.
+- Why Quick Hands: the attack cooldown is `max(1, round(12 x (1 - speed)))` ticks. Quick Hands 0.25 gives 9 ticks, 0.2 gives 10. The masher (random Insight picks, mashes attack) wins boss fights through the faster swing: with only Quick Hands offered it wins 98.8% at 9 ticks and 0% at 10 ticks [MEASURED, per-fight]. Iron Skin 1.2 gives some of it back.
+- **Why 60 seeds hides the truth:** only 31-43 of the 60 runs reach the boss, so one run changes the rate by 2-3 points and the standard error is 5-7 points. Any card change reshuffles which seeds reach the boss, so main passing at 83.9 is luck. At 4000 seeds the true masher rate is **main 74.5%, setup F 73.7%**. Main was already under 75; F is about the same as main. So the 60-seed test did not measure a drop, it measured luck. A seed change alone makes main and F both fail at about 73%; the cards still need a small lift.
+- Tick rounding makes card numbers non-monotonic: Quick Hands 0.21 (9 ticks) reads 82.0% for the masher but kid PE 35 (cap 24); 0.25 reads 75.8% at PE 31. So Quick Hands cannot be the data-only lever.
+
+**The data-only tune: Wind Step 0.3 / every 5 hits / 2 s** (was every 7 / 3 s), everything else as in F, same rules A, B, C. Only `everyHits` 7 to 5 and `seconds` 3 to 2.
+
+Masher (boss reached, Orange gear = belt 3 gear), seeds 1..N, same test code on the #389 build:
+
+| Seeds | main | setup F (#389) | **Wind Step 0.3 / 5 / 2 s** | Floor |
+|---|---|---|---|---|
+| 60 (today's test) | 83.9 | 55.0 (22/40) | **71.1 (27/38), still fails** | 75 |
+| 240 | 70.9 | 73.0 | **78.9** | 75 |
+| 600 | 72.4 | 73.1 (312/427) | **79.6** | 75 |
+| 1000 | n/a | n/a | **80.1** | 75 |
+| 4000 (true rate, all boss reaches) | 74.5 | 73.7 | **81.6 (58.4% of all runs)** | 75 |
+
+Run-to-run swing of the tuned masher rate (blocks of different seeds): 60 seeds SD 5.0 points (88% of blocks at 75 or more); 240 seeds SD 2.3 (100%); 600 seeds SD 1.5 (100%, worst block 78.8); 1000 seeds SD 1.8 (100%). Typical bot still wins 60/60 (also at 600/600), timings 13.4 s without pauses and 15.2 s with (limits 12-15 and 14-20), smart-novice 60/60, Challenge masher 14/16. The whole `b-t3-tune-2-boss-levers` file passes on #389 with the tune at N=240 and N=600 (5 of 5).
+
+**Honest answer: the number tune and the seed change are both needed.** The tune moves the true rate from about 74 to about 81, so the 75% floor has about 6 points of room. At 60 seeds the tune still fails (71.1: the 60-seed SD of 5 means even a true rate of 79 to 81 fails about one block in eight), so the masher assertion must run on more seeds. The floor stays 75%.
+
+Why Wind Step: it is the data-only lever I found that raises the masher without breaking a cap (the others are listed below). A burst that comes more often (every 5 hits) and ends sooner (2 s) suits a bot that hits constantly [GUESS on the reason; the numbers are measured]. Kid Wind Step PE falls from 18 to 14 (still in 12-24).
+
+**Rejected [MEASURED, 4000-seed masher; caps on the kid]:**
+- Quick Hands 0.21: masher 82%, kid PE 35 (cap 24). Quick Hands 0.25: PE 31. Both fail.
+- Wind Step 0.3 / 5 / 3 s: masher passes, Flowing route 42, route spread 14. Wind Step 0.25 / 5 / 3, 0.25 / 5 / 4, 0.2 / 4 / 3: Flowing route 42-45.
+- Iron Skin 1.6: kid PE 31. Rally 0.9: kid PE 25 and Rally route 41 (spread 13). Double Strike 0.1: halves how many masher runs reach the boss. Heavy Hands 0.25: the Manager asked for no Heavy Hands change.
+
+**Caps with the tune [MEASURED, Standard, same seeds as 4b to 4e]:**
+
+| Check | Target | Setup F | **Tune** | Result |
+|---|---|---|---|---|
+| Kid card PE range | 12-24 | 15-24.4 | **14-24.4** (Wind Step 14, Quick Hands 24.4, Ripple 24; the rest identical) | PASS (24.4 is the old 1-over-noise) |
+| Held route win %, kid, 150 seeds (Rooted / Flowing / Power / Virtue) | spread about 10 or less | 28 / 38 / 32 / 34 (10) | **28 / 37 / 32 / 34 (9)** | PASS |
+| Lean picker routes, kid | none stands out | 50 / 46 / 47 / 48 | 49 / 43 / 49 / 48 (6) | PASS |
+| Highest pair PE, kid / newer / careful | under 50 | 43.2 / 46.5 / 36.9 | **43.2 / 46.5 / 36.9** | PASS |
+| Kata class maxima, kid / newer / careful (solo / pair / route) | 38 / 62 / 67 | 36.1 / 49.0 / 49.5 and 31.6 / 60.0 / 56.4 and 27.3 / 56.8 / 30.8 | same (max 36.1 / 60.0 / 49.5 over the classes) | PASS |
+| 9-card pool, kid | 56-59 | 56 | **56** | PASS |
+| 11-card pool (placeholder) | 45-70 | 45 | 45 | unchanged (edge) |
+| Guided / Challenge 9-card pool | unchanged | 96 / 32 | **95 / 31** | PASS (inside noise) |
+
+**Balance check across belts and difficulties (kid, 9-card pool, win %, belts 1 to 10, Standard 150 seeds per belt, Guided and Challenge 60):**
+
+| Tier | Belts 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9 / 10 | Mean | Target | Biggest neighbour jump | Result |
+|---|---|---|---|---|---|
+| Standard, F | 56 / 59 / 69 / 49 / 55 / 53 / 54 / 53 / 57 / 53 | 56 | mean 56-59; none under 45 | 1.39x | PASS |
+| **Standard, tune** | 58 / 59 / 66 / 46 / 55 / 53 / 55 / 55 / 60 / 57 | 56 | same | 1.43x | PASS |
+| Guided, F | 98 / 93 / 98 / 95 / 95 / 95 / 95 / 97 / 97 / 97 | 96 | at least 90 | 1.05x | PASS |
+| **Guided, tune** | 98 / 95 / 100 / 95 / 97 / 97 / 92 / 95 / 92 / 93 | 95 | at least 90 | 1.05x | PASS |
+| Challenge, F | 35 / 18 / 47 / 35 / 43 / 42 / 23 / 28 / 18 / 27 | 32 | within 10 of 30 | 2.55x | PASS (see note) |
+| **Challenge, tune** | 33 / 17 / 42 / 33 / 40 / 38 / 25 / 28 / 25 / 27 | 31 | same | 2.50x | PASS (see note) |
+
+- The one Challenge jump above 2x (belt 2 to 3: 18 to 47 in F, 17 to 42 with the tune) is in F too, and Challenge is inside the +/-6 noise of 60 seeds per belt. The tune does not add a new one; its biggest is 2.50x, F's 2.55x. Flagged, not fixed here (Challenge is unchanged by this task).
+- The masher check applies to one tier only: belt 3 (Orange gear) with its Hearth Cook boss, Standard and Challenge. The tune lifts both (Standard 79.6% at 600 seeds, Challenge 14/16 at 60 seeds, F 18/19).
+- The tune only changes Wind Step, so the changes outside the Flowing and Wind Step cells are within noise.
+
+**P5: step-out cost vs Countering (`r-challenge-p5`).** Rule: total Health lost over all rooms with `stepOutOfLanding` on must be under the total with it off (newer bot, Challenge, belts 4 / 6 / 8 / 10, seeds 501-560).
+- On cards, **no data-only change makes step-out clearly cheaper.** Over 2000 seeds the difference (on minus off, % of total damage) is main +0.2, F -0.4, tune +0.2 as the mean of 60-seed blocks (block SD 1.7-1.9 points; the sign is a coin flip, 48-55% of blocks under 0). At 1000 seeds: main +0.27, F +0.33, tune +0.44 (SE 0.40-0.49), so step-out is a wash. With no Insight cards at all it is the same (-0.09 at 1000 seeds, SE 0.47), so the cause is the bot and the Challenge landing logic (`PATTERN_ANSWERS`, `bot.ts` about lines 215-245), not the cards.
+- Main passed at 60 seeds only because 501-560 fell the lucky way. The flip to +1.1% is noise (SE 1.1-2.8 points at 60 seeds).
+- Fix options (none touch card numbers): (1) a **paired, targeted test**: same seeds, fixed cards, count only landing-circle damage (removes most of the 1.7-1.9 point noise); (2) a **non-inferiority rule**: step-out total at most Counter total x 1.01 at 1000 or more seeds (SE 0.4-0.5); (3) the Programmer improves the step-out answer so it is really cheaper, then keep the current strict rule on at least 1000 seeds. If "clearly cheaper" is a product requirement, (3) is the only one that delivers it; today the bot shows no saving.
+
+**Seed counts to use [MEASURED swing].**
+| Test | Today | Use | Swing at that size |
+|---|---|---|---|
+| B-T3-TUNE-2 masher floor (75%) | 60 | **600** (240 is enough, 10 s) | SD 1.5 points, worst block 78.8, 3 SD above the floor for the tune; at 60 SD is 5.0 |
+| B-T3-TUNE-2 typical wins, timing | 60 | keep 60 (typical wins 600/600 too) | no swing: all run |
+| P5 | 60 | **1000 or more**, paired or non-inferior metric | SE 0.4-0.5 points of total damage; at 60 it is 1.1-2.8 |
+
+Cost: on #389 the whole masher file ran in about 4 s at N=60; two tuned runs (N=240 and N=600) plus one untuned N=600 run took 112 s in total. P5 at 1000 seeds was not timed; if it is too slow for the normal suite, run it under `BALANCE=1` (a choice for the Programmer).
+
+**Changes for the Programmer's #389 (data only):** `content/insights/insights.json` Wind Step `everyHits` 5, `seconds` 2; card text "Every 5 combo hits gives you a 2-second burst of speed."; `r-insight-bal-a.test.ts` Wind Step expectation and the section 7 cap table; the masher seed count in `b-t3-tune-2-boss-levers.test.ts`; the P5 method as above. Content Designer text for Wind Step changes (R-INSIGHT-BAL-c).
 
 ## 5. Virtue placeholder: Calm Breath and Steady Start (after the beta)
 
@@ -276,7 +354,7 @@ Numbers in bold are new this round. Heavy Hands is unchanged at 0.2.
 Tests live in the repo's normal places. Layer 1 runs always; layers 2 and 3 run with `BALANCE=1` like `balance.test.ts`.
 
 **Layer 1: data caps, fast (`packages/sim/test/insight-budget.test.ts`).** No sim.
-1. For each card in `content/insights/insights.json`, the effect amount is **at most the proven cap** in one table in the test (Ripple 1.2, Iron Skin 1.2, Wind Step 0.3 / every 7 / 3 s, Double Strike 0.2, Quick Hands 0.2, Rally 0.75, Heavy Hands 0.2, Press 0.3, Shield Breaker focus 7, and for the placeholders Calm Breath 0.15, Steady Start 40). Failure text: "re-run `BALANCE=1 insight-budget-sim` and update the table with the new PE".
+1. For each card in `content/insights/insights.json`, the effect amount is **at most the proven cap** in one table in the test (Ripple 1.2, Iron Skin 1.2, Wind Step 0.3 / every 5 / 2 s, Double Strike 0.2, Quick Hands 0.2, Rally 0.75, Heavy Hands 0.2, Press 0.3, Shield Breaker focus 7, and for the placeholders Calm Breath 0.15, Steady Start 40). Failure text: "re-run `BALANCE=1 insight-budget-sim` and update the table with the new PE".
 2. Every family has **at least 2 cards** (after the Virtue cards ship; before, the test names Virtue as an expected exception).
 3. Card ids are unique and every id in the table exists (and vice versa).
 4. Stacking sanity from `effects.ts`: the sum of all `attackSpeed` stays under the 0.6 cap, and no combination of cards in the family tables can reach a limit (e.g. `disarm` 0.9).
@@ -337,8 +415,8 @@ Folder `drafts/planning/R-INSIGHT-BAL-sim/` (not compiled, not part of `packages
 - `data.tar.gz`: raw rows (rulers, round 3, all round-4 scans and the final validation `F*` files).
 
 ## Delivery Note
-- **ITEM:** R-INSIGHT-BAL
-- **WHAT:** updated report, budget (new line B10: route spread), proposal, re-sim tables, kata headroom test spec and board items. The Manager's five decisions are recorded. The route gap is closed without Heavy Hands: kid wins held all run Rooted 28 / Flowing 38 / Power 32 / Virtue placeholder 34 (spread 10, was 43), and on the real pick screen 50 / 46 / 47 / 48 (spread 4). Changes: Iron Skin 1.2, Wind Step 0.3 / every 7 / 3 s, Double Strike 0.2, Calm Breath 0.15, Steady Start 40, a new Shield Breaker rule (7 Focus on a shield break), plus the earlier tweaks A and B. No game code, content or work board changed.
-- **WHY:** Jay wants no route stronger than another; Power won 10% of kid runs against 53% for Flowing before, and 31% against 59% in round 3 when held all run.
-- **DECIDE:** (1) Double Strike 0.2 (below the approved 0.3) for the 10-point spread, or 0.3 with a spread of about 12-13. (2) Virtue placeholder strength, only when Virtue is designed (11-card pool 45% vs Virtue route level).
-- **NEXT:** Programmer applies 4a and builds the tests; Content Designer writes the text; Tester re-runs on the real build; Jay sends the kata powers for layer 3. Caps hold: pairs under 50 (max 46.5), kata ceilings 38 / 62 / 67 (max 36.1 / 60.0 / 49.5), 9-card pool 56%, Guided 96% and Challenge 32%.
+- **ITEM:** R-INSIGHT-BAL (round 5: B-T3-TUNE-2 masher drop and P5 flip on PR #389)
+- **WHAT:** found the cause and a data-only tune, section 4f. The masher 83.9 to 55.0 "drop" is mostly 60-seed luck: true rate at 4000 seeds main 74.5%, F 73.7% (Quick Hands 0.25 to 0.2 changes the swing from 9 to 10 ticks, and the masher needs the fast swing). Tune: Wind Step 0.3 / every 5 hits / 2 s (was 7 / 3 s), nothing else. Masher: 4000 seeds 81.6%; 240 seeds 78.9, 600 seeds 79.6, 1000 seeds 80.1; at 60 seeds 71.1% (still red, SD 5). Caps hold: kid card PE 14-24.4, held routes 28 / 37 / 32 / 34 (spread 9), pairs under 50 (max 43.2 / 46.5 / 36.9), kata ceilings 38 / 62 / 67 (max 36.1 / 60.0 / 49.5), 9-card pool 56, Guided 95, Challenge 31. P5: step-out vs Countering is a wash (+0.3 to +0.4%, SE 0.45 at 1000 seeds) on main, F and the tune, and also with no Insights at all, so no card number can make it clearly cheaper. Only docs changed; no game code, content or work board.
+- **WHY:** B-T3-TUNE-2 and P5 went red in the Programmer's #389; the Manager does not want the 75% floor lowered or step-out to be only a wash.
+- **DECIDE:** (1) Manager: accept the seed change (masher floor at 600 seeds, floor still 75%) with the Wind Step tune; it needs the Wind Step card text change. (2) Manager: for P5, pick a fix: paired targeted test, non-inferiority at 1000+ seeds, or the Programmer improves the bot's step-out answer. "Clearly cheaper" cannot come from card numbers. (3) Taste, small, for Jay: Wind Step is now "every 5 hits, 2 s" (more often, shorter).
+- **NEXT:** Programmer edits #389 (Wind Step 5 / 2, text, `r-insight-bal-a.test.ts`, masher seeds 600, P5 method); Content Designer updates the Wind Step text; Tester re-runs section 4f on the real build. Earlier next steps from round 4 stand (Jay's kata powers for layer 3).
