@@ -40,7 +40,7 @@ So players learn no new button. Each enemy gets **one** new move, and it arrives
 | # | Enemy | New pattern | What the player does | Tell (see + hear) | From belt |
 |---|---|---|---|---|---|
 | C1 | swarmer | **Hop-in jab**: hops 1 tile toward the player, then jabs | step back or counter | crouch + small "boing", red circle at the landing spot before the hop | 4 |
-| C2 | shield | **Shield rush**: a 2-tile straight charge (lane), can be countered at the end | dash aside, or counter the bash | shield glows, lane stripes, rising "hmm" | 4 |
+| C2 | shield | **Shield rush**: a 2-tile straight charge (dash-only lane, per §4b) | dash aside | shield glows, lane stripes, rising "hmm" | 4 |
 | C3 | Floor Keeper | **Challenge phase at 50%**: slam → sweep → slam, plus a **shockwave lane** (dash-only) that never overlaps a red circle | dash the lane, counter the slams | existing phase pause + roar; lane stripes + "!!" + whoosh (the Hearth Cook's lane look) | 4 |
 | C4 | brute | **Double slam**: two slams in a row. Each has its own full tell; the 2nd hits at strength 0.6. It is winded right after | counter or block twice, then punish | fist raised twice, two thumps | 5 |
 | C5 | bopper | **Wide bonk**: a front arc (areaRadius 1.3) instead of a dot | step behind or counter | staff pulled far back + "whirr" | 6 |
@@ -51,7 +51,7 @@ So players learn no new button. Each enemy gets **one** new move, and it arrives
 | C10 | Hearth Cook | **Challenge pin phase**: rolling pin lane → ladle bonk, never both at once | dash, then counter | existing phase lines, unchanged | parked (unused) |
 | C11 | elites (swift, guarding) | No new moves. They use their enemy's pattern with the elites.json wind-up values | | | 4 |
 | C12 | belts 4–6 | C1–C5 step in (C1–C3 at 4, C4 at 5, C5 at 6). Later the Content Designer may use **pair rooms**: two pattern enemies in one wave, still limited by the overlap cap | | | 4 |
-| C13 | belts 7–10 | Patterns come sooner in a run: from room 1 instead of room 2 (`fromRoom`) | | | 7 |
+| C13 | belts 7–10 | Patterns come sooner in a run: from room 1 instead of room 2 (`fromRoom`). **On hold (§4b): room-1 patterns made Challenge easier in the sims** | | | 7 |
 
 **With the §13 lock, Challenge is only played at belts 4–10.** Those belts use the shared rooms, so the patterns that matter are C1–C5 (swarmer, shield, Floor Keeper, brute, bopper) plus C11–C13. **Belt fix (Oct 27, 2026):** the step-up is kept, moved onto real Challenge belts. All five enemies appear in the shared rooms at belts 4–10 (swarmer and shield in most battle rooms, brute in bamboo-hall, gauntlet, training-yard and others, bopper in bopper-yard and staff-and-shield, Floor Keeper in keepers-hall and tutorial-keep). Simpler patterns start at belt 4 (C1 hop-in jab, C2 shield rush, C3 Floor Keeper phase, which reuse today's circles and lanes). The double slam (C4) adds at belt 5 and the wide bonk (C5) at belt 6. No numbers changed.
 
@@ -174,6 +174,115 @@ Kid skill stays novice.
 
 If a belt misses its band, change **pattern placement** (fromBelt, fromRoom, pair rooms), not Health, Power or wind-up.
 
+## 4b. Placement, frequency and mixing (R-CHALLENGE-PLACEMENT, Oct 27, 2026)
+
+**Question:** can *where*, *how often* and *with whom* the C1–C5 patterns appear bring the newer bot into 35–75% and the careful bot into 55–85% Challenge wins, inside the fairness rules (one pattern at a time, full warnings, on screen, reach ≤ about 4 tiles, wind-up ≥ 14 ticks, no bigger numbers, R-BAL-12 bands)?
+
+**Short answer: no.** No placement, frequency or mixing setup I tried moves the newer or careful bot below 100% wins at any belt. The closest one costs the careful bot 6.7% Health per fight instead of 5.1%, and it drops the kid bot to 0–3% wins. Even rule-breaking probes (Challenge enemy power ×3, or a 1-tick Counter window) leave the careful bot at 95–100%. The bots Counter every hit they can see, and they heal between rooms. So in the sims the skilled-player band can't be reached with patterns. Human playtests (T2) have to judge it.
+
+### How it was run
+- Bot: #372's P5 bot (`bot-code/R-CHALLENGE-P5` at 294fe376, merged with main ff890b7b). Same harness as the #372 table: 40 seeds, ARTISTS.typical, kid = kid/novice, newer = smart/typical, careful = smart/sharp. Each cell is **win % / Health lost per fight (% of max)**.
+- Candidate setups were built as test-only `challenge` blocks and room copies in a local test file (not pushed). Only sim inputs changed. The probes edited `DIFFICULTY.challenge` locally and were then reverted.
+- **Every belt, all three difficulties:** for BASE (no patterns), S0 (#372 samples), L+B+R1 and L+B, I ran belts 1–10 × Guided/Standard/Challenge. The Guided and Standard rows came out identical to BASE in every one (also proven byte-equal by #372's tests). Challenge at belts 1–3 never shows patterns, because `fromBelt` is 4 or more. For the other candidates I ran only the Challenge rows at belts 4–10, because Guided and Standard can't change.
+
+### Levers tried (all inside the fairness rules unless marked)
+| Code | Lever | What changed |
+|---|---|---|
+| S0 | #372 samples | C1–C5 as in #372: pattern on every 2nd swing, from room 2 |
+| F | frequency | The pattern attack on **every** swing (`pattern: [pattern attack]`) |
+| R1 | placement | `fromRoom: 1` at every Challenge belt (C13 brought forward) |
+| L | pattern type | C2 shield rush becomes a **dash-only lane** (like the rolling pin) |
+| B | boss mixing | Floor Keeper uses the shockwave lane in phase 1 too (slam → shockwave → sweep) |
+| X | spread | Patterns for rolling pin, ladle lobber and dough blob too (same stats) |
+| W14 | wind-up | Pattern `telegraphTicks` 19 (Challenge wind-up exactly 14) instead of 20 |
+| M / M2 | waves | Each battle room gets 1 (M) or 2 (M2) extra closing waves (copies of wave 1) |
+| A | crowding | Wave 1 doubled (a second copy of every wave-1 enemy, 0.8 tiles away) |
+
+### Results: Challenge, belts 4–10 (win % / Health lost per fight)
+| Setup | Bot | b4 | b5 | b6 | b7 | b8 | b9 | b10 |
+|---|---|---|---|---|---|---|---|---|
+| BASE (today) | kid | 28/43.0 | 28/42.1 | 25/42.6 | 18/43.5 | 15/43.1 | 15/43.0 | 15/43.4 |
+| | newer | 100/5.7 | 100/5.9 | 100/5.9 | 100/5.6 | 100/5.5 | 100/5.5 | 100/5.6 |
+| | careful | 100/5.4 | 100/5.1 | 100/5.1 | 100/5.1 | 100/5.0 | 100/5.0 | 100/5.1 |
+| S0 (#372) | kid | 28/40.9 | 38/40.8 | 35/40.3 | 28/41.0 | 25/40.8 | 35/41.1 | 33/41.5 |
+| | newer | 100/6.2 | 100/6.1 | 100/5.9 | 100/5.9 | 100/5.9 | 100/5.9 | 100/5.8 |
+| | careful | 100/5.1 | 100/5.4 | 100/5.2 | 100/5.3 | 100/5.1 | 100/5.2 | 100/5.0 |
+| F | kid | 78/31.5 | 93/27.3 | 93/27.0 | 85/28.5 | 88/28.1 | 88/27.0 | 85/27.2 |
+| | newer | 100/7.8 | 100/7.7 | 100/7.6 | 100/7.6 | 100/7.3 | 100/7.4 | 100/7.1 |
+| | careful | 100/3.8 | 100/3.6 | 100/3.9 | 100/3.6 | 100/3.4 | 100/3.5 | 100/3.3 |
+| R1+F | kid | 88/27.8 | 100/21.2 | 100/20.8 | 100/21.6 | 100/20.8 | 100/21.4 | 100/21.4 |
+| | newer | 100/7.8 | 100/7.7 | 100/7.4 | 100/7.4 | 100/7.5 | 100/7.3 | 100/7.5 |
+| | careful | 100/3.5 | 100/3.2 | 100/3.2 | 100/3.4 | 100/3.3 | 100/3.3 | 100/3.2 |
+| F+L | kid | 55/35.1 | 78/30.8 | 75/31.5 | 75/31.9 | 83/31.0 | 75/30.7 | 80/30.2 |
+| | newer | 100/7.5 | 100/7.1 | 100/7.1 | 100/7.3 | 100/7.2 | 100/7.0 | 100/7.2 |
+| | careful | 100/4.5 | 100/3.7 | 100/3.6 | 100/3.8 | 100/3.7 | 100/3.7 | 100/3.6 |
+| R1+F+L+B (same with +X) | kid | 65/31.3 | 93/25.3 | 90/25.7 | 93/26.2 | 100/25.5 | 90/25.9 | 100/25.4 |
+| | newer | 100/7.5 | 100/6.5 | 100/6.5 | 100/6.5 | 100/6.4 | 100/6.3 | 100/6.6 |
+| | careful | 100/3.7 | 100/3.5 | 100/3.8 | 100/3.9 | 100/3.8 | 100/3.8 | 100/3.8 |
+| W14+R1+F+L+B | kid | 57/34.1 | 90/26.2 | 83/26.8 | 78/27.8 | 75/27.6 | 78/27.1 | 83/26.7 |
+| | newer | 100/7.9 | 100/7.5 | 100/7.8 | 100/7.4 | 100/7.3 | 100/7.2 | 100/7.4 |
+| | careful | 100/4.1 | 100/4.5 | 100/4.3 | 100/4.2 | 100/4.2 | 100/4.1 | 100/4.2 |
+| L | kid | 23/42.5 | 40/40.3 | 38/39.7 | 28/42.3 | 23/42.7 | 23/43.4 | 23/43.4 |
+| | newer | 100/6.1 | 100/6.0 | 100/5.7 | 100/5.5 | 100/5.5 | 100/5.5 | 100/5.4 |
+| | careful | 100/5.2 | 100/5.3 | 100/5.3 | 100/5.3 | 100/5.1 | 100/5.1 | 100/4.9 |
+| **L+B (recommended)** | kid | 28/42.3 | 43/40.3 | 38/39.5 | 25/42.1 | 33/42.0 | 30/42.8 | 30/42.8 |
+| | newer | 100/5.8 | 100/5.8 | 100/5.4 | 100/5.2 | 100/5.3 | 100/5.2 | 100/5.2 |
+| | careful | 100/5.0 | 100/5.2 | 100/5.2 | 100/5.2 | 100/5.0 | 100/5.0 | 100/4.8 |
+| L+B+R1 | kid | 35/40.3 | 55/37.1 | 43/37.7 | 57/36.8 | 63/36.8 | 57/36.2 | 55/37.9 |
+| | newer | 100/5.8 | 100/5.6 | 100/5.4 | 100/4.9 | 100/4.8 | 100/4.8 | 100/5.0 |
+| | careful | 100/5.2 | 100/5.1 | 100/5.2 | 100/5.5 | 100/5.5 | 100/5.4 | 100/5.2 |
+| M+L+B+R1 | kid | 8/51.6 | 18/50.3 | 10/53.6 | 8/53.7 | 13/53.6 | 15/51.5 | 15/53.5 |
+| | newer | 100/6.4 | 100/6.8 | 100/6.7 | 100/6.6 | 100/6.6 | 100/6.5 | 100/6.7 |
+| | careful | 100/5.8 | 100/5.2 | 100/5.5 | 100/5.3 | 100/5.2 | 100/5.1 | 100/5.4 |
+| M+X+R1+F+L+B | kid | 33/41.9 | 75/31.6 | 70/30.7 | 65/31.9 | 65/30.8 | 73/30.8 | 70/31.2 |
+| | newer | 100/8.7 | 100/7.6 | 100/8.4 | 100/8.0 | 100/7.9 | 100/7.7 | 100/8.1 |
+| | careful | 100/4.8 | 100/4.0 | 100/4.4 | 100/4.3 | 100/4.2 | 100/4.2 | 100/4.2 |
+| M2+L+B+R1 (same with +X) | kid | 0/65.0 | 0/63.0 | 0/62.1 | 0/61.8 | 0/61.3 | 0/60.9 | 0/60.8 |
+| | newer | 100/7.0 | 100/7.3 | 100/7.3 | 100/7.9 | 100/7.1 | 100/7.6 | 100/7.4 |
+| | careful | 100/6.3 | 100/6.6 | 100/6.3 | 100/6.6 | 100/6.4 | 100/6.5 | 100/6.2 |
+| A+L+B+R1 (closest for careful) | kid | 0/64.8 | 3/54.3 | 3/56.0 | 0/58.4 | 0/57.6 | 3/59.1 | 3/57.1 |
+| | newer | 100/8.0 | 100/7.4 | 100/7.8 | 100/7.6 | 100/7.4 | 100/7.6 | 100/7.5 |
+| | careful | 100/6.7 | 100/6.4 | 100/6.7 | 100/6.3 | 100/6.5 | 100/6.2 | 100/6.4 |
+| A+M2+W14+L+B+R1 | kid | 3/63.8 | 5/58.2 | 8/59.0 | 3/62.5 | 3/60.8 | 3/59.2 | 3/59.4 |
+| | newer | 100/8.2 | 100/7.9 | 100/7.8 | 100/8.2 | 100/7.9 | 100/7.9 | 100/7.8 |
+| | careful | 100/6.2 | 100/6.1 | 100/6.3 | 100/6.2 | 100/6.2 | 100/6.1 | 100/6.3 |
+| A+M2+W14+F+L+B+R1 | kid | 28/45.2 | 68/32.9 | 50/33.0 | 60/33.6 | 60/33.2 | 68/32.6 | 63/33.9 |
+| | newer | 100/9.0 | 100/8.0 | 100/8.3 | 100/8.2 | 100/8.0 | 100/7.9 | 100/8.0 |
+| | careful | 100/4.2 | 100/4.1 | 100/4.7 | 100/4.5 | 100/4.4 | 100/4.4 | 100/4.6 |
+
+(X changed nothing: the rolling pin, ladle lobber and dough blob don't show up in the belt 4–10 rooms the bots walk through. A ignores M2 in the local harness, so A+M2 = A plus W14.)
+
+### Pass/fail against the bands (balance-check)
+| Setup | careful 55–85% | newer 35–75% | kid ≥ 5% and ≤ 10 pts below today | neighbour jump ≤ 2x | Guided/Standard identical |
+|---|---|---|---|---|---|
+| S0, L, L+B, L+B+R1 | fail (100%) | fail (100%) | pass | pass | pass |
+| F, R1+F, F+L, R1+F+L+B, W14+… | fail (100%) | fail (100%) | pass, but the kid wins **more** than today (up to 100%) | fail on F/R1+F (b4→b5) | pass |
+| M+L+B+R1 | fail | fail | fail at b4–b6 (8–18 vs a floor of 15–18) | fail (b4 8 → b5 18) | pass |
+| M2, A variants | fail | fail | fail (0–8%) | fail (kid 0 → 3) | pass |
+
+### What I learned
+1. **More pattern swings make Challenge easier, not harder.** Pattern attacks need ≥ 14-tick wind-ups. Today's normal swings are 10–13 ticks on Challenge. Swapping fast swings for slow, well-warned ones lowers pressure. The kid wins 78–100% under F, against 15–28% today.
+2. **Crowding (extra waves, doubled waves) hurts the kid far more than the skilled bots.** The careful bot goes from 5.1% to 6.7% Health per fight, while the kid falls to 0–3%.
+3. **The skilled bots are at a ceiling.** Probes outside the rules, with no patterns, only to measure the ceiling:
+
+| Probe (breaks a rule) | kid | newer | careful |
+|---|---|---|---|
+| Challenge enemy power ×1.5 | 0–3 / 64–73 | 100 / 8.3–9.5 | 100 / 7.7–8.1 |
+| ×2 | 0 / 78–84 | 98–100 / 11–13.6 | 100 / 10.1–10.8 |
+| ×3 | 0 / 90 | 88–95 / 17.8–19.0 | 95–100 / 15.5–16.5 |
+| Counter window 4 → 2 ticks | 5–13 / 48–52 | 95–100 / 20.3–21.4 | 100 / 13.7–14.3 |
+| Counter window 4 → 1 tick | 0–8 / 53–57 | 85–95 / 25.8–26.7 | 98–100 / 20.5–21.7 |
+
+   Even these leave the careful bot at 95–100% wins. A 55–85% careful band in the bot would need changes that break the ages-6+ rules (bigger numbers, near-zero Counter windows) and would wipe out the kid. So the bot can't measure the skilled band. It shows that we stay fair, not how hard Challenge feels.
+
+### Recommendation: setup L+B
+- **C1 hop-in jab, C4 double slam, C5 wide bonk:** as in the #372 samples. The pattern comes on every 2nd swing (`pattern: [normal, pattern]`), from room 2. Don't use "every swing".
+- **C2 shield rush:** a **dash-only lane** (`dashOnly: true`, lane stripes as the tell, like the rolling pin) instead of "counter at the end". This gives skilled players a different skill to show (dash timing) rather than just Counter timing. Wind-up 20 file ticks (about 15 on Challenge).
+- **C3 Floor Keeper:** the shockwave lane in **both** phases (phase 1: slam → shockwave → sweep; phase 2 as planned). It is still never at the same time as a red circle.
+- **C12 pair rooms / C13 `fromRoom: 1`: not recommended now.** Room-1 patterns (R1) only made Challenge easier for the kid. Extra or doubled waves broke the kid floor. Keep `fromRoom: 2` at every belt. C13 is on hold until playtests show skilled players want more.
+- **Key numbers (L+B):** careful 100% wins / 4.8–5.2% Health per fight. Newer 100% / 5.2–5.8%. Kid 25–43% / 39.5–42.8% (today 15–28%). Guided and Standard are unchanged. **Bands met: kid yes; newer and careful no** (bot ceiling, see above).
+- R-BAL-12: no Guardian HP or player-damage numbers change, so the 40–80 hits to beat a Guardian and the ≥ 5 hits to knock out the player still hold.
+
 ## 5. Playtest checklist (human testers, Challenge only)
 
 Play each Challenge belt you can reach (belt 4 and up) with at least one younger tester (6–8) and one skilled tester. Write yes/no plus one note for each check.
@@ -199,10 +308,11 @@ Play each Challenge belt you can reach (belt 4 and up) with at least one younger
 | P3 | Programmer | Fairness rules 2 and 5 in world.ts: on-screen check, 1 pattern at a time, lane vs red circle | The overlap and on-screen tests pass over 1,000 seeded rooms | P2 |
 | P4 | Programmer | Tells: lane, circle and landing-spot visuals, plus one Sensei line on first sight, using existing sfx where possible | In the browser, each pattern shows its tell at the start of its wind-up at both phone sizes, with Motion on and off | P2, C1 |
 | P5 | Programmer | Bot answers in bot.ts (landing circles, double hits) | A balance run prints the §4 table with patterns on | P2 |
-| C1 | Content Designer | Write the `challenge` blocks for C1–C5 first (the ones played at belts 4–10), using the `fromBelt` values in §1 (C1–C3: 4, C4: 5, C5: 6). C6–C10 are parked and not written to JSON. Use names, tells and Sensei lines from §1. Keep the swarmer jab and spark dart at ≥ 10 ticks on Challenge (P1) | All files load, and each pattern's Challenge wind-up is ≥ 14 ticks | P2 |
-| C2 | Content Designer | Pair-room and `fromRoom` placement for belts 4–10 (C12, C13) | A belt 4 Challenge run shows C1–C3, belt 5 adds C4, belt 6 adds C5, and a belt 7 run shows patterns from room 1 | C1 |
-| T1 | Tester | Re-run §4 at 100 seeds with patterns on (Challenge rows: belts 4–10 only) | Every row is inside its target band, or the misses are listed with the room causing them | P1–P6, C1, C2 |
-| T2 | Tester | Human playtest using the §5 checklist | Notes from at least 2 testers (one aged 6–8), with no "hit from nowhere" reports | T1 |
+| C1 | Content Designer | Write the `challenge` blocks for C1–C5 first (the ones played at belts 4–10), using the `fromBelt` values in §1 (C1–C3: 4, C4: 5, C5: 6) and the **§4b L+B setup**: C1, C4 and C5 use `pattern: [normal, pattern]` (every 2nd swing) with `fromRoom: 2`. C2 shield rush is a `dashOnly` lane. The C3 shockwave lane is in both Floor Keeper phases (phase 1: slam, shockwave, sweep). C6–C10 are parked and not written to JSON. Use names, tells and Sensei lines from §1 (C2 tell: lane stripes plus shield glow). Keep the swarmer jab and spark dart at ≥ 10 ticks on Challenge (P1) | All files load. Each pattern's Challenge wind-up is ≥ 14 ticks. The P7 sample run matches the §4b L+B row within ±5 points | P2 |
+| C2 | Content Designer | Placement for belts 4–10, per §4b: **no** pair rooms, extra waves or `fromRoom: 1` for now (C12 and C13 on hold, since they broke the kid floor or made Challenge easier). Check that every room at belts 4–10 can still host its patterns on screen | A belt 4 Challenge run shows C1–C3, belt 5 adds C4, belt 6 adds C5, all from room 2. No room has a new wave | C1 |
+| P7 | Programmer | Make `test/balance/sample-patterns.ts` match the §4b L+B setup (C2 `dashOnly`, C3 shockwave in phase 1), or point the P5 table at the real C1 content once it exists | The BALANCE=1 table prints the L+B row. Guided and Standard stay byte-equal | P5, C1 |
+| T1 | Tester | Re-run §4 at 100 seeds with patterns on (Challenge rows: belts 4–10 only) | The kid row meets its floor (≥ 5% and ≤ 10 points below today) with no jump over 2x. Newer and careful are **reported, not graded** (bot ceiling, §4b). Misses are listed with the room causing them | P1–P6, C1, C2 |
+| T2 | Tester | Human playtest using the §5 checklist; this is where the skilled-player difficulty is judged (§4b) | Notes from at least 2 testers (one aged 6–8), with no "hit from nowhere" reports | T1 |
 
 **Scope risk** (beta cut still pending with Jay)**:**
 - With the §13 lock, belt 1–3 patterns aren't played on Challenge, and the Ember patterns (C6–C10) are dormant. The beta suggestion below was written before the lock; Jay's call on it is still open.
