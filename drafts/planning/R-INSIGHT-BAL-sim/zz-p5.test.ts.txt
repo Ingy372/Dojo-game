@@ -1,0 +1,29 @@
+import { describe, it } from 'vitest';
+import { appendFileSync } from 'node:fs';
+import { testContent } from '../load-content';
+import { PATTERN_ANSWERS, playRun, SKILLS } from './bot';
+import { ARTISTS } from '../r-bal-12-artists';
+const env = (globalThis as any).process.env as Record<string, string | undefined>;
+describe('p5', () => {
+  it('run', () => {
+    const a0 = Number(env.S0 ?? 501), n = Number(env.SEEDS ?? 60);
+    const content = testContent();
+    if (env.OVR) { const o = JSON.parse(env.OVR); for (const i of content.insights as any[]) if (o[i.id]) i.effect = { ...i.effect, ...o[i.id] }; }
+    if (env.NOINS) content.insights = [] as any;
+    const key = (env.KEY ?? 'stepOutOfLanding') as 'stepOutOfLanding' | 'holdStrikeForSecondHit';
+    for (let seed = a0; seed < a0 + n; seed++) {
+      const row: any = { seed };
+      for (const on of [true, false]) {
+        PATTERN_ANSWERS[key] = on;
+        let dmg = 0; const rm: Record<string, number> = (row['rm_' + (on ? 'on' : 'off')] ??= {});
+        for (const tier of [4, 6, 8, 10]) {
+          const a = ARTISTS.typical[tier - 1];
+          for (const r of playRun(content, seed, 'smart', SKILLS.typical, 'challenge', { maxHealth: a.health, power: a.power, guard: a.guard }, undefined, { tier }).rooms) { dmg += r.damage; rm[r.roomId] = (rm[r.roomId] ?? 0) + r.damage; }
+        }
+        row[on ? 'on' : 'off'] = dmg;
+      }
+      PATTERN_ANSWERS[key] = true;
+      appendFileSync(env.OUT!, JSON.stringify(row) + '\n');
+    }
+  }, 3000000);
+});
