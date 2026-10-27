@@ -43,7 +43,7 @@ import {
   type SenseiLesson,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
-import { LOCK_SHAKE, LOCKED_CARD, lockedLine, lockedTapFeedback } from '../ui/lockCard';
+import { LOCK_SHAKE, LOCKED_CARD, lockedLine, lockedTapFeedback, lockShakeOffset } from '../ui/lockCard';
 import { music } from '../audio/Music';
 import { addVolumeRow } from '../ui/VolumeRow';
 import { CONTENT } from '../game/content';
@@ -1226,8 +1226,18 @@ export class DojoScene extends Phaser.Scene {
     line.setScale(1);
     if (fb.pulseLine) this.tweens.add({ targets: line, scale: 1.08, duration: 120, yoyo: true });
     if (fb.shake) {
+      // Q-SHAKE-CENTER: same distance left and right of the resting spot, then back exactly on it.
+      (card.getData('lockShake') as Phaser.Tweens.Tween | undefined)?.stop();
       card.x = baseX;
-      this.tweens.add({ targets: card, x: baseX + LOCK_SHAKE.px, duration: LOCK_SHAKE.ms / (LOCK_SHAKE.cycles * 2), yoyo: true, repeat: LOCK_SHAKE.cycles - 1, ease: 'Sine.easeInOut', onComplete: () => { card.x = baseX; } });
+      const shake = this.tweens.addCounter({
+        from: 0,
+        to: 1,
+        duration: LOCK_SHAKE.ms,
+        onUpdate: (tw) => { card.x = baseX + lockShakeOffset(tw.getValue() ?? 0); },
+        onComplete: () => { card.x = baseX; },
+        onStop: () => { card.x = baseX; },
+      });
+      card.setData('lockShake', shake);
     }
   }
 
