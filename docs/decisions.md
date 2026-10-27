@@ -1442,3 +1442,7 @@ Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager p
 - A Challenge pick saved below the 4th belt plays as Standard but stays stored, so it comes back at the 4th belt (`activeDifficulty`). Settings, the Home line and the Bests grades all use the active difficulty, so a child never sees Challenge selected while playing Standard.
 - Below the 4th belt the Challenge card is dimmed (alpha 0.7, contrast 5.6:1 or better), shows 🔒 and "Unlocks at your 4th belt." (content/settings/difficulty.json `locked.challenge`), and does nothing when tapped.
 - A `?difficulty=challenge` test link still wins at any belt, so the sims and goldens don't change.
+
+## Q-FAIR-EDGE — two Challenge fairness edges (2026-10-27)
+- The pattern "on screen" check now counts downed players (only players who are out are skipped). Before, with every player down the check passed vacuously, so a 2nd hit could start off screen.
+- The lane/red-circle rule now runs both ways: a counterable (red circle) attack doesn't start where another enemy's flagged dash lane (`noOverlapWithRedCircle`, uncounterable) winding up covers the player (lane from the enemy to its landing point, area + half a body). The step order inside a tick no longer matters. Challenge only; Guided and Standard unchanged.
