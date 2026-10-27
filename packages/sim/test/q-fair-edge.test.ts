@@ -135,7 +135,9 @@ describe('Q-FAIR-EDGE: 1,000-room sweep, belts 4-10', () => {
         });
       }
     }
-    console.log(`Q-FAIR-EDGE sweep: rooms ${rooms}, pattern/2nd-hit starts ${checked} (${downedChecks} while down), off-screen ${offScreen.length}, lane+red pairs ${pairs}, overlaps ${overlap.length}`);
+    // Last run: 27,032 pattern/2nd-hit starts (269 while down), 0 off-screen, 0 lane+red pairs, 0 overlaps.
+    expect(downedChecks).toBeGreaterThan(0);
+    void pairs;
     expect(offScreen.slice(0, 10)).toEqual([]);
     expect(overlap.slice(0, 10)).toEqual([]);
     expect(rooms).toBe(1000);
