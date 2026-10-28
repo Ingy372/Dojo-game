@@ -35,6 +35,8 @@ export interface Effect {
   seconds?: number;
   /** lowHealthFocus: works below this share of max health (0 to 1). */
   below?: number;
+  /** shieldBreaker: Focus gained when a hit breaks a shield. */
+  focusOnBreak?: number;
 }
 
 /** The sum of all the player's effects. Zero means "no change". */
@@ -49,6 +51,8 @@ export interface PlayerMods {
   staggerBonus: number;
   /** Any hit breaks shields. */
   shieldBreaker: boolean;
+  /** Focus gained when Shield Breaker breaks a shield. */
+  shieldBreakFocus: number;
   /** Perfect Counters also hit enemies within this many tiles (0 = off)... */
   rippleRadius: number;
   /** ...with this move strength. */
@@ -94,6 +98,7 @@ export function noMods(): PlayerMods {
     strikeExtraHit: 0,
     staggerBonus: 0,
     shieldBreaker: false,
+    shieldBreakFocus: 0,
     rippleRadius: 0,
     rippleStrength: 0,
     blockReflect: 0,
@@ -134,6 +139,7 @@ export function modsFrom(effects: readonly Effect[], ticksPerSecond: number): Pl
         break;
       case 'shieldBreaker':
         m.shieldBreaker = true;
+        m.shieldBreakFocus += e.focusOnBreak ?? 0;
         break;
       case 'rippleCounter':
         m.rippleRadius = Math.max(m.rippleRadius, e.radius ?? 0);
@@ -229,9 +235,11 @@ export function loadEffect(data: unknown, fail: (problem: string) => never): Eff
   const everyHits = num('everyHits', type === 'comboSpeed');
   const seconds = num('seconds', type === 'comboSpeed');
   const below = num('below', type === 'lowHealthFocus');
+  const focusOnBreak = num('focusOnBreak', false);
   if (radius !== undefined) out.radius = radius;
   if (everyHits !== undefined) out.everyHits = everyHits;
   if (seconds !== undefined) out.seconds = seconds;
   if (below !== undefined) out.below = below;
+  if (focusOnBreak !== undefined) out.focusOnBreak = focusOnBreak;
   return out;
 }

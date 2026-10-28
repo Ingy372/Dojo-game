@@ -976,3 +976,13 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - If the heroes plus the banner leave no clear spot, the tip may sit over a hero rather than vanish. Buttons, HUD, circles and the banner stay hard keep-outs.
 - Code: `bannerKeepOut` and `tipSpot` in `ui/senseiPlace.ts`; one changed call in `GameScene.placeCounterTip`. No new dependency.
 - Test: `packages/sim/test/q-tip-banner.test.ts` (both phone sizes, the Tester's two tip/banner size pairs, a sweep of hero positions: 0 overlap, off every button, tip always shown, at or below the floor). Live: 64 trials (667x375 + 844x390, reduced motion on/off, 4 modes, 2 pairs, both orders) — 0 overlapping; the same harness with the fix switched off shows 44/64 overlapping (max 24,656 px²). Shots (`docs/shots/q-tip-banner/`): 876/876 and the #384 shots 164/164 still pass.
+
+## R-INSIGHT-BAL-a — Insight card numbers and rules A/B/C (2026-10-27)
+- New numbers and the Content Designer's text in `content/insights/insights.json`; rules A (Wind Step also speeds basic attacks), B (Press the Advantage also on winded/recovering enemies) and C (Shield Breaker: `focusOnBreak` 7 Focus on a shield break) in `packages/sim/src/world.ts` and `effects.ts`. No new dependency.
+- Tests: `packages/sim/test/r-insight-bal-a.test.ts` (one behaviour test per rule, the card numbers, the Focus cap); `r-bal-14b-charms.test.ts` Rally now x1.75. Golden fixture `fixtures/golden/p-menu2-d-default-run.json` regenerated (approved).
+- Local re-run of the R-INSIGHT-BAL harness (kid, newer, careful, Standard, belts 1-10): the 4b card table and the 4d pairs and routes tables match the spec exactly (every difference 0.0 PE, 0 win points).
+- Wind Step tuned to 0.3 / every 5 combo hits / 2 s (Manager, #390 4f); text "Every 5 combo hits gives you a 2-second burst of speed."; test and golden updated.
+- `b-t3-tune-2-boss-levers`: only the masher floor check runs at 600 seeds (60-seed luck); 348/437 = 79.6%, floor still 75%.
+- `r-challenge-p5` step-out test is paired on landing-circle damage: 477 matched swings, step-out 1933 vs Counter 2278 (-15.1%), lower in 22, higher in 4. Follow-up for the Manager: committing to the step-out once started cuts landing damage about 44% (not adopted).
+- Full suite green: 1148 passed, 4 skipped, about 31 s; typecheck and build pass.
+- QA fix (layout): Insight picker cards are as tall as the tallest text plus 8 px under it (was a fixed 175 px); body text steps down 16/15/14 only if the row would not fit. New card text from #391 copied into `insights.json` (numbers untouched). Test: `r-insight-bal-a-picker.test.ts`; live check `/workspace/shots/r-insight-bal-a/`: 372 checks, 0 failed (both phone sizes, reduced motion on and off, 9 cards in 5 rows, plus taps).

@@ -818,7 +818,9 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   if (p.dashTicks === 0 && p.guardTicks === 0 && p.strikeRecovery === 0 && p.attackCooldown === 0) {
     const target = nearestEnemy(world, p, COMBAT.basicAttack.reach);
     if (target) {
-      const speed = Math.min(0.6, p.mods.attackSpeed + activeStance(p).attackSpeed);
+      // Wind Step: while its burst runs, basic attacks also get half of the burst's bonus.
+      const windStep = p.speedBoostTicks > 0 ? p.mods.comboSpeedBonus / 2 : 0;
+      const speed = Math.min(0.6, p.mods.attackSpeed + activeStance(p).attackSpeed + windStep);
       p.attackCooldown = Math.max(1, Math.round(COMBAT.basicAttack.cooldownTicks * (1 - speed)));
       landHit(world, p, target, 'basic', COMBAT.basicAttack.strength, COMBAT.focus.perHit);
     }
@@ -931,6 +933,7 @@ function landHit(
   strength: number,
   focusGain: number,
 ): void {
+  const brokeShield = e.shieldUp && p.mods.shieldBreaker;
   if (e.shieldUp) {
     if ((move === 'basic' || move === 'ripple') && !p.mods.shieldBreaker) {
       // Basic attacks bounce off the shield: no damage, but shield sparks give a little Focus (B-MASHER-a).
@@ -944,9 +947,13 @@ function landHit(
     e.shieldRegrow = e.def.shield!.regrowTicks;
     world.events.push({ kind: 'shieldBreak', playerId: p.id, enemyId: e.id });
   }
+  // Shield Breaker: a shield broken by the card gives a little Focus.
+  if (brokeShield) p.focus = Math.min(COMBAT.focus.max, p.focus + p.mods.shieldBreakFocus);
+  // Press the Advantage: staggered, winded or recovering enemies all take the bonus.
+  const pressed = e.mode === 'stagger' || e.mode === 'winded' || e.mode === 'recover';
   const bonus =
     comboBonus(p.combo) +
-    (e.mode === 'stagger' ? p.mods.staggerBonus : 0) +
+    (pressed ? p.mods.staggerBonus : 0) +
     (e.mode === 'winded' && e.def.winded ? e.def.winded.damageBonus : 0);
   const dmg = damage(p.power * (1 + p.mods.powerScale + stancePowerScale(p)), strength, e.def.guard, bonus);
   p.combo++;
