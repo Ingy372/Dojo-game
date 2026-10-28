@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-27 10:00 PM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#392.
+Last updated: 2026-10-28 8:00 AM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#392.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -158,7 +158,7 @@ Challenge unlocks at the 4th belt (core-design §13), so patterns are played at 
 | C1 | Dojo-Ascent Content Designer | Write the `challenge` blocks for patterns C1–C5 (fromBelt C1–C3: 4, C4: 5, C5: 6). C6–C10 stay parked. Names, tells and Sensei lines from the plan §1. | All files load; each pattern's Challenge wind-up ≥ 14 ticks. | **Done (PR #375, setup L+B per #373, merged Oct 27).** |
 | C2 | Dojo-Ascent Content Designer | Pair-room and `fromRoom` placement for belts 4–10 (plan C12, C13). | Belt 4 Challenge shows C1–C3, belt 5 adds C4, belt 6 adds C5, belt 7 shows patterns from room 1. | **On hold (plan C12, C13 parked per #373).** |
 | T1 | Dojo-Ascent Game Logic/systems Tester | Re-run the plan's §4 at 100 seeds with patterns on (Challenge rows belts 4–10). | Kid floor graded; newer and careful rows reported, not graded (#373). | **Done (Oct 27): kid row b4–b10 at 26–39%, all inside target.** |
-| T2 | Dojo-Ascent Game Logic/systems Tester | Human playtest with the plan's §5 checklist. | Notes from at least 2 testers (one aged 6–8), no "hit from nowhere" reports. | Real tester families (beta risk, see B-ACCT, B-TESTERS). P4 done. |
+| T2 | Dojo-Ascent Game Logic/systems Tester | Human playtest with the plan's §5 checklist, plus the 3+3+3 single-route Insight card playtests from R-INSIGHT-BAL-d. | Notes from at least 2 testers (one aged 6–8), no "hit from nowhere" reports. | Real tester families (beta risk, see B-ACCT, B-TESTERS). P4 done. |
 | P7 | Dojo-Ascent Programmer | Balance-bot samples match the L+B setup from #373. | A balance run prints the §4 table using the L+B pattern setup. | **Done (PR #382, merged Oct 27).** |
 | R-CHALLENGE-PLACEMENT | Dojo-Ascent Researcher & Planner | Pattern placement sims and recommended setup. | Plan merged. | **Done (PR #373, merged Oct 27).** |
 | C-LOCK-WORDS | Dojo-Ascent Content Designer | Challenge lock text names the belt ({belt}, "Opens when you earn your Green Belt!"). | QA passes. | **Done (PR #374, merged Oct 27).** |
@@ -182,7 +182,7 @@ Card spread: 10 cards held all run, 4 on the pick screen. Double Strike set at 0
 | R-INSIGHT-BAL-a | Dojo-Ascent Programmer | Number changes from plan 4a in `content/insights/insights.json`, rule tweaks A, B, C, and update `r-bal-14b-charms.test.ts`. | `npm test` green; plan 4b and 4d tables reproduce within +/-3 PE / +/-5 win points. | **Done.** PR #389 merged Oct 27, 8:10 PM (8e605c39) after QA passed. |
 | R-INSIGHT-BAL-b | Dojo-Ascent Programmer | Balance test layers 1 and 2 from plan section 7 (incl. B10 route-spread check), with a proper test-only seam. | Layer 1 in normal suite; layer 2 passes under `BALANCE=1`; a deliberate bad number fails the right line. | **Done.** PR #392 merged Oct 27, 9:20 PM (a1d3b05c) after QA passed. Layer 2 stays opt-in (`BALANCE=1`), no schedule. |
 | R-INSIGHT-BAL-c | Dojo-Ascent Content Designer | Card text for the changed cards (beta part). After the beta: Calm Breath and Steady Start text and icon brief, Calm Mind/Bow overlap check. | Texts match 4a. | **Beta part done (PR #388, merged Oct 27; text fixes PR #391 merged Oct 27, 7:50 PM: Wind Step 5 hits / 2 s, shorter Press and Rally).** Virtue part after beta. |
-| R-INSIGHT-BAL-d | Dojo-Ascent Game Logic/systems Tester | Re-run the whole report on the real build plus 150-seed kid route run, and 3+3+3 single-route human playtests. | B1-B10 table passes; the three routes clear about equally often. | **In progress** (assigned Oct 27, 9:20 PM). a and b done. |
+| R-INSIGHT-BAL-d | Dojo-Ascent Game Logic/systems Tester | Re-run the whole report on the real build plus 150-seed kid route run, and 3+3+3 single-route human playtests. | B1-B10 table passes; the three routes clear about equally often. | **Bot part done** (Oct 27, 10:40 PM, on main eefcb1ec): B1-B10 all pass; route win rates Rooted 49.0%, Flowing 43.4%, Power 49.3%. Report on `bot-qa` (`drafts/qa`). The 9 single-route human playtests moved into T2. |
 | R-INSIGHT-BAL-e | Dojo-Ascent Programmer | Layer 3 (kata power stacking) and activated-power rule for the sim bot. | Layer 3 runs once per power from Jay; section 7 budget lines pass or the failing power is named. | Jay's kata powers (R-INSIGHT-BAL-b done). |
 
 ## 0b5. Jay's renames and art calls (Oct 25 evening)
