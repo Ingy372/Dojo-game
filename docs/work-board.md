@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-27 2:00 PM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#383.
+Last updated: 2026-10-27 10:00 PM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#392.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -179,11 +179,11 @@ Challenge unlocks at the 4th belt (core-design §13), so patterns are played at 
 Card spread: 10 cards held all run, 4 on the pick screen. Double Strike set at 0.2 (Manager call). **Placeholder:** new Virtue cards (Calm Breath, Steady Start) come after the beta.
 | ID | Owner | What | Done when | Waits on |
 |---|---|---|---|---|
-| R-INSIGHT-BAL-a | Dojo-Ascent Programmer | Number changes from plan 4a in `content/insights/insights.json`, rule tweaks A, B, C, and update `r-bal-14b-charms.test.ts`. | `npm test` green; plan 4b and 4d tables reproduce within +/-3 PE / +/-5 win points. | **In progress.** PR #389 (4fdb0c0f) failed QA Oct 27, 7:47 PM only because Press and Rally card text spills out on phones. Programmer pastes in the #391 text strings, keeps focusOnBreak:7, fixes card fit, then back to Tester. Merge on PASS. |
-| R-INSIGHT-BAL-b | Dojo-Ascent Programmer | Balance test layers 1 and 2 from plan section 7 (incl. B10 route-spread check), with a proper test-only seam. | Layer 1 in normal suite; layer 2 passes under `BALANCE=1`; a deliberate bad number fails the right line. | R-INSIGHT-BAL-a |
+| R-INSIGHT-BAL-a | Dojo-Ascent Programmer | Number changes from plan 4a in `content/insights/insights.json`, rule tweaks A, B, C, and update `r-bal-14b-charms.test.ts`. | `npm test` green; plan 4b and 4d tables reproduce within +/-3 PE / +/-5 win points. | **Done.** PR #389 merged Oct 27, 8:10 PM (8e605c39) after QA passed. |
+| R-INSIGHT-BAL-b | Dojo-Ascent Programmer | Balance test layers 1 and 2 from plan section 7 (incl. B10 route-spread check), with a proper test-only seam. | Layer 1 in normal suite; layer 2 passes under `BALANCE=1`; a deliberate bad number fails the right line. | **Done.** PR #392 merged Oct 27, 9:20 PM (a1d3b05c) after QA passed. Layer 2 stays opt-in (`BALANCE=1`), no schedule. |
 | R-INSIGHT-BAL-c | Dojo-Ascent Content Designer | Card text for the changed cards (beta part). After the beta: Calm Breath and Steady Start text and icon brief, Calm Mind/Bow overlap check. | Texts match 4a. | **Beta part done (PR #388, merged Oct 27; text fixes PR #391 merged Oct 27, 7:50 PM: Wind Step 5 hits / 2 s, shorter Press and Rally).** Virtue part after beta. |
-| R-INSIGHT-BAL-d | Dojo-Ascent Game Logic/systems Tester | Re-run the whole report on the real build plus 150-seed kid route run, and 3+3+3 single-route human playtests. | B1-B10 table passes; the three routes clear about equally often. | R-INSIGHT-BAL-a, R-INSIGHT-BAL-b |
-| R-INSIGHT-BAL-e | Dojo-Ascent Programmer | Layer 3 (kata power stacking) and activated-power rule for the sim bot. | Layer 3 runs once per power from Jay; section 7 budget lines pass or the failing power is named. | Jay's kata powers; R-INSIGHT-BAL-b |
+| R-INSIGHT-BAL-d | Dojo-Ascent Game Logic/systems Tester | Re-run the whole report on the real build plus 150-seed kid route run, and 3+3+3 single-route human playtests. | B1-B10 table passes; the three routes clear about equally often. | **In progress** (assigned Oct 27, 9:20 PM). a and b done. |
+| R-INSIGHT-BAL-e | Dojo-Ascent Programmer | Layer 3 (kata power stacking) and activated-power rule for the sim bot. | Layer 3 runs once per power from Jay; section 7 budget lines pass or the failing power is named. | Jay's kata powers (R-INSIGHT-BAL-b done). |
 
 ## 0b5. Jay's renames and art calls (Oct 25 evening)
 | ID | Owner | What | Done when | Waits on |
