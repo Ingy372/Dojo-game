@@ -954,6 +954,9 @@ export class DojoScene extends Phaser.Scene {
       // Sensei's Scroll (M7-P5): every lesson seen so far, and the tutorial floor, to replay any time.
       const rowLeft = (street ? 130 + 8 : 0) + (journal ? 100 + 8 : 0);
       if (isOpen(this.profile, this.training, 'scroll')) this.button(width - pad - rowLeft - 90, ROW2_Y, 90, MIN_TAP, 'Scroll', 0x7a4a6a, 14, () => this.openScroll());
+      // PLACEHOLDER (A4-DOJO-i): a temporary way into the Action Zone, straight to the inside.
+      // A4-DOJO-ii replaces this button with the way in from the outside.
+      this.button(width - pad - 130, ROW2_Y + MIN_TAP + 8, 130, MIN_TAP, 'Action Zone', 0x3a7a6a, 14, () => this.leaveTo('ActionZoneInside'));
     }
   }
 
