@@ -431,8 +431,6 @@ def scene_inside():
             n += 1
             for poly_ in hand(x, z, 1.1, ((n * 37) % 40) - 20): ppoly(poly_, "#d92b25" if n % 2 else "#2f6fd6", 1)
     T(b - 0.2, WF + 0.16, 0.45, 1.3, 0.1, 0.1, "#d92b25", True, 10, name="extinguisher"); T(b - 0.2, WF + 0.16, 1.3, 1.4, 0.04, 0.04, "#25252e", False, 6, name="extHead")
-    B(22.8, 12.4, 0.35, 2.6, 0.8, 0.5, "#2bb3b3", True, bevel=0.05, name="sofaSeat"); B(22.8, 12.0, 0.8, 2.6, 0.25, 0.7, "#2bb3b3", True, bevel=0.05, name="sofaBack")
-    [B(22.8 + d_, 12.3, 0.55, 0.22, 0.9, 0.7, "#1f9a9a", True, bevel=0.04, name="sofaArm") for d_ in (-1.4, 1.4)]; B(21.9, 12.4, 0.65, 0.5, 0.6, 0.12, "#f08a24", False, name="sofaCushion"); B(23.7, 12.4, 0.65, 0.5, 0.6, 0.12, "#f5c542", False, name="sofaCushion")
     # ======================= LOBBY LITTLE THINGS =======================
     B(2.4, 15.9, 0.25, 1.8, 0.5, 0.1, "#9aa0b0", True, name="bench")
     for x in (1.65, 3.15): B(x, 15.9, 0.12, 0.12, 0.4, 0.24, "#5b5f6e", False, name="benchLeg")

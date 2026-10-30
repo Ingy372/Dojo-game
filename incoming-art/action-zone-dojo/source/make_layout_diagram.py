@@ -51,7 +51,7 @@ box(0.0, 0.0, 0, 0, None) if False else None
 label(sum(LM.DOOR) / 2, LM.R_FRONT - 0.5, "", 10); box(*LM.DOOR, LM.R_FRONT - 0.15, LM.R_FRONT + 0.15, "#f7f4ec", "#f7f4ec", 1)
 label(sum(LM.DOOR) / 2, LM.R_FRONT + 0.9, "ENTRY", 28)
 ax = X(sum(LM.DOOR) / 2); d.line([ax, Y(LM.R_FRONT + 0.3) - 50, ax, Y(LM.R_FRONT - 1.5)], fill=INK, width=6); d.polygon([(ax - 14, Y(LM.R_FRONT - 1.5) + 4), (ax + 14, Y(LM.R_FRONT - 1.5) + 4), (ax, Y(LM.R_FRONT - 2.3))], fill=INK)
-label(4.0, 15.0, "turn LEFT:  PRO SHOP", 20); box(2.0, 5.2, 11.0, 12.0, "#f4f1e8", INK, 2); label(3.6, 11.5, "pro-shop counter", 14); box(21.5, 24.1, 12.0, 12.9, "#2bb3b3", INK, 2); label(22.8, 12.45, "sofa", 14, "white"); label(23.0, 13.8, "turn RIGHT:  TWO CROSS DOORS\nwith the HANDPRINT WALL between", 20)
+label(4.0, 15.0, "turn LEFT:  PRO SHOP", 20); box(2.0, 5.2, 11.0, 12.0, "#f4f1e8", INK, 2); label(3.6, 11.5, "pro-shop counter", 14); label(23.0, 13.8, "turn RIGHT:  TWO CROSS DOORS\nwith the HANDPRINT WALL between", 20)
 label(13.5, 15.0 + 2.6, "", 10)
 d.text((PAD, 24), "ACTION ZONE DOJO - MAIN FLOOR PLAN (top-down, labels only)", font=F(30), fill=INK)
 d.text((PAD, 66), "Entry is at the bottom; the north wall (target wall, styles mural, creeds) is at the top. Wall art is shown unfolded onto the north wall.", font=F(18, False), fill="#444")

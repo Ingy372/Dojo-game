@@ -11,7 +11,7 @@ Samples only, in the Blender toon top-down style of the approved town square (PR
 ## What is in each
 1. **Outside:** tan ribbed metal building with a brown gable roof, red 3D "CMA / MARTIAL ARTS" letters, a small kick-figure badge above them, brown double doors with two glass panes and a push bar, two windows, banners, two blue accessibility plates, benches, two red metal chairs, two flower beds, shrubs, a palm and round trees, a gravel lot with yellow-on-black curb stops.
 2. **Inside (rebuilt):** one wide room, top-down, entry at the bottom. Walls end at a flat drywall cap (nothing above it). Read it from the entry door up:
-   - **Entry hall** (tan tile, welcome mat, open door leaves, plant, bin, bench, turquoise sofa).
+   - **Entry hall** (tan tile, welcome mat, open door leaves, plant, bin, bench).
    - **Left: the PRO SHOP** (blue cloud wall, "PRO SHOP" sign, grid wall with uniform bags and pads, belt rack, black tees, a stylised lion painting, glass counter with gloves, headgear and shoes; no weapons).
    - **Right: the TWO CROSS DOORS** (white doors, blue frames, red crosses; the right one has a blue restroom plate) with the **HANDPRINT WALL** between them (plain red and blue handprints, a wood plaque with the logo and a black belt, a red fire extinguisher).
    - **Straight ahead: the PARENT SEATING**, the approved stadium seats (3 tiers of 8, blue and red), now facing the mat.
