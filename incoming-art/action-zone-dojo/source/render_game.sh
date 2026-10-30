@@ -7,8 +7,8 @@ B="blender -b -P build_action_zone_dojo.py --"
 $B --scene inside  --samples $S --game $W/inside                            | grep -E "Error|Traceback"
 $B --scene outside --samples $S --game $W/out-day                           | grep -E "Error|Traceback"
 $B --scene outside --samples $S --game $W/out-dusk --dusk                   | grep -E "Error|Traceback"
-$B --scene outside --samples $S --game $W/slot-day  --slot --ppt 44 --ow-mult 1.818         | grep -E "Error|Traceback"
-$B --scene outside --samples $S --game $W/slot-dusk --slot --dusk --ppt 44 --ow-mult 1.818  | grep -E "Error|Traceback"
+$B --scene outside --samples $S --game $W/slot-day  --slot --ppt 50 --ow-mult 1.6         | grep -E "Error|Traceback"
+$B --scene outside --samples $S --game $W/slot-dusk --slot --dusk --ppt 50 --ow-mult 1.6  | grep -E "Error|Traceback"
 python3 make_game_inside.py  $W/inside
 python3 make_game_outside.py $W      # reads $W/{out-day,out-dusk,slot-day,slot-dusk}
 # optional: the town-slot preview (town square rendered without its old placeholder dojo; see ../README.md "Rebuild")

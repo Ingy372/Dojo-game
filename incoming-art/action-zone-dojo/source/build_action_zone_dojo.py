@@ -263,7 +263,7 @@ def scene_outside():
     if A.game:
         grp("end")
         LIT = ("wLglass", "wRglass", "wLlowglass", "wRlowglass", "paneL", "paneR", "panelowL", "panelowR", "wallLampLens")
-        if SLOT: render_game(10.0, 7.1, 7.0, 3.65, LIT)         # the town-slot building: columns 2..12, rows 0.1..7.2
+        if SLOT: render_game(10.0, 7.2, 7.0, 3.7, LIT)         # the town-slot building: columns 2..12, rows 0.1..7.2
         else: render_game(14.0, 8.9, 7.0, 4.55, LIT)
     else: finish_and_render(14.0, 8.9, 7.0, 4.55, "outside-face@2x.png", ("phone", "address"))
 

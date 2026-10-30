@@ -5,7 +5,7 @@
 **WHAT:**
 - **Inside, one wide scrolling room** (2272 x 1696 @2x): four full-frame layers (floor, walls, props, foreground), full layers only (no chunks), 17 cropped prop/wall-decal sprites with anchors and sort rows, and `inside-room.json` (walkable grid, blockers, spawn, exit, 11 interactables, 24 seat slots, draw order). Students walk BEHIND the foreground layer (the front wall) and, via 4 foreground sprites (`seats-back`, `bag-{black,blue,red}-top`), behind the seat backs and bag tops (drawn above a character only when its feet row < the sprite's `sortRow`).
 - **Outside, entrance view** (1120 x 712 @2x), day and dusk: ground, building, blank phone and blank address overlays, plus dusk pools and glow; 12 scenery sprites (bin, 2 benches, 2 chairs, 2 beds, shrub, palm, 3 trees) in day and dusk; `outside-entrance.json` (front-door tap rect, blockers, spawn, light sources).
-- **Town-square dojo slot**, day and dusk: 440 x 312 @2x (+ 1x), scale 0.55 of the entrance building, anchored on town tile (3.6, 4.4) where the old placeholder dojo stands in PR #301's town square. Tap rect and target in `static.json`. `previews/town-slot-in-town-{day,dusk}.png` show it placed.
+- **Town-square dojo slot**, day and dusk: 500 x 360 @2x (+ 1x 250 x 180), scale 0.625 of the entrance building (was 0.55; Jay asked for a slightly wider dojo), anchored on town tile (3.6, 4.4) where the old placeholder dojo stands in PR #301's town square. Tap rect and target in `static.json`. `previews/town-slot-in-town-{day,dusk}[@2x].png` show it placed. The tree in front of it is cleared: the small tree at town tile (1.6, 5.6) stood in front of the dojo's lower-left corner, so it is dropped, and the tree at (6.6, 6.0) beside it moves to (6.6, 6.35) so its crown no longer reaches the wider building. It is done by the new opt-in flag `--clear-dojo-trees` of `build_town_square.py` (used with `--no-dojo0`); the default town-square output is pixel-identical to before (checked: default day and night renders, 0 differing px), so PR #301's approved art is untouched.
 - **Interactive prop sprites:** pro-shop counter, 3 bags, target wall, back doors, 2 cross doors, handprint wall, gear box, parent seats (the rest: bench, plant, trash can, whiteboard, wings).
 - **Phone and address** stay blank swappable overlay layers; neither real value is in the repo.
 - Files and frame sizes and anchors are explained in `README.md` ("Game-ready batch").
@@ -17,11 +17,17 @@
 - Approved outside and seating PNGs are byte-identical to `12118dac`.
 - Every file named in the JSON exists and has the stated size (every referenced file checked, none missing); all 8 outside entrance layers are 1120 x 712.
 - a grep of `incoming-art/` for the real phone number and the real house number finds nothing (checked at the tip). No photo or crop is committed. Only `incoming-art/` changed (the town-square scripts got an opt-in `--no-dojo0` flag; their default output is byte-identical).
-- **Red check** (branded red expected): 63 sprite files, 449,516 red px (about 408,977 unique: the seat-back and bag-red-top foreground copies repeat base pixels), all branded: red square (floor 238,966), gear-box 68,839, seats 52,062, crosses, handprints, red bag, chairs, building sign trim. The fire extinguisher is the one danger-red item, as in the approved inside. Nothing else is red.
+- **Red check** (branded red expected): 63 sprite files, 451,428 red px (about 410,889 unique: the seat-back and bag-red-top foreground copies repeat base pixels), all branded: red square (floor 238,966), gear-box 68,839, seats 52,062, crosses, handprints, red bag, chairs, building sign trim. The fire extinguisher is the one danger-red item, as in the approved inside. Nothing else is red.
 - Glows: every dusk glow sits on a real source (two windows, door panes, wall lamp lens). Nothing floats free. The dojo building is graded about 15 percent lighter than the town at dusk (entrance and slot only); glows and pools are unchanged.
 - Foreground sprites are pixel copies of their base sprites: the stacked inside composite is byte-identical with and without them.
 
 **DECIDE:**
+Decided by Jay (applied):
+- **Town-slot scale:** slightly wider, 0.55 to 0.625 (+13.6 percent), re-rendered, anchor and tap rect updated; the dojo stays between the town's paths and the market without overlap. Resolved.
+- **Tree:** the tree that blocked the dojo is removed and its neighbour moved aside (opt-in flag, default town unchanged). Resolved.
+- **Logo in the repo:** OK, keep it. Resolved.
+- **Creed typo fixes** ("fallen", "Christ died"): OK, keep them. Resolved.
+
 Decided by the Manager (applied):
 - **Dusk look:** the dojo (town slot and entrance building) is slightly brighter than the town grade so it reads as the landmark. Subtle: about 15 percent lighter multiply on the building only; every glow stays on its real source.
 - **Wall-lamp lens (dusk only):** keep as is.
@@ -29,16 +35,11 @@ Decided by the Manager (applied):
 - **Chunks vs full layers:** full layers only; the chunks are removed.
 - **History scrub:** not needed (resolved). The old commit stays as is.
 
-HOLD for Jay (left as they are):
-1. **Town-slot scale 0.55.** Same width as the old placeholder (4.4 town tiles). Larger or smaller?
-2. **Logo licence.** Jay's logo is his own file; is it cleared for this public repo?
-3. **Creed typos.** The wording on the creed boards is as in Jay's photo, typos included. Fix them?
-
-Still open from before:
-4. **Branded red exception:** keep the red square, box, seats, sign, crosses and handprints red in the game?
-5. **Edge lines between layers** are a few thin outline pixels (see the numbers above). Fine, or bake a tiny overlap?
-6. **No phone/address overlay on the town slot** (they would be 3 px tall). OK?
-7. "CMA / MARTIAL ARTS" sign wording.
+Still open:
+1. **Branded red exception:** keep the red square, box, seats, sign, crosses and handprints red in the game?
+2. **Edge lines between layers** are a few thin outline pixels (see the numbers above). Fine, or bake a tiny overlap?
+3. **No phone/address overlay on the town slot** (they would be 3 px tall). OK?
+4. "CMA / MARTIAL ARTS" sign wording.
 
 **NEXT:** Programmer imports the layers by `static.json` and `inside-room.json`; the Manager passes Jay's answers; swap the blank phone/address layers from the local values file when Jay wants them shown.
 
@@ -89,9 +90,9 @@ Reference photos stayed outside the repo; no photo or crop is committed.
 2. **Seat direction.** Seats now face the mat (as in the photos); the approved sample faced the entry. Keep?
 3. **Unfolded side-wall features** (yellow men, mural, back doors on the north wall). OK, or should the game use a side-wall view?
 4. **Right gap size and shorter box.** I gave the right gap the same 2.6 width as the left, which shortened the box to 7.2 tiles and 5 openings. Wider or narrower gap, or a longer box? Also the **red box openings I added**, and the pro-shop look. Keep or make it plain like the photo?
-5. **Typos corrected** in the creed wording. Keep the corrections, or copy the wall exactly?
+5. **Typos corrected** in the creed wording. Resolved: Jay says keep the corrections.
 6. **Creed text size.** At the game size the creed boards are not readable; the full-size pictures are in `source/textures/`. Show them larger or in a popup?
-7. **Logo use.** Jay's logo is his own file. Is it cleared for this public repo?
+7. **Logo use.** Resolved: Jay says the logo can stay in the repo.
 8. **One wide room**, 28 x 21 tiles at 80 ppt (2272 x 1696). Scroll it, or split it?
 9. **Outside face** still has my plain kick-figure badge (approved as is). Swap to Jay's logo later?
 10. **Phone and house number: scrub the history?** The real values are out of the branch tip (blank placeholders, read from a local git-ignored `source/local_overlay_values.json`) but still sit in the history of commit `af9fd2a`, and the repo is public. Scrubbing needs a history rewrite and force-push; none has been done. **Resolved: the Manager decided a scrub is not needed.**

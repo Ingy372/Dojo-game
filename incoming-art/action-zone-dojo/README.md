@@ -54,19 +54,20 @@ Dusk is the day art graded by the town-square dusk recipe (blue-violet multiply,
 
 ### 4. Town-square dojo slot (`town-slot-dojo`, tap to enter)
 The Action Zone building scaled down for the left dojo slot of the approved PR #301 town square (the old green-noren placeholder `dojo0`, at town tile (3.6, 4.4)).
-- **Files:** `sprites/town-slot-dojo_day.png`, `sprites/town-slot-dojo_dusk.png` (**440 x 312** @2x; their pixels are 1:1 with the town's @2x art) and `sprites/1x/town-slot-dojo_{day,dusk}.png` (220 x 156, 40 px per town tile).
-- **Scale 0.55:** the building is 8 of its own tiles wide, which becomes 4.4 town tiles, so it sits in the slot like `dojo0` did (same ground footprint, a little taller than the market). Line weight matches the town (1 px at 1x, 2 px at @2x).
-- **Anchor:** `anchorPx` (220.0, 259.4) is the front-centre on the ground (under the door). Put it on **town tile (3.6, 4.4)**: in the concept picture that is px (3.6 x 80, 4.4 x 80 + 76) at @2x. `footprintRectTownTiles` [1.4, 5.8, 3.0, 4.4]; `sortRow` 4.4.
+- **Files:** `sprites/town-slot-dojo_day.png`, `sprites/town-slot-dojo_dusk.png` (**500 x 360** @2x; their pixels are 1:1 with the town's @2x art) and `sprites/1x/town-slot-dojo_{day,dusk}.png` (250 x 180, 40 px per town tile).
+- **Scale 0.625** (was 0.55; Jay asked for a slightly wider dojo, +13.6 percent): the building is 8 of its own tiles wide, which becomes 5.0 town tiles (was 4.4), so it reads easier in the town while the roof stays clear of the market (about 0.7 town tile of gap) and off the paving. Re-rendered at 50 px per building tile (not resampled), so lines stay crisp: line weight matches the town (1 px at 1x, 2 px at @2x).
+- **Anchor:** `anchorPx` (250.0, 295.0) is the front-centre on the ground (under the door). Put it on **town tile (3.6, 4.4)**: in the concept picture that is px (3.6 x 80, 4.4 x 80 + 76) at @2x. `tapRectPx` [50, 119, 450, 295]; `footprintRectTownTiles` [1.1, 6.1, 2.8, 4.4]; `sortRow` 4.4.
 - **Tap:** `tapRectPx` [44, 104, 396, 259] (@2x; halve for 1x), target `outside-entrance-day` or `-dusk` (use the state that matches the town's time of day).
 - **Dusk:** the glow and the ground pools are baked into the dusk sprite (they reach about 0.35 tile round the building and about 1 tile in front). Paste it AFTER the town's dusk grade, not before.
 - No ground, scenery or phone/address overlays here (the overlays would be 3 px tall).
-- **Preview:** `previews/town-slot-in-town-{day,dusk}.png` and `@2x`: the town square re-rendered without `dojo0` and the sprite placed on it. The town-square files in `town-square-concept/` are not changed (the new `--no-dojo0` flag is opt-in and the default output is byte-identical).
+- **Preview:** `previews/town-slot-in-town-{day,dusk}.png` and `@2x`: the town square re-rendered without `dojo0` and the sprite placed on it. The town-square files in `town-square-concept/` are not changed (the new `--no-dojo0` and `--clear-dojo-trees` flags are opt-in and the default output is unchanged).
+- **Tree:** the small tree at town tile (1.6, 5.6) stood in front of the dojo's lower-left corner, so it is dropped, and the tree at (6.6, 6.0) beside it moves to (6.6, 6.35) so its crown no longer reaches the wider building. It is done by the new opt-in flag `--clear-dojo-trees` of `build_town_square.py` (used with `--no-dojo0`); the default town-square output is pixel-identical to before (checked: default day and night renders, 0 differing px), so PR #301's approved art is untouched.
 
 ### 5. Phone and address (blank, swappable)
 `outside-entrance-{day,dusk}_phone.png` and `_address.png` are the only places the two values go, and they are blank bars here. a grep of `incoming-art/` for the real phone number and the real house number finds nothing (checked at the tip). The earlier commit `af9fd2a` still holds the real values in history (no rewrite was done; the Manager decided a scrub is not needed).
 
 ### 6. Red check (branded red expected)
-`python3 /workspace/redcheck.py 'sprites/*.png' 'sprites/1x/*.png'`: 63 files, 449,516 red px in total (the two foreground-sprite copies, seats-back 36,978 and bag-red-top 3,561, repeat pixels that are already in `seats` and `bag-red`, so about 408,977 are unique). All of it is the branded red: the red square (floor layer 238,966), gear-box 68,839, seats 52,062, door crosses ~1,590 each, handprint wall 6,338, bag-red 5,931, pro counter 2,323, building sign/roof trim (outside day 8,506), chairs (~2,650 each), the walls layer 4,167 (flag stripes, creed titles). The dusk building is graded a little lighter now, so its sign trim passes the limit too (entrance dusk building 7,547, slot dusk 2,037, slot day 2,615): the same branded red. No other red.
+`python3 /workspace/redcheck.py 'sprites/*.png' 'sprites/1x/*.png'`: 63 files, 451,428 red px in total (the two foreground-sprite copies, seats-back 36,978 and bag-red-top 3,561, repeat pixels that are already in `seats` and `bag-red`, so about 410,889 are unique). All of it is the branded red: the red square (floor layer 238,966), gear-box 68,839, seats 52,062, door crosses ~1,590 each, handprint wall 6,338, bag-red 5,931, pro counter 2,323, building sign/roof trim (outside day 8,506), chairs (~2,650 each), the walls layer 4,167 (flag stripes, creed titles). The dusk building is graded a little lighter now, so its sign trim passes the limit too (entrance dusk building 7,547, slot dusk 2,037, slot day 2,615): the same branded red. No other red.
 
 ### 7. Rebuild
 ```
@@ -75,9 +76,9 @@ bash render_all.sh      # the 3 samples + 1x copies (as before)
 bash render_game.sh     # the game batch: Blender group renders (one at a time), then make_game_inside.py and make_game_outside.py
 # optional town preview:
 cd ../../town-square-concept/source
-blender -b -P build_town_square.py -- --part town --no-dojo0 --out /tmp/t/town@2x.png
-blender -b -P build_town_square.py -- --part town --night --no-dojo0 --out /tmp/t/town_night@2x.png
-blender -b -P build_town_square.py -- --part lights --night --no-dojo0 --samples 8 --out /tmp/t/lights_night@2x.png
+blender -b -P build_town_square.py -- --part town --no-dojo0 --clear-dojo-trees --out /tmp/t/town@2x.png
+blender -b -P build_town_square.py -- --part town --night --no-dojo0 --clear-dojo-trees --out /tmp/t/town_night@2x.png
+blender -b -P build_town_square.py -- --part lights --night --no-dojo0 --clear-dojo-trees --samples 8 --out /tmp/t/lights_night@2x.png
 python3 make_concept.py --far render_far@2x.png --town /tmp/t/town@2x.png --outdir /tmp/t/out --variant day --no-dojo0
 python3 make_concept.py --far render_far@2x.png --town /tmp/t/town_night@2x.png --lights /tmp/t/lights_night@2x.png --outdir /tmp/t/out --variant dusk --no-dojo0
 python3 ../../action-zone-dojo/source/make_town_preview.py /tmp/t/out

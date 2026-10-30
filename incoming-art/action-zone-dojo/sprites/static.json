@@ -1383,12 +1383,12 @@
   },
   "town-slot-dojo": {
    "size": [
-    440,
-    312
+    500,
+    360
    ],
    "size1x": [
-    220,
-    156
+    250,
+    180
    ],
    "layers": [
     "day",
@@ -1404,15 +1404,15 @@
    },
    "groundRect": {
     "col0": 2.0,
-    "row0": 0.105,
+    "row0": 0.1,
     "col1": 12.0,
-    "row1": 7.195,
-    "note": "the image's pixel box in the building's own tiles (the building is 8 of them wide; in the town one of them is 0.55 town tile)"
+    "row1": 7.3,
+    "note": "the image's pixel box in the building's own tiles (the building is 8 of them wide; in the town one of them is 0.625 town tile)"
    },
    "topExtraTiles": 5.9,
    "anchorPx": [
-    220.0,
-    259.4
+    250.0,
+    295.0
    ],
    "anchorNote": "the building's front-centre on the ground (under the door). Put this pixel on town tile (3.6, 4.4), the dojo slot of the PR #301 town square (that slot's front wall row). @2x here = the town's @2x art scale 1:1 (80 ppt town tiles); the 1x file is the 40 ppt twin.",
    "anchorTownTile": [
@@ -1422,22 +1422,22 @@
    "place": "town-slot",
    "sortRow": 4.4,
    "footprintRectTownTiles": [
-    1.4,
-    5.8,
-    3.0,
+    1.1,
+    6.1,
+    2.8,
     4.4
    ],
    "tapRectPx": [
-    44,
-    104,
-    396,
-    259
+    50,
+    119,
+    450,
+    295
    ],
    "tapRectNote": "front face of the building (wall + roof gable) in @2x px; tap it to enter. Halve for 1x.",
    "interactive": true,
    "target": "outside-entrance-day|dusk",
-   "scale": 0.55,
-   "note": "the Action Zone building at 0.55 scale for the town square's classmate-dojo slot (the old green-noren 'dojo0' placeholder). Day and dusk are separate sprites; dusk has its glow + ground pools baked in (they extend past the building a little: the glow 0.35 tile, the pool ~1 tile in front). Line weight matches the town (1 px @1x, 2 px @2x). No phone/address overlay here (they would be 3 px tall)."
+   "scale": 0.625,
+   "note": "the Action Zone building at 0.625 scale (was 0.55; Jay asked for a slightly wider dojo, +13.6 percent) for the town square's classmate-dojo slot (the old green-noren 'dojo0' placeholder). Day and dusk are separate sprites; dusk has its glow + ground pools baked in (they extend past the building a little: the glow 0.35 tile, the pool ~1 tile in front). Line weight matches the town (1 px @1x, 2 px @2x). No phone/address overlay here (they would be 3 px tall)."
   },
   "seats-back": {
    "size": [

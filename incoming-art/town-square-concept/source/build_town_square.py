@@ -10,6 +10,7 @@ from toon_kit import *
 
 ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); ap.add_argument("--samples", type=int, default=24)
 ap.add_argument("--ppt", type=int, default=80); ap.add_argument("--part", default="town"); ap.add_argument("--no-dojo0", action="store_true", help="leave the left dojo slot empty (the Action Zone slot sprite is placed there instead; default output is unchanged)"); ap.add_argument("--night", action="store_true")
+ap.add_argument("--clear-dojo-trees", action="store_true", help="A4-DOJO: drop the small tree (1.6, 5.6) that stands in front of the left dojo slot and move the tree (6.6, 6.0) beside it to (6.6, 6.35); default output is unchanged")
 A = ap.parse_args(sys.argv[sys.argv.index("--") + 1:])
 EL = 35.0; K = 1 / math.sin(math.radians(EL))
 COLS, ROWS = 23.3, 10.75                      # 1864 x 860 at 80 px per tile
@@ -228,7 +229,10 @@ else:
         add(f"trunk{c}{r}", tube(G(c, r, 0), G(c, r, 0.9 * s), 0.12, 0.09), "#7a5232")
         add(f"leaf{c}{r}", ellipsoid(G(c, r, 1.35 * s), (0.75 * s, 0.7 * s * K * 0.6, 0.62 * s), segs=16, rings=10), "#6fae5a")
         add(f"leaf2{c}{r}", ellipsoid(G(c - 0.25 * s, r + 0.1, 1.6 * s), (0.42 * s, 0.35 * s, 0.38 * s), segs=12, rings=8), "#86c46c", False)
-    for c, r, s in ((6.6, 6.0, 1.0), (17.5, 6.0, 1.0), (3.4, 10.4, 1.1), (19.9, 10.4, 1.1), (0.8, 7.4, 1.2), (22.5, 7.4, 1.2), (1.6, 5.6, 0.9), (21.8, 5.6, 0.9)):
+    TREES = [(6.6, 6.0, 1.0), (17.5, 6.0, 1.0), (3.4, 10.4, 1.1), (19.9, 10.4, 1.1), (0.8, 7.4, 1.2), (22.5, 7.4, 1.2), (1.6, 5.6, 0.9), (21.8, 5.6, 0.9)]
+    if A.clear_dojo_trees:   # opt-in (A4-DOJO): keep the wider Action Zone slot sprite in view
+        TREES = [(6.6, 6.35, 1.0) if t[:2] == (6.6, 6.0) else t for t in TREES if t[:2] != (1.6, 5.6)]
+    for c, r, s in TREES:
         tree(c, r, s)
     def bench(c, r):
         add(f"bs{c}", box(G(c, r, 0.38), (1.3, D(0.35), 0.08)), "#c99a62")

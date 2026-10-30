@@ -1,8 +1,8 @@
 """Action Zone dojo - OUTSIDE as game-ready art.  Post-processes the per-group renders written by
     blender -b -P build_action_zone_dojo.py -- --scene outside --game <dir>                       (day,  full entrance view, 80 ppt)
     blender -b -P build_action_zone_dojo.py -- --scene outside --game <dir> --dusk                (dusk: same + the wall-lamp lens)
-    blender -b -P build_action_zone_dojo.py -- --scene outside --game <dir> --slot --ppt 44 --ow-mult 1.818          (town slot, day)
-    blender -b -P build_action_zone_dojo.py -- --scene outside --game <dir> --slot --dusk --ppt 44 --ow-mult 1.818   (town slot, dusk)
+    blender -b -P build_action_zone_dojo.py -- --scene outside --game <dir> --slot --ppt 50 --ow-mult 1.6          (town slot, day)
+    blender -b -P build_action_zone_dojo.py -- --scene outside --game <dir> --slot --dusk --ppt 50 --ow-mult 1.6   (town slot, dusk)
 into ../sprites/: the entrance view as layers (ground, building, phone/address overlays + scenery sprites), day and dusk,
 and the scaled-down town-square dojo-slot building (1x and @2x, day and dusk), merged into static.json + outside-entrance.json.
 Dusk uses the PR #301 town-square recipe, applied per layer (see grade()).
@@ -18,7 +18,7 @@ os.makedirs(os.path.join(OUT, "1x"), exist_ok=True); os.makedirs(PRE, exist_ok=T
 CX, X0, X1, RF, RB, ZE, ZR = 7.0, 3.0, 11.0, 6.0, 4.3, 2.4, 4.3
 # ---- the two frames. P(c, r, z) = pixel of tile (c, r) lifted by z, in that frame
 ENT = dict(cols=14.0, rows=8.9, cx=7.0, rc=4.55, ppt=80)
-SLOT = dict(cols=10.0, rows=7.1, cx=7.0, rc=3.65, ppt=44)
+SLOT = dict(cols=10.0, rows=7.2, cx=7.0, rc=3.7, ppt=50)   # 50 px per building tile = 0.625 town tile (80 ppt @2x)
 def frame(F):
     W, H = round(F["cols"] * F["ppt"]), round(F["rows"] * F["ppt"])
     ox, oy = W / 2 - F["cx"] * F["ppt"], H / 2 - F["rc"] * F["ppt"]
@@ -198,14 +198,14 @@ for st, im in (("day", sd), ("dusk", sdu)):
     save(im.resize((SW // 2, SH // 2), Image.LANCZOS), fn, os.path.join(OUT, "1x")); files1[st] = "1x/" + fn
 tl, br = SP(X0, RF, ZR), SP(X1, RF, 0.0)
 statics["town-slot-dojo"] = {"size": [SW, SH], "size1x": [SW // 2, SH // 2], "layers": ["day", "dusk"], "files": files, "files1x": files1,
-    "groundRect": dict(frame_rect(SLOT, SW, SH, SP), note="the image's pixel box in the building's own tiles (the building is 8 of them wide; in the town one of them is 0.55 town tile)"),
+    "groundRect": dict(frame_rect(SLOT, SW, SH, SP), note="the image's pixel box in the building's own tiles (the building is 8 of them wide; in the town one of them is 0.625 town tile)"),
     "topExtraTiles": round(SP(CX, RF)[1] / SLOT["ppt"], 2),
     "anchorPx": [round(SP(CX, RF)[0], 1), round(SP(CX, RF)[1], 1)],
     "anchorNote": "the building's front-centre on the ground (under the door). Put this pixel on town tile (3.6, 4.4), the dojo slot of the PR #301 town square (that slot's front wall row). @2x here = the town's @2x art scale 1:1 (80 ppt town tiles); the 1x file is the 40 ppt twin.",
-    "anchorTownTile": [3.6, 4.4], "place": "town-slot", "sortRow": 4.4, "footprintRectTownTiles": [1.4, 5.8, 3.0, 4.4],
+    "anchorTownTile": [3.6, 4.4], "place": "town-slot", "sortRow": 4.4, "footprintRectTownTiles": [1.1, 6.1, 2.8, 4.4],
     "tapRectPx": [round(tl[0]), round(tl[1]), round(br[0]), round(br[1])], "tapRectNote": "front face of the building (wall + roof gable) in @2x px; tap it to enter. Halve for 1x.",
-    "interactive": True, "target": "outside-entrance-day|dusk", "scale": 0.55,
-    "note": "the Action Zone building at 0.55 scale for the town square's classmate-dojo slot (the old green-noren 'dojo0' placeholder). Day and dusk are separate sprites; dusk has its glow + ground pools baked in (they extend past the building a little: the glow 0.35 tile, the pool ~1 tile in front). Line weight matches the town (1 px @1x, 2 px @2x). No phone/address overlay here (they would be 3 px tall)."}
+    "interactive": True, "target": "outside-entrance-day|dusk", "scale": 0.625,
+    "note": "the Action Zone building at 0.625 scale (was 0.55; Jay asked for a slightly wider dojo, +13.6 percent) for the town square's classmate-dojo slot (the old green-noren 'dojo0' placeholder). Day and dusk are separate sprites; dusk has its glow + ground pools baked in (they extend past the building a little: the glow 0.35 tile, the pool ~1 tile in front). Line weight matches the town (1 px @1x, 2 px @2x). No phone/address overlay here (they would be 3 px tall)."}
 
 # ---------------- merge into static.json
 sp = os.path.join(OUT, "static.json"); S = json.load(open(sp)) if os.path.exists(sp) else {"pixelsPerTile": 80, "sprites": {}}
