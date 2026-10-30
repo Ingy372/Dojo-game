@@ -1,0 +1,222 @@
+{
+ "frame": {
+  "size": [
+   1120,
+   712
+  ],
+  "pixelsPerTile": 80,
+  "tiles": [
+   14.0,
+   8.9
+  ],
+  "tile00Px": [
+   0.0,
+   -8.0
+  ],
+  "note": "@2x only; the game import shrinks it like the other static art. px = tile00Px + (col*80, row*80 - z*80*cos35)."
+ },
+ "states": {
+  "day": "outside-entrance-day",
+  "dusk": "outside-entrance-dusk"
+ },
+ "drawOrder": [
+  "ground",
+  "pools (dusk)",
+  "scenery with sortRow < 6.0 (tree-1, tree-2)",
+  "building",
+  "phone",
+  "address",
+  "scenery sorted by sortRow (+ the player when in this view)",
+  "glow (dusk)"
+ ],
+ "building": {
+  "footprintRect": [
+   3.0,
+   11.0,
+   4.3,
+   6.0
+  ],
+  "sortRow": 6.0,
+  "doorCentreTile": [
+   7.0,
+   6.0
+  ]
+ },
+ "interactables": [
+  {
+   "id": "front-door",
+   "label": "enter-dojo",
+   "target": "inside-main-floor",
+   "tapRectPx": [
+    500,
+    367,
+    620,
+    472
+   ],
+   "approachTile": [
+    7.0,
+    6.6
+   ],
+   "approachFacing": "north",
+   "note": "tap the double doors to go inside (the inside room's spawn is its door mat)."
+  }
+ ],
+ "overlays": {
+  "phone": {
+   "layerFile": "outside-entrance-{state}_phone.png",
+   "frame": "full entrance frame",
+   "rectPx": [
+    340,
+    331,
+    452,
+    344
+   ],
+   "content": "BLANK placeholder bar; the real number goes in by swapping this one PNG (never committed)"
+  },
+  "address": {
+   "layerFile": "outside-entrance-{state}_address.png",
+   "frame": "full entrance frame",
+   "rectPx": [
+    606,
+    349,
+    638,
+    362
+   ],
+   "content": "BLANK placeholder bar on the house-number plate; the real house number is NOT in the repo."
+  }
+ },
+ "blockers": [
+  {
+   "id": "bin",
+   "rect": [
+    11.7,
+    12.1,
+    6.3,
+    6.7
+   ]
+  },
+  {
+   "id": "bench-a",
+   "rect": [
+    3.5,
+    5.2,
+    6.25,
+    6.65
+   ]
+  },
+  {
+   "id": "bench-b",
+   "rect": [
+    8.27,
+    9.23,
+    6.2,
+    6.6
+   ]
+  },
+  {
+   "id": "chair-a",
+   "rect": [
+    9.65,
+    10.05,
+    6.2,
+    6.55
+   ]
+  },
+  {
+   "id": "chair-b",
+   "rect": [
+    10.3,
+    10.8,
+    6.4,
+    6.78
+   ]
+  },
+  {
+   "id": "bed-a",
+   "rect": [
+    4.9,
+    6.5,
+    6.8,
+    7.9
+   ]
+  },
+  {
+   "id": "bed-b",
+   "rect": [
+    7.5,
+    9.1,
+    6.8,
+    7.9
+   ]
+  },
+  {
+   "id": "shrub",
+   "rect": [
+    6.7,
+    7.3,
+    6.9,
+    7.22
+   ]
+  },
+  {
+   "id": "palm",
+   "rect": [
+    12.3,
+    12.5,
+    6.3,
+    6.51
+   ]
+  },
+  {
+   "id": "building",
+   "rect": [
+    3.0,
+    11.0,
+    4.3,
+    6.1
+   ]
+  }
+ ],
+ "spawn": {
+  "tile": [
+   7.0,
+   8.6
+  ],
+  "note": "where the player arrives from the town / leaves the inside room: on the walk, below the beds"
+ },
+ "lightSources": [
+  {
+   "id": "window-left",
+   "tile": [
+    4.95,
+    6.0
+   ],
+   "z": 1.18
+  },
+  {
+   "id": "window-right",
+   "tile": [
+    9.05,
+    6.0
+   ],
+   "z": 1.18
+  },
+  {
+   "id": "door-panes",
+   "tile": [
+    7.0,
+    6.0
+   ],
+   "z": 1.0
+  },
+  {
+   "id": "wall-lamp",
+   "tile": [
+    10.5,
+    6.0
+   ],
+   "z": 2.0,
+   "note": "dusk only: the lens object exists only in the dusk render (the day sample draws the lamp as a plain box)"
+  }
+ ]
+}

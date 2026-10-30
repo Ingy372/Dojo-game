@@ -1070,6 +1070,674 @@
    ],
    "interactive": true,
    "note": "handprint wall between the two cross doors: plain handprints, NO names. Wall decal: draw it above its wall and below every character."
+  },
+  "outside-entrance-day": {
+   "size": [
+    1120,
+    712
+   ],
+   "layers": [
+    "ground",
+    "building",
+    "phone",
+    "address"
+   ],
+   "files": {
+    "ground": "outside-entrance-day_ground.png",
+    "building": "outside-entrance-day_building.png",
+    "phone": "outside-entrance-day_phone.png",
+    "address": "outside-entrance-day_address.png"
+   },
+   "groundRect": {
+    "col0": -0.0,
+    "row0": 0.1,
+    "col1": 14.0,
+    "row1": 9.0,
+    "note": "the frame in tiles: 14.0 x 8.9; tile (0,0) is the frame's anchorPx"
+   },
+   "topExtraTiles": 0.0,
+   "anchorPx": [
+    0.0,
+    -8.0
+   ],
+   "anchorNote": "the frame's pixel for tile (0,0)'s top-left corner (ground, z=0); the door's front is at row 6.0, column 7.0",
+   "place": "scene",
+   "note": "ENTRANCE VIEW, DAY. Draw order: ground, then trees behind (sortRow < 6), building, phone/address overlays, then the scenery sprites sorted by sortRow (all are in front of the wall). ground: grass, gravel + pebbles, the concrete pad and walk, the two parking curbs. Draw first. | building: the building: tan ribbed metal, brown roof, red 3D sign (CMA / MARTIAL ARTS), logo badge, door, windows, banners, blank house-number plate. Everything on it is the approved sample, unchanged. | phone: swappable overlay: blank placeholder bar on the left banner. The real phone number is NOT in the repo; the Programmer swaps this one file. | address: swappable overlay: blank placeholder bar on the house-number plate. The real house number is NOT in the repo; swap this one file."
+  },
+  "outside-entrance-dusk": {
+   "size": [
+    1120,
+    712
+   ],
+   "layers": [
+    "ground",
+    "pools",
+    "building",
+    "phone",
+    "address",
+    "glow"
+   ],
+   "files": {
+    "ground": "outside-entrance-dusk_ground.png",
+    "pools": "outside-entrance-dusk_pools.png",
+    "building": "outside-entrance-dusk_building.png",
+    "phone": "outside-entrance-dusk_phone.png",
+    "address": "outside-entrance-dusk_address.png",
+    "glow": "outside-entrance-dusk_glow.png"
+   },
+   "groundRect": {
+    "col0": -0.0,
+    "row0": 0.1,
+    "col1": 14.0,
+    "row1": 9.0,
+    "note": "the frame in tiles: 14.0 x 8.9; tile (0,0) is the frame's anchorPx"
+   },
+   "topExtraTiles": 0.0,
+   "anchorPx": [
+    0.0,
+    -8.0
+   ],
+   "anchorNote": "the frame's pixel for tile (0,0)'s top-left corner (ground, z=0); the door's front is at row 6.0, column 7.0",
+   "place": "scene",
+   "note": "ENTRANCE VIEW, DUSK (same geometry, same sprites; every glow has a real source). Draw order: ground, pools, trees behind, building, overlays, scenery sprites, glow last. ground: grass, gravel + pebbles, the concrete pad and walk, the two parking curbs. Draw first. | pools: dusk only: warm pools of light on the ground, one under each window, one under the door, one under the wall lamp (clipped to the ground). Draw right above the ground. | building: the building: tan ribbed metal, brown roof, red 3D sign (CMA / MARTIAL ARTS), logo badge, door, windows, banners, blank house-number plate. Everything on it is the approved sample, unchanged. | phone: swappable overlay: blank placeholder bar on the left banner. The real phone number is NOT in the repo; the Programmer swaps this one file. | address: swappable overlay: blank placeholder bar on the house-number plate. The real house number is NOT in the repo; swap this one file. | glow: dusk only: soft warm halo round each lit window, the lit door panes and the wall-lamp lens. Draw ABOVE everything."
+  },
+  "outside-bin": {
+   "size": [
+    46,
+    84
+   ],
+   "layers": [
+    "day",
+    "dusk"
+   ],
+   "files": {
+    "day": "outside-bin_day.png",
+    "dusk": "outside-bin_dusk.png"
+   },
+   "groundRect": {
+    "col0": 11.613,
+    "row0": 5.688,
+    "col1": 12.188,
+    "row1": 6.737,
+    "note": "the image's pixel box in entrance tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.01,
+   "anchorPx": [
+    23.0,
+    81.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the ground)",
+   "anchorTile": [
+    11.9,
+    6.7
+   ],
+   "footprintRect": [
+    11.7,
+    12.1,
+    6.3,
+    6.7
+   ],
+   "place": "scenery",
+   "sortRow": 6.7,
+   "entrancePx": [
+    929,
+    447
+   ],
+   "interactive": false,
+   "note": "small blue bin by the right corner."
+  },
+  "outside-bench-a": {
+   "size": [
+    144,
+    84
+   ],
+   "layers": [
+    "day",
+    "dusk"
+   ],
+   "files": {
+    "day": "outside-bench-a_day.png",
+    "dusk": "outside-bench-a_dusk.png"
+   },
+   "groundRect": {
+    "col0": 3.45,
+    "row0": 5.562,
+    "col1": 5.25,
+    "row1": 6.612,
+    "note": "the image's pixel box in entrance tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.09,
+   "anchorPx": [
+    72.0,
+    87.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the ground)",
+   "anchorTile": [
+    4.35,
+    6.65
+   ],
+   "footprintRect": [
+    3.5,
+    5.2,
+    6.25,
+    6.65
+   ],
+   "place": "scenery",
+   "sortRow": 6.65,
+   "entrancePx": [
+    276,
+    437
+   ],
+   "interactive": false,
+   "note": "long brown bench under the left window."
+  },
+  "outside-bench-b": {
+   "size": [
+    84,
+    84
+   ],
+   "layers": [
+    "day",
+    "dusk"
+   ],
+   "files": {
+    "day": "outside-bench-b_day.png",
+    "dusk": "outside-bench-b_dusk.png"
+   },
+   "groundRect": {
+    "col0": 8.225,
+    "row0": 5.513,
+    "col1": 9.275,
+    "row1": 6.562,
+    "note": "the image's pixel box in entrance tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.09,
+   "anchorPx": [
+    42.0,
+    87.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the ground)",
+   "anchorTile": [
+    8.75,
+    6.6
+   ],
+   "footprintRect": [
+    8.27,
+    9.23,
+    6.2,
+    6.6
+   ],
+   "place": "scenery",
+   "sortRow": 6.6,
+   "entrancePx": [
+    658,
+    433
+   ],
+   "interactive": false,
+   "note": "short bench under the right window."
+  },
+  "outside-chair-a": {
+   "size": [
+    46,
+    90
+   ],
+   "layers": [
+    "day",
+    "dusk"
+   ],
+   "files": {
+    "day": "outside-chair-a_day.png",
+    "dusk": "outside-chair-a_dusk.png"
+   },
+   "groundRect": {
+    "col0": 9.562,
+    "row0": 5.438,
+    "col1": 10.137,
+    "row1": 6.562,
+    "note": "the image's pixel box in entrance tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.11,
+   "anchorPx": [
+    23.0,
+    89.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the ground)",
+   "anchorTile": [
+    9.85,
+    6.55
+   ],
+   "footprintRect": [
+    9.65,
+    10.05,
+    6.2,
+    6.55
+   ],
+   "place": "scenery",
+   "sortRow": 6.55,
+   "entrancePx": [
+    765,
+    427
+   ],
+   "interactive": false,
+   "note": "red metal chair (branded red, see DECIDE)."
+  },
+  "outside-chair-b": {
+   "size": [
+    52,
+    91
+   ],
+   "layers": [
+    "day",
+    "dusk"
+   ],
+   "files": {
+    "day": "outside-chair-b_day.png",
+    "dusk": "outside-chair-b_dusk.png"
+   },
+   "groundRect": {
+    "col0": 10.225,
+    "row0": 5.625,
+    "col1": 10.875,
+    "row1": 6.763,
+    "note": "the image's pixel box in entrance tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.15,
+   "anchorPx": [
+    26.0,
+    92.4
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the ground)",
+   "anchorTile": [
+    10.55,
+    6.78
+   ],
+   "footprintRect": [
+    10.3,
+    10.8,
+    6.4,
+    6.78
+   ],
+   "place": "scenery",
+   "sortRow": 6.78,
+   "entrancePx": [
+    818,
+    442
+   ],
+   "interactive": false,
+   "note": "second red metal chair, turned 8 degrees."
+  },
+  "outside-bed-a": {
+   "size": [
+    126,
+    95
+   ],
+   "layers": [
+    "day",
+    "dusk"
+   ],
+   "files": {
+    "day": "outside-bed-a_day.png",
+    "dusk": "outside-bed-a_dusk.png"
+   },
+   "groundRect": {
+    "col0": 4.85,
+    "row0": 6.75,
+    "col1": 6.425,
+    "row1": 7.938,
+    "note": "the image's pixel box in entrance tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.15,
+   "anchorPx": [
+    68.0,
+    92.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the ground)",
+   "anchorTile": [
+    5.7,
+    7.9
+   ],
+   "footprintRect": [
+    4.9,
+    6.5,
+    6.8,
+    7.9
+   ],
+   "place": "scenery",
+   "sortRow": 7.9,
+   "entrancePx": [
+    388,
+    532
+   ],
+   "interactive": false,
+   "note": "flower bed, left of the walk."
+  },
+  "outside-bed-b": {
+   "size": [
+    127,
+    96
+   ],
+   "layers": [
+    "day",
+    "dusk"
+   ],
+   "files": {
+    "day": "outside-bed-b_day.png",
+    "dusk": "outside-bed-b_dusk.png"
+   },
+   "groundRect": {
+    "col0": 7.575,
+    "row0": 6.75,
+    "col1": 9.162,
+    "row1": 7.95,
+    "note": "the image's pixel box in entrance tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.15,
+   "anchorPx": [
+    58.0,
+    92.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the ground)",
+   "anchorTile": [
+    8.3,
+    7.9
+   ],
+   "footprintRect": [
+    7.5,
+    9.1,
+    6.8,
+    7.9
+   ],
+   "place": "scenery",
+   "sortRow": 7.9,
+   "entrancePx": [
+    606,
+    532
+   ],
+   "interactive": false,
+   "note": "flower bed, right of the walk."
+  },
+  "outside-shrub": {
+   "size": [
+    58,
+    56
+   ],
+   "layers": [
+    "day",
+    "dusk"
+   ],
+   "files": {
+    "day": "outside-shrub_day.png",
+    "dusk": "outside-shrub_dusk.png"
+   },
+   "groundRect": {
+    "col0": 6.638,
+    "row0": 6.412,
+    "col1": 7.362,
+    "row1": 7.112,
+    "note": "the image's pixel box in entrance tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 0.81,
+   "anchorPx": [
+    29.0,
+    64.6
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the ground)",
+   "anchorTile": [
+    7.0,
+    7.22
+   ],
+   "footprintRect": [
+    6.7,
+    7.3,
+    6.9,
+    7.22
+   ],
+   "place": "scenery",
+   "sortRow": 7.22,
+   "entrancePx": [
+    531,
+    505
+   ],
+   "interactive": false,
+   "note": "round shrub between the beds."
+  },
+  "outside-palm": {
+   "size": [
+    167,
+    158
+   ],
+   "layers": [
+    "day",
+    "dusk"
+   ],
+   "files": {
+    "day": "outside-palm_day.png",
+    "dusk": "outside-palm_dusk.png"
+   },
+   "groundRect": {
+    "col0": 11.387,
+    "row0": 4.525,
+    "col1": 13.475,
+    "row1": 6.5,
+    "note": "the image's pixel box in entrance tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.98,
+   "anchorPx": [
+    81.0,
+    158.8
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the ground)",
+   "anchorTile": [
+    12.4,
+    6.51
+   ],
+   "footprintRect": [
+    12.3,
+    12.5,
+    6.3,
+    6.51
+   ],
+   "place": "scenery",
+   "sortRow": 6.51,
+   "entrancePx": [
+    911,
+    354
+   ],
+   "interactive": false,
+   "note": "small palm at the right end of the pad."
+  },
+  "outside-tree-1": {
+   "size": [
+    126,
+    168
+   ],
+   "layers": [
+    "day",
+    "dusk"
+   ],
+   "files": {
+    "day": "outside-tree-1_day.png",
+    "dusk": "outside-tree-1_dusk.png"
+   },
+   "groundRect": {
+    "col0": 0.412,
+    "row0": 2.6,
+    "col1": 1.988,
+    "row1": 4.7,
+    "note": "the image's pixel box in entrance tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.12,
+   "anchorPx": [
+    63.0,
+    169.6
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the ground)",
+   "anchorTile": [
+    1.2,
+    4.72
+   ],
+   "footprintRect": [
+    1.08,
+    1.32,
+    4.6,
+    4.72
+   ],
+   "place": "scenery-tree",
+   "sortRow": 4.72,
+   "entrancePx": [
+    33,
+    200
+   ],
+   "interactive": false,
+   "note": "round tree behind-left of the building (behind it: sortRow 4.72)."
+  },
+  "outside-tree-2": {
+   "size": [
+    127,
+    167
+   ],
+   "layers": [
+    "day",
+    "dusk"
+   ],
+   "files": {
+    "day": "outside-tree-2_day.png",
+    "dusk": "outside-tree-2_dusk.png"
+   },
+   "groundRect": {
+    "col0": 12.2,
+    "row0": 2.413,
+    "col1": 13.787,
+    "row1": 4.5,
+    "note": "the image's pixel box in entrance tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.11,
+   "anchorPx": [
+    64.0,
+    168.6
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the ground)",
+   "anchorTile": [
+    13.0,
+    4.52
+   ],
+   "footprintRect": [
+    12.88,
+    13.12,
+    4.4,
+    4.52
+   ],
+   "place": "scenery-tree",
+   "sortRow": 4.52,
+   "entrancePx": [
+    976,
+    185
+   ],
+   "interactive": false,
+   "note": "round tree behind-right."
+  },
+  "outside-tree-3": {
+   "size": [
+    100,
+    136
+   ],
+   "layers": [
+    "day",
+    "dusk"
+   ],
+   "files": {
+    "day": "outside-tree-3_day.png",
+    "dusk": "outside-tree-3_dusk.png"
+   },
+   "groundRect": {
+    "col0": 0.0,
+    "row0": 5.287,
+    "col1": 1.25,
+    "row1": 6.987,
+    "note": "the image's pixel box in entrance tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.71,
+   "anchorPx": [
+    48.0,
+    137.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the ground)",
+   "anchorTile": [
+    0.6,
+    7.0
+   ],
+   "footprintRect": [
+    0.5,
+    0.7,
+    6.9,
+    7.0
+   ],
+   "place": "scenery-tree",
+   "sortRow": 7.0,
+   "entrancePx": [
+    0,
+    415
+   ],
+   "interactive": false,
+   "note": "small round tree at the front-left edge."
+  },
+  "town-slot-dojo": {
+   "size": [
+    440,
+    312
+   ],
+   "size1x": [
+    220,
+    156
+   ],
+   "layers": [
+    "day",
+    "dusk"
+   ],
+   "files": {
+    "day": "town-slot-dojo_day.png",
+    "dusk": "town-slot-dojo_dusk.png"
+   },
+   "files1x": {
+    "day": "1x/town-slot-dojo_day.png",
+    "dusk": "1x/town-slot-dojo_dusk.png"
+   },
+   "groundRect": {
+    "col0": 2.0,
+    "row0": 0.105,
+    "col1": 12.0,
+    "row1": 7.195,
+    "note": "the image's pixel box in the building's own tiles (the building is 8 of them wide; in the town one of them is 0.55 town tile)"
+   },
+   "topExtraTiles": 5.9,
+   "anchorPx": [
+    220.0,
+    259.4
+   ],
+   "anchorNote": "the building's front-centre on the ground (under the door). Put this pixel on town tile (3.6, 4.4), the dojo slot of the PR #301 town square (that slot's front wall row). @2x here = the town's @2x art scale 1:1 (80 ppt town tiles); the 1x file is the 40 ppt twin.",
+   "anchorTownTile": [
+    3.6,
+    4.4
+   ],
+   "place": "town-slot",
+   "sortRow": 4.4,
+   "footprintRectTownTiles": [
+    1.4,
+    5.8,
+    3.0,
+    4.4
+   ],
+   "tapRectPx": [
+    44,
+    104,
+    396,
+    259
+   ],
+   "tapRectNote": "front face of the building (wall + roof gable) in @2x px; tap it to enter. Halve for 1x.",
+   "interactive": true,
+   "target": "outside-entrance-day|dusk",
+   "scale": 0.55,
+   "note": "the Action Zone building at 0.55 scale for the town square's classmate-dojo slot (the old green-noren 'dojo0' placeholder). Day and dusk are separate sprites; dusk has its glow + ground pools baked in (they extend past the building a little: the glow 0.35 tile, the pool ~1 tile in front). Line weight matches the town (1 px @1x, 2 px @2x). No phone/address overlay here (they would be 3 px tall)."
   }
  }
 }

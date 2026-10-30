@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.join(HERE, "..", "..", "tools"))
 from toon_kit import *
 
 ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); ap.add_argument("--samples", type=int, default=24)
-ap.add_argument("--ppt", type=int, default=80); ap.add_argument("--part", default="town"); ap.add_argument("--night", action="store_true")
+ap.add_argument("--ppt", type=int, default=80); ap.add_argument("--part", default="town"); ap.add_argument("--no-dojo0", action="store_true", help="leave the left dojo slot empty (the Action Zone slot sprite is placed there instead; default output is unchanged)"); ap.add_argument("--night", action="store_true")
 A = ap.parse_args(sys.argv[sys.argv.index("--") + 1:])
 EL = 35.0; K = 1 / math.sin(math.radians(EL))
 COLS, ROWS = 23.3, 10.75                      # 1864 x 860 at 80 px per tile
@@ -153,7 +153,7 @@ else:
             add(name + f"ln{x}", ellipsoid(G(cx + x, r - 0.05, 0.92), (0.15, 0.15, 0.2), segs=12, rings=8), "#fff6c8")
     # A4-2: the left building stays the main dojo exactly as before (it will be remodelled on the real Action Zone
     # building once photos arrive); the middle one becomes a friendly shop; the right one is a neutral placeholder.
-    dojo(3.6, 4.4, "#3f9a7a", "dojo0")
+    if not A.no_dojo0: dojo(3.6, 4.4, "#3f9a7a", "dojo0")
     def shop(cx, w, name):
         r = 4.65; h = 1.55
         add(name + "base", box(G(cx, r - 0.55, 0.08), (w + 0.3, D(1.2), 0.16)), "#a9adc4")

@@ -11,7 +11,7 @@ from toon_kit import *
 from mathutils import Vector, Euler
 
 ap = argparse.ArgumentParser(); ap.add_argument("--scene", required=True); ap.add_argument("--samples", type=int, default=24)
-ap.add_argument("--ppt", type=int, default=80); ap.add_argument("--game", default=None, help="render the game-art groups (one full-frame PNG per group) into this folder instead of the sample"); ap.add_argument("--ow-mult", type=float, default=1.0, help="outline width multiplier (the town-slot building keeps the town square line weight)"); ap.add_argument("--slot", action="store_true", help="outside: only the building and what sits against it (town-square dojo slot)"); ap.add_argument("--outdir", default=os.path.join(HERE, ".."))
+ap.add_argument("--ppt", type=int, default=80); ap.add_argument("--game", default=None, help="render the game-art groups (one full-frame PNG per group) into this folder instead of the sample"); ap.add_argument("--ow-mult", type=float, default=1.0, help="outline width multiplier (the town-slot building keeps the town square line weight)"); ap.add_argument("--dusk", action="store_true", help="outside, game mode: add the wall-lamp lens (the one light that is not drawn in the approved daylight sample)"); ap.add_argument("--slot", action="store_true", help="outside: only the building and what sits against it (town-square dojo slot)"); ap.add_argument("--outdir", default=os.path.join(HERE, ".."))
 A = ap.parse_args(sys.argv[sys.argv.index("--") + 1:])
 EL = 35.0; K = 1 / math.sin(math.radians(EL)); CZ = math.cos(math.radians(EL))
 
@@ -64,7 +64,7 @@ def text(name, s, cx, r, z, height, width, hexc, extr=0.04, outline=True, font=N
     ob.data.materials.clear(); ob.data.materials.append(mat(hexc))
     ob["layer"] = LAYER[0] or ""; ob.select_set(False); bpy.context.view_layer.update()
     if outline:
-        h = add_hull(ob, coll, OUT_M, OUTLINE_W * 1.2); h["layer"] = LAYER[0] or ""
+        h = add_hull(ob, coll, OUT_M, OUTLINE_W * 1.2 * A.ow_mult); h["layer"] = LAYER[0] or ""
     return ob
 
 def gable_prism(name, x0, x1, rf, rb, ze, zr, hexc):
@@ -131,18 +131,21 @@ def scene_outside():
     CX = 7.0                                    # door centre column
     X0, X1, RF, RB, ZE, ZR = 3.0, 11.0, 6.0, 4.3, 2.4, 4.3      # building: columns, front row, back row, eave, ridge
     TAN, TANR, BROWN, DOOR = "#cdb088", "#b9966b", "#5b4234", "#6a4a3c"
-    # ---------------- ground
-    B(CX, 5.2, -0.06, 18, 5.4, 0.1, "#7fbf6f", False, name="grass")
-    B(CX, 8.9, -0.07, 18, 2.0, 0.1, "#c4bfb3", False, name="gravel")
-    import random; rnd = random.Random(7)
-    for k in range(220):
-        E(rnd.uniform(-1.8, 15.8), rnd.uniform(8.0, 9.6), 0.0, 0.07, 0.04, 0.025, rnd.choice(("#a9a498", "#d9d4c8", "#b9b4a8", "#8f8a80")), False, 6, 4, name=f"pb{k}")
-    B(CX, 6.45, 0.02, 7.6, 0.9, 0.06, "#d9d4c8", False, name="pad")                 # concrete pad along the front
-    B(CX, 7.45, 0.02, 1.5, 1.2, 0.06, "#d9d4c8", False, name="walk")
-    B(CX, 8.0, 0.015, 1.9, 0.14, 0.05, "#c9c3b6", False, name="walkend")
-    for k, (x0, x1) in enumerate(((0.2, 5.4), (8.6, 13.8))):                       # parking curb stops, yellow ends on black
-        B((x0 + x1) / 2, 8.4, 0.08, x1 - x0, 0.22, 0.16, "#2f2f35", True, name=f"curb{k}")
-        for j in range(4): B(x0 + 0.3 + j * (x1 - x0 - 0.6) / 3, 8.4, 0.17, 0.34, 0.2, 0.03, "#f5d22e", False, name=f"cy{k}{j}")
+    SLOT = A.slot                               # town-slot mode: only the building (no ground, no scenery, no overlays)
+    grp("ground")
+    if not SLOT:
+        B(CX, 5.2, -0.06, 18, 5.4, 0.1, "#7fbf6f", False, name="grass")
+        B(CX, 8.9, -0.07, 18, 2.0, 0.1, "#c4bfb3", False, name="gravel")
+        import random; rnd = random.Random(7)
+        for k in range(220):
+            E(rnd.uniform(-1.8, 15.8), rnd.uniform(8.0, 9.6), 0.0, 0.07, 0.04, 0.025, rnd.choice(("#a9a498", "#d9d4c8", "#b9b4a8", "#8f8a80")), False, 6, 4, name=f"pb{k}")
+        B(CX, 6.45, 0.02, 7.6, 0.9, 0.06, "#d9d4c8", False, name="pad")                 # concrete pad along the front
+        B(CX, 7.45, 0.02, 1.5, 1.2, 0.06, "#d9d4c8", False, name="walk")
+        B(CX, 8.0, 0.015, 1.9, 0.14, 0.05, "#c9c3b6", False, name="walkend")
+        for k, (x0, x1) in enumerate(((0.2, 5.4), (8.6, 13.8))):                       # parking curb stops, yellow ends on black
+            B((x0 + x1) / 2, 8.4, 0.08, x1 - x0, 0.22, 0.16, "#2f2f35", True, name=f"curb{k}")
+            for j in range(4): B(x0 + 0.3 + j * (x1 - x0 - 0.6) / 3, 8.4, 0.17, 0.34, 0.2, 0.03, "#f5d22e", False, name=f"cy{k}{j}")
+    grp("building")
     # ---------------- the building: tan ribbed metal, brown roof, gable facing us
     gable_prism("body", X0, X1, RF, RB, ZE, ZR, TAN)
     xm = (X0 + X1) / 2; half = (X1 - X0) / 2; slope = math.degrees(math.atan((ZR - ZE) / half)); Ls = math.hypot(half, ZR - ZE) + 0.35
@@ -193,10 +196,10 @@ def scene_outside():
     B(9.05, RF + 0.06, 1.95, 1.2, 0.04, 0.4, "#f6f3ec", True, name="bannerR")
     for k in range(3): B(9.0 + 0.1, RF + 0.085, 2.05 - k * 0.1, 0.65, 0.02, 0.035, "#8c8ea0", False, name=f"bannerRbar{k}")
     B(8.62, RF + 0.085, 1.95, 0.26, 0.02, 0.2, "#a8adc2", False, name="bannerRlogo")
-    # little brown light fixture on the wall (daylight only; nothing glows)
+    # little brown light fixture on the wall (the approved daylight sample draws it as a plain box)
     B(10.5, RF + 0.1, 2.0, 0.12, 0.14, 0.12, "#3b3430", True, name="wallLamp")
+    if A.dusk: B(10.5, RF + 0.19, 1.99, 0.07, 0.02, 0.07, "#ffd98a", False, name="wallLampLens")    # dusk only: the lamp's lens, the source of its pool of light
     for x in (X0 + 0.08, X1 - 0.08): B(x, RF + 0.06, ZE / 2, 0.07, 0.07, ZE - 0.1, "#6b5545", False, name="downspout")           # downspouts
-    B(11.9, 6.5, 0.28, 0.4, 0.4, 0.56, "#4f6f8a", True, name="bin"); B(11.9, 6.5, 0.6, 0.46, 0.46, 0.06, "#3b4f63", True, name="binLid")   # a small bin
     # ---------------- overlay layers: PHONE and HOUSE NUMBER (own objects, own PNGs)
     # Real values come from a local, uncommitted file (source/local_overlay_values.json, git-ignored):
     #   {"phone": "...", "house_number": "..."}   If missing or empty, the layers hold blank placeholder bars.
@@ -206,44 +209,55 @@ def scene_outside():
         import json as _json
         _vals = _json.load(open(_lp))
     _phone = str(_vals.get("phone", "")).strip(); _house = str(_vals.get("house_number", "")).strip()
-    LAYER[0] = "phone"
-    if _phone: text("phoneNumber", _phone, 4.95, RF + 0.1, 2.05, 0.1, 1.2, "#25252e", 0.01, False, font=None)
+    LAYER[0] = "phone" if not SLOT else None
+    if SLOT: pass
+    elif _phone: text("phoneNumber", _phone, 4.95, RF + 0.1, 2.05, 0.1, 1.2, "#25252e", 0.01, False, font=None)
     else: B(4.95, RF + 0.1, 2.05, 1.0, 0.02, 0.1, "#9a9aa8", False, name="phonePlaceholder")
-    LAYER[0] = "address"
-    if _house: text("houseNumber", _house, CX + 0.78, RF + 0.07, 1.78, 0.11, 0.34, "#3b2417", 0.01, False)
+    LAYER[0] = "address" if not SLOT else None
+    if SLOT: pass
+    elif _house: text("houseNumber", _house, CX + 0.78, RF + 0.07, 1.78, 0.11, 0.34, "#3b2417", 0.01, False)
     else: B(CX + 0.78, RF + 0.07, 1.78, 0.26, 0.02, 0.07, "#7a5a40", False, name="housePlaceholder")
     LAYER[0] = None
     B(CX + 0.78, RF + 0.05, 1.78, 0.4, 0.03, 0.2, "#b8662e", True, name="houseplate")             # blank plate, digits are on the layer
-    # ---------------- benches, red chairs, flower beds, shrubs, trees
-    def bench(cx, rr, w, hexc, slat):
-        B(cx, rr, 0.33, w, 0.4, 0.07, hexc, True, name="bseat")
-        for x in (-w / 2 + 0.1, w / 2 - 0.1): B(cx + x, rr, 0.16, 0.08, 0.34, 0.32, "#2f2620", False, name="bleg"); B(cx + x, rr - 0.17, 0.46, 0.07, 0.07, 0.62, "#2f2620", False, name="bpost")
-        B(cx, rr - 0.17, 0.56, w, 0.06, 0.4, hexc, True, name="bback")
-        for k in range(slat): B(cx - w / 2 + 0.12 + k * (w - 0.24) / (slat - 1), rr - 0.14, 0.56, 0.035, 0.02, 0.38, "#2a211c", False, name="bslat")
-    bench(4.35, 6.45, 1.7, "#4d3a2f", 7)
-    bench(8.75, 6.4, 0.95, "#5a4338", 5)
-    for cxr, rr, rot in ((9.85, 6.4, 0), (10.55, 6.6, 8)):                                   # two red metal chairs (branded red)
-        for dx, dr in ((-0.17, -0.15), (0.17, -0.15), (-0.17, 0.15), (0.17, 0.15)): T(cxr + dx, rr + dr, 0, 0.36, 0.02, 0.02, RED, False, 6, name="chleg")
-        B(cxr, rr, 0.37, 0.46, 0.4, 0.05, RED, True, rot=(0, 0, rot), name="chseat")
-        B(cxr, rr - 0.2, 0.62, 0.46, 0.05, 0.42, RED, True, rot=(0, 0, rot), name="chback")
-        for k in range(4): B(cxr - 0.15 + k * 0.1, rr - 0.17, 0.62, 0.02, 0.02, 0.34, "#a81f1b", False, rot=(0, 0, rot), name="chbar")
-    def bed(cx, rr, w, flowers):
-        E(cx, rr, 0.01, w, 0.55, 0.05, "#3a3a40", True, 20, 4, name="bedrim")
-        E(cx, rr, 0.04, w - 0.08, 0.5, 0.04, "#7a4a30", False, 20, 4, name="mulch")
-        for k in range(5):
-            x = cx - w * 0.6 + k * w * 0.3; E(x, rr - 0.05 + 0.1 * (k % 2), 0.2, 0.19, 0.15, 0.19, ("#4f8a4a", "#5f9e55")[k % 2], True, 10, 6, name=f"shr{k}")
-        for k, c in enumerate(flowers):
-            a = k * 2.399; E(cx + 0.55 * w * math.cos(a) * ((k % 5) / 5 + 0.3), rr + 0.2 * math.sin(a) * ((k % 4) / 4 + 0.4), 0.33 + 0.02 * (k % 3), 0.06, 0.05, 0.06, c, False, 6, 4, name=f"fl{k}")
-    FL = ["#ffd36b", "#f0a030", "#ffe48a", "#f5c542", "#f0a030", "#fff0b0", "#ffd36b", "#f5c542", "#f0a030", "#ffe48a", "#ffd36b", "#f5c542", "#fff0b0", "#f0a030"]
-    bed(5.7, 7.35, 0.8, FL); bed(8.3, 7.35, 0.8, FL[::-1])
-    E(7.0, 7.0, 0.28, 0.32, 0.22, 0.28, "#5f9e55", True, 10, 6, name="shrubC"); E(6.95, 7.05, 0.5, 0.18, 0.13, 0.15, "#7fbf6f", False, 8, 4, name="shrubC2")
-    # trees: a palm on the right (soft green fronds) and two round trees behind (like the town square)
-    T(12.4, 6.4, 0, 1.5, 0.11, 0.07, "#8a5e38", True, 8, name="palm")
-    for k in range(9):
-        a = k * 40; E(12.4 + 0.5 * math.cos(math.radians(a)), 6.4 + 0.15 * math.sin(math.radians(a)), 1.6 + 0.12 * (k % 2), 0.55, 0.08, 0.1, "#5f9e55" if k % 2 else "#4f8a4a", True, 8, 4, rot=(0, -20 * math.cos(math.radians(a)), a), name=f"frond{k}")
-    for x, rr, s in ((1.2, 4.6, 1.0), (13.0, 4.4, 1.0), (0.6, 6.9, 0.8)):
-        T(x, rr, 0, 0.9 * s, 0.12 * s, 0.09 * s, "#7a5232", True, 8, name="trunk"); E(x, rr, 1.35 * s, 0.75 * s, 0.6 * s, 0.7 * s, "#6fae5f", True, 14, 8, name="crown")
-    finish_and_render(14.0, 8.9, 7.0, 4.55, "outside-face@2x.png", ("phone", "address"))
+    # ---------------- benches, red chairs, flower beds, shrubs, trees (each its own game sprite; none of it in the town-slot building)
+    if not SLOT:
+        def bench(cx, rr, w, hexc, slat):
+            B(cx, rr, 0.33, w, 0.4, 0.07, hexc, True, name="bseat")
+            for x in (-w / 2 + 0.1, w / 2 - 0.1): B(cx + x, rr, 0.16, 0.08, 0.34, 0.32, "#2f2620", False, name="bleg"); B(cx + x, rr - 0.17, 0.46, 0.07, 0.07, 0.62, "#2f2620", False, name="bpost")
+            B(cx, rr - 0.17, 0.56, w, 0.06, 0.4, hexc, True, name="bback")
+            for k in range(slat): B(cx - w / 2 + 0.12 + k * (w - 0.24) / (slat - 1), rr - 0.14, 0.56, 0.035, 0.02, 0.38, "#2a211c", False, name="bslat")
+        grp("bin"); B(11.9, 6.5, 0.28, 0.4, 0.4, 0.56, "#4f6f8a", True, name="bin"); B(11.9, 6.5, 0.6, 0.46, 0.46, 0.06, "#3b4f63", True, name="binLid")   # a small bin
+        grp("bench-a"); bench(4.35, 6.45, 1.7, "#4d3a2f", 7)
+        grp("bench-b"); bench(8.75, 6.4, 0.95, "#5a4338", 5)
+        for chn, (cxr, rr, rot) in zip("ab", ((9.85, 6.4, 0), (10.55, 6.6, 8))):
+            grp("chair-" + chn)                                   # two red metal chairs (branded red)
+            for dx, dr in ((-0.17, -0.15), (0.17, -0.15), (-0.17, 0.15), (0.17, 0.15)): T(cxr + dx, rr + dr, 0, 0.36, 0.02, 0.02, RED, False, 6, name="chleg")
+            B(cxr, rr, 0.37, 0.46, 0.4, 0.05, RED, True, rot=(0, 0, rot), name="chseat")
+            B(cxr, rr - 0.2, 0.62, 0.46, 0.05, 0.42, RED, True, rot=(0, 0, rot), name="chback")
+            for k in range(4): B(cxr - 0.15 + k * 0.1, rr - 0.17, 0.62, 0.02, 0.02, 0.34, "#a81f1b", False, rot=(0, 0, rot), name="chbar")
+        def bed(cx, rr, w, flowers):
+            E(cx, rr, 0.01, w, 0.55, 0.05, "#3a3a40", True, 20, 4, name="bedrim")
+            E(cx, rr, 0.04, w - 0.08, 0.5, 0.04, "#7a4a30", False, 20, 4, name="mulch")
+            for k in range(5):
+                x = cx - w * 0.6 + k * w * 0.3; E(x, rr - 0.05 + 0.1 * (k % 2), 0.2, 0.19, 0.15, 0.19, ("#4f8a4a", "#5f9e55")[k % 2], True, 10, 6, name=f"shr{k}")
+            for k, c in enumerate(flowers):
+                a = k * 2.399; E(cx + 0.55 * w * math.cos(a) * ((k % 5) / 5 + 0.3), rr + 0.2 * math.sin(a) * ((k % 4) / 4 + 0.4), 0.33 + 0.02 * (k % 3), 0.06, 0.05, 0.06, c, False, 6, 4, name=f"fl{k}")
+        FL = ["#ffd36b", "#f0a030", "#ffe48a", "#f5c542", "#f0a030", "#fff0b0", "#ffd36b", "#f5c542", "#f0a030", "#ffe48a", "#ffd36b", "#f5c542", "#fff0b0", "#f0a030"]
+        grp("bed-a"); bed(5.7, 7.35, 0.8, FL); grp("bed-b"); bed(8.3, 7.35, 0.8, FL[::-1])
+        grp("shrub"); E(7.0, 7.0, 0.28, 0.32, 0.22, 0.28, "#5f9e55", True, 10, 6, name="shrubC"); E(6.95, 7.05, 0.5, 0.18, 0.13, 0.15, "#7fbf6f", False, 8, 4, name="shrubC2")
+        # trees: a palm on the right (soft green fronds) and two round trees behind (like the town square)
+        grp("palm"); T(12.4, 6.4, 0, 1.5, 0.11, 0.07, "#8a5e38", True, 8, name="palm")
+        for k in range(9):
+            a = k * 40; E(12.4 + 0.5 * math.cos(math.radians(a)), 6.4 + 0.15 * math.sin(math.radians(a)), 1.6 + 0.12 * (k % 2), 0.55, 0.08, 0.1, "#5f9e55" if k % 2 else "#4f8a4a", True, 8, 4, rot=(0, -20 * math.cos(math.radians(a)), a), name=f"frond{k}")
+        for tn, (x, rr, s) in enumerate(((1.2, 4.6, 1.0), (13.0, 4.4, 1.0), (0.6, 6.9, 0.8))):
+            grp(f"tree-{tn + 1}")
+            T(x, rr, 0, 0.9 * s, 0.12 * s, 0.09 * s, "#7a5232", True, 8, name="trunk"); E(x, rr, 1.35 * s, 0.75 * s, 0.6 * s, 0.7 * s, "#6fae5f", True, 14, 8, name="crown")
+    if A.game:
+        grp("end")
+        LIT = ("wLglass", "wRglass", "wLlowglass", "wRlowglass", "paneL", "paneR", "panelowL", "panelowR", "wallLampLens")
+        if SLOT: render_game(10.0, 7.1, 7.0, 3.65, LIT)         # the town-slot building: columns 2..12, rows 0.1..7.2
+        else: render_game(14.0, 8.9, 7.0, 4.55, LIT)
+    else: finish_and_render(14.0, 8.9, 7.0, 4.55, "outside-face@2x.png", ("phone", "address"))
 
 
 # ============================ flat-shape helpers (wall art, floor logo, handprints, silhouettes) ====================

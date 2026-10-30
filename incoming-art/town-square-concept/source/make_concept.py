@@ -4,7 +4,7 @@ Inputs are the @2x (80 ppt) renders from build_town_square.py --part far / --par
 import argparse, os
 from PIL import Image
 ap = argparse.ArgumentParser()
-ap.add_argument("--far"); ap.add_argument("--town"); ap.add_argument("--outdir"); ap.add_argument("--variant", default="day"); ap.add_argument("--lights", default=None)
+ap.add_argument("--far"); ap.add_argument("--town"); ap.add_argument("--outdir"); ap.add_argument("--variant", default="day"); ap.add_argument("--lights", default=None); ap.add_argument("--no-dojo0", action="store_true")
 A = ap.parse_args()
 SKY = {"day": ((150, 205, 245), (238, 247, 255)), "dusk": ((38, 40, 92), (214, 132, 120))}[A.variant]
 HAZE = {"day": (214, 233, 250), "dusk": (120, 100, 150)}[A.variant]
@@ -49,8 +49,7 @@ if A.variant == "dusk":   # A4-2: darker and cozier - scene dimmed toward blue-v
         # A4-3: warm pools of light on the ground (and on the river) under every lantern, lamp and lit window
         pool = Image.new("L", (W, H)); pd = ImageDraw.Draw(pool)
         # A4-4: every pool sits on the ground right under its source (lantern posts, lamp posts, door, shop front, windows)
-        for c, rr, sx in ((2.75, 4.7, 0.7), (4.45, 4.7, 0.7), (3.84, 4.75, 0.8),            # main dojo: two lanterns + lit door
-                          (7.0, 4.85, 0.7), (11.6, 4.85, 0.7), (9.3, 5.05, 2.0),            # shop: two lanterns + lit front/awning lanterns
+        for c, rr, sx in (() if A.no_dojo0 else ((2.75, 4.7, 0.7), (4.45, 4.7, 0.7), (3.84, 4.75, 0.8))) + ((7.0, 4.85, 0.7), (11.6, 4.85, 0.7), (9.3, 5.05, 2.0),            # shop: two lanterns + lit front/awning lanterns
                           (18.3, 4.55, 0.6), (20.9, 4.55, 0.6),                             # placeholder windows
                           (5.0, 9.05, 1.0), (19.0, 9.05, 1.0),                              # lamp posts
                           (14.6, 8.65, 0.6), (16.6, 8.65, 0.6)):                            # bridge lanterns
