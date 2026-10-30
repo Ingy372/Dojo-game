@@ -145,7 +145,7 @@ for sid, (key, (ac, ar), face, extra) in INTERACT.items():
 # tap rectangles in room px: the sprite's bbox
 for it in inter:
     s = statics.get(it["sprite"]); 
-    if s: it["tapRectPx"] = [s["roomPx"][0], s["roomPx"][1], s["size"][0], s["size"][1]]
+    if s: it["tapRectPx"] = [s["roomPx"][0], s["roomPx"][1], s["roomPx"][0] + s["size"][0], s["roomPx"][1] + s["size"][1]]   # [x0, y0, x1, y1] in room px, same form as the outside rects
 bagrects = {"bag-black": (22.8, 3.8), "bag-blue": (24.0, 4.6), "bag-red": (25.2, 3.8)}
 room = {
     "id": "inside-main-floor", "pixelsPerTile": PPT, "frameSize": list(full), "roomPx": {"tile00": [OX, OY], "note": "room frame pixel of tile (0,0)'s top-left; px = 56 + col*80, py = 168 + row*80 - z*80*cos35"},
