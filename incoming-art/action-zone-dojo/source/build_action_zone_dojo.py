@@ -27,13 +27,16 @@ def grp(name):
     for o in bpy.data.objects:
         if o.type == "MESH" and "grp" not in o: o["grp"] = GRP[0] or "floor"
     GRP[0] = name
+FG = [None]            # foreground-sprite tag: objects made while FG[0] is set also get an extra render of just themselves (holdout = everything else), see render_game
 def add(name, bm, hexc, outline=True, ow=1.6):
     me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free(); me.materials.append(mat(hexc))
     ob = bpy.data.objects.new(name, me); coll.objects.link(ob)
     for p in me.polygons: p.use_smooth = False
     ob["layer"] = LAYER[0] or ""
+    if FG[0]: ob["fg"] = FG[0]
     if outline:
         h = add_hull(ob, coll, OUT_M, OUTLINE_W * ow * A.ow_mult); h["layer"] = LAYER[0] or ""
+        if FG[0]: h["fg"] = FG[0]
     return ob
 def G(c, r, z=0.0): return (c, -r * K, z)
 def D(rows): return rows * K
@@ -110,7 +113,12 @@ def render_game(frame_cols, frame_rows, cx, rc, lit_names=()):
             for o in meshes: o.hide_render = False; o.is_holdout = not (grpname(o) == g and islit(o))
             r.filepath = os.path.join(A.game, g + ".lit.png"); bpy.ops.render.render(write_still=True)
             for o in meshes: o.is_holdout = False
-    print("game groups:", names)
+    fgs = sorted({o["fg"] for o in meshes if o.get("fg")})
+    for f in fgs:     # foreground sprites: only the tagged parts, EVERYTHING else a holdout, so they keep exactly the occlusion they have in the one-piece picture
+        for o in meshes: o.hide_render = False; o.is_holdout = o.get("fg") != f
+        r.filepath = os.path.join(A.game, "fg-" + f + ".png"); bpy.ops.render.render(write_still=True)
+        for o in meshes: o.is_holdout = False
+    print("game groups:", names, "fg:", fgs)
 def finish_and_render(frame_cols, frame_rows, cx, rc, names_out, layers=()):
     """camera centred on column cx and ground row rc (at z=0); render the base picture and then each overlay layer"""
     r = _camera(frame_cols, frame_rows, cx, rc)
@@ -445,7 +453,7 @@ def scene_inside():
         for k in range(NS):
             x = X0 + 0.3 + pitch * (k + 0.5); c = RED if (k + ti) % 2 == 0 else BLUE; dk = "#a81f1b" if c == RED else "#1d4aa0"
             B(x, rs, zt + 0.17, pitch - 0.08, 0.5, 0.32, c, True, bevel=0.03, name="seat"); B(x, rs - 0.23, zt + 0.37, pitch - 0.1, 0.07, 0.07, dk, False, name="seatEdge")
-            B(x, rs + 0.2, zt + 0.55, pitch - 0.08, 0.1, 0.62, c, True, bevel=0.03, name="seatBack"); B(x, rs + 0.26, zt + 0.5, pitch - 0.3, 0.02, 0.38, dk, False, name="seatBackInset")
+            FG[0] = "seat-backs"; B(x, rs + 0.2, zt + 0.55, pitch - 0.08, 0.1, 0.62, c, True, bevel=0.03, name="seatBack"); B(x, rs + 0.26, zt + 0.5, pitch - 0.3, 0.02, 0.38, dk, False, name="seatBackInset"); FG[0] = None
             B(x, rs, zt + 0.02, 0.1, 0.3, 0.05, "#2c2c33", False, name="seatFoot")
         for k in range(NS + 1):
             x = X0 + 0.3 + pitch * k; B(x, rs, zt + 0.42, 0.045, 0.45, 0.04, "#2c2c33", True, name="armrest"); B(x, rs, zt + 0.22, 0.04, 0.04, 0.4, "#2c2c33", False, name="armpost")

@@ -38,307 +38,7 @@
    ],
    "anchorNote": "the room frame's pixel for grid tile (0,0)'s top-left corner (same convention as home-dojo room_*.png)",
    "place": "room",
-   "chunks": {
-    "size": 640,
-    "origin": "image top-left",
-    "layers": {
-     "floor": [
-      {
-       "file": "chunks/inside-main-floor_floor_0_0.png",
-       "col": 0,
-       "row": 0,
-       "x": 0,
-       "y": 0,
-       "size": [
-        640,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_floor_1_0.png",
-       "col": 1,
-       "row": 0,
-       "x": 640,
-       "y": 0,
-       "size": [
-        640,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_floor_2_0.png",
-       "col": 2,
-       "row": 0,
-       "x": 1280,
-       "y": 0,
-       "size": [
-        640,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_floor_3_0.png",
-       "col": 3,
-       "row": 0,
-       "x": 1920,
-       "y": 0,
-       "size": [
-        352,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_floor_0_1.png",
-       "col": 0,
-       "row": 1,
-       "x": 0,
-       "y": 640,
-       "size": [
-        640,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_floor_1_1.png",
-       "col": 1,
-       "row": 1,
-       "x": 640,
-       "y": 640,
-       "size": [
-        640,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_floor_2_1.png",
-       "col": 2,
-       "row": 1,
-       "x": 1280,
-       "y": 640,
-       "size": [
-        640,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_floor_3_1.png",
-       "col": 3,
-       "row": 1,
-       "x": 1920,
-       "y": 640,
-       "size": [
-        352,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_floor_0_2.png",
-       "col": 0,
-       "row": 2,
-       "x": 0,
-       "y": 1280,
-       "size": [
-        640,
-        416
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_floor_1_2.png",
-       "col": 1,
-       "row": 2,
-       "x": 640,
-       "y": 1280,
-       "size": [
-        640,
-        416
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_floor_2_2.png",
-       "col": 2,
-       "row": 2,
-       "x": 1280,
-       "y": 1280,
-       "size": [
-        640,
-        416
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_floor_3_2.png",
-       "col": 3,
-       "row": 2,
-       "x": 1920,
-       "y": 1280,
-       "size": [
-        352,
-        416
-       ]
-      }
-     ],
-     "walls": [
-      {
-       "file": "chunks/inside-main-floor_walls_0_0.png",
-       "col": 0,
-       "row": 0,
-       "x": 0,
-       "y": 0,
-       "size": [
-        640,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_walls_1_0.png",
-       "col": 1,
-       "row": 0,
-       "x": 640,
-       "y": 0,
-       "size": [
-        640,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_walls_2_0.png",
-       "col": 2,
-       "row": 0,
-       "x": 1280,
-       "y": 0,
-       "size": [
-        640,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_walls_3_0.png",
-       "col": 3,
-       "row": 0,
-       "x": 1920,
-       "y": 0,
-       "size": [
-        352,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_walls_0_1.png",
-       "col": 0,
-       "row": 1,
-       "x": 0,
-       "y": 640,
-       "size": [
-        640,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_walls_3_1.png",
-       "col": 3,
-       "row": 1,
-       "x": 1920,
-       "y": 640,
-       "size": [
-        352,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_walls_0_2.png",
-       "col": 0,
-       "row": 2,
-       "x": 0,
-       "y": 1280,
-       "size": [
-        640,
-        416
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_walls_3_2.png",
-       "col": 3,
-       "row": 2,
-       "x": 1920,
-       "y": 1280,
-       "size": [
-        352,
-        416
-       ]
-      }
-     ],
-     "props": [
-      {
-       "file": "chunks/inside-main-floor_props_2_0.png",
-       "col": 2,
-       "row": 0,
-       "x": 1280,
-       "y": 0,
-       "size": [
-        640,
-        640
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_props_3_0.png",
-       "col": 3,
-       "row": 0,
-       "x": 1920,
-       "y": 0,
-       "size": [
-        352,
-        640
-       ]
-      }
-     ],
-     "foreground": [
-      {
-       "file": "chunks/inside-main-floor_foreground_0_2.png",
-       "col": 0,
-       "row": 2,
-       "x": 0,
-       "y": 1280,
-       "size": [
-        640,
-        416
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_foreground_1_2.png",
-       "col": 1,
-       "row": 2,
-       "x": 640,
-       "y": 1280,
-       "size": [
-        640,
-        416
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_foreground_2_2.png",
-       "col": 2,
-       "row": 2,
-       "x": 1280,
-       "y": 1280,
-       "size": [
-        640,
-        416
-       ]
-      },
-      {
-       "file": "chunks/inside-main-floor_foreground_3_2.png",
-       "col": 3,
-       "row": 2,
-       "x": 1920,
-       "y": 1280,
-       "size": [
-        352,
-        416
-       ]
-      }
-     ]
-    }
-   },
-   "note": "ONE wide scrolling room. Draw order: floor, walls, props, then wall-decal sprites and y-sorted sprites and characters sorted by sortRow, then foreground ABOVE the characters. floor: ground: lobby tile, blue mats, big red square with the school logo, thresholds, front-door mat, the seating decks and steps, the red gear-bag box base. Draw first, at depth 0. | walls: the north wall with its wall art, the side wall strips, the back-wall drywall. Nothing above the drywall. Draw above floor. | props: wall-hugging furniture that never moves: the creed boards, flag, mural frames, the gear shelf and crash mats. Under every character. | foreground: the front wall (curb, door posts, door header, open door leaves): the one layer drawn ABOVE characters, so a student walking in or out passes behind it."
+   "note": "ONE wide scrolling room. Draw order: floor, walls, props, then wall-decal sprites and y-sorted sprites and characters sorted by sortRow, then foreground ABOVE the characters. floor: ground: lobby tile, blue mats, big red square with the school logo, thresholds, front-door mat, the seating decks and steps, the red gear-bag box base. Draw first, at depth 0. | walls: the north wall with its wall art, the side wall strips, the back-wall drywall. Nothing above the drywall. Draw above floor. | props: wall-hugging furniture that never moves: the creed boards, flag, mural frames, the gear shelf and crash mats. Under every character. | foreground: the front wall (curb, door posts, door header, open door leaves): the one FULL-FRAME layer drawn ABOVE characters, so a student walking in or out passes behind it. The seat backs and the bag tops are foreground SPRITES (see foregroundSprites), because each has its own sortRow."
   },
   "wing-west": {
    "size": [
@@ -1738,6 +1438,190 @@
    "target": "outside-entrance-day|dusk",
    "scale": 0.55,
    "note": "the Action Zone building at 0.55 scale for the town square's classmate-dojo slot (the old green-noren 'dojo0' placeholder). Day and dusk are separate sprites; dusk has its glow + ground pools baked in (they extend past the building a little: the glow 0.35 tile, the pool ~1 tile in front). Line weight matches the town (1 px @1x, 2 px @2x). No phone/address overlay here (they would be 3 px tall)."
+  },
+  "seats-back": {
+   "size": [
+    592,
+    254
+   ],
+   "layers": [
+    "seats-back"
+   ],
+   "files": {
+    "seats-back": "seats-back_seats-back.png"
+   },
+   "groundRect": {
+    "col0": 9.8,
+    "row0": 10.012,
+    "col1": 17.2,
+    "row1": 13.188,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 4.69,
+   "anchorPx": [
+    296.0,
+    375.0
+   ],
+   "anchorNote": "same anchor tile as the base sprite, so the two line up when both are placed at the same spot",
+   "anchorTile": [
+    13.5,
+    14.7
+   ],
+   "footprintRect": [
+    8.95,
+    18.05,
+    10.2,
+    14.7
+   ],
+   "place": "foreground-sprite",
+   "drawLayer": "foreground",
+   "basedOn": "seats",
+   "sortRow": 14.7,
+   "roomPx": [
+    840,
+    969
+   ],
+   "interactive": false,
+   "foregroundRule": "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character)",
+   "note": "the 24 seat backs (backs and their inset panels) of the parent seating. Foreground sprite: an identical copy of pixels already in 'seats' (draw the base y-sorted as usual, then this one above the characters that are north of it)."
+  },
+  "bag-black-top": {
+   "size": [
+    52,
+    85
+   ],
+   "layers": [
+    "bag-black-top"
+   ],
+   "files": {
+    "bag-black-top": "bag-black-top_bag-black-top.png"
+   },
+   "groundRect": {
+    "col0": 22.475,
+    "row0": 1.712,
+    "col1": 23.125,
+    "row1": 2.775,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.52,
+   "anchorPx": [
+    26.0,
+    201.4
+   ],
+   "anchorNote": "same anchor tile as the base sprite, so the two line up when both are placed at the same spot",
+   "anchorTile": [
+    22.8,
+    4.23
+   ],
+   "footprintRect": [
+    22.3,
+    23.3,
+    3.37,
+    4.23
+   ],
+   "place": "foreground-sprite",
+   "drawLayer": "foreground",
+   "basedOn": "bag-black",
+   "sortRow": 4.23,
+   "roomPx": [
+    1854,
+    305
+   ],
+   "interactive": false,
+   "foregroundRule": "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character)",
+   "note": "top of the black heavy bag: everything above the band, z over 1.25 tile. Foreground sprite: an identical copy of pixels already in 'bag-black' (draw the base y-sorted as usual, then this one above the characters that are north of it)."
+  },
+  "bag-blue-top": {
+   "size": [
+    52,
+    85
+   ],
+   "layers": [
+    "bag-blue-top"
+   ],
+   "files": {
+    "bag-blue-top": "bag-blue-top_bag-blue-top.png"
+   },
+   "groundRect": {
+    "col0": 23.675,
+    "row0": 2.513,
+    "col1": 24.325,
+    "row1": 3.575,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.52,
+   "anchorPx": [
+    26.0,
+    201.4
+   ],
+   "anchorNote": "same anchor tile as the base sprite, so the two line up when both are placed at the same spot",
+   "anchorTile": [
+    24.0,
+    5.03
+   ],
+   "footprintRect": [
+    23.5,
+    24.5,
+    4.17,
+    5.03
+   ],
+   "place": "foreground-sprite",
+   "drawLayer": "foreground",
+   "basedOn": "bag-blue",
+   "sortRow": 5.03,
+   "roomPx": [
+    1950,
+    369
+   ],
+   "interactive": false,
+   "foregroundRule": "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character)",
+   "note": "top of the blue heavy bag: everything above the band, z over 1.25 tile. Foreground sprite: an identical copy of pixels already in 'bag-blue' (draw the base y-sorted as usual, then this one above the characters that are north of it)."
+  },
+  "bag-red-top": {
+   "size": [
+    52,
+    85
+   ],
+   "layers": [
+    "bag-red-top"
+   ],
+   "files": {
+    "bag-red-top": "bag-red-top_bag-red-top.png"
+   },
+   "groundRect": {
+    "col0": 24.875,
+    "row0": 1.712,
+    "col1": 25.525,
+    "row1": 2.775,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.52,
+   "anchorPx": [
+    26.0,
+    201.4
+   ],
+   "anchorNote": "same anchor tile as the base sprite, so the two line up when both are placed at the same spot",
+   "anchorTile": [
+    25.2,
+    4.23
+   ],
+   "footprintRect": [
+    24.7,
+    25.7,
+    3.37,
+    4.23
+   ],
+   "place": "foreground-sprite",
+   "drawLayer": "foreground",
+   "basedOn": "bag-red",
+   "sortRow": 4.23,
+   "roomPx": [
+    2046,
+    305
+   ],
+   "interactive": false,
+   "foregroundRule": "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character)",
+   "note": "top of the red heavy bag: everything above the band, z over 1.25 tile. Foreground sprite: an identical copy of pixels already in 'bag-red' (draw the base y-sorted as usual, then this one above the characters that are north of it)."
   }
  }
 }

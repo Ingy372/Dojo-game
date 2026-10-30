@@ -29,10 +29,11 @@ def frame_rect(F, W, H, P):
 
 # ---------------- dusk: the town-square recipe (make_concept.py), per layer
 DUSK_MUL, DUSK_TINT, WARM = (120, 112, 165), (60, 45, 70), (255, 226, 170)
-def grade(im):
-    """multiply by (120,112,165)/255, then 10% toward (60,45,70); alpha untouched"""
+LANDMARK_MUL = (138, 129, 176)      # the dojo building only (entrance + town slot): about 15 percent brighter than the town's (120,112,165), so it reads as the landmark; ground and scenery keep the town grade
+def grade(im, mul=DUSK_MUL):
+    """multiply by mul/255 (the town's (120,112,165), or LANDMARK_MUL for the building), then 10% toward (60,45,70); alpha untouched"""
     r, a = im.convert("RGB"), im.getchannel("A")
-    r = ImageChops.multiply(r, Image.new("RGB", r.size, DUSK_MUL)); r = Image.blend(r, Image.new("RGB", r.size, DUSK_TINT), 0.1)
+    r = ImageChops.multiply(r, Image.new("RGB", r.size, mul)); r = Image.blend(r, Image.new("RGB", r.size, DUSK_TINT), 0.1)
     r = r.convert("RGBA"); r.putalpha(a); return r
 def lit_pass(graded, orig, lit):
     """lit panes: a warm lamp-yellow, shaded by the original pane's tone (so the glass keeps its low/high split); stays bright, like the town lights"""
@@ -71,7 +72,7 @@ def dusk_set(d, ppt, P, size, with_pools=True):
     res = {}
     for f in sorted(os.listdir(d)):
         if f.endswith(".lit.png") or not f.endswith(".png"): continue
-        g = f[:-4]; im = load(d, g); gr = grade(im)
+        g = f[:-4]; im = load(d, g); gr = grade(im, LANDMARK_MUL if g in ("building", "phone", "address", "overlay-phone", "overlay-address") else DUSK_MUL)
         lit = load(d, g + ".lit")
         if lit is not None:
             res[g + ".glow"] = glow_layer(lit, ppt); gr = lit_pass(gr, im, lit)
@@ -187,7 +188,7 @@ sday, sdusk = os.path.join(WORK, "slot-day"), os.path.join(WORK, "slot-dusk")
 sd = load(sday, "building"); su_in = load(sdusk, "building"); su_lit = load(sdusk, "building.lit")
 assert sd.size == (SW, SH), sd.size
 def slot_dusk():
-    gr = lit_pass(grade(su_in), su_in, su_lit); gl = glow_layer(su_lit, SLOT["ppt"])
+    gr = lit_pass(grade(su_in, LANDMARK_MUL), su_in, su_lit); gl = glow_layer(su_lit, SLOT["ppt"])
     pl = pools_layer((SW, SH), SP, [(4.95, RF + 0.35, 0.95), (9.05, RF + 0.35, 0.95), (CX, RF + 0.5, 1.05), (10.5, RF + 0.55, 0.55)], SLOT["ppt"])
     out = Image.new("RGBA", (SW, SH)); out.alpha_composite(pl); out.alpha_composite(gr); out.alpha_composite(gl); return out
 sdu = slot_dusk()

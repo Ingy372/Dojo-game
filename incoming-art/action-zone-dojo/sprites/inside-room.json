@@ -773,6 +773,7 @@
    "alsoApproach": [],
    "sortRow": 11.95,
    "tapPx": null,
+   "foregroundSprite": null,
    "tapRectPx": [
     200,
     945,
@@ -798,6 +799,7 @@
    "alsoApproach": [],
    "sortRow": 1.01,
    "tapPx": null,
+   "foregroundSprite": null,
    "tapRectPx": [
     81,
     33,
@@ -823,6 +825,7 @@
    "alsoApproach": [],
    "sortRow": 1.01,
    "tapPx": null,
+   "foregroundSprite": null,
    "tapRectPx": [
     1108,
     35,
@@ -848,6 +851,7 @@
    "alsoApproach": [],
    "sortRow": 9.96,
    "tapPx": null,
+   "foregroundSprite": null,
    "tapRectPx": [
     1635,
     796,
@@ -873,6 +877,7 @@
    "alsoApproach": [],
    "sortRow": 9.96,
    "tapPx": null,
+   "foregroundSprite": null,
    "tapRectPx": [
     2035,
     796,
@@ -898,6 +903,7 @@
    "alsoApproach": [],
    "sortRow": 9.96,
    "tapPx": null,
+   "foregroundSprite": null,
    "tapRectPx": [
     1790,
     768,
@@ -928,6 +934,7 @@
    ],
    "sortRow": 4.23,
    "tapPx": null,
+   "foregroundSprite": "bag-black-top",
    "tapRectPx": [
     1837,
     303,
@@ -958,6 +965,7 @@
    ],
    "sortRow": 5.03,
    "tapPx": null,
+   "foregroundSprite": "bag-blue-top",
    "tapRectPx": [
     1933,
     367,
@@ -988,6 +996,7 @@
    ],
    "sortRow": 4.23,
    "tapPx": null,
+   "foregroundSprite": "bag-red-top",
    "tapRectPx": [
     2029,
     304,
@@ -1018,6 +1027,7 @@
    ],
    "sortRow": 9.95,
    "tapPx": null,
+   "foregroundSprite": null,
    "tapRectPx": [
     818,
     778,
@@ -1043,6 +1053,7 @@
    "alsoApproach": [],
    "sortRow": 14.7,
    "tapPx": null,
+   "foregroundSprite": "seats-back",
    "tapRectPx": [
     736,
     960,
@@ -1293,13 +1304,112 @@
    "faces": "north"
   }
  ],
+ "foregroundSprites": [
+  {
+   "id": "seats-back",
+   "file": "seats-back_seats-back.png",
+   "basedOn": "seats",
+   "sortRow": 14.7,
+   "roomPx": [
+    840,
+    969
+   ],
+   "size": [
+    592,
+    254
+   ],
+   "anchorPx": [
+    296.0,
+    375.0
+   ],
+   "anchorTile": [
+    13.5,
+    14.7
+   ],
+   "drawLayer": "foreground",
+   "rule": "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character)"
+  },
+  {
+   "id": "bag-black-top",
+   "file": "bag-black-top_bag-black-top.png",
+   "basedOn": "bag-black",
+   "sortRow": 4.23,
+   "roomPx": [
+    1854,
+    305
+   ],
+   "size": [
+    52,
+    85
+   ],
+   "anchorPx": [
+    26.0,
+    201.4
+   ],
+   "anchorTile": [
+    22.8,
+    4.23
+   ],
+   "drawLayer": "foreground",
+   "rule": "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character)"
+  },
+  {
+   "id": "bag-blue-top",
+   "file": "bag-blue-top_bag-blue-top.png",
+   "basedOn": "bag-blue",
+   "sortRow": 5.03,
+   "roomPx": [
+    1950,
+    369
+   ],
+   "size": [
+    52,
+    85
+   ],
+   "anchorPx": [
+    26.0,
+    201.4
+   ],
+   "anchorTile": [
+    24.0,
+    5.03
+   ],
+   "drawLayer": "foreground",
+   "rule": "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character)"
+  },
+  {
+   "id": "bag-red-top",
+   "file": "bag-red-top_bag-red-top.png",
+   "basedOn": "bag-red",
+   "sortRow": 4.23,
+   "roomPx": [
+    2046,
+    305
+   ],
+   "size": [
+    52,
+    85
+   ],
+   "anchorPx": [
+    26.0,
+    201.4
+   ],
+   "anchorTile": [
+    25.2,
+    4.23
+   ],
+   "drawLayer": "foreground",
+   "rule": "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character)"
+  }
+ ],
+ "foregroundRule": "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character). The full-frame foreground layer (the front wall) is drawn above every character as before; these sprites are the per-object foreground.",
  "drawOrder": [
   "floor",
   "walls",
   "props",
   "wall-decal sprites (sortRow = wall row + 0.01)",
   "y-sorted sprites + characters by sortRow (footprint bottom row)",
-  "foreground (above characters)"
+  "foreground (above characters): the full-frame foreground layer (front wall) always; then the foreground sprites (seats-back, bag-*-top) above each character whose footprint row < the sprite's sortRow"
  ],
  "scroll": {
   "note": "the room is 2272 x 1696 px at 80 ppt; the game camera follows the student inside it",

@@ -1,6 +1,6 @@
 """Action Zone dojo - INSIDE as game-ready art.  Post-processes the per-group renders written by
     blender -b -P build_action_zone_dojo.py -- --scene inside --samples 24 --game <groups-dir>
-into ../sprites/: four full-room layers, 640 px chunk tiles of them, cropped prop sprites with anchors,
+into ../sprites/: four full-room layers (the full layers only, no chunk tiles), cropped prop sprites with anchors, foreground sprites (seat backs, bag tops),
 static.json (merged), inside-room.json (collision grid, interactables, seats, spawn, exit) and the review previews.
 Usage: python3 make_game_inside.py <groups-dir>"""
 import os, sys, json, math, glob
@@ -12,8 +12,8 @@ import layout_main_floor as LM
 HERE = os.path.dirname(os.path.abspath(__file__)); OUT = os.path.join(HERE, "..", "sprites"); PRE = os.path.join(HERE, "..", "previews")
 SRC = sys.argv[1] if len(sys.argv) > 1 else "/workspace/gamework/inside"
 PPT = 80; COS = math.cos(math.radians(35)); OX, OY = 56, 168        # tile (0,0) top-left in the room frame; z lifts by PPT*cos35 per tile
-CHUNK = 640; PAD = 2
-os.makedirs(OUT, exist_ok=True); os.makedirs(os.path.join(OUT, "chunks"), exist_ok=True); os.makedirs(PRE, exist_ok=True)
+PAD = 2
+os.makedirs(OUT, exist_ok=True); os.makedirs(PRE, exist_ok=True)
 P = lambda c, r, z=0.0: (OX + c * PPT, OY + r * PPT - z * PPT * COS)
 
 LAYERS = ["floor", "walls", "props", "foreground"]
@@ -21,7 +21,7 @@ LAYER_NOTE = {
     "floor": "ground: lobby tile, blue mats, big red square with the school logo, thresholds, front-door mat, the seating decks and steps, the red gear-bag box base. Draw first, at depth 0.",
     "walls": "the north wall with its wall art, the side wall strips, the back-wall drywall. Nothing above the drywall. Draw above floor.",
     "props": "wall-hugging furniture that never moves: the creed boards, flag, mural frames, the gear shelf and crash mats. Under every character.",
-    "foreground": "the front wall (curb, door posts, door header, open door leaves): the one layer drawn ABOVE characters, so a student walking in or out passes behind it.",
+    "foreground": "the front wall (curb, door posts, door header, open door leaves): the one FULL-FRAME layer drawn ABOVE characters, so a student walking in or out passes behind it. The seat backs and the bag tops are foreground SPRITES (see foregroundSprites), because each has its own sortRow.",
 }
 # ---- y-sorted sprites: id -> (group file, kind, anchor tile (col,row), footprint rect (x0,x1,r0,r1), sortRow, interactive, note)
 SPR = {
@@ -60,22 +60,15 @@ def bbox(im, pad=PAD):
 
 full = load("floor").size
 statics = {}
-# ---------------- room layers (full frame) + chunks
-chunk_list = {}
+# ---------------- room layers (full frame; shipped whole, no chunking)
 for L in LAYERS:
     im = load(L); assert im.size == full, (L, im.size)
     im.save(os.path.join(OUT, f"inside-main-floor_{L}.png"), optimize=True)
-    chunk_list[L] = []
-    for j in range(math.ceil(im.height / CHUNK)):
-        for i in range(math.ceil(im.width / CHUNK)):
-            box = (i * CHUNK, j * CHUNK, min(im.width, (i + 1) * CHUNK), min(im.height, (j + 1) * CHUNK)); c = im.crop(box)
-            if c.getchannel("A").getbbox() is None: continue
-            fn = f"inside-main-floor_{L}_{i}_{j}.png"; c.save(os.path.join(OUT, "chunks", fn), optimize=True); chunk_list[L].append({"file": "chunks/" + fn, "col": i, "row": j, "x": box[0], "y": box[1], "size": [box[2] - box[0], box[3] - box[1]]})
 statics["inside-main-floor"] = {
     "size": list(full), "layers": LAYERS, "files": {L: f"inside-main-floor_{L}.png" for L in LAYERS},
     "groundRect": {"col0": 0, "row0": 0, "col1": LM.W, "row1": 19.0, "note": "the room's walkable ground in tiles (27 x 19); the walls sit on its north edge, the front wall on row 18.4"},
     "topExtraTiles": 0.0, "anchorPx": [OX, OY], "anchorNote": "the room frame's pixel for grid tile (0,0)'s top-left corner (same convention as home-dojo room_*.png)",
-    "place": "room", "chunks": {"size": CHUNK, "origin": "image top-left", "layers": chunk_list},
+    "place": "room",
     "note": "ONE wide scrolling room. Draw order: floor, walls, props, then wall-decal sprites and y-sorted sprites and characters sorted by sortRow, then foreground ABOVE the characters. " + " | ".join(f"{k}: {v}" for k, v in LAYER_NOTE.items())}
 
 # ---------------- sprites
@@ -92,6 +85,30 @@ for sid, (g, kind, (ac, ar), fp, srow, interactive, note) in SPR.items():
            "anchorTile": [ac, ar], "footprintRect": list(fp), "place": kind, "sortRow": srow, "roomPx": [b[0], b[1]], "interactive": interactive, "note": note}
     if kind == "wall-decal": ent["note"] += " Wall decal: draw it above its wall and below every character."
     statics[sid] = ent; sheet.append((sid, crop, ent))
+
+# ---------------- foreground sprites: the tall parts a student walks BEHIND (seat backs, bag tops). They are pixel-identical copies of the same pixels that are already inside the base sprite
+# (seat backs: rendered with everything else as a holdout; bag tops: the base sprite cut above BAG_CUT_Z), so the room looks the same; the game draws them AGAIN above the characters, but only for
+# characters whose footprint row is LESS than sortRow (north of the object). A character in front of / south of it must NOT be covered, or the student loses their head to the sprite.
+BAG_CUT_Z = 1.25; FG_RULE = "draw this sprite ABOVE a character only when the character's footprint (feet) row < sortRow; otherwise leave it out (the base sprite is already under the character)"
+FGS = {"seats-back": ("fg-seat-backs", "seats", "the 24 seat backs (backs and their inset panels) of the parent seating")}
+for bid in ("black", "blue", "red"): FGS[f"bag-{bid}-top"] = (f"bag-{bid}", f"bag-{bid}", f"top of the {bid} heavy bag: everything above the band, z over {BAG_CUT_Z} tile")
+fgs = {}
+for fid, (g, base, why) in FGS.items():
+    im = load(g); b0 = statics[base]; ac, ar = b0["anchorTile"]
+    if fid.endswith("-top"):
+        cut = round(P(ac, ar - 0.43, BAG_CUT_Z)[1]); im = im.crop((0, 0, im.width, cut)); 
+    if not fid.endswith("-top"):      # seat backs: take the pixels from the BASE sprite wherever the holdout render says "a back is visible here"
+        a = np.asarray(im.getchannel("A")) > 200; bm = np.asarray(load(base))
+        im = Image.fromarray(np.where(a[..., None], bm, 0).astype("uint8"), "RGBA")
+    arr = np.asarray(im).copy(); arr[arr[..., 3] < 255] = 0; im = Image.fromarray(arr, "RGBA")     # only fully opaque pixels: drawn over the base they are exactly the same colour, so the room picture does not change (no doubled anti-aliased edges)
+    b = bbox(im); crop = im.crop(b); fn = f"{fid}_{fid}.png"; crop.save(os.path.join(OUT, fn), optimize=True)
+    px, py = P(ac, ar)
+    ent = {"size": list(crop.size), "layers": [fid], "files": {fid: fn},
+           "groundRect": {"col0": round((b[0] - OX) / PPT, 3), "row0": round((b[1] - OY) / PPT, 3), "col1": round((b[2] - OX) / PPT, 3), "row1": round((b[3] - OY) / PPT, 3), "note": "the image's pixel box in room tiles (rows shown without lifting heights)"},
+           "topExtraTiles": round(max(0, (py - b[1])) / PPT, 2), "anchorPx": [round(px - b[0], 1), round(py - b[1], 1)], "anchorNote": "same anchor tile as the base sprite, so the two line up when both are placed at the same spot",
+           "anchorTile": [ac, ar], "footprintRect": b0["footprintRect"], "place": "foreground-sprite", "drawLayer": "foreground", "basedOn": base, "sortRow": b0["sortRow"], "roomPx": [b[0], b[1]], "interactive": False,
+           "foregroundRule": FG_RULE, "note": why + ". Foreground sprite: an identical copy of pixels already in '" + base + "' (draw the base y-sorted as usual, then this one above the characters that are north of it)."}
+    statics[fid] = ent; fgs[fid] = ent; sheet.append((fid, crop, ent))
 
 # ---------------- collision grid (27 x 19 cells; cell (c,r) = tiles [c,c+1) x [r,r+1))
 W_, H_ = int(LM.W), 19
@@ -141,7 +158,8 @@ for sid, (key, (ac, ar), face, extra) in INTERACT.items():
     if sid.startswith("bag-"): rect = next(b["rect"] for b in blockers if b["id"] == sid)
     else: rect = statics[sid]["footprintRect"]
     inter.append({"id": sid, "kind": key, "sprite": sid if sid in statics else None, "footprintRect": rect, "approachTile": [ac, ar], "approachFacing": face, "alsoApproach": [list(e) for e in extra],
-                  "sortRow": statics[sid]["sortRow"] if sid in statics else None, "tapPx": None})
+                  "sortRow": statics[sid]["sortRow"] if sid in statics else None, "tapPx": None,
+                  "foregroundSprite": ("seats-back" if sid == "seats" else sid + "-top") if (sid == "seats" or sid.startswith("bag-")) else None})
 # tap rectangles in room px: the sprite's bbox
 for it in inter:
     s = statics.get(it["sprite"]); 
@@ -155,7 +173,9 @@ room = {
     "spawn": {"enter": [13, 17], "note": "first tile inside the door; the student walks in from row 18"}, "exit": {"cells": [[12, 18], [13, 18], [14, 18]], "rect": [12.3, 14.7, 17.9, 19.0], "to": "town-square"},
     "zones": {"matRoom": [0, LM.W, 1.0, LM.R_MAT_S], "redSquare": list(LM.REDSQ), "lobby": [0, LM.W, LM.R_MAT_S, LM.R_FRONT], "gapWest": [7.0, 9.6, 8.6, 10.0], "gapEast": [16.8, 19.4, 8.6, 10.0], "proShop": [0, 7.0, 10.12, 12.35], "crashMats": list(LM.CRASH)},
     "interactables": inter, "seatSlots": seat_slots,
-    "drawOrder": ["floor", "walls", "props", "wall-decal sprites (sortRow = wall row + 0.01)", "y-sorted sprites + characters by sortRow (footprint bottom row)", "foreground (above characters)"],
+    "foregroundSprites": [{"id": k, "file": e["files"][k], "basedOn": e["basedOn"], "sortRow": e["sortRow"], "roomPx": e["roomPx"], "size": e["size"], "anchorPx": e["anchorPx"], "anchorTile": e["anchorTile"], "drawLayer": "foreground", "rule": FG_RULE} for k, e in fgs.items()],
+    "foregroundRule": FG_RULE + ". The full-frame foreground layer (the front wall) is drawn above every character as before; these sprites are the per-object foreground.",
+    "drawOrder": ["floor", "walls", "props", "wall-decal sprites (sortRow = wall row + 0.01)", "y-sorted sprites + characters by sortRow (footprint bottom row)", "foreground (above characters): the full-frame foreground layer (front wall) always; then the foreground sprites (seats-back, bag-*-top) above each character whose footprint row < the sprite's sortRow"],
     "scroll": {"note": "the room is 2272 x 1696 px at 80 ppt; the game camera follows the student inside it", "cameraClampPx": [0, 0, full[0], full[1]]},
 }
 json.dump(room, open(os.path.join(OUT, "inside-room.json"), "w"), indent=1)
@@ -170,9 +190,10 @@ order = [("floor", 0), ("walls", 0), ("props", 0)]
 for L, _ in order: comp.alpha_composite(load(L))
 ent_sorted = sorted(statics.items(), key=lambda kv: (kv[1].get("sortRow", -1), kv[0])); 
 for sid, e in ent_sorted:
-    if sid == "inside-main-floor": continue
+    if sid == "inside-main-floor" or sid in fgs: continue
     comp.alpha_composite(Image.open(os.path.join(OUT, e["files"][sid])).convert("RGBA"), tuple(e["roomPx"]))
 comp.alpha_composite(load("foreground"))
+for fid, e in fgs.items(): comp.alpha_composite(Image.open(os.path.join(OUT, e["files"][fid])).convert("RGBA"), tuple(e["roomPx"]))   # (pixel-identical copies: the picture is unchanged)
 bg = Image.new("RGBA", full, (236, 232, 224, 255)); bg.alpha_composite(comp); bg.convert("RGB").save(os.path.join(PRE, "inside-game-composite@2x.png"))
 bg.resize((full[0] // 2, full[1] // 2), Image.LANCZOS).convert("RGB").save(os.path.join(PRE, "inside-game-composite.png"))
 # collision overlay (violet = blocked, teal = walkable; no red)
