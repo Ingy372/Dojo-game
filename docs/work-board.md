@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-10-28 8:00 AM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#392.
+Last updated: 2026-10-30 1:55 PM EDT by Dojo-ascent Manager. Catch-up covers PRs #62–#393.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -193,7 +193,7 @@ Card spread: 10 cards held all run, 4 on the pick screen. Double Strike set at 0
 | A-LEGENDARY | Dojo-ascent Artist | **Done (PR #304; Jay approved the golden-orange Legendary frame).** | — | — |
 | A-LEGENDARY-swap | Dojo-Ascent Programmer | **Done (PR #310, merged Oct 25, 11:58 PM, after QA passed).** Polish for later: the halo on a held ring, the 28 px icon, and 4 columns at 932. | Legendary items show the golden-orange frame wherever Epic did; screenshots at 667×375; QA passes. | — |
 | A4 | Dojo-ascent Artist | **Done (PR #301; Jay approved day and dusk, Oct 25).** | — | — |
-| A4-DOJO | Dojo-ascent Artist | Main dojo building modelled on the real Action Zone dojo, inside and out. **Placeholder:** the plain dojo in #301 stays until then. The shop building is a shop; the third building stays a plain placeholder until Jay decides. | Jay approves the building. | Jay's Action Zone photos (expected the morning of Oct 26) |
+| A4-DOJO | Dojo-ascent Artist | **3 samples delivered (PR #393, Oct 30): outside face and parent seating approved; inside main floor rebuilt to Jay's description, waiting on Jay's OK and his calls (logo in the public repo, creed typo fixes, phone/address left in old commit history). Not merged yet.** Main dojo building modelled on the real Action Zone dojo, inside and out. **Placeholder:** the plain dojo in #301 stays until then; phone/address are blank swappable layers. The shop building is a shop; the third building stays a plain placeholder until Jay decides. | Jay approves the building. | Jay's OK on the #393 inside sample |
 
 **Bug fixes from Jay's phone screenshot (Oct 25), all done:** B-GEAR-BUG #261, B-LASTRUN #262, B-POLISH-1 #263, B-NM-FIX #267, B-NM-FIX-2 #268.
 
