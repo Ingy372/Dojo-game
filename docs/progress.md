@@ -991,3 +991,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Test-only pick seam: `playRoom(..., pickInsight?)` in `balance/bot.ts`. No env flags or HOOKS patch. No new dependency.
 - Results: see the PR's Delivery Note (counts, layer-2 run time, and the deliberate-bad-number demo).
 - QA fix (layout): Insight picker cards are as tall as the tallest text plus 8 px under it (was a fixed 175 px); body text steps down 16/15/14 only if the row would not fit. New card text from #391 copied into `insights.json` (numbers untouched). Test: `r-insight-bal-a-picker.test.ts`; live check `/workspace/shots/r-insight-bal-a/`: 372 checks, 0 failed (both phone sizes, reduced motion on and off, 9 cards in 5 rows, plus taps).
+
+## A4-DOJO-i — Action Zone, the inside room (2026-10-30)
+- Imported pack `dojo-az-inside` (22 sprites at 0.6); `content/dojo/action-zone/inside-room.json` is loaded by `loadInsideRoom` into a sim Room (`packages/sim/src/actionZone.ts`). New `InsideScene` (key `ActionZoneInside`): floor, walls, props, hero and sprites sorted by `sortRow`, seat-back and bag-top pieces that hide the hero only while he is north of them, the front wall on top.
+- PLACEHOLDER: an "Action Zone" button in the Home Dojo (play mode) goes straight in; PR 2 (A4-DOJO-ii) routes it through the outside. The exit door returns to the Home Dojo.
+- Tests: `packages/sim/test/action-zone.test.ts` (7): grid and room match the file; spawn reaches every approach tile and the exit; blockers cannot be crossed by tap or stick; art and sortRow match; a broken file is refused. Golden fixture unchanged.
+- Shots (667x375 and 844x390, reduced motion on and off, setting read back first): 4 runs x 24 checks, 96 pass, 0 fail. They prove the hero is hidden behind the seat panel, both bag tops and the front wall, and fully visible in front of them. Contact sheets: `/workspace/shots/a4-dojo-i/contact-sheet-*.jpg`.
+- Suite at this PR: 1172 passed, 11 skipped (the same skips as main); typecheck and build exit 0; the golden fixture is unchanged.
