@@ -899,6 +899,40 @@
           ]
         }
       ]
+    },
+    "dojo-az-inside": {
+      "note": "A4-DOJO-i: the Action Zone dojo inside room (floor, walls, props, front wall, structures, props, wall decals, seat-back and bag-top foreground sprites). The outside entrance and town slot are imported in A4-DOJO-ii.",
+      "sources": [
+        {
+          "id": "dojo-az-inside",
+          "type": "static",
+          "json": "incoming-art/action-zone-dojo/sprites/static.json",
+          "only": [
+            "inside-main-floor",
+            "wing-west",
+            "wing-east",
+            "pro-counter",
+            "bag-black",
+            "bag-blue",
+            "bag-red",
+            "gear-box",
+            "seats",
+            "bench",
+            "plant",
+            "trash-can",
+            "whiteboard",
+            "target-wall",
+            "back-doors",
+            "cross-door-a",
+            "cross-door-b",
+            "handprint-wall",
+            "seats-back",
+            "bag-black-top",
+            "bag-blue-top",
+            "bag-red-top"
+          ]
+        }
+      ]
     }
   }
 }
