@@ -342,27 +342,6 @@ def scene_inside():
     Wd(cx, 1.75, 2.68, 2.84, "#14121c", 0.04, 0.05, True, name="creedFrame"); imgplane(os.path.join(TXD, "class-creed.png"), "classCreed", cx, 2.6, 2.6 * 1060 / 1000, row=WF + 0.1, zc=1.75)
     a, b = LM.BELTS; cx = (a + b) / 2
     Wd(cx, 1.74, 2.58, 3.1, "#14121c", 0.04, 0.05, True, name="beltFrame"); imgplane(os.path.join(TXD, "belt-creed.png"), "beltCreed", cx, 2.5, 2.5 * 1818 / 1500, row=WF + 0.1, zc=1.74)
-    # ---- back wall, left half: framed photo row + a mirror (both in the photos), and the BLACK BELT SCHOOL banner at the right end. All re-drawn flat and generic: no faces, no readable small text ----
-    pa, pb = LM.PHOTOS_ROW; pics = ["#9fb7d6", "#d8b98a", "#8fb89a", "#c3a6c9", "#e0c46b", "#9dc4cf", "#c9b38f", "#a9b8a0"]
-    xs = [x for x in [pa + 0.6 + 1.45 * k for k in range(int((pb - pa) / 1.45))] if not (6.3 < x < 8.4)]
-    for k, x in enumerate(xs):
-        Wd(x, 2.75, 1.1, 0.85, "#14121c", 0.03, 0.05, True, name="photoFrame"); Wd(x, 2.75, 0.94, 0.69, "#f4f1e8", 0.06, 0.02, False, name="photoMat")
-        wpoly([(x - 0.4, 2.45), (x + 0.4, 2.45), (x + 0.4, 3.05), (x - 0.4, 3.05)], pics[k % len(pics)], 1, "photoCollage")
-        for j in range(2): wpoly([(x - 0.36 + 0.38 * j, 2.52), (x - 0.04 + 0.38 * j, 2.52), (x - 0.04 + 0.38 * j, 2.8), (x - 0.36 + 0.38 * j, 2.8)], "#f4f1e8", 2, "photoTile")
-    a, b = LM.MIRROR; cx = (a + b) / 2
-    Wd(cx, 1.3, b - a + 0.24, 1.84, "#4a4f5e", 0.03, 0.05, True, name="mirrorFrame"); Wd(cx, 1.3, b - a, 1.6, "#bcd7ea", 0.06, 0.02, False, name="mirrorGlass")
-    wpoly([(a + 0.2, 0.62), (a + 0.9, 0.62), (a + 1.7, 1.98), (a + 1.0, 1.98)], "#e4f1f9", 1, "mirrorGlare")
-    wpoly([(cx + 0.4, 0.62), (b - 0.2, 0.62), (b - 0.2, 1.1), (cx + 0.4, 1.1)], "#2f6fd6", 1, "mirrorMatHint")
-    for x in (9.5, 10.9):
-        Wd(x, 1.45, 0.95, 0.7, "#14121c", 0.03, 0.05, True, name="smallFrame"); Wd(x, 1.45, 0.79, 0.54, "#f1e3b8", 0.06, 0.02, False, name="smallFrameIn")
-        wpoly(circ(x, 1.45, 0.17, 20), "#3f9c4a" if x < 10 else "#2f6fd6", 1, "smallFrameDot")
-    a, b = LM.BANNER; cx = (a + b) / 2
-    Wd(cx, 1.55, b - a + 0.1, 1.2, "#14121c", 0.03, 0.05, True, name="bannerFrame"); Wd(cx, 1.55, b - a - 0.06, 1.08, "#f4f1e8", 0.06, 0.02, False, name="bannerBase")
-    wpoly([(a + 0.0, 1.0), (a + 0.55, 1.0), (a + 0.15, 2.1), (a + 0.0, 2.1)], "#2f6fd6", 1, "bannerBlue")
-    wpoly([(b - 0.0, 1.0), (b - 0.5, 1.0), (b - 0.1, 2.1), (b - 0.0, 2.1)], "#d92b25", 1, "bannerStripe")
-    text("bannerT1", "THIS IS A", cx, WF + 0.14, 1.88, 0.2, 1.3, "#14121c", 0.02, False)
-    text("bannerT2", "BLACK BELT", cx, WF + 0.14, 1.55, 0.24, 1.7, "#14121c", 0.02, False)
-    text("bannerT3", "SCHOOL", cx, WF + 0.14, 1.22, 0.24, 1.2, "#14121c", 0.02, False)
     # crash-mat stack + punching bags (right) + a whiteboard on a stand
     a, b, ra, rb = LM.CRASH; cxm, rcm = (a + b) / 2, (ra + rb) / 2
     for k, c in enumerate((BLUE, "#6f9be0", BLUE)): B(cxm + 0.04 * (k % 2), rcm, 0.18 + 0.3 * k, b - a, rb - ra, 0.28, c, True, bevel=0.03, name=f"crashMat{k}")

@@ -19,8 +19,6 @@ DOORS_SRC = (19.4, 27.0); PRO_SRC = (0.0, 7.0)   # source-frame extents of the c
 SEATS = (9.5, 17.5)                      # stadium seats x0, x1 ; 3 tiers, facing the mat
 TIERS = [(11.7, 1.5, 0.3), (13.2, 1.5, 0.6), (14.7, 1.5, 0.9)]   # (south edge row, depth, top z) north -> south
 TARGET = (0.4, 6.6); MURAL = (8.0, 13.0); BACK_DOOR = (13.3, 15.5); FLAG = (15.9, 17.9); CREED = (18.1, 20.7); BELTS = (21.1, 24.1)
-# back wall, left half (from the photos, re-drawn): framed photo row + mirror; right end: the BLACK BELT SCHOOL banner
-PHOTOS_ROW = (0.7, 12.3); MIRROR = (2.2, 5.6); BANNER = (24.3, 26.9)
 BAGS = [(22.8, 3.8, "black"), (24.0, 4.6, "blue"), (25.2, 3.8, "red")]
 CRASH = (24.4, 26.7, 1.3, 2.7)
 
@@ -29,7 +27,6 @@ CRASH = (24.4, 26.7, 1.3, 2.7)
 # RIGHT wall (x = 27): the pro shop (lobby end). Each panel is FOLD_W wide and stands with its face on the row FOLD_*_RF; along the wall it covers rows RF-3.2 .. RF.
 FOLD_W = 7.6
 FOLD_CX_L = -4.0; FOLD_CX_R = W + 4.0
-# left wall, from the entry going back: doors + handprints (lobby), star/target wall, then the artwork (logo + styles mural) at the back
-FOLD_MURAL_RF, FOLD_TARGET_RF, FOLD_DOORS_RF = 4.6, 8.2, 14.2
-FOLD_PRO_RF = 14.2   # right wall, directly opposite the cross doors
+FOLD_TARGET_RF, FOLD_MURAL_RF, FOLD_DOORS_RF = 4.6, 8.2, 14.2
+FOLD_PRO_RF = 13.0
 FRAME_COLS = 43.8                        # picture width in tiles: x -8.4 .. 35.4
