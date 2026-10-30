@@ -62,7 +62,7 @@ The Action Zone building scaled down for the left dojo slot of the approved PR #
 - **Preview:** `previews/town-slot-in-town-{day,dusk}.png` and `@2x`: the town square re-rendered without `dojo0` and the sprite placed on it. The town-square files in `town-square-concept/` are not changed (the new `--no-dojo0` flag is opt-in and the default output is byte-identical).
 
 ### 5. Phone and address (blank, swappable)
-`outside-entrance-{day,dusk}_phone.png` and `_address.png` are the only places the two values go, and they are blank bars here. `grep -rn "910-429-2467\|6105" incoming-art/` finds nothing. The earlier commit `af9fd2a` still holds the real values in history (no rewrite was done; see DECIDE 10 in the Delivery Note).
+`outside-entrance-{day,dusk}_phone.png` and `_address.png` are the only places the two values go, and they are blank bars here. a grep of `incoming-art/` for the real phone number and the real house number finds nothing (checked at the tip). The earlier commit `af9fd2a` still holds the real values in history (no rewrite was done; see DECIDE 10 in the Delivery Note).
 
 ### 6. Red check (branded red expected)
 `python3 /workspace/redcheck.py 'sprites/*.png' 'sprites/1x/*.png'`: 59 files, 399,221 red px in total. All of it is the branded red: the red square (floor layer 238,966), gear-box 68,839, seats 52,062, door crosses ~1,590 each, handprint wall 6,338, bag-red 5,931, pro counter 2,323, building sign/roof trim (outside day 8,506), chairs (~2,650 each), the walls layer 4,167 (flag stripes, creed titles). Dusk files are mostly dimmed below the red limit (slot dusk 232). No other red.

@@ -16,7 +16,7 @@
 - Stacked day layers versus the approved samples: inside 10,259 of 3.85 M px differ by more than 40 (0.27 percent, mean 0.388); outside 877 of 797,440 (mean 0.234). All thin outline/anti-alias lines where layers meet. The sofa is the only intended difference in the inside.
 - Approved outside and seating PNGs are byte-identical to `12118dac`.
 - Every file named in the JSON exists and has the stated size (59 checked); all 8 outside entrance layers are 1120 x 712.
-- `grep -rn "910-429-2467\|6105" incoming-art/` finds nothing. No photo or crop is committed. Only `incoming-art/` changed (the town-square scripts got an opt-in `--no-dojo0` flag; their default output is byte-identical).
+- a grep of `incoming-art/` for the real phone number and the real house number finds nothing (checked at the tip). No photo or crop is committed. Only `incoming-art/` changed (the town-square scripts got an opt-in `--no-dojo0` flag; their default output is byte-identical).
 - **Red check** (branded red expected): 59 sprite files, 399,221 red px, all branded: red square (floor 238,966), gear-box 68,839, seats 52,062, crosses, handprints, red bag, chairs, building sign trim. The fire extinguisher is the one danger-red item, as in the approved inside. Nothing else is red.
 - Glows: every dusk glow sits on a real source (two windows, door panes, wall lamp lens). Nothing floats free.
 
