@@ -1,0 +1,1075 @@
+{
+ "pixelsPerTile": 80,
+ "camera": {
+  "projection": "orthographic",
+  "elevationDeg": 35.0,
+  "facing": "north (the one game view)"
+ },
+ "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+ "sprites": {
+  "inside-main-floor": {
+   "size": [
+    2272,
+    1696
+   ],
+   "layers": [
+    "floor",
+    "walls",
+    "props",
+    "foreground"
+   ],
+   "files": {
+    "floor": "inside-main-floor_floor.png",
+    "walls": "inside-main-floor_walls.png",
+    "props": "inside-main-floor_props.png",
+    "foreground": "inside-main-floor_foreground.png"
+   },
+   "groundRect": {
+    "col0": 0,
+    "row0": 0,
+    "col1": 27.0,
+    "row1": 19.0,
+    "note": "the room's walkable ground in tiles (27 x 19); the walls sit on its north edge, the front wall on row 18.4"
+   },
+   "topExtraTiles": 0.0,
+   "anchorPx": [
+    56,
+    168
+   ],
+   "anchorNote": "the room frame's pixel for grid tile (0,0)'s top-left corner (same convention as home-dojo room_*.png)",
+   "place": "room",
+   "chunks": {
+    "size": 640,
+    "origin": "image top-left",
+    "layers": {
+     "floor": [
+      {
+       "file": "chunks/inside-main-floor_floor_0_0.png",
+       "col": 0,
+       "row": 0,
+       "x": 0,
+       "y": 0,
+       "size": [
+        640,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_floor_1_0.png",
+       "col": 1,
+       "row": 0,
+       "x": 640,
+       "y": 0,
+       "size": [
+        640,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_floor_2_0.png",
+       "col": 2,
+       "row": 0,
+       "x": 1280,
+       "y": 0,
+       "size": [
+        640,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_floor_3_0.png",
+       "col": 3,
+       "row": 0,
+       "x": 1920,
+       "y": 0,
+       "size": [
+        352,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_floor_0_1.png",
+       "col": 0,
+       "row": 1,
+       "x": 0,
+       "y": 640,
+       "size": [
+        640,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_floor_1_1.png",
+       "col": 1,
+       "row": 1,
+       "x": 640,
+       "y": 640,
+       "size": [
+        640,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_floor_2_1.png",
+       "col": 2,
+       "row": 1,
+       "x": 1280,
+       "y": 640,
+       "size": [
+        640,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_floor_3_1.png",
+       "col": 3,
+       "row": 1,
+       "x": 1920,
+       "y": 640,
+       "size": [
+        352,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_floor_0_2.png",
+       "col": 0,
+       "row": 2,
+       "x": 0,
+       "y": 1280,
+       "size": [
+        640,
+        416
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_floor_1_2.png",
+       "col": 1,
+       "row": 2,
+       "x": 640,
+       "y": 1280,
+       "size": [
+        640,
+        416
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_floor_2_2.png",
+       "col": 2,
+       "row": 2,
+       "x": 1280,
+       "y": 1280,
+       "size": [
+        640,
+        416
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_floor_3_2.png",
+       "col": 3,
+       "row": 2,
+       "x": 1920,
+       "y": 1280,
+       "size": [
+        352,
+        416
+       ]
+      }
+     ],
+     "walls": [
+      {
+       "file": "chunks/inside-main-floor_walls_0_0.png",
+       "col": 0,
+       "row": 0,
+       "x": 0,
+       "y": 0,
+       "size": [
+        640,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_walls_1_0.png",
+       "col": 1,
+       "row": 0,
+       "x": 640,
+       "y": 0,
+       "size": [
+        640,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_walls_2_0.png",
+       "col": 2,
+       "row": 0,
+       "x": 1280,
+       "y": 0,
+       "size": [
+        640,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_walls_3_0.png",
+       "col": 3,
+       "row": 0,
+       "x": 1920,
+       "y": 0,
+       "size": [
+        352,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_walls_0_1.png",
+       "col": 0,
+       "row": 1,
+       "x": 0,
+       "y": 640,
+       "size": [
+        640,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_walls_3_1.png",
+       "col": 3,
+       "row": 1,
+       "x": 1920,
+       "y": 640,
+       "size": [
+        352,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_walls_0_2.png",
+       "col": 0,
+       "row": 2,
+       "x": 0,
+       "y": 1280,
+       "size": [
+        640,
+        416
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_walls_3_2.png",
+       "col": 3,
+       "row": 2,
+       "x": 1920,
+       "y": 1280,
+       "size": [
+        352,
+        416
+       ]
+      }
+     ],
+     "props": [
+      {
+       "file": "chunks/inside-main-floor_props_2_0.png",
+       "col": 2,
+       "row": 0,
+       "x": 1280,
+       "y": 0,
+       "size": [
+        640,
+        640
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_props_3_0.png",
+       "col": 3,
+       "row": 0,
+       "x": 1920,
+       "y": 0,
+       "size": [
+        352,
+        640
+       ]
+      }
+     ],
+     "foreground": [
+      {
+       "file": "chunks/inside-main-floor_foreground_0_2.png",
+       "col": 0,
+       "row": 2,
+       "x": 0,
+       "y": 1280,
+       "size": [
+        640,
+        416
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_foreground_1_2.png",
+       "col": 1,
+       "row": 2,
+       "x": 640,
+       "y": 1280,
+       "size": [
+        640,
+        416
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_foreground_2_2.png",
+       "col": 2,
+       "row": 2,
+       "x": 1280,
+       "y": 1280,
+       "size": [
+        640,
+        416
+       ]
+      },
+      {
+       "file": "chunks/inside-main-floor_foreground_3_2.png",
+       "col": 3,
+       "row": 2,
+       "x": 1920,
+       "y": 1280,
+       "size": [
+        352,
+        416
+       ]
+      }
+     ]
+    }
+   },
+   "note": "ONE wide scrolling room. Draw order: floor, walls, props, then wall-decal sprites and y-sorted sprites and characters sorted by sortRow, then foreground ABOVE the characters. floor: ground: lobby tile, blue mats, big red square with the school logo, thresholds, front-door mat, the seating decks and steps, the red gear-bag box base. Draw first, at depth 0. | walls: the north wall with its wall art, the side wall strips, the back-wall drywall. Nothing above the drywall. Draw above floor. | props: wall-hugging furniture that never moves: the creed boards, flag, mural frames, the gear shelf and crash mats. Under every character. | foreground: the front wall (curb, door posts, door header, open door leaves): the one layer drawn ABOVE characters, so a student walking in or out passes behind it."
+  },
+  "wing-west": {
+   "size": [
+    578,
+    455
+   ],
+   "layers": [
+    "wing-west"
+   ],
+   "files": {
+    "wing-west": "wing-west_wing-west.png"
+   },
+   "groundRect": {
+    "col0": -0.075,
+    "row0": 6.675,
+    "col1": 7.15,
+    "row1": 12.363,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 3.27,
+   "anchorPx": [
+    286.0,
+    262.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    3.5,
+    9.95
+   ],
+   "footprintRect": [
+    0.0,
+    7.0,
+    9.78,
+    10.12
+   ],
+   "place": "structure",
+   "sortRow": 9.95,
+   "roomPx": [
+    50,
+    702
+   ],
+   "interactive": false,
+   "note": "pro-shop alcove wall (the left wing). Hides the mat when a character is NORTH of it, is hidden by characters SOUTH of it."
+  },
+  "wing-east": {
+   "size": [
+    620,
+    455
+   ],
+   "layers": [
+    "wing-east"
+   ],
+   "files": {
+    "wing-east": "wing-east_wing-east.png"
+   },
+   "groundRect": {
+    "col0": 19.325,
+    "row0": 6.675,
+    "col1": 27.075,
+    "row1": 12.363,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 3.27,
+   "anchorPx": [
+    310.0,
+    262.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    23.2,
+    9.95
+   ],
+   "footprintRect": [
+    19.4,
+    27.0,
+    9.78,
+    10.12
+   ],
+   "place": "structure",
+   "sortRow": 9.95,
+   "roomPx": [
+    1602,
+    702
+   ],
+   "interactive": false,
+   "note": "east wing wall that carries the two cross doors and the handprint wall (their sprites go on top of it)."
+  },
+  "pro-counter": {
+   "size": [
+    288,
+    180
+   ],
+   "layers": [
+    "pro-counter"
+   ],
+   "files": {
+    "pro-counter": "pro-counter_pro-counter.png"
+   },
+   "groundRect": {
+    "col0": 1.8,
+    "row0": 9.713,
+    "col1": 5.4,
+    "row1": 11.963,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.24,
+   "anchorPx": [
+    144.0,
+    179.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    3.6,
+    11.95
+   ],
+   "footprintRect": [
+    1.9,
+    5.3,
+    11.05,
+    11.95
+   ],
+   "place": "prop",
+   "sortRow": 11.95,
+   "roomPx": [
+    200,
+    945
+   ],
+   "interactive": true,
+   "note": "pro shop counter in the left alcove (its back is the wing wall)."
+  },
+  "bag-black": {
+   "size": [
+    86,
+    204
+   ],
+   "layers": [
+    "bag-black"
+   ],
+   "files": {
+    "bag-black": "bag-black_bag-black.png"
+   },
+   "groundRect": {
+    "col0": 22.262,
+    "row0": 1.688,
+    "col1": 23.337,
+    "row1": 4.237,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.54,
+   "anchorPx": [
+    43.0,
+    203.4
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    22.8,
+    4.23
+   ],
+   "footprintRect": [
+    22.3,
+    23.3,
+    3.37,
+    4.23
+   ],
+   "place": "prop",
+   "sortRow": 4.23,
+   "roomPx": [
+    1837,
+    303
+   ],
+   "interactive": true,
+   "note": "heavy bag, black."
+  },
+  "bag-blue": {
+   "size": [
+    86,
+    204
+   ],
+   "layers": [
+    "bag-blue"
+   ],
+   "files": {
+    "bag-blue": "bag-blue_bag-blue.png"
+   },
+   "groundRect": {
+    "col0": 23.462,
+    "row0": 2.487,
+    "col1": 24.538,
+    "row1": 5.037,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.54,
+   "anchorPx": [
+    43.0,
+    203.4
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    24.0,
+    5.03
+   ],
+   "footprintRect": [
+    23.5,
+    24.5,
+    4.17,
+    5.03
+   ],
+   "place": "prop",
+   "sortRow": 5.03,
+   "roomPx": [
+    1933,
+    367
+   ],
+   "interactive": true,
+   "note": "heavy bag, blue."
+  },
+  "bag-red": {
+   "size": [
+    86,
+    203
+   ],
+   "layers": [
+    "bag-red"
+   ],
+   "files": {
+    "bag-red": "bag-red_bag-red.png"
+   },
+   "groundRect": {
+    "col0": 24.663,
+    "row0": 1.7,
+    "col1": 25.738,
+    "row1": 4.237,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.53,
+   "anchorPx": [
+    43.0,
+    202.4
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    25.2,
+    4.23
+   ],
+   "footprintRect": [
+    24.7,
+    25.7,
+    3.37,
+    4.23
+   ],
+   "place": "prop",
+   "sortRow": 4.23,
+   "roomPx": [
+    2029,
+    304
+   ],
+   "interactive": true,
+   "note": "heavy bag, branded red (DECIDE item, see README)."
+  },
+  "gear-box": {
+   "size": [
+    588,
+    185
+   ],
+   "layers": [
+    "gear-box"
+   ],
+   "files": {
+    "gear-box": "gear-box_gear-box.png"
+   },
+   "groundRect": {
+    "col0": 9.525,
+    "row0": 7.625,
+    "col1": 16.875,
+    "row1": 9.938,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.33,
+   "anchorPx": [
+    294.0,
+    186.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    13.2,
+    9.95
+   ],
+   "footprintRect": [
+    9.6,
+    16.8,
+    8.6,
+    9.95
+   ],
+   "place": "prop",
+   "sortRow": 9.95,
+   "roomPx": [
+    818,
+    778
+   ],
+   "interactive": true,
+   "note": "the red gear-bag box with a 2.6-tile gap at each end onto the mat. Openings face the lobby (south)."
+  },
+  "seats": {
+   "size": [
+    800,
+    386
+   ],
+   "layers": [
+    "seats"
+   ],
+   "files": {
+    "seats": "seats_seats.png"
+   },
+   "groundRect": {
+    "col0": 8.5,
+    "row0": 9.9,
+    "col1": 18.5,
+    "row1": 14.725,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 4.8,
+   "anchorPx": [
+    400.0,
+    384.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    13.5,
+    14.7
+   ],
+   "footprintRect": [
+    8.95,
+    18.05,
+    10.2,
+    14.7
+   ],
+   "place": "prop",
+   "sortRow": 14.7,
+   "roomPx": [
+    736,
+    960
+   ],
+   "interactive": true,
+   "note": "parent stadium seating, 3 tiers of 8 seats facing the mat, with the end steps. One sprite so the tiers never fight over depth."
+  },
+  "bench": {
+   "size": [
+    152,
+    61
+   ],
+   "layers": [
+    "bench"
+   ],
+   "files": {
+    "bench": "bench_bench.png"
+   },
+   "groundRect": {
+    "col0": 1.45,
+    "row0": 15.35,
+    "col1": 3.35,
+    "row1": 16.113,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 0.8,
+   "anchorPx": [
+    76.0,
+    64.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    2.4,
+    16.15
+   ],
+   "footprintRect": [
+    1.5,
+    3.3,
+    15.65,
+    16.15
+   ],
+   "place": "prop",
+   "sortRow": 16.15,
+   "roomPx": [
+    172,
+    1396
+   ],
+   "interactive": false,
+   "note": "waiting bench against the lobby's west side."
+  },
+  "plant": {
+   "size": [
+    61,
+    100
+   ],
+   "layers": [
+    "plant"
+   ],
+   "files": {
+    "plant": "plant_plant.png"
+   },
+   "groundRect": {
+    "col0": 10.238,
+    "row0": 16.512,
+    "col1": 11.0,
+    "row1": 17.762,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.24,
+   "anchorPx": [
+    29.0,
+    99.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    10.6,
+    17.75
+   ],
+   "footprintRect": [
+    10.35,
+    10.85,
+    17.25,
+    17.75
+   ],
+   "place": "prop",
+   "sortRow": 17.75,
+   "roomPx": [
+    875,
+    1489
+   ],
+   "interactive": false,
+   "note": "potted plant by the door."
+  },
+  "trash-can": {
+   "size": [
+    52,
+    98
+   ],
+   "layers": [
+    "trash-can"
+   ],
+   "files": {
+    "trash-can": "trash-can_trash-can.png"
+   },
+   "groundRect": {
+    "col0": 16.975,
+    "row0": 16.55,
+    "col1": 17.625,
+    "row1": 17.775,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.22,
+   "anchorPx": [
+    26.0,
+    97.6
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    17.3,
+    17.77
+   ],
+   "footprintRect": [
+    17.03,
+    17.57,
+    17.23,
+    17.77
+   ],
+   "place": "prop",
+   "sortRow": 17.77,
+   "roomPx": [
+    1414,
+    1492
+   ],
+   "interactive": false,
+   "note": "bin by the door."
+  },
+  "whiteboard": {
+   "size": [
+    128,
+    144
+   ],
+   "layers": [
+    "whiteboard"
+   ],
+   "files": {
+    "whiteboard": "whiteboard_whiteboard.png"
+   },
+   "groundRect": {
+    "col0": 20.5,
+    "row0": 4.612,
+    "col1": 22.1,
+    "row1": 6.412,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 1.79,
+   "anchorPx": [
+    64.0,
+    143.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    21.3,
+    6.4
+   ],
+   "footprintRect": [
+    20.6,
+    22.0,
+    6.2,
+    6.4
+   ],
+   "place": "prop",
+   "sortRow": 6.4,
+   "roomPx": [
+    1696,
+    537
+   ],
+   "interactive": false,
+   "note": "stand whiteboard (blank, no writing)."
+  },
+  "target-wall": {
+   "size": [
+    510,
+    209
+   ],
+   "layers": [
+    "target-wall"
+   ],
+   "files": {
+    "target-wall": "target-wall_target-wall.png"
+   },
+   "groundRect": {
+    "col0": 0.312,
+    "row0": -1.688,
+    "col1": 6.688,
+    "row1": 0.925,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.69,
+   "anchorPx": [
+    255.0,
+    215.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    3.5,
+    1.0
+   ],
+   "footprintRect": [
+    0.4,
+    6.6,
+    0.8,
+    1.0
+   ],
+   "place": "wall-decal",
+   "sortRow": 1.01,
+   "roomPx": [
+    81,
+    33
+   ],
+   "interactive": true,
+   "note": "yellow target wall on the north wall (logo art + styles mural frame). Wall decal: draw it above its wall and below every character."
+  },
+  "back-doors": {
+   "size": [
+    200,
+    215
+   ],
+   "layers": [
+    "back-doors"
+   ],
+   "files": {
+    "back-doors": "back-doors_back-doors.png"
+   },
+   "groundRect": {
+    "col0": 13.15,
+    "row0": -1.663,
+    "col1": 15.65,
+    "row1": 1.025,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.66,
+   "anchorPx": [
+    100.0,
+    213.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    14.4,
+    1.0
+   ],
+   "footprintRect": [
+    13.3,
+    15.5,
+    0.8,
+    1.0
+   ],
+   "place": "wall-decal",
+   "sortRow": 1.01,
+   "roomPx": [
+    1108,
+    35
+   ],
+   "interactive": true,
+   "note": "double back doors in the north wall (to the back room). Wall decal: draw it above its wall and below every character."
+  },
+  "cross-door-a": {
+   "size": [
+    138,
+    176
+   ],
+   "layers": [
+    "cross-door-a"
+   ],
+   "files": {
+    "cross-door-a": "cross-door-a_cross-door-a.png"
+   },
+   "groundRect": {
+    "col0": 19.738,
+    "row0": 7.85,
+    "col1": 21.462,
+    "row1": 10.05,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.1,
+   "anchorPx": [
+    69.0,
+    168.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    20.6,
+    9.95
+   ],
+   "footprintRect": [
+    19.9,
+    21.3,
+    9.95,
+    10.1
+   ],
+   "place": "wall-decal",
+   "sortRow": 9.96,
+   "roomPx": [
+    1635,
+    796
+   ],
+   "interactive": true,
+   "note": "cross door A on the east wing (its shut face is on the lobby side). Wall decal: draw it above its wall and below every character."
+  },
+  "cross-door-b": {
+   "size": [
+    138,
+    176
+   ],
+   "layers": [
+    "cross-door-b"
+   ],
+   "files": {
+    "cross-door-b": "cross-door-b_cross-door-b.png"
+   },
+   "groundRect": {
+    "col0": 24.738,
+    "row0": 7.85,
+    "col1": 26.462,
+    "row1": 10.05,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.1,
+   "anchorPx": [
+    69.0,
+    168.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    25.6,
+    9.95
+   ],
+   "footprintRect": [
+    24.9,
+    26.3,
+    9.95,
+    10.1
+   ],
+   "place": "wall-decal",
+   "sortRow": 9.96,
+   "roomPx": [
+    2035,
+    796
+   ],
+   "interactive": true,
+   "note": "cross door B on the east wing. Wall decal: draw it above its wall and below every character."
+  },
+  "handprint-wall": {
+   "size": [
+    239,
+    188
+   ],
+   "layers": [
+    "handprint-wall"
+   ],
+   "files": {
+    "handprint-wall": "handprint-wall_handprint-wall.png"
+   },
+   "groundRect": {
+    "col0": 21.675,
+    "row0": 7.5,
+    "col1": 24.663,
+    "row1": 9.85,
+    "note": "the image's pixel box in room tiles (rows shown without lifting heights)"
+   },
+   "topExtraTiles": 2.45,
+   "anchorPx": [
+    114.0,
+    196.0
+   ],
+   "anchorNote": "the point of the image that sits on the anchor tile position (bottom-centre of the footprint on the floor)",
+   "anchorTile": [
+    23.1,
+    9.95
+   ],
+   "footprintRect": [
+    21.6,
+    24.6,
+    9.95,
+    10.1
+   ],
+   "place": "wall-decal",
+   "sortRow": 9.96,
+   "roomPx": [
+    1790,
+    768
+   ],
+   "interactive": true,
+   "note": "handprint wall between the two cross doors: plain handprints, NO names. Wall decal: draw it above its wall and below every character."
+  }
+ }
+}

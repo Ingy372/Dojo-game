@@ -11,7 +11,7 @@ from toon_kit import *
 from mathutils import Vector, Euler
 
 ap = argparse.ArgumentParser(); ap.add_argument("--scene", required=True); ap.add_argument("--samples", type=int, default=24)
-ap.add_argument("--ppt", type=int, default=80); ap.add_argument("--outdir", default=os.path.join(HERE, ".."))
+ap.add_argument("--ppt", type=int, default=80); ap.add_argument("--game", default=None, help="render the game-art groups (one full-frame PNG per group) into this folder instead of the sample"); ap.add_argument("--ow-mult", type=float, default=1.0, help="outline width multiplier (the town-slot building keeps the town square line weight)"); ap.add_argument("--slot", action="store_true", help="outside: only the building and what sits against it (town-square dojo slot)"); ap.add_argument("--outdir", default=os.path.join(HERE, ".."))
 A = ap.parse_args(sys.argv[sys.argv.index("--") + 1:])
 EL = 35.0; K = 1 / math.sin(math.radians(EL)); CZ = math.cos(math.radians(EL))
 
@@ -22,13 +22,18 @@ def mat(h):
     if h not in MATS: MATS[h] = toon_material("M" + h, h)
     return MATS[h]
 LAYER = [None]          # objects made while LAYER[0] is set belong to that overlay layer
+GRP = [None]            # game-art group: grp("name") tags every object made since the last call with the PREVIOUS group name, then switches. Tags only, the sample render is unchanged.
+def grp(name):
+    for o in bpy.data.objects:
+        if o.type == "MESH" and "grp" not in o: o["grp"] = GRP[0] or "floor"
+    GRP[0] = name
 def add(name, bm, hexc, outline=True, ow=1.6):
     me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free(); me.materials.append(mat(hexc))
     ob = bpy.data.objects.new(name, me); coll.objects.link(ob)
     for p in me.polygons: p.use_smooth = False
     ob["layer"] = LAYER[0] or ""
     if outline:
-        h = add_hull(ob, coll, OUT_M, OUTLINE_W * ow); h["layer"] = LAYER[0] or ""
+        h = add_hull(ob, coll, OUT_M, OUTLINE_W * ow * A.ow_mult); h["layer"] = LAYER[0] or ""
     return ob
 def G(c, r, z=0.0): return (c, -r * K, z)
 def D(rows): return rows * K
@@ -73,8 +78,8 @@ def gable_prism(name, x0, x1, rf, rb, ze, zr, hexc):
     BM.ops.recalc_face_normals(bm, faces=bm.faces[:])
     return add(name, bm, hexc)
 
-def finish_and_render(frame_cols, frame_rows, cx, rc, names_out, layers=()):
-    """camera centred on column cx and ground row rc (at z=0); render the base picture and then each overlay layer"""
+def _camera(frame_cols, frame_rows, cx, rc):
+    """render settings + the orthographic camera, centred on column cx and ground row rc (at z=0)"""
     r = sc.render; r.engine = "CYCLES"; sc.cycles.device = "CPU"; sc.cycles.samples = A.samples; sc.cycles.use_denoising = False
     r.film_transparent = True; sc.view_settings.view_transform = "Standard"; sc.view_settings.look = "None"
     r.resolution_x, r.resolution_y = round(frame_cols * A.ppt), round(frame_rows * A.ppt); r.resolution_percentage = 100
@@ -83,6 +88,32 @@ def finish_and_render(frame_cols, frame_rows, cx, rc, names_out, layers=()):
     cam.rotation_euler = (math.radians(90 - EL), 0, 0)
     d = Euler(cam.rotation_euler).to_matrix() @ Vector((0, 0, -1))
     cam.location = Vector((cx, -rc * K, 0)) - d * 60
+    return r
+def render_game(frame_cols, frame_rows, cx, rc, lit_names=()):
+    """game-art mode: one full-frame transparent PNG per group (grp tag), each rendered ALONE (no holdouts, so every sprite is complete
+    behind whatever is in front of it); then, for the groups that own lit parts, a white-on-alpha mask of just those parts
+    (everything else is a holdout, so a lit pane that is half hidden is masked the same way). Overlay-layer objects get their own PNG."""
+    r = _camera(frame_cols, frame_rows, cx, rc); os.makedirs(A.game, exist_ok=True)
+    meshes = [o for o in bpy.data.objects if o.type == "MESH"]
+    grpname = lambda o: ("overlay-" + o["layer"]) if o.get("layer") else o.get("grp", "floor")
+    names = sorted({grpname(o) for o in meshes}); base = lambda o: o.name[:-8] if o.name.endswith("_outline") else o.name
+    islit = lambda o: base(o).split(".")[0] in lit_names and not o.name.endswith("_outline")
+    for o in meshes: o.is_holdout = False
+    GROUND = ("floor", "ground")                    # the ground group is a HOLDOUT for every other group: whatever sinks into the ground (wall feet, mat platform edge) is cut off exactly as in the one-piece picture
+    for g in names:
+        for o in meshes:
+            if g not in GROUND and grpname(o) in GROUND: o.hide_render = False; o.is_holdout = True
+            else: o.hide_render = grpname(o) != g; o.is_holdout = False
+        r.filepath = os.path.join(A.game, g + ".png"); bpy.ops.render.render(write_still=True)
+        for o in meshes: o.is_holdout = False
+        if any(islit(o) for o in meshes if grpname(o) == g):
+            for o in meshes: o.hide_render = False; o.is_holdout = not (grpname(o) == g and islit(o))
+            r.filepath = os.path.join(A.game, g + ".lit.png"); bpy.ops.render.render(write_still=True)
+            for o in meshes: o.is_holdout = False
+    print("game groups:", names)
+def finish_and_render(frame_cols, frame_rows, cx, rc, names_out, layers=()):
+    """camera centred on column cx and ground row rc (at z=0); render the base picture and then each overlay layer"""
+    r = _camera(frame_cols, frame_rows, cx, rc)
     bpy.context.preferences.filepaths.save_version = 0
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(HERE, f"action-zone-{A.scene}.blend"), compress=True)
     def show(pred):
@@ -285,6 +316,7 @@ def scene_inside():
     WALL, CAP, SLAB, TILE, PRO = "#efe9d6", "#d8d2c0", "#8d8678", "#cdb89a", "#9ec3ee"
     TXD = os.path.join(HERE, "textures"); LOGO = os.path.join(TXD, "logo-mark.png"); LOGO_AR = 929 / 1000
     Wd_, Hh, RN, RW, RF = LM.W, LM.H, LM.R_N, LM.R_MAT_S, LM.R_FRONT; mid = Wd_ / 2
+    grp("floor")
     # ---------- slab, lobby tile floor, mat platform (blue) ----------
     B(mid, (RN + RF) / 2, -0.15, Wd_ + 0.5, RF - RN + 0.5, 0.3, SLAB, True, name="floorslab")
     B(mid, (RW + RF) / 2, 0.015, Wd_, RF - RW, 0.03, TILE, False, name="lobbyTile")
@@ -299,21 +331,25 @@ def scene_inside():
     for r in range(int(r0) + 1, int(r1), 2): fpoly(rect((x0, r), (x1, r), 0.04), 0.145, "#a81f1b", "seam")
     lw = LM.LOGO_W; imgplane(LOGO, "floorLogo", LM.LOGO_C[0], lw, lw * LOGO_AR, rc=LM.LOGO_C[1], zf=0.155)
     # ---------- walls: north wall (the mat room's back), outer side walls, the two entry wings, low front curb (nothing above the drywall) ----------
+    grp("walls")
     B(mid, RN - 0.17, Hh / 2, Wd_ + 0.3, 0.34, Hh, WALL, True, name="northwall"); B(mid, RN - 0.17, Hh + 0.04, Wd_ + 0.34, 0.38, 0.1, CAP, True, name="northcap")
-    B(mid, RN + 0.03, 0.06, Wd_, 0.04, 0.12, "#6d6a63", False, name="baseboard")
+    grp("floor"); B(mid, RN + 0.03, 0.06, Wd_, 0.04, 0.12, "#6d6a63", False, name="baseboard")   # sunk into the mat platform (hidden), so it goes with the floor
+    grp("walls")
     for x in (-0.12, Wd_ + 0.12):
         B(x, (RN + RF) / 2, Hh / 2, 0.24, RF - RN, Hh, WALL, True, name="sidewall"); B(x, (RN + RF) / 2, Hh + 0.04, 0.3, RF - RN + 0.04, 0.1, CAP, True, name="sidecap")
     for (a, b, col, nm) in ((LM.WEST_WING[0], LM.WEST_WING[1], PRO, "westWing"), (LM.EAST_WING[0], LM.EAST_WING[1], "#f6f3ec", "eastWing")):
-        cx = (a + b) / 2; B(cx, RW - 0.17, Hh / 2, b - a, 0.34, Hh, col, True, name=nm); B(cx, RW - 0.17, Hh + 0.04, b - a + 0.04, 0.38, 0.1, CAP, True, name=nm + "Cap")
+        grp("wing-west" if nm == "westWing" else "wing-east"); cx = (a + b) / 2; B(cx, RW - 0.17, Hh / 2, b - a, 0.34, Hh, col, True, name=nm); B(cx, RW - 0.17, Hh + 0.04, b - a + 0.04, 0.38, 0.1, CAP, True, name=nm + "Cap")
         B(cx, RW + 0.03, 0.06, b - a, 0.04, 0.12, "#6d6a63", False, name="baseboard")
-    B(LM.WEST_WING[1] - 0.1, RW + 1.2, Hh / 2, 0.2, 2.4, Hh, PRO, True, name="westStub"); B(LM.EAST_WING[0] + 0.1, RW + 1.2, Hh / 2, 0.2, 2.4, Hh, "#f6f3ec", True, name="eastStub")
+    grp("wing-west"); B(LM.WEST_WING[1] - 0.1, RW + 1.2, Hh / 2, 0.2, 2.4, Hh, PRO, True, name="westStub"); grp("wing-east"); B(LM.EAST_WING[0] + 0.1, RW + 1.2, Hh / 2, 0.2, 2.4, Hh, "#f6f3ec", True, name="eastStub")
+    grp("foreground")
     for (a, b) in ((0, LM.DOOR[0]), (LM.DOOR[1], Wd_)): B((a + b) / 2, RF, 0.25, b - a, 0.34, 0.5, WALL, True, name="frontCurb")
     for x in LM.DOOR: B(x, RF, 1.2, 0.14, 0.34, 2.4, "#6b4a3a", True, name="doorPost")
     B(sum(LM.DOOR) / 2, RF, 2.45, LM.DOOR[1] - LM.DOOR[0] + 0.14, 0.34, 0.1, "#6b4a3a", True, name="doorHead")
     for x in (LM.DOOR[0] + 0.1, LM.DOOR[1] - 0.1): B(x, RF - 0.6, 1.15, 0.08, 1.1, 2.3, "#6b4a3a", True, name="doorLeaf"); B(x, RF - 0.6, 1.5, 0.1, 0.5, 0.7, "#8ec6ff", False, name="doorGlass")
-    B(sum(LM.DOOR) / 2, RF - 1.3, 0.04, 2.2, 0.9, 0.04, "#4a3226", True, name="welcomeMat"); B(sum(LM.DOOR) / 2, RF - 1.3, 0.065, 2.0, 0.7, 0.02, "#c9a86a", False, name="welcomeMatInner")
+    grp("floor"); B(sum(LM.DOOR) / 2, RF - 1.3, 0.04, 2.2, 0.9, 0.04, "#4a3226", True, name="welcomeMat"); B(sum(LM.DOOR) / 2, RF - 1.3, 0.065, 2.0, 0.7, 0.02, "#c9a86a", False, name="welcomeMatInner")
     # ======================= NORTH WALL (mat room): left to right = target wall, styles + logo mural, back doors, flag, Class Creed, belt creed =======================
     WF = RN
+    grp("target-wall")
     a, b = LM.TARGET; cx = (a + b) / 2
     Wd(cx, 1.7, b - a, 2.95, "#c8924f", 0.025, 0.04, True, name="targetWood")
     for k in range(int((b - a) / 0.36)): Wd(a + 0.2 + k * 0.36, 1.7, 0.02, 2.9, "#a9763a" if k % 2 else "#b6823f", 0.04, 0.01, False, name="plank")
@@ -327,6 +363,7 @@ def scene_inside():
         for q in (rect((-0.16, 0.3), (-0.02, 0.27), 0.025), rect((0.16, 0.3), (0.02, 0.27), 0.025), rect((0, 0.45), (0, 0.06), 0.02)): wpoly(P(q), "#d9a820", 3, "manDetail")
     for row, z0 in enumerate((1.9, 0.62)):
         for k in range(6): yellow_man(a + 0.55 + k * 1.0 + 0.08 * row, z0)
+    grp("walls")
     B(7.3, WF + 0.3, 3.25, 1.5, 0.18, 0.14, "#7a4a30", True, name="ropeRail")
     for x in (6.62, 7.98): B(x, WF + 0.12, 3.25, 0.1, 0.22, 0.2, "#5b4234", False, name="ropeBracket")
     for k in range(4):
@@ -340,42 +377,51 @@ def scene_inside():
     for poly_ in figure("kick", a + 0.95, 1.88, 0.85): wpoly(poly_, "#14121c", 4, "silKick")
     for poly_ in figure("block", b - 0.95, 1.88, 0.85): wpoly(poly_, "#14121c", 4, "silStance")
     for poly_ in figure("split", cx, 0.46, 0.5): wpoly(poly_, "#14121c", 4, "silSplit")
+    grp("back-doors")
     a, b = LM.BACK_DOOR; cx = (a + b) / 2
     Wd(cx, 1.25, b - a + 0.2, 2.55, "#4a3226", 0.03, 0.05, True, name="backDoorFrame")
     for k in (-1, 1):
         x = cx + k * 0.52; Wd(x, 1.2, 1.0, 2.35, "#6b4a3a", 0.07, 0.03, True, name="backDoorLeaf"); Wd(x, 1.7, 0.6, 0.85, "#8ec6ff", 0.1, 0.02, False, name="backDoorGlass"); Wd(x - k * 0.38, 1.0, 0.05, 0.4, "#c8ccd4", 0.1, 0.02, False, name="doorBar")
     for k, x in enumerate((cx - 0.75, cx, cx + 0.75)):
         Wd(x, 3.0, 0.5, 0.38, "#5b4234", 0.035, 0.05, True, name="doorFrameArt"); Wd(x, 3.0, 0.4, 0.28, ("#8ec6ff", "#ffd36b", "#7fd1b9")[k], 0.075, 0.02, False, name="doorArt")
+    grp("walls")
     a, b = LM.FLAG; cx = (a + b) / 2
     imgplane(os.path.join(TXD, "us-flag.png"), "flag", cx, 1.9, 1.0, row=WF + 0.09, zc=2.55)
     Wd(cx, 3.1, 2.0, 0.05, "#c8ccd4", 0.07, 0.02, False, name="flagBar")
+    grp("props")
     B(cx, WF + 0.25, 0.65, 1.6, 0.5, 1.3, "#f4f1e8", True, name="gearShelf")
     for k in range(2):
         for j in range(3): B(cx - 0.5 + j * 0.5, WF + 0.52, 0.3 + k * 0.6, 0.4, 0.02, 0.4, "#3b3f4c", False, name="shelfHole")
     for k, c in enumerate(("#2f6fd6", "#f5c542", "#d92b25")): E(cx - 0.5 + k * 0.5, WF + 0.4, 0.3, 0.17, 0.12, 0.14, c, True, 8, 6, name="shelfGlove")
+    grp("walls")
     a, b = LM.CREED; cx = (a + b) / 2
     Wd(cx, 1.75, 2.68, 2.84, "#14121c", 0.04, 0.05, True, name="creedFrame"); imgplane(os.path.join(TXD, "class-creed.png"), "classCreed", cx, 2.6, 2.6 * 1060 / 1000, row=WF + 0.1, zc=1.75)
     a, b = LM.BELTS; cx = (a + b) / 2
     Wd(cx, 1.74, 2.58, 3.1, "#14121c", 0.04, 0.05, True, name="beltFrame"); imgplane(os.path.join(TXD, "belt-creed.png"), "beltCreed", cx, 2.5, 2.5 * 1818 / 1500, row=WF + 0.1, zc=1.74)
     # crash-mat stack + punching bags (right) + a whiteboard on a stand
+    grp("props")
     a, b, ra, rb = LM.CRASH; cxm, rcm = (a + b) / 2, (ra + rb) / 2
     for k, c in enumerate((BLUE, "#6f9be0", BLUE)): B(cxm + 0.04 * (k % 2), rcm, 0.18 + 0.3 * k, b - a, rb - ra, 0.28, c, True, bevel=0.03, name=f"crashMat{k}")
     B(cxm, rb - 0.02, 0.5, 0.4, 0.03, 0.08, "#f4f1e8", False, name="crashHandle")
     for (x, r, c) in LM.BAGS:
-        col = {"black": "#3a3a45", "blue": "#2f6fd6", "red": "#d92b25"}[c]
+        col = {"black": "#3a3a45", "blue": "#2f6fd6", "red": "#d92b25"}[c]; grp("bag-" + c)
         T(x, r, 0.12, 0.7, 0.5, 0.45, "#25252e", True, 18, name="bagBase", round_ground=True); T(x, r, 0.7, 2.1, 0.29, 0.29, col, True, 16, name="bag", round_ground=True)
         E(x, r, 2.1, 0.29, 0.29, 0.2, col, True, 16, 8, name="bagTop"); B(x, r + 0.01, 1.3, 0.5, 0.45, 0.1, "#f4f1e8", False, name="bagBand")
+    grp("whiteboard")
     B(21.3, 6.3, 1.45, 1.4, 0.08, 0.9, "#f4f1e8", True, name="whiteboard"); B(21.3, 6.3, 1.45, 1.5, 0.06, 1.0, "#7a4a30", True, name="whiteboardFrame")
     for dx in (-0.6, 0.6): T(21.3 + dx, 6.45, 0.12, 1.0, 0.04, 0.04, "#3a3a45", False, 6, name="wbLeg")
     # ======================= RED GEAR-BAG BOX (cubby) + the GAP =======================
+    grp("gear-box")
     x0, x1, r0, r1 = LM.CUBBY; cx, rc = (x0 + x1) / 2, (r0 + r1) / 2
     B(cx, rc, 0.62, x1 - x0, r1 - r0, 1.0, RED, True, bevel=0.02, name="cubby"); B(cx, r1 - 0.02, 0.2, x1 - x0 + 0.06, 0.08, 0.16, BLUE, True, name="cubbyBase"); B(cx, rc, 1.125, x1 - x0 - 0.2, r1 - r0 - 0.2, 0.02, "#b3201c", False, name="cubbyLid")
     BAGC = ("#2f6fd6", "#f5c542", "#3f9c4a", "#25252e", "#ee7fb0", "#f08a24", "#8a5bd0")
     for k in range(5):
         x = x0 + 1.0 + k * 1.3; B(x, r1 + 0.01, 0.78, 0.95, 0.02, 0.62, "#3b1a1a", False, name="cubbyOpening"); E(x, r1 + 0.04, 0.6, 0.33, 0.2, 0.2, BAGC[k], True, 10, 6, name="gearBag")
     B(11.3, rc, 1.2, 0.55, 0.4, 0.08, "#2f6fd6", True, name="book"); B(11.35, rc, 1.28, 0.5, 0.35, 0.07, "#f4f1e8", True, name="book"); B(15.0, rc, 1.17, 0.7, 0.45, 0.05, "#f4f1e8", False, name="papers"); E(16.2, rc, 1.3, 0.4, 0.3, 0.22, "#f5c542", True, 10, 6, name="topBag")
+    grp("floor")
     for g in (LM.GAP, LM.GAP_R): B(sum(g) / 2, RW + 0.14, 0.05, g[1] - g[0], 0.3, 0.1, "#c9a86a", True, name="gapThreshold")
     # ======================= PARENT SEATING (the approved stadium seats, now facing the mat) =======================
+    grp("seats")
     X0, X1 = LM.SEATS; NS = 8; pitch = (X1 - X0 - 0.6) / NS; smid = (X0 + X1) / 2
     for ti, (rf, dp, zt) in enumerate(LM.TIERS):
         B(smid, rf - dp / 2, zt / 2, X1 - X0, dp, zt, "#4a5470", True, name=f"deck{ti}"); B(smid, rf, zt - 0.1, X1 - X0, 0.03, 0.05, "#f4f1e8", False, name=f"riserStripe{ti}")
@@ -392,6 +438,7 @@ def scene_inside():
     sxk = lambda k: X0 + 0.3 + pitch * (k + 0.5); rsw = lambda ti: LM.TIERS[ti][0] - LM.TIERS[ti][1] / 2 - 0.1
     B(sxk(5), rsw(1), LM.TIERS[1][2] + 0.45, 0.42, 0.32, 0.24, "#f5c542", True, bevel=0.04, name="seatBag"); E(sxk(2), rsw(2) + 0.2, LM.TIERS[2][2] + 0.95, 0.3, 0.14, 0.14, "#7fd1b9", True, 10, 6, name="jacket")
     # ======================= WEST WING: PRO SHOP (on your left as you enter) =======================
+    grp("wing-west")
     WF = RW; a, b = LM.WEST_WING
     for k, (x, z, rd) in enumerate(((0.9, 0.9, 0.5), (2.2, 2.7, 0.35), (3.5, 3.1, 0.45), (5.0, 2.4, 0.3), (6.3, 1.2, 0.5), (1.6, 3.0, 0.3), (4.4, 0.8, 0.4), (5.9, 3.0, 0.35), (0.5, 2.6, 0.3), (6.7, 2.2, 0.28))):
         wpoly(circ(x, z, rd, 18, 1.5, 0.8), "#cfe1f7", 0, "cloud")
@@ -408,17 +455,20 @@ def scene_inside():
     Wd(5.9, 2.75, 1.6, 0.05, "#25252e", 0.07, 0.02, False, name="hangRail")
     for k, x in enumerate((5.4, 5.9, 6.4)): wpoly([(x - 0.12, 2.7), (x + 0.12, 2.7), (x + 0.32, 2.55), (x + 0.24, 2.4), (x + 0.15, 2.45), (x + 0.15, 1.9), (x - 0.15, 1.9), (x - 0.15, 2.45), (x - 0.24, 2.4), (x - 0.32, 2.55)], "#25252e" if k != 1 else "#2f6fd6", 2, "tee")
     text("proShopSign", "PRO SHOP", 4.9, WF + 0.1, 3.05, 0.4, 2.3, "#14121c", 0.05, False)
+    grp("pro-counter")
     B(3.6, 11.5, 0.45, 3.4, 0.9, 0.9, "#f4f1e8", True, name="proCounter"); B(3.6, 11.5, 1.1, 3.4, 0.9, 0.5, "#b8dcee", True, name="glassCase"); B(3.6, 11.5, 1.37, 3.5, 0.95, 0.06, "#f4f1e8", True, name="caseTop")
     for k, c in enumerate(list(BELT.values())[:7]): B(2.3 + k * 0.38, 11.97, 1.05, 0.3, 0.03, 0.22, c, False, name="beltInCase")
     for x, c in ((2.3, "#d92b25"), (2.7, "#d92b25"), (3.6, "#2f6fd6"), (4.3, "#d92b25"), (4.6, "#d92b25")): E(x, 11.5, 1.55, 0.17, 0.14, 0.14, c, True, 8, 6, name="proGear")
     B(5.0, 11.3, 1.55, 0.45, 0.35, 0.2, "#3a3a45", True, name="register")
     # ======================= EAST WING: TWO CROSS DOORS with the HANDPRINT WALL between =======================
+    grp("wing-east")
     WF = RW
     for (a, b), isB in ((LM.DOOR_A, False), (LM.DOOR_B, True)):
-        c = (a + b) / 2; Wd(c, 1.25, 1.62, 2.5, "#2f6fd6", 0.03, 0.04, True, name="doorFrameBlue"); Wd(c, 1.2, 1.4, 2.4, "#f4f1e8", 0.07, 0.03, True, name="doorLeaf")
+        grp("cross-door-b" if isB else "cross-door-a"); c = (a + b) / 2; Wd(c, 1.25, 1.62, 2.5, "#2f6fd6", 0.03, 0.04, True, name="doorFrameBlue"); Wd(c, 1.2, 1.4, 2.4, "#f4f1e8", 0.07, 0.03, True, name="doorLeaf")
         for dx in (-0.3, 0.3): Wd(c + dx, 1.8, 0.5, 0.75, "#e6e2d8", 0.1, 0.01, False, name="doorPanel"); Wd(c + dx, 0.55, 0.5, 0.6, "#e6e2d8", 0.1, 0.01, False, name="doorPanel")
         Wd(c, 1.55, 0.17, 1.3, RED, 0.11, 0.02, False, name="crossV"); Wd(c, 1.85, 0.8, 0.17, RED, 0.11, 0.02, False, name="crossH"); Wd(c + 0.55, 1.1, 0.09, 0.09, "#c8ccd4", 0.11, 0.03, False, name="knob")
         if isB: Wd(c - 0.5, 1.25, 0.26, 0.34, "#2f6fd6", 0.11, 0.02, False, name="doorPlate")
+    grp("handprint-wall")
     a, b = LM.PRINTS; pcx = (a + b) / 2
     wpoly(circ(pcx, 2.6, 0.44, 24, 0.82, 1.0), "#7a3f22", 1, "plaque"); wpoly(circ(pcx, 2.6, 0.36, 24, 0.82, 1.0), "#9a5a30", 2, "plaqueIn"); imgplane(LOGO, "plaqueLogo", pcx, 0.5, 0.5 * LOGO_AR, row=WF + 0.11, zc=2.62)
     for p in (rect((pcx, 2.14), (pcx - 0.22, 1.7), 0.1), rect((pcx, 2.14), (pcx + 0.22, 1.7), 0.1), rect((pcx - 0.55, 2.14), (pcx + 0.55, 2.14), 0.09)): wpoly(p, "#25252e", 3, "blackBelt")
@@ -432,12 +482,17 @@ def scene_inside():
             for poly_ in hand(x, z, 1.1, ((n * 37) % 40) - 20): ppoly(poly_, "#d92b25" if n % 2 else "#2f6fd6", 1)
     T(b - 0.2, WF + 0.16, 0.45, 1.3, 0.1, 0.1, "#d92b25", True, 10, name="extinguisher"); T(b - 0.2, WF + 0.16, 1.3, 1.4, 0.04, 0.04, "#25252e", False, 6, name="extHead")
     # ======================= LOBBY LITTLE THINGS =======================
+    grp("bench")
     B(2.4, 15.9, 0.25, 1.8, 0.5, 0.1, "#9aa0b0", True, name="bench")
     for x in (1.65, 3.15): B(x, 15.9, 0.12, 0.12, 0.4, 0.24, "#5b5f6e", False, name="benchLeg")
+    grp("trash-can")
     T(17.3, 17.5, 0, 0.8, 0.27, 0.24, "#7a7f8c", True, 12, name="trashCan", round_ground=True)
+    grp("plant")
     T(10.6, 17.5, 0, 0.45, 0.25, 0.2, "#a05a38", True, 12, name="plantPot", round_ground=True)
     for k in range(5): E(10.6 + 0.12 * math.cos(k * 1.3), 17.5, 0.75 + 0.07 * (k % 2), 0.2, 0.12, 0.3, "#5f9e55", True, 8, 4, rot=(0, 15 * (k - 2), 0), name="leaf")
-    finish_and_render(28.4, 21.2, 13.5, 8.5, "inside-main-floor@2x.png")
+    grp(None)
+    if A.game: render_game(28.4, 21.2, 13.5, 8.5)
+    else: finish_and_render(28.4, 21.2, 13.5, 8.5, "inside-main-floor@2x.png")
 
 
 def scene_seating():
