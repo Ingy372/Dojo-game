@@ -15,9 +15,17 @@ Samples only, in the Blender toon top-down style of the approved town square (PR
 
 ## Separate swappable layers
 Rendered with the same camera, so they drop straight onto the base picture. The base picture has a blank banner and a blank plate where they go.
-- `overlays/outside-phone-layer@2x.png` (+ 1x): the phone number on the left banner.
-- `overlays/outside-address-layer@2x.png` (+ 1x): the house number on the plate by the door.
-They are objects tagged `layer=phone` and `layer=address` in the .blend and in `build_action_zone_dojo.py` (search `LAYER[0] = "phone"`). To drop them: delete those two lines and the two overlay PNGs.
+- `overlays/outside-phone-layer@2x.png` (+ 1x): the phone number slot on the left banner.
+- `overlays/outside-address-layer@2x.png` (+ 1x): the house number slot on the plate by the door.
+They are objects tagged `layer=phone` and `layer=address` in the .blend and in `build_action_zone_dojo.py`.
+
+**The committed layers are blank placeholders** (a faint grey bar and a faint brown bar). The real phone number and house number were **removed from the branch tip** in a follow-up commit. They **remain in the history of the earlier commit `af9fd2a`** (the PR's first commit): its overlay PNGs, .blend files and script hold them. Jay decides whether to scrub that history (it needs a history rewrite and a force-push, which has not been done).
+
+To render the real values locally, make `source/local_overlay_values.json` (git-ignored, never commit it):
+```
+{"phone": "...", "house_number": "..."}
+```
+and run `source/render_all.sh`. Leave the file out, or the values empty, to get the blank placeholders.
 
 ## Rules followed
 - No handprint names at all (Jay's decision): plain handprints only, no names layer.

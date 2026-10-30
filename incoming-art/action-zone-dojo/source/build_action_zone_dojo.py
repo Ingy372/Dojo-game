@@ -167,8 +167,20 @@ def scene_outside():
     for x in (X0 + 0.08, X1 - 0.08): B(x, RF + 0.06, ZE / 2, 0.07, 0.07, ZE - 0.1, "#6b5545", False, name="downspout")           # downspouts
     B(11.9, 6.5, 0.28, 0.4, 0.4, 0.56, "#4f6f8a", True, name="bin"); B(11.9, 6.5, 0.6, 0.46, 0.46, 0.06, "#3b4f63", True, name="binLid")   # a small bin
     # ---------------- overlay layers: PHONE and HOUSE NUMBER (own objects, own PNGs)
-    LAYER[0] = "phone";   text("phoneNumber", "910-429-2467", 4.95, RF + 0.1, 2.05, 0.1, 1.2, "#25252e", 0.01, False, font=None)
-    LAYER[0] = "address"; text("houseNumber", "6105", CX + 0.78, RF + 0.07, 1.78, 0.11, 0.34, "#3b2417", 0.01, False)
+    # Real values come from a local, uncommitted file (source/local_overlay_values.json, git-ignored):
+    #   {"phone": "...", "house_number": "..."}   If missing or empty, the layers hold blank placeholder bars.
+    _vals = {}
+    _lp = os.path.join(HERE, "local_overlay_values.json")
+    if os.path.exists(_lp):
+        import json as _json
+        _vals = _json.load(open(_lp))
+    _phone = str(_vals.get("phone", "")).strip(); _house = str(_vals.get("house_number", "")).strip()
+    LAYER[0] = "phone"
+    if _phone: text("phoneNumber", _phone, 4.95, RF + 0.1, 2.05, 0.1, 1.2, "#25252e", 0.01, False, font=None)
+    else: B(4.95, RF + 0.1, 2.05, 1.0, 0.02, 0.1, "#9a9aa8", False, name="phonePlaceholder")
+    LAYER[0] = "address"
+    if _house: text("houseNumber", _house, CX + 0.78, RF + 0.07, 1.78, 0.11, 0.34, "#3b2417", 0.01, False)
+    else: B(CX + 0.78, RF + 0.07, 1.78, 0.26, 0.02, 0.07, "#7a5a40", False, name="housePlaceholder")
     LAYER[0] = None
     B(CX + 0.78, RF + 0.05, 1.78, 0.4, 0.03, 0.2, "#b8662e", True, name="houseplate")             # blank plate, digits are on the layer
     # ---------------- benches, red chairs, flower beds, shrubs, trees
