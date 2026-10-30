@@ -5,12 +5,21 @@ Samples only, in the Blender toon top-down style of the approved town square (PR
 | Sample | File | Size @2x |
 |---|---|---|
 | 1. Outside face | `samples/outside-face@2x.png` (+ 1x) | 1120 x 712 |
-| 2. Inside main floor | `samples/inside-main-floor@2x.png` (+ 1x) | 1840 x 832 |
+| 2. Inside main floor (rebuilt to Jay's layout) | `samples/inside-main-floor@2x.png` (+ 1x) and `samples/inside-main-floor-layout-diagram.png` | 2272 x 1696 |
 | 3. Parent seating | `samples/parent-seating@2x.png` (+ 1x) | 1008 x 736 |
 
 ## What is in each
 1. **Outside:** tan ribbed metal building with a brown gable roof, red 3D "CMA / MARTIAL ARTS" letters, a small kick-figure badge above them, brown double doors with two glass panes and a push bar, two windows, banners, two blue accessibility plates, benches, two red metal chairs, two flower beds, shrubs, a palm and round trees, a gravel lot with yellow-on-black curb stops.
-2. **Inside:** a cutaway room. Back wall and two side walls end at a flat drywall cap (nothing above it: no ceiling, insulation, ducts or beams). Blue/red mats with white tape and a centre logo; the yellow target wall with a big target and two mitt targets; hanging grip ropes on a short wood rail at the top of the drywall; the pro shop (shelves, glove/pad/uniform/headgear shapes, glass counter, register); two belt-creed boards (8 belt colours, blank text lines); the Class Creed sign (blank lines); a US flag on a stand; two stylised paintings; the martial-styles mural (four plain silhouettes: kick, punch, block, bow); trophy shelf and four stylised photo frames (no faces); a freestanding handprint wall with plain handprints; shoe cubbies, a bench, a water cooler, three kicking-bag stands.
+2. **Inside (rebuilt):** one wide room, top-down, entry at the bottom. Walls end at a flat drywall cap (nothing above it). Read it from the entry door up:
+   - **Entry hall** (tan tile, welcome mat, open door leaves, plant, bin, bench, turquoise sofa).
+   - **Left: the PRO SHOP** (blue cloud wall, "PRO SHOP" sign, grid wall with uniform bags and pads, belt rack, black tees, a stylised lion painting, glass counter with gloves, headgear and shoes; no weapons).
+   - **Right: the TWO CROSS DOORS** (white doors, blue frames, red crosses; the right one has a blue restroom plate) with the **HANDPRINT WALL** between them (plain red and blue handprints, a wood plaque with the logo and a black belt, a red fire extinguisher).
+   - **Straight ahead: the PARENT SEATING**, the approved stadium seats (3 tiers of 8, blue and red), now facing the mat.
+   - **Beyond the seating: the RED BOX** that holds the students' gear bags, with the **GAP** at its left end where students walk onto the mat.
+   - **On the mat, left (north wall):** the **YELLOW target wall** (12 plain yellow torsos on wood), grip ropes, then the **styles mural** with Jay's real logo and the styles named as on the wall (Karate, Kung Fu, Jiu Jitsu, Tae Kwon Do, Weapons). Beside them: the back double doors, the US flag with a gear shelf, the Class Creed and the belt creed boards (real wording).
+   - **On the mat, right:** three **punching bags** (black, blue, red), a whiteboard on a stand, a stack of crash mats.
+   - **Floor:** **blue mats** surrounding a big **red square** with **Jay's real school logo** in the centre.
+   - `samples/inside-main-floor-layout-diagram.png` is a labelled top-down plan drawn from the same numbers (`source/layout_main_floor.py`), so Jay can check placement.
 3. **Parent seating:** 3 stepped tiers of stadium seats alternating blue and red (shifted one seat each row), front rail, side steps, and a few props (bag, bottle, jacket, book, toy basket, four stylised paintings and a clock with no numbers).
 
 ## Separate swappable layers
@@ -29,15 +38,21 @@ and run `source/render_all.sh`. Leave the file out, or the values empty, to get 
 
 ## Rules followed
 - No handprint names at all (Jay's decision): plain handprints only, no names layer.
-- No readable text except the sign letters and the two overlay layers. Creed boards, the Class Creed sign and the pro shop sign are blank bars.
+- Text: sign letters, the style names, and the creed boards, whose words Jay's Manager asked for (read by eye from Jay's wall photos; `source/creed_text.json`; the full-size textures are in `source/textures/`). The two overlay layers stay blank.
+- Jay's logo is his own file (`badges-trophies-a3c/source/jay-logo/logo-white.jpg`), cut out by `make_textures.py`. The old plain kick figure is gone from the main floor (the approved outside face is unchanged).
 - Likeness reference photos were used for looking only. No photo or crop is in the repo.
-- Daylight only. No glows. No weapons or blades in the pro shop. Mural silhouettes show poses only.
-- Branded red (sign, chairs, red mat half, seats, banner stripe, flag stripes) is Jay's real branding and an exception to the no-red-outside-danger rule. See DELIVERY_NOTE.
+- Daylight only. No glows. No weapons or blades in the pro shop. Mural silhouettes show poses only. The yellow men are plain torsos with no faces.
+- Branded red (sign, chairs, the red square, red box, seats, banner stripe, flag stripes, door crosses, logo, creed titles, red bag) is Jay's real branding and an exception to the no-red-outside-danger rule. See DELIVERY_NOTE.
 
 ## Rebuild
 ```
 cd incoming-art/action-zone-dojo/source
+python3 make_textures.py # logo, Class Creed, belt creed and flag pictures into textures/ (needs Pillow, numpy, scipy)
+python3 make_layout_diagram.py   # the labelled plan
 ./render_all.sh          # 3 scenes at 24 samples, writes ../samples, ../overlays, the .blend files, and the 1x copies
 blender -b -P build_action_zone_dojo.py -- --scene outside|inside|seating [--samples 24] [--ppt 80]
 ```
 Needs Blender 4.2 and `incoming-art/tools/toon_kit.py`. Letters use Be Vietnam Pro Black (OFL, system font); the script falls back to Blender's default font if it is missing.
+
+## Photo versus description (what conflicted)
+See the DELIVERY_NOTE ("Photo conflicts"). Short version: the photos put the yellow men and mural on the WEST side wall and the cubby is plain; I followed Jay's words and unfolded the side-wall art onto the north wall (a north-facing camera cannot see side walls).

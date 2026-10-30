@@ -254,125 +254,192 @@ def wdisc(cx, z, rad, hexc, lay, name="disc"): return wpoly(circ(cx, z, rad, 32)
 
 BELT = {"white": "#f4f1e8", "yellow": "#f5d22e", "orange": "#f08a24", "green": "#3f9c4a", "blue": "#2f6fd6", "purple": "#8a5bd0", "brown": "#7a4a30", "black": "#25252e"}
 
+# ============================ MAIN FLOOR (rebuilt to Jay's layout; numbers live in layout_main_floor.py) ====================
+sys.path.insert(0, HERE)
+import layout_main_floor as LM
+IMGMATS = {}
+def imgplane(path, name, cx, w, h, row=None, zc=None, rc=None, zf=None):
+    """a flat picture (emission, alpha respected). Wall: stands on the wall plane at `row`, centre height zc. Floor: lies at height zf, centre row rc."""
+    key = os.path.abspath(path)
+    if key not in IMGMATS:
+        m = bpy.data.materials.new("img" + name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+        tex = nt.nodes.new("ShaderNodeTexImage"); tex.image = bpy.data.images.load(key); tex.image.colorspace_settings.name = "sRGB"; tex.interpolation = "Linear"; tex.extension = "CLIP"
+        em = nt.nodes.new("ShaderNodeEmission"); tr = nt.nodes.new("ShaderNodeBsdfTransparent"); mx = nt.nodes.new("ShaderNodeMixShader"); out = nt.nodes.new("ShaderNodeOutputMaterial")
+        nt.links.new(tex.outputs["Color"], em.inputs["Color"]); nt.links.new(tex.outputs["Alpha"], mx.inputs["Fac"])
+        nt.links.new(tr.outputs["BSDF"], mx.inputs[1]); nt.links.new(em.outputs["Emission"], mx.inputs[2]); nt.links.new(mx.outputs["Shader"], out.inputs["Surface"])
+        IMGMATS[key] = m
+    if row is not None:
+        P = [(cx - w / 2, -row * K, zc - h / 2), (cx + w / 2, -row * K, zc - h / 2), (cx + w / 2, -row * K, zc + h / 2), (cx - w / 2, -row * K, zc + h / 2)]
+    else:
+        P = [(cx - w / 2, -(rc + h / 2) * K, zf), (cx + w / 2, -(rc + h / 2) * K, zf), (cx + w / 2, -(rc - h / 2) * K, zf), (cx - w / 2, -(rc - h / 2) * K, zf)]
+    bm = _BM.new(); vs = [bm.verts.new(p) for p in P]; f = bm.faces.new(vs); uv = bm.loops.layers.uv.new("UV")
+    for lp, (u, v) in zip(f.loops, ((0, 0), (1, 0), (1, 1), (0, 1))): lp[uv].uv = (u, v)
+    me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free(); me.materials.append(IMGMATS[key])
+    ob = bpy.data.objects.new(name, me); coll.objects.link(ob); ob["layer"] = ""; return ob
+
+POSES["split"] = dict(head=(0.0, 0.42), neck=(0.0, 0.3), arms=[[(0.2, 0.28), (0.45, 0.4)], [(-0.2, 0.28), (-0.45, 0.4)]], legs=[[(0.4, -0.02), (0.85, 0.0)], [(-0.4, -0.02), (-0.85, 0.0)]])
+
 def scene_inside():
-    RED, BLUE, NAVY = "#d92b25", "#2a5db0", "#27407a"
-    WALL, WALL2, CAP, FLOORC, SLAB = "#efe9d6", "#35569a", "#d8d2c0", "#cfc9bd", "#8d8678"
-    XR = 22.0; H = 3.3; RB, RFT = 3.05, 10.0                    # room is 22 wide; back wall base row; front floor row
-    # ---------- the room: a floor slab and drywall only (back wall + two side walls, flat top, nothing above) ----------
-    B(XR / 2, (RB + RFT) / 2, -0.15, XR + 0.5, RFT - RB + 0.1, 0.3, SLAB, True, name="floorslab")
-    B(XR / 2, (RB + RFT) / 2, 0.01, XR, RFT - RB, 0.04, FLOORC, False, name="floor")
-    B(XR / 2, WF - 0.17, H / 2, XR + 0.3, 0.34, H, WALL, True, name="backwall")
-    B(XR / 2, WF + 0.015, 0.25, XR, 0.03, 0.5, WALL2, False, name="wainscot")                  # blue wall band
-    B(XR / 2, WF + 0.03, 0.51, XR, 0.04, 0.05, "#f4f1e8", False, name="wainscotcap")
-    B(XR / 2, WF + 0.03, 0.06, XR, 0.04, 0.12, "#6d6a63", False, name="baseboard")
-    for x in (-0.12, XR + 0.12): B(x, (RB + RFT) / 2 - 0.1, H / 2, 0.24, RFT - RB - 0.2, H, WALL, True, name="sidewall")
-    B(XR / 2, WF - 0.17, H + 0.04, XR + 0.34, 0.38, 0.1, CAP, True, name="drywallcap")        # the flat top edge of the drywall
-    # ---------- floor: mats (blue | red) with a centre logo, white tape, and seams ----------
-    MX0, MX1, MR0, MR1 = 5.0, 16.0, 4.4, 9.4; MXM = (MX0 + MX1) / 2
-    B((MX0 + MXM) / 2, (MR0 + MR1) / 2, 0.06, MXM - MX0, MR1 - MR0, 0.07, "#2f6fd6", True, name="matB")
-    B((MXM + MX1) / 2, (MR0 + MR1) / 2, 0.06, MX1 - MXM, MR1 - MR0, 0.07, RED, True, name="matR")
-    for i in range(int(MX0) + 1, int(MX1)):
-        fpoly(rect((i, MR0), (i, MR1), 0.03), 0.1, "#1d4aa0" if i < MXM else "#a81f1b", "seam")
-    for j in range(int(MR0) + 1, int(MR1) + 1):
-        if j < MR1: fpoly(rect((MX0, j), (MXM, j), 0.03), 0.1, "#1d4aa0", "seam"); fpoly(rect((MXM, j), (MX1, j), 0.03), 0.1, "#a81f1b", "seam")
-    fpoly(rect((MX0, MR1 - 0.12), (MX1, MR1 - 0.12), 0.07), 0.105, "#f4f1e8", "tape")
-    fpoly(rect((MXM, MR0), (MXM, MR1), 0.07), 0.105, "#f4f1e8", "tape")
-    LX, LR = MXM, (MR0 + MR1) / 2 - 0.1                                                      # centre logo
-    fpoly(circ(LX, LR, 1.85, 40), 0.115, "#f4f1e8", "logoRing"); fpoly(circ(LX, LR, 1.65, 40), 0.12, NAVY, "logoDisc")
-    fpoly(circ(LX, LR, 1.38, 40), 0.125, "#f4f1e8", "logoRing2"); fpoly(circ(LX, LR, 1.3, 40), 0.13, NAVY, "logoDisc2")
-    for poly_ in figure("kick", LX, LR + 0.05, 1.05): fpoly([(u, LR + 0.05 - (v - (LR + 0.05))) if False else (u, 2 * (LR + 0.05) - v) for u, v in poly_], 0.14, "#f4f1e8", "logoFig")
-    for i in range(1, 22):
-        fpoly(rect((i, MR0 - 1.35), (i, RFT - 0.05), 0.02), 0.045, "#bdb7aa", "tileSeam")
-    for j in range(4, 10):
-        fpoly(rect((0.05, j), (XR - 0.05, j), 0.02), 0.045, "#bdb7aa", "tileSeam")
-    # ---------- back wall, left to right ----------
-    # PRO SHOP: wall shelves with gear, a glass counter, a blank sign bar (items are plain shapes)
-    Wd(2.55, 3.0, 4.0, 0.32, "#27407a", name="proSign"); Wd(0.95, 3.0, 0.5, 0.2, "#f4f1e8", 0.07, 0.03, False, name="proSignGlove")
-    for z in (1.15, 1.85, 2.5): B(2.55, WF + 0.17, z, 3.9, 0.32, 0.07, "#7a4a30", True, name="shelf")
-    for x in (0.7, 4.4): B(x, WF + 0.1, 1.85, 0.08, 0.18, 1.9, "#5b4234", True, name="shelfpost")
-    GLV = ["#2f6fd6", "#f5c542", "#3f9c4a", "#f08a24", "#8a5bd0", "#2bb3b3", "#ee7fb0"]
-    for k in range(7):                                                            # gloves on the top shelf
-        x = 0.95 + k * 0.5; E(x, WF + 0.22, 2.7, 0.15, 0.1, 0.17, GLV[k], True, 10, 6, name="glove"); E(x + 0.14, WF + 0.22, 2.64, 0.07, 0.07, 0.07, GLV[k], False, 8, 4, name="gloveThumb")
-    for k in range(5):                                                            # kick pads and folded uniforms on the middle shelf
-        x = 1.0 + k * 0.72; B(x, WF + 0.22, 2.0, 0.45, 0.14, 0.34, GLV[(k + 2) % 7], True, name="pad"); B(x, WF + 0.3, 2.0, 0.2, 0.02, 0.2, "#ffffff", False, name="padTarget")
+    global WF
+    RED, BLUE = "#d92b25", "#2a5db0"
+    WALL, CAP, SLAB, TILE, PRO = "#efe9d6", "#d8d2c0", "#8d8678", "#cdb89a", "#9ec3ee"
+    TXD = os.path.join(HERE, "textures"); LOGO = os.path.join(TXD, "logo-mark.png"); LOGO_AR = 929 / 1000
+    Wd_, Hh, RN, RW, RF = LM.W, LM.H, LM.R_N, LM.R_MAT_S, LM.R_FRONT; mid = Wd_ / 2
+    # ---------- slab, lobby tile floor, mat platform (blue) ----------
+    B(mid, (RN + RF) / 2, -0.15, Wd_ + 0.5, RF - RN + 0.5, 0.3, SLAB, True, name="floorslab")
+    B(mid, (RW + RF) / 2, 0.015, Wd_, RF - RW, 0.03, TILE, False, name="lobbyTile")
+    for x in range(2, 27, 2): B(x, (RW + RF) / 2, 0.032, 0.03, RF - RW, 0.004, "#bda98a", False, name="tileSeam")
+    for r in (12.0, 14.0, 16.0): B(mid, r, 0.032, Wd_, 0.03, 0.004, "#bda98a", False, name="tileSeam")
+    B(mid, (RN + RW) / 2, 0.06, Wd_, RW - RN, 0.12, BLUE, True, name="matPlatform")
+    for x in range(2, 27, 2): fpoly(rect((x, RN), (x, RW), 0.04), 0.125, "#1f4a92", "seam")
+    for r in range(3, 10, 2): fpoly(rect((0, r), (Wd_, r), 0.04), 0.125, "#1f4a92", "seam")
+    x0, x1, r0, r1 = LM.REDSQ
+    B((x0 + x1) / 2, (r0 + r1) / 2, 0.13, x1 - x0, r1 - r0, 0.02, RED, False, name="redSquare")
+    for x in range(int(x0) + 1, int(x1), 2): fpoly(rect((x, r0), (x, r1), 0.04), 0.145, "#a81f1b", "seam")
+    for r in range(int(r0) + 1, int(r1), 2): fpoly(rect((x0, r), (x1, r), 0.04), 0.145, "#a81f1b", "seam")
+    lw = LM.LOGO_W; imgplane(LOGO, "floorLogo", LM.LOGO_C[0], lw, lw * LOGO_AR, rc=LM.LOGO_C[1], zf=0.155)
+    # ---------- walls: north wall (the mat room's back), outer side walls, the two entry wings, low front curb (nothing above the drywall) ----------
+    B(mid, RN - 0.17, Hh / 2, Wd_ + 0.3, 0.34, Hh, WALL, True, name="northwall"); B(mid, RN - 0.17, Hh + 0.04, Wd_ + 0.34, 0.38, 0.1, CAP, True, name="northcap")
+    B(mid, RN + 0.03, 0.06, Wd_, 0.04, 0.12, "#6d6a63", False, name="baseboard")
+    for x in (-0.12, Wd_ + 0.12):
+        B(x, (RN + RF) / 2, Hh / 2, 0.24, RF - RN, Hh, WALL, True, name="sidewall"); B(x, (RN + RF) / 2, Hh + 0.04, 0.3, RF - RN + 0.04, 0.1, CAP, True, name="sidecap")
+    for (a, b, col, nm) in ((LM.WEST_WING[0], LM.WEST_WING[1], PRO, "westWing"), (LM.EAST_WING[0], LM.EAST_WING[1], "#f6f3ec", "eastWing")):
+        cx = (a + b) / 2; B(cx, RW - 0.17, Hh / 2, b - a, 0.34, Hh, col, True, name=nm); B(cx, RW - 0.17, Hh + 0.04, b - a + 0.04, 0.38, 0.1, CAP, True, name=nm + "Cap")
+        B(cx, RW + 0.03, 0.06, b - a, 0.04, 0.12, "#6d6a63", False, name="baseboard")
+    B(LM.WEST_WING[1] - 0.1, RW + 1.2, Hh / 2, 0.2, 2.4, Hh, PRO, True, name="westStub"); B(LM.EAST_WING[0] + 0.1, RW + 1.2, Hh / 2, 0.2, 2.4, Hh, "#f6f3ec", True, name="eastStub")
+    for (a, b) in ((0, LM.DOOR[0]), (LM.DOOR[1], Wd_)): B((a + b) / 2, RF, 0.25, b - a, 0.34, 0.5, WALL, True, name="frontCurb")
+    for x in LM.DOOR: B(x, RF, 1.2, 0.14, 0.34, 2.4, "#6b4a3a", True, name="doorPost")
+    B(sum(LM.DOOR) / 2, RF, 2.45, LM.DOOR[1] - LM.DOOR[0] + 0.14, 0.34, 0.1, "#6b4a3a", True, name="doorHead")
+    for x in (LM.DOOR[0] + 0.1, LM.DOOR[1] - 0.1): B(x, RF - 0.6, 1.15, 0.08, 1.1, 2.3, "#6b4a3a", True, name="doorLeaf"); B(x, RF - 0.6, 1.5, 0.1, 0.5, 0.7, "#8ec6ff", False, name="doorGlass")
+    B(sum(LM.DOOR) / 2, RF - 1.3, 0.04, 2.2, 0.9, 0.04, "#4a3226", True, name="welcomeMat"); B(sum(LM.DOOR) / 2, RF - 1.3, 0.065, 2.0, 0.7, 0.02, "#c9a86a", False, name="welcomeMatInner")
+    # ======================= NORTH WALL (mat room): left to right = target wall, styles + logo mural, back doors, flag, Class Creed, belt creed =======================
+    WF = RN
+    a, b = LM.TARGET; cx = (a + b) / 2
+    Wd(cx, 1.7, b - a, 2.95, "#c8924f", 0.025, 0.04, True, name="targetWood")
+    for k in range(int((b - a) / 0.36)): Wd(a + 0.2 + k * 0.36, 1.7, 0.02, 2.9, "#a9763a" if k % 2 else "#b6823f", 0.04, 0.01, False, name="plank")
+    Wd(cx, 3.22, b - a + 0.1, 0.09, "#f4f1e8", 0.05, 0.03, False, name="targetTrim")
+    def yellow_man(x, z0):
+        body = [(-0.15, 0.62), (0.15, 0.62), (0.30, 0.52), (0.34, 0.38), (0.28, 0.0), (0.2, -0.2), (-0.2, -0.2), (-0.28, 0.0), (-0.34, 0.38), (-0.30, 0.52)]
+        zc = z0 + 0.2; P = lambda pts, sc_=1.0, dz=0.0: [(x + sc_ * px, zc + sc_ * py + dz) for px, py in pts]
+        wpoly(P(body, 1.12, -0.04), "#14121c", 1, "manLine"); wpoly(circ(x, zc + 0.78, 0.155, 16), "#14121c", 1, "headLine")
+        wpoly(P(body), "#f5c82e", 2, "man"); wpoly(circ(x, zc + 0.78, 0.13, 16), "#f5c82e", 2, "head"); wpoly(P(rect((0, 0.6), (0, 0.7), 0.16)), "#f5c82e", 2, "neck")
+        wpoly(P(((-0.2, -0.2), (0.2, -0.2), (0.28, 0.02), (-0.28, 0.02))), "#25252e", 3, "shorts")
+        for q in (rect((-0.16, 0.3), (-0.02, 0.27), 0.025), rect((0.16, 0.3), (0.02, 0.27), 0.025), rect((0, 0.45), (0, 0.06), 0.02)): wpoly(P(q), "#d9a820", 3, "manDetail")
+    for row, z0 in enumerate((1.9, 0.62)):
+        for k in range(6): yellow_man(a + 0.55 + k * 1.0 + 0.08 * row, z0)
+    B(7.3, WF + 0.3, 3.25, 1.5, 0.18, 0.14, "#7a4a30", True, name="ropeRail")
+    for x in (6.62, 7.98): B(x, WF + 0.12, 3.25, 0.1, 0.22, 0.2, "#5b4234", False, name="ropeBracket")
+    for k in range(4):
+        x = 6.9 + k * 0.28; zb = 2.1 + 0.12 * (k % 2); T(x, WF + 0.32, zb, 3.2, 0.03, 0.03, "#d9c08a", False, 6, name="rope")
+        for q in range(3): E(x, WF + 0.32, zb + 0.25 + q * 0.3, 0.05, 0.04, 0.05, "#c9a86a", False, 6, 4, name="knot")
+        E(x, WF + 0.32, zb, 0.06, 0.05, 0.06, "#7a4a30", False, 8, 4, name="ropeEnd")
+    a, b = LM.MURAL; cx = (a + b) / 2
+    Wd(cx, 1.7, b - a, 2.95, "#faf8f2", 0.03, 0.04, True, name="muralWall")
+    imgplane(LOGO, "muralLogo", cx, 1.7, 1.7 * LOGO_AR, row=WF + 0.1, zc=1.72)
+    for s, x, z, w in (("Karate", cx, 3.0, 1.0), ("Kung Fu", a + 0.95, 2.72, 0.95), ("Jiu Jitsu", b - 0.95, 2.72, 1.0), ("Tae Kwon Do", a + 0.95, 0.98, 1.3), ("Weapons", b - 0.95, 0.98, 1.0)): text("t_" + s, s, x, WF + 0.1, z, 0.22, w, "#14121c", 0.03, False)
+    for poly_ in figure("kick", a + 0.95, 1.88, 0.85): wpoly(poly_, "#14121c", 4, "silKick")
+    for poly_ in figure("block", b - 0.95, 1.88, 0.85): wpoly(poly_, "#14121c", 4, "silStance")
+    for poly_ in figure("split", cx, 0.46, 0.5): wpoly(poly_, "#14121c", 4, "silSplit")
+    a, b = LM.BACK_DOOR; cx = (a + b) / 2
+    Wd(cx, 1.25, b - a + 0.2, 2.55, "#4a3226", 0.03, 0.05, True, name="backDoorFrame")
+    for k in (-1, 1):
+        x = cx + k * 0.52; Wd(x, 1.2, 1.0, 2.35, "#6b4a3a", 0.07, 0.03, True, name="backDoorLeaf"); Wd(x, 1.7, 0.6, 0.85, "#8ec6ff", 0.1, 0.02, False, name="backDoorGlass"); Wd(x - k * 0.38, 1.0, 0.05, 0.4, "#c8ccd4", 0.1, 0.02, False, name="doorBar")
+    for k, x in enumerate((cx - 0.75, cx, cx + 0.75)):
+        Wd(x, 3.0, 0.5, 0.38, "#5b4234", 0.035, 0.05, True, name="doorFrameArt"); Wd(x, 3.0, 0.4, 0.28, ("#8ec6ff", "#ffd36b", "#7fd1b9")[k], 0.075, 0.02, False, name="doorArt")
+    a, b = LM.FLAG; cx = (a + b) / 2
+    imgplane(os.path.join(TXD, "us-flag.png"), "flag", cx, 1.9, 1.0, row=WF + 0.09, zc=2.55)
+    Wd(cx, 3.1, 2.0, 0.05, "#c8ccd4", 0.07, 0.02, False, name="flagBar")
+    B(cx, WF + 0.25, 0.65, 1.6, 0.5, 1.3, "#f4f1e8", True, name="gearShelf")
+    for k in range(2):
+        for j in range(3): B(cx - 0.5 + j * 0.5, WF + 0.52, 0.3 + k * 0.6, 0.4, 0.02, 0.4, "#3b3f4c", False, name="shelfHole")
+    for k, c in enumerate(("#2f6fd6", "#f5c542", "#d92b25")): E(cx - 0.5 + k * 0.5, WF + 0.4, 0.3, 0.17, 0.12, 0.14, c, True, 8, 6, name="shelfGlove")
+    a, b = LM.CREED; cx = (a + b) / 2
+    Wd(cx, 1.75, 2.68, 2.84, "#14121c", 0.04, 0.05, True, name="creedFrame"); imgplane(os.path.join(TXD, "class-creed.png"), "classCreed", cx, 2.6, 2.6 * 1060 / 1000, row=WF + 0.1, zc=1.75)
+    a, b = LM.BELTS; cx = (a + b) / 2
+    Wd(cx, 1.74, 2.58, 3.1, "#14121c", 0.04, 0.05, True, name="beltFrame"); imgplane(os.path.join(TXD, "belt-creed.png"), "beltCreed", cx, 2.5, 2.5 * 1818 / 1500, row=WF + 0.1, zc=1.74)
+    # crash-mat stack + punching bags (right) + a whiteboard on a stand
+    a, b, ra, rb = LM.CRASH; cxm, rcm = (a + b) / 2, (ra + rb) / 2
+    for k, c in enumerate((BLUE, "#6f9be0", BLUE)): B(cxm + 0.04 * (k % 2), rcm, 0.18 + 0.3 * k, b - a, rb - ra, 0.28, c, True, bevel=0.03, name=f"crashMat{k}")
+    B(cxm, rb - 0.02, 0.5, 0.4, 0.03, 0.08, "#f4f1e8", False, name="crashHandle")
+    for (x, r, c) in LM.BAGS:
+        col = {"black": "#3a3a45", "blue": "#2f6fd6", "red": "#d92b25"}[c]
+        T(x, r, 0.12, 0.7, 0.5, 0.45, "#25252e", True, 18, name="bagBase", round_ground=True); T(x, r, 0.7, 2.1, 0.29, 0.29, col, True, 16, name="bag", round_ground=True)
+        E(x, r, 2.1, 0.29, 0.29, 0.2, col, True, 16, 8, name="bagTop"); B(x, r + 0.01, 1.3, 0.5, 0.45, 0.1, "#f4f1e8", False, name="bagBand")
+    B(21.3, 6.3, 1.45, 1.4, 0.08, 0.9, "#f4f1e8", True, name="whiteboard"); B(21.3, 6.3, 1.45, 1.5, 0.06, 1.0, "#7a4a30", True, name="whiteboardFrame")
+    for dx in (-0.6, 0.6): T(21.3 + dx, 6.45, 0.12, 1.0, 0.04, 0.04, "#3a3a45", False, 6, name="wbLeg")
+    # ======================= RED GEAR-BAG BOX (cubby) + the GAP =======================
+    x0, x1, r0, r1 = LM.CUBBY; cx, rc = (x0 + x1) / 2, (r0 + r1) / 2
+    B(cx, rc, 0.62, x1 - x0, r1 - r0, 1.0, RED, True, bevel=0.02, name="cubby"); B(cx, r1 - 0.02, 0.2, x1 - x0 + 0.06, 0.08, 0.16, BLUE, True, name="cubbyBase"); B(cx, rc, 1.125, x1 - x0 - 0.2, r1 - r0 - 0.2, 0.02, "#b3201c", False, name="cubbyLid")
+    BAGC = ("#2f6fd6", "#f5c542", "#3f9c4a", "#25252e", "#ee7fb0", "#f08a24", "#8a5bd0")
+    for k in range(7):
+        x = x0 + 0.9 + k * 1.3; B(x, r1 + 0.01, 0.78, 0.95, 0.02, 0.62, "#3b1a1a", False, name="cubbyOpening"); E(x, r1 + 0.04, 0.6, 0.33, 0.2, 0.2, BAGC[k], True, 10, 6, name="gearBag")
+    B(11.3, rc, 1.2, 0.55, 0.4, 0.08, "#2f6fd6", True, name="book"); B(11.35, rc, 1.28, 0.5, 0.35, 0.07, "#f4f1e8", True, name="book"); B(15.0, rc, 1.17, 0.7, 0.45, 0.05, "#f4f1e8", False, name="papers"); E(17.3, rc, 1.3, 0.4, 0.3, 0.22, "#f5c542", True, 10, 6, name="topBag")
+    B(sum(LM.GAP) / 2, RW + 0.14, 0.05, LM.GAP[1] - LM.GAP[0], 0.3, 0.1, "#c9a86a", True, name="gapThreshold")
+    # ======================= PARENT SEATING (the approved stadium seats, now facing the mat) =======================
+    X0, X1 = LM.SEATS; NS = 8; pitch = (X1 - X0 - 0.6) / NS; smid = (X0 + X1) / 2
+    for ti, (rf, dp, zt) in enumerate(LM.TIERS):
+        B(smid, rf - dp / 2, zt / 2, X1 - X0, dp, zt, "#4a5470", True, name=f"deck{ti}"); B(smid, rf, zt - 0.1, X1 - X0, 0.03, 0.05, "#f4f1e8", False, name=f"riserStripe{ti}")
+        B(smid, rf - dp / 2, zt + 0.01, X1 - X0, dp - 0.05, 0.03, "#5a6685", False, name=f"deckTop{ti}")
+        for sx_ in (X1 + 0.55, X0 - 0.55): B(sx_, rf - dp / 2, zt / 2, 0.8, dp, zt, "#6a7694", True, name=f"step{ti}"); B(sx_, rf, zt - 0.08, 0.8, 0.03, 0.05, "#f4f1e8", False, name=f"stepStripe{ti}")
+        rs = rf - dp / 2 - 0.1
+        for k in range(NS):
+            x = X0 + 0.3 + pitch * (k + 0.5); c = RED if (k + ti) % 2 == 0 else BLUE; dk = "#a81f1b" if c == RED else "#1d4aa0"
+            B(x, rs, zt + 0.17, pitch - 0.08, 0.5, 0.32, c, True, bevel=0.03, name="seat"); B(x, rs - 0.23, zt + 0.37, pitch - 0.1, 0.07, 0.07, dk, False, name="seatEdge")
+            B(x, rs + 0.2, zt + 0.55, pitch - 0.08, 0.1, 0.62, c, True, bevel=0.03, name="seatBack"); B(x, rs + 0.26, zt + 0.5, pitch - 0.3, 0.02, 0.38, dk, False, name="seatBackInset")
+            B(x, rs, zt + 0.02, 0.1, 0.3, 0.05, "#2c2c33", False, name="seatFoot")
+        for k in range(NS + 1):
+            x = X0 + 0.3 + pitch * k; B(x, rs, zt + 0.42, 0.045, 0.45, 0.04, "#2c2c33", True, name="armrest"); B(x, rs, zt + 0.22, 0.04, 0.04, 0.4, "#2c2c33", False, name="armpost")
+    sxk = lambda k: X0 + 0.3 + pitch * (k + 0.5); rsw = lambda ti: LM.TIERS[ti][0] - LM.TIERS[ti][1] / 2 - 0.1
+    B(sxk(5), rsw(1), LM.TIERS[1][2] + 0.45, 0.42, 0.32, 0.24, "#f5c542", True, bevel=0.04, name="seatBag"); E(sxk(2), rsw(2) + 0.2, LM.TIERS[2][2] + 0.95, 0.3, 0.14, 0.14, "#7fd1b9", True, 10, 6, name="jacket")
+    # ======================= WEST WING: PRO SHOP (on your left as you enter) =======================
+    WF = RW; a, b = LM.WEST_WING
+    for k, (x, z, rd) in enumerate(((0.9, 0.9, 0.5), (2.2, 2.7, 0.35), (3.5, 3.1, 0.45), (5.0, 2.4, 0.3), (6.3, 1.2, 0.5), (1.6, 3.0, 0.3), (4.4, 0.8, 0.4), (5.9, 3.0, 0.35), (0.5, 2.6, 0.3), (6.7, 2.2, 0.28))):
+        wpoly(circ(x, z, rd, 18, 1.5, 0.8), "#cfe1f7", 0, "cloud")
+    Wd(0.8, 2.0, 0.92, 1.18, "#6b4a2a", 0.03, 0.05, True, name="lionFrame"); Wd(0.8, 2.0, 0.76, 1.02, "#c98a3a", 0.075, 0.02, False, name="lionPic")
+    wpoly(circ(0.8, 2.1, 0.27, 20), "#8a4b1e", 2, "mane"); wpoly(circ(0.8, 2.1, 0.16, 16), "#e0a95a", 3, "lionFace"); wpoly([(0.5, 1.6), (0.8, 1.9), (1.1, 1.6)], "#6b4a2a", 2, "lionBody")
+    Wd(3.4, 1.85, 2.4, 1.9, "#2b2e38", 0.03, 0.03, True, name="gridWall")
+    for k in range(9): Wd(3.4, 0.98 + k * 0.2, 2.4, 0.012, "#4a4f5e", 0.06, 0.01, False, name="gridH")
+    for k in range(9): Wd(2.3 + k * 0.3, 1.85, 0.012, 1.9, "#4a4f5e", 0.06, 0.01, False, name="gridV")
     for k in range(5):
-        x = 1.0 + k * 0.7; B(x, WF + 0.22, 1.37, 0.5, 0.18, 0.2, "#f4f1e8", True, name="gi"); B(x, WF + 0.33, 1.37, 0.52, 0.02, 0.05, list(BELT.values())[(k + 1) % 7], False, name="giBelt")
-    for k in range(6): E(0.95 + k * 0.62, WF + 0.22, 0.97, 0.12, 0.1, 0.1, "#2c2c33", True, 8, 6, name="head"); 
-    # counter: a white cabinet with a glass-top case showing belts, and a small register
-    B(2.6, 4.45, 0.42, 3.6, 0.9, 0.84, "#f4f1e8", True, name="counter"); B(2.6, 4.9, 0.42, 3.4, 0.03, 0.7, "#c9d3e0", False, name="counterFront")
-    B(2.6, 4.45, 1.0, 3.6, 0.9, 0.46, "#b8dcee", True, name="glassCase"); B(2.6, 4.45, 1.28, 3.7, 0.95, 0.07, "#f4f1e8", True, name="caseTop")
-    for k, c in enumerate(list(BELT.values())[:7]): B(1.35 + k * 0.35, 4.85, 1.03, 0.28, 0.03, 0.2, c, False, name="beltInCase")
-    B(3.8, 4.35, 1.5, 0.45, 0.35, 0.22, "#3a3a45", True, name="register"); B(3.8, 4.35, 1.74, 0.4, 0.12, 0.2, "#8c8ea0", True, rot=(-20, 0, 0), name="registerScreen")
-    for k, (x, c) in enumerate(((1.4, "#ffd36b"), (1.95, "#ffd36b"))):               # two small trophies on the counter
-        T(x, 4.45, 1.32, 1.5, 0.07, 0.03, c, True, 8, name="trophyStem"); E(x, 4.45, 1.65, 0.11, 0.07, 0.14, c, True, 10, 6, name="trophyCup"); B(x, 4.45, 1.31, 0.2, 0.15, 0.05, "#7a4a30", True, name="trophyBase")
-    # BELT-CREED BOARDS: two navy boards of belt-colour bars with blank text lines
-    for bi, (x, belts) in enumerate(((5.35, ("white", "yellow", "orange", "green")), (6.35, ("blue", "purple", "brown", "black")))):
-        Wd(x, 1.8, 0.85, 1.9, "#23304f", 0.04, 0.05, True, name=f"beltBoard{bi}"); Wd(x, 2.72, 0.7, 0.07, "#ffd36b", 0.08, 0.02, False, name="beltBoardHead")
-        for k, b in enumerate(belts):
-            z = 2.35 - k * 0.43; Wd(x, z, 0.7, 0.1, BELT[b], 0.08, 0.02, False, name="beltBar")
-            for j in range(2): Wd(x + 0.04, z - 0.13 - j * 0.07, 0.56 - 0.1 * j, 0.03, "#8c93b0", 0.08, 0.02, False, name="beltLine")
-    # CLASS CREED SIGN: wood frame, blue board, gold header, blank lines
-    Wd(7.9, 1.85, 1.95, 2.1, "#7a4a30", 0.04, 0.07, True, name="creedFrame"); Wd(7.9, 1.85, 1.75, 1.9, "#2a4a8a", 0.09, 0.03, False, name="creedBoard")
-    Wd(7.9, 2.6, 1.3, 0.2, "#ffd36b", 0.11, 0.02, False, name="creedHeader")
-    for k in range(7): Wd(7.9, 2.28 - k * 0.2, 1.45 - 0.2 * (k % 3), 0.045, "#e9ecf8", 0.11, 0.02, False, name="creedLine")
-    for x in (7.05, 8.75): E(x, WF + 0.12, 2.82, 0.05, 0.02, 0.05, "#ffd36b", False, 6, 4, name="creedStar")
-    # HANGING GRIP ROPES: a short wood rail at the top of the drywall, ropes with knots hanging in front of the wall
-    B(10.65, WF + 0.3, 3.1, 3.0, 0.18, 0.14, "#7a4a30", True, name="ropeRail")
-    for x in (9.4, 11.9): B(x, WF + 0.12, 3.1, 0.1, 0.22, 0.2, "#5b4234", False, name="ropeBracket")
-    for k in range(8):
-        x = 9.4 + 0.33 + k * 0.33; zb = 1.1 + 0.15 * (k % 3); T(x, WF + 0.32, zb, 3.03, 0.035, 0.035, "#d9c08a", False, 6, name="rope")
-        for q in range(4): E(x, WF + 0.32, zb + 0.18 + q * 0.5, 0.06, 0.05, 0.06, "#c9a86a", False, 6, 4, name="knot")
-        E(x, WF + 0.32, zb, 0.07, 0.06, 0.07, "#7a4a30", False, 8, 4, name="ropeEnd")
-    # TARGET WALL: a yellow painted section with a big round target and two blue mitt targets
-    TX = 14.0; Wd(TX, H / 2 - 0.05, 3.1, H - 0.1, "#f5c542", 0.025, 0.04, True, name="targetWall")
-    for rad, c, l in ((1.12, "#25252e", 0), (0.92, "#f4f1e8", 1), (0.72, "#25252e", 2), (0.5, "#f4f1e8", 3), (0.3, "#f08a24", 4)): wdisc(TX, 1.85, rad, c, l, "target")
-    for x in (TX - 1.18, TX + 1.18): wdisc(x, 0.95, 0.27, "#2f6fd6", 1, "mitt"); wdisc(x, 0.95, 0.15, "#f4f1e8", 2, "mittRing")
-    Wd(TX, 3.12, 3.1, 0.12, "#25252e", 0.05, 0.03, False, name="targetStripe")
-    # MARTIAL-STYLES MURAL: four coloured panels with plain navy silhouettes (poses only, no faces)
-    MXC = 17.75; Wd(MXC, 1.65, 3.7, 1.85, "#7a4a30", 0.035, 0.06, True, name="muralFrame")
-    for k, (c, pose) in enumerate((("#ffd36b", "kick"), ("#8ec6ff", "punch"), ("#f2a65a", "block"), ("#7fd1b9", "bow"))):
-        x = MXC - 1.38 + k * 0.92; Wd(x, 1.65, 0.86, 1.72, c, 0.075, 0.02, False, name="muralPanel")
-        for poly_ in figure(pose, x, 1.45, 0.95): wpoly(poly_, "#1f2a4a", 4, "muralFig")
-    # PAINTINGS above the mural (stylised landscapes): sky, hills, sun
-    for k, (x, w) in enumerate(((16.6, 1.25), (18.95, 1.0))):
-        Wd(x, 2.98, w, 0.5, "#5b4234", 0.035, 0.05, True, name="paintFrame"); Wd(x, 2.98, w - 0.1, 0.4, "#8ec6ff", 0.075, 0.02, False, name="paintSky")
-        wpoly(circ(x - 0.1 * w + 0.3, 3.05, 0.1, 14), "#ffd36b", 6, "paintSun"); wpoly([(x - w / 2 + 0.05, 2.78), (x, 3.08), (x + w / 2 - 0.05, 2.78)], "#6fae5f", 6, "paintHill")
-    # TROPHY SHELF + PHOTO FRAMES (stylised, no faces) + FLAG
-    B(20.9, WF + 0.2, 1.3, 1.5, 0.28, 0.07, "#7a4a30", True, name="trophyShelf")
-    for k, x in enumerate((20.35, 20.75, 21.15, 21.5)):
-        h = 0.3 + 0.07 * (k % 2); T(x, WF + 0.2, 1.34, 1.34 + h * 0.5, 0.05, 0.025, "#ffd36b", True, 8, name="troStem"); E(x, WF + 0.2, 1.38 + h, 0.1, 0.07, 0.1 + 0.02 * (k % 2), "#ffd36b", True, 10, 6, name="troCup")
-    for k, (x, z) in enumerate(((20.4, 2.15), (21.2, 2.15), (20.4, 2.85), (21.2, 2.85))):
-        Wd(x, z, 0.6, 0.55, "#5b4234", 0.035, 0.05, True, name="photoFrame"); Wd(x, z, 0.5, 0.45, ("#8ec6ff", "#ffd36b", "#7fd1b9", "#f2a65a")[k], 0.075, 0.02, False, name="photoPic")
-        wpoly(circ(x - 0.05, z + 0.02, 0.07, 10), "#ffe3c4", 5, "photoHead"); wpoly([(x - 0.17, z - 0.2), (x - 0.05, z - 0.04), (x + 0.07, z - 0.2)], "#27407a", 5, "photoBody")
-    # flag on a floor stand beside the target wall, stripes + blue canton with plain star dots
-    FX = 15.72; T(FX, WF + 0.5, 0, 3.15, 0.045, 0.035, "#c8ccd4", True, 8, name="flagPole"); T(FX, WF + 0.5, 0, 0.08, 0.26, 0.26, "#3a3a45", True, 12, name="flagBase", round_ground=True)
-    E(FX, WF + 0.5, 3.17, 0.06, 0.04, 0.06, "#ffd36b", True, 8, 6, name="flagFinial")
-    for k in range(7): B(FX - 0.55, WF + 0.5, 3.0 - k * 0.1, 1.05, 0.02, 0.1, "#d92b25" if k % 2 == 0 else "#f6f3ec", k % 2 == 0, name="flagStripe")
-    B(FX - 0.28, WF + 0.52, 2.8, 0.5, 0.025, 0.4, "#27407a", True, name="flagCanton")
-    for a in range(3):
-        for b in range(2): E(FX - 0.4 + a * 0.12, WF + 0.54, 2.72 + b * 0.16, 0.022, 0.01, 0.022, "#ffffff", False, 5, 3, name="flagStar")
-    # ---------- HANDPRINT WALL: a freestanding painted partition with plain colourful handprints (no names) ----------
-    PX, PR, PW, PH = 18.9, 6.0, 4.2, 2.2
-    for x in (PX - PW / 2 - 0.05, PX + PW / 2 + 0.05): B(x, PR, PH / 2, 0.14, 0.3, PH, "#5b4234", True, name="panelPost")
-    B(PX, PR, PH / 2, PW, 0.12, PH, "#f4f1e8", True, name="panel"); B(PX, PR + 0.07, PH + 0.04, PW + 0.3, 0.3, 0.1, "#7a4a30", True, name="panelCap")
-    B(PX, PR + 0.07, 0.07, PW + 0.2, 0.3, 0.14, "#7a4a30", True, name="panelBase")
-    def ppoly(pts, hexc, lay): return _poly("hp", [(x, -(PR + 0.075 + 0.006 * lay) * K, z) for x, z in pts], hexc, (0, -1, 0))
-    HC = ["#2f6fd6", "#f5c542", "#3f9c4a", "#f08a24", "#8a5bd0", "#2bb3b3", "#ee7fb0"]
-    for rw in range(3):
-        for cl in range(7):
-            x = PX - PW / 2 + 0.38 + cl * ((PW - 0.76) / 6) + (0.12 if rw == 1 else 0); z = 0.62 + rw * 0.58
-            if rw == 1 and cl == 6: continue
-            for poly_ in hand(x, z, 1.25, ((cl * 37 + rw * 23) % 30) - 15): ppoly(poly_, HC[(cl + rw * 3) % 7], 1)
-    # ---------- floor props: shoe cubbies + a low bench by the door side, a water cooler, a mat bag ----------
-    B(1.1, 8.2, 0.3, 1.9, 0.6, 0.6, "#7a4a30", True, name="cubbies"); 
-    for k in range(4): B(0.5 + k * 0.4, 8.52, 0.3, 0.3, 0.03, 0.4, "#4a3226", False, name="cubbyHole"); E(0.5 + k * 0.4, 8.5, 0.12, 0.1, 0.05, 0.05, GLV[k], False, 6, 4, name="shoe")
-    B(2.6, 9.2, 0.25, 1.8, 0.5, 0.1, "#9aa0b0", True, name="bench"); 
-    for x in (1.85, 3.35): B(x, 9.2, 0.12, 0.12, 0.4, 0.24, "#5b5f6e", False, name="benchLeg")
-    B(4.1, 4.15, 0.45, 0.5, 0.45, 0.9, "#c8ccd4", True, name="cooler"); B(4.1, 4.15, 1.05, 0.38, 0.38, 0.35, "#8ec6ff", True, name="coolerJug"); E(4.1, 4.15, 1.3, 0.19, 0.19, 0.08, "#8ec6ff", False, 10, 4, name="coolerJugTop")
-    for k, (x, r, c) in enumerate(((17.4, 8.4, "#2f6fd6"), (18.9, 8.8, "#f5c542"), (20.3, 8.4, "#3f9c4a"))):      # three kicking-bag stands (soft, no scary faces)
-        T(x, r, 0, 0.1, 0.4, 0.4, "#3a3a45", True, 14, name="bagBase", round_ground=True); T(x, r, 0.1, 1.5, 0.3, 0.3, c, True, 14, name="bag"); E(x, r, 1.5, 0.3, 0.3 / 1.0, 0.16, c, True, 14, 6, name="bagTop"); B(x, r - 0.02, 1.0, 0.4, 0.02, 0.18, "#f4f1e8", False, name="bagStripe")
-    # sky/lighting: daylight only (no glows)
-    finish_and_render(23.0, 10.4, 11.0, 5.15, "inside-main-floor@2x.png")
+        x = 2.45 + k * 0.46; Wd(x, 2.35, 0.38, 0.5, "#f4f1e8", 0.08, 0.02, True, name="uniformBag"); imgplane(LOGO, "proLogo", x, 0.24, 0.24 * LOGO_AR, row=WF + 0.11, zc=2.3)
+        Wd(x, 1.55, 0.38, 0.45, "#3a3a45", 0.08, 0.02, True, name="padBag"); imgplane(LOGO, "proLogo2", x, 0.24, 0.24 * LOGO_AR, row=WF + 0.11, zc=1.55)
+    Wd(1.7, 1.35, 0.8, 1.2, "#2b2e38", 0.03, 0.03, True, name="beltRack")
+    for k, c in enumerate(list(BELT.values())[:6]): Wd(1.7, 1.75 - k * 0.19, 0.64, 0.1, c, 0.08, 0.02, False, name="beltRackBar")
+    Wd(5.9, 2.75, 1.6, 0.05, "#25252e", 0.07, 0.02, False, name="hangRail")
+    for k, x in enumerate((5.4, 5.9, 6.4)): wpoly([(x - 0.12, 2.7), (x + 0.12, 2.7), (x + 0.32, 2.55), (x + 0.24, 2.4), (x + 0.15, 2.45), (x + 0.15, 1.9), (x - 0.15, 1.9), (x - 0.15, 2.45), (x - 0.24, 2.4), (x - 0.32, 2.55)], "#25252e" if k != 1 else "#2f6fd6", 2, "tee")
+    text("proShopSign", "PRO SHOP", 4.9, WF + 0.1, 3.05, 0.4, 2.3, "#14121c", 0.05, False)
+    B(3.6, 11.5, 0.45, 3.4, 0.9, 0.9, "#f4f1e8", True, name="proCounter"); B(3.6, 11.5, 1.1, 3.4, 0.9, 0.5, "#b8dcee", True, name="glassCase"); B(3.6, 11.5, 1.37, 3.5, 0.95, 0.06, "#f4f1e8", True, name="caseTop")
+    for k, c in enumerate(list(BELT.values())[:7]): B(2.3 + k * 0.38, 11.97, 1.05, 0.3, 0.03, 0.22, c, False, name="beltInCase")
+    for x, c in ((2.3, "#d92b25"), (2.7, "#d92b25"), (3.6, "#2f6fd6"), (4.3, "#d92b25"), (4.6, "#d92b25")): E(x, 11.5, 1.55, 0.17, 0.14, 0.14, c, True, 8, 6, name="proGear")
+    B(5.0, 11.3, 1.55, 0.45, 0.35, 0.2, "#3a3a45", True, name="register")
+    # ======================= EAST WING: TWO CROSS DOORS with the HANDPRINT WALL between =======================
+    WF = RW
+    for (a, b), isB in ((LM.DOOR_A, False), (LM.DOOR_B, True)):
+        c = (a + b) / 2; Wd(c, 1.25, 1.62, 2.5, "#2f6fd6", 0.03, 0.04, True, name="doorFrameBlue"); Wd(c, 1.2, 1.4, 2.4, "#f4f1e8", 0.07, 0.03, True, name="doorLeaf")
+        for dx in (-0.3, 0.3): Wd(c + dx, 1.8, 0.5, 0.75, "#e6e2d8", 0.1, 0.01, False, name="doorPanel"); Wd(c + dx, 0.55, 0.5, 0.6, "#e6e2d8", 0.1, 0.01, False, name="doorPanel")
+        Wd(c, 1.55, 0.17, 1.3, RED, 0.11, 0.02, False, name="crossV"); Wd(c, 1.85, 0.8, 0.17, RED, 0.11, 0.02, False, name="crossH"); Wd(c + 0.55, 1.1, 0.09, 0.09, "#c8ccd4", 0.11, 0.03, False, name="knob")
+        if isB: Wd(c - 0.5, 1.25, 0.26, 0.34, "#2f6fd6", 0.11, 0.02, False, name="doorPlate")
+    a, b = LM.PRINTS; pcx = (a + b) / 2
+    wpoly(circ(pcx, 2.6, 0.44, 24, 0.82, 1.0), "#7a3f22", 1, "plaque"); wpoly(circ(pcx, 2.6, 0.36, 24, 0.82, 1.0), "#9a5a30", 2, "plaqueIn"); imgplane(LOGO, "plaqueLogo", pcx, 0.5, 0.5 * LOGO_AR, row=WF + 0.11, zc=2.62)
+    for p in (rect((pcx, 2.14), (pcx - 0.22, 1.7), 0.1), rect((pcx, 2.14), (pcx + 0.22, 1.7), 0.1), rect((pcx - 0.55, 2.14), (pcx + 0.55, 2.14), 0.09)): wpoly(p, "#25252e", 3, "blackBelt")
+    def ppoly(pts, hexc, lay): return _poly("hp", [(x, -(WF + 0.075 + 0.006 * lay) * K, z) for x, z in pts], hexc, (0, -1, 0))
+    n = 0
+    for zr in range(5):
+        for xr in range(6):
+            x = a + 0.28 + xr * 0.5 + (0.12 if zr % 2 else 0); z = 0.45 + zr * 0.5
+            if x > b - 0.1 or (abs(x - pcx) < 0.75 and 1.75 < z < 3.0) or (x > b - 0.5 and z < 1.6): continue
+            n += 1
+            for poly_ in hand(x, z, 1.1, ((n * 37) % 40) - 20): ppoly(poly_, "#d92b25" if n % 2 else "#2f6fd6", 1)
+    T(b - 0.2, WF + 0.16, 0.45, 1.3, 0.1, 0.1, "#d92b25", True, 10, name="extinguisher"); T(b - 0.2, WF + 0.16, 1.3, 1.4, 0.04, 0.04, "#25252e", False, 6, name="extHead")
+    B(22.8, 12.4, 0.35, 2.6, 0.8, 0.5, "#2bb3b3", True, bevel=0.05, name="sofaSeat"); B(22.8, 12.0, 0.8, 2.6, 0.25, 0.7, "#2bb3b3", True, bevel=0.05, name="sofaBack")
+    [B(22.8 + d_, 12.3, 0.55, 0.22, 0.9, 0.7, "#1f9a9a", True, bevel=0.04, name="sofaArm") for d_ in (-1.4, 1.4)]; B(21.9, 12.4, 0.65, 0.5, 0.6, 0.12, "#f08a24", False, name="sofaCushion"); B(23.7, 12.4, 0.65, 0.5, 0.6, 0.12, "#f5c542", False, name="sofaCushion")
+    # ======================= LOBBY LITTLE THINGS =======================
+    B(2.4, 15.9, 0.25, 1.8, 0.5, 0.1, "#9aa0b0", True, name="bench")
+    for x in (1.65, 3.15): B(x, 15.9, 0.12, 0.12, 0.4, 0.24, "#5b5f6e", False, name="benchLeg")
+    T(17.3, 17.5, 0, 0.8, 0.27, 0.24, "#7a7f8c", True, 12, name="trashCan", round_ground=True)
+    T(10.6, 17.5, 0, 0.45, 0.25, 0.2, "#a05a38", True, 12, name="plantPot", round_ground=True)
+    for k in range(5): E(10.6 + 0.12 * math.cos(k * 1.3), 17.5, 0.75 + 0.07 * (k % 2), 0.2, 0.12, 0.3, "#5f9e55", True, 8, 4, rot=(0, 15 * (k - 2), 0), name="leaf")
+    finish_and_render(28.4, 21.2, 13.5, 8.5, "inside-main-floor@2x.png")
 
 
 def scene_seating():

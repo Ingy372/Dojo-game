@@ -1,25 +1,50 @@
-# Delivery Note: Action Zone dojo, 3 samples
+# Delivery Note: Action Zone dojo, 3 samples (inside main floor rebuilt)
 
-**ITEM:** The real Action Zone dojo for the town square (Jay, via the Manager). Three samples only: outside face, inside main floor, parent seating.
+**ITEM:** The real Action Zone dojo for the town square (Jay, via the Manager). Three samples: outside face and parent seating (APPROVED, unchanged since PR review) and the inside main floor (REBUILT to Jay's description).
 
-**WHAT:** `samples/outside-face`, `samples/inside-main-floor`, `samples/parent-seating` (each @2x and 1x), plus two swappable overlay layers, now blank placeholders (`overlays/outside-phone-layer`, `overlays/outside-address-layer`), the three `.blend` files and the render script in `source/`. Blender toon_kit style, same camera and scale as PR #301. Nothing is drawn above the drywall. All the wall art and decor from the photos are in (belt-creed boards, Class Creed sign, flag, paintings, martial-styles mural, target wall, trophies, photo frames), stylised with no real faces. Handprints are plain, with no names and no names layer.
+**WHAT:** `samples/inside-main-floor@2x.png` (2272 x 1696, one wide room) plus 1x, and `samples/inside-main-floor-layout-diagram.png` (labelled top-down plan). Layout, entry at the bottom: PRO SHOP on the left; two cross doors with the plain-handprint wall between them on the right; the parent seating straight ahead; beyond it the red gear-bag box with the gap at its left end where students walk on; on the mat the yellow target wall on the left with the styles mural and Jay's logo art beside it; punching bags on the right; blue mats around a big red square with the school logo in the middle. Real creed wording, Jay's real logo, US flag, styles named as on the wall. Nothing above the drywall. Phone and address stay blank placeholders. Approved outside and seating PNGs are byte-unchanged.
 
-**WHY:** Jay wants the main dojo modelled on the real building. The samples let him check the likeness and the style before we build the real tiles and props.
-- Second pass: the first roof sat over the sign (wrong slab tilt), the first benches were inside the wall, the seat tiers hid each other, and the sign letters had a stray outline copy. All fixed. Added mural silhouettes, floor tile seams, downspouts, a bin, and the seating props.
-- Red check: the branded red is expected. Counts of red-ish pixels at @2x: outside 13,648, inside 35,154 (1x) / 141,754 (@2x), seating 76,158 (@2x). Sources: the sign letters, red chairs, banner stripe, red mat half, seat backs and cushions, flag stripes. Both overlay layers: 0 px. Nothing else red.
+**WHY:** The first main floor did not match the real room. This one is built from one list of numbers (`source/layout_main_floor.py`) that the 3D scene and the diagram both read, so the diagram is the check on placement.
+
+**Second pass, point by point against Jay's words:**
+- Upon entry, look left: pro shop. YES (west wing, left of the door).
+- Look right: two doors with crosses and the handprint wall between them. YES (east wing).
+- Straight ahead: parent seating. YES (centred on the door).
+- Beyond: red box for students' gear bags, and a gap for students to walk on the mat. YES (gap at the left end of the box).
+- Onto the mat, yellow men (throwing-star wall) to the LEFT with the logo art and styles beside it. YES (north wall, left; mural next to it).
+- Punching bags to the RIGHT. YES.
+- Blue mats surrounding a big red square, school logo in the centre. YES.
+- Approved outside face and seats not changed. YES (seat design reused; orientation flagged below).
+
+**Red check** (branded red, expected): inside @2x 379,761 px, 1x 95,184; layout diagram 207,703; textures logo 63,142 / belt creed 102,756 / flag 199,345. Outside @2x 13,648 and seating @2x 76,158 are unchanged. Sources: red square, red box, seats, logo, door crosses, creed titles, flag stripes, red bag, gloves and shoes, extinguisher (danger red).
+
+**Photo conflicts (photos versus Jay's description, and what I did):**
+1. The yellow men and the styles mural are on the WEST SIDE wall in the photos. A north-facing camera cannot see side walls, so I unfolded them onto the north wall, left to right, as Jay described.
+2. The red box in the photos is plain. I added bag openings, bags and books so it reads as a cubby (easy to remove).
+3. The gap in the photos is at the left end of the box. I used that.
+4. The photo mat has red/blue striped strips and a raised platform at the left. I kept plain blue around the red square, as Jay said.
+5. The photo red square is wider than deep with a lighter inner rectangle. Mine is a plain 8.2 x 6.3 tile rectangle with seams.
+6. The seats face the mat in the photos. The approved sample faced the camera/entry. I turned them to face the mat in this room (same seat model).
+7. The double doors with windows and the "THIS IS A BLACK BELT SCHOOL" banner are on the EAST wall in the photos. I put the double doors on the north wall; the banner is skipped.
+8. The photo targets show faces and chests. I used plain faceless torsos (kid-friendly, no faces).
+9. In the photos the Class Creed, flag and belt boards run above the drywall line. I kept everything below it.
+10. The ropes and rings hang from the ceiling. I put the ropes on a short rail at drywall height.
+11. The wall wording has typos ("falled", "Christ dies"). I corrected them to "fallen" and "Christ died"; "it's sound" is kept as written. I left out the signature.
+12. The pro-shop case in the photos holds weapons. I show gloves, headgear, shoes and belts only.
 
 **DECIDE:**
-1. **Branded red exception.** The red on the sign, chairs, red mat half, red seats, banner stripe and flag stripes is Jay's real branding. That is an exception to the no-red-outside-danger rule. Confirm it, and say whether it applies in the game or only in these samples. Should red-mat and red-seat tints stay saturated, or be softened toward coral?
-2. **Sign wording.** Keep "CMA MARTIAL ARTS"? Ours reads only "CMA / MARTIAL ARTS" (no "Action Zone").
-3. **Creed text.** Blank lines (as drawn) or real words via the Content Designer? Real words would need a legible size, so the boards and the Class Creed sign would be shown larger or in a UI popup.
-4. **Pro shop items.** Drawn as plain shapes: gloves, kick pads, folded uniforms, headgear, a belt case, no blades. Do you want real brands, a "shop" panel in the UI instead, or this look?
-5. **How the outside connects to the town-square slot.** The outside face is 14 x 8.9 tiles at 80 ppt, much bigger than the 3-door row in the square. Options: replace the left dojo slot with this face scaled down; keep it as the Action Zone entrance screen after tapping the dojo; or use only the facade and doors as the slot.
-6. **Phone and house number: scrub the history?** The real values are removed from the branch tip: the overlay layers are blank placeholders and the script reads the values from a local, git-ignored `source/local_overlay_values.json`. They still sit in the history of the first commit (`af9fd2a`: overlay PNGs, .blend files, script), and the repo is public. Should that history be scrubbed (rewrite and force-push, or squash-merge and delete the branch, which still leaves the old commit reachable on GitHub)? No history rewrite has been done.
-7. **Logo.** The sign badge and the mat centre use a plain white kick figure I drew. Jay's own logo is in `badges-trophies-a3c/source/jay-logo/`. Should the badge and mat use that instead (its red cross would be a second branded red)?
-8. **Flag.** A US flag with red stripes. Keep it, or switch to a school flag in blue/gold?
-9. **Mural.** Four plain silhouettes (kick, punch, block, bow). Does the real mural show specific styles (karate, taekwondo...) that should be named by the Content Designer?
-10. **Cutaway and size.** The inside is a front-cut diorama, 22 tiles wide at 80 ppt (1840 px). Should it scroll sideways, or should the pro shop, mats and wall split into separate screens?
+1. **Branded red exception.** Red square, red box, red seats, the logo, door crosses, creed titles and flag stripes are Jay's branding. Confirm it, in the game or only in the samples.
+2. **Seat direction.** Seats now face the mat (as in the photos); the approved sample faced the entry. Keep?
+3. **Unfolded side-wall features** (yellow men, mural, back doors on the north wall). OK, or should the game use a side-wall view?
+4. **Red box openings I added**, and the pro-shop look. Keep or make it plain like the photo?
+5. **Typos corrected** in the creed wording. Keep the corrections, or copy the wall exactly?
+6. **Creed text size.** At the game size the creed boards are not readable; the full-size pictures are in `source/textures/`. Show them larger or in a popup?
+7. **Logo use.** Jay's logo is his own file. Is it cleared for this public repo?
+8. **One wide room**, 28 x 21 tiles at 80 ppt (2272 x 1696). Scroll it, or split it?
+9. **Outside face** still has my plain kick-figure badge (approved as is). Swap to Jay's logo later?
+10. **Phone and house number: scrub the history?** The real values are out of the branch tip (blank placeholders, read from a local git-ignored `source/local_overlay_values.json`) but still sit in the history of commit `af9fd2a`, and the repo is public. Scrubbing needs a history rewrite and force-push; none has been done. Jay decides.
+11. **Sign wording** on the outside ("CMA / MARTIAL ARTS") and the **outside to town-square slot** question from the first note still stand.
 
-**NEXT:** Once Jay answers, build the real game-scale tiles and props: the outside face slot, the mats and logo, the wall art pieces as swappable decals, and the pro shop as an interactable prop.
+**NEXT:** Once Jay answers, build the real game-scale tiles and props from this layout: mats and logo, wall art as swappable decals, the pro shop and cubby as interactable props.
 
-Reference photos stayed outside the repo (`/workspace/dojo-photos/`). Only `incoming-art/` is touched.
+Reference photos stayed outside the repo (`/workspace/dojo-photos/`); no photo or crop is committed. Only `incoming-art/` is touched.
