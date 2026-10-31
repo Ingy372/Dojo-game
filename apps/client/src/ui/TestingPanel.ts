@@ -96,16 +96,17 @@ export class TestingPanel {
     if (maxScroll > 0) {
       let startY = 0;
       let startScroll = 0;
+      // The canvas runs at zoom 1/DPR: the pointer's raw x and y are device pixels; worldX and worldY are the scene units the layout uses.
       this.onDown = (p: Phaser.Input.Pointer) => {
-        startY = p.y;
+        startY = p.worldY;
         startScroll = -list.y;
         this.dragged = false;
       };
       this.onMove = (p: Phaser.Input.Pointer) => {
-        if (!p.isDown || !list.active || p.x > leftW + pad * 2) return;
-        if (Math.abs(p.y - startY) > 8) this.dragged = true;
+        if (!p.isDown || !list.active || p.worldX > leftW + pad * 2) return;
+        if (Math.abs(p.worldY - startY) > 8) this.dragged = true;
         if (this.dragged) {
-          list.y = -Phaser.Math.Clamp(startScroll + (startY - p.y), 0, maxScroll);
+          list.y = -Phaser.Math.Clamp(startScroll + (startY - p.worldY), 0, maxScroll);
           this.updateRowHits(list.y);
         }
       };
@@ -181,7 +182,7 @@ export class TestingPanel {
     const inList = this.host !== this.container;
     if (inList) this.rows.push({ bg, top: y, h });
     bg.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (p: Phaser.Input.Pointer) => {
-      if (inList && (this.dragged || p.y < this.viewTop || p.y > this.viewBottom)) return;
+      if (inList && (this.dragged || p.worldY < this.viewTop || p.worldY > this.viewBottom)) return;
       onTap();
     });
   }

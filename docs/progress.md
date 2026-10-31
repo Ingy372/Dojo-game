@@ -1029,3 +1029,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Tests: `packages/sim/test/q-prem2-routine.test.ts` (new) and `q-prem-f6-again.test.ts`, `p-menu-e-buttons.test.ts` updated. Golden fixture unchanged.
 - Next: Jay: play the preview on a phone (Board, Create, tutorial, Practice room, a knock-out); the Manager checks the shots in `/workspace/shots/q-premium-2-fix/`.
 - QA follow-up on #400: the testing-screen Close works after the list is scrolled (Close on top, off-view rows not tappable, Close label centred), tapping the middle of the inside exit glow leaves the dojo, and the Training Points line no longer overlaps Virtues. Tests are in `packages/sim/test/q-prem2-routine.test.ts`.
+- N1 fix: the testing screen reads the pointer in scene units (worldX / worldY), so its buttons, rows and scrolling work at DPR 1.5 and 3. No other client file had the bug.
+

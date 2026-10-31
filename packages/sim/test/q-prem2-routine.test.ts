@@ -143,3 +143,24 @@ describe('Q-PREMIUM-2 QA: inside exit glow and testing screen', () => {
     expect(s).toMatch(/this\.text\(rx, ry \+ 15, part\.detail, 10, '#b9ad99', false, rw\)/);
   });
 });
+
+describe('Q-PREMIUM-2 N1: the testing screen reads the pointer in scene units', () => {
+  const s = read('ui/TestingPanel.ts');
+  it('never compares the raw device-pixel p.x / p.y with scene units', () => {
+    expect(s).not.toMatch(/\bp\.(x|y)\b/);
+    expect(s).toMatch(/startY = p\.worldY/);
+    expect(s).toMatch(/p\.worldX > leftW \+ pad \* 2/);
+    expect(s).toMatch(/startY - p\.worldY/);
+    expect(s).toMatch(/p\.worldY < this\.viewTop \|\| p\.worldY > this\.viewBottom/);
+  });
+  it('no client file compares a pointer p.x / p.y (device pixels) with scene units without dividing by DPR or using world coordinates', () => {
+    const bad: string[] = [];
+    for (const [path, text] of Object.entries(src)) {
+      text.split('\n').forEach((line, i) => {
+        if (/getWorldPoint\(/.test(line)) return;
+        for (const m of line.matchAll(/\b(?:pointer|ptr)\.[xy]\b(?!\s*\/\s*DPR)/g)) bad.push(`${path}:${i + 1}:${m[0]}`);
+      });
+    }
+    expect(bad).toEqual([]);
+  });
+});
