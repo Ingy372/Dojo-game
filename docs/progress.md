@@ -1023,3 +1023,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Town button in the Home Dojo is still the PLACEHOLDER way out.
 - Tests: `action-zone-outside.test.ts` and `action-zone.test.ts` updated and extended (wantsThrough, cue loader check, spawn distance, source pins). Merged main 35aa0c2f (the hotfix's baked buttons and cues carried forward).
 - Next: Jay: play on the preview link and check the glows and the doorstep.
+
+## Q-PREMIUM-2-fix — routine findings from the premium pass (2026-10-31)
+- Fixed the 16 routine findings (H2, M3, M6, M7, M9, M10, M12, L2, L3, L4, L5, L7, L8, L9, L10, L11) as far as the rules allow; partials and skips are listed in `docs/decisions.md`. L8 is investigate-only (no change).
+- Tests: `packages/sim/test/q-prem2-routine.test.ts` (new) and `q-prem-f6-again.test.ts`, `p-menu-e-buttons.test.ts` updated. Golden fixture unchanged.
+- Next: Jay: play the preview on a phone (Board, Create, tutorial, Practice room, a knock-out); the Manager checks the shots in `/workspace/shots/q-premium-2-fix/`.
