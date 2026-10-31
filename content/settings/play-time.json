@@ -4,7 +4,7 @@
   "grownUpButton": "For grown-ups",
   "gateText": "Grown-ups: what is {a} + {b}?",
   "title": "Play-time limit",
-  "help": "Play time adds up through the day and starts fresh at midnight. When it's up, your child finishes the room they're in. Then the game praises their training and returns to the dojo. No new climb starts until tomorrow. Nothing they found is lost.",
+  "help": "Play time adds up each day and resets at midnight. When it is up, your child finishes their room and returns to the dojo. Nothing is lost.",
   "off": "Off",
   "minutes": "{n} min",
   "done": "Done",

@@ -85,3 +85,56 @@ describe('Q-PREM-F6 Again! is never cut off on the Last run panel', () => {
     expect(src).toMatch(/makePanelScroll\(content, h > inner \? h - inner \+ this\.runFooter : 0, this\.runFooter\)/);
   });
 });
+
+// Q-PREMIUM-2 H2: on the short 667x320 phone the loot comes first, so Found and New for you show without scrolling.
+describe('Q-PREMIUM-2 H2 loot first when only part of the contents show', () => {
+  const ch = 257;
+  const visible = 320 - 54 - 8 - 20 - ROD;
+  it('667x320: Found and New for you sit right under the banner, above the chips', () => {
+    const L = lastRunLayout(375, ch, 9, 5, 3, visible);
+    expect(L.foundLabelY).toBe(MIN_TAP + S1);
+    expect(L.newLabelY).toBe(L.foundLabelY);
+    expect(L.found.y).toBeLessThan(L.chipsY);
+    expect(L.newCard.y).toBeLessThan(L.chipsY);
+    // inside the part that shows before any scrolling (window ends AGAIN footer above the bottom)
+    const pin = pinnedAgain(L.again, ch, visible, 16);
+    expect(L.found.y + L.found.h).toBeLessThanOrEqual(visible - pin.footer);
+    expect(L.newCard.y + L.newCard.h).toBeLessThanOrEqual(visible - pin.footer);
+  });
+  it('everything still fits the contents, taps >= 44, Always keeps a row, nothing tappable near Again!', () => {
+    for (const found of [0, 3, 30]) {
+      const L = lastRunLayout(375, ch, 9, 5, found, visible);
+      for (const b of [L.banner, L.bests, ...L.tiles, L.bar, L.found, L.newCard, L.again]) expect(b.y + b.h).toBeLessThanOrEqual(ch + 0.01);
+      for (const b of [L.bests, L.newCard, L.again]) expect(Math.min(b.w, b.h)).toBeGreaterThanOrEqual(MIN_TAP);
+      expect(L.found.h).toBeGreaterThanOrEqual(MIN_TAP);
+      expect(L.perAlways).toBeGreaterThan(0);
+      expect(L.alwaysY + L.alwaysIcon).toBeLessThanOrEqual(ch);
+      expect(L.found.x + L.found.w).toBeLessThan(L.newCard.x);
+      expect(L.newCard.y + L.newCard.h + AGAIN_CLEAR).toBeLessThanOrEqual(L.again.y);
+    }
+  });
+  it('a phone with room (the whole contents show) keeps the old order', () => {
+    const L = lastRunLayout(359, ch, 9, 5, 3, ch);
+    expect(L.found.y).toBeGreaterThan(L.bar.y);
+  });
+  it('the Board passes the visible height to the layout', () => {
+    expect(src).toMatch(/lastRunLayout\(cw, ch, m\.chips\.length, m\.stats\.length, m\.found\.length, visibleH - 2 \* \(6 \+ S1\)\)/);
+  });
+});
+
+describe('Q-PREMIUM-2 H2 / M6 short-phone Trophy Case and kata icons', () => {
+  it('a short one-row Trophy Case slims the ribbon so cubbies reach the two-line width', async () => {
+    const { trophyLayout, CUBBY_ONE_ROW } = await import('../../../apps/client/src/ui/trophyCase');
+    const L = trophyLayout(359, 186);
+    expect(L.rowsPerPage).toBe(1);
+    expect(L.cubby).toBeGreaterThanOrEqual(CUBBY_ONE_ROW);
+    expect(L.ribbonH).toBeLessThan(40);
+    const tall = trophyLayout(529, 300);
+    expect(tall.ribbonH + tall.rowsPerPage * tall.rowH + tall.pagerH).toBeLessThanOrEqual(300);
+  });
+  it('a trophy with no icon art draws a placeholder star, in the cubby and on New for you', () => {
+    expect(src).toMatch(/function placeholderIcon\(/);
+    expect(src).toMatch(/icon \?\? placeholderIcon\(this, ix, iy, is, true\)/);
+    expect(src).toMatch(/else v\.add\(placeholderIcon\(this, 0, iy, iconS, c\.earned\)\)/);
+  });
+});

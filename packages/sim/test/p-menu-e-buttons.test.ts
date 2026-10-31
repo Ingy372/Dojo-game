@@ -59,7 +59,7 @@ describe('P-MENU-e: CreateScene buttons are drawn at least 44 tall', () => {
     expect(calls.length).toBe(5);
     for (const c of calls) expect(c).toMatch(/, (MIN_TAP|h), (?:'|b ===|this\.first)/);
     expect(method(create, 'stepper')).toMatch(/const h = MIN_TAP;/);
-    expect(create).toMatch(/const btnRowH = MIN_TAP \+ S1;/);
+    expect(create).toMatch(/const btnRowH = MIN_TAP \+ 2;/); // Q-PREMIUM-2 M3: 2 px gaps so the colour rows get the room
   });
   it("keeps the Boy / Girl words as they are (Jay hasn't decided them yet)", () => {
     expect(create).toMatch(/b === 'a' \? 'Boy' : 'Girl'/);

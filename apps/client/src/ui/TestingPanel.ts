@@ -6,7 +6,7 @@ import Phaser from 'phaser';
 import { powerRating, xpToNext, type PowerSource, type Profile, type TrainingState } from '@dojo/sim';
 import { FAKE_PROFILES, selectedProfileKey } from '../game/student';
 import { FONT, crisp, view } from './theme';
-import { GREEN } from './tokens';
+import { GREEN, MIN_TAP } from './tokens';
 
 const SOURCE_NAME: Record<PowerSource, string> = {
   signOffs: 'Sign-offs',
@@ -30,6 +30,18 @@ const COUNT_WORDS: Record<number, string> = { 2: 'two', 3: 'three', 4: 'four', 5
 
 export class TestingPanel {
   readonly container: Phaser.GameObjects.Container;
+  private scroller: Phaser.GameObjects.Container | null = null;
+  private onDown: ((p: Phaser.Input.Pointer) => void) | null = null;
+  private onMove: ((p: Phaser.Input.Pointer) => void) | null = null;
+  /** Q-PREMIUM-2 L7: where text and buttons go (the scrolling list while it is built, else the panel). */
+  private host: Phaser.GameObjects.Container;
+  /** True while a finger is dragging the list, so the lift does not tap a button. */
+  private dragged = false;
+  /** The screen rows the list shows (a button outside them cannot be tapped). */
+  private viewTop = 0;
+  private viewBottom = 0;
+  /** The list's buttons: a row that has scrolled out of the view stops taking taps (a mask only hides pixels, not hit areas). */
+  private rows: Array<{ bg: Phaser.GameObjects.Rectangle; top: number; h: number }> = [];
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -39,14 +51,27 @@ export class TestingPanel {
   ) {
     const { width, height } = view(scene);
     this.container = scene.add.container(0, 0).setDepth(90);
-    this.container.add(scene.add.rectangle(0, 0, width, height, 0x0d0b14, 0.97).setOrigin(0).setInteractive());
+    this.host = this.container;
+    // Q-PREMIUM-2 L7: fully solid, so the Board never shows through.
+    const backdrop = scene.add.rectangle(0, 0, width, height, 0x0d0b14, 1).setOrigin(0).setInteractive();
+    this.container.add(backdrop);
     const pad = 14;
     const leftW = Math.min(300, width * 0.42);
 
-    this.text(pad, pad, 'Testing screen', 20, '#ff9f6b', true);
-    this.text(pad, pad + 26, 'Hidden from players. Fake students until DojoForge is connected.', 11, '#b9ad99', false, leftW);
+    // Close is at the top, always on screen; the list under it scrolls.
+    this.text(pad, pad + 8, 'Testing screen', 20, '#ff9f6b', true);
+    this.text(pad, pad + MIN_TAP + 4, 'Hidden from players. Fake students until DojoForge is connected.', 11, '#b9ad99', false, leftW);
+    this.viewTop = pad + MIN_TAP + 4 + 30;
+    this.viewBottom = height;
 
-    let y = pad + 58;
+    const list = scene.add.container(0, 0);
+    this.container.add(list);
+    this.host = list;
+    const maskG = scene.make.graphics({}, false);
+    maskG.fillStyle(0xffffff).fillRect(0, this.viewTop, leftW + pad * 2, height - this.viewTop);
+    list.setMask(maskG.createGeometryMask());
+
+    let y = this.viewTop + 4;
     this.text(pad, y, `Student profile (same student, ${COUNT_WORDS[FAKE_PROFILES.length] ?? FAKE_PROFILES.length} points in time):`, 12, '#f2e9d8', false, leftW);
     y += 20;
     const current = selectedProfileKey();
@@ -62,7 +87,34 @@ export class TestingPanel {
     this.button(pad, y, half, 32, '+1 level', GREEN, 13, actions.addLevel);
     this.button(pad + half + 8, y, half, 32, 'Back to level 1', 0x6b3a3a, 12, actions.resetLevel);
     y += 38;
-    this.button(pad, y, leftW, 34, 'Close', 0x5b4a3c, 15, actions.close);
+    this.host = this.container;
+    // Close is added after the list so it is above every list row, whatever the list is doing.
+    this.button(pad + leftW - 96, pad, 96, MIN_TAP, 'Close', 0x5b4a3c, 15, actions.close, true);
+
+    // Drag the left list up and down; it stops at both ends.
+    const maxScroll = Math.max(0, y + pad - height);
+    if (maxScroll > 0) {
+      let startY = 0;
+      let startScroll = 0;
+      // The canvas runs at zoom 1/DPR: the pointer's raw x and y are device pixels; worldX and worldY are the scene units the layout uses.
+      this.onDown = (p: Phaser.Input.Pointer) => {
+        startY = p.worldY;
+        startScroll = -list.y;
+        this.dragged = false;
+      };
+      this.onMove = (p: Phaser.Input.Pointer) => {
+        if (!p.isDown || !list.active || p.worldX > leftW + pad * 2) return;
+        if (Math.abs(p.worldY - startY) > 8) this.dragged = true;
+        if (this.dragged) {
+          list.y = -Phaser.Math.Clamp(startScroll + (startY - p.worldY), 0, maxScroll);
+          this.updateRowHits(list.y);
+        }
+      };
+      scene.input.on(Phaser.Input.Events.POINTER_DOWN, this.onDown);
+      scene.input.on(Phaser.Input.Events.POINTER_MOVE, this.onMove);
+    }
+    this.scroller = list;
+    this.updateRowHits(0);
 
     // ---- Power Rating
     const rx = pad * 2 + leftW;
@@ -82,7 +134,8 @@ export class TestingPanel {
       g.fillStyle(0x2a2536).fillRect(rx + 240, ry + 3, rw - 240, 8);
       g.fillStyle(0xffd166).fillRect(rx + 240, ry + 3, (rw - 240) * part.fill, 8);
       this.container.add(g);
-      this.text(rx + 118, ry + 15, part.detail, 10, '#b9ad99', false, rw - 118);
+      // The detail line starts at the label's left edge so a long one (Training Points) stays on one line.
+      this.text(rx, ry + 15, part.detail, 10, '#b9ad99', false, rw);
       ry += rowH;
     }
     ry += 4;
@@ -97,7 +150,18 @@ export class TestingPanel {
     }
   }
 
+  /** Q-PREMIUM-2 L7: only a row that is wholly inside the list view can be hit. */
+  private updateRowHits(scrollY: number): void {
+    for (const r of this.rows) {
+      const inView = r.top + scrollY >= this.viewTop && r.top + r.h + scrollY <= this.viewBottom;
+      if (r.bg.input) r.bg.input.enabled = inView;
+    }
+  }
+
   destroy(): void {
+    if (this.onDown) this.scene.input.off(Phaser.Input.Events.POINTER_DOWN, this.onDown);
+    if (this.onMove) this.scene.input.off(Phaser.Input.Events.POINTER_MOVE, this.onMove);
+    this.scroller?.clearMask(true);
     this.container.destroy();
   }
 
@@ -105,14 +169,21 @@ export class TestingPanel {
     const t = this.scene.add
       .text(x, y, str, { fontFamily: FONT, fontSize: `${size}px`, color, fontStyle: bold ? 'bold' : 'normal', wordWrap: wrap ? { width: wrap } : undefined })
       .setResolution(crisp());
-    this.container.add(t);
+    this.host.add(t);
     return t;
   }
 
-  private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void): void {
+  private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void, centre = false): void {
     const bg = this.scene.add.rectangle(x, y, w, h, color).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.3);
-    this.container.add(bg);
-    this.text(x + 10, y + h / 2, label, size, '#ffffff', true, w - 16).setOrigin(0, 0.5);
-    bg.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, onTap);
+    this.host.add(bg);
+    const t = this.text(centre ? x + w / 2 : x + 10, y + h / 2, label, size, '#ffffff', true, w - 16);
+    t.setOrigin(centre ? 0.5 : 0, 0.5);
+    if (centre) t.setAlign('center');
+    const inList = this.host !== this.container;
+    if (inList) this.rows.push({ bg, top: y, h });
+    bg.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (p: Phaser.Input.Pointer) => {
+      if (inList && (this.dragged || p.worldY < this.viewTop || p.worldY > this.viewBottom)) return;
+      onTap();
+    });
   }
 }

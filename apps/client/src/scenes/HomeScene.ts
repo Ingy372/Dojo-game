@@ -264,15 +264,21 @@ export class HomeScene extends Phaser.Scene {
     const { width, height } = view(this);
     const still = reducedMotion();
     const box = this.add.container(0, 0).setDepth(60);
-    const w = Math.min(420, width - 40);
+    // Q-PREMIUM-2 L11: the card sits over the top of the right-hand panel, so the player card and the ENTER button
+    // stay free and tappable; the dim layer is gone, and a tap on the card itself dismisses it.
+    const pad = height < LEFT_FULL_H ? S2 : 16;
+    const rightX = pad + Math.min(300, width * 0.38) + pad;
+    const rightW = width - rightX - pad;
+    const w = Math.min(420, rightW);
+    const cx = rightX + rightW / 2;
     const h = pointer ? 92 : 60;
-    const cy = height * 0.42;
-    const shade = this.add.rectangle(0, 0, width, height, 0x000000, 0.35).setOrigin(0).setInteractive();
-    box.add([shade, this.add.rectangle(width / 2, cy, w, h, 0x221d2e).setStrokeStyle(3, 0xffd166)]);
+    const cy = pad + h / 2;
+    const shade = this.add.rectangle(cx, cy, w, h, 0x221d2e).setStrokeStyle(3, 0xffd166).setInteractive();
+    box.add(shade);
     const line = (y: number, str: string, size: number, color: string) =>
       box.add(
         this.add
-          .text(width / 2, y, str, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color, align: 'center', wordWrap: { width: w - 24 } })
+          .text(cx, y, str, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color, align: 'center', wordWrap: { width: w - 24 } })
           .setOrigin(0.5)
           .setResolution(crisp()),
       );
@@ -377,7 +383,8 @@ export class HomeScene extends Phaser.Scene {
     const rowTop = pad + 44 + S2;
     const level = effectiveLevel(this.profile, t);
     const atCap = level >= t.levelCap;
-    const levelLine = `Level ${level}  ·  ${atCap ? 'Level cap! The Gate shows how to go higher.' : `cap ${t.levelCap}`}`;
+    // Q-PREMIUM-2 L3: "Level 5 of 40", not "cap 40" (a game word a child does not know).
+    const levelLine = atCap ? `Level ${level}  ·  Top level! The Gate shows how to go higher.` : `Level ${level} of ${t.levelCap}`;
     // Compact: the stack gains the level line (and keeps the Blessing line), so the row grows to fit it.
     const stackH = TYPE.title + S1 + TYPE.body + (t.blessed ? S1 + TYPE.label : 0) + (short ? S1 + TYPE.label + 2 : 0);
     const rowH = short ? Math.max(56, stackH + S1) : 64;
@@ -409,7 +416,7 @@ export class HomeScene extends Phaser.Scene {
     let y = rowTop + rowH + S2;
     if (!short) {
       this.text(pad, y, `Level ${level}`, TYPE.body, '#f2e9d8', true);
-      this.oneLine(this.text(pad + leftW, y + 1, atCap ? 'Level cap! The Gate shows how to go higher.' : `cap ${t.levelCap}`, TYPE.label, atCap ? '#ffd166' : '#b9ad99').setOrigin(1, 0), leftW - 70, 10);
+      this.oneLine(this.text(pad + leftW, y + 1, atCap ? 'Top level! The Gate shows how to go higher.' : `of ${t.levelCap}`, TYPE.label, atCap ? '#ffd166' : '#b9ad99').setOrigin(1, 0), leftW - 70, 10);
       y += TYPE.body + 4 + S2;
     }
     const share = atCap ? 1 : Math.min(1, this.profile.xp / xpToNext(level, t.belts));
@@ -723,7 +730,7 @@ export class HomeScene extends Phaser.Scene {
       return;
     }
     const m = buildLastRun(last, playTimeText.homeHeadline);
-    const L = lastRunLayout(cw, ch, m.chips.length, m.stats.length, m.found.length);
+    const L = lastRunLayout(cw, ch, m.chips.length, m.stats.length, m.found.length, visibleH - 2 * (6 + S1));
     const X = (v: number) => cx0 + v;
     const Y = (v: number) => cy0 + v;
     const count = takeCountUp(safeStore(), runId(this.profile), reducedMotion());
@@ -928,7 +935,7 @@ export class HomeScene extends Phaser.Scene {
       const ix = tall ? 0 : -nc.w / 2 + S2 + is / 2;
       const iy = tall ? -nc.h / 2 + S2 + is / 2 : 0;
       const icon = fresh.icon ? addIcon(this, fresh.icon, ix, iy, is) : null;
-      b.visual.add(icon ?? this.add.circle(ix, iy, is / 2, 0xffd166, 0.9));
+      b.visual.add(icon ?? placeholderIcon(this, ix, iy, is, true));
       const tw = tall ? nc.w - 2 * S2 : nc.w - 3 * S2 - is;
       const label = this.add.text(tall ? 0 : ix + is / 2 + S2, tall ? iy + is / 2 + S1 : 0, fresh.short ?? fresh.name, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#fff6e6', fontStyle: 'bold', align: tall ? 'center' : 'left', wordWrap: { width: tw } }).setResolution(crisp()).setOrigin(tall ? 0.5 : 0, tall ? 0 : 0.5);
       b.visual.add(wrapLikeCubby(label, fresh.short ?? fresh.name, tw));
@@ -1077,19 +1084,25 @@ export class HomeScene extends Phaser.Scene {
       const b = button(this, { x: x + i * (L.slotW + S2), y, w: L.slotW, h: L.slotH, label: '', color: on ? WOOD.switchOn : WOOD.frameDark, size: TYPE.body, selected: on, stroke: WOOD.grain, onTap: () => this.pickSlot(slot) }, this.ui);
       const v = b.visual.setData('styleSlot', slot);
       const top = -L.slotH / 2;
-      const glyphR = Math.min(18, Math.max(12, (L.slotH - 52) / 2));
-      v.add(this.add.circle(0, top + 6 + glyphR, glyphR, BOARD_PAPER, 0.95).setStrokeStyle(2, 0xffd166, on ? 1 : 0.5));
-      v.add(this.add.text(0, top + 6 + glyphR, STYLE_WORDS.glyphs[slot], { fontFamily: FONT, fontSize: `${Math.round(glyphR * 1.1)}px`, color: ink }).setOrigin(0.5).setResolution(crisp()));
-      const ny = top + 6 + 2 * glyphR + 2;
-      const slotLabel = this.add.text(0, ny, STYLE_WORDS.slots[slot].toUpperCase(), { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e3c4', fontStyle: 'bold' }).setOrigin(0.5, 0).setResolution(crisp());
-      v.add(slotLabel);
+      let glyphR = Math.min(18, Math.max(12, (L.slotH - 52) / 2));
+      const disc = this.add.circle(0, 0, glyphR, BOARD_PAPER, 0.95).setStrokeStyle(2, 0xffd166, on ? 1 : 0.5);
+      const glyph = this.add.text(0, 0, STYLE_WORDS.glyphs[slot], { fontFamily: FONT, fontSize: `${Math.round(glyphR * 1.1)}px`, color: ink }).setOrigin(0.5).setResolution(crisp());
+      const slotLabel = this.add.text(0, 0, STYLE_WORDS.slots[slot].toUpperCase(), { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e3c4', fontStyle: 'bold' }).setOrigin(0.5, 0).setResolution(crisp());
       // P-MENU2-SPACE: the name starts under the label's real line height (12 + 2 overlapped it by 1).
-      const nameY = ny + slotLabel.height + 2;
-      const name = this.add.text(0, nameY, pick ? pick.name : STYLE_WORDS.noVirtue, { fontFamily: FONT, fontSize: `${TYPE.body}px`, color: '#fff6e6', fontStyle: 'bold', align: 'center', wordWrap: { width: L.slotW - 2 * S2 } }).setOrigin(0.5, 0).setResolution(crisp());
-      // Names wrap to two lines instead of being cut; shrink only if two lines still don't fit.
-      const room = L.slotH / 2 - nameY - 4;
-      if (name.height > room) name.setFontSize(TYPE.label);
-      v.add(name);
+      const name = this.add.text(0, 0, pick ? pick.name : STYLE_WORDS.noVirtue, { fontFamily: FONT, fontSize: `${TYPE.body}px`, color: '#fff6e6', fontStyle: 'bold', align: 'center', wordWrap: { width: L.slotW - 2 * S2 } }).setOrigin(0.5, 0).setResolution(crisp());
+      // Q-PREMIUM-2 M6: names wrap to two lines and stay inside the card: step the name to 12, then shrink the
+      // glyph disc (down to 10) until the name's last line clears the card's bottom by 4.
+      const place = (): number => {
+        disc.setRadius(glyphR).setPosition(0, top + 6 + glyphR);
+        glyph.setFontSize(Math.round(glyphR * 1.1)).setPosition(0, top + 6 + glyphR);
+        const ny = top + 6 + 2 * glyphR + 2;
+        slotLabel.setPosition(0, ny);
+        name.setPosition(0, ny + slotLabel.height + 2);
+        return L.slotH / 2 - 4 - (name.y + name.height);
+      };
+      if (place() < 0) name.setFontSize(TYPE.label);
+      while (place() < 0 && glyphR > 10) glyphR -= 1;
+      v.add([disc, glyph, slotLabel, name]);
     });
 
     // The tray: picks for the chosen slot, earned first. Equipped one is gold-outlined.
@@ -1390,7 +1403,7 @@ export class HomeScene extends Phaser.Scene {
     if (skin && c.earned) txt.setStroke(WOOD.ink, 4).setData('cubbyName', true);
     const icon = c.icon ? addIcon(this, c.icon, 0, iy, iconS) : null;
     if (icon) v.add(icon.setAlpha(c.earned ? 1 : 0.3));
-    else v.add(this.add.circle(0, iy, iconS / 2, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.3));
+    else v.add(placeholderIcon(this, 0, iy, iconS, c.earned));
     v.add(txt);
     const seal = c.earned && skin ? menu2Image(this, 'cubby-seal', half - 12, -half + 12, 24, 24) : null;
     const lantern = !c.earned && skin ? (next ? menu2Image(this, 'cubby-lantern-0', half - 14, -half + 16, 18, 24) : undefined) : null;
@@ -1631,8 +1644,8 @@ export class HomeScene extends Phaser.Scene {
     dial.lineStyle(3, 0x6b6478).strokeCircle(sx, sy, sr);
     this.ui.add(dial);
     const tx = sx + sr + S2 + 2;
-    this.oneLine(this.text(tx, titleY, 'Time in rank', TYPE.title, '#f2e9d8', true), textW, TYPE.label);
-    this.text(tx, lineY, `${Math.min(g.classesInRank, g.classesBeforeTest)} of ${g.classesBeforeTest} classes`, TYPE.body, '#b9ad99', false, FONT, textW).setMaxLines(2);
+    this.oneLine(this.text(tx, titleY, 'Classes done', TYPE.title, '#f2e9d8', true), textW, TYPE.label);
+    this.text(tx, lineY, `${Math.min(g.classesInRank, g.classesBeforeTest)} of ${g.classesBeforeTest}`, TYPE.body, '#b9ad99', false, FONT, textW).setMaxLines(2);
 
     const kx = x + cardW + GATE.cardGap + S2 + 4 + sr;
     const seal = this.add.container(kx, sy);
@@ -1654,7 +1667,7 @@ export class HomeScene extends Phaser.Scene {
     const kt = kx + sr + S2 + 2;
     this.oneLine(this.text(kt, titleY, "Sensei's Seal", TYPE.title, '#f2e9d8', true), textW, TYPE.label);
     // Never shows or guesses a reason when the Seal isn't lit.
-    const sealText = g.sealLit ? (g.testDate ? `Test day: ${shortDate(g.testDate)}` : 'Approved to test!') : 'Lights when Sensei approves you to test.';
+    const sealText = g.sealLit ? (g.testDate ? `Test day: ${shortDate(g.testDate)}` : 'Approved to test!') : "Lit when Sensei says you're ready.";
     // The full words always show: shrink toward 12 until they fit the card (no cut-off reason).
     const st = this.text(kt, lineY, sealText, TYPE.body, g.sealLit ? '#ffd166' : '#b9ad99', g.sealLit, FONT, textW);
     for (let size = TYPE.body; st.height > cardY + GATE.cardH - 6 - lineY && size > TYPE.label; ) st.setFontSize(--size);
@@ -2224,9 +2237,9 @@ function RARITY_ORDER(item: GearItem): number {
 }
 
 /** "Signed off by Sensei Jay · Sat, Nov 2", or "Passed at White Belt" for the legacy grant. */
-/** A short label for a Gate lock: "Basic Form 1", "SD #6", "Kick 2". */
+/** A short label for a Gate lock: "Basic Form 1", "Defense 6", "Kick 2". */
 function shortName(r: RequirementStatus): string {
-  return r.name.replace('Self-Defense ', 'SD ').replace('Kick Combo ', 'Kick ');
+  return r.name.replace('Self-Defense ', 'Defense ').replace('Kick Combo ', 'Kick ');
 }
 
 /** Belt name color that stays readable on the dark floor (black belt text is lightened). */
@@ -2297,6 +2310,18 @@ function slotGlyph(scene: Phaser.Scene, slot: GearSlot, x: number, y: number, si
     g.lineStyle(2, color, 1).lineBetween(0, -s, 0, -s * 1.15);
   }
   return g;
+}
+
+/**
+ * Q-PREMIUM-2 M6: a trophy with no icon art yet (the katas) gets a code-drawn placeholder, a gold disc with an ink
+ * star, never an empty circle. Same size as a real icon; art lands later.
+ */
+function placeholderIcon(scene: Phaser.Scene, x: number, y: number, size: number, earned: boolean): Phaser.GameObjects.Container {
+  const r = size / 2;
+  return scene.add.container(x, y, [
+    scene.add.circle(0, 0, r, earned ? 0xffd166 : WOOD.grain, earned ? 0.9 : 0.3),
+    scene.add.star(0, 0, 5, r / 3.2, r / 1.5, earned ? 0x7a4a22 : 0x6b5440, earned ? 1 : 0.5).setStrokeStyle(1.5, 0x3a2618, earned ? 0.8 : 0.4),
+  ]);
 }
 
 /** B-POLISH-2: the cubby wrap rules: 3 lines max, tight line gap, and a hyphenated word too wide
