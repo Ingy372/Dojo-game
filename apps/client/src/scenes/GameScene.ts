@@ -88,7 +88,7 @@ import COUNTER_HINT from '../../../../content/settings/counter-hint.json';
 import { Celebrations } from '../ui/Celebrations';
 import BOSS_WIN from '../../../../content/settings/boss-win.json';
 import LAST_RUN from '../../../../content/settings/last-run.json';
-import { MASH_GUARD_LINE, takeMashGuardMoment } from '../game/mashGuardMoment';
+import { MASH_GUARD_HOLD_MS, MASH_GUARD_LINE, takeMashGuardMoment } from '../game/mashGuardMoment';
 import { testFlags } from '../game/beta';
 import { forceAttack, withForced } from '../game/forceAttack';
 
@@ -2690,7 +2690,15 @@ export class GameScene extends Phaser.Scene {
     if (!takeMashGuardMoment(this.run ?? NO_RUN_KEY, playerId)) return;
     // The Manager's call: "seen" is saved with the run, so a reload doesn't show it again.
     if (this.run) saveRunInProgress(this.run);
-    this.senseiSay([MASH_GUARD_LINE], 2200);
+    this.senseiSay([MASH_GUARD_LINE], MASH_GUARD_HOLD_MS);
+    // A4-DOJO-hotfix: a one-line banner has no next line to give way to, so it must take itself down.
+    // (It stayed on screen for the rest of the room.) Only this banner: a newer line is left alone.
+    const banner = this.senseiText;
+    this.time.delayedCall(MASH_GUARD_HOLD_MS, () => {
+      if (!banner?.active) return;
+      banner.destroy();
+      if (this.senseiText === banner) this.senseiText = null;
+    });
     this.placeSteppedBack();
     const p = this.world.players[playerId];
     if (!p) return;

@@ -169,8 +169,11 @@ export abstract class WalkScene extends Phaser.Scene {
     const x = Phaser.Math.Linear(this.prevPos.x, p.pos.x, blend);
     const y = Phaser.Math.Linear(this.prevPos.y, p.pos.y, blend);
     this.player.setPosition(x * TILE, y * TILE);
-    this.player.setDepth(y * TILE);
-    this.standLayer.sort('depth');
+    // Props never move, so the stand order only changes when the hero's row does: no sort while it stands still.
+    if (this.player.depth !== y * TILE) {
+      this.player.setDepth(y * TILE);
+      this.standLayer.sort('depth');
+    }
     this.onDraw(y);
 
     this.hero.face(p.facing.x, p.facing.y);

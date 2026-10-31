@@ -1,0 +1,143 @@
+{
+  "notes": "DRAFT for C-STORY-f. Jay decided (t531u): the town starts as the approved A4 town-square concept (incoming-art/town-square-concept, A4-4/A4-5: main dojo, shop, placeholder, Student of the Month statue, river with bridge and koi, practice yard, lamp posts, Tower with one light). After each real belt test, one visible change makes it livelier and more homely. Night stays the cozy version. Each change is per-player state keyed to that player's own belt; the phone draws the town from the player's own progress, and other players simply appear in it. No change is shown on or about other players, nothing marks anyone's belt, and nothing hints that something is missing. Black is out of scope (placeholder only). Text only; code and art are needed to show it.",
+  "id": "town-changes",
+  "base": "incoming-art/town-square-concept (A4, day approved by Jay; dusk = cozy night)",
+  "rules": {
+    "stateKey": "player's own highest earned belt; changes are cumulative",
+    "sharedSquare": "each phone renders its own town; other players are drawn on top and never change it",
+    "noShame": "no empty plots, signs, locks or 'coming soon' marks; a lower-belt town must look complete on its own",
+    "night": "cozy dusk version; every light has a source; no new scary darkness"
+  },
+  "changes": [
+    {
+      "belt": "white",
+      "beltName": "White",
+      "changeId": "wc-lantern-halls-lamps",
+      "whatChanges": "The two lamp posts in the square light up for the first time with a soft gold glow, and a small new lamp appears on the bridge.",
+      "where": "Town square: the two lamp posts by the statue, and the arched bridge.",
+      "dayNote": "The lamp glass sparkles in the sun. One little gold spark floats up toward the Tower.",
+      "nightNote": "The new lamps add warm pools of light on the paving and bridge. Fireflies gather near them.",
+      "rewardMessage": "You brought light home! The town lamps are glowing.",
+      "storyTieIn": "Lamp Keeper / Lantern Halls: the first piece of light comes home, and the first lamps shine.",
+      "fillsGatePlaceholder": "gate-white (unused alternate) - also covers chapter-1 screens 14-17 White Gate",
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+    },
+    {
+      "belt": "yellow",
+      "beltName": "Yellow",
+      "changeId": "wc-sunrise-garden-blooms",
+      "whatChanges": "The flower beds burst into bloom (gold, white and soft pink), and a vine with small flowers climbs the main dojo's porch post.",
+      "where": "Flower beds around the square and the main dojo's porch.",
+      "dayNote": "Bees and butterflies drift over the flowers. Petals move in the breeze.",
+      "nightNote": "The flowers close up sleepy. Two fireflies rest on the dojo vine.",
+      "rewardMessage": "The garden woke up! Flowers are blooming everywhere.",
+      "storyTieIn": "Sun Gardener / Sunrise Garden: the thorns are gone, so flowers open again.",
+      "fillsGatePlaceholder": "gate-yellow",
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+    },
+    {
+      "belt": "orange",
+      "beltName": "Orange",
+      "changeId": "wc-ember-kitchens-chimney",
+      "whatChanges": "The shop gets a little bakery oven: a chimney with a curl of smoke, a bread basket on the counter, and a long wooden table with benches beside it.",
+      "where": "The shop (middle building) and the open space beside it.",
+      "dayNote": "A soft curl of smoke rises. The bread basket is full and the table is set for many.",
+      "nightNote": "Warm orange glow from the oven window. A lantern hangs over the long table.",
+      "rewardMessage": "Supper smells so good! The town has a table for everyone.",
+      "storyTieIn": "Hearth Cook / Ember Kitchens: the town eats together at one long table again.",
+      "fillsGatePlaceholder": "gate-orange",
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+    },
+    {
+      "belt": "green",
+      "beltName": "Green",
+      "changeId": "wc-giants-steps-path",
+      "whatChanges": "A friendly stone path with smooth, even steps appears up the hill toward the practice pavilion, and a small stone giant-shaped bench appears by the path.",
+      "where": "Hill path from the square to the practice pavilion; bench by the hedge line.",
+      "dayNote": "The stones look sun-warmed. A tiny worry stone sits on the bench, smooth and round.",
+      "nightNote": "Small glowing stones line the path like night lights.",
+      "rewardMessage": "Step by step! A new path is ready to explore.",
+      "storyTieIn": "Stone Giant / Giant's Steps: worries feel smaller when we name them; big things are climbed one step at a time.",
+      "fillsGatePlaceholder": "gate-green",
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+    },
+    {
+      "belt": "blue",
+      "beltName": "Blue",
+      "changeId": "wc-quiet-river-clear",
+      "whatChanges": "The river turns bright and clear: more koi, more lily flowers, and a small wooden sitting dock at the bank.",
+      "where": "The river, bridge and stepping stones.",
+      "dayNote": "The water sparkles and koi swim in a slow circle. A lily flower opens.",
+      "nightNote": "The river is calm and still. Lantern light reflects in the water and fireflies hover.",
+      "rewardMessage": "The river is calm and clear. Come sit a while!",
+      "storyTieIn": "River Watcher / Quiet River: still water, a calm heart (Ps 23:2 'still waters').",
+      "fillsGatePlaceholder": "gate-blue",
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+    },
+    {
+      "belt": "red",
+      "beltName": "Red",
+      "changeId": "wc-forge-courage-banners",
+      "whatChanges": "The plain hill banners and the practice-yard nobori gain a simple gold flame emblem (no text, no red: the concept has zero red), and the practice yard gets a new training dummy and a small brazier.",
+      "where": "Practice yard and hill banners.",
+      "dayNote": "The banners wave in the wind. The yard looks ready for practice.",
+      "nightNote": "The brazier glows warm and safe behind a stone ring. The banners catch its light.",
+      "rewardMessage": "Be brave! The practice yard is ready for you.",
+      "storyTieIn": "Ember Knight / Forge of Courage: courage burns warm, not angry (Josh 1:9).",
+      "fillsGatePlaceholder": "gate-red",
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+    },
+    {
+      "belt": "red-black",
+      "beltName": "Red/Black",
+      "changeId": "wc-hall-echoes-bell",
+      "whatChanges": "A small friendship wind chime and a welcome bell hang by the main dojo door. When any player walks by, the chime makes a soft sound.",
+      "where": "Main dojo entrance.",
+      "dayNote": "The chime turns and twinkles in the sun.",
+      "nightNote": "The chime glows faintly and sings softly in the night breeze.",
+      "rewardMessage": "Listen! The town sings hello to you.",
+      "storyTieIn": "Echo Mask / Hall of Echoes: you are never alone; kind voices answer back (Heb 13:5).",
+      "fillsGatePlaceholder": "gate-red-black",
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+    },
+    {
+      "belt": "brown",
+      "beltName": "Brown",
+      "changeId": "wc-root-library-tree",
+      "whatChanges": "A big friendly tree grows beside the placeholder building, with a little reading nook and a book swap box under it. Roots curl into a bench.",
+      "where": "Beside the right-hand placeholder building.",
+      "dayNote": "Leaves rustle and dappled shade falls on the bench. Birds sit in the branches.",
+      "nightNote": "Small paper lanterns hang in the tree. The book box has a warm lamp inside.",
+      "rewardMessage": "A reading tree grew! Its roots go deep, like yours.",
+      "storyTieIn": "Root Keeper / Root Library: deep roots and steady growth (Ps 1:3).",
+      "fillsGatePlaceholder": "gate-brown",
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+    },
+    {
+      "belt": "brown-black",
+      "beltName": "Brown/Black",
+      "changeId": "wc-storm-stair-tower-glow",
+      "whatChanges": "The Tower in the distance glows much brighter and a gentle rainbow arcs behind it after a passing rain. A lantern now hangs in the main dojo window, like the old lantern Sensei keeps (ties to the reveal drafted in PR #341; if that changes, this stays a plain lantern).",
+      "where": "The Tower on the skyline, and the main dojo window.",
+      "dayNote": "A soft rainbow behind the Tower. Puddles shine on the paving.",
+      "nightNote": "The Tower glows like a gentle star. The dojo window lantern is lit, and all the lights in town feel extra warm.",
+      "rewardMessage": "The storm is quiet. The Tower glows bright for you!",
+      "storyTieIn": "Storm Herald / Storm Stair: peace after the storm (Mark 4:39), and Sensei's lantern from the reveal.",
+      "fillsGatePlaceholder": "gate-brown-black",
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+    },
+    {
+      "belt": "black",
+      "beltName": "Black",
+      "changeId": "wc-summit-great-lamp",
+      "status": "OUT OF SCOPE - placeholder only (Jay: Black is a separate thing)",
+      "whatChanges": "TBD",
+      "where": "TBD",
+      "dayNote": "TBD",
+      "nightNote": "TBD",
+      "rewardMessage": "TBD",
+      "storyTieIn": "Lost Lightbearer / The Summit: the Great Lamp shines on the whole town (lore/10-black.md).",
+      "fillsGatePlaceholder": null
+    }
+  ]
+}
