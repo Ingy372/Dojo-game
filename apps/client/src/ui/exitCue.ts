@@ -13,8 +13,11 @@ const GOLD = 0xffd166;
  */
 export function addExitCue(scene: Phaser.Scene, cx: number, cy: number, w: number, h: number, dir: CueDirection): Phaser.GameObjects.Container {
   const glow = scene.add.graphics();
-  glow.fillStyle(GOLD, 0.22).fillRoundedRect(-w / 2, -h / 2, w, h, h / 2.5);
-  glow.lineStyle(3, GOLD, 0.55).strokeRoundedRect(-w / 2, -h / 2, w, h, h / 2.5);
+  // A4-DOJO-ii-fix: stronger than before (the inside glow was faint on the pale lobby floor): a warmer
+  // fill, a brighter pad in the middle, and a heavy gold edge. Still gold, nothing red, no words.
+  glow.fillStyle(GOLD, 0.42).fillRoundedRect(-w / 2, -h / 2, w, h, h / 2.5);
+  glow.fillStyle(0xfff1c9, 0.28).fillRoundedRect(-w / 2 + 6, -h / 2 + 6, w - 12, h - 12, h / 3);
+  glow.lineStyle(5, GOLD, 0.95).strokeRoundedRect(-w / 2, -h / 2, w, h, h / 2.5);
 
   const s = Math.min(w, h) * 0.3;
   const arrow = scene.add.graphics();
@@ -29,7 +32,7 @@ export function addExitCue(scene: Phaser.Scene, cx: number, cy: number, w: numbe
 
   const cue = scene.add.container(cx, cy, [glow, arrow]);
   if (!reducedMotion()) {
-    scene.tweens.add({ targets: glow, alpha: { from: 0.55, to: 1 }, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    scene.tweens.add({ targets: glow, alpha: { from: 0.7, to: 1 }, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     const bob = { down: [0, 5], left: [-5, 0], right: [5, 0] }[dir];
     scene.tweens.add({ targets: arrow, x: bob[0], y: bob[1], duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }

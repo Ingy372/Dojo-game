@@ -133,6 +133,8 @@ export interface OutsideExit {
   /** Walking into this rectangle (tiles: [x0, x1, y0, y1]) leaves. */
   rect: Rect;
   to: OutsideTarget;
+  /** The gold glow that marks it, in tiles: its centre and size. Its centre is always inside `rect`. */
+  cue: { x: number; y: number; w: number; h: number };
 }
 
 export interface OutsideRoom {
@@ -199,7 +201,14 @@ export function loadOutsideRoom(data: unknown): OutsideRoom {
   const exits = exitList.map((e: Record<string, unknown>) => {
     const to = String(e.to);
     if (to !== 'town') fail(`exit ${String(e.id)} leads to "${to}", which is not the town`);
-    return { id: String(e.id), rect: rect(e.rect, `exit ${String(e.id)} rect`), to } as OutsideExit;
+    const id = String(e.id);
+    const r = rect(e.rect, `exit ${id} rect`);
+    const cueRaw = (e.cue ?? {}) as { center?: unknown; size?: unknown };
+    const centre = cell(cueRaw.center, `exit ${id} cue.center`);
+    const size = cell(cueRaw.size, `exit ${id} cue.size`);
+    // The glow and the way out must line up: a tap on the middle of the glow has to leave.
+    if (centre.x < r[0] || centre.x > r[1] || centre.y < r[2] || centre.y > r[3]) fail(`exit ${id}: the cue's centre must be inside the exit rectangle`);
+    return { id, rect: r, to, cue: { x: centre.x, y: centre.y, w: size.x, h: size.y } } as OutsideExit;
   });
 
   const room: Room = {
@@ -243,4 +252,18 @@ export function loadTown(data: unknown): TownPicture {
   if (!(x0 >= 0 && y0 >= 0 && x1 <= pictureSize[0] && y1 <= pictureSize[1] && x0 < x1 && y0 < y1)) fail('dojo.tapRect must lie inside the picture');
   if (d.to !== 'outside') fail('dojo.to must be "outside"');
   return { pictureSize, dojo: { id: String(d.id), tapRect: [x0, y0, x1, y1], to: 'outside' } };
+}
+
+/**
+ * True when the hero, standing inside `rect` (a doorstep), is being asked to go on through: a push of the
+ * stick upward (north), or a tap that lands inside the same rectangle (a tap on the doors is sent to the
+ * spot in front of them). Standing still, or any other tap or push, is not. A doorstep that has just been
+ * walked out of uses this to open again only when asked, so coming out never bounces straight back in.
+ */
+export function wantsThrough(input: { kind: string; x?: number; y?: number }, pos: Vec2, rect: Rect): boolean {
+  const inside = (p: { x: number; y: number }) => p.x >= rect[0] && p.x <= rect[1] && p.y >= rect[2] && p.y <= rect[3];
+  if (!inside(pos)) return false;
+  if (input.kind === 'stick') return (input.y ?? 0) < -0.3;
+  if (input.kind === 'moveTo') return inside({ x: input.x ?? Number.NaN, y: input.y ?? Number.NaN });
+  return false;
 }
