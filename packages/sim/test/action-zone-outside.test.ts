@@ -189,7 +189,7 @@ describe('Action Zone outside', () => {
 
   it('each exit rectangle lines up with the glow that marks it, and a tap on the glow leaves', () => {
     for (const e of outside.exits) {
-      const { x, y, w, h } = e.cue;
+      const { x, y, w } = e.cue;
       // The glow is whole inside the room, and its middle is inside the exit.
       expect(x - w / 2).toBeGreaterThanOrEqual(0);
       expect(x + w / 2).toBeLessThanOrEqual(room.width ?? 14);
@@ -239,7 +239,8 @@ describe('Action Zone outside', () => {
   });
 
   it('the scenes use these rules: cues come from the file, taps on a cue win over the stick, the doorstep asks wantsThrough', () => {
-    const src = (f: string) => Object.values(import.meta.glob('../../../apps/client/src/**/*.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>).find((_, i, a) => Object.keys(import.meta.glob('../../../apps/client/src/**/*.ts'))[i].endsWith(f)) as string;
+    const files = import.meta.glob('../../../apps/client/src/**/*.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+    const src = (f: string) => files[`../../../apps/client/src/${f}`];
     const outsideScene = src('scenes/OutsideScene.ts');
     expect(outsideScene).toContain('e.cue.x * TILE');
     expect(outsideScene).toContain('protected isTapTarget(');
