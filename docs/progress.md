@@ -1005,3 +1005,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Suite: 1186 passed, 11 skipped (112 files passed, 3 skipped); typecheck and build exit 0; the golden fixture `p-menu2-d-default-run.json` is unchanged.
 - Shots (667x375 and 844x390, reduced motion on and off, setting read back first): 4 runs x 27 checks, 108 pass, 0 fail (button fit, fades, camera clamps, hero hidden behind the shrub and visible in front of shrub and bed by pixels, cues, door tap, exit and return, both town exits). Inside re-run on the new `WalkScene`: 4 x 18 checks, 72 pass, 0 fail. Contact sheets: `/workspace/shots/a4-dojo-ii/contact-sheet-*.jpg`.
 - Not in this PR: a layered, walkable town; other town buildings; a designed door from the Home Dojo to the town; dusk art.
+
+## A4-DOJO-hotfix — choppy dojo, stuck Sensei line, fresh load (2026-10-31)
+- Bug 1: buttons and exit cues are baked once into textures (`ui/button.ts`, `ui/exitCue.ts`); walking scenes re-sort and re-show only on change. Median frame cost (667x375, motion on) 1.2 -> 0.2 ms Home Dojo, 0.4 -> 0.2 inside, 0.5 -> 0.2 outside, 0.5 -> 0.1 town; same at 844x390 with reduced motion.
+- Bug 2: the step-back banner ("Three great counters! ...", B-MASHER-2) now goes away after 2.2 s. Before: still up at 7 s, both motion settings. After: gone by 2.3 s, both settings, two sizes.
+- Bug 3: not reproduced; tests pin the routing. Decision notes in `docs/decisions.md`.
+- Tests: `packages/sim/test/a4-dojo-hotfix.test.ts` (11); `p-menu-c-buttons.test.ts` pin updated for the baked outline. Suite 1197 passed, 11 skipped; typecheck and build exit 0; golden fixture unchanged.
