@@ -59,7 +59,7 @@ export class InsideScene extends WalkScene {
     // The way out: a glow on the floor in front of the door with an arrow pointing at it, drawn
     // under the hero and the props.
     const [x0, x1] = INSIDE.exit;
-    const cue = addExitCue(this, ((x0 + x1) / 2) * TILE, 17.5 * TILE, (x1 - x0) * TILE, 0.8 * TILE, 'down');
+    const cue = addExitCue(this, ((x0 + x1) / 2) * TILE, 17.5 * TILE, (x1 - x0) * TILE, 0.8 * TILE, 'down', 22);
     // Bottom to top: floor, walls, props; the exit cue; what stands and the hero; seat backs and
     // bag tops; the front wall.
     const topLayer = this.add.container(0, 0, tops.flat());

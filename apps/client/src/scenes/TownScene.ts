@@ -67,7 +67,7 @@ export class TownScene extends Phaser.Scene {
     const cx = ox + ((x0 + x1) / 2) * s;
     this.ui.add(addExitCue(this, cx, oy + (y0 - 24) * s, 64 * s, 36 * s, 'down'));
 
-    button(this, { x: 12, y: 12, w: 96, h: MIN_TAP, label: 'Home', color: 0x3d6a99, size: 14, onTap: () => this.leave('Dojo', false) }, this.ui);
+    button(this, { x: 12, y: 12, w: 96, h: MIN_TAP, label: 'Home', color: 0x3d6a99, size: 18, onTap: () => this.leave('Dojo', false) }, this.ui);
   }
 
   private goToDojo(): void {

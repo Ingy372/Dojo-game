@@ -58,11 +58,11 @@ export function openMonsterJournal(scene: Phaser.Scene, journal: Record<string, 
       .text(x, y, s, { fontFamily: FONT, fontSize: `${size}px`, color, fontStyle: bold ? 'bold' : 'normal', wordWrap: wrap ? { width: wrap } : undefined })
       .setResolution(crisp() * scale);
 
-  // Title banner and the page's place name.
+  // Title banner and the page's place name. Q-PREMIUM-2 L9: title 16, place and card names 14 (were 12 and 11).
   page.add(addStatic(scene, NAMED_PACK, 'journal-title-banner', 0, top + TITLE_Y * k));
-  page.add(text(0, top + TITLE_Y * k, CONTENT.named.journalTitle, 12, '#3a2a22', true).setOrigin(0.5));
+  page.add(text(0, top + TITLE_Y * k, CONTENT.named.journalTitle, 16, '#3a2a22', true).setOrigin(0.5));
   const tier = CONTENT.named.rules.minBeltTier;
-  const subtitle = text(0, top + 58 * k, '', 11, '#6b5440', true).setOrigin(0.5);
+  const subtitle = text(0, top + 58 * k, '', 14, '#6b5440', true).setOrigin(0.5);
   page.add(subtitle);
   // Cards (and their side notes) for the shown page; cleared on each page turn.
   const cards = scene.add.container(0, 0);
@@ -112,7 +112,7 @@ export function openMonsterJournal(scene: Phaser.Scene, journal: Record<string, 
       pics.forEach((p) => p.setScale(Math.min(1, well[2] / (st?.frameWidth ?? well[2]))));
       cards.add(pics);
       const [nx, ny, nw] = inCard(cx, cy, [138, 14, 304, 40]);
-      cards.add(text(nx, ny, m.journal.name, 11, '#3a2a22', true, nw));
+      cards.add(text(nx, ny, m.journal.name, 14, '#3a2a22', true, nw));
       fact(cx, cy, m.journal.fact, '#3a2a22', false);
       if (e.beaten) {
         const [sx, sy, sw, sh] = inCard(cx, cy, [250, 74, 304, 128]);
@@ -148,7 +148,7 @@ export function openMonsterJournal(scene: Phaser.Scene, journal: Record<string, 
       }
       if (kd.met) {
         const [nx, ny, nw] = inCard(cx, cy, [138, 14, 304, 40]);
-        cards.add(text(nx, ny, CONTENT.enemies[kd.monster]?.shortName ?? def.name, 11, '#3a2a22', true, nw));
+        cards.add(text(nx, ny, CONTENT.enemies[kd.monster]?.shortName ?? def.name, 14, '#3a2a22', true, nw));
         fact(cx, cy, def.description ?? '', '#3a2a22', false);
         const [sx, sy, sw, sh] = inCard(cx, cy, [250, 74, 304, 128]);
         cards.add(addStatic(scene, NAMED_PACK, 'journal-stamp', sx + sw / 2, sy + sh / 2));

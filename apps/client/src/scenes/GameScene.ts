@@ -309,6 +309,8 @@ export class GameScene extends Phaser.Scene {
   /** When the chest started opening (its 2.5 s opening plays once), or null. */
   private chestOpenAt: number | null = null;
   private roomLabel!: Phaser.GameObjects.Text;
+  /** Q-PREMIUM-2 L10: the practice room's title and hint (null in a run). */
+  private practiceLabel: Phaser.GameObjects.Text | null = null;
   private timerText!: Phaser.GameObjects.Text;
   private bossName!: Phaser.GameObjects.Text;
   /** B-T3-NUDGE: the phase pause's ROAR! word (screen space, under the Sensei banner). */
@@ -1178,6 +1180,15 @@ export class GameScene extends Phaser.Scene {
           this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home'));
         });
     }
+    this.practiceLabel = null;
+    if (!this.run) {
+      // Q-PREMIUM-2 L10: the practice room says what it is and what to try (top centre, clear of the bars and ◀ Home).
+      this.practiceLabel = this.add
+        .text(0, 12, 'Practice room\nTry STRIKE, COUNTER and DASH.', { ...small, fontSize: '14px', align: 'center', fontStyle: 'bold', color: '#ffd166' })
+        .setOrigin(0.5, 0)
+        .setResolution(crisp());
+      this.cameras.main.ignore(this.practiceLabel);
+    }
     this.timerText = this.add
       .text(0, 36, '', { ...small, fontStyle: 'bold', fontSize: '20px' })
       .setOrigin(1, 0)
@@ -1209,6 +1220,7 @@ export class GameScene extends Phaser.Scene {
     this.chainText.setX(width / 2);
     this.placeMessage();
     this.roomLabel.setX(width - 16);
+    this.practiceLabel?.setX(width / 2);
     this.timerText.setX(width - 16);
     this.screenFlash.setSize(width, height);
   }
@@ -1987,10 +1999,10 @@ export class GameScene extends Phaser.Scene {
       .text(width / 2, 0, 'Got it', {
         fontFamily: 'system-ui, sans-serif',
         fontStyle: 'bold',
-        fontSize: width < 720 ? '20px' : '24px',
+        fontSize: width < 720 ? '24px' : '28px',
         color: '#1a1426',
         backgroundColor: '#ffd166',
-        padding: { x: 22, y: 10 },
+        padding: { x: 30, y: 12 },
       })
       .setOrigin(0.5, 0)
       .setResolution(window.devicePixelRatio || 1)
@@ -2212,7 +2224,8 @@ export class GameScene extends Phaser.Scene {
     // Room number and name (top right).
     // Q-PREMIUM-2 M7: one counter once no enemy is left ("Wave" goes with the last enemy).
     const waves = this.world.waveCount > 1 && !prog.cleared && enemiesAlive ? `  ·  Wave ${this.world.wave} of ${this.world.waveCount}` : '';
-    this.roomLabel.setText(`Room ${this.run.depth + 1} of ${this.run.totalRooms}${waves}`);
+    // Q-PREMIUM-2 L5: the tutorial floor shows no Room / Wave counter (Sensei's steps lead, not numbers).
+    this.roomLabel.setText(this.run.tutorial ? '' : `Room ${this.run.depth + 1} of ${this.run.totalRooms}${waves}`);
 
     // Challenge timer.
     const ch = this.room.challenge;
@@ -2406,7 +2419,8 @@ export class GameScene extends Phaser.Scene {
           return { x0: r.left - 8, x1: r.right + 8, y0: r.top - 8, y1: r.bottom + 8 }; // + the gold ring
         }),
       ];
-      const spots = [top, ...keepOff.flatMap((b) => [b.y1 + 6, b.y0 - 6 - h])];
+      // Q-PREMIUM-2 L5: docked at the bottom first, so the walking space above stays open; the old spots are the fallback.
+      const spots = [H - 8 - h, top, ...keepOff.flatMap((b) => [b.y1 + 6, b.y0 - 6 - h])];
       // Centred first; if nothing is clear there, slid to the left edge, away from the buttons.
       const fit = [view(this).width / 2, 8 + t.width / 2]
         .map((x) => {

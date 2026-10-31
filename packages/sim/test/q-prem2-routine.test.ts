@@ -48,3 +48,56 @@ describe('Q-PREMIUM-2 M9 / M10 / L2 Dojo panels and labels', () => {
     expect(s).toMatch(/x: 20, y: height - 20 - 44, w, h: 44, label: t\.wipeButton/);
   });
 });
+
+describe('Q-PREMIUM-2 L3 Board wording', () => {
+  const s = read('scenes/HomeScene.ts');
+  it('the level line reads "Level N of CAP" and the rank dial says Classes done', () => {
+    expect(s).toMatch(/Level \$\{[^}]+\} of \$\{/);
+    expect(s).toMatch(/'Classes done'/);
+    expect(s).not.toMatch(/'Time in rank'/);
+    expect(s).toMatch(/Lit when Sensei says you're ready\./);
+  });
+  it('long lesson names shorten Self-Defense to Defense', () => {
+    expect(s).toMatch(/'Self-Defense '/);
+    expect(s).toMatch(/'Defense '/);
+  });
+});
+
+describe('Q-PREMIUM-2 L4 / L5 / L7 / L9 / L10 / L11', () => {
+  it('L4: the door arrow has a floor size and pulses only when motion is allowed', () => {
+    const s = read('ui/exitCue.ts');
+    expect(s).toMatch(/arrowMin = 0/);
+    expect(s).toMatch(/Math\.max\(arrowMin, /);
+    expect(s).toMatch(/if \(!reducedMotion\(\)\)[\s\S]*scale/);
+    expect(read('scenes/InsideScene.ts')).toMatch(/addExitCue\([^\n]*'down', 22\)/);
+  });
+  it('L5: the tutorial dialog docks at the bottom first, with a big Got it and no room counter', () => {
+    const s = read('scenes/GameScene.ts');
+    expect(s).toMatch(/const spots = \[H - 8 - h, top,/);
+    expect(s).toMatch(/this\.run\.tutorial \? '' : `Room /);
+    expect(s).toMatch(/width < 720 \? '24px' : '28px'/);
+  });
+  it('L7: the testing screen has Close at the top, a solid backdrop and a scrolling list', () => {
+    const s = read('ui/TestingPanel.ts');
+    expect(s).toMatch(/pad \+ leftW - 96, pad, 96, MIN_TAP, 'Close'/);
+    expect(s).toMatch(/createGeometryMask/);
+    expect(s).toMatch(/dragged/);
+  });
+  it('L9: Journal title 16, subtitle and card names 14', () => {
+    const s = read('ui/MonsterJournal.ts');
+    expect(s).toMatch(/CONTENT\.named\.journalTitle, 16,/);
+    expect(s).toMatch(/subtitle = text\(0, top \+ 58 \* k, '', 14,/);
+    expect(s).toMatch(/m\.journal\.name, 14,/);
+  });
+  it('L10: the practice room shows a title and a hint', () => {
+    const s = read('scenes/GameScene.ts');
+    expect(s).toMatch(/'Practice room\\nTry STRIKE, COUNTER and DASH\.'/);
+    expect(s).toMatch(/this\.practiceLabel\?\.setX\(width \/ 2\)/);
+  });
+  it('L11: the Welcome home card sits over the right panel, dims nothing and dismisses on tap', () => {
+    const s = read('scenes/HomeScene.ts');
+    expect(s).toMatch(/const rightX = pad \+ Math\.min\(300, width \* 0\.38\) \+ pad;/);
+    expect(s).not.toMatch(/0x000000, 0\.35\)\.setOrigin\(0\)\.setInteractive/);
+    expect(s).toMatch(/shade\.on\(Phaser\.Input\.Events\.GAMEOBJECT_POINTER_DOWN, close\)/);
+  });
+});
