@@ -57,7 +57,7 @@ FRONT = {  # parts of an overlay that stand IN FRONT of the dojo sprite (everyth
     "green": [(0, 0, 0, 0)], "red": [(0, 0, 0, 0)]}
 POOLS = {  # (tile col, ground row, half-width in tiles): a soft warm pool right under a real source (dusk only)
     "white": [(5.0, 9.05, 0.95), (19.0, 9.05, 0.95), (15.6, 7.7, 0.5)],
-    "orange": [(12.2, 4.25, 0.65), (13.55, 4.3, 0.8)], "blue": [(15.59, 5.6, 0.5)], "red": [(5.3, 7.8, 0.85)], "brown": [(22.12, 4.3, 0.55)]}
+    "orange": [(12.2, 4.25, 0.65), (13.55, 4.3, 0.8)], "blue": [(15.59, 5.6, 0.5)], "red": [(5.3, 7.8, 0.85)], "brown": [(22.85, 4.3, 0.55)]}
 FIREFLIES = {  # dusk only: (px, py) of a firefly that really flies there
     "yellow": [(78, 340), (118, 372), (88, 404), (126, 330), (104, 436), (738, 500), (792, 484), (770, 520), (1090, 500), (1136, 486), (1112, 522), (46, 436), (560, 440)]}
 

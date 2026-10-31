@@ -26,9 +26,9 @@ Jump to: [What is here](#what-is-here) | [How the game stacks them](#how-the-gam
 | 3 | Orange | `wc-ember-kitchens-chimney` | shop chimney with smoke; a bread basket on the counter; a brick oven; a long table with two benches, plates and bread; a lantern post | the oven window, the table's lantern and a chimney glow |
 | 4 | Green | `wc-giants-steps-path` | smooth stepping stones up the right hill; a giant stone bench in the lawn gap by the shop (and a worry stone) | three small stone lanterns light the path |
 | 5 | Blue | `wc-quiet-river-clear` | the river runs clear: pebbles on the bed, more koi, lily pads with blooms, sparkles, a small wooden sitting dock with a lantern | the dock lantern and its pool |
-| 6 | Red | `wc-forge-courage-banners` | **gold flame** emblems on the hill banners and the two yard banners; a padded training dummy and a brazier in the yard corners | the brazier is lit (a warm pool on the yard) |
+| 6 | Red | `wc-forge-courage-banners` | **gold flame** emblems on the hill banners and the two yard banners; a padded training dummy and a brazier in the yard corners | the brazier is lit (a warm pool on the yard); a small lit lantern on a bracket next to each of the six gold flame banners is the light source for its flame |
 | 7 | Red-Black | `wc-hall-echoes-bell` | a wind chime and a welcome bell by the dojo door | the chime tubes glimmer faintly |
-| 8 | Brown | `wc-root-library-tree` | a big reading tree on the right with two little birds, a root bench and a book-swap box | the box lamp and four hanging lanterns |
+| 8 | Brown | `wc-root-library-tree` | a big reading tree at the right edge of the lawn (moved in 0.5 tile, so its whole crown is inside the frame) with two little birds, a root bench and a book-swap box | the box lamp and four lanterns hanging under the crown |
 | 9 | Brown-Black | `wc-storm-stair-tower-glow` | the Tower lamp glows gold with soft sparkles; a rainbow; puddles in open paving corners; a lantern in the dojo window | the Tower glows stronger, the town's lamps glow a little warmer |
 
 **No red anywhere.** Red belt = **gold flame** (Jay's choice). The rainbow has five bands (orange, yellow, green, blue, violet), no red band. The only red in the previews is the dojo's existing branded CMA sign and the awning stripe.
@@ -43,7 +43,7 @@ Rebuild from the repo root: `bash incoming-art/town-growth/source/render_all.sh 
 
 ## Rules and checks
 - **Red check** (HSV hue < 0.03 or > 0.97, saturation > 0.6, value > 0.4): **0 red px in all 36 overlay files.** The stage previews carry the same red count as stage 0 (the dojo's branded sign), never more.
-- **Lanes and statue:** the overlays have no opaque pixel on the statue or its ring, and none in the plaza's walkable paving: the only objects there sit on the lawn line, the beds, the water and bank, the yard corners, hills and walls. Puddles are flat decals in open corners. Nothing is drawn above a character's walking space.
-- **Glows:** every dusk glow is on a real source (lamp lanterns, oven window, lanterns, brazier flame, the Tower lamp, the window lantern, the existing town lights, fireflies). Warm pools are drawn only right under a source.
+- **Lanes and statue:** the overlays have no opaque pixel on the statue or its ring, and none in the plaza's walkable paving: the only objects there sit on the lawn line, the beds, the water and bank, the yard corners, hills and walls (the Brown tree stands on the lawn at rows 3.5 to 4.2, above the lane strip). Puddles are flat decals in open corners. Nothing is drawn above a character's walking space.
+- **Glows:** every dusk glow is on a real source (lamp lanterns, oven window, lanterns, the lanterns beside the gold banner flames, brazier flame, the Tower lamp, the window lantern, the existing town lights, fireflies). Warm pools are drawn only right under a source.
 - **Kid-friendly:** soft shapes, no weapons, no sharp props.
 - The real phone and house number are not in the repo (grep of `incoming-art/` finds nothing). No reference photo is committed.

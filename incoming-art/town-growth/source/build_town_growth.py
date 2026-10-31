@@ -253,8 +253,14 @@ def flame(n, p, s, lit=False):
 if ID == "red":
     for k, (px, py) in enumerate(((417, 122), (719, 180), (657, 131), (344, 170))):      # the four plain hill banners
         flame(f"rd_hf{k}", SC(px, py + 0.5, r=1.6), 0.27)
+        if NIGHT:                                    # dusk: a small lantern sitting on a little bracket at the top of each hill banner pole is the light for its flame
+            add(f"rd_hla{k}", tube(SC(px - 17, py - 12, r=1.6), SC(px + 27, py - 12, r=1.6), 0.016, 0.016, segs=5), WOOD4, False)
+            lantern(f"rd_hln{k}", (px + 22) / PPT, 1.6, (1.6 * PPT + SHIFT_ROWS * PPT - (py - 19)) / ZPX, 0.55, True)
     for k, bxx in enumerate((2.4, 5.8)):                                                  # the two practice-yard nobori
         flame(f"rd_nf{k}", G(bxx, 6.99, 1.3), 0.5)
+        if NIGHT:                                    # dusk: a small lantern hangs from an arm on the pole, beside the banner (up in the air, nothing on the ground)
+            add(f"rd_nla{k}", tube(G(bxx, 6.99, 1.8), G(bxx + 0.62, 6.99, 1.8), 0.02, 0.02, segs=5), WOOD4, False)
+            lantern(f"rd_nln{k}", bxx + 0.62, 6.99, 1.45, 0.62, True, 0.17)
     # a padded wooden training dummy in the yard's left-front corner
     dc, dr_ = 3.0, 8.05
     add("rd_dbase", box(G(dc, dr_, 0.14), (0.55, D(0.34), 0.08), bevel=0.02), WOOD2)
@@ -298,22 +304,22 @@ if ID == "redblack":
 
 # ================================================================= BROWN: reading tree with a root bench and a book-swap box
 if ID == "brown":
-    tx, ty = 22.95, 4.05
-    add("bt_trunk", tube(G(tx, ty, 0), G(tx - 0.04, ty, 1.5), 0.2, 0.14, segs=14), WOOD2)
+    tx, ty = 22.45, 4.05
+    add("bt_trunk", tube(G(tx, ty, 0), G(tx - 0.04, ty, 1.3), 0.2, 0.14, segs=14), WOOD2)
     for k, (a, ln) in enumerate(((200, 0.55), (250, 0.5), (300, 0.5), (340, 0.45), (160, 0.4))):
         ar = math.radians(a)
         add(f"bt_root{k}", tube(G(tx, ty, 0.3), G(tx + math.cos(ar) * ln, ty - math.sin(ar) * ln * 0.7, 0.04), 0.08, 0.045, segs=8), WOOD2, False)
-    for k, (c, z, s) in enumerate(((22.9, 2.2, 1.0), (22.45, 1.95, 0.7), (23.35, 2.0, 0.72), (22.9, 2.75, 0.75), (22.15, 2.35, 0.45))):
+    for k, (c, z, s) in enumerate(((22.45, 1.85, 0.72), (22.13, 1.62, 0.5), (22.75, 1.67, 0.48), (22.45, 2.25, 0.52), (21.95, 1.95, 0.3))):    # crown kept inside the frame (right edge 23.3)
         add(f"bt_leaf{k}", ellipsoid(G(c, ty - 0.1, z), (s, s * 0.62, s * 0.72), segs=16, rings=10), ("#6fae5a", "#86c46c", "#5f9e55", "#86c46c", "#6fae5a")[k])
-    add("bt_hi", ellipsoid(G(22.55, ty - 0.55, 2.55), (0.45, 0.2, 0.28), segs=10, rings=6), "#9dd486", False)
+    add("bt_hi", ellipsoid(G(22.2, ty - 0.55, 2.15), (0.32, 0.15, 0.2), segs=10, rings=6), "#9dd486", False)
     # root bench: a plank seat with its roots curling up into the ends
-    bx_, by_ = 22.62, 4.42
+    bx_, by_ = 22.5, 4.42
     add("bt_seat", box(G(bx_, by_, 0.36), (0.95, D(0.24), 0.07), bevel=0.02), WOOD3)
     for sx in (-1, 1):
         add(f"bt_bl{sx}", tube(G(bx_ + sx * 0.4, by_, 0.0), G(bx_ + sx * 0.36, by_, 0.36), 0.07, 0.05, segs=8), WOOD2)
         add(f"bt_curl{sx}", tube(G(bx_ + sx * 0.5, by_ + 0.02, 0.1), G(bx_ + sx * 0.42, by_ + 0.02, 0.42), 0.05, 0.035, segs=8), WOOD2, False)
     # book-swap box: a post with a little house-shaped cupboard of colourful books
-    sx_, sy_ = 22.12, 4.18
+    sx_, sy_ = 22.85, 4.18
     add("bt_post", tube(G(sx_, sy_, 0), G(sx_, sy_, 0.78), 0.045, 0.045, segs=8), WOOD4)
     add("bt_box", box(G(sx_, sy_, 1.0), (0.52, D(0.26), 0.44), bevel=0.02), WOOD)
     add("bt_inner", box(G(sx_, sy_ + 0.17, 1.0), (0.4, 0.03, 0.32)), "#ffe9a0", False, True)
@@ -321,10 +327,10 @@ if ID == "brown":
         add(f"bt_book{k}", box(G(sx_ - 0.14 + k * 0.055, sy_ + 0.19, 0.96 + (0.02 if k % 2 else 0)), (0.045, 0.03, 0.22 + 0.04 * (k % 2))), bc, False)
     add("bt_roof", tube(G(sx_, sy_, 1.22), G(sx_, sy_, 1.42), 0.42, 0.02, segs=4), "#6f8f6a")
     if NIGHT:
-        for k, (c, z) in enumerate(((22.45, 1.55), (23.05, 1.45), (22.75, 1.3), (23.3, 1.65))):
-            lantern(f"bt_ln{k}", c, ty - 0.25, z, 0.62, True, 0.25)
+        for k, (c, z) in enumerate(((22.12, 1.15), (22.78, 1.1), (22.45, 0.98), (22.9, 1.25))):
+            lantern(f"bt_ln{k}", c, ty + 0.3, z, 0.62, True, 0.25)
     else:
-        for k, (c, z) in enumerate(((22.55, 2.3), (23.2, 2.45))):          # two little birds in the branches
+        for k, (c, z) in enumerate(((22.25, 1.95), (22.7, 2.1))):          # two little birds in the branches
             add(f"bt_bird{k}", ellipsoid(G(c, ty - 0.45, z), (0.08, 0.06, 0.07), segs=8, rings=5), "#6f9fd2" if k == 0 else "#ffd36b")
             add(f"bt_birdb{k}", ellipsoid(G(c - 0.1, ty - 0.45, z + 0.01), (0.03, 0.02, 0.02), segs=5, rings=3), "#f59a3c", False)
 

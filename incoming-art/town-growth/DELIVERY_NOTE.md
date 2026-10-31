@@ -17,18 +17,26 @@
 - **Glows:** every dusk glow is on a real source (lantern, oven window, table lantern, brazier flame, dock lantern, book-box lamp, window lantern, the Tower lamp, the town's own lamps, fireflies). Pools only where there is a source.
 - Phone and house number: a grep of `incoming-art/` for both real values finds nothing. No photo is committed. Only `incoming-art/` changed; `main`, game code, the town base and the statue are untouched.
 
-**DECIDE:**
-1. **Gold flame** (Red belt): done as Jay chose, gold on the hill and yard banners. At dusk the **banner flames are not lit** (only the yard brazier flame is a real light), so they read a little murky in the dark. OK, or give the banners a small lantern source?
-2. **Rainbow (Brown-Black):** no red band (orange, yellow, green, blue, violet) because of the no-red rule, and it is **day only** (dusk gets the stronger Tower glow, sparkles and warmer town lights instead). OK?
-3. **Practice yard** (Red): the training dummy and brazier sit in the yard's left corners. If the yard platform counts as walkable, treat them as blockers or move them.
-4. **Puddles** are flat decals in the four far paving corners. Walkable but only a decal; keep, or drop them to be safe?
-5. **White:** the base dusk already lights the existing lamps, so stage 1 adds bigger gold glass lanterns, one bridge lamp and pools. Enough of a change for the first belt?
-6. **Green path** is short (the right hill strip) plus the stone bench in the lawn gap at the hedge line; at preview size the stones are small. Bigger?
-7. **Brown tree** sits at the right edge and its crown is cropped by the frame. Move it left onto the lawn (which crowds the market), or keep?
-8. **Names and wording:** the 9 changeIds (as in the spec: `wc-lantern-halls-lamps` ... `wc-storm-stair-tower-glow`), titles (Lantern Halls, Sunrise Garden, Ember Kitchens, Giant's Steps, Quiet River, Forge of Courage, Hall of Echoes, Root Library, Storm Stair) and the nine kid reward messages in `overlays.json`. Wording needs Jay's or the Manager's eye.
-9. **Black belt** is out of scope (no spec yet).
+**Review fixes (Manager, PR #396):**
+- **Banner flames now have a light source (done).** At dusk each gold flame banner has a small lit lantern next to it: on a little bracket at the top of each of the four hill banner poles, and on a short arm beside each of the two yard banners. The lantern is the source of the glow; the flames themselves stay unlit. No red, nothing in a walking lane.
+- **Brown tree moved in (done).** The tree and its crown moved 0.5 tile left (trunk at tile 22.45), the crown is lower and rounder, and the whole crown is inside the 23.3-tile frame. The four night lanterns now hang in front of the crown, the book-swap box moved in so it is not cropped, and the glow pool moved with it. The tree stands on the lawn above the front lane strip (rows 4.6 to 5.8).
+- **Wording check (done, nothing to fix).** All 9 reward messages in `overlays.json` match `drafts/content/town/town-changes.md` (branch `bot-content-story-f`) word for word, and the 9 titles match the spec's Name / Title. The spec lists a 10th change (`wc-summit-great-lamp`, Black), which is not built (see Black belt below).
+- Re-rendered: `6-red-dusk`, `8-brown-day`, `8-brown-dusk` (+ @2x) and the stage 6 to 9 previews that include them, plus both growth sheets. Re-run checks: red 0 px in all 36 overlays; previews carry only the branded CMA sign (day 1,905 px, dusk 1,389 px, never above stage 0); phone and house number grep finds nothing; statue box clear in every overlay except the yellow beds and the river (existing flowerbeds and water); front strip clear except the beds, the river/bank (blue) and the yard banner foot (red, 104 px at the yard edge, on the yard platform).
+
+**DECIDED (Manager):**
+1. **Rainbow OK** (no red band, day only).
+2. **Corners fine:** the training dummy and brazier stay in the practice yard corners.
+3. **Puddles kept** (flat decals in the four far paving corners).
+4. **White is enough** for the first belt.
+5. **Path as is** (the Green stepping stones and the stone bench).
+6. **Banner flames:** a small lantern was added at dusk (see above).
+7. **Brown tree:** moved in so the crown is not cropped (see above).
+8. **Names and wording:** identical to the spec.
+
+**STILL OPEN:**
+1. **Black belt** (`wc-summit-great-lamp`) is out of scope, no art made.
 
 **NEXT:**
-1. Jay looks at the previews (`previews/growth-sheet-day.png` and `-dusk.png` first, then each stage) and answers DECIDE.
-2. I apply the changes (one command: `source/render_all.sh`) and push to this PR.
+1. Jay and the Manager look at the regenerated `previews/growth-sheet-day.png` and `-dusk.png` and the stage 6 and 8 previews, and merge if happy.
+2. Any further changes: one command, `source/render_all.sh`, then push to this PR.
 3. The Programmer imports the 36 overlays (stack in stage order on the town base) once the picture is approved; the content side wires them to the changeIds.
