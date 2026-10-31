@@ -1016,3 +1016,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Bug 2: the step-back banner ("Three great counters! ...", B-MASHER-2) now goes away after 2.2 s. Before: still up at 7 s, both motion settings. After: gone by 2.3 s, both settings, two sizes.
 - Bug 3: not reproduced; tests pin the routing. Decision notes in `docs/decisions.md`.
 - Tests: `packages/sim/test/a4-dojo-hotfix.test.ts` (11); `p-menu-c-buttons.test.ts` pin updated for the baked outline. Suite 1197 passed, 11 skipped; typecheck and build exit 0; golden fixture unchanged.
+
+## A4-DOJO-ii-fix — Action Zone walking fixes (2026-10-31)
+- Exits line up with their glows (one source: the room file, checked by the loader), both glows on screen at 667 wide, a press on a glow walks even under the stick, the doorstep opens only on a push up or a tap on the doors, the inside spawn is 2 tiles from the door, collision gaps tighter. Stronger glow kept baked.
+- Town button in the Home Dojo is still the PLACEHOLDER way out.
+- Tests: `action-zone-outside.test.ts` and `action-zone.test.ts` updated and extended (wantsThrough, cue loader check, spawn distance, source pins). Merged main 35aa0c2f (the hotfix's baked buttons and cues carried forward).
+- Next: Jay: play on the preview link and check the glows and the doorstep.

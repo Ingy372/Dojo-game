@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { TICKS_PER_SECOND, createWorld, stepWorld, type PlayerInput, type Room, type Vec2, type WorldState } from '@dojo/sim';
+import { TICKS_PER_SECOND, createWorld, stepWorld, type MoveInput, type PlayerInput, type Room, type Vec2, type WorldState } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { reducedMotion } from '../game/motion';
 import { touchPlayClock } from '../game/playTime';
@@ -59,6 +59,12 @@ export abstract class WalkScene extends Phaser.Scene {
   protected abstract drawRoom(): void;
   /** Called after every sim tick with the hero's position. */
   protected abstract afterTick(pos: Vec2): void;
+  /** Called before every sim tick with what the player asked for and where the hero stands. */
+  protected onInput(_input: MoveInput, _pos: Vec2): void {}
+  /** True for room points (tiles) that are tap targets even where the stick would start: a tap there walks. */
+  protected isTapTarget(_tile: Vec2): boolean {
+    return false;
+  }
   /** Where a tap lands, in tiles: a scene can send taps on a door to the spot in front of it. */
   protected tapTile(tile: Vec2): Vec2 {
     return tile;
@@ -87,7 +93,7 @@ export abstract class WalkScene extends Phaser.Scene {
     this.standLayer.add(this.player);
     this.drawRoom();
 
-    this.controls = new TouchControls(this, this.cameras.main, (x, y) => this.toTile(x, y), () => this.leaving);
+    this.controls = new TouchControls(this, this.cameras.main, (x, y) => this.toTile(x, y), () => this.leaving, (x, y) => this.isTapTarget(this.rawTile(x, y)));
     this.layout();
 
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
@@ -115,6 +121,11 @@ export abstract class WalkScene extends Phaser.Scene {
     return this.add.container(p.x * TILE, p.y * TILE, [this.hero.container]);
   }
 
+  /** Lets `id` fire again while the hero stands inside it, because the player asked to go through (not on its own). */
+  protected arm(id: string): void {
+    this.armed.set(id, true);
+  }
+
   /**
    * True once, when the hero is inside `rect` after having been outside it. `id` names the rectangle.
    * A hero that starts inside it must step out first.
@@ -134,6 +145,7 @@ export abstract class WalkScene extends Phaser.Scene {
       while (this.elapsed >= TICK_MS && !this.leaving) {
         this.prevPos = { ...this.world.players.p1.pos };
         const input: PlayerInput = this.controls.takeInput();
+        this.onInput(input, this.world.players.p1.pos);
         stepWorld(this.world, this.room(), { p1: input });
         this.elapsed -= TICK_MS;
         this.afterTick(this.world.players.p1.pos);
@@ -200,6 +212,11 @@ export abstract class WalkScene extends Phaser.Scene {
 
   /** Screen point to room tiles. */
   private toTile(x: number, y: number): Vec2 {
-    return this.tapTile({ x: (x - this.worldLayer.x) / this.zoom / TILE, y: (y - this.worldLayer.y) / this.zoom / TILE });
+    return this.tapTile(this.rawTile(x, y));
+  }
+
+  /** Screen point to room tiles, before a scene sends the tap elsewhere. */
+  private rawTile(x: number, y: number): Vec2 {
+    return { x: (x - this.worldLayer.x) / this.zoom / TILE, y: (y - this.worldLayer.y) / this.zoom / TILE };
   }
 }

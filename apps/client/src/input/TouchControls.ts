@@ -30,6 +30,11 @@ export class TouchControls {
     private readonly toTiles: (x: number, y: number) => { x: number; y: number },
     /** True for screen points that belong to buttons, which this ignores. */
     private readonly isButton: (x: number, y: number) => boolean = () => false,
+    /**
+     * True for screen points that are tap targets even inside the stick area (an exit cue under the
+     * stick): a press there is a tap, not a stick.
+     */
+    private readonly isTapTarget: (x: number, y: number) => boolean = () => false,
   ) {
     // Allow several fingers at once (stick, a button, and a tap).
     scene.input.addPointer(2);
@@ -101,7 +106,7 @@ export class TouchControls {
   private onDown(pointer: Phaser.Input.Pointer): void {
     if (this.off) return;
     if (this.isButton((pointer.x / DPR), (pointer.y / DPR))) return;
-    if (this.stickPointer === null && this.inStickZone((pointer.x / DPR), (pointer.y / DPR))) {
+    if (this.stickPointer === null && this.inStickZone((pointer.x / DPR), (pointer.y / DPR)) && !this.isTapTarget((pointer.x / DPR), (pointer.y / DPR))) {
       this.stickPointer = pointer.id;
       // Keep the whole stick on screen even if the thumb lands near the edge.
       const { height } = view(this.scene);
