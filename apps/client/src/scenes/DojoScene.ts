@@ -86,6 +86,8 @@ const MAX_TICKS_PER_FRAME = 5;
 const HOUR = 3_600_000;
 /** Screen space taken by the title bar, and by the storage tray while decorating. */
 const TOP = 48;
+/** Q-PREMIUM-2 L2: door and sign labels in the Home Dojo are never smaller than this (px). */
+const LABEL_PX = 14;
 /** Q-PREM-F9: Decorate's top bar fits 44 pt buttons (8 + 44 + 8). */
 const DECOR_TOP = 60;
 /** Q-PREM-F9: the second button row (Street Smarts, Journal, Scroll) is 44 pt tall, 8 below the first row's tap zones. */
@@ -410,7 +412,7 @@ export class DojoScene extends Phaser.Scene {
     const box = this.add.container(0, 0).setDepth(70);
     this.cardsOpen++;
     box.once(Phaser.GameObjects.Events.DESTROY, () => (this.cardsOpen = Math.max(0, this.cardsOpen - 1)));
-    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.6).setOrigin(0).setInteractive());
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
     const body = this.add
       .text(width / 2, 0, lines.join('\n\n'), { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', align: 'center', wordWrap: { width: w - 36 }, lineSpacing: 2 })
       .setOrigin(0.5, 0)
@@ -770,13 +772,13 @@ export class DojoScene extends Phaser.Scene {
     const b = CONTENT.dojo.board;
     const label = (x: number, y: number, text: string, size: number) =>
       this.add
-        .text(x, y, text, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color: '#fff6e0', stroke: '#14121c', strokeThickness: 3 })
+        .text(x, y, text, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color: '#fff6e0', stroke: '#14121c', strokeThickness: 3, backgroundColor: 'rgba(20,18,28,0.72)', padding: { x: 6, y: 1 } })
         .setOrigin(0.5, 0)
         .setResolution(crisp() * 2);
     return {
       back: [floor, board].filter(Boolean),
       front: [front].filter(Boolean),
-      labels: [label(door.x * TILE, (door.y - 0.2) * TILE, 'TOWER', 11), label(b.col * TILE + TILE / 2, TILE + 2, 'BOARD', 10)],
+      labels: [label(door.x * TILE, (door.y - 0.2) * TILE, 'TOWER', LABEL_PX), label(b.col * TILE + TILE / 2, TILE + 2, 'BOARD', LABEL_PX)],
     };
   }
 
@@ -905,16 +907,16 @@ export class DojoScene extends Phaser.Scene {
     const pad = 12;
 
     // A dark strip behind the title and buttons (the room scrolls underneath).
-    this.ui.add(this.add.rectangle(0, 0, width, this.mode === 'decorate' ? DECOR_TOP : TOP, 0x14121c, 0.7).setOrigin(0));
+    this.ui.add(this.add.rectangle(0, 0, width, this.mode === 'decorate' ? DECOR_TOP : TOP, 0x14121c, 0.85).setOrigin(0));
     const title = this.text(pad, 8, 'Home Dojo', 20, '#f2e9d8', true, 'Georgia, serif');
     title.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.tapTitle());
     this.uiRects.push(title.getBounds());
     const chores = choresLeft(this.dojo);
     const status = chores > 0 ? `Tidy up: ${chores} left` : '✓ Spotless';
-    this.text(pad + title.width + 12, 13, status, 13, chores > 0 ? '#e8d9b5' : '#bff5ec', true);
+    this.text(pad + title.width + 12, 12, status, 14, chores > 0 ? '#e8d9b5' : '#bff5ec', true);
     if (this.dojo.calmMindRuns > 0) {
       const n = this.dojo.calmMindRuns;
-      this.text(pad, 32, `Calm Mind · ${n} Tower run${n > 1 ? 's' : ''}`, 12, '#bff5ec', true);
+      this.text(pad, 30, `Calm Mind · ${n} Tower run${n > 1 ? 's' : ''}`, 14, '#bff5ec', true);
     }
 
     if (this.mode === 'decorate') {
@@ -927,7 +929,10 @@ export class DojoScene extends Phaser.Scene {
       if (this.selected) {
         this.button(width - pad - 90 - 8 - 110, 8, 110, MIN_TAP, 'Put away', 0x6b3a3a, 14, () => this.putAway());
       }
-      this.text(width / 2, DECOR_TOP + 6, hint, 14, '#fff6e0', true).setOrigin(0.5, 0).setStroke('#14121c', 5);
+      // Q-PREMIUM-2 M9: the hint rides in a solid dark pill at the bottom, just above the tray (and left of the arrow pad).
+      const hintX = this.selected && arrows ? (width - (3 * ARROW + 24)) / 2 : width / 2;
+      const hintText = this.text(hintX, height - TRAY - 10, hint, 16, '#fff6e0', true).setOrigin(0.5, 1);
+      hintText.setBackgroundColor('#14121c').setPadding(12, 6, 12, 6).setAlpha(1);
       this.renderTray(width, height);
     } else if (this.mode === 'play') {
       this.button(width - pad - 80, 8, 80, 32, 'Board', 0x4a3f63, 14, () => this.goBoard());
@@ -1009,7 +1014,7 @@ export class DojoScene extends Phaser.Scene {
     this.controls.reset();
     const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
-    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.85).setOrigin(0).setInteractive());
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
     const close = (reopen = false) => {
       box.destroy();
       if (reopen) return;
@@ -1080,7 +1085,7 @@ export class DojoScene extends Phaser.Scene {
     this.controls.reset();
     const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
-    const dim = this.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive();
+    const dim = this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive();
     box.add(dim);
     const close = () => {
       box.destroy();
@@ -1176,7 +1181,7 @@ export class DojoScene extends Phaser.Scene {
     const back = this.mode === 'arriving' ? 'play' : this.mode;
     this.mode = 'menu';
     const box = this.add.container(0, 0).setDepth(80);
-    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.8).setOrigin(0).setInteractive());
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
     const w = Math.min(460, width - 40);
     const h = 200;
     const left = (width - w) / 2;
@@ -1218,14 +1223,14 @@ export class DojoScene extends Phaser.Scene {
     const pt = PLAY_TIME_TEXT;
     const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
-    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.85).setOrigin(0).setInteractive());
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
     this.addWipeButton(box);
     const close = () => {
       box.destroy();
       this.mode = back === 'menu' ? 'play' : back;
       this.renderUi();
     };
-    const w = Math.min(560, width - 40);
+    const w = Math.min(620, width - 40);
     box.add(this.add.text(width / 2, height * 0.08, pt.title, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
     const help = this.add.text(width / 2, height * 0.08 + 36, pt.help, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
     box.add(help);
@@ -1294,7 +1299,7 @@ export class DojoScene extends Phaser.Scene {
     const floor = feedEntry(applyBeltEntry(feed, this.profile.beltEntry));
     const pick: BeltEntry = { ...floor };
     const box = this.add.container(0, 0).setDepth(70);
-    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.9).setOrigin(0).setInteractive());
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
     const close = () => {
       box.destroy();
       this.training = currentTraining();
@@ -1377,7 +1382,7 @@ export class DojoScene extends Phaser.Scene {
     this.mode = 'menu';
     const { width, height } = view(this);
     const box = this.add.container(0, 0).setDepth(70);
-    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.75).setOrigin(0).setInteractive());
+    box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
     const title = this.add
       .text(width / 2, height * 0.12, 'How do you like to move decorations?', { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' })
       .setOrigin(0.5, 0)
@@ -1454,10 +1459,10 @@ export class DojoScene extends Phaser.Scene {
   private addWipeButton(box: Phaser.GameObjects.Container): void {
     const t = SAFE_TEXT;
     const { height } = view(this);
-    const label = this.add.text(12 + 8, height - 12 - 22, t.wipeButton, { fontFamily: FONT, fontSize: '14px', color: '#ff9f9f' }).setOrigin(0, 0.5).setResolution(crisp());
+    const label = this.add.text(20 + 8, height - 20 - 22, t.wipeButton, { fontFamily: FONT, fontSize: '14px', color: '#ff9f9f' }).setOrigin(0, 0.5).setResolution(crisp());
     const w = label.width + 16;
     label.destroy();
-    roundButton(this, { x: 12, y: height - 12 - 44, w, h: 44, label: t.wipeButton, color: 0x2a1a20, size: 14, stroke: 0xff9f9f, labelColor: '#ff9f9f', onTap: () => this.confirmWipe() }, box);
+    roundButton(this, { x: 20, y: height - 20 - 44, w, h: 44, label: t.wipeButton, color: 0x2a1a20, size: 14, stroke: 0xff9f9f, labelColor: '#ff9f9f', onTap: () => this.confirmWipe() }, box);
   }
 
   private confirmWipe(): void {

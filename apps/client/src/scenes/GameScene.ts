@@ -143,6 +143,10 @@ const BOSS_BAR_Y = 16;
 const HUD_BOTTOM = 56;
 /** Bottom of the health and Focus bars drawn in drawHud. */
 const HUD_BARS_BOTTOM = 51;
+/** Q-PREMIUM-2 M12: the hero's numbers start this far above the head (world px), step left, middle, right, and at most this many show at once. */
+const HERO_POP_RAISE_PX = 46;
+const HERO_POP_SIDE_PX = [0, -38, 38];
+const HERO_POP_MAX = 3;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 /** Never run more than this many ticks in one frame (e.g. after a long pause). */
 const MAX_TICKS_PER_FRAME = 10;
@@ -367,6 +371,11 @@ export class GameScene extends Phaser.Scene {
   /** B-T3-NUDGE: the boss's "Help me!" when its helpers come with a phase pause (under ROAR!). */
   private helpText: Phaser.GameObjects.Text | null = null;
   private toastY = 0;
+  /** Q-PREMIUM-2 M7: the loot and decoration notes on screen, so door labels step aside. */
+  /** Q-PREMIUM-2 M12: the hero's floating numbers that are still up (oldest first). */
+  private heroPops: Phaser.GameObjects.Text[] = [];
+  private heroPopN = 0;
+  private lootToasts = new Set<Phaser.GameObjects.Text>();
   /** Decoration labels on screen and where they'd like to be (K12). */
   private decoToasts: Array<{ t: Phaser.GameObjects.Text; y: number }> = [];
   private twistBadge: Phaser.GameObjects.Container | null = null;
@@ -505,10 +514,12 @@ export class GameScene extends Phaser.Scene {
       this.afterHelpUp?.();
     });
     this.popups.clear();
+    this.heroPops = [];
     this.leaving = false;
     this.picker = null;
     this.doorViews = [];
     this.toastY = 0;
+    this.lootToasts.clear();
     this.decoToasts = [];
     this.prevPos = { ...this.world.players[this.me].pos };
     this.elapsed = 0;
@@ -2158,6 +2169,7 @@ export class GameScene extends Phaser.Scene {
     const prog = this.world.progress;
     const pulse = 0.75 + Math.sin(now / 200) * 0.25;
 
+    const enemiesAlive = this.world.enemies.some((e) => e.mode !== 'defeated');
     for (const d of this.doorViews) {
       // Closed until the room is cleared, then the doors slide open and the doorway glows.
       setStaticFrame(this, this.towerPack, d.art, d.images, prog.doorsOpen ? 1 : 0);
@@ -2166,6 +2178,9 @@ export class GameScene extends Phaser.Scene {
         if (!prog.doorsOpen) this.animateStatic('door-boss-glow', d.glow, now / 1000);
       }
       d.label.setAlpha(prog.doorsOpen ? pulse : 0.55);
+      // Q-PREMIUM-2 M7: a door's name shows only once no enemy is left (a word floating over a fight
+      // reads as part of the floor), and never under a loot toast.
+      d.label.setVisible(!enemiesAlive && !this.underToast(d.label));
       // Keep the label below the top bar and the Challenge timer (health, Focus, "Room 1 of 8"): in small rooms
       // the top doors sit right under it on a 667-wide phone.
       const cam = this.cameras.main;
@@ -2195,7 +2210,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     // Room number and name (top right).
-    const waves = this.world.waveCount > 1 && !prog.cleared ? `  ·  Wave ${this.world.wave} of ${this.world.waveCount}` : '';
+    // Q-PREMIUM-2 M7: one counter once no enemy is left ("Wave" goes with the last enemy).
+    const waves = this.world.waveCount > 1 && !prog.cleared && enemiesAlive ? `  ·  Wave ${this.world.wave} of ${this.world.waveCount}` : '';
     this.roomLabel.setText(`Room ${this.run.depth + 1} of ${this.run.totalRooms}${waves}`);
 
     // Challenge timer.
@@ -2445,6 +2461,23 @@ export class GameScene extends Phaser.Scene {
     return boxes;
   }
 
+  /** Q-PREMIUM-2 M7: true when a door label's screen box touches a loot or decoration toast. */
+  private underToast(label: Phaser.GameObjects.Text): boolean {
+    if (this.lootToasts.size === 0) return false;
+    const cam = this.cameras.main;
+    const k = cam.zoom / DPR;
+    const b = label.getBounds();
+    const l = (b.left - cam.worldView.x) * k;
+    const r = (b.right - cam.worldView.x) * k;
+    const t = (b.top - cam.worldView.y) * k;
+    const bt = (b.bottom - cam.worldView.y) * k;
+    for (const o of this.lootToasts) {
+      const tb = o.getBounds();
+      if (r > tb.left - 6 && l < tb.right + 6 && bt > tb.top - 6 && t < tb.bottom + 6) return true;
+    }
+    return false;
+  }
+
   /** A dropped item: a glowing orb that pops out, then a note at the top of the screen. */
   private showLoot(item: GearItem, at: Vec2): void {
     const { name, rarity } = item;
@@ -2468,6 +2501,7 @@ export class GameScene extends Phaser.Scene {
     const icon = addGearIcon(this, item, 0, y + t.height / 2, 24);
     const parts = icon ? [t, icon] : [t];
     this.cameras.main.ignore(parts);
+    this.lootToasts.add(t);
     const slideX = (o: Phaser.GameObjects.Components.Transform & Phaser.GameObjects.GameObject, to: number) =>
       this.tweens.add({ targets: o, alpha: 1, x: { from: to + 56, to }, duration: 220, ease: 'Back.Out' });
     slideX(t, width - 16);
@@ -2478,6 +2512,7 @@ export class GameScene extends Phaser.Scene {
       delay: 2600,
       duration: 400,
       onComplete: () => {
+        this.lootToasts.delete(t);
         parts.forEach((o) => o.destroy());
         this.toastY = Math.max(0, this.toastY - 1);
       },
@@ -2498,6 +2533,7 @@ export class GameScene extends Phaser.Scene {
       .setOrigin(1, 0)
       .setResolution(crisp());
     this.cameras.main.ignore(t);
+    this.lootToasts.add(t);
     // K12: kept clear of Sensei's banner every frame (placeSensei), since the banner moves.
     this.decoToasts.push({ t, y });
     this.placeDecoToasts();
@@ -2507,6 +2543,7 @@ export class GameScene extends Phaser.Scene {
       delay: 3000,
       duration: 400,
       onComplete: () => {
+        this.lootToasts.delete(t);
         t.destroy();
         this.decoToasts = this.decoToasts.filter((d) => d.t !== t);
         this.toastY = Math.max(0, this.toastY - 1);
@@ -2849,9 +2886,21 @@ export class GameScene extends Phaser.Scene {
 
   private floatText(at: Vec2, text: string, color: string, size: number, rise = 0.8): void {
     if (this.downed) return;
+    // Q-PREMIUM-2 M12: the hero's own numbers ride above the head (never on the body), each new one
+    // a step to the side of the last, and at most 3 show at once, so the hero stays in view.
+    const me = this.world.players[this.me]?.pos;
+    const hero = !!me && Math.abs(at.x - me.x) < 0.01 && Math.abs(at.y - me.y) < 0.01;
+    let x = at.x * TILE + (Math.random() - 0.5) * 16;
+    let y = (at.y - 0.6) * TILE;
+    if (hero) {
+      const cam = this.cameras.main;
+      const floor = cam.worldView.y + (HUD_TOP_PX + 24) / (cam.zoom / DPR);
+      x = at.x * TILE + HERO_POP_SIDE_PX[this.heroPopN++ % HERO_POP_SIDE_PX.length];
+      y = Math.max(floor, (at.y - 0.6) * TILE - HERO_POP_RAISE_PX);
+    }
     const t = this.addWorld(
       this.add
-        .text(at.x * TILE + (Math.random() - 0.5) * 16, (at.y - 0.6) * TILE, text, {
+        .text(x, y, text, {
           fontFamily: 'system-ui, sans-serif',
           fontStyle: 'bold',
           fontSize: `${size}px`,
@@ -2864,6 +2913,14 @@ export class GameScene extends Phaser.Scene {
         .setDepth(11),
     );
     this.popups.add(t);
+    if (hero) {
+      this.heroPops = this.heroPops.filter((o) => this.popups.has(o));
+      this.heroPops.push(t);
+      while (this.heroPops.length > HERO_POP_MAX) {
+        const old = this.heroPops.shift()!;
+        if (this.popups.has(old)) this.dropPopup(old);
+      }
+    }
     this.tweens.add({ targets: t, y: t.y - rise * TILE, alpha: 0, duration: 650, ease: 'Cubic.Out', onComplete: () => this.dropPopup(t) });
   }
 
