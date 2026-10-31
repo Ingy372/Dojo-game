@@ -22,5 +22,30 @@
     "seconds": 2.5,
     "damageBonus": 0.5
   },
-  "parSeconds": 8
+  "parSeconds": 8,
+  "challenge": {
+    "fromBelt": 5,
+    "fromRoom": 2,
+    "attacks": [
+      {
+        "name": "double slam",
+        "strength": 1,
+        "startRange": 1.3,
+        "reach": 0.9,
+        "areaRadius": 0.95,
+        "telegraphTicks": 20,
+        "recoverTicks": 18,
+        "followUp": {
+          "strength": 0.6,
+          "gapTicks": 20
+        },
+        "tell": "Fist up, then up again. Two thumps.",
+        "senseiLine": "New move! Two slams, then it rests."
+      }
+    ],
+    "pattern": [
+      "attack",
+      "double slam"
+    ]
+  }
 }

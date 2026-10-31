@@ -1,0 +1,51 @@
+diff --git a/packages/sim/src/world.ts b/packages/sim/src/world.ts
+index 2700ce9..886c8fe 100644
+--- a/packages/sim/src/world.ts
++++ b/packages/sim/src/world.ts
+@@ -818,7 +818,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
+   if (p.dashTicks === 0 && p.guardTicks === 0 && p.strikeRecovery === 0 && p.attackCooldown === 0) {
+     const target = nearestEnemy(world, p, COMBAT.basicAttack.reach);
+     if (target) {
+-      const speed = Math.min(0.6, p.mods.attackSpeed + activeStance(p).attackSpeed);
++      const speed = Math.min(0.6, p.mods.attackSpeed + activeStance(p).attackSpeed + (process.env.WIND_ATK === '1' && p.speedBoostTicks > 0 ? p.mods.comboSpeedBonus * 0.5 : 0));
+       p.attackCooldown = Math.max(1, Math.round(COMBAT.basicAttack.cooldownTicks * (1 - speed)));
+       landHit(world, p, target, 'basic', COMBAT.basicAttack.strength, COMBAT.focus.perHit);
+     }
+@@ -923,6 +923,7 @@ function tryStrike(world: WorldState, p: PlayerState, room: Room): void {
+ }
+ 
+ /** A player's hit on an enemy: damage with the combo bonus, Focus, and the combo counter. */
++const XSB = { dmg: Number(process.env.SB_DMG ?? 0), focus: Number(process.env.SB_FOCUS ?? 0), stag: Number(process.env.SB_STAG ?? 0) };
+ function landHit(
+   world: WorldState,
+   p: PlayerState,
+@@ -931,6 +932,7 @@ function landHit(
+   strength: number,
+   focusGain: number,
+ ): void {
++  const wasShielded = e.shieldUp;
+   if (e.shieldUp) {
+     if ((move === 'basic' || move === 'ripple') && !p.mods.shieldBreaker) {
+       // Basic attacks bounce off the shield: no damage, but shield sparks give a little Focus (B-MASHER-a).
+@@ -944,9 +946,12 @@ function landHit(
+     e.shieldRegrow = e.def.shield!.regrowTicks;
+     world.events.push({ kind: 'shieldBreak', playerId: p.id, enemyId: e.id });
+   }
++  const sbOn = p.mods.shieldBreaker && wasShielded;
++  if (sbOn && XSB.focus > 0) p.focus = Math.min(COMBAT.focus.max, p.focus + XSB.focus);
+   const bonus =
++    (sbOn ? XSB.dmg : 0) +
+     comboBonus(p.combo) +
+-    (e.mode === 'stagger' ? p.mods.staggerBonus : 0) +
++    ((e.mode === 'stagger' || (process.env.PRESS_WIDE === '1' && (e.mode === 'recover' || e.mode === 'winded'))) ? p.mods.staggerBonus : 0) +
+     (e.mode === 'winded' && e.def.winded ? e.def.winded.damageBonus : 0);
+   const dmg = damage(p.power * (1 + p.mods.powerScale + stancePowerScale(p)), strength, e.def.guard, bonus);
+   p.combo++;
+@@ -959,6 +964,7 @@ function landHit(
+   p.focus = Math.min(COMBAT.focus.max, p.focus + focusGain * (1 + p.mods.focusGain + activeStance(p).focusGain) * (lowHealth ? p.mods.lowHealthFocusScale : 1));
+   p.facing = directionTo(p.pos, e.pos);
+   hurtEnemy(world, p, e, move, dmg);
++  if (sbOn && XSB.stag > 0 && e.mode !== 'defeated') { e.mode = 'stagger'; e.modeTicks = Math.max(e.modeTicks, XSB.stag); e.attackCenter = null; }
+ }
+ 
+ /** Damage lands on an enemy. */

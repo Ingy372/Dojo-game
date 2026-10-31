@@ -43,6 +43,7 @@ import {
   type SenseiLesson,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
+import { LOCK_SHAKE, LOCKED_CARD, lockedLine, lockedTapFeedback, lockShakeOffset } from '../ui/lockCard';
 import { music } from '../audio/Music';
 import { addVolumeRow } from '../ui/VolumeRow';
 import { CONTENT } from '../game/content';
@@ -66,7 +67,7 @@ import { addStatic, addTinted, loadArt } from '../art/art';
 import type { LayeredSprite } from '../art/LayeredSprite';
 import { makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
-import { bowPrompt, playBow } from '../ui/bow';
+import { bowGate, bowPrompt, playBow } from '../ui/bow';
 import { Celebrations } from '../ui/Celebrations';
 import { FONT, crisp, view, DPR, hiDpi } from '../ui/theme';
 import { showGrownUpGate } from '../ui/grownUpGate';
@@ -253,25 +254,58 @@ export class DojoScene extends Phaser.Scene {
     touchPlayClock();
     this.time.addEvent({ delay: 5000, loop: true, callback: () => touchPlayClock() });
 
+    // Scenes are reused on restart, so reset the bow gate here.
+    this.bowShown = false;
+    this.bowHoursAway = null;
+    this.cardsOpen = 0;
+    this.arriving = false;
+    this.arrived = false;
     if (!bowIsDue()) this.offerResume();
     if (bowIsDue()) {
-      this.mode = 'arriving';
-      bowPrompt(this, 'Bow as you enter your dojo', () => {
-        this.heroDo('bow', BOW.ms);
-        playBow(
-          this,
-          this.player,
-          () => {
-            setBowDue(false);
-            this.arrive(hoursAway);
-          },
-          this.hero,
-        );
-      });
+      this.bowHoursAway = hoursAway;
+      this.tryBow();
     }
   }
 
+  /**
+   * Q-BOW-OVER-MENU: the due bow waits until no menu, panel, card or arrival sequence is open,
+   * then shows once. `arriving` is owned by arrive() itself (not inferred from the mode), so the
+   * "Welcome home" celebrations and every other arrival step hold the bow however arrive() is reached.
+   */
+  private bowHoursAway: number | null = null;
+  private bowShown = false;
+  private cardsOpen = 0;
+  private arriving = false;
+  /** Whether this scene's arrival steps already played (a later bow only bows). */
+  private arrived = false;
+  private tryBow(): void {
+    if (this.bowHoursAway === null) return;
+    const gate = bowGate({ due: bowIsDue(), menuOpen: this.mode !== 'play' || this.cardsOpen > 0, arriving: this.arriving, shown: this.bowShown });
+    if (gate !== 'show') return;
+    this.bowShown = true;
+    const hoursAway = this.bowHoursAway;
+    this.mode = 'arriving';
+    bowPrompt(this, 'Bow as you enter your dojo', () => {
+      this.heroDo('bow', BOW.ms);
+      playBow(
+        this,
+        this.player,
+        () => {
+          setBowDue(false);
+          // A bow that came due later (held through the arrival) shows once; after it, a new due bow may show again.
+          this.bowShown = false;
+          if (this.arrived) {
+            this.mode = 'play';
+            this.renderUi();
+          } else this.arrive(hoursAway);
+        },
+        this.hero,
+      );
+    });
+  }
+
   update(time: number, delta: number): void {
+    if (!this.bowShown && this.bowHoursAway !== null) this.tryBow();
     if (this.mode !== 'play' || this.leaving) {
       this.controls.takeInput();
       this.elapsed = 0;
@@ -293,6 +327,10 @@ export class DojoScene extends Phaser.Scene {
 
   /** After the bow: a welcome card (first visit, or back after a while), then any real celebrations. */
   private arrive(hoursAway: number): void {
+    this.arriving = true;
+    this.arrived = true;
+    this.bowHoursAway ??= hoursAway;
+    this.mode = 'arriving';
     const name = this.training.displayName.split(' ')[0];
     const chores = choresLeft(this.dojo);
     const steps: Array<() => void> = [];
@@ -357,7 +395,9 @@ export class DojoScene extends Phaser.Scene {
         this.controls.reset();
         this.quietUntil = this.time.now + ARRIVAL_QUIET_MS;
         this.mode = 'play';
+        this.arriving = false;
         this.renderUi();
+        this.tryBow();
       }
     };
     next();
@@ -368,6 +408,8 @@ export class DojoScene extends Phaser.Scene {
     const { width, height } = view(this);
     const w = Math.min(460, width - 40);
     const box = this.add.container(0, 0).setDepth(70);
+    this.cardsOpen++;
+    box.once(Phaser.GameObjects.Events.DESTROY, () => (this.cardsOpen = Math.max(0, this.cardsOpen - 1)));
     box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.6).setOrigin(0).setInteractive());
     const body = this.add
       .text(width / 2, 0, lines.join('\n\n'), { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', align: 'center', wordWrap: { width: w - 36 }, lineSpacing: 2 })
@@ -912,6 +954,9 @@ export class DojoScene extends Phaser.Scene {
       // Sensei's Scroll (M7-P5): every lesson seen so far, and the tutorial floor, to replay any time.
       const rowLeft = (street ? 130 + 8 : 0) + (journal ? 100 + 8 : 0);
       if (isOpen(this.profile, this.training, 'scroll')) this.button(width - pad - rowLeft - 90, ROW2_Y, 90, MIN_TAP, 'Scroll', 0x7a4a6a, 14, () => this.openScroll());
+      // The way out to the town (A4-DOJO-ii), and from there to the Action Zone. A button for now:
+      // the Home Dojo has no town door yet.
+      this.button(width - pad - 130, ROW2_Y + MIN_TAP + 8, 130, MIN_TAP, 'Town', 0x3d6a99, 14, () => this.leaveTo('ActionZoneTown', { from: 'home' }));
     }
   }
 
@@ -1064,16 +1109,21 @@ export class DojoScene extends Phaser.Scene {
       const on = current === c.id;
       const locked = c.id === 'challenge' && !challengeUnlocked(tier);
       // P-MENU-e: a rounded card with the shared press; the name and words ride inside it.
-      const b = roundButton(this, { x, y: top, w, h, label: '', color: 0x2a2536, size: 15, selected: on, onTap: () => {
-        if (locked) return;
+      // Q-LOCK-CARD: the locked card is solid (no see-through), and a tap answers gently.
+      let line: Phaser.GameObjects.Text | null = null;
+      const b = roundButton(this, { x, y: top, w, h, label: '', color: locked ? LOCKED_CARD.color : 0x2a2536, size: 15, selected: on, onTap: () => {
+        if (locked) {
+          this.lockedCardTap(b.visual, line!);
+          return;
+        }
         sfx.place(true);
         chooseDifficulty(this.profile, c.id);
         writeSave(this.profile);
         close();
       } }, box);
-      b.visual.add(this.add.text(0, 18 - h / 2, (on ? '✓ ' : locked ? '🔒 ' : '') + c.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5, 0).setResolution(crisp()));
-      b.visual.add(this.add.text(0, 54 - h / 2, locked ? t.locked.challenge : c.text, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w - 24 } }).setOrigin(0.5, 0).setResolution(crisp()));
-      if (locked) b.visual.setAlpha(0.7);
+      b.visual.add(this.add.text(0, 18 - h / 2, (on ? '✓ ' : locked ? '🔒 ' : '') + c.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: locked ? LOCKED_CARD.nameColor : '#ffffff' }).setOrigin(0.5, 0).setResolution(crisp()));
+      line = this.add.text(0, 54 - h / 2, locked ? lockedLine(t.locked.challenge, this.training.belts) : c.text, { fontFamily: FONT, fontSize: '15px', color: locked ? LOCKED_CARD.textColor : '#e8d9b5', align: 'center', wordWrap: { width: w - 24 } }).setOrigin(0.5, 0).setResolution(crisp());
+      b.visual.add(line);
     });
     box.add(this.add.text(width / 2, top + h + 14, t.footer, { fontFamily: FONT, fontSize: '14px', color: '#b9ad99' }).setOrigin(0.5, 0).setResolution(crisp()));
     // Grown-up settings sit behind a simple sum, so a young child can't open them by accident (M7-P9).
@@ -1208,6 +1258,31 @@ export class DojoScene extends Phaser.Scene {
       this.openBeltEntry(back);
     } }, box);
     roundButton(this, { x: width / 2 + 8, y: dy, w: dw, h: 44, label: pt.done, color: GREEN, size: 16, onTap: close }, box);
+  }
+
+  /** Q-LOCK-CARD: tapping the locked Challenge card: a soft sound, a small shake (not with reduced motion), and a pulse of the unlock line. */
+  private lockedCardTap(card: Phaser.GameObjects.Container, line: Phaser.GameObjects.Text): void {
+    const fb = lockedTapFeedback(reducedMotion());
+    if (fb.sound) sfx.place(false);
+    const baseX = (card.getData('lockBaseX') as number | undefined) ?? card.x;
+    card.setData('lockBaseX', baseX);
+    this.tweens.killTweensOf(line);
+    line.setScale(1);
+    if (fb.pulseLine) this.tweens.add({ targets: line, scale: 1.08, duration: 120, yoyo: true });
+    if (fb.shake) {
+      // Q-SHAKE-CENTER: same distance left and right of the resting spot, then back exactly on it.
+      (card.getData('lockShake') as Phaser.Tweens.Tween | undefined)?.stop();
+      card.x = baseX;
+      const shake = this.tweens.addCounter({
+        from: 0,
+        to: 1,
+        duration: LOCK_SHAKE.ms,
+        onUpdate: (tw) => { card.x = baseX + lockShakeOffset(tw.getValue() ?? 0); },
+        onComplete: () => { card.x = baseX; },
+        onStop: () => { card.x = baseX; },
+      });
+      card.setData('lockShake', shake);
+    }
   }
 
   /** Grown-up setting (B-BELT): the real belt and stripes. Choices below what's saved are greyed out. */

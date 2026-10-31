@@ -3,8 +3,11 @@ import { CreateScene } from './scenes/CreateScene';
 import { DojoScene } from './scenes/DojoScene';
 import { GameScene } from './scenes/GameScene';
 import { HomeScene } from './scenes/HomeScene';
+import { InsideScene } from './scenes/InsideScene';
+import { OutsideScene } from './scenes/OutsideScene';
 import { StreetSmartsScene } from './scenes/StreetSmartsScene';
 import { TitleScene } from './scenes/TitleScene';
+import { TownScene } from './scenes/TownScene';
 import { App } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
@@ -41,7 +44,7 @@ const game = new Phaser.Game({
     mouse: true,
     touch: true,
   },
-  scene: [TitleScene, CreateScene, DojoScene, HomeScene, GameScene, StreetSmartsScene],
+  scene: [TitleScene, CreateScene, DojoScene, HomeScene, GameScene, StreetSmartsScene, InsideScene, OutsideScene, TownScene],
 });
 
 // Music (M7-P8): each screen that opens picks its track from content/settings/audio.json.

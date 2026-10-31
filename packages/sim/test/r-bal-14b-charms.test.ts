@@ -15,9 +15,9 @@ describe('R-BAL-14b charm amounts', () => {
   it('Kind Stone multiplies low-health Focus by 1 + amount', () => {
     expect([0, 1, 2, 3].map((i) => mods(charm('red-black-charm-1'), i).lowHealthFocusScale)).toEqual([1.25, 1.5, 1.75, 2]);
   });
-  it('Rally (Insight) keeps x2 with the extra-share rule', () => {
+  it('Rally (Insight) is x1.75 with the extra-share rule', () => {
     const rally = insights.insights.find((x: { id: string }) => x.id === 'rally')!;
-    expect(modsFrom([rally.effect as Effect], TICKS_PER_SECOND).lowHealthFocusScale).toBe(2);
+    expect(modsFrom([rally.effect as Effect], TICKS_PER_SECOND).lowHealthFocusScale).toBe(1.75);
   });
   it('Great Lamp fully recharges DASH on a block at every rarity', () => {
     for (let i = 0; i < 4; i++) expect(mods(charm('black-charm-1'), i).dashOnBlock).toBe(true);

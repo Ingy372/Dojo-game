@@ -1,0 +1,149 @@
+// R-CHALLENGE P4: pattern tells. The loader keeps each attack's tell and Sensei line, every C1
+// pattern has a tell shape, and "first time" is remembered per save (enemy + attack).
+import { describe, expect, it } from 'vitest';
+import { firstPatternSight, loadEnemy, loadProfile, newProfile, patternKey, patternShape, type EnemyDef } from '../src';
+import { testContent } from './load-content';
+import bruteData from '../../../content/enemies/brute.json';
+
+const content = testContent();
+const patterns = Object.values(content.enemies).flatMap((d: EnemyDef) => (d.challenge?.attacks ?? []).map((a) => ({ d, a })));
+const find = (name: string) => patterns.find((x) => x.a.name === name)!;
+
+describe('R-CHALLENGE P4: C1 tells load', () => {
+  it('each of the five C1 patterns has a tell, a Sensei line and the right shape', () => {
+    const want: Record<string, string> = { 'hop-in jab': 'landing', 'shield rush': 'lane', shockwave: 'lane', 'double slam': 'circle', 'wide bonk': 'circle' };
+    expect(patterns.map((x) => x.a.name).sort()).toEqual(Object.keys(want).sort());
+    for (const [name, shape] of Object.entries(want)) {
+      const { a } = find(name);
+      expect(patternShape(a)).toBe(shape);
+      expect(a.tell).toMatch(/\S/);
+      expect(a.senseiLine).toMatch(/\S/);
+    }
+  });
+  it('normal attacks have no pattern shape (drawn as before)', () => {
+    for (const d of Object.values(content.enemies)) for (const a of d.attacks.filter((x) => !x.challenge)) expect(patternShape(a)).toBeNull();
+  });
+  it('refuses a tell or Sensei line that is not text', () => {
+    const block = (extra: object) => ({ ...bruteData, challenge: { fromBelt: 4, attacks: [{ name: 'x', strength: 1, startRange: 1, reach: 1, areaRadius: 1, telegraphTicks: 20, recoverTicks: 18, ...extra }], pattern: ['x'] } });
+    expect(() => loadEnemy(block({ senseiLine: 3 }))).toThrow(/senseiLine/);
+    expect(() => loadEnemy(block({ tell: '  ' }))).toThrow(/tell/);
+    expect(loadEnemy(block({ senseiLine: 'Hi' })).challenge!.attacks[0].senseiLine).toBe('Hi');
+  });
+});
+
+describe('R-CHALLENGE P4: first sight, per save', () => {
+  it('fires once per enemy + attack, and survives save and load', () => {
+    const p = newProfile();
+    expect(p.patternsSeen).toEqual([]);
+    const { d, a } = find('double slam');
+    const k = patternKey(d.id, a);
+    expect(k).toBe('brute:double slam');
+    expect(firstPatternSight(p, k)).toBe(true);
+    expect(firstPatternSight(p, k)).toBe(false); // the 2nd hit, and every later fight
+    const back = loadProfile(JSON.parse(JSON.stringify(p)));
+    expect(firstPatternSight(back, k)).toBe(false);
+    expect(firstPatternSight(back, patternKey('floor-keeper', find('shockwave').a))).toBe(true);
+  });
+  it('an old save (no field) starts with nothing seen', () => {
+    const old = JSON.parse(JSON.stringify(newProfile()));
+    delete old.patternsSeen;
+    expect(loadProfile(old).patternsSeen).toEqual([]);
+  });
+});
+
+import { createWorld, currentAttack, loadRoom, stepWorld } from '../src';
+import keeperData from '../../../content/enemies/floor-keeper.json';
+import pinData from '../../../content/enemies/rolling-pin.json';
+import swarmerData from '../../../content/enemies/swarmer.json';
+
+describe('R-CHALLENGE P4: no Counter cue for a dash-only wind-up', () => {
+  const arena = (enemy: string) =>
+    loadRoom({ id: 'arena', name: 'Arena', tiles: ['##############', '#............#', '#............#', '#..P.........#', '#............#', '#............#', '##############'], enemies: [{ enemy, column: 7, row: 3 }] });
+  for (const [id, data, opts] of [
+    ['floor-keeper', keeperData, { difficulty: 'challenge' as const, challengeAt: { belt: 4, room: 2 } }],
+    ['rolling-pin', pinData, { difficulty: 'standard' as const }],
+  ] as const) {
+    it(`${id}: Sensei's guided Counter (COUNTER!) only picks a counterable warning`, () => {
+      const room = arena(id);
+      const w = createWorld(room, ['p1'], { enemyTypes: { [id]: loadEnemy(data), swarmer: loadEnemy(swarmerData) }, guideStep: 1, ...opts });
+      let dashOnly = 0;
+      for (let i = 0; i < 2400; i++) {
+        stepWorld(w, room, { p1: { kind: 'none' } });
+        w.players.p1.health = Math.max(w.players.p1.health, 5);
+        for (const ev of w.events) {
+          if (ev.kind === 'telegraph') {
+            const e = w.enemies.find((x) => x.id === ev.enemyId)!;
+            if (currentAttack(e).counterable === false) dashOnly++;
+          }
+          if (ev.kind === 'guideStart') expect(currentAttack(w.enemies.find((x) => x.id === ev.enemyId)!).counterable).not.toBe(false);
+        }
+      }
+      expect(dashOnly).toBeGreaterThan(0);
+    });
+  }
+});
+
+describe('Q-P4 QA: a stale "COUNTER!" cue is cleared', () => {
+  // The client opens the cue on guideStart and closes it on guideDone or guideCancel. Before the fix, a guided
+  // wind-up that ended without a swing (staggered here) closed nothing, so "COUNTER!" stayed up over the
+  // rolling pin's next, dash-only roll.
+  it('a staggered guided wind-up sends guideCancel before the dash-only roll winds up', () => {
+    const room = loadRoom({ id: 'arena', name: 'Arena', tiles: ['##############', '#............#', '#............#', '#..P.........#', '#............#', '#............#', '##############'], enemies: [{ enemy: 'rolling-pin', column: 10, row: 2 }, { enemy: 'swarmer', column: 6, row: 4 }] });
+    const w = createWorld(room, ['p1'], { enemyTypes: { 'rolling-pin': loadEnemy(pinData), swarmer: loadEnemy(swarmerData) }, guideStep: 1, difficulty: 'standard' });
+    let cueOpen = false;
+    let staggered = 0;
+    let dashWhileStale = 0;
+    let dashAfterCancel = 0;
+    for (let i = 0; i < 4000; i++) {
+      stepWorld(w, room, { p1: { kind: 'none' } });
+      w.players.p1.health = Math.max(w.players.p1.health, 5);
+      for (const ev of w.events) {
+        if (ev.kind === 'guideStart') {
+          cueOpen = true;
+          // Knock the guided enemy out of its counterable wind-up, as a hit or a stagger does in play.
+          const e = w.enemies.find((x) => x.id === ev.enemyId)!;
+          e.mode = 'stagger';
+          e.modeTicks = 10;
+          staggered++;
+        }
+        if (ev.kind === 'guideDone' || ev.kind === 'guideCancel') cueOpen = false;
+        if (ev.kind === 'telegraph') {
+          const e = w.enemies.find((x) => x.id === ev.enemyId)!;
+          if (currentAttack(e).counterable === false) {
+            if (cueOpen) dashWhileStale++;
+            else if (staggered > 0) dashAfterCancel++;
+          }
+        }
+      }
+    }
+    expect(staggered).toBeGreaterThan(0);
+    expect(dashAfterCancel).toBeGreaterThan(0);
+    expect(dashWhileStale).toBe(0);
+  });
+});
+
+import { forceAttack } from '../../../apps/client/src/game/forceAttack';
+
+describe('Q-P4 QA: ?force=wide-bonk forces the bopper wide bonk (test link only)', () => {
+  const room = loadRoom({ id: 'arena', name: 'Arena', tiles: ['##############', '#............#', '#............#', '#..P.........#', '#............#', '#............#', '##############'], enemies: [{ enemy: 'bopper', column: 5, row: 3 }] });
+  const swings = (def: EnemyDef) => {
+    const w = createWorld(room, ['p1'], { enemyTypes: { bopper: def }, difficulty: 'challenge', challengeAt: { belt: 6, room: 2 } });
+    const names = new Set<string>();
+    for (let i = 0; i < 2400; i++) {
+      stepWorld(w, room, { p1: { kind: 'none' } });
+      w.players.p1.health = Math.max(w.players.p1.health, 5);
+      for (const ev of w.events) if (ev.kind === 'telegraph') names.add(currentAttack(w.enemies.find((x) => x.id === ev.enemyId)!).name);
+    }
+    return [...names].sort();
+  };
+  it('finds the bopper and keeps only wide bonk in its pattern', () => {
+    const f = forceAttack(content.enemies, 'wide-bonk')!;
+    expect(f.id).toBe('bopper');
+    expect(swings(f.def)).toEqual(['wide bonk']);
+  });
+  it('normal play is unchanged: no flag, or an unknown name, forces nothing', () => {
+    expect(forceAttack(content.enemies, null)).toBeNull();
+    expect(forceAttack(content.enemies, 'bonk')).toBeNull(); // a normal attack, not a Challenge one
+    expect(swings(content.enemies.bopper)).toEqual(['bonk', 'wide bonk']);
+  });
+});

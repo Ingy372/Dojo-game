@@ -16,7 +16,9 @@ const DOUBLE_SLAM = {
   name: 'double slam', strength: 1, startRange: 1.3, reach: 0.9, areaRadius: 0.95,
   telegraphTicks: 20, recoverTicks: 18, followUp: { strength: 0.6, gapTicks: 18 },
 };
-const sample = (challenge: unknown) => ({ ...bruteData, id: 'sample-brute', challenge });
+// Test-only: the brute with any real (content) Challenge block taken off, so these tests don't depend on C1.
+const { challenge: _contentBlock, ...plainBrute } = bruteData as Record<string, unknown>;
+const sample = (challenge: unknown) => ({ ...plainBrute, id: 'sample-brute', challenge });
 const BLOCK = { fromBelt: 4, fromRoom: 2, attacks: [DOUBLE_SLAM], pattern: ['attack', 'attack', 'double slam'] };
 const sampleBrute = loadEnemy(sample(BLOCK));
 
@@ -33,7 +35,7 @@ describe('R-CHALLENGE P2: loader', () => {
   });
 
   it('adds no field to enemies without a block', () => {
-    expect('challenge' in loadEnemy(bruteData)).toBe(false);
+    expect('challenge' in loadEnemy(plainBrute)).toBe(false);
   });
 
   it.each([
@@ -72,7 +74,7 @@ describe('R-CHALLENGE P2: the one switch (challengeDef)', () => {
 
   it("a boss's Challenge phases replace its normal phases on Challenge only", () => {
     const boss = loadEnemy({
-      ...bruteData, id: 'sample-boss', boss: true, radius: 0.8,
+      ...plainBrute, id: 'sample-boss', boss: true, radius: 0.8,
       attacks: [{ ...DOUBLE_SLAM, name: 'slam', followUp: undefined }],
       phases: [{ atHealthFraction: 1, attacks: ['slam'] }],
       challenge: { fromBelt: 4, attacks: [{ ...DOUBLE_SLAM, name: 'sweep', followUp: undefined }], phases: [{ atHealthFraction: 1, attacks: ['slam'] }, { atHealthFraction: 0.5, attacks: ['slam', 'sweep', 'slam'], senseiLine: 'Watch it!' }] },
