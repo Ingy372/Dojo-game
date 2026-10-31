@@ -1,0 +1,48 @@
+files loaded: 20
+levels at the speaker (Sound volume 5/5, music off), dBFS; rms over a 2.6 s window
+mode  event          rms   peak
+file  hit            -39.7  -14.2
+file  strike         -35.3  -12.0
+file  block          -41.0  -10.5
+file  whoosh         -39.1  -10.9
+file  dash           -39.5  -13.8
+file  tap            -50.2  -11.0
+file  chest          -33.0  -18.4
+file  loot(0)        -36.1  -16.8
+file  loot(1)        -32.4  -17.2
+file  loot(2)        -29.8  -14.8
+file  insight        -35.5  -28.5
+file  levelUp        -34.5  -13.6
+file  promotion      -27.7   -7.0
+file  greatCounter   -37.2  -11.9
+file  hurt           -44.5  -16.4
+file  enemyDown      -43.0  -17.8
+file  signOff        -36.6  -18.5
+file  stripe         -33.2  -13.8
+file  gong           -28.3  -12.1
+file  bow            -39.6  -20.1
+file  denied         -49.0  -23.0
+code  hit            -45.5  -18.1
+code  strike         -43.8  -15.0
+code  block          -45.6  -16.8
+code  whoosh         -57.6  -28.2
+code  dash           -53.1  -22.7
+code  tap            -63.4  -29.9
+code  chest          -48.4  -28.0
+code  loot(0)        -49.5  -24.3
+code  loot(1)        -44.8  -22.3
+code  loot(2)        -41.3  -20.4
+code  insight        -45.4  -23.3
+code  levelUp        -47.8  -21.3
+code  promotion      -29.0   -8.2
+code  greatCounter   -37.2  -11.9
+code  hurt           -44.6  -16.4
+code  enemyDown      -43.1  -17.8
+code  signOff        -36.6  -18.5
+code  stripe         -33.2  -13.8
+code  gong           -28.3  -12.1
+code  bow            -39.6  -20.1
+code  denied         -49.1  -23.0
+
+peaks above -1 dBFS: none
+page errors: 0

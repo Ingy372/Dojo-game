@@ -1,0 +1,241 @@
+{
+  "_note": "R-PREMIUM-b3. Sound files for game events (CC0 packs, see incoming-art/audio/sfx/README.md). Made by tools/audio-sfx/build.mjs: meanDb/peakDb are measured (ffmpeg volumedetect), gainDb brings the mean to the group target and never lets the peak pass -1 dBFS. Events not listed keep their sounds made in code. Paths are relative to the game (served from assets/).",
+  "ceilingDb": -1,
+  "events": {
+    "hit": {
+      "target": -26,
+      "variants": [
+        {
+          "file": "audio/sfx/kenney-impact/impactPunch_medium_000.ogg",
+          "meanDb": -17.2,
+          "peakDb": -1.1,
+          "gainDb": -8.8
+        },
+        {
+          "file": "audio/sfx/kenney-impact/impactPunch_medium_001.ogg",
+          "meanDb": -16.9,
+          "peakDb": -1.1,
+          "gainDb": -9.1
+        },
+        {
+          "file": "audio/sfx/kenney-impact/impactPunch_medium_002.ogg",
+          "meanDb": -18.7,
+          "peakDb": -0.8,
+          "gainDb": -7.3
+        }
+      ]
+    },
+    "strike": {
+      "target": -23,
+      "variants": [
+        {
+          "file": "audio/sfx/kenney-impact/impactPunch_heavy_000.ogg",
+          "meanDb": -18,
+          "peakDb": -1,
+          "gainDb": -5
+        },
+        {
+          "file": "audio/sfx/kenney-impact/impactPunch_heavy_001.ogg",
+          "meanDb": -17.5,
+          "peakDb": -1.2,
+          "gainDb": -5.5
+        }
+      ]
+    },
+    "block": {
+      "target": -26,
+      "variants": [
+        {
+          "file": "audio/sfx/kenney-impact/impactWood_medium_000.ogg",
+          "meanDb": -22.6,
+          "peakDb": -1,
+          "gainDb": -3.4
+        },
+        {
+          "file": "audio/sfx/kenney-impact/impactWood_medium_001.ogg",
+          "meanDb": -22.5,
+          "peakDb": -1,
+          "gainDb": -3.5
+        }
+      ]
+    },
+    "whoosh": {
+      "target": -26,
+      "variants": [
+        {
+          "file": "audio/sfx/kenney-rpg/cloth1.ogg",
+          "meanDb": -24.6,
+          "peakDb": -3.5,
+          "gainDb": -1.4
+        },
+        {
+          "file": "audio/sfx/kenney-rpg/cloth2.ogg",
+          "meanDb": -28.7,
+          "peakDb": -7.9,
+          "gainDb": 2.7
+        },
+        {
+          "file": "audio/sfx/kenney-rpg/cloth3.ogg",
+          "meanDb": -29.3,
+          "peakDb": -10.1,
+          "gainDb": 3.3
+        }
+      ]
+    },
+    "dash": {
+      "target": -27,
+      "variants": [
+        {
+          "file": "audio/sfx/kenney-rpg/cloth1.ogg",
+          "meanDb": -24.6,
+          "peakDb": -3.5,
+          "gainDb": -2.4
+        },
+        {
+          "file": "audio/sfx/kenney-rpg/cloth2.ogg",
+          "meanDb": -28.7,
+          "peakDb": -7.9,
+          "gainDb": 1.7
+        },
+        {
+          "file": "audio/sfx/kenney-rpg/cloth3.ogg",
+          "meanDb": -29.3,
+          "peakDb": -10.1,
+          "gainDb": 2.3
+        }
+      ],
+      "accent": {
+        "target": -28,
+        "variants": [
+          {
+            "file": "audio/sfx/oga-512-8bit/sfx_movement_jump1.wav",
+            "meanDb": -7.3,
+            "peakDb": -6,
+            "gainDb": -20.7
+          }
+        ]
+      }
+    },
+    "tap": {
+      "target": -30,
+      "variants": [
+        {
+          "file": "audio/sfx/kenney-interface/click_001.ogg",
+          "meanDb": -26.4,
+          "peakDb": -1.4,
+          "gainDb": -3.6
+        }
+      ]
+    },
+    "chest": {
+      "target": -24,
+      "variants": [
+        {
+          "file": "audio/sfx/kenney-jingles/jingles_PIZZI07.ogg",
+          "meanDb": -17.3,
+          "peakDb": -5.7,
+          "gainDb": -6.7
+        }
+      ]
+    },
+    "loot0": {
+      "target": -25,
+      "variants": [
+        {
+          "file": "audio/sfx/kenney-jingles/jingles_PIZZI00.ogg",
+          "meanDb": -17.5,
+          "peakDb": -6.1,
+          "gainDb": -7.5
+        }
+      ],
+      "accent": {
+        "target": -26,
+        "variants": [
+          {
+            "file": "audio/sfx/oga-512-8bit/sfx_coin_single1.wav",
+            "meanDb": -14.4,
+            "peakDb": -6,
+            "gainDb": -11.6
+          }
+        ]
+      }
+    },
+    "loot1": {
+      "target": -23,
+      "variants": [
+        {
+          "file": "audio/sfx/kenney-jingles/jingles_PIZZI01.ogg",
+          "meanDb": -15.1,
+          "peakDb": -5.1,
+          "gainDb": -7.9
+        }
+      ],
+      "accent": {
+        "target": -26,
+        "variants": [
+          {
+            "file": "audio/sfx/oga-512-8bit/sfx_coin_single1.wav",
+            "meanDb": -14.4,
+            "peakDb": -6,
+            "gainDb": -11.6
+          }
+        ]
+      }
+    },
+    "loot2": {
+      "target": -21,
+      "variants": [
+        {
+          "file": "audio/sfx/kenney-jingles/jingles_PIZZI07.ogg",
+          "meanDb": -17.3,
+          "peakDb": -5.7,
+          "gainDb": -3.7
+        }
+      ],
+      "accent": {
+        "target": -26,
+        "variants": [
+          {
+            "file": "audio/sfx/oga-512-8bit/sfx_coin_double1.wav",
+            "meanDb": -16.4,
+            "peakDb": -11.8,
+            "gainDb": -9.6
+          }
+        ]
+      }
+    },
+    "insight": {
+      "target": -24,
+      "variants": [
+        {
+          "file": "audio/sfx/oga-512-8bit/sfx_sounds_powerup2.wav",
+          "meanDb": -7.5,
+          "peakDb": -6,
+          "gainDb": -16.5
+        }
+      ]
+    },
+    "levelUp": {
+      "target": -24,
+      "variants": [
+        {
+          "file": "audio/sfx/kenney-jingles/jingles_STEEL00.ogg",
+          "meanDb": -19,
+          "peakDb": -2.6,
+          "gainDb": -5
+        }
+      ]
+    },
+    "promotion": {
+      "target": -15,
+      "variants": [
+        {
+          "file": "audio/sfx/kenney-jingles/jingles_STEEL04.ogg",
+          "meanDb": -17.6,
+          "peakDb": -1.5,
+          "gainDb": 0.5
+        }
+      ]
+    }
+  }
+}

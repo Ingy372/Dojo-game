@@ -36,7 +36,7 @@ import {
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
 import { STYLE_LEFT_SHARE, STYLE_LEFT_SHARE_MIN, STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
-import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, pinnedAgain, runId, headingSparkle, sparkleStars, SPARKLE_W, statStack, takeCountUp, type FoundTile, type KeyStore } from '../ui/lastRun';
+import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, pinnedAgain, runId, headingSparkle, sparkleStars, SPARKLE_W, statStack, takeCountUp, takeLevelUpSound, type FoundTile, type KeyStore } from '../ui/lastRun';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, slotEmptyLine, tileBox, toggleFilter } from '../ui/gearBoard';
 import { CONTENT, KATAS } from '../game/content';
@@ -728,6 +728,12 @@ export class HomeScene extends Phaser.Scene {
     const Y = (v: number) => cy0 + v;
     const count = takeCountUp(safeStore(), runId(this.profile), reducedMotion());
     this.lastRunCounted = count;
+    // R-PREMIUM-b3: the level-up sound plays once per run, the moment the XP bar lands on the new level (below: the fill
+    // tween's onComplete; at once with Reduced motion or when the count-up already ran for this run).
+    const levelUpId = runId(this.profile);
+    const levelUpSound = () => {
+      if (takeLevelUpSound(safeStore(), levelUpId, m.levelsGained)) sfx.levelUp();
+    };
 
     // Banner: the result in kind words, gold for a clear.
     const head = this.text(X(0), Y(L.banner.h / 2), m.headline, TYPE.heading, m.cleared ? '#a0522d' : WOOD.ink, true).setOrigin(0, 0.5);
@@ -859,8 +865,11 @@ export class HomeScene extends Phaser.Scene {
     if (count) {
       drawBar(from);
       const v = { s: from };
-      this.tweens.add({ targets: v, s: share, delay: countDelay + LASTRUN_MOTION.countMs, duration: LASTRUN_MOTION.fillMs, ease: XP_FILL.ease, onUpdate: () => drawBar(v.s) });
-    } else drawBar(share);
+      this.tweens.add({ targets: v, s: share, delay: countDelay + LASTRUN_MOTION.countMs, duration: LASTRUN_MOTION.fillMs, ease: XP_FILL.ease, onUpdate: () => drawBar(v.s), onComplete: levelUpSound });
+    } else {
+      drawBar(share);
+      levelUpSound();
+    }
 
     // Found: every item and dojo piece from this run, each a 44+ tile that opens its sheet.
     this.text(X(0), Y(L.foundLabelY), LASTRUN_WORDS.found, TYPE.label, WOOD.ink, true);
