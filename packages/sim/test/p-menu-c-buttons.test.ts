@@ -38,7 +38,8 @@ describe('P-MENU-c: every swapped button is at least 44 pt (button() also pads t
   it('button() pads its tap zone to MIN_TAP and supports selected + disabled', () => {
     expect(MIN_TAP).toBe(44);
     expect(button).toMatch(/selected\?: boolean/);
-    expect(button).toMatch(/if \(o\.selected\) g\.lineStyle\(3, 0xffd166/);
+    // A4-DOJO-hotfix: the outline is baked into the button texture; selected is still a 3 pt gold line.
+    expect(button).toMatch(/o\.selected \? \{ width: 3, colour: 0xffd166/);
     expect(button).toMatch(/if \(o\.disabled\) visual\.setAlpha\(0\.35\);\s*else hit\.setInteractive/);
   });
   for (const [name, src] of Object.entries(scopes)) {

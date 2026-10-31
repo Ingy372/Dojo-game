@@ -4,7 +4,7 @@ import Phaser from 'phaser';
 
 import { sfx } from '../audio/Sfx';
 import { reducedMotion } from '../game/motion';
-import { FONT, crisp } from './theme';
+import { DPR, FONT, crisp } from './theme';
 import { MOTION, PRESS_BRIGHTEN, RADIUS, tapArea } from './tokens';
 
 export interface ButtonOptions {
@@ -41,13 +41,11 @@ export interface Button {
 export function button(scene: Phaser.Scene, o: ButtonOptions, parent?: Phaser.GameObjects.Container): Button {
   const cx = o.x + o.w / 2;
   const cy = o.y + o.h / 2;
-  const g = scene.add.graphics();
-  g.fillStyle(o.color).fillRoundedRect(-o.w / 2, -o.h / 2, o.w, o.h, RADIUS.button);
-  if (o.selected) g.lineStyle(3, 0xffd166, 1);
-  else g.lineStyle(2, o.stroke ?? 0xffffff, o.stroke === undefined ? 0.35 : 0.8);
-  g.strokeRoundedRect(-o.w / 2, -o.h / 2, o.w, o.h, RADIUS.button);
-  const shine = scene.add.graphics().setAlpha(0);
-  shine.fillStyle(0xffffff).fillRoundedRect(-o.w / 2, -o.h / 2, o.w, o.h, RADIUS.button);
+  // A4-DOJO-hotfix: drawn once into textures and shown as images. A Graphics object is re-triangulated
+  // on the CPU every frame it is on screen, and the Home Dojo has a dozen buttons: that was most of its
+  // frame (1.0 of 1.2 ms). The look is unchanged.
+  const g = scene.add.image(0, 0, bakeButton(scene, o)).setScale(1 / BAKE);
+  const shine = scene.add.image(0, 0, bakeShine(scene, o.w, o.h)).setScale(1 / BAKE).setAlpha(0);
   const label = scene.add
     .text(o.labelDx ?? 0, 0, o.label, { fontFamily: FONT, fontSize: `${o.size}px`, color: o.labelColor ?? '#ffffff', fontStyle: 'bold', align: 'center', wordWrap: o.labelWrap ? { width: o.labelWrap } : undefined })
     .setResolution(crisp())
@@ -100,4 +98,32 @@ export function button(scene: Phaser.Scene, o: ButtonOptions, parent?: Phaser.Ga
   // The action may redraw the screen and destroy the button mid-tween.
   visual.once(Phaser.GameObjects.Events.DESTROY, () => scene.tweens.killTweensOf([visual, shine]));
   return { visual, hit };
+}
+
+/** Texture pixels per point: the UI camera is zoomed by DPR, so this is one texture pixel per screen pixel. */
+const BAKE = Math.ceil(DPR);
+/** Room around the shape for half the outline, in points. */
+const PAD = 2;
+
+function bakeButton(scene: Phaser.Scene, o: ButtonOptions): string {
+  const line = o.selected ? { width: 3, colour: 0xffd166, alpha: 1 } : { width: 2, colour: o.stroke ?? 0xffffff, alpha: o.stroke === undefined ? 0.35 : 0.8 };
+  const key = `btn-${o.w}x${o.h}-${o.color.toString(16)}-${line.width}-${line.colour.toString(16)}-${line.alpha}-${BAKE}`;
+  if (scene.textures.exists(key)) return key;
+  const r = RADIUS.button * BAKE;
+  const g = scene.make.graphics({}, false);
+  g.fillStyle(o.color).fillRoundedRect(PAD * BAKE, PAD * BAKE, o.w * BAKE, o.h * BAKE, r);
+  g.lineStyle(line.width * BAKE, line.colour, line.alpha).strokeRoundedRect(PAD * BAKE, PAD * BAKE, o.w * BAKE, o.h * BAKE, r);
+  g.generateTexture(key, Math.ceil((o.w + PAD * 2) * BAKE), Math.ceil((o.h + PAD * 2) * BAKE));
+  g.destroy();
+  return key;
+}
+
+function bakeShine(scene: Phaser.Scene, w: number, h: number): string {
+  const key = `btn-shine-${w}x${h}-${BAKE}`;
+  if (scene.textures.exists(key)) return key;
+  const g = scene.make.graphics({}, false);
+  g.fillStyle(0xffffff).fillRoundedRect(PAD * BAKE, PAD * BAKE, w * BAKE, h * BAKE, RADIUS.button * BAKE);
+  g.generateTexture(key, Math.ceil((w + PAD * 2) * BAKE), Math.ceil((h + PAD * 2) * BAKE));
+  g.destroy();
+  return key;
 }

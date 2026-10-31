@@ -68,7 +68,10 @@ export class InsideScene extends WalkScene {
 
   protected onDraw(heroRow: number): void {
     // A seat back or bag top covers the hero only while the hero stands north of it.
-    for (const t of this.tops) for (const img of t.images) img.setVisible(heroRow < t.sortRow);
+    for (const t of this.tops) {
+      const show = heroRow < t.sortRow;
+      for (const img of t.images) if (img.visible !== show) img.setVisible(show);
+    }
   }
 
   /** Walking into the door rectangle at the bottom leaves for the outside, standing at the doors. */
