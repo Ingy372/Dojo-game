@@ -180,7 +180,8 @@ def load_character(packer: Packer, json_path: str, scale: float, skip_layers: li
     return out
 
 
-def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | None, inline: dict | None = None) -> dict:
+def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | None, inline: dict | None = None,
+                only_layers: list[str] | None = None) -> dict:
     # A source may list its sprites inline (B-T3-TUNE-2b: the lid icon came as plain PNGs, no static.json);
     # then "json" is the folder the files are in.
     d = {'sprites': inline} if inline else json.load(open(json_path))
@@ -198,7 +199,8 @@ def load_static(packer: Packer, json_path: str, scale: float, only: list[str] | 
         fh = size[1]
         layers = {}
         layer_sizes = {}
-        for layer in s.get('layers', list(s['files'])):
+        # A source may keep just some layers (A4-DOJO-ii: day art only, no dusk layers).
+        for layer in [l for l in s.get('layers', list(s['files'])) if not only_layers or l in only_layers]:
             im = Image.open(os.path.join(base, s['files'][layer])).convert('RGBA')
             lw, lh = (fw, fh) if im.size[0] == fw * frames and im.size[1] == fh else (im.size[0] // frames, im.size[1])
             if (lw, lh) != (fw, fh):
@@ -272,7 +274,7 @@ def main() -> None:
             elif src['type'] == 'ui':
                 entries[src['id']] = load_ui(packer, path, src.get('only'), [rel(p) for p in src.get('mergeSprites', [])])
             else:
-                entries[src['id']] = load_static(packer, path, scale, src.get('only'), src.get('sprites'))
+                entries[src['id']] = load_static(packer, path, scale, src.get('only'), src.get('sprites'), src.get('onlyLayers'))
         pages = packer.pack()
         names = []
         for old in os.listdir(out_dir):

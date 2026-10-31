@@ -901,7 +901,7 @@
       ]
     },
     "dojo-az-inside": {
-      "note": "A4-DOJO-i: the Action Zone dojo inside room (floor, walls, props, front wall, structures, props, wall decals, seat-back and bag-top foreground sprites). The outside entrance and town slot are imported in A4-DOJO-ii.",
+      "note": "A4-DOJO-i: the Action Zone dojo inside room (floor, walls, props, front wall, structures, props, wall decals, seat-back and bag-top foreground sprites). The outside entrance is the dojo-az-outside pack (A4-DOJO-ii).",
       "sources": [
         {
           "id": "dojo-az-inside",
@@ -931,6 +931,66 @@
             "bag-blue-top",
             "bag-red-top"
           ]
+        }
+      ]
+    },
+    "dojo-az-outside": {
+      "note": "A4-DOJO-ii: the Action Zone dojo outside, entrance view, DAY art only (the dusk layers are left out). The entrance's ground, building and the blank phone and address bars, plus its 12 scenery sprites.",
+      "sources": [
+        {
+          "id": "dojo-az-outside",
+          "type": "static",
+          "json": "incoming-art/action-zone-dojo/sprites/static.json",
+          "only": [
+            "outside-entrance-day",
+            "outside-bin",
+            "outside-bench-a",
+            "outside-bench-b",
+            "outside-chair-a",
+            "outside-chair-b",
+            "outside-bed-a",
+            "outside-bed-b",
+            "outside-shrub",
+            "outside-palm",
+            "outside-tree-1",
+            "outside-tree-2",
+            "outside-tree-3"
+          ],
+          "onlyLayers": [
+            "ground",
+            "building",
+            "phone",
+            "address",
+            "day"
+          ]
+        }
+      ]
+    },
+    "dojo-az-town": {
+      "note": "A4-DOJO-ii: the town square picture Jay confirmed (the Action Zone building in its slot, trees cleared), DAY, one still picture at @2x. There is no layered town art yet.",
+      "sources": [
+        {
+          "id": "dojo-az-town",
+          "type": "static",
+          "json": "incoming-art/action-zone-dojo/previews",
+          "sprites": {
+            "town-day": {
+              "size": [
+                1864,
+                860
+              ],
+              "layers": [
+                "day"
+              ],
+              "files": {
+                "day": "town-slot-in-town-day@2x.png"
+              },
+              "anchorPx": [
+                0,
+                0
+              ]
+            }
+          }
         }
       ]
     }
