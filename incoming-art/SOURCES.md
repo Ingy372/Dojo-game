@@ -44,3 +44,14 @@ Notes:
 
 ## A3c school mark (`badges-trophies-a3c/`)
 - `badges-trophies-a3c/source/jay-logo/logo-white.jpg` and `logo-black.png`: **Jay's own school logo**, supplied by Jay (24 Oct 2026). Only the red cross and the kicking figure are used in `seal-mark-school.png`; the ring text and the name plate are left out.
+
+## Audio SFX (R-PREMIUM-b2, `audio/sfx/`), all CC0 1.0, licences re-checked 2026-10-26
+- Kenney **Impact Sounds**: https://kenney.nl/assets/impact-sounds (CC0; licence: `audio/sfx/kenney-impact/License.txt`, https://creativecommons.org/publicdomain/zero/1.0/)
+- Kenney **Interface Sounds**: https://kenney.nl/assets/interface-sounds (CC0; `audio/sfx/kenney-interface/License.txt`)
+- Kenney **Music Jingles**: https://kenney.nl/assets/music-jingles (CC0; `audio/sfx/kenney-jingles/License.txt`)
+- **512 Sound Effects (8-bit style)** by SubspaceAudio (Juhani Junkala), OpenGameArt: https://opengameart.org/content/512-sound-effects-8-bit-style (CC0; `audio/sfx/oga-512-8bit/INFO-license.txt`)
+- Kenney **RPG Audio**: https://kenney.nl/assets/rpg-audio (CC0, re-checked 2026-10-26 on the page and in the zip `License.txt`; licence copy: `audio/sfx/kenney-rpg/License.txt`). Used: `cloth1.ogg`, `cloth2.ogg`, `cloth3.ogg` (whiff). No knife or blade sounds were used.
+
+**Action Zone dojo samples (2026-10-30): no outside assets.** Drawn by `action-zone-dojo/source/build_action_zone_dojo.py` (Blender toon_kit). Letters use the system font Be Vietnam Pro Black (SIL OFL 1.1, falls back to Blender's default font). Likeness reference photos from Jay were used for looking only and are not in the repo. The phone and house number slots are separate blank overlay layers (`action-zone-dojo/overlays/`); real values live only in a local uncommitted file. The main-floor rebuild adds `action-zone-dojo/source/textures/`: the logo is Jay's own file (`badges-trophies-a3c/source/jay-logo/`), the creed wording was transcribed by eye from Jay's wall photos (`creed_text.json`), the US flag is drawn by script; no photo or crop of a photo is committed.
+
+**Action Zone dojo game-ready batch (A4-DOJO, 2026-10-30): no outside assets.** The same Blender toon_kit scene as the samples, rendered group by group (`action-zone-dojo/source/build_action_zone_dojo.py`, `make_game_inside.py`, `make_game_outside.py`, `make_town_preview.py`; rebuild with `render_game.sh`). The town-slot preview reuses the approved PR #301 town square (`town-square-concept/`), re-rendered without its placeholder dojo through opt-in `--no-dojo0` and `--clear-dojo-trees` flags. Still no photo or crop is committed; the phone and house number are blank overlay layers.

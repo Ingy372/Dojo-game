@@ -22,6 +22,7 @@ export * from './rewards';
 export * from './goals';
 export * from './power';
 export * from './dojo';
+export * from './actionZone';
 export * from './twist';
 export * from './lessons';
 export * from './elite';

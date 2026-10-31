@@ -7,19 +7,20 @@ import { homeDojo, setBowDue } from './dojo';
 import { localDay } from './lessons';
 import { writeSave } from './save';
 import { testFlags } from './beta';
+import { testRoom } from './roomParam';
 
 /** `replayTutorial`: the Lesson Scroll's "Replay the tutorial floor" (M7-P5). */
 export function startTowerRun(profile: Profile, training: TrainingState, opts: { replayTutorial?: boolean } = {}): RunState {
   const params = testFlags();
   const seedParam = Number(params.get('seed'));
   const seed = Number.isFinite(seedParam) && seedParam > 0 ? seedParam : Math.floor(Math.random() * 2147483647) + 1;
-  const firstRoomId = params.get('room') ?? undefined;
   // For testing: ?twist=lantern-dark forces that twist in the next room that can have it.
   const twistParam = params.get('twist');
   const forcedTwist = CONTENT.twists.twists.some((t) => t.id === twistParam) ? (twistParam ?? undefined) : undefined;
   // One difficulty for the whole run (elites and combat): ?difficulty= test link, else the player's setting, else Standard.
   ensureDifficulty(profile);
-  const difficulty = runDifficulty(profile, params.get('difficulty'));
+  // R-CHALLENGE P6: a Challenge pick below the 4th belt plays as Standard (the choice is kept).
+  const difficulty = runDifficulty(profile, params.get('difficulty'), training.belt.tier);
   // For testing: ?elite=swift or ?elite=guarding puts that elite in every battle and challenge room
   // (the run then doesn't count toward the profile).
   const eliteParam = params.get('elite');
@@ -29,6 +30,12 @@ export function startTowerRun(profile: Profile, training: TrainingState, opts: {
   const namedParam = params.get('named');
   const forcedNamed = CONTENT.named.monsters.some((m) => m.id === namedParam) ? (namedParam ?? undefined) : undefined;
   const tier = training.belt.tier;
+  // For testing: ?room=X starts in room X. A belt with its own copy of X gets the copy (R-B1-RAMP-2:
+  // ?room=brute-and-swarm on a white belt is w-brute-and-swarm); ?room=w-... always gives that copy.
+  // An unknown id warns in the console (Q-DOOR-LABELS) and a random room starts.
+  const picked = testRoom(CONTENT, params.get('room'), tier);
+  if (picked.warning) console.warn(picked.warning);
+  const firstRoomId = picked.id;
   // Named monsters skip a profile's first few runs: count every real run started.
   const runsStarted = profile.runsStarted;
   // A brand-new profile's first floor is the tutorial floor (M7-P2); ?tutorial=1 shows it again for testing.

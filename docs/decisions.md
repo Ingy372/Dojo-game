@@ -44,7 +44,7 @@ Anything waiting on Jay's answer goes here. When he answers, the answer moves in
 - **Counter timing:** pressing Counter starts a short guard pose (0.5 s, no walking). If the attack lands within the window after the press, it's a Perfect Counter; if it lands later in the guard pose, it's a Block. If the guard pose ends with nothing to counter, the button rests for 0.5 s, so tapping it nonstop doesn't work.
 - **Strike (for now):** costs 30 Focus; one heavy hit (2.5× a basic hit) with a short lunge. The "tap in rhythm for a 3–5 hit chain" version comes with more abilities later.
 - **Automatic basic attacks** hit the nearest enemy in reach every 0.6 s, even while walking.
-- **Defeat:** a soft fade and "Ouch! Back to the start.", then the player is back at the room start with full health. Focus and combo reset, and the room's enemies reset too. Nothing is lost.
+- **Defeat in the practice room:** a soft fade and Sensei helping the hero up ("Sensei helps you up." / "Every fall is part of training.", B-MASHER-d1; was "Ouch! Back to the start."), then the player is back at the room start with full health. Focus and combo reset, and the room's enemies reset too. Nothing is lost and nothing ends. A Tower run's knock-out is the B-MASHER-d1 flow below.
 - **Beaten enemies come back after 4 seconds**, so there's always something to practice on.
 - **Game feel lives in the game, not the rules:** the short freeze on impact, screen shake, flashes, sparks, damage numbers and sounds are in `apps/client`. The freeze pauses the game for a split second on this phone only; in co-op later it will become a visual-only freeze so players stay in sync.
 - **Sounds are generated in code** with the phone's built-in sound system (no sound files, no new libraries). Sound switches on at the first tap, as phones require.
@@ -1312,7 +1312,231 @@ Jay's call: Ready is the open leg stance; a new default Beginner's Stance is pla
 - Why: at 667x320 a 4 px strip of New for you sat just above Again!, so a tap that landed a little high opened Abilities.
 - Follow-up: action-button faces (DASH, COUNTER, STRIKE, VIRTUE) were all filled at 0.9 alpha, so the floor tinted through (DASH label fell to 4.51:1). All are solid now (`FACE_ALPHA = 1` in input/ActionButtons.ts); the dimmed not-ready states (container alpha) are unchanged. The rest card's Back home now uses Math.max(44, …) like the run-over card (F5).
 
+## Q-PREM-F9 — readable action buttons, 44 px Dojo top buttons (2026-10-26)
+- Colours live in ui/tokens.ts (`ACTION_COLORS`, `ACTION_LABEL`). Each button keeps its own hue: COUNTER 3a7bd5→2f74d3 (white 4.22→4.61), STRIKE d5713a→b75a27 (white 3.36→4.66). VIRTUE ffb02e stays gold, but its label turns dark #14121c (white 1.83→10.15), because darkening it enough would lose the gold. COUNTER's flash 6fa8ff also gets the dark label (2.41→7.70).
+- Not ready: COUNTER, STRIKE and VIRTUE no longer fade the whole button (container alpha 0.45–0.55 let the floor show through). They use a solid dim fill with a #d8d2c8 label (5.59–7.38:1) and a faint stroke. DASH and STANCE still dim by alpha (out of scope).
+- Dojo: decorate's top bar is 60 px tall, and Done, Move and Put away are 44 px. Street Smarts, Journal and Scroll moved down to y 60 at 44 px, because their tap zones overlapped the top row before. The play row (Board, Decorate, Look, Difficulty) stays 32 px drawn, with a 44 px tap zone.
 ## Q-PREM-F10 — short stat tiles and the New for you sparkle (2026-10-26)
 - At 47 px tiles (667x320, 667x375) the 14 px number (17 drawn) and 12 px label (15 drawn) can't keep the label 8 px inside the rim and still stay apart. On short tiles (< 56) they are now one stack, centred inside the rim and 4 px apart (`statStack` in ui/lastRun.ts). The label sits ~2.5 px inside the rim instead of 8. If a tile ever gets too short for that (44), the number steps down to 12 px. Tall tiles are unchanged.
 - The short New for you card (~73 px wide) has no room beside its label for stars, and it is flush with the content's right edge. So its sparkle (two stars, `headingSparkle`) now sits 4 px before the "New for you" heading, in the gap after Found. The tall card keeps its three corner stars. The bottom-left star no longer touches the trophy icon.
 - F8's 12 px clear above Again! is unchanged.
+
+## Q-PREM-TRY — go-home retry line (2026-10-26)
+- The 10 lessons in drafts/content/tutorial/C-STORY-TRY.json now say "Nice work today. Let's rest at the dojo." (Jay picked version A). lesson-counter-guided keeps "So close! Let's try again." (it never held the old line, per the draft's notInScope).
+## B-MASHER-d1 — the knock-out flow (2026-10-26)
+Jay's signed spec (#292, drafts/learning/b-masher-d-knockout-flow.md), Manager picks:
+- **Screens, words from content/settings/knockout.json only (no new story text):** Screen 1 "Sensei helps you up." with Sensei "Every fall is part of training." (about 2.5 s, `helpUpMs`; a tap skips it; soft fade, Reduced motion fades at once; `sfx.playerDown` is now a warm rising chime, no sad sound). Screen 2 (`keptCard`): "You kept everything you found!" with each find (items, decorations, +XP) and a small sparkle (still under Reduced motion), or "You learned this room!"; Sensei "Let's rest at the dojo."; one Head home button with a drawn door; a tap anywhere also continues; no timer. Screen 3 (Home): "Welcome home!" and one pointer, fading after about 4 s (`pointerMs`) or on a tap, then the usual homecoming (celebrations, goals).
+- **Replaces Q-PREM-F4's no-bubble rule:** once the hero is down, `senseiSay` still ignores every line except the help-up line. "Good effort!", "You reached room N of M." and "Every climb makes you stronger." (runOverCard) are gone; "Ouch! The run is over" is found 0 times in apps/client/src and content (test).
+- **Guided offer (M7-P1) stays,** now shown after Screen 2 (on Head home), lost runs only.
+- **Home is the Training Board** (HomeScene), told by `knockout: 'run' | 'rested'`.
+- **Resting line covers time-limit endings too:** a 'rested' ending (M7-P9) and a knock-out while play time is up both show Screen 2 with "Great training today! Your dojo is resting." in place of Sensei's line. The old rest card (restCard, play-time.json restTitle/restLines/restButton) is removed. The resting door itself is unchanged (DojoScene, M7-P9).
+- **Pointer order:** a real class first (training nextClassDay) "Train in class to grow stronger!", else "The Tower is ready when you are."; the next-run pointer is skipped when play time is up. No "upgrade ready" pointer.
+- **No read-aloud** (a separate item). **Practice-room KO:** the same kind Screen 1 words, and nothing ends; the fight buttons and stick now come back on playerReturn (they stayed hidden after F4).
+- **Persistence:** the screens live only while the app stays loaded; banking is unchanged (bankRun once, same as finishRun), so a reload mid-screen loses nothing found.
+- Screen 2 measures its title first, so a title that wraps (932x430 caught it) pushes the rows down.
+- **K23b banner (line ~704) re-checked:** the centre message is still `this.message`, now "Sensei helps you up.", so the banner placement still keeps off it; in the shots the Sensei line sits under it with no overlap.
+- Lines are 7 words or fewer, no banned words (test), and fit 667x375 in at most 2 lines (verify-ui-shots).
+
+## Q-PREM-GRADE — room grades show on Challenge only (2026-10-26)
+- One helper, `showGrades(difficulty)` in apps/client/src/game/difficulty.ts, is true only for `challenge`; missing means hidden.
+- Off Challenge: GameScene hides the big S/A/B letter and skips `sfx.grade`, but keeps the "Room clear!" line and stats (gradeLine bounds still used by the ability pop-up). The HomeScene tutorial card drops its letter. Last run chips show the room mark instead of a letter. Bests drops "Most S grades".
+- Last run and the tutorial card decide by the difficulty the run was played on: RunSummary now has optional `difficulty` (set in summarizeRun). Old summaries without it are hidden. Bests is a lifetime list, so it uses the player's current difficulty.
+- Sim rules unchanged: rooms are still graded, the S-grade bonus loot stays, and sGrades / mostSGrades are still tracked, just not shown.
+## Q-PREM-BOSSWIN — first Floor Keeper clear gets one big moment (2026-10-26)
+- New profile flag `keeperCelebrated` (packages/sim/src/profile.ts). `keeperWin(profile, run, result, bossId)` says yes only for a cleared real floor whose boss is `floor-keeper`: not the tutorial keep, not a test link, not the Hearth Cook. A yes sets the flag; GameScene saves it (writeSave) before the moment shows, so it plays once per save. Later clears keep the normal "Floor cleared!".
+- Old saves (no flag), changed by the Manager on 2026-10-26: a tutorial-only clear must not use up the moment. floorsCleared, floorsByTier and the Kind Keeper trophy all count the tutorial keep too (it uses the floor-keeper enemy), so they can't prove a real win. The only proof in a save is lastRun.summary: cleared, not tutorial, not test, and `defeated` includes floor-keeper. That counts as celebrated; anything else stays uncelebrated, so the moment plays (a returning player may see it once late, which is the accepted trade).
+- The moment is a new Celebrations step (`keeper`): one screen with the character, rays and 40 confetti, "Floor Keeper defeated!" at 28 px. It stays smaller than a promotion (3 screens, 60 confetti, gong), per the hard rule that real achievements get the biggest celebrations. Reduced motion: no confetti, the rays stay still, and the title doesn't pop.
+- Words in content: content/settings/boss-win.json (keeperDefeated, roomClear). "Floor cleared!" now comes from last-run.json `cleared`. No new story text.
+- Q-PREM-F9 QA fix (2026-10-26): DASH and STANCE drop see-through alpha (0.5 / 0.6) for the same solid treatment as COUNTER/STRIKE/VIRTUE: alpha 1, dim face (DASH 0x2f4a3e, STANCE 0x34405a), stroke 0.35, label #d8d2c8 (6.44:1, 6.89:1). A missed Counter's 0.5 s lockout now also draws a refill ring around the dim COUNTER face, so it reads as "wait". Decorate's camera clamps the room top to the 60 px bar (was 48), so wall decorations are never under it. The 32 px row-1 top buttons stay out of scope.
+
+## Q-PREM-F11 — KO tap skip and Head home size (2026-10-26)
+- A tap on KO Screen 1 (after the 300 ms mash guard) now calls the sim's `skipDown`, which sets `downTicks` to 1, so `playerOut` fires on the next tick and Screen 2 shows at once. Before this, the tap only skipped the client wait, and the sim's 30 down ticks (about 1.75 s) still held Screen 2 back. `skipDown` does nothing in the practice room (`respawnEnemies`) or when the player isn't down.
+- The Screen 2 fade stays 260 ms, and 0 with Reduced motion.
+- The Head home button is `max(48, min(52, height*0.13))` tall, so it is never under 48 px; it is 48 at 667x320.
+## Q-PREM-TRY fix — keep-practicing line (2026-10-26)
+- QA found play continues after the retry line (GameScene.ts guideDone -> senseiDone only shows the line; world.ts stepGuide just moves to the next hint), so "Let's rest at the dojo." didn't fit. The 10 lessons now say "Nice work. Let's keep practicing." (Manager's call; no 'try again' wording). lesson-counter-guided unchanged.
+- lesson-counter-guided's retry is now "So close! Let's keep practicing." (the guided Counter repeats after it); no lesson says 'try again'.
+- lesson-counter-guided's retry now matches the other 10: "Nice work. Let's keep practicing." (all 11 share it); no lesson says 'So close' or 'try again'.
+
+## L-PREMIUM-a2 — locked-ability hints in the Trophy Case (2026-10-26)
+- Stance hints wired as written (Content Designer will reword later). Kata cubbies fall back to the stance hint by kata order (stances[n+2], clamped); past the end of any list uses the last hint.
+- Trophy Case cubby sheet only; no read-aloud. Hint shows as its own line under "Ask Sensei about this one".
+- Hints copied to content/hints/locked-hints.json; the draft stays, and check-locked-hints.py is kept and still reads drafts/.
+## B-TUNE-GUIDED — Guided enemy Power ×0.75 (2026-10-26)
+- From R-T3-TUNE-3 (#352). DIFFICULTY gets `enemyPowerScale`: Guided 0.75, Standard and Challenge 1.0. Enemy Health is never scaled by the setting.
+- Applies in every fight (Tower, practice room, tutorial), on top of the belt scale. Scaled Power rounds to a whole number, at least 1 (a 0-Power enemy stays 0). Disarmed weapon Power scales too.
+- The setting is read when a world is made, so a change takes effect from the next run.
+- New testing fixture `fixtures/6-orange-typical.json` pins fight stats with an optional feed `testStats` (333 Health / 46 Power / 34 Guard = ARTISTS.typical belt 3), so the Tester plays the sims' numbers. Real feeds never send it.
+- Out of scope: Challenge tuning and the belt-3 floor content.
+- Golden: only rooted/guided changed (player Health 141 -> 154); every Standard and Challenge value is byte-identical.
+## Q-PREM-F11 QA fix — no accidental Home on a mash (2026-10-26)
+- QA: mashing through the KO sent the player Home in 7/8 runs (first pointerdown 100–300 ms after Screen 2).
+- Screen 2 now ignores every tap (shade and Head home) for 500 ms after it appears (`ARM_MS = 500`), timed on the wall clock with the tap's own `pointer.downTime`, so a tap made inside the window but handled a frame late is still ignored.
+- B-TUNE-GUIDED: scaled enemy Power floors at 1 (if it was above 0) on the belt-scale path as well; before, it could round to 0.
+## L-PREMIUM-b — Counter hint (2026-10-26)
+- A miss is only a counterable hit with no Counter press lately and no dash; Blocks and dashes never count.
+- After 2 misses in a battle/boss room the sim emits `counterHint`; the client shows `LESSONS[GUIDE_LESSONS[0]].nudge` as a placed tip (never over HUD, red circles or buttons) and pulses COUNTER; tip fades after 3 s.
+- Max 1 per room; off in the tutorial, on Challenge, while Sensei's guide is active, and after 3 Great Counters in the run. Limits in content/settings/counter-hint.json.
+- Reduced motion: still gold outline on COUNTER instead of the pulse; tip removed without fade.
+- The mash guard turns most mashing hits into Blocks, so a mashing kid rarely sees the tip.
+
+## L-PREMIUM-b QA fix — the tip shows in real play (2026-10-26)
+- QA: 0 tips in 1,391 real rooms, because the Mash guard turns unanswered swings into Blocks and only Hits counted; the old tests hid it with perfects=3 / perfectsLeft=99.
+- DECIDED (Manager confirmed): a Block made by the Mash guard (no Counter press lately, no Dash) counts as a miss. A real Block from a Counter press, or a Dash, never does.
+- missesBeforeHint is 3, per the spec.
+- While the tip pulses COUNTER, STRIKE's ring stays blue and still, so COUNTER is the only gold.
+## Q-PREM-F11 QA fix — no accidental Home on a mash (2026-10-26)
+- QA: mashing through the KO sent the player Home in 7/8 runs (first pointerdown 100–300 ms after Screen 2).
+- Screen 2 now ignores every tap (shade and Head home) for 500 ms after it appears (`ARM_MS = 500`), timed on the wall clock with the tap's own `pointer.downTime`, so a tap made inside the window but handled a frame late is still ignored.
+
+### L-PREMIUM-a2 follow-up — kata cubby hint (2026-10-26)
+- Kata cubbies now use the shared kata-cubby hint "Learn a kata in class with Sensei!" instead of the stance fallback (stances unlock by their own sign-off since R-STANCE-d2).
+- The hint is read from `cubbies.kata-cubby`, which #355 added to the draft. content/hints/locked-hints.json is re-copied from main's draft, so it stays an exact copy (no second copy of the hint), and it picks up #355's reworded stance hints.
+## B-MAIN-TRY11 — fix red main after #355 (2026-10-26)
+- #355 added lesson-counter-guided to C-STORY-TRY's programmerHandoff (11 lessons), so q-prem-try.test.ts now expects 11 and does not count the guided Counter twice. No content change.
+
+## B-W-ROOMS-TESTS — tests for the white-belt rooms (#359, 2026-10-26)
+- White rooms have only swarmers and shields, so: the mixes test checks a white floor has at least 2 mixes using only those (belt 2 keeps the 4-mix check); Old Thumper (brute) is first met at belt 2 in the K12 and old-thumper tests (zippy-zoom and captain-clank stay at belt 1); the p-menu2 golden is re-captured, with only white, white3 and rooted runs moving (capturing without the w- rooms gives the old file exactly). No game stat changes.
+
+## B-BRIDGE-GOLDENS — golden after the bridge swarmer move (#361, 2026-10-26)
+- The p-menu2 golden is re-captured because one Narrow Bridge swarmer (white and belt rooms) moved from (17,4) to (17,3). Only the 5 runs that visit the bridge change, from the bridge room on (the white run 1 bridge room goes 224 -> 251 ticks, A -> S); the bot keeps playing on after a different fight, so later rooms in those runs differ too. Moving the swarmer back gives the old file exactly. No stat or content changes.
+- Correction (R-B1-RAMP-2): #361 changed 8 run entries in the golden, not 5: white/new and white/oldSave run 1, white3/new and white3/oldSave run 1, yellow/new and yellow/oldSave run 1, and yellow/new and yellow/oldSave run 2.
+
+## R-B1-RAMP-2 — white belt room copies stay in step with their originals (2026-10-26)
+- No new content field: a copy is found by its `w-` prefix (`baseRoomId`). Room art comes from the tiles plus the belt's art pack and the Monster Journal goes by enemy, so neither needed a change.
+- `?room=<original>` at white belt now opens the belt's own copy (`beltRoomId`, client only), so old test links keep working.
+- A pin test checks all 15 copies keep their original's layout, doors, chest, shrine and kind. The only text allowed to differ: w-brute-and-swarm's name and mix, and w-stone-garden's mix.
+
+## Q-DOOR-LABELS — door labels stay on screen; unknown ?room= warns (2026-10-27)
+- Each frame, after the boss slide, a door label's X is clamped so the whole label sits at least 8 px inside the camera view (`clampLabelX`, `DOOR_LABEL_SIDE_PX`). A label for a door that is off screen sits pinned at the nearest edge.
+- An unknown `?room=` id keeps the random-room fallback but logs a console warning (`testRoom`). Nothing shows on screen, because only testers use `?room=`.
+## R-CHALLENGE P1 — 10-tick wind-up floor on Challenge (2026-10-27)
+- The 10-tick minimum (`MIN_WINDUP_TICKS` in config.ts, also used by the enemy loader) now applies after the Challenge formula too, in `telegraphTicks`. Only the swarmer jab and spark-sprite dart change (9 -> 10 ticks on Challenge). Guided and Standard use the exact old formula (tested on every attack).
+- Elites keep their own minimum code (`eliteWindup`); a test checks every elite Challenge wind-up is still at least 10.
+- The p-menu2 golden is re-captured: only `rooted.challenge` moves (perfects 6 -> 7, blocks 2 -> 4, health 146 -> 191) because that room's swarmer jabs are 1 tick longer. Every Guided and Standard value is unchanged. The R-BAL-12 bands test stays green.
+
+## R-CHALLENGE P2 — enemy `challenge` blocks: loader, one switch, patterns, followUp (2026-10-27)
+- Enemy files may have an optional `challenge` block (`fromBelt`, `fromRoom`, `attacks`, `pattern`, `phases`). The loader checks: `fromBelt` is a real belt number from `CHALLENGE_FROM_TIER` (4) to 10, so a pattern is never unreachable; pattern and phase names exist; new attacks have strength ≤ 1 and a Challenge wind-up of at least 14 ticks; `followUp.strength` ≤ 1 and `followUp.gapTicks` ≥ the attack's recover. Enemies without a block get no new field.
+- One switch: `challengeDef` (enemy.ts), called where createWorld resolves each enemy type, so summons and splits follow too. It returns the def unchanged unless the difficulty is Challenge and the room's belt and room number (`challengeAt`, set by createRunWorld; null on tutorial floors and missing in practice rooms) reach the block's gate. Then the extra attacks are appended, `pattern` is set, and a boss's Challenge `phases` replace its normal phases.
+- `nextAttackIndex` follows `pattern` like boss phases. A `followUp` attack hits, waits `gapTicks`, then winds up a second hit with its own full tell at `followUp.strength`; a stagger or winded break starts it over. The second wind-up starts right after the gap (it is the same move), without waiting for the room's attacker cap. `landing` is stored for P4's tells only.
+- `CHALLENGE_FROM_TIER` is added to config.ts with the exact text from #367, so the two merge cleanly.
+
+## R-CHALLENGE P3 — pattern attacks on screen, one at a time, no lane over a red circle (2026-10-27)
+- `SIM_VIEW` (config.ts) = 9 x 6.75 tiles, top strip 1.1: the smallest view of every supported size, width and height taken separately. View width is 6.75 x w / h: 667x375 12.0, 667x320 14.07, 844x390 14.6, 932x430 14.6, 1024x768 9.0, 800x290 18.6; height is 6.75 at every size. The client camera math now lives in apps/client/src/game/cameraView.ts (no Phaser), GameScene.layout uses it, and a test checks SIM_VIEW against it plus that the sim view sits inside the client view at every size (a smaller clamped box always nests in a bigger one).
+- On Challenge, a pattern attack (a `challenge.attacks` entry, or a two-part attack's 2nd hit) starts only if the enemy's body and the whole danger area are inside every player's view (centred on the player, clamped at the room edges like the camera). A dash-only lane counts its full length, from the enemy to the far end, as wide as its area. If not: that swing is the first normal attack in its list and the pattern resumes after it; with no normal attack it walks closer. A 2nd hit that would start off screen is dropped.
+- Only one pattern wind-up at a time room-wide. While a two-part attack is waiting for, winding up, or landing its 2nd hit, no other enemy starts any attack. The 2nd hit keeps its own full tell.
+- `noOverlapWithRedCircle` is loaded (Hearth Cook lane in `attacks`, Rolling Pin roll from its `dashOnlyAttack` notes block). On Challenge only, a flagged dash lane doesn't start while another enemy's red (counterable) circle covers the player.
+- Guided and Standard are unchanged; the golden file is byte-identical (no Challenge golden row moved).
+
+## R-CHALLENGE P5 — the balance bot answers Challenge patterns (2026-10-27)
+
+- **Landing circles:** a typical (newer) bot steps out of a `landing` attack's circle when it can clear the edge with its reaction time to spare; otherwise it Counters as before. A sharp (careful) bot always Counters. Measured over belts 4/6/8/10 x 60 seeds on the samples, stepping out costs less Health than always Countering (test).
+- **Double hits:** typical and sharp bots don't Strike while an enemy's second hit is pending (`followUpStage === 1`), so Counter is ready; the second wind-up is planned like any other. Punishing the winded state after is left for C1.
+- **Kid and novice play are unchanged.** All changes key on Challenge-only attack fields, so Guided and Standard runs are byte-equal with the samples on and off (test), and the golden is byte-identical.
+- **Samples are test-only** (`packages/sim/test/balance/sample-patterns.ts`), shaped like plan rows C1-C5 with placeholder numbers. C13's belt-dependent fromRoom isn't modelled (one block per enemy; fromRoom 2, Floor Keeper 1). No band target is set; the table (`BALANCE=1`, run with `BALANCE=1 npx vitest run test/r-challenge-p5.test.ts --silent=false`) is for reading, labelled "sample patterns, not C1".
+## Q-DOOR-LABELS-2 — door label side clamp runs after the camera moves (2026-10-27)
+- The side clamp moved out of `update()` into the camera's `FOLLOW_UPDATE` event (`clampDoorLabels`). Phaser sets `worldView` in `preRender` after `update()`, so the old clamp used last frame's view and a label could sit 2.5 px from the edge for 1-2 frames when a scroll started. The listener is removed on scene shutdown.
+- The top (Y) clamp stays in `update()`: the camera does not scroll far enough vertically in current rooms to show the same lag. Possible follow-up if a tall room shows it.
+## R-CHALLENGE P6 — Challenge difficulty unlocks at the 4th belt (2026-10-27)
+- core-design §13: Challenge can be picked from the 4th belt (`CHALLENGE_FROM_TIER = 4`). Only the difficulty is gated; Challenge rooms still appear at every belt. There is no Sensei unlock line.
+- A Challenge pick saved below the 4th belt plays as Standard but stays stored, so it comes back at the 4th belt (`activeDifficulty`). Settings, the Home line and the Bests grades all use the active difficulty, so a child never sees Challenge selected while playing Standard.
+- Below the 4th belt the Challenge card is dimmed (alpha 0.7, contrast 5.6:1 or better), shows 🔒 and "Unlocks at your 4th belt." (content/settings/difficulty.json `locked.challenge`), and does nothing when tapped.
+- A `?difficulty=challenge` test link still wins at any belt, so the sims and goldens don't change.
+
+## R-CHALLENGE P4 — pattern tells and first-sight Sensei lines (2026-10-27)
+- "First time" is per enemy + attack (`floor-keeper:shockwave`), stored in the save as `patternsSeen` (an old save reads as none seen).
+- The Floor Keeper's phase line is skipped if its shockwave line already played that fight.
+- `tell` text is designer-only (not shown in game). Existing art and sounds only: whoosh on a lane wind-up, clank on the double slam.
+- Reduced motion keeps every lane and circle; only the lane's sliding stripes stop.
+- Sensei's guided Counter ("COUNTER!" + pulsing button) now only picks a counterable warning; before, it could pick a dash-only lane (incl. the rolling pin and hearth cook) — a real bug, test added.
+## Q-SWARM-JAB — swarmer jab wind-up on Challenge (2026-10-27)
+- P1's floor (`telegraphTicks`, MIN_WINDUP_TICKS = 10) already gives the 12-tick swarmer jab 10 ticks on Challenge (it was 9), C1's swarmer content included. No game-logic change.
+- Guard: the elites loader now refuses `minWindupTicks` under MIN_WINDUP_TICKS, so an elites.json edit can't push an elite wind-up under half a second.
+## Q-FAIR-EDGE — two Challenge fairness edges (2026-10-27)
+- The pattern "on screen" check now counts downed players (only players who are out are skipped). Before, with every player down the check passed vacuously, so a 2nd hit could start off screen.
+- The lane/red-circle rule now runs both ways: a counterable (red circle) attack doesn't start where another enemy's flagged dash lane (`noOverlapWithRedCircle`, uncounterable) winding up covers the player (lane from the enemy to its landing point, area + half a body). The step order inside a tick no longer matters. Challenge only; Guided and Standard unchanged.
+## Q-LOCK-CARD — the locked Challenge card answers a tap (2026-10-27)
+- The locked card is solid (no `setAlpha(0.7)`): fill `#1d1a26`, name `#a39bb0` (6.4:1), line `#c9b98f` (8.8:1). It no longer shows the room through it at 667x320.
+- A tap on the locked card plays the existing `sfx.place(false)` (no new sound or art), pulses the unlock line (scale 1.08, 120 ms, yoyo) and shakes the card ±4 px, 3 cycles in 250 ms. With reduced motion on there is no shake; the sound and pulse stay. The card returns to its stored base x, so fast repeat taps don't drift. The tap never picks Challenge or saves.
+- The locked line may hold `{belt}`, filled with the school-data belt name at `CHALLENGE_FROM_TIER` (`lockedLine` in `apps/client/src/ui/lockCard.ts`). Text without `{belt}` shows unchanged, so this works with today's text and with C-LOCK-WORDS. Supersedes the "dimmed, alpha 0.7" note in R-CHALLENGE P6.
+
+- R-CHALLENGE P4 banner fix: the Sensei banner is placed no higher than the bottom of the top bar (room/wave label, timer, boss bar) + 6px, so at 667x375 it cannot cover the top bar during wind-ups. Shot: docs/shots/r-challenge-p4/667x375-windup-shockwave.png.
+
+- R-CHALLENGE P4 QA: one floor for every Sensei line, `senseiHomeY(senseiTop, topBarBottom) = max(senseiTop, topBarBottom + 6)` (apps/client/src/ui/senseiPlace.ts). The top bar includes the health and Focus bars (bottom y 51), the room/wave label, the timer and the boss bar.
+- Stale COUNTER! root cause: when the guided enemy's wind-up ended without a swing (staggered, hit out of it, beaten), `stepGuide` set `guide.enemyId = null` with no event, so the client's "COUNTER!" banner and Counter pulse (only cleared by guideDone) stayed up over the next wind-up, e.g. the rolling pin's dash-only roll. Now the sim pushes `guideCancel` and the client clears that cue; the client also clears it when a non-counterable wind-up starts while no guided wind-up is live.
+- `?force=<attack>` (e.g. `?force=wide-bonk`) is a test link only (apps/client/src/game/forceAttack.ts): in Practice it swaps the brute for the attack's owner at Challenge with a one-attack pattern; on a run it cuts that enemy's Challenge pattern to the attack. Without the flag nothing changes.
+## Q-BOW-OVER-MENU — the bow waits for menus to close (2026-10-27)
+- Manager's pick: "wait until the menu closes". In the Home Dojo, a due bow is held while `mode !== 'play'` (menu, decorate, arriving) or any arrival card is open (`cardsOpen`), and polled in `update`. It shows as soon as all are closed, exactly once per scene start (`bowShown`, reset in `create`). The bow itself (prompt, tap, `playBow`, `setBowDue(false)`, `arrive`) is unchanged.
+- Repro (3-yellow): with the arrival "Your Home Dojo" card up, a due bow drew on top of it (depth 80 over 70) and the next card then queued behind it. The Tower floor bow (GameScene `askForBow`) already runs before any menu can open and sets `menuOpen`, so it is not gated.
+## R-CHALLENGE P7 — the balance table reads the real C1 content (2026-10-27)
+- `test/balance/sample-patterns.ts` is deleted; the P5 tests and the BALANCE=1 table run on `testContent()` (content/enemies with the C1 blocks). The "off" side of the byte-equal checks is a copy with every `challenge` block stripped.
+- Target = the §4b "L+B (recommended)" Challenge win % row (belts 4-10, 40 seeds), in `test/balance/challenge-targets.ts`. A cell more than 5 points off prints a `WARN` line; it does not fail the test (T1 grades at 100 seeds). Supersedes the "Samples are test-only" note in P5.
+
+- Q-SHAKE-CENTER: the shake is driven by `lockShakeOffset(t) = px * sin(2*pi*cycles*t)` from a counter tween, not a yoyo tween to +px (which only moved right). A sine is exactly symmetric and 0 at both ends; onComplete/onStop still snap x back to rest.
+- Q-P7-SEEDS: the BALANCE=1 table uses `BALANCE_SEEDS = 100` (matches T1 grading); at 40 seeds kid cells swung enough to raise false WARNs. Targets and the 5-point tolerance are unchanged. Costs ~70s only when BALANCE=1.
+
+Follow-up after QA (#381 FAIL): the arrival sequence is gated with its own `arriving` flag, set and cleared by arrive(), instead of being inferred from the scene mode or cardsOpen. Root cause: the gate read 'arrival open' from `mode !== 'play' || cardsOpen > 0`. The "Welcome home" splash is a Celebrations overlay, not a card(), so cardsOpen stays 0, and arrive() never set the mode itself (it trusted tryBow to have set 'arriving'). So when arrive() ran with the mode at 'play', nothing marked the arrival as open, and the bow drew under the splash's input layer, where taps couldn't reach it. Also, the once-per-scene bowShown latch meant a bow that came due after the first bow could never show at all. A bow held through the arrival shows once after the last arrival step and only bows (the arrival steps don't replay).
+
+## Q-STANCE-BANNER: action buttons are a hard keep-out for Sensei's banner (2026-10-27)
+The banner's placement is one pure rule (`ui/senseiPlace.ts`, `pickBannerSpot`). Order: clear of everything → clear of hero + buttons → shrink to 20px and retry → over the arena (still clear of buttons). Covering the hero is acceptable as a last resort; covering a control the player may need during the 2.2 s is not.
+
+## Q-VIRTUE-BANNER: all Sensei banners use the one placement rule (2026-10-27)
+`placeSensei` always finishes in `placeOffPlayers` (pickBannerSpot + buttonKeepOut), not only for "steps back" banners. The Counter tip and the twist banner use the same helper. If a tall line has no clear spot, it narrows (taller, thinner) before it may go over the arena; it never goes over an action button.
+
+## Q-TIP-BANNER: the Counter tip yields to a showing Sensei banner (2026-10-27)
+The banner owns the floor (top bar bottom + 6); the tip is the secondary element. `placeCounterTip` adds the banner's box (+6px) to its hard keep-outs (with the buttons, HUD and circles) via `tipSpot`. Heroes are a soft keep-out: if the hard ones leave no spot, the tip may sit over a hero instead of hiding, so a lesson tip is never lost. Covering a button or the banner is never allowed. The tip re-places every frame, so no ordering logic is needed.
+
+## R-INSIGHT-BAL-a: Insight card numbers and three rule tweaks (2026-10-27)
+Numbers from `drafts/planning/R-INSIGHT-BAL.md` 4a, in `content/insights/insights.json`: Ripple Counter 1.2, Iron Skin 1.2, Wind Step 0.3 every 5 combo hits for 2 s (the Manager's call, #390 4f; the first tune was every 7 hits for 3 s), Double Strike 0.2 (the Manager's call; 0.25 gave a held spread of 12), Quick Hands 0.2, Rally 0.75. Press the Advantage (0.3) and Heavy Hands (0.2) are unchanged. Card text is the Content Designer's (`drafts/content/insights/R-INSIGHT-BAL-c.json`).
+- **Rule A (Wind Step):** while the Wind Step burst is on, basic attacks also speed up by half the burst's bonus (`comboSpeedBonus / 2`, so +15% at 0.3), inside the existing 0.6 attack-speed cap.
+- **Rule B (Press the Advantage):** the bonus also applies to winded and recovering enemies, not only staggered ones.
+- **Rule C (Shield Breaker):** breaking a shield gives Focus. The amount is card data (`focusOnBreak: 7` on the `shieldBreaker` effect), not a config constant, so the text and number stay in content.
+- **Virtue placeholders** (Calm Breath, Steady Start) are after-beta: not added to the pool. The pool stays 9 cards.
+- **Golden fixture regenerated** (Manager approved). The golden bot picks Insights at random, so any card number or rule change moves the run. Even the three code rules alone (with main's JSON) change it.
+- **Masher floor test now runs at 600 seeds (Manager, #390 4f).** `b-t3-tune-2-boss-levers` read 55% at its 60 seeds, but only 31 to 40 of 60 runs reach the boss, so that sample has an SD of about 5 points and was luck. Only the masher check moved to 600 seeds (`MASHER_N`); the floor stays 75% and the other checks stay at 60 seeds. Result with these changes: 348/437 = 79.6% (the Researcher measured the same).
+- **P5 step-out test is now paired (Manager, #390 4f).** `r-challenge-p5` no longer compares total Health, which is dominated by noise. It compares landing-circle damage only, step-out vs Counter, on the first landing swing of the same seed (runs are identical until the bot's first step-out decision, so it is the same moment). Belts 4/6/8/10, seeds 501-680, newer bot, Challenge: 477 matched swings, step-out 1933 vs Counter 2278 (-15.1%), lower in 22 pairs, higher in 4 (z about 3.4). Asserts: more than 300 pairs, step-out under 90% of Counter, lower at least 3x as often as higher, lower in at least 15. Test cost about 20 s. `bot.ts` got additive `landingDamage`/`landingFirst` in `RoomStats`.
+- **Golden fixture regenerated again** after the Wind Step change (the golden bot picks Insights at random).
+- **Full suite:** 108 files passed, 2 skipped; 1148 tests passed, 4 skipped; about 31 s.
+- **Open, for the Manager (recommended follow-up):** the step-out saving is modest because the bot re-decides every tick and stalls about 0.78 tiles from the circle centre (catch radius 0.81) near impact, then Counters too late. Committing to the step-out once started cut landing damage by 44%, 44% and 18% on three 60-seed blocks (47 pairs lower, 2 higher). Not adopted here: it would move every Challenge newer-bot measurement, including the Researcher's tune tables.
+
+## R-INSIGHT-BAL-b: Insight budget tests, two layers (2026-10-27)
+- **Layer 1** (`packages/sim/test/insight-budget.test.ts`, normal suite, no sim): one CAPS table with the proven number per card (max for amounts and seconds, min for Wind Step's "every N hits"); card ids unique and CAPS and content list the same cards; every family has 2+ cards except Virtue (the test fails when Virtue reaches 2, to retire the exception); the sum of all card attack speed stays under the 0.6 cap and disarm under 0.9. A card may be weaker than its cap; to make one stronger, run layer 2 and update the table.
+- **Layer 2** (`packages/sim/test/balance/insight-budget.test.ts`, `BALANCE=1` like the other balance tables): B1-B7 and B10 fail by name and print a table (card or combo, bot, PE, limit); B9 is printed only. Helpers are in `balance/insight-sim.ts`.
+- **The pick seam is a plain parameter, not a flag:** `playRoom(..., pickInsight?: InsightPicker)` in `balance/bot.ts` (test code only). Default is the old random pick, so every existing table is unchanged. No `HOOKS` object, no env flags in committed code (the draft sim used both).
+- **Seeds are the counts the spec tables were measured with** (kid 100 singles / 60 pairs / 40 ruler; newer and careful 50 / 30 / 20; routes 150; pool 150 per belt; pickers 60), starting at seed 1000. Seeds 1..N are not equivalent: they read 40-45% at belts 7-10 where 1000+ reads 52-57%. Runs are seeded, so the numbers repeat. More seeds do not make a line fairer, they read another sample; the ruler's noise matters most because it is divided into every PE.
+- **Skilled-bot floors are not tested** (B1 floor is the kid only); the reasons are in the test file's header.
+- Not built here: layer 3 (kata powers) is R-INSIGHT-BAL-e.
+- **Insight picker cards follow their text (QA fail on #389, layout only).** Root cause: `InsightPicker` drew every card a fixed 175 px (`min(height*0.55, 175)`), so any text past 2-3 lines spilled out. Now the text is laid out first and the row height is the tallest text bottom + 8 px (+2 for the 3 px border's inner edge), the same for all cards (`ui/insightLayout.ts` `fitCards`). If that would run off the screen, the body steps 16 to 15 to 14 px (TYPE.body, the smallest readable size). At 667x375 and 844x390 the cards are 180 to 184 px high and fit at 16 px, so no step-down is used. Card copy is unchanged by this fix. The card text itself now matches #391 (Press the Advantage "Hit dizzy or winded enemies 30% harder.", Rally "Below half health? Focus fills 75% faster!"); Wind Step's text matched the 5-hit / 2 s tune already.
+
+## A4-DOJO-i: the Action Zone inside room (2026-10-30)
+PR 1 of 2. The inside room only; the outside is A4-DOJO-ii.
+- **Art pack `dojo-az-inside` at 0.6** (Jay OK'd the art; day art only): the 22 inside sprites from `incoming-art/action-zone-dojo/sprites/static.json`, 25 frames on 2 pages, 0.8 MB. `approved.json` lists them in `only`. The outside pack waits for PR 2.
+- **The room file is data, the room is built from it.** `content/dojo/action-zone/inside-room.json` is an unchanged copy of the incoming file. `loadInsideRoom` (`packages/sim/src/actionZone.ts`) checks it (grid, spawn, exit, approach tiles, facing, at least one interactable) and builds a normal sim Room from the grid (kind `rest`, no enemies, a door at the exit). A bad file throws `ActionZoneError`, so a broken edit fails the test, not the game. Walking, tap routes and blockers are the sim's own.
+- **Interactables are walk-up spots with no behaviour.** The loader gives each one a rect and an approach tile; the tests prove the spawn reaches every approach tile and the exit, and that no blocker can be entered by tap or stick from any side.
+- **Depth.** Floor, walls, props, then the hero and standing sprites sorted by `sortRow` (hero by his y), then the foreground pieces, then the front wall on top. A seat-back or bag-top piece is shown only while the hero's y is less than its `sortRow`. The front wall is always on top.
+- **Honest note on the seat backs.** The seats-back piece spans x 9.8 to 17.2, which is inside the seats blocker, so a hero who can only stand on open floor never needs it. The rule is built and tested at hook-placed positions; the bag tops and the front wall do matter and are proven in the shots.
+- **Camera helper not lifted.** The Home Dojo's clamp is tied to decorate mode and the title bar, so lifting it would add parameters, not remove code. The inside scene has its own 6-line clamp from the room picture's bounds (same zoom: 6.5 rows tall).
+- **PLACEHOLDER way in.** An "Action Zone" button in the Home Dojo (play mode, under the Scroll button) goes straight to the inside. It is marked PLACEHOLDER in the code; PR 2 removes it and routes the way in through the outside. The exit door returns to the Home Dojo. Nothing else in the Home Dojo changed.
+- **Music continues.** `content/settings/audio.json` maps scene `ActionZoneInside` to the temple track, like the Home Dojo.
+- **Reduced motion:** the fade in and out is skipped (0 ms) when it is on; the setting is read each time, not cached.
+
+## A4-DOJO-ii: outside, town and the way in (2026-10-30)
+PR 2 of 2. The Home Dojo, the town, the outside and the inside are joined. Day art only.
+- **Art imported (Jay OK'd, Manager named the pieces):** pack `dojo-az-outside` (the approved day outside layers; no dusk) and pack `dojo-az-town` (one still picture, the Jay-confirmed "town with the new dojo" preview). `import_art.py` got an optional `onlyLayers` filter so a pack can take named layers only; nothing else in the importer changed.
+- **Town scope was not clear, so the town is a picture and not a walkable map.** There is no game-ready layered town art. The town scene shows the still picture with one tappable area (the dojo roof and door) and a Home button. The tap area (`tapRect` in `town.json`) is my own measurement of the picture, not the artist's. Nothing else in the town is tappable. Missing for a real town: layered walkable art, destinations for the other buildings, dusk art.
+- **The room file is data.** `content/dojo/action-zone/outside-room.json` (the artist's file, 14x9 grid) plus my changes, all listed here: (1) rows 0-5 are closed, as the artist drew them; (2) four cells carved open at (6,6), (7,6), (6,7), (7,7), the walkway to the doors, because the artist's grid left the doors unreachable; (3) row 8 open across the whole width so both lawns connect; (4) one extra blocker, `tree-3`; (5) the shrub stays passable (the hero on the doorstep draws partly behind it); (6) two exits at the ends of row 8, both to the town. `loadOutsideRoom` and `loadTown` (`packages/sim/src/actionZone.ts`) check the files and throw `ActionZoneError` when they are broken.
+- **The way in.** Home Dojo -> a plain blue "Town" button (play mode, replaces the PLACEHOLDER green "Action Zone" button) -> town -> tap the dojo -> outside -> walk to the doors or tap them (the tap walks to the doorstep, tile 7.0, 6.6, then goes in) -> inside. The inside bottom door -> outside, standing on the doorstep (the doorstep does not bounce him back in: a door or exit rect fires only after the hero has been outside it). Walking off either end of the bottom walk -> the town. The town's Home button -> the Home Dojo. The Home Dojo has no designed door to the town yet; that is a DECIDE.
+- **Exit cue** (gold glow and chevron, no text, `ui/exitCue.ts`): at the inside door and at both ends of the outside walk. It pulses only when reduced motion is off. The left cue sits in the stick's rest zone (the left 40% of the screen, below 40% of its height), so a thumb there is a stick, which walks left anyway.
+- **Shared walking scene.** `WalkScene` is the base for `InsideScene` and `OutsideScene` (camera clamp, tap-to-walk, fades, hero and sprite sorting, arming of doors). It was written once here instead of copying the inside scene; `InsideScene` behaves as in A4-DOJO-i, plus the cue.
+- **Depth outside:** ground, trees behind the building (sortRow below 6), building, phone and address bars (blank art; no real numbers in the repo), cues, then props and the hero sorted by y.
+- **Music:** `ActionZoneOutside` and `ActionZoneTown` use the temple track (`audio.json`).
+- **Reduced motion:** all fades are 0 ms, the cues and the town cue do not move.
+- **Kept as the Manager said:** the red bag, flag stripes and handprints (branded red), and the front-wall and seat-back pieces.
+
+## A4-DOJO-hotfix: choppy dojo, stuck Sensei line, fresh load (2026-10-31)
+Three of Jay's phone bugs in one PR. Found by reproducing each on a dev server and bisecting against `95a486c4` (before #394), `18602a4e` (#394, A4-DOJO-i) and `dae15ae` (#395, A4-DOJO-ii).
+- **1. Choppy dojo: Phaser `Graphics` objects are re-drawn on the CPU every frame.** Each plain button (`ui/button.ts`) was a fill/stroke Graphics plus a shine Graphics; the Home Dojo has 12, and they were 1.0 of 1.2 ms of its frame. This came from P-MENU-a (Oct 25), not #394/#395; #394 added one more button. The Action Zone exit cues (gold glow and chevron, #395) were about half of the inside, outside and town frames. Fix: draw each shape once into a texture (`generateTexture`, 4x for the cues, the screen's pixel ratio for buttons) and show it as an Image. Looks, sizes, taps and the cue tweens are unchanged (before/after shots differ by 0.13% of pixels). Also: the hero sort and the hide/show loop in the walking scenes now run only when the hero's row or a piece's state changes. Ruled out: listener leaks on re-entering a scene (none), and the 0.6 art (not a cost).
+- **Honest note on the numbers.** Frame cost is measured as time to `gl.finish()` per frame in headless Chrome on software GL, so it shows the CPU/vertex share, not a real iPhone GPU. Other scenes (Create, Game HUD) still use Graphics; not touched here.
+- **2. Stuck "Three great counters! Your timing can fly on its own now." line.** It is not the Counter hint. It is the B-MASHER-2 step-back banner (`senseiStepsBack`, from dd42175a, Oct 25), which showed the line and had no timer to remove it. It was there before #394/#395. The Counter hint is off on the tutorial and Challenge and does fade on its own (about 3 s); I checked it. Fix: the banner now holds `MASH_GUARD_HOLD_MS` (2.2 s, the same as before) and is then destroyed.
+- **DECIDE (Manager or Jay):** the step-back line is once per run on any difficulty, so it can show on Challenge. Left as is; gating it on Challenge is one line.
+- **3. Fresh load goes to the practice room: not reproduced.** Fresh load runs Title -> Create (first) -> tutorial. Title is still the first scene registered; #394 and #395 only appended scenes. The only way to the practice room (`Game` with no run) is the `?room=training` test link (empty in a beta build). Most likely cause: a link or bookmark with that parameter. No code change; tests pin the routing so a change would fail. If it happens on a clean URL, I need the exact link and the save state.

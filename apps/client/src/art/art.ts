@@ -69,6 +69,10 @@ export interface StaticSprite {
   loop?: boolean;
   footprint?: [number, number];
   place?: string;
+  /** Where the sprite stands in the room, in tiles (Action Zone art: the anchor lands on this tile position). */
+  anchorTile?: [number, number];
+  /** The row the sprite sorts by against characters (Action Zone art). */
+  sortRow?: number;
   keyFrames?: Record<string, number | string>;
   layers: Record<string, number[]>;
   /** Extra notes from the artist, e.g. a tinted piece's colour1. */
@@ -150,6 +154,13 @@ export function staticArt(scene: Phaser.Scene, pack: PackName, id: string): Stat
     if (s) return s;
   }
   return null;
+}
+
+/** Every static sprite of a loaded pack, by id (empty until the pack is loaded). */
+export function staticSprites(scene: Phaser.Scene, pack: PackName): Record<string, StaticSprite> {
+  const data = register(scene, pack);
+  if (!data) return {};
+  return Object.assign({}, ...Object.values(data.entries).map((e) => e.sprites ?? {}));
 }
 
 /** Index of the 8 directions (N, NE, E, SE, S, SW, W, NW) closest to a facing vector. */

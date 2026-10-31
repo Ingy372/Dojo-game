@@ -1,0 +1,23 @@
+diff --git a/packages/sim/test/balance/bot.ts b/packages/sim/test/balance/bot.ts
+index fee79e4..d5ce68d 100644
+--- a/packages/sim/test/balance/bot.ts
++++ b/packages/sim/test/balance/bot.ts
+@@ -46,6 +46,9 @@ import {
+ 
+ export type Style = 'smart' | 'stand' | 'masher' | 'kid';
+ 
++/** LOCAL R-INSIGHT-BAL hook (not committed): a deliberate Insight picker. */
++export const HOOKS: { pick: null | ((run: RunState, choices: string[]) => string) } = { pick: null };
++
+ /** B-MASHER-c: share of ticks on which the kid bot presses a random button. */
+ export const KID_RANDOM_PRESS = 0.12;
+ 
+@@ -122,7 +125,7 @@ export function playRoom(content: Content, run: RunState, world: WorldState, roo
+   let crowdN = 0;
+   const limit = 20 * 60 * 6;
+   for (let t = 0; t < limit && run.status === 'playing'; t++) {
+-    if (run.insightChoices) chooseInsight(run, pick(rng, run.insightChoices));
++    if (run.insightChoices) { const c = run.insightChoices; chooseInsight(run, HOOKS.pick ? HOOKS.pick(run, c) : pick(rng, c)); }
+     const input = decide(world, room, run, style, skill, rng, plans);
+     stepWorld(world, room, { p1: input });
+     onTick?.(world);

@@ -1,3 +1,4 @@
+import { bannerKeepOut, leftStripWidth, overArena, pickBannerSpot, senseiFloorY, senseiHomeY, tipSpot, type BannerAsk, type Box } from '../ui/senseiPlace';
 import Phaser from 'phaser';
 import {
   GUIDE_DONE,
@@ -73,12 +74,23 @@ import {
   BOSS_TAG,
   lidUp,
   type TagBox,
+  keeperWin,
+  skipDown,
+  patternShape,
+  patternKey,
+  firstPatternSight,
 } from '@dojo/sim';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
 import tutorialData from '../../../../content/tutorial/tutorial-floor.json';
-import { MASH_GUARD_LINE, takeMashGuardMoment } from '../game/mashGuardMoment';
+// L-PREMIUM-b: the Counter tip's rules.
+import COUNTER_HINT from '../../../../content/settings/counter-hint.json';
+import { Celebrations } from '../ui/Celebrations';
+import BOSS_WIN from '../../../../content/settings/boss-win.json';
+import LAST_RUN from '../../../../content/settings/last-run.json';
+import { MASH_GUARD_HOLD_MS, MASH_GUARD_LINE, takeMashGuardMoment } from '../game/mashGuardMoment';
 import { testFlags } from '../game/beta';
+import { forceAttack, withForced } from '../game/forceAttack';
 
 /** The tutorial floor's lines (M7-P2). */
 const TUTORIAL = loadTutorialLines(tutorialData);
@@ -94,13 +106,15 @@ import { CONTENT } from '../game/content';
 import { homeDojo } from '../game/dojo';
 import { NAMED_PACK, NamedView } from '../game/named';
 import { reducedMotion } from '../game/motion';
+import { drawPatternTell } from '../game/patternTells';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining } from '../game/student';
 import { bowPrompt, playBow } from '../ui/bow';
 import { InsightPicker } from '../ui/InsightPicker';
-import { choiceCard, restCard, runOverCard } from '../ui/RunOverCard';
+import { choiceCard, keptCard } from '../ui/RunOverCard';
+import { KO } from '../game/knockout';
 import { PLAY_TIME_TEXT, isPlayTimeUp } from '../game/playTime';
-import { DIFFICULTY_TEXT, localToday } from '../game/difficulty';
+import { DIFFICULTY_TEXT, localToday, showGrades } from '../game/difficulty';
 import { LESSONS, noteLessonSeen, takeLesson } from '../game/lessons';
 import { bankRun, saveRunInProgress } from '../game/runSave';
 import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, clock, crisp, css, view, DPR, hiDpi } from '../ui/theme';
@@ -108,6 +122,8 @@ import { ActionButtons } from '../input/ActionButtons';
 import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
+import { clampDoorLabels } from '../ui/doorLabel';
+import { VISIBLE_ROWS, cameraBounds } from '../game/cameraView';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
@@ -125,8 +141,8 @@ const ROAR_GAP_PX = 8;
 const BOSS_BAR_Y = 16;
 /** The bottom of the health and Focus bars (screen px). */
 const HUD_BOTTOM = 56;
-/** How many tiles tall the view is, whatever the phone's size. */
-const VISIBLE_ROWS = 6.75;
+/** Bottom of the health and Focus bars drawn in drawHud. */
+const HUD_BARS_BOTTOM = 51;
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 /** Never run more than this many ticks in one frame (e.g. after a long pause). */
 const MAX_TICKS_PER_FRAME = 10;
@@ -266,6 +282,10 @@ export class GameScene extends Phaser.Scene {
   private menuOpen = false;
   /** The hero is down (the run is over): no boss tag or bar, no fight buttons or stick (Q-PREM-F4). */
   private downed = false;
+  /** B-MASHER-d1: when the hero went down, whether a tap skipped Screen 1, and what runs after it. */
+  private downAt = 0;
+  private helpUpSkipped = false;
+  private afterHelpUp: (() => void) | null = null;
   /** Live floating texts and pop words, cleared when the hero goes down (Q-PREM-F4). */
   private popups = new Set<Phaser.GameObjects.Text>();
   /** Tutorial floor (K24a): where the step flow is, the tip's Got it button, and the success line to lead the next tip. */
@@ -403,6 +423,8 @@ export class GameScene extends Phaser.Scene {
   /** Sensei's Lessons (M7-P5): this run's tag for the one-lesson-per-room limit, and warnings still filling. */
   private runTag = '';
   private warnings = new Map<string, { until: number; inside: boolean }>();
+  /** R-CHALLENGE P4: enemies whose first-sight pattern line played this fight (skips the boss phase line). */
+  private patternLineSaid = new Set<string>();
   private strikeHit = false;
 
   constructor() {
@@ -432,7 +454,7 @@ export class GameScene extends Phaser.Scene {
     this.setup = characterSetup(loadSave(), this.training, CONTENT.abilities);
     if (this.run) {
       this.room = currentRoom(CONTENT, this.run);
-      this.world = createRunWorld(CONTENT, this.run, this.setup, this.setup.effects, undefined, testGuide() ?? loadSave().guideStep);
+      this.world = createRunWorld(withForced(CONTENT, testForced()), this.run, this.setup, this.setup.effects, undefined, testGuide() ?? loadSave().guideStep, COUNTER_HINT);
       // K24a: on the tutorial's first room, enemies wait and waves come only when Sensei's step lets them in.
       if (this.run.tutorial && this.room.kind === 'battle') {
         this.world.enemyHold = true;
@@ -443,10 +465,13 @@ export class GameScene extends Phaser.Scene {
       this.gotItBtn = null;
       this.tutorialLead = '';
     } else {
-      this.room = loadRoom(trainingRoom);
+      // Q-P4 QA: ?force=wide-bonk puts the attack's owner (the bopper) in Practice, at Challenge, with only that attack.
+      const forced = testForced();
+      this.room = loadRoom(forced ? { ...trainingRoom, enemies: trainingRoom.enemies.map((e) => ({ ...e, enemy: forced.id })) } : trainingRoom);
       this.world = createWorld(this.room, [this.me], {
-        enemyTypes: { brute: loadEnemy(bruteData) },
-        difficulty: testDifficulty(),
+        enemyTypes: forced ? { [forced.id]: forced.def } : { brute: loadEnemy(bruteData) },
+        ...(forced ? { challengeAt: { belt: forced.def.challenge!.fromBelt, room: forced.def.challenge!.fromRoom } } : {}),
+        difficulty: forced ? 'challenge' : testDifficulty(),
         guideStep: testGuide() ?? loadSave().guideStep,
         player: { ...this.setup, mods: modsFrom(this.setup.effects, TICKS_PER_SECOND) },
       });
@@ -465,9 +490,20 @@ export class GameScene extends Phaser.Scene {
       this.time.delayedCall(1500, check);
     }
     this.senseiText = null;
+    this.counterTip = null;
     this.gradeLine = null;
     this.menuOpen = false;
     this.downed = false;
+    this.helpUpSkipped = false;
+    this.afterHelpUp = null;
+    // B-MASHER-d1: a tap anywhere skips Screen 1 (Sensei helping the hero up) on a run.
+    this.input.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      if (!this.downed || !this.run || this.helpUpSkipped || this.time.now - this.downAt < 300) return;
+      this.helpUpSkipped = true;
+      // Q-PREM-F11: end the knock-out pause now, so Screen 2 comes on the next tick, not ~1.75 s later.
+      skipDown(this.world, this.me);
+      this.afterHelpUp?.();
+    });
     this.popups.clear();
     this.leaving = false;
     this.picker = null;
@@ -486,6 +522,7 @@ export class GameScene extends Phaser.Scene {
     this.strikeTaught = false;
     this.runTag ||= `run-${Date.now()}`;
     this.warnings.clear();
+    this.patternLineSaid.clear();
     this.strikeHit = false;
     const roomGfx = this.drawRoom();
     const objects = this.makeRoomObjects();
@@ -506,6 +543,11 @@ export class GameScene extends Phaser.Scene {
     // Two cameras: one follows the character through the room, one holds the on-screen controls.
     const cam = this.cameras.main;
     cam.startFollow(this.player, true);
+    // Q-DOOR-LABELS-2: the side clamp runs after the camera has moved this frame (Phaser emits
+    // FOLLOW_UPDATE in preRender, after the follow scroll and worldView update), so a label is never
+    // closer than 8 px to the edge, even in the first frames of a scroll.
+    cam.on(Phaser.Cameras.Scene2D.Events.FOLLOW_UPDATE, this.clampDoorLabels, this);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => cam.off(Phaser.Cameras.Scene2D.Events.FOLLOW_UPDATE, this.clampDoorLabels, this));
     this.uiCamera = this.cameras.add(0, 0, this.scale.width, this.scale.height);
     hiDpi(this.uiCamera);
     // The Guarding tether is world art too, or the screen camera draws a ghost copy (elites QA bug 1).
@@ -630,6 +672,7 @@ export class GameScene extends Phaser.Scene {
     this.buttons.counterWindow(this.counterWindowOpen);
 
     this.buttons.update(p);
+    this.placeCounterTip();
     this.drawHud();
     this.drawRunHud(now);
   }
@@ -772,6 +815,9 @@ export class GameScene extends Phaser.Scene {
       const cy = e.attackCenter.y * TILE;
       const area = currentAttack(e).areaRadius * TILE;
       const glow = this.world.twist?.dim ? 1.6 : 1; // Lantern Dark: warnings glow extra bright
+      // R-CHALLENGE P4: a pattern's lane or landing hop, from the first frame of the wind-up.
+      const shape = patternShape(currentAttack(e));
+      if (shape) drawPatternTell(this.danger, shape, { x: e.pos.x * TILE, y: e.pos.y * TILE }, { x: cx, y: cy }, area, COLORS.danger, elapsed / e.windupTotal, !reducedMotion());
       if (glow > 1) this.danger.lineStyle(10, 0xffd166, 0.35).strokeCircle(cx, cy, area + 4);
       this.danger.fillStyle(COLORS.danger, 0.16 * glow).fillCircle(cx, cy, area);
       this.danger.lineStyle(inWindow ? 6 : 3 * glow, inWindow ? 0xff8a80 : COLORS.danger, inWindow ? 1 : 0.9).strokeCircle(cx, cy, area);
@@ -834,6 +880,32 @@ export class GameScene extends Phaser.Scene {
       } else if (winded) {
         const fall = ((now / 600 + i / v.stars.length) % 1) * r * 0.9;
         st.setFillStyle(0x9ad1ff).setScale(1.5).setPosition((i - 1) * r * 0.7, -v.top * 0.8 + fall);
+      }
+    });
+  }
+
+  /**
+   * R-CHALLENGE P4: a pattern attack's wind-up starts. Its own sound on top of the wind-up sound
+   * (lane: whoosh, two-part: clank), and Sensei's line the first time this save sees it.
+   */
+  private patternTellStart(e: EnemyState): void {
+    const a = currentAttack(e);
+    const shape = patternShape(a);
+    if (!shape) return;
+    if (shape === 'lane') sfx.whoosh();
+    else if (a.followUp || e.followUpStage === 2) sfx.clank();
+    if (!a.senseiLine) return;
+    const profile = loadSave();
+    if (!firstPatternSight(profile, patternKey(e.def.id, a))) return;
+    writeSave(profile);
+    this.patternLineSaid.add(e.id);
+    this.senseiSay([a.senseiLine], 1600);
+    // The line goes away on its own, so it doesn't sit over the next warnings.
+    const t = this.senseiText;
+    this.time.delayedCall(2600, () => {
+      if (t && t === this.senseiText) {
+        t.destroy();
+        this.senseiText = null;
       }
     });
   }
@@ -1116,14 +1188,8 @@ export class GameScene extends Phaser.Scene {
     cam.setZoom(zoom * DPR);
     // Camera limits: a strip above the top wall keeps doors clear of the health bars,
     // and rooms smaller than the screen sit in the middle.
-    const viewW = width / zoom;
-    const viewH = height / zoom;
-    const roomW = this.room.width * TILE;
-    const top = -TILE * 1.1;
-    const roomH = this.room.height * TILE - top;
-    const bw = Math.max(roomW, viewW);
-    const bh = Math.max(roomH, viewH);
-    cam.setBounds((roomW - bw) / 2, top - (bh - roomH) / 2, bw, bh);
+    const b = cameraBounds(this.room.width, this.room.height, width / zoom, height / zoom, TILE);
+    cam.setBounds(b.x, b.y, b.width, b.height);
     this.uiCamera.setSize(width * DPR, height * DPR);
     this.controls.layout();
     this.buttons.layout();
@@ -1236,15 +1302,31 @@ export class GameScene extends Phaser.Scene {
           noteLessonSeen(lesson.id, this.roomTag());
           this.senseiSay(ev.step === 0 ? LESSONS[WARNING_LESSON].screens : lesson.screens, 1100);
           this.buttons.pulseCounter(ev.step === 2 ? 1 : 2);
+          this.guideCue = this.senseiText;
           break;
         }
         case 'guideWait':
           this.senseiSay(LESSONS[GUIDE_LESSONS[0]].screens);
+          this.guideCue = this.senseiText;
+          break;
+        case 'guideCancel':
+          // Q-P4 QA: the guided wind-up ended without a swing, so its "COUNTER!" cue goes now
+          // instead of staying up over the next (maybe dash-only) wind-up.
+          this.clearGuideCue();
           break;
         case 'guideNudge': {
           const nudge = LESSONS[GUIDE_LESSONS[0]].nudge;
           if (nudge) this.senseiSay([nudge]);
+          this.guideCue = this.senseiText;
           this.buttons.pulseCounter(3);
+          break;
+        }
+        case 'counterHint': {
+          // L-PREMIUM-b: Counter windows went by with no answer. Sensei's nudge shows as a small tip that keeps off
+          // the red circles and the buttons, Counter pulses (a still outline with Reduced motion), and both end on their own.
+          const nudge = LESSONS[GUIDE_LESSONS[0]].nudge;
+          if (!nudge || this.downed) break;
+          this.showCounterTip(nudge);
           break;
         }
         case 'guideDone': {
@@ -1257,7 +1339,12 @@ export class GameScene extends Phaser.Scene {
           // A warning is coming: the twist banner gets out of the way so it never covers one.
           if (this.twistBannerView?.active) this.tweens.add({ targets: this.twistBannerView, alpha: 0.25, duration: 150 });
           const e = this.enemy(ev.enemyId);
+          // Q-P4 QA: a wind-up that can't be Countered (a dash-only lane) never keeps an old "COUNTER!" cue up
+          // unless the guided enemy is still winding up its own counterable attack.
+          const se = this.world.enemies.find((x) => x.id === ev.enemyId);
+          if (se && currentAttack(se).counterable === false && !this.guidedWindupLive()) this.clearGuideCue();
           sfx.windup(ticksToRealMs(ev.ticks) / 1000);
+          if (e) this.patternTellStart(e);
           if (e) this.floatText({ x: e.pos.x, y: e.pos.y - e.def.radius - 0.3 }, '!', '#ff3b30', 40, 0.4);
           // Sensei's Lessons: a second warning while another is still filling is two attacks at once.
           const now = this.time.now;
@@ -1331,10 +1418,13 @@ export class GameScene extends Phaser.Scene {
           }
           break;
         case 'playerDown':
+          // B-MASHER-d1 Screen 1: a soft fade, a warm chime, and Sensei helps the hero up.
+          // In the practice room the same kind words show, and the room simply starts over.
           sfx.playerDown();
           this.heroDo('defeat');
-          // Clear the screen for the loss message: no boss tag or bar, no fight buttons or stick.
           this.downed = true;
+          this.downAt = this.time.now;
+          this.helpUpSkipped = false;
           this.buttons.disable();
           this.controls.disable();
           this.bossName.setVisible(false);
@@ -1342,10 +1432,9 @@ export class GameScene extends Phaser.Scene {
           this.bossTagWorld = null;
           for (const t of [...this.popups]) this.dropPopup(t);
           this.chainText.setVisible(false);
-          this.senseiText?.destroy();
-          this.senseiText = null;
-          this.cameras.main.fade(900, 10, 8, 16);
-          this.message.setText(this.run ? 'Ouch! The run is over.\nYou keep everything you found.' : 'Ouch!\nBack to the start.').setVisible(true);
+          this.cameras.main.fade(reducedMotion() ? 0 : 900, 10, 8, 16, true);
+          this.message.setText(KO.helpUp).setVisible(true);
+          this.senseiSay([KO.helpUpSensei], 1400, true);
           break;
         case 'wave':
           sfx.wave();
@@ -1422,6 +1511,14 @@ export class GameScene extends Phaser.Scene {
           this.cameras.main.resetFX();
           this.cameras.main.fadeIn(400, 10, 8, 16);
           this.message.setVisible(false);
+          if (!this.run) {
+            // The practice room: nothing ends. The hero is back up and can train on.
+            this.downed = false;
+            this.senseiText?.destroy();
+            this.senseiText = null;
+            this.buttons.enable();
+            this.controls.enable();
+          }
           break;
         case 'enemySpawn': {
           const e = this.enemy(ev.enemyId);
@@ -1478,7 +1575,8 @@ export class GameScene extends Phaser.Scene {
             }
           }
           sfx.appear();
-          if (ev.senseiLine) this.senseiSay([ev.senseiLine], Math.max(1200, ms));
+          // R-CHALLENGE P4: skipped when this boss's first-sight pattern line already played this fight.
+          if (ev.senseiLine && !this.patternLineSaid.has(ev.enemyId)) this.senseiSay([ev.senseiLine], Math.max(1200, ms));
           // B-T3-NUDGE: ROAR! sits on screen just under Sensei's banner (8 px gap), above everything, so the banner never covers it.
           if (e) {
             const { width } = view(this);
@@ -1623,30 +1721,38 @@ export class GameScene extends Phaser.Scene {
       this.cameras.main.fadeOut(600, 10, 8, 16);
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start(scene, data));
     };
-    if (status === 'rested') {
-      // Play time is up (M7-P9): a kind card, then home. Everything found is already saved.
-      sfx.floorClear();
-      this.time.delayedCall(500, () => {
-        const card = restCard(this, () => {
-          this.uiCamera.fadeOut(400, 10, 8, 16);
-          this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home', { fromRun: true }));
-        });
-        this.cameras.main.ignore(card);
-      });
-      return;
-    }
-    if (status === 'lost') {
-      // A soft card with what they keep, then Back home. After losses in a row on
-      // this floor, Guided is kindly offered first, at most once a day (M7-P1).
+    if (status === 'lost' || status === 'rested') {
+      // B-MASHER-d1: Screen 2 (what they kept, Head home), then Home's welcome (Screen 3).
+      // A knock-out first waits for Screen 1 (about 2.5 s, a tap skips it). When play time
+      // is up (M7-P9), Screen 2 uses the resting line and Home skips the next-run pointer.
+      const resting = status === 'rested' || isPlayTimeUp(profile);
+      const finds = [
+        ...summary.items.map((i) => i.name),
+        ...summary.decorations.map((d) => decorationDef(CONTENT.dojo, d).name),
+        ...(xp.gained > 0 ? [`+${xp.gained} experience`] : []),
+      ];
+      // After losses in a row on this floor, Guided is kindly offered, now after Screen 2,
+      // at most once a day (M7-P1). Never after a rested ending.
       const tier = this.run.tier;
-      const offer = shouldOfferGuided(profile, tier, DIFFICULTY_TEXT, localToday());
+      const offer = status === 'lost' && shouldOfferGuided(profile, tier, DIFFICULTY_TEXT, localToday());
       if (offer) {
         markGuidedOffered(profile, localToday());
         writeSave(profile);
       }
-      this.time.delayedCall(1400, () => {
+      const home = () => {
+        this.uiCamera.fadeOut(400, 10, 8, 16);
+        this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () =>
+          this.scene.start('Home', { fromRun: true, knockout: resting ? 'rested' : 'run' } satisfies HomeSceneData),
+        );
+      };
+      const showKept = () => {
+        this.afterHelpUp = null;
         this.message.setVisible(false);
-        if (offer) {
+        this.senseiText?.destroy();
+        this.senseiText = null;
+        const card = keptCard(this, finds, resting, () => {
+          if (!offer) return home();
+          card.destroy();
           const o = DIFFICULTY_TEXT.offer;
           const ask = choiceCard(this, o.title, o.line, o.no, o.yes, (yes) => {
             if (yes) {
@@ -1654,28 +1760,43 @@ export class GameScene extends Phaser.Scene {
               chooseDifficulty(p, 'guided');
               writeSave(p);
             }
-            showCard();
+            home();
           });
           this.cameras.main.ignore(ask);
-        } else showCard();
-      });
-      const showCard = () => {
-        const card = runOverCard(
-          this,
-          summary,
-          xp.gained,
-          () => {
-            this.uiCamera.fadeOut(400, 10, 8, 16);
-            this.uiCamera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Home', { fromRun: true }));
-          },
-        );
+        });
         this.cameras.main.ignore(card);
       };
+      if (status === 'rested') {
+        sfx.floorClear();
+        this.time.delayedCall(500, showKept);
+        return;
+      }
+      const wait = this.helpUpSkipped ? 0 : Math.max(0, KO.helpUpMs - (this.time.now - this.downAt));
+      if (wait === 0) showKept();
+      else {
+        this.afterHelpUp = showKept;
+        this.time.delayedCall(wait, () => this.afterHelpUp?.());
+      }
+      return;
+    }
+    // Q-PREM-BOSSWIN: the first real Floor Keeper clear gets its one big moment, saved so it plays once.
+    const bossId = this.room.enemySpawns.map((sp) => sp.enemy).find((id) => CONTENT.enemies[id]?.boss);
+    if (keeperWin(profile, this.run, status, bossId)) {
+      writeSave(profile);
+      this.showKeeperWin(() => leave('Home', { fromRun: true }));
       return;
     }
     sfx.floorClear();
-    this.message.setText('Floor cleared!').setVisible(true);
+    this.message.setText(LAST_RUN.cleared).setVisible(true);
     this.time.delayedCall(200, () => leave('Home', { fromRun: true }));
+  }
+
+  /** Q-PREM-BOSSWIN: 'Floor Keeper defeated!' over the room, then onDone (home). */
+  private showKeeperWin(onDone: () => void): void {
+    this.message.setVisible(false);
+    this.menuOpen = true;
+    const c = new Celebrations(this, [], this.training, onDone, [], BOSS_WIN.keeperDefeated);
+    this.cameras.main.ignore(c.root);
   }
 
   /** The bow at the start of the floor: the fight waits, then a small Focus head start. */
@@ -1939,8 +2060,16 @@ export class GameScene extends Phaser.Scene {
     const { width } = view(this);
     // Near the top, just under the health and Focus bars, so it never covers the fight or a warning circle.
     const banner = twistBanner(this, twist, width, 0);
-    const BANNER_Y = 58 + banner.height / 2;
-    banner.setY(BANNER_Y);
+    // Q-P4 QA: its Sensei line keeps the same floor. Q-VIRTUE-BANNER: the one rule, so it never covers a button.
+    const { height } = view(this);
+    const floor = Math.max(58, this.senseiFloor());
+    const twistAsk: BannerAsk = {
+      viewW: width, viewH: height, floor, home: floor, w: banner.width, h: banner.height, x: banner.x, y: floor,
+      players: [], buttons: this.buttonKeepOut(), others: [], // as before: just under the bars unless a button is there
+    };
+    const twistSpot = pickBannerSpot(twistAsk) ?? overArena(twistAsk);
+    const BANNER_Y = twistSpot.y + banner.height / 2;
+    banner.setPosition(twistSpot.x, BANNER_Y);
     this.cameras.main.ignore(banner);
     this.tweens.add({ targets: banner, alpha: { from: 0, to: 1 }, y: { from: BANNER_Y + 20, to: BANNER_Y }, duration: 300, ease: 'Back.Out' });
     this.tweens.add({ targets: banner, alpha: 0, delay: 4200, duration: 500, onComplete: () => banner.destroy() });
@@ -2137,16 +2266,92 @@ export class GameScene extends Phaser.Scene {
    * Keeps Sensei's banner under the boss bar and off the door labels (which scroll with the
    * room), every frame, so it stays right when a boss appears or the camera moves (K10).
    */
+  /** L-PREMIUM-b: the Counter tip's text (null when not showing). */
+  private counterTip: Phaser.GameObjects.Text | null = null;
+
+  private showCounterTip(line: string): void {
+    this.counterTip?.destroy();
+    const { width } = view(this);
+    const t = this.add
+      .text(0, 0, `Sensei: ${line}`, {
+        fontFamily: 'system-ui, sans-serif',
+        fontStyle: 'bold',
+        fontSize: width < 720 ? '16px' : '18px',
+        color: '#ffffff',
+        backgroundColor: '#2a2440ee',
+        padding: { x: 12, y: 8 },
+        wordWrap: { width: Math.min(width * 0.4, 300), useAdvancedWrap: true },
+      })
+      .setDepth(60)
+      .setResolution(window.devicePixelRatio || 1);
+    this.cameras.main.ignore(t);
+    this.counterTip = t;
+    this.buttons.pulseCounter(4);
+    this.placeCounterTip();
+    this.time.delayedCall(COUNTER_HINT.tipMs, () => {
+      if (this.buttons.counterPulseLevel() === 4) this.buttons.pulseCounter(0);
+      if (t !== this.counterTip) return;
+      const done = () => {
+        t.destroy();
+        if (this.counterTip === t) this.counterTip = null;
+      };
+      if (reducedMotion()) done();
+      else this.tweens.add({ targets: t, alpha: 0, duration: 400, onComplete: done });
+    });
+  }
+
+  /** Each frame: the tip takes the first spot clear of every red attack circle, the buttons, the HUD and Sensei's banner; if none is clear, it hides for that frame. */
+  private placeCounterTip(): void {
+    const t = this.counterTip;
+    if (!t?.active) return;
+    if (this.downed) {
+      t.setVisible(false);
+      return;
+    }
+    const { width: W, height: H } = view(this);
+    const cam = this.cameras.main;
+    const z = cam.zoom / DPR;
+    const keepOff = [
+      { x0: 0, x1: W, y0: 0, y1: Math.max(HUD_BOTTOM, this.topBarBottom()) },
+      ...this.world.enemies
+        .filter((e) => e.attackCenter && e.mode === 'windup')
+        .map((e) => {
+          const cx = (e.attackCenter!.x * TILE - cam.worldView.x) * z;
+          const cy = (e.attackCenter!.y * TILE - cam.worldView.y) * z;
+          const r = currentAttack(e).areaRadius * TILE * z + 8;
+          return { x0: cx - r, x1: cx + r, y0: cy - r, y1: cy + r };
+        }),
+      ...this.buttons.objects.map((o) => {
+        const r = (o as Phaser.GameObjects.Container).getBounds();
+        return { x0: r.left - 12, x1: r.right + 12, y0: r.top - 12, y1: r.bottom + 12 };
+      }),
+    ];
+    const w = t.width;
+    const h = t.height;
+    const top = Math.max(HUD_BOTTOM + 6, this.senseiFloor()); // Q-P4 QA: the same floor as every Sensei line
+    // Q-TIP-BANNER: the one rule (ui/senseiPlace.ts tipSpot): off the buttons, HUD, red circles and Sensei's banner. None clear: hidden.
+    const banner = this.senseiText?.active && this.senseiText.visible ? bannerKeepOut(this.senseiText) : null;
+    const free = tipSpot({
+      viewW: W, viewH: H, floor: top, home: top, w, h, x: 8 + w / 2, y: top,
+      players: this.playerScreenBoxes(), buttons: keepOff, others: [],
+    }, banner);
+    t.setVisible(!!free);
+    if (free) t.setPosition(free.x - w / 2, free.y);
+  }
+
   private placeSensei(): void {
     const t = this.senseiText;
     if (!t?.active) return;
     const { height } = view(this);
-    let top = this.senseiTop(height);
+    // R-CHALLENGE P4: never over the top bar (health, room and wave, timer, boss bar), e.g. at 667x375.
+    const floor = this.senseiFloor();
+    let top = this.senseiHome(height);
     const left = t.x - t.width / 2;
     const right = t.x + t.width / 2;
     const boxes = this.protectedBoxes(true);
     const btn = this.gotItBtn?.active ? this.gotItBtn : null;
     const h = t.height + (btn ? btn.height + 8 : 0);
+    let tutorialExtra: Box[] = [];
     for (let pass = 0; pass < 2; pass++) {
       for (const b of boxes) {
         if (b.x1 < left || b.x0 > right || b.y1 < top || b.y0 > top + h) continue;
@@ -2162,6 +2367,13 @@ export class GameScene extends Phaser.Scene {
       const py = (p.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
       const px = (p.x * TILE - cam.worldView.x) * (cam.zoom / DPR);
       const H = view(this).height;
+      tutorialExtra = this.world.enemies
+        .filter((e) => e.def.boss && e.mode !== 'defeated')
+        .map((e) => {
+          const ex = (e.pos.x * TILE - cam.worldView.x) * (cam.zoom / DPR);
+          const ey = (e.pos.y * TILE - cam.worldView.y) * (cam.zoom / DPR);
+          return { x0: ex - 1.5 * k, x1: ex + 1.5 * k, y0: ey - 3 * k, y1: ey + k };
+        });
       const keepOff = [
         ...boxes,
         { x0: px - k, x1: px + k, y0: py - 1.8 * k, y1: py + 0.8 * k },
@@ -2183,7 +2395,7 @@ export class GameScene extends Phaser.Scene {
       const fit = [view(this).width / 2, 8 + t.width / 2]
         .map((x) => {
           const clear = (y: number) =>
-            y >= 8 && y + h <= H - 8 && !keepOff.some((b) => b.x1 > x - t.width / 2 && b.x0 < x + t.width / 2 && b.y1 > y && b.y0 < y + h);
+            y >= floor && y + h <= H - 8 && !keepOff.some((b) => b.x1 > x - t.width / 2 && b.x0 < x + t.width / 2 && b.y1 > y && b.y0 < y + h);
           return { x, y: spots.find(clear) };
         })
         .find((s) => s.y !== undefined);
@@ -2192,15 +2404,16 @@ export class GameScene extends Phaser.Scene {
       top = fit?.y ?? H - h - 8;
     }
     t.setY(top);
-    // QA on #295: the "Sensei steps back" banner never covers a player.
-    if (t.getData('keepOffPlayers')) this.placeOffPlayers(t);
+    // Q-VIRTUE-BANNER: every Sensei line (New move!, lessons, Counter tip, twists, tutorial) goes through the one
+    // rule, so none covers VIRTUE, STRIKE, Stance or any action button (#295: nor a player when there is room).
+    this.placeOffPlayers(t, btn ? btn.height + 8 : 0, tutorialExtra);
     btn?.setPosition(t.x, t.y + t.height + 8);
     this.placeDecoToasts();
   }
 
   /**
    * Screen boxes that pop-ups keep off: each door (its tile plus the label under it, K23),
-   * the chest once it shows, and (if asked) the big centre message such as "Ouch! The run is over." (K23b).
+   * the chest once it shows, and (if asked) the big centre message such as "Sensei helps you up." (K23b, B-MASHER-d1).
    */
   private protectedBoxes(withMessage: boolean): { x0: number; x1: number; y0: number; y1: number }[] {
     const cam = this.cameras.main;
@@ -2329,13 +2542,16 @@ export class GameScene extends Phaser.Scene {
 
   private showGrade(grade: 'S' | 'A' | 'B', perfects: number, damage: number, ticks: number, inTime: boolean | null): void {
     const { width, height } = view(this);
-    sfx.grade(grade);
+    // Q-PREM-GRADE: the big letter and its sound are Challenge only; the Room clear! line always shows.
+    const graded = showGrades(this.world.difficulty);
+    if (graded) sfx.grade(grade);
     const letter = this.add
       .text(width / 2, height * 0.36, grade, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '84px', color: GRADE_COLOR[grade], stroke: '#14121c', strokeThickness: 9 })
       .setOrigin(0.5)
       .setResolution(crisp())
       .setScale(2.2)
-      .setAlpha(0);
+      .setAlpha(0)
+      .setVisible(graded);
     // K23: the damage number is dropped (it read as harsh to kids); a clean room still says so.
     const parts = [`${perfects} Great`, ...(damage > 0 ? [] : ['no damage']), realClock(ticks)];
     const ch = this.room.challenge;
@@ -2343,7 +2559,7 @@ export class GameScene extends Phaser.Scene {
     // A missed time gets its own line: the full sentence doesn't fit beside the stats at 667.
     const missed = ch && inTime === false ? `\n${ch.outOfTimeText}` : '';
     const line = this.add
-      .text(width / 2, height * 0.36 + 48, `Room clear!  ${parts.join('  ·  ')}${missed}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4, align: 'center', wordWrap: { width: width - 32 } })
+      .text(width / 2, height * 0.36 + 48, `${BOSS_WIN.roomClear}  ${parts.join('  ·  ')}${missed}`, { fontFamily: FONT, fontSize: '17px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4, align: 'center', wordWrap: { width: width - 32 } })
       .setOrigin(0.5, 0)
       .setResolution(crisp())
       .setAlpha(0);
@@ -2474,7 +2690,15 @@ export class GameScene extends Phaser.Scene {
     if (!takeMashGuardMoment(this.run ?? NO_RUN_KEY, playerId)) return;
     // The Manager's call: "seen" is saved with the run, so a reload doesn't show it again.
     if (this.run) saveRunInProgress(this.run);
-    this.senseiSay([MASH_GUARD_LINE], 2200);
+    this.senseiSay([MASH_GUARD_LINE], MASH_GUARD_HOLD_MS);
+    // A4-DOJO-hotfix: a one-line banner has no next line to give way to, so it must take itself down.
+    // (It stayed on screen for the rest of the room.) Only this banner: a newer line is left alone.
+    const banner = this.senseiText;
+    this.time.delayedCall(MASH_GUARD_HOLD_MS, () => {
+      if (!banner?.active) return;
+      banner.destroy();
+      if (this.senseiText === banner) this.senseiText = null;
+    });
     this.placeSteppedBack();
     const p = this.world.players[playerId];
     if (!p) return;
@@ -2539,22 +2763,56 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** The first spot for the banner clear of every player (and of the doors and messages when it can be). */
-  private placeOffPlayers(t: Phaser.GameObjects.Text): void {
-    const { height } = view(this);
-    const players = this.playerScreenBoxes();
-    const h = t.height;
-    const x0 = t.x - t.width / 2, x1 = t.x + t.width / 2;
-    const hits = (boxes: typeof players) => (y: number) => !boxes.some((b) => b.x1 > x0 && b.x0 < x1 && b.y1 > y && b.y0 < y + h);
-    const buttons = this.buttons.objects.map((o) => {
+  /**
+   * Keeps a banner off the heroes and, always, off the action buttons (Q-STANCE-BANNER), under the top bar.
+   * One search (ui/senseiPlace.ts pickBannerSpot): clear of everything, else clear of heroes and buttons (the free
+   * space above the bottom button row). No room: the small-phone text size, then again. Still none: over the
+   * arena (clear of the buttons only), never over Stance or another button.
+   */
+  private placeOffPlayers(t: Phaser.GameObjects.Text, below = 0, extra: Box[] = []): void {
+    const ask = (): BannerAsk => {
+      const { width, height } = view(this);
+      return {
+        viewW: width,
+        viewH: height,
+        floor: this.senseiFloor(),
+        home: this.senseiHome(height),
+        w: t.width,
+        h: t.height + below,
+        x: t.x,
+        y: t.y,
+        players: this.playerScreenBoxes(),
+        buttons: this.buttonKeepOut(),
+        others: [...this.protectedBoxes(true), ...extra],
+      };
+    };
+    let spot = pickBannerSpot(ask());
+    if (!spot && Number.parseFloat(String(t.style.fontSize)) > 20) {
+      t.setFontSize(20);
+      t.setWordWrapWidth(Math.min(view(this).width - 48, 640), true);
+      spot = pickBannerSpot(ask());
+    }
+    // Q-VIRTUE-BANNER: still no room (a tall tip on a small phone): narrow it into the strip left of the buttons.
+    // Then narrower and taller, a step at a time, so it fits beside the hero (or in that strip).
+    if (!spot) {
+      const strip = leftStripWidth(ask());
+      const wraps = [strip, ...Array.from({ length: 6 }, (_, i) => t.width - 40 * (i + 1))].filter((w) => w >= 200 && w < t.width);
+      for (const w of wraps) {
+        t.setWordWrapWidth(w - 32, true);
+        spot = pickBannerSpot(ask());
+        if (spot) break;
+      }
+    }
+    spot ??= overArena(ask());
+    t.setPosition(spot.x, spot.y);
+  }
+
+  /** Q-STANCE-BANNER: the action buttons (Stance and its name included) plus 8 px, kept clear of Sensei's banner. */
+  buttonKeepOut(): Box[] {
+    return this.buttons.objects.map((o) => {
       const r = (o as Phaser.GameObjects.Container).getBounds();
       return { x0: r.left - 8, x1: r.right + 8, y0: r.top - 8, y1: r.bottom + 8 };
     });
-    const all = [...players, ...buttons, ...this.protectedBoxes(true)];
-    const spots = [t.y, this.senseiTop(height), 8, height - h - 8, ...all.flatMap((b) => [b.y0 - 6 - h, b.y1 + 6])].filter((y) => y >= 8 && y + h <= height - 8);
-    // Clear of everything if it can be; the players always come first.
-    // If nothing is clear of everything, it keeps off the players and stays up top, away from the buttons.
-    const y = spots.find(hits(all)) ?? [this.senseiTop(height), 8, ...spots].find((y) => y >= 8 && y + h <= height - 8 && hits(players)(y));
-    if (y !== undefined) t.setY(y);
   }
 
   private shieldGlow(at: Vec2, radiusTiles: number): void {
@@ -2709,6 +2967,11 @@ export class GameScene extends Phaser.Scene {
    * K30: a door label never sits on the boss's head, health bar or name. If it would, it slides
    * sideways to the far side of the door from the boss (the label still reads as that door's).
    */
+  /** Q-DOOR-LABELS: a door by a side wall keeps its whole label on screen (after the boss slide in update). */
+  private clampDoorLabels(cam: Phaser.Cameras.Scene2D.Camera): void {
+    clampDoorLabels(this.doorViews.map((d) => d.label), cam, DPR);
+  }
+
   private keepLabelOffBoss(d: { label: Phaser.GameObjects.Text; at: Vec2 }): void {
     const home = d.at.x * TILE;
     d.label.setX(home);
@@ -2743,18 +3006,59 @@ export class GameScene extends Phaser.Scene {
   }
 
   /** Top of Sensei's banner: just under the boss bar and its name when a boss is up, so both stay readable. */
+  /** R-CHALLENGE P4: the lowest edge of the top bar's text and bars, in screen pixels. */
+  private topBarBottom(): number {
+    // Q-P4 QA: the health and Focus bars (drawHud: Focus's back ends at y 37 + 14) are part of the top bar too.
+    let y = this.hud?.visible ? HUD_BARS_BOTTOM : 0;
+    for (const o of [this.roomLabel, this.timerText]) if (o?.active && o.visible) y = Math.max(y, o.getBounds().bottom);
+    if (this.world.enemies.some((e) => e.def.boss && e.mode !== 'defeated')) y = Math.max(y, BOSS_BAR_Y + 18);
+    return y;
+  }
+
+  /** Q-P4 QA: the highest any Sensei banner may sit: 6 px under the top bar (every path goes through this). */
+  private senseiFloor(): number {
+    return senseiFloorY(this.topBarBottom());
+  }
+
+  /** Sensei's usual spot, never over the top bar: max(senseiTop, topBarBottom() + 6). */
+  private senseiHome(height: number): number {
+    return senseiHomeY(this.senseiTop(height), this.topBarBottom());
+  }
+
+  /** Q-P4 QA: the banner showing the guided Counter's cue, if it is still the one up. */
+  private guideCue: Phaser.GameObjects.Text | null = null;
+
+  /** True while the guided enemy is still winding up the attack its cue is about. */
+  private guidedWindupLive(): boolean {
+    const id = this.world.guide?.enemyId;
+    if (id == null) return false;
+    const g = this.world.enemies.find((x) => x.id === id);
+    return !!g && g.mode === 'windup' && currentAttack(g).counterable !== false;
+  }
+
+  /** Removes the guided "COUNTER!" cue (and its Counter pulse) when no guided wind-up is left to Counter. */
+  private clearGuideCue(): void {
+    const t = this.guideCue;
+    this.guideCue = null;
+    if (!t || t !== this.senseiText) return;
+    t.destroy();
+    this.senseiText = null;
+    this.buttons.pulseCounter(0);
+  }
+
   private senseiTop(height: number): number {
     const boss = this.world.enemies.find((e) => e.def.boss && e.mode !== 'defeated');
     return boss ? BOSS_BAR_Y + 34 : height * 0.2 - 22;
   }
 
   /** Shows Sensei's read-aloud lines one after another at the top of the screen. */
-  private senseiSay(lines: string[], holdMs = 1400): void {
-    if (this.downed) return; // Q-PREM-F4: no new Sensei bubble over the loss message; the next run starts fresh.
+  private senseiSay(lines: string[], holdMs = 1400, helpUp = false): void {
+    // Q-PREM-F4: once the hero is down, only Sensei's help-up line shows (B-MASHER-d1, Jay's signed spec #292).
+    if (this.downed && !helpUp) return;
     this.senseiText?.destroy();
     const { width, height } = view(this);
     const t = this.add
-      .text(width / 2, this.senseiTop(height), '', {
+      .text(width / 2, this.senseiHome(height), '', {
         fontFamily: 'system-ui, sans-serif',
         fontStyle: 'bold',
         // K12: smaller on phones, and long lines wrap so they always fit on screen.
@@ -2847,6 +3151,11 @@ export class GameScene extends Phaser.Scene {
 function testGuide(): number | undefined {
   const asked = testFlags().get('guide');
   return asked !== null && /^[0-3]$/.test(asked) ? Number(asked) : undefined;
+}
+
+/** For testing: ?force=wide-bonk makes the attack's owner use only that Challenge attack (see forceAttack.ts). */
+function testForced() {
+  return forceAttack(CONTENT.enemies, testFlags().get('force'));
 }
 
 /** Practice room only: ?difficulty=guided (or challenge). Tower runs carry their own difficulty (runDifficulty). */

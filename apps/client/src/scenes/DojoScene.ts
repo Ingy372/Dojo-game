@@ -35,12 +35,15 @@ import {
   type Vec2,
   type WorldState,
   streetSmartsOpen,
+  activeDifficulty,
+  challengeUnlocked,
   chooseDifficulty,
   PLAY_LIMIT_CHOICES,
   scrollLessons,
   type SenseiLesson,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
+import { LOCK_SHAKE, LOCKED_CARD, lockedLine, lockedTapFeedback, lockShakeOffset } from '../ui/lockCard';
 import { music } from '../audio/Music';
 import { addVolumeRow } from '../ui/VolumeRow';
 import { CONTENT } from '../game/content';
@@ -64,7 +67,7 @@ import { addStatic, addTinted, loadArt } from '../art/art';
 import type { LayeredSprite } from '../art/LayeredSprite';
 import { makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
-import { bowPrompt, playBow } from '../ui/bow';
+import { bowGate, bowPrompt, playBow } from '../ui/bow';
 import { Celebrations } from '../ui/Celebrations';
 import { FONT, crisp, view, DPR, hiDpi } from '../ui/theme';
 import { showGrownUpGate } from '../ui/grownUpGate';
@@ -83,6 +86,10 @@ const MAX_TICKS_PER_FRAME = 5;
 const HOUR = 3_600_000;
 /** Screen space taken by the title bar, and by the storage tray while decorating. */
 const TOP = 48;
+/** Q-PREM-F9: Decorate's top bar fits 44 pt buttons (8 + 44 + 8). */
+const DECOR_TOP = 60;
+/** Q-PREM-F9: the second button row (Street Smarts, Journal, Scroll) is 44 pt tall, 8 below the first row's tap zones. */
+const ROW2_Y = 60;
 const TRAY = 70;
 /** How many tiles tall the view is (the camera follows the character, like in the Tower). */
 const VIEW_ROWS = 6.5;
@@ -247,25 +254,58 @@ export class DojoScene extends Phaser.Scene {
     touchPlayClock();
     this.time.addEvent({ delay: 5000, loop: true, callback: () => touchPlayClock() });
 
+    // Scenes are reused on restart, so reset the bow gate here.
+    this.bowShown = false;
+    this.bowHoursAway = null;
+    this.cardsOpen = 0;
+    this.arriving = false;
+    this.arrived = false;
     if (!bowIsDue()) this.offerResume();
     if (bowIsDue()) {
-      this.mode = 'arriving';
-      bowPrompt(this, 'Bow as you enter your dojo', () => {
-        this.heroDo('bow', BOW.ms);
-        playBow(
-          this,
-          this.player,
-          () => {
-            setBowDue(false);
-            this.arrive(hoursAway);
-          },
-          this.hero,
-        );
-      });
+      this.bowHoursAway = hoursAway;
+      this.tryBow();
     }
   }
 
+  /**
+   * Q-BOW-OVER-MENU: the due bow waits until no menu, panel, card or arrival sequence is open,
+   * then shows once. `arriving` is owned by arrive() itself (not inferred from the mode), so the
+   * "Welcome home" celebrations and every other arrival step hold the bow however arrive() is reached.
+   */
+  private bowHoursAway: number | null = null;
+  private bowShown = false;
+  private cardsOpen = 0;
+  private arriving = false;
+  /** Whether this scene's arrival steps already played (a later bow only bows). */
+  private arrived = false;
+  private tryBow(): void {
+    if (this.bowHoursAway === null) return;
+    const gate = bowGate({ due: bowIsDue(), menuOpen: this.mode !== 'play' || this.cardsOpen > 0, arriving: this.arriving, shown: this.bowShown });
+    if (gate !== 'show') return;
+    this.bowShown = true;
+    const hoursAway = this.bowHoursAway;
+    this.mode = 'arriving';
+    bowPrompt(this, 'Bow as you enter your dojo', () => {
+      this.heroDo('bow', BOW.ms);
+      playBow(
+        this,
+        this.player,
+        () => {
+          setBowDue(false);
+          // A bow that came due later (held through the arrival) shows once; after it, a new due bow may show again.
+          this.bowShown = false;
+          if (this.arrived) {
+            this.mode = 'play';
+            this.renderUi();
+          } else this.arrive(hoursAway);
+        },
+        this.hero,
+      );
+    });
+  }
+
   update(time: number, delta: number): void {
+    if (!this.bowShown && this.bowHoursAway !== null) this.tryBow();
     if (this.mode !== 'play' || this.leaving) {
       this.controls.takeInput();
       this.elapsed = 0;
@@ -287,6 +327,10 @@ export class DojoScene extends Phaser.Scene {
 
   /** After the bow: a welcome card (first visit, or back after a while), then any real celebrations. */
   private arrive(hoursAway: number): void {
+    this.arriving = true;
+    this.arrived = true;
+    this.bowHoursAway ??= hoursAway;
+    this.mode = 'arriving';
     const name = this.training.displayName.split(' ')[0];
     const chores = choresLeft(this.dojo);
     const steps: Array<() => void> = [];
@@ -351,7 +395,9 @@ export class DojoScene extends Phaser.Scene {
         this.controls.reset();
         this.quietUntil = this.time.now + ARRIVAL_QUIET_MS;
         this.mode = 'play';
+        this.arriving = false;
         this.renderUi();
+        this.tryBow();
       }
     };
     next();
@@ -362,6 +408,8 @@ export class DojoScene extends Phaser.Scene {
     const { width, height } = view(this);
     const w = Math.min(460, width - 40);
     const box = this.add.container(0, 0).setDepth(70);
+    this.cardsOpen++;
+    box.once(Phaser.GameObjects.Events.DESTROY, () => (this.cardsOpen = Math.max(0, this.cardsOpen - 1)));
     box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.6).setOrigin(0).setInteractive());
     const body = this.add
       .text(width / 2, 0, lines.join('\n\n'), { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', align: 'center', wordWrap: { width: w - 36 }, lineSpacing: 2 })
@@ -857,7 +905,7 @@ export class DojoScene extends Phaser.Scene {
     const pad = 12;
 
     // A dark strip behind the title and buttons (the room scrolls underneath).
-    this.ui.add(this.add.rectangle(0, 0, width, TOP, 0x14121c, 0.7).setOrigin(0));
+    this.ui.add(this.add.rectangle(0, 0, width, this.mode === 'decorate' ? DECOR_TOP : TOP, 0x14121c, 0.7).setOrigin(0));
     const title = this.text(pad, 8, 'Home Dojo', 20, '#f2e9d8', true, 'Georgia, serif');
     title.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.tapTitle());
     this.uiRects.push(title.getBounds());
@@ -873,13 +921,13 @@ export class DojoScene extends Phaser.Scene {
       const arrows = this.moveStyle === 'arrows';
       // The arrows go first, so the top buttons (Done, Put away) always sit above them.
       if (this.selected && arrows) this.renderArrows(width, height);
-      this.button(width - pad - 90, 8, 90, 32, 'Done', GREEN, 15, () => this.setDecorating(false));
+      this.button(width - pad - 90, 8, 90, MIN_TAP, 'Done', GREEN, 15, () => this.setDecorating(false));
       const hint = !this.selected ? 'Tap a decoration to pick it' : arrows ? 'Use the arrows to move it' : 'Now tap where it should go';
-      this.button(width - pad - 90 - 8 - 110 - 8 - 130, 8, 130, 32, arrows ? 'Move: Arrows ⇄' : 'Move: Tap ⇄', 0x3a3a4a, 13, () => this.chooseMoveStyle());
+      this.button(width - pad - 90 - 8 - 110 - 8 - 130, 8, 130, MIN_TAP, arrows ? 'Move: Arrows ⇄' : 'Move: Tap ⇄', 0x3a3a4a, 13, () => this.chooseMoveStyle());
       if (this.selected) {
-        this.button(width - pad - 90 - 8 - 110, 8, 110, 32, 'Put away', 0x6b3a3a, 14, () => this.putAway());
+        this.button(width - pad - 90 - 8 - 110, 8, 110, MIN_TAP, 'Put away', 0x6b3a3a, 14, () => this.putAway());
       }
-      this.text(width / 2, TOP + 6, hint, 14, '#fff6e0', true).setOrigin(0.5, 0).setStroke('#14121c', 5);
+      this.text(width / 2, DECOR_TOP + 6, hint, 14, '#fff6e0', true).setOrigin(0.5, 0).setStroke('#14121c', 5);
       this.renderTray(width, height);
     } else if (this.mode === 'play') {
       this.button(width - pad - 80, 8, 80, 32, 'Board', 0x4a3f63, 14, () => this.goBoard());
@@ -888,24 +936,27 @@ export class DojoScene extends Phaser.Scene {
       this.button(width - pad - 80 - 8 - 100 - 8 - 70 - 8 - 90, 8, 90, 32, DIFFICULTY_TEXT.button, 0x3a3a4a, 14, () => this.openDifficulty());
       // One line says which difficulty they're on, shown once ever (M7-P1).
       if (!this.profile.difficultyLineShown && this.profile.difficulty) {
-        const name = DIFFICULTY_TEXT.choices.find((c) => c.id === this.profile.difficulty)?.name ?? '';
+        const name = DIFFICULTY_TEXT.choices.find((c) => c.id === activeDifficulty(this.profile, this.training.belt.tier))?.name ?? '';
         // Below the second button row (Scroll, Journal, Street Smarts) so nothing covers it.
-        this.text(pad, 46 + 32 + 8, DIFFICULTY_TEXT.homeLine.replace('{name}', name), 14, '#fff6e0', true).setStroke('#14121c', 5);
+        this.text(pad, ROW2_Y + MIN_TAP + 8, DIFFICULTY_TEXT.homeLine.replace('{name}', name), 14, '#fff6e0', true).setStroke('#14121c', 5);
         this.profile.difficultyLineShown = true;
         writeSave(this.profile);
       }
       // Welcome Week (M7-P7): an existing student's systems show once Sensei has introduced them.
       const street = streetSmartsOpen(this.training.tier, streetUi.unlockTier) && isOpen(this.profile, this.training, 'street-smarts');
       const journal = this.training.tier >= CONTENT.named.rules.minBeltTier && isOpen(this.profile, this.training, 'journal');
-      if (street) this.button(width - pad - 130, 46, 130, 32, streetUi.button, GREEN, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
+      if (street) this.button(width - pad - 130, ROW2_Y, 130, MIN_TAP, streetUi.button, GREEN, 14, () => this.leaveTo('StreetSmarts', { id: 'store-separated' }));
       // The Monster Journal, from the belt where named monsters start showing up.
       if (journal) {
         const x = width - pad - (street ? 130 + 8 : 0) - 100;
-        this.button(x, 46, 100, 32, CONTENT.named.journalButton, 0x6b5a2a, 14, () => this.openJournal());
+        this.button(x, ROW2_Y, 100, MIN_TAP, CONTENT.named.journalButton, 0x6b5a2a, 14, () => this.openJournal());
       }
       // Sensei's Scroll (M7-P5): every lesson seen so far, and the tutorial floor, to replay any time.
       const rowLeft = (street ? 130 + 8 : 0) + (journal ? 100 + 8 : 0);
-      if (isOpen(this.profile, this.training, 'scroll')) this.button(width - pad - rowLeft - 90, 46, 90, 32, 'Scroll', 0x7a4a6a, 14, () => this.openScroll());
+      if (isOpen(this.profile, this.training, 'scroll')) this.button(width - pad - rowLeft - 90, ROW2_Y, 90, MIN_TAP, 'Scroll', 0x7a4a6a, 14, () => this.openScroll());
+      // The way out to the town (A4-DOJO-ii), and from there to the Action Zone. A button for now:
+      // the Home Dojo has no town door yet.
+      this.button(width - pad - 130, ROW2_Y + MIN_TAP + 8, 130, MIN_TAP, 'Town', 0x3d6a99, 14, () => this.leaveTo('ActionZoneTown', { from: 'home' }));
     }
   }
 
@@ -919,7 +970,7 @@ export class DojoScene extends Phaser.Scene {
     const m = 14;
     const a = ARROW;
     const bottom = height - TRAY - 10;
-    const cross = bottom - (3 * a + 2 * gap) - m >= TOP + 30;
+    const cross = bottom - (3 * a + 2 * gap) - m >= DECOR_TOP + 30;
     const it = this.dojo.items.find((x) => x.uid === this.selected);
     const wall = it ? decorationDef(CONTENT.dojo, it.id).place === 'wall' : false;
     const buttons: Array<[number, number, string, number, number]> = [];
@@ -1050,19 +1101,29 @@ export class DojoScene extends Phaser.Scene {
     // Leave room under the cards for the two rows of buttons (Music / Sound, M7-P8).
     const h = Math.min(170, height * 0.5, height - 12 - MIN_TAP * 2 - 8 - 40 - top);
     const x0 = width / 2 - (n * w + (n - 1) * gap) / 2;
-    const current = this.profile.difficulty ?? 'standard';
+    // R-CHALLENGE P6: below the 4th belt a Challenge pick plays as Standard, so Steady shows as selected.
+    const tier = this.training.belt.tier;
+    const current = activeDifficulty(this.profile, tier);
     t.choices.forEach((c, i) => {
       const x = x0 + i * (w + gap);
       const on = current === c.id;
+      const locked = c.id === 'challenge' && !challengeUnlocked(tier);
       // P-MENU-e: a rounded card with the shared press; the name and words ride inside it.
-      const b = roundButton(this, { x, y: top, w, h, label: '', color: 0x2a2536, size: 15, selected: on, onTap: () => {
+      // Q-LOCK-CARD: the locked card is solid (no see-through), and a tap answers gently.
+      let line: Phaser.GameObjects.Text | null = null;
+      const b = roundButton(this, { x, y: top, w, h, label: '', color: locked ? LOCKED_CARD.color : 0x2a2536, size: 15, selected: on, onTap: () => {
+        if (locked) {
+          this.lockedCardTap(b.visual, line!);
+          return;
+        }
         sfx.place(true);
         chooseDifficulty(this.profile, c.id);
         writeSave(this.profile);
         close();
       } }, box);
-      b.visual.add(this.add.text(0, 18 - h / 2, (on ? '✓ ' : '') + c.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5, 0).setResolution(crisp()));
-      b.visual.add(this.add.text(0, 54 - h / 2, c.text, { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w - 24 } }).setOrigin(0.5, 0).setResolution(crisp()));
+      b.visual.add(this.add.text(0, 18 - h / 2, (on ? '✓ ' : locked ? '🔒 ' : '') + c.name, { fontFamily: FONT, fontStyle: 'bold', fontSize: '20px', color: locked ? LOCKED_CARD.nameColor : '#ffffff' }).setOrigin(0.5, 0).setResolution(crisp()));
+      line = this.add.text(0, 54 - h / 2, locked ? lockedLine(t.locked.challenge, this.training.belts) : c.text, { fontFamily: FONT, fontSize: '15px', color: locked ? LOCKED_CARD.textColor : '#e8d9b5', align: 'center', wordWrap: { width: w - 24 } }).setOrigin(0.5, 0).setResolution(crisp());
+      b.visual.add(line);
     });
     box.add(this.add.text(width / 2, top + h + 14, t.footer, { fontFamily: FONT, fontSize: '14px', color: '#b9ad99' }).setOrigin(0.5, 0).setResolution(crisp()));
     // Grown-up settings sit behind a simple sum, so a young child can't open them by accident (M7-P9).
@@ -1197,6 +1258,31 @@ export class DojoScene extends Phaser.Scene {
       this.openBeltEntry(back);
     } }, box);
     roundButton(this, { x: width / 2 + 8, y: dy, w: dw, h: 44, label: pt.done, color: GREEN, size: 16, onTap: close }, box);
+  }
+
+  /** Q-LOCK-CARD: tapping the locked Challenge card: a soft sound, a small shake (not with reduced motion), and a pulse of the unlock line. */
+  private lockedCardTap(card: Phaser.GameObjects.Container, line: Phaser.GameObjects.Text): void {
+    const fb = lockedTapFeedback(reducedMotion());
+    if (fb.sound) sfx.place(false);
+    const baseX = (card.getData('lockBaseX') as number | undefined) ?? card.x;
+    card.setData('lockBaseX', baseX);
+    this.tweens.killTweensOf(line);
+    line.setScale(1);
+    if (fb.pulseLine) this.tweens.add({ targets: line, scale: 1.08, duration: 120, yoyo: true });
+    if (fb.shake) {
+      // Q-SHAKE-CENTER: same distance left and right of the resting spot, then back exactly on it.
+      (card.getData('lockShake') as Phaser.Tweens.Tween | undefined)?.stop();
+      card.x = baseX;
+      const shake = this.tweens.addCounter({
+        from: 0,
+        to: 1,
+        duration: LOCK_SHAKE.ms,
+        onUpdate: (tw) => { card.x = baseX + lockShakeOffset(tw.getValue() ?? 0); },
+        onComplete: () => { card.x = baseX; },
+        onStop: () => { card.x = baseX; },
+      });
+      card.setData('lockShake', shake);
+    }
   }
 
   /** Grown-up setting (B-BELT): the real belt and stripes. Choices below what's saved are greyed out. */
@@ -1528,7 +1614,9 @@ export class DojoScene extends Phaser.Scene {
     const clamp = (v: number, lo: number, hi: number) => (lo > hi ? (lo + hi) / 2 : Math.max(lo, Math.min(hi, v)));
     const bottom = (this.mode === 'decorate' ? TRAY : 0) / t;
     const tx = clamp(target.x, viewW / 2, room.width - viewW / 2);
-    const ty = clamp(target.y, viewH / 2 - TOP / t, room.height + bottom - viewH / 2);
+    // Q-PREM-F9: Decorate's top bar is 60 tall, so the top wall (and its decorations) stays below it.
+    const top = (this.mode === 'decorate' ? DECOR_TOP : TOP) / t;
+    const ty = clamp(target.y, viewH / 2 - top, room.height + bottom - viewH / 2);
     this.cam = { x: this.cam.x + (tx - this.cam.x) * k, y: this.cam.y + (ty - this.cam.y) * k };
     this.offX = width / 2 - this.cam.x * t;
     this.offY = height / 2 - this.cam.y * t;

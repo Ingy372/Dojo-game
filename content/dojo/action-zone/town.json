@@ -1,0 +1,19 @@
+{
+ "id": "town-square",
+ "about": "The town square, as one still picture (the one Jay confirmed: the Action Zone building in its slot, the in-front tree cleared). There is no layered town art or walk grid yet: the picture is the town, and the Action Zone building is the one place to tap.",
+ "pictureSize": [
+  932,
+  430
+ ],
+ "dojo": {
+  "id": "action-zone",
+  "tapRect": [
+   36,
+   72,
+   252,
+   220
+  ],
+  "to": "outside",
+  "note": "the building's roof and front wall in picture px (the 1x picture of 40 px per town tile), measured on the picture"
+ }
+}

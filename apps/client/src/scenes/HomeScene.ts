@@ -31,6 +31,7 @@ import {
   type RequirementStatus,
   type TrainingState,
   kataArrows,
+  activeDifficulty,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
@@ -44,6 +45,7 @@ import { currentTraining, selectProfile, shortDate } from '../game/student';
 import { hex } from '../ui/belt';
 import { startTowerRun } from '../game/tower';
 import { isPlayTimeUp } from '../game/playTime';
+import { KO, homePointer } from '../game/knockout';
 import { addIcon, ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { loadArt } from '../art/art';
@@ -56,12 +58,15 @@ import { GoalsCard } from '../ui/GoalsCard';
 import { localDay, takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
 import { BETA } from '../game/beta';
+import { showGrades } from '../game/difficulty';
 import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, crisp, css, view, hiDpi, WOOD } from '../ui/theme';
 import type { GameSceneData } from './GameScene';
 
 /** How Home was opened: after a run (cleared, lost, or rested at the play limit) the next goals may show. */
 export interface HomeSceneData {
   fromRun?: boolean;
+  /** B-MASHER-d1: home after a knock-out ('run') or when play time ended ('rested'): Screen 3's welcome shows. */
+  knockout?: 'run' | 'rested';
 }
 
 const SLOT_NAME: Record<GearSlot, string> = { hands: 'Hands', gi: 'Gi', charm: 'Charm' };
@@ -151,6 +156,7 @@ export class HomeScene extends Phaser.Scene {
   private titleTaps: number[] = [];
   /** Came here straight from a run, and the next goals haven't been considered yet. */
   private fromRun = false;
+  private knockout: HomeSceneData['knockout'] | null = null;
   private firstFloorDone = false;
   /** P-MENU2-g: the Found strip's page, and whether this view counted up (test hook). */
   private foundPageNo = 0;
@@ -167,6 +173,7 @@ export class HomeScene extends Phaser.Scene {
 
   init(data: HomeSceneData): void {
     this.fromRun = data?.fromRun === true;
+    this.knockout = data?.knockout ?? null;
     this.firstFloorDone = false;
   }
 
@@ -184,7 +191,15 @@ export class HomeScene extends Phaser.Scene {
     this.underline = this.add.rectangle(0, 0, 0, 3, 0xffd166).setOrigin(0).setVisible(false);
     this.panel = null;
     this.ui = this.shell;
-    this.refresh();
+    if (this.knockout) {
+      // B-MASHER-d1 Screen 3: "Welcome home!" and one pointer first; the rest of the
+      // homecoming (celebrations, goals) follows once it fades.
+      const resting = this.knockout === 'rested';
+      this.knockout = null;
+      this.training = currentTraining();
+      this.render();
+      this.welcomeHome(homePointer(this.training.path.nextClassDay, resting || isPlayTimeUp(this.profile)), () => this.refresh());
+    } else this.refresh();
     this.cameras.main.fadeIn(400, 10, 8, 16);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.render, this);
     this.listenPanelScroll();
@@ -244,6 +259,38 @@ export class HomeScene extends Phaser.Scene {
     );
   }
 
+  /** B-MASHER-d1 Screen 3: a soft bell, "Welcome home!" and one pointer; fades after about 4 s or on a tap. */
+  private welcomeHome(pointer: string | null, onDone: () => void): void {
+    const { width, height } = view(this);
+    const still = reducedMotion();
+    const box = this.add.container(0, 0).setDepth(60);
+    const w = Math.min(420, width - 40);
+    const h = pointer ? 92 : 60;
+    const cy = height * 0.42;
+    const shade = this.add.rectangle(0, 0, width, height, 0x000000, 0.35).setOrigin(0).setInteractive();
+    box.add([shade, this.add.rectangle(width / 2, cy, w, h, 0x221d2e).setStrokeStyle(3, 0xffd166)]);
+    const line = (y: number, str: string, size: number, color: string) =>
+      box.add(
+        this.add
+          .text(width / 2, y, str, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color, align: 'center', wordWrap: { width: w - 24 } })
+          .setOrigin(0.5)
+          .setResolution(crisp()),
+      );
+    line(cy - (pointer ? 18 : 0), KO.welcome, 22, '#ffd166');
+    if (pointer) line(cy + 20, pointer, 16, '#f2e9d8');
+    sfx.seal();
+    let done = false;
+    const close = () => {
+      if (done) return;
+      done = true;
+      this.tweens.add({ targets: box, alpha: 0, duration: still ? 0 : 300, onComplete: () => (box.destroy(), onDone()) });
+    };
+    shade.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, close);
+    this.time.delayedCall(KO.pointerMs, close);
+    box.setAlpha(0);
+    this.tweens.add({ targets: box, alpha: 1, duration: still ? 0 : 300 });
+  }
+
   /** K23: the first floor's results for a 6-year-old: the grade, one reward and Continue. */
   private firstFloorCard(onDone: () => void): void {
     const s = this.profile.lastRun!.summary;
@@ -261,7 +308,7 @@ export class HomeScene extends Phaser.Scene {
     label(cx, top + 26, 'Floor cleared!', 24, '#ffd166', 'Georgia, serif');
     const order = ['S', 'A', 'B'] as const;
     const grade = order.find((g) => s.results.some((r) => r.grade === g));
-    if (grade) label(cx, top + h * 0.36, grade, 64, GRADE_COLOR[grade], 'Georgia, serif');
+    if (grade && showGrades(s.difficulty)) label(cx, top + h * 0.36, grade, 64, GRADE_COLOR[grade], 'Georgia, serif');
     const best = s.items.slice().sort((a, b) => RARITY_ORDER(b) - RARITY_ORDER(a))[0];
     const deco = [...(s.decorations ?? []), ...(this.profile.lastRun!.earned ?? [])][0];
     const reward = best ? `You found: ${best.name}` : deco ? `For your dojo: ${decorationDef(CONTENT.dojo, deco).name}` : '';
@@ -927,7 +974,7 @@ export class HomeScene extends Phaser.Scene {
 
   /** The Bests sheet: the student's own bests only (no comparing, no streaks). */
   private openBests(): void {
-    const rows = lastRunBests(this.profile.bests, this.profile.lastRun?.newBests ?? []);
+    const rows = lastRunBests(this.profile.bests, this.profile.lastRun?.newBests ?? [], showGrades(activeDifficulty(this.profile, this.training.belt.tier)));
     this.openRunSheet(LASTRUN_WORDS.bestsTitle, [[LASTRUN_WORDS.bestsLine, '#7a5a3a', false], ...rows.map((r): [string, string, boolean] => [`${r.name}: ${r.value}${r.isNew ? `   ${LASTRUN_WORDS.bestNew}` : ''}`, r.isNew ? '#a0522d' : WOOD.ink, r.isNew])]);
   }
 
@@ -1444,8 +1491,10 @@ export class HomeScene extends Phaser.Scene {
     const sw = rw - 2 * f;
     const sx = rx + f;
     const tw = sw - 2 * pad - 56 - S2;
+    // L-PREMIUM-a2: a not-yet cubby says how to earn it, under its status line.
+    const hintH = c.hint ? 2 * (TYPE.body + 4) + 4 : 0;
     const kataH = c.kata ? TYPE.label + 4 + kataLines(c.kata, sw - 2 * pad) * KATA_LINE : 0;
-    const sh = Math.min(panelH - 2 * f, Math.max((panelH - 2 * f) / 2, pad + TYPE.title + 4 + TYPE.body * TROPHY_UI.effectLines + 8 + TYPE.body + 8 + kataH + 44 + pad));
+    const sh = Math.min(panelH - 2 * f, Math.max((panelH - 2 * f) / 2, pad + TYPE.title + 4 + TYPE.body * TROPHY_UI.effectLines + 8 + TYPE.body + 8 + hintH + kataH + 44 + pad));
     const sy = top + panelH - f - sh;
     const body = this.add.container(0, 0);
     sheet.add(body);
@@ -1468,6 +1517,12 @@ export class HomeScene extends Phaser.Scene {
     const eff = this.text(tx, ty, c.effect, TYPE.body, '#5a3e28', false, FONT, textW).setMaxLines(TROPHY_UI.effectLines);
     ty += eff.height + 6;
     this.text(tx, ty, c.status, TYPE.body, c.earned ? '#a0522d' : '#7a5a3a', true, FONT, textW);
+    if (c.hint) {
+      ty += TYPE.body + 6;
+      const hint = this.text(tx, ty, c.hint, TYPE.body, '#5a3e28', false, FONT, textW).setMaxLines(2);
+      hint.setData('lockedHint', true);
+      ty += hint.height - TYPE.body - 6;
+    }
     ty = Math.max(ty + TYPE.body + 8, sy + pad + 56 + S2);
     if (c.kata) {
       this.text(sx + pad, ty, TROPHY_WORDS.kataSteps, TYPE.label, '#7a5a3a', true);

@@ -12,9 +12,11 @@
 //              presses every button.
 // It uses its own seeded random numbers, so results repeat exactly.
 
-import type { EliteKind, StanceDef } from '../../src';
+import type { CounterHintRules, EliteKind, StanceDef } from '../../src';
 import {
   COMBAT,
+  MOVEMENT,
+  TICKS_PER_SECOND,
   GUIDE_DONE,
   activeDoorSlots,
   chooseInsight,
@@ -54,6 +56,9 @@ export interface Skill {
   timingSd: number;
 }
 
+/** R-CHALLENGE P5: the pattern answers, switchable so tests can measure them. */
+export const PATTERN_ANSWERS = { stepOutOfLanding: true, holdStrikeForSecondHit: true };
+
 export const SKILLS: Record<string, Skill> = {
   // Roughly: a sharp teen, a typical 10-12 year old, a younger or newer player.
   sharp: { reactTicks: 4, timingSd: 1.5 },
@@ -85,6 +90,12 @@ export interface RoomStats {
   grade: string | null;
   /** B-T3-TUNE-2c: rules ticks spent in boss phase pauses (not in `ticks`, which stops during them). */
   holdTicks?: number;
+  /** L-PREMIUM-b: Counter tips shown (only when playRun gets hint rules). */
+  hints?: number;
+  /** R-INSIGHT-BAL-a P5: Health lost to landing-circle swings (Hits and Blocks), from the swing's own event damage. */
+  landingDamage?: number;
+  /** R-INSIGHT-BAL-a P5: Health lost to the room's first landing-circle swing (0 if it missed or was Countered; unset if the room had none). */
+  landingFirst?: number;
 }
 
 export interface RunStats {
@@ -107,24 +118,40 @@ interface Plan {
 }
 
 /** Plays one room until it's left (door, defeat, or time limit). */
-export function playRoom(content: Content, run: RunState, world: WorldState, room: Room, style: Style, skill: Skill, rng: Rng): RoomStats {
+/** Chooses an Insight from the offered ids. The default is a random one (tests may pass a deliberate picker). */
+export type InsightPicker = (run: RunState, choices: string[]) => string;
+
+export function playRoom(content: Content, run: RunState, world: WorldState, room: Room, style: Style, skill: Skill, rng: Rng, onTick?: (world: WorldState) => void, pickInsight?: InsightPicker): RoomStats {
   const p = world.players.p1;
   const plans = new Map<string, Plan>();
   const stats: RoomStats = { roomId: room.id, kind: room.kind, ticks: 0, damage: 0, perfects: 0, blocks: 0, hits: 0, strikes: 0, dealt: 0, kos: 0, died: false, crowd: 0, peakCrowd: 0, winded: 0, grade: null };
   let crowdSum = 0;
   let crowdN = 0;
+  // Enemies whose current attack is a landing circle, read at the end of each tick (the attack index moves on inside a swing's own tick).
+  let landers = new Set<string>();
+  let firstLandingTick = -1;
   const limit = 20 * 60 * 6;
   for (let t = 0; t < limit && run.status === 'playing'; t++) {
-    if (run.insightChoices) chooseInsight(run, pick(rng, run.insightChoices));
+    if (run.insightChoices) chooseInsight(run, pickInsight ? pickInsight(run, run.insightChoices) : pick(rng, run.insightChoices));
     const input = decide(world, room, run, style, skill, rng, plans);
     stepWorld(world, room, { p1: input });
+    onTick?.(world);
     for (const ev of world.events) {
+      if (ev.kind === 'enemySwing' && landers.has(ev.enemyId) && firstLandingTick < 0) {
+        firstLandingTick = world.tick;
+        stats.landingFirst = 0;
+      }
+      if ((ev.kind === 'hit' || ev.kind === 'block') && landers.has(ev.enemyId)) {
+        stats.landingDamage = (stats.landingDamage ?? 0) + ev.damage;
+        if (world.tick === firstLandingTick) stats.landingFirst = (stats.landingFirst ?? 0) + ev.damage;
+      }
       if (ev.kind === 'perfectCounter') stats.perfects++;
       if (ev.kind === 'block') stats.blocks++;
       if (ev.kind === 'hit') stats.hits++;
       if (ev.kind === 'playerAttack' && ev.move === 'strike') stats.strikes++;
       if (ev.kind === 'playerAttack') { stats.dealt += ev.damage; if (ev.defeated) stats.kos++; }
       if (ev.kind === 'winded') stats.winded++;
+      if (ev.kind === 'counterHint') stats.hints = (stats.hints ?? 0) + 1;
       if (ev.kind === 'phaseHold') stats.holdTicks = (stats.holdTicks ?? 0) + ev.ticks;
     }
     const alive = world.enemies.filter((e) => e.mode !== 'defeated');
@@ -137,6 +164,7 @@ export function playRoom(content: Content, run: RunState, world: WorldState, roo
     const evs = updateRun(content, run, world);
     for (const ev of evs) if (ev.kind === 'graded') stats.grade = ev.result.grade;
     if (evs.some((e) => e.kind === 'nextRoom' || e.kind === 'runOver')) break;
+    landers = new Set(world.enemies.filter((e) => currentAttack(e).landing === true).map((e) => e.id));
   }
   stats.ticks = world.progress.ticks;
   stats.damage = world.progress.damageTaken;
@@ -209,7 +237,15 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
     const overlap = second && second.impact - first.impact < 8;
     const firstEnemy = alive.find((x) => x.id === first.enemyId)!;
     const dashOnly = currentAttack(firstEnemy).counterable === false;
-    if (dashOnly && now >= first.noticeAt && p.dashCooldown === 0) {
+    // R-CHALLENGE P5: a landing circle (Challenge patterns only): a typical player steps out of it
+    // when they can clear its edge in time (with their reaction time spare); otherwise, and for a
+    // sharp player, it is Countered as before. Novice play is unchanged.
+    const landing = currentAttack(firstEnemy).landing === true && skill === SKILLS.typical && PATTERN_ANSWERS.stepOutOfLanding;
+    const toEdge = landing ? currentAttack(firstEnemy).areaRadius + 0.3 - distance(p.pos, firstEnemy.attackCenter!) : 0;
+    const stepOut = landing && toEdge / (MOVEMENT.speedTilesPerSecond / TICKS_PER_SECOND) + skill.reactTicks < first.impact - now;
+    if (stepOut && now >= first.noticeAt) {
+      escape = awayFrom(p.pos, [firstEnemy.attackCenter!], room);
+    } else if (dashOnly && now >= first.noticeAt && p.dashCooldown === 0) {
       // B-T3: can't be Countered or blocked (rolling pin), so dash out.
       escape = awayFrom(p.pos, [firstEnemy.attackCenter!], room);
       action = 'dash';
@@ -228,7 +264,9 @@ function decide(world: WorldState, room: Room, run: RunState, style: Style, skil
   }
 
   // 2. Strike when it helps.
-  if (!action && p.focus >= COMBAT.strike.focusCost && p.guardTicks === 0) {
+  // R-CHALLENGE P5: between the two hits of a double hit, keep Counter ready instead of Striking.
+  const secondComing = PATTERN_ANSWERS.holdStrikeForSecondHit && skill !== SKILLS.novice && alive.some((e) => e.followUpStage === 1);
+  if (!action && !secondComing && p.focus >= COMBAT.strike.focusCost && p.guardTicks === 0) {
     const t = nearest(p.pos, alive);
     if (t && distance(p.pos, t.pos) - t.def.radius - 0.42 <= COMBAT.strike.reach && (style === 'stand' || t.shieldUp || t.mode === 'winded' || t.mode === 'stagger' || p.focus >= 60)) {
       action = 'strike';
@@ -325,14 +363,14 @@ function awayFrom(pos: Vec2, from: Vec2[], room: Room): Vec2 {
 }
 
 /** Plays a whole run. */
-export function playRun(content: Content, seed: number, style: Style, skill: Skill, difficulty: Difficulty = 'standard', base: { maxHealth: number; power: number; guard: number; stances?: StanceDef[] } = { maxHealth: 100, power: 10, guard: 0 }, guideStep?: number, elites: { tier?: number; forcedElite?: EliteKind } = {}): RunStats {
+export function playRun(content: Content, seed: number, style: Style, skill: Skill, difficulty: Difficulty = 'standard', base: { maxHealth: number; power: number; guard: number; stances?: StanceDef[] } = { maxHealth: 100, power: 10, guard: 0 }, guideStep?: number, elites: { tier?: number; forcedElite?: EliteKind } = {}, hintRules?: CounterHintRules): RunStats {
   const run = startRun(content, { seed, dryRuns: 0, difficulty, ...elites });
   const rng = createRng(seed * 7919 + 13);
   const rooms: RoomStats[] = [];
   let ticks = 0;
   while (run.status === 'playing' && rooms.length < 20) {
     const room = currentRoom(content, run);
-    const world = createRunWorld(content, run, base, [], difficulty, guideStep);
+    const world = createRunWorld(content, run, base, [], difficulty, guideStep, hintRules);
     const elite = run.elites[0]?.kind ?? null;
     const played = playRoom(content, run, world, room, style, skill, rng);
     played.elite = elite;

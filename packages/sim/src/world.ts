@@ -6,11 +6,11 @@ import type { TwistDef } from './twist';
 import type { StanceDef, VirtueKind } from './abilities';
 import { pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
-import { BOW, COMBAT, DIFFICULTY, MOVEMENT, TICKS_PER_SECOND, realSecondsToTicks, type Difficulty } from './config';
+import { BOW, COMBAT, DIFFICULTY, MIN_WINDUP_TICKS, MOVEMENT, SIM_VIEW, TICKS_PER_SECOND, realSecondsToTicks, type Difficulty } from './config';
 import { noMods, type PlayerMods } from './effects';
 import { namedDef, type NamedRules, type NamedSpawn } from './named';
 import { eliteDef, eliteWindup, type EliteKind, type EliteRules, type EliteSpawn } from './elite';
-import type { EnemyAttackDef, EnemyDef } from './enemy';
+import { challengeDef, type ChallengeAt, type EnemyAttackDef, type EnemyDef } from './enemy';
 import { clamp, distance, length, quantize, type Vec2 } from './math';
 import { findPath, standableSpot } from './path';
 import { activeDoorSlots, waveCount, type EnemySpawn, type Room } from './room';
@@ -151,6 +151,14 @@ export interface EnemyState {
   /** B-T3-TUNE-2: phased bosses: the phase it is in and its place in that phase's attack pattern. */
   phase?: number;
   phaseStep?: number;
+  /** R-CHALLENGE P2: place in the def's `pattern` (set only for pattern enemies). */
+  patternStep?: number;
+  /** R-CHALLENGE P2: two-part attacks: 1 = waiting for the second wind-up, 2 = winding up the second hit. */
+  followUpStage?: 1 | 2;
+  /** R-CHALLENGE P3: a pattern attack swapped for a normal one this swing; the pattern resumes with it. */
+  heldAttack?: number;
+  /** R-CHALLENGE P3: the tick a two-part attack's 2nd hit landed (other enemies wait through it). */
+  followUpLandedTick?: number;
   /** B-T3: already split into its smaller enemies (Dough Blob). */
   splitDone?: boolean;
   /** Which way it circles while waiting its turn to attack: 1 or -1. */
@@ -185,10 +193,14 @@ export type CombatEvent =
   | { kind: 'guideNudge' }
   /** The taught attack landed or was countered. */
   | { kind: 'guideDone'; step: number; success: boolean }
+  /** Q-P4 QA: the guided wind-up ended with no swing (beaten, staggered, knocked out of it); the cue must go. */
+  | { kind: 'guideCancel'; step: number }
   | { kind: 'enemySwing'; enemyId: EnemyId }
   | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId; chain: number }
   /** B-MASHER-2: this room's Perfect Counters reached COMBAT.counter.mashGuardPerfects, so Mash guard is off until the next room. */
   | { kind: 'mashGuardOff'; playerId: PlayerId }
+  /** L-PREMIUM-b: the player let Counter windows pass with no answer, so the client shows the Counter tip (at most once per room). */
+  | { kind: 'counterHint'; playerId: PlayerId }
   | { kind: 'block'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'hit'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'counterPressed'; playerId: PlayerId }
@@ -253,6 +265,8 @@ export interface WorldState {
   bells: number;
   /** Sensei's guided first Counter, or null when it's finished or off. */
   guide: GuideState | null;
+  /** L-PREMIUM-b: this room's Counter tip, or null when off. */
+  counterHint: CounterHintRoom | null;
   /** Health never drops below this (1 on the tutorial floor, else 0). */
   minHealth: number;
   /** The tutorial floor's glowing spot, or null. */
@@ -331,8 +345,35 @@ export interface WorldOptions {
   minHealth?: number;
   /** The tutorial floor's easy boss (M7-P2): bosses have this share of their health and call in no helpers. */
   easyBossHealth?: number;
+  /** R-CHALLENGE P2: the belt and room number, for enemy Challenge blocks. Missing (practice rooms) = no patterns. */
+  challengeAt?: ChallengeAt | null;
   /** R-BAL-12: multiply enemy Health and Power (then round) for the run's belt. Default: none. */
   enemyScale?: { maxHealth: number; power: number };
+  /** L-PREMIUM-b: the Counter tip for this room, or null/absent for none (tutorial, Challenge, practice room, or the run is past its limit). */
+  counterHint?: CounterHintRoom | null;
+}
+
+/** L-PREMIUM-b rules, from content/settings/counter-hint.json. */
+export interface CounterHintRules {
+  /** Missed Counter windows (no answer at all) in a room before the tip shows. */
+  missesBeforeHint: number;
+  /** The tip stops for the run after this many Great (Perfect) Counters. */
+  stopAfterGreatCounters: number;
+}
+
+/** One room's Counter tip state. */
+export interface CounterHintRoom {
+  missesBeforeHint: number;
+  /** Great Counters still allowed in this run before the tip stops (the room's own count included). */
+  perfectsLeft: number;
+  misses: number;
+  given: boolean;
+}
+
+/** L-PREMIUM-b: the room's Counter tip, or null when it is off. */
+export function counterHintFor(rules: CounterHintRules, runPerfects: number, on: boolean): CounterHintRoom | null {
+  const left = rules.stopAfterGreatCounters - runPerfects;
+  return on && left > 0 ? { missesBeforeHint: rules.missesBeforeHint, perfectsLeft: left, misses: 0, given: false } : null;
 }
 
 export interface PlayerSetup {
@@ -409,12 +450,18 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
   const enemyTypes: Record<string, EnemyDef> = {};
   if (options.enemyTypes) {
     const typeOf = (id: string): EnemyDef => {
-      const base = options.enemyTypes![id];
-      if (!base) throw new Error(`Room "${room.id}" uses enemy "${id}", but no such enemy type was loaded`);
+      const file = options.enemyTypes![id];
+      if (!file) throw new Error(`Room "${room.id}" uses enemy "${id}", but no such enemy type was loaded`);
+      const base = challengeDef(file, options.difficulty ?? COMBAT.defaultDifficulty, options.challengeAt);
       // R-BAL-12: content holds BASE numbers; the run's belt scales Health and Power (whole numbers).
       // Guard and timings never scale.
+      // B-TUNE-GUIDED: the setting's enemyPowerScale also multiplies Power, in every fight.
+      // Scaled Power rounds to a whole number, at least 1 (a 0-Power enemy stays 0).
       const sc = options.enemyScale;
-      const def = sc ? { ...base, maxHealth: Math.max(1, Math.round(base.maxHealth * sc.maxHealth)), power: Math.round(base.power * sc.power), weapon: base.weapon ? { ...base.weapon, disarmedPower: Math.round(base.weapon.disarmedPower * sc.power) } : base.weapon } : base;
+      const ps = (sc?.power ?? 1) * DIFFICULTY[options.difficulty ?? COMBAT.defaultDifficulty].enemyPowerScale;
+      const pow = (v: number) => (v > 0 ? Math.max(1, Math.round(v * ps)) : v);
+      const scaled = sc || ps !== 1;
+      const def = scaled ? { ...base, maxHealth: sc ? Math.max(1, Math.round(base.maxHealth * sc.maxHealth)) : base.maxHealth, power: pow(base.power), weapon: base.weapon ? { ...base.weapon, disarmedPower: pow(base.weapon.disarmedPower) } : base.weapon } : base;
       if (def.boss && options.easyBossHealth !== undefined) return { ...def, maxHealth: Math.max(1, Math.round(def.maxHealth * options.easyBossHealth)), summon: null };
       return def;
     };
@@ -467,6 +514,7 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
     phaseHoldTicks: 0,
     waveHold: false,
     seeAll: false,
+    counterHint: options.counterHint ? { ...options.counterHint } : null,
     guide: (options.guideStep ?? GUIDE_DONE) < GUIDE_DONE ? { step: options.guideStep!, enemyId: null, waiting: false, waitTicks: 0 } : null,
   };
 }
@@ -507,7 +555,7 @@ function newEnemy(
     attackCenter: null,
     path: null,
     repathIn: 0,
-    attackIndex: 0,
+    attackIndex: def.pattern ? def.pattern[0] : 0,
     shieldUp: def.shield !== null,
     shieldRegrow: 0,
     summoned: false,
@@ -566,7 +614,12 @@ export function stepWorld(world: WorldState, room: Room, inputs: Record<PlayerId
 /** Sensei's guided first Counter: picks the warning to teach, holds still on step 0, and moves on. */
 function stepGuide(world: WorldState, guide: GuideState, ids: string[]): void {
   if (guide.enemyId === null) {
-    const t = world.events.find((ev) => ev.kind === 'telegraph');
+    // R-CHALLENGE P4: only a warning the player can Counter; a dash-only lane never gets "COUNTER!".
+    const t = world.events.find((ev) => {
+      if (ev.kind !== 'telegraph') return false;
+      const e = world.enemies.find((x) => x.id === ev.enemyId);
+      return !!e && currentAttack(e).counterable !== false;
+    });
     if (t?.kind === 'telegraph') {
       guide.enemyId = t.enemyId;
       world.events.push({ kind: 'guideStart', step: guide.step, enemyId: t.enemyId });
@@ -585,6 +638,7 @@ function stepGuide(world: WorldState, guide: GuideState, ids: string[]): void {
   }
   if (!e || e.mode !== 'windup' || !e.attackCenter) {
     guide.enemyId = null; // Beaten or knocked out of its wind-up: wait for the next warning.
+    world.events.push({ kind: 'guideCancel', step: guide.step });
     return;
   }
   // Step 0: with the circle nearly full (inside the Perfect window), hold still for the tap.
@@ -610,7 +664,10 @@ export function isEnemyPresent(e: EnemyState): boolean {
 
 /** The attack an enemy is winding up (or will use next). */
 export function currentAttack(e: EnemyState): EnemyAttackDef {
-  return e.def.attacks[e.attackIndex % e.def.attacks.length];
+  const a = e.def.attacks[e.attackIndex % e.def.attacks.length];
+  // R-CHALLENGE P2: the second hit of a two-part attack is weaker and has no further follow-up.
+  if (e.followUpStage === 2 && a.followUp) return { ...a, strength: a.strength * a.followUp.strength, followUp: undefined };
+  return a;
 }
 
 /** B-T3: the attacks a phased boss may use at its current health (indexes into its attacks). */
@@ -624,8 +681,22 @@ export function phaseAttacks(e: EnemyState): number[] | null {
 
 /** The attack after this one: in turn, within the current phase for phased bosses. */
 function nextAttackIndex(e: EnemyState): number {
+  // R-CHALLENGE P3: a swapped-out pattern attack comes back next, in the same place in the pattern.
+  if (e.heldAttack !== undefined) {
+    const held = e.heldAttack;
+    delete e.heldAttack;
+    return held;
+  }
   const list = phaseAttacks(e);
-  if (!list) return (e.attackIndex + 1) % e.def.attacks.length;
+  if (!list) {
+    // R-CHALLENGE P2: Challenge pattern enemies keep their place in the pattern.
+    const pat = e.def.pattern;
+    if (pat) {
+      e.patternStep = ((e.patternStep ?? 0) + 1) % pat.length;
+      return pat[e.patternStep];
+    }
+    return (e.attackIndex + 1) % e.def.attacks.length;
+  }
   // A pattern may name an attack twice (bonk, pin, pin), so keep the place in the pattern.
   e.phaseStep = ((e.phaseStep ?? 0) + 1) % list.length;
   return list[e.phaseStep];
@@ -651,12 +722,14 @@ export function allEnemiesBeaten(world: WorldState): boolean {
 /**
  * Total wind-up for an enemy's attack on a difficulty. The enemy file's telegraphTicks is the
  * Standard total; its fill part (before the Standard window) is scaled, then this
- * difficulty's window is added.
+ * difficulty's window is added. R-CHALLENGE P1: Challenge never goes under MIN_WINDUP_TICKS
+ * (the 12-tick swarmer jab and spark dart used to come out at 9). Guided and Standard are untouched.
  */
 export function telegraphTicks(attack: EnemyAttackDef, difficulty: Difficulty): number {
   const fill = attack.telegraphTicks - DIFFICULTY.standard.counterWindowTicks;
   const d = DIFFICULTY[difficulty];
-  return Math.round(fill * d.fillScale) + d.counterWindowTicks;
+  const ticks = Math.round(fill * d.fillScale) + d.counterWindowTicks;
+  return difficulty === 'challenge' ? Math.max(MIN_WINDUP_TICKS, ticks) : ticks;
 }
 
 /** The Perfect Counter window for a player, in ticks (Stances and Technique Seals can widen it). */
@@ -745,7 +818,9 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
   if (p.dashTicks === 0 && p.guardTicks === 0 && p.strikeRecovery === 0 && p.attackCooldown === 0) {
     const target = nearestEnemy(world, p, COMBAT.basicAttack.reach);
     if (target) {
-      const speed = Math.min(0.6, p.mods.attackSpeed + activeStance(p).attackSpeed);
+      // Wind Step: while its burst runs, basic attacks also get half of the burst's bonus.
+      const windStep = p.speedBoostTicks > 0 ? p.mods.comboSpeedBonus / 2 : 0;
+      const speed = Math.min(0.6, p.mods.attackSpeed + activeStance(p).attackSpeed + windStep);
       p.attackCooldown = Math.max(1, Math.round(COMBAT.basicAttack.cooldownTicks * (1 - speed)));
       landHit(world, p, target, 'basic', COMBAT.basicAttack.strength, COMBAT.focus.perHit);
     }
@@ -858,6 +933,7 @@ function landHit(
   strength: number,
   focusGain: number,
 ): void {
+  const brokeShield = e.shieldUp && p.mods.shieldBreaker;
   if (e.shieldUp) {
     if ((move === 'basic' || move === 'ripple') && !p.mods.shieldBreaker) {
       // Basic attacks bounce off the shield: no damage, but shield sparks give a little Focus (B-MASHER-a).
@@ -871,9 +947,13 @@ function landHit(
     e.shieldRegrow = e.def.shield!.regrowTicks;
     world.events.push({ kind: 'shieldBreak', playerId: p.id, enemyId: e.id });
   }
+  // Shield Breaker: a shield broken by the card gives a little Focus.
+  if (brokeShield) p.focus = Math.min(COMBAT.focus.max, p.focus + p.mods.shieldBreakFocus);
+  // Press the Advantage: staggered, winded or recovering enemies all take the bonus.
+  const pressed = e.mode === 'stagger' || e.mode === 'winded' || e.mode === 'recover';
   const bonus =
     comboBonus(p.combo) +
-    (e.mode === 'stagger' ? p.mods.staggerBonus : 0) +
+    (pressed ? p.mods.staggerBonus : 0) +
     (e.mode === 'winded' && e.def.winded ? e.def.winded.damageBonus : 0);
   const dmg = damage(p.power * (1 + p.mods.powerScale + stancePowerScale(p)), strength, e.def.guard, bonus);
   p.combo++;
@@ -1060,6 +1140,7 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
       const k = phaseIndex(e);
       if (k > (e.phase ?? 0)) {
         e.phase = k;
+        delete e.heldAttack;
         // Mid wind-up: finish that attack, then start the new pattern from its first attack.
         if (e.mode === 'windup') e.phaseStep = -1;
         else {
@@ -1078,18 +1159,45 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
         resetEnemy(world, e);
       }
       return;
-    case 'waiting':
     case 'recover':
+      if (--e.modeTicks <= 0) {
+        e.mode = 'chase';
+        // R-CHALLENGE P2: after the gap, the second hit winds up with its own full tell.
+        if (e.followUpStage === 1) {
+          e.followUpStage = 2;
+          const target = nearestPlayer(world, e);
+          if (target) e.facing = directionTo(e.pos, target.pos);
+          // R-CHALLENGE P3: a second hit that would start off screen is dropped (the pattern moves on).
+          if (!patternAttackOnScreen(world, room, e, currentAttack(e))) {
+            e.followUpStage = undefined;
+            e.attackIndex = nextAttackIndex(e);
+            return;
+          }
+          startWindup(world, e);
+        }
+      }
+      return;
+    case 'waiting':
     case 'stagger':
     case 'winded':
       if (--e.modeTicks <= 0) e.mode = 'chase';
       return;
     case 'windup':
       if (--e.modeTicks <= 0) {
+        const done = currentAttack(e);
         e.mode = 'recover';
-        e.modeTicks = currentAttack(e).recoverTicks;
+        e.modeTicks = done.recoverTicks;
         resolveAttack(world, e);
         e.attackCenter = null;
+        if (done.followUp && e.mode === 'recover') {
+          // R-CHALLENGE P2: first hit of a two-part attack: wait the gap, then wind up the second.
+          e.followUpStage = 1;
+          e.modeTicks = done.followUp.gapTicks;
+          return;
+        }
+        // R-CHALLENGE P3: the 2nd hit is still "active" on the tick it lands, for every other enemy.
+        if (e.followUpStage === 2) e.followUpLandedTick = world.tick;
+        e.followUpStage = undefined;
         e.attackIndex = nextAttackIndex(e);
       }
       return;
@@ -1100,6 +1208,20 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
   }
 }
 
+/** Start the telegraph. The danger area is fixed now, so the player can step out of it. */
+function startWindup(world: WorldState, e: EnemyState): void {
+  const a = currentAttack(e);
+  let ticks = telegraphTicks(a, world.difficulty);
+  if (e.elite && world.elites) ticks = eliteWindup(ticks, e.elite, world.difficulty, world.elites, DIFFICULTY[world.difficulty].counterWindowTicks);
+  e.mode = 'windup';
+  e.modeTicks = ticks;
+  e.windupTotal = ticks;
+  e.attackCenter = { x: e.pos.x + e.facing.x * a.reach, y: e.pos.y + e.facing.y * a.reach };
+  e.path = null;
+  e.chaseTicks = 0;
+  world.events.push({ kind: 'telegraph', enemyId: e.id, ticks });
+}
+
 function chase(world: WorldState, e: EnemyState, room: Room): void {
   const target = nearestPlayer(world, e);
   if (!target) {
@@ -1107,24 +1229,38 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
     return;
   }
   e.facing = directionTo(e.pos, target.pos);
-  const a = currentAttack(e);
+  // A two-part attack cut short (stagger, winded) starts over from its first hit.
+  if (e.followUpStage) e.followUpStage = undefined;
+  let a = currentAttack(e);
   const dist = distance(e.pos, target.pos);
-  const canAttack = attackersNow(world) < COMBAT.maxAttackersAtOnce;
+  let canAttack = attackersNow(world) < COMBAT.maxAttackersAtOnce && !otherFollowUpPending(world, e);
+  let closer = false;
+  if (dist <= a.startRange && canAttack && world.difficulty === 'challenge') {
+    // R-CHALLENGE P3: a pattern attack starts only on screen and only one at a time;
+    // otherwise this swing is a normal attack, or (with none) the enemy walks closer.
+    if (a.challenge && (!patternAttackOnScreen(world, room, e, a) || otherPatternWindup(world, e))) {
+      const normal = normalAttackIndex(e);
+      if (normal === null) {
+        canAttack = false;
+        closer = true;
+      } else {
+        e.heldAttack = e.attackIndex;
+        e.attackIndex = normal;
+        a = currentAttack(e);
+      }
+    }
+    // A flagged dash lane never starts while another enemy's red circle covers the player.
+    if (canAttack && a.noOverlapWithRedCircle && a.counterable === false && redCircleOn(world, e, target.pos)) canAttack = false;
+    // Q-FAIR-EDGE: and the other way round: no red circle starts where a flagged lane winding up covers
+    // the player, so the order the enemies step in a tick doesn't matter.
+    if (canAttack && a.counterable !== false && flaggedLaneOn(world, e, target.pos)) canAttack = false;
+  }
   if (dist <= a.startRange && canAttack) {
-    // Start the telegraph. The danger area is fixed now, so the player can step out of it.
-    let ticks = telegraphTicks(a, world.difficulty);
-    if (e.elite && world.elites) ticks = eliteWindup(ticks, e.elite, world.difficulty, world.elites, DIFFICULTY[world.difficulty].counterWindowTicks);
-    e.mode = 'windup';
-    e.modeTicks = ticks;
-    e.windupTotal = ticks;
-    e.attackCenter = { x: e.pos.x + e.facing.x * a.reach, y: e.pos.y + e.facing.y * a.reach };
-    e.path = null;
-    e.chaseTicks = 0;
-    world.events.push({ kind: 'telegraph', enemyId: e.id, ticks });
+    startWindup(world, e);
     return;
   }
   const speed = e.def.moveSpeedTilesPerSecond / TICKS_PER_SECOND;
-  if (!canAttack && dist <= a.startRange + COMBAT.circleExtraRange) {
+  if (!canAttack && !closer && dist <= a.startRange + COMBAT.circleExtraRange) {
     // Waiting its turn ("kung fu circle"): circle around the player at a little distance.
     const out = { x: (e.pos.x - target.pos.x) / (dist || 1), y: (e.pos.y - target.pos.y) / (dist || 1) };
     const want = a.startRange + COMBAT.circleExtraRange * 0.5;
@@ -1142,7 +1278,7 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
   }
   e.repathIn--;
   // Don't walk right on top of the player; stop once in attack range.
-  if (e.path && distance(e.pos, target.pos) > a.startRange * 0.8) {
+  if (e.path && (closer || distance(e.pos, target.pos) > a.startRange * 0.8)) {
     walkPath(e.pos, e.path, speed);
     pushOutOfWalls(room, e.pos, e.def.radius);
     // A long chase without a swing leaves slow enemies out of breath.
@@ -1215,6 +1351,9 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       const dmg = damage(power, a.strength * share * weak, guardOf(p));
       world.events.push({ kind: 'block', playerId: p.id, enemyId: e.id, damage: dmg });
       if (p.mods.dashOnBlock) p.dashCooldown = 0;
+      // L-PREMIUM-b (Manager, decided): a Block made by the Mash guard, not by a Counter press, is a
+      // Counter window with no answer, so it is a miss. A real Block (guarding) or a Dash never is.
+      if (!guarding && !counterPressedLately(world, p) && p.dashTicks === 0) noteCounterMiss(world, p);
       hurt(world, p, dmg);
       // Iron Skin: part of the full hit bounces back (shields stop it, unless Shield Breaker).
       if (p.mods.blockReflect > 0 && isEnemyPresent(e) && (!e.shieldUp || p.mods.shieldBreaker)) {
@@ -1227,9 +1366,24 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       p.combo = 0;
       p.counterChain = 0;
       world.events.push({ kind: 'hit', playerId: p.id, enemyId: e.id, damage: dmg });
+      // L-PREMIUM-b: a Counter window with no answer at all (no recent Counter press, no Dash) is a miss.
+      if (a.counterable !== false && !counterPressedLately(world, p) && p.dashTicks === 0) noteCounterMiss(world, p);
       hurt(world, p, dmg);
     }
   }
+}
+
+/** L-PREMIUM-b: the player pressed Counter recently enough that this swing was answered (guard, window and lockout). */
+function counterPressedLately(world: WorldState, p: PlayerState): boolean {
+  return p.counterPressedTick >= 0 && world.tick - p.counterPressedTick <= Math.max(COMBAT.counter.guardTicks, counterWindowTicks(world, p) + COMBAT.counter.blockTicksAfterWindow) + COMBAT.counter.missLockoutTicks;
+}
+
+function noteCounterMiss(world: WorldState, p: PlayerState): void {
+  const h = world.counterHint;
+  if (!h || h.given || world.guide || p.perfects >= h.perfectsLeft) return;
+  if (++h.misses < h.missesBeforeHint) return;
+  h.given = true;
+  world.events.push({ kind: 'counterHint', playerId: p.id });
 }
 
 /** Focus for the nth Perfect Counter in a chain (1 = first). */
@@ -1389,7 +1543,10 @@ function resetEnemy(world: WorldState, e: EnemyState): void {
   e.attackCenter = null;
   e.path = null;
   e.repathIn = 0;
-  e.attackIndex = 0;
+  e.attackIndex = e.def.pattern ? e.def.pattern[0] : 0;
+  if (e.def.pattern) e.patternStep = 0;
+  e.followUpStage = undefined;
+  delete e.heldAttack;
   e.shieldUp = e.def.shield !== null;
   e.shieldRegrow = 0;
   e.summonDone = false;
@@ -1414,6 +1571,98 @@ function nearestPlayer(world: WorldState, e: EnemyState): PlayerState | null {
     }
   }
   return best;
+}
+
+/** R-CHALLENGE P3: the camera view (tiles) of a player at `at`, as the client draws it (see SIM_VIEW). */
+export function simViewRect(room: Room, at: Vec2): { x0: number; y0: number; x1: number; y1: number } {
+  const w = SIM_VIEW.width;
+  const h = SIM_VIEW.height;
+  const top = -SIM_VIEW.topStrip;
+  const roomH = room.height - top;
+  const bw = Math.max(room.width, w);
+  const bh = Math.max(roomH, h);
+  const bx = (room.width - bw) / 2;
+  const by = top - (bh - roomH) / 2;
+  const x0 = clamp(at.x - w / 2, bx, bx + bw - w);
+  const y0 = clamp(at.y - h / 2, by, by + bh - h);
+  return { x0, y0, x1: x0 + w, y1: y0 + h };
+}
+
+/**
+ * R-CHALLENGE P3: the box around an attack's body and danger area: the enemy's body, plus the
+ * circle, or for a dash-only attack the full lane from the enemy to the far end, as wide as its area.
+ */
+export function attackBox(pos: Vec2, radius: number, facing: Vec2, a: EnemyAttackDef): { x0: number; y0: number; x1: number; y1: number } {
+  const c = { x: pos.x + facing.x * a.reach, y: pos.y + facing.y * a.reach };
+  const r = a.areaRadius;
+  const box = { x0: Math.min(pos.x - radius, c.x - r), y0: Math.min(pos.y - radius, c.y - r), x1: Math.max(pos.x + radius, c.x + r), y1: Math.max(pos.y + radius, c.y + r) };
+  if (a.counterable === false) {
+    // The lane covers every point from the enemy to the end, so also the enemy end widened by r.
+    box.x0 = Math.min(box.x0, pos.x - r);
+    box.y0 = Math.min(box.y0, pos.y - r);
+    box.x1 = Math.max(box.x1, pos.x + r);
+    box.y1 = Math.max(box.y1, pos.y + r);
+  }
+  return box;
+}
+
+/**
+ * R-CHALLENGE P3: the attack, aimed now, is fully inside the view of every player still in the room.
+ * Q-FAIR-EDGE: a downed player counts too (they get up into this attack), so with everyone down
+ * the check isn't skipped; only players who are out don't count.
+ */
+function patternAttackOnScreen(world: WorldState, room: Room, e: EnemyState, a: EnemyAttackDef): boolean {
+  const b = attackBox(e.pos, e.def.radius, e.facing, a);
+  for (const p of Object.values(world.players)) {
+    if (p.out) continue;
+    const v = simViewRect(room, p.pos);
+    if (b.x0 < v.x0 || b.y0 < v.y0 || b.x1 > v.x1 || b.y1 > v.y1) return false;
+  }
+  return true;
+}
+
+/** R-CHALLENGE P3: another enemy is in the middle of a two-part attack (gap or second hit). */
+function otherFollowUpPending(world: WorldState, e: EnemyState): boolean {
+  return world.enemies.some((o) => o !== e && o.mode !== 'defeated' && (o.followUpStage !== undefined || o.followUpLandedTick === world.tick));
+}
+
+/** R-CHALLENGE P3: another enemy is winding up a Challenge pattern attack. */
+function otherPatternWindup(world: WorldState, e: EnemyState): boolean {
+  return world.enemies.some((o) => o !== e && o.mode === 'windup' && currentAttack(o).challenge === true);
+}
+
+/** R-CHALLENGE P3: the first attack this enemy may use now that isn't a Challenge pattern attack. */
+function normalAttackIndex(e: EnemyState): number | null {
+  const list = phaseAttacks(e) ?? e.def.pattern ?? e.def.attacks.map((_, i) => i);
+  for (const i of list) if (!e.def.attacks[i].challenge) return i;
+  return null;
+}
+
+/** R-CHALLENGE P3: another enemy's red (counterable) circle, winding up now, covers this spot. */
+function redCircleOn(world: WorldState, e: EnemyState, at: Vec2): boolean {
+  return world.enemies.some((o) => o !== e && o.mode === 'windup' && o.attackCenter !== null && currentAttack(o).counterable !== false && distance(at, o.attackCenter) <= currentAttack(o).areaRadius + R * 0.5);
+}
+
+/**
+ * Q-FAIR-EDGE: another enemy's flagged dash lane (noOverlapWithRedCircle), winding up now, covers this
+ * spot: within its area (plus half a body) of the lane from that enemy to its landing point.
+ */
+export function flaggedLaneOn(world: WorldState, e: EnemyState, at: Vec2): boolean {
+  return world.enemies.some((o) => {
+    if (o === e || o.mode !== 'windup' || o.attackCenter === null) return false;
+    const a = currentAttack(o);
+    if (!a.noOverlapWithRedCircle || a.counterable !== false) return false;
+    return segmentDistance(at, o.pos, o.attackCenter) <= a.areaRadius + R * 0.5;
+  });
+}
+
+/** Distance from a point to the segment a-b. */
+function segmentDistance(p: Vec2, a: Vec2, b: Vec2): number {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const len2 = dx * dx + dy * dy;
+  const t = len2 === 0 ? 0 : clamp(((p.x - a.x) * dx + (p.y - a.y) * dy) / len2, 0, 1);
+  return distance(p, { x: a.x + dx * t, y: a.y + dy * t });
 }
 
 /** How many enemies are winding up an attack right now (the "kung fu circle" limit). */
@@ -1503,6 +1752,18 @@ function directionTo(from: Vec2, to: Vec2): Vec2 {
 }
 
 /** B-MASHER-2 (E3): Mash guard helps a player until they make COMBAT.counter.mashGuardPerfects Perfect Counters in this room; each new room starts it again. In co-op each player has their own. */
+/**
+ * Q-PREM-F11: a tap on KO Screen 1 skips the rest of the knock-out pause, so on a floor
+ * room the next tick ends the run (playerOut) right away. The practice room, which starts
+ * the player over instead, is left alone. Returns true when it shortened the pause.
+ */
+export function skipDown(world: WorldState, playerId: PlayerId): boolean {
+  const p = world.players[playerId];
+  if (!p || p.downTicks <= 1 || world.respawnEnemies) return false;
+  p.downTicks = 1;
+  return true;
+}
+
 export function mashGuardOn(p: PlayerState): boolean {
   return p.perfects < COMBAT.counter.mashGuardPerfects;
 }

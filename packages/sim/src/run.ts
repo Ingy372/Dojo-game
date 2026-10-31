@@ -9,8 +9,8 @@ import { modsFrom, type Effect } from './effects';
 import { chance, makeItem, rarityRank, rollRarity, type GearItem } from './loot';
 import type { Vec2 } from './math';
 import { createRng, nextFloat, nextInt, pick, pickWeighted, shuffled, type Rng } from './rng';
-import type { Room, RoomKind } from './room';
-import { createWorld, type PlayerSetup, type WorldState } from './world';
+import { baseRoomId, type Room, type RoomKind } from './room';
+import { counterHintFor, createWorld, type CounterHintRules, type PlayerSetup, type WorldState } from './world';
 import type { TwistDef } from './twist';
 import { namedForTier, type NamedSpawn } from './named';
 import { elitesAllowed, type EliteKind, type EliteSpawn } from './elite';
@@ -250,8 +250,12 @@ export function createRunWorld(
   difficulty?: Difficulty,
   /** Sensei's guided Counter step from the profile (see GUIDE_DONE); off by default. */
   guideStep?: number,
+  /** L-PREMIUM-b: Counter tip rules (content/settings/counter-hint.json); off when absent. */
+  hintRules?: CounterHintRules,
 ): WorldState {
   const room = currentRoom(content, run);
+  const d = difficulty ?? run.difficulty;
+  const hintOn = !!hintRules && !run.tutorial && d !== 'challenge' && !room.challenge && (room.kind === 'battle' || room.kind === 'boss');
   return createWorld(room, ['p1'], {
     enemyTypes: content.enemies,
     difficulty: difficulty ?? run.difficulty,
@@ -263,7 +267,10 @@ export function createRunWorld(
     doorCount: run.doors.length,
     twist: currentTwist(content, run),
     guideStep,
+    counterHint: hintRules ? counterHintFor(hintRules, run.perfects, hintOn) : null,
     enemyScale: byTier(ENEMY_TRAINING_SCALE, run.tier),
+    // R-CHALLENGE P2: tutorial floors never get Challenge patterns.
+    challengeAt: run.tutorial ? null : { belt: run.tier, room: run.depth + 1 },
     ...(run.tutorial ? { minHealth: TUTORIAL_FLOOR.minHealth, easyBossHealth: TUTORIAL_FLOOR.bossHealth } : {}),
     player: {
       ...player,
@@ -416,6 +423,8 @@ export interface RunSummary {
   tier: number;
   /** The tutorial floor (M7-P2). */
   tutorial: boolean;
+  /** Q-PREM-GRADE: the difficulty the run was played on (missing on old saves). */
+  difficulty?: Difficulty;
 }
 
 export function summarizeRun(run: RunState): RunSummary {
@@ -436,6 +445,7 @@ export function summarizeRun(run: RunState): RunSummary {
     test: run.test,
     tier: run.tier,
     tutorial: run.tutorial,
+    difficulty: run.difficulty,
   };
 }
 
@@ -554,6 +564,16 @@ export function floorRooms(content: Content, tier: number): Room[] {
   const open = content.rooms.filter((r) => !r.tutorial && r.minBeltTier <= tier);
   const own = open.filter((r) => r.floorSet !== null && r.minBeltTier === tier);
   return own.length > 0 ? own : open.filter((r) => r.floorSet === null);
+}
+
+/**
+ * R-B1-RAMP-2: the room a ?room= test link means at this belt tier. If the tier has its own copy of
+ * the asked-for original (white belt: `brute-and-swarm` -> `w-brute-and-swarm`), the copy, so the link
+ * shows the room that belt really gets. Any other id (a copy asked for by name, an unknown id) is kept.
+ */
+export function beltRoomId(content: Content, id: string, tier: number): string {
+  const copy = floorRooms(content, tier).find((r) => r.id !== id && baseRoomId(r.id) === id);
+  return copy ? copy.id : id;
 }
 
 function pickRoom(content: Content, run: RunState, kind: DoorKind): Room {

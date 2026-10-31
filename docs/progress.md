@@ -892,5 +892,122 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## Q-PREM-F8 (2026-10-26)
 - Nothing tappable within 8 px above Again! (12 px measured) at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off, scrolled to the top, halfway and the end. Hands-on touches 2, 4 and 6 px above Again! open nothing, and Again! still starts Game. verify-ui-shots: 308 PASS, 0 FAIL (docs/shots/q-prem-f8/verify-log.txt). Test: packages/sim/test/q-prem-f6-again.test.ts (F8 gap check at all 4 sizes).
 
+## Q-PREM-F9 (2026-10-26)
+- COUNTER, STRIKE and VIRTUE ready, not-ready and flash labels all reach 4.5:1 or more (pixel-sampled). Decorate's Done and Street Smarts are 44 px at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off. Hands-on: each action button queues its action, Done returns to play, and Street Smarts opens its scene. verify-ui-shots: 488 PASS, 0 FAIL (docs/shots/q-prem-f9/verify-log.txt). Test: packages/sim/test/q-prem-f9-actions.test.ts.
 ## Q-PREM-F10 (2026-10-26)
 - Stat tile number and label at least 4 px apart, with nothing overlapping (tile icons, New for you label, icon and sparkle checked against every panel text and picture), at 667x320, 667x375, 844x390 and 932x430, with Reduced motion on and off. Text is at least 12 px, F8's 12 px above Again! is kept, and a hands-on tap on Again! starts a run. verify-ui-shots: 766 PASS, 0 FAIL (docs/shots/q-prem-f10/verify-log.txt). Test: packages/sim/test/b-lastrun-layout.test.ts (Q-PREM-F10 block).
+
+## Q-PREM-TRY (2026-10-26)
+- Retry line changed in the 10 listed lessons; the test checks them against the draft list; shots at 4 sizes, 20 PASS / 0 FAIL (docs/shots/q-prem-try/verify-log.txt).
+## B-MASHER-d1 — knock-out flow (2026-10-26)
+**Done**
+- A Tower knock-out is three kind screens: "Sensei helps you up." (tap skips), "You kept everything you found!" with the finds and one Head home button (tap anywhere too, no timer), then "Welcome home!" on the Training Board with one pointer (class first, else the Tower; none when play time is up). Time-limit endings share Screen 2 with the resting line; the old rest card is gone. Guided offer comes after Screen 2. Practice KO gets the kind words and keeps going (controls now come back).
+- "Ouch! The run is over" / "Back to the start": 0 in client and content (test: packages/sim/test/b-masher-d1-knockout.test.ts).
+- npm test 953 passed, 3 skipped; typecheck and build pass. verify-ui-shots at 667x320, 667x375, 844x390, 932x430, Reduced motion on/off: docs/shots/b-masher-d1/verify-log.txt.
+**Next**
+- Tester: play a Tower knock-out and a play-time-up ending on a phone.
+- Read-aloud of these screens is a separate item.
+## Q-PREM-GRADE (2026-10-26)
+- Grade letters, the grade sound, Last run grade chips, the tutorial card letter and "Most S grades" now show on Challenge only (`showGrades`). Run summaries save their difficulty. verify-ui-shots: 4 sizes × guided/standard/challenge, 72 PASS / 0 FAIL (docs/shots/q-prem-grade/verify-log.txt). Test: packages/sim/test/q-prem-grade.test.ts.
+**Next**
+- Tester: clear rooms on Standard (no letters, no grade chime, "Room clear!" stays) and on Challenge (letters back).
+## Q-PREM-BOSSWIN (2026-10-26)
+- First real Floor Keeper clear shows "Floor Keeper defeated!" once per save; old saves count as celebrated only when the last run was a real (non-tutorial) Floor Keeper clear; a tutorial-only save still gets it. verify-ui-shots at 667x375, 844x390, 932x430, 1024x768, Reduced motion on/off, frames 0/600/1500 ms, hands-on tap continues: 224 PASS / 0 FAIL (docs/shots/q-prem-bosswin/verify-log.txt). Test: packages/sim/test/q-prem-bosswin.test.ts.
+**Next**
+- Tester: beat the Floor Keeper on a fresh save (moment plays), then again (normal clear). Q-PREM-GRADE next.
+- Q-PREM-F9 QA fix: DASH/STANCE solid dim faces (6.44:1 / 6.89:1), Counter lockout ring, Decorate wall row clear of the 60 px bar. verify-ui-shots 656 PASS, 0 FAIL (4 sizes × Reduced motion on/off).
+
+## 2026-10-26 — Q-PREM-F11
+- A tap on KO Screen 1 goes straight to Screen 2 (90–275 ms after the tap, was about 1.75 s). Head home is ≥48 px at every size. New test: packages/sim/test/q-prem-f11-ko.test.ts. Shots and log: docs/shots/q-prem-f11 (88 PASS, 0 FAIL, 4 sizes × RM on/off).
+## Q-PREM-TRY fix (2026-10-26)
+- Retry line in the 10 lessons is now "Nice work. Let's keep practicing."; test updated.
+- lesson-counter-guided retry: "So close! Let's keep practicing."; test bans 'try again' in all lessons; shots include the guided line.
+- All 11 lesson retry lines are "Nice work. Let's keep practicing."; test bans 'So close' and 'try again'.
+
+- 2026-10-26 L-PREMIUM-a2: locked Trophy Case cubbies show a one-line hint (content/hints/locked-hints.json). Tests in packages/sim/test/l-premium-a2-hints.test.ts; shots in docs/shots/l-premium-a2.
+## Q-PREM-F11 QA fix (2026-10-26)
+- 500 ms tap guard on Screen 2; source test + shot check (mash inside the window stays, a tap after goes Home), 112 PASS, 0 FAIL at 4 sizes, RM on/off.
+- 2026-10-26 L-PREMIUM-a2: kata cubbies show "Learn a kata in class with Sensei!" (cubbies.kata-cubby); kata sheet shots re-run.
+- 2026-10-26 B-TUNE-GUIDED: Guided enemy Power ×0.75 via DIFFICULTY.enemyPowerScale; "Orange typical" testing fixture (6-orange-typical, pinned 333/46/34). Kid bot on Guided 78% -> 95% overall, white belt 57% -> 90%; Standard and Challenge unchanged.
+## L-PREMIUM-b (2026-10-26)
+- Counter hint built: sim event + rules, client tip/pulse, 7 tests (200-run kid ≤1/room, smart 0, Challenge 0), shots in docs/shots/l-premium-b (104 PASS, 0 FAIL).
+
+## L-PREMIUM-b QA fix (2026-10-26)
+- Mash-guard Blocks count as misses; threshold 3; test overrides removed. No-override 200-run sim: kid 164 tips in 1,228 rooms (max 1 per room), smart 0 in 1,600, Challenge 0 in 939. Shots 104 PASS, 0 FAIL.
+## Q-PREM-F11 QA fix (2026-10-26)
+- 500 ms tap guard on Screen 2; source test + shot check (mash inside the window stays, a tap after goes Home), 112 PASS, 0 FAIL at 4 sizes, RM on/off.
+- B-MAIN-TRY11: q-prem-try test updated for the 11-lesson draft from #355; main green again.
+- B-W-ROOMS-TESTS: #359 tests fit the white rooms (mixes, K12, old-thumper at belt 2, golden re-captured for white runs only).
+- B-BRIDGE-GOLDENS: p-menu2 golden re-captured for the #361 bridge swarmer move (revert proof passes).
+- R-B1-RAMP-2: pin test for the 15 white room copies, ?room= link maps to the white copy, background shots match the originals; #361 note corrected to 8 run entries.
+- Q-DOOR-LABELS: side door labels clamped 8 px inside the view, unknown ?room= console warning; 8 tests; shots 60 PASS, 0 FAIL at 3 sizes, RM on/off (gauntlet CHALLENGE label moved from -47 px to 8 px at 667x375).
+- R-CHALLENGE P1: Challenge wind-ups never under 10 ticks (jab and dart 9 -> 10); golden moves only in its rooted Challenge row; next Q-DOOR-LABELS, then P6.
+- R-CHALLENGE P2: enemy `challenge` blocks (loader checks, one switch in createWorld, pattern stepping, two-part followUp hits, landing flag); 23 tests with test-only sample enemies; golden byte-identical; no content yet (C1).
+- R-CHALLENGE P3: Challenge pattern attacks start on screen (SIM_VIEW 9 x 6.75 tiles, tied to the client camera), one pattern wind-up at a time, no other attack during a two-part attack, no flagged lane over a red circle; 10 tests incl. a 1,000-room sweep at belts 4-10; golden byte-identical.
+- R-CHALLENGE P5: balance bot answers Challenge patterns: a typical bot steps out of a landing circle when it can clear the edge in time (else Counters), and a typical or sharp bot holds Strike between the two hits of a double hit; novice/kid unchanged. TEST-ONLY sample blocks (C1-C5 shapes) in test/balance/sample-patterns.ts, nothing in content/. BALANCE=1 prints the plan's section 4 table. Guided/Standard byte-equal with samples on/off; golden byte-identical.
+- Q-DOOR-LABELS-2: door label side clamp runs after the camera update (FOLLOW_UPDATE), so labels stay 8 px in from the edge on scroll-start frames; tests for the moved view; scroll-start shots 48 PASS, 0 FAIL at 3 sizes, RM on/off (30 frames each).
+- R-CHALLENGE P6: Challenge difficulty locked below the 4th belt (plays and shows as Steady, the stored pick is kept); 6 tests; no golden or fixture diff; Settings shots 16 PASS, 0 FAIL at 2 phone sizes, RM on/off, belts 3 and 4.
+- R-CHALLENGE P4: pattern tells. Lane (striped strip, stripes slide unless Reduced motion), landing spot (dashed hop line + inner ring), circle (as before), drawn from the first wind-up frame; first time per enemy+attack (saved `patternsSeen`) Sensei says the attack's `senseiLine` (clears after 2.6 s); boss phase line skipped when the shockwave line already played that fight; double slam's 2nd hit redraws. Sensei's guided Counter no longer picks an uncounterable (dash-only) warning. 7 tests; golden byte-identical. Shots: docs/shots/r-challenge-p4/{lane,landing,circle}.png.
+
+- 2026-10-27 Q-SWARM-JAB: tests lock the swarmer jab at 10 or more ticks on Challenge, elites and play included (packages/sim/test/q-swarm-jab.test.ts). The elites loader now requires minWindupTicks >= MIN_WINDUP_TICKS. No golden change.
+- 2026-10-27 Q-FAIR-EDGE: downed players count for the pattern on-screen check; red circles no longer start under a winding-up flagged lane (either step order). Tests: packages/sim/test/q-fair-edge.test.ts (downed edge, both step orders, 1,000-room sweep belts 4-10: 0 off-screen, 0 overlaps).
+- Q-LOCK-CARD: locked Challenge card is solid and answers a tap with a sound, a line pulse and a small shake (no shake with reduced motion); `{belt}` placeholder in the locked line from school data; 4 tests; shots 63 PASS, 0 FAIL at 667x320, 667x375, 844x390, RM on/off, plus belt 4 unlocked.
+
+- R-CHALLENGE P4 banner fix: the Sensei banner is placed no higher than the bottom of the top bar (room/wave label, timer, boss bar) + 6px, so at 667x375 it cannot cover the top bar during wind-ups. Shot: docs/shots/r-challenge-p4/667x375-windup-shockwave.png.
+- 2026-10-27 R-CHALLENGE P4 QA fixes: (1) every Sensei line (senseiSay, placeSensei, placeOffPlayers / the Mash guard lesson banner, the Counter tip, the twist banner) sits at max(senseiTop, topBarBottom + 6); topBarBottom now includes the health and Focus bars (y 51). A tall lesson banner with no room clear of the hero goes full width at 20px and retries. (2) Stale "Sensei: COUNTER!" fixed with a new `guideCancel` sim event (test reproduces: 65 stale dash-only wind-ups before, 0 after). (3) `?force=wide-bonk` test link forces the bopper's wide bonk. Tests 1119 passed / 4 skipped; golden unchanged; shots 80 PASS / 0 FAIL at 667x375 and 844x390, reduced motion on and off.
+- 2026-10-27 Q-BOW-OVER-MENU: the dojo bow prompt waits while a menu, panel or the arrival sequence is open, then shows once after it closes (`bowGate` in apps/client/src/ui/bowGate.ts); 2 tests (packages/sim/test/bow-gate.test.ts); shots 26 PASS, 0 FAIL at 844x390 and 667x375 (arrival panel and Settings, open then closed). Fix after QA FAIL: the bow is also held for the whole arrival, "Welcome home" splash included, and shows once after it. Root cause: the gate read 'arrival open' from `mode !== 'play' || cardsOpen > 0`. The "Welcome home" splash is a Celebrations overlay, not a card(), so cardsOpen stays 0, and arrive() never set the mode itself (it trusted tryBow to have set 'arriving'). So when arrive() ran with the mode at 'play', nothing marked the arrival as open, and the bow drew under the splash's input layer, where taps couldn't reach it. Also, the once-per-scene bowShown latch meant a bow that came due after the first bow could never show at all. arrive() now owns an `arriving` flag (passed to bowGate), and the latch resets after each bow; +1 test; shots 4 configs PASS (844x390 and 667x375, RM on/off), in /workspace/qa/bow381.
+- 2026-10-27 R-CHALLENGE P7: the P5 balance table and pattern tests now use the real C1 content (content/enemies); the test-only sample-patterns.ts is deleted. BALANCE=1 warns for each Challenge cell more than 5 win points off the §4b L+B row (2 warnings at 40 seeds: kid b8 25 vs 33, kid b10 20 vs 30; newer and careful match at 100). Guided/Standard byte-equal with the real patterns on and off; golden byte-identical.
+
+- Q-SHAKE-CENTER: the locked Challenge card shake is now a sine wave around its resting spot (same 4px left and right, 3 cycles, 250ms), ending exactly where it started; a second tap stops the old shake first. Test in packages/sim/test/q-lock-card.test.ts. verify-ui-shots 26/26 frame by frame at 844x390 and 667x375.
+- 2026-10-27 Q-P7-SEEDS: the BALANCE=1 Challenge table (r-challenge-p5.test.ts) runs 100 seeds per cell instead of 40. Result: Challenge kid 26/39/37/30/32/32/31 (b4-b10), newer and careful 100; 0 WARN lines (the 40-seed b8/b10 warnings were noise). Default npm test unchanged (table is skipped without BALANCE=1).
+
+## Q-STANCE-BANNER — Sensei's banner never covers Stance (2026-10-27)
+- In Practice, when the lesson banner can't sit above the hero, it now goes into free space beside/above the bottom button row (bottom-left strip), never over Stance or any action button. Before: `docs/shots/q-stance-banner/before-667x375-practice.png`; after: `contact-sheet.png`.
+- One rule: `pickBannerSpot` / `overArena` in `ui/senseiPlace.ts`; the action buttons (+8px) are a hard keep-out. No room → shrink to the small-phone size (20px); still none → over the arena, never over buttons.
+- Test: `packages/sim/test/q-stance-banner.test.ts` (both phone sizes + 5,000 random layouts: banner box never overlaps the Stance box). Shots: 667x375 + 844x390, reduced motion on/off, Practice/standard/challenge — 164/164 checks (≥6px under the top bars, clear of the hero, off every button, Stance tap registered while the banner is up).
+
+## Q-VIRTUE-BANNER — no Sensei banner covers any action button (2026-10-27)
+- Challenge "New move!" lines (and every other Sensei line) used to cover VIRTUE and sometimes STRIKE. Now every placement path goes through `pickBannerSpot` with `buttonKeepOut()` as the keep-out zone: `placeSensei` (New move!, lessons, tutorial tips, twist Sensei lines, KO lines), the Counter tip (`placeCounterTip`) and the twist banner (`showTwist`).
+- A line with no room is shrunk to the small-phone size, then narrowed step by step (and into the strip left of the buttons) before it may sit over the arena, never over a button.
+- Tests: `packages/sim/test/q-stance-banner.test.ts` extended: New move!, lesson, Counter tip and twist at 667x375 and 844x390 over a sweep of hero positions never overlap any button box. Shots (`docs/shots/q-virtue-banner/`): 876/876 checks at both sizes, reduced motion on/off, Practice/Standard/Challenge (off every button, ≥6px under the bars, off the hero, VIRTUE and STRIKE taps still register with a New move! line up); the #384 shots still pass 164/164.
+
+## Q-TIP-BANNER — the Counter tip and the Sensei banner no longer overlap (2026-10-27)
+- The Tester saw the Counter tip and a Sensei banner overlap in 8 of 8 trials (6.2k–9.7k px²). `placeCounterTip` passed `others: []`, so it did not know the banner was there. It now treats the showing banner's box (+6px) as one more keep-out, so the tip sits clear of it in either order (tip first or banner first; the tip re-places itself every frame). The tip still never covers an action button, stays ≥6px under the top bars, and avoids the heroes when there is room.
+- If the heroes plus the banner leave no clear spot, the tip may sit over a hero rather than vanish. Buttons, HUD, circles and the banner stay hard keep-outs.
+- Code: `bannerKeepOut` and `tipSpot` in `ui/senseiPlace.ts`; one changed call in `GameScene.placeCounterTip`. No new dependency.
+- Test: `packages/sim/test/q-tip-banner.test.ts` (both phone sizes, the Tester's two tip/banner size pairs, a sweep of hero positions: 0 overlap, off every button, tip always shown, at or below the floor). Live: 64 trials (667x375 + 844x390, reduced motion on/off, 4 modes, 2 pairs, both orders) — 0 overlapping; the same harness with the fix switched off shows 44/64 overlapping (max 24,656 px²). Shots (`docs/shots/q-tip-banner/`): 876/876 and the #384 shots 164/164 still pass.
+
+## R-INSIGHT-BAL-a — Insight card numbers and rules A/B/C (2026-10-27)
+- New numbers and the Content Designer's text in `content/insights/insights.json`; rules A (Wind Step also speeds basic attacks), B (Press the Advantage also on winded/recovering enemies) and C (Shield Breaker: `focusOnBreak` 7 Focus on a shield break) in `packages/sim/src/world.ts` and `effects.ts`. No new dependency.
+- Tests: `packages/sim/test/r-insight-bal-a.test.ts` (one behaviour test per rule, the card numbers, the Focus cap); `r-bal-14b-charms.test.ts` Rally now x1.75. Golden fixture `fixtures/golden/p-menu2-d-default-run.json` regenerated (approved).
+- Local re-run of the R-INSIGHT-BAL harness (kid, newer, careful, Standard, belts 1-10): the 4b card table and the 4d pairs and routes tables match the spec exactly (every difference 0.0 PE, 0 win points).
+- Wind Step tuned to 0.3 / every 5 combo hits / 2 s (Manager, #390 4f); text "Every 5 combo hits gives you a 2-second burst of speed."; test and golden updated.
+- `b-t3-tune-2-boss-levers`: only the masher floor check runs at 600 seeds (60-seed luck); 348/437 = 79.6%, floor still 75%.
+- `r-challenge-p5` step-out test is paired on landing-circle damage: 477 matched swings, step-out 1933 vs Counter 2278 (-15.1%), lower in 22, higher in 4. Follow-up for the Manager: committing to the step-out once started cuts landing damage about 44% (not adopted).
+- Full suite green: 1148 passed, 4 skipped, about 31 s; typecheck and build pass.
+
+## R-INSIGHT-BAL-b — Insight budget tests, layers 1 and 2 (2026-10-27)
+- Stacked on R-INSIGHT-BAL-a (#389). Layer 1 (`packages/sim/test/insight-budget.test.ts`) runs in the normal suite: caps table, unique ids, family sizes, stacking limits. Layer 2 (`packages/sim/test/balance/insight-budget.test.ts`, `BALANCE=1`): B1-B7 and B10 (route win-rate spread: held at most 14, lean-picker at most 10), B9 printed.
+- Test-only pick seam: `playRoom(..., pickInsight?)` in `balance/bot.ts`. No env flags or HOOKS patch. No new dependency.
+- Results: see the PR's Delivery Note (counts, layer-2 run time, and the deliberate-bad-number demo).
+- QA fix (layout): Insight picker cards are as tall as the tallest text plus 8 px under it (was a fixed 175 px); body text steps down 16/15/14 only if the row would not fit. New card text from #391 copied into `insights.json` (numbers untouched). Test: `r-insight-bal-a-picker.test.ts`; live check `/workspace/shots/r-insight-bal-a/`: 372 checks, 0 failed (both phone sizes, reduced motion on and off, 9 cards in 5 rows, plus taps).
+
+## A4-DOJO-i — Action Zone, the inside room (2026-10-30)
+- Imported pack `dojo-az-inside` (22 sprites at 0.6); `content/dojo/action-zone/inside-room.json` is loaded by `loadInsideRoom` into a sim Room (`packages/sim/src/actionZone.ts`). New `InsideScene` (key `ActionZoneInside`): floor, walls, props, hero and sprites sorted by `sortRow`, seat-back and bag-top pieces that hide the hero only while he is north of them, the front wall on top.
+- PLACEHOLDER: an "Action Zone" button in the Home Dojo (play mode) goes straight in; PR 2 (A4-DOJO-ii) routes it through the outside. The exit door returns to the Home Dojo.
+- Tests: `packages/sim/test/action-zone.test.ts` (7): grid and room match the file; spawn reaches every approach tile and the exit; blockers cannot be crossed by tap or stick; art and sortRow match; a broken file is refused. Golden fixture unchanged.
+- Shots (667x375 and 844x390, reduced motion on and off, setting read back first): 4 runs x 24 checks, 96 pass, 0 fail. They prove the hero is hidden behind the seat panel, both bag tops and the front wall, and fully visible in front of them. Contact sheets: `/workspace/shots/a4-dojo-i/contact-sheet-*.jpg`.
+- Suite at this PR: 1172 passed, 11 skipped (none of them mine; this PR adds 7 tests, no skips); typecheck and build exit 0; the golden fixture is unchanged.
+
+## A4-DOJO-ii — Action Zone, outside, town and the way in (2026-10-30)
+- Imported packs `dojo-az-outside` (day only) and `dojo-az-town` (a still picture). New `WalkScene` base; `InsideScene` moved onto it with an exit cue; new `OutsideScene` (key `ActionZoneOutside`) and `TownScene` (key `ActionZoneTown`). The PLACEHOLDER Action Zone button is gone; a plain "Town" button in the Home Dojo starts the trip. Rooms load through `loadOutsideRoom` and `loadTown` (`packages/sim/src/actionZone.ts`).
+- Tests: `packages/sim/test/action-zone-outside.test.ts` (14): grid matches the file; the artist's blockers are kept (only `tree-3` added, only four cells carved); every walkable tile is reachable by tap from the town spawn; the doorstep is reached by tap and by stick; both exits are reachable; solid blockers cannot be entered; the pack is day only; a broken file throws.
+- Suite: 1186 passed, 11 skipped (112 files passed, 3 skipped); typecheck and build exit 0; the golden fixture `p-menu2-d-default-run.json` is unchanged.
+- Shots (667x375 and 844x390, reduced motion on and off, setting read back first): 4 runs x 27 checks, 108 pass, 0 fail (button fit, fades, camera clamps, hero hidden behind the shrub and visible in front of shrub and bed by pixels, cues, door tap, exit and return, both town exits). Inside re-run on the new `WalkScene`: 4 x 18 checks, 72 pass, 0 fail. Contact sheets: `/workspace/shots/a4-dojo-ii/contact-sheet-*.jpg`.
+- Not in this PR: a layered, walkable town; other town buildings; a designed door from the Home Dojo to the town; dusk art.
+
+## A4-DOJO-hotfix — choppy dojo, stuck Sensei line, fresh load (2026-10-31)
+- Bug 1: buttons and exit cues are baked once into textures (`ui/button.ts`, `ui/exitCue.ts`); walking scenes re-sort and re-show only on change. Median frame cost (667x375, motion on) 1.2 -> 0.2 ms Home Dojo, 0.4 -> 0.2 inside, 0.5 -> 0.2 outside, 0.5 -> 0.1 town; same at 844x390 with reduced motion.
+- Bug 2: the step-back banner ("Three great counters! ...", B-MASHER-2) now goes away after 2.2 s. Before: still up at 7 s, both motion settings. After: gone by 2.3 s, both settings, two sizes.
+- Bug 3: not reproduced; tests pin the routing. Decision notes in `docs/decisions.md`.
+- Tests: `packages/sim/test/a4-dojo-hotfix.test.ts` (11); `p-menu-c-buttons.test.ts` pin updated for the baked outline. Suite 1197 passed, 11 skipped; typecheck and build exit 0; golden fixture unchanged.

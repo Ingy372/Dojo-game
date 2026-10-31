@@ -297,6 +297,15 @@ Two player stance idles on the existing player rig: `stance_rooted` (**Rooted Fo
 - During a wind-up the stars fade to 50% over 4 ticks (the bandage stays). Wobble ±3°, 1.6 s, idle/move only.
 - `fx/injured-popup_plate.png` has no text; the game draws "Injured!" in its UI font in `textArea`. `fx/injured-puff_shake-off.png` plays on `injuredEnd`.
 
+## A4-DOJO: Action Zone dojo, game-ready art (`incoming-art/action-zone-dojo/`, PR #393) [NEW, art only, not wired]
+Read `action-zone-dojo/README.md` ("Game-ready batch") for every file, frame size and anchor. Jay approved the samples (the only change: the sofa by the handprint wall is gone). All art is @2x at 80 px per tile; shrink on import like the other static art. Pixel rule for one frame: `px = tile00Px + (col*80, row*80 - z*65.5)`.
+- **Inside** (`sprites/static.json` id `inside-main-floor`, `sprites/inside-room.json`): one room, 2272 x 1696, tile (0,0) at (56, 168). Stack the full layers `inside-main-floor_{floor,walls,props,foreground}.png` (full layers only; there are no chunk tiles). Draw order: floor, walls, props, wall-decal sprites, then sprites and characters by `sortRow`, then **foreground above the characters**: the full-frame `foreground` layer always, then the foreground sprites `seats-back` and `bag-{black,blue,red}-top` (copies of pixels already in `seats` / `bag-*`) above each character whose feet row is LESS than the sprite's `sortRow` (`inside-room.json` `foregroundSprites`, `foregroundRule`); never above a character in front of them. `inside-room.json` has the walkable grid (`tiles`, walkable chars `.Dgmr`), blockers [col0,col1,row0,row1], spawn (13,17), the exit to the town square, 11 interactables (`approachTile`, `tapRectPx` [x0,y0,x1,y1]), 24 seat slots and the camera clamp.
+- **Outside entrance** (`sprites/outside-entrance.json`): 1120 x 712, tile (0,0) at (0,-8). Layers per state (`day`, `dusk`): ground, [dusk pools], building, `phone`, `address`, scenery sprites by `sortRow`, [dusk glow]. The front door is the tap target (`tapRectPx`, `approachTile` (7.0, 6.6), `target` = `inside-main-floor`). Blockers and spawn (7.0, 8.6) are listed. Use the dusk set at the town's dusk time.
+- **Town slot** (`static.json` id `town-slot-dojo`): `town-slot-dojo_{day,dusk}.png` 500 x 360 @2x, 1x copies in `sprites/1x/`. Put `anchorPx` (250, 295) on town tile (3.6, 4.4) (the old `dojo0` slot of the PR #301 town square, `footprintRectTownTiles` [1.1, 6.1, 2.8, 4.4]); scale 0.625 (Jay: slightly wider than the first 0.55) of the entrance building. Tap `tapRectPx` (@2x) to go to the entrance scene. The dusk sprite is graded slightly lighter than the town (landmark) and has its glow and ground pools baked in; paste it after the town's dusk grade. Remove the old `dojo0` art when you place it (the town-square `--no-dojo0 --clear-dojo-trees` flags render the town without it and without the tree that stood in front of it (tree (1.6, 5.6) dropped, tree (6.6, 6.0) moved to (6.6, 6.35)); both are opt-in, the default town is unchanged: `previews/town-slot-in-town-{day,dusk}.png`).
+- **Phone and address are blank overlay layers** (`outside-entrance-<state>_phone.png`, `_address.png`; rects in `outside-entrance.json`). The real values are not in the repo: draw them at runtime from the game's own config, or swap the two PNGs.
+- **Prop sprites** (`<id>_<id>.png`, `anchorPx`, `footprintRect`, `sortRow`, `interactive`): pro-counter (shop), gear-box, seats, bag-black/blue/red, target-wall, back-doors, cross-door-a/b, handprint-wall; plus bench, plant, trash-can, whiteboard and the two wings. Wing sprites include the door stubs, so their pixel box is taller than their `sortRow` suggests: use `sortRow`. `target-wall` has only the yellow targets; the mural, creed boards and flag are in the props layer.
+- **Branded red** (red square, gear box, seats, sign, crosses, handprints) is kept pending Jay's answer. Open items are in the action-zone-dojo DELIVERY_NOTE (DECIDE).
+
 ## Open items in one place
 
 1. The player frame changed to 128 × 160 with the anchor at (64, 136.96). It applies to `player-character/` and `player-custom/`.
@@ -312,6 +321,7 @@ Two player stance idles on the existing player rig: `stance_rooted` (**Rooted Fo
 11. **[UPDATED]** A2 Form stances: Rooted = option A (decided by Jay). Still open: the real names (Content Writer), when the stance idle shows, and whether other animations get form variants.
 12. **[UPDATED]** A6 decoration pool: ids and names follow C10; colour 2 on White floors is wood tan `#d2a878`; the folding screen is bonus-only; Tier 2+ gold-plate trophies are parked. Still open: the keeper figures per floor (lion-dog, turtle, crane) and the scroll picture-to-subject pairing (mapped in order; Content Designer to confirm).
 13. **[NEW]** S4c Injured art: enemies only, the stars at head height, and 2 stars for the Keeper and Guardians (decided by Jay). The 'Injured!' wording goes to S4c-C1.
+14. **[NEW]** A4-DOJO: the Action Zone dojo art is delivered (PR #393, not wired). Decided by the Manager: dusk lamp lens kept, dojo slightly brighter at dusk, seat backs and bag tops are foreground sprites, full layers only, history scrub not needed. **Decided by Jay:** town slot slightly wider (scale 0.625), the tree in front of it cleared, the logo in the repo and the creed typo fixes kept. Open from before: the branded red, edge lines, no phone/address on the slot, sign wording.
 
 ## A8: Monster Journal silhouettes (journal-silhouettes-a8/)
 - `journal-silhouette-keeper` and `journal-silhouette-padded` (116x120) are in `journal-silhouettes-a8/sprites/static.json`. They are the same treatment as the named-monster silhouettes. Use them on the unmet Floor Keeper and Bopper cards in place of the big "?" (#135).
@@ -337,3 +347,19 @@ Re-import, same file names and JSON as before (no layout change):
 - `form-stances-a2/sprites/body-a/` and `body-b/`: the `face-0N` sheets of `stance_rooted` and `stance_flowing`.
 - `dojo-people/sprites/kohai/`: the `kohai_body_*` sheets; `dojo-people/portraits/kohai/`: the 4 flattened portraits and the 4 `*_body` layers.
 Don't import `walk-rework/arms-*` yet: Jay hasn't picked one.
+
+## Audio: staged SFX (`incoming-art/audio/sfx/`) [SAMPLES, do not wire until Jay approves]
+- The event-to-file mapping is in `audio/sfx/README.md`. Formats: Kenney `.ogg` and 512-pack `.wav` (44.1 kHz, 16-bit mono).
+- All files are CC0, and a credit is not required. A courtesy credit for "Kenney (kenney.nl)" and "SubspaceAudio / Juhani Junkala" is appreciated. Kenney RPG Audio (cloth whooshes) is also CC0.
+- Copy the chosen files into the game's audio folder when wiring. Do not load them from `incoming-art/`.
+- **Loudness: balance in the game's mixer. The files are untouched on purpose (no volume edits in the repo).** Measured with ffmpeg volumedetect (mean / peak):
+  - 8-bit `sfx_sounds_powerup2.wav` (-7.5 / -6.0 dB) and `sfx_movement_jump1.wav` (-7.3 / -6.0 dB) are about 8-10 dB louder than the Kenney sounds. Trim them by about 8-10 dB.
+  - `jingles_SAX03.ogg` is quiet (-20.0 / -10.6 dB peak; the other jingles peak at -1 to -6 dB). Raise it by about +6 dB.
+  - `sfx_coin_double1.wav` is quiet (peak -11.8 dB, versus -6.0 dB for `sfx_coin_single1`). Raise it by about +5 dB or match it to coin_single1.
+  - The Kenney UI clicks and impacts peak near 0 dBFS (-0.0 to -1.4 dB; `pluck_001` peaks at -0.0 dB). Keep headroom on the UI/SFX bus to avoid clipping when sounds stack.
+  - Kenney mean levels span about 15 dB (`click_001` -26.4 dB to `confirmation_001` -11.3 dB). Normalize per event group.
+  - The cloth whooshes (`kenney-rpg/cloth1-3`) are quiet: mean -24.6 to -29.3 dB, peak -3.5 to -10.1 dB. Raise the whiff group to taste.
+  - Duration: `click_002.ogg` is only 0.01 s long and can sound like a tick, so prefer `click_001` for taps. `scroll_001.ogg` is 1.0 s long, which is long for a UI cue, so cut it off or fade it out on stop.
+- Whiff picks a random file from `kenney-rpg/cloth1-3`. Level-up and belt-up use the STEEL jingles (`jingles_STEEL00` / `jingles_STEEL04`).
+- For hit variants, pick at random among the `_000/_001/_002` files to avoid repetition.
+- Keep it kid-friendly: do not add sounds from the scream, explosion, weapon or alarm folders of the 512 pack.

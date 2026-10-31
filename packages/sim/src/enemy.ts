@@ -1,7 +1,7 @@
 // Enemy types are content (data files in content/enemies), checked here when loaded.
 // Distances are in tiles and times in ticks.
 
-import { TICKS_PER_SECOND } from './config';
+import { CHALLENGE_FROM_TIER, DIFFICULTY, MIN_WINDUP_TICKS, TICKS_PER_SECOND } from './config';
 
 export interface EnemyAttackDef {
   /** Optional name, for bosses with several attacks (for example "slam"). */
@@ -20,6 +20,55 @@ export interface EnemyAttackDef {
   recoverTicks: number;
   /** B-T3: false for dash-only attacks (the Rolling Pin's roll). A Counter does nothing; the answer is to dash out. */
   counterable?: boolean;
+  /** R-CHALLENGE P2: a second hit after this one, with its own full wind-up (Challenge patterns only). */
+  followUp?: EnemyFollowUpDef;
+  /** R-CHALLENGE P2: the danger circle is drawn at the spot it lands on (tells come in P4). */
+  landing?: boolean;
+  /** R-CHALLENGE P3: set on attacks from the Challenge block. They must start on screen (see SIM_VIEW). */
+  challenge?: boolean;
+  /** R-CHALLENGE P3: on Challenge, this dash-only lane never starts while another enemy's red circle covers the player. */
+  noOverlapWithRedCircle?: boolean;
+  /** R-CHALLENGE P4: designer note on how the tell looks and sounds (not shown in game). */
+  tell?: string;
+  /** R-CHALLENGE P4: what Sensei says the first time this save meets this attack. */
+  senseiLine?: string;
+}
+
+/** R-CHALLENGE P4: how a pattern attack's danger area is drawn at the start of its wind-up. */
+export type PatternShape = 'lane' | 'landing' | 'circle';
+
+/** R-CHALLENGE P4: the tell shape of a Challenge pattern attack, or null for a normal attack (drawn as today). */
+export function patternShape(a: EnemyAttackDef): PatternShape | null {
+  if (!a.challenge) return null;
+  if (a.counterable === false) return 'lane';
+  return a.landing ? 'landing' : 'circle';
+}
+
+/** R-CHALLENGE P4: the per-save key for "first time this attack is seen" (enemy + attack). */
+export function patternKey(enemyId: string, a: EnemyAttackDef): string {
+  return `${enemyId}:${a.name}`;
+}
+
+/** R-CHALLENGE P2: the second hit of a two-part attack. */
+export interface EnemyFollowUpDef {
+  /** Share of the attack's strength (0 to 1). */
+  strength: number;
+  /** Ticks between the first hit and the start of the second wind-up (at least the attack's recover). */
+  gapTicks: number;
+}
+
+/** R-CHALLENGE P2: the optional Challenge block. Used only on Challenge, from `fromBelt` and `fromRoom` up. */
+export interface EnemyChallengeDef {
+  /** Real belt number, CHALLENGE_FROM_TIER to 10. */
+  fromBelt: number;
+  /** Room number in the floor (1 = first room). */
+  fromRoom: number;
+  /** Extra attacks, added after the normal ones. */
+  attacks: EnemyAttackDef[];
+  /** Attack order that repeats (indexes into normal + extra attacks), or null for all in turn. */
+  pattern: number[] | null;
+  /** Bosses: replaces the normal phases on Challenge (indexes into normal + extra attacks). */
+  phases: EnemyPhaseDef[] | null;
 }
 
 /** B-T3: a boss phase. From this share of health down, only these attacks (indexes into attacks) are used, in turn. */
@@ -94,6 +143,10 @@ export interface EnemyDef {
   parSeconds: number;
   /** Placeholder body color, as "#rrggbb" (art comes later). */
   color: string;
+  /** R-CHALLENGE P2: attack order that repeats (set only by mergeChallenge). */
+  pattern?: number[];
+  /** R-CHALLENGE P2: the Challenge block (missing when the file has none). */
+  challenge?: EnemyChallengeDef;
 }
 
 export class EnemyError extends Error {
@@ -139,9 +192,16 @@ function loadAttack(data: unknown, id: string, where: string): EnemyAttackDef {
   };
   if (a.counterable !== undefined && typeof a.counterable !== 'boolean') throw new EnemyError(id, `"${where}.counterable" must be true or false`);
   if (a.counterable === false || a.dashOnly === true) attack.counterable = false;
+  if (a.noOverlapWithRedCircle !== undefined && typeof a.noOverlapWithRedCircle !== 'boolean') throw new EnemyError(id, `"${where}.noOverlapWithRedCircle" must be true or false`);
+  if (a.noOverlapWithRedCircle === true) attack.noOverlapWithRedCircle = true;
+  for (const k of ['tell', 'senseiLine'] as const) {
+    if (a[k] === undefined) continue;
+    if (typeof a[k] !== 'string' || (a[k] as string).trim() === '') throw new EnemyError(id, `"${where}.${k}" must be some text`);
+    attack[k] = a[k] as string;
+  }
   // Every attack must be telegraphed: at least half a second of warning on Standard.
-  if (attack.telegraphTicks < 10) {
-    throw new EnemyError(id, `"${where}.telegraphTicks" must be at least 10 (half a second of warning)`);
+  if (attack.telegraphTicks < MIN_WINDUP_TICKS) {
+    throw new EnemyError(id, `"${where}.telegraphTicks" must be at least ${MIN_WINDUP_TICKS} (half a second of warning)`);
   }
   return attack;
 }
@@ -172,6 +232,11 @@ export function loadEnemy(data: unknown): EnemyDef {
     attacks = [loadAttack(raw.attack, id, 'attack')];
   } else {
     throw new EnemyError(id, '"attack" is missing');
+  }
+  // R-CHALLENGE P3: the Rolling Pin keeps the no-overlap flag in its "dashOnlyAttack" notes block.
+  const dashNote = raw.dashOnlyAttack as Record<string, unknown> | undefined;
+  if (dashNote && typeof dashNote === 'object' && dashNote.noOverlapWithRedCircle === true) {
+    for (const a of attacks) if (a.name === dashNote.name && a.counterable === false) a.noOverlapWithRedCircle = true;
   }
 
   let shield: EnemyShieldDef | null = null;
@@ -211,25 +276,7 @@ export function loadEnemy(data: unknown): EnemyDef {
     weapon = { id: w.id, disarmedPower: positiveNumber(w, 'disarmedPower', id, 'weapon.') };
   }
 
-  let phases: EnemyPhaseDef[] | null = null;
-  if (raw.phases !== undefined) {
-    if (!Array.isArray(raw.phases) || raw.phases.length === 0) throw new EnemyError(id, '"phases" must list at least one phase');
-    let last = Infinity;
-    phases = raw.phases.map((ph: unknown, i: number) => {
-      const o = (typeof ph === 'object' && ph !== null ? ph : {}) as Record<string, unknown>;
-      const at = positiveNumber(o, 'atHealthFraction', id, `phases[${i + 1}].`);
-      if (at > 1 || at >= last) throw new EnemyError(id, `"phases[${i + 1}].atHealthFraction" must be 1 or less and lower than the phase before`);
-      last = at;
-      if (!Array.isArray(o.attacks) || o.attacks.length === 0) throw new EnemyError(id, `"phases[${i + 1}].attacks" must name at least one attack`);
-      const list = o.attacks.map((n) => {
-        const k = attacks.findIndex((a) => a.name === n);
-        if (k < 0) throw new EnemyError(id, `"phases[${i + 1}]" names attack "${String(n)}", which isn't in "attacks"`);
-        return k;
-      });
-      return { atHealthFraction: at, attacks: list, senseiLine: typeof o.senseiLine === 'string' ? o.senseiLine : null };
-    });
-    if (phases[0].atHealthFraction !== 1) throw new EnemyError(id, '"phases[1].atHealthFraction" must be 1');
-  }
+  const phases = raw.phases !== undefined ? loadPhases(raw.phases, attacks, id, 'phases') : null;
 
   let split: EnemySplitDef | null = null;
   if (raw.split !== undefined && raw.split !== null) {
@@ -263,5 +310,116 @@ export function loadEnemy(data: unknown): EnemyDef {
     weapon,
     parSeconds: raw.parSeconds === undefined ? 4 : positiveNumber(raw, 'parSeconds', id),
     color,
+    ...(raw.challenge !== undefined ? { challenge: loadChallenge(raw.challenge, attacks, id) } : {}),
+  };
+}
+
+function loadPhases(data: unknown, attacks: EnemyAttackDef[], id: string, key: string): EnemyPhaseDef[] {
+  if (!Array.isArray(data) || data.length === 0) throw new EnemyError(id, `"${key}" must list at least one phase`);
+  let last = Infinity;
+  const phases = data.map((ph: unknown, i: number) => {
+    const o = (typeof ph === 'object' && ph !== null ? ph : {}) as Record<string, unknown>;
+    const at = positiveNumber(o, 'atHealthFraction', id, `${key}[${i + 1}].`);
+    if (at > 1 || at >= last) throw new EnemyError(id, `"${key}[${i + 1}].atHealthFraction" must be 1 or less and lower than the phase before`);
+    last = at;
+    if (!Array.isArray(o.attacks) || o.attacks.length === 0) throw new EnemyError(id, `"${key}[${i + 1}].attacks" must name at least one attack`);
+    const list = o.attacks.map((n) => {
+      const k = attacks.findIndex((a) => a.name === n);
+      if (k < 0) throw new EnemyError(id, `"${key}[${i + 1}]" names attack "${String(n)}", which isn't in "attacks"`);
+      return k;
+    });
+    return { atHealthFraction: at, attacks: list, senseiLine: typeof o.senseiLine === 'string' ? o.senseiLine : null };
+  });
+  if (phases[0].atHealthFraction !== 1) throw new EnemyError(id, `"${key}[1].atHealthFraction" must be 1`);
+  return phases;
+}
+
+/** R-CHALLENGE P2: shortest Challenge wind-up for a new pattern attack (0.7 s). */
+export const MIN_PATTERN_WINDUP_TICKS = 14;
+
+/** The Challenge wind-up of an attack (same formula as telegraphTicks in world.ts). */
+function challengeWindup(a: EnemyAttackDef): number {
+  const fill = a.telegraphTicks - DIFFICULTY.standard.counterWindowTicks;
+  const d = DIFFICULTY.challenge;
+  return Math.max(MIN_WINDUP_TICKS, Math.round(fill * d.fillScale) + d.counterWindowTicks);
+}
+
+function loadChallenge(data: unknown, base: EnemyAttackDef[], id: string): EnemyChallengeDef {
+  if (typeof data !== 'object' || data === null) throw new EnemyError(id, '"challenge" must be an object');
+  const c = data as Record<string, unknown>;
+  const fromBelt = c.fromBelt;
+  if (typeof fromBelt !== 'number' || !Number.isInteger(fromBelt) || fromBelt < CHALLENGE_FROM_TIER || fromBelt > 10) {
+    throw new EnemyError(id, `"challenge.fromBelt" must be a whole number from ${CHALLENGE_FROM_TIER} to 10 (Challenge opens at belt ${CHALLENGE_FROM_TIER})`);
+  }
+  let fromRoom = 1;
+  if (c.fromRoom !== undefined) {
+    fromRoom = positiveNumber(c, 'fromRoom', id, 'challenge.');
+    if (!Number.isInteger(fromRoom)) throw new EnemyError(id, '"challenge.fromRoom" must be a whole number');
+  }
+  const rawAttacks = c.attacks ?? [];
+  if (!Array.isArray(rawAttacks)) throw new EnemyError(id, '"challenge.attacks" must be a list');
+  const extra = rawAttacks.map((a, i) => {
+    const where = `challenge.attacks[${i + 1}]`;
+    const attack = loadAttack(a, id, where);
+    const o = a as Record<string, unknown>;
+    if (attack.strength > 1) throw new EnemyError(id, `"${where}.strength" must be 1 or less`);
+    if (challengeWindup(attack) < MIN_PATTERN_WINDUP_TICKS) {
+      throw new EnemyError(id, `"${where}.telegraphTicks" gives a Challenge wind-up under ${MIN_PATTERN_WINDUP_TICKS} ticks (0.7 s)`);
+    }
+    if (o.followUp !== undefined) {
+      if (typeof o.followUp !== 'object' || o.followUp === null) throw new EnemyError(id, `"${where}.followUp" must be an object`);
+      const f = o.followUp as Record<string, unknown>;
+      const strength = positiveNumber(f, 'strength', id, `${where}.followUp.`);
+      if (strength > 1) throw new EnemyError(id, `"${where}.followUp.strength" must be 1 or less`);
+      const gapTicks = wholeTicks(f, 'gapTicks', id, `${where}.followUp.`);
+      if (gapTicks < attack.recoverTicks) throw new EnemyError(id, `"${where}.followUp.gapTicks" must be at least its recoverTicks`);
+      attack.followUp = { strength, gapTicks };
+    }
+    if (o.landing !== undefined && typeof o.landing !== 'boolean') throw new EnemyError(id, `"${where}.landing" must be true or false`);
+    if (o.landing === true) attack.landing = true;
+    attack.challenge = true;
+    return attack;
+  });
+  const all = [...base, ...extra];
+  const names = new Set<string>();
+  for (const a of all) {
+    if (names.has(a.name) && extra.includes(a)) throw new EnemyError(id, `"challenge.attacks" repeats the attack name "${a.name}"`);
+    names.add(a.name);
+  }
+  let pattern: number[] | null = null;
+  if (c.pattern !== undefined && c.pattern !== null) {
+    if (!Array.isArray(c.pattern) || c.pattern.length === 0) throw new EnemyError(id, '"challenge.pattern" must name at least one attack');
+    pattern = c.pattern.map((n) => {
+      const k = all.findIndex((a) => a.name === n);
+      if (k < 0) throw new EnemyError(id, `"challenge.pattern" names attack "${String(n)}", which isn't in "attacks" or "challenge.attacks"`);
+      return k;
+    });
+  }
+  const phases = c.phases !== undefined && c.phases !== null ? loadPhases(c.phases, all, id, 'challenge.phases') : null;
+  if (extra.length === 0 && !pattern && !phases) throw new EnemyError(id, '"challenge" needs attacks, a pattern or phases');
+  return { fromBelt, fromRoom, attacks: extra, pattern, phases };
+}
+
+/** Where a room sits, for the Challenge block's gate. Practice rooms have none. */
+export interface ChallengeAt {
+  /** Real belt number. */
+  belt: number;
+  /** Room number in the floor (1 = first room). */
+  room: number;
+}
+
+/**
+ * R-CHALLENGE P2: the one place Challenge patterns switch on. Returns `def` itself (untouched)
+ * unless the difficulty is Challenge, the enemy has a challenge block, and the room is at or past
+ * its belt and room. Then the extra attacks are added, and the pattern and boss phases are set.
+ */
+export function challengeDef(def: EnemyDef, difficulty: string, at: ChallengeAt | null | undefined): EnemyDef {
+  const c = def.challenge;
+  if (difficulty !== 'challenge' || !c || !at || at.belt < c.fromBelt || at.room < c.fromRoom) return def;
+  return {
+    ...def,
+    attacks: [...def.attacks, ...c.attacks],
+    ...(c.pattern ? { pattern: c.pattern } : {}),
+    phases: c.phases ?? def.phases,
   };
 }

@@ -30,10 +30,14 @@ export const MOVEMENT = {
  */
 export const DIFFICULTY = {
   // Guided: same fill speed as Standard, then a 0.5 s window (Jay, 2026-10-06).
-  guided: { counterWindowTicks: 10, fillScale: 1 },
-  standard: { counterWindowTicks: 6, fillScale: 1 },
-  challenge: { counterWindowTicks: 4, fillScale: 0.8 },
+  // B-TUNE-GUIDED: enemyPowerScale multiplies every enemy's Power (Health never changes).
+  guided: { counterWindowTicks: 10, fillScale: 1, enemyPowerScale: 0.75 },
+  standard: { counterWindowTicks: 6, fillScale: 1, enemyPowerScale: 1 },
+  challenge: { counterWindowTicks: 4, fillScale: 0.8, enemyPowerScale: 1 },
 } as const;
+
+/** R-CHALLENGE P1: no enemy wind-up is ever shorter than this, on any difficulty (half a second). */
+export const MIN_WINDUP_TICKS = 10;
 
 /** How full the danger circle is (0 to 1) when the Perfect Counter window opens. */
 export const TELEGRAPH_NEARLY_FULL = 0.85;
@@ -41,6 +45,18 @@ export const TELEGRAPH_NEARLY_FULL = 0.85;
 export type Difficulty = keyof typeof DIFFICULTY;
 
 /** Combat numbers. Starting values from core-design section 4; tune from playtesting. */
+/** R-CHALLENGE P6 (core-design §13): Challenge difficulty can be picked from this belt tier (4th belt) up. */
+export const CHALLENGE_FROM_TIER = 4;
+
+/**
+ * R-CHALLENGE P3: the screen area (in tiles) a Challenge pattern attack must start inside.
+ * It is the smallest view of every supported screen size, taken from the client's camera math
+ * (apps/client/src/game/cameraView.ts): width from 1024x768 (6.75 * 1024 / 768 = 9 tiles),
+ * height 6.75 tiles at every size. The camera follows the player and stops at the room edges,
+ * with a strip of 1.1 tiles above the top wall. A test ties these numbers to the client's.
+ */
+export const SIM_VIEW = { width: 9, height: 6.75, topStrip: 1.1 } as const;
+
 export const COMBAT = {
   defaultDifficulty: 'standard' as Difficulty,
 
