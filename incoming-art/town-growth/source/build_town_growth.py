@@ -158,7 +158,7 @@ if ID == "orange":
     add("ob_flue", tube(G(oc + 0.25, orr - 0.1, 1.2), G(oc + 0.25, orr - 0.1, 1.62), 0.07, 0.07, segs=10), "#8b8070")
     add("ob_fluec", tube(G(oc + 0.25, orr - 0.1, 1.62), G(oc + 0.25, orr - 0.1, 1.7), 0.1, 0.1, segs=10), "#6b6256", False)
     # the long wooden table with two benches, set with plates and bread
-    tc, tr = 13.85, 4.18
+    tc, tr = 13.85, 4.1
     add("ob_tb", box(G(tc, tr, 0.6), (1.5, D(0.46), 0.07), bevel=0.02), WOOD3)
     for sx in (-0.62, 0.62):
         add(f"ob_tl{sx}", box(G(tc + sx, tr, 0.3), (0.1, D(0.36), 0.6)), WOOD2)
@@ -185,12 +185,11 @@ if ID == "green":
         add(f"gp_st{k}", box((x, y + 0.0, 0.15), (w * 0.8, D(0.16), 0.02)), "#efe9db", False)
     # the stone giant bench on the lawn gap between the dojo and the shop, at the hedge line
     bc, brow = 6.65, 4.15
-    add("gb_seat", box(G(bc, brow, 0.4), (0.7, D(0.3), 0.14), bevel=0.05), "#d2cabb")
+    add("gb_seat", box(G(bc, brow, 0.36), (0.78, D(0.3), 0.12), bevel=0.04), "#d9d1c2")
     for sx in (-1, 1):
-        add(f"gb_foot{sx}", ellipsoid(G(bc + sx * 0.27, brow + 0.04, 0.2), (0.17, D(0.17), 0.2), segs=12, rings=8), "#c4bba9")
-        add(f"gb_arm{sx}", ellipsoid(G(bc + sx * 0.36, brow - 0.02, 0.52), (0.1, D(0.15), 0.14), segs=10, rings=6), "#d2cabb")
-    add("gb_back", box(G(bc, brow - 0.12, 0.62), (0.72, D(0.08), 0.3), bevel=0.04), "#d9d1c2")
-    if not NIGHT: add("gb_worry", ellipsoid(G(bc + 0.12, brow + 0.02, 0.52), (0.06, 0.05, 0.04), segs=10, rings=6), "#9fa3b5")
+        add(f"gb_foot{sx}", box(G(bc + sx * 0.28, brow, 0.15), (0.2, D(0.26), 0.3), bevel=0.04), "#c4bba9")
+    add("gb_back", box(G(bc, brow - 0.1, 0.62), (0.78, D(0.07), 0.34), bevel=0.04), "#d2cabb")
+    if not NIGHT: add("gb_worry", ellipsoid(G(bc + 0.12, brow + 0.02, 0.46), (0.06, 0.05, 0.04), segs=10, rings=6), "#9fa3b5")
     else:
         for k, ((px, py), dx) in enumerate(zip(path[:6], (-0.0, 0, 0, 0, 0, 0))):
             if k % 2 == 1 or k == 0:
@@ -213,7 +212,7 @@ if ID == "blue":
         x = RV0 + 0.18 + random.random() * (RV1 - RV0 - 0.36); y = 3.9 + random.random() * 7.2
         if 7.4 < y < 8.6: continue
         add(f"bu_peb{k}", ellipsoid(G(x, y, 0.045), (0.07 + random.random() * 0.04, D(0.05), 0.02), segs=8, rings=3), ("#efe2bd", "#e2cf9d", "#f7f2e8")[k % 3], False)
-    for k, (x, y, col) in enumerate(((15.45, 5.0, "#f59a3c"), (15.2, 5.2, "#fbf3df"), (16.05, 7.0, "#ffd36b"), (15.55, 9.3, "#fbf3df"), (15.85, 9.6, "#f59a3c"), (15.2, 11.1, "#ffd36b"))):
+    for k, (x, y, col) in enumerate(((15.45, 5.0, "#f59a3c"), (15.3, 4.2, "#fbf3df"), (16.05, 7.0, "#ffd36b"), (15.55, 9.3, "#fbf3df"), (15.85, 9.6, "#f59a3c"), (15.2, 11.1, "#ffd36b"))):
         add(f"bu_koi{k}", ellipsoid(G(x, y, 0.045), (0.08, D(0.2), 0.02), segs=10, rings=3), col, False)
         add(f"bu_koit{k}", ellipsoid(G(x - 0.02, y - 0.21, 0.045), (0.06, D(0.07), 0.012), segs=6, rings=3), col, False)
     for k, (x, y) in enumerate(((15.1, 4.6), (16.0, 5.6), (15.9, 7.1), (15.35, 9.2), (16.1, 11.0))):
@@ -223,7 +222,7 @@ if ID == "blue":
             add(f"bu_pet{k}{j}", ellipsoid(G(x + 0.05 + 0.055 * math.cos(a), y + 0.055 * math.sin(a) * 0.8, 0.09), (0.045, D(0.04), 0.06), rot=(0, 0, math.degrees(a)), segs=6, rings=4), ("#f6c3d6", "#fbf3df")[k % 2], False)
         add(f"bu_lc{k}", ellipsoid(G(x + 0.05, y, 0.1), (0.03, D(0.03), 0.03), segs=6, rings=3), "#ffd36b", False)
     # small wooden sitting dock off the left bank, upstream of the bridge
-    dx0, dr = 14.74, 7.0
+    dx0, dr = 14.74, 5.7
     for k in range(6):
         add(f"bu_pl{k}", box(G(dx0 + 0.07 + k * 0.13, dr, 0.15), (0.12, D(0.5), 0.05), bevel=0.012), ("#c99a62", "#b98a55")[k % 2])
     for sy in (-0.2, 0.2):
@@ -246,7 +245,9 @@ if ID == "blue":
 # ================================================================= RED: gold flame banners, training dummy, brazier (NO red anywhere)
 def flame(n, p, s, lit=False):
     c, y, z = p
-    add(n + "o", tube((c, y, z - 0.38 * s), (c, y, z + 0.5 * s), 0.34 * s, 0.0, segs=14, sy=0.25), GOLD, True, lit)
+    add(n + "o", tube((c, y, z - 0.38 * s), (c, y, z + 0.62 * s), 0.30 * s, 0.0, segs=14, sy=0.25), GOLD, True, lit)
+    add(n + "l", tube((c - 0.17 * s, y, z - 0.05 * s), (c - 0.27 * s, y, z + 0.34 * s), 0.12 * s, 0.0, segs=10, sy=0.25), GOLD, True, lit)
+    add(n + "r", tube((c + 0.17 * s, y, z - 0.05 * s), (c + 0.22 * s, y, z + 0.28 * s), 0.1 * s, 0.0, segs=10, sy=0.25), GOLD, True, lit)
     add(n + "b", ellipsoid((c, y, z - 0.18 * s), (0.34 * s, 0.1 * s, 0.34 * s), segs=14, rings=8), GOLD, False, lit)
     add(n + "i", tube((c, y - 0.01, z - 0.3 * s), (c, y - 0.01, z + 0.22 * s), 0.16 * s, 0.0, segs=12, sy=0.2), GOLD2, False, lit)
 if ID == "red":
@@ -275,17 +276,17 @@ if ID == "red":
 # ================================================================= RED/BLACK: wind chime + welcome bell at the dojo door
 if ID == "redblack":
     BRASS, BRASS2 = "#e8b84f", "#f4d37c"
-    cxp, top = 231, 350
+    cxp, top = 232, 357
     add("rb_arm", tube(SC(cxp - 14, top, r=4.5), SC(cxp + 2, top, r=4.5), 0.03, 0.03, segs=6), WOOD4, False)
     add("rb_cord", tube(SC(cxp, top, r=4.5), SC(cxp, top + 14, r=4.5), 0.012, 0.012, segs=4), WOOD4, False)
     add("rb_disc", tube(SC(cxp, top + 14, r=4.5), SC(cxp, top + 18, r=4.5), 0.16, 0.16, segs=14), WOOD3)
     for k, (dxp, ln) in enumerate(((-11, 22), (-5.5, 30), (0, 38), (5.5, 28), (11, 20))):
         p0 = SC(cxp + dxp, top + 18, r=4.52); p1 = SC(cxp + dxp, top + 18 + ln, r=4.52)
         add(f"rb_t{k}", tube(p0, p1, 0.04, 0.04, segs=8), BRASS if k % 2 == 0 else BRASS2, True, False)
-    add("rb_sail", tube(SC(cxp, top + 18, r=4.5), SC(cxp, top + 62, r=4.5), 0.012, 0.012, segs=4), WOOD4, False)
-    add("rb_sailc", ellipsoid(SC(cxp, top + 66, r=4.5), (0.07, 0.015, 0.09), segs=8, rings=4), "#fbf3df", False)
+    add("rb_sail", tube(SC(cxp, top + 18, r=4.5), SC(cxp, top + 44, r=4.5), 0.012, 0.012, segs=4), WOOD4, False)
+    add("rb_sailc", ellipsoid(SC(cxp, top + 48, r=4.5), (0.07, 0.015, 0.09), segs=8, rings=4), "#fbf3df", False)
     # the welcome bell on a bracket by the door's right frame
-    bxp, byp = 339, 372
+    bxp, byp = 345, 378
     add("rb_barm", tube(SC(bxp - 18, byp - 14, r=4.5), SC(bxp + 2, byp - 14, r=4.5), 0.03, 0.03, segs=6), WOOD4, False)
     add("rb_bcord", tube(SC(bxp, byp - 14, r=4.5), SC(bxp, byp - 8, r=4.5), 0.012, 0.012, segs=4), WOOD4, False)
     add("rb_bell", tube(SC(bxp, byp - 8, r=4.52), SC(bxp, byp + 10, r=4.52), 0.09, 0.2, segs=14), BRASS)
