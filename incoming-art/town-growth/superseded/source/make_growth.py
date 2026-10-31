@@ -14,7 +14,7 @@ ap.add_argument("--passes", required=True); ap.add_argument("--base-town", requi
 ap.add_argument("--only", default=None)
 A = ap.parse_args()
 HERE = os.path.dirname(os.path.abspath(__file__)); OUT = os.path.dirname(HERE)
-AZ = os.path.join(OUT, "..", "action-zone-dojo"); CONCEPT = os.path.join(OUT, "..", "town-square-concept", "source")
+AZ = os.path.join(OUT, "..", "..", "action-zone-dojo"); CONCEPT = os.path.join(OUT, "..", "..", "town-square-concept", "source")
 W, H, PPT = 1864, 860, 80.0
 SHIFT = int(0.95 * PPT)
 

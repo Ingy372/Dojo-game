@@ -1,0 +1,114 @@
+{
+  "note": "One FULL town background per belt, day + dusk, dojo sprite already in. Swap the whole picture by the student's belt. Nothing stacks.",
+  "sizePx2x": [
+    1864,
+    860
+  ],
+  "sizePx1x": [
+    932,
+    430
+  ],
+  "tilePx2x": 80,
+  "stages": [
+    {
+      "order": 1,
+      "belt": "white",
+      "built": true,
+      "statue": false,
+      "notes": "A little run down: faded and worn, a boarded window, a patched awning and bridge plank, weedy empty beds, murky water, empty plinth. Still friendly.",
+      "files": {
+        "day": {
+          "2x": "1-white-day@2x.png",
+          "1x": "1-white-day.png"
+        },
+        "dusk": {
+          "2x": "1-white-dusk@2x.png",
+          "1x": "1-white-dusk.png"
+        }
+      }
+    },
+    {
+      "order": 2,
+      "belt": "yellow",
+      "built": false,
+      "statue": false,
+      "notes": "PLANNED, not built: cleaner and more normal than White."
+    },
+    {
+      "order": 3,
+      "belt": "orange",
+      "built": true,
+      "statue": false,
+      "notes": "About the approved town concept art (the base). Empty plinth. A shop chimney and a bread basket.",
+      "files": {
+        "day": {
+          "2x": "3-orange-day@2x.png",
+          "1x": "3-orange-day.png"
+        },
+        "dusk": {
+          "2x": "3-orange-dusk@2x.png",
+          "1x": "3-orange-dusk.png"
+        }
+      }
+    },
+    {
+      "order": 4,
+      "belt": "green",
+      "built": false,
+      "statue": true,
+      "notes": "PLANNED, not built: the statue arrives."
+    },
+    {
+      "order": 5,
+      "belt": "blue",
+      "built": true,
+      "statue": true,
+      "notes": "Statue in place. First gentle light effects: thin chimney smoke, extra koi and lilies, faint sun shafts and motes by day, a few fireflies at dusk.",
+      "files": {
+        "day": {
+          "2x": "5-blue-day@2x.png",
+          "1x": "5-blue-day.png"
+        },
+        "dusk": {
+          "2x": "5-blue-dusk@2x.png",
+          "1x": "5-blue-dusk.png"
+        }
+      }
+    },
+    {
+      "order": 6,
+      "belt": "red",
+      "built": false,
+      "statue": true,
+      "notes": "PLANNED, not built: one gentle upgrade on Blue (gold flame, never red)."
+    },
+    {
+      "order": 7,
+      "belt": "redblack",
+      "built": false,
+      "statue": true,
+      "notes": "PLANNED, not built: one gentle upgrade."
+    },
+    {
+      "order": 8,
+      "belt": "brown",
+      "built": false,
+      "statue": true,
+      "notes": "PLANNED, not built: one gentle upgrade."
+    },
+    {
+      "order": 9,
+      "belt": "brownblack",
+      "built": false,
+      "statue": true,
+      "notes": "PLANNED, not built: one gentle upgrade."
+    },
+    {
+      "order": 10,
+      "belt": "black",
+      "built": false,
+      "statue": true,
+      "notes": "PLANNED, not built: out of scope in the content spec so far; keep it gentle too."
+    }
+  ]
+}

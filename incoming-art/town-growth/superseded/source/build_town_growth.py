@@ -11,7 +11,7 @@ Positions are tile columns/rows of the town grid (z up). Wall and hill items use
 final 1864x860 picture (the town frame is already shifted down 0.95 tile)."""
 import bpy, sys, os, math, argparse, random
 HERE = os.path.dirname(os.path.abspath(__file__))
-BASE = os.path.join(HERE, "..", "..", "town-square-concept", "source", "build_town_square.py")
+BASE = os.path.join(HERE, "..", "..", "..", "town-square-concept", "source", "build_town_square.py")
 ap = argparse.ArgumentParser(); ap.add_argument("--id", required=True); ap.add_argument("--out", required=True)
 ap.add_argument("--night", action="store_true"); ap.add_argument("--samples", type=int, default=24)
 AA = ap.parse_args(sys.argv[sys.argv.index("--") + 1:])

@@ -1,49 +1,72 @@
-# Town Growth: 9 belt add-on overlays on the town square (A-TOWN-GROWTH)
+# Town Growth v2: one full town picture per belt (A-TOWN-GROWTH)
 
-The town grows as the student ranks up. Each belt adds one transparent overlay on top of the approved town square (PR #301) with the Action Zone dojo in its slot (PR #393), in a **day** and a **dusk** version. Spec: `drafts/content/town/town-changes.md` (PR #344, branch `bot-content-story-f`). Art only: nothing outside `incoming-art/` changed, no game code, no change to the town base or the statue.
+Jay's verdict on the first set was "too messy and cluttered", and he asked for a new arc where the town starts a little **run down** and gets nicer. Add-on overlays can only add things, so they cannot make a town that looks *worse* than the approved base. This set therefore uses a different structure (below).
 
-Jump to: [What is here](#what-is-here) | [How the game stacks them](#how-the-game-stacks-them) | [The 9 add-ons](#the-9-add-ons) | [How it is built](#how-it-is-built) | [Rules and checks](#rules-and-checks)
+**Samples only for now:** White, Orange and Blue, each in day and dusk. The other belts are planned but not built.
+
+Jump to: [Structure for the Programmer](#structure-for-the-programmer) | [The arc](#the-arc) | [What is here](#what-is-here) | [How it is built](#how-it-is-built) | [Rules and checks](#rules-and-checks)
+
+![samples](previews/samples-sheet.png)
+
+## Structure for the Programmer
+
+**One complete town background per belt, in a day and a dusk version. Nothing stacks.**
+
+1. Every picture is the whole town frame (1864x860 at @2x, 932x430 at 1x, the same frame and camera as the approved town square). It already has the sky, hills, Tower and **the Action Zone dojo already drawn in its slot**.
+2. Show the picture for the player's **own highest earned belt** (day or dusk to match the time of day). When the belt changes, **swap the whole picture**. Do not draw one belt on top of another.
+3. Draw characters, effects and UI **on top**, as before. The town art is only the background.
+4. A belt that has no picture yet falls back to the nearest earlier built one (for the samples: Yellow shows White, Green shows Orange, and Red to Black show Blue). `stages/stages.json` lists every belt, which are built, and the file names.
+5. Each phone draws its own town from its own belt. Other players never change it.
+
+Why this structure: it is the simplest to use (one image lookup, no ordering rules), it can go below the base, and it avoids a pile of small overlays crowding the screen. The cost is file size (one background per belt per time of day instead of small overlays); at 10 belts that is 20 backgrounds. If size becomes a problem, the pictures can be cut into the same tile grid later.
+
+`stages/stages.json` is the lookup: per belt `order`, `belt`, `built`, `statue`, `notes` and `files` (day and dusk, @2x and 1x).
+
+## The arc
+
+| # | Belt | Look | Statue | Status |
+|---|---|---|---|---|
+| 1 | White | A little run down but friendly: faded and worn colours, a boarded window, a patched awning stripe and a patched bridge plank, weedy empty flower beds, murky water with one koi, a few cracked stones near the plinth. Lamp posts and the dojo and shop windows are lit at dusk (the tall lantern posts are off). | No (empty plinth) | **built** |
+| 2 | Yellow | A bit cleaner and more normal: boards and patches gone, beds tidy, water clearer. | No | planned |
+| 3 | Orange | About the approved town concept art. Plus a shop chimney and a bread basket (no smoke). | No (empty plinth) | **built** |
+| 4 | Green | The statue arrives on the plinth. | Yes | planned |
+| 5 | Blue | Statue plus the first light effects, homely: a thin chimney smoke curl, two more koi and two more lily pads, a warm 5% tint, faint sun shafts and a few floating motes by day, a few fireflies near the river and hedges at dusk. | Yes | **built** |
+| 6 | Red | One more gentle upgrade on Blue. Any flame is gold, never red. | Yes | planned |
+| 7 | Red/Black | One more gentle upgrade. | Yes | planned |
+| 8 | Brown | One more gentle upgrade. | Yes | planned |
+| 9 | Brown/Black | One more gentle upgrade. | Yes | planned |
+| 10 | Black | Out of scope in the content spec so far. Keep it gentle too. | Yes | planned |
+
+Guard rails for Red to Black: a small change each time, never a screen full of effects, stay out of the walkable lanes, every glow has a source.
 
 ## What is here
-| Folder | Contents |
+
+| Path | What |
 |---|---|
-| `overlays/` | 9 add-ons x day/dusk x (@2x 1864 x 860, 1x 932 x 430) = **36 transparent PNGs** named `<stage>-<id>-<day or dusk>[@2x].png`, and `overlays.json` (belt, changeId, reward message, files) |
-| `previews/` | `stage-<0..9>-<id>-<day or dusk>.png`: the **cumulative** town after each belt (stage 0 = the town today), each with a caption bar; `growth-sheet-day.png` / `growth-sheet-dusk.png`: all 10 stages on one sheet (watch the town grow) |
-| `source/` | `build_town_growth.py` (Blender, the 3D add-ons), `make_growth.py` (Pillow: dusk grade, glow, pools, fireflies, the 2D sky layers, previews), `render_all.sh` (rebuilds everything) |
-| `DELIVERY_NOTE.md` | ITEM / WHAT / WHY / DECIDE / NEXT |
-
-## How the game stacks them
-- Every overlay is a **full-frame** PNG in the same frame as `action-zone-dojo/previews/town-slot-in-town-<day|dusk>[@2x].png` (1864 x 860 @2x = 23.3 x 10.75 tiles; the town is shifted down 0.95 tile like the approved concept, so a ground point at tile (c, r) is at px (c x 80, r x 80 + 76) @2x). No anchors or offsets: draw each at (0, 0).
-- Draw order: the town base (with the dojo sprite), then the overlays **in stage order** (1 White ... 9 Brown-Black) for every belt the student has reached. The rank is cumulative, so a Blue belt shows stages 1 to 5.
-- Match the town's time of day (day overlays on the day town, dusk on the dusk town).
-- The overlays are flat pictures with no sprites to sort: everything in them sits on lawn, flower beds, hedges, walls, hills, water, the bank, the yard corners, the sky or the dojo's front wall. They never cover a walking lane (see Rules and checks).
-
-## The 9 add-ons
-| # | Belt | changeId | What grows (day) | At dusk |
-|---|---|---|---|---|
-| 1 | White | `wc-lantern-halls-lamps` | the two lamp posts get bigger gold glass lanterns; a new lamp on the bridge's back rail; glints and one rising gold spark | the lanterns, with a warm pool under each source |
-| 2 | Yellow | `wc-sunrise-garden-blooms` | both flower beds overflow with gold, white and pink blooms and sunflowers; lawn tufts; a flowering vine on the dojo's left corner; three butterflies | flowers close into buds; fireflies drift round the vine and beds |
-| 3 | Orange | `wc-ember-kitchens-chimney` | shop chimney with smoke; a bread basket on the counter; a brick oven; a long table with two benches, plates and bread; a lantern post | the oven window, the table's lantern and a chimney glow |
-| 4 | Green | `wc-giants-steps-path` | smooth stepping stones up the right hill; a giant stone bench in the lawn gap by the shop (and a worry stone) | three small stone lanterns light the path |
-| 5 | Blue | `wc-quiet-river-clear` | the river runs clear: pebbles on the bed, more koi, lily pads with blooms, sparkles, a small wooden sitting dock with a lantern | the dock lantern and its pool |
-| 6 | Red | `wc-forge-courage-banners` | **gold flame** emblems on the hill banners and the two yard banners; a padded training dummy and a brazier in the yard corners | the brazier is lit (a warm pool on the yard); a small lit lantern on a bracket next to each of the six gold flame banners is the light source for its flame |
-| 7 | Red-Black | `wc-hall-echoes-bell` | a wind chime and a welcome bell by the dojo door | the chime tubes glimmer faintly |
-| 8 | Brown | `wc-root-library-tree` | a big reading tree at the right edge of the lawn (moved in 0.5 tile, so its whole crown is inside the frame) with two little birds, a root bench and a book-swap box | the box lamp and four lanterns hanging under the crown |
-| 9 | Brown-Black | `wc-storm-stair-tower-glow` | the Tower lamp glows gold with soft sparkles; a rainbow; puddles in open paving corners; a lantern in the dojo window | the Tower glows stronger, the town's lamps glow a little warmer |
-
-**No red anywhere.** Red belt = **gold flame** (Jay's choice). The rainbow has five bands (orange, yellow, green, blue, violet), no red band. The only red in the previews is the dojo's existing branded CMA sign and the awning stripe.
+| `stages/1-white-day.png`, `...-dusk.png` (and `@2x`) | White backgrounds |
+| `stages/3-orange-day.png`, `...-dusk.png` (and `@2x`) | Orange backgrounds |
+| `stages/5-blue-day.png`, `...-dusk.png` (and `@2x`) | Blue backgrounds |
+| `stages/stages.json` | The belt-to-picture lookup |
+| `previews/samples-sheet.png` | The 3 stages side by side, day on top and dusk below |
+| `source/` | The build scripts |
+| `superseded/` | The first (add-on overlay) set, kept for reference. **Do not use it.** Nothing was deleted. |
+| `DELIVERY_NOTE.md` | Item, what, why, decide, next, and the check results |
 
 ## How it is built
-The overlays come from the **same Blender scene and camera** as the town square, so they line up pixel for pixel.
-1. `build_town_growth.py` loads the town square script (`--no-dojo0 --clear-dojo-trees`, the PR #393 slot setup), turns every existing town object into a **holdout** (so each add-on is hidden behind the town's own trees, bridge, walls and roofs), adds only that belt's objects, and renders a colour pass and a "lit" pass (the emissive objects) at 1864 x 860. Same toon look and outline (`tools/toon_kit.py`).
-2. `make_growth.py` holds each overlay out of the dojo sprite's silhouette (except the few pieces that stand in front of the dojo: the vine, the chime and bell, the window lantern). **Dusk** follows the town square's recipe: multiply (120, 112, 165), 10 percent toward (60, 45, 70), lit pixels warm (255, 226, 170), a glow = the blurred lit mask, and a warm pool on the ground right under each source. The sky layers of stage 9 (rainbow, Tower glow, sparkles) and the puddles are drawn here, hidden behind the town, the dojo and the Tower.
-3. `render_all.sh` runs everything (at most 2 Blender processes at once) and then the previews.
 
-Rebuild from the repo root: `bash incoming-art/town-growth/source/render_all.sh /tmp/passes`.
+Run `bash incoming-art/town-growth/source/render_all.sh` from the repo root (Blender 4.2 and Pillow; at most 2 Blender processes at once).
+
+- `source/build_town_stage.py` (Blender) runs the approved town-square build, then changes it for one stage: the statue and star are removed for White and Orange, the sparkles are thinned, and the stage's wear or extras are added. It renders four passes: `day`, `night`, `lights` (a mask of the lit windows and lanterns, the source of every glow) and `props` (a mask of only the added objects, used for the lanes check).
+- `source/make_stages.py` (Pillow) adds the sky, hazy far hills and Tower, the White "worn" grade, the dusk grade, the soft light, the Blue effects, and pastes the Action Zone dojo sprite exactly as `action-zone-dojo/source/make_town_preview.py` does. It writes `stages/` and `stages.json`.
+- `source/make_sheet.py` makes the side-by-side sheet.
+- With no changes, the same pipeline reproduces the approved day picture pixel for pixel (checked), so Orange is the approved town and nothing else.
+
+**Dusk is much gentler than the approved dusk.** Window and lantern glow is about a quarter of the old strength, the ground light pools about a third, the Tower light is fainter, there is no firefly swarm (Blue has only a few), and the dojo sprite's own door pools are turned down to match. Every glow still comes from a lit window, lantern or the Tower.
 
 ## Rules and checks
-- **Red check** (HSV hue < 0.03 or > 0.97, saturation > 0.6, value > 0.4): **0 red px in all 36 overlay files.** The stage previews carry the same red count as stage 0 (the dojo's branded sign), never more.
-- **Lanes and statue:** the overlays have no opaque pixel on the statue or its ring, and none in the plaza's walkable paving: the only objects there sit on the lawn line, the beds, the water and bank, the yard corners, hills and walls (the Brown tree stands on the lawn at rows 3.5 to 4.2, above the lane strip). Puddles are flat decals in open corners. Nothing is drawn above a character's walking space.
-- **Glows:** every dusk glow is on a real source (lamp lanterns, oven window, lanterns, the lanterns beside the gold banner flames, brazier flame, the Tower lamp, the window lantern, the existing town lights, fireflies). Warm pools are drawn only right under a source.
-- **Kid-friendly:** soft shapes, no weapons, no sharp props.
-- The real phone and house number are not in the repo (grep of `incoming-art/` finds nothing). No reference photo is committed.
+
+- Kid-friendly (ages 6+). Nothing is drawn above the characters' heads. No red anywhere except the CMA sign's brand red (the Red belt uses a gold flame).
+- The added objects stay out of the walkable lanes (the strip in front of the buildings and the bridge). White's weeds and cracks are only on the flower beds and around the plinth.
+- The statue and plinth are the approved ones and unchanged. They are hidden before Green and shown from Blue.
+- The photos used as likeness reference are not in the repo.
+- Results of the checks are in `DELIVERY_NOTE.md`.
