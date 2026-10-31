@@ -3,7 +3,7 @@
 ## Delivery Note
 
 - **ITEM:** Q-PREMIUM-PASS. Premium quality audit of main `69c3abaf`, Sat Oct 31 2026 (ET). No code was written.
-- **WHAT:** I played every screen I could reach on a phone-shaped browser (real touch, DPR 1.5) at 667x375, 844x390 and 667x320, with reduced motion on and off. The Board was checked at all 6 size and motion combinations. The other screens were checked at 667x375 with reduced motion off. 22 findings below, ranked High, Medium and Low. The Board has a full redesign proposal and a mockup.
+- **WHAT:** I played every screen I could reach on a phone-shaped browser (real touch, DPR 1.5) at 667x375, 844x390 and 667x320, with reduced motion on and off. The Board was checked at all 6 size and motion combinations. The other screens were checked at 667x375 with reduced motion off. 21 findings below, ranked High, Medium and Low. The Board has a full redesign proposal and a mockup.
 - **WHY:** Jay says the in-game "board" looks messy. He is right. It is the **Training Board** (the Dojo's "Board" button). It has about 12 things on the left, 4 tabs with 3 different frame styles, text from 10 px to 30 px, and it clips at 667x320.
 - **DECIDE:** (1) Approve the Board redesign in section 1 (one frame style, 3-thing left column, big icon tabs, named gear). (2) Pick which Medium items ride with it: I suggest M1 (first-visit modals), M2 (title) and M4 (loudness). (3) Say whether "Video soon" should hide until videos exist.
 - **NEXT:** A code job for the Board redesign (it fixes H1 to H4 and L3 together). Then a second pass of the same checks on the result. Still open for a later pass: the Keeper boss fight, the lose screen, the levels-gained moment, and listening to the sounds (see "Not covered").
