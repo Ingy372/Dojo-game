@@ -1,5 +1,7 @@
 // Q-PREMIUM-2 routine fixes: small source/pure checks that hold each fix in place.
 import { describe, expect, it } from 'vitest';
+import { MOVEMENT, circleHitsWall, createWorld, loadInsideRoom, stepWorld, type Vec2 } from '../src';
+import insideJson from '../../../content/dojo/action-zone/inside-room.json';
 
 const src = import.meta.glob('../../../apps/client/src/**/*.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 const read = (name: string): string => {
@@ -99,5 +101,45 @@ describe('Q-PREMIUM-2 L4 / L5 / L7 / L9 / L10 / L11', () => {
     expect(s).toMatch(/const rightX = pad \+ Math\.min\(300, width \* 0\.38\) \+ pad;/);
     expect(s).not.toMatch(/0x000000, 0\.35\)\.setOrigin\(0\)\.setInteractive/);
     expect(s).toMatch(/shade\.on\(Phaser\.Input\.Events\.GAMEOBJECT_POINTER_DOWN, close\)/);
+  });
+});
+
+describe('Q-PREMIUM-2 QA: inside exit glow and testing screen', () => {
+  const inside = loadInsideRoom(insideJson);
+  const cueSrc = read('scenes/InsideScene.ts');
+  const cueY = Number(/EXIT_CUE_Y = ([\d.]+);/.exec(cueSrc)![1]);
+  const cueH = Number(/EXIT_CUE_H = ([\d.]+);/.exec(cueSrc)![1]);
+  const walk = (from: Vec2, to: Vec2): Vec2 => {
+    const world = createWorld(inside.room, ['p1']);
+    world.players.p1.pos = { ...from };
+    for (let t = 0; t < 20 * 6; t++) stepWorld(world, inside.room, { p1: { kind: 'moveTo', x: to.x, y: to.y } });
+    return world.players.p1.pos;
+  };
+  it('the glow is whole in the room and its middle is inside the exit rectangle, which starts 0.1 tile inside its top edge', () => {
+    const [x0, x1, y0, y1] = inside.exit;
+    expect(cueY + cueH / 2).toBeLessThanOrEqual(y1);
+    expect(cueY).toBeGreaterThan(y0);
+    expect(cueY).toBeLessThan(y1);
+    expect(y0 - (cueY - cueH / 2)).toBeCloseTo(0.1, 5);
+    expect(x1 - x0).toBeGreaterThan(2);
+  });
+  it('the hero walks onto the glow middle (open floor) and ends inside the exit', () => {
+    const [x0, x1, y0, y1] = inside.exit;
+    const mid = { x: (x0 + x1) / 2, y: cueY };
+    expect(circleHitsWall(inside.room, mid, MOVEMENT.playerRadius)).toBe(false);
+    // Every tap on the glow (middle and the top edge a little in) ends inside the exit rectangle.
+    for (const p of [mid, { x: x0 + 0.2, y: cueY - cueH / 2 + 0.15 }, { x: x1 - 0.2, y: cueY }]) {
+      const end = walk(inside.spawn, p);
+      expect(end.x >= x0 && end.x <= x1 && end.y >= y0 && end.y <= y1, JSON.stringify(p)).toBe(true);
+    }
+  });
+  it('the testing screen: Close is added after the list and centred; rows out of view stop taking taps', () => {
+    const s = read('ui/TestingPanel.ts');
+    expect(s.indexOf("'Close'")).toBeGreaterThan(s.indexOf('this.host = list;'));
+    expect(s).toMatch(/'Close', 0x5b4a3c, 15, actions\.close, true\)/);
+    expect(s).toMatch(/t\.setOrigin\(centre \? 0\.5 : 0, 0\.5\)/);
+    expect(s).toMatch(/r\.bg\.input\.enabled = inView/);
+    expect(s).toMatch(/this\.updateRowHits\(list\.y\)/);
+    expect(s).toMatch(/this\.text\(rx, ry \+ 15, part\.detail, 10, '#b9ad99', false, rw\)/);
   });
 });

@@ -1028,3 +1028,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Fixed the 16 routine findings (H2, M3, M6, M7, M9, M10, M12, L2, L3, L4, L5, L7, L8, L9, L10, L11) as far as the rules allow; partials and skips are listed in `docs/decisions.md`. L8 is investigate-only (no change).
 - Tests: `packages/sim/test/q-prem2-routine.test.ts` (new) and `q-prem-f6-again.test.ts`, `p-menu-e-buttons.test.ts` updated. Golden fixture unchanged.
 - Next: Jay: play the preview on a phone (Board, Create, tutorial, Practice room, a knock-out); the Manager checks the shots in `/workspace/shots/q-premium-2-fix/`.
+- QA follow-up on #400: the testing-screen Close works after the list is scrolled (Close on top, off-view rows not tappable, Close label centred), tapping the middle of the inside exit glow leaves the dojo, and the Training Points line no longer overlaps Virtues. Tests are in `packages/sim/test/q-prem2-routine.test.ts`.

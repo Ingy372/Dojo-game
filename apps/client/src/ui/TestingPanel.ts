@@ -40,6 +40,8 @@ export class TestingPanel {
   /** The screen rows the list shows (a button outside them cannot be tapped). */
   private viewTop = 0;
   private viewBottom = 0;
+  /** The list's buttons: a row that has scrolled out of the view stops taking taps (a mask only hides pixels, not hit areas). */
+  private rows: Array<{ bg: Phaser.GameObjects.Rectangle; top: number; h: number }> = [];
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -58,7 +60,6 @@ export class TestingPanel {
 
     // Close is at the top, always on screen; the list under it scrolls.
     this.text(pad, pad + 8, 'Testing screen', 20, '#ff9f6b', true);
-    this.button(pad + leftW - 96, pad, 96, MIN_TAP, 'Close', 0x5b4a3c, 15, actions.close);
     this.text(pad, pad + MIN_TAP + 4, 'Hidden from players. Fake students until DojoForge is connected.', 11, '#b9ad99', false, leftW);
     this.viewTop = pad + MIN_TAP + 4 + 30;
     this.viewBottom = height;
@@ -87,6 +88,8 @@ export class TestingPanel {
     this.button(pad + half + 8, y, half, 32, 'Back to level 1', 0x6b3a3a, 12, actions.resetLevel);
     y += 38;
     this.host = this.container;
+    // Close is added after the list so it is above every list row, whatever the list is doing.
+    this.button(pad + leftW - 96, pad, 96, MIN_TAP, 'Close', 0x5b4a3c, 15, actions.close, true);
 
     // Drag the left list up and down; it stops at both ends.
     const maxScroll = Math.max(0, y + pad - height);
@@ -101,12 +104,16 @@ export class TestingPanel {
       this.onMove = (p: Phaser.Input.Pointer) => {
         if (!p.isDown || !list.active || p.x > leftW + pad * 2) return;
         if (Math.abs(p.y - startY) > 8) this.dragged = true;
-        if (this.dragged) list.y = -Phaser.Math.Clamp(startScroll + (startY - p.y), 0, maxScroll);
+        if (this.dragged) {
+          list.y = -Phaser.Math.Clamp(startScroll + (startY - p.y), 0, maxScroll);
+          this.updateRowHits(list.y);
+        }
       };
       scene.input.on(Phaser.Input.Events.POINTER_DOWN, this.onDown);
       scene.input.on(Phaser.Input.Events.POINTER_MOVE, this.onMove);
     }
     this.scroller = list;
+    this.updateRowHits(0);
 
     // ---- Power Rating
     const rx = pad * 2 + leftW;
@@ -126,7 +133,8 @@ export class TestingPanel {
       g.fillStyle(0x2a2536).fillRect(rx + 240, ry + 3, rw - 240, 8);
       g.fillStyle(0xffd166).fillRect(rx + 240, ry + 3, (rw - 240) * part.fill, 8);
       this.container.add(g);
-      this.text(rx + 118, ry + 15, part.detail, 10, '#b9ad99', false, rw - 118);
+      // The detail line starts at the label's left edge so a long one (Training Points) stays on one line.
+      this.text(rx, ry + 15, part.detail, 10, '#b9ad99', false, rw);
       ry += rowH;
     }
     ry += 4;
@@ -138,6 +146,14 @@ export class TestingPanel {
     for (const l of lines) {
       this.text(rx, ry, l, 11, '#b9ad99', false, rw);
       ry += 15;
+    }
+  }
+
+  /** Q-PREMIUM-2 L7: only a row that is wholly inside the list view can be hit. */
+  private updateRowHits(scrollY: number): void {
+    for (const r of this.rows) {
+      const inView = r.top + scrollY >= this.viewTop && r.top + r.h + scrollY <= this.viewBottom;
+      if (r.bg.input) r.bg.input.enabled = inView;
     }
   }
 
@@ -156,11 +172,14 @@ export class TestingPanel {
     return t;
   }
 
-  private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void): void {
+  private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void, centre = false): void {
     const bg = this.scene.add.rectangle(x, y, w, h, color).setOrigin(0).setStrokeStyle(2, 0xffffff, 0.3);
     this.host.add(bg);
-    this.text(x + 10, y + h / 2, label, size, '#ffffff', true, w - 16).setOrigin(0, 0.5);
+    const t = this.text(centre ? x + w / 2 : x + 10, y + h / 2, label, size, '#ffffff', true, w - 16);
+    t.setOrigin(centre ? 0.5 : 0, 0.5);
+    if (centre) t.setAlign('center');
     const inList = this.host !== this.container;
+    if (inList) this.rows.push({ bg, top: y, h });
     bg.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (p: Phaser.Input.Pointer) => {
       if (inList && (this.dragged || p.y < this.viewTop || p.y > this.viewBottom)) return;
       onTap();
