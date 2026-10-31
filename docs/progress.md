@@ -919,7 +919,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## R-PREMIUM-b3 (2026-10-26)
 - 13 sound events play CC0 files (20 files plus licences, 349 KB) with per-file gains from `tools/audio-sfx/build.mjs`; the rest stay made in code, and each file event falls back to code. "perfect" is now `greatCounter()`. Loudness at the speakers: all peaks −7 dBFS or lower, 0 errors (docs/shots/r-premium-b3/loudness.txt). Hands-on: 80 real taps in training, files played for hit, dash and insight, 0 missing files, 0 errors (hands-on.txt). Test: packages/sim/test/r-premium-b3-sfx.test.ts.
 **Next**
-- Jay: listen on the preview link before merge. Decide whether something should call the level-up sound.
+- Jay: listen on the preview link before merge.
+- 2026-10-31: merged main (no conflicts); `sfx.levelUp()` now plays once when the Home levels-gained screen shows (`takeLevelUpSound`, 3 new tests in `r-premium-b3-sfx.test.ts`). Suite 1207 passed, 11 skipped; typecheck and build exit 0; golden fixture unchanged. No UI change, so no shots.
 
 ## 2026-10-26 — Q-PREM-F11
 - A tap on KO Screen 1 goes straight to Screen 2 (90–275 ms after the tap, was about 1.75 s). Head home is ≥48 px at every size. New test: packages/sim/test/q-prem-f11-ko.test.ts. Shots and log: docs/shots/q-prem-f11 (88 PASS, 0 FAIL, 4 sizes × RM on/off).

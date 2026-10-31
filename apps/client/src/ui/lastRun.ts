@@ -101,6 +101,23 @@ export function takeCountUp(store: KeyStore | null, id: string, reduced: boolean
   return !reduced;
 }
 
+export const LEVELUP_KEY = 'dojo.lastRunLevelUp';
+
+/**
+ * R-PREMIUM-b3: true once per run that gained a level, the first time the Home levels-gained
+ * screen asks. Sound is not motion, so Reduced motion still hears it. Remembers at once.
+ */
+export function takeLevelUpSound(store: KeyStore | null, id: string, levelsGained: number): boolean {
+  if (!id || !store || levelsGained <= 0) return false;
+  try {
+    if (store.getItem(LEVELUP_KEY) === id) return false;
+    store.setItem(LEVELUP_KEY, id);
+  } catch {
+    return false;
+  }
+  return true;
+}
+
 /** The count-up value at progress t (0..1), Cubic.Out, landing exactly on the target. */
 export function countAt(target: number, t: number): number {
   const k = Math.max(0, Math.min(1, t));

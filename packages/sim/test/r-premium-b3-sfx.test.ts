@@ -65,3 +65,36 @@ describe('R-PREMIUM-b3 sound files', () => {
     expect(events.greatCounter).toBeUndefined();
   });
 });
+
+import { LEVELUP_KEY, takeLevelUpSound, type KeyStore } from '../../../apps/client/src/ui/lastRun';
+
+const homeSrc = Object.values(import.meta.glob('../../../apps/client/src/scenes/HomeScene.ts', { query: '?raw', import: 'default', eager: true }))[0] as string;
+const mem = (): KeyStore & { m: Map<string, string> } => {
+  const m = new Map<string, string>();
+  return { m, getItem: (k) => m.get(k) ?? null, setItem: (k, v) => void m.set(k, v) };
+};
+
+describe('R-PREMIUM-b3 level-up sound on the Home levels-gained screen', () => {
+  it('plays once per run that gained a level, and never for a run with no level gained', () => {
+    const st = mem();
+    expect(takeLevelUpSound(st, 'run-1', 0)).toBe(false);
+    expect(takeLevelUpSound(st, 'run-1', 1)).toBe(true);
+    expect(takeLevelUpSound(st, 'run-1', 1)).toBe(false); // reopening the screen stays quiet
+    expect(takeLevelUpSound(st, 'run-2', 2)).toBe(true); // the next run's level-up plays
+    expect(st.m.get(LEVELUP_KEY)).toBe('run-2');
+  });
+
+  it('is quiet with no id or no storage, and survives a storage that throws', () => {
+    expect(takeLevelUpSound(null, 'run-1', 1)).toBe(false);
+    expect(takeLevelUpSound(mem(), '', 1)).toBe(false);
+    const bad: KeyStore = { getItem: () => { throw new Error('no'); }, setItem: () => { throw new Error('no'); } };
+    expect(takeLevelUpSound(bad, 'run-1', 1)).toBe(false);
+  });
+
+  it('Home calls sfx.levelUp() only through that gate, and only when levels were gained', () => {
+    const run = homeSrc.slice(homeSrc.indexOf('private renderRun('), homeSrc.indexOf('private turnFound('));
+    expect(run).toContain('if (m.levelsGained > 0) {');
+    expect(run).toContain('if (takeLevelUpSound(safeStore(), id, m.levelsGained)) sfx.levelUp();');
+    expect(homeSrc.match(/sfx\.levelUp\(\)/g)).toHaveLength(1);
+  });
+});
