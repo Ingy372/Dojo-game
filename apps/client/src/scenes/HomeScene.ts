@@ -723,7 +723,7 @@ export class HomeScene extends Phaser.Scene {
       return;
     }
     const m = buildLastRun(last, playTimeText.homeHeadline);
-    const L = lastRunLayout(cw, ch, m.chips.length, m.stats.length, m.found.length);
+    const L = lastRunLayout(cw, ch, m.chips.length, m.stats.length, m.found.length, visibleH - 2 * (6 + S1));
     const X = (v: number) => cx0 + v;
     const Y = (v: number) => cy0 + v;
     const count = takeCountUp(safeStore(), runId(this.profile), reducedMotion());
@@ -928,7 +928,7 @@ export class HomeScene extends Phaser.Scene {
       const ix = tall ? 0 : -nc.w / 2 + S2 + is / 2;
       const iy = tall ? -nc.h / 2 + S2 + is / 2 : 0;
       const icon = fresh.icon ? addIcon(this, fresh.icon, ix, iy, is) : null;
-      b.visual.add(icon ?? this.add.circle(ix, iy, is / 2, 0xffd166, 0.9));
+      b.visual.add(icon ?? placeholderIcon(this, ix, iy, is, true));
       const tw = tall ? nc.w - 2 * S2 : nc.w - 3 * S2 - is;
       const label = this.add.text(tall ? 0 : ix + is / 2 + S2, tall ? iy + is / 2 + S1 : 0, fresh.short ?? fresh.name, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#fff6e6', fontStyle: 'bold', align: tall ? 'center' : 'left', wordWrap: { width: tw } }).setResolution(crisp()).setOrigin(tall ? 0.5 : 0, tall ? 0 : 0.5);
       b.visual.add(wrapLikeCubby(label, fresh.short ?? fresh.name, tw));
@@ -1077,19 +1077,25 @@ export class HomeScene extends Phaser.Scene {
       const b = button(this, { x: x + i * (L.slotW + S2), y, w: L.slotW, h: L.slotH, label: '', color: on ? WOOD.switchOn : WOOD.frameDark, size: TYPE.body, selected: on, stroke: WOOD.grain, onTap: () => this.pickSlot(slot) }, this.ui);
       const v = b.visual.setData('styleSlot', slot);
       const top = -L.slotH / 2;
-      const glyphR = Math.min(18, Math.max(12, (L.slotH - 52) / 2));
-      v.add(this.add.circle(0, top + 6 + glyphR, glyphR, BOARD_PAPER, 0.95).setStrokeStyle(2, 0xffd166, on ? 1 : 0.5));
-      v.add(this.add.text(0, top + 6 + glyphR, STYLE_WORDS.glyphs[slot], { fontFamily: FONT, fontSize: `${Math.round(glyphR * 1.1)}px`, color: ink }).setOrigin(0.5).setResolution(crisp()));
-      const ny = top + 6 + 2 * glyphR + 2;
-      const slotLabel = this.add.text(0, ny, STYLE_WORDS.slots[slot].toUpperCase(), { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e3c4', fontStyle: 'bold' }).setOrigin(0.5, 0).setResolution(crisp());
-      v.add(slotLabel);
+      let glyphR = Math.min(18, Math.max(12, (L.slotH - 52) / 2));
+      const disc = this.add.circle(0, 0, glyphR, BOARD_PAPER, 0.95).setStrokeStyle(2, 0xffd166, on ? 1 : 0.5);
+      const glyph = this.add.text(0, 0, STYLE_WORDS.glyphs[slot], { fontFamily: FONT, fontSize: `${Math.round(glyphR * 1.1)}px`, color: ink }).setOrigin(0.5).setResolution(crisp());
+      const slotLabel = this.add.text(0, 0, STYLE_WORDS.slots[slot].toUpperCase(), { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e3c4', fontStyle: 'bold' }).setOrigin(0.5, 0).setResolution(crisp());
       // P-MENU2-SPACE: the name starts under the label's real line height (12 + 2 overlapped it by 1).
-      const nameY = ny + slotLabel.height + 2;
-      const name = this.add.text(0, nameY, pick ? pick.name : STYLE_WORDS.noVirtue, { fontFamily: FONT, fontSize: `${TYPE.body}px`, color: '#fff6e6', fontStyle: 'bold', align: 'center', wordWrap: { width: L.slotW - 2 * S2 } }).setOrigin(0.5, 0).setResolution(crisp());
-      // Names wrap to two lines instead of being cut; shrink only if two lines still don't fit.
-      const room = L.slotH / 2 - nameY - 4;
-      if (name.height > room) name.setFontSize(TYPE.label);
-      v.add(name);
+      const name = this.add.text(0, 0, pick ? pick.name : STYLE_WORDS.noVirtue, { fontFamily: FONT, fontSize: `${TYPE.body}px`, color: '#fff6e6', fontStyle: 'bold', align: 'center', wordWrap: { width: L.slotW - 2 * S2 } }).setOrigin(0.5, 0).setResolution(crisp());
+      // Q-PREMIUM-2 M6: names wrap to two lines and stay inside the card: step the name to 12, then shrink the
+      // glyph disc (down to 10) until the name's last line clears the card's bottom by 4.
+      const place = (): number => {
+        disc.setRadius(glyphR).setPosition(0, top + 6 + glyphR);
+        glyph.setFontSize(Math.round(glyphR * 1.1)).setPosition(0, top + 6 + glyphR);
+        const ny = top + 6 + 2 * glyphR + 2;
+        slotLabel.setPosition(0, ny);
+        name.setPosition(0, ny + slotLabel.height + 2);
+        return L.slotH / 2 - 4 - (name.y + name.height);
+      };
+      if (place() < 0) name.setFontSize(TYPE.label);
+      while (place() < 0 && glyphR > 10) glyphR -= 1;
+      v.add([disc, glyph, slotLabel, name]);
     });
 
     // The tray: picks for the chosen slot, earned first. Equipped one is gold-outlined.
@@ -1390,7 +1396,7 @@ export class HomeScene extends Phaser.Scene {
     if (skin && c.earned) txt.setStroke(WOOD.ink, 4).setData('cubbyName', true);
     const icon = c.icon ? addIcon(this, c.icon, 0, iy, iconS) : null;
     if (icon) v.add(icon.setAlpha(c.earned ? 1 : 0.3));
-    else v.add(this.add.circle(0, iy, iconS / 2, c.earned ? 0xffd166 : WOOD.grain, c.earned ? 0.9 : 0.3));
+    else v.add(placeholderIcon(this, 0, iy, iconS, c.earned));
     v.add(txt);
     const seal = c.earned && skin ? menu2Image(this, 'cubby-seal', half - 12, -half + 12, 24, 24) : null;
     const lantern = !c.earned && skin ? (next ? menu2Image(this, 'cubby-lantern-0', half - 14, -half + 16, 18, 24) : undefined) : null;
@@ -2297,6 +2303,18 @@ function slotGlyph(scene: Phaser.Scene, slot: GearSlot, x: number, y: number, si
     g.lineStyle(2, color, 1).lineBetween(0, -s, 0, -s * 1.15);
   }
   return g;
+}
+
+/**
+ * Q-PREMIUM-2 M6: a trophy with no icon art yet (the katas) gets a code-drawn placeholder, a gold disc with an ink
+ * star, never an empty circle. Same size as a real icon; art lands later.
+ */
+function placeholderIcon(scene: Phaser.Scene, x: number, y: number, size: number, earned: boolean): Phaser.GameObjects.Container {
+  const r = size / 2;
+  return scene.add.container(x, y, [
+    scene.add.circle(0, 0, r, earned ? 0xffd166 : WOOD.grain, earned ? 0.9 : 0.3),
+    scene.add.star(0, 0, 5, r / 3.2, r / 1.5, earned ? 0x7a4a22 : 0x6b5440, earned ? 1 : 0.5).setStrokeStyle(1.5, 0x3a2618, earned ? 0.8 : 0.4),
+  ]);
 }
 
 /** B-POLISH-2: the cubby wrap rules: 3 lines max, tight line gap, and a hyphenated word too wide
