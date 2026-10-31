@@ -9,6 +9,8 @@
     "Create": "temple",
     "Dojo": "temple",
     "ActionZoneInside": "temple",
+    "ActionZoneOutside": "temple",
+    "ActionZoneTown": "temple",
     "Home": "temple",
     "StreetSmarts": "temple",
     "Game": "road"

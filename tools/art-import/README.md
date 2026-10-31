@@ -18,6 +18,7 @@ python3 tools/art-import/import_art.py dojo       # just one pack
    - Extra animations for a rig that's already imported (e.g. the A2 Form stances) go in the character source's `mergeAnimations` list: JSONs with the same frame size and anchor whose animations are added to the main JSON's. A clash stops the import.
      - An overlay (e.g. the Hearth Cook's `lid/p2` sheets) may reuse an animation name the rig already has: it then only adds new layers to that animation, with the same frame count. New layers are added to the rig's layer list. Anything else that clashes still stops the import.
    - A static source with no `static.json` can list its sprites inline (`"sprites": {...}`, the same shape as in a static.json); its `json` is then the folder holding the PNGs.
+   - A static source may list `onlyLayers` to keep just some layers of each sprite (A4-DOJO-ii: the Action Zone outside keeps its day layers and leaves the dusk ones out).
 3. Run the script and commit `assets/art/`.
 
 ## What it does
