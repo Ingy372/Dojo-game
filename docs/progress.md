@@ -921,6 +921,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 **Next**
 - Jay: listen on the preview link before merge.
 - 2026-10-31: merged main (no conflicts); `sfx.levelUp()` now plays once when the Home levels-gained screen shows (`takeLevelUpSound`, 3 new tests in `r-premium-b3-sfx.test.ts`). Suite 1207 passed, 11 skipped; typecheck and build exit 0; golden fixture unchanged. No UI change, so no shots.
+- 2026-10-31 QA fix: the level-up sound now fires from the XP fill tween's `onComplete` (it was ~600 ms early, on a delayedCall); measured 0-1 ms after the last bar frame. Merged main 98f38586; one new test pinning the timing. Whoosh levels untouched.
 
 ## 2026-10-26 — Q-PREM-F11
 - A tap on KO Screen 1 goes straight to Screen 2 (90–275 ms after the tap, was about 1.75 s). Head home is ≥48 px at every size. New test: packages/sim/test/q-prem-f11-ko.test.ts. Shots and log: docs/shots/q-prem-f11 (88 PASS, 0 FAIL, 4 sizes × RM on/off).

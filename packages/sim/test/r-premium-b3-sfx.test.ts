@@ -91,10 +91,22 @@ describe('R-PREMIUM-b3 level-up sound on the Home levels-gained screen', () => {
     expect(takeLevelUpSound(bad, 'run-1', 1)).toBe(false);
   });
 
-  it('Home calls sfx.levelUp() only through that gate, and only when levels were gained', () => {
+  it('Home calls sfx.levelUp() only through that gate, from one place', () => {
     const run = homeSrc.slice(homeSrc.indexOf('private renderRun('), homeSrc.indexOf('private turnFound('));
-    expect(run).toContain('if (m.levelsGained > 0) {');
-    expect(run).toContain('if (takeLevelUpSound(safeStore(), id, m.levelsGained)) sfx.levelUp();');
+    expect(run).toContain('if (takeLevelUpSound(safeStore(), levelUpId, m.levelsGained)) sfx.levelUp();');
     expect(homeSrc.match(/sfx\.levelUp\(\)/g)).toHaveLength(1);
+  });
+
+  it('the sound is timed by the XP bar, not by a guessed delay: it fires on the fill tween\'s onComplete', () => {
+    const run = homeSrc.slice(homeSrc.indexOf('private renderRun('), homeSrc.indexOf('private turnFound('));
+    // The one tween that fills the bar calls the sound when it completes.
+    const fill = run.slice(run.indexOf('if (count) {\n      drawBar(from);'));
+    expect(fill).toMatch(/duration: LASTRUN_MOTION\.fillMs,[^\n]*onComplete: levelUpSound \}\);/);
+    // Reduced motion (or a count-up already shown): the bar is drawn full at once, and the sound is at once.
+    expect(fill).toMatch(/\} else \{\n      drawBar\(share\);\n      levelUpSound\(\);\n    \}/);
+    // No timer anywhere near the sound.
+    const decl = run.slice(run.indexOf('const levelUpSound'), run.indexOf('// Banner'));
+    expect(decl).not.toMatch(/delayedCall|setTimeout|delay:/);
+    expect(run).not.toMatch(/delayedCall\([^)]*levelUp/);
   });
 });

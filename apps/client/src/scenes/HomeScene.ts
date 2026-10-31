@@ -728,13 +728,12 @@ export class HomeScene extends Phaser.Scene {
     const Y = (v: number) => cy0 + v;
     const count = takeCountUp(safeStore(), runId(this.profile), reducedMotion());
     this.lastRunCounted = count;
-    // R-PREMIUM-b3: the level-up sound plays once per run, when the XP bar lands on the new level (at once with Reduced motion).
-    if (m.levelsGained > 0) {
-      const id = runId(this.profile);
-      this.time.delayedCall(count ? m.chips.length * LASTRUN_MOTION.chipStepMs + LASTRUN_MOTION.countMs : 0, () => {
-        if (takeLevelUpSound(safeStore(), id, m.levelsGained)) sfx.levelUp();
-      });
-    }
+    // R-PREMIUM-b3: the level-up sound plays once per run, the moment the XP bar lands on the new level (below: the fill
+    // tween's onComplete; at once with Reduced motion or when the count-up already ran for this run).
+    const levelUpId = runId(this.profile);
+    const levelUpSound = () => {
+      if (takeLevelUpSound(safeStore(), levelUpId, m.levelsGained)) sfx.levelUp();
+    };
 
     // Banner: the result in kind words, gold for a clear.
     const head = this.text(X(0), Y(L.banner.h / 2), m.headline, TYPE.heading, m.cleared ? '#a0522d' : WOOD.ink, true).setOrigin(0, 0.5);
@@ -866,8 +865,11 @@ export class HomeScene extends Phaser.Scene {
     if (count) {
       drawBar(from);
       const v = { s: from };
-      this.tweens.add({ targets: v, s: share, delay: countDelay + LASTRUN_MOTION.countMs, duration: LASTRUN_MOTION.fillMs, ease: XP_FILL.ease, onUpdate: () => drawBar(v.s) });
-    } else drawBar(share);
+      this.tweens.add({ targets: v, s: share, delay: countDelay + LASTRUN_MOTION.countMs, duration: LASTRUN_MOTION.fillMs, ease: XP_FILL.ease, onUpdate: () => drawBar(v.s), onComplete: levelUpSound });
+    } else {
+      drawBar(share);
+      levelUpSound();
+    }
 
     // Found: every item and dojo piece from this run, each a 44+ tile that opens its sheet.
     this.text(X(0), Y(L.foundLabelY), LASTRUN_WORDS.found, TYPE.label, WOOD.ink, true);
