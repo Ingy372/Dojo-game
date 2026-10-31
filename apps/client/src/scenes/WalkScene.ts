@@ -93,7 +93,7 @@ export abstract class WalkScene extends Phaser.Scene {
     this.standLayer.add(this.player);
     this.drawRoom();
 
-    this.controls = new TouchControls(this, this.cameras.main, (x, y) => this.toTile(x, y), () => this.leaving, () => false, (x, y) => this.isTapTarget(this.rawTile(x, y)));
+    this.controls = new TouchControls(this, this.cameras.main, (x, y) => this.toTile(x, y), () => this.leaving, (x, y) => this.isTapTarget(this.rawTile(x, y)));
     this.layout();
 
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
