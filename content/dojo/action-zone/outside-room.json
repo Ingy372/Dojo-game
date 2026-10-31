@@ -1,0 +1,454 @@
+{
+ "id": "outside-entrance",
+ "about": "The Action Zone dojo's outside (entrance view, day). Made from the artist's outside-entrance.json (incoming-art/action-zone-dojo/sprites/) by the Programmer: the walk grid is built from the artist's blockers (a tile is blocked if any blocker touches it), then the walkway to the front door is carved open. The art file is not changed.",
+ "pixelsPerTile": 80,
+ "frameSize": [
+  1120,
+  712
+ ],
+ "tile00Px": [
+  0,
+  -8
+ ],
+ "gridSize": [
+  14,
+  9
+ ],
+ "tileLegend": {
+  "#": "blocked (the building, sky, flower beds, benches, chairs, bin, palm, the front-left tree, the parking curbs)",
+  ".": "walkable lawn",
+  "d": "walkable: the doorstep in front of the double doors",
+  "x": "walkable: the two ends of the walk along the bottom, where the street leads off to the town"
+ },
+ "walkableChars": ".dx",
+ "tiles": [
+  "##############",
+  "##############",
+  "##############",
+  "##############",
+  "##############",
+  "##############",
+  "#..###dd#####.",
+  "#...##..##....",
+  "x............x"
+ ],
+ "walkableCells": 28,
+ "carved": [
+  [
+   6,
+   6
+  ],
+  [
+   7,
+   6
+  ],
+  [
+   6,
+   7
+  ],
+  [
+   7,
+   7
+  ]
+ ],
+ "carvedNote": "Walkway to the door: the artist's flower beds (x 4.9 to 6.5 and 7.5 to 9.1) and the shrub (x 6.7 to 7.3) leave no room for a hero 0.84 wide, so the two columns x 6 to 8 are opened from the doorstep down to the walk along the bottom. The hero walks in front of or behind the shrub and the bed edges by depth, like any prop.",
+ "blockers": [
+  {
+   "id": "bin",
+   "rect": [
+    11.7,
+    12.1,
+    6.3,
+    6.7
+   ],
+   "cells": [
+    [
+     11,
+     6
+    ],
+    [
+     12,
+     6
+    ]
+   ]
+  },
+  {
+   "id": "bench-a",
+   "rect": [
+    3.5,
+    5.2,
+    6.25,
+    6.65
+   ],
+   "cells": [
+    [
+     3,
+     6
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     5,
+     6
+    ]
+   ]
+  },
+  {
+   "id": "bench-b",
+   "rect": [
+    8.27,
+    9.23,
+    6.2,
+    6.6
+   ],
+   "cells": [
+    [
+     8,
+     6
+    ],
+    [
+     9,
+     6
+    ]
+   ]
+  },
+  {
+   "id": "chair-a",
+   "rect": [
+    9.65,
+    10.05,
+    6.2,
+    6.55
+   ],
+   "cells": [
+    [
+     9,
+     6
+    ],
+    [
+     10,
+     6
+    ]
+   ]
+  },
+  {
+   "id": "chair-b",
+   "rect": [
+    10.3,
+    10.8,
+    6.4,
+    6.78
+   ],
+   "cells": [
+    [
+     10,
+     6
+    ]
+   ]
+  },
+  {
+   "id": "bed-a",
+   "rect": [
+    4.9,
+    6.5,
+    6.8,
+    7.9
+   ],
+   "cells": [
+    [
+     4,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     4,
+     7
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     6,
+     7
+    ]
+   ]
+  },
+  {
+   "id": "bed-b",
+   "rect": [
+    7.5,
+    9.1,
+    6.8,
+    7.9
+   ],
+   "cells": [
+    [
+     7,
+     6
+    ],
+    [
+     8,
+     6
+    ],
+    [
+     9,
+     6
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     8,
+     7
+    ],
+    [
+     9,
+     7
+    ]
+   ]
+  },
+  {
+   "id": "shrub",
+   "rect": [
+    6.7,
+    7.3,
+    6.9,
+    7.22
+   ],
+   "cells": [
+    [
+     6,
+     6
+    ],
+    [
+     7,
+     6
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     7,
+     7
+    ]
+   ]
+  },
+  {
+   "id": "palm",
+   "rect": [
+    12.3,
+    12.5,
+    6.3,
+    6.51
+   ],
+   "cells": [
+    [
+     12,
+     6
+    ]
+   ]
+  },
+  {
+   "id": "building",
+   "rect": [
+    3.0,
+    11.0,
+    4.3,
+    6.1
+   ],
+   "cells": [
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     6,
+     4
+    ],
+    [
+     7,
+     4
+    ],
+    [
+     8,
+     4
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     6,
+     5
+    ],
+    [
+     7,
+     5
+    ],
+    [
+     8,
+     5
+    ],
+    [
+     9,
+     5
+    ],
+    [
+     10,
+     5
+    ],
+    [
+     3,
+     6
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     7,
+     6
+    ],
+    [
+     8,
+     6
+    ],
+    [
+     9,
+     6
+    ],
+    [
+     10,
+     6
+    ]
+   ]
+  },
+  {
+   "id": "tree-3",
+   "rect": [
+    0.35,
+    0.85,
+    6.7,
+    7.05
+   ],
+   "cells": [
+    [
+     0,
+     6
+    ],
+    [
+     0,
+     7
+    ]
+   ],
+   "note": "added by the Programmer: the artist listed no footprint for the front-left tree; its trunk stands at (0.6, 7.0)"
+  }
+ ],
+ "spawn": {
+  "fromTown": {
+   "pos": [
+    7.0,
+    8.5
+   ],
+   "facing": "north",
+   "note": "the artist's spawn (7.0, 8.6) moved up 0.1 so the hero fits inside the bottom row"
+  },
+  "fromInside": {
+   "pos": [
+    7.0,
+    6.6
+   ],
+   "facing": "south",
+   "note": "the front door's approach tile: coming out of the dojo you stand at the doors"
+  }
+ },
+ "frontDoor": {
+  "id": "front-door",
+  "target": "inside",
+  "tapRectPx": [
+   500,
+   367,
+   620,
+   472
+  ],
+  "approachTile": [
+   7.0,
+   6.6
+  ],
+  "approachFacing": "north",
+  "enterRect": [
+   6.4,
+   7.6,
+   6.0,
+   6.9
+  ],
+  "note": "Standing in enterRect (the doorstep) goes inside. A tap on tapRectPx (frame px) walks to the approach tile."
+ },
+ "exits": [
+  {
+   "id": "town-left",
+   "rect": [
+    0.0,
+    0.6,
+    8.0,
+    9.0
+   ],
+   "to": "town"
+  },
+  {
+   "id": "town-right",
+   "rect": [
+    13.4,
+    14.0,
+    8.0,
+    9.0
+   ],
+   "to": "town"
+  }
+ ],
+ "exitsNote": "Walking off either end of the walk along the bottom goes back to the town. The artist put no curbs in the blocker list, so the parking strip along the bottom is walkable the whole way across."
+}
