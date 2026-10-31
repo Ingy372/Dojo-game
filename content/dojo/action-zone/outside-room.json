@@ -29,10 +29,10 @@
   "##############",
   "##############",
   "#..###dd#####.",
-  "#...##..##....",
+  ".....#..#.....",
   "x............x"
  ],
- "walkableCells": 28,
+ "walkableCells": 31,
  "carved": [
   [
    6,
@@ -49,9 +49,17 @@
   [
    7,
    7
+  ],
+  [
+   4,
+   7
+  ],
+  [
+   9,
+   7
   ]
  ],
- "carvedNote": "Walkway to the door: the artist's flower beds (x 4.9 to 6.5 and 7.5 to 9.1) and the shrub (x 6.7 to 7.3) leave no room for a hero 0.84 wide, so the two columns x 6 to 8 are opened from the doorstep down to the walk along the bottom. The hero walks in front of or behind the shrub and the bed edges by depth, like any prop.",
+ "carvedNote": "Walkway to the door: the artist's flower beds (x 4.9 to 6.5 and 7.5 to 9.1) and the shrub (x 6.7 to 7.3) leave no room for a hero 0.84 wide, so the two columns x 6 to 8 are opened from the doorstep down to the walk along the bottom. The hero walks in front of or behind the shrub and the bed edges by depth, like any prop. A4-DOJO-ii-fix: cells (4,7) and (9,7) are opened too. Each is blocked only by a sliver of a bed (the bed starts at x 4.9 and ends at x 9.1, the cell edge is 5.0 and 9.0), which kept the hero 0.9 tile away from the art; the hero now stands against the bed, overlapping its edge by at most 0.1 tile, by depth like any prop.",
  "blockers": [
   {
    "id": "bin",
@@ -373,19 +381,15 @@
     0.35,
     0.85,
     6.7,
-    7.05
+    7.0
    ],
    "cells": [
     [
      0,
      6
-    ],
-    [
-     0,
-     7
     ]
    ],
-   "note": "added by the Programmer: the artist listed no footprint for the front-left tree; its trunk stands at (0.6, 7.0)"
+   "note": "added by the Programmer: the artist listed no footprint for the front-left tree; its trunk stands at (0.6, 7.0). A4-DOJO-ii-fix: the trunk's base is at 7.0, so the tile below it (0, 7) is open and the hero can stand right under the tree."
   }
  ],
  "spawn": {
@@ -403,7 +407,7 @@
     6.6
    ],
    "facing": "south",
-   "note": "the front door's approach tile: coming out of the dojo you stand at the doors"
+   "note": "the front door's approach tile: coming out of the dojo you stand at the doors. The doorstep is inside enterRect, so entering again needs a tap on the doors or a push up (A4-DOJO-ii-fix); standing there does nothing."
   }
  },
  "frontDoor": {
@@ -433,22 +437,42 @@
    "id": "town-left",
    "rect": [
     0.0,
-    0.6,
-    8.0,
+    2.4,
+    8.2,
     9.0
    ],
-   "to": "town"
+   "to": "town",
+   "cue": {
+    "center": [
+     1.9,
+     8.4
+    ],
+    "size": [
+     1.2,
+     0.75
+    ]
+   }
   },
   {
    "id": "town-right",
    "rect": [
-    13.4,
+    11.6,
     14.0,
-    8.0,
+    8.2,
     9.0
    ],
-   "to": "town"
+   "to": "town",
+   "cue": {
+    "center": [
+     12.1,
+     8.4
+    ],
+    "size": [
+     1.2,
+     0.75
+    ]
+   }
   }
  ],
- "exitsNote": "Walking off either end of the walk along the bottom goes back to the town. The artist put no curbs in the blocker list, so the parking strip along the bottom is walkable the whole way across."
+ "exitsNote": "Walking onto the gold glow at either end of the walk along the bottom goes back to the town. The glow (cue) is drawn at its centre and size, in tiles; the exit rectangle runs from 0.1 tile inside the glow's inner edge to the room's edge, so a tap anywhere on the glow leaves, and a tap on its middle always does (A4-DOJO-ii-fix). The glow sits at x 1.9 and 12.1 so both are on screen at the spawn on a phone 667 px wide (the view is 11.6 tiles wide), and 0.225 tile (13 px at that size) above the bottom edge. The artist put no curbs in the blocker list, so the parking strip along the bottom is walkable the whole way across."
 }
