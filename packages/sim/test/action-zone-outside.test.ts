@@ -1,7 +1,7 @@
 // A4-DOJO-ii: the Action Zone outside entrance and the town picture: walk grid, front door,
 // spawns, exits and the art packs they use.
 import { describe, expect, it } from 'vitest';
-import { MOVEMENT, ActionZoneError, circleHitsWall, createWorld, loadInsideRoom, loadOutsideRoom, loadTown, stepWorld, type PlayerInput, type Vec2 } from '../src';
+import { MOVEMENT, ActionZoneError, circleHitsWall, createWorld, loadInsideRoom, loadOutsideRoom, loadTown, stepWorld, wantsThrough, type PlayerInput, type Vec2 } from '../src';
 import outsideJson from '../../../content/dojo/action-zone/outside-room.json';
 import insideJson from '../../../content/dojo/action-zone/inside-room.json';
 import townJson from '../../../content/dojo/action-zone/town.json';
@@ -44,7 +44,7 @@ describe('Action Zone outside', () => {
     // The one blocker that is new: the front-left tree, which the artist gave no footprint.
     expect(outsideJson.blockers.filter((b) => !artist.some((a) => a.id === b.id)).map((b) => b.id)).toEqual(['tree-3']);
     const carved = new Set(outsideJson.carved.map(([c, r]) => `${c},${r}`));
-    expect([...carved].sort()).toEqual(['6,6', '6,7', '7,6', '7,7']);
+    expect([...carved].sort()).toEqual(['4,7', '6,6', '6,7', '7,6', '7,7', '9,7']);
     for (const b of outsideJson.blockers) {
       for (const [col, row] of b.cells) expect(room.walls[row][col] || carved.has(`${col},${row}`), `${b.id} ${col},${row}`).toBe(true);
     }
@@ -183,5 +183,75 @@ describe('Action Zone outside', () => {
     expect(() => loadOutsideRoom({ ...outsideJson, exits: [{ id: 'x', rect: [0, 1, 0, 1], to: 'moon' }] })).toThrow(/town/);
     expect(() => loadTown({})).toThrow(ActionZoneError);
     expect(() => loadTown({ ...townJson, dojo: { ...townJson.dojo, tapRect: [0, 0, 5000, 5000] } })).toThrow(/inside the picture/);
+  });
+
+  // ---- A4-DOJO-ii-fix ----
+
+  it('each exit rectangle lines up with the glow that marks it, and a tap on the glow leaves', () => {
+    for (const e of outside.exits) {
+      const { x, y, w, h } = e.cue;
+      // The glow is whole inside the room, and its middle is inside the exit.
+      expect(x - w / 2).toBeGreaterThanOrEqual(0);
+      expect(x + w / 2).toBeLessThanOrEqual(room.width ?? 14);
+      expect(inRect({ x, y }, e.rect), e.id).toBe(true);
+      // The exit starts 0.1 tile inside the glow's inner edge, so no part of the glow is dead.
+      const inner = x < 7 ? x + w / 2 : x - w / 2;
+      const edge = x < 7 ? e.rect[1] : e.rect[0];
+      expect(Math.abs(inner - edge), e.id).toBeCloseTo(0.1, 5);
+      const end = walk(outside.spawnFromTown.pos, 20 * 8, () => ({ kind: 'moveTo', x, y }));
+      expect(inRect(end, e.rect), e.id).toBe(true);
+    }
+  });
+
+  it('both glows are on screen at the town spawn on a 667 x 375 phone (the view is 11.56 tiles wide)', () => {
+    const viewW = (6.5 * 667) / 375;
+    const centre = Math.max(viewW / 2, Math.min(14 - viewW / 2, outside.spawnFromTown.pos.x));
+    for (const e of outside.exits) {
+      expect(e.cue.x - e.cue.w / 2, e.id).toBeGreaterThanOrEqual(centre - viewW / 2);
+      expect(e.cue.x + e.cue.w / 2, e.id).toBeLessThanOrEqual(centre + viewW / 2);
+    }
+  });
+
+  it('a glow whose centre is outside its exit rectangle is refused', () => {
+    const bad = { ...outsideJson, exits: outsideJson.exits.map((e, i) => (i ? e : { ...e, cue: { ...e.cue, center: [6, 3] } })) };
+    expect(() => loadOutsideRoom(bad)).toThrow(/cue/);
+    const none = { ...outsideJson, exits: outsideJson.exits.map((e) => ({ id: e.id, rect: e.rect, to: e.to })) };
+    expect(() => loadOutsideRoom(none)).toThrow(ActionZoneError);
+  });
+
+  it('wantsThrough: the doorstep opens only on a push up or a tap on the doors, never by standing there', () => {
+    const door = outside.frontDoor.enterRect;
+    const on = { x: 7, y: 6.6 };
+    expect(wantsThrough({ kind: 'none' }, on, door)).toBe(false);
+    expect(wantsThrough({ kind: 'stick', x: 0, y: 0 }, on, door)).toBe(false);
+    expect(wantsThrough({ kind: 'stick', x: 0, y: 1 }, on, door)).toBe(false); // down: away
+    expect(wantsThrough({ kind: 'stick', x: 1, y: 0 }, on, door)).toBe(false); // sideways
+    expect(wantsThrough({ kind: 'stick', x: 0, y: -1 }, on, door)).toBe(true); // up: through
+    expect(wantsThrough({ kind: 'moveTo', x: 7, y: 6.6 }, on, door)).toBe(true); // tap on the doors
+    expect(wantsThrough({ kind: 'moveTo', x: 3, y: 8 }, on, door)).toBe(false); // tap elsewhere
+    expect(wantsThrough({ kind: 'stick', x: 0, y: -1 }, { x: 7, y: 8 }, door)).toBe(false); // not on the step
+  });
+
+  it('coming out of the dojo you stand on the doorstep and do nothing: no bounce back in', () => {
+    const idle = walk(outside.spawnFromInside.pos, 20 * 4, () => ({ kind: 'none' }));
+    expect(inRect(idle, outside.frontDoor.enterRect)).toBe(true);
+    expect(wantsThrough({ kind: 'none' }, idle, outside.frontDoor.enterRect)).toBe(false);
+  });
+
+  it('the scenes use these rules: cues come from the file, taps on a cue win over the stick, the doorstep asks wantsThrough', () => {
+    const src = (f: string) => Object.values(import.meta.glob('../../../apps/client/src/**/*.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>).find((_, i, a) => Object.keys(import.meta.glob('../../../apps/client/src/**/*.ts'))[i].endsWith(f)) as string;
+    const outsideScene = src('scenes/OutsideScene.ts');
+    expect(outsideScene).toContain('e.cue.x * TILE');
+    expect(outsideScene).toContain('protected isTapTarget(');
+    expect(outsideScene).toContain("if (wantsThrough(input, pos, OUTSIDE.frontDoor.enterRect)) this.arm('front-door');");
+    expect(src('input/TouchControls.ts')).toContain('&& !this.isTapTarget(');
+    expect(src('scenes/WalkScene.ts')).toContain('this.isTapTarget(this.rawTile(x, y))');
+  });
+
+  it('the Home Dojo Town button is marked PLACEHOLDER in the code, as a temporary way out', () => {
+    const dojo = Object.entries(import.meta.glob('../../../apps/client/src/scenes/DojoScene.ts', { query: '?raw', import: 'default', eager: true }))[0][1] as string;
+    const at = dojo.indexOf("'Town'");
+    expect(at).toBeGreaterThan(0);
+    expect(dojo.slice(Math.max(0, at - 400), at)).toContain('PLACEHOLDER');
   });
 });
