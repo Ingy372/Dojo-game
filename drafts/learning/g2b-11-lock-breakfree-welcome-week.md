@@ -1,11 +1,13 @@
-# G2B-11: learning Lock & Break Free + Brown belt Welcome Week (draft, v2)
+# G2B-11: learning Lock & Break Free + Brown belt Welcome Week (draft, v3)
 
 ## Delivery Note
 - **ITEM:** G2B-11 (board id `R-G2B-11` in `drafts/planning/R-GREEN-TO-BLACK.md`). v2 applies Jay's Power & Progression Redesign (Oct 30) and the Manager's answers of Nov 1.
-- **WHAT:** (1) Two first-encounter lessons: **Lock** (Arm Bar, Self-Defense #17, in the Lock Seal) and **Break Free** (Self-Defense #29, in the **Escape Seal**: Blocks or Dashes make space and give Dash back). Exact lines, kind handling of misses, link to class, and what happens when the seal isn't equipped (Brown has **4 Seal slots**). (2) A **10-item Welcome Week order** for a Brown belt. Design only: no game code, no new technique, no launch scope added.
+- **WHAT:** (1) Two first-encounter lessons: **Lock** (Arm Bar, Self-Defense #17, in the Lock Seal) and **Break Free** (Self-Defense #29, in the **Escape Seal**: Blocks or Dashes make space and give Dash back). Exact lines, kind handling of misses, link to class, and what happens when the seal isn't equipped (Brown has **4 Seal slots**). (3) A short **equip tip** for the seal unlock screen, so a kid learns to put a Seal in a slot. (2) A **10-item Welcome Week order** for a Brown belt. Design only: no game code, no new technique, no launch scope added.
 - **WHY:** A Brown belt arrives with #1-35 and now chooses 4 Seals to carry. Section 13 of `docs/core-design.md` says systems arrive one per session so nobody is buried on day one. Lock and Break Free are new ideas, so a kid needs a calm, no-fail way to meet them.
-- **DECIDE (Jay):** one taste check: do the lines in Lessons 1 and 2 sound right (main wording or the alternates)? Nothing else is waiting on Jay. Questions for the Manager are at the end (4). Questions for the Programmer are in "Open for Programmer".
-- **NEXT:** After Jay's taste check, the Content Designer can turn the lessons into lesson data (same keys as `first-session-lessons.json`) and the Programmer can add the order to `content/settings/unlock-schedule.json`. The Lock and Break Free mechanics are built after the beta, so the lessons wait for them. **G2B-05 is not started** (it waits for the Content Designer's G2B-02).
+- **DECIDE (Jay):** one taste check: do the lines in Lessons 1 and 2 and the equip tip sound right (main wording or the alternates)? Nothing else is waiting on Jay. One question for the Manager is at the end. Questions for the Programmer are in "Open for Programmer".
+- **NEXT:** After Jay's taste check, the Content Designer can turn the lessons into lesson data (same keys as `first-session-lessons.json`) and the Programmer can add the order to `content/settings/unlock-schedule.json`. The Lock and Break Free lessons sit ready until after the beta (decided). **G2B-05 is not started** (it waits for the Content Designer's G2B-02).
+
+**Decisions recorded (Jay, Nov 1).** (a) Jay teaches equipping through the equip tip below. (b) Sensei's Trial runs **only for new unlocks**, not for ranks a student already holds. (c) The Lock and Break Free lessons sit ready until after the beta.
 
 **Answers applied (Manager, Nov 1).** (1) Break Free lives in the Escape Seal, and no state holds the player, so the lesson teaches the Escape Seal. (2) Brown has #1-35. (3) Street Smarts stays as built. (4) The Artist draws the Locked enemy and its tag. (5) Brown has 4 Seal slots. (6) Pinned, Release and Injured are post-launch. (7) Open items go to the Programmer. (8) The file stays in `drafts/learning/`. (9) `check-lessons.py` is not edited; the spec is below. The plan asked for "day-by-day", but K17 and K19 define a session as a calendar day with a run, so the order is **session by session**.
 
@@ -20,7 +22,7 @@
 | Calls to class | Callouts use the real number ("Self-Defense #17!") with a short subtitle. Locked cards say "Show Sensei {X} in class to unlock". | K22b, `S4` |
 | How lessons work | One sentence per screen, a practice try that can't be lost, replay from the Lesson Scroll, never more than one new system per session. | core-design §13 |
 | Never punish | "Unlocks never expire and the game never takes power away." | Redesign doc, rule 7 |
-| **Not defined** | Whether elites can be locked. Whether the Locked enemy has a tag or ring (the Artist decides). How a kid makes a Block. How equipping is taught. | Open for Programmer |
+| **Not defined** | Whether elites can be locked. Whether the Locked enemy has a tag or ring (the Artist decides). How a kid makes a Block. | Open for Programmer |
 
 ## Part 1: how players learn Lock and Break Free
 
@@ -67,6 +69,17 @@
 - **Fields:** same as Lesson 1, with `scroll` true.
 - **No held-player state:** nothing in the game grabs or holds the player, so the lesson never shows a hold. It teaches getting away.
 
+### Equip tip (seal unlock screen)
+Equipping is taught by this tip (decided). It sits under the Seal's name and rank on the unlock screen, as two short lines.
+- **Main:**
+  1. "Put this Seal in a slot."
+  2. "Then it helps you in fights."
+- **Alt A:** "Pick a slot for this Seal." / "You can swap it any time."
+- **Alt B:** "Slots hold the Seals you use." / "Change them whenever you like."
+- **Note:** the example "Put a Seal in a slot to use it." is 9 words, so I cut it to the 8-word limit.
+- **No pressure:** no "must", no "need", no timer. The tip is shown **once per session**, on the first Seal unlock screen (not on every Seal in the session 1 cascade), and it never comes back as a nag. Nothing is lost if the kid ignores it. The "swap" lines also tell a Brown with 4 full slots that they can change.
+- **Who:** the Content Designer places it in the unlock screen data. Jay approves the wording (taste check).
+
 ### Four Seal slots: when do the lessons fire?
 Brown has 6 Seal families and 4 slots, so a Brown can never carry them all. A lesson needs its move to happen, so the move must be equipped.
 | What the kid equips | What happens |
@@ -76,8 +89,8 @@ Brown has 6 Seal families and 4 slots, so a Brown can never carry them all. A le
 | Neither equipped | Both wait. **No message, no nudge to equip, nothing lost.** Both are on the Lesson Scroll. |
 | Equips it weeks later | The lesson fires the first time the move happens, as long as no other new thing is due that session. |
 - A lesson that is waiting **never blocks** the next item in the order (the same rule the engine uses to skip systems a belt hasn't opened).
-- From the Scroll, the practice try should auto-equip the seal for that room, like Sensei's Trial in the Redesign. That is a Programmer question (item 5 below).
-- Equipping itself is taught somewhere else (Q1 for the Manager).
+- From the Scroll, the practice try should auto-equip the seal for that room. Sensei's Trial only runs for new unlocks (decided), so this is a Programmer question (item 5 below).
+- Equipping is taught by the equip tip above.
 
 ### When a kid doesn't get it (kind, no punishment)
 The docs define **no failure state** for Lock or Break Free, so none is added.
@@ -110,8 +123,8 @@ The docs define **no failure state** for Lock or Break Free, so none is added.
 | 6 | **Street Smarts** card | System | Built, unchanged |
 | 7 | **Monster Journal** card | System | Built |
 | 8 | Takedown / Throw (#11, Throw Seal) | Lesson | Planned: R-G2B-05 writes it. Not started |
-| 9 | **Lock** (Arm Bar, #17) | Lesson | **This draft** (waits for the Lock mechanic) |
-| 10 | **Break Free** (#29, Escape Seal) | Lesson | **This draft** (waits for `breakFree`) |
+| 9 | **Lock** (Arm Bar, #17) | Lesson | **This draft** (ready, waits until after the beta) |
+| 10 | **Break Free** (#29, Escape Seal) | Lesson | **This draft** (ready, waits until after the beta) |
 
 Why this order: items 8-10 follow the order the student **learned them in class** (Orange #11, Green #17, Red #29), so each idea comes after the one before it. Items 2-7 are as built, with only the Scroll moved first so every later lesson can be replayed.
 
@@ -143,10 +156,9 @@ They don't get Welcome Week (K19: existing students only). The promotion ceremon
 2. **Order when both are due:** when a lesson and a system card are both due in the same session, which one goes first? My assumption: the order table above, top to bottom.
 3. **Does a held-back lesson roll over?** My assumption: a lesson held back by the one-per-session limit, or by an unequipped seal, fires at the next first chance, and never blocks the next item.
 4. **Can elites be locked?** The docs say only "never a Guardian". Lines don't change, but a Locked elite needs an art and rule decision.
-5. **Practice from the Scroll:** can the practice try auto-equip the seal for that room (like Sensei's Trial)? If not, the replay can't be done with an unequipped seal.
+5. **Practice from the Scroll:** can the practice try auto-equip the seal for that room? Sensei's Trial won't do it, because it runs only for new unlocks. If it can't, the replay can't be done with an unequipped seal.
 6. **Callout number:** the Escape pop-up says "Self-Defense #29!". Should the number be the rank's own technique (could be #30 or later) rather than always #29?
 7. **Escape wording:** the Redesign says "blocks or dashes create space and refill Dash". Please confirm that a Dash (not only a Block) refills Dash, since my screen 3 says so.
-8. **Sensei's Trial:** does a student joining at Brown get a Trial for each unlocked rank? If yes it would add a new thing per session on top of this order (Q2 for the Manager).
 
 ### Spec: what `check-lessons.py` should also cover (I did not edit the script)
 The script today is hardcoded to `dash-only-lesson.json`. For these lessons it should:
@@ -156,7 +168,7 @@ The script today is hardcoded to `dash-only-lesson.json`. For these lessons it s
 4. Fail "break" or "broke" anywhere except inside "Break Free".
 5. Fail pressure words in any lesson or unlock card: streak, expire, countdown, "days left", "missed", "last chance", "hurry".
 6. Check `retry` equals "Nice work. Let's keep practicing." and that each lesson ends with a class-link screen that names the move.
-7. Check each callout has the "Self-Defense #N!" form.
+7. Check each callout has the "Self-Defense #N!" form, and that the equip tip is 2 lines of 8 words or fewer with no "must" or "need".
 8. Check the Welcome Week list: no repeated id, every id exists, and no two items share a session.
 
 ## Evidence
@@ -175,10 +187,12 @@ Checked by web search on Nov 1, 2026 (DOI or publisher pages). Ratings are for *
 | About 4-5 weeks for a twice-a-week student is about right. | Arithmetic from the list only. No study | WEAK. Please test with real Brown belts (not 6-year-olds) |
 
 ## Decisions for Jay
-1. **Taste check on the lines:** Lessons 1 and 2 (main wording or the alternates). Nothing else is waiting on Jay.
+Remaining: **a taste check** on Lessons 1 and 2 and the equip tip (main wording or the alternates).
+
+**Decided (Nov 1):**
+- Jay teaches equipping, through the equip tip on the seal unlock screen.
+- Sensei's Trial runs only for new unlocks, not for ranks a student already holds.
+- The Lock and Break Free lessons sit ready until after the beta.
 
 ## Questions for the Manager
-1. **Who teaches equipping?** Lessons only fire for an equipped seal, so a kid must know how to equip one. The Redesign has the loadout screen and Sensei's Trial, but no equip lesson. Is that written elsewhere?
-2. **Sensei's Trial for a Brown student:** should it run for the ranks they already have? If so it competes with this order (Open for Programmer, item 8).
-3. **Slot numbers:** "4 Seal slots at Red and above" is a starting proposal that the test bot confirms. If it changes, the "what happens" table above still holds.
-4. **Timing:** the Redesign puts Lock and Break Free mechanics after the beta. These lessons are ready early and wait for the mechanics. Is that right?
+1. **Slot numbers:** "4 Seal slots at Red and above" is a starting proposal that the test bot confirms. If it changes, the "what happens" table above still holds.
