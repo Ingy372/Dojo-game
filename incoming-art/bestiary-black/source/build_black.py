@@ -227,6 +227,26 @@ bone("sparks", (0, 0, H * 0.45), (0, 0, H * 0.45 + 0.05), "root")
 HGS = (0.44, -0.14, 0.34)   # Hush Guard: the shield's centre. The shield bone turns about the vertical axis through it (the shield turns to face you)
 if E == "hush-guard": bone("shield", HGS, (HGS[0], HGS[1], HGS[2] + 0.1), "arm.L")
 else: bone("shield", (R * 1.15, -R * 0.75, SH_Z - 0.06), (R * 1.15, -R * 0.75, SH_Z + 0.04), "arm.L")
+# ----------------------------------------------------------------- Sky Sweeper ribbons: 5 flat cloth ribbons of uneven length (one smooth swept strip each), bent gently the same way (the wind), on small bone chains for the flutter
+def _rib_spec():
+    WIND = Vector((0.9, 0.42, 0.12)).normalized()          # the wind's direction in the character's frame (+x = its left, +y = behind): every ribbon trails this way
+    out = []
+    for i, (az, ln, fk) in enumerate(((20, 0.32, True), (92, 0.20, False), (164, 0.37, True), (236, 0.23, False), (308, 0.29, True))):
+        a = math.radians(az); rh = Vector((math.sin(a), -math.cos(a), 0.0)); t = math.radians(46)
+        d0 = rh * math.sin(t) + Vector((0, 0, -math.cos(t))); nh = rh * math.cos(t) + Vector((0, 0, math.sin(t)))
+        pts = [rh * 0.245 + Vector((0, 0, 0.295))]; dirs = []
+        for k, (f0, f1, bw) in enumerate(((0.0, 0.22, 0.0), (0.22, 0.44, 0.25), (0.44, 0.66, 0.55), (0.66, 0.84, 0.85), (0.84, 1.0, 1.1))):
+            d = (d0 + WIND * bw).normalized(); dirs.append(d); pts.append(pts[-1] + d * ln * (f1 - f0))
+        path = []
+        for k in range(6):
+            d = dirs[min(k, 4)]; path.append((pts[k], d, (nh - d * nh.dot(d)).normalized()))
+        out.append(dict(i=i, ln=ln, fork=fk, path=path))
+    return out
+RIBS = _rib_spec()
+if E == "sky-sweeper":     # one bone per ribbon, for the flutter
+    for r in RIBS:
+        p0, d, n = r["path"][0]
+        b = eb.new(f"rib{r['i']}"); b.head = p0; b.tail = p0 + d * 0.06; b.align_roll(n); b.parent = eb["body"]; b.use_deform = False
 bpy.ops.object.mode_set(mode="OBJECT")
 for pb in arm.pose.bones: pb.rotation_mode = "XYZ"
 PB = arm.pose.bones
@@ -989,27 +1009,44 @@ if E == "sky-sweeper":   # a round periwinkle wind-cloud with a skirt of soft wi
     WOOD = toon_material("SSWOOD", "#d8b47e"); STRAW = toon_material("SSSTRAW", "#f4e6b8"); GOLD = toon_material("SSGOLD", "#d9b84a")
     LAN = toon_material("SSLAN", "#fff3c8", shadow=1.0, highlight=1.0); SOCK = toon_material("SSSOCK", "#26315a", shadow=1.0, highlight=1.0); CHK = toon_material("SSCHEEK", "#f4b4c4")
     M_("body", ellipsoid(BC, BR, segs=24, rings=14), MAT["body"])
-    # the wind skirt: 7 flat, wide cloth ribbons (a lighter cloth colour with a deeper stripe), straight, square-cut or forked (swallow-tail) ends: no curl, no taper, no rounded tips
+    # the wind skirt: 5 flat cloth ribbons of uneven length hung from the sash (a lighter cloth colour with a deeper stripe). Each is one smooth flat strip that bends gently the same way (the wind),
+    # with a square-cut or forked (swallow-tail) end: no curl, no taper, no rounded tips. Each hangs on its own bone so it can flutter.
     RIB = toon_material("SSRIB", "#e2eaff"); RSTR = toon_material("SSRSTR", "#7d96d8")
-    RW, RT = 0.17, 0.02; PSI = 0
+    RW, RT = 0.20, 0.02
+    def _swept(path, w, t, off=0.0, lo=0.0, hi=1.0):
+        """a flat strip of width w and thickness t swept along the ribbon's centre line (path = [(point, dir, normal)]), from fraction lo to hi, shifted sideways by off"""
+        n = len(path) - 1; fr = [lo + (hi - lo) * j / n for j in range(n + 1)]
+        def at(f):   # sample the path at fraction f (linear between samples)
+            u = min(max(f, 0.0), 1.0) * n; k = min(int(u), n - 1); q = u - k
+            (p0, d0, n0), (p1, d1, n1) = path[k], path[k + 1]
+            d = (d0 * (1 - q) + d1 * q).normalized(); nn = (n0 * (1 - q) + n1 * q); nn = (nn - d * nn.dot(d)).normalized()
+            return p0 * (1 - q) + p1 * q, d, nn, d.cross(nn).normalized()
+        bm = bmesh.new(); rows = []
+        for f in fr:
+            p, d, nn, x = at(f); c = p + x * off
+            rows.append([bm.verts.new(c + x * sx * w / 2 + nn * sz * t / 2) for sx, sz in ((-1, 1), (1, 1), (1, -1), (-1, -1))])
+        for r0, r1 in zip(rows[:-1], rows[1:]):
+            for q in range(4): bm.faces.new((r0[q], r0[(q + 1) % 4], r1[(q + 1) % 4], r1[q]))
+        bm.faces.new(rows[0][::-1]); bm.faces.new(rows[-1])
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        return bm
     M_("sash", tube((0, 0, 0.275), (0, 0, 0.335), 0.262, 0.262, segs=28, sy=0.93), GOLD)
-    for k in range(7):
-        a = math.radians(k * 360 / 7 + 10); rh = (math.sin(a), -math.cos(a)); th = (-rh[1], rh[0])
-        longr = (k % 2 == 0); R0, Z0 = 0.245, 0.295; RL = 0.32 if longr else 0.25; tl = math.radians(40 if longr else 34); ps = math.radians(PSI)
-        dx_, dout, dz_ = -math.cos(tl) * math.sin(ps), math.sin(tl), -math.cos(tl) * math.cos(ps)
-        def at(f, off=0.0):   # a point a fraction f down the ribbon, off to the side
-            return (rh[0] * (R0 + f * RL * dout) + th[0] * (off + f * RL * dx_), rh[1] * (R0 + f * RL * dout) + th[1] * (off + f * RL * dx_), Z0 + f * RL * dz_)
-        ang = math.degrees(a); rot = (-math.degrees(tl), PSI, ang)
-        if longr:   # forked (swallow-tail) end: a solid upper part and two flat prongs with a square notch between
-            f1 = 0.62; l1 = RL * f1
-            M_(f"rib{k}", box(at(f1 / 2), (RW, RT, l1), rot=rot), RIB)
-            M_(f"rib{k}s", box(at(f1 / 2 + 0.01), (RW * 0.2, RT * 1.3, l1 * 0.96), rot=rot), RSTR, outline=False)
-            for sgn in (-1, 1):
-                pc = at((f1 + 1.0) / 2, sgn * RW * 0.27 * math.cos(ps))
-                M_(f"rib{k}p{sgn}", box(pc, (RW * 0.42, RT, RL * (1 - f1)), rot=rot), RIB)
-        else:       # a straight, square cut end
-            M_(f"rib{k}", box(at(0.5), (RW, RT, RL), rot=rot), RIB)
-            M_(f"rib{k}s", box(at(0.5), (RW * 0.2, RT * 1.3, RL * 0.96), rot=rot), RSTR, outline=False)
+    for r in RIBS:
+        bn = f"rib{r['i']}"; path = r["path"]
+        if r["fork"]:     # the forked end: two flat prongs with a square notch between
+            M_(bn + "a", _swept(path, RW, RT, hi=0.66), RIB, bn)
+            for sgn in (-1, 1): M_(f"{bn}p{sgn}", _swept(path, RW * 0.42, RT, off=sgn * RW * 0.27, lo=0.64), RIB, bn)
+            M_(bn + "s", _swept(path, RW * 0.2, RT * 1.3, hi=0.66), RSTR, bn, outline=False)
+        else:
+            M_(bn + "a", _swept(path, RW, RT), RIB, bn)
+            M_(bn + "s", _swept(path, RW * 0.2, RT * 1.3), RSTR, bn, outline=False)
+    def flutter(name, i, f):         # a small per-frame flutter of each ribbon (idle loops; wind-up and attack run on)
+        amp = {"idle": 1.0, "windup": 1.2, "attack": 1.6}.get(name, 0)
+        if not amp: return
+        base = 2 * math.pi * i / (8 if name == "idle" else 5)
+        for r in RIBS:
+            ph = base + 1.7 * r["i"]; pb = PB[f"rib{r['i']}"]
+            pb.rotation_euler = Euler([math.radians(amp * 6.0 * math.sin(ph)), math.radians(amp * 3.0 * math.sin(ph + 1.0)), math.radians(amp * 3.5 * math.cos(ph))], "XYZ"); pb.keyframe_insert("rotation_euler", frame=f)
     ex = 0.1; ez = 0.5
     for x in (1, -1):
         M_(f"sock{x}", ellipsoid((x * ex, _sy(BC, BR, ex, ez) + 0.009, ez), (0.08, 0.02, 0.1), rot=(0, 0, x * 18), segs=16, rings=8), SOCK, outline=False)
@@ -1077,7 +1114,9 @@ def apply(p, f):
 def action(name, poses, fps, loop, tags="", info=None):
     act = bpy.data.actions.new(name); act.use_fake_user = True
     arm.animation_data_create(); arm.animation_data.action = act
-    for i, p in enumerate(poses): apply(p, i + 1)
+    for i, p in enumerate(poses):
+        apply(p, i + 1)
+        if E == 'sky-sweeper': flutter(name, i, i + 1)
     for fc in act.fcurves:
         for k in fc.keyframe_points: k.interpolation = "LINEAR"
     act["sprite_fps"] = fps; act["sprite_loop"] = loop; act["sprite_tags"] = tags
