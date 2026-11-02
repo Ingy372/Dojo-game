@@ -23,7 +23,7 @@ export async function resolve(spec, ctx, next) {
 const { loadEnemy } = await import(pathToFileURL(path.join(root, 'packages/sim/src/enemy.ts')).href);
 
 const list = (dir) => fs.existsSync(path.join(root, dir)) ? fs.readdirSync(path.join(root, dir)).filter((f) => f.endsWith('.json')).map((f) => path.join(root, dir, f)) : [];
-const isEnemy = (d) => d && typeof d === 'object' && typeof d.id === 'string' && 'attack' in d && 'maxHealth' in d;
+const isEnemy = (d) => d && typeof d === 'object' && typeof d.id === 'string' && ('attack' in d || 'attacks' in d) && 'maxHealth' in d;
 const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 
 const draftFiles = process.argv.length > 2 ? process.argv.slice(2).map((f) => path.resolve(f)) : [...list('drafts/content/enemies'), ...list('drafts/content/bosses')];
