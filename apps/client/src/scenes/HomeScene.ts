@@ -32,6 +32,7 @@ import {
   type TrainingState,
   kataArrows,
   activeDifficulty,
+  seedFakeStudent,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
@@ -649,9 +650,8 @@ export class HomeScene extends Phaser.Scene {
     this.text(px, ty, 'YOUR NEXT STEP', TYPE.label, '#ffd166', true);
     ty += TYPE.label + (padP === S3 ? S2 : 4);
     if (p.next) {
-      // The video library arrives with the real DojoForge connection.
-      const video = this.text(x + w - padP, ty + 3, '▶ Video soon', TYPE.label, '#6b6478').setOrigin(1, 0);
-      this.oneLine(this.text(px, ty, p.next.name, TYPE.title, '#ffffff', true), pw - video.width - S2, TYPE.body);
+      // G2B12-FIXES: no "Video soon" tag until a video exists (the library arrives with the real DojoForge connection).
+      this.oneLine(this.text(px, ty, p.next.name, TYPE.title, '#ffffff', true), pw, TYPE.body);
       ty += TYPE.title + S2;
       if (p.next.catchUp) {
         this.text(px, ty, `Catch-up from ${p.next.beltName}`, TYPE.label, '#ffd166');
@@ -1984,6 +1984,8 @@ export class HomeScene extends Phaser.Scene {
     this.testing = new TestingPanel(this, this.profile, this.training, {
       pickProfile: (key) => {
         selectProfile(key);
+        // G2B12-FIXES: the fake student brings its level and gear with it (never lowers, never overwrites gear).
+        if (seedFakeStudent(this.profile, currentTraining(), CONTENT.loot)) writeSave(this.profile);
         this.closeTesting();
         this.page = 0;
         this.refresh();
