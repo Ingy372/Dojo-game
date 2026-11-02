@@ -6,7 +6,7 @@ room sizes by kind (20x12 battle and challenge, 20x14 boss, 13x9 treasure and re
 enemies stand on '.', away from P, waves count up from 1, wave and room sizes; no stat keys anywhere; the floor table agrees with the rooms
 (rooms and enemies per floor derived from minFloor/maxFloor; Boulder Roller on floor 4 only, in rooms with a clear 3-tile lane).
 Every room has minFloor (1-5); each enemy may not appear before its first floor; only the Boulder Roller rooms carry maxFloor (4). Green enemies are mixed with the
-earlier brute, shield and swarmer (their existing ids), plus the Padded-Staff Bopper in five rooms (R-G2B-25). Signs short and gentle.
+earlier brute, shield and swarmer (their existing ids), plus the Padded-Staff Bopper in three rooms (R-G2B-25, trimmed from five). Signs short and gentle.
 Usage: python3 drafts/content/tools/check-rooms-giants-steps.py [file]"""
 import json, re, sys, glob, pathlib, collections
 R = pathlib.Path(__file__).resolve().parents[3]
@@ -149,10 +149,10 @@ for f in fl:
 for rid, r in byid.items():
     if not any(rid in f.get("rooms", []) for f in fl): e.append(f"room {rid} is on no floor")
     if r["kind"] in ("battle", "challenge") and r.get("earliestRoom", 99) < 3 and any(m["enemy"] in ("stack-golem", "boulder-roller") for m in r.get("enemies", [])): e.append(f"{rid}: F3-4 enemies need earliestRoom 3+")
-BOPPER_ROOMS = {"golem-stairs", "shield-shelf", "roller-run", "switchback-road", "giants-gate"}
+BOPPER_ROOMS = {"golem-stairs", "roller-run", "switchback-road"}  # R-G2B-25 had five; shield-shelf and giants-gate dropped after the belt-4 kid-bot dip (QA fixes)
 for rid, r in byid.items():
     has = any(m["enemy"] == "bopper" for m in r.get("enemies", []))
-    if has != (rid in BOPPER_ROOMS): e.append(f"{rid}: the Padded-Staff Bopper belongs in {sorted(BOPPER_ROOMS)} only (R-G2B-25)")
+    if has != (rid in BOPPER_ROOMS): e.append(f"{rid}: the Padded-Staff Bopper belongs in {sorted(BOPPER_ROOMS)} only")
     if has and any(m["enemy"] == "bopper" and m["wave"] == 1 for m in r["enemies"]) and r.get("kind") != "challenge": e.append(f"{rid}: the Bopper joins from wave 2")
 print(f"{path.name}: {len(byid)} rooms, {sum(len(r.get('enemies', [])) for r in byid.values())} enemy placements, {len(fl)} floors")
 e = list(dict.fromkeys(e))

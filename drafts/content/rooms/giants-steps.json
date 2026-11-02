@@ -587,12 +587,6 @@
           "column": 6,
           "row": 7,
           "wave": 3
-        },
-        {
-          "enemy": "bopper",
-          "column": 3,
-          "row": 8,
-          "wave": 2
         }
       ],
       "artProps": "One long stone shelf across the room with a wide gap in the middle, like a cupboard for giants; round shield-shaped stones lean on the wall.",
@@ -919,12 +913,6 @@
           "wave": 3
         },
         {
-          "enemy": "bopper",
-          "column": 6,
-          "row": 3,
-          "wave": 3
-        },
-        {
           "enemy": "swarmer",
           "column": 16,
           "row": 6,
@@ -1038,7 +1026,7 @@
       "artProps": "A giant staircase rising on the top wall, each step bigger than the last; the Giant sits on the lowest step.",
       "signs": [
         "The steps are tall. Take them one at a time.",
-        "Even a giant can use a friend."
+        "Even a giant likes a kind word."
       ]
     }
   ]
