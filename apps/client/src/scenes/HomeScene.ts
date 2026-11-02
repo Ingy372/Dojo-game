@@ -906,9 +906,10 @@ export class HomeScene extends Phaser.Scene {
       } else b.visual.add(houseIcon(this, 0, 0, s - 16));
     });
 
-    // Always with you: what's always on (shown, not picked).
+    // Your Strike: the Strike in the Strike slot (shown, not picked; PB-05 adds the slots).
     if (L.perAlways > 0) {
       this.text(X(0), Y(L.alwaysLabelY), LASTRUN_WORDS.always, TYPE.label, WOOD.ink, true);
+      if (!this.styleModel().always.length) this.text(X(0), Y(L.alwaysY), LASTRUN_WORDS.alwaysEmpty, TYPE.label, WOOD.ink);
       this.styleModel().always.slice(0, L.perAlways).forEach((a, i) => {
         const s = L.alwaysIcon;
         const ax = X(i * (s + S1));
@@ -1170,7 +1171,7 @@ export class HomeScene extends Phaser.Scene {
     };
     if (place(S2) + S1 > hy) { title.setFontSize(TYPE.body); body.setFontSize(TYPE.label); if (place(S2) + S1 > hy) place(S1); }
 
-    // "Always with you": Strikes and Seals are always on, so they are shown, not picked.
+    // "Your Strike": the Strike in the Strike slot is shown here, not picked (PB-05 adds the slot picks).
     const ay = y + L.alwaysY;
     this.text(x, ay, STYLE_WORDS.always, TYPE.label, '#f2e3c4', true);
     const iy = ay + TYPE.label + S1;
@@ -1721,7 +1722,7 @@ export class HomeScene extends Phaser.Scene {
       else v.add(slotGlyph(this, slot, 0, 0, R - 22, item ? 0x3a2618 : 0x6b5440));
       this.gearRings[slot] = { visual: v, x: cx, y: cy, icon };
     });
-    // "Always with you": Strikes and Seals are always on, so they are shown here too.
+    // "Your Strike": the Strike in the Strike slot is shown here too (PB-05 adds the slot picks).
     const ay = y + L.alwaysY;
     if (L.alwaysRows > 0) {
       const always = this.styleModel().always;

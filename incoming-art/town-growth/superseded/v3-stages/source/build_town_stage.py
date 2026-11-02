@@ -1,0 +1,298 @@
+"""Dojo Ascent - A-TOWN-GROWTH v3: one FULL town picture per belt (the approved town square, changed per belt).
+Town growth is CAPPED at Blue: White -> Yellow -> Orange -> Green -> Blue. Red and above reuse the Blue picture.
+Runs the town-square build (same scene, camera and toon look as the approved concept: PR #301 + the #393 dojo slot,
+dojo slot left empty because the dojo sprite is pasted on top later), changes it for this belt and renders one pass:
+    blender -b -P incoming-art/town-growth/source/build_town_stage.py -- --stage white|green|blue|base --pass <pass> --out <png>
+  day / night  the town in house colours (night = the dusk picture's town: no sourceless water sparkles)
+  lights       a mask: this belt's lit windows and lanterns white, the rest black (the dusk glow source)
+  props        a mask: ONLY the objects this belt ADDS white (the exempt beds / river items black) - for the lanes check
+  shade        the whole town as plain white clay lit by ONE sun + a soft sky: cast shadows and ambient occlusion (soft drop shadows)
+  height       world height of every surface, 16 bit: used for the light-facing rim line and the contact shading
+  hero         a mask of the few hero props that get a little bloom (statue + star, stone lanterns)
+make_stages.py then adds sky, far hills, light and shadow, colour grade, effects and the dojo sprite.
+Stages: white = a little run down, no statue (empty plinth); green = clearly upgraded, statue unveiled, festive;
+blue = fully maxed hero town; base = no changes at all (proves the pipeline reproduces the approved picture)."""
+import bpy, sys, os, math, argparse, random, re, bmesh
+from mathutils import Vector, Euler
+HERE = os.path.dirname(os.path.abspath(__file__))
+BASE = os.path.join(HERE, "..", "..", "town-square-concept", "source", "build_town_square.py")
+ap = argparse.ArgumentParser(); ap.add_argument("--stage", required=True); ap.add_argument("--pass", dest="ps", required=True)
+ap.add_argument("--out", required=True); ap.add_argument("--samples", type=int, default=24)
+AA = ap.parse_args(sys.argv[sys.argv.index("--") + 1:])
+ST, PASS = AA.stage, AA.ps
+NIGHT = PASS in ("night", "lights")
+
+src = open(BASE).read(); src = src[:src.index("# ---------------------------------------------------------------- camera + render")]
+sys.argv = [sys.argv[0], "--", "--out", "x.png", "--no-dojo0", "--clear-dojo-trees", "--samples", str(AA.samples)] + (["--night"] if NIGHT else [])
+NS = {"__file__": os.path.abspath(BASE), "__name__": "town_base"}
+exec(compile(src, BASE, "exec"), NS)
+bpy.context.view_layer.update()
+sc, coll, K, EL, COLS, ROWS, G, D = (NS[k] for k in ("sc", "coll", "K", "EL", "COLS", "ROWS", "G", "D"))
+base_add, mat = NS["add"], NS["mat"]
+box, tube, ellipsoid = NS["box"], NS["tube"], NS["ellipsoid"]
+BASE_OBJECTS = set(bpy.data.objects)
+def add(n, bm, col, outline=True): return base_add(n, bm, col, outline)
+def rm(name):
+    for n in (name, name + "_outline"):
+        o = bpy.data.objects.get(n)
+        if o: bpy.data.objects.remove(o, do_unlink=True)
+def rm_prefix(p):
+    for o in [o for o in bpy.data.objects if o.name.startswith(p)]: bpy.data.objects.remove(o, do_unlink=True)
+def paint(name, hexc):
+    o = bpy.data.objects.get(name)
+    if o: o.data.materials[0] = mat(hexc)
+def tuft(n, c, r, z=0.0, cols=("#8fa65a", "#a7b266", "#7f9a55")):
+    for k in range(3):
+        dx = (k - 1) * 0.07
+        add(f"{n}{k}", tube(G(c + dx * 0.4, r, z), G(c + dx * 1.6, r + 0.01, z + 0.17 + 0.03 * (k % 2)), 0.018, 0.006, segs=5), cols[k], False)
+def tri(name, a, b, c, col, thick=0.025, outline=True):
+    """a thin triangular flag / pennant (world-space corners)."""
+    a, b, c = Vector(a), Vector(b), Vector(c); n = (b - a).cross(c - a).normalized() * thick / 2
+    bm = bmesh.new(); vs = [bm.verts.new(p - n) for p in (a, b, c)] + [bm.verts.new(p + n) for p in (a, b, c)]
+    bm.faces.new(vs[:3]); bm.faces.new(vs[3:][::-1])
+    for i in range(3): j = (i + 1) % 3; bm.faces.new([vs[i], vs[j], vs[3 + j], vs[3 + i]])
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:]); return add(name, bm, col, outline)
+
+TREES = [(6.6, 6.35), (17.5, 6.0), (3.4, 10.4), (19.9, 10.4), (0.8, 7.4), (22.5, 7.4), (21.8, 5.6)]
+BLOOM_TREES = [(6.6, 6.35), (17.5, 6.0), (0.8, 7.4), (22.5, 7.4), (21.8, 5.6)]
+FLOWER_PAL = ("#fbf3df", "#ffd36b", "#f6a8c4", "#b78ae0", "#6f9fd2")      # cream, gold, pink, violet, blue - never red
+SUN_UP = {"white": 0.95, "green": 0.72, "blue": 0.46, "base": 0.72}[ST]      # sun height: Blue is golden hour (longer shadows)
+
+# ---- statue: it arrives at Green. In White the plinth stands empty (no star plate either).
+if ST == "white":
+    for n in ("s_legL", "s_legR", "s_feet", "s_body", "s_belt", "s_head", "s_arm-1", "s_arm1", "s_fist-1", "s_fist1", "s_shine", "star"): rm(n)
+
+# ---- water sparkles (day only): fewer when run down
+sp = sorted((o.name for o in bpy.data.objects if o.name.startswith("spk")), key=lambda s: int(s[3:]))
+keep = {"white": 0, "green": 10, "blue": 14, "base": 14}[ST]
+for n in sp[keep:]: rm(n)
+
+SHOP_C, SHOP_R = 9.3, 4.65
+def chimney_and_basket():
+    add("ob_chim", box(G(10.45, 3.6, 2.62), (0.5, 0.5, 1.05), bevel=0.02), "#c9bfae")
+    for k, zz in enumerate((2.3, 2.62, 2.94)): add(f"ob_chb{k}", box(G(10.45, 3.6, zz), (0.54, 0.54, 0.07)), "#a89b86", False)
+    add("ob_chcap", box(G(10.45, 3.6, 3.19), (0.62, 0.62, 0.1)), "#8b8070")
+    bcx, bry = SHOP_C + 1.5, 4.46
+    add("ob_bk", tube(G(bcx, bry, 0.69), G(bcx, bry, 0.9), 0.24, 0.28, segs=14), "#c19159")
+    add("ob_bkrim", tube(G(bcx, bry, 0.9), G(bcx, bry, 0.94), 0.3, 0.3, segs=14), "#a8743f", False)
+    for k, dx in enumerate((-0.12, 0.0, 0.12)):
+        add(f"ob_bag{k}", tube(G(bcx + dx - 0.05, bry, 0.92), G(bcx + dx + 0.1 + 0.05 * k, bry - 0.05, 1.28), 0.055, 0.055, segs=8), "#e0aa5c")
+        add(f"ob_bagc{k}", ellipsoid(G(bcx + dx + 0.1 + 0.05 * k, bry - 0.05, 1.29), (0.06, 0.06, 0.05), segs=8, rings=4), "#e0aa5c", False)
+    for k, dx in enumerate((-0.14, 0.14)): add(f"ob_loaf{k}", ellipsoid(G(bcx + dx, bry + 0.06, 0.98), (0.12, 0.09, 0.08), segs=10, rings=6), "#d9a35a")
+
+# ---- the upgraded-town pieces (Green and Blue share them; Blue adds more on top) -------------------------------------
+def retint(stage):
+    """fresh paint and richer colours: paving, grass, hedges, water, roofs. Same objects, new colours (adds nothing)."""
+    pal = {"green": ["#e6d5b0", "#dfcba4", "#ebdcbc", "#d9c59c", "#e3d1ae", "#e8d9b8", "#dccaa8"],
+           "blue": ["#ecdcb6", "#e4d1a8", "#f1e4c4", "#dec99d", "#eed9bd", "#e9d8b0", "#f0e0bd"]}[stage]
+    for o in list(bpy.data.objects):
+        m = re.match(r"st(-?\d+)_(\d+)$", o.name)
+        if m:
+            i, j = int(m.group(1)), int(m.group(2)); paint(o.name, pal[(i * 3 + j * 5 + (i * j) % 3) % len(pal)])
+    paint("plaza_base", "#a8977a")
+    for k in range(28): paint(f"ring{k}", "#f7f0dc" if stage == "green" else "#f3d27a")
+    paint("spath", "#f7f0dc" if stage == "green" else "#f3d27a")
+    paint("grass_back", "#78c45e" if stage == "green" else "#72c862")
+    for k in range(16): paint(f"hedge{k}", "#54a456" if stage == "green" else "#47a05c")
+    paint("water", "#74cdf0" if stage == "green" else "#6ad2f2"); paint("riverbed", "#4f9fcb" if stage == "green" else "#4a9ccf")
+    paint("shoproof", "#4f9a78" if stage == "green" else "#3c9482")
+    paint("plcwall", "#efe3c8" if stage == "green" else "#f5e8c8"); paint("plcroof", "#8fa8c4" if stage == "green" else "#6f98c0")
+    paint("plcbase", "#b8bcd2")
+    for c in (9.4, 13.9): paint(f"soil{c}", "#4a9a48")
+
+def lush_beds(n_extra, seed):
+    rnd = random.Random(seed)
+    for c in (9.4, 13.9):
+        for k in range(5):      # leafy mounds behind the blooms
+            add(f"ob_bedleaf{c}{k}", ellipsoid(G(c - 0.5 + k * 0.25, 6.0 + (0.12 if k % 2 else -0.1), 0.3), (0.2, D(0.11), 0.12), segs=10, rings=6), ("#4f9f4f", "#62b058")[k % 2], False)
+        for k in range(n_extra):
+            x = c - 0.55 + 1.1 * (k + rnd.random() * 0.6) / n_extra; rr = 6.0 + rnd.uniform(-0.15, 0.15); zz = 0.4 + rnd.uniform(0, 0.1)
+            add(f"ob_bedfl{c}{k}", ellipsoid(G(x, rr, zz), (0.075, D(0.06), 0.065), segs=8, rings=4), FLOWER_PAL[(k + int(c * 3)) % 5], False)
+
+def window_boxes():
+    for x in (-1.3, 1.3):
+        cx = 19.6 + x
+        add(f"ob_pbox{x}", box(G(cx, 4.5, 0.16 + 0.5), (0.74, 0.14, 0.14)), "#a8743f")
+        for k in range(6): add(f"ob_pbfl{x}{k}", ellipsoid(G(cx - 0.28 + k * 0.112, 4.5, 0.16 + 0.62), (0.06, 0.06, 0.07), segs=8, rings=4), FLOWER_PAL[(k + int(x * 3)) % 5], False)
+
+def hedge_blossoms(per, pal, seed):
+    rnd = random.Random(seed)
+    for k in range(16):
+        if k == 10: continue
+        hx = k * 1.6 - 0.4
+        for q in range(per):
+            dx = rnd.uniform(-0.7, 0.7); dz = rnd.uniform(-0.05, 0.22)
+            dy = 0.35 * math.sqrt(max(0.02, 1 - (dx / 0.95) ** 2 - (dz / 0.42) ** 2)) * 1.0
+            add(f"ob_hb{k}_{q}", ellipsoid(G(hx + dx, 3.35 + dy - 0.01, 0.25 + dz), (0.055, 0.04, 0.05), segs=6, rings=4), pal[(k + q) % len(pal)], False)
+
+def bridge_garland(pal):
+    BLn = 1.5 + 1.1
+    for side in (7.55, 8.45):
+        for t in range(0, 21):
+            u = t / 20; x = 14.85 - 0.55 + BLn * u; z = 0.52 + 0.42 * math.sin(u * math.pi) + 0.045
+            add(f"ob_rvgl{side}{t}", ellipsoid(G(x, side, z), (0.05, 0.04, 0.045), segs=6, rings=4), pal[t % len(pal)], False)
+
+def toro(idx, c, r):
+    """a little stone garden lantern: a REAL light source (the lamp box is lit at dusk)."""
+    add(f"ob_tr{idx}foot", tube(G(c, r, 0), G(c, r, 0.1), 0.2, 0.17, segs=8), "#b9b3a6")
+    add(f"ob_tr{idx}post", tube(G(c, r, 0.1), G(c, r, 0.46), 0.075, 0.075, segs=8), "#cfc8ba")
+    add(f"ob_tr{idx}plate", box(G(c, r, 0.5), (0.36, D(0.36), 0.06)), "#b9b3a6")
+    add(f"ob_ln_toro{idx}", box(G(c, r, 0.66), (0.24, D(0.24), 0.26)), "#ffe9a0", False)
+    add(f"ob_tr{idx}roof", tube(G(c, r, 0.79), G(c, r, 0.97), 0.3, 0.04, segs=4), "#8f897d")
+    add(f"ob_tr{idx}top", ellipsoid(G(c, r, 1.0), (0.06, 0.06, 0.06), segs=8, rings=4), "#cfc8ba", False)
+
+def bunting(cols, n=14):
+    """one string of small pennants from the shop's right roof edge across the river to the placeholder's left roof edge."""
+    a = Vector(G(11.6, 4.52, 1.74)); b = Vector(G(17.2, 4.52, 1.86)); sag = 0.55
+    def pt(u): p = a.lerp(b, u); p.z -= sag * 4 * u * (1 - u); return p
+    for k in range(26): add(f"ob_bt{k}", tube(pt(k / 26), pt((k + 1) / 26), 0.012, 0.012, segs=5), "#6b4428", False)
+    for k in range(n):
+        u0, u1 = (k + 0.25) / n, (k + 0.75) / n; p0, p1 = pt(u0), pt(u1); mid = (p0 + p1) / 2
+        tri(f"ob_bp{k}", p0, p1, mid - Vector((0, 0, 0.36)), cols[k % len(cols)])
+
+def roof_flag(name, x, row, z0, h, c1, c2):
+    add(f"ob_{name}pole", tube(G(x, row, z0), G(x, row, z0 + h), 0.03, 0.025, segs=6), "#6b4428")
+    add(f"ob_{name}ball", ellipsoid(G(x, row, z0 + h + 0.03), (0.05, 0.05, 0.05), segs=8, rings=4), "#ffd36b", False)
+    top, bot = z0 + h - 0.05, z0 + h - 0.5
+    tri(f"ob_{name}a", G(x + 0.02, row, top), G(x + 0.02, row, bot), G(x + 0.78, row, (top + bot) / 2 + 0.06), c1)
+    tri(f"ob_{name}b", G(x + 0.02, row, (top + bot) / 2 + 0.17), G(x + 0.02, row, (top + bot) / 2 - 0.09), G(x + 0.42, row, (top + bot) / 2 + 0.04), c2, 0.03, False)
+
+def banner_pole(idx, x, row, col):
+    add(f"ob_bn{idx}pole", tube(G(x, row, 0), G(x, row, 2.6), 0.045, 0.04, segs=8), "#6b4428")
+    add(f"ob_bn{idx}ball", ellipsoid(G(x, row, 2.66), (0.07, 0.07, 0.07), segs=8, rings=4), "#ffd36b", False)
+    add(f"ob_bn{idx}bar", tube(G(x - 0.02, row, 2.42), G(x + 0.56, row, 2.42), 0.03, 0.03, segs=6), "#6b4428", False)
+    add(f"ob_bn{idx}cloth", box(G(x + 0.28, row + 0.02, 1.8), (0.48, 0.03, 1.26)), col)
+    add(f"ob_bn{idx}tip", box(G(x + 0.28, row + 0.02, 1.13), (0.48, 0.03, 0.05)), "#ffd36b", False)
+    add(f"ob_bn{idx}emb", ellipsoid(G(x + 0.28, row + 0.045, 1.95), (0.15, 0.02, 0.15), segs=14, rings=6), "#ffd36b", False)
+    add(f"ob_bn{idx}emc", ellipsoid(G(x + 0.28, row + 0.05, 1.95), (0.07, 0.02, 0.07), segs=10, rings=4), "#fbf3df", False)
+
+OFF_LIGHTS = set()          # lit things switched OFF for this belt (dusk only)
+if ST == "white":
+    # --- run down, but friendly: tired colours, a few boarded and patched spots, bare beds, fewer fish, murky water
+    paint("water", "#8cb6b8"); paint("riverbed", "#6d9ba2")
+    for n in ("lily2", "lily3", "lilyf0", "lilyf1", "lilyf2", "lilyf3", "koi1", "koi2", "koi3", "koit1", "koit2", "koit3"): rm(n)
+    rm_prefix("fl")                                     # the flower beds are bare
+    for c in (9.4, 13.9):
+        paint(f"soil{c}", "#86714a")
+        for k, dx in enumerate((-0.45, -0.1, 0.3, 0.55)): tuft(f"ob_bedw{c}{k}", c + dx, 6.0 + (0.08 if k % 2 else -0.08), 0.26)
+    add("ob_bedflower", ellipsoid(G(9.4 + 0.1, 6.02, 0.36), (0.07, 0.07, 0.05), segs=8, rings=4), "#f7f2e8", False)   # one brave little flower
+    # the placeholder building: the left window is boarded up (the right one stays lit)
+    rm("plcwin-1.3")
+    add("ob_dark", box(G(18.3, 4.43, 1.01), (0.6, 0.05, 0.5)), "#4a4238", False)
+    for k, (zz, tilt, col) in enumerate(((0.86, 5, "#a8743f"), (1.03, -4, "#8a5e38"), (1.19, 3, "#a8743f"))):
+        add(f"ob_board{k}", box(G(18.3, 4.48, zz), (0.8, 0.045, 0.11), rot=(0, tilt, 0)), col)
+    # the shop: one patched awning stripe, faded paper lanterns (off), a patched bridge plank
+    add("ob_awpatch", box(G(10.09, 4.72, 1.74), (0.46, D(0.34), 0.075), rot=(-22, 0, 0)), "#8fa6c4")
+    for k, hx in enumerate((-0.14, 0.14)): add(f"ob_awst{k}", box(G(10.09 + hx, 4.72, 1.745), (0.022, D(0.28), 0.08), rot=(-22, 0, 0)), "#5f6f92", False)
+    paint("brd4", "#e3c88e"); paint("brd8", "#8d6a44")
+    for n in ["shopln-2.3", "shopln2.3", "shopln0h", "shopln1h", "shopln2h", "brln14.6", "brln16.6"]: OFF_LIGHTS.add(n); paint(n, "#d8cfb2")
+    # the paving: a few worn stones, a few cracks and tufts (all around the empty plinth, nothing in the walking lanes)
+    for i, j in ((6, 2), (7, 3), (11, 4), (12, 5), (18, 2), (19, 5), (3, 4), (9, 6), (10, 5)): paint(f"st{i}_{j}", "#a79f90")
+    for k, (c, r) in enumerate(((10.1, 9.55), (13.3, 9.7), (8.3, 8.6))):
+        for q in range(3): add(f"ob_crk{k}{q}", box(G(c + q * 0.3, r + (0.07 if q % 2 else -0.05), 0.065), (0.34, D(0.025), 0.012)), "#80756a", False)
+    for k, (c, r) in enumerate(((10.4, 8.45), (12.95, 8.4), (11.0, 9.25), (12.4, 9.25))): tuft(f"ob_pw{k}", c, r, 0.06)
+elif ST == "green":
+    # --- GREEN: fresh paint, the statue unveiled, a festive little town. Clearly upgraded, still airy.
+    retint("green"); chimney_and_basket(); lush_beds(10, 3); window_boxes(); hedge_blossoms(1, ("#fbf3df", "#ffd36b"), 4)
+    toro(0, 10.2, 9.1); toro(1, 13.1, 9.1)
+    bunting(("#ffd36b", "#fbf3df", "#3f9a7a", "#6f9fd2"), 12)
+    roof_flag("fs", 7.8, 3.875, 2.48, 1.25, "#ffd36b", "#fbf3df")
+    bridge_garland(("#fbf3df", "#ffd36b"))
+    add("ob_rvkoi", ellipsoid(G(15.55, 7.2, 0.035), (0.08, D(0.2), 0.015), segs=10, rings=3), "#fbf3df", False)
+    add("ob_rvkoit", ellipsoid(G(15.55, 7.0, 0.035), (0.06, D(0.06), 0.01), segs=6, rings=3), "#fbf3df", False)
+elif ST == "blue":
+    # --- BLUE: FULLY MAXED. Everything Green has, then: blossom trees, four stone lanterns, banners on tall poles,
+    #     two roof flags, a golden paving ring, lotus + more koi, a curl of chimney smoke.
+    retint("blue"); chimney_and_basket(); lush_beds(14, 5); window_boxes(); hedge_blossoms(2, ("#ffe4ee", "#f6a8c4", "#fbf3df", "#ffd36b"), 6)
+    for c, r in BLOOM_TREES:                                    # the big trees become cherry-blossom trees (same objects, new colours)
+        s_ = {(6.6, 6.35): 1.0, (17.5, 6.0): 1.0, (0.8, 7.4): 1.2, (22.5, 7.4): 1.2, (21.8, 5.6): 0.9}[(c, r)]
+        paint(f"leaf{c}{r}", "#f4a9c6"); paint(f"leaf2{c}{r}", "#fbd0e0")
+        rnd = random.Random(int(c * 10 + r)); 
+        for k in range(4):
+            a = rnd.uniform(0, 2 * math.pi); rr_ = rnd.uniform(0.3, 0.55)
+            add(f"ob_pk{c}{r}{k}", ellipsoid(G(c + math.cos(a) * 0.62 * s_ * rr_ * 1.3, r + math.sin(a) * 0.25 * s_, 1.35 * s_ + math.sin(a * 2) * 0.3 * s_), (0.2 * s_, 0.12 * s_, 0.16 * s_), segs=10, rings=6), ("#ffe4ee", "#e98fb4")[k % 2], False)
+    toro(0, 10.2, 9.1); toro(1, 13.1, 9.1); toro(2, 10.2, 6.9); toro(3, 13.1, 6.9)
+    bunting(("#ffd36b", "#fbf3df", "#3f9a7a", "#6f9fd2", "#f6a8c4", "#86c46c"), 14)
+    roof_flag("fs", 7.8, 3.875, 2.48, 1.25, "#ffd36b", "#fbf3df"); roof_flag("fp", 18.0, 4.0, 1.85, 1.3, "#3f9a7a", "#fbf3df")
+    banner_pole(0, 1.9, 9.3, "#3f9a7a"); banner_pole(1, 21.0, 9.3, "#4f6fa6")
+    bridge_garland(("#fbf3df", "#f6a8c4", "#ffd36b"))
+    paint("pl0", "#a9b8d8"); paint("pl2", "#f1e8cf")
+    for k, dx in enumerate((0.0, 0.1, -0.05)):      # a thin curl of smoke from the shop chimney
+        rr = (0.13, 0.17, 0.2)[k]; add(f"ob_sm{k}", ellipsoid(G(10.45 + dx, 3.6, 3.5 + 0.36 * k), (rr, rr * 0.7, rr * 0.85), segs=12, rings=8), ("#f3f1ec", "#e8e6e2")[k % 2])
+    for k, (x, rr, col) in enumerate(((15.45, 6.9, "#fbf3df"), (15.75, 9.35, "#ffd36b"), (15.25, 8.6, "#f59a3c"), (15.8, 5.1, "#fbf3df"))):      # more koi
+        add(f"ob_rvkoi{k}", ellipsoid(G(x, rr, 0.035), (0.08, D(0.2), 0.015), segs=10, rings=3), col, False)
+        add(f"ob_rvkoit{k}", ellipsoid(G(x, rr - 0.2, 0.035), (0.06, D(0.06), 0.01), segs=6, rings=3), col, False)
+    for k, (x, rr) in enumerate(((15.35, 7.3), (15.95, 9.9), (15.3, 4.4), (15.95, 4.6))):      # more lily pads, three with pink lotus
+        add(f"ob_rvlily{k}", ellipsoid(G(x, rr, 0.035), (0.24, D(0.2), 0.02), segs=14, rings=3), "#5fa65a", False)
+        if k < 3:
+            for q, (dx, dz) in enumerate(((-0.05, 0.1), (0.05, 0.1), (0.0, 0.14))): add(f"ob_rvlot{k}{q}", ellipsoid(G(x + dx, rr, 0.07 + dz * 0.5), (0.06, D(0.05), 0.09), segs=8, rings=4), ("#f6a8c4", "#ffe4ee", "#f6a8c4")[q], False)
+        else: add(f"ob_rvlilyf{k}", ellipsoid(G(x + 0.05, rr, 0.07), (0.07, D(0.07), 0.05), segs=8, rings=4), "#fbf3df", False)
+PROPS = set(bpy.data.objects) - BASE_OBJECTS
+EXEMPT = ("ob_bed", "ob_rv")            # beds and the river are allowed in the walking-lane band (as in the approved concept)
+PNAMES = {o.name for o in PROPS if not o.name.startswith(EXEMPT)}
+
+def emis(c):
+    m = bpy.data.materials.new("E%s" % c); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    e = nt.nodes.new("ShaderNodeEmission"); e.inputs[0].default_value = (c, c, c, 1); o = nt.nodes.new("ShaderNodeOutputMaterial")
+    nt.links.new(e.outputs[0], o.inputs[0]); return m
+def holdout():
+    hold = bpy.data.materials.new("HOLD"); hold.use_nodes = True; nt = hold.node_tree; nt.nodes.clear()
+    h = nt.nodes.new("ShaderNodeHoldout"); o_ = nt.nodes.new("ShaderNodeOutputMaterial"); nt.links.new(h.outputs[0], o_.inputs[0]); return hold
+def recolour(pred, a, b):
+    for o in bpy.data.objects:
+        if o.type != "MESH": continue
+        base = o.name[:-len("_outline")] if o.name.endswith("_outline") else o.name
+        o.data.materials.clear(); o.data.materials.append(a if pred(base) else b)
+RAW = False
+if PASS == "lights":
+    W_, B_ = emis(1.0), emis(0.0); LIT = re.compile(r"(glow|ln|lampb|inside|win|shoji)")
+    for o in bpy.data.objects:
+        if o.type != "MESH": continue
+        if "_outline" in o.name: o.hide_render = True; continue
+        lit = bool(LIT.search(o.name)) and "twin" not in o.name and o.name not in OFF_LIGHTS and (not o.name.startswith("ob_") or o.name.startswith("ob_ln"))
+        o.data.materials.clear(); o.data.materials.append(W_ if lit else B_)
+if PASS == "props": recolour(lambda b: b in PNAMES, emis(1.0), holdout())
+if PASS == "hero":
+    HERO = re.compile(r"^(s_|star$|ob_ln_toro)"); HERO_X = re.compile(r"^s_shine")
+    for o in bpy.data.objects:
+        if o.type == "MESH" and "_outline" in o.name: o.hide_render = True
+    recolour(lambda b: bool(HERO.search(b)) and b in {x.name for x in bpy.data.objects}, emis(1.0), emis(0.0))
+if PASS == "height":
+    RAW = True
+    m = bpy.data.materials.new("HGT"); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    g = nt.nodes.new("ShaderNodeNewGeometry"); sp_ = nt.nodes.new("ShaderNodeSeparateXYZ"); a_ = nt.nodes.new("ShaderNodeMath"); b_ = nt.nodes.new("ShaderNodeMath")
+    a_.operation, b_.operation = "ADD", "MULTIPLY"; a_.inputs[1].default_value = 0.1; b_.inputs[1].default_value = 0.16
+    cmb = nt.nodes.new("ShaderNodeCombineXYZ"); e = nt.nodes.new("ShaderNodeEmission"); o_ = nt.nodes.new("ShaderNodeOutputMaterial")
+    nt.links.new(g.outputs["Position"], sp_.inputs[0]); nt.links.new(sp_.outputs["Z"], a_.inputs[0]); nt.links.new(a_.outputs[0], b_.inputs[0])
+    for i in range(3): nt.links.new(b_.outputs[0], cmb.inputs[i])
+    nt.links.new(cmb.outputs[0], e.inputs[0]); nt.links.new(e.outputs[0], o_.inputs[0])
+    for o in bpy.data.objects:
+        if o.type != "MESH": continue
+        if "_outline" in o.name: o.hide_render = True; continue
+        o.data.materials.clear(); o.data.materials.append(m)
+if PASS == "shade":
+    m = bpy.data.materials.new("CLAY"); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    d_ = nt.nodes.new("ShaderNodeBsdfDiffuse"); d_.inputs["Color"].default_value = (0.8, 0.8, 0.8, 1); o_ = nt.nodes.new("ShaderNodeOutputMaterial"); nt.links.new(d_.outputs[0], o_.inputs[0])
+    for o in bpy.data.objects:
+        if o.type != "MESH": continue
+        if "_outline" in o.name: o.hide_render = True; continue
+        o.data.materials.clear(); o.data.materials.append(m)
+    w = bpy.data.worlds.new("W"); w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (1, 1, 1, 1); w.node_tree.nodes["Background"].inputs[1].default_value = 0.25
+    sc.world = w
+    ld = bpy.data.lights.new("Sun", "SUN"); ld.energy = 3.5; ld.angle = math.radians(2.5)
+    lo = bpy.data.objects.new("Sun", ld); coll.objects.link(lo)
+    to_light = Vector((-0.45, -0.55, SUN_UP)).normalized()          # the toon kit's light direction (camera side, upper left)
+    lo.rotation_euler = to_light.to_track_quat("Z", "Y").to_euler()
+    AA.samples = max(AA.samples, 64)
+
+# ---- camera + render (the house settings, identical to build_town_square.py)
+r = sc.render; r.engine = "CYCLES"; sc.cycles.device = "CPU"; sc.cycles.samples = AA.samples; sc.cycles.use_denoising = False
+r.film_transparent = True; sc.view_settings.view_transform = "Raw" if RAW else "Standard"; sc.view_settings.look = "None"
+if RAW: r.image_settings.color_depth = "16"; r.image_settings.color_mode = "BW"
+r.resolution_x, r.resolution_y = round(COLS * 80), round(ROWS * 80); r.resolution_percentage = 100
+cd = bpy.data.cameras.new("Cam"); cd.type = "ORTHO"; cd.sensor_fit = "HORIZONTAL"; cd.ortho_scale = COLS; cd.clip_end = 300
+cam = bpy.data.objects.new("Cam", cd); coll.objects.link(cam); sc.camera = cam
+cam.rotation_euler = (math.radians(90 - EL), 0, 0)
+d = Euler(cam.rotation_euler).to_matrix() @ Vector((0, 0, -1))
+cam.location = Vector((COLS / 2, -(ROWS / 2) * K, 0)) - d * 60
+r.filepath = AA.out; bpy.ops.render.render(write_still=True)

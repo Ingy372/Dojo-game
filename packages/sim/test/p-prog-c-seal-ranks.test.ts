@@ -54,6 +54,8 @@ describe('PB-02 family ranks', () => {
     expect(familyRank(fam('escape'), signed)).toBe(1);
     expect(familyRank(fam('counter'), signed)).toBe(2);
     expect(familyRank(fam('guard'), signed)).toBe(0);
+    // A family that is not live has no rank, so PB-05 can use familyRank without unlockedFamilies and still not offer it.
+    expect(familyRank({ ...fam('escape'), live: false }, signed)).toBe(0);
     expect(unlockedFamilies(training(white3), fams)).toEqual(['escape', 'counter']);
     expect(unlockedFamilies(training(white), fams)).toEqual([]);
   });
