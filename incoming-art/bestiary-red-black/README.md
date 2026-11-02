@@ -31,5 +31,8 @@ No teeth, points or spikes. No red or orange in any sprite (red is only the game
 
 `source/build_rb.py` is built from the Red build script with the three new types.
 
+## Decided (Nov 2, 2026)
+Copycat Shade waits for the full set. Data colours follow the art (follow-up notes in `DELIVERY_NOTE.md`, no data edits here). Masklet floats with no feet: OK. The Hush Guard's soft shield shove: OK for ages 6+. The Echo Bell's top button stays.
+
 ## Grounding
 Idle is constant per direction. The Masklet floats on purpose (it has no feet); the game draws its shadow. The Hush Guard's and Echo Bell's attack lunges toward the camera are ground travel, not floating. No frame touches the edge of its 160 px frame.

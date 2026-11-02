@@ -21,12 +21,16 @@
 - No frame touches the frame edge; idle is constant per direction; the attack lunges toward the camera are ground travel, not floating.
 - Red check on all body / glow / light sheets: 0 red pixels. Phone and house number check on the folder: no hits. Temp files, `.blend1` files and frames/ folders removed.
 
-**DECIDE:**
-1. **Which three.** I made Masklet, Hush Guard and Echo Bell and left Copycat Shade for the full set, because it mirrors the shape of the player's last move, which is a design question for the Content Designer. OK, or should Copycat Shade replace one of the three?
-2. **Data colours.** The sprite colours are close to the data but not equal: Masklet `#b9a6dc` (data `#c7b8e0`), Hush Guard `#6f7391` (data `#6c6f8a`), Echo Bell `#c2a548` (data `#b8a04a`). Recommendation: data follows the art, as on #432. If yes, this becomes a follow-up note for the Content Designer or Programmer (not an edit here).
-3. **Masklet floats with no feet.** It hovers a little above the ground line and the game should draw a small shadow under it. OK? Its two teal ribbon ties are its arms.
-4. **Hush Guard's shield.** The wind-up turns the silver shield to face you; the attack is a soft shove with it. Is a shield shove OK for ages 6+? (I think yes: no edges, no spikes, and it is a push, not a hit.)
-5. **Echo Bell glow and top button.** The glow comes from the twelve lit studs round the lip. The small flush button on top is part of the bell shape; keep it? The ring with a gap and its glowing gap are the game's, drawn from `incoming-art/dash-telegraph`.
-6. Data ids `masklet`, `hush-guard` and `echo-bell` match the folder names: nothing to decide.
+**DECIDED (Manager's calls on #435, Nov 2, 2026):** all five questions are answered. No export.
+1. **Copycat Shade waits for the full set.** The three samples stay Masklet, Hush Guard and Echo Bell.
+2. **The data follows the art.** **Follow-up for the Content Designer or Programmer** (not done in this PR; only `incoming-art/` is touched):
+   - `drafts/content/enemies/masklet.json`: change the colour from `#c7b8e0` to `#b9a6dc`.
+   - `drafts/content/enemies/hush-guard.json`: change the colour from `#6c6f8a` to `#6f7391`.
+   - `drafts/content/enemies/echo-bell.json`: change the colour from `#b8a04a` to `#c2a548`.
+3. **Masklet floating with no feet: OK.** The game draws its shadow.
+4. **Hush Guard's soft shield shove: fine for ages 6+.**
+5. **Echo Bell's small top button: KEEP.**
 
-**NEXT:** full sets (move, hit, defeat "set free") for all three, plus Copycat Shade. Then G2B-36 (Brown), G2B-37 (Brown/Black) and G2B-38 (Black) are free for the next sample set.
+**DECIDE:** nothing open on this PR.
+
+**NEXT:** full sets (move, hit, defeat "set free") for all three, plus Copycat Shade. Content Designer or Programmer: the three data colours (DECIDED 2). Then G2B-36 (Brown), G2B-37 (Brown/Black) and G2B-38 (Black).
