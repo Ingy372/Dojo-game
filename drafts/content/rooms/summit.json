@@ -1,0 +1,579 @@
+{
+  "notes": "DRAFT for R-G2B-25/26/27. Black (Tier 10) set. F1-2: Storm Wisp, Rumble Brute. F3-4: Echo Knight, Sky Sweeper (dash-only). No new move to show on this tier (plan R-G2B-27 note). Endless mode is not covered here. Content/rooms/ format (same legend and tile letters; no new tile types); every room carries minBeltTier and floorSet like the Giant's Steps set. 8 rooms in the Ember pattern: 4 battle, 1 challenge, 1 treasure, 1 rest, 1 boss. F1-2 enemies in rooms 1-2; F3-4 enemies from room 3 (earliestRoom). Props are art notes only: every prop on a '.' must stay walk-through decoration; solid props are already '#'. The boss room's chest 'C' is where the light piece and the relic appear after the Guardian is freed; faith content is overlay key 'lost-lightbearer' only. NO enemy stats here. Wave sizes are PLACEHOLDERS until balance work. The challenge uses the existing rules; its 90 seconds is the Supper Rush number (PLACEHOLDER) and the text has no digits. Not built; code is needed to use these.",
+  "tier": "black",
+  "place": "The Summit",
+  "faithOverlayKey": "lost-lightbearer",
+  "rooms": [
+    {
+      "id": "summit-steps",
+      "name": "Summit Steps",
+      "kind": "battle",
+      "minBeltTier": 10,
+      "floorSet": "summit",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..#............#..#",
+        "#..................#",
+        "#.....#......#.....#",
+        "#..................#",
+        "#..#............#..#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 1,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "storm-wisp",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "rumble-brute",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "rumble-brute",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        }
+      ],
+      "artProps": "The last wide steps with a soft glow at the top; wind-bent grass in the gaps.",
+      "signs": [
+        "Almost at the top. One step more."
+      ]
+    },
+    {
+      "id": "wisp-walk",
+      "name": "Wisp Walk",
+      "kind": "battle",
+      "minBeltTier": 10,
+      "floorSet": "summit",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#....#........#....#",
+        "#..................#",
+        "#..#............#..#",
+        "#......#....#......#",
+        "#..................#",
+        "#....#........#....#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 2,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "storm-wisp",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 16,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "rumble-brute",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        }
+      ],
+      "artProps": "A walkway lined with tiny floating lights; rain-dark flagstones.",
+      "signs": [
+        "Little lights dance in the wind."
+      ]
+    },
+    {
+      "id": "knight-terrace",
+      "name": "Knight Terrace",
+      "kind": "battle",
+      "minBeltTier": 10,
+      "floorSet": "summit",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#.##............##.#",
+        "#.##............##.#",
+        "#..................#",
+        "#..................#",
+        "#.##............##.#",
+        "#.##............##.#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "echo-knight",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "rumble-brute",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "echo-knight",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        }
+      ],
+      "artProps": "A terrace with old statues of helpers; each one holds a small lantern.",
+      "signs": [
+        "Echoes of friends walk with you."
+      ]
+    },
+    {
+      "id": "sweeper-ridge",
+      "name": "Sweeper Ridge",
+      "kind": "battle",
+      "minBeltTier": 10,
+      "floorSet": "summit",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "######........######",
+        "#..................#",
+        "#..................#",
+        "######........######",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "sky-sweeper",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "rumble-brute",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "echo-knight",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "rumble-brute",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "sky-sweeper",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "echo-knight",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 4,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "A high ridge with two long wind walls; clouds roll past the open sides.",
+      "signs": [
+        "The wind sweeps. You stay steady."
+      ]
+    },
+    {
+      "id": "last-climb",
+      "name": "The Last Climb",
+      "kind": "challenge",
+      "minBeltTier": 10,
+      "floorSet": "summit",
+      "challenge": {
+        "seconds": 90,
+        "text": "Clear the room in time for a better chest!",
+        "inTimeText": "In time!",
+        "outOfTimeText": "Time's up! The climb was long, but you still earned a chest.",
+        "outOfTimeShort": "Time's up!"
+      },
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "###.......C......###",
+        "##................##",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "##................##",
+        "###..............###",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 4,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "storm-wisp",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "rumble-brute",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "echo-knight",
+          "column": 5,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "sky-sweeper",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "rumble-brute",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 16,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "echo-knight",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "rumble-brute",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 4,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "A bright stone arch with the sky behind it; small lamps lit in the corners.",
+      "signs": [
+        "Together, we bring the light home."
+      ]
+    },
+    {
+      "id": "bell-nook",
+      "name": "Bell Nook",
+      "kind": "treasure",
+      "minBeltTier": 10,
+      "floorSet": "summit",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D##D##D###",
+        "#...........#",
+        "#.##.....##.#",
+        "#.....C.....#",
+        "#.##.....##.#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "A small bronze bell on a hook; the chest is a travel trunk with a clean sash on top.",
+      "signs": [
+        "Ring the bell for the whole town."
+      ]
+    },
+    {
+      "id": "lamp-stand",
+      "name": "The Lamp Stand",
+      "kind": "rest",
+      "minBeltTier": 10,
+      "floorSet": "summit",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D##D##D###",
+        "#...........#",
+        "#.#.......#.#",
+        "#.....S.....#",
+        "#.#.......#.#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "An empty lamp stand glowing softly, two cushions, and a view of the whole town below.",
+      "signs": [
+        "The great lamp waits. Rest first."
+      ]
+    },
+    {
+      "id": "summit-lamp",
+      "name": "The Empty Lamp",
+      "kind": "boss",
+      "minBeltTier": 10,
+      "floorSet": "summit",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "##########D#########",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........C........#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "lost-lightbearer",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "rumble-brute",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "storm-wisp",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        }
+      ],
+      "artProps": "The very top: an empty lamp stand under swirling clouds; the Lightbearer stands beside it, tired but holding on.",
+      "signs": [
+        "Come, let us finish together.",
+        "No one is to blame."
+      ]
+    }
+  ]
+}
