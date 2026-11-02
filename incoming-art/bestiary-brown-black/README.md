@@ -31,5 +31,8 @@ No teeth, points or spikes (the kite's corners are rounded). No red or orange in
 
 `source/build_bb.py` is built from the Brown build script with the three new types. The `.blend` files are not kept; the script rebuilds them.
 
+## Decided (Nov 2, 2026)
+Cloud Puff waits for the full set. The pale blue Gust Sprite tell is good. Floating with no feet: OK. The Thunder Drum's three beats: OK. The Zap Kite's zig-zag lane is a Programmer follow-up (see `DELIVERY_NOTE.md`); the preview lane is a stand-in.
+
 ## Grounding
 Idle is constant per direction. The Gust Sprite and Zap Kite float on purpose (no feet); the game draws their shadows. The Thunder Drum stands on two felt feet. The Zap Kite's dart is ground travel along the lane. No frame touches the edge of its 160 px frame.

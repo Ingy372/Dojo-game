@@ -19,11 +19,13 @@
 - No frame touches the frame edge (0 clipped frames); idle is constant per direction.
 - Red check on all body / glow / light sheets: 0 red pixels. Phone and house number check on the folder: no hits. Temp files, `.blend` / `.blend1` files and frames/ folders removed.
 
-**DECIDE:** (the Manager's calls)
-1. **Which three samples?** I made Gust Sprite, Thunder Drum and Zap Kite. Cloud Puff waits for the full set, because it splits into the Cloudlet and needs a split effect. OK?
-2. **Gust Sprite telegraph tint.** Its push does no damage, so the tint is pale blue `#a9c6d8`, not red, and the game draws a pale gust arrow. Is a non-red tell OK, or should the game tint it a neutral white?
-3. **Gust Sprite and Zap Kite float with no feet.** The game draws their shadows. OK?
-4. **Thunder Drum's three-beat attack** (boom, boom, BOOM) matches the three red circles in a beat. OK?
-5. **Zap Kite's soft rounded zig-zag tail and purple tell,** with the lane and '!!' drawn by the game. The zig-zag lane shape does not exist yet (it links to the open `dash-telegraph` question on the lane shape); the preview uses the lane art, bent into a zig-zag, as a stand-in. OK to ask for a zig-zag lane in `dash-telegraph`?
+**DECIDED (Manager's calls on #438, Nov 2, 2026):** all five questions are answered. No export.
+1. **Cloud Puff waits for the full set.** The three samples stay Gust Sprite, Thunder Drum and Zap Kite.
+2. **The pale blue tell is good.** The Gust Sprite telegraph is tinted pale blue `#a9c6d8`, not red.
+3. **Floating is OK.** The Gust Sprite and Zap Kite float with no feet; the game draws their shadows.
+4. **The three beats are OK.** The Thunder Drum's boom, boom, BOOM attack stays as made.
+5. **Zig-zag lane: a Programmer follow-up** (not done in this PR; only `incoming-art/` is touched). The Zap Kite's zig-zag lane shape does not exist yet in `incoming-art/dash-telegraph`. Programmer: draw a purple-and-white zig-zag lane for the Zap Kite dash. The preview lane (`preview/zap-kite_lane.png` / `.gif`) is only a stand-in.
 
-**NEXT:** the answers above. Then full sets (move, hit, defeat "set free") for the three plus Cloud Puff and the Cloudlet, and G2B-38 (Black).
+**DECIDE:** nothing open on this PR.
+
+**NEXT:** full sets (move, hit, defeat "set free") for the three plus Cloud Puff and the Cloudlet. Programmer: the zig-zag lane (DECIDED 5). Then G2B-38 (Black).
