@@ -1662,3 +1662,7 @@ First code step of `drafts/planning/R-PROGRESSION-BETA.md` (#407). Data and save
 - Why a JSON beside the art: the Zap Kite is still a draft (`drafts/content/enemies/zap-kite.json`, reach 3.0, areaRadius 0.6) and the dash art is not imported, so there is no game content to read yet. When the Zap Kite is imported, align `length` and `width` to its enemy data.
 - No game code, content or balance change. The other three shapes' PNGs are byte-for-byte the same after the rebuild.
 - Test: `zapkite-zigzag.test.ts` (4): the data is sane and the three layers have the size the data asks for.
+### START-LEVEL-PIN: tests that pin the start-level rule (2026-11-02)
+- Jay's rule: a new student starts at Level 1 with 0 XP whatever the belt, even with a belt entry; real check-offs start active; level comes only from in-game XP.
+- Main already behaved this way (the start-level check after #428 found no conflict), so this is a test-only PR: `packages/sim/test/start-level-pin.test.ts` (8 tests). No src, content or balance change.
+- Checked the tests bite: setting the new-profile level to 5 fails 6 of 8; making a belt entry set a level fails 1.

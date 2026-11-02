@@ -1097,3 +1097,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## ZAPKITE-ZIGZAG: the Zap Kite's zig-zag lane (2026-11-02)
 - Added the baked zig-zag lane (glow, fill, edge) to `incoming-art/dash-telegraph`, from `source/zigzag.json`; `make_zigzag_preview.py` draws it at 667x375 (motion on, motion off, greyscale, GIF). Not imported into the game yet.
 - Tests: `zapkite-zigzag.test.ts` (4). Previews in /workspace/shots/zapkite-zigzag with `pass-fail.md`.
+### START-LEVEL-PIN: start-level rule pinned by tests (2026-11-02)
+- Test-only: new profile, empty/old save and every belt entry stay Level 1 / 0 XP; a Green entry earns level only through `gainXp`; belt-entry check-offs are signed off; picks come from check-offs, not level.
+- Tests: `start-level-pin` (8).
