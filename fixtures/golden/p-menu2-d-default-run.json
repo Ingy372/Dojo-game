@@ -6,6 +6,19 @@
       "power": 10,
       "guard": 0,
       "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -490,6 +503,19 @@
       "power": 10,
       "guard": 0,
       "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -974,6 +1000,19 @@
       "power": 13,
       "guard": 7,
       "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -1482,6 +1521,19 @@
       "power": 13,
       "guard": 7,
       "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -1989,16 +2041,20 @@
       "maxHealth": 191,
       "power": 23,
       "guard": 19,
-      "effects": [
-        {
-          "type": "strikeExtraHit",
-          "amount": 0.5
-        },
-        {
-          "type": "strikeCost",
-          "amount": 8
-        }
-      ],
+      "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -2540,16 +2596,20 @@
       "maxHealth": 191,
       "power": 23,
       "guard": 19,
-      "effects": [
-        {
-          "type": "strikeExtraHit",
-          "amount": 0.5
-        },
-        {
-          "type": "strikeCost",
-          "amount": 8
-        }
-      ],
+      "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -3091,16 +3151,20 @@
       "maxHealth": 236,
       "power": 37,
       "guard": 3,
-      "effects": [
-        {
-          "type": "strikeExtraHit",
-          "amount": 0.5
-        },
-        {
-          "type": "strikeCost",
-          "amount": 8
-        }
-      ],
+      "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -3659,16 +3723,20 @@
       "maxHealth": 236,
       "power": 37,
       "guard": 3,
-      "effects": [
-        {
-          "type": "strikeExtraHit",
-          "amount": 0.5
-        },
-        {
-          "type": "strikeCost",
-          "amount": 8
-        }
-      ],
+      "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
