@@ -29,7 +29,7 @@ Rules that apply to every tier, all taken from the repo:
 - **Elites** (live `elites.json`): from belt 4 (Green). Earliest room 3. 20% chance in a battle room, 35% in a challenge room. At most 1 per room and 2 per floor. At most 1 Guarding per floor. No Guarding on Guided. No Guarding on a tier's first floor. Guarding makes allies within 3 tiles take 33% less (x0.67). Reward: 15 Focus and a 15% chance of a decoration, never gear.
 - **Dash-only** attacks use purple stripes with "!!", at least 20 ticks (bestiary: 20-24 by tier). Rooms 1-2 never overlap a red circle. From room 3 a stripe may overlap a red circle with at least 10 ticks between them. Never on Guided.
 - Wind-up ticks never scale. Difficulty is tuned through content, not bigger numbers.
-- **Gap found: elites only exist for Brute, Swarmer and Shield.** `elites.json` lists only those three live enemies, and none of the 28 new enemies are on the list. So from Green on, an elite can only show up when a room also holds one of those three. See item R-G2B-30.
+- **Gap found: elites only exist for Brute, Swarmer and Shield.** `elites.json` lists only those three live enemies, and none of the 28 new enemies are on the list. So from Green on, an elite can only show up when a room also holds one of those three. See item R-G2B-28.
 
 ## Per tier
 
@@ -91,7 +91,7 @@ New: Strike #7 Spinning Finisher. Seals #31-35 (mostly Lock). 4 Seal slots.
 
 Only one F1-2 enemy (Masklet) in this tier, so rooms 1-2 are Masklet-only. Planner's proposal for variety: rooms 1-2 may repeat Masklets in different shapes (rows, ring, split sides) and the Content Designer can add a second F1-2 enemy later.
 
-**Newest-move room:** a **Masklet crowd surrounding the student** is where Spinning Finisher #7 (a ring of hits) is wanted. **Catch the Hand #35** ("a Block locks a quick attacker, wind-up 12 or less") needs a quick attacker: Masklets are the only candidates. The bestiary does not give Masklet's wind-up ticks. **Question for the bot: what is the Masklet's wind-up?** If it is above 12, #35 never fires in this tier.
+**Newest-move room:** a **Masklet crowd surrounding the student** is where Spinning Finisher #7 (a ring of hits) is wanted. **Catch the Hand #35** ("a Block locks a quick attacker, wind-up 12 or less") needs a quick attacker: Masklets are the only candidates. The bestiary does not give Masklet's wind-up ticks. **Question for the bot: what is the Masklet's wind-up?** If it is above 12, #35 never fires in this tier (item R-G2B-32).
 
 ### Tier 8: Brown, The Root Library (belt 8)
 
@@ -131,7 +131,7 @@ No new Seal in the plan. Black Strikes #8-12 wait on Jay.
 | F3-4 | Sky Sweeper (mid, dash-only) | Arc, then a lane, 20 ticks each | Purple stripes and "!!" | none |
 | Guardian | The Lost Lightbearer | Storm swing, shadow echoes of earlier Guardians, Storm Sweep (dash-only) | | Concept sheets only, form shift Lost Lightbearer to Cloud Lantern |
 
-Endless mode after the Summit scales at +3% per floor with no cap (bestiary plan). The balance check did not test endless floors. Item R-G2B-31.
+Endless mode after the Summit scales at +3% per floor with no cap (bestiary plan). The balance check did not test endless floors. Item R-G2B-31 covers it.
 
 ## Numbers (from `R-G2B-balance-check.md`)
 
@@ -148,7 +148,7 @@ Endless mode after the Summit scales at +3% per floor with no cap (bestiary plan
 3. **Tiers 9 and 10 have nothing new to teach.** The "newest move" test has no newest move there. Jay's black belt Strikes (#8-12) and Possi's seals (#41-45) wait on him.
 4. **Masklet wind-up unknown** (needed for Catch the Hand #35).
 5. **Endless mode** is untested.
-6. **Room names and signs** for all seven tiers are not written. Brief item R-G2B-07 and the new R-G2B-26 to 29 cover them. Lore per tier is in `drafts/content/lore/`.
+6. **Room names and signs** for all seven tiers are not written. Item R-G2B-07 and the new R-G2B-25 to 27 cover them. Lore per tier is in `drafts/content/lore/`.
 
 ## Batch 1 correction
 
