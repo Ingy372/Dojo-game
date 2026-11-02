@@ -5,10 +5,11 @@ Ember Kitchens room (floorSet ember-kitchens in content/rooms/, plus split targe
 every key is a real enemy in content/enemies/; chances are numbers from 0 to 1 and not above the brute's; chance follows the health band
 (about 22 health: 3.5% or less; 60-75 health: 10% or less); expected enemy drops PER RUN (the enemies a run really meets, measured by
 drafts/content/tools/loot-per-run-sim.test.ts.keep and stored in drafts/content/loot/LOOT-B3-01-per-run.json) on belt 3 are within
-25% of belt 1; kid-safe words. (The old per-floor room count missed that a run is 8 rooms and meets about 54 Spark Sprites: it said
+25% of belt 1; kid-safe words; the Ember Kitchens room and enemy data still match the data the per-run counts were measured on
+(a SHA-256 stored in the per-run file; if it differs, re-run the sim). (The old per-floor room count missed that a run is 8 rooms and meets about 54 Spark Sprites: it said
 1.16 where the real ratio was 1.35.)
-Usage: python3 drafts/content/tools/check-loot-b3.py"""
-import json, glob, pathlib, re, collections
+Usage: python3 drafts/content/tools/check-loot-b3.py   (--print-hash prints the current Ember data hash)"""
+import json, glob, pathlib, re, collections, hashlib
 R = pathlib.Path(__file__).resolve().parents[3]
 live = json.loads((R / 'content/loot/drops.json').read_text())
 new = json.loads((R / 'drafts/content/loot/LOOT-B3-01.json').read_text())
@@ -50,6 +51,22 @@ for k, v in ch.items():
     if hp <= 30 and v > 0.035: bad.append(f'{k}: {hp} health but chance {v} is above the swarmer 0.035')
     if 55 <= hp <= 80 and not 0.05 <= v <= 0.1: bad.append(f'{k}: {hp} health, expected 0.05 to 0.1 (shield/bopper are 0.1), got {v}')
 per_run = json.loads((R / 'drafts/content/loot/LOOT-B3-01-per-run.json').read_text())
+def ember_data_hash():
+    # SHA-256 of the data the per-run counts depend on: every Ember Kitchens room, and every enemy those rooms use (and split into).
+    ids = set()
+    for r in ember:
+        for e in r.get('enemies', []):
+            ids.add(e['enemy'])
+            sp = enemies.get(e['enemy'], {}).get('split')
+            if sp: ids.add(sp['into'])
+    blob = {'rooms': sorted(ember, key=lambda r: r['id']), 'enemies': [enemies[i] for i in sorted(ids) if i in enemies]}
+    return hashlib.sha256(json.dumps(blob, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+if '--print-hash' in __import__('sys').argv:
+    print(ember_data_hash()); raise SystemExit(0)
+if per_run.get('emberDataSha256') != ember_data_hash():
+    bad.append('the Ember Kitchens rooms or enemies changed since the per-run counts were measured: re-run the sim '
+               '(drafts/content/tools/loot-per-run-sim.test.ts.keep), update LOOT-B3-01-per-run.json, then store the new hash '
+               '(python3 drafts/content/tools/check-loot-b3.py --print-hash)')
 def run_exp(belt):
     # expected enemy drops in one real run = sum over enemies of (how many a run meets) x (drop chance)
     return sum(ch.get(k, 0) * n for k, n in per_run[belt]['enemiesPerRun'].items())

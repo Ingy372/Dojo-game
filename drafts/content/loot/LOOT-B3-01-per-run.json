@@ -1,5 +1,5 @@
 {
-  "notes": "Measured with drafts/content/tools/loot-per-run-sim.test.ts.keep: the smart bot, typical skill, 200 seeds (1-200), tier 1 stats {100 health, 10 power, 0 guard} on belt 1 and tier 3 stats {332.79, 45.85, 33.53} on belt 3, on main's content. Each number is how many of that enemy appear in the rooms one run actually plays (Dough Blob splits counted). Expected drops per run = sum(count x chance). check-loot-b3.py reads this file.",
+  "notes": "Measured with drafts/content/tools/loot-per-run-sim.test.ts.keep: the smart bot, typical skill, 200 seeds (1-200), tier 1 stats {100 health, 10 power, 0 guard} on belt 1 and tier 3 stats {332.79, 45.85, 33.53} on belt 3, on main's content. Each number is how many of that enemy appear in the rooms one run actually plays (Dough Blob splits counted). Expected drops per run = sum(count x chance). check-loot-b3.py reads this file. emberDataSha256 is a hash of every Ember Kitchens room and the enemies they use, on main 56a079f (re-measured: counts identical). check-loot-b3.py recomputes it and fails with a 're-run the sim' message if the rooms or enemies change.",
   "belt1": {
     "tier": 1,
     "runs": 200,
@@ -23,5 +23,6 @@
       "ladle-lobber": 8.58,
       "hearth-cook": 1
     }
-  }
+  },
+  "emberDataSha256": "784c993c721496eac6ea3b8288cf2dd946643a7d696c396fa291220273c009f9"
 }

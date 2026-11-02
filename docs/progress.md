@@ -1072,3 +1072,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Fake student seed: Green (24/28) now shows Level 30 and 3 worn Rares on the testing screen.
 - Gear sheet no longer covers the "Your Strike" row at 932x430; "Always with you" comments removed (Tester's low notes from #425).
 - Tests: `g2b12-fixes` (10). Shots in /workspace/shots/g2b12-fixes with `pass-fail.md`.
+
+### C430-FIXES: the Content Designer's #430 trio (2026-11-02)
+- Thunder Drum's name and bar no longer cover Virtue (or any action button) at 667x375.
+- `stationary: true` enemy flag; thunder-drum, sleepy-sentry and thorn-sprout use speed 0.
+- The sim models Bellows Puff's no-damage push (Hit slide, Block hold, wall stop, `push` event). A Puff room costs 0 Health.
+- Tests: `k31-boss-tag` (+3), `c430-stationary` (4), `c430-push` (5), `puff-push` balance report (gated). Shots in /workspace/shots/c430-fixes with `pass-fail.md`.

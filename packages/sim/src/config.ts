@@ -146,6 +146,8 @@ export const COMBAT = {
   circleExtraRange: 1.8,
   /** ...moving sideways at this share of their walking speed. */
   circleSpeedShare: 0.5,
+  /** C430: a no-damage push (Bellows Puff's gust) slides the player this far away from the enemy (tiles), stopping at a wall. */
+  enemyPushTiles: 1.5,
 
   /** Clearing a room with enemies restores this share of max health ("catch your breath"). */
   roomClearHeal: 0.15,
