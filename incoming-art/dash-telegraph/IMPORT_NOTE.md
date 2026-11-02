@@ -10,6 +10,7 @@ All art is top-down floor decals, at **96 px per tile** (2x the game's `TILE = 4
 | Shape | Files (`dash-<shape>_<layer>.png`) | Canvas px | Default size (tiles) | Anchor (origin) |
 |---|---|---|---|---|
 | lane | glow, fill, edge | 576 x 192 | 5 long x 1 wide, rounded ends | centre (0.5, 0.5) = middle of the lane; lane runs along +x |
+| zigzag (Zap Kite) | glow, fill, edge | 576 x 288 | 4.2 long x 1.2 wide = the hit capsule (reach 3.0 + 2 x areaRadius 0.6); 4 corners, band 0.5, swing 0.3, all inside the 1.2 width | centre (0.5, 0.5) = middle of the capsule, which is half the reach (1.5 tiles) in front of the enemy; runs along +x, rotate like the lane. Numbers: `source/zigzag.json` |
 | arc | glow, fill, edge | 576 x 576 | outer radius 2.6, band 1.0, 120 deg | centre = the enemy; the arc opens toward screen-up (-y) at rotation 0 |
 | arc180 | glow, fill, edge | 576 x 576 | outer radius 2.6, band 1.0, 180 deg | as arc |
 | ring | glow, fill, gap, edge | 768 x 768 | outer radius 3.0, band 0.8, gap 40 deg | centre = the enemy; the gap points screen-down (+y) at rotation 0 |
@@ -20,7 +21,7 @@ Order: glow, then fill, then gap (ring only), then edge. Put them on the floor (
 the same place as the red circle.
 
 ## Aiming and scaling
-- **Rotate** each shape by the attack direction: lane `angle = atan2(dy, dx)`, arc `atan2(dy, dx) + 90 deg`,
+- **Rotate** each shape by the attack direction: lane and zigzag `angle = atan2(dy, dx)`, arc `atan2(dy, dx) + 90 deg`,
   ring `atan2(dy, dx) - 90 deg` (where the gap points).
 - **Uniform scale** works for any size, e.g. a 2-tile radius arc is `0.5 * 2 / 2.6`. The stripes and the band scale
   with it, which is fine for small changes (about 0.7x to 1.4x).
