@@ -1,0 +1,52 @@
+{
+  "notes": "R-G2B-10 (updated after the Manager's calls): kid-facing effect text for Green belt seals #16-20 (Technique Seal format from content/abilities/abilities.json and seals-31-40-text.json). Names come from the S4 table in drafts/planning/S4-self-defense-powers.md; every name is an S4 PROPOSAL and every number is a guess, so no numbers appear in the text. #16 and #20 are redesigned as SIDEGRADES that reuse effect types already in content/abilities/abilities.json (staggerBonus, strikeCost), so they play differently from Double Strike, Spin Kick Finish and Wind Step; no new effect types. 'status' marks a seal that cannot be built yet. Each text is one sentence under 80 characters, ages 6-9, hopeful, no pressure. 'Great Counter' is the kid word (S4 still says Perfect Counter). Kid text says 'padded staff' and avoids body-part words. ids are proposed; the Programmer may adjust at import. effectRef names the effect and is not final effect JSON. The R-PROGRESSION-BETA family names may change any line later.",
+  "seals": [
+    {
+      "id": "low-high-strike",
+      "technique": "Self-Defense #16",
+      "name": "Low-High Strike",
+      "text": "Your STRIKE hits an off-balance enemy extra hard.",
+      "causesInjured": false,
+      "effectRef": "staggerBonus (existing type; abilities.json Follow Through #10 uses it at 0.15). Sidegrade: STRIKE hits only, amount PLACEHOLDER above Follow Through's",
+      "flag": "Redesigned from S4's strikeExtraHit 0.3, which duplicated Spin Kick Finish and Double Strike. Same Grab-and-strike family as #10, but it rewards a STRIKE after a Great Counter instead of adding a hit. It stacks with Follow Through; if 'STRIKE hits only' needs a scope flag, use plain staggerBonus instead. Do not give #16 extra hits."
+    },
+    {
+      "id": "arm-bar",
+      "technique": "Self-Defense #17",
+      "name": "Arm Bar",
+      "text": "A Great Counter locks the attacker in place, so it can't block or shield.",
+      "causesInjured": false,
+      "effectRef": "counterLock 20 ticks (new, R-G2B-09)",
+      "flag": "Says 'locks' (control, never harm). A Guardian is never locked (R-G2B-09 test), so the line is true for normal enemies only."
+    },
+    {
+      "id": "slide-away",
+      "technique": "Self-Defense #18",
+      "name": "Slide Away",
+      "text": "DASH past a swing and your Focus fills up a little.",
+      "causesInjured": false,
+      "effectRef": "dashDodgeFocus 10 (new). S4: dashing through a padded-staff attack",
+      "status": "waits on padded staff (post-beta)",
+      "flag": "waits on padded staff (post-beta). S4 limits this to padded-staff attacks. Until that enemy ships it would work on every swing, so the text says 'a swing'; reword when the padded-staff enemy exists."
+    },
+    {
+      "id": "wrist-lock",
+      "technique": "Self-Defense #19",
+      "name": "Wrist Lock",
+      "text": "A padded staff you disarm does no damage with its next swing.",
+      "causesInjured": false,
+      "effectRef": "disarm 1.0 vs weapon enemies",
+      "status": "waits on padded staff (post-beta)",
+      "flag": "waits on padded staff (post-beta). Until the padded-staff enemy ships the seal would work on every enemy's next attack (S4 fallback), so 'padded staff' is only true for the Bouncy Bopper today."
+    },
+    {
+      "id": "hold-and-combo",
+      "technique": "Self-Defense #20",
+      "name": "Hold and Combo",
+      "text": "Your STRIKE costs a little less Focus, so combos last longer.",
+      "causesInjured": false,
+      "effectRef": "strikeCost (existing type; abilities.json Butterfly Flow uses it at 8). Sidegrade: amount PLACEHOLDER, smaller than Butterfly Flow's 8",
+      "flag": "Redesigned from S4's comboSpeed, which duplicated the Wind Step Insight. Fits 'held through a full combo' by helping combos last. It stacks with Butterfly Flow; keep the amount below Butterfly Flow's so the two stay a sidegrade, not a stack of power."
+    }
+  ]
+}

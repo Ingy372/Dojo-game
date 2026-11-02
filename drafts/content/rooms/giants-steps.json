@@ -1,0 +1,1018 @@
+{
+  "notes": "DRAFT for R-G2B-07 (updated after the Manager's calls). Tier 4 (Green) room set for Giant's Steps, in the content/rooms/ format (same legend and tile letters; no new tile types; every room has minBeltTier 4 and floorSet 'giants-steps'). 11 rooms: 7 battle, 1 challenge, 1 treasure, 1 rest, 1 boss. Every room has 'minFloor' (the first floor, 1-5, it may appear on); the Programmer is making the engine change that reads it. Only the Boulder Roller rooms also carry 'maxFloor' 4 (approved by the Manager: the Roller shows on floor 4 only; maxFloor will be added to the Programmer's minFloor item). Green enemies (pebble-pal, cliff-goat, stack-golem, boulder-roller) are mixed with the earlier brute, shield and swarmer (their existing ids), so the floors do not feel thin and their challenge patterns come along automatically. Floors 1-4 end in the existing Floor Keeper boss; floor 5 ends in the Stone Giant (great-stair). There are NO enemy stats here (stats are Batch 2). Props are art notes only: every prop on a '.' must stay walk-through decoration; solid props are already '#'. 'floors' is the floor-by-floor plan; it is derived from minFloor and maxFloor and the checker keeps them in step. The boss room's chest 'C' is where the light piece and the relic appear after the Stone Giant is freed; faith content is overlay key 'stone-giant' only. Wave sizes are PLACEHOLDERS until balance work. Not built; code is needed to use these.",
+  "tier": "green",
+  "place": "The Giant's Steps",
+  "faithOverlayKey": "stone-giant",
+  "floors": [
+    {
+      "floor": 1,
+      "newEnemy": "pebble-pal",
+      "enemies": [
+        "pebble-pal"
+      ],
+      "earlierEnemies": [
+        "brute",
+        "swarmer"
+      ],
+      "rooms": [
+        "pebble-path",
+        "swarm-slope",
+        "water-jar-landing",
+        "resting-step"
+      ],
+      "boulderRoller": null,
+      "ends": "Floor Keeper"
+    },
+    {
+      "floor": 2,
+      "newEnemy": "cliff-goat",
+      "enemies": [
+        "cliff-goat",
+        "pebble-pal"
+      ],
+      "earlierEnemies": [
+        "brute",
+        "swarmer"
+      ],
+      "rooms": [
+        "pebble-path",
+        "swarm-slope",
+        "goat-ledge",
+        "water-jar-landing",
+        "resting-step"
+      ],
+      "boulderRoller": null,
+      "ends": "Floor Keeper"
+    },
+    {
+      "floor": 3,
+      "newEnemy": "stack-golem",
+      "enemies": [
+        "cliff-goat",
+        "pebble-pal",
+        "stack-golem"
+      ],
+      "earlierEnemies": [
+        "brute",
+        "shield",
+        "swarmer"
+      ],
+      "rooms": [
+        "pebble-path",
+        "swarm-slope",
+        "goat-ledge",
+        "golem-stairs",
+        "shield-shelf",
+        "giants-gate",
+        "water-jar-landing",
+        "resting-step"
+      ],
+      "boulderRoller": null,
+      "ends": "Floor Keeper"
+    },
+    {
+      "floor": 4,
+      "newEnemy": "boulder-roller",
+      "enemies": [
+        "boulder-roller",
+        "cliff-goat",
+        "pebble-pal",
+        "stack-golem"
+      ],
+      "earlierEnemies": [
+        "brute",
+        "shield",
+        "swarmer"
+      ],
+      "rooms": [
+        "pebble-path",
+        "swarm-slope",
+        "goat-ledge",
+        "golem-stairs",
+        "shield-shelf",
+        "roller-run",
+        "switchback-road",
+        "giants-gate",
+        "water-jar-landing",
+        "resting-step"
+      ],
+      "boulderRoller": {
+        "rooms": [
+          "roller-run",
+          "switchback-road"
+        ],
+        "lanes": "roller-run: one lane per wave, columns 11, 6, 15 (waves 1-3); switchback-road: columns 5, 16, 11 (waves 1-3). Columns and rows count from 1, like the enemy entries. One Boulder Roller per wave.",
+        "stripeOverlap": "may overlap a red circle (10+ ticks apart), never on Guided"
+      },
+      "ends": "Floor Keeper"
+    },
+    {
+      "floor": 5,
+      "newEnemy": null,
+      "enemies": [
+        "cliff-goat",
+        "pebble-pal",
+        "stack-golem",
+        "stone-giant"
+      ],
+      "earlierEnemies": [
+        "brute",
+        "shield",
+        "swarmer"
+      ],
+      "rooms": [
+        "pebble-path",
+        "swarm-slope",
+        "goat-ledge",
+        "golem-stairs",
+        "shield-shelf",
+        "giants-gate",
+        "water-jar-landing",
+        "resting-step",
+        "great-stair"
+      ],
+      "boulderRoller": null,
+      "ends": "Stone Giant in great-stair"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "pebble-path",
+      "name": "Pebble Path",
+      "kind": "battle",
+      "minBeltTier": 4,
+      "floorSet": "giants-steps",
+      "minFloor": 1,
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#.##............##.#",
+        "#.#..............#.#",
+        "#..................#",
+        "#..................#",
+        "#.#..............#.#",
+        "#.##............##.#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 1,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "pebble-pal",
+          "column": 6,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 15,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 5,
+          "row": 7,
+          "wave": 2
+        },
+        {
+          "enemy": "swarmer",
+          "column": 10,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 16,
+          "row": 7,
+          "wave": 2
+        },
+        {
+          "enemy": "swarmer",
+          "column": 13,
+          "row": 6,
+          "wave": 2
+        }
+      ],
+      "artProps": "Flat stepping stones along a worn path; the stair-shaped blocks in the corners are the old steps.",
+      "signs": [
+        "One step at a time."
+      ]
+    },
+    {
+      "id": "swarm-slope",
+      "name": "Swarm Slope",
+      "kind": "battle",
+      "minBeltTier": 4,
+      "floorSet": "giants-steps",
+      "minFloor": 1,
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..##..........##..#",
+        "#...##........##...#",
+        "#....##......##....#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 2,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "swarmer",
+          "column": 7,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "swarmer",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "swarmer",
+          "column": 11,
+          "row": 5,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 3,
+          "row": 7,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 18,
+          "row": 7,
+          "wave": 1
+        },
+        {
+          "enemy": "brute",
+          "column": 11,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 5,
+          "row": 7,
+          "wave": 2
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 17,
+          "row": 7,
+          "wave": 2
+        },
+        {
+          "enemy": "swarmer",
+          "column": 5,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "swarmer",
+          "column": 17,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "swarmer",
+          "column": 11,
+          "row": 4,
+          "wave": 3
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 9,
+          "row": 7,
+          "wave": 3
+        }
+      ],
+      "artProps": "A loose gravel hillside; the diagonal stone blocks are old steps that slid into a V.",
+      "signs": [
+        "Small stones tumble. Big hearts hold."
+      ]
+    },
+    {
+      "id": "goat-ledge",
+      "name": "Goat Ledge",
+      "kind": "battle",
+      "minBeltTier": 4,
+      "floorSet": "giants-steps",
+      "minFloor": 2,
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..####......####..#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 2,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "cliff-goat",
+          "column": 6,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "cliff-goat",
+          "column": 15,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 11,
+          "row": 5,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 9,
+          "row": 7,
+          "wave": 1
+        },
+        {
+          "enemy": "cliff-goat",
+          "column": 11,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "brute",
+          "column": 5,
+          "row": 4,
+          "wave": 2
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 16,
+          "row": 4,
+          "wave": 2
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 13,
+          "row": 7,
+          "wave": 2
+        }
+      ],
+      "artProps": "Two long rock ledges with a wide gap between them; tufts of mountain grass on the floor.",
+      "signs": [
+        "Steady feet, steady heart."
+      ]
+    },
+    {
+      "id": "golem-stairs",
+      "name": "Golem Stairs",
+      "kind": "battle",
+      "minBeltTier": 4,
+      "floorSet": "giants-steps",
+      "minFloor": 3,
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#.#..............#.#",
+        "#.##............##.#",
+        "#.###..........###.#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "stack-golem",
+          "column": 10,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 7,
+          "row": 7,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 14,
+          "row": 7,
+          "wave": 1
+        },
+        {
+          "enemy": "stack-golem",
+          "column": 11,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "cliff-goat",
+          "column": 6,
+          "row": 7,
+          "wave": 2
+        },
+        {
+          "enemy": "shield",
+          "column": 15,
+          "row": 7,
+          "wave": 2
+        },
+        {
+          "enemy": "cliff-goat",
+          "column": 7,
+          "row": 7,
+          "wave": 3
+        },
+        {
+          "enemy": "swarmer",
+          "column": 11,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "swarmer",
+          "column": 15,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        }
+      ],
+      "artProps": "A great staircase of stone in each upper corner, each step a little higher; loose stones on the floor.",
+      "signs": [
+        "Little stones make big steps."
+      ]
+    },
+    {
+      "id": "shield-shelf",
+      "name": "Shield Shelf",
+      "kind": "battle",
+      "minBeltTier": 4,
+      "floorSet": "giants-steps",
+      "minFloor": 3,
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.#####......#####.#",
+        "#..................#",
+        "#....#........#....#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "shield",
+          "column": 7,
+          "row": 4,
+          "wave": 1
+        },
+        {
+          "enemy": "cliff-goat",
+          "column": 15,
+          "row": 4,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 4,
+          "row": 7,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 17,
+          "row": 7,
+          "wave": 1
+        },
+        {
+          "enemy": "shield",
+          "column": 14,
+          "row": 4,
+          "wave": 2
+        },
+        {
+          "enemy": "stack-golem",
+          "column": 10,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "swarmer",
+          "column": 6,
+          "row": 4,
+          "wave": 2
+        },
+        {
+          "enemy": "swarmer",
+          "column": 16,
+          "row": 5,
+          "wave": 2
+        },
+        {
+          "enemy": "brute",
+          "column": 11,
+          "row": 4,
+          "wave": 3
+        },
+        {
+          "enemy": "cliff-goat",
+          "column": 5,
+          "row": 5,
+          "wave": 3
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 16,
+          "row": 7,
+          "wave": 3
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 6,
+          "row": 7,
+          "wave": 3
+        }
+      ],
+      "artProps": "One long stone shelf across the room with a wide gap in the middle, like a cupboard for giants; round shield-shaped stones lean on the wall.",
+      "signs": [
+        "Look up, look down, look around."
+      ]
+    },
+    {
+      "id": "roller-run",
+      "name": "Roller Run",
+      "kind": "battle",
+      "minBeltTier": 4,
+      "floorSet": "giants-steps",
+      "minFloor": 4,
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "maxFloor": 4,
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.###..........###.#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "boulder-roller",
+          "column": 11,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "cliff-goat",
+          "column": 5,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 16,
+          "row": 4,
+          "wave": 1
+        },
+        {
+          "enemy": "swarmer",
+          "column": 9,
+          "row": 7,
+          "wave": 1
+        },
+        {
+          "enemy": "boulder-roller",
+          "column": 6,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "shield",
+          "column": 15,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 11,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 14,
+          "row": 7,
+          "wave": 2
+        },
+        {
+          "enemy": "boulder-roller",
+          "column": 15,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "brute",
+          "column": 6,
+          "row": 4,
+          "wave": 3
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 10,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 13,
+          "row": 7,
+          "wave": 3
+        }
+      ],
+      "artProps": "A smooth stone road with two low ridges; old wheel marks run down it in straight lines.",
+      "signs": [
+        "Quick feet find the way."
+      ]
+    },
+    {
+      "id": "switchback-road",
+      "name": "Switchback Road",
+      "kind": "battle",
+      "minBeltTier": 4,
+      "floorSet": "giants-steps",
+      "minFloor": 4,
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "maxFloor": 4,
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.#####............#",
+        "#..................#",
+        "#............#####.#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 4,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "boulder-roller",
+          "column": 5,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "brute",
+          "column": 15,
+          "row": 4,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 9,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "boulder-roller",
+          "column": 16,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "stack-golem",
+          "column": 7,
+          "row": 4,
+          "wave": 2
+        },
+        {
+          "enemy": "swarmer",
+          "column": 12,
+          "row": 5,
+          "wave": 2
+        },
+        {
+          "enemy": "swarmer",
+          "column": 4,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "boulder-roller",
+          "column": 11,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "shield",
+          "column": 6,
+          "row": 5,
+          "wave": 3
+        },
+        {
+          "enemy": "cliff-goat",
+          "column": 16,
+          "row": 5,
+          "wave": 3
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 14,
+          "row": 7,
+          "wave": 3
+        }
+      ],
+      "artProps": "A zigzag mountain road; two long ridges switch sides, and the wheel marks run straight down between them.",
+      "signs": [
+        "Zig, then zag, then go."
+      ]
+    },
+    {
+      "id": "giants-gate",
+      "name": "The Giant's Gate",
+      "kind": "challenge",
+      "minBeltTier": 4,
+      "floorSet": "giants-steps",
+      "minFloor": 3,
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "challenge": {
+        "seconds": 90,
+        "text": "Clear the room in 90 seconds for a better chest!",
+        "inTimeText": "In time!",
+        "outOfTimeText": "Time's up! The hill was steep, but you still earned a chest.",
+        "outOfTimeShort": "Time's up!"
+      },
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#.........C........#",
+        "#.###..........###.#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.###..........###.#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 4,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "swarmer",
+          "column": 5,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "swarmer",
+          "column": 9,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "swarmer",
+          "column": 13,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 17,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "stack-golem",
+          "column": 11,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "shield",
+          "column": 16,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "cliff-goat",
+          "column": 6,
+          "row": 7,
+          "wave": 2
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 15,
+          "row": 7,
+          "wave": 2
+        },
+        {
+          "enemy": "brute",
+          "column": 11,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "cliff-goat",
+          "column": 13,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "swarmer",
+          "column": 6,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "swarmer",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        }
+      ],
+      "artProps": "A tall stone arch over the door, with two stair-shaped corner blocks; small cairns at the edges.",
+      "signs": [
+        "Many small steps climb a tall hill."
+      ]
+    },
+    {
+      "id": "water-jar-landing",
+      "name": "Water Jar Landing",
+      "kind": "treasure",
+      "minBeltTier": 4,
+      "floorSet": "giants-steps",
+      "minFloor": 1,
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D###D###D#",
+        "#...........#",
+        "#.#.......#.#",
+        "#.....C.....#",
+        "#.#.......#.#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "Big clay water jars in a row; the chest is the oldest jar, with a wooden lid.",
+      "signs": [
+        "Thank the helpers who came before."
+      ]
+    },
+    {
+      "id": "resting-step",
+      "name": "Resting Step",
+      "kind": "rest",
+      "minBeltTier": 4,
+      "floorSet": "giants-steps",
+      "minFloor": 1,
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D###D###D#",
+        "#...........#",
+        "#..##...##..#",
+        "#.....S.....#",
+        "#..##...##..#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "A wide flat step with two warm blankets and a small lantern on the ledge.",
+      "signs": [
+        "Rest on the step. You have come far."
+      ]
+    },
+    {
+      "id": "great-stair",
+      "name": "The Great Stair",
+      "kind": "boss",
+      "minBeltTier": 4,
+      "floorSet": "giants-steps",
+      "minFloor": 5,
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "##########D#########",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........C........#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "stone-giant",
+          "column": 11,
+          "row": 4,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 7,
+          "row": 5,
+          "wave": 1
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 7,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "pebble-pal",
+          "column": 15,
+          "row": 6,
+          "wave": 2
+        }
+      ],
+      "artProps": "A giant staircase rising on the top wall, each step bigger than the last; the Giant sits on the lowest step.",
+      "signs": [
+        "The steps are tall. Take them one at a time.",
+        "Even a giant can use a friend."
+      ]
+    }
+  ]
+}
