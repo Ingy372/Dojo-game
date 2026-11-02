@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { GEAR_SLOTS, buildTraining, loadFeed, newProfile, seedFakeStudent } from '../src';
 import green from '../../../fixtures/4-green-belt.json';
 import white from '../../../fixtures/1-white-belt-new.json';
+import { gearBoardLayout, gearSheetBox, GEAR_BOARD } from '../../../apps/client/src/ui/gearBoard';
 import { systemMayShow } from '../../../apps/client/src/ui/arrivalQueue';
 import { testContent } from './load-content';
 
@@ -49,11 +50,11 @@ describe('seedFakeStudent (the Green fake profile read as Level 1 with no gear)'
     const t = training(green);
     const p = newProfile();
     seedFakeStudent(p, t, content.loot);
-    const kept = structuredClone(p.inventory);
+    const kept = JSON.parse(JSON.stringify(p.inventory));
     p.level = t.levelCap;
     p.inventory.pop();
     p.inventory.pop();
-    const before = structuredClone(p.inventory);
+    const before = JSON.parse(JSON.stringify(p.inventory));
     expect(seedFakeStudent(p, t, content.loot)).toBe(false);
     expect(p.level).toBe(t.levelCap);
     expect(p.inventory).toEqual(before);
@@ -89,5 +90,21 @@ describe('the other small fixes stay in place', () => {
     const g = read('scenes/GameScene.ts');
     expect(g).toMatch(/this\.doorHint\.setText\(one \?/);
     expect(g).not.toMatch(/floatText\(p\.pos, one \?/);
+  });
+});
+
+describe('G2B12-FIXES: the gear sheet leaves the Strike row showing', () => {
+  it('starts right of the doll column on a wide panel and clears the Strike row', () => {
+    const L = gearBoardLayout(564, 332);
+    const sb = gearSheetBox(L, 564, 332);
+    expect(sb.x).toBe(L.dollW + 8);
+    expect(sb.x + sb.w).toBe(564);
+    expect(sb.w).toBeGreaterThanOrEqual(GEAR_BOARD.sheetNarrowMin);
+  });
+  it('stays full width when the narrow sheet would be too small or the Strike row is clear', () => {
+    const small = gearBoardLayout(360, 250);
+    expect(gearSheetBox(small, 360, 250)).toEqual({ x: 0, w: 360 });
+    const tall = gearBoardLayout(564, 600);
+    expect(gearSheetBox(tall, 564, 600)).toEqual({ x: 0, w: 564 });
   });
 });
