@@ -30,31 +30,31 @@
       "enemies": [
         {
           "enemy": "page-flutter",
-          "column": 14,
+          "column": 17,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 5,
           "row": 3,
           "wave": 1
         },
         {
           "enemy": "bookworm",
           "column": 17,
-          "row": 6,
-          "wave": 1
-        },
-        {
-          "enemy": "page-flutter",
-          "column": 17,
-          "row": 3,
-          "wave": 2
-        },
-        {
-          "enemy": "page-flutter",
-          "column": 5,
           "row": 6,
           "wave": 2
         },
         {
           "enemy": "bookworm",
           "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 14,
           "row": 3,
           "wave": 2
         }
