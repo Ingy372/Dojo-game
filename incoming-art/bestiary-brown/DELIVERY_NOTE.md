@@ -20,11 +20,13 @@
 - No frame touches the frame edge (0 clipped frames); idle is constant per direction.
 - Red check on all body / glow / light sheets: 0 red pixels. Phone and house number check on the folder: no hits. Temp files, `.blend` / `.blend1` files and frames/ folders removed.
 
-**DECIDE:**
-1. **Which three samples?** Page Flutter, Bookworm and Root Snapper, with Ink Blot waiting for the full set (floor puddle decal, slow zone, navy next to the shadow family). OK?
-2. **Root Snapper colour.** The art is `#7b5a38` and the data file `drafts/content/enemies/root-snapper.json` says `#6b4a2b` (the art is a little lighter so it reads against the dark floor). Same as #435: follow the data to the art as a follow-up note (not an edit here)? Page Flutter (`#efe6cf`) and Bookworm (`#9bbf5a`) already match their data.
-3. **Page Flutter floats with no feet** (a thin sliver from the side; the game draws its shadow). OK?
-4. **Bookworm** holds a small book and wears glasses; it is friendly, with no teeth. OK?
-5. **Root Snapper's soft root slam** (arms forward and down, no spikes or hard impact): fine for ages 6+? The lane and '!!' come from the game.
+**DECIDED (Manager's calls on #436, Nov 2, 2026):** all five questions are answered. No export.
+1. **Ink Blot waits for the full set.** The three samples stay Page Flutter, Bookworm and Root Snapper.
+2. **The Root Snapper data follows the art.** **Follow-up for the Content Designer or Programmer** (not done in this PR; only `incoming-art/` is touched): in `drafts/content/enemies/root-snapper.json`, change the colour from `#6b4a2b` to `#7b5a38`.
+3. **Page Flutter floating with no feet: OK.** The game draws its shadow.
+4. **Bookworm: OK.**
+5. **Root Snapper's soft root slam: OK.**
 
-**NEXT:** after the Manager's calls: full sets (move, hit, defeat "set free") for the three plus Ink Blot. If DECIDE 2 is yes, the Content Designer or Programmer changes the Root Snapper data colour. Then G2B-37 (Brown/Black) and G2B-38 (Black).
+**DECIDE:** nothing open on this PR.
+
+**NEXT:** full sets (move, hit, defeat "set free") for the three plus Ink Blot. Content Designer or Programmer: the Root Snapper data colour (DECIDED 2). Then G2B-37 (Brown/Black) and G2B-38 (Black).

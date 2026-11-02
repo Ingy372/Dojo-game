@@ -31,5 +31,8 @@ No teeth, points or spikes. No red or orange in any sprite (red is only the game
 
 `source/build_brown.py` is built from the Red/Black build script with the three new types. The `.blend` files are not kept; the script rebuilds them.
 
+## Decided (Nov 2, 2026)
+Ink Blot waits for the full set. The Root Snapper data colour follows the art, `#7b5a38` (follow-up note in `DELIVERY_NOTE.md`, no data edit here). Page Flutter floats with no feet: OK. Bookworm: OK. The Root Snapper's soft root slam: OK.
+
 ## Grounding
 Idle is constant per direction. Page Flutter floats on purpose (it has no feet); the game draws its shadow. The Bookworm rises from its own mound. The Root Snapper's slam is ground travel, not floating. No frame touches the edge of its 160 px frame.
