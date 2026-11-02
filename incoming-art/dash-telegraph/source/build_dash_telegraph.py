@@ -1,6 +1,6 @@
 """
 Dojo Ascent - dash-only telegraph art (A-BEST 2, Art Director bot).
-Purple-and-white diagonal floor stripes in three shapes (lane, arc, ring with a gap) + the '!!' mark.
+Purple-and-white diagonal floor stripes in four shapes (lane, arc, ring with a gap, Zap Kite zig-zag lane) + the '!!' mark.
 Rules (drafts/content/enemies/bestiary-plan.md, 'Dash-only attacks'): stripes on the floor, lane / arc / ring
 with a gap, never a circle, never red, '!!' above the enemy; Echo Bell's ring gap glows.
 
@@ -11,7 +11,7 @@ draws the red circles as true circles, so the floor is not squashed).
 import math, os, json
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
-ROOT = "incoming-art"; OUT = os.path.join(ROOT, "dash-telegraph")
+ROOT = "incoming-art"; ZIGZAG_DATA = os.path.join(ROOT, "dash-telegraph", "source", "zigzag.json"); OUT = os.path.join(ROOT, "dash-telegraph")
 SP, PV = os.path.join(OUT, "sprites"), os.path.join(OUT, "preview")
 PX = 96                    # sprite px per tile (2x the game's TILE = 48); scale 0.5 for TILE 48
 SS = 4                     # supersampling
@@ -29,9 +29,25 @@ def stripes(w, h, phase=0.0, ss=1):
     a[..., :3] = np.where(white[..., None], WHITE, PURPLE); a[..., 3] = 255
     return Image.fromarray(a, "RGBA")
 
+def zigzag_points(length, amplitude, turns):
+    """centre line of the zig-zag lane in tiles, relative to its middle, running along +x. It starts and ends on the aim
+    line; the first and last legs are half legs, so every leg has the same slope. turns = number of corners.
+    length here is the centre line's reach, so the lane's visible length is that plus one width (the round ends)."""
+    u = length / turns; pts = [(-length / 2, 0.0)]
+    for k in range(1, turns + 1): pts.append((-length / 2 + (k - 0.5) * u, (-1) ** k * amplitude))
+    pts.append((length / 2, 0.0)); return pts
+
+def zigzag_size(zz):
+    """canvas size in tiles (whole tiles, so the anchor stays the exact middle)."""
+    return (math.ceil(zz["length"] + 2 * zz["canvasMargin"]), math.ceil(2 * zz["amplitude"] + zz["width"] + 2 * zz["canvasMargin"]))
+
 def shape_mask(kind, size, ss, **k):
     W, H = int(size[0] * PX), int(size[1] * PX); m = Image.new("L", (W * ss, H * ss), 0); d = ImageDraw.Draw(m); s = PX * ss
-    if kind == "lane":          # k: length, width (tiles); rounded ends
+    if kind == "zigzag":        # k: length, width, amplitude, turns (tiles); round joins and ends like the lane
+        wd = k["width"] * s; pts = [(W * ss / 2 + x * s, H * ss / 2 + y * s) for x, y in zigzag_points(k["length"] - k["width"], k["amplitude"], k["turns"])]
+        d.line(pts, fill=255, width=int(wd), joint="curve")
+        for x, y in pts: d.ellipse([x - wd / 2, y - wd / 2, x + wd / 2, y + wd / 2], fill=255)
+    elif kind == "lane":          # k: length, width (tiles); rounded ends
         L, Wd = k["length"], k["width"]; pad = (W * ss - L * s) / 2, (H * ss - Wd * s) / 2
         d.rounded_rectangle([pad[0], pad[1], pad[0] + L * s, pad[1] + Wd * s], radius=Wd * s * 0.25, fill=255)
     else:                       # arc / ring: annulus sector. k: r (outer), band (thickness), sweep or gap (deg)
@@ -92,10 +108,15 @@ SHAPES = {   # default pre-baked sizes (tiles); used by the plan's enemies
     "ring":  dict(kind="ring", size=(8, 8), r=3.0, band=0.8, gap=40),              # Echo Bell
 }
 
+def shapes():
+    """the pre-baked shapes: the fixed ones above plus the Zap Kite zig-zag, whose numbers come from source/zigzag.json."""
+    zz = json.load(open(ZIGZAG_DATA))["zigzag"]
+    return dict(SHAPES, zigzag=dict(kind="zigzag", size=zigzag_size(zz), length=zz["length"], width=zz["width"], amplitude=zz["amplitude"], turns=zz["turns"]))
+
 def main():
     os.makedirs(SP, exist_ok=True); os.makedirs(PV, exist_ok=True)
     built = {}
-    for name, p in SHAPES.items():
+    for name, p in shapes().items():
         p = dict(p); kind = p.pop("kind"); size = p.pop("size")
         built[name] = build(kind, size, **p)
         for ln, im in built[name].items(): im.save(os.path.join(SP, f"dash-{name}_{ln}.png"))

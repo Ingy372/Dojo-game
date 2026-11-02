@@ -1094,3 +1094,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - `stationary: true` enemy flag; thunder-drum, sleepy-sentry and thorn-sprout use speed 0.
 - The sim models Bellows Puff's no-damage push (Hit slide, Block hold, wall stop, `push` event). A Puff room costs 0 Health.
 - Tests: `k31-boss-tag` (+3), `c430-stationary` (4), `c430-push` (5), `puff-push` balance report (gated). Shots in /workspace/shots/c430-fixes with `pass-fail.md`.
+## ZAPKITE-ZIGZAG: the Zap Kite's zig-zag lane (2026-11-02)
+- Added the baked zig-zag lane (glow, fill, edge) to `incoming-art/dash-telegraph`, from `source/zigzag.json`; `make_zigzag_preview.py` draws it at 667x375 (motion on, motion off, greyscale, GIF). Not imported into the game yet.
+- Tests: `zapkite-zigzag.test.ts` (4). Previews in /workspace/shots/zapkite-zigzag with `pass-fail.md`.

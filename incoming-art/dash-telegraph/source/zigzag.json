@@ -1,0 +1,10 @@
+{
+  "notes": "Zap Kite zig-zag lane (the #438 follow-up, DECIDED 5). Read by build_dash_telegraph.py; all sizes are in tiles. The lane runs along +x like the straight lane (rotate by atan2(dy, dx)) and is centred on the canvas. It starts and ends on the aim line and swings 'amplitude' tiles to each side, so the visible length (round ends included) is 'length', the same as the straight lane. Change a number here and re-run the builder; nothing is hard-coded in the script. 'length' 5 and 'width' 1 match the straight lane. For reference the draft Zap Kite (drafts/content/enemies/zap-kite.json) has reach 3.0 and areaRadius 0.6; align 'length' and 'width' to the final enemy data when the Zap Kite is imported.",
+  "zigzag": {
+    "length": 5.0,
+    "width": 1.0,
+    "amplitude": 0.55,
+    "turns": 4,
+    "canvasMargin": 0.5
+  }
+}
