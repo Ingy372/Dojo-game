@@ -1,5 +1,6 @@
-"""PB-07 review sheet 08: the two icons changed in the last round, Guard (elbows in line with the body) and Counter (clean straight punching arm), each with a LARGE full
-view and a LARGE close-up, old (superseded/v5-final-icons) next to new. Jumping Spins (approved), Disarm (approved) and Strike are not touched.
+"""PB-07 review sheet 08 (pass 4): Counter only. Guard (approved after pass 3), Jumping Spins and Disarm (approved) and Strike are not touched.
+Old = the pass-3 Counter (superseded/v5-pass3-icons), new = the current one: LARGE full views, LARGE close-ups of the chambered hip fist and of the punching arm,
+and 30 pt / grey 30 pt enlarged 4x.
   python3 incoming-art/icons-slots/source/make_review_08.py     (Pillow only)"""
 import os, sys
 from PIL import Image, ImageDraw, ImageFont
@@ -12,30 +13,30 @@ def F(sz):
     except Exception: pass
     return f
 INK, SOFT, PAPER = (70, 42, 22), (120, 86, 56), (250, 242, 222)
-ROWS = [('guard', 'Guard', 'elbows now line up with the sides of the body, not flared out', (170, 300, 860, 860)),
-        ('counter', 'Counter', 'one straight line shoulder to sleeve to cuff to fist; chambered hip fist kept', (110, 260, 910, 820))]
 S = 700
+HIP = {'old': (180, 380, 640, 700), 'new': (130, 380, 590, 700)}
+PUNCH = {'old': (280, 290, 880, 570), 'new': (330, 290, 930, 570)}
 def fit(im, w, h):
     r = min(w / im.width, h / im.height); c = im.resize((int(im.width * r), int(im.height * r)), Image.LANCZOS)
     out = Image.new('RGBA', (w, h), (255, 252, 244, 255)); out.alpha_composite(c, ((w - c.width) // 2, (h - c.height) // 2)); return out
-def px(im, s):
+def px(im, s=60):
     inner = int(round(s * 112 / 128)); t = Image.new('RGBA', (s, s), PAPER); t.alpha_composite(im.resize((inner, inner), Image.LANCZOS), ((s - inner) // 2, (s - inner) // 2)); return t
-W, RH = 4 * S + 5 * 20, S + 90
-sheet = Image.new('RGBA', (W, 90 + RH * len(ROWS)), PAPER); d = ImageDraw.Draw(sheet)
-d.text((20, 16), 'Review 08: Guard and Counter, v5 before (old) vs after (new). Jumping Spins and Disarm approved; Strike untouched', font=F(34), fill=INK)
-for x, k in ((20, 'LARGE: old'), (20 + S + 20, 'LARGE: new'), (20 + 2 * (S + 20), 'close-up: old'), (20 + 3 * (S + 20), 'close-up: new')):
-    d.text((x, 58), k, font=F(26), fill=SOFT)
-for i, (n, nm, note, box) in enumerate(ROWS):
-    y = 100 + i * RH
-    old = Image.open(os.path.join(ROOT, 'superseded', 'v5-final-icons', n + '.png')).convert('RGBA'); new = si.ALL[n]()
+old = Image.open(os.path.join(ROOT, 'superseded', 'v5-pass3-icons', 'counter.png')).convert('RGBA'); new = si.ALL['counter']()
+G = 20; W = 4 * S + 5 * G; H = 90 + 2 * (S + 70)
+sheet = Image.new('RGBA', (W, H), PAPER); d = ImageDraw.Draw(sheet)
+d.text((G, 14), 'Review 08 (pass 4): Counter, old v5 (left of each pair) vs new (right). Guard approved, untouched', font=F(34), fill=INK)
+col = lambda i: G + i * (S + G)
+y1, y2 = 90, 90 + S + 70
+for i, k in enumerate(('FULL: old', 'FULL: new', 'chambered hip fist: old', 'chambered hip fist: new')): d.text((col(i), 56), k, font=F(24), fill=SOFT)
+sheet.alpha_composite(fit(old, S, S), (col(0), y1)); sheet.alpha_composite(fit(new, S, S), (col(1), y1))
+sheet.alpha_composite(fit(old.crop(HIP['old']), S, S), (col(2), y1)); sheet.alpha_composite(fit(new.crop(HIP['new']), S, S), (col(3), y1))
+for i, k in enumerate(('punching arm: old', 'punching arm: new', '30 pt, 4x: old, new', 'grey 30 pt, 4x: old, new')): d.text((col(i), y2 - 34), k, font=F(24), fill=SOFT)
+sheet.alpha_composite(fit(old.crop(PUNCH['old']), S, S), (col(0), y2)); sheet.alpha_composite(fit(new.crop(PUNCH['new']), S, S), (col(1), y2))
+for g, c in ((False, 2), (True, 3)):
     for j, im in enumerate((old, new)):
-        sheet.alpha_composite(fit(im, S, S), (20 + j * (S + 20), y))
-        sheet.alpha_composite(fit(im.crop(box), S, S), (20 + (2 + j) * (S + 20), y))
-    d.text((20, y + S + 10), nm + ': ' + note, font=F(28), fill=INK)
-    d.text((20 + 2 * (S + 20), y + S + 10), '30 pt, then grey (old, new):', font=F(22), fill=SOFT)
-    for j, im in enumerate((old, new)):
-        sheet.alpha_composite(px(im, 60), (20 + 2 * (S + 20) + 360 + j * 66, y + S + 6))
-        g = px(im, 60).convert('LA').convert('RGBA'); sheet.alpha_composite(g, (20 + 2 * (S + 20) + 520 + j * 66, y + S + 6))
+        t = px(im); t = t.convert('LA').convert('RGBA') if g else t
+        sheet.alpha_composite(t.resize((330, 330), Image.NEAREST), (col(c) + j * 350, y2 + 100))
+d.text((col(0), y2 + S + 6), 'Counter: chambered fist moved to the side of the hip (elbow behind the body), both fists the same size as Guard, shoulder forward so the arm grows from it', font=F(26), fill=INK)
 os.makedirs(os.path.join(ROOT, 'preview'), exist_ok=True)
 nm_ = '08-review-guard-counter'; out = sheet.convert('RGB'); out.save(os.path.join(ROOT, 'preview', nm_ + '@2x.png'))
-out.resize((W // 2, sheet.height // 2), Image.LANCZOS).save(os.path.join(ROOT, 'preview', nm_ + '.png')); print('ok', out.size)
+out.resize((W // 2, H // 2), Image.LANCZOS).save(os.path.join(ROOT, 'preview', nm_ + '.png')); print('ok', out.size)

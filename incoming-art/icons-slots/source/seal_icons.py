@@ -104,27 +104,38 @@ def place_fit(med, art, wmax, hmax, cx=128, cy=128, bg=None, fmax=1.0):
     return f
 
 
-def counter(rim=RIMS['counter'], hx=104, hr=22, ty=88, tw=52, th=76, belt=136, sh=(112, 107), wr=(168, 105), fs=28, r_sh=15, r_cuff=12, behind=True,
-             rel=(52, 138), rwr=(84, 136), rfs=30, ar=(58, 12), arrow_y=150, stance=(-28, 40), ank=200, W=162, H=162, cx=130, cy=128, burst_gap=12):
-    """v5 pass 3: a clean straight reverse punch. The punching arm is ONE straight line from the shoulder (it grows out of the shoulder corner of the jacket) through
-    the sleeve to the cuff, a clear wrist and a properly sized mitten fist, level with the shoulder; the back fist stays chambered at the hip. 2 fists, 0 fingers, 0 toes."""
-    med = medallion(rim); a = Art()
-    for k, dx in enumerate(stance):
-        hip = (hx + (-12 if k == 0 else 12), ty + th - 8)
-        an = (hx + dx, ank)
-        sleeve(a, hip, (an[0], an[1] - 12), 13, 11, ow=4.6, shade=GSH, band=6)
-        kick_leg(a, an, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
-    if behind:
-        forearm_block(a, sh, wr, fs, 0, 1, r_el=r_sh, r_cuff=r_cuff, gband=6, **GK)
-    gi_torso(a, hx, ty, tw, th, belt_y=belt, ow=4.6, shade=GSH, band=6)
-    limb(a, (hx, ty - 8), (hx, ty + 6), 8, 8)
-    head_front(a, hx, ty - 24, hr)
-    forearm_block(a, rel, rwr, rfs, 0, 1, r_el=11.5, r_cuff=10, gband=6, **GK)
-    if not behind:
-        forearm_block(a, sh, wr, fs, 0, 1, r_el=r_sh, r_cuff=r_cuff, gband=6, **GK)
-    burst(a, wr[0] + 8 + fs + burst_gap, wr[1] - 4, 6.5, 14, 7, .3)
-    pts = [(hx + 8 + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 36, -8)]
-    arrow(a, pts, BLUE_S, 7, 16, outline=(255, 252, 240))
+def counter(rim=RIMS['counter'], hx=104, hr=24, ty=88, tw=56, th=76, belt=136, sh=(120, 107), wr=(168, 105), r_sh=14, r_cuff=12, F=30.4,
+            relb=(70, 146), rcuff=(76, 141), rfist=(84, 134), rcuff_ang=-25, r_rel=11.5, r_rcuff=10,
+            ar=(46, 12), arrow_y=150, arrow_dx=16, stance=(-28, 40), ank=200, W=158, H=158, cx=132, cy=126, burst_gap=8):
+    """v5 pass 4: a reverse punch. Punching arm (viewer's right): the shoulder comes forward as a round shoulder cap over the jacket corner and ONE straight sleeve runs
+    from it to the cuff, a clear wrist and a mitten fist, knuckles out toward the burst. Chambered arm (viewer's left): the fist sits at the side of the hip on the left
+    edge of the torso, the elbow pulled back BEHIND the body (only the elbow tip shows past the back of the jacket). Both fists are the same size as Guard's fists
+    (F = 30.4 pt on the 256 face, solved after the fit). 2 fists, 0 fingers, 0 toes."""
+    def draw(fs):
+        med = medallion(rim); a = Art()
+        for k, dx in enumerate(stance):
+            hip = (hx + (-12 if k == 0 else 12), ty + th - 8)
+            an = (hx + dx, ank)
+            sleeve(a, hip, (an[0], an[1] - 12), 13, 11, ow=4.6, shade=GSH, band=6)
+            kick_leg(a, an, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
+        sleeve(a, relb, rcuff, r_rel, r_rcuff, ow=3.0, shade=GSH, band=6)                                         # chambered elbow, behind the jacket
+        gi_torso(a, hx, ty, tw, th, belt_y=belt, ow=4.6, shade=GSH, band=6)
+        limb(a, (hx, ty - 8), (hx, ty + 6), 8, 8)
+        head_front(a, hx, ty - 24, hr)
+        forearm_block(a, sh, wr, fs, 0, 1, r_el=r_sh, r_cuff=r_cuff, gband=6, **GK)                                 # shoulder cap, straight arm, fist
+        ang = math.radians(rcuff_ang); ux, uy = math.cos(ang), math.sin(ang)
+        a.shape(poly(rrect_pts(rcuff[0], rcuff[1], 9, 2 * r_rcuff + 3, 3.5, ang)), GI, GSH, (255, 255, 250), ow=2.4, band=2.4)
+        limb(a, (rcuff[0] + ux * 3, rcuff[1] + uy * 3), (rfist[0] - ux * 6, rfist[1] - uy * 6), 7.2, 7.6)
+        mitten_fist(a, rfist[0], rfist[1], fs, ang, -1)                                                            # chambered fist at the hip
+        burst(a, wr[0] + 8 + fs + burst_gap, wr[1] - 4, 6.5, 14, 7, .3)
+        pts = [(hx + arrow_dx + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 36, -8)]
+        arrow(a, pts, BLUE_S, 7, 16, outline=(255, 252, 240))
+        return med, a
+    fs = F
+    for _ in range(3):                                                                                              # fists end up exactly F big on the face, like Guard
+        med, a = draw(fs)
+        bb = a.im.getchannel('A').getbbox(); k = P(1)
+        fs = F / min(W / ((bb[2] - bb[0]) / k), H / ((bb[3] - bb[1]) / k), 1.0)
     place_fit(med, a, W, H, cx, cy)
     return med.result()
 

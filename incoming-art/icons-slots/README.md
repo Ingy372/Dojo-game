@@ -1,8 +1,10 @@
 # Seal families (PB-07 samples)
 
-**Status: samples only, v5 pass 3. Disarm and Jumping Spins are APPROVED by Jay (do not touch). Guard elbows now in and Counter has a clean straight punching arm (sheet 08). Guard (X-block), Counter (reverse punch) and Jumping Spins (slim kid) are redrawn in v5 after Jay's notes on v4; Strike stays as in v4; see below.** Three preview sheets for Jay to OK before the full set is drawn. No game files are touched. No sprites exported yet: Jay approves first.
+**Status: samples only, v5 pass 4. Guard, Disarm and Jumping Spins are APPROVED by Jay (do not touch). Counter: hip fist at the side with the elbow behind, same-size fists, forward shoulder (sheet 08). Guard (X-block), Counter (reverse punch) and Jumping Spins (slim kid) are redrawn in v5 after Jay's notes on v4; Strike stays as in v4; see below.** Three preview sheets for Jay to OK before the full set is drawn. No game files are touched. No sprites exported yet: Jay approves first.
 
 The folder is `incoming-art/icons-slots/`, the path the PB-07 spec names (it was moved from `incoming-art/seal-families/` with `git mv`).
+
+**What changed in pass 4 (Jay's notes on sheet 08):** Guard approved, untouched. Counter: chambered fist moved to the side of the hip on the torso's left edge with the elbow behind the body; both fists the same size as Guard's; the punching shoulder comes forward so the arm grows from it. Old in `superseded/v5-pass3-icons/`. Digit, 30 pt, grey, red and grep checks pass.
 
 **What changed in pass 3 (Jay's notes on #419):** Jumping Spins APPROVED and untouched. Guard: elbows brought in to line up with the body sides, X-block kept. Counter: the punching arm is one straight line from the shoulder to a bigger fist; hip chamber kept. Old versions in `superseded/v5-final-icons/`; see `preview/08-review-guard-counter@2x.png`. Digit, 30 pt, grey, red and grep checks pass.
 
@@ -39,7 +41,7 @@ PB-07 (in `drafts/planning/R-PROGRESSION-BETA.md`) replaces G2B-03. It asks for 
 | b | `preview/02-lock-and-slot-glyphs.png` (+ `@2x`) | Lock, Strike glyph, Kata glyph, empty Seal slot. Large, in a mock slot row, 48 and 32 pt, in grey |
 | c | `preview/03-jumping-spins.png` (+ `@2x`) | Jumping Spins. Large, next to the plain Strike glyph, 64, 48 and 32 pt on paper, grey and wall |
 | d | `preview/04-before-after-v2-v3.png` (+ `@2x`) | Old v2 next to new v3 for every icon: large, 30 pt, 40 pt, grey 30 pt and on the wall at 30 pt |
-| h | `preview/08-review-guard-counter.png` (+ `@2x`) | Pass 3: Guard (elbows in) and Counter (straight punching arm), old next to new: LARGE full view, LARGE close-up, 30 pt and grey 30 pt. Old versions in `superseded/v5-final-icons/` |
+| h | `preview/08-review-guard-counter.png` (+ `@2x`) | Pass 4: Counter only, old v5 (pass 3) next to new: full views, LARGE close-ups of the hip fist and the punching arm, 30 pt and grey 30 pt at 4x. Old versions in `superseded/v5-pass3-icons/` and `v5-final-icons/` |
 | g | `preview/07-before-after-v4-v5.png` (+ `@2x`) | v5: Guard, Counter and Jumping Spins, old v4 next to new v5: large, close-up, 40 pt, 30 pt, grey and wall |
 | f | `preview/06-before-after-v3-v4-full-set.png` (+ `@2x`) | v4 full set: Guard, Disarm, Counter, Strike and Jumping Spins, old v3 next to new v4: large, close-up, 40 pt, 30 pt, grey and wall |
 | e | `preview/05-before-after-v3-v4.png` (+ `@2x`) | v4: Guard and Disarm, old v3 next to new v4: large, close-up of the hand and foot, 40 pt, 30 pt, grey and wall |
