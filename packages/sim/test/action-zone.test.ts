@@ -24,7 +24,7 @@ describe('Action Zone inside room', () => {
     expect(room.width).toBe(27);
     expect(room.height).toBe(19);
     expect(room.walls.flat().filter((w) => !w)).toHaveLength(insideJson.walkableCells);
-    expect(room.playerStart).toEqual({ x: 13.5, y: 17.5 });
+    expect(room.playerStart).toEqual({ x: 13.5, y: 16.5 });
     expect(room.walls[0].every(Boolean)).toBe(true);
   });
 
@@ -92,5 +92,12 @@ describe('Action Zone inside room', () => {
     expect(() => loadInsideRoom({})).toThrow(ActionZoneError);
     expect(() => loadInsideRoom({ ...insideJson, spawn: { enter: [0, 0] } })).toThrow(/spawn/);
     expect(() => loadInsideRoom({ ...insideJson, interactables: [] })).toThrow(/interactables/);
+  });
+
+  it('A4-DOJO-ii-fix: the hero walks in and stands in the lobby, at least 1.3 tiles above the exit, and standing still never leaves', () => {
+    const [x0, x1, y0, y1] = inside.exit;
+    expect(y0 - inside.spawn.y).toBeGreaterThanOrEqual(1.3);
+    const end = walk(inside.spawn, 20 * 5, () => ({ kind: 'none' }));
+    expect(end.x >= x0 && end.x <= x1 && end.y >= y0 && end.y <= y1).toBe(false);
   });
 });

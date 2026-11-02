@@ -683,9 +683,9 @@
  "spawn": {
   "enter": [
    13,
-   17
+   16
   ],
-  "note": "first tile inside the door; the student walks in from row 18"
+  "note": "two tiles in front of the door mat (the door is row 18): the hero walks in from the street and stands in the lobby, not on the doorstep. A4-DOJO-ii-fix: it was the first tile inside the door (13, 17), only 0.4 tile above the exit, so holding down left at once."
  },
  "exit": {
   "cells": [

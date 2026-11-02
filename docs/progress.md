@@ -916,6 +916,12 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 **Next**
 - Tester: beat the Floor Keeper on a fresh save (moment plays), then again (normal clear). Q-PREM-GRADE next.
 - Q-PREM-F9 QA fix: DASH/STANCE solid dim faces (6.44:1 / 6.89:1), Counter lockout ring, Decorate wall row clear of the 60 px bar. verify-ui-shots 656 PASS, 0 FAIL (4 sizes × Reduced motion on/off).
+## R-PREMIUM-b3 (2026-10-26)
+- 13 sound events play CC0 files (20 files plus licences, 349 KB) with per-file gains from `tools/audio-sfx/build.mjs`; the rest stay made in code, and each file event falls back to code. "perfect" is now `greatCounter()`. Loudness at the speakers: all peaks −7 dBFS or lower, 0 errors (docs/shots/r-premium-b3/loudness.txt). Hands-on: 80 real taps in training, files played for hit, dash and insight, 0 missing files, 0 errors (hands-on.txt). Test: packages/sim/test/r-premium-b3-sfx.test.ts.
+**Next**
+- Jay: listen on the preview link before merge.
+- 2026-10-31: merged main (no conflicts); `sfx.levelUp()` now plays once when the Home levels-gained screen shows (`takeLevelUpSound`, 3 new tests in `r-premium-b3-sfx.test.ts`). Suite 1207 passed, 11 skipped; typecheck and build exit 0; golden fixture unchanged. No UI change, so no shots.
+- 2026-10-31 QA fix: the level-up sound now fires from the XP fill tween's `onComplete` (it was ~600 ms early, on a delayedCall); measured 0-1 ms after the last bar frame. Merged main 98f38586; one new test pinning the timing. Whoosh levels untouched.
 
 ## 2026-10-26 — Q-PREM-F11
 - A tap on KO Screen 1 goes straight to Screen 2 (90–275 ms after the tap, was about 1.75 s). Head home is ≥48 px at every size. New test: packages/sim/test/q-prem-f11-ko.test.ts. Shots and log: docs/shots/q-prem-f11 (88 PASS, 0 FAIL, 4 sizes × RM on/off).
@@ -1005,3 +1011,30 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Suite: 1186 passed, 11 skipped (112 files passed, 3 skipped); typecheck and build exit 0; the golden fixture `p-menu2-d-default-run.json` is unchanged.
 - Shots (667x375 and 844x390, reduced motion on and off, setting read back first): 4 runs x 27 checks, 108 pass, 0 fail (button fit, fades, camera clamps, hero hidden behind the shrub and visible in front of shrub and bed by pixels, cues, door tap, exit and return, both town exits). Inside re-run on the new `WalkScene`: 4 x 18 checks, 72 pass, 0 fail. Contact sheets: `/workspace/shots/a4-dojo-ii/contact-sheet-*.jpg`.
 - Not in this PR: a layered, walkable town; other town buildings; a designed door from the Home Dojo to the town; dusk art.
+
+## A4-DOJO-hotfix — choppy dojo, stuck Sensei line, fresh load (2026-10-31)
+- Bug 1: buttons and exit cues are baked once into textures (`ui/button.ts`, `ui/exitCue.ts`); walking scenes re-sort and re-show only on change. Median frame cost (667x375, motion on) 1.2 -> 0.2 ms Home Dojo, 0.4 -> 0.2 inside, 0.5 -> 0.2 outside, 0.5 -> 0.1 town; same at 844x390 with reduced motion.
+- Bug 2: the step-back banner ("Three great counters! ...", B-MASHER-2) now goes away after 2.2 s. Before: still up at 7 s, both motion settings. After: gone by 2.3 s, both settings, two sizes.
+- Bug 3: not reproduced; tests pin the routing. Decision notes in `docs/decisions.md`.
+- Tests: `packages/sim/test/a4-dojo-hotfix.test.ts` (11); `p-menu-c-buttons.test.ts` pin updated for the baked outline. Suite 1197 passed, 11 skipped; typecheck and build exit 0; golden fixture unchanged.
+
+## A4-DOJO-ii-fix — Action Zone walking fixes (2026-10-31)
+- Exits line up with their glows (one source: the room file, checked by the loader), both glows on screen at 667 wide, a press on a glow walks even under the stick, the doorstep opens only on a push up or a tap on the doors, the inside spawn is 2 tiles from the door, collision gaps tighter. Stronger glow kept baked.
+- Town button in the Home Dojo is still the PLACEHOLDER way out.
+- Tests: `action-zone-outside.test.ts` and `action-zone.test.ts` updated and extended (wantsThrough, cue loader check, spawn distance, source pins). Merged main 35aa0c2f (the hotfix's baked buttons and cues carried forward).
+- Next: Jay: play on the preview link and check the glows and the doorstep.
+
+## Q-PREMIUM-2-fix — routine findings from the premium pass (2026-10-31)
+- Fixed the 16 routine findings (H2, M3, M6, M7, M9, M10, M12, L2, L3, L4, L5, L7, L8, L9, L10, L11) as far as the rules allow; partials and skips are listed in `docs/decisions.md`. L8 is investigate-only (no change).
+- Tests: `packages/sim/test/q-prem2-routine.test.ts` (new) and `q-prem-f6-again.test.ts`, `p-menu-e-buttons.test.ts` updated. Golden fixture unchanged.
+- Next: Jay: play the preview on a phone (Board, Create, tutorial, Practice room, a knock-out); the Manager checks the shots in `/workspace/shots/q-premium-2-fix/`.
+- QA follow-up on #400: the testing-screen Close works after the list is scrolled (Close on top, off-view rows not tappable, Close label centred), tapping the middle of the inside exit glow leaves the dojo, and the Training Points line no longer overlaps Virtues. Tests are in `packages/sim/test/q-prem2-routine.test.ts`.
+- N1 fix: the testing screen reads the pointer in scene units (worldX / worldY), so its buttons, rows and scrolling work at DPR 1.5 and 3. No other client file had the bug.
+
+
+## PB-01 — Loadout v2, sealSlots(belt), the slot seed (2026-11-01)
+- `Loadout` has five slots (`stance`, `virtue`, `strike`, `kata`, `seals`); old two-field and `{ form }` saves load unchanged. New `loadout.ts`: `sealSlots(tier)` (2/2/3, then 3, 3, 4), Seal equip, swap and remove rules, `normalizeSlots`, and the once-only seed (`migrateLoadoutV2`, `seedLoadoutV2`, guarded by `profile.loadoutV2`, with a `showSlotNote` flag). Types for Seal families, Strikes and kata powers are in `abilities.ts`.
+- No fight, UI or balance change: golden fixture unchanged; Power and Health are the same before and after the seed (tested on Yellow, Green and Orange).
+- Not wired yet: the seed waits for PB-02 (families) and PB-03 (Strikes), see `docs/decisions.md`.
+- Tests: `p-prog-a-loadout-save`, `p-prog-b-seal-slots`, `p-prog-f-migration` (34 new). Suite 1276 passed, 11 skipped; typecheck and build exit 0.
+- Next: PB-02, PB-03, PB-04.

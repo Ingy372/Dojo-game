@@ -114,7 +114,7 @@ export function menu2Frames(scene: Phaser.Scene, names: Name[]): Array<[string, 
  * Pressed art, when given, shows while the finger is down.
  */
 export function skinButton(scene: Phaser.Scene, b: { visual: Phaser.GameObjects.Container; hit: Phaser.GameObjects.Zone }, skin: Phaser.GameObjects.Image | Phaser.GameObjects.NineSlice, normal: Name, pressed?: Name): void {
-  const bg = b.visual.list[0] as Phaser.GameObjects.Graphics;
+  const bg = b.visual.list[0] as Phaser.GameObjects.Image;
   bg.setVisible(false);
   b.visual.addAt(skin, 1);
   if (!pressed) return;

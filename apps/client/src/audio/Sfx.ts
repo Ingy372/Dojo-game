@@ -1,16 +1,24 @@
 import { stepGain } from '@dojo/sim';
+import SFX from '../../../../content/settings/sfx.json';
 import { AUDIO_TEXT, loadVolume } from './volume';
 
+type SfxEvent = keyof typeof SFX.events;
+interface Variant { file: string; gainDb: number }
+
 /**
- * Simple sounds made in code with the phone's built-in Web Audio, so there are no
- * sound files to download. Phones only allow sound after the first touch, so
- * `unlock()` is called from a touch handler.
+ * Game sounds on the phone's built-in Web Audio. R-PREMIUM-b3: the events listed in
+ * content/settings/sfx.json play a sound file (CC0 packs, balanced by gainDb); every
+ * other event, and any file that is missing or not loaded yet, uses the simple sound
+ * made in code. Phones only allow sound after the first touch, so `unlock()` is
+ * called from a touch handler, and the files start loading then.
  */
 class SoundMaker {
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
   private noiseBuffer: AudioBuffer | null = null;
   private unlockListeners: Array<() => void> = [];
+  /** Decoded sound files by path; only files that loaded are here. */
+  private files = new Map<string, AudioBuffer>();
 
   /** The shared audio context (music plays on it too), or null before the first touch. */
   context(): AudioContext | null {
@@ -40,6 +48,7 @@ class SoundMaker {
       this.noiseBuffer = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
       const data = this.noiseBuffer.getChannelData(0);
       for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+      this.loadFiles(this.ctx);
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) void this.ctx?.suspend();
         else void this.ctx?.resume();
@@ -51,26 +60,29 @@ class SoundMaker {
 
   /** A short punchy hit. */
   hit(): void {
+    if (this.playFile('hit')) return;
     this.noise(0.07, 0.5, 1800);
     this.tone(170, 70, 0.09, 'square', 0.25);
   }
 
   /** The heavy Strike. */
   strike(): void {
+    if (this.playFile('strike')) return;
     this.noise(0.14, 0.7, 1200);
     this.tone(150, 50, 0.18, 'sawtooth', 0.35);
   }
 
-  /** Perfect Counter: a sharp snap and a bright chime. */
-  perfect(): void {
+  /** Great Counter: a sharp snap and a bright chime (made in code). */
+  greatCounter(): void {
     this.noise(0.06, 0.6, 4000);
     this.tone(880, 880, 0.35, 'sine', 0.3, 0.02);
     this.tone(1320, 1320, 0.45, 'sine', 0.22, 0.07);
     this.tone(1760, 1760, 0.5, 'triangle', 0.12, 0.12);
   }
 
-  /** Block: a metal clank. */
+  /** Block: a wooden knock (file), or a metal clank made in code. */
   block(): void {
+    if (this.playFile('block')) return;
     this.tone(620, 560, 0.12, 'square', 0.18);
     this.tone(930, 900, 0.16, 'triangle', 0.15);
     this.noise(0.04, 0.3, 3000);
@@ -98,6 +110,7 @@ class SoundMaker {
 
   /** A real promotion: the biggest sound in the game. */
   promotion(): void {
+    if (this.playFile('promotion')) return;
     this.noise(0.3, 0.3, 600);
     [392, 523, 659, 784, 1046].forEach((f, i) => this.tone(f, f, 0.5, 'sawtooth', 0.12, i * 0.14));
     [523, 659, 784, 1046, 1318].forEach((f) => this.tone(f, f, 2.2, 'triangle', 0.16, 0.75));
@@ -113,6 +126,7 @@ class SoundMaker {
 
   /** A game level up: small, so real achievements stay bigger. */
   levelUp(): void {
+    if (this.playFile('levelUp')) return;
     this.tone(523, 784, 0.25, 'triangle', 0.18);
   }
 
@@ -130,6 +144,7 @@ class SoundMaker {
 
   /** The enemy swings and misses. */
   whoosh(): void {
+    if (this.playFile('whoosh')) return;
     this.noise(0.18, 0.35, 700);
   }
 
@@ -151,12 +166,14 @@ class SoundMaker {
 
   /** A chest opens. */
   chest(): void {
+    if (this.playFile('chest')) return;
     this.noise(0.15, 0.3, 600);
     [392, 523, 659].forEach((f, i) => this.tone(f, f, 0.14, 'square', 0.08, 0.05 + i * 0.06));
   }
 
   /** An item drops: rarer items get a longer, higher chime. */
   loot(rank: number): void {
+    if (this.playFile(rank >= 2 ? 'loot2' : rank === 1 ? 'loot1' : 'loot0')) return;
     const notes = [659, 784, 988, 1175, 1319].slice(0, 2 + rank);
     notes.forEach((f, i) => this.tone(f, f, 0.12 + rank * 0.03, 'sine', 0.12 + rank * 0.03, 0.1 + i * 0.06));
   }
@@ -174,6 +191,7 @@ class SoundMaker {
 
   /** An Insight is chosen. */
   insight(): void {
+    if (this.playFile('insight')) return;
     [784, 1047, 1319].forEach((f, i) => this.tone(f, f * 1.01, 0.2, 'sine', 0.12, i * 0.05));
   }
 
@@ -209,6 +227,7 @@ class SoundMaker {
 
   /** Dash: a fast airy swoosh. */
   dash(): void {
+    if (this.playFile('dash')) return;
     this.noise(0.12, 0.3, 1800);
     this.tone(300, 700, 0.1, 'sine', 0.08);
   }
@@ -236,8 +255,9 @@ class SoundMaker {
 
   // ---- menus
 
-  /** P-MENU-a: a soft, short tap for a button press (made in code, quiet). */
+  /** P-MENU-a: a soft, short tap for a button press (a click file, or made in code). */
   tap(): void {
+    if (this.playFile('tap')) return;
     this.tone(1400, 1100, 0.035, 'sine', 0.05);
     this.tone(700, 650, 0.05, 'triangle', 0.03);
   }
@@ -285,6 +305,52 @@ class SoundMaker {
   /** Picking up or putting down a decoration. */
   place(down: boolean): void {
     this.tone(down ? 260 : 380, down ? 200 : 460, 0.08, 'triangle', 0.15);
+  }
+
+  /** Fetches and decodes every listed file once. A file that fails is simply left out. */
+  private loadFiles(ctx: AudioContext): void {
+    const paths = new Set<string>();
+    for (const e of Object.values(SFX.events) as Array<{ variants: Variant[]; accent?: { variants: Variant[] } }>) {
+      for (const v of [...e.variants, ...(e.accent?.variants ?? [])]) paths.add(v.file);
+    }
+    for (const path of paths) {
+      fetch(path)
+        .then((r) => (r.ok ? r.arrayBuffer() : null))
+        .then((data) => (data ? ctx.decodeAudioData(data) : null))
+        .then((buf) => {
+          if (buf) this.files.set(path, buf);
+        })
+        .catch(() => undefined);
+    }
+  }
+
+  /** Plays one loaded variant of `event` (and its light accent); false if none is loaded yet. */
+  private playFile(event: SfxEvent): boolean {
+    if (!this.ctx || !this.master) return false;
+    const e = SFX.events[event] as { variants: Variant[]; accent?: { variants: Variant[] } };
+    const main = this.pick(e.variants);
+    if (!main) return false;
+    this.buffer(main);
+    const accent = e.accent && this.pick(e.accent.variants);
+    if (accent) this.buffer(accent);
+    return true;
+  }
+
+  private pick(variants: Variant[]): { v: Variant; buf: AudioBuffer } | null {
+    const ready = variants.filter((v) => this.files.has(v.file));
+    if (ready.length === 0) return null;
+    const v = ready[Math.floor(Math.random() * ready.length)];
+    return { v, buf: this.files.get(v.file)! };
+  }
+
+  private buffer({ v, buf }: { v: Variant; buf: AudioBuffer }): void {
+    const ctx = this.ctx!;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const gain = ctx.createGain();
+    gain.gain.value = Math.pow(10, v.gainDb / 20);
+    src.connect(gain).connect(this.master!);
+    src.start();
   }
 
   private tone(from: number, to: number, seconds: number, type: OscillatorType, volume: number, delay = 0): void {

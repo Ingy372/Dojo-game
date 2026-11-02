@@ -1,0 +1,7 @@
+R-PREMIUM-b3 hands-on (844x390, 80 real taps on the action buttons)
+in Game: true; buttons tapped: virtue, stance, stanceName, counter, strike, dash
+files loaded: 20, audio: running
+sound plays: {"insight:file":14,"hit:file":2,"dash:file":7}
+missing sfx files: 0
+errors: 0
+
