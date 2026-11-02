@@ -989,10 +989,27 @@ if E == "sky-sweeper":   # a round periwinkle wind-cloud with a skirt of soft wi
     WOOD = toon_material("SSWOOD", "#d8b47e"); STRAW = toon_material("SSSTRAW", "#f4e6b8"); GOLD = toon_material("SSGOLD", "#d9b84a")
     LAN = toon_material("SSLAN", "#fff3c8", shadow=1.0, highlight=1.0); SOCK = toon_material("SSSOCK", "#26315a", shadow=1.0, highlight=1.0); CHK = toon_material("SSCHEEK", "#f4b4c4")
     M_("body", ellipsoid(BC, BR, segs=24, rings=14), MAT["body"])
+    # the wind skirt: 7 flat, wide cloth ribbons (a lighter cloth colour with a deeper stripe), straight, square-cut or forked (swallow-tail) ends: no curl, no taper, no rounded tips
+    RIB = toon_material("SSRIB", "#e2eaff"); RSTR = toon_material("SSRSTR", "#7d96d8")
+    RW, RT = 0.17, 0.02; PSI = 0
+    M_("sash", tube((0, 0, 0.275), (0, 0, 0.335), 0.262, 0.262, segs=28, sy=0.93), GOLD)
     for k in range(7):
-        a = math.radians(k * 360 / 7 + 10); sa, ca = math.sin(a), -math.cos(a)
-        M_(f"str{k}", tube((sa * 0.18, ca * 0.17, 0.27), (sa * 0.27, ca * 0.25, 0.14), 0.055, 0.04, segs=10), MAT["accent"])
-        M_(f"strt{k}", ellipsoid((sa * 0.27, ca * 0.25, 0.135), (0.042, 0.042, 0.042), segs=8, rings=6), MAT["accent"])
+        a = math.radians(k * 360 / 7 + 10); rh = (math.sin(a), -math.cos(a)); th = (-rh[1], rh[0])
+        longr = (k % 2 == 0); R0, Z0 = 0.245, 0.295; RL = 0.32 if longr else 0.25; tl = math.radians(40 if longr else 34); ps = math.radians(PSI)
+        dx_, dout, dz_ = -math.cos(tl) * math.sin(ps), math.sin(tl), -math.cos(tl) * math.cos(ps)
+        def at(f, off=0.0):   # a point a fraction f down the ribbon, off to the side
+            return (rh[0] * (R0 + f * RL * dout) + th[0] * (off + f * RL * dx_), rh[1] * (R0 + f * RL * dout) + th[1] * (off + f * RL * dx_), Z0 + f * RL * dz_)
+        ang = math.degrees(a); rot = (-math.degrees(tl), PSI, ang)
+        if longr:   # forked (swallow-tail) end: a solid upper part and two flat prongs with a square notch between
+            f1 = 0.62; l1 = RL * f1
+            M_(f"rib{k}", box(at(f1 / 2), (RW, RT, l1), rot=rot), RIB)
+            M_(f"rib{k}s", box(at(f1 / 2 + 0.01), (RW * 0.2, RT * 1.3, l1 * 0.96), rot=rot), RSTR, outline=False)
+            for sgn in (-1, 1):
+                pc = at((f1 + 1.0) / 2, sgn * RW * 0.27 * math.cos(ps))
+                M_(f"rib{k}p{sgn}", box(pc, (RW * 0.42, RT, RL * (1 - f1)), rot=rot), RIB)
+        else:       # a straight, square cut end
+            M_(f"rib{k}", box(at(0.5), (RW, RT, RL), rot=rot), RIB)
+            M_(f"rib{k}s", box(at(0.5), (RW * 0.2, RT * 1.3, RL * 0.96), rot=rot), RSTR, outline=False)
     ex = 0.1; ez = 0.5
     for x in (1, -1):
         M_(f"sock{x}", ellipsoid((x * ex, _sy(BC, BR, ex, ez) + 0.009, ez), (0.08, 0.02, 0.1), rot=(0, 0, x * 18), segs=16, rings=8), SOCK, outline=False)
