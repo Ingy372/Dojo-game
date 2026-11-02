@@ -6,7 +6,7 @@ Three Black enemies from `drafts/planning/R-GREEN-TO-BLACK.md` (R-G2B-38). One m
 |---|---|---|---|---|
 | `storm-wisp/` | `drafts/content/enemies/storm-wisp.json` | a small slate storm cloud that floats: big eyes in sockets, pink cheeks, a smile, side puffs, tiny hands, a curling cloud tail and a small yellow zig-zag bolt at its side. No feet | small, round | slate `#8c96b0` (matches data), bolt yellow |
 | `rumble-brute/` | `rumble-brute.json` | a big, soft thundercloud-bellied brute: a ring of cloud-scarf puffs, a belly patch with a yellow bolt, thick arms with cloud mitts, dark stubby feet, big eyes, a smile | wide, heavy | dark slate `#4d5466` (matches data), bolt yellow |
-| `sky-sweeper/` | `sky-sweeper.json` | a periwinkle ball with a gold sash and a skirt of five flat cloth ribbons of uneven length, bent gently one way (pale cloth with a deeper blue stripe; three forked swallow-tail ends, two square-cut), a straw broom in one hand and a paper lantern on a cord in the other, big eyes, a smile. No feet | tall, light | periwinkle `#9fb4e8` (matches data), straw and gold, lantern |
+| `sky-sweeper/` | `sky-sweeper.json` | a periwinkle ball with a gold sash and a skirt of five flat cloth ribbons of uneven length, set round the sides and back and bent one way (pale cloth; three long forked swallow-tail ends with a blue stripe, two short plain square-cut), a straw broom in one hand and a paper lantern on a cord in the other, big eyes, a smile. No feet | tall, light | periwinkle `#9fb4e8` (matches data), straw and gold, lantern |
 
 No teeth, points or spikes. No red or orange in any sprite. The telegraph layer is neutral white and is tinted by the game: red for the Storm Wisp and the Rumble Brute, and house purple `#8a4fe6` for the dash-only Sky Sweeper.
 
@@ -35,4 +35,4 @@ No teeth, points or spikes. No red or orange in any sprite. The telegraph layer 
 Idle is constant per direction. The Storm Wisp and Sky Sweeper float on purpose (no feet); the game draws their shadows. The Rumble Brute stands on two stubby feet. No frame touches the edge of its 160 px frame.
 
 ## Decided (Nov 2, 2026)
-Samples, the Sky Sweeper arc-then-lane and purple tell, floating, the Rumble Brute slam and the Storm Wisp crackle: all OK. Sky Sweeper's streamers get a second pass: now flat cloth ribbons with square or forked ends and a stripe (no rounded tips, taper or curl). A third pass cut them to 5 uneven ribbons that bend gently one way and flutter a little per frame (idle, wind-up, attack). See `DELIVERY_NOTE.md`.
+Samples, the Sky Sweeper arc-then-lane and purple tell, floating, the Rumble Brute slam and the Storm Wisp crackle: all OK. Sky Sweeper's streamers get a second pass: now flat cloth ribbons with square or forked ends and a stripe (no rounded tips, taper or curl). A third and fourth pass cut them to 5 uneven ribbons that bend gently one way and flutter a little per frame (idle, wind-up, attack). See `DELIVERY_NOTE.md`.

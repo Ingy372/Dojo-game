@@ -231,11 +231,11 @@ else: bone("shield", (R * 1.15, -R * 0.75, SH_Z - 0.06), (R * 1.15, -R * 0.75, S
 def _rib_spec():
     WIND = Vector((0.9, 0.42, 0.12)).normalized()          # the wind's direction in the character's frame (+x = its left, +y = behind): every ribbon trails this way
     out = []
-    for i, (az, ln, fk) in enumerate(((20, 0.32, True), (92, 0.20, False), (164, 0.37, True), (236, 0.23, False), (308, 0.29, True))):
+    for i, (az, ln, fk) in enumerate(((70, 0.31, True), (118, 0.20, False), (180, 0.37, True), (242, 0.23, False), (290, 0.29, True))):
         a = math.radians(az); rh = Vector((math.sin(a), -math.cos(a), 0.0)); t = math.radians(46)
         d0 = rh * math.sin(t) + Vector((0, 0, -math.cos(t))); nh = rh * math.cos(t) + Vector((0, 0, math.sin(t)))
         pts = [rh * 0.245 + Vector((0, 0, 0.295))]; dirs = []
-        for k, (f0, f1, bw) in enumerate(((0.0, 0.22, 0.0), (0.22, 0.44, 0.25), (0.44, 0.66, 0.55), (0.66, 0.84, 0.85), (0.84, 1.0, 1.1))):
+        for k, (f0, f1, bw) in enumerate(((0.0, 0.22, 0.0), (0.22, 0.44, 0.32), (0.44, 0.66, 0.72), (0.66, 0.84, 1.12), (0.84, 1.0, 1.45))):
             d = (d0 + WIND * bw).normalized(); dirs.append(d); pts.append(pts[-1] + d * ln * (f1 - f0))
         path = []
         for k in range(6):
@@ -1038,8 +1038,7 @@ if E == "sky-sweeper":   # a round periwinkle wind-cloud with a skirt of soft wi
             for sgn in (-1, 1): M_(f"{bn}p{sgn}", _swept(path, RW * 0.42, RT, off=sgn * RW * 0.27, lo=0.64), RIB, bn)
             M_(bn + "s", _swept(path, RW * 0.2, RT * 1.3, hi=0.66), RSTR, bn, outline=False)
         else:
-            M_(bn + "a", _swept(path, RW, RT), RIB, bn)
-            M_(bn + "s", _swept(path, RW * 0.2, RT * 1.3), RSTR, bn, outline=False)
+            M_(bn + "a", _swept(path, RW, RT), RIB, bn)       # the short ribbons are plain, no stripe
     def flutter(name, i, f):         # a small per-frame flutter of each ribbon (idle loops; wind-up and attack run on)
         amp = {"idle": 1.0, "windup": 1.2, "attack": 1.6}.get(name, 0)
         if not amp: return
