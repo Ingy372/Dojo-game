@@ -1,0 +1,232 @@
+{
+  "_note": "R-PROGRESSION-BETA PB-02. A Seal is a family; its rank is the number of signed-off techniques in it, and a rank's effects are those of every signed-off technique in the family. Names and words are placeholders until PB-06; numbers are S4's, tuned in PB-09. 'live': false = Coming later (no effect, cannot be equipped).",
+  "families": [
+    {
+      "id": "escape",
+      "name": "Escape",
+      "text": "Slip away from trouble. Blocks and Great Counters give you room.",
+      "icon": "placeholder",
+      "live": true,
+      "ranks": [
+        {
+          "technique": 1,
+          "name": "Off the Line",
+          "text": "A Great Counter adds two quick punches.",
+          "effects": [
+            {
+              "type": "counterHits",
+              "amount": 0.3,
+              "hits": 2
+            }
+          ]
+        },
+        {
+          "technique": 2,
+          "name": "Other Side",
+          "text": "A Block instantly recharges DASH, so you can get away.",
+          "effects": [
+            {
+              "type": "dashOnBlock"
+            }
+          ]
+        },
+        {
+          "technique": 4,
+          "name": "Drive Back",
+          "text": "A Great Counter pushes the attacker back.",
+          "effects": [
+            {
+              "type": "counterPush",
+              "amount": 1.5
+            }
+          ]
+        },
+        {
+          "technique": 15,
+          "name": "Slip and Double",
+          "text": "Off the Line adds a third punch, and the Great Counter window is a little longer.",
+          "effects": [
+            {
+              "type": "counterHits",
+              "amount": 0.3,
+              "hits": 1
+            },
+            {
+              "type": "counterWindow",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "counter",
+      "name": "Counter",
+      "text": "Make every Great Counter count for more.",
+      "icon": "placeholder",
+      "live": true,
+      "ranks": [
+        {
+          "technique": 3,
+          "name": "Spin Back Fist",
+          "text": "A Great Counter also hits enemies close by.",
+          "effects": [
+            {
+              "type": "rippleCounter",
+              "amount": 0.6,
+              "radius": 1.2
+            }
+          ]
+        },
+        {
+          "technique": 5,
+          "name": "Spin Elbow",
+          "text": "Spin Back Fist reaches farther and hits harder.",
+          "effects": [
+            {
+              "type": "rippleCounter",
+              "amount": 0.2,
+              "radius": 1.6
+            }
+          ]
+        },
+        {
+          "technique": 6,
+          "name": "Arm Wrap",
+          "text": "A Great Counter traps the attacker a little longer.",
+          "effects": [
+            {
+              "type": "staggerTicks",
+              "amount": 10
+            }
+          ]
+        },
+        {
+          "technique": 7,
+          "name": "Palm Heel",
+          "text": "Great Counter hits are stronger.",
+          "effects": [
+            {
+              "type": "counterStrength",
+              "amount": 0.5
+            }
+          ]
+        },
+        {
+          "technique": 10,
+          "name": "Grab and Strike",
+          "text": "Off-balance enemies take more damage, and each Great Counter restores a little Health.",
+          "effects": [
+            {
+              "type": "staggerBonus",
+              "amount": 0.15
+            },
+            {
+              "type": "healOnPerfect",
+              "amount": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guard",
+      "name": "Guard",
+      "text": "Blocks turn into a counter-attack.",
+      "icon": "placeholder",
+      "live": true,
+      "ranks": [
+        {
+          "technique": 8,
+          "name": "Block and Strike",
+          "text": "Blocks bounce part of the hit back at the attacker.",
+          "effects": [
+            {
+              "type": "blockReflect",
+              "amount": 0.2
+            }
+          ]
+        },
+        {
+          "technique": 9,
+          "name": "High Block Strike",
+          "text": "Blocks take less damage and bounce back more, and a bounced hit leaves the attacker off-balance.",
+          "effects": [
+            {
+              "type": "blockReflect",
+              "amount": 0.15
+            },
+            {
+              "type": "blockCut",
+              "amount": 0.1
+            },
+            {
+              "type": "reflectStaggers",
+              "amount": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "throw",
+      "name": "Throw",
+      "text": "Take the attacker to the ground. Coming later.",
+      "icon": "placeholder",
+      "live": false,
+      "ranks": [
+        {
+          "technique": 11,
+          "name": "Outside Reap",
+          "text": "A Great Counter tumbles a brute or swarmer to the ground for a moment.",
+          "effects": []
+        },
+        {
+          "technique": 12,
+          "name": "Reap and Finish",
+          "text": "Enemies you tumble take extra damage while they are on the ground.",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "disarm",
+      "name": "Disarm",
+      "text": "Take the sting out of the next attack.",
+      "icon": "placeholder",
+      "live": true,
+      "ranks": [
+        {
+          "technique": 13,
+          "name": "Kick the Weapon",
+          "text": "A Great Counter kicks the weapon aside, so their next hit is weaker.",
+          "effects": [
+            {
+              "type": "disarm",
+              "amount": 0.5
+            }
+          ]
+        },
+        {
+          "technique": 14,
+          "name": "Kick and Spin",
+          "text": "Your kick lasts longer: their next two hits are weaker.",
+          "effects": [
+            {
+              "type": "disarmAttacks",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lock",
+      "name": "Lock",
+      "text": "Hold the attacker still. Coming later.",
+      "icon": "placeholder",
+      "live": false,
+      "ranks": []
+    }
+  ]
+}

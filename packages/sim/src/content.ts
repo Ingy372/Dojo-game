@@ -30,6 +30,8 @@ export interface RawContent {
   gear: unknown;
   drops: unknown;
   abilities: unknown;
+  /** PB-02: content/abilities/seal-families.json. */
+  sealFamilies: unknown;
   dojoRoom: unknown;
   decorations: unknown;
   twists: unknown;
@@ -88,7 +90,7 @@ export function loadContent(raw: RawContent): Content {
     enemies,
     insights: loadInsights(raw.insights),
     loot,
-    abilities: loadAbilities(raw.abilities),
+    abilities: loadAbilities(raw.abilities, raw.sealFamilies),
     dojo,
     twists: loadTwists(raw.twists),
     elites,

@@ -19,6 +19,7 @@ export * from './abilities';
 export * from './training';
 export * from './progression';
 export * from './loadout';
+export * from './sealFamilies';
 export * from './rewards';
 export * from './goals';
 export * from './power';
