@@ -22,9 +22,9 @@
 **DECIDE:**
 1. **Goat colour.** The data colour is a pale `#d8d2c4`. A pale body does not read as a shadow creature, so the body is slate-blue and the pale colour is the horns and tuft. OK, or paler?
 2. **Goat horns.** Short, curled, cream, rounded. From the front they bunch up a little. Smaller or simpler?
-3. **Golem stones.** Five when full, one off per hit; the full set is on the 4-stone sprite. Should the game swap between the 5, 4 and 3-stone sprites (shown), and how many stones for each floor band?
+3. **Golem stones.** Five when full, one off per hit; the wind-up and attack are on the 4-stone sprite. Should the game swap between the 5, 4 and 3-stone sprites (shown), and how many stones for each floor band?
 4. **Roller tell colour.** The wind-up sprite carries a neutral white tell layer, tinted house purple (`#8a4fe6`) like the other dash-only tells, with '!!' and the lane drawn by the game. OK? The boulder is part of the sprite (it spins during the dash); the dash itself is the game moving him.
 5. **Roller headband.** Gold band with a knot. It is the only gold on him, so he reads as a porter. Keep, or plain? (In the S wind-up it floats a little.)
 6. **Frame sizes.** Goat and Roller use 160 px frames, the golem 128 px (80 px per tile all three). OK for the Programmer?
 
-**NEXT:** after your answers: full sets (move, hit, defeat "set free") for all three, the dash pose for the Roller, and the 4-stone golem sheets.
+**NEXT:** after your answers: full sets (move, hit, defeat "set free") for all three, the dash pose for the Roller, and the wind-up and attack sheets for the 5 and 3-stone golem.
