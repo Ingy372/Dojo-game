@@ -1076,3 +1076,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ### LOOT-B3-01: Ember Kitchens drops are live (2026-11-02)
 - Orange belt enemies (Spark Sprite, Doughling, Dough Blob, Ladle Lobber, Rolling Pin) now drop gear at the #431 rates; a run drops about as much as a belt 1 run (1.04x).
 - Test: `loot-b3-01` (10).
+### C430-FIXES: the Content Designer's #430 trio (2026-11-02)
+- Thunder Drum's name and bar no longer cover Virtue (or any action button) at 667x375.
+- `stationary: true` enemy flag; thunder-drum, sleepy-sentry and thorn-sprout use speed 0.
+- The sim models Bellows Puff's no-damage push (Hit slide, Block hold, wall stop, `push` event). A Puff room costs 0 Health.
+- Tests: `k31-boss-tag` (+3), `c430-stationary` (4), `c430-push` (5), `puff-push` balance report (gated). Shots in /workspace/shots/c430-fixes with `pass-fail.md`.
