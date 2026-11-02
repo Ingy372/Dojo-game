@@ -6,7 +6,7 @@ Written Nov 1, 2026 by the Researcher & Planner. Docs only. Every "exists" below
 
 - **Almost nothing exists yet for tiers 4-10.** One Green monster (Pebble Pal) has working art that Jay has not approved. All 10 Guardians have concept pictures only, waiting on Jay's final OK. There are no room kits above Orange. There are no Strike icons at all.
 - **Seal icons: I recommend 6 family medallions plus rank pips**, not 35 separate drawings. The old 10 Seal icons are samples for the old placeholder Seals.
-- This plan lists what each artist item must deliver. The items are R-G2B-33 to 45 on the board.
+- This plan lists what each artist item must deliver. The items are R-G2B-33 to 44 on the board. The unlock screen and Sensei's Trial art is PB-15 in `R-PROGRESSION-BETA.md`, so it is not repeated.
 
 ## What exists today
 
@@ -21,15 +21,15 @@ Written Nov 1, 2026 by the Researcher & Planner. Docs only. Every "exists" below
 | Dash-only warning | `dash-telegraph` (purple stripes with "!!") | Done. New tier shapes (wave lane, arc, ring, zig-zag) are not drawn. See item R-G2B-33 to 38. |
 | Padded-staff weapon | `enemy-padded-weapon` | Done. Needed for Bopper in Green and Blue. |
 | Kata icons | `kata-icons` (21 moves) | Not imported, waits on Jay. Katas are out of scope here. |
-| Unlock screen and Sensei's Trial art | none | The redesign puts both in the beta (Dec 15). |
+| Unlock screen and Sensei's Trial art | none | The redesign puts both in the beta (Dec 15). PB-15 owns it. |
 
 ## Seal icons (#1-10 and #16-40)
 
-**Count:** 35 techniques need an icon (10 + 25), plus #11-15 which R-G2B-03 already covers.
+**Count:** 35 techniques need an icon (10 + 25), plus #11-15 which R-G2B-03 and PB-07 cover.
 
 **Proposal: 6 family medallions plus rank pips.** The redesign's rule is "every self-defense sign-off shows on a Seal by its real name". The name does the job of telling techniques apart. The icon only needs to say which family it is and what rank it is.
 
-- 6 medallions: Counter, Guard, Escape, Disarm, Throw, Lock. Each has its own rim colour and one simple symbol, in the existing Seal style (round medallion plus one symbol, 128 x 128, thick 2 px outline, no text).
+- 6 medallions: Counter, Guard, Escape, Disarm, Throw, Lock. PB-07 in `R-PROGRESSION-BETA.md` already draws 5 of them (merged with R-G2B-03) plus a Lock silhouette. This plan adds the full Lock medallion and the pips. Each has its own rim colour and one simple symbol, in the existing Seal style (round medallion plus one symbol, 128 x 128, thick 2 px outline, no text).
 - A small row of rank pips under the symbol, drawn as game art (not baked into the medallion), so one medallion works for every rank. Ranks per family: Counter 1-9 (#1 is rank 1, #16 rank 8, #20 rank 9), Guard 1-4, Escape 1-6, Disarm 1-5, Throw 1-6, Lock 1-10 (counts from `R-G2B-seal-families-16-40.md`).
 - Phone check: the family must be readable at 48 pt, with a grey-scale check (colour is never the only cue).
 - The 10 existing sample icons stay as spare art until the family list is decided (Jay decides each family, R-G2B-22).
@@ -40,7 +40,7 @@ Written Nov 1, 2026 by the Researcher & Planner. Docs only. Every "exists" below
 
 ## Strike icons
 
-7 icons (Strikes #1-7), 128 x 128, in the Seals' medallion family or the Insight scroll family. R-G2B-03 already draws #2 Jumping Spins. The new item R-G2B-44 covers #1, #3, #4, #5, #6, #7. Strike #1 and #3 are beta. #4-7 are launch.
+7 icons (Strikes #1-7), 128 x 128. PB-07 draws the Strike glyph with the Jumping Spins icon (#2). R-G2B-44 covers #3-7 and checks #1. #3 is beta. #4-7 are launch.
 
 ## Enemies (28) and Guardians (7)
 
@@ -78,10 +78,10 @@ Each kit waits on the matching room item (R-G2B-25 to 27) for the room list and 
 
 ## Unlock screen and Sensei's Trial
 
-R-G2B-45 (Artist): the unlock screen (real technique name, new Strike or Seal rank, kid words) and the Sensei's Trial room look. The redesign says one room template and one screen, in the beta. The unlock text comes from the Content Writer. The build is R-G2B-46 (Programmer).
+Owned by PB-13, PB-14 and PB-15 in `R-PROGRESSION-BETA.md` (merged on main). Nothing to add here.
 
 ## Order I would do it in
 
-1. Beta first: Strike icons #1 and #3, family medallions, unlock screen and Trial art (R-G2B-43, 44, 45).
+1. Beta first: PB-07 (medallions and Strike glyph), then the pips and the #3 Strike icon (R-G2B-43, 44).
 2. Launch: Green enemy art (R-G2B-08), Guardian final art after Jay's OK, then tiers in belt order.
 3. Because there are 28 enemies and 7 Guardians with only one working picture, **art is the longest launch job**. If the dates are tight, the Manager might build tiers 4-6 first and keep 7-10 for after launch. That is Jay's call, not mine.

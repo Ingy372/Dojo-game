@@ -2,7 +2,7 @@
 
 **Status: Batch 1 (merged, PR #401) and Batch 2 (this file's second half).** Written Nov 1, 2026 by the Researcher & Planner. Docs only. No game code.
 
-**What this is.** Jay's content covers everything up to Brown/Black except katas. The board has run dry. This is the plan for turning that content into work. Batch 1 is the first 12 board items (R-G2B-01 to 12). Batch 2 is R-G2B-13 to R-G2B-46, with the long plans in the files linked below.
+**What this is.** Jay's content covers everything up to Brown/Black except katas. The board has run dry. This is the plan for turning that content into work. Batch 1 is the first 12 board items (R-G2B-01 to 12). Batch 2 is R-G2B-13 to R-G2B-44, with the long plans in the files linked below.
 
 **Plain words for Jay.** Most of the design is already written (the 40 seals, the 7 Strikes, the monster list, the 10 tower places). What is missing is the building: none of it is in the game yet. Batch 1 starts that, and it starts with the beta belts (White to Orange).
 
@@ -28,7 +28,7 @@ Jay's **Power & Progression Redesign** is now in the repo (`drafts/planning/powe
 - **S4-self-defense-powers.md is the #1-15 template** (already done). Butterfly Flow is Strike #3, Jumping Spins is #2 (confirmed).
 - **Kata powers ship in the beta, passive only.** Jay supplies the powers.
 - **After the beta:** Lock and Break Free, padded-staff enemies, Green and above content, activated kata powers, and the Injured and Pinned states. This plan treats Pinned and Injured as **cut until after launch**.
-- The loadout screen, the slot rules, the unlock screen and the Sensei's Trial room are in the redesign's beta table. This plan covers the art and a few small builds for them (R-G2B-43 to 46), not the loadout screen itself.
+- The loadout screen, the slot rules, the unlock screen and the Sensei's Trial room are in the redesign's beta table. The unlock screen and Sensei's Trial room have owners in `R-PROGRESSION-BETA.md` (PB-13 Programmer, PB-14 Content Designer, PB-15 Artist), so this plan has no items for them.
 
 Still open and not settled by the redesign: the seal family for each technique from #16 on (Jay decides, R-G2B-22), the Strike shapes' final numbers (the test bot sets them), and the Black belt Strikes #8-12 and kata powers (they wait on Jay).
 
@@ -37,11 +37,11 @@ Still open and not settled by the redesign: the seal family for each technique f
 | Item | What to change |
 |---|---|
 | R-G2B-07 | Says "5 floors plus the Stone Giant Guardian room". The Orange pattern it tells you to copy is **8 rooms per floor set** (7 rooms plus the Guardian). See `R-G2B-tower-tiers-4-10.md`. Rooms for all of tiers 4-10 are now R-G2B-25 to 27, and R-G2B-07 is the first of them. |
-| R-G2B-01 | The redesign says Jumping Spins can be built "from existing settings". The code has only one hit plus an optional chain hit, so three hits with their own strengths is a new setting. That is R-G2B-13. R-G2B-01 should wait on it, or use the one-hit-plus-chain setting as a stand-in. |
+| R-G2B-01 | The redesign says Jumping Spins can be built "from existing settings". The code has only one hit plus an optional chain hit, so three hits with their own strengths is a new setting. That is R-G2B-13. R-G2B-01 already waits on PB-01 to PB-03 (`R-PROGRESSION-BETA.md`) and should also wait on R-G2B-13, or use the one-hit-plus-chain setting as a stand-in. |
 | R-G2B-04, 09 | Throw and Lock states: numbers are now in `R-G2B-balance-check.md` section G. Throw passes. Lock needs a **30-tick ceiling**: four stacked Lock ranks make one Perfect Counter about 2.4 times today's. R-G2B-20 carries it. Guardians are never thrown, locked or pushed. |
 | R-G2B-08 | "Pebble Pal already exists": it is working art that Jay has not approved. |
-| R-G2B-10 | Seal #16 Low-High Strike probably becomes a Counter rank (Conflict 4 in `R-G2B-seal-families-16-40.md`). Write its text after R-G2B-22 answers it. #17-20 are fine to write now. |
-| R-G2B-11 | The rules list "Injured (#31-40, after launch)". Pinned and Injured are both cut until after launch, so the lesson lines teach Lock and Break Free only. |
+| R-G2B-10 | Seal #16 Low-High Strike probably becomes a Counter rank (Conflict 4 in `R-G2B-seal-families-16-40.md`). Write its text after R-G2B-22 answers it. #17-20 can be written now. |
+| R-G2B-11 | Merged already. Its Welcome Week file puts Pinned, Release and Injured after launch, which matches the redesign. Nothing to change. (The rules line below is fixed.) |
 | Rules, last line | "Batch 1 has no new numbers" stays true. Batch 2 numbers come only from `r-g2b-balance-check.py`. |
 
 ## Scope risk key
@@ -143,10 +143,8 @@ Long plans and tables: `R-G2B-strikes-4-7.md`, `R-G2B-seal-families-16-40.md`, `
 | **R-G2B-40** | Artist | Room kit for Green and Blue (like `tier3-ember-kitchens`). | `incoming-art/tower-rooms-t4-t5/` with previews for all 8 rooms of each. | R-G2B-25 | LAUNCH. MED. |
 | **R-G2B-41** | Artist | Room kit for Red and Red/Black. | `incoming-art/tower-rooms-t6-t7/`. | R-G2B-26 | LAUNCH. MED. |
 | **R-G2B-42** | Artist | Room kit for Brown, Brown/Black and Black. | `incoming-art/tower-rooms-t8-t10/`. | R-G2B-27 | LAUNCH. MED. |
-| **R-G2B-43** | Artist | **6 Seal family medallions** (Counter, Guard, Escape, Disarm, Throw, Lock) plus a rank-pip strip, in the Seal icon style. Replaces about 35 per-technique icons (Jay can overrule, see `R-G2B-art-plan.md`). | `incoming-art/icons-seals/` with 6 icons, the pips, a 48 pt phone preview and a grey-scale check. | R-G2B-22 (for the family list) | BETA for the families used in #1-15. LOW. |
-| **R-G2B-44** | Artist | Strike icons for #1, #3, #4, #5, #6, #7 (#2 is in R-G2B-03). | 6 icons, 128 x 128, in `incoming-art/icons-strikes/`. | nothing | #1 and #3: BETA. #4-7: LAUNCH. LOW. |
-| **R-G2B-45** | Artist | Art for the **unlock screen** and the **Sensei's Trial room**. | A mock of the screen and one room kit with previews. | nothing | BETA. MED. |
-| **R-G2B-46** | Programmer | Build the unlock screen and one Sensei's Trial room template (the new move is auto-equipped for that room; a small one-time reward, never a purchase). | A new unlock shows the screen once. The Trial room runs and rewards once. Tests pass. | R-G2B-45, R-G2B-16 | BETA. MED. |
+| **R-G2B-43** | Artist | **Finish the Seal family art for #16-40**: PB-07 already draws 5 family medallions and a Lock silhouette (it replaced R-G2B-03). This item adds the **full Lock medallion** and the **rank-pip strip** (rank 1 to 10 per family), so no per-technique icons are needed for #1-10 and #16-40 (Jay can overrule, see `R-G2B-art-plan.md`). | Files added to `incoming-art/icons-slots/` (or a sibling folder) with a 48 pt phone preview and a grey-scale check. | PB-07, R-G2B-22 (family list) | Pips for #1-15: BETA. Lock: LAUNCH. LOW. |
+| **R-G2B-44** | Artist | Strike icons for #3, #4, #5, #6, #7. PB-07 already draws the Strike glyph and Jumping Spins (#2); #1 Spin Kick needs checking against it. | 5 icons (plus #1 if PB-07 left it out), 128 x 128, in `incoming-art/icons-strikes/`. | PB-07 | #3: BETA. #4-7: LAUNCH. LOW. |
 
 ## Questions for Jay (none block Batch 1)
 

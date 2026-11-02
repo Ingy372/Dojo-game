@@ -17,7 +17,7 @@ Written Nov 1, 2026 by the Researcher & Planner. Docs only. Source of truth: `po
 
 ## Map of all 40 (proposed family and rank)
 
-Names, belts and S4 effects are copied from `S4-self-defense-powers.md` (not from memory). "Rank" counts within the family. The family column is **my proposal**: the redesign says Jay decides which family each technique belongs to. "Built?" is what the engine has (checked in `effects.ts`): **Yes** = an existing effect with a new number; **Small** = an existing effect plus a small condition (for example "only against padded-staff enemies"); **New** = one of the three allowed new mechanics; **Decision** = see the conflicts below.
+Names, belts and S4 effects are copied from `S4-self-defense-powers.md` (not from memory). The belt column is the belt the student is **wearing while learning** the technique (S4 rule): a student who has just earned Brown already holds #1-35 and learns #36-40 at Brown. "Rank" counts within the family. The family column is **my proposal**: the redesign says Jay decides which family each technique belongs to. "Built?" is what the engine has (checked in `effects.ts`): **Yes** = an existing effect with a new number; **Small** = an existing effect plus a small condition (for example "only against padded-staff enemies"); **New** = one of the three allowed new mechanics; **Decision** = see the conflicts below.
 
 | # | Belt | Technique | Family | Rank | S4 effect | Recast to fit the redesign | Built? |
 |---|---|---|---|---|---|---|---|

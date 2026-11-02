@@ -11,6 +11,8 @@ Written Nov 1, 2026 by the Researcher & Planner. Docs only, no game code. Plain 
 - Jay's redesign says each belt's floors should bring an enemy the **newest move** answers best. For Green to Brown I have named a room for each. For **Brown/Black and Black there is no new Seal or Strike in the plan** (Seals stop at #40 Brown, Black Strikes #8-12 are undefined). Those two tiers have nothing new to show off until Jay describes more. See "Gaps".
 - The numbers all passed the balance check except 25 cells, and there is a one-number fix (see `R-G2B-balance-check.md`).
 
+A note on belts: "New for the student" below means what the student learns while wearing that belt (the S4 rule). A student who arrives at a tier already holds everything from the belts before it.
+
 ## The room pattern (copied from the Ember Kitchens)
 
 | Room | Kind | Enemies | Rule it follows |
