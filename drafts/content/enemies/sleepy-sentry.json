@@ -1,13 +1,13 @@
 {
   "id": "sleepy-sentry",
   "name": "Sleepy Sentry",
-  "notes": "DRAFT for C13-1 (bestiary-plan.md). A drowsy stone statue. It yawns, then stomps a long purple stripe. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A drowsy stone statue. It yawns, then stomps a long purple stripe. Stats set in R-BAL-8 (#183). Speed 0.01 = stays put (loadEnemy needs a speed above 0). Distances in tiles, times in ticks (20 per second).",
   "color": "#8f9aa6",
   "maxHealth": 54,
   "power": 12,
   "guard": 10,
   "radius": 0.45,
-  "moveSpeedTilesPerSecond": 0.0,
+  "moveSpeedTilesPerSecond": 0.01,
   "sightRange": 10,
   "attack": {
     "name": "yawn stomp",
