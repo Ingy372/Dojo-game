@@ -1072,3 +1072,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Fake student seed: Green (24/28) now shows Level 30 and 3 worn Rares on the testing screen.
 - Gear sheet no longer covers the "Your Strike" row at 932x430; "Always with you" comments removed (Tester's low notes from #425).
 - Tests: `g2b12-fixes` (10). Shots in /workspace/shots/g2b12-fixes with `pass-fail.md`.
+
+### LOOT-B3-01: Ember Kitchens drops are live (2026-11-02)
+- Orange belt enemies (Spark Sprite, Doughling, Dough Blob, Ladle Lobber, Rolling Pin) now drop gear at the #431 rates; a run drops about as much as a belt 1 run (1.04x).
+- Test: `loot-b3-01` (10).
