@@ -1046,3 +1046,13 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Golden fixture re-captured on purpose (a null loadout has no Seals); see `docs/decisions.md`.
 - Gaps: no UI to equip Seals until PB-05; #16 and #20 are not in a family; Strikes are not seeded yet (PB-03).
 - Next: PB-03 (Strikes), PB-04 (kata powers), PB-05 (equip screen).
+
+
+## PB-03 — The Strike slot (2026-11-01)
+- New `content/abilities/strikes.json` and `strikes.ts`: Spin Kick (default, byte-for-byte today's Strike), Jumping Spins (3 hits), Butterfly Flow (one delayed hit). A Strike is earned with the kick combo of the same number. Old ids map by combo: `follow-up-kick` -> `spin-kick`, `quick-combo` -> `jumping-spins` (`legacyIds`).
+- The two always-on Strike upgrades are retired. `characterSetup` now returns `strike` (the equipped Strike or Spin Kick). The fight reads it; delayed hits queue and land on the same enemy.
+- `strikeSeeded` + `seedStrikeSlot` fill the Strike slot once for saves PB-02 seeded. `seedLoadoutV2` fills it for saves not yet seeded.
+- Golden fixture re-captured on purpose (setups only; every run identical).
+- Gaps: no equip UI until PB-05; Jumping Spins and Butterfly Flow numbers are placeholders for PB-09; no Trophy Case entry for combo 3.
+- Tests: `p-prog-d-strike` (22 new) plus fixes to five older tests.
+- Next: PB-04 (kata powers), PB-05 (equip screen), PB-09 (balance).

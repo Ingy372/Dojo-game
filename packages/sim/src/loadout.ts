@@ -7,6 +7,7 @@ import type { AbilityContent } from './abilities';
 import { SEAL_SLOTS_BY_TIER } from './config';
 import { emptyLoadout, type Loadout, type Profile } from './profile';
 import { unlockedFamilies } from './sealFamilies';
+import { earnedStrikes, resolveStrikeId } from './strikes';
 import type { TrainingState } from './training';
 
 /** How many Seal slots a belt tier has (tier 1 = white). A tier past the table uses its last row. */
@@ -29,9 +30,13 @@ export interface LoadoutEarned {
   kataPowers: readonly string[];
 }
 
-/** The Strike ids and Seal family ids a student has earned, oldest first. */
+/**
+ * The Strike ids and Seal family ids a student has earned, oldest first. Strikes (PB-03) are the
+ * ones in content/abilities/strikes.json whose kick combo is signed off; Spin Kick is the empty
+ * slot, so it is not listed.
+ */
 export function earnedPicks(training: TrainingState, abilities: AbilityContent): LoadoutEarned {
-  const strikes = training.abilities.filter((a) => a.kind === 'strike' && a.unlocked && a.perk).map((a) => a.perk!.id);
+  const strikes = earnedStrikes(training, abilities.strikeDefs);
   return { strikes, families: unlockedFamilies(training, abilities.families), kataPowers: [] };
 }
 
@@ -102,6 +107,7 @@ export function migrateLoadoutV2(loadout: Loadout | null, input: LoadoutSeedInpu
 
 /**
  * Runs `migrateLoadoutV2` on a profile once, guarded by `profile.loadoutV2`. Returns true if it ran.
+ * It also fills the Strike slot, so it marks `strikeSeeded` too.
  * The client calls it once at start (`seedLoadout` in game/student.ts), where the student's
  * earned families and Strikes are known.
  */
@@ -111,6 +117,23 @@ export function seedLoadoutV2(profile: Profile, input: LoadoutSeedInput): boolea
   profile.loadout = seeded.loadout;
   profile.showSlotNote = seeded.note;
   profile.loadoutV2 = true;
+  profile.strikeSeeded = true;
+  return true;
+}
+
+/**
+ * PB-03: fills the Strike slot, once, for a save that `seedLoadoutV2` already ran on (PB-02 saved
+ * it when no Strike could be earned yet), guarded by `profile.strikeSeeded`. The Strike is the
+ * newest one earned, so nobody is set back; a Strike already in the slot is kept; none earned
+ * leaves the slot empty (Spin Kick). Old Strike ids in the slot become their new ids. Returns true if
+ * it ran. The loadout stays null when there is nothing to put in it.
+ */
+export function seedStrikeSlot(profile: Profile, abilities: AbilityContent, earned: readonly string[]): boolean {
+  if (profile.strikeSeeded) return false;
+  const kept = profile.loadout ? resolveStrikeId(abilities.strikeDefs, profile.loadout.strike) : null;
+  const strike = kept !== null && earned.includes(kept) ? kept : earned[earned.length - 1] ?? null;
+  if (strike !== null) profile.loadout = { ...(profile.loadout ?? emptyLoadout()), strike };
+  profile.strikeSeeded = true;
   return true;
 }
 

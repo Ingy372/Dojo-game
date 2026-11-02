@@ -137,6 +137,11 @@ export interface Profile {
    * old saves that never played and picked nothing, start true; an older save starts false.
    */
   loadoutV2: boolean;
+  /**
+   * PB-03: true once the Strike slot has been filled (`seedStrikeSlot`, or `seedLoadoutV2` which
+   * fills it too). PB-02 saves seeded before any Strike could be earned start false so it runs once.
+   */
+  strikeSeeded: boolean;
   /** PB-01: true while the one-time "Your Seals now go in slots" note has not been dismissed. */
   showSlotNote: boolean;
   /**
@@ -250,6 +255,7 @@ export function newProfile(): Profile {
     loadout: null,
     loadoutV2: true,
     showSlotNote: false,
+    strikeSeeded: true,
     grandfatheredStances: [],
     stanceMigrated: true,
   };
@@ -278,11 +284,13 @@ export function migrateReadyStance(raw: { runsPlayed?: unknown; stanceMigrated?:
 /**
  * PB-01: the two slot-seed flags of a saved profile. An old save that has played, or has any
  * pick, starts with `loadoutV2` false so `seedLoadoutV2` runs once; one that never played and
- * picked nothing is already in the new shape. A missing `showSlotNote` is false.
+ * picked nothing is already in the new shape. A missing `showSlotNote` is false. PB-03:
+ * `strikeSeeded` is read the same way: a save from before it that has played or has a pick starts
+ * false (so `seedStrikeSlot` or `seedLoadoutV2` runs once); one that never played is already seeded.
  */
-function readLoadoutV2Flags(p: { loadoutV2?: unknown; showSlotNote?: unknown; runsPlayed?: unknown; loadout?: unknown }): Pick<Profile, 'loadoutV2' | 'showSlotNote'> {
+function readLoadoutV2Flags(p: { loadoutV2?: unknown; showSlotNote?: unknown; strikeSeeded?: unknown; runsPlayed?: unknown; loadout?: unknown }): Pick<Profile, 'loadoutV2' | 'showSlotNote' | 'strikeSeeded'> {
   const fresh = !(typeof p.runsPlayed === 'number' && p.runsPlayed > 0) && readLoadout(p.loadout) === null;
-  return { loadoutV2: typeof p.loadoutV2 === 'boolean' ? p.loadoutV2 : fresh, showSlotNote: p.showSlotNote === true };
+  return { loadoutV2: typeof p.loadoutV2 === 'boolean' ? p.loadoutV2 : fresh, showSlotNote: p.showSlotNote === true, strikeSeeded: typeof p.strikeSeeded === 'boolean' ? p.strikeSeeded : fresh };
 }
 
 /** Reads a saved profile, falling back to a fresh one if it's missing or damaged. */
