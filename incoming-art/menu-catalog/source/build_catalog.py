@@ -2,8 +2,8 @@
 Three images, all drawn by script (Pillow + numpy):
   python3 incoming-art/menu-catalog/source/build_catalog.py
 Needs PR #412 merged (it imports incoming-art/tools/board_ui_kit.py, the warm Board look).
-The Seal medallions are PB-07 (PR #419): seal_icons.py and toon.py are copied next to this file so the
-sample builds without #419. Real names and dojo words come from the repo docs (see README, "Where the words come from").
+The Seal medallions are PB-07 (PR #419, final v3): seal_icons.py and toon.py are copied next to this file so the
+sample builds without #419. make_tab_icons.py is the #412 final tab icons, copied for the same reason. Real names and dojo words come from the repo docs (see README, "Where the words come from").
 Words marked PLACEHOLDER are not in the docs yet; they are listed under DECIDE in DELIVERY_NOTE.md."""
 import os, sys, json, math
 import numpy as np
@@ -20,6 +20,7 @@ from board_ui_kit import K, M, Screen, font, spr, sized, tint, INK, INK_SOFT, CR
 import mat
 from mat import S
 import seal_icons as si
+import moves_text as mt
 
 PV = os.path.join(ROOT, 'preview')
 os.makedirs(PV, exist_ok=True)
@@ -31,13 +32,21 @@ RANK = {}                                           # self-defense number -> (fa
 for fam in TEXTS['families']:
     for r in fam['ranks']:
         RANK[r['technique']] = (fam['id'], r['name'], r['text'])
-BELT_OF = {**{n: 'White' for n in range(1, 6)}, **{n: 'Yellow' for n in range(6, 11)}, **{n: 'Orange' for n in range(11, 16)}}
-# docs/self-defense.md, rows 3 and 8: Jay's words for the "In the dojo:" line (lightly joined, not rewritten)
-DOJO = {
-    3: dict(attack='a hook punch', steps=['Step across the center line with an inside block.', 'Spin.', 'Back fist!'],
-            line='Against a hook punch: step across the center line with an inside block, spin, back fist.',
-            result='The attack is turned aside, and you strike from the spin.'),
-}
+BELTS5 = ['White', 'Yellow', 'Orange', 'Green', 'Blue', 'Red', 'Red/Black', 'Brown']   # 5 moves per belt, #1-40 (docs/self-defense.md)
+BELT_OF = {n: BELTS5[(n - 1) // 5] for n in range(1, 41)}
+MOVES = mt.parse()                                   # Jay's table, docs/self-defense.md
+PLACEHOLDER_TXT = 'Not written yet'                  # PLACEHOLDER wording for a move whose words Jay has not given
+
+
+def dojo_of(n):
+    """Jay's exact words for move n: short line (= the attack), numbered steps, result. Nothing is reworded."""
+    m = MOVES[n]
+    steps, review = mt.split_steps(m['does'])
+    if not m['stated']:
+        return dict(short=None, attack=None, steps=[], result=m['result'], review=False)
+    return dict(short=m['attack'], attack=m['attack'], steps=steps, result=m['result'], review=review)
+
+
 RIM = dict(si.RIMS)
 RIM_NAME = {'counter': 'COUNTER', 'escape': 'ESCAPE', 'guard': 'GUARD', 'disarm': 'DISARM', 'throw': 'THROW',
             'strike': 'STRIKE', 'kata': 'KATA'}
@@ -93,6 +102,13 @@ def tri(sc, cx, cy, size, col, left=False):
     pts = [(x + s * .5, y - s * .6), (x + s * .5, y + s * .6), (x - s * .6, y)] if left else \
           [(x - s * .5, y - s * .6), (x - s * .5, y + s * .6), (x + s * .6, y)]
     d.polygon(pts, fill=col)
+
+
+def tri_down(sc, cx, cy, size, col):
+    d = ImageDraw.Draw(sc.img)
+    q = size * K
+    x, y = cx * K, cy * K
+    d.polygon([(x - q, y - q * .5), (x + q, y - q * .5), (x, y + q * .7)], fill=col)
 
 
 def levelbar(sc, bx, y, bw, frac):
@@ -189,19 +205,75 @@ def ink_on(col):
 
 
 # ------------------------------------------------------------------ the big card (front and back)
+# LAYOUT: every number the game needs to draw the text itself, in card points (card = 250 x 396, origin = top-left of the
+# visible card, not of the file). export_catalog.py writes this into the manifest.
+CW, CH = 250, 396
+BWD = 6                                              # frame width
+LAYOUT = dict(
+    card=[CW, CH],
+    front=dict(
+        ribbonRect=[10, 14, 124, 24], ribbonText=dict(at=[20, 26], anchor='lm', size=12.5, weight='ExtraBold'),
+        beltText=dict(at=[232, 26], anchor='rm', size=12, weight='ExtraBold', color='#6e4a2e'),
+        medallion=dict(center=[125, 112], size=124), stageDisc=dict(center=[125, 112], radius=74),
+        bigName=dict(at=[125, 204], anchor='mm', size=27, weight='ExtraBold', maxWidth=218, color='#462a16'),
+        gameName=dict(at=[125, 229], anchor='mm', size=16.5, weight='ExtraBold', maxWidth=218, colorRule='family rim darkened 42%'),
+        effect=dict(at=[125, 252], anchor='mm', size=12.5, weight='SemiBold', lineHeight=16, maxLines=2, maxWidth=224, color='#6e4a2e'),
+        inset=dict(rect=[14, 288, 222, 92], sprite='menu2 panel-inset (9-slice), or card/inset-placeholder when the words are not written'),
+        insetLabel=dict(at=[26, 304], anchor='lm', size=12.5, weight='ExtraBold', colorRule='family rim darkened 45%'),
+        shortLine=dict(at=[26, 330], anchor='lm', size=14, weight='Bold', lineHeight=17, maxLines=3, maxWidth=198, color='#462a16'),
+        flipChip=dict(rect=[124, 293, 104, 22], text=dict(at=[166, 305], anchor='mm', size=11.5, weight='ExtraBold', color='#462a16'))),
+    back=dict(
+        ribbonRect=[10, 14, 124, 24], ribbonText=dict(at=[20, 26], anchor='lm', size=12.5, weight='ExtraBold'),
+        medallion=dict(center=[44, 80], size=56),
+        bigName=dict(at=[80, 70], anchor='lm', size=19, weight='ExtraBold', maxWidth=152, color='#462a16'),
+        gameName=dict(at=[80, 92], anchor='lm', size=13.5, weight='ExtraBold', maxWidth=152, colorRule='family rim darkened 42%'),
+        startsLabel=dict(at=[22, 124], anchor='lm', size=11, weight='ExtraBold', color='#6e4a2e'),
+        attack=dict(at=[22, 142], anchor='lm', size=15, weight='ExtraBold', maxWidth=206, color='#462a16'),
+        stepsArea=dict(rect=[16, 154, 218, 136], badge=dict(size=[20, 20], center_x=32), placeholderRect=[14, 158, 222, 126], rowRule='row height = lines x (size x 1.16) + 5, at least 22', text=dict(x=50, anchor='lm', maxWidth=184, weight='Bold', color='#462a16',
+                       sizeMax=13, sizeMin=12, note='shrink from 13 to 12 pt to fit; if it still does not fit, scroll this area (moves with 5+ long steps)')),
+        inset=dict(rect=[14, 296, 222, 84]),
+        insetLabel=dict(at=[26, 311], anchor='lm', size=12.5, weight='ExtraBold', colorRule='family rim darkened 45%'),
+        resultLines=dict(at=[26, 331], anchor='lm', size=12.5, weight='Bold', lineHeight=15.5, maxLines=3, maxWidth=198, color='#462a16')))
+
+
+def placeholder_inset(w, h):
+    """the paper inset with a dashed tan outline: the words for this move are not written yet. w x h points, at K."""
+    im = sized('panel-inset', w, h).copy()
+    d = ImageDraw.Draw(im)
+    col = (150, 112, 70, 255)
+    x0, y0, x1, y1 = 5 * K, 5 * K, im.width - 5 * K, im.height - 5 * K
+    dash, gap = 7 * K, 5 * K
+    for (ax, ay, bx_, by_) in ((x0, y0, x1, y0), (x0, y1, x1, y1)):
+        t = ax
+        while t < bx_:
+            d.line([(t, ay), (min(t + dash, bx_), by_)], fill=col, width=int(1.6 * K))
+            t += dash + gap
+    for (ax, ay, bx_, by_) in ((x0, y0, x0, y1), (x1, y0, x1, y1)):
+        t = ay
+        while t < by_:
+            d.line([(ax, t), (bx_, min(t + dash, by_))], fill=col, width=int(1.6 * K))
+            t += dash + gap
+    return im
+
+
+def dashed_inset(sc, x, y, w, h, rim):
+    """PLACEHOLDER panel: the paper inset with a dashed outline (the words are not written yet)."""
+    sc.put(placeholder_inset(int(w), int(h)), x, y)
+
+
 def card_front(sc, x, y, w, d):
-    """d: fam, ribbon, belt, big, game, effect, dojo, num (placeholder medallion number)."""
+    """d: fam, ribbon, belt, big, game, effect, short (Jay's short line, or None = not written yet), num."""
     s = w / 250.0
     h = 396 * s
+    L = LAYOUT['front']
     rim = RIM[d['fam']]
     bw = 6 * s
     put_piece(sc, frame_piece(int(w), int(h), rim, bw, 16 * s), x, y)
-    rw, rh = 124 * s, 24 * s
-    rx, ry = x + bw + 4 * s, y + bw + 8 * s
-    put_piece(sc, ku.ribbon(int(rw), int(rh), rim), rx, ry)
+    rx, ry, rw, rh = [v * s for v in L['ribbonRect']]
+    put_piece(sc, ku.ribbon(int(rw), int(rh), rim), x + rx, y + ry)
     rc = ink_on(rim)
-    label(sc, rx + 10 * s, ry + rh / 2, d['ribbon'], 12.5 * s, rc, 'lm', 'ExtraBold', None if rc == INK else darken(rim, .55))
-    label(sc, x + w - bw - 12 * s, ry + rh / 2, d['belt'], 12 * s, INK_SOFT, 'rm', 'ExtraBold')
+    label(sc, x + rx + 10 * s, y + ry + rh / 2, d['ribbon'], 12.5 * s, rc, 'lm', 'ExtraBold', None if rc == INK else darken(rim, .55))
+    label(sc, x + w - bw - 12 * s, y + ry + rh / 2, d['belt'], 12 * s, INK_SOFT, 'rm', 'ExtraBold')
     cx, cy, r = x + w / 2, y + 112 * s, 66 * s
     stage_disc(sc, cx, cy, r + 8 * s, rim)
     put_medallion(sc, medallion_img(d['fam'], d.get('num')), cx, cy, 2 * r - 8 * s)
@@ -210,44 +282,105 @@ def card_front(sc, x, y, w, d):
     ey = y + 252 * s
     for i, ln in enumerate(wrap(d['effect'], 12.5 * s, 'SemiBold', w - 2 * bw - 26 * s)[:2]):
         label(sc, cx, ey + i * 16 * s, ln, 12.5 * s, INK_SOFT, 'mm', 'SemiBold')
-    bx, by, bwid, bh = x + bw + 8 * s, y + 288 * s, w - 2 * bw - 16 * s, 92 * s
-    sc.put(sized('panel-inset', int(bwid), int(bh)), bx, by)
-    label(sc, bx + 12 * s, by + 15 * s, 'In the dojo:', 12.5 * s, darken(rim, .45), 'lm', 'ExtraBold')
-    for i, ln in enumerate(wrap(d['dojo'], 12.5 * s, 'Bold', bwid - 24 * s)[:4]):
-        label(sc, bx + 12 * s, by + 33 * s + i * 15.5 * s, ln, 12.5 * s, INK, 'lm', 'Bold')
+    bx, by, bwid, bh = [v * s for v in L['inset']['rect']]
+    bx, by = x + bx, y + by
+    if d.get('short'):
+        sc.put(sized('panel-inset', int(bwid), int(bh)), bx, by)
+        label(sc, bx + 12 * s, by + 16 * s, 'In the dojo:', 12.5 * s, darken(rim, .45), 'lm', 'ExtraBold')
+        for i, ln in enumerate(wrap(d['short'], 14 * s, 'Bold', 198 * s)[:3]):
+            label(sc, bx + 12 * s, by + 42 * s + i * 17 * s, ln, 14 * s, INK, 'lm', 'Bold')
+        fx, fy, fw, fh = [v * s for v in L['flipChip']['rect']]
+        put_piece(sc, flip_chip(int(fw), int(fh)), x + fx, y + fy)
+        label(sc, x + fx + fw * .40, y + fy + fh / 2 + 1 * s, 'Flip for steps', 11.5 * s, INK, 'mm', 'ExtraBold')
+    else:
+        dashed_inset(sc, bx, by, bwid, bh, rim)
+        label(sc, bx + 12 * s, by + 16 * s, 'In the dojo:', 12.5 * s, darken(rim, .45), 'lm', 'ExtraBold')
+        label(sc, bx + bwid / 2, by + 52 * s, '[PLACEHOLDER]', 11 * s, INK_SOFT, 'mm', 'ExtraBold')
+        label(sc, bx + bwid / 2, by + 70 * s, PLACEHOLDER_TXT, 14 * s, INK_SOFT, 'mm', 'Bold')
     return h
+
+
+def fit_steps(steps, area_w, area_h, smax=13, smin=12):
+    """size and layout for the numbered steps: shrink smax -> smin until they fit. Returns (size, [(lines, pitch)], fits)."""
+    for sz in [smax - i * .5 for i in range(int((smax - smin) / .5) + 1)]:
+        rows, tot = [], 0
+        lh = sz * 1.16
+        for st in steps:
+            lines = wrap(st, sz, 'Bold', area_w)
+            hh = max(22, len(lines) * lh + 5)
+            rows.append((lines, hh))
+            tot += hh
+        if tot <= area_h:
+            return sz, rows, True
+    return smin, rows, False
 
 
 def card_back(sc, x, y, w, d, steps, attack, result):
     s = w / 250.0
     h = 396 * s
+    L = LAYOUT['back']
     rim = RIM[d['fam']]
     bw = 6 * s
     put_piece(sc, frame_piece(int(w), int(h), rim, bw, 16 * s, seed=27), x, y)
-    rw, rh = 124 * s, 24 * s
-    rx, ry = x + bw + 4 * s, y + bw + 8 * s
-    put_piece(sc, ku.ribbon(int(rw), int(rh), rim), rx, ry)
+    rx, ry, rw, rh = [v * s for v in L['ribbonRect']]
+    put_piece(sc, ku.ribbon(int(rw), int(rh), rim), x + rx, y + ry)
     rc = ink_on(rim)
-    label(sc, rx + 10 * s, ry + rh / 2, 'HOW IT GOES', 12.5 * s, rc, 'lm', 'ExtraBold', None if rc == INK else darken(rim, .55))
-    put_medallion(sc, medallion_img(d['fam'], d.get('num')), x + 46 * s, y + 80 * s, 56 * s)
-    label(sc, x + 82 * s, y + 70 * s, d['big'], 19 * s, INK, 'lm', 'ExtraBold')
-    label(sc, x + 82 * s, y + 92 * s, d['game'], 13.5 * s, darken(rim, .42), 'lm', 'ExtraBold')
-    label(sc, x + 22 * s, y + 130 * s, 'IT STARTS WITH', 11 * s, INK_SOFT, 'lm', 'ExtraBold')
-    label(sc, x + 22 * s, y + 148 * s, attack[0].upper() + attack[1:], 15 * s, INK, 'lm', 'ExtraBold')
-    yy = y + 176 * s
-    for i, st in enumerate(steps):
-        lines = wrap(st, 13 * s, 'Bold', w - 94 * s)
-        put_piece(sc, ku.new_dot(int(10 * s) or 10), x + 22 * s, yy - 1 * s)
-        label(sc, x + 22 * s + 10 * s, yy + 9 * s, str(i + 1), 12 * s, INK, 'mm', 'ExtraBold')
-        for j, ln in enumerate(lines):
-            label(sc, x + 54 * s, yy + 9 * s + j * 16 * s, ln, 13 * s, INK, 'lm', 'Bold')
-        yy += max(34 * s, len(lines) * 16 * s + 16 * s)
-    bx, by, bwid, bh = x + bw + 8 * s, y + 296 * s, w - 2 * bw - 16 * s, 84 * s
-    sc.put(sized('panel-inset', int(bwid), int(bh)), bx, by)
-    label(sc, bx + 12 * s, by + 15 * s, 'What happens:', 12.5 * s, darken(rim, .45), 'lm', 'ExtraBold')
-    for i, ln in enumerate(wrap(result, 12.5 * s, 'Bold', bwid - 24 * s)[:3]):
-        label(sc, bx + 12 * s, by + 34 * s + i * 15.5 * s, ln, 12.5 * s, INK, 'lm', 'Bold')
-    return h
+    label(sc, x + rx + 10 * s, y + ry + rh / 2, 'HOW IT GOES', 12.5 * s, rc, 'lm', 'ExtraBold', None if rc == INK else darken(rim, .55))
+    put_medallion(sc, medallion_img(d['fam'], d.get('num')), x + 44 * s, y + 80 * s, 56 * s)
+    fit_label_l(sc, x + 80 * s, y + 70 * s, d['big'], 19 * s, 152 * s, INK)
+    fit_label_l(sc, x + 80 * s, y + 92 * s, d['game'], 13.5 * s, 152 * s, darken(rim, .42))
+    if attack:
+        label(sc, x + 22 * s, y + 124 * s, 'IT STARTS WITH', 11 * s, INK_SOFT, 'lm', 'ExtraBold')
+        label(sc, x + 22 * s, y + 142 * s, attack[0].upper() + attack[1:], 15 * s, INK, 'lm', 'ExtraBold')
+    ax, ay, aw, ah = [v * s for v in L['stepsArea']['rect']]
+    fits = True
+    if steps:
+        sz, rows, fits = fit_steps(steps, 184 * s, ah, 13 * s, 12 * s)
+        yy = y + ay
+        used = 0
+        for i, (lines, hh) in enumerate(rows):
+            if used + hh > ah:                       # does not fit: the game scrolls this area. Sample shows a 'more' chevron.
+                tri_down(sc, x + 125 * s, yy - 3 * s, 5 * s, INK_SOFT)
+                break
+            used += hh
+            put_piece(sc, ku.new_dot(10), x + 22 * s, yy + 1 * s)
+            label(sc, x + 32 * s, yy + 11 * s, str(i + 1), 12 * s, INK, 'mm', 'ExtraBold')
+            lh = sz * 1.16
+            oy = yy + 11 * s
+            for j, ln in enumerate(lines):
+                label(sc, x + 50 * s, oy + j * lh, ln, sz, INK, 'lm', 'Bold')
+            yy += hh
+    else:
+        px_, py_, pw_, ph_ = x + 14 * s, y + 158 * s, 222 * s, 126 * s
+        dashed_inset(sc, px_, py_, pw_, ph_, rim)
+        label(sc, px_ + pw_ / 2, py_ + ph_ / 2 - 10 * s, '[PLACEHOLDER]', 11 * s, INK_SOFT, 'mm', 'ExtraBold')
+        label(sc, px_ + pw_ / 2, py_ + ph_ / 2 + 10 * s, PLACEHOLDER_TXT, 14 * s, INK_SOFT, 'mm', 'Bold')
+    bx, by, bwid, bh = [v * s for v in L['inset']['rect']]
+    sc.put(sized('panel-inset', int(bwid), int(bh)), x + bx, y + by)
+    label(sc, x + bx + 12 * s, y + by + 15 * s, 'What happens:', 12.5 * s, darken(rim, .45), 'lm', 'ExtraBold')
+    for i, ln in enumerate(wrap(result, 12.5 * s, 'Bold', 198 * s)[:3]):
+        label(sc, x + bx + 12 * s, y + by + 35 * s + i * 15.5 * s, ln, 12.5 * s, INK, 'lm', 'Bold')
+    return h if fits else -h
+
+
+def fit_label_l(sc, x, y, s_, sz, maxw, col):
+    while sz > 8 and font(sz, 'ExtraBold').getlength(s_) > maxw * K:
+        sz -= .5
+    label(sc, x, y, s_, sz, col, 'lm', 'ExtraBold')
+
+
+def flip_chip(w, h):
+    """a small gold chip for 'Flip for steps' (blank; text drawn by the game) with a play-arrow at the right end."""
+    img = ku.cv(w, h)
+    m = ku.box(w, h, h / 2)
+    mat.drop_shadow(img, m, 1.2, 1.6, .4)
+    mat.tex(img, mat.vgrad(*img.size, mat.GOLD_L, mat.GOLD), m)
+    mat.bevel(img, m, 1, .8, hi_a=.5, lo_a=.3)
+    mat.outline(img, m, mat.GOLD_D, 1.2)
+    d = ImageDraw.Draw(img)
+    cx, cy = S(M + w - 13), S(M + h / 2)
+    d.polygon([(cx - S(3), cy - S(4.2)), (cx - S(3), cy + S(4.2)), (cx + S(4), cy)], fill=(70, 42, 22, 255))
+    return ku.out(img, w, h)
 
 
 # ------------------------------------------------------------------ grid cards: collected / new / locked
@@ -275,7 +408,8 @@ def mini(sc, x, y, w, h, d, state='collected'):
 def sd_card(n, **kw):
     fam, name, eff = RANK[n]
     belt = BELT_OF[n] + ' Belt'
-    return dict(fam=fam, game=name, effect=eff, belt=belt, big='Defense #%d' % n, n=n, num=n, **kw)
+    dj = dojo_of(n)
+    return dict(fam=fam, game=name, effect=eff, belt=belt, big='Defense #%d' % n, n=n, num=n, short=dj['short'], **kw)
 
 
 # ------------------------------------------------------------------ the Board chrome (same as the B2 samples, #412)
@@ -367,9 +501,9 @@ def screen_catalog():
 def kind_cards():
     strike = dict(fam='strike', game='Spin Kick', big='Kick Combo 1', belt='White Belt',
                   effect=[s for s in TEXTS['strikes'] if s['combo'] == 1][0]['text'], n=101,
-                  dojo='Front kick, front kick, inside kick, outside kick, spinning outside kick.')
+                  short='Front kick, front kick, inside kick, outside kick, spinning outside kick.')
     kata = dict(fam='kata', game='Rooted Form', big='Basic Form 1', belt='White Belt', n=102,
-                effect='Your first form.', dojo='[PLACEHOLDER: Jay has not described the forms yet.]')
+                effect='Your first form.', short=None)
     return strike, kata
 
 
@@ -379,7 +513,6 @@ def sample_card():
     d3 = sd_card(3)
     d3['ribbon'] = 'COUNTER'
     d3['big'] = 'Self-Defense #3'
-    d3['dojo'] = DOJO[3]['line']
     card_front(sc, 42, 16, 250, d3)
     X = 330
     label(sc, X, 30, 'One card for every move you learn in class', 17, CREAM, 'lm', 'ExtraBold', SHADOW_TXT)
@@ -430,11 +563,11 @@ def screen_detail():
     d3 = sd_card(3)
     d3['ribbon'] = 'COUNTER'
     d3['big'] = 'Self-Defense #3'
-    d3['dojo'] = DOJO[3]['line']
     w = 214
     x0 = (844 - (2 * w + 96)) / 2
     card_front(sc, x0, 24, w, d3)
-    card_back(sc, x0 + w + 96, 24, w, d3, DOJO[3]['steps'], DOJO[3]['attack'], DOJO[3]['result'])
+    dj3 = dojo_of(3)
+    card_back(sc, x0 + w + 96, 24, w, d3, dj3['steps'], dj3['attack'], dj3['result'])
     flip_arrow(sc, x0 + w + 48, 168)
     # browse buttons + close
     for bx, left in ((48, True), (844 - 48 - 52, False)):
@@ -446,9 +579,36 @@ def screen_detail():
     return sc
 
 
+# ------------------------------------------------------------------ sample d: long words and a not-written-yet card
+def screen_text_test():
+    sc = Screen(844, 390)
+    label(sc, 22, 20, 'The game draws these words. Long moves, and a move that is not written yet', 15, CREAM, 'lm', 'ExtraBold', SHADOW_TXT)
+    w = 196
+    s = w / 250.0
+    y = 38
+    gap = 20
+    x0 = (844 - (4 * w + 3 * gap)) / 2
+    strike, kata = kind_cards()
+    strike['ribbon'], kata['ribbon'] = 'STRIKE', 'KATA'
+    strike['big'], kata['big'] = 'Kick Combo 1', 'Basic Form 1'
+    card_front(sc, x0, y, w, strike)
+    card_front(sc, x0 + (w + gap), y, w, kata)
+    for i, n in enumerate((6, 20)):
+        d = sd_card(n) if n in RANK else dict(sd_card(6), game='(game name not set yet)', big='Defense #%d' % n, n=n, num=n)
+        d['ribbon'] = RIM_NAME[d['fam']]
+        d['big'] = 'Self-Defense #%d' % n
+        dj = dojo_of(n)
+        card_back(sc, x0 + (2 + i) * (w + gap), y, w, d, dj['steps'], dj['attack'], dj['result'])
+    cap = ['Kick Combo: the list is the line', 'Form: PLACEHOLDER', '#6: five steps, the list scrolls', '#20: six steps, the list scrolls']
+    for i, c in enumerate(cap):
+        fit_label(sc, x0 + i * (w + gap) + w / 2, 372, c, 12, w + 10, CREAM, 'ExtraBold')
+    return sc
+
+
 if __name__ == '__main__':
     screen_card = sample_card()
     screen_card.save(os.path.join(PV, '01-move-card-large'))
     screen_catalog().save(os.path.join(PV, '02-catalog-grid-844x390'))
     screen_detail().save(os.path.join(PV, '03-card-detail-flip-844x390'))
+    screen_text_test().save(os.path.join(PV, '04-long-words-and-placeholder-844x390'))
     print('ok')

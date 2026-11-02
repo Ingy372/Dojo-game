@@ -37,15 +37,12 @@ def medallion(rim, face=CREAM, face_dish=CREAM_S):
 
 
 def fist(a, cx, cy, s, ang, clip=None):
-    """a clenched fist seen from the back / side. Knuckles face along ang (radians, 0 = right).
-    Four stacked finger bands at the front, thumb across them, flat back of the hand behind."""
+    """a clean MITTEN fist (v3): one chunky rounded blob with a thumb lying across the front. No finger lines.
+    Knuckles face along ang (radians, 0 = right). s is the fist's height in U units."""
     def L(pts):
         return rot(pts, cx, cy, ang)
-    a.shape(poly(L(rrect_pts(-.22 * s, 0, .62 * s, .98 * s, .2 * s))), SKIN, SKIN_S, lighten(SKIN, .4), ow=2.6, band=3.2, clip=clip)
-    for i in range(4):
-        y = -.37 * s + i * .245 * s
-        a.shape(poly(L(rrect_pts(.2 * s, y + .02 * s, .5 * s, .26 * s, .12 * s))), SKIN, SKIN_S, lighten(SKIN, .4), ow=2.0, band=2.2, clip=clip)
-    a.shape(poly(L(rrect_pts(.05 * s, .4 * s, .6 * s, .2 * s, .1 * s))), SKIN, SKIN_S, lighten(SKIN, .45), ow=2.2, band=2.2, clip=clip)
+    a.shape(poly(L(rrect_pts(0, 0, .98 * s, .92 * s, .36 * s))), SKIN, SKIN_S, lighten(SKIN, .4), ow=2.8, band=3.4, clip=clip)
+    a.shape(poly(L(rrect_pts(.2 * s, .2 * s, .56 * s, .3 * s, .15 * s, .18))), SKIN, SKIN_S, lighten(SKIN, .45), ow=2.4, band=2.2, clip=clip)
 
 
 def sleeve(a, p0, p1, r0, r1, clip=None):
@@ -119,41 +116,53 @@ def counter(rim=RIMS['counter']):
 
 # ------------------------------------------------------------------ GUARD: cross block
 def guard(rim=RIMS['guard']):
+    """v3: a friendly 'guard up' pose, front view: big smiling head, round gi body, BOTH forearms raised in front of the chest with chunky
+    mitten fists beside the cheeks (like a boxer's guard), plus a soft blue shield arc in front. No crossed arms, no finger lines."""
     a = medallion(rim)
     c = face_clip()
-    gi_torso(a, 128, 120, 104, 110, clip=c, belt_y=196)
-    # gi collar V
-    a.shape(poly([(110, 118), (146, 118), (128, 154)]), SKIN, SKIN_S, None, ow=2.4, band=3, clip=c)
-    a.line([(110, 118), (128, 154), (146, 118)], (210, 208, 226), 4, clip=c)
-    limb(a, (128, 104), (128, 124), 10, 10, clip=c)
-    head_front(a, 128, 84, 25, clip=c)
-    # two forearms crossed in front of the chest, fists up beside the face, backs of the wrists out
-    for sgn in (1, -1):
-        ex, ey = 128 - 50 * sgn, 184      # elbow
-        wx, wy = 128 + 34 * sgn, 112      # wrist
-        limb(a, (ex, ey), (wx, wy), 11, 8.5, clip=c)
-        sleeve(a, (128 - 40 * sgn, 134), (ex, ey), 15, 14, clip=c)
-        sleeve(a, (ex, ey), (128 - 26 * sgn, 166), 14, 13, clip=c)
-        ang = math.atan2(wy - ey, wx - ex)
-        fist(a, wx + 13 * math.cos(ang), wy + 13 * math.sin(ang), 30, ang, clip=c)
+    a.shape(poly(chaikin([(64, 112), (192, 112), (190, 170), (128, 226), (66, 170)], 3)), lighten(BLUE, .3), BLUE, lighten(BLUE, .6), ow=3.0, band=5, clip=c)   # soft shield behind
+    gi_torso(a, 128, 128, 88, 100, clip=c, belt_y=194)
+    limb(a, (128, 108), (128, 126), 10, 10, clip=c)
+    # head: round, friendly, rosy cheeks
+    a.shape(circ(128, 88, 30), SKIN, SKIN_S, lighten(SKIN, .4), ow=3, band=4, clip=c)
+    hair = [(97, 92)] + arc_pts(128, 88, 32, math.pi, 2 * math.pi, 16) + [(159, 92), (150, 76), (128, 70), (106, 76)]
+    a.shape(poly(hair), HAIR, HAIR_S, lighten(HAIR, .25), ow=2.6, band=3.5, clip=c)
+    for dx in (-11, 11):
+        a.shape(circ(128 + dx, 93, 3.4), INKC, None, None, ow=0, clip=c)
+        a.shape(circ(128 + dx * 1.9, 101, 4.6), (246, 170, 150), None, None, ow=0, clip=c)
+    a.line([(120, 104), (128, 109), (136, 104)], INKC, 2.4, clip=c)
+    # two raised forearms: sleeve from the elbow up to the wrist, mitten fist at the chin
+    for sgn in (-1, 1):
+        ex, ey = 128 + 56 * sgn, 196
+        wx, wy = 128 + 33 * sgn, 150
+        sleeve(a, (ex, ey), (wx, wy), 15, 12.5, clip=c)
+        fist(a, wx - 2 * sgn, wy - 20, 38, -math.pi / 2 - .18 * sgn, clip=c)
     return a.result()
 
 
-def foot(a, ax, ay, ang, clip=None, s=1.0):
-    """a bare foot seen sole-on (like a kicking foot at the moment of impact): heel at (ax, ay), toes lead along ang.
-    Heel pad, arch, ball and five toes, so it cannot be mistaken for a hand."""
+SOCK, SOCK_S = (126, 174, 226), (84, 128, 190)
+
+
+def chaikin(pts, n=3):
+    for _ in range(n):
+        out = []
+        for i in range(len(pts)):
+            (x0, y0), (x1, y1) = pts[i], pts[(i + 1) % len(pts)]
+            out += [(.75 * x0 + .25 * x1, .75 * y0 + .25 * y1), (.25 * x0 + .75 * x1, .25 * y0 + .75 * y1)]
+        pts = out
+    return pts
+
+
+def foot(a, ax, ay, ang, clip=None, s=1.0, flip=False):
+    """a chunky training SHOE (v3), side view: soft blue upper, cream sole strip, cream ankle collar. One rounded shape, NO separate toes.
+    Local frame: heel corner at (ax, ay), toe leads along ang, the sole is on the local +y side (flip mirrors it), the ankle collar rises on the -y side."""
+    f = -1 if flip else 1
     def L(pts):
-        return rot([(x * s, y * s) for x, y in pts], ax, ay, ang)
-    sole = [(-4, -9), (10, -10), (24, -14), (33, -13), (38, -7), (39, 6), (34, 13), (24, 14), (10, 10), (-4, 9), (-9, 4), (-9, -4)]
-    a.shape(poly(L(sole)), SKIN, SKIN_S, lighten(SKIN, .45), ow=2.8, band=3.4, clip=clip)
-    toes = [(45, -8.5, 5.2), (46, -1.2, 4.3), (44, 5.2, 3.8), (41, 10.4, 3.3), (37, 14.6, 2.8)]
-    for tx, ty, tr in toes:
-        p = L([(tx, ty)])[0]
-        a.shape(circ(p[0], p[1], tr * s), SKIN, SKIN_S, lighten(SKIN, .45), ow=2.2, band=1.6, clip=clip)
-    # arch: a soft shade on the inner side
-    a.line(L([(6, 7), (18, 4), (26, 7)]), SKIN_S, 2.4 * s, clip=clip)
-    # the sole hides the toe-joins, so repaint the joins
-    a.shape(poly(L([(33, -10), (40, -6), (40, 5), (34, 10)])), SKIN, None, None, ow=0, clip=clip)
+        return rot([(x * s, y * f * s) for x, y in pts], ax, ay, ang)
+    upper = chaikin([(0, -26), (22, -26), (27, -10), (40, -12), (52, -8), (59, 2), (58, 11), (0, 11)], 3)
+    a.shape(poly(L(upper)), SOCK, SOCK_S, lighten(SOCK, .4), ow=3.0, band=4.2, clip=clip)
+    a.shape(poly(L(rrect_pts(11, -22, 24, 7, 3))), CREAM, CREAM_S, None, ow=2.2, band=2, clip=clip)       # ankle collar
+    a.shape(poly(L(rrect_pts(30, 12, 64, 12, 6))), CREAM, CREAM_S, (255, 252, 240), ow=2.8, band=3, clip=clip)   # sole strip
 
 
 # ------------------------------------------------------------------ DISARM: kick the training stick away
@@ -176,10 +185,9 @@ def disarm(rim=RIMS['disarm']):
     a.line([(120, 96), (112, 84), (114, 70)], BLUE_S, 4.5, clip=c)
     a.line([(204, 104), (208, 90), (200, 76)], BLUE_S, 4.5, clip=c)
     stick(a, 148, 88, -.5, clip=c, k=.8)
-    limb(a, (62, 168), (84, 162), 10, 9, clip=c)
-    a.shape(cap((18, 182), (64, 170), 26, 18), GI, GI_S, (255, 255, 250), ow=3.2, band=5, clip=c)
-    foot(a, 88, 160, -math.pi / 2 + .95, clip=c, s=1.2)
-    burst(a, 152, 122, 6, 13, 7, .2, clip=c)
+    a.shape(cap((36, 188), (84, 176), 26, 18), GI, GI_S, (255, 255, 250), ow=3.2, band=5, clip=c)
+    foot(a, 114, 164, -3 * math.pi / 4, clip=c, s=1.0)
+    burst(a, 158, 118, 6, 13, 7, .2, clip=c)
     return a.result()
 
 
@@ -208,19 +216,16 @@ def strike(rim=RIMS['strike']):
     a.shape(circ(178, 124, 15), GOLD, GOLD_S, (255, 232, 140), ow=2.4, band=3, clip=c)
     a.shape(circ(178, 124, 6), PADB_S, None, None, ow=0, clip=c)
     burst(a, 154, 112, 7, 15, 7, 0, clip=c)
-    limb(a, (82, 144), (98, 142), 8.5, 8, clip=c)
     a.shape(cap((22, 152), (82, 144), 23, 16), GI, GI_S, (255, 255, 250), ow=3.2, band=5, clip=c)
-    foot(a, 100, 142, -math.pi / 2 + .38, clip=c, s=1.05)
+    foot(a, 108, 156, -math.pi / 2, clip=c, s=1.0)
     return a.result()
 
 
 # ------------------------------------------------------------------ KATA slot glyph
 def foot_print(a, x, y, ang, s=1.0, col=BLUE_S, clip=None):
-    """a footprint, toes along ang."""
-    a.shape(poly(rot(ell_pts(0, 3 * s, 6.2 * s, 10 * s, 0), x, y, ang + math.pi / 2)), col, None, None, ow=2.0, clip=clip)
-    for i, ox in enumerate((-4.6, -1.6, 1.4, 4.2)):
-        tp = rot([(ox * s, -11.5 * s + abs(ox) * .5 * s)], x, y, ang + math.pi / 2)[0]
-        a.shape(circ(tp[0], tp[1], 2.2 * s), col, None, None, ow=1.4, clip=clip)
+    """a footprint, heel to toe along ang: one sole oval plus a round heel. No toes."""
+    a.shape(poly(rot(ell_pts(0, -2 * s, 7 * s, 11 * s, 0), x, y, ang + math.pi / 2)), col, None, None, ow=2.0, clip=clip)
+    a.shape(poly(rot(ell_pts(0, 11 * s, 5.2 * s, 5.2 * s, 0), x, y, ang + math.pi / 2)), col, None, None, ow=2.0, clip=clip)
 
 
 def kata(rim=RIMS['kata']):
@@ -273,8 +278,7 @@ def jumping_spins(rim=RIMS['strike']):
     # tucked leg: thigh forward and down, shin folded back, foot under
     a.shape(cap((106, 132), (126, 156), 15, 12), GI, GI_S, (255, 255, 250), ow=3, band=4)
     a.shape(cap((126, 156), (96, 168), 12, 10), GI, GI_S, (255, 255, 250), ow=3, band=4)
-    limb(a, (98, 167), (90, 169), 6, 5.5)
-    foot(a, 90, 170, math.pi + .5, s=.55)
+    foot(a, 94, 166, math.pi, s=.46, flip=True)
     # torso leaning away from the kick, belt, then the head (profile, eyes on the target)
     a.shape(cap((88, 82), (106, 128), 20, 18), GI, GI_S, (255, 255, 250), ow=3.2, band=5)
     a.shape(poly(rot(rrect_pts(0, 0, 42, 13, 5), 104, 122, -.38)), BELT, BELT_S, lighten(BELT, .3), ow=2.4, band=3)
@@ -292,9 +296,8 @@ def jumping_spins(rim=RIMS['strike']):
     # kicking leg: thigh, shin, cuff, ankle, foot (spin kick, out and a little up)
     a.shape(cap((106, 130), (140, 124), 17, 14), GI, GI_S, (255, 255, 250), ow=3.2, band=5)
     a.shape(cap((138, 124), (168, 112), 14, 14), GI, GI_S, (255, 255, 250), ow=3.2, band=4.5)
-    limb(a, (166, 113), (178, 107), 7.5, 7)
     burst(a, 214, 92, 7, 15, 7, .2)
-    foot(a, 178, 107, -.35, s=.78)
+    foot(a, 188, 122, -math.pi / 2 - .15, s=.62)
     front = [(cx + 72 * math.cos(math.radians(t)), cy + 17 * math.sin(math.radians(t))) for t in range(10, 192, 8)]
     arrow(a, front, BLUE_S, 7, 15, outline=(255, 252, 240))
     place(med, a, .78, 128 - .78 * 124 + 1, 128 - .78 * 118, fc)
