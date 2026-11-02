@@ -973,17 +973,7 @@
       "maxHealth": 121,
       "power": 13,
       "guard": 7,
-      "effects": [
-        {
-          "type": "staggerTicks",
-          "amount": 10
-        },
-        {
-          "type": "rippleCounter",
-          "amount": 0.6,
-          "radius": 1.2
-        }
-      ],
+      "effects": [],
       "stances": [
         {
           "id": "beginners-stance",
@@ -1491,17 +1481,7 @@
       "maxHealth": 121,
       "power": 13,
       "guard": 7,
-      "effects": [
-        {
-          "type": "staggerTicks",
-          "amount": 10
-        },
-        {
-          "type": "rippleCounter",
-          "amount": 0.6,
-          "radius": 1.2
-        }
-      ],
+      "effects": [],
       "stances": [
         {
           "id": "beginners-stance",
@@ -2011,45 +1991,8 @@
       "guard": 19,
       "effects": [
         {
-          "type": "staggerTicks",
-          "amount": 10
-        },
-        {
-          "type": "dashOnBlock",
-          "amount": 0
-        },
-        {
-          "type": "rippleCounter",
-          "amount": 0.6,
-          "radius": 1.2
-        },
-        {
-          "type": "blockCut",
-          "amount": 0.1
-        },
-        {
           "type": "strikeExtraHit",
           "amount": 0.5
-        },
-        {
-          "type": "counterWindow",
-          "amount": 1
-        },
-        {
-          "type": "blockReflect",
-          "amount": 0.2
-        },
-        {
-          "type": "disarm",
-          "amount": 0.5
-        },
-        {
-          "type": "counterStrength",
-          "amount": 0.5
-        },
-        {
-          "type": "staggerBonus",
-          "amount": 0.15
         },
         {
           "type": "strikeCost",
@@ -2599,45 +2542,8 @@
       "guard": 19,
       "effects": [
         {
-          "type": "staggerTicks",
-          "amount": 10
-        },
-        {
-          "type": "dashOnBlock",
-          "amount": 0
-        },
-        {
-          "type": "rippleCounter",
-          "amount": 0.6,
-          "radius": 1.2
-        },
-        {
-          "type": "blockCut",
-          "amount": 0.1
-        },
-        {
           "type": "strikeExtraHit",
           "amount": 0.5
-        },
-        {
-          "type": "counterWindow",
-          "amount": 1
-        },
-        {
-          "type": "blockReflect",
-          "amount": 0.2
-        },
-        {
-          "type": "disarm",
-          "amount": 0.5
-        },
-        {
-          "type": "counterStrength",
-          "amount": 0.5
-        },
-        {
-          "type": "staggerBonus",
-          "amount": 0.15
         },
         {
           "type": "strikeCost",
@@ -3187,49 +3093,8 @@
       "guard": 3,
       "effects": [
         {
-          "type": "staggerTicks",
-          "amount": 10
-        },
-        {
-          "type": "dashOnBlock",
-          "amount": 0
-        },
-        {
-          "type": "rippleCounter",
-          "amount": 0.6,
-          "radius": 1.2
-        },
-        {
-          "type": "healOnPerfect",
-          "amount": 3
-        },
-        {
-          "type": "blockCut",
-          "amount": 0.1
-        },
-        {
           "type": "strikeExtraHit",
           "amount": 0.5
-        },
-        {
-          "type": "counterWindow",
-          "amount": 1
-        },
-        {
-          "type": "blockReflect",
-          "amount": 0.2
-        },
-        {
-          "type": "disarm",
-          "amount": 0.5
-        },
-        {
-          "type": "counterStrength",
-          "amount": 0.5
-        },
-        {
-          "type": "staggerBonus",
-          "amount": 0.15
         },
         {
           "type": "strikeCost",
@@ -3796,49 +3661,8 @@
       "guard": 3,
       "effects": [
         {
-          "type": "staggerTicks",
-          "amount": 10
-        },
-        {
-          "type": "dashOnBlock",
-          "amount": 0
-        },
-        {
-          "type": "rippleCounter",
-          "amount": 0.6,
-          "radius": 1.2
-        },
-        {
-          "type": "healOnPerfect",
-          "amount": 3
-        },
-        {
-          "type": "blockCut",
-          "amount": 0.1
-        },
-        {
           "type": "strikeExtraHit",
           "amount": 0.5
-        },
-        {
-          "type": "counterWindow",
-          "amount": 1
-        },
-        {
-          "type": "blockReflect",
-          "amount": 0.2
-        },
-        {
-          "type": "disarm",
-          "amount": 0.5
-        },
-        {
-          "type": "counterStrength",
-          "amount": 0.5
-        },
-        {
-          "type": "staggerBonus",
-          "amount": 0.15
         },
         {
           "type": "strikeCost",
@@ -4400,22 +4224,22 @@
   "rooted": {
     "rootedAt": 2,
     "guided": {
-      "window": 13,
-      "perfects": 7,
-      "blocks": 2,
-      "health": 180
+      "window": 12,
+      "perfects": 11,
+      "blocks": 6,
+      "health": 135
     },
     "standard": {
-      "window": 9,
-      "perfects": 5,
-      "blocks": 11,
-      "health": 168
+      "window": 8,
+      "perfects": 8,
+      "blocks": 6,
+      "health": 88
     },
     "challenge": {
-      "window": 7,
-      "perfects": 5,
-      "blocks": 8,
-      "health": 126
+      "window": 6,
+      "perfects": 8,
+      "blocks": 6,
+      "health": 81
     }
   }
 }
