@@ -2,12 +2,13 @@
 // incoming-art/dash-telegraph/source/zigzag.json; the baked layers in sprites/ must match them, and the art must stay
 // purple and white (never red). The art is not imported into the game yet, so nothing in content/ or the client changes.
 import { describe, expect, it } from 'vitest';
-import { inflateSync } from 'node:zlib';
 import data from '../../../incoming-art/dash-telegraph/source/zigzag.json';
 
 // Each PNG as a base64 data URL (Vite's ?inline), so the header bytes arrive intact.
 const PNGS = import.meta.glob('../../../incoming-art/dash-telegraph/sprites/dash-{lane,zigzag}_*.png', { query: '?inline', import: 'default', eager: true }) as Record<string, string>;
 declare function atob(data: string): string; // a browser global; the sim package has no DOM types
+declare const process: { getBuiltinModule(id: string): unknown }; // Node 22; the sim package has no Node types either
+const { inflateSync } = process.getBuiltinModule('node:zlib') as { inflateSync(data: Uint8Array): Uint8Array };
 const PX = 96; // sprite px per tile (2x the game's TILE = 48), same as the other dash shapes
 const zz = data.zigzag;
 const LAYERS = ['glow', 'fill', 'edge'] as const;
