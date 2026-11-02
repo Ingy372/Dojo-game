@@ -1072,6 +1072,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - The Gear tab's own grid is unchanged. Whether to drop it is Jay's call.
 - Tests: `menu-bag-01.test.ts` (layout at 5 sizes, header, sheet never covers the pick, paging, wiring).
 - Shots: `/workspace/shots/menu-bag-01` (not committed).
+- Tester note folded in: the top Gear sheet is lifted 8 px at 667 wide so it clears "Your Strike" (`gearSheetBox.lift`, tests in `menu-bag-01`).
 ### G2B12-FIXES: the Green playthrough fixes (2026-11-02)
 - Door banner: one fixed pill at the top centre, readable at 667x375, hidden behind the Insight picker and menus.
 - Home path card: no "▶ Video soon".
