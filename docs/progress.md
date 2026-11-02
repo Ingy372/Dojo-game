@@ -1086,3 +1086,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Bag paging uses its own `bagPage` field; ▶ and ◀ work at 1024x768 with 30 and 60 items (real taps, Reduced motion on and off).
 - 667x320: the sheet for a row-1 tile hides less of it, and a second tap closes it.
 - Tests: menu-bag-01.test.ts is now 25 tests. Shots: /workspace/shots/menu-bag-01/*fix1*.
+### C430-FIXES: the Content Designer's #430 trio (2026-11-02)
+- Thunder Drum's name and bar no longer cover Virtue (or any action button) at 667x375.
+- `stationary: true` enemy flag; thunder-drum, sleepy-sentry and thorn-sprout use speed 0.
+- The sim models Bellows Puff's no-damage push (Hit slide, Block hold, wall stop, `push` event). A Puff room costs 0 Health.
+- Tests: `k31-boss-tag` (+3), `c430-stationary` (4), `c430-push` (5), `puff-push` balance report (gated). Shots in /workspace/shots/c430-fixes with `pass-fail.md`.
