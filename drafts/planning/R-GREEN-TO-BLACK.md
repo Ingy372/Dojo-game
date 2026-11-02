@@ -23,7 +23,8 @@
 ## What is not in the repo (please point me to it)
 
 - **R-PROGRESSION-BETA** is being written in parallel. This plan does not repeat it. It owns the slot system (2 slots at White and Yellow, 3 at Orange), loadouts, the 6 Seal families and the passive kata powers. Items below that touch seal effects say so.
-- **The "Power & Progression Redesign" doc** and a "self-defense #1-15 template" file were not found on main, in any branch or in any PR title. I used the S4 table rows #1-15 as the template. If a different file exists, the Manager should send me the path and I will check Batch 1 against it.
+- **The "Power & Progression Redesign" doc** was not on main, in any branch or in any PR title. Phase 2 uses it as the source of truth once it is in the repo.
+- **Self-defense #1-15 template:** Jay confirmed (Nov 1) that `S4-self-defense-powers.md` is the right template, so the earlier flag is dropped.
 
 ## Scope risk key
 
@@ -77,5 +78,5 @@ Beta items first (01 to 06). Then Green and up (07 to 12).
 
 ## Questions for Jay (none block Batch 1)
 
-1. Where is the Power & Progression Redesign doc and the #1-15 template? (Manager or Jay.)
+1. (Answered Nov 1: S4 is the #1-15 template.) The Power & Progression Redesign doc still needs to be added to the repo.
 2. For the beta: OK with the cut line above (seals #1-10 and Strikes #1-2 are must-ship; Orange seals #11-15 and Strike #3 move to after the beta if time runs out)?
