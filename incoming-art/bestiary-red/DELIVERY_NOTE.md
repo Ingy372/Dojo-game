@@ -10,7 +10,7 @@
 - Wind-up lengths follow the data files (imp 18 ticks = 9 frames, puff 20 = 10, sweeper 22 = 11). Attack recover: 18 / 20 / 24 ticks.
 - `preview/lineup.png`: all three at in-game size next to the player and existing enemies. `preview/<enemy>_moves.png`: player, Brute, idle, wind-up (last frame, telegraph tinted) and attack (impact) in S, SE, E, N. `preview/forge-sweeper_arc.png` / `.gif`: the sweeper's wind-up inside the dash arc.
 
-**WHY:** Red ("The Forge of Courage") needs a COUNTER enemy with a clear raised-hammer tell, a pusher, and a dash sweeper that are easy to tell apart at a glance: a small grey round shape holding a hammer, a wide squat tan drum with a nozzle, and a flat wide broom with a glowing hem. All are soft shadow-creature shapes with big friendly eyes, a little spooky and never scary for a 6-year-old: no teeth, points or spikes, and the hammer has soft leather caps. No red and no orange in any sprite: red is only the game-tinted telegraph layer (shown red for the imp and puff, house purple for the sweeper). Every glow has a source (sweeper bristle tips); nothing is above a head except the imp's raised hammer in the N view (see DECIDE 3).
+**WHY:** Red ("The Forge of Courage") needs a COUNTER enemy with a clear raised-hammer tell, a pusher, and a dash sweeper that are easy to tell apart at a glance: a small grey round shape holding a hammer, a wide squat tan drum with a nozzle, and a flat wide broom with a glowing hem. All are soft shadow-creature shapes with big friendly eyes, a little spooky and never scary for a 6-year-old: no teeth, points or spikes, and the hammer has soft leather caps. No red and no orange in any sprite: red is only the game-tinted telegraph layer (shown red for the imp and puff, house purple for the sweeper). Every glow has a source (sweeper bristle tips); nothing is above a head except the imp's raised hammer in the N view (see DECIDED 3).
 
 **Second pass:** checked all three in 8 directions on the contact views and in S, SE, E, N at 2x on the move sheets.
 - Fixed: the puff first read like a pot or a hat (a dark top board dominated, from the elevated camera). It is now four pear-shaped folds, a small light top board with a ring, a lighter tan, and the cream belly was removed because it hid the cream eyes.
@@ -21,13 +21,15 @@
 - No frame touches the frame edge; idle is constant per direction; attack lunges toward the camera are ground travel, not floating.
 - Red check on all body / glow / light sheets: 0 red pixels. Phone and house number check on the folder: no hits. Temp files, `.blend1` files and frames/ folders removed.
 
-**DECIDE:**
-1. **Bellows Puff colour: tan leather and wood, not the data colour.** The data colour is `#c46a4a` (red-orange), which breaks "no red except danger". The sprite uses tan `#b98e57` with a dark wood accent `#7a573a`. If you agree, update `drafts/content/enemies/bellows-puff.json` colour to `#b98e57` (Content Designer or Programmer; same kind of follow-up as the Side Crab). Not done in this PR.
-2. **Forge Sweeper colour: straw and gold embers, no amber or orange.** The data colour is `#e0a03a` (amber, close to the orange reserved for ENTER THE TOWER). The sprite is straw `#a07a4a` / `#d4b064` with gold tips `#f2cb62`. Suggested data colour: `#a07a4a`. Same follow-up. Keep it?
-3. **Imp hammer height cap.** The raised hammer is held at head height and, in the N (facing away) view only, pokes about 8 px above the head. Same camera effect as the Side Crab's claw-up in #429. Keep it as the COUNTER tell, or lower it for N?
-4. **Soft leather-capped mallet.** A wooden mallet with leather end caps (not an iron hammer or anvil). OK for the kid-friendly rule?
-5. **Forge Sweeper is dash-only**, purple tell with the house stripes on the dash arc, as for the Vine Sweeper. Its data id is `forge-sweep` (the folder here is `forge-sweeper`, the json `enemy` field is `forge-sweep`). OK?
-6. **Coal Cub** is not part of these samples and waits for the full set. OK?
-7. **160 px frames (feet at y 118)** as in #429 and Blue (the Programmer reads size and anchor from each sprite json). Assumed OK, no change unless you say.
+**DECIDED (Manager's calls on #432, Nov 2, 2026):** all seven earlier questions are answered. No export.
+1. **Bellows Puff: the data follows the art.** **Follow-up for the Content Designer or Programmer:** change the colour in `drafts/content/enemies/bellows-puff.json` from `#c46a4a` to `#b98e57` (the sprite's tan; wood accent `#7a573a`). Not done in this PR (only `incoming-art/` is touched).
+2. **Forge Sweeper: the data becomes `#a07a4a`.** **Follow-up for the Content Designer or Programmer:** change the colour in `drafts/content/enemies/forge-sweep.json` from `#e0a03a` to `#a07a4a` (the sprite's straw body; straw highlights `#d4b064`, gold tips `#f2cb62`). Not done in this PR.
+3. **Imp hammer in the north view: KEEP as it is** (about 8 px above the head silhouette, a camera effect, the COUNTER tell).
+4. **Soft wooden mallet with leather end caps: OK.**
+5. **Data id `forge-sweep` with the `forge-sweeper` folder: OK.**
+6. **Coal Cub waits for the full set.**
+7. **160 px frames (feet at y 118): OK.**
 
-**NEXT:** full sets (move, hit, defeat "set free") for all three, plus the Coal Cub. Content Designer or Programmer: the puff and sweeper data colours (DECIDE 1 and 2) once you decide.
+**DECIDE:** nothing open on this PR.
+
+**NEXT:** full sets (move, hit, defeat "set free") for all three, plus the Coal Cub. Content Designer or Programmer: the puff and sweeper data colours (DECIDED 1 and 2).
