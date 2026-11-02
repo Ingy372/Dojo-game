@@ -12,7 +12,7 @@ const training = (data: unknown) => {
   return buildTraining(feed, content.abilities, { ms: Date.parse(feed.asOf), weekday: 3 });
 };
 const ALL = ['counter', 'guard', 'escape', 'disarm', 'throw'];
-const earned = (families: string[] = ALL) => ({ strikes: ['follow-up-kick'], families, kataPowers: ['basic-form-1-power'] });
+const earned = (families: string[] = ALL) => ({ strikes: ['jumping-spins'], families, kataPowers: ['basic-form-1-power'] });
 
 describe('PB-01 sealSlots', () => {
   it('is 2 for White and Yellow, 3 for Orange, 3 for Green and Blue, 4 from Red', () => {
@@ -88,10 +88,10 @@ describe('PB-01 equipSeal, swapSeal, removeSeal', () => {
 });
 
 describe('PB-01 normalizing a loadout', () => {
-  const l: Loadout = { ...emptyLoadout(), strike: 'follow-up-kick', kata: 'basic-form-1-power', seals: ['escape', 'lock', 'counter', 'escape', 'guard'] };
+  const l: Loadout = { ...emptyLoadout(), strike: 'jumping-spins', kata: 'basic-form-1-power', seals: ['escape', 'lock', 'counter', 'escape', 'guard'] };
 
   it('drops unearned picks to their defaults, repeats, and extras past the slots (from the end)', () => {
-    expect(normalizeSlots(l, earned(), 2)).toEqual({ strike: 'follow-up-kick', kata: 'basic-form-1-power', seals: ['escape', 'counter'] });
+    expect(normalizeSlots(l, earned(), 2)).toEqual({ strike: 'jumping-spins', kata: 'basic-form-1-power', seals: ['escape', 'counter'] });
     expect(normalizeSlots(l, earned(), 3).seals).toEqual(['escape', 'counter', 'guard']);
     expect(normalizeSlots(l, earned(['escape']), 3).seals).toEqual(['escape']);
     expect(normalizeSlots(l, { strikes: [], families: [], kataPowers: [] }, 3)).toEqual({ strike: null, kata: null, seals: [] });
@@ -106,7 +106,14 @@ describe('PB-01 normalizing a loadout', () => {
 
   it('with no kata powers in the game yet, a kata pick is dropped; Seals are kept if earned (Yellow has Escape, Counter, Guard); Stance and Virtue are untouched', () => {
     const n = normalizeLoadout({ ...l, virtue: 'second-wind' }, training(yellow), content.abilities)!;
-    expect(n).toEqual({ stance: null, virtue: 'second-wind', strike: 'follow-up-kick', kata: null, seals: ['escape', 'counter'] });
+    expect(n).toEqual({ stance: null, virtue: 'second-wind', strike: 'jumping-spins', kata: null, seals: ['escape', 'counter'] });
+  });
+
+  it('PB-03: the old Strike id follow-up-kick means Spin Kick (the empty slot); quick-combo means Jumping Spins and is kept when its combo is signed off', () => {
+    const a = normalizeLoadout({ ...emptyLoadout(), strike: 'follow-up-kick' }, training(yellow), content.abilities)!;
+    expect(a.strike).toBeNull();
+    const b = normalizeLoadout({ ...emptyLoadout(), strike: 'quick-combo' }, training(yellow), content.abilities)!;
+    expect(b.strike).toBe('jumping-spins');
   });
 
   it('a Strike that was not earned goes back to null (Spin Kick)', () => {

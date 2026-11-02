@@ -86,11 +86,15 @@ export interface StrikeDef {
   text: string;
   /** The kick combo number that unlocks it (1, 2, 3). */
   combo: number;
+  /** True for the Strike a student has with nothing equipped (Spin Kick). Exactly one. */
+  default: boolean;
   focusCost: number;
   hits: { strength: number; delayTicks: number }[];
   reach: number;
   lungeTiles: number;
   recoveryTicks: number;
+  /** Old Strike ids (abilities.json `strikes`) that now mean this Strike. */
+  legacyIds: string[];
 }
 
 export interface KataPowerDef {
@@ -128,6 +132,8 @@ export interface AbilityContent {
   virtues: VirtueDef[];
   /** PB-02: the Seal families (empty if `loadAbilities` was given no family file). */
   families: SealFamilyDef[];
+  /** PB-03: the Strikes for the Strike slot (empty if `loadAbilities` was given no Strike file). */
+  strikeDefs: StrikeDef[];
 }
 
 export class AbilityError extends Error {
@@ -150,7 +156,7 @@ function num(v: unknown, where: string): number {
   return v as number;
 }
 
-export function loadAbilities(data: unknown, familyData?: unknown): AbilityContent {
+export function loadAbilities(data: unknown, familyData?: unknown, strikeData?: unknown): AbilityContent {
   const d = data as Record<string, unknown>;
   if (!d || typeof d !== 'object') fail('the file is not an object');
   const listOf = (key: string): Record<string, unknown>[] => {
@@ -228,7 +234,7 @@ export function loadAbilities(data: unknown, familyData?: unknown): AbilityConte
     };
   });
 
-  return { stances, strikes: perks('strikes'), seals: perks('seals'), virtues, families: familyData === undefined ? [] : loadSealFamilies(familyData) };
+  return { stances, strikes: perks('strikes'), seals: perks('seals'), virtues, families: familyData === undefined ? [] : loadSealFamilies(familyData), strikeDefs: strikeData === undefined ? [] : loadStrikeDefs(strikeData) };
 }
 
 const FAMILY_IDS: readonly SealFamilyId[] = ['escape', 'counter', 'guard', 'throw', 'disarm', 'lock'];
@@ -269,4 +275,50 @@ export function loadSealFamilies(data: unknown): SealFamilyDef[] {
     if (families.filter((f) => f.id === id).length !== 1) fail(`seal families: "${id}" must be listed exactly once`);
   }
   return families;
+}
+
+/** Checks content/abilities/strikes.json: one default Strike, combos 1, 2, 3... in order, whole hit lists, no repeated ids. */
+export function loadStrikeDefs(data: unknown): StrikeDef[] {
+  const d = data as Record<string, unknown>;
+  if (!d || typeof d !== 'object' || !Array.isArray(d.strikes)) fail('strikes: the file needs a "strikes" list');
+  const seen = new Set<string>();
+  const legacy = new Set<string>();
+  const defs = (d.strikes as Record<string, unknown>[]).map((s, i) => {
+    const w = `strikes[${i + 1}]`;
+    const sid = str(s.id, `${w}.id`);
+    if (seen.has(sid)) fail(`${w}: the id "${sid}" is used twice`);
+    seen.add(sid);
+    if (typeof s.default !== 'boolean') fail(`${w}.default must be true or false`);
+    const combo = num(s.combo, `${w}.combo`);
+    if (combo !== i + 1) fail(`${w}.combo must be ${i + 1} (Strikes are in kick combo order)`);
+    const focusCost = num(s.focusCost, `${w}.focusCost`);
+    if (focusCost < 10) fail(`${w}.focusCost must be at least 10`);
+    if (!Array.isArray(s.hits) || s.hits.length === 0) fail(`${w}.hits must list at least one hit`);
+    const hits = (s.hits as Record<string, unknown>[]).map((h, j) => {
+      const hw = `${w}.hits[${j + 1}]`;
+      const strength = num(h.strength, `${hw}.strength`);
+      const delayTicks = num(h.delayTicks, `${hw}.delayTicks`);
+      if (strength <= 0) fail(`${hw}.strength must be more than 0`);
+      if (!Number.isInteger(delayTicks) || delayTicks < 0) fail(`${hw}.delayTicks must be a whole number, 0 or more`);
+      return { strength, delayTicks };
+    });
+    for (let j = 1; j < hits.length; j++) if (hits[j].delayTicks < hits[j - 1].delayTicks) fail(`${w}.hits must be in order of delayTicks`);
+    const reach = num(s.reach, `${w}.reach`);
+    const lungeTiles = num(s.lungeTiles, `${w}.lungeTiles`);
+    const recoveryTicks = num(s.recoveryTicks, `${w}.recoveryTicks`);
+    if (reach <= 0 || lungeTiles < 0 || !Number.isInteger(recoveryTicks) || recoveryTicks < 0) fail(`${w} has reach, lunge or recovery out of range`);
+    if (recoveryTicks < hits[hits.length - 1].delayTicks) fail(`${w}.recoveryTicks must last until the last hit lands`);
+    if (!Array.isArray(s.legacyIds)) fail(`${w}.legacyIds must be a list`);
+    const legacyIds = (s.legacyIds as unknown[]).map((l) => str(l, `${w}.legacyIds`));
+    for (const l of legacyIds) {
+      if (legacy.has(l)) fail(`${w}: the old id "${l}" is on two Strikes`);
+      legacy.add(l);
+    }
+    const def: StrikeDef = { id: sid, name: str(s.name, `${w}.name`), text: str(s.text, `${w}.text`), combo, default: s.default as boolean, focusCost, hits, reach, lungeTiles, recoveryTicks, legacyIds };
+    return def;
+  });
+  if (defs.length === 0) fail('strikes: the list is empty');
+  if (defs.filter((s) => s.default).length !== 1) fail('strikes: exactly one Strike must have "default": true');
+  if (!defs[0].default) fail('strikes: the default Strike (Spin Kick) must be first');
+  return defs;
 }
