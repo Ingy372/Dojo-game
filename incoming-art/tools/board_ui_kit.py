@@ -329,8 +329,15 @@ def mat_tatami(w, h):
     return out(img, w, h)
 
 
-# ---------- placeholder tab icons (B3 will replace; same size/outline rules) ----------
+# ---------- tab icons ----------
 def tab_icon(kind, px=26):
+    """the FINAL B3 tab icons (ui-benchmark/source/make_tab_icons.py). Returns px*K device pixels."""
+    sys.path.insert(0, os.path.join(ART, 'ui-benchmark', 'source'))
+    import make_tab_icons
+    return make_tab_icons.render(kind, int(px * K))
+
+
+def tab_icon_placeholder(kind, px=26):
     """simple outlined glyphs, 26 pt box: climb scroll / bag / belt star / gate. Placeholders for B3."""
     n = 26
     img = Image.new('RGBA', (S(n), S(n)), (0, 0, 0, 0))

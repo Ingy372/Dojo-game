@@ -184,7 +184,7 @@ def sample_climb():
     climb_strip(sc, 52, 70, 740, icon=62, rise=8)
     # --- the matrix: 5 kinds x 3 states
     put_piece(sc, ku.paper_card(534, 252, seed=22), 18, 262)
-    names = {'fight': 'Fight', 'chest': 'Chest', 'shrine': 'Shrine', 'door': 'Door pick', 'guardian': 'Guardian'}
+    names = {'fight': 'Fight', 'chest': 'Chest', 'shrine': 'Shrine', 'door': 'Challenge', 'guardian': 'Guardian'}
     rows = [('cleared', 'Cleared'), ('current', 'You are here'), ('ahead', 'Not yet')]
     cx0, cw, cy0, rh = 150, 80, 322, 62
     for j, k in enumerate(ci.KINDS):

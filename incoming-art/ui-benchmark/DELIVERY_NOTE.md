@@ -1,27 +1,29 @@
-# Delivery note: UI benchmark samples (B2 + B4)
+# Delivery note: UI benchmark, FINAL export (B2 + B3 + B4)
 
 **ITEM**
-R-BENCHMARK: one paper-and-wood look for every Board tab (B2) and Tower Climb map icons (B4). Three samples, no game code.
+R-BENCHMARK: the Board paper-and-wood kit (B2), the final tab icons (B3) and the Tower Climb room icons (B4), exported as sprites for the Programmer. Jay approved the samples on Nov 1, 11:21 PM.
 
 **WHAT**
-- `preview/01-board-panel-kit`: the kit (tabs, buttons, paper, ribbons, bars, seals, palette, four tabs side by side).
-- `preview/02-board-gate-844x390`: a full Board screen, Gate tab, on wood with cream paper.
-- `preview/03-climb-icons`: five room icons x three states on a sample map strip, plus a tiny-size test.
-- `tokens.json`, `source/build_ui_benchmark.py`, and two reusable scripts in `incoming-art/tools/` (`board_ui_kit.py`, `climb_icons.py`).
+- `sprites/`: 65 sprites at 1x and @2x with 9-slice margins, plus `sprites/board-ui.json` (the manifest: size, nineSlice, visibleRect, shadowMargin, state, notes, tab layout, room mapping).
+  - Kit: 3 button families (ENTER orange, gold, wood) with pressed and disabled, 3 tabs (normal, pressed, active gold), paper card, 2 ribbons, 2 gate seals, 2 Sensei's Seal states (師), new dot, level fill, floor mat, 25 progress-ring steps, wall.
+  - Tab icons: Climb (tower), Gear (bag), Abilities (fist and spark), Gate (blue gate with a lock).
+  - Climb: 5 rooms x 3 states. Door pick is the `challenge` room. Guardian (`boss`) is purple.
+- `preview/04-export-contact-sheet`, `05-b3-tab-icons`, `06-nine-slice-proof` (new); `01` to `03` redrawn with the final tab icons (old ones in `superseded/v1-samples/`).
+- `source/export_sprites.py`, `source/make_tab_icons.py`, `source/toon.py` (copy of the #419 toon kit). Kit `tab_icon()` now draws the final icons.
 
 **WHY**
-- The Gear, Gate and Next-step panels were dark brown or navy; only Last run was paper. Now they are all the same paper in the same wood frame.
-- The Climb map had no way to tell rooms apart. Five different shapes with five different colours read at 30 pt and in grey.
-- Orange is kept for ENTER THE TOWER only, so the main button is easy to find.
+- The Programmer needs real files with margins, not a picture of a kit.
+- The tab icons were placeholders; four small readable shapes with a thick outline work on both tab colours.
+
+**CHECKS**
+- Red check on every sprite and preview: 0 red pixels. Orange appears only on the ENTER button. No text baked in (only the 師 glyph).
+- 9-slice proof (`preview/06`) re-stretches buttons, tabs, ribbon and card from the exported files at three sizes each.
+- Phone and house number strings: no hits. Only `incoming-art/` differs from main.
 
 **DECIDE**
-1. **Door pick.** The code has `practice | battle | challenge | treasure | rest | boss`, and no "door pick" room. I drew a double-door icon. Does it mean the doors between rooms, the challenge room, or a mystery door? A sixth icon for the challenge room is easy to add.
-2. **Guardian colour.** Purple, because red is for danger and orange is for ENTER. OK?
-3. **Active tab.** Raised gold lacquer tab (shown), or a paper folder tab?
-4. **Tab icons.** The four tab icons are placeholders for B3. OK to draw the final ones next?
-5. **The 師 seal** on the Gate tab (Sensei's Seal): keep it, or use a plain star?
-6. **Hero softness.** The hero at 100 pt is a 2x upscale and a little soft (B1). Leave for B1?
-7. **Export.** After approval, should I export the icon sprites (PNG strips plus JSON) for the Programmer?
+1. **Practice rooms.** The game has a `practice` room kind and no practice icon (only five were approved). Use the battle icon for now, or should I draw a sixth (a training post)?
+2. **Ring steps.** The ring is 25 pre-drawn steps (x of 24). If the Programmer wants any value, a gold-arc mask can be added instead. OK as is?
+3. **Pressed text.** On pressed buttons the label moves down 2 pt (in the manifest notes). OK?
 
 **NEXT**
-After the decisions: export the icon sprites and kit sprites, then the G2 Insight picker re-skin (not started).
+After merge: the Programmer wires the sprites from `board-ui.json`. Then the G2 Insight picker re-skin (not started).
