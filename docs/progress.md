@@ -1063,3 +1063,12 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - `familyRank` returns 0 for a family that is not live (test added).
 - Golden runs never apply effects (pre-existing): noted in `docs/decisions.md`, no code change.
 - Tests: `p-prog-d-strike` (+1), `p-prog-c-seal-ranks` (+1 check), `p-menu2-f-gear` (heading).
+
+### G2B12-FIXES: the Green playthrough fixes (2026-11-02)
+- Door banner: one fixed pill at the top centre, readable at 667x375, hidden behind the Insight picker and menus.
+- Home path card: no "▶ Video soon".
+- First visit: the Welcome Week card waits for the second visit, so a first visit is four cards, not five.
+- Favicon (svg + ico) so the browser stops asking for a missing icon.
+- Fake student seed: Green (24/28) now shows Level 30 and 3 worn Rares on the testing screen.
+- Gear sheet no longer covers the "Your Strike" row at 932x430; "Always with you" comments removed (Tester's low notes from #425).
+- Tests: `g2b12-fixes` (10). Shots in /workspace/shots/g2b12-fixes with `pass-fail.md`.

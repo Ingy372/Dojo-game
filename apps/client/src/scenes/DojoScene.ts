@@ -67,6 +67,7 @@ import { addStatic, addTinted, loadArt } from '../art/art';
 import type { LayeredSprite } from '../art/LayeredSprite';
 import { makePlayerSprite, playLocomotion } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
+import { systemMayShow } from '../ui/arrivalQueue';
 import { bowGate, bowPrompt, playBow } from '../ui/bow';
 import { Celebrations } from '../ui/Celebrations';
 import { FONT, crisp, view, DPR, hiDpi } from '../ui/theme';
@@ -336,7 +337,8 @@ export class DojoScene extends Phaser.Scene {
     const name = this.training.displayName.split(' ')[0];
     const chores = choresLeft(this.dojo);
     const steps: Array<() => void> = [];
-    if (!this.dojo.welcomed) {
+    const firstVisit = !this.dojo.welcomed;
+    if (firstVisit) {
       steps.push(() =>
         this.card('Your Home Dojo', [
           'This space is yours. Bow when you enter, keep it clean, and make it your own.',
@@ -381,7 +383,8 @@ export class DojoScene extends Phaser.Scene {
       );
     }
     // Welcome Week (M7-P7): at most one new system a day for an existing student, shared with the lessons.
-    const system = systemForToday(this.profile, this.training);
+    // G2B12-FIXES: not on the very first visit, so a new student isn't walked through five cards in a row.
+    const system = systemMayShow({ firstVisit }) ? systemForToday(this.profile, this.training) : null;
     if (system) {
       writeSave(this.profile);
       steps.push(() => this.card('Sensei', system.screens, 'Okay!', next));
