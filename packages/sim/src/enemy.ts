@@ -1,7 +1,7 @@
 // Enemy types are content (data files in content/enemies), checked here when loaded.
 // Distances are in tiles and times in ticks.
 
-import { CHALLENGE_FROM_TIER, DIFFICULTY, MIN_WINDUP_TICKS, TICKS_PER_SECOND } from './config';
+import { CHALLENGE_FROM_TIER, COMBAT, DIFFICULTY, MIN_WINDUP_TICKS, TICKS_PER_SECOND } from './config';
 
 export interface EnemyAttackDef {
   /** Optional name, for bosses with several attacks (for example "slam"). */
@@ -113,6 +113,11 @@ export interface EnemyWeaponDef {
   disarmedPower: number;
 }
 
+/** C430: the push is fixed in strength (COMBAT.enemyPushTiles unless the file gives distanceTiles) and never does damage. */
+export interface EnemyPushDef {
+  distanceTiles: number;
+}
+
 export interface EnemyDef {
   id: string;
   name: string;
@@ -125,6 +130,8 @@ export interface EnemyDef {
   moveSpeedTilesPerSecond: number;
   /** C430: never walks, circles or paths (Thunder Drum, Sleepy Sentry, Thorn Sprout). Its speed is exactly 0. */
   stationary?: boolean;
+  /** C430: a no-damage push (Bellows Puff). Its swing slides you away instead of hurting you. */
+  push?: EnemyPushDef;
   sightRange: number;
   /** Attacks used in turn (most enemies have one). */
   attacks: EnemyAttackDef[];
@@ -300,6 +307,15 @@ export function loadEnemy(data: unknown): EnemyDef {
     speed = positiveNumber(raw, 'moveSpeedTilesPerSecond', id);
   }
 
+  let push: EnemyPushDef | undefined;
+  if (raw.push !== undefined) {
+    const o = raw.push as Record<string, unknown>;
+    if (typeof o !== 'object' || o === null) throw new EnemyError(id, '"push" must be an object');
+    if (o.damage !== 0) throw new EnemyError(id, '"push.damage" must be 0 (a push never hurts)');
+    if (o.intoHazard !== undefined && o.intoHazard !== false) throw new EnemyError(id, '"push.intoHazard" must be false (a push never moves you into a hazard)');
+    push = { distanceTiles: o.distanceTiles === undefined ? COMBAT.enemyPushTiles : positiveNumber(o, 'distanceTiles', id, 'push.') };
+  }
+
   const color = typeof raw.color === 'string' && /^#[0-9a-fA-F]{6}$/.test(raw.color) ? raw.color : '#7d3f2f';
 
   return {
@@ -312,6 +328,7 @@ export function loadEnemy(data: unknown): EnemyDef {
     radius,
     moveSpeedTilesPerSecond: speed,
     ...(stationary ? { stationary: true } : {}),
+    ...(push ? { push } : {}),
     sightRange: positiveNumber(raw, 'sightRange', id),
     attacks,
     shield,
