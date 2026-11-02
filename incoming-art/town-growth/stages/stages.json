@@ -1,0 +1,164 @@
+{
+  "note": "White is TWO layers: the clear background plus the separate smog overlay (it FADES OUT after the White floor boss is beaten; clear White is the after-boss look). All other belts are one picture, no overlay. Town growth is CAPPED at Blue. One FULL town background per belt, day + dusk, dojo sprite already in. Swap the whole picture by the student's highest earned belt. Nothing stacks. Red, Red/Black, Brown, Brown/Black and Black have NO town pictures of their own: they use the Blue picture.",
+  "sizePx2x": [
+    1864,
+    860
+  ],
+  "sizePx1x": [
+    932,
+    430
+  ],
+  "tilePx2x": 80,
+  "stages": [
+    {
+      "order": 1,
+      "belt": "white",
+      "built": true,
+      "statue": false,
+      "notes": "A little run down: a boarded window, a patched awning and bridge plank, weedy empty beds, murky water, EMPTY plinth. This picture is the CLEAR-AIR base (blue sky, bright); the grey smog is the SEPARATE overlay 1-white-smog-* drawn on top while the White floor boss is unbeaten. After the boss the smog FADES OUT and this clear White picture is the town from then on. Still friendly.",
+      "files": {
+        "day": {
+          "2x": "1-white-day@2x.png",
+          "1x": "1-white-day.png"
+        },
+        "dusk": {
+          "2x": "1-white-dusk@2x.png",
+          "1x": "1-white-dusk.png"
+        }
+      },
+      "smogOverlay": {
+        "files": {
+          "day": {
+            "2x": "1-white-smog-day@2x.png",
+            "1x": "1-white-smog-day.png"
+          },
+          "dusk": {
+            "2x": "1-white-smog-dusk@2x.png",
+            "1x": "1-white-smog-dusk.png"
+          }
+        },
+        "sizePx2x": [
+          1864,
+          860
+        ],
+        "draw": "full-frame transparent PNG, same size as the background; draw it OVER the White background (same day/dusk variant) and UNDER characters, effects and UI",
+        "fadeOut": {
+          "on": "White-belt floor boss defeated",
+          "durationMs": 2500,
+          "curve": "ease-out",
+          "from": "overlay alpha 1.0",
+          "to": "overlay alpha 0.0 (suggested duration - tune in game)"
+        },
+        "remove": "after the White-belt floor boss the smog FADES OUT (see fadeOut), then stop drawing it: the clear White picture underneath (1-white-*) is the after-boss look and the town from then on. Never draw it on any other belt."
+      }
+    },
+    {
+      "order": 2,
+      "belt": "yellow",
+      "built": true,
+      "statue": false,
+      "notes": "The clean-up: the boards are off and the window is lit again, the patches are gone, the water runs clearer with a second koi, the beds show their first blooms, one flower box, the bridge lanterns glow again. The shop is still shut (lanterns off, no chimney). Brighter, fresher colour. Still no statue (empty plinth).",
+      "files": {
+        "day": {
+          "2x": "2-yellow-day@2x.png",
+          "1x": "2-yellow-day.png"
+        },
+        "dusk": {
+          "2x": "2-yellow-dusk@2x.png",
+          "1x": "2-yellow-dusk.png"
+        }
+      }
+    },
+    {
+      "order": 3,
+      "belt": "orange",
+      "built": true,
+      "statue": false,
+      "notes": "The shop opens: a chimney with a curl of smoke, a basket of bread, the shop lanterns lit, fuller flower beds, flower boxes on the neighbour, a small blue-and-cream flag on the shop roof, fresher paint and a warmer grade. A fuller, happier town. Still no statue (empty plinth).",
+      "files": {
+        "day": {
+          "2x": "3-orange-day@2x.png",
+          "1x": "3-orange-day.png"
+        },
+        "dusk": {
+          "2x": "3-orange-dusk@2x.png",
+          "1x": "3-orange-dusk.png"
+        }
+      }
+    },
+    {
+      "order": 4,
+      "belt": "green",
+      "built": true,
+      "statue": true,
+      "notes": "Clearly upgraded: fresh paint and a vivid colour grade, the STATUE unveiled with two stone lanterns, lush flower beds, bunting across the river, a roof flag, window boxes, blossoming hedges, bridge garland, soft cast shadows.",
+      "files": {
+        "day": {
+          "2x": "4-green-day@2x.png",
+          "1x": "4-green-day.png"
+        },
+        "dusk": {
+          "2x": "4-green-dusk@2x.png",
+          "1x": "4-green-dusk.png"
+        }
+      }
+    },
+    {
+      "order": 5,
+      "belt": "blue",
+      "built": true,
+      "statue": true,
+      "notes": "FULLY MAXED hero town (the last town picture): golden-hour grade, five SAKURA trees drawn with the SAME toon ramp and outline as the other trees (thick brown trunks, soft pink clumps), each in a stone tree ring with a soft ground shadow and fallen petals, all clear of the walking lane; the two bench corners are sakura too; a few distant blossom trees on the hills; four stone lanterns, two tall banners, two roof flags, golden paving ring, lotus and koi, chimney smoke, sun shafts, bloom on the statue and lanterns. Dusk grades the pink to deeper cooler rose with a warm rim on the sides facing the paper lanterns, fire bowl and lamp posts, plus 12 fireflies and falling petals.",
+      "files": {
+        "day": {
+          "2x": "5-blue-day@2x.png",
+          "1x": "5-blue-day.png"
+        },
+        "dusk": {
+          "2x": "5-blue-dusk@2x.png",
+          "1x": "5-blue-dusk.png"
+        }
+      }
+    },
+    {
+      "order": 6,
+      "belt": "red",
+      "built": false,
+      "useStage": "blue",
+      "statue": true,
+      "notes": "USE BLUE: no town picture of its own. Show the Blue picture (5-blue-*). No town art changes from Red up."
+    },
+    {
+      "order": 7,
+      "belt": "redblack",
+      "built": false,
+      "useStage": "blue",
+      "statue": true,
+      "notes": "USE BLUE: no town picture of its own. Show the Blue picture (5-blue-*). No town art changes from Red up."
+    },
+    {
+      "order": 8,
+      "belt": "brown",
+      "built": false,
+      "useStage": "blue",
+      "statue": true,
+      "notes": "USE BLUE: no town picture of its own. Show the Blue picture (5-blue-*). No town art changes from Red up."
+    },
+    {
+      "order": 9,
+      "belt": "brownblack",
+      "built": false,
+      "useStage": "blue",
+      "statue": true,
+      "notes": "USE BLUE: no town picture of its own. Show the Blue picture (5-blue-*). No town art changes from Red up."
+    },
+    {
+      "order": 10,
+      "belt": "black",
+      "built": false,
+      "useStage": "blue",
+      "statue": true,
+      "notes": "USE BLUE: no town picture of its own. Show the Blue picture (5-blue-*). No town art changes from Red up."
+    }
+  ]
+}

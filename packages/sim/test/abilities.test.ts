@@ -127,9 +127,13 @@ describe('Technique Seals and Strike upgrades', () => {
     expect(plain.enemies[0].modeTicks).toBe(COMBAT.counter.perfectStaggerTicks);
   });
 
-  it('Quick Combo makes Strikes cheaper', () => {
-    const w = world(character(yellow));
-    expect(strikeCost(w.players.p1)).toBe(COMBAT.strike.focusCost - 8);
+  it('PB-03: the old always-on Strike upgrades are retired: Strikes keep their price and add no hit just from training', () => {
+    const c = character(yellow);
+    expect(c.effects.some((e) => e.type === 'strikeCost' || e.type === 'strikeExtraHit')).toBe(false);
+    const w = world(c);
+    expect(strikeCost(w.players.p1)).toBe(COMBAT.strike.focusCost);
+    expect(w.players.p1.mods.strikeExtraHit).toBe(0);
+    expect(w.players.p1.mods.strikeCostCut).toBe(0);
   });
 
   it('Escape Step recharges Dash on a Block', () => {
