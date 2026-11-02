@@ -51,7 +51,7 @@ export function loadContent(raw: RawContent): Content {
   const guardianScale = raw.guardianScale === undefined ? NO_GUARDIAN_SCALE : loadGuardianScale(raw.guardianScale);
   for (const data of raw.enemies) {
     const e0 = loadEnemy(data);
-    const e = scaleEnemyDef(e0, guardianScaleFor(guardianScale, e0.id, e0.boss));
+    const e = scaleEnemyDef(e0, guardianScaleFor(guardianScale, e0.id, e0.boss), guardianScale.attackGrowth, guardianScale.reachGrowth);
     if (enemies[e.id]) throw new Error(`Two enemy files use the id "${e.id}"`);
     enemies[e.id] = e;
   }

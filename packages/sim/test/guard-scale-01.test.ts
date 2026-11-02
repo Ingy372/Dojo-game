@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { attackBox, loadContent, loadEnemy, loadGuardianScale, scaleEnemyDef, MOVEMENT, COMBAT, type EnemyAttackDef, type EnemyDef, type RawContent } from '../src';
 import { testContent } from './load-content';
 import guardianScaleRaw from '../../../content/settings/guardian-scale.json';
-import { bossZoomPlan, viewTiles } from '../../../apps/client/src/game/cameraView';
+import { bossRoomZoom, bossZoomPlan, viewTiles } from '../../../apps/client/src/game/cameraView';
 import gameSceneRaw from '../../../apps/client/src/scenes/GameScene.ts?raw';
 import guardScaleSrc from '../src/guardScale.ts?raw';
 import contentSrc from '../src/content.ts?raw';
@@ -20,6 +20,8 @@ const rawDef = (id: string): EnemyDef => loadEnemy(raw(id));
 const guardians = () => Object.values(content.enemies).filter((d) => d.boss);
 const allAttacks = (d: EnemyDef): EnemyAttackDef[] => [...d.attacks, ...(d.challenge?.attacks ?? [])];
 const G = guardianScaleRaw.guardianScale;
+const AG = guardianScaleRaw.attackGrowth;
+const RG = guardianScaleRaw.reachGrowth;
 
 describe('GUARD-SCALE-01: the factors are content data', () => {
   it('the file says 1.5 for Guardians and 1.75 for the Stone Giant and Lost Lightbearer', () => {
@@ -59,6 +61,10 @@ describe('GUARD-SCALE-01: the factors are content data', () => {
     expect(bad({ guardianScale: 0.9 })).toThrow(/guardianScale/);
     expect(bad({ guardianScale: 2.5 })).toThrow(/guardianScale/);
     expect(bad({ bigGuardians: { 'stone-giant': 'big' } })).toThrow(/stone-giant/);
+    expect(bad({ attackGrowth: 1.5 })).toThrow(/attackGrowth/);
+    expect(bad({ reachGrowth: -0.1 })).toThrow(/reachGrowth/);
+    expect(bad({ bossRoomZoom: { placeholder: true, zoom: 0.2 } })).toThrow(/bossRoomZoom/);
+    expect(bad({ bossRoomZoom: { placeholder: true, zoom: 1.2 } })).toThrow(/bossRoomZoom/);
     expect(bad({ bossZoom: { ...guardianScaleRaw.bossZoom, zoomTo: 1.4 } })).toThrow(/zoomTo/);
     expect(bad({ bossZoom: { ...guardianScaleRaw.bossZoom, outMs: 0 } })).toThrow(/outMs/);
     expect(() => loadGuardianScale(null)).toThrow();
@@ -90,15 +96,16 @@ function rawBundle(): RawContent {
 }
 
 describe('GUARD-SCALE-01: hitbox and attack reach match the bigger body', () => {
-  it('radius and danger circles scale; reach and start range keep the same gap from the body edge', () => {
+  it('radius scales fully; danger circles by attackGrowth; reach and start range by the extra radius x reachGrowth', () => {
     for (const d of guardians()) {
       const base = rawDef(d.id);
-      const grow = base.radius * (G - 1);
+      const grow = base.radius * (G - 1) * RG;
+      const circle = 1 + (G - 1) * AG;
       const pairs: [EnemyAttackDef, EnemyAttackDef][] = allAttacks(base).map((a, i) => [a, allAttacks(d)[i]]);
       expect(pairs.length, d.id).toBeGreaterThan(0);
       for (const [a, b] of pairs) {
-        expect(b.areaRadius, `${d.id}/${a.name}`).toBeCloseTo(a.areaRadius * G, 10);
-        expect(b.startRange - d.radius, `${d.id}/${a.name} start gap`).toBeCloseTo(a.startRange - base.radius, 10);
+        expect(b.areaRadius, `${d.id}/${a.name}`).toBeCloseTo(a.areaRadius * circle, 10);
+        expect(b.startRange, `${d.id}/${a.name} start`).toBeCloseTo(a.startRange + grow, 10);
         expect(b.reach, `${d.id}/${a.name}`).toBeCloseTo(a.reach > 0 ? a.reach + grow : 0, 10);
         // Everything else about the attack is untouched: timing, strength, flags.
         expect({ ...b, startRange: 0, reach: 0, areaRadius: 0 }).toEqual({ ...a, startRange: 0, reach: 0, areaRadius: 0 });
@@ -113,15 +120,15 @@ describe('GUARD-SCALE-01: hitbox and attack reach match the bigger body', () => 
     const k = content.enemies['floor-keeper'];
     const sweep = k.attacks.find((a) => a.name === 'sweep')!;
     expect(sweep.reach).toBe(0);
-    expect(sweep.areaRadius).toBeCloseTo(3.15, 10);
+    expect(sweep.areaRadius).toBeCloseTo(2.1 * (1 + (G - 1) * AG), 10);
     expect(k.radius).toBeCloseTo(1.275, 10);
-    expect(k.attacks.find((a) => a.name === 'slam')!.reach).toBeCloseTo(1.1 + 0.425, 10);
+    expect(k.attacks.find((a) => a.name === 'slam')!.reach).toBeCloseTo(1.1 + 0.425 * RG, 10);
   });
 
   it('scaling by 1 gives back the same object, and a Guardian scale reaches Challenge attacks too', () => {
     const base = rawDef('floor-keeper');
     expect(scaleEnemyDef(base, 1)).toBe(base);
-    expect(content.enemies['floor-keeper'].challenge!.attacks[0].areaRadius).toBeCloseTo(base.challenge!.attacks[0].areaRadius * G, 10);
+    expect(content.enemies['floor-keeper'].challenge!.attacks[0].areaRadius).toBeCloseTo(base.challenge!.attacks[0].areaRadius * (1 + (G - 1) * AG), 10);
   });
 });
 
@@ -222,6 +229,30 @@ describe('GUARD-SCALE-01: the boss zoom-out', () => {
     // The zoom ends at exactly 1, is reset when the scene is made, and reaches the camera limits too.
     expect(gameSceneRaw).toMatch(/this\.bossZoom = 1;\s*this\.bossSeen = false;/);
     expect(gameSceneRaw).toMatch(/\* this\.bossZoom;/);
+  });
+});
+
+describe('GUARD-SCALE-01: the trimmed reach and the held Guardian-room zoom (data)', () => {
+  it('the body stays at the full scale while the reach is trimmed; the loader reads the trim from the data', () => {
+    expect(RG).toBeGreaterThan(0);
+    expect(RG).toBeLessThan(1);
+    const full = loadContent({ ...rawBundle(), guardianScale: { ...guardianScaleRaw, reachGrowth: 1 } }).enemies['floor-keeper'];
+    const none = loadContent({ ...rawBundle(), guardianScale: { ...guardianScaleRaw, reachGrowth: 0 } }).enemies['floor-keeper'];
+    const now = content.enemies['floor-keeper'];
+    expect(full.radius).toBe(now.radius);
+    expect(none.radius).toBe(now.radius);
+    expect(none.attacks[0].startRange).toBeLessThan(now.attacks[0].startRange);
+    expect(now.attacks[0].startRange).toBeLessThan(full.attacks[0].startRange);
+  });
+
+  it('the room zoom is a marked placeholder in data, held only in Guardian rooms, whatever Reduced motion says', () => {
+    expect(guardianScaleRaw.bossRoomZoom.placeholder).toBe(true);
+    expect(guardianScaleRaw.bossRoomZoom.zoom).toBeCloseTo(0.9, 10);
+    expect(content.guardianScale.bossRoomZoom).toEqual(guardianScaleRaw.bossRoomZoom);
+    expect(bossRoomZoom(true, guardianScaleRaw.bossRoomZoom)).toBe(guardianScaleRaw.bossRoomZoom.zoom);
+    expect(bossRoomZoom(false, guardianScaleRaw.bossRoomZoom)).toBe(1);
+    expect(gameSceneRaw).toMatch(/bossRoomZoom\([^\n]*CONTENT\.guardianScale\.bossRoomZoom\)/);
+    expect(gameSceneRaw).toMatch(/\* roomZoom \* this\.bossZoom;/);
   });
 });
 

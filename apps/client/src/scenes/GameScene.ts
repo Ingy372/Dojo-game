@@ -123,7 +123,7 @@ import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
 import { clampDoorLabels } from '../ui/doorLabel';
-import { VISIBLE_ROWS, bossZoomPlan, cameraBounds } from '../game/cameraView';
+import { VISIBLE_ROWS, bossRoomZoom, bossZoomPlan, cameraBounds } from '../game/cameraView';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
@@ -1229,11 +1229,12 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.chainText, this.message, this.doorHint, this.screenFlash, this.roomLabel, this.timerText, this.bossName, ...(this.lidIcon ? [this.lidIcon] : [])]);
   }
 
-  /** The main camera's zoom and limits, including the boss intro's pull-back (`bossZoom`). */
+  /** The main camera's zoom and limits, including the Guardian room's held zoom and the boss intro's pull-back (`bossZoom`). */
   private applyCameraZoom(): void {
     const { width, height } = view(this);
     const cam = this.cameras.main;
-    const zoom = (height / (VISIBLE_ROWS * TILE)) * this.bossZoom;
+    const roomZoom = bossRoomZoom(this.room.enemySpawns.some((sp) => CONTENT.enemies[sp.enemy]?.boss), CONTENT.guardianScale.bossRoomZoom);
+    const zoom = (height / (VISIBLE_ROWS * TILE)) * roomZoom * this.bossZoom;
     // The camera zoom also carries DPR (full sharpness); `zoom` stays in screen points.
     cam.setZoom(zoom * DPR);
     // Camera limits: a strip above the top wall keeps doors clear of the health bars,

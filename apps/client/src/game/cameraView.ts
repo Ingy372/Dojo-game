@@ -47,3 +47,8 @@ export function bossZoomPlan(reducedMotion: boolean, roomHasBoss: boolean, zoom:
   if (reducedMotion || !roomHasBoss || zoom.zoomTo >= 1) return null;
   return zoom;
 }
+
+/** GUARD-SCALE-01: the zoom held for the whole Guardian room (1 for rooms without a boss). A placeholder number in the data file until Jay picks it. */
+export function bossRoomZoom(roomHasBoss: boolean, def: { zoom: number }): number {
+  return roomHasBoss ? def.zoom : 1;
+}

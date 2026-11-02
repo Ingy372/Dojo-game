@@ -1,9 +1,15 @@
 {
-  "notes": "GUARD-SCALE-01 (from Jay): Guardians (every boss enemy) are drawn bigger. The sim and the picture use the same number, so the hitbox, the danger circles and the art always match. Body radius and danger-circle size (areaRadius) are multiplied by the scale. Reach and startRange grow by the extra body radius (radius x (scale - 1)), so the gap from the Guardian's edge to where its attack starts stays what it was; a circle centred on the Guardian (reach 0) stays centred. Speed, health, power and wind-up times are unchanged. 'bigGuardians' lists the ids that use a different scale: the Stone Giant (Green) and the Lost Lightbearer (Black summit) are not built yet, so these entries wait for their enemy files. The short boss zoom-out is in 'bossZoom'.",
+  "notes": "GUARD-SCALE-01 (from Jay): Guardians (every boss enemy) are drawn bigger. The sim and the picture use the same number, so the hitbox, the danger circles and the art always match. Body radius and danger-circle size (areaRadius) are multiplied by the scale. Reach and startRange grow by the extra body radius (radius x (scale - 1)) x reachGrowth; a circle centred on the Guardian (reach 0) stays centred. Speed, health, power and wind-up times are unchanged. 'bigGuardians' lists the ids that use a different scale: the Stone Giant (Green) and the Lost Lightbearer (Black summit) are not built yet, so these entries wait for their enemy files. The short boss zoom-out is in 'bossZoom'. attackGrowth (0 to 1) is how much of the body's growth the danger circles take: circle = 1 + (scale - 1) x attackGrowth (1 = the circle matches the picture). reachGrowth (0 to 1) is how much of the extra body radius the start range and reach take (1 = the gap from the body edge is kept; 0 = they stay where they were). It is trimmed to 0.5 so the Insight-budget B5 gate for belt 4 (within 15 of 61, about 46.0) still passes with the body at the full scale: at 1 belt 4 reads 45.3; at 0.5 and at 0 it reads 46.0. bossRoomZoom is a permanent camera zoom held in every Guardian room so the taller head clears the HUD at 667x375 (PLACEHOLDER number: Jay to pick it; placeholder true marks it).",
   "guardianScale": 1.5,
   "bigGuardians": {
     "stone-giant": 1.75,
     "lost-lightbearer": 1.75
+  },
+  "attackGrowth": 1,
+  "reachGrowth": 0.5,
+  "bossRoomZoom": {
+    "placeholder": true,
+    "zoom": 0.9
   },
   "bossZoom": {
     "notes": "When a boss room starts, the camera pulls back to this share of its normal zoom, holds, then eases back. Reduced motion: no zoom at all.",
