@@ -14,8 +14,7 @@ import {
   signOffGain,
   signOffsRow,
   snapshot,
-  unlockedStances,
-} from '../src';
+  unlockedStances, emptyLoadout } from '../src';
 import abilitiesData from '../../../content/abilities/abilities.json';
 import { buildStyle } from '../../../apps/client/src/ui/fightingStyle';
 import white3 from '../../../fixtures/2-white-belt-3-signoffs.json';
@@ -90,13 +89,13 @@ describe('R-STANCE-d2 stance sign-offs', () => {
   it('idempotent load: a picked stance that is not signed off loads as Ready, Virtue kept; again changes nothing', () => {
     const t = train(white3);
     const p = newProfile();
-    p.loadout = { stance: 'horse-stance', virtue: 'second-wind' };
+    p.loadout = { ...emptyLoadout(), stance: 'horse-stance', virtue: 'second-wind' };
     const loaded = loadProfile(clone(p));
     const once = normalizeLoadout(loaded.loadout, t, content.abilities);
-    expect(once).toEqual({ stance: null, virtue: 'second-wind' });
+    expect(once).toEqual({ ...emptyLoadout(), stance: null, virtue: 'second-wind' });
     expect(normalizeLoadout(once, t, content.abilities)).toEqual(once);
     expect(loadProfile(clone({ ...loaded, loadout: once }))).toEqual(loadProfile(clone({ ...loaded, loadout: once })));
-    expect(normalizeLoadout({ stance: 'cat-stance', virtue: null }, t, content.abilities)).toEqual({ stance: 'cat-stance', virtue: null });
+    expect(normalizeLoadout({ ...emptyLoadout(), stance: 'cat-stance', virtue: null }, t, content.abilities)).toEqual({ ...emptyLoadout(), stance: 'cat-stance', virtue: null });
   });
 
   it('content: Ready has no sign-off id, every other stance a unique clearly marked placeholder', () => {
