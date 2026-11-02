@@ -29,22 +29,29 @@ def stripes(w, h, phase=0.0, ss=1):
     a[..., :3] = np.where(white[..., None], WHITE, PURPLE); a[..., 3] = 255
     return Image.fromarray(a, "RGBA")
 
+EDGE = (2 * (int(0.05 * PX * SS) // 2) + 1) // 2 / (PX * SS)   # how far the edge layer's deep-purple outline grows past the fill, tiles (build(): MaxFilter)
+
+def zigzag_amplitude(zz):
+    """the swing, clamped so the whole drawn path stays inside the lane's width: the centre line swings +-amplitude, the
+    stroke adds strokeWidth / 2 and the outline adds EDGE on each side, and all of that must fit in 'width'."""
+    return max(0.0, min(zz["amplitude"], (zz["width"] - zz["strokeWidth"] - 2 * EDGE) / 2))
+
 def zigzag_points(length, amplitude, turns):
-    """centre line of the zig-zag lane in tiles, relative to its middle, running along +x. It starts and ends on the aim
+    """centre line of the zig-zag in tiles, relative to its middle, running along +x. It starts and ends on the aim
     line; the first and last legs are half legs, so every leg has the same slope. turns = number of corners.
-    length here is the centre line's reach, so the lane's visible length is that plus one width (the round ends)."""
+    length here is the centre line's length: the lane's visible length is that plus one strokeWidth (the round ends) plus the outline at each end."""
     u = length / turns; pts = [(-length / 2, 0.0)]
     for k in range(1, turns + 1): pts.append((-length / 2 + (k - 0.5) * u, (-1) ** k * amplitude))
     pts.append((length / 2, 0.0)); return pts
 
 def zigzag_size(zz):
-    """canvas size in tiles (whole tiles, so the anchor stays the exact middle)."""
-    return (math.ceil(zz["length"] + 2 * zz["canvasMargin"]), math.ceil(2 * zz["amplitude"] + zz["width"] + 2 * zz["canvasMargin"]))
+    """canvas size in tiles (whole tiles, so the anchor stays the exact middle). The path never leaves 'width'."""
+    return (math.ceil(zz["length"] + 2 * zz["canvasMargin"]), math.ceil(zz["width"] + 2 * zz["canvasMargin"]))
 
 def shape_mask(kind, size, ss, **k):
     W, H = int(size[0] * PX), int(size[1] * PX); m = Image.new("L", (W * ss, H * ss), 0); d = ImageDraw.Draw(m); s = PX * ss
-    if kind == "zigzag":        # k: length, width, amplitude, turns (tiles); round joins and ends like the lane
-        wd = k["width"] * s; pts = [(W * ss / 2 + x * s, H * ss / 2 + y * s) for x, y in zigzag_points(k["length"] - k["width"], k["amplitude"], k["turns"])]
+    if kind == "zigzag":        # k: length, strokeWidth, amplitude (already clamped), turns (tiles); round joins and ends like the lane
+        wd = k["strokeWidth"] * s; pts = [(W * ss / 2 + x * s, H * ss / 2 + y * s) for x, y in zigzag_points(k["length"] - k["strokeWidth"] - 2 * EDGE, k["amplitude"], k["turns"])]
         d.line(pts, fill=255, width=int(wd), joint="curve")
         for x, y in pts: d.ellipse([x - wd / 2, y - wd / 2, x + wd / 2, y + wd / 2], fill=255)
     elif kind == "lane":          # k: length, width (tiles); rounded ends
@@ -111,7 +118,7 @@ SHAPES = {   # default pre-baked sizes (tiles); used by the plan's enemies
 def shapes():
     """the pre-baked shapes: the fixed ones above plus the Zap Kite zig-zag, whose numbers come from source/zigzag.json."""
     zz = json.load(open(ZIGZAG_DATA))["zigzag"]
-    return dict(SHAPES, zigzag=dict(kind="zigzag", size=zigzag_size(zz), length=zz["length"], width=zz["width"], amplitude=zz["amplitude"], turns=zz["turns"]))
+    return dict(SHAPES, zigzag=dict(kind="zigzag", size=zigzag_size(zz), length=zz["length"], strokeWidth=zz["strokeWidth"], amplitude=zigzag_amplitude(zz), turns=zz["turns"]))
 
 def main():
     os.makedirs(SP, exist_ok=True); os.makedirs(PV, exist_ok=True)

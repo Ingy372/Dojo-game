@@ -1,10 +1,13 @@
 {
-  "notes": "Zap Kite zig-zag lane (the #438 follow-up, DECIDED 5; resized on the Manager's #444 review). Read by build_dash_telegraph.py; all sizes are in tiles. The lane runs along +x (rotate by atan2(dy, dx)) and is centred on the canvas. It starts and ends on the aim line and swings 'amplitude' tiles to each side, so the visible length (round ends included) is 'length'. 'length' = the draft Zap Kite's attack reach (drafts/content/enemies/zap-kite.json, reach 3.0) and 'width' = 2 x its areaRadius (0.6): the sim treats areaRadius as the lane's half-width (a dash-only attack covers every point within areaRadius of the segment from the enemy to enemy + reach), so the full width is 1.2. Choice to note: the sim's capsule also extends areaRadius past both ends (4.2 long in all); 'length' here follows the Manager's call (reach 3.0, round ends included). 'amplitude' 0.3 and 'turns' 2 are art: at 3 x 1.2 four turns blur into a blob, so two corners (an S-bend, same slope on every leg) keep the zig-zag readable; the swing puts the drawn edge 0.3 tile beyond the sim's straight hit lane on each side. Change a number here and re-run the builder; nothing is hard-coded in the script.",
+  "notes": "Zap Kite zig-zag lane (the #438 follow-up, DECIDED 5; redone on the Manager's second #444 review). Read by build_dash_telegraph.py; all sizes are in tiles. The lane runs along +x (rotate by atan2(dy, dx)) and is centred on the canvas. It shows the TRUE hit capsule: the sim treats a dash-only attack as every point within areaRadius of the segment from the enemy to enemy + reach (drafts/content/enemies/zap-kite.json: reach 3.0, areaRadius 0.6), so the capsule is 'width' = 2 x areaRadius = 1.2 wide and 'length' = reach + 2 x areaRadius = 4.2 long, round ends included; its middle is reach / 2 in front of the enemy. The drawn zig-zag must stay inside that capsule: 'strokeWidth' is the band's thickness, and 'amplitude' (how far the centre line swings to each side) is clamped by the builder to (width - strokeWidth - 2 x the outline, about 0.023) / 2, so stroke, swing and outline together never pass 'width'. 'turns' = corners in the path (even). Change a number here and re-run the builder; nothing is hard-coded in the script.",
   "zigzag": {
-    "length": 3.0,
+    "reach": 3.0,
+    "areaRadius": 0.6,
+    "length": 4.2,
     "width": 1.2,
+    "strokeWidth": 0.5,
     "amplitude": 0.3,
-    "turns": 2,
+    "turns": 4,
     "canvasMargin": 0.5
   }
 }

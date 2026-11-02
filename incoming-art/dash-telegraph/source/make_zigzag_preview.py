@@ -25,8 +25,8 @@ def scene(phase=0.0, alpha=1.0, progress=0.7, windup_frame=-1):
     for y in range(rows):
         for x in range(cols): img.alpha_composite(fl, (x * T, y * T))
     f = BB.sprdir("zap-kite"); m = BB.meta(f); pl, pa = BB.player("W"); pl_s, pa_s = BB.player("N"); bang = D.sc(D.L("dash-bang.png"), D.K * 1.2)
-    def kite_lane(kx, ky, angle, tag):          # kite at the lane's start; lane centre half its length along the aim
-        L = ZZ["length"]; ax, ay = math.cos(math.radians(angle)), math.sin(math.radians(angle)); cx, cy = kx + ax * L / 2, ky + ay * L / 2
+    def kite_lane(kx, ky, angle, tag):          # kite at the lane's start; the capsule's middle is half the reach in front of it
+        L = ZZ["reach"]; ax, ay = math.cos(math.radians(angle)), math.sin(math.radians(angle)); cx, cy = kx + ax * L / 2, ky + ay * L / 2
         dec = zigzag_decal(angle, phase, alpha); img.alpha_composite(dec, (round(cx * T - dec.width / 2), round(cy * T - dec.height / 2)))
         D.place(img, BB.frame(f, m, "windup", "E" if abs(angle) < 45 else "SE", windup_frame, BB.PURPLE), m["anchor"], kx, ky)
         img.alpha_composite(bang, (round(kx * T - bang.width / 2), round((ky - 1.4) * T)))

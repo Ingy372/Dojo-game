@@ -10,7 +10,7 @@ All art is top-down floor decals, at **96 px per tile** (2x the game's `TILE = 4
 | Shape | Files (`dash-<shape>_<layer>.png`) | Canvas px | Default size (tiles) | Anchor (origin) |
 |---|---|---|---|---|
 | lane | glow, fill, edge | 576 x 192 | 5 long x 1 wide, rounded ends | centre (0.5, 0.5) = middle of the lane; lane runs along +x |
-| zigzag (Zap Kite) | glow, fill, edge | 384 x 288 | 3.0 long x 1.2 wide, 2 turns, swing 0.3 tile each side, rounded ends | centre (0.5, 0.5) = middle of the lane; runs along +x, rotate like the lane. Numbers: `source/zigzag.json` |
+| zigzag (Zap Kite) | glow, fill, edge | 576 x 288 | 4.2 long x 1.2 wide = the hit capsule (reach 3.0 + 2 x areaRadius 0.6); 4 corners, band 0.5, swing 0.3, all inside the 1.2 width | centre (0.5, 0.5) = middle of the capsule, which is half the reach (1.5 tiles) in front of the enemy; runs along +x, rotate like the lane. Numbers: `source/zigzag.json` |
 | arc | glow, fill, edge | 576 x 576 | outer radius 2.6, band 1.0, 120 deg | centre = the enemy; the arc opens toward screen-up (-y) at rotation 0 |
 | arc180 | glow, fill, edge | 576 x 576 | outer radius 2.6, band 1.0, 180 deg | as arc |
 | ring | glow, fill, gap, edge | 768 x 768 | outer radius 3.0, band 0.8, gap 40 deg | centre = the enemy; the gap points screen-down (+y) at rotation 0 |
