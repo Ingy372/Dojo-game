@@ -1094,3 +1094,12 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - `stationary: true` enemy flag; thunder-drum, sleepy-sentry and thorn-sprout use speed 0.
 - The sim models Bellows Puff's no-damage push (Hit slide, Block hold, wall stop, `push` event). A Puff room costs 0 Health.
 - Tests: `k31-boss-tag` (+3), `c430-stationary` (4), `c430-push` (5), `puff-push` balance report (gated). Shots in /workspace/shots/c430-fixes with `pass-fail.md`.
+
+### GUARD-SCALE-01: bigger Guardians (2026-11-02)
+- Guardians draw, collide and reach 1.5x (Stone Giant and Lost Lightbearer 1.75x, not live yet). Factors and the zoom numbers are in `content/settings/guardian-scale.json`.
+- Body and danger circles scale fully; reach and start range take half the extra radius (`reachGrowth` 0.5 in the data), trimmed so B5 belt 4 (46.0 gate) passes as on main.
+- A held 0.9x zoom in Guardian rooms (placeholder in data, Jay to pick) keeps the head under the HUD at 667x375; it also applies with Reduced motion on.
+- Dodge check at 667x375: farthest escape from a red circle 1.25 to 1.79 tiles, a Dash is 2.5.
+- Camera eases out to 0.8x when the Guardian walks into view; no zoom with Reduced motion on.
+- Golden fixture re-captured (boss rooms only); one noisy test uses 300 seeds.
+- Tests: `guard-scale-01` (15). Shots in /workspace/shots/guard-scale-01 with `pass-fail.md`.
