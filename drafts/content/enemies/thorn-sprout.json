@@ -1,13 +1,13 @@
 {
   "id": "thorn-sprout",
   "name": "Thorn Sprout",
-  "notes": "DRAFT for C13-1 (bestiary-plan.md). A grumpy sprout that stays put and spits seeds. Stats set in R-BAL-8 (#183). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-1 (bestiary-plan.md). A grumpy sprout that stays put and spits seeds. Stats set in R-BAL-8 (#183). Speed 0.01 = stays put (loadEnemy needs a speed above 0). Distances in tiles, times in ticks (20 per second).",
   "color": "#6fae4a",
   "maxHealth": 59,
   "power": 11,
   "guard": 10,
   "radius": 0.4,
-  "moveSpeedTilesPerSecond": 0.0,
+  "moveSpeedTilesPerSecond": 0.01,
   "sightRange": 10,
   "attack": {
     "name": "seed spit",

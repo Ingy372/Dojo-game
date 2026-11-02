@@ -1,7 +1,7 @@
 {
   "id": "river-watcher",
   "name": "The River Watcher",
-  "notes": "DRAFT for C13-5 (bestiary-plan.md; lore from drafts/content/lore/guardians-and-relics.json, unchanged). Blue Guardian on floor 5. Same shape as content/enemies/floor-keeper.json, plus phases. Stats are TODO for the Researcher (the scaling guide puts a Guardian at about 90% of the tier max; hits-to-beat in the 40-80 boss band). Faith tie-ins stay out until Jay decides; see faithOverlayKey.",
+  "notes": "Muddy splash strength 0.01 (loadEnemy needs above 0; the real slow-zone is for the Programmer). DRAFT for C13-5 (bestiary-plan.md; lore from drafts/content/lore/guardians-and-relics.json, unchanged). Blue Guardian on floor 5. Same shape as content/enemies/floor-keeper.json, plus phases. Stats are TODO for the Researcher (the scaling guide puts a Guardian at about 90% of the tier max; hits-to-beat in the 40-80 boss band). Faith tie-ins stay out until Jay decides; see faithOverlayKey.",
   "color": "#5aa0d6",
   "boss": true,
   "guardian": true,
@@ -25,7 +25,7 @@
     },
     {
       "name": "muddy splash",
-      "strength": 0.0,
+      "strength": 0.01,
       "startRange": 5.0,
       "reach": 4.0,
       "areaRadius": 1.0,
