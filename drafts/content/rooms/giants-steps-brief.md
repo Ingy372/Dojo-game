@@ -15,9 +15,9 @@ A long mountain stair, with big old steps made for someone very tall. The stones
 ## How the engine will use it (not built yet)
 
 - **`minFloor`** is on every room: the first floor (1-5) it may appear on. The Programmer is making the engine change that reads it. Until then the field is ignored and only `earliestRoom` (room number inside a floor) applies.
-- **`maxFloor` 4** is on the two Boulder Roller rooms only. This is my reading of "keep the Roller on floor 4 only". It is a proposal: if the engine has no `maxFloor`, remove it and the Roller rooms also appear on floor 5.
+- **`maxFloor` 4** is on the two Boulder Roller rooms only. This is my reading of "keep the Roller on floor 4 only". The Manager approved it, and `maxFloor` will be added to the Programmer's minFloor item.
 - **Floors 1-4 end in the existing Floor Keeper boss.** Floor 5 ends in the Stone Giant (`great-stair`, `minFloor` 5).
-- **Earlier-tier enemies are mixed in** by their existing ids (`brute`, `shield`, `swarmer`), so the floors do not feel thin, and their challenge patterns come along automatically (Swarmer, Shield Guard and Floor Keeper have `challenge.fromBelt` 4, Brute has 5; all from room 2). Each enemy keeps its own band: Swarmer and Brute from floor 1, Shield Guard from floor 3.
+- **Earlier-tier enemies are mixed in** by their existing ids (`brute`, `shield`, `swarmer`), so the floors do not feel thin, and their challenge patterns come along automatically (Swarmer, Shield Guard and Floor Keeper have `challenge.fromBelt` 4, Brute has 5, and the belt note for the Brute is: Programmer confirms Green's belt index; all from room 2). Each enemy keeps its own band: Swarmer and Brute from floor 1, Shield Guard from floor 3.
 - **Column and row count from 1** in the `enemies` entries (like `content/rooms/`, so column 1 is the left wall tile). `tiles[]` is indexed from 0 in the file, as usual.
 
 ## The rooms (11)
