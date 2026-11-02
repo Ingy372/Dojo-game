@@ -21,7 +21,11 @@ export type EffectType =
   | 'counterWindow'
   | 'disarm'
   | 'counterStrength'
-  | 'focusGain';
+  | 'focusGain'
+  | 'counterHits'
+  | 'counterPush'
+  | 'reflectStaggers'
+  | 'disarmAttacks';
 
 export interface Effect {
   type: EffectType;
@@ -37,6 +41,8 @@ export interface Effect {
   below?: number;
   /** shieldBreaker: Focus gained when a hit breaks a shield. */
   focusOnBreak?: number;
+  /** counterHits: how many quick hits this adds (`amount` is each hit's move strength). */
+  hits?: number;
 }
 
 /** The sum of all the player's effects. Zero means "no change". */
@@ -89,6 +95,16 @@ export interface PlayerMods {
   counterStrength: number;
   /** Focus gains are this share bigger (0.2 = +20%; Calm Mind). */
   focusGain: number;
+  /** R-PROGRESSION-BETA PB-02: a Perfect Counter adds this many quick hits (0 = none)... */
+  counterHits: number;
+  /** ...each at this move strength. */
+  counterHitStrength: number;
+  /** A Perfect Counter pushes the attacker back this many tiles (0 = no push). */
+  counterPush: number;
+  /** A Block's bounce-back also staggers the attacker this many ticks (0 = no). */
+  reflectStaggerTicks: number;
+  /** A disarmed enemy stays disarmed for this many attacks (0 = disarm lasts 1). */
+  disarmAttacks: number;
 }
 
 export function noMods(): PlayerMods {
@@ -117,6 +133,11 @@ export function noMods(): PlayerMods {
     disarm: 0,
     counterStrength: 0,
     focusGain: 0,
+    counterHits: 0,
+    counterHitStrength: 0,
+    counterPush: 0,
+    reflectStaggerTicks: 0,
+    disarmAttacks: 0,
   };
 }
 
@@ -185,6 +206,19 @@ export function modsFrom(effects: readonly Effect[], ticksPerSecond: number): Pl
       case 'counterStrength':
         m.counterStrength += e.amount;
         break;
+      case 'counterHits':
+        m.counterHits += e.hits ?? 1;
+        m.counterHitStrength = Math.max(m.counterHitStrength, e.amount);
+        break;
+      case 'counterPush':
+        m.counterPush += e.amount;
+        break;
+      case 'reflectStaggers':
+        m.reflectStaggerTicks = Math.max(m.reflectStaggerTicks, e.amount);
+        break;
+      case 'disarmAttacks':
+        m.disarmAttacks = Math.max(m.disarmAttacks, Math.round(e.amount));
+        break;
       case 'focusGain':
         m.focusGain += e.amount;
         break;
@@ -213,6 +247,10 @@ const TYPES: readonly EffectType[] = [
   'disarm',
   'counterStrength',
   'focusGain',
+  'counterHits',
+  'counterPush',
+  'reflectStaggers',
+  'disarmAttacks',
 ];
 
 /** Effects that are simply on or off (no amount needed). */
@@ -236,10 +274,12 @@ export function loadEffect(data: unknown, fail: (problem: string) => never): Eff
   const seconds = num('seconds', type === 'comboSpeed');
   const below = num('below', type === 'lowHealthFocus');
   const focusOnBreak = num('focusOnBreak', false);
+  const hits = num('hits', type === 'counterHits');
   if (radius !== undefined) out.radius = radius;
   if (everyHits !== undefined) out.everyHits = everyHits;
   if (seconds !== undefined) out.seconds = seconds;
   if (below !== undefined) out.below = below;
   if (focusOnBreak !== undefined) out.focusOnBreak = focusOnBreak;
+  if (hits !== undefined) out.hits = hits;
   return out;
 }

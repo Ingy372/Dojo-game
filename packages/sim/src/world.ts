@@ -167,6 +167,8 @@ export interface EnemyState {
   chaseTicks: number;
   /** Disarmed by a Perfect Counter: its next attack does this much less damage (0 = not disarmed). */
   disarmed: number;
+  /** PB-02: attacks left while disarmed (set by a Perfect Counter; unset = it was never disarmed). */
+  disarmLeft?: number;
   /** Elite trait (S1 #3), or null for a normal enemy. Its stats in `def` are already scaled. */
   elite: EliteKind | null;
   /** The Guarding elite protecting this enemy right now (updated every tick), or null. */
@@ -1187,7 +1189,7 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
         const done = currentAttack(e);
         e.mode = 'recover';
         e.modeTicks = done.recoverTicks;
-        resolveAttack(world, e);
+        resolveAttack(world, room, e);
         e.attackCenter = null;
         if (done.followUp && e.mode === 'recover') {
           // R-CHALLENGE P2: first hit of a two-part attack: wait the gap, then wind up the second.
@@ -1294,7 +1296,7 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
 }
 
 /** The swing lands: each player in the danger area gets a Perfect Counter, a Block, or a Hit. */
-function resolveAttack(world: WorldState, e: EnemyState): void {
+function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
   world.events.push({ kind: 'enemySwing', enemyId: e.id });
   const center = e.attackCenter;
   if (!center) return;
@@ -1304,7 +1306,12 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
   const pushing = e.disarmed > 0 && e.def.weapon !== null;
   const power = pushing ? e.def.weapon!.disarmedPower : e.def.power;
   const weak = pushing ? 1 : 1 - e.disarmed;
-  e.disarmed = 0;
+  // PB-02 (Kick and Spin): a disarm can last more than one swing.
+  if (e.disarmLeft !== undefined && e.disarmLeft > 1) e.disarmLeft--;
+  else {
+    e.disarmed = 0;
+    e.disarmLeft = undefined;
+  }
   for (const id of Object.keys(world.players).sort()) {
     const p = world.players[id];
     if (!isActive(p)) continue;
@@ -1327,11 +1334,22 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       if (world.bells < bellsNeeded) world.events.push({ kind: 'bell', count: ++world.bells, of: bellsNeeded });
       if (p.mods.healOnPerfect > 0) p.health = Math.min(p.maxHealth, p.health + p.mods.healOnPerfect);
       landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, chainFocus(p.counterChain));
+      // Off the Line / Slip and Double: quick extra punches, no extra Focus.
+      for (let i = 0; i < p.mods.counterHits && e.mode !== 'defeated'; i++) landHit(world, p, e, 'counter', p.mods.counterHitStrength, 0);
       if (e.mode !== 'defeated') {
         e.mode = 'stagger';
         e.modeTicks = COMBAT.counter.perfectStaggerTicks + p.mods.staggerTicks;
         // Disarm: this attacker's next attack is weaker.
-        if (p.mods.disarm > 0) e.disarmed = Math.max(e.disarmed, p.mods.disarm);
+        if (p.mods.disarm > 0) {
+          e.disarmed = Math.max(e.disarmed, p.mods.disarm);
+          e.disarmLeft = Math.max(e.disarmLeft ?? 0, 1, p.mods.disarmAttacks);
+        }
+        // Drive Back: the attacker is pushed away from the player (bosses stay put).
+        if (p.mods.counterPush > 0 && !e.def.boss) {
+          const away = directionTo(p.pos, e.pos);
+          e.pos = { x: e.pos.x + away.x * p.mods.counterPush, y: e.pos.y + away.y * p.mods.counterPush };
+          pushOutOfWalls(room, e.pos, e.def.radius);
+        }
       }
       // Ripple Counter: the counter also hits every other enemy nearby.
       if (p.mods.rippleRadius > 0) {
@@ -1359,6 +1377,11 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       if (p.mods.blockReflect > 0 && isEnemyPresent(e) && (!e.shieldUp || p.mods.shieldBreaker)) {
         const back = Math.max(1, Math.round(damage(e.def.power, a.strength, guardOf(p)) * p.mods.blockReflect));
         hurtEnemy(world, p, e, 'reflect', back);
+        // High Block Strike: a bounced hit leaves the attacker off-balance.
+        if (p.mods.reflectStaggerTicks > 0 && e.mode !== 'defeated') {
+          e.mode = 'stagger';
+          e.modeTicks = Math.max(e.modeTicks, p.mods.reflectStaggerTicks);
+        }
       }
     } else {
       // Hit: full damage, combo resets.
@@ -1555,6 +1578,7 @@ function resetEnemy(world: WorldState, e: EnemyState): void {
   e.splitDone = false;
   e.chaseTicks = 0;
   e.disarmed = 0;
+  e.disarmLeft = undefined;
   world.events.push({ kind: 'enemySpawn', enemyId: e.id });
 }
 
