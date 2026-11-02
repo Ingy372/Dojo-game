@@ -89,15 +89,23 @@ def moves(e, name, tint):
 
 # ---------- golem stones ----------
 def stones():
-    ims = []
+    """5, 4 and 3 stones (rows) x idle, wind-up (last frame) and attack (impact) (columns), facing S and SE, at 2x on one ground line."""
+    rows = []
     for n in (5, 4, 3):
         f = sprdir("stack-golem") if n == 4 else os.path.join(BG, "stack-golem", f"stones-{n}", "sprites")
-        if os.path.isdir(f): ims.append((n, frame(f, meta(f), "idle", "S"), meta(f)["anchor"]))
-    if not ims: return
-    S = 2; w = ims[0][1].width * S; h = ims[0][1].height * S
-    img = Image.new("RGBA", (w * len(ims), h + 20), FLOOR); d = ImageDraw.Draw(img)
-    for k, (n, im, a) in enumerate(ims):
-        img.alpha_composite(im.resize((w, h), Image.NEAREST), (k * w, 20)); label(d, (k * w + 6, 4), f"{n} stones" + (" (full)" if k == 0 else ""))
+        if os.path.isdir(f): rows.append((n, f, meta(f)))
+    if not rows: return
+    S = 2; m0 = rows[0][2]; w = m0["frameWidth"] * S; h = m0["frameHeight"] * S
+    cols = [("idle", 0, "idle"), ("windup", -1, "wind-up (last frame)"), ("attack", 0, "attack (impact)")]; dirs = ["S", "SE"]
+    img = Image.new("RGBA", (w * len(cols) * len(dirs), h * len(rows) + 22), FLOOR); d = ImageDraw.Draw(img)
+    for r, (n, f, m) in enumerate(rows):
+        gy = 22 + r * h + int(m["anchor"]["y"] * S); d.line([(0, gy), (img.width, gy)], fill=(70, 66, 90, 255))
+        for k, dr in enumerate(dirs):
+            for j, (an, fi, nm) in enumerate(cols):
+                im = frame(f, m, an, dr, fi, "#ff3b30"); x0 = (k * len(cols) + j) * w
+                img.alpha_composite(im.resize((im.width * S, im.height * S), Image.NEAREST), (x0, 22 + r * h))
+                if r == 0: label(d, (x0 + 6, 5), f"{dr}: {nm}")
+        label(d, (6, 24 + r * h), f"{n} stones" + (" (full)" if n == 5 else ""), (255, 220, 120, 255))
     img.save(os.path.join(PV, "stack-golem_stones.png")); print("stones", img.size)
 
 # ---------- roller + lane ----------

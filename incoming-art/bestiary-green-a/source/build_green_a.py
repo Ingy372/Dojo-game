@@ -330,9 +330,8 @@ elif E == "cliff-goat":   # a low, long, sure-footed goat (absolute tile sizes):
     for x in (1, -1):
         sd_ = "foot." + ("L" if x > 0 else "R")
         M_(f"ear{x}", ellipsoid((x * 0.2, -0.38, 0.5), (0.09, 0.04, 0.05), rot=(0, x * 25, x * -15)), MAT["body"], glow=True)
-        M_(f"horn{x}a", tube((x * 0.08, -0.44, 0.63), (x * 0.17, -0.4, 0.73), 0.05, 0.045, segs=12), MAT["accent"], glow=True)
-        M_(f"horn{x}b", tube((x * 0.17, -0.4, 0.73), (x * 0.215, -0.29, 0.72), 0.045, 0.03, segs=12), MAT["accent"], glow=True)
-        M_(f"horn{x}t", ellipsoid((x * 0.215, -0.28, 0.715), (0.032, 0.032, 0.032)), MAT["accent"], glow=True)
+        M_(f"horn{x}a", tube((x * 0.09, -0.43, 0.64), (x * 0.165, -0.41, 0.75), 0.052, 0.04, segs=12), MAT["accent"], glow=True)   # ONE short, upright, rounded horn per side, spread in a V (clean from the front)
+        M_(f"horn{x}t", ellipsoid((x * 0.165, -0.41, 0.75), (0.04, 0.04, 0.04)), MAT["accent"], glow=True)
         M_(f"legF{x}", ellipsoid((x * 0.13, -0.2, 0.12), (0.06, 0.06, 0.12)), MAT["body"], sd_)
         M_(f"hoofF{x}", ellipsoid((x * 0.13, -0.2, 0.03), (0.075, 0.085, 0.035)), MAT["hoof"], sd_)
         M_(f"legB{x}", ellipsoid((x * 0.13, 0.33, 0.12), (0.06, 0.07, 0.12)), MAT["body"])
@@ -351,15 +350,13 @@ elif E == "stack-golem":  # a tall, narrow tower of rounded stones, the face on 
     M_("face", ellipsoid((0, -ryt * 0.78, zt), (rx_[-1] * 0.62, ryt * 0.2, GZ * 0.72)), MAT["dark"], "top", outline=False)
     for x in (1, -1):
         M_(f"cheek{x}", ellipsoid((x * R * 0.5, -R * 0.64, zt - R * 0.3), (R * 0.12, R * 0.05, R * 0.07)), MAT["cheek"], "top", outline=False)
-elif E == "boulder-roller":   # a small porter hugging a big round boulder (absolute tile sizes): a round head with a work-band, stubby arms, a chunky boulder with chips
+elif E == "boulder-roller":   # a small porter hugging a big round boulder (absolute tile sizes): a round head with a plain work-band, stubby arms, a chunky boulder with chips
     HZ_ = 0.65
     M_("body", ellipsoid((0, 0, 0.31), (0.27, 0.25, 0.25), segs=24, rings=14), MAT["body"], glow=True)
     M_("belly", ellipsoid((0, -0.17, 0.27), (0.15, 0.1, 0.14)), MAT["belly"], outline=False)
     M_("head", ellipsoid((0, 0, HZ_), (0.27, 0.25, 0.24), segs=24, rings=14), MAT["body"], glow=True)
-    # a work-band across the forehead (front only, so the head does not read as a pot), tied with a little knot and two tails at the back
-    M_("band", ellipsoid((0, -0.215, HZ_ + 0.075), (0.2, 0.05, 0.04), rot=(-25, 0, 0)), MAT["accent"], glow=True)
-    M_("knot", ellipsoid((0, 0.22, HZ_ + 0.075), (0.05, 0.045, 0.04)), MAT["accent"], glow=True)
-    for x in (1, -1): M_(f"tail{x}", ellipsoid((x * 0.045, 0.27, HZ_ + 0.05), (0.025, 0.06, 0.02), rot=(0, 0, x * 25)), MAT["accent"], outline=False)
+    # a plain work-band across the forehead (front only, so the head does not read as a pot): no knot, no tails, no gold
+    M_("band", ellipsoid((0, -0.215, HZ_ + 0.075), (0.2, 0.05, 0.04), rot=(-25, 0, 0)), toon_material("BAND", "#8d6f58"), outline=True)
     for x in (1, -1):
         sa_ = "arm." + ("L" if x > 0 else "R")
         sh_ = Vector((x * 0.22, 0, 0.36)); hd_ = Vector((x * 0.25, -0.17, 0.28))
