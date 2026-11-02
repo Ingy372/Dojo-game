@@ -1,0 +1,187 @@
+{
+  "character": "splash-wave",
+  "frameWidth": 160,
+  "frameHeight": 160,
+  "anchor": {
+    "x": 80.0,
+    "y": 118.4,
+    "note": "feet / ground point of the character, in pixels from the frame's top-left"
+  },
+  "pixelsPerTile": 80.0,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "orthoScaleTiles": 2.0,
+    "note": "one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen"
+  },
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "directionVectors": {
+    "N": [
+      0,
+      -1
+    ],
+    "NE": [
+      0.7071,
+      -0.7071
+    ],
+    "E": [
+      1,
+      0
+    ],
+    "SE": [
+      0.7071,
+      0.7071
+    ],
+    "S": [
+      0,
+      1
+    ],
+    "SW": [
+      -0.7071,
+      0.7071
+    ],
+    "W": [
+      -1,
+      0
+    ],
+    "NW": [
+      -0.7071,
+      -0.7071
+    ]
+  },
+  "sheetLayout": "rows = directions (in the order above), columns = frames, no padding",
+  "layers": [
+    {
+      "name": "body",
+      "order": 0,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "glow",
+      "order": 1,
+      "tint": false,
+      "optional": false
+    },
+    {
+      "name": "telegraph",
+      "order": 2,
+      "tint": true,
+      "optional": true
+    },
+    {
+      "name": "light",
+      "order": 3,
+      "tint": false,
+      "optional": false
+    }
+  ],
+  "animations": {
+    "idle": {
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "tags": {},
+      "sheets": {
+        "body": "splash-wave_body_idle.png",
+        "glow": "splash-wave_glow_idle.png",
+        "telegraph": "splash-wave_telegraph_idle.png",
+        "light": "splash-wave_light_idle.png"
+      },
+      "note": "a gentle swell and lap, 1 s loop"
+    },
+    "windup": {
+      "frames": 12,
+      "fps": 10,
+      "durationSec": 1.2,
+      "loop": false,
+      "tags": {
+        "telegraph": "0-11"
+      },
+      "sheets": {
+        "body": "splash-wave_body_windup.png",
+        "glow": "splash-wave_glow_windup.png",
+        "telegraph": "splash-wave_telegraph_windup.png",
+        "light": "splash-wave_light_windup.png"
+      },
+      "telegraphSeconds": 1.2,
+      "telegraphTicks": 24,
+      "telegraphIntensity": [
+        0.25,
+        0.265,
+        0.31,
+        0.379,
+        0.469,
+        0.572,
+        0.678,
+        0.781,
+        0.871,
+        0.94,
+        0.985,
+        1.0
+      ],
+      "note": "lasts exactly the telegraph (24 ticks). In Guided mode the wind-up holds: hold the last frame (intensity 1). telegraphIntensity: per-frame alpha (0..1) for the telegraph layer. It ramps up through the wind-up and fades smoothly through the first half of the attack (no hard cut). Multiply it into the tinted layer's alpha"
+    },
+    "attack": {
+      "frames": 14,
+      "fps": 10,
+      "durationSec": 1.4,
+      "loop": false,
+      "tags": {
+        "impact": "0",
+        "recover": "2-13"
+      },
+      "sheets": {
+        "body": "splash-wave_body_attack.png",
+        "glow": "splash-wave_glow_attack.png",
+        "telegraph": "splash-wave_telegraph_attack.png",
+        "light": "splash-wave_light_attack.png"
+      },
+      "keyFrames": {
+        "impact": 0
+      },
+      "recoverSeconds": 1.2,
+      "telegraphIntensity": [
+        1.0,
+        0.95,
+        0.812,
+        0.611,
+        0.389,
+        0.188,
+        0.05,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "note": "the surge: the wave rolls forward. Dash-only: the purple striped lane and '!!' are drawn by the game (incoming-art/dash-telegraph)"
+    }
+  },
+  "enemy": "splash-wave",
+  "name": "Splash Wave",
+  "sizeTiles": {
+    "bodyWidth": 0.82,
+    "bodyHeight": 0.62,
+    "radiusInData": 0.45
+  },
+  "tintGuidance": {
+    "mode": "multiply (Phaser setTint)",
+    "body": "no tint",
+    "glow": "no tint, always drawn (soft rim)",
+    "telegraph": "optional: draw only during the wind-up, tinted (e.g. #ff3b30 red, or #ffd36b gold in Guided mode) and flashed / pulsed in alpha",
+    "light": "no tint, always drawn (only the defeat has anything in it)"
+  }
+}
