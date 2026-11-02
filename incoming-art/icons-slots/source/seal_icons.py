@@ -104,39 +104,28 @@ def place_fit(med, art, wmax, hmax, cx=128, cy=128, bg=None, fmax=1.0):
     return f
 
 
-def counter(rim=RIMS['counter'], hx=104, hr=24, ty=88, tw=56, th=76, belt=136, sh=(118, 107), wr=(160, 105), r_sh=14.5, r_wr=11, F=29, hipk=.6, wrist_len=10,
-            relb=(69, 152), rcuff=(72, 146), rfist=(71, 141), rang=-35, r_rel=10, r_rcuff=8.5,
-            ar=(42, 12), arrow_y=152, arrow_dx=26, stance=(-28, 40), ank=200, W=158, H=158, cx=132, cy=126, burst_gap=12):
-    """v5 pass 5: a reverse punch. PUNCHING ARM (viewer's right): ONE smooth tapered sleeve from the shoulder (a round shoulder in front of the jacket corner) to the wrist, with no
-    cuff band or stacked tubes, then a short skin wrist and a natural-size mitten fist (F = 29 on the face) knuckles out toward the burst. HIP ARM (viewer's left): drawn wholly
-    BEHIND the jacket; only a small fist (60% of the punch fist) peeks out at the side of the hip beside the belt, its curl line on top (palm up), and the elbow tip behind it.
-    2 fists, 0 fingers, 0 toes."""
-    def draw(fs):
-        med = medallion(rim); a = Art()
-        for k, dx in enumerate(stance):
-            hip = (hx + (-12 if k == 0 else 12), ty + th - 8)
-            an = (hx + dx, ank)
-            sleeve(a, hip, (an[0], an[1] - 12), 13, 11, ow=4.6, shade=GSH, band=6)
-            kick_leg(a, an, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
-        sleeve(a, relb, rcuff, r_rel, r_rcuff, ow=3.0, shade=GSH, band=6)                                          # hip arm, behind the jacket
-        ang = math.radians(rang); ux, uy = math.cos(ang), math.sin(ang)
-        limb(a, rcuff, (rfist[0] - ux * 3, rfist[1] - uy * 3), 5.5, 5.8)
-        mitten_fist(a, rfist[0], rfist[1], fs * hipk, ang, -1)
-        gi_torso(a, hx, ty, tw, th, belt_y=belt, ow=4.6, shade=GSH, band=6)
-        limb(a, (hx, ty - 8), (hx, ty + 6), 8, 8)
-        head_front(a, hx, ty - 24, hr)
-        sleeve(a, sh, wr, r_sh, r_wr, ow=3.0, shade=GSH, band=6)                                                    # ONE sleeve, shoulder to wrist
-        limb(a, (wr[0] - 2, wr[1]), (wr[0] + wrist_len, wr[1]), 7.0, 7.4)
-        mitten_fist(a, wr[0] + wrist_len + fs * .38, wr[1], fs, 0, 1)
-        burst(a, wr[0] + wrist_len + fs * .88 + burst_gap, wr[1] - 4, 6.5, 14, 7, .3)
-        pts = [(hx + arrow_dx + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 36, -8)]
-        arrow(a, pts, BLUE_S, 7, 16, outline=(255, 252, 240))
-        return med, a
-    fs = F
-    for _ in range(3):
-        med, a = draw(fs)
-        bb = a.im.getchannel('A').getbbox(); k = P(1)
-        fs = F / min(W / ((bb[2] - bb[0]) / k), H / ((bb[3] - bb[1]) / k), 1.0)
+def counter(rim=RIMS['counter'], hx=104, hr=22, ty=90, tw=52, th=76, belt=136, sh=(118, 106), wr=(158, 104), r_sh=10.5, r_wr=9, fs=24, wrist_len=8,
+            gel=(-34, -2), gwr=(-30, -34), gfs=24, ar=(42, 12), arrow_y=152, arrow_dx=26, stance=(-28, 40), ank=200, W=158, H=158, cx=132, cy=126, burst_gap=10):
+    """v5 pass 6 (sheet 10), drawn in Jumping Spins' own proportions (head r 22, jacket about 50 wide, forearm sleeve r 10 to 9, mitten fist 24).
+    PUNCHING ARM (viewer's right): ONE smooth tapered sleeve (shoulder r 11 to wrist r 9, no cuff band, no seams) then a short skin wrist and a mitten fist knuckles out; the arm
+    reaches 57 U past the jacket edge (Spins' raised forearm and fist is 64 U). BACK HAND (viewer's left): no hip chamber; it is raised as a guard exactly like Spins' arm, a sleeve
+    with a cuff, a skin wrist and a fist by the cheek, the elbow down at the belt. 2 fists, 0 fingers, 0 toes."""
+    med = medallion(rim); a = Art()
+    for k, dx in enumerate(stance):
+        hip = (hx + (-12 if k == 0 else 12), ty + th - 8)
+        an = (hx + dx, ank)
+        sleeve(a, hip, (an[0], an[1] - 12), 13, 11, ow=4.6, shade=GSH, band=6)
+        kick_leg(a, an, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
+    gi_torso(a, hx, ty, tw, th, belt_y=belt, ow=4.6, shade=GSH, band=6)
+    limb(a, (hx, ty - 8), (hx, ty + 6), 8, 8)
+    head_front(a, hx, ty - 24, hr)
+    forearm_block(a, (hx + gel[0], belt + gel[1]), (hx + gwr[0], belt + gwr[1]), gfs, -math.pi / 2 + .1, 1, r_el=10, r_cuff=9, gband=6, **GK)
+    sleeve(a, sh, wr, r_sh, r_wr, ow=3.0, shade=GSH, band=6)                                                    # ONE sleeve, shoulder to wrist
+    limb(a, (wr[0] - 2, wr[1]), (wr[0] + wrist_len, wr[1]), 6.6, 7.0)
+    mitten_fist(a, wr[0] + wrist_len + fs * .38, wr[1], fs, 0, 1)
+    burst(a, wr[0] + wrist_len + fs * .88 + burst_gap, wr[1] - 4, 6.5, 14, 7, .3)
+    pts = [(hx + arrow_dx + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 36, -8)]
+    arrow(a, pts, BLUE_S, 7, 16, outline=(255, 252, 240))
     place_fit(med, a, W, H, cx, cy)
     return med.result()
 
@@ -163,15 +152,15 @@ def forearm_block(a, el, wr, fist_s, fist_ang, side, clip=None, r_el=14.5, r_cuf
     mitten_fist(a, wx + ux * (8 + fist_s * .42), wy + uy * (8 + fist_s * .42), fist_s, ang, side, clip=clip)
 
 
-def guard(rim=RIMS['guard'], eo=20, ey=204, wx=14, wy=150, fs=32, front=1, shield=True, hy=94, f=.95, cy=151):
+def guard(rim=RIMS['guard'], eo=26.5, ey=185, wx=10, wy=148, fs=30, front=1, shield=True, hy=94, f=1.0, cy=146, th=100, belt=188, r_el=12.5, r_cuff=11):
     """v5: a real crossed-forearm X-block. Smiling kid, gi torso, a soft blue shield behind. Both forearms come up from low elbows and cross in front of the chest:
     one sleeve is clearly drawn OVER the other (the outline and the cuff band make the overlap plain). Each forearm ends in the same cuff band, clear skin wrist and
-    one closed mitten fist (one soft rounded square, one thumb crease) as before, the fists up by the cheeks. The forearms are folded so the elbows sit tight against the ribs, INSIDE the
-    torso outline (elbow outer edge 128 +- 36 against the torso edge 128 +- 39; see measure_guard.py). 2 fists, 0 fingers."""
+    one closed mitten fist (one soft rounded square, one thumb crease) as before, the fists up by the cheeks. Pass 6: the elbow outer edge sits right at the torso edge (torso x 85.8..170.5 U,
+    elbow 86.0..170.2 U; measure_guard.py) and the arms and jacket are shortened to Jumping Spins' proportions (measure_proportions.py). 2 fists, 0 fingers."""
     med = medallion(rim); a = Art(); c = None
     if shield:
         a.shape(poly(chaikin([(60, 118), (196, 118), (192, 172), (128, 228), (64, 172)], 3)), lighten(BLUE, .3), BLUE, lighten(BLUE, .6), ow=3.0, band=5, clip=c)
-    gi_torso(a, 128, 126, 78, 110, clip=c, belt_y=198)
+    gi_torso(a, 128, 126, 78, th, clip=c, belt_y=belt)
     limb(a, (128, 108), (128, 126), 10, 10, clip=c)
     a.shape(circ(128, hy, 28), SKIN, SKIN_S, lighten(SKIN, .4), ow=3, band=4, clip=c)
     hair = [(99, hy+4)] + arc_pts(128, hy, 30, math.pi, 2 * math.pi, 16) + [(157, hy+4), (148, hy-12), (128, hy-18), (108, hy-12)]
@@ -185,7 +174,7 @@ def guard(rim=RIMS['guard'], eo=20, ey=204, wx=14, wy=150, fs=32, front=1, shiel
     B = ((128 + eo, ey), (128 - wx, wy), 1)
     back, fr = (B, A) if front == -1 else (A, B)
     for el, wr, sd in (back, fr):
-        forearm_block(a, el, wr, fs, 0, sd, clip=c, r_el=14.5, r_cuff=12.5)
+        forearm_block(a, el, wr, fs, 0, sd, clip=c, r_el=r_el, r_cuff=r_cuff)
     place(med, a, f, 128 - f * 128, 128 - f * cy, face_clip())
     return med.result()
 
