@@ -1,14 +1,17 @@
-"""The v5 review sheet: columns day / dusk, rows White WITH the smog layer on top (what the kid sees until the floor boss falls), White CLEARED (smog layer removed),
+"""The growth review sheet (all five stages, day and dusk): columns day / dusk, rows White WITH the smog layer on top (what the kid sees until the floor boss falls), White CLEARED (smog layer removed),
 Blue (sakura; dusk has the fire bowl, paper lanterns, 12 fireflies). 932x430 each. Run after make_stages.py."""
 import os
 from PIL import Image, ImageDraw, ImageFont
 HERE = os.path.dirname(os.path.abspath(__file__)); G = os.path.join(HERE, ".."); S = os.path.join(G, "stages"); P = os.path.join(G, "previews")
 ROWS = (("White + SMOG layer (before the White floor boss)", P, "1-white-with-smog-{v}.png"),
         ("White CLEAR (smog fades out after the boss = after-boss look)", S, "1-white-{v}.png"),
+        ("Yellow - first repairs, lit window, first blooms", S, "2-yellow-{v}.png"),
+        ("Orange - lush beds, flag, chimney smoke, river koi", S, "3-orange-{v}.png"),
+        ("Green - lantern festival, koi, blossoms", S, "4-green-{v}.png"),
         ("Blue v5 - sakura (Red and up reuse this)", S, "5-blue-{v}.png"))
 try: f = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 19)
 except Exception: f = ImageFont.load_default()
-CH = 34; sheet = Image.new("RGB", (932 * 2 + 10, (430 + CH) * 3 + 20), (36, 36, 44)); d = ImageDraw.Draw(sheet)
+CH = 34; sheet = Image.new("RGB", (932 * 2 + 10, (430 + CH) * len(ROWS) + 20), (36, 36, 44)); d = ImageDraw.Draw(sheet)
 for ri, (label, folder, pat) in enumerate(ROWS):
     for ci, v in enumerate(("day", "dusk")):
         x, y = ci * 942, ri * (430 + CH + 10)

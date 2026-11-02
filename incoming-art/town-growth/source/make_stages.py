@@ -21,12 +21,16 @@ HERE = os.path.dirname(os.path.abspath(__file__)); OUT = os.path.join(HERE, ".."
 TS = os.path.join(HERE, "..", "..", "town-square-concept", "source"); AZ = os.path.join(HERE, "..", "..", "action-zone-dojo")
 sys.path.insert(0, HERE); import blue_extras as BX
 PPT = 80; SHIFT = int(0.95 * PPT); W, H = 1864, 860; FS = 0.92
-STAGES = {"white": (1, "white"), "green": (4, "green"), "blue": (5, "blue")}   # order, belt
+STAGES = {"white": (1, "white"), "yellow": (2, "yellow"), "orange": (3, "orange"), "green": (4, "green"), "blue": (5, "blue")}   # order, belt
 CFG = {
     "whitesmog": dict(shadow=0.38, scol=(0.80, 0.84, 0.92), rim=0.14, rimc=(236, 236, 226), warm=(1.0, 0.99, 0.96), sat=0.74, con=0.94, expo=1.0,
                   stint=(0.97, 0.97, 0.92), htint=(1.0, 0.99, 0.96), lift=0.08, vig=0.16, bloom=0.0, blot=0.05, glow=0.0),
     "white": dict(shadow=0.52, scol=(0.74, 0.80, 0.95), rim=0.22, rimc=(240, 238, 226), warm=(1.02, 1.0, 0.96), sat=0.94, con=1.02, expo=1.0,
                   stint=(0.96, 0.96, 0.98), htint=(1.02, 1.0, 0.97), lift=0.0, vig=0.08, bloom=0.0, blot=0.04, glow=0.0),
+    "yellow": dict(shadow=0.60, scol=(0.70, 0.78, 0.98), rim=0.28, rimc=(248, 240, 218), warm=(1.03, 1.01, 0.96), sat=1.05, con=1.06, expo=0.99,
+                   stint=(0.94, 0.95, 1.00), htint=(1.03, 1.01, 0.97), lift=0.0, vig=0.075, bloom=0.0, blot=0.035, glow=0.0),
+    "orange": dict(shadow=0.65, scol=(0.68, 0.76, 1.0), rim=0.32, rimc=(255, 242, 212), warm=(1.04, 1.02, 0.95), sat=1.11, con=1.08, expo=0.985,
+                   stint=(0.93, 0.95, 1.03), htint=(1.035, 1.015, 0.965), lift=0.0, vig=0.072, bloom=0.0, blot=0.032, glow=0.0),
     "green": dict(shadow=0.70, scol=(0.66, 0.75, 1.0), rim=0.36, rimc=(255, 244, 214), warm=(1.05, 1.02, 0.95), sat=1.18, con=1.11, expo=0.98,
                   stint=(0.92, 0.95, 1.04), htint=(1.04, 1.02, 0.97), lift=0.0, vig=0.07, bloom=0.10, blot=0.03, glow=0.0),
     "blue": dict(shadow=0.74, scol=(0.64, 0.68, 0.98), rim=0.52, rimc=(255, 226, 160), warm=(1.06, 1.01, 0.90), sat=1.26, con=1.15, expo=0.96,
@@ -47,8 +51,8 @@ def blossom_far(sky, x, y, sz, variant, haze):
 def sky_far(stage, variant):     # 'stage' here is the STYLE: white (clear air), whitesmog (the smoggy look that the smog layer is fitted to), green, blue
     if variant == "day":
         SK = {"whitesmog": [(176, 192, 205), (224, 229, 231)], "white": [(124, 178, 232), (226, 242, 252)], "green": [(112, 186, 246), (226, 245, 255)],
-              "blue": [(112, 168, 236), (255, 228, 186)]}[stage]
-        HAZE = {"whitesmog": (204, 212, 218), "white": (214, 230, 242), "green": (212, 236, 252), "blue": (255, 232, 200)}[stage]
+              "yellow": [(118, 180, 238), (228, 243, 252)], "orange": [(114, 184, 244), (228, 244, 254)], "blue": [(112, 168, 236), (255, 228, 186)]}[stage]
+        HAZE = {"whitesmog": (204, 212, 218), "white": (214, 230, 242), "green": (212, 236, 252), "yellow": (214, 232, 244), "orange": (212, 234, 250), "blue": (255, 232, 200)}[stage]
     else:
         SK = [(38, 40, 92), (214, 132, 120)]; HAZE = (120, 100, 150)
     sky = Image.new("RGBA", (W, H)); top, bot = SK
@@ -57,8 +61,8 @@ def sky_far(stage, variant):     # 'stage' here is the STYLE: white (clear air),
     if variant == "day":     # soft painted clouds (behind the far hills): grey bank in White, white puffs in Green, warm-lit puffs in Blue
         random.seed(3)
         for cx, cy, sc in ((300, 64, 1.0), (760, 104, 0.8), (1500, 70, 0.9), (1760, 112, 0.7)):
-            for layer, col, dy in (("sh", {"whitesmog": (170, 180, 190), "white": (196, 214, 236), "green": (186, 210, 238), "blue": (255, 196, 160)}[stage], 7),
-                                   ("hi", {"whitesmog": (206, 211, 216), "white": (250, 252, 255), "green": (255, 255, 255), "blue": (255, 246, 232)}[stage], 0)):
+            for layer, col, dy in (("sh", {"whitesmog": (170, 180, 190), "white": (196, 214, 236), "green": (186, 210, 238), "yellow": (190, 212, 238), "orange": (188, 210, 238), "blue": (255, 196, 160)}[stage], 7),
+                                   ("hi", {"whitesmog": (206, 211, 216), "white": (250, 252, 255), "green": (255, 255, 255), "yellow": (252, 253, 255), "orange": (255, 255, 255), "blue": (255, 246, 232)}[stage], 0)):
                 cl = Image.new("RGBA", (W, H), (0, 0, 0, 0)); cd = ImageDraw.Draw(cl)
                 for ox, oy, rx, ry in ((-70, 8, 60, 22), (-20, -6, 70, 34), (40, -2, 64, 30), (86, 10, 52, 20), (0, 14, 120, 16)):
                     x, y = cx + ox * sc, cy + oy * sc + dy
@@ -169,6 +173,9 @@ TORO = {"green": ((10.2, 9.1, 0.55), (13.1, 9.1, 0.55)), "blue": ((10.2, 9.1, 0.
 def pools_for(stage):
     if stage == "white":   # lamp posts + shop front + the one lit placeholder window only; lanterns are off
         return [(9.3, 5.05, 1.4), (20.9, 4.55, 0.6), (5.0, 9.05, 1.0), (19.0, 9.05, 1.0)]
+    if stage == "yellow":   # the left window and the bridge lanterns are lit again; the shop is still shut
+        return [(9.3, 5.05, 1.4), (18.3, 4.55, 0.6), (20.9, 4.55, 0.6), (5.0, 9.05, 1.0), (19.0, 9.05, 1.0), (14.6, 8.65, 0.6), (16.6, 8.65, 0.6)]
+    if stage == "orange": return list(POOLS)      # the shop is open: every lit thing, no stone lanterns yet
     return list(POOLS) + list(TORO[stage])
 
 def soft_light(out, x, y, rx, ry, col, strength, blur):
@@ -358,12 +365,11 @@ def smog_png(a, k):
 
 PLAN = [  # order, belt, status, one line of what the picture shows
     (1, "white", "built", "A little run down: a boarded window, a patched awning and bridge plank, weedy empty beds, murky water, EMPTY plinth. This picture is the CLEAR-AIR base (blue sky, bright); the grey smog is the SEPARATE overlay 1-white-smog-* drawn on top while the White floor boss is unbeaten. After the boss the smog FADES OUT and this clear White picture is the town from then on. Still friendly."),
-    (2, "yellow", "planned", "NOT BUILT: the clean-up step - boards come off, fresh paint, colour comes back, first blooms. Until it is built use the White picture."),
-    (3, "orange", "planned", "NOT BUILT: the shop opens - chimney, warm lanterns, bread, a fuller town. Until it is built use the White picture."),
+    (2, "yellow", "built", "The clean-up: the boards are off and the window is lit again, the patches are gone, the water runs clearer with a second koi, the beds show their first blooms, one flower box, the bridge lanterns glow again. The shop is still shut (lanterns off, no chimney). Brighter, fresher colour. Still no statue (empty plinth)."),
+    (3, "orange", "built", "The shop opens: a chimney with a curl of smoke, a basket of bread, the shop lanterns lit, fuller flower beds, flower boxes on the neighbour, a small blue-and-cream flag on the shop roof, fresher paint and a warmer grade. A fuller, happier town. Still no statue (empty plinth)."),
     (4, "green", "built", "Clearly upgraded: fresh paint and a vivid colour grade, the STATUE unveiled with two stone lanterns, lush flower beds, bunting across the river, a roof flag, window boxes, blossoming hedges, bridge garland, soft cast shadows."),
     (5, "blue", "built", "FULLY MAXED hero town (the last town picture): golden-hour grade, five SAKURA trees drawn with the SAME toon ramp and outline as the other trees (thick brown trunks, soft pink clumps), each in a stone tree ring with a soft ground shadow and fallen petals, all clear of the walking lane; the two bench corners are sakura too; a few distant blossom trees on the hills; four stone lanterns, two tall banners, two roof flags, golden paving ring, lotus and koi, chimney smoke, sun shafts, bloom on the statue and lanterns. Dusk grades the pink to deeper cooler rose with a warm rim on the sides facing the paper lanterns, fire bowl and lamp posts, plus 12 fireflies and falling petals.")]
 USE_BLUE = ["red", "redblack", "brown", "brownblack", "black"]
-FALLBACK = {"yellow": "white", "orange": "white"}
 
 def write_manifest():
     out = {"note": "White is TWO layers: the clear background plus the separate smog overlay (it FADES OUT after the White floor boss is beaten; clear White is the after-boss look). All other belts are one picture, no overlay. Town growth is CAPPED at Blue. One FULL town background per belt, day + dusk, dojo sprite already in. Swap the whole picture by the student's highest earned belt. Nothing stacks. Red, Red/Black, Brown, Brown/Black and Black have NO town pictures of their own: they use the Blue picture.",
@@ -371,7 +377,6 @@ def write_manifest():
     for order, belt, status, notes in PLAN:
         e = {"order": order, "belt": belt, "built": status == "built", "statue": belt in ("green", "blue"), "notes": notes}
         if status == "built": e["files"] = {v: {"2x": f"{order}-{belt}-{v}@2x.png", "1x": f"{order}-{belt}-{v}.png"} for v in ("day", "dusk")}
-        else: e["useUntilBuilt"] = FALLBACK[belt]
         if belt == "white":
             e["smogOverlay"] = {"files": {v: {"2x": f"1-white-smog-{v}@2x.png", "1x": f"1-white-smog-{v}.png"} for v in ("day", "dusk")}, "sizePx2x": [W, H],
                                 "draw": "full-frame transparent PNG, same size as the background; draw it OVER the White background (same day/dusk variant) and UNDER characters, effects and UI",
@@ -384,7 +389,7 @@ def write_manifest():
     json.dump(out, open(os.path.join(OUT, "stages", "stages.json"), "w"), indent=2); open(os.path.join(OUT, "stages", "stages.json"), "a").write("\n")
 
 if __name__ == "__main__":
-    passes = sys.argv[1]; which = sys.argv[2:] or ["white", "green", "blue"]
+    passes = sys.argv[1]; which = sys.argv[2:] or ["white", "yellow", "orange", "green", "blue"]
     d = os.path.join(OUT, "stages"); os.makedirs(d, exist_ok=True); pv = os.path.join(OUT, "previews"); os.makedirs(pv, exist_ok=True)
     def save2(im, name, folder=d):
         im.save(os.path.join(folder, name + "@2x.png")); im.resize((W // 2, H // 2), Image.LANCZOS).save(os.path.join(folder, name + ".png"))

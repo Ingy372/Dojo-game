@@ -1,3 +1,26 @@
+# Delivery Note: Town Growth FINAL export (A-TOWN-GROWTH, PR #396)
+
+**ITEM:** A-TOWN-GROWTH, final export on PR #396 (branch `bot-art-town-growth`). Jay approved the v5 look on Nov 1.
+
+**WHAT:** The full set is in `stages/`, day and dusk, @2x (1864x860) and 1x (932x430): **White** (clear base + the separate smog layer, fades out after the White floor boss), **Yellow** (new), **Orange** (new), **Green** and **Blue** (five sakura). `stages/stages.json` is the lookup for the Programmer: Red, Red/Black, Brown, Brown/Black and Black are `useStage: "blue"`. Review sheet: `previews/samples-sheet.png` (all stages, day and dusk). The approved White, Green and Blue pictures were re-rendered and kept as they were (differences of at most 1/255 on a few pixels).
+- **Yellow, the clean-up:** the boards are off and the left window is lit again, no patches, clearer water with a second koi, first blooms in the beds, one window box, the bridge lanterns glow at dusk. The shop is still shut (lanterns off, no chimney). No statue yet.
+- **Orange, the shop opens:** chimney with two smoke puffs, a roof flag, shop lanterns glowing at dusk, lush beds, two window boxes, a river koi. No statue yet (the statue comes at Green).
+
+**WHY:** Each step should read as a clear change, climbing from run down (White) to maxed (Blue), with the statue unveiled at Green.
+
+**Checks (second pass):**
+- Lanes: `source/check_lanes.py` 0 sakura pixels in y 444-540 at @2x (lowest crown top y=568).
+- Red check on all 24 `stages/*.png`: only the CMA sign's brand red remains, with the same pixel count per size in every stage (about 830 at 1x, about 3300 at @2x by day), so nothing new is red.
+- Phone and house-number strings from the dojo sign: 0 hits in `town-growth` (derived and checked without printing them).
+- Heads: nothing drawn above the characters' heads. Glows: each has a real source (lit windows, lamp posts, bridge lanterns, shop lanterns from Orange, Tower). The Yellow shop lanterns are OFF on purpose.
+- Only `incoming-art/` changed. No game code, no `main`, no `.blend`, no history rewrite. Main is merged into the branch with a normal merge.
+
+**DECIDE (Jay):** (1) Yellow and Orange: is the step from White to Yellow to Orange big enough, or should the beds and flags go further? (2) The Orange smoke puffs and roof flag are small at 1x. OK? (3) The smog fade (2.5 s, ease-out) is a suggestion: tune in game.
+
+**NEXT:** Programmer wires the lookup from `stages.json`. Nothing else is open on the town. The older v5 note follows for the record.
+
+---
+
 # Delivery Note: Town Growth v5, Blue sakura redone (A-TOWN-GROWTH)
 
 **ITEM:** A-TOWN-GROWTH, fifth pass on PR #396 (same branch, `bot-art-town-growth`) after Jay found the v4 sakura awkward and not blended with the other trees. Deliverables: Blue day v5, Blue dusk v5 (`stages/5-blue-{day,dusk}[@2x].png`) and a v4 / v5 comparison sheet (`previews/compare-v4-v5-blue.png`). v4 Blue is moved to `superseded/v4-stages/` (with the v4 sheet and scripts). Green and White pictures are untouched.
@@ -36,4 +59,4 @@
 
 **Mismatches against `drafts/content/town/town-changes.md`:** unchanged since v4 (cap at Blue, statue from Green, run-down White, full per-belt backgrounds instead of overlays). They are in the v4 note in git history (commit 802821c2) and still apply.
 
-**NEXT:** After Jay's OK: resume Yellow (clean-up) and Orange (shop opens) in the same pipeline. Red to Black stay on the Blue picture. The v3 and v4 sets stay in `superseded/` until Jay says to delete them.
+**NEXT (older):** Yellow and Orange are now built (see the top). The v3 and v4 sets stay in `superseded/` until Jay says to delete them.

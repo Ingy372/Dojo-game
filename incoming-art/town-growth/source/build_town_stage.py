@@ -2,7 +2,7 @@
 Town growth is CAPPED at Blue: White -> Yellow -> Orange -> Green -> Blue. Red and above reuse the Blue picture.
 Runs the town-square build (same scene, camera and toon look as the approved concept: PR #301 + the #393 dojo slot,
 dojo slot left empty because the dojo sprite is pasted on top later), changes it for this belt and renders one pass:
-    blender -b -P incoming-art/town-growth/source/build_town_stage.py -- --stage white|green|blue|base --pass <pass> --out <png>
+    blender -b -P incoming-art/town-growth/source/build_town_stage.py -- --stage white|yellow|orange|green|blue|base --pass <pass> --out <png>
   day / night  the town in house colours (night = the dusk picture's town: no sourceless water sparkles)
   lights       a mask: this belt's lit windows and lanterns white, the rest black (the dusk glow source)
   props        a mask: ONLY the objects this belt ADDS white (the exempt beds / river items black) - for the lanes check
@@ -12,7 +12,8 @@ dojo slot left empty because the dojo sprite is pasted on top later), changes it
   trees        Blue only: a mask of every part of every sakura (crown, trunk, tree ring): lane check, ground shadows, rim light
   bloom        Blue only: a mask of the blossom crowns only (the dusk rose grade)
 make_stages.py then adds sky, far hills, light and shadow, colour grade, effects and the dojo sprite.
-Stages: white = a little run down, no statue (empty plinth); green = clearly upgraded, statue unveiled, festive;
+Stages: white = a little run down, no statue (empty plinth); yellow = the clean-up (boards off, clearer water, first blooms, bridge lanterns back on);
+orange = the shop opens (chimney with smoke, bread basket, shop lanterns lit, fuller beds, window boxes), still no statue; green = clearly upgraded, statue unveiled, festive;
 blue = fully maxed hero town; base = no changes at all (proves the pipeline reproduces the approved picture)."""
 import bpy, sys, os, math, argparse, random, re, bmesh
 from mathutils import Vector, Euler
@@ -58,15 +59,15 @@ def tri(name, a, b, c, col, thick=0.025, outline=True):
 
 TREES = [(6.6, 6.35), (17.5, 6.0), (3.4, 10.4), (19.9, 10.4), (0.8, 7.4), (22.5, 7.4), (21.8, 5.6)]      # the round trees of the base scene (Green keeps them; Blue replaces ALL of them)
 FLOWER_PAL = ("#fbf3df", "#ffd36b", "#f6a8c4", "#b78ae0", "#6f9fd2")      # cream, gold, pink, violet, blue - never red
-SUN_UP = {"white": 0.95, "green": 0.72, "blue": 0.46, "base": 0.72}[ST]      # sun height: Blue is golden hour (longer shadows)
+SUN_UP = {"white": 0.95, "yellow": 0.88, "orange": 0.80, "green": 0.72, "blue": 0.46, "base": 0.72}[ST]      # sun height: Blue is golden hour (longer shadows)
 
 # ---- statue: it arrives at Green. In White the plinth stands empty (no star plate either).
-if ST == "white":
+if ST in ("white", "yellow", "orange"):
     for n in ("s_legL", "s_legR", "s_feet", "s_body", "s_belt", "s_head", "s_arm-1", "s_arm1", "s_fist-1", "s_fist1", "s_shine", "star"): rm(n)
 
 # ---- water sparkles (day only): fewer when run down
 sp = sorted((o.name for o in bpy.data.objects if o.name.startswith("spk")), key=lambda s: int(s[3:]))
-keep = {"white": 0, "green": 10, "blue": 14, "base": 14}[ST]
+keep = {"white": 0, "yellow": 4, "orange": 8, "green": 10, "blue": 14, "base": 14}[ST]
 for n in sp[keep:]: rm(n)
 
 SHOP_C, SHOP_R = 9.3, 4.65
@@ -85,22 +86,25 @@ def chimney_and_basket():
 # ---- the upgraded-town pieces (Green and Blue share them; Blue adds more on top) -------------------------------------
 def retint(stage):
     """fresh paint and richer colours: paving, grass, hedges, water, roofs. Same objects, new colours (adds nothing)."""
-    pal = {"green": ["#e6d5b0", "#dfcba4", "#ebdcbc", "#d9c59c", "#e3d1ae", "#e8d9b8", "#dccaa8"],
+    pal = {"yellow": ["#e4d3ad", "#dcc9a1", "#e8d8b6", "#d6c298", "#e0cea9", "#e5d5b3", "#d9c7a4"],
+           "orange": ["#e5d4ae", "#ddcaa2", "#e9d9b7", "#d8c499", "#e1cfaa", "#e6d6b5", "#dac8a6"],
+           "green": ["#e6d5b0", "#dfcba4", "#ebdcbc", "#d9c59c", "#e3d1ae", "#e8d9b8", "#dccaa8"],
            "blue": ["#ecdcb6", "#e4d1a8", "#f1e4c4", "#dec99d", "#eed9bd", "#e9d8b0", "#f0e0bd"]}[stage]
+    T = lambda y, o, g, b: {"yellow": y, "orange": o, "green": g, "blue": b}[stage]
     for o in list(bpy.data.objects):
         m = re.match(r"st(-?\d+)_(\d+)$", o.name)
         if m:
             i, j = int(m.group(1)), int(m.group(2)); paint(o.name, pal[(i * 3 + j * 5 + (i * j) % 3) % len(pal)])
     paint("plaza_base", "#a8977a")
-    for k in range(28): paint(f"ring{k}", "#f7f0dc" if stage == "green" else "#f3d27a")
-    paint("spath", "#f7f0dc" if stage == "green" else "#f3d27a")
-    paint("grass_back", "#78c45e" if stage == "green" else "#72c862")
-    for k in range(16): paint(f"hedge{k}", "#54a456" if stage == "green" else "#47a05c")
-    paint("water", "#74cdf0" if stage == "green" else "#6ad2f2"); paint("riverbed", "#4f9fcb" if stage == "green" else "#4a9ccf")
-    paint("shoproof", "#4f9a78" if stage == "green" else "#3c9482")
-    paint("plcwall", "#efe3c8" if stage == "green" else "#f5e8c8"); paint("plcroof", "#8fa8c4" if stage == "green" else "#6f98c0")
+    for k in range(28): paint(f"ring{k}", T("#f1e9d0", "#f4ecd2", "#f7f0dc", "#f3d27a"))
+    paint("spath", T("#f1e9d0", "#f4ecd2", "#f7f0dc", "#f3d27a"))
+    paint("grass_back", T("#78bc5e", "#78c05e", "#78c45e", "#72c862"))
+    for k in range(16): paint(f"hedge{k}", T("#53a056", "#53a456", "#54a456", "#47a05c"))
+    paint("water", T("#7cc6e2", "#78c9e8", "#74cdf0", "#6ad2f2")); paint("riverbed", T("#5aa2c6", "#56a0c8", "#4f9fcb", "#4a9ccf"))
+    if stage != "yellow": paint("shoproof", T("", "#4f9a78", "#4f9a78", "#3c9482"))
+    paint("plcwall", T("#ede0c4", "#eee2c6", "#efe3c8", "#f5e8c8")); paint("plcroof", T("#8aa2bf", "#8aa6c2", "#8fa8c4", "#6f98c0"))
     paint("plcbase", "#b8bcd2")
-    for c in (9.4, 13.9): paint(f"soil{c}", "#4a9a48")
+    for c in (9.4, 13.9): paint(f"soil{c}", "#4a9a48" if stage in ("green", "blue") else "#5e7d44")
 
 def lush_beds(n_extra, seed):
     rnd = random.Random(seed)
@@ -111,8 +115,8 @@ def lush_beds(n_extra, seed):
             x = c - 0.55 + 1.1 * (k + rnd.random() * 0.6) / n_extra; rr = 6.0 + rnd.uniform(-0.15, 0.15); zz = 0.4 + rnd.uniform(0, 0.1)
             add(f"ob_bedfl{c}{k}", ellipsoid(G(x, rr, zz), (0.075, D(0.06), 0.065), segs=8, rings=4), FLOWER_PAL[(k + int(c * 3)) % 5], False)
 
-def window_boxes():
-    for x in (-1.3, 1.3):
+def window_boxes(xs=(-1.3, 1.3)):
+    for x in xs:
         cx = 19.6 + x
         add(f"ob_pbox{x}", box(G(cx, 4.5, 0.16 + 0.5), (0.74, 0.14, 0.14)), "#a8743f")
         for k in range(6): add(f"ob_pbfl{x}{k}", ellipsoid(G(cx - 0.28 + k * 0.112, 4.5, 0.16 + 0.62), (0.06, 0.06, 0.07), segs=8, rings=4), FLOWER_PAL[(k + int(x * 3)) % 5], False)
@@ -275,6 +279,25 @@ if ST == "white":
     for k, (c, r) in enumerate(((10.1, 9.55), (13.3, 9.7), (8.3, 8.6))):
         for q in range(3): add(f"ob_crk{k}{q}", box(G(c + q * 0.3, r + (0.07 if q % 2 else -0.05), 0.065), (0.34, D(0.025), 0.012)), "#80756a", False)
     for k, (c, r) in enumerate(((10.4, 8.45), (12.95, 8.4), (11.0, 9.25), (12.4, 9.25))): tuft(f"ob_pw{k}", c, r, 0.06)
+elif ST == "yellow":
+    # --- YELLOW: the clean-up. The boards come off and the window is lit again, the patches are gone, the water runs clearer with a second koi,
+    #     the beds show their first blooms, one window box, the bridge lanterns glow again. The shop is still shut (lanterns off, no chimney). No statue yet.
+    retint("yellow")
+    for n in ("lily3", "lilyf2", "lilyf3", "koi2", "koi3", "koit2", "koit3"): rm(n)          # a little less life than Green: one koi and one lily more than White
+    lush_beds(5, 2); window_boxes((-1.3,))
+    for n in ["shopln-2.3", "shopln2.3", "shopln0h", "shopln1h", "shopln2h"]: OFF_LIGHTS.add(n); paint(n, "#e6dcc0")      # the shop is still closed
+    for k, (c, r) in enumerate(((10.4, 8.45), (12.95, 8.4))): tuft(f"ob_pw{k}", c, r, 0.06, ("#7fb25a", "#97c066", "#6fa650"))
+    for k, (c, r) in enumerate(((11.0, 9.25), (12.4, 9.25))): add(f"ob_fresh{k}", ellipsoid(G(c, r, 0.06), (0.06, D(0.05), 0.04), segs=8, rings=4), FLOWER_PAL[k], False)      # first little blooms in the paving cracks' old place
+elif ST == "orange":
+    # --- ORANGE: the shop opens. Chimney with a curl of smoke, a basket of bread, the shop lanterns lit, fuller flower beds, window boxes on the
+    #     neighbour, a small flag on the shop roof. Still no statue.
+    retint("orange"); chimney_and_basket(); lush_beds(9, 4); window_boxes()
+    roof_flag("fs", 7.8, 3.875, 2.48, 1.0, "#6f9fd2", "#fbf3df")
+    for k, dx in enumerate((0.0, 0.1)):
+        rr = (0.13, 0.17)[k]; add(f"ob_sm{k}", ellipsoid(G(10.45 + dx, 3.6, 3.5 + 0.36 * k), (rr, rr * 0.7, rr * 0.85), segs=12, rings=8), ("#f3f1ec", "#e8e6e2")[k % 2])
+    for k, (x, rr, col) in enumerate(((15.45, 6.9, "#fbf3df"),)):
+        add(f"ob_rvkoi{k}", ellipsoid(G(x, rr, 0.035), (0.08, D(0.2), 0.015), segs=10, rings=3), col, False)
+        add(f"ob_rvkoit{k}", ellipsoid(G(x, rr - 0.2, 0.035), (0.06, D(0.06), 0.01), segs=6, rings=3), col, False)
 elif ST == "green":
     # --- GREEN: fresh paint, the statue unveiled, a festive little town. Clearly upgraded, still airy.
     retint("green"); chimney_and_basket(); lush_beds(10, 3); window_boxes(); hedge_blossoms(1, ("#fbf3df", "#ffd36b"), 4)

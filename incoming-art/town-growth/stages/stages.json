@@ -55,18 +55,36 @@
     {
       "order": 2,
       "belt": "yellow",
-      "built": false,
+      "built": true,
       "statue": false,
-      "notes": "NOT BUILT: the clean-up step - boards come off, fresh paint, colour comes back, first blooms. Until it is built use the White picture.",
-      "useUntilBuilt": "white"
+      "notes": "The clean-up: the boards are off and the window is lit again, the patches are gone, the water runs clearer with a second koi, the beds show their first blooms, one flower box, the bridge lanterns glow again. The shop is still shut (lanterns off, no chimney). Brighter, fresher colour. Still no statue (empty plinth).",
+      "files": {
+        "day": {
+          "2x": "2-yellow-day@2x.png",
+          "1x": "2-yellow-day.png"
+        },
+        "dusk": {
+          "2x": "2-yellow-dusk@2x.png",
+          "1x": "2-yellow-dusk.png"
+        }
+      }
     },
     {
       "order": 3,
       "belt": "orange",
-      "built": false,
+      "built": true,
       "statue": false,
-      "notes": "NOT BUILT: the shop opens - chimney, warm lanterns, bread, a fuller town. Until it is built use the White picture.",
-      "useUntilBuilt": "white"
+      "notes": "The shop opens: a chimney with a curl of smoke, a basket of bread, the shop lanterns lit, fuller flower beds, flower boxes on the neighbour, a small blue-and-cream flag on the shop roof, fresher paint and a warmer grade. A fuller, happier town. Still no statue (empty plinth).",
+      "files": {
+        "day": {
+          "2x": "3-orange-day@2x.png",
+          "1x": "3-orange-day.png"
+        },
+        "dusk": {
+          "2x": "3-orange-dusk@2x.png",
+          "1x": "3-orange-dusk.png"
+        }
+      }
     },
     {
       "order": 4,
