@@ -393,6 +393,9 @@ export class GameScene extends Phaser.Scene {
   private enemiesAt: number | null = 0;
   /** GUARD-SCALE-01: the boss intro's camera pull-back, as a share of the normal zoom (1 = none). */
   private bossZoom = 1;
+  /** GUARD-SCALE-01: the zoom-out plays once per room, the first time the Guardian walks into view. */
+  private bossSeen = false;
+  private bossWatchFrom = 0;
   /** While above 0, the action is frozen for a moment on impact. */
   private hitStopMs = 0;
 
@@ -590,10 +593,12 @@ export class GameScene extends Phaser.Scene {
     cam.ignore([...this.controls.objects, ...this.buttons.objects]);
     cam.fadeIn(350, 10, 8, 16);
     this.enemiesAt = 0;
+    this.bossZoom = 1;
+    this.bossSeen = false;
+    this.bossWatchFrom = this.time.now + 600;
     if (this.run && this.run.depth === 0 && !this.run.bowed) this.askForBow();
     else this.introduceRoom();
 
-    this.bossZoom = 1;
     this.layout();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     // Let go of everything if the app goes to the background mid-touch.
@@ -693,6 +698,7 @@ export class GameScene extends Phaser.Scene {
     this.cues.clear();
     this.counterWindowOpen = false;
     this.drawTethers(now);
+    this.watchBossAppear();
     this.syncEnemyViews();
     for (const e of this.world.enemies) this.drawEnemy(e, blend, now);
     this.buttons.counterWindow(this.counterWindowOpen);
@@ -1878,8 +1884,21 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.ignore(prompt);
   }
 
+  /** The first time a living Guardian is inside the camera's view, play the zoom-out (once per room). */
+  private watchBossAppear(): void {
+    // Wait a moment after the room starts so the camera has followed the player and the Guardian is really drawn.
+    if (this.bossSeen || this.enemiesAt === null || this.menuOpen || this.time.now < this.bossWatchFrom) return;
+    const view = this.cameras.main.worldView;
+    const seen = this.world.enemies.some(
+      (e) => e.def.boss && e.mode !== 'defeated' && e.pos.x * TILE > view.x && e.pos.x * TILE < view.right && e.pos.y * TILE > view.y && e.pos.y * TILE < view.bottom,
+    );
+    if (!seen) return;
+    this.bossSeen = true;
+    this.bossIntroZoom();
+  }
+
   /**
-   * GUARD-SCALE-01: when a boss room starts, the camera pulls back a little so the bigger Guardian is seen whole,
+   * GUARD-SCALE-01: when a Guardian appears, the camera pulls back a little so the bigger Guardian is seen whole,
    * holds, then eases back. Reduced motion: no zoom. The numbers are content (guardian-scale.json).
    */
   private bossIntroZoom(): void {
@@ -1910,7 +1929,6 @@ export class GameScene extends Phaser.Scene {
   /** The room's name (and challenge rule) when entering. */
   private introduceRoom(): void {
     if (!this.run) return;
-    this.bossIntroZoom();
     if (this.run.tutorial) {
       this.introduceTutorialRoom();
       return;

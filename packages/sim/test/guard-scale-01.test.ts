@@ -213,12 +213,14 @@ describe('GUARD-SCALE-01: the boss zoom-out', () => {
     expect(bossZoomPlan(false, true, { ...z, zoomTo: 1 })).toBeNull();
   });
 
-  it('is short, and GameScene plays it from the room intro using the Reduced motion setting', () => {
+  it('is short, and GameScene plays it once, when the Guardian walks into view, using the Reduced motion setting', () => {
     expect(z.outMs + z.holdMs + z.backMs).toBeLessThanOrEqual(2000);
     expect(gameSceneRaw).toMatch(/bossZoomPlan\(reducedMotion\(\), /);
-    expect(gameSceneRaw).toMatch(/private introduceRoom\(\): void \{\s*if \(!this\.run\) return;\s*this\.bossIntroZoom\(\);/);
+    expect(gameSceneRaw).toMatch(/private watchBossAppear\(\): void \{\s*if \(this\.bossSeen /);
+    expect(gameSceneRaw).toMatch(/this\.bossSeen = true;\s*this\.bossIntroZoom\(\);/);
+    expect(gameSceneRaw).toMatch(/this\.drawTethers\(now\);\s*this\.watchBossAppear\(\);/);
     // The zoom ends at exactly 1, is reset when the scene is made, and reaches the camera limits too.
-    expect(gameSceneRaw).toMatch(/this\.bossZoom = 1;\s*this\.layout\(\);/);
+    expect(gameSceneRaw).toMatch(/this\.bossZoom = 1;\s*this\.bossSeen = false;/);
     expect(gameSceneRaw).toMatch(/\* this\.bossZoom;/);
   });
 });
