@@ -1,8 +1,8 @@
 {
   "id": "town-changes",
-  "version": 2,
-  "notes": "DRAFT for C-STORY-g, a rewrite of C-STORY-f for Jay's new town arc (Oct 31). White is a little worn and hopeful, Yellow cleaner, Orange the approved base art, Green brings the statue, Blue the first gentle homely touches, Red to Black gentle upgrades, with the Red gold flame approved by Jay (t677u). One full picture per belt. Red/Black, Brown, Brown/Black and Black add-ons are PROPOSALS until Jay picks. Text only; art is in PR #396 and code is a Programmer job.",
-  "art": "incoming-art/town-growth (PR #396): stages/stages.json is the belt-to-picture lookup; the artKey on each belt below matches its names",
+  "version": 3,
+  "notes": "DRAFT for C-STORY-g, v3 (Nov 1). Town visuals stop at Blue (Jay, via the Manager). White is a little worn and hopeful, Yellow cleaner, Orange the approved base art, Green brings the statue, Blue the first gentle homely touches. One full picture per belt. Red to Black have no new art and show the Blue picture. The gold flame for Red was an art change and is superseded by the cap (Manager to confirm). The mechanic proposals for Red up live in the md and are PROPOSALS until Jay picks. Text only; art is in PR #396 and code is a Programmer job.",
+  "art": "incoming-art/town-growth (PR #396): stages/stages.json is the belt-to-picture lookup; the artKey on each belt below matches its names. PR #396 still lists Red to Black as planned pictures; with the cap they use the Blue picture instead.",
   "beltOrder": [
     "White",
     "Yellow",
@@ -17,13 +17,18 @@
   ],
   "rules": {
     "stateKey": "player's own highest earned belt; the phone shows that belt's picture",
-    "structure": "one complete town picture per belt, each in a day and a dusk version, swapped whole. Nothing stacks.",
+    "structure": "one complete town picture per belt up to Blue, each in a day and a dusk version, swapped whole. Nothing stacks. Blue is the last picture.",
+    "cap": "town visuals stop at Blue (Jay, Nov 1). Red to Black show the Blue picture.",
     "sharedSquare": "each phone renders its own town; other players are drawn on top and never change it",
     "noShame": "no locks, 'coming soon' marks, signs or text on the town, and nothing about other players' belts. A worn or empty bit is allowed when it looks friendly. Words about the town are hopeful and never blame.",
-    "dusk": "subtle and cozy; every light has a source (a window, a lantern, a lamp post, a brazier or the Tower)",
-    "redToBlack": "one gentle add-on per belt, a small one, out of the walking lanes, never a screen full of effects",
-    "colour": "no red in the town except the brand sign. Any flame is gold."
+    "dusk": "subtle and cozy; every light has a source (a window, a lantern, a lamp post or the Tower)",
+    "colour": "no red in the town except the brand sign."
   },
+  "goldFlame": {
+    "status": "superseded by the Blue cap (unconfirmed)",
+    "note": "Jay approved a gold flame for Red (t677u). It was an art change, so with no art after Blue it has no home. The Manager should confirm, or ask Jay if he wants it as a mechanic reward instead."
+  },
+  "mechanics": "Mechanic proposals for Red up are in town-changes.md (section 'From Red up'). They are proposals for Jay; none is decided.",
   "changes": [
     {
       "order": 1,
@@ -33,14 +38,15 @@
       "pictureId": "town-1-white",
       "pictureStatus": "built (sample, PR #396)",
       "statue": false,
-      "whatYouSee": "The fresh-start town: a little worn and very friendly. Faded colours, a boarded window, a patched shop awning and bridge plank, weedy flower beds, cloudy water with one koi, an empty statue plinth. The two lamp posts and the windows glow softly at dusk; the tall lantern posts stay dark for now.",
+      "whatYouSee": "A little worn but friendly: faded colours, a boarded window, a patched shop-awning stripe and a patched bridge plank, weedy empty flower beds, cloudy water with one koi, a few cracked stones near the empty statue plinth. At dusk the two lamp posts and the dojo and shop windows glow softly; the tall lantern posts stay dark.",
       "where": "The whole town picture.",
       "dayNote": "Soft, faded colours. Quiet and ready for someone to care for it.",
-      "nightNote": "Only the windows and the two lamp posts glow, gently. The tall lantern posts are dark.",
+      "nightNote": "The windows and the two lamp posts glow, gently. The tall lantern posts are dark.",
       "rewardMessage": "Welcome home! This town has lots of room to grow, and you will help it shine.",
       "storyTieIn": "Lamp Keeper / Lantern Halls: the lanterns are waiting, and the first small lights are on.",
       "fillsGatePlaceholder": "gate-white (unused alternate) - also covers chapter-1 screens 14-17 White Gate",
-      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here",
+      "pictureStatusNote": null
     },
     {
       "order": 2,
@@ -57,7 +63,8 @@
       "rewardMessage": "The town got a tidy-up! Fresh and neat, just for you.",
       "storyTieIn": "Sun Gardener / Sunrise Garden: the garden is tidy and ready to wake up.",
       "fillsGatePlaceholder": "gate-yellow",
-      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here",
+      "pictureStatusNote": null
     },
     {
       "order": 3,
@@ -74,7 +81,8 @@
       "rewardMessage": "Fresh bread at the shop! The town smells like home.",
       "storyTieIn": "Hearth Cook / Ember Kitchens: the ovens are warm again.",
       "fillsGatePlaceholder": "gate-orange",
-      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here",
+      "pictureStatusNote": null
     },
     {
       "order": 4,
@@ -91,7 +99,8 @@
       "rewardMessage": "The statue has arrived in the square! Come and take a look.",
       "storyTieIn": "Stone Giant / Giant's Steps: big things stand tall one step at a time.",
       "fillsGatePlaceholder": "gate-green",
-      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here",
+      "pictureStatusNote": null
     },
     {
       "order": 5,
@@ -108,246 +117,114 @@
       "rewardMessage": "The town feels cozy now. Koi are swimming and the sun is glowing.",
       "storyTieIn": "River Watcher / Quiet River: calm water and a calm heart.",
       "fillsGatePlaceholder": "gate-blue",
-      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here"
+      "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here",
+      "finalPicture": true,
+      "pictureStatusNote": null
     },
     {
       "order": 6,
       "belt": "red",
       "beltName": "Red",
       "artKey": "red",
-      "pictureId": "town-6-red",
-      "pictureStatus": "planned, not built yet",
+      "pictureId": null,
+      "usesPicture": "town-5-blue",
+      "pictureStatus": "no new picture (Blue is the cap)",
       "statue": true,
-      "whatYouSee": "The Blue town plus a gold flame on the hill banners and the practice-yard banners. The flame is gold, never red, with no words. This was approved by Jay (t677u). One add-on from the options below may join it.",
-      "where": "Hill banners and practice yard.",
-      "dayNote": "The banners wave with a small gold flame.",
-      "nightNote": "The flame catches the glow of the nearest lamp. Nothing new glows by itself.",
-      "rewardMessage": "Be brave! A gold flame now shines on the town banners.",
+      "whatYouSee": "The Blue town picture, unchanged. What grows from here is a mechanic proposal (see the md), not art.",
+      "where": "n/a",
+      "dayNote": "Same as Blue.",
+      "nightNote": "Same as Blue.",
+      "rewardMessage": null,
+      "rewardStatus": "Waits for Jay's pick of a mechanic. Lines are in the md.",
       "storyTieIn": "Ember Knight / Forge of Courage: courage burns warm, not angry.",
       "fillsGatePlaceholder": "gate-red",
       "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here",
-      "addOnStatus": "PROPOSAL - Jay picks one (or none). The gold flame is already part of Red.",
-      "addOnOptions": [
-        {
-          "id": "red-a",
-          "name": "Practice dummy",
-          "status": "PROPOSAL",
-          "whatYouSee": "A friendly padded training dummy on the grass at the edge of the practice yard.",
-          "dayNote": "A little stuffed dummy with a cloth belt. It stands still and waits.",
-          "nightNote": "No glow of its own. The nearest lamp lights it a little.",
-          "rewardMessage": "Be brave! A training buddy is waiting in the yard."
-        },
-        {
-          "id": "red-b",
-          "name": "Brazier with a stone ring",
-          "status": "PROPOSAL",
-          "whatYouSee": "A small brazier with a gold glow, safe inside a ring of stones, at the yard edge.",
-          "dayNote": "A calm little flame in a stone ring. No sparks fly.",
-          "nightNote": "The brazier is the light source: a warm gold pool on the ground, small and gentle.",
-          "rewardMessage": "Be brave! A warm gold light glows in the yard."
-        },
-        {
-          "id": "red-c",
-          "name": "Practice mats",
-          "status": "PROPOSAL",
-          "whatYouSee": "A neat stack of folded practice mats and a water bucket by the yard fence.",
-          "dayNote": "Tidy blue and cream mats, ready to use.",
-          "nightNote": "No glow. Quiet and calm.",
-          "rewardMessage": "Be brave! The yard has fresh mats ready for you."
-        }
-      ]
+      "mechanicStatus": "PROPOSAL - no art. Red to Black show the Blue picture (the cap). What changes from Red up is a small mechanic, which Jay picks in the md.",
+      "pictureStatusNote": null
     },
     {
       "order": 7,
       "belt": "red-black",
       "beltName": "Red/Black",
       "artKey": "redblack",
-      "pictureId": "town-7-red-black",
-      "pictureStatus": "planned, not built yet",
+      "pictureId": null,
+      "usesPicture": "town-5-blue",
+      "pictureStatus": "no new picture (Blue is the cap)",
       "statue": true,
-      "whatYouSee": "The Red town plus one gentle add-on chosen from the options below.",
-      "where": "Near the main dojo.",
-      "dayNote": "See the options.",
-      "nightNote": "See the options.",
+      "whatYouSee": "The Blue town picture, unchanged. What grows from here is a mechanic proposal (see the md), not art.",
+      "where": "n/a",
+      "dayNote": "Same as Blue.",
+      "nightNote": "Same as Blue.",
       "rewardMessage": null,
-      "rewardStatus": "PROPOSED lines are with each option; Jay picks.",
+      "rewardStatus": "Waits for Jay's pick of a mechanic. Lines are in the md.",
       "storyTieIn": "Echo Mask / Hall of Echoes: kind voices answer back.",
       "fillsGatePlaceholder": "gate-red-black",
       "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here",
-      "addOnStatus": "PROPOSAL - Jay picks one.",
-      "addOnOptions": [
-        {
-          "id": "redblack-a",
-          "name": "Wind chime",
-          "status": "PROPOSAL",
-          "whatYouSee": "A small wind chime by the main dojo door.",
-          "dayNote": "It turns and twinkles in the sun.",
-          "nightNote": "It catches the door-lamp light. No glow of its own.",
-          "rewardMessage": "Listen! The dojo door sings hello."
-        },
-        {
-          "id": "redblack-b",
-          "name": "Welcome bell",
-          "status": "PROPOSAL",
-          "whatYouSee": "A small brass welcome bell on a bracket by the dojo door.",
-          "dayNote": "A little gold bell, still and shiny.",
-          "nightNote": "It shines a bit in the door light.",
-          "rewardMessage": "Ding! The dojo door has a welcome bell."
-        },
-        {
-          "id": "redblack-c",
-          "name": "Cloth pennants",
-          "status": "PROPOSAL",
-          "whatYouSee": "A short string of small cloth pennants along the dojo porch rail (gold, cream and teal).",
-          "dayNote": "The pennants flutter in the breeze.",
-          "nightNote": "They hang quiet in the window light.",
-          "rewardMessage": "Look up! Little flags cheer along the dojo porch."
-        }
-      ]
+      "mechanicStatus": "PROPOSAL - no art. Red to Black show the Blue picture (the cap). What changes from Red up is a small mechanic, which Jay picks in the md.",
+      "pictureStatusNote": null
     },
     {
       "order": 8,
       "belt": "brown",
       "beltName": "Brown",
       "artKey": "brown",
-      "pictureId": "town-8-brown",
-      "pictureStatus": "planned, not built yet",
+      "pictureId": null,
+      "usesPicture": "town-5-blue",
+      "pictureStatus": "no new picture (Blue is the cap)",
       "statue": true,
-      "whatYouSee": "The Red/Black town plus one gentle add-on chosen from the options below.",
-      "where": "Near the right-hand placeholder building (not inside it).",
-      "dayNote": "See the options.",
-      "nightNote": "See the options.",
+      "whatYouSee": "The Blue town picture, unchanged. What grows from here is a mechanic proposal (see the md), not art.",
+      "where": "n/a",
+      "dayNote": "Same as Blue.",
+      "nightNote": "Same as Blue.",
       "rewardMessage": null,
-      "rewardStatus": "PROPOSED lines are with each option; Jay picks.",
+      "rewardStatus": "Waits for Jay's pick of a mechanic. Lines are in the md.",
       "storyTieIn": "Root Keeper / Root Library: deep roots and steady growth.",
       "fillsGatePlaceholder": "gate-brown",
       "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here",
-      "addOnStatus": "PROPOSAL - Jay picks one.",
-      "addOnOptions": [
-        {
-          "id": "brown-a",
-          "name": "Reading tree and book box",
-          "status": "PROPOSAL",
-          "whatYouSee": "A friendly young tree beside the placeholder building with a small book-swap box at its roots.",
-          "dayNote": "Leaves rustle and shade falls on a small bench.",
-          "nightNote": "A warm lamp glows inside the book box. That is the only glow.",
-          "rewardMessage": "A reading tree grew! Its roots go deep, like yours."
-        },
-        {
-          "id": "brown-b",
-          "name": "Vine arch by the beds",
-          "status": "PROPOSAL",
-          "whatYouSee": "A small wooden arch with green vines over the flower-bed path. It stays out of the walking lane.",
-          "dayNote": "Green leaves and a few small white flowers.",
-          "nightNote": "The leaves rest quiet in the lamp-post light.",
-          "rewardMessage": "A green arch grew by the garden! Come see."
-        },
-        {
-          "id": "brown-c",
-          "name": "Little free library",
-          "status": "PROPOSAL",
-          "whatYouSee": "A small wooden book box on a post near the bridge, no tree.",
-          "dayNote": "A tiny roof and a few colourful book spines.",
-          "nightNote": "A warm lamp inside the box is the only glow.",
-          "rewardMessage": "A little book box opened by the bridge. Share a story!"
-        }
-      ]
+      "mechanicStatus": "PROPOSAL - no art. Red to Black show the Blue picture (the cap). What changes from Red up is a small mechanic, which Jay picks in the md.",
+      "pictureStatusNote": null
     },
     {
       "order": 9,
       "belt": "brown-black",
       "beltName": "Brown/Black",
       "artKey": "brownblack",
-      "pictureId": "town-9-brown-black",
-      "pictureStatus": "planned, not built yet",
+      "pictureId": null,
+      "usesPicture": "town-5-blue",
+      "pictureStatus": "no new picture (Blue is the cap)",
       "statue": true,
-      "whatYouSee": "The Brown town plus one gentle add-on chosen from the options below.",
-      "where": "The skyline and the dojo window.",
-      "dayNote": "See the options.",
-      "nightNote": "See the options.",
+      "whatYouSee": "The Blue town picture, unchanged. What grows from here is a mechanic proposal (see the md), not art.",
+      "where": "n/a",
+      "dayNote": "Same as Blue.",
+      "nightNote": "Same as Blue.",
       "rewardMessage": null,
-      "rewardStatus": "PROPOSED lines are with each option; Jay picks.",
+      "rewardStatus": "Waits for Jay's pick of a mechanic. Lines are in the md.",
       "storyTieIn": "Storm Herald / Storm Stair: calm after the storm.",
       "fillsGatePlaceholder": "gate-brown-black",
       "placeholderStatus": "PLACEHOLDER in story/gate-scenes.json (PR #339, unmerged) - fill in a follow-up after the stack merges; do not edit that file here",
-      "addOnStatus": "PROPOSAL - Jay picks one.",
-      "addOnOptions": [
-        {
-          "id": "brownblack-a",
-          "name": "Tower glows a little brighter",
-          "status": "PROPOSAL",
-          "whatYouSee": "The Tower light on the skyline shines a bit brighter and steadier.",
-          "dayNote": "A small bright spot at the Tower top.",
-          "nightNote": "The Tower is the light source: a soft glow like a gentle star.",
-          "rewardMessage": "The storm is quiet. The Tower glows bright for you!"
-        },
-        {
-          "id": "brownblack-b",
-          "name": "Soft rainbow",
-          "status": "PROPOSAL",
-          "whatYouSee": "A faint rainbow behind the Tower, as if after a passing rain.",
-          "dayNote": "A pale rainbow arc. No puddles in the walking lanes.",
-          "nightNote": "No rainbow at dusk. The sky stays calm.",
-          "rewardMessage": "A soft rainbow shines over the Tower. The storm has passed!"
-        },
-        {
-          "id": "brownblack-c",
-          "name": "Lantern in the dojo window",
-          "status": "PROPOSAL",
-          "whatYouSee": "A small lantern hangs in the main dojo window, like the one Sensei keeps. Works as a plain lantern if Sensei's reveal (PR #341, unmerged) changes.",
-          "dayNote": "A little lantern in the window.",
-          "nightNote": "The lantern is the light source: a warm glow in the window.",
-          "rewardMessage": "A lantern is lit in the dojo window. It feels like home."
-        }
-      ]
+      "mechanicStatus": "PROPOSAL - no art. Red to Black show the Blue picture (the cap). What changes from Red up is a small mechanic, which Jay picks in the md.",
+      "pictureStatusNote": null
     },
     {
       "order": 10,
       "belt": "black",
       "beltName": "Black",
       "artKey": "black",
-      "pictureId": "town-10-black",
-      "pictureStatus": "planned, not built yet",
+      "pictureId": null,
+      "usesPicture": "town-5-blue",
+      "pictureStatus": "no new picture (Blue is the cap)",
       "statue": true,
-      "whatYouSee": "PROPOSAL ONLY. Black is a separate thing (Jay), so these are for Jay to pick from, or to leave out. One gentle add-on on the Brown/Black town.",
-      "where": "Near the statue and the Tower.",
-      "dayNote": "See the options.",
-      "nightNote": "See the options.",
+      "whatYouSee": "The Blue town picture, unchanged. What grows from here is a mechanic proposal (see the md), not art.",
+      "where": "n/a",
+      "dayNote": "Same as Blue.",
+      "nightNote": "Same as Blue.",
       "rewardMessage": null,
-      "rewardStatus": "PROPOSED lines are with each option; Jay picks, or skips Black.",
+      "rewardStatus": "Waits for Jay's pick of a mechanic. Lines are in the md.",
       "storyTieIn": "Lost Lightbearer / The Summit: the Great Lamp shines on the whole town (lore/10-black.md).",
       "fillsGatePlaceholder": null,
       "placeholderStatus": "n/a (Black has no gate scene placeholder)",
-      "addOnStatus": "PROPOSAL - Jay picks one, or leaves Black out of this arc.",
-      "addOnOptions": [
-        {
-          "id": "black-a",
-          "name": "Tower light steady and gold",
-          "status": "PROPOSAL",
-          "whatYouSee": "The Tower top shines a steady gold light, like the Great Lamp.",
-          "dayNote": "A warm gold spot at the Tower top.",
-          "nightNote": "The Tower is the light source: a soft gold glow, not a beam.",
-          "rewardMessage": "The Great Lamp shines! Its light reaches the whole town."
-        },
-        {
-          "id": "black-b",
-          "name": "Gold lantern by the statue",
-          "status": "PROPOSAL",
-          "whatYouSee": "One small gold lantern on a post beside the statue.",
-          "dayNote": "A little gold lantern with a shiny glass.",
-          "nightNote": "The lantern is the light source: one soft gold pool by the plinth.",
-          "rewardMessage": "A gold lantern shines beside the statue."
-        },
-        {
-          "id": "black-c",
-          "name": "Gold specks drifting to the Tower",
-          "status": "PROPOSAL",
-          "whatYouSee": "A few tiny gold specks float slowly up toward the Tower.",
-          "dayNote": "Three or four specks only.",
-          "nightNote": "The same few specks, drifting slowly.",
-          "rewardMessage": "Little gold lights float up toward the Tower."
-        }
-      ]
+      "mechanicStatus": "PROPOSAL - no art. Red to Black show the Blue picture (the cap). What changes from Red up is a small mechanic, which Jay picks in the md.",
+      "pictureStatusNote": null
     }
   ],
   "clashResolutions": [
@@ -373,7 +250,7 @@
       "n": 4,
       "topic": "Structure",
       "clash": "Spec: nine add-on overlay layers that stack. New: one full background per belt.",
-      "resolution": "Each belt has one picture (`pictureId`). The phone shows the picture for the player's own highest belt and swaps it whole. Nothing stacks. \"Changes add up\" is replaced by \"each picture is complete\"."
+      "resolution": "Each belt up to Blue has one picture (`pictureId`). The phone shows the picture for the player's own highest belt and swaps it whole. Nothing stacks. \"Changes add up\" is replaced by \"each picture is complete\"."
     },
     {
       "n": 5,
@@ -415,25 +292,25 @@
       "n": 11,
       "topic": "Red to Black",
       "clash": "Spec: Red banners, dummy and brazier; Red/Black chime and bell; Brown tree and book box; Brown/Black glowing Tower, rainbow and window lantern; Black out of scope. New: gentle upgrades, none defined.",
-      "resolution": "Red keeps Jay's approved gold flame. Red, Red/Black, Brown, Brown/Black and Black each get 2-3 PROPOSAL add-ons for Jay to pick one from. The old spec items are reused as options. One add-on per belt, so the screen never fills up."
+      "resolution": "Updated Nov 1: town visuals now stop at Blue (Jay, via the Manager). Red to Black have no new art, so all the old art add-ons and my art options are dropped. From Red up, the md pitches mechanics instead, as PROPOSALS for Jay. Red to Black show the Blue picture."
     },
     {
       "n": 12,
       "topic": "Reward messages and tie-ins",
       "clash": "The old messages and changeIds point at the old changes.",
-      "resolution": "Every message is rewritten to match its picture (Green brings the statue). The old changeIds are replaced by pictureIds. Story tie-ins keep the same story names. Bible references are removed from this file, since faith content lives only in `drafts/content/faith/`."
+      "resolution": "Messages up to Blue are rewritten to match their pictures (Green brings the statue). The old changeIds are replaced by pictureIds. Red up has no line until Jay picks a mechanic. Story tie-ins keep the same story names. Bible references are removed from this file, since faith content lives only in `drafts/content/faith/`."
     },
     {
       "n": 13,
       "topic": "Open items",
       "clash": "The Brown tree beside the placeholder and the placeholder building's use.",
-      "resolution": "Still open (A4-2). The boarded window in White is only wear. Every Brown option stays outside the building, so its use can be decided later."
+      "resolution": "The Brown tree is gone with the art add-ons. The placeholder building's use is still open (A4-2). The boarded window in White is only wear."
     },
     {
       "n": 14,
       "topic": "Scope",
       "clash": "The spec asked for nine overlays. The art has three of ten stages built.",
-      "resolution": "The file now shows `pictureStatus` per belt. Built: White, Orange, Blue. Planned: the other seven. Until a picture is built, the belt shows the nearest earlier built one (README of PR #396)."
+      "resolution": "The cap makes it five pictures in all: White, Yellow, Orange, Green, Blue. Built in PR #396: White, Orange, Blue. Planned: Yellow, Green. Red, Red/Black, Brown, Brown/Black and Black use the Blue picture. Until Yellow and Green are built, a belt shows the nearest earlier built picture (README of PR #396)."
     }
   ]
 }
