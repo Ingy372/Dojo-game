@@ -1,0 +1,48 @@
+{
+  "notes": "R-G2B-02: kid-facing effect text for Orange belt seals #11-15 (Technique Seal format from content/abilities/abilities.json and seals-31-40-text.json). Names and effects come from the S4 table in drafts/planning/S4-self-defense-powers.md; every name is an S4 PROPOSAL and every number there is a guess, so no numbers appear in the text. Each text is one sentence under 80 characters, ages 6-9, hopeful, no pressure. 'Great Counter' is the kid word (S4 still says Perfect Counter). ids are proposed (no #11-15 ids exist in content/abilities yet); the Programmer may adjust at import. effectRef points at the S4 effect and is not final effect JSON. 'flag' marks a line whose wording may change; the R-PROGRESSION-BETA family names may also change any line later.",
+  "seals": [
+    {
+      "id": "outside-reap",
+      "technique": "Self-Defense #11",
+      "name": "Outside Reap",
+      "text": "A Great Counter tumbles a brute or swarmer to the ground for a moment.",
+      "causesInjured": false,
+      "effectRef": "counterThrow 30 ticks (new). Name: S4 'Outside Reap (Osoto Gari)'",
+      "flag": "Wording follows the Takedown family. Enemy names 'brute' and 'swarmer' are the current content ids; check them if R-G2B-04 renames anything."
+    },
+    {
+      "id": "reap-and-finish",
+      "technique": "Self-Defense #12",
+      "name": "Reap and Finish",
+      "text": "Enemies you tumble take extra damage while they are on the ground.",
+      "causesInjured": false,
+      "effectRef": "counterThrow + downBonus 0.25 (new)"
+    },
+    {
+      "id": "kick-the-weapon",
+      "technique": "Self-Defense #13",
+      "name": "Kick the Weapon",
+      "text": "A Great Counter kicks the weapon aside, so their next hit is weaker.",
+      "causesInjured": false,
+      "effectRef": "disarm 0.5 (moves here from current #8 Disarm)",
+      "flag": "Says 'weapon' because that is the technique. Until the padded-staff enemy ships, the seal works on every enemy's next attack (S4 fallback)."
+    },
+    {
+      "id": "kick-and-spin",
+      "technique": "Self-Defense #14",
+      "name": "Kick and Spin",
+      "text": "Your kick lasts longer: their next two hits are weaker.",
+      "causesInjured": false,
+      "effectRef": "disarm + disarmAttacks 2 (new)"
+    },
+    {
+      "id": "slip-and-double",
+      "technique": "Self-Defense #15",
+      "name": "Slip and Double",
+      "text": "Great Counters add a third quick punch and give you a little more time.",
+      "causesInjured": false,
+      "effectRef": "counterHits +1, counterWindow +1 tick",
+      "flag": "Talks about the Great Counter, not 'Off the Line', because S4 says 'Off the Line adds a 3rd punch' but the Off the Line effect (#1) is not built. Reword once #1 is final."
+    }
+  ]
+}
