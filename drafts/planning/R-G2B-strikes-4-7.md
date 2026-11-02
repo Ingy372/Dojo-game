@@ -16,15 +16,15 @@ Written Nov 1, 2026 by the Researcher & Planner. Docs only, no game code. Source
 
 ## The seven Strikes (redesign shapes)
 
-| # | Belt | Strike (shape) | In class (the move that ends the combo) | Needs in the engine |
+| # | Belt | Strike (shape) | Real combo ends with (`S4-kick-combos.md`, Jay's words) | Needs in the engine |
 |---|---|---|---|---|
-| 1 | White | **Spin Kick**: one heavy hit, long reach | Spin kick finish | Built (strength 2.5, reach 1.4, lunge 0.7). The baseline. |
-| 2 | Yellow | **Jumping Spins**: three spins, each stronger (example ramp 5, 7, 12) | Jumping spin kicks | A Strike with a list of hits and a strength for each. See "gap 1". |
-| 3 | Orange | **Butterfly Flow**: spins the other way, hits a good bit harder, slower to land | Butterfly kick | A wind-up on a Strike. See "gap 2". |
-| 4 | Green | **Side Kick Drive**: steps forward and pushes the enemy back | Side kick | A push on a Strike. See "gap 3". |
-| 5 | Blue | **Hook Kick**: curves around blocks and shields to hit the enemy behind them | Hook kick | New targeting. See "gap 4" and taste call 1. |
-| 6 | Red | **Lunge**: closes distance fast, then strikes | Block, punch, lunge | A longer lunge (a setting that exists). |
-| 7 | Red/Black | **Spinning Finisher**: multi-hit spin around you | Spinning finish | Hits all enemies in a ring. See "gap 5". |
+| 1 | White | **Spin Kick**: one heavy hit, long reach | spinning outside kick | Built (strength 2.5, reach 1.4, lunge 0.7). The baseline. |
+| 2 | Yellow | **Jumping Spins**: three spins, each stronger (example ramp 5, 7, 12) | 3 jumping spin kicks | A Strike with a list of hits and a strength for each. See "gap 1". |
+| 3 | Orange | **Butterfly Flow**: spins the other way, hits a good bit harder, slower to land | round kick and butterfly kick | A wind-up on a Strike. See "gap 2". |
+| 4 | Green | **Side Kick Drive**: steps forward and pushes the enemy back | spin kicks, left and right | A push on a Strike. See "gap 3". |
+| 5 | Blue | **Hook Kick**: curves around blocks and shields to hit the enemy behind them | front kick left, right, left (after step-behind hook kicks) | New targeting. See "gap 4" and taste call 1. |
+| 6 | Red | **Lunge**: closes distance fast, then strikes | stepping back twice, lunging in with a jumping front kick | A longer lunge (a setting that exists). |
+| 7 | Red/Black | **Spinning Finisher**: multi-hit spin around you | spinning hook kick | Hits all enemies in a ring. See "gap 5". |
 | 8-12 | Black | Not defined | Jay's black belt combos | Waits on Jay. |
 
 Names: the redesign's names are used in the table. The S4 names (approved Oct 24) were Spin Kick Finish, Jumping Spins, Butterfly Flow, **Both Sides**, **Low-High Kicks**, **Block, Punch, Lunge**, **Axe and Hook**. See taste call 2.
@@ -68,7 +68,7 @@ The "example ramp 5, 7, 12" in the redesign cannot be strengths: Spin Kick is 2.
 
 The balance table for the **enemies** each Strike faces is in `R-G2B-balance-check.md`. It shows how many Spin Kicks (strength 2.5) a typical student needs per enemy class at each belt, so the bot has a baseline.
 
-## Which rooms show off each new Strike (redesign: "floors that need the new move")
+## Which rooms could show off each new Strike (planner's proposal; enemies are from `bestiary-plan.json`)
 
 | Strike | Belt | Enemies that make it the easy answer | Where |
 |---|---|---|---|
@@ -79,12 +79,13 @@ The balance table for the **enemies** each Strike faces is in `R-G2B-balance-che
 
 ## Taste calls for Jay (both are plain words)
 
-1. **What does "goes around guards" mean for the Hook Kick?** (This replaces the old question about "break guards" for Strike #7. The redesign moved that idea to #5.) Today a Strike already breaks a shield and still hits. So "curves around" has to mean something new. Pick one:
+1. **What does "break guards" mean now?** The old S4 question was about Strike #7 (Axe and Hook). Under the redesign #7 is the Spinning Finisher, and the guard idea moved to #5 Hook Kick ("curves around blocks and shields"). Today a Strike already breaks a shield and still hits. So "curves around" has to mean something new. Pick one:
    - **A. Hits the enemy standing behind a shield enemy.** The shield enemy is not touched. Good for rows of enemies.
    - **B. Hits the shield enemy and does not break its shield.** The shield stays, but the damage lands. Good for keeping shields as a puzzle.
    - **C. Both: curves past the shield and hits the enemy behind.** Hits the shield enemy for less.
+   **D. The old S4 meaning, kept for #7:** Strike #7 ignores the Guarding elite's one-third damage cut (`guarding.damageScale 0.67` in `hurtEnemy`). S4 asked for this, and it needs a Strike-only check there. It gives #7 an edge over Spin Kick, which the redesign says Strikes must not have (same budget, different shape). *Planner's lean against D.*
    *Planner's lean: A.* It matches the redesign's words "to hit the enemy behind them". It needs no new number. Choose before Hook Kick is built (it is a Blue Strike, after the beta).
-2. **Which names do kids see for Strikes #4-7?** The redesign names the shapes (Side Kick Drive, Hook Kick, Lunge, Spinning Finisher). The Manager approved the S4 names on Oct 24 (Both Sides, Low-High Kicks, Block Punch Lunge, Axe and Hook). They no longer describe what the Strikes do. *Planner's lean: use the redesign shapes as the Strike names, and keep the real combo name as the "In the dojo:" line.* This also **removes the Low-High clash**: seal #16 "Low-High Strike" stays a seal rank, and no Strike is called Low-High Kicks anymore. If you keep the old Strike names, the clash comes back, and one of the two needs a new name.
+2. **Which names do kids see for Strikes #4-7?** The redesign names the shapes (Side Kick Drive, Hook Kick, Lunge, Spinning Finisher). The Manager decided the S4 names on Oct 24 (Both Sides, Low-High Kicks, Block Punch Lunge, Axe and Hook). They no longer describe what the Strikes do. *Planner's lean: use the redesign shapes as the Strike names, and keep the real combo name as the "In the dojo:" line.* This also **removes the Low-High clash**: seal #16 "Low-High Strike" stays a seal rank, and no Strike is called Low-High Kicks anymore. If you keep the old Strike names, the clash comes back, and one of the two needs a new name.
 
 ## Board items from this note (full rows in `R-GREEN-TO-BLACK.md`)
 
