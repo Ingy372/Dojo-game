@@ -1,5 +1,5 @@
 """PB-07 samples (Seal family medallions, Lock, slot glyphs, Jumping Spins). Three images, all drawn by script:
-  python3 incoming-art/seal-families/source/build_seal_families.py
+  python3 incoming-art/icons-slots/source/build_seal_families.py
 Needs only Pillow + numpy, plus incoming-art/tools/board_ui_kit.py (the warm Board look, PR #412).
 Icons are drawn in seal_icons.py (a small toon kit in toon.py). No text lives inside the art pieces.
 All words in the mocks are placeholders."""
@@ -76,12 +76,12 @@ def sample_families():
     W, H = 844, 560
     sc = Screen(W, H)
     label(sc, 24, 26, 'Seal families', 18, CREAM, 'lm', 'ExtraBold', SHADOW_TXT)
-    label(sc, W - 24, 26, 'Counter \u00b7 Guard \u00b7 Disarm (Escape and Throw come next)', 12, CREAM, 'rm', 'Bold', SHADOW_TXT)
+    label(sc, W - 24, 26, 'Counter \u00b7 Guard \u00b7 Disarm (Escape and Throw pictures come next)', 12, CREAM, 'rm', 'Bold', SHADOW_TXT)
     card(sc, 20, 46, W - 40, 262)
     label(sc, 36, 66, 'LARGE', 11, mat.GOLD_D, 'lm', 'ExtraBold')
     fam = [('counter', 'Counter', 'Turn their move against them'),
            ('guard', 'Guard', 'Block and stay safe'),
-           ('disarm', 'Disarm', 'Kick the knife away')]
+           ('disarm', 'Disarm', 'Kick the stick away')]
     cw = (W - 40) / 3
     for i, (k, nm, kid) in enumerate(fam):
         cx = 20 + cw * (i + .5)
@@ -117,14 +117,15 @@ def sample_families():
             x += s + 8
         x += 18
     label(sc, 456, 460, 'RIM COLOUR = FAMILY', 11, CREAM, 'lm', 'ExtraBold', SHADOW_TXT)
-    rims = [('counter', 'blue'), ('guard', 'green'), ('escape', 'teal'), ('disarm', 'purple'), ('throw', 'rose'), ('lock', 'grey')]
+    rims = [('counter', 'blue'), ('guard', 'green'), ('escape', 'green-teal'), ('disarm', 'purple'), ('throw', 'rose'), ('lock', 'grey')]
     for i, (k, nm) in enumerate(rims):
         col = si.RIMS[k]
-        cx = 470 + (i % 3) * 124
-        cy = 492 + (i // 3) * 34
+        cx = 478 + (i // 3) * 190
+        cy = 486 + (i % 3) * 28
         d = ImageDraw.Draw(sc.img)
-        d.ellipse([(cx - 10) * K, (cy - 10) * K, (cx + 10) * K, (cy + 10) * K], fill=(*col, 255), outline=(*INK, 255), width=2 * K)
-        label(sc, cx + 18, cy, k.capitalize() + (' (next)' if k in ('escape', 'throw') else ''), 12, CREAM, 'lm', 'Bold', SHADOW_TXT)
+        d.ellipse([(cx - 11) * K, (cy - 11) * K, (cx + 11) * K, (cy + 11) * K], fill=(*col, 255), outline=(*INK, 255), width=2 * K)
+        d.ellipse([(cx - 5) * K, (cy - 5) * K, (cx + 5) * K, (cy + 5) * K], fill=(*CREAM, 255), outline=(*INK, 255), width=1 * K)
+        label(sc, cx + 20, cy, '%s: %s%s' % (k.capitalize(), nm, ' (art next)' if k in ('escape', 'throw') else ''), 12, CREAM, 'lm', 'Bold', SHADOW_TXT)
     sc.save(os.path.join(PV, '01-family-medallions'))
 
 

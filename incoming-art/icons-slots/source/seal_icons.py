@@ -8,8 +8,8 @@ from toon import *
 
 RIMS = {  # rim colours: family colour cue. No red. Orange belongs to ENTER THE TOWER only.
     'counter': (70, 150, 215),   # blue (the colour every Seal rim has today)
-    'guard': (74, 176, 112),     # green
-    'escape': (44, 178, 192),    # teal
+    'guard': (104, 180, 72),     # leaf green (moved toward yellow-green so Escape can sit next to it)
+    'escape': (36, 172, 140),    # green-teal (Manager answer: clearly apart from Counter's blue)
     'disarm': (146, 104, 214),   # purple
     'throw': (224, 112, 172),    # rose pink
     'lock': (150, 140, 130),     # stone grey: not open yet
@@ -156,28 +156,30 @@ def foot(a, ax, ay, ang, clip=None, s=1.0):
     a.shape(poly(L([(33, -10), (40, -6), (40, 5), (34, 10)])), SKIN, None, None, ow=0, clip=clip)
 
 
-# ------------------------------------------------------------------ DISARM: kick the weapon
-def knife(a, cx, cy, ang, clip=None, k=1.0):
-    """a rubber training knife (blue pad blade, wood handle). Blade points along ang."""
+# ------------------------------------------------------------------ DISARM: kick the training stick away
+def stick(a, cx, cy, ang, clip=None, k=1.0):
+    """a padded training stick (foam-wrapped, like a dojo escrima stick): wood grip at the tail, a thick blue foam pad
+    over the rest with a gold tape band at each end. Rounded ends, nothing sharp. Pad end points along ang."""
     def L(pts):
         return rot([(x * k, y * k) for x, y in pts], cx, cy, ang)
-    a.shape(poly(L(rrect_pts(-15, 0, 26, 11, 4))), WOOD, WOOD_S, lighten(WOOD, .35), ow=2.6, band=3, clip=clip)
-    a.shape(poly(L(rrect_pts(-1, 0, 5, 18, 2))), GOLD, GOLD_S, None, ow=2.2, band=2, clip=clip)
-    blade = [(2, -8), (30, -8), (40, 0), (30, 8), (2, 8)]
-    a.shape(poly(L(blade)), PADB, PADB_S, lighten(PADB, .35), ow=2.8, band=3.5, clip=clip)
+    a.shape(poly(L(rrect_pts(-26, 0, 28, 10, 5))), WOOD, WOOD_S, lighten(WOOD, .35), ow=2.6, band=3, clip=clip)   # grip
+    a.shape(poly(L(rrect_pts(14, 0, 64, 25, 12))), PADB, PADB_S, lighten(PADB, .35), ow=3.0, band=4.5, clip=clip)   # foam pad
+    for bx in (-12, 40):
+        a.shape(poly(L(rrect_pts(bx, 0, 6, 27, 2.5))), GOLD, GOLD_S, None, ow=2.0, band=2, clip=clip)              # tape bands
+    a.line(L([(-4, -6), (34, -6)]), lighten(PADB, .5), 2.6, clip=clip)                                           # soft sheen
 
 
 def disarm(rim=RIMS['disarm']):
     a = medallion(rim)
     c = face_clip()
-    # a rubber training knife tumbling away, kicked out of play
-    a.line([(104, 58), (118, 44), (138, 40)], BLUE_S, 4.5, clip=c)
-    a.line([(196, 134), (206, 118), (206, 100)], BLUE_S, 4.5, clip=c)
-    knife(a, 152, 102, -.9, clip=c, k=1.15)
-    burst(a, 130, 128, 7, 15, 7, .2, clip=c)
-    limb(a, (66, 164), (88, 158), 10, 9, clip=c)
-    a.shape(cap((20, 176), (68, 165), 26, 18), GI, GI_S, (255, 255, 250), ow=3.2, band=5, clip=c)
-    foot(a, 92, 158, -math.pi / 2 + .62, clip=c, s=1.2)
+    # a padded training stick tumbling away, kicked out of play
+    a.line([(120, 96), (112, 84), (114, 70)], BLUE_S, 4.5, clip=c)
+    a.line([(204, 104), (208, 90), (200, 76)], BLUE_S, 4.5, clip=c)
+    stick(a, 148, 88, -.5, clip=c, k=.8)
+    limb(a, (62, 168), (84, 162), 10, 9, clip=c)
+    a.shape(cap((18, 182), (64, 170), 26, 18), GI, GI_S, (255, 255, 250), ow=3.2, band=5, clip=c)
+    foot(a, 88, 160, -math.pi / 2 + .95, clip=c, s=1.2)
+    burst(a, 152, 122, 6, 13, 7, .2, clip=c)
     return a.result()
 
 
