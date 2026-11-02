@@ -1081,3 +1081,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Fake student seed: Green (24/28) now shows Level 30 and 3 worn Rares on the testing screen.
 - Gear sheet no longer covers the "Your Strike" row at 932x430; "Always with you" comments removed (Tester's low notes from #425).
 - Tests: `g2b12-fixes` (10). Shots in /workspace/shots/g2b12-fixes with `pass-fail.md`.
+
+### MENU-BAG-01 B1 follow-up (2026-11-02)
+- Bag paging uses its own `bagPage` field; ▶ and ◀ work at 1024x768 with 30 and 60 items (real taps, Reduced motion on and off).
+- 667x320: the sheet for a row-1 tile hides less of it, and a second tap closes it.
+- Tests: menu-bag-01.test.ts is now 25 tests. Shots: /workspace/shots/menu-bag-01/*fix1*.
