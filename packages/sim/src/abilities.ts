@@ -49,6 +49,61 @@ export interface PerkDef {
   effect: Effect;
 }
 
+// R-PROGRESSION-BETA: the types for the slot system. Seal families are loaded here (PB-02, from
+// content/abilities/seal-families.json); Strikes (PB-03) and kata powers (PB-04) come later.
+
+export type SealFamilyId = 'counter' | 'guard' | 'escape' | 'disarm' | 'throw' | 'lock';
+
+export interface SealRankDef {
+  /** The self-defense number, e.g. 11. */
+  technique: number;
+  /** The real technique name shown on the rank. */
+  name: string;
+  effects: Effect[];
+  /** Kid words, no numbers. */
+  text: string;
+}
+
+export interface SealFamilyDef {
+  id: SealFamilyId;
+  name: string;
+  text: string;
+  /** Path under incoming-art/ (a placeholder is allowed). */
+  icon: string;
+  /** In technique order. */
+  ranks: SealRankDef[];
+  /**
+   * PB-02: false = the family is not playable yet (Throw until R-G2B-04, Lock until it has ranks):
+   * it shows as "Coming later", cannot be equipped, and has no effect.
+   */
+  live: boolean;
+}
+
+export interface StrikeDef {
+  /** 'spin-kick' | 'jumping-spins' | 'butterfly-flow' */
+  id: string;
+  name: string;
+  text: string;
+  /** The kick combo number that unlocks it (1, 2, 3). */
+  combo: number;
+  focusCost: number;
+  hits: { strength: number; delayTicks: number }[];
+  reach: number;
+  lungeTiles: number;
+  recoveryTicks: number;
+}
+
+export interface KataPowerDef {
+  id: string;
+  /** The content/katas id. */
+  kata: string;
+  name: string;
+  text: string;
+  status: 'placeholder' | 'final';
+  /** Passive only. Empty while the status is 'placeholder'. */
+  effects: Effect[];
+}
+
 export type VirtueKind = 'shield' | 'heal' | 'discipline';
 
 export interface VirtueDef {
@@ -71,6 +126,8 @@ export interface AbilityContent {
   strikes: PerkDef[];
   seals: PerkDef[];
   virtues: VirtueDef[];
+  /** PB-02: the Seal families (empty if `loadAbilities` was given no family file). */
+  families: SealFamilyDef[];
 }
 
 export class AbilityError extends Error {
@@ -93,7 +150,7 @@ function num(v: unknown, where: string): number {
   return v as number;
 }
 
-export function loadAbilities(data: unknown): AbilityContent {
+export function loadAbilities(data: unknown, familyData?: unknown): AbilityContent {
   const d = data as Record<string, unknown>;
   if (!d || typeof d !== 'object') fail('the file is not an object');
   const listOf = (key: string): Record<string, unknown>[] => {
@@ -171,5 +228,45 @@ export function loadAbilities(data: unknown): AbilityContent {
     };
   });
 
-  return { stances, strikes: perks('strikes'), seals: perks('seals'), virtues };
+  return { stances, strikes: perks('strikes'), seals: perks('seals'), virtues, families: familyData === undefined ? [] : loadSealFamilies(familyData) };
+}
+
+const FAMILY_IDS: readonly SealFamilyId[] = ['escape', 'counter', 'guard', 'throw', 'disarm', 'lock'];
+
+/** Checks content/abilities/seal-families.json: every family once, every technique in one family, kid words with no numbers. */
+export function loadSealFamilies(data: unknown): SealFamilyDef[] {
+  const d = data as Record<string, unknown>;
+  if (!d || typeof d !== 'object' || !Array.isArray(d.families)) fail('seal families: the file needs a "families" list');
+  const seenTechniques = new Set<number>();
+  const families = (d.families as Record<string, unknown>[]).map((f, i) => {
+    const w = `families[${i + 1}]`;
+    if (!FAMILY_IDS.includes(f.id as SealFamilyId)) fail(`${w}.id must be one of: ${FAMILY_IDS.join(', ')}`);
+    if (typeof f.live !== 'boolean') fail(`${w}.live must be true or false`);
+    if (!Array.isArray(f.ranks)) fail(`${w}.ranks must be a list`);
+    const noDigits = (v: string, where: string): string => {
+      if (/\d/.test(v)) fail(`${where} is for kids: no numbers`);
+      return v;
+    };
+    let last = 0;
+    const ranks = (f.ranks as Record<string, unknown>[]).map((r, j) => {
+      const rw = `${w}.ranks[${j + 1}]`;
+      const technique = num(r.technique, `${rw}.technique`);
+      if (!Number.isInteger(technique) || technique < 1) fail(`${rw}.technique must be a whole number from 1`);
+      if (technique <= last) fail(`${rw}.technique must be bigger than the one before (ranks are in technique order)`);
+      if (seenTechniques.has(technique)) fail(`technique #${technique} is in two families`);
+      last = technique;
+      seenTechniques.add(technique);
+      if (!Array.isArray(r.effects)) fail(`${rw}.effects must be a list`);
+      const effects = (r.effects as unknown[]).map((e) => loadEffect(e, (problem) => fail(`${rw}: ${problem}`)));
+      if (f.live && effects.length === 0) fail(`${rw}: a live family's ranks each need an effect`);
+      return { technique, name: str(r.name, `${rw}.name`), effects, text: noDigits(str(r.text, `${rw}.text`), `${rw}.text`) };
+    });
+    if (f.live && ranks.length === 0) fail(`${w} is live but has no ranks`);
+    const def: SealFamilyDef = { id: f.id as SealFamilyId, name: str(f.name, `${w}.name`), text: noDigits(str(f.text, `${w}.text`), `${w}.text`), icon: str(f.icon, `${w}.icon`), ranks, live: f.live as boolean };
+    return def;
+  });
+  for (const id of FAMILY_IDS) {
+    if (families.filter((f) => f.id === id).length !== 1) fail(`seal families: "${id}" must be listed exactly once`);
+  }
+  return families;
 }

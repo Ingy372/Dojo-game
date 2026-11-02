@@ -2,7 +2,7 @@
 // is now the Open Leg Stance (ready-stance) with its own sign-off; students who played before
 // keep it (Manager Q5 (b)).
 import { describe, expect, it } from 'vitest';
-import { READY_STANCE_ID, buildTraining, characterSetup, loadFeed, loadProfile, migrateReadyStance, newProfile, normalizeLoadout, unlockedStances } from '../src';
+import { READY_STANCE_ID, buildTraining, characterSetup, loadFeed, loadProfile, migrateReadyStance, newProfile, normalizeLoadout, unlockedStances, emptyLoadout } from '../src';
 import { testContent } from './load-content';
 import abilitiesData from '../../../content/abilities/abilities.json';
 import styleWords from '../../../content/abilities/fighting-style.json';
@@ -56,9 +56,9 @@ describe('R-STANCE-g new players', () => {
   });
   it('an unsigned or unknown pick falls back to Beginner', () => {
     const t = train(newWhite);
-    expect(normalizeLoadout({ stance: READY_STANCE_ID, virtue: null }, t, content.abilities)).toEqual({ stance: null, virtue: null });
-    expect(normalizeLoadout({ stance: 'nope-stance', virtue: null }, t, content.abilities)).toEqual({ stance: null, virtue: null });
-    const p = loadProfile(clone({ ...newProfile(), loadout: { stance: 'cat-stance', virtue: null } }));
+    expect(normalizeLoadout({ ...emptyLoadout(), stance: READY_STANCE_ID, virtue: null }, t, content.abilities)).toEqual({ ...emptyLoadout(), stance: null, virtue: null });
+    expect(normalizeLoadout({ ...emptyLoadout(), stance: 'nope-stance', virtue: null }, t, content.abilities)).toEqual({ ...emptyLoadout(), stance: null, virtue: null });
+    const p = loadProfile(clone({ ...newProfile(), loadout: { ...emptyLoadout(), stance: 'cat-stance', virtue: null } }));
     expect(characterSetup(p, t, content.abilities).stances![0].id).toBe('beginners-stance');
   });
 });
@@ -72,7 +72,7 @@ describe('R-STANCE-g migration (b)', () => {
   };
   it('a player with runs and no pick becomes Open Leg, without a sign-off; running it twice changes nothing', () => {
     const once = loadProfile(oldSave({ runsPlayed: 3, loadout: null }));
-    expect(once.loadout).toEqual({ stance: READY_STANCE_ID, virtue: null });
+    expect(once.loadout).toEqual({ ...emptyLoadout(), stance: READY_STANCE_ID, virtue: null });
     expect(once.grandfatheredStances).toEqual([READY_STANCE_ID]);
     const twice = loadProfile(clone(once));
     expect(twice).toEqual(once);
@@ -81,10 +81,10 @@ describe('R-STANCE-g migration (b)', () => {
     expect(characterSetup(twice, t, content.abilities).stances!.map((s) => s.id)).toEqual([READY_STANCE_ID, 'beginners-stance']);
   });
   it('a d1-moved save (stance null) stays Ready; a real pick is kept and Ready is still owned', () => {
-    expect(loadProfile(oldSave({ runsPlayed: 0, loadout: { stance: null, virtue: 'second-wind' } })).loadout).toEqual({ stance: READY_STANCE_ID, virtue: 'second-wind' });
-    expect(loadProfile(oldSave({ loadout: { form: 'rooted-form', virtue: null } })).loadout).toEqual({ stance: READY_STANCE_ID, virtue: null });
-    const cat = loadProfile(oldSave({ runsPlayed: 2, loadout: { stance: 'cat-stance', virtue: null } }));
-    expect(cat.loadout).toEqual({ stance: 'cat-stance', virtue: null });
+    expect(loadProfile(oldSave({ runsPlayed: 0, loadout: { ...emptyLoadout(), stance: null, virtue: 'second-wind' } })).loadout).toEqual({ ...emptyLoadout(), stance: READY_STANCE_ID, virtue: 'second-wind' });
+    expect(loadProfile(oldSave({ loadout: { form: 'rooted-form', virtue: null } })).loadout).toEqual({ ...emptyLoadout(), stance: READY_STANCE_ID, virtue: null });
+    const cat = loadProfile(oldSave({ runsPlayed: 2, loadout: { ...emptyLoadout(), stance: 'cat-stance', virtue: null } }));
+    expect(cat.loadout).toEqual({ ...emptyLoadout(), stance: 'cat-stance', virtue: null });
     expect(cat.grandfatheredStances).toEqual([READY_STANCE_ID]);
   });
   it('a pre-g save that never played and never picked stays Beginner, and re-running never makes it Ready', () => {
@@ -100,7 +100,7 @@ describe('R-STANCE-g switching', () => {
     expect(unlockedStances(train(yellow), content.abilities).map((s) => s.id)).toEqual(['beginners-stance', READY_STANCE_ID, 'cat-stance', 'front-stance']);
     const t = train(newWhite);
     expect(unlockedStances(t, content.abilities, [READY_STANCE_ID]).map((s) => s.id)).toEqual(['beginners-stance', READY_STANCE_ID]);
-    const p = loadProfile(clone({ ...newProfile(), loadout: { stance: 'cat-stance', virtue: null }, grandfatheredStances: [READY_STANCE_ID] }));
+    const p = loadProfile(clone({ ...newProfile(), loadout: { ...emptyLoadout(), stance: 'cat-stance', virtue: null }, grandfatheredStances: [READY_STANCE_ID] }));
     expect(characterSetup(p, t, content.abilities).stances!.map((s) => s.id)).toEqual(['beginners-stance', READY_STANCE_ID]);
   });
 });
