@@ -1,0 +1,26 @@
+{
+  "notes": "PB-08 (R-PROGRESSION-BETA, PR #407): first-use help for the Fighting Style screen, in Sensei's voice. The plan allows at most 3 lines, one new idea per session: slots first, Seals next, swap last. Each 'line' is ONE short sentence (12 words or fewer, under 80 characters), ages 6-9, no digits, no guilt or pressure, no timers. 'screen' names the part of the Fighting Style screen the line sits on (words from content/abilities/fighting-style.json). 'trigger' says when the Programmer shows it (once each, then never again; the seen list lives in the save, additive). 'session' is the order: show only one line per visit. Needs a read by the Learning & Engagement Designer (PB-08 'done when'). Nothing here needs a tutorial step or new art.",
+  "help": [
+    {
+      "id": "help-slots",
+      "session": 1,
+      "screen": "Fighting Style, the slot cards",
+      "trigger": "the first time the Fighting Style screen opens",
+      "line": "These are your slots: tap one, then pick what to bring along!"
+    },
+    {
+      "id": "help-seals",
+      "session": 2,
+      "screen": "Fighting Style, a Seal card",
+      "trigger": "the first time the student taps a Seal card",
+      "line": "Each Seal grows as you learn its moves at the dojo."
+    },
+    {
+      "id": "help-swap",
+      "session": 3,
+      "screen": "Fighting Style, the swap question",
+      "trigger": "the first time all Seal slots are full and a new Seal is tapped",
+      "line": "With full slots, pick the Seal you want to swap out."
+    }
+  ]
+}
