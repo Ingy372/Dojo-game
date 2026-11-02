@@ -1,0 +1,591 @@
+{
+  "notes": "DRAFT for R-G2B-25/26/27. Red/Black (Tier 7) set. F1-2: Masklet only (its wind-up is not known yet). F3-4: Copycat Shade, Hush Guard, Echo Bell (dash-only). Room 4 is the Masklet Circle: six Masklets stand in a ring around the student so the Spinning Finisher has a clear use (R-G2B-26). Content/rooms/ format (same legend and tile letters; no new tile types); every room carries minBeltTier and floorSet like the Giant's Steps set. 8 rooms in the Ember pattern: 4 battle, 1 challenge, 1 treasure, 1 rest, 1 boss. F1-2 enemies in rooms 1-2; F3-4 enemies from room 3 (earliestRoom). Props are art notes only: every prop on a '.' must stay walk-through decoration; solid props are already '#'. The boss room's chest 'C' is where the light piece and the relic appear after the Guardian is freed; faith content is overlay key 'echo-mask' only. NO enemy stats here. Wave sizes are PLACEHOLDERS until balance work. The challenge uses the existing rules; its 90 seconds is the Supper Rush number (PLACEHOLDER) and the text has no digits. Not built; code is needed to use these.",
+  "tier": "red-black",
+  "place": "The Hall of Echoes",
+  "faithOverlayKey": "echo-mask",
+  "rooms": [
+    {
+      "id": "whisper-gate",
+      "name": "Whisper Gate",
+      "kind": "battle",
+      "minBeltTier": 7,
+      "floorSet": "hall-of-echoes",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..#............#..#",
+        "#..................#",
+        "#.....#......#.....#",
+        "#..................#",
+        "#..#............#..#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 1,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "masklet",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        }
+      ],
+      "artProps": "A tall arched gate with a stone ear on each side; soft sound-wave rings on the floor.",
+      "signs": [
+        "Say something kind. Hear it come back."
+      ]
+    },
+    {
+      "id": "split-mirrors",
+      "name": "Split Mirrors",
+      "kind": "battle",
+      "minBeltTier": 7,
+      "floorSet": "hall-of-echoes",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#.....#......#.....#",
+        "#.....#......#.....#",
+        "#.....#......#.....#",
+        "#.....#......#.....#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 2,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "masklet",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 13,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 16,
+          "row": 3,
+          "wave": 2
+        }
+      ],
+      "artProps": "Two tall mirror frames on the top wall; a faint line down the middle of the floor.",
+      "signs": [
+        "Two mirrors, one you."
+      ]
+    },
+    {
+      "id": "shade-gallery",
+      "name": "Shade Gallery",
+      "kind": "battle",
+      "minBeltTier": 7,
+      "floorSet": "hall-of-echoes",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#.##............##.#",
+        "#.##............##.#",
+        "#..................#",
+        "#..................#",
+        "#.##............##.#",
+        "#.##............##.#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "copycat-shade",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "copycat-shade",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "masklet",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "masklet",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        }
+      ],
+      "artProps": "Picture frames with soft shadows moving in them; low lamps along the walls.",
+      "signs": [
+        "Your shadow just copies. You choose."
+      ]
+    },
+    {
+      "id": "masklet-circle",
+      "name": "Masklet Circle",
+      "kind": "battle",
+      "minBeltTier": 7,
+      "floorSet": "hall-of-echoes",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "masklet",
+          "column": 6,
+          "row": 7,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 16,
+          "row": 7,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 8,
+          "row": 4,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 14,
+          "row": 4,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 8,
+          "row": 10,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 14,
+          "row": 10,
+          "wave": 1
+        },
+        {
+          "enemy": "hush-guard",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "copycat-shade",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 13,
+          "row": 5,
+          "wave": 2
+        }
+      ],
+      "artProps": "A round ring of floor tiles in the middle; echo bells hung quietly round the walls.",
+      "signs": [
+        "A ring of friends. Turn and say hello."
+      ]
+    },
+    {
+      "id": "echo-chamber",
+      "name": "The Echo Chamber",
+      "kind": "challenge",
+      "minBeltTier": 7,
+      "floorSet": "hall-of-echoes",
+      "challenge": {
+        "seconds": 90,
+        "text": "Clear the room in time for a better chest!",
+        "inTimeText": "In time!",
+        "outOfTimeText": "Time's up! The echoes were loud, but you still earned a chest.",
+        "outOfTimeShort": "Time's up!"
+      },
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#.........C........#",
+        "#....#........#....#",
+        "#..................#",
+        "#..#............#..#",
+        "#......#....#......#",
+        "#..................#",
+        "#....#........#....#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 4,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "masklet",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "copycat-shade",
+          "column": 16,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 5,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "hush-guard",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "echo-bell",
+          "column": 16,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "copycat-shade",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "masklet",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "masklet",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "hush-guard",
+          "column": 4,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "A round chamber of curved walls with a big hanging bell; a stone ear in each corner.",
+      "signs": [
+        "Kind words travel far."
+      ]
+    },
+    {
+      "id": "kind-word-nook",
+      "name": "Kind Word Nook",
+      "kind": "treasure",
+      "minBeltTier": 7,
+      "floorSet": "hall-of-echoes",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D##D##D###",
+        "#...........#",
+        "#..#.....#..#",
+        "#.....C.....#",
+        "#..#.....#..#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "A smooth stone with a hollow for whispers; the chest is a small music box.",
+      "signs": [
+        "Whisper a kind word to the stone."
+      ]
+    },
+    {
+      "id": "quiet-corner",
+      "name": "Quiet Corner",
+      "kind": "rest",
+      "minBeltTier": 7,
+      "floorSet": "hall-of-echoes",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D##D##D###",
+        "#...........#",
+        "#...........#",
+        "###...S...###",
+        "#...........#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "Thick soft rugs that hush every sound, two cushions and a single candle.",
+      "signs": [
+        "No echo here. Just rest."
+      ]
+    },
+    {
+      "id": "mask-hall",
+      "name": "The Echo Hall",
+      "kind": "boss",
+      "minBeltTier": 7,
+      "floorSet": "hall-of-echoes",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "##########D#########",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........C........#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "echo-mask",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "masklet",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "masklet",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "masklet",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "masklet",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "masklet",
+          "column": 4,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "A grand hall of mirrors and bells; a floating mask hangs in the middle, copying the student.",
+      "signs": [
+        "Be the same inside and out.",
+        "Say a kind word to the mask."
+      ]
+    }
+  ]
+}
