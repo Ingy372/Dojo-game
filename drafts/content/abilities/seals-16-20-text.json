@@ -1,0 +1,50 @@
+{
+  "notes": "R-G2B-10: kid-facing effect text for Green belt seals #16-20 (Technique Seal format from content/abilities/abilities.json and seals-31-40-text.json). Names and effects come from the S4 table in drafts/planning/S4-self-defense-powers.md; every name is an S4 PROPOSAL and every number there is a guess, so no numbers appear in the text. Each text is one sentence under 80 characters, ages 6-9, hopeful, no pressure. 'Great Counter' is the kid word (S4 still says Perfect Counter). Kid text says 'padded staff' (never the real technique's weapon word) and avoids body-part words. ids are proposed (no #16-20 ids exist in content/abilities yet); the Programmer may adjust at import. effectRef points at the S4 effect and is not final effect JSON. 'flag' marks a line whose wording may change; the R-PROGRESSION-BETA family names may also change any line later.",
+  "seals": [
+    {
+      "id": "low-high-strike",
+      "technique": "Self-Defense #16",
+      "name": "Low-High Strike",
+      "text": "Your STRIKE adds a quick extra hit, like a low-then-high combo.",
+      "causesInjured": false,
+      "effectRef": "strikeExtraHit 0.3",
+      "flag": "Overlaps the Strike 'Spin Kick Finish' (follow-up-kick), which already says 'adds a second kick', and the Double Strike Insight (also `strikeExtraHit`). The three effects are the same kind; ask the Game Systems Designer if #16 should differ, then reword."
+    },
+    {
+      "id": "arm-bar",
+      "technique": "Self-Defense #17",
+      "name": "Arm Bar",
+      "text": "A Great Counter locks the attacker in place, so it can't block or shield.",
+      "causesInjured": false,
+      "effectRef": "counterLock 20 ticks (new, R-G2B-09)",
+      "flag": "Says 'locks' (control, never harm). A Guardian is never locked (R-G2B-09 test), so the line is true for normal enemies only."
+    },
+    {
+      "id": "slide-away",
+      "technique": "Self-Defense #18",
+      "name": "Slide Away",
+      "text": "DASH past a swing and your Focus fills up a little.",
+      "causesInjured": false,
+      "effectRef": "dashDodgeFocus 10 (new). S4: dashing through a padded-staff attack",
+      "flag": "S4 limits this to padded-staff attacks. Until that enemy ships it works on every enemy's swing (S4 fallback), so the text says 'a swing'. Reword once the padded-staff enemy exists."
+    },
+    {
+      "id": "wrist-lock",
+      "technique": "Self-Defense #19",
+      "name": "Wrist Lock",
+      "text": "A padded staff you disarm does no damage with its next swing.",
+      "causesInjured": false,
+      "effectRef": "disarm 1.0 vs weapon enemies",
+      "flag": "Until the padded-staff enemy ships, the seal works on every enemy's next attack (S4 fallback), so 'padded staff' is only true for the Bouncy Bopper today."
+    },
+    {
+      "id": "hold-and-combo",
+      "technique": "Self-Defense #20",
+      "name": "Hold and Combo",
+      "text": "Every few combo hits give you a short burst of speed.",
+      "causesInjured": false,
+      "effectRef": "comboSpeed 4 hits / +20% / 40 ticks",
+      "flag": "Overlaps the Wind Step Insight (a speed burst on combo hits). Ask the Game Systems Designer how they differ, then reword."
+    }
+  ]
+}
