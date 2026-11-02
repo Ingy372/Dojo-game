@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Checks drafts/content/town/town-changes.json against town-changes.md (C-STORY-g, v3).
+"""Checks drafts/content/town/town-changes.json against town-changes.md (C-STORY-g, v4).
 Belt order matches docs/curriculum.md; town pictures stop at Blue (White to Blue have a pictureId, Red to Black have none
-and show the Blue picture); no art add-on options remain; the gold flame is marked superseded; the 14 clash resolutions
-are present; the md has 2-3 mechanic proposals for Red up, each marked PROPOSAL with a pitch, per-belt growth, sample
-lines and why it is fun; reward lines are short and kid-readable; no "perfect"; no Bible references (faith content
-lives only in drafts/content/faith/); the md repeats every reward line and pictureId from the JSON."""
+and show the Blue picture); no art add-on options remain and no gold flame anywhere; the 14 clash resolutions are present
+and clash 3 is marked decided; Tuck is Red only (placeholder name marked, arrival, task, manners, dusk story, reward line,
+Artist sprite note); Red/Black, Brown, Brown/Black and Black each have one PROPOSAL with pitch, sample lines, reward line,
+why it is fun and a scope flag; every reward line is short, kid-readable and in the md; no "perfect"; no Bible references
+(faith content lives only in drafts/content/faith/); the md repeats every pictureId from the JSON."""
 import json, re, sys, pathlib
 R = pathlib.Path(__file__).resolve().parents[3]
 d = json.loads((R/"drafts/content/town/town-changes.json").read_text())
@@ -42,28 +43,43 @@ for i, c in enumerate(d["changes"]):
     else:
         if c.get("pictureId") is not None: e.append(f"{b}: no pictureId after Blue (town visuals stop at Blue)")
         if c.get("usesPicture") != d["changes"][cap]["pictureId"]: e.append(f"{b}: must use the Blue picture")
-        if c.get("rewardMessage") is not None: e.append(f"{b}: reward line waits for Jay's mechanic pick")
-gf = d.get("goldFlame", {})
-if "superseded" not in gf.get("status", ""): e.append("goldFlame must be marked superseded by the Blue cap")
-if "Gold flame for Red: superseded" not in md: e.append("md must note the gold flame is superseded")
-sec = md.split("## From Red up", 1)
-if len(sec) < 2: e.append("md needs a 'From Red up' section")
-else:
-    body = sec[1].split("\n## ", 1)[0]
-    opts = re.findall(r"^### Option (\d): (.+?) \(PROPOSAL\)\s*$", body, re.M)
-    if not 2 <= len(opts) <= 3: e.append(f"need 2-3 PROPOSAL mechanic options, found {len(opts)}")
-    parts = re.split(r"^### ", body, flags=re.M)[1:]
-    for part in parts:
-        if not part.startswith("Option"): continue
-        t = part.split("\n", 1)[0]
-        if "**Pitch:**" not in part: e.append(f"{t}: needs a pitch")
-        if "**Why it's fun:**" not in part: e.append(f"{t}: needs a why-it's-fun")
-        if "Sample lines" not in part: e.append(f"{t}: needs sample lines")
-        for belt in ("Red", "Red/Black", "Brown", "Brown/Black", "Black"):
-            if not re.search(rf"^\| {re.escape(belt)} \|", part, re.M): e.append(f"{t}: needs a row for {belt}")
+        line(b, c.get("rewardMessage"))
+        if b == "Red" and "DECIDED" not in c.get("mechanicStatus", ""): e.append("Red: Tuck must be marked DECIDED")
+        if b != "Red" and "PROPOSAL" not in c.get("mechanicStatus", ""): e.append(f"{b}: its mechanic must be marked PROPOSAL")
+if "goldFlame" in d: e.append("goldFlame was dropped; remove it from the JSON")
+c3 = next(x for x in d["clashResolutions"] if x["n"] == 3)
+if "DECIDED" not in c3["resolution"]: e.append("clash 3 must be marked DECIDED")
+if not re.search(r"^\| 3 \|.*DECIDED", md, re.M): e.append("md clash row 3 must be marked DECIDED")
+tk = d.get("tuck", {})
+if "PLACEHOLDER" not in tk.get("nameStatus", ""): e.append("Tuck must be marked as a placeholder name")
+if tk.get("belt") != "red": e.append("Tuck is the Red upgrade only")
+for k in ("arrival", "task", "manners", "duskStory", "reward", "artist", "programmer", "why"):
+    if not tk.get(k): e.append(f"tuck.{k} is missing")
+if tk.get("reward") != next(c for c in d["changes"] if c["beltName"] == "Red")["rewardMessage"]: e.append("Tuck's reward line must be Red's reward line")
+if '"Tuck" is a placeholder name' not in md: e.append("md must say Tuck is a placeholder name")
+if "A Tuck sprite" not in md: e.append("md must tell the Artist a Tuck sprite is needed")
+props = d.get("proposals", [])
+if [p["belt"] for p in props] != ["red-black", "brown", "brown-black", "black"]: e.append("need one proposal each for Red/Black, Brown, Brown/Black and Black")
+if len({p["id"] for p in props}) != len(props): e.append("each proposal must be a different idea")
+for p in props:
+    for k in ("name", "pitch", "growth", "lines", "reward", "why", "scope"):
+        if not p.get(k): e.append(f"proposal {p.get('id')}: missing {k}")
+    if "PROPOSAL" not in p.get("status", ""): e.append(f"proposal {p['id']}: must be marked PROPOSAL")
+    if not re.match(r"(SMALL|MEDIUM|LARGE)", p.get("scope", "")): e.append(f"proposal {p['id']}: scope flag must start with SMALL, MEDIUM or LARGE")
+    if not re.search(rf"^### \S+: {re.escape(p['name'])} \(PROPOSAL\)\s*$", md, re.M): e.append(f"proposal {p['id']}: md heading missing")
+    for l in p["lines"]:
+        if l not in md: e.append(f"proposal {p['id']}: sample line not in the md")
+    if p["reward"] not in md: e.append(f"proposal {p['id']}: reward line not in the md")
+    texts_p = [p["reward"]] + p["lines"]
+    for l in texts_p:
+        if re.search(r"\b(shame|failed|behind|ugly|broken)\b", l, re.I): e.append(f"proposal {p['id']}: negative word in {l}")
+tm = (tk.get("task", {}).get("lines", {}) or {}).values()
+for l in list(tm) + [tk.get("manners", {}).get("kinder", "")] + tk.get("duskStory", {}).get("lines", []):
+    if l and l not in md: e.append(f"Tuck line not in the md: {l}")
 for w in ("dummy", "brazier", "pennant", "wind chime", "rainbow"):
     if re.search(rf"\b{w}", json.dumps(d["changes"]), re.I): e.append(f"old art add-on word {w!r} still in the JSON")
 blob = json.dumps(d) + md
+if re.search(r"gold flame", blob, re.I): e.append("the gold flame is dropped; remove the mention")
 if re.search(r"perfect", blob, re.I): e.append('"perfect" is banned')
 if re.search(r"\b(?:[1-3] )?(?:Gen|Exod|Ps|Prov|Isa|Matt|Mark|Luke|John|Rom|Heb|Josh|Phil|Cor|Eph|Col)[a-z]*\.? \d+:\d+", blob): e.append("Bible reference found; faith content belongs in drafts/content/faith/")
 for t in texts:

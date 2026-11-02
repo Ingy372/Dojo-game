@@ -1,8 +1,14 @@
-# C-STORY-g: the town grows with every belt (draft, v3)
+# C-STORY-g: the town grows with every belt (draft, v4)
 
 Data: `town-changes.json` (the same words; `tools/check-town-changes.py` checks they match). Text only. Nothing shipped is changed, and `story/gate-scenes.json` (PR #339) is not edited.
 
 This rewrites C-STORY-f for Jay's new town arc (Oct 31) and his Nov 1 direction: **town visuals stop at Blue.** The art is in PR #396 (`incoming-art/town-growth`).
+
+## Decided (Manager, Nov 1)
+- **DECIDED (Manager, Nov 1):** The narrowed rule is accepted. Still banned: locks, coming-soon or belt signs, text on the town, and anything about other players' belts. Allowed: worn bits and the empty plinth before Green.
+- **DECIDED (Manager, Nov 1; narrowed by Jay):** Tuck the Traveling Helper, with a dusk Tower story folded in. Jay then narrowed Tuck to the Red belt only (Nov 1 evening). Red/Black to Black each get a different PROPOSAL for Jay.
+- **DECIDED (Manager, Nov 1):** A Tuck sprite is OK. The Blue cap covers scenery only.
+- **DECIDED (Manager, Nov 1):** Dropped.
 
 ## The arc
 - **White:** a little worn, and a hopeful fresh start.
@@ -10,7 +16,7 @@ This rewrites C-STORY-f for Jay's new town arc (Oct 31) and his Nov 1 direction:
 - **Orange:** the approved base concept art.
 - **Green:** the statue arrives.
 - **Blue:** the first gentle, homely touches. **This is the last town picture.**
-- **Red to Black:** no new art. The town shows the Blue picture. What grows is a mechanic, pitched below for Jay.
+- **Red to Black:** no new art. The town shows the Blue picture. Red gets Tuck (placeholder name). Red/Black to Black each have a PROPOSAL.
 - **Dusk** stays subtle.
 - **One full picture per belt**, swapped whole. Nothing stacks.
 
@@ -38,77 +44,104 @@ Matches PR #396 (its README, `stages.json` and Delivery Note). Five full picture
 
 Dusk (all belts): window and lantern glow about a quarter of the first approved dusk, ground pools about a third, a fainter Tower light, no firefly swarm. The day and dusk notes for each belt are in the JSON.
 
-## Red to Black: no art
-Red, Red/Black, Brown, Brown/Black and Black use the Blue picture. They keep their story tie-ins and gate placeholders (`gate-red`, `gate-red-black`, `gate-brown`, `gate-brown-black`; Black has none). Their reward lines wait for Jay's mechanic pick.
+## Red to Black: no new picture
+Red, Red/Black, Brown, Brown/Black and Black use the Blue picture. They keep their story tie-ins and gate placeholders (`gate-red`, `gate-red-black`, `gate-brown`, `gate-brown-black`; Black has none). Every art add-on idea is dropped. Red gets Tuck. Red/Black to Black have proposals, below.
 
-**Gold flame for Red: superseded by the Blue cap (unconfirmed).** Jay approved a gold flame on the banners (t677u). That was an art change, so with no art after Blue it has no home. Note for the Manager: please confirm it is dropped, or ask Jay whether he wants it somewhere else (for example as a small icon on the Red reward line).
+## Red: Tuck the Traveling Helper (DECIDED)
 
-The old art add-on options (dummy, brazier, mats, chime, bell, pennants, reading tree, vine arch, book box, Tower glow, rainbow, window lantern, gold lantern, gold specks) are all dropped.
+**DECIDED (Manager, Nov 1), and Jay narrowed it to the Red belt only.** **"Tuck" is a placeholder name** (renames are proposals).
 
-## From Red up: mechanic proposals (PROPOSALS for Jay)
+**Who:** A small traveler with a backpack that is far too big. Friendly, curious and a little shy.
 
-With no new art after Blue, Red to Black can still feel like growing. These are three charming ideas for what the town does from Red up. **All three are PROPOSALS. Jay picks one, a mix, or none.** Names such as Bea and Tuck are placeholder names.
+**Where:** Sits by the bridge. Part of the player's own town, so nothing on screen shows anyone's belt. Once he arrives he stays.
 
-**Rules for all three:**
-- Each phone shows only the player's own story. No chat between players, no purchases, no timers, no streaks, no "come back" pressure, and nothing that mentions another player's belt.
-- Nothing here changes how strong you are. Real training stays the source of power. These are for warmth, stories and kindness.
-- Everything is skippable, and a kid who skips loses nothing.
-- Every line is short, hopeful and kind. No Bible text here (faith content stays in `drafts/content/faith/`).
+**Rules:**
+- The task is optional. Thanks is the only reward, and nothing is earned that changes how strong you are.
+- No timers, streaks or counters. Skipping or saying 'later' costs nothing, and Tuck is just as glad to see you.
+- The manners moment has no wrong answer. Tuck shows the kinder idea gently.
+- No chat between players, no purchases, nothing about other players' belts.
+- The dusk story can be heard again any time.
 
-| | Option | Feel | Launch scope |
-|---|---|---|---|
-| 1 | Neighbours Wake Up | A town that comes alive | **Heavy.** New townsfolk sprites (art, so it goes beyond the Blue cap and needs Jay's OK), walking paths, a wave and hello. Start with one or two walkers. |
-| 2 | Tuck the Traveling Helper | One new friend with a purpose | **Medium.** One new character sprite (art, needs Jay's OK), a small dialogue screen, optional tasks. |
-| 3 | Dusk Tales with Sensei | A bedtime story that leads to the Tower | **Light.** Reuses the existing story cards and Sensei's voice. Content only, plus one "Tales" entry. No new art. |
+- **Arrival:** Tuck arrives at the bridge, puffing a little under the big backpack, and asks if he can sit.
+- **Optional task (in-game visit):** Say hello to Sensei for Tuck.
+  - Tuck asks: "Hi! I'm Tuck. Could you say hello to Sensei for me?"
+  - Tuck thanks: "Thank you! Sensei sounds so kind."
+- **Manners moment:** "Tuck is new. How could we say hello?" Choices: "Wave and smile" or "Say 'Hi, I'm here!'". Tuck says: "Both are friendly! A smile and a name make a new friend feel at home."
+- **Dusk Tower story: The Forge of Courage.** "Long ago, smiths made shields for anyone who needed one." "They sang while they worked, and the forge felt warm." "Courage can be warm, like a small flame." Try this: "Try one brave, kind thing tomorrow."
+- **Reward line:** "A new friend! Tuck the traveler has come to the bridge."
 
-### Option 1: Neighbours Wake Up (PROPOSAL)
-**Pitch:** The town has been quiet and cozy. From Red up, the neighbours start strolling about, one new friend at each belt. They wave when you walk by. Everyone sees their own town, so nothing hints at anyone else's.
+**Why it's fun:** One friend who is glad to see you, a tiny kind job where the kid gets to be the helper, and a story that points toward the Tower.
 
-| Belt | What grows | Sample lines |
-|---|---|---|
-| Red | Bea the baker strolls between the shop and the bridge. | "Good morning! Fresh bread today." |
-| Red/Black | A gardener and a kid with a kite join the walk. They stop to say hello. | "Look how high my kite goes!" |
-| Brown | The koi keeper feeds the fish at the river. Neighbours bow back when you bow. | "A kind bow! I'll bow right back." |
-| Brown/Black | At dusk the neighbours stroll by the statue and look up at the Tower. | "The Tower light looks warm tonight." |
-| Black | The whole town takes a slow evening walk toward the Tower light. | "Thank you for helping our town shine." |
+**Needs, in short:**
+- **Artist:** A Tuck character sprite is needed (new NPC art; the Blue cap covers scenery only). A small traveler with a big backpack, drawn on top of the Blue town, not baked into the picture. Needs: sitting idle by the bridge, a wave, a small speech portrait, day and dusk lighting. No red.
+- **Programmer:** Small and flagged, not part of this PR: one fixed NPC spot by the bridge (no walking), a dialogue box that reuses Sensei's, one optional visit task, one two-choice manners screen with no wrong answer, and the existing story-card viewer for the dusk story. Tuck shows when the player's own highest belt is Red or higher.
 
-**Why it's fun:** The town feels alive, and kids get a wave back. Waving and bowing is gentle and costs nothing.
+## Red/Black to Black: one PROPOSAL each, for Jay
 
-### Option 2: Tuck the Traveling Helper (PROPOSAL)
-**Pitch:** At Red, a small traveler named Tuck arrives with a backpack that is far too big. Tuck sits by the bridge and has a real purpose: a small helpful task, a Tower story to share, and a chance to practice kind manners. Tasks are always optional. Thanks is the only reward.
+Each is a different small, gentle idea. All of them: ages 6+, no chat, no purchases, no pressure, nothing about other players' belts, no power. Nothing here is decided, and none adds code to this PR.
 
-| Belt | What Tuck does | Sample lines |
-|---|---|---|
-| Red | Arrives and asks for one small, helpful thing: say hello to Sensei for Tuck. | "Hi! I'm Tuck. Could you say hello to Sensei for me?" |
-| Red/Black | Shares a story from the Tower, one piece at a time. | "I heard a hall up there repeats kind words. Want to hear?" |
-| Brown | Manners practice. Tuck asks how to be kind, and both answers are fine; Tuck shows the kinder one. | "Someone dropped their pencil. What could we do?" |
-| Brown/Black | Tuck shares a story about calm after a storm, and asks for help carrying a small lantern to the dojo. | "Storms pass. Want to carry this lantern with me?" |
-| Black | Tuck waves at the Tower and cheers you on. | "See you at the top! I'm cheering for you." |
+### Red/Black: Townsfolk Walking and Waving (PROPOSAL)
 
-**Why it's fun:** A friend who is glad to see you, a story that gets bigger each belt, and tiny kind jobs. Kids get to be the helper.
+**Pitch:** A few neighbours stroll the lanes and wave when you walk by. They are glad you are home.
 
-### Option 3: Dusk Tales with Sensei (PROPOSAL)
-**Pitch:** When the town lights come up at dusk, Sensei has a short story card, one new tale per belt from Red up, each from the Tower's own history. Each ends with a tiny, kind thing to try. Nothing is counted and nothing is earned. It is the story the Tower has been waiting to tell.
+**How it fits Red/Black:** Two or three townsfolk who walk slow loops and wave back. They fit the Hall of Echoes: kind greetings come back to you.
 
-| Belt | The tale | Sample lines |
-|---|---|---|
-| Red | The Forge of Courage: the smiths who sang while they worked. | "Courage can be warm, like a small flame." |
-| Red/Black | The Hall of Echoes: a hall that once repeated kind words. | "What kind thing could you say today?" |
-| Brown | The Root Library: every book tells how someone was helped. | "Who helped you once? You could say thanks." |
-| Brown/Black | The Storm Stair: wind and rain that wash the Tower clean. | "After the storm, the air feels fresh." |
-| Black | The Summit: the empty stand where the great light once shone. | "A little light from each of us can shine far." |
+**Sample lines:** "Hello, neighbour! Lovely day." "I saw you training. Keep going!" "Thanks for waving back."
 
-**Why it's fun:** It feels like a bedtime story from Sensei, it builds toward the Tower story, and each tale gives a small kindness idea for real life. It is also the easiest to build.
+**Proposed reward line:** "Neighbours are out for a stroll. Wave hello as you pass!"
 
-### Which one first?
-My suggestion is **Option 3** for launch because it needs no new art and little code. **Option 2** could come later, with Tuck telling the Dusk Tales. **Option 1** is the biggest and fits best after launch. These can combine, and none is decided.
+**Why it's fun:** The town feels alive, and a wave back is the best feeling.
+
+**Scope flag:** MEDIUM: 2-3 new townsfolk sprites with a walk cycle, and simple looping paths on the Blue picture. Some code. Flagged, not part of this PR.
+
+### Brown: Dusk Tales with Sensei (PROPOSAL)
+
+**Pitch:** At dusk Sensei sits on the dojo step and tells a short Tower story. Nothing to do but listen.
+
+**How it fits Brown:** One tale for the Root Library: old roots hold up a library, and every book tells how someone was helped. A kid can hear it again any time.
+
+**Sample lines:** "Come and sit. I have a story about the Tower." "Everyone gets help, and everyone can give it." "Thank you for listening."
+
+**Proposed reward line:** "Sensei has a story for you at dusk. Come and sit a while."
+
+**Why it's fun:** A quiet, cozy moment with Sensei, and it adds a piece of the Tower story.
+
+**Scope flag:** SMALL: reuses the story-card viewer and Sensei art. It may need one seated pose. If Tuck's dusk story already uses the same viewer, nothing new.
+
+### Brown/Black: The Town Pup (PROPOSAL)
+
+**Pitch:** A small friendly pup trots around the square. Tap to say hello. It naps at dusk.
+
+**How it fits Brown/Black:** The pup needs nothing: no feeding, no chores, and nothing sad if you stay away. It fits the Storm Stair: it shakes off the rain and trots back out once the sky is clear.
+
+**Sample lines:** "Woof! (That means hello.)" "The pup shakes off the rain. All clear!" "The pup curls up for a nap."
+
+**Proposed reward line:** "A new little friend is trotting around the town square. Say hello!"
+
+**Why it's fun:** Everyone loves a pup. It is just a friend: no care duties, no streaks.
+
+**Scope flag:** SMALL to MEDIUM: one pup sprite (idle, trot, nap), a tap reaction and a simple wander. Some code. Flagged, not part of this PR.
+
+### Black: The Lantern Walk (PROPOSAL)
+
+**Pitch:** One calm dusk scene: townsfolk carry small lanterns to the square and gather. No tasks, just a gentle thank-you.
+
+**How it fits Black:** It echoes the Lost Lightbearer, who carried a small light up the Tower. Sensei and Tuck stand together while the neighbours gather. A kid can watch it again any time.
+
+**Sample lines:** "A little light from each of us." "Thank you for climbing with us." "Look how bright the square is together."
+
+**Proposed reward line:** "Tonight the whole town carries lanterns. Come and watch at dusk!"
+
+**Why it's fun:** A warm, shared goodbye to the long climb, with no pressure to do anything.
+
+**Scope flag:** MEDIUM: a short scripted scene with the townsfolk sprites and small lantern props. It works best if the Red/Black townsfolk proposal is chosen. If not, it uses Sensei and Tuck only (SMALL). Flagged, not part of this PR.
 
 ## The 14 clashes from the Artist's note (PR #396), and how each was resolved
 | # | Clash | What clashed | Resolution |
 |---|---|---|---|
 | 1 | Statue | Spec: the statue is not touched and is part of the start. New arc: the statue is absent until Green. | The statue arrives at Green. The plinth is empty at White, Yellow and Orange. The "statue is not touched" rule is dropped. |
 | 2 | White start | Spec: a White-belt town looks complete, the start is the approved base. New arc: White is a little run down. | White is the fresh-start town, below the base. The approved base is Orange. White text is hopeful and says "room to grow", never shame. |
-| 3 | No empty plots, locks or signs | Spec forbids them. The empty plinth, boarded window, patches and weedy beds break it. | The rule is narrowed. Still banned: locks, "coming soon" or belt signs, any text on the town, and anything about other players' belts. Allowed: worn bits and the empty plinth, drawn as friendly wear. This follows Jay's new arc and needs his OK (see DECIDE 1). |
+| 3 | No empty plots, locks or signs | Spec forbids them. The empty plinth, boarded window, patches and weedy beds break it. | The rule is narrowed. Still banned: locks, "coming soon" or belt signs, any text on the town, and anything about other players' belts. Allowed: worn bits and the empty plinth, drawn as friendly wear. DECIDED: accepted by the Manager (Nov 1). |
 | 4 | Structure | Spec: nine add-on overlay layers that stack. New: one full background per belt. | Each belt up to Blue has one picture (`pictureId`). The phone shows the picture for the player's own highest belt and swaps it whole. Nothing stacks. "Changes add up" is replaced by "each picture is complete". |
 | 5 | White lamps | Spec: lamp posts and a bridge lamp light up at White. New: no lamp reveal. | No lamp reveal. The lamp posts glow softly at dusk from White on. The tall lantern posts stay dark, which matches the Lamp Keeper story. |
 | 6 | Yellow | Spec: beds bloom and a vine on the dojo porch. New: cleaner. | Yellow is cleaner: boards and patches gone, beds tidy, water clearer. No vine and no bloom reward. The approved flowers are in Orange. |
@@ -116,22 +149,25 @@ My suggestion is **Option 3** for launch because it needs no new art and little 
 | 8 | Green | Spec: stone path and a stone bench. New: the statue arrives. | Green is the statue arriving. The path and bench are dropped. |
 | 9 | Blue | Spec: the river turns clear, more koi and a sitting dock. New: statue and light effects, two more koi and lilies. | Blue is the first gentle homely touches. The dock is dropped. The river is clearer than White, but "turns clear" is no longer a Blue moment. |
 | 10 | Effects only from Blue | Spec has effects at earlier belts. New: none before Blue, apart from the White lamp posts. | Agreed. Effects (smoke, beams, specks, fireflies) start at Blue and stay few. Dusk stays subtle: every glow has a source. |
-| 11 | Red to Black | Spec: Red banners, dummy and brazier; Red/Black chime and bell; Brown tree and book box; Brown/Black glowing Tower, rainbow and window lantern; Black out of scope. New: gentle upgrades, none defined. | Updated Nov 1: town visuals now stop at Blue (Jay, via the Manager). Red to Black have no new art, so all the old art add-ons and my art options are dropped. From Red up, the md pitches mechanics instead, as PROPOSALS for Jay. Red to Black show the Blue picture. |
-| 12 | Reward messages and tie-ins | The old messages and changeIds point at the old changes. | Messages up to Blue are rewritten to match their pictures (Green brings the statue). The old changeIds are replaced by pictureIds. Red up has no line until Jay picks a mechanic. Story tie-ins keep the same story names. Bible references are removed from this file, since faith content lives only in `drafts/content/faith/`. |
+| 11 | Red to Black | Spec: Red banners, dummy and brazier; Red/Black chime and bell; Brown tree and book box; Brown/Black glowing Tower, rainbow and window lantern; Black out of scope. New: gentle upgrades, none defined. | DECIDED (Manager, Nov 1): town visuals stop at Blue, so Red to Black have no new art and all the old art add-ons are dropped, including the Red banners. Red gets a character instead: Tuck the Traveling Helper (placeholder name). Red/Black to Black get a different PROPOSAL each. Red to Black show the Blue picture. |
+| 12 | Reward messages and tie-ins | The old messages and changeIds point at the old changes. | Messages up to Blue are rewritten to match their pictures (Green brings the statue). The old changeIds are replaced by pictureIds. Red to Black lines are Tuck's reward lines. Story tie-ins keep the same story names. Bible references are removed from this file, since faith content lives only in `drafts/content/faith/`. |
 | 13 | Open items | The Brown tree beside the placeholder and the placeholder building's use. | The Brown tree is gone with the art add-ons. The placeholder building's use is still open (A4-2). The boarded window in White is only wear. |
 | 14 | Scope | The spec asked for nine overlays. The art has three of ten stages built. | The cap makes it five pictures in all: White, Yellow, Orange, Green, Blue. Built in PR #396: White, Orange, Blue. Planned: Yellow, Green. Red, Red/Black, Brown, Brown/Black and Black use the Blue picture. Until Yellow and Green are built, a belt shows the nearest earlier built picture (README of PR #396). |
 
 ## What the Artist needs
 - Yellow and Green: one full town picture each, day and dusk, in the same frame as the PR #396 samples.
-- Nothing for Red to Black. Please mark Red, Red/Black, Brown, Brown/Black and Black in `stages.json` as "use Blue" instead of "planned". PR #396 still lists them as planned upgrades.
+- **A Tuck sprite** (new NPC art; the Blue cap covers scenery only). Details are under Tuck above.
+- Nothing else for Red to Black. Please mark Red, Red/Black, Brown, Brown/Black and Black in `stages.json` as "use Blue" instead of "planned". PR #396 still lists them as planned upgrades.
 - No red except the brand sign.
 
 ## What the Programmer needs
 - One lookup from the player's own highest belt to one picture (day or dusk to match the time). Red to Black map to the Blue picture. See `stages/stages.json` in PR #396 for file names. Show the reward message once, after the Gate scene.
 - A belt with no built picture shows the nearest earlier built one.
-- Other players are drawn on top and never change the town. No new launch scope in this file. The mechanic proposals below say what code each one would need; none is decided.
+- Other players are drawn on top and never change the town.
+- Tuck and each proposal are new code scope. Each is flagged in its own section and none is part of this PR.
 
 ## Open
 - The placeholder building's final use (A4-2) is still open.
-- When the PR #339 stack merges, a follow-up fills each `visibleChange` in the gate scenes. For Red up it follows the mechanic Jay picks.
-- Red to Black reward lines wait for Jay's pick.
+- When the PR #339 stack merges, a follow-up fills each `visibleChange` in the gate scenes. For Red it is Tuck's arrival. For Red/Black to Black it follows the proposal Jay picks.
+- "Tuck" is a placeholder name until Jay or the Manager picks one.
+- Jay picks, or passes on, one idea each for Red/Black, Brown, Brown/Black and Black. The reward lines for those four are proposed and go with the idea.
