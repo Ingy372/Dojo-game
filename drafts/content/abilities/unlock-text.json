@@ -1,0 +1,159 @@
+{
+  "notes": "PB-14 (R-PROGRESSION-BETA, PR #407): words for the unlock screen and Sensei's Trial room. Words only, no art, no game code. Every 'line' is 8 words or fewer, first-grade reading level (the L&E Designer's standard: short common words, no word over three syllables apart from game names), no digits, no 'perfect', no pressure. 'title' is the real name shown above the line (Strike name, Seal rank name, or kata name); rank titles and numbers come from seal-families-text.json (PB-06, merged). The line says what the move does in kid words, never a stat dump. OVERLAP WITH THE #404 SEAL UNLOCK TIP: the equip tip ('Put this Seal in a slot.' / 'Then it helps you in fights.', drafts/learning/g2b-11-lock-breakfree-welcome-week.md) sits under the Seal name on the same screen. These lines do not repeat it: none says slot or equip, and none says it helps you in fights. A Seal screen reads title, rank line from here, then the #404 tip, so the two do not clash. Strikes #4-7 unlock lines are in strikes-4-7-text.json (R-G2B-16) and join this file at import. Kata power lines wait on Jay (PB-11): the placeholder line is the Manager-approved 'Power coming soon' idea.",
+  "headers": {
+    "strike": "New Strike!",
+    "seal": "New Seal rank!",
+    "kata": "New kata power!"
+  },
+  "strikes": [
+    {
+      "id": "spin-kick",
+      "title": "Spin Kick",
+      "line": "Your first STRIKE: a big spin kick!"
+    },
+    {
+      "id": "jumping-spins",
+      "title": "Jumping Spins",
+      "line": "Jump and spin three times!"
+    },
+    {
+      "id": "butterfly-flow",
+      "title": "Butterfly Flow",
+      "line": "A slow, strong butterfly kick!"
+    }
+  ],
+  "seals": [
+    {
+      "family": "escape",
+      "technique": 1,
+      "title": "Off the Line",
+      "line": "Great Counters add two quick punches!"
+    },
+    {
+      "family": "escape",
+      "technique": 2,
+      "title": "Other Side",
+      "line": "A Block gives your DASH back!"
+    },
+    {
+      "family": "counter",
+      "technique": 3,
+      "title": "Spin Back Fist",
+      "line": "Great Counters hit enemies nearby, too!"
+    },
+    {
+      "family": "escape",
+      "technique": 4,
+      "title": "Drive Back",
+      "line": "Great Counters push enemies back!"
+    },
+    {
+      "family": "counter",
+      "technique": 5,
+      "title": "Spin Elbow",
+      "line": "Your spin reaches farther now!"
+    },
+    {
+      "family": "counter",
+      "technique": 6,
+      "title": "Arm Wrap",
+      "line": "Enemies stay trapped a bit longer!"
+    },
+    {
+      "family": "counter",
+      "technique": 7,
+      "title": "Palm Heel",
+      "line": "Your Great Counters hit harder!"
+    },
+    {
+      "family": "guard",
+      "technique": 8,
+      "title": "Block and Strike",
+      "line": "Blocks bounce some of the hit back!"
+    },
+    {
+      "family": "guard",
+      "technique": 9,
+      "title": "High Block Strike",
+      "line": "Blocks leave enemies off-balance!"
+    },
+    {
+      "family": "counter",
+      "technique": 10,
+      "title": "Grab and Strike",
+      "line": "Off-balance enemies take extra damage!"
+    },
+    {
+      "family": "throw",
+      "technique": 11,
+      "title": "Outside Reap",
+      "line": "Great Counters tumble enemies down!"
+    },
+    {
+      "family": "throw",
+      "technique": 12,
+      "title": "Reap and Finish",
+      "line": "Tumbled enemies take extra damage!"
+    },
+    {
+      "family": "disarm",
+      "technique": 13,
+      "title": "Kick the Weapon",
+      "line": "Kicked weapons make the next hit weaker!"
+    },
+    {
+      "family": "disarm",
+      "technique": 14,
+      "title": "Kick and Spin",
+      "line": "Their next two hits are weaker!"
+    },
+    {
+      "family": "escape",
+      "technique": 15,
+      "title": "Slip and Double",
+      "line": "Great Counters add a third punch!"
+    }
+  ],
+  "sealCarries": [
+    {
+      "name": "Steady Breath",
+      "family": "counter",
+      "technique": 10,
+      "line": "Great Counters give you back Health!"
+    },
+    {
+      "name": "Strong Block",
+      "family": "guard",
+      "technique": 9,
+      "line": "Your Blocks take less damage!"
+    }
+  ],
+  "kata": [
+    {
+      "id": "basic-form-1-power",
+      "kata": "basic-form-1",
+      "title": "Basic Form 1",
+      "status": "placeholder",
+      "line": "Your kata power is coming soon!"
+    },
+    {
+      "id": "basic-form-2-power",
+      "kata": "basic-form-2",
+      "title": "Basic Form 2",
+      "status": "placeholder",
+      "line": "Your kata power is coming soon!"
+    },
+    {
+      "id": "keon-power",
+      "kata": "keon",
+      "title": "Keon",
+      "status": "placeholder",
+      "line": "Your kata power is coming soon!"
+    }
+  ],
+  "trial": {
+    "intro": "Try your new move here!",
+    "clear": "Nice work with your new move!",
+    "reward": "Here is a small gift for you!"
+  }
+}
