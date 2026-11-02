@@ -1,6 +1,6 @@
 # insight-picker (G2): SAMPLES
 
-Warm re-skin of the Insight picker ("Choose an Insight") using the Board kit (#412) and the catalog style (#422). Art only.
+Warm re-skin of the Insight picker over the paused room, dimmed, ("Choose an Insight") using the Board kit (#412) and the catalog style (#422). Art only.
 
 - `preview/`: 01 picker screen 844x390, 02 card close-up, 03 picked state, 04 pick in three frames (bonus). Each at 1x and @2x.
 - `source/build_insight_picker.py`: builds all previews. Reads words from `content/insights/insights.json` and icons from `incoming-art/icons/sprites/`. Uses `incoming-art/tools/board_ui_kit.py` read-only.

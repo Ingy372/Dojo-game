@@ -126,11 +126,57 @@ def paste_layer(sc, lay, dy=0.0, dim=1.0, alpha=1.0, scale=1.0, cx=None, cy=None
     sc.img.alpha_composite(im, (ox, oy)) if ox >= 0 and oy >= 0 else sc.img.alpha_composite(im, (max(ox, 0), max(oy, 0)))
 
 
+ROOMS = os.path.join(ART, 'tower-rooms', 'sprites')
+_rs = {}
+
+
+def room_sprite(name, frame=None, fw=None):
+    k = (name, frame)
+    if k not in _rs:
+        im = Image.open(os.path.join(ROOMS, name + '_' + name.split('-', 0)[0] + '.png')) if False else Image.open(os.path.join(ROOMS, name))
+        if frame is not None:
+            im = im.crop((frame * fw, 0, (frame + 1) * fw, im.height))
+        _rs[k] = im.convert('RGBA')
+    return _rs[k]
+
+
 def backdrop(w, h):
-    sc = Screen(w, h)
-    # the room is paused behind a warm wash: darker wood, no HUD showing through (the problem in the "today" shot)
-    wash = Image.new('RGBA', sc.img.size, (34, 18, 8, 120))
-    sc.img.alpha_composite(wash)
+    """The paused room dimmed behind the picker (DECIDE 4, decided for #426): the real Tower room kit
+    (tower-rooms: flagstones, wall, doors, pillars), drawn at the game's 48 pt tile, then dimmed.
+    The HUD is not drawn: the room is paused and the dim hides it."""
+    sc = Screen(w, h, bg=Image.new('RGBA', (w * K, h * K), (22, 20, 34, 255)))
+    t = 48 * K / 80.0                                    # sprite px -> composite px (sprites are 80 px per tile, the game draws 48 pt tiles)
+
+    def put(im, x, y):                                    # x, y in points; (x, y) = top-left of the sprite
+        im = im.resize((round(im.width * t), round(im.height * t)), Image.LANCZOS)
+        sc.img.alpha_composite(im, (round(x * K), round(y * K)))
+
+    floors = ['floor-big_floor-big.png', 'floor-quad_floor-quad.png', 'floor-big_floor-big.png', 'floor-quad_floor-quad.png', 'floor-worn_floor-worn.png']
+    wall = room_sprite('wall-face_wall-face.png')
+    wh = wall.height * 48 / 80.0
+    fy = wh - 24 * 48 / 80.0                              # top of the first floor row (wall anchor)
+    cols, rows = int(w // 48) + 2, int((h - fy) // 48) + 2
+    x0 = (w - 48 * 17) / 2.0                              # centre the tiled floor on the screen
+    for r in range(rows):
+        for c in range(-1, cols):
+            n = (c * 7 + r * 3 + (c * r)) % 11
+            name = floors[0] if n in (0, 3, 6) else floors[1] if n in (1, 4, 8) else floors[4] if n == 10 else floors[2]
+            put(room_sprite(name), x0 + c * 48, fy + r * 48)
+    for c in range(-1, cols):
+        put(wall, x0 + c * 48, 0)
+    door = room_sprite('door-treasure_door-treasure.png', 0, 96)
+    for dx in (118, w - 118 - 96 * 0.6):
+        put(door, dx, wh - door.height * 0.6 + 2)
+    put(room_sprite('pillar_pillar.png'), 22, wh - 14 * 0.6 - 224 * 0.6 + 12 * 0.6 + 0)
+    put(room_sprite('pillar_pillar.png'), w - 22 - 88 * 0.6, wh - 14 * 0.6 - 224 * 0.6 + 12 * 0.6 + 0)
+    # the dim: a deep, cool wash with a soft vignette so the cards carry the screen
+    sc.img.alpha_composite(Image.new('RGBA', sc.img.size, (14, 12, 28, 140)))
+    yy, xx = np.mgrid[0:h * K, 0:w * K]
+    d = np.sqrt(((xx - w * K / 2) / (w * K / 2)) ** 2 + ((yy - h * K / 2) / (h * K / 2)) ** 2)
+    vig = np.clip((d - .55) / .8, 0, 1) ** 1.6 * 110
+    v = np.zeros((h * K, w * K, 4), dtype=np.uint8)
+    v[..., :3] = (8, 6, 16); v[..., 3] = vig.astype(np.uint8)
+    sc.img.alpha_composite(Image.fromarray(v, 'RGBA'))
     return sc
 
 
