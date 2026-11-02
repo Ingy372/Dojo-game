@@ -1,6 +1,8 @@
-# Delivery Note: Seal families (PB-07 samples, v3)
+# Delivery Note: Seal families (PB-07 samples, v4)
 
 - **ITEM:** PB-07 slot art, samples only: family medallions (Counter, Guard, Disarm shown), Lock, Strike and Kata glyphs, empty slot, Jumping Spins.
+- **WHAT (v4, Guard and Disarm only):** Jay rejected them ("Disarm's ankle looks broken. Guard's hands look really weird. Good enough is not OK, we want premium"). Both are redrawn. **Guard:** a high-guard block with sleeve, cuff band, a clear wrist and ONE closed mitten fist per arm (one thumb crease inside the outline, no finger lines, nothing sticking out). **Disarm:** a front snap kick: straight shin into a natural ankle, a flexed foot with the sole on the padded stick, a shoe with a clear round heel, a burst on the sole as the glow source. Digit check: 2 fists with 0 fingers; 0 toes. Checked large, zoomed and at 30 pt, plus grey and wall. Before/after: `preview/05-before-after-v3-v4.png`. Old v3 icons: `superseded/v3-icons/`. Several attempts were made (a bare foot in line with the shin, a foam bootie in line, a flexed shoe); the bare feet read as blobs, so the flexed shoe is kept. Sheet 01 is regenerated with the new icons. No sprites exported.
+- **Second pass (v4):** see the line above. Not changed: Counter, Strike, Jumping Spins, Kata, Lock, empty slot.
 - **WHAT (v3, from Jay's feedback):** the medallions looked rough (a foot with 6 toes; Guard "looks like something in a nightmare"). Fixed: fists are clean mitten shapes with a thumb (no finger lines); feet are chunky shoes with no separate toes (also the Kata footprints); **Guard is redrawn** as a friendly guard-up pose (smiling kid, fists at the chin, soft shield). Every icon re-checked for anatomy counts and at 30 pt. New sheet `preview/04-before-after-v2-v3.png` shows old vs new, large and at 30 pt. Old icons are in `superseded/v2-icons/`. Counter, Disarm, Strike, Jumping Spins and Kata were touched by the hand/foot change; Lock and the empty slot are unchanged.
 - **WHAT (earlier):** 3 preview sheets (large and real size, paper, wall and grey) in `preview/`, plus the build scripts. No sprites or game files yet (no export until Jay approves). Escape and Throw pictures are not drawn yet; their rim colours are shown in the key on sheet 1.
   Manager answers applied in v2:
@@ -10,6 +12,7 @@
   4. Kept as they were: the Counter back fist, the Strike and Kata glyphs, the Jumping Spins ripples, the Lock and empty-slot look.
 - **WHY:** The manager OK'd the family look with these changes. A padded stick is safe for ages 6+ and still reads as "a weapon kicked away".
 - **DECIDE:**
+  00. Do the v4 Guard (clear wrist, closed fist) and Disarm (straight shin, natural ankle, clear heel) now meet the premium bar? Strike and Jumping Spins still use the v3 shoe, and Counter the v3 fist. Should they match the new look?
   0. Do the new Guard (guard-up, mitten fists, shield) and the shoe feet look friendly enough? Tell me what still feels off.
   1. Guard's rim moved to leaf green (not asked for). It was needed to keep Escape and Guard apart. OK, or keep the old green and nudge Escape bluer?
   2. Text in the mock now says "Kick the stick away". The game text in `drafts/content/abilities/seal-families-text.json` still says "Kick the Weapon" (fine). Any other words that say "knife"?
