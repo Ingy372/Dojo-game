@@ -6,6 +6,7 @@ import insights from '../../../../content/insights/insights.json';
 import gear from '../../../../content/loot/gear.json';
 import drops from '../../../../content/loot/drops.json';
 import abilities from '../../../../content/abilities/abilities.json';
+import sealFamilies from '../../../../content/abilities/seal-families.json';
 import dojoRoom from '../../../../content/dojo/home-dojo.json';
 import decorations from '../../../../content/dojo/decorations.json';
 import twists from '../../../../content/twists/twists.json';
@@ -17,7 +18,7 @@ const enemies = import.meta.glob('../../../../content/enemies/*.json', { eager: 
 
 const sorted = (files: Record<string, unknown>) => Object.keys(files).sort().map((k) => files[k]);
 
-export const CONTENT = loadContent({ rooms: sorted(rooms), enemies: sorted(enemies), insights, gear, drops, abilities, dojoRoom, decorations, twists, elites, named });
+export const CONTENT = loadContent({ rooms: sorted(rooms), enemies: sorted(enemies), insights, gear, drops, abilities, sealFamilies, dojoRoom, decorations, twists, elites, named });
 
 const katas = import.meta.glob('../../../../content/katas/*.json', { eager: true, import: 'default' });
 
