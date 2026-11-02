@@ -1,0 +1,27 @@
+{
+  "notes": "Measured with drafts/content/tools/loot-per-run-sim.test.ts.keep: the smart bot, typical skill, 200 seeds (1-200), tier 1 stats {100 health, 10 power, 0 guard} on belt 1 and tier 3 stats {332.79, 45.85, 33.53} on belt 3, on main's content. Each number is how many of that enemy appear in the rooms one run actually plays (Dough Blob splits counted). Expected drops per run = sum(count x chance). check-loot-b3.py reads this file.",
+  "belt1": {
+    "tier": 1,
+    "runs": 200,
+    "roomsPerRun": 8,
+    "enemiesPerRun": {
+      "swarmer": 69.11,
+      "shield": 20.155,
+      "floor-keeper": 1
+    }
+  },
+  "belt3": {
+    "tier": 3,
+    "runs": 200,
+    "roomsPerRun": 8,
+    "enemiesPerRun": {
+      "spark-sprite": 54.375,
+      "dough-blob": 8.54,
+      "doughling": 17.08,
+      "brute": 6.64,
+      "rolling-pin": 10.28,
+      "ladle-lobber": 8.58,
+      "hearth-cook": 1
+    }
+  }
+}
