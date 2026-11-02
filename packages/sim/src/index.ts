@@ -21,6 +21,7 @@ export * from './training';
 export * from './progression';
 export * from './loadout';
 export * from './sealFamilies';
+export * from './strikes';
 export * from './rewards';
 export * from './goals';
 export * from './power';

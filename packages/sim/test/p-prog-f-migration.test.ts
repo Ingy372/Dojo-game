@@ -1,7 +1,7 @@
 // PB-01 (R-PROGRESSION-BETA): an old save gets its slots seeded once; stats do not change.
 import { describe, expect, it } from 'vitest';
 import {
-  buildTraining, characterSetup, dismissSlotNote, emptyLoadout, loadFeed, loadProfile, migrateLoadoutV2, newProfile, seedInputFor, seedLoadoutV2,
+  buildTraining, characterSetup, dismissSlotNote, earnedStrikes, emptyLoadout, loadFeed, loadProfile, migrateLoadoutV2, newProfile, seedInputFor, seedLoadoutV2,
   type Loadout, type LoadoutSeedInput,
 } from '../src';
 import { testContent } from './load-content';
@@ -21,6 +21,7 @@ function oldSave(loadout: unknown = { stance: 'cat-stance', virtue: 'second-wind
   const p = copy(newProfile()) as unknown as Record<string, unknown>;
   delete p.loadoutV2;
   delete p.showSlotNote;
+  delete p.strikeSeeded;
   return { ...p, runsPlayed: 12, stanceMigrated: true, loadout };
 }
 // The families this student earned, oldest first (PB-02 supplies the real list).
@@ -105,8 +106,9 @@ describe('PB-01 migration (migrateLoadoutV2, seedLoadoutV2)', () => {
       const after = loadProfile(oldSave());
       seedLoadoutV2(after, seedInputFor(t, content.abilities));
       expect(after.loadout!.seals.length).toBeGreaterThan(0);
-      const { effects: a, ...rest } = characterSetup(after, t, content.abilities);
-      const { effects: b, ...restBefore } = characterSetup(before, t, content.abilities);
+      // PB-03: the seed also fills the Strike slot, so the Strike is the one thing besides the effects that may differ.
+      const { effects: a, strike: _s, ...rest } = characterSetup(after, t, content.abilities);
+      const { effects: b, strike: _b, ...restBefore } = characterSetup(before, t, content.abilities);
       expect(rest).toEqual(restBefore);
       expect(a.length).toBeGreaterThan(b.length);
     }
@@ -116,7 +118,8 @@ describe('PB-01 migration (migrateLoadoutV2, seedLoadoutV2)', () => {
     const t = training(green);
     const i = seedInputFor(t, content.abilities);
     expect(i.tier).toBe(t.tier);
-    expect(i.earned.strikes).toEqual(t.abilities.filter((a) => a.kind === 'strike' && a.unlocked && a.perk).map((a) => a.perk!.id));
+    // PB-03: the Strikes with a signed-off kick combo, not the default (Spin Kick is the empty slot).
+    expect(i.earned.strikes).toEqual(earnedStrikes(t, content.abilities.strikeDefs));
     expect(i.earned.strikes.length).toBeGreaterThan(0);
     expect(i.earned.families.length).toBeGreaterThan(0);
     expect(i.earned.kataPowers).toEqual([]);
