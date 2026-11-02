@@ -63,8 +63,8 @@ def head_front(a, cx, cy, r, clip=None):
     a.line([(cx - r * .22, cy + r * .55), (cx, cy + r * .66), (cx + r * .22, cy + r * .55)], INKC, 2.2, clip=clip)
 
 
-def gi_torso(a, cx, top, w, h, clip=None, belt_y=None):
-    a.shape(poly(rrect_pts(cx, top + h / 2, w, h, 26)), GI, GI_S, (255, 255, 250), ow=3.2, band=5, clip=clip)
+def gi_torso(a, cx, top, w, h, clip=None, belt_y=None, r=26):
+    a.shape(poly(rrect_pts(cx, top + h / 2, w, h, r)), GI, GI_S, (255, 255, 250), ow=3.2, band=5, clip=clip)
     by = belt_y if belt_y is not None else top + h * .62
     a.shape(poly(rrect_pts(cx, by, w - 2, 15, 5)), BELT, BELT_S, lighten(BELT, .3), ow=2.6, band=3, clip=clip)
 
@@ -88,24 +88,30 @@ def arrow(a, pts, col, w, head, clip=None, outline=None):
 
 
 # ------------------------------------------------------------------ COUNTER: straight punch with a turn
-def counter(rim=RIMS['counter'], hx=108, fs=28, tw=64, ay=138, wy=132, wx=144, rear=True, ar=(70, 24)):
-    """v4 (premium pass): a straight punch with a turn. Smiling kid, gi torso, near arm out to the right (sleeve, cuff band, a clear wrist, one closed mitten fist, a gold
-    hit burst at the knuckles), far arm up in a guard, a blue spin arrow around the belly. Same fist, wrist and head as Guard. 0 fingers, 1 thumb crease per fist."""
-    a = medallion(rim); c = face_clip()
-    gi_torso(a, hx, 116, tw, 112, clip=c, belt_y=192)
-    pts = [(hx + 14 + ar[0] * math.cos(math.radians(t)), 154 + ar[1] * math.sin(math.radians(t))) for t in range(158, 14, -8)]
-    arrow(a, pts, BLUE_S, 8, 17, clip=c, outline=(255, 252, 240))
-    limb(a, (hx, 106), (hx, 122), 10, 10, clip=c)
-    head_front(a, hx, 82, 27, clip=c)
-    if rear:
-        forearm_block(a, (hx - 52, 178), (hx - 46, 136), 28, -math.pi / 2 + .1, 1, clip=c, r_el=12.5, r_cuff=11)
-    burst(a, wx + 44, wy - 26, 7, 14.5, 7, .3, clip=c)
-    forearm_block(a, (hx + 12, ay), (wx, wy), fs, -.02, 1, clip=c, r_el=15, r_cuff=12.5)
-    return a.result()
-
-
-if __name__=='__main__' and len(sys.argv)>2:
-    show(sys.argv[2], [counter4(hx=108, wx=144, wy=132, ay=138, fs=28, rear=True, ar=(70,24))])
+def counter(rim=RIMS['counter'], hx=104, f=.86, cx_=128, cy_=137, hr=22, ty=88, tw=52, th=76, belt=136, el=(118, 112), wr=(158, 108), fs=24,
+             rel=(52, 138), rwr=(86, 136), rfs=22, rs=26, ar=(62, 14), arrow_y=170, stance=(-28, 40), ank=204, burst_dx=34):
+    """v5: a reverse punch in a balanced stance. Feet wide apart on flat shoes, the front arm punching out to the right (sleeve, cuff band, clear wrist, one mitten fist,
+    a gold burst), the BACK hand pulled to the hip in a clean chambered fist (the forearm runs along the belt line, the fist sits on the belt, knuckles forward), a blue
+    spin arrow around the hips. Same head, sleeve, wrist and fist as Guard. 2 fists, 0 fingers, 0 toes."""
+    med = medallion(rim); a = Art()
+    # legs: pants capsule from the hip to above the ankle, then a standing shoe
+    for k, dx in enumerate(stance):
+        hip = (hx + (-12 if k == 0 else 12), ty + th - 8)
+        an = (hx + dx, ank)
+        sleeve(a, hip, (an[0], an[1] - 12), 13, 11)
+        kick_leg(a, an, 90, 0, .55, 14, None, r0=21, r1=18)
+    gi_torso(a, hx, ty, tw, th, belt_y=belt)
+    limb(a, (hx, ty - 8), (hx, ty + 6), 8, 8)
+    head_front(a, hx, ty - 24, hr)
+    # rear arm chambered at the hip (drawn first, the torso stays in front of the elbow side)
+    forearm_block(a, rel, rwr, rfs, 0, 1, r_el=11.5, r_cuff=10)
+    # punching arm
+    forearm_block(a, el, wr, fs, 0, 1, r_el=12.5, r_cuff=11)
+    burst(a, wr[0] + 8 + fs + 10, wr[1] - 4, 6.5, 14, 7, .3)
+    pts = [(hx + 8 + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 10, -8)]
+    arrow(a, pts, BLUE_S, 7, 15, outline=(255, 252, 240))
+    place(med, a, f, 128 - f * cx_, 128 - f * cy_, face_clip())
+    return med.result()
 
 
 # ------------------------------------------------------------------ GUARD: cross block
@@ -130,24 +136,30 @@ def forearm_block(a, el, wr, fist_s, fist_ang, side, clip=None, r_el=14.5, r_cuf
     mitten_fist(a, wx + ux * (8 + fist_s * .42), wy + uy * (8 + fist_s * .42), fist_s, ang, side, clip=clip)
 
 
-def guard(rim=RIMS['guard'], fx=46, tilt=.12):
-    """v4 (premium pass): front view 'high guard' block. Smiling kid, gi torso, BOTH forearms raised beside the head: sleeve, cuff band, a clear wrist, then a
-    simple closed mitten fist (one soft rounded square, one thumb crease). A soft blue shield sits behind. No crossed arms, no separate fingers."""
-    a = medallion(rim)
-    c = face_clip()
-    a.shape(poly(chaikin([(60, 118), (196, 118), (192, 172), (128, 228), (64, 172)], 3)), lighten(BLUE, .3), BLUE, lighten(BLUE, .6), ow=3.0, band=5, clip=c)   # soft shield behind
+def guard(rim=RIMS['guard'], eo=42, ey=204, wx=14, wy=150, fs=32, front=1, shield=True, hy=94, f=.92, cy=148):
+    """v5: a real crossed-forearm X-block. Smiling kid, gi torso, a soft blue shield behind. Both forearms come up from low elbows and cross in front of the chest:
+    one sleeve is clearly drawn OVER the other (the outline and the cuff band make the overlap plain). Each forearm ends in the same cuff band, clear skin wrist and
+    one closed mitten fist (one soft rounded square, one thumb crease) as before, the fists up by the cheeks. 2 fists, 0 fingers."""
+    med = medallion(rim); a = Art(); c = None
+    if shield:
+        a.shape(poly(chaikin([(60, 118), (196, 118), (192, 172), (128, 228), (64, 172)], 3)), lighten(BLUE, .3), BLUE, lighten(BLUE, .6), ow=3.0, band=5, clip=c)
     gi_torso(a, 128, 126, 78, 110, clip=c, belt_y=198)
     limb(a, (128, 108), (128, 126), 10, 10, clip=c)
-    a.shape(circ(128, 86, 28), SKIN, SKIN_S, lighten(SKIN, .4), ow=3, band=4, clip=c)
-    hair = [(99, 90)] + arc_pts(128, 86, 30, math.pi, 2 * math.pi, 16) + [(157, 90), (148, 74), (128, 68), (108, 74)]
+    a.shape(circ(128, hy, 28), SKIN, SKIN_S, lighten(SKIN, .4), ow=3, band=4, clip=c)
+    hair = [(99, hy+4)] + arc_pts(128, hy, 30, math.pi, 2 * math.pi, 16) + [(157, hy+4), (148, hy-12), (128, hy-18), (108, hy-12)]
     a.shape(poly(hair), HAIR, HAIR_S, lighten(HAIR, .25), ow=2.6, band=3.5, clip=c)
     for dx in (-11, 11):
-        a.shape(circ(128 + dx, 91, 3.4), INKC, None, None, ow=0, clip=c)
-        a.shape(circ(128 + dx * 1.9, 99, 4.6), (246, 170, 150), None, None, ow=0, clip=c)
-    a.line([(120, 102), (128, 107), (136, 102)], INKC, 2.4, clip=c)
-    for sgn in (-1, 1):
-        forearm_block(a, (128 + 54 * sgn, 214), (128 + fx * sgn, 150), 34, -math.pi / 2 + tilt * sgn, sgn, clip=c)
-    return a.result()
+        a.shape(circ(128 + dx, hy+5, 3.4), INKC, None, None, ow=0, clip=c)
+        a.shape(circ(128 + dx * 1.9, hy+13, 4.6), (246, 170, 150), None, None, ow=0, clip=c)
+    a.line([(120, hy+16), (128, hy+21), (136, hy+16)], INKC, 2.4, clip=c)
+    # the screen-left elbow arm goes up-right, the screen-right elbow arm goes up-left; front=1 puts the second (up-left) arm on top
+    A = ((128 - eo, ey), (128 + wx, wy), -1)     # screen-left elbow -> wrist right of centre
+    B = ((128 + eo, ey), (128 - wx, wy), 1)
+    back, fr = (B, A) if front == -1 else (A, B)
+    for el, wr, sd in (back, fr):
+        forearm_block(a, el, wr, fs, 0, sd, clip=c, r_el=14.5, r_cuff=12.5)
+    place(med, a, f, 128 - f * 128, 128 - f * cy, face_clip())
+    return med.result()
 
 
 SOCK, SOCK_S = (126, 174, 226), (84, 128, 190)
@@ -303,25 +315,26 @@ def place(med, art, f, dx, dy, clip):
     med.im.alpha_composite(lay)
 
 
-def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=112, tk=(92, 172), tang=104, f=.82, dy=0, ccy=126):
-    """v4 (premium pass): a smiling kid in the air, one leg kicking out and up, the other tucked under (the same rigid shin and flexed shoe as Disarm), one mitten fist
-    up in a guard, a blue spin arrow round the waist, a floor shadow with two blue ripples (the 'hits enemies close by' part), a gold burst on the kicking shoe."""
+def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, tk=(98, 172), tang=104, f=.82, ccy=126, cx_=130,
+           tw=46, th=84, tr=16, ttop=84, belt=136, hr=22, arw=62, arrow_y=152, sleeve_r=(10, 9)):
+    """v5: a smiling kid in the air, now SLIM (a straight narrow gi torso in the same proportions as Counter, not a round blob). One leg kicks out and up and the other
+    stands under him (same rigid shin and flexed shoe as Disarm), one mitten fist up in a guard, a blue spin arrow round the waist, a floor shadow with two blue ripples
+    (the 'hits enemies close by' part) and a gold burst on the kicking shoe. 1 fist, 0 fingers, 0 toes."""
     med = medallion(rim); fc = face_clip(); a = Art()
     a.shape(poly(rrect_pts(128, 226, 200, 44, 10)), (214, 198, 134), (186, 168, 104), None, ow=0, band=4)
     for rx, ry, al in ((66, 11, .65), (44, 7, .85)):
         a.line(ell_pts(120, 207, rx, ry, 0, 40), (70, 150, 215), 3, closed=True, a=al)
     a.fill_mask(mask_of(poly(ell_pts(114, 207, 30, 6))), (60, 44, 30), .4)
-    kick_leg(a, tk, tang, -14, .6, 120)                       # tucked leg, behind
-    kick_leg(a, (kx, ky), kang, -14, .62, 120)                # kicking leg, behind the torso side
+    kick_leg(a, tk, tang, -14, .6, 120)
+    kick_leg(a, (kx, ky), kang, -14, .62, 120)
     burst(a, kx + 30, ky - 2, 7, 15, 7, .2)
-    gi_torso(a, hx, 84, 56, 66, belt_y=128)
-    limb(a, (hx, 78), (hx, 90), 8, 8)
-    head_front(a, hx, 54, 21)
-    forearm_block(a, (hx - 40, 126), (hx - 36, 94), 24, -math.pi / 2 + .1, 1, r_el=10.5, r_cuff=9.5)
-    front = [(hx + 8 + 70 * math.cos(math.radians(t)), 152 + 17 * math.sin(math.radians(t))) for t in range(10, 192, 8)]
+    gi_torso(a, hx, ttop, tw, th, belt_y=belt, r=tr)
+    limb(a, (hx, ttop - 6), (hx, ttop + 6), 8, 8)
+    head_front(a, hx, ttop - 27, hr)
+    forearm_block(a, (hx - tw / 2 - 14, belt - 2), (hx - tw / 2 - 10, 96), 24, -math.pi / 2 + .1, 1, r_el=sleeve_r[0], r_cuff=sleeve_r[1])
+    front = [(hx + 8 + arw * math.cos(math.radians(t)), arrow_y + 17 * math.sin(math.radians(t))) for t in range(10, 178, 8)]
     arrow(a, front, BLUE_S, 7, 15, outline=(255, 252, 240))
-    cx_, cy_ = 130, ccy
-    place(med, a, f, 128 - f * cx_, 128 - f * cy_ + dy, fc)
+    place(med, a, f, 128 - f * cx_, 128 - f * ccy, fc)
     return med.result()
 
 

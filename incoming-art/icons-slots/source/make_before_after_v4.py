@@ -42,7 +42,7 @@ for i, (n, nm, note, box) in enumerate(ROWS):
     d.text((24, y + 100), nm, font=F(30), fill=INK)
     for li, ln in enumerate(textwrap.wrap(note, 26)):
         d.text((24, y + 142 + li * 24), ln, font=F(18), fill=SOFT)
-    old = Image.open(os.path.join(ROOT, 'superseded', 'v3-icons', n + '.png')).convert('RGBA'); new = si.ALL[n]()
+    old = Image.open(os.path.join(ROOT, 'superseded', 'v3-icons', n + '.png')).convert('RGBA'); new = (Image.open(os.path.join(ROOT, 'superseded', 'v4-icons', n + '.png')).convert('RGBA') if n in ('guard', 'counter', 'jumping-spins') else si.ALL[n]())   # v5 moved on (sheet 07)
     sheet.alpha_composite(pad(old, BIG), (280, y + 14)); sheet.alpha_composite(pad(new, BIG), (570, y + 14))
     sheet.alpha_composite(zoom(old, box), (880, y + 14)); sheet.alpha_composite(zoom(new, box), (1170, y + 14))
     cy = y + RH // 2 - 40
