@@ -1094,3 +1094,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - `stationary: true` enemy flag; thunder-drum, sleepy-sentry and thorn-sprout use speed 0.
 - The sim models Bellows Puff's no-damage push (Hit slide, Block hold, wall stop, `push` event). A Puff room costs 0 Health.
 - Tests: `k31-boss-tag` (+3), `c430-stationary` (4), `c430-push` (5), `puff-push` balance report (gated). Shots in /workspace/shots/c430-fixes with `pass-fail.md`.
+### START-LEVEL-PIN: start-level rule pinned by tests (2026-11-02)
+- Test-only: new profile, empty/old save and every belt entry stay Level 1 / 0 XP; a Green entry earns level only through `gainXp`; belt-entry check-offs are signed off; picks come from check-offs, not level.
+- Tests: `start-level-pin` (8).
