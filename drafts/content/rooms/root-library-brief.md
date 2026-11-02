@@ -24,7 +24,7 @@ Make the floor art plain and light so red circles and purple stripes always stan
 
 | # | Room | Kind | Enemies (placeholder sizes) | Layout | Props | Sign |
 |---|---|---|---|---|---|---|
-| 1 | Dusty Entry | battle | W1: 2 Page Flutter, 1 Bookworm; W2: 2 Page Flutter, 2 Bookworm | Open, with a few small blocks | Tall shelves with dusty books along the walls; a round welcome rug. | "Every book began with a helper." |
+| 1 | Dusty Entry | battle | W1: 2 Page Flutter (placed far from the start, so the first moments are gentle); W2: 2 Bookworm, 1 Page Flutter | Open, with a few small blocks | Tall shelves with dusty books along the walls; a round welcome rug. | "Every book began with a helper." |
 | 2 | Reading Roots | battle | W1: 3 Page Flutter; W2: 2 Bookworm, 2 Page Flutter | Scattered single stones | Thick tree roots curl round the shelves (the '#' blocks are root knots); loose pages on the floor. | "Roots hold up the tallest shelves." |
 | 3 | Inkwell Aisle | battle (room 3+) | W1: 1 Ink Blot, 2 Page Flutter; W2: 2 Bookworm, 1 Page Flutter, 1 Ink Blot; W3: 2 Page Flutter, 1 Bookworm | One tall wall on each side | A row of giant inkwells and quills; the floor shows faint ink dots. | "A blot is a story waiting to start." |
 | 4 | Root Stacks | battle (room 3+) | W1: 1 Root Snapper, 1 Page Flutter, 1 Bookworm; W2: 1 Ink Blot, 2 Bookworm, 1 Page Flutter; W3: 1 Root Snapper, 1 Ink Blot, 2 Page Flutter | Two long ledges split the room into lanes | Two huge shelves grown through with roots split the room into reading lanes. | "Take one book at a time." |
