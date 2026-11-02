@@ -1317,6 +1317,8 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
     startWindup(world, e);
     return;
   }
+  // C430: a stationary enemy (true speed 0) never walks, circles or paths; it only winds up when you are in range.
+  if (e.def.stationary) return;
   const speed = e.def.moveSpeedTilesPerSecond / TICKS_PER_SECOND;
   if (!canAttack && !closer && dist <= a.startRange + COMBAT.circleExtraRange) {
     // Waiting its turn ("kung fu circle"): circle around the player at a little distance.

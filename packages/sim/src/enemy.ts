@@ -123,6 +123,8 @@ export interface EnemyDef {
   guard: number;
   radius: number;
   moveSpeedTilesPerSecond: number;
+  /** C430: never walks, circles or paths (Thunder Drum, Sleepy Sentry, Thorn Sprout). Its speed is exactly 0. */
+  stationary?: boolean;
   sightRange: number;
   /** Attacks used in turn (most enemies have one). */
   attacks: EnemyAttackDef[];
@@ -287,6 +289,17 @@ export function loadEnemy(data: unknown): EnemyDef {
     split = { into: o.into, count };
   }
 
+  // C430: a "stationary" enemy has a true speed of 0; every other enemy still needs a speed above 0.
+  if (raw.stationary !== undefined && typeof raw.stationary !== 'boolean') throw new EnemyError(id, '"stationary" must be true or false when given');
+  const stationary = raw.stationary === true;
+  let speed: number;
+  if (stationary) {
+    speed = raw.moveSpeedTilesPerSecond === undefined ? 0 : nonNegative(raw, 'moveSpeedTilesPerSecond', id);
+    if (speed !== 0) throw new EnemyError(id, '"moveSpeedTilesPerSecond" must be 0 (or left out) when "stationary" is true');
+  } else {
+    speed = positiveNumber(raw, 'moveSpeedTilesPerSecond', id);
+  }
+
   const color = typeof raw.color === 'string' && /^#[0-9a-fA-F]{6}$/.test(raw.color) ? raw.color : '#7d3f2f';
 
   return {
@@ -297,7 +310,8 @@ export function loadEnemy(data: unknown): EnemyDef {
     power: positiveNumber(raw, 'power', id),
     guard,
     radius,
-    moveSpeedTilesPerSecond: positiveNumber(raw, 'moveSpeedTilesPerSecond', id),
+    moveSpeedTilesPerSecond: speed,
+    ...(stationary ? { stationary: true } : {}),
     sightRange: positiveNumber(raw, 'sightRange', id),
     attacks,
     shield,
