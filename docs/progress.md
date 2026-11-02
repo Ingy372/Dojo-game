@@ -1056,3 +1056,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Gaps: no equip UI until PB-05; Jumping Spins and Butterfly Flow numbers are placeholders for PB-09; no Trophy Case entry for combo 3.
 - Tests: `p-prog-d-strike` (22 new) plus fixes to five older tests.
 - Next: PB-04 (kata powers), PB-05 (equip screen), PB-09 (balance).
+
+### PB-03 follow-up: the Tester's 5 low notes (2026-11-02)
+- The stale empty text and the "Always with you" heading now read "Your Strike" / "Your Strike shows up here." on the Fighting Style, Gear and Run tab screens. The Run tab row now shows the empty text when there is no Strike.
+- Stale "always on" comments in `HomeScene.ts`, `fightingStyle.ts` and `profile.ts` fixed.
+- `familyRank` returns 0 for a family that is not live (test added).
+- Golden runs never apply effects (pre-existing): noted in `docs/decisions.md`, no code change.
+- Tests: `p-prog-d-strike` (+1), `p-prog-c-seal-ranks` (+1 check), `p-menu2-f-gear` (heading).

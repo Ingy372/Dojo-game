@@ -1,5 +1,5 @@
 // P-MENU2-e: the Fighting Style model (no Phaser, so Vitest can check it). Two slots (Stance and
-// Virtue, D2), a tray of picks for the chosen slot, and the "Always with you" row. Tap a slot,
+// Virtue, D2), a tray of picks for the chosen slot, and the "Your Strike" row. Tap a slot,
 // then tap a pick (D4). Wording comes from content/abilities/fighting-style.json.
 
 import { defaultStrikeDef, emptyLoadout, normalizeLoadout, unlockedStances, virtueTitle, type AbilityContent, type Loadout, type TrainingState } from '@dojo/sim';

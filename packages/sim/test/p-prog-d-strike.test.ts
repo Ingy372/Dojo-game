@@ -236,6 +236,18 @@ describe('PB-03 the Fighting Style screen', () => {
   });
 });
 
+describe('PB-03 words for the Strike row', () => {
+  it('the Fighting Style, Gear and Run tab rows are headed "Your Strike" and have empty text that does not promise Seals', async () => {
+    const style = (await import('../../../content/abilities/fighting-style.json')).default;
+    const gear = (await import('../../../content/loot/gear-board.json')).default;
+    const run = (await import('../../../content/settings/last-run.json')).default;
+    for (const w of [style, gear, run]) {
+      expect(w.always).toBe('Your Strike');
+      expect(w.alwaysEmpty).toBe('Your Strike shows up here.');
+    }
+  });
+});
+
 describe('PB-03 loadStrikeDefs checks (through loadAbilities)', () => {
   const load = (strikes: unknown) => () => loadAbilities(abilitiesJson, familiesJson, strikes);
   const mutate = (fn: (s: typeof strikesJson.strikes) => void) => {

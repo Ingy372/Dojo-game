@@ -129,7 +129,7 @@ export interface Profile {
   patternsSeen: string[];
   /**
    * P-MENU2-d: the Fighting Style the student picked (starting Stance and Virtue), or null for
-   * today's default (Beginner's Stance first, strongest Virtue). Strikes and Seals are always on.
+   * today's default (Beginner's Stance first, strongest Virtue). The Strike and Seals come from the other loadout slots.
    */
   loadout: Loadout | null;
   /**
