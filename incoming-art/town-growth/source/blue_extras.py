@@ -16,3 +16,7 @@ LANTERN_R = (0.20, 0.14)                 # lantern radius (tiles): big, small
 # Blue dusk fireflies (v3 had 6; v4 has 12). Rows stay clear of the walking-lane band (screen y 444-540).
 FIREFLIES = ((14.4, 6.6), (17.0, 7.0), (15.5, 9.0), (16.9, 10.0), (13.6, 10.2), (18.2, 9.4),
              (20.6, 8.0), (18.8, 7.7), (21.7, 9.6), (3.8, 9.8), (8.2, 7.3), (12.6, 9.9))
+
+# v5 Blue sakura: (col, row) of the trunk foot -> (scale, lean toward the town, seed). EVERY tree stands in the lower plaza, south of the walking lane
+# (screen y 444-540 at @2x): the lowest point of a crown must stay below y=540 (checked by check_lanes.py on the 'trees' pass).
+SAKURA = {(0.55, 8.4): (1.0, 1, 3), (22.55, 8.0): (1.0, -1, 4), (3.5, 9.6): (0.8, 1, 1), (19.9, 9.6): (0.8, -1, 5), (17.7, 8.0): (0.72, -1, 2)}

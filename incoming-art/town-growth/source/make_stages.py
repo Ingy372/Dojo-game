@@ -33,6 +33,17 @@ CFG = {
                  stint=(0.90, 0.91, 1.05), htint=(1.07, 1.02, 0.92), lift=0.0, vig=0.11, bloom=0.30, blot=0.03, glow=0.09)}
 
 # ------------------------------------------------------------------ sky
+HILL_BLOSSOMS = ((330, 0.62), (640, 0.55), (790, 0.66), (1290, 0.6), (1400, 0.54), (1600, 0.6))      # (x at @2x, size) - the ridge height is read from the far-hill layer
+def blossom_far(sky, x, y, sz, variant, haze):
+    """one tiny distant blossom tree: thin brown trunk, three soft pink lumps, no outline, mixed toward the haze so it recedes"""
+    lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay); u = sz * 40
+    tr, pk, hi = ((140, 100, 84), (246, 190, 212), (252, 218, 232)) if variant == "day" else ((92, 66, 70), (214, 134, 170), (232, 168, 196))
+    d.line([(x, y), (x, y - 0.9 * u)], fill=tr + (255,), width=max(3, int(0.17 * u)))
+    for ox, oy, rx, ry, c in ((-0.55, -1.15, 0.62, 0.5, pk), (0.5, -1.2, 0.58, 0.48, pk), (0.0, -1.6, 0.7, 0.58, pk), (-0.1, -1.75, 0.38, 0.3, hi)):
+        d.ellipse((x + (ox - rx) * u, y + (oy - ry) * u, x + (ox + rx) * u, y + (oy + ry) * u), fill=c + (255,))
+    r_, g_, b_, a_ = lay.split(); rgb = Image.blend(Image.merge("RGB", (r_, g_, b_)), Image.new("RGB", (W, H), haze), 0.22)
+    lay = Image.merge("RGBA", (*rgb.split(), a_)); sky.alpha_composite(lay)
+
 def sky_far(stage, variant):     # 'stage' here is the STYLE: white (clear air), whitesmog (the smoggy look that the smog layer is fitted to), green, blue
     if variant == "day":
         SK = {"whitesmog": [(176, 192, 205), (224, 229, 231)], "white": [(124, 178, 232), (226, 242, 252)], "green": [(112, 186, 246), (226, 245, 255)],
@@ -59,6 +70,11 @@ def sky_far(stage, variant):     # 'stage' here is the STYLE: white (clear air),
     dx = int(14.2 * PPT - far.width / 2)
     col = far.crop((far.width // 2 - 2, 0, far.width // 2 + 2, far.height)).getbbox(); dy = int(0.3 * PPT) - col[1]
     layer = Image.new("RGBA", (W, H)); layer.paste(far, (dx, dy), far); sky.alpha_composite(layer)
+    if stage == "blue":       # v5: a few more small blossom trees far away on the hills (hazy, so they sit far behind the sakura in the town)
+        al = np.asarray(layer.getchannel("A"))
+        for hx, sz in HILL_BLOSSOMS:
+            col = np.where(al[:, hx] > 200)[0]; hy = int(col[0]) + int(0.42 * PPT)
+            blossom_far(sky, hx, hy, sz, variant, HAZE)
     if variant == "day" and not stage.startswith("white"):
         kd = ImageDraw.Draw(sky)
         for (c, rr, sz) in ((17.0, 0.7, 0.16), (17.5, 0.95, 0.12), (17.9, 0.6, 0.14), (8.3, 1.5, 0.12), (8.7, 1.35, 0.1)):
@@ -80,6 +96,16 @@ def lin(v): return ((v + 0.055) / 1.055) ** 2.4
 def smooth(x, a, b): t = np.clip((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t)
 
 # ------------------------------------------------------------------ light, shadow, rim, bloom, grade
+def tree_shadows(tmask, ground):
+    """soft contact + canopy shadow for each sakura: an oval on the paving, pushed a little to the lower right (the sun is upper left), held out of the tree itself"""
+    m = Image.new("L", (W, H)); d = ImageDraw.Draw(m)
+    for (c, r), sc in SAKURA_TREES:
+        x, y = c * PPT + 0.30 * sc * PPT, r * PPT + SHIFT + 0.02 * PPT
+        d.ellipse((x - 1.15 * sc * PPT, y - 0.34 * sc * PPT, x + 1.15 * sc * PPT, y + 0.36 * sc * PPT), fill=255)
+        d.ellipse((x - 0.62 * sc * PPT, y - 0.22 * sc * PPT, x + 0.62 * sc * PPT, y + 0.26 * sc * PPT), fill=255)
+    sh = gaussian_filter(np.asarray(m).astype(np.float32) / 255, 0.24 * PPT) * 0.62
+    return np.clip(sh * (1 - np.clip(gaussian_filter(tmask, 1.0) * 1.6, 0, 1)) * ground, 0, 1)
+
 def lighting(rgb, stage, variant, passes, town_alpha, spmask=None, style=None):
     """rgb: float (H,W,3) 0..1. Adds the cast shadows, warm light, rim line, hero bloom, stage grade, vignette and painterly blotches."""
     c = CFG[style or stage]; dusk = variant == "dusk"; ks = 0.5 if dusk else 1.0
@@ -91,6 +117,9 @@ def lighting(rgb, stage, variant, passes, town_alpha, spmask=None, style=None):
     s = gaussian_filter(s, 1.4)
     keep = 1 - (spmask if spmask is not None else 0)     # the dojo sprite is finished art: no cast shadow / rim from the hedge geometry hidden behind it
     s = s * keep
+    tpath = os.path.join(passes, f"{stage}-trees.png")
+    if stage == "blue" and os.path.exists(tpath):      # v5: a soft ground shadow under EVERY sakura (on top of the cast shadow), so each tree sits on the paving
+        s = np.maximum(s, tree_shadows(shifted_f(tpath)[..., 3], a))
     wt = 1 - 0.65 * np.clip((z - 0.15) / 0.4, 0, 1)                 # full shadow on the ground, a lighter touch on props (they are toon-shaded already)
     k = (c["shadow"] * ks * s * wt)[..., None]
     scol = np.array(c["scol"], np.float32); rgb = rgb * (1 - k) + rgb * scol * k
@@ -163,7 +192,31 @@ def blue_warm_sources(out):
     out = Image.composite(fill((255, 206, 120)), out, sp.filter(ImageFilter.GaussianBlur(0.8)))
     return out
 
-def dusk(stage, bg_lit, lights):
+def sakura_dusk(out, lights, passes):
+    """v5 dusk look of the sakura: the pink is graded to the dusk palette (cooler, deeper rose) and the sides that FACE a real warm source
+    (the paper lanterns, the fire bowl, the lamp posts - taken from the 'lights' pass) get a thin warm rim."""
+    from scipy.ndimage import map_coordinates
+    T = shifted_f(os.path.join(passes, "blue-trees.png"))[..., 3]; Bm = shifted_f(os.path.join(passes, "blue-bloom.png"))[..., 3]
+    x = np.asarray(out).astype(np.float32) / 255
+    bm = gaussian_filter(Bm, 0.8)[..., None]
+    lum = (x @ np.array([0.299, 0.587, 0.114], np.float32))[..., None]
+    rose = lum * 1.18 + (x - lum * 1.0) * 1.08                                           # a little more colour ...
+    rose = rose * np.array((1.08, 0.86, 1.10), np.float32)                  # ... pushed cooler and deeper: less red/yellow, a touch more blue (rose-violet, never red)
+    x = x * (1 - bm * 0.85) + rose * bm * 0.85
+    # warm rim: light field = the blurred 'lights' mask; its gradient points to the nearest source
+    Lm = np.asarray(lights).astype(np.float32) / 255
+    Lf = gaussian_filter(Lm, 1.1 * PPT) * 40.0
+    gy, gx = np.gradient(gaussian_filter(Lm, 1.3 * PPT)); nrm = np.hypot(gx, gy) + 1e-9; dx_, dy_ = gx / nrm, gy / nrm
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    T1 = gaussian_filter(T, 0.7); step = 6.0
+    Tn = map_coordinates(T1, [yy + dy_ * step, xx + dx_ * step], order=1, mode="nearest")      # the neighbour toward the light
+    edge = np.clip(T1 - Tn, 0, 1) * (T1 > 0.5)
+    rim = gaussian_filter(edge, 1.0) * np.clip(Lf, 0, 1) * (lum[..., 0] > 0.10)
+    rim = np.clip(rim * 2.2, 0, 1)[..., None]
+    x = x * (1 - rim * 0.8) + np.array((1.0, 0.72, 0.42), np.float32) * rim * 0.8
+    return Image.fromarray((np.clip(x, 0, 1) * 255 + 0.5).astype(np.uint8), "RGB")
+
+def dusk(stage, bg_lit, lights, passes=None):
     out = ImageChops.multiply(bg_lit, fill((120, 112, 165))); out = Image.blend(out, fill((60, 45, 70)), 0.1)
     m = lights
     warm = ImageChops.multiply(bg_lit, fill((255, 226, 170))); out.paste(warm, (0, 0), m)          # the lit windows/lanterns themselves stay bright
@@ -186,6 +239,7 @@ def dusk(stage, bg_lit, lights):
     out = Image.composite(fill((255, 220, 140)), out, tl.filter(ImageFilter.GaussianBlur(int(0.4 * PPT))))
     if stage == "blue":    # Blue: the cosy corner (fire bowl + two paper lanterns, each lit by a real source), then the fireflies
         out = blue_warm_sources(out)
+        if passes: out = sakura_dusk(out, lights, passes)
         random.seed(5); ff = Image.new("L", (W, H)); fd = ImageDraw.Draw(ff); core = Image.new("L", (W, H)); cd = ImageDraw.Draw(core)
         for c, rr in BX.FIREFLIES:      # 12 (v3 had 6); rows keep clear of the walking-lane band
             x = c * PPT + random.uniform(-10, 10); y = rr * PPT + SHIFT - 0.4 * PPT; rad = random.uniform(0.038, 0.05) * PPT
@@ -196,7 +250,7 @@ def dusk(stage, bg_lit, lights):
         out = Image.composite(fill((250, 255, 215)), out, core.filter(ImageFilter.GaussianBlur(1)))
     return out
 
-SAKURA_TREES = (((6.6, 6.35), 1.0), ((17.5, 6.0), 1.0), ((0.8, 7.4), 1.2), ((22.5, 7.4), 1.2), ((21.8, 5.6), 0.9))
+SAKURA_TREES = tuple((cr, v[0]) for cr, v in BX.SAKURA.items())       # (col, row), scale: ONE list shared with the Blender build
 def petal_layer(seed=21):
     """Blue: sakura petals. A soft carpet under each tree, petals FALLING from each crown (slanting, a few with a faint motion streak) and a few
     drifting ones. Everything is kept out of the walking-lane band (y 444-540); the falling ones start from the crown's underside."""
@@ -207,11 +261,12 @@ def petal_layer(seed=21):
         p = p.rotate(ang, resample=Image.BICUBIC); lay.alpha_composite(p, (int(x) - 28, int(y) - 28))
     for (c, r), sc in SAKURA_TREES:
         gy = r * PPT + SHIFT
-        for _ in range(11):                       # the carpet on the ground
-            x = c * PPT + rnd.uniform(-70, 70) * sc; y = gy + rnd.uniform(6, 60)
+        for _ in range(12):                       # fallen petals on the ground round the tree ring (and a couple on the soil inside it)
+            ang = rnd.uniform(0, 2 * math.pi); rad = rnd.choice((rnd.uniform(0.2, 0.42), rnd.uniform(0.62, 1.25), rnd.uniform(0.62, 1.25))) * sc
+            x = c * PPT + math.cos(ang) * rad * PPT; y = gy + 4 + math.sin(ang) * rad * PPT * 0.42
             if 444 <= y <= 540: continue
             petal(x, y, rnd.uniform(4.5, 7), rnd.uniform(0, 180), rnd.choice(PINK), 235)
-        for k in range(7):                        # falling from the crown: x drifts to the right as they fall (a light breeze)
+        for k in range(5):                        # falling from the crown: x drifts to the right as they fall (a light breeze)
             y0 = gy - rnd.uniform(0.1, 0.9) * PPT * 0.82 * sc; y = y0 + rnd.uniform(0.15, 0.75) * PPT * sc
             x = c * PPT + rnd.uniform(-95, 95) * sc + (y - y0) * 0.35
             if 430 <= y <= 552: continue
@@ -267,7 +322,7 @@ def make(stage, variant, passes, style=None):
     im = Image.fromarray((rgb * 255 + 0.5).astype(np.uint8), "RGB")
     if variant == "dusk":
         if stage == "blue": o_ = im.convert("RGBA"); o_.alpha_composite(petal_layer()); im = o_.convert("RGB")      # petals fall at dusk too (they get the dusk grade)
-        im = dusk(stage, im, shifted_mask(os.path.join(passes, f"{stage}-lights.png")))
+        im = dusk(stage, im, shifted_mask(os.path.join(passes, f"{stage}-lights.png")), passes)
         sp, pos = sprite(stage, "dusk", style=style); o = im.convert("RGBA"); o.alpha_composite(sp, pos); return o.convert("RGB")
     return day_effects(im, stage)
 
@@ -302,16 +357,16 @@ def smog_png(a, k):
     col = np.clip(k / np.maximum(a, 1e-3)[..., None], 0, 1); return Image.fromarray((np.dstack([col, a[..., None]]) * 255 + 0.5).astype(np.uint8), "RGBA")
 
 PLAN = [  # order, belt, status, one line of what the picture shows
-    (1, "white", "built", "A little run down: a boarded window, a patched awning and bridge plank, weedy empty beds, murky water, EMPTY plinth. This picture is the CLEAR-AIR base (blue sky, bright); the grey smog is the SEPARATE overlay 1-white-smog-* drawn on top while the White floor boss is unbeaten. Still friendly."),
+    (1, "white", "built", "A little run down: a boarded window, a patched awning and bridge plank, weedy empty beds, murky water, EMPTY plinth. This picture is the CLEAR-AIR base (blue sky, bright); the grey smog is the SEPARATE overlay 1-white-smog-* drawn on top while the White floor boss is unbeaten. After the boss the smog FADES OUT and this clear White picture is the town from then on. Still friendly."),
     (2, "yellow", "planned", "NOT BUILT: the clean-up step - boards come off, fresh paint, colour comes back, first blooms. Until it is built use the White picture."),
     (3, "orange", "planned", "NOT BUILT: the shop opens - chimney, warm lanterns, bread, a fuller town. Until it is built use the White picture."),
     (4, "green", "built", "Clearly upgraded: fresh paint and a vivid colour grade, the STATUE unveiled with two stone lanterns, lush flower beds, bunting across the river, a roof flag, window boxes, blossoming hedges, bridge garland, soft cast shadows."),
-    (5, "blue", "built", "FULLY MAXED hero town (the last town picture): golden-hour grade, five real SAKURA trees (dark crooked trunks and branches, layered cloud-like blossom clumps, falling petals), four stone lanterns, two tall banners, two roof flags, golden paving ring, lotus and more koi, chimney smoke, sun shafts, petals, bloom on the statue and lanterns. Dusk adds a fire bowl, two paper lanterns on a hook post, 12 fireflies and falling petals.")]
+    (5, "blue", "built", "FULLY MAXED hero town (the last town picture): golden-hour grade, five SAKURA trees drawn with the SAME toon ramp and outline as the other trees (thick brown trunks, soft pink clumps), each in a stone tree ring with a soft ground shadow and fallen petals, all clear of the walking lane; the two bench corners are sakura too; a few distant blossom trees on the hills; four stone lanterns, two tall banners, two roof flags, golden paving ring, lotus and koi, chimney smoke, sun shafts, bloom on the statue and lanterns. Dusk grades the pink to deeper cooler rose with a warm rim on the sides facing the paper lanterns, fire bowl and lamp posts, plus 12 fireflies and falling petals.")]
 USE_BLUE = ["red", "redblack", "brown", "brownblack", "black"]
 FALLBACK = {"yellow": "white", "orange": "white"}
 
 def write_manifest():
-    out = {"note": "White is TWO layers: the clear background plus the separate smog overlay (removed when the White floor boss is beaten). All other belts are one picture, no overlay. Town growth is CAPPED at Blue. One FULL town background per belt, day + dusk, dojo sprite already in. Swap the whole picture by the student's highest earned belt. Nothing stacks. Red, Red/Black, Brown, Brown/Black and Black have NO town pictures of their own: they use the Blue picture.",
+    out = {"note": "White is TWO layers: the clear background plus the separate smog overlay (it FADES OUT after the White floor boss is beaten; clear White is the after-boss look). All other belts are one picture, no overlay. Town growth is CAPPED at Blue. One FULL town background per belt, day + dusk, dojo sprite already in. Swap the whole picture by the student's highest earned belt. Nothing stacks. Red, Red/Black, Brown, Brown/Black and Black have NO town pictures of their own: they use the Blue picture.",
            "sizePx2x": [W, H], "sizePx1x": [W // 2, H // 2], "tilePx2x": PPT, "stages": []}
     for order, belt, status, notes in PLAN:
         e = {"order": order, "belt": belt, "built": status == "built", "statue": belt in ("green", "blue"), "notes": notes}
@@ -320,7 +375,8 @@ def write_manifest():
         if belt == "white":
             e["smogOverlay"] = {"files": {v: {"2x": f"1-white-smog-{v}@2x.png", "1x": f"1-white-smog-{v}.png"} for v in ("day", "dusk")}, "sizePx2x": [W, H],
                                 "draw": "full-frame transparent PNG, same size as the background; draw it OVER the White background (same day/dusk variant) and UNDER characters, effects and UI",
-                                "remove": "when the student beats the White-belt floor boss: stop drawing it and the clear White picture underneath is the town. Never draw it on any other belt."}
+                                "fadeOut": {"on": "White-belt floor boss defeated", "durationMs": 2500, "curve": "ease-out", "from": "overlay alpha 1.0", "to": "overlay alpha 0.0 (suggested duration - tune in game)"},
+                                "remove": "after the White-belt floor boss the smog FADES OUT (see fadeOut), then stop drawing it: the clear White picture underneath (1-white-*) is the after-boss look and the town from then on. Never draw it on any other belt."}
         out["stages"].append(e)
     for i, belt in enumerate(USE_BLUE):
         out["stages"].append({"order": 6 + i, "belt": belt, "built": False, "useStage": "blue", "statue": True,
