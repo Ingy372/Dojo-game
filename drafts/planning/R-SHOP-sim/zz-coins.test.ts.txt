@@ -1,0 +1,41 @@
+/// <reference types="vite/client" />
+// LOCAL ONLY (R-SHOP). Plays whole runs like insight-sim.ts and writes one JSON row per run:
+// the rooms cleared by kind and the gear found by rarity. The sim has no coins, so coins are worked out afterwards (coins.py).
+import { describe, it } from 'vitest';
+import { writeFileSync } from 'node:fs';
+import { ARTISTS } from '../r-bal-12-artists';
+import { testContent } from '../load-content';
+import { createRng, createRunWorld, currentRoom, startRun, type Difficulty } from '../../src';
+import { playRoom } from './bot';
+import { BOTS, BELTS, SEED_BASE, type BotName } from './insight-sim';
+
+const env = import.meta.env as Record<string, string | undefined>;
+describe.skipIf(!env.COINS)('coins', () => {
+  it('writes rows', () => {
+    const seeds = Number(env.SEEDS ?? 30);
+    const rows: unknown[] = [];
+    for (const diff of ['guided', 'standard', 'challenge'] as Difficulty[])
+      for (const bot of Object.keys(BOTS) as BotName[])
+        for (const tier of BELTS)
+          for (let i = 0; i < seeds; i++) {
+            const seed = SEED_BASE + i;
+            const { style, skill } = BOTS[bot];
+            const a = ARTISTS.typical[tier - 1];
+            const base = { maxHealth: a.health, power: a.power, guard: a.guard };
+            const c = testContent();
+            const run = startRun(c, { seed, dryRuns: 0, difficulty: diff, tier });
+            const rng = createRng(seed * 7919 + 13);
+            const cleared: string[] = [];
+            let n = 0;
+            while (run.status === 'playing' && n < 20) {
+              const room = currentRoom(c, run);
+              const world = createRunWorld(c, run, base, [], diff, undefined, undefined);
+              const st = playRoom(c, run, world, room, style, skill, rng);
+              if (!st.died) cleared.push(room.kind + (st.grade ? ':' + st.grade : ''));
+              n++;
+            }
+            rows.push({ diff, bot, tier, seed, won: run.status === 'cleared', ticks: run.ticks, cleared, loot: run.loot.map((x) => x.rarity) });
+          }
+    writeFileSync(env.OUT ?? '/tmp/coins.json', JSON.stringify(rows));
+  }, 3_000_000);
+});
