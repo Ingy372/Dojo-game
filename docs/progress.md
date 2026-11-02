@@ -1031,3 +1031,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - QA follow-up on #400: the testing-screen Close works after the list is scrolled (Close on top, off-view rows not tappable, Close label centred), tapping the middle of the inside exit glow leaves the dojo, and the Training Points line no longer overlaps Virtues. Tests are in `packages/sim/test/q-prem2-routine.test.ts`.
 - N1 fix: the testing screen reads the pointer in scene units (worldX / worldY), so its buttons, rows and scrolling work at DPR 1.5 and 3. No other client file had the bug.
 
+
+## PB-01 — Loadout v2, sealSlots(belt), the slot seed (2026-11-01)
+- `Loadout` has five slots (`stance`, `virtue`, `strike`, `kata`, `seals`); old two-field and `{ form }` saves load unchanged. New `loadout.ts`: `sealSlots(tier)` (2/2/3, then 3, 3, 4), Seal equip, swap and remove rules, `normalizeSlots`, and the once-only seed (`migrateLoadoutV2`, `seedLoadoutV2`, guarded by `profile.loadoutV2`, with a `showSlotNote` flag). Types for Seal families, Strikes and kata powers are in `abilities.ts`.
+- No fight, UI or balance change: golden fixture unchanged; Power and Health are the same before and after the seed (tested on Yellow, Green and Orange).
+- Not wired yet: the seed waits for PB-02 (families) and PB-03 (Strikes), see `docs/decisions.md`.
+- Tests: `p-prog-a-loadout-save`, `p-prog-b-seal-slots`, `p-prog-f-migration` (34 new). Suite 1276 passed, 11 skipped; typecheck and build exit 0.
+- Next: PB-02, PB-03, PB-04.

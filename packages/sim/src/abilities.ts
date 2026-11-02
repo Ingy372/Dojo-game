@@ -49,6 +49,56 @@ export interface PerkDef {
   effect: Effect;
 }
 
+// R-PROGRESSION-BETA (PB-01): the types for the slot system. Types only; the data files and the
+// code that reads them come with PB-02 (Seal families), PB-03 (Strikes) and PB-04 (kata powers).
+
+export type SealFamilyId = 'counter' | 'guard' | 'escape' | 'disarm' | 'throw' | 'lock';
+
+export interface SealRankDef {
+  /** The self-defense number, e.g. 11. */
+  technique: number;
+  /** The real technique name shown on the rank. */
+  name: string;
+  effects: Effect[];
+  /** Kid words, no numbers. */
+  text: string;
+}
+
+export interface SealFamilyDef {
+  id: SealFamilyId;
+  name: string;
+  text: string;
+  /** Path under incoming-art/ (a placeholder is allowed). */
+  icon: string;
+  /** In technique order. */
+  ranks: SealRankDef[];
+}
+
+export interface StrikeDef {
+  /** 'spin-kick' | 'jumping-spins' | 'butterfly-flow' */
+  id: string;
+  name: string;
+  text: string;
+  /** The kick combo number that unlocks it (1, 2, 3). */
+  combo: number;
+  focusCost: number;
+  hits: { strength: number; delayTicks: number }[];
+  reach: number;
+  lungeTiles: number;
+  recoveryTicks: number;
+}
+
+export interface KataPowerDef {
+  id: string;
+  /** The content/katas id. */
+  kata: string;
+  name: string;
+  text: string;
+  status: 'placeholder' | 'final';
+  /** Passive only. Empty while the status is 'placeholder'. */
+  effects: Effect[];
+}
+
 export type VirtueKind = 'shield' | 'heal' | 'discipline';
 
 export interface VirtueDef {

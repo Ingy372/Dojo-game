@@ -2,7 +2,7 @@
 // Virtue, D2), a tray of picks for the chosen slot, and the "Always with you" row. Tap a slot,
 // then tap a pick (D4). Wording comes from content/abilities/fighting-style.json.
 
-import { unlockedStances, virtueTitle, type AbilityContent, type Loadout, type TrainingState } from '@dojo/sim';
+import { emptyLoadout, unlockedStances, virtueTitle, type AbilityContent, type Loadout, type TrainingState } from '@dojo/sim';
 import words from '../../../../content/abilities/fighting-style.json';
 import { MIN_TAP, S1, S2, TYPE, pageDots } from './tokens';
 
@@ -77,7 +77,8 @@ export function equipPick(loadout: Loadout | null, slot: StyleSlot, pick: StyleP
   if (!pick.earned || pick.slot !== slot) return loadout;
   // B-POLISH-2: re-tapping the equipped pick changes nothing (same object: no re-save, no pop).
   if ((slot === 'stance' ? loadout?.stance : loadout?.virtue) === pick.id) return loadout;
-  const base: Loadout = { stance: loadout?.stance ?? null, virtue: loadout?.virtue ?? null };
+  // PB-01: the Strike, kata and Seal slots are carried through untouched.
+  const base: Loadout = { ...emptyLoadout(), ...loadout };
   return slot === 'stance' ? { ...base, stance: pick.id } : { ...base, virtue: pick.id };
 }
 

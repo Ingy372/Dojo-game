@@ -2,7 +2,7 @@
 // the profile loadout (P-MENU2-d), survives a save and load, and feeds the next fight. Not-yet
 // picks change nothing. Leaving everything alone (or picking the defaults) plays as today.
 import { describe, expect, it } from 'vitest';
-import { buildTraining, characterSetup, loadFeed, loadProfile, newProfile, type TrainingState } from '../src';
+import { buildTraining, characterSetup, loadFeed, loadProfile, newProfile, type TrainingState, emptyLoadout } from '../src';
 import { testContent } from './load-content';
 import yellow from '../../../fixtures/3-yellow-belt.json';
 import white from '../../../fixtures/1-white-belt-new.json';
@@ -33,7 +33,7 @@ describe('P-MENU2-e Fighting Style', () => {
     const m = buildStyle(t, content.abilities, p.loadout);
     const flowing = m.trays.stance.find((x) => x.id === 'front-stance')!;
     p.loadout = equipPick(p.loadout, 'stance', flowing);
-    expect(p.loadout).toEqual({ stance: 'front-stance', virtue: null });
+    expect(p.loadout).toEqual({ ...emptyLoadout(), stance: 'front-stance', virtue: null });
     expect(buildStyle(t, content.abilities, p.loadout).current.stance?.id).toBe('front-stance');
     expect(characterSetup(p, t, content.abilities).stances![0].id).toBe('front-stance');
   });
@@ -49,10 +49,10 @@ describe('P-MENU2-e Fighting Style', () => {
   });
 
   it('tap Virtue, tap a pick: only the Virtue changes', () => {
-    const m = buildStyle(t, content.abilities, { stance: 'cat-stance', virtue: null });
+    const m = buildStyle(t, content.abilities, { ...emptyLoadout(), stance: 'cat-stance', virtue: null });
     const other = m.trays.virtue.find((x) => x.earned && x.id !== t.virtue?.def.id)!;
-    const l = equipPick({ stance: 'cat-stance', virtue: null }, 'virtue', other);
-    expect(l).toEqual({ stance: 'cat-stance', virtue: other.id });
+    const l = equipPick({ ...emptyLoadout(), stance: 'cat-stance', virtue: null }, 'virtue', other);
+    expect(l).toEqual({ ...emptyLoadout(), stance: 'cat-stance', virtue: other.id });
   });
 
   it('the pick survives a save and load (a restart)', () => {
@@ -60,7 +60,7 @@ describe('P-MENU2-e Fighting Style', () => {
     const m = buildStyle(t, content.abilities, null);
     p.loadout = equipPick(p.loadout, 'stance', m.trays.stance.find((x) => x.id === 'cat-stance')!);
     const restored = loadProfile(JSON.parse(JSON.stringify(p)));
-    expect(restored.loadout).toEqual({ stance: 'cat-stance', virtue: null });
+    expect(restored.loadout).toEqual({ ...emptyLoadout(), stance: 'cat-stance', virtue: null });
     expect(buildStyle(t, content.abilities, restored.loadout).current.stance?.id).toBe('cat-stance');
   });
 
