@@ -30,7 +30,7 @@ Written Nov 1, 2026 by the Researcher & Planner. Docs only. Every "exists" below
 **Proposal: 6 family medallions plus rank pips.** The redesign's rule is "every self-defense sign-off shows on a Seal by its real name". The name does the job of telling techniques apart. The icon only needs to say which family it is and what rank it is.
 
 - 6 medallions: Counter, Guard, Escape, Disarm, Throw, Lock. Each has its own rim colour and one simple symbol, in the existing Seal style (round medallion plus one symbol, 128 x 128, thick 2 px outline, no text).
-- A small row of rank pips under the symbol, drawn as game art (not baked into the medallion), so one medallion works for every rank. Ranks per family: Counter 1-10 (#1 is rank 1, #20 is rank 9, #16 rank 8), Guard 1-4, Escape 1-6, Disarm 1-5, Throw 1-6, Lock 1-10 (counts from `R-G2B-seal-families-16-40.md`).
+- A small row of rank pips under the symbol, drawn as game art (not baked into the medallion), so one medallion works for every rank. Ranks per family: Counter 1-9 (#1 is rank 1, #16 rank 8, #20 rank 9), Guard 1-4, Escape 1-6, Disarm 1-5, Throw 1-6, Lock 1-10 (counts from `R-G2B-seal-families-16-40.md`).
 - Phone check: the family must be readable at 48 pt, with a grey-scale check (colour is never the only cue).
 - The 10 existing sample icons stay as spare art until the family list is decided (Jay decides each family, R-G2B-22).
 
