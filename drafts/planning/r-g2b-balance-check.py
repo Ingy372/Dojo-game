@@ -133,6 +133,8 @@ def main():
                     if beat > band[1] or beat < band[0] or ko < komin: bad.append((belt, st, diff, beat, ko))
         print(f"{eid} elite: {len(bad)} cells outside band" + (f"; e.g. {bad[:3]}" if bad else ""))
     section_e(res)
+    section_f(rows)
+    section_g(rows)
     return res
 
 def window(row):
@@ -151,6 +153,63 @@ def section_e(res):
             ok = window(row)
             only = all(f[1] == "trainsMore" and f[2] == "challenge" for f in row[5]["fails"])
             print(f"{row[1]}: now {row[4]['maxHealth']}; fails are all trainsMore+Challenge: {only}; passing base maxHealth: " + (f"{min(ok)}-{max(ok)}" if ok else "NONE"))
+
+BASIC_COOLDOWN = 12; PC_STRENGTH = 2.0; PC_STAGGER = 20   # config.ts: basicAttack.cooldownTicks, counter.perfectStrength, perfectStaggerTicks
+SPIN_KICK = 2.5                                            # config.ts: strike.strength
+
+def section_f(rows):
+    """Spin Kick baseline: Strikes (strength 2.5) needed to beat each class, typical student."""
+    print("\n== F. Spin Kick baseline: Spin Kicks to beat (typical student; Standard / Challenge) ==")
+    reps = {"small": "pebble-pal", "mid": "cliff-goat", "heavy": "stack-golem", "boss": "stone-giant"}
+    print("| Belt | " + " | ".join(f"{k} ({v})" for k, v in reps.items()) + " |")
+    print("|---|---|---|---|---|")
+    for belt in range(4, 11):
+        cells = []
+        for k, eid in reps.items():
+            base = [r for r in rows if r[1] == eid][0][4]
+            H, _ = scaled(base, belt); a = ARTISTS["typical"][belt - 1]
+            d = damage(a["power"], SPIN_KICK, base["guard"])
+            cells.append(f"{math.ceil(H / d)} / {math.ceil(H * CHALLENGE / d)}")
+        print(f"| {BELTS[belt-1]} | " + " | ".join(cells) + " |")
+
+def package(stagger_ticks, bonus=0.0, strength_bonus=0.0):
+    """Basic-hit equivalents from ONE Perfect Counter: its own hit plus the free basic hits in the window."""
+    free = stagger_ticks // BASIC_COOLDOWN
+    return PC_STRENGTH * (1 + strength_bonus) + free * (1 + bonus), free
+
+def section_g(rows):
+    """Control windows (Throw, Lock) vs the built Perfect Counter. Durations are the S4 GUESSES, not decided numbers."""
+    print("\n== G. One Perfect Counter, in basic-hit equivalents (S4 guess durations; the test bot sets the real ones) ==")
+    stages = [
+        ("Built today: stagger 20", package(20)),
+        ("Lock #17 (20 ticks)", package(20)),
+        ("+ #28 Four-Corner Lock (30)", package(30)),
+        ("+ #31 Arm Bar Release (40)", package(40)),
+        ("+ #40 Master Hold (50)", package(50)),
+        ("+ #32 locked take +15% (50)", package(50, 0.15)),
+        ("+ Counter #10 staggerBonus +15% too", package(50, 0.30)),
+        ("Throw #11 (down 30)", package(30)),
+        ("+ #12 downBonus +25% (30)", package(30, 0.25)),
+    ]
+    base = stages[0][1][0]
+    print("| Stage | Free basic hits | Package | x baseline | step jump |")
+    print("|---|---|---|---|---|")
+    prev = None
+    for name, (pk, free) in stages:
+        jump = "" if prev is None or name.startswith("Throw") else f"{pk/prev:.2f}"
+        print(f"| {name} | {free} | {pk:.2f} | {pk/base:.2f} | {jump} |")
+        prev = pk
+    full = package(50, 0.30)[0]
+    print(f"\nShare of one enemy's health taken by the full-stack Lock package ({full:.1f} basic hits) vs hits-to-beat, Standard, every belt 4-10, all students:")
+    full = package(50, 0.30)[0]
+    for eid, bk in (("cliff-goat", "mid"), ("stack-golem", "heavy"), ("pebble-pal", "small")):
+        base_e = [r for r in rows if r[1] == eid][0][4]; band, _ = BANDS[bk]
+        lo, hi = 99, 0
+        for belt in range(4, 11):
+            for st in ARTISTS:
+                beat = check(base_e, belt, st, band)["standard"][0]
+                lo = min(lo, full / beat); hi = max(hi, full / beat)
+        print(f"  {eid} ({bk}, beats in {band[0]}-{band[1]} hits): {lo*100:.0f}%-{hi*100:.0f}% of its health from one Perfect Counter")
 
 if __name__ == "__main__":
     main()
