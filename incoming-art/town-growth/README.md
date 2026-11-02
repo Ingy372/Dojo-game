@@ -1,72 +1,84 @@
-# Town Growth v2: one full town picture per belt (A-TOWN-GROWTH)
+# Town Growth v3: five steps from run down to FULLY MAXED, then the Blue picture for good (A-TOWN-GROWTH)
 
-Jay's verdict on the first set was "too messy and cluttered", and he asked for a new arc where the town starts a little **run down** and gets nicer. Add-on overlays can only add things, so they cannot make a town that looks *worse* than the approved base. This set therefore uses a different structure (below).
+Jay's direction (Nov 1): the town changes were not special enough. New arc: town growth is **capped at Blue**. White is a little run down, then the town climbs step by step (White, Yellow, Orange, Green, Blue) to a **fully maxed hero town at Blue**. Each step is meant to be a clear "wow, it changed" moment. **Red and above have no town art of their own: they reuse the Blue picture.** (The Content Designer owns a different mechanic for those belts.) **The gold flame is dropped.**
 
-**Samples only for now:** White, Orange and Blue, each in day and dusk. The other belts are planned but not built.
+**Samples only for now:** White (run down), Green (clearly upgraded) and Blue (fully maxed), each in day and dusk, plus a side-by-side sheet. Yellow and Orange are planned and not built.
 
-Jump to: [Structure for the Programmer](#structure-for-the-programmer) | [The arc](#the-arc) | [What is here](#what-is-here) | [How it is built](#how-it-is-built) | [Rules and checks](#rules-and-checks)
+Jump to: [Structure for the Programmer](#structure-for-the-programmer) | [The arc](#the-arc) | [Techniques used](#techniques-used-and-where-they-come-from) | [What is here](#what-is-here) | [How it is built](#how-it-is-built) | [Rules and checks](#rules-and-checks)
 
 ![samples](previews/samples-sheet.png)
 
 ## Structure for the Programmer
 
-**One complete town background per belt, in a day and a dusk version. Nothing stacks.**
+**One complete town background per belt, in a day and a dusk version. Nothing stacks.** (Same structure as v2.)
 
-1. Every picture is the whole town frame (1864x860 at @2x, 932x430 at 1x, the same frame and camera as the approved town square). It already has the sky, hills, Tower and **the Action Zone dojo already drawn in its slot**.
+1. Every picture is the whole town frame (1864x860 at @2x, 932x430 at 1x, the same frame and camera as the approved town square). It already has the sky, hills, Tower and **the Action Zone dojo drawn in its slot**.
 2. Show the picture for the player's **own highest earned belt** (day or dusk to match the time of day). When the belt changes, **swap the whole picture**. Do not draw one belt on top of another.
-3. Draw characters, effects and UI **on top**, as before. The town art is only the background.
-4. A belt that has no picture yet falls back to the nearest earlier built one (for the samples: Yellow shows White, Green shows Orange, and Red to Black show Blue). `stages/stages.json` lists every belt, which are built, and the file names.
+3. Draw characters, effects and UI **on top**. The town art is only the background.
+4. **Town art stops at Blue.** Red, Red/Black, Brown, Brown/Black and Black all show the **Blue** picture. In `stages/stages.json` those five belts are `"built": false, "useStage": "blue"` and have no `files`. Yellow and Orange are not built yet and say `"useUntilBuilt": "white"`.
 5. Each phone draws its own town from its own belt. Other players never change it.
 
-Why this structure: it is the simplest to use (one image lookup, no ordering rules), it can go below the base, and it avoids a pile of small overlays crowding the screen. The cost is file size (one background per belt per time of day instead of small overlays); at 10 belts that is 20 backgrounds. If size becomes a problem, the pictures can be cut into the same tile grid later.
-
-`stages/stages.json` is the lookup: per belt `order`, `belt`, `built`, `statue`, `notes` and `files` (day and dusk, @2x and 1x).
+`stages/stages.json` is the lookup: per belt `order`, `belt`, `built`, `statue`, `notes`, and either `files` (day and dusk, @2x and 1x), `useStage` (Red to Black: use Blue) or `useUntilBuilt`.
 
 ## The arc
 
-| # | Belt | Look | Statue | Status |
+| # | Belt | The "wow" | Statue | Status |
 |---|---|---|---|---|
-| 1 | White | A little run down but friendly: faded and worn colours, a boarded window, a patched awning stripe and a patched bridge plank, weedy empty flower beds, murky water with one koi, a few cracked stones near the plinth. Lamp posts and the dojo and shop windows are lit at dusk (the tall lantern posts are off). | No (empty plinth) | **built** |
-| 2 | Yellow | A bit cleaner and more normal: boards and patches gone, beds tidy, water clearer. | No | planned |
-| 3 | Orange | About the approved town concept art. Plus a shop chimney and a bread basket (no smoke). | No (empty plinth) | **built** |
-| 4 | Green | The statue arrives on the plinth. | Yes | planned |
-| 5 | Blue | Statue plus the first light effects, homely: a thin chimney smoke curl, two more koi and two more lily pads, a warm 5% tint, faint sun shafts and a few floating motes by day, a few fireflies near the river and hedges at dusk. | Yes | **built** |
-| 6 | Red | One more gentle upgrade on Blue. Any flame is gold, never red. | Yes | planned |
-| 7 | Red/Black | One more gentle upgrade. | Yes | planned |
-| 8 | Brown | One more gentle upgrade. | Yes | planned |
-| 9 | Brown/Black | One more gentle upgrade. | Yes | planned |
-| 10 | Black | Out of scope in the content spec so far. Keep it gentle too. | Yes | planned |
+| 1 | White | A little run down but friendly. Cool grey overcast sky, faded and washed colours, weak shadows, a boarded window and a patched awning, a patched bridge plank, weedy empty beds, murky water with one koi, cracked stones, **an empty plinth**. Lamp posts and the dojo and shop windows are lit at dusk; the tall lanterns are off. | No (empty plinth) | **built** |
+| 2 | Yellow | The clean-up: boards and patches gone, tidy beds, water clearer, first colour coming back. | No | planned, not built (until then show White) |
+| 3 | Orange | The shop opens: chimney, warm lights, a fuller town (about the approved concept level). | No | planned, not built (until then show White) |
+| 4 | Green | **Clearly upgraded.** Sky turns bright blue, fresh vivid grade, warm cream paving, **the statue is unveiled** with two stone lanterns (lit at dusk), lush flower beds, window boxes, blossoming hedges, bunting across the river, a gold roof flag, a bridge garland, one more koi, soft cast shadows and a thin warm rim light. | Yes | **built** |
+| 5 | Blue | **FULLY MAXED hero town (the last town picture).** Golden-hour grade with violet shadows and long soft shadows, **five cherry-blossom trees** with a petal carpet and a few drifting petals, **four stone lanterns** around the statue, **two tall banners** and **two roof flags**, a bigger bunting line, a golden paving ring, lotus flowers and more koi and lily pads, chimney smoke, sun shafts and motes, bloom on the statue and lanterns. At dusk: a few fireflies and the lanterns glowing. | Yes | **built** |
+| 6 | Red | **Use the Blue picture.** No town art of its own. | Yes | use Blue |
+| 7 | Red/Black | **Use the Blue picture.** | Yes | use Blue |
+| 8 | Brown | **Use the Blue picture.** | Yes | use Blue |
+| 9 | Brown/Black | **Use the Blue picture.** | Yes | use Blue |
+| 10 | Black | **Use the Blue picture.** | Yes | use Blue |
 
-Guard rails for Red to Black: a small change each time, never a screen full of effects, stay out of the walkable lanes, every glow has a source.
+No gold flame, no extra effects: town growth is finished at Blue.
+
+## Techniques used (and where they come from)
+
+Looked up before building, and copied where they fit this frame:
+
+1. **A coherent colour grade per stage** (Pokemon, Club Penguin, Slay the Spire). White is desaturated and cool grey with a heavier vignette. Green is fresh and vivid. Blue is warm golden hour with violet shadows. One grade, one mood, per step, so each step reads as a new "place".
+2. **Warm, saturated, readable palettes and clean shapes** (Pokemon, Club Penguin). Cream paving, strong greens, blossom pink, gold. Every prop keeps a simple silhouette.
+3. **Crisp dark outlines** (Archero, Survivor.io). The approved toon outline (inverted hull) is kept on everything.
+4. **Soft cast shadows plus ambient occlusion** (Archero, Survivor.io drop shadows). A separate clay render of the town lit by one sun gives soft shadows that fall up and right, cooler on the ground, lighter on props. The sun gets lower in later stages (longer shadows at Blue).
+5. **Painterly light and rim light** (Slay the Spire). Lit surfaces get a warm tint, shadows a cool tint. A thin warm **rim line** runs along edges that face the light (from a height render of the scene), so roofs, hedges, props and paving edges "pop" off the ground.
+6. **Play space vs scenery contrast** (Archero, Survivor.io). The back lawn, hills and hedges are about 6% darker and cooler than the plaza, and a soft vignette pulls the eye to the plaza where characters walk.
+7. **Bloom on a few hero props only** (Pokemon, Club Penguin). Just the statue (richer gold, a soft halo) and the stone lanterns. Nothing else glows in the day.
+8. **Banners, flags and bunting.** Roof flags, two tall banners and a bunting line across the river, in teal, blue, gold and cream (no red).
+9. **Painterly texture.** Faint low-frequency blotches and a fine grain take the flat 3D look off the surfaces. Soft painted clouds and a per-stage sky (flat grey, bright azure, peach golden hour).
+10. **Ambient-ready elements** (all stay static in the picture, but are built as separate shapes so the Programmer can animate later): bunting, flags and banners (wave), cherry petals (drift), chimney smoke (rise), koi and lotus (move), lantern flames (flicker), motes and fireflies (float).
+11. **Subtle dusk.** Same picture, then a gentle dusk grade. Glow comes only from lit windows, stone lanterns, lamp posts, the shop and the Tower. A handful of fireflies at Blue only.
 
 ## What is here
 
 | Path | What |
 |---|---|
 | `stages/1-white-day.png`, `...-dusk.png` (and `@2x`) | White backgrounds |
-| `stages/3-orange-day.png`, `...-dusk.png` (and `@2x`) | Orange backgrounds |
-| `stages/5-blue-day.png`, `...-dusk.png` (and `@2x`) | Blue backgrounds |
-| `stages/stages.json` | The belt-to-picture lookup |
+| `stages/4-green-day.png`, `...-dusk.png` (and `@2x`) | Green backgrounds |
+| `stages/5-blue-day.png`, `...-dusk.png` (and `@2x`) | Blue backgrounds, **also used for Red to Black** |
+| `stages/stages.json` | The belt-to-picture lookup (Red to Black = use Blue) |
 | `previews/samples-sheet.png` | The 3 stages side by side, day on top and dusk below |
 | `source/` | The build scripts |
-| `superseded/` | The first (add-on overlay) set, kept for reference. **Do not use it.** Nothing was deleted. |
-| `DELIVERY_NOTE.md` | Item, what, why, decide, next, and the check results |
+| `superseded/` | The first overlay set and the v2 set (Orange, the old Blue, the v2 White and the v2 docs). **Do not use.** Nothing was deleted. |
+| `DELIVERY_NOTE.md` | Item, what, why, decide, next, the check results and the spec mismatches |
 
 ## How it is built
 
-Run `bash incoming-art/town-growth/source/render_all.sh` from the repo root (Blender 4.2 and Pillow; at most 2 Blender processes at once).
+Run `bash incoming-art/town-growth/source/render_all.sh` from the repo root (Blender 4.2, Pillow, numpy and scipy; at most 2 Blender processes at once).
 
-- `source/build_town_stage.py` (Blender) runs the approved town-square build, then changes it for one stage: the statue and star are removed for White and Orange, the sparkles are thinned, and the stage's wear or extras are added. It renders four passes: `day`, `night`, `lights` (a mask of the lit windows and lanterns, the source of every glow) and `props` (a mask of only the added objects, used for the lanes check).
-- `source/make_stages.py` (Pillow) adds the sky, hazy far hills and Tower, the White "worn" grade, the dusk grade, the soft light, the Blue effects, and pastes the Action Zone dojo sprite exactly as `action-zone-dojo/source/make_town_preview.py` does. It writes `stages/` and `stages.json`.
+- `source/build_town_stage.py` (Blender) runs the approved town-square build and changes it for one stage (statue removed in White, wear in White, upgrades in Green and Blue). Seven passes per stage: `day`, `night` (dusk town), `lights` (mask of lit things, the source of every glow), `props` (mask of added objects, for the lanes check), `shade` (clay render under one sun: shadows), `height` (surface height: rim light) and `hero` (mask for bloom).
+- `source/make_stages.py` (Pillow, numpy) builds the sky, clouds and hazy far hills, composites the town and the dojo sprite, applies shadows, rim, bloom, the stage grade, scenery contrast and the vignette, then the effects and the dusk step. It writes `stages/` and `stages.json`.
 - `source/make_sheet.py` makes the side-by-side sheet.
-- With no changes, the same pipeline reproduces the approved day picture pixel for pixel (checked), so Orange is the approved town and nothing else.
-
-**Dusk is much gentler than the approved dusk.** Window and lantern glow is about a quarter of the old strength, the ground light pools about a third, the Tower light is fainter, there is no firefly swarm (Blue has only a few), and the dojo sprite's own door pools are turned down to match. Every glow still comes from a lit window, lantern or the Tower.
 
 ## Rules and checks
 
-- Kid-friendly (ages 6+). Nothing is drawn above the characters' heads. No red anywhere except the CMA sign's brand red (the Red belt uses a gold flame).
-- The added objects stay out of the walkable lanes (the strip in front of the buildings and the bridge). White's weeds and cracks are only on the flower beds and around the plinth.
-- The statue and plinth are the approved ones and unchanged. They are hidden before Green and shown from Blue.
+- Kid-friendly (ages 6+). Nothing is drawn above the characters' heads. **No red anywhere except the CMA sign's brand red.**
+- Everything added stays out of the walkable lanes (the strip in front of the buildings and the bridge). The river and the flower beds are exempt. Petals, shafts and motes stay out of that strip.
+- Every glow has a real source (lit window, stone lantern, lamp post, shop, Tower).
+- The statue and plinth are the approved ones, unchanged. They are hidden before Green and shown from Green.
 - The photos used as likeness reference are not in the repo.
 - Results of the checks are in `DELIVERY_NOTE.md`.

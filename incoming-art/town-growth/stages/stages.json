@@ -1,5 +1,5 @@
 {
-  "note": "One FULL town background per belt, day + dusk, dojo sprite already in. Swap the whole picture by the student's belt. Nothing stacks.",
+  "note": "Town growth is CAPPED at Blue. One FULL town background per belt, day + dusk, dojo sprite already in. Swap the whole picture by the student's highest earned belt. Nothing stacks. Red, Red/Black, Brown, Brown/Black and Black have NO town pictures of their own: they use the Blue picture.",
   "sizePx2x": [
     1864,
     860
@@ -15,7 +15,7 @@
       "belt": "white",
       "built": true,
       "statue": false,
-      "notes": "A little run down: faded and worn, a boarded window, a patched awning and bridge plank, weedy empty beds, murky water, empty plinth. Still friendly.",
+      "notes": "A little run down: faded, grey and overcast, a boarded window, a patched awning and bridge plank, weedy empty beds, murky water, EMPTY plinth. Still friendly.",
       "files": {
         "day": {
           "2x": "1-white-day@2x.png",
@@ -32,38 +32,40 @@
       "belt": "yellow",
       "built": false,
       "statue": false,
-      "notes": "PLANNED, not built: cleaner and more normal than White."
+      "notes": "NOT BUILT: the clean-up step - boards come off, fresh paint, colour comes back, first blooms. Until it is built use the White picture.",
+      "useUntilBuilt": "white"
     },
     {
       "order": 3,
       "belt": "orange",
-      "built": true,
+      "built": false,
       "statue": false,
-      "notes": "About the approved town concept art (the base). Empty plinth. A shop chimney and a bread basket.",
-      "files": {
-        "day": {
-          "2x": "3-orange-day@2x.png",
-          "1x": "3-orange-day.png"
-        },
-        "dusk": {
-          "2x": "3-orange-dusk@2x.png",
-          "1x": "3-orange-dusk.png"
-        }
-      }
+      "notes": "NOT BUILT: the shop opens - chimney, warm lanterns, bread, a fuller town. Until it is built use the White picture.",
+      "useUntilBuilt": "white"
     },
     {
       "order": 4,
       "belt": "green",
-      "built": false,
+      "built": true,
       "statue": true,
-      "notes": "PLANNED, not built: the statue arrives."
+      "notes": "Clearly upgraded: fresh paint and a vivid colour grade, the STATUE unveiled with two stone lanterns, lush flower beds, bunting across the river, a roof flag, window boxes, blossoming hedges, bridge garland, soft cast shadows.",
+      "files": {
+        "day": {
+          "2x": "4-green-day@2x.png",
+          "1x": "4-green-day.png"
+        },
+        "dusk": {
+          "2x": "4-green-dusk@2x.png",
+          "1x": "4-green-dusk.png"
+        }
+      }
     },
     {
       "order": 5,
       "belt": "blue",
       "built": true,
       "statue": true,
-      "notes": "Statue in place. First gentle light effects: thin chimney smoke, extra koi and lilies, faint sun shafts and motes by day, a few fireflies at dusk.",
+      "notes": "FULLY MAXED hero town (the last town picture): golden-hour grade, five cherry-blossom trees, four stone lanterns, two tall banners, two roof flags, golden paving ring, lotus and more koi, chimney smoke, sun shafts, petals, bloom on the statue and lanterns.",
       "files": {
         "day": {
           "2x": "5-blue-day@2x.png",
@@ -79,36 +81,41 @@
       "order": 6,
       "belt": "red",
       "built": false,
+      "useStage": "blue",
       "statue": true,
-      "notes": "PLANNED, not built: one gentle upgrade on Blue (gold flame, never red)."
+      "notes": "USE BLUE: no town picture of its own. Show the Blue picture (5-blue-*). No town art changes from Red up."
     },
     {
       "order": 7,
       "belt": "redblack",
       "built": false,
+      "useStage": "blue",
       "statue": true,
-      "notes": "PLANNED, not built: one gentle upgrade."
+      "notes": "USE BLUE: no town picture of its own. Show the Blue picture (5-blue-*). No town art changes from Red up."
     },
     {
       "order": 8,
       "belt": "brown",
       "built": false,
+      "useStage": "blue",
       "statue": true,
-      "notes": "PLANNED, not built: one gentle upgrade."
+      "notes": "USE BLUE: no town picture of its own. Show the Blue picture (5-blue-*). No town art changes from Red up."
     },
     {
       "order": 9,
       "belt": "brownblack",
       "built": false,
+      "useStage": "blue",
       "statue": true,
-      "notes": "PLANNED, not built: one gentle upgrade."
+      "notes": "USE BLUE: no town picture of its own. Show the Blue picture (5-blue-*). No town art changes from Red up."
     },
     {
       "order": 10,
       "belt": "black",
       "built": false,
+      "useStage": "blue",
       "statue": true,
-      "notes": "PLANNED, not built: out of scope in the content spec so far; keep it gentle too."
+      "notes": "USE BLUE: no town picture of its own. Show the Blue picture (5-blue-*). No town art changes from Red up."
     }
   ]
 }
