@@ -104,22 +104,25 @@ def place_fit(med, art, wmax, hmax, cx=128, cy=128, bg=None, fmax=1.0):
     return f
 
 
-def counter(rim=RIMS['counter'], hx=104, hr=22, ty=88, tw=52, th=76, belt=136, el=(118, 112), wr=(158, 108), fs=24,
-             rel=(52, 138), rwr=(84, 136), rfs=30, ar=(58, 12), arrow_y=150, stance=(-28, 40), ank=200, W=166, H=166, cx=128, cy=128):
-    """v5 pass 2: reverse punch, balanced stance, ink-dark sleeve/pant outlines and a darker gi shade so the white gi reads in grey at 30 pt; the figure is fitted bigger
-    with a bold chambered fist. 2 fists, 0 fingers, 0 toes."""
+def counter(rim=RIMS['counter'], hx=104, hr=22, ty=88, tw=52, th=76, belt=136, sh=(112, 107), wr=(168, 105), fs=28, r_sh=15, r_cuff=12, behind=True,
+             rel=(52, 138), rwr=(84, 136), rfs=30, ar=(58, 12), arrow_y=150, stance=(-28, 40), ank=200, W=162, H=162, cx=130, cy=128, burst_gap=12):
+    """v5 pass 3: a clean straight reverse punch. The punching arm is ONE straight line from the shoulder (it grows out of the shoulder corner of the jacket) through
+    the sleeve to the cuff, a clear wrist and a properly sized mitten fist, level with the shoulder; the back fist stays chambered at the hip. 2 fists, 0 fingers, 0 toes."""
     med = medallion(rim); a = Art()
     for k, dx in enumerate(stance):
         hip = (hx + (-12 if k == 0 else 12), ty + th - 8)
         an = (hx + dx, ank)
         sleeve(a, hip, (an[0], an[1] - 12), 13, 11, ow=4.6, shade=GSH, band=6)
         kick_leg(a, an, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
+    if behind:
+        forearm_block(a, sh, wr, fs, 0, 1, r_el=r_sh, r_cuff=r_cuff, gband=6, **GK)
     gi_torso(a, hx, ty, tw, th, belt_y=belt, ow=4.6, shade=GSH, band=6)
     limb(a, (hx, ty - 8), (hx, ty + 6), 8, 8)
     head_front(a, hx, ty - 24, hr)
     forearm_block(a, rel, rwr, rfs, 0, 1, r_el=11.5, r_cuff=10, gband=6, **GK)
-    forearm_block(a, el, wr, fs, 0, 1, r_el=12.5, r_cuff=11, gband=6, **GK)
-    burst(a, wr[0] + 8 + fs + 10, wr[1] - 4, 6.5, 14, 7, .3)
+    if not behind:
+        forearm_block(a, sh, wr, fs, 0, 1, r_el=r_sh, r_cuff=r_cuff, gband=6, **GK)
+    burst(a, wr[0] + 8 + fs + burst_gap, wr[1] - 4, 6.5, 14, 7, .3)
     pts = [(hx + 8 + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 36, -8)]
     arrow(a, pts, BLUE_S, 7, 16, outline=(255, 252, 240))
     place_fit(med, a, W, H, cx, cy)
@@ -148,10 +151,11 @@ def forearm_block(a, el, wr, fist_s, fist_ang, side, clip=None, r_el=14.5, r_cuf
     mitten_fist(a, wx + ux * (8 + fist_s * .42), wy + uy * (8 + fist_s * .42), fist_s, ang, side, clip=clip)
 
 
-def guard(rim=RIMS['guard'], eo=42, ey=204, wx=14, wy=150, fs=32, front=1, shield=True, hy=94, f=.92, cy=148):
+def guard(rim=RIMS['guard'], eo=30, ey=204, wx=14, wy=150, fs=32, front=1, shield=True, hy=94, f=.95, cy=151):
     """v5: a real crossed-forearm X-block. Smiling kid, gi torso, a soft blue shield behind. Both forearms come up from low elbows and cross in front of the chest:
     one sleeve is clearly drawn OVER the other (the outline and the cuff band make the overlap plain). Each forearm ends in the same cuff band, clear skin wrist and
-    one closed mitten fist (one soft rounded square, one thumb crease) as before, the fists up by the cheeks. 2 fists, 0 fingers."""
+    one closed mitten fist (one soft rounded square, one thumb crease) as before, the fists up by the cheeks. The elbows sit in line with the sides of the body
+    (not flared out). 2 fists, 0 fingers."""
     med = medallion(rim); a = Art(); c = None
     if shield:
         a.shape(poly(chaikin([(60, 118), (196, 118), (192, 172), (128, 228), (64, 172)], 3)), lighten(BLUE, .3), BLUE, lighten(BLUE, .6), ow=3.0, band=5, clip=c)
