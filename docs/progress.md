@@ -1097,8 +1097,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ### GUARD-SCALE-01: bigger Guardians (2026-11-02)
 - Guardians draw, collide and reach 1.5x (Stone Giant and Lost Lightbearer 1.75x, not live yet). Factors and the zoom numbers are in `content/settings/guardian-scale.json`.
-- Hitbox, body, attack areas and reach scale together; ranged reach keeps its gap from the Guardian's edge.
+- Body and danger circles scale fully; reach and start range take half the extra radius (`reachGrowth` 0.5 in the data), trimmed so B5 belt 4 (46.0 gate) passes as on main.
+- A held 0.9x zoom in Guardian rooms (placeholder in data, Jay to pick) keeps the head under the HUD at 667x375; it also applies with Reduced motion on.
 - Dodge check at 667x375: farthest escape from a red circle 1.25 to 1.79 tiles, a Dash is 2.5.
 - Camera eases out to 0.8x when the Guardian walks into view; no zoom with Reduced motion on.
 - Golden fixture re-captured (boss rooms only); one noisy test uses 300 seeds.
-- Tests: `guard-scale-01` (13). Shots in /workspace/shots/guard-scale-01 with `pass-fail.md`.
+- Tests: `guard-scale-01` (15). Shots in /workspace/shots/guard-scale-01 with `pass-fail.md`.
