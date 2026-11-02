@@ -1,10 +1,10 @@
 {
-  "notes": "Zap Kite zig-zag lane (the #438 follow-up, DECIDED 5). Read by build_dash_telegraph.py; all sizes are in tiles. The lane runs along +x like the straight lane (rotate by atan2(dy, dx)) and is centred on the canvas. It starts and ends on the aim line and swings 'amplitude' tiles to each side, so the visible length (round ends included) is 'length', the same as the straight lane. Change a number here and re-run the builder; nothing is hard-coded in the script. 'length' 5 and 'width' 1 match the straight lane. For reference the draft Zap Kite (drafts/content/enemies/zap-kite.json) has reach 3.0 and areaRadius 0.6; align 'length' and 'width' to the final enemy data when the Zap Kite is imported.",
+  "notes": "Zap Kite zig-zag lane (the #438 follow-up, DECIDED 5; resized on the Manager's #444 review). Read by build_dash_telegraph.py; all sizes are in tiles. The lane runs along +x (rotate by atan2(dy, dx)) and is centred on the canvas. It starts and ends on the aim line and swings 'amplitude' tiles to each side, so the visible length (round ends included) is 'length'. 'length' = the draft Zap Kite's attack reach (drafts/content/enemies/zap-kite.json, reach 3.0) and 'width' = 2 x its areaRadius (0.6): the sim treats areaRadius as the lane's half-width (a dash-only attack covers every point within areaRadius of the segment from the enemy to enemy + reach), so the full width is 1.2. Choice to note: the sim's capsule also extends areaRadius past both ends (4.2 long in all); 'length' here follows the Manager's call (reach 3.0, round ends included). 'amplitude' 0.3 and 'turns' 2 are art: at 3 x 1.2 four turns blur into a blob, so two corners (an S-bend, same slope on every leg) keep the zig-zag readable; the swing puts the drawn edge 0.3 tile beyond the sim's straight hit lane on each side. Change a number here and re-run the builder; nothing is hard-coded in the script.",
   "zigzag": {
-    "length": 5.0,
-    "width": 1.0,
-    "amplitude": 0.55,
-    "turns": 4,
+    "length": 3.0,
+    "width": 1.2,
+    "amplitude": 0.3,
+    "turns": 2,
     "canvasMargin": 0.5
   }
 }

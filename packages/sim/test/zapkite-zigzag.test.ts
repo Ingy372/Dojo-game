@@ -30,16 +30,19 @@ describe('Zap Kite zig-zag lane data', () => {
     expect(Number.isInteger(zz.turns) && zz.turns >= 2 && zz.turns % 2 === 0).toBe(true);
   });
 
-  it('matches the straight lane: the same 5 x 1 tiles by default', () => {
-    expect(zz.length).toBe(5);
-    expect(zz.width).toBe(1);
+  it('matches the draft Zap Kite: length = reach 3.0, width = 2 x areaRadius 0.6', () => {
+    // drafts/content/enemies/zap-kite.json (reach 3.0, areaRadius 0.6). areaRadius is the lane's half-width in the sim,
+    // so the full width is 1.2. Update both numbers here when the real enemy data differs.
+    expect(zz.length).toBe(3.0);
+    expect(zz.width).toBeCloseTo(2 * 0.6, 10);
   });
 });
 
 describe('Zap Kite zig-zag lane sprites', () => {
-  it('has glow, fill and edge layers at the size the data asks for (whole tiles, margin around the lane)', () => {
+  it('has glow, fill and edge layers at the size the data asks for (whole tiles, margin around the lane): 384 x 288 px', () => {
     const w = Math.ceil(zz.length + 2 * zz.canvasMargin) * PX;
     const h = Math.ceil(2 * zz.amplitude + zz.width + 2 * zz.canvasMargin) * PX;
+    expect({ w, h }).toEqual({ w: 4 * PX, h: 3 * PX });
     for (const l of LAYERS) expect(pngSize(`dash-zigzag_${l}.png`), l).toEqual({ w, h });
   });
 
