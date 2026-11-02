@@ -13,9 +13,9 @@ def F(sz):
     return f
 INK, SOFT, PAPER, WALL = (70, 42, 22), (120, 86, 56), (250, 242, 222), (110, 74, 46)
 # (name, label, note, zoom box on the 1024 px icon for the hand / foot close-up)
-ROWS = [('guard', 'Guard', 'crossed forearms: X-block, clear which arm is on top', (190, 330, 840, 880)),
-        ('counter', 'Counter', 'reverse punch: back fist chambered at the hip, balanced stance', (120, 250, 900, 900)),
-        ('jumping-spins', 'Jumping Spins', 'slim kid, same proportions as Counter', (200, 170, 960, 800))]
+ROWS = [('guard', 'Guard', 'X-block (unchanged since the first v5 pass)', (190, 330, 840, 880)),
+        ('counter', 'Counter', 'bigger figure, bold chambered fist, ink outline on sleeves and pants', (110, 300, 900, 840)),
+        ('jumping-spins', 'Jumping Spins', 'tapered jacket, belt break, natural standing leg, bigger spin arrow', (130, 130, 900, 880))]
 def pad(im, px):
     inner = int(round(px * 112 / 128)); out = Image.new('RGBA', (px, px), (0, 0, 0, 0))
     out.alpha_composite(im.resize((inner, inner), Image.LANCZOS), ((px - inner) // 2, (px - inner) // 2)); return out
@@ -26,8 +26,8 @@ def zoom(im, box, side=270):
     out = Image.new('RGBA', (side, side), (255, 252, 244, 255)); out.alpha_composite(c, ((side - c.width) // 2, (side - c.height) // 2)); return out
 BIG, RH, W = 270, 320, 2040
 sheet = Image.new('RGBA', (W, 110 + RH * len(ROWS)), PAPER); d = ImageDraw.Draw(sheet)
-d.text((24, 16), 'Guard, Counter and Jumping Spins: v4 (old) vs v5 (new). X-block, chambered back fist, slim kid. Disarm (approved) is untouched', font=F(26), fill=INK)
-for x, k in ((280, 'LARGE: old'), (570, 'LARGE: new'), (880, 'close-up: old'), (1170, 'close-up: new'), (1470, '30 pt: old / new'), (1690, '40 pt: old / new'), (1900, 'grey 30 pt')):
+d.text((24, 16), 'Guard, Counter, Jumping Spins: v4 (old) vs v5 final. Disarm (approved) and Strike untouched', font=F(26), fill=INK)
+for x, k in ((280, 'LARGE: old'), (570, 'LARGE: final'), (880, 'close-up: old'), (1170, 'close-up: final'), (1470, '30 pt: old / final'), (1690, '40 pt: old / final'), (1900, 'grey 30 pt')):
     d.text((x, 64), k, font=F(22), fill=SOFT)
 for i, (n, nm, note, box) in enumerate(ROWS):
     y = 110 + i * RH

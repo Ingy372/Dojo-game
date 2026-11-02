@@ -45,8 +45,8 @@ def fist(a, cx, cy, s, ang, clip=None):
     a.shape(poly(L(rrect_pts(.2 * s, .2 * s, .56 * s, .3 * s, .15 * s, .18))), SKIN, SKIN_S, lighten(SKIN, .45), ow=2.4, band=2.2, clip=clip)
 
 
-def sleeve(a, p0, p1, r0, r1, clip=None):
-    a.shape(cap(p0, p1, r0, r1), GI, GI_S, (255, 255, 250), ow=3.0, band=4.5, clip=clip)
+def sleeve(a, p0, p1, r0, r1, clip=None, ow=3.0, shade=GI_S, band=4.5):
+    a.shape(cap(p0, p1, r0, r1), GI, shade, (255, 255, 250), ow=ow, band=band, clip=clip)
 
 
 def limb(a, p0, p1, r0, r1, clip=None):
@@ -63,8 +63,8 @@ def head_front(a, cx, cy, r, clip=None):
     a.line([(cx - r * .22, cy + r * .55), (cx, cy + r * .66), (cx + r * .22, cy + r * .55)], INKC, 2.2, clip=clip)
 
 
-def gi_torso(a, cx, top, w, h, clip=None, belt_y=None, r=26):
-    a.shape(poly(rrect_pts(cx, top + h / 2, w, h, r)), GI, GI_S, (255, 255, 250), ow=3.2, band=5, clip=clip)
+def gi_torso(a, cx, top, w, h, clip=None, belt_y=None, r=26, ow=3.2, shade=GI_S, band=5):
+    a.shape(poly(rrect_pts(cx, top + h / 2, w, h, r)), GI, shade, (255, 255, 250), ow=ow, band=band, clip=clip)
     by = belt_y if belt_y is not None else top + h * .62
     a.shape(poly(rrect_pts(cx, by, w - 2, 15, 5)), BELT, BELT_S, lighten(BELT, .3), ow=2.6, band=3, clip=clip)
 
@@ -88,29 +88,41 @@ def arrow(a, pts, col, w, head, clip=None, outline=None):
 
 
 # ------------------------------------------------------------------ COUNTER: straight punch with a turn
-def counter(rim=RIMS['counter'], hx=104, f=.86, cx_=128, cy_=137, hr=22, ty=88, tw=52, th=76, belt=136, el=(118, 112), wr=(158, 108), fs=24,
-             rel=(52, 138), rwr=(86, 136), rfs=22, rs=26, ar=(62, 14), arrow_y=170, stance=(-28, 40), ank=204, burst_dx=34):
-    """v5: a reverse punch in a balanced stance. Feet wide apart on flat shoes, the front arm punching out to the right (sleeve, cuff band, clear wrist, one mitten fist,
-    a gold burst), the BACK hand pulled to the hip in a clean chambered fist (the forearm runs along the belt line, the fist sits on the belt, knuckles forward), a blue
-    spin arrow around the hips. Same head, sleeve, wrist and fist as Guard. 2 fists, 0 fingers, 0 toes."""
+GSH = (150, 156, 196)          # a darker gi shade for Counter and Jumping Spins so the white parts read in grey at 30 pt
+GK = dict(gow=4.6, gshade=GSH)  # the thicker ink outline + darker shade for sleeves and legs
+PANT = (238, 240, 248)
+
+
+def place_fit(med, art, wmax, hmax, cx=128, cy=128, bg=None, fmax=1.0):
+    """scale `art` to fit wmax x hmax U (its own bounding box), centre it at (cx, cy) on the medallion inside the face clip; `bg` (floor) uses the same transform."""
+    bb = art.im.getchannel('A').getbbox(); k = P(1)
+    w, h = (bb[2] - bb[0]) / k, (bb[3] - bb[1]) / k
+    f = min(wmax / w, hmax / h, fmax)
+    mx, my = (bb[0] + bb[2]) / 2 / k, (bb[1] + bb[3]) / 2 / k
+    for layer in ([bg] if bg is not None else []) + [art]:
+        place(med, layer, f, cx - f * mx, cy - f * my, face_clip())
+    return f
+
+
+def counter(rim=RIMS['counter'], hx=104, hr=22, ty=88, tw=52, th=76, belt=136, el=(118, 112), wr=(158, 108), fs=24,
+             rel=(52, 138), rwr=(84, 136), rfs=30, ar=(62, 14), arrow_y=168, stance=(-28, 40), ank=200, W=166, H=166, cx=128, cy=128):
+    """v5 pass 2: reverse punch, balanced stance, ink-dark sleeve/pant outlines and a darker gi shade so the white gi reads in grey at 30 pt; the figure is fitted bigger
+    with a bold chambered fist. 2 fists, 0 fingers, 0 toes."""
     med = medallion(rim); a = Art()
-    # legs: pants capsule from the hip to above the ankle, then a standing shoe
     for k, dx in enumerate(stance):
         hip = (hx + (-12 if k == 0 else 12), ty + th - 8)
         an = (hx + dx, ank)
-        sleeve(a, hip, (an[0], an[1] - 12), 13, 11)
-        kick_leg(a, an, 90, 0, .55, 14, None, r0=21, r1=18)
-    gi_torso(a, hx, ty, tw, th, belt_y=belt)
+        sleeve(a, hip, (an[0], an[1] - 12), 13, 11, ow=4.6, shade=GSH, band=6)
+        kick_leg(a, an, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
+    gi_torso(a, hx, ty, tw, th, belt_y=belt, ow=4.6, shade=GSH, band=6)
     limb(a, (hx, ty - 8), (hx, ty + 6), 8, 8)
     head_front(a, hx, ty - 24, hr)
-    # rear arm chambered at the hip (drawn first, the torso stays in front of the elbow side)
-    forearm_block(a, rel, rwr, rfs, 0, 1, r_el=11.5, r_cuff=10)
-    # punching arm
-    forearm_block(a, el, wr, fs, 0, 1, r_el=12.5, r_cuff=11)
+    forearm_block(a, rel, rwr, rfs, 0, 1, r_el=11.5, r_cuff=10, gband=6, **GK)
+    forearm_block(a, el, wr, fs, 0, 1, r_el=12.5, r_cuff=11, gband=6, **GK)
     burst(a, wr[0] + 8 + fs + 10, wr[1] - 4, 6.5, 14, 7, .3)
-    pts = [(hx + 8 + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 10, -8)]
-    arrow(a, pts, BLUE_S, 7, 15, outline=(255, 252, 240))
-    place(med, a, f, 128 - f * cx_, 128 - f * cy_, face_clip())
+    pts = [(hx + 8 + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 24, -8)]
+    arrow(a, pts, BLUE_S, 7, 18, outline=(255, 252, 240))
+    place_fit(med, a, W, H, cx, cy)
     return med.result()
 
 
@@ -124,14 +136,14 @@ def mitten_fist(a, cx, cy, s, ang, side=1, clip=None):
     a.line(L([(-.30 * s, side * .22 * s), (-.12 * s, side * .30 * s), (.12 * s, side * .30 * s), (.28 * s, side * .22 * s)]), SKIN_S, 2.6, clip=clip)
 
 
-def forearm_block(a, el, wr, fist_s, fist_ang, side, clip=None, r_el=14.5, r_cuff=12.5):
+def forearm_block(a, el, wr, fist_s, fist_ang, side, clip=None, r_el=14.5, r_cuff=12.5, gow=3.0, gshade=GI_S, gband=4.5):
     """v4 forearm: sleeve from the elbow to a cuff band, then a CLEAR skin wrist (narrower than both the cuff and the fist), then the mitten fist."""
     ex, ey = el
     wx, wy = wr
     ang = math.atan2(wy - ey, wx - ex)
     ux, uy = math.cos(ang), math.sin(ang)
-    sleeve(a, (ex, ey), (wx - ux * 8, wy - uy * 8), r_el, r_cuff, clip=clip)
-    a.shape(poly(rrect_pts(wx - ux * 8, wy - uy * 8, 9, 2 * r_cuff + 3, 3.5, ang)), GI, GI_S, (255, 255, 250), ow=2.4, band=2.4, clip=clip)   # cuff band
+    sleeve(a, (ex, ey), (wx - ux * 8, wy - uy * 8), r_el, r_cuff, clip=clip, ow=gow, shade=gshade, band=gband)
+    a.shape(poly(rrect_pts(wx - ux * 8, wy - uy * 8, 9, 2 * r_cuff + 3, 3.5, ang)), GI, gshade, (255, 255, 250), ow=gow - .6, band=2.4, clip=clip)   # cuff band
     limb(a, (wx - ux * 5, wy - uy * 5), (wx + ux * 8, wy + uy * 8), 7.2, 7.6, clip=clip)                                                     # wrist
     mitten_fist(a, wx + ux * (8 + fist_s * .42), wy + uy * (8 + fist_s * .42), fist_s, ang, side, clip=clip)
 
@@ -200,7 +212,7 @@ def stick(a, cx, cy, ang, clip=None, k=1.0):
     a.line(L([(-4, -6), (34, -6)]), lighten(PADB, .5), 2.6, clip=clip)                                           # soft sheen
 
 
-def kick_leg(a, ankle, ang_deg, flex=-14, sc=1.1, L_=120, clip=None, r0=21, r1=13.5):
+def kick_leg(a, ankle, ang_deg, flex=-14, sc=1.1, L_=120, clip=None, r0=21, r1=13.5, gow=3.0, gshade=GI_S):
     """v4 kicking leg (shared by Disarm, Strike and Jumping Spins). Shin, ankle and shoe are drawn ONCE in a standing frame (shin straight up from the ankle,
     toes right, sole down) and rotated as one rigid group by ang_deg - 90, so the shin-to-foot line cannot kink. Gi cuff, a short natural strip of ankle, then
     the shoe (blue foam upper with a gold collar, pale sole with a clear rounded heel). The foot is flexed about 90 degrees, as in a real front kick, so the SOLE
@@ -214,8 +226,8 @@ def kick_leg(a, ankle, ang_deg, flex=-14, sc=1.1, L_=120, clip=None, r0=21, r1=1
     a.shape(poly(G(rrect_pts(0, -4, 18.4, 18, 3))), SKIN, SKIN_S, lighten(SKIN, .4), ow=2.6, band=3.0, clip=clip)   # ankle, tucked under cuff and collar
     p0 = G([(0, -L_)])[0]
     p1 = G([(0, -12)])[0]
-    a.shape(cap(p0, p1, r0 * sc, r1 * sc), GI, GI_S, (255, 255, 250), ow=3.0, band=4.8, clip=clip)                  # gi shin
-    a.shape(poly(G(rrect_pts(0, -12, 2 * r1 + 3.5, 7, 3.2))), GI, GI_S, (255, 255, 250), ow=2.4, band=2.4, clip=clip)  # cuff
+    a.shape(cap(p0, p1, r0 * sc, r1 * sc), GI, gshade, (255, 255, 250), ow=gow, band=4.8, clip=clip)                  # gi shin
+    a.shape(poly(G(rrect_pts(0, -12, 2 * r1 + 3.5, 7, 3.2))), GI, gshade, (255, 255, 250), ow=gow - .6, band=2.4, clip=clip)  # cuff
     upper = chaikin([(-16, 0), (14, 0), (17, 9), (27, 15), (45, 20), (56, 26), (56, 33), (-21, 33), (-23, 14)], 2)
     a.shape(poly(G(upper, fl)), PADB, PADB_S, lighten(PADB, .35), ow=3.0, band=4.5, clip=clip)
     sole = chaikin([(-23, 31), (57, 31), (60, 38), (52, 44), (-16, 44), (-25, 39)], 2)
@@ -315,27 +327,38 @@ def place(med, art, f, dx, dy, clip):
     med.im.alpha_composite(lay)
 
 
-def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, tk=(98, 172), tang=104, f=.82, ccy=126, cx_=130,
-           tw=46, th=84, tr=16, ttop=84, belt=136, hr=22, arw=62, arrow_y=152, sleeve_r=(10, 9)):
-    """v5: a smiling kid in the air, now SLIM (a straight narrow gi torso in the same proportions as Counter, not a round blob). One leg kicks out and up and the other
-    stands under him (same rigid shin and flexed shoe as Disarm), one mitten fist up in a guard, a blue spin arrow round the waist, a floor shadow with two blue ripples
-    (the 'hits enemies close by' part) and a gold burst on the kicking shoe. 1 fist, 0 fingers, 0 toes."""
-    med = medallion(rim); fc = face_clip(); a = Art()
-    a.shape(poly(rrect_pts(128, 226, 200, 44, 10)), (214, 198, 134), (186, 168, 104), None, ow=0, band=4)
+def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, belt=130, hip=160, sw=48, ww=40, hr=22,
+           sl=((-9, 152), (-4, 176), (-12, 196)), arw=68, arrow_y=150, head=27, W=152, H=152, cx=128, cy=121):
+    """v5 pass 2: slim kid, slightly tapered jacket over pants with a belt break (belt, knot, tails), a natural standing leg (thigh, bent knee, shin, flat shoe),
+    the spin kick, a big spin arrowhead, ink-dark outlines for grey legibility. 1 fist, 0 fingers, 0 toes."""
+    med = medallion(rim); a = Art(); bg = Art()
+    fy = sl[2][1] + 19
+    bg.shape(poly(rrect_pts(128, fy + 19, 230, 44, 10)), (214, 198, 134), (186, 168, 104), None, ow=0, band=4)
     for rx, ry, al in ((66, 11, .65), (44, 7, .85)):
-        a.line(ell_pts(120, 207, rx, ry, 0, 40), (70, 150, 215), 3, closed=True, a=al)
-    a.fill_mask(mask_of(poly(ell_pts(114, 207, 30, 6))), (60, 44, 30), .4)
-    kick_leg(a, tk, tang, -14, .6, 120)
-    kick_leg(a, (kx, ky), kang, -14, .62, 120)
+        bg.line(ell_pts(120, fy, rx, ry, 0, 40), (70, 150, 215), 3, closed=True, a=al)
+    bg.fill_mask(mask_of(poly(ell_pts(114, fy, 30, 6))), (60, 44, 30), .4)
+    (h0, k0, a0) = [(hx + dx, y) for dx, y in sl]
+    sleeve(a, h0, k0, 13, 11.5, ow=4.6, shade=GSH, band=6)
+    sleeve(a, k0, (a0[0], a0[1] - 10), 11.5, 10.5, ow=4.6, shade=GSH, band=6)
+    kick_leg(a, a0, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
+    kick_leg(a, (kx, ky), kang, -14, .62, 120, **GK)
     burst(a, kx + 30, ky - 2, 7, 15, 7, .2)
-    gi_torso(a, hx, ttop, tw, th, belt_y=belt, r=tr)
+    jack = chaikin([(hx - sw / 2, ttop + 12), (hx - sw / 2 + 5, ttop), (hx + sw / 2 - 5, ttop), (hx + sw / 2, ttop + 12), (hx + ww / 2, belt), (hx - ww / 2, belt)], 2)
+    pants = chaikin([(hx - ww / 2 - 1, belt - 4), (hx + ww / 2 + 1, belt - 4), (hx + ww / 2 + 3, hip - 6), (hx + ww / 2 - 4, hip), (hx - ww / 2 + 4, hip), (hx - ww / 2 - 3, hip - 6)], 2)
+    a.shape(poly(pants), PANT, GSH, (255, 255, 250), ow=4.6, band=6)
+    a.shape(poly(jack), GI, GSH, (255, 255, 250), ow=4.6, band=6)
+    a.shape(poly(rrect_pts(hx, belt, ww + 6, 13, 5)), BELT, BELT_S, lighten(BELT, .3), ow=3.0, band=3)
+    for ang, dx in ((.35, 2), (-.2, 11)):
+        a.shape(poly(rrect_pts(hx + dx, belt + 17, 7, 17, 2.8, ang)), BELT, BELT_S, lighten(BELT, .3), ow=2.6, band=2)
+    a.shape(poly(rrect_pts(hx + 6, belt + 1, 9, 11, 3.5)), BELT, BELT_S, lighten(BELT, .3), ow=2.6, band=2)
     limb(a, (hx, ttop - 6), (hx, ttop + 6), 8, 8)
-    head_front(a, hx, ttop - 27, hr)
-    forearm_block(a, (hx - tw / 2 - 14, belt - 2), (hx - tw / 2 - 10, 96), 24, -math.pi / 2 + .1, 1, r_el=sleeve_r[0], r_cuff=sleeve_r[1])
-    front = [(hx + 8 + arw * math.cos(math.radians(t)), arrow_y + 17 * math.sin(math.radians(t))) for t in range(10, 178, 8)]
-    arrow(a, front, BLUE_S, 7, 15, outline=(255, 252, 240))
-    place(med, a, f, 128 - f * cx_, 128 - f * ccy, fc)
+    head_front(a, hx, ttop - 26, hr)
+    forearm_block(a, (hx - sw / 2 - 12, belt - 2), (hx - sw / 2 - 8, 96), 24, -math.pi / 2 + .1, 1, r_el=10, r_cuff=9, gband=6, **GK)
+    front = [(hx + 8 + arw * math.cos(math.radians(t)), arrow_y + 17 * math.sin(math.radians(t))) for t in range(10, 150, 7)]
+    arrow(a, front, BLUE_S, 8, head, outline=(255, 252, 240))
+    place_fit(med, a, W, H, cx, cy, bg=bg)
     return med.result()
+
 
 
 # ------------------------------------------------------------------ EMPTY SLOT
