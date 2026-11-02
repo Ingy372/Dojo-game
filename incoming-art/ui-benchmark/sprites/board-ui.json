@@ -1,0 +1,1330 @@
+{
+ "about": "R-BENCHMARK final export: Training Board kit sprites (B2), Tower Climb room icons (B4), final tab icons (B3). Sizes are 1x points; every file also exists as name@2x.png. nineSlice = [top, right, bottom, left] in 1x px (same as menu2.json).",
+ "shadowMargin": 6,
+ "rule": "No text in any sprite except the 師 seal glyph. Orange = ENTER THE TOWER only. No red anywhere in the UI. Guardian/boss is purple.",
+ "menu2Refs": {
+  "panel-frame": {
+   "file": "menu2/sprites/panel/panel-frame.png",
+   "size": [
+    192,
+    192
+   ],
+   "nineSlice": [
+    48,
+    48,
+    48,
+    48
+   ]
+  },
+  "panel-inset": {
+   "file": "menu2/sprites/panel/panel-inset.png",
+   "size": [
+    96,
+    96
+   ],
+   "nineSlice": [
+    24,
+    24,
+    24,
+    24
+   ]
+  },
+  "title-plaque": {
+   "file": "menu2/sprites/panel/title-plaque.png",
+   "size": [
+    160,
+    40
+   ],
+   "nineSlice": [
+    0,
+    22,
+    0,
+    22
+   ]
+  },
+  "xp-bar-frame": {
+   "file": "menu2/sprites/stats/xp-bar-frame.png",
+   "size": [
+    200,
+    20
+   ],
+   "nineSlice": [
+    0,
+    10,
+    0,
+    10
+   ]
+  },
+  "xp-bar-gloss": {
+   "file": "menu2/sprites/stats/xp-bar-gloss.png",
+   "size": [
+    192,
+    11
+   ],
+   "nineSlice": [
+    0,
+    6,
+    0,
+    6
+   ]
+  },
+  "stat-tile": {
+   "file": "menu2/sprites/stats/stat-tile.png",
+   "size": [
+    96,
+    64
+   ],
+   "nineSlice": [
+    16,
+    16,
+    16,
+    16
+   ]
+  },
+  "sheet-icon-well": {
+   "file": "menu2/sprites/sheet/sheet-icon-well.png",
+   "size": [
+    104,
+    104
+   ],
+   "nineSlice": null
+  },
+  "doll-backing": {
+   "file": "menu2/sprites/gear/doll-backing.png",
+   "size": [
+    96,
+    128
+   ],
+   "nineSlice": null
+  },
+  "gear-ring-common": {
+   "file": "menu2/sprites/gear/gear-ring-common.png",
+   "size": [
+    56,
+    56
+   ],
+   "nineSlice": null
+  },
+  "tray-tile-normal": {
+   "file": "menu2/sprites/tray/tray-tile-normal.png",
+   "size": [
+    84,
+    84
+   ],
+   "nineSlice": null
+  },
+  "cubby-earned": {
+   "file": "menu2/sprites/cubby/cubby-earned.png",
+   "size": [
+    112,
+    112
+   ],
+   "nineSlice": [
+    24,
+    24,
+    24,
+    24
+   ]
+  },
+  "cubby-notyet": {
+   "file": "menu2/sprites/cubby/cubby-notyet.png",
+   "size": [
+    112,
+    112
+   ],
+   "nineSlice": [
+    24,
+    24,
+    24,
+    24
+   ]
+  },
+  "switch-track": {
+   "file": "menu2/sprites/switch/switch-track.png",
+   "size": [
+    240,
+    52
+   ],
+   "nineSlice": [
+    0,
+    24,
+    0,
+    24
+   ]
+  },
+  "switch-left-on": {
+   "file": "menu2/sprites/switch/switch-left-on.png",
+   "size": [
+    120,
+    44
+   ],
+   "nineSlice": null
+  }
+ },
+ "menu2RefsNote": "These already exist in incoming-art/menu2/sprites (A-MENU2). Not copied here. The Board uses them as they are.",
+ "tabLayout": {
+  "unit": "pt",
+  "tabWidth": 126,
+  "gap": 6,
+  "firstTabX": 306,
+  "restingTop": 8,
+  "activeTop": 4,
+  "iconBox": 26,
+  "iconX": 14,
+  "iconCentreY": "tab centre (active: 2 pt higher)",
+  "labelX": 48,
+  "labelFont": "14 pt ExtraBold",
+  "labelColour": {
+   "normal": "#fff4dc with a #3c200e shadow",
+   "active": "#462a16"
+  },
+  "newDot": "x = tabLeft + 100, y = 8"
+ },
+ "tabs": [
+  "climb",
+  "gear",
+  "abilities",
+  "gate"
+ ],
+ "climbRooms": {
+  "mapping": {
+   "fight": "battle",
+   "chest": "treasure",
+   "shrine": "rest",
+   "door": "challenge",
+   "guardian": "boss"
+  },
+  "practice": null,
+  "note": "RoomKind also has \"practice\". It has NO icon here (only five were approved). Use the battle icon or ask Art for a sixth.",
+  "states": {
+   "cleared": "filled + gold check seal",
+   "current": "filled + cream-and-gold ring (you are here)",
+   "ahead": "outline ring only (not reached yet)"
+  },
+  "nominalSize": 46,
+  "bossScale": 1.2,
+  "artBox": 72
+ },
+ "ring": {
+  "steps": 24,
+  "start": "top, clockwise",
+  "file": "kit/ring/ring-NN.png (NN = 00..24)"
+ },
+ "sprites": {
+  "kit/button-enter": {
+   "file": "kit/button-enter.png",
+   "file2x": "kit/button-enter@2x.png",
+   "size": [
+    132,
+    56
+   ],
+   "nineSlice": [
+    27,
+    28,
+    27,
+    28
+   ],
+   "visibleRect": [
+    6,
+    6,
+    120,
+    44
+   ],
+   "shadowMargin": 6,
+   "state": "normal",
+   "note": "ENTER THE TOWER button (the only orange in the UI). Text cream with an orange-brown outline. 3-slice along x only (left and right caps 28 px, middle column stretches). Height is fixed at 44 pt. Text is drawn by the game."
+  },
+  "kit/button-enter-pressed": {
+   "file": "kit/button-enter-pressed.png",
+   "file2x": "kit/button-enter-pressed@2x.png",
+   "size": [
+    132,
+    56
+   ],
+   "nineSlice": [
+    27,
+    28,
+    27,
+    28
+   ],
+   "visibleRect": [
+    6,
+    6,
+    120,
+    44
+   ],
+   "shadowMargin": 6,
+   "state": "pressed",
+   "note": "ENTER THE TOWER, pressed (2 pt lower, short shadow). Move the text down 2 pt. 3-slice along x only (left and right caps 28 px, middle column stretches). Height is fixed at 44 pt. Text is drawn by the game."
+  },
+  "kit/button-gold": {
+   "file": "kit/button-gold.png",
+   "file2x": "kit/button-gold@2x.png",
+   "size": [
+    132,
+    56
+   ],
+   "nineSlice": [
+    27,
+    28,
+    27,
+    28
+   ],
+   "visibleRect": [
+    6,
+    6,
+    120,
+    44
+   ],
+   "shadowMargin": 6,
+   "state": "normal",
+   "note": "Gold lacquer main action (Climb again). Text dark ink #462a16. 3-slice along x only (left and right caps 28 px, middle column stretches). Height is fixed at 44 pt. Text is drawn by the game."
+  },
+  "kit/button-gold-pressed": {
+   "file": "kit/button-gold-pressed.png",
+   "file2x": "kit/button-gold-pressed@2x.png",
+   "size": [
+    132,
+    56
+   ],
+   "nineSlice": [
+    27,
+    28,
+    27,
+    28
+   ],
+   "visibleRect": [
+    6,
+    6,
+    120,
+    44
+   ],
+   "shadowMargin": 6,
+   "state": "pressed",
+   "note": "Gold, pressed. Move the text down 2 pt. 3-slice along x only (left and right caps 28 px, middle column stretches). Height is fixed at 44 pt. Text is drawn by the game."
+  },
+  "kit/button-wood": {
+   "file": "kit/button-wood.png",
+   "file2x": "kit/button-wood@2x.png",
+   "size": [
+    132,
+    56
+   ],
+   "nineSlice": [
+    27,
+    28,
+    27,
+    28
+   ],
+   "visibleRect": [
+    6,
+    6,
+    120,
+    44
+   ],
+   "shadowMargin": 6,
+   "state": "normal",
+   "note": "Wood button for secondary actions (Practice room, back to Dojo). Text cream with a dark shadow. 3-slice along x only (left and right caps 28 px, middle column stretches). Height is fixed at 44 pt. Text is drawn by the game."
+  },
+  "kit/button-wood-pressed": {
+   "file": "kit/button-wood-pressed.png",
+   "file2x": "kit/button-wood-pressed@2x.png",
+   "size": [
+    132,
+    56
+   ],
+   "nineSlice": [
+    27,
+    28,
+    27,
+    28
+   ],
+   "visibleRect": [
+    6,
+    6,
+    120,
+    44
+   ],
+   "shadowMargin": 6,
+   "state": "pressed",
+   "note": "Wood, pressed. 3-slice along x only (left and right caps 28 px, middle column stretches). Height is fixed at 44 pt. Text is drawn by the game."
+  },
+  "kit/button-wood-disabled": {
+   "file": "kit/button-wood-disabled.png",
+   "file2x": "kit/button-wood-disabled@2x.png",
+   "size": [
+    132,
+    56
+   ],
+   "nineSlice": [
+    27,
+    28,
+    27,
+    28
+   ],
+   "visibleRect": [
+    6,
+    6,
+    120,
+    44
+   ],
+   "shadowMargin": 6,
+   "state": "disabled",
+   "note": "Wood, disabled (locked). Text colour #bea07c. 3-slice along x only (left and right caps 28 px, middle column stretches). Height is fixed at 44 pt. Text is drawn by the game."
+  },
+  "kit/tab-normal": {
+   "file": "kit/tab-normal.png",
+   "file2x": "kit/tab-normal@2x.png",
+   "size": [
+    138,
+    56
+   ],
+   "nineSlice": [
+    20,
+    20,
+    12,
+    20
+   ],
+   "visibleRect": [
+    6,
+    6,
+    126,
+    44
+   ],
+   "shadowMargin": 6,
+   "state": "normal",
+   "note": "Wood tab, resting. Top of the shape is 8 pt below the active tab. 3-slice along x (20 px caps). Open at the bottom: the tab sits on the frame. Icon and label are drawn by the game."
+  },
+  "kit/tab-pressed": {
+   "file": "kit/tab-pressed.png",
+   "file2x": "kit/tab-pressed@2x.png",
+   "size": [
+    138,
+    56
+   ],
+   "nineSlice": [
+    20,
+    20,
+    12,
+    20
+   ],
+   "visibleRect": [
+    6,
+    6,
+    126,
+    44
+   ],
+   "shadowMargin": 6,
+   "state": "pressed",
+   "note": "Wood tab, pressed (darker). 3-slice along x (20 px caps). Open at the bottom: the tab sits on the frame. Icon and label are drawn by the game."
+  },
+  "kit/tab-active": {
+   "file": "kit/tab-active.png",
+   "file2x": "kit/tab-active@2x.png",
+   "size": [
+    138,
+    60
+   ],
+   "nineSlice": [
+    20,
+    20,
+    12,
+    20
+   ],
+   "visibleRect": [
+    6,
+    6,
+    126,
+    48
+   ],
+   "shadowMargin": 6,
+   "state": "active",
+   "note": "ACTIVE tab: raised honey-gold lacquer, 4 pt taller. Draw it 4 pt higher than the others. Label dark ink #462a16. 3-slice along x (20 px caps). Open at the bottom: the tab sits on the frame. Icon and label are drawn by the game."
+  },
+  "kit/new-dot": {
+   "file": "kit/new-dot.png",
+   "file2x": "kit/new-dot@2x.png",
+   "size": [
+    24,
+    24
+   ],
+   "visibleRect": [
+    6,
+    6,
+    12,
+    12
+   ],
+   "shadowMargin": 6,
+   "note": "Small gold \"something new\" dot. No number, never red. Sits at the tab's top-right: (tabLeft + tabWidth - 20, tabTop)."
+  },
+  "kit/paper-card": {
+   "file": "kit/paper-card.png",
+   "file2x": "kit/paper-card@2x.png",
+   "size": [
+    92,
+    72
+   ],
+   "nineSlice": [
+    18,
+    18,
+    18,
+    18
+   ],
+   "visibleRect": [
+    6,
+    6,
+    80,
+    60
+   ],
+   "shadowMargin": 6,
+   "note": "Cream paper card with a wood edge: the one paper tone on every tab. 9-slice 18 px (6 shadow + 10 corner + 2)."
+  },
+  "kit/ribbon-rooted": {
+   "file": "kit/ribbon-rooted.png",
+   "file2x": "kit/ribbon-rooted@2x.png",
+   "size": [
+    106,
+    34
+   ],
+   "nineSlice": [
+    0,
+    24,
+    0,
+    14
+   ],
+   "visibleRect": [
+    6,
+    6,
+    94,
+    22
+   ],
+   "shadowMargin": 6,
+   "note": "Rooted family ribbon (blue). Small bookmark flag with a notched tail. 3-slice along x: 14 px left cap, 24 px right cap (the notch)."
+  },
+  "kit/ribbon-flowing": {
+   "file": "kit/ribbon-flowing.png",
+   "file2x": "kit/ribbon-flowing@2x.png",
+   "size": [
+    106,
+    34
+   ],
+   "nineSlice": [
+    0,
+    24,
+    0,
+    14
+   ],
+   "visibleRect": [
+    6,
+    6,
+    94,
+    22
+   ],
+   "shadowMargin": 6,
+   "note": "Flowing family ribbon (green). Same shape and slice."
+  },
+  "kit/medallion-lit": {
+   "file": "kit/medallion-lit.png",
+   "file2x": "kit/medallion-lit@2x.png",
+   "size": [
+    50,
+    50
+   ],
+   "visibleRect": [
+    6,
+    6,
+    38,
+    38
+   ],
+   "shadowMargin": 6,
+   "state": "lit",
+   "note": "Gate lock seal, lit: gold with a check. Diameter 38 pt. One per lock that is lit."
+  },
+  "kit/medallion-locked": {
+   "file": "kit/medallion-locked.png",
+   "file2x": "kit/medallion-locked@2x.png",
+   "size": [
+    50,
+    50
+   ],
+   "visibleRect": [
+    6,
+    6,
+    38,
+    38
+   ],
+   "shadowMargin": 6,
+   "state": "locked",
+   "note": "Gate lock seal, locked: wood with a paper padlock. Diameter 38 pt."
+  },
+  "kit/ring/ring-00": {
+   "file": "kit/ring/ring-00.png",
+   "file2x": "kit/ring/ring-00@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "0/24",
+   "step": 0,
+   "of": 24,
+   "note": "Progress ring 0/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-01": {
+   "file": "kit/ring/ring-01.png",
+   "file2x": "kit/ring/ring-01@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "1/24",
+   "step": 1,
+   "of": 24,
+   "note": "Progress ring 1/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-02": {
+   "file": "kit/ring/ring-02.png",
+   "file2x": "kit/ring/ring-02@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "2/24",
+   "step": 2,
+   "of": 24,
+   "note": "Progress ring 2/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-03": {
+   "file": "kit/ring/ring-03.png",
+   "file2x": "kit/ring/ring-03@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "3/24",
+   "step": 3,
+   "of": 24,
+   "note": "Progress ring 3/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-04": {
+   "file": "kit/ring/ring-04.png",
+   "file2x": "kit/ring/ring-04@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "4/24",
+   "step": 4,
+   "of": 24,
+   "note": "Progress ring 4/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-05": {
+   "file": "kit/ring/ring-05.png",
+   "file2x": "kit/ring/ring-05@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "5/24",
+   "step": 5,
+   "of": 24,
+   "note": "Progress ring 5/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-06": {
+   "file": "kit/ring/ring-06.png",
+   "file2x": "kit/ring/ring-06@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "6/24",
+   "step": 6,
+   "of": 24,
+   "note": "Progress ring 6/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-07": {
+   "file": "kit/ring/ring-07.png",
+   "file2x": "kit/ring/ring-07@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "7/24",
+   "step": 7,
+   "of": 24,
+   "note": "Progress ring 7/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-08": {
+   "file": "kit/ring/ring-08.png",
+   "file2x": "kit/ring/ring-08@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "8/24",
+   "step": 8,
+   "of": 24,
+   "note": "Progress ring 8/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-09": {
+   "file": "kit/ring/ring-09.png",
+   "file2x": "kit/ring/ring-09@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "9/24",
+   "step": 9,
+   "of": 24,
+   "note": "Progress ring 9/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-10": {
+   "file": "kit/ring/ring-10.png",
+   "file2x": "kit/ring/ring-10@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "10/24",
+   "step": 10,
+   "of": 24,
+   "note": "Progress ring 10/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-11": {
+   "file": "kit/ring/ring-11.png",
+   "file2x": "kit/ring/ring-11@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "11/24",
+   "step": 11,
+   "of": 24,
+   "note": "Progress ring 11/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-12": {
+   "file": "kit/ring/ring-12.png",
+   "file2x": "kit/ring/ring-12@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "12/24",
+   "step": 12,
+   "of": 24,
+   "note": "Progress ring 12/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-13": {
+   "file": "kit/ring/ring-13.png",
+   "file2x": "kit/ring/ring-13@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "13/24",
+   "step": 13,
+   "of": 24,
+   "note": "Progress ring 13/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-14": {
+   "file": "kit/ring/ring-14.png",
+   "file2x": "kit/ring/ring-14@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "14/24",
+   "step": 14,
+   "of": 24,
+   "note": "Progress ring 14/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-15": {
+   "file": "kit/ring/ring-15.png",
+   "file2x": "kit/ring/ring-15@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "15/24",
+   "step": 15,
+   "of": 24,
+   "note": "Progress ring 15/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-16": {
+   "file": "kit/ring/ring-16.png",
+   "file2x": "kit/ring/ring-16@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "16/24",
+   "step": 16,
+   "of": 24,
+   "note": "Progress ring 16/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-17": {
+   "file": "kit/ring/ring-17.png",
+   "file2x": "kit/ring/ring-17@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "17/24",
+   "step": 17,
+   "of": 24,
+   "note": "Progress ring 17/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-18": {
+   "file": "kit/ring/ring-18.png",
+   "file2x": "kit/ring/ring-18@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "18/24",
+   "step": 18,
+   "of": 24,
+   "note": "Progress ring 18/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-19": {
+   "file": "kit/ring/ring-19.png",
+   "file2x": "kit/ring/ring-19@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "19/24",
+   "step": 19,
+   "of": 24,
+   "note": "Progress ring 19/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-20": {
+   "file": "kit/ring/ring-20.png",
+   "file2x": "kit/ring/ring-20@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "20/24",
+   "step": 20,
+   "of": 24,
+   "note": "Progress ring 20/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-21": {
+   "file": "kit/ring/ring-21.png",
+   "file2x": "kit/ring/ring-21@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "21/24",
+   "step": 21,
+   "of": 24,
+   "note": "Progress ring 21/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-22": {
+   "file": "kit/ring/ring-22.png",
+   "file2x": "kit/ring/ring-22@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "22/24",
+   "step": 22,
+   "of": 24,
+   "note": "Progress ring 22/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-23": {
+   "file": "kit/ring/ring-23.png",
+   "file2x": "kit/ring/ring-23@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "23/24",
+   "step": 23,
+   "of": 24,
+   "note": "Progress ring 23/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/ring/ring-24": {
+   "file": "kit/ring/ring-24.png",
+   "file2x": "kit/ring/ring-24@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "24/24",
+   "step": 24,
+   "of": 24,
+   "note": "Progress ring 24/24 (gold arc from the top, clockwise, on a wood track). Diameter 64 pt. Pick the nearest of 25 steps; ring-24 is full."
+  },
+  "kit/sensei-seal-unlit": {
+   "file": "kit/sensei-seal-unlit.png",
+   "file2x": "kit/sensei-seal-unlit@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "unlit",
+   "note": "Sensei's Seal, not lit yet: paper stamp with the 師 character (master) in muted brown. Diameter 64 pt."
+  },
+  "kit/sensei-seal-lit": {
+   "file": "kit/sensei-seal-lit.png",
+   "file2x": "kit/sensei-seal-lit@2x.png",
+   "size": [
+    76,
+    76
+   ],
+   "visibleRect": [
+    6,
+    6,
+    64,
+    64
+   ],
+   "shadowMargin": 6,
+   "state": "lit",
+   "note": "Sensei's Seal, lit (Sensei says you are ready): gold with the 師 in dark brown. Cross-fade from unlit over about 0.3 s."
+  },
+  "kit/level-fill-gold": {
+   "file": "kit/level-fill-gold.png",
+   "file2x": "kit/level-fill-gold@2x.png",
+   "size": [
+    192,
+    11
+   ],
+   "nineSlice": [
+    0,
+    6,
+    0,
+    6
+   ],
+   "note": "Level bar fill, gold-tinted. Frame = menu2 xp-bar-frame (see menu2Refs). Draw the fill 4 pt inside the frame, width = (frameWidth - 8) * fraction, 11 pt tall. 3-slice along x, 6 px caps. Gloss = menu2 xp-bar-gloss on top."
+  },
+  "kit/floor-mat": {
+   "file": "kit/floor-mat.png",
+   "file2x": "kit/floor-mat@2x.png",
+   "size": [
+    202,
+    34
+   ],
+   "visibleRect": [
+    6,
+    6,
+    190,
+    22
+   ],
+   "shadowMargin": 6,
+   "note": "Tatami floor mat the hero stands on (flat oval). Hero feet at the middle of the mat."
+  },
+  "wall/wall-844x390": {
+   "file": "wall/wall-844x390.png",
+   "file2x": "wall/wall-844x390@2x.png",
+   "size": [
+    844,
+    390
+   ],
+   "note": "The wood wall behind every tab, one image at the 844 x 390 design size. Scale to cover. Vertical planks every 58 pt."
+  },
+  "tab-icons/tab-icon-climb": {
+   "file": "tab-icons/tab-icon-climb.png",
+   "file2x": "tab-icons/tab-icon-climb@2x.png",
+   "size": [
+    26,
+    26
+   ],
+   "tab": "climb",
+   "note": "B3 final climb tab icon, 26 pt box. Dark outline so it reads on the wood tab and on the gold active tab. No red."
+  },
+  "tab-icons/tab-icon-gear": {
+   "file": "tab-icons/tab-icon-gear.png",
+   "file2x": "tab-icons/tab-icon-gear@2x.png",
+   "size": [
+    26,
+    26
+   ],
+   "tab": "gear",
+   "note": "B3 final gear tab icon, 26 pt box. Dark outline so it reads on the wood tab and on the gold active tab. No red."
+  },
+  "tab-icons/tab-icon-abilities": {
+   "file": "tab-icons/tab-icon-abilities.png",
+   "file2x": "tab-icons/tab-icon-abilities@2x.png",
+   "size": [
+    26,
+    26
+   ],
+   "tab": "abilities",
+   "note": "B3 final abilities tab icon, 26 pt box. Dark outline so it reads on the wood tab and on the gold active tab. No red."
+  },
+  "tab-icons/tab-icon-gate": {
+   "file": "tab-icons/tab-icon-gate.png",
+   "file2x": "tab-icons/tab-icon-gate@2x.png",
+   "size": [
+    26,
+    26
+   ],
+   "tab": "gate",
+   "note": "B3 final gate tab icon, 26 pt box. Dark outline so it reads on the wood tab and on the gold active tab. No red."
+  },
+  "climb/battle-cleared": {
+   "file": "climb/battle-cleared.png",
+   "file2x": "climb/battle-cleared@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "cleared",
+   "room": "battle",
+   "hue": "blue",
+   "note": "Tower Climb battle room, blue, cleared: filled + gold check seal. 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/battle-current": {
+   "file": "climb/battle-current.png",
+   "file2x": "climb/battle-current@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "current",
+   "room": "battle",
+   "hue": "blue",
+   "note": "Tower Climb battle room, blue, current: filled + cream-and-gold ring (you are here). 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/battle-ahead": {
+   "file": "climb/battle-ahead.png",
+   "file2x": "climb/battle-ahead@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "ahead",
+   "room": "battle",
+   "hue": "blue",
+   "note": "Tower Climb battle room, blue, ahead: outline ring only (not reached yet). 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/treasure-cleared": {
+   "file": "climb/treasure-cleared.png",
+   "file2x": "climb/treasure-cleared@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "cleared",
+   "room": "treasure",
+   "hue": "gold",
+   "note": "Tower Climb treasure room, gold, cleared: filled + gold check seal. 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/treasure-current": {
+   "file": "climb/treasure-current.png",
+   "file2x": "climb/treasure-current@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "current",
+   "room": "treasure",
+   "hue": "gold",
+   "note": "Tower Climb treasure room, gold, current: filled + cream-and-gold ring (you are here). 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/treasure-ahead": {
+   "file": "climb/treasure-ahead.png",
+   "file2x": "climb/treasure-ahead@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "ahead",
+   "room": "treasure",
+   "hue": "gold",
+   "note": "Tower Climb treasure room, gold, ahead: outline ring only (not reached yet). 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/rest-cleared": {
+   "file": "climb/rest-cleared.png",
+   "file2x": "climb/rest-cleared@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "cleared",
+   "room": "rest",
+   "hue": "green",
+   "note": "Tower Climb rest room, green, cleared: filled + gold check seal. 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/rest-current": {
+   "file": "climb/rest-current.png",
+   "file2x": "climb/rest-current@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "current",
+   "room": "rest",
+   "hue": "green",
+   "note": "Tower Climb rest room, green, current: filled + cream-and-gold ring (you are here). 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/rest-ahead": {
+   "file": "climb/rest-ahead.png",
+   "file2x": "climb/rest-ahead@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "ahead",
+   "room": "rest",
+   "hue": "green",
+   "note": "Tower Climb rest room, green, ahead: outline ring only (not reached yet). 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/challenge-cleared": {
+   "file": "climb/challenge-cleared.png",
+   "file2x": "climb/challenge-cleared@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "cleared",
+   "room": "challenge",
+   "hue": "orchid",
+   "note": "Tower Climb challenge room, orchid, cleared: filled + gold check seal. 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/challenge-current": {
+   "file": "climb/challenge-current.png",
+   "file2x": "climb/challenge-current@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "current",
+   "room": "challenge",
+   "hue": "orchid",
+   "note": "Tower Climb challenge room, orchid, current: filled + cream-and-gold ring (you are here). 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/challenge-ahead": {
+   "file": "climb/challenge-ahead.png",
+   "file2x": "climb/challenge-ahead@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "ahead",
+   "room": "challenge",
+   "hue": "orchid",
+   "note": "Tower Climb challenge room, orchid, ahead: outline ring only (not reached yet). 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/boss-cleared": {
+   "file": "climb/boss-cleared.png",
+   "file2x": "climb/boss-cleared@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "cleared",
+   "room": "boss",
+   "hue": "purple",
+   "note": "Tower Climb boss room, purple, cleared: filled + gold check seal. 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/boss-current": {
+   "file": "climb/boss-current.png",
+   "file2x": "climb/boss-current@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "current",
+   "room": "boss",
+   "hue": "purple",
+   "note": "Tower Climb boss room, purple, current: filled + cream-and-gold ring (you are here). 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  },
+  "climb/boss-ahead": {
+   "file": "climb/boss-ahead.png",
+   "file2x": "climb/boss-ahead@2x.png",
+   "size": [
+    72,
+    72
+   ],
+   "state": "ahead",
+   "room": "boss",
+   "hue": "purple",
+   "note": "Tower Climb boss room, purple, ahead: outline ring only (not reached yet). 72 pt art box, shape inset 4 pt. Nominal draw size 46 pt (boss 1.2x)."
+  }
+ }
+}
