@@ -12,6 +12,13 @@ import { TILE, WalkScene, type Facing } from './WalkScene';
  * nothing yet. The door at the bottom leads back outside (A4-DOJO-ii), where you stand at the
  * double doors; a glowing mat with an arrow marks it.
  */
+/**
+ * Q-PREMIUM-2 QA: the exit glow's middle and height, in tiles. The exit rectangle (inside-room.json) starts 0.1 tile
+ * inside the glow's top edge, so a tap anywhere on the glow walks the hero into the exit. A test pins the pair.
+ */
+export const EXIT_CUE_Y = 18.2;
+export const EXIT_CUE_H = 0.8;
+
 export class InsideScene extends WalkScene {
   /** Seat backs and bag tops, each hidden unless the hero's feet are north of its sort row. */
   private tops: Array<{ images: Phaser.GameObjects.Image[]; sortRow: number }> = [];
@@ -59,7 +66,7 @@ export class InsideScene extends WalkScene {
     // The way out: a glow on the floor in front of the door with an arrow pointing at it, drawn
     // under the hero and the props.
     const [x0, x1] = INSIDE.exit;
-    const cue = addExitCue(this, ((x0 + x1) / 2) * TILE, 17.5 * TILE, (x1 - x0) * TILE, 0.8 * TILE, 'down');
+    const cue = addExitCue(this, ((x0 + x1) / 2) * TILE, EXIT_CUE_Y * TILE, (x1 - x0) * TILE, EXIT_CUE_H * TILE, 'down', 22);
     // Bottom to top: floor, walls, props; the exit cue; what stands and the hero; seat backs and
     // bag tops; the front wall.
     const topLayer = this.add.container(0, 0, tops.flat());

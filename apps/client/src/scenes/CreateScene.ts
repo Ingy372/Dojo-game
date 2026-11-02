@@ -74,25 +74,31 @@ export class CreateScene extends Phaser.Scene {
     this.text(leftW / 2, pad + 30, sub, 13, '#f2e9d8').setOrigin(0.5, 0).setAlign('center').setWordWrapWidth(leftW - 24, true);
 
     const r = Math.min(height * 0.16, leftW * 0.2);
-    const cy = height * 0.56;
+    const cy = height * 0.5;
     this.ui.add(this.add.ellipse(leftW / 2, cy + r * 1.25, r * 3, r * 0.9, GOLD, 0.12));
     this.character = makeStandingCharacter(this, leftW / 2, cy, r, this.training.belt, this.training.stripesThisBelt, this.look);
     this.ui.add(this.character.container);
-    this.text(leftW / 2, height - pad - 18, `${this.training.displayName}  ·  ${this.training.belt.name}`, 13, '#b9ad99').setOrigin(0.5);
+    // Q-PREMIUM-2 M3: the big buttons now sit under the character, so the right panel
+    // keeps the whole height for finger-sized colour swatches.
+    const by = height - pad - MIN_TAP;
+    this.text(leftW / 2, by - 14, `${this.training.displayName}  ·  ${this.training.belt.name}`, 13, '#b9ad99').setOrigin(0.5);
+    const doneW = this.first ? leftW - 2 * pad : (leftW - 2 * pad - S2) / 2;
+    this.button(pad + (this.first ? 0 : doneW + S2), by, doneW, MIN_TAP, this.first ? "Let's go!" : 'Done', GREEN, 18, () => this.finish(true));
+    if (!this.first) this.button(pad, by, doneW, MIN_TAP, '◀ Back', 0x5b4a3c, 15, () => this.finish(false));
 
     // ---- right: the choices
     const x0 = leftW + 8;
     const w = width - x0 - pad;
     const labelW = Math.min(96, w * 0.24);
-    const top = pad;
-    // P-MENU-e: Body, Eyes and Hairstyle rows hold buttons, so they are tall enough for
-    // 44 pt buttons; the three colour rows share what is left (their dots tap by the whole cell).
-    const bottomH = MIN_TAP + S2;
-    const btnRowH = MIN_TAP + S1;
-    const dotRowH = Math.min(52, (height - top - bottomH - pad - 12 - 3 * btnRowH) / 3);
+    const top = height < 350 ? 6 : Math.min(pad, 10);
+    // P-MENU-e: Body, Eyes and Hairstyle rows hold 44 pt buttons. Q-PREMIUM-2 M3: the three colour
+    // rows share the rest of the panel, each as two rows of five swatches (30 to 40 px, whole cell taps).
+    const btnRowH = MIN_TAP + 2;
+    const panelH = height - 2 * top;
+    const dotRowH = Math.min(100, (panelH - 12 - 3 * btnRowH) / 3);
     const panel = this.add.graphics();
-    panel.fillStyle(PANEL, 0.9).fillRoundedRect(x0 - 6, top - 6, w + 12, 3 * (btnRowH + dotRowH) + 12, RADIUS.panel);
-    panel.lineStyle(2, GOLD, 0.25).strokeRoundedRect(x0 - 6, top - 6, w + 12, 3 * (btnRowH + dotRowH) + 12, RADIUS.panel);
+    panel.fillStyle(PANEL, 0.9).fillRoundedRect(x0 - 6, top - 6, w + 12, panelH, RADIUS.panel);
+    panel.lineStyle(2, GOLD, 0.25).strokeRoundedRect(x0 - 6, top - 6, w + 12, panelH, RADIUS.panel);
     this.ui.add(panel);
     let y = top;
     let rowH = btnRowH;
@@ -121,12 +127,6 @@ export class CreateScene extends Phaser.Scene {
     this.swatches(row('Skin'), rowH, pal.skin ?? [], this.look.skin, (skin) => this.change({ skin }));
     this.swatches(row('Hair colour'), rowH, pal.hair ?? [], this.look.hairColor, (hairColor) => this.change({ hairColor }));
     this.swatches(row('Gi'), rowH, pal.gi ?? [], this.look.gi, (gi) => this.change({ gi }));
-
-    // ---- bottom: done (and, after the first time, back without changing anything)
-    const by = height - pad - MIN_TAP;
-    const doneW = Math.min(200, w * 0.5);
-    this.button(width - pad - doneW, by, doneW, MIN_TAP, this.first ? "Let's go!" : 'Done', GREEN, 18, () => this.finish(true));
-    if (!this.first) this.button(x0, by, Math.min(120, w * 0.3), MIN_TAP, '◀ Back', 0x5b4a3c, 15, () => this.finish(false));
   }
 
   private change(part: Partial<PlayerLook>): void {
@@ -152,33 +152,34 @@ export class CreateScene extends Phaser.Scene {
     this.button(at.x + at.w - bw, at.y + (rowH - h) / 2, bw, h, '▶', 0x4a3f63, 20, go(1));
     // No words or numbers to read: one dot per option, the chosen one big and gold.
     const n = list.length;
-    const gap = Math.min(14, (at.w - 2 * bw - 16) / n);
+    const gap = Math.min(18, (at.w - 2 * bw - 16) / n);
     const g = this.add.graphics();
     for (let k = 0; k < n; k++) {
       const dx = at.x + at.w / 2 + (k - (n - 1) / 2) * gap;
-      if (k === i) g.fillStyle(GOLD, 1).fillCircle(dx, at.y + rowH / 2, 5.5);
-      else g.fillStyle(0xf2e9d8, 0.45).fillCircle(dx, at.y + rowH / 2, 3);
+      if (k === i) g.fillStyle(GOLD, 1).fillCircle(dx, at.y + rowH / 2, 7);
+      else g.fillStyle(0xf2e9d8, 0.45).fillCircle(dx, at.y + rowH / 2, 4);
     }
     this.ui.add(g);
     void name;
   }
 
-  /** A row of colour circles; the chosen one has a gold ring. */
+  /** Ten colour circles in two rows of five; the chosen one has a gold ring. */
   private swatches(at: { x: number; y: number; w: number }, rowH: number, colors: string[], cur: number, pick: (i: number) => void): void {
     const n = Math.min(SWATCHES, colors.length);
-    const cell = at.w / n;
-    const rad = Math.min(15, cell * 0.4, rowH * 0.32);
+    const perRow = Math.ceil(n / 2);
+    const cell = at.w / perRow;
+    const cellH = rowH / 2;
+    const rad = Math.min(20, cell * 0.36, (cellH - 3) / 2);
     colors.slice(0, n).forEach((hex, i) => {
-      const cx = at.x + cell * (i + 0.5);
-      const cy = at.y + rowH / 2;
+      const cx = at.x + cell * ((i % perRow) + 0.5);
+      const cy = at.y + cellH * (Math.floor(i / perRow) + 0.5);
       const on = i === cur;
       // A light rim so dark swatches show on the dark panel (A7): thicker and solid on the dark ones.
       const c = Phaser.Display.Color.HexStringToColor(hex);
       const dark = (0.2126 * c.red + 0.7152 * c.green + 0.0722 * c.blue) / 255 < 0.35;
-      const dot = this.add.circle(cx, cy, rad, c.color).setStrokeStyle(on ? 4 : dark ? 3 : 2, on ? GOLD : 0xf2e9d8, on || dark ? 1 : 0.6);
-      if (on) this.ui.add(this.add.circle(cx, cy, rad + 5).setStrokeStyle(2, GOLD, 0.5));
+      const dot = this.add.circle(cx, cy, rad - 2, c.color).setStrokeStyle(on ? 4 : dark ? 3 : 2, on ? GOLD : 0xf2e9d8, on || dark ? 1 : 0.6);
       // The whole cell is the tap target, so small fingers don't miss.
-      dot.setInteractive(new Phaser.Geom.Rectangle(rad - cell / 2, rad - rowH / 2, cell, rowH), Phaser.Geom.Rectangle.Contains);
+      dot.setInteractive(new Phaser.Geom.Rectangle(rad - 2 - cell / 2, rad - 2 - cellH / 2, cell, cellH), Phaser.Geom.Rectangle.Contains);
       dot.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
         sfx.unlock();
         pick(i);

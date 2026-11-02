@@ -136,6 +136,8 @@ export interface TrophyLayout {
 }
 
 const LABEL_H = TYPE.label + 4;
+/** Q-PREMIUM-2: a one-row cubby this wide fits a two-line kata name; narrower, the ribbon slims. */
+export const CUBBY_ONE_ROW = 80;
 
 /** Trophy Case layout for a w x h area under the switch: 2 shelf rows per page when they fit, else 1. */
 export function trophyLayout(w: number, h: number): TrophyLayout {
@@ -151,9 +153,14 @@ export function trophyLayout(w: number, h: number): TrophyLayout {
     return { rowsPerPage: 2, cubby: c2, perRow: perRowFor(w2, c2), rowH: LABEL_H + c2 + gap, ribbonH: BOARD.ribbonCompact, sideArrows: true, pagerH: BOARD.dotsH, shelfX: side, shelfW: w2 };
   }
   // One row: full ribbon, the 44-tall ◀ dots ▶ pager below.
-  const room = h - BOARD.ribbonH - S2 - MIN_TAP - S2;
+  // Q-PREMIUM-2 H2: on a short phone (667x320) the full ribbon leaves cubbies under CUBBY_ONE_ROW, too
+  // narrow for "David and Goliath" in two lines; the slim ribbon gives the cubbies the 12 px back.
+  const roomFull = h - BOARD.ribbonH - S2 - MIN_TAP - S2;
+  const slim = Math.min(sized(w), roomFull - LABEL_H) < CUBBY_ONE_ROW;
+  const ribbonH = slim ? BOARD.ribbonCompact : BOARD.ribbonH;
+  const room = h - ribbonH - S2 - MIN_TAP - S2;
   const c = Math.max(MIN_TAP, Math.min(sized(w), room - LABEL_H));
-  return { rowsPerPage: 1, cubby: c, perRow: perRowFor(w, c), rowH: LABEL_H + c + gap, ribbonH: BOARD.ribbonH, sideArrows: false, pagerH: MIN_TAP, shelfX: 0, shelfW: w };
+  return { rowsPerPage: 1, cubby: c, perRow: perRowFor(w, c), rowH: LABEL_H + c + gap, ribbonH, sideArrows: false, pagerH: MIN_TAP, shelfX: 0, shelfW: w };
 }
 
 /** Rows split into pages (shown as dots, never "n / m"). */

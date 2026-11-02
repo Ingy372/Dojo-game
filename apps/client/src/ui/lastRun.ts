@@ -157,17 +157,22 @@ export interface LastRunLayout {
 }
 
 /**
+ * Q-PREMIUM-2 H2: when only part of the contents shows (visibleH < h, a 667x320 phone) the loot (Found and
+ * New for you) sits right under the banner, so the reward is the first thing seen. The chips, stats and bar
+ * follow it and the contents scroll to them; Always (Strikes, Seals) takes the row Found left. Same total height.
  * Panel coordinates (0,0 = the panel's top-left inside its padding). Everything sits inside w×h
  * at 667×375, 844×390 and 932×430; every tap is at least 44 on each side.
  */
 /** Q-PREM-F8: clear space above Again! (12). Nothing tappable sits within 8 px above it, scrolled or not. */
 export const AGAIN_CLEAR = S2 + S1;
 
-export function lastRunLayout(w: number, h: number, chipCount: number, statCount: number, foundCount: number): LastRunLayout {
+export function lastRunLayout(w: number, h: number, chipCount: number, statCount: number, foundCount: number, visibleH: number = h): LastRunLayout {
   const bestsW = 96;
   const banner = { x: 0, y: 0, w: w - bestsW - S2, h: MIN_TAP };
   const bests = { x: w - bestsW, y: 0, w: bestsW, h: MIN_TAP };
-  const chipsY = MIN_TAP + S1;
+  const lootFirst = h < 300 && visibleH < h;
+  const lootBlock = lootFirst ? TYPE.label + S1 + MIN_TAP + S1 : 0;
+  const chipsY = MIN_TAP + S1 + lootBlock;
   const chipStep = Math.min(MIN_TAP, Math.floor(w / Math.max(1, chipCount)));
   // Short phones (under 300 tall inside the scroll) get 24 pt chips, 52 pt tiles and 4 pt gaps.
   const compact = h < 300;
@@ -183,7 +188,7 @@ export function lastRunLayout(w: number, h: number, chipCount: number, statCount
   // give up the shortfall (never under MIN_TAP). At 667x375 that's 5 px: 52 -> 47.
   const barH = compact ? 10 : 12;
   const roughNewTop = tilesY + baseTileH + gap + barH + gap + TYPE.label + S1;
-  const short = Math.max(0, roughNewTop + MIN_TAP + AGAIN_CLEAR - (h - MIN_TAP));
+  const short = lootFirst ? 0 : Math.max(0, roughNewTop + MIN_TAP + AGAIN_CLEAR - (h - MIN_TAP));
   const tileH = Math.max(MIN_TAP, baseTileH - short);
   const tileW = (w - (nTiles - 1) * S2) / nTiles;
   const tiles = Array.from({ length: nTiles }, (_, i) => ({ x: i * (tileW + S2), y: tilesY, w: tileW, h: tileH }));
@@ -193,21 +198,21 @@ export function lastRunLayout(w: number, h: number, chipCount: number, statCount
   const rightW = Math.max(112, Math.min(200, Math.round(w * 0.34)));
   const leftW = w - rightW - S3;
   const again = { x: w - rightW, y: h - MIN_TAP, w: rightW, h: MIN_TAP };
-  const newLabelY = lowerY;
-  const newTop = lowerY + TYPE.label + S1;
-  const newH = Math.max(MIN_TAP, Math.min(96, again.y - AGAIN_CLEAR - newTop));
-  const newCard = { x: w - rightW, y: newTop, w: Math.min(rightW, Math.max(newH, 96)), h: newH };
+  const newLabelY = lootFirst ? MIN_TAP + S1 : lowerY;
+  const newTop = newLabelY + TYPE.label + S1;
+  const newH = lootFirst ? MIN_TAP : Math.max(MIN_TAP, Math.min(96, again.y - AGAIN_CLEAR - newTop));
+  const newCard = { x: w - rightW, y: newTop, w: lootFirst ? rightW : Math.min(rightW, Math.max(newH, 96)), h: newH };
 
   const foundTile = MIN_TAP;
-  const foundLabelY = lowerY;
-  const foundY = lowerY + TYPE.label + S1;
+  const foundLabelY = lootFirst ? MIN_TAP + S1 : lowerY;
+  const foundY = foundLabelY + TYPE.label + S1;
   const fits = (room: number) => Math.max(1, Math.floor((room + S1) / (foundTile + S1)));
   const all = fits(leftW);
   const arrows = foundCount > all;
   // More than fit: one ▶ at the end turns the page (and wraps back to the first).
   const perPage = arrows ? fits(leftW - (MIN_TAP + S1)) : all;
   const found = { x: 0, y: foundY, w: arrows ? leftW - (MIN_TAP + S1) : leftW, h: foundTile };
-  const alwaysLabelY = foundY + foundTile + S1;
+  const alwaysLabelY = lootFirst ? lowerY : foundY + foundTile + S1;
   const alwaysY = alwaysLabelY + TYPE.label + S1;
   const alwaysIcon = Math.max(0, Math.min(32, h - alwaysY));
   const perAlways = alwaysIcon >= 24 ? Math.floor((leftW + S1) / (alwaysIcon + S1)) : 0;
