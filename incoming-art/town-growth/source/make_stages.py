@@ -19,22 +19,25 @@ from PIL import Image, ImageChops, ImageDraw, ImageFilter
 from scipy.ndimage import gaussian_filter
 HERE = os.path.dirname(os.path.abspath(__file__)); OUT = os.path.join(HERE, "..")
 TS = os.path.join(HERE, "..", "..", "town-square-concept", "source"); AZ = os.path.join(HERE, "..", "..", "action-zone-dojo")
+sys.path.insert(0, HERE); import blue_extras as BX
 PPT = 80; SHIFT = int(0.95 * PPT); W, H = 1864, 860; FS = 0.92
 STAGES = {"white": (1, "white"), "green": (4, "green"), "blue": (5, "blue")}   # order, belt
 CFG = {
-    "white": dict(shadow=0.38, scol=(0.80, 0.84, 0.92), rim=0.14, rimc=(236, 236, 226), warm=(1.0, 0.99, 0.96), sat=0.74, con=0.94, expo=1.0,
+    "whitesmog": dict(shadow=0.38, scol=(0.80, 0.84, 0.92), rim=0.14, rimc=(236, 236, 226), warm=(1.0, 0.99, 0.96), sat=0.74, con=0.94, expo=1.0,
                   stint=(0.97, 0.97, 0.92), htint=(1.0, 0.99, 0.96), lift=0.08, vig=0.16, bloom=0.0, blot=0.05, glow=0.0),
+    "white": dict(shadow=0.52, scol=(0.74, 0.80, 0.95), rim=0.22, rimc=(240, 238, 226), warm=(1.02, 1.0, 0.96), sat=0.94, con=1.02, expo=1.0,
+                  stint=(0.96, 0.96, 0.98), htint=(1.02, 1.0, 0.97), lift=0.0, vig=0.08, bloom=0.0, blot=0.04, glow=0.0),
     "green": dict(shadow=0.70, scol=(0.66, 0.75, 1.0), rim=0.36, rimc=(255, 244, 214), warm=(1.05, 1.02, 0.95), sat=1.18, con=1.11, expo=0.98,
                   stint=(0.92, 0.95, 1.04), htint=(1.04, 1.02, 0.97), lift=0.0, vig=0.07, bloom=0.10, blot=0.03, glow=0.0),
     "blue": dict(shadow=0.74, scol=(0.64, 0.68, 0.98), rim=0.52, rimc=(255, 226, 160), warm=(1.06, 1.01, 0.90), sat=1.26, con=1.15, expo=0.96,
                  stint=(0.90, 0.91, 1.05), htint=(1.07, 1.02, 0.92), lift=0.0, vig=0.11, bloom=0.30, blot=0.03, glow=0.09)}
 
 # ------------------------------------------------------------------ sky
-def sky_far(stage, variant):
+def sky_far(stage, variant):     # 'stage' here is the STYLE: white (clear air), whitesmog (the smoggy look that the smog layer is fitted to), green, blue
     if variant == "day":
-        SK = {"white": [(176, 192, 205), (224, 229, 231)], "green": [(112, 186, 246), (226, 245, 255)],
+        SK = {"whitesmog": [(176, 192, 205), (224, 229, 231)], "white": [(124, 178, 232), (226, 242, 252)], "green": [(112, 186, 246), (226, 245, 255)],
               "blue": [(112, 168, 236), (255, 228, 186)]}[stage]
-        HAZE = {"white": (204, 212, 218), "green": (212, 236, 252), "blue": (255, 232, 200)}[stage]
+        HAZE = {"whitesmog": (204, 212, 218), "white": (214, 230, 242), "green": (212, 236, 252), "blue": (255, 232, 200)}[stage]
     else:
         SK = [(38, 40, 92), (214, 132, 120)]; HAZE = (120, 100, 150)
     sky = Image.new("RGBA", (W, H)); top, bot = SK
@@ -43,12 +46,12 @@ def sky_far(stage, variant):
     if variant == "day":     # soft painted clouds (behind the far hills): grey bank in White, white puffs in Green, warm-lit puffs in Blue
         random.seed(3)
         for cx, cy, sc in ((300, 64, 1.0), (760, 104, 0.8), (1500, 70, 0.9), (1760, 112, 0.7)):
-            for layer, col, dy in (("sh", {"white": (170, 180, 190), "green": (186, 210, 238), "blue": (255, 196, 160)}[stage], 7),
-                                   ("hi", {"white": (206, 211, 216), "green": (255, 255, 255), "blue": (255, 246, 232)}[stage], 0)):
+            for layer, col, dy in (("sh", {"whitesmog": (170, 180, 190), "white": (196, 214, 236), "green": (186, 210, 238), "blue": (255, 196, 160)}[stage], 7),
+                                   ("hi", {"whitesmog": (206, 211, 216), "white": (250, 252, 255), "green": (255, 255, 255), "blue": (255, 246, 232)}[stage], 0)):
                 cl = Image.new("RGBA", (W, H), (0, 0, 0, 0)); cd = ImageDraw.Draw(cl)
                 for ox, oy, rx, ry in ((-70, 8, 60, 22), (-20, -6, 70, 34), (40, -2, 64, 30), (86, 10, 52, 20), (0, 14, 120, 16)):
                     x, y = cx + ox * sc, cy + oy * sc + dy
-                    cd.ellipse((x - rx * sc, y - ry * sc, x + rx * sc, y + ry * sc), fill=col + (235 if stage != "white" else 170,))
+                    cd.ellipse((x - rx * sc, y - ry * sc, x + rx * sc, y + ry * sc), fill=col + (235 if stage != "whitesmog" else 170,))
                 sky.alpha_composite(cl.filter(ImageFilter.GaussianBlur(2.2)))
     far = Image.open(os.path.join(TS, "render_far@2x.png")).convert("RGBA")
     far = far.resize((int(far.width * FS), int(far.height * FS)), Image.LANCZOS)
@@ -56,7 +59,7 @@ def sky_far(stage, variant):
     dx = int(14.2 * PPT - far.width / 2)
     col = far.crop((far.width // 2 - 2, 0, far.width // 2 + 2, far.height)).getbbox(); dy = int(0.3 * PPT) - col[1]
     layer = Image.new("RGBA", (W, H)); layer.paste(far, (dx, dy), far); sky.alpha_composite(layer)
-    if variant == "day" and stage != "white":
+    if variant == "day" and not stage.startswith("white"):
         kd = ImageDraw.Draw(sky)
         for (c, rr, sz) in ((17.0, 0.7, 0.16), (17.5, 0.95, 0.12), (17.9, 0.6, 0.14), (8.3, 1.5, 0.12), (8.7, 1.35, 0.1)):
             x, y, k = c * PPT, rr * PPT, sz * PPT
@@ -77,9 +80,9 @@ def lin(v): return ((v + 0.055) / 1.055) ** 2.4
 def smooth(x, a, b): t = np.clip((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t)
 
 # ------------------------------------------------------------------ light, shadow, rim, bloom, grade
-def lighting(rgb, stage, variant, passes, town_alpha, spmask=None):
+def lighting(rgb, stage, variant, passes, town_alpha, spmask=None, style=None):
     """rgb: float (H,W,3) 0..1. Adds the cast shadows, warm light, rim line, hero bloom, stage grade, vignette and painterly blotches."""
-    c = CFG[stage]; dusk = variant == "dusk"; ks = 0.5 if dusk else 1.0
+    c = CFG[style or stage]; dusk = variant == "dusk"; ks = 0.5 if dusk else 1.0
     a = town_alpha > 0.5
     sh = shifted_f(os.path.join(passes, f"{stage}-shade.png"))[..., :3]; z = shifted_f(os.path.join(passes, f"{stage}-height.png")) / 0.16 - 0.1
     L = lin(sh.mean(-1)); flat = a & (z < 0.1) & (L > 0.01)
@@ -122,7 +125,7 @@ def lighting(rgb, stage, variant, passes, town_alpha, spmask=None):
     rgb = rgb * (1 + c["blot"] * 0.5 * n1[..., None] + 0.012 * n2[..., None])
     return np.clip(rgb, 0, 1)
 
-def grade_sprite(im, stage):
+def grade_sprite(im, stage):      # stage = the STYLE key of CFG
     """the dojo sprite gets the stage's saturation / contrast / tint so it sits in the same picture"""
     c = CFG[stage]; a = np.asarray(im.getchannel("A")); x = np.asarray(im.convert("RGB")).astype(np.float32) / 255
     lum = (x @ np.array([0.299, 0.587, 0.114], np.float32))[..., None]; x = lum + (x - lum) * c["sat"]; x = 0.5 + (x - 0.5) * c["con"]
@@ -138,6 +141,27 @@ def pools_for(stage):
     if stage == "white":   # lamp posts + shop front + the one lit placeholder window only; lanterns are off
         return [(9.3, 5.05, 1.4), (20.9, 4.55, 0.6), (5.0, 9.05, 1.0), (19.0, 9.05, 1.0)]
     return list(POOLS) + list(TORO[stage])
+
+def soft_light(out, x, y, rx, ry, col, strength, blur):
+    """a warm pool / halo: a soft ellipse of colour blended over the picture"""
+    m = Image.new("L", (W, H)); ImageDraw.Draw(m).ellipse((x - rx, y - ry, x + rx, y + ry), fill=255)
+    return Image.composite(fill(col), out, m.filter(ImageFilter.GaussianBlur(blur)).point(lambda v: int(v * strength)))
+
+def blue_warm_sources(out):
+    """warm light that comes ONLY from the fire bowl's flames/coals and from the two paper lanterns (their bodies are in the 'lights' pass)"""
+    fx, fy = BX.scr(*BX.FIRE, 0.0); fz = BX.scr(*BX.FIRE, BX.FIRE_FLAME_Z)
+    out = soft_light(out, fx, fy + 6, 1.45 * PPT, 0.62 * PPT, (255, 170, 80), 0.46, 0.35 * PPT)       # warm pool on the paving round the bowl
+    out = soft_light(out, fz[0], fz[1], 0.62 * PPT, 0.62 * PPT, (255, 196, 110), 0.40, 0.30 * PPT)     # halo round the flames
+    out = soft_light(out, fz[0], fz[1] + 8, 0.2 * PPT, 0.3 * PPT, (255, 226, 150), 0.55, 0.12 * PPT)   # the bright heart of the fire
+    for (lc, lr, lz), R in zip(BX.LANTERNS, BX.LANTERN_R):
+        lx, ly = BX.scr(lc, lr, lz)
+        out = soft_light(out, lx, ly, 1.0 * R * PPT * 2.6, 1.0 * R * PPT * 2.6, (255, 200, 120), 0.50, R * PPT * 1.2)       # paper-lantern halo
+    random.seed(17); sp = Image.new("L", (W, H)); sd = ImageDraw.Draw(sp)           # a few tiny embers rising from the fire (stay close to the bowl)
+    for k in range(5):
+        x = fz[0] + random.uniform(-0.22, 0.22) * PPT; y = fz[1] - random.uniform(0.35, 0.75) * PPT
+        sd.ellipse((x - 2, y - 2, x + 2, y + 2), fill=255)
+    out = Image.composite(fill((255, 206, 120)), out, sp.filter(ImageFilter.GaussianBlur(0.8)))
+    return out
 
 def dusk(stage, bg_lit, lights):
     out = ImageChops.multiply(bg_lit, fill((120, 112, 165))); out = Image.blend(out, fill((60, 45, 70)), 0.1)
@@ -160,30 +184,40 @@ def dusk(stage, bg_lit, lights):
         out = Image.composite(fill((255, 214, 140)), out, rf.filter(ImageFilter.GaussianBlur(2)))
     tl = Image.new("L", (W, H)); ImageDraw.Draw(tl).ellipse((14.2 * PPT - 0.9 * PPT, 0.1 * PPT, 14.2 * PPT + 0.9 * PPT, 1.6 * PPT), fill=TOWER)
     out = Image.composite(fill((255, 220, 140)), out, tl.filter(ImageFilter.GaussianBlur(int(0.4 * PPT))))
-    if stage == "blue":    # Blue: a few fireflies by the river and the hedges (nothing over the walking lanes)
+    if stage == "blue":    # Blue: the cosy corner (fire bowl + two paper lanterns, each lit by a real source), then the fireflies
+        out = blue_warm_sources(out)
         random.seed(5); ff = Image.new("L", (W, H)); fd = ImageDraw.Draw(ff); core = Image.new("L", (W, H)); cd = ImageDraw.Draw(core)
-        for c, rr in ((14.4, 6.6), (17.0, 7.0), (15.5, 9.0), (16.9, 10.0), (13.6, 10.2), (18.2, 9.4)):
-            x = c * PPT; y = rr * PPT + SHIFT - 0.4 * PPT; rad = 0.045 * PPT
+        for c, rr in BX.FIREFLIES:      # 12 (v3 had 6); rows keep clear of the walking-lane band
+            x = c * PPT + random.uniform(-10, 10); y = rr * PPT + SHIFT - 0.4 * PPT; rad = random.uniform(0.038, 0.05) * PPT
+            assert not 444 <= y <= 540, (c, rr, y)
             fd.ellipse((x - 3 * rad, y - 3 * rad, x + 3 * rad, y + 3 * rad), fill=70); cd.ellipse((x - rad, y - rad, x + rad, y + rad), fill=190)
         ff = ff.filter(ImageFilter.GaussianBlur(int(0.12 * PPT)))
         out = Image.composite(fill((236, 255, 160)), out, ff.point(lambda v: int(v * 0.6)))
         out = Image.composite(fill((250, 255, 215)), out, core.filter(ImageFilter.GaussianBlur(1)))
     return out
 
+SAKURA_TREES = (((6.6, 6.35), 1.0), ((17.5, 6.0), 1.0), ((0.8, 7.4), 1.2), ((22.5, 7.4), 1.2), ((21.8, 5.6), 0.9))
 def petal_layer(seed=21):
-    """Blue day: a soft carpet of blossom petals under each cherry tree and a few drifting ones. Kept out of the walking-lane band (y 444-540)."""
-    rnd = random.Random(seed); lay = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
-    def petal(x, y, s, ang, col, al):
-        p = Image.new("RGBA", (40, 40), (0, 0, 0, 0)); pd = ImageDraw.Draw(p); pd.ellipse((20 - s, 20 - s * 0.55, 20 + s, 20 + s * 0.55), fill=col + (al,))
-        p = p.rotate(ang, resample=Image.BICUBIC); lay.alpha_composite(p, (int(x) - 20, int(y) - 20))
-    trees = ((6.6, 6.35), (17.5, 6.0), (0.8, 7.4), (22.5, 7.4), (21.8, 5.6))
-    for c, r in trees:
-        for _ in range(11):
-            x = c * PPT + rnd.uniform(-70, 70); y = r * PPT + SHIFT + rnd.uniform(6, 60)
+    """Blue: sakura petals. A soft carpet under each tree, petals FALLING from each crown (slanting, a few with a faint motion streak) and a few
+    drifting ones. Everything is kept out of the walking-lane band (y 444-540); the falling ones start from the crown's underside."""
+    rnd = random.Random(seed); lay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    PINK = ((250, 196, 214), (255, 226, 236), (240, 164, 196), (255, 240, 246))
+    def petal(x, y, s, ang, col, al, stretch=1.0):
+        p = Image.new("RGBA", (56, 56), (0, 0, 0, 0)); pd = ImageDraw.Draw(p); pd.ellipse((28 - s * stretch, 28 - s * 0.55, 28 + s * stretch, 28 + s * 0.55), fill=col + (al,))
+        p = p.rotate(ang, resample=Image.BICUBIC); lay.alpha_composite(p, (int(x) - 28, int(y) - 28))
+    for (c, r), sc in SAKURA_TREES:
+        gy = r * PPT + SHIFT
+        for _ in range(11):                       # the carpet on the ground
+            x = c * PPT + rnd.uniform(-70, 70) * sc; y = gy + rnd.uniform(6, 60)
             if 444 <= y <= 540: continue
-            petal(x, y, rnd.uniform(4.5, 7), rnd.uniform(0, 180), rnd.choice(((250, 196, 214), (255, 226, 236), (240, 164, 196))), 235)
-    for _ in range(9):                   # drifting: well above the lane band, in the lawn/hedge zone
-        c, r = rnd.choice(trees); x = c * PPT + rnd.uniform(-110, 110); y = rnd.uniform(250, 425)
+            petal(x, y, rnd.uniform(4.5, 7), rnd.uniform(0, 180), rnd.choice(PINK), 235)
+        for k in range(7):                        # falling from the crown: x drifts to the right as they fall (a light breeze)
+            y0 = gy - rnd.uniform(0.1, 0.9) * PPT * 0.82 * sc; y = y0 + rnd.uniform(0.15, 0.75) * PPT * sc
+            x = c * PPT + rnd.uniform(-95, 95) * sc + (y - y0) * 0.35
+            if 430 <= y <= 552: continue
+            petal(x, y, rnd.uniform(4, 6.2), rnd.uniform(0, 180), rnd.choice(PINK), 235, stretch=rnd.choice((1.0, 1.0, 1.9)))
+    for _ in range(9):                            # drifting: well above the lane band, in the lawn/hedge zone
+        (c, r), sc = rnd.choice(SAKURA_TREES); x = c * PPT + rnd.uniform(-110, 110); y = rnd.uniform(250, 425)
         petal(x, y, rnd.uniform(4, 6), rnd.uniform(0, 180), (255, 214, 228), 220)
     return lay
 
@@ -207,7 +241,7 @@ def day_effects(out, stage):
     out = Image.composite(fill((255, 250, 225)), out, core.filter(ImageFilter.GaussianBlur(1)).point(lambda v: int(v * 0.8)))
     o = out.convert("RGBA"); o.alpha_composite(petal_layer()); return o.convert("RGB")
 
-def sprite(stage, variant, graded=True):
+def sprite(stage, variant, graded=True, style=None):
     info = json.load(open(os.path.join(AZ, "sprites", "static.json")))["sprites"]["town-slot-dojo"]
     sp = Image.open(os.path.join(AZ, "sprites", info["files"][variant])).convert("RGBA")
     if variant == "dusk":    # the sprite's own warm ground pools under the door are turned down like the rest of the dusk light
@@ -217,40 +251,76 @@ def sprite(stage, variant, graded=True):
         for yy in range(sp.height): rd.line([(0, yy), (sp.width, yy)], fill=int(255 * 0.6 * min(1.0, max(0.0, (yy - 286) / 16.0))))
         sp = Image.composite(g, sp, ramp)
     ax, ay = info["anchorPx"]; tx, ty = info["anchorTownTile"]
-    return (grade_sprite(sp, stage) if graded else sp), (round(tx * PPT - ax), round(ty * PPT + SHIFT - ay))
+    return (grade_sprite(sp, style or stage) if graded else sp), (round(tx * PPT - ax), round(ty * PPT + SHIFT - ay))
 
-def make(stage, variant, passes):
+def make(stage, variant, passes, style=None):
+    style = style or stage        # style 'whitesmog' = the v3 smoggy White look (only used to fit the smog layer)
     town = shifted(os.path.join(passes, f"{stage}-{'day' if variant == 'day' else 'night'}.png"))
-    sky = sky_far(stage, variant); sky.alpha_composite(town); out = sky
+    sky = sky_far(style, variant); sky.alpha_composite(town); out = sky
     ta = np.asarray(town.getchannel("A")).astype(np.float32) / 255; spm = None
     if variant == "day":      # the dojo sprite goes in BEFORE the light pass so the whole picture is graded as one
         sp, pos = sprite(stage, "day", graded=False)
         spa = Image.new("RGBA", (W, H), (0, 0, 0, 0)); spa.alpha_composite(sp, pos)
         out.alpha_composite(spa); spm = np.asarray(spa.getchannel("A")).astype(np.float32) / 255; ta = np.maximum(ta, spm)
     rgb = np.asarray(out.convert("RGB")).astype(np.float32) / 255
-    rgb = lighting(rgb, stage, variant, passes, ta, spm)
+    rgb = lighting(rgb, stage, variant, passes, ta, spm, style)
     im = Image.fromarray((rgb * 255 + 0.5).astype(np.uint8), "RGB")
     if variant == "dusk":
+        if stage == "blue": o_ = im.convert("RGBA"); o_.alpha_composite(petal_layer()); im = o_.convert("RGB")      # petals fall at dusk too (they get the dusk grade)
         im = dusk(stage, im, shifted_mask(os.path.join(passes, f"{stage}-lights.png")))
-        sp, pos = sprite(stage, "dusk"); o = im.convert("RGBA"); o.alpha_composite(sp, pos); return o.convert("RGB")
+        sp, pos = sprite(stage, "dusk", style=style); o = im.convert("RGBA"); o.alpha_composite(sp, pos); return o.convert("RGB")
     return day_effects(im, stage)
 
+# ------------------------------------------------------------------ the White SMOG layer (v4)
+def fit_smog(B, T, small=75, big=301, lam=0.02, sigma=14.0):
+    """Fit a soft translucent layer (colour C, alpha a) so that  B*(1-a) + a*C  ~ T  (T = the smoggy v3 White look, B = the same town with clear air).
+    D = T - B = a*(C - B): per pixel a is the (negative) slope of D against B inside a local window; k = a*C is the intercept. Both fields are then smoothed,
+    so the layer is a pure soft haze (no town detail baked in)."""
+    from scipy.ndimage import uniform_filter
+    D = T - B
+    def stats(size):
+        mB = np.stack([uniform_filter(B[..., c], size, mode="reflect") for c in range(3)], -1); mD = np.stack([uniform_filter(D[..., c], size, mode="reflect") for c in range(3)], -1)
+        vB = sum(uniform_filter(B[..., c] ** 2, size, mode="reflect") - mB[..., c] ** 2 for c in range(3))
+        cv = sum(uniform_filter(D[..., c] * B[..., c], size, mode="reflect") - mD[..., c] * mB[..., c] for c in range(3))
+        return mB, mD, vB, cv
+    _, _, vb, cb = stats(big); a_big = np.clip(-cb / (vb + 1e-6), 0, 0.9)
+    mB, mD, vB, cv = stats(small); a = np.clip((-cv + lam * a_big) / (vB + lam), 0, 0.9)
+    k = mD + a[..., None] * mB
+    a_s = gaussian_filter(a, sigma); k_s = np.stack([gaussian_filter(k[..., c], sigma) for c in range(3)], -1)
+    return np.clip(a_s, 0, 0.9), np.clip(k_s, 0, None)
+
+def smog_layers(passes):
+    """returns {variant: (alpha (H,W), premultiplied colour k (H,W,3), clear-base rgb, smoggy-look rgb)} for White day and dusk"""
+    out = {}
+    for v in ("day", "dusk"):
+        B = np.asarray(make("white", v, passes)).astype(np.float32) / 255; T = np.asarray(make("white", v, passes, style="whitesmog")).astype(np.float32) / 255
+        a, k = fit_smog(B, T); out[v] = (a, k, B, T)
+    return out
+
+def smog_png(a, k):
+    """straight-alpha RGBA: colour = k / a, alpha = a (so  base*(1-a) + a*colour  is the smoggy picture)"""
+    col = np.clip(k / np.maximum(a, 1e-3)[..., None], 0, 1); return Image.fromarray((np.dstack([col, a[..., None]]) * 255 + 0.5).astype(np.uint8), "RGBA")
+
 PLAN = [  # order, belt, status, one line of what the picture shows
-    (1, "white", "built", "A little run down: faded, grey and overcast, a boarded window, a patched awning and bridge plank, weedy empty beds, murky water, EMPTY plinth. Still friendly."),
+    (1, "white", "built", "A little run down: a boarded window, a patched awning and bridge plank, weedy empty beds, murky water, EMPTY plinth. This picture is the CLEAR-AIR base (blue sky, bright); the grey smog is the SEPARATE overlay 1-white-smog-* drawn on top while the White floor boss is unbeaten. Still friendly."),
     (2, "yellow", "planned", "NOT BUILT: the clean-up step - boards come off, fresh paint, colour comes back, first blooms. Until it is built use the White picture."),
     (3, "orange", "planned", "NOT BUILT: the shop opens - chimney, warm lanterns, bread, a fuller town. Until it is built use the White picture."),
     (4, "green", "built", "Clearly upgraded: fresh paint and a vivid colour grade, the STATUE unveiled with two stone lanterns, lush flower beds, bunting across the river, a roof flag, window boxes, blossoming hedges, bridge garland, soft cast shadows."),
-    (5, "blue", "built", "FULLY MAXED hero town (the last town picture): golden-hour grade, five cherry-blossom trees, four stone lanterns, two tall banners, two roof flags, golden paving ring, lotus and more koi, chimney smoke, sun shafts, petals, bloom on the statue and lanterns.")]
+    (5, "blue", "built", "FULLY MAXED hero town (the last town picture): golden-hour grade, five real SAKURA trees (dark crooked trunks and branches, layered cloud-like blossom clumps, falling petals), four stone lanterns, two tall banners, two roof flags, golden paving ring, lotus and more koi, chimney smoke, sun shafts, petals, bloom on the statue and lanterns. Dusk adds a fire bowl, two paper lanterns on a hook post, 12 fireflies and falling petals.")]
 USE_BLUE = ["red", "redblack", "brown", "brownblack", "black"]
 FALLBACK = {"yellow": "white", "orange": "white"}
 
 def write_manifest():
-    out = {"note": "Town growth is CAPPED at Blue. One FULL town background per belt, day + dusk, dojo sprite already in. Swap the whole picture by the student's highest earned belt. Nothing stacks. Red, Red/Black, Brown, Brown/Black and Black have NO town pictures of their own: they use the Blue picture.",
+    out = {"note": "White is TWO layers: the clear background plus the separate smog overlay (removed when the White floor boss is beaten). All other belts are one picture, no overlay. Town growth is CAPPED at Blue. One FULL town background per belt, day + dusk, dojo sprite already in. Swap the whole picture by the student's highest earned belt. Nothing stacks. Red, Red/Black, Brown, Brown/Black and Black have NO town pictures of their own: they use the Blue picture.",
            "sizePx2x": [W, H], "sizePx1x": [W // 2, H // 2], "tilePx2x": PPT, "stages": []}
     for order, belt, status, notes in PLAN:
         e = {"order": order, "belt": belt, "built": status == "built", "statue": belt in ("green", "blue"), "notes": notes}
         if status == "built": e["files"] = {v: {"2x": f"{order}-{belt}-{v}@2x.png", "1x": f"{order}-{belt}-{v}.png"} for v in ("day", "dusk")}
         else: e["useUntilBuilt"] = FALLBACK[belt]
+        if belt == "white":
+            e["smogOverlay"] = {"files": {v: {"2x": f"1-white-smog-{v}@2x.png", "1x": f"1-white-smog-{v}.png"} for v in ("day", "dusk")}, "sizePx2x": [W, H],
+                                "draw": "full-frame transparent PNG, same size as the background; draw it OVER the White background (same day/dusk variant) and UNDER characters, effects and UI",
+                                "remove": "when the student beats the White-belt floor boss: stop drawing it and the clear White picture underneath is the town. Never draw it on any other belt."}
         out["stages"].append(e)
     for i, belt in enumerate(USE_BLUE):
         out["stages"].append({"order": 6 + i, "belt": belt, "built": False, "useStage": "blue", "statue": True,
@@ -259,10 +329,24 @@ def write_manifest():
 
 if __name__ == "__main__":
     passes = sys.argv[1]; which = sys.argv[2:] or ["white", "green", "blue"]
-    os.makedirs(os.path.join(OUT, "stages"), exist_ok=True)
+    d = os.path.join(OUT, "stages"); os.makedirs(d, exist_ok=True); pv = os.path.join(OUT, "previews"); os.makedirs(pv, exist_ok=True)
+    def save2(im, name, folder=d):
+        im.save(os.path.join(folder, name + "@2x.png")); im.resize((W // 2, H // 2), Image.LANCZOS).save(os.path.join(folder, name + ".png"))
     for st in which:
         order, belt = STAGES[st]
+        if st == "white":      # clear base + the separate smog layer (fitted so base + layer ~ the v3 smoggy White)
+            L = smog_layers(passes)
+            for v, (a, k, B, T) in L.items():
+                save2(Image.fromarray((B * 255 + 0.5).astype(np.uint8)), f"{order}-{belt}-{v}")
+                lay = smog_png(a, k); lay.save(os.path.join(d, f"{order}-{belt}-smog-{v}@2x.png"))
+                # 1x: downsample the PREMULTIPLIED colour (no dark fringes), then divide
+                k1 = np.asarray(Image.fromarray(k.astype(np.float32)[..., 0]).resize((W // 2, H // 2), Image.BOX)); k1 = np.dstack([np.asarray(Image.fromarray(k[..., c].astype(np.float32)).resize((W // 2, H // 2), Image.BOX)) for c in range(3)])
+                a1 = np.asarray(Image.fromarray(a.astype(np.float32)).resize((W // 2, H // 2), Image.BOX)); smog_png(a1, k1).save(os.path.join(d, f"{order}-{belt}-smog-{v}.png"))
+                P = B * (1 - a[..., None]) + k; err = np.abs(P - T).mean() * 255
+                Image.fromarray((P * 255 + 0.5).astype(np.uint8)).save(os.path.join(pv, f"{order}-{belt}-with-smog-{v}@2x.png"))
+                Image.fromarray((P * 255 + 0.5).astype(np.uint8)).resize((W // 2, H // 2), Image.LANCZOS).save(os.path.join(pv, f"{order}-{belt}-with-smog-{v}.png"))
+                print("ok", f"{order}-{belt}-{v} + smog layer; composite vs v3 look: mean abs err {err:.2f}/255")
+            continue
         for v in ("day", "dusk"):
-            im = make(st, v, passes); name = f"{order}-{belt}-{v}"; d = os.path.join(OUT, "stages")
-            im.save(os.path.join(d, name + "@2x.png")); im.resize((W // 2, H // 2), Image.LANCZOS).save(os.path.join(d, name + ".png")); print("ok", name)
+            im = make(st, v, passes); name = f"{order}-{belt}-{v}"; save2(im, name); print("ok", name)
     write_manifest()

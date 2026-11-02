@@ -9,12 +9,14 @@ dojo slot left empty because the dojo sprite is pasted on top later), changes it
   shade        the whole town as plain white clay lit by ONE sun + a soft sky: cast shadows and ambient occlusion (soft drop shadows)
   height       world height of every surface, 16 bit: used for the light-facing rim line and the contact shading
   hero         a mask of the few hero props that get a little bloom (statue + star, stone lanterns)
+  treesil      Blue only: a mask of the ORIGINAL round trees (the lanes check lets the sakura sit inside their silhouette)
 make_stages.py then adds sky, far hills, light and shadow, colour grade, effects and the dojo sprite.
 Stages: white = a little run down, no statue (empty plinth); green = clearly upgraded, statue unveiled, festive;
 blue = fully maxed hero town; base = no changes at all (proves the pipeline reproduces the approved picture)."""
 import bpy, sys, os, math, argparse, random, re, bmesh
 from mathutils import Vector, Euler
-HERE = os.path.dirname(os.path.abspath(__file__))
+HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
+import blue_extras as BX
 BASE = os.path.join(HERE, "..", "..", "town-square-concept", "source", "build_town_square.py")
 ap = argparse.ArgumentParser(); ap.add_argument("--stage", required=True); ap.add_argument("--pass", dest="ps", required=True)
 ap.add_argument("--out", required=True); ap.add_argument("--samples", type=int, default=24)
@@ -166,6 +168,86 @@ def banner_pole(idx, x, row, col):
     add(f"ob_bn{idx}emb", ellipsoid(G(x + 0.28, row + 0.045, 1.95), (0.15, 0.02, 0.15), segs=14, rings=6), "#ffd36b", False)
     add(f"ob_bn{idx}emc", ellipsoid(G(x + 0.28, row + 0.05, 1.95), (0.07, 0.02, 0.07), segs=10, rings=4), "#fbf3df", False)
 
+# ---- v4 Blue: real sakura, a stone fire bowl, a crook post with two paper lanterns -----------------------------------
+SAKURA = {(6.6, 6.35): (1.0, 1, 1), (17.5, 6.0): (1.0, -1, 2), (0.8, 7.4): (1.2, 1, 3), (22.5, 7.4): (1.2, -1, 4), (21.8, 5.6): (0.9, -1, 5)}   # scale, lean toward the town, seed
+TREE_OBJS = []
+def sakura(c, r, s, lean, seed):
+    """A true cherry-blossom (sakura) tree: a dark, thick, crooked trunk that leans, a few spreading crooked branches and
+    LAYERED, cloud-like blossom clumps (a darker pink underside, mid-pink body, light top, white highlights) with gaps that show the branches."""
+    rnd = random.Random(seed); names = (f"trunk{c}{r}", f"leaf{c}{r}", f"leaf2{c}{r}"); TREE_OBJS.extend(names)
+    if PASS == "treesil": return                                  # the silhouette pass keeps the ORIGINAL round tree (for the lanes check)
+    for n in names: rm(n)
+    P = lambda dx, dr, z: G(c + dx * s, r + dr * s, z * s); tag = f"ob_sk{c}_{r}_"; L = lean
+    TR, BR = "#46302a", "#583c32"
+    pts = [(0, 0, 0), (0.11 * L, 0.0, 0.34), (-0.05 * L, 0.03, 0.66), (0.14 * L, -0.02, 0.96)]; rad = [0.17, 0.125, 0.10, 0.075]
+    add(tag + "flare", ellipsoid(P(0, 0, 0.03), (0.21 * s, 0.17 * s, 0.09 * s), segs=10, rings=4), TR, False)
+    for i in range(3): add(tag + f"t{i}", tube(P(*pts[i]), P(*pts[i + 1]), rad[i] * s, rad[i + 1] * s, segs=8), TR)
+    jit = lambda: rnd.uniform(-0.05, 0.05)
+    # (start, bend, end) per branch, in tile units relative to the trunk foot; x*L so the crown spreads toward the town AND away from it
+    BRANCHES = [((0.14 * L, -0.02, 0.96), (0.52 * L, -0.06, 1.12), (0.98 * L + jit(), 0.04, 1.42), (0.060, 0.034, 0.018)),
+                ((0.14 * L, -0.02, 0.96), (-0.30 * L, 0.05, 1.22), (-0.88 * L + jit(), -0.05, 1.30), (0.060, 0.034, 0.018)),
+                ((0.14 * L, -0.02, 0.96), (0.06 * L, 0.0, 1.38), (0.30 * L + jit(), 0.02, 1.76), (0.055, 0.03, 0.016)),
+                ((-0.05 * L, 0.03, 0.66), (-0.52 * L, 0.10, 0.80), (-1.02 * L + jit(), 0.12, 1.04), (0.050, 0.028, 0.015)),
+                ((-0.05 * L, 0.03, 0.66), (0.44 * L, 0.08, 0.84), (0.86 * L + jit(), 0.10, 1.00), (0.045, 0.026, 0.014))]
+    for i, (a, b, e, (r0, r1, r2)) in enumerate(BRANCHES):
+        add(tag + f"b{i}a", tube(P(*a), P(*b), r0 * s, r1 * s, segs=6), BR, False); add(tag + f"b{i}b", tube(P(*b), P(*e), r1 * s, r2 * s, segs=6), BR, False)
+        if i < 3:       # a small twig fork on the upper branches
+            tw = (e[0] + 0.18 * L, e[1] - 0.04, e[2] + 0.16); add(tag + f"w{i}", tube(P(*e), P(*tw), r2 * s, 0.01 * s, segs=5), BR, False)
+    DEEP, MID, LIGHT, TOP, WHITE = "#e58fb2", "#f4a9c6", "#fac6da", "#ffe3ee", "#fff5f9"
+    def cloud(name, dx, dr, z, w):
+        """one blossom clump: three rows of overlapping lumps (underside darker, top lighter) + two highlight caps"""
+        LUMPS = (((-0.58, 0.00, -0.20, 0.50), DEEP), ((0.00, 0.06, -0.24, 0.60), DEEP), ((0.58, 0.00, -0.18, 0.48), DEEP),
+                 ((-0.36, 0.00, 0.06, 0.54), MID), ((0.34, 0.02, 0.08, 0.58), MID), ((-0.02, -0.04, 0.34, 0.54), LIGHT), ((0.52, 0.0, 0.30, 0.38), LIGHT))
+        for k, ((ox, oy, oz, f), col) in enumerate(LUMPS):
+            add(f"{name}_l{k}", ellipsoid(P(dx + ox * w, dr + oy * w, z + oz * w), (w * f * 1.08, w * f * 0.85, w * f * 0.74), segs=12, rings=7), col)
+        add(f"{name}_h0", ellipsoid(P(dx - 0.16 * w, dr - 0.12 * w, z + 0.50 * w), (w * 0.30, w * 0.20, w * 0.17), segs=8, rings=5), TOP, False)
+        add(f"{name}_h1", ellipsoid(P(dx + 0.50 * w, dr - 0.10 * w, z + 0.46 * w), (w * 0.17, w * 0.12, w * 0.10), segs=8, rings=4), WHITE, False)
+    CLOUDS = [(0.98 * L, 0.05, 1.44, 0.42), (-0.88 * L, -0.04, 1.32, 0.40), (0.30 * L, 0.02, 1.74, 0.38), (-0.12 * L, 0.16, 1.50, 0.46),
+              (0.52 * L, -0.12, 1.46, 0.34), (-1.02 * L, 0.12, 1.08, 0.33), (0.86 * L, 0.10, 1.04, 0.31), (0.62 * L, 0.02, 1.18, 0.30), (-0.52 * L, 0.06, 1.16, 0.30)]
+    lane_tree = r < 6.5          # these three stand beside the walking lane: no low outer clumps (so the crowns stay as high and as close to the old round trees' footprint as a spreading sakura can)
+    for k, (dx, dr, z, w) in enumerate(CLOUDS):
+        if lane_tree and k in (5, 6): continue
+        cloud(tag + f"c{k}", dx + jit(), dr, z + (0.12 if lane_tree else 0.0), w * rnd.uniform(0.94, 1.06))
+
+def fire_bowl():
+    """a small stone fire bowl (a ring of stones, a short pedestal, a wide bowl, two logs, glowing coals and three flames): the REAL source of the warm light"""
+    c, r = BX.FIRE
+    for k in range(6):
+        a = k * math.pi / 3 + 0.3; add(f"ob_fbst{k}", ellipsoid(G(c + math.cos(a) * 0.42, r + math.sin(a) * 0.42 / K * 0.9, 0.05), (0.09, 0.08, 0.06), segs=8, rings=4), ("#b9b3a6", "#a39c8f")[k % 2], False)
+    add("ob_fbfoot", tube(G(c, r, 0), G(c, r, 0.2), 0.20, 0.13, segs=10), "#a39c8f")
+    add("ob_fbbowl", tube(G(c, r, 0.2), G(c, r, 0.42), 0.17, 0.31, segs=12), "#8d867a")
+    add("ob_fbrim", tube(G(c, r, 0.42), G(c, r, 0.46), 0.325, 0.325, segs=12), "#c9c3b6", False)
+    add("ob_fbin", tube(G(c, r, 0.455), G(c, r, 0.47), 0.26, 0.26, segs=12), "#33281f", False)
+    add("ob_fblog0", tube(G(c - 0.2, r - 0.04, 0.52), G(c + 0.2, r + 0.05, 0.6), 0.05, 0.05, segs=6), "#5a3a24", False)
+    add("ob_fblog1", tube(G(c - 0.18, r + 0.06, 0.6), G(c + 0.2, r - 0.05, 0.52), 0.05, 0.05, segs=6), "#6b4428", False)
+    if PASS == "day":      # by day the bowl is cold: grey ash, no flames (the fire is lit at dusk)
+        add("ob_ln_coal", ellipsoid(G(c, r, 0.52), (0.18, 0.15, 0.04), segs=10, rings=4), "#4a4440", False)
+        return
+    add("ob_ln_coal", ellipsoid(G(c, r, 0.55), (0.18, 0.15, 0.05), segs=10, rings=4), "#ffb347", False)
+    add("ob_ln_fl0", tube(G(c, r, 0.56), G(c + 0.01, r, 0.56 + 0.40), 0.13, 0.0, segs=8), "#ffa63a", False)
+    add("ob_ln_fl1", tube(G(c - 0.12, r, 0.56), G(c - 0.18, r, 0.56 + 0.26), 0.08, 0.0, segs=7), "#ffb94a", False)
+    add("ob_ln_fl2", tube(G(c + 0.12, r, 0.56), G(c + 0.19, r, 0.56 + 0.28), 0.085, 0.0, segs=7), "#ffb94a", False)
+    add("ob_ln_fl3", tube(G(c, r, 0.57), G(c + 0.0, r, 0.57 + 0.24), 0.065, 0.0, segs=7), "#fff0a0", False)
+
+def lantern_post():
+    """a wooden crook post with a short arm; two paper lanterns hang from it (cream paper, golden ribs, dark caps): REAL sources, lit at dusk"""
+    c, r = BX.POST; H = BX.POST_H; A = BX.ARM; W = "#6b4428"
+    add("ob_lpfoot", tube(G(c, r, 0), G(c, r, 0.14), 0.13, 0.09, segs=8), "#a39c8f")
+    add("ob_lppole", tube(G(c, r, 0.12), G(c, r, H), 0.05, 0.04, segs=8), W)
+    add("ob_lparm0", tube(G(c, r, H), G(c + A * 0.55, r, H + 0.06), 0.04, 0.032, segs=6), W, False)
+    add("ob_lparm1", tube(G(c + A * 0.55, r, H + 0.06), G(c + A, r, H - 0.02), 0.032, 0.026, segs=6), W, False)
+    add("ob_lpball", ellipsoid(G(c, r, H + 0.04), (0.065, 0.065, 0.065), segs=8, rings=4), "#ffd36b", False)
+    for i, ((lc, lr, lz), R) in enumerate(zip(BX.LANTERNS, BX.LANTERN_R)):
+        top = lz + R * 1.28 + 0.03
+        hook = H - 0.02 if i == 0 else H + 0.0
+        add(f"ob_lpcord{i}", tube(G(lc, lr, top + 0.03), G(lc, lr, max(hook, top + 0.1) if i == 0 else H + 0.04), 0.008, 0.008, segs=4), "#3d2a1c", False)
+        add(f"ob_ln_pl{i}", ellipsoid(G(lc, lr, lz), (R, R, R * 1.25), segs=14, rings=8), "#ffd98a")
+        for q, f in enumerate((-0.55, 0.0, 0.55)): add(f"ob_lprib{i}{q}", tube(G(lc, lr, lz + f * R * 1.1), G(lc, lr, lz + f * R * 1.1 + 0.012), R * math.sqrt(max(0.02, 1 - f * f * 0.65)) * 1.01, R * math.sqrt(max(0.02, 1 - f * f * 0.65)) * 1.01, segs=14), "#d99a32", False)
+        add(f"ob_lptop{i}", tube(G(lc, lr, lz + R * 1.2), G(lc, lr, lz + R * 1.2 + 0.035), R * 0.55, R * 0.45, segs=10), "#5a3a24", False)
+        add(f"ob_lpbot{i}", tube(G(lc, lr, lz - R * 1.2 - 0.035), G(lc, lr, lz - R * 1.2), R * 0.45, R * 0.55, segs=10), "#5a3a24", False)
+        add(f"ob_lptas{i}", tube(G(lc, lr, lz - R * 1.2 - 0.035), G(lc, lr, lz - R * 1.2 - 0.17), 0.012, 0.03, segs=5), "#d99a32", False)
+
+
 OFF_LIGHTS = set()          # lit things switched OFF for this belt (dusk only)
 if ST == "white":
     # --- run down, but friendly: tired colours, a few boarded and patched spots, bare beds, fewer fish, murky water
@@ -200,17 +282,13 @@ elif ST == "green":
     bridge_garland(("#fbf3df", "#ffd36b"))
     add("ob_rvkoi", ellipsoid(G(15.55, 7.2, 0.035), (0.08, D(0.2), 0.015), segs=10, rings=3), "#fbf3df", False)
     add("ob_rvkoit", ellipsoid(G(15.55, 7.0, 0.035), (0.06, D(0.06), 0.01), segs=6, rings=3), "#fbf3df", False)
+
 elif ST == "blue":
     # --- BLUE: FULLY MAXED. Everything Green has, then: blossom trees, four stone lanterns, banners on tall poles,
     #     two roof flags, a golden paving ring, lotus + more koi, a curl of chimney smoke.
     retint("blue"); chimney_and_basket(); lush_beds(14, 5); window_boxes(); hedge_blossoms(2, ("#ffe4ee", "#f6a8c4", "#fbf3df", "#ffd36b"), 6)
-    for c, r in BLOOM_TREES:                                    # the big trees become cherry-blossom trees (same objects, new colours)
-        s_ = {(6.6, 6.35): 1.0, (17.5, 6.0): 1.0, (0.8, 7.4): 1.2, (22.5, 7.4): 1.2, (21.8, 5.6): 0.9}[(c, r)]
-        paint(f"leaf{c}{r}", "#f4a9c6"); paint(f"leaf2{c}{r}", "#fbd0e0")
-        rnd = random.Random(int(c * 10 + r)); 
-        for k in range(4):
-            a = rnd.uniform(0, 2 * math.pi); rr_ = rnd.uniform(0.3, 0.55)
-            add(f"ob_pk{c}{r}{k}", ellipsoid(G(c + math.cos(a) * 0.62 * s_ * rr_ * 1.3, r + math.sin(a) * 0.25 * s_, 1.35 * s_ + math.sin(a * 2) * 0.3 * s_), (0.2 * s_, 0.12 * s_, 0.16 * s_), segs=10, rings=6), ("#ffe4ee", "#e98fb4")[k % 2], False)
+    for c, r in BLOOM_TREES: sakura(c, r, *SAKURA[(c, r)])      # the five big trees become true sakura (the round green trees are removed)
+    fire_bowl(); lantern_post()
     toro(0, 10.2, 9.1); toro(1, 13.1, 9.1); toro(2, 10.2, 6.9); toro(3, 13.1, 6.9)
     bunting(("#ffd36b", "#fbf3df", "#3f9a7a", "#6f9fd2", "#f6a8c4", "#86c46c"), 14)
     roof_flag("fs", 7.8, 3.875, 2.48, 1.25, "#ffd36b", "#fbf3df"); roof_flag("fp", 18.0, 4.0, 1.85, 1.3, "#3f9a7a", "#fbf3df")
@@ -252,6 +330,7 @@ if PASS == "lights":
         lit = bool(LIT.search(o.name)) and "twin" not in o.name and o.name not in OFF_LIGHTS and (not o.name.startswith("ob_") or o.name.startswith("ob_ln"))
         o.data.materials.clear(); o.data.materials.append(W_ if lit else B_)
 if PASS == "props": recolour(lambda b: b in PNAMES, emis(1.0), holdout())
+if PASS == "treesil": recolour(lambda b: b in TREE_OBJS, emis(1.0), holdout())      # the ORIGINAL round trees' silhouette (the lanes check allows sakura to sit inside it)
 if PASS == "hero":
     HERO = re.compile(r"^(s_|star$|ob_ln_toro)"); HERO_X = re.compile(r"^s_shine")
     for o in bpy.data.objects:

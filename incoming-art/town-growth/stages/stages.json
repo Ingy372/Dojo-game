@@ -1,5 +1,5 @@
 {
-  "note": "Town growth is CAPPED at Blue. One FULL town background per belt, day + dusk, dojo sprite already in. Swap the whole picture by the student's highest earned belt. Nothing stacks. Red, Red/Black, Brown, Brown/Black and Black have NO town pictures of their own: they use the Blue picture.",
+  "note": "White is TWO layers: the clear background plus the separate smog overlay (removed when the White floor boss is beaten). All other belts are one picture, no overlay. Town growth is CAPPED at Blue. One FULL town background per belt, day + dusk, dojo sprite already in. Swap the whole picture by the student's highest earned belt. Nothing stacks. Red, Red/Black, Brown, Brown/Black and Black have NO town pictures of their own: they use the Blue picture.",
   "sizePx2x": [
     1864,
     860
@@ -15,7 +15,7 @@
       "belt": "white",
       "built": true,
       "statue": false,
-      "notes": "A little run down: faded, grey and overcast, a boarded window, a patched awning and bridge plank, weedy empty beds, murky water, EMPTY plinth. Still friendly.",
+      "notes": "A little run down: a boarded window, a patched awning and bridge plank, weedy empty beds, murky water, EMPTY plinth. This picture is the CLEAR-AIR base (blue sky, bright); the grey smog is the SEPARATE overlay 1-white-smog-* drawn on top while the White floor boss is unbeaten. Still friendly.",
       "files": {
         "day": {
           "2x": "1-white-day@2x.png",
@@ -25,6 +25,24 @@
           "2x": "1-white-dusk@2x.png",
           "1x": "1-white-dusk.png"
         }
+      },
+      "smogOverlay": {
+        "files": {
+          "day": {
+            "2x": "1-white-smog-day@2x.png",
+            "1x": "1-white-smog-day.png"
+          },
+          "dusk": {
+            "2x": "1-white-smog-dusk@2x.png",
+            "1x": "1-white-smog-dusk.png"
+          }
+        },
+        "sizePx2x": [
+          1864,
+          860
+        ],
+        "draw": "full-frame transparent PNG, same size as the background; draw it OVER the White background (same day/dusk variant) and UNDER characters, effects and UI",
+        "remove": "when the student beats the White-belt floor boss: stop drawing it and the clear White picture underneath is the town. Never draw it on any other belt."
       }
     },
     {
@@ -65,7 +83,7 @@
       "belt": "blue",
       "built": true,
       "statue": true,
-      "notes": "FULLY MAXED hero town (the last town picture): golden-hour grade, five cherry-blossom trees, four stone lanterns, two tall banners, two roof flags, golden paving ring, lotus and more koi, chimney smoke, sun shafts, petals, bloom on the statue and lanterns.",
+      "notes": "FULLY MAXED hero town (the last town picture): golden-hour grade, five real SAKURA trees (dark crooked trunks and branches, layered cloud-like blossom clumps, falling petals), four stone lanterns, two tall banners, two roof flags, golden paving ring, lotus and more koi, chimney smoke, sun shafts, petals, bloom on the statue and lanterns. Dusk adds a fire bowl, two paper lanterns on a hook post, 12 fireflies and falling petals.",
       "files": {
         "day": {
           "2x": "5-blue-day@2x.png",
