@@ -32,3 +32,18 @@ export function cameraBounds(roomWidthTiles: number, roomHeightTiles: number, vi
   const bh = Math.max(roomH, viewH);
   return { x: (roomW - bw) / 2, y: top - (bh - roomH) / 2, width: bw, height: bh };
 }
+
+/** GUARD-SCALE-01: the short camera pull-back when a boss appears (numbers from content/settings/guardian-scale.json). */
+export interface BossZoomPlan {
+  /** Share of the normal zoom the camera pulls back to. */
+  zoomTo: number;
+  outMs: number;
+  holdMs: number;
+  backMs: number;
+}
+
+/** The pull-back to play, or null for none: with Reduced motion on there is never a zoom, and rooms without a boss have none. */
+export function bossZoomPlan(reducedMotion: boolean, roomHasBoss: boolean, zoom: BossZoomPlan): BossZoomPlan | null {
+  if (reducedMotion || !roomHasBoss || zoom.zoomTo >= 1) return null;
+  return zoom;
+}

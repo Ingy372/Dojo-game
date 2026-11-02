@@ -122,6 +122,8 @@ export interface EnemyDef {
   power: number;
   guard: number;
   radius: number;
+  /** GUARD-SCALE-01: how much bigger than its data file this enemy is drawn (1 = as written). `radius` and the attacks already include it. */
+  scale: number;
   moveSpeedTilesPerSecond: number;
   sightRange: number;
   /** Attacks used in turn (most enemies have one). */
@@ -297,6 +299,7 @@ export function loadEnemy(data: unknown): EnemyDef {
     power: positiveNumber(raw, 'power', id),
     guard,
     radius,
+    scale: 1,
     moveSpeedTilesPerSecond: positiveNumber(raw, 'moveSpeedTilesPerSecond', id),
     sightRange: positiveNumber(raw, 'sightRange', id),
     attacks,

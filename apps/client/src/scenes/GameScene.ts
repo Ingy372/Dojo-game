@@ -123,7 +123,7 @@ import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
 import { clampDoorLabels } from '../ui/doorLabel';
-import { VISIBLE_ROWS, cameraBounds } from '../game/cameraView';
+import { VISIBLE_ROWS, bossZoomPlan, cameraBounds } from '../game/cameraView';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
@@ -391,6 +391,8 @@ export class GameScene extends Phaser.Scene {
   private elapsed = 0;
   /** When the room's enemies appeared (null until the floor's bow is done). */
   private enemiesAt: number | null = 0;
+  /** GUARD-SCALE-01: the boss intro's camera pull-back, as a share of the normal zoom (1 = none). */
+  private bossZoom = 1;
   /** While above 0, the action is frozen for a moment on impact. */
   private hitStopMs = 0;
 
@@ -591,6 +593,7 @@ export class GameScene extends Phaser.Scene {
     if (this.run && this.run.depth === 0 && !this.run.bowed) this.askForBow();
     else this.introduceRoom();
 
+    this.bossZoom = 1;
     this.layout();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     // Let go of everything if the app goes to the background mid-touch.
@@ -807,10 +810,10 @@ export class GameScene extends Phaser.Scene {
         alpha = 1 - t;
       }
       // The dissolve is drawn a little bigger and glowing, and its shadow fades with it.
-      s.container.setScale(1 + 0.3 * Math.min(1, t * 3));
+      s.container.setScale(e.def.scale * (1 + 0.3 * Math.min(1, t * 3)));
       (s.container.list[0] as Phaser.GameObjects.Ellipse | undefined)?.setAlpha(1 - t);
     } else if (e.mode === 'waiting') {
-      s.container.setScale(1);
+      s.container.setScale(e.def.scale);
       (s.container.list[0] as Phaser.GameObjects.Ellipse | undefined)?.setAlpha(1);
       alpha = 1 - (e.modeTicks / COMBAT.enemySpawnWaitTicks) * 0.8;
       s.play('idle');
@@ -1107,9 +1110,13 @@ export class GameScene extends Phaser.Scene {
     const own = enemyArt(e.def.id, e.health / e.def.maxHealth);
     const art = (own && characterArt(this, own.pack, own.id)) || characterArt(this, 'enemies-t1', e.def.id)!;
     const sprite = new LayeredSprite(this, art);
-    sprite.container.addAt(addShadow(this, r * 2.2), 0);
+    // GUARD-SCALE-01: a Guardian's art is drawn `scale` times bigger (the sim's radius already is). The shadow
+    // sits inside the scaled container, so it is made at the body size / scale.
+    const scale = e.def.scale;
+    sprite.container.setScale(scale);
+    sprite.container.addAt(addShadow(this, (r * 2.2) / scale), 0);
     sprite.setLayer('telegraph', false).setLayerTint('telegraph', TELEGRAPH_TINT).setLayer('lid', false);
-    const top = characterTop(this, art);
+    const top = characterTop(this, art) * scale;
     const hpBack = this.add.rectangle(0, -top - 8, r * 2, 8, 0x000000, 0.6);
     const hpFill = this.add.rectangle(-r + 2, -top - 8, r * 2 - 4, 4, COLORS.healthLow).setOrigin(0, 0.5);
     const stars = [0, 1, 2].map(() => this.add.circle(0, 0, 4, COLORS.gold).setVisible(false));
@@ -1216,17 +1223,24 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.chainText, this.message, this.doorHint, this.screenFlash, this.roomLabel, this.timerText, this.bossName, ...(this.lidIcon ? [this.lidIcon] : [])]);
   }
 
-  private layout(): void {
+  /** The main camera's zoom and limits, including the boss intro's pull-back (`bossZoom`). */
+  private applyCameraZoom(): void {
     const { width, height } = view(this);
     const cam = this.cameras.main;
-    cam.setSize(width * DPR, height * DPR);
-    const zoom = height / (VISIBLE_ROWS * TILE);
+    const zoom = (height / (VISIBLE_ROWS * TILE)) * this.bossZoom;
     // The camera zoom also carries DPR (full sharpness); `zoom` stays in screen points.
     cam.setZoom(zoom * DPR);
     // Camera limits: a strip above the top wall keeps doors clear of the health bars,
     // and rooms smaller than the screen sit in the middle.
     const b = cameraBounds(this.room.width, this.room.height, width / zoom, height / zoom, TILE);
     cam.setBounds(b.x, b.y, b.width, b.height);
+  }
+
+  private layout(): void {
+    const { width, height } = view(this);
+    const cam = this.cameras.main;
+    cam.setSize(width * DPR, height * DPR);
+    this.applyCameraZoom();
     this.uiCamera.setSize(width * DPR, height * DPR);
     this.controls.layout();
     this.buttons.layout();
@@ -1864,9 +1878,39 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.ignore(prompt);
   }
 
+  /**
+   * GUARD-SCALE-01: when a boss room starts, the camera pulls back a little so the bigger Guardian is seen whole,
+   * holds, then eases back. Reduced motion: no zoom. The numbers are content (guardian-scale.json).
+   */
+  private bossIntroZoom(): void {
+    const z = bossZoomPlan(reducedMotion(), this.room.enemySpawns.some((sp) => CONTENT.enemies[sp.enemy]?.boss), CONTENT.guardianScale.bossZoom);
+    if (!z) return;
+    const step = (from: number, to: number, duration: number, delay: number, done: () => void) =>
+      this.tweens.addCounter({
+        from,
+        to,
+        duration,
+        delay,
+        ease: 'Sine.easeInOut',
+        onUpdate: (t) => {
+          this.bossZoom = t.getValue() ?? 1;
+          this.applyCameraZoom();
+        },
+        onComplete: done,
+      });
+    // Out, hold, back. The last step snaps to exactly 1.
+    step(1, z.zoomTo, z.outMs, 0, () =>
+      step(z.zoomTo, 1, z.backMs, z.holdMs, () => {
+        this.bossZoom = 1;
+        this.applyCameraZoom();
+      }),
+    );
+  }
+
   /** The room's name (and challenge rule) when entering. */
   private introduceRoom(): void {
     if (!this.run) return;
+    this.bossIntroZoom();
     if (this.run.tutorial) {
       this.introduceTutorialRoom();
       return;

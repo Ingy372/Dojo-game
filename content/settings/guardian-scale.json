@@ -1,0 +1,15 @@
+{
+  "notes": "GUARD-SCALE-01 (from Jay): Guardians (every boss enemy) are drawn bigger. The sim and the picture use the same number, so the hitbox, the danger circles and the art always match. Body radius and danger-circle size (areaRadius) are multiplied by the scale. Reach and startRange grow by the extra body radius (radius x (scale - 1)), so the gap from the Guardian's edge to where its attack starts stays what it was; a circle centred on the Guardian (reach 0) stays centred. Speed, health, power and wind-up times are unchanged. 'bigGuardians' lists the ids that use a different scale: the Stone Giant (Green) and the Lost Lightbearer (Black summit) are not built yet, so these entries wait for their enemy files. The short boss zoom-out is in 'bossZoom'.",
+  "guardianScale": 1.5,
+  "bigGuardians": {
+    "stone-giant": 1.75,
+    "lost-lightbearer": 1.75
+  },
+  "bossZoom": {
+    "notes": "When a boss room starts, the camera pulls back to this share of its normal zoom, holds, then eases back. Reduced motion: no zoom at all.",
+    "zoomTo": 0.8,
+    "outMs": 450,
+    "holdMs": 700,
+    "backMs": 650
+  }
+}

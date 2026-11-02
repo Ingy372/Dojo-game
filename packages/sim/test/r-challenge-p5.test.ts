@@ -2,7 +2,7 @@
 // checked on the real C1 content, and the plan's section 4 table (BALANCE=1 to print it) with a
 // warning for each Challenge cell more than 5 points off the §4b L+B row.
 import { describe, expect, it } from 'vitest';
-import { loadEnemy, type Content, type Difficulty } from '../src';
+import { loadEnemy, scaleEnemyDef, type Content, type Difficulty } from '../src';
 import { PATTERN_ANSWERS, playRun, SKILLS, type RunStats } from './balance/bot';
 import { targetWarnings, TARGET_TOLERANCE } from './balance/challenge-targets';
 import { testContent } from './load-content';
@@ -19,7 +19,8 @@ const withoutPatterns = (c: Content): Content => {
   const enemies = { ...c.enemies };
   for (const raw of Object.values(rawEnemies)) if (raw.challenge) {
     const { challenge: _drop, ...rest } = raw;
-    enemies[raw.id as string] = loadEnemy(rest);
+    // GUARD-SCALE-01: keep the Guardian scale, so only the patterns differ.
+    enemies[raw.id as string] = scaleEnemyDef(loadEnemy(rest), c.enemies[raw.id as string].scale);
   }
   return { ...c, enemies };
 };
@@ -100,12 +101,13 @@ describe('R-CHALLENGE P5: the bot answers patterns', () => {
     expect(fewer).toBeGreaterThanOrEqual(15);
   });
 
-  // The double-slam rule is checked on total Health over many runs (belts 4, 6, 8, 10 x 60 seeds).
+  // The double-slam rule is checked on total Health over many runs (belts 4, 6, 8, 10 x 300 seeds). GUARD-SCALE-01: 60 seeds
+  // was too few (the gap was 0.01% before it and flipped to +0.05% when the Guardians got bigger); at 300 seeds it is about 0.4% either way.
   const total = (key: 'holdStrikeForSecondHit', on: boolean) => {
     PATTERN_ANSWERS[key] = on;
     try {
       let damage = 0;
-      for (const tier of [4, 6, 8, 10]) for (let seed = 501; seed <= 560; seed++) for (const r of run(content, seed, BOTS[1], 'challenge', tier).rooms) damage += r.damage;
+      for (const tier of [4, 6, 8, 10]) for (let seed = 501; seed <= 800; seed++) for (const r of run(content, seed, BOTS[1], 'challenge', tier).rooms) damage += r.damage;
       return damage;
     } finally {
       PATTERN_ANSWERS[key] = true;
