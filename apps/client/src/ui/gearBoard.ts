@@ -211,6 +211,30 @@ export function bagScreenLayout(w: number, h: number): BagScreenLayout {
   return { cols: b.cols, rows: b.rows, perPage: b.perPage, tileW, tileH, gridX, gridY, gridW, headY: b.pad, backX: b.pad, titleX, filterX, pagerX, pagerW };
 }
 
+/**
+ * Whether the item sheet sits at the top (true) or the bottom of [top, bottom]. Default: the bottom, unless the picked tile
+ * (ending at pickedBottom) reaches into it. MENU-BAG-01 B1b: when the tile (tileH tall) is under the sheet either way
+ * (667x320), take the end that hides less of it, so part of the tile stays out and tapping it again closes the sheet.
+ */
+export function sheetAtTop(top: number, bottom: number, lift: number, pickedBottom: number, tileH = 0): boolean {
+  const sh = GEAR_BOARD.sheetH;
+  if (pickedBottom <= bottom - sh) return false;
+  if (tileH <= 0) return true;
+  const t0 = pickedBottom - tileH;
+  const hidden = (a: number, b: number) => Math.max(0, Math.min(pickedBottom, b) - Math.max(t0, a));
+  return hidden(bottom - sh, bottom) > hidden(top - lift, top - lift + sh);
+}
+
+/** MENU-BAG-01 B1: how many pages a bag of this many items has (at least 1). */
+export function bagPageCount(count: number): number {
+  return Math.max(1, Math.ceil(count / BAG_SCREEN.perPage));
+}
+
+/** MENU-BAG-01 B1: the Bag's page after ◀ (-1) or ▶ (+1), kept inside 0..pages-1. The Bag keeps this itself; the Gear tab behind it has its own page. */
+export function turnBagPage(page: number, by: number, count: number): number {
+  return Math.max(0, Math.min(bagPageCount(count) - 1, page + by));
+}
+
 /** A tile's top-left on the Bag screen (absolute). */
 export function bagTileBox(L: BagScreenLayout, i: number): { x: number; y: number; w: number; h: number } {
   return { x: L.gridX + (i % L.cols) * (L.tileW + BAG_SCREEN.gap), y: L.gridY + Math.floor(i / L.cols) * (L.tileH + BAG_SCREEN.gap), w: L.tileW, h: L.tileH };

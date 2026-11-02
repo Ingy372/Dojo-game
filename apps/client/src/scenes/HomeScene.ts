@@ -39,7 +39,7 @@ import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, u
 import { STYLE_LEFT_SHARE, STYLE_LEFT_SHARE_MIN, STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
 import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, pinnedAgain, runId, headingSparkle, sparkleStars, SPARKLE_W, statStack, takeCountUp, takeLevelUpSound, type FoundTile, type KeyStore } from '../ui/lastRun';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
-import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, gearSheetBox, slotEmptyLine, tileBox, toggleFilter, bagScreenLayout, bagTileBox, BAG_SCREEN } from '../ui/gearBoard';
+import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, gearSheetBox, slotEmptyLine, tileBox, toggleFilter, bagScreenLayout, bagTileBox, BAG_SCREEN, bagPageCount, turnBagPage, sheetAtTop } from '../ui/gearBoard';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining, selectProfile, shortDate } from '../game/student';
@@ -130,6 +130,8 @@ export class HomeScene extends Phaser.Scene {
   private gearDollGlow: Phaser.GameObjects.Ellipse | null = null;
   /** MENU-BAG-01: the full-screen Bag (6 x 4 a page) is open; it sits on its own layer above the tab panel. */
   private bagOpen = false;
+  /** MENU-BAG-01 B1: the Bag's own page. renderGear (the tab behind it) clamps `page` to its own page count, which reset the Bag's. */
+  private bagPage = 0;
   private bagLayer: Phaser.GameObjects.Container | null = null;
   private bagTileViews: Record<string, Phaser.GameObjects.Container> = {};
   /** Where the draw helpers add things: the shell, the tab bar or the panel (P-MENU-b). */
@@ -1490,17 +1492,17 @@ export class HomeScene extends Phaser.Scene {
   }
 
   /** P-MENU2-b: ◀ dots ▶ (44 tall). Dots only, never "n / m". */
-  private trophyPager(x: number, y: number, w: number, pages: number, dotsCy: number = y + 22): void {
+  private trophyPager(x: number, y: number, w: number, pages: number, dotsCy: number = y + 22, page: number = this.page): void {
     woodSkin(this, this.button(x, y, GEAR.arrowW, 44, '◀', WOOD.switchOff, 15, () => this.turn(-1)), GEAR.arrowW, 44);
     woodSkin(this, this.button(x + w - GEAR.arrowW, y, GEAR.arrowW, 44, '▶', WOOD.switchOff, 15, () => this.turn(1)), GEAR.arrowW, 44);
-    this.pageDotsRow(x + GEAR.arrowW, dotsCy, w - 2 * GEAR.arrowW, pages);
+    this.pageDotsRow(x + GEAR.arrowW, dotsCy, w - 2 * GEAR.arrowW, pages, page);
   }
 
   /** Page dots centred in a strip (never "n / m"). */
-  private pageDotsRow(x: number, cy: number, w: number, pages: number): void {
+  private pageDotsRow(x: number, cy: number, w: number, pages: number, page: number = this.page): void {
     const d = pageDots(pages, w);
     if (!d) return;
-    for (let i = 0; i < pages; i++) this.ui.add(this.add.circle(x + d.x0 + i * d.step, cy, GEAR.dot / 2, i === this.page ? 0xffd166 : WOOD.paper, i === this.page ? 1 : 0.35));
+    for (let i = 0; i < pages; i++) this.ui.add(this.add.circle(x + d.x0 + i * d.step, cy, GEAR.dot / 2, i === page ? 0xffd166 : WOOD.paper, i === page ? 1 : 0.35));
   }
 
   /** P-MENU2-b: the detail sheet: icon, real name, one line of what it does, the status line and kata arrows. */
@@ -1859,10 +1861,10 @@ export class HomeScene extends Phaser.Scene {
   }
 
   /** P-MENU2-f: the sheet: the item and what's worn, ↑ / ↓ in calm colours with plain words, numbers behind Details. */
-  private renderSheet(item: GearItem, x: number, top: number, w: number, bottom: number, pickedBottom: number, lift = 0): void {
+  private renderSheet(item: GearItem, x: number, top: number, w: number, bottom: number, pickedBottom: number, lift = 0, tileH = 0): void {
     const W = GEAR_WORDS;
     const sh = GEAR_BOARD.sheetH;
-    const atTop = pickedBottom > bottom - sh;
+    const atTop = sheetAtTop(top, bottom, lift, pickedBottom, tileH);
     const sy = atTop ? top - lift : bottom - sh;
     const closer = this.add.zone(x - 8, top - 8, w + 16, bottom - top + 16).setOrigin(0).setInteractive();
     closer.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.closeSheet());
@@ -1940,6 +1942,7 @@ export class HomeScene extends Phaser.Scene {
   private filterGear(slot: GearSlot): void {
     this.gearFilter = toggleFilter(this.gearFilter, slot);
     this.page = 0;
+    this.bagPage = 0;
     this.selected = null;
     this.confirmLetGo = false;
     this.renderPanel('none');
@@ -1974,6 +1977,7 @@ export class HomeScene extends Phaser.Scene {
 
   private openBag(): void {
     this.bagOpen = true;
+    this.bagPage = 0;
     this.page = 0;
     this.selected = null;
     this.confirmLetGo = false;
@@ -1982,6 +1986,7 @@ export class HomeScene extends Phaser.Scene {
 
   private closeBag(): void {
     this.bagOpen = false;
+    this.bagPage = 0;
     this.page = 0;
     this.selected = null;
     this.confirmLetGo = false;
@@ -2014,8 +2019,8 @@ export class HomeScene extends Phaser.Scene {
     const backdrop = this.add.rectangle(0, 0, W0, H0, 0x1b1626, 1).setOrigin(0).setInteractive();
     layer.add(backdrop);
     const bag = filterBag(this.profile.inventory, this.gearFilter);
-    const pages = Math.max(1, Math.ceil(bag.length / L.perPage));
-    this.page = Math.min(this.page, pages - 1);
+    const pages = bagPageCount(bag.length);
+    this.bagPage = Math.min(this.bagPage, pages - 1);
 
     // Header row (all 44 tall).
     woodSkin(this, this.button(L.backX, L.headY, BAG_SCREEN.backW, BAG_SCREEN.headH, W.back, WOOD.switchOff, 15, () => this.closeBag()), BAG_SCREEN.backW, BAG_SCREEN.headH);
@@ -2026,12 +2031,12 @@ export class HomeScene extends Phaser.Scene {
       const b = button(this, { x: L.filterX + i * (MIN_TAP + S1), y: L.headY, w: MIN_TAP, h: BAG_SCREEN.headH, label: '', color: on ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: on, stroke: WOOD.grain, onTap: () => this.filterGear(slot) }, this.ui);
       b.visual.setData('gearFilter', slot).add(slotGlyph(this, slot, 0, 0, 22, on ? 0xfff6e6 : 0xd9c6a3));
     });
-    if (pages > 1) this.trophyPager(L.pagerX, L.headY, L.pagerW, pages);
+    if (pages > 1) this.trophyPager(L.pagerX, L.headY, L.pagerW, pages, L.headY + 22, this.bagPage);
 
     // The 24 slots: items first, then faint empty outlines.
     const grid = this.add.container(0, 0);
     layer.add(grid);
-    const onPage = bag.slice(this.page * L.perPage, (this.page + 1) * L.perPage);
+    const onPage = bag.slice(this.bagPage * L.perPage, (this.bagPage + 1) * L.perPage);
     const slots = this.add.graphics();
     grid.add(slots);
     for (let i = onPage.length; i < L.perPage; i++) {
@@ -2054,7 +2059,7 @@ export class HomeScene extends Phaser.Scene {
       layer.bringToTop(t);
     }
     const picked = this.pickedItem();
-    if (picked) this.renderSheet(picked, BAG_SCREEN.pad, 0, W0 - 2 * BAG_SCREEN.pad, H0, pickedBottom);
+    if (picked) this.renderSheet(picked, BAG_SCREEN.pad, 0, W0 - 2 * BAG_SCREEN.pad, H0, pickedBottom, 0, L.tileH);
   }
 
   // ---------------------------------------------------------------- actions
@@ -2148,7 +2153,9 @@ export class HomeScene extends Phaser.Scene {
   }
 
   private turn(by: number): void {
-    this.page = Math.max(0, this.page + by);
+    // The Bag sits above the Gear tab and has its own page; the tab's pager is behind its backdrop.
+    if (this.bagOpen) this.bagPage = turnBagPage(this.bagPage, by, filterBag(this.profile.inventory, this.gearFilter).length);
+    else this.page = Math.max(0, this.page + by);
     this.selected = null;
     this.renderPanel(by > 0 ? 'pageNext' : 'pagePrev');
   }
