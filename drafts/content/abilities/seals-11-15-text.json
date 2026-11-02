@@ -1,5 +1,5 @@
 {
-  "notes": "R-G2B-02: kid-facing effect text for Orange belt seals #11-15 (Technique Seal format from content/abilities/abilities.json and seals-31-40-text.json). Names and effects come from the S4 table in drafts/planning/S4-self-defense-powers.md; every name is an S4 PROPOSAL and every number there is a guess, so no numbers appear in the text. Each text is one sentence under 80 characters, ages 6-9, hopeful, no pressure. 'Great Counter' is the kid word (S4 still says Perfect Counter). ids are proposed (no #11-15 ids exist in content/abilities yet); the Programmer may adjust at import. effectRef points at the S4 effect and is not final effect JSON. 'flag' marks a line whose wording may change; the R-PROGRESSION-BETA family names may also change any line later.",
+  "notes": "R-G2B-02: kid-facing effect text for Orange belt seals #11-15 (Technique Seal format from content/abilities/abilities.json and seals-31-40-text.json). Names and effects come from the S4 table in drafts/planning/S4-self-defense-powers.md; every name is an S4 PROPOSAL and every number there is a guess, so no numbers appear in the text. Each text is one sentence under 80 characters, ages 6-9, hopeful, no pressure. 'Great Counter' is the kid word (S4 still says Perfect Counter). ids are proposed (no #11-15 ids exist in content/abilities yet); the Programmer may adjust at import. effectRef points at the S4 effect and is not final effect JSON. 'flag' marks a line whose wording may change; the R-PROGRESSION-BETA family names may also change any line later. 'status' marks a seal that cannot be built yet (#15 waits on S4 #1, the Off the Line effect). The seal-name-clashes-1-10.md names stay PROPOSALS.",
   "seals": [
     {
       "id": "outside-reap",
@@ -42,7 +42,8 @@
       "text": "Great Counters add a third quick punch and give you a little more time.",
       "causesInjured": false,
       "effectRef": "counterHits +1, counterWindow +1 tick",
-      "flag": "Talks about the Great Counter, not 'Off the Line', because S4 says 'Off the Line adds a 3rd punch' but the Off the Line effect (#1) is not built. Reword once #1 is final."
+      "status": "waits on S4 #1",
+      "flag": "waits on S4 #1. Talks about the Great Counter, not 'Off the Line', because S4 says 'Off the Line adds a 3rd punch' but the Off the Line effect (#1) is not built. Reword once #1 is final."
     }
   ]
 }
