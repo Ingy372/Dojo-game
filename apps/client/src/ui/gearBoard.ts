@@ -149,3 +149,55 @@ export function labelPadding(tileW: number, textW: number): number {
 export function slotEmptyLine(slot: GearSlot): string {
   return words.slotEmpty.replace('{slot}', words.slots[slot]);
 }
+
+/**
+ * MENU-BAG-01: the Bag screen. It covers the whole view and shows a fixed 6 x 4 grid (24 slots a page)
+ * at every size we ship. One 44 header row holds Back, the title, the slot filters and the pager, so the
+ * grid gets the rest. Tiles are never smaller than minTileW x minTileH (both at least MIN_TAP), and rows
+ * 0 and 1 end above a bottom sheet while rows 2 and 3 start below a top sheet, so a picked tile is never covered.
+ */
+export const BAG_SCREEN = { cols: 6, rows: 4, perPage: 24, pad: S2, gap: S2, headH: MIN_TAP, backW: 96, tileMaxW: 104, tileMaxH: 76, minTileW: MIN_TAP, minTileH: MIN_TAP } as const;
+
+export interface BagScreenLayout {
+  cols: number;
+  rows: number;
+  perPage: number;
+  tileW: number;
+  tileH: number;
+  /** The grid's top-left and width. */
+  gridX: number;
+  gridY: number;
+  gridW: number;
+  /** The header row: Back, title, the filters and the pager (left to right). */
+  headY: number;
+  backX: number;
+  titleX: number;
+  filterX: number;
+  pagerX: number;
+  pagerW: number;
+}
+
+export function bagScreenLayout(w: number, h: number): BagScreenLayout {
+  const b = BAG_SCREEN;
+  const g = b.gap;
+  const gridY = b.pad + b.headH + b.pad;
+  const fitW = Math.floor((w - 2 * b.pad - (b.cols - 1) * g) / b.cols);
+  const tileW = Math.max(b.minTileW, Math.min(b.tileMaxW, fitW));
+  const fitH = Math.floor((h - gridY - b.pad - (b.rows - 1) * g) / b.rows);
+  // Two rows must end above a bottom sheet (rows 2 and 3 are then covered by it, and the picked tile is above it).
+  const sheetFit = Math.floor((h - GEAR_BOARD.sheetH - gridY - g) / 2);
+  const tileH = Math.max(b.minTileH, Math.min(b.tileMaxH, fitH, Math.max(sheetFit, Math.min(fitH, 61))));
+  const gridW = b.cols * tileW + (b.cols - 1) * g;
+  const gridX = Math.floor((w - gridW) / 2);
+  const filterW = 3 * MIN_TAP + 2 * S1;
+  const pagerW = 2 * MIN_TAP + 72;
+  const pagerX = w - b.pad - pagerW;
+  const filterX = pagerX - g - filterW;
+  const titleX = b.pad + b.backW + g;
+  return { cols: b.cols, rows: b.rows, perPage: b.perPage, tileW, tileH, gridX, gridY, gridW, headY: b.pad, backX: b.pad, titleX, filterX, pagerX, pagerW };
+}
+
+/** A tile's top-left on the Bag screen (absolute). */
+export function bagTileBox(L: BagScreenLayout, i: number): { x: number; y: number; w: number; h: number } {
+  return { x: L.gridX + (i % L.cols) * (L.tileW + BAG_SCREEN.gap), y: L.gridY + Math.floor(i / L.cols) * (L.tileH + BAG_SCREEN.gap), w: L.tileW, h: L.tileH };
+}

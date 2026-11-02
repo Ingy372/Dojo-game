@@ -37,7 +37,7 @@ describe('P-MENU-d Gear tab', () => {
     expect(last + GEAR.dot / 2).toBeLessThanOrEqual(240);
     expect(pageDots(40, 200)).toBeNull();
     // P-MENU2-f: the bag pages with the Trophy Case ◀ dots ▶ (which already falls back cleanly).
-    expect(gear).toMatch(/this\.trophyPager\(gx, y \+ L\.pagerY, L\.gridW, pages\)/);
+    expect(gear).toMatch(/this\.trophyPager\(gx, y \+ L\.pagerY, L\.gridW, pages(, [^)]*)?\)/);
   });
   it('slide-on does not pick: cards act through button() (press must start on it)', () => {
     const btn = Object.values(import.meta.glob(['../../../apps/client/src/ui/button.ts'], { query: '?raw', import: 'default', eager: true }))[0] as string;

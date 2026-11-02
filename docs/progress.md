@@ -1063,3 +1063,12 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - `familyRank` returns 0 for a family that is not live (test added).
 - Golden runs never apply effects (pre-existing): noted in `docs/decisions.md`, no code change.
 - Tests: `p-prog-d-strike` (+1), `p-prog-c-seal-ranks` (+1 check), `p-menu2-f-gear` (heading).
+
+
+## MENU-BAG-01 — The Bag screen (2026-11-02)
+- New full-screen Bag, opened by a **Bag** button on the Gear tab's filter row: 6 x 4 = 24 slots a page at 667x375, 844x390 and larger, ≥44 px tiles and controls, ◀ Back, slot filters, ◀ ▶ paging when there are more than 24 items, faint outlines for empty slots.
+- Tap a tile to pick it, then Wear / Take off / Let go / Details in the same sheet as the Gear tab (rows 0-1 get the sheet at the bottom, rows 2-3 at the top, so it never covers the picked tile). Wear gives a small pop on the tile instead of the flight to the doll.
+- One tile drawing (`gearTile`) for both screens. Layout is pure data in `ui/gearBoard.ts` (`bagScreenLayout`, `bagTileBox`, `BAG_SCREEN`).
+- The Gear tab's own grid is unchanged. Whether to drop it is Jay's call.
+- Tests: `menu-bag-01.test.ts` (layout at 5 sizes, header, sheet never covers the pick, paging, wiring).
+- Shots: `/workspace/shots/menu-bag-01` (not committed).
