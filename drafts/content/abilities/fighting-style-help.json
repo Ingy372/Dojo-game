@@ -1,26 +1,28 @@
 {
-  "notes": "PB-08 (R-PROGRESSION-BETA, PR #407): first-use help for the Fighting Style screen, in Sensei's voice. The plan allows at most 3 lines, one new idea per session: slots first, Seals next, swap last. Each 'line' is ONE short sentence (12 words or fewer, under 80 characters), ages 6-9, no digits, no guilt or pressure, no timers. 'screen' names the part of the Fighting Style screen the line sits on (words from content/abilities/fighting-style.json). 'trigger' says when the Programmer shows it (once each, then never again; the seen list lives in the save, additive). 'session' is the order: show only one line per visit. Needs a read by the Learning & Engagement Designer (PB-08 'done when'). Nothing here needs a tutorial step or new art.",
+  "notes": "PB-08 (R-PROGRESSION-BETA, PR #407): first-use help for the Fighting Style screen, in Sensei's voice. The plan allows at most 3 lines, one new idea per session: slots first, Seals next, swap last. Each 'line' is ONE short sentence, or a very short question and its answer (8 words or fewer, under 80 characters), ages 6-9, no digits, no guilt or pressure, no timers. 'screen' names the part of the Fighting Style screen the line sits on (words from content/abilities/fighting-style.json). 'trigger' says when the Programmer shows it (once each, then never again; the seen list lives in the save, additive). 'session' is the order: show only one line per visit. Needs a read by the Learning & Engagement Designer (PB-08 'done when'). Nothing here needs a tutorial step or new art. OVERLAP WITH THE SEAL UNLOCK TIP (PR #404, drafts/learning/g2b-11-lock-breakfree-welcome-week.md, 'Equip tip'): the unlock screen shows \"Put this Seal in a slot.\" / \"Then it helps you in fights.\" once per session. help-slots and help-seals say nearly the same thing, so they carry \"yieldsTo\": \"seal-unlock-equip-tip\". Rule for the Programmer: if the equip tip has shown earlier in the same session (same app visit), do NOT show this line and do NOT mark it seen; it stays waiting and shows on the next visit when the tip has not just shown. help-swap does not yield (the main tip does not talk about swapping). If the tip's Alt A or Alt B (which mention swapping) is ever chosen, help-swap should yield to the tip too.",
   "help": [
     {
       "id": "help-slots",
       "session": 1,
       "screen": "Fighting Style, the slot cards",
       "trigger": "the first time the Fighting Style screen opens",
-      "line": "These are your slots: tap one, then pick what to bring along!"
+      "line": "Tap a slot, then pick a Seal.",
+      "yieldsTo": "seal-unlock-equip-tip"
     },
     {
       "id": "help-seals",
       "session": 2,
       "screen": "Fighting Style, a Seal card",
       "trigger": "the first time the student taps a Seal card",
-      "line": "Each Seal grows as you learn its moves at the dojo."
+      "line": "Seals grow as you learn moves in class.",
+      "yieldsTo": "seal-unlock-equip-tip"
     },
     {
       "id": "help-swap",
       "session": 3,
       "screen": "Fighting Style, the swap question",
       "trigger": "the first time all Seal slots are full and a new Seal is tapped",
-      "line": "With full slots, pick the Seal you want to swap out."
+      "line": "Slots full? Pick a Seal to swap."
     }
   ]
 }

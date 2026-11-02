@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """PB-08: check drafts/content/abilities/fighting-style-help.json (first-use help for the Fighting Style screen).
-Rules: at most 3 lines; each 'line' is ONE sentence, 12 words or fewer, under 80 characters, no digits, no 'perfect', no pressure, guilt, injury,
+Rules: at most 3 lines; each 'line' is ONE sentence (or a 2-word question then a short answer), 8 words or fewer, under 80 characters, no digits, no 'perfect', no pressure, guilt, injury,
 body-part or weapon words; STRIKE/DASH/COUNTER in capitals; ids are kebab-case; sessions are 1..n with one idea each (slots first, swap last);
-every line names a screen and a trigger. Usage: python3 drafts/content/tools/check-fighting-style-help.py [file]"""
+every line names a screen and a trigger; help-slots and help-seals must yield to the seal unlock equip tip (PR #404). Usage: python3 drafts/content/tools/check-fighting-style-help.py [file]"""
 import json, re, sys, pathlib
 R = pathlib.Path(__file__).resolve().parents[3]
 F = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else R / "drafts/content/abilities/fighting-style-help.json"
@@ -22,14 +22,17 @@ for x in h:
         if k not in x: e.append(f"{i}: missing {k}")
     if not re.fullmatch(r"[a-z]+(-[a-z]+)*", i): e.append(f"{i}: id must be kebab-case")
     if len(t) >= 80: e.append(f"{i}: {len(t)} characters (max 79)")
-    if len(t.split()) > 12: e.append(f"{i}: {len(t.split())} words (max 12)")
-    if not t.endswith((".", "!")) or len(re.findall(r"[.!?]", t)) != 1: e.append(f"{i}: must be exactly one sentence")
+    if len(t.split()) > 8: e.append(f"{i}: {len(t.split())} words (max 8)")
+    marks = re.findall(r"[.!?]", t)
+    if not t.endswith((".", "!")) or len(marks) > 2 or (len(marks) == 2 and marks[0] != "?"): e.append(f"{i}: must be one sentence, or a short question then a short answer")
     if re.search(r"\d", t): e.append(f"{i}: no digits")
     for rx, label in ((BAN, "a word not for ages 6-9 or one that pressures"), (BODY, "a body-part word"), (WEAPON, "a weapon word")):
         if rx.search(t): e.append(f"{i}: {label}: {rx.search(t).group()}")
     if INJ.search(t): e.append(f"{i}: injury or break word: {INJ.search(t).group()}")
     if re.search(r"\b(strike|dash|counter)\b", t): e.append(f"{i}: write STRIKE, DASH or COUNTER in capitals")
 if h and "swap" in h[0].get("line", "").lower(): e.append("the swap idea must not come first")
+for x in h:
+    if x.get("id") in ("help-slots", "help-seals") and x.get("yieldsTo") != "seal-unlock-equip-tip": e.append(f"{x.get('id')}: needs yieldsTo seal-unlock-equip-tip (same idea as the #404 unlock tip)")
 print(f"{F.name}: {len(h)} lines")
 for x in e: print("  FAIL", x)
 print("OK: fighting style help passes" if not e else f"{len(e)} problem(s)")
