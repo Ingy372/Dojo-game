@@ -216,7 +216,7 @@ describe('GUARD-SCALE-01: the boss zoom-out', () => {
   it('is short, and GameScene plays it once, when the Guardian walks into view, using the Reduced motion setting', () => {
     expect(z.outMs + z.holdMs + z.backMs).toBeLessThanOrEqual(2000);
     expect(gameSceneRaw).toMatch(/bossZoomPlan\(reducedMotion\(\), /);
-    expect(gameSceneRaw).toMatch(/private watchBossAppear\(\): void \{\s*if \(this\.bossSeen /);
+    expect(gameSceneRaw).toMatch(/private watchBossAppear\(\): void \{\s*(\/\/[^\n]*\s*)?if \(this\.bossSeen /);
     expect(gameSceneRaw).toMatch(/this\.bossSeen = true;\s*this\.bossIntroZoom\(\);/);
     expect(gameSceneRaw).toMatch(/this\.drawTethers\(now\);\s*this\.watchBossAppear\(\);/);
     // The zoom ends at exactly 1, is reset when the scene is made, and reaches the camera limits too.
