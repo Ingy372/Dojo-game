@@ -1,5 +1,5 @@
 {
-  "notes": "Game abilities that real sign-offs unlock (framework section 5). The real technique names come from the school's curriculum; these are the generic powers they map to, in belt order. The 1st belt's kata unlocks stances[1], the 2nd belt's stances[2], and so on; each belt's kick combo unlocks the next strike; each self-defense technique unlocks the next seal (5 per belt). stances[0] is the Beginner's Stance everyone starts with (plain standing, all 0). stances[1] is the Open Leg (Ready) Stance, unlocked by its own sign-off; students who played before R-STANCE-g keep it without one. Belts beyond the end of a list still unlock their ability, with its power arriving in a later update. Effect types are listed in packages/sim/src/effects.ts. Virtues: each stripe word maps to one Virtue. The reason behind each choice is in docs/decisions.md (milestone 4).",
+  "notes": "Game abilities that real sign-offs unlock (framework section 5). The real technique names come from the school's curriculum; these are the generic powers they map to, in belt order. The 1st belt's kata unlocks stances[1], the 2nd belt's stances[2], and so on; each belt's kick combo unlocks the next strike; each self-defense technique unlocks the next seal (5 per belt). stances[0] is the Beginner's Stance everyone starts with (plain standing, all 0). stances[1] is the Open Leg (Ready) Stance, unlocked by its own sign-off; students who played before R-STANCE-g keep it without one. Belts beyond the end of a list still unlock their ability, with its power arriving in a later update. Effect types are listed in packages/sim/src/effects.ts. Virtues: each stripe word maps to one Virtue. The reason behind each choice is in docs/decisions.md (milestone 4). PB-03: the strikes list is kept one release only as the migration source for old Strike ids and for the unlock words in the Trophy Case; its two effects are no longer applied in a fight. The Strikes a student can equip are in content/abilities/strikes.json.",
   "stances": [
     {
       "id": "beginners-stance",
@@ -80,8 +80,8 @@
   "strikes": [
     {
       "id": "follow-up-kick",
-      "name": "Spin Kick Finish",
-      "text": "Your STRIKE adds a second kick.",
+      "name": "Spin Kick",
+      "text": "Your STRIKE is a big spinning kick.",
       "effect": {
         "type": "strikeExtraHit",
         "amount": 0.5
@@ -89,8 +89,8 @@
     },
     {
       "id": "quick-combo",
-      "name": "Butterfly Flow",
-      "text": "Practiced combos flow smoothly: each STRIKE costs 8 less Focus.",
+      "name": "Jumping Spins",
+      "text": "Jump and spin three times: a new STRIKE to choose.",
       "effect": {
         "type": "strikeCost",
         "amount": 8

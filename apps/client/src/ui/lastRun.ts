@@ -1,6 +1,6 @@
 // P-MENU2-g: the Last run "Scroll of the Climb" model and layout (no Phaser, so Vitest can check
 // it). A banner in kind words, room chips, 4 to 5 stat tiles that count up once per run, an XP
-// fill, the found strip, "New for you", "Always with you", Bests and a big Again! button.
+// fill, the found strip, "New for you", Bests and a big Again! button.
 // Wording comes from content/settings/last-run.json. Placeholder art is drawn in code.
 
 import { realClock, ticksToRealMs, type BestKey, type GearItem, type Profile, type RoomResult } from '@dojo/sim';

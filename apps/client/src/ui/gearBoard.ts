@@ -10,7 +10,7 @@ import { MIN_TAP, S1, S2, TROPHY_UI, TYPE } from './tokens';
 export const GEAR_WORDS = words;
 
 /** Sizes. Tiles are never narrower than tileMin; rings and every tap target are at least 44. */
-export const GEAR_BOARD = { tileMin: 56, labelSize: 12, labelH: 15, iconMax: 36, tileMax: 76, ring: 48, ringGap: S2, dollMin: 102, dollMax: 150, gap: S2, filterH: MIN_TAP, pagerH: MIN_TAP, sheetH: 172, wearH: 52, flyMs: 220, labelPad: 8, stroke: 2 } as const;
+export const GEAR_BOARD = { tileMin: 56, labelSize: 12, labelH: 15, iconMax: 36, tileMax: 76, ring: 48, ringGap: S2, dollMin: 102, dollMax: 150, gap: S2, filterH: MIN_TAP, pagerH: MIN_TAP, sheetH: 172, sheetNarrowMin: 280, wearH: 52, flyMs: 220, labelPad: 8, stroke: 2 } as const;
 
 export interface GearBoardLayout {
   dollW: number;
@@ -80,6 +80,17 @@ export function gearBoardLayout(w: number, h: number, minTileW: number = GEAR_BO
     dollW, ringX: g.ring / 2, ringYs: ringYs.map((y) => y + g.ring / 2), figureX: g.ring + S2 + figW / 2, figureY: dollH / 2 - figureR * 0.4, figureR,
     alwaysY, alwaysIcon, perAlwaysRow, alwaysRows, gridX, gridW, filterY, gridY, cols, rows, perPage: cols * rows, tileW, tileH, pagerY,
   };
+}
+
+/**
+ * G2B12-FIXES: where the item sheet goes, relative to the panel (w x h). It is full width, except that when it
+ * would cover the "Your Strike" row it starts right of the doll column, as long as that leaves it
+ * sheetNarrowMin or more. Smaller panels keep the full-width sheet.
+ */
+export function gearSheetBox(L: GearBoardLayout, w: number, h: number): { x: number; w: number } {
+  const strikeBottom = L.alwaysY + TYPE.label + S1 + L.alwaysIcon;
+  const x = L.dollW + S2;
+  return h - GEAR_BOARD.sheetH < strikeBottom && w - x >= GEAR_BOARD.sheetNarrowMin ? { x, w: w - x } : { x: 0, w };
 }
 
 /** The tile at index i on a page: its top-left, relative to the panel. Depends only on i and the layout. */

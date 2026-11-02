@@ -20,8 +20,9 @@ export function signedOffTechniques(training: TrainingState): Set<number> {
   return out;
 }
 
-/** How many of a family's techniques are signed off (0 = not unlocked). */
+/** How many of a family's techniques are signed off (0 = not unlocked). A family that is not live has no rank: it cannot be equipped, so it never counts as unlocked. */
 export function familyRank(family: SealFamilyDef, signed: ReadonlySet<number>): number {
+  if (!family.live) return 0;
   return family.ranks.filter((r) => signed.has(r.technique)).length;
 }
 
@@ -38,7 +39,7 @@ export function familyEffects(family: SealFamilyDef, signed: ReadonlySet<number>
 export function unlockedFamilies(training: TrainingState, families: readonly SealFamilyDef[]): string[] {
   const signed = signedOffTechniques(training);
   return families
-    .filter((f) => f.live && familyRank(f, signed) > 0)
+    .filter((f) => familyRank(f, signed) > 0)
     .map((f) => ({ id: f.id as string, first: Math.min(...f.ranks.filter((r) => signed.has(r.technique)).map((r) => r.technique)) }))
     .sort((a, b) => a.first - b.first)
     .map((f) => f.id);
