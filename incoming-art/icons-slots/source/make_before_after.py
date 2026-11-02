@@ -31,7 +31,7 @@ for i, (n, nm, note) in enumerate(ROWS):
     d.text((24, y + 100), nm, font=F(30), fill=INK)
     for li, ln in enumerate((note[:26], note[26:52])):
         d.text((24, y + 142 + li * 24), ln, font=F(18), fill=SOFT)
-    old = Image.open(os.path.join(ROOT, 'superseded', 'v2-icons', n + '.png')).convert('RGBA'); new = (Image.open(os.path.join(ROOT, 'superseded', 'v3-icons', n + '.png')).convert('RGBA') if n in ('guard', 'disarm') else si.ALL[n]())   # Guard and Disarm moved on to v4 (sheet 05)
+    old = Image.open(os.path.join(ROOT, 'superseded', 'v2-icons', n + '.png')).convert('RGBA'); new = (Image.open(os.path.join(ROOT, 'superseded', 'v3-icons', n + '.png')).convert('RGBA') if n in ('guard', 'disarm', 'counter', 'strike', 'jumping-spins') else si.ALL[n]())   # these five moved on to v4 (sheets 05 and 06)
     sheet.alpha_composite(pad(old, BIG), (280, y + 14)); sheet.alpha_composite(pad(new, BIG), (570, y + 14))
     cy = y + RH // 2 - 30
     for x0, sz, g in ((880, 60, False), (1090, 80, False), (1330, 60, True)):

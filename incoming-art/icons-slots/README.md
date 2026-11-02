@@ -1,10 +1,10 @@
 # Seal families (PB-07 samples)
 
-**Status: samples only, v4 (Guard and Disarm redrawn to a premium bar; see below).** Three preview sheets for Jay to OK before the full set is drawn. No game files are touched. No sprites exported yet: Jay approves first.
+**Status: samples only, v4 (Guard, Disarm, Counter, Strike and Jumping Spins all redrawn to the premium bar; see below).** Three preview sheets for Jay to OK before the full set is drawn. No game files are touched. No sprites exported yet: Jay approves first.
 
 The folder is `incoming-art/icons-slots/`, the path the PB-07 spec names (it was moved from `incoming-art/seal-families/` with `git mv`).
 
-**What changed in v4 (Jay: "Disarm's ankle looks broken. Guard's hands look really weird. Good enough is not OK, we want premium"):** only Guard and Disarm were redrawn. See `preview/05-before-after-v3-v4.png` (old and new, large, zoomed on the hand and the foot, at 40 and 30 pt, grey and on the wall). The v3 versions are kept in `superseded/v3-icons/`.
+**What changed in v4 (Jay: "Disarm's ankle looks broken. Guard's hands look really weird. Good enough is not OK, we want premium"):** Guard and Disarm were redrawn first, then Counter, Strike and Jumping Spins were restyled to match (same mitten fist with a clear wrist, same rigid shin, ankle and flexed shoe, same head). Strike's pad is now teal so the shoe and the pad read as two shapes. See `preview/06-before-after-v3-v4-full-set.png` for all five, and `preview/05-before-after-v3-v4.png` for Guard and Disarm only (old and new, large, zoomed on the hand and the foot, at 40 and 30 pt, grey and on the wall). The v3 versions are kept in `superseded/v3-icons/`.
 - **Guard** is a front-view high-guard block. Each forearm is a sleeve, then a cuff band, then a **clear skin wrist** (narrower than the cuff and the fist), then ONE closed mitten fist: a soft rounded square with a single thumb crease drawn inside the outline. There is no separate thumb shape, nothing sticks out of the silhouette, and no finger lines. The old fists were big blobs with a thumb bump that read as thumbs-up, and the sleeve ran straight into them.
 - **Disarm** is a real front snap kick. Shin, ankle and shoe are drawn once in a standing frame and rotated together, so the shin runs straight into the ankle and cannot kink. The foot is flexed about 90 degrees as in a real front kick, with the sole facing the stick. The shoe is a blue foam sparring bootie with a gold tape collar and a pale sole with a clear round heel. The old shoe was a disjointed boot with an odd collar and a disconnected leg. The burst on the sole is the hit, the source of the glow. The padded stick tumbles away.
 - **Digit check:** Guard shows 2 fists. Each has 0 visible fingers and 0 extra thumb shapes (1 thumb crease inside the outline). Disarm shows 0 fingers and 0 toes (toeless shoe, one foot). Checked large, in a zoom of each hand and foot, and at 30 pt.
@@ -25,6 +25,7 @@ PB-07 (in `drafts/planning/R-PROGRESSION-BETA.md`) replaces G2B-03. It asks for 
 | b | `preview/02-lock-and-slot-glyphs.png` (+ `@2x`) | Lock, Strike glyph, Kata glyph, empty Seal slot. Large, in a mock slot row, 48 and 32 pt, in grey |
 | c | `preview/03-jumping-spins.png` (+ `@2x`) | Jumping Spins. Large, next to the plain Strike glyph, 64, 48 and 32 pt on paper, grey and wall |
 | d | `preview/04-before-after-v2-v3.png` (+ `@2x`) | Old v2 next to new v3 for every icon: large, 30 pt, 40 pt, grey 30 pt and on the wall at 30 pt |
+| f | `preview/06-before-after-v3-v4-full-set.png` (+ `@2x`) | v4 full set: Guard, Disarm, Counter, Strike and Jumping Spins, old v3 next to new v4: large, close-up, 40 pt, 30 pt, grey and wall |
 | e | `preview/05-before-after-v3-v4.png` (+ `@2x`) | v4: Guard and Disarm, old v3 next to new v4: large, close-up of the hand and foot, 40 pt, 30 pt, grey and wall |
 
 The `@2x` files are the true pixels. The 1x files are the same sheets at phone points.
@@ -44,4 +45,4 @@ python3 incoming-art/icons-slots/source/build_seal_families.py
 ```
 Needs Pillow and numpy only. **It also needs PR #412 merged**, because it imports `incoming-art/tools/board_ui_kit.py` (the Board look). This PR does not copy that file, so it cannot clash with #412.
 
-Files: `source/toon.py` (drawing kit), `source/seal_icons.py` (the icons), `source/build_seal_families.py` (the three sheets), `source/make_before_after.py` (sheet 4; Pillow only, no #412 needed), `source/make_before_after_v4.py` (sheet 5; Pillow only).
+Files: `source/toon.py` (drawing kit), `source/seal_icons.py` (the icons), `source/build_seal_families.py` (the three sheets), `source/make_before_after.py` (sheet 4; Pillow only, no #412 needed), `source/make_before_after_v4.py` (sheet 5, and sheet 6 with `--all`; Pillow only).
