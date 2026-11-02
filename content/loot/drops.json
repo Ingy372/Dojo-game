@@ -1,10 +1,15 @@
 {
-  "notes": "Loot tables: who drops what and how much. Rarity shares and bad-luck protection are in packages/sim/src/config.ts (LOOT).",
+  "notes": "Loot tables: who drops what and how much. Rarity shares and bad-luck protection are in packages/sim/src/config.ts (LOOT). Belt 3 Ember Kitchens enemies (LOOT-B3-01, rates per #431): spark-sprite 2.5%, doughling 2%, dough-blob, ladle-lobber and rolling-pin 7%, brute 15%. Chances are set so a whole run drops about as much as a belt 1 run (4.61 vs 4.43 drops per run). Bosses (Floor Keeper, Hearth Cook) have no entry; the boss chest is their prize.",
   "enemyDropChance": {
     "swarmer": 0.035,
     "shield": 0.1,
     "bopper": 0.1,
-    "brute": 0.15
+    "brute": 0.15,
+    "spark-sprite": 0.025,
+    "doughling": 0.02,
+    "dough-blob": 0.07,
+    "ladle-lobber": 0.07,
+    "rolling-pin": 0.07
   },
   "chests": {
     "treasure": {
