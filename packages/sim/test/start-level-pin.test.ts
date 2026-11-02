@@ -39,11 +39,27 @@ describe('START-LEVEL-PIN: a new save is Level 1 with 0 XP, whatever the belt', 
     }
   });
 
-  it('applying a belt entry only changes the feed, never the profile', () => {
-    const p = newProfile();
-    const before = JSON.stringify(p);
-    for (const belt of belts) buildTraining(applyBeltEntry(white, { belt: belt.id, stripes: 2 }), abilities, now);
-    expect(JSON.stringify(p)).toBe(before);
+  it('applying a belt entry and playing on it never moves the profile: no level or XP from the belt itself', () => {
+    // The profile goes through the real chain (record the entry, apply it to the feed, build the training, gain 0 XP),
+    // so a belt that leaked into level or XP anywhere along the way would change it.
+    for (const belt of belts) {
+      const p = newProfile();
+      p.beltEntry = recordBeltEntry(belts, p.beltEntry, { belt: belt.id, stripes: 2 });
+      const before = JSON.stringify(p);
+      const training = buildTraining(applyBeltEntry(white, p.beltEntry), abilities, now);
+      gainXp(p, training, 0);
+      expect(JSON.stringify(p), belt.id).toBe(before);
+      expect([p.level, p.xp], belt.id).toEqual([1, 0]);
+    }
+  });
+
+  it('an old full-shape save with no level or XP, even with runs played, loads at Level 1 with 0 XP', () => {
+    const raw = JSON.parse(JSON.stringify(newProfile()));
+    delete raw.level;
+    delete raw.xp;
+    raw.runsPlayed = 5;
+    const p = loadProfile(raw);
+    expect([p.level, p.xp]).toEqual([1, 0]);
   });
 });
 
@@ -80,6 +96,11 @@ describe('START-LEVEL-PIN: real check-offs start active, whatever the level', ()
     expect(whiteItems.length).toBeGreaterThan(0);
     expect(whiteItems.every((r) => r.signedOff)).toBe(true);
     expect(newProfile().level).toBe(1);
+  });
+
+  it('a teacher sign-off in the feed comes through as signed off', () => {
+    const t = buildTraining(fixture('2-white-belt-3-signoffs'), abilities, now);
+    expect(t.requirements.filter((r) => r.signedOff).length).toBeGreaterThan(0);
   });
 
   it('what a student can use comes from the check-offs: a Green feed has picks that a fresh White feed does not, with no profile involved', () => {

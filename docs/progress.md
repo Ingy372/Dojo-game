@@ -1097,3 +1097,5 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ### START-LEVEL-PIN: start-level rule pinned by tests (2026-11-02)
 - Test-only: new profile, empty/old save and every belt entry stay Level 1 / 0 XP; a Green entry earns level only through `gainXp`; belt-entry check-offs are signed off; picks come from check-offs, not level.
 - Tests: `start-level-pin` (8).
+### START-LEVEL-PIN-GAPS: start-level tests tightened (2026-11-02)
+- Test-only: added "old save without level or XP loads at Level 1 / 0 XP" and "a feed sign-off shows as signed off"; the belt-entry test now runs the profile through `gainXp` so it can fail. `start-level-pin` is now 10 tests.
