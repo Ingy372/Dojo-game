@@ -104,13 +104,13 @@ def place_fit(med, art, wmax, hmax, cx=128, cy=128, bg=None, fmax=1.0):
     return f
 
 
-def counter(rim=RIMS['counter'], hx=104, hr=24, ty=88, tw=56, th=76, belt=136, sh=(120, 107), wr=(168, 105), r_sh=14, r_cuff=12, F=30.4,
-            relb=(70, 146), rcuff=(76, 141), rfist=(84, 134), rcuff_ang=-25, r_rel=11.5, r_rcuff=10,
-            ar=(46, 12), arrow_y=150, arrow_dx=16, stance=(-28, 40), ank=200, W=158, H=158, cx=132, cy=126, burst_gap=8):
-    """v5 pass 4: a reverse punch. Punching arm (viewer's right): the shoulder comes forward as a round shoulder cap over the jacket corner and ONE straight sleeve runs
-    from it to the cuff, a clear wrist and a mitten fist, knuckles out toward the burst. Chambered arm (viewer's left): the fist sits at the side of the hip on the left
-    edge of the torso, the elbow pulled back BEHIND the body (only the elbow tip shows past the back of the jacket). Both fists are the same size as Guard's fists
-    (F = 30.4 pt on the 256 face, solved after the fit). 2 fists, 0 fingers, 0 toes."""
+def counter(rim=RIMS['counter'], hx=104, hr=24, ty=88, tw=56, th=76, belt=136, sh=(118, 107), wr=(160, 105), r_sh=14.5, r_wr=11, F=29, hipk=.6, wrist_len=10,
+            relb=(69, 152), rcuff=(72, 146), rfist=(71, 141), rang=-35, r_rel=10, r_rcuff=8.5,
+            ar=(42, 12), arrow_y=152, arrow_dx=26, stance=(-28, 40), ank=200, W=158, H=158, cx=132, cy=126, burst_gap=12):
+    """v5 pass 5: a reverse punch. PUNCHING ARM (viewer's right): ONE smooth tapered sleeve from the shoulder (a round shoulder in front of the jacket corner) to the wrist, with no
+    cuff band or stacked tubes, then a short skin wrist and a natural-size mitten fist (F = 29 on the face) knuckles out toward the burst. HIP ARM (viewer's left): drawn wholly
+    BEHIND the jacket; only a small fist (60% of the punch fist) peeks out at the side of the hip beside the belt, its curl line on top (palm up), and the elbow tip behind it.
+    2 fists, 0 fingers, 0 toes."""
     def draw(fs):
         med = medallion(rim); a = Art()
         for k, dx in enumerate(stance):
@@ -118,21 +118,22 @@ def counter(rim=RIMS['counter'], hx=104, hr=24, ty=88, tw=56, th=76, belt=136, s
             an = (hx + dx, ank)
             sleeve(a, hip, (an[0], an[1] - 12), 13, 11, ow=4.6, shade=GSH, band=6)
             kick_leg(a, an, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
-        sleeve(a, relb, rcuff, r_rel, r_rcuff, ow=3.0, shade=GSH, band=6)                                         # chambered elbow, behind the jacket
+        sleeve(a, relb, rcuff, r_rel, r_rcuff, ow=3.0, shade=GSH, band=6)                                          # hip arm, behind the jacket
+        ang = math.radians(rang); ux, uy = math.cos(ang), math.sin(ang)
+        limb(a, rcuff, (rfist[0] - ux * 3, rfist[1] - uy * 3), 5.5, 5.8)
+        mitten_fist(a, rfist[0], rfist[1], fs * hipk, ang, -1)
         gi_torso(a, hx, ty, tw, th, belt_y=belt, ow=4.6, shade=GSH, band=6)
         limb(a, (hx, ty - 8), (hx, ty + 6), 8, 8)
         head_front(a, hx, ty - 24, hr)
-        forearm_block(a, sh, wr, fs, 0, 1, r_el=r_sh, r_cuff=r_cuff, gband=6, **GK)                                 # shoulder cap, straight arm, fist
-        ang = math.radians(rcuff_ang); ux, uy = math.cos(ang), math.sin(ang)
-        a.shape(poly(rrect_pts(rcuff[0], rcuff[1], 9, 2 * r_rcuff + 3, 3.5, ang)), GI, GSH, (255, 255, 250), ow=2.4, band=2.4)
-        limb(a, (rcuff[0] + ux * 3, rcuff[1] + uy * 3), (rfist[0] - ux * 6, rfist[1] - uy * 6), 7.2, 7.6)
-        mitten_fist(a, rfist[0], rfist[1], fs, ang, -1)                                                            # chambered fist at the hip
-        burst(a, wr[0] + 8 + fs + burst_gap, wr[1] - 4, 6.5, 14, 7, .3)
+        sleeve(a, sh, wr, r_sh, r_wr, ow=3.0, shade=GSH, band=6)                                                    # ONE sleeve, shoulder to wrist
+        limb(a, (wr[0] - 2, wr[1]), (wr[0] + wrist_len, wr[1]), 7.0, 7.4)
+        mitten_fist(a, wr[0] + wrist_len + fs * .38, wr[1], fs, 0, 1)
+        burst(a, wr[0] + wrist_len + fs * .88 + burst_gap, wr[1] - 4, 6.5, 14, 7, .3)
         pts = [(hx + arrow_dx + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 36, -8)]
         arrow(a, pts, BLUE_S, 7, 16, outline=(255, 252, 240))
         return med, a
     fs = F
-    for _ in range(3):                                                                                              # fists end up exactly F big on the face, like Guard
+    for _ in range(3):
         med, a = draw(fs)
         bb = a.im.getchannel('A').getbbox(); k = P(1)
         fs = F / min(W / ((bb[2] - bb[0]) / k), H / ((bb[3] - bb[1]) / k), 1.0)
@@ -162,11 +163,11 @@ def forearm_block(a, el, wr, fist_s, fist_ang, side, clip=None, r_el=14.5, r_cuf
     mitten_fist(a, wx + ux * (8 + fist_s * .42), wy + uy * (8 + fist_s * .42), fist_s, ang, side, clip=clip)
 
 
-def guard(rim=RIMS['guard'], eo=30, ey=204, wx=14, wy=150, fs=32, front=1, shield=True, hy=94, f=.95, cy=151):
+def guard(rim=RIMS['guard'], eo=20, ey=204, wx=14, wy=150, fs=32, front=1, shield=True, hy=94, f=.95, cy=151):
     """v5: a real crossed-forearm X-block. Smiling kid, gi torso, a soft blue shield behind. Both forearms come up from low elbows and cross in front of the chest:
     one sleeve is clearly drawn OVER the other (the outline and the cuff band make the overlap plain). Each forearm ends in the same cuff band, clear skin wrist and
-    one closed mitten fist (one soft rounded square, one thumb crease) as before, the fists up by the cheeks. The elbows sit in line with the sides of the body
-    (not flared out). 2 fists, 0 fingers."""
+    one closed mitten fist (one soft rounded square, one thumb crease) as before, the fists up by the cheeks. The forearms are folded so the elbows sit tight against the ribs, INSIDE the
+    torso outline (elbow outer edge 128 +- 36 against the torso edge 128 +- 39; see measure_guard.py). 2 fists, 0 fingers."""
     med = medallion(rim); a = Art(); c = None
     if shield:
         a.shape(poly(chaikin([(60, 118), (196, 118), (192, 172), (128, 228), (64, 172)], 3)), lighten(BLUE, .3), BLUE, lighten(BLUE, .6), ow=3.0, band=5, clip=c)

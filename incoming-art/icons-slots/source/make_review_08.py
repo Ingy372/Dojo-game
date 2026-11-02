@@ -1,4 +1,4 @@
-"""PB-07 review sheet 08 (pass 4): Counter only. Guard (approved after pass 3), Jumping Spins and Disarm (approved) and Strike are not touched.
+"""PB-07 review sheet 08 (pass 4): Counter only. Guard is NOT approved (it is redone in pass 5, sheet 09); Jumping Spins and Disarm are approved; Strike is not touched.
 Old = the pass-3 Counter (superseded/v5-pass3-icons), new = the current one: LARGE full views, LARGE close-ups of the chambered hip fist and of the punching arm,
 and 30 pt / grey 30 pt enlarged 4x.
   python3 incoming-art/icons-slots/source/make_review_08.py     (Pillow only)"""
@@ -21,10 +21,10 @@ def fit(im, w, h):
     out = Image.new('RGBA', (w, h), (255, 252, 244, 255)); out.alpha_composite(c, ((w - c.width) // 2, (h - c.height) // 2)); return out
 def px(im, s=60):
     inner = int(round(s * 112 / 128)); t = Image.new('RGBA', (s, s), PAPER); t.alpha_composite(im.resize((inner, inner), Image.LANCZOS), ((s - inner) // 2, (s - inner) // 2)); return t
-old = Image.open(os.path.join(ROOT, 'superseded', 'v5-pass3-icons', 'counter.png')).convert('RGBA'); new = si.ALL['counter']()
+old = Image.open(os.path.join(ROOT, 'superseded', 'v5-pass3-icons', 'counter.png')).convert('RGBA'); new = Image.open(os.path.join(ROOT, 'superseded', 'v5-pass4-icons', 'counter.png')).convert('RGBA')  # frozen: the edf4403 state; the live Counter moved on in pass 5
 G = 20; W = 4 * S + 5 * G; H = 90 + 2 * (S + 70)
 sheet = Image.new('RGBA', (W, H), PAPER); d = ImageDraw.Draw(sheet)
-d.text((G, 14), 'Review 08 (pass 4): Counter, old v5 (left of each pair) vs new (right). Guard approved, untouched', font=F(34), fill=INK)
+d.text((G, 14), 'Review 08 (pass 4): Counter, old v5 (left of each pair) vs new (right). Guard NOT approved (see sheet 09)', font=F(34), fill=INK)
 col = lambda i: G + i * (S + G)
 y1, y2 = 90, 90 + S + 70
 for i, k in enumerate(('FULL: old', 'FULL: new', 'chambered hip fist: old', 'chambered hip fist: new')): d.text((col(i), 56), k, font=F(24), fill=SOFT)
