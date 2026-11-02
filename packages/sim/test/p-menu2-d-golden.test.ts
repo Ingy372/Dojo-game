@@ -9,7 +9,7 @@
 // on purpose and say so in the PR.
 // PB-02 re-captured it on purpose: Seals now come from the families in the Seal slots, and a profile with no loadout has no Seals equipped (it used to get every unlocked Seal). The white3, yellow and green setups lose their Seal effects, and the rooted run (which has Seals) changes (health, blocks, perfects, window); every other run is byte-identical. Capture by hand with captureGolden() to see the diff.
 // PB-03 re-captured it on purpose: the two always-on Strike upgrades are retired (Spin Kick Finish's extra hit, Butterfly Flow's -8 Focus), so the yellow and green setups lose their strikeExtraHit and strikeCost effects, and every setup gains the new `strike` (Spin Kick: 30 Focus, one 2.5 hit, reach 1.4, lunge 0.7, recovery 8, today's Strike). No profile here has a Strike equipped, so every run is byte-identical.
-// GUARD-SCALE-01 re-captured it on purpose: Guardians are 1.5x bigger (body, danger circles, reach), so only the boss room (keepers-hall, w-keepers-hall) of each run moves, and with it the run totals and the items that depend on that fight; every setup and every other room is byte-identical.
+// GUARD-SCALE-01 re-captured it on purpose: Guardians are 1.5x bigger (body, danger circles; reach and start range grow by half the extra radius, reachGrowth 0.5), so only the boss room (keepers-hall, w-keepers-hall) of each run moves, and with it the run totals and the items that depend on that fight; every setup and every other room is byte-identical.
 import { describe, expect, it } from 'vitest';
 import { captureGolden } from './golden-capture';
 import golden from '../../../fixtures/golden/p-menu2-d-default-run.json';

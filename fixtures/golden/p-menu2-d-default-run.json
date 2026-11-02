@@ -43,7 +43,7 @@
     "runs": [
       {
         "won": true,
-        "ticks": 1930,
+        "ticks": 1937,
         "rooms": [
           {
             "roomId": "w-bamboo-hall",
@@ -174,16 +174,16 @@
           {
             "roomId": "w-keepers-hall",
             "kind": "boss",
-            "ticks": 327,
+            "ticks": 336,
             "damage": 30,
             "perfects": 7,
             "blocks": 2,
             "hits": 1,
-            "strikes": 15,
-            "dealt": 1045,
+            "strikes": 16,
+            "dealt": 1073,
             "kos": 11,
             "died": false,
-            "crowd": 1.2629969418960245,
+            "crowd": 1.2470238095238095,
             "peakCrowd": 3,
             "winded": 0,
             "grade": "A",
@@ -540,7 +540,7 @@
     "runs": [
       {
         "won": true,
-        "ticks": 1930,
+        "ticks": 1937,
         "rooms": [
           {
             "roomId": "w-bamboo-hall",
@@ -671,16 +671,16 @@
           {
             "roomId": "w-keepers-hall",
             "kind": "boss",
-            "ticks": 327,
+            "ticks": 336,
             "damage": 30,
             "perfects": 7,
             "blocks": 2,
             "hits": 1,
-            "strikes": 15,
-            "dealt": 1045,
+            "strikes": 16,
+            "dealt": 1073,
             "kos": 11,
             "died": false,
-            "crowd": 1.2629969418960245,
+            "crowd": 1.2470238095238095,
             "peakCrowd": 3,
             "winded": 0,
             "grade": "A",
@@ -1061,7 +1061,7 @@
     "runs": [
       {
         "won": true,
-        "ticks": 1783,
+        "ticks": 1786,
         "rooms": [
           {
             "roomId": "w-bamboo-hall",
@@ -1192,7 +1192,7 @@
           {
             "roomId": "w-keepers-hall",
             "kind": "boss",
-            "ticks": 314,
+            "ticks": 315,
             "damage": 34,
             "perfects": 7,
             "blocks": 0,
@@ -1201,7 +1201,7 @@
             "dealt": 1115,
             "kos": 11,
             "died": false,
-            "crowd": 1.4936305732484076,
+            "crowd": 1.492063492063492,
             "peakCrowd": 4,
             "winded": 0,
             "grade": "A",
@@ -1212,7 +1212,7 @@
       },
       {
         "won": true,
-        "ticks": 1821,
+        "ticks": 1796,
         "rooms": [
           {
             "roomId": "w-lantern-room",
@@ -1343,16 +1343,16 @@
           {
             "roomId": "w-keepers-hall",
             "kind": "boss",
-            "ticks": 318,
-            "damage": 9,
-            "perfects": 7,
+            "ticks": 290,
+            "damage": 7,
+            "perfects": 8,
             "blocks": 1,
             "hits": 0,
             "strikes": 14,
-            "dealt": 1161,
+            "dealt": 1107,
             "kos": 11,
             "died": false,
-            "crowd": 1.229559748427673,
+            "crowd": 1.2586206896551724,
             "peakCrowd": 3,
             "winded": 0,
             "grade": "S",
@@ -1582,7 +1582,7 @@
     "runs": [
       {
         "won": true,
-        "ticks": 1783,
+        "ticks": 1786,
         "rooms": [
           {
             "roomId": "w-bamboo-hall",
@@ -1713,7 +1713,7 @@
           {
             "roomId": "w-keepers-hall",
             "kind": "boss",
-            "ticks": 314,
+            "ticks": 315,
             "damage": 34,
             "perfects": 7,
             "blocks": 0,
@@ -1722,7 +1722,7 @@
             "dealt": 1115,
             "kos": 11,
             "died": false,
-            "crowd": 1.4936305732484076,
+            "crowd": 1.492063492063492,
             "peakCrowd": 4,
             "winded": 0,
             "grade": "A",
@@ -1733,7 +1733,7 @@
       },
       {
         "won": true,
-        "ticks": 1821,
+        "ticks": 1796,
         "rooms": [
           {
             "roomId": "w-lantern-room",
@@ -1864,16 +1864,16 @@
           {
             "roomId": "w-keepers-hall",
             "kind": "boss",
-            "ticks": 318,
-            "damage": 9,
-            "perfects": 7,
+            "ticks": 290,
+            "damage": 7,
+            "perfects": 8,
             "blocks": 1,
             "hits": 0,
             "strikes": 14,
-            "dealt": 1161,
+            "dealt": 1107,
             "kos": 11,
             "died": false,
-            "crowd": 1.229559748427673,
+            "crowd": 1.2586206896551724,
             "peakCrowd": 3,
             "winded": 0,
             "grade": "S",
@@ -2288,7 +2288,7 @@
       },
       {
         "won": true,
-        "ticks": 2042,
+        "ticks": 2081,
         "rooms": [
           {
             "roomId": "lantern-room",
@@ -2419,17 +2419,17 @@
           {
             "roomId": "keepers-hall",
             "kind": "boss",
-            "ticks": 258,
+            "ticks": 291,
             "damage": 0,
             "perfects": 8,
             "blocks": 0,
             "hits": 0,
-            "strikes": 12,
-            "dealt": 2001,
+            "strikes": 10,
+            "dealt": 1963,
             "kos": 11,
             "died": false,
-            "crowd": 1.306201550387597,
-            "peakCrowd": 2,
+            "crowd": 1.3470790378006874,
+            "peakCrowd": 3,
             "winded": 0,
             "grade": "S",
             "elite": null
@@ -2843,7 +2843,7 @@
       },
       {
         "won": true,
-        "ticks": 2042,
+        "ticks": 2081,
         "rooms": [
           {
             "roomId": "lantern-room",
@@ -2974,17 +2974,17 @@
           {
             "roomId": "keepers-hall",
             "kind": "boss",
-            "ticks": 258,
+            "ticks": 291,
             "damage": 0,
             "perfects": 8,
             "blocks": 0,
             "hits": 0,
-            "strikes": 12,
-            "dealt": 2001,
+            "strikes": 10,
+            "dealt": 1963,
             "kos": 11,
             "died": false,
-            "crowd": 1.306201550387597,
-            "peakCrowd": 2,
+            "crowd": 1.3470790378006874,
+            "peakCrowd": 3,
             "winded": 0,
             "grade": "S",
             "elite": null
@@ -3415,7 +3415,7 @@
       },
       {
         "won": true,
-        "ticks": 2572,
+        "ticks": 2558,
         "rooms": [
           {
             "roomId": "lantern-room",
@@ -3546,16 +3546,16 @@
           {
             "roomId": "keepers-hall",
             "kind": "boss",
-            "ticks": 337,
+            "ticks": 323,
             "damage": 0,
-            "perfects": 9,
+            "perfects": 10,
             "blocks": 0,
             "hits": 0,
-            "strikes": 19,
-            "dealt": 4089,
+            "strikes": 18,
+            "dealt": 3972,
             "kos": 11,
             "died": false,
-            "crowd": 1.2195845697329377,
+            "crowd": 1.2476780185758514,
             "peakCrowd": 2,
             "winded": 0,
             "grade": "S",
@@ -3566,7 +3566,7 @@
       },
       {
         "won": true,
-        "ticks": 2315,
+        "ticks": 2347,
         "rooms": [
           {
             "roomId": "brute-and-swarm",
@@ -3697,16 +3697,16 @@
           {
             "roomId": "keepers-hall",
             "kind": "boss",
-            "ticks": 312,
+            "ticks": 355,
             "damage": 63,
-            "perfects": 7,
+            "perfects": 6,
             "blocks": 2,
             "hits": 0,
-            "strikes": 15,
-            "dealt": 3994,
+            "strikes": 13,
+            "dealt": 3917,
             "kos": 11,
             "died": false,
-            "crowd": 1.3333333333333333,
+            "crowd": 1.343661971830986,
             "peakCrowd": 3,
             "winded": 0,
             "grade": "A",
@@ -3987,7 +3987,7 @@
       },
       {
         "won": true,
-        "ticks": 2572,
+        "ticks": 2558,
         "rooms": [
           {
             "roomId": "lantern-room",
@@ -4118,16 +4118,16 @@
           {
             "roomId": "keepers-hall",
             "kind": "boss",
-            "ticks": 337,
+            "ticks": 323,
             "damage": 0,
-            "perfects": 9,
+            "perfects": 10,
             "blocks": 0,
             "hits": 0,
-            "strikes": 19,
-            "dealt": 4089,
+            "strikes": 18,
+            "dealt": 3972,
             "kos": 11,
             "died": false,
-            "crowd": 1.2195845697329377,
+            "crowd": 1.2476780185758514,
             "peakCrowd": 2,
             "winded": 0,
             "grade": "S",
@@ -4138,7 +4138,7 @@
       },
       {
         "won": true,
-        "ticks": 2315,
+        "ticks": 2347,
         "rooms": [
           {
             "roomId": "brute-and-swarm",
@@ -4269,16 +4269,16 @@
           {
             "roomId": "keepers-hall",
             "kind": "boss",
-            "ticks": 312,
+            "ticks": 355,
             "damage": 63,
-            "perfects": 7,
+            "perfects": 6,
             "blocks": 2,
             "hits": 0,
-            "strikes": 15,
-            "dealt": 3994,
+            "strikes": 13,
+            "dealt": 3917,
             "kos": 11,
             "died": false,
-            "crowd": 1.3333333333333333,
+            "crowd": 1.343661971830986,
             "peakCrowd": 3,
             "winded": 0,
             "grade": "A",

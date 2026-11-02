@@ -20,7 +20,7 @@ const withoutPatterns = (c: Content): Content => {
   for (const raw of Object.values(rawEnemies)) if (raw.challenge) {
     const { challenge: _drop, ...rest } = raw;
     // GUARD-SCALE-01: keep the Guardian scale, so only the patterns differ.
-    enemies[raw.id as string] = scaleEnemyDef(loadEnemy(rest), c.enemies[raw.id as string].scale);
+    enemies[raw.id as string] = scaleEnemyDef(loadEnemy(rest), c.enemies[raw.id as string].scale, c.guardianScale.attackGrowth, c.guardianScale.reachGrowth);
   }
   return { ...c, enemies };
 };

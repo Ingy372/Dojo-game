@@ -81,8 +81,8 @@ function scaleAttack(a: EnemyAttackDef, circle: number, grow: number): EnemyAtta
 }
 
 /**
- * The enemy at `scale`: a bigger body, and danger areas that grow by `attackGrowth` of that (1 = as much as the body). `reach` and `startRange` grow by the extra
- * body radius, so the gap from its edge to where its attacks start is the same as before. Done once, when content loads.
+ * The enemy at `scale`: a bigger body, and danger areas that grow by `attackGrowth` of that (1 = as much as the body). `reach` and `startRange` grow by
+ * `reachGrowth` of the extra body radius (1 keeps the gap from the body's edge to where an attack starts; 0 leaves them as they were). Done once, when content loads.
  */
 export function scaleEnemyDef(def: EnemyDef, scale: number, attackGrowth = 1, reachGrowth = 1): EnemyDef {
   if (scale === 1) return def;
