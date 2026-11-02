@@ -104,9 +104,9 @@ describe('PB-01 normalizing a loadout', () => {
     expect(o.seals).toEqual(['escape', 'counter', 'guard']);
   });
 
-  it('with no Seal families or kata powers in the game yet, a Seal or kata pick is dropped, and Stance and Virtue are untouched', () => {
+  it('with no kata powers in the game yet, a kata pick is dropped; Seals are kept if earned (Yellow has Escape, Counter, Guard); Stance and Virtue are untouched', () => {
     const n = normalizeLoadout({ ...l, virtue: 'second-wind' }, training(yellow), content.abilities)!;
-    expect(n).toEqual({ stance: null, virtue: 'second-wind', strike: 'follow-up-kick', kata: null, seals: [] });
+    expect(n).toEqual({ stance: null, virtue: 'second-wind', strike: 'follow-up-kick', kata: null, seals: ['escape', 'counter'] });
   });
 
   it('a Strike that was not earned goes back to null (Spin Kick)', () => {

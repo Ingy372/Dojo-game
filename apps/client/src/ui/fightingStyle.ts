@@ -65,8 +65,9 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
   const defaultVirtue = training.virtue ? earnedVirtues.find((p) => p.id === training.virtue!.def.id) : undefined;
   const virtue = earnedVirtues.find((p) => p.id === loadout?.virtue) ?? defaultVirtue ?? earnedVirtues[0] ?? null;
 
+  // PB-02: only the Strikes are always on now; a Seal works only when its family is in a Seal slot (PB-05 shows the slots).
   const always = training.abilities
-    .filter((a) => (a.kind === 'strike' || a.kind === 'seal') && a.unlocked && a.perk)
+    .filter((a) => a.kind === 'strike' && a.unlocked && a.perk)
     .map((a) => ({ id: a.perk!.id, name: a.perk!.name }));
 
   return { current: { stance, virtue }, trays: { stance: [...earnedStances, ...lockedStances], virtue: [...earnedVirtues, ...lockedVirtues] }, always };
