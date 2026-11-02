@@ -4,7 +4,7 @@
 
 import type { TwistDef } from './twist';
 import type { StanceDef, VirtueKind } from './abilities';
-import { pushOutOfWalls } from './collision';
+import { circleHitsWall, pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
 import { BOW, COMBAT, DIFFICULTY, MIN_WINDUP_TICKS, MOVEMENT, SIM_VIEW, TICKS_PER_SECOND, realSecondsToTicks, type Difficulty } from './config';
 import { noMods, type PlayerMods } from './effects';
@@ -209,6 +209,8 @@ export type CombatEvent =
   | { kind: 'counterHint'; playerId: PlayerId }
   | { kind: 'block'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'hit'; playerId: PlayerId; enemyId: EnemyId; damage: number }
+  /** C430: a no-damage push (Bellows Puff) slid the player `tiles` away from the enemy. */
+  | { kind: 'push'; playerId: PlayerId; enemyId: EnemyId; tiles: number }
   | { kind: 'counterPressed'; playerId: PlayerId }
   | { kind: 'dash'; playerId: PlayerId }
   | { kind: 'strikeRefused'; playerId: PlayerId; reason: 'focus' | 'noTarget' }
@@ -1317,6 +1319,8 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
     startWindup(world, e);
     return;
   }
+  // C430: a stationary enemy (true speed 0) never walks, circles or paths; it only winds up when you are in range.
+  if (e.def.stationary) return;
   const speed = e.def.moveSpeedTilesPerSecond / TICKS_PER_SECOND;
   if (!canAttack && !closer && dist <= a.startRange + COMBAT.circleExtraRange) {
     // Waiting its turn ("kung fu circle"): circle around the player at a little distance.
@@ -1422,15 +1426,16 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
       // counts as the same Block, for everyone. B-MASHER-2 (E3): only until the room's 3rd Perfect Counter.
       p.guardTicks = 0;
       const share = blockShare(p);
-      const dmg = damage(power, a.strength * share * weak, guardOf(p));
+      // C430: a no-damage push (Bellows Puff) is simply held off by a Block: no damage, no slide, nothing to bounce back.
+      const dmg = e.def.push ? 0 : damage(power, a.strength * share * weak, guardOf(p));
       world.events.push({ kind: 'block', playerId: p.id, enemyId: e.id, damage: dmg });
       if (p.mods.dashOnBlock) p.dashCooldown = 0;
       // L-PREMIUM-b (Manager, decided): a Block made by the Mash guard, not by a Counter press, is a
       // Counter window with no answer, so it is a miss. A real Block (guarding) or a Dash never is.
       if (!guarding && !counterPressedLately(world, p) && p.dashTicks === 0) noteCounterMiss(world, p);
-      hurt(world, p, dmg);
+      if (dmg > 0 || !e.def.push) hurt(world, p, dmg);
       // Iron Skin: part of the full hit bounces back (shields stop it, unless Shield Breaker).
-      if (p.mods.blockReflect > 0 && isEnemyPresent(e) && (!e.shieldUp || p.mods.shieldBreaker)) {
+      if (!e.def.push && p.mods.blockReflect > 0 && isEnemyPresent(e) && (!e.shieldUp || p.mods.shieldBreaker)) {
         const back = Math.max(1, Math.round(damage(e.def.power, a.strength, guardOf(p)) * p.mods.blockReflect));
         hurtEnemy(world, p, e, 'reflect', back);
         // High Block Strike: a bounced hit leaves the attacker off-balance.
@@ -1439,6 +1444,9 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
           e.modeTicks = Math.max(e.modeTicks, p.mods.reflectStaggerTicks);
         }
       }
+    } else if (e.def.push) {
+      // C430: a no-damage push. No damage, so the combo stays and it is not a Counter miss; the player slides away.
+      pushPlayer(world, room, p, e, e.def.push.distanceTiles);
     } else {
       // Hit: full damage, combo resets.
       const dmg = damage(power, a.strength * weak, guardOf(p));
@@ -1450,6 +1458,26 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
       hurt(world, p, dmg);
     }
   }
+}
+
+/**
+ * C430: Bellows Puff's gust. Slides the player `tiles` straight away from the enemy, a little at a time so it stops at the
+ * first wall (never through one). The sim has no hazards or ledges, so there is nothing to push into; the data says
+ * `intoHazard: false` and the loader refuses anything else. Cancels a tap-to-walk path; no damage.
+ */
+function pushPlayer(world: WorldState, room: Room, p: PlayerState, e: EnemyState, tiles: number): void {
+  const away = directionTo(e.pos, p.pos);
+  const step = 0.1;
+  let moved = 0;
+  while (moved < tiles - 1e-9) {
+    const d = Math.min(step, tiles - moved);
+    const next = { x: p.pos.x + away.x * d, y: p.pos.y + away.y * d };
+    if (circleHitsWall(room, next, R)) break;
+    p.pos = next;
+    moved += d;
+  }
+  p.path = null;
+  world.events.push({ kind: 'push', playerId: p.id, enemyId: e.id, tiles: Math.round(moved * 100) / 100 });
 }
 
 /** L-PREMIUM-b: the player pressed Counter recently enough that this swing was answered (guard, window and lockout). */
