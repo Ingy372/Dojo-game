@@ -32,13 +32,14 @@ import {
   type TrainingState,
   kataArrows,
   activeDifficulty,
+  seedFakeStudent,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
 import { STYLE_LEFT_SHARE, STYLE_LEFT_SHARE_MIN, STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
 import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, pinnedAgain, runId, headingSparkle, sparkleStars, SPARKLE_W, statStack, takeCountUp, takeLevelUpSound, type FoundTile, type KeyStore } from '../ui/lastRun';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
-import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, slotEmptyLine, tileBox, toggleFilter, bagScreenLayout, bagTileBox, BAG_SCREEN } from '../ui/gearBoard';
+import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, gearSheetBox, slotEmptyLine, tileBox, toggleFilter, bagScreenLayout, bagTileBox, BAG_SCREEN } from '../ui/gearBoard';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining, selectProfile, shortDate } from '../game/student';
@@ -654,9 +655,8 @@ export class HomeScene extends Phaser.Scene {
     this.text(px, ty, 'YOUR NEXT STEP', TYPE.label, '#ffd166', true);
     ty += TYPE.label + (padP === S3 ? S2 : 4);
     if (p.next) {
-      // The video library arrives with the real DojoForge connection.
-      const video = this.text(x + w - padP, ty + 3, '▶ Video soon', TYPE.label, '#6b6478').setOrigin(1, 0);
-      this.oneLine(this.text(px, ty, p.next.name, TYPE.title, '#ffffff', true), pw - video.width - S2, TYPE.body);
+      // G2B12-FIXES: no "Video soon" tag until a video exists (the library arrives with the real DojoForge connection).
+      this.oneLine(this.text(px, ty, p.next.name, TYPE.title, '#ffffff', true), pw, TYPE.body);
       ty += TYPE.title + S2;
       if (p.next.catchUp) {
         this.text(px, ty, `Catch-up from ${p.next.beltName}`, TYPE.label, '#ffd166');
@@ -711,7 +711,7 @@ export class HomeScene extends Phaser.Scene {
   /**
    * P-MENU2-g: the Last run "Scroll of the Climb". A paper scroll (rolled wood ends drawn in
    * code): a banner in kind words with Bests, room chips, stat tiles that count up once per run,
-   * an XP fill, the Found strip (every tile opens its sheet), "Always with you", "New for you"
+   * an XP fill, the Found strip (every tile opens its sheet), "New for you"
    * (only when there is one) and a big Again! button. Positions come from lastRunLayout().
    */
   private renderRun(x: number, y: number, w: number, h: number, visibleH = h): void {
@@ -1064,7 +1064,7 @@ export class HomeScene extends Phaser.Scene {
 
   /**
    * P-MENU2-e: Fighting Style. Two slot cards (Stance, Virtue), the tray of picks for the chosen
-   * slot, a plain-words preview, and the "Always with you" row. Tap a slot, then a pick (D4); the
+   * slot, a plain-words preview, and the "Your Strike" row. Tap a slot, then a pick (D4); the
    * pick is saved at once. Not-yet picks say "Learn this at the dojo" and open their sheet.
    * Placeholder art drawn in code until Jay OKs the #265 art.
    */
@@ -1124,7 +1124,7 @@ export class HomeScene extends Phaser.Scene {
       button(this, { x, y: ty, w: MIN_TAP, h: L.tileH, label: '◀', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo === 0, onTap: () => this.turnTray(-1) }, this.ui);
       button(this, { x: x + L.leftW - MIN_TAP, y: ty, w: MIN_TAP, h: L.tileH, label: '▶', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo >= tp.pages - 1, onTap: () => this.turnTray(1) }, this.ui);
     }
-    // P-MENU2-f: page dots under the tray (in the gap before "Always with you"), no numbers.
+    // P-MENU2-f: page dots under the tray (in the gap before "Your Strike"), no numbers.
     for (const d of trayDots(tp.pages, this.trayPageNo, L.leftW)) this.ui.add(this.add.circle(x + d.x, ty + L.tileH + S2 / 2, 3, d.on ? 0xffd166 : WOOD.paper, d.on ? 1 : 0.35).setData('trayDot', d.on));
     // Tiles are centred in the room between the arrows (or the whole row).
     const room = L.leftW - 2 * tp.tilesX;
@@ -1789,7 +1789,8 @@ export class HomeScene extends Phaser.Scene {
     if (pages > 1) this.trophyPager(gx, y + L.pagerY, L.gridW, pages, roomy ? y + L.pagerY + 22 : y + L.pagerY - S1 - 3);
 
     const picked = this.pickedItem();
-    if (picked) this.renderSheet(picked, x, y, w, y + h, pickedBottom);
+    const sb = gearSheetBox(L, w, h); // G2B12-FIXES: keeps the "Your Strike" row showing
+    if (picked) this.renderSheet(picked, x + sb.x, y, sb.w, y + h, pickedBottom);
   }
 
   /** One bag tile at (tx, ty), bw x bh: rarity frame, icon, rarity word, worn / compare badge. Shared by the Gear tab and the Bag screen. */
@@ -2090,6 +2091,8 @@ export class HomeScene extends Phaser.Scene {
     this.testing = new TestingPanel(this, this.profile, this.training, {
       pickProfile: (key) => {
         selectProfile(key);
+        // G2B12-FIXES: the fake student brings its level and gear with it (never lowers, never overwrites gear).
+        if (seedFakeStudent(this.profile, currentTraining(), CONTENT.loot)) writeSave(this.profile);
         this.closeTesting();
         this.page = 0;
         this.refresh();

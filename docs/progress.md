@@ -1072,3 +1072,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - The Gear tab's own grid is unchanged. Whether to drop it is Jay's call.
 - Tests: `menu-bag-01.test.ts` (layout at 5 sizes, header, sheet never covers the pick, paging, wiring).
 - Shots: `/workspace/shots/menu-bag-01` (not committed).
+### G2B12-FIXES: the Green playthrough fixes (2026-11-02)
+- Door banner: one fixed pill at the top centre, readable at 667x375, hidden behind the Insight picker and menus.
+- Home path card: no "▶ Video soon".
+- First visit: the Welcome Week card waits for the second visit, so a first visit is four cards, not five.
+- Favicon (svg + ico) so the browser stops asking for a missing icon.
+- Fake student seed: Green (24/28) now shows Level 30 and 3 worn Rares on the testing screen.
+- Gear sheet no longer covers the "Your Strike" row at 932x430; "Always with you" comments removed (Tester's low notes from #425).
+- Tests: `g2b12-fixes` (10). Shots in /workspace/shots/g2b12-fixes with `pass-fail.md`.
