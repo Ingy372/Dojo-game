@@ -143,6 +143,9 @@ const BOSS_BAR_Y = 16;
 const HUD_BOTTOM = 56;
 /** Bottom of the health and Focus bars drawn in drawHud. */
 const HUD_BARS_BOTTOM = 51;
+/** G2B12-FIXES: the door hint's top edge, and the width each side keeps clear (the health bars on the left, the room label on the right). */
+const DOOR_HINT_TOP = 10;
+const DOOR_HINT_SIDE_PX = 222;
 /** Q-PREMIUM-2 M12: the hero's numbers start this far above the head (world px), step left, middle, right, and at most this many show at once. */
 const HERO_POP_RAISE_PX = 46;
 const HERO_POP_SIDE_PX = [0, -38, 38];
@@ -420,6 +423,9 @@ export class GameScene extends Phaser.Scene {
   private chainText!: Phaser.GameObjects.Text;
   private shownChain = 0;
   private message!: Phaser.GameObjects.Text;
+  /** G2B12-FIXES: "Pick one" stays put in the top strip while the doors are open (it used to fade over the HP bars). */
+  private doorHint!: Phaser.GameObjects.Text;
+  private doorHintOn = false;
   private senseiText: Phaser.GameObjects.Text | null = null;
   /** The 'Room clear!' line under the grade, while it shows (K23c: the ability pop-up keeps off it). */
   private gradeLine: Phaser.GameObjects.Text | null = null;
@@ -520,6 +526,7 @@ export class GameScene extends Phaser.Scene {
     this.heroPops = [];
     this.leaving = false;
     this.picker = null;
+    this.doorHintOn = false;
     this.doorViews = [];
     this.toastY = 0;
     this.lootToasts.clear();
@@ -643,6 +650,8 @@ export class GameScene extends Phaser.Scene {
 
   private draw(blend: number): void {
     const now = this.time.now;
+    // The door hint waits out the Insight picker and any menu, so it never sits over their titles.
+    this.doorHint.setVisible(this.doorHintOn && !this.menuOpen && !this.leaving);
     const p = this.world.players[this.me];
     const x = Phaser.Math.Linear(this.prevPos.x, p.pos.x, blend);
     const y = Phaser.Math.Linear(this.prevPos.y, p.pos.y, blend);
@@ -1163,6 +1172,11 @@ export class GameScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setResolution(res)
       .setVisible(false);
+    this.doorHint = this.add
+      .text(0, DOOR_HINT_TOP, '', { fontFamily: 'system-ui, sans-serif', fontStyle: 'bold', fontSize: '16px', color: '#fff6e0', align: 'center', backgroundColor: '#14121ccc', padding: { x: 10, y: 4 } })
+      .setOrigin(0.5, 0)
+      .setResolution(res)
+      .setVisible(false);
     this.screenFlash = this.add.rectangle(0, 0, 10, 10, 0xffffff).setOrigin(0).setAlpha(0);
     const small = { fontFamily: FONT, fontSize: '15px', color: '#f2e9d8', stroke: '#14121c', strokeThickness: 4 };
     this.roomLabel = this.add.text(0, 14, '', small).setOrigin(1, 0).setResolution(crisp());
@@ -1199,7 +1213,7 @@ export class GameScene extends Phaser.Scene {
     const calm = this.add.text(16, 55, 'Calm Mind', { ...small, fontSize: '12px', color: '#bff5ec' }).setResolution(crisp()).setVisible(!!this.run?.calmMind);
     this.cameras.main.ignore(calm);
     this.lidIcon = this.makeLidIcon();
-    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.chainText, this.message, this.screenFlash, this.roomLabel, this.timerText, this.bossName, ...(this.lidIcon ? [this.lidIcon] : [])]);
+    this.cameras.main.ignore([this.hud, this.comboText, this.comboBonusText, this.chainText, this.message, this.doorHint, this.screenFlash, this.roomLabel, this.timerText, this.bossName, ...(this.lidIcon ? [this.lidIcon] : [])]);
   }
 
   private layout(): void {
@@ -1220,6 +1234,7 @@ export class GameScene extends Phaser.Scene {
     this.comboBonusText.setX(width / 2);
     this.chainText.setX(width / 2);
     this.placeMessage();
+    this.placeDoorHint();
     this.roomLabel.setX(width - 16);
     this.practiceLabel?.setX(width / 2);
     this.timerText.setX(width - 16);
@@ -1525,10 +1540,11 @@ export class GameScene extends Phaser.Scene {
         case 'doorsOpen': {
           sfx.doors();
           for (const d of this.doorViews) this.ring(d.at, DOOR_LOOK[d.kind].color, 1.2);
-          const p = this.world.players[this.me];
           const one = this.doorViews.length === 1;
           if (this.run?.tutorial && this.room.kind === 'boss') this.tutorialTip('tutorial-door');
-          this.floatText(p.pos, one ? 'The door is open!' : 'The doors are open! Pick one.', '#f2e9d8', 20, 1.2);
+          this.doorHint.setText(one ? 'The door is open!' : 'The doors are open!\nPick one.');
+          this.doorHintOn = true;
+          this.placeDoorHint();
           break;
         }
         case 'playerReturn':
@@ -2063,6 +2079,12 @@ export class GameScene extends Phaser.Scene {
     this.strikeTaught = true;
     noteLessonSeen(STRIKE_LESSON, this.roomTag());
     this.senseiSay(LESSONS[STRIKE_LESSON].screens, 1600);
+  }
+
+  /** The door hint sits in the top strip between the health bars (left) and the room label (right). */
+  private placeDoorHint(): void {
+    const { width } = view(this);
+    this.doorHint.setWordWrapWidth(Math.max(160, width - 2 * DOOR_HINT_SIDE_PX - 20)).setPosition(width / 2, DOOR_HINT_TOP);
   }
 
   /** The big middle message, moved down under the twist banner while one is showing. */
