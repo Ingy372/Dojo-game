@@ -1,0 +1,33 @@
+{
+  "notes": "R-G2B-16 (PR #410 plan, R-G2B-strikes-4-7.md): names and kid text for Strikes #4-7. Strikes #1-3 are already in seal-families-text.json (PB-06) and their unlock lines are in unlock-text.json (PB-14), so the board's 'Strikes #3-7, 5 entries' becomes 4 entries here. Names follow the planner's lean on taste call 2 (Jay's): the redesign shape names, with the real combo as the 'inDojo' line. 'altName' holds the old S4 name (Manager, Oct 24), so Jay's call is a one-line swap and no name is invented. Under the redesign every Strike costs 30 Focus and has Spin Kick's strength; they differ in shape, so the texts describe the shape and never say stronger. 'text' is 12 words or fewer; 'unlock' is 8 words or fewer, first-grade words (same rules as unlock-text.json); 'inDojo' says what the real combo does, from docs/curriculum.md. Hook Kick's text follows the planner's lean A (taste call 1, Jay's): hits the enemy behind a shield enemy. If Jay picks B or D, only this one entry changes. No body-part words, no digits, no 'perfect'.",
+  "strikes": [
+    {
+      "id": "side-kick-drive", "combo": 4, "belt": "Green", "name": "Side Kick Drive", "altName": "Both Sides",
+      "text": "Step forward and push the enemy away.",
+      "unlock": "Your kick now pushes enemies away!",
+      "inDojo": "In the dojo: step-behind side kicks, then spin kicks.",
+      "status": "ready"
+    },
+    {
+      "id": "hook-kick", "combo": 5, "belt": "Blue", "name": "Hook Kick", "altName": "Low-High Kicks",
+      "text": "Your kick curves around a shield to reach the enemy behind.",
+      "unlock": "Your kick curves around shields!",
+      "inDojo": "In the dojo: step-behind hook kicks, then front kicks.",
+      "status": "waits on taste call 1 (Hook Kick meaning)"
+    },
+    {
+      "id": "lunge", "combo": 6, "belt": "Red", "name": "Lunge", "altName": "Block, Punch, Lunge",
+      "text": "Rush in fast, then land your kick.",
+      "unlock": "Your kick now rushes in fast!",
+      "inDojo": "In the dojo: step back twice, then lunge with a front kick.",
+      "status": "ready"
+    },
+    {
+      "id": "spinning-finisher", "combo": 7, "belt": "Red/Black", "name": "Spinning Finisher", "altName": "Axe and Hook",
+      "text": "Spin around and hit every enemy near you.",
+      "unlock": "Your spin hits all around you!",
+      "inDojo": "In the dojo: finish with a spinning hook kick.",
+      "status": "ready"
+    }
+  ]
+}

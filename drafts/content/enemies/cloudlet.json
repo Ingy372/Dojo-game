@@ -1,0 +1,33 @@
+{
+  "id": "cloudlet",
+  "name": "Cloudlet",
+  "notes": "Smaller Cloud Puff from the split (own file, like doughling.json; it was a variants entry with stats TODO). Two Cloudlets together have about as much Health as one Cloud Puff, and hit a little softer. Never splits again. Distances in tiles, times in ticks (20 per second).",
+  "color": "#f3f7fa",
+  "maxHealth": 10,
+  "power": 5,
+  "guard": 0,
+  "radius": 0.26,
+  "moveSpeedTilesPerSecond": 3.8,
+  "sightRange": 12,
+  "attack": {
+    "name": "little puff",
+    "strength": 1,
+    "startRange": 0.95,
+    "reach": 0.5,
+    "areaRadius": 0.55,
+    "telegraphTicks": 16,
+    "recoverTicks": 16
+  },
+  "parSeconds": 1.5,
+  "tier": "brown-black",
+  "band": "F1-2",
+  "tell": "tiny puff, then small red circle",
+  "senseiLine": "Little clouds. Calm them gently.",
+  "description": "A small cloud that split from a Cloud Puff.",
+  "bestiary": {
+    "tip": "Small and quick. Calm them first.",
+    "lore": {
+      "brown-black": "Two little clouds, still a bit stormy. Calm them, and they float away together."
+    }
+  }
+}

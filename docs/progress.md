@@ -1046,3 +1046,35 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Golden fixture re-captured on purpose (a null loadout has no Seals); see `docs/decisions.md`.
 - Gaps: no UI to equip Seals until PB-05; #16 and #20 are not in a family; Strikes are not seeded yet (PB-03).
 - Next: PB-03 (Strikes), PB-04 (kata powers), PB-05 (equip screen).
+
+
+## PB-03 — The Strike slot (2026-11-01)
+- New `content/abilities/strikes.json` and `strikes.ts`: Spin Kick (default, byte-for-byte today's Strike), Jumping Spins (3 hits), Butterfly Flow (one delayed hit). A Strike is earned with the kick combo of the same number. Old ids map by combo: `follow-up-kick` -> `spin-kick`, `quick-combo` -> `jumping-spins` (`legacyIds`).
+- The two always-on Strike upgrades are retired. `characterSetup` now returns `strike` (the equipped Strike or Spin Kick). The fight reads it; delayed hits queue and land on the same enemy.
+- `strikeSeeded` + `seedStrikeSlot` fill the Strike slot once for saves PB-02 seeded. `seedLoadoutV2` fills it for saves not yet seeded.
+- Golden fixture re-captured on purpose (setups only; every run identical).
+- Gaps: no equip UI until PB-05; Jumping Spins and Butterfly Flow numbers are placeholders for PB-09; no Trophy Case entry for combo 3.
+- Tests: `p-prog-d-strike` (22 new) plus fixes to five older tests.
+- Next: PB-04 (kata powers), PB-05 (equip screen), PB-09 (balance).
+
+### PB-03 follow-up: the Tester's 5 low notes (2026-11-02)
+- The stale empty text and the "Always with you" heading now read "Your Strike" / "Your Strike shows up here." on the Fighting Style, Gear and Run tab screens. The Run tab row now shows the empty text when there is no Strike.
+- Stale "always on" comments in `HomeScene.ts`, `fightingStyle.ts` and `profile.ts` fixed.
+- `familyRank` returns 0 for a family that is not live (test added).
+- Golden runs never apply effects (pre-existing): noted in `docs/decisions.md`, no code change.
+- Tests: `p-prog-d-strike` (+1), `p-prog-c-seal-ranks` (+1 check), `p-menu2-f-gear` (heading).
+
+### G2B12-FIXES: the Green playthrough fixes (2026-11-02)
+- Door banner: one fixed pill at the top centre, readable at 667x375, hidden behind the Insight picker and menus.
+- Home path card: no "▶ Video soon".
+- First visit: the Welcome Week card waits for the second visit, so a first visit is four cards, not five.
+- Favicon (svg + ico) so the browser stops asking for a missing icon.
+- Fake student seed: Green (24/28) now shows Level 30 and 3 worn Rares on the testing screen.
+- Gear sheet no longer covers the "Your Strike" row at 932x430; "Always with you" comments removed (Tester's low notes from #425).
+- Tests: `g2b12-fixes` (10). Shots in /workspace/shots/g2b12-fixes with `pass-fail.md`.
+
+### C430-FIXES: the Content Designer's #430 trio (2026-11-02)
+- Thunder Drum's name and bar no longer cover Virtue (or any action button) at 667x375.
+- `stationary: true` enemy flag; thunder-drum, sleepy-sentry and thorn-sprout use speed 0.
+- The sim models Bellows Puff's no-damage push (Hit slide, Block hold, wall stop, `push` event). A Puff room costs 0 Health.
+- Tests: `k31-boss-tag` (+3), `c430-stationary` (4), `c430-push` (5), `puff-push` balance report (gated). Shots in /workspace/shots/c430-fixes with `pass-fail.md`.
