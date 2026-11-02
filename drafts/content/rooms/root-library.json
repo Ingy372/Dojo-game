@@ -1,0 +1,579 @@
+{
+  "notes": "DRAFT for R-G2B-25/26/27. Brown (Tier 8) set. F1-2: Page Flutter, Bookworm. F3-4: Ink Blot, Root Snapper (dash-only). Room 2 and the challenge room use Page Flutter packs. Content/rooms/ format (same legend and tile letters; no new tile types); every room carries minBeltTier and floorSet like the Giant's Steps set. 8 rooms in the Ember pattern: 4 battle, 1 challenge, 1 treasure, 1 rest, 1 boss. F1-2 enemies in rooms 1-2; F3-4 enemies from room 3 (earliestRoom). Props are art notes only: every prop on a '.' must stay walk-through decoration; solid props are already '#'. The boss room's chest 'C' is where the light piece and the relic appear after the Guardian is freed; faith content is overlay key 'root-keeper' only. NO enemy stats here. Wave sizes are PLACEHOLDERS until balance work. The challenge uses the existing rules; its 90 seconds is the Supper Rush number (PLACEHOLDER) and the text has no digits. Not built; code is needed to use these.",
+  "tier": "brown",
+  "place": "The Root Library",
+  "faithOverlayKey": "root-keeper",
+  "rooms": [
+    {
+      "id": "dusty-entry",
+      "name": "Dusty Entry",
+      "kind": "battle",
+      "minBeltTier": 8,
+      "floorSet": "root-library",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..#............#..#",
+        "#..................#",
+        "#.....#......#.....#",
+        "#..................#",
+        "#..#............#..#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 1,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "page-flutter",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "bookworm",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "bookworm",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "bookworm",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        }
+      ],
+      "artProps": "Tall shelves with dusty books along the walls; a round welcome rug.",
+      "signs": [
+        "Every book began with a helper."
+      ]
+    },
+    {
+      "id": "reading-roots",
+      "name": "Reading Roots",
+      "kind": "battle",
+      "minBeltTier": 8,
+      "floorSet": "root-library",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#....#........#....#",
+        "#..................#",
+        "#..#............#..#",
+        "#......#....#......#",
+        "#..................#",
+        "#....#........#....#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 2,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "page-flutter",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 16,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "bookworm",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "bookworm",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        }
+      ],
+      "artProps": "Thick tree roots curl round the shelves (the '#' blocks are root knots); loose pages on the floor.",
+      "signs": [
+        "Roots hold up the tallest shelves."
+      ]
+    },
+    {
+      "id": "inkwell-aisle",
+      "name": "Inkwell Aisle",
+      "kind": "battle",
+      "minBeltTier": 8,
+      "floorSet": "root-library",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#.....#......#.....#",
+        "#.....#......#.....#",
+        "#.....#......#.....#",
+        "#.....#......#.....#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "ink-blot",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 13,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "bookworm",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "bookworm",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "ink-blot",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "bookworm",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        }
+      ],
+      "artProps": "A row of giant inkwells and quills; the floor shows faint ink dots.",
+      "signs": [
+        "A blot is a story waiting to start."
+      ]
+    },
+    {
+      "id": "root-stacks",
+      "name": "Root Stacks",
+      "kind": "battle",
+      "minBeltTier": 8,
+      "floorSet": "root-library",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "######........######",
+        "#..................#",
+        "#..................#",
+        "######........######",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "root-snapper",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "bookworm",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "ink-blot",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "bookworm",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "bookworm",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "root-snapper",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "ink-blot",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 4,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "Two huge shelves grown through with roots split the room into reading lanes.",
+      "signs": [
+        "Take one book at a time."
+      ]
+    },
+    {
+      "id": "great-reading-room",
+      "name": "The Reading Room",
+      "kind": "challenge",
+      "minBeltTier": 8,
+      "floorSet": "root-library",
+      "challenge": {
+        "seconds": 90,
+        "text": "Clear the room in time for a better chest!",
+        "inTimeText": "In time!",
+        "outOfTimeText": "Time's up! The shelves were tall, but you still earned a chest.",
+        "outOfTimeShort": "Time's up!"
+      },
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "###.......C......###",
+        "##................##",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "##................##",
+        "###..............###",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 4,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "page-flutter",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "bookworm",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "ink-blot",
+          "column": 5,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "root-snapper",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "bookworm",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "bookworm",
+          "column": 16,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "ink-blot",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "bookworm",
+          "column": 4,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "A round reading room with a glowing lamp over the door; tall stacks in each corner.",
+      "signs": [
+        "Every story needs a reader."
+      ]
+    },
+    {
+      "id": "story-shelf",
+      "name": "Story Shelf",
+      "kind": "treasure",
+      "minBeltTier": 8,
+      "floorSet": "root-library",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D##D##D###",
+        "#...........#",
+        "#.#.......#.#",
+        "#.....C.....#",
+        "#.#.......#.#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "A shelf of helper stories; the chest is a thick old book with a clasp.",
+      "signs": [
+        "The last page is for you."
+      ]
+    },
+    {
+      "id": "reading-nook",
+      "name": "Reading Nook",
+      "kind": "rest",
+      "minBeltTier": 8,
+      "floorSet": "root-library",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D##D##D###",
+        "#...........#",
+        "#..#.....#..#",
+        "#.....S.....#",
+        "#..#.....#..#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "A big armchair-shaped root, two cushions, and a warm reading lamp.",
+      "signs": [
+        "Rest and read. You belong here."
+      ]
+    },
+    {
+      "id": "root-hall",
+      "name": "The Root Hall",
+      "kind": "boss",
+      "minBeltTier": 8,
+      "floorSet": "root-library",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "##########D#########",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........C........#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "root-keeper",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "bookworm",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "page-flutter",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "bookworm",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "bookworm",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        }
+      ],
+      "artProps": "A huge hall held up by one giant tree; the Root Keeper sits among its roots with a book.",
+      "signs": [
+        "Strong roots keep you standing.",
+        "Share a story with the old tree."
+      ]
+    }
+  ]
+}
