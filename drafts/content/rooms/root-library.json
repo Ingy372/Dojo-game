@@ -30,12 +30,6 @@
       "enemies": [
         {
           "enemy": "page-flutter",
-          "column": 11,
-          "row": 6,
-          "wave": 1
-        },
-        {
-          "enemy": "page-flutter",
           "column": 14,
           "row": 3,
           "wave": 1
@@ -62,12 +56,6 @@
           "enemy": "bookworm",
           "column": 9,
           "row": 3,
-          "wave": 2
-        },
-        {
-          "enemy": "bookworm",
-          "column": 12,
-          "row": 6,
           "wave": 2
         }
       ],
