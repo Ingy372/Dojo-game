@@ -69,7 +69,7 @@ def check(path):
             if k not in v.get("attack",{}): e.append(f"variants.{vid}.attack.{k} missing")
         for k,s_ in [("senseiLine",v.get("senseiLine","")),("tell",v.get("tell","")),("tip",v.get("bestiary",{}).get("tip",""))]+[("lore",x) for x in v.get("bestiary",{}).get("lore",{}).values()]:
             if not s_ or words(s_)>LIMITS[k] or BANNED.search(s_): e.append(f"variants.{vid}.{k} empty, too long or unsuitable")
-    if "split" in d and d["split"].get("into") not in d.get("variants",{}): e.append("split.into must name a variant in this file")
+    if "split" in d and not any(os.path.exists(os.path.join(b,d["split"]["into"]+".json")) for b in ("content/enemies","drafts/content/enemies")): e.append("split.into needs its own enemy file (content/enemies or drafts/content/enemies); a variants entry alone fails loadContent")
     return e
 files=sys.argv[1:] or [p for p in sorted(glob.glob("drafts/content/enemies/*.json")) if "tier" in json.load(open(p))]
 bad=0

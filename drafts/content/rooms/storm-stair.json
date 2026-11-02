@@ -1,0 +1,579 @@
+{
+  "notes": "DRAFT for R-G2B-25/26/27. Brown/Black (Tier 9) set. F1-2: Cloud Puff, Gust Sprite. F3-4: Thunder Drum, Zap Kite (dash-only). No new move to show on this tier (plan R-G2B-27 note). Content/rooms/ format (same legend and tile letters; no new tile types); every room carries minBeltTier and floorSet like the Giant's Steps set. 8 rooms in the Ember pattern: 4 battle, 1 challenge, 1 treasure, 1 rest, 1 boss. F1-2 enemies in rooms 1-2; F3-4 enemies from room 3 (earliestRoom). Props are art notes only: every prop on a '.' must stay walk-through decoration; solid props are already '#'. The boss room's chest 'C' is where the light piece and the relic appear after the Guardian is freed; faith content is overlay key 'storm-herald' only. NO enemy stats here. Wave sizes are PLACEHOLDERS until balance work. The challenge uses the existing rules; its 90 seconds is the Supper Rush number (PLACEHOLDER) and the text has no digits. Not built; code is needed to use these.",
+  "tier": "brown-black",
+  "place": "The Storm Stair",
+  "faithOverlayKey": "storm-herald",
+  "rooms": [
+    {
+      "id": "rainy-landing",
+      "name": "Rainy Landing",
+      "kind": "battle",
+      "minBeltTier": 9,
+      "floorSet": "storm-stair",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..#............#..#",
+        "#..................#",
+        "#.....#......#.....#",
+        "#..................#",
+        "#..#............#..#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 1,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "cloud-puff",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        }
+      ],
+      "artProps": "A wide wet stone landing with puddles on the floor and a tipped umbrella.",
+      "signs": [
+        "Rain washes the stair clean."
+      ]
+    },
+    {
+      "id": "breezy-bend",
+      "name": "Breezy Bend",
+      "kind": "battle",
+      "minBeltTier": 9,
+      "floorSet": "storm-stair",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#.#..............#.#",
+        "#..#............#..#",
+        "#...#..........#...#",
+        "#....#........#....#",
+        "#.....#......#.....#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 2,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "gust-sprite",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        }
+      ],
+      "artProps": "A bend in the stair with fluttering flags; leaves swirl along the walls.",
+      "signs": [
+        "Lean into the wind. Stay steady."
+      ]
+    },
+    {
+      "id": "drum-landing",
+      "name": "Drum Landing",
+      "kind": "battle",
+      "minBeltTier": 9,
+      "floorSet": "storm-stair",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#...##........##...#",
+        "#...##........##...#",
+        "#..................#",
+        "#..................#",
+        "#...##........##...#",
+        "#...##........##...#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "thunder-drum",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "thunder-drum",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        }
+      ],
+      "artProps": "Two big storm drums on stone stands; rain streaks down the windows.",
+      "signs": [
+        "Count the beat. Then step."
+      ]
+    },
+    {
+      "id": "zigzag-steps",
+      "name": "Zig-Zag Steps",
+      "kind": "battle",
+      "minBeltTier": 9,
+      "floorSet": "storm-stair",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#.#..............#.#",
+        "#..#............#..#",
+        "#...#..........#...#",
+        "#....#........#....#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "zap-kite",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "thunder-drum",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 4,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "zap-kite",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "thunder-drum",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 15,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 4,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "Steps that zig-zag up the walls; kite ribbons tied to the posts.",
+      "signs": [
+        "The wind turns left, then right."
+      ]
+    },
+    {
+      "id": "storm-gate",
+      "name": "The Storm Gate",
+      "kind": "challenge",
+      "minBeltTier": 9,
+      "floorSet": "storm-stair",
+      "challenge": {
+        "seconds": 90,
+        "text": "Clear the room in time for a better chest!",
+        "inTimeText": "In time!",
+        "outOfTimeText": "Time's up! The storm was loud, but you still earned a chest.",
+        "outOfTimeShort": "Time's up!"
+      },
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#.........C........#",
+        "#.##............##.#",
+        "#.##............##.#",
+        "#..................#",
+        "#..................#",
+        "#.##............##.#",
+        "#.##............##.#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 4,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "cloud-puff",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "thunder-drum",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 5,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "zap-kite",
+          "column": 16,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 15,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "thunder-drum",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 4,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "A tall iron gate swirled with cloud; a lightning rod in each corner.",
+      "signs": [
+        "Even storms pass."
+      ]
+    },
+    {
+      "id": "feather-nook",
+      "name": "Feather Nook",
+      "kind": "treasure",
+      "minBeltTier": 9,
+      "floorSet": "storm-stair",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D##D##D###",
+        "#...........#",
+        "#...........#",
+        "###...C...###",
+        "#...........#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "A single feather hanging in the air, very still; the chest is a wind-worn trunk.",
+      "signs": [
+        "A calm feather floats here."
+      ]
+    },
+    {
+      "id": "dry-alcove",
+      "name": "Dry Alcove",
+      "kind": "rest",
+      "minBeltTier": 9,
+      "floorSet": "storm-stair",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D##D##D###",
+        "#...........#",
+        "##.........##",
+        "#.....S.....#",
+        "##.........##",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "A snug stone alcove with a roof, two cushions and a warm lamp.",
+      "signs": [
+        "Rest out of the rain."
+      ]
+    },
+    {
+      "id": "heralds-landing",
+      "name": "The Herald's Landing",
+      "kind": "boss",
+      "minBeltTier": 9,
+      "floorSet": "storm-stair",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "##########D#########",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........C........#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "storm-herald",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "cloud-puff",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "gust-sprite",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        }
+      ],
+      "artProps": "A wide windy platform in the clouds; the Storm Herald stands tall in the middle with ribbons of wind.",
+      "signs": [
+        "Listen for the calm.",
+        "A bell rings from the top."
+      ]
+    }
+  ]
+}

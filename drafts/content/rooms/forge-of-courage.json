@@ -1,0 +1,597 @@
+{
+  "notes": "DRAFT for R-G2B-25/26/27. Red (Tier 6) set. F1-2: Coal Cub, Anvil Imp. F3-4: Bellows Puff (pushes you back), Forge Sweeper (dash-only). Crowd rooms 2, 3 and 5 put three or more Coal Cubs close together so Break Free has a reason to be used (R-G2B-26). Content/rooms/ format (same legend and tile letters; no new tile types); every room carries minBeltTier and floorSet like the Giant's Steps set. 8 rooms in the Ember pattern: 4 battle, 1 challenge, 1 treasure, 1 rest, 1 boss. F1-2 enemies in rooms 1-2; F3-4 enemies from room 3 (earliestRoom). Props are art notes only: every prop on a '.' must stay walk-through decoration; solid props are already '#'. The boss room's chest 'C' is where the light piece and the relic appear after the Guardian is freed; faith content is overlay key 'ember-knight' only. NO enemy stats here. Wave sizes are PLACEHOLDERS until balance work. The challenge uses the existing rules; its 90 seconds is the Supper Rush number (PLACEHOLDER) and the text has no digits. Not built; code is needed to use these.",
+  "tier": "red",
+  "place": "The Forge of Courage",
+  "faithOverlayKey": "ember-knight",
+  "rooms": [
+    {
+      "id": "bellows-door",
+      "name": "Bellows Door",
+      "kind": "battle",
+      "minBeltTier": 6,
+      "floorSet": "forge-of-courage",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "###..............###",
+        "##................##",
+        "#..................#",
+        "#..................#",
+        "###..............###",
+        "##................##",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 1,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "coal-cub",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "anvil-imp",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        }
+      ],
+      "artProps": "Two huge leather bellows by the door; cool coals in baskets.",
+      "signs": [
+        "Warm hands, kind hearts."
+      ]
+    },
+    {
+      "id": "cub-crowd",
+      "name": "Cub Crowd",
+      "kind": "battle",
+      "minBeltTier": 6,
+      "floorSet": "forge-of-courage",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "###..............###",
+        "##................##",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "##................##",
+        "###..............###",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 2,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "coal-cub",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "anvil-imp",
+          "column": 16,
+          "row": 3,
+          "wave": 2
+        }
+      ],
+      "artProps": "A cozy corner cushion pile; small cool ember piles on the floor.",
+      "signs": [
+        "Many little cubs. Step with care."
+      ]
+    },
+    {
+      "id": "anvil-alley",
+      "name": "Anvil Alley",
+      "kind": "battle",
+      "minBeltTier": 6,
+      "floorSet": "forge-of-courage",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#...##........##...#",
+        "#...##........##...#",
+        "#..................#",
+        "#..................#",
+        "#...##........##...#",
+        "#...##........##...#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "coal-cub",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "bellows-puff",
+          "column": 5,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "anvil-imp",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "bellows-puff",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "anvil-imp",
+          "column": 4,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "Two big anvils with hammers on racks; sparks in jars along the walls.",
+      "signs": [
+        "Hammers ring. Hearts sing."
+      ]
+    },
+    {
+      "id": "sweeping-hall",
+      "name": "Sweeping Hall",
+      "kind": "battle",
+      "minBeltTier": 6,
+      "floorSet": "forge-of-courage",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "######........######",
+        "#..................#",
+        "#..................#",
+        "######........######",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "forge-sweep",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "bellows-puff",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "anvil-imp",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "forge-sweep",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "bellows-puff",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 4,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "Two long work benches with brooms; a bright clean floor for the sweep lanes.",
+      "signs": [
+        "Wide sweeps, wide smiles. Step aside."
+      ]
+    },
+    {
+      "id": "smiths-rush",
+      "name": "Smith's Rush",
+      "kind": "challenge",
+      "minBeltTier": 6,
+      "floorSet": "forge-of-courage",
+      "challenge": {
+        "seconds": 90,
+        "text": "Clear the room in time for a better chest!",
+        "inTimeText": "In time!",
+        "outOfTimeText": "Time's up! The forge was busy, but you still earned a chest.",
+        "outOfTimeShort": "Time's up!"
+      },
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#.........C........#",
+        "#.##............##.#",
+        "#.##............##.#",
+        "#..................#",
+        "#..................#",
+        "#.##............##.#",
+        "#.##............##.#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 4,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "coal-cub",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "anvil-imp",
+          "column": 5,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "bellows-puff",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "anvil-imp",
+          "column": 16,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "forge-sweep",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 4,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "A big forge clock above the door, a bucket of cool water in each corner.",
+      "signs": [
+        "Strong hands, kind heart."
+      ]
+    },
+    {
+      "id": "shield-rack",
+      "name": "Shield Rack",
+      "kind": "treasure",
+      "minBeltTier": 6,
+      "floorSet": "forge-of-courage",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D##D##D###",
+        "#...........#",
+        "##.........##",
+        "#.....C.....#",
+        "##.........##",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "A rack of round shields; the chest is a smith's tool chest with a red lid.",
+      "signs": [
+        "Shields are for helping."
+      ]
+    },
+    {
+      "id": "cool-embers",
+      "name": "Cool Embers",
+      "kind": "rest",
+      "minBeltTier": 6,
+      "floorSet": "forge-of-courage",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D##D##D###",
+        "#...........#",
+        "#.##.....##.#",
+        "#.....S.....#",
+        "#.##.....##.#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "A bed of glowing coals that do not burn, two cushions and a kettle.",
+      "signs": [
+        "Rest by the coals. They are gentle."
+      ]
+    },
+    {
+      "id": "knights-forge",
+      "name": "The Knight's Forge",
+      "kind": "boss",
+      "minBeltTier": 6,
+      "floorSet": "forge-of-courage",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "##########D#########",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........C........#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "ember-knight",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "anvil-imp",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "coal-cub",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        }
+      ],
+      "artProps": "A huge round forge with a glowing mouth; the Ember Knight stands before it with a raised shield.",
+      "signs": [
+        "Open your shield. Stay steady.",
+        "A calm heart is a strong heart."
+      ]
+    }
+  ]
+}

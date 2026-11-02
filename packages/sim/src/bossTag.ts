@@ -69,6 +69,19 @@ export function bossTagLayout(i: BossTagInput): BossTagLayout {
     const p = fit(t);
     if (p) return { x: p.x, nameTop: p.top, barY: p.top + BOSS_TAG.nameH + BOSS_TAG.gap + BOSS_TAG.barH / 2, below: p.top > i.headY };
   }
+  // C430: the buttons fill the lower right, so the quick slide-or-drop can fail. Search every spot that sits flush
+  // against a box (beside it, above it, below it) and take the clear one nearest the boss.
+  const tops = [order[0], ...avoid.flatMap((b) => [b.bottom + margin + 1, b.top - margin - STACK - 1])].map(clampTop);
+  const xs = [i.bossX, ...avoid.flatMap((b) => [b.right + margin + i.halfW, b.left - margin - i.halfW])].map(clampX);
+  let best: { x: number; top: number; cost: number } | null = null;
+  for (const top of tops) {
+    for (const x of xs) {
+      if (hits(x, top).length) continue;
+      const cost = Math.abs(x - i.bossX) + 2 * Math.abs(top - order[0]);
+      if (!best || cost < best.cost) best = { x, top, cost };
+    }
+  }
+  if (best) return { x: best.x, nameTop: best.top, barY: best.top + BOSS_TAG.nameH + BOSS_TAG.gap + BOSS_TAG.barH / 2, below: best.top > i.headY };
   const top = clampTop(order[order.length - 1]);
   return { x: clampX(i.bossX), nameTop: top, barY: top + BOSS_TAG.nameH + BOSS_TAG.gap + BOSS_TAG.barH / 2, below: top > i.headY };
 }

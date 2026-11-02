@@ -11,6 +11,7 @@ export * from './effects';
 export * from './katas';
 export * from './insight';
 export * from './loot';
+export * from './fakeStudent';
 export * from './content';
 export * from './run';
 export * from './profile';
