@@ -14,8 +14,8 @@ def F(sz):
 INK, SOFT, PAPER, WALL = (70, 42, 22), (120, 86, 56), (250, 242, 222), (110, 74, 46)
 # (name, label, note, zoom box on the 1024 px icon for the hand / foot close-up)
 ROWS = [('guard', 'Guard', 'X-block (unchanged since the first v5 pass)', (190, 330, 840, 880)),
-        ('counter', 'Counter', 'bigger figure, bold chambered fist, ink outline on sleeves and pants', (110, 300, 900, 840)),
-        ('jumping-spins', 'Jumping Spins', 'tapered jacket, belt break, natural standing leg, bigger spin arrow', (130, 130, 900, 880))]
+        ('counter', 'Counter', 'bigger figure, bold chambered fist, ink outline, arrow clear of the socks', (110, 300, 900, 840)),
+        ('jumping-spins', 'Jumping Spins', 'tapered jacket, clean belt band, natural leg, arrow wraps behind the body', (130, 130, 900, 880))]
 def pad(im, px):
     inner = int(round(px * 112 / 128)); out = Image.new('RGBA', (px, px), (0, 0, 0, 0))
     out.alpha_composite(im.resize((inner, inner), Image.LANCZOS), ((px - inner) // 2, (px - inner) // 2)); return out

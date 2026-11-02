@@ -105,7 +105,7 @@ def place_fit(med, art, wmax, hmax, cx=128, cy=128, bg=None, fmax=1.0):
 
 
 def counter(rim=RIMS['counter'], hx=104, hr=22, ty=88, tw=52, th=76, belt=136, el=(118, 112), wr=(158, 108), fs=24,
-             rel=(52, 138), rwr=(84, 136), rfs=30, ar=(62, 14), arrow_y=168, stance=(-28, 40), ank=200, W=166, H=166, cx=128, cy=128):
+             rel=(52, 138), rwr=(84, 136), rfs=30, ar=(58, 12), arrow_y=150, stance=(-28, 40), ank=200, W=166, H=166, cx=128, cy=128):
     """v5 pass 2: reverse punch, balanced stance, ink-dark sleeve/pant outlines and a darker gi shade so the white gi reads in grey at 30 pt; the figure is fitted bigger
     with a bold chambered fist. 2 fists, 0 fingers, 0 toes."""
     med = medallion(rim); a = Art()
@@ -120,8 +120,8 @@ def counter(rim=RIMS['counter'], hx=104, hr=22, ty=88, tw=52, th=76, belt=136, e
     forearm_block(a, rel, rwr, rfs, 0, 1, r_el=11.5, r_cuff=10, gband=6, **GK)
     forearm_block(a, el, wr, fs, 0, 1, r_el=12.5, r_cuff=11, gband=6, **GK)
     burst(a, wr[0] + 8 + fs + 10, wr[1] - 4, 6.5, 14, 7, .3)
-    pts = [(hx + 8 + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 24, -8)]
-    arrow(a, pts, BLUE_S, 7, 18, outline=(255, 252, 240))
+    pts = [(hx + 8 + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 36, -8)]
+    arrow(a, pts, BLUE_S, 7, 16, outline=(255, 252, 240))
     place_fit(med, a, W, H, cx, cy)
     return med.result()
 
@@ -328,7 +328,7 @@ def place(med, art, f, dx, dy, clip):
 
 
 def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, belt=130, hip=160, sw=48, ww=40, hr=22,
-           sl=((-9, 152), (-4, 176), (-12, 196)), arw=68, arrow_y=150, head=27, W=152, H=152, cx=128, cy=121):
+           sl=((-9, 152), (-4, 176), (-12, 196)), arw=70, arrow_y=152, ary=15, head=27, W=152, H=152, cx=128, cy=121):
     """v5 pass 2: slim kid, slightly tapered jacket over pants with a belt break (belt, knot, tails), a natural standing leg (thigh, bent knee, shin, flat shoe),
     the spin kick, a big spin arrowhead, ink-dark outlines for grey legibility. 1 fist, 0 fingers, 0 toes."""
     med = medallion(rim); a = Art(); bg = Art()
@@ -337,6 +337,9 @@ def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, 
     for rx, ry, al in ((66, 11, .65), (44, 7, .85)):
         bg.line(ell_pts(120, fy, rx, ry, 0, 40), (70, 150, 215), 3, closed=True, a=al)
     bg.fill_mask(mask_of(poly(ell_pts(114, fy, 30, 6))), (60, 44, 30), .4)
+    # spin arrow first: it wraps behind the body so the leg, belt and arrow never pile up
+    front = [(hx + 8 + arw * math.cos(math.radians(t)), arrow_y + ary * math.sin(math.radians(t))) for t in range(10, 150, 7)]
+    arrow(a, front, BLUE_S, 8, head, outline=(255, 252, 240))
     (h0, k0, a0) = [(hx + dx, y) for dx, y in sl]
     sleeve(a, h0, k0, 13, 11.5, ow=4.6, shade=GSH, band=6)
     sleeve(a, k0, (a0[0], a0[1] - 10), 11.5, 10.5, ow=4.6, shade=GSH, band=6)
@@ -347,15 +350,10 @@ def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, 
     pants = chaikin([(hx - ww / 2 - 1, belt - 4), (hx + ww / 2 + 1, belt - 4), (hx + ww / 2 + 3, hip - 6), (hx + ww / 2 - 4, hip), (hx - ww / 2 + 4, hip), (hx - ww / 2 - 3, hip - 6)], 2)
     a.shape(poly(pants), PANT, GSH, (255, 255, 250), ow=4.6, band=6)
     a.shape(poly(jack), GI, GSH, (255, 255, 250), ow=4.6, band=6)
-    a.shape(poly(rrect_pts(hx, belt, ww + 6, 13, 5)), BELT, BELT_S, lighten(BELT, .3), ow=3.0, band=3)
-    for ang, dx in ((.35, 2), (-.2, 11)):
-        a.shape(poly(rrect_pts(hx + dx, belt + 17, 7, 17, 2.8, ang)), BELT, BELT_S, lighten(BELT, .3), ow=2.6, band=2)
-    a.shape(poly(rrect_pts(hx + 6, belt + 1, 9, 11, 3.5)), BELT, BELT_S, lighten(BELT, .3), ow=2.6, band=2)
+    a.shape(poly(rrect_pts(hx, belt, ww + 6, 14, 5)), BELT, BELT_S, lighten(BELT, .3), ow=3.0, band=3)
     limb(a, (hx, ttop - 6), (hx, ttop + 6), 8, 8)
     head_front(a, hx, ttop - 26, hr)
     forearm_block(a, (hx - sw / 2 - 12, belt - 2), (hx - sw / 2 - 8, 96), 24, -math.pi / 2 + .1, 1, r_el=10, r_cuff=9, gband=6, **GK)
-    front = [(hx + 8 + arw * math.cos(math.radians(t)), arrow_y + 17 * math.sin(math.radians(t))) for t in range(10, 150, 7)]
-    arrow(a, front, BLUE_S, 8, head, outline=(255, 252, 240))
     place_fit(med, a, W, H, cx, cy, bg=bg)
     return med.result()
 
