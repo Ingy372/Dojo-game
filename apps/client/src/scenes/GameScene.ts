@@ -108,7 +108,7 @@ import { NAMED_PACK, NamedView } from '../game/named';
 import { reducedMotion } from '../game/motion';
 import { drawPatternTell } from '../game/patternTells';
 import { loadSave, writeSave } from '../game/save';
-import { currentTraining } from '../game/student';
+import { currentTraining, seedLoadout } from '../game/student';
 import { bowPrompt, playBow } from '../ui/bow';
 import { InsightPicker } from '../ui/InsightPicker';
 import { choiceCard, keptCard } from '../ui/RunOverCard';
@@ -462,6 +462,7 @@ export class GameScene extends Phaser.Scene {
   create(): void {
     this.tweens.timeScale = TEMPO.speed;
     this.training = currentTraining();
+    seedLoadout();
     this.setup = characterSetup(loadSave(), this.training, CONTENT.abilities);
     if (this.run) {
       this.room = currentRoom(CONTENT, this.run);

@@ -19,8 +19,7 @@ import {
   stepWorld,
   type PlayerInput,
   type StanceDef,
-  type WorldState,
-} from '../src';
+  type WorldState, emptyLoadout } from '../src';
 import abilitiesData from '../../../content/abilities/abilities.json';
 import { STYLE_LEFT_SHARE, STYLE_LEFT_SHARE_MIN, styleLayout } from '../../../apps/client/src/ui/fightingStyle';
 import { TROPHY_UI, cubbyTextW } from '../../../apps/client/src/ui/tokens';
@@ -133,22 +132,22 @@ describe('R-STANCE-d1 stances', () => {
 describe('R-STANCE-d1 save migration', () => {
   it('Rooted and Flowing picks, old or new ids, go back to Ready; running again changes nothing', () => {
     for (const old of ['rooted-form', 'flowing-form', 'rooted-stance', 'flowing-stance']) {
-      const once = migrateLoadout({ stance: old, virtue: 'second-wind' });
-      expect(once).toEqual({ stance: null, virtue: 'second-wind' });
+      const once = migrateLoadout({ ...emptyLoadout(), stance: old, virtue: 'second-wind' });
+      expect(once).toEqual({ ...emptyLoadout(), stance: null, virtue: 'second-wind' });
       expect(migrateLoadout(once)).toEqual(once);
       expect(migrateLoadout({ form: old, virtue: null })).toEqual({ stance: null, virtue: null });
     }
     const p = loadProfile(JSON.parse(JSON.stringify(oldSave)));
     expect(loadProfile(JSON.parse(JSON.stringify(p)))).toEqual(p);
-    expect(migrateLoadout({ stance: 'horse-stance', virtue: null })).toEqual({ stance: 'horse-stance', virtue: null });
+    expect(migrateLoadout({ ...emptyLoadout(), stance: 'horse-stance', virtue: null })).toEqual({ ...emptyLoadout(), stance: 'horse-stance', virtue: null });
   });
 
   it('normalizeLoadout drops a Stance the student has not unlocked and keeps the Virtue', () => {
     const feed = loadFeed(white3);
     const t = buildTraining(feed, content.abilities, { ms: Date.parse(feed.asOf), weekday: 3 });
-    expect(normalizeLoadout({ stance: 'cat-stance', virtue: null }, t, content.abilities)).toEqual({ stance: 'cat-stance', virtue: null });
-    expect(normalizeLoadout({ stance: 'horse-stance', virtue: 'second-wind' }, t, content.abilities)).toEqual({ stance: null, virtue: 'second-wind' });
-    expect(normalizeLoadout({ stance: 'horse-stance', virtue: null }, t, content.abilities)).toEqual({ stance: null, virtue: null });
+    expect(normalizeLoadout({ ...emptyLoadout(), stance: 'cat-stance', virtue: null }, t, content.abilities)).toEqual({ ...emptyLoadout(), stance: 'cat-stance', virtue: null });
+    expect(normalizeLoadout({ ...emptyLoadout(), stance: 'horse-stance', virtue: 'second-wind' }, t, content.abilities)).toEqual({ ...emptyLoadout(), stance: null, virtue: 'second-wind' });
+    expect(normalizeLoadout({ ...emptyLoadout(), stance: 'horse-stance', virtue: null }, t, content.abilities)).toEqual({ ...emptyLoadout(), stance: null, virtue: null });
     expect(normalizeLoadout(null, t, content.abilities)).toBeNull();
   });
 });
@@ -203,9 +202,9 @@ describe('R-STANCE-d1 old Form save with no virtue', () => {
     const base = JSON.parse(JSON.stringify(newProfile()));
     for (const form of ['rooted-form', 'flowing-form', 'rooted-stance', 'flowing-stance']) {
       const once = loadProfile({ ...base, loadout: { form } });
-      expect(once.loadout).toEqual({ stance: null, virtue: null });
-      expect(loadProfile(JSON.parse(JSON.stringify(once))).loadout).toEqual({ stance: null, virtue: null });
+      expect(once.loadout).toEqual({ ...emptyLoadout(), stance: null, virtue: null });
+      expect(loadProfile(JSON.parse(JSON.stringify(once))).loadout).toEqual({ ...emptyLoadout(), stance: null, virtue: null });
     }
-    expect(loadProfile({ ...base, loadout: { form: 'front-stance' } }).loadout).toEqual({ stance: 'front-stance', virtue: null });
+    expect(loadProfile({ ...base, loadout: { form: 'front-stance' } }).loadout).toEqual({ ...emptyLoadout(), stance: 'front-stance', virtue: null });
   });
 });

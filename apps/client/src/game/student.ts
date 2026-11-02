@@ -2,9 +2,9 @@
 // from the fake profiles in fixtures/, picked on the hidden testing screen. Their dates
 // are moved so each profile looks "fresh" (its last update is now).
 
-import { applyBeltEntry, buildTraining, loadFeed, shiftFeedDates, type StudentFeed, type TrainingState } from '@dojo/sim';
+import { applyBeltEntry, buildTraining, loadFeed, seedInputFor, seedLoadoutV2, shiftFeedDates, type StudentFeed, type TrainingState } from '@dojo/sim';
 import { CONTENT } from './content';
-import { loadSave } from './save';
+import { loadSave, writeSave } from './save';
 
 const files = import.meta.glob('../../../../fixtures/*.json', { eager: true, import: 'default' });
 
@@ -62,6 +62,18 @@ export function currentTraining(): TrainingState {
   const feed = shiftFeedDates(fake.feed, new Date(asOf + Math.floor((now.getTime() - asOf) / DAY) * DAY).toISOString());
   // B-BELT: the grown-up's belt entry, when it is above the feed (it never lowers anything).
   return buildTraining(applyBeltEntry(feed, loadSave().beltEntry), CONTENT.abilities, { ms: now.getTime(), weekday: now.getDay() });
+}
+
+/**
+ * PB-02: gives an old save (loadoutV2 false) the Seal slots filled from what the student has
+ * earned, once. Safe to call again: it does nothing after the first time. Returns true if it ran.
+ */
+export function seedLoadout(): boolean {
+  const profile = loadSave();
+  if (profile.loadoutV2) return false;
+  seedLoadoutV2(profile, seedInputFor(currentTraining(), CONTENT.abilities));
+  writeSave(profile);
+  return true;
 }
 
 /** "Sat, Mar 27" for a "YYYY-MM-DD" date. */
