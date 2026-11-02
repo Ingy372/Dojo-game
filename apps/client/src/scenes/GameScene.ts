@@ -3031,6 +3031,8 @@ export class GameScene extends Phaser.Scene {
       const b = t.getBounds();
       avoid.push({ left: b.left, right: b.right, top: b.top, bottom: b.bottom });
     }
+    // C430: the action buttons (Virtue, Strike, Dash, Counter, Stance) are HUD boxes too; the tag keeps clear of them.
+    for (const b of this.buttonKeepOut()) avoid.push({ left: b.x0, right: b.x1, top: b.y0, bottom: b.y1 });
     const barHalf = (v.hpBack.width * k) / 2;
     const halfW = Math.max(this.bossName.width / 2, barHalf);
     const t = bossTagLayout({
