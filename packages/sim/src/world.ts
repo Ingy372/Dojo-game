@@ -46,6 +46,10 @@ export interface PlayerState {
   attackCooldown: number;
   /** Ticks of Strike recovery left (no attacking while above 0). */
   strikeRecovery: number;
+  /** PB-03: the equipped Strike (Spin Kick when none). */
+  strike: StrikeSetup;
+  /** PB-03: Strike hits still to land (a Strike hit with `delayTicks` lands later). */
+  pendingStrikeHits: PendingStrikeHit[];
   /** The tick Counter was last pressed, or -1. */
   counterPressedTick: number;
   /** Ticks of guard pose left after pressing Counter (0 = not guarding). */
@@ -388,6 +392,35 @@ export interface PlayerSetup {
   /** Stances to switch between; the first is active at the start. Defaults to none (Beginner's Stance). */
   stances?: StanceDef[];
   virtue?: VirtueSetup | null;
+  /** PB-03: the equipped Strike. Missing = Spin Kick (today's Strike, from COMBAT.strike). */
+  strike?: StrikeSetup;
+}
+
+/** PB-03: a Strike as a fight uses it (a StrikeDef without the words). */
+export interface StrikeSetup {
+  id: string;
+  focusCost: number;
+  hits: { strength: number; delayTicks: number }[];
+  reach: number;
+  lungeTiles: number;
+  recoveryTicks: number;
+}
+
+/** A Strike hit waiting to land (see `StrikeSetup.hits`). */
+export interface PendingStrikeHit {
+  ticks: number;
+  enemyId: EnemyId;
+  strength: number;
+}
+
+/** Spin Kick: the Strike every student has. These are the numbers the Strike had before PB-03. */
+export function defaultStrike(): StrikeSetup {
+  const s = COMBAT.strike;
+  return { id: 'spin-kick', focusCost: s.focusCost, hits: [{ strength: s.strength, delayTicks: 0 }], reach: s.reach, lungeTiles: s.lungeTiles, recoveryTicks: s.recoveryTicks };
+}
+
+function cloneStrike(s: StrikeSetup): StrikeSetup {
+  return { ...s, hits: s.hits.map((h) => ({ ...h })) };
 }
 
 /** The Beginner's Stance: no changes. Used when the player has no Stances. */
@@ -419,6 +452,8 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       perfects: 0,
       attackCooldown: 0,
       strikeRecovery: 0,
+      strike: options.player?.strike ? cloneStrike(options.player.strike) : defaultStrike(),
+      pendingStrikeHits: [],
       counterPressedTick: -1,
       guardTicks: 0,
       counterLockout: 0,
@@ -746,7 +781,7 @@ export function activeStance(p: PlayerState): StanceDef {
 
 /** Focus a Strike costs this player (Strike upgrades can lower it). */
 export function strikeCost(p: PlayerState): number {
-  return Math.max(10, COMBAT.strike.focusCost - p.mods.strikeCostCut);
+  return Math.max(10, p.strike.focusCost - p.mods.strikeCostCut);
 }
 
 /** The player's Guard with the active Stance. */
@@ -776,6 +811,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
 
   if (p.attackCooldown > 0) p.attackCooldown--;
   if (p.strikeRecovery > 0) p.strikeRecovery--;
+  landPendingStrikeHits(world, p);
   if (p.counterLockout > 0) p.counterLockout--;
   if (p.dashCooldown > 0) p.dashCooldown--;
   if (p.stanceCooldown > 0) p.stanceCooldown--;
@@ -897,7 +933,7 @@ function useVirtue(world: WorldState, p: PlayerState): void {
 }
 
 function tryStrike(world: WorldState, p: PlayerState, room: Room): void {
-  const s = COMBAT.strike;
+  const s = p.strike;
   const cost = strikeCost(p);
   if (p.focus < cost) {
     world.events.push({ kind: 'strikeRefused', playerId: p.id, reason: 'focus' });
@@ -919,10 +955,29 @@ function tryStrike(world: WorldState, p: PlayerState, room: Room): void {
   p.focus -= cost;
   p.strikeRecovery = s.recoveryTicks;
   p.attackCooldown = Math.max(p.attackCooldown, s.recoveryTicks);
-  landHit(world, p, target, 'strike', s.strength, COMBAT.focus.perHit);
-  // Double Strike: a second, lighter hit right after.
+  // PB-03: every hit in the Strike's list. A hit with no delay lands now; the rest land later.
+  s.hits.forEach((h, i) => {
+    if (h.delayTicks > 0) p.pendingStrikeHits.push({ ticks: h.delayTicks, enemyId: target.id, strength: h.strength });
+    else if (i === 0 || isEnemyPresent(target)) landHit(world, p, target, 'strike', h.strength, COMBAT.focus.perHit);
+  });
+  // Double Strike (an effect from a charm or Insight): a second, lighter hit right after the first.
   if (p.mods.strikeExtraHit > 0 && isEnemyPresent(target)) {
-    landHit(world, p, target, 'chain', s.strength * p.mods.strikeExtraHit, COMBAT.focus.perHit);
+    landHit(world, p, target, 'chain', s.hits[0].strength * p.mods.strikeExtraHit, COMBAT.focus.perHit);
+  }
+}
+
+/** PB-03: counts down the Strike hits still to land and lands the ones that are due, on the enemy they were aimed at. */
+function landPendingStrikeHits(world: WorldState, p: PlayerState): void {
+  if (p.pendingStrikeHits.length === 0) return;
+  const due: PendingStrikeHit[] = [];
+  p.pendingStrikeHits = p.pendingStrikeHits.filter((h) => {
+    if (--h.ticks > 0) return true;
+    due.push(h);
+    return false;
+  });
+  for (const h of due) {
+    const e = world.enemies.find((x) => x.id === h.enemyId);
+    if (e && isEnemyPresent(e)) landHit(world, p, e, 'strike', h.strength, COMBAT.focus.perHit);
   }
 }
 
@@ -1025,6 +1080,7 @@ function returnToStart(world: WorldState, p: PlayerState, room: Room): void {
   p.combo = 0;
   p.attackCooldown = 0;
   p.strikeRecovery = 0;
+  p.pendingStrikeHits = [];
   p.counterPressedTick = -1;
   p.guardTicks = 0;
   p.counterLockout = 0;

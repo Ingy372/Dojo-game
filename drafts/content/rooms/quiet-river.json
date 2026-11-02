@@ -1,0 +1,555 @@
+{
+  "notes": "DRAFT for R-G2B-25/26/27. Blue (Tier 5) set. F1-2 enemies: Puddle Frog, Mist Wisp. F3-4: Side Crab, Splash Wave (dash-only, needs a clear lane). The Padded-Staff Bopper (Yellow, already live) joins rooms 3, 4 and the challenge so the staff stays in practice (R-G2B-25). Content/rooms/ format (same legend and tile letters; no new tile types); every room carries minBeltTier and floorSet like the Giant's Steps set. 8 rooms in the Ember pattern: 4 battle, 1 challenge, 1 treasure, 1 rest, 1 boss. F1-2 enemies in rooms 1-2; F3-4 enemies from room 3 (earliestRoom). Props are art notes only: every prop on a '.' must stay walk-through decoration; solid props are already '#'. The boss room's chest 'C' is where the light piece and the relic appear after the Guardian is freed; faith content is overlay key 'river-watcher' only. NO enemy stats here. Wave sizes are PLACEHOLDERS until balance work. The challenge uses the existing rules; its 90 seconds is the Supper Rush number (PLACEHOLDER) and the text has no digits. Not built; code is needed to use these.",
+  "tier": "blue",
+  "place": "The Quiet River",
+  "faithOverlayKey": "river-watcher",
+  "rooms": [
+    {
+      "id": "ferry-landing",
+      "name": "Ferry Landing",
+      "kind": "battle",
+      "minBeltTier": 5,
+      "floorSet": "quiet-river",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..#............#..#",
+        "#..................#",
+        "#.....#......#.....#",
+        "#..................#",
+        "#..#............#..#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 1,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "puddle-frog",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        }
+      ],
+      "artProps": "Wooden dock posts and a tied-up rowboat; flat stepping stones on the floor.",
+      "signs": [
+        "Wade in slowly. The water is kind."
+      ]
+    },
+    {
+      "id": "reed-bank",
+      "name": "Reed Bank",
+      "kind": "battle",
+      "minBeltTier": 5,
+      "floorSet": "quiet-river",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#....#........#....#",
+        "#..................#",
+        "#..#............#..#",
+        "#......#....#......#",
+        "#..................#",
+        "#....#........#....#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 2,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "mist-wisp",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 16,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        }
+      ],
+      "artProps": "Tall soft reeds along both sides (the '#' blocks are reed clumps); lily pads on the floor.",
+      "signs": [
+        "Still water, steady breath."
+      ]
+    },
+    {
+      "id": "crab-shallows",
+      "name": "Crab Shallows",
+      "kind": "battle",
+      "minBeltTier": 5,
+      "floorSet": "quiet-river",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#...##........##...#",
+        "#...##........##...#",
+        "#..................#",
+        "#..................#",
+        "#...##........##...#",
+        "#...##........##...#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "side-crab",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "side-crab",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "bopper",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        }
+      ],
+      "artProps": "Two sandbars with shells; shallow water ripples on the floor.",
+      "signs": [
+        "Shells keep soft hearts safe."
+      ]
+    },
+    {
+      "id": "wave-lanes",
+      "name": "Wave Lanes",
+      "kind": "battle",
+      "minBeltTier": 5,
+      "floorSet": "quiet-river",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "######........######",
+        "#..................#",
+        "#..................#",
+        "######........######",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 3,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "splash-wave",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "side-crab",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "bopper",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "splash-wave",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 4,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "Two long stone piers split the room into wide water lanes.",
+      "signs": [
+        "Let the wave pass, then step in."
+      ]
+    },
+    {
+      "id": "lantern-barge",
+      "name": "The Lantern Barge",
+      "kind": "challenge",
+      "minBeltTier": 5,
+      "floorSet": "quiet-river",
+      "challenge": {
+        "seconds": 90,
+        "text": "Clear the room in time for a better chest!",
+        "inTimeText": "In time!",
+        "outOfTimeText": "Time's up! The river was wide, but you still earned a chest.",
+        "outOfTimeShort": "Time's up!"
+      },
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "####D#####D#####D###",
+        "#..................#",
+        "#.........C........#",
+        "#.##............##.#",
+        "#.##............##.#",
+        "#..................#",
+        "#..................#",
+        "#.##............##.#",
+        "#.##............##.#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "earliestRoom": 4,
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "puddle-frog",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "side-crab",
+          "column": 17,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "bopper",
+          "column": 5,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "splash-wave",
+          "column": 16,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 9,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 12,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "bopper",
+          "column": 15,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "side-crab",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 16,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "bopper",
+          "column": 4,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "A wide barge with a row of unlit lanterns; two lantern posts in each corner.",
+      "signs": [
+        "Many oars make the river easy."
+      ]
+    },
+    {
+      "id": "oar-locker",
+      "name": "Oar Locker",
+      "kind": "treasure",
+      "minBeltTier": 5,
+      "floorSet": "quiet-river",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D##D##D###",
+        "#...........#",
+        "#.#.......#.#",
+        "#.....C.....#",
+        "#.#.......#.#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "A wall rack of worn oars; the chest is an old boat locker with a brass latch.",
+      "signs": [
+        "Many hands rowed here before you."
+      ]
+    },
+    {
+      "id": "still-pool",
+      "name": "Still Pool",
+      "kind": "rest",
+      "minBeltTier": 5,
+      "floorSet": "quiet-river",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "###D##D##D###",
+        "#...........#",
+        "#...........#",
+        "#.##..S..##.#",
+        "#...........#",
+        "#...........#",
+        "#.....P.....#",
+        "#...........#",
+        "#############"
+      ],
+      "artProps": "A round pool as flat as glass, with two cushions and a hanging lantern.",
+      "signs": [
+        "Rest by the water. You are welcome."
+      ]
+    },
+    {
+      "id": "watching-pool",
+      "name": "The Watching Pool",
+      "kind": "boss",
+      "minBeltTier": 5,
+      "floorSet": "quiet-river",
+      "legend": "# = wall, . = floor, P = player start, D = door slot (in the outer wall), C = chest, S = rest shrine",
+      "tiles": [
+        "##########D#########",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........C........#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#..................#",
+        "#.........P........#",
+        "#..................#",
+        "####################"
+      ],
+      "waves_note": "Enemies arrive in waves: the next wave comes when 1 enemy (or none) is left.",
+      "enemies": [
+        {
+          "enemy": "river-watcher",
+          "column": 11,
+          "row": 6,
+          "wave": 1
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 14,
+          "row": 3,
+          "wave": 1
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 17,
+          "row": 3,
+          "wave": 2
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 5,
+          "row": 6,
+          "wave": 2
+        },
+        {
+          "enemy": "mist-wisp",
+          "column": 9,
+          "row": 6,
+          "wave": 3
+        },
+        {
+          "enemy": "puddle-frog",
+          "column": 12,
+          "row": 3,
+          "wave": 3
+        }
+      ],
+      "artProps": "A wide shallow pool with stepping stones; a tall water heron stands in the middle, its feathers streaked with mud.",
+      "signs": [
+        "Be still, and the water clears.",
+        "Even a heron needs a friend."
+      ]
+    }
+  ]
+}
