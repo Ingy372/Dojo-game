@@ -6,6 +6,7 @@ import { BLESSING, PROGRESSION, TICKS_PER_SECOND, VIRTUE_RANK_BONUS } from './co
 import type { Effect } from './effects';
 import type { FeedBelt } from './feed';
 import { playerStats, type Loadout, type Profile } from './profile';
+import { earnedPicks, normalizeSlots, sealSlots, type LoadoutEarned } from './loadout';
 import type { RunSummary } from './run';
 import { trainingStats, unlockedStances, virtueTitle, type TrainingState, type VirtueInfo } from './training';
 import type { PlayerSetup, VirtueSetup } from './world';
@@ -139,11 +140,12 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
  * R-STANCE-d1: a loadout with any Stance the student hasn't unlocked dropped (R-STANCE-g: back to
  * the Beginner's Stance, null). The Virtue pick is left as is. Returns null when nothing is left.
  */
-export function normalizeLoadout(loadout: Loadout | null, training: TrainingState, abilities: AbilityContent, grandfathered: readonly string[] = []): Loadout | null {
+export function normalizeLoadout(loadout: Loadout | null, training: TrainingState, abilities: AbilityContent, grandfathered: readonly string[] = [], earned: LoadoutEarned = earnedPicks(training)): Loadout | null {
   if (!loadout) return null;
   const ok = loadout.stance !== null && unlockedStances(training, abilities, grandfathered).some((s) => s.id === loadout.stance);
   // A stance that isn't unlocked goes to the Beginner's Stance (null); the loadout and its virtue are kept.
-  return { stance: ok ? loadout.stance : null, virtue: loadout.virtue };
+  // R-PROGRESSION-BETA: a Strike, kata power or Seal that isn't earned goes to its slot's default; extra Seals are dropped from the end.
+  return { stance: ok ? loadout.stance : null, virtue: loadout.virtue, ...normalizeSlots(loadout, earned, sealSlots(training.tier)) };
 }
 
 /**
