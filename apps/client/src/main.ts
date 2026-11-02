@@ -15,9 +15,11 @@ import { music } from './audio/Music';
 import { sfx } from './audio/Sfx';
 import { DPR } from './ui/theme';
 import { finishPendingWipe } from './game/beta';
+import { seedLoadout } from './game/student';
 
 // B-SAFE: a grown-up's wipe finishes here, before anything reads the save.
 finishPendingWipe();
+seedLoadout();
 
 /** The game area's size in screen points (the #game box fills the safe area). */
 function screenSize(): { width: number; height: number } {

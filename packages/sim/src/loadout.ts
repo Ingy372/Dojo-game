@@ -1,10 +1,12 @@
 // R-PROGRESSION-BETA (PB-01): the Loadout's five slots, the Seal slot count by belt, the pure
 // equip rules for Seals, and the one-time seed for saves from before slots. Nothing here changes
-// a fight: `characterSetup` still reads only the Stance and Virtue (PB-02, PB-03 and PB-04 wire
-// the other three slots in).
+// a fight by itself: `characterSetup` reads the Stance, Virtue and (PB-02) the Seals; PB-03 and
+// PB-04 wire the Strike and kata slots in.
 
+import type { AbilityContent } from './abilities';
 import { SEAL_SLOTS_BY_TIER } from './config';
 import { emptyLoadout, type Loadout, type Profile } from './profile';
+import { unlockedFamilies } from './sealFamilies';
 import type { TrainingState } from './training';
 
 /** How many Seal slots a belt tier has (tier 1 = white). A tier past the table uses its last row. */
@@ -17,9 +19,9 @@ export function sealSlots(tier: number): number {
 /**
  * What a student has earned for each slot that holds a choice, oldest first. `strikes` are Strike
  * ids, `families` Seal family ids, `kataPowers` kata power ids.
- * PB-01: the Seal families (PB-02) and kata powers (PB-04) have no data yet, so those two lists
- * are empty here and a Seal or kata pick is dropped until that data lands. The caller can pass its
- * own lists (the tests do).
+ * `families` come from the signed-off self-defense techniques (PB-02). PB-01/PB-04: kata powers
+ * have no data yet, so that list is empty and a kata pick is dropped until PB-04. The caller can
+ * pass its own lists (the tests do).
  */
 export interface LoadoutEarned {
   strikes: readonly string[];
@@ -27,10 +29,10 @@ export interface LoadoutEarned {
   kataPowers: readonly string[];
 }
 
-/** The Strike ids a student has earned, in kick-combo order, from today's always-on Strike list. */
-export function earnedPicks(training: TrainingState): LoadoutEarned {
+/** The Strike ids and Seal family ids a student has earned, oldest first. */
+export function earnedPicks(training: TrainingState, abilities: AbilityContent): LoadoutEarned {
   const strikes = training.abilities.filter((a) => a.kind === 'strike' && a.unlocked && a.perk).map((a) => a.perk!.id);
-  return { strikes, families: [], kataPowers: [] };
+  return { strikes, families: unlockedFamilies(training, abilities.families), kataPowers: [] };
 }
 
 /**
@@ -100,8 +102,8 @@ export function migrateLoadoutV2(loadout: Loadout | null, input: LoadoutSeedInpu
 
 /**
  * Runs `migrateLoadoutV2` on a profile once, guarded by `profile.loadoutV2`. Returns true if it ran.
- * PB-02 and PB-03 call it where the student's earned families and Strikes are known; it is not
- * called yet, because until the Seal families exist it would mark a save done with no Seals seeded.
+ * The client calls it once at start (`seedLoadout` in game/student.ts), where the student's
+ * earned families and Strikes are known.
  */
 export function seedLoadoutV2(profile: Profile, input: LoadoutSeedInput): boolean {
   if (profile.loadoutV2) return false;
@@ -118,6 +120,6 @@ export function dismissSlotNote(profile: Profile): void {
 }
 
 /** The earned picks and the belt tier for a student, ready for `seedLoadoutV2`. */
-export function seedInputFor(training: TrainingState): LoadoutSeedInput {
-  return { tier: training.tier, earned: earnedPicks(training) };
+export function seedInputFor(training: TrainingState, abilities: AbilityContent): LoadoutSeedInput {
+  return { tier: training.tier, earned: earnedPicks(training, abilities) };
 }

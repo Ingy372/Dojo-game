@@ -7,6 +7,7 @@ import type { Effect } from './effects';
 import type { FeedBelt } from './feed';
 import { playerStats, type Loadout, type Profile } from './profile';
 import { earnedPicks, normalizeSlots, sealSlots, type LoadoutEarned } from './loadout';
+import { equippedSealEffects } from './sealFamilies';
 import type { RunSummary } from './run';
 import { trainingStats, unlockedStances, virtueTitle, type TrainingState, type VirtueInfo } from './training';
 import type { PlayerSetup, VirtueSetup } from './world';
@@ -113,7 +114,7 @@ export function describeVirtue(v: VirtueSetup, text: string): string {
 
 export interface CharacterSetup extends PlayerSetup {
   level: number;
-  /** Charm effects plus Strike upgrades and Technique Seals (Insights are added per run). */
+  /** Charm effects plus Strike upgrades and the equipped Seal families (Insights are added per run). */
   effects: Effect[];
 }
 
@@ -121,7 +122,12 @@ export interface CharacterSetup extends PlayerSetup {
 export function characterSetup(profile: Profile, training: TrainingState, abilities: AbilityContent): CharacterSetup {
   const gear = playerStats(profile);
   const level = effectiveLevel(profile, training);
-  const earned = training.abilities.filter((a) => a.unlocked && a.perk).map((a) => a.perk!.effect);
+  // Strike upgrades stay always-on until PB-03 puts the Strike in its slot.
+  const strikes = training.abilities.filter((a) => a.kind === 'strike' && a.unlocked && a.perk).map((a) => a.perk!.effect);
+  // PB-02: Seals are the families in the student's Seal slots, at the student's rank in each. No
+  // slot filled (or no family earned) means no Seal effects.
+  const loadout = normalizeLoadout(profile.loadout, training, abilities, profile.grandfatheredStances);
+  const seals = equippedSealEffects(training, abilities.families, loadout?.seals ?? []);
   // R-BAL-12: real training adds whole-number stats on top of gear and level.
   const trained = trainingStats(training);
   return {
@@ -131,7 +137,7 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
     guard: gear.guard + trained.guard,
     // B-TUNE-GUIDED: a testing fixture's pinned stats replace the worked-out ones.
     ...training.pinnedStats,
-    effects: [...earned, ...gear.effects],
+    effects: [...strikes, ...seals, ...gear.effects],
     ...loadoutAbilities(profile.loadout, training, abilities, profile.grandfatheredStances),
   };
 }
@@ -140,7 +146,7 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
  * R-STANCE-d1: a loadout with any Stance the student hasn't unlocked dropped (R-STANCE-g: back to
  * the Beginner's Stance, null). The Virtue pick is left as is. Returns null when nothing is left.
  */
-export function normalizeLoadout(loadout: Loadout | null, training: TrainingState, abilities: AbilityContent, grandfathered: readonly string[] = [], earned: LoadoutEarned = earnedPicks(training)): Loadout | null {
+export function normalizeLoadout(loadout: Loadout | null, training: TrainingState, abilities: AbilityContent, grandfathered: readonly string[] = [], earned: LoadoutEarned = earnedPicks(training, abilities)): Loadout | null {
   if (!loadout) return null;
   const ok = loadout.stance !== null && unlockedStances(training, abilities, grandfathered).some((s) => s.id === loadout.stance);
   // A stance that isn't unlocked goes to the Beginner's Stance (null); the loadout and its virtue are kept.

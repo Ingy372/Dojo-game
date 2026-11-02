@@ -98,24 +98,27 @@ describe('PB-01 migration (migrateLoadoutV2, seedLoadoutV2)', () => {
     expect(p.loadout).toEqual({ stance: null, virtue: null, strike: null, kata: null, seals: ['escape', 'counter'] });
   });
 
-  it('Power, Health and the fight setup are unchanged by the seed (the slots are not read in a fight yet)', () => {
+  it('Power, Health and the Stances are unchanged by the seed; only the Seal effects come from the slots (PB-02)', () => {
     for (const fixture of [yellow, green, orange]) {
       const t = training(fixture);
       const before = loadProfile(oldSave());
       const after = loadProfile(oldSave());
-      seedLoadoutV2(after, { tier: t.tier, earned: { strikes: ['follow-up-kick'], families: ['escape', 'counter', 'guard'], kataPowers: [] } });
+      seedLoadoutV2(after, seedInputFor(t, content.abilities));
       expect(after.loadout!.seals.length).toBeGreaterThan(0);
-      expect(characterSetup(after, t, content.abilities)).toEqual(characterSetup(before, t, content.abilities));
+      const { effects: a, ...rest } = characterSetup(after, t, content.abilities);
+      const { effects: b, ...restBefore } = characterSetup(before, t, content.abilities);
+      expect(rest).toEqual(restBefore);
+      expect(a.length).toBeGreaterThan(b.length);
     }
   });
 
-  it('seedInputFor reads the belt tier and the Strikes the training has unlocked (no families or kata powers exist yet)', () => {
+  it('seedInputFor reads the belt tier, the Strikes unlocked and the Seal families earned (no kata powers yet)', () => {
     const t = training(green);
-    const i = seedInputFor(t);
+    const i = seedInputFor(t, content.abilities);
     expect(i.tier).toBe(t.tier);
     expect(i.earned.strikes).toEqual(t.abilities.filter((a) => a.kind === 'strike' && a.unlocked && a.perk).map((a) => a.perk!.id));
     expect(i.earned.strikes.length).toBeGreaterThan(0);
-    expect(i.earned.families).toEqual([]);
+    expect(i.earned.families.length).toBeGreaterThan(0);
     expect(i.earned.kataPowers).toEqual([]);
   });
 });
