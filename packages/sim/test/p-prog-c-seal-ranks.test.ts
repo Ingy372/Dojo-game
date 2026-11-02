@@ -163,7 +163,7 @@ describe('PB-02 new effects in play', () => {
   });
   const gentle = (effects: Effect[]): PlayerSetup => {
     const base = characterSetup(newProfile(), training(white3), content.abilities);
-    return { ...base, power: 20, effects, mods: mods(effects) };
+    return { ...base, power: 20, mods: mods(effects) };
   };
   const world = (effects: Effect[]) => createWorld(room, ['p1'], { enemyTypes: { brute }, difficulty: 'standard', player: gentle(effects) });
   const stepUntil = (w: ReturnType<typeof world>, kind: CombatEvent['kind']) => {
