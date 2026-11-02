@@ -2,8 +2,8 @@
 // sizes we ship), every tile is at least the minimum tap size, paging reaches every item once, and a picked
 // tile is never covered by its sheet. Tap-to-select then Wear stays.
 import { describe, expect, it } from 'vitest';
-import { BAG_SCREEN, GEAR_BOARD, bagScreenLayout, bagTileBox, filterBag } from '../../../apps/client/src/ui/gearBoard';
-import { MIN_TAP, S2 } from '../../../apps/client/src/ui/tokens';
+import { BAG_SCREEN, GEAR_BOARD, bagScreenLayout, bagTileBox, filterBag, gearBoardLayout, gearSheetBox } from '../../../apps/client/src/ui/gearBoard';
+import { MIN_TAP, S1, S2 } from '../../../apps/client/src/ui/tokens';
 import type { GearItem } from '../src';
 
 const src = Object.values(import.meta.glob(['../../../apps/client/src/scenes/HomeScene.ts'], { query: '?raw', import: 'default', eager: true }))[0] as string;
@@ -90,5 +90,22 @@ describe('MENU-BAG-01 wiring', () => {
     // The Gear tab's Bag button never overlaps the three 44 filter buttons: end of the filter row when it fits, else the middle of the pager row.
     expect(src).toMatch(/const roomy = L\.gridW >= filtersW \+ S1 \+ bagBtnW;/);
     expect(src).toMatch(/const bagY = roomy \? y \+ L\.filterY : y \+ L\.pagerY;/);
+  });
+});
+
+describe('MENU-BAG-01: the full-width Gear sheet at the top clears "Your Strike" at 667 wide', () => {
+  // Panel sizes inside the 10 px padding at 667x375 and 667x320 (what renderGear gets).
+  it.each([[345.54, 277], [369.54, 238], [369.54, 258]])('panel %s x %s: sheet is full width, lifted into the padding, 4 px above the label', (w, h) => {
+    const L = gearBoardLayout(w, h);
+    const sb = gearSheetBox(L, w, h);
+    expect(sb.x).toBe(0);
+    expect(sb.w).toBe(w);
+    expect(sb.lift).toBeGreaterThan(0);
+    expect(sb.lift).toBeLessThanOrEqual(S2);
+    expect(GEAR_BOARD.sheetH - sb.lift).toBeLessThanOrEqual(L.alwaysY - S1);
+  });
+  it('renderSheet lifts only the top sheet', () => {
+    expect(src).toMatch(/const sy = atTop \? top - lift : bottom - sh;/);
+    expect(src).toMatch(/pickedBottom, sb\.lift\)/);
   });
 });

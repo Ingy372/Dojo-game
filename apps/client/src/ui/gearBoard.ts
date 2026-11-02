@@ -85,12 +85,15 @@ export function gearBoardLayout(w: number, h: number, minTileW: number = GEAR_BO
 /**
  * G2B12-FIXES: where the item sheet goes, relative to the panel (w x h). It is full width, except that when it
  * would cover the "Your Strike" row it starts right of the doll column, as long as that leaves it
- * sheetNarrowMin or more. Smaller panels keep the full-width sheet.
+ * sheetNarrowMin or more. Smaller panels keep the full-width sheet (see lift).
  */
-export function gearSheetBox(L: GearBoardLayout, w: number, h: number): { x: number; w: number } {
+export function gearSheetBox(L: GearBoardLayout, w: number, h: number): { x: number; w: number; lift: number } {
   const strikeBottom = L.alwaysY + TYPE.label + S1 + L.alwaysIcon;
   const x = L.dollW + S2;
-  return h - GEAR_BOARD.sheetH < strikeBottom && w - x >= GEAR_BOARD.sheetNarrowMin ? { x, w: w - x } : { x: 0, w };
+  if (h - GEAR_BOARD.sheetH < strikeBottom && w - x >= GEAR_BOARD.sheetNarrowMin) return { x, w: w - x, lift: 0 };
+  // MENU-BAG-01: a full-width sheet at the top ends sheetH down; if that reaches the "Your Strike" label it moves up
+  // into the panel's 10 px padding (at most S2) so a 4 px gap is left.
+  return { x: 0, w, lift: Math.min(S2, Math.max(0, GEAR_BOARD.sheetH - L.alwaysY + S1)) };
 }
 
 /** The tile at index i on a page: its top-left, relative to the panel. Depends only on i and the layout. */

@@ -1790,7 +1790,7 @@ export class HomeScene extends Phaser.Scene {
 
     const picked = this.pickedItem();
     const sb = gearSheetBox(L, w, h); // G2B12-FIXES: keeps the "Your Strike" row showing
-    if (picked) this.renderSheet(picked, x + sb.x, y, sb.w, y + h, pickedBottom);
+    if (picked) this.renderSheet(picked, x + sb.x, y, sb.w, y + h, pickedBottom, sb.lift);
   }
 
   /** One bag tile at (tx, ty), bw x bh: rarity frame, icon, rarity word, worn / compare badge. Shared by the Gear tab and the Bag screen. */
@@ -1859,11 +1859,11 @@ export class HomeScene extends Phaser.Scene {
   }
 
   /** P-MENU2-f: the sheet: the item and what's worn, ↑ / ↓ in calm colours with plain words, numbers behind Details. */
-  private renderSheet(item: GearItem, x: number, top: number, w: number, bottom: number, pickedBottom: number): void {
+  private renderSheet(item: GearItem, x: number, top: number, w: number, bottom: number, pickedBottom: number, lift = 0): void {
     const W = GEAR_WORDS;
     const sh = GEAR_BOARD.sheetH;
     const atTop = pickedBottom > bottom - sh;
-    const sy = atTop ? top : bottom - sh;
+    const sy = atTop ? top - lift : bottom - sh;
     const closer = this.add.zone(x - 8, top - 8, w + 16, bottom - top + 16).setOrigin(0).setInteractive();
     closer.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.closeSheet());
     this.ui.add(closer);
