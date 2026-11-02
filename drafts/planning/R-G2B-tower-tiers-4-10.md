@@ -37,7 +37,7 @@ Rules that apply to every tier, all taken from the repo:
 
 ### Tier 4: Green, The Giant's Steps (belt 4)
 
-New for the student: Strike #4 Side Kick Drive. Seals #16-20 (Low-High Strike, Arm Bar and Wrist Lock are the first **Lock**). 3 Seal slots.
+New for the student: Strike #4 Side Kick Drive. Seals #16-20 (Arm Bar and Wrist Lock are the first **Lock**). 3 Seal slots (redesign table: Orange, Green and Blue have 3).
 
 | Group | Enemy | What it does | Tell | Art |
 |---|---|---|---|---|
@@ -47,7 +47,7 @@ New for the student: Strike #4 Side Kick Drive. Seals #16-20 (Low-High Strike, A
 | F3-4 | Boulder Roller (mid, dash-only) | Boulder down a stripe lane, 24 ticks | Purple stripes and "!!" | none |
 | Guardian | The Stone Giant | Giant stomp, stone toss, Rock Slide (dash-only, two lanes) | | Concept sheets only (`guardian-concepts`), form shift Stone Giant to Pebble Heart |
 
-**Newest-move room:** rooms 3-4 and the challenge room should hold **padded-staff enemies** so Arm Bar #17 and Wrist Lock #19 (Lock) have something to answer, as the redesign says. **The Green bestiary has no padded-staff enemy.** Planner's proposal: reuse the live **Bopper** (padded staff, already in `content/enemies`, Yellow). It passes the balance bands today (Tiers 1-3 test). Jay or the Content Designer could instead add a new Green enemy. Strike #4 Side Kick Drive shows off against Pebble Pal swarms (push them back).
+**Newest-move room:** rooms 3-4 and the challenge room should hold **padded-staff enemies** so Arm Bar #17 and Wrist Lock #19 (Lock) have something to answer, as the redesign says. **The Green bestiary has no padded-staff enemy.** Planner's proposal: reuse the live **Bopper** (padded staff, already in `content/enemies`, Yellow). It is already in the live bands test as a mid enemy from belt 2. Jay or the Content Designer could instead add a new Green enemy. Strike #4 Side Kick Drive shows off against Pebble Pal swarms (push them back).
 
 ### Tier 5: Blue, The Quiet River (belt 5)
 
@@ -65,7 +65,7 @@ New: Strike #5 Hook Kick. Seals #21-25 (Disarm, Guard and Escape ranks). 3 Seal 
 
 ### Tier 6: Red, The Forge of Courage (belt 6)
 
-New: Strike #6 Lunge. Seals #26-30, including **Break Free** (#29, #30). 3 Seal slots.
+New: Strike #6 Lunge. Seals #26-30, including **Break Free** (#29, #30). 4 Seal slots (Red and above have 4).
 
 | Group | Enemy | What it does | Tell | Art |
 |---|---|---|---|---|
@@ -75,11 +75,11 @@ New: Strike #6 Lunge. Seals #26-30, including **Break Free** (#29, #30). 3 Seal 
 | F3-4 | Forge Sweeper (mid, dash-only) | Striped arc, 22 ticks | Purple arc and "!!" | none |
 | Guardian | The Ember Knight | Knight's swing, Spark Shield (Strike breaks it), Forge Sweep (dash-only arc) | | Concept sheets only |
 
-**Newest-move room:** the **crowd** rooms (2-3 and the challenge room, 3 or more Coal Cubs at once with an Anvil Imp) are where Break Free is wanted: 2 or more enemies within 1 tile while you Block. Lunge #6 shows off against the Bellows Puff, which keeps its distance. Bellows Puff's gust and Break Free's push-back both move enemies: the Tester should check the two do not cancel in a confusing way. The Ember Knight's Spark Shield is the one place the redesign's "Strikes break shields" is a designed answer.
+**Newest-move room:** the **crowd** rooms (2-3 and the challenge room, 3 or more Coal Cubs at once with an Anvil Imp) are where Break Free is wanted: 2 or more enemies within 1 tile while you Block. Lunge #6 (closes distance fast) is wanted wherever the student must cross a room, such as the Forge Sweeper's long striped arc rooms. Bellows Puff's gust and Break Free's push-back both move enemies: the Tester should check the two do not cancel in a confusing way. The Ember Knight's Spark Shield is the one place the redesign's "Strikes break shields" is a designed answer.
 
 ### Tier 7: Red/Black, The Hall of Echoes (belt 7)
 
-New: Strike #7 Spinning Finisher. Seals #31-35 (mostly Lock). 3 Seal slots.
+New: Strike #7 Spinning Finisher. Seals #31-35 (mostly Lock). 4 Seal slots.
 
 | Group | Enemy | What it does | Tell | Art |
 |---|---|---|---|---|
@@ -95,7 +95,7 @@ Only one F1-2 enemy (Masklet) in this tier, so rooms 1-2 are Masklet-only. Plann
 
 ### Tier 8: Brown, The Root Library (belt 8)
 
-New: Seals #36-40 (Wide Release, Steady Hold, Lock to Takedown, Release and Go, Master Hold). No new Strike. 4 Seal slots (Brown, 2-4 at the top).
+New: Seals #36-40 (Wide Release, Steady Hold, Lock to Takedown, Release and Go, Master Hold). No new Strike. 4 Seal slots.
 
 | Group | Enemy | What it does | Tell | Art |
 |---|---|---|---|---|
@@ -105,7 +105,7 @@ New: Seals #36-40 (Wide Release, Steady Hold, Lock to Takedown, Release and Go, 
 | F3-4 | Root Snapper (mid, dash-only) | Striped lane, 20 ticks | Purple stripes and "!!" | none |
 | Guardian | The Root Keeper | Branch tap, Flying Pages (Page Flutters join), Root Line (dash-only) | | Concept sheets only |
 
-**Newest-move room:** the Lock family (hold, release, takedown) shows off against the **Bookworm** (it pops out of the ground, so it can be held and thrown) and Page Flutter packs for Wide Release #36 (bumped enemies knock others). A room that gives the player a **held enemy next to a crowd** is the proposal. The slot count at Brown is "up to 4"; the redesign says 2-4 for belts above Orange, so the exact count per belt is not set (item R-G2B-22 asks).
+**Newest-move room:** the Lock family (hold, release, takedown) shows off in a room that puts **a held enemy next to a crowd**, such as Page Flutter packs with a Bookworm, so Wide Release #36 (bumped enemies knock others) has a crowd to knock. That room layout is the planner's proposal, not in the bestiary.
 
 ### Tier 9: Brown/Black, The Storm Stair (belt 9)
 
@@ -139,7 +139,7 @@ Endless mode after the Summit scales at +3% per floor with no cap (bestiary plan
 - Fix proven to pass every check: Guardians' base Health **495**, Stack Golem **128**.
 - No two neighbouring belts differ by more than 2x in hits to beat.
 - Elites on Challenge: a Brute elite takes 22-25 hits against a top of 20, a Shield elite 11-12 against a top of 10. This is a question for the test bot (R-G2B-18). It matters more now because elites are only for Brute, Swarmer and Shield (see above).
-- **I did not set any new numbers for enemy attack speed, wind-up or range.** Those stay in `bestiary-plan.json`. Where it has none, the Content Designer or bot sets them and runs `r-g2b-balance-check.py`.
+- **I did not set any new numbers for enemy attack speed, wind-up or range.** Those stay in `bestiary-plan.json`. Where it has none, the Content Designer or the test bot sets them and runs `r-g2b-balance-check.py`.
 
 ## Gaps and questions
 

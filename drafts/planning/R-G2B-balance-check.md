@@ -114,9 +114,9 @@ storm-herald: now 510; fails are all trainsMore+Challenge: True; passing base ma
 | Enemy | Base maxHealth now | Proposed | Result with the proposal |
 |---|---|---|---|
 | Stack Golem | 129 | **128** | 0 fails. Beat 12-20, KO at least 5 |
-| All 7 Guardians (Stone Giant, River Watcher, Ember Knight, Echo Mask, Root Keeper, Storm Herald, Lost Lightbearer) | 532, 521, 521, 510, 510, 510, 510 | **495** (the same as the live Floor Keeper) | 0 fails. Beat 47-80, KO at least 5 |
+| 6 failing Guardians, plus Lost Lightbearer for one shared number (Lost Lightbearer already passes at 510, so it is optional) (Stone Giant, River Watcher, Ember Knight, Echo Mask, Root Keeper, Storm Herald, Lost Lightbearer) | 532, 521, 521, 510, 510, 510, 510 | **495** (the same as the live Floor Keeper) | 0 fails. Beat 47-80, KO at least 5 |
 
-The alternative is to keep the numbers and accept the Hearth Cook-style exception for those 7 Guardians and the Stack Golem. Planner's lean: use the proposal, it is a one-number change and it matches the live Floor Keeper. The draft files in `drafts/content/` are not edited here (item R-G2B-19 does it).
+The alternative is to keep the numbers and accept the Hearth Cook-style exception for those Guardians and the Stack Golem. Planner's lean: use the proposal, it is a one-number change and it matches the live Floor Keeper. The draft files in `drafts/content/` are not edited here (item R-G2B-19 does it).
 
 ## F. Spin Kick baseline for the Strike bot run
 
