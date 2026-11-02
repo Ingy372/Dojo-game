@@ -1,0 +1,1000 @@
+{
+ "about": "Move Catalog sprites for the Programmer. Text-free card frames, grid cards, states and family pictures. The game draws every word (see layout and moves-text.json). Sizes are 1x points; the @2x file is the same picture at twice the pixels. visibleRect and shadowMargin: each frame carries a 6 pt shadow margin, so the visible card starts 6 pt in. nineSlice is [top, right, bottom, left] in 1x px, as in menu2.json.",
+ "shadowMargin": 6,
+ "rule": "No text is baked into any file. No red. Orange is not used. The card rim colour is the family colour.",
+ "menu2Refs": {
+  "panel-inset": "menu2 sprite: the cream inset box on the front (222 x 92) and the back (222 x 84). 9-slice from menu2.json.",
+  "panel-frame": "menu2 sprite: the Board paper panel the catalog grid sits in (536 x 340 on the 844 x 390 Board).",
+  "tabs and chips": "ui-benchmark/sprites/kit/tab-active and tab-normal (PR #412) for the Self-Defense / Kick Combos / Forms sub-tabs; ring-00..24 for the progress ring (8 of 40 = ring-05)."
+ },
+ "families": {
+  "counter": {
+   "rim": "#4696d7",
+   "name": "COUNTER",
+   "art": "family-art/counter.png",
+   "placeholderArt": false,
+   "front": "card/front-counter.png",
+   "back": "card/back-counter.png",
+   "mini": "mini/collected-counter.png"
+  },
+  "escape": {
+   "rim": "#24ac8c",
+   "name": "ESCAPE",
+   "art": "family-art/escape-placeholder.png",
+   "placeholderArt": true,
+   "front": "card/front-escape.png",
+   "back": "card/back-escape.png",
+   "mini": "mini/collected-escape.png"
+  },
+  "guard": {
+   "rim": "#68b448",
+   "name": "GUARD",
+   "art": "family-art/guard.png",
+   "placeholderArt": false,
+   "front": "card/front-guard.png",
+   "back": "card/back-guard.png",
+   "mini": "mini/collected-guard.png"
+  },
+  "disarm": {
+   "rim": "#9268d6",
+   "name": "DISARM",
+   "art": "family-art/disarm.png",
+   "placeholderArt": false,
+   "front": "card/front-disarm.png",
+   "back": "card/back-disarm.png",
+   "mini": "mini/collected-disarm.png"
+  },
+  "throw": {
+   "rim": "#e070ac",
+   "name": "THROW",
+   "art": "family-art/throw-placeholder.png",
+   "placeholderArt": true,
+   "front": "card/front-throw.png",
+   "back": "card/back-throw.png",
+   "mini": "mini/collected-throw.png"
+  },
+  "strike": {
+   "rim": "#f0b238",
+   "name": "STRIKE",
+   "art": "family-art/strike.png",
+   "placeholderArt": false,
+   "front": "card/front-strike.png",
+   "back": "card/back-strike.png",
+   "mini": "mini/collected-strike.png"
+  },
+  "kata": {
+   "rim": "#a0683c",
+   "name": "KATA",
+   "art": "family-art/kata.png",
+   "placeholderArt": false,
+   "front": "card/front-kata.png",
+   "back": "card/back-kata.png",
+   "mini": "mini/collected-kata.png"
+  }
+ },
+ "states": {
+  "collected": "mini/collected-{family}.png + family art + dojo name + game name",
+  "new": "collected + mini/new-ribbon.png at the top-left (the NEW word is drawn by the game)",
+  "locked": "mini/locked.png (family-neutral) + dojo name + the belt where the move is learned. No game name, no picture.",
+  "placeholder": "big card only: card/inset-placeholder-front.png (front) or card/inset-placeholder-steps.png (back) instead of the cream inset"
+ },
+ "layout": {
+  "units": "points; origin is the top-left corner of the VISIBLE card (the file starts shadowMargin pt earlier)",
+  "front": {
+   "ribbonRect": [
+    10,
+    14,
+    124,
+    24
+   ],
+   "ribbonText": {
+    "at": [
+     20,
+     26
+    ],
+    "anchor": "lm",
+    "size": 12.5,
+    "weight": "ExtraBold"
+   },
+   "beltText": {
+    "at": [
+     232,
+     26
+    ],
+    "anchor": "rm",
+    "size": 12,
+    "weight": "ExtraBold",
+    "color": "#6e4a2e"
+   },
+   "medallion": {
+    "center": [
+     125,
+     112
+    ],
+    "size": 124
+   },
+   "stageDisc": {
+    "center": [
+     125,
+     112
+    ],
+    "radius": 74
+   },
+   "bigName": {
+    "at": [
+     125,
+     204
+    ],
+    "anchor": "mm",
+    "size": 27,
+    "weight": "ExtraBold",
+    "maxWidth": 218,
+    "color": "#462a16"
+   },
+   "gameName": {
+    "at": [
+     125,
+     229
+    ],
+    "anchor": "mm",
+    "size": 16.5,
+    "weight": "ExtraBold",
+    "maxWidth": 218,
+    "colorRule": "family rim darkened 42%"
+   },
+   "effect": {
+    "at": [
+     125,
+     252
+    ],
+    "anchor": "mm",
+    "size": 12.5,
+    "weight": "SemiBold",
+    "lineHeight": 16,
+    "maxLines": 2,
+    "maxWidth": 224,
+    "color": "#6e4a2e"
+   },
+   "inset": {
+    "rect": [
+     14,
+     288,
+     222,
+     92
+    ],
+    "sprite": "menu2 panel-inset (9-slice), or card/inset-placeholder when the words are not written"
+   },
+   "insetLabel": {
+    "at": [
+     26,
+     304
+    ],
+    "anchor": "lm",
+    "size": 12.5,
+    "weight": "ExtraBold",
+    "colorRule": "family rim darkened 45%"
+   },
+   "shortLine": {
+    "at": [
+     26,
+     330
+    ],
+    "anchor": "lm",
+    "size": 14,
+    "weight": "Bold",
+    "lineHeight": 17,
+    "maxLines": 3,
+    "maxWidth": 198,
+    "color": "#462a16"
+   },
+   "flipChip": {
+    "rect": [
+     124,
+     293,
+     104,
+     22
+    ],
+    "text": {
+     "at": [
+      166,
+      305
+     ],
+     "anchor": "mm",
+     "size": 11.5,
+     "weight": "ExtraBold",
+     "color": "#462a16"
+    }
+   }
+  },
+  "back": {
+   "ribbonRect": [
+    10,
+    14,
+    124,
+    24
+   ],
+   "ribbonText": {
+    "at": [
+     20,
+     26
+    ],
+    "anchor": "lm",
+    "size": 12.5,
+    "weight": "ExtraBold"
+   },
+   "medallion": {
+    "center": [
+     44,
+     80
+    ],
+    "size": 56
+   },
+   "bigName": {
+    "at": [
+     80,
+     70
+    ],
+    "anchor": "lm",
+    "size": 19,
+    "weight": "ExtraBold",
+    "maxWidth": 152,
+    "color": "#462a16"
+   },
+   "gameName": {
+    "at": [
+     80,
+     92
+    ],
+    "anchor": "lm",
+    "size": 13.5,
+    "weight": "ExtraBold",
+    "maxWidth": 152,
+    "colorRule": "family rim darkened 42%"
+   },
+   "startsLabel": {
+    "at": [
+     22,
+     124
+    ],
+    "anchor": "lm",
+    "size": 11,
+    "weight": "ExtraBold",
+    "color": "#6e4a2e"
+   },
+   "attack": {
+    "at": [
+     22,
+     142
+    ],
+    "anchor": "lm",
+    "size": 15,
+    "weight": "ExtraBold",
+    "maxWidth": 206,
+    "color": "#462a16"
+   },
+   "stepsArea": {
+    "rect": [
+     16,
+     154,
+     218,
+     136
+    ],
+    "badge": {
+     "size": [
+      20,
+      20
+     ],
+     "center_x": 32
+    },
+    "placeholderRect": [
+     14,
+     158,
+     222,
+     126
+    ],
+    "rowRule": "row height = lines x (size x 1.16) + 5, at least 22",
+    "text": {
+     "x": 50,
+     "anchor": "lm",
+     "maxWidth": 184,
+     "weight": "Bold",
+     "color": "#462a16",
+     "sizeMax": 13,
+     "sizeMin": 12,
+     "note": "shrink from 13 to 12 pt to fit; if it still does not fit, scroll this area (moves with 5+ long steps)"
+    }
+   },
+   "inset": {
+    "rect": [
+     14,
+     296,
+     222,
+     84
+    ]
+   },
+   "insetLabel": {
+    "at": [
+     26,
+     311
+    ],
+    "anchor": "lm",
+    "size": 12.5,
+    "weight": "ExtraBold",
+    "colorRule": "family rim darkened 45%"
+   },
+   "resultLines": {
+    "at": [
+     26,
+     331
+    ],
+    "anchor": "lm",
+    "size": 12.5,
+    "weight": "Bold",
+    "lineHeight": 15.5,
+    "maxLines": 3,
+    "maxWidth": 198,
+    "color": "#462a16"
+   }
+  },
+  "card": [
+   250,
+   396
+  ],
+  "mini": {
+   "size": [
+    87,
+    94
+   ],
+   "art": {
+    "center": [
+     43.5,
+     34
+    ],
+    "size": 52
+   },
+   "dojoName": {
+    "at": [
+     43.5,
+     63
+    ],
+    "anchor": "mm",
+    "size": 11.5,
+    "weight": "ExtraBold",
+    "maxWidth": 75,
+    "fit": "shrink the size until it fits maxWidth, never below 7 pt",
+    "color": "#462a16 (locked: #f0deba)"
+   },
+   "secondLine": {
+    "at": [
+     43.5,
+     79
+    ],
+    "anchor": "mm",
+    "size": 10.5,
+    "weight": "Bold",
+    "maxWidth": 75,
+    "collected": "game name, colour = family rim darkened 42%",
+    "locked": "belt where learned, e.g. \"Yellow Belt\", colour #ceac7c"
+   },
+   "newRibbon": {
+    "offset": [
+     -5,
+     7
+    ],
+    "text": {
+     "at": [
+      12,
+      14.5
+     ],
+     "size": 9.5,
+     "weight": "ExtraBold",
+     "color": "#462a16"
+    }
+   },
+   "lockedSeal": "baked into mini/locked.png (40 pt, 9 pt below the top)"
+  },
+  "grid": {
+   "columns": 5,
+   "cardSize": [
+    87,
+    94
+   ],
+   "gap": 9,
+   "beltHeader": {
+    "size": 11,
+    "weight": "ExtraBold",
+    "color": "#6e4a2e",
+    "rule": "1.6 pt tan line #c49c6a from the end of the text to the right edge of the row",
+    "text": "\"{BELT} BELT  ·  #a–b\""
+   },
+   "grouping": "by belt, five moves per belt (#1-5 White, #6-10 Yellow, #11-15 Orange, #16-20 Green, #21-25 Blue, #26-30 Red, #31-35 Red/Black, #36-40 Brown)",
+   "headerRow": "ring + \"Move Catalog\" 20 pt + \"{n} of 40 moves collected\" 13 pt; sub-tabs on the right"
+  },
+  "detail": {
+   "frontBack": "front card left, back card right, 96 pt apart (214 pt wide cards at scale 0.856); flip-arrow centred between them at y = 168; previous/next wood buttons 52 pt; close = menu2 sheet-close",
+   "scrim": "rgba(28,14,6,0.80) over the catalog"
+  }
+ },
+ "text": {
+  "bigName": "dojo name: \"Self-Defense #n\" (grid: \"Defense #n\")",
+  "gameName": "game name under it (PB-06), only on cards that are not locked",
+  "frontLine": "short \"In the dojo:\" line = the attack in Jay's table (Kick Combos: the list of kicks), then the \"Flip for steps\" chip",
+  "back": "attack under IT STARTS WITH, numbered steps (moves-text.json, split at Jay's commas, no rewording), Jay's result under What happens:",
+  "lockedBelt": "ui.sealLocked in seal-families-text.json = \"{belt}\" where belt is the full name, e.g. \"Orange Belt\"",
+  "placeholder": "Moves with no words: draw \"[PLACEHOLDER]\" in dev builds; the player-facing wording is a DECIDE item",
+  "file": "moves-text.json"
+ },
+ "sprites": {
+  "card/front-counter": {
+   "file": "card/front-counter.png",
+   "file2x": "card/front-counter@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "counter",
+   "rim": "#4696d7",
+   "note": "Counter card FRONT: family-colour frame, cream paper, blank ribbon, pale stage disc for the picture. 250 x 396 pt. No text, no picture: draw the family art, names, kid line and the In-the-dojo panel on top (see layout.front)."
+  },
+  "card/back-counter": {
+   "file": "card/back-counter.png",
+   "file2x": "card/back-counter@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "counter",
+   "rim": "#4696d7",
+   "note": "Counter card BACK (\"How it goes\"): same frame, blank ribbon. 250 x 396 pt. Draw the small family art, names, attack, numbered steps and the What-happens panel on top (see layout.back)."
+  },
+  "card/front-escape": {
+   "file": "card/front-escape.png",
+   "file2x": "card/front-escape@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "escape",
+   "rim": "#24ac8c",
+   "note": "Escape card FRONT: family-colour frame, cream paper, blank ribbon, pale stage disc for the picture. 250 x 396 pt. No text, no picture: draw the family art, names, kid line and the In-the-dojo panel on top (see layout.front)."
+  },
+  "card/back-escape": {
+   "file": "card/back-escape.png",
+   "file2x": "card/back-escape@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "escape",
+   "rim": "#24ac8c",
+   "note": "Escape card BACK (\"How it goes\"): same frame, blank ribbon. 250 x 396 pt. Draw the small family art, names, attack, numbered steps and the What-happens panel on top (see layout.back)."
+  },
+  "card/front-guard": {
+   "file": "card/front-guard.png",
+   "file2x": "card/front-guard@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "guard",
+   "rim": "#68b448",
+   "note": "Guard card FRONT: family-colour frame, cream paper, blank ribbon, pale stage disc for the picture. 250 x 396 pt. No text, no picture: draw the family art, names, kid line and the In-the-dojo panel on top (see layout.front)."
+  },
+  "card/back-guard": {
+   "file": "card/back-guard.png",
+   "file2x": "card/back-guard@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "guard",
+   "rim": "#68b448",
+   "note": "Guard card BACK (\"How it goes\"): same frame, blank ribbon. 250 x 396 pt. Draw the small family art, names, attack, numbered steps and the What-happens panel on top (see layout.back)."
+  },
+  "card/front-disarm": {
+   "file": "card/front-disarm.png",
+   "file2x": "card/front-disarm@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "disarm",
+   "rim": "#9268d6",
+   "note": "Disarm card FRONT: family-colour frame, cream paper, blank ribbon, pale stage disc for the picture. 250 x 396 pt. No text, no picture: draw the family art, names, kid line and the In-the-dojo panel on top (see layout.front)."
+  },
+  "card/back-disarm": {
+   "file": "card/back-disarm.png",
+   "file2x": "card/back-disarm@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "disarm",
+   "rim": "#9268d6",
+   "note": "Disarm card BACK (\"How it goes\"): same frame, blank ribbon. 250 x 396 pt. Draw the small family art, names, attack, numbered steps and the What-happens panel on top (see layout.back)."
+  },
+  "card/front-throw": {
+   "file": "card/front-throw.png",
+   "file2x": "card/front-throw@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "throw",
+   "rim": "#e070ac",
+   "note": "Throw card FRONT: family-colour frame, cream paper, blank ribbon, pale stage disc for the picture. 250 x 396 pt. No text, no picture: draw the family art, names, kid line and the In-the-dojo panel on top (see layout.front)."
+  },
+  "card/back-throw": {
+   "file": "card/back-throw.png",
+   "file2x": "card/back-throw@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "throw",
+   "rim": "#e070ac",
+   "note": "Throw card BACK (\"How it goes\"): same frame, blank ribbon. 250 x 396 pt. Draw the small family art, names, attack, numbered steps and the What-happens panel on top (see layout.back)."
+  },
+  "card/front-strike": {
+   "file": "card/front-strike.png",
+   "file2x": "card/front-strike@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "strike",
+   "rim": "#f0b238",
+   "note": "Strike card FRONT: family-colour frame, cream paper, blank ribbon, pale stage disc for the picture. 250 x 396 pt. No text, no picture: draw the family art, names, kid line and the In-the-dojo panel on top (see layout.front)."
+  },
+  "card/back-strike": {
+   "file": "card/back-strike.png",
+   "file2x": "card/back-strike@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "strike",
+   "rim": "#f0b238",
+   "note": "Strike card BACK (\"How it goes\"): same frame, blank ribbon. 250 x 396 pt. Draw the small family art, names, attack, numbered steps and the What-happens panel on top (see layout.back)."
+  },
+  "card/front-kata": {
+   "file": "card/front-kata.png",
+   "file2x": "card/front-kata@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "kata",
+   "rim": "#a0683c",
+   "note": "Kata card FRONT: family-colour frame, cream paper, blank ribbon, pale stage disc for the picture. 250 x 396 pt. No text, no picture: draw the family art, names, kid line and the In-the-dojo panel on top (see layout.front)."
+  },
+  "card/back-kata": {
+   "file": "card/back-kata.png",
+   "file2x": "card/back-kata@2x.png",
+   "size": [
+    262,
+    408
+   ],
+   "visibleRect": [
+    6,
+    6,
+    250,
+    396
+   ],
+   "shadowMargin": 6,
+   "family": "kata",
+   "rim": "#a0683c",
+   "note": "Kata card BACK (\"How it goes\"): same frame, blank ribbon. 250 x 396 pt. Draw the small family art, names, attack, numbered steps and the What-happens panel on top (see layout.back)."
+  },
+  "card/inset-placeholder-front": {
+   "file": "card/inset-placeholder-front.png",
+   "file2x": "card/inset-placeholder-front@2x.png",
+   "size": [
+    222,
+    92
+   ],
+   "state": "placeholder",
+   "note": "PLACEHOLDER panel for the front In-the-dojo box when a move has no words yet: paper inset with a dashed tan outline. 222 x 92 pt. No margin. Draw the label and your placeholder wording on it."
+  },
+  "card/inset-placeholder-steps": {
+   "file": "card/inset-placeholder-steps.png",
+   "file2x": "card/inset-placeholder-steps@2x.png",
+   "size": [
+    222,
+    126
+   ],
+   "state": "placeholder",
+   "note": "PLACEHOLDER panel for the back steps area when a move has no steps yet. 222 x 126 pt. No margin."
+  },
+  "card/flip-chip": {
+   "file": "card/flip-chip.png",
+   "file2x": "card/flip-chip@2x.png",
+   "size": [
+    116,
+    34
+   ],
+   "visibleRect": [
+    6,
+    6,
+    104,
+    22
+   ],
+   "shadowMargin": 6,
+   "note": "Gold chip with a play arrow at the right end, for \"Flip for steps\" (text drawn by the game, centred in the left 84 pt). 104 x 22 pt."
+  },
+  "card/step-badge": {
+   "file": "card/step-badge.png",
+   "file2x": "card/step-badge@2x.png",
+   "size": [
+    32,
+    32
+   ],
+   "visibleRect": [
+    6,
+    6,
+    20,
+    20
+   ],
+   "shadowMargin": 6,
+   "note": "Round gold badge for a step number (20 x 20 pt). The number is drawn by the game, 12 pt ExtraBold ink."
+  },
+  "card/flip-arrow": {
+   "file": "card/flip-arrow.png",
+   "file2x": "card/flip-arrow@2x.png",
+   "size": [
+    96,
+    68
+   ],
+   "visibleRect": [
+    6,
+    6,
+    84,
+    56
+   ],
+   "shadowMargin": 6,
+   "note": "Curved \"tap to flip\" arrow between the front and back in the detail view (84 x 56 pt). Cream with a soft shadow, on the dark scrim. The words \"Tap to flip\" are drawn by the game under it."
+  },
+  "mini/collected-counter": {
+   "file": "mini/collected-counter.png",
+   "file2x": "mini/collected-counter@2x.png",
+   "size": [
+    99,
+    106
+   ],
+   "visibleRect": [
+    6,
+    6,
+    87,
+    94
+   ],
+   "shadowMargin": 6,
+   "state": "collected",
+   "family": "counter",
+   "rim": "#4696d7",
+   "note": "Counter catalog card, collected (also the base for NEW). 87 x 94 pt, no text, no picture: family art at 52 pt centred 34 pt below the top, dojo name and game name below (see layout.mini)."
+  },
+  "mini/collected-escape": {
+   "file": "mini/collected-escape.png",
+   "file2x": "mini/collected-escape@2x.png",
+   "size": [
+    99,
+    106
+   ],
+   "visibleRect": [
+    6,
+    6,
+    87,
+    94
+   ],
+   "shadowMargin": 6,
+   "state": "collected",
+   "family": "escape",
+   "rim": "#24ac8c",
+   "note": "Escape catalog card, collected (also the base for NEW). 87 x 94 pt, no text, no picture: family art at 52 pt centred 34 pt below the top, dojo name and game name below (see layout.mini)."
+  },
+  "mini/collected-guard": {
+   "file": "mini/collected-guard.png",
+   "file2x": "mini/collected-guard@2x.png",
+   "size": [
+    99,
+    106
+   ],
+   "visibleRect": [
+    6,
+    6,
+    87,
+    94
+   ],
+   "shadowMargin": 6,
+   "state": "collected",
+   "family": "guard",
+   "rim": "#68b448",
+   "note": "Guard catalog card, collected (also the base for NEW). 87 x 94 pt, no text, no picture: family art at 52 pt centred 34 pt below the top, dojo name and game name below (see layout.mini)."
+  },
+  "mini/collected-disarm": {
+   "file": "mini/collected-disarm.png",
+   "file2x": "mini/collected-disarm@2x.png",
+   "size": [
+    99,
+    106
+   ],
+   "visibleRect": [
+    6,
+    6,
+    87,
+    94
+   ],
+   "shadowMargin": 6,
+   "state": "collected",
+   "family": "disarm",
+   "rim": "#9268d6",
+   "note": "Disarm catalog card, collected (also the base for NEW). 87 x 94 pt, no text, no picture: family art at 52 pt centred 34 pt below the top, dojo name and game name below (see layout.mini)."
+  },
+  "mini/collected-throw": {
+   "file": "mini/collected-throw.png",
+   "file2x": "mini/collected-throw@2x.png",
+   "size": [
+    99,
+    106
+   ],
+   "visibleRect": [
+    6,
+    6,
+    87,
+    94
+   ],
+   "shadowMargin": 6,
+   "state": "collected",
+   "family": "throw",
+   "rim": "#e070ac",
+   "note": "Throw catalog card, collected (also the base for NEW). 87 x 94 pt, no text, no picture: family art at 52 pt centred 34 pt below the top, dojo name and game name below (see layout.mini)."
+  },
+  "mini/collected-strike": {
+   "file": "mini/collected-strike.png",
+   "file2x": "mini/collected-strike@2x.png",
+   "size": [
+    99,
+    106
+   ],
+   "visibleRect": [
+    6,
+    6,
+    87,
+    94
+   ],
+   "shadowMargin": 6,
+   "state": "collected",
+   "family": "strike",
+   "rim": "#f0b238",
+   "note": "Strike catalog card, collected (also the base for NEW). 87 x 94 pt, no text, no picture: family art at 52 pt centred 34 pt below the top, dojo name and game name below (see layout.mini)."
+  },
+  "mini/collected-kata": {
+   "file": "mini/collected-kata.png",
+   "file2x": "mini/collected-kata@2x.png",
+   "size": [
+    99,
+    106
+   ],
+   "visibleRect": [
+    6,
+    6,
+    87,
+    94
+   ],
+   "shadowMargin": 6,
+   "state": "collected",
+   "family": "kata",
+   "rim": "#a0683c",
+   "note": "Kata catalog card, collected (also the base for NEW). 87 x 94 pt, no text, no picture: family art at 52 pt centred 34 pt below the top, dojo name and game name below (see layout.mini)."
+  },
+  "mini/locked": {
+   "file": "mini/locked.png",
+   "file2x": "mini/locked@2x.png",
+   "size": [
+    99,
+    106
+   ],
+   "visibleRect": [
+    6,
+    6,
+    87,
+    94
+   ],
+   "shadowMargin": 6,
+   "state": "locked",
+   "note": "Locked catalog card: dark wood, pressed in, with the wood padlock seal baked in at the top (40 pt). Same for every family: a locked card shows no move name and no family. 87 x 94 pt. Draw the dojo name and then the belt where the move is learned (text rules in layout.mini)."
+  },
+  "mini/new-ribbon": {
+   "file": "mini/new-ribbon.png",
+   "file2x": "mini/new-ribbon@2x.png",
+   "size": [
+    48,
+    27
+   ],
+   "visibleRect": [
+    6,
+    6,
+    36,
+    15
+   ],
+   "shadowMargin": 6,
+   "state": "new",
+   "note": "Gold NEW ribbon, blank (36 x 15 pt). Place at the card top-left, 5 pt left of the card edge and 7 pt down. The game draws NEW (9.5 pt ExtraBold ink) at x+17, y+7.5 of the ribbon."
+  },
+  "family-art/counter": {
+   "file": "family-art/counter.png",
+   "file2x": "family-art/counter@2x.png",
+   "size": [
+    128,
+    128
+   ],
+   "family": "counter",
+   "rim": "#4696d7",
+   "placeholder": false,
+   "note": "PB-07 (#419 v3) family picture for counter. 128 x 128 pt, no shadow margin. Large card 124 pt, back 56 pt, grid card 52 pt, rim key 22 pt."
+  },
+  "family-art/escape-placeholder": {
+   "file": "family-art/escape-placeholder.png",
+   "file2x": "family-art/escape-placeholder@2x.png",
+   "size": [
+    128,
+    128
+   ],
+   "family": "escape",
+   "rim": "#24ac8c",
+   "placeholder": true,
+   "note": "PLACEHOLDER family picture: the rim and the cream face only, until the art is drawn for escape. 128 x 128 pt, no shadow margin. Large card 124 pt, back 56 pt, grid card 52 pt, rim key 22 pt."
+  },
+  "family-art/guard": {
+   "file": "family-art/guard.png",
+   "file2x": "family-art/guard@2x.png",
+   "size": [
+    128,
+    128
+   ],
+   "family": "guard",
+   "rim": "#68b448",
+   "placeholder": false,
+   "note": "PB-07 (#419 v3) family picture for guard. 128 x 128 pt, no shadow margin. Large card 124 pt, back 56 pt, grid card 52 pt, rim key 22 pt."
+  },
+  "family-art/disarm": {
+   "file": "family-art/disarm.png",
+   "file2x": "family-art/disarm@2x.png",
+   "size": [
+    128,
+    128
+   ],
+   "family": "disarm",
+   "rim": "#9268d6",
+   "placeholder": false,
+   "note": "PB-07 (#419 v3) family picture for disarm. 128 x 128 pt, no shadow margin. Large card 124 pt, back 56 pt, grid card 52 pt, rim key 22 pt."
+  },
+  "family-art/throw-placeholder": {
+   "file": "family-art/throw-placeholder.png",
+   "file2x": "family-art/throw-placeholder@2x.png",
+   "size": [
+    128,
+    128
+   ],
+   "family": "throw",
+   "rim": "#e070ac",
+   "placeholder": true,
+   "note": "PLACEHOLDER family picture: the rim and the cream face only, until the art is drawn for throw. 128 x 128 pt, no shadow margin. Large card 124 pt, back 56 pt, grid card 52 pt, rim key 22 pt."
+  },
+  "family-art/strike": {
+   "file": "family-art/strike.png",
+   "file2x": "family-art/strike@2x.png",
+   "size": [
+    128,
+    128
+   ],
+   "family": "strike",
+   "rim": "#f0b238",
+   "placeholder": false,
+   "note": "PB-07 (#419 v3) family picture for strike. 128 x 128 pt, no shadow margin. Large card 124 pt, back 56 pt, grid card 52 pt, rim key 22 pt."
+  },
+  "family-art/kata": {
+   "file": "family-art/kata.png",
+   "file2x": "family-art/kata@2x.png",
+   "size": [
+    128,
+    128
+   ],
+   "family": "kata",
+   "rim": "#a0683c",
+   "placeholder": false,
+   "note": "PB-07 (#419 v3) family picture for kata. 128 x 128 pt, no shadow margin. Large card 124 pt, back 56 pt, grid card 52 pt, rim key 22 pt."
+  }
+ }
+}

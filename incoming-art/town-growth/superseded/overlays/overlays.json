@@ -1,0 +1,178 @@
+{
+ "frame": {
+  "size2x": [
+   1864,
+   860
+  ],
+  "size1x": [
+   932,
+   430
+  ],
+  "pixelsPerTile2x": 80,
+  "note": "every overlay is a full-frame transparent PNG, the same frame as incoming-art/action-zone-dojo/previews/town-slot-in-town-<day|dusk>[@2x].png; stack them in stage order on that base"
+ },
+ "overlays": [
+  {
+   "stage": 1,
+   "belt": "White",
+   "changeId": "wc-lantern-halls-lamps",
+   "title": "Lantern Halls",
+   "adds": "bigger glass lamps, a new bridge lamp",
+   "rewardMessage": "You brought light home! The town lamps are glowing.",
+   "files": {
+    "day": {
+     "@2x": "overlays/1-white-day@2x.png",
+     "1x": "overlays/1-white-day.png"
+    },
+    "dusk": {
+     "@2x": "overlays/1-white-dusk@2x.png",
+     "1x": "overlays/1-white-dusk.png"
+    }
+   }
+  },
+  {
+   "stage": 2,
+   "belt": "Yellow",
+   "changeId": "wc-sunrise-garden-blooms",
+   "title": "Sunrise Garden",
+   "adds": "flower beds, lawn tufts, a flowering vine",
+   "rewardMessage": "The garden woke up! Flowers are blooming everywhere.",
+   "files": {
+    "day": {
+     "@2x": "overlays/2-yellow-day@2x.png",
+     "1x": "overlays/2-yellow-day.png"
+    },
+    "dusk": {
+     "@2x": "overlays/2-yellow-dusk@2x.png",
+     "1x": "overlays/2-yellow-dusk.png"
+    }
+   }
+  },
+  {
+   "stage": 3,
+   "belt": "Orange",
+   "changeId": "wc-ember-kitchens-chimney",
+   "title": "Ember Kitchens",
+   "adds": "shop chimney, bread, brick oven, long table",
+   "rewardMessage": "Supper smells so good! The town has a table for everyone.",
+   "files": {
+    "day": {
+     "@2x": "overlays/3-orange-day@2x.png",
+     "1x": "overlays/3-orange-day.png"
+    },
+    "dusk": {
+     "@2x": "overlays/3-orange-dusk@2x.png",
+     "1x": "overlays/3-orange-dusk.png"
+    }
+   }
+  },
+  {
+   "stage": 4,
+   "belt": "Green",
+   "changeId": "wc-giants-steps-path",
+   "title": "Giant's Steps",
+   "adds": "stepping-stone path, stone giant bench",
+   "rewardMessage": "Step by step! A new path is ready to explore.",
+   "files": {
+    "day": {
+     "@2x": "overlays/4-green-day@2x.png",
+     "1x": "overlays/4-green-day.png"
+    },
+    "dusk": {
+     "@2x": "overlays/4-green-dusk@2x.png",
+     "1x": "overlays/4-green-dusk.png"
+    }
+   }
+  },
+  {
+   "stage": 5,
+   "belt": "Blue",
+   "changeId": "wc-quiet-river-clear",
+   "title": "Quiet River",
+   "adds": "clear water, koi, lilies, sitting dock",
+   "rewardMessage": "The river is calm and clear. Come sit a while!",
+   "files": {
+    "day": {
+     "@2x": "overlays/5-blue-day@2x.png",
+     "1x": "overlays/5-blue-day.png"
+    },
+    "dusk": {
+     "@2x": "overlays/5-blue-dusk@2x.png",
+     "1x": "overlays/5-blue-dusk.png"
+    }
+   }
+  },
+  {
+   "stage": 6,
+   "belt": "Red",
+   "changeId": "wc-forge-courage-banners",
+   "title": "Forge of Courage",
+   "adds": "gold flame banners, dummy, brazier",
+   "rewardMessage": "Be brave! The practice yard is ready for you.",
+   "files": {
+    "day": {
+     "@2x": "overlays/6-red-day@2x.png",
+     "1x": "overlays/6-red-day.png"
+    },
+    "dusk": {
+     "@2x": "overlays/6-red-dusk@2x.png",
+     "1x": "overlays/6-red-dusk.png"
+    }
+   }
+  },
+  {
+   "stage": 7,
+   "belt": "Red-Black",
+   "changeId": "wc-hall-echoes-bell",
+   "title": "Hall of Echoes",
+   "adds": "wind chime and welcome bell",
+   "rewardMessage": "Listen! The town sings hello to you.",
+   "files": {
+    "day": {
+     "@2x": "overlays/7-redblack-day@2x.png",
+     "1x": "overlays/7-redblack-day.png"
+    },
+    "dusk": {
+     "@2x": "overlays/7-redblack-dusk@2x.png",
+     "1x": "overlays/7-redblack-dusk.png"
+    }
+   }
+  },
+  {
+   "stage": 8,
+   "belt": "Brown",
+   "changeId": "wc-root-library-tree",
+   "title": "Root Library",
+   "adds": "reading tree, root bench, book-swap box",
+   "rewardMessage": "A reading tree grew! Its roots go deep, like yours.",
+   "files": {
+    "day": {
+     "@2x": "overlays/8-brown-day@2x.png",
+     "1x": "overlays/8-brown-day.png"
+    },
+    "dusk": {
+     "@2x": "overlays/8-brown-dusk@2x.png",
+     "1x": "overlays/8-brown-dusk.png"
+    }
+   }
+  },
+  {
+   "stage": 9,
+   "belt": "Brown-Black",
+   "changeId": "wc-storm-stair-tower-glow",
+   "title": "Storm Stair",
+   "adds": "Tower glow, rainbow, puddles, window lantern",
+   "rewardMessage": "The storm is quiet. The Tower glows bright for you!",
+   "files": {
+    "day": {
+     "@2x": "overlays/9-brownblack-day@2x.png",
+     "1x": "overlays/9-brownblack-day.png"
+    },
+    "dusk": {
+     "@2x": "overlays/9-brownblack-dusk@2x.png",
+     "1x": "overlays/9-brownblack-dusk.png"
+    }
+   }
+  }
+ ]
+}
