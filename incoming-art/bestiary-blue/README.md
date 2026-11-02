@@ -5,10 +5,10 @@ Three Blue-belt ("The Quiet River") enemies from `drafts/planning/R-GREEN-TO-BLA
 | Folder | Data file | Look | Shape | Colours |
 |---|---|---|---|---|
 | `puddle-frog/` | `drafts/content/enemies/puddle-frog.json` | a round pond frog: wide soft body, flat head with two low eye bumps, cream chin, folded back legs with webbed feet, little front hands, darker spots, a gentle smile | squat and round | body `#4a9c68` (data `#4fa36b`), chin `#d3ebc8`, spots `#2f7049` |
-| `side-crab/` | `side-crab.json` | a wide river crab: low oval shell, lighter belly plate, big googly eyes, three rounded legs a side, one BIG rounded mitten claw and a smaller one | very wide and low | slate-teal `#3f7d86`, sand claws `#eadfb4` (data colour is red-orange `#d0603f`, see DECIDE) |
+| `side-crab/` | `side-crab.json` | a wide river crab: low oval shell, lighter belly plate, big googly eyes, three rounded legs a side, one BIG rounded mitten claw and a smaller one | very wide and low | slate-teal `#3f7d86`, sand claws `#eadfb4` (data colour is red-orange `#d0603f`: decided to keep the teal; the data colour should be updated to `#3f7d86`, see the Delivery Note) |
 | `splash-wave/` | `splash-wave.json` | a friendly mound of water with a soft foam cap and curl, little flippers, a ring of foam beads where it meets the ground | round and wobbly | water `#4e86d0` / `#8fc2f0`, foam `#f0f9ff` (data `#5b8fd1`) |
 
-All shapes are soft and rounded: no teeth, pincers' points or spikes. Nothing sits above the head except the wave's foam cap, which is part of its body (see DECIDE). No red in any sprite (red is only the game-tinted telegraph layer, shown red in the previews; the Splash Wave's is shown house purple `#8a4fe6`, because it is dash-only). Mood: calm blue and teal, in line with `drafts/content/lore/05-blue.md`.
+All shapes are soft and rounded: no teeth, pincers' points or spikes. Nothing sits above the head except the wave's foam cap, which is part of its body (decided: keep). No red in any sprite (red is only the game-tinted telegraph layer, shown red in the previews; the Splash Wave's is shown house purple `#8a4fe6`, because it is dash-only). Mood: calm blue and teal, in line with `drafts/content/lore/05-blue.md`.
 
 ## What was made
 - Idle (8 frames), wind-up and attack in 8 directions, 4 layers each, at the game's 80 px per tile. All three: 160 px frames at `--ortho 2.0`, `--anchor-y 0.74` (the feet sit at y 118 of 160, so a lunge toward the camera has room below).
