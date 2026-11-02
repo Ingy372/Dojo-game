@@ -1064,6 +1064,15 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Golden runs never apply effects (pre-existing): noted in `docs/decisions.md`, no code change.
 - Tests: `p-prog-d-strike` (+1), `p-prog-c-seal-ranks` (+1 check), `p-menu2-f-gear` (heading).
 
+
+## MENU-BAG-01 — The Bag screen (2026-11-02)
+- New full-screen Bag, opened by a **Bag** button on the Gear tab's filter row: 6 x 4 = 24 slots a page at 667x375, 844x390 and larger, ≥44 px tiles and controls, ◀ Back, slot filters, ◀ ▶ paging when there are more than 24 items, faint outlines for empty slots.
+- Tap a tile to pick it, then Wear / Take off / Let go / Details in the same sheet as the Gear tab (rows 0-1 get the sheet at the bottom, rows 2-3 at the top, so it never covers the picked tile). Wear gives a small pop on the tile instead of the flight to the doll.
+- One tile drawing (`gearTile`) for both screens. Layout is pure data in `ui/gearBoard.ts` (`bagScreenLayout`, `bagTileBox`, `BAG_SCREEN`).
+- The Gear tab's own grid is unchanged. Whether to drop it is Jay's call.
+- Tests: `menu-bag-01.test.ts` (layout at 5 sizes, header, sheet never covers the pick, paging, wiring).
+- Shots: `/workspace/shots/menu-bag-01` (not committed).
+- Tester note folded in: the top Gear sheet is lifted 8 px at 667 wide so it clears "Your Strike" (`gearSheetBox.lift`, tests in `menu-bag-01`).
 ### G2B12-FIXES: the Green playthrough fixes (2026-11-02)
 - Door banner: one fixed pill at the top centre, readable at 667x375, hidden behind the Insight picker and menus.
 - Home path card: no "▶ Video soon".
@@ -1073,6 +1082,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Gear sheet no longer covers the "Your Strike" row at 932x430; "Always with you" comments removed (Tester's low notes from #425).
 - Tests: `g2b12-fixes` (10). Shots in /workspace/shots/g2b12-fixes with `pass-fail.md`.
 
+### MENU-BAG-01 B1 follow-up (2026-11-02)
+- Bag paging uses its own `bagPage` field; ▶ and ◀ work at 1024x768 with 30 and 60 items (real taps, Reduced motion on and off).
+- 667x320: the sheet for a row-1 tile hides less of it, and a second tap closes it.
+- Tests: menu-bag-01.test.ts is now 25 tests. Shots: /workspace/shots/menu-bag-01/*fix1*.
 ### C430-FIXES: the Content Designer's #430 trio (2026-11-02)
 - Thunder Drum's name and bar no longer cover Virtue (or any action button) at 667x375.
 - `stationary: true` enemy flag; thunder-drum, sleepy-sentry and thorn-sprout use speed 0.

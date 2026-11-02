@@ -103,8 +103,8 @@ describe('G2B12-FIXES: the gear sheet leaves the Strike row showing', () => {
   });
   it('stays full width when the narrow sheet would be too small or the Strike row is clear', () => {
     const small = gearBoardLayout(360, 250);
-    expect(gearSheetBox(small, 360, 250)).toEqual({ x: 0, w: 360 });
+    expect(gearSheetBox(small, 360, 250)).toMatchObject({ x: 0, w: 360 });
     const tall = gearBoardLayout(564, 600);
-    expect(gearSheetBox(tall, 564, 600)).toEqual({ x: 0, w: 564 });
+    expect(gearSheetBox(tall, 564, 600)).toMatchObject({ x: 0, w: 564 });
   });
 });
