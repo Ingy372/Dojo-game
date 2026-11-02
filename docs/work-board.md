@@ -287,6 +287,36 @@ Order (Manager, Nov 1): **PB-01 to PB-03 come before G2B-01** (Jumping Spins lan
 | PB-15 | Dojo-ascent Artist | **Unlock screen art and Sensei's Trial room art.** One unlock card frame with a spot for the technique picture, and one Trial room backdrop and prop set that reads as "a short training room". Uses PB-07's medallions for the Seal kind. *Size: 3 days.* | Files in `incoming-art/unlock-trial/` with README, phone-size preview Jay can OK at a glance, in the approved style, no text baked in. Code-drawn placeholders are allowed first. | PB-13 (sizes and layout). PB-07 (medallions). |
 | PB-16 | Dojo-Ascent Programmer | **Orange floor grabber/brute behaviour that makes Throw shine** (Redesign beta table, "Enemy tuning"). *Scope: BETA. Needed for balance test 3 (newest option ranks top 2) on Orange.* | On Orange floors a grabber or brute behaves so Throw is a clear good answer; PB-09 test 3 passes for Throw on Orange; tests pass. | G2B-04 (thrown state) |
 
+## 0b10. Shop (launch, April 2027) (from `drafts/planning/R-SHOP.md`, PR #421, merged main 512d05e)
+**Order:** every SHOP item comes **after** the Dec 15 beta items. None of them blocks the beta. Rows below are copied as written in R-SHOP section 8; SHOP-LITE-01 is optional and not recommended.
+
+**Jay decided Nov 1, 2026:**
+- The shop ships at **launch (April 2027), not in the beta.**
+- The **code card is shelved** (R-SHOP section 10). Revisit only if kids ask.
+- **Sparkles are in.** Jay wants many items: limited-run effects, decorations, and character cosmetics.
+- The Manager takes the Researcher's recommendations on the other taste calls in section 9, with one exception: **the shop may sell its own decorations**, while S7-earned decor stays earned (no shop item copies an S7 look).
+- **Bag size:** 24 slots per page (MENU-BAG-01). **Manager's proposal for SHOP-BAGCAP-01:** a total cap of 72 (3 pages of 24). Programmer confirms it against the sim's items per run before locking.
+
+| ID | Owner | What | Done when | Waits on | When |
+|---|---|---|---|---|---|
+| SHOP-DOC-01 | Content Designer | Apply the doc edits in section 7. | Every line in the table reads as proposed. A word check finds no "never bought" without "with real money" in docs and parent text. | Jay approves section 9. | Launch |
+| SHOP-BAL-01 | Content Designer | Add drop chances to the belt 3 Ember Kitchens enemies in `content/loot/drops.json`. | Re-run of `R-SHOP-sim` shows belt 3 items per run within 2x of belt 2 and 4 for every bot. | Nothing. Can go in beta if loot is open. | Beta or launch |
+| SHOP-COIN-01 | Programmer | Add `coins` to the profile and the run payout (60 base, +3 per fight room, +10 per boss, +10 win) and the sell ladder. Old saves start at 0. | Sim test reproduces `R-SHOP-sim/table.md` within 1 coin. Spread across live cells is 2x or less. Losing a run still pays 60. | Jay locks the numbers (section 9). | Launch |
+| SHOP-BAGCAP-01 | Programmer | Define the bag size and what happens at the limit. There is none in code today. | A full bag shows Sell and Break down, never loses an item, and never blocks a run. | Jay picks the size (section 9). Related to MENU-BAG-01 (bag screen). | Launch (beta only with beta-lite) |
+| SHOP-SELL-01 | Programmer | "Sell" and "Break down" on the bag screen, per item, two-tap confirm, no sell on worn items. | Selling gives exactly the table price. Break down and Sell never both pay. Earned looks stay in `ownedLooks`. | SHOP-COIN-01, SHOP-BAGCAP-01. | Launch |
+| SHOP-DATA-01 | Programmer | The data shape in section 4: separate `coins` and `entitlements[]`, catalog schema, validator. | Validator rejects power, off-band prices, timers or stock counts, and items with both a coin price and a store id. No code path converts coins to entitlements. | SHOP-COIN-01. | Launch |
+| SHOP-CAT-01 | Content Designer | `content/shop/catalog.json`: the 38 items in section 3 with shelves and belts. | Passes the validator. Total is 28,000 or Jay's edited total. No item copies an S7 or S10 look. | SHOP-DATA-01, Jay's catalog calls. | Launch |
+| SHOP-ART-01 | Artist | A tappable shop building (the town art has one that is not tappable), a counter scene, 8+4 gi dye swatches, 4 bag skins, 10 banners, 12 decor props, 4 sparkle effects. | All art in the style guide, one preview per item, nothing resembles a belt, trophy or plaque. | SHOP-CAT-01. | Launch (the biggest scope risk) |
+| SHOP-UI-01 | Programmer | The shop screen: shelves, exact preview, price, coins before and after, one-tap confirm, owned list. Opens from the town shop building. | A kid can buy, see, wear and re-buy nothing twice. No timers. No "N left". Works with no network. | SHOP-ART-01, SHOP-CAT-01. | Launch |
+| SHOP-LEARN-01 | Learning & Engagement Designer | Words and an ethics read: kid-readable copy, no pressure words, a regret check for Sell (does a kid ever sell something they wanted?), and the wording that coins are "earned". | A word list passes. A short student session finds no kid confused about what they get or what they gave up. | SHOP-UI-01 draft. | Launch |
+| SHOP-TEST-01 | Tester | Balance regression and rule tests: re-run the coin table, prove each shop item changes no Power Rating, run the word check, check the gate on every link-out. | All pass. Table spread is 2x or less. Zero shop items change Power Rating. | SHOP-COIN-01, SHOP-CAT-01. | Launch |
+| SHOP-LITE-01 (optional) | Programmer | Beta-lite: coins and Sell only, no shop. | Same as SHOP-COIN-01 and SHOP-SELL-01 for beta. | Jay says yes, and the beta bag cap exists. | Beta (**not recommended**) |
+
+**Small loot item (Content Designer):**
+| ID | Owner | What | Done when | Waits on |
+|---|---|---|---|---|
+| LOOT-B3-01 | Dojo-Ascent Content Designer | The belt 3 Ember Kitchens enemies have no drops in `content/loot/drops.json`. Add them. (Covers the data part of SHOP-BAL-01; the sim re-run stays with SHOP-BAL-01.) | The checkers are clean and the Tester passes it. | nothing |
+
 ## 0b9. Benchmark beta items (from `drafts/planning/R-BENCHMARK.md`, PR #403). All **queued**.
 | ID | Owner | What | Done when | Waits on |
 |---|---|---|---|---|
