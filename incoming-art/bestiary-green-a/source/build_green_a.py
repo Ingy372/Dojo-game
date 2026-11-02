@@ -482,12 +482,15 @@ def mix(a, b, t):
 def B(dx=0, dy=0, dz=0, pitch=0, yaw=0, roll=0, sw=1, sh=1, sd=None):
     return (dx, dy, dz, pitch, yaw, roll, sw, sh, sw if sd is None else sd)
 
+HIND_Y = 0.40   # Cliff Goat: distance of the hind hooves behind the root (tiles)
 def apply(p, f):
     def key(pb, loc=None, rot=None, sc=None):
         if loc is not None: pb.location = loc; pb.keyframe_insert("location", frame=f)
         if rot is not None: pb.rotation_euler = Euler([math.radians(v) for v in rot], "XYZ"); pb.keyframe_insert("rotation_euler", frame=f)
         if sc is not None: pb.scale = sc; pb.keyframe_insert("scale", frame=f)
     b = p["body"]
+    if E == "cliff-goat":   # the hind legs ride on the body bone (the front legs are on the foot bones): keep the hind hooves on the ground when the body pitches about the root
+        b = list(b); b[2] -= HIND_Y * math.sin(math.radians(b[3])); b = tuple(b)
     # vertical bones: local X = X, local Y = up, local Z = -Y (back to front)
     key(PB["body"], loc=(b[0], b[2], -b[1]), rot=(b[3], b[4], -b[5]), sc=(b[6], b[7], b[8]))
     key(PB["eyes"], sc=(p["eyes"][0], p["eyes"][1], 1))
@@ -742,13 +745,13 @@ if E == "stack-golem":  # the tower wobbles: the upper stones rock side to side 
     def wobble(k, q):
         q = dict(q); a = 6 + 1.2 * k; q["top"] = (-9 + 1.5 * (k % 2), a * (1 if k % 2 else -1), 0.012 * (1 if k % 2 else -1)); return q
     telegraph_action("windup", TW, at["telegraphTicks"], tweak=wobble)
-    TH = P(body=B(dy=-0.05 * W, pitch=10, sw=1.06, sh=0.92, sd=1.06), eyes=(1.1, 0.8), top=(32, 0, 0), arm_l=(60, 10), arm_r=(60, 10))
+    TH = P(body=B(dy=-0.05 * W, pitch=5, sw=1.06, sh=0.92, sd=1.06), eyes=(1.1, 0.8), top=(32, 0, 0), arm_l=(60, 10), arm_r=(60, 10))
     attack_action("attack", TH, at["recoverTicks"], {"note": "the topple: the upper stones tip forward and thump down (one more stone is knocked off per hit you land: that is game-driven)"})
 if E == "boulder-roller":   # DASH-ONLY: leans back and hauls the boulder back, trembling; then a big shove and the boulder rolls away
     at = DATA["attack"]
-    RW = P(body=B(dy=0.1 * W, pitch=-16, sw=0.96, sh=1.04), eyes=(1.15, 1.3), arm_l=(-12, 6), arm_r=(-12, 6), prop=(0.08, 0.03, -28))
+    RW = P(body=B(dy=0.1 * W, dz=0.03, pitch=-16, sw=0.96, sh=1.04), eyes=(1.15, 1.3), arm_l=(-12, 6), arm_r=(-12, 6), prop=(0, 0, -28))   # rocked back, never pulled or lifted: its ground contact stays on the shared ground line
     def strain(k, q):
-        q = dict(q); p_ = list(q["prop"]); p_[0] += 0.012 * (1 if k % 2 else -1); p_[2] += 4 * (1 if k % 2 else -1); q["prop"] = tuple(p_); return q
+        q = dict(q); p_ = list(q["prop"]); p_[2] += 4 * (1 if k % 2 else -1); q["prop"] = tuple(p_); return q   # the boulder only rocks (roll): it stays on the ground
     telegraph_action("windup", RW, at["telegraphTicks"], ",dashOnly", tweak=strain)
     RH = P(body=B(dy=-0.18 * W, pitch=24, sw=1.04, sh=0.94), eyes=(1.1, 0.6), arm_l=(40, 6), arm_r=(40, 6), prop=(-0.2, 0.0, 80), foot_l=(0, -0.06, 0), foot_r=(0, 0.04, 0))
     attack_action("attack", RH, at["recoverTicks"], {"note": "the shove: the boulder rolls away down the lane. Dash-only: the purple striped lane and '!!' are drawn by the game (incoming-art/dash-telegraph)"})

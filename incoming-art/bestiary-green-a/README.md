@@ -33,3 +33,6 @@ All shapes are soft and rounded, no teeth, claws or sharp points. Nothing sits a
     python3 incoming-art/bestiary-green-a/source/make_green_a_lineup.py lineup   # also: moves | stones | lane
 
 `source/build_green_a.py` is built from the set 2 build script with the three new types, extra bones (`top` for the golem's upper stones, `prop` for the boulder) and a `--stones` option.
+
+## Grounding
+Every frame is checked so the lowest body pixel stays on the shared ground line: the Roller's wind-up is constant per direction and equal to idle; the Cliff Goat's hind hooves are compensated for body pitch (`HIND_Y` in `build_green_a.py`); the Stack Golem's attack pitch is 5 deg. Moves toward the camera in the attack are ground travel, not floating.
