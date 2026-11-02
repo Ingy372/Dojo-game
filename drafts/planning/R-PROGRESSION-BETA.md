@@ -1,6 +1,6 @@
 # R-PROGRESSION-BETA: the buildable beta plan for slots, loadout, Seal families and kata powers
 
-**For:** Jay and the Manager. **From:** Researcher & Planner. **Written:** Nov 1, 2026. Docs only. No game code, no work-board edit.
+**For:** Jay and the Manager. **From:** Researcher & Planner. **Written:** Nov 1, 2026. **Updated Nov 1 (night)** with the Manager's PB-12 calls (section 1a). Docs only. No game code, no work-board edit.
 **Source of truth:** `drafts/planning/power-and-progression-redesign.md` (Jay's Oct 30 doc with his answers; it lands in the repo with the Green-to-Black phase-2 PR). Where this plan says "the Redesign", it means that file.
 **Labels:** **[FACT]** is from the repo or the Redesign. **[GUESS]** is my estimate. **[DECIDE]** needs Jay.
 **Target:** the Dec 15, 2026 beta (5-10 tester families, White to Orange only). **Freeze: Fri Dec 4. Build to testers: Mon Dec 7** (`BETA-DEC15-plan.md`).
@@ -12,6 +12,19 @@
 - **What you approved (Nov 1):** the slot change, the 6 Seal families, Jumping Spins at #2 and Butterfly Flow at #3, Seal slots of 2 (White, Yellow) and 3 (Orange), and kata powers in the beta (passive only).
 - **What I need from you:** the 3 beta kata powers (Basic Form 1, Basic Form 2, Keon). I did not pick or tune them. The build uses empty placeholder slots until your list arrives. **Please send it by Fri Nov 13; the last safe day is Fri Nov 20** (section 9).
 - **Good news:** no new numbers are proposed here. The only number rules are the ones already set: a kata power is at most **PE 12**, and stance plus kata stays inside the **+12% damage cap**. Every other number waits for the balance test (item PB-09).
+
+## 1a. The Manager's PB-12 calls (Nov 1) [FACT, now recorded here]
+
+| Call | What it changed in this plan |
+|---|---|
+| **PB-01, PB-02 and PB-03 come before R-G2B-01.** | R-G2B-01 (Jumping Spins data, Butterfly Flow to #3) waits on PB-01 to PB-03. Order table and critical path say so. |
+| **R-G2B-03 becomes the 5 family medallions and is merged into PB-07.** | PB-07 is the one art item for the medallions. R-G2B-03 is closed as a separate item. |
+| **Steady Breath goes in Counter, Strong Block in Guard** (as in Jay's doc). | Section 4.4 family map updated. No open question left. |
+| **Retire both always-on Strike upgrades** (Spin Kick Finish extra hit, Butterfly Flow's -8 Focus), under "equip, don't stack". | Section 7 item 3 and PB-03 updated. |
+| **White's 2 slots and 2 families are approved.** | Risk row and question removed. |
+| **"Power coming soon" is OK** as the placeholder for a late kata power. | Section 5 item 5 and the kata risk row updated. |
+| **Unlock screen and Sensei's Trial get owners.** | New items **PB-13** (Programmer), **PB-14** (Content Designer), **PB-15** (Artist). |
+| PB-12 itself | **Done.** |
 
 ## 2. What is in the game today [FACT]
 
@@ -105,7 +118,7 @@ The old `abilities.json` `strikes` and `seals` arrays are kept for one release a
 1. **Slots by belt.** `sealSlots(belt)`: White 2, Yellow 2, Orange 3, Green and Blue 3, Red and up 4 (Green and up are in the Redesign table, not in the beta). One function, one table, in data. **[FACT]**
 2. **A Seal is a family.** The family unlocks at its first signed-off technique. **Rank = number of signed-off techniques in that family.** The effects of a rank are the effects of every signed-off technique in the family (set, not order, so a catch-up sign-off works). The family shows the real name of the newest rank ("Throw Seal, Rank 2: Reap and Finish").
 3. **Equip rules.** `equipSeal(loadout, family)` adds the family if there is a free slot, it is unlocked, and it is not already in. If full, the UI asks which one to swap (no silent swap). Removing is always allowed. A family can never be in two slots.
-4. **Strike.** The Strike button reads the equipped `StrikeDef` (default Spin Kick). `tryStrike` loops `hits`. Spin Kick must give **byte-for-byte today's result** (a test checks it). Today's two upgrade effects are removed from the always-on list (see 6.3).
+4. **Strike.** The Strike button reads the equipped `StrikeDef` (default Spin Kick). `tryStrike` loops `hits`. Spin Kick must give **byte-for-byte today's result** (a test checks it). Today's two upgrade effects are removed from the always-on list (section 7, item 3).
 5. **Kata power.** One equipped. Its `effects` join `characterSetup.effects`. **Passive only:** the type allows only effect types already marked passive. The stance + kata damage cap (+12%) is checked at setup: if `stance powerScale + kata damage` is above 0.12, the data test fails (it never clips silently in game).
 6. **Unearned picks are dropped, never an error.** `normalizeLoadout` is extended: any pick that is not earned goes to the default for its slot. Extra Seals beyond the slot count are dropped from the end.
 7. **Setup.** `characterSetup` builds `effects` from: gear, equipped Seal ranks, kata power. It stops using "all unlocked Seals and Strikes". `PlayerSetup` gets `strike: StrikeSetup`.
@@ -123,7 +136,16 @@ The old `abilities.json` `strikes` and `seals` arrays are kept for one release a
 | Disarm | #13 Kick the Weapon (O), #14 Kick and Spin (O) | `disarm` | `disarmAttacks` (small) |
 | Lock | none in the beta (#17 is the first) | none | later |
 
-How the old 10 placeholder Seals land (the Redesign says each becomes a rank, none are thrown away). Eight match a #1-15 row by effect type: Off-Balance (`staggerTicks`) is #6, Escape Step (`dashOnBlock`) is #2, Sweep (`rippleCounter`) is #3, Create Distance (`blockReflect`) is #8, Disarm is #13, Throw (`counterStrength`) is #7, Follow Through (`staggerBonus`) is #10, Sharp Eyes (`counterWindow`) is #15. **Two have no #1-15 row: Strong Block (Guard) and Steady Breath (heal on a Great Counter).** The Redesign says they get a home. **[DECIDE]** which family and rank (section 11, Q2). Until then PB-02 keeps them as the last rank of Guard and Counter, so nobody's earned power disappears.
+How the old 10 placeholder Seals land (the Redesign says each becomes a rank effect, none are thrown away). Eight match a #1-15 row by effect type: Off-Balance (`staggerTicks`) is #6, Escape Step (`dashOnBlock`) is #2, Sweep (`rippleCounter`) is #3, Create Distance (`blockReflect`) is #8, Disarm is #13, Throw (`counterStrength`) is #7, Follow Through (`staggerBonus`) is #10, Sharp Eyes (`counterWindow`) is #15.
+
+**Settled by the Manager (Nov 1, per Jay's doc): the last two get a home.**
+
+| Old Seal | Family | Where in the family | Notes |
+|---|---|---|---|
+| **Steady Breath** (heal on a Great Counter) | **Counter** | Rides on the last beta Counter rank (#10 Grab and Strike, rank 5) | Placeholder amount until PB-09. |
+| **Strong Block** | **Guard** | Rides on the last beta Guard rank (#9 High Block Strike, rank 2) | Placeholder amount until PB-09. |
+
+Both are data rows in `seal-families.json`. The Content Designer (PB-06) can move one to another rank in the same family with a one-line edit if Jay's template reads differently. A student who had either old Seal keeps its effect when they equip that family at that rank, so nobody's earned power disappears. PB-02 builds both and PB-09 sets the amounts.
 
 ## 5. UI flow: picking and equipping
 
@@ -133,7 +155,7 @@ Built on the Fighting Style screen that exists (`buildStyle`, `equipPick`, `styl
 2. **Tap a card -> the tray shows the picks for that slot.** Earned picks are bright and tappable. Not-yet-earned picks are dim with "Learn this at the dojo" (existing `notYet` wording). The Lock family shows "Coming later".
 3. **Tap a pick -> it equips and the card fills with its picture and name.** The right side shows one kid line (no numbers, D6). For Seals the line shows the real technique name of the newest rank.
 4. **Seals full?** Tapping a third Seal asks "Swap with which one?" and highlights the 2-3 cards. Cancel is one tap. Never silent.
-5. **Kata card.** Shows the equipped kata power. A white belt sees one pick (Basic Form 1). An orange belt sees up to 3. While Jay's powers are placeholders, the card shows the kata name and "Power coming soon" in a friendly tone, never grey-failure. The game plays normally.
+5. **Kata card.** Shows the equipped kata power. A white belt sees one pick (Basic Form 1). An orange belt sees up to 3. While Jay's powers are placeholders (or one is late), the card shows the kata name and **"Power coming soon"** in a friendly tone, never grey-failure. **The Manager approved this wording on Nov 1.** The game plays normally.
 6. **One-time note after an update** (only for saves that had Seals on): "Your Seals now go in slots. We picked your first ones. Change them any time!" One tap to dismiss. Nothing was lost (section 7).
 7. **No pressure rules.** No timers, no red badges, no "you are missing power". A new unlock gets a soft "New" dot until opened. Reduced-motion: no tray slide, no pulse.
 8. **Always works.** If no slot is filled, the game plays with Spin Kick and no Seals (today's default feel for a new player).
@@ -150,7 +172,12 @@ Built on the Fighting Style screen that exists (`buildStyle`, `equipPick`, `styl
 | Slot art: 5 family medallions (+ Lock), Strike glyph, Kata glyph, empty-slot art | Artist | nothing (code-drawn placeholders are allowed first, as in B-POLISH-2) |
 | Words for the one-time note and empty-slot lines | Content Designer | nothing |
 
-**R-G2B-03 note for the Manager:** it draws one icon per Orange Seal (#11-15). With families, a Seal is a family, so the 5 **family** medallions matter more than per-technique icons. I suggest changing R-G2B-03 to "5 family medallions + Jumping Spins icon" (or adding PB-07 and trimming R-G2B-03).
+**R-G2B-03 (decided by the Manager, Nov 1):** it is now the 5 family medallions and is merged into **PB-07**. There is no separate per-technique icon item.
+
+| Content (added Nov 1) | Who | Waits on |
+|---|---|---|
+| Unlock screen lines (kid words, real technique name, no stat dump) and the Sensei's Trial room lines | Content Designer (PB-14) | PB-06 (the same word rules and rank names), PB-13 for the screen layout |
+| Unlock screen art and Sensei's Trial room art | Artist (PB-15) | PB-13 for sizes |
 
 ## 7. Save and migration (old saves keep working)
 
@@ -162,7 +189,7 @@ Built on the Fighting Style screen that exists (`buildStyle`, `equipPick`, `styl
    - `seals`: fill up to `sealSlots(belt)` with the families the student **earned first** (oldest unlock first).
    - `kata`: null.
    - Set a `showSlotNote: true` flag so the friendly note shows once.
-3. **Old Strike upgrades.** Today's `follow-up-kick` (extra hit) and `quick-combo` (-8 Focus) stop being always-on. Spin Kick stays the same as today's base Strike. This is a small drop in always-on power for a student who earned them. **[DECIDE]** (section 11, Q3): confirm they go, or keep them as Counter or Strike ranks.
+3. **Old Strike upgrades retired (decided Nov 1).** Today's `follow-up-kick` (Spin Kick Finish extra hit) and `quick-combo` (Butterfly Flow, -8 Focus) stop being always-on, under "equip, don't stack". Spin Kick stays the same as today's base Strike. This is a small drop in always-on power for a student who earned them, so the friendly one-time note covers it, and Power and Health are unchanged. Their ideas live on in the new shapes: Jumping Spins (several hits) and Butterfly Flow (a harder, slower hit).
 4. **Old Seal ids.** The 10 placeholder ids map to family ranks (4.4). An unknown id in a save is ignored, never an error (the `LOADOUT_ID` check already drops odd ids).
 5. **Beta context.** Every tester starts fresh or from the grown-up belt entry (B-BELT), so the migration matters most for Jay's and staff's phones and the QA saves. It is still tested, because Rule 7 says never punish.
 6. **Wipe data** (B-SAFE) already clears the loadout. No change.
@@ -179,6 +206,7 @@ Built on the Fighting Style screen that exists (`buildStyle`, `equipPick`, `styl
 | `p-prog-f-migration.test.ts` | A fully-loaded old save (all 10 Seals on) gets the first N families, keeps Power and Health unchanged, shows the note once. |
 | `p-prog-g-style-screen.test.ts` | Slot cards and trays for a White, Yellow and Orange profile. Lock text. Swap prompt. No numbers on screen (D6). Touch targets are at least 44 pt. |
 | `p-prog-h-no-pressure-words.test.ts` | Wording check: no timers, no "missing", no purchase or pressure words in the new strings. |
+| `p-prog-i-unlock-trial.test.ts` | A new sign-off shows the unlock screen once, with the real technique name and no numbers. A seen unlock never shows again. The Trial room auto-equips the new move only for that room and restores the loadout after. The reward is given once. Reduced motion and no-pressure wording hold. (PB-13) |
 | Balance: `test/balance/prog-*.test.ts` (BALANCE=1) | PB-09 below. |
 
 ## 9. Balance check (follows `balance-check`: every belt, every difficulty)
@@ -247,7 +275,7 @@ Built on the Fighting Style screen that exists (`buildStyle`, `equipPick`, `styl
 
 | Belt | Slots | Families the student has (my 4.4 mapping) | Real choice? |
 |---|---|---|---|
-| White (#1-5) | 2 | Escape, Counter (2) | **No choice yet.** Both fit. Fine: it teaches the screen. |
+| White (#1-5) | 2 | Escape, Counter (2) | **No choice yet.** Both fit. Approved by the Manager (Nov 1): it teaches the screen. |
 | Yellow (#6-10) | 2 | Escape, Counter, Guard (3) | Yes, 3 for 2. |
 | Orange (#11-15) | 3 | Escape, Counter, Guard, Throw, Disarm (5) | Yes, 5 for 3. |
 
@@ -257,22 +285,25 @@ Built on the Fighting Style screen that exists (`buildStyle`, `equipPick`, `styl
 
 ## 10. Board items
 
-Owners: **Programmer, Content Designer, Artist, Tester, Jay.** Size is my **[GUESS]** in working days.
+Owners: **Programmer, Content Designer, Artist, Tester, Jay** (Manager for PB-12). One owner per item. Size is my **[GUESS]** in working days.
 
 | ID | Owner | What | Done when | Waits on | Size |
 |---|---|---|---|---|---|
 | **PB-01** | Programmer | Loadout v2: the types in 4.1, `readLoadout` for 5 fields, `normalizeLoadout`, `sealSlots(belt)`, the migration seed in section 7. No UI, no engine change. | `p-prog-a`, `p-prog-b` (slot math), `p-prog-f` pass. An old `{stance, virtue}` save loads and gets the first families. A new test shows Power and Health are unchanged. | nothing | 3 |
 | **PB-02** | Programmer | Seal families: `seal-families.json`, rank rules, `characterSetup` uses only equipped Seals. The 10 placeholder Seals move into ranks. Beta families Escape, Counter, Guard, Disarm work. Throw ranks wired but off until R-G2B-04. | `p-prog-c` passes. A White profile with 2 equipped families has only those effects in a test fight. The Lock family shows locked. | PB-01. Throw effects: R-G2B-04. | 5 |
-| **PB-03** | Programmer | Strike slot: `strikes.json`, `tryStrike` reads the equipped Strike, Spin Kick as data, equip by combo sign-off. Retires the two old always-on Strike upgrades (see Q3). | `p-prog-d` passes. Spin Kick gives today's exact damage in a test. A Yellow profile can equip Jumping Spins. **R-G2B-01 (Jumping Spins data, Butterfly Flow to #3) should land on this item, so it waits on PB-03.** | PB-01 | 4 |
+| **PB-03** | Programmer | Strike slot: `strikes.json`, `tryStrike` reads the equipped Strike, Spin Kick as data, equip by combo sign-off. Retires the two old always-on Strike upgrades (decided Nov 1). | `p-prog-d` passes. Spin Kick gives today's exact damage in a test. A Yellow profile can equip Jumping Spins. **R-G2B-01 (Jumping Spins data, Butterfly Flow to #3) comes after PB-01 to PB-03 and lands on this slot (Manager, Nov 1).** | PB-01 | 4 |
 | **PB-04** | Programmer | Kata power slot: `powers.json` with 3 placeholder powers, equip, passive-only effects, the +12% cap data test. One kata power per run. | `p-prog-e` passes. A White profile can equip Basic Form 1's placeholder and play. A final power added by data only (no code) changes the fight. | PB-01. Real powers: PB-11. | 3 |
 | **PB-05** | Programmer | Fighting Style screen: 5 slot cards, Seal swap prompt, Lock "Coming later", Kata card, the one-time note, "New" dots, reduced motion. | `p-prog-g` and `p-prog-h` pass. On a phone-size preview a White, Yellow and Orange profile each equip every slot in at most 3 taps per slot. Touch targets 44 pt. | PB-01 (can start with fixtures). Final text: PB-06. | 6 |
 | **PB-06** | Content Designer | Words: families, ranks #1-15, Strikes, empty slots, the one-time note, kata power lines when they arrive. Confirm the #1-15 family map against Jay's template. | New `drafts/content/abilities/seal-families-text.json`. Word check passes (no "break" outside Break Free, no injury words, no numbers). A list of any families that differ from 4.4 is in the Delivery Note. | Family map (Jay's #1-15 template). Kata lines: PB-11. | 3 |
-| **PB-07** | Artist | Slot art: 5 family medallions plus a Lock silhouette, Strike glyph, Kata glyph, empty-slot art, in the approved icon families. | Files in `incoming-art/icons-slots/` with README, 128 x 128, transparent, phone-size preview Jay can OK at a glance. | nothing | 3 |
+| **PB-07** | Artist | Slot art: 5 family medallions (this is **R-G2B-03, merged in**: it replaces per-technique Orange Seal icons #11-15) plus a Lock silhouette, Strike glyph (with the Jumping Spins icon), Kata glyph, empty-slot art, in the approved icon families. | Files in `incoming-art/icons-slots/` with README, 128 x 128, transparent, phone-size preview Jay can OK at a glance. R-G2B-03 is closed on the board when this merges. | nothing | 3 |
 | **PB-08** | Content Designer | Fighting Style first-use help: one Sensei line per screen, one new idea per session (slots first, swap later). | Note with at most 3 lines, kid words, no pressure. Reviewed by the Learning & Engagement Designer. | PB-06 | 1 |
 | **PB-09** | Programmer | Balance harness: put Strikes, Seals and kata powers into the sim and run the four tests of section 9 on belts 1-10 x Guided, Standard, Challenge x 3 bots. Fill the Seal and Strike rank numbers. | A table in the PR: every belt and difficulty passes, or a flagged list sent back for number changes. No tier is more than 2x its neighbour without a note. | PB-02, PB-03. Kata rows: PB-04 and PB-11. | 6 |
 | **PB-10** | Tester | Beta test plan and run for the loadout: old saves, slot caps, swap, Lock text, Strike equip, kata placeholder, Guided/Standard/Challenge, reduced motion, wipe data. | `drafts/planning/R-PROGRESSION-test-plan.md` with at least 20 numbered cases, each with steps and a pass line. Run on a phone-size window after PB-05 merges, results logged. | Writing: nothing. Running: PB-05. | 3 |
 | **PB-11** | **Jay** | Send the 3 kata powers: name, one sentence, what you see on screen. Passive only. | A list of 3 in any form. | nothing. **Target Fri Nov 13, latest Fri Nov 20.** | n/a |
-| **PB-12** | Manager | After this plan: (a) tell R-G2B-01 to wait on PB-03, (b) decide R-G2B-03 (family medallions), (c) assign the unlock screen and Sensei's Trial (not in this plan, see section 11). | Board updated. | this plan merged | n/a |
+| **PB-12** | Manager | **DONE (Nov 1).** (a) R-G2B-01 comes after PB-01 to PB-03. (b) R-G2B-03 is the 5 family medallions, merged into PB-07. (c) Owners for the unlock screen and Sensei's Trial: PB-13, PB-14, PB-15. | Board updated. | done | n/a |
+| **PB-13** | Programmer | **Unlock screen and Sensei's Trial room** (Redesign, "Making new moves exciting", items 1 and 2). (1) Unlock screen: when a sign-off syncs, the next time the student opens the game one short screen names the real technique and the new Strike, Seal rank or kata power, in kid words from PB-14, with one tap to dismiss. A `seenUnlocks` list in the save (additive, per-field reader) makes it show once. (2) Sensei's Trial: the first run after an unlock opens with **one short room from one template**, the new move auto-equipped for that room only (the real loadout is restored after), and a **small one-time reward** from an existing decoration or XP source. No new currency. The reward size is a placeholder until the Manager and PB-09 set it. | `p-prog-i` passes. In a test, a new sign-off shows the screen once and a second open does not. The Trial room loads for a Strike, a Seal rank and a kata power (placeholder is fine), restores the loadout after, and gives the reward once. A tester can clear the room on a phone-size window in under a minute, with no timer, no fail screen and no pressure words. Reduced motion respected. | PB-01 (save fields). PB-02, PB-03, PB-04 for the three unlock kinds. Final words: PB-14. Final art: PB-15 (placeholders first). | 5 |
+| **PB-14** | Content Designer | **Unlock screen and Sensei's Trial words.** One kid-word unlock line per kind (Strike, Seal rank, kata power) that uses the real technique name ("Your throws now knock enemies down longer"), the Trial room intro and clear lines, the reward line, and the "Power coming soon" unlock line for a late kata power. Words only. Art is PB-15. | New `drafts/content/abilities/unlock-text.json` with lines for Strikes 1-3, the 15 rank names from PB-06, and the 3 kata powers. Word check passes (no numbers, no injury words, no pressure or purchase words). Reviewed by the Learning & Engagement Designer against the real technique. | PB-06 (same family map and rank names). Kata lines: PB-11. | 2 |
+| **PB-15** | Artist | **Unlock screen art and Sensei's Trial room art.** One unlock card frame with a spot for the technique picture, and one Trial room backdrop and prop set that reads as "a short training room". Uses PB-07's medallions for the Seal kind. | Files in `incoming-art/unlock-trial/` with README, phone-size preview Jay can OK at a glance, in the approved style, no text baked in. Code-drawn placeholders are allowed first. | PB-13 (sizes and layout). PB-07 (medallions). | 3 |
 
 ## 11. Order, critical path and scope risks
 
@@ -281,8 +312,8 @@ Owners: **Programmer, Content Designer, Artist, Tester, Jay.** Size is my **[GUE
 | Week | Work |
 |---|---|
 | Nov 2-6 | **PB-01** (everything else needs it). PB-06, PB-07, PB-10 (writing) start. R-G2B-04 (thrown state) in parallel. |
-| Nov 9-13 | PB-02, PB-03, PB-04 in parallel. **Jay sends kata powers (target Nov 13).** |
-| Nov 16-20 | PB-05 on real data. PB-09 first runs (Seals, Strikes). Kata power data goes in (latest day: Nov 20). Tier 3 art deadline Nov 20 (existing). |
+| Nov 9-13 | PB-02, PB-03, PB-04 in parallel. **Jay sends kata powers (target Nov 13).** PB-14 words start when PB-06 has rank names. **R-G2B-01 starts only after PB-03 (Manager call).** |
+| Nov 16-20 | PB-13 (unlock screen, Sensei's Trial) with placeholders; PB-15 art. PB-05 on real data. PB-09 first runs (Seals, Strikes). Kata power data goes in (latest day: Nov 20). Tier 3 art deadline Nov 20 (existing). |
 | Nov 23-29 | Thanksgiving week, light load. PB-09 tuning loop. PB-05 polish. |
 | Nov 30-Dec 3 | PB-10 run. Fix. All numbers must pass PB-09. |
 | **Dec 4** | **Freeze.** Fixes only. |
@@ -291,34 +322,34 @@ Owners: **Programmer, Content Designer, Artist, Tester, Jay.** Size is my **[GUE
 ### Critical path
 
 **PB-01 -> PB-02, PB-03 -> PB-09 (first tuning) -> PB-05 -> PB-10 -> freeze Dec 4.**
+**Unlock path:** PB-01 -> PB-02, PB-03, PB-04 -> PB-13 (with PB-14 words and PB-15 art) -> PB-10 -> freeze. It runs next to the main path and must land before the Nov 30 test run.
 **Kata path:** Jay's list (PB-11) -> PB-04 final data -> PB-09 kata rows -> freeze. It is the only path where a person outside the team can stall the date.
 
 ### Scope risks
 
 | Risk | Tag | Why | Fallback |
 |---|---|---|---|
-| Jay's kata list arrives after Nov 20 | **HIGH** | Kata powers must ship in the beta. The test needs about a week and the tuning loop hits Thanksgiving. | Ship the slot and the 3 katas with placeholders ("Power coming soon") and send the real powers as a data-only update before Dec 15. Needs Jay's OK. |
+| Jay's kata list arrives after Nov 20 | **HIGH** | Kata powers must ship in the beta. The test needs about a week and the tuning loop hits Thanksgiving. | Ship the slot and the 3 katas with "Power coming soon" (approved by the Manager, Nov 1) and send the real powers as a data-only update before Dec 15. |
 | Seal and Strike numbers are untested | **HIGH** | They are not in the sim. PB-09 builds the harness first. | Use the S4 numbers at a smaller size (about half) and re-check. Never ship an unchecked tier. |
 | Counter holds 5 of 15 techniques, Escape 4 | MED | Jay decides families. A big family ranks up fast and gets strong. | PB-09 sets rank amounts so the family total fits the Seal budget. A family map change is a data edit. |
 | Orange (belt 3) has the biggest kid win-rate swing | MED | The +12% stand-in moves the kid win rate +16 points at Orange on Standard, against +0 and +3 next door (PE itself is on target). Orange is a beta belt. | Keep kata powers at PE 12 or less and re-check Orange first in PB-09. |
 | Throw needs the thrown state | MED | R-G2B-04 builds it. If it runs long, Throw stays dark. | Cut line: Orange has 4 families (no Throw) and slots stay 3. Say so in the build note. |
-| White has no Seal choice | LOW | 2 families for 2 slots. | Fine. It teaches the screen. Choice starts at Yellow. |
-| Unlock screen and Sensei's Trial | MED | In the Redesign beta table, but not in this plan or in the Batch 1 items. Nobody owns it yet. | Manager to give it an owner (PB-12). |
-| Art for slots | LOW | Code-drawn placeholders are enough for the beta. | Ship placeholders if art is late. |
+| Unlock screen and Sensei's Trial run long | MED | Now owned (PB-13, PB-14, PB-15) but it needs the three unlock kinds to exist, so it starts late. | Cut line: the unlock screen ships, and the Trial room ships for Strikes and Seals only. Say so in the build note. |
+| **Orange grabber or brute enemy behaviour for Throw** | MED | In the Redesign beta table ("Enemy tuning") and needed for the newest-option test (Test 3) on Orange, but **no item and no owner yet**. It was not part of PB-12. | **Manager: assign an owner** (it needs R-G2B-04 first). Without it, Throw is not the easy answer on Orange floors and Test 3 may fail for it. |
+| Art for slots, unlock screen and Trial room | LOW | Code-drawn placeholders are enough for the beta. | Ship placeholders if art is late. |
 | Power taken from saves that had everything on | LOW | Old Strike upgrades and extra Seals move out. | Section 7: stats unchanged, friendly note, first families seeded. |
 
-### Open questions for Jay
+### Open for Jay (the Manager's calls are in section 1a, so this is all that is left)
 
-1. **Kata powers (PB-11):** please send the 3 powers by Nov 13. Is "Power coming soon" in the beta OK if one is late?
-2. **Families for #1-15:** is my mapping in 4.4 the same as your filled template? If not, tell the Content Designer the rows that differ. Where does Steady Breath (heal on Great Counter) belong?
-3. **Old Strike upgrades:** today's "Spin Kick Finish" extra hit and Butterfly Flow's Focus cut are always on. In the Redesign, Spin Kick is one heavy hit and every Strike costs 30 Focus. OK to retire both?
-4. **White has 2 slots and 2 families.** OK that real choice starts at Yellow?
-5. **Unlock screen and Sensei's Trial** are in your beta table. Do they ship in the beta? (I did not plan them. This plan covers slots, loadout, families and kata powers.)
+1. **Kata powers (PB-11):** please send the 3 powers (Basic Form 1, Basic Form 2, Keon) by Fri Nov 13, latest Nov 20. If one is late the card says "Power coming soon" (approved).
+2. **Families for #1-15:** is my mapping in 4.4 the same as your filled template? If not, tell the Content Designer the rows that differ. (Steady Breath in Counter and Strong Block in Guard are settled.)
+
+**For the Manager (not a Jay question):** assign an owner for the Orange grabber or brute behaviour (see the risk table).
 
 ## Delivery Note
 
-- **ITEM:** R-PROGRESSION-BETA
-- **WHAT:** The buildable beta plan for slots, loadout, 6 Seal families and passive kata powers: types and data files, UI flow, content list, save migration, tests, a balance table for belts 1-10 x 3 difficulties, 12 board items with owners, and the order to Dec 15. Docs only. No game code, no work-board edit, no new tuning numbers.
-- **WHY:** you approved the slot change on Nov 1 and want kata powers in the beta. The Programmer can now build without guessing, and the only outside wait is your kata list.
-- **DECIDE:** (1) Send the 3 kata powers by Nov 13 (latest Nov 20). (2) Confirm or fix the #1-15 family map in 4.4. (3) OK to retire today's two always-on Strike upgrades? (4) OK that White has no real Seal choice? (5) Do the unlock screen and Sensei's Trial ship in the beta?
-- **NEXT:** the Manager adds PB-01 to PB-12 to the board, moves R-G2B-01 behind PB-03, and decides R-G2B-03. The Programmer starts PB-01.
+- **ITEM:** R-PROGRESSION-BETA (updated Nov 1 with the Manager's PB-12 calls)
+- **WHAT:** The buildable beta plan for slots, loadout, 6 Seal families and passive kata powers: types and data files, UI flow, content list, save migration, tests, a balance table for belts 1-10 x 3 difficulties, 15 board items (PB-01 to PB-15) with owners, "Done when" and waits-on, and the order to Dec 15. New since the first version: PB-12 marked done; PB-13 (Programmer, unlock screen and Sensei's Trial room), PB-14 (Content Designer, words), PB-15 (Artist, art); R-G2B-03 merged into PB-07; Steady Breath in Counter and Strong Block in Guard; both old Strike upgrades retired; White's 2 slots approved; "Power coming soon" approved. Docs only. No game code, no work-board edit, no new tuning numbers.
+- **WHY:** Jay approved the slot change on Nov 1 and wants kata powers in the beta. The Programmer can build without guessing; the only outside wait is Jay's kata list.
+- **DECIDE:** (1) Jay sends the 3 kata powers by Nov 13 (latest Nov 20). (2) Jay confirms or fixes the #1-15 family map in 4.4. Manager: give the Orange grabber or brute enemy work an owner.
+- **NEXT:** The Manager puts PB-01 to PB-15 on the board, with R-G2B-01 after PB-03 and R-G2B-03 closed into PB-07. The Programmer starts PB-01.
