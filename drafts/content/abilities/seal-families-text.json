@@ -1,5 +1,5 @@
 {
-  "notes": "PB-06 (R-PROGRESSION-BETA, PR #407): kid words for the Seal families, seal ranks #1-15 and the three Strikes. Words only: no effect numbers, no game code. Family map is the plan's section 4.4 (the Programmer's file seal-families.json copies ids, names and text from here). Rank 'name' keeps the current names unchanged: the S4 table names in drafts/planning/S4-self-defense-powers.md (all are proposals; the name-clash list in G2B-02 stays a list of proposals). 'technique' is the self-defense number. 'oldSeal' is the placeholder Seal in abilities.json whose effect lands on that rank (plan 4.4). 'carries' are the two old Seals that ride on a rank (Steady Breath on the last Counter rank, Strong Block on the last Guard rank); both keep their current names. 'effectRef' only points at the S4 effect; amounts are placeholders until PB-09. 'status' marks a rank whose effect is not built yet. Kid wording: Great Counter (S4 still says Perfect Counter), capital STRIKE, DASH and COUNTER, no digits, one sentence under 80 characters. Seal text for #31-40 (Injured status) is elsewhere. Kata power lines wait on Jay (PB-11).",
+  "notes": "PB-06 (R-PROGRESSION-BETA, PR #407): kid words for the Seal families, seal ranks #1-15 and the three Strikes. Words only: no effect numbers, no game code. Family map is the plan's section 4.4 (the Programmer's file seal-families.json copies ids, names and text from here). Rank 'name' keeps the current names unchanged: the S4 table names in drafts/planning/S4-self-defense-powers.md (all are proposals; the name-clash list in G2B-02 stays a list of proposals). 'technique' is the self-defense number. 'oldSeal' is the placeholder Seal in abilities.json whose effect lands on that rank (plan 4.4). 'carries' are the two old Seals that ride on a rank (Steady Breath on the last Counter rank, Strong Block on the last Guard rank); both keep their current names. 'effectRef' only points at the S4 effect; amounts are placeholders until PB-09. 'status' marks a rank whose effect is not built yet. Kid wording: Great Counter (S4 still says Perfect Counter), capital STRIKE, DASH and COUNTER, no digits, one sentence under 80 characters. Seal text for #31-40 (Injured status) is elsewhere. Kata power lines wait on Jay (PB-11). ui.sealLocked is just the belt name: the school belt name already ends in Belt, so the code fills {belt} with the full name (for example Orange Belt) and adds no word after it.",
   "families": [
     {
       "id": "escape",
@@ -79,7 +79,7 @@
       "kata": "Power coming soon",
       "seal": "Pick a Seal to bring along."
     },
-    "sealLocked": "{belt} belt",
+    "sealLocked": "{belt}",
     "swapPrompt": "Swap with which one?",
     "slotNote": "Your Seals now go in slots. We picked your first ones. Change them any time!"
   }
