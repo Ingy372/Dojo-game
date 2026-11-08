@@ -127,6 +127,8 @@ export interface EnemyDef {
   power: number;
   guard: number;
   radius: number;
+  /** GUARD-SCALE-01: how much bigger than its data file this enemy is drawn (1 = as written). `radius` and the attacks already include it. */
+  scale: number;
   moveSpeedTilesPerSecond: number;
   /** C430: never walks, circles or paths (Thunder Drum, Sleepy Sentry, Thorn Sprout). Its speed is exactly 0. */
   stationary?: boolean;
@@ -326,6 +328,7 @@ export function loadEnemy(data: unknown): EnemyDef {
     power: positiveNumber(raw, 'power', id),
     guard,
     radius,
+    scale: 1,
     moveSpeedTilesPerSecond: speed,
     ...(stationary ? { stationary: true } : {}),
     ...(push ? { push } : {}),
