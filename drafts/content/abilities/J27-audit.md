@@ -31,6 +31,8 @@ Each line: current name(s), what the move is (from `docs/self-defense.md` unless
 19. **Carried old Seals** Steady Breath, Strong Block (`seal-families-text.json`, `unlock-text.json`): old placeholder powers riding on #10 and #9. Candidates: none. Rename these with #4 and #5 above.
 20. **Kata moves** (`katas/moves.json`) Low block, High block, Straight punch, Reverse kick, Straight kick, Choke break, Kiai!: not in the three docs. Candidates: Jay's kata sheets.
 
+**NEXT:** The Programmer can apply the 41 rename drop-ins now (12 to live `content/` files). The #4 family move (`familyMoves`, `applyNow: false`) waits until the loader supports an `advancing` family; until then #4 stays under escape.
+
 **Scope:** every technique, move, Seal, Strike, Seal family and Form name in `content/abilities/` and `drafts/content/` (abilities, katas `moves.json`, callout subtitles, unlock text). Enemies, rooms, gear, Virtues and kata names (Basic Form 1, Keon, and so on, which are already real) are skipped. Names in long notes and room briefs (for example "Spinning Finisher" in `hall-of-echoes.json`) follow whatever is decided here.
 **Real names** are matched word for word (case aside) against `docs/curriculum.md`, `docs/self-defense.md` and `docs/framework.md`. framework.md has no technique list, so every source is one of the other two. A candidate is the real term on that technique's own line in the docs. **OPEN** means the docs have no single clear name.
 **Status:** Real = already the real name. Renamed (drop-in) = a ready real name, built as a drop-in in `J27-seal-renames.json` under `renames` (the Programmer applies the live ones). KEEP = Seal family label, kept as a game group (Manager, Nov 8). OPEN = needs Jay. Skip = a motion word, not a technique.

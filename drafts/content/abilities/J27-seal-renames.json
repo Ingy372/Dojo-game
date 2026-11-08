@@ -640,7 +640,7 @@
         }
       ],
       "source": "Jay, Nov 8, via the Manager (#447 correction): \"Self-defense #4 belongs to Advancing.\" Advancing is the family, not the name. This replaces J21's Escape family (drafts/planning/R-G2B-seal-families-16-40.md:11).",
-      "note": "Files #4 under a new Advancing family; name and push-back effect unchanged. No Advancing family exists yet in seal-families.json; the Programmer adds it (family text is the Planner's call).",
+      "note": "Files #4 under a new Advancing family; name and push-back effect unchanged. Do not apply yet: no Advancing family exists in seal-families.json and the loader rejects one. When the loader supports it, the Programmer adds the family (family text is the Planner's call) and then applies this move. The renames can be applied now.",
       "status": "FUTURE DEPENDENCY: do not apply",
       "applyNow": false,
       "dependsOn": "The loader schema must support an 'advancing' family id first. Tester (#447, at 4cec6ff5): adding or moving to an advancing family throws today; removing #4 from escape without adding the family loses its push. Until then #4 stays under escape in content and drafts, with a j27 note on the entry."
