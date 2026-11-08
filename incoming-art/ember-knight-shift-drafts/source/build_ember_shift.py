@@ -1,0 +1,382 @@
+"""
+Dojo Ascent — J16 Ember Knight shifted form, three DRAFT alternatives.
+
+Reuses the Ember Knight from incoming-art/guardian-concepts/source/build_guardian_concepts.py
+(height 1.4, helm, round shoulders, round shield, blunt bar, oval eyes) and the house toon kit
+and camera (incoming-art/tools/toon_kit.py; 35° orthographic, ortho 2.6).
+
+The phase-3 mesh is rebuilt first. Three alternatives then change the cooled shield.
+They are three shield designs, not three angles of one design.
+No new name, no new attack, no new timing.
+
+    blender -b -P incoming-art/ember-knight-shift-drafts/source/build_ember_shift.py -- --out DIR
+"""
+import argparse, math, os, sys
+import bpy, bmesh
+from mathutils import Vector, Euler
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(HERE, "..", "..", "tools"))
+from toon_kit import (
+    LIGHT_DIR, srgb, toon_material, outline_material, hull_material, add_hull,
+    ellipsoid, tube, OUTLINE_W,
+)
+
+argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+ap = argparse.ArgumentParser()
+ap.add_argument("--out", required=True)
+ap.add_argument("--kinds", default="before,a,b,c")
+ap.add_argument("--samples", type=int, default=24)
+ap.add_argument("--size", type=int, default=512)
+ap.add_argument("--ortho", type=float, default=2.6)
+A = ap.parse_args(argv)
+
+# Cooled palette — hexes copied from the J16 brief (PR #449).
+COPPER = "#c9824a"
+HONEY = "#f2c46a"
+FACE = "#ffd08a"
+RIM = "#ffa560"
+CENTER = "#fff1b8"
+EYE = "#ffe2c0"
+WHITE = "#ffffff"
+HALO = "#ffecaa"
+# Phase-3 colours from build_guardian_concepts.py. Not used on the new forms.
+P3_BODY, P3_HELM, P3_ACCENT = "#80564a", "#a26d58", "#e8772e"
+P3_VISOR, P3_WISP = "#120e2a", "#4a4478"
+
+H, W = 1.4, 0.85
+R = W / 2
+HELM_TOP = H * 0.83 + H * 0.18
+SHOULDER_Z = H * 0.66
+# House outline is 0.013. The concept script draws it at 0.026. Draft B uses a
+# wider line so the parts still separate on the pale kitchen floor at 48 px per tile.
+OUT_B = 0.042
+OUT_EYE = 0.032
+
+def toon_contrast(name, hex_color, shadow=0.42, highlight=1.25, lit_at=0.62):
+    """Same cel shader as toon_kit, with a wider light/shade step.
+
+    The shared kit keeps shadow at 66% and the lit step at 0.47, which leaves a
+    front-facing copper plate almost one flat colour. This draft moves the lit
+    step later and darkens the shadow so the round helm, body and shoulders
+    each show a light side and a shade side. The base hex stays the brief's copper.
+    """
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    nt.nodes.clear()
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    light = nt.nodes.new("ShaderNodeCombineXYZ")
+    light.inputs[0].default_value = LIGHT_DIR.x
+    light.inputs[1].default_value = LIGHT_DIR.y
+    light.inputs[2].default_value = LIGHT_DIR.z
+    dot = nt.nodes.new("ShaderNodeVectorMath")
+    dot.operation = "DOT_PRODUCT"
+    ramp = nt.nodes.new("ShaderNodeValToRGB")
+    ramp.color_ramp.interpolation = "CONSTANT"
+    els = ramp.color_ramp.elements
+    els[0].position = 0.0
+    els[0].color = (shadow, shadow, shadow, 1)
+    els[1].position = lit_at
+    els[1].color = (1, 1, 1, 1)
+    hi = els.new(0.90)
+    hi.color = (highlight, highlight, highlight, 1)
+    remap = nt.nodes.new("ShaderNodeMapRange")
+    remap.inputs["From Min"].default_value = -1.0
+    remap.inputs["From Max"].default_value = 1.0
+    mult = nt.nodes.new("ShaderNodeMix")
+    mult.data_type = "RGBA"
+    mult.blend_type = "MULTIPLY"
+    mult.inputs["Factor"].default_value = 1.0
+    mult.inputs[6].default_value = srgb(hex_color)
+    emit = nt.nodes.new("ShaderNodeEmission")
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    nt.links.new(geo.outputs["Normal"], dot.inputs[0])
+    nt.links.new(light.outputs[0], dot.inputs[1])
+    nt.links.new(dot.outputs["Value"], remap.inputs["Value"])
+    nt.links.new(remap.outputs["Result"], ramp.inputs["Fac"])
+    nt.links.new(ramp.outputs["Color"], mult.inputs[7])
+    nt.links.new(mult.outputs[2], emit.inputs["Color"])
+    nt.links.new(emit.outputs[0], out.inputs["Surface"])
+    m.diffuse_color = srgb(hex_color)
+    return m
+
+def clear():
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+
+def ring_xz(center, rx, rz, minor, segs=36, sides=8):
+    """Solid oval ring in the XZ plane, facing the student (-Y)."""
+    bm = bmesh.new()
+    rings = []
+    for i in range(segs):
+        a = 2 * math.pi * i / segs
+        cx = math.cos(a) * rx
+        cz = math.sin(a) * rz
+        # radial direction in XZ, used so the tube stays even on an oval
+        rxd, rzd = math.cos(a), math.sin(a)
+        row = []
+        for j in range(sides):
+            b = 2 * math.pi * j / sides
+            x = center[0] + cx + rxd * math.cos(b) * minor
+            z = center[2] + cz + rzd * math.cos(b) * minor
+            y = center[1] + math.sin(b) * minor
+            row.append(bm.verts.new((x, y, z)))
+        rings.append(row)
+    for i in range(segs):
+        cur, nxt = rings[i], rings[(i + 1) % segs]
+        for j in range(sides):
+            bm.faces.new((cur[j], cur[(j + 1) % sides], nxt[(j + 1) % sides], nxt[j]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    return bm
+
+def build(kind):
+    clear()
+    sc = bpy.context.scene
+    root = bpy.data.objects.new("ROOT", None)
+    sc.collection.objects.link(root)
+    sc["dojo_label"] = "Ember Knight — shifted form" if kind != "before" else "Ember Knight phase 3 (rebuilt)"
+    sc["dojo_placeholder_name"] = "Warm Shield" if kind != "before" else ""
+    sc["dojo_kind"] = kind
+    OUT = outline_material()
+    HALO_MAT = hull_material("SHIELDHALO", HALO)
+    mats = {}
+
+    def mat(key, hex_color, shadow=0.66, highlight=1.10):
+        if key not in mats:
+            mats[key] = toon_material(key, hex_color, shadow, highlight)
+        return mats[key]
+
+    def put(name, bm, material, outline=True, halo=False, outline_w=None, halo_w=0.045, halo_hex=None):
+        me = bpy.data.meshes.new(name)
+        for f in bm.faces:
+            f.smooth = True
+        bm.to_mesh(me)
+        bm.free()
+        me.materials.append(material)
+        ob = bpy.data.objects.new(name, me)
+        sc.collection.objects.link(ob)
+        ob.parent = root
+        if outline:
+            add_hull(ob, sc.collection, OUT, OUTLINE_W * 2 if outline_w is None else outline_w).parent = root
+        if halo:
+            hm = HALO_MAT if halo_hex is None else hull_material(name + "HALO", halo_hex)
+            add_hull(ob, sc.collection, hm, halo_w).parent = root
+        return ob
+
+    E = ellipsoid
+
+    def eyes(z, dx, y, s=0.75):
+        for x in (1, -1):
+            put(f"eye{x}", E((x * R * dx * 2, y, z), (R * 0.17 * s, R * 0.07, R * 0.24 * s)),
+                mat("eye", EYE, 1, 1), outline=False)
+            put(f"hi{x}", E((x * R * dx * 2 - R * 0.05, y - R * 0.06, z + R * 0.06 * s),
+                            (R * 0.05 * s, R * 0.03, R * 0.06 * s)),
+                mat("hi", WHITE, 1, 1), outline=False)
+
+    def disc(name, center, radius, thick, material, outline=True, halo=False):
+        x, y, z = center
+        return put(name, tube((x, y + thick * 0.5, z), (x, y - thick * 0.5, z), radius, radius, segs=32),
+                   material, outline=outline, halo=halo)
+
+    if kind == "before":
+        # Same mesh as build_guardian_concepts.py, ember-knight phase 3.
+        put("bodyk", E((0, 0, H * 0.45), (R * 0.95, R * 0.8, H * 0.42), segs=24, rings=14),
+            mat("body", P3_BODY), outline=True)
+        put("helm", E((0, 0, H * 0.83), (R * 0.6, R * 0.58, H * 0.18)), mat("belly", P3_HELM), outline=True)
+        put("visor", E((0, -R * 0.52, H * 0.82), (R * 0.45, R * 0.08, H * 0.08)),
+            mat("dark", P3_VISOR, 1, 1), outline=False)
+        eyes(H * 0.82, 0.14, -R * 0.6, s=0.75)
+        for s in (1, -1):
+            put(f"pauld{s}", E((s * R * 0.85, 0, H * 0.66), (R * 0.32, R * 0.32, R * 0.22)),
+                mat("accent", P3_ACCENT, 0.8, 1.12), outline=True)
+        put("shield", tube((-R * 1.15, -R * 0.5, H * 0.45), (-R * 1.15, -R * 0.62, H * 0.45), R * 0.5, R * 0.5, segs=24),
+            mat("accent", P3_ACCENT, 0.8, 1.12), outline=True)
+        put("boss", E((-R * 1.15, -R * 0.66, H * 0.45), (R * 0.15, R * 0.06, R * 0.15)),
+            mat("warm", CENTER, 1, 1), outline=False)
+        put("bar", tube((R * 1.15, -R * 0.4, H * 0.3), (R * 1.15, -R * 0.4, H * 0.75), 0.04, 0.04, segs=10),
+            mat("accent2", P3_ACCENT, 0.8, 1.12), outline=True)
+        put("barend", E((R * 1.15, -R * 0.4, H * 0.76), (0.06, 0.06, 0.06)),
+            mat("warm2", CENTER, 1, 1), outline=False)
+        for s in (1, -1):
+            put(f"arm{s}", E((s * R * 1.1, -R * 0.1, H * 0.5), (0.09 * 1.2, 0.09 * 1.2, 0.17 * 1.2), rot=(0, s * 20, 0)),
+                mat("body2", P3_BODY), outline=True)
+        for k in range(2):
+            a = 2 * math.pi * (k + 0.5) / 2 + 0.3
+            put(f"wisp{k}", E((math.cos(a) * R * 1.05, math.sin(a) * R * 1.05 * 0.8,
+                               0.05 + (H * 0.35 - 0.05) * ((k * 37) % 10) / 10),
+                              (R * 0.32, R * 0.28, R * 0.24), rot=(0, 0, math.degrees(a))),
+                mat("wisp", P3_WISP, 0.85, 1.0), outline=True)
+        body = bpy.data.objects["bodyk"]
+        add_hull(body, sc.collection, hull_material("RIM", RIM), OUTLINE_W * 2 + 0.036).parent = root
+    elif kind != "b":
+        plate = mat("copper", COPPER)
+        honey = mat("honey", HONEY, 0.9, 1.06)
+        face = mat("face", FACE, 1, 1)
+        rim_flat = mat("rimflat", RIM, 1, 1)
+        rim_metal = mat("rimmetal", RIM, 0.82, 1.08)
+        center = mat("center", CENTER, 1, 1)
+        put("bodyk", E((0, 0, H * 0.45), (R * 0.95, R * 0.8, H * 0.42), segs=24, rings=14), plate, outline=True)
+        put("helm", E((0, 0, H * 0.83), (R * 0.6, R * 0.58, H * 0.18)), plate, outline=True)
+        for s in (1, -1):
+            put(f"pauld{s}", E((s * R * 0.85, 0, H * 0.66), (R * 0.32, R * 0.32, R * 0.22)), plate, outline=True)
+            put(f"pring{s}", ring_xz((s * R * 0.85, -R * 0.26, H * 0.66), R * 0.30, R * 0.20, 0.016),
+                honey, outline=False)
+        eyes(H * 0.82, 0.14, -R * 0.6, s=0.75)
+        # Black visor is gone. One thin honey ring frames both eyes and stays on the helm.
+        put("eyeframe", ring_xz((0, -R * 0.72, H * 0.82), 0.24, 0.105, 0.013), honey, outline=False)
+
+        def hold_shield(center):
+            x, y, z = center
+            put("armshield", tube((-R * 0.72, -R * 0.12, H * 0.58), (x + 0.02, y + 0.1, z - 0.02), 0.055, 0.042, segs=10),
+                plate, outline=True)
+
+        def hold_bar(top, bot, ball_r):
+            put("bar", tube(top, bot, 0.036, 0.032, segs=10), plate, outline=True)
+            put("barend", E(bot, (ball_r, ball_r, ball_r)), honey, outline=False)
+            put("armbar", tube((R * 0.72, -R * 0.08, H * 0.52), top, 0.048, 0.038, segs=10), plate, outline=True)
+
+        # Same pose family: shield at the chest, face toward the student, bar down.
+        # The bright shape on the shield is what changes.
+        if kind == "a":
+            # The whole shield face is the glow. Big, so it reads on a phone.
+            c = (-R * 0.35, -R * 1.08, H * 0.50)
+            disc("srim", (c[0], c[1] + 0.02, c[2]), 0.40, 0.05, rim_flat, outline=True, halo=True)
+            disc("shield", (c[0], c[1] - 0.025, c[2]), 0.33, 0.05, face, outline=False, halo=True)
+            put("boss", E((c[0], c[1] - 0.065, c[2]), (0.07, 0.03, 0.07)), center, outline=False)
+            put("seam", tube((R * 0.15, -R * 0.84, H * 0.28), (R * 0.15, -R * 0.84, H * 0.62), 0.022, 0.022, segs=8),
+                honey, outline=False)
+            hold_shield(c)
+            hold_bar((R * 1.02, -R * 0.40, H * 0.50), (R * 1.02, -R * 0.48, H * 0.12), 0.05)
+        else:
+            # Round hearth door: copper face, two glowing straps, warm center.
+            c = (-R * 0.42, -R * 1.02, H * 0.48)
+            disc("srim", (c[0], c[1] + 0.02, c[2]), 0.34, 0.045, rim_metal, outline=True, halo=False)
+            disc("shield", (c[0], c[1] - 0.015, c[2]), 0.27, 0.05, plate, outline=True, halo=False)
+            for i, dz in enumerate((0.08, -0.08)):
+                put(f"strap{i}", tube((c[0] - 0.18, c[1] - 0.05, c[2] + dz), (c[0] + 0.18, c[1] - 0.05, c[2] + dz),
+                                      0.028, 0.028, segs=8), face, outline=False, halo=True)
+            put("boss", E((c[0], c[1] - 0.075, c[2]), (0.08, 0.035, 0.08)), center, outline=False, halo=True)
+            put("waist", tube((-R * 0.15, -R * 0.70, H * 0.30), (R * 0.78, -R * 0.55, H * 0.30), 0.026, 0.026, segs=8),
+                honey, outline=False)
+            hold_shield(c)
+            hold_bar((R * 0.98, -R * 0.28, H * 0.46), (R * 1.00, -R * 0.36, H * 0.12), 0.045)
+    else:
+        # Review direction (Manager, not a Jay-approved detail): dark cool armour,
+        # copper accents, glowing orange-gold seams. Mesh positions stay as the last B.
+        STEEL = "#4a5a72"
+        body_m = toon_contrast("BBODY", STEEL, shadow=0.22, highlight=1.55, lit_at=0.58)
+        helm_m = toon_contrast("BHELM", STEEL, shadow=0.18, highlight=1.70, lit_at=0.52)
+        sh_m = toon_contrast("BSH", COPPER, shadow=0.32, highlight=1.45, lit_at=0.55)
+        limb_m = toon_contrast("BLIMB", COPPER, shadow=0.30, highlight=1.35, lit_at=0.52)
+        seam = mat("seam", "#ffc14d", 1, 1)
+        face = mat("face", FACE, 1, 1)
+        rim_metal = toon_contrast("BRIM", COPPER, shadow=0.40, highlight=1.40, lit_at=0.55)
+        center = mat("center", CENTER, 1, 1)
+        eye_m = mat("eye", EYE, 1, 1)
+        hi_m = mat("hi", WHITE, 1, 1)
+        socket_m = toon_contrast("BSOCK", "#121820", shadow=0.55, highlight=1.05, lit_at=0.70)
+        ow = dict(outline_w=OUT_B)
+
+        put("bodyk", E((0, 0, H * 0.45), (R * 0.95, R * 0.8, H * 0.42), segs=24, rings=14), body_m, **ow)
+        put("helm", E((0, 0, H * 0.83), (R * 0.6, R * 0.58, H * 0.18)), helm_m, **ow)
+        # Honey line where the helm meets the body, on the helm, not a floating hoop.
+        put("neck", ring_xz((0, -R * 0.42, H * 0.70), 0.22, 0.055, 0.026), seam, outline=False, halo=True, halo_w=0.018, halo_hex="#ffd08a")
+        put("seamchest", tube((0.04, -R * 0.88, H * 0.34), (0.04, -R * 0.88, H * 0.60), 0.026, 0.026, segs=8),
+            seam, outline=False, halo=True, halo_w=0.016, halo_hex="#ffd08a")
+        for s in (1, -1):
+            put(f"pauld{s}", E((s * R * 0.85, 0, H * 0.66), (R * 0.32, R * 0.32, R * 0.22)), sh_m, **ow)
+            put(f"pring{s}", ring_xz((s * R * 0.85, -R * 0.16, H * 0.66), R * 0.26, R * 0.16, 0.020),
+                seam, outline=False, halo=True, halo_w=0.012, halo_hex="#ffd08a")
+        # Same eye mesh as the phase-3 knight (s=0.75). A dark outline makes the oval
+        # read without bringing the black visor back. A thin honey frame sits outside it.
+        for x in (1, -1):
+            # On the helm face, behind the eye, so a dark copper oval shows around it.
+            put(f"socket{x}", E((x * R * 0.28, -R * 0.56, H * 0.82), (0.09, 0.025, 0.115)),
+                socket_m, outline=False)
+            put(f"eye{x}", E((x * R * 0.28, -R * 0.6, H * 0.82), (R * 0.17 * 0.75, R * 0.07, R * 0.24 * 0.75)),
+                eye_m, outline=True, outline_w=OUT_EYE, halo=True, halo_w=0.028, halo_hex=EYE)
+            put(f"hi{x}", E((x * R * 0.28 - R * 0.05, -R * 0.6 - R * 0.06, H * 0.82 + R * 0.045),
+                            (R * 0.05 * 0.75, R * 0.03, R * 0.06 * 0.75)),
+                hi_m, outline=False)
+        put("eyeframe", ring_xz((0, -R * 0.48, H * 0.82), 0.27, 0.125, 0.012), seam, outline=False)
+
+        # Shield lowered to the chest, face toward the student. Only the centre glows.
+        c = (-R * 0.55, -R * 0.98, H * 0.46)
+        put("srim", tube((c[0], c[1] + 0.04, c[2]), (c[0], c[1] + 0.0, c[2]), 0.28, 0.28, segs=32),
+            rim_metal, **ow)
+        put("shield", tube((c[0], c[1] + 0.0, c[2]), (c[0], c[1] - 0.04, c[2]), 0.22, 0.22, segs=32),
+            body_m, **ow)
+        put("coal", E((c[0], c[1] - 0.055, c[2]), (0.13, 0.045, 0.13)), face, outline=False, halo=True, halo_w=0.04, halo_hex=HALO)
+        put("boss", E((c[0], c[1] - 0.08, c[2]), (0.07, 0.03, 0.07)), center, outline=False, halo=True, halo_w=0.03, halo_hex=CENTER)
+        # Left arm, same chunk as the phase-3 arm, reaching the shield. It does not melt into the body.
+        put("armshield", tube((-R * 0.72, -R * 0.15, H * 0.58), (c[0] + 0.04, c[1] + 0.08, c[2]), 0.07, 0.055, segs=12),
+            limb_m, **ow)
+        # Bar rests down, out past the shoulder, so the silhouette shows arm then bar.
+        bar_top = (R * 1.38, -R * 0.42, H * 0.48)
+        bar_bot = (R * 1.38, -R * 0.52, H * 0.08)
+        put("armbar", tube((R * 0.78, -R * 0.12, H * 0.58), bar_top, 0.065, 0.05, segs=12), limb_m, **ow)
+        put("bar", tube(bar_top, bar_bot, 0.042, 0.036, segs=12), limb_m, **ow)
+        put("barend", E(bar_bot, (0.055, 0.055, 0.055)), seam, outline=True, outline_w=OUT_EYE)
+
+    top = -1.0
+    for ob in sc.objects:
+        if ob.type != "MESH" or "outline" in ob.name:
+            continue
+        for v in ob.bound_box:
+            top = max(top, (ob.matrix_world @ Vector(v)).z)
+    print(f"KIND {kind} mesh-top {top:.3f} helm-top {HELM_TOP:.3f}", flush=True)
+    if kind != "before" and top > HELM_TOP + 0.04:
+        raise SystemExit(f"{kind} sticks above the helm ({top:.3f} > {HELM_TOP:.3f})")
+    return sc, root
+
+def render(sc, root, path, yaw):
+    r = sc.render
+    r.engine = "CYCLES"
+    sc.cycles.device = "CPU"
+    sc.cycles.samples = A.samples
+    sc.cycles.use_denoising = False
+    sc.cycles.max_bounces = 0
+    sc.cycles.transparent_max_bounces = 16
+    r.film_transparent = True
+    r.resolution_x = r.resolution_y = A.size
+    sc.view_settings.view_transform = "Standard"
+    sc.world = bpy.data.worlds.new("W")
+    sc.world.use_nodes = False
+    sc.world.color = (0, 0, 0)
+    if not sc.camera:
+        cd = bpy.data.cameras.new("C")
+        cd.type = "ORTHO"
+        cd.ortho_scale = A.ortho
+        cd.sensor_fit = "HORIZONTAL"
+        cam = bpy.data.objects.new("C", cd)
+        sc.collection.objects.link(cam)
+        rx = math.radians(55)  # 35° down from horizontal
+        cam.rotation_euler = Euler((rx, 0, 0))
+        fwd = Euler((rx, 0, 0)).to_matrix() @ Vector((0, 0, -1))
+        up = Euler((rx, 0, 0)).to_matrix() @ Vector((0, 1, 0))
+        zt = (0.85 - 0.5) * A.ortho / up.z
+        cam.location = Vector((0, 0, zt)) - fwd * 20
+        sc.camera = cam
+    root.rotation_euler = Euler((0, 0, math.radians(yaw)))
+    r.filepath = path
+    bpy.ops.render.render(write_still=True)
+
+def main():
+    os.makedirs(A.out, exist_ok=True)
+    names = {
+        "before": "ember-knight-phase3",
+        "a": "ember-knight-shift-a",
+        "b": "ember-knight-shift-b",
+        "c": "ember-knight-shift-c",
+    }
+    for kind in [k.strip() for k in A.kinds.split(",") if k.strip()]:
+        sc, root = build(kind)
+        tag = "rebuilt-p3" if kind == "before" else f"shift-{kind}"
+        for d, yaw in (("S", 0), ("SE", 45)):
+            render(sc, root, os.path.join(A.out, f"ember-knight-{tag}_{d}.png"), yaw)
+        root.rotation_euler = Euler((0, 0, 0))
+        bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(os.path.join(HERE, names[kind] + ".blend")))
+        print("RENDERED", kind, flush=True)
+
+if __name__ == "__main__":
+    main()
