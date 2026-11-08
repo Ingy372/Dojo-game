@@ -4,9 +4,9 @@ Checks: ids, order, text and effect match content/abilities/abilities.json seals
 appears word for word (case aside) on the cited line of docs/self-defense.md or docs/curriculum.md, and the subtitle is that name;
 altName is the current name; OPEN seals keep their current name and have an openNote; no two seals share a proposed name;
 names are 3 words or fewer; Nov 8: each proposed Strike name is on its cited curriculum line, ids/combo unchanged, old name in altName,
-Kick Combo 5 is Hook Kick; seal #16 keeps its id, OPEN with description "Hammer Fist, Back Fist", kid line says "a low hammer fist", 8 words or fewer,
+Kick Combo 5 is Hook Kick; seal #16 keeps its id, OPEN with description "Hammer Fist, Back Fist", kid line is exactly Jay's "A quick low hammer fist, then a high back fist." (9 words, Jay's own),
 no groin/face/head; every audit row Real/Rename candidate is on its cited line; the 'renames' drop-ins (one per audit Renamed row) each find their entry by id, hold the current
-name in altName, cite a docs line that has the new name, and match the audit; Seal family labels are KEEP; 'about' lines are 8 words or fewer; no banned words in new names and lines (OPEN seals keep their current names). Usage: check-j27-seal-names.py [path-to-json]"""
+name in altName, cite a docs line that has the new name, and match the audit; Seal family labels are KEEP; #4 is OPEN with family Advancing (Escape rejected), effect kept, moved by familyMoves; 'about' lines are 8 words or fewer; no banned words in new names and lines (OPEN seals keep their current names). Usage: check-j27-seal-names.py [path-to-json]"""
 import json, pathlib, re, sys
 R = pathlib.Path(__file__).resolve().parents[3]
 path = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else R / 'drafts/content/abilities/J27-seal-renames.json'
@@ -73,8 +73,7 @@ if s16.get('id') != ids16[0]: bad.append('seal16: id must stay ' + ids16[0])
 if s16.get('status') == 'PROPOSED' and not on_line(s16.get('name', ''), s16.get('source')): bad.append('seal16: proposed name is not in the docs')
 if s16.get('status') == 'OPEN' and s16.get('proposedDescription') != 'Hammer Fist, Back Fist': bad.append('seal16: OPEN needs the description "Hammer Fist, Back Fist"')
 kid = (s16.get('kidText') or '').lower()
-if 'low hammer fist' not in kid: bad.append('seal16: kid text must say "a low hammer fist"')
-if len(kid.split()) > 8: bad.append('seal16: kid text over 8 words')
+if s16.get('kidText') != 'A quick low hammer fist, then a high back fist.': bad.append('seal16: kid text must be exactly Jay\'s line "A quick low hammer fist, then a high back fist."')
 for w in ('groin', 'perfect', 'face', 'head'):
     if re.search(r'\b' + w + r'\b', kid): bad.append(f'seal16: kid text uses {w!r}')
 audit = json.loads((R / 'drafts/content/abilities/J27-audit.json').read_text())
@@ -99,7 +98,18 @@ ren = d.get('renames', [])
 done = {(r['file'], r['id'].split(' (')[0]) for r in audit if r['status'] == 'Renamed (drop-in)'}
 if len(ren) != len(done): bad.append(f'renames: {len(ren)} entries but {len(done)} audit rows are Renamed (drop-in)')
 s4 = seals[3] if len(seals) > 3 else {}
-if s4.get('name') != 'Advancing' or s4.get('family') != 'Escape' or 'J21' not in (s4.get('familySource') or ''): bad.append('#4: J21 says name Advancing, family Escape, cited to J21')
+if s4.get('status') != 'OPEN' or s4.get('name') != live[3]['name'] or s4.get('altName') != live[3]['name']: bad.append('#4: name must be OPEN (current name kept, old name in altName); Advancing is its family, not its name')
+if s4.get('family') != 'Advancing': bad.append(f'#4: family must be Advancing (Jay, Nov 8), not {s4.get("family")!r}' + (' (Escape is rejected)' if s4.get('family') == 'Escape' else ''))
+if 'belongs to Advancing' not in (s4.get('familySource') or ''): bad.append("#4: familySource must quote Jay: 'Self-defense #4 belongs to Advancing.'")
+if s4.get('effect') != live[3]['effect'] or 'push' not in (s4.get('effectNote') or ''): bad.append('#4: keep the effect and note the push-back')
+if any(e.get('name') == 'Advancing' for e in ren) or any(e.get('name') == 'Advancing' for e in seals): bad.append('#4: no entry may use Advancing as a name')
+fm = [m for m in d.get('familyMoves', []) if m.get('technique') == 4]
+if not fm or fm[0].get('to') != 'advancing' or fm[0].get('from') != 'escape': bad.append('familyMoves: #4 must move from escape to advancing')
+for m in d.get('familyMoves', []):
+    for f in m.get('files', []):
+        tgt = resolve(json.loads((R / f['file']).read_text()), f['where'])
+        if tgt is None or tgt.get('technique') != m['technique']: bad.append(f'familyMoves: {f["file"]} {f["where"]} not found')
+        if f.get('live') != f['file'].startswith('content/'): bad.append(f'familyMoves: live flag wrong for {f["file"]}')
 if {(e.get('file'), e.get('id')) for e in ren} != done: bad.append('renames and the audit "Renamed (drop-in)" rows do not match')
 for e in ren:
     t = f'rename {e.get("file")} {e.get("where")}'

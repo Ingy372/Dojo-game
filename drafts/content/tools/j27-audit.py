@@ -13,7 +13,7 @@ def where(name):
 SD=lambda n:f'docs/self-defense.md:{10+n}'
 KC=lambda n:f'docs/curriculum.md:{45+n}'
 # candidate per technique number / combo: (term or None, note)
-SEAL={1:('double punch',''),2:(None,'same as #1, other side'),3:('back fist','also #5, #10'),4:('advancing','Jay, J21 (Nov 8): "#4 is named Advancing"; family stays Escape (drafts/planning/power-and-progression-redesign.md:199, R-G2B-seal-families-16-40.md:11). J21 is not in docs/decisions.md'),
+SEAL={1:('double punch',''),2:(None,'same as #1, other side'),3:('back fist','also #5, #10'),4:(None,'family Advancing (Jay, Nov 8: "Self-defense #4 belongs to Advancing."); no real name in the docs. Push-back effect kept'),
 5:(None,'candidates back fist (also #3) / elbow'),6:(None,'candidate hook punch (attacker also throws one)'),7:('palm heel',''),8:(None,'block-and-strike, no set name'),
 9:(None,'as #8, high'),10:('double knifehand block',''),11:('osotogari','Jay\'s spelling; S4 "Osoto Gari"'),12:(None,'osotogari again (also #11)'),
 13:('inside kick','also #14'),14:(None,'candidate spin kick (clashes with Strike "Spin Kick")'),15:(None,'candidate double punch (also #1)'),

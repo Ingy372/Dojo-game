@@ -37,11 +37,11 @@
   "id": "steady-breath",
   "name": "Steady Breath",
   "verbatim": "docs/self-defense.md:75",
-  "cand": "Advancing",
+  "cand": "OPEN",
   "src": "docs/self-defense.md:14",
   "live": "live",
-  "note": "Jay, J21 (Nov 8): \"#4 is named Advancing\"; family stays Escape (drafts/planning/power-and-progression-redesign.md:199, R-G2B-seal-families-16-40.md:11). J21 is not in docs/decisions.md",
-  "status": "Renamed (drop-in)"
+  "note": "family Advancing (Jay, Nov 8: \"Self-defense #4 belongs to Advancing.\"); no real name in the docs. Push-back effect kept",
+  "status": "OPEN"
  },
  {
   "file": "content/abilities/abilities.json",
@@ -268,11 +268,11 @@
   "id": "escape #4",
   "name": "Drive Back",
   "verbatim": null,
-  "cand": "Advancing",
+  "cand": "OPEN",
   "src": "docs/self-defense.md:14",
   "live": "live",
-  "note": "Jay, J21 (Nov 8): \"#4 is named Advancing\"; family stays Escape (drafts/planning/power-and-progression-redesign.md:199, R-G2B-seal-families-16-40.md:11). J21 is not in docs/decisions.md",
-  "status": "Renamed (drop-in)"
+  "note": "family Advancing (Jay, Nov 8: \"Self-defense #4 belongs to Advancing.\"); no real name in the docs. Push-back effect kept",
+  "status": "OPEN"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -499,11 +499,11 @@
   "id": "escape #4",
   "name": "Drive Back",
   "verbatim": null,
-  "cand": "Advancing",
+  "cand": "OPEN",
   "src": "docs/self-defense.md:14",
   "live": "drafts",
-  "note": "Jay, J21 (Nov 8): \"#4 is named Advancing\"; family stays Escape (drafts/planning/power-and-progression-redesign.md:199, R-G2B-seal-families-16-40.md:11). J21 is not in docs/decisions.md",
-  "status": "Renamed (drop-in)"
+  "note": "family Advancing (Jay, Nov 8: \"Self-defense #4 belongs to Advancing.\"); no real name in the docs. Push-back effect kept",
+  "status": "OPEN"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -1093,11 +1093,11 @@
   "id": "steady-breath (subtitle)",
   "name": "Steady Breath",
   "verbatim": "docs/self-defense.md:75",
-  "cand": "Advancing",
+  "cand": "OPEN",
   "src": "docs/self-defense.md:14",
   "live": "drafts",
-  "note": "Jay, J21 (Nov 8): \"#4 is named Advancing\"; family stays Escape (drafts/planning/power-and-progression-redesign.md:199, R-G2B-seal-families-16-40.md:11). J21 is not in docs/decisions.md",
-  "status": "Renamed (drop-in)"
+  "note": "family Advancing (Jay, Nov 8: \"Self-defense #4 belongs to Advancing.\"); no real name in the docs. Push-back effect kept",
+  "status": "OPEN"
  },
  {
   "file": "drafts/content/abilities/technique-callouts.json",
@@ -1258,11 +1258,11 @@
   "id": "seal #4 (title)",
   "name": "Drive Back",
   "verbatim": null,
-  "cand": "Advancing",
+  "cand": "OPEN",
   "src": "docs/self-defense.md:14",
   "live": "drafts",
-  "note": "Jay, J21 (Nov 8): \"#4 is named Advancing\"; family stays Escape (drafts/planning/power-and-progression-redesign.md:199, R-G2B-seal-families-16-40.md:11). J21 is not in docs/decisions.md",
-  "status": "Renamed (drop-in)"
+  "note": "family Advancing (Jay, Nov 8: \"Self-defense #4 belongs to Advancing.\"); no real name in the docs. Push-back effect kept",
+  "status": "OPEN"
  },
  {
   "file": "drafts/content/abilities/unlock-text.json",

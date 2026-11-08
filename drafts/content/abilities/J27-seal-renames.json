@@ -1,5 +1,5 @@
 {
-  "notes": "J27 (Jay via the Manager): seal callout subtitles use the REAL Action Zone technique names, because they teach the terms. Drop-in for content/abilities/abilities.json seals[0..9]: same ids, same order, same text and effect; only 'name' changes and the old name goes in 'altName' (as #414 did). 'subtitle' is the line under the 'Self-Defense #N!' callout (technique-callouts.json). Each proposed name is copied word for word (title case) from the 'What the student does' column of docs/self-defense.md, at the file and line in 'source'. docs/curriculum.md names no technique steps. OPEN = no single clear real name; the seal keeps its current name until Jay picks. 'about' is a new 8-words-or-fewer line; 'text' is unchanged game text. PROPOSAL only: nothing is renamed in game files. When the Programmer copies a seal over, drop 'technique', 'subtitle', 'callout', 'about', 'source', 'status' and 'openNote' unless the loader takes them. Check: drafts/content/tools/check-j27-seal-names.py. Nov 8 (Jay via the Manager: real dojo names ONLY, everywhere): 'strikes' holds the Kick Combo 5 Strike, named 'Hook Kick' (docs/curriculum.md:50, 'step behind hook kick'); the old name 'Low-High Kicks' stays in altName, id unchanged. 'Low-High' appears in drafts/content only in strikes-4-7-text.json (already altName), seals-16-20-text.json (#16) and two notes; it is in no seal-families text and nowhere in content/. 'seal16' is #16: no real name in the docs, so OPEN, with a description and an 8-word kid line. Nov 8, Manager's calls on #447: 'renames' holds all 35 ready real names as drop-ins, one per place the name appears: 'file' and 'where' find the entry ('where' uses id, technique or ability keys, never positions), 'field' is the field to change, 'name' is the real name, 'altName' the old one, 'source' the docs line. ids never change. live=true means the file is in content/: the Programmer applies those; this PR edits no content/ file. Seal family labels stay (KEEP). Nov 8 (later): #4 is Advancing (Jay, J21, word for word; 'Advancing combo' is its category in docs/self-defense.md:14), family Escape per J21. J21 is in drafts/planning (power-and-progression-redesign.md:199, R-G2B-seal-families-16-40.md:11), not in docs/decisions.md. The renames list now also covers unlock-text.json titles, which the first audit missed.",
+  "notes": "J27 (Jay via the Manager): seal callout subtitles use the REAL Action Zone technique names, because they teach the terms. Drop-in for content/abilities/abilities.json seals[0..9]: same ids, same order, same text and effect; only 'name' changes and the old name goes in 'altName' (as #414 did). 'subtitle' is the line under the 'Self-Defense #N!' callout (technique-callouts.json). Each proposed name is copied word for word (title case) from the 'What the student does' column of docs/self-defense.md, at the file and line in 'source'. docs/curriculum.md names no technique steps. OPEN = no single clear real name; the seal keeps its current name until Jay picks. 'about' is a new 8-words-or-fewer line; 'text' is unchanged game text. PROPOSAL only: nothing is renamed in game files. When the Programmer copies a seal over, drop 'technique', 'subtitle', 'callout', 'about', 'source', 'status' and 'openNote' unless the loader takes them. Check: drafts/content/tools/check-j27-seal-names.py. Nov 8 (Jay via the Manager: real dojo names ONLY, everywhere): 'strikes' holds the Kick Combo 5 Strike, named 'Hook Kick' (docs/curriculum.md:50, 'step behind hook kick'); the old name 'Low-High Kicks' stays in altName, id unchanged. 'Low-High' appears in drafts/content only in strikes-4-7-text.json (already altName), seals-16-20-text.json (#16) and two notes; it is in no seal-families text and nowhere in content/. 'seal16' is #16: no real name in the docs, so OPEN, with a description and an 8-word kid line. Nov 8, Manager's calls on #447: 'renames' holds all 35 ready real names as drop-ins, one per place the name appears: 'file' and 'where' find the entry ('where' uses id, technique or ability keys, never positions), 'field' is the field to change, 'name' is the real name, 'altName' the old one, 'source' the docs line. ids never change. live=true means the file is in content/: the Programmer applies those; this PR edits no content/ file. Seal family labels stay (KEEP). Nov 8 (Manager's correction): Jay said \"Self-defense #4 belongs to Advancing.\" Advancing is #4's FAMILY, not its name, so #4 is OPEN with family Advancing and keeps its push-back effect. #16's kid line is Jay's: \"A quick low hammer fist, then a high back fist.\". The renames list now also covers unlock-text.json titles, which the first audit missed.",
   "seals": [
     {
       "id": "off-balance",
@@ -53,21 +53,22 @@
     {
       "id": "steady-breath",
       "technique": 4,
-      "name": "Advancing",
+      "name": "Steady Breath",
       "altName": "Steady Breath",
       "callout": "Self-Defense #4!",
-      "subtitle": "Advancing",
-      "about": "Step in and drive the attacker back.",
-      "source": "docs/self-defense.md:14",
-      "status": "PROPOSED",
+      "subtitle": "Steady Breath",
+      "status": "OPEN",
       "text": "Each Great Counter restores 3 Health.",
       "effect": {
         "type": "healOnPerfect",
         "amount": 3
       },
-      "family": "Escape",
-      "familySource": "Jay, J21 (Nov 8): \"#4 is named Advancing ... It stays in the Escape family (a push makes space).\" drafts/planning/R-G2B-seal-families-16-40.md:11; drafts/planning/power-and-progression-redesign.md:199. J21 is not recorded in docs/decisions.md.",
-      "jay": "J21: the old game name Drive Back is retired; the effect is the push (counterPush), 1.5 tiles kept."
+      "family": "Advancing",
+      "familySource": "Jay, Nov 8, via the Manager (#447 correction): \"Self-defense #4 belongs to Advancing.\" Advancing is the family, not the name. This replaces J21's Escape family (drafts/planning/R-G2B-seal-families-16-40.md:11).",
+      "source": null,
+      "about": null,
+      "effectNote": "Keeps the push-back effect (counterPush, 1.5 tiles, measured and kept in J21).",
+      "openNote": "No real name for #4 in the docs (line 14 lists steps; 'Advancing combo' is its category). Advancing is its family. Candidates: Outside Block, Double Punch (also #1). The old game names Steady Breath and Drive Back stay until Jay names it."
     },
     {
       "id": "strong-block",
@@ -193,7 +194,7 @@
     "status": "OPEN",
     "source": "docs/self-defense.md:26",
     "proposedDescription": "Hammer Fist, Back Fist",
-    "kidText": "A low hammer fist, then a back fist.",
+    "kidText": "A quick low hammer fist, then a high back fist.",
     "openNote": "Neither docs/self-defense.md nor docs/curriculum.md gives #16 a name (line 26 lists steps only). 'Hammer Fist, Back Fist' is a description, not a name. Jay (Nov 8): a quick hammer fist low, then a back fist. The current name keeps 'Low-High' only until Jay names it. Kid text never names the target of the low strike.",
     "seenIn": [
       "drafts/content/abilities/seals-16-20-text.json",
@@ -221,17 +222,6 @@
       "altName": "Sweep",
       "source": "docs/self-defense.md:13",
       "live": true
-    },
-    {
-      "file": "content/abilities/abilities.json",
-      "where": "seals[id=steady-breath]",
-      "field": "name",
-      "id": "steady-breath",
-      "name": "Advancing",
-      "altName": "Steady Breath",
-      "source": "docs/self-defense.md:14",
-      "live": true,
-      "jay": "J21 (Nov 8): \"#4 is named Advancing\". drafts/planning/power-and-progression-redesign.md:199"
     },
     {
       "file": "content/abilities/abilities.json",
@@ -295,17 +285,6 @@
     },
     {
       "file": "content/abilities/seal-families.json",
-      "where": "families[id=escape].ranks[technique=4]",
-      "field": "name",
-      "id": "escape #4",
-      "name": "Advancing",
-      "altName": "Drive Back",
-      "source": "docs/self-defense.md:14",
-      "live": true,
-      "jay": "J21 (Nov 8): \"#4 is named Advancing\". drafts/planning/power-and-progression-redesign.md:199"
-    },
-    {
-      "file": "content/abilities/seal-families.json",
       "where": "families[id=counter].ranks[technique=3]",
       "field": "name",
       "id": "counter #3",
@@ -353,17 +332,6 @@
       "altName": "Off the Line",
       "source": "docs/self-defense.md:11",
       "live": false
-    },
-    {
-      "file": "drafts/content/abilities/seal-families-text.json",
-      "where": "families[id=escape].ranks[technique=4]",
-      "field": "name",
-      "id": "escape #4",
-      "name": "Advancing",
-      "altName": "Drive Back",
-      "source": "docs/self-defense.md:14",
-      "live": false,
-      "jay": "J21 (Nov 8): \"#4 is named Advancing\". drafts/planning/power-and-progression-redesign.md:199"
     },
     {
       "file": "drafts/content/abilities/seal-families-text.json",
@@ -547,17 +515,6 @@
     },
     {
       "file": "drafts/content/abilities/technique-callouts.json",
-      "where": "callouts[ability=steady-breath]",
-      "field": "subtitle",
-      "id": "steady-breath",
-      "name": "Advancing",
-      "altName": "Steady Breath",
-      "source": "docs/self-defense.md:14",
-      "live": false,
-      "jay": "J21 (Nov 8): \"#4 is named Advancing\". drafts/planning/power-and-progression-redesign.md:199"
-    },
-    {
-      "file": "drafts/content/abilities/technique-callouts.json",
       "where": "callouts[ability=create-distance]",
       "field": "subtitle",
       "id": "create-distance",
@@ -618,17 +575,6 @@
     },
     {
       "file": "drafts/content/abilities/unlock-text.json",
-      "where": "seals[technique=4]",
-      "field": "title",
-      "id": "seal #4",
-      "name": "Advancing",
-      "altName": "Drive Back",
-      "source": "docs/self-defense.md:14",
-      "live": false,
-      "jay": "J21 (Nov 8): \"#4 is named Advancing\". drafts/planning/power-and-progression-redesign.md:199"
-    },
-    {
-      "file": "drafts/content/abilities/unlock-text.json",
       "where": "seals[technique=10]",
       "field": "title",
       "id": "seal #10",
@@ -676,6 +622,35 @@
       "altName": "Backfist",
       "source": "docs/self-defense.md:13",
       "live": false
+    }
+  ],
+  "familyMoves": [
+    {
+      "technique": 4,
+      "id": "steady-breath",
+      "from": "escape",
+      "to": "advancing",
+      "toName": "Advancing",
+      "files": [
+        {
+          "file": "content/abilities/seal-families.json",
+          "where": "families[id=escape].ranks[technique=4]",
+          "live": true
+        },
+        {
+          "file": "drafts/content/abilities/seal-families-text.json",
+          "where": "families[id=escape].ranks[technique=4]",
+          "live": false
+        },
+        {
+          "file": "drafts/content/abilities/unlock-text.json",
+          "where": "seals[technique=4]",
+          "field": "family",
+          "live": false
+        }
+      ],
+      "source": "Jay, Nov 8, via the Manager (#447 correction): \"Self-defense #4 belongs to Advancing.\" Advancing is the family, not the name. This replaces J21's Escape family (drafts/planning/R-G2B-seal-families-16-40.md:11).",
+      "note": "Files #4 under a new Advancing family; name and push-back effect unchanged. No Advancing family exists yet in seal-families.json; the Programmer adds it (family text is the Planner's call)."
     }
   ]
 }
