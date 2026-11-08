@@ -89,6 +89,8 @@ describe('B-T3-TUNE-2a: Hearth Cook pot lid and patterns', () => {
     let last = -1;
     for (let t = 0; t < 20 * 90 && seen.length < 8; t++) {
       a.world.players.p1.health = a.world.players.p1.maxHealth;
+      // GUARD-SCALE-01: the bigger Cook closes in a little slower, so keep it in phase 3 for the whole check (it used to survive on its own).
+      a.boss.health = Math.floor(a.boss.def.maxHealth * 0.3);
       a.world.players.p1.pos = { x: a.boss.pos.x - 2.5, y: a.boss.pos.y };
       stepWorld(a.world, a.room, { p1: IDLE });
       const started = a.boss.mode === 'windup' && a.boss.modeTicks === a.boss.windupTotal - 1;
