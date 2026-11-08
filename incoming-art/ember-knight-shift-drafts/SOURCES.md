@@ -54,6 +54,21 @@ Not a stand-in colour. These are the tiles the game draws.
 - `apps/client/src/scenes/GameScene.ts`: `TILE = 48`. The mix is `pick = ((col * 73856093) ^ (row * 19349663)) % 100`, worn under 8, quad under 30, otherwise big. The review sheets use that rule.
 - Each concept still is 512 px across 2.6 tiles, so at 48 px per tile it is drawn at 125 px.
 
+## Effect layers (this review)
+
+Jay asked for the calmer form to feel cooler. The still brief said no sparks, no flame, and no floor glow. These layers stay inside that: soft steam and light from the shield core only.
+
+| File | What it is |
+| --- | --- |
+| `layers/fx-core.png` | Centre glow, `#fff1b8` and `#ffd08a` |
+| `layers/fx-rim.png` | Soft rim, `#ffecaa`, in the shield's plane, smaller than the shield |
+| `layers/fx-steam-00.png` … `fx-steam-05.png` | Cooling steam, `#fff1b8`, `#f2c46a`, `#fff4cf`, rising off the core |
+| `source/ember-knight-shift-b-fx.blend` | The same pieces in one Blender file |
+| `source/build_b_fx.py` | Rebuilds the layers. Same camera as the knight. |
+| `source/make_b_vfx_review.py` | Builds the strip, the 125 px floor picture, and the close-up. The idle pulse and the Reduced Motion still are done here from those layers. |
+
+The white-gold of the 1 second shift is `#fff4cf` with halo `#ffecaa`, the same colours as the other four shifts. This draft does not use the 0.15 second flash from that older sample.
+
 ## Shading on draft B
 
 The plate hex stays `#c9824a`. The cel step is wider than `incoming-art/tools/toon_kit.py` (house shadow 0.66, lit step 0.47, highlight 1.10). Draft B uses a shadow around 0.36–0.46 and a later lit step so the round helm, body and shoulders each show a light side and a shade side. Body outline width is 0.042. The house outline is 0.013. The concept script uses 0.026.

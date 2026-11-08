@@ -1,0 +1,8 @@
+Draft B second pass — eyes, shoulders, bar, red, edges
+
+ember-knight-shift-b_S.png danger-red 0, hot-old-colours 0, margin L148 R123 T190 B52
+Looked at the 512 px still, the 125 px in-game pair on the kitchen floor, and a 4x enlargement of those same pixels.
+Eyes: two ovals, same mesh as phase 3, dark rim, white shine. At 48 px per tile they are small, and they still read as two eyes.
+Shoulders: two round plates, separate from the helm.
+Bar: lowered, off to the side, honey ball at the bottom, its own outline.
+Shield centre is the bright spot. No floor glow.

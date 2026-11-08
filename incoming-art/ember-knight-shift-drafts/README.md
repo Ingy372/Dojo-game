@@ -10,10 +10,13 @@ The picture under review is **draft B**: the shield stays copper, and only the c
 
 ## What to look at
 
-1. `preview/review-b-ingame-floor.png` — Before and B at the size the game draws (48 px per tile), on the real tower floor.
-2. `preview/review-b-closeup.png` — B large, on the same floor tiles.
-3. `preview/quality-check-b.txt` — the red-pixel check and the phone-size read of the eyes, shoulders and bar.
-4. `DELIVERY_NOTE.md` — what is still open.
+1. `preview/review-b-vfx-strip.png` — still frames of the 1 second shift and the idle, normal and Reduced Motion. Start here.
+2. `preview/review-b-vfx-floor.png` — the same ideas at 125 px on the real tower floor.
+3. `preview/review-b-vfx-closeup.png` — steam, a brighter core, and the still Reduced Motion core.
+4. `preview/quality-check-vfx.txt` — red-pixel and edge check on those frames.
+5. `DELIVERY_NOTE.md` — what is still open.
+
+The earlier still comparison is `preview/review-b-ingame-floor.png` and `preview/review-b-closeup.png`.
 
 There is no `sprites/` folder. These are concepts, not game art.
 
@@ -34,12 +37,18 @@ From the repo folder:
 blender -b -P incoming-art/ember-knight-shift-drafts/source/build_ember_shift.py -- \
   --out incoming-art/ember-knight-shift-drafts/renders --kinds b --samples 24
 python3 incoming-art/ember-knight-shift-drafts/source/make_b_floor_review.py
+blender -b -P incoming-art/ember-knight-shift-drafts/source/build_b_fx.py -- \
+  --out incoming-art/ember-knight-shift-drafts/layers --samples 12
+python3 incoming-art/ember-knight-shift-drafts/source/make_b_vfx_review.py
 ```
+
+Effect layers (transparent, not the knight): `layers/fx-core.png`, `layers/fx-rim.png`, `layers/fx-steam-00.png` to `fx-steam-05.png`. Model: `source/ember-knight-shift-b-fx.blend`.
 
 Blender files in `source/`:
 
 - `ember-knight-phase3.blend` — the phase-3 knight, rebuilt from the concept script
-- `ember-knight-shift-b.blend` — the draft under review
+- `ember-knight-shift-b.blend` — the knight under review
+- `ember-knight-shift-b-fx.blend` — steam, core, and rim only
 - `ember-knight-shift-a.blend` and `ember-knight-shift-c.blend` — the earlier ideas, kept
 
 The build uses `incoming-art/tools/toon_kit.py` and the same camera as the Guardian concepts (35° down, orthographic, 2.6 tiles across). Needs Blender 4 and Python 3 with Pillow and numpy. No new libraries.
