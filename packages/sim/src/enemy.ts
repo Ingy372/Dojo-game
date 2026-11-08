@@ -132,6 +132,8 @@ export interface EnemyDef {
   stationary?: boolean;
   /** C430: a no-damage push (Bellows Puff). Its swing slides you away instead of hurting you. */
   push?: EnemyPushDef;
+  /** G2B-04: a Perfect Counter with Outside Reap (#11) can throw it down (brutes and swarmers). Never a Guardian. */
+  throwable?: boolean;
   sightRange: number;
   /** Attacks used in turn (most enemies have one). */
   attacks: EnemyAttackDef[];
@@ -307,6 +309,10 @@ export function loadEnemy(data: unknown): EnemyDef {
     speed = positiveNumber(raw, 'moveSpeedTilesPerSecond', id);
   }
 
+  // G2B-04: throwable enemies (brutes and swarmers). A Guardian is never thrown.
+  if (raw.throwable !== undefined && typeof raw.throwable !== 'boolean') throw new EnemyError(id, '"throwable" must be true or false when given');
+  const throwable = raw.throwable === true;
+  if (throwable && boss) throw new EnemyError(id, '"throwable" cannot be true on a Guardian (boss): Guardians are never thrown');
   let push: EnemyPushDef | undefined;
   if (raw.push !== undefined) {
     const o = raw.push as Record<string, unknown>;
@@ -329,6 +335,7 @@ export function loadEnemy(data: unknown): EnemyDef {
     moveSpeedTilesPerSecond: speed,
     ...(stationary ? { stationary: true } : {}),
     ...(push ? { push } : {}),
+    ...(throwable ? { throwable: true } : {}),
     sightRange: positiveNumber(raw, 'sightRange', id),
     attacks,
     shield,

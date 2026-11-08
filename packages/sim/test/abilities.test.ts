@@ -116,11 +116,13 @@ describe('Stances', () => {
 });
 
 describe('Technique Seals and Strike upgrades', () => {
-  it('Arm Wrap (Counter family) makes Perfect Counters stagger longer', () => {
+  it('Arm Wrap (Counter family) makes Perfect Counters stagger longer, up to the 24-tick hold cap (G2B-04)', () => {
     const w = world(gentle(yellow, ['counter']));
     const events = counterAt(w, 1);
     expect(events.some((e) => e.kind === 'perfectCounter')).toBe(true);
-    expect(w.enemies[0].modeTicks).toBe(COMBAT.counter.perfectStaggerTicks + 10);
+    // 20 + Arm Wrap's 10 = 30, capped at 24 (Manager, 2026-11-02: the hold caps at 24 ticks, Counter #6 included).
+    expect(w.enemies[0].modeTicks).toBe(Math.min(COMBAT.counter.holdCapTicks, COMBAT.counter.perfectStaggerTicks + 10));
+    expect(w.enemies[0].modeTicks).toBe(24);
     // No Seal in a slot: the plain stagger.
     const plain = world(gentle(yellow, []));
     counterAt(plain, 1);

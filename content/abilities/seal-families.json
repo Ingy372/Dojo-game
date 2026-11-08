@@ -171,21 +171,31 @@
     {
       "id": "throw",
       "name": "Throw",
-      "text": "Take the attacker to the ground. Coming later.",
+      "text": "Take the attacker to the ground.",
       "icon": "placeholder",
-      "live": false,
+      "live": true,
       "ranks": [
         {
           "technique": 11,
           "name": "Outside Reap",
           "text": "A Great Counter tumbles a brute or swarmer to the ground for a moment.",
-          "effects": []
+          "effects": [
+            {
+              "type": "counterThrow",
+              "amount": 30
+            }
+          ]
         },
         {
           "technique": 12,
           "name": "Reap and Finish",
           "text": "Enemies you tumble take extra damage while they are on the ground.",
-          "effects": []
+          "effects": [
+            {
+              "type": "downBonus",
+              "amount": 0.25
+            }
+          ]
         }
       ]
     },

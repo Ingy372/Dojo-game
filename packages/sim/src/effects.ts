@@ -25,7 +25,9 @@ export type EffectType =
   | 'counterHits'
   | 'counterPush'
   | 'reflectStaggers'
-  | 'disarmAttacks';
+  | 'disarmAttacks'
+  | 'counterThrow'
+  | 'downBonus';
 
 export interface Effect {
   type: EffectType;
@@ -105,6 +107,10 @@ export interface PlayerMods {
   reflectStaggerTicks: number;
   /** A disarmed enemy stays disarmed for this many attacks (0 = disarm lasts 1). */
   disarmAttacks: number;
+  /** G2B-04 (#11 Outside Reap): a Perfect Counter throws a throwable enemy down for this many ticks (0 = no throw). */
+  counterThrowTicks: number;
+  /** G2B-04 (#12 Reap and Finish): extra damage share against a thrown (down) enemy. */
+  downBonus: number;
 }
 
 export function noMods(): PlayerMods {
@@ -138,6 +144,8 @@ export function noMods(): PlayerMods {
     counterPush: 0,
     reflectStaggerTicks: 0,
     disarmAttacks: 0,
+    counterThrowTicks: 0,
+    downBonus: 0,
   };
 }
 
@@ -222,6 +230,12 @@ export function modsFrom(effects: readonly Effect[], ticksPerSecond: number): Pl
       case 'focusGain':
         m.focusGain += e.amount;
         break;
+      case 'counterThrow':
+        m.counterThrowTicks = Math.max(m.counterThrowTicks, Math.round(e.amount));
+        break;
+      case 'downBonus':
+        m.downBonus += e.amount;
+        break;
     }
   }
   return m;
@@ -251,6 +265,8 @@ const TYPES: readonly EffectType[] = [
   'counterPush',
   'reflectStaggers',
   'disarmAttacks',
+  'counterThrow',
+  'downBonus',
 ];
 
 /** Effects that are simply on or off (no amount needed). */

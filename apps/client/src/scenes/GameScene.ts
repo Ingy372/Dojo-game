@@ -853,7 +853,7 @@ export class GameScene extends Phaser.Scene {
       const anim = v.pushing ? this.enemyAnim(s, 'pushpaw', 'attack') : this.enemyAnim(s, v.attack, 'attack');
       if (started) s.play(anim, { restart: true });
       telegraph = s.art.animations[anim].telegraphIntensity?.[s.frame] ?? 0;
-    } else if (e.mode === 'stagger') {
+    } else if (e.mode === 'stagger' || e.mode === 'thrown') {
       s.play(this.enemyAnim(s, 'stagger', 'idle'));
     } else if (e.mode === 'winded') {
       // Out of breath: pale, slumped, and breathing hard.
