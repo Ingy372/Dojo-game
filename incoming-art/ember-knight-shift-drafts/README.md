@@ -1,34 +1,30 @@
-# Ember Knight — shifted form (draft alternatives)
+# Ember Knight — shifted form (draft B)
 
-**Draft only. Not approved. Do not import these into the game.**
+**Draft only. Not approved. Not for Jay yet. Do not import these into the game.**
 
 Stable label: **Ember Knight — shifted form**.
 
-**Warm Shield** is a placeholder name from the brief. It is not chosen yet.
+**Warm Shield** is a placeholder name. It is not chosen yet.
 
-This folder holds three shield ideas for the Ember Knight's fifth form shift (J16). They are three designs, not three angles of one design. The 1 second white-gold glow is unchanged.
+The picture under review is **draft B**: the shield stays copper, and only the centre glows. The 1 second white-gold glow is unchanged. A and C, the other two early ideas, are kept in `superseded/pass-2-three-way/` and their stills are still in `renders/`.
 
 ## What to look at
 
-1. `preview/review-1-alternatives.png` — the three ideas, large, with the phase-3 knight beside them.
-2. `preview/review-2-phone-grey.png` — the same ideas at phone size, in colour and in grey.
-3. `preview/quality-check.txt` — the red-pixel and edge check.
-4. `renders/` — the Blender stills, plain, with no labels.
-5. `DELIVERY_NOTE.md` — what to decide.
-
-`superseded/pass-1/` is an earlier try. The honey lines were dots. Review the pictures in `preview/`, not that folder.
+1. `preview/review-b-ingame-floor.png` — Before and B at the size the game draws (48 px per tile), on the real tower floor.
+2. `preview/review-b-closeup.png` — B large, on the same floor tiles.
+3. `preview/quality-check-b.txt` — the red-pixel check and the phone-size read of the eyes, shoulders and bar.
+4. `DELIVERY_NOTE.md` — what is still open.
 
 There is no `sprites/` folder. These are concepts, not game art.
 
-## The three ideas
+## Floor
 
-| | Look | What a child should see |
-| --- | --- | --- |
-| A | The whole shield glows | A big warm shield, held out like a hello |
-| B | A coal you could hold | A copper shield with one bright round center |
-| C | A little round door | Two bright straps and a warm center |
+The floor in those two pictures is the game's own tower art, not a flat stand-in.
 
-Same knight in all three: copper plates, honey seams, round shoulders, two oval eyes, blunt bar resting down, no shadow wisps, no glow on the floor.
+- Files: `incoming-art/tier3-ember-kitchens/sprites/floor-big_floor-big.png`, `floor-quad_floor-quad.png`, `floor-worn_floor-worn.png`
+- The game loads them as the `tower-t3` pack (Ember Kitchens).
+- `apps/client/src/art/tiers.ts` gives that pack to any belt that does not have its own tower art yet. The Ember Knight is the red guardian, and red has no tower pack of its own, so this is the floor the game draws.
+- `GameScene.ts` uses `TILE = 48` and mixes the three tiles from the tile's position. The review uses that same mix.
 
 ## Rebuild
 
@@ -36,15 +32,14 @@ From the repo folder:
 
 ```
 blender -b -P incoming-art/ember-knight-shift-drafts/source/build_ember_shift.py -- \
-  --out incoming-art/ember-knight-shift-drafts/renders --samples 24
-python3 incoming-art/ember-knight-shift-drafts/source/make_ember_shift_review.py
+  --out incoming-art/ember-knight-shift-drafts/renders --kinds b --samples 24
+python3 incoming-art/ember-knight-shift-drafts/source/make_b_floor_review.py
 ```
 
-The build script uses the shared toon kit at `incoming-art/tools/toon_kit.py` and the same camera as the Guardian concepts (35° down, orthographic, 2.6 tiles across). It saves four Blender files in `source/`:
+Blender files in `source/`:
 
 - `ember-knight-phase3.blend` — the phase-3 knight, rebuilt from the concept script
-- `ember-knight-shift-a.blend`
-- `ember-knight-shift-b.blend`
-- `ember-knight-shift-c.blend`
+- `ember-knight-shift-b.blend` — the draft under review
+- `ember-knight-shift-a.blend` and `ember-knight-shift-c.blend` — the earlier ideas, kept
 
-Needs Blender 4 and Python 3 with Pillow and numpy. No new libraries.
+The build uses `incoming-art/tools/toon_kit.py` and the same camera as the Guardian concepts (35° down, orthographic, 2.6 tiles across). Needs Blender 4 and Python 3 with Pillow and numpy. No new libraries.

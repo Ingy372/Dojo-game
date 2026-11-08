@@ -11,7 +11,7 @@ These are concept pictures for a review. There is no sprite sheet and no JSON fo
 
 ## When a look is approved
 
-The Blender files in `source/` are the models. `ember-knight-shift-a.blend`, `ember-knight-shift-b.blend`, and `ember-knight-shift-c.blend` match ideas A, B, and C. Rebuild with the commands in `README.md`.
+The Blender file for the picture under review is `source/ember-knight-shift-b.blend` (shield centre glows). A and C are earlier ideas, kept beside it. Rebuild with the commands in `README.md`.
 
 A later art pass would render the chosen model the usual way: transparent PNG, house camera, 80 px per tile, then the import script. That pass is not this delivery.
 

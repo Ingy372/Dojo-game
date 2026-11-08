@@ -39,6 +39,25 @@ Not used on A, B, or C:
 
 Phase-3 body mixes, written in the brief and not used as a new palette: `#ed9841`, `#80564a`, `#a26d58`, wisps `#4a4478`.
 
+## Floor in the review pictures
+
+Not a stand-in colour. These are the tiles the game draws.
+
+| File | Game id |
+| --- | --- |
+| `incoming-art/tier3-ember-kitchens/sprites/floor-big_floor-big.png` | `floor-big` |
+| `incoming-art/tier3-ember-kitchens/sprites/floor-quad_floor-quad.png` | `floor-quad` |
+| `incoming-art/tier3-ember-kitchens/sprites/floor-worn_floor-worn.png` | `floor-worn` |
+
+- Packed as `tower-t3` in `tools/art-import/approved.json` (Ember Kitchens, approved).
+- `apps/client/src/art/tiers.ts`: a belt with no tower pack of its own uses the newest kit. That is `tower-t3`. The Ember Knight is the red guardian, and red has no tower pack yet.
+- `apps/client/src/scenes/GameScene.ts`: `TILE = 48`. The mix is `pick = ((col * 73856093) ^ (row * 19349663)) % 100`, worn under 8, quad under 30, otherwise big. The review sheets use that rule.
+- Each concept still is 512 px across 2.6 tiles, so at 48 px per tile it is drawn at 125 px.
+
+## Shading on draft B
+
+The plate hex stays `#c9824a`. The cel step is wider than `incoming-art/tools/toon_kit.py` (house shadow 0.66, lit step 0.47, highlight 1.10). Draft B uses a shadow around 0.36–0.46 and a later lit step so the round helm, body and shoulders each show a light side and a shade side. Body outline width is 0.042. The house outline is 0.013. The concept script uses 0.026.
+
 ## Timing (unchanged)
 
 From the top of the brief and `guardian-form-shifts.json`:

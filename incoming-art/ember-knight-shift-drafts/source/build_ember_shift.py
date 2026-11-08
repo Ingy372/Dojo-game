@@ -17,7 +17,10 @@ from mathutils import Vector, Euler
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "tools"))
-from toon_kit import toon_material, outline_material, hull_material, add_hull, ellipsoid, tube, OUTLINE_W
+from toon_kit import (
+    LIGHT_DIR, srgb, toon_material, outline_material, hull_material, add_hull,
+    ellipsoid, tube, OUTLINE_W,
+)
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 ap = argparse.ArgumentParser()
@@ -45,6 +48,58 @@ H, W = 1.4, 0.85
 R = W / 2
 HELM_TOP = H * 0.83 + H * 0.18
 SHOULDER_Z = H * 0.66
+# House outline is 0.013. The concept script draws it at 0.026. Draft B uses a
+# wider line so the parts still separate on the pale kitchen floor at 48 px per tile.
+OUT_B = 0.042
+OUT_EYE = 0.032
+
+def toon_contrast(name, hex_color, shadow=0.42, highlight=1.25, lit_at=0.62):
+    """Same cel shader as toon_kit, with a wider light/shade step.
+
+    The shared kit keeps shadow at 66% and the lit step at 0.47, which leaves a
+    front-facing copper plate almost one flat colour. This draft moves the lit
+    step later and darkens the shadow so the round helm, body and shoulders
+    each show a light side and a shade side. The base hex stays the brief's copper.
+    """
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    nt.nodes.clear()
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    light = nt.nodes.new("ShaderNodeCombineXYZ")
+    light.inputs[0].default_value = LIGHT_DIR.x
+    light.inputs[1].default_value = LIGHT_DIR.y
+    light.inputs[2].default_value = LIGHT_DIR.z
+    dot = nt.nodes.new("ShaderNodeVectorMath")
+    dot.operation = "DOT_PRODUCT"
+    ramp = nt.nodes.new("ShaderNodeValToRGB")
+    ramp.color_ramp.interpolation = "CONSTANT"
+    els = ramp.color_ramp.elements
+    els[0].position = 0.0
+    els[0].color = (shadow, shadow, shadow, 1)
+    els[1].position = lit_at
+    els[1].color = (1, 1, 1, 1)
+    hi = els.new(0.90)
+    hi.color = (highlight, highlight, highlight, 1)
+    remap = nt.nodes.new("ShaderNodeMapRange")
+    remap.inputs["From Min"].default_value = -1.0
+    remap.inputs["From Max"].default_value = 1.0
+    mult = nt.nodes.new("ShaderNodeMix")
+    mult.data_type = "RGBA"
+    mult.blend_type = "MULTIPLY"
+    mult.inputs["Factor"].default_value = 1.0
+    mult.inputs[6].default_value = srgb(hex_color)
+    emit = nt.nodes.new("ShaderNodeEmission")
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    nt.links.new(geo.outputs["Normal"], dot.inputs[0])
+    nt.links.new(light.outputs[0], dot.inputs[1])
+    nt.links.new(dot.outputs["Value"], remap.inputs["Value"])
+    nt.links.new(remap.outputs["Result"], ramp.inputs["Fac"])
+    nt.links.new(ramp.outputs["Color"], mult.inputs[7])
+    nt.links.new(mult.outputs[2], emit.inputs["Color"])
+    nt.links.new(emit.outputs[0], out.inputs["Surface"])
+    m.diffuse_color = srgb(hex_color)
+    return m
 
 def clear():
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -91,7 +146,7 @@ def build(kind):
             mats[key] = toon_material(key, hex_color, shadow, highlight)
         return mats[key]
 
-    def put(name, bm, material, outline=True, halo=False):
+    def put(name, bm, material, outline=True, halo=False, outline_w=None, halo_w=0.045, halo_hex=None):
         me = bpy.data.meshes.new(name)
         for f in bm.faces:
             f.smooth = True
@@ -102,9 +157,10 @@ def build(kind):
         sc.collection.objects.link(ob)
         ob.parent = root
         if outline:
-            add_hull(ob, sc.collection, OUT, OUTLINE_W * 2).parent = root
+            add_hull(ob, sc.collection, OUT, OUTLINE_W * 2 if outline_w is None else outline_w).parent = root
         if halo:
-            add_hull(ob, sc.collection, HALO_MAT, 0.045).parent = root
+            hm = HALO_MAT if halo_hex is None else hull_material(name + "HALO", halo_hex)
+            add_hull(ob, sc.collection, hm, halo_w).parent = root
         return ob
 
     E = ellipsoid
@@ -152,7 +208,7 @@ def build(kind):
                 mat("wisp", P3_WISP, 0.85, 1.0), outline=True)
         body = bpy.data.objects["bodyk"]
         add_hull(body, sc.collection, hull_material("RIM", RIM), OUTLINE_W * 2 + 0.036).parent = root
-    else:
+    elif kind != "b":
         plate = mat("copper", COPPER)
         honey = mat("honey", HONEY, 0.9, 1.06)
         face = mat("face", FACE, 1, 1)
@@ -191,18 +247,6 @@ def build(kind):
                 honey, outline=False)
             hold_shield(c)
             hold_bar((R * 1.02, -R * 0.40, H * 0.50), (R * 1.02, -R * 0.48, H * 0.12), 0.05)
-        elif kind == "b":
-            # Copper shield. Only a bigger center boss glows: a coal you could hold.
-            c = (-R * 0.55, -R * 0.98, H * 0.46)
-            disc("srim", (c[0], c[1] + 0.02, c[2]), 0.28, 0.045, rim_metal, outline=True, halo=False)
-            disc("shield", (c[0], c[1] - 0.015, c[2]), 0.22, 0.05, plate, outline=True, halo=False)
-            put("coal", E((c[0], c[1] - 0.055, c[2]), (0.13, 0.045, 0.13)), face, outline=False, halo=True)
-            put("boss", E((c[0], c[1] - 0.08, c[2]), (0.07, 0.03, 0.07)), center, outline=False, halo=True)
-            for i, z0 in enumerate((0.30, 0.42, 0.54)):
-                put(f"stitch{i}", tube((R * 0.22, -R * 0.86, H * z0), (R * 0.22, -R * 0.86, H * z0 + 0.07), 0.018, 0.018, segs=8),
-                    honey, outline=False)
-            hold_shield(c)
-            hold_bar((R * 0.90, -R * 0.16, H * 0.38), (R * 0.94, -R * 0.26, H * 0.14), 0.04)
         else:
             # Round hearth door: copper face, two glowing straps, warm center.
             c = (-R * 0.42, -R * 1.02, H * 0.48)
@@ -216,6 +260,61 @@ def build(kind):
                 honey, outline=False)
             hold_shield(c)
             hold_bar((R * 0.98, -R * 0.28, H * 0.46), (R * 1.00, -R * 0.36, H * 0.12), 0.045)
+    else:
+        # Draft B, manager pass: shield-centre glow kept. Parts read apart on a pale floor.
+        # Plates stay the one copper hex. Contrast is shading and outline, not a new colour.
+        body_m = toon_contrast("BBODY", COPPER, shadow=0.46, highlight=1.18, lit_at=0.60)
+        helm_m = toon_contrast("BHELM", COPPER, shadow=0.36, highlight=1.30, lit_at=0.54)
+        sh_m = toon_contrast("BSH", COPPER, shadow=0.38, highlight=1.32, lit_at=0.56)
+        limb_m = toon_contrast("BLIMB", COPPER, shadow=0.34, highlight=1.12, lit_at=0.50)
+        honey = mat("honey", HONEY, 0.88, 1.08)
+        face = mat("face", FACE, 1, 1)
+        rim_metal = toon_contrast("BRIM", RIM, shadow=0.55, highlight=1.12, lit_at=0.58)
+        center = mat("center", CENTER, 1, 1)
+        eye_m = mat("eye", EYE, 1, 1)
+        hi_m = mat("hi", WHITE, 1, 1)
+        # A dark recess of the same copper, behind each eye. Not the old black visor bar.
+        socket_m = toon_contrast("BSOCK", COPPER, shadow=0.22, highlight=0.34, lit_at=0.80)
+        ow = dict(outline_w=OUT_B)
+
+        put("bodyk", E((0, 0, H * 0.45), (R * 0.95, R * 0.8, H * 0.42), segs=24, rings=14), body_m, **ow)
+        put("helm", E((0, 0, H * 0.83), (R * 0.6, R * 0.58, H * 0.18)), helm_m, **ow)
+        # Honey line where the helm meets the body, on the helm, not a floating hoop.
+        put("neck", ring_xz((0, -R * 0.42, H * 0.70), 0.22, 0.055, 0.014), honey, outline=False)
+        for s in (1, -1):
+            put(f"pauld{s}", E((s * R * 0.85, 0, H * 0.66), (R * 0.32, R * 0.32, R * 0.22)), sh_m, **ow)
+            put(f"pring{s}", ring_xz((s * R * 0.85, -R * 0.16, H * 0.66), R * 0.26, R * 0.16, 0.012),
+                honey, outline=False)
+        # Same eye mesh as the phase-3 knight (s=0.75). A dark outline makes the oval
+        # read without bringing the black visor back. A thin honey frame sits outside it.
+        for x in (1, -1):
+            # On the helm face, behind the eye, so a dark copper oval shows around it.
+            put(f"socket{x}", E((x * R * 0.28, -R * 0.56, H * 0.82), (0.09, 0.025, 0.115)),
+                socket_m, outline=False)
+            put(f"eye{x}", E((x * R * 0.28, -R * 0.6, H * 0.82), (R * 0.17 * 0.75, R * 0.07, R * 0.24 * 0.75)),
+                eye_m, outline=True, outline_w=OUT_EYE, halo=True, halo_w=0.028, halo_hex=EYE)
+            put(f"hi{x}", E((x * R * 0.28 - R * 0.05, -R * 0.6 - R * 0.06, H * 0.82 + R * 0.045),
+                            (R * 0.05 * 0.75, R * 0.03, R * 0.06 * 0.75)),
+                hi_m, outline=False)
+        put("eyeframe", ring_xz((0, -R * 0.48, H * 0.82), 0.27, 0.125, 0.011), honey, outline=False)
+
+        # Shield lowered to the chest, face toward the student. Only the centre glows.
+        c = (-R * 0.55, -R * 0.98, H * 0.46)
+        put("srim", tube((c[0], c[1] + 0.04, c[2]), (c[0], c[1] + 0.0, c[2]), 0.28, 0.28, segs=32),
+            rim_metal, **ow)
+        put("shield", tube((c[0], c[1] + 0.0, c[2]), (c[0], c[1] - 0.04, c[2]), 0.22, 0.22, segs=32),
+            body_m, **ow)
+        put("coal", E((c[0], c[1] - 0.055, c[2]), (0.13, 0.045, 0.13)), face, outline=False, halo=True, halo_w=0.04, halo_hex=HALO)
+        put("boss", E((c[0], c[1] - 0.08, c[2]), (0.07, 0.03, 0.07)), center, outline=False, halo=True, halo_w=0.03, halo_hex=CENTER)
+        # Left arm, same chunk as the phase-3 arm, reaching the shield. It does not melt into the body.
+        put("armshield", tube((-R * 0.72, -R * 0.15, H * 0.58), (c[0] + 0.04, c[1] + 0.08, c[2]), 0.07, 0.055, segs=12),
+            limb_m, **ow)
+        # Bar rests down, out past the shoulder, so the silhouette shows arm then bar.
+        bar_top = (R * 1.38, -R * 0.42, H * 0.48)
+        bar_bot = (R * 1.38, -R * 0.52, H * 0.08)
+        put("armbar", tube((R * 0.78, -R * 0.12, H * 0.58), bar_top, 0.065, 0.05, segs=12), limb_m, **ow)
+        put("bar", tube(bar_top, bar_bot, 0.042, 0.036, segs=12), limb_m, **ow)
+        put("barend", E(bar_bot, (0.055, 0.055, 0.055)), honey, outline=True, outline_w=OUT_EYE)
 
     top = -1.0
     for ob in sc.objects:
