@@ -190,18 +190,18 @@ Six decisions unblock the beta; the rest can wait until after launch.
 
 ## Updates from Jay, Nov 8, 2026
 
-Recorded by the Researcher & Planner. These notes sit on top of the Oct 30 text above. They do not change a number. Where an effect changes when an old amount applies, it is marked **needs balance-check**.
+Recorded by the Researcher & Planner. These notes sit on top of the Oct 30 text above. The balance check is in `R-G2B-seal-families-16-40.md`. The only amount changed there is #26's block cut, from 0.15 to the measured 0.02.
 
-**J20. Kick combo 5 is Hook Kick.** The old game name "Low-High Kicks" is retired. It is not a shape name. Kids see Hook Kick. The steps in `docs/curriculum.md` stay as Jay wrote them. What "curves around a block" means in a fight is still open (taste call 1 in `R-G2B-strikes-4-7.md`).
+**J20. Kick combo 5 is Hook Kick.** The old game name "Low-High Kicks" is retired. It is not a shape name. Kids see Hook Kick. The steps in `docs/curriculum.md` stay as Jay wrote them. **J19:** against a guarding enemy, Hook Kick reaches around the guard and is a guard break. No new number.
 
 **J21. Seals.**
 
-- #4 is named **Advancing**. It pushes an enemy back. The old name Drive Back is retired. The written 1.5 tile distance stays. **needs balance-check.**
+- #4 is named **Advancing**. It pushes an enemy back. The old name Drive Back is retired. The 1.5-tile distance was measured and kept.
 - #25 Escape from Behind is a general escape (team call). It is not a behind-only counter.
-- #16 is a very quick hammer fist low, then a back fist high. Game text: "quick low hammer fist, then a high back fist." No groin. No face. The effect is a quick two-hit follow-up (one extra hit), not a heal. Why: the real move is two fast strikes, so the seal adds a hit. The written 30% stays. **needs balance-check.** The name "Low-High Strike" is not in the curriculum as a title. It is flagged, not renamed.
+- #16 is a very quick hammer fist low, then a back fist high. Game text: "quick low hammer fist, then a high back fist." No groin. No face. The effect is a quick two-hit follow-up (one extra hit), not a heal. Why: the real move is two fast strikes, so the seal adds a hit. The written 30% was measured and does not fit the reserve. It was not replaced. Real names are in `drafts/content/abilities/J27-audit.md`.
 - Each seal works alone (team call). No seal needs another.
-- Old placeholder powers follow the team lean in `R-G2B-seal-families-16-40.md`, except Steady Breath's heal stays on #10, because #16 is the extra hit. That choice is noted there.
-- #37 Steady Hold moves to the Counter family. Yes.
+- Old placeholder powers follow the team lean in `R-G2B-seal-families-16-40.md`. Steady Breath shares #10, because #16 is the extra hit and the beta plan already parked the heal on the last beta Counter rank. #19 Wrist Lock moves to Disarm, because the built effect is a full disarm, not a hold.
+- #37 Steady Hold moves to the Counter family. Yes. The +1 tick does not fit the reserve, and no smaller whole tick exists, so the rank adds no tick. #26's stand-alone block cut is 0.02.
 
 **J26. Feel.**
 

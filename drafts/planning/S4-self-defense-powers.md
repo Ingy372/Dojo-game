@@ -43,7 +43,7 @@ Effect types in `code` already exist in `packages/sim/src/effects.ts`. **New:** 
 | 13 | Orange | Kick away the weapon | Kick the Weapon | After a Perfect Counter, that attacker is **disarmed**: next attack does half damage | `disarm` 0.5 (current #8, moved here) | S | Starts Kick-away |
 | 14 | Orange | Kick away the weapon | Kick and Spin | Disarm lasts 2 attacks instead of 1 | `disarm` + **new** `disarmAttacks` 2 | S | #13 |
 | 15 | Orange | Avoid | Slip and Double | Off the Line adds a 3rd punch, and the Counter window is 1 tick longer | `counterHits` +1, `counterWindow` 1 | S | #1, #2 |
-| 16 | Green | Grab and strike | Low-High Strike (name flagged) | A quick two-hit follow-up (one extra hit), not a heal. Game text: "quick low hammer fist, then a high back fist." No groin or face. 30% stays the written guess. **needs balance-check**. Why: the real move is two fast strikes, so the seal adds a hit. | `strikeExtraHit` 0.3 | M | #10 |
+| 16 | Green | Grab and strike | Low-High Strike | A quick two-hit follow-up (one extra hit), not a heal. Game text: "quick low hammer fist, then a high back fist." No groin or face. Why: the real move is two fast strikes, so the seal adds a hit. Measured: 0.3 does not fit the reserve. The amount was not changed. | `strikeExtraHit` 0.3 | M | #10 |
 | 17 | Green | Joint lock | Arm Bar | A Perfect Counter **locks** the attacker for 20 ticks; locked enemies can't block or shield | **New:** `counterLock` 20 (uses shield-break rules while locked) | M | Starts Lock |
 | 18 | Green | Avoid the weapon | Slide Away | Dashing through a padded-staff attack gives +10 Focus | **New:** `dashDodgeFocus` 10 | S | Avoid (#1, #2, #15) |
 | 19 | Green | Weapon control | Wrist Lock | Disarm on a padded-staff enemy is full for 1 attack (no damage) | `disarm` 1.0 vs weapon enemies | M | #13, #14, #17 |
@@ -53,7 +53,7 @@ Effect types in `code` already exist in `packages/sim/src/effects.ts`. **New:** 
 | 23 | Blue | Redirect the weapon | Turn It Back | Blocking a padded-staff attack bounces 50% of it back | `blockReflect` 0.5 vs weapon enemies (**new** condition) | M | #8, #9 |
 | 24 | Blue | Kick away the weapon | Wrist Kick | A Strike (not only a Counter) can disarm | `disarm` + **new** `disarmOnStrike` | M | #13, #14 |
 | 25 | Blue | Escape | Escape from Behind | A general escape (team call, Nov 8): blocks or dashes create space and refill Dash. Not only from behind. No new amount. **needs balance-check** | Existing Escape effects, not `rearCounter` | M | Starts Escape |
-| 26 | Red | Control hold | Shoulder Control | While an enemy is locked, your Blocks take 15% less damage | `blockCut` 0.15 (while locking, **new** condition) | S | #17 |
+| 26 | Red | Control hold | Shoulder Control | Blocks take less damage on their own. The written 15% does not fit. The measured cut is 0.02. See `R-G2B-seal-families-16-40.md`. | `blockCut` 0.02 | S | Works alone |
 | 27 | Red | Takedown | Sweep | Throws now work on shields and Guarding elites too | `counterThrow` + **new** `throwAll` | M | #11, #12 |
 | 28 | Red | Weapon control | Four-Corner Lock | Locks last +10 ticks, and disarms work on heavy overhead attacks | `counterLock` +10, `disarm` heavy | S | #17, #19, #21 |
 | 29 | Red | Choke escape | Break Free | When 2+ enemies are within 1 tile, a Block pushes them all back 1.5 tiles | **New:** `breakFree` 1.5 | M | #25 |
@@ -77,7 +77,7 @@ All 10 build on the Joint lock line (#17 Arm Bar `counterLock` 20, #26, #28) and
 | 34 | Red/Black | Joint control and takedown | Lock and Drop | When a lock ends, the enemy is **thrown** instead (down 30 ticks) | `lockRelease` → `counterThrow` 30 | M | #33, #11, #27 |
 | 35 | Red/Black | Wrist control | Catch the Hand | A **Block** (not only a Perfect Counter) locks a quick attacker (wind-up 12 ticks or less) for 10 ticks | **new** `blockLock` 10 (quick attacks only) | M | #17, #31 |
 | 36 | Brown | Joint control | Wide Release | Release pushes +0.5 tiles further, and the pushed enemy knocks back anyone it bumps | `lockRelease` +0.5, **new** flag `releaseBumps` | S | #31 |
-| 37 | Brown | Joint control | Steady Hold | Counter family (Jay, Nov 8). The Counter window is 1 tick longer on its own, not only while a lock is held. The 1 tick stays. **needs balance-check** | `counterWindow` 1 | S | Works alone |
+| 37 | Brown | Joint control | Steady Hold | Counter family (Jay, Nov 8), and it works alone. The +1 tick was measured and does not fit the reserve. No smaller whole tick exists, so this rank adds no tick. | none (the written +1 does not fit) | S | Works alone |
 | 38 | Brown | Joint control and takedown | Lock to Takedown | A thrown enemy stays down +15 ticks. Lock and Drop works on shields and Guarding elites | `counterThrow` +15, `throwAll` on lock throws | S | #34, #27, #22 |
 | 39 | Brown | Joint control | Release and Go | Release also makes every enemy within 1.5 tiles off-balance, and refills Dash | `lockRelease` + `breakFree` 1.5 + `dashOnBlock` | M | #36, #29, #30 |
 | 40 | Brown | Joint control and takedown | Master Hold | Locks last +10 ticks, and enemies thrown from a lock take 25% more damage while down | `counterLock` +10, `downBonus` +0.25 on lock throws | S | #34, #38, #12 |

@@ -147,7 +147,7 @@ How the old 10 placeholder Seals land (the Redesign says each becomes a rank eff
 
 Both are data rows in `seal-families.json`. The Content Designer (PB-06) can move one to another rank in the same family with a one-line edit if Jay's template reads differently. A student who had either old Seal keeps its effect when they equip that family at that rank, so nobody's earned power disappears. PB-02 builds both and PB-09 sets the amounts.
 
-**Jay, Nov 8:** #4's name is **Advancing**, not Drive Back. The effect is the push (`counterPush`). The 1.5 tile guess is unchanged and **needs balance-check**. #16 is an extra hit, not a heal, so Steady Breath does **not** move off this #10 home onto #16. No new heal amount. The full map is in `R-G2B-seal-families-16-40.md`. This beta table's family rows for #1 and #15 were not changed.
+**Jay, Nov 8:** #4's name is **Advancing**, not Drive Back. The effect is the push (`counterPush`). The 1.5 tile distance was measured and kept. #16 is an extra hit, not a heal, so Steady Breath shares this #10 home. No new heal amount. #19's disarm effect is Disarm, not Lock; that change is outside the beta belts' rank list here. The full map is in `R-G2B-seal-families-16-40.md`. This beta table's family rows for #1 and #15 were not changed.
 
 ## 5. UI flow: picking and equipping
 
