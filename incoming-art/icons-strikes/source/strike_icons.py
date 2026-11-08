@@ -2,18 +2,12 @@
 No outside art pack. No Blender: these are the 2D medallion family, not 3D world sprites.
 The kit lives in incoming-art/icons-slots/source (project code, already on main).
 
-Ids and sources (nothing invented):
-  butterfly-flow  Strike #3, Orange, beta. content/abilities/strikes.json.
-                  docs/curriculum.md combo 3: same as 2, plus a round kick and a tornado kick
-                  (the school calls it a butterfly kick). Game shape: spins the other way from
-                  Jumping Spins (drafts/planning/R-G2B-strikes-4-7.md).
-  side-kick-drive Strike #4, Green. Redesign name. Jay, curriculum combo 4: step-behind side kicks.
-                  Game shape: steps in and drives the other person back.
-  hook-kick       Strike #5, Blue. Jay, Nov 8 (J20): the name is Hook Kick. Curriculum combo 5
-                  includes a step-behind hook kick. J19: it reaches around a guard.
-
-#1 spin-kick is not drawn here. The merged strike.png is the slot picture (a front kick on a pad).
-jumping-spins.png is Strike #2. Neither is the spinning outside kick that ends combo 1.
+Ids and sources. Line numbers are in the Delivery Note. Nothing here is a pose the docs did not name.
+  spin-kick       Strike #1. docs/curriculum.md:46 spinning outside kick (spin kick). Not a jump.
+  butterfly-flow  Strike #3. docs/curriculum.md:48 names a round kick and a tornado kick
+                  (butterfly kick). The pose is not described. Confirmation required.
+  side-kick-drive Strike #4. docs/curriculum.md:49 step-behind side kick.
+  hook-kick       Strike #5. docs/curriculum.md:50 step-behind hook kick. The returning heel is drawn larger.
 """
 import math
 import os
@@ -85,6 +79,26 @@ def poly_of_rect(cx, cy, w, h, r):
 CREAM_GI = (250, 246, 236)
 
 
+def spin_kick():
+    """#1. The finishing kick of combo 1: a spinning outside kick. Not a jump.
+    docs/curriculum.md line 46 names it. The line does not give the angle or the height."""
+    a = Art()
+    hx = 114
+    _support(a, hx)
+    hip_pt = (hx + 2, 152)
+    # across at chest height, so it is not the steep kick on Jumping Spins and not the front kick on the slot picture.
+    # That height is a reading of "outside", which the curriculum lists apart from "front". The number is not in the docs.
+    reach, deg = 66.0, 22.0
+    ankle = (hip_pt[0] + reach * math.cos(math.radians(deg)), hip_pt[1] - reach * math.sin(math.radians(deg)))
+    knee = ((hip_pt[0] + ankle[0]) / 2, (hip_pt[1] + ankle[1]) / 2)
+    sole = hip_high_kick(a, hip_pt, knee, ankle, flex=14)
+    burst(a, sole[0], sole[1], 6, 12, 6, .12)
+    _torso(a, hx, lean=8)
+    # one spin. The arrow sits in the cream. Combo 2 is the one with three jumping spins.
+    arrow(a, [(hx - 40, 170), (hx - 6, 190), (hx + 30, 172)], BLUE_S, 14, 28, outline=INKC, ink_ow=4.6, spread=0.9)
+    return _finish(a)
+
+
 def butterfly_flow():
     """#3. A tornado kick (the school's butterfly kick): one leg swings in a round arc,
     and the spin arrow runs the other way from Jumping Spins (head on the right)."""
@@ -124,28 +138,32 @@ def side_kick_drive():
 
 
 def hook_kick():
-    """#5. Hook kick: the leg reaches around. Heel comes back. Curved arrow shows the hook.
-    A pad stands in for the guard it reaches around. No person is drawn as the target."""
+    """#5. Hook kick. The curriculum names a step-behind hook kick and does not give the angle.
+    The heel is drawn large and in open space so the return reads at 30 px. A pad stands in for the guard."""
     a = Art()
-    hx = 104
+    hx = 98
     _support(a, hx)
-    # thigh lifts forward, shin folds back, heel returns. The bend is the hook.
-    hip_pt = (hx + 10, 156)
-    knee = (hip_pt[0] + 52, hip_pt[1] - 48)
-    # the heel comes all the way back, past the hip, so the hook reads as a hook and not a straight kick
-    ankle = (hip_pt[0] - 28, hip_pt[1] - 36)
+    hip_pt = (hx + 2, 164)
+    knee = (hip_pt[0] + 48, hip_pt[1] - 18)
+    # shin folds back and up. The shoe is large and sits in the cream, clear of the head and the fist.
+    ankle = (knee[0] - 4, knee[1] - 34)
     from toon import poly, rrect_pts
-    a.shape(poly(rrect_pts(knee[0] + 16, knee[1] + 4, 18, 40, 8)), PAD, PAD_S, lighten(PAD, .35), ow=3.2, band=4)
-    sole = hip_high_kick(a, hip_pt, knee, ankle, flex=50)
-    # arrow in the cream above the hook, head pointing back with the heel. It does not cover the shoe.
-    arrow(a, [(hip_pt[0] + 18, hip_pt[1] - 34), (knee[0] + 4, knee[1] - 22), (ankle[0] + 8, ankle[1] - 22)],
-          BLUE_S, 11, 22, outline=INKC, ink_ow=4.6, spread=0.88)
-    burst(a, ankle[0], ankle[1], 6, 12, 6, .15)
-    _torso(a, hx, lean=4)
+    a.shape(poly(rrect_pts(knee[0] + 26, knee[1] + 4, 16, 32, 7)), PAD, PAD_S, lighten(PAD, .35), ow=3.2, band=4)
+    # arrow first, so the returning shoe is drawn on top of it
+    arrow(a, [(hip_pt[0] - 6, hip_pt[1] - 36), (knee[0] - 16, knee[1] - 40), (ankle[0] - 18, ankle[1] - 8)],
+          BLUE_S, 12, 26, outline=INKC, ink_ow=4.6, spread=0.92)
+    dx, dy = knee[0] - ankle[0], knee[1] - ankle[1]
+    dist = math.hypot(dx, dy)
+    ang = math.degrees(math.atan2(-dy / dist, -dx / dist))
+    # bigger shoe than the other icons, so the returning heel is still a shape at 30 px
+    kick_leg(a, ankle, ang, 0, 1.0, dist / 1.0, None, r0=15, r1=11, gow=4.6, gshade=GSH)
+    sleeve(a, hip_pt, knee, 15, 12.5, ow=4.6, shade=GSH, band=6)
+    _torso(a, hx, lean=0)
     return _finish(a)
 
 
 ALL = {
+    'spin-kick': spin_kick,
     'butterfly-flow': butterfly_flow,
     'side-kick-drive': side_kick_drive,
     'hook-kick': hook_kick,
@@ -154,50 +172,63 @@ ALL = {
 def sheet():
     from PIL import Image, ImageDraw, ImageFont, ImageOps
     out = os.path.join(HERE, '..', 'preview')
-    small = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 18)
+    font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 16)
+    tiny = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 13)
     cells = [
-        ('Jumping Spins #2, approved', os.path.join(SLOTS, '..', 'sprites', 'jumping-spins@2x.png')),
-        ('Strike slot, approved', os.path.join(SLOTS, '..', 'sprites', 'strike@2x.png')),
-        ('#3 Butterfly Flow', os.path.join(out, 'butterfly-flow-full.png')),
-        ('#4 Side Kick Drive', os.path.join(out, 'side-kick-drive-full.png')),
-        ('#5 Hook Kick', os.path.join(out, 'hook-kick-full.png')),
+        ('#2 Jumping Spins, approved',
+         os.path.join(SLOTS, '..', 'sprites', 'jumping-spins@2x.png'),
+         ['Reference, already on main.', 'docs/curriculum.md:47', '3 jumping spin kicks']),
+        ('Strike slot, approved',
+         os.path.join(SLOTS, '..', 'sprites', 'strike@2x.png'),
+         ['Reference, already on main.', 'Front kick on a pad.', 'This is not combo 1.']),
+        ('#1 Spin Kick',
+         os.path.join(out, 'spin-kick-full.png'),
+         ['docs/curriculum.md:46', 'spinning outside kick (spin kick)', 'Not a jump. Angle not in the doc.']),
+        ('#3 Butterfly Flow',
+         os.path.join(out, 'butterfly-flow-full.png'),
+         ['docs/curriculum.md:48', 'round kick and butterfly kick', 'POSE NOT IN THE DOCS. Confirm.']),
+        ('#4 Side Kick Drive',
+         os.path.join(out, 'side-kick-drive-full.png'),
+         ['docs/curriculum.md:49', 'step-behind side kick', 'Unchanged from the first draft.']),
+        ('#5 Hook Kick',
+         os.path.join(out, 'hook-kick-full.png'),
+         ['docs/curriculum.md:50', 'step-behind hook kick', 'Returning heel drawn larger.']),
     ]
-    big = 300
-    sizes = (128, 96, 64, 40, 30)
-    col = 420
-    pad = 20
-    # each column: label, large, then colour sizes, then grey sizes
-    size_block = 20 + 128 + 8
-    H = pad + 28 + big + 16 + size_block + 8 + size_block + pad
+    big = 260
+    col = 390
+    pad = 14
+    H = 1180
     W = pad + len(cells) * col
     img = Image.new('RGB', (W, H), (28, 26, 24))
     d = ImageDraw.Draw(img)
-    d.text((pad, 6), 'G2B-44 drafts beside the approved Strike family. Under each: colour, then grey, at 128, 96, 64, 40, 30.', fill=(250, 246, 236), font=small)
-    for i, (label, path) in enumerate(cells):
+    d.text((pad, 8), 'G2B-44. Two approved references, then samples #1 #3 #4 #5. True 40 and 30, colour then grey. The x4 boxes are the same pixels, enlarged.', fill=(250, 246, 236), font=tiny)
+    for i, (label, path, cite) in enumerate(cells):
         x = pad + i * col
-        y = 36
-        d.text((x, y), label, fill=(250, 246, 236), font=small)
+        y = 32
+        d.text((x, y), label, fill=(250, 246, 236), font=font)
         im = Image.open(path).convert('RGBA')
         big_im = im.resize((big, big), Image.LANCZOS)
         tile = Image.new('RGBA', (big, big), (28, 26, 24, 255))
         tile.alpha_composite(big_im)
-        img.paste(tile.convert('RGB'), (x, y + 24))
-        y2 = y + 24 + big + 8
+        img.paste(tile.convert('RGB'), (x, y + 22))
+        for n, line in enumerate(cite):
+            d.text((x, y + 24 + big + 2 + n * 15), line, fill=(232, 196, 120), font=tiny)
+        y2 = y + 24 + big + 50
         for grey, word in ((False, 'colour'), (True, 'grey')):
-            d.text((x, y2), word, fill=(250, 246, 236), font=small)
-            sx = x
-            sy = y2 + 22
-            for sz in sizes:
+            for sz in (40, 30):
                 one = im.resize((sz, sz), Image.LANCZOS)
                 if grey:
                     g = ImageOps.grayscale(one)
                     one = Image.merge('RGBA', (g, g, g, one.split()[-1]))
-                box = Image.new('RGBA', (sz, sz + 16), (28, 26, 24, 255))
-                ImageDraw.Draw(box).text((0, 0), str(sz), fill=(200, 190, 170), font=small)
-                box.alpha_composite(one, (0, 16))
-                img.paste(box.convert('RGB'), (sx, sy))
-                sx += sz + 6
-            y2 = sy + 128 + 10
+                d.text((x, y2), f'{word} {sz} true, then the same pixels x4', fill=(200, 190, 170), font=tiny)
+                true = Image.new('RGBA', (sz, sz), (28, 26, 24, 255))
+                true.alpha_composite(one)
+                img.paste(true.convert('RGB'), (x, y2 + 18))
+                zoom = one.resize((sz * 4, sz * 4), Image.NEAREST)
+                box = Image.new('RGBA', (sz * 4, sz * 4), (28, 26, 24, 255))
+                box.alpha_composite(zoom)
+                img.paste(box.convert('RGB'), (x + sz + 8, y2 + 18))
+                y2 += 18 + sz * 4 + 12
     img.save(os.path.join(out, 'sheet-g2b44-samples.png'))
     print('sheet', img.size)
 
