@@ -123,7 +123,7 @@ import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
 import { clampDoorLabels } from '../ui/doorLabel';
-import { VISIBLE_ROWS, bossRoomZoom, bossZoomPlan, cameraBounds } from '../game/cameraView';
+import { VISIBLE_ROWS, bossHeadroom, bossRoomZoom, bossZoomPlan, cameraBounds } from '../game/cameraView';
 
 /** Pixels per tile in the world (before camera zoom). */
 const TILE = 48;
@@ -595,6 +595,7 @@ export class GameScene extends Phaser.Scene {
     this.enemiesAt = 0;
     this.bossZoom = 1;
     this.bossSeen = false;
+    this.bossLift = 0;
     this.bossWatchFrom = this.time.now + 600;
     if (this.run && this.run.depth === 0 && !this.run.bowed) this.askForBow();
     else this.introduceRoom();
@@ -699,6 +700,7 @@ export class GameScene extends Phaser.Scene {
     this.counterWindowOpen = false;
     this.drawTethers(now);
     this.watchBossAppear();
+    this.frameBoss();
     this.syncEnemyViews();
     for (const e of this.world.enemies) this.drawEnemy(e, blend, now);
     this.buttons.counterWindow(this.counterWindowOpen);
@@ -1239,8 +1241,64 @@ export class GameScene extends Phaser.Scene {
     cam.setZoom(zoom * DPR);
     // Camera limits: a strip above the top wall keeps doors clear of the health bars,
     // and rooms smaller than the screen sit in the middle.
-    const b = cameraBounds(this.room.width, this.room.height, width / zoom, height / zoom, TILE);
+    // GUARD-SCALE-01 (c, d): in a Guardian room the camera may rise far enough that a Guardian against the north wall
+    // (knocked back, dashed past, or at its spawn) is drawn whole under the HUD bars, at the current zoom (dip included).
+    const head = this.bossHeadPx();
+    const strip = head ? bossHeadroom(head.minCenterY, head.headPx, HUD_BOTTOM, zoom) : 0;
+    const b = cameraBounds(this.room.width, this.room.height, width / zoom, height / zoom, TILE, strip);
     cam.setBounds(b.x, b.y, b.width, b.height);
+  }
+
+  /** GUARD-SCALE-01 (c): how far (world px) the camera is lifted above the player to keep a Guardian's head under the HUD. */
+  private bossLift = 0;
+
+  /**
+   * GUARD-SCALE-01 (c, d): when a living Guardian near the player is high enough that its head would go under the HUD bars
+   * (pinned to the north wall by knockback, a dash-past or its spawn), lift the camera so the whole Guardian shows, at the
+   * current zoom (dip included). The player always keeps at least 1.5 tiles below them on screen. Eased, so it never jumps.
+   */
+  private frameBoss(): void {
+    const cam = this.cameras.main;
+    const head = this.bossHeadPx();
+    let want = 0;
+    if (head && this.player) {
+      const k = cam.zoom / DPR;
+      const viewW = cam.width / DPR / k;
+      const viewH = cam.height / DPR / k;
+      const naturalTop = this.player.y - viewH / 2;
+      for (const e of this.world.enemies) {
+        if (!e.def.boss || e.mode === 'defeated') continue;
+        const x = e.pos.x * TILE, y = e.pos.y * TILE;
+        if (Math.abs(x - this.player.x) > viewW / 2 + e.def.radius * TILE) continue;
+        if (y + e.def.radius * TILE < naturalTop) continue; // wholly above the view: the player is far away, normal follow
+        const needTop = y - head.headPx - (HUD_BOTTOM + 8) / k; // 8 points of room so the eased lift never dips under the bars
+        want = Math.max(want, Math.min(naturalTop - needTop, viewH / 2 - 1.5 * TILE));
+      }
+    }
+    const next = this.bossLift + (Math.max(0, want) - this.bossLift) * 0.4;
+    this.bossLift = Math.abs(next - want) < 0.5 ? Math.max(0, want) : next;
+    cam.setFollowOffset(0, this.bossLift);
+  }
+
+  private bossHead: { room: string; v: { minCenterY: number; headPx: number } | null } | null = null;
+
+  /** The biggest Guardian in this room: the highest its centre can sit (one wall tile plus its radius) and its head height, in world px. */
+  private bossHeadPx(): { minCenterY: number; headPx: number } | null {
+    if (this.bossHead?.room === this.room.id) return this.bossHead.v;
+    let v: { minCenterY: number; headPx: number } | null = null;
+    for (const sp of this.room.enemySpawns) {
+      const def = CONTENT.enemies[sp.enemy];
+      if (!def?.boss) continue;
+      const own = enemyArt(def.id, 1);
+      const art = (own && characterArt(this, own.pack, own.id)) || characterArt(this, 'enemies-t1', def.id);
+      if (!art) continue;
+      // The health bar sits 8 px above the art's top, 8 px tall (makeEnemy).
+      const headPx = characterTop(this, art) * def.scale + 12;
+      const minCenterY = (1 + def.radius) * TILE;
+      if (!v || headPx - minCenterY > v.headPx - v.minCenterY) v = { minCenterY, headPx };
+    }
+    this.bossHead = { room: this.room.id, v };
+    return v;
   }
 
   private layout(): void {
@@ -1903,7 +1961,9 @@ export class GameScene extends Phaser.Scene {
    * holds, then eases back. Reduced motion: no zoom. The numbers are content (guardian-scale.json).
    */
   private bossIntroZoom(): void {
-    const z = bossZoomPlan(reducedMotion(), this.room.enemySpawns.some((sp) => CONTENT.enemies[sp.enemy]?.boss), CONTENT.guardianScale.bossZoom);
+    const hasBoss = this.room.enemySpawns.some((sp) => CONTENT.enemies[sp.enemy]?.boss);
+    // (a) The dip's total is bossZoom.zoomTo (0.8), not 0.8 on top of the held 0.9. (b) Reduced motion: no dip, the held zoom only.
+    const z = bossZoomPlan(reducedMotion(), hasBoss, CONTENT.guardianScale.bossZoom, bossRoomZoom(hasBoss, CONTENT.guardianScale.bossRoomZoom));
     if (!z) return;
     const step = (from: number, to: number, duration: number, delay: number, done: () => void) =>
       this.tweens.addCounter({

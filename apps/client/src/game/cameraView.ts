@@ -24,9 +24,9 @@ export function viewTiles(width: number, height: number): { width: number; heigh
 }
 
 /** Camera limits for a room (all in the same unit as `viewW`/`viewH`; `tile` is one tile in it). */
-export function cameraBounds(roomWidthTiles: number, roomHeightTiles: number, viewW: number, viewH: number, tile: number): { x: number; y: number; width: number; height: number } {
+export function cameraBounds(roomWidthTiles: number, roomHeightTiles: number, viewW: number, viewH: number, tile: number, topStrip = tile * TOP_STRIP_TILES): { x: number; y: number; width: number; height: number } {
   const roomW = roomWidthTiles * tile;
-  const top = -tile * TOP_STRIP_TILES;
+  const top = -Math.max(tile * TOP_STRIP_TILES, topStrip);
   const roomH = roomHeightTiles * tile - top;
   const bw = Math.max(roomW, viewW);
   const bh = Math.max(roomH, viewH);
@@ -42,10 +42,25 @@ export interface BossZoomPlan {
   backMs: number;
 }
 
-/** The pull-back to play, or null for none: with Reduced motion on there is never a zoom, and rooms without a boss have none. */
-export function bossZoomPlan(reducedMotion: boolean, roomHasBoss: boolean, zoom: BossZoomPlan): BossZoomPlan | null {
-  if (reducedMotion || !roomHasBoss || zoom.zoomTo >= 1) return null;
-  return zoom;
+/**
+ * The pull-back to play, or null for none. `zoomTo` in the data is the TOTAL dip (0.8 of the normal zoom); it does not
+ * stack on the held room zoom, so the returned `zoomTo` is the share of the held zoom that reaches it (0.8 / 0.9).
+ * Reduced motion on: no dip at all, the camera sits at the held zoom. Rooms without a boss have none, and a dip that
+ * would not go below the held zoom is skipped.
+ */
+export function bossZoomPlan(reducedMotion: boolean, roomHasBoss: boolean, zoom: BossZoomPlan, heldZoom = 1): BossZoomPlan | null {
+  if (reducedMotion || !roomHasBoss || zoom.zoomTo >= heldZoom) return null;
+  return { ...zoom, zoomTo: zoom.zoomTo / heldZoom };
+}
+
+/**
+ * GUARD-SCALE-01 (c, d): the strip (world px) the camera may show above the north wall in a Guardian room, so a Guardian
+ * pinned against that wall is drawn whole below the HUD bars. `minCenterY` is the highest the Guardian's centre can be
+ * (world px), `headPx` how far its art and health bar reach above its centre (world px), `hudBottom` the HUD bars' bottom
+ * (screen points) and `zoom` the camera zoom in screen points per world px (the current one, so the dip is covered too).
+ */
+export function bossHeadroom(minCenterY: number, headPx: number, hudBottom: number, zoom: number, marginPts = 4): number {
+  return Math.max(0, headPx - minCenterY + (hudBottom + marginPts) / zoom);
 }
 
 /** GUARD-SCALE-01: the zoom held for the whole Guardian room (1 for rooms without a boss). A placeholder number in the data file until Jay picks it. */

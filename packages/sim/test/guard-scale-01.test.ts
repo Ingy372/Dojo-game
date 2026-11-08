@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { attackBox, loadContent, loadEnemy, loadGuardianScale, scaleEnemyDef, MOVEMENT, COMBAT, type EnemyAttackDef, type EnemyDef, type RawContent } from '../src';
 import { testContent } from './load-content';
 import guardianScaleRaw from '../../../content/settings/guardian-scale.json';
-import { bossRoomZoom, bossZoomPlan, viewTiles } from '../../../apps/client/src/game/cameraView';
+import { bossHeadroom, bossRoomZoom, bossZoomPlan, cameraBounds, TOP_STRIP_TILES, viewTiles } from '../../../apps/client/src/game/cameraView';
 import gameSceneRaw from '../../../apps/client/src/scenes/GameScene.ts?raw';
 import guardScaleSrc from '../src/guardScale.ts?raw';
 import contentSrc from '../src/content.ts?raw';
@@ -229,6 +229,44 @@ describe('GUARD-SCALE-01: the boss zoom-out', () => {
     // The zoom ends at exactly 1, is reset when the scene is made, and reaches the camera limits too.
     expect(gameSceneRaw).toMatch(/this\.bossZoom = 1;\s*this\.bossSeen = false;/);
     expect(gameSceneRaw).toMatch(/\* this\.bossZoom;/);
+  });
+});
+
+describe('GUARD-SCALE-01 QA fixes: the dip does not stack, Reduced motion snaps, the head clears the HUD', () => {
+  const z = guardianScaleRaw.bossZoom;
+  const held = guardianScaleRaw.bossRoomZoom.zoom;
+  it('(a) the dip bottoms out at a TOTAL of bossZoom.zoomTo (0.80), not 0.80 x the held 0.9 (0.72)', () => {
+    const plan = bossZoomPlan(false, true, z, bossRoomZoom(true, guardianScaleRaw.bossRoomZoom))!;
+    expect(plan).not.toBeNull();
+    expect(held * plan.zoomTo).toBeCloseTo(z.zoomTo, 10);
+    expect(held * plan.zoomTo).not.toBeCloseTo(held * z.zoomTo, 3);
+    // Timings unchanged; a held zoom already at or below the dip plays no dip.
+    expect([plan.outMs, plan.holdMs, plan.backMs]).toEqual([z.outMs, z.holdMs, z.backMs]);
+    expect(bossZoomPlan(false, true, z, z.zoomTo)).toBeNull();
+    expect(gameSceneRaw).toMatch(/bossZoomPlan\(reducedMotion\(\), hasBoss, CONTENT\.guardianScale\.bossZoom, bossRoomZoom\(hasBoss, /);
+  });
+
+  it('(b) Reduced motion on: no dip animation, the camera stays at the held 0.9 from the start', () => {
+    expect(bossZoomPlan(true, true, z, held)).toBeNull();
+    expect(bossRoomZoom(true, guardianScaleRaw.bossRoomZoom)).toBe(held);
+    // The held zoom is applied in applyCameraZoom regardless of Reduced motion; only the dip tween reads it.
+    const apply = gameSceneRaw.slice(gameSceneRaw.indexOf('private applyCameraZoom'), gameSceneRaw.indexOf('private bossHead'));
+    expect(apply).toMatch(/bossRoomZoom\(/);
+    expect(apply).not.toMatch(/reducedMotion/);
+  });
+
+  it('(c, d) the camera may rise far enough to show a Guardian pinned to the north wall whole under the HUD bars, dip included', () => {
+    const T = 48;
+    const head = 150, minCenterY = (1 + 1.275) * T;
+    for (const zoom of [375 / (6.75 * T) * held, 375 / (6.75 * T) * z.zoomTo]) {
+      const strip = bossHeadroom(minCenterY, head, 56, zoom);
+      const b = cameraBounds(20, 14, 667 / zoom, 375 / zoom, T, strip);
+      // Camera at its highest: the head top is on screen at least 56 + 4 points down.
+      expect((minCenterY - head - b.y) * zoom).toBeGreaterThanOrEqual(60 - 1e-9);
+    }
+    // Rooms without a Guardian keep the old strip.
+    expect(cameraBounds(20, 14, 600, 300, T).y).toBe(-T * TOP_STRIP_TILES);
+    expect(cameraBounds(20, 14, 600, 300, T, 0).y).toBe(-T * TOP_STRIP_TILES);
   });
 });
 
