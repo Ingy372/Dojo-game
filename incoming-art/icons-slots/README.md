@@ -1,6 +1,8 @@
 # Seal families (PB-07 samples)
 
-**Status: samples only, pass 7c draft. Not approved, and not exported.** Guard is untouched: it has no motion arrow. Strike and Disarm have a gold impact burst where the kick lands, not a motion arrow, so no arrow was added to them. Counter's motion arrowhead is bigger and sits in the cream, clear of the legs. Spin Kick keeps the cf534ce pose exactly; the whole kicker is shifted right so the arrow tail shows, and the arrow stays put. Two picture-only belt colours are shown (pine and bronze). They are not ranks and do not change the belt system. Sheet 13.
+**Status: exported, ready for the Manager to review. Not imported.** Jay approved the #454 pictures for now, to judge them in the game. The Spin Kick belt in the export is **pine `#20705A`**, a placeholder the Manager selected. Jay did not pick the belt colour. Bronze is archived, not exported. Poses, outlines and arrows are the pass 7c ones. Sprites are in `sprites/` (128 and @2x). See `PROGRAMMER_HANDOFF.md`. No game file was changed.
+
+**Earlier status, pass 7c:** Guard is untouched: it has no motion arrow. Strike and Disarm have a gold impact burst where the kick lands, not a motion arrow, so no arrow was added to them. Counter's motion arrowhead is bigger and sits in the cream, clear of the legs. Spin Kick keeps the cf534ce pose exactly; the whole kicker is shifted right so the arrow tail shows, and the arrow stays put. Two picture-only belt colours were shown (pine and bronze). They are not ranks and do not change the belt system. Sheet 13.
 
 **Earlier status, pass 7b:** The Manager rejected the first pass-7 kick (dac4663): the thigh was flat and the shin went straight up, so the knee read as a crouch. Pass 7b draws one straight leg from the hip at 45 degrees, with the foot near shoulder height, a slight bend in the standing knee, and the torso leaned back a little. The heavier lines and arrows from pass 7 stay. The five figures are drawn larger and may cover the coloured ring. The ring drawing and the canvas size do not change. Fists and feet are not cut off at the canvas edge. Sheet 12. No game files. The Manager checks this draft before Jay.
 
@@ -77,7 +79,7 @@ The `@2x` files are the true pixels. The 1x files are the same sheets at phone p
 - Every glow has a real source (the burst is the hit). Nothing is drawn above a head.
 - Hands and feet (v3): sleeves flare at the cuff and a wrist shows. A fist is ONE chunky mitten shape with a thumb across the front (no finger lines) and points the way the strike goes. A foot is a chunky training shoe (blue upper, cream sole strip and ankle collar), side view, with the sole toward the target. No separate toes anywhere. Anatomy count per icon: Counter 1 fist; Guard 2 fists; Disarm 1 shoe; Strike 1 shoe; Jumping Spins 2 fists and 2 shoes; Kata 5 toe-less footprints.
 - Real technique: Counter = spinning back fist. Guard = guard up (both forearms raised in front of the chest, fists at the chin) with a shield. Disarm = a front kick that knocks a padded training stick away (foam pad, no blade). Strike = front kick on a kick pad. Jumping Spins = a jumping spin kick.
-- Sprite spec when exported: 128 x 128 transparent PNG (plus @2x), with the 8 px margin kept clear. `--export` writes them to `sprites/`. Not run yet, so no sprites are committed.
+- Sprite spec: 128 x 128 transparent PNG (plus @2x), with the 8 px margin kept clear. `--export` writes them to `sprites/`. **Exported.** Pine is the Spin Kick belt in that folder. Not imported.
 - The look of the previews (warm wood wall, cream paper cards, INK text, Nunito) is the Board look from PR #412.
 
 ## Rebuild

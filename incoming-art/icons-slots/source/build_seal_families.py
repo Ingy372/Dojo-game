@@ -10,10 +10,15 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(os.path.dirname(ROOT), 'tools'))
-import board_ui_kit as ku
-from board_ui_kit import K, M, Screen, font, INK, INK_SOFT, CREAM
-import mat
 import seal_icons as si
+# The Board kit is only for the preview sheets. --export must run without it (PR #412 is not in this branch).
+if '--export' not in sys.argv:
+    import board_ui_kit as ku
+    from board_ui_kit import K, M, Screen, font, INK, INK_SOFT, CREAM
+    import mat
+else:
+    INK = INK_SOFT = CREAM = None
+    K = M = 2
 
 PV = os.path.join(ROOT, 'preview')
 os.makedirs(PV, exist_ok=True)
