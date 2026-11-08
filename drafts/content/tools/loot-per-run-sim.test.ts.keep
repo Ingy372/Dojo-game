@@ -1,0 +1,27 @@
+import { describe, it } from 'vitest';
+import { writeFileSync } from 'fs';
+import { testContent } from './load-content';
+import { playRun, SKILLS } from './balance/bot';
+const content = testContent();
+const spawnsOf = (id: string) => {
+  const room = content.rooms.find((r) => r.id === id)!;
+  const out: string[] = [];
+  for (const s of room.enemySpawns) {
+    out.push(s.enemy);
+    const sp = content.enemies[s.enemy].split;
+    if (sp) for (let i = 0; i < sp.count; i++) out.push(sp.into);
+  }
+  return out;
+};
+describe('loot', () => { it('per run', () => {
+  const res: any = {};
+  for (const [tier, base] of [[1, { maxHealth: 100, power: 10, guard: 0 }], [3, { maxHealth: 332.79, power: 45.85, guard: 33.53 }]] as const) {
+    const by: Record<string, number> = {}; let rooms = 0; const N = 200;
+    for (let seed = 1; seed <= N; seed++) {
+      const r = playRun(content, seed, 'smart', SKILLS.typical, 'standard', base as any, undefined, { tier });
+      for (const rm of r.rooms) { rooms++; for (const e of spawnsOf(rm.roomId)) by[e] = (by[e] ?? 0) + 1; }
+    }
+    res[tier] = { runs: N, roomsPerRun: rooms / N, enemiesPerRun: Object.fromEntries(Object.entries(by).map(([k, v]) => [k, +(v / N).toFixed(3)])) };
+  }
+  writeFileSync('/tmp/loot-sim.json', JSON.stringify(res, null, 1));
+}, 600000); });

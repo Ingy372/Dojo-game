@@ -6,6 +6,19 @@
       "power": 10,
       "guard": 0,
       "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -490,6 +503,19 @@
       "power": 10,
       "guard": 0,
       "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -973,17 +999,20 @@
       "maxHealth": 121,
       "power": 13,
       "guard": 7,
-      "effects": [
-        {
-          "type": "staggerTicks",
-          "amount": 10
-        },
-        {
-          "type": "rippleCounter",
-          "amount": 0.6,
-          "radius": 1.2
-        }
-      ],
+      "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -1491,17 +1520,20 @@
       "maxHealth": 121,
       "power": 13,
       "guard": 7,
-      "effects": [
-        {
-          "type": "staggerTicks",
-          "amount": 10
-        },
-        {
-          "type": "rippleCounter",
-          "amount": 0.6,
-          "radius": 1.2
-        }
-      ],
+      "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -2009,53 +2041,20 @@
       "maxHealth": 191,
       "power": 23,
       "guard": 19,
-      "effects": [
-        {
-          "type": "staggerTicks",
-          "amount": 10
-        },
-        {
-          "type": "dashOnBlock",
-          "amount": 0
-        },
-        {
-          "type": "rippleCounter",
-          "amount": 0.6,
-          "radius": 1.2
-        },
-        {
-          "type": "blockCut",
-          "amount": 0.1
-        },
-        {
-          "type": "strikeExtraHit",
-          "amount": 0.5
-        },
-        {
-          "type": "counterWindow",
-          "amount": 1
-        },
-        {
-          "type": "blockReflect",
-          "amount": 0.2
-        },
-        {
-          "type": "disarm",
-          "amount": 0.5
-        },
-        {
-          "type": "counterStrength",
-          "amount": 0.5
-        },
-        {
-          "type": "staggerBonus",
-          "amount": 0.15
-        },
-        {
-          "type": "strikeCost",
-          "amount": 8
-        }
-      ],
+      "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -2597,53 +2596,20 @@
       "maxHealth": 191,
       "power": 23,
       "guard": 19,
-      "effects": [
-        {
-          "type": "staggerTicks",
-          "amount": 10
-        },
-        {
-          "type": "dashOnBlock",
-          "amount": 0
-        },
-        {
-          "type": "rippleCounter",
-          "amount": 0.6,
-          "radius": 1.2
-        },
-        {
-          "type": "blockCut",
-          "amount": 0.1
-        },
-        {
-          "type": "strikeExtraHit",
-          "amount": 0.5
-        },
-        {
-          "type": "counterWindow",
-          "amount": 1
-        },
-        {
-          "type": "blockReflect",
-          "amount": 0.2
-        },
-        {
-          "type": "disarm",
-          "amount": 0.5
-        },
-        {
-          "type": "counterStrength",
-          "amount": 0.5
-        },
-        {
-          "type": "staggerBonus",
-          "amount": 0.15
-        },
-        {
-          "type": "strikeCost",
-          "amount": 8
-        }
-      ],
+      "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -3185,57 +3151,20 @@
       "maxHealth": 236,
       "power": 37,
       "guard": 3,
-      "effects": [
-        {
-          "type": "staggerTicks",
-          "amount": 10
-        },
-        {
-          "type": "dashOnBlock",
-          "amount": 0
-        },
-        {
-          "type": "rippleCounter",
-          "amount": 0.6,
-          "radius": 1.2
-        },
-        {
-          "type": "healOnPerfect",
-          "amount": 3
-        },
-        {
-          "type": "blockCut",
-          "amount": 0.1
-        },
-        {
-          "type": "strikeExtraHit",
-          "amount": 0.5
-        },
-        {
-          "type": "counterWindow",
-          "amount": 1
-        },
-        {
-          "type": "blockReflect",
-          "amount": 0.2
-        },
-        {
-          "type": "disarm",
-          "amount": 0.5
-        },
-        {
-          "type": "counterStrength",
-          "amount": 0.5
-        },
-        {
-          "type": "staggerBonus",
-          "amount": 0.15
-        },
-        {
-          "type": "strikeCost",
-          "amount": 8
-        }
-      ],
+      "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -3794,57 +3723,20 @@
       "maxHealth": 236,
       "power": 37,
       "guard": 3,
-      "effects": [
-        {
-          "type": "staggerTicks",
-          "amount": 10
-        },
-        {
-          "type": "dashOnBlock",
-          "amount": 0
-        },
-        {
-          "type": "rippleCounter",
-          "amount": 0.6,
-          "radius": 1.2
-        },
-        {
-          "type": "healOnPerfect",
-          "amount": 3
-        },
-        {
-          "type": "blockCut",
-          "amount": 0.1
-        },
-        {
-          "type": "strikeExtraHit",
-          "amount": 0.5
-        },
-        {
-          "type": "counterWindow",
-          "amount": 1
-        },
-        {
-          "type": "blockReflect",
-          "amount": 0.2
-        },
-        {
-          "type": "disarm",
-          "amount": 0.5
-        },
-        {
-          "type": "counterStrength",
-          "amount": 0.5
-        },
-        {
-          "type": "staggerBonus",
-          "amount": 0.15
-        },
-        {
-          "type": "strikeCost",
-          "amount": 8
-        }
-      ],
+      "effects": [],
+      "strike": {
+        "id": "spin-kick",
+        "focusCost": 30,
+        "hits": [
+          {
+            "strength": 2.5,
+            "delayTicks": 0
+          }
+        ],
+        "reach": 1.4,
+        "lungeTiles": 0.7,
+        "recoveryTicks": 8
+      },
       "stances": [
         {
           "id": "beginners-stance",
@@ -4400,22 +4292,22 @@
   "rooted": {
     "rootedAt": 2,
     "guided": {
-      "window": 13,
-      "perfects": 7,
-      "blocks": 2,
-      "health": 180
+      "window": 12,
+      "perfects": 11,
+      "blocks": 6,
+      "health": 135
     },
     "standard": {
-      "window": 9,
-      "perfects": 5,
-      "blocks": 11,
-      "health": 168
+      "window": 8,
+      "perfects": 8,
+      "blocks": 6,
+      "health": 88
     },
     "challenge": {
-      "window": 7,
-      "perfects": 5,
-      "blocks": 8,
-      "health": 126
+      "window": 6,
+      "perfects": 8,
+      "blocks": 6,
+      "health": 81
     }
   }
 }

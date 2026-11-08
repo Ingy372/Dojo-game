@@ -1031,3 +1031,71 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - QA follow-up on #400: the testing-screen Close works after the list is scrolled (Close on top, off-view rows not tappable, Close label centred), tapping the middle of the inside exit glow leaves the dojo, and the Training Points line no longer overlaps Virtues. Tests are in `packages/sim/test/q-prem2-routine.test.ts`.
 - N1 fix: the testing screen reads the pointer in scene units (worldX / worldY), so its buttons, rows and scrolling work at DPR 1.5 and 3. No other client file had the bug.
 
+
+## PB-01 — Loadout v2, sealSlots(belt), the slot seed (2026-11-01)
+- `Loadout` has five slots (`stance`, `virtue`, `strike`, `kata`, `seals`); old two-field and `{ form }` saves load unchanged. New `loadout.ts`: `sealSlots(tier)` (2/2/3, then 3, 3, 4), Seal equip, swap and remove rules, `normalizeSlots`, and the once-only seed (`migrateLoadoutV2`, `seedLoadoutV2`, guarded by `profile.loadoutV2`, with a `showSlotNote` flag). Types for Seal families, Strikes and kata powers are in `abilities.ts`.
+- No fight, UI or balance change: golden fixture unchanged; Power and Health are the same before and after the seed (tested on Yellow, Green and Orange).
+- Not wired yet: the seed waits for PB-02 (families) and PB-03 (Strikes), see `docs/decisions.md`.
+- Tests: `p-prog-a-loadout-save`, `p-prog-b-seal-slots`, `p-prog-f-migration` (34 new). Suite 1276 passed, 11 skipped; typecheck and build exit 0.
+- Next: PB-02, PB-03, PB-04.
+
+
+## PB-02 — Seal families, ranks and the Seal slots (2026-11-01)
+- Seals are now families (Escape, Counter, Guard, Throw, Disarm, Lock) in `content/abilities/seal-families.json`; rank = signed-off techniques in the family. `characterSetup` uses only the families in the Seal slots, plus the Strikes and gear. Four new effects: `counterHits`, `counterPush`, `reflectStaggers`, `disarmAttacks`. Throw and Lock are off (`live: false`).
+- `seedLoadout()` (client `game/student.ts`) runs `seedLoadoutV2` once at boot and before a fight.
+- Golden fixture re-captured on purpose (a null loadout has no Seals); see `docs/decisions.md`.
+- Gaps: no UI to equip Seals until PB-05; #16 and #20 are not in a family; Strikes are not seeded yet (PB-03).
+- Next: PB-03 (Strikes), PB-04 (kata powers), PB-05 (equip screen).
+
+
+## PB-03 — The Strike slot (2026-11-01)
+- New `content/abilities/strikes.json` and `strikes.ts`: Spin Kick (default, byte-for-byte today's Strike), Jumping Spins (3 hits), Butterfly Flow (one delayed hit). A Strike is earned with the kick combo of the same number. Old ids map by combo: `follow-up-kick` -> `spin-kick`, `quick-combo` -> `jumping-spins` (`legacyIds`).
+- The two always-on Strike upgrades are retired. `characterSetup` now returns `strike` (the equipped Strike or Spin Kick). The fight reads it; delayed hits queue and land on the same enemy.
+- `strikeSeeded` + `seedStrikeSlot` fill the Strike slot once for saves PB-02 seeded. `seedLoadoutV2` fills it for saves not yet seeded.
+- Golden fixture re-captured on purpose (setups only; every run identical).
+- Gaps: no equip UI until PB-05; Jumping Spins and Butterfly Flow numbers are placeholders for PB-09; no Trophy Case entry for combo 3.
+- Tests: `p-prog-d-strike` (22 new) plus fixes to five older tests.
+- Next: PB-04 (kata powers), PB-05 (equip screen), PB-09 (balance).
+
+### PB-03 follow-up: the Tester's 5 low notes (2026-11-02)
+- The stale empty text and the "Always with you" heading now read "Your Strike" / "Your Strike shows up here." on the Fighting Style, Gear and Run tab screens. The Run tab row now shows the empty text when there is no Strike.
+- Stale "always on" comments in `HomeScene.ts`, `fightingStyle.ts` and `profile.ts` fixed.
+- `familyRank` returns 0 for a family that is not live (test added).
+- Golden runs never apply effects (pre-existing): noted in `docs/decisions.md`, no code change.
+- Tests: `p-prog-d-strike` (+1), `p-prog-c-seal-ranks` (+1 check), `p-menu2-f-gear` (heading).
+
+
+## MENU-BAG-01 — The Bag screen (2026-11-02)
+- New full-screen Bag, opened by a **Bag** button on the Gear tab's filter row: 6 x 4 = 24 slots a page at 667x375, 844x390 and larger, ≥44 px tiles and controls, ◀ Back, slot filters, ◀ ▶ paging when there are more than 24 items, faint outlines for empty slots.
+- Tap a tile to pick it, then Wear / Take off / Let go / Details in the same sheet as the Gear tab (rows 0-1 get the sheet at the bottom, rows 2-3 at the top, so it never covers the picked tile). Wear gives a small pop on the tile instead of the flight to the doll.
+- One tile drawing (`gearTile`) for both screens. Layout is pure data in `ui/gearBoard.ts` (`bagScreenLayout`, `bagTileBox`, `BAG_SCREEN`).
+- The Gear tab's own grid is unchanged. Whether to drop it is Jay's call.
+- Tests: `menu-bag-01.test.ts` (layout at 5 sizes, header, sheet never covers the pick, paging, wiring).
+- Shots: `/workspace/shots/menu-bag-01` (not committed).
+- Tester note folded in: the top Gear sheet is lifted 8 px at 667 wide so it clears "Your Strike" (`gearSheetBox.lift`, tests in `menu-bag-01`).
+### G2B12-FIXES: the Green playthrough fixes (2026-11-02)
+- Door banner: one fixed pill at the top centre, readable at 667x375, hidden behind the Insight picker and menus.
+- Home path card: no "▶ Video soon".
+- First visit: the Welcome Week card waits for the second visit, so a first visit is four cards, not five.
+- Favicon (svg + ico) so the browser stops asking for a missing icon.
+- Fake student seed: Green (24/28) now shows Level 30 and 3 worn Rares on the testing screen.
+- Gear sheet no longer covers the "Your Strike" row at 932x430; "Always with you" comments removed (Tester's low notes from #425).
+- Tests: `g2b12-fixes` (10). Shots in /workspace/shots/g2b12-fixes with `pass-fail.md`.
+
+### LOOT-B3-01: Ember Kitchens drops are live (2026-11-02)
+- Orange belt enemies (Spark Sprite, Doughling, Dough Blob, Ladle Lobber, Rolling Pin) now drop gear at the #431 rates; a run drops about as much as a belt 1 run (1.04x).
+- Test: `loot-b3-01` (10).
+### MENU-BAG-01 B1 follow-up (2026-11-02)
+- Bag paging uses its own `bagPage` field; ▶ and ◀ work at 1024x768 with 30 and 60 items (real taps, Reduced motion on and off).
+- 667x320: the sheet for a row-1 tile hides less of it, and a second tap closes it.
+- Tests: menu-bag-01.test.ts is now 25 tests. Shots: /workspace/shots/menu-bag-01/*fix1*.
+### C430-FIXES: the Content Designer's #430 trio (2026-11-02)
+- Thunder Drum's name and bar no longer cover Virtue (or any action button) at 667x375.
+- `stationary: true` enemy flag; thunder-drum, sleepy-sentry and thorn-sprout use speed 0.
+- The sim models Bellows Puff's no-damage push (Hit slide, Block hold, wall stop, `push` event). A Puff room costs 0 Health.
+- Tests: `k31-boss-tag` (+3), `c430-stationary` (4), `c430-push` (5), `puff-push` balance report (gated). Shots in /workspace/shots/c430-fixes with `pass-fail.md`.
+### START-LEVEL-PIN: start-level rule pinned by tests (2026-11-02)
+- Test-only: new profile, empty/old save and every belt entry stay Level 1 / 0 XP; a Green entry earns level only through `gainXp`; belt-entry check-offs are signed off; picks come from check-offs, not level.
+- Tests: `start-level-pin` (8).
+### START-LEVEL-PIN-GAPS: start-level tests tightened (2026-11-02)
+- Test-only: added "old save without level or XP loads at Level 1 / 0 XP" and "a feed sign-off shows as signed off"; the belt-entry test now runs the profile through `gainXp` so it can fail. `start-level-pin` is now 10 tests.

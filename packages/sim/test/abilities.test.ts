@@ -5,6 +5,7 @@ import {
   buildTraining,
   characterSetup,
   createWorld,
+  emptyLoadout,
   loadEnemy,
   loadFeed,
   loadRoom,
@@ -23,6 +24,7 @@ import {
 import bruteData from '../../../content/enemies/brute.json';
 import white3 from '../../../fixtures/2-white-belt-3-signoffs.json';
 import yellow from '../../../fixtures/3-yellow-belt.json';
+import green from '../../../fixtures/4-green-belt.json';
 import { testContent } from './load-content';
 import { holdSwing } from './hold-swing';
 
@@ -36,11 +38,19 @@ const room = loadRoom({
   enemies: [{ enemy: 'brute', column: 5, row: 4 }],
 });
 
-function character(data: unknown) {
+/** PB-02: Seals come from the families in the Seal slots, so a test names the ones it equips. */
+function character(data: unknown, seals: string[] = []) {
   const feed = loadFeed(data);
   const t = buildTraining(feed, content.abilities, { ms: Date.parse(feed.asOf), weekday: 3 });
-  const c = characterSetup(newProfile(), t, content.abilities);
+  const c = characterSetup({ ...newProfile(), loadout: { ...emptyLoadout(), seals } }, t, content.abilities);
   return { ...c, mods: modsFrom(c.effects, TICKS_PER_SECOND) };
+}
+
+/** The same character without R-BAL-12 training Power, so the counter does not defeat the enemy. */
+function gentle(data: unknown, seals: string[]) {
+  const c = character(data, seals);
+  const feed = loadFeed(data);
+  return { ...c, power: c.power - trainingStats(buildTraining(feed, content.abilities, { ms: 0, weekday: 3 })).power };
 }
 
 function world(player?: PlayerSetup): WorldState {
@@ -106,20 +116,28 @@ describe('Stances', () => {
 });
 
 describe('Technique Seals and Strike upgrades', () => {
-  it('Off-Balance makes Perfect Counters stagger longer', () => {
-    const w = world(character(white3));
+  it('Arm Wrap (Counter family) makes Perfect Counters stagger longer', () => {
+    const w = world(gentle(yellow, ['counter']));
     const events = counterAt(w, 1);
     expect(events.some((e) => e.kind === 'perfectCounter')).toBe(true);
     expect(w.enemies[0].modeTicks).toBe(COMBAT.counter.perfectStaggerTicks + 10);
+    // No Seal in a slot: the plain stagger.
+    const plain = world(gentle(yellow, []));
+    counterAt(plain, 1);
+    expect(plain.enemies[0].modeTicks).toBe(COMBAT.counter.perfectStaggerTicks);
   });
 
-  it('Quick Combo makes Strikes cheaper', () => {
-    const w = world(character(yellow));
-    expect(strikeCost(w.players.p1)).toBe(COMBAT.strike.focusCost - 8);
+  it('PB-03: the old always-on Strike upgrades are retired: Strikes keep their price and add no hit just from training', () => {
+    const c = character(yellow);
+    expect(c.effects.some((e) => e.type === 'strikeCost' || e.type === 'strikeExtraHit')).toBe(false);
+    const w = world(c);
+    expect(strikeCost(w.players.p1)).toBe(COMBAT.strike.focusCost);
+    expect(w.players.p1.mods.strikeExtraHit).toBe(0);
+    expect(w.players.p1.mods.strikeCostCut).toBe(0);
   });
 
   it('Escape Step recharges Dash on a Block', () => {
-    const w = world(character(yellow));
+    const w = world(character(yellow, ['escape']));
     const p = w.players.p1;
     p.dashCooldown = 25;
     // Press a little too early: a Block, not a Perfect Counter.
@@ -140,12 +158,13 @@ describe('Technique Seals and Strike upgrades', () => {
       const ev = w.events.find((e) => e.kind === 'hit');
       return ev && ev.kind === 'hit' ? ev.damage : 0;
     };
-    const y0 = character(yellow);
     // Keep the enemy alive through the counter: test Disarm without R-BAL-12 training Power.
-    const y = { ...y0, power: y0.power - trainingStats(buildTraining(loadFeed(yellow), content.abilities, { ms: 0, weekday: 3 })).power };
+    const y = gentle(green, ['disarm']);
     const plain = hitDamage({ ...y, mods: { ...y.mods, disarm: 0 } });
     const disarmed = hitDamage(y);
-    expect(disarmed).toBe(Math.round(plain / 2));
+    // Each hit is rounded on its own, so half of the plain hit can be off by one half.
+    expect(Math.abs(disarmed - plain / 2)).toBeLessThanOrEqual(0.5);
+    expect(disarmed).toBeLessThan(plain);
   });
 });
 

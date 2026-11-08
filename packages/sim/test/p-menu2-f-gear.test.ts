@@ -58,7 +58,7 @@ describe('P-MENU2-f layout', () => {
     }
     const scene = src.slice(src.indexOf('private renderGear('), src.indexOf('private renderSheet('));
     expect(scene).toMatch(/bag\.slice\(this\.page \* L\.perPage, \(this\.page \+ 1\) \* L\.perPage\)/);
-    expect(scene).toMatch(/this\.trophyPager\(gx, y \+ L\.pagerY, L\.gridW, pages\)/);
+    expect(scene).toMatch(/this\.trophyPager\(gx, y \+ L\.pagerY, L\.gridW, pages(, [^)]*)?\)/);
   });
   it('even a very narrow grid keeps 2 columns', () => {
     expect(gearColumns(100).cols).toBe(2);
@@ -134,7 +134,7 @@ describe('P-MENU2-f words', () => {
   it('all words come from content and use no pressure words', () => {
     const all = JSON.stringify(words);
     expect(all).not.toMatch(/\b(hurry|now or never|last chance|don't miss|limited|weak|bad|lose|fail)\b/i);
-    for (const s of ['Wear', 'Take off', 'Let go', 'Details', 'Always with you']) expect(all).toContain(s);
+    for (const s of ['Wear', 'Take off', 'Let go', 'Details', 'Your Strike']) expect(all).toContain(s);
   });
 });
 

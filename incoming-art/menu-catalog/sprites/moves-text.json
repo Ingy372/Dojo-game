@@ -1,0 +1,809 @@
+{
+ "about": "Jay's words, copied mechanically from docs/self-defense.md (Self-Defense 1-40) and docs/curriculum.md (Kick Combos 1-7). NO rewording. Allowed edits: the (Jay, date) notes are dropped, the first letter of a step is capitalised and a full stop is added. Steps are split only at Jay's commas. A sentence that points at another move (\"Same as #1\", \"As #21\", \"Like #3\") or starts \"Self defense NN:\" stays ONE step with stepsNeedReview=true, because splitting it would be a guess. written=false: Jay has not described it (#36-40): draw the PLACEHOLDER panel. The game should read the real words from its own data; this file is the reference for the card sprites. kidLine/gameName/family exist for #1-15 only (PB-06). Regenerate: python3 incoming-art/menu-catalog/source/export_catalog.py",
+ "selfDefense": {
+  "1": {
+   "dojoName": "Self-Defense #1",
+   "gridName": "Defense #1",
+   "belt": "White Belt",
+   "family": "escape",
+   "gameName": "Off the Line",
+   "kidLine": "A Great Counter adds two quick punches.",
+   "written": true,
+   "shortLine": "A punch",
+   "attack": "A punch",
+   "steps": [
+    "Parry.",
+    "Block.",
+    "Step to the side.",
+    "Double punch."
+   ],
+   "stepsNeedReview": false,
+   "result": "Attack misses; student is off the line and answers with two punches. Teaches avoidance."
+  },
+  "2": {
+   "dojoName": "Self-Defense #2",
+   "gridName": "Defense #2",
+   "belt": "White Belt",
+   "family": "escape",
+   "gameName": "Other Side",
+   "kidLine": "A Block fills your DASH right back up, so you can step away.",
+   "written": true,
+   "shortLine": "Same as #1",
+   "attack": "Same as #1",
+   "steps": [
+    "Same as #1, moving the other direction."
+   ],
+   "stepsNeedReview": true,
+   "result": "Same as #1, other side"
+  },
+  "3": {
+   "dojoName": "Self-Defense #3",
+   "gridName": "Defense #3",
+   "belt": "White Belt",
+   "family": "counter",
+   "gameName": "Spin Back Fist",
+   "kidLine": "A Great Counter also knocks into enemies close by.",
+   "written": true,
+   "shortLine": "Hook punch",
+   "attack": "Hook punch",
+   "steps": [
+    "Step across the center line with an inside block.",
+    "Spin.",
+    "Back fist."
+   ],
+   "stepsNeedReview": false,
+   "result": "Attack turned aside; struck from the spin"
+  },
+  "4": {
+   "dojoName": "Self-Defense #4",
+   "gridName": "Defense #4",
+   "belt": "White Belt",
+   "family": "escape",
+   "gameName": "Drive Back",
+   "kidLine": "A Great Counter pushes the attacker back and leaves them off-balance.",
+   "written": true,
+   "shortLine": "Straight reach for the throat. In the game: a \"grab reach\".",
+   "attack": "Straight reach for the throat. In the game: a \"grab reach\".",
+   "steps": [
+    "Step forward with an outside block.",
+    "Double punch to the solar plexus.",
+    "Step and punch high to the face."
+   ],
+   "stepsNeedReview": false,
+   "result": "Driven back by a body-then-head attack"
+  },
+  "5": {
+   "dojoName": "Self-Defense #5",
+   "gridName": "Defense #5",
+   "belt": "White Belt",
+   "family": "counter",
+   "gameName": "Spin Elbow",
+   "kidLine": "The spin of your Great Counter reaches farther and hits harder.",
+   "written": true,
+   "shortLine": "Hook punch",
+   "attack": "Hook punch",
+   "steps": [
+    "Like #3: step across the center line, inside block, spin with an elbow, step out, finish with a back fist."
+   ],
+   "stepsNeedReview": true,
+   "result": "Attack turned aside; elbow, then back fist"
+  },
+  "6": {
+   "dojoName": "Self-Defense #6",
+   "gridName": "Defense #6",
+   "belt": "Yellow Belt",
+   "family": "counter",
+   "gameName": "Arm Wrap",
+   "kidLine": "A Great Counter keeps the attacker trapped a little longer.",
+   "written": true,
+   "shortLine": "Hook punch",
+   "attack": "Hook punch",
+   "steps": [
+    "Step and meet it with an outside block.",
+    "Wrap the arm.",
+    "Strike up under the chin to the bridge of the nose.",
+    "Hook punch to the cheek.",
+    "Bring the elbow back to strike the other side."
+   ],
+   "stepsNeedReview": false,
+   "result": "Arm trapped while several strikes land"
+  },
+  "7": {
+   "dojoName": "Self-Defense #7",
+   "gridName": "Defense #7",
+   "belt": "Yellow Belt",
+   "family": "counter",
+   "gameName": "Palm Heel",
+   "kidLine": "Your Great Counter hits a bit harder.",
+   "written": true,
+   "shortLine": "Hook punch",
+   "attack": "Hook punch",
+   "steps": [
+    "Step and outside block.",
+    "Wrap and trap the arm.",
+    "Palm heel to the nose."
+   ],
+   "stepsNeedReview": false,
+   "result": "Arm trapped, one strong strike"
+  },
+  "8": {
+   "dojoName": "Self-Defense #8",
+   "gridName": "Defense #8",
+   "belt": "Yellow Belt",
+   "family": "guard",
+   "gameName": "Block and Strike",
+   "kidLine": "Blocks bounce some of the hit back at the attacker.",
+   "written": true,
+   "shortLine": "Hook punch",
+   "attack": "Hook punch",
+   "steps": [
+    "Step out with an outside block.",
+    "Striking the solar plexus at the same moment."
+   ],
+   "stepsNeedReview": false,
+   "result": "Blocked and hit in one motion"
+  },
+  "9": {
+   "dojoName": "Self-Defense #9",
+   "gridName": "Defense #9",
+   "belt": "Yellow Belt",
+   "family": "guard",
+   "gameName": "High Block Strike",
+   "kidLine": "Blocks bounce back even more and leave the attacker off-balance.",
+   "written": true,
+   "shortLine": "Hook punch",
+   "attack": "Hook punch",
+   "steps": [
+    "Step out with an outside block.",
+    "Attacking the nose at the same moment."
+   ],
+   "stepsNeedReview": false,
+   "result": "Blocked and hit high in one motion"
+  },
+  "10": {
+   "dojoName": "Self-Defense #10",
+   "gridName": "Defense #10",
+   "belt": "Yellow Belt",
+   "family": "counter",
+   "gameName": "Grab and Strike",
+   "kidLine": "Enemies who are off-balance or trapped take extra damage.",
+   "written": true,
+   "shortLine": "Hook punch",
+   "attack": "Hook punch",
+   "steps": [
+    "Step to the side.",
+    "Double knifehand block.",
+    "Grab the arm with the left hand.",
+    "Right back fist."
+   ],
+   "stepsNeedReview": false,
+   "result": "Arm held, struck"
+  },
+  "11": {
+   "dojoName": "Self-Defense #11",
+   "gridName": "Defense #11",
+   "belt": "Orange Belt",
+   "family": "throw",
+   "gameName": "Outside Reap",
+   "kidLine": "A Great Counter tumbles a brute or swarmer to the ground for a moment.",
+   "written": true,
+   "shortLine": "Hook punch",
+   "attack": "Hook punch",
+   "steps": [
+    "Outside block.",
+    "Osotogari.",
+    "Punch to the ribs."
+   ],
+   "stepsNeedReview": false,
+   "result": "Thrown to the ground"
+  },
+  "12": {
+   "dojoName": "Self-Defense #12",
+   "gridName": "Defense #12",
+   "belt": "Orange Belt",
+   "family": "throw",
+   "gameName": "Reap and Finish",
+   "kidLine": "Enemies you tumble take extra damage while they are on the ground.",
+   "written": true,
+   "shortLine": "Hook punch",
+   "attack": "Hook punch",
+   "steps": [
+    "Outside block.",
+    "Osotogari.",
+    "Punch to the ribs.",
+    "Stomp to the ribs."
+   ],
+   "stepsNeedReview": false,
+   "result": "Thrown, then finished on the ground"
+  },
+  "13": {
+   "dojoName": "Self-Defense #13",
+   "gridName": "Defense #13",
+   "belt": "Orange Belt",
+   "family": "disarm",
+   "gameName": "Kick the Weapon",
+   "kidLine": "A Great Counter kicks the weapon aside, so their next hit is weaker.",
+   "written": true,
+   "shortLine": "A weapon coming toward the student",
+   "attack": "A weapon coming toward the student",
+   "steps": [
+    "Jump to a fighting stance.",
+    "Inside kick the weapon.",
+    "Spin.",
+    "Side kick to the solar plexus."
+   ],
+   "stepsNeedReview": false,
+   "result": "Weapon kicked aside, then kicked"
+  },
+  "14": {
+   "dojoName": "Self-Defense #14",
+   "gridName": "Defense #14",
+   "belt": "Orange Belt",
+   "family": "disarm",
+   "gameName": "Kick and Spin",
+   "kidLine": "Your kick lasts longer: their next two hits are weaker.",
+   "written": true,
+   "shortLine": "A weapon coming toward the student",
+   "attack": "A weapon coming toward the student",
+   "steps": [
+    "Jump to a fighting stance.",
+    "Inside kick the weapon.",
+    "Turn.",
+    "Spin kick toward the head."
+   ],
+   "stepsNeedReview": false,
+   "result": "Weapon kicked aside, then high kick"
+  },
+  "15": {
+   "dojoName": "Self-Defense #15",
+   "gridName": "Defense #15",
+   "belt": "Orange Belt",
+   "family": "escape",
+   "gameName": "Slip and Double",
+   "kidLine": "Great Counters add a third quick punch and give you a little more time.",
+   "written": true,
+   "shortLine": "Straight jab",
+   "attack": "Straight jab",
+   "steps": [
+    "Step to the side.",
+    "Parry.",
+    "Outside block.",
+    "Double punch to the head."
+   ],
+   "stepsNeedReview": false,
+   "result": "Attack misses; answered with two punches"
+  },
+  "16": {
+   "dojoName": "Self-Defense #16",
+   "gridName": "Defense #16",
+   "belt": "Green Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Hook punch",
+   "attack": "Hook punch",
+   "steps": [
+    "Step to the side.",
+    "Double knifehand block.",
+    "Grab the wrist.",
+    "Strike low to the groin.",
+    "Strike high to the head."
+   ],
+   "stepsNeedReview": false,
+   "result": "Wrist held; low-then-high strikes"
+  },
+  "17": {
+   "dojoName": "Self-Defense #17",
+   "gridName": "Defense #17",
+   "belt": "Green Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Hook punch",
+   "attack": "Hook punch",
+   "steps": [
+    "Outside block.",
+    "Snake the leg between the attacker's legs.",
+    "Reach over the arm to set an arm bar.",
+    "Then reach back over and finish with an elbow strike."
+   ],
+   "stepsNeedReview": false,
+   "result": "Arm locked, then struck"
+  },
+  "18": {
+   "dojoName": "Self-Defense #18",
+   "gridName": "Defense #18",
+   "belt": "Green Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Knife stab to the midsection",
+   "attack": "Knife stab to the midsection",
+   "steps": [
+    "Slide to the side.",
+    "Parry the knife.",
+    "Right hand strikes the throat."
+   ],
+   "stepsNeedReview": false,
+   "result": "Knife misses; strong counter"
+  },
+  "19": {
+   "dojoName": "Self-Defense #19",
+   "gridName": "Defense #19",
+   "belt": "Green Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Knife stab to the midsection",
+   "attack": "Knife stab to the midsection",
+   "steps": [
+    "Slide to the side.",
+    "Parry the knife.",
+    "Grab the hand.",
+    "Set a wrist lock."
+   ],
+   "stepsNeedReview": false,
+   "result": "Knife hand controlled"
+  },
+  "20": {
+   "dojoName": "Self-Defense #20",
+   "gridName": "Defense #20",
+   "belt": "Green Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Hook punch",
+   "attack": "Hook punch",
+   "steps": [
+    "Outside block.",
+    "Grab the arm.",
+    "Punch to the face.",
+    "Retract and swing the elbow with the same arm.",
+    "Slap and grab the back of the head.",
+    "Pull it down into the knee."
+   ],
+   "stepsNeedReview": false,
+   "result": "Held through a full combo"
+  },
+  "21": {
+   "dojoName": "Self-Defense #21",
+   "gridName": "Defense #21",
+   "belt": "Blue Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Knife lunge",
+   "attack": "Knife lunge",
+   "steps": [
+    "Step on a 45.",
+    "X-block with the back of the arms.",
+    "Roll the arm up into a wrist lock.",
+    "Kick toward the face."
+   ],
+   "stepsNeedReview": false,
+   "result": "Knife hand locked, then kicked"
+  },
+  "22": {
+   "dojoName": "Self-Defense #22",
+   "gridName": "Defense #22",
+   "belt": "Blue Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Knife lunge",
+   "attack": "Knife lunge",
+   "steps": [
+    "As #21, then stomp the knee with the other leg, push the attacker down, end with the left knee in the attacker's shoulder."
+   ],
+   "stepsNeedReview": true,
+   "result": "Locked, taken down, pinned"
+  },
+  "23": {
+   "dojoName": "Self-Defense #23",
+   "gridName": "Defense #23",
+   "belt": "Blue Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Overhead knife attack",
+   "attack": "Overhead knife attack",
+   "steps": [
+    "Move on a 45.",
+    "Grab the arm.",
+    "Redirect the attack back into the attacker's leg."
+   ],
+   "stepsNeedReview": false,
+   "result": "The attacker's own attack is turned back on them"
+  },
+  "24": {
+   "dojoName": "Self-Defense #24",
+   "gridName": "Defense #24",
+   "belt": "Blue Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Straight knife lunge",
+   "attack": "Straight knife lunge",
+   "steps": [
+    "Jump on the left 90.",
+    "Hard outside kick to the wrist or elbow."
+   ],
+   "stepsNeedReview": false,
+   "result": "Weapon arm struck away"
+  },
+  "25": {
+   "dojoName": "Self-Defense #25",
+   "gridName": "Defense #25",
+   "belt": "Blue Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Knife held to the student's back",
+   "attack": "Knife held to the student's back",
+   "steps": [
+    "Reach back with the right hand.",
+    "Grab the wrist.",
+    "Step around to expose the elbow.",
+    "Strike it hard."
+   ],
+   "stepsNeedReview": false,
+   "result": "Escape from behind, arm struck"
+  },
+  "26": {
+   "dojoName": "Self-Defense #26",
+   "gridName": "Defense #26",
+   "belt": "Red Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Attacker standing with hands on hips",
+   "attack": "Attacker standing with hands on hips",
+   "steps": [
+    "Right hand reaches across.",
+    "Left arm knocks the elbow off the hip.",
+    "Trap the elbow.",
+    "Set a shoulder crank.",
+    "Finish with an arm around the neck for control."
+   ],
+   "stepsNeedReview": false,
+   "result": "Held under control"
+  },
+  "27": {
+   "dojoName": "Self-Defense #27",
+   "gridName": "Defense #27",
+   "belt": "Red Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Attacker standing with hands on hips",
+   "attack": "Attacker standing with hands on hips",
+   "steps": [
+    "As #26 with a headlock, then sweep the right leg from underneath and slam the opponent."
+   ],
+   "stepsNeedReview": true,
+   "result": "Controlled, then taken down"
+  },
+  "28": {
+   "dojoName": "Self-Defense #28",
+   "gridName": "Defense #28",
+   "belt": "Red Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Overhead knife attack",
+   "attack": "Overhead knife attack",
+   "steps": [
+    "Block high.",
+    "Reach behind.",
+    "Grab your own wrist.",
+    "Set a four-corner shoulder lock."
+   ],
+   "stepsNeedReview": false,
+   "result": "Weapon arm locked"
+  },
+  "29": {
+   "dojoName": "Self-Defense #29",
+   "gridName": "Defense #29",
+   "belt": "Red Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Two-hand choke from the front",
+   "attack": "Two-hand choke from the front",
+   "steps": [
+    "Hands up between the attacker's elbows.",
+    "Left hand to the chin.",
+    "Right hand to the back of the head.",
+    "Step back and throw the attacker by the head."
+   ],
+   "stepsNeedReview": false,
+   "result": "Choke broken, attacker thrown"
+  },
+  "30": {
+   "dojoName": "Self-Defense #30",
+   "gridName": "Defense #30",
+   "belt": "Red Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Two-hand choke from the front",
+   "attack": "Two-hand choke from the front",
+   "steps": [
+    "Hands up between the attacker's elbows.",
+    "Palms to the sides of the head.",
+    "Thumbs to the eyes."
+   ],
+   "stepsNeedReview": false,
+   "result": "Choke broken"
+  },
+  "31": {
+   "dojoName": "Self-Defense #31",
+   "gridName": "Defense #31",
+   "belt": "Red/Black Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Jab",
+   "attack": "Jab",
+   "steps": [
+    "Self defense 31: attacker throws jab, you cross step to the back as you parry and strike the arm (hyperextension), then roll it into an arm bar and control or break."
+   ],
+   "stepsNeedReview": true,
+   "result": "Joint control/break"
+  },
+  "32": {
+   "dojoName": "Self-Defense #32",
+   "gridName": "Defense #32",
+   "belt": "Red/Black Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Jab",
+   "attack": "Jab",
+   "steps": [
+    "Self defense 32: same as 31; once at arm bar, slide to the wrist and set wrist lock."
+   ],
+   "stepsNeedReview": true,
+   "result": "Joint control/break"
+  },
+  "33": {
+   "dojoName": "Self-Defense #33",
+   "gridName": "Defense #33",
+   "belt": "Red/Black Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Jab",
+   "attack": "Jab",
+   "steps": [
+    "Self defense 33: same as 32; once wrist lock is set, rotate hand to the left, bend the elbow and set a party flex."
+   ],
+   "stepsNeedReview": true,
+   "result": "Joint control/break. \"Party flex\" is a type of wrist lock."
+  },
+  "34": {
+   "dojoName": "Self-Defense #34",
+   "gridName": "Defense #34",
+   "belt": "Red/Black Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Jab",
+   "attack": "Jab",
+   "steps": [
+    "Self defense 34: same as 33 with a slam at the end."
+   ],
+   "stepsNeedReview": true,
+   "result": "Joint control/break and takedown"
+  },
+  "35": {
+   "dojoName": "Self-Defense #35",
+   "gridName": "Defense #35",
+   "belt": "Red/Black Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": "Jab",
+   "attack": "Jab",
+   "steps": [
+    "Self defense 35: attacker throws jab, slide to the side and parry, catching the hand and setting a wrist lock."
+   ],
+   "stepsNeedReview": true,
+   "result": "Wrist control/break"
+  },
+  "36": {
+   "dojoName": "Self-Defense #36",
+   "gridName": "Defense #36",
+   "belt": "Brown Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": false,
+   "shortLine": null,
+   "attack": null,
+   "steps": [],
+   "stepsNeedReview": false,
+   "result": "Joint manipulation/break"
+  },
+  "37": {
+   "dojoName": "Self-Defense #37",
+   "gridName": "Defense #37",
+   "belt": "Brown Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": false,
+   "shortLine": null,
+   "attack": null,
+   "steps": [],
+   "stepsNeedReview": false,
+   "result": "Joint manipulation/break"
+  },
+  "38": {
+   "dojoName": "Self-Defense #38",
+   "gridName": "Defense #38",
+   "belt": "Brown Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": false,
+   "shortLine": null,
+   "attack": null,
+   "steps": [],
+   "stepsNeedReview": false,
+   "result": "Joint manipulation/break into takedown"
+  },
+  "39": {
+   "dojoName": "Self-Defense #39",
+   "gridName": "Defense #39",
+   "belt": "Brown Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": false,
+   "shortLine": null,
+   "attack": null,
+   "steps": [],
+   "stepsNeedReview": false,
+   "result": "Joint manipulation/break"
+  },
+  "40": {
+   "dojoName": "Self-Defense #40",
+   "gridName": "Defense #40",
+   "belt": "Brown Belt",
+   "family": null,
+   "gameName": null,
+   "kidLine": null,
+   "written": false,
+   "shortLine": null,
+   "attack": null,
+   "steps": [],
+   "stepsNeedReview": false,
+   "result": "Joint manipulation/break and takedown"
+  }
+ },
+ "kickCombos": {
+  "1": {
+   "dojoName": "Kick Combo 1",
+   "gridName": "Kick Combo 1",
+   "belt": "White Belt",
+   "family": "strike",
+   "gameName": "Spin Kick",
+   "kidLine": "Your starting STRIKE: one strong spin kick.",
+   "written": true,
+   "shortLine": "front kick, front kick, inside kick, outside kick, spinning outside kick.",
+   "steps": [
+    "Front kick.",
+    "Front kick.",
+    "Inside kick.",
+    "Outside kick.",
+    "Spinning outside kick."
+   ],
+   "stepsNeedReview": false
+  },
+  "2": {
+   "dojoName": "Kick Combo 2",
+   "gridName": "Kick Combo 2",
+   "belt": "Yellow Belt",
+   "family": "strike",
+   "gameName": "Jumping Spins",
+   "kidLine": "Jump and spin for a few quick kicks in a row.",
+   "written": true,
+   "shortLine": null,
+   "steps": [
+    "Same as 1 with an additional 3 jumping spin kicks."
+   ],
+   "stepsNeedReview": true
+  },
+  "3": {
+   "dojoName": "Kick Combo 3",
+   "gridName": "Kick Combo 3",
+   "belt": "Orange Belt",
+   "family": "strike",
+   "gameName": "Butterfly Flow",
+   "kidLine": "A slower butterfly kick that lands extra hard.",
+   "written": true,
+   "shortLine": null,
+   "steps": [
+    "Same as 2 with an additional round kick and tornado kick (we call it butterfly kick)."
+   ],
+   "stepsNeedReview": true
+  },
+  "4": {
+   "dojoName": "Kick Combo 4",
+   "gridName": "Kick Combo 4",
+   "belt": "Green Belt",
+   "family": "strike",
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": null,
+   "steps": [
+    "Look right, step behind side kick, look left step behind side kick, left leg behind you and then use it to round house, right leg does a spin kick and tucks behind you. Then right leg does the round kick, and left leg does the spin kick."
+   ],
+   "stepsNeedReview": true
+  },
+  "5": {
+   "dojoName": "Kick Combo 5",
+   "gridName": "Kick Combo 5",
+   "belt": "Blue Belt",
+   "family": "strike",
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": null,
+   "steps": [
+    "Same as 4. Add left leg roundhouse low, step behind hook kick, right leg round house low, step behind hook kick, finish with front kick left, front kick right, front kick left."
+   ],
+   "stepsNeedReview": true
+  },
+  "6": {
+   "dojoName": "Kick Combo 6",
+   "gridName": "Kick Combo 6",
+   "belt": "Red Belt",
+   "family": "strike",
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": null,
+   "steps": [
+    "Palm down block followed by a reverse punch and immediately jumping spin kick, right leg round house kick, left leg spinning side kick. Left leg step behind hook. Right leg round house, right leg step behind hook kick. Left leg round house, right leg spin kick, right leg round house butterfly kick. Step back twice and lunge forward with a chambered jumping front kick."
+   ],
+   "stepsNeedReview": true
+  },
+  "7": {
+   "dojoName": "Kick Combo 7",
+   "gridName": "Kick Combo 7",
+   "belt": "Red/Black Belt",
+   "family": "strike",
+   "gameName": null,
+   "kidLine": null,
+   "written": true,
+   "shortLine": null,
+   "steps": [
+    "Front kick, left leg axe kick, right leg round kick, butterfly, left leg spinning heel kick and tuck left leg back. Step across centerline and throw right leg spinning hook kick."
+   ],
+   "stepsNeedReview": true
+  }
+ }
+}

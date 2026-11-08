@@ -47,4 +47,34 @@ describe('K31 boss name + small bar layout', () => {
     expect(p.left).toBeGreaterThanOrEqual(0);
     expect(gapOf(l)).toBe(BOSS_TAG.gap);
   });
+
+  // C430: at 667x375 the thunder-drum banner sat on Virtue / Strike. The action buttons (screen px, +8 px) are avoid boxes too.
+  const circle = (cx: number, cy: number, r: number): TagBox => ({ left: cx - r - 8, right: cx + r + 8, top: cy - r - 8, bottom: cy + r + 8 });
+  const buttons667: TagBox[] = [
+    circle(476, 180, 30), // Virtue
+    circle(484, 267, 38), // Strike
+    circle(598, 197, 32), // Dash
+    circle(593, 301, 50), // Counter
+    { left: 365, right: 430, top: 265, bottom: 345 }, // Stance and its name
+  ];
+  it('C430: the pair keeps clear of every action button wherever the boss stands at 667x375', () => {
+    for (let bossX = 20; bossX <= 650; bossX += 30) {
+      for (let feet = 120; feet <= 360; feet += 24) {
+        const l = bossTagLayout({ ...base, bossX, headY: feet - 60, feetY: feet, halfW: 48, avoid: buttons667 });
+        const p = pairBox(l, 48);
+        for (const b of buttons667) expect(touches(p, b), `boss ${bossX},${feet}`).toBe(false);
+        expect(p.left).toBeGreaterThanOrEqual(0);
+        expect(p.right).toBeLessThanOrEqual(667);
+        expect(p.top).toBeGreaterThanOrEqual(base.minY);
+        expect(p.bottom).toBeLessThanOrEqual(base.maxY);
+        expect(gapOf(l)).toBe(BOSS_TAG.gap);
+      }
+    }
+  });
+  it('C430: placeBossTag feeds the button boxes to the layout', () => {
+    const SRC = import.meta.glob('../../../apps/client/src/scenes/GameScene.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+    const src = Object.values(SRC)[0];
+    const fn = src.slice(src.indexOf('private placeBossTag'));
+    expect(fn.slice(0, fn.indexOf('bossTagLayout(')).includes('this.buttonKeepOut()')).toBe(true);
+  });
 });

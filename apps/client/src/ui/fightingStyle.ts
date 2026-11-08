@@ -1,8 +1,8 @@
 // P-MENU2-e: the Fighting Style model (no Phaser, so Vitest can check it). Two slots (Stance and
-// Virtue, D2), a tray of picks for the chosen slot, and the "Always with you" row. Tap a slot,
+// Virtue, D2), a tray of picks for the chosen slot, and the "Your Strike" row. Tap a slot,
 // then tap a pick (D4). Wording comes from content/abilities/fighting-style.json.
 
-import { unlockedStances, virtueTitle, type AbilityContent, type Loadout, type TrainingState } from '@dojo/sim';
+import { defaultStrikeDef, emptyLoadout, normalizeLoadout, unlockedStances, virtueTitle, type AbilityContent, type Loadout, type TrainingState } from '@dojo/sim';
 import words from '../../../../content/abilities/fighting-style.json';
 import { MIN_TAP, S1, S2, TYPE, pageDots } from './tokens';
 
@@ -65,9 +65,10 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
   const defaultVirtue = training.virtue ? earnedVirtues.find((p) => p.id === training.virtue!.def.id) : undefined;
   const virtue = earnedVirtues.find((p) => p.id === loadout?.virtue) ?? defaultVirtue ?? earnedVirtues[0] ?? null;
 
-  const always = training.abilities
-    .filter((a) => (a.kind === 'strike' || a.kind === 'seal') && a.unlocked && a.perk)
-    .map((a) => ({ id: a.perk!.id, name: a.perk!.name }));
+  // PB-03: nothing is always on now. This row shows the Strike in the Strike slot (Spin Kick when empty); PB-05 shows the slots.
+  const strikeId = normalizeLoadout(loadout, training, abilities, grandfathered)?.strike ?? null;
+  const strikeDef = abilities.strikeDefs.find((s) => s.id === strikeId) ?? defaultStrikeDef(abilities.strikeDefs);
+  const always = strikeDef ? [{ id: strikeDef.id, name: strikeDef.name }] : [];
 
   return { current: { stance, virtue }, trays: { stance: [...earnedStances, ...lockedStances], virtue: [...earnedVirtues, ...lockedVirtues] }, always };
 }
@@ -77,7 +78,8 @@ export function equipPick(loadout: Loadout | null, slot: StyleSlot, pick: StyleP
   if (!pick.earned || pick.slot !== slot) return loadout;
   // B-POLISH-2: re-tapping the equipped pick changes nothing (same object: no re-save, no pop).
   if ((slot === 'stance' ? loadout?.stance : loadout?.virtue) === pick.id) return loadout;
-  const base: Loadout = { stance: loadout?.stance ?? null, virtue: loadout?.virtue ?? null };
+  // PB-01: the Strike, kata and Seal slots are carried through untouched.
+  const base: Loadout = { ...emptyLoadout(), ...loadout };
   return slot === 'stance' ? { ...base, stance: pick.id } : { ...base, virtue: pick.id };
 }
 

@@ -129,9 +129,21 @@ export interface Profile {
   patternsSeen: string[];
   /**
    * P-MENU2-d: the Fighting Style the student picked (starting Stance and Virtue), or null for
-   * today's default (Beginner's Stance first, strongest Virtue). Strikes and Seals are always on.
+   * today's default (Beginner's Stance first, strongest Virtue). The Strike and Seals come from the other loadout slots.
    */
   loadout: Loadout | null;
+  /**
+   * R-PROGRESSION-BETA (PB-01): true once the slot seed (`seedLoadoutV2`) has run. New profiles, and
+   * old saves that never played and picked nothing, start true; an older save starts false.
+   */
+  loadoutV2: boolean;
+  /**
+   * PB-03: true once the Strike slot has been filled (`seedStrikeSlot`, or `seedLoadoutV2` which
+   * fills it too). PB-02 saves seeded before any Strike could be earned start false so it runs once.
+   */
+  strikeSeeded: boolean;
+  /** PB-01: true while the one-time "Your Seals now go in slots" note has not been dismissed. */
+  showSlotNote: boolean;
   /**
    * R-STANCE-g: Stance ids this student keeps without a teacher's sign-off. Students who played
    * before Open Leg (Ready) needed a sign-off keep it (Manager Q5 (b)).
@@ -141,10 +153,25 @@ export interface Profile {
   stanceMigrated: boolean;
 }
 
-/** P-MENU2-d: two picks only (D2). Each is an id, or null for the default. Unearned picks are ignored. */
+/**
+ * P-MENU2-d: the Fighting Style picks. R-PROGRESSION-BETA (PB-01) grows it from two picks to five
+ * slots. Each single pick is an id, or null for the default; unearned picks are ignored. A save
+ * with only `{ stance, virtue }` still loads (the new fields read as null, null and []).
+ */
 export interface Loadout {
   stance: string | null;
   virtue: string | null;
+  /** A Strike id. null = Spin Kick (the default). */
+  strike: string | null;
+  /** A kata power id. null = no kata power this run. */
+  kata: string | null;
+  /** Seal family ids, at most `sealSlots(tier)`, no repeats. */
+  seals: string[];
+}
+
+/** An empty loadout: every slot at its default. */
+export function emptyLoadout(): Loadout {
+  return { stance: null, virtue: null, strike: null, kata: null, seals: [] };
 }
 
 const LOADOUT_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -175,12 +202,13 @@ export function readLoadout(data: unknown): Loadout | null {
   // Ability ids are lowercase words joined by hyphens ("rooted-stance"). Anything else, or a
   // name every object has built in ("constructor", "toString", "__proto__"), is dropped.
   const id = (v: unknown) => (typeof v === 'string' && LOADOUT_ID.test(v) && !(v in Object.prototype) ? v : null);
-  const out = { stance: id(l.stance), virtue: id(l.virtue) };
+  const seals = Array.isArray(l.seals) ? l.seals.map(id).filter((v, i, all): v is string => v !== null && all.indexOf(v) === i) : [];
+  const out: Loadout = { stance: id(l.stance), virtue: id(l.virtue), strike: id(l.strike), kata: id(l.kata), seals };
   // R-STANCE-d1 (Manager): an old Form save keeps its migrated stance even with no virtue, so
   // { form: 'rooted-form' } becomes { stance: null (Ready), virtue: null (default) }, not null.
   const raw = data as Record<string, unknown>;
   const hadStance = 'form' in raw || raw.stance === null || (typeof raw.stance === 'string' && Object.prototype.hasOwnProperty.call(OLD_STANCE_IDS, raw.stance));
-  return out.stance || out.virtue || hadStance ? out : null;
+  return out.stance || out.virtue || out.strike || out.kata || out.seals.length > 0 || hadStance ? out : null;
 }
 
 export interface StreetSmartsSave {
@@ -225,6 +253,9 @@ export function newProfile(): Profile {
     keeperCelebrated: false,
     patternsSeen: [],
     loadout: null,
+    loadoutV2: true,
+    showSlotNote: false,
+    strikeSeeded: true,
     grandfatheredStances: [],
     stanceMigrated: true,
   };
@@ -247,7 +278,19 @@ export function migrateReadyStance(raw: { runsPlayed?: unknown; stanceMigrated?:
   if (!played && !loadout) return { loadout, grandfatheredStances: kept, stanceMigrated: true };
   const grandfatheredStances = kept.includes(READY_STANCE_ID) ? kept : [...kept, READY_STANCE_ID];
   const wasDefault = !loadout || loadout.stance === null || loadout.stance === 'beginners-stance';
-  return { loadout: wasDefault ? { stance: READY_STANCE_ID, virtue: loadout?.virtue ?? null } : loadout, grandfatheredStances, stanceMigrated: true };
+  return { loadout: wasDefault ? { ...(loadout ?? emptyLoadout()), stance: READY_STANCE_ID } : loadout, grandfatheredStances, stanceMigrated: true };
+}
+
+/**
+ * PB-01: the two slot-seed flags of a saved profile. An old save that has played, or has any
+ * pick, starts with `loadoutV2` false so `seedLoadoutV2` runs once; one that never played and
+ * picked nothing is already in the new shape. A missing `showSlotNote` is false. PB-03:
+ * `strikeSeeded` is read the same way: a save from before it that has played or has a pick starts
+ * false (so `seedStrikeSlot` or `seedLoadoutV2` runs once); one that never played is already seeded.
+ */
+function readLoadoutV2Flags(p: { loadoutV2?: unknown; showSlotNote?: unknown; strikeSeeded?: unknown; runsPlayed?: unknown; loadout?: unknown }): Pick<Profile, 'loadoutV2' | 'showSlotNote' | 'strikeSeeded'> {
+  const fresh = !(typeof p.runsPlayed === 'number' && p.runsPlayed > 0) && readLoadout(p.loadout) === null;
+  return { loadoutV2: typeof p.loadoutV2 === 'boolean' ? p.loadoutV2 : fresh, showSlotNote: p.showSlotNote === true, strikeSeeded: typeof p.strikeSeeded === 'boolean' ? p.strikeSeeded : fresh };
 }
 
 /** Reads a saved profile, falling back to a fresh one if it's missing or damaged. */
@@ -262,7 +305,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null, sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, keeperCelebrated: typeof p.keeperCelebrated === 'boolean' ? p.keeperCelebrated : oldKeeperWin(p.lastRun), patternsSeen: Array.isArray(p.patternsSeen) ? p.patternsSeen.filter((v) => typeof v === 'string') : [], ...migrateReadyStance(p, readLoadout(p.loadout)) };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null, sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, keeperCelebrated: typeof p.keeperCelebrated === 'boolean' ? p.keeperCelebrated : oldKeeperWin(p.lastRun), patternsSeen: Array.isArray(p.patternsSeen) ? p.patternsSeen.filter((v) => typeof v === 'string') : [], ...migrateReadyStance(p, readLoadout(p.loadout)), ...readLoadoutV2Flags(p) };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {

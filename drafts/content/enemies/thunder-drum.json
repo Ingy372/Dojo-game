@@ -1,13 +1,14 @@
 {
   "id": "thunder-drum",
   "name": "Thunder Drum",
-  "notes": "DRAFT for C13-3 (bestiary-plan.md). Beats a steady rhythm: boom, boom, BOOM. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Beats a steady rhythm: boom, boom, BOOM. Stats set in R-BAL-8 (#185/#186). \"stationary\": true with speed 0 = stays put (C430). Distances in tiles, times in ticks (20 per second).",
   "color": "#7a5a9e",
   "maxHealth": 55,
   "power": 11,
   "guard": 10,
   "radius": 0.4,
-  "moveSpeedTilesPerSecond": 0.0,
+  "moveSpeedTilesPerSecond": 0,
+  "stationary": true,
   "sightRange": 10,
   "attack": {
     "name": "boom",

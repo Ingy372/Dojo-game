@@ -4,7 +4,7 @@
 
 import type { TwistDef } from './twist';
 import type { StanceDef, VirtueKind } from './abilities';
-import { pushOutOfWalls } from './collision';
+import { circleHitsWall, pushOutOfWalls } from './collision';
 import { comboBonus, damage } from './combat';
 import { BOW, COMBAT, DIFFICULTY, MIN_WINDUP_TICKS, MOVEMENT, SIM_VIEW, TICKS_PER_SECOND, realSecondsToTicks, type Difficulty } from './config';
 import { noMods, type PlayerMods } from './effects';
@@ -46,6 +46,10 @@ export interface PlayerState {
   attackCooldown: number;
   /** Ticks of Strike recovery left (no attacking while above 0). */
   strikeRecovery: number;
+  /** PB-03: the equipped Strike (Spin Kick when none). */
+  strike: StrikeSetup;
+  /** PB-03: Strike hits still to land (a Strike hit with `delayTicks` lands later). */
+  pendingStrikeHits: PendingStrikeHit[];
   /** The tick Counter was last pressed, or -1. */
   counterPressedTick: number;
   /** Ticks of guard pose left after pressing Counter (0 = not guarding). */
@@ -167,6 +171,8 @@ export interface EnemyState {
   chaseTicks: number;
   /** Disarmed by a Perfect Counter: its next attack does this much less damage (0 = not disarmed). */
   disarmed: number;
+  /** PB-02: attacks left while disarmed (set by a Perfect Counter; unset = it was never disarmed). */
+  disarmLeft?: number;
   /** Elite trait (S1 #3), or null for a normal enemy. Its stats in `def` are already scaled. */
   elite: EliteKind | null;
   /** The Guarding elite protecting this enemy right now (updated every tick), or null. */
@@ -203,6 +209,8 @@ export type CombatEvent =
   | { kind: 'counterHint'; playerId: PlayerId }
   | { kind: 'block'; playerId: PlayerId; enemyId: EnemyId; damage: number }
   | { kind: 'hit'; playerId: PlayerId; enemyId: EnemyId; damage: number }
+  /** C430: a no-damage push (Bellows Puff) slid the player `tiles` away from the enemy. */
+  | { kind: 'push'; playerId: PlayerId; enemyId: EnemyId; tiles: number }
   | { kind: 'counterPressed'; playerId: PlayerId }
   | { kind: 'dash'; playerId: PlayerId }
   | { kind: 'strikeRefused'; playerId: PlayerId; reason: 'focus' | 'noTarget' }
@@ -386,6 +394,35 @@ export interface PlayerSetup {
   /** Stances to switch between; the first is active at the start. Defaults to none (Beginner's Stance). */
   stances?: StanceDef[];
   virtue?: VirtueSetup | null;
+  /** PB-03: the equipped Strike. Missing = Spin Kick (today's Strike, from COMBAT.strike). */
+  strike?: StrikeSetup;
+}
+
+/** PB-03: a Strike as a fight uses it (a StrikeDef without the words). */
+export interface StrikeSetup {
+  id: string;
+  focusCost: number;
+  hits: { strength: number; delayTicks: number }[];
+  reach: number;
+  lungeTiles: number;
+  recoveryTicks: number;
+}
+
+/** A Strike hit waiting to land (see `StrikeSetup.hits`). */
+export interface PendingStrikeHit {
+  ticks: number;
+  enemyId: EnemyId;
+  strength: number;
+}
+
+/** Spin Kick: the Strike every student has. These are the numbers the Strike had before PB-03. */
+export function defaultStrike(): StrikeSetup {
+  const s = COMBAT.strike;
+  return { id: 'spin-kick', focusCost: s.focusCost, hits: [{ strength: s.strength, delayTicks: 0 }], reach: s.reach, lungeTiles: s.lungeTiles, recoveryTicks: s.recoveryTicks };
+}
+
+function cloneStrike(s: StrikeSetup): StrikeSetup {
+  return { ...s, hits: s.hits.map((h) => ({ ...h })) };
 }
 
 /** The Beginner's Stance: no changes. Used when the player has no Stances. */
@@ -417,6 +454,8 @@ export function createWorld(room: Room, playerIds: PlayerId[], options: WorldOpt
       perfects: 0,
       attackCooldown: 0,
       strikeRecovery: 0,
+      strike: options.player?.strike ? cloneStrike(options.player.strike) : defaultStrike(),
+      pendingStrikeHits: [],
       counterPressedTick: -1,
       guardTicks: 0,
       counterLockout: 0,
@@ -744,7 +783,7 @@ export function activeStance(p: PlayerState): StanceDef {
 
 /** Focus a Strike costs this player (Strike upgrades can lower it). */
 export function strikeCost(p: PlayerState): number {
-  return Math.max(10, COMBAT.strike.focusCost - p.mods.strikeCostCut);
+  return Math.max(10, p.strike.focusCost - p.mods.strikeCostCut);
 }
 
 /** The player's Guard with the active Stance. */
@@ -774,6 +813,7 @@ function stepPlayer(world: WorldState, p: PlayerState, room: Room, input: Player
 
   if (p.attackCooldown > 0) p.attackCooldown--;
   if (p.strikeRecovery > 0) p.strikeRecovery--;
+  landPendingStrikeHits(world, p);
   if (p.counterLockout > 0) p.counterLockout--;
   if (p.dashCooldown > 0) p.dashCooldown--;
   if (p.stanceCooldown > 0) p.stanceCooldown--;
@@ -895,7 +935,7 @@ function useVirtue(world: WorldState, p: PlayerState): void {
 }
 
 function tryStrike(world: WorldState, p: PlayerState, room: Room): void {
-  const s = COMBAT.strike;
+  const s = p.strike;
   const cost = strikeCost(p);
   if (p.focus < cost) {
     world.events.push({ kind: 'strikeRefused', playerId: p.id, reason: 'focus' });
@@ -917,10 +957,29 @@ function tryStrike(world: WorldState, p: PlayerState, room: Room): void {
   p.focus -= cost;
   p.strikeRecovery = s.recoveryTicks;
   p.attackCooldown = Math.max(p.attackCooldown, s.recoveryTicks);
-  landHit(world, p, target, 'strike', s.strength, COMBAT.focus.perHit);
-  // Double Strike: a second, lighter hit right after.
+  // PB-03: every hit in the Strike's list. A hit with no delay lands now; the rest land later.
+  s.hits.forEach((h, i) => {
+    if (h.delayTicks > 0) p.pendingStrikeHits.push({ ticks: h.delayTicks, enemyId: target.id, strength: h.strength });
+    else if (i === 0 || isEnemyPresent(target)) landHit(world, p, target, 'strike', h.strength, COMBAT.focus.perHit);
+  });
+  // Double Strike (an effect from a charm or Insight): a second, lighter hit right after the first.
   if (p.mods.strikeExtraHit > 0 && isEnemyPresent(target)) {
-    landHit(world, p, target, 'chain', s.strength * p.mods.strikeExtraHit, COMBAT.focus.perHit);
+    landHit(world, p, target, 'chain', s.hits[0].strength * p.mods.strikeExtraHit, COMBAT.focus.perHit);
+  }
+}
+
+/** PB-03: counts down the Strike hits still to land and lands the ones that are due, on the enemy they were aimed at. */
+function landPendingStrikeHits(world: WorldState, p: PlayerState): void {
+  if (p.pendingStrikeHits.length === 0) return;
+  const due: PendingStrikeHit[] = [];
+  p.pendingStrikeHits = p.pendingStrikeHits.filter((h) => {
+    if (--h.ticks > 0) return true;
+    due.push(h);
+    return false;
+  });
+  for (const h of due) {
+    const e = world.enemies.find((x) => x.id === h.enemyId);
+    if (e && isEnemyPresent(e)) landHit(world, p, e, 'strike', h.strength, COMBAT.focus.perHit);
   }
 }
 
@@ -1023,6 +1082,7 @@ function returnToStart(world: WorldState, p: PlayerState, room: Room): void {
   p.combo = 0;
   p.attackCooldown = 0;
   p.strikeRecovery = 0;
+  p.pendingStrikeHits = [];
   p.counterPressedTick = -1;
   p.guardTicks = 0;
   p.counterLockout = 0;
@@ -1187,7 +1247,7 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
         const done = currentAttack(e);
         e.mode = 'recover';
         e.modeTicks = done.recoverTicks;
-        resolveAttack(world, e);
+        resolveAttack(world, room, e);
         e.attackCenter = null;
         if (done.followUp && e.mode === 'recover') {
           // R-CHALLENGE P2: first hit of a two-part attack: wait the gap, then wind up the second.
@@ -1259,6 +1319,8 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
     startWindup(world, e);
     return;
   }
+  // C430: a stationary enemy (true speed 0) never walks, circles or paths; it only winds up when you are in range.
+  if (e.def.stationary) return;
   const speed = e.def.moveSpeedTilesPerSecond / TICKS_PER_SECOND;
   if (!canAttack && !closer && dist <= a.startRange + COMBAT.circleExtraRange) {
     // Waiting its turn ("kung fu circle"): circle around the player at a little distance.
@@ -1294,7 +1356,7 @@ function chase(world: WorldState, e: EnemyState, room: Room): void {
 }
 
 /** The swing lands: each player in the danger area gets a Perfect Counter, a Block, or a Hit. */
-function resolveAttack(world: WorldState, e: EnemyState): void {
+function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
   world.events.push({ kind: 'enemySwing', enemyId: e.id });
   const center = e.attackCenter;
   if (!center) return;
@@ -1304,7 +1366,12 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
   const pushing = e.disarmed > 0 && e.def.weapon !== null;
   const power = pushing ? e.def.weapon!.disarmedPower : e.def.power;
   const weak = pushing ? 1 : 1 - e.disarmed;
-  e.disarmed = 0;
+  // PB-02 (Kick and Spin): a disarm can last more than one swing.
+  if (e.disarmLeft !== undefined && e.disarmLeft > 1) e.disarmLeft--;
+  else {
+    e.disarmed = 0;
+    e.disarmLeft = undefined;
+  }
   for (const id of Object.keys(world.players).sort()) {
     const p = world.players[id];
     if (!isActive(p)) continue;
@@ -1327,11 +1394,22 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       if (world.bells < bellsNeeded) world.events.push({ kind: 'bell', count: ++world.bells, of: bellsNeeded });
       if (p.mods.healOnPerfect > 0) p.health = Math.min(p.maxHealth, p.health + p.mods.healOnPerfect);
       landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, chainFocus(p.counterChain));
+      // Off the Line / Slip and Double: quick extra punches, no extra Focus.
+      for (let i = 0; i < p.mods.counterHits && e.mode !== 'defeated'; i++) landHit(world, p, e, 'counter', p.mods.counterHitStrength, 0);
       if (e.mode !== 'defeated') {
         e.mode = 'stagger';
         e.modeTicks = COMBAT.counter.perfectStaggerTicks + p.mods.staggerTicks;
         // Disarm: this attacker's next attack is weaker.
-        if (p.mods.disarm > 0) e.disarmed = Math.max(e.disarmed, p.mods.disarm);
+        if (p.mods.disarm > 0) {
+          e.disarmed = Math.max(e.disarmed, p.mods.disarm);
+          e.disarmLeft = Math.max(e.disarmLeft ?? 0, 1, p.mods.disarmAttacks);
+        }
+        // Drive Back: the attacker is pushed away from the player (bosses stay put).
+        if (p.mods.counterPush > 0 && !e.def.boss) {
+          const away = directionTo(p.pos, e.pos);
+          e.pos = { x: e.pos.x + away.x * p.mods.counterPush, y: e.pos.y + away.y * p.mods.counterPush };
+          pushOutOfWalls(room, e.pos, e.def.radius);
+        }
       }
       // Ripple Counter: the counter also hits every other enemy nearby.
       if (p.mods.rippleRadius > 0) {
@@ -1348,18 +1426,27 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       // counts as the same Block, for everyone. B-MASHER-2 (E3): only until the room's 3rd Perfect Counter.
       p.guardTicks = 0;
       const share = blockShare(p);
-      const dmg = damage(power, a.strength * share * weak, guardOf(p));
+      // C430: a no-damage push (Bellows Puff) is simply held off by a Block: no damage, no slide, nothing to bounce back.
+      const dmg = e.def.push ? 0 : damage(power, a.strength * share * weak, guardOf(p));
       world.events.push({ kind: 'block', playerId: p.id, enemyId: e.id, damage: dmg });
       if (p.mods.dashOnBlock) p.dashCooldown = 0;
       // L-PREMIUM-b (Manager, decided): a Block made by the Mash guard, not by a Counter press, is a
       // Counter window with no answer, so it is a miss. A real Block (guarding) or a Dash never is.
       if (!guarding && !counterPressedLately(world, p) && p.dashTicks === 0) noteCounterMiss(world, p);
-      hurt(world, p, dmg);
+      if (dmg > 0 || !e.def.push) hurt(world, p, dmg);
       // Iron Skin: part of the full hit bounces back (shields stop it, unless Shield Breaker).
-      if (p.mods.blockReflect > 0 && isEnemyPresent(e) && (!e.shieldUp || p.mods.shieldBreaker)) {
+      if (!e.def.push && p.mods.blockReflect > 0 && isEnemyPresent(e) && (!e.shieldUp || p.mods.shieldBreaker)) {
         const back = Math.max(1, Math.round(damage(e.def.power, a.strength, guardOf(p)) * p.mods.blockReflect));
         hurtEnemy(world, p, e, 'reflect', back);
+        // High Block Strike: a bounced hit leaves the attacker off-balance.
+        if (p.mods.reflectStaggerTicks > 0 && e.mode !== 'defeated') {
+          e.mode = 'stagger';
+          e.modeTicks = Math.max(e.modeTicks, p.mods.reflectStaggerTicks);
+        }
       }
+    } else if (e.def.push) {
+      // C430: a no-damage push. No damage, so the combo stays and it is not a Counter miss; the player slides away.
+      pushPlayer(world, room, p, e, e.def.push.distanceTiles);
     } else {
       // Hit: full damage, combo resets.
       const dmg = damage(power, a.strength * weak, guardOf(p));
@@ -1371,6 +1458,26 @@ function resolveAttack(world: WorldState, e: EnemyState): void {
       hurt(world, p, dmg);
     }
   }
+}
+
+/**
+ * C430: Bellows Puff's gust. Slides the player `tiles` straight away from the enemy, a little at a time so it stops at the
+ * first wall (never through one). The sim has no hazards or ledges, so there is nothing to push into; the data says
+ * `intoHazard: false` and the loader refuses anything else. Cancels a tap-to-walk path; no damage.
+ */
+function pushPlayer(world: WorldState, room: Room, p: PlayerState, e: EnemyState, tiles: number): void {
+  const away = directionTo(e.pos, p.pos);
+  const step = 0.1;
+  let moved = 0;
+  while (moved < tiles - 1e-9) {
+    const d = Math.min(step, tiles - moved);
+    const next = { x: p.pos.x + away.x * d, y: p.pos.y + away.y * d };
+    if (circleHitsWall(room, next, R)) break;
+    p.pos = next;
+    moved += d;
+  }
+  p.path = null;
+  world.events.push({ kind: 'push', playerId: p.id, enemyId: e.id, tiles: Math.round(moved * 100) / 100 });
 }
 
 /** L-PREMIUM-b: the player pressed Counter recently enough that this swing was answered (guard, window and lockout). */
@@ -1555,6 +1662,7 @@ function resetEnemy(world: WorldState, e: EnemyState): void {
   e.splitDone = false;
   e.chaseTicks = 0;
   e.disarmed = 0;
+  e.disarmLeft = undefined;
   world.events.push({ kind: 'enemySpawn', enemyId: e.id });
 }
 

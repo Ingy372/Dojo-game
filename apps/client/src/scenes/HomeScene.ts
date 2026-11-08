@@ -32,13 +32,14 @@ import {
   type TrainingState,
   kataArrows,
   activeDifficulty,
+  seedFakeStudent,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
 import { STYLE_LEFT_SHARE, STYLE_LEFT_SHARE_MIN, STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
 import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, pinnedAgain, runId, headingSparkle, sparkleStars, SPARKLE_W, statStack, takeCountUp, takeLevelUpSound, type FoundTile, type KeyStore } from '../ui/lastRun';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
-import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, slotEmptyLine, tileBox, toggleFilter } from '../ui/gearBoard';
+import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, gearSheetBox, slotEmptyLine, tileBox, toggleFilter, bagScreenLayout, bagTileBox, BAG_SCREEN, bagPageCount, turnBagPage, sheetAtTop } from '../ui/gearBoard';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining, selectProfile, shortDate } from '../game/student';
@@ -127,6 +128,12 @@ export class HomeScene extends Phaser.Scene {
   private gearRings: Partial<Record<GearSlot, { visual: Phaser.GameObjects.Container; x: number; y: number; icon: Phaser.GameObjects.Image | null }>> = {};
   private gearTiles: Record<string, { x: number; y: number }> = {};
   private gearDollGlow: Phaser.GameObjects.Ellipse | null = null;
+  /** MENU-BAG-01: the full-screen Bag (6 x 4 a page) is open; it sits on its own layer above the tab panel. */
+  private bagOpen = false;
+  /** MENU-BAG-01 B1: the Bag's own page. renderGear (the tab behind it) clamps `page` to its own page count, which reset the Bag's. */
+  private bagPage = 0;
+  private bagLayer: Phaser.GameObjects.Container | null = null;
+  private bagTileViews: Record<string, Phaser.GameObjects.Container> = {};
   /** Where the draw helpers add things: the shell, the tab bar or the panel (P-MENU-b). */
   private ui!: Phaser.GameObjects.Container;
   /** P-MENU-b: background, left column and panel frame. Redrawn on create, refresh and resize. */
@@ -504,6 +511,7 @@ export class HomeScene extends Phaser.Scene {
       panel.setPosition(swap.dx, 0).setAlpha(swap.fromAlpha);
       this.tweens.add({ targets: panel, x: 0, alpha: 1, duration: swap.ms, ease: swap.ease });
     }
+    this.renderBagLayer();
   }
 
   /**
@@ -649,9 +657,8 @@ export class HomeScene extends Phaser.Scene {
     this.text(px, ty, 'YOUR NEXT STEP', TYPE.label, '#ffd166', true);
     ty += TYPE.label + (padP === S3 ? S2 : 4);
     if (p.next) {
-      // The video library arrives with the real DojoForge connection.
-      const video = this.text(x + w - padP, ty + 3, '▶ Video soon', TYPE.label, '#6b6478').setOrigin(1, 0);
-      this.oneLine(this.text(px, ty, p.next.name, TYPE.title, '#ffffff', true), pw - video.width - S2, TYPE.body);
+      // G2B12-FIXES: no "Video soon" tag until a video exists (the library arrives with the real DojoForge connection).
+      this.oneLine(this.text(px, ty, p.next.name, TYPE.title, '#ffffff', true), pw, TYPE.body);
       ty += TYPE.title + S2;
       if (p.next.catchUp) {
         this.text(px, ty, `Catch-up from ${p.next.beltName}`, TYPE.label, '#ffd166');
@@ -706,7 +713,7 @@ export class HomeScene extends Phaser.Scene {
   /**
    * P-MENU2-g: the Last run "Scroll of the Climb". A paper scroll (rolled wood ends drawn in
    * code): a banner in kind words with Bests, room chips, stat tiles that count up once per run,
-   * an XP fill, the Found strip (every tile opens its sheet), "Always with you", "New for you"
+   * an XP fill, the Found strip (every tile opens its sheet), "New for you"
    * (only when there is one) and a big Again! button. Positions come from lastRunLayout().
    */
   private renderRun(x: number, y: number, w: number, h: number, visibleH = h): void {
@@ -906,9 +913,10 @@ export class HomeScene extends Phaser.Scene {
       } else b.visual.add(houseIcon(this, 0, 0, s - 16));
     });
 
-    // Always with you: what's always on (shown, not picked).
+    // Your Strike: the Strike in the Strike slot (shown, not picked; PB-05 adds the slots).
     if (L.perAlways > 0) {
       this.text(X(0), Y(L.alwaysLabelY), LASTRUN_WORDS.always, TYPE.label, WOOD.ink, true);
+      if (!this.styleModel().always.length) this.text(X(0), Y(L.alwaysY), LASTRUN_WORDS.alwaysEmpty, TYPE.label, WOOD.ink);
       this.styleModel().always.slice(0, L.perAlways).forEach((a, i) => {
         const s = L.alwaysIcon;
         const ax = X(i * (s + S1));
@@ -1058,7 +1066,7 @@ export class HomeScene extends Phaser.Scene {
 
   /**
    * P-MENU2-e: Fighting Style. Two slot cards (Stance, Virtue), the tray of picks for the chosen
-   * slot, a plain-words preview, and the "Always with you" row. Tap a slot, then a pick (D4); the
+   * slot, a plain-words preview, and the "Your Strike" row. Tap a slot, then a pick (D4); the
    * pick is saved at once. Not-yet picks say "Learn this at the dojo" and open their sheet.
    * Placeholder art drawn in code until Jay OKs the #265 art.
    */
@@ -1118,7 +1126,7 @@ export class HomeScene extends Phaser.Scene {
       button(this, { x, y: ty, w: MIN_TAP, h: L.tileH, label: '◀', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo === 0, onTap: () => this.turnTray(-1) }, this.ui);
       button(this, { x: x + L.leftW - MIN_TAP, y: ty, w: MIN_TAP, h: L.tileH, label: '▶', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo >= tp.pages - 1, onTap: () => this.turnTray(1) }, this.ui);
     }
-    // P-MENU2-f: page dots under the tray (in the gap before "Always with you"), no numbers.
+    // P-MENU2-f: page dots under the tray (in the gap before "Your Strike"), no numbers.
     for (const d of trayDots(tp.pages, this.trayPageNo, L.leftW)) this.ui.add(this.add.circle(x + d.x, ty + L.tileH + S2 / 2, 3, d.on ? 0xffd166 : WOOD.paper, d.on ? 1 : 0.35).setData('trayDot', d.on));
     // Tiles are centred in the room between the arrows (or the whole row).
     const room = L.leftW - 2 * tp.tilesX;
@@ -1170,7 +1178,7 @@ export class HomeScene extends Phaser.Scene {
     };
     if (place(S2) + S1 > hy) { title.setFontSize(TYPE.body); body.setFontSize(TYPE.label); if (place(S2) + S1 > hy) place(S1); }
 
-    // "Always with you": Strikes and Seals are always on, so they are shown, not picked.
+    // "Your Strike": the Strike in the Strike slot is shown here, not picked (PB-05 adds the slot picks).
     const ay = y + L.alwaysY;
     this.text(x, ay, STYLE_WORDS.always, TYPE.label, '#f2e3c4', true);
     const iy = ay + TYPE.label + S1;
@@ -1484,17 +1492,17 @@ export class HomeScene extends Phaser.Scene {
   }
 
   /** P-MENU2-b: ◀ dots ▶ (44 tall). Dots only, never "n / m". */
-  private trophyPager(x: number, y: number, w: number, pages: number): void {
+  private trophyPager(x: number, y: number, w: number, pages: number, dotsCy: number = y + 22, page: number = this.page): void {
     woodSkin(this, this.button(x, y, GEAR.arrowW, 44, '◀', WOOD.switchOff, 15, () => this.turn(-1)), GEAR.arrowW, 44);
     woodSkin(this, this.button(x + w - GEAR.arrowW, y, GEAR.arrowW, 44, '▶', WOOD.switchOff, 15, () => this.turn(1)), GEAR.arrowW, 44);
-    this.pageDotsRow(x + GEAR.arrowW, y + 22, w - 2 * GEAR.arrowW, pages);
+    this.pageDotsRow(x + GEAR.arrowW, dotsCy, w - 2 * GEAR.arrowW, pages, page);
   }
 
   /** Page dots centred in a strip (never "n / m"). */
-  private pageDotsRow(x: number, cy: number, w: number, pages: number): void {
+  private pageDotsRow(x: number, cy: number, w: number, pages: number, page: number = this.page): void {
     const d = pageDots(pages, w);
     if (!d) return;
-    for (let i = 0; i < pages; i++) this.ui.add(this.add.circle(x + d.x0 + i * d.step, cy, GEAR.dot / 2, i === this.page ? 0xffd166 : WOOD.paper, i === this.page ? 1 : 0.35));
+    for (let i = 0; i < pages; i++) this.ui.add(this.add.circle(x + d.x0 + i * d.step, cy, GEAR.dot / 2, i === page ? 0xffd166 : WOOD.paper, i === page ? 1 : 0.35));
   }
 
   /** P-MENU2-b: the detail sheet: icon, real name, one line of what it does, the status line and kata arrows. */
@@ -1721,7 +1729,7 @@ export class HomeScene extends Phaser.Scene {
       else v.add(slotGlyph(this, slot, 0, 0, R - 22, item ? 0x3a2618 : 0x6b5440));
       this.gearRings[slot] = { visual: v, x: cx, y: cy, icon };
     });
-    // "Always with you": Strikes and Seals are always on, so they are shown here too.
+    // "Your Strike": the Strike in the Strike slot is shown here too (PB-05 adds the slot picks).
     const ay = y + L.alwaysY;
     if (L.alwaysRows > 0) {
       const always = this.styleModel().always;
@@ -1749,8 +1757,17 @@ export class HomeScene extends Phaser.Scene {
       const b = button(this, { x: gx + i * (MIN_TAP + S1), y: y + L.filterY, w: MIN_TAP, h: GEAR_BOARD.filterH, label: '', color: on ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: on, stroke: WOOD.grain, onTap: () => this.filterGear(slot) }, this.ui);
       b.visual.setData('gearFilter', slot).add(slotGlyph(this, slot, 0, 0, 22, on ? 0xfff6e6 : 0xd9c6a3));
     });
+    // MENU-BAG-01: "Bag" opens the full-screen bag (6 x 4 a page). It sits at the end of the filter row when
+    // the row has room, otherwise in the middle of the pager row (the page dots move up a little).
+    const bagBtnW = 56;
+    const filtersW = 3 * MIN_TAP + 2 * S1;
+    const roomy = L.gridW >= filtersW + S1 + bagBtnW;
+    const bagX = roomy ? gx + L.gridW - bagBtnW : gx + Math.floor((L.gridW - bagBtnW) / 2);
+    const bagY = roomy ? y + L.filterY : y + L.pagerY;
+    const bagBtn = button(this, { x: bagX, y: bagY, w: bagBtnW, h: GEAR_BOARD.filterH, label: W.openBag, color: WOOD.switchOff, size: TYPE.label, stroke: WOOD.grain, onTap: () => this.openBag() }, this.ui);
+    bagBtn.visual.setData('openBag', true);
     const fx = gx + 3 * (MIN_TAP + S1) + S1;
-    this.oneLine(this.text(fx, y + L.filterY + GEAR_BOARD.filterH / 2, this.gearFilter ? W.slots[this.gearFilter] : '', TYPE.body, '#f2e3c4', true).setOrigin(0, 0.5), x + w - fx, TYPE.label);
+    if (roomy && this.gearFilter && bagX - S1 - fx >= 44) this.oneLine(this.text(fx, y + L.filterY + GEAR_BOARD.filterH / 2, W.slots[this.gearFilter], TYPE.body, '#f2e3c4', true).setOrigin(0, 0.5), bagX - S1 - fx, TYPE.label);
 
     // The bag grid. Order ignores what's worn, so wearing never moves a tile; worn ones get a gold ✓.
     const bag = filterBag(this.profile.inventory, this.gearFilter);
@@ -1767,83 +1784,88 @@ export class HomeScene extends Phaser.Scene {
     let pickedBottom = 0;
     bag.slice(this.page * L.perPage, (this.page + 1) * L.perPage).forEach((it, i) => {
       const box = tileBox(L, i);
-      const tx = x + box.x;
-      const ty = y + box.y;
-      const worn = wornItem(this.profile, it.slot);
-      const cmp = compareWith(it, worn);
-      const sel = this.selected === it.uid;
-      if (sel) pickedBottom = ty + box.h;
-      const b = button(this, { x: tx, y: ty, w: box.w, h: box.h, label: '', color: sel ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: sel, stroke: RARITY_COLOR[it.rarity], onTap: () => this.pick(it.uid) }, grid);
-      const v = b.visual.setData('gearTile', it.uid);
-      // P-MENU2-i: the rarity frame (72 x 88 tile in an 84 x 100 file); Selected art while picked.
-      const tileArt = sel ? 'bag-tile-selected' : `bag-tile-${artRarity(it.rarity)}`;
-      // QA: one uniform scale (fit to the width, the plain middle cropped out), never stretched.
-      // A-LEGENDARY-wire: Legendary is a 9-slice (true-size corners at any tile size) with the gem crest on the top rail, unstretched.
-      const legend = it.rarity === 'legendary' ? menu2Slice(this, 'bag-tile-legendary-9slice', -box.w / 2 - 6, -box.h / 2 - 6, box.w + 12, box.h + 12) : null;
-      const halves = legend ? null : menu2Fit(this, tileArt, box.w, box.h, 6);
-      const tileSkin = legend ?? halves?.[0] ?? null;
-      if (legend) {
-        skinButton(this, b, legend, 'bag-tile-legendary-9slice');
-        const crest = menu2Image(this, 'bag-tile-legendary-crest', 0, -box.h / 2 - 6, 84, 100);
-        if (crest) v.addAt(crest.setOrigin(0.5, 0).setData('legendCrest', true), 2);
-        v.setData('legendFrame', true);
-        // Manager's call: a picked Legendary keeps its frame and crest; the selected highlight is drawn on top (cream ring just inside the gold rim, honey glow outside it).
-        if (sel) {
-          const hl = this.add.graphics().setData('legendSelected', true);
-          hl.lineStyle(3, 0xffd166, 0.9).strokeRoundedRect(-box.w / 2 - 3, -box.h / 2 - 3, box.w + 6, box.h + 6, 10);
-          hl.lineStyle(2, 0xfff6d8, 1).strokeRoundedRect(-box.w / 2 + LEGEND_RIM.side + 1, -box.h / 2 + LEGEND_RIM.side + 1, box.w - 2 * LEGEND_RIM.side - 2, box.h - 2 * LEGEND_RIM.side - 2, 6);
-          v.add(hl);
-        }
-        b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => legend.setTint(0xd8c8b0));
-        const up = () => legend.active && legend.clearTint();
-        b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, up);
-        b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, up);
-      } else if (halves) {
-        skinButton(this, b, halves[0], tileArt, 'bag-tile-pressed');
-        halves.slice(1).forEach((hb) => {
-          v.addAt(hb, 2);
-          b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => setMenu2(this, hb, 'bag-tile-pressed'));
-          const up = () => hb.active && setMenu2(this, hb, tileArt);
-          b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, up);
-          b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, up);
-        });
-        v.setData('tileFit', halves.map((im) => [im.scaleX, im.scaleY]));
-      }
-      // Icon above, the small rarity word under it (12 px, ≥8 px side padding, B-POLISH-2 wrap rules).
-      const lh = GEAR_BOARD.labelH;
-      // A-LEGENDARY-wire: on the Legendary frame the word sits 8 px above the gold rim (descenders included), so the icon gives up the height.
-      const wordBottom = legend ? box.h / 2 - LEGEND_RIM.bottom - LEGEND_CLEAR : box.h / 2 - S1 - 1;
-      const iconS = legend ? Math.min(GEAR_BOARD.iconMax, wordBottom - lh - S1 - (-box.h / 2 + S1 + 2)) : Math.min(GEAR_BOARD.iconMax, box.h - lh - 3 * S1 - 4);
-      const iy = -box.h / 2 + S1 + 2 + iconS / 2;
-      const icon = addGearIcon(this, it, 0, iy, iconS);
-      if (icon) v.add(icon);
-      else v.add(slotGlyph(this, it.slot, 0, iy, iconS - 8, RARITY_COLOR[it.rarity]));
-      const tw = cubbyTextW(box.w);
-      const word = rarityName(it.rarity);
-      const lab = this.add.text(0, wordBottom, word, { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold', color: tileSkin ? RARITY_INK[it.rarity] : css(RARITY_COLOR[it.rarity]), align: 'center', wordWrap: { width: tw } }).setOrigin(0.5, 1).setResolution(crisp()).setData('rarityWord', true);
-      v.add(wrapLikeCubby(lab, word, tw).setMaxLines(1));
-      if (cmp.overall === 'worn') {
-        v.add(this.add.circle(-box.w / 2 + 9, -box.h / 2 + 9, 7, 0xffd166));
-        v.add(this.add.text(-box.w / 2 + 9, -box.h / 2 + 9, '✓', { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#3a2618', fontStyle: 'bold' }).setOrigin(0.5).setResolution(crisp()));
-      } else if (cmp.overall === 'up' || cmp.overall === 'down') {
-        v.add(this.add.circle(box.w / 2 - 9, -box.h / 2 + 9, 7, COMPARE_COLOR[cmp.overall]));
-        v.add(this.add.text(box.w / 2 - 9, -box.h / 2 + 9, ARROW[cmp.overall], { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#1e1a2b', fontStyle: 'bold' }).setOrigin(0.5).setResolution(crisp()));
-      }
-      this.gearTiles[it.uid] = { x: tx + box.w / 2, y: ty + box.h / 2 };
+      if (this.selected === it.uid) pickedBottom = y + box.y + box.h;
+      this.gearTile(it, x + box.x, y + box.y, box, grid);
     });
     // ◀ dots ▶ always has its row reserved, so the grid never shifts when pages appear.
-    if (pages > 1) this.trophyPager(gx, y + L.pagerY, L.gridW, pages);
+    if (pages > 1) this.trophyPager(gx, y + L.pagerY, L.gridW, pages, roomy ? y + L.pagerY + 22 : y + L.pagerY - S1 - 3);
 
     const picked = this.pickedItem();
-    if (picked) this.renderSheet(picked, x, y, w, y + h, pickedBottom);
+    const sb = gearSheetBox(L, w, h); // G2B12-FIXES: keeps the "Your Strike" row showing
+    if (picked) this.renderSheet(picked, x + sb.x, y, sb.w, y + h, pickedBottom, sb.lift);
+  }
+
+  /** One bag tile at (tx, ty), bw x bh: rarity frame, icon, rarity word, worn / compare badge. Shared by the Gear tab and the Bag screen. */
+  private gearTile(it: GearItem, tx: number, ty: number, box: { w: number; h: number }, grid: Phaser.GameObjects.Container): void {
+    const worn = wornItem(this.profile, it.slot);
+    const cmp = compareWith(it, worn);
+    const sel = this.selected === it.uid;
+    const b = button(this, { x: tx, y: ty, w: box.w, h: box.h, label: '', color: sel ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: sel, stroke: RARITY_COLOR[it.rarity], onTap: () => this.pick(it.uid) }, grid);
+    const v = b.visual.setData('gearTile', it.uid);
+    if (this.bagOpen) this.bagTileViews[it.uid] = v;
+    // P-MENU2-i: the rarity frame (72 x 88 tile in an 84 x 100 file); Selected art while picked.
+    const tileArt = sel ? 'bag-tile-selected' : `bag-tile-${artRarity(it.rarity)}`;
+    // QA: one uniform scale (fit to the width, the plain middle cropped out), never stretched.
+    // A-LEGENDARY-wire: Legendary is a 9-slice (true-size corners at any tile size) with the gem crest on the top rail, unstretched.
+    const legend = it.rarity === 'legendary' ? menu2Slice(this, 'bag-tile-legendary-9slice', -box.w / 2 - 6, -box.h / 2 - 6, box.w + 12, box.h + 12) : null;
+    const halves = legend ? null : menu2Fit(this, tileArt, box.w, box.h, 6);
+    const tileSkin = legend ?? halves?.[0] ?? null;
+    if (legend) {
+      skinButton(this, b, legend, 'bag-tile-legendary-9slice');
+      const crest = menu2Image(this, 'bag-tile-legendary-crest', 0, -box.h / 2 - 6, 84, 100);
+      if (crest) v.addAt(crest.setOrigin(0.5, 0).setData('legendCrest', true), 2);
+      v.setData('legendFrame', true);
+      // Manager's call: a picked Legendary keeps its frame and crest; the selected highlight is drawn on top (cream ring just inside the gold rim, honey glow outside it).
+      if (sel) {
+        const hl = this.add.graphics().setData('legendSelected', true);
+        hl.lineStyle(3, 0xffd166, 0.9).strokeRoundedRect(-box.w / 2 - 3, -box.h / 2 - 3, box.w + 6, box.h + 6, 10);
+        hl.lineStyle(2, 0xfff6d8, 1).strokeRoundedRect(-box.w / 2 + LEGEND_RIM.side + 1, -box.h / 2 + LEGEND_RIM.side + 1, box.w - 2 * LEGEND_RIM.side - 2, box.h - 2 * LEGEND_RIM.side - 2, 6);
+        v.add(hl);
+      }
+      b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => legend.setTint(0xd8c8b0));
+      const up = () => legend.active && legend.clearTint();
+      b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, up);
+      b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, up);
+    } else if (halves) {
+      skinButton(this, b, halves[0], tileArt, 'bag-tile-pressed');
+      halves.slice(1).forEach((hb) => {
+        v.addAt(hb, 2);
+        b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => setMenu2(this, hb, 'bag-tile-pressed'));
+        const up = () => hb.active && setMenu2(this, hb, tileArt);
+        b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, up);
+        b.hit.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, up);
+      });
+      v.setData('tileFit', halves.map((im) => [im.scaleX, im.scaleY]));
+    }
+    // Icon above, the small rarity word under it (12 px, ≥8 px side padding, B-POLISH-2 wrap rules).
+    const lh = GEAR_BOARD.labelH;
+    // A-LEGENDARY-wire: on the Legendary frame the word sits 8 px above the gold rim (descenders included), so the icon gives up the height.
+    const wordBottom = legend ? box.h / 2 - LEGEND_RIM.bottom - LEGEND_CLEAR : box.h / 2 - S1 - 1;
+    const iconS = legend ? Math.min(GEAR_BOARD.iconMax, wordBottom - lh - S1 - (-box.h / 2 + S1 + 2)) : Math.min(GEAR_BOARD.iconMax, box.h - lh - 3 * S1 - 4);
+    const iy = -box.h / 2 + S1 + 2 + iconS / 2;
+    const icon = addGearIcon(this, it, 0, iy, iconS);
+    if (icon) v.add(icon);
+    else v.add(slotGlyph(this, it.slot, 0, iy, iconS - 8, RARITY_COLOR[it.rarity]));
+    const tw = cubbyTextW(box.w);
+    const word = rarityName(it.rarity);
+    const lab = this.add.text(0, wordBottom, word, { fontFamily: FONT, fontSize: `${GEAR_BOARD.labelSize}px`, fontStyle: 'bold', color: tileSkin ? RARITY_INK[it.rarity] : css(RARITY_COLOR[it.rarity]), align: 'center', wordWrap: { width: tw } }).setOrigin(0.5, 1).setResolution(crisp()).setData('rarityWord', true);
+    v.add(wrapLikeCubby(lab, word, tw).setMaxLines(1));
+    if (cmp.overall === 'worn') {
+      v.add(this.add.circle(-box.w / 2 + 9, -box.h / 2 + 9, 7, 0xffd166));
+      v.add(this.add.text(-box.w / 2 + 9, -box.h / 2 + 9, '✓', { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#3a2618', fontStyle: 'bold' }).setOrigin(0.5).setResolution(crisp()));
+    } else if (cmp.overall === 'up' || cmp.overall === 'down') {
+      v.add(this.add.circle(box.w / 2 - 9, -box.h / 2 + 9, 7, COMPARE_COLOR[cmp.overall]));
+      v.add(this.add.text(box.w / 2 - 9, -box.h / 2 + 9, ARROW[cmp.overall], { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#1e1a2b', fontStyle: 'bold' }).setOrigin(0.5).setResolution(crisp()));
+    }
+    this.gearTiles[it.uid] = { x: tx + box.w / 2, y: ty + box.h / 2 };
   }
 
   /** P-MENU2-f: the sheet: the item and what's worn, ↑ / ↓ in calm colours with plain words, numbers behind Details. */
-  private renderSheet(item: GearItem, x: number, top: number, w: number, bottom: number, pickedBottom: number): void {
+  private renderSheet(item: GearItem, x: number, top: number, w: number, bottom: number, pickedBottom: number, lift = 0, tileH = 0): void {
     const W = GEAR_WORDS;
     const sh = GEAR_BOARD.sheetH;
-    const atTop = pickedBottom > bottom - sh;
-    const sy = atTop ? top : bottom - sh;
+    const atTop = sheetAtTop(top, bottom, lift, pickedBottom, tileH);
+    const sy = atTop ? top - lift : bottom - sh;
     const closer = this.add.zone(x - 8, top - 8, w + 16, bottom - top + 16).setOrigin(0).setInteractive();
     closer.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.closeSheet());
     this.ui.add(closer);
@@ -1920,6 +1942,7 @@ export class HomeScene extends Phaser.Scene {
   private filterGear(slot: GearSlot): void {
     this.gearFilter = toggleFilter(this.gearFilter, slot);
     this.page = 0;
+    this.bagPage = 0;
     this.selected = null;
     this.confirmLetGo = false;
     this.renderPanel('none');
@@ -1948,6 +1971,95 @@ export class HomeScene extends Phaser.Scene {
       this.input.enabled = true;
       this.renderPanel('none');
     } });
+  }
+
+  // ---------------------------------------------------------------- MENU-BAG-01: the Bag screen
+
+  private openBag(): void {
+    this.bagOpen = true;
+    this.bagPage = 0;
+    this.page = 0;
+    this.selected = null;
+    this.confirmLetGo = false;
+    this.renderPanel('none');
+  }
+
+  private closeBag(): void {
+    this.bagOpen = false;
+    this.bagPage = 0;
+    this.page = 0;
+    this.selected = null;
+    this.confirmLetGo = false;
+    this.renderPanel('none');
+  }
+
+  /** After Wear on the Bag screen: the tile gives one small pop (reduced motion: none; the gold check says it all). */
+  private popBagTile(uid: string): void {
+    const v = this.bagTileViews[uid];
+    if (!v?.active || reducedMotion()) return;
+    this.tweens.add({ targets: v, scale: 1.08, duration: MOTION.pop.ms / 2, yoyo: true, ease: 'Sine.Out' });
+  }
+
+  /**
+   * The whole-view bag: Back, title, the three slot filters and the pager in one 44 row, then 6 x 4 slots
+   * (a page is 24; empty slots show as faint outlines). Tap a tile to pick it, then Wear in the sheet.
+   * Rebuilt by renderPanel, like every other screen, so wear / take off / let go all just re-render.
+   */
+  private renderBagLayer(): void {
+    this.bagLayer?.destroy(true);
+    this.bagLayer = null;
+    this.bagTileViews = {};
+    if (!this.bagOpen) return;
+    const { width: W0, height: H0 } = view(this);
+    const W = GEAR_WORDS;
+    const L = bagScreenLayout(W0, H0);
+    const layer = this.add.container(0, 0).setDepth(40);
+    this.bagLayer = layer;
+    this.ui = layer;
+    const backdrop = this.add.rectangle(0, 0, W0, H0, 0x1b1626, 1).setOrigin(0).setInteractive();
+    layer.add(backdrop);
+    const bag = filterBag(this.profile.inventory, this.gearFilter);
+    const pages = bagPageCount(bag.length);
+    this.bagPage = Math.min(this.bagPage, pages - 1);
+
+    // Header row (all 44 tall).
+    woodSkin(this, this.button(L.backX, L.headY, BAG_SCREEN.backW, BAG_SCREEN.headH, W.back, WOOD.switchOff, 15, () => this.closeBag()), BAG_SCREEN.backW, BAG_SCREEN.headH);
+    const title = `${this.gearFilter ? W.slots[this.gearFilter] : W.bag} (${bag.length})`;
+    this.oneLine(this.text(L.titleX, L.headY + BAG_SCREEN.headH / 2, title, TYPE.title, '#f2e3c4', true).setOrigin(0, 0.5), L.filterX - BAG_SCREEN.gap - L.titleX, TYPE.label);
+    GEAR_SLOTS.forEach((slot, i) => {
+      const on = this.gearFilter === slot;
+      const b = button(this, { x: L.filterX + i * (MIN_TAP + S1), y: L.headY, w: MIN_TAP, h: BAG_SCREEN.headH, label: '', color: on ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: on, stroke: WOOD.grain, onTap: () => this.filterGear(slot) }, this.ui);
+      b.visual.setData('gearFilter', slot).add(slotGlyph(this, slot, 0, 0, 22, on ? 0xfff6e6 : 0xd9c6a3));
+    });
+    if (pages > 1) this.trophyPager(L.pagerX, L.headY, L.pagerW, pages, L.headY + 22, this.bagPage);
+
+    // The 24 slots: items first, then faint empty outlines.
+    const grid = this.add.container(0, 0);
+    layer.add(grid);
+    const onPage = bag.slice(this.bagPage * L.perPage, (this.bagPage + 1) * L.perPage);
+    const slots = this.add.graphics();
+    grid.add(slots);
+    for (let i = onPage.length; i < L.perPage; i++) {
+      const e = bagTileBox(L, i);
+      slots.fillStyle(0x000000, 0.2).fillRoundedRect(e.x, e.y, e.w, e.h, RADIUS.button);
+      slots.lineStyle(2, 0xd9c6a3, 0.18).strokeRoundedRect(e.x, e.y, e.w, e.h, RADIUS.button);
+    }
+    let pickedBottom = 0;
+    onPage.forEach((it, i) => {
+      const box = bagTileBox(L, i);
+      if (this.selected === it.uid) pickedBottom = box.y + box.h;
+      this.gearTile(it, box.x, box.y, box, grid);
+    });
+    if (!bag.length) {
+      const msg = this.gearFilter ? slotEmptyLine(this.gearFilter) : W.bagEmpty;
+      const mw = Math.min(L.gridW - 2 * S3, 480);
+      const cy = L.gridY + (L.rows * L.tileH + (L.rows - 1) * BAG_SCREEN.gap) / 2;
+      const t = this.twoLines(this.text(W0 / 2, cy, msg, TYPE.body, '#f2e3c4', false, FONT, mw - 2 * S2).setOrigin(0.5).setAlign('center'), mw - 2 * S2, TYPE.label);
+      layer.add(this.add.rectangle(W0 / 2, cy, mw, t.height + 2 * S3, 0x1b1626, 0.92).setStrokeStyle(2, 0xd9c6a3, 0.5));
+      layer.bringToTop(t);
+    }
+    const picked = this.pickedItem();
+    if (picked) this.renderSheet(picked, BAG_SCREEN.pad, 0, W0 - 2 * BAG_SCREEN.pad, H0, pickedBottom, 0, L.tileH);
   }
 
   // ---------------------------------------------------------------- actions
@@ -1984,6 +2096,8 @@ export class HomeScene extends Phaser.Scene {
     this.testing = new TestingPanel(this, this.profile, this.training, {
       pickProfile: (key) => {
         selectProfile(key);
+        // G2B12-FIXES: the fake student brings its level and gear with it (never lowers, never overwrites gear).
+        if (seedFakeStudent(this.profile, currentTraining(), CONTENT.loot)) writeSave(this.profile);
         this.closeTesting();
         this.page = 0;
         this.refresh();
@@ -2039,7 +2153,9 @@ export class HomeScene extends Phaser.Scene {
   }
 
   private turn(by: number): void {
-    this.page = Math.max(0, this.page + by);
+    // The Bag sits above the Gear tab and has its own page; the tab's pager is behind its backdrop.
+    if (this.bagOpen) this.bagPage = turnBagPage(this.bagPage, by, filterBag(this.profile.inventory, this.gearFilter).length);
+    else this.page = Math.max(0, this.page + by);
     this.selected = null;
     this.renderPanel(by > 0 ? 'pageNext' : 'pagePrev');
   }
@@ -2055,6 +2171,7 @@ export class HomeScene extends Phaser.Scene {
     // P-MENU2-f: the tile's icon flies to its ring, then the ring pops and the doll glows.
     // Reduced motion: a plain swap (the ring just shows the new item). The grid never moves.
     const ring = this.gearRings[item.slot];
+    if (this.bagOpen) return this.popBagTile(item.uid);
     if (!ring || !from || reducedMotion()) return;
     const fly = addGearIcon(this, item, from.x, from.y, 36);
     if (ring.icon) ring.icon.setAlpha(0);

@@ -146,6 +146,8 @@ export const COMBAT = {
   circleExtraRange: 1.8,
   /** ...moving sideways at this share of their walking speed. */
   circleSpeedShare: 0.5,
+  /** C430: a no-damage push (Bellows Puff's gust) slides the player this far away from the enemy (tiles), stopping at a wall. */
+  enemyPushTiles: 1.5,
 
   /** Clearing a room with enemies restores this share of max health ("catch your breath"). */
   roomClearHeal: 0.15,
@@ -227,6 +229,15 @@ export function gearCapsForTier(tier: number): (typeof GEAR_CAPS)[keyof typeof G
   const rows = Object.values(GEAR_CAPS);
   return rows[Math.max(0, Math.min(rows.length, Math.floor(tier)) - 1)];
 }
+
+// ---------------------------------------------------------------- loadout slots (R-PROGRESSION-BETA, PB-01)
+
+/**
+ * How many Seal slots a belt tier has (tier 1 = white). White 2, Yellow 2, Orange 3 (the beta),
+ * Green and Blue 3, Red and up 4 (after the beta). A tier past the last row uses the last row.
+ * The one table, read by `sealSlots` in loadout.ts. PLACEHOLDER from the Redesign table.
+ */
+export const SEAL_SLOTS_BY_TIER: readonly number[] = [2, 2, 3, 3, 3, 4];
 
 // ---------------------------------------------------------------- the training link (milestone 4)
 

@@ -2,9 +2,9 @@
 // from the fake profiles in fixtures/, picked on the hidden testing screen. Their dates
 // are moved so each profile looks "fresh" (its last update is now).
 
-import { applyBeltEntry, buildTraining, loadFeed, shiftFeedDates, type StudentFeed, type TrainingState } from '@dojo/sim';
+import { applyBeltEntry, buildTraining, earnedPicks, loadFeed, seedInputFor, seedLoadoutV2, seedStrikeSlot, shiftFeedDates, type StudentFeed, type TrainingState } from '@dojo/sim';
 import { CONTENT } from './content';
-import { loadSave } from './save';
+import { loadSave, writeSave } from './save';
 
 const files = import.meta.glob('../../../../fixtures/*.json', { eager: true, import: 'default' });
 
@@ -62,6 +62,22 @@ export function currentTraining(): TrainingState {
   const feed = shiftFeedDates(fake.feed, new Date(asOf + Math.floor((now.getTime() - asOf) / DAY) * DAY).toISOString());
   // B-BELT: the grown-up's belt entry, when it is above the feed (it never lowers anything).
   return buildTraining(applyBeltEntry(feed, loadSave().beltEntry), CONTENT.abilities, { ms: now.getTime(), weekday: now.getDay() });
+}
+
+/**
+ * PB-02: gives an old save (loadoutV2 false) the Seal slots filled from what the student has
+ * earned, once. PB-03: that seed also fills the Strike slot, and a save PB-02 already seeded (when
+ * no Strike could be earned yet) gets its Strike slot filled once more by `seedStrikeSlot`. Safe to
+ * call again: it does nothing after the first time. Returns true if it ran.
+ */
+export function seedLoadout(): boolean {
+  const profile = loadSave();
+  if (profile.loadoutV2 && profile.strikeSeeded) return false;
+  const training = currentTraining();
+  if (!profile.loadoutV2) seedLoadoutV2(profile, seedInputFor(training, CONTENT.abilities));
+  else seedStrikeSlot(profile, CONTENT.abilities, earnedPicks(training, CONTENT.abilities).strikes);
+  writeSave(profile);
+  return true;
 }
 
 /** "Sat, Mar 27" for a "YYYY-MM-DD" date. */

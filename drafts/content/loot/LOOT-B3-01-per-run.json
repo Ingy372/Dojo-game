@@ -1,0 +1,29 @@
+{
+  "notes": "Measured with drafts/content/tools/loot-per-run-sim.test.ts.keep: the smart bot, typical skill, 200 seeds (1-200), tier 1 stats {100 health, 10 power, 0 guard} on belt 1 and tier 3 stats {332.79, 45.85, 33.53} on belt 3, on main's content. Each number is how many of that enemy appear in the rooms one run actually plays (Dough Blob splits counted). Expected drops per run = sum(count x chance). check-loot-b3.py reads this file. Each belt's dataSha256 is a SHA-256 of every room of that belt's floor set (White Dojo for belt 1, Ember Kitchens for belt 3) and the enemies they use, on main a04f3f8 (re-measured on a04f3f8: belt 1 counts identical to before, belt 3 counts moved by under 1.5 percent, for example spark-sprite 54.375 to 53.855, most likely because sim code changed in #439; I did not check which change). check-loot-b3.py recomputes both and fails with a 're-run the sim' message if either changes.",
+  "belt1": {
+    "tier": 1,
+    "runs": 200,
+    "roomsPerRun": 8,
+    "enemiesPerRun": {
+      "swarmer": 69.11,
+      "shield": 20.155,
+      "floor-keeper": 1
+    },
+    "dataSha256": "5d98be3b8a94f73c1346b7c50e7d510814cb6bc688a5f574a9259474cd14e577"
+  },
+  "belt3": {
+    "tier": 3,
+    "runs": 200,
+    "roomsPerRun": 8,
+    "enemiesPerRun": {
+      "spark-sprite": 53.855,
+      "dough-blob": 8.56,
+      "doughling": 17.12,
+      "brute": 6.6,
+      "rolling-pin": 10.375,
+      "ladle-lobber": 8.77,
+      "hearth-cook": 1
+    },
+    "dataSha256": "784c993c721496eac6ea3b8288cf2dd946643a7d696c396fa291220273c009f9"
+  }
+}

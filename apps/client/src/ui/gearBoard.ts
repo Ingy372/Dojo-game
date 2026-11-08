@@ -10,7 +10,7 @@ import { MIN_TAP, S1, S2, TROPHY_UI, TYPE } from './tokens';
 export const GEAR_WORDS = words;
 
 /** Sizes. Tiles are never narrower than tileMin; rings and every tap target are at least 44. */
-export const GEAR_BOARD = { tileMin: 56, labelSize: 12, labelH: 15, iconMax: 36, tileMax: 76, ring: 48, ringGap: S2, dollMin: 102, dollMax: 150, gap: S2, filterH: MIN_TAP, pagerH: MIN_TAP, sheetH: 172, wearH: 52, flyMs: 220, labelPad: 8, stroke: 2 } as const;
+export const GEAR_BOARD = { tileMin: 56, labelSize: 12, labelH: 15, iconMax: 36, tileMax: 76, ring: 48, ringGap: S2, dollMin: 102, dollMax: 150, gap: S2, filterH: MIN_TAP, pagerH: MIN_TAP, sheetH: 172, sheetNarrowMin: 280, wearH: 52, flyMs: 220, labelPad: 8, stroke: 2 } as const;
 
 export interface GearBoardLayout {
   dollW: number;
@@ -82,6 +82,20 @@ export function gearBoardLayout(w: number, h: number, minTileW: number = GEAR_BO
   };
 }
 
+/**
+ * G2B12-FIXES: where the item sheet goes, relative to the panel (w x h). It is full width, except that when it
+ * would cover the "Your Strike" row it starts right of the doll column, as long as that leaves it
+ * sheetNarrowMin or more. Smaller panels keep the full-width sheet (see lift).
+ */
+export function gearSheetBox(L: GearBoardLayout, w: number, h: number): { x: number; w: number; lift: number } {
+  const strikeBottom = L.alwaysY + TYPE.label + S1 + L.alwaysIcon;
+  const x = L.dollW + S2;
+  if (h - GEAR_BOARD.sheetH < strikeBottom && w - x >= GEAR_BOARD.sheetNarrowMin) return { x, w: w - x, lift: 0 };
+  // MENU-BAG-01: a full-width sheet at the top ends sheetH down; if that reaches the "Your Strike" label it moves up
+  // into the panel's 10 px padding (at most S2) so a 4 px gap is left.
+  return { x: 0, w, lift: Math.min(S2, Math.max(0, GEAR_BOARD.sheetH - L.alwaysY + S1)) };
+}
+
 /** The tile at index i on a page: its top-left, relative to the panel. Depends only on i and the layout. */
 export function tileBox(L: GearBoardLayout, i: number): { x: number; y: number; w: number; h: number } {
   const c = i % L.cols;
@@ -148,4 +162,80 @@ export function labelPadding(tileW: number, textW: number): number {
 /** The slot label with {slot} filled in. */
 export function slotEmptyLine(slot: GearSlot): string {
   return words.slotEmpty.replace('{slot}', words.slots[slot]);
+}
+
+/**
+ * MENU-BAG-01: the Bag screen. It covers the whole view and shows a fixed 6 x 4 grid (24 slots a page)
+ * at every size we ship. One 44 header row holds Back, the title, the slot filters and the pager, so the
+ * grid gets the rest. Tiles are never smaller than minTileW x minTileH (both at least MIN_TAP), and rows
+ * 0 and 1 end above a bottom sheet while rows 2 and 3 start below a top sheet, so a picked tile is never covered.
+ */
+export const BAG_SCREEN = { cols: 6, rows: 4, perPage: 24, pad: S2, gap: S2, headH: MIN_TAP, backW: 96, tileMaxW: 104, tileMaxH: 76, minTileW: MIN_TAP, minTileH: MIN_TAP } as const;
+
+export interface BagScreenLayout {
+  cols: number;
+  rows: number;
+  perPage: number;
+  tileW: number;
+  tileH: number;
+  /** The grid's top-left and width. */
+  gridX: number;
+  gridY: number;
+  gridW: number;
+  /** The header row: Back, title, the filters and the pager (left to right). */
+  headY: number;
+  backX: number;
+  titleX: number;
+  filterX: number;
+  pagerX: number;
+  pagerW: number;
+}
+
+export function bagScreenLayout(w: number, h: number): BagScreenLayout {
+  const b = BAG_SCREEN;
+  const g = b.gap;
+  const gridY = b.pad + b.headH + b.pad;
+  const fitW = Math.floor((w - 2 * b.pad - (b.cols - 1) * g) / b.cols);
+  const tileW = Math.max(b.minTileW, Math.min(b.tileMaxW, fitW));
+  const fitH = Math.floor((h - gridY - b.pad - (b.rows - 1) * g) / b.rows);
+  // Two rows must end above a bottom sheet (rows 2 and 3 are then covered by it, and the picked tile is above it).
+  const sheetFit = Math.floor((h - GEAR_BOARD.sheetH - gridY - g) / 2);
+  const tileH = Math.max(b.minTileH, Math.min(b.tileMaxH, fitH, Math.max(sheetFit, Math.min(fitH, 61))));
+  const gridW = b.cols * tileW + (b.cols - 1) * g;
+  const gridX = Math.floor((w - gridW) / 2);
+  const filterW = 3 * MIN_TAP + 2 * S1;
+  const pagerW = 2 * MIN_TAP + 72;
+  const pagerX = w - b.pad - pagerW;
+  const filterX = pagerX - g - filterW;
+  const titleX = b.pad + b.backW + g;
+  return { cols: b.cols, rows: b.rows, perPage: b.perPage, tileW, tileH, gridX, gridY, gridW, headY: b.pad, backX: b.pad, titleX, filterX, pagerX, pagerW };
+}
+
+/**
+ * Whether the item sheet sits at the top (true) or the bottom of [top, bottom]. Default: the bottom, unless the picked tile
+ * (ending at pickedBottom) reaches into it. MENU-BAG-01 B1b: when the tile (tileH tall) is under the sheet either way
+ * (667x320), take the end that hides less of it, so part of the tile stays out and tapping it again closes the sheet.
+ */
+export function sheetAtTop(top: number, bottom: number, lift: number, pickedBottom: number, tileH = 0): boolean {
+  const sh = GEAR_BOARD.sheetH;
+  if (pickedBottom <= bottom - sh) return false;
+  if (tileH <= 0) return true;
+  const t0 = pickedBottom - tileH;
+  const hidden = (a: number, b: number) => Math.max(0, Math.min(pickedBottom, b) - Math.max(t0, a));
+  return hidden(bottom - sh, bottom) > hidden(top - lift, top - lift + sh);
+}
+
+/** MENU-BAG-01 B1: how many pages a bag of this many items has (at least 1). */
+export function bagPageCount(count: number): number {
+  return Math.max(1, Math.ceil(count / BAG_SCREEN.perPage));
+}
+
+/** MENU-BAG-01 B1: the Bag's page after ◀ (-1) or ▶ (+1), kept inside 0..pages-1. The Bag keeps this itself; the Gear tab behind it has its own page. */
+export function turnBagPage(page: number, by: number, count: number): number {
+  return Math.max(0, Math.min(bagPageCount(count) - 1, page + by));
+}
+
+/** A tile's top-left on the Bag screen (absolute). */
+export function bagTileBox(L: BagScreenLayout, i: number): { x: number; y: number; w: number; h: number } {
+  return { x: L.gridX + (i % L.cols) * (L.tileW + BAG_SCREEN.gap), y: L.gridY + Math.floor(i / L.cols) * (L.tileH + BAG_SCREEN.gap), w: L.tileW, h: L.tileH };
 }
