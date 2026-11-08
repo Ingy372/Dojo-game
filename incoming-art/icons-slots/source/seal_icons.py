@@ -12,7 +12,7 @@ from toon import *
 # covered Counter's shoe and touched Jumping Spins' rim. Ink weight matches the jacket (ow 4.6).
 # Fit stays locked to the pass-6 box unless a call passes grow, so a thicker mark cannot slide the figure.
 PASS7 = {
-    'counter': dict(w=14, head=16, spread=0.68, ow=4.6),
+    'counter': dict(w=14, head=26, spread=0.9, ow=4.6),
     'spins': dict(w=16, head=34, spread=0.82, ow=4.6),
     'kata': dict(size=22, spread=0.85, ow=4.6),
 }
@@ -32,6 +32,14 @@ PLACE = {
     'disarm': (1.16, 18, -4),
     'spins': (1.24, 0, 0),
 }
+# Picture-only belt colours for Spin Kick. Not ranks, and not a change to the belt system.
+# Pine and bronze sit apart from the blue motion arrow (44, 108, 170) and the yellow ring (240, 178, 56). Neither is red.
+BELT_OPTIONS = {
+    'pine': ((32, 112, 90), (18, 74, 58)),       # #20705A / #124A3A
+    'bronze': ((168, 106, 58), (118, 70, 34)),   # #A86A3A / #764622
+}
+# How far the kicker shifts right, in U, after the fit. The arrow is not shifted.
+SPIN_SHIFT = 18
 V6_ARROW = {
     'counter': dict(w=7, head=16, spread=0.62, ow=None, outline=(255, 252, 240)),
     'spins': dict(w=8, head=27, spread=0.62, ow=None, outline=(255, 252, 240)),
@@ -168,7 +176,12 @@ def place_fit(med, art, wmax, hmax, cx=128, cy=128, bg=None, fmax=1.0, lock=None
 
 
 def _counter_pts(hx, ar, arrow_y, arrow_dx):
-    return [(hx + arrow_dx + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 36, -8)]
+    # the shaft stays on the old curve. The last point is lifted up and to the right so the
+    # bigger head sits in the cream, clear of the shin and the shoe.
+    pts = [(hx + arrow_dx + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 36, -8)]
+    x, y = pts[-1]
+    pts[-1] = (x + 26, y - 28)
+    return pts
 
 
 def counter(rim=RIMS['counter'], hx=104, hr=22, ty=90, tw=52, th=76, belt=136, sh=(118, 106), wr=(158, 104), r_sh=10.5, r_wr=9, fs=24, wrist_len=8,
@@ -489,7 +502,7 @@ def _spins_pts(hx, arw, arrow_y, ary):
     return [(hx + 8 + arw * math.cos(math.radians(t)), arrow_y + ary * math.sin(math.radians(t))) for t in range(10, 150, 7)]
 
 
-def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, belt=130, hip=160, sw=48, ww=40, hr=22,
+def jumping_spins(belt_name='pine', rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, belt=130, hip=160, sw=48, ww=40, hr=22,
            sl=((-9, 152), (-4, 176), (-12, 196)), arw=70, arrow_y=152, ary=15, head=27, W=152, H=152, cx=128, cy=121):
     """pass 7b draft: one nearly straight kicking leg from the hip, about 45 degrees up, foot near shoulder height.
     The support knee is slightly bent and the torso leans back a little. Same heavier arrow. Placed at FIG_SCALE over the ring. 1 fist, 0 fingers, 0 toes. Not approved."""
@@ -501,7 +514,7 @@ def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, 
         bg.fill_mask(mask_of(poly(ell_pts(114, fy, 30, 6))), (60, 44, 30), .4)
         return bg
 
-    def body_art():
+    def body_art(belt_fill, belt_shade):
         a = Art()
         # support leg: a small knee bend, not a crouch. Knee sits a little forward of the hip-to-ankle line.
         stand = ((-8, 154), (6, 174), (-6, 200))
@@ -523,7 +536,7 @@ def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, 
         pants = chaikin([(hx - ww / 2 - 1, belt - 4), (hx + ww / 2 + 1, belt - 4), (hx + ww / 2 + 3, hip - 6), (hx + ww / 2 - 4, hip), (hx - ww / 2 + 4, hip), (hx - ww / 2 - 3, hip - 6)], 2)
         a.shape(poly(pants), PANT, GSH, (255, 255, 250), ow=4.6, band=6)
         a.shape(poly(jack), GI, GSH, (255, 255, 250), ow=4.6, band=6)
-        a.shape(poly(rrect_pts(hx, belt, ww + 6, 14, 5)), BELT, BELT_S, lighten(BELT, .3), ow=3.0, band=3)
+        a.shape(poly(rrect_pts(hx, belt, ww + 6, 14, 5)), belt_fill, belt_shade, lighten(belt_fill, .3), ow=3.0, band=3)
         limb(a, (hx - lean * .6, ttop - 6), (hx - lean * .25, ttop + 6), 8, 8)
         head_front(a, hx - lean, ttop - 28, hr)
         forearm_block(a, (hx - sw / 2 - 12 - lean, belt - 2), (hx - sw / 2 - 8 - lean, 92), 24, -math.pi / 2 + .1, 1, r_el=10, r_cuff=9, gband=6, **GK)
@@ -558,13 +571,17 @@ def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, 
     old_s, new_s = V6_ARROW['spins'], PASS7['spins']
     lock_art = _over([arrow_art(old_s, old_s['outline'], old_s['ow'], head), body_v6()])
     f0, dx0, dy0 = _fit_params(lock_art, W, H, cx, cy, 1.0)
-    new_all = _over([arrow_art(new_s, INKC, new_s['ow'], new_s['head'], y=arrow_y + 22), body_art()])
+    belt_fill, belt_shade = BELT_OPTIONS[belt_name]
+    arrow_layer = arrow_art(new_s, INKC, new_s['ow'], new_s['head'], y=arrow_y + 22)
+    body = body_art(belt_fill, belt_shade)
     med = medallion(rim)
-    # the floor, ripples and shadow stay on the original fit, clipped to the cream face
+    # floor stays on the original fit, inside the cream face
     place(med, bg, f0, dx0, dy0, face_clip())
     sc, nx, ny = PLACE['spins']
     f, dx, dy = grow_placement(f0, dx0, dy0, sc)
-    place(med, new_all, f, dx + nx, dy + ny, wide_clip())
+    # arrow stays put; the whole kicker shifts right so the arrow tail shows. Pose is not redrawn.
+    place(med, arrow_layer, f, dx + nx, dy + ny, wide_clip())
+    place(med, body, f, dx + nx + SPIN_SHIFT, dy + ny, wide_clip())
     return med.result()
 
 
