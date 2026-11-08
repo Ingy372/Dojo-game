@@ -24,6 +24,10 @@
 - The first seed set (base 1000) gives the same numbers as the table with LOOT-B3-01 applied in the first run, so putting the table in `drops.json` changed nothing else.
 - Every cell, every seed set, is in `SHOP-BAL-01-items.json` under `liveMain_a04f3f8`; the tool is `shop-bal-01-ratios.py live=a.json,b.json,...` (it prints each set, then the range, and exits with an error if any cell is outside 0.5 to 2.0).
 
+**Tester's #442 note (added Nov 8, 2026, America/New_York):**
+- The 0.73 to 1.17 range (belt 3 ÷ belt 2) covers **Guided and Standard only**. The Challenge `kid` cell is information only and reaches about **1.33** (1.32 in my four seed sets).
+- The data hashes in `check-loot-b3.py` cover the belt 1 and belt 3 rooms and enemies only. They **do not cover bot or student stats** (the tier stats in `LOOT-B3-01-per-run.json`, or the sim bots). If those change, the check will not notice. Re-run the sim by hand.
+
 ### The regenerated R-SHOP table
 `python3 drafts/planning/R-SHOP-sim/coins.py` on the base 1000 run (`/tmp/coins-live2.json`) is saved as **`drafts/content/loot/SHOP-BAL-01b-table.md`**. The committed `drafts/planning/R-SHOP-sim/table.md` is in the Researcher & Planner's folder (`drafts/planning/`), not `drafts/content/`, and the Content Writer may only edit `drafts/content/` (docs/GROK_BOTS.md), so I left it alone. Only the belt 3 rows change ("own everything" weeks on belt 3 go from 100 to 123 down to 94 to 117 for Guided and Standard) plus the numbers that use them. **DECIDE:** the Planner or Manager copies `SHOP-BAL-01b-table.md` over `table.md` (without the first comment block).
 

@@ -49,7 +49,7 @@ New for the student: Strike #4 Side Kick Drive. Seals #16-20 (Arm Bar and Wrist 
 | F3-4 | Boulder Roller (mid, dash-only) | Boulder down a stripe lane, 24 ticks | Purple stripes and "!!" | none |
 | Guardian | The Stone Giant | Giant stomp, stone toss, Rock Slide (dash-only, two lanes) | | Concept sheets only (`guardian-concepts`), form shift Stone Giant to Pebble Heart |
 
-**Newest-move room:** rooms 3-4 and the challenge room should hold **padded-staff enemies** so Arm Bar #17 and Wrist Lock #19 (Lock) have something to answer, as the redesign says. **The Green bestiary has no padded-staff enemy.** Planner's proposal: reuse the live **Bopper** (padded staff, already in `content/enemies`, Yellow). It is already in the live bands test as a mid enemy from belt 2. Jay or the Content Designer could instead add a new Green enemy. Strike #4 Side Kick Drive shows off against Pebble Pal swarms (push them back).
+**Newest-move room:** rooms 3-4 and the challenge room should hold **padded-staff enemies** so Arm Bar #17 (Lock) and Wrist Lock #19 (Disarm) have something to answer. **The Green bestiary has no padded-staff enemy.** Planner's proposal: reuse the live **Bopper** (padded staff, already in `content/enemies`, Yellow). It is already in the live bands test as a mid enemy from belt 2. Jay or the Content Designer could instead add a new Green enemy. Strike #4 shows off against Pebble Pal swarms (push them back).
 
 ### Tier 5: Blue, The Quiet River (belt 5)
 
@@ -63,7 +63,7 @@ New: Strike #5 Hook Kick. Seals #21-25 (Disarm, Guard and Escape ranks). 3 Seal 
 | F3-4 | Splash Wave (mid, dash-only) | Striped wave lane, 24 ticks | Purple stripes and "!!" | none |
 | Guardian | The River Watcher | Beak peck, muddy splash, River Wave (dash-only) | | Concept sheets only |
 
-**Newest-move room:** a room with **Side Crab** (it guards) is where Hook Kick #5 (hits around a guard) is wanted. Padded-staff Boppers again in rooms 3-4 for Disarm, X-Block, Turn It Back and Wrist Kick (#21, #23, #24). One taste call lives here: what "around a guard" means (`R-G2B-strikes-4-7.md`, taste call 1).
+**Newest-move room:** a room with **Side Crab** (it guards) is where Hook Kick #5 is wanted. J19: the kick reaches around the guard and is a guard break. Padded-staff Boppers again in rooms 3-4 for Disarm, X-Block, Turn It Back and Wrist Kick (#21, #23, #24).
 
 ### Tier 6: Red, The Forge of Courage (belt 6)
 
@@ -97,7 +97,7 @@ Only one F1-2 enemy (Masklet) in this tier, so rooms 1-2 are Masklet-only. Plann
 
 ### Tier 8: Brown, The Root Library (belt 8)
 
-New: Seals #36-40 (Wide Release, Steady Hold, Lock to Takedown, Release and Go, Master Hold). No new Strike. 4 Seal slots.
+New: Seals #36-40 (Wide Release, Steady Hold, Lock to Takedown, Release and Go, Master Hold). Steady Hold #37 is a Counter rank (Jay, Nov 8), not a Lock rank. No new Strike. 4 Seal slots.
 
 | Group | Enemy | What it does | Tell | Art |
 |---|---|---|---|---|
