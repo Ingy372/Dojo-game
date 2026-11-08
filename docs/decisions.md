@@ -1675,3 +1675,9 @@ First code step of `drafts/planning/R-PROGRESSION-BETA.md` (#407). Data and save
 - J10: WAFU approved the music for use by other dojos.
 - J21 (partial): self-defense #4, Drive Back, is in the Advancing family.
 - J27: callouts use the real technique names. The Content Designer will send the list.
+### Jay's decisions, Nov 8 (docs only; nothing built ahead of the Planner's PR)
+- Real dojo technique names only, no made-up game names.
+- J20: the kick combo shows as "Hook Kick".
+- #4 Drive Back pushes an enemy back.
+- Steady Hold (#37) moves from the Lock family to Counter. Lock's planned ranks no longer include #37 (G2B-04 adds no Lock ranks; Lock stays off until #17 Arm Bar).
+- J26 (placeholders until playtest): test a fight zoom of about 15%; "GREAT!" shows smaller after the first one in each room; vibration is light and on by default, with an off switch.
