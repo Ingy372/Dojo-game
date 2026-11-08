@@ -17,7 +17,7 @@ SEAL={1:('double punch',''),2:(None,'same as #1, other side'),3:('back fist','al
 5:(None,'candidates back fist (also #3) / elbow'),6:(None,'candidate hook punch (attacker also throws one)'),7:('palm heel',''),8:(None,'block-and-strike, no set name'),
 9:(None,'as #8, high'),10:('double knifehand block',''),11:('osotogari','Jay\'s spelling; S4 "Osoto Gari"'),12:(None,'osotogari again (also #11)'),
 13:('inside kick','also #14'),14:(None,'candidate spin kick (clashes with Strike "Spin Kick")'),15:(None,'candidate double punch (also #1)'),
-16:(None,'Jay (Nov 8): low hammer fist, then back fist; no name in docs'),17:('arm bar',''),18:('parry','parry is in many; no set name'),19:('wrist lock',''),20:(None,'grab and combo, no set name'),
+16:(None,'Jay (Nov 8): low hammer fist, then back fist; no name in docs'),17:('arm bar',''),18:(None,'parry is in many; no set name'),19:('wrist lock',''),20:(None,'grab and combo, no set name'),
 31:(None,'candidate arm bar (also #17)'),32:(None,'"slide to the wrist" is a step; candidate wrist lock (also #19)'),33:('party flex',''),34:(None,'no name ("same as 33 with a slam")'),
 35:(None,'candidate wrist lock (also #19)'),36:(None,'not stated yet'),37:(None,'not stated yet'),38:(None,'not stated yet'),39:(None,'not stated yet'),40:(None,'not stated yet')}
 COMBO={1:('spin kick',''),2:('jumping spin kicks','doc: "3 jumping spin kicks" (plural, word for word)'),3:('butterfly kick','"tornado kick (we call it butterfly kick)"'),4:('side kick','doc: "step behind side kick"'),

@@ -21,20 +21,21 @@ Each line: current name(s), what the move is (from `docs/self-defense.md` unless
 
 **Drafts only**
 11. **#16** Low-High Strike: "Quick low hammer fist, then high back fist." (kid line, Manager Nov 8). Description: "Hammer Fist, Back Fist". Candidates: none in the docs.
-12. **#20** Hold and Combo: grab the arm, then a full combo. Candidates: none.
-13. **#31** Arm Bar Release: parry, then roll into an arm bar. Candidates: Arm Bar (also #17).
-14. **#32** Slide to the Wrist: from the arm bar to a wrist lock. Candidates: Wrist Lock (also #19). "Slide to the wrist" is a step in the docs, not a name.
-15. **#34** Lock and Drop: #33 with a slam. Candidates: none.
-16. **#35** Catch the Hand: slide, parry, wrist lock. Candidates: Wrist Lock (also #19).
-17. **#36-40** Wide Release, Steady Hold, Lock to Takedown, Release and Go, Master Hold: the docs say "(not stated)". Candidates: none until Jay describes them.
-18. **Carried old Seals** Steady Breath, Strong Block (`seal-families-text.json`, `unlock-text.json`): old placeholder powers riding on #10 and #9. Candidates: none. Rename these with #4 and #5 above.
-19. **Kata moves** (`katas/moves.json`) Low block, High block, Straight punch, Reverse kick, Straight kick, Choke break, Kiai!: not in the three docs. Candidates: Jay's kata sheets.
+12. **#18** Slide Away: slide to the side, parry, a strike. Parry is in many; no set name (Manager, Nov 8). Candidates: Parry (also #1, #15, #19, #31, #35).
+13. **#20** Hold and Combo: grab the arm, then a full combo. Candidates: none.
+14. **#31** Arm Bar Release: parry, then roll into an arm bar. Candidates: Arm Bar (also #17).
+15. **#32** Slide to the Wrist: from the arm bar to a wrist lock. Candidates: Wrist Lock (also #19). "Slide to the wrist" is a step in the docs, not a name.
+16. **#34** Lock and Drop: #33 with a slam. Candidates: none.
+17. **#35** Catch the Hand: slide, parry, wrist lock. Candidates: Wrist Lock (also #19).
+18. **#36-40** Wide Release, Steady Hold, Lock to Takedown, Release and Go, Master Hold: the docs say "(not stated)". Candidates: none until Jay describes them.
+19. **Carried old Seals** Steady Breath, Strong Block (`seal-families-text.json`, `unlock-text.json`): old placeholder powers riding on #10 and #9. Candidates: none. Rename these with #4 and #5 above.
+20. **Kata moves** (`katas/moves.json`) Low block, High block, Straight punch, Reverse kick, Straight kick, Choke break, Kiai!: not in the three docs. Candidates: Jay's kata sheets.
 
 **Scope:** every technique, move, Seal, Strike, Seal family and Form name in `content/abilities/` and `drafts/content/` (abilities, katas `moves.json`, callout subtitles, unlock text). Enemies, rooms, gear, Virtues and kata names (Basic Form 1, Keon, and so on, which are already real) are skipped. Names in long notes and room briefs (for example "Spinning Finisher" in `hall-of-echoes.json`) follow whatever is decided here.
 **Real names** are matched word for word (case aside) against `docs/curriculum.md`, `docs/self-defense.md` and `docs/framework.md`. framework.md has no technique list, so every source is one of the other two. A candidate is the real term on that technique's own line in the docs. **OPEN** means the docs have no single clear name.
 **Status:** Real = already the real name. Renamed (drop-in) = a ready real name, built as a drop-in in `J27-seal-renames.json` under `renames` (the Programmer applies the live ones). KEEP = Seal family label, kept as a game group (Manager, Nov 8). OPEN = needs Jay. Skip = a motion word, not a technique.
 
-**Totals:** 147 names (including the `unlock-text.json` titles). Live in `content/`: Real 5, Renamed (drop-in) 12, KEEP 6, OPEN 19. Drafts only: Real 11, Renamed (drop-in) 30, KEEP 6, OPEN 51, Skip 7.
+**Totals:** 147 names (including the `unlock-text.json` titles). Live in `content/`: Real 5, Renamed (drop-in) 12, KEEP 6, OPEN 19. Drafts only: Real 11, Renamed (drop-in) 29, KEEP 6, OPEN 52, Skip 7.
 
 | File | Id | Current name | Real-name candidate | Source line | Live or drafts | Status | Note |
 |---|---|---|---|---|---|---|---|
@@ -113,7 +114,7 @@ Each line: current name(s), what the move is (from `docs/self-defense.md` unless
 | `drafts/content/abilities/seals-11-15-text.json` | `slip-and-double` | Slip and Double | OPEN | `docs/self-defense.md:25` | drafts | OPEN | candidate double punch (also #1) |
 | `drafts/content/abilities/seals-16-20-text.json` | `low-high-strike` | Low-High Strike | OPEN | `docs/self-defense.md:26` | drafts | OPEN | Jay (Nov 8): low hammer fist, then back fist; no name in docs |
 | `drafts/content/abilities/seals-16-20-text.json` | `arm-bar` | Arm Bar | Arm Bar | `docs/self-defense.md:27` | drafts | Real |  |
-| `drafts/content/abilities/seals-16-20-text.json` | `slide-away` | Slide Away | Parry | `docs/self-defense.md:28` | drafts | Renamed (drop-in) | parry is in many; no set name |
+| `drafts/content/abilities/seals-16-20-text.json` | `slide-away` | Slide Away | OPEN | `docs/self-defense.md:28` | drafts | OPEN | parry is in many; no set name |
 | `drafts/content/abilities/seals-16-20-text.json` | `wrist-lock` | Wrist Lock | Wrist Lock | `docs/self-defense.md:29` | drafts | Real |  |
 | `drafts/content/abilities/seals-16-20-text.json` | `hold-and-combo` | Hold and Combo | OPEN | `docs/self-defense.md:30` | drafts | OPEN | grab and combo, no set name |
 | `drafts/content/abilities/seals-31-40-text.json` | `arm-bar-release` | Arm Bar Release | OPEN | `docs/self-defense.md:41` | drafts | OPEN | candidate arm bar (also #17) |

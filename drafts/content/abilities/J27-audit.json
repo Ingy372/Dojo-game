@@ -829,11 +829,11 @@
   "id": "slide-away",
   "name": "Slide Away",
   "verbatim": null,
-  "cand": "Parry",
+  "cand": "OPEN",
   "src": "docs/self-defense.md:28",
   "live": "drafts",
   "note": "parry is in many; no set name",
-  "status": "Renamed (drop-in)"
+  "status": "OPEN"
  },
  {
   "file": "drafts/content/abilities/seals-16-20-text.json",

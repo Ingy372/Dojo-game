@@ -34,7 +34,7 @@ Clash list: PR #402 (`seal-name-clashes-1-10.md`). Names come word for word from
 - **Kid-text choice:** player text is "Quick low hammer fist, then high back fist." (8 words; Manager's decision, Nov 8). It never says where the low strike lands, so the groin is not mentioned for ages 6 and up. The face is left out as well (no body-part words, as in S4). The real details stay in the curriculum and the technique video.
 - "Low-High Strike" stays only until Jay gives the real name.
 
-## The 42 ready real names (drop-ins, Manager Nov 8)
+## The 41 ready real names (drop-ins, Manager Nov 8)
 
 Built in `J27-seal-renames.json` under `renames`. Ids stay the same, and the old name goes in `altName`. Live rows are for the Programmer; this PR edits no `content/` file.
 
@@ -61,7 +61,6 @@ Built in `J27-seal-renames.json` under `renames`. Ids stay the same, and the old
 | `drafts/content/abilities/seal-families-text.json` | `strikes[id=butterfly-flow]` | Butterfly Flow | **Butterfly Kick** | `docs/curriculum.md:48` | drafts |
 | `drafts/content/abilities/seals-11-15-text.json` | `seals[id=outside-reap]` | Outside Reap | **Osotogari** | `docs/self-defense.md:21` | drafts |
 | `drafts/content/abilities/seals-11-15-text.json` | `seals[id=kick-the-weapon]` | Kick the Weapon | **Inside Kick** | `docs/self-defense.md:23` | drafts |
-| `drafts/content/abilities/seals-16-20-text.json` | `seals[id=slide-away]` | Slide Away | **Parry** | `docs/self-defense.md:28` | drafts |
 | `drafts/content/abilities/strikes-4-7-text.json` | `strikes[id=side-kick-drive]` | Side Kick Drive | **Side Kick** | `docs/curriculum.md:49` | drafts |
 | `drafts/content/abilities/strikes-4-7-text.json` | `strikes[id=lunge]` | Lunge | **Jumping Front Kick** | `docs/curriculum.md:51` | drafts |
 | `drafts/content/abilities/strikes-4-7-text.json` | `strikes[id=spinning-finisher]` | Spinning Finisher | **Spinning Hook Kick** | `docs/curriculum.md:52` | drafts |
@@ -91,7 +90,7 @@ Built in `J27-seal-renames.json` under `renames`. Ids stay the same, and the old
 
 ## Notes
 - **#4 (Manager's correction, Nov 8):** Jay said "Self-defense #4 belongs to Advancing." **Advancing is #4's family, not its name.** So #4 stays OPEN: it keeps its current name, with the old name also in `altName`. Its family is **Advancing** (not Escape, which J21 had in `drafts/planning/R-G2B-seal-families-16-40.md:11`), and it keeps the push-back effect. The 5 drop-ins that renamed #4 to "Advancing" are removed. One `familyMoves` entry files #4 under Advancing in `seal-families.json` (live), `seal-families-text.json` and `unlock-text.json`. **It is a future dependency: do not apply it** until the loader schema supports an `advancing` family id. The Tester found that adding the family throws today. Until then, #4 stays under escape in those files, with a `j27` note on the entry that says name OPEN, family Advancing.
-- **Renames: 42.** The first 35, minus #4's name, plus the 7 `unlock-text.json` titles the Manager confirmed.
+- **Renames: 41.** The first 35, minus #4's name (5 entries) and #18 Parry (1 entry; Manager, Nov 8: #18 is OPEN, "parry is in many; no set name"), plus the 7 `unlock-text.json` titles the Manager confirmed.
 - **Full audit** of every technique, move, Seal, Strike and family name: `J27-audit.md`.
 - **Repeats:** "back fist" is also in #5 and #10, and "double punch" is also in #4. I gave each name to the seal it best fits (the move the technique ends on or is known for), so no two seals share a name.
 - **OPEN (6 of 10): #2, #4, #5, #6, #8, #9.** The docs describe these as a set of steps with no single name. The S4 names (Other Side, Drive Back, Spin Elbow, Arm Wrap, Block and Strike, High Block Strike) are game names, not real ones, so I did not use them. Jay can give the dojo's own name for each, or pick a candidate.
