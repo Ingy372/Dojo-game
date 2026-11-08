@@ -22,12 +22,12 @@ Written Nov 1, 2026 by the Researcher & Planner. Docs only, no game code. Source
 | 2 | Yellow | **Jumping Spins**: three spins, each stronger (example ramp 5, 7, 12) | 3 jumping spin kicks | A Strike with a list of hits and a strength for each. See "gap 1". |
 | 3 | Orange | **Butterfly Flow**: spins the other way, hits a good bit harder, slower to land | round kick and butterfly kick | A wind-up on a Strike. See "gap 2". |
 | 4 | Green | **Side Kick Drive**: steps forward and pushes the enemy back | spin kicks, left and right | A push on a Strike. See "gap 3". |
-| 5 | Blue | **Hook Kick**: curves around blocks and shields to hit the enemy behind them | front kick left, right, left (after step-behind hook kicks) | New targeting. See "gap 4" and taste call 1. |
+| 5 | Blue | **Hook Kick** (Jay, Nov 8, J20: the combo's name, not a shape name. The old game name Low-High Kicks is retired) | front kick left, right, left (after step-behind hook kicks). The curriculum steps are unchanged. | J19: it reaches around the guard and is a guard break. No new number. |
 | 6 | Red | **Lunge**: closes distance fast, then strikes | stepping back twice, lunging in with a jumping front kick | A longer lunge (a setting that exists). |
 | 7 | Red/Black | **Spinning Finisher**: multi-hit spin around you | spinning hook kick | Hits all enemies in a ring. See "gap 5". |
 | 8-12 | Black | Not defined | Jay's black belt combos | Waits on Jay. |
 
-Names: the redesign's names are used in the table. The S4 names (approved Oct 24) were Spin Kick Finish, Jumping Spins, Butterfly Flow, **Both Sides**, **Low-High Kicks**, **Block, Punch, Lunge**, **Axe and Hook**. See taste call 2.
+Names: the table still shows the redesign's words, except combo #5. Jay (Nov 8, J20) named that combo **Hook Kick**, not "Low-High Kicks", and said it has no shape name. Kids see Hook Kick. There is not a second "in the dojo" name. The Oct 24 S4 names were Spin Kick Finish, Jumping Spins, Butterfly Flow, **Both Sides**, **Low-High Kicks** (retired), **Block, Punch, Lunge**, **Axe and Hook**. The other names were not renamed. See taste call 2.
 
 ## What the engine already has (checked in `packages/sim/src/config.ts` and `world.ts` `tryStrike`)
 
@@ -49,7 +49,7 @@ So **Gaps 1 and 2 are needed in the beta** (Jumping Spins and Butterfly Flow). T
 
 - All cost 30 Focus. Strike cost never goes below 10 for any modifier (kept from S4).
 - Strikes and Perfect Counters already break shields (`landHit`). Basic attacks bounce. Do **not** reuse the global `shieldBreaker` switch for a Strike: it also lets basic hits through shields and changes how block-reflect works (`world.ts` around line 1359).
-- The elite Guarding aura cuts hits by a third (`damageScale 0.67`) on the two enemies it protects. Nothing in the redesign changes that.
+- The elite Guarding aura cuts hits by a third (`damageScale 0.67`) on the two enemies it protects. Hook Kick is the exception: J19 says it is a guard break, so that existing cut does not apply to this Strike. The 0.67 stays for every other hit. No new number.
 - Callout and unlock words follow `docs/self-defense.md` and Jay's real combo words, shown under "In the dojo:" on the info page.
 
 ## Balance: what the test bot must hold (no numbers invented)
@@ -79,14 +79,11 @@ The balance table for the **enemies** each Strike faces is in `R-G2B-balance-che
 
 ## Taste calls for Jay (both are plain words)
 
-1. **What does "break guards" mean now?** The old S4 question was about Strike #7 (Axe and Hook). Under the redesign #7 is the Spinning Finisher, and the guard idea moved to #5 Hook Kick ("curves around blocks and shields"). Today a Strike already breaks a shield and still hits. So "curves around" has to mean something new. Pick one:
-   - **A. Hits the enemy standing behind a shield enemy.** The shield enemy is not touched. Good for rows of enemies.
-   - **B. Hits the shield enemy and does not break its shield.** The shield stays, but the damage lands. Good for keeping shields as a puzzle.
-   - **C. Both: curves past the shield and hits the enemy behind.** Hits the shield enemy for less.
-   **D. The old S4 meaning, kept for #7:** Strike #7 ignores the Guarding elite's one-third damage cut (`guarding.damageScale 0.67` in `hurtEnemy`). S4 asked for this, and it needs a Strike-only check there. It gives #7 an edge over Spin Kick, which the redesign says Strikes must not have (same budget, different shape). *Planner's lean against D.*
-   *Planner's lean: A.* It matches the redesign's words "to hit the enemy behind them". It needs no new number. Choose before Hook Kick is built (it is a Blue Strike, after the beta).
-2. **Which names do kids see for Strikes #4-7?** The redesign names the shapes (Side Kick Drive, Hook Kick, Lunge, Spinning Finisher). The Manager decided the S4 names on Oct 24 (Both Sides, Low-High Kicks, Block Punch Lunge, Axe and Hook). They no longer describe what the Strikes do. *Planner's lean: use the redesign shapes as the Strike names, and keep the real combo name as the "In the dojo:" line.* This also **removes the Low-High clash**: seal #16 "Low-High Strike" stays a seal rank, and no Strike is called Low-High Kicks anymore. If you keep the old Strike names, the clash comes back, and one of the two needs a new name.
+1. **What does Hook Kick do to a guard?** **Answered (J19).** It reaches around the guard and it is a guard break. The kick gets to the hit instead of being stopped by the guard, and the Guarding aura's existing one-third cut (`damageScale 0.67`) does not apply to this Strike. The cut stays 0.67 for every other hit. No new number. This is not still open. Strike #7 is not the guard break.
+2. **Which names do kids see?** **Answered for #5 (Jay, Nov 8, J20).** The Blue combo is **Hook Kick**, not a shape name, and not Low-High Kicks. Other real names are the Content Designer's list in `drafts/content/abilities/J27-audit.md`. This note does not repeat that list.
 
 ## Board items from this note (full rows in `R-GREEN-TO-BLACK.md`)
 
-R-G2B-13 (Strike shape settings, beta), R-G2B-14 (bot run for Strikes 1-3, beta), R-G2B-15 (build Strikes #4-7), R-G2B-16 (names and unlock text), R-G2B-17 (bot run for Strikes #4-7).
+R-G2B-13 (Strike shape settings, beta), R-G2B-14 (bot run for Strikes 1-3, beta), R-G2B-15 (build Strikes #4-7; #5 is Hook Kick, and J19 says it reaches around the guard and is a guard break), R-G2B-16 (names and unlock text; #5 is Hook Kick), R-G2B-17 (bot run for Strikes #4-7).
+
+Real technique names are the Content Designer's list in `drafts/content/abilities/J27-audit.md`. This note does not keep its own name list.

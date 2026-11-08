@@ -10,6 +10,12 @@ Labels: **[SHOT]** seen in a screenshot I took, **[CODE]** read from main (`00c5
 - **DECIDE:** T1 to T6 in §7. Only T1 (bigger hero) and T3 (phone buzz) change what the game feels like; the rest are small.
 - **NEXT:** Artist and Programmer start B1 to B4 (beta-critical Board items). Programmer starts G1 (counter readability). The Manager puts the items on the work board; I did not touch `docs/work-board.md`.
 
+## Update — Jay, Nov 8, 2026 (J26)
+
+- **T1:** try the zoom. The test values already written in G3 stay (1.0, 1.15, 1.25). No zoom is chosen. No new number.
+- **T2:** the GREAT popup gets smaller after the first one in a room. The sizes already written in G1 stay. No new size.
+- **T3:** vibration is a question for playtesters. The placeholder is light, on by default, with an off switch. No new strength.
+
 ---
 
 ## 0. How I judged, and what I could not see
@@ -113,6 +119,7 @@ Ranked by how much a first-time viewer would notice in the first 30 seconds. Eac
 
 **1. R-BENCH-G1 · Counter and number readability** · **Programmer** · **Beta-critical**
 - Today: the GREAT! banner is big and sits **over the hero and the telegraph**; floating numbers stack in one spot [SHOT `fight-great`].
+- **Jay, Nov 8 (J26, T2):** yes. The big GREAT shows the first time in a room. After that, the popup gets smaller. The sizes already written below stay. No new size.
 - Do: shrink GREAT! to a quick pop above the hero's head (about a third of today's size, gone in about 0.5 s) and keep the large version for the **first Great of a room** only; put combo and "GREAT x2" in the top strip (already there). Offset each damage number a little left or right and fade older ones sooner; cap at 3 on screen; bigger and warmer for a Great, plain for a normal hit. No camera kick (decided). **Reduced motion:** no pop scale, just a short fade.
 - Done when: in a play pass at 844×390, during a Great Counter you can still see the hero, the "!" icons and the red ring in every frame of the 30-frame capture; no more than 3 numbers are readable at once.
 
@@ -124,19 +131,21 @@ Ranked by how much a first-time viewer would notice in the first 30 seconds. Eac
 
 **3. R-BENCH-G3 · Hero and enemy presence** · **Programmer** (a zoom value) + **Artist** (outline and ground shadow check) · Taste call **T1**, decide by **Nov 24** to keep Dec 15 safe
 - Today: hero about 45 px tall; Archero's rooms "fit within a phone screen" so every enemy is visible [SOURCE: Game Developer]. We must keep that.
-- Do: a single camera zoom value, test 1.0, 1.15 and 1.25 at 844×390 and 667×375; pick the biggest that keeps all attackers and the telegraph on screen. Check the dark outline reads on the pale floor.
+- **Jay, Nov 8 (J26, T1):** try the zoom. Do not pick a winner yet.
+- Do: a single camera zoom value, test 1.0, 1.15 and 1.25 at 844×390 and 667×375; pick the biggest that keeps all attackers and the telegraph on screen. Those three values are the test already written. No new zoom number. Check the dark outline reads on the pale floor.
 - Done when: three side-by-side shots at the same moment, and a play pass where Jay or the Manager picks one. The chosen zoom never clips an attacker's "!" icon at the smallest phone size.
-- Waits on: Jay's pick (T1). Do not ship without a phone look.
+- Waits on: the try-out, then a pick. Do not ship without a phone look.
 
 **4. R-BENCH-G4 · Sounds for the key moments** · **Programmer** (wire) with picks from Kenney CC0 · May slip past Dec 15 (decided)
 - Do: add file-backed sounds for Great Counter, hurt, wind-up, enemy-down, room-clear and grade, using the same `sfx.json` path as the other 13. Keep the code tones as the fallback.
 - Done when: `sfx.json` has an entry for each of the 6; a play pass has no silent key moment; volume slider still scales all of them. Jay or the Manager approves the six sounds by ear (T5).
 - Waits on: the sound picks.
 
-**5. R-BENCH-G5 · Phone buzz** · **Programmer** · Beta-nice; needs T3 OK
-- Do: add `@capacitor/haptics`. Light impact on a normal hit landed, Medium on a Great Counter, a soft Warning notification when you are hurt. A Settings switch "Vibration" (on by default) and it is **off when the motion slider is at Off**. No-op on the web build.
-- Done when: a test shows each event calls the right style once, and the switch and motion-off stop all calls; the Manager feels it on a real phone (a screenshot cannot show it).
-- Waits on: **T3** (new native plugin; Jay says yes) and one real phone.
+**5. R-BENCH-G5 · Phone buzz** · **Programmer** · Beta-nice; playtesters decide if it stays
+- **Jay, Nov 8 (J26, T3):** vibration is a playtester question, not a yes. The placeholder is light, on by default, with an off switch. No new strength. The earlier Light / Medium / Warning list is not this answer.
+- Do: add `@capacitor/haptics` as a placeholder only. One light buzz. A Settings switch "Vibration", on by default. The off switch stops it. No-op on the web build.
+- Done when: a test shows the light buzz fires when the switch is on and never fires when it is off; playtesters say whether the buzz stays. A screenshot cannot show it.
+- Waits on: one real phone, then the playtester answer.
 
 **6. R-BENCH-G6 · Climb pips in the HUD** · **Artist** (reuse B4 icons) + **Programmer** · **Beta-critical** (cheap)
 - Today: small text "Room 1 of 8 · Wave 3 of 3" at top right [SHOT].
@@ -172,7 +181,7 @@ Dates: beta **Dec 15, 2026**; launch **April 2027**.
 
 | Item | Beta-critical? | Size (my guess, **[OBS]**) | Risk |
 |---|---|---|---|
-| B1 hero stage | **Yes** | M | Hero art at 2× may need redrawing. Mitigation: decide T1 by Nov 24 |
+| B1 hero stage | **Yes** | M | Hero art at 2× may need redrawing. Jay, Nov 8, said try the fight zoom. The Board 2× size is still a proposal |
 | B2 one material | **Yes** | S-M | Low; reuses tokens |
 | B3 icon tabs | **Yes** | S | Needs 4 icons; low |
 | B4 climb icons | **Yes** | M | 5 icons; blocks G6 |
@@ -180,18 +189,18 @@ Dates: beta **Dec 15, 2026**; launch **April 2027**.
 | G1 counter readability | **Yes** | S-M | Low; code only |
 | G2 Insight picker | **Yes** | M | Needs B2 first |
 | G6 HUD pips | **Yes** | S | Needs B4 icons |
-| G3 presence / zoom | Decide by Nov 24 | S code, test time | Clipping at small phones; needs a phone look |
+| G3 presence / zoom | Try it (Jay, Nov 8). The pick is still open | S code, test time | Clipping at small phones; needs a phone look. Test values stay 1.0, 1.15, 1.25 |
 | B5 reveal, B6 gear welcome | If capacity | S each | Low |
-| G5 haptics | If capacity | S | New plugin, needs T3 and a real phone |
+| G5 haptics | If capacity | S | Placeholder only (light, on, with an off switch). Playtesters decide if it stays. Needs a real phone |
 | G4 sounds, G8 emitter | May slip (decided) | M | Fine to slip; code fallbacks exist |
 | B7 Sensei line, G7 room mood (beyond vignette), G9 spark | Post-beta | M | Content and art time |
 
 **Order I would build:** B2, B3, B4, B8 (Artist icons first) in week 1; G1 in parallel; B1 and G6 next; G2 after B2. That is eight beta-critical items; seven of them are small or medium.
 
 ## 7. Taste calls for Jay
-- **T1 · Bigger hero, on the Board and in play?** Today about 50 px (Board) and 45 px (fights). A 15% zoom in fights and a 2× hero on the Board make it feel like Archero or Club Penguin, but cost Artist time and could hide an enemy on a small phone. My pick: yes on the Board, test 1.15 in fights.
-- **T2 · How loud is GREAT!?** G1 shrinks it after the first one in a room. Some kids like the big shout every time. My pick: shrink it; the combo strip still cheers.
-- **T3 · Phone buzz?** Adds one plugin and a Settings switch. My pick: yes, light, default on, off with the motion slider at Off.
+- **T1 · Bigger hero, on the Board and in play?** **Jay, Nov 8: try the zoom.** Today about 50 px (Board) and 45 px (fights). The fight test stays 1.0, 1.15 and 1.25. No zoom is chosen. The Board's 2× hero (at least 96 px in B1) was not separately answered, so it stays a proposal.
+- **T2 · How loud is GREAT!?** **Jay, Nov 8: the GREAT popup gets smaller after the first one** in a room. The sizes already in G1 stay. No new size.
+- **T3 · Phone buzz?** **Jay, Nov 8: this is a playtester question.** The placeholder is light, on by default, with an off switch. No new strength.
 - **T4 · A star that floats to the counter when a monster is set free?** Cute and clear, but one more thing to look at. My pick: post-beta.
 - **T5 · Who picks the six new sounds?** I suggest Jay or the Manager listens and says yes or no; Kenney CC0 first (decided).
 - **T6 · Room mood.** Warm, cool, dusk floors by Tower tier. Do you want the Tower to look different as you climb, or the same tidy dojo floor all the way? My pick: different.
