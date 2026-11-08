@@ -152,14 +152,46 @@ interface Setup {
   insights?: string[];
 }
 
+/** Off the Line is 2 hits at 0.3. The kata adds 1 hit. The sim keeps the higher strength. */
+function linePlusKick(amount: number): Effect[] {
+  return [
+    { type: 'counterHits', hits: 2, amount: 0.3 },
+    { type: 'counterHits', hits: 1, amount },
+  ];
+}
+
+const SHRINK: Setup[] = [0.35, 0.34, 0.33, 0.32, 0.31, 0.3, 0.2, 0.1].map((amount) => ({
+  name: `line+${amount}`,
+  effects: linePlusKick(amount),
+}));
+
+/** Largest kick that keeps Off the Line + kick under PE 12 on newer Challenge (30 seeds): 0.31 read 12.0, 0.30 read 11.7. */
+const KICK = 0.3;
+
 const TABLE: Setup[] = [
   { name: 'cs0.5', effects: [{ type: 'counterStrength', amount: 0.5 }] },
-  { name: 'ch0.4', effects: [{ type: 'counterHits', hits: 1, amount: 0.4 }] },
+  { name: 'ch0.3', effects: [{ type: 'counterHits', hits: 1, amount: KICK }] },
   { name: 'dis0.4', effects: [{ type: 'disarm', amount: 0.4 }] },
   { name: 'palmStack', effects: [{ type: 'counterStrength', amount: 1 }] },
   { name: 'lineOnly', effects: [{ type: 'counterHits', hits: 2, amount: 0.3 }] },
-  { name: 'lineStack', effects: [{ type: 'counterHits', hits: 3, amount: 0.4 }] },
+  { name: 'lineStack', effects: linePlusKick(KICK) },
   { name: 'disarmStack', effects: [{ type: 'disarm', amount: 0.9 }] },
+];
+
+const CEIL: Setup[] = [
+  { name: 'kick', effects: [{ type: 'counterHits', hits: 1, amount: KICK }] },
+  { name: 'hh', effects: [], insights: ['heavy-hands'] },
+  { name: 'hh+kick', effects: [{ type: 'counterHits', hits: 1, amount: KICK }], insights: ['heavy-hands'] },
+  { name: 'hh+cs0.5', effects: [{ type: 'counterStrength', amount: 0.5 }], insights: ['heavy-hands'] },
+  { name: 'pair', effects: [], insights: ['ripple-counter', 'heavy-hands'] },
+  { name: 'pair+kick', effects: [{ type: 'counterHits', hits: 1, amount: KICK }], insights: ['ripple-counter', 'heavy-hands'] },
+  { name: 'pair+cs0.5', effects: [{ type: 'counterStrength', amount: 0.5 }], insights: ['ripple-counter', 'heavy-hands'] },
+  { name: 'pair+dis0.4', effects: [{ type: 'disarm', amount: 0.4 }], insights: ['ripple-counter', 'heavy-hands'] },
+  { name: 'ds+hh', effects: [], insights: ['double-strike', 'heavy-hands'] },
+  { name: 'ds+hh+kick', effects: [{ type: 'counterHits', hits: 1, amount: KICK }], insights: ['double-strike', 'heavy-hands'] },
+  { name: 'rooted+cs0.5', effects: [{ type: 'counterStrength', amount: 0.5 }], insights: ['ripple-counter', 'iron-skin'] },
+  { name: 'flowing+kick', effects: [{ type: 'counterHits', hits: 1, amount: KICK }], insights: ['wind-step', 'double-strike', 'quick-hands'] },
+  { name: 'power+cs0.5', effects: [{ type: 'counterStrength', amount: 0.5 }], insights: ['press-the-advantage', 'shield-breaker', 'heavy-hands'] },
 ];
 
 const CONFIRM: Setup[] = [
@@ -273,8 +305,8 @@ describe('pb11 measure', () => {
     if (!BOTS[bot]) throw new Error(`unknown bot ${bot}`);
     const seeds = Number(process.env.PB11_SEEDS ?? 40);
     const mode = process.env.PB11_MODE ?? 'confirm';
-    const diffs: Difficulty[] = mode === 'table' ? ['guided', 'standard', 'challenge'] : ['standard'];
-    const setups = mode === 'table' ? TABLE : CONFIRM;
+    const diffs: Difficulty[] = mode === 'table' ? ['guided', 'standard', 'challenge'] : mode === 'shrink' ? ['challenge'] : ['standard'];
+    const setups = mode === 'table' ? TABLE : mode === 'shrink' ? SHRINK : mode === 'ceil' ? CEIL : CONFIRM;
     const t0 = Date.now();
     const reports = diffs.map((diff) => measureBot(bot, diff, seeds, setups));
     const payload = { bot, mode, seeds, ms: Date.now() - t0, reports, bands: bot === 'kid' ? { atCounterBonus0: bands(0), atCounterBonus05: bands(0.5) } : undefined };
