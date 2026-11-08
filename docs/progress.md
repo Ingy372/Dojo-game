@@ -1097,8 +1097,19 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## ZAPKITE-ZIGZAG: the Zap Kite's zig-zag lane (2026-11-02)
 - Added the baked zig-zag lane (glow, fill, edge) to `incoming-art/dash-telegraph`, from `source/zigzag.json`. After the #444 reviews it shows the true hit capsule, 4.2 long x 1.2 wide (reach 3.0 + 2 x areaRadius 0.6, 2 x areaRadius), with the zig-zag band clamped to stay inside it (stroke 0.5, swing 0.3, 4 corners). `make_zigzag_preview.py` draws it at 667x375 (motion on, motion off, greyscale, GIF). Not imported into the game yet.
 - Tests: `zapkite-zigzag.test.ts` (7), including a pixel check that nothing is drawn outside the capsule. Previews in /workspace/shots/zapkite-zigzag with `pass-fail.md`.
+
+### GUARD-SCALE-01: bigger Guardians (2026-11-02)
+- Guardians draw, collide and reach 1.5x (Stone Giant and Lost Lightbearer 1.75x, not live yet). Factors and the zoom numbers are in `content/settings/guardian-scale.json`.
+- Body and danger circles scale fully; reach and start range take half the extra radius (`reachGrowth` 0.5 in the data), trimmed so B5 belt 4 (46.0 gate) passes as on main.
+- A held 0.9x zoom in Guardian rooms (placeholder in data, Jay to pick) keeps the head under the HUD at 667x375; it also applies with Reduced motion on.
+- Dodge check at 667x375: farthest escape from a red circle 1.25 to 1.79 tiles, a Dash is 2.5.
+- Camera eases out to 0.8x when the Guardian walks into view; no zoom with Reduced motion on.
+- Golden fixture re-captured (boss rooms only); one noisy test uses 300 seeds.
+- Tests: `guard-scale-01` (15). Shots in /workspace/shots/guard-scale-01 with `pass-fail.md`.
 ### START-LEVEL-PIN: start-level rule pinned by tests (2026-11-02)
 - Test-only: new profile, empty/old save and every belt entry stay Level 1 / 0 XP; a Green entry earns level only through `gainXp`; belt-entry check-offs are signed off; picks come from check-offs, not level.
 - Tests: `start-level-pin` (8).
 ### START-LEVEL-PIN-GAPS: start-level tests tightened (2026-11-02)
 - Test-only: added "old save without level or XP loads at Level 1 / 0 XP" and "a feed sign-off shows as signed off"; the belt-entry test now runs the profile through `gainXp` so it can fail. `start-level-pin` is now 10 tests.
+### GUARD-SCALE-01 QA fixes (2026-11-08)
+- Boss dip total is 0.80 (was 0.72 stacked on the held 0.9); Reduced motion snaps to the held 0.9 with no dip; a Guardian at the north wall is drawn whole under the HUD, dip included. Tests: `guard-scale-01` +3. decisions.md view size corrected to 13.33 x 7.5.
