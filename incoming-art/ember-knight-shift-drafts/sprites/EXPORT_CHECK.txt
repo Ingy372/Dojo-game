@@ -1,0 +1,22 @@
+Export check against the approved preview (commit 8acf72fd).
+Sheet splits back to the source frames. Max channel difference: 0.
+Approved strip thumbs vs these frames (opaque pixels). Max channel difference: 0.
+normal 0 0.00 before: danger-red 0, margin L113 R127 T185 B63
+normal 1 0.50 glow: danger-red 0, margin L113 R127 T185 B63
+normal 2 1.00 burst: danger-red 0, margin L134 R123 T190 B38
+normal 3 1.25 steam: danger-red 0, margin L134 R123 T190 B38
+normal 4 1.50 idle: danger-red 0, margin L134 R123 T190 B38
+normal 5 idle embers: danger-red 0, margin L134 R123 T190 B38
+normal 6 core low: danger-red 0, margin L134 R123 T190 B38
+normal 7 core high: danger-red 0, margin L134 R123 T190 B38
+reduced 0 0.00 before: danger-red 0, margin L113 R127 T185 B63
+reduced 1 0.50 glow: danger-red 0, margin L113 R127 T185 B63
+reduced 2 1.00 fade: danger-red 0, margin L113 R127 T185 B63
+reduced 3 1.25 still: danger-red 0, margin L114 R123 T186 B39
+reduced 4 1.50 still: danger-red 0, margin L135 R123 T190 B38
+reduced 5 still: danger-red 0, margin L135 R123 T190 B38
+reduced 6 still: danger-red 0, margin L135 R123 T190 B38
+reduced 7 still: danger-red 0, margin L135 R123 T190 B38
+Reduced Motion frames 4 through 7 are the same picture: True.
+Danger-red total: 0. Closest opaque pixel to a frame edge: 38 px.
+PASS

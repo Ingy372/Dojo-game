@@ -1,0 +1,147 @@
+{
+  "id": "ember-knight-shift",
+  "label": "Ember Knight \u2014 shifted form",
+  "placeholderName": "Warm Shield",
+  "placeholderNameStatus": "PLACEHOLDER. Not approved as a name. Do not use it as an id.",
+  "approvedCommit": "8acf72fdd8f76ed3fc7c956dd89041118e4e8fa0",
+  "status": "Approved by Jay as the effects look. Not imported. Manager merges. Do not copy into the game from this file alone.",
+  "direction": "S only. The approved pictures face the camera. No other direction was drawn.",
+  "frameWidth": 512,
+  "frameHeight": 512,
+  "anchorPx": [
+    256.0,
+    435.2
+  ],
+  "anchorNote": "Feet. The camera puts the ground line at 85% of the frame height. 0.85 * 512 = 435.2. X is the centre.",
+  "orthoScaleTiles": 2.6,
+  "elevationDeg": 35,
+  "sourcePixelsPerTile": 196.9231,
+  "gamePixelsPerTile": 48,
+  "gameDisplayPx": 125,
+  "gameScale": 0.24375,
+  "gameScaleNote": "Draw the 512 frame at 125 px so it matches 48 px per tile. 512 * 48 / (512/2.6) = 124.8, rounded to 125.",
+  "sheetLayout": "One row. Columns are frames, left to right, no padding. Straight alpha.",
+  "sheets": {
+    "normal": {
+      "file": "ember-knight-shift_normal.png",
+      "frames": 8,
+      "columns": [
+        "0.00 before",
+        "0.50 glow",
+        "1.00 burst",
+        "1.25 steam",
+        "1.50 idle",
+        "idle embers",
+        "core low",
+        "core high"
+      ],
+      "timeSec": [
+        0.0,
+        0.5,
+        1.0,
+        1.25,
+        1.5,
+        null,
+        null,
+        null
+      ]
+    },
+    "reducedMotion": {
+      "file": "ember-knight-shift_reduced.png",
+      "frames": 8,
+      "columns": [
+        "0.00 before",
+        "0.50 glow",
+        "1.00 fade",
+        "1.25 still",
+        "1.50 still",
+        "still",
+        "still",
+        "still"
+      ],
+      "timeSec": [
+        0.0,
+        0.5,
+        1.0,
+        1.25,
+        1.5,
+        null,
+        null,
+        null
+      ],
+      "note": "Frames 4, 5, 6 and 7 are the same still."
+    }
+  },
+  "timing": {
+    "shiftGlowSec": 1.0,
+    "shiftGlowColor": "#fff4cf",
+    "shiftGlowHalo": "#ffecaa",
+    "settleAccentSec": 0.5,
+    "settleStartsAtSec": 1.0,
+    "noStrobe": true,
+    "noFlashAfterGlow": true,
+    "keyframesOnly": true,
+    "keyframesNote": "These are the approved sample frames, not a 20-frame-per-second film. Playing the eight frames back to back will jump. Do not invent the frames in between."
+  },
+  "reducedMotion": {
+    "particles": false,
+    "pulse": false,
+    "drift": false,
+    "keeps": [
+      "seams on the body",
+      "core",
+      "rim",
+      "ground pool"
+    ]
+  },
+  "layers": {
+    "body": "renders/ember-knight-shift-b_S.png",
+    "before": "incoming-art/guardian-concepts/renders/ember-knight_p3_S.png",
+    "core": "layers/fx-core.png",
+    "rim": "layers/fx-rim.png",
+    "ground": "layers/fx-ground.png",
+    "steam": [
+      "layers/fx-steam-00.png",
+      "layers/fx-steam-01.png",
+      "layers/fx-steam-02.png",
+      "layers/fx-steam-03.png"
+    ],
+    "burst": [
+      "layers/fx-burst-00.png",
+      "layers/fx-burst-01.png",
+      "layers/fx-burst-02.png",
+      "layers/fx-burst-03.png"
+    ],
+    "embers": [
+      "layers/fx-ember-00.png",
+      "layers/fx-ember-01.png",
+      "layers/fx-ember-02.png",
+      "layers/fx-ember-03.png",
+      "layers/fx-ember-04.png"
+    ]
+  },
+  "drawOrder": [
+    "ground",
+    "body",
+    "rim",
+    "core",
+    "burst",
+    "steam",
+    "embers"
+  ],
+  "drawOrderNote": "Ground sits under the body. Burst, steam and embers are Normal only, and only on the frames listed above. The sheets already have this order baked in.",
+  "colors": {
+    "armour": "#4a5a72",
+    "copper": "#c9824a",
+    "seams": "#ffc14d",
+    "core": [
+      "#fff1b8",
+      "#ffd08a"
+    ],
+    "rim": "#ffe08a",
+    "ground": "#ffb25a",
+    "steam": "#fff6e0",
+    "embers": "#ffe7a8",
+    "shiftGlow": "#fff4cf"
+  }
+}
