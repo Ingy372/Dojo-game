@@ -1665,3 +1665,13 @@ First code step of `drafts/planning/R-PROGRESSION-BETA.md` (#407). Data and save
 - The Tester's mutation run on #445 found two mutants of the start-level rule that survived: an old full-shape save (no level or XP, runs played) loading above Level 1 or with XP, and feed sign-offs being ignored. Two tests added to `start-level-pin.test.ts` (8 to 10).
 - The old "applying a belt entry only changes the feed, never the profile" test could not fail (the profile was never passed to anything). It now records the entry on the profile, applies it to the feed, builds the training and calls `gainXp(p, training, 0)`, then checks the profile is byte-for-byte the same and Level 1 / 0 XP.
 - Each new or fixed test fails under its mutant (old save to 1 + runsPlayed, old save with 5 XP, sign-offs ignored, `gainXp` lifting the level to the belt, `gainXp` adding XP at 0). Test-only; no src, content or balance change.
+### BF-ORANGE-UNLOCK: Butterfly Flow unlocks at Orange (2026-11-08)
+- Butterfly Flow is kick combo 3, learned at Orange (docs/curriculum.md, Kick combos; Jay approved it at #3 in R-PROGRESSION-BETA). Main counted the student's strike-type abilities by position, so the Orange kick showed up as the 2nd entry and Butterfly Flow came at Green.
+- Root fix: each Strike in `content/abilities/strikes.json` now names its `belt` (white, yellow, orange), the loader requires it, and `earnedStrikes` matches a signed-off kick requirement by belt instead of by list position (`signedOffCombos` became `signedOffKickBelts`).
+- Tests check the mapping against docs/curriculum.md and every fixture school, and walk the belts: White none, Yellow Jumping Spins, Orange Butterfly Flow once its kick combo is signed off, Green and up both.
+### Jay's decisions recorded (2026-11-08, via the Manager)
+- J19: Hook Kick (#5) reaches around the guard, so it counts as a guard break (option A).
+- J16: Ember Knight is added as a 5th form shift. The final boss gets 3 forms, shifts at 33% Health, and is invulnerable during the shift glow.
+- J10: WAFU approved the music for use by other dojos.
+- J21 (partial): self-defense #4, Drive Back, is in the Advancing family.
+- J27: callouts use the real technique names. The Content Designer will send the list.
