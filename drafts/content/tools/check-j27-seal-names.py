@@ -5,7 +5,8 @@ appears word for word (case aside) on the cited line of docs/self-defense.md or 
 altName is the current name; OPEN seals keep their current name and have an openNote; no two seals share a proposed name;
 names are 3 words or fewer; Nov 8: each proposed Strike name is on its cited curriculum line, ids/combo unchanged, old name in altName,
 Kick Combo 5 is Hook Kick; seal #16 keeps its id, OPEN with description "Hammer Fist, Back Fist", kid line says "a low hammer fist", 8 words or fewer,
-no groin/face/head; every audit row Real/Rename candidate is on its cited line; 'about' lines are 8 words or fewer; no banned words in new names and lines (OPEN seals keep their current names). Usage: check-j27-seal-names.py [path-to-json]"""
+no groin/face/head; every audit row Real/Rename candidate is on its cited line; the 35 'renames' drop-ins each find their entry by id, hold the current
+name in altName, cite a docs line that has the new name, and match the audit; Seal family labels are KEEP; 'about' lines are 8 words or fewer; no banned words in new names and lines (OPEN seals keep their current names). Usage: check-j27-seal-names.py [path-to-json]"""
 import json, pathlib, re, sys
 R = pathlib.Path(__file__).resolve().parents[3]
 path = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else R / 'drafts/content/abilities/J27-seal-renames.json'
@@ -80,9 +81,37 @@ audit = json.loads((R / 'drafts/content/abilities/J27-audit.json').read_text())
 for r in audit:
     if r['live'] != ('live' if r['file'].startswith('content/') else 'drafts'): bad.append(f'audit {r["id"]}: live flag wrong')
     if not (R / r['file']).exists(): bad.append(f'audit {r["id"]}: file {r["file"]} missing')
-    if r['status'] in ('Real', 'Rename') and not on_line(r['cand'], r['src']): bad.append(f'audit {r["file"]} {r["id"]}: candidate {r["cand"]!r} is not on {r["src"]}')
+    if r['status'] in ('Real', 'Rename', 'Renamed (drop-in)') and not on_line(r['cand'], r['src']): bad.append(f'audit {r["file"]} {r["id"]}: candidate {r["cand"]!r} is not on {r["src"]}')
     if r['status'] == 'OPEN' and r['cand'] != 'OPEN': bad.append(f'audit {r["id"]}: OPEN row must say OPEN')
 print(f'strikes: {len(d.get("strikes", []))}; seal16: {s16.get("status")}; audit rows: {len(audit)}')
+# Manager's calls (Nov 8): 35 drop-in renames, family labels KEEP.
+def resolve(doc, where):
+    if where.startswith('moves.'): return doc.get('moves', {}).get(where[6:])  # move keys contain dots
+    cur = doc
+    for part in re.findall(r'[^.\[\]]+(?:\[[^\]]+\])?', where):
+        m = re.fullmatch(r'([^\[]+)(?:\[(\w+)=([^\]]+)\])?', part)
+        cur = cur.get(m.group(1)) if isinstance(cur, dict) else None
+        if m.group(2):
+            cur = next((x for x in (cur or []) if str(x.get(m.group(2))) == m.group(3)), None)
+        if cur is None: return None
+    return cur
+ren = d.get('renames', [])
+done = {(r['file'], r['id'].split(' (')[0]) for r in audit if r['status'] == 'Renamed (drop-in)'}
+if len(ren) != 35: bad.append(f'renames: need 35, found {len(ren)}')
+if {(e.get('file'), e.get('id')) for e in ren} != done: bad.append('renames and the audit "Renamed (drop-in)" rows do not match')
+for e in ren:
+    t = f'rename {e.get("file")} {e.get("where")}'
+    if e.get('live') != e.get('file', '').startswith('content/'): bad.append(f'{t}: live flag wrong')
+    tgt = resolve(json.loads((R / e['file']).read_text()), e['where'])
+    if tgt is None: bad.append(f'{t}: entry not found (id changed?)'); continue
+    now = tgt if e['field'] == 'value' else tgt.get(e['field'])
+    if now != e.get('altName'): bad.append(f'{t}: altName {e.get("altName")!r} is not the current name {now!r}')
+    if e['field'] != 'value' and 'id' in tgt and tgt['id'] != e['id']: bad.append(f'{t}: id differs')
+    if not on_line(e.get('name', ''), e.get('source')): bad.append(f'{t}: {e.get("name")!r} is not on {e.get("source")}: never invent a name')
+for r in audit:
+    if 'family label' in r['note'] or 'game group' in r['note']:
+        if r['status'] != 'KEEP': bad.append(f'audit {r["file"]} {r["id"]}: family label must be KEEP')
+print(f'renames: {len(ren)} ({sum(1 for e in ren if e.get("live"))} for live content/, applied by the Programmer)')
 op = [e['technique'] for e in seals if e.get('status') == 'OPEN']
 print(f'proposed: {len(seen)}; OPEN: {op}')
 if bad: print('PROBLEMS'); [print(' -', b) for b in bad]; raise SystemExit(1)

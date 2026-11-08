@@ -8,7 +8,7 @@
   "src": "docs/self-defense.md:11",
   "live": "live",
   "note": "",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/abilities.json",
@@ -30,7 +30,7 @@
   "src": "docs/self-defense.md:13",
   "live": "live",
   "note": "also #5, #10",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/abilities.json",
@@ -74,7 +74,7 @@
   "src": "docs/self-defense.md:17",
   "live": "live",
   "note": "",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/abilities.json",
@@ -107,7 +107,7 @@
   "src": "docs/self-defense.md:20",
   "live": "live",
   "note": "",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/abilities.json",
@@ -129,7 +129,7 @@
   "src": "docs/curriculum.md:47",
   "live": "live",
   "note": "doc: \"3 jumping spin kicks\" (plural, word for word)",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/abilities.json",
@@ -150,7 +150,7 @@
   "cand": "OPEN",
   "src": "",
   "live": "live",
-  "note": "Jay-approved stance (J1, drafts/content/katas/stances.json), but not in the 3 docs",
+  "note": "Jay-approved stance (J1), but Jay's own words naming it are not in decisions.md or progress.md, so curriculum.md was not edited",
   "status": "OPEN"
  },
  {
@@ -161,7 +161,7 @@
   "cand": "OPEN",
   "src": "",
   "live": "live",
-  "note": "Jay-approved stance (J1, drafts/content/katas/stances.json), but not in the 3 docs",
+  "note": "Jay-approved stance (J1), but Jay's own words naming it are not in decisions.md or progress.md, so curriculum.md was not edited",
   "status": "OPEN"
  },
  {
@@ -172,7 +172,7 @@
   "cand": "OPEN",
   "src": "",
   "live": "live",
-  "note": "Jay-approved stance (J1, drafts/content/katas/stances.json), but not in the 3 docs",
+  "note": "Jay-approved stance (J1), but Jay's own words naming it are not in decisions.md or progress.md, so curriculum.md was not edited",
   "status": "OPEN"
  },
  {
@@ -194,7 +194,7 @@
   "cand": "OPEN",
   "src": "",
   "live": "live",
-  "note": "Jay-approved stance (J1, drafts/content/katas/stances.json), but not in the 3 docs",
+  "note": "Jay-approved stance (J1), but Jay's own words naming it are not in decisions.md or progress.md, so curriculum.md was not edited",
   "status": "OPEN"
  },
  {
@@ -217,7 +217,7 @@
   "src": "docs/curriculum.md:47",
   "live": "live",
   "note": "doc: \"3 jumping spin kicks\" (plural, word for word)",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/strikes.json",
@@ -228,18 +228,18 @@
   "src": "docs/curriculum.md:48",
   "live": "live",
   "note": "\"tornado kick (we call it butterfly kick)\"",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/seal-families.json",
   "id": "escape",
   "name": "Escape",
   "verbatim": "docs/self-defense.md:35",
-  "cand": "OPEN",
+  "cand": "KEEP",
   "src": "",
   "live": "live",
-  "note": "family label (game group), not a technique",
-  "status": "OPEN"
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -250,7 +250,7 @@
   "src": "docs/self-defense.md:11",
   "live": "live",
   "note": "",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -290,11 +290,11 @@
   "id": "counter",
   "name": "Counter",
   "verbatim": "docs/self-defense.md:28",
-  "cand": "OPEN",
+  "cand": "KEEP",
   "src": "",
   "live": "live",
-  "note": "family label (game group), not a technique",
-  "status": "OPEN"
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -305,7 +305,7 @@
   "src": "docs/self-defense.md:13",
   "live": "live",
   "note": "also #5, #10",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -349,18 +349,18 @@
   "src": "docs/self-defense.md:20",
   "live": "live",
   "note": "",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/seal-families.json",
   "id": "guard",
   "name": "Guard",
   "verbatim": null,
-  "cand": "OPEN",
+  "cand": "KEEP",
   "src": "",
   "live": "live",
-  "note": "family label (game group), not a technique",
-  "status": "OPEN"
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -389,11 +389,11 @@
   "id": "throw",
   "name": "Throw",
   "verbatim": "docs/curriculum.md:52",
-  "cand": "OPEN",
+  "cand": "KEEP",
   "src": "",
   "live": "live",
-  "note": "family label (game group), not a technique",
-  "status": "OPEN"
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -404,7 +404,7 @@
   "src": "docs/self-defense.md:21",
   "live": "live",
   "note": "Jay's spelling; S4 \"Osoto Gari\"",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -422,11 +422,11 @@
   "id": "disarm",
   "name": "Disarm",
   "verbatim": "docs/self-defense.md:79",
-  "cand": "OPEN",
+  "cand": "KEEP",
   "src": "",
   "live": "live",
-  "note": "family label (game group), not a technique",
-  "status": "OPEN"
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -437,7 +437,7 @@
   "src": "docs/self-defense.md:23",
   "live": "live",
   "note": "also #14",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -455,22 +455,22 @@
   "id": "lock",
   "name": "Lock",
   "verbatim": "docs/self-defense.md:27",
-  "cand": "OPEN",
+  "cand": "KEEP",
   "src": "",
   "live": "live",
-  "note": "family label (game group), not a technique",
-  "status": "OPEN"
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
   "id": "escape",
   "name": "Escape",
   "verbatim": "docs/self-defense.md:35",
-  "cand": "OPEN",
+  "cand": "KEEP",
   "src": "",
   "live": "drafts",
-  "note": "family label (game group), not a technique",
-  "status": "OPEN"
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -481,7 +481,7 @@
   "src": "docs/self-defense.md:11",
   "live": "drafts",
   "note": "",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -521,11 +521,11 @@
   "id": "counter",
   "name": "Counter",
   "verbatim": "docs/self-defense.md:28",
-  "cand": "OPEN",
+  "cand": "KEEP",
   "src": "",
   "live": "drafts",
-  "note": "family label (game group), not a technique",
-  "status": "OPEN"
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -536,7 +536,7 @@
   "src": "docs/self-defense.md:13",
   "live": "drafts",
   "note": "also #5, #10",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -580,7 +580,7 @@
   "src": "docs/self-defense.md:20",
   "live": "drafts",
   "note": "",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -598,11 +598,11 @@
   "id": "guard",
   "name": "Guard",
   "verbatim": null,
-  "cand": "OPEN",
+  "cand": "KEEP",
   "src": "",
   "live": "drafts",
-  "note": "family label (game group), not a technique",
-  "status": "OPEN"
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -642,11 +642,11 @@
   "id": "disarm",
   "name": "Disarm",
   "verbatim": "docs/self-defense.md:79",
-  "cand": "OPEN",
+  "cand": "KEEP",
   "src": "",
   "live": "drafts",
-  "note": "family label (game group), not a technique",
-  "status": "OPEN"
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -657,7 +657,7 @@
   "src": "docs/self-defense.md:23",
   "live": "drafts",
   "note": "also #14",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -675,11 +675,11 @@
   "id": "throw",
   "name": "Throw",
   "verbatim": "docs/curriculum.md:52",
-  "cand": "OPEN",
+  "cand": "KEEP",
   "src": "",
   "live": "drafts",
-  "note": "family label (game group), not a technique",
-  "status": "OPEN"
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -690,7 +690,7 @@
   "src": "docs/self-defense.md:21",
   "live": "drafts",
   "note": "Jay's spelling; S4 \"Osoto Gari\"",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -708,11 +708,11 @@
   "id": "lock",
   "name": "Lock",
   "verbatim": "docs/self-defense.md:27",
-  "cand": "OPEN",
+  "cand": "KEEP",
   "src": "",
   "live": "drafts",
-  "note": "family label (game group), not a technique",
-  "status": "OPEN"
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -734,7 +734,7 @@
   "src": "docs/curriculum.md:47",
   "live": "drafts",
   "note": "doc: \"3 jumping spin kicks\" (plural, word for word)",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -745,7 +745,7 @@
   "src": "docs/curriculum.md:48",
   "live": "drafts",
   "note": "\"tornado kick (we call it butterfly kick)\"",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/seals-11-15-text.json",
@@ -756,7 +756,7 @@
   "src": "docs/self-defense.md:21",
   "live": "drafts",
   "note": "Jay's spelling; S4 \"Osoto Gari\"",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/seals-11-15-text.json",
@@ -778,7 +778,7 @@
   "src": "docs/self-defense.md:23",
   "live": "drafts",
   "note": "also #14",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/seals-11-15-text.json",
@@ -833,7 +833,7 @@
   "src": "docs/self-defense.md:28",
   "live": "drafts",
   "note": "parry is in many; no set name",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/seals-16-20-text.json",
@@ -976,7 +976,7 @@
   "src": "docs/curriculum.md:49",
   "live": "drafts",
   "note": "doc: \"step behind side kick\"",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/strikes-4-7-text.json",
@@ -998,7 +998,7 @@
   "src": "docs/curriculum.md:51",
   "live": "drafts",
   "note": "doc: \"chambered jumping front kick\"",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/strikes-4-7-text.json",
@@ -1009,7 +1009,7 @@
   "src": "docs/curriculum.md:52",
   "live": "drafts",
   "note": "",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/technique-callouts.json",
@@ -1020,7 +1020,7 @@
   "src": "docs/curriculum.md:19",
   "live": "drafts",
   "note": "kata name; the callout line already says it",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/technique-callouts.json",
@@ -1031,7 +1031,7 @@
   "src": "docs/curriculum.md:20",
   "live": "drafts",
   "note": "kata name; the callout line already says it",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/technique-callouts.json",
@@ -1042,7 +1042,7 @@
   "src": "docs/curriculum.md:46",
   "live": "drafts",
   "note": "",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/technique-callouts.json",
@@ -1053,7 +1053,7 @@
   "src": "docs/curriculum.md:47",
   "live": "drafts",
   "note": "doc: \"3 jumping spin kicks\" (plural, word for word)",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/technique-callouts.json",
@@ -1064,7 +1064,7 @@
   "src": "docs/self-defense.md:11",
   "live": "drafts",
   "note": "",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/technique-callouts.json",
@@ -1086,7 +1086,7 @@
   "src": "docs/self-defense.md:13",
   "live": "drafts",
   "note": "also #5, #10",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/technique-callouts.json",
@@ -1130,7 +1130,7 @@
   "src": "docs/self-defense.md:17",
   "live": "drafts",
   "note": "",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/technique-callouts.json",
@@ -1163,7 +1163,7 @@
   "src": "docs/self-defense.md:20",
   "live": "drafts",
   "note": "",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/unlock-text.json",
@@ -1306,7 +1306,7 @@
   "src": "docs/self-defense.md:20",
   "live": "drafts",
   "note": "docs spelling \"knifehand\"",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/katas/moves.json",
@@ -1339,7 +1339,7 @@
   "src": "docs/self-defense.md:13",
   "live": "drafts",
   "note": "spelling: docs write \"back fist\"",
-  "status": "Rename"
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/katas/moves.json",

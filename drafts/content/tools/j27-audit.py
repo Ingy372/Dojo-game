@@ -75,5 +75,11 @@ import collections; FIX={'pivot':('Skip','','motion word, not a technique'),'tur
 for r in rows:
     if r['file'].endswith('moves.json') and r['id'] in FIX:
         c,s,n=FIX[r['id']]; r['cand'],r['src'],r['note']=(c if c!='Skip' else '-'),s,n; r['status']='Skip' if c=='Skip' else 'Rename'
+# Manager's calls on #447 (Nov 8): ready names become drop-ins in J27-seal-renames.json 'renames'; family labels are KEEP;
+# stances stay OPEN because Jay's own words naming them are not in decisions.md or progress.md.
+for r in rows:
+    if r['status'] == 'Rename': r['status'] = 'Renamed (drop-in)'
+    if r['status'] == 'OPEN' and 'family label' in r['note']: r['status'] = 'KEEP'; r['cand'] = 'KEEP'; r['note'] = 'game group label (Manager, Nov 8: keep)'
+    if r['status'] == 'OPEN' and 'stance' in r['note'].lower(): r['note'] = "Jay-approved stance (J1), but Jay's own words naming it are not in decisions.md or progress.md, so curriculum.md was not edited"
 json.dump(rows,open('drafts/content/abilities/J27-audit.json','w'),indent=1); open('drafts/content/abilities/J27-audit.json','a').write('\n')
 print(len(rows), 'names;', dict(collections.Counter((r['status'],r['live']) for r in rows)))

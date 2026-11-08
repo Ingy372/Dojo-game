@@ -34,6 +34,48 @@ Clash list: PR #402 (`seal-name-clashes-1-10.md`). Names come word for word from
 - **Kid-text choice:** player text says "a low hammer fist". It never says where the low strike lands, so the groin is not mentioned for ages 6 and up. The face is left out as well (no body-part words, as in S4). The real details stay in the curriculum and the technique video.
 - "Low-High Strike" stays only until Jay gives the real name.
 
+## The 35 ready real names (drop-ins, Manager Nov 8)
+
+Built in `J27-seal-renames.json` under `renames`. Ids stay the same, and the old name goes in `altName`. Live rows are for the Programmer; this PR edits no `content/` file.
+
+| File | Entry | Old name (altName) | Real name | Source | Live |
+|---|---|---|---|---|---|
+| `content/abilities/abilities.json` | `seals[id=off-balance]` | Off-Balance | **Double Punch** | `docs/self-defense.md:11` | yes |
+| `content/abilities/abilities.json` | `seals[id=sweep]` | Sweep | **Back Fist** | `docs/self-defense.md:13` | yes |
+| `content/abilities/abilities.json` | `seals[id=create-distance]` | Create Distance | **Palm Heel** | `docs/self-defense.md:17` | yes |
+| `content/abilities/abilities.json` | `seals[id=follow-through]` | Follow Through | **Double Knifehand Block** | `docs/self-defense.md:20` | yes |
+| `content/abilities/abilities.json` | `strikes[id=quick-combo]` | Jumping Spins | **Jumping Spin Kicks** | `docs/curriculum.md:47` | yes |
+| `content/abilities/strikes.json` | `strikes[id=jumping-spins]` | Jumping Spins | **Jumping Spin Kicks** | `docs/curriculum.md:47` | yes |
+| `content/abilities/strikes.json` | `strikes[id=butterfly-flow]` | Butterfly Flow | **Butterfly Kick** | `docs/curriculum.md:48` | yes |
+| `content/abilities/seal-families.json` | `families[id=escape].ranks[technique=1]` | Off the Line | **Double Punch** | `docs/self-defense.md:11` | yes |
+| `content/abilities/seal-families.json` | `families[id=counter].ranks[technique=3]` | Spin Back Fist | **Back Fist** | `docs/self-defense.md:13` | yes |
+| `content/abilities/seal-families.json` | `families[id=counter].ranks[technique=10]` | Grab and Strike | **Double Knifehand Block** | `docs/self-defense.md:20` | yes |
+| `content/abilities/seal-families.json` | `families[id=throw].ranks[technique=11]` | Outside Reap | **Osotogari** | `docs/self-defense.md:21` | yes |
+| `content/abilities/seal-families.json` | `families[id=disarm].ranks[technique=13]` | Kick the Weapon | **Inside Kick** | `docs/self-defense.md:23` | yes |
+| `drafts/content/abilities/seal-families-text.json` | `families[id=escape].ranks[technique=1]` | Off the Line | **Double Punch** | `docs/self-defense.md:11` | drafts |
+| `drafts/content/abilities/seal-families-text.json` | `families[id=counter].ranks[technique=3]` | Spin Back Fist | **Back Fist** | `docs/self-defense.md:13` | drafts |
+| `drafts/content/abilities/seal-families-text.json` | `families[id=counter].ranks[technique=10]` | Grab and Strike | **Double Knifehand Block** | `docs/self-defense.md:20` | drafts |
+| `drafts/content/abilities/seal-families-text.json` | `families[id=disarm].ranks[technique=13]` | Kick the Weapon | **Inside Kick** | `docs/self-defense.md:23` | drafts |
+| `drafts/content/abilities/seal-families-text.json` | `families[id=throw].ranks[technique=11]` | Outside Reap | **Osotogari** | `docs/self-defense.md:21` | drafts |
+| `drafts/content/abilities/seal-families-text.json` | `strikes[id=jumping-spins]` | Jumping Spins | **Jumping Spin Kicks** | `docs/curriculum.md:47` | drafts |
+| `drafts/content/abilities/seal-families-text.json` | `strikes[id=butterfly-flow]` | Butterfly Flow | **Butterfly Kick** | `docs/curriculum.md:48` | drafts |
+| `drafts/content/abilities/seals-11-15-text.json` | `seals[id=outside-reap]` | Outside Reap | **Osotogari** | `docs/self-defense.md:21` | drafts |
+| `drafts/content/abilities/seals-11-15-text.json` | `seals[id=kick-the-weapon]` | Kick the Weapon | **Inside Kick** | `docs/self-defense.md:23` | drafts |
+| `drafts/content/abilities/seals-16-20-text.json` | `seals[id=slide-away]` | Slide Away | **Parry** | `docs/self-defense.md:28` | drafts |
+| `drafts/content/abilities/strikes-4-7-text.json` | `strikes[id=side-kick-drive]` | Side Kick Drive | **Side Kick** | `docs/curriculum.md:49` | drafts |
+| `drafts/content/abilities/strikes-4-7-text.json` | `strikes[id=lunge]` | Lunge | **Jumping Front Kick** | `docs/curriculum.md:51` | drafts |
+| `drafts/content/abilities/strikes-4-7-text.json` | `strikes[id=spinning-finisher]` | Spinning Finisher | **Spinning Hook Kick** | `docs/curriculum.md:52` | drafts |
+| `drafts/content/abilities/technique-callouts.json` | `callouts[ability=rooted-form]` | Rooted Form | **Basic Form 1** | `docs/curriculum.md:19` | drafts |
+| `drafts/content/abilities/technique-callouts.json` | `callouts[ability=flowing-form]` | Flowing Form | **Basic Form 2** | `docs/curriculum.md:20` | drafts |
+| `drafts/content/abilities/technique-callouts.json` | `callouts[ability=follow-up-kick]` | Spin Kick Finish | **Spin Kick** | `docs/curriculum.md:46` | drafts |
+| `drafts/content/abilities/technique-callouts.json` | `callouts[ability=quick-combo]` | Butterfly Flow | **Jumping Spin Kicks** | `docs/curriculum.md:47` | drafts |
+| `drafts/content/abilities/technique-callouts.json` | `callouts[ability=off-balance]` | Off-Balance | **Double Punch** | `docs/self-defense.md:11` | drafts |
+| `drafts/content/abilities/technique-callouts.json` | `callouts[ability=sweep]` | Sweep | **Back Fist** | `docs/self-defense.md:13` | drafts |
+| `drafts/content/abilities/technique-callouts.json` | `callouts[ability=create-distance]` | Create Distance | **Palm Heel** | `docs/self-defense.md:17` | drafts |
+| `drafts/content/abilities/technique-callouts.json` | `callouts[ability=follow-through]` | Follow Through | **Double Knifehand Block** | `docs/self-defense.md:20` | drafts |
+| `drafts/content/katas/moves.json` | `moves.block.double-knife-hand` | Knife-hand block | **Double Knifehand Block** | `docs/self-defense.md:20` | drafts |
+| `drafts/content/katas/moves.json` | `moves.strike.backfist` | Backfist | **Back Fist** | `docs/self-defense.md:13` | drafts |
+
 ## Short lines (8 words or fewer)
 - #1 Double Punch: "Step aside, then punch two times fast."
 - #3 Back Fist: "Spin around and strike with a back fist."

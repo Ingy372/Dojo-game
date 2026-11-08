@@ -1,5 +1,5 @@
 {
-  "notes": "J27 (Jay via the Manager): seal callout subtitles use the REAL Action Zone technique names, because they teach the terms. Drop-in for content/abilities/abilities.json seals[0..9]: same ids, same order, same text and effect; only 'name' changes and the old name goes in 'altName' (as #414 did). 'subtitle' is the line under the 'Self-Defense #N!' callout (technique-callouts.json). Each proposed name is copied word for word (title case) from the 'What the student does' column of docs/self-defense.md, at the file and line in 'source'. docs/curriculum.md names no technique steps. OPEN = no single clear real name; the seal keeps its current name until Jay picks. 'about' is a new 8-words-or-fewer line; 'text' is unchanged game text. PROPOSAL only: nothing is renamed in game files. When the Programmer copies a seal over, drop 'technique', 'subtitle', 'callout', 'about', 'source', 'status' and 'openNote' unless the loader takes them. Check: drafts/content/tools/check-j27-seal-names.py. Nov 8 (Jay via the Manager: real dojo names ONLY, everywhere): 'strikes' holds the Kick Combo 5 Strike, named 'Hook Kick' (docs/curriculum.md:50, 'step behind hook kick'); the old name 'Low-High Kicks' stays in altName, id unchanged. 'Low-High' appears in drafts/content only in strikes-4-7-text.json (already altName), seals-16-20-text.json (#16) and two notes; it is in no seal-families text and nowhere in content/. 'seal16' is #16: no real name in the docs, so OPEN, with a description and an 8-word kid line.",
+  "notes": "J27 (Jay via the Manager): seal callout subtitles use the REAL Action Zone technique names, because they teach the terms. Drop-in for content/abilities/abilities.json seals[0..9]: same ids, same order, same text and effect; only 'name' changes and the old name goes in 'altName' (as #414 did). 'subtitle' is the line under the 'Self-Defense #N!' callout (technique-callouts.json). Each proposed name is copied word for word (title case) from the 'What the student does' column of docs/self-defense.md, at the file and line in 'source'. docs/curriculum.md names no technique steps. OPEN = no single clear real name; the seal keeps its current name until Jay picks. 'about' is a new 8-words-or-fewer line; 'text' is unchanged game text. PROPOSAL only: nothing is renamed in game files. When the Programmer copies a seal over, drop 'technique', 'subtitle', 'callout', 'about', 'source', 'status' and 'openNote' unless the loader takes them. Check: drafts/content/tools/check-j27-seal-names.py. Nov 8 (Jay via the Manager: real dojo names ONLY, everywhere): 'strikes' holds the Kick Combo 5 Strike, named 'Hook Kick' (docs/curriculum.md:50, 'step behind hook kick'); the old name 'Low-High Kicks' stays in altName, id unchanged. 'Low-High' appears in drafts/content only in strikes-4-7-text.json (already altName), seals-16-20-text.json (#16) and two notes; it is in no seal-families text and nowhere in content/. 'seal16' is #16: no real name in the docs, so OPEN, with a description and an 8-word kid line. Nov 8, Manager's calls on #447: 'renames' holds all 35 ready real names as drop-ins, one per place the name appears: 'file' and 'where' find the entry ('where' uses id, technique or ability keys, never positions), 'field' is the field to change, 'name' is the real name, 'altName' the old one, 'source' the docs line. ids never change. live=true means the file is in content/: the Programmer applies those; this PR edits no content/ file. Seal family labels stay (KEEP).",
   "seals": [
     {
       "id": "off-balance",
@@ -198,5 +198,357 @@
       "drafts/content/abilities/seal-name-clashes-1-10.md",
       "drafts/content/tools/check-strikes-4-7-text.py (docstring)"
     ]
-  }
+  },
+  "renames": [
+    {
+      "file": "content/abilities/abilities.json",
+      "where": "seals[id=off-balance]",
+      "field": "name",
+      "id": "off-balance",
+      "name": "Double Punch",
+      "altName": "Off-Balance",
+      "source": "docs/self-defense.md:11",
+      "live": true
+    },
+    {
+      "file": "content/abilities/abilities.json",
+      "where": "seals[id=sweep]",
+      "field": "name",
+      "id": "sweep",
+      "name": "Back Fist",
+      "altName": "Sweep",
+      "source": "docs/self-defense.md:13",
+      "live": true
+    },
+    {
+      "file": "content/abilities/abilities.json",
+      "where": "seals[id=create-distance]",
+      "field": "name",
+      "id": "create-distance",
+      "name": "Palm Heel",
+      "altName": "Create Distance",
+      "source": "docs/self-defense.md:17",
+      "live": true
+    },
+    {
+      "file": "content/abilities/abilities.json",
+      "where": "seals[id=follow-through]",
+      "field": "name",
+      "id": "follow-through",
+      "name": "Double Knifehand Block",
+      "altName": "Follow Through",
+      "source": "docs/self-defense.md:20",
+      "live": true
+    },
+    {
+      "file": "content/abilities/abilities.json",
+      "where": "strikes[id=quick-combo]",
+      "field": "name",
+      "id": "quick-combo",
+      "name": "Jumping Spin Kicks",
+      "altName": "Jumping Spins",
+      "source": "docs/curriculum.md:47",
+      "live": true
+    },
+    {
+      "file": "content/abilities/strikes.json",
+      "where": "strikes[id=jumping-spins]",
+      "field": "name",
+      "id": "jumping-spins",
+      "name": "Jumping Spin Kicks",
+      "altName": "Jumping Spins",
+      "source": "docs/curriculum.md:47",
+      "live": true
+    },
+    {
+      "file": "content/abilities/strikes.json",
+      "where": "strikes[id=butterfly-flow]",
+      "field": "name",
+      "id": "butterfly-flow",
+      "name": "Butterfly Kick",
+      "altName": "Butterfly Flow",
+      "source": "docs/curriculum.md:48",
+      "live": true
+    },
+    {
+      "file": "content/abilities/seal-families.json",
+      "where": "families[id=escape].ranks[technique=1]",
+      "field": "name",
+      "id": "escape #1",
+      "name": "Double Punch",
+      "altName": "Off the Line",
+      "source": "docs/self-defense.md:11",
+      "live": true
+    },
+    {
+      "file": "content/abilities/seal-families.json",
+      "where": "families[id=counter].ranks[technique=3]",
+      "field": "name",
+      "id": "counter #3",
+      "name": "Back Fist",
+      "altName": "Spin Back Fist",
+      "source": "docs/self-defense.md:13",
+      "live": true
+    },
+    {
+      "file": "content/abilities/seal-families.json",
+      "where": "families[id=counter].ranks[technique=10]",
+      "field": "name",
+      "id": "counter #10",
+      "name": "Double Knifehand Block",
+      "altName": "Grab and Strike",
+      "source": "docs/self-defense.md:20",
+      "live": true
+    },
+    {
+      "file": "content/abilities/seal-families.json",
+      "where": "families[id=throw].ranks[technique=11]",
+      "field": "name",
+      "id": "throw #11",
+      "name": "Osotogari",
+      "altName": "Outside Reap",
+      "source": "docs/self-defense.md:21",
+      "live": true
+    },
+    {
+      "file": "content/abilities/seal-families.json",
+      "where": "families[id=disarm].ranks[technique=13]",
+      "field": "name",
+      "id": "disarm #13",
+      "name": "Inside Kick",
+      "altName": "Kick the Weapon",
+      "source": "docs/self-defense.md:23",
+      "live": true
+    },
+    {
+      "file": "drafts/content/abilities/seal-families-text.json",
+      "where": "families[id=escape].ranks[technique=1]",
+      "field": "name",
+      "id": "escape #1",
+      "name": "Double Punch",
+      "altName": "Off the Line",
+      "source": "docs/self-defense.md:11",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/seal-families-text.json",
+      "where": "families[id=counter].ranks[technique=3]",
+      "field": "name",
+      "id": "counter #3",
+      "name": "Back Fist",
+      "altName": "Spin Back Fist",
+      "source": "docs/self-defense.md:13",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/seal-families-text.json",
+      "where": "families[id=counter].ranks[technique=10]",
+      "field": "name",
+      "id": "counter #10",
+      "name": "Double Knifehand Block",
+      "altName": "Grab and Strike",
+      "source": "docs/self-defense.md:20",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/seal-families-text.json",
+      "where": "families[id=disarm].ranks[technique=13]",
+      "field": "name",
+      "id": "disarm #13",
+      "name": "Inside Kick",
+      "altName": "Kick the Weapon",
+      "source": "docs/self-defense.md:23",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/seal-families-text.json",
+      "where": "families[id=throw].ranks[technique=11]",
+      "field": "name",
+      "id": "throw #11",
+      "name": "Osotogari",
+      "altName": "Outside Reap",
+      "source": "docs/self-defense.md:21",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/seal-families-text.json",
+      "where": "strikes[id=jumping-spins]",
+      "field": "name",
+      "id": "jumping-spins",
+      "name": "Jumping Spin Kicks",
+      "altName": "Jumping Spins",
+      "source": "docs/curriculum.md:47",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/seal-families-text.json",
+      "where": "strikes[id=butterfly-flow]",
+      "field": "name",
+      "id": "butterfly-flow",
+      "name": "Butterfly Kick",
+      "altName": "Butterfly Flow",
+      "source": "docs/curriculum.md:48",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/seals-11-15-text.json",
+      "where": "seals[id=outside-reap]",
+      "field": "name",
+      "id": "outside-reap",
+      "name": "Osotogari",
+      "altName": "Outside Reap",
+      "source": "docs/self-defense.md:21",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/seals-11-15-text.json",
+      "where": "seals[id=kick-the-weapon]",
+      "field": "name",
+      "id": "kick-the-weapon",
+      "name": "Inside Kick",
+      "altName": "Kick the Weapon",
+      "source": "docs/self-defense.md:23",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/seals-16-20-text.json",
+      "where": "seals[id=slide-away]",
+      "field": "name",
+      "id": "slide-away",
+      "name": "Parry",
+      "altName": "Slide Away",
+      "source": "docs/self-defense.md:28",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/strikes-4-7-text.json",
+      "where": "strikes[id=side-kick-drive]",
+      "field": "name",
+      "id": "side-kick-drive",
+      "name": "Side Kick",
+      "altName": "Side Kick Drive",
+      "source": "docs/curriculum.md:49",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/strikes-4-7-text.json",
+      "where": "strikes[id=lunge]",
+      "field": "name",
+      "id": "lunge",
+      "name": "Jumping Front Kick",
+      "altName": "Lunge",
+      "source": "docs/curriculum.md:51",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/strikes-4-7-text.json",
+      "where": "strikes[id=spinning-finisher]",
+      "field": "name",
+      "id": "spinning-finisher",
+      "name": "Spinning Hook Kick",
+      "altName": "Spinning Finisher",
+      "source": "docs/curriculum.md:52",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/technique-callouts.json",
+      "where": "callouts[ability=rooted-form]",
+      "field": "subtitle",
+      "id": "rooted-form",
+      "name": "Basic Form 1",
+      "altName": "Rooted Form",
+      "source": "docs/curriculum.md:19",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/technique-callouts.json",
+      "where": "callouts[ability=flowing-form]",
+      "field": "subtitle",
+      "id": "flowing-form",
+      "name": "Basic Form 2",
+      "altName": "Flowing Form",
+      "source": "docs/curriculum.md:20",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/technique-callouts.json",
+      "where": "callouts[ability=follow-up-kick]",
+      "field": "subtitle",
+      "id": "follow-up-kick",
+      "name": "Spin Kick",
+      "altName": "Spin Kick Finish",
+      "source": "docs/curriculum.md:46",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/technique-callouts.json",
+      "where": "callouts[ability=quick-combo]",
+      "field": "subtitle",
+      "id": "quick-combo",
+      "name": "Jumping Spin Kicks",
+      "altName": "Butterfly Flow",
+      "source": "docs/curriculum.md:47",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/technique-callouts.json",
+      "where": "callouts[ability=off-balance]",
+      "field": "subtitle",
+      "id": "off-balance",
+      "name": "Double Punch",
+      "altName": "Off-Balance",
+      "source": "docs/self-defense.md:11",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/technique-callouts.json",
+      "where": "callouts[ability=sweep]",
+      "field": "subtitle",
+      "id": "sweep",
+      "name": "Back Fist",
+      "altName": "Sweep",
+      "source": "docs/self-defense.md:13",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/technique-callouts.json",
+      "where": "callouts[ability=create-distance]",
+      "field": "subtitle",
+      "id": "create-distance",
+      "name": "Palm Heel",
+      "altName": "Create Distance",
+      "source": "docs/self-defense.md:17",
+      "live": false
+    },
+    {
+      "file": "drafts/content/abilities/technique-callouts.json",
+      "where": "callouts[ability=follow-through]",
+      "field": "subtitle",
+      "id": "follow-through",
+      "name": "Double Knifehand Block",
+      "altName": "Follow Through",
+      "source": "docs/self-defense.md:20",
+      "live": false
+    },
+    {
+      "file": "drafts/content/katas/moves.json",
+      "where": "moves.block.double-knife-hand",
+      "field": "value",
+      "id": "block.double-knife-hand",
+      "name": "Double Knifehand Block",
+      "altName": "Knife-hand block",
+      "source": "docs/self-defense.md:20",
+      "live": false
+    },
+    {
+      "file": "drafts/content/katas/moves.json",
+      "where": "moves.strike.backfist",
+      "field": "value",
+      "id": "strike.backfist",
+      "name": "Back Fist",
+      "altName": "Backfist",
+      "source": "docs/self-defense.md:13",
+      "live": false
+    }
+  ]
 }
