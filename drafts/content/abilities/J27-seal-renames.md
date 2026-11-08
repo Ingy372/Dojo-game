@@ -26,12 +26,12 @@ Clash list: PR #402 (`seal-name-clashes-1-10.md`). Names come word for word from
 "Low-High" in `drafts/content/`: `strikes-4-7-text.json` (already only in `altName`), `seals-16-20-text.json` (#16, below), and the notes in `seal-name-clashes-1-10.md` and `check-strikes-4-7-text.py`. It is not in `seal-families-text.json` or anywhere in `content/`.
 
 ### Seal #16: OPEN
-| Id (unchanged) | Name now | Real name | Description (not a name) | Kid line (Jay's) | Source |
+| Id (unchanged) | Name now | Real name | Description (not a name) | Kid line (8 words or fewer) | Source |
 |---|---|---|---|---|---|
-| `low-high-strike` | Low-High Strike | **OPEN**: neither `docs/self-defense.md` nor `docs/curriculum.md` names #16 | Hammer Fist, Back Fist | "A quick low hammer fist, then a high back fist." | `docs/self-defense.md:26` (steps only) |
+| `low-high-strike` | Low-High Strike | **OPEN**: neither `docs/self-defense.md` nor `docs/curriculum.md` names #16 | Hammer Fist, Back Fist | "Quick low hammer fist, then high back fist." | `docs/self-defense.md:26` (steps only) |
 
 - Jay (Nov 8): #16 is a quick hammer fist low, then a back fist to the face.
-- **Kid-text choice:** player text is Jay's line "A quick low hammer fist, then a high back fist." (9 words, Jay's own, so the 8-word limit gives way). It never says where the low strike lands, so the groin is not mentioned for ages 6 and up. The face is left out as well (no body-part words, as in S4). The real details stay in the curriculum and the technique video.
+- **Kid-text choice:** player text is "Quick low hammer fist, then high back fist." (8 words; Manager's decision, Nov 8). It never says where the low strike lands, so the groin is not mentioned for ages 6 and up. The face is left out as well (no body-part words, as in S4). The real details stay in the curriculum and the technique video.
 - "Low-High Strike" stays only until Jay gives the real name.
 
 ## The 42 ready real names (drop-ins, Manager Nov 8)
@@ -90,7 +90,7 @@ Built in `J27-seal-renames.json` under `renames`. Ids stay the same, and the old
 - #10 Double Knifehand Block: "Block with both hands, then grab the arm."
 
 ## Notes
-- **#4 (Manager's correction, Nov 8):** Jay said "Self-defense #4 belongs to Advancing." **Advancing is #4's family, not its name.** So #4 stays OPEN: it keeps its current name, with the old name also in `altName`. Its family is **Advancing** (not Escape, which J21 had in `drafts/planning/R-G2B-seal-families-16-40.md:11`), and it keeps the push-back effect. The 5 drop-ins that renamed #4 to "Advancing" are removed. One `familyMoves` entry files #4 under Advancing in `seal-families.json` (live), `seal-families-text.json` and `unlock-text.json`. No Advancing family exists yet; the Programmer adds it.
+- **#4 (Manager's correction, Nov 8):** Jay said "Self-defense #4 belongs to Advancing." **Advancing is #4's family, not its name.** So #4 stays OPEN: it keeps its current name, with the old name also in `altName`. Its family is **Advancing** (not Escape, which J21 had in `drafts/planning/R-G2B-seal-families-16-40.md:11`), and it keeps the push-back effect. The 5 drop-ins that renamed #4 to "Advancing" are removed. One `familyMoves` entry files #4 under Advancing in `seal-families.json` (live), `seal-families-text.json` and `unlock-text.json`. **It is a future dependency: do not apply it** until the loader schema supports an `advancing` family id. The Tester found that adding the family throws today. Until then, #4 stays under escape in those files, with a `j27` note on the entry that says name OPEN, family Advancing.
 - **Renames: 42.** The first 35, minus #4's name, plus the 7 `unlock-text.json` titles the Manager confirmed.
 - **Full audit** of every technique, move, Seal, Strike and family name: `J27-audit.md`.
 - **Repeats:** "back fist" is also in #5 and #10, and "double punch" is also in #4. I gave each name to the seal it best fits (the move the technique ends on or is known for), so no two seals share a name.

@@ -20,7 +20,7 @@ Each line: current name(s), what the move is (from `docs/self-defense.md` unless
 10. **Stances** Open Leg, Cat, Front, Horse: approved in J1, but Jay's own words naming them are not in `decisions.md` or `progress.md`, and they are not in the three docs. Candidates: keep these names once Jay's words are recorded.
 
 **Drafts only**
-11. **#16** Low-High Strike: "A quick low hammer fist, then a high back fist." (Jay's kid line). Description: "Hammer Fist, Back Fist". Candidates: none in the docs.
+11. **#16** Low-High Strike: "Quick low hammer fist, then high back fist." (kid line, Manager Nov 8). Description: "Hammer Fist, Back Fist". Candidates: none in the docs.
 12. **#20** Hold and Combo: grab the arm, then a full combo. Candidates: none.
 13. **#31** Arm Bar Release: parry, then roll into an arm bar. Candidates: Arm Bar (also #17).
 14. **#32** Slide to the Wrist: from the arm bar to a wrist lock. Candidates: Wrist Lock (also #19). "Slide to the wrist" is a step in the docs, not a name.

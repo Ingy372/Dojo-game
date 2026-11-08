@@ -4,9 +4,9 @@ Checks: ids, order, text and effect match content/abilities/abilities.json seals
 appears word for word (case aside) on the cited line of docs/self-defense.md or docs/curriculum.md, and the subtitle is that name;
 altName is the current name; OPEN seals keep their current name and have an openNote; no two seals share a proposed name;
 names are 3 words or fewer; Nov 8: each proposed Strike name is on its cited curriculum line, ids/combo unchanged, old name in altName,
-Kick Combo 5 is Hook Kick; seal #16 keeps its id, OPEN with description "Hammer Fist, Back Fist", kid line is exactly Jay's "A quick low hammer fist, then a high back fist." (9 words, Jay's own),
+Kick Combo 5 is Hook Kick; seal #16 keeps its id, OPEN with description "Hammer Fist, Back Fist", kid line is exactly "Quick low hammer fist, then high back fist." and 8 words or fewer,
 no groin/face/head; every audit row Real/Rename candidate is on its cited line; the 'renames' drop-ins (one per audit Renamed row) each find their entry by id, hold the current
-name in altName, cite a docs line that has the new name, and match the audit; Seal family labels are KEEP; #4 is OPEN with family Advancing (Escape rejected), effect kept, moved by familyMoves; 'about' lines are 8 words or fewer; no banned words in new names and lines (OPEN seals keep their current names). Usage: check-j27-seal-names.py [path-to-json]"""
+name in altName, cite a docs line that has the new name, and match the audit; Seal family labels are KEEP; #4 is OPEN with family Advancing (Escape rejected), effect kept, moved by familyMoves (a future dependency, applyNow false); 'about' lines are 8 words or fewer; no banned words in new names and lines (OPEN seals keep their current names). Usage: check-j27-seal-names.py [path-to-json]"""
 import json, pathlib, re, sys
 R = pathlib.Path(__file__).resolve().parents[3]
 path = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else R / 'drafts/content/abilities/J27-seal-renames.json'
@@ -73,7 +73,9 @@ if s16.get('id') != ids16[0]: bad.append('seal16: id must stay ' + ids16[0])
 if s16.get('status') == 'PROPOSED' and not on_line(s16.get('name', ''), s16.get('source')): bad.append('seal16: proposed name is not in the docs')
 if s16.get('status') == 'OPEN' and s16.get('proposedDescription') != 'Hammer Fist, Back Fist': bad.append('seal16: OPEN needs the description "Hammer Fist, Back Fist"')
 kid = (s16.get('kidText') or '').lower()
-if s16.get('kidText') != 'A quick low hammer fist, then a high back fist.': bad.append('seal16: kid text must be exactly Jay\'s line "A quick low hammer fist, then a high back fist."')
+SEAL16_LINE = 'Quick low hammer fist, then high back fist.'  # Manager, Nov 8
+if s16.get('kidText') != SEAL16_LINE: bad.append(f'seal16: kid text must be exactly {SEAL16_LINE!r}')
+if len(kid.split()) > 8: bad.append('seal16: kid text over 8 words')
 for w in ('groin', 'perfect', 'face', 'head'):
     if re.search(r'\b' + w + r'\b', kid): bad.append(f'seal16: kid text uses {w!r}')
 audit = json.loads((R / 'drafts/content/abilities/J27-audit.json').read_text())
@@ -106,6 +108,7 @@ if any(e.get('name') == 'Advancing' for e in ren) or any(e.get('name') == 'Advan
 fm = [m for m in d.get('familyMoves', []) if m.get('technique') == 4]
 if not fm or fm[0].get('to') != 'advancing' or fm[0].get('from') != 'escape': bad.append('familyMoves: #4 must move from escape to advancing')
 for m in d.get('familyMoves', []):
+    if m.get('applyNow') is not False or 'FUTURE DEPENDENCY' not in (m.get('status') or '') or 'loader' not in (m.get('dependsOn') or ''): bad.append(f'familyMoves #{m.get("technique")}: must be marked a future dependency (applyNow false, dependsOn the loader)')
     for f in m.get('files', []):
         tgt = resolve(json.loads((R / f['file']).read_text()), f['where'])
         if tgt is None or tgt.get('technique') != m['technique']: bad.append(f'familyMoves: {f["file"]} {f["where"]} not found')
