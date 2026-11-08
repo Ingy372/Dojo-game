@@ -22,12 +22,12 @@ Written Nov 1, 2026 by the Researcher & Planner. Docs only, no game code. Source
 | 2 | Yellow | **Jumping Spins**: three spins, each stronger (example ramp 5, 7, 12) | 3 jumping spin kicks | A Strike with a list of hits and a strength for each. See "gap 1". |
 | 3 | Orange | **Butterfly Flow**: spins the other way, hits a good bit harder, slower to land | round kick and butterfly kick | A wind-up on a Strike. See "gap 2". |
 | 4 | Green | **Side Kick Drive**: steps forward and pushes the enemy back | spin kicks, left and right | A push on a Strike. See "gap 3". |
-| 5 | Blue | **Hook Kick**: curves around blocks and shields to hit the enemy behind them | front kick left, right, left (after step-behind hook kicks) | New targeting. See "gap 4" and taste call 1. |
+| 5 | Blue | **Hook Kick** (Jay, Nov 8, J20: this is the combo's name, not a shape name. The old game name Low-High Kicks is retired): curves around blocks and shields to hit the enemy behind them | front kick left, right, left (after step-behind hook kicks). The curriculum steps are unchanged. | New targeting. See "gap 4" and taste call 1. No new number. |
 | 6 | Red | **Lunge**: closes distance fast, then strikes | stepping back twice, lunging in with a jumping front kick | A longer lunge (a setting that exists). |
 | 7 | Red/Black | **Spinning Finisher**: multi-hit spin around you | spinning hook kick | Hits all enemies in a ring. See "gap 5". |
 | 8-12 | Black | Not defined | Jay's black belt combos | Waits on Jay. |
 
-Names: the redesign's names are used in the table. The S4 names (approved Oct 24) were Spin Kick Finish, Jumping Spins, Butterfly Flow, **Both Sides**, **Low-High Kicks**, **Block, Punch, Lunge**, **Axe and Hook**. See taste call 2.
+Names: the table still shows the redesign's words, except combo #5. Jay (Nov 8, J20) named that combo **Hook Kick**, not "Low-High Kicks", and said it has no shape name. Kids see Hook Kick. There is not a second "in the dojo" name. The Oct 24 S4 names were Spin Kick Finish, Jumping Spins, Butterfly Flow, **Both Sides**, **Low-High Kicks** (retired), **Block, Punch, Lunge**, **Axe and Hook**. The other names were not renamed. See taste call 2.
 
 ## What the engine already has (checked in `packages/sim/src/config.ts` and `world.ts` `tryStrike`)
 
@@ -84,9 +84,19 @@ The balance table for the **enemies** each Strike faces is in `R-G2B-balance-che
    - **B. Hits the shield enemy and does not break its shield.** The shield stays, but the damage lands. Good for keeping shields as a puzzle.
    - **C. Both: curves past the shield and hits the enemy behind.** Hits the shield enemy for less.
    **D. The old S4 meaning, kept for #7:** Strike #7 ignores the Guarding elite's one-third damage cut (`guarding.damageScale 0.67` in `hurtEnemy`). S4 asked for this, and it needs a Strike-only check there. It gives #7 an edge over Spin Kick, which the redesign says Strikes must not have (same budget, different shape). *Planner's lean against D.*
-   *Planner's lean: A.* It matches the redesign's words "to hit the enemy behind them". It needs no new number. Choose before Hook Kick is built (it is a Blue Strike, after the beta).
-2. **Which names do kids see for Strikes #4-7?** The redesign names the shapes (Side Kick Drive, Hook Kick, Lunge, Spinning Finisher). The Manager decided the S4 names on Oct 24 (Both Sides, Low-High Kicks, Block Punch Lunge, Axe and Hook). They no longer describe what the Strikes do. *Planner's lean: use the redesign shapes as the Strike names, and keep the real combo name as the "In the dojo:" line.* This also **removes the Low-High clash**: seal #16 "Low-High Strike" stays a seal rank, and no Strike is called Low-High Kicks anymore. If you keep the old Strike names, the clash comes back, and one of the two needs a new name.
+   *Planner's lean: A.* It matches the redesign's words "to hit the enemy behind them". It needs no new number. **Still open after Nov 8.** Jay named the combo Hook Kick. He did not pick A, B, C or D. Choose before Hook Kick is built (it is a Blue Strike, after the beta).
+2. **Which names do kids see for Strikes #4-7?** **Answered for #5 only (Jay, Nov 8, J20).** The Blue combo is **Hook Kick**. It is not called Low-High Kicks, and it has no shape name. That **resolves the Low-High clash on the Strike side**: no Strike is called Low-High. Seal #16's name is a separate flag in `R-G2B-seal-families-16-40.md` (it is not the dojo's name, and it was not renamed). **Still open for #4, #6 and #7,** and for #1 to #3: the redesign words (Side Kick Drive, Lunge, Spinning Finisher, and the earlier shape labels) and the Oct 24 game names (Both Sides, Block Punch Lunge, Axe and Hook, Spin Kick Finish, Jumping Spins, Butterfly Flow) are not settled here. They are flagged for Jay. They were not renamed. The old lean (show a shape name, and hide the real combo name on an "In the dojo" line) is not how #5 works.
 
 ## Board items from this note (full rows in `R-GREEN-TO-BLACK.md`)
 
-R-G2B-13 (Strike shape settings, beta), R-G2B-14 (bot run for Strikes 1-3, beta), R-G2B-15 (build Strikes #4-7), R-G2B-16 (names and unlock text), R-G2B-17 (bot run for Strikes #4-7).
+R-G2B-13 (Strike shape settings, beta), R-G2B-14 (bot run for Strikes 1-3, beta), R-G2B-15 (build Strikes #4-7; #5's name is Hook Kick, and taste call 1 is still open), R-G2B-16 (names and unlock text; #5 is Hook Kick, the other names still wait), R-G2B-17 (bot run for Strikes #4-7).
+
+## Names to check with Jay (not renamed here, except Hook Kick)
+
+Jay (Nov 8) named combo #5 **Hook Kick** and retired **Low-High Kicks**. No shape name goes with it. These other Strike labels are still in the plans and are not curriculum titles. They were not renamed:
+
+- Spin Kick Finish, Jumping Spins, Butterfly Flow (Oct 24 game names; "spin kick", "jumping spin kicks" and "butterfly kick" are Jay's words, and the extra words are not)
+- Both Sides, Block Punch Lunge (also written Block, Punch, Lunge), Axe and Hook
+- Side Kick Drive, Lunge, Spinning Finisher (redesign shape labels)
+
+Spin Kick, as the name of the whole White combo, is also a game label. Jay's line calls that combo "Kick combo 1" and uses "spin kick" for the last kick.

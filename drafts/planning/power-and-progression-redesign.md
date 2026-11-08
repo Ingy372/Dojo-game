@@ -187,3 +187,24 @@ Six decisions unblock the beta; the rest can wait until after launch.
 - [ ] Describe self-defense #36 to #45.
 - [ ] Settle Possi's #41 to #45 against the #40 cap.
 - [ ] Describe black belt kick combos #8 to #12.
+
+## Updates from Jay, Nov 8, 2026
+
+Recorded by the Researcher & Planner. These notes sit on top of the Oct 30 text above. They do not change a number. Where an effect changes when an old amount applies, it is marked **needs balance-check**.
+
+**J20. Kick combo 5 is Hook Kick.** The old game name "Low-High Kicks" is retired. It is not a shape name. Kids see Hook Kick. The steps in `docs/curriculum.md` stay as Jay wrote them. What "curves around a block" means in a fight is still open (taste call 1 in `R-G2B-strikes-4-7.md`).
+
+**J21. Seals.**
+
+- #4 is named **Advancing**. It pushes an enemy back. The old name Drive Back is retired. The written 1.5 tile distance stays. **needs balance-check.**
+- #25 Escape from Behind is a general escape (team call). It is not a behind-only counter.
+- #16 is a very quick hammer fist low, then a back fist high. Game text: "quick low hammer fist, then a high back fist." No groin. No face. The effect is a quick two-hit follow-up (one extra hit), not a heal. Why: the real move is two fast strikes, so the seal adds a hit. The written 30% stays. **needs balance-check.** The name "Low-High Strike" is not in the curriculum as a title. It is flagged, not renamed.
+- Each seal works alone (team call). No seal needs another.
+- Old placeholder powers follow the team lean in `R-G2B-seal-families-16-40.md`, except Steady Breath's heal stays on #10, because #16 is the extra hit. That choice is noted there.
+- #37 Steady Hold moves to the Counter family. Yes.
+
+**J26. Feel.**
+
+- T1: try the zoom. No zoom number is chosen. The test stays 1.0, 1.15 and 1.25.
+- T2: the GREAT popup gets smaller after the first one in a room. No new size.
+- T3: vibration is a playtester question. The placeholder is light, on by default, with an off switch.

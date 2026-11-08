@@ -20,7 +20,7 @@ Author: Dojo-Ascent Researcher & Planner, 2026-10-24. Plan only. No game code ch
 | 2 | Yellow | combo 1 + 3 jumping spin kicks | **Jumping Spins** | The Strike's last kick also hits enemies close by (40% within 1.2 tiles) (guess) | **new** `strikeRipple` amount / radius (same shape as `rippleCounter`) | New |
 | 3 | Orange | combo 2 + round kick and butterfly kick | **Butterfly Flow** | Practised combos flow: Strikes cost 8 less Focus | `strikeCost` 8 | No: today's "Quick Combo", renamed |
 | 4 | Green | step-behind side kicks both ways, roundhouse, spin kicks, left and right | **Both Sides** | The Strike's extra kick can turn to hit an enemy behind you (guess) | **new** flag `strikeBothSides` | New |
-| 5 | Blue | combo 4 + low roundhouses, step-behind hook kicks, then front kick left, right, left | **Low-High Kicks** | Adds a third quick hit (30%) and makes the target off-balance | `strikeExtraHit` +0.3, plus **new** flag `strikeStaggers` | New flag |
+| 5 | Blue | combo 4 + low roundhouses, step-behind hook kicks, then front kick left, right, left | **Hook Kick** | Adds a third quick hit (30%) and makes the target off-balance | `strikeExtraHit` +0.3, plus **new** flag `strikeStaggers` | New flag |
 | 6 | Red | palm-down block, reverse punch, jumping spin kick ... ends stepping back twice and lunging in with a jumping front kick | **Block, Punch, Lunge** | The Strike ends with a short lunge forward (guess: 1 tile). No auto-Block (decided). | **new** `strikeLunge` tiles 1 | New |
 | 7 | Red/Black | front, axe, round, butterfly, spinning heel, cross centre line, spinning hook kick | **Axe and Hook** | Strikes break guards (hit through the Guardian/elite guard) | `shieldBreaker` (existing), limited to Strikes (guess) | Existing type; needs a Strike-only check |
 
@@ -37,7 +37,7 @@ One short sentence each, ages 6+:
 2. "Jump and spin: your last kick hits enemies close by."
 3. "Your kicks flow: Strikes cost less Focus."
 4. "Kick both ways: your Strike can hit behind you."
-5. "Low, then high: one more kick, and they wobble."
+5. "Hook Kick."
 6. "Step back, then lunge in with a jumping kick."
 7. "Axe kick and hook kick break through guards."
 
@@ -61,5 +61,6 @@ One short sentence each, ages 6+:
 
 1. **Decided:** today's 2 Strikes are renamed: "Follow-up Kick" becomes #1 "Spin Kick Finish" and "Quick Combo" becomes #3 "Butterfly Flow". Their effects stay the same.
 2. **Decided:** #6 drops the auto-Block and keeps only the lunge.
-3. **Decided:** the 7 names are approved, and kids see "butterfly kick" (the school's word).
-4. **Still open:** #7 (guard-break on Strikes) waits on the Programmer's code check of `shieldBreaker`.
+3. **Decided (Oct 24):** the 7 names were approved, and kids see "butterfly kick" (the school's word). **Name #5 was replaced on Nov 8** (see item 5). The other six names in this file were not renamed.
+4. **Still open:** #7 (guard-break on Strikes) waits on the Programmer's code check of `shieldBreaker`. The redesign later moved that idea. See `R-G2B-strikes-4-7.md`. This file's effect column is the Oct 24 guess.
+5. **Decided (Jay, Nov 8, J20):** combo #5's name is **Hook Kick**, not "Low-High Kicks", and it has no shape name. Kids see Hook Kick. The curriculum steps are unchanged (roundhouses, hook kicks, then three front kicks). The old kid line "Low, then high" is retired with the old name. No new number. This retires the Low-High name on the Strike, so it no longer clashes with seal #16. Seal #16's own name is flagged in `R-G2B-seal-families-16-40.md` and was not renamed.

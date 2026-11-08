@@ -129,7 +129,7 @@ The old `abilities.json` `strikes` and `seals` arrays are kept for one release a
 
 | Family | Techniques (belt) | Effect types already in `effects.ts` | New mechanic |
 |---|---|---|---|
-| Escape | #1 Off the Line (W), #2 Other Side (W), #4 Drive Back (W), #15 Slip and Double (O) | `dashOnBlock`, `counterWindow` | `counterHits`, `counterPush` (small) |
+| Escape | #1 Off the Line (W), #2 Other Side (W), #4 Advancing (W), #15 Slip and Double (O) | `dashOnBlock`, `counterWindow` | `counterHits`, `counterPush` (small) |
 | Counter | #3 Spin Back Fist (W), #5 Spin Elbow (W), #6 Arm Wrap (Y), #7 Palm Heel (Y), #10 Grab and Strike (Y) | `rippleCounter`, `staggerTicks`, `counterStrength`, `staggerBonus` | none |
 | Guard | #8 Block and Strike (Y), #9 High Block Strike (Y) | `blockReflect` | `reflectStaggers` (small flag) |
 | Throw | #11 Outside Reap (O), #12 Reap and Finish (O) | none | `counterThrow` + thrown state, `downBonus` (R-G2B-04) |
@@ -146,6 +146,8 @@ How the old 10 placeholder Seals land (the Redesign says each becomes a rank eff
 | **Strong Block** | **Guard** | Rides on the last beta Guard rank (#9 High Block Strike, rank 2) | Placeholder amount until PB-09. |
 
 Both are data rows in `seal-families.json`. The Content Designer (PB-06) can move one to another rank in the same family with a one-line edit if Jay's template reads differently. A student who had either old Seal keeps its effect when they equip that family at that rank, so nobody's earned power disappears. PB-02 builds both and PB-09 sets the amounts.
+
+**Jay, Nov 8:** #4's name is **Advancing**, not Drive Back. The effect is the push (`counterPush`). The 1.5 tile guess is unchanged and **needs balance-check**. #16 is an extra hit, not a heal, so Steady Breath does **not** move off this #10 home onto #16. No new heal amount. The full map is in `R-G2B-seal-families-16-40.md`. This beta table's family rows for #1 and #15 were not changed.
 
 ## 5. UI flow: picking and equipping
 

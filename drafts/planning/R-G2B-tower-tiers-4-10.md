@@ -97,7 +97,7 @@ Only one F1-2 enemy (Masklet) in this tier, so rooms 1-2 are Masklet-only. Plann
 
 ### Tier 8: Brown, The Root Library (belt 8)
 
-New: Seals #36-40 (Wide Release, Steady Hold, Lock to Takedown, Release and Go, Master Hold). No new Strike. 4 Seal slots.
+New: Seals #36-40 (Wide Release, Steady Hold, Lock to Takedown, Release and Go, Master Hold). Steady Hold #37 is a Counter rank (Jay, Nov 8), not a Lock rank. No new Strike. 4 Seal slots.
 
 | Group | Enemy | What it does | Tell | Art |
 |---|---|---|---|---|
