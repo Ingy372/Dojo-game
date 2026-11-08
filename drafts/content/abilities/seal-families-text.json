@@ -16,7 +16,7 @@
       "name": "Advancing",
       "text": "Step forward into the attacker and close the distance.",
       "ranks": [
-        { "technique": 4, "name": "OPEN", "text": "A Great Counter pushes the attacker back and leaves them off-balance.", "effectRef": "counterPush 1.5 (S4 #4 OPEN)", "status": "built push, measured in PR #453; family row not in seal-families.json yet" }
+        { "technique": 4, "name": "OPEN", "text": "A Great Counter pushes the attacker back and leaves them off-balance.", "effectRef": "counterPush 1.5 (S4 #4 OPEN)", "status": "built push, measured in PR #453; family row not in seal-families.json yet", "j27": "Name OPEN. Drive Back is retired. Family Advancing, not Escape. The live seal-families.json still needs this family. See familyMoves in J27-seal-renames.json." }
       ]
     },
     {
