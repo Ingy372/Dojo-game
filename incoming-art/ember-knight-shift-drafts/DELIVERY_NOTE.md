@@ -1,6 +1,6 @@
 # Delivery Note — J16 Ember Knight shifted form, draft B
 
-**Draft. Not approved. Not for Jay yet. Do not import. Do not merge as final art.**
+**Jay approved the effects ("much better"). Ready for the Manager to merge. Not imported. Do not copy into the game yet.**
 
 **ITEM:** J16 — draft B, revised after the Manager failed the subtle effects.
 
@@ -15,7 +15,7 @@
 3. Is the Sensei line okay? "Look. The armor cooled."
 4. Reduced Motion keeps the seams, the core, the rim, and the ground pool, and turns off drift and pulse. Is that the right stillness?
 
-**NEXT:** Manager reviews these pictures before Jay. Nothing here is imported.
+**NEXT:** The Manager can merge this art folder. It is not imported. The Programmer handoff is `HANDOFF.md` and `sprites/ember-knight-shift.json`. The picture is the one in commit `8acf72fd`. This export does not change it.
 
 ## Direction change (not a Jay approval)
 
