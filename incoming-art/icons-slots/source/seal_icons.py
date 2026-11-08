@@ -30,7 +30,7 @@ PLACE = {
     'counter': (1.28, 0, 0),
     'strike': (1.14, 30, 0),
     'disarm': (1.16, 18, -4),
-    'spins': (1.24, 0, -12),
+    'spins': (1.24, 0, 0),
 }
 V6_ARROW = {
     'counter': dict(w=7, head=16, spread=0.62, ow=None, outline=(255, 252, 240)),
@@ -557,12 +557,14 @@ def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, 
     bg = floor()
     old_s, new_s = V6_ARROW['spins'], PASS7['spins']
     lock_art = _over([arrow_art(old_s, old_s['outline'], old_s['ow'], head), body_v6()])
-    f, dx, dy = _fit_params(lock_art, W, H, cx, cy, 1.0)
+    f0, dx0, dy0 = _fit_params(lock_art, W, H, cx, cy, 1.0)
     new_all = _over([arrow_art(new_s, INKC, new_s['ow'], new_s['head'], y=arrow_y + 22), body_art()])
     med = medallion(rim)
+    # the floor, ripples and shadow stay on the original fit, clipped to the cream face
+    place(med, bg, f0, dx0, dy0, face_clip())
     sc, nx, ny = PLACE['spins']
-    f, dx, dy = grow_placement(f, dx, dy, sc)
-    place_fit(med, new_all, W, H, cx, cy, bg=bg, lock=(f, dx + nx, dy + ny), clip=wide_clip())
+    f, dx, dy = grow_placement(f0, dx0, dy0, sc)
+    place(med, new_all, f, dx + nx, dy + ny, wide_clip())
     return med.result()
 
 
