@@ -6,7 +6,7 @@ A record of choices already made, newest at the bottom, so settled questions are
 
 Anything waiting on Jay's answer goes here. When he answers, the answer moves into the log below and the question is removed.
 
-(None right now.)
+- **J16 Ember Knight shifted form.** Jay approved the fifth shift: it happens at 33% health, and the knight is invulnerable during the glow. Still to OK, in `drafts/content/enemies/guardian-form-shifts.md`: the working name Warm Shield, the Sensei line "Look. The armor cooled.", and the proposal that the cooled glow lives in the lowered round shield.
 
 ## Milestone 0 — Setup (2026-10-05)
 
@@ -1665,3 +1665,9 @@ First code step of `drafts/planning/R-PROGRESSION-BETA.md` (#407). Data and save
 - The Tester's mutation run on #445 found two mutants of the start-level rule that survived: an old full-shape save (no level or XP, runs played) loading above Level 1 or with XP, and feed sign-offs being ignored. Two tests added to `start-level-pin.test.ts` (8 to 10).
 - The old "applying a belt entry only changes the feed, never the profile" test could not fail (the profile was never passed to anything). It now records the entry on the profile, applies it to the feed, builds the training and calls `gainXp(p, training, 0)`, then checks the profile is byte-for-byte the same and Level 1 / 0 XP.
 - Each new or fixed test fails under its mutant (old save to 1 + runsPlayed, old save with 5 XP, sign-offs ignored, `gainXp` lifting the level to the belt, `gainXp` adding XP at 0). Test-only; no src, content or balance change.
+
+## J16 — Ember Knight is a fifth Guardian form shift (Jay approved, 2026-11-08)
+
+- **Approved.** The Ember Knight shifts at 33% health, the same moment as its forge phase. It is invulnerable during the about-1-second white-gold glow, and it does not attack during that glow. The new form keeps the forge phase's existing attacks. No new tuning numbers.
+- **The brief** is in `drafts/content/enemies/guardian-form-shifts.md` (and the matching entry in `guardian-form-shifts.json`). The working name Warm Shield, the Sensei line, and the shield-glow look are proposals until Jay OKs them. The open questions are at the top of this file.
+- **Scope.** This is the Red Guardian's mid-fight shift. The final boss's three forms stay in their own plan.

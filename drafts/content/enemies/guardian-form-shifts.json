@@ -1,5 +1,5 @@
 {
-  "notes": "DRAFT for C14 (Jay via Manager). Some Guardians do a full form shift mid-fight: they glow for about 1 second, then come back in a new form. The shift happens at the same moment as that Guardian's 33% phase change, so the new form brings the last phase's attacks (no new attacks). Each shift shows the shadow letting go a little, so it reads hopeful, not scarier. Faith text stays out (faithOverlayKey only). newForm names are proposals. Lamp Keeper, Hearth Cook, River Watcher, Ember Knight, Echo Mask and Root Keeper do not shift (see guardian-form-shifts.md).",
+  "notes": "DRAFT for C14 (Jay via Manager). Some Guardians do a full form shift mid-fight: they glow for about 1 second, then come back in a new form. The shift happens at the same moment as that Guardian's 33% phase change, so the new form brings the last phase's attacks (no new attacks). During the glow the Guardian is invulnerable and does not attack. Each shift shows the shadow letting go a little, so it reads hopeful, not scarier. Faith text stays out (faithOverlayKey only). newForm names are proposals. Jay approved Ember Knight as a fifth shift (J16). Its working name Warm Shield is a proposal; the full artist brief, palette, and sources are in guardian-form-shifts.md. Lamp Keeper, Hearth Cook, River Watcher, Echo Mask and Root Keeper do not shift.",
   "glowRule": {
     "glowSeconds": 1,
     "invulnerableDuringGlow": true,
@@ -67,6 +67,21 @@
       "invulnerableDuringGlow": true,
       "keepsPhaseAttacks": true,
       "faithOverlayKey": "lost-lightbearer"
+    },
+    {
+      "guardian": "ember-knight",
+      "tier": "red",
+      "atHealthFraction": 0.33,
+      "phase": "forge",
+      "fromForm": "Ember Knight",
+      "newForm": "Warm Shield",
+      "loreReason": "The hot armor cools. The round shield that kept everyone out becomes a warm light that glows and does not burn.",
+      "artistBrief": "Same rounded knight as the concept (smooth helm, round shoulders, round shield, blunt bar with a ball end, two oval eyes), same height, nothing human-like and nothing above the helm. Shadow wisps gone. Plates cool to copper #c9824a with honey seams #f2c46a. The shield lowers, faces the student, and is the glow: face #ffd08a, rim #ffa560, center #fff1b8. Eyes stay #ffe2c0. The hot orange #e8772e, hot ember #f08a3c, draft #d9532b, and visor black #120e2a stay on the old form. Full brief, sources, and proposals: guardian-form-shifts.md.",
+      "senseiLine": "Look. The armor cooled.",
+      "glowSeconds": 1,
+      "invulnerableDuringGlow": true,
+      "keepsPhaseAttacks": true,
+      "faithOverlayKey": "ember-knight"
     }
   ]
 }

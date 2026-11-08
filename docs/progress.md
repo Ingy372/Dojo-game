@@ -1099,3 +1099,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Tests: `start-level-pin` (8).
 ### START-LEVEL-PIN-GAPS: start-level tests tightened (2026-11-02)
 - Test-only: added "old save without level or XP loads at Level 1 / 0 XP" and "a feed sign-off shows as signed off"; the belt-entry test now runs the profile through `gainXp` so it can fail. `start-level-pin` is now 10 tests.
+
+## J16 — Ember Knight form-shift brief (2026-11-08)
+
+- Artist brief only. The Ember Knight now has a shifted-form entry in `drafts/content/enemies/guardian-form-shifts.md` (working name Warm Shield), with the same 33% glow rules as the other four. The matching draft data is in `guardian-form-shifts.json`. No game code and no new tuning numbers.
+- Next: Jay OKs the name, the Sensei line, and the shield glow. Then the Artist can draw the concept. Wiring the shift into the fight is later.
