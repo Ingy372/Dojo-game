@@ -1,0 +1,171 @@
+{
+  "notes": "J27 (Jay via the Manager): seal callout subtitles use the REAL Action Zone technique names, because they teach the terms. Drop-in for content/abilities/abilities.json seals[0..9]: same ids, same order, same text and effect; only 'name' changes and the old name goes in 'altName' (as #414 did). 'subtitle' is the line under the 'Self-Defense #N!' callout (technique-callouts.json). Each proposed name is copied word for word (title case) from the 'What the student does' column of docs/self-defense.md, at the file and line in 'source'. docs/curriculum.md names no technique steps. OPEN = no single clear real name; the seal keeps its current name until Jay picks. 'about' is a new 8-words-or-fewer line; 'text' is unchanged game text. PROPOSAL only: nothing is renamed in game files. When the Programmer copies a seal over, drop 'technique', 'subtitle', 'callout', 'about', 'source', 'status' and 'openNote' unless the loader takes them. Check: drafts/content/tools/check-j27-seal-names.py.",
+  "seals": [
+    {
+      "id": "off-balance",
+      "technique": 1,
+      "name": "Double Punch",
+      "altName": "Off-Balance",
+      "callout": "Self-Defense #1!",
+      "subtitle": "Double Punch",
+      "about": "Step aside, then punch two times fast.",
+      "source": "docs/self-defense.md:11",
+      "status": "PROPOSED",
+      "text": "Great Counters leave the attacker off-balance half a second longer.",
+      "effect": {
+        "type": "staggerTicks",
+        "amount": 10
+      }
+    },
+    {
+      "id": "escape-step",
+      "technique": 2,
+      "name": "Escape Step",
+      "altName": null,
+      "callout": "Self-Defense #2!",
+      "subtitle": "Escape Step",
+      "about": null,
+      "source": null,
+      "status": "OPEN",
+      "openNote": "Same moves as #1, other side, so no separate name. Candidate: reuse 'Double Punch' (line 12 says 'Same as #1').",
+      "text": "A Block instantly recharges DASH, so you can get away.",
+      "effect": {
+        "type": "dashOnBlock"
+      }
+    },
+    {
+      "id": "sweep",
+      "technique": 3,
+      "name": "Back Fist",
+      "altName": "Sweep",
+      "callout": "Self-Defense #3!",
+      "subtitle": "Back Fist",
+      "about": "Spin around and strike with a back fist.",
+      "source": "docs/self-defense.md:13",
+      "status": "PROPOSED",
+      "text": "Great Counters also knock into enemies close by.",
+      "effect": {
+        "type": "rippleCounter",
+        "amount": 0.6,
+        "radius": 1.2
+      }
+    },
+    {
+      "id": "steady-breath",
+      "technique": 4,
+      "name": "Steady Breath",
+      "altName": null,
+      "callout": "Self-Defense #4!",
+      "subtitle": "Steady Breath",
+      "about": null,
+      "source": null,
+      "status": "OPEN",
+      "openNote": "Several real moves (outside block, double punch). Candidates: 'Outside Block' (line 14) or 'Double Punch' (line 14, also #1).",
+      "text": "Each Great Counter restores 3 Health.",
+      "effect": {
+        "type": "healOnPerfect",
+        "amount": 3
+      }
+    },
+    {
+      "id": "strong-block",
+      "technique": 5,
+      "name": "Strong Block",
+      "altName": null,
+      "callout": "Self-Defense #5!",
+      "subtitle": "Strong Block",
+      "about": null,
+      "source": null,
+      "status": "OPEN",
+      "openNote": "Candidates: 'Back Fist' (line 15, also #3) or the elbow strike (line 15 says 'spin with an elbow', not a set name).",
+      "text": "Blocks take 10% less damage.",
+      "effect": {
+        "type": "blockCut",
+        "amount": 0.1
+      }
+    },
+    {
+      "id": "sharp-eyes",
+      "technique": 6,
+      "name": "Sharp Eyes",
+      "altName": null,
+      "callout": "Self-Defense #6!",
+      "subtitle": "Sharp Eyes",
+      "about": null,
+      "source": null,
+      "status": "OPEN",
+      "openNote": "Candidate: 'Hook Punch' (line 16), but the attacker also throws a hook punch, which could confuse.",
+      "text": "The Great Counter window is 1 tick longer.",
+      "effect": {
+        "type": "counterWindow",
+        "amount": 1
+      }
+    },
+    {
+      "id": "create-distance",
+      "technique": 7,
+      "name": "Palm Heel",
+      "altName": "Create Distance",
+      "callout": "Self-Defense #7!",
+      "subtitle": "Palm Heel",
+      "about": "Trap the arm, then one strong palm strike.",
+      "source": "docs/self-defense.md:17",
+      "status": "PROPOSED",
+      "text": "Blocks shove the attacker back, bouncing 20% of the hit back at them.",
+      "effect": {
+        "type": "blockReflect",
+        "amount": 0.2
+      }
+    },
+    {
+      "id": "disarm",
+      "technique": 8,
+      "name": "Disarm",
+      "altName": null,
+      "callout": "Self-Defense #8!",
+      "subtitle": "Disarm",
+      "about": null,
+      "source": null,
+      "status": "OPEN",
+      "openNote": "Block-and-strike together (line 18) has no set name. Candidate: 'Outside Block' (also #4, #6, #7, #9).",
+      "text": "After a Great Counter, that attacker's next attack does half damage.",
+      "effect": {
+        "type": "disarm",
+        "amount": 0.5
+      }
+    },
+    {
+      "id": "throw",
+      "technique": 9,
+      "name": "Throw",
+      "altName": null,
+      "callout": "Self-Defense #9!",
+      "subtitle": "Throw",
+      "about": null,
+      "source": null,
+      "status": "OPEN",
+      "openNote": "Same as #8, high (line 19). No set name. Candidate: 'Outside Block'.",
+      "text": "Great Counter hits are 25% stronger.",
+      "effect": {
+        "type": "counterStrength",
+        "amount": 0.5
+      }
+    },
+    {
+      "id": "follow-through",
+      "technique": 10,
+      "name": "Double Knifehand Block",
+      "altName": "Follow Through",
+      "callout": "Self-Defense #10!",
+      "subtitle": "Double Knifehand Block",
+      "about": "Block with both hands, then grab the arm.",
+      "source": "docs/self-defense.md:20",
+      "status": "PROPOSED",
+      "text": "Off-balance (staggered) enemies take 15% more damage.",
+      "effect": {
+        "type": "staggerBonus",
+        "amount": 0.15
+      }
+    }
+  ]
+}
