@@ -5,6 +5,7 @@ import { loadAbilities, type AbilityContent } from './abilities';
 import { loadDojoContent, type DojoContent } from './dojo';
 import { loadElites, type EliteRules } from './elite';
 import { loadEnemy, type EnemyDef } from './enemy';
+import { guardianScaleFor, loadGuardianScale, NO_GUARDIAN_SCALE, scaleEnemyDef, type GuardianScaleContent } from './guardScale';
 import { loadNamed, type NamedContent } from './named';
 import { loadInsights, type InsightDef } from './insight';
 import { loadLootTables, type LootTables } from './loot';
@@ -21,6 +22,8 @@ export interface Content {
   twists: TwistContent;
   elites: EliteRules;
   named: NamedContent;
+  /** GUARD-SCALE-01: Guardian size and the boss zoom-out. */
+  guardianScale: GuardianScaleContent;
 }
 
 export interface RawContent {
@@ -39,12 +42,16 @@ export interface RawContent {
   twists: unknown;
   elites: unknown;
   named: unknown;
+  /** GUARD-SCALE-01: content/settings/guardian-scale.json (missing = no scaling). */
+  guardianScale?: unknown;
 }
 
 export function loadContent(raw: RawContent): Content {
   const enemies: Record<string, EnemyDef> = {};
+  const guardianScale = raw.guardianScale === undefined ? NO_GUARDIAN_SCALE : loadGuardianScale(raw.guardianScale);
   for (const data of raw.enemies) {
-    const e = loadEnemy(data);
+    const e0 = loadEnemy(data);
+    const e = scaleEnemyDef(e0, guardianScaleFor(guardianScale, e0.id, e0.boss), guardianScale.attackGrowth, guardianScale.reachGrowth);
     if (enemies[e.id]) throw new Error(`Two enemy files use the id "${e.id}"`);
     enemies[e.id] = e;
   }
@@ -97,5 +104,6 @@ export function loadContent(raw: RawContent): Content {
     twists: loadTwists(raw.twists),
     elites,
     named,
+    guardianScale,
   };
 }

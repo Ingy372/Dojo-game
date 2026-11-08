@@ -1,0 +1,64 @@
+{
+  "kind": "ui-icons",
+  "notImported": true,
+  "readyFor": "Manager review, then the Programmer imports. Nothing in this folder is in the game yet.",
+  "pixelsPerTile": 80,
+  "size": [128, 128],
+  "anchorPx": [64, 64],
+  "anchorNote": "anchor = centre of the 128 x 128 image",
+  "marginPx": 8,
+  "frames": 1,
+  "at2x": "each file also has a sibling <name>@2x.png at 256 x 256, with a 16 px margin (the same 8 px at 1x)",
+  "beltPlaceholder": {
+    "icon": "jumping-spins",
+    "colour": "pine",
+    "fill": "#20705A",
+    "fillRgb": [32, 112, 90],
+    "shade": "#124A3A",
+    "shadeRgb": [18, 74, 58],
+    "whoChoseIt": "Manager, as a placeholder so the icon can be judged in the game",
+    "not": "Jay has not picked a belt colour. This is not a rank and it does not change the belt system. The bronze alternative is archived, not exported."
+  },
+  "sprites": {
+    "counter": {
+      "file": "counter.png",
+      "family": "Counter",
+      "note": "Seal family medallion. Reverse punch, blue spin arrow, arrowhead in the cream past the legs."
+    },
+    "guard": {
+      "file": "guard.png",
+      "family": "Guard",
+      "note": "Seal family medallion. Crossed-arm block and a shield. No motion arrow."
+    },
+    "strike": {
+      "file": "strike.png",
+      "family": "Strike",
+      "note": "Strike slot. Front kick on a pad. Gold impact burst, not a motion arrow."
+    },
+    "disarm": {
+      "file": "disarm.png",
+      "family": "Disarm",
+      "note": "Seal family medallion. Front kick on a padded stick. Gold impact burst, not a motion arrow."
+    },
+    "jumping-spins": {
+      "file": "jumping-spins.png",
+      "family": "Strike",
+      "note": "Jumping Spins. Straight kick from the hip. Pine belt is the Manager's placeholder, not Jay's colour pick."
+    },
+    "kata": {
+      "file": "kata.png",
+      "family": "Kata",
+      "note": "Kata slot. Footprints on a mat and a direction mark."
+    },
+    "lock": {
+      "file": "lock.png",
+      "family": "Lock",
+      "note": "Seal family not open yet. A lock."
+    },
+    "empty-slot": {
+      "file": "empty-slot.png",
+      "family": "slot",
+      "note": "Empty Seal slot. A plus in a socket."
+    }
+  }
+}
