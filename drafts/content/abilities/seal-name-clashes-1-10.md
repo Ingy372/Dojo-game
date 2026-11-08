@@ -16,7 +16,7 @@ Written 2026-11-01 by the Content Writer.
 | 1 | Off-Balance (`off-balance`) | Off the Line | Step off the line, double punch | **Clash.** The docs say "Partly". "Off-Balance" names a status the enemy gets, not what the student does. Near-clash with S4 "Off the Line". |
 | 2 | Escape Step (`escape-step`) | Other Side | Same as #1, other direction | **Name clash**, effect fits ("Yes, avoidance"). Near-clash with S4 #25 "Escape from Behind" and S4 #18 "Slide Away". |
 | 3 | Sweep (`sweep`) | Spin Back Fist | Inside block, spin, back fist | **Clash.** The docs say the name is wrong: #3 is not a sweep. |
-| 4 | Steady Breath (`steady-breath`) | Drive Back | Advancing combo | **Clash.** The docs say "No". |
+| 4 | Steady Breath (`steady-breath`) | OPEN | OPEN. Advancing is the family, not the name, and it is not Escape. | **Clash.** The docs say "No". The old game name Drive Back is retired. |
 | 5 | Strong Block (`strong-block`) | Spin Elbow | Spin strike with an elbow | **Clash.** The docs say "No". The "less Block damage" effect of "Strong Block" returns at S4 #26 as "Shoulder Control", so "Strong Block" is retired. |
 | 6 | Sharp Eyes (`sharp-eyes`) | Arm Wrap | Trap and combo | **Clash.** The docs say "No". |
 | 7 | Create Distance (`create-distance`) | Palm Heel | A trap and one strong strike | **Clash.** The docs say "No". |
