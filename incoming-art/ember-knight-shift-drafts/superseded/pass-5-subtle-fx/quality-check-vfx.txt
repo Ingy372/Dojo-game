@@ -1,0 +1,22 @@
+Draft B effects — second look at the real frames
+
+Danger red: hue under 0.03, strong colour, bright. Clipping: opaque pixels within 8 px of the frame.
+normal-0: danger-red 0, near-white 52, margin L113 R127 T185 B63
+normal-1: danger-red 0, near-white 0, margin L113 R127 T185 B63
+normal-2: danger-red 0, near-white 0, margin L110 R123 T182 B59
+normal-3: danger-red 0, near-white 48, margin L148 R123 T190 B52
+normal-4: danger-red 0, near-white 48, margin L148 R123 T190 B52
+normal-5: danger-red 0, near-white 48, margin L148 R123 T190 B52
+normal-6: danger-red 0, near-white 48, margin L148 R123 T190 B52
+normal-7: danger-red 0, near-white 48, margin L148 R123 T190 B52
+reduced-0: danger-red 0, near-white 52, margin L113 R127 T185 B63
+reduced-1: danger-red 0, near-white 0, margin L113 R127 T185 B63
+reduced-2: danger-red 0, near-white 0, margin L113 R127 T185 B63
+reduced-3: danger-red 0, near-white 0, margin L113 R124 T185 B53
+reduced-4: danger-red 0, near-white 48, margin L148 R123 T190 B52
+reduced-5: danger-red 0, near-white 48, margin L148 R123 T190 B52
+reduced-6: danger-red 0, near-white 48, margin L148 R123 T190 B52
+reduced-7: danger-red 0, near-white 48, margin L148 R123 T190 B52
+Reduced Motion idle frames identical: True
+Eyes stay on the helm. Steam stays on the shield side and below the eyes.
+Result: CLEAR
