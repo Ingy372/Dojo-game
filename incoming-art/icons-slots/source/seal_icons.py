@@ -19,6 +19,19 @@ PASS7 = {
 # Silhouette ink. The spec asks for a thick 2 px outline on the 128 px file, which is ow 4 at this drawing size
 # (1 U = 0.5 px at 128). Guard, Strike and Disarm were 3.0 to 3.2 (1.5 px). Counter and Spins were already 4.6.
 LINE = {'was_thin': 3.0, 'guard_body': 3.2, 'now': 4.6}
+# Pass 7b. The cream face was keeping the figures small. They now grow by this factor around the same centre,
+# and they may cover the coloured ring. The canvas and the ring drawing do not change. Fists and feet must stay
+# inside the canvas (they are checked after each render).
+FIG_SCALE = 1.28
+# Per-icon scale and a nudge in U, chosen so the figure covers the coloured ring but fists and feet are not cut
+# by the canvas. Strike and Disarm sit further left, so they grow a little less and shift inward.
+PLACE = {
+    'guard': (1.28, 0, 0),
+    'counter': (1.28, 0, 0),
+    'strike': (1.14, 30, 0),
+    'disarm': (1.16, 18, -4),
+    'spins': (1.24, 0, -12),
+}
 V6_ARROW = {
     'counter': dict(w=7, head=16, spread=0.62, ow=None, outline=(255, 252, 240)),
     'spins': dict(w=8, head=27, spread=0.62, ow=None, outline=(255, 252, 240)),
@@ -42,6 +55,19 @@ def face_clip():
     m = Image.new('L', (P(U), P(U)), 0)
     ImageDraw.Draw(m).ellipse([P(128 - FACE_R), P(128 - FACE_R), P(128 + FACE_R), P(128 + FACE_R)], fill=255)
     return m
+
+
+def wide_clip(r=124):
+    """lets the figure paint over the coloured ring. r 124 stays inside the 256 canvas (edge is 128)."""
+    m = Image.new('L', (P(U), P(U)), 0)
+    ImageDraw.Draw(m).ellipse([P(128 - r), P(128 - r), P(128 + r), P(128 + r)], fill=255)
+    return m
+
+
+def grow_placement(f, dx, dy, s=None, ox=128.0, oy=128.0):
+    """scale a placement by s around (ox, oy). A placed point is dx + f*u."""
+    s = FIG_SCALE if s is None else s
+    return s * f, ox + s * (dx - ox), oy + s * (dy - oy)
 
 
 def medallion(rim, face=CREAM, face_dish=CREAM_S):
@@ -124,15 +150,20 @@ def _fit_params(art, wmax, hmax, cx, cy, fmax):
     return f, cx - f * mx, cy - f * my
 
 
-def place_fit(med, art, wmax, hmax, cx=128, cy=128, bg=None, fmax=1.0, lock=None):
-    """scale `art` to fit wmax x hmax U (its own bounding box), centre it at (cx, cy) on the medallion inside the face clip; `bg` (floor) uses the same transform.
-    `lock` is (f, dx, dy) from the v6 art. Pass it when the only change is a thicker arrow, so the new bounding box cannot move or scale the figure."""
+def place_fit(med, art, wmax, hmax, cx=128, cy=128, bg=None, fmax=1.0, lock=None, clip=None, grow=None):
+    """scale `art` to fit wmax x hmax U (its own bounding box), centre it at (cx, cy); `bg` (floor) uses the same transform.
+    `lock` is (f, dx, dy). `grow` multiplies that placement around (128, 128) so the figure gets bigger without a new auto-fit.
+    The default clip is the cream face. Pass wide_clip() when the figure may cover the coloured ring."""
     if lock is None:
         f, dx, dy = _fit_params(art, wmax, hmax, cx, cy, fmax)
     else:
         f, dx, dy = lock
+    if grow:
+        f, dx, dy = grow_placement(f, dx, dy, grow)
+    if clip is None:
+        clip = face_clip()
     for layer in ([bg] if bg is not None else []) + [art]:
-        place(med, layer, f, dx, dy, face_clip())
+        place(med, layer, f, dx, dy, clip)
     return f
 
 
@@ -165,8 +196,10 @@ def counter(rim=RIMS['counter'], hx=104, hr=22, ty=90, tw=52, th=76, belt=136, s
     old_s, new_s = V6_ARROW['counter'], PASS7['counter']
     # lock to the pass-6 sleeve (ow 3) and the pass-6 arrow, so the thicker sleeve cannot move the figure
     f, dx, dy = _fit_params(draw(old_s, old_s['outline'], old_s['ow'], 3.0), W, H, cx, cy, 1.0)
+    sc, nx, ny = PLACE['counter']
+    f, dx, dy = grow_placement(f, dx, dy, sc)
     med = medallion(rim)
-    place_fit(med, draw(new_s, INKC, new_s['ow'], LINE['now']), W, H, cx, cy, lock=(f, dx, dy))
+    place_fit(med, draw(new_s, INKC, new_s['ow'], LINE['now']), W, H, cx, cy, lock=(f, dx + nx, dy + ny), clip=wide_clip())
     return med.result()
 
 
@@ -215,7 +248,9 @@ def guard(rim=RIMS['guard'], eo=26.5, ey=185, wx=10, wy=148, fs=30, front=1, shi
     back, fr = (B, A) if front == -1 else (A, B)
     for el, wr, sd in (back, fr):
         forearm_block(a, el, wr, fs, 0, sd, clip=c, r_el=r_el, r_cuff=r_cuff, gow=LINE['now'])
-    place(med, a, f, 128 - f * 128, 128 - f * cy, face_clip())
+    sc, nx, ny = PLACE['guard']
+    fs = f * sc
+    place(med, a, fs, 128 - fs * 128 + nx, 128 - fs * cy + ny, wide_clip())
     return med.result()
 
 
@@ -257,7 +292,7 @@ def stick(a, cx, cy, ang, clip=None, k=1.0):
     a.line(L([(-4, -6), (34, -6)]), lighten(PADB, .5), 2.6, clip=clip)                                           # soft sheen
 
 
-def hip_high_kick(a, hip, knee, ankle, ow=4.6, sc=0.58, flex=-12):
+def hip_high_kick(a, hip, knee, ankle, ow=4.6, sc=0.62, flex=22):
     """a high kick whose thigh starts at the hip joint and angles up. The shin and the toeless shoe are the shared kick_leg,
     so the knee meets the thigh and the sole faces the kick. Returns the sole point for the burst."""
     dx, dy = knee[0] - ankle[0], knee[1] - ankle[1]
@@ -298,15 +333,18 @@ def disarm(rim=RIMS['disarm'], ang_deg=-24, ankle=(92, 166), flex=-14, stickang=
     """v4 (premium pass): a front snap kick that knocks a padded training stick away. Shin, ankle and shoe are drawn ONCE in a standing frame (shin straight up
     from the ankle, toes right) and rotated as one rigid group, so the shin-to-foot line cannot kink. The gi cuff meets a short, natural strip of ankle, then the
     shoe (blue foam upper with a gold collar, pale sole with a clear rounded heel). The foot is flexed about 90 degrees, as in a real front kick, with the SOLE
-    facing the stick. The burst on the sole is the hit, which is also the source of the glow. Nothing above the head. 0 toes (a toeless shoe)."""
-    a = medallion(rim)
-    c = face_clip()
-    G, fl = kick_leg(a, ankle, ang_deg, flex, sc, 120, c, gow=LINE['now'])
+    facing the stick. The burst on the sole is the hit, which is also the source of the glow. Nothing above the head. 0 toes (a toeless shoe).
+    Pass 7b draws the same pose larger, so it may cover the coloured ring. The canvas is not cropped."""
+    a = Art()
+    G, fl = kick_leg(a, ankle, ang_deg, flex, sc, 120, None, gow=LINE['now'])
     bx, by = G([(16, 56)], fl)[0]
     sx, sy = G([(16, sd)], fl)[0]
-    stick(a, sx, sy + sdy, stickang, clip=c, k=k)
-    burst(a, bx, by, 7, 15, 8, .2, clip=c)
-    return a.result()
+    stick(a, sx, sy + sdy, stickang, clip=None, k=k)
+    burst(a, bx, by, 7, 15, 8, .2, clip=None)
+    med = medallion(rim)
+    s, nx, ny = PLACE['disarm']
+    place(med, a, s, 128 * (1 - s) + nx, 128 * (1 - s) + ny, wide_clip())
+    return med.result()
 
 
 # ------------------------------------------------------------------ LOCK (Seal family, not open yet)
@@ -331,16 +369,18 @@ PAD, PAD_S = (64, 174, 160), (36, 126, 122)   # kick-pad teal (not the shoe blue
 
 def strike(rim=RIMS['strike'], ax=92, ay=138, ang=0, sc=1.1):
     """v4 (premium pass): a front kick landing on a kick pad. The same rigid shin, ankle and flexed shoe as Disarm (sole to the pad), a gold burst where they meet,
-    and a teal pad with a gold target. 0 toes."""
-    a = medallion(rim)
-    c = face_clip()
-    a.shape(poly(rrect_pts(180, 128, 40, 92, 14)), PAD, PAD_S, lighten(PAD, .35), ow=3.2, band=5, clip=c)
-    a.shape(circ(180, 128, 15), GOLD, GOLD_S, (255, 232, 140), ow=2.4, band=3, clip=c)
-    a.shape(circ(180, 128, 6), PAD_S, None, None, ow=0, clip=c)
-    G, fl = kick_leg(a, (ax, ay), ang, -14, sc, 120, c, gow=LINE['now'])
+    and a teal pad with a gold target. 0 toes. Pass 7b is the same pose, drawn larger, and it may cover the coloured ring."""
+    a = Art()
+    a.shape(poly(rrect_pts(180, 128, 40, 92, 14)), PAD, PAD_S, lighten(PAD, .35), ow=3.2, band=5)
+    a.shape(circ(180, 128, 15), GOLD, GOLD_S, (255, 232, 140), ow=2.4, band=3)
+    a.shape(circ(180, 128, 6), PAD_S, None, None, ow=0)
+    G, fl = kick_leg(a, (ax, ay), ang, -14, sc, 120, None, gow=LINE['now'])
     bx, by = G([(16, 56)], fl)[0]
-    burst(a, bx + 4, by, 7, 15, 8, .2, clip=c)
-    return a.result()
+    burst(a, bx + 4, by, 7, 15, 8, .2)
+    med = medallion(rim)
+    s, nx, ny = PLACE['strike']
+    place(med, a, s, 128 * (1 - s) + nx, 128 * (1 - s) + ny, wide_clip())
+    return med.result()
 
 
 # ------------------------------------------------------------------ KATA slot glyph
@@ -451,9 +491,8 @@ def _spins_pts(hx, arw, arrow_y, ary):
 
 def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, belt=130, hip=160, sw=48, ww=40, hr=22,
            sl=((-9, 152), (-4, 176), (-12, 196)), arw=70, arrow_y=152, ary=15, head=27, W=152, H=152, cx=128, cy=121):
-    """pass 7: the kicking thigh now leaves the hip, under the belt, and angles up into a high kick. The head, guard fist,
-    standing leg and jacket stay on the pass-6 fit, so they do not slide. The spin arrow is thicker, with a dark ink outline, and sits behind the body.
-    1 fist, 0 fingers, 0 toes. Not approved: the Manager checks the hip before Jay."""
+    """pass 7b draft: one nearly straight kicking leg from the hip, about 45 degrees up, foot near shoulder height.
+    The support knee is slightly bent and the torso leans back a little. Same heavier arrow. Placed at FIG_SCALE over the ring. 1 fist, 0 fingers, 0 toes. Not approved."""
     def floor():
         bg = Art(); fy = sl[2][1] + 19
         bg.shape(poly(rrect_pts(128, fy + 19, 230, 44, 10)), (214, 198, 134), (186, 168, 104), None, ow=0, band=4)
@@ -464,23 +503,30 @@ def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, 
 
     def body_art():
         a = Art()
-        (h0, k0, a0) = [(hx + dx, y) for dx, y in sl]
+        # support leg: a small knee bend, not a crouch. Knee sits a little forward of the hip-to-ankle line.
+        stand = ((-8, 154), (6, 174), (-6, 200))
+        (h0, k0, a0) = [(hx + dx, y) for dx, y in stand]
         sleeve(a, h0, k0, 13, 11.5, ow=4.6, shade=GSH, band=6)
         sleeve(a, k0, (a0[0], a0[1] - 10), 11.5, 10.5, ow=4.6, shade=GSH, band=6)
         kick_leg(a, a0, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
-        # thigh leaves the pelvis (under the belt), then the shin rises. Not the old shoulder-level shin.
-        # hip joint sits inside the pelvis; the thigh leaves the hip hem (below the belt) and the shin rises.
-        # knee is out beside the hip, not up at the armpit, so the two shapes stay apart even at 30 px.
-        sole = hip_high_kick(a, (hx + 2, hip - 2), (hx + 56, hip - 14), (hx + 72, ttop + 8))
+        # one nearly straight leg from the hip, about 45 degrees up. The knee is only a few units off that line.
+        hip_pt = (hx + 4, hip - 4)   # inside the pelvis; the leg leaves the hip hem
+        deg = 45.0
+        reach = 70.0
+        ankle = (hip_pt[0] + reach * math.cos(math.radians(deg)), hip_pt[1] - reach * math.sin(math.radians(deg)))
+        # knee sits ON the hip-to-ankle line, so the silhouette is one straight leg, not an L
+        knee = ((hip_pt[0] + ankle[0]) / 2, (hip_pt[1] + ankle[1]) / 2)
+        sole = hip_high_kick(a, hip_pt, knee, ankle, flex=22)
         burst(a, sole[0], sole[1], 6, 13, 7, .15)
-        jack = chaikin([(hx - sw / 2, ttop + 12), (hx - sw / 2 + 5, ttop), (hx + sw / 2 - 5, ttop), (hx + sw / 2, ttop + 12), (hx + ww / 2, belt), (hx - ww / 2, belt)], 2)
+        lean = 9  # shoulders and head shift back, away from the kick; the belt stays put
+        jack = chaikin([(hx - sw / 2 - lean, ttop + 12), (hx - sw / 2 + 5 - lean, ttop), (hx + sw / 2 - 5 - lean, ttop), (hx + sw / 2 - lean, ttop + 12), (hx + ww / 2, belt), (hx - ww / 2, belt)], 2)
         pants = chaikin([(hx - ww / 2 - 1, belt - 4), (hx + ww / 2 + 1, belt - 4), (hx + ww / 2 + 3, hip - 6), (hx + ww / 2 - 4, hip), (hx - ww / 2 + 4, hip), (hx - ww / 2 - 3, hip - 6)], 2)
         a.shape(poly(pants), PANT, GSH, (255, 255, 250), ow=4.6, band=6)
         a.shape(poly(jack), GI, GSH, (255, 255, 250), ow=4.6, band=6)
         a.shape(poly(rrect_pts(hx, belt, ww + 6, 14, 5)), BELT, BELT_S, lighten(BELT, .3), ow=3.0, band=3)
-        limb(a, (hx, ttop - 6), (hx, ttop + 6), 8, 8)
-        head_front(a, hx, ttop - 26, hr)
-        forearm_block(a, (hx - sw / 2 - 12, belt - 2), (hx - sw / 2 - 8, 96), 24, -math.pi / 2 + .1, 1, r_el=10, r_cuff=9, gband=6, **GK)
+        limb(a, (hx - lean * .6, ttop - 6), (hx - lean * .25, ttop + 6), 8, 8)
+        head_front(a, hx - lean, ttop - 28, hr)
+        forearm_block(a, (hx - sw / 2 - 12 - lean, belt - 2), (hx - sw / 2 - 8 - lean, 92), 24, -math.pi / 2 + .1, 1, r_el=10, r_cuff=9, gband=6, **GK)
         return a
 
     def arrow_art(spec, outline, ink_ow, head_n, y=None):
@@ -514,7 +560,9 @@ def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, 
     f, dx, dy = _fit_params(lock_art, W, H, cx, cy, 1.0)
     new_all = _over([arrow_art(new_s, INKC, new_s['ow'], new_s['head'], y=arrow_y + 22), body_art()])
     med = medallion(rim)
-    place_fit(med, new_all, W, H, cx, cy, bg=bg, lock=(f, dx, dy))
+    sc, nx, ny = PLACE['spins']
+    f, dx, dy = grow_placement(f, dx, dy, sc)
+    place_fit(med, new_all, W, H, cx, cy, bg=bg, lock=(f, dx + nx, dy + ny), clip=wide_clip())
     return med.result()
 
 
