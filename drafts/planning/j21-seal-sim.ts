@@ -243,7 +243,29 @@ const SHRINK: Setup[] = [
   { name: 'block0.02', effects: [{ type: 'blockCut', amount: 0.02 }] },
 ];
 
-const setups = mode === 'ceil' ? CEIL : mode === 'shrink' ? SHRINK : TABLE;
+/**
+ * #16 on the kata-kick hook: one extra hit after a Great Counter, strength 0.3.
+ * The fight adds the hit counts and keeps the higher strength (effects.ts).
+ * Two copies are #16 plus the kata kick. The amount is the same on every difficulty.
+ */
+const KICK03: Effect = { type: 'counterHits', hits: 1, amount: 0.3 };
+const C16: Setup[] = [
+  { name: 'cue', effects: [] },
+  { name: 'c16', effects: [KICK03] },
+  { name: 'both', effects: [KICK03, { type: 'counterHits', hits: 1, amount: 0.3 }] },
+  { name: 'hh', effects: [], insights: ['heavy-hands'] },
+  { name: 'hh+c16', effects: [KICK03], insights: ['heavy-hands'] },
+  { name: 'hh+both', effects: [KICK03, { type: 'counterHits', hits: 1, amount: 0.3 }], insights: ['heavy-hands'] },
+  { name: 'pair', effects: [], insights: ['ripple-counter', 'heavy-hands'] },
+  { name: 'pair+c16', effects: [KICK03], insights: ['ripple-counter', 'heavy-hands'] },
+  { name: 'pair+both', effects: [KICK03, { type: 'counterHits', hits: 1, amount: 0.3 }], insights: ['ripple-counter', 'heavy-hands'] },
+  { name: 'rooted+c16', effects: [KICK03], insights: ['ripple-counter', 'iron-skin'] },
+  { name: 'flowing+c16', effects: [KICK03], insights: ['wind-step', 'double-strike', 'quick-hands'] },
+  { name: 'power+c16', effects: [KICK03], insights: ['press-the-advantage', 'shield-breaker', 'heavy-hands'] },
+  { name: 'power+both', effects: [KICK03, { type: 'counterHits', hits: 1, amount: 0.3 }], insights: ['press-the-advantage', 'shield-breaker', 'heavy-hands'] },
+];
+
+const setups = mode === 'ceil' ? CEIL : mode === 'shrink' ? SHRINK : mode === 'c16' ? C16 : TABLE;
 
 describe('j21 seal amounts', () => {
   it('measures', () => {

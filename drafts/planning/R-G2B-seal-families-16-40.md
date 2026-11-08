@@ -10,10 +10,10 @@ These win where they disagree with the Nov 1 proposal.
 
 1. **#4 is named Advancing, and it pushes an enemy back.** The old game name Drive Back is retired. It stays in the Escape family (a push makes space). The 1.5-tile distance was measured and kept.
 2. **#25 Escape from Behind is a general escape** (team call). The built effect is a Block refilling Dash. It measured PE 0. No amount was added.
-3. **#16 is a quick two-hit follow-up (one extra hit), not a heal.** In class it is a very quick hammer fist low, then a back fist high. Game text says "quick low hammer fist, then a high back fist." It does not say groin or face. Why: the real move is two fast strikes in a row, so the seal adds a hit. A heal would not look like the move. The written amount stays `strikeExtraHit` 0.3. It was measured and does not fit the reserve, and it was not replaced. Names are in `drafts/content/abilities/J27-audit.md`.
+3. **#16 is a quick two-hit follow-up after a Great Counter, not a heal.** In class it is a very quick hammer fist low, then a back fist high. Game text says "quick low hammer fist, then a high back fist." It does not say groin or face. Why: the real move is two fast strikes in a row, so the seal adds a hit after the counter. It uses the same hook as the kata kick: one extra hit, strength 0.3. The same strength is used on Guided, Standard, and Challenge. A Strike-button extra hit at 0.3 did not fit, so this is not that. Names are in `drafts/content/abilities/J27-audit.md`.
 4. **Each seal works alone** (team call). No seal needs another seal equipped. #26's block cut, measured on its own, is 0.02. #37 adds no tick. #34, #38, and #40 stay stand-alone, and they were not measured because a thrown state is not in the fight rules.
 5. **Old placeholder powers:** the team lean in Conflict 6 is applied. Steady Breath does **not** go on #16, because #16 is the extra hit. It **shares #10** (see below).
-6. **#37 Steady Hold moves to the Counter family. Yes.** It is Counter rank 10. The written effect was the Counter window 1 tick longer, on its own. The balance check found that +1 tick does not fit. No smaller whole tick exists, so the rank does not add a tick.
+6. **#37 Steady Hold moves to the Counter family. Yes.** It is Counter rank 10. The +1 tick is removed. With Steady Hold equipped, the counter window keeps the gold "!" and the gold COUNTER flash the game already draws, and the existing guard swish plays once when that window opens. No fight number changes. It measured 0 PE on every belt.
 7. **#19 Wrist Lock moves to Disarm.** Why: the effect that is built is `disarm` at a full cut for one attack (the fight rules cap a disarm at 0.9). It does not hold the enemy. A Lock rank is a hold. Putting a disarm on the Lock seal would make Lock disarm, and would leave the Disarm seal without this rank. So it is Disarm rank 3, between Kick and Spin and X-Block Lock.
 
 Real technique names are the Content Designer's list in `drafts/content/abilities/J27-audit.md`. This note does not keep its own name list.
@@ -50,7 +50,7 @@ Names, belts and S4 effects are copied from `S4-self-defense-powers.md` (not fro
 | 13 | Orange | Kick the Weapon | Disarm | 1 | Attacker's next attack does half damage (`disarm`) | same | Yes (built) |
 | 14 | Orange | Kick and Spin | Disarm | 2 | Disarm lasts 2 attacks (new `disarmAttacks`) | Disarm cuts more (a bigger number) | Yes (flag dropped) |
 | 15 | Orange | Slip and Double | Counter | 7 | Off the Line gets a 3rd punch, Counter window +1 tick (`counterHits`, `counterWindow`) | Counter window +1 tick, counter harder again | Yes |
-| 16 | Green | Low-High Strike | Counter | 8 | Strikes add a second hit, 30% (`strikeExtraHit`) | Jay, Nov 8: a quick two-hit follow-up (one extra hit), not a heal. Game text: "quick low hammer fist, then a high back fist." No groin or face. Measured: 0.3 does not fit. Amount not changed. | Yes (`strikeExtraHit`). Measured, does not fit |
+| 16 | Green | Low-High Strike | Counter | 8 | Strikes add a second hit, 30% (`strikeExtraHit`) | One extra hit after a Great Counter, strength 0.3, same hook as the kata kick (`counterHits`). Same number on every difficulty. Measured: fits. | Yes. Measured |
 | 17 | Green | Arm Bar | Lock | 1 | Counter locks attacker 20 ticks, no blocking or shield (new `counterLock`) | same | **New (Lock)** |
 | 18 | Green | Slide Away | Escape | 3 | Dash through a padded-staff attack gives +10 Focus (new `dashDodgeFocus`) | Dash through any attack gives a little Focus (twist) | Small |
 | 19 | Green | Wrist Lock | Disarm | 3 | Disarm vs a padded-staff enemy is full for 1 attack | Team lean: Disarm, because the built effect is a full disarm (`disarm` 1.0, capped at 0.9 in the fight rules), not a hold | Small |
@@ -71,7 +71,7 @@ Names, belts and S4 effects are copied from `S4-self-defense-powers.md` (not fro
 | 34 | Red/Black | Lock and Drop | Throw | 4 | When a lock ends, enemy is thrown instead, down 30 ticks | Works alone. Thrown enemies stay down longer. No tick count was set, and a thrown state is not in the fight rules, so this was not measured. | Not measured |
 | 35 | Red/Black | Catch the Hand | Lock | 6 | A Block locks a quick attacker (wind-up 12 or less) 10 ticks (new `blockLock`) | same | Small (Lock) |
 | 36 | Brown | Wide Release | Lock | 7 | Release pushes +0.5 tile, bumped enemies knock others (new flag) | same | Small (Lock) |
-| 37 | Brown | Steady Hold | Counter | 10 | While holding a lock, Counter window +1 tick (`counterWindow`) | Counter family, and it works alone. The +1 tick was measured and does not fit. No smaller whole tick exists, so this rank adds no tick. | Measured. The +1 does not fit |
+| 37 | Brown | Steady Hold | Counter | 10 | While holding a lock, Counter window +1 tick (`counterWindow`) | Counter family. No +1 tick. The cue is the gold "!" and COUNTER flash already in the game, plus the existing guard swish once when the window opens. Measured 0 PE. | Cue only. 0 PE |
 | 38 | Brown | Lock to Takedown | Throw | 5 | Thrown stays down +15 ticks, lock throws work on shields and elites | Works alone. The +15 ticks stay written. A thrown state is not in the fight rules, so this was not measured. | Not measured |
 | 39 | Brown | Release and Go | Lock | 8 | Release: enemies within 1.5 tiles off-balance, Dash refilled | same | Yes (built parts) |
 | 40 | Brown | Master Hold | Throw | 6 | Locks +10 ticks, lock-thrown enemies take 25% more (`downBonus`) | Works alone. The 25% stays written. A thrown state is not in the fight rules, so this was not measured. | Not measured |
@@ -79,14 +79,14 @@ Names, belts and S4 effects are copied from `S4-self-defense-powers.md` (not fro
 **Count by family:** Counter 10, Lock 8, Escape 6, Throw 6, Disarm 6, Guard 4 (total 40). #37 Steady Hold is Counter rank 10. #19 Wrist Lock is Disarm rank 3. #39 Release and Go is Lock rank 8. Counter ranks in order: #1, #3, #5, #6, #7, #10, #15, #16, #20, #37. Disarm ranks in order: #13, #14, #19, #21, #22, #24. Lock ranks in order: #17, #28, #31, #32, #33, #35, #36, #39.
 **The beta (#1-15):** Counter 7 (#1, 3, 5, 6, 7, 10, 15), Guard 2 (#8, 9), Escape 2 (#2 Other Side, #4 Advancing), Disarm 2 (#13, 14), Throw 2 (#11, 12). **No Lock until Green (#17)**, as the redesign says, and Break Free arrives at Red (#29). #37 is Brown, so the beta counts do not change.
 **Lopsided:** #37 is Counter and #26 stays Guard. Lock has 8 ranks, Disarm has 6, Counter has 10, Guard has 4. A kid still cannot equip all six families, so that is fine.
-**Twists:** the redesign gives every third rank a small twist. Twist ranks above (3, 6, 9) carry the S4 effect that is most like a twist. Where a plain bonus lands on a twist rank (for example Counter 6, #10), the bot can adjust. Steady Hold is Counter rank 10, so its +1 tick is a plain bonus, not a twist.
+**Twists:** the redesign gives every third rank a small twist. Twist ranks above (3, 6, 9) carry the S4 effect that is most like a twist. Where a plain bonus lands on a twist rank (for example Counter 6, #10), the bot can adjust. Steady Hold is Counter rank 10. It is a cue, not a power twist.
 
 ## Where S4 and the redesign disagree
 
 **Conflict 1. Decided (Jay, Nov 8).** S4 added new effect kinds to Counter, Guard, Escape and Disarm (`counterHits`, `counterPush`, `reflectStaggers`, `disarmAttacks`). The redesign says those families reuse what is built. The map still recasts the others to existing effects (harder counter, bigger disarm). **#4 is the exception Jay kept:** the name is **Advancing**, and a counter pushes one enemy back. The old name Drive Back is retired. The written distance stays 1.5 tiles. **needs balance-check.** The earlier lean (a bigger Dash refill now, push only when Break Free is built) is not the effect. This push is one enemy, not Break Free's crowd push. Guardians are still never pushed.
 **Conflict 2. Pinned and Injured are cut until after launch (redesign).** S4 had Pinned in #22 and Injured in #31-40. The map has neither. #22 Lock and Pin keeps its name and gets a bigger disarm.
 **Conflict 3. Decided (team call, Nov 8).** #25 Escape from Behind is a **general escape**. Blocks or dashes create space and refill Dash, from any side. The game does not need a new "attack came from behind" check, so `rearCounter` is not the effect. No new amount was picked. **needs balance-check.**
-**Conflict 4. Decided (Jay, Nov 8).** #16 stays a Counter rank, and it is a **quick two-hit follow-up (one extra hit)**, not a heal. Why: in class it is a very quick hammer fist low, then a back fist high, so the seal should add a hit. A heal would not look like that move. Game text: "quick low hammer fist, then a high back fist." No groin. No face. The written amount stays `strikeExtraHit` 0.3. **needs balance-check**, because an extra hit can change how hard a fight is, and Strikes are supposed to share one budget. The earlier lean (put the old Steady Breath heal here) is not the effect. The Low-High **name** clash with the Blue kick combo is resolved on the Strike side: that combo is Hook Kick, not Low-High Kicks (`R-G2B-strikes-4-7.md`, J20). **Name flag:** "Low-High Strike" is not the dojo's name for #16. The curriculum numbers the technique and describes the low strike then the high strike. The name is kept until Jay says what to call it.
+**Conflict 4. Decided (Jay, Nov 8).** #16 stays a Counter rank, and it is one extra hit after a Great Counter, strength 0.3, the same hook as the kata kick. It is not a heal. Why: in class it is a very quick hammer fist low, then a back fist high, so the seal adds a hit. A heal would not look like that move. Game text: "quick low hammer fist, then a high back fist." No groin. No face. The same 0.3 is used on every difficulty. It was measured and it fits. The earlier lean (put the old Steady Breath heal here) is not the effect. Names are in `drafts/content/abilities/J27-audit.md`.
 **Conflict 5. Decided (team call, Nov 8).** Every seal works on its own. No seal needs another seal equipped. #26, #34, #37, #38 and #40 use the stand-alone recast in the table. Old amounts stay (15% block cut, +15 ticks down, +1 counter tick, +15 ticks down, +25% damage). **needs balance-check** on each, because the bonus used to wait for a lock and now it does not. No new amount was picked.
 **Conflict 6. Applied Nov 8 (team lean), with one choice noted.** The 10 placeholder Seals on main (Off-Balance, Escape Step, Sweep, Steady Breath, Strong Block, Sharp Eyes, Create Distance, Disarm, Throw, Follow Through; `abilities.json`) each become a rank effect. None are thrown away.
 
@@ -139,7 +139,7 @@ The Orange beta ships Throw (#11, #12) with the Counter "throws down, enemy stay
 
 ## Board items from this note
 
-R-G2B-20 (build Lock; #37 is a Counter rank and does not add a tick; #19 is Disarm, not Lock), R-G2B-21 (build Break Free and its limit), R-G2B-22 (the Nov 8 questions in this file are answered, including #19), R-G2B-23 (recast the S4 effect kinds; #4's 1.5-tile push stays; #16's 0.3 does not fit and was not replaced; #26's block cut is 0.02), R-G2B-24 (the balance check for the marked rows is in the balance section of this file). Rows in `R-GREEN-TO-BLACK.md`.
+R-G2B-20 (build Lock; #37 is a Counter rank and does not add a tick; #19 is Disarm, not Lock), R-G2B-21 (build Break Free and its limit), R-G2B-22 (the Nov 8 questions in this file are answered, including #19), R-G2B-23 (recast the S4 effect kinds; #4's 1.5-tile push stays; #16 is one Great Counter follow-up at strength 0.3; #26's block cut is 0.02; #37 is a cue), R-G2B-24 (the balance check for the marked rows is in the balance section of this file). Rows in `R-GREEN-TO-BLACK.md`.
 
 ## Names
 
@@ -149,7 +149,7 @@ Real technique names are the Content Designer's list in `drafts/content/abilitie
 
 Same harness as PB-11: whole runs on the real fight rules (`startRun`, `createRunWorld`, the balance bot), 20 seeds from seed 1000, the trained-student stats in `r-bal-12-artists.ts`. Bots: kid, newer, careful, masher. Guided and Standard on belts 1–10. Challenge on belts 4–10. PE is the Insight ruler (0, 10, 20, 30, 40, 60 percent Power). A star means that difficulty's +60% Power ruler moved health-lost by less than 1 point on every belt, so that PE is not used to pick a size. Noise on this harness is about ±5 PE. The script is `drafts/planning/j21-seal-sim.ts`. The raw rows are in `drafts/planning/j21-sim-out/`.
 
-Limits held to: a single effect at or under **PE 12**, an Insight pair under **PE 50**, a card plus the effect at or under **38**, a pair plus the effect at or under **62**, a route plus the effect at or under **67**. Double Strike stays **0.2** in `content/insights/insights.json` (it was not edited). R-BAL-12, strength-1 hits: Floor Keeper **45–54** hits on Standard and **67–80** on Challenge, knockout **5–10** hits, nothing under 5. Hearth Cook for the "trains more" student on Challenge is **86–88** hits, the exception already accepted for that boss. None of these seal effects change Power or a strength-1 hit, so that band does not move.
+Limits held to: a single effect at or under **PE 12**, an Insight pair under **PE 50**, a card plus the effect at or under **38**, a pair plus the effect at or under **62**, a route plus the effect at or under **67**. Double Strike stays **0.2** in `content/insights/insights.json` (it was not edited). R-BAL-12, strength-1 hits: Floor Keeper **45–54** hits on Standard and **67–80** on Challenge, knockout **5–10** hits, nothing under 5. Hearth Cook for the "trains more" student on Challenge is **86–88** hits, the exception already accepted for that boss. None of these seal effects change Power or a strength-1 hit, so that band does not move. No amount in this note is bigger or smaller on Challenge than on Guided or Standard. Challenge stays new patterns, not bigger numbers (Jay, Oct 27).
 
 Pooled PE for the written amounts. G = Guided, S = Standard, C = Challenge.
 
@@ -160,28 +160,33 @@ Pooled PE for the written amounts. G = Guided, S = Standard, C = Challenge.
 | | careful | 0* | 2.2 | 28.4 |
 | | masher | 0 | 0 | 0 |
 | #25 dash refill on a Block | kid, newer, careful, masher | 0 | 0 | 0 |
-| #16 extra hit 0.3 | kid | 20 | 18 | 30.3 |
-| | newer | 10.6* | 18.6 | 18.6 |
-| | careful | 10* | 15.9 | 14.5 |
-| | masher | 12.5 | 16.5 | 31.2 |
+| #16 counter follow-up 0.3 | kid | 2.9 | 0 | 0 |
+| | newer | 0.6* | 6.5 | 7.1 |
+| | careful | 3.8* | 11.2 | 8.2 |
+| | masher | 0 | 0 | 0 |
+| #16 plus the kata kick | kid | 4.5 | 0.7 | 0 |
+| | newer | 0.9* | 9 | 9.9 |
+| | careful | 5* | 9.6 | 2.8 |
+| | masher | 0 | 0 | 0 |
 | #26 block cut 0.15 | kid | 10.2 | 22.4 | 28.1 |
 | | newer | 24.9* | 11.2 | 10 |
 | | careful | 24.9* | 8.3 | 33 |
 | | masher | 29.5 | 26.1 | 29.1 |
-| Steady Hold +1 tick | kid | 0.6 | 1.3 | 22.3 |
-| | newer | 30* | 28 | 15.4 |
-| | careful | 25* | 32.4 | 39.4 |
-| | masher | 0 | 0 | 0 |
+| Steady Hold cue | kid, newer, careful, masher | 0 | 0 | 0 |
 
 **Advancing, 1.5 tiles. Kept.** On the rows that form a line, PE is 0 to 6.8. The masher is 0 because a push only happens on a Great Counter, and that bot never makes one. Careful on Challenge reads 28.4, but 1.0 tiles read 12 and 0.5 tiles read 27.2 on that same row, so it is not a clean line and it is not used to change the distance. Card plus the push stays under 38 (highest 24.6, newer, Standard). Pair plus the push stays under 62. Route plus the push stays under 67.
 
 **#25, general escape. Kept. No amount.** The built escape is a Block refilling Dash (`dashOnBlock`). It measured PE 0 on every bot and every difficulty, including every belt. There is no smaller amount to pick. It is on or off, and on does not move the fight in this harness. Card, pair, and route ceilings stay where the cards already were.
 
-**#16, extra hit 0.3. Does not fit. Amount not changed.** Standard PE is 18, 18.6, 15.9, and 16.5. Heavy Hands plus 0.3 is PE 50 for the newer bot, over the card ceiling of 38. I also measured 0.2, 0.15, 0.1, and 0.05. On Standard, 0.1 is the largest of those that is at or under 12 for every bot (newer 10.4; 0.15 is 14.1). On Challenge, even 0.05 still reads over 12 for the kid (23.4) and the masher (25.3). I am not substituting 0.1 or 0.05, because neither passes Challenge, and I am not inventing a share below 0.05. The written 0.3 stays, and it fails the reserve. Double Strike's own 0.2 was not edited. The two add if both are equipped.
+**#16, Great Counter follow-up, strength 0.3. Kept.** A Strike-button extra hit at 0.3 did not fit (that pass is still in `j21-sim-out/*-table.json`). This pass puts the second hit on a Great Counter, the same hook as the kata kick (`counterHits`, one hit, strength 0.3). The strength is the same number on Guided, Standard, and Challenge. Challenge does not scale it (Jay, Oct 27: new patterns, not bigger numbers). Pooled PE is under 12 on every bot and every difficulty. The highest pooled score is careful Standard, 11.2. The masher is 0, because that bot never makes a Great Counter. A star means the +60% ruler moved health by less than 1 point, so that row is not used to size it. One belt reads 12.1 (kid, Guided, belt 4), inside the ±5 noise. Other single belts that read over 12 already have the bot winning every run and a ruler move under about 1 health point, so they are not used to size it, the same rule as the kata check.
+
+**How it meets the kata kick.** The fight adds the hit counts and keeps the higher strength (`effects.ts`). #16 and the kata kick are both one hit at 0.3, so both hits land, at strength 0.3. The fight does not drop one of them. Together, pooled PE stays under 12 (highest 9.9, newer, Challenge).
+
+**Stacks.** Heavy Hands plus #16 stays under 38 (highest 25.5, newer, Challenge). The Ripple + Heavy Hands pair stays under 50 on the rows that are not starred (highest 43.7, kid, Standard). Pair plus #16 stays under 62 (highest 54.2, careful, Standard). Rooted, Flowing, and Power routes plus #16 stay under 67 (highest 56, masher, Standard, Flowing). Pair plus both kicks stays under 62 (highest 55.2, careful, Standard). Power route plus both kicks stays under 67 (highest 50.9, kid, Challenge). A heal was not needed.
 
 **#26, block cut. Changed from 0.15 to 0.02.** 0.15 fails (masher Standard 26.1). 0.1, the old Strong Block amount, still fails (masher Standard 22.9). 0.05 still fails (masher Standard 17.4). **0.02** is the largest amount I measured that is at or under PE 12 on Standard for every bot (masher 1.9, kid 3.1, newer 1.1, careful 0.9). Masher Challenge reads 14.8, inside the ±5 noise of the 12 line. Heavy Hands plus 0.02 stays under 38 (highest 27.1, kid). Pair plus 0.02 stays under 62. I did not measure 0.03 or 0.04, so 0.02 is the largest measured step that fit, not a finer guess.
 
-**Steady Hold, +1 tick. Does not fit. No new tick was picked.** Newer Standard is 28, careful Standard is 32.4, and Heavy Hands plus the tick is 42 and 41.6, over the card ceiling of 38. The window is counted in whole ticks. There is no smaller positive tick to measure. The rank stays in Counter and still works alone, and it does not lengthen the window.
+**Steady Hold. The +1 tick is removed.** In its place the rank is a cue with no power: the gold "!" and the gold COUNTER flash the game already draws, plus the existing guard swish once when the window opens. Reduced motion keeps the still gold outline. An empty effect list, which is all this cue is in the fight rules, measured 0 PE on every bot, every difficulty, and every belt.
 
 **#34, #38, and #40 were not measured.** "Stay down longer," "+15 ticks down," and "+25% while down" need a thrown state. That state is not in the fight rules, so there was no real hook to run. Those amounts were not changed.
 
@@ -194,18 +199,19 @@ Per-belt PE, Standard, for the written amounts. Belts 1 to 10.
 | | careful | 29 | 0 | 8.4 | 0.3 | 0 | 0 | 0 | 0 | 0 | 0 |
 | | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Escape | all four | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Extra 0.3 | kid | 11.1 | 26.4 | 21.1 | 25.1 | 22.3 | 25.7 | 15.5 | 13.6 | 11.6 | 18.4 |
-| | newer | 18.7 | 28.2 | 12.4 | 20.4 | 19.6 | 19.7 | 15.3 | 4.5 | 15.4 | 10 |
-| | careful | 12.5 | 20.3 | 9.2 | 14.4 | 20 | 17.7 | 18.6 | 18.6 | 18.6 | 15.2 |
-| | masher | 16 | 11.6 | 26.1 | 12.8 | 18.8 | 15.4 | 21.2 | 20.6 | 20.5 | 20.3 |
+| #16 at 0.3 | kid | 4.5 | 5 | 0 | 0.5 | 0 | 0.4 | 3.1 | 0.7 | 2.2 | 0.9 |
+| | newer | 5.3 | 6.3 | 0 | 3.6 | 11.3 | 11.7 | 14.5 | 14.6 | 14.4 | 5.8 |
+| | careful | 6.9 | 7.5 | 0.4 | 4.6 | 17.9 | 17.2 | 19.9 | 19.8 | 19.9 | 15.8 |
+| | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| #16 plus kata kick | kid | 4.5 | 9.9 | 0 | 1.4 | 1.2 | 4.6 | 2.6 | 0.3 | 1.4 | 0.5 |
+| | newer | 10.4 | 3.5 | 1.6 | 3.2 | 13.9 | 14.5 | 15.3 | 15.4 | 13.3 | 7.4 |
+| | careful | 16.8 | 9.8 | 1.1 | 8.2 | 8.8 | 8.6 | 14.3 | 13.2 | 18.5 | 11.3 |
+| | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Block 0.15 | kid | 22.6 | 22.2 | 16.7 | 13.9 | 16.6 | 19.9 | 20.7 | 20.9 | 11.4 | 22.7 |
 | | newer | 8.3 | 19 | 2.6 | 7.8 | 8.9 | 8.5 | 12.9 | 13.1 | 12.9 | 11.9 |
 | | careful | 4.7 | 9.7 | 6.4 | 5.6 | 13.7 | 13.9 | 7.8 | 8 | 8 | 8.5 |
 | | masher | 23.6 | 23.5 | 25 | 27.6 | 24.8 | 25.6 | 30.5 | 29.9 | 30 | 30.8 |
-| +1 tick | kid | 7.4 | 8.6 | 0 | 9.3 | 3.5 | 6.9 | 4.7 | 0.8 | 1 | 2.7 |
-| | newer | 10.7 | 23.4 | 18 | 8.9 | 32.2 | 32.5 | 13.4 | 13.6 | 13.4 | 12.7 |
-| | careful | 32.4 | 36.9 | 32 | 35 | 32.8 | 32.8 | 31.8 | 31.8 | 31.8 | 31.9 |
-| | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Steady Hold cue | all four | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 Challenge, belts 4 to 10, same written amounts.
 
@@ -216,17 +222,28 @@ Challenge, belts 4 to 10, same written amounts.
 | | careful | 18.1 | 16.2 | 4.1 | 31.7 | 31.5 | 31.5 | 31 |
 | | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Escape | all four | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Extra 0.3 | kid | 36.2 | 29.2 | 28.8 | 30.8 | 27.2 | 28.9 | 28.8 |
-| | newer | 33.6 | 17.2 | 16.4 | 15.1 | 17.2 | 18.7 | 17 |
-| | careful | 34.3 | 13.5 | 11.1 | 16 | 14.5 | 14.8 | 13.1 |
-| | masher | 26.9 | 31.3 | 31.4 | 34.9 | 17.7 | 22.5 | 34.6 |
+| #16 at 0.3 | kid | 0 | 0 | 0 | 0 | 4.5 | 0 | 2.8 |
+| | newer | 4 | 4.4 | 8.5 | 6.5 | 8.7 | 7.6 | 8.6 |
+| | careful | 1.7 | 8.8 | 10.5 | 8.9 | 8.9 | 8.9 | 8.6 |
+| | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| #16 plus kata kick | kid | 17.6 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | newer | 7.2 | 2.1 | 4.6 | 14.1 | 15.2 | 13.8 | 13.3 |
+| | careful | 1.8 | 16.8 | 15 | 11.2 | 10.8 | 10 | 10.6 |
+| | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Block 0.15 | kid | 14.1 | 25.4 | 25.4 | 20.5 | 30.3 | 29.8 | 30.2 |
 | | newer | 16.3 | 9.4 | 7 | 12.3 | 9.7 | 12.8 | 8.1 |
 | | careful | 19.3 | 31 | 30.7 | 34.5 | 34.4 | 34.2 | 34.6 |
 | | masher | 28.1 | 28.5 | 29 | 28.6 | 28.7 | 30.2 | 30.7 |
-| +1 tick | kid | 5.5 | 13.1 | 15.4 | 15.5 | 26.1 | 20.2 | 22.6 |
-| | newer | 24.2 | 15.2 | 7.7 | 17.7 | 12.5 | 17.6 | 9.3 |
-| | careful | 39.6 | 38.9 | 39 | 39.7 | 39.8 | 39.7 | 39.2 |
-| | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Steady Hold cue | all four | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
-Guided per-belt rows are in the json. Newer and careful Guided are starred (the ruler barely moves) and were not used to pick a size.
+Guided, belts 1 to 10, for #16. A star on the pooled row means the ruler barely moved.
+
+| Effect | Bot | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| #16 at 0.3 | kid | 4.2 | 3.5 | 3.7 | 12.1 | 3.6 | 2.8 | 4.4 | 4 | 1.2 | 5.1 |
+| | newer | 0 | 0 | 2.9 | 3.1 | 0.3 | 0.3 | 0 | 0 | 0 | 0.3 |
+| | careful | 2.2 | 2.9 | 32.9 | 2.2 | 3.9 | 3.9 | 5 | 5 | 5 | 5.1 |
+| | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Steady Hold cue | all four | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+Newer and careful Guided are starred and were not used to pick a size. Careful Guided belt 3 reads 32.9 with a ruler that moved the wrong way (health-lost change −0.3), so it is not a size. The single-belt scores over 12 on Standard for newer and careful are the same kind of row: the bot already wins every run and the ruler moves about 1 health point or less.

@@ -198,10 +198,10 @@ Recorded by the Researcher & Planner. These notes sit on top of the Oct 30 text 
 
 - #4 is named **Advancing**. It pushes an enemy back. The old name Drive Back is retired. The 1.5-tile distance was measured and kept.
 - #25 Escape from Behind is a general escape (team call). It is not a behind-only counter.
-- #16 is a very quick hammer fist low, then a back fist high. Game text: "quick low hammer fist, then a high back fist." No groin. No face. The effect is a quick two-hit follow-up (one extra hit), not a heal. Why: the real move is two fast strikes, so the seal adds a hit. The written 30% was measured and does not fit the reserve. It was not replaced. Real names are in `drafts/content/abilities/J27-audit.md`.
+- #16 is a very quick hammer fist low, then a back fist high. Game text: "quick low hammer fist, then a high back fist." No groin. No face. It is one extra hit after a Great Counter, strength 0.3, the same hook as the kata kick. The same number is used on every difficulty. Both hits land if the kata kick is also equipped, at the higher strength. It fits. Real names are in `drafts/content/abilities/J27-audit.md`.
 - Each seal works alone (team call). No seal needs another.
 - Old placeholder powers follow the team lean in `R-G2B-seal-families-16-40.md`. Steady Breath shares #10, because #16 is the extra hit and the beta plan already parked the heal on the last beta Counter rank. #19 Wrist Lock moves to Disarm, because the built effect is a full disarm, not a hold.
-- #37 Steady Hold moves to the Counter family. Yes. The +1 tick does not fit the reserve, and no smaller whole tick exists, so the rank adds no tick. #26's stand-alone block cut is 0.02.
+- #37 Steady Hold moves to the Counter family. Yes. The +1 tick is removed. The rank is a clearer counter-window cue (the gold "!" and COUNTER flash already in the game, plus the existing guard swish once when the window opens) and it adds no power. It measured 0 PE. #26's stand-alone block cut is 0.02.
 
 **J26. Feel.**
 
