@@ -1671,3 +1671,11 @@ First code step of `drafts/planning/R-PROGRESSION-BETA.md` (#407). Data and save
 - **Golden fixture re-captured on purpose** (`p-menu2-d-default-run.json`; header note in the test). Only the boss rooms (`keepers-hall`, `w-keepers-hall`) changed in each run; every setup is identical.
 - **Noisy test:** the "holding Strike costs less Health" total in `r-challenge-p5` now uses 300 seeds (was 60). At 60 seeds the bigger Keeper's damage flipped it from 94658 to 94707 (noise: on main the gap was 0.2%). At 300 seeds, on 481566 vs off 483377.
 - **Balance:** see the Delivery Note on the PR; Guardian rooms cost the kid bot more Health, and the B5 belt-4 gate is on the edge.
+### START-LEVEL-PIN: tests that pin the start-level rule (2026-11-02)
+- Jay's rule: a new student starts at Level 1 with 0 XP whatever the belt, even with a belt entry; real check-offs start active; level comes only from in-game XP.
+- Main already behaved this way (the start-level check after #428 found no conflict), so this is a test-only PR: `packages/sim/test/start-level-pin.test.ts` (8 tests). No src, content or balance change.
+- Checked the tests bite: setting the new-profile level to 5 fails 6 of 8; making a belt entry set a level fails 1.
+### START-LEVEL-PIN-GAPS: two surviving mutants killed, one test fixed (2026-11-02)
+- The Tester's mutation run on #445 found two mutants of the start-level rule that survived: an old full-shape save (no level or XP, runs played) loading above Level 1 or with XP, and feed sign-offs being ignored. Two tests added to `start-level-pin.test.ts` (8 to 10).
+- The old "applying a belt entry only changes the feed, never the profile" test could not fail (the profile was never passed to anything). It now records the entry on the profile, applies it to the feed, builds the training and calls `gainXp(p, training, 0)`, then checks the profile is byte-for-byte the same and Level 1 / 0 XP.
+- Each new or fixed test fails under its mutant (old save to 1 + runsPlayed, old save with 5 XP, sign-offs ignored, `gainXp` lifting the level to the belt, `gainXp` adding XP at 0). Test-only; no src, content or balance change.
