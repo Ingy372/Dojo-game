@@ -1,0 +1,17 @@
+J16 Ember Knight shifted form — second quality pass
+
+Danger red means hue under 0.03, strong colour, and bright enough to read as red.
+Copper shadow is darker and more orange, so it is not counted. House outline is #14121c.
+Clipping means opaque pixels within 8 px of the frame edge.
+
+ember-knight-shift-a_S.png: danger-red 0, hot-old-colours 0, margin L141 R153 T193 B63
+ember-knight-shift-a_SE.png: danger-red 0, hot-old-colours 0, margin L173 R147 T192 B60
+ember-knight-shift-b_S.png: danger-red 0, hot-old-colours 0, margin L150 R153 T193 B71
+ember-knight-shift-b_SE.png: danger-red 0, hot-old-colours 0, margin L173 R169 T192 B69
+ember-knight-shift-c_S.png: danger-red 0, hot-old-colours 0, margin L149 R153 T193 B71
+ember-knight-shift-c_SE.png: danger-red 0, hot-old-colours 0, margin L173 R165 T192 B69
+
+Result: CLEAR
+Pass 2 looked at the stills, the phone-size row, and the grey row.
+The three shields still read apart in grey: big disc, small coal, two straps.
+Nothing is cut off by the frame. Nothing uses the old hot orange, draft red, or a black visor.
