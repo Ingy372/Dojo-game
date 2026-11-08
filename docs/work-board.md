@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-11-02 EST by Dojo-ascent Manager (board: mark merged items done). Catch-up covers PRs #62–#431. PR #430 (QA fixes for #416-418) and PR #431 (LOOT-B3-01 rate fix) are in QA.
+Last updated: 2026-11-08 12:10 PM EST by Dojo-ascent Manager (Nov 8 status block added; merged #453). Catch-up covers PRs #62–#457. Main is ba1a9db and green.
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -9,6 +9,27 @@ Last updated: 2026-11-02 EST by Dojo-ascent Manager (board: mark merged items do
 **Owners:** Jay · Dojo-Ascent Programmer · Dojo-Ascent Researcher & Planner (drafts/planning/) · Learning & Engagement Designer · Content Writer · Art Director · QA & Playability Tester · DojoForge (outside this repository).
 
 ---
+
+## 00. Nov 8, 2026 status (Manager)
+Team resumed Nov 8. Jay approved in principle: kata powers are passives, a simplicity pass with belt-by-belt reveal and Easy controls, and explicit tutorial lessons. Real dojo names only (J27).
+
+| ID | Owner | What | Done when | Waits on |
+|---|---|---|---|---|
+| G2B-01 | Dojo-Ascent Programmer | **Delivered, PR #455 (BF-ORANGE-UNLOCK):** Butterfly Flow unlocks at Orange; records J10/J16/J19/J21/J27 in decisions.md. | #455 passes QA and merges. | QA |
+| G2B-04 | Dojo-Ascent Programmer | **Delivered, PR #457:** thrown state, #11 counterThrow, #12 downBonus, Lock caps. | #457 passes QA and merges. | QA |
+| GUARD-SCALE-01 | Dojo-Ascent Programmer | **QA fixes pushed to PR #441** (372e747): dip clamp 0.80, Reduced motion snaps, north-wall fix. | Re-QA passes and it merges. | QA re-check |
+| ZAPKITE-ZIGZAG | Dojo-Ascent Programmer | PR #444: lane must be 4.2 long with the wiggle inside it (Manager call, Nov 2). | Lane fixed, QA passes, merges. | nothing (Programmer) |
+| J27-NAMES | Dojo-Ascent Content Designer | PR #447: 35 real-name renames (12 live for the Programmer after merge). Open names list in `drafts/content/abilities/J27-audit.md`. | QA passes and it merges; Jay gives the remaining names. | QA; Jay (seal names #2, 4, 5, 6, 8, 9, 12, 14, 15; stance names) |
+| J27-APPLY | Dojo-Ascent Programmer | Apply the 12 live renames from #447 to `content/`. | Live names match `J27-seal-renames.json`; tests pass. | #447 merged |
+| PB-11 | Dojo-Ascent Researcher & Planner | **Delivered, PR #452:** kata passives (BF1 harder counter, BF2 and Keon add a kick, David and Goliath softens the next swing). Pinon 1-3, Nahanchi, Possi blank until step sheets arrive. **Placeholder:** shrink the kick to keep PE under 12. | Jay OKs the passive list (by Nov 13), then it merges. | Jay |
+| SIMPLICITY-PASS | Dojo-Ascent Researcher & Planner | **Delivered, PR #448** (docs only). Leans adopted unless Jay objects: Insights at White, Town at Yellow, Bestiary in the Journal, Stance hidden under Easy, first visit shows only Board and Settings. | Jay answers: build after Dec 4 beta freeze? who can turn off Easy controls? the name. Then it merges and build items are added. | Jay |
+| TUTORIAL-LESSONS | Dojo-ascent Learning & Engagement Designer | **Delivered, PR #451:** 7 Sensei beats, 14 lines. **Placeholders:** keep the Scroll name, add the auto-attack beat, existing players get the cards in the book without replays. | Jay checks the 14 lines' wording; it merges; build item added. | Jay |
+| J16-BOSS | Dojo-Ascent Researcher & Planner | **Delivered, PR #450:** Lost Lightbearer 3 forms (Storm Wrap, Bowing Cloud, Cloud Lantern). **Placeholders:** glow is a safe pause; ring ending on Guided and Standard, straight lane on Challenge only; 4 existing moves kept. | Jay OKs the name "Bowing Cloud"; it merges. | Jay |
+| J16-EMBER | Dojo-Ascent Researcher & Planner | **Delivered, PR #449:** Ember Knight shifted form brief. Name "Warm Shield" is a placeholder. | Jay OKs the name; it merges. | Jay |
+| J16-EMBER-ART | Dojo-ascent Artist | **Draft B in PR #456** (shield-centre glow). Not for Jay yet. | Manager art check passes, then Jay sees it. | Manager review |
+| PB-07 / #419 | Dojo-ascent Artist | **Pass 7 in PR #454** (Spin Kick from the hip, heavier arrows, belt colour options pine and bronze). | Manager art check passes, then Jay OKs the set. | Manager review |
+| J19/J21/J26 | Dojo-Ascent Researcher & Planner | **Done (PR #453 merged Nov 8, main ba1a9db).** Hook Kick is a guard break; Wrist Lock to Disarm rank 3; Steady Breath on #10; #16 is a 0.3 follow-up hit. #34, #38, #40 still can't be measured until the thrown state (G2B-04) merges. | done | — |
+| J21-THROW-BAL | Dojo-Ascent Researcher & Planner | Measure #34, #38 and #40 once the thrown state is in the fight rules. | Balance table updated in `drafts/planning/R-G2B-seal-families-16-40.md`. | #457 merged |
 
 ## 0. Jay decided Oct 25
 - Launch is now a **Dec 15, 2026 beta for 5-10 tester families**; the store launch comes later (mid-January target, D-B4). Plan: `drafts/planning/BETA-DEC15-plan.md` (PR #232; replan PR #230).
