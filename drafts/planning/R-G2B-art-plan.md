@@ -30,11 +30,11 @@ Written Nov 1, 2026 by the Researcher & Planner. Docs only. Every "exists" below
 **Proposal: 6 family medallions plus rank pips.** The redesign's rule is "every self-defense sign-off shows on a Seal by its real name". The name does the job of telling techniques apart. The icon only needs to say which family it is and what rank it is.
 
 - 6 medallions: Counter, Guard, Escape, Disarm, Throw, Lock. PB-07 in `R-PROGRESSION-BETA.md` already draws 5 of them (merged with R-G2B-03) plus a Lock silhouette. This plan adds the full Lock medallion and the pips. Each has its own rim colour and one simple symbol, in the existing Seal style (round medallion plus one symbol, 128 x 128, thick 2 px outline, no text).
-- A small row of rank pips under the symbol, drawn as game art (not baked into the medallion), so one medallion works for every rank. Ranks per family: Counter 1-9 (#1 is rank 1, #16 rank 8, #20 rank 9), Guard 1-4, Escape 1-6, Disarm 1-5, Throw 1-6, Lock 1-10 (counts from `R-G2B-seal-families-16-40.md`).
+- A small row of rank pips under the symbol, drawn as game art (not baked into the medallion), so one medallion works for every rank. Ranks per family: Counter 1-10 (#37 is rank 10), Guard 1-4, Escape 1-6, Disarm 1-6 (#19 is rank 3), Throw 1-6, Lock 1-8 (counts from `R-G2B-seal-families-16-40.md`). The pip strip still runs to 10, because Counter reaches 10.
 - Phone check: the family must be readable at 48 pt, with a grey-scale check (colour is never the only cue).
 - The 10 existing sample icons stay as spare art until the family list is decided (Jay decides each family, R-G2B-22).
 
-**Why not 35 drawings:** about 10 times the work for something a kid reads through the name. It also stops a family rebalance (Jay may move #37 or #19, see the seal doc) from forcing redraws.
+**Why not 35 drawings:** about 10 times the work for something a kid reads through the name. It also stops a family rebalance from forcing redraws. #37 is Counter and #19 is Disarm (see the seal doc).
 
 **If Jay prefers one drawing per technique**, the count is 35 (plus 5 for #11-15), each in the same medallion style. That is a taste call. It does not block the beta: the beta needs only #1-15.
 
