@@ -10,7 +10,8 @@
       "ranks": [
         {
           "technique": 1,
-          "name": "Off the Line",
+          "name": "Double Punch",
+          "altName": "Off the Line",
           "text": "A Great Counter adds two quick punches.",
           "effects": [
             {
@@ -68,7 +69,8 @@
       "ranks": [
         {
           "technique": 3,
-          "name": "Spin Back Fist",
+          "name": "Back Fist",
+          "altName": "Spin Back Fist",
           "text": "A Great Counter also hits enemies close by.",
           "effects": [
             {
@@ -114,7 +116,8 @@
         },
         {
           "technique": 10,
-          "name": "Grab and Strike",
+          "name": "Double Knifehand Block",
+          "altName": "Grab and Strike",
           "text": "Off-balance enemies take more damage, and each Great Counter restores a little Health.",
           "effects": [
             {
@@ -177,7 +180,8 @@
       "ranks": [
         {
           "technique": 11,
-          "name": "Outside Reap",
+          "name": "Osotogari",
+          "altName": "Outside Reap",
           "text": "A Great Counter tumbles a brute or swarmer to the ground for a moment.",
           "effects": []
         },
@@ -198,7 +202,8 @@
       "ranks": [
         {
           "technique": 13,
-          "name": "Kick the Weapon",
+          "name": "Inside Kick",
+          "altName": "Kick the Weapon",
           "text": "A Great Counter kicks the weapon aside, so their next hit is weaker.",
           "effects": [
             {

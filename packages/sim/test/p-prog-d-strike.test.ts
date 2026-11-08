@@ -232,7 +232,7 @@ describe('PB-03 the Fighting Style screen', () => {
   it('shows the equipped Strike (Spin Kick when empty) where it used to list the always-on upgrades', () => {
     const t = training(yellow);
     expect(buildStyle(t, content.abilities, null).always).toEqual([{ id: 'spin-kick', name: 'Spin Kick' }]);
-    expect(buildStyle(t, content.abilities, { ...emptyLoadout(), strike: 'jumping-spins' }).always).toEqual([{ id: 'jumping-spins', name: 'Jumping Spins' }]);
+    expect(buildStyle(t, content.abilities, { ...emptyLoadout(), strike: 'jumping-spins' }).always).toEqual([{ id: 'jumping-spins', name: 'Jumping Spin Kicks' }]);
   });
 });
 
