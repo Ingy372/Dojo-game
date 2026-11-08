@@ -6,7 +6,7 @@ Stable label: **Ember Knight — shifted form**.
 
 **Warm Shield** is a placeholder name. It is not chosen yet.
 
-The picture under review is **draft B**: the shield stays copper, and only the centre glows. The 1 second white-gold glow is unchanged. A and C, the other two early ideas, are kept in `superseded/pass-2-three-way/` and their stills are still in `renders/`.
+The picture under review is **draft B** after the Manager failed the subtle effects. The shape and the eyes are the same. The armour is dark cool metal with copper accents and orange-gold seams. The 1 second white-gold glow is unchanged. A half-second settle (one ring and a steam puff) comes after it. **Warm Shield** is still only a placeholder. Jay has not approved these colours. A and C stay in `superseded/pass-2-three-way/`.
 
 ## What to look at
 

@@ -2,62 +2,73 @@
 
 **Draft. Not approved. Not for Jay yet. Do not import. Do not merge as final art.**
 
-**ITEM:** J16 — draft B of the Ember Knight's shifted form, plus a review-only effects pass.
+**ITEM:** J16 — draft B, revised after the Manager failed the subtle effects.
 
-**WHAT:** The knight from the last draft (eyes, shoulders, lowered bar) with gentle effects on top. The stable label is **Ember Knight — shifted form**. **Warm Shield** is still a placeholder name. Effects are separate transparent layers. No sprite sheets. No game code. The white-gold glow still lasts 1 second. There is no flash after it.
+**WHAT:** Same eyes and same outer shape as the last B. The metal is now dark cool armour with copper shoulders, bar, and shield rim, and orange-gold seams. Effects are stronger and are separate transparent layers. The stable label is **Ember Knight — shifted form**. **Warm Shield** is still a placeholder. No sprite sheets. No game code.
 
-**WHY:** Jay, through the Manager, asked for the calmer form to feel cooler. The earlier brief was a still picture and said no sparks, no flame, and no glow on the floor. This pass keeps those limits and adds only soft steam and light that come from the shield core. That is an extension of the still concept, asked for in this review. It is not a new attack and not a new timing number.
+**WHY:** The subtle steam did not show at 125 px. The Manager set a new review direction. That direction replaces, for this draft only, the earlier limits of copper-only plates, no particles, and no floor glow. Jay has not approved these details.
 
 **DECIDE:**
 
-1. Is this effects pass gentle enough to show Jay?
+1. Is this stronger draft ready to show Jay?
 2. Is the placeholder name **Warm Shield** okay?
 3. Is the Sensei line okay? "Look. The armor cooled."
-4. Reduced Motion here is a still core glow and a soft crossfade. Is that the right amount of stillness?
+4. Reduced Motion keeps the seams, the core, the rim, and the ground pool, and turns off drift and pulse. Is that the right stillness?
 
 **NEXT:** Manager reviews these pictures before Jay. Nothing here is imported.
 
-## Effects (review only)
+## Direction change (not a Jay approval)
 
-Look at `preview/review-b-vfx-strip.png` first. It is a still strip, so the frames can be checked without a video.
+The still brief painted every plate copper `#c9824a` and said no sparks, no flame, and no glow on the floor. This review draft does not follow that. It uses:
 
-- **Shift, normal.** The old form, then 1.0 second of soft white-gold (`#fff4cf`, halo `#ffecaa`). Then the new form, and a small pale cloud rises off the shield core and fades. The cloud is honey and shield-centre colour, not hot orange, not sparks, not a flame, and it does not sit on the floor.
-- **Idle, normal.** The shield core slowly brightens and eases back. The body does not move. No loose embers.
-- **Reduced Motion.** The same 1.0 second, as a quieter gold and a crossfade. No steam drifting, no pulse. The idle frames are the same still, with a restrained core and rim glow.
-- The older form-shift sample used a 0.15 second flash after the glow. This draft does not. Jay asked for gentle, and for no flashes.
+| Part | Hex | Where the light comes from |
+| --- | --- | --- |
+| Cool armour | `#4a5a72` | The metal itself. Deep shadow, cool shine. Not a new gameplay stat. |
+| Copper accents (shoulders, bar, shield rim) | `#c9824a` | The accent metal. |
+| Seams | `#ffc14d`, halo `#ffd08a` | Glowing lines on the armour. Smooth lines, not wounds. |
+| Shield core | `#fff1b8` inside `#ffd08a` | The heated centre of the shield. |
+| Rim light | `#ffe08a` and `#ffc14d` | A ring in the shield's plane, from the core. |
+| Ground pool | `#ffb25a` and `#ffd08a` | Light on the floor under the shield, from that core. Not the red attack circle (`#ff3b30`). |
+| Steam | `#fff6e0`, `#ffe08a` | One puff off the core during the settle. |
+| Embers | `#ffe7a8` | Three dots rising from the shield and the chest seam. |
+| 1 second shift glow | `#fff4cf`, halo `#ffecaa` | The same white-gold as the other four shifts. |
 
-Layers, all transparent, same camera as the knight: `layers/fx-core.png`, `layers/fx-rim.png`, `layers/fx-steam-00.png` through `fx-steam-05.png`. The Blender file is `source/ember-knight-shift-b-fx.blend`.
+## Timing
 
-## What changed on B
+- **0.00–1.00 s.** The existing white-gold transition. It still lasts 1 second. It does not flash or strobe. At the end of that second the tint is about 60% of the way to `#fff4cf`, so the shape is still in the glow.
+- **1.00–1.50 s.** A settle accent, half a second, after the 1 second glow. One gold ring grows once and fades. One steam puff rises off the core. It does not repeat.
+- **Idle.** The core's lit area grows and shrinks. Two or three embers drift up. The ground pool stays.
+- **Reduced Motion.** The 1 second is a quieter crossfade. After that, the picture does not change: seams, core, rim, and ground pool only. No ring, no steam drift, no embers, no pulse.
+- The older form-shift sample's 0.15 second flash is not used.
 
-- Eyes are the same ovals as the phase-3 knight (same size in the model), with a white shine and a dark rim so they read. The black visor stays off.
-- A dark copper socket sits behind each eye. It is the same copper, not the old visor bar.
-- Helm, shoulders and body stay one copper. A wider light-and-shade step, honey seams, and a thicker dark outline keep them from melting together.
-- The shoulders are the same round plates as the phase-3 knight.
-- The bar rests down, out to the side, on its own arm, with the honey ball at the bottom.
-- The shield is lowered to the chest. Only the centre glows (`#ffd08a` around `#fff1b8`).
+## What stayed the same
 
-## Where the brief and the review ask for different things
+- Eye meshes, helm, shoulders, shield, and bar are in the same places. The outer silhouette pixels match the previous B exactly (alpha overlap 1.000, 0 pixels added, 0 removed).
+- The black visor stays off. Eyes are still `#ffe2c0` with a white shine.
 
-Reported here instead of picking a new colour or bringing the visor back.
+## Measured at 125 px
 
-- The brief paints the helm, body, shoulders and bar with one copper, `#c9824a`. The review asked them not to look flat. This draft keeps that one hex. The plates use a wider cel step than the house kit (house shadow is 66% and the lit step starts at 0.47; these plates use a shadow around 0.36–0.46 and a later lit step). The outline on the body is 0.042. The house outline is 0.013, and the concept script draws it at 0.026.
-- The brief removes the black visor. The phase-3 eyes read as large because that visor sits behind them. These eyes are the same mesh. At 48 px per tile they are only a few pixels tall. On the close-up they are clear ovals. On the phone-size floor they still read as two eyes, smaller than the phase-3 face.
+The still is 512 px across 2.6 tiles. At 48 px per tile that picture is 125 px. Numbers from `preview/quality-check-vfx.txt`:
 
-## Phone-size check (with the effects on)
+- Gold-orange pixels: **701** on the phase-3 knight, **1129** on the new form at 1.25 s. The armour is darker, and the bright parts cover more of the picture.
+- Steam-only gold box: **34 by 22 px**, 72 pixels. That is a cloud, not a speck.
+- Shield window, pixels brighter than luminance 200: **250** at the low core, **342** at the high core. The peak stays **251** because the gold is already near its ceiling. The pulse grows the lit area by about 37%. It does not turn the centre white.
+- Danger-red pixels: **0**. Nearest frame edge: **38 px** (the check fails under 8 px).
 
-At 48 px per tile, on the kitchen floor, and again on the strip:
+## Honest limits
 
-- Eyes: still two light ovals. The steam stays on the shield, below them.
-- Shoulders and the lowered bar: still separate. The effects do not cover them.
-- Shield: the bright spot is still the centre. The steam is a soft pale puff that lifts off that centre. At 125 px it is small. The close-up and the strip show the rise.
-- Reduced Motion idle is one still. Its two strip frames match.
-- Danger-red pixels: 0 on the normal frames and the Reduced Motion frames. Nothing is cut off by the frame. The near-white pixels are the eye shine, already on the phase-3 knight.
+- At 125 px the eyes are still only a few pixels tall. They stay visible on the dark helm. They are not as large as the phase-3 face, because that face has the black visor behind the eyes.
+- The third ember can sit in the chest seam, so a quick look may count two dots above the shield rather than three.
+- The ground pool is a soft gold oval under the shield. It is not the red danger circle. A child could still wonder if a glow on the floor is a warning. That is the trade for the new direction.
+- The 1 second glow does cover the old form while it lasts. Once the new form is in, the face stays clear of the steam.
+
+The 125 px check above is the phone-size check. The strip shows the same frames larger. Reduced Motion's last frames are the same picture. The near-white pixels in the check are the eye shine, already on the phase-3 knight.
 
 ## Kept, not thrown away
 
 - `superseded/pass-1/` — first try, honey lines were dots.
 - `superseded/pass-2-three-way/` — the three-idea review (A, B, C).
 - `superseded/pass-3-contrast/` — B after the outline pass, before the eye sockets.
-- `superseded/pass-4-static-b/` — the still B review, before steam and the core pulse. The knight in `renders/` is still that body.
+- `superseded/pass-4-static-b/` — the still B review, before steam and the core pulse.
+- `superseded/pass-5-subtle-fx/` — the subtle effects the Manager failed.
 - A and C Blender files and stills are still in `source/` and `renders/`.

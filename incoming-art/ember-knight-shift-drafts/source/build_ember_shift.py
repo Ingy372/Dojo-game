@@ -261,30 +261,32 @@ def build(kind):
             hold_shield(c)
             hold_bar((R * 0.98, -R * 0.28, H * 0.46), (R * 1.00, -R * 0.36, H * 0.12), 0.045)
     else:
-        # Draft B, manager pass: shield-centre glow kept. Parts read apart on a pale floor.
-        # Plates stay the one copper hex. Contrast is shading and outline, not a new colour.
-        body_m = toon_contrast("BBODY", COPPER, shadow=0.46, highlight=1.18, lit_at=0.60)
-        helm_m = toon_contrast("BHELM", COPPER, shadow=0.36, highlight=1.30, lit_at=0.54)
-        sh_m = toon_contrast("BSH", COPPER, shadow=0.38, highlight=1.32, lit_at=0.56)
-        limb_m = toon_contrast("BLIMB", COPPER, shadow=0.34, highlight=1.12, lit_at=0.50)
-        honey = mat("honey", HONEY, 0.88, 1.08)
+        # Review direction (Manager, not a Jay-approved detail): dark cool armour,
+        # copper accents, glowing orange-gold seams. Mesh positions stay as the last B.
+        STEEL = "#4a5a72"
+        body_m = toon_contrast("BBODY", STEEL, shadow=0.22, highlight=1.55, lit_at=0.58)
+        helm_m = toon_contrast("BHELM", STEEL, shadow=0.18, highlight=1.70, lit_at=0.52)
+        sh_m = toon_contrast("BSH", COPPER, shadow=0.32, highlight=1.45, lit_at=0.55)
+        limb_m = toon_contrast("BLIMB", COPPER, shadow=0.30, highlight=1.35, lit_at=0.52)
+        seam = mat("seam", "#ffc14d", 1, 1)
         face = mat("face", FACE, 1, 1)
-        rim_metal = toon_contrast("BRIM", RIM, shadow=0.55, highlight=1.12, lit_at=0.58)
+        rim_metal = toon_contrast("BRIM", COPPER, shadow=0.40, highlight=1.40, lit_at=0.55)
         center = mat("center", CENTER, 1, 1)
         eye_m = mat("eye", EYE, 1, 1)
         hi_m = mat("hi", WHITE, 1, 1)
-        # A dark recess of the same copper, behind each eye. Not the old black visor bar.
-        socket_m = toon_contrast("BSOCK", COPPER, shadow=0.22, highlight=0.34, lit_at=0.80)
+        socket_m = toon_contrast("BSOCK", "#121820", shadow=0.55, highlight=1.05, lit_at=0.70)
         ow = dict(outline_w=OUT_B)
 
         put("bodyk", E((0, 0, H * 0.45), (R * 0.95, R * 0.8, H * 0.42), segs=24, rings=14), body_m, **ow)
         put("helm", E((0, 0, H * 0.83), (R * 0.6, R * 0.58, H * 0.18)), helm_m, **ow)
         # Honey line where the helm meets the body, on the helm, not a floating hoop.
-        put("neck", ring_xz((0, -R * 0.42, H * 0.70), 0.22, 0.055, 0.014), honey, outline=False)
+        put("neck", ring_xz((0, -R * 0.42, H * 0.70), 0.22, 0.055, 0.026), seam, outline=False, halo=True, halo_w=0.018, halo_hex="#ffd08a")
+        put("seamchest", tube((0.04, -R * 0.88, H * 0.34), (0.04, -R * 0.88, H * 0.60), 0.026, 0.026, segs=8),
+            seam, outline=False, halo=True, halo_w=0.016, halo_hex="#ffd08a")
         for s in (1, -1):
             put(f"pauld{s}", E((s * R * 0.85, 0, H * 0.66), (R * 0.32, R * 0.32, R * 0.22)), sh_m, **ow)
-            put(f"pring{s}", ring_xz((s * R * 0.85, -R * 0.16, H * 0.66), R * 0.26, R * 0.16, 0.012),
-                honey, outline=False)
+            put(f"pring{s}", ring_xz((s * R * 0.85, -R * 0.16, H * 0.66), R * 0.26, R * 0.16, 0.020),
+                seam, outline=False, halo=True, halo_w=0.012, halo_hex="#ffd08a")
         # Same eye mesh as the phase-3 knight (s=0.75). A dark outline makes the oval
         # read without bringing the black visor back. A thin honey frame sits outside it.
         for x in (1, -1):
@@ -296,7 +298,7 @@ def build(kind):
             put(f"hi{x}", E((x * R * 0.28 - R * 0.05, -R * 0.6 - R * 0.06, H * 0.82 + R * 0.045),
                             (R * 0.05 * 0.75, R * 0.03, R * 0.06 * 0.75)),
                 hi_m, outline=False)
-        put("eyeframe", ring_xz((0, -R * 0.48, H * 0.82), 0.27, 0.125, 0.011), honey, outline=False)
+        put("eyeframe", ring_xz((0, -R * 0.48, H * 0.82), 0.27, 0.125, 0.012), seam, outline=False)
 
         # Shield lowered to the chest, face toward the student. Only the centre glows.
         c = (-R * 0.55, -R * 0.98, H * 0.46)
@@ -314,7 +316,7 @@ def build(kind):
         bar_bot = (R * 1.38, -R * 0.52, H * 0.08)
         put("armbar", tube((R * 0.78, -R * 0.12, H * 0.58), bar_top, 0.065, 0.05, segs=12), limb_m, **ow)
         put("bar", tube(bar_top, bar_bot, 0.042, 0.036, segs=12), limb_m, **ow)
-        put("barend", E(bar_bot, (0.055, 0.055, 0.055)), honey, outline=True, outline_w=OUT_EYE)
+        put("barend", E(bar_bot, (0.055, 0.055, 0.055)), seam, outline=True, outline_w=OUT_EYE)
 
     top = -1.0
     for ob in sc.objects:

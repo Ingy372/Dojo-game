@@ -40,7 +40,9 @@ C = (-R * 0.55, -R * 0.98, H * 0.46)
 CORE = (C[0], C[1] - 0.07, C[2])
 FACE, CENTER, HALO = "#ffd08a", "#fff1b8", "#ffecaa"
 # Pale steam. Honey and the shield centre, not the hot orange of the old form.
-STEAM = ("#fff1b8", "#f2c46a", "#fff4cf")
+STEAM = ("#fff6e0", "#ffe08a", "#fff1b8")
+GOLD = "#ffc14d"
+EMBER = "#ffe7a8"
 
 def clear():
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -103,22 +105,46 @@ def build_core(sc, root):
     put(sc, root, "corewarm", ellipsoid((CORE[0], CORE[1] + 0.012, CORE[2]), (0.11, 0.035, 0.11)), FACE)
 
 def build_rim(sc, root):
-    # A soft ring in the shield's plane, smaller than the shield, fed by the core.
+    # Brighter rim, still in the shield plane and smaller than the shield face.
     x, y, z = CORE
-    put(sc, root, "rim", tube((x, y + 0.02, z), (x, y - 0.01, z), 0.16, 0.16, segs=32), HALO)
+    put(sc, root, "rim", tube((x, y + 0.02, z), (x, y - 0.01, z), 0.20, 0.20, segs=32), "#ffe08a")
+    put(sc, root, "rimhot", tube((x, y + 0.015, z), (x, y - 0.015, z), 0.13, 0.13, segs=28), GOLD)
+
+def build_ground(sc, root):
+    """Soft pool under the shield side. Light from the core, not an attack circle."""
+    put(sc, root, "pool", ellipsoid((CORE[0] + 0.06, -0.05, 0.015), (0.42, 0.26, 0.012)), "#ffb25a")
+    put(sc, root, "poolin", ellipsoid((CORE[0] + 0.02, -0.08, 0.02), (0.22, 0.14, 0.01)), "#ffd08a")
 
 def build_steam(sc, root, frame, nframes):
-    """Three soft puffs. They leave the core and rise over the shield. They stay below the eyes and off the floor."""
+    """One cooling cloud off the core. Big enough to see at 125 px. Stays left of the eyes."""
     u = 0 if nframes <= 1 else frame / (nframes - 1)
-    # Staggered so they read as a little cloud, not one hard ball.
-    lifts = (0.02, 0.10, 0.16)
-    spreads = (-0.04, 0.03, 0.07)
-    for i, (lift, spread) in enumerate(zip(lifts, spreads)):
-        z = CORE[2] + 0.05 + (lift + 0.16) * u
-        x = CORE[0] + spread * (0.35 + u)
-        y = CORE[1] - 0.04 - 0.05 * u
-        s = 0.055 + 0.03 * u
-        put(sc, root, f"puff{i}", ellipsoid((x, y, z), (s * 1.15, s * 0.5, s)), STEAM[i])
+    z = CORE[2] + 0.08 + 0.20 * u
+    x = CORE[0] - 0.02
+    y = CORE[1] - 0.06
+    s = 0.10 + 0.04 * u
+    put(sc, root, "cloud", ellipsoid((x, y, z), (s * 1.2, s * 0.45, s * 0.85)), STEAM[0])
+    put(sc, root, "cloudb", ellipsoid((x + 0.04, y - 0.01, z - 0.04), (s * 0.7, s * 0.35, s * 0.55)), STEAM[1])
+
+def build_burst(sc, root, frame, nframes):
+    """One ring that grows once. Not a strobe."""
+    u = 0 if nframes <= 1 else frame / (nframes - 1)
+    rad = 0.10 + 0.20 * u
+    x, y, z = CORE
+    put(sc, root, "burst", tube((x, y + 0.01, z), (x, y - 0.01, z), rad, rad, segs=32), GOLD)
+
+def build_embers(sc, root, frame, nframes):
+    """Three embers. Fixed paths, rising from the shield and the chest seam. No randomness."""
+    u = 0 if nframes <= 1 else frame / (nframes - 1)
+    starts = (
+        (CORE[0] - 0.12, CORE[1] - 0.05, CORE[2] + 0.08),
+        (CORE[0] + 0.00, CORE[1] - 0.07, CORE[2] + 0.18),
+        (0.18, -R * 0.82, H * 0.48),
+    )
+    for i, (x0, y0, z0) in enumerate(starts):
+        z = z0 + 0.14 * u
+        x = x0 + (i - 1) * 0.03 * u
+        y = y0 - 0.02 * u
+        put(sc, root, f"ember{i}", ellipsoid((x, y, z), (0.05, 0.028, 0.05)), EMBER)
 
 def main():
     os.makedirs(A.out, exist_ok=True)
@@ -128,20 +154,33 @@ def main():
     sc, root = new_scene()
     build_rim(sc, root)
     render_to(sc, os.path.join(A.out, "fx-rim.png"))
-    n = 6
-    for frame in range(n):
+    sc, root = new_scene()
+    build_ground(sc, root)
+    render_to(sc, os.path.join(A.out, "fx-ground.png"))
+    for frame in range(4):
         sc, root = new_scene()
-        build_steam(sc, root, frame, n)
+        build_steam(sc, root, frame, 4)
         render_to(sc, os.path.join(A.out, f"fx-steam-{frame:02d}.png"))
         print("STEAM", frame, flush=True)
-    # One blend with the core, the rim, and the first steam, for reuse.
+    for frame in range(4):
+        sc, root = new_scene()
+        build_burst(sc, root, frame, 4)
+        render_to(sc, os.path.join(A.out, "fx-burst-%02d.png" % frame))
+        print("BURST", frame, flush=True)
+    for frame in range(5):
+        sc, root = new_scene()
+        build_embers(sc, root, frame, 5)
+        render_to(sc, os.path.join(A.out, "fx-ember-%02d.png" % frame))
+        print("EMBER", frame, flush=True)
     sc, root = new_scene()
     build_core(sc, root)
     build_rim(sc, root)
-    build_steam(sc, root, 2, n)
+    build_ground(sc, root)
+    build_steam(sc, root, 1, 4)
+    build_embers(sc, root, 2, 5)
     sc["dojo_label"] = "Ember Knight — shifted form"
     sc["dojo_placeholder_name"] = "Warm Shield"
-    sc["dojo_fx"] = "shield-core steam, rim, and centre. No floor glow."
+    sc["dojo_fx"] = "Review direction: core, brighter rim, ground pool, steam, one burst ring, three embers. Not a Jay-approved detail."
     bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(os.path.join(HERE, "ember-knight-shift-b-fx.blend")))
     print("FX RENDERED", flush=True)
 

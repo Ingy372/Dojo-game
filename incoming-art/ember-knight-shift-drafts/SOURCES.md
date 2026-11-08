@@ -56,13 +56,18 @@ Not a stand-in colour. These are the tiles the game draws.
 
 ## Effect layers (this review)
 
-Jay asked for the calmer form to feel cooler. The still brief said no sparks, no flame, and no floor glow. These layers stay inside that: soft steam and light from the shield core only.
+The Manager's new direction replaces, for this draft only, the copper-only plates and the ban on particles and floor glow. Jay has not approved the new hexes. Details are in `DELIVERY_NOTE.md`.
+
+Armour `#4a5a72`. Copper accents `#c9824a`. Seams `#ffc14d`. Core `#fff1b8` / `#ffd08a`. Rim `#ffe08a`. Ground pool `#ffb25a`. Steam `#fff6e0`. Embers `#ffe7a8`. Shift glow `#fff4cf`. None of these is danger red `#ff3b30`.
 
 | File | What it is |
 | --- | --- |
 | `layers/fx-core.png` | Centre glow, `#fff1b8` and `#ffd08a` |
-| `layers/fx-rim.png` | Soft rim, `#ffecaa`, in the shield's plane, smaller than the shield |
-| `layers/fx-steam-00.png` … `fx-steam-05.png` | Cooling steam, `#fff1b8`, `#f2c46a`, `#fff4cf`, rising off the core |
+| `layers/fx-rim.png` | Brighter rim, `#ffe08a` and `#ffc14d`, in the shield's plane |
+| `layers/fx-ground.png` | Ground pool, `#ffb25a` and `#ffd08a`, under the shield |
+| `layers/fx-steam-00.png` … `fx-steam-03.png` | One steam puff, `#fff6e0` and `#ffe08a` |
+| `layers/fx-burst-00.png` … `fx-burst-03.png` | One ring that grows once, `#ffc14d` |
+| `layers/fx-ember-00.png` … `fx-ember-04.png` | Three embers, `#ffe7a8`, fixed paths |
 | `source/ember-knight-shift-b-fx.blend` | The same pieces in one Blender file |
 | `source/build_b_fx.py` | Rebuilds the layers. Same camera as the knight. |
 | `source/make_b_vfx_review.py` | Builds the strip, the 125 px floor picture, and the close-up. The idle pulse and the Reduced Motion still are done here from those layers. |
@@ -71,7 +76,7 @@ The white-gold of the 1 second shift is `#fff4cf` with halo `#ffecaa`, the same 
 
 ## Shading on draft B
 
-The plate hex stays `#c9824a`. The cel step is wider than `incoming-art/tools/toon_kit.py` (house shadow 0.66, lit step 0.47, highlight 1.10). Draft B uses a shadow around 0.36–0.46 and a later lit step so the round helm, body and shoulders each show a light side and a shade side. Body outline width is 0.042. The house outline is 0.013. The concept script uses 0.026.
+Armour is `#4a5a72` with a deep shadow (about 0.22 of the colour) and a cool highlight (about 1.55). Copper accents stay `#c9824a`. This replaces the earlier all-copper shading. Body outline width is still 0.042. The house outline is 0.013. The concept script uses 0.026.
 
 ## Timing (unchanged)
 

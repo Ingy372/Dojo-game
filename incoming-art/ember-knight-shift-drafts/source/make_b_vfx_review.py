@@ -47,7 +47,10 @@ BEFORE = load(os.path.join(CONCEPT, "ember-knight_p3_S.png"))
 BODY = load(os.path.join(RENDERS, "ember-knight-shift-b_S.png"))
 CORE = load(os.path.join(LAYERS, "fx-core.png"))
 RIM = load(os.path.join(LAYERS, "fx-rim.png"))
-STEAM = [load(os.path.join(LAYERS, f"fx-steam-{i:02d}.png")) for i in range(6)]
+GROUND = load(os.path.join(LAYERS, "fx-ground.png"))
+STEAM = [load(os.path.join(LAYERS, f"fx-steam-{i:02d}.png")) for i in range(4)]
+BURST = [load(os.path.join(LAYERS, f"fx-burst-{i:02d}.png")) for i in range(4)]
+EMBERS = [load(os.path.join(LAYERS, f"fx-ember-{i:02d}.png")) for i in range(5)]
 
 def font_wrap(draw, text, fnt, width):
     lines, cur = [], ""
@@ -92,41 +95,47 @@ def crossfade(a, b, t):
     return Image.blend(a, b, max(0.0, min(1.0, t)))
 
 def core_glow(strength):
-    """Light from the shield core only. strength 0..1, kept soft. The rim is blurred so it stays a glow."""
-    return over(soften(RIM, 3.0, 0.40 * strength), fade(CORE, 0.62 * strength))
+    """Brighter rim and core. strength 0..1. One smooth level, not a strobe."""
+    return over(soften(RIM, 1.6, 0.85 * strength), fade(CORE, 0.95 * strength))
+
+def ground_glow(k=0.9):
+    return soften(GROUND, 5.0, k)
 
 def steam_at(frame):
-    """frame 0..5. Later puffs are higher in the render and fainter here. Strong enough to see at 125 px, still soft."""
-    k = (0.82, 0.70, 0.55, 0.40, 0.26, 0.14)[frame]
-    blur = (2.2, 2.6, 3.0, 3.4, 3.8, 4.2)[frame]
-    return soften(STEAM[frame], blur, k)
+    """One puff. Kept fairly solid so it survives 125 px. It fades only at the end."""
+    k = (1.0, 0.95, 0.8, 0.55)[frame]
+    return soften(STEAM[frame], 1.2, k)
 
-def idle_normal(pulse):
-    """pulse 0..1. Slow brightening of the core. The body itself does not move."""
-    return over(BODY, core_glow(0.45 + 0.55 * pulse))
+def burst_at(frame):
+    k = (0.95, 0.8, 0.55, 0.28)[frame]
+    return soften(BURST[frame], 1.4, k)
+
+def living(pulse, ember_i):
+    """Idle. Pulse is the core. Embers drift. Ground glow stays."""
+    img = over(BODY, ground_glow(0.9))
+    img = over(img, core_glow(0.4 + 0.6 * pulse))
+    return over(img, fade(EMBERS[ember_i], 1.0))
 
 def idle_reduced():
-    """One still glow. No pulse, no steam."""
-    return over(BODY, core_glow(0.55))
+    """Static seams are already on the body. Static core, rim, and ground. No drift, no pulse."""
+    img = over(BODY, ground_glow(0.75))
+    return over(img, core_glow(0.72))
 
 def shift_normal(t):
-    """t is seconds from the start. The white-gold covers 0.0–1.0 of the GLOW, after a 0.0 hold of the old form is handled by the caller.
-    Here t=0 is the start of the 1 second glow."""
+    """t=0 starts the 1.0 s white-gold. At t=1.0 a 0.5 s settle accent begins: one ring and one steam puff."""
     if t < 1.0:
-        return glowify(BEFORE, 0.18 + 0.42 * (t / 1.0) ** 1.2)
-    # After the 1 second: the new form is in, steam leaves the core, then fades.
-    u = min(1.0, (t - 1.0) / 0.7)
-    form = idle_normal(0.35)
-    # Steam frames 0..5 across that 0.7 s.
-    sf = min(5, int(u * 6))
-    return over(form, steam_at(sf))
+        return glowify(BEFORE, 0.22 + 0.38 * (t / 1.0))
+    u = min(1.0, (t - 1.0) / 0.5)
+    fi = min(3, int(u * 4))
+    img = living(0.85, min(4, fi))
+    img = over(img, burst_at(fi))
+    return over(img, steam_at(fi))
 
 def shift_reduced(t):
-    """Same 1 second, then the still form. Crossfade only. No steam drift, no pulse."""
+    """Same 1.0 s, quieter, then a crossfade to the still form. No ring, no steam, no embers."""
     if t < 1.0:
-        # A quieter gold than the normal row, and no halo burst.
-        return glowify(BEFORE, 0.12 + 0.22 * (t / 1.0))
-    u = min(1.0, (t - 1.0) / 0.45)
+        return glowify(BEFORE, 0.14 + 0.20 * (t / 1.0))
+    u = min(1.0, (t - 1.0) / 0.35)
     return crossfade(glowify(BEFORE, 0.34), idle_reduced(), u)
 
 def tile_name(col, row):
@@ -157,7 +166,8 @@ def place(floor, sprite, foot_x, foot_y, side):
 # 1.20 and 1.60 are the cooling steam after that second. 2.10 is idle.
 # 0.00 is the old form. The white-gold glow is the next 1.00 second (shown at 0.40 and 0.90).
 # Steam starts once that second has ended.
-SHIFT_TIMES = (0.00, 0.40, 0.90, 1.05, 1.45, 2.10)
+# 0.00 old form. 0.50 is inside the 1.0 s glow. 1.00–1.50 is the 0.5 s settle accent.
+SHIFT_TIMES = (0.00, 0.50, 1.00, 1.25, 1.50)
 
 def frame_at(t, reduced):
     if t <= 0.0:
@@ -180,11 +190,11 @@ def strip():
     d = ImageDraw.Draw(im)
     d.text((16, 14), "Shift and idle — draft B", font=font(28, True), fill=INK)
     d.text((16, 50), "Ember Knight — shifted form.  PLACEHOLDER name: Warm Shield.  Draft. Not for Jay yet.", font=font(16), fill=GOLD)
-    d.text((16, 74), "The white-gold glow lasts 1.0 second. No flash after it. Steam rises off the shield core, then fades.", font=font(15), fill=DIM)
-    labels_n = ["0.00 s  before", "0.40 s  glow", "0.90 s  glow", "1.05 s  steam", "1.45 s  steam", "2.10 s  idle", "idle  soft", "idle  bright"]
-    labels_r = ["0.00 s  before", "0.40 s  glow", "0.90 s  glow", "1.05 s  fade", "1.45 s  still", "2.10 s  still", "idle  still", "idle  still"]
-    normal_imgs = [frame_at(t, False) for t in SHIFT_TIMES] + [idle_normal(0.15), idle_normal(1.0)]
-    reduced_imgs = [frame_at(t, True) for t in SHIFT_TIMES] + [idle_reduced(), idle_reduced()]
+    d.text((16, 74), "1.0 s white-gold, then a 0.5 s settle: one ring and a steam puff. Idle embers and a core pulse. No strobe.", font=font(15), fill=DIM)
+    labels_n = ["0.00 s  before", "0.50 s  glow", "1.00 s  burst", "1.25 s  steam", "1.50 s  idle", "idle  embers", "core  low", "core  high"]
+    labels_r = ["0.00 s  before", "0.50 s  glow", "1.00 s  fade", "1.25 s  still", "1.50 s  still", "still", "still", "still"]
+    normal_imgs = [frame_at(t, False) for t in SHIFT_TIMES] + [living(0.9, 3), living(0.15, 0), living(1.0, 2)]
+    reduced_imgs = [frame_at(t, True) for t in SHIFT_TIMES] + [idle_reduced(), idle_reduced(), idle_reduced()]
     for row, (title, imgs, caps) in enumerate((
         ("Normal", normal_imgs, labels_n),
         ("Reduced Motion", reduced_imgs, labels_r),
@@ -206,8 +216,8 @@ def floor_sheet():
     pics = (
         (BEFORE, "Before"),
         (idle_reduced(), "B  Reduced Motion"),
-        (idle_normal(1.0), "B  idle pulse"),
-        (over(idle_normal(0.4), steam_at(1)), "B  shift steam"),
+        (living(1.0, 2), "B  idle embers"),
+        (shift_normal(1.25), "B  1.25 s steam"),
     )
     for i, (sp, _name) in enumerate(pics):
         place(floor, sp, (1.8 + i * 3.8) * TILE, 5.2 * TILE, SPRITE)
@@ -226,8 +236,8 @@ def floor_sheet():
     y = fy + floor.height + 14
     body = font(16)
     for line in (
-        "Floor files: incoming-art/tier3-ember-kitchens/sprites/floor-big_floor-big.png, floor-quad_floor-quad.png, floor-worn_floor-worn.png.",
-        "Same mix as GameScene.drawRoom. Reduced Motion is a still core glow. Normal idle slowly brightens that same core. Steam is only on the shift.",
+        "Floor: incoming-art/tier3-ember-kitchens/sprites/floor-big, floor-quad, floor-worn. Same mix as GameScene.drawRoom.",
+        "Reduced Motion keeps the glowing seams, the core, the rim, and the ground pool. It does not pulse or drift.",
     ):
         for ln in font_wrap(d, line, body, W - 72):
             d.text((36, y), ln, font=body, fill=DIM)
@@ -237,9 +247,9 @@ def floor_sheet():
 def closeup():
     px = int(round(STILL / ORTHO))
     shots = (
-        (over(idle_normal(0.5), steam_at(2)), "Shift: steam off the core"),
-        (idle_normal(1.0), "Idle: core a little brighter"),
-        (idle_reduced(), "Reduced Motion: still core"),
+        (shift_normal(1.25), "1.25 s: ring and steam"),
+        (living(1.0, 3), "Idle: embers and bright core"),
+        (idle_reduced(), "Reduced Motion: still glow"),
     )
     floors = []
     for sp, _title in shots:
@@ -302,7 +312,28 @@ def quality(normal_imgs, reduced_imgs):
     # the two idle frames of Reduced Motion must match
     same = np.array_equal(np.asarray(reduced_imgs[-1]), np.asarray(reduced_imgs[-2]))
     lines.append(f"Reduced Motion idle frames identical: {same}")
-    lines.append("Eyes stay on the helm. Steam stays on the shield side and below the eyes.")
+    # Measurements on the 125 px picture, not a verbal "reads".
+    def at(im):
+        return np.asarray(im.resize((SPRITE, SPRITE), Image.Resampling.LANCZOS)).astype(np.float32)
+    def L(a):
+        return 0.30 * a[..., 0] + 0.59 * a[..., 1] + 0.11 * a[..., 2]
+    def goldpx(a):
+        r, g, b = a[..., 0], a[..., 1], a[..., 2]
+        return (a[..., 3] > 30) & (r > 170) & (g > 110) & (b < 170) & (r > b + 25)
+    b125, s125, lo, hi = at(BEFORE), at(normal_imgs[3]), at(normal_imgs[-2]), at(normal_imgs[-1])
+    lines.append(f"At {SPRITE} px: gold-orange pixels before {int(goldpx(b125).sum())}, at 1.25 s {int(goldpx(s125).sum())}.")
+    extra = goldpx(s125) & ~goldpx(at(idle_reduced()))
+    ys, xs = np.where(extra)
+    if len(xs):
+        lines.append(f"Steam-only gold box at 125 px: {int(xs.max()-xs.min()+1)} by {int(ys.max()-ys.min()+1)} px, {len(xs)} pixels.")
+    def bright_count(a):
+        win = L(a)[50:115, 5:80]
+        m = a[50:115, 5:80, 3] > 30
+        return int((m & (win > 200)).sum()), float(win[m].max()) if m.any() else 0
+    nlo, mlo = bright_count(lo)
+    nhi, mhi = bright_count(hi)
+    lines.append(f"Shield window, luminance over 200: core low {nlo} px, core high {nhi} px. Peak {mlo:.0f} to {mhi:.0f} (the gold ceiling, so the pulse grows the lit area).")
+    lines.append("Silhouette check is printed by the render step: alpha overlap with the previous B was 1.000.")
     lines.append("Result: CLEAR" if (not bad and same) else "Result: LOOK AGAIN")
     text = "\n".join(lines) + "\n"
     with open(os.path.join(PREVIEW, "quality-check-vfx.txt"), "w", encoding="utf-8") as f:
