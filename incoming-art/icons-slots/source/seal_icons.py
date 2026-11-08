@@ -3,8 +3,27 @@ Every function returns a 256 x 256 RGBA image (the @2x file; the 128 x 128 file 
 Medallion shape and ring order match the existing Seal icons (incoming-art/icons): cream face, coloured rim,
 pale outer ring, dark outline. What changes per family is the rim colour and the picture."""
 import math
-from PIL import Image, ImageDraw, ImageChops
+import numpy as np
+from PIL import Image, ImageDraw, ImageChops, ImageFilter
 from toon import *
+
+# Pass 7. v6 shafts were counter 7 / spins 8 with a cream halo, heads 16 / 27, kata head 15 at outline weight 2.
+# Shafts are 2x. Heads are bolder (wider wings, dark ink) but shorter than a strict 2x, because a 2x head
+# covered Counter's shoe and touched Jumping Spins' rim. Ink weight matches the jacket (ow 4.6).
+# Fit stays locked to the pass-6 box unless a call passes grow, so a thicker mark cannot slide the figure.
+PASS7 = {
+    'counter': dict(w=14, head=16, spread=0.68, ow=4.6),
+    'spins': dict(w=16, head=34, spread=0.82, ow=4.6),
+    'kata': dict(size=22, spread=0.85, ow=4.6),
+}
+# Silhouette ink. The spec asks for a thick 2 px outline on the 128 px file, which is ow 4 at this drawing size
+# (1 U = 0.5 px at 128). Guard, Strike and Disarm were 3.0 to 3.2 (1.5 px). Counter and Spins were already 4.6.
+LINE = {'was_thin': 3.0, 'guard_body': 3.2, 'now': 4.6}
+V6_ARROW = {
+    'counter': dict(w=7, head=16, spread=0.62, ow=None, outline=(255, 252, 240)),
+    'spins': dict(w=8, head=27, spread=0.62, ow=None, outline=(255, 252, 240)),
+    'kata': dict(size=15, spread=0.62, ow=2.0),
+}
 
 RIMS = {  # rim colours: family colour cue. No red. Orange belongs to ENTER THE TOWER only.
     'counter': (70, 150, 215),   # blue (the colour every Seal rim has today)
@@ -54,7 +73,7 @@ def limb(a, p0, p1, r0, r1, clip=None):
 
 
 def head_front(a, cx, cy, r, clip=None):
-    a.shape(circ(cx, cy, r), SKIN, SKIN_S, lighten(SKIN, .4), ow=3, band=4, clip=clip)
+    a.shape(circ(cx, cy, r), SKIN, SKIN_S, lighten(SKIN, .4), ow=4.0, band=4, clip=clip)
     hair = [(cx - r - 1.5, cy + 2)] + arc_pts(cx, cy, r + 2, math.pi, 2 * math.pi, 14) + [(cx + r + 1.5, cy + 2),
             (cx + r * .55, cy - r * .12), (cx + r * .1, cy - r * .02), (cx - r * .45, cy - r * .22), (cx - r * .8, cy - r * .02)]
     a.shape(poly(hair), HAIR, HAIR_S, lighten(HAIR, .25), ow=2.6, band=3.5, clip=clip)
@@ -73,16 +92,19 @@ def burst(a, cx, cy, r0, r1, n=7, ang=0.0, clip=None):
     a.shape(poly(star_pts(cx, cy, r0, r1, n, ang)), GOLD, GOLD_S, (255, 232, 140), ow=2.6, band=3, clip=clip)
 
 
-def arrow(a, pts, col, w, head, clip=None, outline=None):
-    """a curved arrow along pts; arrowhead at the last point."""
+def arrow(a, pts, col, w, head, clip=None, outline=None, ink_ow=None, spread=0.62, head_mul=1.25):
+    """a curved arrow along pts; arrowhead at the last point.
+    ink_ow is None: the v6 halo (shaft outline w+4, head outline 2.0).
+    ink_ow set: a dark ink border of that weight on each side, the same ow the jackets use."""
     (x0, y0), (x1, y1) = pts[-2], pts[-1]
     ang = math.atan2(y1 - y0, x1 - x0)
     if outline:
-        a.line(pts, outline, w + 4, clip=clip)
+        a.line(pts, outline, (w + 4) if ink_ow is None else (w + 2 * ink_ow), clip=clip)
     a.line(pts, col, w, clip=clip)
-    hp = arrow_head((x1, y1), ang, head * 1.25)
+    hp = arrow_head((x1, y1), ang, head * head_mul, spread=spread)
+    how = 2.0 if ink_ow is None else ink_ow
     if outline:
-        a.shape(poly(hp), col, None, None, ow=2.0, outline=outline, clip=clip)
+        a.shape(poly(hp), col, None, None, ow=how, outline=outline, clip=clip)
     else:
         a.shape(poly(hp), col, None, None, ow=0, clip=clip)
 
@@ -93,40 +115,58 @@ GK = dict(gow=4.6, gshade=GSH)  # the thicker ink outline + darker shade for sle
 PANT = (238, 240, 248)
 
 
-def place_fit(med, art, wmax, hmax, cx=128, cy=128, bg=None, fmax=1.0):
-    """scale `art` to fit wmax x hmax U (its own bounding box), centre it at (cx, cy) on the medallion inside the face clip; `bg` (floor) uses the same transform."""
+def _fit_params(art, wmax, hmax, cx, cy, fmax):
+    """the v6 place_fit numbers: scale to wmax x hmax, then centre the bounding box on (cx, cy)."""
     bb = art.im.getchannel('A').getbbox(); k = P(1)
     w, h = (bb[2] - bb[0]) / k, (bb[3] - bb[1]) / k
     f = min(wmax / w, hmax / h, fmax)
     mx, my = (bb[0] + bb[2]) / 2 / k, (bb[1] + bb[3]) / 2 / k
+    return f, cx - f * mx, cy - f * my
+
+
+def place_fit(med, art, wmax, hmax, cx=128, cy=128, bg=None, fmax=1.0, lock=None):
+    """scale `art` to fit wmax x hmax U (its own bounding box), centre it at (cx, cy) on the medallion inside the face clip; `bg` (floor) uses the same transform.
+    `lock` is (f, dx, dy) from the v6 art. Pass it when the only change is a thicker arrow, so the new bounding box cannot move or scale the figure."""
+    if lock is None:
+        f, dx, dy = _fit_params(art, wmax, hmax, cx, cy, fmax)
+    else:
+        f, dx, dy = lock
     for layer in ([bg] if bg is not None else []) + [art]:
-        place(med, layer, f, cx - f * mx, cy - f * my, face_clip())
+        place(med, layer, f, dx, dy, face_clip())
     return f
+
+
+def _counter_pts(hx, ar, arrow_y, arrow_dx):
+    return [(hx + arrow_dx + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 36, -8)]
 
 
 def counter(rim=RIMS['counter'], hx=104, hr=22, ty=90, tw=52, th=76, belt=136, sh=(118, 106), wr=(158, 104), r_sh=10.5, r_wr=9, fs=24, wrist_len=8,
             gel=(-34, -2), gwr=(-30, -34), gfs=24, ar=(42, 12), arrow_y=152, arrow_dx=26, stance=(-28, 40), ank=200, W=158, H=158, cx=132, cy=126, burst_gap=10):
-    """v5 pass 6 (sheet 10), drawn in Jumping Spins' own proportions (head r 22, jacket about 50 wide, forearm sleeve r 10 to 9, mitten fist 24).
-    PUNCHING ARM (viewer's right): ONE smooth tapered sleeve (shoulder r 11 to wrist r 9, no cuff band, no seams) then a short skin wrist and a mitten fist knuckles out; the arm
-    reaches 57 U past the jacket edge (Spins' raised forearm and fist is 64 U). BACK HAND (viewer's left): no hip chamber; it is raised as a guard exactly like Spins' arm, a sleeve
-    with a cuff, a skin wrist and a fist by the cheek, the elbow down at the belt. 2 fists, 0 fingers, 0 toes."""
-    med = medallion(rim); a = Art()
-    for k, dx in enumerate(stance):
-        hip = (hx + (-12 if k == 0 else 12), ty + th - 8)
-        an = (hx + dx, ank)
-        sleeve(a, hip, (an[0], an[1] - 12), 13, 11, ow=4.6, shade=GSH, band=6)
-        kick_leg(a, an, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
-    gi_torso(a, hx, ty, tw, th, belt_y=belt, ow=4.6, shade=GSH, band=6)
-    limb(a, (hx, ty - 8), (hx, ty + 6), 8, 8)
-    head_front(a, hx, ty - 24, hr)
-    forearm_block(a, (hx + gel[0], belt + gel[1]), (hx + gwr[0], belt + gwr[1]), gfs, -math.pi / 2 + .1, 1, r_el=10, r_cuff=9, gband=6, **GK)
-    sleeve(a, sh, wr, r_sh, r_wr, ow=3.0, shade=GSH, band=6)                                                    # ONE sleeve, shoulder to wrist
-    limb(a, (wr[0] - 2, wr[1]), (wr[0] + wrist_len, wr[1]), 6.6, 7.0)
-    mitten_fist(a, wr[0] + wrist_len + fs * .38, wr[1], fs, 0, 1)
-    burst(a, wr[0] + wrist_len + fs * .88 + burst_gap, wr[1] - 4, 6.5, 14, 7, .3)
-    pts = [(hx + arrow_dx + ar[0] * math.cos(math.radians(t)), arrow_y + ar[1] * math.sin(math.radians(t))) for t in range(165, 36, -8)]
-    arrow(a, pts, BLUE_S, 7, 16, outline=(255, 252, 240))
-    place_fit(med, a, W, H, cx, cy)
+    """v5 pass 6 pose (sheet 10), with the pass-7 spin arrow only: shaft 2x, a wider head, and the jacket's dark ink outline.
+    The figure, its placement and its scale are the pass-6 ones. The fit is locked to the pass-6 bounding box. 2 fists, 0 fingers, 0 toes."""
+    def draw(spec, outline, ink_ow, sleeve_ow):
+        a = Art()
+        for k, dx in enumerate(stance):
+            hip = (hx + (-12 if k == 0 else 12), ty + th - 8)
+            an = (hx + dx, ank)
+            sleeve(a, hip, (an[0], an[1] - 12), 13, 11, ow=4.6, shade=GSH, band=6)
+            kick_leg(a, an, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
+        gi_torso(a, hx, ty, tw, th, belt_y=belt, ow=4.6, shade=GSH, band=6)
+        limb(a, (hx, ty - 8), (hx, ty + 6), 8, 8)
+        head_front(a, hx, ty - 24, hr)
+        forearm_block(a, (hx + gel[0], belt + gel[1]), (hx + gwr[0], belt + gwr[1]), gfs, -math.pi / 2 + .1, 1, r_el=10, r_cuff=9, gband=6, **GK)
+        sleeve(a, sh, wr, r_sh, r_wr, ow=sleeve_ow, shade=GSH, band=6)                                            # ONE sleeve, shoulder to wrist
+        limb(a, (wr[0] - 2, wr[1]), (wr[0] + wrist_len, wr[1]), 6.6, 7.0)
+        mitten_fist(a, wr[0] + wrist_len + fs * .38, wr[1], fs, 0, 1)
+        burst(a, wr[0] + wrist_len + fs * .88 + burst_gap, wr[1] - 4, 6.5, 14, 7, .3)
+        arrow(a, _counter_pts(hx, ar, arrow_y, arrow_dx), BLUE_S, spec['w'], spec['head'], outline=outline, ink_ow=ink_ow, spread=spec['spread'])
+        return a
+
+    old_s, new_s = V6_ARROW['counter'], PASS7['counter']
+    # lock to the pass-6 sleeve (ow 3) and the pass-6 arrow, so the thicker sleeve cannot move the figure
+    f, dx, dy = _fit_params(draw(old_s, old_s['outline'], old_s['ow'], 3.0), W, H, cx, cy, 1.0)
+    med = medallion(rim)
+    place_fit(med, draw(new_s, INKC, new_s['ow'], LINE['now']), W, H, cx, cy, lock=(f, dx, dy))
     return med.result()
 
 
@@ -136,8 +176,8 @@ def mitten_fist(a, cx, cy, s, ang, side=1, clip=None):
     INSIDE the outline (no separate thumb shape, no bump on the edge, no finger lines), so there is nothing to count or misread: 0 fingers, 1 thumb crease."""
     def L(pts):
         return rot(pts, cx, cy, ang)
-    a.shape(poly(L(rrect_pts(0, 0, s, .9 * s, .36 * s))), SKIN, SKIN_S, lighten(SKIN, .4), ow=2.8, band=3.4, clip=clip)
-    a.line(L([(-.30 * s, side * .22 * s), (-.12 * s, side * .30 * s), (.12 * s, side * .30 * s), (.28 * s, side * .22 * s)]), SKIN_S, 2.6, clip=clip)
+    a.shape(poly(L(rrect_pts(0, 0, s, .9 * s, .36 * s))), SKIN, SKIN_S, lighten(SKIN, .4), ow=3.6, band=3.4, clip=clip)
+    a.line(L([(-.30 * s, side * .22 * s), (-.12 * s, side * .30 * s), (.12 * s, side * .30 * s), (.28 * s, side * .22 * s)]), SKIN_S, 3.2, clip=clip)
 
 
 def forearm_block(a, el, wr, fist_s, fist_ang, side, clip=None, r_el=14.5, r_cuff=12.5, gow=3.0, gshade=GI_S, gband=4.5):
@@ -159,10 +199,10 @@ def guard(rim=RIMS['guard'], eo=26.5, ey=185, wx=10, wy=148, fs=30, front=1, shi
     elbow 86.0..170.2 U; measure_guard.py) and the arms and jacket are shortened to Jumping Spins' proportions (measure_proportions.py). 2 fists, 0 fingers."""
     med = medallion(rim); a = Art(); c = None
     if shield:
-        a.shape(poly(chaikin([(60, 118), (196, 118), (192, 172), (128, 228), (64, 172)], 3)), lighten(BLUE, .3), BLUE, lighten(BLUE, .6), ow=3.0, band=5, clip=c)
-    gi_torso(a, 128, 126, 78, th, clip=c, belt_y=belt)
+        a.shape(poly(chaikin([(60, 118), (196, 118), (192, 172), (128, 228), (64, 172)], 3)), lighten(BLUE, .3), BLUE, lighten(BLUE, .6), ow=4.0, band=5, clip=c)
+    gi_torso(a, 128, 126, 78, th, clip=c, belt_y=belt, ow=LINE['now'])
     limb(a, (128, 108), (128, 126), 10, 10, clip=c)
-    a.shape(circ(128, hy, 28), SKIN, SKIN_S, lighten(SKIN, .4), ow=3, band=4, clip=c)
+    a.shape(circ(128, hy, 28), SKIN, SKIN_S, lighten(SKIN, .4), ow=4.0, band=4, clip=c)
     hair = [(99, hy+4)] + arc_pts(128, hy, 30, math.pi, 2 * math.pi, 16) + [(157, hy+4), (148, hy-12), (128, hy-18), (108, hy-12)]
     a.shape(poly(hair), HAIR, HAIR_S, lighten(HAIR, .25), ow=2.6, band=3.5, clip=c)
     for dx in (-11, 11):
@@ -174,7 +214,7 @@ def guard(rim=RIMS['guard'], eo=26.5, ey=185, wx=10, wy=148, fs=30, front=1, shi
     B = ((128 + eo, ey), (128 - wx, wy), 1)
     back, fr = (B, A) if front == -1 else (A, B)
     for el, wr, sd in (back, fr):
-        forearm_block(a, el, wr, fs, 0, sd, clip=c, r_el=r_el, r_cuff=r_cuff)
+        forearm_block(a, el, wr, fs, 0, sd, clip=c, r_el=r_el, r_cuff=r_cuff, gow=LINE['now'])
     place(med, a, f, 128 - f * 128, 128 - f * cy, face_clip())
     return med.result()
 
@@ -217,6 +257,18 @@ def stick(a, cx, cy, ang, clip=None, k=1.0):
     a.line(L([(-4, -6), (34, -6)]), lighten(PADB, .5), 2.6, clip=clip)                                           # soft sheen
 
 
+def hip_high_kick(a, hip, knee, ankle, ow=4.6, sc=0.58, flex=-12):
+    """a high kick whose thigh starts at the hip joint and angles up. The shin and the toeless shoe are the shared kick_leg,
+    so the knee meets the thigh and the sole faces the kick. Returns the sole point for the burst."""
+    dx, dy = knee[0] - ankle[0], knee[1] - ankle[1]
+    dist = math.hypot(dx, dy)
+    # kick_leg's shin runs from the ankle toward the body along (-cos ang, -sin ang) in screen space
+    ang = math.degrees(math.atan2(-dy / dist, -dx / dist))
+    G, fl = kick_leg(a, ankle, ang, flex, sc, dist / sc, None, r0=22, r1=14, gow=ow, gshade=GSH)
+    sleeve(a, hip, knee, 15, 12.5, ow=ow, shade=GSH, band=6)   # thigh, drawn over the knee so the hip line is continuous
+    return G([(52, 46)], fl)[0]   # toe end of the sole, so the burst is the hit and not the ankle
+
+
 def kick_leg(a, ankle, ang_deg, flex=-14, sc=1.1, L_=120, clip=None, r0=21, r1=13.5, gow=3.0, gshade=GI_S):
     """v4 kicking leg (shared by Disarm, Strike and Jumping Spins). Shin, ankle and shoe are drawn ONCE in a standing frame (shin straight up from the ankle,
     toes right, sole down) and rotated as one rigid group by ang_deg - 90, so the shin-to-foot line cannot kink. Gi cuff, a short natural strip of ankle, then
@@ -249,7 +301,7 @@ def disarm(rim=RIMS['disarm'], ang_deg=-24, ankle=(92, 166), flex=-14, stickang=
     facing the stick. The burst on the sole is the hit, which is also the source of the glow. Nothing above the head. 0 toes (a toeless shoe)."""
     a = medallion(rim)
     c = face_clip()
-    G, fl = kick_leg(a, ankle, ang_deg, flex, sc, 120, c)
+    G, fl = kick_leg(a, ankle, ang_deg, flex, sc, 120, c, gow=LINE['now'])
     bx, by = G([(16, 56)], fl)[0]
     sx, sy = G([(16, sd)], fl)[0]
     stick(a, sx, sy + sdy, stickang, clip=c, k=k)
@@ -285,7 +337,7 @@ def strike(rim=RIMS['strike'], ax=92, ay=138, ang=0, sc=1.1):
     a.shape(poly(rrect_pts(180, 128, 40, 92, 14)), PAD, PAD_S, lighten(PAD, .35), ow=3.2, band=5, clip=c)
     a.shape(circ(180, 128, 15), GOLD, GOLD_S, (255, 232, 140), ow=2.4, band=3, clip=c)
     a.shape(circ(180, 128, 6), PAD_S, None, None, ow=0, clip=c)
-    G, fl = kick_leg(a, (ax, ay), ang, -14, sc, 120, c)
+    G, fl = kick_leg(a, (ax, ay), ang, -14, sc, 120, c, gow=LINE['now'])
     bx, by = G([(16, 56)], fl)[0]
     burst(a, bx + 4, by, 7, 15, 8, .2, clip=c)
     return a.result()
@@ -298,68 +350,171 @@ def foot_print(a, x, y, ang, s=1.0, col=BLUE_S, clip=None):
     a.shape(poly(rot(ell_pts(0, 11 * s, 5.2 * s, 5.2 * s, 0), x, y, ang + math.pi / 2)), col, None, None, ow=2.0, clip=clip)
 
 
-def kata(rim=RIMS['kata']):
-    a = medallion(rim)
-    c = face_clip()
+def _kata_prints(a, c):
+    foot_print(a, 77, 150, -math.pi / 2, .9, clip=c)
+    foot_print(a, 91, 126, -math.pi / 2, .9, clip=c)
+    foot_print(a, 113, 95, 0, .9, clip=c)
+    foot_print(a, 143, 109, 0, .9, clip=c)
+    foot_print(a, 179, 128, math.pi / 2, .9, clip=c)
+
+
+def _kata_arrow(a, c, size, spread, ow):
+    a.shape(poly(arrow_head((172, 168), math.pi / 2, size, spread=spread)), BLUE_S, None, None, ow=ow, clip=c)
+
+
+def _kata_mat(a, c):
     mat_col, mat_sh = (214, 198, 134), (186, 168, 104)
     a.shape(poly(rrect_pts(128, 132, 128, 112, 12)), (90, 118, 84), (66, 90, 62), None, ow=3.2, band=4, clip=c)
     a.shape(poly(rrect_pts(128, 132, 112, 96, 8)), mat_col, mat_sh, (240, 228, 170), ow=2.0, band=4, clip=c)
     for yy in (116, 132, 148):
         a.line([(78, yy), (178, yy)], (196, 180, 116), 2, clip=c)
     path = [(84, 168), (84, 102), (172, 102), (172, 154)]
-    # dotted floor path (the pattern a kata walks)
     for (x0, y0), (x1, y1) in zip(path, path[1:]):
         n = int(math.hypot(x1 - x0, y1 - y0) / 13)
         for i in range(n):
             t = (i + .5) / n
             a.shape(circ(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, 2.6), (120, 86, 56), None, None, ow=0, clip=c)
-    foot_print(a, 77, 150, -math.pi / 2, .9, clip=c)
-    foot_print(a, 91, 126, -math.pi / 2, .9, clip=c)
-    foot_print(a, 113, 95, 0, .9, clip=c)
-    foot_print(a, 143, 109, 0, .9, clip=c)
-    foot_print(a, 179, 128, math.pi / 2, .9, clip=c)
-    a.shape(poly(arrow_head((172, 168), math.pi / 2, 15)), BLUE_S, None, None, ow=2.0, clip=c)
+
+
+def _kata_full(rim, size, spread, ow):
+    a = medallion(rim); c = face_clip()
+    _kata_mat(a, c); _kata_prints(a, c); _kata_arrow(a, c, size, spread, ow)
     return a.result()
 
 
+def kata(rim=RIMS['kata']):
+    """the v3 kata mat and footprints, with the pass-7 direction arrow only: a bolder head and the same dark ink weight as the figures.
+    Footprints stay on top of the arrow, so a bigger head cannot cover a step."""
+    old_s, new_s = V6_ARROW['kata'], PASS7['kata']
+    old = _kata_full(rim, old_s['size'], old_s['spread'], old_s['ow'])
+    new = _kata_full(rim, new_s['size'], new_s['spread'], new_s['ow'])
+    def head_alpha(size, spread, ow):
+        a = Art(); c = face_clip(); _kata_arrow(a, c, size, spread, ow)
+        return np.array(a.result().getchannel('A'))
+    fa = Art(); _kata_prints(fa, face_clip())
+    allow = _allow(head_alpha(old_s['size'], old_s['spread'], old_s['ow']),
+                   head_alpha(new_s['size'], new_s['spread'], new_s['ow']),
+                   protect_a=np.array(fa.result().getchannel('A')))
+    return _splice(old, new, allow)
+
+
 # ------------------------------------------------------------------ JUMPING SPINS (Strike icon)
+def placed_layer(art, f, dx, dy, clip):
+    """the same pixels place() lays down, before they are composited onto the medallion."""
+    big = art.im.resize((int(P(U) * f), int(P(U) * f)), Image.LANCZOS)
+    lay = Image.new('RGBA', (P(U), P(U)), (0, 0, 0, 0))
+    lay.alpha_composite(big, (int(P(dx)), int(P(dy))))
+    if clip is not None:
+        lay.putalpha(ImageChops.multiply(lay.getchannel('A'), clip))
+    return lay
+
+
 def place(med, art, f, dx, dy, clip):
     """scale a free-standing drawing by f, move it by (dx, dy) in U units, and lay it on the medallion inside the face."""
-    big = art.im.resize((int(P(U) * f), int(P(U) * f)), Image.LANCZOS)
-    lay = Image.new('RGBA', med.im.size, (0, 0, 0, 0))
-    lay.alpha_composite(big, (int(P(dx)), int(P(dy))))
-    lay.putalpha(ImageChops.multiply(lay.getchannel('A'), clip))
-    med.im.alpha_composite(lay)
+    med.im.alpha_composite(placed_layer(art, f, dx, dy, clip))
+
+
+def _over(parts):
+    """stack full-canvas drawings with the painter's 'over' (later parts sit on top)."""
+    out = Art()
+    for p in parts:
+        out.im.alpha_composite(p.im)
+    return out
+
+
+def _splice(base, updated, allow):
+    """keep every pixel of base except where allow is set, which comes from updated. Non-arrow pixels stay byte-identical."""
+    b = np.array(base)
+    b[allow] = np.array(updated)[allow]
+    return Image.fromarray(b, 'RGBA')
+
+
+def _alpha(art, f, dx, dy):
+    return np.array(placed_layer(art, f, dx, dy, face_clip()).getchannel('A'))
+
+
+def _allow(old_a, new_a, body_a=None, protect_a=None, behind=False, dilate=3):
+    allow = (old_a > 0) | (new_a > 0)
+    if dilate:
+        im = Image.fromarray(np.where(allow, np.uint8(255), np.uint8(0)), 'L')
+        allow = np.array(im.filter(ImageFilter.MaxFilter(dilate * 2 + 1))) > 0
+    if behind and body_a is not None:
+        allow &= body_a <= 250          # the solid figure stays the v6 pixels; the arrow remains behind it
+    if protect_a is not None:
+        allow &= protect_a == 0          # face and fists are never painted over
+    return allow
+
+
+def _spins_pts(hx, arw, arrow_y, ary):
+    return [(hx + 8 + arw * math.cos(math.radians(t)), arrow_y + ary * math.sin(math.radians(t))) for t in range(10, 150, 7)]
 
 
 def jumping_spins(rim=RIMS['strike'], kx=186, ky=98, kang=-20, hx=114, ttop=84, belt=130, hip=160, sw=48, ww=40, hr=22,
            sl=((-9, 152), (-4, 176), (-12, 196)), arw=70, arrow_y=152, ary=15, head=27, W=152, H=152, cx=128, cy=121):
-    """v5 pass 2: slim kid, slightly tapered jacket over pants with a belt break (belt, knot, tails), a natural standing leg (thigh, bent knee, shin, flat shoe),
-    the spin kick, a big spin arrowhead, ink-dark outlines for grey legibility. 1 fist, 0 fingers, 0 toes."""
-    med = medallion(rim); a = Art(); bg = Art()
-    fy = sl[2][1] + 19
-    bg.shape(poly(rrect_pts(128, fy + 19, 230, 44, 10)), (214, 198, 134), (186, 168, 104), None, ow=0, band=4)
-    for rx, ry, al in ((66, 11, .65), (44, 7, .85)):
-        bg.line(ell_pts(120, fy, rx, ry, 0, 40), (70, 150, 215), 3, closed=True, a=al)
-    bg.fill_mask(mask_of(poly(ell_pts(114, fy, 30, 6))), (60, 44, 30), .4)
-    # spin arrow first: it wraps behind the body so the leg, belt and arrow never pile up
-    front = [(hx + 8 + arw * math.cos(math.radians(t)), arrow_y + ary * math.sin(math.radians(t))) for t in range(10, 150, 7)]
-    arrow(a, front, BLUE_S, 8, head, outline=(255, 252, 240))
-    (h0, k0, a0) = [(hx + dx, y) for dx, y in sl]
-    sleeve(a, h0, k0, 13, 11.5, ow=4.6, shade=GSH, band=6)
-    sleeve(a, k0, (a0[0], a0[1] - 10), 11.5, 10.5, ow=4.6, shade=GSH, band=6)
-    kick_leg(a, a0, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
-    kick_leg(a, (kx, ky), kang, -14, .62, 120, **GK)
-    burst(a, kx + 30, ky - 2, 7, 15, 7, .2)
-    jack = chaikin([(hx - sw / 2, ttop + 12), (hx - sw / 2 + 5, ttop), (hx + sw / 2 - 5, ttop), (hx + sw / 2, ttop + 12), (hx + ww / 2, belt), (hx - ww / 2, belt)], 2)
-    pants = chaikin([(hx - ww / 2 - 1, belt - 4), (hx + ww / 2 + 1, belt - 4), (hx + ww / 2 + 3, hip - 6), (hx + ww / 2 - 4, hip), (hx - ww / 2 + 4, hip), (hx - ww / 2 - 3, hip - 6)], 2)
-    a.shape(poly(pants), PANT, GSH, (255, 255, 250), ow=4.6, band=6)
-    a.shape(poly(jack), GI, GSH, (255, 255, 250), ow=4.6, band=6)
-    a.shape(poly(rrect_pts(hx, belt, ww + 6, 14, 5)), BELT, BELT_S, lighten(BELT, .3), ow=3.0, band=3)
-    limb(a, (hx, ttop - 6), (hx, ttop + 6), 8, 8)
-    head_front(a, hx, ttop - 26, hr)
-    forearm_block(a, (hx - sw / 2 - 12, belt - 2), (hx - sw / 2 - 8, 96), 24, -math.pi / 2 + .1, 1, r_el=10, r_cuff=9, gband=6, **GK)
-    place_fit(med, a, W, H, cx, cy, bg=bg)
+    """pass 7: the kicking thigh now leaves the hip, under the belt, and angles up into a high kick. The head, guard fist,
+    standing leg and jacket stay on the pass-6 fit, so they do not slide. The spin arrow is thicker, with a dark ink outline, and sits behind the body.
+    1 fist, 0 fingers, 0 toes. Not approved: the Manager checks the hip before Jay."""
+    def floor():
+        bg = Art(); fy = sl[2][1] + 19
+        bg.shape(poly(rrect_pts(128, fy + 19, 230, 44, 10)), (214, 198, 134), (186, 168, 104), None, ow=0, band=4)
+        for rx, ry, al in ((66, 11, .65), (44, 7, .85)):
+            bg.line(ell_pts(120, fy, rx, ry, 0, 40), (70, 150, 215), 3, closed=True, a=al)
+        bg.fill_mask(mask_of(poly(ell_pts(114, fy, 30, 6))), (60, 44, 30), .4)
+        return bg
+
+    def body_art():
+        a = Art()
+        (h0, k0, a0) = [(hx + dx, y) for dx, y in sl]
+        sleeve(a, h0, k0, 13, 11.5, ow=4.6, shade=GSH, band=6)
+        sleeve(a, k0, (a0[0], a0[1] - 10), 11.5, 10.5, ow=4.6, shade=GSH, band=6)
+        kick_leg(a, a0, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
+        # thigh leaves the pelvis (under the belt), then the shin rises. Not the old shoulder-level shin.
+        # hip joint sits inside the pelvis; the thigh leaves the hip hem (below the belt) and the shin rises.
+        # knee is out beside the hip, not up at the armpit, so the two shapes stay apart even at 30 px.
+        sole = hip_high_kick(a, (hx + 2, hip - 2), (hx + 56, hip - 14), (hx + 72, ttop + 8))
+        burst(a, sole[0], sole[1], 6, 13, 7, .15)
+        jack = chaikin([(hx - sw / 2, ttop + 12), (hx - sw / 2 + 5, ttop), (hx + sw / 2 - 5, ttop), (hx + sw / 2, ttop + 12), (hx + ww / 2, belt), (hx - ww / 2, belt)], 2)
+        pants = chaikin([(hx - ww / 2 - 1, belt - 4), (hx + ww / 2 + 1, belt - 4), (hx + ww / 2 + 3, hip - 6), (hx + ww / 2 - 4, hip), (hx - ww / 2 + 4, hip), (hx - ww / 2 - 3, hip - 6)], 2)
+        a.shape(poly(pants), PANT, GSH, (255, 255, 250), ow=4.6, band=6)
+        a.shape(poly(jack), GI, GSH, (255, 255, 250), ow=4.6, band=6)
+        a.shape(poly(rrect_pts(hx, belt, ww + 6, 14, 5)), BELT, BELT_S, lighten(BELT, .3), ow=3.0, band=3)
+        limb(a, (hx, ttop - 6), (hx, ttop + 6), 8, 8)
+        head_front(a, hx, ttop - 26, hr)
+        forearm_block(a, (hx - sw / 2 - 12, belt - 2), (hx - sw / 2 - 8, 96), 24, -math.pi / 2 + .1, 1, r_el=10, r_cuff=9, gband=6, **GK)
+        return a
+
+    def arrow_art(spec, outline, ink_ow, head_n, y=None):
+        a = Art()
+        # the new arrow sits lower, under the raised thigh, so it does not cross the hip joint
+        arrow(a, _spins_pts(hx, arw, arrow_y if y is None else y, ary), BLUE_S, spec['w'], head_n, outline=outline, ink_ow=ink_ow, spread=spec['spread'])
+        return a
+
+    def body_v6():
+        """the pass-6 body, used only to lock the fit. The shoulder-level kick stays in this copy and is not what we ship."""
+        a = Art()
+        (h0, k0, a0) = [(hx + dx, y) for dx, y in sl]
+        sleeve(a, h0, k0, 13, 11.5, ow=4.6, shade=GSH, band=6)
+        sleeve(a, k0, (a0[0], a0[1] - 10), 11.5, 10.5, ow=4.6, shade=GSH, band=6)
+        kick_leg(a, a0, 90, 0, .55, 14, None, r0=21, r1=18, **GK)
+        kick_leg(a, (kx, ky), kang, -14, .62, 120, **GK)
+        burst(a, kx + 30, ky - 2, 7, 15, 7, .2)
+        jack = chaikin([(hx - sw / 2, ttop + 12), (hx - sw / 2 + 5, ttop), (hx + sw / 2 - 5, ttop), (hx + sw / 2, ttop + 12), (hx + ww / 2, belt), (hx - ww / 2, belt)], 2)
+        pants = chaikin([(hx - ww / 2 - 1, belt - 4), (hx + ww / 2 + 1, belt - 4), (hx + ww / 2 + 3, hip - 6), (hx + ww / 2 - 4, hip), (hx - ww / 2 + 4, hip), (hx - ww / 2 - 3, hip - 6)], 2)
+        a.shape(poly(pants), PANT, GSH, (255, 255, 250), ow=4.6, band=6)
+        a.shape(poly(jack), GI, GSH, (255, 255, 250), ow=4.6, band=6)
+        a.shape(poly(rrect_pts(hx, belt, ww + 6, 14, 5)), BELT, BELT_S, lighten(BELT, .3), ow=3.0, band=3)
+        limb(a, (hx, ttop - 6), (hx, ttop + 6), 8, 8)
+        head_front(a, hx, ttop - 26, hr)
+        forearm_block(a, (hx - sw / 2 - 12, belt - 2), (hx - sw / 2 - 8, 96), 24, -math.pi / 2 + .1, 1, r_el=10, r_cuff=9, gband=6, **GK)
+        return a
+
+    bg = floor()
+    old_s, new_s = V6_ARROW['spins'], PASS7['spins']
+    lock_art = _over([arrow_art(old_s, old_s['outline'], old_s['ow'], head), body_v6()])
+    f, dx, dy = _fit_params(lock_art, W, H, cx, cy, 1.0)
+    new_all = _over([arrow_art(new_s, INKC, new_s['ow'], new_s['head'], y=arrow_y + 22), body_art()])
+    med = medallion(rim)
+    place_fit(med, new_all, W, H, cx, cy, bg=bg, lock=(f, dx, dy))
     return med.result()
 
 
