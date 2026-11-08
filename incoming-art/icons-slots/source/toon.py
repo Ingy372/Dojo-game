@@ -152,10 +152,10 @@ def darken(c, k=.25):
     return tuple(int(v * (1 - k)) for v in c)
 
 
-def arrow_head(tip, ang, size):
-    """a triangle at tip pointing along ang."""
+def arrow_head(tip, ang, size, spread=0.62):
+    """a dart at tip pointing along ang. spread is the wing width as a fraction of the length (0.62 is the v6 dart)."""
     x, y = tip
-    a = [(0, 0), (-size, -size * .62), (-size * .62, 0), (-size, size * .62)]
+    a = [(0, 0), (-size, -size * spread), (-size * .62, 0), (-size, size * spread)]
     return rot(a, x, y, ang)
 
 
