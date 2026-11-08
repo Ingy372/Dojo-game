@@ -5,7 +5,7 @@ appears word for word (case aside) on the cited line of docs/self-defense.md or 
 altName is the current name; OPEN seals keep their current name and have an openNote; no two seals share a proposed name;
 names are 3 words or fewer; Nov 8: each proposed Strike name is on its cited curriculum line, ids/combo unchanged, old name in altName,
 Kick Combo 5 is Hook Kick; seal #16 keeps its id, OPEN with description "Hammer Fist, Back Fist", kid line says "a low hammer fist", 8 words or fewer,
-no groin/face/head; every audit row Real/Rename candidate is on its cited line; the 35 'renames' drop-ins each find their entry by id, hold the current
+no groin/face/head; every audit row Real/Rename candidate is on its cited line; the 'renames' drop-ins (one per audit Renamed row) each find their entry by id, hold the current
 name in altName, cite a docs line that has the new name, and match the audit; Seal family labels are KEEP; 'about' lines are 8 words or fewer; no banned words in new names and lines (OPEN seals keep their current names). Usage: check-j27-seal-names.py [path-to-json]"""
 import json, pathlib, re, sys
 R = pathlib.Path(__file__).resolve().parents[3]
@@ -97,7 +97,9 @@ def resolve(doc, where):
     return cur
 ren = d.get('renames', [])
 done = {(r['file'], r['id'].split(' (')[0]) for r in audit if r['status'] == 'Renamed (drop-in)'}
-if len(ren) != 35: bad.append(f'renames: need 35, found {len(ren)}')
+if len(ren) != len(done): bad.append(f'renames: {len(ren)} entries but {len(done)} audit rows are Renamed (drop-in)')
+s4 = seals[3] if len(seals) > 3 else {}
+if s4.get('name') != 'Advancing' or s4.get('family') != 'Escape' or 'J21' not in (s4.get('familySource') or ''): bad.append('#4: J21 says name Advancing, family Escape, cited to J21')
 if {(e.get('file'), e.get('id')) for e in ren} != done: bad.append('renames and the audit "Renamed (drop-in)" rows do not match')
 for e in ren:
     t = f'rename {e.get("file")} {e.get("where")}'

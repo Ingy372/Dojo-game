@@ -37,11 +37,11 @@
   "id": "steady-breath",
   "name": "Steady Breath",
   "verbatim": "docs/self-defense.md:75",
-  "cand": "OPEN",
+  "cand": "Advancing",
   "src": "docs/self-defense.md:14",
   "live": "live",
-  "note": "candidates outside block / double punch",
-  "status": "OPEN"
+  "note": "Jay, J21 (Nov 8): \"#4 is named Advancing\"; family stays Escape (drafts/planning/power-and-progression-redesign.md:199, R-G2B-seal-families-16-40.md:11). J21 is not in docs/decisions.md",
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/abilities.json",
@@ -268,11 +268,11 @@
   "id": "escape #4",
   "name": "Drive Back",
   "verbatim": null,
-  "cand": "OPEN",
+  "cand": "Advancing",
   "src": "docs/self-defense.md:14",
   "live": "live",
-  "note": "candidates outside block / double punch",
-  "status": "OPEN"
+  "note": "Jay, J21 (Nov 8): \"#4 is named Advancing\"; family stays Escape (drafts/planning/power-and-progression-redesign.md:199, R-G2B-seal-families-16-40.md:11). J21 is not in docs/decisions.md",
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -499,11 +499,11 @@
   "id": "escape #4",
   "name": "Drive Back",
   "verbatim": null,
-  "cand": "OPEN",
+  "cand": "Advancing",
   "src": "docs/self-defense.md:14",
   "live": "drafts",
-  "note": "candidates outside block / double punch",
-  "status": "OPEN"
+  "note": "Jay, J21 (Nov 8): \"#4 is named Advancing\"; family stays Escape (drafts/planning/power-and-progression-redesign.md:199, R-G2B-seal-families-16-40.md:11). J21 is not in docs/decisions.md",
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -1093,11 +1093,11 @@
   "id": "steady-breath (subtitle)",
   "name": "Steady Breath",
   "verbatim": "docs/self-defense.md:75",
-  "cand": "OPEN",
+  "cand": "Advancing",
   "src": "docs/self-defense.md:14",
   "live": "drafts",
-  "note": "candidates outside block / double punch",
-  "status": "OPEN"
+  "note": "Jay, J21 (Nov 8): \"#4 is named Advancing\"; family stays Escape (drafts/planning/power-and-progression-redesign.md:199, R-G2B-seal-families-16-40.md:11). J21 is not in docs/decisions.md",
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "drafts/content/abilities/technique-callouts.json",
@@ -1185,6 +1185,204 @@
   "src": "",
   "live": "drafts",
   "note": "old placeholder Seal carried on a rank",
+  "status": "OPEN"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "spin-kick (title)",
+  "name": "Spin Kick",
+  "verbatim": "docs/curriculum.md:46",
+  "cand": "Spin Kick",
+  "src": "docs/curriculum.md:46",
+  "live": "drafts",
+  "note": "",
+  "status": "Real"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "jumping-spins (title)",
+  "name": "Jumping Spins",
+  "verbatim": null,
+  "cand": "Jumping Spin Kicks",
+  "src": "docs/curriculum.md:47",
+  "live": "drafts",
+  "note": "doc: \"3 jumping spin kicks\" (plural, word for word)",
+  "status": "Renamed (drop-in)"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "butterfly-flow (title)",
+  "name": "Butterfly Flow",
+  "verbatim": null,
+  "cand": "Butterfly Kick",
+  "src": "docs/curriculum.md:48",
+  "live": "drafts",
+  "note": "\"tornado kick (we call it butterfly kick)\"",
+  "status": "Renamed (drop-in)"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #1 (title)",
+  "name": "Off the Line",
+  "verbatim": "docs/self-defense.md:11",
+  "cand": "Double Punch",
+  "src": "docs/self-defense.md:11",
+  "live": "drafts",
+  "note": "",
+  "status": "Renamed (drop-in)"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #2 (title)",
+  "name": "Other Side",
+  "verbatim": "docs/self-defense.md:12",
+  "cand": "OPEN",
+  "src": "docs/self-defense.md:12",
+  "live": "drafts",
+  "note": "same as #1, other side",
+  "status": "OPEN"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #3 (title)",
+  "name": "Spin Back Fist",
+  "verbatim": null,
+  "cand": "Back Fist",
+  "src": "docs/self-defense.md:13",
+  "live": "drafts",
+  "note": "also #5, #10",
+  "status": "Renamed (drop-in)"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #4 (title)",
+  "name": "Drive Back",
+  "verbatim": null,
+  "cand": "Advancing",
+  "src": "docs/self-defense.md:14",
+  "live": "drafts",
+  "note": "Jay, J21 (Nov 8): \"#4 is named Advancing\"; family stays Escape (drafts/planning/power-and-progression-redesign.md:199, R-G2B-seal-families-16-40.md:11). J21 is not in docs/decisions.md",
+  "status": "Renamed (drop-in)"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #5 (title)",
+  "name": "Spin Elbow",
+  "verbatim": null,
+  "cand": "OPEN",
+  "src": "docs/self-defense.md:15",
+  "live": "drafts",
+  "note": "candidates back fist (also #3) / elbow",
+  "status": "OPEN"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #6 (title)",
+  "name": "Arm Wrap",
+  "verbatim": null,
+  "cand": "OPEN",
+  "src": "docs/self-defense.md:16",
+  "live": "drafts",
+  "note": "candidate hook punch (attacker also throws one)",
+  "status": "OPEN"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #7 (title)",
+  "name": "Palm Heel",
+  "verbatim": "docs/self-defense.md:17",
+  "cand": "Palm Heel",
+  "src": "docs/self-defense.md:17",
+  "live": "drafts",
+  "note": "",
+  "status": "Real"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #8 (title)",
+  "name": "Block and Strike",
+  "verbatim": null,
+  "cand": "OPEN",
+  "src": "docs/self-defense.md:18",
+  "live": "drafts",
+  "note": "block-and-strike, no set name",
+  "status": "OPEN"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #9 (title)",
+  "name": "High Block Strike",
+  "verbatim": null,
+  "cand": "OPEN",
+  "src": "docs/self-defense.md:19",
+  "live": "drafts",
+  "note": "as #8, high",
+  "status": "OPEN"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #10 (title)",
+  "name": "Grab and Strike",
+  "verbatim": "docs/self-defense.md:20",
+  "cand": "Double Knifehand Block",
+  "src": "docs/self-defense.md:20",
+  "live": "drafts",
+  "note": "",
+  "status": "Renamed (drop-in)"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #11 (title)",
+  "name": "Outside Reap",
+  "verbatim": null,
+  "cand": "Osotogari",
+  "src": "docs/self-defense.md:21",
+  "live": "drafts",
+  "note": "Jay's spelling; S4 \"Osoto Gari\"",
+  "status": "Renamed (drop-in)"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #12 (title)",
+  "name": "Reap and Finish",
+  "verbatim": null,
+  "cand": "OPEN",
+  "src": "docs/self-defense.md:22",
+  "live": "drafts",
+  "note": "osotogari again (also #11)",
+  "status": "OPEN"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #13 (title)",
+  "name": "Kick the Weapon",
+  "verbatim": "docs/self-defense.md:23",
+  "cand": "Inside Kick",
+  "src": "docs/self-defense.md:23",
+  "live": "drafts",
+  "note": "also #14",
+  "status": "Renamed (drop-in)"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #14 (title)",
+  "name": "Kick and Spin",
+  "verbatim": null,
+  "cand": "OPEN",
+  "src": "docs/self-defense.md:24",
+  "live": "drafts",
+  "note": "candidate spin kick (clashes with Strike \"Spin Kick\")",
+  "status": "OPEN"
+ },
+ {
+  "file": "drafts/content/abilities/unlock-text.json",
+  "id": "seal #15 (title)",
+  "name": "Slip and Double",
+  "verbatim": null,
+  "cand": "OPEN",
+  "src": "docs/self-defense.md:25",
+  "live": "drafts",
+  "note": "candidate double punch (also #1)",
   "status": "OPEN"
  },
  {

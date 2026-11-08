@@ -13,7 +13,7 @@ def where(name):
 SD=lambda n:f'docs/self-defense.md:{10+n}'
 KC=lambda n:f'docs/curriculum.md:{45+n}'
 # candidate per technique number / combo: (term or None, note)
-SEAL={1:('double punch',''),2:(None,'same as #1, other side'),3:('back fist','also #5, #10'),4:(None,'candidates outside block / double punch'),
+SEAL={1:('double punch',''),2:(None,'same as #1, other side'),3:('back fist','also #5, #10'),4:('advancing','Jay, J21 (Nov 8): "#4 is named Advancing"; family stays Escape (drafts/planning/power-and-progression-redesign.md:199, R-G2B-seal-families-16-40.md:11). J21 is not in docs/decisions.md'),
 5:(None,'candidates back fist (also #3) / elbow'),6:(None,'candidate hook punch (attacker also throws one)'),7:('palm heel',''),8:(None,'block-and-strike, no set name'),
 9:(None,'as #8, high'),10:('double knifehand block',''),11:('osotogari','Jay\'s spelling; S4 "Osoto Gari"'),12:(None,'osotogari again (also #11)'),
 13:('inside kick','also #14'),14:(None,'candidate spin kick (clashes with Strike "Spin Kick")'),15:(None,'candidate double punch (also #1)'),
@@ -62,6 +62,9 @@ for c in json.load(open('drafts/content/abilities/technique-callouts.json'))['ca
 for v in json.load(open('drafts/content/abilities/unlock-text.json'))['sealCarries']:
     k=v.get('technique')
     add('drafts/content/abilities/unlock-text.json',f'sealCarries {k}',v['name'],'OPEN','','drafts','old placeholder Seal carried on a rank')
+ut=json.load(open('drafts/content/abilities/unlock-text.json'))
+for x in ut['strikes']: strike('drafts/content/abilities/unlock-text.json',x['id']+' (title)',x['title'],ut['strikes'].index(x)+1,'drafts')
+for x in ut['seals']: seal('drafts/content/abilities/unlock-text.json',f"seal #{x['technique']} (title)",x['title'],x['technique'],'drafts')
 for k,v in json.load(open('drafts/content/katas/moves.json'))['moves'].items():
     w=where(v.rstrip('!'))
     add('drafts/content/katas/moves.json',k,v,v if w else 'OPEN',w or '','drafts','kata move; file says wording is a guess' + ('' if w else '; not in the 3 docs (Jay\'s kata sheets may have it)'))
