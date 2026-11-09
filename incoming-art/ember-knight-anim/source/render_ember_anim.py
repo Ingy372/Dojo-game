@@ -62,7 +62,10 @@ def setup_camera(sc):
     sc.cycles.max_bounces = 0
     sc.cycles.transparent_max_bounces = 16
     r.film_transparent = True
-    r.resolution_x = r.resolution_y = A.size
+    # 512 wide, 640 tall. Feet stay 435 px from the top. The extra canvas is below,
+    # so a floor arc is not cut off. Every move uses this same frame.
+    r.resolution_x = 512
+    r.resolution_y = 640
     sc.view_settings.view_transform = "Standard"
     if sc.world is None:
         sc.world = bpy.data.worlds.new("W")
@@ -76,13 +79,15 @@ def setup_camera(sc):
         sc.camera = cam
     cd = cam.data
     cd.type = "ORTHO"
-    cd.ortho_scale = A.ortho
+    # Wider view than the old 2.6 so a floor arc fits beside the knight as well as below.
+    cd.ortho_scale = 3.15
     cd.sensor_fit = "HORIZONTAL"
     rx = math.radians(55)  # 35° down from horizontal
     cam.rotation_euler = Euler((rx, 0, 0))
     fwd = Euler((rx, 0, 0)).to_matrix() @ Vector((0, 0, -1))
     up = Euler((rx, 0, 0)).to_matrix() @ Vector((0, 1, 0))
-    zt = (0.85 - 0.5) * A.ortho / up.z
+    world_h = cd.ortho_scale * (r.resolution_y / r.resolution_x)
+    zt = (435.2 / r.resolution_y - 0.5) * world_h / up.z
     cam.location = Vector((0, 0, zt)) - fwd * 20
 
 
@@ -141,6 +146,28 @@ def thicken(name, extra):
     bm.to_mesh(ob.data)
     ob.data.update()
     bm.free()
+
+
+def glow_mat(name, hex_color, alpha):
+    """Emission mixed with clear, so the body shows through the ring."""
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    nt.nodes.clear()
+    emit = nt.nodes.new("ShaderNodeEmission")
+    h = hex_color.lstrip("#")
+    rgb = tuple(int(h[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    lin = tuple(c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in rgb)
+    emit.inputs["Color"].default_value = (*lin, 1)
+    emit.inputs["Strength"].default_value = 2.2
+    clear = nt.nodes.new("ShaderNodeBsdfTransparent")
+    mix = nt.nodes.new("ShaderNodeMixShader")
+    mix.inputs["Fac"].default_value = alpha
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    nt.links.new(clear.outputs[0], mix.inputs[1])
+    nt.links.new(emit.outputs[0], mix.inputs[2])
+    nt.links.new(mix.outputs[0], out.inputs["Surface"])
+    return m
 
 
 def emission(name, hex_color, strength=2.5):
@@ -226,10 +253,10 @@ def _fan_mesh(scale):
     inner, outer = [], []
     for i in range(steps + 1):
         t = i / steps
-        ang = math.radians(-100 + 200 * t)
+        ang = math.radians(-75 + 150 * t)
         taper = math.sin(t * math.pi)
         half = (0.06 + 0.34 * taper) * scale
-        radius = 0.95
+        radius = 0.78
         direction = Vector((math.sin(ang), -math.cos(ang), 0.0))
         center = Vector((0.0, -0.25, 0.07)) + direction * radius
         inner.append(bm.verts.new(center - direction * half))
@@ -655,11 +682,9 @@ def pose_sweep(i, body, shield, bar):
     pose_feet(0.0, False)
 
 
-def place_sparks(sparks, halo, present):
-    halo.hide_render = present < 0.35
-    # Centered on the shield, just behind the face, so a gold rim shows around it.
-    halo.location = Vector((0.04, -0.20, -0.22))
-    halo.scale = (1.7, 0.28, 1.7)
+def place_sparks(sparks, rings, present):
+    for ring in rings:
+        ring.hide_render = present < 0.4
     # Three big sparks, not a ring of tiny ones.
     for i, ob in enumerate(sparks):
         ob.hide_render = present < 0.55
@@ -667,9 +692,9 @@ def place_sparks(sparks, halo, present):
             continue
         ang = i / max(1, len(sparks)) * math.tau * 0.8 - 0.4
         ob.location = Vector((
-            0.04 + math.cos(ang) * 0.38,
-            -0.46,
-            -0.22 + math.sin(ang) * 0.34,
+            0.035 + math.cos(ang) * 0.46,
+            -0.42,
+            -0.22 + math.sin(ang) * 0.42,
         ))
         k = 1.7
         ob.scale = (k, k, k)
@@ -704,21 +729,33 @@ def main():
     add_boots(sc, body)
     ring, steam, embers = add_effects(sc, shield)
     arc = add_slash_arc(sc, root)
+    # Layered see-through rings around the shield face, not a solid blob.
+    shield_face = Vector((0.035, -0.34, -0.22))
+    rings = []
+    for i, (maj, minor, alpha, col) in enumerate((
+        (0.26, 0.02, 0.5, "#ffd36a"),
+        (0.32, 0.026, 0.3, "#ffc14d"),
+        (0.38, 0.03, 0.16, "#ffe7a0"),
+    )):
+        bpy.ops.mesh.primitive_torus_add(major_radius=maj, minor_radius=minor, major_segments=28, minor_segments=8)
+        ob = bpy.context.active_object
+        ob.name = f"glow-ring-{i}"
+        ob.rotation_euler = Euler((math.radians(90), 0, 0))
+        ob.location = shield_face
+        ob.data.materials.append(glow_mat(f"GR{i}", col, alpha))
+        keep_world(ob, shield)
+        ob.hide_render = True
+        rings.append(ob)
     sparks = []
-    for i in range(3):
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.12, segments=12, ring_count=8)
+    for i, ang in enumerate((-0.2, 1.15, 2.4)):
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.07, segments=10, ring_count=6)
         ob = bpy.context.active_object
         ob.name = f"spark-{i}"
-        ob.data.materials.append(emission("SPARK%d" % i, "#ffd36a"))
+        ob.data.materials.append(emission("SPARK%d" % i, "#ffd36a", 3.0))
+        ob.location = shield_face + Vector((math.cos(ang) * 0.58, -0.08, math.sin(ang) * 0.52))
         keep_world(ob, shield)
         ob.hide_render = True
         sparks.append(ob)
-    bpy.ops.mesh.primitive_uv_sphere_add(radius=0.34, segments=16, ring_count=10)
-    halo = bpy.context.active_object
-    halo.name = "spark-halo"
-    halo.data.materials.append(emission("HALO", "#ffc14d", 1.6))
-    keep_world(halo, shield)
-    halo.hide_render = True
     fan = add_floor_fan(sc, root)
 
     def hide_fx():
@@ -727,13 +764,12 @@ def main():
             ob.hide_render = True
         place_embers(embers, 0, False)
         place_arc(arc, -1, None)
-        place_sparks(sparks, halo, 0)
+        place_sparks(sparks, rings, 0)
         place_floor_fan(fan, False)
 
     jobs = []
     if A.only == "test":
-        jobs.append(("attack", 20, (9,), ("S",)))
-        jobs.append(("sweep", 16, (6, 8), ("S",)))
+        jobs.append(("sweep", 16, (8,), ("S",)))
         jobs.append(("spark", 16, (8,), ("S",)))
     else:
         if want("idle"):
@@ -783,7 +819,7 @@ def main():
                     place_arc(arc, i, tips)
                 elif anim == "spark":
                     present = pose_spark(i, body, shield, bar)
-                    place_sparks(sparks, halo, present)
+                    place_sparks(sparks, rings, present)
                 elif anim == "sweep":
                     pose_sweep(i, body, shield, bar)
                     place_floor_fan(fan, i in (7, 8, 9))

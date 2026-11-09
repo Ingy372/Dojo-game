@@ -6,15 +6,15 @@
   "notForImport": true,
   "notForImportNote": "Motion concept for the Manager. Do not copy these sheets into the game until the Manager approves them.",
   "frameWidth": 512,
-  "frameHeight": 512,
+  "frameHeight": 640,
   "anchorPx": [
     256.0,
     435.2
   ],
-  "anchorNote": "Feet. Same camera as the approved shift still: ground line at 85% of the frame. 0.85 * 512 = 435.2.",
-  "orthoScaleTiles": 2.6,
+  "anchorNote": "Feet. Still 435.2 px from the top, the same as the old 512-tall frame. The frame is now 640 px tall, so the extra canvas is below the feet. The view is also wider: 3.15 tiles across instead of 2.6, so a floor arc is not cut off at the side. Every move uses this same frame and anchor.",
+  "orthoScaleTiles": 3.15,
   "elevationDeg": 35,
-  "sourcePixelsPerTile": 196.9231,
+  "sourcePixelsPerTile": 162.5397,
   "gamePixelsPerTile": 48,
   "gameDisplayPx": 125,
   "directions": [
