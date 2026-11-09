@@ -36,6 +36,22 @@ def _finish(art):
     return med.result()
 
 
+def _finish_in(art):
+    """place at 1:1 so the figure can be drawn inside the cream, not over the rim."""
+    med = medallion(RIMS['strike'])
+    place(med, art, 1.0, 0, 0, wide_clip())
+    return med.result()
+
+
+def _shin_shoe(a, knee, ankle, flex, sc=0.52):
+    """gi shin from the knee to the ankle, then the toeless shoe. Returns the ball-of-foot point."""
+    dx, dy = knee[0] - ankle[0], knee[1] - ankle[1]
+    dist = math.hypot(dx, dy) or 1
+    ang = math.degrees(math.atan2(-dy / dist, -dx / dist))
+    G, fl = kick_leg(a, ankle, ang, flex, sc, dist / sc, None, r0=15, r1=11, gow=4.2, gshade=GSH)
+    return G([(52, 40)], fl)[0]
+
+
 def _support(a, hx=118):
     """the same standing leg as Jumping Spins: a small knee bend, shoe, no toes."""
     stand = ((-8, 154), (6, 174), (-6, 200))
@@ -100,61 +116,94 @@ def spin_kick():
 
 
 def butterfly_flow():
-    """#3. Jay, via the Manager: the butterfly kick moment. Body near horizontal, in the air, legs scissoring.
-    docs/curriculum.md:48 names that kick. This pose is Jay's answer, not a guess."""
+    """#3. Jay: body near horizontal, in the air, legs scissoring. The arm starts on the shoulder.
+    Both thighs start inside the hip."""
     a = Art()
     from seal_icons import forearm_block, limb
-    hip = (158, 128)
-    # two legs from the same hip, opposite ways. Shoes, no toes. No foot on the ground.
-    hip_high_kick(a, hip, ((hip[0] + 200) / 2, (hip[1] + 78) / 2), (200, 78), flex=12)
-    hip_high_kick(a, hip, ((hip[0] + 188) / 2, (hip[1] + 186) / 2), (188, 186), flex=12)
-    body = chaikin([(62, 122), (150, 108), (172, 126), (150, 150), (62, 142)], 2)
-    a.shape(poly_of(body), CREAM_GI, GSH, (255, 255, 250), ow=4.6, band=6)
-    a.shape(poly_of_rect(118, 130, 16, 36, 5), PINE, PINE_S, lighten(PINE, .3), ow=3.0, band=3)
-    limb(a, (78, 118), (86, 128), 7, 7)
-    head_front(a, 58, 112, 20)
-    forearm_block(a, (96, 104), (112, 96), 16, -0.6, 1, r_el=8, r_cuff=8, gband=5, gow=4.0, gshade=GSH)
-    return _finish(a)
+    hip = (150, 128)
+    # scissor from one hip. Shoes stop inside the cream.
+    sleeve(a, hip, (168, 112), 11, 9, ow=4.2, shade=GSH, band=5)
+    _shin_shoe(a, (168, 112), (182, 102), 0, 0.4)
+    sleeve(a, hip, (168, 146), 11, 9, ow=4.2, shade=GSH, band=5)
+    _shin_shoe(a, (168, 146), (182, 156), 0, 0.4)
+    body = chaikin([(86, 116), (158, 108), (168, 126), (158, 146), (86, 138)], 2)
+    a.shape(poly_of(body), CREAM_GI, GSH, (255, 255, 250), ow=4.4, band=5)
+    a.shape(poly_of_rect(122, 128, 14, 28, 5), PINE, PINE_S, lighten(PINE, .3), ow=2.8, band=3)
+    limb(a, (96, 120), (82, 114), 6, 6)
+    head_front(a, 74, 112, 16)
+    sleeve(a, (112, 114), (128, 104), 8, 7, ow=4.0, shade=GSH, band=4)
+    limb(a, (128, 104), (136, 98), 5.5, 5.5)
+    from seal_icons import fist
+    fist(a, 142, 94, 13, -0.3)
+    return _finish_in(a)
 
 
 def lunge():
-    """#6. Literal ending of combo 6: lunge forward with a chambered jumping front kick.
-    docs/curriculum.md:51. The exact frame (knee still bent, or leg already out) is not drawn in the doc."""
+    """#6. Side-view jumping front kick. Torso slightly back, kicking leg straight at chest
+    height, other knee tucked high, both feet off the ground. Arrow stays behind the body."""
     a = Art()
-    hx = 108
-    # front kick, out of the hip. The arrow stays above the shin.
-    hip_f = (hx + 6, 132)
-    ankle = (hip_f[0] + 62, hip_f[1] - 4)
-    knee = ((hip_f[0] + ankle[0]) / 2, (hip_f[1] + ankle[1]) / 2)
-    sole = hip_high_kick(a, hip_f, knee, ankle, flex=8)
-    burst(a, sole[0], sole[1], 5, 11, 5, .1)
-    arrow(a, [(hip_f[0] + 12, hip_f[1] - 26), (ankle[0] - 10, ankle[1] - 22), (ankle[0] + 8, ankle[1] - 20)],
-          BLUE_S, 11, 20, outline=INKC, ink_ow=4.6, spread=0.85)
-    # the other knee is up and the shoe is tucked, so both feet are off the ground
-    sleeve(a, (hx - 2, 146), (hx - 8, 118), 13, 11, ow=4.6, shade=GSH, band=6)
-    kick_leg(a, (hx - 22, 136), 80, 16, 0.7, 20, None, r0=15, r1=12, gow=4.6, gshade=GSH)
-    _torso(a, hx, lean=12, ttop=64, belt_y=108, hip=140)
-    return _finish(a)
+    from seal_icons import forearm_block, limb
+    # arrow in the cream under the jump, pointing the same way as the kick
+    arrow(a, [(72, 178), (130, 178), (188, 168)], BLUE_S, 10, 18, outline=INKC, ink_ow=4.2, spread=0.82)
+    hip = (122, 140)
+    knee_t = (104, 104)
+    foot_t = (92, 126)
+    sleeve(a, hip, knee_t, 11, 9, ow=4.2, shade=GSH, band=5)
+    _shin_shoe(a, knee_t, foot_t, 18, 0.48)
+    ankle = (172, 114)
+    knee_k = ((hip[0] + ankle[0]) / 2, (hip[1] + ankle[1]) / 2)
+    sleeve(a, hip, knee_k, 12, 10, ow=4.2, shade=GSH, band=5)
+    _shin_shoe(a, knee_k, ankle, 0, 0.48)
+    body = chaikin([(104, 96), (140, 102), (138, 132), (128, 152), (112, 150), (100, 122)], 2)
+    a.shape(poly_of(body), CREAM_GI, GSH, (255, 255, 250), ow=4.4, band=5)
+    a.shape(poly_of_rect(122, 130, 30, 12, 4), PINE, PINE_S, lighten(PINE, .3), ow=2.8, band=3)
+    # sleeves start on the shoulder edge so the arms read as attached
+    from seal_icons import fist
+    sleeve(a, (108, 104), (98, 90), 8, 7, ow=4.0, shade=GSH, band=4)
+    limb(a, (98, 90), (92, 82), 5.5, 5.5)
+    fist(a, 88, 76, 13, -1.1)
+    sleeve(a, (136, 106), (148, 94), 8, 7, ow=4.0, shade=GSH, band=4)
+    limb(a, (148, 94), (154, 86), 5.5, 5.5)
+    fist(a, 158, 78, 13, -0.4)
+    limb(a, (120, 96), (118, 84), 6, 6)
+    head_front(a, 114, 72, 15)
+    return _finish_in(a)
 
 
 def spinning_finisher():
-    """#7. Literal finish: a spinning hook kick. The redesign also says the hits go around you.
-    docs/curriculum.md:52 and drafts/planning/R-G2B-strikes-4-7.md:27. Limb angle is not in the doc."""
+    """#7. Spinning hook kick. Standing leg straight and planted. Hooking leg at head height,
+    heel leading. Torso turned. Ring drawn first so it sits behind the figure."""
     a = Art()
-    hx = 118
-    # ring first, so the figure sits inside it. "Hits all enemies in a ring."
+    from seal_icons import forearm_block, limb
     ring = []
-    for deg in range(200, 200 - 320, -24):
-        ring.append((hx + 78 * math.cos(math.radians(deg)), 132 + 74 * math.sin(math.radians(deg))))
-    arrow(a, ring, BLUE_S, 11, 22, outline=INKC, ink_ow=4.6, spread=0.85)
-    _support(a, hx)
-    # hook stays inside the ring, heel coming back, so the spin reads and the leg is not the arrow
-    hip_pt = (hx + 4, 148)
-    knee = (hip_pt[0] + 34, hip_pt[1] - 36)
-    ankle = (knee[0] - 30, knee[1] + 4)
-    hip_high_kick(a, hip_pt, knee, ankle, flex=30)
-    _torso(a, hx, lean=6)
-    return _finish(a)
+    for deg in range(40, 40 - 330, -22):
+        ring.append((128 + 66 * math.cos(math.radians(deg)), 132 + 62 * math.sin(math.radians(deg))))
+    arrow(a, ring, BLUE_S, 10, 18, outline=INKC, ink_ow=4.0, spread=0.8)
+    hip = (126, 138)
+    # one straight standing leg, foot planted
+    foot_s = (122, 178)
+    sleeve(a, hip, foot_s, 11, 9, ow=4.2, shade=GSH, band=5)
+    _shin_shoe(a, (124, 160), foot_s, -8, 0.46)
+    # hook: shin drawn first, thigh overlaps the knee, heel at head height
+    knee_h = (156, 108)
+    foot_h = (146, 88)
+    _shin_shoe(a, knee_h, foot_h, 40, 0.46)
+    sleeve(a, hip, knee_h, 12, 10, ow=4.2, shade=GSH, band=5)
+    # back of the gi, turned, shoulders not square to the camera
+    # shoulders twisted: the far shoulder is high, the head looks back over the near shoulder
+    body = chaikin([(100, 118), (152, 90), (156, 122), (134, 150), (110, 146), (94, 126)], 2)
+    a.shape(poly_of(body), CREAM_GI, GSH, (255, 255, 250), ow=4.4, band=5)
+    a.shape(poly_of_rect(126, 128, 24, 11, 4), PINE, PINE_S, lighten(PINE, .3), ow=2.8, band=3)
+    from seal_icons import fist
+    sleeve(a, (108, 116), (96, 100), 8, 7, ow=4.0, shade=GSH, band=4)
+    limb(a, (96, 100), (90, 90), 5.5, 5.5)
+    fist(a, 86, 82, 12, -1.2)
+    sleeve(a, (146, 96), (158, 86), 8, 7, ow=4.0, shade=GSH, band=4)
+    limb(a, (158, 86), (162, 78), 5.5, 5.5)
+    fist(a, 166, 72, 12, -0.2)
+    limb(a, (112, 108), (100, 92), 6, 6)
+    head_front(a, 96, 80, 14)
+    return _finish_in(a)
 
 
 def side_kick_drive():
@@ -227,7 +276,7 @@ def sheet():
          ['docs/curriculum.md:46', 'spinning outside kick (spin kick)', 'Not a jump. Angle not in the doc.']),
         ('#3 Butterfly Flow',
          os.path.join(out, 'butterfly-flow-full.png'),
-         ['Jay: show the butterfly kick (via Manager)', 'docs/curriculum.md:48', 'Body horizontal, legs scissoring.']),
+         ['Jay: show the butterfly kick (via Manager)', 'docs/curriculum.md:48', 'Body horizontal. Arm on the shoulder.']),
         ('#4 Side Kick Drive',
          os.path.join(out, 'side-kick-drive-full.png'),
          ['docs/curriculum.md:49', 'step-behind side kick', 'Unchanged.']),
@@ -236,10 +285,10 @@ def sheet():
          ['docs/curriculum.md:50', 'step-behind hook kick', 'Returning heel drawn larger.']),
         ('#6 Lunge',
          os.path.join(out, 'lunge-full.png'),
-         ['docs/curriculum.md:51', 'chambered jumping front kick', 'Confirmation required: exact frame.']),
+         ['docs/curriculum.md:51', 'Jumping front kick, knee tucked.', 'Arrow behind. Inside the rim.']),
         ('#7 Spinning Finisher',
          os.path.join(out, 'spinning-finisher-full.png'),
-         ['docs/curriculum.md:52 spinning hook kick', 'R-G2B-strikes-4-7.md:27 ring', 'Confirmation required: limb angle.']),
+         ['docs/curriculum.md:52 spinning hook kick', 'R-G2B-strikes-4-7.md:27 ring behind', 'Heel at head height. Inside the rim.']),
     ]
     big = 220
     col = 430

@@ -9,15 +9,15 @@ Draft. Not approved. Not exported into the game.
 | # | File | Status |
 | --- | --- | --- |
 | 1 | `preview/spin-kick-full.png` | Kept. Standing spinning outside kick. |
-| 3 | `preview/butterfly-flow-full.png` | Redrawn. Jay: show the butterfly kick (via Manager). Body near horizontal, in the air, legs scissoring. |
+| 3 | `preview/butterfly-flow-full.png` | Jay: butterfly kick (via Manager). Body horizontal, arm on the shoulder, both legs from the hip. Inside the rim. |
 | 4 | `preview/side-kick-drive-full.png` | Kept. |
 | 5 | `preview/hook-kick-full.png` | Kept. Returning heel enlarged. |
-| 6 | `preview/lunge-full.png` | New. Jumping front kick, other knee up, both feet off the ground. |
-| 7 | `preview/spinning-finisher-full.png` | New. A hooking leg inside a ring. |
+| 6 | `preview/lunge-full.png` | Jumping front kick. Torso slightly back, kicking leg straight at chest height, other knee tucked high, arrow behind the body. |
+| 7 | `preview/spinning-finisher-full.png` | Spinning hook kick. Standing leg straight, heel at head height, ring behind the figure. |
 
 Sheet: `preview/sheet-g2b44-samples.png`. Approved Jumping Spins and the Strike slot picture sit beside these six. Each is shown large, then in colour and in grey at 128, 96, 64, 40, and 30.
 
-The earlier upright Butterfly Flow picture is in `superseded/sample-2-unconfirmed/`. The first three drafts are in `superseded/sample-1/`.
+The pass before this one is in `superseded/sample-3/`. The upright Butterfly Flow is in `superseded/sample-2-unconfirmed/`. The first three drafts are in `superseded/sample-1/`.
 
 **WHY.** #3 was waiting on Jay's pose. He answered: draw the butterfly kick, body flat, legs scissoring, not another Jumping Spins. #6 and #7 are the last two Strikes in the live list.
 
@@ -34,8 +34,7 @@ Sources:
 
 **DECIDE.**
 
-1. #6 Lunge: confirmation required. The line says a chambered jumping front kick. It does not say whether the knee is still bent or the leg is already straight. This picture is the literal reading: in the air, one leg out in a front kick, the other knee up.
-2. #7 Spinning Finisher: confirmation required. The finish is a spinning hook kick, and the redesign adds a ring of hits. The limb angle is not in the doc. The ring is the part that reads at 30 px.
+The three poses just redrawn follow the review: #6 is the jumping front kick with the knee tucked, #7 is the spinning hook with the heel at head height, #3 keeps the horizontal scissor. Nothing else is waiting on a pose answer in this set.
 
 **NEXT.** Wait for a look at this sheet. No sprite export until then. G2B-40, then G2B-41, then G2B-42 are a later batch and are not in this pull request.
 
