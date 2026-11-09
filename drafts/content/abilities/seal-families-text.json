@@ -8,8 +8,15 @@
       "ranks": [
         { "technique": 1, "name": "Off the Line", "text": "A Great Counter adds two quick punches.", "effectRef": "counterHits 2 x 0.3 (S4 #1)", "status": "new effect counterHits (PB-02)" },
         { "technique": 2, "name": "Other Side", "text": "A Block fills your DASH right back up, so you can step away.", "oldSeal": "escape-step", "effectRef": "dashOnBlock (S4 #2)" },
-        { "technique": 4, "name": "Drive Back", "text": "A Great Counter pushes the attacker back and leaves them off-balance.", "effectRef": "counterPush 1.5 (S4 #4)", "status": "new effect counterPush (PB-02)" },
         { "technique": 15, "name": "Slip and Double", "text": "Great Counters add a third quick punch and give you a little more time.", "oldSeal": "sharp-eyes", "effectRef": "counterHits +1, counterWindow +1 tick (S4 #15)", "status": "waits on #1 (counterHits)" }
+      ]
+    },
+    {
+      "id": "advancing",
+      "name": "Advancing",
+      "text": "Step forward into the attacker and close the distance.",
+      "ranks": [
+        { "technique": 4, "name": "OPEN", "text": "A Great Counter pushes the attacker back and leaves them off-balance.", "effectRef": "counterPush 1.5 (S4 #4 OPEN)", "status": "built push, measured in PR #453; family row not in seal-families.json yet", "j27": "Name OPEN. Drive Back is retired. Family Advancing, not Escape. The live seal-families.json still needs this family. See familyMoves in J27-seal-renames.json." }
       ]
     },
     {

@@ -106,7 +106,7 @@ export interface KataPowerDef {
 
 | File | Holds | Who fills it |
 |---|---|---|
-| `content/abilities/seal-families.json` (new) | 6 `SealFamilyDef`. Beta fills ranks for #1-15. `lock` exists with no ranks (locked, "Coming later"). | Content Designer (words) and Programmer (effects) |
+| `content/abilities/seal-families.json` (new) | Seal families. The live file has six. Jay's ruling adds a seventh, Advancing (#4 OPEN). The Programmer adds that entry. Beta fills ranks for #1-15. `lock` exists with no ranks (locked, "Coming later"). | Content Designer (words) and Programmer (effects) |
 | `content/abilities/strikes.json` (new) | 3 `StrikeDef`. Spin Kick copies `COMBAT.strike` exactly. Jumping Spins and Butterfly Flow start from the placeholder numbers in `S4-kick-combos.md`. | Programmer, tuned by PB-09 |
 | `content/katas/powers.json` (new) | 3 `KataPowerDef` (Basic Form 1, Basic Form 2, Keon), all `placeholder` until Jay's list. | Jay's list, then Content Designer |
 | `content/abilities/fighting-style.json` | New slot names, hints, empty-slot lines, the one-time note. | Content Designer |
@@ -129,7 +129,8 @@ The old `abilities.json` `strikes` and `seals` arrays are kept for one release a
 
 | Family | Techniques (belt) | Effect types already in `effects.ts` | New mechanic |
 |---|---|---|---|
-| Escape | #1 Off the Line (W), #2 Other Side (W), #4 Advancing (W), #15 Slip and Double (O) | `dashOnBlock`, `counterWindow` | `counterHits`, `counterPush` (small) |
+| Escape | #1 Off the Line (W), #2 Other Side (W), #15 Slip and Double (O) | `dashOnBlock`, `counterWindow` | `counterHits` |
+| Advancing | #4 OPEN (W) | none | `counterPush` 1.5 (measured and kept in PR #453) |
 | Counter | #3 Spin Back Fist (W), #5 Spin Elbow (W), #6 Arm Wrap (Y), #7 Palm Heel (Y), #10 Grab and Strike (Y) | `rippleCounter`, `staggerTicks`, `counterStrength`, `staggerBonus` | none |
 | Guard | #8 Block and Strike (Y), #9 High Block Strike (Y) | `blockReflect` | `reflectStaggers` (small flag) |
 | Throw | #11 Outside Reap (O), #12 Reap and Finish (O) | none | `counterThrow` + thrown state, `downBonus` (R-G2B-04) |
@@ -147,7 +148,7 @@ How the old 10 placeholder Seals land (the Redesign says each becomes a rank eff
 
 Both are data rows in `seal-families.json`. The Content Designer (PB-06) can move one to another rank in the same family with a one-line edit if Jay's template reads differently. A student who had either old Seal keeps its effect when they equip that family at that rank, so nobody's earned power disappears. PB-02 builds both and PB-09 sets the amounts.
 
-**Jay, Nov 8:** #4's name is **Advancing**, not Drive Back. The effect is the push (`counterPush`). The 1.5 tile distance was measured and kept. #16 is an extra hit, not a heal, so Steady Breath shares this #10 home. No new heal amount. #19's disarm effect is Disarm, not Lock; that change is outside the beta belts' rank list here. The full map is in `R-G2B-seal-families-16-40.md`. This beta table's family rows for #1 and #15 were not changed.
+**Jay's ruling:** #4's real name is **OPEN**. Advancing is its family, not its name, and OPEN is not in Escape. The old game name Drive Back is retired. The effect is still the push (`counterPush`). The 1.5 tile distance was measured in PR #453 and stays. The Programmer adds the Advancing family to `seal-families.json`. This beta table's family rows for #1 and #15 were not changed. #16 is an extra hit, not a heal, so Steady Breath shares this #10 home. No new heal amount. #19's disarm effect is Disarm, not Lock; that change is outside the beta belts' rank list here. The full map is in `R-G2B-seal-families-16-40.md`.
 
 ## 5. UI flow: picking and equipping
 
@@ -166,7 +167,7 @@ Built on the Fighting Style screen that exists (`buildStyle`, `equipPick`, `styl
 
 | Content | Who | Waits on |
 |---|---|---|
-| Family name and one-line text for the 5 beta families (Counter, Guard, Escape, Disarm, Throw) and the Lock "Coming later" line | Content Designer | Jay OKs the names (he approved the 6 families on Nov 1) |
+| Family name and one-line text for the beta families (Counter, Guard, Escape, Disarm, Throw, Advancing) and the Lock "Coming later" line | Content Designer | Jay approved 6 families on Nov 1. The later ruling adds Advancing. Its only confirmed member is #4 OPEN |
 | Rank text for #1-15 (kid words, real technique name, no numbers, no injury words) | Content Designer | Family map for #1-15 confirmed (4.4). Builds on R-G2B-02. |
 | Strike names and lines for Jumping Spins and Butterfly Flow | Content Designer | nothing |
 | **3 kata powers (Basic Form 1, Basic Form 2, Keon): name, one sentence, what it does on screen** | **Jay** | **Jay's power list.** Toni's kata descriptions help but are not needed for passive powers. |
@@ -277,9 +278,9 @@ Built on the Fighting Style screen that exists (`buildStyle`, `equipPick`, `styl
 
 | Belt | Slots | Families the student has (my 4.4 mapping) | Real choice? |
 |---|---|---|---|
-| White (#1-5) | 2 | Escape, Counter (2) | **No choice yet.** Both fit. Approved by the Manager (Nov 1): it teaches the screen. |
-| Yellow (#6-10) | 2 | Escape, Counter, Guard (3) | Yes, 3 for 2. |
-| Orange (#11-15) | 3 | Escape, Counter, Guard, Throw, Disarm (5) | Yes, 5 for 3. |
+| White (#1-5) | 2 | Escape, Counter, Advancing (3) | Yes, 3 for 2. The Nov 1 note (no choice yet, both fit) was the old map, before OPEN left Escape. |
+| Yellow (#6-10) | 2 | Escape, Counter, Guard, Advancing (4) | Yes, 4 for 2. |
+| Orange (#11-15) | 3 | Escape, Counter, Guard, Throw, Disarm, Advancing (6) | Yes, 6 for 3. |
 
 **Proposal: no new tuning numbers.** Only these two ceilings stay, and every tier passes them by the table above: a kata power is **at most PE 12**, and **stance + kata damage is at most +12%**. All Seal, Strike and kata amounts stay **placeholders** until PB-09 shows a table where every belt and difficulty passes.
 
@@ -333,7 +334,7 @@ Owners: **Programmer, Content Designer, Artist, Tester, Jay** (Manager for PB-12
 |---|---|---|---|
 | Jay's kata list arrives after Nov 20 | **HIGH** | Kata powers must ship in the beta. The test needs about a week and the tuning loop hits Thanksgiving. | Ship the slot and the 3 katas with "Power coming soon" (approved by the Manager, Nov 1) and send the real powers as a data-only update before Dec 15. |
 | Seal and Strike numbers are untested | **HIGH** | They are not in the sim. PB-09 builds the harness first. | Use the S4 numbers at a smaller size (about half) and re-check. Never ship an unchecked tier. |
-| Counter holds 5 of 15 techniques, Escape 4 | MED | Jay decides families. A big family ranks up fast and gets strong. | PB-09 sets rank amounts so the family total fits the Seal budget. A family map change is a data edit. |
+| Counter holds 5 of 15 techniques, Escape 3, Advancing 1 (#4 OPEN) | MED | Jay decides families. A big family ranks up fast and gets strong. | PB-09 sets rank amounts so the family total fits the Seal budget. A family map change is a data edit. |
 | Orange (belt 3) has the biggest kid win-rate swing | MED | The +12% stand-in moves the kid win rate +16 points at Orange on Standard, against +0 and +3 next door (PE itself is on target). Orange is a beta belt. | Keep kata powers at PE 12 or less and re-check Orange first in PB-09. |
 | Throw needs the thrown state | MED | R-G2B-04 builds it. If it runs long, Throw stays dark. | Cut line: Orange has 4 families (no Throw) and slots stay 3. Say so in the build note. |
 | Unlock screen and Sensei's Trial run long | MED | Now owned (PB-13, PB-14, PB-15) but it needs the three unlock kinds to exist, so it starts late. | Cut line: the unlock screen ships, and the Trial room ships for Strikes and Seals only. Say so in the build note. |
