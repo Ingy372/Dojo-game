@@ -6,6 +6,7 @@
 import type { SealFamilyDef } from './abilities';
 import type { Effect } from './effects';
 import type { TrainingState } from './training';
+import { COMBAT } from './config';
 
 /**
  * The self-defense technique numbers a student has had signed off. Techniques come in curriculum
@@ -48,8 +49,28 @@ export function unlockedFamilies(training: TrainingState, families: readonly Sea
 /** The effects of the Seals in the slots: each equipped, live family at the student's rank. */
 export function equippedSealEffects(training: TrainingState, families: readonly SealFamilyDef[], equipped: readonly string[]): Effect[] {
   const signed = signedOffTechniques(training);
-  return equipped.flatMap((id) => {
-    const f = families.find((x) => x.id === id);
-    return f ? familyEffects(f, signed) : [];
+  return capSealEffects(
+    equipped.flatMap((id) => {
+      const f = families.find((x) => x.id === id);
+      return f ? familyEffects(f, signed) : [];
+    }),
+  );
+}
+
+/**
+ * G2B-04 Lock cap (Manager, 2026-11-02): the Seals' staggerBonus together never passes COMBAT.counter.sealStaggerBonusCap
+ * (+20%; e.g. Counter #10's 0.15 plus Lock #32's 0.15 gives 0.2, not 0.3). Under the cap nothing changes. The hold-length
+ * cap (24 ticks, Counter #6 included) is applied where the stagger starts, in world.ts.
+ */
+export function capSealEffects(effects: readonly Effect[]): Effect[] {
+  const cap = COMBAT.counter.sealStaggerBonusCap;
+  const total = effects.filter((e) => e.type === 'staggerBonus').reduce((s, e) => s + e.amount, 0);
+  if (total <= cap) return [...effects];
+  let left = cap;
+  return effects.map((e) => {
+    if (e.type !== 'staggerBonus') return e;
+    const amount = Math.min(e.amount, left);
+    left -= amount;
+    return { ...e, amount };
   });
 }

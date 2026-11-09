@@ -106,6 +106,7 @@ import { CONTENT } from '../game/content';
 import { homeDojo } from '../game/dojo';
 import { NAMED_PACK, NamedView } from '../game/named';
 import { reducedMotion } from '../game/motion';
+import { THROWN_LOOK, getUpAngle, thrownPose } from '../ui/thrownPose';
 import { drawPatternTell } from '../game/patternTells';
 import { loadSave, writeSave } from '../game/save';
 import { currentTraining, seedLoadout } from '../game/student';
@@ -248,6 +249,10 @@ interface EnemyView {
   clangUntil: number;
   /** The mode drawn last frame, to start animations when it changes. */
   lastMode: string;
+  /** G2B-04: when it was thrown (ms) and where from, for the tumble; when it got back up. */
+  thrownAt?: number;
+  thrownFrom?: Vec2;
+  upAt?: number;
   /** The attack being wound up (its animation plays when it lands). */
   attack: string;
   /** A disarmed enemy with a weapon is pushing this attack instead (no staff drawn, push-paw animation). */
@@ -803,7 +808,27 @@ export class GameScene extends Phaser.Scene {
       if (a) setStaticFrame(this, 'auras-t1', v.aura.id, [...v.aura.back, ...v.aura.front], Math.floor((now / 1000) * (a.fps ?? 10)) % a.frames);
     }
     const started = e.mode !== v.lastMode;
+    const wasThrown = v.lastMode === 'thrown';
     v.lastMode = e.mode;
+    // G2B-04: thrown: tumble over the 1-tile slide, lie down, then get up (existing sprite, turned). Reduced motion snaps.
+    const rm = reducedMotion();
+    if (started && e.mode === 'thrown') {
+      v.thrownAt = now;
+      v.thrownFrom = { ...v.prev };
+      v.upAt = undefined;
+    }
+    if (started && wasThrown) v.upAt = now;
+    if (e.mode === 'thrown' && v.thrownAt !== undefined && v.thrownFrom) {
+      const pose = thrownPose(now - v.thrownAt, rm);
+      const tx = Phaser.Math.Linear(v.thrownFrom.x, e.pos.x, pose.slide);
+      const ty = Phaser.Math.Linear(v.thrownFrom.y, e.pos.y, pose.slide);
+      v.container.setPosition(tx * TILE, ty * TILE).setDepth(depthAt(ty * TILE));
+      s.container.setRotation((e.pos.x >= v.thrownFrom.x ? 1 : -1) * pose.angle);
+    } else if (v.upAt !== undefined && now - v.upAt < THROWN_LOOK.getUpMs && !rm) {
+      s.container.setRotation((s.container.rotation >= 0 ? 1 : -1) * getUpAngle(now - v.upAt, rm));
+    } else if (s.container.rotation !== 0) {
+      s.container.setRotation(0);
+    }
 
     let alpha = 1;
     let telegraph = 0;
@@ -864,7 +889,7 @@ export class GameScene extends Phaser.Scene {
       const anim = v.pushing ? this.enemyAnim(s, 'pushpaw', 'attack') : this.enemyAnim(s, v.attack, 'attack');
       if (started) s.play(anim, { restart: true });
       telegraph = s.art.animations[anim].telegraphIntensity?.[s.frame] ?? 0;
-    } else if (e.mode === 'stagger') {
+    } else if (e.mode === 'stagger' || e.mode === 'thrown') {
       s.play(this.enemyAnim(s, 'stagger', 'idle'));
     } else if (e.mode === 'winded') {
       // Out of breath: pale, slumped, and breathing hard.

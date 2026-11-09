@@ -74,7 +74,7 @@ describe('R-CHALLENGE P2: the one switch (challengeDef)', () => {
 
   it("a boss's Challenge phases replace its normal phases on Challenge only", () => {
     const boss = loadEnemy({
-      ...plainBrute, id: 'sample-boss', boss: true, radius: 0.8,
+      ...plainBrute, throwable: undefined, id: 'sample-boss', boss: true, radius: 0.8,
       attacks: [{ ...DOUBLE_SLAM, name: 'slam', followUp: undefined }],
       phases: [{ atHealthFraction: 1, attacks: ['slam'] }],
       challenge: { fromBelt: 4, attacks: [{ ...DOUBLE_SLAM, name: 'sweep', followUp: undefined }], phases: [{ atHealthFraction: 1, attacks: ['slam'] }, { atHealthFraction: 0.5, attacks: ['slam', 'sweep', 'slam'], senseiLine: 'Watch it!' }] },

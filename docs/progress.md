@@ -1108,6 +1108,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Tests: `start-level-pin` (8).
 ### START-LEVEL-PIN-GAPS: start-level tests tightened (2026-11-02)
 - Test-only: added "old save without level or XP loads at Level 1 / 0 XP" and "a feed sign-off shows as signed off"; the belt-entry test now runs the profile through `gainXp` so it can fail. `start-level-pin` is now 10 tests.
+### G2B-04: Throw live; Lock caps (2026-11-08)
+- Enemy `thrown` state; #11 Outside Reap throws a brute or swarmer down 30 ticks, #12 Reap and Finish +25% while down. Never Guardians or elites. Hold after a Perfect Counter capped at 24 ticks (Arm Wrap 30 -> 24); Seal staggerBonus capped at +20%.
+- Tests: `g2b-04-throw` (9); `abilities`, `p-prog-c-seal-ranks`, `r-challenge-p2` updated.
+- Knock-down look (tumble, lie, get up; RM snaps) and kid-words Throw card. Tests: `g2b-04-thrown-look` (5). Shots: /workspace/shots/g2b-04-thrown.
 ### BF-ORANGE-UNLOCK: Butterfly Flow at Orange (2026-11-08)
 - Strikes now name their belt in `strikes.json`; Butterfly Flow unlocks with the Orange kick combo, not at Green. Jay's decisions J10, J16, J19, J21 (partial) and J27 recorded in decisions.md.
 - Tests: `bf-orange-unlock` (9).
