@@ -8,10 +8,10 @@ Camera and tile size match the approved Tower rooms (`incoming-art/tier3-ember-k
 
 **ITEM:** First samples for the Green/Blue, Red/Red-Black, and Brown/Brown-Black/Black room kits.
 
-**WHAT:**
-- **G2B-40 — Green, Giant's Steps, Pebble Path.** Warm sand floor, river-stone wall with a moss cap, stair blocks, pebbles, and a pale blue trickle.
-- **G2B-41 — Red, Forge of Courage, Bellows Door.** Light brick floor, iron wall, lacquer banners with gold hems, a leather bellows, and a copper pot. No danger-red. Counted danger-red pixels: 0.
-- **G2B-42 — Brown, Root Library, Reading Nook.** Wood floor, bark wall, a root seat, a parchment book, two leaves, and a warm lamp.
+**WHAT:** Second pass. The flat grids are in `superseded/sample-1/`. These are modelled rooms in the same toon look as the approved Ember Kitchens: 35° camera, 80 px tiles, dark outlines, cel light, and a contact shadow under each prop. The preview sheet puts an approved kitchen room beside them, and shows a 48 px-per-tile row.
+- **G2B-40 — Green, Pebble Path.** Sand stones, a mossy stone wall, big stepping stones, ferns, and a stream with sparkles.
+- **G2B-41 — Red, Bellows Door.** Brick floor, an anvil, bellows, lacquer and maroon banners with gold hems, and a warm ember in the forge mouth. Danger-red pixels: 0.
+- **G2B-42 — Brown, Reading Nook.** Wood planks, a bookshelf of coloured books, tree roots, a root seat, and a lamp.
 
 **WHY:** Jay's rule is three samples before a big batch, so the belt colours can be checked on a phone before the rest of the rooms are built.
 
@@ -39,8 +39,9 @@ Same camera and 80 px tiles. One kit per floor set, in the shape of the Ember Ki
 
 **G2B-42 — Black, The Summit** (`summit-brief.md`): Summit Steps, Wisp Walk, Knight Terrace, Sweeper Ridge, The Last Climb, Bell Nook, The Lamp Stand, The Empty Lamp.
 
-## Open questions
+## Decided by the Manager
 
-1. The Green brief lists 11 rooms. The board asks for 8 rooms per belt, like the kitchens. Which 8 should the full Green kit include?
-2. These samples are one room from each of the three jobs (Green, Red, Brown). Blue, Red/Black, Brown/Black, and Black are in the list above and were not drawn yet. Is that the right trio to approve first?
-3. Does the red sample still read as the red belt when the bright warning red is left out?
+- This trio is the right first sample: Pebble Path, Bellows Door, Reading Nook.
+- The full Green kit, later, needs art for all 11 rooms in `giants-steps.json`, because a run draws 8 from that pool.
+
+Still only these 3 samples until the looks are approved.

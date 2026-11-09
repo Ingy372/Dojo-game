@@ -10,7 +10,7 @@
     "room-green": {
       "size": [
         560,
-        504
+        508
       ],
       "layers": [
         "room-green"
@@ -25,18 +25,18 @@
         "row1": 5,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 1.3,
+      "topExtraTiles": 1.35,
       "anchorPx": [
         0,
-        104.0
+        108.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "G2B-40 sample. Green, Giant's Steps, Pebble Path. Moss, river stone, warm sand."
+      "note": "G2B-40 sample. Green, Giant's Steps, Pebble Path."
     },
     "room-red": {
       "size": [
         560,
-        504
+        508
       ],
       "layers": [
         "room-red"
@@ -51,18 +51,18 @@
         "row1": 5,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 1.3,
+      "topExtraTiles": 1.35,
       "anchorPx": [
         0,
-        104.0
+        108.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "G2B-41 sample. Red belt forge, Bellows Door. Brick, iron, lacquer and gold. No danger red."
+      "note": "G2B-41 sample. Red belt forge, Bellows Door. Brick, lacquer, maroon, gold. No danger red."
     },
     "room-brown": {
       "size": [
         560,
-        504
+        508
       ],
       "layers": [
         "room-brown"
@@ -77,13 +77,13 @@
         "row1": 5,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 1.3,
+      "topExtraTiles": 1.35,
       "anchorPx": [
         0,
-        104.0
+        108.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "G2B-42 sample. Brown, Root Library, Reading Nook. Wood, bark, parchment, a warm lamp."
+      "note": "G2B-42 sample. Brown, Root Library, Reading Nook."
     }
   }
 }
