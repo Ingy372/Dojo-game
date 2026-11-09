@@ -57,6 +57,10 @@ python3 incoming-art/ember-knight-anim/source/make_preview.py
 
 `source/ember-knight-anim.blend` is that scene after the pivots and the shift pieces (ring, steam, embers) were added. The poses live in `render_ember_anim.py`, which is the reusable script.
 
+## Spark Shield and Forge Sweep
+
+Added from the plan line for the Ember Knight: Spark Shield (the shield comes forward, gold motes on the rim, a Strike is what breaks it) and Forge Sweep (a wide blade arc with a step forward). Both are 8 directions, 512 px, 16 frames at 10 fps. The plan line did not give tick counts. No danger red. Close-ups: `preview/spark-shield-closeup.png` and `preview/forge-sweep-closeup.png`.
+
 ## Decided by the Manager
 
 - Walk speed is 1.6 tiles a second. It is in the manifest. The Programmer tunes playback.

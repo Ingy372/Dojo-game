@@ -336,6 +336,7 @@ def zero(body, shield, bar):
     body.location = (0, 0, 0)
     body.rotation_euler = (0, 0, 0)
     shield.rotation_euler = (0, 0, 0)
+    shield.location = Vector(SHIELD_PIVOT)
     bar.rotation_mode = "XYZ"
     bar.rotation_euler = (0, 0, 0)
     for name in ("coal", "boss"):
@@ -486,7 +487,76 @@ def render_file(sc, root, path, yaw):
 
 
 def want(name):
-    return A.only in ("all", name)
+    if A.only == "all":
+        return True
+    return name in [p.strip() for p in A.only.split(",") if p.strip()]
+
+
+def pose_spark(i, body, shield, bar):
+    """Spark Shield. The shield comes forward so a Strike can meet it.
+    Gold motes sit on the rim. The shield itself stays visible. Not red."""
+    if i <= 6:
+        u = (i / 6) ** 1.4
+        lean, twist = -0.16 * u, 0.08 * u
+        present = 0.15 * u
+    elif i <= 10:
+        u = (i - 6) / 4
+        lean, twist = -0.16 + 0.28 * u, 0.08 - 0.18 * u
+        present = 0.15 + 0.85 * u
+    else:
+        u = (i - 10) / 5
+        lean, twist = 0.12 * (1 - u), -0.10 * (1 - u)
+        present = 1.0 * (1 - u)
+    body.rotation_euler = (lean, 0, twist)
+    body.location = (0, -0.06 * present, 0.02 * present)
+    shield.location = Vector(SHIELD_PIVOT) + Vector((0.0, -0.32 * present, 0.08 * present))
+    shield.rotation_euler = (0.15 * present, -0.35 * present, 0)
+    bar.rotation_mode = "XYZ"
+    bar.rotation_euler = (0.1 * present, 0.15 * present, 0)
+    pose_feet(0.0, False)
+    return present
+
+
+def pose_sweep(i, body, shield, bar):
+    """Forge Sweep. A wide blade arc with a step forward. The blade stays visible."""
+    if i <= 6:
+        u = (i / 6) ** 1.5
+        bq = Q_REST.slerp(Q_WIND, u)
+        lean, twist, lunge = -0.28 * u, 0.22 * u, 0.0
+    elif i <= 9:
+        u = (i - 6) / 3
+        bq = Q_WIND.slerp(Q_HIT, u)
+        lean = -0.28 + 0.46 * u
+        twist = 0.22 - 0.55 * u
+        lunge = 0.28 * u
+    else:
+        u = (i - 9) / 6
+        bq = Q_HIT.slerp(Q_REST, u)
+        lean = 0.18 * (1 - u)
+        twist = -0.33 * (1 - u)
+        lunge = 0.28 * (1 - u)
+    bar.rotation_mode = "QUATERNION"
+    bar.rotation_quaternion = bq
+    body.rotation_euler = (lean, 0, twist)
+    body.location = (0.03 * twist, -lunge, 0.02)
+    shield.rotation_euler = (0, -0.12, 0)
+    pose_feet(0.0, False)
+
+
+def place_sparks(sparks, present):
+    show = present > 0.45
+    for i, ob in enumerate(sparks):
+        ob.hide_render = not show
+        if not show:
+            continue
+        ang = i / len(sparks) * math.tau + present
+        ob.location = Vector((
+            0.02 + math.cos(ang) * 0.30,
+            -0.30,
+            0.02 + math.sin(ang) * 0.24,
+        ))
+        s = 0.85 + 0.35 * present
+        ob.scale = (s, s, s)
 
 
 def main():
@@ -518,6 +588,15 @@ def main():
     add_boots(sc, body)
     ring, steam, embers = add_effects(sc, shield)
     arc = add_slash_arc(sc, root)
+    sparks = []
+    for i in range(6):
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.055, segments=10, ring_count=6)
+        ob = bpy.context.active_object
+        ob.name = f"spark-{i}"
+        ob.data.materials.append(emission("SPARK%d" % i, "#ffc14d" if i % 2 == 0 else "#ffe08a"))
+        keep_world(ob, shield)
+        ob.hide_render = True
+        sparks.append(ob)
 
     def hide_fx():
         ring.hide_render = True
@@ -525,10 +604,12 @@ def main():
             ob.hide_render = True
         place_embers(embers, 0, False)
         place_arc(arc, -1, None)
+        place_sparks(sparks, 0)
 
     jobs = []
     if A.only == "test":
-        jobs.append(("attack", 20, (0, 9), ("S", "N", "NE", "NW")))
+        jobs.append(("spark", 16, (2, 8), ("S",)))
+        jobs.append(("sweep", 16, (4, 8), ("S",)))
     else:
         if want("idle"):
             jobs.append(("idle", 8, range(8), [d for d, _ in DIRS]))
@@ -538,14 +619,25 @@ def main():
             jobs.append(("attack", 20, range(20), [d for d, _ in DIRS]))
         if want("shift"):
             jobs.append(("shift", 4, range(4), [d for d, _ in DIRS]))
+        if want("spark"):
+            jobs.append(("spark", 16, range(16), [d for d, _ in DIRS]))
+        if want("sweep"):
+            jobs.append(("sweep", 16, range(16), [d for d, _ in DIRS]))
 
     # Where the bar head actually is, so the trail sits on the swing.
     tips = {}
+    sweep_tips = {}
     if any(anim == "attack" for anim, _, _, _ in jobs):
         for i in range(20):
             zero(body, shield, bar)
             pose_attack(i, body, shield, bar)
             tips[i] = bar_tip(root).copy()
+        zero(body, shield, bar)
+    if any(anim == "sweep" for anim, _, _, _ in jobs):
+        for i in range(16):
+            zero(body, shield, bar)
+            pose_sweep(i, body, shield, bar)
+            sweep_tips[i] = bar_tip(root).copy()
         zero(body, shield, bar)
 
     yaw_of = dict(DIRS)
@@ -564,6 +656,13 @@ def main():
                 elif anim == "attack":
                     pose_attack(i, body, shield, bar)
                     place_arc(arc, i, tips)
+                elif anim == "spark":
+                    present = pose_spark(i, body, shield, bar)
+                    place_sparks(sparks, present)
+                elif anim == "sweep":
+                    pose_sweep(i, body, shield, bar)
+                    if i in (7, 8, 9):
+                        place_arc(arc, 9, {8: sweep_tips[6], 9: sweep_tips[i], 10: sweep_tips[min(i + 1, 15)]})
                 elif anim == "shift":
                     # 0 rest, 1 ring at 1.00 s, 2 steam at 1.25 s, 3 core high at 1.50 s
                     pose_idle(0, body, shield, bar)

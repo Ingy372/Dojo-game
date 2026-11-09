@@ -1,20 +1,32 @@
 {
   "id": "ember-knight",
-  "label": "Ember Knight — shifted form",
+  "label": "Ember Knight \u2014 shifted form",
   "placeholderName": "Warm Shield",
   "placeholderNameStatus": "PLACEHOLDER. Not approved as a name. Do not use it as an id.",
   "notForImport": true,
   "notForImportNote": "Motion concept for the Manager. Do not copy these sheets into the game until the Manager approves them.",
   "frameWidth": 512,
   "frameHeight": 512,
-  "anchorPx": [256.0, 435.2],
+  "anchorPx": [
+    256.0,
+    435.2
+  ],
   "anchorNote": "Feet. Same camera as the approved shift still: ground line at 85% of the frame. 0.85 * 512 = 435.2.",
   "orthoScaleTiles": 2.6,
   "elevationDeg": 35,
   "sourcePixelsPerTile": 196.9231,
   "gamePixelsPerTile": 48,
   "gameDisplayPx": 125,
-  "directions": ["N", "NE", "E", "SE", "S", "SW", "W", "NW"],
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
   "sheetLayout": "Rows are directions, top to bottom, in the order above. Columns are frames, left to right, no padding. Straight alpha.",
   "camera": "Orthographic, 35 degrees down, 2.6 tiles across. Same camera as incoming-art/ember-knight-shift-drafts/source/build_ember_shift.py.",
   "model": "Approved shifted form. Round body, shield arm, bar arm. No separate legs.",
@@ -53,8 +65,20 @@
       "fps": null,
       "durationSec": 1.5,
       "loop": false,
-      "columns": ["0.00 before", "0.50 glow", "1.00 ring", "1.25 steam", "1.50 idle"],
-      "timeSec": [0.0, 0.5, 1.0, 1.25, 1.5],
+      "columns": [
+        "0.00 before",
+        "0.50 glow",
+        "1.00 ring",
+        "1.25 steam",
+        "1.50 idle"
+      ],
+      "timeSec": [
+        0.0,
+        0.5,
+        1.0,
+        1.25,
+        1.5
+      ],
       "shiftGlowSec": 1.0,
       "shiftGlowColor": "#fff4cf",
       "settleAccentSec": 0.5,
@@ -66,9 +90,41 @@
       "frames": 5,
       "durationSec": 1.5,
       "loop": false,
-      "columns": ["0.00 before", "0.50 glow", "1.00 fade", "1.25 still", "1.50 still"],
-      "timeSec": [0.0, 0.5, 1.0, 1.25, 1.5],
+      "columns": [
+        "0.00 before",
+        "0.50 glow",
+        "1.00 fade",
+        "1.25 still",
+        "1.50 still"
+      ],
+      "timeSec": [
+        0.0,
+        0.5,
+        1.0,
+        1.25,
+        1.5
+      ],
       "note": "Same 1.5 s. Quieter glow, then a crossfade to the still form. No ring, no steam, no embers."
+    },
+    "sparkShield": {
+      "file": "ember-knight_spark-shield.png",
+      "name": "Spark Shield",
+      "frames": 16,
+      "fps": 10,
+      "durationSec": 1.6,
+      "loop": false,
+      "presentFrame": 8,
+      "note": "The shield comes forward. Gold motes sit on the rim. A Strike is what breaks it; this art does not draw a red circle. The plan line did not give tick counts, so this is 16 frames at 10 fps."
+    },
+    "forgeSweep": {
+      "file": "ember-knight_forge-sweep.png",
+      "name": "Forge Sweep",
+      "frames": 16,
+      "fps": 10,
+      "durationSec": 1.6,
+      "loop": false,
+      "impactFrame": 8,
+      "note": "Dash-only wide blade arc. The blade stays visible. The gold arc is warm gold, not red and not the game's purple stripe. The plan line did not give tick counts, so this is 16 frames at 10 fps."
     }
   }
 }
