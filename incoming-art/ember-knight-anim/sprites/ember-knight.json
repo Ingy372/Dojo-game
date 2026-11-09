@@ -33,7 +33,8 @@
       "fps": 30,
       "durationSec": 0.3333,
       "loop": true,
-      "note": "Style-guide walk timing: 10 frames at 30 fps. Bounce, a side-to-side weight shift, a lean, and an opposite arm swing. No legs, so it is not a foot cycle."
+      "designSpeedTilesPerSec": 1.6,
+      "note": "10 frames at 30 fps. The Manager set the walk speed at 1.6 tiles a second. The Programmer tunes playback. The sheet has a bigger bob than idle and two stubby boots stepping under the hem. The round body is unchanged."
     },
     "attack": {
       "file": "ember-knight_attack.png",

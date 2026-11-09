@@ -22,6 +22,9 @@ import bpy
 import bmesh
 from mathutils import Vector, Euler, Quaternion
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "tools"))
+from toon_kit import toon_material, outline_material, add_hull
+
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 ap = argparse.ArgumentParser()
 ap.add_argument("--out", required=True)
@@ -203,18 +206,130 @@ def add_effects(sc, shield_pivot):
 
 
 def add_slash_arc(sc, root):
-    """Short warm arc along the slash. Gold and orange, never red. Hidden except on the hit."""
+    """Bold warm-gold arc. It sits beside the blade, and it is not red."""
     dots = []
-    colors = ("#ff9a3c", "#ffc14d", "#ff7a28", "#ffc14d", "#ff9a3c")
-    for i, color in enumerate(colors):
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.045, segments=10, ring_count=6)
+    for i in range(6):
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.11, segments=12, ring_count=8)
         ob = bpy.context.active_object
         ob.name = f"slash-arc-{i}"
-        ob.data.materials.append(emission("ARC%d" % i, color))
+        ob.data.materials.append(emission("ARC%d" % i, "#ffc14d" if i % 2 == 0 else "#ffe08a"))
         keep_world(ob, root)
         ob.hide_render = True
         dots.append(ob)
     return dots
+
+
+def _diamond_prism(p0, p1, w0, t0, w1, t1, side_hint=None):
+    d = (p1 - p0)
+    if d.length < 1e-6:
+        d = Vector((0, 0, -1))
+    d = d.normalized()
+    if side_hint is not None:
+        side = Vector(side_hint) - d * Vector(side_hint).dot(d)
+        if side.length < 0.05:
+            side = d.cross(Vector((0, 0, 1)))
+    else:
+        side = d.cross(Vector((0, 0, 1)))
+        if side.length < 0.05:
+            side = d.cross(Vector((1, 0, 0)))
+    side.normalize()
+    up = side.cross(d).normalized()
+    bm = bmesh.new()
+
+    def ring(c, w, t):
+        return [c + side * w, c + up * t, c - side * w, c - up * t]
+
+    v0 = [bm.verts.new(p) for p in ring(p0, w0, t0)]
+    v1 = [bm.verts.new(p) for p in ring(p1, w1, t1)]
+    for i in range(4):
+        bm.faces.new((v0[i], v0[(i + 1) % 4], v1[(i + 1) % 4], v1[i]))
+    bm.faces.new(tuple(reversed(v0)))
+    bm.faces.new(tuple(v1))
+    return bm
+
+
+def add_sword(sc, bar_pivot):
+    """A flat blade and a crossguard, parented to the bar so every direction
+    shows a sword rather than a stick. The old round bar is hidden."""
+    for name in ("bar", "bar_outline", "barend", "barend_outline"):
+        ob = bpy.data.objects.get(name)
+        if ob:
+            ob.hide_render = True
+    hilt = Vector((R * 1.38, -R * 0.42, H * 0.50))
+    tip = Vector((R * 1.38, -R * 0.55, H * 0.02))
+    copper = toon_material("BLADE", "#c9824a", 0.32, 1.45)
+    gold = toon_material("GUARD", "#ffc14d", 0.45, 1.35)
+    out = outline_material()
+    # Wide left-to-right, so the flat of the blade shows from the front and the back.
+    blade_bm = _diamond_prism(hilt, tip, 0.14, 0.07, 0.03, 0.035, side_hint=(1, 0, 0))
+    me = bpy.data.meshes.new("blade")
+    blade_bm.to_mesh(me)
+    blade_bm.free()
+    me.materials.append(copper)
+    blade = bpy.data.objects.new("blade", me)
+    sc.collection.objects.link(blade)
+    hull = add_hull(blade, sc.collection, out, 0.012)
+    keep_world(blade, bar_pivot)
+    keep_world(hull, blade)
+    # Crossguard across the hilt, wide enough to read from behind.
+    guard_bm = _diamond_prism(
+        hilt + Vector((-0.30, 0.0, 0.02)),
+        hilt + Vector((0.30, 0.0, 0.02)),
+        0.05, 0.045, 0.05, 0.045,
+        side_hint=(0, 1, 0),
+    )
+    gme = bpy.data.meshes.new("crossguard")
+    guard_bm.to_mesh(gme)
+    guard_bm.free()
+    gme.materials.append(gold)
+    guard = bpy.data.objects.new("crossguard", gme)
+    sc.collection.objects.link(guard)
+    gh = add_hull(guard, sc.collection, out, 0.01)
+    keep_world(guard, bar_pivot)
+    keep_world(gh, guard)
+    # A second bar, front to back, so the hilt still reads when the wide bar is edge-on.
+    guard2_bm = _diamond_prism(
+        hilt + Vector((0.0, 0.16, 0.02)),
+        hilt + Vector((0.0, -0.16, 0.02)),
+        0.045, 0.04, 0.045, 0.04,
+        side_hint=(1, 0, 0),
+    )
+    g2 = bpy.data.meshes.new("crossguard-2")
+    guard2_bm.to_mesh(g2)
+    guard2_bm.free()
+    g2.materials.append(gold)
+    g2ob = bpy.data.objects.new("crossguard-2", g2)
+    sc.collection.objects.link(g2ob)
+    g2h = add_hull(g2ob, sc.collection, out, 0.01)
+    keep_world(g2ob, bar_pivot)
+    keep_world(g2h, g2ob)
+    return blade
+
+
+def add_boots(sc, body_pivot):
+    """Two stubby boots peeking under the front of the hem."""
+    global BOOTS, BOOT_REST
+    leather = toon_material("BOOT", "#8a5a34", 0.35, 1.25)
+    out = outline_material()
+    BOOTS = []
+    for i, x in enumerate((-0.13, 0.13)):
+        bm = _diamond_prism(
+            Vector((x, -0.16, 0.02)),
+            Vector((x, -0.30, 0.10)),
+            0.07, 0.05, 0.075, 0.045,
+        )
+        me = bpy.data.meshes.new(f"boot-{i}")
+        bm.to_mesh(me)
+        bm.free()
+        me.materials.append(leather)
+        ob = bpy.data.objects.new(f"boot-{i}", me)
+        sc.collection.objects.link(ob)
+        hull = add_hull(ob, sc.collection, out, 0.01)
+        keep_world(ob, body_pivot)
+        keep_world(hull, ob)
+        BOOTS.append(ob)
+    bpy.context.view_layer.update()
+    BOOT_REST = [b.location.copy() for b in BOOTS]
 
 
 def zero(body, shield, bar):
@@ -241,19 +356,34 @@ def pose_idle(i, body, shield, bar):
         ob = bpy.data.objects.get(name)
         if ob:
             ob.scale = (pulse, pulse, pulse)
+    pose_feet(0.0, False)
     return phase
 
 
+BOOTS = []
+BOOT_REST = []
+
+
+def pose_feet(phase, stepping):
+    """Stubby boots under the hem. Walk steps them; everything else plants them."""
+    for i, boot in enumerate(BOOTS):
+        s = math.sin(phase + i * math.pi) if stepping else 0.0
+        lift = max(0.0, s) if stepping else 0.0
+        boot.location = BOOT_REST[i] + Vector((0.0, -s * 0.10, lift * 0.16))
+
+
 def pose_walk(i, body, shield, bar):
-    """10 frames, 30 fps. Bounce plus a side-to-side weight shift, so it
-    reads as stepping. Still no legs."""
+    """10 frames, 30 fps, played at 1.6 tiles/s. A big bob and alternate steps,
+    so it does not read as a slide. The round body stays the approved shape."""
     phase = 2 * math.pi * i / 10
     sway = math.sin(phase)
-    body.location = (0.05 * sway, 0, 0.028 * math.sin(phase * 2))
-    body.rotation_euler = (0.06, 0, 0.12 * sway)
+    bob = 0.11 * (0.5 + 0.5 * math.sin(phase * 2))
+    body.location = (0.04 * sway, 0, bob)
+    body.rotation_euler = (0.06, 0, 0.10 * sway)
     shield.rotation_euler = (0.10 * math.sin(phase), 0.32 * math.sin(phase), 0)
     bar.rotation_mode = "XYZ"
     bar.rotation_euler = (-0.10 * math.sin(phase), -0.32 * math.sin(phase), 0)
+    pose_feet(phase, True)
 
 
 def qeuler(rx, ry, rz):
@@ -299,36 +429,37 @@ def pose_attack(i, body, shield, bar):
     body.rotation_euler = (lean, 0, twist)
     body.location = (0.04 * twist, 0, hop)
     shield.rotation_euler = (0, shield_y, 0)
+    pose_feet(0.0, False)
 
 
 def bar_tip(root):
     bpy.context.view_layer.update()
-    ob = bpy.data.objects["barend"]
+    ob = bpy.data.objects.get("blade") or bpy.data.objects["barend"]
+    pivot = bpy.data.objects["PIVOT_BAR"].matrix_world.translation
     verts = [ob.matrix_world @ v.co for v in ob.data.vertices]
-    center = sum(verts, Vector()) / len(verts)
-    return root.matrix_world.inverted() @ center
+    tip = max(verts, key=lambda p: (p - pivot).length)
+    return root.matrix_world.inverted() @ tip
 
 
 def place_arc(dots, frame, tips):
     """A short gold-orange arc along the sweep, from the cocked bar to the hit."""
     for ob in dots:
         ob.hide_render = True
-    if tips is None or frame not in (8, 9, 10):
+    if tips is None or frame not in (9, 10):
         return
     def bow(a, b, t):
         p = a.lerp(b, t)
-        # The straight line passes through the body. Bow it toward the camera.
-        return Vector((p.x, p.y - math.sin(t * math.pi) * 1.05, p.z + 0.12))
-    if frame == 8:
-        pts = [tips[8]]
-    elif frame == 9:
-        pts = [bow(tips[8], tips[9], t) for t in (0.15, 0.35, 0.55, 0.75, 0.95)]
+        # Just in front of the blade, so the arc does not cover it.
+        # Beside the blade, toward the camera, so the gold does not cover the sword.
+        return Vector((p.x + 0.16, p.y - 0.62 - math.sin(t * math.pi) * 0.08, p.z + 0.02))
+    if frame == 9:
+        pts = [bow(tips[8], tips[9], t) for t in (0.15, 0.32, 0.5, 0.68, 0.84, 1.0)]
     else:
-        pts = [bow(tips[9], tips[10], t) for t in (0.4, 0.8)]
+        pts = [bow(tips[9], tips[10], t) for t in (0.25, 0.55, 0.85)]
     for ob, p in zip(dots, pts):
         ob.hide_render = False
         ob.location = p
-        s = 1.25 if frame == 9 else 0.8
+        s = 1.35 if frame == 9 else 0.95
         ob.scale = (s, s, s)
 
 
@@ -377,14 +508,14 @@ def main():
     # Upper arms, then the bar shaft (the forearm of the weapon arm). The body stays as approved.
     for name in ("armshield", "armshield_outline", "armbar", "armbar_outline"):
         thicken(name, 0.05)
-    for name in ("bar", "bar_outline"):
-        thicken(name, 0.028)
     body = make_pivot(sc, root, "PIVOT_BODY", (0, 0, 0))
     adopt(body, BODY)
     shield = make_pivot(sc, body, "PIVOT_SHIELD", SHIELD_PIVOT)
     bar = make_pivot(sc, body, "PIVOT_BAR", BAR_PIVOT)
     adopt(shield, SHIELD)
     adopt(bar, BAR)
+    add_sword(sc, bar)
+    add_boots(sc, body)
     ring, steam, embers = add_effects(sc, shield)
     arc = add_slash_arc(sc, root)
 
@@ -397,7 +528,7 @@ def main():
 
     jobs = []
     if A.only == "test":
-        jobs.append(("attack", 20, (0, 6, 8, 9, 10, 12), ("S",)))
+        jobs.append(("attack", 20, (0, 9), ("S", "N", "NE", "NW")))
     else:
         if want("idle"):
             jobs.append(("idle", 8, range(8), [d for d, _ in DIRS]))

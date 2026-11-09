@@ -139,6 +139,28 @@ def main():
     gif_row(walk[si], os.path.join(PREVIEW, "walk-S.gif"), 33)        # nearest GIF step to 30 fps
     gif_row(attack[si], os.path.join(PREVIEW, "attack-S.gif"), 100)   # 10 fps
     gif_row(normal[si], os.path.join(PREVIEW, "shift-S.gif"), [500, 500, 250, 250, 750])
+
+    # 40 px tall, the size the Manager checked. Idle, three walk steps, the hit, and the back view.
+    def at40(im):
+        a = np.array(im)
+        ys, xs = np.where(a[..., 3] > 20)
+        crop = im.crop((int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1))
+        ch = 40
+        cw = max(1, round(crop.width * ch / crop.height))
+        return crop.resize((cw, ch), Image.Resampling.LANCZOS)
+    bits = [
+        at40(idle[si][0]), at40(walk[si][0]), at40(walk[si][2]), at40(walk[si][5]),
+        at40(attack[si][8]), at40(attack[si][9]), at40(attack[DIRS.index("N")][0]),
+    ]
+    pad = 6
+    row = Image.new("RGBA", (sum(b.width + pad for b in bits) + pad, 40 + pad * 2), (24, 22, 32, 255))
+    x = pad
+    for b in bits:
+        bg = Image.new("RGBA", b.size, (24, 22, 32, 255))
+        bg.alpha_composite(b)
+        row.alpha_composite(bg, (x, pad))
+        x += b.width + pad
+    row.convert("RGB").save(os.path.join(PREVIEW, "check-40.png"))
     print("wrote", SPRITES, PREVIEW)
 
 
