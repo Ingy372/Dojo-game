@@ -10,7 +10,7 @@ These sheets are **not for import** until the Manager approves them. No game cod
 
 **ITEM:** J16-EMBER-ANIM. The Ember Knight in all 8 directions, with idle, walk, attack, and the existing form-shift timing.
 
-**WHAT:** The approved shifted-form scene (`incoming-art/ember-knight-shift-drafts/source/ember-knight-shift-b.blend`) and the same camera as `build_ember_shift.py` (orthographic, 35° down, 2.6 tiles, 512 px, feet at 85% of the frame). The phase-3 blend supplies the "before" picture in the shift.
+**WHAT:** Second pass. The first previews are in `superseded/sample-1/`. Same approved scene and camera (orthographic, 35° down, 2.6 tiles, 512 px, feet at x 256, y 435.2). The upper arms and the bar shaft are thicker. The slash cocks back and up, then sweeps across the front. The walk adds a side-to-side weight shift. No legs were added.
 
 | Animation | Frames | fps | Length | Sheet |
 | --- | --- | --- | --- | --- |
@@ -39,9 +39,9 @@ Every sheet is 512 × 512 per frame. Rows are N, NE, E, SE, S, SW, W, NW. Column
 
 ## How it was checked
 
-The attack close-up was looked at before this was pushed. Across all 20 frames the shield arm stays on the left shoulder and the bar arm stays on the right shoulder. The bar raises, sweeps across, and comes back. The elbow of the bar (where the handle meets the head) stays joined. No frame uses danger red (counted on every sheet: 0 pixels).
+The attack close-up was looked at again, at full frame size. Frames 0–8 pull the bar back and up over the shoulder while the body leans back. Frame 9 is the hit: the bar sweeps across the front, with a short gold-orange arc (not red). Frames 10–19 are the follow-through and the return. Both arms stay on the shoulders, and the bar head stays on the shaft. Danger-red pixels on every sheet: 0.
 
-The three pale dots on the idle are gold embers rising from the shield, on a fixed path. They are not sparks thrown at the face.
+The pale specks under the shield were the idle embers, and they did not read as embers. They are gone. The shield core still pulses.
 
 ## Rebuild
 
@@ -59,9 +59,7 @@ python3 incoming-art/ember-knight-anim/source/make_preview.py
 
 `source/ember-knight-anim.blend` is that scene after the pivots and the shift pieces (ring, steam, embers) were added. The poses live in `render_ember_anim.py`, which is the reusable script.
 
-## Open questions
+## Open questions for the Manager
 
-1. The approved knight has no separate legs. The walk is a bounce, a lean, and the two arms swinging opposite ways. Adding legs would change the silhouette Jay already approved.
-2. The walk loop uses the style-guide timing (10 frames, 30 fps). The draft boss file lists a move speed of 1.6 tiles a second, not the 4.5 tiles a second the player walk is synced to. Which speed should the game use later?
-3. This attack is ember slash only. Shield bash and shield rush are not in this pack.
-4. Reduced Motion is the shift sheet without the ring, steam, or embers. Walk and attack do not have a second, quieter sheet.
+1. The walk loop uses the style-guide timing (10 frames, 30 fps). The draft boss file lists a move speed of 1.6 tiles a second, not the 4.5 tiles a second the player walk is synced to. Which speed should the game use later?
+2. This attack is ember slash only. Shield bash and shield rush are not in this pack.

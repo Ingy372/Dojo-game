@@ -25,7 +25,7 @@
       "fps": 8,
       "durationSec": 1.0,
       "loop": true,
-      "note": "Style-guide idle rate. A small breathe, a core pulse, and three gold embers rising from the shield. No flash."
+      "note": "Style-guide idle rate. A small breathe and a core pulse. The earlier floating specks were removed. No flash."
     },
     "walk": {
       "file": "ember-knight_walk.png",
@@ -33,7 +33,7 @@
       "fps": 30,
       "durationSec": 0.3333,
       "loop": true,
-      "note": "Style-guide walk timing: 10 frames at 30 fps, the same loop length as the player walk. The approved knight has no legs, so this is a bounce, a lean, and an opposite arm swing. It is not a foot cycle."
+      "note": "Style-guide walk timing: 10 frames at 30 fps. Bounce, a side-to-side weight shift, a lean, and an opposite arm swing. No legs, so it is not a foot cycle."
     },
     "attack": {
       "file": "ember-knight_attack.png",
@@ -44,7 +44,7 @@
       "loop": false,
       "impactFrame": 9,
       "impactTimeSec": 0.9,
-      "note": "Ember slash from the draft boss file: 18 telegraph ticks then 22 recover ticks, at 20 ticks a second, is 0.9 s plus 1.1 s. 20 frames at 10 fps lands on those times. Frame 9 is the hit. The bar stays on the shoulder. No red is drawn on the knight. The game's danger circle is separate."
+      "note": "Ember slash. 18 telegraph ticks then 22 recover ticks at 20 ticks a second. Frame 9 is the hit. Frames 0-8 cock the bar back and up while the body leans back. Frame 9 sweeps across the front with a short gold-orange arc. Then follow-through and recovery. Arms are thicker than the first pass. No red on the knight."
     },
     "shift": {
       "file": "ember-knight_shift.png",
