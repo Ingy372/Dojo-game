@@ -177,7 +177,7 @@
     {
       "id": "throw",
       "name": "Throw",
-      "text": "Great Counter hits are 25% stronger.",
+      "text": "A Great Counter knocks a big or fast foe down. Hit it while it rests!",
       "effect": {
         "type": "counterStrength",
         "amount": 0.5

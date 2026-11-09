@@ -115,6 +115,18 @@ export const COMBAT = {
     missLockoutTicks: 10,
     /** Perfect Counter: enemy staggered this long (1 second). */
     perfectStaggerTicks: 20,
+    /**
+     * G2B-04 Lock caps (Manager, 2026-11-02): the hold after a Perfect Counter (the stagger, Counter #6's +10 and any later
+     * Lock rank together) never lasts longer than this many ticks...
+     */
+    holdCapTicks: 24,
+    /**
+     * ...and the Seals' extra damage against a staggered, winded or recovering enemy (staggerBonus from every equipped Seal
+     * together) never passes +20%. Insights and gear are not Seals: Press the Advantage keeps its +30% for one run.
+     */
+    sealStaggerBonusCap: 0.2,
+    /** G2B-04: a thrown enemy tumbles this many tiles away from the player. */
+    throwTumbleTiles: 1,
     /** Perfect Counter: the counter hit uses this move strength (2x Power). */
     perfectStrength: 2,
     /** Block: damage taken is multiplied by this. */

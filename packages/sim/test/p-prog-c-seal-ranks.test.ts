@@ -78,13 +78,13 @@ describe('PB-02 family ranks', () => {
     expect(fams.flatMap((f) => familyEffects(f, signedOffTechniques(t)))).toEqual(all);
   });
 
-  it('Lock has no ranks and Throw is off until R-G2B-04: neither gives effects or can be unlocked', () => {
+  it('Lock has no ranks yet (R-G2B-09) and stays off; Throw is live since R-G2B-04', () => {
     expect(fam('lock').live).toBe(false);
-    expect(fam('throw').live).toBe(false);
+    expect(fam('throw').live).toBe(true);
     const everything = new Set(Array.from({ length: 30 }, (_, i) => i + 1));
-    expect(familyEffects(fam('throw'), everything)).toEqual([]);
+    expect(familyEffects(fam('throw'), everything)).toEqual([{ type: 'counterThrow', amount: 30 }, { type: 'downBonus', amount: 0.25 }]);
     expect(familyEffects(fam('lock'), everything)).toEqual([]);
-    expect(unlockedFamilies(training(green), fams)).not.toContain('throw');
+    expect(unlockedFamilies(training(green), fams)).toContain('throw');
     expect(unlockedFamilies(training(green), fams)).not.toContain('lock');
   });
 
