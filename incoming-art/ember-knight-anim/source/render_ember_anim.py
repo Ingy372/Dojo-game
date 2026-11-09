@@ -143,7 +143,7 @@ def thicken(name, extra):
     bm.free()
 
 
-def emission(name, hex_color):
+def emission(name, hex_color, strength=2.5):
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     nt = m.node_tree
@@ -154,7 +154,7 @@ def emission(name, hex_color):
     # Rough sRGB to linear, same idea as the toon kit's colour path.
     lin = tuple(c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in rgb)
     emit.inputs["Color"].default_value = (*lin, 1)
-    emit.inputs["Strength"].default_value = 2.0
+    emit.inputs["Strength"].default_value = strength
     out = nt.nodes.new("ShaderNodeOutputMaterial")
     nt.links.new(emit.outputs[0], out.inputs["Surface"])
     return m
@@ -203,6 +203,50 @@ def add_effects(sc, shield_pivot):
         ob.hide_render = True
         embers.append(ob)
     return ring, steam, embers
+
+
+def add_floor_fan(sc, root):
+    """A wide gold crescent on the ground, for Forge Sweep. Not red."""
+    parts = []
+    for name, color in (("fan-edge", "#e0923a"), ("fan-gold", "#ffd36a")):
+        me = bpy.data.meshes.new(name)
+        ob = bpy.data.objects.new(name, me)
+        ob.data.materials.append(emission(name, color))
+        sc.collection.objects.link(ob)
+        keep_world(ob, root)
+        ob.hide_render = True
+        parts.append(ob)
+    return parts
+
+
+def _fan_mesh(scale):
+    """One crescent lying on the floor, fanning around the front. Ends taper to points."""
+    bm = bmesh.new()
+    steps = 18
+    inner, outer = [], []
+    for i in range(steps + 1):
+        t = i / steps
+        ang = math.radians(-100 + 200 * t)
+        taper = math.sin(t * math.pi)
+        half = (0.06 + 0.34 * taper) * scale
+        radius = 0.95
+        direction = Vector((math.sin(ang), -math.cos(ang), 0.0))
+        center = Vector((0.0, -0.25, 0.07)) + direction * radius
+        inner.append(bm.verts.new(center - direction * half))
+        outer.append(bm.verts.new(center + direction * half + Vector((0, 0, 0.02))))
+    for i in range(steps):
+        bm.faces.new((inner[i], outer[i], outer[i + 1], inner[i + 1]))
+    return bm
+
+
+def place_floor_fan(parts, show):
+    edge, gold = parts
+    if not show:
+        edge.hide_render = gold.hide_render = True
+        return
+    _put_mesh(edge, _fan_mesh(1.0))
+    _put_mesh(gold, _fan_mesh(0.72))
+    edge.hide_render = gold.hide_render = False
 
 
 def add_slash_arc(sc, root):
@@ -339,6 +383,7 @@ def zero(body, shield, bar):
     shield.location = Vector(SHIELD_PIVOT)
     bar.rotation_mode = "XYZ"
     bar.rotation_euler = (0, 0, 0)
+    bar.location = Vector(BAR_PIVOT)
     for name in ("coal", "boss"):
         ob = bpy.data.objects.get(name)
         if ob:
@@ -410,7 +455,9 @@ def pose_attack(i, body, shield, bar):
         shield_y = -0.16 * u
     elif i == 9:
         bq = Q_HIT
-        lean, twist, hop, shield_y = 0.18, -0.30, 0.012, 0.06
+        lean, twist, hop, shield_y = 0.12, -0.22, 0.01, 0.04
+        # Bring the whole sword toward the camera so it sits on top of the gold.
+        bar.location = Vector(BAR_PIVOT) + Vector((0.0, -0.16, 0.02))
     elif i <= 12:
         u = (i - 9) / 3
         bq = Q_HIT.slerp(Q_FOLLOW, u)
@@ -450,7 +497,8 @@ def _swoosh_mesh(points, width_scale):
     segs = 8
     for i, p in enumerate(points):
         t = i / (n - 1)
-        rad = 0.105 * (t ** 1.15) * width_scale
+        # Full width about half the body (body is ~0.8 wide, so the arc is ~0.4).
+        rad = 0.20 * (t ** 1.05) * width_scale
         if i == 0:
             tangent = points[1] - points[0]
         elif i == n - 1:
@@ -496,32 +544,21 @@ def place_arc(parts, frame, tips):
         ob.hide_render = True
     if tips is None or frame not in (9, 10):
         return
-    if frame == 9:
-        tail, head = tips[8], tips[9]
-    else:
-        tail, head = tips[9], tips[10]
-    # Along the path just behind the blade. The tip of the sword stays past the thick end.
-    start = head
-    head = start.lerp(tail, 0.16)
-    tail = start.lerp(tail, 0.72)
-    mid = (tail + head) * 0.5
-    direction = head - tail
-    bend = Vector((-direction.z, 0.0, direction.x))
-    if bend.length < 1e-4:
-        bend = Vector((0.2, 0.0, 0.2))
-    bend.normalize()
-    # Curve along the swing, nudged behind the blade so the sword draws on top.
-    ctrl = mid + bend * 0.10 + Vector((0.0, 0.05, 0.0))
+    # Fixed crescent in front of the chest, wide left-to-right. The sword is
+    # closer to the camera than y=-0.55, so the blade draws on top of the gold.
+    slide = 0.0 if frame == 9 else 0.15
+    tail = Vector((-0.15, -0.55, 1.15))
+    ctrl = Vector((0.35 + slide, -0.58, 0.85))
+    head = Vector((0.85 + slide, -0.55, 0.40))
     pts = []
-    steps = 12
+    steps = 14
     for i in range(steps + 1):
         t = i / steps
         p = (1 - t) ** 2 * tail + 2 * (1 - t) * t * ctrl + t ** 2 * head
-        pts.append(Vector((p.x, p.y + 0.09, p.z)))
+        pts.append(p)
     edge, gold = parts
     _put_mesh(edge, _swoosh_mesh(pts, 1.0))
-    gold_pts = [Vector((p.x, p.y - 0.015, p.z)) for p in pts]
-    _put_mesh(gold, _swoosh_mesh(gold_pts, 0.72))
+    _put_mesh(gold, _swoosh_mesh(pts, 0.78))
     edge.hide_render = False
     gold.hide_render = False
 
@@ -579,46 +616,63 @@ def pose_spark(i, body, shield, bar):
     return present
 
 
+# Low, in front of the body. Not the overhead slash.
+Q_SWEEP_BACK = qeuler(-0.20, -0.15, 0.15)
+Q_SWEEP_RIGHT = qeuler(-0.35, -0.35, 0.0)
+Q_SWEEP_FRONT = qeuler(-0.70, 0.70, 0.0)
+Q_SWEEP_THROUGH = qeuler(0.35, -0.70, -2.45)
+
+
 def pose_sweep(i, body, shield, bar):
-    """Forge Sweep. A wide blade arc with a step forward. The blade stays visible."""
-    if i <= 6:
-        u = (i / 6) ** 1.5
-        bq = Q_REST.slerp(Q_WIND, u)
-        lean, twist, lunge = -0.28 * u, 0.22 * u, 0.0
+    """Forge Sweep: a low horizontal cut at about knee height, with a step forward."""
+    if i <= 5:
+        u = i / 5
+        bq = Q_REST.slerp(Q_SWEEP_BACK, u)
+        lunge = 0.0
+        lean = 0.04 * u
     elif i <= 9:
-        u = (i - 6) / 3
-        bq = Q_WIND.slerp(Q_HIT, u)
-        lean = -0.28 + 0.46 * u
-        twist = 0.22 - 0.55 * u
-        lunge = 0.28 * u
+        u = (i - 5) / 4
+        if u < 0.5:
+            bq = Q_SWEEP_BACK.slerp(Q_SWEEP_RIGHT, u / 0.5)
+        else:
+            bq = Q_SWEEP_RIGHT.slerp(Q_SWEEP_FRONT, (u - 0.5) / 0.5)
+        lunge = 0.34 * u
+        lean = 0.10
     else:
         u = (i - 9) / 6
-        bq = Q_HIT.slerp(Q_REST, u)
-        lean = 0.18 * (1 - u)
-        twist = -0.33 * (1 - u)
-        lunge = 0.28 * (1 - u)
+        bq = Q_SWEEP_FRONT.slerp(Q_SWEEP_THROUGH, min(1.0, u * 1.4))
+        if u > 0.45:
+            bq = Q_SWEEP_THROUGH.slerp(Q_REST, (u - 0.45) / 0.55)
+        lunge = 0.34 * (1 - u)
+        lean = 0.08 * (1 - u)
     bar.rotation_mode = "QUATERNION"
     bar.rotation_quaternion = bq
-    body.rotation_euler = (lean, 0, twist)
-    body.location = (0.03 * twist, -lunge, 0.02)
-    shield.rotation_euler = (0, -0.12, 0)
+    # The sword stays low; nudge it forward so it is not inside the floor arc.
+    bar.location = Vector(BAR_PIVOT) + Vector((0.0, -0.10, -0.06))
+    body.rotation_euler = (lean, 0, 0)
+    body.location = (0.0, -lunge, 0.0)
+    shield.rotation_euler = (0.05, 0.0, 0)
     pose_feet(0.0, False)
 
 
-def place_sparks(sparks, present):
-    show = present > 0.45
+def place_sparks(sparks, halo, present):
+    halo.hide_render = present < 0.35
+    # Centered on the shield, just behind the face, so a gold rim shows around it.
+    halo.location = Vector((0.04, -0.20, -0.22))
+    halo.scale = (1.7, 0.28, 1.7)
+    # Three big sparks, not a ring of tiny ones.
     for i, ob in enumerate(sparks):
-        ob.hide_render = not show
-        if not show:
+        ob.hide_render = present < 0.55
+        if ob.hide_render:
             continue
-        ang = i / len(sparks) * math.tau + present
+        ang = i / max(1, len(sparks)) * math.tau * 0.8 - 0.4
         ob.location = Vector((
-            0.02 + math.cos(ang) * 0.30,
-            -0.30,
-            0.02 + math.sin(ang) * 0.24,
+            0.04 + math.cos(ang) * 0.38,
+            -0.46,
+            -0.22 + math.sin(ang) * 0.34,
         ))
-        s = 0.85 + 0.35 * present
-        ob.scale = (s, s, s)
+        k = 1.7
+        ob.scale = (k, k, k)
 
 
 def main():
@@ -651,14 +705,21 @@ def main():
     ring, steam, embers = add_effects(sc, shield)
     arc = add_slash_arc(sc, root)
     sparks = []
-    for i in range(6):
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.055, segments=10, ring_count=6)
+    for i in range(3):
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.12, segments=12, ring_count=8)
         ob = bpy.context.active_object
         ob.name = f"spark-{i}"
-        ob.data.materials.append(emission("SPARK%d" % i, "#ffc14d" if i % 2 == 0 else "#ffe08a"))
+        ob.data.materials.append(emission("SPARK%d" % i, "#ffd36a"))
         keep_world(ob, shield)
         ob.hide_render = True
         sparks.append(ob)
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=0.34, segments=16, ring_count=10)
+    halo = bpy.context.active_object
+    halo.name = "spark-halo"
+    halo.data.materials.append(emission("HALO", "#ffc14d", 1.6))
+    keep_world(halo, shield)
+    halo.hide_render = True
+    fan = add_floor_fan(sc, root)
 
     def hide_fx():
         ring.hide_render = True
@@ -666,12 +727,14 @@ def main():
             ob.hide_render = True
         place_embers(embers, 0, False)
         place_arc(arc, -1, None)
-        place_sparks(sparks, 0)
+        place_sparks(sparks, halo, 0)
+        place_floor_fan(fan, False)
 
     jobs = []
     if A.only == "test":
-        jobs.append(("attack", 20, (9,), ("S", "N", "E")))
-        jobs.append(("sweep", 16, (8,), ("S", "N")))
+        jobs.append(("attack", 20, (9,), ("S",)))
+        jobs.append(("sweep", 16, (6, 8), ("S",)))
+        jobs.append(("spark", 16, (8,), ("S",)))
     else:
         if want("idle"):
             jobs.append(("idle", 8, range(8), [d for d, _ in DIRS]))
@@ -720,11 +783,10 @@ def main():
                     place_arc(arc, i, tips)
                 elif anim == "spark":
                     present = pose_spark(i, body, shield, bar)
-                    place_sparks(sparks, present)
+                    place_sparks(sparks, halo, present)
                 elif anim == "sweep":
                     pose_sweep(i, body, shield, bar)
-                    if i in (7, 8, 9):
-                        place_arc(arc, 9, {8: sweep_tips[6], 9: sweep_tips[i], 10: sweep_tips[min(i + 1, 15)]})
+                    place_floor_fan(fan, i in (7, 8, 9))
                 elif anim == "shift":
                     # 0 rest, 1 ring at 1.00 s, 2 steam at 1.25 s, 3 core high at 1.50 s
                     pose_idle(0, body, shield, bar)
