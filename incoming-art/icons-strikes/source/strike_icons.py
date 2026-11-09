@@ -196,27 +196,25 @@ def side_kick_drive():
     _belt(a, 106, 124, 28)
     _arm(a, (112, 102), (126, 108), (132, 98), -0.2, thick=10, fist_s=14)
     _arm(a, (108, 112), (120, 120), (126, 110), -0.15, thick=10, fist_s=14)
-    _neck(a, (104, 94), (100, 84))
-    _head_profile(a, 98, 72, 16, face=1)
+    # neck as short as #6: the head sits on the shoulders
+    _neck(a, (104, 100), (102, 94))
+    _head_back(a, 100, 82, 14)
     return _finish_in(a)
 
 
 def hook_kick():
-    """#5. Leg extended to the side, heel snaps back. A small curve shows that snap."""
+    """#5. Standing leg and hooking leg stay apart. Heel snaps back."""
     a = Art()
-    hip = (108, 140)
-    _leg(a, hip, (100, 162), (96, 180), flex=-8, sc=0.5, thick=14)
-    # thigh out, heel returns
-    knee = (158, 118)
-    heel = (142, 96)
-    _leg(a, hip, knee, heel, flex=42, sc=0.5, thick=14)
-    arrow(a, [(168, 108), (156, 90), (140, 84)], BLUE_S, 8, 14, outline=INKC, ink_ow=3.4, spread=0.82)
-    _gi(a, [(90, 100), (128, 94), (132, 122), (120, 150), (96, 152), (86, 120)])
-    _belt(a, 108, 126, 30)
-    _arm(a, (114, 106), (128, 110), (134, 98), -0.3, thick=10, fist_s=14)
-    _arm(a, (108, 114), (120, 122), (126, 112), -0.2, thick=10, fist_s=14)
-    _neck(a, (104, 98), (100, 88))
-    _head_profile(a, 98, 76, 16, face=1)
+    # standing leg on the left, hook on the right, no shared pixels
+    _leg(a, (92, 150), (88, 168), (86, 184), flex=-8, sc=0.48, thick=12)
+    _leg(a, (128, 128), (170, 122), (156, 100), flex=42, sc=0.46, thick=12)
+    arrow(a, [(180, 112), (168, 94), (154, 90)], BLUE_S, 8, 14, outline=INKC, ink_ow=3.4, spread=0.82)
+    _gi(a, [(84, 102), (136, 96), (140, 124), (124, 152), (96, 156), (80, 124)])
+    _belt(a, 110, 128, 32)
+    _arm(a, (112, 108), (124, 112), (130, 100), -0.3, thick=10, fist_s=14)
+    _arm(a, (100, 116), (112, 124), (118, 114), -0.2, thick=10, fist_s=14)
+    _neck(a, (104, 104), (102, 98))
+    _head_back(a, 100, 86, 14)
     return _finish_in(a)
 
 
@@ -388,6 +386,45 @@ def compare_sheet_2():
     print('compare2', img.size)
 
 
+def final_sheet():
+    """all six Strike icons, large, plus true 40, 36 and 30."""
+    from PIL import Image, ImageDraw, ImageFont
+    out = os.path.join(HERE, '..', 'preview')
+    font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 15)
+    tiny = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 13)
+    names = [
+        ('#1 Spin', 'spin-kick-full.png'),
+        ('#3 Butterfly', 'butterfly-flow-full.png'),
+        ('#4 Side', 'side-kick-drive-full.png'),
+        ('#5 Hook', 'hook-kick-full.png'),
+        ('#6 Lunge', 'lunge-full.png'),
+        ('#7 Spinning', 'spinning-finisher-full.png'),
+    ]
+    big = 200
+    col = 220
+    pad = 10
+    img = Image.new('RGB', (pad + len(names) * col, 300), (28, 26, 24))
+    d = ImageDraw.Draw(img)
+    for i, (label, fn) in enumerate(names):
+        x = pad + i * col
+        im = Image.open(os.path.join(out, fn)).convert('RGBA')
+        d.text((x, 6), label, fill=(250, 246, 236), font=font)
+        tile = Image.new('RGBA', (big, big), (28, 26, 24, 255))
+        tile.alpha_composite(im.resize((big, big), Image.LANCZOS))
+        img.paste(tile.convert('RGB'), (x, 26))
+        sx = x
+        for sz in (40, 36, 30):
+            one = im.resize((sz, sz), Image.LANCZOS)
+            d.text((sx, 230), str(sz), fill=(200, 190, 170), font=tiny)
+            box = Image.new('RGBA', (sz, sz), (28, 26, 24, 255))
+            box.alpha_composite(one)
+            img.paste(box.convert('RGB'), (sx, 246))
+            sx += sz + 8
+    path = os.path.join(out, 'sheet-g2b44-final.png')
+    img.save(path)
+    print('final', img.size)
+
+
 if __name__ == '__main__':
     out = os.path.join(HERE, '..', 'preview')
     os.makedirs(out, exist_ok=True)
@@ -397,3 +434,4 @@ if __name__ == '__main__':
     sheet()
     compare_sheet()
     compare_sheet_2()
+    final_sheet()
