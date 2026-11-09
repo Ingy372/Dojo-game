@@ -231,19 +231,17 @@ The button is the Great Counter the child already has. The new part is the resul
 
 Proposed ids, for the Programmer to confirm: `lesson-throw` / `firstThrow`. Fires the first time an equipped Throw seal knocks an enemy down. Unequipped, it waits, with no nag, the same as G2B-11. Scroll: `scroll` true. One screen, then the practice line.
 
-### Primary (the lesson screen)
-
-> A Great Counter knocks some enemies down.
-
-7 words, 41 characters. One sentence.
-
-### Alternate A
-
-Use only if Jay confirms that students call the technique Outside Reap. That name is in the G2B-02 card. It is not in `docs/self-defense.md` or `docs/curriculum.md`.
+### Primary (the lesson screen) — Jay's pick (Nov 9, via the Manager)
 
 > Your Outside Reap knocks some enemies down.
 
-7 words, 43 characters.
+7 words, 43 characters. One sentence. Jay picked this over the Great Counter line.
+
+### Former primary (not picked)
+
+> A Great Counter knocks some enemies down.
+
+7 words, 41 characters.
 
 ### Alternate B
 
@@ -259,13 +257,11 @@ For the fight, when the enemy is on screen. "Them" has nobody to point at on the
 
 7 words, 33 characters. "This one" is the single practice enemy.
 
-### In class too
+### In class too (placeholder, Nov 9, via the Manager)
 
-> Sensei showed you this in class.
+> You learned Outside Reap in class.
 
-6 words, 32 characters. It points at class. It does not say the game knock-down is the real throw, and it does not use an unconfirmed name.
-
-If Jay confirms the class name, the G2B-11 pattern is available: "You learned Outside Reap in class." (6 words, 34 characters).
+6 words, 34 characters. Same pattern as G2B-11. Placeholder until the class name is confirmed; the fallback is "Sensei showed you this in class." (6 words, 32 characters).
 
 ### After the try
 
@@ -283,11 +279,11 @@ Retry, unchanged from the other lessons:
 
 | Line | Role | Words | Characters |
 |---|---|---|---|
-| A Great Counter knocks some enemies down. | Primary lesson | 7 | 41 |
-| Your Outside Reap knocks some enemies down. | Alternate A | 7 | 43 |
+| Your Outside Reap knocks some enemies down. | Primary lesson (Jay's pick) | 7 | 43 |
+| A Great Counter knocks some enemies down. | Former primary | 7 | 41 |
 | A Great Counter knocks them down. | Alternate B | 6 | 33 |
 | Make a Great Counter on this one. | Try it now | 7 | 33 |
-| Sensei showed you this in class. | In class too | 6 | 32 |
+| You learned Outside Reap in class. | In class too (placeholder) | 6 | 34 |
 | That one went down! | After the try | 4 | 19 |
 | Nice work. Let's keep practicing. | Retry, existing | 5 | 33 |
 
@@ -317,9 +313,9 @@ Callout, if the fight already shows one for other seals: "Self-Defense #11!" wit
 
 ## Taste check for Jay (through the Manager)
 
-1. Primary lesson line, or Alternate A, or Alternate B?
+1. Decided Nov 9: "Your Outside Reap knocks some enemies down."
 2. Card replacements for #11, #12, #13, #14, and #15, yes or a different short line?
-3. Class line: "Sensei showed you this in class." or, if the class name is Outside Reap, "You learned Outside Reap in class."?
+3. Placeholder Nov 9: "You learned Outside Reap in class." Confirm once the class name is settled.
 
 ## Handoffs
 
