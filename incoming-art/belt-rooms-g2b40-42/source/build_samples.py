@@ -180,10 +180,10 @@ def shelf_of_books(lay, name, x, row, book_colors):
             obox(lay, f"{lay}_{name}b{zi}_{k}", Vector((x + dx, sy - 0.14, z)), (0.2, 0.1, 0.26), col)
 
 def floor_root(lay, name, c0, r0, c1, r1):
-    """A thick root lying on the floor, level, so it does not read as a floating plank."""
-    a, b = grid(c0, r0, 0.07), grid(c1, r1, 0.08)
-    otube(lay, name, a, b, 0.09, 0.055, "#5c3d28", segs=8)
-    oell(lay, name + "k", (a + b) / 2 + Vector((0, 0, 0.02)), (0.14, 0.1, 0.08), "#4a301f")
+    """A short root against the wall. Low, and close to the plank colour, so it is not a barrier."""
+    a, b = grid(c0, r0, 0.04), grid(c1, r1, 0.045)
+    otube(lay, name, a, b, 0.055, 0.035, "#a08060", segs=8)
+    oell(lay, name + "k", (a + b) / 2 + Vector((0, 0, 0.012)), (0.08, 0.06, 0.04), "#8a6844")
 
 # ------------------------------------------------------------------ Green: Pebble Path
 # Palette from giants-steps-brief: moss green, river-stone grey, warm sand, soft blue shade.
@@ -276,10 +276,9 @@ target_note_r = "G2B-41 sample. Red belt forge, Bellows Door. Bellows, rack, bin
 # Warm planks, shelves both sides, a cart, rugs, cushions, floor roots and a ladder.
 # The middle, from the open door to the front, stays clear.
 B = "room-brown"
-PLANKS = ["#c49a62", "#bc9258", "#c9a46c", "#b68c54"]
 BARK, PAGE, LEAF, LEATHER = "#5c3d28", "#f3e6c8", "#5f8a48", "#8a5a38"
-# No dark seam beams. Those read as walls. The planks themselves stay, in close warm shades.
-floor_planks(B, PLANKS)
+# One slab. Separate plank rows left a dark seam on every joint.
+gbox(B, f"{B}_floor", 0, 0, 7, 5, -0.02, 0.0, "#c49a62", outline=False)
 back_wall(B, "#6a4a32", "#8a6844", "#a08060", "#5c3d28")
 BOOKS = ((-0.38, "#c4a06a"), (-0.12, "#3f6a38"), (0.14, "#8a5a3c"), (0.38, "#efe0c0"))
 shelf_of_books(B, "shL", 1.15, 0.95, BOOKS)
@@ -290,10 +289,10 @@ otube(B, f"{B}_ladL", lad + Vector((-0.16, 0, 0.08)), lad + Vector((-0.16, 0, 0.
 otube(B, f"{B}_ladR", lad + Vector((0.16, 0, 0.08)), lad + Vector((0.16, 0, 0.95)), 0.035, 0.03, "#c4a06a")
 for i, z in enumerate((0.28, 0.5, 0.72)):
     otube(B, f"{B}_rung{i}", lad + Vector((-0.16, 0, z)), lad + Vector((0.16, 0, z)), 0.028, 0.028, "#a08060")
-# Roots lying across the side floor, level, with a knot in the middle.
-floor_root(B, f"{B}_root0", 0.35, 1.7, 2.15, 1.85)
-floor_root(B, f"{B}_root1", 4.7, 1.85, 6.65, 1.7)
-floor_root(B, f"{B}_root2", 0.3, 3.15, 1.7, 3.35)
+# Short roots tucked on the wall edges, not lying across the floor.
+floor_root(B, f"{B}_root0", 0.22, 1.55, 0.48, 2.05)
+floor_root(B, f"{B}_root1", 6.5, 1.55, 6.78, 2.1)
+floor_root(B, f"{B}_root2", 0.22, 3.45, 0.42, 3.9)
 # Armchair-shaped root and two cushions, on the left of the path.
 shadow(B, f"{B}_shseat", 1.35, 4.15, 0.5, 0.28)
 seat = grid(1.35, 3.9, 0)

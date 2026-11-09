@@ -11,7 +11,7 @@ Camera and tile size match the approved Tower rooms (`incoming-art/tier3-ember-k
 **WHAT:** Fourth pass. Props are unchanged from the third pass (`superseded/sample-3/`). The floors are quieter so a fighter reads the way they do on the kitchen floor. Same 35° camera, 80 px tiles, and toon look. The preview sheet keeps the kitchen and the earlier passes, and the 48 px row shows the approved kitchen player standing in the middle of each room and on the kitchen.
 - **G2B-40 — Green, Pebble Path.** Soft moss with a thin moss joint and low-contrast tile shades. The river stones, stairs, ferns, and stream stay.
 - **G2B-41 — Red, Bellows Door.** Brick contrast cut about in half. The ember pools stay bright. The forge props stay.
-- **G2B-42 — Brown, Reading Nook.** The dark floor beams are gone. Warm planks sit close in colour. The shelves, ladder, cart, rugs, cushions, and roots stay.
+- **G2B-42 — Brown, Reading Nook.** One even warm plank floor, with no seams. The roots are short and sit on the wall edges. The shelves, ladder, cart, rugs, and cushions stay.
 
 **WHY:** Jay's rule is three samples before a big batch, so the belt colours can be checked on a phone before the rest of the rooms are built.
 
