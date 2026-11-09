@@ -1,0 +1,13 @@
+{
+  "notes": "Zap Kite zig-zag lane (the #438 follow-up, DECIDED 5; redone on the Manager's second #444 review). Read by build_dash_telegraph.py; all sizes are in tiles. The lane runs along +x (rotate by atan2(dy, dx)) and is centred on the canvas. It shows the TRUE hit capsule: the sim treats a dash-only attack as every point within areaRadius of the segment from the enemy to enemy + reach (drafts/content/enemies/zap-kite.json: reach 3.0, areaRadius 0.6), so the capsule is 'width' = 2 x areaRadius = 1.2 wide and 'length' = reach + 2 x areaRadius = 4.2 long, round ends included; its middle is reach / 2 in front of the enemy. The drawn zig-zag must stay inside that capsule: 'strokeWidth' is the band's thickness, and 'amplitude' (how far the centre line swings to each side) is clamped by the builder to (width - strokeWidth - 2 x the outline, about 0.023) / 2, so stroke, swing and outline together never pass 'width'. 'turns' = corners in the path (even). Change a number here and re-run the builder; nothing is hard-coded in the script.",
+  "zigzag": {
+    "reach": 3.0,
+    "areaRadius": 0.6,
+    "length": 4.2,
+    "width": 1.2,
+    "strokeWidth": 0.5,
+    "amplitude": 0.3,
+    "turns": 4,
+    "canvasMargin": 0.5
+  }
+}
