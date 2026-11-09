@@ -34,7 +34,7 @@
         {
           "technique": 15,
           "name": "Slip and Double",
-          "text": "Off the Line adds a third punch, and the Great Counter window is a little longer.",
+          "text": "Double Punch adds a third punch, and the Great Counter window is a little longer.",
           "effects": [
             {
               "type": "counterHits",
@@ -92,7 +92,7 @@
         {
           "technique": 5,
           "name": "Spin Elbow",
-          "text": "Spin Back Fist reaches farther and hits harder.",
+          "text": "Back Fist reaches farther and hits harder.",
           "effects": [
             {
               "type": "rippleCounter",

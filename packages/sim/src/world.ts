@@ -1398,7 +1398,7 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
       if (world.bells < bellsNeeded) world.events.push({ kind: 'bell', count: ++world.bells, of: bellsNeeded });
       if (p.mods.healOnPerfect > 0) p.health = Math.min(p.maxHealth, p.health + p.mods.healOnPerfect);
       landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, chainFocus(p.counterChain));
-      // Off the Line / Slip and Double: quick extra punches, no extra Focus.
+      // Double Punch / Slip and Double: quick extra punches, no extra Focus.
       for (let i = 0; i < p.mods.counterHits && e.mode !== 'defeated'; i++) landHit(world, p, e, 'counter', p.mods.counterHitStrength, 0);
       if (e.mode !== 'defeated' && canThrow(p, e)) {
         // G2B-04 Outside Reap: the attacker tumbles a tile away and is down for a while (brutes and swarmers; never Guardians or elites).

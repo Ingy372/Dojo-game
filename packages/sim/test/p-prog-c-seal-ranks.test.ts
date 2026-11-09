@@ -121,6 +121,13 @@ describe('PB-02 loading the family file', () => {
     expect(fam('escape').ranks.map((x) => x.technique)).not.toContain(4);
   });
 
+  it('J27: no seal text uses a retired name', () => {
+    const ranks = (sealFamilyData.families as { ranks: { text: string; altName?: string | null }[] }[]).flatMap((f) => f.ranks);
+    const retired = ranks.map((r) => r.altName).filter((n): n is string => !!n);
+    expect(retired.length).toBeGreaterThan(0);
+    for (const r of ranks) for (const old of retired) expect(r.text).not.toContain(old);
+  });
+
   it('rejects a technique in two families, a missing family, numbers in kid text, and a live rank with no effect', () => {
     const dup = clone();
     dup.families[0].ranks.push({ ...dup.families[1].ranks[0], technique: 99 });
