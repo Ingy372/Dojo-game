@@ -1591,7 +1591,7 @@ First code step of `drafts/planning/R-PROGRESSION-BETA.md` (#407). Data and save
 
 
 ## PB-02 — Seal families, ranks and the Seal slots (2026-11-01)
-- **A Seal is a family.** `content/abilities/seal-families.json` lists six: Escape (#1, #2, #4, #15), Counter (#3, #5, #6, #7, #10), Guard (#8, #9), Throw (#11, #12), Disarm (#13, #14), Lock (none), the plan's 4.3 map. Rank = the number of signed-off techniques in a family; the effects are the union of the signed-off ones, so the order they were signed in changes nothing. A family unlocks at its first signed-off technique. Names and kid text are S4 placeholders; the numbers are S4's, in data. The kid texts have no digits (the loader checks).
+- **A Seal is a family.** `content/abilities/seal-families.json` lists six: Escape (#1, #2, #4, #15), Counter (#3, #5, #6, #7, #10), Guard (#8, #9), Throw (#11, #12), Disarm (#13, #14), Lock (none), the plan's 4.3 map. That list is what PB-02 shipped. Jay later ruled that #4's real name is OPEN and its family is Advancing, not Escape. The file on disk still has the old Escape list until the Programmer adds Advancing. The 1.5-tile push is unchanged. Rank = the number of signed-off techniques in a family; the effects are the union of the signed-off ones, so the order they were signed in changes nothing. A family unlocks at its first signed-off technique. Names and kid text are S4 placeholders; the numbers are S4's, in data. The kid texts have no digits (the loader checks).
 - **Which technique is which number:** the nth seal-kind entry in `training.abilities` (curriculum order, the same order `buildTraining` uses) is technique n. `signedOffTechniques` reads that.
 - **`live` flag:** Throw and Lock are `live: false`. They cannot be equipped, give no effects and are not in `unlockedFamilies`. Throw is wired and waits for R-G2B-04; Lock has no ranks and is locked (plan 4.3). Turning one on is one flag plus its ranks' effects.
 - **A student's Seals are now only the families in the Seal slots.** `characterSetup` = Strikes (still always on until PB-03) + the equipped families at the student's rank + gear. A profile with a null loadout therefore has no Seals (it used to get every unlocked Seal). There is no legacy fallback on purpose; the plan says to stop using "all unlocked Seals".
@@ -1695,6 +1695,12 @@ First code step of `drafts/planning/R-PROGRESSION-BETA.md` (#407). Data and save
 - #4 Drive Back pushes an enemy back.
 - Steady Hold (#37) moves from the Lock family to Counter. Lock's planned ranks no longer include #37 (G2B-04 adds no Lock ranks; Lock stays off until #17 Arm Bar).
 - J26 (placeholders until playtest): test a fight zoom of about 15%; "GREAT!" shows smaller after the first one in each room; vibration is light and on by default, with an off switch.
+
+## Self-defense #4: the name is OPEN, the family is Advancing (2026-11-08)
+- Jay ruled the real name of self-defense #4 is OPEN. Advancing is the family, not the name. OPEN is not in the Escape family.
+- The in-game effect stays a 1.5-tile push (`counterPush`). PR #453 already measured that distance and kept it.
+- `content/abilities/seal-families.json` still lists technique 4 under Escape, under the old game name Drive Back. The Programmer adds an Advancing family and moves #4 onto it. This note does not edit that file. OPEN is the only confirmed member so far.
+- The plan is in `drafts/planning/R-G2B-seal-families-16-40.md` and `drafts/planning/power-and-progression-redesign.md`.
 ### GUARD-SCALE-01 QA fixes (2026-11-08, from the Manager)
 - **(a) The dip no longer stacks:** `bossZoom.zoomTo` (0.8) is now the total camera zoom at the bottom of the dip. `bossZoomPlan` takes the held room zoom and returns the share of it to tween to (0.8 / 0.9 = 0.889), so the camera goes 0.9 -> 0.80 -> 0.9, not down to 0.72.
 - **(b) Reduced motion:** unchanged in effect and now pinned by a test: no dip tween at all, the camera is at the held 0.9 from the first frame (the held zoom is a fixed camera size, not motion).

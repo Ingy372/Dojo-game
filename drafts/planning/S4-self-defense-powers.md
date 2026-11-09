@@ -31,7 +31,7 @@ Effect types in `code` already exist in `packages/sim/src/effects.ts`. **New:** 
 | 1 | White | Avoid | Off the Line | A Perfect Counter adds 2 quick punches (each 30% of a Strike) | **New:** `counterHits` 2 × 0.3 | S | Starts Avoid |
 | 2 | White | Avoid | Other Side | A Block instantly recharges Dash so you can step away | `dashOnBlock` (current #2, kept) | S | Avoid |
 | 3 | White | Spin strike | Spin Back Fist | A Perfect Counter also hits enemies within 1.2 tiles (60%) | `rippleCounter` 0.6 / 1.2 (current "Sweep", renamed) | S | Starts Spin |
-| 4 | White | Advancing combo | Advancing | A Perfect Counter pushes the attacker back 1.5 tiles, off-balance. Jay, Nov 8: the name is Advancing, not Drive Back, and the effect is this push. 1.5 tiles stays the written guess. **needs balance-check** | **New:** `counterPush` 1.5 | S | Starts Advancing |
+| 4 | White | Advancing | OPEN | A Perfect Counter pushes the attacker back 1.5 tiles, off-balance. Jay's ruling: the real name is OPEN. Advancing is the family, not the name, and OPEN is not in Escape. The 1.5-tile push stays (measured and kept in PR #453). | **New:** `counterPush` 1.5 | S | Starts Advancing |
 | 5 | White | Spin strike | Spin Elbow | Spin Back Fist reaches +0.4 tiles and hits +20% harder | `rippleCounter` +0.2 / +0.4 | S | #3 |
 | 6 | Yellow | Trap and combo | Arm Wrap | A Perfect Counter traps the attacker 10 ticks longer | `staggerTicks` 10 (current #1 effect, moved) | S | Starts Trap |
 | 7 | Yellow | Trap | Palm Heel | Perfect Counter hits are 25% stronger | `counterStrength` 0.25 | M | #6 |
