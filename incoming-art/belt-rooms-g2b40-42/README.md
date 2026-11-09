@@ -8,10 +8,10 @@ Camera and tile size match the approved Tower rooms (`incoming-art/tier3-ember-k
 
 **ITEM:** First samples for the Green/Blue, Red/Red-Black, and Brown/Brown-Black/Black room kits.
 
-**WHAT:** Third pass. The flat grids are in `superseded/sample-1/`. The second pass (sand floor, sparse props, diagonal roots) is in `superseded/sample-2/`. These rooms use the same toon look as the approved Ember Kitchens: 35° camera, 80 px tiles, dark outlines, cel light, and a contact shadow under each prop. The middle of each room, and the doorway in the back wall, stay open. The preview sheet puts an approved kitchen room beside the new samples and the two earlier passes, and shows a 48 px-per-tile row.
-- **G2B-40 — Green, Pebble Path.** Moss-green floor (no beige), river-stone grey stepping stones, four stair blocks on the side walls, ferns, a narrow sparkling stream, and soft blue shade in the back corners. Warm sand is only a few pebbles.
-- **G2B-41 — Red, Bellows Door.** Warm brick, two leather bellows by the open door, an anvil, a tool rack, a coal bin, a water trough, a quench barrel, and warm ember pools on the floor. Lacquer and maroon banners with gold hems hang beside the door. Danger-red pixels: 0.
-- **G2B-42 — Brown, Reading Nook.** Wood planks, a shelf on each side, a ladder against the right shelf, a book cart, two rugs, cushions, a root armchair, a lamp, and thick roots lying across the side floor.
+**WHAT:** Fourth pass. Props are unchanged from the third pass (`superseded/sample-3/`). The floors are quieter so a fighter reads the way they do on the kitchen floor. Same 35° camera, 80 px tiles, and toon look. The preview sheet keeps the kitchen and the earlier passes, and the 48 px row shows the approved kitchen player standing in the middle of each room and on the kitchen.
+- **G2B-40 — Green, Pebble Path.** Soft moss with a thin moss joint and low-contrast tile shades. The river stones, stairs, ferns, and stream stay.
+- **G2B-41 — Red, Bellows Door.** Brick contrast cut about in half. The ember pools stay bright. The forge props stay.
+- **G2B-42 — Brown, Reading Nook.** The dark floor beams are gone. Warm planks sit close in colour. The shelves, ladder, cart, rugs, cushions, and roots stay.
 
 **WHY:** Jay's rule is three samples before a big batch, so the belt colours can be checked on a phone before the rest of the rooms are built.
 

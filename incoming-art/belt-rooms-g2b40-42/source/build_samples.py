@@ -1,5 +1,5 @@
 """
-Dojo Ascent — belt room samples, third pass.
+Dojo Ascent — belt room samples, fourth pass.
 
 Same camera, toon shader, dark outlines and 80 px tiles as the approved
 Tower rooms (tier3-ember-kitchens / tools/render_static.py). Walls are
@@ -110,20 +110,22 @@ def back_wall(lay, stone, cap, mortar, brick=None, n=7, gap=(2.2, 4.8)):
         obox(lay, f"{lay}_side{side}", p + Vector((0, 0, 0.55)), (0.28, 0.9, 1.1), stone, bevel=0.02)
         obox(lay, f"{lay}_sidecap{side}", p + Vector((0, 0, 1.12)), (0.34, 0.95, 0.12), cap, outline=False)
 
-def floor_stones(lay, colors, grout):
+def floor_stones(lay, colors, grout, soft=False):
     for col in range(7):
         for row in range(5):
-            shade = colors[(col * 3 + row) % len(colors)]
+            shade = colors[(col + row) % len(colors)]
             gbox(lay, f"{lay}_g{col}_{row}", col, row, col + 1, row + 1, -0.05, -0.012, grout, outline=False)
-            inset = 0.06 + ((col + row) % 2) * 0.02
-            gbox(lay, f"{lay}_s{col}_{row}", col + inset, row + inset, col + 1 - inset * 0.8, row + 1 - inset,
-                 -0.012, 0.0, shade, outline=False, bevel=0.01)
+            # Soft moss uses a thin joint and no checker of wide and narrow stones.
+            inset = 0.035 if soft else 0.06 + ((col + row) % 2) * 0.02
+            gbox(lay, f"{lay}_s{col}_{row}", col + inset, row + inset, col + 1 - inset, row + 1 - inset,
+                 -0.012, 0.0, shade, outline=False, bevel=0.008 if soft else 0.01)
 
-def floor_planks(lay, colors, gap):
+def floor_planks(lay, colors, gap=None):
     for row in range(5):
         shade = colors[row % len(colors)]
-        gbox(lay, f"{lay}_pl{row}", 0, row + 0.04, 7, row + 0.96, -0.02, 0.0, shade, outline=False)
-        gbox(lay, f"{lay}_gap{row}", 0, row, 7, row + 0.045, -0.03, -0.005, gap, outline=False)
+        gbox(lay, f"{lay}_pl{row}", 0, row, 7, row + 1, -0.02, 0.0, shade, outline=False)
+        if gap:
+            gbox(lay, f"{lay}_gap{row}", 0, row, 7, row + 0.045, -0.01, 0.004, gap, outline=False)
 
 def floor_bricks(lay, colors, mortar):
     for row in range(5):
@@ -188,7 +190,8 @@ def floor_root(lay, name, c0, r0, c1, r1):
 # The floor itself is moss. Sand is only a few pebbles. The middle stays a clear path.
 G = "room-green"
 MOSS, STONE, CAP, RIVER = "#5f8f45", "#6e726c", "#6e9a62", "#8a8780"
-floor_stones(G, ["#4e7a3a", "#5c8a46", "#3f6a32", "#6a9a52"], "#5a564f")
+# Close moss shades only. The joint is moss too, so the floor is not a light/dark board.
+floor_stones(G, ["#568448", "#5e8c50", "#5a884c", "#628e54"], "#527e46", soft=True)
 back_wall(G, STONE, CAP, "#4a4e48", "#3f6a32")
 stair_block(G, "sl1", 0.28, 0.55, 1.35, 1.35, RIVER, MOSS)
 stair_block(G, "sl2", 0.28, 3.55, 1.28, 4.45, RIVER, MOSS)
@@ -223,9 +226,10 @@ target_note_g = "G2B-40 sample. Green, Giant's Steps, Pebble Path. Moss floor, r
 # Deep warm brick and iron. Lacquer and maroon stay brown-red so they are not danger red.
 # Props sit on the sides. The middle columns and the back doorway stay clear.
 R = "room-red"
-BRICKS = ["#b06a48", "#c4845c", "#8f563c", "#a87450"]
+# Brick shades pulled halfway toward their average, so the floor contrast is about half. Ember pools stay bright.
+BRICKS = ["#ad6c4a", "#b77954", "#9d6244", "#a9714e"]
 IRON, LACQUER, MAROON, GOLD = "#4e555e", "#8d5238", "#7a4a3c", "#e2b15a"
-floor_bricks(R, BRICKS, "#6a4634")
+floor_bricks(R, BRICKS, "#8a5a40")
 back_wall(R, "#5c4338", "#3e3532", "#c4a07a", "#8d5238")
 banner(R, "bl", 1.05, LACQUER, GOLD)
 banner(R, "br", 5.95, MAROON, GOLD)
@@ -272,9 +276,10 @@ target_note_r = "G2B-41 sample. Red belt forge, Bellows Door. Bellows, rack, bin
 # Warm planks, shelves both sides, a cart, rugs, cushions, floor roots and a ladder.
 # The middle, from the open door to the front, stays clear.
 B = "room-brown"
-PLANKS = ["#c49a62", "#b5884e", "#d2ae78", "#a87848"]
+PLANKS = ["#c49a62", "#bc9258", "#c9a46c", "#b68c54"]
 BARK, PAGE, LEAF, LEATHER = "#5c3d28", "#f3e6c8", "#5f8a48", "#8a5a38"
-floor_planks(B, PLANKS, "#6b4428")
+# No dark seam beams. Those read as walls. The planks themselves stay, in close warm shades.
+floor_planks(B, PLANKS)
 back_wall(B, "#6a4a32", "#8a6844", "#a08060", "#5c3d28")
 BOOKS = ((-0.38, "#c4a06a"), (-0.12, "#3f6a38"), (0.14, "#8a5a3c"), (0.38, "#efe0c0"))
 shelf_of_books(B, "shL", 1.15, 0.95, BOOKS)
