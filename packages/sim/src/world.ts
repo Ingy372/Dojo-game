@@ -1404,7 +1404,7 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
           e.disarmed = Math.max(e.disarmed, p.mods.disarm);
           e.disarmLeft = Math.max(e.disarmLeft ?? 0, 1, p.mods.disarmAttacks);
         }
-        // Drive Back: the attacker is pushed away from the player (bosses stay put).
+        // Self-defense #4 (Advancing; name OPEN): the attacker is pushed away from the player (bosses stay put).
         if (p.mods.counterPush > 0 && !e.def.boss) {
           const away = directionTo(p.pos, e.pos);
           e.pos = { x: e.pos.x + away.x * p.mods.counterPush, y: e.pos.y + away.y * p.mods.counterPush };

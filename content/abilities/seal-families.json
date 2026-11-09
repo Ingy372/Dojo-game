@@ -32,17 +32,6 @@
           ]
         },
         {
-          "technique": 4,
-          "name": "Drive Back",
-          "text": "A Great Counter pushes the attacker back.",
-          "effects": [
-            {
-              "type": "counterPush",
-              "amount": 1.5
-            }
-          ]
-        },
-        {
           "technique": 15,
           "name": "Slip and Double",
           "text": "Off the Line adds a third punch, and the Great Counter window is a little longer.",
@@ -55,6 +44,26 @@
             {
               "type": "counterWindow",
               "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "advancing",
+      "name": "Advancing",
+      "text": "Step forward into the attacker and close the distance.",
+      "icon": "placeholder",
+      "live": true,
+      "ranks": [
+        {
+          "technique": 4,
+          "name": "Self-Defense #4",
+          "text": "A Great Counter pushes the attacker back.",
+          "effects": [
+            {
+              "type": "counterPush",
+              "amount": 1.5
             }
           ]
         }
