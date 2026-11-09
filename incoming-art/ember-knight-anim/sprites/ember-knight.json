@@ -1,0 +1,73 @@
+{
+  "id": "ember-knight",
+  "label": "Ember Knight — shifted form",
+  "placeholderName": "Warm Shield",
+  "placeholderNameStatus": "PLACEHOLDER. Not approved as a name. Do not use it as an id.",
+  "notForImport": true,
+  "notForImportNote": "Motion concept for the Manager. Do not copy these sheets into the game until the Manager approves them.",
+  "frameWidth": 512,
+  "frameHeight": 512,
+  "anchorPx": [256.0, 435.2],
+  "anchorNote": "Feet. Same camera as the approved shift still: ground line at 85% of the frame. 0.85 * 512 = 435.2.",
+  "orthoScaleTiles": 2.6,
+  "elevationDeg": 35,
+  "sourcePixelsPerTile": 196.9231,
+  "gamePixelsPerTile": 48,
+  "gameDisplayPx": 125,
+  "directions": ["N", "NE", "E", "SE", "S", "SW", "W", "NW"],
+  "sheetLayout": "Rows are directions, top to bottom, in the order above. Columns are frames, left to right, no padding. Straight alpha.",
+  "camera": "Orthographic, 35 degrees down, 2.6 tiles across. Same camera as incoming-art/ember-knight-shift-drafts/source/build_ember_shift.py.",
+  "model": "Approved shifted form. Round body, shield arm, bar arm. No separate legs.",
+  "animations": {
+    "idle": {
+      "file": "ember-knight_idle.png",
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "note": "Style-guide idle rate. A small breathe, a core pulse, and three gold embers rising from the shield. No flash."
+    },
+    "walk": {
+      "file": "ember-knight_walk.png",
+      "frames": 10,
+      "fps": 30,
+      "durationSec": 0.3333,
+      "loop": true,
+      "note": "Style-guide walk timing: 10 frames at 30 fps, the same loop length as the player walk. The approved knight has no legs, so this is a bounce, a lean, and an opposite arm swing. It is not a foot cycle."
+    },
+    "attack": {
+      "file": "ember-knight_attack.png",
+      "name": "ember slash",
+      "frames": 20,
+      "fps": 10,
+      "durationSec": 2.0,
+      "loop": false,
+      "impactFrame": 9,
+      "impactTimeSec": 0.9,
+      "note": "Ember slash from the draft boss file: 18 telegraph ticks then 22 recover ticks, at 20 ticks a second, is 0.9 s plus 1.1 s. 20 frames at 10 fps lands on those times. Frame 9 is the hit. The bar stays on the shoulder. No red is drawn on the knight. The game's danger circle is separate."
+    },
+    "shift": {
+      "file": "ember-knight_shift.png",
+      "frames": 5,
+      "fps": null,
+      "durationSec": 1.5,
+      "loop": false,
+      "columns": ["0.00 before", "0.50 glow", "1.00 ring", "1.25 steam", "1.50 idle"],
+      "timeSec": [0.0, 0.5, 1.0, 1.25, 1.5],
+      "shiftGlowSec": 1.0,
+      "shiftGlowColor": "#fff4cf",
+      "settleAccentSec": 0.5,
+      "keyframesOnly": true,
+      "note": "Same clock as the approved shift. 1.0 s white-gold, then a 0.5 s settle (one gold ring, one steam puff). These are the sample times, not a smooth film."
+    },
+    "shiftReduced": {
+      "file": "ember-knight_shift-reduced.png",
+      "frames": 5,
+      "durationSec": 1.5,
+      "loop": false,
+      "columns": ["0.00 before", "0.50 glow", "1.00 fade", "1.25 still", "1.50 still"],
+      "timeSec": [0.0, 0.5, 1.0, 1.25, 1.5],
+      "note": "Same 1.5 s. Quieter glow, then a crossfade to the still form. No ring, no steam, no embers."
+    }
+  }
+}
