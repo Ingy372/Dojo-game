@@ -42,11 +42,11 @@
       "line": "Great Counters hit enemies nearby, too!"
     },
     {
-      "family": "escape",
+      "family": "advancing",
       "technique": 4,
-      "title": "Drive Back",
+      "title": "OPEN",
       "line": "Great Counters push enemies back!",
-      "j27": "Name OPEN (Drive Back is retired, J21; no real name yet). Family Advancing (Jay, Nov 8: \"Self-defense #4 belongs to Advancing.\"). It stays under escape here only until the loader supports an advancing family: see familyMoves in J27-seal-renames.json."
+      "j27": "Name OPEN. Drive Back is retired. Family Advancing, not Escape. The live seal-families.json still needs this family. See familyMoves in J27-seal-renames.json."
     },
     {
       "family": "counter",

@@ -68,13 +68,14 @@ The existing +12% damage cap on stance plus kata stays. A power that fails any t
 
 ## Self-defense Seal families
 
-The 40+ self-defense techniques feed 6 Seal families instead of 40 separate powers. A family's first technique unlocks its Seal; every later technique in that family ranks it up and is named on the rank.
+The 40+ self-defense techniques feed 7 Seal families instead of 40 separate powers. A family's first technique unlocks its Seal; every later technique in that family ranks it up and is named on the rank. Jay first agreed to 6 families. The later ruling adds a seventh, Advancing.
 
 | Family | What it does in game | Mechanic | Status | Draft techniques that fit |
 | --- | --- | --- | --- | --- |
 | Counter | Great Counters hit harder or stagger longer | Existing counter effects | Built | Off-Balance, Sharp Eyes, Follow Through, Steady Breath |
 | Guard | Blocks take less or push damage back | Existing block effects | Built | Strong Block, Create Distance, Turn It Back |
 | Escape | Blocks or dashes create space and refill Dash | Existing dashOnBlock, plus breakFree | Partly built | Escape Step, Slide Away, Break Free, Escape from Behind |
+| Advancing | You move forward into the attacker to close the distance. A Great Counter still pushes that attacker back 1.5 tiles | Existing counterPush, 1.5 tiles | Push is built and was measured in PR #453. The family row is not in `seal-families.json` yet | OPEN |
 | Disarm | The attacker's next hits do less damage | Existing disarm effect | Built | Disarm, Kick the Weapon, Wrist Kick |
 | Throw | Counters knock enemies down for a short time | New counterThrow + thrown state | Not built | Sweep, Throw, Outside Reap, Reap and Finish |
 | Lock | Counters hold an enemy in place | New counterLock + locked state | Not built | Arm Bar, Wrist Lock, Four-Corner Lock, the Red/Black and Brown locks |
@@ -138,7 +139,7 @@ The tower only has floors for tiers 1 to 3, so the beta needs White, Yellow and 
 | --- | --- | --- |
 | Loadout screen with Stance, Virtue, Strike, Seal and Kata slots | Yes | Build the screen and the equip rules |
 | Strikes 1 to 3 | Yes | Spin Kick built; Jumping Spins new from existing settings; move Butterfly Flow to #3 |
-| Seals for self-defense #1 to #15 | Yes | Counter, Guard, Escape, Disarm reuse built effects; Throw is the one new mechanic |
+| Seals for self-defense #1 to #15 | Yes | Counter, Guard, Escape, Advancing, Disarm reuse built effects; Throw is the one new mechanic |
 | Seal slots: 2 at White and Yellow, 3 at Orange | Yes | Slot rule in code |
 | Kata powers for Basic Form 1, Basic Form 2, Keon | Jay decides | Passive only if they ship |
 | Unlock screen and Sensei's Trial room | Yes | One room template, one screen |
@@ -196,7 +197,7 @@ Recorded by the Researcher & Planner. These notes sit on top of the Oct 30 text 
 
 **J21. Seals.**
 
-- #4 is named **Advancing**. It pushes an enemy back. The old name Drive Back is retired. The 1.5-tile distance was measured and kept.
+- #4's real name is **OPEN**. **Advancing** is its family, not its name, and OPEN is not in the Escape family. The old game name Drive Back is retired. In class the move steps you forward into the attacker to close the distance. In the game, a Great Counter still pushes the attacker back 1.5 tiles. That distance was measured in PR #453 and stays. The Programmer adds the Advancing family to `content/abilities/seal-families.json`. This note does not edit that file. OPEN is the only confirmed member so far.
 - #25 Escape from Behind is a general escape (team call). It is not a behind-only counter.
 - #16 is a very quick hammer fist low, then a back fist high. Game text: "quick low hammer fist, then a high back fist." No groin. No face. It is one extra hit after a Great Counter, strength 0.3, the same hook as the kata kick. The same number is used on every difficulty. Both hits land if the kata kick is also equipped, at the higher strength. It fits. Real names are in `drafts/content/abilities/J27-audit.md`.
 - Each seal works alone (team call). No seal needs another.
