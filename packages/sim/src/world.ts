@@ -1398,7 +1398,7 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
       if (world.bells < bellsNeeded) world.events.push({ kind: 'bell', count: ++world.bells, of: bellsNeeded });
       if (p.mods.healOnPerfect > 0) p.health = Math.min(p.maxHealth, p.health + p.mods.healOnPerfect);
       landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, chainFocus(p.counterChain));
-      // Off the Line / Slip and Double: quick extra punches, no extra Focus.
+      // Double Punch / Slip and Double: quick extra punches, no extra Focus.
       for (let i = 0; i < p.mods.counterHits && e.mode !== 'defeated'; i++) landHit(world, p, e, 'counter', p.mods.counterHitStrength, 0);
       if (e.mode !== 'defeated' && canThrow(p, e)) {
         // G2B-04 Outside Reap: the attacker tumbles a tile away and is down for a while (brutes and swarmers; never Guardians or elites).
@@ -1417,7 +1417,7 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
           e.disarmed = Math.max(e.disarmed, p.mods.disarm);
           e.disarmLeft = Math.max(e.disarmLeft ?? 0, 1, p.mods.disarmAttacks);
         }
-        // Drive Back: the attacker is pushed away from the player (bosses stay put).
+        // Self-defense #4 (Advancing; name OPEN): the attacker is pushed away from the player (bosses stay put).
         if (p.mods.counterPush > 0 && !e.def.boss) {
           const away = directionTo(p.pos, e.pos);
           e.pos = { x: e.pos.x + away.x * p.mods.counterPush, y: e.pos.y + away.y * p.mods.counterPush };

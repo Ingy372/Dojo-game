@@ -17,7 +17,8 @@
     },
     {
       "id": "jumping-spins",
-      "name": "Jumping Spins",
+      "name": "Jumping Spin Kicks",
+      "altName": "Jumping Spins",
       "text": "Jump and spin three times. Each spin hits harder than the one before.",
       "default": false,
       "combo": 2,
@@ -35,7 +36,8 @@
     },
     {
       "id": "butterfly-flow",
-      "name": "Butterfly Flow",
+      "name": "Butterfly Kick",
+      "altName": "Butterfly Flow",
       "text": "Spin the other way. It takes a moment to land, but it hits harder.",
       "default": false,
       "combo": 3,

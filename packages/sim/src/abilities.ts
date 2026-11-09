@@ -52,7 +52,7 @@ export interface PerkDef {
 // R-PROGRESSION-BETA: the types for the slot system. Seal families are loaded here (PB-02, from
 // content/abilities/seal-families.json); Strikes (PB-03) and kata powers (PB-04) come later.
 
-export type SealFamilyId = 'counter' | 'guard' | 'escape' | 'disarm' | 'throw' | 'lock';
+export type SealFamilyId = 'counter' | 'guard' | 'escape' | 'advancing' | 'disarm' | 'throw' | 'lock';
 
 export interface SealRankDef {
   /** The self-defense number, e.g. 11. */
@@ -239,7 +239,7 @@ export function loadAbilities(data: unknown, familyData?: unknown, strikeData?: 
   return { stances, strikes: perks('strikes'), seals: perks('seals'), virtues, families: familyData === undefined ? [] : loadSealFamilies(familyData), strikeDefs: strikeData === undefined ? [] : loadStrikeDefs(strikeData) };
 }
 
-const FAMILY_IDS: readonly SealFamilyId[] = ['escape', 'counter', 'guard', 'throw', 'disarm', 'lock'];
+const FAMILY_IDS: readonly SealFamilyId[] = ['escape', 'advancing', 'counter', 'guard', 'throw', 'disarm', 'lock'];
 
 /** Checks content/abilities/seal-families.json: every family once, every technique in one family, kid words with no numbers. */
 export function loadSealFamilies(data: unknown): SealFamilyDef[] {
