@@ -52,17 +52,17 @@ def _shin_shoe(a, knee, ankle, flex, sc=0.52):
     return G([(52, 40)], fl)[0]
 
 
-def _leg(a, hip, knee, ankle, flex=0, sc=0.40):
+def _leg(a, hip, knee, ankle, flex=0, sc=0.40, thick=11):
     """thigh from the hip, shin and one toeless shoe. The thigh is drawn over the knee."""
     _shin_shoe(a, knee, ankle, flex, sc)
-    sleeve(a, hip, knee, 11, 9.5, ow=4.2, shade=GSH, band=5)
+    sleeve(a, hip, knee, thick, max(8, thick - 1.5), ow=4.2, shade=GSH, band=5)
 
 
-def _arm(a, shoulder, elbow, hand, ang):
+def _arm(a, shoulder, elbow, hand, ang, thick=8, fist_s=12):
     """sleeve from the shoulder, skin forearm, one mitten fist. Nothing else."""
-    sleeve(a, shoulder, elbow, 8, 7, ow=4.0, shade=GSH, band=4)
-    limb(a, elbow, hand, 5.5, 5.2)
-    fist(a, hand[0], hand[1], 12, ang)
+    sleeve(a, shoulder, elbow, thick, max(6, thick - 1), ow=4.0, shade=GSH, band=4)
+    limb(a, elbow, hand, thick * (5.5 / 8), thick * (5.2 / 8))
+    fist(a, hand[0], hand[1], fist_s, ang)
 
 
 def _neck(a, top, head):
@@ -82,10 +82,9 @@ def _head_profile(a, cx, cy, r, face=1):
 
 
 def _head_back(a, cx, cy, r):
-    """back of the head: hair, two ears, no face."""
-    a.shape(circ(cx, cy, r), HAIR, HAIR_S, lighten(HAIR, .25), ow=3.6, band=3)
-    for s in (-1, 1):
-        a.shape(circ(cx + s * r * 0.92, cy + r * 0.12, r * 0.2), SKIN, SKIN_S, lighten(SKIN, .4), ow=2.0, band=2)
+    """back of the head: all hair, one small ear on the side. No skin on the crown."""
+    a.shape(circ(cx, cy, r), HAIR, HAIR_S, lighten(HAIR, .08), ow=3.6, band=2)
+    a.shape(circ(cx + r * 1.02, cy + r * 0.35, r * 0.16), SKIN, SKIN_S, lighten(SKIN, .35), ow=1.8, band=1.5)
 
 
 def _gi(a, pts):
@@ -106,21 +105,22 @@ CREAM_GI = (250, 246, 236)
 
 
 def spin_kick():
-    """#1. Mid-spin. Back and one shoulder are turning. One standing leg, one outside kick."""
+    """#1. Back to the viewer. The kicking leg sweeps, and a curved arc goes around that leg."""
     a = Art()
-    arrow(a, [(78, 158), (96, 174), (78, 186)], BLUE_S, 9, 16, outline=INKC, ink_ow=3.6, spread=0.8)
-    hip = (124, 136)
-    _leg(a, hip, (114, 156), (108, 172), flex=-8)
-    _leg(a, hip, (148, 122), (168, 112), flex=0)
-    # back of the gi, right shoulder coming around
-    _gi(a, [(108, 112), (146, 96), (150, 124), (132, 146), (110, 144), (100, 124)])
-    _belt(a, 124, 128)
-    _arm(a, (112, 110), (100, 118), (96, 108), -1.2)
-    _arm(a, (142, 104), (154, 112), (150, 100), -0.4)
-    _neck(a, (122, 104), (116, 92))
-    _head_back(a, 114, 80, 13)
-    # the turning cheek, so the spin reads
-    a.shape(circ(126, 84, 6), SKIN, SKIN_S, lighten(SKIN, .4), ow=2.0, band=2)
+    hip = (118, 142)
+    _leg(a, hip, (108, 164), (102, 182), flex=-8, sc=0.5, thick=14)
+    # the sweeping leg, up and around, not a level side kick
+    _leg(a, hip, (150, 118), (172, 96), flex=8, sc=0.5, thick=14)
+    arc = []
+    for deg in range(150, 20, -16):
+        arc.append((128 + 58 * math.cos(math.radians(deg)), 118 + 46 * math.sin(math.radians(deg))))
+    arrow(a, arc, BLUE_S, 10, 18, outline=INKC, ink_ow=3.8, spread=0.85)
+    _gi(a, [(96, 108), (104, 92), (142, 96), (148, 112), (136, 150), (108, 152)])
+    _belt(a, 120, 128, 32)
+    _arm(a, (108, 108), (96, 116), (100, 104), -1.2, thick=10, fist_s=14)
+    _arm(a, (138, 104), (152, 112), (148, 100), -0.3, thick=10, fist_s=14)
+    _neck(a, (120, 98), (118, 88))
+    _head_back(a, 116, 74, 16)
     return _finish_in(a)
 
 
@@ -186,34 +186,37 @@ def spinning_finisher():
 
 
 def side_kick_drive():
-    """#4. Side-on. Standing leg down, side kick straight out, heel leading, guard in front."""
+    """#4. Hip turned, body side-on. Kicking leg straight and level at chest height. Blade leads."""
     a = Art()
-    arrow(a, [(72, 150), (88, 164)], BLUE_S, 8, 14, outline=INKC, ink_ow=3.4, spread=0.8)
-    hip = (112, 138)
-    _leg(a, hip, (104, 158), (100, 172), flex=-8)
-    _leg(a, hip, (142, 126), (168, 116), flex=0)
-    _gi(a, [(96, 104), (126, 100), (128, 128), (118, 148), (98, 146), (92, 120)])
-    _belt(a, 110, 126, 22)
-    _arm(a, (114, 108), (128, 112), (134, 100), -0.3)
-    _arm(a, (110, 116), (122, 122), (128, 112), -0.2)
-    _neck(a, (108, 102), (106, 92))
-    _head_profile(a, 104, 80, 13, face=1)
+    hip = (108, 118)
+    _leg(a, (102, 140), (96, 162), (92, 180), flex=-8, sc=0.5, thick=14)
+    # straight and level: hip, knee and foot share one height. Foot cocked so the edge leads.
+    _leg(a, hip, (142, 118), (176, 118), flex=78, sc=0.48, thick=14)
+    _gi(a, [(88, 96), (124, 90), (128, 118), (116, 148), (94, 150), (84, 118)])
+    _belt(a, 106, 124, 28)
+    _arm(a, (112, 102), (126, 108), (132, 98), -0.2, thick=10, fist_s=14)
+    _arm(a, (108, 112), (120, 120), (126, 110), -0.15, thick=10, fist_s=14)
+    _neck(a, (104, 94), (100, 84))
+    _head_profile(a, 98, 72, 16, face=1)
     return _finish_in(a)
 
 
 def hook_kick():
-    """#5. One standing leg, one hook with the heel pulling back. No pad. Guard up."""
+    """#5. Leg extended to the side, heel snaps back. A small curve shows that snap."""
     a = Art()
-    hip = (118, 140)
-    _leg(a, hip, (110, 158), (106, 172), flex=-8)
-    # thigh forward, shin folds back so the heel returns
-    _leg(a, hip, (150, 112), (136, 96), flex=36, sc=0.42)
-    _gi(a, [(100, 106), (132, 102), (134, 130), (122, 150), (102, 148), (96, 122)])
-    _belt(a, 114, 128, 22)
-    _arm(a, (116, 110), (130, 108), (136, 98), -0.4)
-    _arm(a, (110, 118), (122, 120), (128, 110), -0.3)
-    _neck(a, (112, 104), (110, 94))
-    _head_profile(a, 108, 82, 13, face=1)
+    hip = (108, 140)
+    _leg(a, hip, (100, 162), (96, 180), flex=-8, sc=0.5, thick=14)
+    # thigh out, heel returns
+    knee = (158, 118)
+    heel = (142, 96)
+    _leg(a, hip, knee, heel, flex=42, sc=0.5, thick=14)
+    arrow(a, [(168, 108), (156, 90), (140, 84)], BLUE_S, 8, 14, outline=INKC, ink_ow=3.4, spread=0.82)
+    _gi(a, [(90, 100), (128, 94), (132, 122), (120, 150), (96, 152), (86, 120)])
+    _belt(a, 108, 126, 30)
+    _arm(a, (114, 106), (128, 110), (134, 98), -0.3, thick=10, fist_s=14)
+    _arm(a, (108, 114), (120, 122), (126, 112), -0.2, thick=10, fist_s=14)
+    _neck(a, (104, 98), (100, 88))
+    _head_profile(a, 98, 76, 16, face=1)
     return _finish_in(a)
 
 
@@ -343,6 +346,48 @@ def compare_sheet():
     print('compare', img.size, path)
 
 
+def compare_sheet_2():
+    """before sample-5 beside after, for #1 #4 #5 only. Large, plus 40, 36 and 30."""
+    from PIL import Image, ImageDraw, ImageFont
+    out = os.path.join(HERE, '..', 'preview')
+    old = os.path.join(HERE, '..', 'superseded', 'sample-5')
+    font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 16)
+    tiny = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 13)
+    names = [
+        ('#1 Spin Kick', 'spin-kick-full.png'),
+        ('#4 Side Kick', 'side-kick-drive-full.png'),
+        ('#5 Hook Kick', 'hook-kick-full.png'),
+    ]
+    big = 220
+    row = 310
+    pad = 12
+    img = Image.new('RGB', (16 + 2 * 250, 36 + len(names) * row), (28, 26, 24))
+    d = ImageDraw.Draw(img)
+    d.text((pad, 8), 'G2B-44 #1 #4 #5. Before sample-5 (left), after (right). Large, then 40, 36, 30.', fill=(250, 246, 236), font=tiny)
+    for i, (label, fn) in enumerate(names):
+        y = 32 + i * row
+        d.text((pad, y), label, fill=(250, 246, 236), font=font)
+        for j, folder in enumerate((old, out)):
+            im = Image.open(os.path.join(folder, fn)).convert('RGBA')
+            x = pad + j * 250
+            d.text((x, y + 18), 'before' if j == 0 else 'after', fill=(232, 196, 120), font=tiny)
+            tile = Image.new('RGBA', (big, big), (28, 26, 24, 255))
+            tile.alpha_composite(im.resize((big, big), Image.LANCZOS))
+            img.paste(tile.convert('RGB'), (x, y + 34))
+            sx = x
+            sy = y + 34 + big + 4
+            for sz in (40, 36, 30):
+                one = im.resize((sz, sz), Image.LANCZOS)
+                d.text((sx, sy), str(sz), fill=(200, 190, 170), font=tiny)
+                box = Image.new('RGBA', (sz, sz), (28, 26, 24, 255))
+                box.alpha_composite(one)
+                img.paste(box.convert('RGB'), (sx, sy + 14))
+                sx += max(sz, 28) + 6
+    path = os.path.join(out, 'sheet-g2b44-compare-2.png')
+    img.save(path)
+    print('compare2', img.size)
+
+
 if __name__ == '__main__':
     out = os.path.join(HERE, '..', 'preview')
     os.makedirs(out, exist_ok=True)
@@ -351,3 +396,4 @@ if __name__ == '__main__':
         print(n)
     sheet()
     compare_sheet()
+    compare_sheet_2()

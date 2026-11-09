@@ -17,7 +17,7 @@ Draft. Not approved. Not exported into the game.
 
 Sheet: `preview/sheet-g2b44-samples.png`. Approved Jumping Spins and the Strike slot picture sit beside these six. Each is shown large, then in colour and in grey at 128, 96, 64, 40, and 30.
 
-`preview/sheet-g2b44-compare.png` puts commit d4faa2ba beside this pass, large, plus true 40 and 30. That older set is in `superseded/sample-4/`.
+`preview/sheet-g2b44-compare-2.png` puts the previous #1, #4, and #5 beside this pass, large, plus true 40, 36, and 30. Those three older pictures are in `superseded/sample-5/`. #3 and #6 were not redrawn. #7 only lost the skin patch on the back of the head.
 
 #1 is turned mid-spin (back and shoulder). #4 is side-on. #5 is one hook and one standing leg, with the arms in guard. #6 holds the fists at the chest. #7 is seen from the back. #3 is the same horizontal scissor, drawn larger. Every figure in this pass stays inside the gold ring.
 
