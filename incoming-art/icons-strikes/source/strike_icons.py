@@ -18,11 +18,11 @@ SLOTS = os.path.normpath(os.path.join(HERE, '..', '..', 'icons-slots', 'source')
 sys.path.insert(0, SLOTS)
 
 from seal_icons import (  # noqa: E402
-    BELT_OPTIONS, BLUE_S, CREAM, GOLD, GOLD_S, GSH, INKC, PAD, PAD_S, PANT, RIMS,
-    SKIN, SKIN_S, arrow, burst, chaikin, head_front, hip_high_kick, kick_leg,
-    lighten, medallion, place, sleeve, wide_clip,
+    BELT_OPTIONS, BLUE_S, CREAM, GOLD, GOLD_S, GSH, HAIR, HAIR_S, INKC, PANT, RIMS,
+    SKIN, SKIN_S, arrow, chaikin, fist, head_front, kick_leg, lighten, limb,
+    medallion, place, sleeve, wide_clip,
 )
-from toon import Art  # noqa: E402
+from toon import Art, circ  # noqa: E402
 
 PINE, PINE_S = BELT_OPTIONS['pine']
 # Same growth as the approved Jumping Spins figure, so these sit at the same size in the slot.
@@ -52,34 +52,44 @@ def _shin_shoe(a, knee, ankle, flex, sc=0.52):
     return G([(52, 40)], fl)[0]
 
 
-def _support(a, hx=118):
-    """the same standing leg as Jumping Spins: a small knee bend, shoe, no toes."""
-    stand = ((-8, 154), (6, 174), (-6, 200))
-    (h0, k0, a0) = [(hx + dx, y) for dx, y in stand]
-    sleeve(a, h0, k0, 13, 11.5, ow=4.6, shade=GSH, band=6)
-    sleeve(a, k0, (a0[0], a0[1] - 10), 11.5, 10.5, ow=4.6, shade=GSH, band=6)
-    kick_leg(a, a0, 90, 0, .55, 14, None, r0=21, r1=18, gow=4.6, gshade=GSH)
+def _leg(a, hip, knee, ankle, flex=0, sc=0.40):
+    """thigh from the hip, shin and one toeless shoe. The thigh is drawn over the knee."""
+    _shin_shoe(a, knee, ankle, flex, sc)
+    sleeve(a, hip, knee, 11, 9.5, ow=4.2, shade=GSH, band=5)
 
 
-def _torso(a, hx=118, ttop=86, belt_y=132, hip=160, sw=46, ww=38, hr=22, lean=0):
-    jack = chaikin([
-        (hx - sw / 2 - lean, ttop + 12), (hx - sw / 2 + 5 - lean, ttop),
-        (hx + sw / 2 - 5 - lean, ttop), (hx + sw / 2 - lean, ttop + 12),
-        (hx + ww / 2, belt_y), (hx - ww / 2, belt_y),
-    ], 2)
-    pants = chaikin([
-        (hx - ww / 2 - 1, belt_y - 4), (hx + ww / 2 + 1, belt_y - 4),
-        (hx + ww / 2 + 3, hip - 6), (hx + ww / 2 - 4, hip),
-        (hx - ww / 2 + 4, hip), (hx - ww / 2 - 3, hip - 6),
-    ], 2)
-    a.shape(poly_of(pants), PANT, GSH, (255, 255, 250), ow=4.6, band=6)
-    a.shape(poly_of(jack), CREAM_GI, GSH, (255, 255, 250), ow=4.6, band=6)
-    a.shape(poly_of_rect(hx, belt_y, ww + 6, 14, 5), PINE, PINE_S, lighten(PINE, .3), ow=3.0, band=3)
-    from seal_icons import limb
-    limb(a, (hx - lean * .5, ttop - 4), (hx - lean * .2, ttop + 8), 8, 8)
-    head_front(a, hx - lean, ttop - 26, hr)
-    from seal_icons import forearm_block
-    forearm_block(a, (hx - sw / 2 - 10 - lean, belt_y), (hx - sw / 2 - 6 - lean, ttop + 8), 22, -math.pi / 2, 1, r_el=10, r_cuff=9, gband=6, gow=4.6, gshade=GSH)
+def _arm(a, shoulder, elbow, hand, ang):
+    """sleeve from the shoulder, skin forearm, one mitten fist. Nothing else."""
+    sleeve(a, shoulder, elbow, 8, 7, ow=4.0, shade=GSH, band=4)
+    limb(a, elbow, hand, 5.5, 5.2)
+    fist(a, hand[0], hand[1], 12, ang)
+
+
+def _neck(a, top, head):
+    limb(a, top, head, 6, 6)
+
+
+def _belt(a, cx, cy, w=26):
+    a.shape(poly_of_rect(cx, cy, w, 10, 4), PINE, PINE_S, lighten(PINE, .3), ow=2.6, band=3)
+
+
+def _head_profile(a, cx, cy, r, face=1):
+    """side view. face=1 looks to the right. One eye, no second face."""
+    a.shape(circ(cx, cy, r), SKIN, SKIN_S, lighten(SKIN, .4), ow=3.6, band=3)
+    a.shape(circ(cx - face * r * 0.35, cy - r * 0.2, r * 0.55), HAIR, HAIR_S, lighten(HAIR, .25), ow=2.2, band=2.5)
+    a.shape(circ(cx + face * r * 0.32, cy - r * 0.02, r * 0.11), INKC, None, None, ow=0)
+    a.shape(circ(cx + face * r * 0.78, cy + r * 0.08, r * 0.16), SKIN, SKIN_S, lighten(SKIN, .35), ow=2.0, band=2)
+
+
+def _head_back(a, cx, cy, r):
+    """back of the head: hair, two ears, no face."""
+    a.shape(circ(cx, cy, r), HAIR, HAIR_S, lighten(HAIR, .25), ow=3.6, band=3)
+    for s in (-1, 1):
+        a.shape(circ(cx + s * r * 0.92, cy + r * 0.12, r * 0.2), SKIN, SKIN_S, lighten(SKIN, .4), ow=2.0, band=2)
+
+
+def _gi(a, pts):
+    a.shape(poly_of(chaikin(pts, 2)), CREAM_GI, GSH, (255, 255, 250), ow=4.2, band=5)
 
 
 def poly_of(pts):
@@ -96,45 +106,36 @@ CREAM_GI = (250, 246, 236)
 
 
 def spin_kick():
-    """#1. The finishing kick of combo 1: a spinning outside kick. Not a jump.
-    docs/curriculum.md line 46 names it. The line does not give the angle or the height."""
+    """#1. Mid-spin. Back and one shoulder are turning. One standing leg, one outside kick."""
     a = Art()
-    hx = 114
-    _support(a, hx)
-    hip_pt = (hx + 2, 152)
-    # across at chest height, so it is not the steep kick on Jumping Spins and not the front kick on the slot picture.
-    # That height is a reading of "outside", which the curriculum lists apart from "front". The number is not in the docs.
-    reach, deg = 66.0, 22.0
-    ankle = (hip_pt[0] + reach * math.cos(math.radians(deg)), hip_pt[1] - reach * math.sin(math.radians(deg)))
-    knee = ((hip_pt[0] + ankle[0]) / 2, (hip_pt[1] + ankle[1]) / 2)
-    sole = hip_high_kick(a, hip_pt, knee, ankle, flex=14)
-    burst(a, sole[0], sole[1], 6, 12, 6, .12)
-    _torso(a, hx, lean=8)
-    # one spin. The arrow sits in the cream. Combo 2 is the one with three jumping spins.
-    arrow(a, [(hx - 40, 170), (hx - 6, 190), (hx + 30, 172)], BLUE_S, 14, 28, outline=INKC, ink_ow=4.6, spread=0.9)
-    return _finish(a)
+    arrow(a, [(78, 158), (96, 174), (78, 186)], BLUE_S, 9, 16, outline=INKC, ink_ow=3.6, spread=0.8)
+    hip = (124, 136)
+    _leg(a, hip, (114, 156), (108, 172), flex=-8)
+    _leg(a, hip, (148, 122), (168, 112), flex=0)
+    # back of the gi, right shoulder coming around
+    _gi(a, [(108, 112), (146, 96), (150, 124), (132, 146), (110, 144), (100, 124)])
+    _belt(a, 124, 128)
+    _arm(a, (112, 110), (100, 118), (96, 108), -1.2)
+    _arm(a, (142, 104), (154, 112), (150, 100), -0.4)
+    _neck(a, (122, 104), (116, 92))
+    _head_back(a, 114, 80, 13)
+    # the turning cheek, so the spin reads
+    a.shape(circ(126, 84, 6), SKIN, SKIN_S, lighten(SKIN, .4), ow=2.0, band=2)
+    return _finish_in(a)
 
 
 def butterfly_flow():
-    """#3. Jay: body near horizontal, in the air, legs scissoring. The arm starts on the shoulder.
-    Both thighs start inside the hip."""
+    """#3. Horizontal butterfly, drawn larger. Two arms from the shoulders, two legs from one hip."""
     a = Art()
-    from seal_icons import forearm_block, limb
-    hip = (150, 128)
-    # scissor from one hip. Shoes stop inside the cream.
-    sleeve(a, hip, (168, 112), 11, 9, ow=4.2, shade=GSH, band=5)
-    _shin_shoe(a, (168, 112), (182, 102), 0, 0.4)
-    sleeve(a, hip, (168, 146), 11, 9, ow=4.2, shade=GSH, band=5)
-    _shin_shoe(a, (168, 146), (182, 156), 0, 0.4)
-    body = chaikin([(86, 116), (158, 108), (168, 126), (158, 146), (86, 138)], 2)
-    a.shape(poly_of(body), CREAM_GI, GSH, (255, 255, 250), ow=4.4, band=5)
-    a.shape(poly_of_rect(122, 128, 14, 28, 5), PINE, PINE_S, lighten(PINE, .3), ow=2.8, band=3)
-    limb(a, (96, 120), (82, 114), 6, 6)
-    head_front(a, 74, 112, 16)
-    sleeve(a, (112, 114), (128, 104), 8, 7, ow=4.0, shade=GSH, band=4)
-    limb(a, (128, 104), (136, 98), 5.5, 5.5)
-    from seal_icons import fist
-    fist(a, 142, 94, 13, -0.3)
+    hip = (158, 126)
+    _leg(a, hip, (174, 106), (186, 96), flex=0, sc=0.44)
+    _leg(a, hip, (174, 148), (186, 160), flex=0, sc=0.44)
+    _gi(a, [(72, 110), (166, 100), (176, 124), (166, 150), (72, 142)])
+    _belt(a, 116, 126, 18)
+    _arm(a, (100, 112), (118, 100), (130, 94), -0.4)
+    _arm(a, (100, 140), (118, 152), (130, 158), 0.6)
+    _neck(a, (84, 122), (74, 116))
+    head_front(a, 62, 112, 17)
     return _finish_in(a)
 
 
@@ -157,97 +158,63 @@ def lunge():
     body = chaikin([(104, 96), (140, 102), (138, 132), (128, 152), (112, 150), (100, 122)], 2)
     a.shape(poly_of(body), CREAM_GI, GSH, (255, 255, 250), ow=4.4, band=5)
     a.shape(poly_of_rect(122, 130, 30, 12, 4), PINE, PINE_S, lighten(PINE, .3), ow=2.8, band=3)
-    # sleeves start on the shoulder edge so the arms read as attached
-    from seal_icons import fist
-    sleeve(a, (108, 104), (98, 90), 8, 7, ow=4.0, shade=GSH, band=4)
-    limb(a, (98, 90), (92, 82), 5.5, 5.5)
-    fist(a, 88, 76, 13, -1.1)
-    sleeve(a, (136, 106), (148, 94), 8, 7, ow=4.0, shade=GSH, band=4)
-    limb(a, (148, 94), (154, 86), 5.5, 5.5)
-    fist(a, 158, 78, 13, -0.4)
-    limb(a, (120, 96), (118, 84), 6, 6)
-    head_front(a, 114, 72, 15)
+    # guard held in front of the chest, under the chin
+    _arm(a, (112, 116), (104, 124), (112, 112), -1.1)
+    _arm(a, (132, 118), (140, 126), (132, 114), -0.3)
+    _neck(a, (120, 98), (116, 86))
+    head_front(a, 114, 74, 14)
     return _finish_in(a)
 
 
 def spinning_finisher():
-    """#7. Spinning hook kick. Standing leg straight and planted. Hooking leg at head height,
-    heel leading. Torso turned. Ring drawn first so it sits behind the figure."""
+    """#7. Back to the viewer. One straight planted leg. One high hook, heel leading. Guard from the shoulders."""
     a = Art()
-    from seal_icons import forearm_block, limb
     ring = []
-    for deg in range(40, 40 - 330, -22):
-        ring.append((128 + 66 * math.cos(math.radians(deg)), 132 + 62 * math.sin(math.radians(deg))))
-    arrow(a, ring, BLUE_S, 10, 18, outline=INKC, ink_ow=4.0, spread=0.8)
-    hip = (126, 138)
-    # one straight standing leg, foot planted
-    foot_s = (122, 178)
-    sleeve(a, hip, foot_s, 11, 9, ow=4.2, shade=GSH, band=5)
-    _shin_shoe(a, (124, 160), foot_s, -8, 0.46)
-    # hook: shin drawn first, thigh overlaps the knee, heel at head height
-    knee_h = (156, 108)
-    foot_h = (146, 88)
-    _shin_shoe(a, knee_h, foot_h, 40, 0.46)
-    sleeve(a, hip, knee_h, 12, 10, ow=4.2, shade=GSH, band=5)
-    # back of the gi, turned, shoulders not square to the camera
-    # shoulders twisted: the far shoulder is high, the head looks back over the near shoulder
-    body = chaikin([(100, 118), (152, 90), (156, 122), (134, 150), (110, 146), (94, 126)], 2)
-    a.shape(poly_of(body), CREAM_GI, GSH, (255, 255, 250), ow=4.4, band=5)
-    a.shape(poly_of_rect(126, 128, 24, 11, 4), PINE, PINE_S, lighten(PINE, .3), ow=2.8, band=3)
-    from seal_icons import fist
-    sleeve(a, (108, 116), (96, 100), 8, 7, ow=4.0, shade=GSH, band=4)
-    limb(a, (96, 100), (90, 90), 5.5, 5.5)
-    fist(a, 86, 82, 12, -1.2)
-    sleeve(a, (146, 96), (158, 86), 8, 7, ow=4.0, shade=GSH, band=4)
-    limb(a, (158, 86), (162, 78), 5.5, 5.5)
-    fist(a, 166, 72, 12, -0.2)
-    limb(a, (112, 108), (100, 92), 6, 6)
-    head_front(a, 96, 80, 14)
+    for deg in range(30, 30 - 320, -20):
+        ring.append((128 + 64 * math.cos(math.radians(deg)), 130 + 60 * math.sin(math.radians(deg))))
+    arrow(a, ring, BLUE_S, 9, 16, outline=INKC, ink_ow=3.6, spread=0.8)
+    hip = (128, 138)
+    _leg(a, hip, (128, 158), (128, 174), flex=-10)
+    _leg(a, hip, (150, 112), (168, 84), flex=50, sc=0.38)
+    _gi(a, [(108, 108), (112, 98), (144, 98), (148, 108), (140, 146), (116, 146)])
+    _belt(a, 128, 124, 28)
+    _arm(a, (116, 112), (104, 120), (108, 110), -1.2)
+    _arm(a, (140, 112), (150, 122), (146, 112), -0.4)
+    _neck(a, (128, 100), (128, 90))
+    _head_back(a, 128, 78, 13)
     return _finish_in(a)
 
 
 def side_kick_drive():
-    """#4. The step-behind side kick that drives forward. Heel toward the target, a short straight arrow."""
+    """#4. Side-on. Standing leg down, side kick straight out, heel leading, guard in front."""
     a = Art()
-    hx = 108
-    _support(a, hx)
-    hip_pt = (hx + 8, 150)
-    # nearly level side kick, a few degrees up so the heel is at hip height
-    reach, deg = 68.0, 8.0
-    ankle = (hip_pt[0] + reach * math.cos(math.radians(deg)), hip_pt[1] - reach * math.sin(math.radians(deg)))
-    knee = ((hip_pt[0] + ankle[0]) / 2, (hip_pt[1] + ankle[1]) / 2)
-    sole = hip_high_kick(a, hip_pt, knee, ankle, flex=8)
-    burst(a, sole[0], sole[1], 6, 12, 6, .1)
-    # drive arrow sits ABOVE the shin, head past the heel, so it does not replace the leg
-    arrow(a, [(hip_pt[0] + 18, hip_pt[1] - 22), (sole[0] - 4, sole[1] - 20), (sole[0] + 14, sole[1] - 18)],
-          BLUE_S, 12, 22, outline=INKC, ink_ow=4.6, spread=0.85)
-    _torso(a, hx, lean=0)
-    return _finish(a)
+    arrow(a, [(72, 150), (88, 164)], BLUE_S, 8, 14, outline=INKC, ink_ow=3.4, spread=0.8)
+    hip = (112, 138)
+    _leg(a, hip, (104, 158), (100, 172), flex=-8)
+    _leg(a, hip, (142, 126), (168, 116), flex=0)
+    _gi(a, [(96, 104), (126, 100), (128, 128), (118, 148), (98, 146), (92, 120)])
+    _belt(a, 110, 126, 22)
+    _arm(a, (114, 108), (128, 112), (134, 100), -0.3)
+    _arm(a, (110, 116), (122, 122), (128, 112), -0.2)
+    _neck(a, (108, 102), (106, 92))
+    _head_profile(a, 104, 80, 13, face=1)
+    return _finish_in(a)
 
 
 def hook_kick():
-    """#5. Hook kick. The curriculum names a step-behind hook kick and does not give the angle.
-    The heel is drawn large and in open space so the return reads at 30 px. A pad stands in for the guard."""
+    """#5. One standing leg, one hook with the heel pulling back. No pad. Guard up."""
     a = Art()
-    hx = 98
-    _support(a, hx)
-    hip_pt = (hx + 2, 164)
-    knee = (hip_pt[0] + 48, hip_pt[1] - 18)
-    # shin folds back and up. The shoe is large and sits in the cream, clear of the head and the fist.
-    ankle = (knee[0] - 4, knee[1] - 34)
-    from toon import poly, rrect_pts
-    a.shape(poly(rrect_pts(knee[0] + 26, knee[1] + 4, 16, 32, 7)), PAD, PAD_S, lighten(PAD, .35), ow=3.2, band=4)
-    # arrow first, so the returning shoe is drawn on top of it
-    arrow(a, [(hip_pt[0] - 6, hip_pt[1] - 36), (knee[0] - 16, knee[1] - 40), (ankle[0] - 18, ankle[1] - 8)],
-          BLUE_S, 12, 26, outline=INKC, ink_ow=4.6, spread=0.92)
-    dx, dy = knee[0] - ankle[0], knee[1] - ankle[1]
-    dist = math.hypot(dx, dy)
-    ang = math.degrees(math.atan2(-dy / dist, -dx / dist))
-    # bigger shoe than the other icons, so the returning heel is still a shape at 30 px
-    kick_leg(a, ankle, ang, 0, 1.0, dist / 1.0, None, r0=15, r1=11, gow=4.6, gshade=GSH)
-    sleeve(a, hip_pt, knee, 15, 12.5, ow=4.6, shade=GSH, band=6)
-    _torso(a, hx, lean=0)
-    return _finish(a)
+    hip = (118, 140)
+    _leg(a, hip, (110, 158), (106, 172), flex=-8)
+    # thigh forward, shin folds back so the heel returns
+    _leg(a, hip, (150, 112), (136, 96), flex=36, sc=0.42)
+    _gi(a, [(100, 106), (132, 102), (134, 130), (122, 150), (102, 148), (96, 122)])
+    _belt(a, 114, 128, 22)
+    _arm(a, (116, 110), (130, 108), (136, 98), -0.4)
+    _arm(a, (110, 118), (122, 120), (128, 110), -0.3)
+    _neck(a, (112, 104), (110, 94))
+    _head_profile(a, 108, 82, 13, face=1)
+    return _finish_in(a)
 
 
 ALL = {
@@ -329,6 +296,53 @@ def sheet():
     print('sheet', img.size)
 
 
+def compare_sheet():
+    """before (sample-4, commit d4faa2ba) beside after, large, plus true 40 and 30."""
+    from PIL import Image, ImageDraw, ImageFont
+    out = os.path.join(HERE, '..', 'preview')
+    old = os.path.join(HERE, '..', 'superseded', 'sample-4')
+    font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 16)
+    tiny = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 13)
+    names = [
+        ('#1 Spin Kick', 'spin-kick-full.png'),
+        ('#3 Butterfly', 'butterfly-flow-full.png'),
+        ('#4 Side Kick', 'side-kick-drive-full.png'),
+        ('#5 Hook Kick', 'hook-kick-full.png'),
+        ('#6 Lunge', 'lunge-full.png'),
+        ('#7 Spinning Finisher', 'spinning-finisher-full.png'),
+    ]
+    big = 200
+    row = 280
+    pad = 12
+    H = 36 + len(names) * row
+    W = 16 + 2 * 230
+    img = Image.new('RGB', (W, H), (28, 26, 24))
+    d = ImageDraw.Draw(img)
+    d.text((pad, 8), 'G2B-44 before d4faa2ba (left) and after (right). Large, then 40 and 30.', fill=(250, 246, 236), font=tiny)
+    for i, (label, fn) in enumerate(names):
+        y = 32 + i * row
+        d.text((pad, y), label, fill=(250, 246, 236), font=font)
+        for j, folder in enumerate((old, out)):
+            im = Image.open(os.path.join(folder, fn)).convert('RGBA')
+            x = pad + j * 230
+            d.text((x, y + 18), 'before' if j == 0 else 'after', fill=(232, 196, 120), font=tiny)
+            tile = Image.new('RGBA', (big, big), (28, 26, 24, 255))
+            tile.alpha_composite(im.resize((big, big), Image.LANCZOS))
+            img.paste(tile.convert('RGB'), (x, y + 34))
+            sx = x
+            sy = y + 34 + big + 4
+            for sz in (40, 30):
+                one = im.resize((sz, sz), Image.LANCZOS)
+                d.text((sx, sy), str(sz), fill=(200, 190, 170), font=tiny)
+                box = Image.new('RGBA', (sz, sz), (28, 26, 24, 255))
+                box.alpha_composite(one)
+                img.paste(box.convert('RGB'), (sx, sy + 14))
+                sx += sz + 8
+    path = os.path.join(out, 'sheet-g2b44-compare.png')
+    img.save(path)
+    print('compare', img.size, path)
+
+
 if __name__ == '__main__':
     out = os.path.join(HERE, '..', 'preview')
     os.makedirs(out, exist_ok=True)
@@ -336,3 +350,4 @@ if __name__ == '__main__':
         fn().save(os.path.join(out, n + '-full.png'))
         print(n)
     sheet()
+    compare_sheet()

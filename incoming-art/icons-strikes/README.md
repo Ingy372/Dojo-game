@@ -17,7 +17,9 @@ Draft. Not approved. Not exported into the game.
 
 Sheet: `preview/sheet-g2b44-samples.png`. Approved Jumping Spins and the Strike slot picture sit beside these six. Each is shown large, then in colour and in grey at 128, 96, 64, 40, and 30.
 
-The pass before this one is in `superseded/sample-3/`. The upright Butterfly Flow is in `superseded/sample-2-unconfirmed/`. The first three drafts are in `superseded/sample-1/`.
+`preview/sheet-g2b44-compare.png` puts commit d4faa2ba beside this pass, large, plus true 40 and 30. That older set is in `superseded/sample-4/`.
+
+#1 is turned mid-spin (back and shoulder). #4 is side-on. #5 is one hook and one standing leg, with the arms in guard. #6 holds the fists at the chest. #7 is seen from the back. #3 is the same horizontal scissor, drawn larger. Every figure in this pass stays inside the gold ring.
 
 **WHY.** #3 was waiting on Jay's pose. He answered: draw the butterfly kick, body flat, legs scissoring, not another Jumping Spins. #6 and #7 are the last two Strikes in the live list.
 
