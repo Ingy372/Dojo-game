@@ -16,25 +16,24 @@ export function defaultStrikeDef(defs: readonly StrikeDef[]): StrikeDef | undefi
 }
 
 /**
- * The kick combo numbers a student has had signed off. Combos come in curriculum order and each
- * one unlocks the next Strike (the same order `buildTraining` uses), so the nth kick-combo
- * requirement is combo n.
+ * The belts whose kick combo a student has had signed off. A kick combo belongs to the belt it is
+ * learned at (docs/curriculum.md: #1 White, #2 Yellow, #3 Orange), so each Strike names its belt
+ * in content/abilities/strikes.json and is earned when that belt's kick-combo requirement is
+ * signed off (belts below the current one count as signed off, see `buildTraining`).
  */
-export function signedOffCombos(training: TrainingState): Set<number> {
-  const out = new Set<number>();
-  training.abilities.filter((a) => a.kind === 'strike').forEach((a, i) => {
-    if (a.unlocked) out.add(i + 1);
-  });
+export function signedOffKickBelts(training: TrainingState): Set<string> {
+  const out = new Set<string>();
+  for (const a of training.abilities) if (a.kind === 'strike' && a.unlocked) out.add(a.requirement.belt);
   return out;
 }
 
 /**
- * The Strike ids a student can equip besides the default, oldest first: each Strike whose kick
- * combo is signed off. The default (Spin Kick) is never listed: it is what the slot holds when it is empty.
+ * The Strike ids a student can equip besides the default, oldest first: each Strike whose belt's
+ * kick combo is signed off. The default (Spin Kick) is never listed: it is what the slot holds when it is empty.
  */
 export function earnedStrikes(training: TrainingState, defs: readonly StrikeDef[]): string[] {
-  const signed = signedOffCombos(training);
-  return defs.filter((s) => !s.default && signed.has(s.combo)).sort((a, b) => a.combo - b.combo).map((s) => s.id);
+  const signed = signedOffKickBelts(training);
+  return defs.filter((s) => !s.default && signed.has(s.belt)).sort((a, b) => a.combo - b.combo).map((s) => s.id);
 }
 
 /**

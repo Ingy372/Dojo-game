@@ -1,5 +1,5 @@
 {
-  "_note": "R-PROGRESSION-BETA PB-03. the Strikes a student can put in the Strike slot. Spin Kick is the default (nothing equipped) and copies today's Strike in config.ts COMBAT.strike exactly; a test keeps them equal. combo = the kick combo number whose teacher sign-off unlocks the Strike (Spin Kick has none: everyone has it). Every Strike costs 30 Focus (Strike cost never goes below 10). hits = the Strike's hits in order. strength is a share of Power like COMBAT.strike.strength; delayTicks counts from the button press (20 ticks = 1 second). reach, lungeTiles and recoveryTicks are as in COMBAT.strike. legacyIds = the old Strike ids (the abilities.json 'strikes' list, which is kept one release as the migration source) that now mean this Strike. Old strikes[n] was the kick combo n+1 unlock, so the mapping is by combo number: follow-up-kick (combo 1) -> spin-kick, quick-combo (combo 2) -> jumping-spins. Jumping Spins and Butterfly Flow numbers are PLACEHOLDERS until PB-09 (balance run). Rules from the redesign: all three Jumping Spins hits together beat Spin Kick's one hit, and the first is lighter than Spin Kick's; Butterfly Flow hits harder than Spin Kick and lands later.",
+  "_note": "R-PROGRESSION-BETA PB-03. the Strikes a student can put in the Strike slot. Spin Kick is the default (nothing equipped) and copies today's Strike in config.ts COMBAT.strike exactly; a test keeps them equal. combo = the kick combo number whose teacher sign-off unlocks the Strike (Spin Kick has none: everyone has it). belt = the belt that combo is learned at (docs/curriculum.md, Kick combos: #1 White, #2 Yellow, #3 Orange); a test checks it against the kick requirement of that belt in every fixture, so the combo-to-belt mapping lives here and cannot drift. Every Strike costs 30 Focus (Strike cost never goes below 10). hits = the Strike's hits in order. strength is a share of Power like COMBAT.strike.strength; delayTicks counts from the button press (20 ticks = 1 second). reach, lungeTiles and recoveryTicks are as in COMBAT.strike. legacyIds = the old Strike ids (the abilities.json 'strikes' list, which is kept one release as the migration source) that now mean this Strike. Old strikes[n] was the kick combo n+1 unlock, so the mapping is by combo number: follow-up-kick (combo 1) -> spin-kick, quick-combo (combo 2) -> jumping-spins. Jumping Spins and Butterfly Flow numbers are PLACEHOLDERS until PB-09 (balance run). Rules from the redesign: all three Jumping Spins hits together beat Spin Kick's one hit, and the first is lighter than Spin Kick's; Butterfly Flow hits harder than Spin Kick and lands later.",
   "strikes": [
     {
       "id": "spin-kick",
@@ -7,6 +7,7 @@
       "text": "One big spinning kick.",
       "default": true,
       "combo": 1,
+      "belt": "white",
       "focusCost": 30,
       "hits": [{ "strength": 2.5, "delayTicks": 0 }],
       "reach": 1.4,
@@ -21,6 +22,7 @@
       "text": "Jump and spin three times. Each spin hits harder than the one before.",
       "default": false,
       "combo": 2,
+      "belt": "yellow",
       "focusCost": 30,
       "hits": [
         { "strength": 0.7, "delayTicks": 0 },
@@ -39,6 +41,7 @@
       "text": "Spin the other way. It takes a moment to land, but it hits harder.",
       "default": false,
       "combo": 3,
+      "belt": "orange",
       "focusCost": 30,
       "hits": [{ "strength": 2.8, "delayTicks": 6 }],
       "reach": 1.4,

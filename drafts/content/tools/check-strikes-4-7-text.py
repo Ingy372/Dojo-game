@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """R-G2B-16: check drafts/content/abilities/strikes-4-7-text.json (names and kid text for Strikes #4-7).
 Names are never invented: 'name' must be one of the plan's shape names (R-G2B-strikes-4-7.md) and 'altName' one of the S4 names; neither may equal a Seal rank name
-(no clash with seal #16 Low-High Strike or Drive Back). 'text' 12 words or fewer; 'unlock' 8 words or fewer; 'inDojo' starts 'In the dojo:' and is 12 words or fewer.
+(no clash with seal #16 Low-High Strike or OPEN). 'text' 12 words or fewer; 'unlock' 8 words or fewer; 'inDojo' starts 'In the dojo:' and is 12 words or fewer.
 Kid-text rules: one sentence, no digits, no 'perfect' or pressure words, no injury or body-part or blade words, STRIKE/DASH/COUNTER in capitals, first-grade words in text and unlock.
 Usage: python3 drafts/content/tools/check-strikes-4-7-text.py [file]"""
 import json, re, sys, pathlib, glob
