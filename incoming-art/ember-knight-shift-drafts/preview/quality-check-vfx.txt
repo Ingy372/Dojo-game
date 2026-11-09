@@ -1,0 +1,25 @@
+Draft B effects — second look at the real frames
+
+Danger red: hue under 0.03, strong colour, bright. Clipping: opaque pixels within 8 px of the frame.
+normal-0: danger-red 0, near-white 52, margin L113 R127 T185 B63
+normal-1: danger-red 0, near-white 0, margin L113 R127 T185 B63
+normal-2: danger-red 0, near-white 48, margin L134 R123 T190 B38
+normal-3: danger-red 0, near-white 48, margin L134 R123 T190 B38
+normal-4: danger-red 0, near-white 48, margin L134 R123 T190 B38
+normal-5: danger-red 0, near-white 48, margin L134 R123 T190 B38
+normal-6: danger-red 0, near-white 48, margin L134 R123 T190 B38
+normal-7: danger-red 0, near-white 48, margin L134 R123 T190 B38
+reduced-0: danger-red 0, near-white 52, margin L113 R127 T185 B63
+reduced-1: danger-red 0, near-white 0, margin L113 R127 T185 B63
+reduced-2: danger-red 0, near-white 0, margin L113 R127 T185 B63
+reduced-3: danger-red 0, near-white 41, margin L114 R123 T186 B39
+reduced-4: danger-red 0, near-white 48, margin L135 R123 T190 B38
+reduced-5: danger-red 0, near-white 48, margin L135 R123 T190 B38
+reduced-6: danger-red 0, near-white 48, margin L135 R123 T190 B38
+reduced-7: danger-red 0, near-white 48, margin L135 R123 T190 B38
+Reduced Motion idle frames identical: True
+At 125 px: gold-orange pixels before 701, at 1.25 s 1129.
+Steam-only gold box at 125 px: 34 by 22 px, 72 pixels.
+Shield window, luminance over 200: core low 250 px, core high 342 px. Peak 251 to 251 (the gold ceiling, so the pulse grows the lit area).
+Silhouette check is printed by the render step: alpha overlap with the previous B was 1.000.
+Result: CLEAR
