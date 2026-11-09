@@ -4,8 +4,8 @@ The kit lives in incoming-art/icons-slots/source (project code, already on main)
 
 Ids and sources. Line numbers are in the Delivery Note. Nothing here is a pose the docs did not name.
   spin-kick       Strike #1. docs/curriculum.md:46 spinning outside kick (spin kick). Not a jump.
-  butterfly-flow  Strike #3. docs/curriculum.md:48 names a round kick and a tornado kick
-                  (butterfly kick). The pose is not described. Confirmation required.
+  butterfly-flow  Strike #3. Jay, via the Manager: body horizontal, legs scissoring.
+                  docs/curriculum.md:48 names the butterfly kick.
   side-kick-drive Strike #4. docs/curriculum.md:49 step-behind side kick.
   hook-kick       Strike #5. docs/curriculum.md:50 step-behind hook kick. The returning heel is drawn larger.
 """
@@ -100,21 +100,60 @@ def spin_kick():
 
 
 def butterfly_flow():
-    """#3. A tornado kick (the school's butterfly kick): one leg swings in a round arc,
-    and the spin arrow runs the other way from Jumping Spins (head on the right)."""
+    """#3. Jay, via the Manager: the butterfly kick moment. Body near horizontal, in the air, legs scissoring.
+    docs/curriculum.md:48 names that kick. This pose is Jay's answer, not a guess."""
+    a = Art()
+    from seal_icons import forearm_block, limb
+    hip = (158, 128)
+    # two legs from the same hip, opposite ways. Shoes, no toes. No foot on the ground.
+    hip_high_kick(a, hip, ((hip[0] + 200) / 2, (hip[1] + 78) / 2), (200, 78), flex=12)
+    hip_high_kick(a, hip, ((hip[0] + 188) / 2, (hip[1] + 186) / 2), (188, 186), flex=12)
+    body = chaikin([(62, 122), (150, 108), (172, 126), (150, 150), (62, 142)], 2)
+    a.shape(poly_of(body), CREAM_GI, GSH, (255, 255, 250), ow=4.6, band=6)
+    a.shape(poly_of_rect(118, 130, 16, 36, 5), PINE, PINE_S, lighten(PINE, .3), ow=3.0, band=3)
+    limb(a, (78, 118), (86, 128), 7, 7)
+    head_front(a, 58, 112, 20)
+    forearm_block(a, (96, 104), (112, 96), 16, -0.6, 1, r_el=8, r_cuff=8, gband=5, gow=4.0, gshade=GSH)
+    return _finish(a)
+
+
+def lunge():
+    """#6. Literal ending of combo 6: lunge forward with a chambered jumping front kick.
+    docs/curriculum.md:51. The exact frame (knee still bent, or leg already out) is not drawn in the doc."""
     a = Art()
     hx = 108
+    # front kick, out of the hip. The arrow stays above the shin.
+    hip_f = (hx + 6, 132)
+    ankle = (hip_f[0] + 62, hip_f[1] - 4)
+    knee = ((hip_f[0] + ankle[0]) / 2, (hip_f[1] + ankle[1]) / 2)
+    sole = hip_high_kick(a, hip_f, knee, ankle, flex=8)
+    burst(a, sole[0], sole[1], 5, 11, 5, .1)
+    arrow(a, [(hip_f[0] + 12, hip_f[1] - 26), (ankle[0] - 10, ankle[1] - 22), (ankle[0] + 8, ankle[1] - 20)],
+          BLUE_S, 11, 20, outline=INKC, ink_ow=4.6, spread=0.85)
+    # the other knee is up and the shoe is tucked, so both feet are off the ground
+    sleeve(a, (hx - 2, 146), (hx - 8, 118), 13, 11, ow=4.6, shade=GSH, band=6)
+    kick_leg(a, (hx - 22, 136), 80, 16, 0.7, 20, None, r0=15, r1=12, gow=4.6, gshade=GSH)
+    _torso(a, hx, lean=12, ttop=64, belt_y=108, hip=140)
+    return _finish(a)
+
+
+def spinning_finisher():
+    """#7. Literal finish: a spinning hook kick. The redesign also says the hits go around you.
+    docs/curriculum.md:52 and drafts/planning/R-G2B-strikes-4-7.md:27. Limb angle is not in the doc."""
+    a = Art()
+    hx = 118
+    # ring first, so the figure sits inside it. "Hits all enemies in a ring."
+    ring = []
+    for deg in range(200, 200 - 320, -24):
+        ring.append((hx + 78 * math.cos(math.radians(deg)), 132 + 74 * math.sin(math.radians(deg))))
+    arrow(a, ring, BLUE_S, 11, 22, outline=INKC, ink_ow=4.6, spread=0.85)
     _support(a, hx)
-    # round / tornado sweep: one straight leg out at chest height. Not Jumping Spins' 45-degree line.
+    # hook stays inside the ring, heel coming back, so the spin reads and the leg is not the arrow
     hip_pt = (hx + 4, 148)
-    ankle = (hip_pt[0] + 58, hip_pt[1] - 36)
-    knee = ((hip_pt[0] + ankle[0]) / 2, (hip_pt[1] + ankle[1]) / 2)
-    sole = hip_high_kick(a, hip_pt, knee, ankle, flex=18)
-    burst(a, sole[0], sole[1], 6, 13, 7, .15)
+    knee = (hip_pt[0] + 34, hip_pt[1] - 36)
+    ankle = (knee[0] - 30, knee[1] + 4)
+    hip_high_kick(a, hip_pt, knee, ankle, flex=30)
     _torso(a, hx, lean=6)
-    # spin the other way from Jumping Spins: head on the right, in the cream under the kick, not through the legs
-    pts = [(hx - 10, 176), (hx + 24, 188), (hx + 58, 176)]
-    arrow(a, pts, BLUE_S, 14, 28, outline=INKC, ink_ow=4.6, spread=0.9)
     return _finish(a)
 
 
@@ -167,6 +206,8 @@ ALL = {
     'butterfly-flow': butterfly_flow,
     'side-kick-drive': side_kick_drive,
     'hook-kick': hook_kick,
+    'lunge': lunge,
+    'spinning-finisher': spinning_finisher,
 }
 
 def sheet():
@@ -186,49 +227,55 @@ def sheet():
          ['docs/curriculum.md:46', 'spinning outside kick (spin kick)', 'Not a jump. Angle not in the doc.']),
         ('#3 Butterfly Flow',
          os.path.join(out, 'butterfly-flow-full.png'),
-         ['docs/curriculum.md:48', 'round kick and butterfly kick', 'POSE NOT IN THE DOCS. Confirm.']),
+         ['Jay: show the butterfly kick (via Manager)', 'docs/curriculum.md:48', 'Body horizontal, legs scissoring.']),
         ('#4 Side Kick Drive',
          os.path.join(out, 'side-kick-drive-full.png'),
-         ['docs/curriculum.md:49', 'step-behind side kick', 'Unchanged from the first draft.']),
+         ['docs/curriculum.md:49', 'step-behind side kick', 'Unchanged.']),
         ('#5 Hook Kick',
          os.path.join(out, 'hook-kick-full.png'),
          ['docs/curriculum.md:50', 'step-behind hook kick', 'Returning heel drawn larger.']),
+        ('#6 Lunge',
+         os.path.join(out, 'lunge-full.png'),
+         ['docs/curriculum.md:51', 'chambered jumping front kick', 'Confirmation required: exact frame.']),
+        ('#7 Spinning Finisher',
+         os.path.join(out, 'spinning-finisher-full.png'),
+         ['docs/curriculum.md:52 spinning hook kick', 'R-G2B-strikes-4-7.md:27 ring', 'Confirmation required: limb angle.']),
     ]
-    big = 260
-    col = 390
-    pad = 14
-    H = 1180
+    big = 220
+    col = 430
+    pad = 12
+    H = 760
     W = pad + len(cells) * col
     img = Image.new('RGB', (W, H), (28, 26, 24))
     d = ImageDraw.Draw(img)
-    d.text((pad, 8), 'G2B-44. Two approved references, then samples #1 #3 #4 #5. True 40 and 30, colour then grey. The x4 boxes are the same pixels, enlarged.', fill=(250, 246, 236), font=tiny)
+    d.text((pad, 6), 'G2B-44. Approved Jumping Spins and Strike slot, then #1 #3 #4 #5 #6 #7. Under each: colour, then grey, at 128, 96, 64, 40, 30.', fill=(250, 246, 236), font=tiny)
+    sizes = (128, 96, 64, 40, 30)
     for i, (label, path, cite) in enumerate(cells):
         x = pad + i * col
-        y = 32
+        y = 26
         d.text((x, y), label, fill=(250, 246, 236), font=font)
         im = Image.open(path).convert('RGBA')
         big_im = im.resize((big, big), Image.LANCZOS)
         tile = Image.new('RGBA', (big, big), (28, 26, 24, 255))
         tile.alpha_composite(big_im)
-        img.paste(tile.convert('RGB'), (x, y + 22))
+        img.paste(tile.convert('RGB'), (x, y + 20))
         for n, line in enumerate(cite):
-            d.text((x, y + 24 + big + 2 + n * 15), line, fill=(232, 196, 120), font=tiny)
-        y2 = y + 24 + big + 50
+            d.text((x, y + 22 + big + n * 14), line, fill=(232, 196, 120), font=tiny)
+        y2 = y + 22 + big + 46
         for grey, word in ((False, 'colour'), (True, 'grey')):
-            for sz in (40, 30):
+            d.text((x, y2), word, fill=(200, 190, 170), font=tiny)
+            sx = x
+            for sz in sizes:
                 one = im.resize((sz, sz), Image.LANCZOS)
                 if grey:
                     g = ImageOps.grayscale(one)
                     one = Image.merge('RGBA', (g, g, g, one.split()[-1]))
-                d.text((x, y2), f'{word} {sz} true, then the same pixels x4', fill=(200, 190, 170), font=tiny)
-                true = Image.new('RGBA', (sz, sz), (28, 26, 24, 255))
-                true.alpha_composite(one)
-                img.paste(true.convert('RGB'), (x, y2 + 18))
-                zoom = one.resize((sz * 4, sz * 4), Image.NEAREST)
-                box = Image.new('RGBA', (sz * 4, sz * 4), (28, 26, 24, 255))
-                box.alpha_composite(zoom)
-                img.paste(box.convert('RGB'), (x + sz + 8, y2 + 18))
-                y2 += 18 + sz * 4 + 12
+                box = Image.new('RGBA', (sz, sz + 14), (28, 26, 24, 255))
+                ImageDraw.Draw(box).text((0, 0), str(sz), fill=(200, 190, 170), font=tiny)
+                box.alpha_composite(one, (0, 14))
+                img.paste(box.convert('RGB'), (sx, y2 + 16))
+                sx += sz + 6
+            y2 += 16 + 128 + 8
     img.save(os.path.join(out, 'sheet-g2b44-samples.png'))
     print('sheet', img.size)
 
