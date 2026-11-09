@@ -11,7 +11,7 @@ Source: Jay, head instructor, 2026-10-18. This is the real curriculum. **Game ef
 | 1 | White | A punch (type not stated) | Parry, block, step to the side, double punch | Attack misses; student is off the line and answers with two punches. Teaches avoidance. | Avoid |
 | 2 | White | Same as #1 | Same as #1, moving the other direction | Same as #1, other side | Avoid |
 | 3 | White | Hook punch (Jay, 2026-10-24) | Step across the center line with an inside block, spin, back fist | Attack turned aside; struck from the spin | Spin strike |
-| 4 | White | Straight reach for the throat (Jay, 2026-10-24). In the game: a "grab reach". | Step forward with an outside block, double punch to the solar plexus, step and punch high to the face | Driven back by a body-then-head attack | Advancing combo |
+| 4 | White | Straight reach for the throat (Jay, 2026-10-24). In the game: a "grab reach". | Step forward with an outside block, double punch to the solar plexus, step and punch high to the face | Driven back by a body-then-head attack | Advancing |
 | 5 | White | Hook punch (Jay, 2026-10-24) | Like #3: step across the center line, inside block, spin with an elbow, step out, finish with a back fist | Attack turned aside; elbow, then back fist | Spin strike |
 | 6 | Yellow | Hook punch | Step and meet it with an outside block, wrap the arm, strike up under the chin to the bridge of the nose, hook punch to the cheek, bring the elbow back to strike the other side | Arm trapped while several strikes land | Trap and combo |
 | 7 | Yellow | Hook punch | Step and outside block, wrap and trap the arm, palm heel to the nose | Arm trapped, one strong strike | Trap |
@@ -72,7 +72,7 @@ The game was built with placeholder powers, given out in order before these desc
 | 1 | Off-Balance (enemy staggered longer) | Partly. #1 is about stepping off the line. |
 | 2 | Escape Step (a Block recharges Dash) | Yes, avoidance |
 | 3 | "Sweep" (a Perfect Counter hits enemies nearby) | The effect fits a spinning back fist, but the name is wrong: #3 isn't a sweep |
-| 4 | Steady Breath (heal on Perfect Counter) | No. #4 is an advancing combo. |
+| 4 | Steady Breath (heal on Perfect Counter) | No. The real name is OPEN. Advancing is the family, not the name. |
 | 5 | Strong Block (less block damage) | No. #5 is a spin strike. |
 | 6 | Sharp Eyes (longer counter window) | No. #6 is trap and combo. |
 | 7 | Create Distance (Block shoves and reflects) | No. #7 is a trap. |
