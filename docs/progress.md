@@ -1110,6 +1110,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Test-only: added "old save without level or XP loads at Level 1 / 0 XP" and "a feed sign-off shows as signed off"; the belt-entry test now runs the profile through `gainXp` so it can fail. `start-level-pin` is now 10 tests.
 ### J27-APPLY (2026-11-08)
 - 12 live seal/strike renames applied (old names in altName). Tests: training, p-prog-d-strike updated.
+- New Advancing seal family; #4 moved there from Escape (shows "Self-Defense #4" until Jay names it, counterPush 1.5). No save migration or heads-up: pre-beta (Dec 4), no real student saves.
 ### BF-ORANGE-UNLOCK: Butterfly Flow at Orange (2026-11-08)
 - Strikes now name their belt in `strikes.json`; Butterfly Flow unlocks with the Orange kick combo, not at Green. Jay's decisions J10, J16, J19, J21 (partial) and J27 recorded in decisions.md.
 - Tests: `bf-orange-unlock` (9).
