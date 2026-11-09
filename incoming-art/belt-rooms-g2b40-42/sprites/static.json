@@ -31,7 +31,7 @@
         108.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "G2B-40 sample. Green, Giant's Steps, Pebble Path."
+      "note": "G2B-40 sample. Green, Giant's Steps, Pebble Path. Moss floor, river stones, side stairs."
     },
     "room-red": {
       "size": [
@@ -57,7 +57,7 @@
         108.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "G2B-41 sample. Red belt forge, Bellows Door. Brick, lacquer, maroon, gold. No danger red."
+      "note": "G2B-41 sample. Red belt forge, Bellows Door. Bellows, rack, bin, trough, barrel, ember pools. No danger red."
     },
     "room-brown": {
       "size": [
@@ -83,7 +83,7 @@
         108.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "G2B-42 sample. Brown, Root Library, Reading Nook."
+      "note": "G2B-42 sample. Brown, Root Library, Reading Nook. Shelves, cart, rugs, cushions, floor roots, ladder."
     }
   }
 }

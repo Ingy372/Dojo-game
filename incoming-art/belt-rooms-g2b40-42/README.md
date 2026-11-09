@@ -8,10 +8,10 @@ Camera and tile size match the approved Tower rooms (`incoming-art/tier3-ember-k
 
 **ITEM:** First samples for the Green/Blue, Red/Red-Black, and Brown/Brown-Black/Black room kits.
 
-**WHAT:** Second pass. The flat grids are in `superseded/sample-1/`. These are modelled rooms in the same toon look as the approved Ember Kitchens: 35° camera, 80 px tiles, dark outlines, cel light, and a contact shadow under each prop. The preview sheet puts an approved kitchen room beside them, and shows a 48 px-per-tile row.
-- **G2B-40 — Green, Pebble Path.** Sand stones, a mossy stone wall, big stepping stones, ferns, and a stream with sparkles.
-- **G2B-41 — Red, Bellows Door.** Brick floor, an anvil, bellows, lacquer and maroon banners with gold hems, and a warm ember in the forge mouth. Danger-red pixels: 0.
-- **G2B-42 — Brown, Reading Nook.** Wood planks, a bookshelf of coloured books, tree roots, a root seat, and a lamp.
+**WHAT:** Third pass. The flat grids are in `superseded/sample-1/`. The second pass (sand floor, sparse props, diagonal roots) is in `superseded/sample-2/`. These rooms use the same toon look as the approved Ember Kitchens: 35° camera, 80 px tiles, dark outlines, cel light, and a contact shadow under each prop. The middle of each room, and the doorway in the back wall, stay open. The preview sheet puts an approved kitchen room beside the new samples and the two earlier passes, and shows a 48 px-per-tile row.
+- **G2B-40 — Green, Pebble Path.** Moss-green floor (no beige), river-stone grey stepping stones, four stair blocks on the side walls, ferns, a narrow sparkling stream, and soft blue shade in the back corners. Warm sand is only a few pebbles.
+- **G2B-41 — Red, Bellows Door.** Warm brick, two leather bellows by the open door, an anvil, a tool rack, a coal bin, a water trough, a quench barrel, and warm ember pools on the floor. Lacquer and maroon banners with gold hems hang beside the door. Danger-red pixels: 0.
+- **G2B-42 — Brown, Reading Nook.** Wood planks, a shelf on each side, a ladder against the right shelf, a book cart, two rugs, cushions, a root armchair, a lamp, and thick roots lying across the side floor.
 
 **WHY:** Jay's rule is three samples before a big batch, so the belt colours can be checked on a phone before the rest of the rooms are built.
 
