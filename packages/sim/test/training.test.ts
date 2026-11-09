@@ -101,7 +101,7 @@ describe('white belt with 3 sign-offs and a stripe', () => {
     const unlocked = t.abilities.filter((a) => a.unlocked);
     expect(unlocked.map((a) => a.requirement.name)).toEqual(['Basic Form 1', 'Self-Defense #1', 'Self-Defense #3']);
     // R-STANCE-d2: the kata unlocks no stance; the Cat Stance sign-off does.
-    expect(unlocked.map((a) => a.stance?.name ?? a.perk?.name ?? null)).toEqual([null, 'Off-Balance', 'Sweep']);
+    expect(unlocked.map((a) => a.stance?.name ?? a.perk?.name ?? null)).toEqual([null, 'Double Punch', 'Back Fist']); // J27-APPLY: real technique names
     expect(t.stances.filter((s) => s.unlocked).map((s) => s.def.name)).toEqual(['Cat Stance']);
     expect(unlocked[2].requirement.signedOffBy).toBe('Sensei Jay');
     expect(unlockedStances(t, abilities).map((f) => f.name)).toEqual(["Beginner's Stance", 'Cat Stance']);

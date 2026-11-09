@@ -27,3 +27,14 @@ ring), plus a seamless stripe swatch for any size. See IMPORT_NOTE.md for sizes,
 1. Stripe width: 1 purple and 1 white band per 0.5 tile on the diagonal. Thinner or wider?
 2. Scroll the stripes during the wind-up, or only pulse? (Scrolling needs the TileSprite route.)
 3. Zap Kite's zig-zag and Splash Wave's "wave lane" are lanes in the plan. Use the lane as-is, or make extra baked shapes later?
+
+## Update: Zap Kite zig-zag lane (ZAPKITE-ZIGZAG, the #438 follow-up)
+A fourth baked shape, `dash-zigzag_glow / fill / edge.png` (576 x 288, 96 px per tile), same purple-and-white stripes, white rim,
+deep-purple outline and soft glow as the lane. It shows the true hit capsule of the draft Zap Kite
+(`drafts/content/enemies/zap-kite.json`): 4.2 tiles long (reach 3.0 + areaRadius 0.6 past each end, round ends included) and
+1.2 wide (2 x areaRadius). The zig-zag band (0.5 thick, 4 corners) swings 0.3 tile to each side and is clamped so the whole path,
+stroke and outline included, stays inside the 1.2 width; it starts and ends on the aim line and every leg has the same slope.
+The capsule's middle is 1.5 tiles (half the reach) in front of the enemy. All numbers are in `source/zigzag.json` (the builder
+reads them; nothing is hard-coded). Rotate it like the lane. Previews: `preview/zigzag_scene_667x375.png` (motion on),
+`_motion-off.png` (Reduced motion: steady, no fade or scroll), `_grey.png`, `zigzag_anim.gif`.
+Still not imported; the Manager's review and Jay's OK come first.

@@ -6,6 +6,7 @@
   "power": 17,
   "guard": 25,
   "radius": 0.48,
+  "throwable": true,
   "moveSpeedTilesPerSecond": 1.2,
   "sightRange": 10,
   "attack": {

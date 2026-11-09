@@ -52,7 +52,7 @@ export interface PerkDef {
 // R-PROGRESSION-BETA: the types for the slot system. Seal families are loaded here (PB-02, from
 // content/abilities/seal-families.json); Strikes (PB-03) and kata powers (PB-04) come later.
 
-export type SealFamilyId = 'counter' | 'guard' | 'escape' | 'disarm' | 'throw' | 'lock';
+export type SealFamilyId = 'counter' | 'guard' | 'escape' | 'advancing' | 'disarm' | 'throw' | 'lock';
 
 export interface SealRankDef {
   /** The self-defense number, e.g. 11. */
@@ -86,6 +86,8 @@ export interface StrikeDef {
   text: string;
   /** The kick combo number that unlocks it (1, 2, 3). */
   combo: number;
+  /** The belt id that kick combo is learned at ('white' | 'yellow' | 'orange'), from docs/curriculum.md. */
+  belt: string;
   /** True for the Strike a student has with nothing equipped (Spin Kick). Exactly one. */
   default: boolean;
   focusCost: number;
@@ -237,7 +239,7 @@ export function loadAbilities(data: unknown, familyData?: unknown, strikeData?: 
   return { stances, strikes: perks('strikes'), seals: perks('seals'), virtues, families: familyData === undefined ? [] : loadSealFamilies(familyData), strikeDefs: strikeData === undefined ? [] : loadStrikeDefs(strikeData) };
 }
 
-const FAMILY_IDS: readonly SealFamilyId[] = ['escape', 'counter', 'guard', 'throw', 'disarm', 'lock'];
+const FAMILY_IDS: readonly SealFamilyId[] = ['escape', 'advancing', 'counter', 'guard', 'throw', 'disarm', 'lock'];
 
 /** Checks content/abilities/seal-families.json: every family once, every technique in one family, kid words with no numbers. */
 export function loadSealFamilies(data: unknown): SealFamilyDef[] {
@@ -291,6 +293,7 @@ export function loadStrikeDefs(data: unknown): StrikeDef[] {
     if (typeof s.default !== 'boolean') fail(`${w}.default must be true or false`);
     const combo = num(s.combo, `${w}.combo`);
     if (combo !== i + 1) fail(`${w}.combo must be ${i + 1} (Strikes are in kick combo order)`);
+    const belt = str(s.belt, `${w}.belt`);
     const focusCost = num(s.focusCost, `${w}.focusCost`);
     if (focusCost < 10) fail(`${w}.focusCost must be at least 10`);
     if (!Array.isArray(s.hits) || s.hits.length === 0) fail(`${w}.hits must list at least one hit`);
@@ -314,7 +317,7 @@ export function loadStrikeDefs(data: unknown): StrikeDef[] {
       if (legacy.has(l)) fail(`${w}: the old id "${l}" is on two Strikes`);
       legacy.add(l);
     }
-    const def: StrikeDef = { id: sid, name: str(s.name, `${w}.name`), text: str(s.text, `${w}.text`), combo, default: s.default as boolean, focusCost, hits, reach, lungeTiles, recoveryTicks, legacyIds };
+    const def: StrikeDef = { id: sid, name: str(s.name, `${w}.name`), text: str(s.text, `${w}.text`), combo, belt, default: s.default as boolean, focusCost, hits, reach, lungeTiles, recoveryTicks, legacyIds };
     return def;
   });
   if (defs.length === 0) fail('strikes: the list is empty');

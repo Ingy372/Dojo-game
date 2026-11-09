@@ -10,7 +10,8 @@
       "ranks": [
         {
           "technique": 1,
-          "name": "Off the Line",
+          "name": "Double Punch",
+          "altName": "Off the Line",
           "text": "A Great Counter adds two quick punches.",
           "effects": [
             {
@@ -31,20 +32,9 @@
           ]
         },
         {
-          "technique": 4,
-          "name": "Drive Back",
-          "text": "A Great Counter pushes the attacker back.",
-          "effects": [
-            {
-              "type": "counterPush",
-              "amount": 1.5
-            }
-          ]
-        },
-        {
           "technique": 15,
           "name": "Slip and Double",
-          "text": "Off the Line adds a third punch, and the Great Counter window is a little longer.",
+          "text": "Double Punch adds a third punch, and the Great Counter window is a little longer.",
           "effects": [
             {
               "type": "counterHits",
@@ -60,6 +50,26 @@
       ]
     },
     {
+      "id": "advancing",
+      "name": "Advancing",
+      "text": "Step forward into the attacker and close the distance.",
+      "icon": "placeholder",
+      "live": true,
+      "ranks": [
+        {
+          "technique": 4,
+          "name": "Self-Defense #4",
+          "text": "A Great Counter pushes the attacker back.",
+          "effects": [
+            {
+              "type": "counterPush",
+              "amount": 1.5
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "counter",
       "name": "Counter",
       "text": "Make every Great Counter count for more.",
@@ -68,7 +78,8 @@
       "ranks": [
         {
           "technique": 3,
-          "name": "Spin Back Fist",
+          "name": "Back Fist",
+          "altName": "Spin Back Fist",
           "text": "A Great Counter also hits enemies close by.",
           "effects": [
             {
@@ -81,7 +92,7 @@
         {
           "technique": 5,
           "name": "Spin Elbow",
-          "text": "Spin Back Fist reaches farther and hits harder.",
+          "text": "Back Fist reaches farther and hits harder.",
           "effects": [
             {
               "type": "rippleCounter",
@@ -114,7 +125,8 @@
         },
         {
           "technique": 10,
-          "name": "Grab and Strike",
+          "name": "Double Knifehand Block",
+          "altName": "Grab and Strike",
           "text": "Off-balance enemies take more damage, and each Great Counter restores a little Health.",
           "effects": [
             {
@@ -171,21 +183,32 @@
     {
       "id": "throw",
       "name": "Throw",
-      "text": "Take the attacker to the ground. Coming later.",
+      "text": "Take the attacker to the ground.",
       "icon": "placeholder",
-      "live": false,
+      "live": true,
       "ranks": [
         {
           "technique": 11,
-          "name": "Outside Reap",
+          "name": "Osotogari",
+          "altName": "Outside Reap",
           "text": "A Great Counter tumbles a brute or swarmer to the ground for a moment.",
-          "effects": []
+          "effects": [
+            {
+              "type": "counterThrow",
+              "amount": 30
+            }
+          ]
         },
         {
           "technique": 12,
           "name": "Reap and Finish",
           "text": "Enemies you tumble take extra damage while they are on the ground.",
-          "effects": []
+          "effects": [
+            {
+              "type": "downBonus",
+              "amount": 0.25
+            }
+          ]
         }
       ]
     },
@@ -198,7 +221,8 @@
       "ranks": [
         {
           "technique": 13,
-          "name": "Kick the Weapon",
+          "name": "Inside Kick",
+          "altName": "Kick the Weapon",
           "text": "A Great Counter kicks the weapon aside, so their next hit is weaker.",
           "effects": [
             {
