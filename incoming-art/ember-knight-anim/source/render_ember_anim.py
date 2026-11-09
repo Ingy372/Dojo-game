@@ -206,17 +206,17 @@ def add_effects(sc, shield_pivot):
 
 
 def add_slash_arc(sc, root):
-    """Bold warm-gold arc. It sits beside the blade, and it is not red."""
-    dots = []
-    for i in range(6):
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.11, segments=12, ring_count=8)
-        ob = bpy.context.active_object
-        ob.name = f"slash-arc-{i}"
-        ob.data.materials.append(emission("ARC%d" % i, "#ffc14d" if i % 2 == 0 else "#ffe08a"))
+    """One crescent, not a row of spheres. Edge is orange-gold, face is warm gold."""
+    parts = []
+    for name, color in (("swoosh-edge", "#e0923a"), ("swoosh-gold", "#ffd36a")):
+        me = bpy.data.meshes.new(name)
+        ob = bpy.data.objects.new(name, me)
+        ob.data.materials.append(emission(name, color))
+        sc.collection.objects.link(ob)
         keep_world(ob, root)
         ob.hide_render = True
-        dots.append(ob)
-    return dots
+        parts.append(ob)
+    return parts
 
 
 def _diamond_prism(p0, p1, w0, t0, w1, t1, side_hint=None):
@@ -442,26 +442,88 @@ def bar_tip(root):
     return root.matrix_world.inverted() @ tip
 
 
-def place_arc(dots, frame, tips):
-    """A short gold-orange arc along the sweep, from the cocked bar to the hit."""
-    for ob in dots:
+def _swoosh_mesh(points, width_scale):
+    """One tapered crescent. points[0] is the point behind the blade, points[-1] is thick."""
+    bm = bmesh.new()
+    rings = []
+    n = len(points)
+    segs = 8
+    for i, p in enumerate(points):
+        t = i / (n - 1)
+        rad = 0.105 * (t ** 1.15) * width_scale
+        if i == 0:
+            tangent = points[1] - points[0]
+        elif i == n - 1:
+            tangent = points[-1] - points[-2]
+        else:
+            tangent = points[i + 1] - points[i - 1]
+        if tangent.length < 1e-6:
+            tangent = Vector((0, 0, 1))
+        tangent = tangent.normalized()
+        side = tangent.cross(Vector((0, 0, 1)))
+        if side.length < 0.2:
+            side = tangent.cross(Vector((1, 0, 0)))
+        side.normalize()
+        up = side.cross(tangent).normalized()
+        ring = []
+        for k in range(segs):
+            a = k / segs * math.tau
+            ring.append(bm.verts.new(p + (side * math.cos(a) + up * math.sin(a)) * rad))
+        rings.append(ring)
+    for i in range(n - 1):
+        for k in range(segs):
+            bm.faces.new((rings[i][k], rings[i][(k + 1) % segs], rings[i + 1][(k + 1) % segs], rings[i + 1][k]))
+    bm.faces.new(tuple(rings[-1]))
+    return bm
+
+
+def _put_mesh(ob, bm):
+    me = bpy.data.meshes.new(ob.name + "-mesh")
+    bm.to_mesh(me)
+    bm.free()
+    old = ob.data
+    ob.data = me
+    if old.materials:
+        me.materials.append(old.materials[0])
+    if old.users == 0:
+        bpy.data.meshes.remove(old)
+
+
+def place_arc(parts, frame, tips):
+    """One crescent on the hit frames. Thick by the blade, a point behind it.
+    Shifted slightly behind the blade so the sword stays on top."""
+    for ob in parts:
         ob.hide_render = True
     if tips is None or frame not in (9, 10):
         return
-    def bow(a, b, t):
-        p = a.lerp(b, t)
-        # Just in front of the blade, so the arc does not cover it.
-        # Beside the blade, toward the camera, so the gold does not cover the sword.
-        return Vector((p.x + 0.16, p.y - 0.62 - math.sin(t * math.pi) * 0.08, p.z + 0.02))
     if frame == 9:
-        pts = [bow(tips[8], tips[9], t) for t in (0.15, 0.32, 0.5, 0.68, 0.84, 1.0)]
+        tail, head = tips[8], tips[9]
     else:
-        pts = [bow(tips[9], tips[10], t) for t in (0.25, 0.55, 0.85)]
-    for ob, p in zip(dots, pts):
-        ob.hide_render = False
-        ob.location = p
-        s = 1.35 if frame == 9 else 0.95
-        ob.scale = (s, s, s)
+        tail, head = tips[9], tips[10]
+    # Along the path just behind the blade. The tip of the sword stays past the thick end.
+    start = head
+    head = start.lerp(tail, 0.16)
+    tail = start.lerp(tail, 0.72)
+    mid = (tail + head) * 0.5
+    direction = head - tail
+    bend = Vector((-direction.z, 0.0, direction.x))
+    if bend.length < 1e-4:
+        bend = Vector((0.2, 0.0, 0.2))
+    bend.normalize()
+    # Curve along the swing, nudged behind the blade so the sword draws on top.
+    ctrl = mid + bend * 0.10 + Vector((0.0, 0.05, 0.0))
+    pts = []
+    steps = 12
+    for i in range(steps + 1):
+        t = i / steps
+        p = (1 - t) ** 2 * tail + 2 * (1 - t) * t * ctrl + t ** 2 * head
+        pts.append(Vector((p.x, p.y + 0.09, p.z)))
+    edge, gold = parts
+    _put_mesh(edge, _swoosh_mesh(pts, 1.0))
+    gold_pts = [Vector((p.x, p.y - 0.015, p.z)) for p in pts]
+    _put_mesh(gold, _swoosh_mesh(gold_pts, 0.72))
+    edge.hide_render = False
+    gold.hide_render = False
 
 
 def place_embers(embers, phase, show):
@@ -608,8 +670,8 @@ def main():
 
     jobs = []
     if A.only == "test":
-        jobs.append(("spark", 16, (2, 8), ("S",)))
-        jobs.append(("sweep", 16, (4, 8), ("S",)))
+        jobs.append(("attack", 20, (9,), ("S", "N", "E")))
+        jobs.append(("sweep", 16, (8,), ("S", "N")))
     else:
         if want("idle"):
             jobs.append(("idle", 8, range(8), [d for d, _ in DIRS]))

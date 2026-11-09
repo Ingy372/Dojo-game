@@ -10,7 +10,7 @@ These sheets are **not for import** until the Manager approves them. No game cod
 
 **ITEM:** J16-EMBER-ANIM. The Ember Knight in all 8 directions, with idle, walk, attack, and the existing form-shift timing.
 
-**WHAT:** Pass 3, after the Manager's review of `e166dd1c`. Earlier previews are in `superseded/sample-1/` and `superseded/sample-2/`. Same camera and 512 px frames. The walk now has two stubby boots stepping under the hem and a bigger bob, and it is marked 1.6 tiles a second for the Programmer to tune. The weapon is a blade with a crossguard. The hit keeps the blade visible and adds a bold warm-gold arc. No shield bash or shield rush sheets.
+**WHAT:** Pass 3, after the Manager's review of `e166dd1c`. Earlier previews are in `superseded/sample-1/` and `superseded/sample-2/`. Same camera and 512 px frames. The walk now has two stubby boots stepping under the hem and a bigger bob, and it is marked 1.6 tiles a second for the Programmer to tune. The weapon is a blade with a crossguard. The hit keeps the blade visible. The gold mark is one tapered crescent, thick by the blade and pointed behind it, not a row of circles. No shield bash or shield rush sheets.
 
 | Animation | Frames | fps | Length | Sheet |
 | --- | --- | --- | --- | --- |
