@@ -1591,7 +1591,7 @@ First code step of `drafts/planning/R-PROGRESSION-BETA.md` (#407). Data and save
 
 
 ## PB-02 — Seal families, ranks and the Seal slots (2026-11-01)
-- **A Seal is a family.** `content/abilities/seal-families.json` lists six: Escape (#1, #2, #4, #15), Counter (#3, #5, #6, #7, #10), Guard (#8, #9), Throw (#11, #12), Disarm (#13, #14), Lock (none), the plan's 4.3 map. Rank = the number of signed-off techniques in a family; the effects are the union of the signed-off ones, so the order they were signed in changes nothing. A family unlocks at its first signed-off technique. Names and kid text are S4 placeholders; the numbers are S4's, in data. The kid texts have no digits (the loader checks).
+- **A Seal is a family.** `content/abilities/seal-families.json` lists six: Escape (#1, #2, #4, #15), Counter (#3, #5, #6, #7, #10), Guard (#8, #9), Throw (#11, #12), Disarm (#13, #14), Lock (none), the plan's 4.3 map. That list is what PB-02 shipped. Jay later ruled that #4's real name is OPEN and its family is Advancing, not Escape. The file on disk still has the old Escape list until the Programmer adds Advancing. The 1.5-tile push is unchanged. Rank = the number of signed-off techniques in a family; the effects are the union of the signed-off ones, so the order they were signed in changes nothing. A family unlocks at its first signed-off technique. Names and kid text are S4 placeholders; the numbers are S4's, in data. The kid texts have no digits (the loader checks).
 - **Which technique is which number:** the nth seal-kind entry in `training.abilities` (curriculum order, the same order `buildTraining` uses) is technique n. `signedOffTechniques` reads that.
 - **`live` flag:** Throw and Lock are `live: false`. They cannot be equipped, give no effects and are not in `unlockedFamilies`. Throw is wired and waits for R-G2B-04; Lock has no ranks and is locked (plan 4.3). Turning one on is one flag plus its ranks' effects.
 - **A student's Seals are now only the families in the Seal slots.** `characterSetup` = Strikes (still always on until PB-03) + the equipped families at the student's rank + gear. A profile with a null loadout therefore has no Seals (it used to get every unlocked Seal). There is no legacy fallback on purpose; the plan says to stop using "all unlocked Seals".
@@ -1686,6 +1686,37 @@ First code step of `drafts/planning/R-PROGRESSION-BETA.md` (#407). Data and save
 - The Tester's mutation run on #445 found two mutants of the start-level rule that survived: an old full-shape save (no level or XP, runs played) loading above Level 1 or with XP, and feed sign-offs being ignored. Two tests added to `start-level-pin.test.ts` (8 to 10).
 - The old "applying a belt entry only changes the feed, never the profile" test could not fail (the profile was never passed to anything). It now records the entry on the profile, applies it to the feed, builds the training and calls `gainXp(p, training, 0)`, then checks the profile is byte-for-byte the same and Level 1 / 0 XP.
 - Each new or fixed test fails under its mutant (old save to 1 + runsPlayed, old save with 5 XP, sign-offs ignored, `gainXp` lifting the level to the belt, `gainXp` adding XP at 0). Test-only; no src, content or balance change.
+### G2B-04: Throw (thrown state, counterThrow, downBonus) and the Lock caps (2026-11-08)
+- **Thrown state:** a new enemy mode `thrown`. A Perfect Counter with Outside Reap (#11, `counterThrow` 30) on a throwable enemy tumbles it `COMBAT.counter.throwTumbleTiles` (1) away from the player (stopped by walls) and keeps it down 30 ticks: no moving, no wind-up, then back to chase. Event `{kind:'thrown'}`. The client draws it like a stagger for now (no tumble art yet).
+- **Who:** `throwable: true` in content (brute.json, swarmer.json). The enemy loader refuses `throwable` on a Guardian; `canThrow` also refuses bosses and elites. Every other enemy is staggered as before.
+- **Reap and Finish (#12, `downBonus` 0.25):** +25% damage against a thrown enemy. A thrown enemy is not "pressed", so staggerBonus does not also apply (matches R-G2B-balance-check section G: Throw package 4.0 then 4.5 basic-hit units).
+- **Throw is live** (numbers are the S4 ones from R-G2B-seal-families-16-40.md). **Lock stays `live: false`:** it has no ranks yet (#17 Arm Bar is R-G2B-09) and the loader does not allow a live family with no ranks.
+- **Lock caps (Manager, 2026-11-02):** the hold after a Perfect Counter (stagger 20 + Counter #6's +10 + any later Lock rank) caps at `COMBAT.counter.holdCapTicks` = 24, so Arm Wrap now holds 24 ticks, not 30. The Seals' staggerBonus together caps at `COMBAT.counter.sealStaggerBonusCap` = +20% (`capSealEffects`). The Press the Advantage Insight (+30%, its card text says 30%) is not a Seal and is not capped.
+- Steady Hold (#37) now belongs to Counter, not Lock (Jay, Nov 8). Lock's future ranks (R-G2B-09 and later) leave it out; no rank is built here.
+- **Knock-down look (Manager addition):** a thrown enemy's existing sprite turns (no new art). It tumbles one full turn plus a quarter over the 1-tile slide (350 ms), lies on its side for the rest of the 30 ticks, then eases back up (220 ms). Only the art turns; the health bar stays upright. Reduced motion: no tumble and no slide; it snaps to lying down and snaps back up. Numbers are in `apps/client/src/ui/thrownPose.ts` (look only, not tuning).
+- **Throw card text:** the Trophy Case Throw card (abilities.json `throw`) said "Great Counter hits are 25% stronger." It now reads "A Great Counter knocks a big or fast foe down. Hit it while it rests!"
+### BF-ORANGE-UNLOCK: Butterfly Flow unlocks at Orange (2026-11-08)
+- Butterfly Flow is kick combo 3, learned at Orange (docs/curriculum.md, Kick combos; Jay approved it at #3 in R-PROGRESSION-BETA). Main counted the student's strike-type abilities by position, so the Orange kick showed up as the 2nd entry and Butterfly Flow came at Green.
+- Root fix: each Strike in `content/abilities/strikes.json` now names its `belt` (white, yellow, orange), the loader requires it, and `earnedStrikes` matches a signed-off kick requirement by belt instead of by list position (`signedOffCombos` became `signedOffKickBelts`).
+- Tests check the mapping against docs/curriculum.md and every fixture school, and walk the belts: White none, Yellow Jumping Spins, Orange Butterfly Flow once its kick combo is signed off, Green and up both.
+### Jay's decisions recorded (2026-11-08, via the Manager)
+- J19: Hook Kick (#5) reaches around the guard, so it counts as a guard break (option A).
+- J16: Ember Knight is added as a 5th form shift. The final boss gets 3 forms, shifts at 33% Health, and is invulnerable during the shift glow.
+- J10: WAFU approved the music for use by other dojos.
+- J21 (partial): self-defense #4, Drive Back, is in the Advancing family.
+- J27: callouts use the real technique names. The Content Designer will send the list.
+### Jay's decisions, Nov 8 (docs only; nothing built ahead of the Planner's PR)
+- Real dojo technique names only, no made-up game names.
+- J20: the kick combo shows as "Hook Kick".
+- #4 Drive Back pushes an enemy back.
+- Steady Hold (#37) moves from the Lock family to Counter. Lock's planned ranks no longer include #37 (G2B-04 adds no Lock ranks; Lock stays off until #17 Arm Bar).
+- J26 (placeholders until playtest): test a fight zoom of about 15%; "GREAT!" shows smaller after the first one in each room; vibration is light and on by default, with an off switch.
+
+## Self-defense #4: the name is OPEN, the family is Advancing (2026-11-08)
+- Jay ruled the real name of self-defense #4 is OPEN. Advancing is the family, not the name. OPEN is not in the Escape family.
+- The in-game effect stays a 1.5-tile push (`counterPush`). PR #453 already measured that distance and kept it.
+- `content/abilities/seal-families.json` still lists technique 4 under Escape, under the old game name Drive Back. The Programmer adds an Advancing family and moves #4 onto it. This note does not edit that file. OPEN is the only confirmed member so far.
+- The plan is in `drafts/planning/R-G2B-seal-families-16-40.md` and `drafts/planning/power-and-progression-redesign.md`.
 ### GUARD-SCALE-01 QA fixes (2026-11-08, from the Manager)
 - **(a) The dip no longer stacks:** `bossZoom.zoomTo` (0.8) is now the total camera zoom at the bottom of the dip. `bossZoomPlan` takes the held room zoom and returns the share of it to tween to (0.8 / 0.9 = 0.889), so the camera goes 0.9 -> 0.80 -> 0.9, not down to 0.72.
 - **(b) Reduced motion:** unchanged in effect and now pinned by a test: no dip tween at all, the camera is at the held 0.9 from the first frame (the held zoom is a fixed camera size, not motion).

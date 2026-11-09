@@ -120,9 +120,9 @@ export interface RoomProgress {
  * What an enemy is doing:
  * waiting (just appeared), chase, windup (telegraphing an attack), recover (after a swing),
  * stagger (after a Perfect Counter), winded (out of breath after a long chase),
- * defeated (gone until it comes back).
+ * defeated (gone until it comes back), thrown (G2B-04: tumbled to the ground by Outside Reap, down for a while).
  */
-export type EnemyMode = 'waiting' | 'chase' | 'windup' | 'recover' | 'stagger' | 'winded' | 'defeated';
+export type EnemyMode = 'waiting' | 'chase' | 'windup' | 'recover' | 'stagger' | 'winded' | 'thrown' | 'defeated';
 
 export interface EnemyState {
   id: EnemyId;
@@ -203,6 +203,7 @@ export type CombatEvent =
   | { kind: 'guideCancel'; step: number }
   | { kind: 'enemySwing'; enemyId: EnemyId }
   | { kind: 'perfectCounter'; playerId: PlayerId; enemyId: EnemyId; chain: number }
+  | { kind: 'thrown'; playerId: PlayerId; enemyId: EnemyId }
   /** B-MASHER-2: this room's Perfect Counters reached COMBAT.counter.mashGuardPerfects, so Mash guard is off until the next room. */
   | { kind: 'mashGuardOff'; playerId: PlayerId }
   /** L-PREMIUM-b: the player let Counter windows pass with no answer, so the client shows the Counter tip (at most once per room). */
@@ -1010,9 +1011,11 @@ function landHit(
   if (brokeShield) p.focus = Math.min(COMBAT.focus.max, p.focus + p.mods.shieldBreakFocus);
   // Press the Advantage: staggered, winded or recovering enemies all take the bonus.
   const pressed = e.mode === 'stagger' || e.mode === 'winded' || e.mode === 'recover';
+  // G2B-04: a thrown enemy takes downBonus instead (Reap and Finish). The Seals' staggerBonus is capped in sealFamilies.ts.
   const bonus =
     comboBonus(p.combo) +
     (pressed ? p.mods.staggerBonus : 0) +
+    (e.mode === 'thrown' ? p.mods.downBonus : 0) +
     (e.mode === 'winded' && e.def.winded ? e.def.winded.damageBonus : 0);
   const dmg = damage(p.power * (1 + p.mods.powerScale + stancePowerScale(p)), strength, e.def.guard, bonus);
   p.combo++;
@@ -1240,6 +1243,7 @@ function stepEnemy(world: WorldState, e: EnemyState, room: Room): void {
     case 'waiting':
     case 'stagger':
     case 'winded':
+    case 'thrown':
       if (--e.modeTicks <= 0) e.mode = 'chase';
       return;
     case 'windup':
@@ -1396,9 +1400,18 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
       landHit(world, p, e, 'counter', COMBAT.counter.perfectStrength + p.mods.counterStrength, chainFocus(p.counterChain));
       // Off the Line / Slip and Double: quick extra punches, no extra Focus.
       for (let i = 0; i < p.mods.counterHits && e.mode !== 'defeated'; i++) landHit(world, p, e, 'counter', p.mods.counterHitStrength, 0);
-      if (e.mode !== 'defeated') {
+      if (e.mode !== 'defeated' && canThrow(p, e)) {
+        // G2B-04 Outside Reap: the attacker tumbles a tile away and is down for a while (brutes and swarmers; never Guardians or elites).
+        e.mode = 'thrown';
+        e.modeTicks = p.mods.counterThrowTicks;
+        const away = directionTo(p.pos, e.pos);
+        e.pos = { x: e.pos.x + away.x * COMBAT.counter.throwTumbleTiles, y: e.pos.y + away.y * COMBAT.counter.throwTumbleTiles };
+        pushOutOfWalls(room, e.pos, e.def.radius);
+        world.events.push({ kind: 'thrown', playerId: p.id, enemyId: e.id });
+      } else if (e.mode !== 'defeated') {
         e.mode = 'stagger';
-        e.modeTicks = COMBAT.counter.perfectStaggerTicks + p.mods.staggerTicks;
+        // G2B-04 Lock cap: the hold (stagger + Counter #6 + any Lock rank) never passes holdCapTicks.
+        e.modeTicks = Math.min(COMBAT.counter.holdCapTicks, COMBAT.counter.perfectStaggerTicks + p.mods.staggerTicks);
         // Disarm: this attacker's next attack is weaker.
         if (p.mods.disarm > 0) {
           e.disarmed = Math.max(e.disarmed, p.mods.disarm);
@@ -1439,7 +1452,7 @@ function resolveAttack(world: WorldState, room: Room, e: EnemyState): void {
         const back = Math.max(1, Math.round(damage(e.def.power, a.strength, guardOf(p)) * p.mods.blockReflect));
         hurtEnemy(world, p, e, 'reflect', back);
         // High Block Strike: a bounced hit leaves the attacker off-balance.
-        if (p.mods.reflectStaggerTicks > 0 && e.mode !== 'defeated') {
+        if (p.mods.reflectStaggerTicks > 0 && e.mode !== 'defeated' && e.mode !== 'thrown') {
           e.mode = 'stagger';
           e.modeTicks = Math.max(e.modeTicks, p.mods.reflectStaggerTicks);
         }
@@ -1874,4 +1887,9 @@ export function skipDown(world: WorldState, playerId: PlayerId): boolean {
 
 export function mashGuardOn(p: PlayerState): boolean {
   return p.perfects < COMBAT.counter.mashGuardPerfects;
+}
+
+/** G2B-04: a Perfect Counter throws this enemy (Outside Reap equipped, a throwable brute or swarmer, never a Guardian or an elite). */
+export function canThrow(p: { mods: { counterThrowTicks: number } }, e: EnemyState): boolean {
+  return p.mods.counterThrowTicks > 0 && e.def.throwable === true && !e.def.boss && e.elite === null;
 }
