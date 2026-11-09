@@ -86,6 +86,8 @@ export interface StrikeDef {
   text: string;
   /** The kick combo number that unlocks it (1, 2, 3). */
   combo: number;
+  /** The belt id that kick combo is learned at ('white' | 'yellow' | 'orange'), from docs/curriculum.md. */
+  belt: string;
   /** True for the Strike a student has with nothing equipped (Spin Kick). Exactly one. */
   default: boolean;
   focusCost: number;
@@ -291,6 +293,7 @@ export function loadStrikeDefs(data: unknown): StrikeDef[] {
     if (typeof s.default !== 'boolean') fail(`${w}.default must be true or false`);
     const combo = num(s.combo, `${w}.combo`);
     if (combo !== i + 1) fail(`${w}.combo must be ${i + 1} (Strikes are in kick combo order)`);
+    const belt = str(s.belt, `${w}.belt`);
     const focusCost = num(s.focusCost, `${w}.focusCost`);
     if (focusCost < 10) fail(`${w}.focusCost must be at least 10`);
     if (!Array.isArray(s.hits) || s.hits.length === 0) fail(`${w}.hits must list at least one hit`);
@@ -314,7 +317,7 @@ export function loadStrikeDefs(data: unknown): StrikeDef[] {
       if (legacy.has(l)) fail(`${w}: the old id "${l}" is on two Strikes`);
       legacy.add(l);
     }
-    const def: StrikeDef = { id: sid, name: str(s.name, `${w}.name`), text: str(s.text, `${w}.text`), combo, default: s.default as boolean, focusCost, hits, reach, lungeTiles, recoveryTicks, legacyIds };
+    const def: StrikeDef = { id: sid, name: str(s.name, `${w}.name`), text: str(s.text, `${w}.text`), combo, belt, default: s.default as boolean, focusCost, hits, reach, lungeTiles, recoveryTicks, legacyIds };
     return def;
   });
   if (defs.length === 0) fail('strikes: the list is empty');

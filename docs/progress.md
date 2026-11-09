@@ -1108,5 +1108,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Tests: `start-level-pin` (8).
 ### START-LEVEL-PIN-GAPS: start-level tests tightened (2026-11-02)
 - Test-only: added "old save without level or XP loads at Level 1 / 0 XP" and "a feed sign-off shows as signed off"; the belt-entry test now runs the profile through `gainXp` so it can fail. `start-level-pin` is now 10 tests.
+### BF-ORANGE-UNLOCK: Butterfly Flow at Orange (2026-11-08)
+- Strikes now name their belt in `strikes.json`; Butterfly Flow unlocks with the Orange kick combo, not at Green. Jay's decisions J10, J16, J19, J21 (partial) and J27 recorded in decisions.md.
+- Tests: `bf-orange-unlock` (9).
 ### GUARD-SCALE-01 QA fixes (2026-11-08)
 - Boss dip total is 0.80 (was 0.72 stacked on the held 0.9); Reduced motion snaps to the held 0.9 with no dip; a Guardian at the north wall is drawn whole under the HUD, dip included. Tests: `guard-scale-01` +3. decisions.md view size corrected to 13.33 x 7.5.
