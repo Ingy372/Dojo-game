@@ -386,6 +386,90 @@ def compare_sheet_2():
     print('compare2', img.size)
 
 
+SPRITE_META = [
+    ('spin-kick', '1', 'Spin Kick', 'docs/curriculum.md:46', 'Standing spin, seen from the back, arc around the kicking leg.'),
+    ('butterfly-flow', '3', 'Butterfly Flow', 'docs/curriculum.md:48', 'Jay: butterfly kick. Body horizontal, legs scissoring.'),
+    ('side-kick-drive', '4', 'Side Kick Drive', 'docs/curriculum.md:49', 'Side-on. Kicking leg straight and level at chest height.'),
+    ('hook-kick', '5', 'Hook Kick', 'docs/curriculum.md:50', 'Leg out to the side, heel snapping back.'),
+    ('lunge', '6', 'Lunge', 'docs/curriculum.md:51', 'Jumping front kick, other knee tucked, arrow behind the body.'),
+    ('spinning-finisher', '7', 'Spinning Finisher', 'docs/curriculum.md:52', 'Back view. Planted leg, hook at head height, ring behind.'),
+]
+
+
+def padded(im, px):
+    """Same fit as the seal export: 8 px clear at 128, scaled with the file."""
+    from PIL import Image
+    inner = int(round(px * 112 / 128))
+    small = im.resize((inner, inner), Image.LANCZOS)
+    out = Image.new('RGBA', (px, px), (0, 0, 0, 0))
+    out.alpha_composite(small, ((px - inner) // 2, (px - inner) // 2))
+    return out
+
+
+def export_sprites():
+    """Write the import set. Does not change the approved drawings."""
+    import json
+    from PIL import Image
+    import numpy as np
+    out = os.path.join(HERE, '..', 'sprites')
+    os.makedirs(out, exist_ok=True)
+    sprites = {}
+    for sid, num, name, src, note in SPRITE_META:
+        full = ALL[sid]()
+        padded(full, 128).save(os.path.join(out, sid + '.png'))
+        padded(full, 256).save(os.path.join(out, sid + '@2x.png'))
+        sprites[sid] = {
+            'file': sid + '.png',
+            'at2x': sid + '@2x.png',
+            'number': num,
+            'name': name,
+            'source': src,
+            'note': note,
+        }
+        print('export', sid)
+    manifest = {
+        'kind': 'strike-icons',
+        'notImported': True,
+        'readyFor': 'Manager review. Jay approved the pictures on Nov 10, relayed by the Manager. Not imported.',
+        'approval': 'Jay, Nov 10, relayed by the Manager: Both the strike icons and the Ember Knight look good. This folder exports the strike icons only.',
+        'size': [128, 128],
+        'anchorPx': [64, 64],
+        'anchorNote': 'anchor = centre of the 128 x 128 image',
+        'marginPx': 8,
+        'frames': 1,
+        'at2x': 'each file also has a sibling <name>@2x.png at 256 x 256, with a 16 px margin',
+        'render': 'python3 incoming-art/icons-strikes/source/strike_icons.py --export',
+        'sourceScript': 'incoming-art/icons-strikes/source/strike_icons.py',
+        'blender': 'None. These are the flat medallion drawings, the same Pillow kit as the seal icons. There is no .blend file.',
+        'belt': 'Pine #20705A where a belt is drawn. Same placeholder already used on the approved Jumping Spins icon. Not a rank.',
+        'notInThisSet': 'Strike #2 Jumping Spins is already exported at incoming-art/icons-slots/sprites/jumping-spins.png. It is not copied here.',
+        'sprites': sprites,
+    }
+    with open(os.path.join(out, 'static.json'), 'w') as f:
+        json.dump(manifest, f, indent=2)
+        f.write('\n')
+    # check the files that were just written
+    bad = []
+    for sid, _, _, _, _ in SPRITE_META:
+        for suffix, px, margin in (('', 128, 8), ('@2x', 256, 16)):
+            im = Image.open(os.path.join(out, sid + suffix + '.png'))
+            a = np.array(im)
+            if im.size != (px, px) or im.mode != 'RGBA':
+                bad.append(sid + suffix + ' size/mode')
+            edge = np.concatenate([
+                a[:margin].reshape(-1, 4), a[-margin:].reshape(-1, 4),
+                a[:, :margin].reshape(-1, 4), a[:, -margin:].reshape(-1, 4),
+            ])
+            if int((edge[:, 3] > 0).sum()):
+                bad.append(sid + suffix + ' margin')
+            r, g, b, al = a[:, :, 0].astype(int), a[:, :, 1].astype(int), a[:, :, 2].astype(int), a[:, :, 3]
+            red = int(((al > 20) & (r > 180) & (g < 80) & (b < 80)).sum())
+            if red:
+                bad.append(sid + suffix + ' red ' + str(red))
+    print('export check', 'ok' if not bad else bad)
+    return bad
+
+
 def final_sheet():
     """all six Strike icons, large, plus true 40, 36 and 30."""
     from PIL import Image, ImageDraw, ImageFont
@@ -426,12 +510,15 @@ def final_sheet():
 
 
 if __name__ == '__main__':
-    out = os.path.join(HERE, '..', 'preview')
-    os.makedirs(out, exist_ok=True)
-    for n, fn in ALL.items():
-        fn().save(os.path.join(out, n + '-full.png'))
-        print(n)
-    sheet()
-    compare_sheet()
-    compare_sheet_2()
-    final_sheet()
+    if '--export' in sys.argv:
+        export_sprites()
+    else:
+        out = os.path.join(HERE, '..', 'preview')
+        os.makedirs(out, exist_ok=True)
+        for n, fn in ALL.items():
+            fn().save(os.path.join(out, n + '-full.png'))
+            print(n)
+        sheet()
+        compare_sheet()
+        compare_sheet_2()
+        final_sheet()

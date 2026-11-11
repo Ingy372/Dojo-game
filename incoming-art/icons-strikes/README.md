@@ -1,6 +1,6 @@
-# G2B-44 — Strike icon samples
+# G2B-44 — Strike icons
 
-Draft. Not approved. Not exported into the game.
+**Exported. Ready for the Manager to review. Not imported.** Jay approved the six pictures on Nov 10. The Manager relayed his words: "Both the strike icons and the Ember Knight look good." Sprites are in `sprites/` (128 and @2x). The note is `DELIVERY_NOTE.md`. The Programmer note is `PROGRAMMER_HANDOFF.md`. No game file was changed.
 
 **ITEM.** Strike icons #1 and #3 through #7, in the approved medallion style, for one review.
 
