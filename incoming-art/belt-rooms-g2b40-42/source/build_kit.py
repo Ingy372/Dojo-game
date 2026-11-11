@@ -110,15 +110,19 @@ def south_tile(name, stone, cap, group):
     gbox(name, name + "_c", -0.06, -0.04, 1.06, 1.04, 0.38, 0.52, cap, outline=False)
     add_target(name, 0.6, "south wall cell, joins its neighbours", group)
 
-def block_tile(name, stone, cap, group, h=0.55):
-    """Stacked steps. The lowest tread fills the tile so neighbours join. Moss on top."""
-    gbox(name, name + "_a", -0.03, -0.02, 1.03, 1.02, 0.0, h * 0.34, stone)
-    gbox(name, name + "_ma", -0.02, 0.0, 1.02, 0.96, h * 0.26, h * 0.42, cap, outline=False)
-    gbox(name, name + "_b", 0.06, 0.08, 0.94, 0.72, 0.0, h * 0.66, stone)
-    gbox(name, name + "_mb", 0.07, 0.1, 0.92, 0.68, h * 0.56, h * 0.74, cap, outline=False)
-    gbox(name, name + "_c", 0.16, 0.16, 0.84, 0.46, 0.0, h, stone)
-    gbox(name, name + "_m", 0.18, 0.18, 0.8, 0.42, h - 0.02, h + 0.08, cap, outline=False)
-    add_target(name, h + 0.12, "joined stair block with a moss or cap top", group)
+def block_tile(name, stone, cap, group, h=0.22):
+    """One low tread for every belt. Full tile, full cap. No back, no seat, no recess.
+
+    Failed premise, checked against the a58b7637 platform silhouette before this
+    change: painting moss onto the old high-backed stair did not make it a
+    platform. Green and Blue used this same mesh. The height argument is
+    ignored so a caller cannot bring the chair back.
+    """
+    del h
+    slab = 0.22
+    gbox(name, name + "_s", -0.02, -0.02, 1.02, 1.02, 0.0, slab, stone)
+    gbox(name, name + "_m", -0.01, -0.01, 1.01, 1.01, slab - 0.01, slab + 0.05, cap, outline=False)
+    add_target(name, slab + 0.08, "low solid stone tread with a full cap", group)
 
 def side_tile(name, stone, cap, group):
     """A rim that runs the full depth of the cell, so stacked side cells join."""

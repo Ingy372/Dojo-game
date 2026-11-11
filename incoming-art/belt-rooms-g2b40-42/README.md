@@ -8,6 +8,32 @@ This pass puts those approved groupings into the real Pebble Path, Bellows Door,
 
 ## Delivery Note
 
+**ITEM:** One shared stair block. The same mesh was the green stair, the blue stair, and every other belt's `#` block.
+
+**WHAT:** The block is now one low stone slab with a full cap. The high back, the arms, and the seat recess are gone from the shared model, not painted over. Maps, placements, and the other corrections are unchanged. The old chair-shaped art is in `superseded/pass-cde096d6-chair-block/`.
+
+Failed premise, written down before the mesh change and checked with an isolated silhouette against the approved `a58b7637` platform: adding moss to the high-backed stair does not make it that platform. Green and Blue were the same shape. See `preview/silhouette-before-shared-block.png`.
+
+Shared assets rebuilt from that one mesh: `green-block`, `blue-block`, `red-block`, `redblack-block`, `brown-block`, `brownblack-block`, `black-block`, `green-stair`.
+
+Rooms whose pictures changed, because they contain that block: pebble-path, swarm-slope, goat-ledge, golem-stairs, shield-shelf, roller-run, switchback-road, giants-gate, water-jar-landing, resting-step, ferry-landing, reed-bank, crab-shallows, wave-lanes, lantern-barge, oar-locker, still-pool, bellows-door, cub-crowd, anvil-alley, sweeping-hall, smiths-rush, shield-rack, cool-embers, whisper-gate, split-mirrors, shade-gallery, echo-chamber, kind-word-nook, quiet-corner, dusty-entry, reading-roots, inkwell-aisle, root-stacks, great-reading-room, story-shelf, reading-nook, rainy-landing, breezy-bend, drum-landing, zigzag-steps, storm-gate, feather-nook, dry-alcove, summit-steps, wisp-walk, knight-terrace, sweeper-ridge, last-climb, bell-nook, lamp-stand.
+
+Unchanged room pictures: great-stair, watching-pool, knights-forge, mask-hall, root-hall, heralds-landing, summit-lamp, masklet-circle. The boss sheet is unchanged. 59 room ids. 0 danger-red pixels.
+
+**WHY:** On the real rooms the shared block read as a chair: a high back and a seat. That showed on Green (Pebble Path, golem-stairs, swarm-slope) and on Blue (ferry-landing, reed-bank).
+
+**DECIDE:** Review the low tread. It is not imported.
+
+**NEXT:** After a yes, a Programmer can import the kit. Until then it stays in `incoming-art/`.
+
+Look here:
+
+- `preview/compare-treads-48.png` — Pebble Path, golem-stairs, swarm-slope, ferry-landing, and reed-bank, before and now, at 48 px per tile.
+- `preview/compare-treads-closeup.png` — large before and now, with the approved platform beside them.
+- `preview/silhouette-before-shared-block.png` — the failed premise, the old shape, the approved platform, and the new slab.
+
+## Earlier pass
+
 **ITEM:** G2B-40, G2B-41, and G2B-42. Every room from Green through Black.
 
 **WHAT:** The same 59 rooms, same maps, same 35° camera, 80 px tiles. Nothing was added to the collision. Every placed picture is listed in `art-placements.json` with `collision: false`.

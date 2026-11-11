@@ -140,7 +140,7 @@
     "green-block": {
       "size": [
         80,
-        134
+        104
       ],
       "layers": [
         "green-block"
@@ -155,13 +155,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.67,
+      "topExtraTiles": 0.3,
       "anchorPx": [
         0,
-        53.6
+        24.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "joined stair block with a moss or cap top"
+      "note": "low solid stone tread with a full cap"
     },
     "green-door": {
       "size": [
@@ -452,7 +452,7 @@
     "blue-block": {
       "size": [
         80,
-        134
+        104
       ],
       "layers": [
         "blue-block"
@@ -467,13 +467,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.67,
+      "topExtraTiles": 0.3,
       "anchorPx": [
         0,
-        53.6
+        24.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "joined stair block with a moss or cap top"
+      "note": "low solid stone tread with a full cap"
     },
     "blue-door": {
       "size": [
@@ -764,7 +764,7 @@
     "red-block": {
       "size": [
         80,
-        134
+        104
       ],
       "layers": [
         "red-block"
@@ -779,13 +779,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.67,
+      "topExtraTiles": 0.3,
       "anchorPx": [
         0,
-        53.6
+        24.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "joined stair block with a moss or cap top"
+      "note": "low solid stone tread with a full cap"
     },
     "red-door": {
       "size": [
@@ -1076,7 +1076,7 @@
     "redblack-block": {
       "size": [
         80,
-        134
+        104
       ],
       "layers": [
         "redblack-block"
@@ -1091,13 +1091,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.67,
+      "topExtraTiles": 0.3,
       "anchorPx": [
         0,
-        53.6
+        24.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "joined stair block with a moss or cap top"
+      "note": "low solid stone tread with a full cap"
     },
     "redblack-door": {
       "size": [
@@ -1362,7 +1362,7 @@
     "brown-block": {
       "size": [
         80,
-        134
+        104
       ],
       "layers": [
         "brown-block"
@@ -1377,13 +1377,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.67,
+      "topExtraTiles": 0.3,
       "anchorPx": [
         0,
-        53.6
+        24.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "joined stair block with a moss or cap top"
+      "note": "low solid stone tread with a full cap"
     },
     "brown-door": {
       "size": [
@@ -1674,7 +1674,7 @@
     "brownblack-block": {
       "size": [
         80,
-        134
+        104
       ],
       "layers": [
         "brownblack-block"
@@ -1689,13 +1689,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.67,
+      "topExtraTiles": 0.3,
       "anchorPx": [
         0,
-        53.6
+        24.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "joined stair block with a moss or cap top"
+      "note": "low solid stone tread with a full cap"
     },
     "brownblack-door": {
       "size": [
@@ -1986,7 +1986,7 @@
     "black-block": {
       "size": [
         80,
-        134
+        104
       ],
       "layers": [
         "black-block"
@@ -2001,13 +2001,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.67,
+      "topExtraTiles": 0.3,
       "anchorPx": [
         0,
-        53.6
+        24.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "joined stair block with a moss or cap top"
+      "note": "low solid stone tread with a full cap"
     },
     "black-door": {
       "size": [
@@ -2272,7 +2272,7 @@
     "green-stair": {
       "size": [
         80,
-        123
+        104
       ],
       "layers": [
         "green-stair"
@@ -2287,13 +2287,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.54,
+      "topExtraTiles": 0.3,
       "anchorPx": [
         0,
-        43.2
+        24.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "joined stair block with a moss or cap top"
+      "note": "low solid stone tread with a full cap"
     },
     "green-shade": {
       "size": [
