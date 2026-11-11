@@ -1127,6 +1127,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 ## PB-05 — Fighting Style slot cards (2026-11-11)
 - The Fighting Style screen now has Stance, Virtue, Strike, Kata and the Seal cards. Tap a card, then a pick. A full Seal row asks which card to swap. Lock says "Coming later". A kata says "Power coming soon" and does not change a fight. New dots, one help line per visit, and no pulse when Reduced motion is on.
 - Approved slot pictures are in `assets/art/slot-icons/`. Escape, Throw and Advancing still use a plain disc.
-- Tests: `p-prog-g-style-screen`, `p-prog-h-no-pressure-words`. Phone check 374 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off (`docs/shots/pb-05/pb05-verify.mjs`).
+- Tests: `p-prog-g-style-screen`, `p-prog-h-no-pressure-words`. Phone check 352 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off, including padding, contrast, occupancy, New-dot frames, and equipping Strike and Virtue (`docs/shots/pb-05/pb05-verify.mjs`).
 - Not changed: the green-belt HUD still shows Beginner's Stance until one is equipped. See `docs/decisions.md`.
 - Next: PB-10 can run the phone test plan. Kata powers still wait on Jay (PB-11) and PB-04.

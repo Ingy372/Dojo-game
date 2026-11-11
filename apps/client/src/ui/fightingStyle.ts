@@ -357,8 +357,9 @@ export interface StyleScreenLayout {
 }
 
 /**
- * PB-05: the slot cards wrap to two rows across the whole panel. The tray stays on the left
- * and one kid line sits on the right. Every card and the tray row are at least 44 pt.
+ * PB-05: slot cards wrap to two rows. The kid line is its own row, and the tray uses the
+ * full width under it so three picks fit on a page. A later page is one arrow, so a pick is
+ * at most three taps (card, arrow, pick). 8 px stays clear at the bottom.
  */
 export function styleScreenLayout(w: number, h: number, specs: readonly { slot: StyleSlot; index: number; locked: boolean }[], showNote: boolean): StyleScreenLayout {
   const n = Math.max(1, specs.length);
@@ -369,33 +370,35 @@ export function styleScreenLayout(w: number, h: number, specs: readonly { slot: 
     while (r1 > 1 && !wide(r1)) r1--;
   }
   const r2 = n - r1;
+  const previewH = MIN_TAP;
   const noteH = showNote ? MIN_TAP : 0;
-  const rowGaps = (r2 > 0 ? S2 : 0) + S2 + (showNote ? S2 : 0);
+  const bottomPad = 12;
   const rows = r2 > 0 ? 2 : 1;
-  let trayH = 72;
-  let cardH = Math.floor((h - trayH - noteH - rowGaps) / rows);
+  const rowGaps = (r2 > 0 ? S2 : 0) + S2 + S2 + (showNote ? S2 : 0);
+  let trayH = 64;
+  let cardH = Math.floor((h - bottomPad - previewH - trayH - noteH - rowGaps) / rows);
   if (cardH < MIN_TAP) {
     trayH = MIN_TAP;
-    cardH = Math.floor((h - trayH - noteH - rowGaps) / rows);
+    cardH = Math.floor((h - bottomPad - previewH - trayH - noteH - rowGaps) / rows);
   }
   cardH = Math.max(MIN_TAP, Math.min(72, cardH));
   const row = (count: number, y: number): StyleBox[] => {
     if (count <= 0) return [];
-    const cw = Math.floor((w - (count - 1) * S2) / count);
+    const inset = 4;
+    const cw = Math.floor((w - 2 * inset - (count - 1) * S2) / count);
     const used = count * cw + (count - 1) * S2;
-    const x0 = Math.floor((w - used) / 2);
+    const x0 = inset + Math.floor((w - 2 * inset - used) / 2);
     return Array.from({ length: count }, (_, i) => ({ x: x0 + i * (cw + S2), y, w: cw, h: cardH }));
   };
   const boxes = [...row(r1, 0), ...row(r2, cardH + S2)];
-  const trayY = (r2 > 0 ? cardH + S2 : 0) + cardH + S2;
-  const trayW = Math.min(Math.round(w * 0.62), w - MIN_TAP - S2);
-  const previewX = trayW + S2;
+  const previewY = (r2 > 0 ? cardH + S2 : 0) + cardH + S2;
+  const trayY = previewY + previewH + S2;
   const noteY = trayY + trayH + S2;
   return {
     cards: specs.map((s, i) => ({ ...s, ...(boxes[i] ?? { x: 0, y: 0, w: MIN_TAP, h: MIN_TAP }) })),
-    tray: { x: 0, y: trayY, w: Math.max(MIN_TAP, trayW), h: trayH },
-    leftW: Math.max(MIN_TAP, trayW),
-    preview: { x: previewX, y: trayY, w: Math.max(MIN_TAP, w - previewX), h: trayH },
+    preview: { x: 4, y: previewY, w: w - 8, h: previewH },
+    tray: { x: 4, y: trayY, w: w - 8, h: trayH },
+    leftW: w - 8,
     note: showNote ? { x: 0, y: noteY, w, h: noteH } : null,
     icon: Math.min(40, Math.max(28, cardH - TYPE.label - 14)),
   };

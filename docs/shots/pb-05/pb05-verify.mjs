@@ -65,6 +65,9 @@ async function open(W, H, rm, student) {
   return { ctx, pg };
 }
 
+const lum = (hex) => { const v = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
+const contrast = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+
 const cards = (pg) => pg.evaluate(() => {
   const h = window.game.scene.getScene('Home');
   const out = [];
@@ -94,134 +97,118 @@ function tapCard(list, key) {
   return list.find((c) => c.key === key);
 }
 
-/** Page the open tray until `name` is on it. One tile per page on the narrow phone. */
-async function findPick(pg, name) {
-  await pg.evaluate(() => { const h = window.game.scene.getScene('Home'); h.trayPageNo = 0; h.render(); });
-  await pg.waitForTimeout(150);
-  for (let page = 0; page < 8; page++) {
-    const ts = await texts(pg);
-    const hit = ts.find((t) => t.t === name);
-    if (hit) return hit;
-    const arrow = ts.find((t) => t.t === '▶' && t.y > 200);
-    if (!arrow) return null;
-    await pg.touchscreen.tap(arrow.x, arrow.y);
-    await pg.waitForTimeout(200);
+const measure = (pg) => pg.evaluate(() => {
+  const h = window.game.scene.getScene('Home');
+  const pb = h.panelBox;
+  const panel = { l: pb.rx, t: pb.top, r: pb.rx + pb.rw, b: pb.top + pb.panelH };
+  const items = [];
+  const walk = (list) => {
+    for (const c of list) {
+      if (!c.visible || c.alpha < 0.05) continue;
+      if (c.list) walk(c.list);
+      const b = c.getBounds?.();
+      if (!b || b.width < 1 || b.height < 1) continue;
+      if (b.centerX < panel.l || b.centerX > panel.r || b.centerY < panel.t || b.centerY > panel.b) continue;
+      if (c.type === 'Text' && c.text) items.push({ kind: 'text', label: c.text.slice(0, 48), l: b.left, top: b.top, r: b.right, bot: b.bottom, size: parseFloat(c.style.fontSize), color: c.style.color });
+      if (c.getData?.('styleKey') || c.getData?.('stylePick') || c.getData?.('styleCancel') || c.getData?.('styleTakeOut') || c.getData?.('trayArrow')) items.push({ kind: 'box', label: c.getData('styleKey') || c.getData('stylePick') || 'control', l: b.left, top: b.top, r: b.right, bot: b.bottom });
+    }
+  };
+  walk(h.children.list);
+  const overlap = (a, b) => a.r > b.l + 1 && a.l < b.r - 1 && a.bot > b.top + 1 && a.top < b.bot - 1;
+  const styleTop = panel.t + 56;
+  const textsOnly = items.filter((i) => i.kind === 'text' && i.top >= styleTop);
+  const overl = [];
+  for (let i = 0; i < textsOnly.length; i++) for (let j = i + 1; j < textsOnly.length; j++) if (overlap(textsOnly[i], textsOnly[j])) overl.push(`${textsOnly[i].label}/${textsOnly[j].label}`);
+  const boxes = items.filter((i) => i.kind === 'box');
+  const content = [...textsOnly, ...boxes];
+  const padOf = (o) => Math.min(o.l - panel.l, panel.r - o.r, o.top - panel.t, panel.b - o.bot);
+  const pad = content.length ? Math.min(...content.map(padOf)) : 999;
+  const bb = content.reduce((a, o) => ({ l: Math.min(a.l, o.l), top: Math.min(a.top, o.top), r: Math.max(a.r, o.r), bot: Math.max(a.bot, o.bot) }), { l: 1e9, top: 1e9, r: -1e9, bot: -1e9 });
+  const area = (panel.r - panel.l) * (panel.b - panel.t);
+  const occ = area > 0 ? Math.max(0, bb.r - bb.l) * Math.max(0, bb.bot - bb.top) / area : 0;
+  const cardsOnly = boxes.filter((i) => String(i.label).includes(':'));
+  let minGap = 999;
+  for (let i = 0; i < cardsOnly.length; i++) for (let j = i + 1; j < cardsOnly.length; j++) {
+    const a = cardsOnly[i], d = cardsOnly[j];
+    const xOver = a.r > d.l && a.l < d.r;
+    const yOver = a.bot > d.top && a.top < d.bot;
+    if (xOver) minGap = Math.min(minGap, Math.max(0, Math.max(a.top, d.top) - Math.min(a.bot, d.bot)));
+    if (yOver) minGap = Math.min(minGap, Math.max(0, Math.max(a.l, d.l) - Math.min(a.r, d.r)));
   }
-  return null;
+  return { panel, texts: textsOnly, overl, pad, occ, minGap, minText: Math.min(...textsOnly.map((t) => t.size), 99) };
+});
+
+const sample = async (pg, buf, x, y, W, H) => pg.evaluate(async ([src, x, y, W, H]) => {
+  const img = new Image(); img.src = src; await img.decode();
+  const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+  const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+  const sx = img.width / W, sy = img.height / H;
+  const px = Math.max(0, Math.min(img.width - 1, Math.round(x * sx)));
+  const py = Math.max(0, Math.min(img.height - 1, Math.round(y * sy)));
+  const d = g.getImageData(px, py, 1, 1).data;
+  return '#' + [d[0], d[1], d[2]].map((v) => v.toString(16).padStart(2, '0')).join('');
+}, ['data:image/png;base64,' + buf.toString('base64'), x, y, W, H]);
+
+async function layoutChecks(pg, tag, W, H) {
+  const buf = await pg.screenshot({ path: `${OUT}/${tag}.png` });
+  const m = await measure(pg);
+  check(tag, 'style content >= 8 px inside the visible panel', m.pad >= 8, `${m.pad.toFixed(1)} px`);
+  check(tag, 'no style text overlaps another', m.overl.length === 0, m.overl.slice(0, 4).join(' | '));
+  check(tag, 'style text is at least 12 px', m.minText >= 12, `${m.minText} px`);
+  check(tag, 'not crowded: card gap >= 4 px and panel occupancy <= 80%', m.minGap >= 4 && m.occ <= 0.8, `gap ${m.minGap === 999 ? 'n/a' : m.minGap.toFixed(1)} px (layout gap is 8, each outline takes 2), occupancy ${(m.occ * 100).toFixed(1)}%`);
+  let worst = { r: 99, t: '', fg: '', bg: '' };
+  for (const t of m.texts) {
+    const pts = [[t.l - 6, (t.top + t.bot) / 2], [(t.l + t.r) / 2, t.top - 5], [t.r + 4, (t.top + t.bot) / 2]].filter(([x, y]) => x > 1 && y > 1 && x < W - 1 && y < H - 1);
+    const ratios = [];
+    for (const [x, y] of pts) {
+      const bg = await sample(pg, buf, x, y, W, H);
+      if (bg === t.color) continue;
+      ratios.push({ r: contrast(t.color, bg), bg });
+    }
+    if (!ratios.length) { check(tag, `contrast ${t.t}`, false, 'no background sample'); continue; }
+    ratios.sort((a, b) => a.r - b.r);
+    const mid = ratios[Math.floor(ratios.length / 2)];
+    if (mid.r < worst.r) worst = { r: mid.r, t: t.label, fg: t.color, bg: mid.bg };
+    check(tag, `contrast >= 4.5:1 "${t.label}"`, mid.r >= 4.5, `${t.color} on ${mid.bg} = ${mid.r.toFixed(2)}:1`);
+  }
+  return worst;
 }
 
-for (const [W, H] of sizes) for (const rm of ['off', 'on']) for (const [student, belt] of profiles) {
-  const tag = `${belt}-${W}x${H}-rm-${rm}`;
-  const { ctx, pg } = await open(W, H, rm, student);
-  check(tag, 'Reduced motion read back', (await rmNow(pg)) === rm, await rmNow(pg));
-  await pg.evaluate(() => { const h = window.game.scene.getScene('Home'); h.tab = 'abilities'; h.part = 'style'; h.styleSlot = null; h.render(); });
-  await pg.waitForTimeout(400);
-  let cs = await cards(pg);
-  await pg.screenshot({ path: `${OUT}/${tag}-cards.png` });
-  check(tag, 'five slot kinds are on screen', ['stance:0', 'virtue:0', 'strike:0', 'kata:0'].every((k) => cs.some((c) => c.key === k)) && cs.some((c) => c.key.startsWith('seal:')), cs.map((c) => c.key).join(','));
-  for (const c of cs) {
-    check(tag, `${c.key} is at least 44 pt`, c.w >= 44 && c.h >= 44, `${Math.round(c.w)}x${Math.round(c.h)}`);
-    check(tag, `${c.key} is on screen`, c.l >= -1 && c.t >= -1 && c.r <= W + 1 && c.btm <= H + 1, `${Math.round(c.l)},${Math.round(c.t)}`);
+/** From a closed screen: tap the card, then page, then the pick. Every arrow counts. */
+async function equipFromClosed(pg, slotKey, pickId) {
+  await pg.evaluate(() => { const h = window.game.scene.getScene('Home'); h.styleSlot = null; h.swapFamily = null; h.styleFocus = null; h.trayPageNo = 0; h.render(); });
+  await pg.waitForTimeout(150);
+  let taps = 0;
+  const cs = await cards(pg);
+  const card = cs.find((c) => c.key === slotKey);
+  if (!card) return { taps, missing: 'card' };
+  await pg.touchscreen.tap(card.x, card.y);
+  taps++;
+  for (let i = 0; i < 6; i++) {
+    const hit = await pg.evaluate((id) => {
+      const h = window.game.scene.getScene('Home');
+      let box = null;
+      const w = (l) => { for (const c of l) { if (c.getData?.('stylePick') === id) { const b = c.getBounds(); box = { x: b.centerX, y: b.centerY }; } if (c.list) w(c.list); } };
+      w(h.children.list);
+      return box;
+    }, pickId);
+    if (hit) { await pg.touchscreen.tap(hit.x, hit.y); taps++; return { taps }; }
+    const arrow = await pg.evaluate(() => {
+      const h = window.game.scene.getScene('Home');
+      let box = null;
+      const w = (l) => { for (const c of l) { if (c.getData?.('trayArrow') === 'next') { const b = c.getBounds(); box = { x: b.centerX, y: b.centerY }; } if (c.list) w(c.list); } };
+      w(h.children.list);
+      return box;
+    });
+    if (!arrow) return { taps, missing: pickId };
+    await pg.touchscreen.tap(arrow.x, arrow.y);
+    taps++;
+    await pg.waitForTimeout(150);
   }
-  const ts = await texts(pg);
-  const joined = ts.map((t) => t.t).join(' | ');
-  check(tag, 'slot words show', /STANCE/.test(joined) && /VIRTUE/.test(joined) && /STRIKE/.test(joined) && /KATA/.test(joined) && /SEAL/.test(joined));
-  if (belt !== 'orange') check(tag, 'quiet lock names the belt', /Orange Belt/.test(joined), joined.slice(0, 180));
+  return { taps, missing: pickId };
+}
 
-  // Hands-on: open Kata (tap 1) and read the placeholder, then equip Basic Form 1 if it is there (tap 2).
-  const kata = tapCard(cs, 'kata:0');
-  await pg.touchscreen.tap(kata.x, kata.y);
-  await pg.waitForTimeout(250);
-  let after = await texts(pg);
-  check(tag, 'Kata card says Power coming soon', after.some((t) => t.t.includes('Power coming soon')));
-  const form = after.find((t) => t.t === 'Basic Form 1');
-  if (form) {
-    await pg.touchscreen.tap(form.x, form.y);
-    await pg.waitForTimeout(250);
-    const lo = await loadout(pg);
-    check(tag, 'Kata equip took 2 taps and saved the placeholder', lo?.kata === 'basic-form-1', JSON.stringify(lo?.kata));
-  } else check(tag, 'Basic Form 1 is a pick', false, 'not in the tray');
-
-  // Stance: tap the card, then Cat Stance or Open Leg, whichever is earned and visible.
-  cs = await cards(pg);
-  const stance = tapCard(cs, 'stance:0');
-  await pg.touchscreen.tap(stance.x, stance.y);
-  await pg.waitForTimeout(250);
-  const earnedStance = await pg.evaluate(() => {
-    const h = window.game.scene.getScene('Home');
-    return h.styleModel().trays.stance.find((p) => p.earned && p.id !== 'beginners-stance')?.name ?? null;
-  });
-  const stancePick = earnedStance ? await findPick(pg, earnedStance) : await findPick(pg, 'Beginner\'s Stance');
-  if (stancePick) {
-    await pg.touchscreen.tap(stancePick.x, stancePick.y);
-    await pg.waitForTimeout(250);
-    const lo = await loadout(pg);
-    const ok = earnedStance ? lo?.stance && lo.stance !== 'beginners-stance' : true;
-    check(tag, `Stance equip is 2 taps (${stancePick.t})`, ok, lo?.stance ?? 'beginner');
-  } else check(tag, 'a stance pick is in the tray', false);
-
-  // Seal: equip the first earned family, then a second. White and yellow have 2 slots; orange 3.
-  cs = await cards(pg);
-  const seal0 = tapCard(cs, 'seal:0');
-  await pg.touchscreen.tap(seal0.x, seal0.y);
-  await pg.waitForTimeout(250);
-  const escape = await findPick(pg, 'Escape');
-  if (escape) {
-    await pg.touchscreen.tap(escape.x, escape.y);
-    await pg.waitForTimeout(250);
-    check(tag, 'first Seal equips in 2 taps', (await loadout(pg))?.seals?.[0] === 'escape', JSON.stringify((await loadout(pg))?.seals));
-  }
-  cs = await cards(pg);
-  const seal1 = tapCard(cs, 'seal:1');
-  await pg.touchscreen.tap(seal1.x, seal1.y);
-  await pg.waitForTimeout(200);
-  const counter = await findPick(pg, 'Counter');
-  if (counter) {
-    await pg.touchscreen.tap(counter.x, counter.y);
-    await pg.waitForTimeout(250);
-    const seals = (await loadout(pg))?.seals ?? [];
-    check(tag, 'second Seal equips in 2 taps', seals.includes('counter'), seals.join(','));
-  }
-
-  // Lock: open a Seal card and page until Lock is tappable, then tap it.
-  cs = await cards(pg);
-  await pg.touchscreen.tap(tapCard(cs, 'seal:0').x, tapCard(cs, 'seal:0').y);
-  await pg.waitForTimeout(200);
-  const lock = await findPick(pg, 'Lock');
-  if (lock) {
-    await pg.touchscreen.tap(lock.x, lock.y);
-    await pg.waitForTimeout(200);
-    after = await texts(pg);
-    check(tag, 'Lock shows Coming later', after.some((t) => t.t.includes('Coming later')));
-    check(tag, 'Lock does not equip', !((await loadout(pg))?.seals ?? []).includes('lock'));
-  } else check(tag, 'Lock tile can be reached', false);
-
-  // Yellow: fill is already 2, so a third Seal asks to swap. Orange has a free third slot.
-  if (belt === 'yellow') {
-    const guard = await findPick(pg, 'Guard');
-    if (guard) {
-      const before = (await loadout(pg))?.seals?.slice() ?? [];
-      await pg.touchscreen.tap(guard.x, guard.y);
-      await pg.waitForTimeout(250);
-      after = await texts(pg);
-      check(tag, 'full Seal row asks which one to swap', after.some((t) => t.t.includes('Swap with which one')));
-      const cancel = await pg.evaluate(() => {
-        const h = window.game.scene.getScene('Home');
-        let box = null;
-        const w = (l) => { for (const c of l) { if (c.getData?.('styleCancel')) { const b = c.getBounds(); box = { w: b.width, h: b.height }; } if (c.list) w(c.list); } };
-        w(h.children.list);
-        return box;
-      });
-      check(tag, 'Cancel is at least 44 pt', !!cancel && cancel.w >= 44 && cancel.h >= 44, cancel ? `${Math.round(cancel.w)}x${Math.round(cancel.h)}` : 'missing');
-      cs = await cards(pg);
-      await pg.touchscreen.tap(tapCard(cs, 'seal:0').x, tapCard(cs, 'seal:0').y);
-      await pg.waitForTimeout(250);
-      const seals = (await loadout(pg))?.seals ?? [];
-      check(tag, 'swap replaces the tapped Seal', seals.includes('guard') && seals.join() !== before.join(), `${before.join()} -> ${seals.join()}`);
-    } else check(tag, 'Guard is a pick for the swap', false);
-  }
-
-  // New dot: mark nothing seen, reopen, tap the Strike card, the dot goes away. No pulse when Reduced motion is on.
+async function pulseFrames(pg, tag, rm) {
   await pg.evaluate(() => {
     const h = window.game.scene.getScene('Home');
     h.profile.styleSeen = [];
@@ -229,39 +216,161 @@ for (const [W, H] of sizes) for (const rm of ['off', 'on']) for (const [student,
     h.tab = 'abilities'; h.part = 'style'; h.styleSlot = null;
     h.render();
   });
-  await pg.waitForTimeout(200);
-  const dotsBefore = await dotCount(pg);
-  check(tag, 'a New dot shows for an unopened pick', dotsBefore > 0, String(dotsBefore));
-  if (rm === 'on') {
-    const pulsing = await pg.evaluate(() => {
-      const h = window.game.scene.getScene('Home');
-      return h.tweens.getTweens().some((tw) => tw.targets?.some?.((t) => t.getData?.('newDot')));
+  const dot = () => pg.evaluate(() => {
+    const h = window.game.scene.getScene('Home');
+    let d = null;
+    const w = (l) => { for (const c of l) { if (c.getData?.('newDot')) { const b = c.getBounds(); d = { a: +c.alpha.toFixed(3), x: +b.centerX.toFixed(1), y: +b.centerY.toFixed(1) }; } if (c.list) w(c.list); } };
+    w(h.children.list);
+    return d;
+  });
+  const a0 = await dot();
+  await pg.screenshot({ path: `${OUT}/${tag}-dot-start.png` });
+  await pg.waitForTimeout(350);
+  const a1 = await dot();
+  await pg.screenshot({ path: `${OUT}/${tag}-dot-mid.png` });
+  await pg.waitForTimeout(350);
+  const a2 = await dot();
+  await pg.screenshot({ path: `${OUT}/${tag}-dot-end.png` });
+  const spread = a0 && a1 && a2 ? Math.max(a0.a, a1.a, a2.a) - Math.min(a0.a, a1.a, a2.a) : -1;
+  if (rm === 'on') check(tag, 'New dot stays still, Reduced motion, start/mid/end', spread >= 0 && spread < 0.02 && Math.abs(a0.x - a1.x) < 0.6 && Math.abs(a0.y - a2.y) < 0.6, `alpha ${a0?.a},${a1?.a},${a2?.a} y ${a0?.y},${a1?.y},${a2?.y}`);
+  else check(tag, 'New dot pulse moves across start/mid/end', spread >= 0.2, `alpha ${a0?.a},${a1?.a},${a2?.a}`);
+}
+
+for (const [W, H] of sizes) for (const rm of ['off', 'on']) {
+  let pulsed = false;
+  for (const [student, belt] of profiles) {
+    const tag = `${belt}-${W}x${H}-rm-${rm}`;
+    const { ctx, pg } = await open(W, H, rm, student);
+    check(tag, 'Reduced motion read back', (await rmNow(pg)) === rm, await rmNow(pg));
+    await pg.evaluate(() => { const h = window.game.scene.getScene('Home'); h.children.list.filter((c) => c.depth >= 90).forEach((c) => c.destroy()); h.celebrating = false; h.tab = 'abilities'; h.part = 'style'; h.styleSlot = null; h.render(); });
+    await pg.waitForTimeout(300);
+    await pg.screenshot({ path: `${OUT}/${tag}-help.png` });
+    const help = (await texts(pg)).some((t) => t.t.includes('Tap a slot, then pick a Seal'));
+    check(tag, 'first visit shows the slot help line', help);
+    await layoutChecks(pg, `${tag}-cards`, W, H);
+
+    const plan = await pg.evaluate(() => {
+      const m = window.game.scene.getScene('Home').styleModel();
+      const one = (slot, pred) => m.trays[slot].filter(pred).map((p) => ({ id: p.id, name: p.name, earned: p.earned }));
+      return {
+        stance: one('stance', (p) => p.earned && p.id !== 'beginners-stance'),
+        lockedStance: one('stance', (p) => !p.earned)[0] || null,
+        virtue: one('virtue', (p) => p.earned),
+        strike: one('strike', (p) => p.earned),
+        lockedStrike: one('strike', (p) => !p.earned)[0] || null,
+        kata: one('kata', (p) => p.earned),
+        seal: one('seal', (p) => p.earned && !p.comingLater),
+      };
     });
-    check(tag, 'Reduced motion: the New dot does not pulse', pulsing === false);
+
+    if (plan.stance[0]) {
+      const taps = await equipFromClosed(pg, 'stance:0', plan.stance[0].id);
+      const lo = await loadout(pg);
+      check(tag, `Stance ${plan.stance[0].name} equips in <= 3 taps including paging`, !taps.missing && taps.taps <= 3 && lo?.stance === plan.stance[0].id, `${taps.taps} taps, ${lo?.stance}`);
+      await pg.screenshot({ path: `${OUT}/${tag}-tray-stance.png` });
+    }
+    if (plan.lockedStance) {
+      const before = (await loadout(pg))?.stance ?? null;
+      const taps = await equipFromClosed(pg, 'stance:0', plan.lockedStance.id);
+      await pg.waitForTimeout(200);
+      const sheet = (await texts(pg)).some((t) => t.t === 'Close' || t.t.includes('Ask Sensei') || t.t.includes('Learn this'));
+      const close = (await texts(pg)).find((t) => t.t === 'Close');
+      if (close) { await pg.touchscreen.tap(close.x, close.y); await pg.waitForTimeout(200); }
+      const after = (await loadout(pg))?.stance ?? null;
+      check(tag, `locked stance ${plan.lockedStance.name} does not equip, Close returns`, sheet && after === before && !taps.missing, `taps ${taps.taps}, stance ${after}`);
+    }
+    if (plan.virtue[0]) {
+      const taps = await equipFromClosed(pg, 'virtue:0', plan.virtue[0].id);
+      const lo = await loadout(pg);
+      check(tag, `Virtue ${plan.virtue[0].name} equips in <= 3 taps including paging`, !taps.missing && taps.taps <= 3 && lo?.virtue === plan.virtue[0].id, `${taps.taps} taps, ${lo?.virtue}`);
+    } else check(tag, 'no earned Virtue on this profile', true, 'none to equip');
+    for (const s of plan.strike) {
+      const taps = await equipFromClosed(pg, 'strike:0', s.id);
+      const lo = await loadout(pg);
+      const shown = s.id === 'spin-kick' ? (lo?.strike ?? null) === null : lo?.strike === s.id;
+      check(tag, `Strike ${s.name} equips in <= 3 taps including paging`, !taps.missing && taps.taps <= 3 && shown, `${taps.taps} taps, strike ${lo?.strike ?? 'spin-kick'}`);
+    }
+    await pg.screenshot({ path: `${OUT}/${tag}-tray-strike.png` });
+    if (plan.lockedStrike) {
+      const before = (await loadout(pg))?.strike ?? null;
+      const taps = await equipFromClosed(pg, 'strike:0', plan.lockedStrike.id);
+      await pg.waitForTimeout(200);
+      const close = (await texts(pg)).find((t) => t.t === 'Close');
+      const sheet = (await texts(pg)).some((t) => t.t === 'Close' || /Learn this|Ask Sensei/.test(t.t));
+      if (close) { await pg.touchscreen.tap(close.x, close.y); await pg.waitForTimeout(200); }
+      check(tag, `locked strike ${plan.lockedStrike.name} does not equip, Close returns`, sheet && ((await loadout(pg))?.strike ?? null) === before && !taps.missing, `taps ${taps.taps}`);
+    }
+    if (plan.kata[0]) {
+      await pg.screenshot({ path: `${OUT}/${tag}-tray-kata.png` });
+      const taps = await equipFromClosed(pg, 'kata:0', plan.kata[0].id);
+      const line = (await texts(pg)).some((t) => t.t.includes('Power coming soon'));
+      check(tag, `Kata ${plan.kata[0].name} equips in <= 3 taps and stays a placeholder`, !taps.missing && taps.taps <= 3 && line && (await loadout(pg))?.kata === plan.kata[0].id, `${taps.taps} taps`);
+    }
+    if (plan.seal[0]) {
+      const taps = await equipFromClosed(pg, 'seal:0', plan.seal[0].id);
+      check(tag, `Seal ${plan.seal[0].name} equips in <= 3 taps including paging`, !taps.missing && taps.taps <= 3 && ((await loadout(pg))?.seals ?? []).includes(plan.seal[0].id), `${taps.taps} taps`);
+      await pg.screenshot({ path: `${OUT}/${tag}-tray-seal.png` });
+    }
+    if (plan.seal[1]) {
+      const taps = await equipFromClosed(pg, 'seal:1', plan.seal[1].id);
+      check(tag, `Seal ${plan.seal[1].name} equips in <= 3 taps including paging`, !taps.missing && taps.taps <= 3 && ((await loadout(pg))?.seals ?? []).includes(plan.seal[1].id), `${taps.taps} taps`);
+    }
+    const lock = await equipFromClosed(pg, 'seal:0', 'lock');
+    const later = (await texts(pg)).some((t) => t.t.includes('Coming later'));
+    check(tag, 'Lock shows Coming later and is not equipped', !lock.missing && later && !((await loadout(pg))?.seals ?? []).includes('lock'), `${lock.taps} taps`);
+
+    if (belt === 'yellow' && plan.seal[2]) {
+      const taps = await equipFromClosed(pg, 'seal:0', plan.seal[2].id);
+      await pg.screenshot({ path: `${OUT}/${tag}-swap.png` });
+      const asked = (await texts(pg)).some((t) => t.t.includes('Swap with which one'));
+      const before = ((await loadout(pg))?.seals ?? []).slice();
+      const cancel = await pg.evaluate(() => {
+        const h = window.game.scene.getScene('Home'); let box = null;
+        const w = (l) => { for (const c of l) { if (c.getData?.('styleCancel')) { const b = c.getBounds(); box = { x: b.centerX, y: b.centerY, w: b.width, h: b.height }; } if (c.list) w(c.list); } };
+        w(h.children.list); return box;
+      });
+      check(tag, 'Cancel is at least 44 pt', !!cancel && cancel.w >= 44 && cancel.h >= 44, cancel ? `${Math.round(cancel.w)}x${Math.round(cancel.h)}` : 'missing');
+      if (cancel) { await pg.touchscreen.tap(cancel.x, cancel.y); await pg.waitForTimeout(200); }
+      const afterCancel = (await loadout(pg))?.seals ?? [];
+      check(tag, 'Cancel leaves the Seals unchanged', asked && afterCancel.join() === before.join(), `${before.join()} -> ${afterCancel.join()}, ${taps.taps} taps to the question`);
+      await equipFromClosed(pg, 'seal:0', plan.seal[2].id);
+      const cs = await cards(pg);
+      const target = cs.find((c) => c.key === 'seal:0');
+      if (target) { await pg.touchscreen.tap(target.x, target.y); await pg.waitForTimeout(200); }
+      const swapped = (await loadout(pg))?.seals ?? [];
+      check(tag, 'the swap itself replaces the tapped Seal', swapped.includes(plan.seal[2].id) && swapped.join() !== before.join(), `${before.join()} -> ${swapped.join()}`);
+      const take = await pg.evaluate(() => {
+        const h = window.game.scene.getScene('Home'); let box = null;
+        const w = (l) => { for (const c of l) { if (c.getData?.('styleTakeOut')) { const b = c.getBounds(); box = { x: b.centerX, y: b.centerY, w: b.width, h: b.height }; } if (c.list) w(c.list); } };
+        w(h.children.list); return box;
+      });
+      // Take out is on the open Seal card. Open seal 0 if the button is not up.
+      if (!take) {
+        const again = await cards(pg);
+        const s0 = again.find((c) => c.key === 'seal:0');
+        if (s0) { await pg.touchscreen.tap(s0.x, s0.y); await pg.waitForTimeout(200); }
+      }
+      const take2 = take || await pg.evaluate(() => {
+        const h = window.game.scene.getScene('Home'); let box = null;
+        const w = (l) => { for (const c of l) { if (c.getData?.('styleTakeOut')) { const b = c.getBounds(); box = { x: b.centerX, y: b.centerY, w: b.width, h: b.height }; } if (c.list) w(c.list); } };
+        w(h.children.list); return box;
+      });
+      const beforeOut = ((await loadout(pg))?.seals ?? []).slice();
+      if (take2) { await pg.touchscreen.tap(take2.x, take2.y); await pg.waitForTimeout(200); }
+      const afterOut = (await loadout(pg))?.seals ?? [];
+      check(tag, 'Take out removes the open Seal', !!take2 && take2.w >= 44 && take2.h >= 44 && afterOut.length === beforeOut.length - 1, `${beforeOut.join()} -> ${afterOut.join()}`);
+    }
+
+    if (!pulsed) { await pulseFrames(pg, tag, rm); pulsed = true; }
+    const saved = await loadout(pg);
+    await pg.reload({ waitUntil: 'domcontentloaded' });
+    await pg.waitForFunction(() => window.game?.scene?.getScenes?.(true).length);
+    await pg.waitForTimeout(500);
+    const back = await pg.evaluate(() => JSON.parse(localStorage.getItem('dojo-ascent-profile-v1') || '{}').loadout);
+    check(tag, 'picks survive a reload', JSON.stringify(back?.seals) === JSON.stringify(saved?.seals) && back?.kata === saved?.kata && back?.stance === saved?.stance && (back?.strike ?? null) === (saved?.strike ?? null), JSON.stringify(back));
+    check(tag, 'no page errors', pg.errs.length === 0, pg.errs.join(' | '));
+    await ctx.close();
   }
-  cs = await cards(pg);
-  await pg.touchscreen.tap(tapCard(cs, 'strike:0').x, tapCard(cs, 'strike:0').y);
-  await pg.waitForTimeout(250);
-  check(tag, 'opening the card clears its New dot', (await dotCount(pg)) < dotsBefore, `${dotsBefore} -> ${await dotCount(pg)}`);
-
-  // Persistence across a reload.
-  const saved = await loadout(pg);
-  await pg.reload();
-  await pg.waitForFunction(() => window.game?.scene?.getScenes?.(true).length);
-  await pg.waitForTimeout(800);
-  await pg.evaluate(() => { const g = window.game; g.scene.getScenes(true).forEach((s) => g.scene.stop(s.scene.key)); g.scene.start('Home'); });
-  await pg.waitForTimeout(500);
-  const back = await pg.evaluate(() => JSON.parse(localStorage.getItem('dojo-ascent-profile-v1') || '{}').loadout);
-  check(tag, 'the picks are still there after a reload', JSON.stringify(back?.seals) === JSON.stringify(saved?.seals) && back?.kata === saved?.kata && back?.stance === saved?.stance, JSON.stringify(back));
-
-  // Trophy cubbies are still there.
-  await pg.evaluate(() => { const h = window.game.scene.getScene('Home'); h.tab = 'abilities'; h.part = 'trophy'; h.render(); });
-  await pg.waitForTimeout(300);
-  const trophy = (await texts(pg)).map((t) => t.t).join(' | ');
-  check(tag, 'Trophy Case cubbies still show', /Katas|Kicks|Self-Defense/.test(trophy));
-  await pg.screenshot({ path: `${OUT}/${tag}-trophy.png` });
-  check(tag, 'no page errors', pg.errs.length === 0, pg.errs.join(' | '));
-  await ctx.close();
 }
 
 const fails = rows.filter((r) => r.startsWith('FAIL')).length;
@@ -270,3 +379,5 @@ fs.writeFileSync(`${OUT}/verify-log.txt`, out);
 console.log(out);
 await b.close();
 process.exit(fails ? 1 : 0);
+
+

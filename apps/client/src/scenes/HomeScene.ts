@@ -1110,26 +1110,31 @@ export class HomeScene extends Phaser.Scene {
     const showTray = open !== null && open.locked === null && this.styleSlot !== null;
     if (showTray && this.styleSlot) {
       const picks = m.trays[this.styleSlot];
-      const tp = trayPaging(L.tray.w, tileMin, picks.length);
+      // Page by how many tiles fit the full row. Arrows sit on the line above, so a tile is not squeezed under 44.
+      const fit = trayPaging(L.tray.w, tileMin, 0);
+      const pages = Math.max(1, Math.ceil(picks.length / fit.perPage));
+      const tp = { ...fit, pages, arrows: pages > 1, tilesX: 0 };
       this.trayPageNo = Math.max(0, Math.min(tp.pages - 1, this.trayPageNo));
       const tray = trayPage(picks, tp, this.trayPageNo);
       const ty = y + L.tray.y;
-      for (const d of trayDots(tp.pages, this.trayPageNo, L.leftW)) this.ui.add(this.add.circle(x + L.tray.x + d.x, ty + L.tray.h + 4, 3, d.on ? 0xffd166 : WOOD.paper, d.on ? 1 : 0.35).setData('trayDot', d.on));
+      for (const d of trayDots(tp.pages, this.trayPageNo, L.leftW)) this.ui.add(this.add.circle(x + L.preview.x + d.x, y + L.preview.y + L.preview.h + S2 / 2, 3, d.on ? 0xffd166 : WOOD.paper, d.on ? 1 : 0.35).setData('trayDot', d.on));
       if (tp.arrows) {
-        button(this, { x: x + L.tray.x, y: ty, w: MIN_TAP, h: L.tray.h, label: '◀', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo === 0, onTap: () => this.turnTray(-1) }, this.ui);
-        button(this, { x: x + L.tray.x + L.tray.w - MIN_TAP, y: ty, w: MIN_TAP, h: L.tray.h, label: '▶', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo >= tp.pages - 1, onTap: () => this.turnTray(1) }, this.ui);
+        button(this, { x: x + L.preview.x, y: y + L.preview.y, w: MIN_TAP, h: L.preview.h, label: '◀', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo === 0, onTap: () => this.turnTray(-1) }, this.ui).visual.setData('trayArrow', 'back');
+        button(this, { x: x + L.preview.x + MIN_TAP + S2, y: y + L.preview.y, w: MIN_TAP, h: L.preview.h, label: '▶', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo >= tp.pages - 1, onTap: () => this.turnTray(1) }, this.ui).visual.setData('trayArrow', 'next');
       }
-      const room = L.tray.w - 2 * tp.tilesX;
-      const tx0 = x + L.tray.x + tp.tilesX + (room - (tray.length * tp.tileW + (tray.length - 1) * S2)) / 2;
+      const room = L.tray.w;
+      const tx0 = x + L.tray.x + (room - (tray.length * tp.tileW + (tray.length - 1) * S2)) / 2;
       const equipped = new Set(this.styleSlot === 'seal' ? (this.profile.loadout?.seals ?? []) : open.pick ? [open.pick.id] : []);
       tray.forEach((p, i) => {
-        const tile = button(this, {
+        const btn = button(this, {
           x: tx0 + i * (tp.tileW + S2), y: ty, w: tp.tileW, h: L.tray.h,
           label: p.name, labelWrap: cubbyTextW(tp.tileW), size: TYPE.label,
           color: p.earned && !p.comingLater ? WOOD.frame : BOARD_PAPER, labelColor: p.earned && !p.comingLater ? '#fff6e6' : ink,
           stroke: WOOD.grain, selected: equipped.has(p.id),
           onTap: () => (p.earned && !p.comingLater ? this.equipStyle(p) : this.commitStyle(applyStyleTap(this.styleSession(), { kind: 'pick', id: p.id }, this.training, CONTENT.abilities, this.profile.grandfatheredStances))),
-        }, this.ui).visual.list[2] as Phaser.GameObjects.Text;
+        }, this.ui);
+        btn.visual.setData('stylePick', p.id);
+        const tile = btn.visual.list[2] as Phaser.GameObjects.Text;
         wrapLikeCubby(tile, p.name, cubbyTextW(tp.tileW));
       });
     }
@@ -1141,7 +1146,7 @@ export class HomeScene extends Phaser.Scene {
       const swapOn = this.swapFamily !== null && card.slot === 'seal' && card.pick !== null && card.locked === null;
       const b = button(this, {
         x: x + box.x, y: y + box.y, w: box.w, h: box.h, label: '',
-        color: on || swapOn ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: on || swapOn, stroke: WOOD.grain,
+        color: WOOD.frameDark, size: TYPE.label, selected: on || swapOn, stroke: WOOD.grain,
         onTap: () => this.pickSlot(card.slot, card.index),
       }, this.ui);
       const v = b.visual.setData('styleKey', `${card.slot}:${card.index}`).setData('styleSlot', card.slot);
@@ -1180,8 +1185,11 @@ export class HomeScene extends Phaser.Scene {
       }
     });
 
+    const paging = showTray && this.styleSlot ? m.trays[this.styleSlot].length > trayPaging(L.tray.w, tileMin, 0).perPage : false;
+    const arrowW = paging ? MIN_TAP + S2 + MIN_TAP + S2 : 0;
     const side = this.swapFamily !== null || (open?.slot === 'seal' && open.pick !== null && open.locked === null);
-    const previewW = L.preview.w - (side ? 80 : 0) - S2;
+    const previewX = L.preview.x + arrowW;
+    const previewW = L.preview.w - arrowW - (side ? 80 : 0) - S2;
     let preview = this.styleHelpLine && !this.swapFamily && !this.styleFocus ? this.styleHelpLine : STYLE_WORDS.hint;
     if (this.swapFamily) preview = STYLE_WORDS.swapPrompt;
     else if (this.styleFocus && this.styleSlot) {
@@ -1191,7 +1199,7 @@ export class HomeScene extends Phaser.Scene {
     else if (open?.pick) preview = open.pick.line;
     else if (open?.slot === 'kata') preview = STYLE_WORDS.emptyKata;
     else if (open?.slot === 'seal') preview = STYLE_WORDS.emptySeal;
-    const pt = this.text(x + L.preview.x, y + L.preview.y + S1, preview, TYPE.label, '#f2e3c4', false, FONT, Math.max(MIN_TAP, previewW)).setData('styleLine', preview);
+    const pt = this.text(x + previewX, y + L.preview.y + S1, preview, TYPE.label, '#f2e3c4', false, FONT, Math.max(MIN_TAP, previewW)).setData('styleLine', preview);
     balanceWrap(pt, Math.max(MIN_TAP, previewW));
     if (this.styleHelpLine && preview === this.styleHelpLine) pt.setData('styleHelp', true);
     if (this.swapFamily) {
@@ -1239,8 +1247,8 @@ export class HomeScene extends Phaser.Scene {
       if (add.length) { this.profile.styleSeen = [...this.profile.styleSeen, ...add]; writeSave(this.profile); }
     }
     if (!this.styleHelpUsed && r.triggers.length) this.styleTriggers = r.triggers;
-    if (r.sheet) this.openStylePick(r.sheet);
     this.renderPanel('none');
+    if (r.sheet) this.openStylePick(r.sheet);
     if (!r.save || reducedMotion()) return;
     const key = this.styleSlot ? `${this.styleSlot}:${this.styleSealIndex}` : '';
     const card = this.panelContent?.list.find((c) => c instanceof Phaser.GameObjects.Container && (c as Phaser.GameObjects.Container).getData?.('styleKey') === key);
