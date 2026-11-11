@@ -17,7 +17,7 @@ ROOMS = os.path.join(ROOT, "rooms")
 PREVIEW = os.path.join(ROOT, "preview")
 DATA = os.path.join(REPO, "drafts", "content", "rooms")
 T = 80
-ROOM_TOP = 1.2
+ROOM_TOP = 2.4
 SETS = [
     "giants-steps", "quiet-river", "forge-of-courage", "hall-of-echoes",
     "root-library", "storm-stair", "summit",
@@ -133,7 +133,7 @@ def span(spec):
 
 # The approved sample rooms keep every prop from that sample, still off the middle.
 ROOM_PACK = {
-    "pebble-path": ["green-pathstone", "green-pathstone", "green-pathstone", "green-fern", "green-stream"],
+    "pebble-path": ["green-pathstone", "green-fern", "green-stream"],
     "ferry-landing": ["blue-boat", "blue-stone", "blue-oar"],
     "reed-bank": ["blue-reed", "blue-reed", "blue-lily"],
     "bellows-door": ["red-bellows", "red-anvil", "red-tool", "red-bin", "red-trough", "red-barrel", "red-ember", "red-hang", "red-hang"],
@@ -141,20 +141,26 @@ ROOM_PACK = {
     "split-mirrors": ["redblack-mirror", "redblack-mirror"],
     "inkwell-aisle": ["brown-ink", "brown-ink"],
     "drum-landing": ["brownblack-drum", "brownblack-drum"],
-    "rainy-landing": ["brownblack-umbrella", "brownblack-flag", "brownblack-puddle"],
+    "rainy-landing": ["brownblack-umbrella", "brownblack-flag"],
     "storm-gate": ["brownblack-gate", "brownblack-flag"],
-    "wisp-walk": ["black-wisp", "black-wisp", "black-lantern"],
+    "wisp-walk": ["black-lantern"],
     "great-stair": ["green-giant-stair"],
     "knights-forge": ["red-forge"],
-    "watching-pool": ["blue-pool", "blue-pool"],
-    "mask-hall": ["redblack-grand", "redblack-bell"],
-    "root-hall": ["brown-tree", "brown-root"],
+    "watching-pool": ["blue-stone"],
+    "mask-hall": ["redblack-grand"],
+    "root-hall": ["brown-tree"],
     "heralds-landing": ["brownblack-clouds"],
-    "summit-lamp": ["black-stand", "black-wisp"],
+    "summit-lamp": ["black-stand"],
 }
-SETPIECES = {
-    "green-giant-stair", "red-forge", "blue-pool", "redblack-grand",
-    "brown-tree", "brownblack-clouds", "black-stand", "green-pathstone",
+# These sit on the top-wall row only. Their pictures are one tile deep, so they do not cover the floor.
+WALL_ONLY = {
+    "green-giant-stair", "red-forge", "redblack-grand",
+    "brown-tree", "brownblack-clouds", "black-stand", "red-hang",
+}
+# Boss floors stay open. Only the wall piece (or, for the pool, flat stones) is added.
+BOSS_KEEP = {
+    "great-stair", "knights-forge", "mask-hall", "root-hall",
+    "heralds-landing", "summit-lamp", "watching-pool",
 }
 
 def props_for(theme, text, room_id=""):
@@ -226,12 +232,41 @@ def side_spots(tiles, w=1):
     return spots
 
 
+def wall_start(tiles, w):
+    """First cell of a top-wall run of # long enough for this piece. Never covers a door."""
+    row = tiles[0]
+    x = 0
+    best = None
+    while x < len(row):
+        if row[x] == "#":
+            x0 = x
+            while x < len(row) and row[x] == "#":
+                x += 1
+            if best is None or (x - x0) > best[1]:
+                best = (x0, x - x0)
+        else:
+            x += 1
+    if not best or best[1] < w:
+        return None
+    start = best[0] + (1 if best[0] == 0 and best[1] - 1 >= w else 0)
+    if start + w > best[0] + best[1]:
+        start = best[0]
+    return start
+
+
 def draw_room(data, room, specs, images, fighter):
     theme = theme_of(data)
     tiles = room["tiles"]
     H, W = len(tiles), len(tiles[0])
     canvas = Image.new("RGBA", (W * T, int((H + ROOM_TOP) * T)), (0, 0, 0, 0))
-    floor = f"{theme}-floor"
+    notes = []
+    # Watching Pool is a shallow floor. Other boss floors stay even, so a future danger mark can be seen.
+    if room["id"] == "watching-pool":
+        floor = "blue-shallow"
+    elif room["id"] in BOSS_KEEP:
+        floor = f"{theme}-floor-quiet"
+    else:
+        floor = f"{theme}-floor"
     # Floors first, so every later piece sits on them and nearer rows paint over farther ones.
     # Floor under every cell, including walls, so a seam shows the floor instead of a black void.
     for y, row in enumerate(tiles):
@@ -255,8 +290,22 @@ def draw_room(data, room, specs, images, fighter):
             elif ch == "S":
                 layers.append((y, x, f"{theme}-shrine", 0))
     chosen = props_for(theme, room.get("artProps", ""), room["id"])
-    if theme == "green" and "green-stream" not in chosen:
+    if room["id"] in BOSS_KEEP:
+        chosen = [p for p in ROOM_PACK.get(room["id"], [])]
+    # Light ovals read as danger marks. Keep those floors quiet.
+    chosen = [p for p in chosen if not p.endswith("-wisp") and "puddle" not in p]
+    if room["id"] == "root-hall":
+        chosen = [p for p in chosen if not p.endswith("-root")]
+    if theme == "green" and room["id"] not in BOSS_KEEP and "green-stream" not in chosen:
         chosen.append("green-stream")
+    seen = set()
+    uniq = []
+    for piece in chosen:
+        if piece in WALL_ONLY and piece in seen:
+            continue
+        seen.add(piece)
+        uniq.append(piece)
+    chosen = uniq
     used = set()
     # A stream is a run of water tiles on the outer floor, not one speck.
     if "green-stream" in chosen:
@@ -265,46 +314,105 @@ def draw_room(data, room, specs, images, fighter):
             x = W - 2
             if tiles[y][x] == "." and n < 4:
                 layers.append((y, x, "green-stream", 0))
+                notes.append({
+                    "room": room["id"], "piece": "green-stream", "col": x, "row": y,
+                    "layer": "floor-flat", "collision": False,
+                    "note": "Flat water on a walkable tile. No new collision.",
+                })
                 used.add((x, y))
                 n += 1
         chosen = [p for p in chosen if p != "green-stream"]
-    def wide_spots(w, h, n):
-        door = tiles[0].index("D") if "D" in tiles[0] else None
-        spots = []
-        for y in (1, 2, 3, max(2, H - 5)):
-            for x in (1, 2, W - w - 1, (door + 2) if door is not None else 2):
-                if x < 1 or y < 1 or x + w >= W or y + h >= H:
+    # The three approved samples, staged on the real maps. Middle columns stay clear.
+    staged = {
+        "pebble-path": [
+            ("green-pathstone", 4, 2), ("green-pathstone", 4, 5),
+            ("green-pathstone", 14, 5), ("green-pathstone", 15, 2),
+            ("green-fern", 5, 4), ("green-fern", 5, 6),
+            ("green-fern", 15, 4), ("green-fern", 16, 6),
+            ("green-stone", 2, 6), ("green-stone", 13, 6),
+        ],
+        "bellows-door": [
+            ("red-bellows", 2, 2), ("red-bellows", 16, 2),
+            ("red-anvil", 2, 5), ("red-tool", 4, 6),
+            ("red-bin", 16, 5), ("red-trough", 14, 7),
+            ("red-barrel", 17, 6),
+            ("red-ember", 3, 4), ("red-ember", 16, 4),
+            ("red-hang", -1, -1),
+        ],
+        "reading-nook": [
+            ("brown-shelf", 1, 1), ("brown-shelf", 10, 1),
+            ("brown-ladder", 11, 2), ("brown-lamp", 10, 5),
+            ("brown-rug", 1, 4), ("brown-rug", 10, 6),
+            ("brown-seat", 1, 6),
+            ("brown-cushion", 1, 2), ("brown-cushion", 11, 5),
+            ("brown-root", 1, 3), ("brown-root", 11, 3),
+        ],
+    }
+    if room["id"] in staged:
+        for piece, col, row in staged[room["id"]]:
+            if piece not in images:
+                continue
+            if piece in WALL_ONLY:
+                w = span(specs[piece])
+                if piece == "red-hang":
+                    row0 = tiles[0]
+                    spots = [x for x, ch in enumerate(row0) if ch == "#" and 0 < x < W - 1 and row0[x - 1] != "D" and row0[min(W - 1, x + 1)] != "D"]
+                    step = max(1, len(spots) // 3) if spots else 1
+                    for x in (spots[::step][:3] if spots else []):
+                        layers.append((0, x, piece, 0, 1))
+                        notes.append({
+                            "room": room["id"], "piece": piece, "col": x, "row": 0,
+                            "layer": "top-wall", "collision": False,
+                            "note": "Hanging on the top wall. No new collision.",
+                        })
                     continue
-                if abs((x + w / 2.0) - (W - 1) / 2.0) < 3 and w < 5:
-                    continue
-                good = all(tiles[y + dy][x + dx] != "#" for dy in range(h) for dx in range(w))
-                if good and (x, y) not in spots:
-                    spots.append((x, y))
-        return spots[:n]
+            w = span(specs[piece])
+            if row < 1 or col < 1 or col + w >= W or row >= H - 1:
+                continue
+            if any(tiles[row][col + d] != "." for d in range(w)):
+                continue
+            layers.append((row, col, piece, 0))
+            notes.append({
+                "room": room["id"], "piece": piece, "col": col, "row": row,
+                "layer": "floor-flat", "collision": False,
+                "note": "Approved sample grouping on a walkable tile. No new collision.",
+            })
+            for d in range(w):
+                used.add((col + d, row))
+        chosen = [p for p in chosen if p == "green-stream"]
+
+    def note(piece, col, row, layer):
+        notes.append({
+            "room": room["id"],
+            "piece": piece,
+            "col": col,
+            "row": row,
+            "layer": layer,
+            "collision": False,
+            "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have.",
+        })
 
     for piece in chosen:
         if piece not in images:
             continue
-        if piece in SETPIECES:
+        if piece in WALL_ONLY:
             w = span(specs[piece])
-            gh = specs[piece]["groundRect"]
-            hh = max(1, int(round(gh["row1"] - gh["row0"])))
-            n = 3 if piece == "green-pathstone" else (2 if piece == "blue-pool" else 1)
-            for cell in wide_spots(w, hh, n):
-                if any((cell[0] + d, cell[1]) in used for d in range(w)):
-                    continue
-                layers.append((cell[1], cell[0], piece, 0))
-                for d in range(w):
-                    used.add((cell[0] + d, cell[1]))
-            continue
-        if piece == "red-hang":
-            for x in (2, 5, W - 3):
-                if 0 < x < W - 1 and tiles[1][x] == "." and (x, 1) not in used:
-                    layers.append((1, x, piece, 0))
-                    used.add((x, 1))
+            x0 = wall_start(tiles, w)
+            if x0 is None:
+                continue
+            if piece == "red-hang":
+                row = tiles[0]
+                spots = [x for x, ch in enumerate(row) if ch == "#" and 0 < x < W - 1 and row[x - 1] != "D" and row[min(W - 1, x + 1)] != "D"]
+                step = max(1, len(spots) // 3) if spots else 1
+                for x in (spots[::step][:3] if spots else []):
+                    layers.append((0, x, piece, 0, 1))
+                    note(piece, x, 0, "top-wall")
+                continue
+            layers.append((0, x0, piece, 0, 1))
+            note(piece, x0, 0, "top-wall")
             continue
         w = span(specs[piece])
-        copies = 3 if piece in FLAT or piece.endswith(("-stone", "-fern", "-ember", "-root", "-reed", "-wisp")) else 1
+        copies = 3 if piece in FLAT or piece.endswith(("-stone", "-fern", "-ember", "-root", "-reed", "-pathstone")) else 1
         placed = 0
         pool = side_spots(tiles, w)
         if piece.endswith("-root"):
@@ -313,13 +421,15 @@ def draw_room(data, room, specs, images, fighter):
             if any((cell[0] + d, cell[1]) in used for d in range(w)):
                 continue
             layers.append((cell[1], cell[0], piece, 0))
+            note(piece, cell[0], cell[1], "floor-flat")
             for d in range(w):
                 used.add((cell[0] + d, cell[1]))
             placed += 1
             if placed >= copies:
                 break
-    # Nearer rows last, so a front prop covers the foot of the wall behind it.
-    for y, x, piece, dx in sorted(layers, key=lambda t: (t[0], t[1])):
+    # Nearer rows last. Wall art paints after the wall cells of the same row, so a wide piece is not covered.
+    for item in sorted(layers, key=lambda t: (t[0], t[4] if len(t) > 4 else 0, t[1])):
+        y, x, piece, dx = item[0], item[1], item[2], item[3]
         paste(canvas, images[piece], specs[piece], x, y, dx)
     for y, row in enumerate(tiles):
         if "P" in row:
@@ -327,7 +437,7 @@ def draw_room(data, room, specs, images, fighter):
             im, (ax, ay) = fighter
             # Same placement as the approved kitchen preview: feet on the cell, sprite not scaled.
             canvas.alpha_composite(im, (int(x * T + T / 2 - ax), int((y + ROOM_TOP + 0.8) * T - ay)))
-    return canvas
+    return canvas, notes
 
 
 def danger(im):
@@ -368,13 +478,15 @@ def main():
     specs, images = load_kit()
     fighter = player_sprite()
     manifest = []
+    placements = []
     reds = {}
     by_set = {s: [] for s in SETS}
     for name in SETS:
         data = json.load(open(os.path.join(DATA, name + ".json")))
         theme = theme_of(data)
         for room in data["rooms"]:
-            im = draw_room(data, room, specs, images, fighter)
+            im, notes = draw_room(data, room, specs, images, fighter)
+            placements.extend(notes)
             path = os.path.join(ROOMS, room["id"] + ".png")
             im.save(path)
             nred = danger(im)
@@ -403,6 +515,15 @@ def main():
             print(room["id"], im.size, "red", nred)
     json.dump({
         "notForImport": True,
+        "collision": "Every listed piece has collision false. None of this art adds or hides a collision tile. Existing # . D P C S maps are unchanged.",
+        "layers": {
+            "top-wall": "Drawn on row 0, the top wall. The picture is one tile deep and rises above the wall. It does not sit on a walkable tile.",
+            "floor-flat": "Drawn on a walkable tile. It is flat and reads as the floor, not as a solid obstacle.",
+        },
+        "placements": placements,
+    }, open(os.path.join(ROOT, "art-placements.json"), "w"), indent=2)
+    json.dump({
+        "notForImport": True,
         "note": "Green-to-Black room kit export. Ready for the Manager to review. Not imported.",
         "pixelsPerTile": T,
         "gamePixelsPerTile": 48,
@@ -415,44 +536,49 @@ def main():
     sheet([(b, os.path.join(ROOMS, b + ".png")) for b in bosses],
           "Boss arenas at 48 px per tile. Architecture only, no guardian.",
           os.path.join(PREVIEW, "boss-setpieces-48.png"), 48 / 80)
-    # Same 80 px per tile on every picture. Seven tiles wide, so the fighter and props match the samples.
-    pairs = [
-        ("Green", "room-green_room-green.png", "pebble-path"),
-        ("Blue", None, "ferry-landing"),
-        ("Red", "room-red_room-red.png", "bellows-door"),
-        ("Red-Black", None, "whisper-gate"),
-        ("Brown", "room-brown_room-brown.png", "reading-nook"),
-        ("Brown-Black", None, "rainy-landing"),
-        ("Black", None, "summit-steps"),
+    # The three approved samples, the rejected export, and this export, all at 48 px per tile.
+    samples = [
+        ("Green Pebble Path", "room-green_room-green.png", "pebble-path"),
+        ("Red Bellows Door", "room-red_room-red.png", "bellows-door"),
+        ("Brown Reading Nook", "room-brown_room-brown.png", "reading-nook"),
     ]
-    old_root = os.path.join(ROOT, "superseded", "pass-a7324da8", "rooms")
-    cells = []
-    for i, (lab, sample, rid) in enumerate(pairs):
-        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)
-        blocks = []
-        new = Image.open(os.path.join(ROOMS, rid + ".png")).convert("RGBA")
-        blocks.append(("Now, 80 px per tile", new))
-        oldp = os.path.join(old_root, rid + ".png")
-        if os.path.exists(oldp):
-            blocks.append(("Before, same scale", Image.open(oldp).convert("RGBA")))
-        if sample:
-            blocks.append(("Approved sample, 80 px per tile", Image.open(os.path.join(ROOT, "sprites", sample)).convert("RGBA")))
-        w = max(b.width for _, b in blocks)
-        h = sum(b.height + 32 for _, b in blocks) + 16
-        page = Image.new("RGB", (w + 24, h), (20, 18, 28))
+    before_root = os.path.join(ROOT, "superseded", "pass-271a138a", "rooms")
+    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)
+    row_pages = []
+    for lab, sample, rid in samples:
+        parts = []
+        for title, path in (
+            ("Before, 48 px per tile", os.path.join(before_root, rid + ".png")),
+            ("Corrected export, 48 px per tile", os.path.join(ROOMS, rid + ".png")),
+            ("Approved sample, 48 px per tile", os.path.join(ROOT, "sprites", sample)),
+        ):
+            im = Image.open(path).convert("RGBA")
+            im = im.resize((max(1, round(im.width * 48 / 80)), max(1, round(im.height * 48 / 80))), Image.Resampling.LANCZOS)
+            parts.append((title, im))
+        gap = 16
+        w = sum(im.width for _, im in parts) + gap * (len(parts) + 1)
+        h = max(im.height for _, im in parts) + 64
+        page = Image.new("RGB", (w, h), (20, 18, 28))
         d = ImageDraw.Draw(page)
-        y = 8
-        for title, im in blocks:
-            d.text((12, y), lab + " — " + title, fill=(244, 236, 220), font=font)
+        d.text((12, 8), lab, fill=(244, 236, 220), font=font)
+        x = gap
+        for title, im in parts:
+            d.text((x, 34), title, fill=(196, 186, 168), font=font)
             bg = Image.new("RGBA", im.size, (20, 18, 28, 255))
             bg.alpha_composite(im)
-            page.paste(bg.convert("RGB"), (12, y + 26))
-            y += im.height + 32
-        page.save(os.path.join(PREVIEW, "closeup-" + lab.lower().replace(" ", "-") + ".png"))
-        cells.append((lab, new.crop((0, 0, min(new.width, 7 * T), min(new.height, int((5 + ROOM_TOP) * T))))))
-    sheet([(c[0], _save_tmp(c[1], i)) for i, c in enumerate(cells)],
-          "Equal scale, 80 px per tile. Before, now, and the approved sample where we have one.",
-          os.path.join(PREVIEW, "compare-equal-scale.png"), 1)
+            page.paste(bg.convert("RGB"), (x, 58))
+            x += im.width + gap
+        row_pages.append(page)
+        page.save(os.path.join(PREVIEW, "closeup-" + rid + ".png"))
+    sheet_w = max(p.width for p in row_pages)
+    sheet_h = sum(p.height for p in row_pages) + 8
+    board = Image.new("RGB", (sheet_w, sheet_h), (20, 18, 28))
+    y = 0
+    for page in row_pages:
+        board.paste(page, (0, y))
+        y += page.height
+    board.save(os.path.join(PREVIEW, "compare-samples-48.png"))
+    print("compare", board.size)
     print("danger rooms", {k: v for k, v in reds.items() if v})
     print("rooms", len(manifest))
 

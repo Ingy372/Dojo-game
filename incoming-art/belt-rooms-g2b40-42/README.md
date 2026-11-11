@@ -2,15 +2,21 @@
 
 Not imported. Jay said the belt rooms look good and to build the full set. The Manager relayed that on Nov 10.
 
-The empty kit pass is in `superseded/pass-63fb0263/`. The next pass is in `superseded/pass-a7324da8/`. This pass joins the walls, puts real stepping stones on the Pebble Path, builds the seven boss backdrops, and makes the named props big enough to read at 48 px per tile.
+Earlier passes are in `superseded/`. The pass the Manager sent back (`271a138a`) is in `superseded/pass-271a138a/`. The three approved sample pictures stay in `sprites/`.
 
-The three approved sample pictures stay in `sprites/`.
+This pass puts those approved groupings into the real Pebble Path, Bellows Door, and Reading Nook. Green steps are grey stone with a thick moss tread, not a bare slab. Boss pieces sit on the top wall. The floors they stand over stay open.
 
 ## Delivery Note
 
 **ITEM:** G2B-40, G2B-41, and G2B-42. Every room from Green through Black.
 
-**WHAT:** 59 rooms. Green is all 11 rooms in `giants-steps.json` (a run still picks 8). Then Blue, Red, Red-Black, Brown, Brown-Black, and Black, 8 rooms each. Layouts are the `# . D P C S` maps in `drafts/content/rooms/`. Props are only the ones named in that room's art line, kept off the middle. Green floors are one soft moss, with river stones, ferns, and a stream at the sides. Red floors are one quiet brick, with bright ember pools. Brown floors are one even plank, and roots sit only on the wall edges. Same 35° camera and 80 px tiles as the samples. The contact sheets are at 48 px per tile with the approved kitchen fighter standing on P.
+**WHAT:** The same 59 rooms, same maps, same 35° camera, 80 px tiles. Nothing was added to the collision. Every placed picture is listed in `art-placements.json` with `collision: false`.
+
+- Pebble Path now has the approved grouping on the real room: thick mossy stepping stones and ferns beside the path, a stream against the right wall, and stair blocks with a moss tread.
+- Bellows Door has the bellows by the doors, anvil, tools, bin, trough, barrel, and ember pools on the sides, and three lanterns hanging on the top wall.
+- Reading Nook has shelves, the ladder, the lamp, rugs, cushions, the seat, and short roots at the sides. The middle lane stays clear.
+- The forge, the mirrors, and the lamp stand are on the top wall. The Root Hall tree and its roots are on the wall only. The Great Stair and the Herald's landing stay open, with the stair and the clouds up on the wall. The Watching Pool is a shallow floor with flat stones at the sides.
+- Blue, Red-Black, Brown-Black, Black, and the boss floors no longer have the repeated light ovals.
 
 | Set | Rooms | Sheet |
 | --- | --- | --- |
@@ -24,9 +30,9 @@ The three approved sample pictures stay in `sprites/`.
 
 Each room picture is `rooms/<id>.png`. The piece list, sizes, and anchors are `kit/static.json`. The room list is `manifest.json`.
 
-**WHY:** The sample trio was approved, so the rest of the belt rooms can be built for review.
+**WHY:** The Manager sent back `271a138a` because the real Pebble Path, Bellows Door, and Reading Nook did not match the approved samples, and the green steps looked like raw grey slabs.
 
-**DECIDE:** Review the full set. It is not imported. A few art calls, already made so the build could finish:
+**DECIDE:** Review the corrected rooms. They are not imported. A few art calls, already made so the build could finish:
 
 - The guardians themselves (Stone Giant, heron, Ember Knight, mask, Root Keeper, Storm Herald, Lightbearer) are not drawn in these rooms. They are character art, not floor tiles.
 - "Deep red" and the smith chest's "red lid" are lacquer brown. Danger-red stays for attack warnings only. Checked pixels: 0.
@@ -37,8 +43,9 @@ Each room picture is `rooms/<id>.png`. The piece list, sizes, and anchors are `k
 
 ## Look here
 
-- `preview/closeup-green.png`, `closeup-red.png`, `closeup-brown.png`, and the other four tiers — the whole room at 80 px per tile, the failed pass at the same scale, and the approved sample where there is one.
-- `preview/*-48.png` — all 59 rooms at 48 px per tile. The fighter is the kitchen sprite, scaled only because the whole picture is.
+- `preview/compare-samples-48.png` — Pebble Path, Bellows Door, and Reading Nook. Each row is the rejected export, this export, and the approved sample, all at 48 px per tile.
+- `preview/*-48.png` — all 59 rooms at 48 px per tile, plus `boss-setpieces-48.png`. The fighter is the kitchen sprite.
+- `art-placements.json` — where each picture sits, which layer (top wall or flat floor), and that it adds no collision.
 
 ## Rebuild
 

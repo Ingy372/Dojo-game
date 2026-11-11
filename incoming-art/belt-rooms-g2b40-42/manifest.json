@@ -19,10 +19,10 @@
       "image": "rooms/pebble-path.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -44,10 +44,10 @@
       "image": "rooms/swarm-slope.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -69,10 +69,10 @@
       "image": "rooms/goat-ledge.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -94,10 +94,10 @@
       "image": "rooms/golem-stairs.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -119,10 +119,10 @@
       "image": "rooms/shield-shelf.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -144,10 +144,10 @@
       "image": "rooms/roller-run.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -169,10 +169,10 @@
       "image": "rooms/switchback-road.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -194,10 +194,10 @@
       "image": "rooms/giants-gate.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -219,10 +219,10 @@
       "image": "rooms/water-jar-landing.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -244,10 +244,10 @@
       "image": "rooms/resting-step.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -269,10 +269,10 @@
       "image": "rooms/great-stair.png",
       "imagePx": [
         1600,
-        1216
+        1312
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -294,10 +294,10 @@
       "image": "rooms/ferry-landing.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -319,10 +319,10 @@
       "image": "rooms/reed-bank.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -344,10 +344,10 @@
       "image": "rooms/crab-shallows.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -369,10 +369,10 @@
       "image": "rooms/wave-lanes.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -394,10 +394,10 @@
       "image": "rooms/lantern-barge.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -419,10 +419,10 @@
       "image": "rooms/oar-locker.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -444,10 +444,10 @@
       "image": "rooms/still-pool.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -469,10 +469,10 @@
       "image": "rooms/watching-pool.png",
       "imagePx": [
         1600,
-        1216
+        1312
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -494,10 +494,10 @@
       "image": "rooms/bellows-door.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -519,10 +519,10 @@
       "image": "rooms/cub-crowd.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -544,10 +544,10 @@
       "image": "rooms/anvil-alley.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -569,10 +569,10 @@
       "image": "rooms/sweeping-hall.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -594,10 +594,10 @@
       "image": "rooms/smiths-rush.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -619,10 +619,10 @@
       "image": "rooms/shield-rack.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -644,10 +644,10 @@
       "image": "rooms/cool-embers.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -669,10 +669,10 @@
       "image": "rooms/knights-forge.png",
       "imagePx": [
         1600,
-        1216
+        1312
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -694,10 +694,10 @@
       "image": "rooms/whisper-gate.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -719,10 +719,10 @@
       "image": "rooms/split-mirrors.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -744,10 +744,10 @@
       "image": "rooms/shade-gallery.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -769,10 +769,10 @@
       "image": "rooms/masklet-circle.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -794,10 +794,10 @@
       "image": "rooms/echo-chamber.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -819,10 +819,10 @@
       "image": "rooms/kind-word-nook.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -844,10 +844,10 @@
       "image": "rooms/quiet-corner.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -869,10 +869,10 @@
       "image": "rooms/mask-hall.png",
       "imagePx": [
         1600,
-        1216
+        1312
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -894,10 +894,10 @@
       "image": "rooms/dusty-entry.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -919,10 +919,10 @@
       "image": "rooms/reading-roots.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -944,10 +944,10 @@
       "image": "rooms/inkwell-aisle.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -969,10 +969,10 @@
       "image": "rooms/root-stacks.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -994,10 +994,10 @@
       "image": "rooms/great-reading-room.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1019,10 +1019,10 @@
       "image": "rooms/story-shelf.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1044,10 +1044,10 @@
       "image": "rooms/reading-nook.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1069,10 +1069,10 @@
       "image": "rooms/root-hall.png",
       "imagePx": [
         1600,
-        1216
+        1312
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1094,10 +1094,10 @@
       "image": "rooms/rainy-landing.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1119,10 +1119,10 @@
       "image": "rooms/breezy-bend.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1144,10 +1144,10 @@
       "image": "rooms/drum-landing.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1169,10 +1169,10 @@
       "image": "rooms/zigzag-steps.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1194,10 +1194,10 @@
       "image": "rooms/storm-gate.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1219,10 +1219,10 @@
       "image": "rooms/feather-nook.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1244,10 +1244,10 @@
       "image": "rooms/dry-alcove.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1269,10 +1269,10 @@
       "image": "rooms/heralds-landing.png",
       "imagePx": [
         1600,
-        1216
+        1312
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1294,10 +1294,10 @@
       "image": "rooms/summit-steps.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1319,10 +1319,10 @@
       "image": "rooms/wisp-walk.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1344,10 +1344,10 @@
       "image": "rooms/knight-terrace.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1369,10 +1369,10 @@
       "image": "rooms/sweeper-ridge.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1394,10 +1394,10 @@
       "image": "rooms/last-climb.png",
       "imagePx": [
         1600,
-        1056
+        1152
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1419,10 +1419,10 @@
       "image": "rooms/bell-nook.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1444,10 +1444,10 @@
       "image": "rooms/lamp-stand.png",
       "imagePx": [
         1040,
-        816
+        912
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
@@ -1469,10 +1469,10 @@
       "image": "rooms/summit-lamp.png",
       "imagePx": [
         1600,
-        1216
+        1312
       ],
       "pixelsPerTile": 80,
-      "wallTopTiles": 1.2,
+      "wallTopTiles": 2.4,
       "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
       "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
       "gamePixelsPerTile": 48,
