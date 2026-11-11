@@ -1,45 +1,47 @@
-# Ember Knight — idle, walk, attack, and the shift (all 8 directions)
+# Ember Knight — approved export (not imported)
 
 Stable label: **Ember Knight — shifted form**.
 
 **Warm Shield** is a **PLACEHOLDER** name. It is not an id.
 
-These sheets are **not for import** until the Manager approves them. No game code was changed.
+These sheets are **not imported**. Jay said the strike icons and the Ember Knight look good. The Manager relayed that on Nov 10. This folder is the export for the Manager to review before anyone copies it into the game.
+
+No game code was changed. No shield bash or shield rush sheets.
 
 ## Delivery Note
 
-**ITEM:** J16-EMBER-ANIM. The Ember Knight in all 8 directions, with idle, walk, attack, and the existing form-shift timing.
+**ITEM:** J16-EMBER-ANIM. Approved export of the Ember Knight, all 8 directions.
 
-**WHAT:** Pass 3, after the Manager's review of `e166dd1c`. Earlier previews are in `superseded/sample-1/` and `superseded/sample-2/`. Same camera and 512 px frames. The walk now has two stubby boots stepping under the hem and a bigger bob, and it is marked 1.6 tiles a second for the Programmer to tune. The weapon is a blade with a crossguard. The hit keeps the blade visible. The gold mark is one tapered crescent, thick by the blade and pointed behind it, not a row of circles. No shield bash or shield rush sheets.
+**WHAT:** The approved poses and timing are unchanged. Sheets are straight-alpha PNG, 512 × 640 a frame, feet at x 256, y 435.2. Rows are N, NE, E, SE, S, SW, W, NW. Columns are frames. Camera is orthographic, 35° down, 3.15 tiles across. Draw a frame at 151 × 189 px in the game (48 px per tile). The older 512-tall reduced-motion shift is in `superseded/sample-6/`; the export pads that same picture to 640 px, with the extra space below the feet. Nothing was redrawn.
 
-| Animation | Frames | fps | Length | Sheet |
-| --- | --- | --- | --- | --- |
-| Idle | 8 | 8 | 1.0 s, loops | `sprites/ember-knight_idle.png` |
-| Walk | 10 | 30 | 0.3333 s, loops | `sprites/ember-knight_walk.png` |
-| Attack (ember slash) | 20 | 10 | 2.0 s, once. Hit on frame 9 (0.9 s) | `sprites/ember-knight_attack.png` |
-| Shift | 5 sample times | not a film | 1.5 s (1.0 s glow, then 0.5 s settle) | `sprites/ember-knight_shift.png` |
-| Shift, Reduced Motion | 5 sample times | not a film | same 1.5 s, no ring or steam | `sprites/ember-knight_shift-reduced.png` |
+| Animation | Frames | fps | Length | Hit or mark | Sheet |
+| --- | --- | --- | --- | --- | --- |
+| Idle | 8 | 8 | 1.0 s, loops | — | `sprites/ember-knight_idle.png` |
+| Walk | 10 | 30 | 0.333 s, loops | — | `sprites/ember-knight_walk.png` |
+| Attack (ember slash) | 20 | 10 | 2.0 s, once | hit frame 9 (0.9 s) | `sprites/ember-knight_attack.png` |
+| Spark Shield | 16 | 10 | 1.6 s, once | shield forward at frame 8 | `sprites/ember-knight_spark-shield.png` |
+| Forge Sweep | 16 | 10 | 1.6 s, once | hit frame 8 | `sprites/ember-knight_forge-sweep.png` |
+| Shift | 5 sample times | not a film | 1.5 s (1.0 s glow, then 0.5 s settle) | — | `sprites/ember-knight_shift.png` |
+| Shift, Reduced Motion | 5 sample times | not a film | same 1.5 s, no ring or steam | — | `sprites/ember-knight_shift-reduced.png` |
 
-Every sheet is 512 × 512 per frame. Rows are N, NE, E, SE, S, SW, W, NW. Columns are frames. Straight alpha. Feet at x 256, y 435.2.
+The walk sheet is marked 1.6 tiles a second so it can be played back. That number is a **placeholder**, not final gameplay tuning.
 
-**WHY:** Jay approved the full animation scope. The old pack only faced the camera and had no walk or attack.
+**WHY:** Jay approved the look. The Manager asked for the export and this note, ready to review, and not imported.
 
-**DECIDE:** See the open questions at the bottom. Nothing here should be imported yet.
+**DECIDE:** Review this export. Warm Shield is still only a placeholder name. 1.6 tiles a second is not a final speed. Say if this may be imported.
 
-**NEXT:** The Manager looks at the preview, then says if this can be imported. Pause after this delivery.
+**NEXT:** After a yes, a Programmer can import it. Until then it stays in `incoming-art/`. This delivery does not include room art.
 
 ## Look here
 
-- `preview/sheet.png` — all 8 directions, one idle frame, one walk frame, and the slash.
-- `preview/idle-S.gif` — facing the camera, 8 fps.
-- `preview/walk-S.gif` — facing the camera. A GIF can only step in hundredths of a second, so this is 3/100 s per frame (a little faster than the 30 fps sheet).
-- `preview/attack-S.gif` — ember slash, 10 fps.
-- `preview/shift-S.gif` — the 1.5 s shift, with the holds at 0.00, 0.50, 1.00, 1.25 and 1.50.
-- `preview/attack-closeup.png` — all 20 attack frames, large, facing the camera.
+- `preview/approved-40.png` — idle, a walk step, the slash, Spark Shield, Forge Sweep, the shift, and the back view, each 40 px tall.
+- `preview/idle-S.gif`, `preview/walk-S.gif`, `preview/attack-S.gif`, `preview/spark-shield-S.gif`, `preview/forge-sweep-S.gif`, `preview/shift-S.gif` — facing the camera.
+- `preview/attack-closeup.png`, `preview/spark-shield-closeup.png`, `preview/forge-sweep-closeup.png`.
+- `sprites/ember-knight.json` — frame size, anchor, camera, frame counts, fps, and hit frames.
 
 ## How it was checked
 
-`preview/check-40.png` is the walk, the hit, and the back view at 40 px tall. The boots and the bob are visible at that size, and the walk does not match the idle. The hit keeps the blade, with a warm-gold arc beside it. From behind, the hilt is a crossguard, not a stick. Danger-red pixels on every sheet: 0.
+Checked the sheets in `sprites/`, not a stand-in. Every move is 8 directions and the frame count in the table. Every frame is 512 × 640, RGBA, with clear corners. Danger-red pixels (red over 180, green and blue under 70): 0 on every sheet. The tightest opaque edge is 23 px (Forge Sweep, facing east, frame 7). Every other move is farther in. The reduced-motion shift, after the 640 pad, is 81 px in at the tightest. Feet stay at y 435.2. The round body, stubby boots, shield, and blade match the approved pass. At 40 px the boots, the slash, the shield sparks, and the floor arc still read. No stray specks off the body.
 
 ## Rebuild
 
@@ -55,13 +57,10 @@ blender -b incoming-art/ember-knight-shift-drafts/source/ember-knight-phase3.ble
 python3 incoming-art/ember-knight-anim/source/make_preview.py
 ```
 
-`source/ember-knight-anim.blend` is that scene after the pivots and the shift pieces (ring, steam, embers) were added. The poses live in `render_ember_anim.py`, which is the reusable script.
+`source/ember-knight-anim.blend` is the scene after the pivots and the shift pieces were added. The poses live in `render_ember_anim.py`. Do not rerun this over the approved sheets unless the frames folder is a fresh render of this same script.
 
-## Spark Shield and Forge Sweep
+## Decided already
 
-Added from the plan line for the Ember Knight: Spark Shield (the shield comes forward, gold motes on the rim, a Strike is what breaks it) and Forge Sweep (a wide blade arc with a step forward). Both are 8 directions, 512 px, 16 frames at 10 fps. The plan line did not give tick counts. No danger red. Close-ups: `preview/spark-shield-closeup.png` and `preview/forge-sweep-closeup.png`.
-
-## Decided by the Manager
-
-- Walk speed is 1.6 tiles a second. It is in the manifest. The Programmer tunes playback.
 - No shield bash or shield rush sheets.
+- Warm Shield stays a placeholder.
+- The shift clock is unchanged: 1.5 s, with a quieter reduced-motion version.

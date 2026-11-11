@@ -2,8 +2,7 @@
 Dojo Ascent — Ember Knight animation renders.
 
 Opens the approved shifted-form scene (or the phase-3 "before" scene) and
-renders with the same camera as build_ember_shift.py: orthographic, 35° down,
-2.6 tiles across, 512 px, feet at 85% of the frame.
+renders orthographic, 35° down, 3.15 tiles across, 512 × 640, feet at y 435.2.
 
     blender -b incoming-art/ember-knight-shift-drafts/source/ember-knight-shift-b.blend \
         -P incoming-art/ember-knight-anim/source/render_ember_anim.py -- \

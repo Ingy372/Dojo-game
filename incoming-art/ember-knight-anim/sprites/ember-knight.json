@@ -4,19 +4,21 @@
   "placeholderName": "Warm Shield",
   "placeholderNameStatus": "PLACEHOLDER. Not approved as a name. Do not use it as an id.",
   "notForImport": true,
-  "notForImportNote": "Motion concept for the Manager. Do not copy these sheets into the game until the Manager approves them.",
+  "notForImportNote": "Jay said the Ember Knight looks good. The Manager relayed that on Nov 10. These sheets are the approved export, ready for the Manager to review. They are not imported.",
   "frameWidth": 512,
   "frameHeight": 640,
   "anchorPx": [
     256.0,
     435.2
   ],
-  "anchorNote": "Feet. Still 435.2 px from the top, the same as the old 512-tall frame. The frame is now 640 px tall, so the extra canvas is below the feet. The view is also wider: 3.15 tiles across instead of 2.6, so a floor arc is not cut off at the side. Every move uses this same frame and anchor.",
+  "anchorNote": "Feet. 435.2 px from the top of every 512 × 640 frame. The extra canvas is below the feet. Every move uses this same frame and anchor.",
   "orthoScaleTiles": 3.15,
   "elevationDeg": 35,
   "sourcePixelsPerTile": 162.5397,
   "gamePixelsPerTile": 48,
-  "gameDisplayPx": 125,
+  "gameDisplayPx": 151,
+  "gameDisplayHeightPx": 189,
+  "gameDisplayNote": "Draw the 512 × 640 frame at 151 × 189 px (3.15 tiles × 48 px). The old 125 px width was the 2.6-tile camera and does not match this export.",
   "directions": [
     "N",
     "NE",
@@ -28,7 +30,7 @@
     "NW"
   ],
   "sheetLayout": "Rows are directions, top to bottom, in the order above. Columns are frames, left to right, no padding. Straight alpha.",
-  "camera": "Orthographic, 35 degrees down, 2.6 tiles across. Same camera as incoming-art/ember-knight-shift-drafts/source/build_ember_shift.py.",
+  "camera": "Orthographic, 35 degrees down, 3.15 tiles across, 512 × 640. Same elevation as incoming-art/ember-knight-shift-drafts/source/build_ember_shift.py. The view is wider than that still's 2.6 tiles so the floor arc fits.",
   "model": "Approved shifted form. Round body, shield arm, bar arm. No separate legs.",
   "animations": {
     "idle": {
@@ -46,7 +48,8 @@
       "durationSec": 0.3333,
       "loop": true,
       "designSpeedTilesPerSec": 1.6,
-      "note": "10 frames at 30 fps. The Manager set the walk speed at 1.6 tiles a second. The Programmer tunes playback. The sheet has a bigger bob than idle and two stubby boots stepping under the hem. The round body is unchanged."
+      "designSpeedStatus": "PLACEHOLDER. Not final gameplay tuning.",
+      "note": "10 frames at 30 fps. 1.6 tiles a second is only a placeholder so the walk can be played back. It is not the final gameplay speed. The sheet has a bigger bob than idle and two stubby boots stepping under the hem. The round body is unchanged."
     },
     "attack": {
       "file": "ember-knight_attack.png",
@@ -57,6 +60,7 @@
       "loop": false,
       "impactFrame": 9,
       "impactTimeSec": 0.9,
+      "events": [{"frame": 9, "event": "hit", "timeSec": 0.9}],
       "note": "Ember slash. 18 telegraph ticks then 22 recover ticks at 20 ticks a second. Frame 9 is the hit. Frames 0-8 cock the bar back and up while the body leans back. Frame 9 sweeps across the front with a short gold-orange arc. Then follow-through and recovery. Arms are thicker than the first pass. No red on the knight."
     },
     "shift": {
@@ -114,6 +118,7 @@
       "durationSec": 1.6,
       "loop": false,
       "presentFrame": 8,
+      "events": [{"frame": 8, "event": "shieldPresent", "timeSec": 0.8}],
       "note": "The shield comes forward. Gold motes sit on the rim. A Strike is what breaks it; this art does not draw a red circle. The plan line did not give tick counts, so this is 16 frames at 10 fps."
     },
     "forgeSweep": {
@@ -124,6 +129,7 @@
       "durationSec": 1.6,
       "loop": false,
       "impactFrame": 8,
+      "events": [{"frame": 8, "event": "hit", "timeSec": 0.8}],
       "note": "Dash-only wide blade arc. The blade stays visible. The gold arc is warm gold, not red and not the game's purple stripe. The plan line did not give tick counts, so this is 16 frames at 10 fps."
     }
   }

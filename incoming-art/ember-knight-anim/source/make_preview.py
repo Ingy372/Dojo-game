@@ -18,7 +18,8 @@ os.makedirs(SPRITES, exist_ok=True)
 os.makedirs(PREVIEW, exist_ok=True)
 
 DIRS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
-W = H = 512
+# Filled from the rendered frames. The approved export is 512 wide and 640 tall.
+W, H = 512, 640
 GLOW = np.array([255, 244, 207], np.float32)  # #fff4cf
 HALO = (255, 236, 170)  # #ffecaa
 
@@ -42,11 +43,14 @@ def crossfade(a, b, t):
 
 
 def sheet(frames_2d, path):
+    w, h = frames_2d[0][0].size
     rows, cols = len(frames_2d), len(frames_2d[0])
-    canvas = Image.new("RGBA", (cols * W, rows * H), (0, 0, 0, 0))
+    canvas = Image.new("RGBA", (cols * w, rows * h), (0, 0, 0, 0))
     for r, row in enumerate(frames_2d):
         for c, im in enumerate(row):
-            canvas.paste(im, (c * W, r * H))
+            if im.size != (w, h):
+                raise SystemExit(f"frame size {im.size} does not match {w}x{h}")
+            canvas.paste(im, (c * w, r * h))
     canvas.save(path)
     return canvas
 
@@ -60,7 +64,9 @@ def danger(im):
 
 
 def main():
+    global W, H
     idle = [[load(f"idle_{d}_{i:02d}.png") for i in range(8)] for d in DIRS]
+    W, H = idle[0][0].size
     walk = [[load(f"walk_{d}_{i:02d}.png") for i in range(10)] for d in DIRS]
     attack = [[load(f"attack_{d}_{i:02d}.png") for i in range(20)] for d in DIRS]
     before = {d: load(f"before_{d}.png") for d in DIRS}
@@ -126,11 +132,13 @@ def main():
     close.convert("RGB").save(os.path.join(PREVIEW, "attack-closeup.png"))
 
     def gif_row(images, path, duration):
-        side = 125  # in-game size of this 512 frame
-        frames = [im.resize((side, side), Image.Resampling.LANCZOS).convert("RGBA") for im in images]
+        # 3.15 tiles across, drawn at 48 px per tile. Not the old 2.6-tile 125 px width.
+        side_w = round(3.15 * 48)
+        side_h = round(images[0].height * side_w / images[0].width)
+        frames = [im.resize((side_w, side_h), Image.Resampling.LANCZOS).convert("RGBA") for im in images]
         bg = []
         for fr in frames:
-            base = Image.new("RGBA", (side, side), (36, 34, 48, 255))
+            base = Image.new("RGBA", (side_w, side_h), (36, 34, 48, 255))
             base.alpha_composite(fr)
             bg.append(base.convert("RGB"))
         bg[0].save(path, save_all=True, append_images=bg[1:], duration=duration, loop=0)
