@@ -449,6 +449,11 @@ export class HomeScene extends Phaser.Scene {
     y += enterH + S2;
     this.button(pad, y, leftW, 44, 'Practice room', 0x3a3a4a, TYPE.body, () => this.goTo('Game', {}));
     y += 44 + S2;
+    // Staff fixture list. One ordinary click. A beta build does not draw it (B-SAFE).
+    if (!BETA) {
+      this.button(pad, y, leftW, MIN_TAP, 'Testing', 0x4a3f63, TYPE.body, () => this.openTesting());
+      y += MIN_TAP + S2;
+    }
     this.renderPath(pad, y, leftW, height - y - pad);
 
     // ---- right: tabs
@@ -2136,6 +2141,7 @@ export class HomeScene extends Phaser.Scene {
   }
 
   private openTesting(): void {
+    if (BETA) return; // B-SAFE: the fixture screen stays closed in a beta build, whatever called this.
     this.testing?.destroy();
     this.testing = new TestingPanel(this, this.profile, this.training, {
       pickProfile: (key) => {

@@ -1128,5 +1128,7 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - The Fighting Style screen now has Stance, Virtue, Strike, Kata and the Seal cards. Tap a card, then a pick. A full Seal row asks which card to swap. Lock says "Coming later". A kata says "Power coming soon" and does not change a fight. New dots, one help line per visit, and no pulse when Reduced motion is on.
 - Approved slot pictures are in `assets/art/slot-icons/`. Escape, Throw and Advancing still use a plain disc.
 - Tests: `p-prog-g-style-screen`, `p-prog-h-no-pressure-words`. Phone check 352 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off, including padding, contrast, occupancy, New-dot frames, and equipping Strike and Virtue (`docs/shots/pb-05/pb05-verify.mjs`).
+- QA entry: a Testing button on the Training Board (under Practice room) opens that same fixture screen in one click. Five title taps still work. A beta build does not draw the button (`b-safe` source pin, and `docs/shots/pb-05/beta-entry-check.mjs` on the beta bundle).
 - Not changed: the green-belt HUD still shows Beginner's Stance until one is equipped. See `docs/decisions.md`.
+- Still for Tester: White, Orange, Help, Got it, New dots, geometry, contrast and animation. The Yellow checks from the phone pass stand. Not a merge pass.
 - Next: PB-10 can run the phone test plan. Kata powers still wait on Jay (PB-11) and PB-04.

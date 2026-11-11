@@ -1,5 +1,7 @@
-// The hidden testing screen (tap "Home Dojo" 5 times). For Jay and staff only:
-// switch fake student profiles, replay celebrations, and check the Power Rating.
+// The fixture list for Jay and staff. On the Training Board, the Testing button opens it
+// (one ordinary click). Five taps on the words "Training Board" still open it too.
+// A beta build draws neither way in. This is not the Home Dojo title.
+// Switch fake student profiles, replay celebrations, and check the Power Rating.
 // Power Rating must never appear anywhere a player would normally look.
 
 import Phaser from 'phaser';
