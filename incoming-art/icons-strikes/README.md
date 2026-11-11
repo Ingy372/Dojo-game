@@ -1,8 +1,8 @@
 # G2B-44 — Strike icons
 
-**Exported. Ready for the Manager to review. Not imported.** Jay approved the six pictures on Nov 10. The Manager relayed his words: "Both the strike icons and the Ember Knight look good." Sprites are in `sprites/` (128 and @2x). The note is `DELIVERY_NOTE.md`. The Programmer note is `PROGRAMMER_HANDOFF.md`. No game file was changed.
+**Approved-design exports. Ready for Manager review. Not imported.** The Manager relayed Jay's Nov 10 words: "Both the strike icons and the Ember Knight look good." That quote was relayed. It was not witnessed in this note. This package is the strike icons only. The 12 sprite PNGs are in `sprites/`. The note is `DELIVERY_NOTE.md`. The Programmer note is `PROGRAMMER_HANDOFF.md`. No import and no merge are authorized here. No game file was changed.
 
-**ITEM.** Strike icons #1 and #3 through #7, in the approved medallion style, for one review.
+**ITEM.** G2B-44 Strike icon exports (#1 and #3 through #7), ready for the Manager to review. Not imported.
 
 **WHAT.**
 
@@ -21,7 +21,7 @@ Sheet: `preview/sheet-g2b44-samples.png`. Approved Jumping Spins and the Strike 
 
 #1 is turned mid-spin (back and shoulder). #4 is side-on. #5 is one hook and one standing leg, with the arms in guard. #6 holds the fists at the chest. #7 is seen from the back. #3 is the same horizontal scissor, drawn larger. Every figure in this pass stays inside the gold ring.
 
-**WHY.** #3 was waiting on Jay's pose. He answered: draw the butterfly kick, body flat, legs scissoring, not another Jumping Spins. #6 and #7 are the last two Strikes in the live list.
+**WHY.** The six drawings are the ones in the export. The Manager relayed Jay's Nov 10 quote, so the designs were exported for review. This folder does not authorize putting them in the game.
 
 Sources:
 
@@ -34,14 +34,6 @@ Sources:
 
 **Checks.** Gold Strike rim, dark ink, pine belt `#20705A`. One mitten fist. Toeless shoes. No red pixels. Canvas margin 17 px or more on the 1024 drawing. #1, #4, and #5 match the previous commit pixel for pixel.
 
-**DECIDE.**
+**DECIDE.** Manager, do these exports pass review? This file does not authorize import or merge.
 
-The three poses just redrawn follow the review: #6 is the jumping front kick with the knee tucked, #7 is the spinning hook with the heel at head height, #3 keeps the horizontal scissor. Nothing else is waiting on a pose answer in this set.
-
-**NEXT.** Wait for a look at this sheet. No sprite export until then. G2B-40, then G2B-41, then G2B-42 are a later batch and are not in this pull request.
-
-Redraw with:
-
-```
-python3 incoming-art/icons-strikes/source/strike_icons.py
-```
+**NEXT.** After that review, the Manager says whether anyone may import. Do not import or merge from this note. The sprites are already written. Rebuild only if a file is missing: `python3 incoming-art/icons-strikes/source/strike_icons.py --export`.

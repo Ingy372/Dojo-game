@@ -1,10 +1,12 @@
 # Programmer handoff: G2B-44 Strike icons
 
-Ready for the Manager to review. **Not imported.** Do not copy these into the game until the Manager says so. No game file was changed.
+Approved-design exports, ready for Manager review. **Not imported.** This handoff does not authorize import or merge. No game file was changed.
 
-Jay approved the pictures on Nov 10. The Manager relayed his words: "Both the strike icons and the Ember Knight look good." This folder is the strike icons only.
+The Manager relayed Jay's Nov 10 quote: "Both the strike icons and the Ember Knight look good." That quote was relayed. It was not witnessed here. This folder is the strike icons only.
 
-## What to import
+## Files in the export
+
+These are the files a later import would use. Do not copy them into the game unless the Manager authorizes import after reviewing this package.
 
 Folder: `incoming-art/icons-strikes/sprites/`
 
