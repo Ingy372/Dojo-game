@@ -1,0 +1,138 @@
+{
+  "id": "ember-knight",
+  "label": "Ember Knight \u2014 shifted form",
+  "placeholderName": "Warm Shield",
+  "placeholderNameStatus": "PLACEHOLDER. Not approved as a name. Do not use it as an id.",
+  "notForImport": true,
+  "reviewStatus": "READY FOR MANAGER REVIEW, NOT IMPORTED",
+  "approval": "Manager's relay of Jay's Nov 10 words: \"Both the strike icons and the Ember Knight look good.\" Not personally witnessed. This file does not authorize import or merge.",
+  "notForImportNote": "Approved-design exports. READY FOR MANAGER REVIEW, NOT IMPORTED. The Manager relayed Jay's Nov 10 words: \"Both the strike icons and the Ember Knight look good.\" That relay was not personally witnessed. Nothing here authorizes import or merge.",
+  "frameWidth": 512,
+  "frameHeight": 640,
+  "anchorPx": [
+    256.0,
+    435.2
+  ],
+  "anchorNote": "Feet. 435.2 px from the top of every 512 × 640 frame. The extra canvas is below the feet. Every move uses this same frame and anchor.",
+  "orthoScaleTiles": 3.15,
+  "elevationDeg": 35,
+  "sourcePixelsPerTile": 162.5397,
+  "gamePixelsPerTile": 48,
+  "gameDisplayPx": 151,
+  "gameDisplayHeightPx": 189,
+  "gameDisplayNote": "Draw the 512 × 640 frame at 151 × 189 px (3.15 tiles × 48 px). The old 125 px width was the 2.6-tile camera and does not match this export.",
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "sheetLayout": "Rows are directions, top to bottom, in the order above. Columns are frames, left to right, no padding. Straight alpha.",
+  "camera": "Orthographic, 35 degrees down, 3.15 tiles across, 512 × 640. Same elevation as incoming-art/ember-knight-shift-drafts/source/build_ember_shift.py. The view is wider than that still's 2.6 tiles so the floor arc fits.",
+  "model": "Approved shifted form. Round body, shield arm, bar arm. No separate legs.",
+  "animations": {
+    "idle": {
+      "file": "ember-knight_idle.png",
+      "frames": 8,
+      "fps": 8,
+      "durationSec": 1.0,
+      "loop": true,
+      "note": "Style-guide idle rate. A small breathe and a core pulse. The earlier floating specks were removed. No flash."
+    },
+    "walk": {
+      "file": "ember-knight_walk.png",
+      "frames": 10,
+      "fps": 30,
+      "durationSec": 0.3333,
+      "loop": true,
+      "designSpeedTilesPerSec": 1.6,
+      "designSpeedStatus": "PLACEHOLDER. Not final gameplay tuning.",
+      "note": "10 frames at 30 fps. 1.6 tiles a second is only a placeholder so the walk can be played back. It is not the final gameplay speed. The sheet has a bigger bob than idle and two stubby boots stepping under the hem. The round body is unchanged."
+    },
+    "attack": {
+      "file": "ember-knight_attack.png",
+      "name": "ember slash",
+      "frames": 20,
+      "fps": 10,
+      "durationSec": 2.0,
+      "loop": false,
+      "impactFrame": 9,
+      "impactTimeSec": 0.9,
+      "events": [{"frame": 9, "event": "hit", "timeSec": 0.9}],
+      "note": "Ember slash. 18 telegraph ticks then 22 recover ticks at 20 ticks a second. Frame 9 is the hit. Frames 0-8 cock the bar back and up while the body leans back. Frame 9 sweeps across the front with a short gold-orange arc. Then follow-through and recovery. Arms are thicker than the first pass. No red on the knight."
+    },
+    "shift": {
+      "file": "ember-knight_shift.png",
+      "frames": 5,
+      "fps": null,
+      "durationSec": 1.5,
+      "loop": false,
+      "columns": [
+        "0.00 before",
+        "0.50 glow",
+        "1.00 ring",
+        "1.25 steam",
+        "1.50 idle"
+      ],
+      "timeSec": [
+        0.0,
+        0.5,
+        1.0,
+        1.25,
+        1.5
+      ],
+      "shiftGlowSec": 1.0,
+      "shiftGlowColor": "#fff4cf",
+      "settleAccentSec": 0.5,
+      "keyframesOnly": true,
+      "note": "Same clock as the approved shift. 1.0 s white-gold, then a 0.5 s settle (one gold ring, one steam puff). These are the sample times, not a smooth film."
+    },
+    "shiftReduced": {
+      "file": "ember-knight_shift-reduced.png",
+      "frames": 5,
+      "durationSec": 1.5,
+      "loop": false,
+      "columns": [
+        "0.00 before",
+        "0.50 glow",
+        "1.00 fade",
+        "1.25 still",
+        "1.50 still"
+      ],
+      "timeSec": [
+        0.0,
+        0.5,
+        1.0,
+        1.25,
+        1.5
+      ],
+      "note": "Same 1.5 s. Quieter glow, then a crossfade to the still form. No ring, no steam, no embers."
+    },
+    "sparkShield": {
+      "file": "ember-knight_spark-shield.png",
+      "name": "Spark Shield",
+      "frames": 16,
+      "fps": 10,
+      "durationSec": 1.6,
+      "loop": false,
+      "presentFrame": 8,
+      "events": [{"frame": 8, "event": "shieldPresent", "timeSec": 0.8}],
+      "note": "The shield comes forward. Gold motes sit on the rim. A Strike is what breaks it; this art does not draw a red circle. The plan line did not give tick counts, so this is 16 frames at 10 fps."
+    },
+    "forgeSweep": {
+      "file": "ember-knight_forge-sweep.png",
+      "name": "Forge Sweep",
+      "frames": 16,
+      "fps": 10,
+      "durationSec": 1.6,
+      "loop": false,
+      "impactFrame": 8,
+      "events": [{"frame": 8, "event": "hit", "timeSec": 0.8}],
+      "note": "Dash-only wide blade arc. The blade stays visible. The gold arc is warm gold, not red and not the game's purple stripe. The plan line did not give tick counts, so this is 16 frames at 10 fps."
+    }
+  }
+}
