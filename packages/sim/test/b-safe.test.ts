@@ -49,6 +49,19 @@ describe('B-SAFE', () => {
     expect(file('scenes/HomeScene.ts')).toMatch(/tapTitle\(\): void \{\s*if \(BETA\) return/);
   });
 
+  it('the Training Board Testing button exists only outside beta, and it cannot open the fixture screen in beta', () => {
+    const home = file('scenes/HomeScene.ts');
+    // One ordinary click, full 44 pt row, drawn only when this is not a beta build.
+    expect(home).toMatch(/if \(!BETA\) \{\s*this\.button\(pad, y, leftW, MIN_TAP, 'Testing'[\s\S]*?this\.openTesting\(\)/);
+    // The button's handler calls openTesting, which returns before the panel exists.
+    expect(home).toMatch(/openTesting\(\): void \{\s*if \(BETA\) return/);
+    const open = home.slice(home.indexOf('private openTesting'));
+    expect(open.indexOf('if (BETA) return')).toBeLessThan(open.indexOf('new TestingPanel'));
+    const panel = file('ui/TestingPanel.ts');
+    expect(panel).toMatch(/Training Board's Testing button|the Testing button/);
+    expect(panel).not.toMatch(/tap "Home Dojo"|Home Dojo" 5 times/);
+  });
+
   it('outside links open only through the gate helper', () => {
     for (const [name, text] of Object.entries(src)) {
       if (name.endsWith('ui/grownUpGate.ts')) continue;

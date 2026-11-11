@@ -1123,3 +1123,14 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Tests: `bf-orange-unlock` (9).
 ### GUARD-SCALE-01 QA fixes (2026-11-08)
 - Boss dip total is 0.80 (was 0.72 stacked on the held 0.9); Reduced motion snaps to the held 0.9 with no dip; a Guardian at the north wall is drawn whole under the HUD, dip included. Tests: `guard-scale-01` +3. decisions.md view size corrected to 13.33 x 7.5.
+
+## PB-05 — Fighting Style slot cards (2026-11-11)
+- The Fighting Style screen now has Stance, Virtue, Strike, Kata and the Seal cards. Tap a card, then a pick. A full Seal row asks which card to swap. Lock says "Coming later". A kata says "Power coming soon" and does not change a fight. New dots, one help line per visit, and no pulse when Reduced motion is on.
+- Approved slot pictures are in `assets/art/slot-icons/`. Escape, Throw and Advancing still use a plain disc.
+- Tests: `p-prog-g-style-screen`, `p-prog-h-no-pressure-words`. Phone check 352 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off, including padding, contrast, occupancy, New-dot frames, and equipping Strike and Virtue (`docs/shots/pb-05/pb05-verify.mjs`).
+- QA entry: a Testing button on the Training Board (under Practice room) opens that same fixture screen in one click. Five title taps still work. A beta build does not draw the button (`b-safe` source pin, and `docs/shots/pb-05/beta-entry-check.mjs` on the beta bundle).
+- Switch contrast: the selected Fighting Style label is white on the wood frame brown, 6.00:1 from rendered pixels at both phone sizes (it was 4.15:1 on the gold fill). Got it uses that same brown.
+- Slot note: it shares the line under the cards, so it stays inside the wood. Focused harness `FOCUS=gaps` is 244 PASS, 0 FAIL. Log: `/opt/cursor/artifacts/pb-05-note/verify-log.txt`. Painted occupancy with the note up is 41.6% (844) and 48.9% (667). Content is 12 px inside the frame.
+- Not changed: the green-belt HUD still shows Beginner's Stance until one is equipped. See `docs/decisions.md`.
+- Still for Tester: White, Orange, Help, Got it, New dots, geometry, contrast and animation. The Yellow checks from the phone pass stand. Not a merge pass.
+- Next: PB-10 can run the phone test plan. Kata powers still wait on Jay (PB-11) and PB-04.
