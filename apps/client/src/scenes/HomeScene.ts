@@ -1095,7 +1095,8 @@ export class HomeScene extends Phaser.Scene {
       writeSave(this.profile);
     }
     const m = this.styleModel();
-    if (m.help && !this.styleHelpUsed) {
+    // Help waits while the slot note is up, so it is not marked seen unseen.
+    if (m.help && !this.styleHelpUsed && !m.note) {
       this.styleHelpUsed = true;
       if (!m.help.yielded) {
         this.styleHelpLine = m.help.line;
@@ -1205,9 +1206,13 @@ export class HomeScene extends Phaser.Scene {
     else if (open?.pick) preview = open.pick.line;
     else if (open?.slot === 'kata') preview = STYLE_WORDS.emptyKata;
     else if (open?.slot === 'seal') preview = STYLE_WORDS.emptySeal;
-    const pt = this.text(x + previewX, y + L.preview.y + S1, preview, TYPE.label, '#f2e3c4', false, FONT, Math.max(MIN_TAP, previewW)).setData('styleLine', preview);
-    balanceWrap(pt, Math.max(MIN_TAP, previewW));
-    if (this.styleHelpLine && preview === this.styleHelpLine) pt.setData('styleHelp', true);
+    // The one-time note uses this row while no card is open. An extra row of its own fell past the wood.
+    const noteUp = !!(L.note && m.note) && open === null && this.swapFamily === null;
+    if (!noteUp) {
+      const pt = this.text(x + previewX, y + L.preview.y + S1, preview, TYPE.label, '#f2e3c4', false, FONT, Math.max(MIN_TAP, previewW)).setData('styleLine', preview);
+      balanceWrap(pt, Math.max(MIN_TAP, previewW));
+      if (this.styleHelpLine && preview === this.styleHelpLine) pt.setData('styleHelp', true);
+    }
     if (this.swapFamily) {
       const cancel = button(this, { x: x + L.preview.x + L.preview.w - 72, y: y + L.preview.y, w: 72, h: Math.max(MIN_TAP, L.preview.h), label: STYLE_WORDS.swapCancel, color: WOOD.switchOff, size: TYPE.label, onTap: () => this.commitStyle(applyStyleTap(this.styleSession(), { kind: 'cancel' }, this.training, CONTENT.abilities, this.profile.grandfatheredStances)) }, this.ui);
       cancel.visual.setData('styleCancel', true);
@@ -1216,7 +1221,7 @@ export class HomeScene extends Phaser.Scene {
       take.visual.setData('styleTakeOut', true);
     }
 
-    if (L.note && m.note) {
+    if (noteUp && L.note && m.note) {
       this.text(x + L.note.x, y + L.note.y + S1, m.note, TYPE.label, '#f2e3c4', false, FONT, L.note.w - 88).setData('slotNote', true);
       // Same white-on-gold pair as the switch (4.15:1). The frame brown is the fill; the label stays white.
       button(this, { x: x + L.note.x + L.note.w - 80, y: y + L.note.y, w: 72, h: MIN_TAP, label: STYLE_WORDS.gotIt, color: WOOD.frame, size: TYPE.label, onTap: () => { dismissSlotNote(this.profile); writeSave(this.profile); this.renderPanel('none'); } }, this.ui);

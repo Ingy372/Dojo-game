@@ -177,6 +177,21 @@ describe('PB-05 Fighting Style screen', () => {
     }
   });
 
+  it('keeps the slot note inside the style area on both phones', () => {
+    for (const [width, height] of [[667, 375], [844, 390]] as const) {
+      const area = styleArea(width, height);
+      const t = training(white);
+      const m = buildStyle(t, content.abilities, null);
+      const L = styleScreenLayout(area.w, area.h, m.cards.map((c) => ({ slot: c.slot, index: c.index, locked: c.locked !== null })), true);
+      expect(L.note).toBeTruthy();
+      expect(L.note!.y).toBeGreaterThanOrEqual(0);
+      expect(L.note!.y + L.note!.h).toBeLessThanOrEqual(area.h - 8);
+      expect(L.note!.y).toBe(L.preview.y);
+      expect(L.tray.h).toBeGreaterThanOrEqual(MIN_TAP);
+      for (const card of L.cards) expect(card.h).toBeGreaterThanOrEqual(MIN_TAP);
+    }
+  });
+
   it('shows no digits on the screen except the live Self-Defense #4 label', () => {
     for (const t of [...Object.values(belts), training(green)]) {
       const m = buildStyle(t, content.abilities, null, [], { showNote: true, triggers: ['open', 'seal', 'swap', 'kata', 'kata-soon', 'kata-pick'] });

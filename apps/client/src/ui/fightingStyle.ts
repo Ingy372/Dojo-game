@@ -371,10 +371,11 @@ export function styleScreenLayout(w: number, h: number, specs: readonly { slot: 
   }
   const r2 = n - r1;
   const previewH = MIN_TAP;
-  const noteH = showNote ? MIN_TAP : 0;
+  // The note shares the preview row. A row of its own is pushed past the wood on a phone.
+  const noteH = 0;
   const bottomPad = 12;
   const rows = r2 > 0 ? 2 : 1;
-  const rowGaps = (r2 > 0 ? S2 : 0) + S2 + S2 + (showNote ? S2 : 0);
+  const rowGaps = (r2 > 0 ? S2 : 0) + S2 + S2;
   let trayH = 64;
   let cardH = Math.floor((h - bottomPad - previewH - trayH - noteH - rowGaps) / rows);
   if (cardH < MIN_TAP) {
@@ -393,13 +394,12 @@ export function styleScreenLayout(w: number, h: number, specs: readonly { slot: 
   const boxes = [...row(r1, 0), ...row(r2, cardH + S2)];
   const previewY = (r2 > 0 ? cardH + S2 : 0) + cardH + S2;
   const trayY = previewY + previewH + S2;
-  const noteY = trayY + trayH + S2;
   return {
     cards: specs.map((s, i) => ({ ...s, ...(boxes[i] ?? { x: 0, y: 0, w: MIN_TAP, h: MIN_TAP }) })),
     preview: { x: 4, y: previewY, w: w - 8, h: previewH },
     tray: { x: 4, y: trayY, w: w - 8, h: trayH },
     leftW: w - 8,
-    note: showNote ? { x: 0, y: noteY, w, h: noteH } : null,
+    note: showNote ? { x: 4, y: previewY, w: w - 8, h: previewH } : null,
     icon: Math.min(40, Math.max(28, cardH - TYPE.label - 14)),
   };
 }

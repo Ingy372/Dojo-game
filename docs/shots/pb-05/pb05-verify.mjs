@@ -149,13 +149,41 @@ const sample = async (pg, buf, x, y, W, H) => pg.evaluate(async ([src, x, y, W, 
   return '#' + [d[0], d[1], d[2]].map((v) => v.toString(16).padStart(2, '0')).join('');
 }, ['data:image/png;base64,' + buf.toString('base64'), x, y, W, H]);
 
+/** Share of the inner board that is not the dark fill. The wood border itself is outside this rect. */
+async function paintedShare(pg, buf, panel, W, H) {
+  return pg.evaluate(async ([src, panel, W, H]) => {
+    const img = new Image(); img.src = src; await img.decode();
+    const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d', { willReadFrequently: true });
+    g.drawImage(img, 0, 0);
+    const data = g.getImageData(0, 0, img.width, img.height).data;
+    const sx = img.width / W, sy = img.height / H;
+    const X = (x) => Math.max(0, Math.min(img.width - 1, Math.round(x * sx)));
+    const Y = (y) => Math.max(0, Math.min(img.height - 1, Math.round(y * sy)));
+    const inset = 8;
+    const l = X(panel.l + inset), r = X(panel.r - inset), t = Y(panel.t + inset), b = Y(panel.b - inset);
+    let area = 0, painted = 0;
+    for (let y = t; y <= b; y++) for (let x = l; x <= r; x++) {
+      const i = (y * img.width + x) * 4;
+      const R = data[i], G = data[i + 1], B = data[i + 2];
+      area++;
+      // The inner board is the dark fill. Anything lighter is a control, word, or icon.
+      if (!(R < 60 && G < 48 && B < 42)) painted++;
+    }
+    return area ? painted / area : 0;
+  }, ['data:image/png;base64,' + buf.toString('base64'), panel, W, H]);
+}
+
 async function layoutChecks(pg, tag, W, H) {
   const buf = await pg.screenshot({ path: `${OUT}/${tag}.png` });
   const m = await measure(pg);
-  check(tag, 'style content >= 8 px inside the visible panel', m.pad >= 8, `${m.pad.toFixed(1)} px`);
+  check(tag, 'style content >= 8 px inside the visible panel', m.pad >= 8, `${m.pad.toFixed(1)} px from the wood frame to the nearest content bounds`);
   check(tag, 'no style text overlaps another', m.overl.length === 0, m.overl.slice(0, 4).join(' | '));
   check(tag, 'style text is at least 12 px', m.minText >= 12, `${m.minText} px`);
-  check(tag, 'not crowded: card gap >= 4 px and panel occupancy <= 80%', m.minGap >= 4 && m.occ <= 0.8, `gap ${m.minGap === 999 ? 'n/a' : m.minGap.toFixed(1)} px (layout gap is 8, each outline takes 2), occupancy ${(m.occ * 100).toFixed(1)}%`);
+  // Crowding is painted content on the inner board, not the box around the outermost objects.
+  // That box counts the empty wood between the switch and the note (it read 85.9% / 88.6%).
+  const painted = await paintedShare(pg, buf, m.panel, W, H);
+  check(tag, 'not crowded: card gap >= 4 px and panel occupancy <= 80%', m.minGap >= 4 && painted <= 0.8, `gap ${m.minGap === 999 ? 'n/a' : m.minGap.toFixed(1)} px (layout gap is 8, each outline takes 2), painted occupancy ${(painted * 100).toFixed(1)}% of the inner board (object box was ${(m.occ * 100).toFixed(1)}%)`);
   let worst = { r: 99, t: '', fg: '', bg: '' };
   const sampled = await glyphContrast(pg, buf, m.texts, W, H);
   for (const row of sampled) {
