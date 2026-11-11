@@ -1,0 +1,73 @@
+{
+  "kind": "strike-icons",
+  "notImported": true,
+  "readyFor": "Approved-design exports, ready for Manager review. Not imported. This file does not authorize import or merge.",
+  "approval": "The Manager relayed Jay's Nov 10 quote: \"Both the strike icons and the Ember Knight look good.\" The quote was relayed, not witnessed in this manifest. This folder is the strike-icon export only.",
+  "size": [
+    128,
+    128
+  ],
+  "anchorPx": [
+    64,
+    64
+  ],
+  "anchorNote": "anchor = centre of the 128 x 128 image",
+  "marginPx": 8,
+  "frames": 1,
+  "at2x": "each file also has a sibling <name>@2x.png at 256 x 256, with a 16 px margin",
+  "render": "python3 incoming-art/icons-strikes/source/strike_icons.py --export",
+  "sourceScript": "incoming-art/icons-strikes/source/strike_icons.py",
+  "blender": "None. These are the flat medallion drawings, the same Pillow kit as the seal icons. There is no .blend file.",
+  "belt": "Pine #20705A where a belt is drawn. Same placeholder already used on the approved Jumping Spins icon. Not a rank.",
+  "notInThisSet": "Strike #2 Jumping Spins is already exported at incoming-art/icons-slots/sprites/jumping-spins.png. It is not copied here.",
+  "sprites": {
+    "spin-kick": {
+      "file": "spin-kick.png",
+      "at2x": "spin-kick@2x.png",
+      "number": "1",
+      "name": "Spin Kick",
+      "source": "docs/curriculum.md:46",
+      "note": "Standing spin, seen from the back, arc around the kicking leg."
+    },
+    "butterfly-flow": {
+      "file": "butterfly-flow.png",
+      "at2x": "butterfly-flow@2x.png",
+      "number": "3",
+      "name": "Butterfly Flow",
+      "source": "docs/curriculum.md:48",
+      "note": "Jay: butterfly kick. Body horizontal, legs scissoring."
+    },
+    "side-kick-drive": {
+      "file": "side-kick-drive.png",
+      "at2x": "side-kick-drive@2x.png",
+      "number": "4",
+      "name": "Side Kick Drive",
+      "source": "docs/curriculum.md:49",
+      "note": "Side-on. Kicking leg straight and level at chest height."
+    },
+    "hook-kick": {
+      "file": "hook-kick.png",
+      "at2x": "hook-kick@2x.png",
+      "number": "5",
+      "name": "Hook Kick",
+      "source": "docs/curriculum.md:50",
+      "note": "Leg out to the side, heel snapping back."
+    },
+    "lunge": {
+      "file": "lunge.png",
+      "at2x": "lunge@2x.png",
+      "number": "6",
+      "name": "Lunge",
+      "source": "docs/curriculum.md:51",
+      "note": "Jumping front kick, other knee tucked, arrow behind the body."
+    },
+    "spinning-finisher": {
+      "file": "spinning-finisher.png",
+      "at2x": "spinning-finisher@2x.png",
+      "number": "7",
+      "name": "Spinning Finisher",
+      "source": "docs/curriculum.md:52",
+      "note": "Back view. Planted leg, hook at head height, ring behind."
+    }
+  }
+}
