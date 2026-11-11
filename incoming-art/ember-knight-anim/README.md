@@ -1,16 +1,18 @@
-# Ember Knight — approved export (not imported)
+# Ember Knight — approved-design exports
+
+**READY FOR MANAGER REVIEW, NOT IMPORTED.**
 
 Stable label: **Ember Knight — shifted form**.
 
 **Warm Shield** is a **PLACEHOLDER** name. It is not an id.
 
-These sheets are **not imported**. Jay said the strike icons and the Ember Knight look good. The Manager relayed that on Nov 10. This folder is the export for the Manager to review before anyone copies it into the game.
+The Manager relayed Jay's words from Nov 10: "Both the strike icons and the Ember Knight look good." This note records that relay. It is not a personal witness of Jay saying it. It does not authorize import or merge.
 
 No game code was changed. No shield bash or shield rush sheets.
 
 ## Delivery Note
 
-**ITEM:** J16-EMBER-ANIM. Approved export of the Ember Knight, all 8 directions.
+**ITEM:** J16-EMBER-ANIM. Approved-design exports of the Ember Knight, all 8 directions. READY FOR MANAGER REVIEW, NOT IMPORTED.
 
 **WHAT:** The approved poses and timing are unchanged. Sheets are straight-alpha PNG, 512 × 640 a frame, feet at x 256, y 435.2. Rows are N, NE, E, SE, S, SW, W, NW. Columns are frames. Camera is orthographic, 35° down, 3.15 tiles across. Draw a frame at 151 × 189 px in the game (48 px per tile). The older 512-tall reduced-motion shift is in `superseded/sample-6/`; the export pads that same picture to 640 px, with the extra space below the feet. Nothing was redrawn.
 
@@ -26,11 +28,21 @@ No game code was changed. No shield bash or shield rush sheets.
 
 The walk sheet is marked 1.6 tiles a second so it can be played back. That number is a **placeholder**, not final gameplay tuning.
 
-**WHY:** Jay approved the look. The Manager asked for the export and this note, ready to review, and not imported.
+**WHY:** The Manager relayed Jay's Nov 10 words: "Both the strike icons and the Ember Knight look good." The relay is the record. It was not personally witnessed. The exports are the approved design, ready for the Manager to review, and not imported.
 
-**DECIDE:** Review this export. Warm Shield is still only a placeholder name. 1.6 tiles a second is not a final speed. Say if this may be imported.
+**DECIDE:** These approved-design exports are READY FOR MANAGER REVIEW, NOT IMPORTED. Warm Shield is still only a placeholder name. 1.6 tiles a second is not a final speed. This note does not authorize import or merge.
 
-**NEXT:** After a yes, a Programmer can import it. Until then it stays in `incoming-art/`. This delivery does not include room art.
+**NEXT:** The sheets stay in `incoming-art/` for the Manager's review. Import or merge would need a separate go-ahead. This delivery does not include room art.
+
+## Handoff
+
+Status: approved-design exports, READY FOR MANAGER REVIEW, NOT IMPORTED.
+
+The Manager relayed Jay's Nov 10 words: "Both the strike icons and the Ember Knight look good." Not personally witnessed. No authorization here to import or merge.
+
+- Delivery note: this file.
+- Manifest: `sprites/ember-knight.json` (`notForImport` is true).
+- Pictures and the Blender scene are unchanged by this text refresh.
 
 ## Look here
 

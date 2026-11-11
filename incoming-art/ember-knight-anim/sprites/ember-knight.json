@@ -4,7 +4,9 @@
   "placeholderName": "Warm Shield",
   "placeholderNameStatus": "PLACEHOLDER. Not approved as a name. Do not use it as an id.",
   "notForImport": true,
-  "notForImportNote": "Jay said the Ember Knight looks good. The Manager relayed that on Nov 10. These sheets are the approved export, ready for the Manager to review. They are not imported.",
+  "reviewStatus": "READY FOR MANAGER REVIEW, NOT IMPORTED",
+  "approval": "Manager's relay of Jay's Nov 10 words: \"Both the strike icons and the Ember Knight look good.\" Not personally witnessed. This file does not authorize import or merge.",
+  "notForImportNote": "Approved-design exports. READY FOR MANAGER REVIEW, NOT IMPORTED. The Manager relayed Jay's Nov 10 words: \"Both the strike icons and the Ember Knight look good.\" That relay was not personally witnessed. Nothing here authorizes import or merge.",
   "frameWidth": 512,
   "frameHeight": 640,
   "anchorPx": [
