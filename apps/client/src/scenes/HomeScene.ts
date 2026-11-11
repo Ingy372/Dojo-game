@@ -1075,7 +1075,8 @@ export class HomeScene extends Phaser.Scene {
     ];
     parts.forEach(([part, label], i) => {
       const on = this.part === part;
-      button(this, { x: x + sw.x0 + i * (sw.segW + sw.gap), y, w: sw.segW, h: sw.h, label, color: on ? WOOD.switchOn : WOOD.switchOff, size: TYPE.body, selected: on, onTap: () => this.setPart(part) }, this.ui);
+      // Selected gold (switchOn, #a8703f) put white text at 4.15:1. The wood frame brown keeps it above 4.5. The gold outline still marks the selected half.
+      button(this, { x: x + sw.x0 + i * (sw.segW + sw.gap), y, w: sw.segW, h: sw.h, label, color: on ? WOOD.frame : WOOD.switchOff, size: TYPE.body, selected: on, onTap: () => this.setPart(part) }, this.ui);
     });
     const top = y + sw.h + S2;
     if (this.part === 'style') this.renderFightingStyle(x, top, w, h - (top - y));
@@ -1217,7 +1218,8 @@ export class HomeScene extends Phaser.Scene {
 
     if (L.note && m.note) {
       this.text(x + L.note.x, y + L.note.y + S1, m.note, TYPE.label, '#f2e3c4', false, FONT, L.note.w - 88).setData('slotNote', true);
-      button(this, { x: x + L.note.x + L.note.w - 80, y: y + L.note.y, w: 72, h: MIN_TAP, label: STYLE_WORDS.gotIt, color: WOOD.switchOn, size: TYPE.label, onTap: () => { dismissSlotNote(this.profile); writeSave(this.profile); this.renderPanel('none'); } }, this.ui);
+      // Same white-on-gold pair as the switch (4.15:1). The frame brown is the fill; the label stays white.
+      button(this, { x: x + L.note.x + L.note.w - 80, y: y + L.note.y, w: 72, h: MIN_TAP, label: STYLE_WORDS.gotIt, color: WOOD.frame, size: TYPE.label, onTap: () => { dismissSlotNote(this.profile); writeSave(this.profile); this.renderPanel('none'); } }, this.ui);
     }
   }
 

@@ -213,4 +213,15 @@ describe('PB-05 Fighting Style screen', () => {
     const picked = equip(t, null, 'stance', 0, 'ready-stance');
     expect(characterSetup({ ...newProfile(), loadout: picked.session.loadout }, t, content.abilities).stances![0].id).toBe('ready-stance');
   });
+
+  it('the selected Fighting Style switch is not white text on the gold fill', () => {
+    const home = Object.values(import.meta.glob('../../../apps/client/src/scenes/HomeScene.ts', { query: '?raw', import: 'default', eager: true }))[0] as string;
+    const fn = home.slice(home.indexOf('private renderAbilities'), home.indexOf('private renderFightingStyle'));
+    // switchOn (#a8703f) with the default white label measured 4.15:1. The selected half uses the frame brown.
+    expect(fn).toMatch(/color: on \? WOOD\.frame : WOOD\.switchOff/);
+    expect(fn).not.toMatch(/WOOD\.switchOn/);
+    const got = home.slice(home.indexOf('STYLE_WORDS.gotIt'), home.indexOf('STYLE_WORDS.gotIt') + 280);
+    expect(got).toMatch(/color: WOOD\.frame/);
+    expect(got).not.toMatch(/WOOD\.switchOn/);
+  });
 });

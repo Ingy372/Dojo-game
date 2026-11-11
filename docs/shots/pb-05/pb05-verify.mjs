@@ -115,8 +115,8 @@ const measure = (pg) => pg.evaluate(() => {
   };
   walk(h.children.list);
   const overlap = (a, b) => a.r > b.l + 1 && a.l < b.r - 1 && a.bot > b.top + 1 && a.top < b.bot - 1;
-  const styleTop = panel.t + 56;
-  const textsOnly = items.filter((i) => i.kind === 'text' && i.top >= styleTop);
+  // Include the Trophy Case / Fighting Style switch. A cutoff under the switch hid its label last time.
+  const textsOnly = items.filter((i) => i.kind === 'text');
   const overl = [];
   for (let i = 0; i < textsOnly.length; i++) for (let j = i + 1; j < textsOnly.length; j++) if (overlap(textsOnly[i], textsOnly[j])) overl.push(`${textsOnly[i].label}/${textsOnly[j].label}`);
   const boxes = items.filter((i) => i.kind === 'box');
@@ -157,21 +157,92 @@ async function layoutChecks(pg, tag, W, H) {
   check(tag, 'style text is at least 12 px', m.minText >= 12, `${m.minText} px`);
   check(tag, 'not crowded: card gap >= 4 px and panel occupancy <= 80%', m.minGap >= 4 && m.occ <= 0.8, `gap ${m.minGap === 999 ? 'n/a' : m.minGap.toFixed(1)} px (layout gap is 8, each outline takes 2), occupancy ${(m.occ * 100).toFixed(1)}%`);
   let worst = { r: 99, t: '', fg: '', bg: '' };
-  for (const t of m.texts) {
-    const pts = [[t.l - 6, (t.top + t.bot) / 2], [(t.l + t.r) / 2, t.top - 5], [t.r + 4, (t.top + t.bot) / 2]].filter(([x, y]) => x > 1 && y > 1 && x < W - 1 && y < H - 1);
-    const ratios = [];
-    for (const [x, y] of pts) {
-      const bg = await sample(pg, buf, x, y, W, H);
-      if (bg === t.color) continue;
-      ratios.push({ r: contrast(t.color, bg), bg });
-    }
-    if (!ratios.length) { check(tag, `contrast ${t.t}`, false, 'no background sample'); continue; }
-    ratios.sort((a, b) => a.r - b.r);
-    const mid = ratios[Math.floor(ratios.length / 2)];
-    if (mid.r < worst.r) worst = { r: mid.r, t: t.label, fg: t.color, bg: mid.bg };
-    check(tag, `contrast >= 4.5:1 "${t.label}"`, mid.r >= 4.5, `${t.color} on ${mid.bg} = ${mid.r.toFixed(2)}:1`);
+  const sampled = await glyphContrast(pg, buf, m.texts, W, H);
+  for (const row of sampled) {
+    // Icons (a footprint, a sparkle) are not the switch or slot words. Word labels are the check.
+    if (!/[A-Za-z]{2,}/.test(row.label)) continue;
+    if (!row.fg) { check(tag, `contrast >= 4.5:1 "${row.label}"`, false, 'no solid glyph pixels'); continue; }
+    const r = contrast(row.fg, row.bg);
+    if (r < worst.r) worst = { r, t: row.label, fg: row.fg, bg: row.bg };
+    check(tag, `contrast >= 4.5:1 "${row.label}"`, r >= 4.5, `glyph ${row.fg} on fill ${row.bg} = ${r.toFixed(2)}:1 (${row.n} glyph px)`);
   }
+  const switchLabel = sampled.find((row) => /Fighting Style/.test(row.label));
+  check(tag, 'selected Fighting Style switch label is in the contrast set', !!switchLabel, switchLabel ? switchLabel.label : 'missing');
   return worst;
+}
+
+/** Solid glyph pixels inside each label, against the fill just outside the glyphs. Not the CSS color. */
+async function glyphContrast(pg, buf, texts, W, H) {
+  return pg.evaluate(async ([src, texts, W, H]) => {
+    const img = new Image(); img.src = src; await img.decode();
+    const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d', { willReadFrequently: true });
+    g.drawImage(img, 0, 0);
+    const sx = img.width / W, sy = img.height / H;
+    const data = g.getImageData(0, 0, img.width, img.height).data;
+    const at = (x, y) => {
+      const px = Math.max(0, Math.min(img.width - 1, Math.round(x * sx)));
+      const py = Math.max(0, Math.min(img.height - 1, Math.round(y * sy)));
+      const i = (py * img.width + px) * 4;
+      return [data[i], data[i + 1], data[i + 2]];
+    };
+    const q = (p) => p.map((v) => Math.min(255, Math.round(v / 8) * 8)).join(',');
+    const hex = (k) => '#' + k.split(',').map((v) => Number(v).toString(16).padStart(2, '0')).join('');
+    const out = [];
+    for (const t of texts) {
+      const bg = new Map();
+      const addBg = (x, y) => { if (x < 1 || y < 1 || x > W - 2 || y > H - 2) return; const k = q(at(x, y)); bg.set(k, (bg.get(k) || 0) + 1); };
+      for (let x = t.l; x <= t.r; x += 2) { addBg(x, t.top - 4); addBg(x, t.bot + 4); }
+      for (let y = t.top; y <= t.bot; y += 2) { addBg(t.l - 4, y); addBg(t.r + 4, y); }
+      let bgKey = '', bgN = 0;
+      for (const [k, n] of bg) if (n > bgN) { bgKey = k; bgN = n; }
+      const bgPx = bgKey ? bgKey.split(',').map(Number) : [0, 0, 0];
+      const far = (p) => Math.abs(p[0] - bgPx[0]) + Math.abs(p[1] - bgPx[1]) + Math.abs(p[2] - bgPx[2]) >= 80;
+      const lum = (p) => 0.2126 * p[0] + 0.7152 * p[1] + 0.0722 * p[2];
+      const glyph = new Map();
+      for (let y = Math.ceil(t.top); y <= Math.floor(t.bot); y++) {
+        for (let x = Math.ceil(t.l); x <= Math.floor(t.r); x++) {
+          const p = at(x, y);
+          if (!far(p)) continue;
+          const k = q(p);
+          glyph.set(k, (glyph.get(k) || 0) + 1);
+        }
+      }
+      // Solid letter cores, not the larger cloud of gray antialiasing. Pick the cluster furthest in brightness from the fill.
+      const bgL = lum(bgPx);
+      let fgKey = '', fgN = 0, fgFar = -1;
+      for (const [k, n] of glyph) {
+        if (n < 8) continue;
+        const p = k.split(',').map(Number);
+        const d = Math.abs(lum(p) - bgL);
+        if (d > fgFar) { fgFar = d; fgKey = k; fgN = n; }
+      }
+      out.push({ label: t.label, fg: fgKey ? hex(fgKey) : '', bg: bgKey ? hex(bgKey) : '', n: fgN });
+    }
+    return out;
+  }, ['data:image/png;base64,' + buf.toString('base64'), texts, W, H]);
+}
+
+async function controlHit(pg, dataKey) {
+  return pg.evaluate((dataKey) => {
+    const h = window.game.scene.getScene('Home');
+    let visual = null;
+    const w = (l) => { for (const c of l || []) { if (c.getData?.(dataKey)) visual = c; if (c.list) w(c.list); } };
+    w(h.children.list);
+    if (!visual?.parentContainer) return null;
+    const list = visual.parentContainer.list;
+    const hit = list[list.indexOf(visual) + 1];
+    const b = hit?.getBounds?.();
+    const drawn = visual.getBounds();
+    return {
+      zoneW: b ? +b.width.toFixed(1) : 0,
+      zoneH: b ? +b.height.toFixed(1) : 0,
+      drawnW: +drawn.width.toFixed(1),
+      drawnH: +drawn.height.toFixed(1),
+      x: b ? b.centerX : 0,
+      y: b ? b.centerY : 0,
+    };
+  }, dataKey);
 }
 
 /** From a closed screen: tap the card, then page, then the pick. Every arrow counts. */
@@ -236,7 +307,7 @@ async function pulseFrames(pg, tag, rm) {
   else check(tag, 'New dot pulse moves across start/mid/end', spread >= 0.2, `alpha ${a0?.a},${a1?.a},${a2?.a}`);
 }
 
-for (const [W, H] of sizes) for (const rm of ['off', 'on']) {
+if (process.env.FOCUS !== 'gaps') for (const [W, H] of sizes) for (const rm of ['off', 'on']) {
   let pulsed = false;
   for (const [student, belt] of profiles) {
     const tag = `${belt}-${W}x${H}-rm-${rm}`;
@@ -370,6 +441,140 @@ for (const [W, H] of sizes) for (const rm of ['off', 'on']) {
     check(tag, 'picks survive a reload', JSON.stringify(back?.seals) === JSON.stringify(saved?.seals) && back?.kata === saved?.kata && back?.stance === saved?.stance && (back?.strike ?? null) === (saved?.strike ?? null), JSON.stringify(back));
     check(tag, 'no page errors', pg.errs.length === 0, pg.errs.join(' | '));
     await ctx.close();
+  }
+}
+
+/** Local-dev only. Seeds the save the way a dev page can; this is not the deployed Testing-button route. */
+if (process.env.FOCUS === 'gaps') {
+  const tapText = async (pg, re) => {
+    const hit = (await texts(pg)).find((t) => re.test(t.t));
+    if (!hit) return false;
+    await pg.touchscreen.tap(hit.x, hit.y);
+    await pg.waitForTimeout(250);
+    return true;
+  };
+  for (const [W, H] of sizes) for (const rm of ['off', 'on']) {
+    const tag = `gap-white-${W}x${H}-rm-${rm}`;
+    const { ctx, pg } = await open(W, H, rm, '2-white-belt-3-signoffs');
+    check(tag, 'Reduced motion read back', (await rmNow(pg)) === rm, await rmNow(pg));
+    await pg.evaluate(() => {
+      const h = window.game.scene.getScene('Home');
+      h.children.list.filter((c) => c.depth >= 90).forEach((c) => c.destroy());
+      h.celebrating = false;
+      h.profile.styleHelpSeen = [];
+      h.profile.styleSeen = null;
+      h.profile.showSlotNote = false;
+      h.styleHelpUsed = false;
+      h.styleHelpLine = null;
+      h.styleTriggers = ['open'];
+      h.tab = 'abilities';
+      h.part = 'trophy';
+      h.styleSlot = null;
+      h.render();
+    });
+    await pg.waitForTimeout(200);
+    check(tag, 'tap Fighting Style (ordinary switch)', await tapText(pg, /Fighting Style/));
+    await pg.screenshot({ path: `${OUT}/${tag}-help.png` });
+    const help = (await texts(pg)).some((t) => t.t.includes('Tap a slot, then pick a Seal'));
+    check(tag, 'first visit shows the slot help line', help);
+    await layoutChecks(pg, `${tag}-cards`, W, H);
+
+    await pg.evaluate(() => {
+      const h = window.game.scene.getScene('Home');
+      h.profile.showSlotNote = true;
+      h.styleHelpUsed = true;
+      h.styleHelpLine = null;
+      h.render();
+    });
+    await pg.waitForTimeout(200);
+    await pg.screenshot({ path: `${OUT}/${tag}-got-it.png` });
+    check(tag, 'slot note shows Got it', (await texts(pg)).some((t) => t.t === 'Got it'));
+    await layoutChecks(pg, `${tag}-note`, W, H);
+    check(tag, 'tap Got it', await tapText(pg, /^Got it$/));
+    const noted = await pg.evaluate(() => window.game.scene.getScene('Home').profile.showSlotNote);
+    check(tag, 'Got it clears the note', noted === false && !(await texts(pg)).some((t) => t.t === 'Got it'), `showSlotNote ${noted}`);
+
+    await pulseFrames(pg, tag, rm);
+    const dotShot = fs.readFileSync(`${OUT}/${tag}-dot-start.png`);
+    check(tag, 'New-dot start frame is a real PNG', dotShot.length > 1000, `${dotShot.length} bytes`);
+
+    await pg.evaluate(() => {
+      const h = window.game.scene.getScene('Home');
+      h.styleHelpUsed = true;
+      h.styleSlot = null;
+      h.swapFamily = null;
+      h.render();
+    });
+    const escape = await equipFromClosed(pg, 'seal:0', 'escape');
+    await pg.screenshot({ path: `${OUT}/${tag}-take-out.png` });
+    const take = await controlHit(pg, 'styleTakeOut');
+    check(tag, 'Take out hit target is at least 44 x 44', !!take && take.zoneW >= 44 && take.zoneH >= 44, take ? `zone ${take.zoneW}x${take.zoneH}, drawn ${take.drawnW}x${take.drawnH}` : 'missing');
+    const before = ((await loadout(pg))?.seals ?? []).slice();
+    if (take) { await pg.touchscreen.tap(take.x, take.y); await pg.waitForTimeout(250); }
+    const after = (await loadout(pg))?.seals ?? [];
+    check(tag, 'Take out removes the open White Seal', !escape.missing && escape.taps <= 3 && before.includes('escape') && !after.includes('escape'), `${before.join()} -> ${after.join()}`);
+    await pg.reload({ waitUntil: 'domcontentloaded' });
+    await pg.waitForFunction(() => window.game?.scene?.getScenes?.(true).length);
+    await pg.waitForTimeout(400);
+    const kept = await pg.evaluate(() => JSON.parse(localStorage.getItem('dojo-ascent-profile-v1') || '{}').loadout?.seals ?? []);
+    check(tag, 'White Seal removal survives a reload', !kept.includes('escape'), kept.join() || '(empty)');
+
+    await ctx.close();
+
+    const yellow = await open(W, H, rm, '3-yellow-belt');
+    const ytag = `gap-yellow-${W}x${H}-rm-${rm}`;
+    check(ytag, 'Reduced motion read back', (await rmNow(yellow.pg)) === rm, await rmNow(yellow.pg));
+    await yellow.pg.evaluate(() => {
+      const scene = window.game.scene.getScene('Home');
+      scene.children.list.filter((c) => c.depth >= 90).forEach((c) => c.destroy());
+      scene.celebrating = false;
+      scene.styleHelpUsed = true;
+      scene.tab = 'abilities';
+      scene.part = 'style';
+      scene.styleSlot = null;
+      scene.profile.styleSeen = scene.profile.styleSeen || [];
+      scene.render();
+    });
+    await yellow.pg.waitForTimeout(200);
+    // Ordinary new-dot path: ids earned on Yellow that a prior White visit did not mark.
+    await yellow.pg.evaluate(() => {
+      const h = window.game.scene.getScene('Home');
+      h.profile.styleSeen = ['beginners-stance', 'cat-stance', 'escape', 'counter'];
+      h.styleHelpUsed = true;
+      h.render();
+    });
+    await yellow.pg.waitForTimeout(200);
+    const dots = await dotCount(yellow.pg);
+    await yellow.pg.screenshot({ path: `${OUT}/${ytag}-new-dots.png` });
+    check(ytag, 'a later-earned pick shows a New dot', dots > 0, `${dots} dots`);
+
+    for (const id of ['escape', 'counter']) await equipFromClosed(yellow.pg, id === 'escape' ? 'seal:0' : 'seal:1', id);
+    const third = await equipFromClosed(yellow.pg, 'seal:0', 'guard');
+    await yellow.pg.screenshot({ path: `${OUT}/${ytag}-cancel.png` });
+    const asked = (await texts(yellow.pg)).some((t) => t.t.includes('Swap with which one'));
+    const cancel = await controlHit(yellow.pg, 'styleCancel');
+    check(ytag, 'Cancel hit target is at least 44 x 44', !!cancel && cancel.zoneW >= 44 && cancel.zoneH >= 44, cancel ? `zone ${cancel.zoneW}x${cancel.zoneH}, drawn ${cancel.drawnW}x${cancel.drawnH}, prompt ${asked}, taps ${third.taps}` : 'missing');
+    await yellow.ctx.close();
+
+    const orange = await open(W, H, rm, '6-orange-typical');
+    const otag = `gap-orange-${W}x${H}-rm-${rm}`;
+    check(otag, 'Reduced motion read back', (await rmNow(orange.pg)) === rm, await rmNow(orange.pg));
+    await orange.pg.evaluate(() => {
+      const h = window.game.scene.getScene('Home');
+      h.children.list.filter((c) => c.depth >= 90).forEach((c) => c.destroy());
+      h.celebrating = false;
+      h.styleHelpUsed = true;
+      h.tab = 'abilities';
+      h.part = 'style';
+      h.styleSlot = null;
+      h.render();
+    });
+    await orange.pg.waitForTimeout(200);
+    await layoutChecks(orange.pg, `${otag}-cards`, W, H);
+    await orange.pg.evaluate(() => window.game.scene.getScene('Home').pickSlot('seal', 0));
+    await orange.pg.waitForTimeout(200);
+    await orange.pg.screenshot({ path: `${OUT}/${otag}-seal-tray.png` });
+    await orange.ctx.close();
   }
 }
 
