@@ -1,0 +1,2458 @@
+{
+  "notForImport": true,
+  "collision": "Every listed piece has collision false. None of this art adds or hides a collision tile. Existing # . D P C S maps are unchanged.",
+  "layers": {
+    "top-wall": "Drawn on row 0, the top wall. The picture is one tile deep and rises above the wall. It does not sit on a walkable tile.",
+    "floor-flat": "Drawn on a walkable tile. It is flat and reads as the floor, not as a solid obstacle."
+  },
+  "placements": [
+    {
+      "room": "pebble-path",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "pebble-path",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "pebble-path",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "pebble-path",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "pebble-path",
+      "piece": "green-pathstone",
+      "col": 4,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "pebble-path",
+      "piece": "green-pathstone",
+      "col": 4,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "pebble-path",
+      "piece": "green-pathstone",
+      "col": 14,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "pebble-path",
+      "piece": "green-pathstone",
+      "col": 15,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "pebble-path",
+      "piece": "green-fern",
+      "col": 5,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "pebble-path",
+      "piece": "green-fern",
+      "col": 5,
+      "row": 6,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "pebble-path",
+      "piece": "green-fern",
+      "col": 15,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "pebble-path",
+      "piece": "green-fern",
+      "col": 16,
+      "row": 6,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "pebble-path",
+      "piece": "green-stone",
+      "col": 2,
+      "row": 6,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "pebble-path",
+      "piece": "green-stone",
+      "col": 13,
+      "row": 6,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "swarm-slope",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "swarm-slope",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "swarm-slope",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "swarm-slope",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "swarm-slope",
+      "piece": "green-stone",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "swarm-slope",
+      "piece": "green-stone",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "swarm-slope",
+      "piece": "green-stone",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "swarm-slope",
+      "piece": "green-fern",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "swarm-slope",
+      "piece": "green-fern",
+      "col": 17,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "swarm-slope",
+      "piece": "green-fern",
+      "col": 2,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "goat-ledge",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "goat-ledge",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "goat-ledge",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "goat-ledge",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "goat-ledge",
+      "piece": "green-stone",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "goat-ledge",
+      "piece": "green-stone",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "goat-ledge",
+      "piece": "green-stone",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "goat-ledge",
+      "piece": "green-fern",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "goat-ledge",
+      "piece": "green-fern",
+      "col": 3,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "goat-ledge",
+      "piece": "green-fern",
+      "col": 17,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "golem-stairs",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "golem-stairs",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "golem-stairs",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "golem-stairs",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "golem-stairs",
+      "piece": "green-stone",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "golem-stairs",
+      "piece": "green-stone",
+      "col": 2,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "golem-stairs",
+      "piece": "green-stone",
+      "col": 3,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "golem-stairs",
+      "piece": "green-fern",
+      "col": 17,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "golem-stairs",
+      "piece": "green-fern",
+      "col": 2,
+      "row": 6,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "golem-stairs",
+      "piece": "green-fern",
+      "col": 3,
+      "row": 6,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "golem-stairs",
+      "piece": "green-stair",
+      "col": 17,
+      "row": 6,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "shield-shelf",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "shield-shelf",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "shield-shelf",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "shield-shelf",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "shield-shelf",
+      "piece": "green-stone",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "shield-shelf",
+      "piece": "green-stone",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "shield-shelf",
+      "piece": "green-stone",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "shield-shelf",
+      "piece": "green-fern",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "shield-shelf",
+      "piece": "green-fern",
+      "col": 3,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "shield-shelf",
+      "piece": "green-fern",
+      "col": 17,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "shield-shelf",
+      "piece": "green-stair",
+      "col": 2,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "roller-run",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "roller-run",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "roller-run",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "roller-run",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "roller-run",
+      "piece": "green-stone",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "roller-run",
+      "piece": "green-stone",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "roller-run",
+      "piece": "green-stone",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "roller-run",
+      "piece": "green-fern",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "roller-run",
+      "piece": "green-fern",
+      "col": 3,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "roller-run",
+      "piece": "green-fern",
+      "col": 17,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "roller-run",
+      "piece": "green-stair",
+      "col": 2,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "switchback-road",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "switchback-road",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "switchback-road",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "switchback-road",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "switchback-road",
+      "piece": "green-stone",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "switchback-road",
+      "piece": "green-stone",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "switchback-road",
+      "piece": "green-stone",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "switchback-road",
+      "piece": "green-fern",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "switchback-road",
+      "piece": "green-fern",
+      "col": 3,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "switchback-road",
+      "piece": "green-fern",
+      "col": 17,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "switchback-road",
+      "piece": "green-stair",
+      "col": 2,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "giants-gate",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "giants-gate",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "giants-gate",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "giants-gate",
+      "piece": "green-stream",
+      "col": 18,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "giants-gate",
+      "piece": "green-stone",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "giants-gate",
+      "piece": "green-stone",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "giants-gate",
+      "piece": "green-stone",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "giants-gate",
+      "piece": "green-fern",
+      "col": 2,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "giants-gate",
+      "piece": "green-fern",
+      "col": 3,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "giants-gate",
+      "piece": "green-fern",
+      "col": 17,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "giants-gate",
+      "piece": "green-stair",
+      "col": 2,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "water-jar-landing",
+      "piece": "green-stream",
+      "col": 11,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "water-jar-landing",
+      "piece": "green-stream",
+      "col": 11,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "water-jar-landing",
+      "piece": "green-stream",
+      "col": 11,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "water-jar-landing",
+      "piece": "green-stream",
+      "col": 11,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "water-jar-landing",
+      "piece": "green-stone",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "water-jar-landing",
+      "piece": "green-stone",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "water-jar-landing",
+      "piece": "green-stone",
+      "col": 3,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "water-jar-landing",
+      "piece": "green-fern",
+      "col": 10,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "water-jar-landing",
+      "piece": "green-fern",
+      "col": 3,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "water-jar-landing",
+      "piece": "green-fern",
+      "col": 2,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "water-jar-landing",
+      "piece": "green-jar",
+      "col": 3,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "resting-step",
+      "piece": "green-stream",
+      "col": 11,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "resting-step",
+      "piece": "green-stream",
+      "col": 11,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "resting-step",
+      "piece": "green-stream",
+      "col": 11,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "resting-step",
+      "piece": "green-stream",
+      "col": 11,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Flat water on a walkable tile. No new collision."
+    },
+    {
+      "room": "resting-step",
+      "piece": "green-stone",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "resting-step",
+      "piece": "green-stone",
+      "col": 10,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "resting-step",
+      "piece": "green-stone",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "resting-step",
+      "piece": "green-fern",
+      "col": 3,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "resting-step",
+      "piece": "green-fern",
+      "col": 10,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "resting-step",
+      "piece": "green-fern",
+      "col": 2,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "resting-step",
+      "piece": "green-blanket",
+      "col": 10,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "resting-step",
+      "piece": "green-lantern",
+      "col": 2,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "great-stair",
+      "piece": "green-giant-stair",
+      "col": 1,
+      "row": 0,
+      "layer": "top-wall",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "ferry-landing",
+      "piece": "blue-boat",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "ferry-landing",
+      "piece": "blue-stone",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "ferry-landing",
+      "piece": "blue-stone",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "ferry-landing",
+      "piece": "blue-stone",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "ferry-landing",
+      "piece": "blue-oar",
+      "col": 17,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reed-bank",
+      "piece": "blue-reed",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reed-bank",
+      "piece": "blue-reed",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reed-bank",
+      "piece": "blue-reed",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reed-bank",
+      "piece": "blue-reed",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reed-bank",
+      "piece": "blue-reed",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reed-bank",
+      "piece": "blue-reed",
+      "col": 3,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reed-bank",
+      "piece": "blue-lily",
+      "col": 17,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reed-bank",
+      "piece": "blue-lily",
+      "col": 18,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reed-bank",
+      "piece": "blue-lily",
+      "col": 2,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "crab-shallows",
+      "piece": "blue-ripple",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "crab-shallows",
+      "piece": "blue-ripple",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "crab-shallows",
+      "piece": "blue-ripple",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "crab-shallows",
+      "piece": "blue-lily",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "crab-shallows",
+      "piece": "blue-lily",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "crab-shallows",
+      "piece": "blue-lily",
+      "col": 3,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "wave-lanes",
+      "piece": "blue-stone",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "wave-lanes",
+      "piece": "blue-stone",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "wave-lanes",
+      "piece": "blue-stone",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "lantern-barge",
+      "piece": "blue-lantern",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "oar-locker",
+      "piece": "blue-boat",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "oar-locker",
+      "piece": "blue-oar",
+      "col": 11,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "still-pool",
+      "piece": "blue-lantern",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "still-pool",
+      "piece": "blue-cushion",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "still-pool",
+      "piece": "blue-ripple",
+      "col": 10,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "still-pool",
+      "piece": "blue-ripple",
+      "col": 11,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "still-pool",
+      "piece": "blue-ripple",
+      "col": 11,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "watching-pool",
+      "piece": "blue-stone",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "watching-pool",
+      "piece": "blue-stone",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "watching-pool",
+      "piece": "blue-stone",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "bellows-door",
+      "piece": "red-bellows",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "bellows-door",
+      "piece": "red-bellows",
+      "col": 16,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "bellows-door",
+      "piece": "red-anvil",
+      "col": 2,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "bellows-door",
+      "piece": "red-tool",
+      "col": 4,
+      "row": 6,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "bellows-door",
+      "piece": "red-bin",
+      "col": 16,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "bellows-door",
+      "piece": "red-trough",
+      "col": 14,
+      "row": 7,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "bellows-door",
+      "piece": "red-barrel",
+      "col": 17,
+      "row": 6,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "bellows-door",
+      "piece": "red-ember",
+      "col": 3,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "bellows-door",
+      "piece": "red-ember",
+      "col": 16,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "bellows-door",
+      "piece": "red-hang",
+      "col": 1,
+      "row": 0,
+      "layer": "top-wall",
+      "collision": false,
+      "note": "Hanging on the top wall. No new collision."
+    },
+    {
+      "room": "bellows-door",
+      "piece": "red-hang",
+      "col": 7,
+      "row": 0,
+      "layer": "top-wall",
+      "collision": false,
+      "note": "Hanging on the top wall. No new collision."
+    },
+    {
+      "room": "bellows-door",
+      "piece": "red-hang",
+      "col": 13,
+      "row": 0,
+      "layer": "top-wall",
+      "collision": false,
+      "note": "Hanging on the top wall. No new collision."
+    },
+    {
+      "room": "cub-crowd",
+      "piece": "red-ember",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "cub-crowd",
+      "piece": "red-ember",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "cub-crowd",
+      "piece": "red-ember",
+      "col": 3,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "cub-crowd",
+      "piece": "red-cushion",
+      "col": 17,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "anvil-alley",
+      "piece": "red-ember",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "anvil-alley",
+      "piece": "red-ember",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "anvil-alley",
+      "piece": "red-ember",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "anvil-alley",
+      "piece": "red-anvil",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "anvil-alley",
+      "piece": "red-tool",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "sweeping-hall",
+      "piece": "red-ember",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "sweeping-hall",
+      "piece": "red-ember",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "sweeping-hall",
+      "piece": "red-ember",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "sweeping-hall",
+      "piece": "red-bench",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "smiths-rush",
+      "piece": "red-ember",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "smiths-rush",
+      "piece": "red-ember",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "smiths-rush",
+      "piece": "red-ember",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "smiths-rush",
+      "piece": "red-barrel",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "smiths-rush",
+      "piece": "red-trough",
+      "col": 2,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "smiths-rush",
+      "piece": "red-tool",
+      "col": 18,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "shield-rack",
+      "piece": "red-ember",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "shield-rack",
+      "piece": "red-ember",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "shield-rack",
+      "piece": "red-ember",
+      "col": 10,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "shield-rack",
+      "piece": "red-tool",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "cool-embers",
+      "piece": "red-ember",
+      "col": 11,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "cool-embers",
+      "piece": "red-ember",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "cool-embers",
+      "piece": "red-ember",
+      "col": 3,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "cool-embers",
+      "piece": "red-bin",
+      "col": 10,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "cool-embers",
+      "piece": "red-cushion",
+      "col": 11,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "cool-embers",
+      "piece": "red-barrel",
+      "col": 11,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "knights-forge",
+      "piece": "red-forge",
+      "col": 1,
+      "row": 0,
+      "layer": "top-wall",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "whisper-gate",
+      "piece": "redblack-arch",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "whisper-gate",
+      "piece": "redblack-ring",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "whisper-gate",
+      "piece": "redblack-ring",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "whisper-gate",
+      "piece": "redblack-ring",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "split-mirrors",
+      "piece": "redblack-mirror",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "split-mirrors",
+      "piece": "redblack-mirror",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "shade-gallery",
+      "piece": "redblack-lantern",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "shade-gallery",
+      "piece": "redblack-mirror",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "masklet-circle",
+      "piece": "redblack-bell",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "masklet-circle",
+      "piece": "redblack-ring",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "masklet-circle",
+      "piece": "redblack-ring",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "masklet-circle",
+      "piece": "redblack-ring",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "echo-chamber",
+      "piece": "redblack-bell",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "echo-chamber",
+      "piece": "redblack-arch",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "quiet-corner",
+      "piece": "redblack-lantern",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "quiet-corner",
+      "piece": "redblack-rug",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "quiet-corner",
+      "piece": "redblack-cushion",
+      "col": 10,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "mask-hall",
+      "piece": "redblack-grand",
+      "col": 1,
+      "row": 0,
+      "layer": "top-wall",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "dusty-entry",
+      "piece": "brown-root",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "dusty-entry",
+      "piece": "brown-root",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "dusty-entry",
+      "piece": "brown-root",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "dusty-entry",
+      "piece": "brown-shelf",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "dusty-entry",
+      "piece": "brown-rug",
+      "col": 17,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "dusty-entry",
+      "piece": "brown-rug",
+      "col": 2,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "dusty-entry",
+      "piece": "brown-rug",
+      "col": 16,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reading-roots",
+      "piece": "brown-root",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reading-roots",
+      "piece": "brown-root",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reading-roots",
+      "piece": "brown-root",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reading-roots",
+      "piece": "brown-rug",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reading-roots",
+      "piece": "brown-rug",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reading-roots",
+      "piece": "brown-rug",
+      "col": 16,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "inkwell-aisle",
+      "piece": "brown-ink",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "inkwell-aisle",
+      "piece": "brown-ink",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "inkwell-aisle",
+      "piece": "brown-root",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "inkwell-aisle",
+      "piece": "brown-root",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "inkwell-aisle",
+      "piece": "brown-root",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "root-stacks",
+      "piece": "brown-root",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "root-stacks",
+      "piece": "brown-root",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "root-stacks",
+      "piece": "brown-root",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "great-reading-room",
+      "piece": "brown-root",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "great-reading-room",
+      "piece": "brown-root",
+      "col": 17,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "great-reading-room",
+      "piece": "brown-root",
+      "col": 2,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "great-reading-room",
+      "piece": "brown-lamp",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "story-shelf",
+      "piece": "brown-root",
+      "col": 11,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "story-shelf",
+      "piece": "brown-root",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "story-shelf",
+      "piece": "brown-root",
+      "col": 10,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "story-shelf",
+      "piece": "brown-shelf",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "reading-nook",
+      "piece": "brown-shelf",
+      "col": 1,
+      "row": 1,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "reading-nook",
+      "piece": "brown-shelf",
+      "col": 10,
+      "row": 1,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "reading-nook",
+      "piece": "brown-ladder",
+      "col": 11,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "reading-nook",
+      "piece": "brown-lamp",
+      "col": 10,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "reading-nook",
+      "piece": "brown-rug",
+      "col": 1,
+      "row": 4,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "reading-nook",
+      "piece": "brown-rug",
+      "col": 10,
+      "row": 6,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "reading-nook",
+      "piece": "brown-seat",
+      "col": 1,
+      "row": 6,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "reading-nook",
+      "piece": "brown-cushion",
+      "col": 1,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "reading-nook",
+      "piece": "brown-cushion",
+      "col": 11,
+      "row": 5,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "reading-nook",
+      "piece": "brown-root",
+      "col": 1,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "reading-nook",
+      "piece": "brown-root",
+      "col": 11,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Approved sample grouping on a walkable tile. No new collision."
+    },
+    {
+      "room": "root-hall",
+      "piece": "brown-tree",
+      "col": 1,
+      "row": 0,
+      "layer": "top-wall",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "rainy-landing",
+      "piece": "brownblack-umbrella",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "rainy-landing",
+      "piece": "brownblack-flag",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "breezy-bend",
+      "piece": "brownblack-umbrella",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "drum-landing",
+      "piece": "brownblack-drum",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "drum-landing",
+      "piece": "brownblack-drum",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "zigzag-steps",
+      "piece": "brownblack-feather",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "storm-gate",
+      "piece": "brownblack-gate",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "storm-gate",
+      "piece": "brownblack-flag",
+      "col": 17,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "storm-gate",
+      "piece": "brownblack-rod",
+      "col": 18,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "feather-nook",
+      "piece": "brownblack-feather",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "dry-alcove",
+      "piece": "brownblack-cushion",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "dry-alcove",
+      "piece": "brownblack-lantern",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "heralds-landing",
+      "piece": "brownblack-clouds",
+      "col": 1,
+      "row": 0,
+      "layer": "top-wall",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "wisp-walk",
+      "piece": "black-lantern",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "knight-terrace",
+      "piece": "black-statue",
+      "col": 2,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "knight-terrace",
+      "piece": "black-lantern",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "last-climb",
+      "piece": "black-arch",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "last-climb",
+      "piece": "black-lantern",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "bell-nook",
+      "piece": "black-bell",
+      "col": 11,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "bell-nook",
+      "piece": "black-sash",
+      "col": 2,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "bell-nook",
+      "piece": "black-chest",
+      "col": 3,
+      "row": 3,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "lamp-stand",
+      "piece": "black-lantern",
+      "col": 3,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "lamp-stand",
+      "piece": "black-cushion",
+      "col": 11,
+      "row": 2,
+      "layer": "floor-flat",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    },
+    {
+      "room": "summit-lamp",
+      "piece": "black-stand",
+      "col": 1,
+      "row": 0,
+      "layer": "top-wall",
+      "collision": false,
+      "note": "Art only. It does not add a collision tile. Map # cells keep the collision they already have."
+    }
+  ]
+}
