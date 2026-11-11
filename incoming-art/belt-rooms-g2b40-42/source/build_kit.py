@@ -85,8 +85,7 @@ def floor_tile(name, color, group, note, kind="plain"):
     if kind == "moss":
         # One soft patch and one pebble. Two tile versions shift them so the floor is not a stamp.
         shift = 0.35 if name.endswith("-b") else 0.0
-        oell(name, name + "_m", grid(0.28 + shift, 0.4, 0.015), (0.22, 0.12, 0.015), "#5f8f4e", outline=False)
-        oell(name, name + "_p", grid(0.72 - shift, 0.68, 0.02), (0.07, 0.05, 0.015), "#8a8780", outline=False)
+        oell(name, name + "_m", grid(0.28 + shift, 0.4, 0.012), (0.34, 0.18, 0.012), "#5e8c50", outline=False)
     elif kind == "brick":
         gbox(name, name + "_a", 0.04, 0.08, 0.96, 0.48, -0.01, 0.0, "#b07954", outline=False)
         gbox(name, name + "_b", 0.0, 0.52, 0.62, 0.94, -0.01, 0.0, "#9d6244", outline=False)
@@ -102,25 +101,32 @@ def floor_tile(name, color, group, note, kind="plain"):
     add_target(name, 0.0, note, group)
 
 def wall_tile(name, stone, cap, group):
+    """Full-bleed so neighbouring wall cells meet. The camera crops to the tile."""
     y = grid(0, 0.28, 0).y
-    obox(name, name + "_w", Vector((0.5, y + 0.08, 0.55)), (0.96, 0.28, 1.05), stone, bevel=0.02)
-    obox(name, name + "_c", Vector((0.5, y - 0.02, 1.12)), (1.02, 0.34, 0.16), cap, bevel=0.02)
-    obox(name, name + "_b", Vector((0.5, y + 0.02, 0.08)), (1.0, 0.16, 0.16), "#3e342c", outline=False)
-    add_target(name, 1.2, "top-wall cell", group)
+    obox(name, name + "_w", Vector((0.5, y + 0.08, 0.55)), (1.12, 0.34, 1.05), stone)
+    obox(name, name + "_c", Vector((0.5, y - 0.02, 1.12)), (1.16, 0.4, 0.18), cap)
+    obox(name, name + "_b", Vector((0.5, y + 0.02, 0.08)), (1.12, 0.2, 0.16), "#3e342c", outline=False)
+    add_target(name, 1.2, "top-wall cell, joins the next cell", group)
+
+def south_tile(name, stone, cap, group):
+    """One parapet cell. Edge to edge, so a row of them is one wall, not a palisade."""
+    gbox(name, name + "_w", -0.04, -0.02, 1.04, 1.02, 0.0, 0.42, stone)
+    gbox(name, name + "_c", -0.06, -0.04, 1.06, 1.04, 0.38, 0.52, cap, outline=False)
+    add_target(name, 0.6, "south wall cell, joins its neighbours", group)
 
 def block_tile(name, stone, cap, group, h=0.55):
-    """A stepped block, the same idea as the sample side stairs, not a plain cube."""
-    gbox(name, name + "_a", 0.08, 0.55, 0.92, 0.95, 0.0, h * 0.4, stone, bevel=0.015)
-    gbox(name, name + "_b", 0.14, 0.28, 0.86, 0.7, 0.0, h * 0.7, stone, bevel=0.015)
-    gbox(name, name + "_c", 0.22, 0.06, 0.78, 0.42, 0.0, h, stone, bevel=0.015)
-    gbox(name, name + "_m", 0.24, 0.08, 0.74, 0.38, h - 0.02, h + 0.04, cap, outline=False)
-    add_target(name, h + 0.12, "solid layout block", group)
+    """Stacked steps. The lowest tread fills the tile so neighbours join. Moss on top."""
+    gbox(name, name + "_a", -0.03, -0.02, 1.03, 1.02, 0.0, h * 0.38, stone)
+    gbox(name, name + "_b", 0.06, 0.08, 0.94, 0.78, 0.0, h * 0.7, stone)
+    gbox(name, name + "_c", 0.16, 0.16, 0.84, 0.52, 0.0, h, stone)
+    gbox(name, name + "_m", 0.18, 0.18, 0.8, 0.48, h - 0.01, h + 0.045, cap, outline=False)
+    add_target(name, h + 0.12, "joined stair block with a moss or cap top", group)
 
 def side_tile(name, stone, cap, group):
-    """A thin rim for the left and right walls, matching the sample's side returns."""
-    gbox(name, name + "_s", 0.0, 0.0, 0.42, 1.0, 0.0, 0.85, stone, bevel=0.02)
-    gbox(name, name + "_c", 0.0, 0.0, 0.48, 1.0, 0.85, 0.98, cap, outline=False)
-    add_target(name, 1.05, "side wall", group)
+    """A rim that runs the full depth of the cell, so stacked side cells join."""
+    gbox(name, name + "_s", 0.0, -0.04, 0.46, 1.04, 0.0, 0.9, stone)
+    gbox(name, name + "_c", 0.0, -0.06, 0.52, 1.06, 0.84, 1.0, cap, outline=False)
+    add_target(name, 1.08, "side wall", group)
 
 def door_tile(name, stone, cap, group):
     y = grid(0, 0.28, 0).y
@@ -136,12 +142,14 @@ def chest_tile(name, body, lid, band, group):
     add_target(name, 0.55, "chest", group)
 
 def shrine_tile(name, cloth, post, glow, group):
-    oell(name, name + "_c1", grid(0.32, 0.62, 0.08), (0.22, 0.16, 0.08), cloth)
-    oell(name, name + "_c2", grid(0.68, 0.66, 0.08), (0.2, 0.14, 0.07), cloth)
-    p = grid(0.5, 0.38, 0)
-    otube(name, name + "_p", p, p + Vector((0, 0, 0.55)), 0.04, 0.03, post)
-    oell(name, name + "_g", p + Vector((0, -0.02, 0.66)), (0.12, 0.09, 0.1), glow, outline=False)
-    add_target(name, 0.75, "rest shrine", group)
+    shadow(name, name + "_sh", 0.5, 0.82, 0.3, 0.18)
+    oell(name, name + "_c1", grid(0.28, 0.7, 0.08), (0.24, 0.16, 0.08), cloth)
+    oell(name, name + "_c2", grid(0.72, 0.72, 0.08), (0.22, 0.15, 0.07), cloth)
+    p = grid(0.5, 0.42, 0)
+    otube(name, name + "_p", p, p + Vector((0, 0, 0.28)), 0.045, 0.04, post)
+    obox(name, name + "_h", p + Vector((0, -0.02, 0.52)), (0.4, 0.3, 0.36), post, bevel=0.03)
+    oell(name, name + "_g", p + Vector((0, -0.08, 0.52)), (0.22, 0.14, 0.2), glow, outline=False)
+    add_target(name, 0.85, "rest shrine with a lamp body", group)
 
 def flat_ell(name, color, sx, sy, group, note, z=0.03):
     oell(name, name + "_e", grid(0.5, 0.5, z), (sx, sy, 0.03), color, outline=False)
@@ -163,30 +171,36 @@ def prop_fern(name, leaf, group):
     add_target(name, 0.45, "fern", group)
 
 def prop_jar(name, clay, group):
-    p = grid(0.5, 0.55, 0)
-    otube(name, name + "_j", p, p + Vector((0, 0, 0.45)), 0.18, 0.12, clay)
-    otube(name, name + "_n", p + Vector((0, 0, 0.45)), p + Vector((0, 0, 0.58)), 0.08, 0.07, "#c4a06a")
-    add_target(name, 0.7, "water jar", group)
+    shadow(name, name + "_sh", 0.5, 0.78, 0.35, 0.22)
+    p = grid(0.5, 0.5, 0)
+    otube(name, name + "_j", p, p + Vector((0, 0, 1.05)), 0.42, 0.28, clay)
+    otube(name, name + "_n", p + Vector((0, 0, 1.05)), p + Vector((0, 0, 1.35)), 0.16, 0.12, "#c4a06a")
+    add_target(name, 1.45, "jar or giant inkwell", group)
 
 def prop_blanket(name, cloth, group):
     gbox(name, name + "_b", 0.15, 0.25, 0.85, 0.8, 0.0, 0.08, cloth, bevel=0.02)
     add_target(name, 0.15, "blanket", group)
 
 def prop_lantern(name, post, glow, group):
-    p = grid(0.5, 0.55, 0)
-    otube(name, name + "_p", p, p + Vector((0, 0, 0.5)), 0.035, 0.03, post)
-    oell(name, name + "_g", p + Vector((0, -0.02, 0.6)), (0.12, 0.09, 0.1), glow, outline=False)
-    add_target(name, 0.75, "lantern", group)
+    shadow(name, name + "_sh", 0.5, 0.78, 0.28, 0.18)
+    p = grid(0.5, 0.5, 0)
+    otube(name, name + "_p", p, p + Vector((0, 0, 0.35)), 0.045, 0.04, post)
+    obox(name, name + "_h", p + Vector((0, -0.02, 0.62)), (0.62, 0.42, 0.48), post, bevel=0.04)
+    oell(name, name + "_g", p + Vector((0, -0.1, 0.62)), (0.32, 0.2, 0.26), glow, outline=False)
+    obox(name, name + "_c", p + Vector((0, -0.02, 0.74)), (0.4, 0.3, 0.08), "#5c4634")
+    add_target(name, 0.9, "lantern with a real body", group)
 
 def prop_reed(name, green, group):
-    for i, dx in enumerate((-0.12, 0.0, 0.12)):
-        a = grid(0.5 + dx, 0.6, 0)
-        otube(name, name + f"r{i}", a, a + Vector((0.02, -0.02, 0.55)), 0.03, 0.015, green)
-    add_target(name, 0.65, "reeds", group)
+    for i, dx in enumerate((-0.22, -0.05, 0.12, 0.26)):
+        a = grid(0.5 + dx, 0.7, 0)
+        otube(name, name + f"r{i}", a, a + Vector((0.04, -0.04, 1.35)), 0.055, 0.02, green)
+    add_target(name, 1.5, "tall reeds", group)
 
 def prop_boat(name, wood, group):
-    oell(name, name + "_h", grid(0.5, 0.55, 0.1), (0.46, 0.22, 0.1), wood)
-    add_target(name, 0.25, "rowboat", group)
+    shadow(name, name + "_sh", 1.0, 0.85, 0.9, 0.35)
+    oell(name, name + "_h", grid(1.0, 0.5, 0.16), (1.55, 0.48, 0.22), wood)
+    obox(name, name + "_s", grid(0.7, 0.45, 0.32), (0.08, 0.4, 0.28), "#6b4428")
+    add_target(name, 0.5, "rowboat", group, w=2.0)
 
 def prop_oar(name, wood, group):
     a, b = grid(0.25, 0.7, 0.15), grid(0.75, 0.35, 0.35)
@@ -245,20 +259,24 @@ def prop_rug(name, cloth, group):
     add_target(name, 0.05, "rug", group, w=2.0)
 
 def prop_drum(name, hide, band, group):
-    p = grid(0.5, 0.55, 0)
-    otube(name, name + "_d", p, p + Vector((0, 0, 0.28)), 0.22, 0.22, hide)
-    obox(name, name + "_b", p + Vector((0, 0, 0.16)), (0.48, 0.32, 0.05), band, outline=False)
-    add_target(name, 0.4, "storm drum", group)
+    shadow(name, name + "_sh", 0.5, 0.82, 0.48, 0.3)
+    p = grid(0.5, 0.48, 0)
+    otube(name, name + "_d", p, p + Vector((0, 0, 0.62)), 0.4, 0.4, hide)
+    obox(name, name + "_b", p + Vector((0, 0, 0.32)), (0.86, 0.58, 0.08), band, outline=False)
+    add_target(name, 0.75, "storm drum", group)
 
 def prop_bell(name, metal, group):
-    p = grid(0.5, 0.45, 0.15)
-    otube(name, name + "_b", p + Vector((0, 0, 0.35)), p, 0.06, 0.16, metal)
-    add_target(name, 0.6, "bell", group)
+    shadow(name, name + "_sh", 0.5, 0.85, 0.28, 0.16)
+    p = grid(0.5, 0.45, 0.2)
+    otube(name, name + "_b", p + Vector((0, 0, 0.7)), p, 0.1, 0.28, metal)
+    otube(name, name + "_p", p + Vector((0, 0, 0.7)), p + Vector((0, 0, 1.05)), 0.03, 0.03, "#6b4428")
+    add_target(name, 1.2, "bell", group)
 
 def prop_mirror(name, frame, glass, group):
-    obox(name, name + "_f", grid(0.5, 0.4, 0.45), (0.55, 0.08, 0.7), frame, bevel=0.02)
-    obox(name, name + "_g", grid(0.5, 0.36, 0.45), (0.4, 0.04, 0.5), glass, outline=False)
-    add_target(name, 0.85, "mirror frame", group)
+    shadow(name, name + "_sh", 0.5, 0.9, 0.4, 0.16)
+    obox(name, name + "_f", grid(0.5, 0.35, 0.85), (0.78, 0.1, 1.45), frame, bevel=0.03)
+    obox(name, name + "_g", grid(0.5, 0.3, 0.85), (0.55, 0.05, 1.15), glass, outline=False)
+    add_target(name, 1.7, "tall mirror frame", group)
 
 def prop_statue(name, stone, glow, group):
     p = grid(0.5, 0.55, 0)
@@ -277,10 +295,11 @@ def prop_feather(name, color, group):
     add_target(name, 0.6, "hanging feather", group)
 
 def prop_umbrella(name, cloth, group):
-    p = grid(0.55, 0.6, 0)
-    otube(name, name + "_p", p, p + Vector((0.15, -0.05, 0.4)), 0.025, 0.02, "#6b4428")
-    oell(name, name + "_u", p + Vector((0.12, -0.04, 0.28)), (0.28, 0.16, 0.08), cloth, rot=(70, 0, 40))
-    add_target(name, 0.5, "tipped umbrella", group)
+    shadow(name, name + "_sh", 0.55, 0.85, 0.45, 0.24)
+    p = grid(0.4, 0.55, 0)
+    otube(name, name + "_p", p, p + Vector((0.22, -0.08, 0.85)), 0.045, 0.03, "#6b4428")
+    oell(name, name + "_u", p + Vector((0.2, -0.06, 0.55)), (0.62, 0.36, 0.18), cloth, rot=(70, 0, 35))
+    add_target(name, 1.0, "tipped umbrella", group)
 
 # Palettes. Reds stay brown enough that they are not danger-red.
 THEMES = {
@@ -312,6 +331,7 @@ def build_theme(key, pal):
     if pal["floor2"] != pal["floor"]:
         floor_tile(f"{g}-floor-b", pal["floor2"], g, "a second floor tile, only a little lighter", kind)
     wall_tile(f"{g}-wall", pal["wall"], pal["cap"], g)
+    south_tile(f"{g}-south", pal["wall"], pal["cap"], g)
     side_tile(f"{g}-side", pal["wall"], pal["cap"], g)
     block_tile(f"{g}-block", pal["block"], pal["cap"], g)
     door_tile(f"{g}-door", pal["wall"], pal["cap"], g)
@@ -388,8 +408,110 @@ add_target("brownblack-rod", 0.9, "lightning rod with a soft gold tip", "brownbl
 prop_statue("black-statue", "#8a93a4", "#e2b15a", "black")
 prop_bell("black-bell", "#c8a45a", "black")
 prop_arch("black-arch", "#d5dbe4", "black")
-flat_ell("black-wisp", "#e2b15a", 0.16, 0.1, "black", "tiny warm light", z=0.2)
 prop_blanket("black-sash", "#e6d7b0", "black")
+
+# A worn stepping stone, two tiles wide, with a real shadow. Not a floor speck.
+def path_stone(name, color, moss, group):
+    shadow(name, name + "_sh", 1.0, 0.85, 0.85, 0.4)
+    oell(name, name + "_s", grid(1.0, 0.5, 0.12), (1.45, 0.62, 0.18), color)
+    oell(name, name + "_m", grid(0.7, 0.42, 0.2), (0.4, 0.18, 0.04), moss, outline=False)
+    add_target(name, 0.3, "thick river stepping stone", group, w=2.0)
+path_stone("green-pathstone", "#8a8780", "#6aaa52", "green")
+
+def prop_ladder(name, wood, group):
+    shadow(name, name + "_sh", 0.5, 0.85, 0.28, 0.14)
+    a = grid(0.32, 0.5, 0.05)
+    b = grid(0.68, 0.5, 0.05)
+    otube(name, name + "_l", a, a + Vector((0, 0, 1.15)), 0.04, 0.035, wood)
+    otube(name, name + "_r", b, b + Vector((0, 0, 1.15)), 0.04, 0.035, wood)
+    for i, z in enumerate((0.25, 0.5, 0.75, 1.0)):
+        otube(name, name + f"u{i}", a + Vector((0, 0, z)), b + Vector((0, 0, z)), 0.03, 0.03, "#a08060")
+    add_target(name, 1.25, "library ladder", group)
+prop_ladder("brown-ladder", "#c4a06a", "brown")
+
+def hanging_lantern(name, cloth, glow, group):
+    y = grid(0, 0.3, 0).y
+    obox(name, name + "_p", Vector((0.5, y, 1.15)), (0.08, 0.08, 0.35), "#c4a06a", outline=False)
+    obox(name, name + "_h", Vector((0.5, y - 0.04, 0.82)), (0.32, 0.22, 0.36), cloth, bevel=0.03)
+    oell(name, name + "_g", Vector((0.5, y - 0.1, 0.82)), (0.16, 0.1, 0.16), glow, outline=False)
+    add_target(name, 1.35, "hanging lantern", group)
+hanging_lantern("red-hang", "#8d5238", "#ffb25a", "red")
+
+def prop_flag(name, cloth, group):
+    otube(name, name + "_p", grid(0.35, 0.6, 0), grid(0.35, 0.55, 1.3), 0.04, 0.03, "#5c5348")
+    gbox(name, name + "_f", 0.4, 0.35, 0.95, 0.55, 0.85, 1.15, cloth)
+    add_target(name, 1.4, "flag", group)
+prop_flag("brownblack-flag", "#2f6a62", "brownblack")
+
+def cloud_gate(name, stone, cloud, group):
+    y = grid(0, 0.35, 0).y
+    for tag, x in (("a", 0.35), ("b", 1.65)):
+        obox(name, name + tag, Vector((x, y, 0.7)), (0.28, 0.28, 1.3), stone, bevel=0.02)
+    obox(name, name + "_l", Vector((1.0, y, 1.4)), (1.7, 0.3, 0.22), stone)
+    oell(name, name + "_c", Vector((1.0, y - 0.1, 1.55)), (0.7, 0.3, 0.28), cloud, outline=False)
+    add_target(name, 1.7, "cloud gate", group, w=2.0)
+cloud_gate("brownblack-gate", "#3e4450", "#d5dbe4", "brownblack")
+
+# Boss architecture. Backdrop and perimeter only. No guardian body.
+def giant_stair(name, stone, moss, group):
+    # High step at the back, lower steps toward the camera, so the treads show.
+    for i, h in enumerate((1.35, 1.0, 0.65, 0.32)):
+        r0 = 0.05 + i * 0.28
+        gbox(name, name + f"s{i}", 0.05, r0, 5.95, r0 + 0.32, 0.0, h, stone)
+        gbox(name, name + f"m{i}", 0.1, r0 + 0.02, 5.9, r0 + 0.28, h - 0.02, h + 0.05, moss, outline=False)
+    add_target(name, 1.55, "giant staircase on the top wall", group, w=6.0, h=1.3)
+giant_stair("green-giant-stair", "#7d7a74", "#6e9a62", "green")
+
+def round_forge(name, group):
+    shadow(name, name + "_sh", 2.0, 1.1, 1.6, 0.5)
+    p = grid(2.0, 0.45, 0)
+    otube(name, name + "_m", p, p + Vector((0, 0, 1.3)), 1.15, 1.15, "#5c4338")
+    oell(name, name + "_g", p + Vector((0, -0.7, 0.7)), (0.7, 0.25, 0.55), "#2a2428")
+    oell(name, name + "_e", p + Vector((0, -0.85, 0.7)), (0.4, 0.12, 0.28), "#ffb25a", outline=False)
+    add_target(name, 1.5, "huge round forge", group, w=4.0, h=1.2)
+round_forge("red-forge", "red")
+
+def shallow_pool(name, group):
+    gbox(name, name + "_w", 0.0, 0.0, 4.0, 2.0, -0.03, 0.02, "#6aa4b8", outline=False)
+    oell(name, name + "_s", grid(0.8, 1.3, 0.06), (0.7, 0.35, 0.08), "#9aa4aa")
+    oell(name, name + "_s2", grid(3.1, 0.6, 0.06), (0.6, 0.3, 0.08), "#9aa4aa")
+    add_target(name, 0.15, "wide shallow pool, flat, with side stones", group, w=4.0, h=2.0)
+shallow_pool("blue-pool", "blue")
+
+def grand_mirror(name, group):
+    for i, x in enumerate((0.6, 1.8, 3.0)):
+        obox(name, name + f"f{i}", grid(x, 0.35, 0.9), (0.7, 0.1, 1.5), "#c5ccd4", bevel=0.02)
+        obox(name, name + f"g{i}", grid(x, 0.3, 0.9), (0.48, 0.04, 1.15), "#9aa8b4", outline=False)
+    otube(name, name + "_b", grid(3.8, 0.4, 0.2), grid(3.8, 0.35, 1.3), 0.08, 0.22, "#c5ccd4")
+    add_target(name, 1.7, "grand mirrors and a bell", group, w=4.5, h=1.0)
+grand_mirror("redblack-grand", "redblack")
+
+def giant_tree(name, group):
+    p = grid(1.2, 0.4, 0)
+    otube(name, name + "_t", p, p + Vector((0, 0, 2.2)), 0.45, 0.28, "#5c3d28")
+    oell(name, name + "_c", p + Vector((0, -0.05, 2.0)), (1.3, 0.7, 0.7), "#3f6a38")
+    otube(name, name + "_r", grid(0.2, 0.8, 0.08), grid(2.2, 0.55, 0.1), 0.12, 0.06, "#5c3d28")
+    add_target(name, 2.3, "giant tree on the back wall", group, w=2.6, h=1.2)
+giant_tree("brown-tree", "brown")
+
+def wind_platform(name, group):
+    for i, (c, r) in enumerate(((0.4, 0.3), (1.5, 0.6), (2.8, 0.25), (3.6, 0.7))):
+        oell(name, name + f"c{i}", grid(c, r, 0.9), (0.7, 0.35, 0.28), "#d5dbe4", outline=False)
+    gbox(name, name + "_p", 0.2, 0.8, 3.6, 1.5, 0.0, 0.12, "#8a8478", outline=False)
+    add_target(name, 1.2, "cloudy wind platform along the edge", group, w=4.0, h=1.6)
+wind_platform("brownblack-clouds", "brownblack")
+
+def summit_stand(name, group):
+    p = grid(0.8, 0.55, 0)
+    otube(name, name + "_p", p, p + Vector((0, 0, 1.5)), 0.08, 0.06, "#c8cdd4")
+    obox(name, name + "_h", p + Vector((0, -0.02, 1.15)), (0.45, 0.32, 0.4), "#8a93a4", bevel=0.03)
+    oell(name, name + "_g", p + Vector((0, -0.08, 1.15)), (0.22, 0.14, 0.2), "#e2b15a", outline=False)
+    for i, (c, r) in enumerate(((1.8, 0.3), (2.6, 0.55), (3.3, 0.25))):
+        oell(name, name + f"c{i}", grid(c, r, 1.3), (0.55, 0.28, 0.22), "#d5dbe4", outline=False)
+    add_target(name, 1.8, "lamp stand under swirling clouds", group, w=4.0, h=1.2)
+summit_stand("black-stand", "black")
+
+flat_ell("black-wisp", "#e2b15a", 0.42, 0.28, "black", "warm wisp", z=0.35)
 
 scene["static_targets"] = json.dumps(TARGETS)
 os.makedirs(os.path.dirname(os.path.abspath(A.out)), exist_ok=True)

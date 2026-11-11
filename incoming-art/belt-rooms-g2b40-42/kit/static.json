@@ -83,12 +83,38 @@
         96.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "top-wall cell"
+      "note": "top-wall cell, joins the next cell"
+    },
+    "green-south": {
+      "size": [
+        80,
+        128
+      ],
+      "layers": [
+        "green-south"
+      ],
+      "files": {
+        "green-south": "green-south_green-south.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        0,
+        48.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "south wall cell, joins its neighbours"
     },
     "green-side": {
       "size": [
         80,
-        164
+        166
       ],
       "layers": [
         "green-side"
@@ -103,10 +129,10 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 1.05,
+      "topExtraTiles": 1.08,
       "anchorPx": [
         0,
-        84.0
+        86.4
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "side wall"
@@ -135,7 +161,7 @@
         53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "solid layout block"
+      "note": "joined stair block with a moss or cap top"
     },
     "green-door": {
       "size": [
@@ -192,7 +218,7 @@
     "green-shrine": {
       "size": [
         80,
-        140
+        148
       ],
       "layers": [
         "green-shrine"
@@ -207,18 +233,18 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.85,
       "anchorPx": [
         0,
-        60.0
+        68.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "rest shrine"
+      "note": "rest shrine with a lamp body"
     },
     "green-lantern": {
       "size": [
         80,
-        140
+        152
       ],
       "layers": [
         "green-lantern"
@@ -233,13 +259,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.9,
       "anchorPx": [
         0,
-        60.0
+        72.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "lantern"
+      "note": "lantern with a real body"
     },
     "green-cushion": {
       "size": [
@@ -369,12 +395,38 @@
         96.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "top-wall cell"
+      "note": "top-wall cell, joins the next cell"
+    },
+    "blue-south": {
+      "size": [
+        80,
+        128
+      ],
+      "layers": [
+        "blue-south"
+      ],
+      "files": {
+        "blue-south": "blue-south_blue-south.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        0,
+        48.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "south wall cell, joins its neighbours"
     },
     "blue-side": {
       "size": [
         80,
-        164
+        166
       ],
       "layers": [
         "blue-side"
@@ -389,10 +441,10 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 1.05,
+      "topExtraTiles": 1.08,
       "anchorPx": [
         0,
-        84.0
+        86.4
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "side wall"
@@ -421,7 +473,7 @@
         53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "solid layout block"
+      "note": "joined stair block with a moss or cap top"
     },
     "blue-door": {
       "size": [
@@ -478,7 +530,7 @@
     "blue-shrine": {
       "size": [
         80,
-        140
+        148
       ],
       "layers": [
         "blue-shrine"
@@ -493,18 +545,18 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.85,
       "anchorPx": [
         0,
-        60.0
+        68.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "rest shrine"
+      "note": "rest shrine with a lamp body"
     },
     "blue-lantern": {
       "size": [
         80,
-        140
+        152
       ],
       "layers": [
         "blue-lantern"
@@ -519,13 +571,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.9,
       "anchorPx": [
         0,
-        60.0
+        72.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "lantern"
+      "note": "lantern with a real body"
     },
     "blue-cushion": {
       "size": [
@@ -655,12 +707,38 @@
         96.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "top-wall cell"
+      "note": "top-wall cell, joins the next cell"
+    },
+    "red-south": {
+      "size": [
+        80,
+        128
+      ],
+      "layers": [
+        "red-south"
+      ],
+      "files": {
+        "red-south": "red-south_red-south.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        0,
+        48.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "south wall cell, joins its neighbours"
     },
     "red-side": {
       "size": [
         80,
-        164
+        166
       ],
       "layers": [
         "red-side"
@@ -675,10 +753,10 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 1.05,
+      "topExtraTiles": 1.08,
       "anchorPx": [
         0,
-        84.0
+        86.4
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "side wall"
@@ -707,7 +785,7 @@
         53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "solid layout block"
+      "note": "joined stair block with a moss or cap top"
     },
     "red-door": {
       "size": [
@@ -764,7 +842,7 @@
     "red-shrine": {
       "size": [
         80,
-        140
+        148
       ],
       "layers": [
         "red-shrine"
@@ -779,18 +857,18 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.85,
       "anchorPx": [
         0,
-        60.0
+        68.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "rest shrine"
+      "note": "rest shrine with a lamp body"
     },
     "red-lantern": {
       "size": [
         80,
-        140
+        152
       ],
       "layers": [
         "red-lantern"
@@ -805,13 +883,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.9,
       "anchorPx": [
         0,
-        60.0
+        72.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "lantern"
+      "note": "lantern with a real body"
     },
     "red-cushion": {
       "size": [
@@ -941,12 +1019,38 @@
         96.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "top-wall cell"
+      "note": "top-wall cell, joins the next cell"
+    },
+    "redblack-south": {
+      "size": [
+        80,
+        128
+      ],
+      "layers": [
+        "redblack-south"
+      ],
+      "files": {
+        "redblack-south": "redblack-south_redblack-south.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        0,
+        48.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "south wall cell, joins its neighbours"
     },
     "redblack-side": {
       "size": [
         80,
-        164
+        166
       ],
       "layers": [
         "redblack-side"
@@ -961,10 +1065,10 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 1.05,
+      "topExtraTiles": 1.08,
       "anchorPx": [
         0,
-        84.0
+        86.4
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "side wall"
@@ -993,7 +1097,7 @@
         53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "solid layout block"
+      "note": "joined stair block with a moss or cap top"
     },
     "redblack-door": {
       "size": [
@@ -1050,7 +1154,7 @@
     "redblack-shrine": {
       "size": [
         80,
-        140
+        148
       ],
       "layers": [
         "redblack-shrine"
@@ -1065,18 +1169,18 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.85,
       "anchorPx": [
         0,
-        60.0
+        68.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "rest shrine"
+      "note": "rest shrine with a lamp body"
     },
     "redblack-lantern": {
       "size": [
         80,
-        140
+        152
       ],
       "layers": [
         "redblack-lantern"
@@ -1091,13 +1195,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.9,
       "anchorPx": [
         0,
-        60.0
+        72.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "lantern"
+      "note": "lantern with a real body"
     },
     "redblack-cushion": {
       "size": [
@@ -1201,12 +1305,38 @@
         96.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "top-wall cell"
+      "note": "top-wall cell, joins the next cell"
+    },
+    "brown-south": {
+      "size": [
+        80,
+        128
+      ],
+      "layers": [
+        "brown-south"
+      ],
+      "files": {
+        "brown-south": "brown-south_brown-south.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        0,
+        48.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "south wall cell, joins its neighbours"
     },
     "brown-side": {
       "size": [
         80,
-        164
+        166
       ],
       "layers": [
         "brown-side"
@@ -1221,10 +1351,10 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 1.05,
+      "topExtraTiles": 1.08,
       "anchorPx": [
         0,
-        84.0
+        86.4
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "side wall"
@@ -1253,7 +1383,7 @@
         53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "solid layout block"
+      "note": "joined stair block with a moss or cap top"
     },
     "brown-door": {
       "size": [
@@ -1310,7 +1440,7 @@
     "brown-shrine": {
       "size": [
         80,
-        140
+        148
       ],
       "layers": [
         "brown-shrine"
@@ -1325,18 +1455,18 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.85,
       "anchorPx": [
         0,
-        60.0
+        68.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "rest shrine"
+      "note": "rest shrine with a lamp body"
     },
     "brown-lantern": {
       "size": [
         80,
-        140
+        152
       ],
       "layers": [
         "brown-lantern"
@@ -1351,13 +1481,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.9,
       "anchorPx": [
         0,
-        60.0
+        72.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "lantern"
+      "note": "lantern with a real body"
     },
     "brown-cushion": {
       "size": [
@@ -1487,12 +1617,38 @@
         96.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "top-wall cell"
+      "note": "top-wall cell, joins the next cell"
+    },
+    "brownblack-south": {
+      "size": [
+        80,
+        128
+      ],
+      "layers": [
+        "brownblack-south"
+      ],
+      "files": {
+        "brownblack-south": "brownblack-south_brownblack-south.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        0,
+        48.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "south wall cell, joins its neighbours"
     },
     "brownblack-side": {
       "size": [
         80,
-        164
+        166
       ],
       "layers": [
         "brownblack-side"
@@ -1507,10 +1663,10 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 1.05,
+      "topExtraTiles": 1.08,
       "anchorPx": [
         0,
-        84.0
+        86.4
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "side wall"
@@ -1539,7 +1695,7 @@
         53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "solid layout block"
+      "note": "joined stair block with a moss or cap top"
     },
     "brownblack-door": {
       "size": [
@@ -1596,7 +1752,7 @@
     "brownblack-shrine": {
       "size": [
         80,
-        140
+        148
       ],
       "layers": [
         "brownblack-shrine"
@@ -1611,18 +1767,18 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.85,
       "anchorPx": [
         0,
-        60.0
+        68.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "rest shrine"
+      "note": "rest shrine with a lamp body"
     },
     "brownblack-lantern": {
       "size": [
         80,
-        140
+        152
       ],
       "layers": [
         "brownblack-lantern"
@@ -1637,13 +1793,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.9,
       "anchorPx": [
         0,
-        60.0
+        72.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "lantern"
+      "note": "lantern with a real body"
     },
     "brownblack-cushion": {
       "size": [
@@ -1773,12 +1929,38 @@
         96.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "top-wall cell"
+      "note": "top-wall cell, joins the next cell"
+    },
+    "black-south": {
+      "size": [
+        80,
+        128
+      ],
+      "layers": [
+        "black-south"
+      ],
+      "files": {
+        "black-south": "black-south_black-south.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.6,
+      "anchorPx": [
+        0,
+        48.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "south wall cell, joins its neighbours"
     },
     "black-side": {
       "size": [
         80,
-        164
+        166
       ],
       "layers": [
         "black-side"
@@ -1793,10 +1975,10 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 1.05,
+      "topExtraTiles": 1.08,
       "anchorPx": [
         0,
-        84.0
+        86.4
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "side wall"
@@ -1825,7 +2007,7 @@
         53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "solid layout block"
+      "note": "joined stair block with a moss or cap top"
     },
     "black-door": {
       "size": [
@@ -1882,7 +2064,7 @@
     "black-shrine": {
       "size": [
         80,
-        140
+        148
       ],
       "layers": [
         "black-shrine"
@@ -1897,18 +2079,18 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.85,
       "anchorPx": [
         0,
-        60.0
+        68.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "rest shrine"
+      "note": "rest shrine with a lamp body"
     },
     "black-lantern": {
       "size": [
         80,
-        140
+        152
       ],
       "layers": [
         "black-lantern"
@@ -1923,13 +2105,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.9,
       "anchorPx": [
         0,
-        60.0
+        72.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "lantern"
+      "note": "lantern with a real body"
     },
     "black-cushion": {
       "size": [
@@ -2038,7 +2220,7 @@
     "green-jar": {
       "size": [
         80,
-        136
+        196
       ],
       "layers": [
         "green-jar"
@@ -2053,13 +2235,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.7,
+      "topExtraTiles": 1.45,
       "anchorPx": [
         0,
-        56.0
+        116.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "water jar"
+      "note": "jar or giant inkwell"
     },
     "green-blanket": {
       "size": [
@@ -2111,7 +2293,7 @@
         43.2
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "solid layout block"
+      "note": "joined stair block with a moss or cap top"
     },
     "green-shade": {
       "size": [
@@ -2168,7 +2350,7 @@
     "blue-reed": {
       "size": [
         80,
-        132
+        200
       ],
       "layers": [
         "blue-reed"
@@ -2183,18 +2365,18 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.65,
+      "topExtraTiles": 1.5,
       "anchorPx": [
         0,
-        52.0
+        120.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "reeds"
+      "note": "tall reeds"
     },
     "blue-boat": {
       "size": [
-        80,
-        100
+        160,
+        120
       ],
       "layers": [
         "blue-boat"
@@ -2205,14 +2387,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1.0,
+        "col1": 2.0,
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.25,
+      "topExtraTiles": 0.5,
       "anchorPx": [
         0,
-        20.0
+        40.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "rowboat"
@@ -2532,7 +2714,7 @@
     "redblack-mirror": {
       "size": [
         80,
-        148
+        216
       ],
       "layers": [
         "redblack-mirror"
@@ -2547,18 +2729,18 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.85,
+      "topExtraTiles": 1.7,
       "anchorPx": [
         0,
-        68.0
+        136.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "mirror frame"
+      "note": "tall mirror frame"
     },
     "redblack-bell": {
       "size": [
         80,
-        128
+        176
       ],
       "layers": [
         "redblack-bell"
@@ -2573,10 +2755,10 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.6,
+      "topExtraTiles": 1.2,
       "anchorPx": [
         0,
-        48.0
+        96.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "bell"
@@ -2688,7 +2870,7 @@
     "brown-lamp": {
       "size": [
         80,
-        140
+        152
       ],
       "layers": [
         "brown-lamp"
@@ -2703,13 +2885,13 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.75,
+      "topExtraTiles": 0.9,
       "anchorPx": [
         0,
-        60.0
+        72.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "lantern"
+      "note": "lantern with a real body"
     },
     "brown-seat": {
       "size": [
@@ -2740,7 +2922,7 @@
     "brown-ink": {
       "size": [
         80,
-        136
+        196
       ],
       "layers": [
         "brown-ink"
@@ -2755,18 +2937,18 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.7,
+      "topExtraTiles": 1.45,
       "anchorPx": [
         0,
-        56.0
+        116.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "water jar"
+      "note": "jar or giant inkwell"
     },
     "brownblack-drum": {
       "size": [
         80,
-        112
+        140
       ],
       "layers": [
         "brownblack-drum"
@@ -2781,10 +2963,10 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.4,
+      "topExtraTiles": 0.75,
       "anchorPx": [
         0,
-        32.0
+        60.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "storm drum"
@@ -2792,7 +2974,7 @@
     "brownblack-umbrella": {
       "size": [
         80,
-        120
+        160
       ],
       "layers": [
         "brownblack-umbrella"
@@ -2807,10 +2989,10 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.5,
+      "topExtraTiles": 1.0,
       "anchorPx": [
         0,
-        40.0
+        80.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "tipped umbrella"
@@ -2922,7 +3104,7 @@
     "black-bell": {
       "size": [
         80,
-        128
+        176
       ],
       "layers": [
         "black-bell"
@@ -2937,10 +3119,10 @@
         "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.6,
+      "topExtraTiles": 1.2,
       "anchorPx": [
         0,
-        48.0
+        96.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "bell"
@@ -2971,32 +3153,6 @@
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "arch lintel"
     },
-    "black-wisp": {
-      "size": [
-        80,
-        84
-      ],
-      "layers": [
-        "black-wisp"
-      ],
-      "files": {
-        "black-wisp": "black-wisp_black-wisp.png"
-      },
-      "groundRect": {
-        "col0": 0,
-        "row0": 0,
-        "col1": 1.0,
-        "row1": 1.0,
-        "note": "the image's ground area in tiles"
-      },
-      "topExtraTiles": 0.05,
-      "anchorPx": [
-        0,
-        4.0
-      ],
-      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "tiny warm light"
-    },
     "black-sash": {
       "size": [
         80,
@@ -3022,6 +3178,344 @@
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "blanket"
+    },
+    "green-pathstone": {
+      "size": [
+        160,
+        104
+      ],
+      "layers": [
+        "green-pathstone"
+      ],
+      "files": {
+        "green-pathstone": "green-pathstone_green-pathstone.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 2.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.3,
+      "anchorPx": [
+        0,
+        24.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "thick river stepping stone"
+    },
+    "brown-ladder": {
+      "size": [
+        80,
+        180
+      ],
+      "layers": [
+        "brown-ladder"
+      ],
+      "files": {
+        "brown-ladder": "brown-ladder_brown-ladder.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.25,
+      "anchorPx": [
+        0,
+        100.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "library ladder"
+    },
+    "red-hang": {
+      "size": [
+        80,
+        188
+      ],
+      "layers": [
+        "red-hang"
+      ],
+      "files": {
+        "red-hang": "red-hang_red-hang.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.35,
+      "anchorPx": [
+        0,
+        108.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "hanging lantern"
+    },
+    "brownblack-flag": {
+      "size": [
+        80,
+        192
+      ],
+      "layers": [
+        "brownblack-flag"
+      ],
+      "files": {
+        "brownblack-flag": "brownblack-flag_brownblack-flag.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.4,
+      "anchorPx": [
+        0,
+        112.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "flag"
+    },
+    "brownblack-gate": {
+      "size": [
+        160,
+        216
+      ],
+      "layers": [
+        "brownblack-gate"
+      ],
+      "files": {
+        "brownblack-gate": "brownblack-gate_brownblack-gate.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 2.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.7,
+      "anchorPx": [
+        0,
+        136.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "cloud gate"
+    },
+    "green-giant-stair": {
+      "size": [
+        480,
+        228
+      ],
+      "layers": [
+        "green-giant-stair"
+      ],
+      "files": {
+        "green-giant-stair": "green-giant-stair_green-giant-stair.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 6.0,
+        "row1": 1.3,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.55,
+      "anchorPx": [
+        0,
+        124.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "giant staircase on the top wall"
+    },
+    "red-forge": {
+      "size": [
+        320,
+        216
+      ],
+      "layers": [
+        "red-forge"
+      ],
+      "files": {
+        "red-forge": "red-forge_red-forge.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 4.0,
+        "row1": 1.2,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.5,
+      "anchorPx": [
+        0,
+        120.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "huge round forge"
+    },
+    "blue-pool": {
+      "size": [
+        320,
+        172
+      ],
+      "layers": [
+        "blue-pool"
+      ],
+      "files": {
+        "blue-pool": "blue-pool_blue-pool.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 4.0,
+        "row1": 2.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.15,
+      "anchorPx": [
+        0,
+        12.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "wide shallow pool, flat, with side stones"
+    },
+    "redblack-grand": {
+      "size": [
+        360,
+        216
+      ],
+      "layers": [
+        "redblack-grand"
+      ],
+      "files": {
+        "redblack-grand": "redblack-grand_redblack-grand.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 4.5,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.7,
+      "anchorPx": [
+        0,
+        136.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "grand mirrors and a bell"
+    },
+    "brown-tree": {
+      "size": [
+        208,
+        280
+      ],
+      "layers": [
+        "brown-tree"
+      ],
+      "files": {
+        "brown-tree": "brown-tree_brown-tree.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 2.6,
+        "row1": 1.2,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 2.3,
+      "anchorPx": [
+        0,
+        184.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "giant tree on the back wall"
+    },
+    "brownblack-clouds": {
+      "size": [
+        320,
+        224
+      ],
+      "layers": [
+        "brownblack-clouds"
+      ],
+      "files": {
+        "brownblack-clouds": "brownblack-clouds_brownblack-clouds.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 4.0,
+        "row1": 1.6,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.2,
+      "anchorPx": [
+        0,
+        96.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "cloudy wind platform along the edge"
+    },
+    "black-stand": {
+      "size": [
+        320,
+        240
+      ],
+      "layers": [
+        "black-stand"
+      ],
+      "files": {
+        "black-stand": "black-stand_black-stand.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 4.0,
+        "row1": 1.2,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.8,
+      "anchorPx": [
+        0,
+        144.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "lamp stand under swirling clouds"
+    },
+    "black-wisp": {
+      "size": [
+        80,
+        84
+      ],
+      "layers": [
+        "black-wisp"
+      ],
+      "files": {
+        "black-wisp": "black-wisp_black-wisp.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.05,
+      "anchorPx": [
+        0,
+        4.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "warm wisp"
     }
   }
 }

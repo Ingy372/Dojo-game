@@ -2,7 +2,7 @@
 
 Not imported. Jay said the belt rooms look good and to build the full set. The Manager relayed that on Nov 10.
 
-The first full-kit pass was too empty. It is kept in `superseded/pass-63fb0263/`. This pass uses the same layouts, with larger props, quiet floors that still have some texture, and the kitchen fighter left at its real size.
+The empty kit pass is in `superseded/pass-63fb0263/`. The next pass is in `superseded/pass-a7324da8/`. This pass joins the walls, puts real stepping stones on the Pebble Path, builds the seven boss backdrops, and makes the named props big enough to read at 48 px per tile.
 
 The three approved sample pictures stay in `sprites/`.
 

@@ -1,0 +1,1484 @@
+{
+  "notForImport": true,
+  "note": "Green-to-Black room kit export. Ready for the Manager to review. Not imported.",
+  "pixelsPerTile": 80,
+  "gamePixelsPerTile": 48,
+  "camera": "orthographic, 35 degrees down, same as the approved samples",
+  "rooms": [
+    {
+      "id": "pebble-path",
+      "name": "Pebble Path",
+      "set": "giants-steps",
+      "place": "The Giant's Steps",
+      "tier": "green",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/pebble-path.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Flat stepping stones along a worn path; the stair-shaped blocks in the corners are the old steps.",
+      "dangerRed": 0
+    },
+    {
+      "id": "swarm-slope",
+      "name": "Swarm Slope",
+      "set": "giants-steps",
+      "place": "The Giant's Steps",
+      "tier": "green",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/swarm-slope.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A loose gravel hillside; the diagonal stone blocks are old steps that slid into a V.",
+      "dangerRed": 0
+    },
+    {
+      "id": "goat-ledge",
+      "name": "Goat Ledge",
+      "set": "giants-steps",
+      "place": "The Giant's Steps",
+      "tier": "green",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/goat-ledge.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Two long rock ledges with a wide gap between them; tufts of mountain grass on the floor.",
+      "dangerRed": 0
+    },
+    {
+      "id": "golem-stairs",
+      "name": "Golem Stairs",
+      "set": "giants-steps",
+      "place": "The Giant's Steps",
+      "tier": "green",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/golem-stairs.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A great staircase of stone in each upper corner, each step a little higher; loose stones on the floor.",
+      "dangerRed": 0
+    },
+    {
+      "id": "shield-shelf",
+      "name": "Shield Shelf",
+      "set": "giants-steps",
+      "place": "The Giant's Steps",
+      "tier": "green",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/shield-shelf.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "One long stone shelf across the room with a wide gap in the middle, like a cupboard for giants; round shield-shaped stones lean on the wall.",
+      "dangerRed": 0
+    },
+    {
+      "id": "roller-run",
+      "name": "Roller Run",
+      "set": "giants-steps",
+      "place": "The Giant's Steps",
+      "tier": "green",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/roller-run.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A smooth stone road with two low ridges; old wheel marks run down it in straight lines.",
+      "dangerRed": 0
+    },
+    {
+      "id": "switchback-road",
+      "name": "Switchback Road",
+      "set": "giants-steps",
+      "place": "The Giant's Steps",
+      "tier": "green",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/switchback-road.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A zigzag mountain road; two long ridges switch sides, and the wheel marks run straight down between them.",
+      "dangerRed": 0
+    },
+    {
+      "id": "giants-gate",
+      "name": "The Giant's Gate",
+      "set": "giants-steps",
+      "place": "The Giant's Steps",
+      "tier": "green",
+      "kind": "challenge",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/giants-gate.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A tall stone arch over the door, with two stair-shaped corner blocks; small cairns at the edges.",
+      "dangerRed": 0
+    },
+    {
+      "id": "water-jar-landing",
+      "name": "Water Jar Landing",
+      "set": "giants-steps",
+      "place": "The Giant's Steps",
+      "tier": "green",
+      "kind": "treasure",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/water-jar-landing.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Big clay water jars in a row; the chest is the oldest jar, with a wooden lid.",
+      "dangerRed": 0
+    },
+    {
+      "id": "resting-step",
+      "name": "Resting Step",
+      "set": "giants-steps",
+      "place": "The Giant's Steps",
+      "tier": "green",
+      "kind": "rest",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/resting-step.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A wide flat step with two warm blankets and a small lantern on the ledge.",
+      "dangerRed": 0
+    },
+    {
+      "id": "great-stair",
+      "name": "The Great Stair",
+      "set": "giants-steps",
+      "place": "The Giant's Steps",
+      "tier": "green",
+      "kind": "boss",
+      "tiles": [
+        20,
+        14
+      ],
+      "image": "rooms/great-stair.png",
+      "imagePx": [
+        1600,
+        1216
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A giant staircase rising on the top wall, each step bigger than the last; the Giant sits on the lowest step.",
+      "dangerRed": 0
+    },
+    {
+      "id": "ferry-landing",
+      "name": "Ferry Landing",
+      "set": "quiet-river",
+      "place": "The Quiet River",
+      "tier": "blue",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/ferry-landing.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Wooden dock posts and a tied-up rowboat; flat stepping stones on the floor.",
+      "dangerRed": 0
+    },
+    {
+      "id": "reed-bank",
+      "name": "Reed Bank",
+      "set": "quiet-river",
+      "place": "The Quiet River",
+      "tier": "blue",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/reed-bank.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Tall soft reeds along both sides (the '#' blocks are reed clumps); lily pads on the floor.",
+      "dangerRed": 0
+    },
+    {
+      "id": "crab-shallows",
+      "name": "Crab Shallows",
+      "set": "quiet-river",
+      "place": "The Quiet River",
+      "tier": "blue",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/crab-shallows.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Two sandbars with shells; shallow water ripples on the floor.",
+      "dangerRed": 0
+    },
+    {
+      "id": "wave-lanes",
+      "name": "Wave Lanes",
+      "set": "quiet-river",
+      "place": "The Quiet River",
+      "tier": "blue",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/wave-lanes.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Two long stone piers split the room into wide water lanes.",
+      "dangerRed": 0
+    },
+    {
+      "id": "lantern-barge",
+      "name": "The Lantern Barge",
+      "set": "quiet-river",
+      "place": "The Quiet River",
+      "tier": "blue",
+      "kind": "challenge",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/lantern-barge.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A wide barge with a row of unlit lanterns; two lantern posts in each corner.",
+      "dangerRed": 0
+    },
+    {
+      "id": "oar-locker",
+      "name": "Oar Locker",
+      "set": "quiet-river",
+      "place": "The Quiet River",
+      "tier": "blue",
+      "kind": "treasure",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/oar-locker.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A wall rack of worn oars; the chest is an old boat locker with a brass latch.",
+      "dangerRed": 0
+    },
+    {
+      "id": "still-pool",
+      "name": "Still Pool",
+      "set": "quiet-river",
+      "place": "The Quiet River",
+      "tier": "blue",
+      "kind": "rest",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/still-pool.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A round pool as flat as glass, with two cushions and a hanging lantern.",
+      "dangerRed": 0
+    },
+    {
+      "id": "watching-pool",
+      "name": "The Watching Pool",
+      "set": "quiet-river",
+      "place": "The Quiet River",
+      "tier": "blue",
+      "kind": "boss",
+      "tiles": [
+        20,
+        14
+      ],
+      "image": "rooms/watching-pool.png",
+      "imagePx": [
+        1600,
+        1216
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A wide shallow pool with stepping stones; a tall water heron stands in the middle, its feathers streaked with mud.",
+      "dangerRed": 0
+    },
+    {
+      "id": "bellows-door",
+      "name": "Bellows Door",
+      "set": "forge-of-courage",
+      "place": "The Forge of Courage",
+      "tier": "red",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/bellows-door.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Two huge leather bellows by the door; cool coals in baskets.",
+      "dangerRed": 0
+    },
+    {
+      "id": "cub-crowd",
+      "name": "Cub Crowd",
+      "set": "forge-of-courage",
+      "place": "The Forge of Courage",
+      "tier": "red",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/cub-crowd.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A cozy corner cushion pile; small cool ember piles on the floor.",
+      "dangerRed": 0
+    },
+    {
+      "id": "anvil-alley",
+      "name": "Anvil Alley",
+      "set": "forge-of-courage",
+      "place": "The Forge of Courage",
+      "tier": "red",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/anvil-alley.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Two big anvils with hammers on racks; sparks in jars along the walls.",
+      "dangerRed": 0
+    },
+    {
+      "id": "sweeping-hall",
+      "name": "Sweeping Hall",
+      "set": "forge-of-courage",
+      "place": "The Forge of Courage",
+      "tier": "red",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/sweeping-hall.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Two long work benches with brooms; a bright clean floor for the sweep lanes.",
+      "dangerRed": 0
+    },
+    {
+      "id": "smiths-rush",
+      "name": "Smith's Rush",
+      "set": "forge-of-courage",
+      "place": "The Forge of Courage",
+      "tier": "red",
+      "kind": "challenge",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/smiths-rush.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A big forge clock above the door, a bucket of cool water in each corner.",
+      "dangerRed": 0
+    },
+    {
+      "id": "shield-rack",
+      "name": "Shield Rack",
+      "set": "forge-of-courage",
+      "place": "The Forge of Courage",
+      "tier": "red",
+      "kind": "treasure",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/shield-rack.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A rack of round shields; the chest is a smith's tool chest with a red lid.",
+      "dangerRed": 0
+    },
+    {
+      "id": "cool-embers",
+      "name": "Cool Embers",
+      "set": "forge-of-courage",
+      "place": "The Forge of Courage",
+      "tier": "red",
+      "kind": "rest",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/cool-embers.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A bed of glowing coals that do not burn, two cushions and a kettle.",
+      "dangerRed": 0
+    },
+    {
+      "id": "knights-forge",
+      "name": "The Knight's Forge",
+      "set": "forge-of-courage",
+      "place": "The Forge of Courage",
+      "tier": "red",
+      "kind": "boss",
+      "tiles": [
+        20,
+        14
+      ],
+      "image": "rooms/knights-forge.png",
+      "imagePx": [
+        1600,
+        1216
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A huge round forge with a glowing mouth; the Ember Knight stands before it with a raised shield.",
+      "dangerRed": 0
+    },
+    {
+      "id": "whisper-gate",
+      "name": "Whisper Gate",
+      "set": "hall-of-echoes",
+      "place": "The Hall of Echoes",
+      "tier": "red-black",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/whisper-gate.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A tall arched gate with a stone ear on each side; soft sound-wave rings on the floor.",
+      "dangerRed": 0
+    },
+    {
+      "id": "split-mirrors",
+      "name": "Split Mirrors",
+      "set": "hall-of-echoes",
+      "place": "The Hall of Echoes",
+      "tier": "red-black",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/split-mirrors.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Two tall mirror frames on the top wall; a faint line down the middle of the floor.",
+      "dangerRed": 0
+    },
+    {
+      "id": "shade-gallery",
+      "name": "Shade Gallery",
+      "set": "hall-of-echoes",
+      "place": "The Hall of Echoes",
+      "tier": "red-black",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/shade-gallery.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Picture frames with soft shadows moving in them; low lamps along the walls.",
+      "dangerRed": 0
+    },
+    {
+      "id": "masklet-circle",
+      "name": "Masklet Circle",
+      "set": "hall-of-echoes",
+      "place": "The Hall of Echoes",
+      "tier": "red-black",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/masklet-circle.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A round ring of floor tiles in the middle; echo bells hung quietly round the walls.",
+      "dangerRed": 0
+    },
+    {
+      "id": "echo-chamber",
+      "name": "The Echo Chamber",
+      "set": "hall-of-echoes",
+      "place": "The Hall of Echoes",
+      "tier": "red-black",
+      "kind": "challenge",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/echo-chamber.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A round chamber of curved walls with a big hanging bell; a stone ear in each corner.",
+      "dangerRed": 0
+    },
+    {
+      "id": "kind-word-nook",
+      "name": "Kind Word Nook",
+      "set": "hall-of-echoes",
+      "place": "The Hall of Echoes",
+      "tier": "red-black",
+      "kind": "treasure",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/kind-word-nook.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A smooth stone with a hollow for whispers; the chest is a small music box.",
+      "dangerRed": 0
+    },
+    {
+      "id": "quiet-corner",
+      "name": "Quiet Corner",
+      "set": "hall-of-echoes",
+      "place": "The Hall of Echoes",
+      "tier": "red-black",
+      "kind": "rest",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/quiet-corner.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Thick soft rugs that hush every sound, two cushions and a single candle.",
+      "dangerRed": 0
+    },
+    {
+      "id": "mask-hall",
+      "name": "The Echo Hall",
+      "set": "hall-of-echoes",
+      "place": "The Hall of Echoes",
+      "tier": "red-black",
+      "kind": "boss",
+      "tiles": [
+        20,
+        14
+      ],
+      "image": "rooms/mask-hall.png",
+      "imagePx": [
+        1600,
+        1216
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A grand hall of mirrors and bells; a floating mask hangs in the middle, copying the student.",
+      "dangerRed": 0
+    },
+    {
+      "id": "dusty-entry",
+      "name": "Dusty Entry",
+      "set": "root-library",
+      "place": "The Root Library",
+      "tier": "brown",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/dusty-entry.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Tall shelves with dusty books along the walls; a round welcome rug.",
+      "dangerRed": 0
+    },
+    {
+      "id": "reading-roots",
+      "name": "Reading Roots",
+      "set": "root-library",
+      "place": "The Root Library",
+      "tier": "brown",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/reading-roots.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Thick tree roots curl round the shelves (the '#' blocks are root knots); loose pages on the floor.",
+      "dangerRed": 0
+    },
+    {
+      "id": "inkwell-aisle",
+      "name": "Inkwell Aisle",
+      "set": "root-library",
+      "place": "The Root Library",
+      "tier": "brown",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/inkwell-aisle.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A row of giant inkwells and quills; the floor shows faint ink dots.",
+      "dangerRed": 0
+    },
+    {
+      "id": "root-stacks",
+      "name": "Root Stacks",
+      "set": "root-library",
+      "place": "The Root Library",
+      "tier": "brown",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/root-stacks.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Two huge shelves grown through with roots split the room into reading lanes.",
+      "dangerRed": 0
+    },
+    {
+      "id": "great-reading-room",
+      "name": "The Reading Room",
+      "set": "root-library",
+      "place": "The Root Library",
+      "tier": "brown",
+      "kind": "challenge",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/great-reading-room.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A round reading room with a glowing lamp over the door; tall stacks in each corner.",
+      "dangerRed": 0
+    },
+    {
+      "id": "story-shelf",
+      "name": "Story Shelf",
+      "set": "root-library",
+      "place": "The Root Library",
+      "tier": "brown",
+      "kind": "treasure",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/story-shelf.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A shelf of helper stories; the chest is a thick old book with a clasp.",
+      "dangerRed": 0
+    },
+    {
+      "id": "reading-nook",
+      "name": "Reading Nook",
+      "set": "root-library",
+      "place": "The Root Library",
+      "tier": "brown",
+      "kind": "rest",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/reading-nook.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A big armchair-shaped root, two cushions, and a warm reading lamp.",
+      "dangerRed": 0
+    },
+    {
+      "id": "root-hall",
+      "name": "The Root Hall",
+      "set": "root-library",
+      "place": "The Root Library",
+      "tier": "brown",
+      "kind": "boss",
+      "tiles": [
+        20,
+        14
+      ],
+      "image": "rooms/root-hall.png",
+      "imagePx": [
+        1600,
+        1216
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A huge hall held up by one giant tree; the Root Keeper sits among its roots with a book.",
+      "dangerRed": 0
+    },
+    {
+      "id": "rainy-landing",
+      "name": "Rainy Landing",
+      "set": "storm-stair",
+      "place": "The Storm Stair",
+      "tier": "brown-black",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/rainy-landing.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A wide wet stone landing with puddles on the floor and a tipped umbrella.",
+      "dangerRed": 0
+    },
+    {
+      "id": "breezy-bend",
+      "name": "Breezy Bend",
+      "set": "storm-stair",
+      "place": "The Storm Stair",
+      "tier": "brown-black",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/breezy-bend.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A bend in the stair with fluttering flags; leaves swirl along the walls.",
+      "dangerRed": 0
+    },
+    {
+      "id": "drum-landing",
+      "name": "Drum Landing",
+      "set": "storm-stair",
+      "place": "The Storm Stair",
+      "tier": "brown-black",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/drum-landing.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Two big storm drums on stone stands; rain streaks down the windows.",
+      "dangerRed": 0
+    },
+    {
+      "id": "zigzag-steps",
+      "name": "Zig-Zag Steps",
+      "set": "storm-stair",
+      "place": "The Storm Stair",
+      "tier": "brown-black",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/zigzag-steps.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "Steps that zig-zag up the walls; kite ribbons tied to the posts.",
+      "dangerRed": 0
+    },
+    {
+      "id": "storm-gate",
+      "name": "The Storm Gate",
+      "set": "storm-stair",
+      "place": "The Storm Stair",
+      "tier": "brown-black",
+      "kind": "challenge",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/storm-gate.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A tall iron gate swirled with cloud; a lightning rod in each corner.",
+      "dangerRed": 0
+    },
+    {
+      "id": "feather-nook",
+      "name": "Feather Nook",
+      "set": "storm-stair",
+      "place": "The Storm Stair",
+      "tier": "brown-black",
+      "kind": "treasure",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/feather-nook.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A single feather hanging in the air, very still; the chest is a wind-worn trunk.",
+      "dangerRed": 0
+    },
+    {
+      "id": "dry-alcove",
+      "name": "Dry Alcove",
+      "set": "storm-stair",
+      "place": "The Storm Stair",
+      "tier": "brown-black",
+      "kind": "rest",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/dry-alcove.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A snug stone alcove with a roof, two cushions and a warm lamp.",
+      "dangerRed": 0
+    },
+    {
+      "id": "heralds-landing",
+      "name": "The Herald's Landing",
+      "set": "storm-stair",
+      "place": "The Storm Stair",
+      "tier": "brown-black",
+      "kind": "boss",
+      "tiles": [
+        20,
+        14
+      ],
+      "image": "rooms/heralds-landing.png",
+      "imagePx": [
+        1600,
+        1216
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A wide windy platform in the clouds; the Storm Herald stands tall in the middle with ribbons of wind.",
+      "dangerRed": 0
+    },
+    {
+      "id": "summit-steps",
+      "name": "Summit Steps",
+      "set": "summit",
+      "place": "The Summit",
+      "tier": "black",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/summit-steps.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "The last wide steps with a soft glow at the top; wind-bent grass in the gaps.",
+      "dangerRed": 0
+    },
+    {
+      "id": "wisp-walk",
+      "name": "Wisp Walk",
+      "set": "summit",
+      "place": "The Summit",
+      "tier": "black",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/wisp-walk.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A walkway lined with tiny floating lights; rain-dark flagstones.",
+      "dangerRed": 0
+    },
+    {
+      "id": "knight-terrace",
+      "name": "Knight Terrace",
+      "set": "summit",
+      "place": "The Summit",
+      "tier": "black",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/knight-terrace.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A terrace with old statues of helpers; each one holds a small lantern.",
+      "dangerRed": 0
+    },
+    {
+      "id": "sweeper-ridge",
+      "name": "Sweeper Ridge",
+      "set": "summit",
+      "place": "The Summit",
+      "tier": "black",
+      "kind": "battle",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/sweeper-ridge.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A high ridge with two long wind walls; clouds roll past the open sides.",
+      "dangerRed": 0
+    },
+    {
+      "id": "last-climb",
+      "name": "The Last Climb",
+      "set": "summit",
+      "place": "The Summit",
+      "tier": "black",
+      "kind": "challenge",
+      "tiles": [
+        20,
+        12
+      ],
+      "image": "rooms/last-climb.png",
+      "imagePx": [
+        1600,
+        1056
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A bright stone arch with the sky behind it; small lamps lit in the corners.",
+      "dangerRed": 0
+    },
+    {
+      "id": "bell-nook",
+      "name": "Bell Nook",
+      "set": "summit",
+      "place": "The Summit",
+      "tier": "black",
+      "kind": "treasure",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/bell-nook.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "A small bronze bell on a hook; the chest is a travel trunk with a clean sash on top.",
+      "dangerRed": 0
+    },
+    {
+      "id": "lamp-stand",
+      "name": "The Lamp Stand",
+      "set": "summit",
+      "place": "The Summit",
+      "tier": "black",
+      "kind": "rest",
+      "tiles": [
+        13,
+        9
+      ],
+      "image": "rooms/lamp-stand.png",
+      "imagePx": [
+        1040,
+        816
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "An empty lamp stand glowing softly, two cushions, and a view of the whole town below.",
+      "dangerRed": 0
+    },
+    {
+      "id": "summit-lamp",
+      "name": "The Empty Lamp",
+      "set": "summit",
+      "place": "The Summit",
+      "tier": "black",
+      "kind": "boss",
+      "tiles": [
+        20,
+        14
+      ],
+      "image": "rooms/summit-lamp.png",
+      "imagePx": [
+        1600,
+        1216
+      ],
+      "pixelsPerTile": 80,
+      "wallTopTiles": 1.2,
+      "anchor": "top-left of the picture. Tile (0,0) ground starts wallTopTiles below the top.",
+      "player": "the approved kitchen fighter, standing on P, at 80 px per tile",
+      "gamePixelsPerTile": 48,
+      "notForImport": true,
+      "artProps": "The very top: an empty lamp stand under swirling clouds; the Lightbearer stands beside it, tired but holding on.",
+      "dangerRed": 0
+    }
+  ]
+}

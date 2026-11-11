@@ -133,8 +133,28 @@ def span(spec):
 
 # The approved sample rooms keep every prop from that sample, still off the middle.
 ROOM_PACK = {
-    "bellows-door": ["red-bellows", "red-anvil", "red-tool", "red-bin", "red-trough", "red-barrel", "red-ember"],
-    "reading-nook": ["brown-shelf", "brown-rug", "brown-seat", "brown-cushion", "brown-lamp", "brown-root"],
+    "pebble-path": ["green-pathstone", "green-pathstone", "green-pathstone", "green-fern", "green-stream"],
+    "ferry-landing": ["blue-boat", "blue-stone", "blue-oar"],
+    "reed-bank": ["blue-reed", "blue-reed", "blue-lily"],
+    "bellows-door": ["red-bellows", "red-anvil", "red-tool", "red-bin", "red-trough", "red-barrel", "red-ember", "red-hang", "red-hang"],
+    "reading-nook": ["brown-shelf", "brown-rug", "brown-seat", "brown-cushion", "brown-lamp", "brown-ladder", "brown-root"],
+    "split-mirrors": ["redblack-mirror", "redblack-mirror"],
+    "inkwell-aisle": ["brown-ink", "brown-ink"],
+    "drum-landing": ["brownblack-drum", "brownblack-drum"],
+    "rainy-landing": ["brownblack-umbrella", "brownblack-flag", "brownblack-puddle"],
+    "storm-gate": ["brownblack-gate", "brownblack-flag"],
+    "wisp-walk": ["black-wisp", "black-wisp", "black-lantern"],
+    "great-stair": ["green-giant-stair"],
+    "knights-forge": ["red-forge"],
+    "watching-pool": ["blue-pool", "blue-pool"],
+    "mask-hall": ["redblack-grand", "redblack-bell"],
+    "root-hall": ["brown-tree", "brown-root"],
+    "heralds-landing": ["brownblack-clouds"],
+    "summit-lamp": ["black-stand", "black-wisp"],
+}
+SETPIECES = {
+    "green-giant-stair", "red-forge", "blue-pool", "redblack-grand",
+    "brown-tree", "brownblack-clouds", "black-stand", "green-pathstone",
 }
 
 def props_for(theme, text, room_id=""):
@@ -213,16 +233,17 @@ def draw_room(data, room, specs, images, fighter):
     canvas = Image.new("RGBA", (W * T, int((H + ROOM_TOP) * T)), (0, 0, 0, 0))
     floor = f"{theme}-floor"
     # Floors first, so every later piece sits on them and nearer rows paint over farther ones.
+    # Floor under every cell, including walls, so a seam shows the floor instead of a black void.
     for y, row in enumerate(tiles):
-        for x, ch in enumerate(row):
-            if ch == "#":
-                continue
+        for x, _ch in enumerate(row):
             paste(canvas, images[floor], specs[floor], x, y)
     layers = []
     for y, row in enumerate(tiles):
         for x, ch in enumerate(row):
             if ch == "#" and y == 0:
                 layers.append((y, x, f"{theme}-wall", 0))
+            elif ch == "#" and y == H - 1:
+                layers.append((y, x, f"{theme}-south", 0))
             elif ch == "#" and x in (0, W - 1):
                 layers.append((y, x, f"{theme}-side", int(0.58 * T) if x == W - 1 else 0))
             elif ch == "#":
@@ -247,11 +268,43 @@ def draw_room(data, room, specs, images, fighter):
                 used.add((x, y))
                 n += 1
         chosen = [p for p in chosen if p != "green-stream"]
+    def wide_spots(w, h, n):
+        door = tiles[0].index("D") if "D" in tiles[0] else None
+        spots = []
+        for y in (1, 2, 3, max(2, H - 5)):
+            for x in (1, 2, W - w - 1, (door + 2) if door is not None else 2):
+                if x < 1 or y < 1 or x + w >= W or y + h >= H:
+                    continue
+                if abs((x + w / 2.0) - (W - 1) / 2.0) < 3 and w < 5:
+                    continue
+                good = all(tiles[y + dy][x + dx] != "#" for dy in range(h) for dx in range(w))
+                if good and (x, y) not in spots:
+                    spots.append((x, y))
+        return spots[:n]
+
     for piece in chosen:
         if piece not in images:
             continue
+        if piece in SETPIECES:
+            w = span(specs[piece])
+            gh = specs[piece]["groundRect"]
+            hh = max(1, int(round(gh["row1"] - gh["row0"])))
+            n = 3 if piece == "green-pathstone" else (2 if piece == "blue-pool" else 1)
+            for cell in wide_spots(w, hh, n):
+                if any((cell[0] + d, cell[1]) in used for d in range(w)):
+                    continue
+                layers.append((cell[1], cell[0], piece, 0))
+                for d in range(w):
+                    used.add((cell[0] + d, cell[1]))
+            continue
+        if piece == "red-hang":
+            for x in (2, 5, W - 3):
+                if 0 < x < W - 1 and tiles[1][x] == "." and (x, 1) not in used:
+                    layers.append((1, x, piece, 0))
+                    used.add((x, 1))
+            continue
         w = span(specs[piece])
-        copies = 3 if piece in FLAT or piece.endswith(("-stone", "-fern", "-ember", "-root")) else 1
+        copies = 3 if piece in FLAT or piece.endswith(("-stone", "-fern", "-ember", "-root", "-reed", "-wisp")) else 1
         placed = 0
         pool = side_spots(tiles, w)
         if piece.endswith("-root"):
@@ -358,6 +411,10 @@ def main():
     }, open(os.path.join(ROOT, "manifest.json"), "w"), indent=2)
     for name, items in by_set.items():
         sheet(items, name + " at 48 px per tile, with the kitchen fighter", os.path.join(PREVIEW, name + "-48.png"), 48 / 80)
+    bosses = ["great-stair", "watching-pool", "knights-forge", "mask-hall", "root-hall", "heralds-landing", "summit-lamp"]
+    sheet([(b, os.path.join(ROOMS, b + ".png")) for b in bosses],
+          "Boss arenas at 48 px per tile. Architecture only, no guardian.",
+          os.path.join(PREVIEW, "boss-setpieces-48.png"), 48 / 80)
     # Same 80 px per tile on every picture. Seven tiles wide, so the fighter and props match the samples.
     pairs = [
         ("Green", "room-green_room-green.png", "pebble-path"),
@@ -368,7 +425,7 @@ def main():
         ("Brown-Black", None, "rainy-landing"),
         ("Black", None, "summit-steps"),
     ]
-    old_root = os.path.join(ROOT, "superseded", "pass-63fb0263", "rooms")
+    old_root = os.path.join(ROOT, "superseded", "pass-a7324da8", "rooms")
     cells = []
     for i, (lab, sample, rid) in enumerate(pairs):
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)
