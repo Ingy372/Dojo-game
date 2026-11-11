@@ -1,47 +1,53 @@
-# Belt room samples — G2B-40, G2B-41, G2B-42
+# Belt rooms — full Green-to-Black kit (G2B-40, G2B-41, G2B-42)
 
-Three sample rooms only. Not the full kits. Not for import. No game code.
+Not imported. Jay said the belt rooms look good and to build the full set. The Manager relayed that on Nov 10.
 
-Camera and tile size match the approved Tower rooms (`incoming-art/tier3-ember-kitchens`, rendered with `incoming-art/tools/render_static.py`): orthographic, 35° down, **80 px per tile**. Each sample is 7 tiles wide and 5 deep, plus the wall height, so the picture is 560 × 504 px.
+The three approved sample pictures stay in `sprites/`. This delivery is the full kit built from those looks and from each room's own data file.
 
 ## Delivery Note
 
-**ITEM:** First samples for the Green/Blue, Red/Red-Black, and Brown/Brown-Black/Black room kits.
+**ITEM:** G2B-40, G2B-41, and G2B-42. Every room from Green through Black.
 
-**WHAT:** Fourth pass. Props are unchanged from the third pass (`superseded/sample-3/`). The floors are quieter so a fighter reads the way they do on the kitchen floor. Same 35° camera, 80 px tiles, and toon look. The preview sheet keeps the kitchen and the earlier passes, and the 48 px row shows the approved kitchen player standing in the middle of each room and on the kitchen.
-- **G2B-40 — Green, Pebble Path.** Soft moss with a thin moss joint and low-contrast tile shades. The river stones, stairs, ferns, and stream stay.
-- **G2B-41 — Red, Bellows Door.** Brick contrast cut about in half. The ember pools stay bright. The forge props stay.
-- **G2B-42 — Brown, Reading Nook.** One even warm plank floor, with no seams. The roots are short and sit on the wall edges. The shelves, ladder, cart, rugs, and cushions stay.
+**WHAT:** 59 rooms. Green is all 11 rooms in `giants-steps.json` (a run still picks 8). Then Blue, Red, Red-Black, Brown, Brown-Black, and Black, 8 rooms each. Layouts are the `# . D P C S` maps in `drafts/content/rooms/`. Props are only the ones named in that room's art line, kept off the middle. Green floors are one soft moss, with river stones, ferns, and a stream at the sides. Red floors are one quiet brick, with bright ember pools. Brown floors are one even plank, and roots sit only on the wall edges. Same 35° camera and 80 px tiles as the samples. The contact sheets are at 48 px per tile with the approved kitchen fighter standing on P.
 
-**WHY:** Jay's rule is three samples before a big batch, so the belt colours can be checked on a phone before the rest of the rooms are built.
+| Set | Rooms | Sheet |
+| --- | --- | --- |
+| Giant's Steps (Green) | 11 | `preview/giants-steps-48.png` |
+| Quiet River (Blue) | 8 | `preview/quiet-river-48.png` |
+| Forge of Courage (Red) | 8 | `preview/forge-of-courage-48.png` |
+| Hall of Echoes (Red-Black) | 8 | `preview/hall-of-echoes-48.png` |
+| Root Library (Brown) | 8 | `preview/root-library-48.png` |
+| Storm Stair (Brown-Black) | 8 | `preview/storm-stair-48.png` |
+| The Summit (Black) | 8 | `preview/summit-48.png` |
 
-**DECIDE:** Do these three looks feel like the right belts, and is the red room warm brick and lacquer rather than a warning?
+Each room picture is `rooms/<id>.png`. The piece list, sizes, and anchors are `kit/static.json`. The room list is `manifest.json`.
 
-**NEXT:** After a yes, build the full list below. Until then, nothing is imported.
+**WHY:** The sample trio was approved, so the rest of the belt rooms can be built for review.
 
-Preview: `preview/samples-sheet.png` (source size on top, game size at 48 px per tile below).
+**DECIDE:** Review the full set. It is not imported. A few art calls, already made so the build could finish:
 
-## What the full batch will contain
+- The guardians themselves (Stone Giant, heron, Ember Knight, mask, Root Keeper, Storm Herald, Lightbearer) are not drawn in these rooms. They are character art, not floor tiles.
+- "Deep red" and the smith chest's "red lid" are lacquer brown. Danger-red stays for attack warnings only. Checked pixels: 0.
+- Storm lightning is a short post with a soft gold tip, not a bolt and not a stripe.
+- Sign words are not painted into the pictures. They stay in the room data for the game to draw.
 
-Same camera and 80 px tiles. One kit per floor set, in the shape of the Ember Kitchens kit (floors, walls, doors, chest, shrine, and the props named in each brief).
+**NEXT:** After a yes, a Programmer can import the kit. Until then it stays in `incoming-art/`.
 
-**G2B-40 — Green, The Giant's Steps** (`drafts/content/rooms/giants-steps-brief.md`): Pebble Path, Swarm Slope, Goat Ledge, Golem Stairs, Shield Shelf, Roller Run, Switchback Road, The Giant's Gate, Water Jar Landing, Resting Step, The Great Stair.
+## Look here
 
-**G2B-40 — Blue, The Quiet River** (`quiet-river-brief.md`): Ferry Landing, Reed Bank, Crab Shallows, Wave Lanes, The Lantern Barge, Oar Locker, Still Pool, The Watching Pool.
+- `preview/compare-approved.png` — the three approved samples beside the new full rooms.
+- `preview/kit-closeup.png` — floors and the new pieces.
+- `preview/*-48.png` — every room at phone size, with the fighter.
 
-**G2B-41 — Red, The Forge of Courage** (`forge-of-courage-brief.md`): Bellows Door, Cub Crowd, Anvil Alley, Sweeping Hall, Smith's Rush, Shield Rack, Cool Embers, The Knight's Forge. Brick, iron, lacquer, and gold. No danger-red floods.
+## Rebuild
 
-**G2B-41 — Red/Black, The Hall of Echoes** (`hall-of-echoes-brief.md`): Whisper Gate, Split Mirrors, Shade Gallery, Masklet Circle, The Echo Chamber, Kind Word Nook, Quiet Corner, The Echo Hall. Charcoal, silver, and warm lamps. Not a red warning.
+```
+blender -b -P incoming-art/belt-rooms-g2b40-42/source/build_kit.py -- \
+    --out incoming-art/belt-rooms-g2b40-42/source/belt-room-kit.blend
+blender -b incoming-art/belt-rooms-g2b40-42/source/belt-room-kit.blend \
+    -P incoming-art/tools/render_static.py -- \
+    --out incoming-art/belt-rooms-g2b40-42/kit --samples 8
+python3 incoming-art/belt-rooms-g2b40-42/source/compose_rooms.py
+```
 
-**G2B-42 — Brown, The Root Library** (`root-library-brief.md`): Dusty Entry, Reading Roots, Inkwell Aisle, Root Stacks, The Reading Room, Story Shelf, Reading Nook, The Root Hall.
-
-**G2B-42 — Brown/Black, The Storm Stair** (`storm-stair-brief.md`): Rainy Landing, Breezy Bend, Drum Landing, Zig-Zag Steps, The Storm Gate, Feather Nook, Dry Alcove, The Herald's Landing.
-
-**G2B-42 — Black, The Summit** (`summit-brief.md`): Summit Steps, Wisp Walk, Knight Terrace, Sweeper Ridge, The Last Climb, Bell Nook, The Lamp Stand, The Empty Lamp.
-
-## Decided by the Manager
-
-- This trio is the right first sample: Pebble Path, Bellows Door, Reading Nook.
-- The full Green kit, later, needs art for all 11 rooms in `giants-steps.json`, because a run draws 8 from that pool.
-
-Still only these 3 samples until the looks are approved.
+Scene: `source/belt-room-kit.blend`. Script: `source/build_kit.py`.
