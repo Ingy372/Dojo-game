@@ -1094,6 +1094,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - `stationary: true` enemy flag; thunder-drum, sleepy-sentry and thorn-sprout use speed 0.
 - The sim models Bellows Puff's no-damage push (Hit slide, Block hold, wall stop, `push` event). A Puff room costs 0 Health.
 - Tests: `k31-boss-tag` (+3), `c430-stationary` (4), `c430-push` (5), `puff-push` balance report (gated). Shots in /workspace/shots/c430-fixes with `pass-fail.md`.
+## ZAPKITE-ZIGZAG: the Zap Kite's zig-zag lane (2026-11-02)
+- Added the baked zig-zag lane (glow, fill, edge) to `incoming-art/dash-telegraph`, from `source/zigzag.json`. After the #444 reviews it shows the true hit capsule, 4.2 long x 1.2 wide (reach 3.0 + 2 x areaRadius 0.6, 2 x areaRadius), with the zig-zag band clamped to stay inside it (stroke 0.5, swing 0.3, 4 corners). `make_zigzag_preview.py` draws it at 667x375 (motion on, motion off, greyscale, GIF). Not imported into the game yet.
+- Tests: `zapkite-zigzag.test.ts` (7), including a pixel check that nothing is drawn outside the capsule. Previews in /workspace/shots/zapkite-zigzag with `pass-fail.md`.
 
 ### GUARD-SCALE-01: bigger Guardians (2026-11-02)
 - Guardians draw, collide and reach 1.5x (Stone Giant and Lost Lightbearer 1.75x, not live yet). Factors and the zoom numbers are in `content/settings/guardian-scale.json`.
@@ -1108,5 +1111,15 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Tests: `start-level-pin` (8).
 ### START-LEVEL-PIN-GAPS: start-level tests tightened (2026-11-02)
 - Test-only: added "old save without level or XP loads at Level 1 / 0 XP" and "a feed sign-off shows as signed off"; the belt-entry test now runs the profile through `gainXp` so it can fail. `start-level-pin` is now 10 tests.
+### J27-APPLY (2026-11-08)
+- 12 live seal/strike renames applied (old names in altName). Tests: training, p-prog-d-strike updated.
+- New Advancing seal family; #4 moved there from Escape (shows "Self-Defense #4" until Jay names it, counterPush 1.5). No save migration or heads-up: pre-beta (Dec 4), no real student saves.
+### G2B-04: Throw live; Lock caps (2026-11-08)
+- Enemy `thrown` state; #11 Outside Reap throws a brute or swarmer down 30 ticks, #12 Reap and Finish +25% while down. Never Guardians or elites. Hold after a Perfect Counter capped at 24 ticks (Arm Wrap 30 -> 24); Seal staggerBonus capped at +20%.
+- Tests: `g2b-04-throw` (9); `abilities`, `p-prog-c-seal-ranks`, `r-challenge-p2` updated.
+- Knock-down look (tumble, lie, get up; RM snaps) and kid-words Throw card. Tests: `g2b-04-thrown-look` (5). Shots: /workspace/shots/g2b-04-thrown.
+### BF-ORANGE-UNLOCK: Butterfly Flow at Orange (2026-11-08)
+- Strikes now name their belt in `strikes.json`; Butterfly Flow unlocks with the Orange kick combo, not at Green. Jay's decisions J10, J16, J19, J21 (partial) and J27 recorded in decisions.md.
+- Tests: `bf-orange-unlock` (9).
 ### GUARD-SCALE-01 QA fixes (2026-11-08)
 - Boss dip total is 0.80 (was 0.72 stacked on the held 0.9); Reduced motion snaps to the held 0.9 with no dip; a Guardian at the north wall is drawn whole under the HUD, dip included. Tests: `guard-scale-01` +3. decisions.md view size corrected to 13.33 x 7.5.

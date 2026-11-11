@@ -1,14 +1,14 @@
 # R-G2B: Seal families and ranks for #1-40, with Lock and Break Free
 
-Written Nov 1, 2026 by the Researcher & Planner. Updated Nov 8, 2026 with Jay's answers (J21). Docs only. Source of truth: `power-and-progression-redesign.md`. Technique names and what each technique is: `S4-self-defense-powers.md` (Jay approved the list Oct 24) plus Jay's Nov 8 answers below. Rows Jay answered on Nov 8 are decided. The other family and "recast" cells are still a **proposal**. Rule 5: the test bot sets the numbers, so no amount below is final. Where a Nov 8 answer changes when an old amount applies, the amount is left as written and marked **needs balance-check**. No new amount was picked.
+Written Nov 1, 2026 by the Researcher & Planner. Updated Nov 8, 2026 with Jay's answers (J21). A later ruling corrects #4: the real name is OPEN, and Advancing is the family, not the name. Docs only. Source of truth: `power-and-progression-redesign.md`. Technique names and what each technique is: `S4-self-defense-powers.md` (Jay approved the list Oct 24) plus Jay's Nov 8 answers below. Rows Jay answered on Nov 8 are decided. The other family and "recast" cells are still a **proposal**. Rule 5: the test bot sets the numbers, so no amount below is final. Where a Nov 8 answer changes when an old amount applies, the amount is left as written and marked **needs balance-check**. No new amount was picked.
 
-**In plain words.** Every self-defense technique becomes a rank of one of six Seal families, named by the technique. A kid picks Seals into 2-4 slots (2 at White and Yellow, 3 at Orange, Green and Blue, 4 from Red). Only three things are truly new in the game: **Throw**, **Lock** and **Break Free**. Everything else reuses something already built. This note gives all 40 a family and a rank, says which are already built, and writes down the Lock and Break Free rules so they can be built once.
+**In plain words.** Every self-defense technique becomes a rank of one of seven Seal families, named by the technique. A kid picks Seals into 2-4 slots (2 at White and Yellow, 3 at Orange, Green and Blue, 4 from Red). Only three things are truly new in the game: **Throw**, **Lock** and **Break Free**. Everything else reuses something already built. This note gives all 40 a family and a rank, says which are already built, and writes down the Lock and Break Free rules so they can be built once.
 
 ## Jay's answers, Nov 8, 2026 (J21)
 
 These win where they disagree with the Nov 1 proposal.
 
-1. **#4 is named Advancing, and it pushes an enemy back.** The old game name Drive Back is retired. It stays in the Escape family (a push makes space). The 1.5-tile distance was measured and kept.
+1. **#4's real name is OPEN. Advancing is the family, not the name.** OPEN is not in the Escape family. The old game name Drive Back is retired. In class the move steps you forward into the attacker to close the distance. In the game it still pushes one attacker back 1.5 tiles. That distance was measured in PR #453 and stays. Advancing's only confirmed member so far is #4 OPEN. The Programmer adds this family to `content/abilities/seal-families.json`. This note does not edit that file. See "Advancing family" below.
 2. **#25 Escape from Behind is a general escape** (team call). The built effect is a Block refilling Dash. It measured PE 0. No amount was added.
 3. **#16 is a quick two-hit follow-up after a Great Counter, not a heal.** In class it is a very quick hammer fist low, then a back fist high. Game text says "quick low hammer fist, then a high back fist." It does not say groin or face. Why: the real move is two fast strikes in a row, so the seal adds a hit after the counter. It uses the same hook as the kata kick: one extra hit, strength 0.3. The same strength is used on Guided, Standard, and Challenge. A Strike-button extra hit at 0.3 did not fit, so this is not that. Names are in `drafts/content/abilities/J27-audit.md`.
 4. **Each seal works alone** (team call). No seal needs another seal equipped. #26's block cut, measured on its own, is 0.02. #37 adds no tick. #34, #38, and #40 stay stand-alone, and they were not measured because a thrown state is not in the fight rules.
@@ -18,27 +18,46 @@ These win where they disagree with the Nov 1 proposal.
 
 Real technique names are the Content Designer's list in `drafts/content/abilities/J27-audit.md`. This note does not keep its own name list.
 
-## The six families (from the redesign) and what they do
+## The families (from the redesign) and what they do
+
+Jay first agreed to six families. The later ruling adds a seventh, Advancing.
 
 | Family | Job | Built today? |
 |---|---|---|
 | Counter | A Perfect Counter hits harder, stuns longer or gives something back | Yes (counterStrength, staggerTicks, staggerBonus, counterWindow, rippleCounter, healOnPerfect, comboSpeed) |
 | Guard | Blocking hurts less or sends hits back | Yes (blockCut, blockReflect) |
-| Escape | Blocks or dashes make space and refill Dash. **Break Free is part of this family** | Partly (dashOnBlock). Break Free is new |
+| Escape | Blocks or dashes make space and refill Dash. **Break Free is part of this family.** OPEN is not in this family | Partly (dashOnBlock). Break Free is new |
+| Advancing | You move forward into the attacker to close the distance | The 1.5-tile push is built (`counterPush`). The family row is not in `seal-families.json` yet. The Programmer adds it |
 | Disarm | A Perfect Counter takes the attacker's weapon or power for a while | Yes (disarm) |
 | Throw | A Perfect Counter throws the attacker down. A downed enemy takes extra damage | New |
 | Lock | A Perfect Counter holds the attacker in place and open | New |
 
+## Advancing family (proposal for the Programmer)
+
+Jay already ruled this. Do not treat it as an open question. `content/abilities/seal-families.json` has no Advancing family yet, and it still lists technique 4 inside Escape under the old game name Drive Back. This note does not edit that file, and it does not change the push.
+
+- **Family name:** Advancing
+- **Suggested id:** `advancing` (same style as `escape` and `counter`)
+- **What the family means:** the move steps you forward into the attacker to close the distance.
+- **Members:** #4 OPEN is the only confirmed member so far. Rank 1.
+- **Real technique name:** OPEN. Advancing is not the technique's name. Drive Back is retired.
+- **Effect, unchanged:** a Great Counter pushes the attacker back 1.5 tiles (`counterPush`, amount 1.5). Guardians are never pushed. PR #453 measured this distance and kept it.
+- **Where it sits today:** in the live file, technique 4 is a rank of `escape`. Take that rank out of Escape and put it on Advancing. Leave techniques 1, 2 and 15 where the live file already has them. Do not change the 1.5 amount.
+- **Suggested rank text:** "A Great Counter pushes the attacker back." No body targets.
+- **Suggested family text:** "Step forward into the attacker and close the distance."
+- **Live:** true, because the push is already built. Kids who signed off #4 should still get that push when they equip Advancing.
+- **NEXT:** the Programmer adds this entry to `content/abilities/seal-families.json`.
+
 ## Map of all 40 (proposed family and rank)
 
-Names, belts and S4 effects are copied from `S4-self-defense-powers.md` (not from memory). The belt column is the belt the student is **wearing while learning** the technique (S4 rule): a student who has just earned Brown already holds #1-35 and learns #36-40 at Brown. "Rank" counts within the family. The family column is **my proposal**, except #37, which Jay moved to Counter on Nov 8. Where the recast column is dated Nov 8, that column is the effect. The S4 column is the older draft. "Built?" is what the engine has (checked in `effects.ts`): **Yes** = an existing effect with a new number; **Small** = an existing effect plus a small condition (for example "only against padded-staff enemies"); **New** = one of the three allowed new mechanics; **Decision** = see the conflicts below.
+Names, belts and S4 effects are copied from `S4-self-defense-powers.md` (not from memory). The belt column is the belt the student is **wearing while learning** the technique (S4 rule): a student who has just earned Brown already holds #1-35 and learns #36-40 at Brown. "Rank" counts within the family. The family column is **my proposal**, except #37, which Jay moved to Counter on Nov 8, and #4, which Jay ruled is Advancing (the technique name is OPEN). Where the recast column is dated Nov 8, that column is the effect. The S4 column is the older draft. "Built?" is what the engine has (checked in `effects.ts`): **Yes** = an existing effect with a new number; **Small** = an existing effect plus a small condition (for example "only against padded-staff enemies"); **New** = one of the three allowed new mechanics; **Decision** = see the conflicts below.
 
 | # | Belt | Technique | Family | Rank | S4 effect | Recast to fit the redesign | Built? |
 |---|---|---|---|---|---|---|---|
 | 1 | White | Off the Line | Counter | 1 | Counter adds 2 quick punches (new `counterHits`) | Counter hits harder | Yes |
 | 2 | White | Other Side | Escape | 1 | Block recharges Dash (`dashOnBlock`) | same | Yes (built) |
 | 3 | White | Spin Back Fist | Counter | 2 | Counter also hits enemies within 1.2 tiles (`rippleCounter`) | same | Yes (built) |
-| 4 | White | Advancing | Escape | 2 | Counter pushes attacker back 1.5 tiles (new `counterPush`) | Jay, Nov 8: this push is the effect. Name is Advancing. Measured: 1.5 tiles kept. | Push. Measured |
+| 4 | White | OPEN | Advancing | 1 | Counter pushes attacker back 1.5 tiles (new `counterPush`) | Jay's ruling: the name is OPEN. Advancing is the family, not the name, and OPEN is not in Escape. Measured in PR #453: 1.5 tiles kept. | Push. Measured |
 | 5 | White | Spin Elbow | Counter | 3 | Spin Back Fist reaches farther and hits harder (`rippleCounter`) | same (twist: wider ring) | Yes (built) |
 | 6 | Yellow | Arm Wrap | Counter | 4 | Counter traps 10 ticks longer (`staggerTicks`) | same | Yes (built) |
 | 7 | Yellow | Palm Heel | Counter | 5 | Counter hits 25% stronger (`counterStrength`) | same | Yes (built) |
@@ -52,19 +71,19 @@ Names, belts and S4 effects are copied from `S4-self-defense-powers.md` (not fro
 | 15 | Orange | Slip and Double | Counter | 7 | Off the Line gets a 3rd punch, Counter window +1 tick (`counterHits`, `counterWindow`) | Counter window +1 tick, counter harder again | Yes |
 | 16 | Green | Low-High Strike | Counter | 8 | Strikes add a second hit, 30% (`strikeExtraHit`) | One extra hit after a Great Counter, strength 0.3, same hook as the kata kick (`counterHits`). Same number on every difficulty. Measured: fits. | Yes. Measured |
 | 17 | Green | Arm Bar | Lock | 1 | Counter locks attacker 20 ticks, no blocking or shield (new `counterLock`) | same | **New (Lock)** |
-| 18 | Green | Slide Away | Escape | 3 | Dash through a padded-staff attack gives +10 Focus (new `dashDodgeFocus`) | Dash through any attack gives a little Focus (twist) | Small |
+| 18 | Green | Slide Away | Escape | 2 | Dash through a padded-staff attack gives +10 Focus (new `dashDodgeFocus`) | Dash through any attack gives a little Focus (twist) | Small |
 | 19 | Green | Wrist Lock | Disarm | 3 | Disarm vs a padded-staff enemy is full for 1 attack | Team lean: Disarm, because the built effect is a full disarm (`disarm` 1.0, capped at 0.9 in the fight rules), not a hold | Small |
 | 20 | Green | Hold and Combo | Counter | 9 | Every 4 combo hits a short speed burst (`comboSpeed`) | same (twist) | Yes (built) |
 | 21 | Blue | X-Block Lock | Disarm | 4 | Counters +20% vs disarmed enemies (`counterStrength`, new condition) | same (twist) | Small |
 | 22 | Blue | Lock and Pin | Disarm | 5 | Disarmed enemy thrown or locked is pinned 15 ticks longer | Pinned is cut: disarm cuts more (a bigger number) | Yes (flag dropped) |
 | 23 | Blue | Turn It Back | Guard | 3 | Blocking a padded-staff attack bounces 50% back (`blockReflect`, new condition) | same (twist) | Small |
 | 24 | Blue | Wrist Kick | Disarm | 6 | A Strike (not only a Counter) can disarm (new `disarmOnStrike`) | same (small flag) | Small |
-| 25 | Blue | Escape from Behind | Escape | 4 | Counter an attack from behind and turn to face it (new `rearCounter`) | Jay, Nov 8 (team call): a general escape. The built effect is a Block refilling Dash. Measured PE 0. No amount. | Existing Escape effect. Measured |
+| 25 | Blue | Escape from Behind | Escape | 3 | Counter an attack from behind and turn to face it (new `rearCounter`) | Jay, Nov 8 (team call): a general escape. The built effect is a Block refilling Dash. Measured PE 0. No amount. | Existing Escape effect. Measured |
 | 26 | Red | Shoulder Control | Guard | 4 | While an enemy is locked, Blocks take 15% less (`blockCut`, new condition) | Works alone. Measured block cut is **0.02** (the 0.15 guess does not fit). See the balance section. | Yes. Measured |
 | 27 | Red | Sweep | Throw | 3 | Throws work on shields and Guarding elites (`throwAll`) | same (twist) | Small (Throw) |
 | 28 | Red | Four-Corner Lock | Lock | 2 | Locks +10 ticks, disarm works on heavy overhead attacks | Lock +10 ticks (to the 30-tick ceiling) | New (Lock) |
-| 29 | Red | Break Free | Escape | 5 | 2+ enemies within 1 tile: Block pushes them back 1.5 tiles (new `breakFree`) | same | **New (Break Free)** |
-| 30 | Red | Break Free and Go | Escape | 6 | Break Free also off-balance and refills Dash | same (twist) | Yes (built parts) |
+| 29 | Red | Break Free | Escape | 4 | 2+ enemies within 1 tile: Block pushes them back 1.5 tiles (new `breakFree`) | same | **New (Break Free)** |
+| 30 | Red | Break Free and Go | Escape | 5 | Break Free also off-balance and refills Dash | same (twist) | Yes (built parts) |
 | 31 | Red/Black | Arm Bar Release | Lock | 3 | Locks +10 ticks. Lock end: push 1 tile and off-balance (new `lockRelease`) | Lock end: push and off-balance. No extra ticks (ceiling) | Small (Lock) |
 | 32 | Red/Black | Slide to the Wrist | Lock | 4 | Locked enemies take 15% more (`staggerBonus`, new condition) | same | Small (Lock) |
 | 33 | Red/Black | Party Flex | Lock | 5 | Each lock gives +5 Focus (new `lockFocus`) | same (twist) | Small (Lock) |
@@ -76,18 +95,18 @@ Names, belts and S4 effects are copied from `S4-self-defense-powers.md` (not fro
 | 39 | Brown | Release and Go | Lock | 8 | Release: enemies within 1.5 tiles off-balance, Dash refilled | same | Yes (built parts) |
 | 40 | Brown | Master Hold | Throw | 6 | Locks +10 ticks, lock-thrown enemies take 25% more (`downBonus`) | Works alone. The 25% stays written. A thrown state is not in the fight rules, so this was not measured. | Not measured |
 
-**Count by family:** Counter 10, Lock 8, Escape 6, Throw 6, Disarm 6, Guard 4 (total 40). #37 Steady Hold is Counter rank 10. #19 Wrist Lock is Disarm rank 3. #39 Release and Go is Lock rank 8. Counter ranks in order: #1, #3, #5, #6, #7, #10, #15, #16, #20, #37. Disarm ranks in order: #13, #14, #19, #21, #22, #24. Lock ranks in order: #17, #28, #31, #32, #33, #35, #36, #39.
-**The beta (#1-15):** Counter 7 (#1, 3, 5, 6, 7, 10, 15), Guard 2 (#8, 9), Escape 2 (#2 Other Side, #4 Advancing), Disarm 2 (#13, 14), Throw 2 (#11, 12). **No Lock until Green (#17)**, as the redesign says, and Break Free arrives at Red (#29). #37 is Brown, so the beta counts do not change.
-**Lopsided:** #37 is Counter and #26 stays Guard. Lock has 8 ranks, Disarm has 6, Counter has 10, Guard has 4. A kid still cannot equip all six families, so that is fine.
+**Count by family:** Counter 10, Lock 8, Escape 5, Throw 6, Disarm 6, Guard 4, Advancing 1 (total 40). #4 OPEN is Advancing rank 1, the only member so far. #37 Steady Hold is Counter rank 10. #19 Wrist Lock is Disarm rank 3. #39 Release and Go is Lock rank 8. Counter ranks in order: #1, #3, #5, #6, #7, #10, #15, #16, #20, #37. Escape ranks in order: #2, #18, #25, #29, #30. Disarm ranks in order: #13, #14, #19, #21, #22, #24. Lock ranks in order: #17, #28, #31, #32, #33, #35, #36, #39.
+**The beta (#1-15):** Counter 7 (#1, 3, 5, 6, 7, 10, 15), Guard 2 (#8, 9), Escape 1 (#2 Other Side), Advancing 1 (#4 OPEN), Disarm 2 (#13, 14), Throw 2 (#11, 12). **No Lock until Green (#17)**, as the redesign says, and Break Free arrives at Red (#29). #37 is Brown, so the beta counts do not change.
+**Lopsided:** #37 is Counter and #26 stays Guard. Lock has 8 ranks, Disarm has 6, Counter has 10, Guard has 4, Advancing has 1. A kid still cannot equip all seven families, so that is fine.
 **Twists:** the redesign gives every third rank a small twist. Twist ranks above (3, 6, 9) carry the S4 effect that is most like a twist. Where a plain bonus lands on a twist rank (for example Counter 6, #10), the bot can adjust. Steady Hold is Counter rank 10. It is a cue, not a power twist.
 
 ## Where S4 and the redesign disagree
 
-**Conflict 1. Decided (Jay, Nov 8).** S4 added new effect kinds to Counter, Guard, Escape and Disarm (`counterHits`, `counterPush`, `reflectStaggers`, `disarmAttacks`). The redesign says those families reuse what is built. The map still recasts the others to existing effects (harder counter, bigger disarm). **#4 is the exception Jay kept:** the name is **Advancing**, and a counter pushes one enemy back. The old name Drive Back is retired. The written distance stays 1.5 tiles. **needs balance-check.** The earlier lean (a bigger Dash refill now, push only when Break Free is built) is not the effect. This push is one enemy, not Break Free's crowd push. Guardians are still never pushed.
+**Conflict 1. Decided.** S4 added new effect kinds to Counter, Guard, Escape and Disarm (`counterHits`, `counterPush`, `reflectStaggers`, `disarmAttacks`). The redesign says those families reuse what is built. The map still recasts the others to existing effects (harder counter, bigger disarm). **#4 is the exception that keeps a push:** a counter pushes one attacker back 1.5 tiles. PR #453 measured that distance and kept it. Do not change it. Jay's ruling: the real name is **OPEN**. **Advancing** is the family, not the name. OPEN is not in the Escape family. The old game name Drive Back is retired. The earlier lean (a bigger Dash refill now, push only when Break Free is built) is not the effect. This push is one attacker, not Break Free's crowd push. Guardians are still never pushed.
 **Conflict 2. Pinned and Injured are cut until after launch (redesign).** S4 had Pinned in #22 and Injured in #31-40. The map has neither. #22 Lock and Pin keeps its name and gets a bigger disarm.
 **Conflict 3. Decided (team call, Nov 8).** #25 Escape from Behind is a **general escape**. Blocks or dashes create space and refill Dash, from any side. The game does not need a new "attack came from behind" check, so `rearCounter` is not the effect. No new amount was picked. **needs balance-check.**
 **Conflict 4. Decided (Jay, Nov 8).** #16 stays a Counter rank, and it is one extra hit after a Great Counter, strength 0.3, the same hook as the kata kick. It is not a heal. Why: in class it is a very quick hammer fist low, then a back fist high, so the seal adds a hit. A heal would not look like that move. Game text: "quick low hammer fist, then a high back fist." No groin. No face. The same 0.3 is used on every difficulty. It was measured and it fits. The earlier lean (put the old Steady Breath heal here) is not the effect. Names are in `drafts/content/abilities/J27-audit.md`.
-**Conflict 5. Decided (team call, Nov 8).** Every seal works on its own. No seal needs another seal equipped. #26, #34, #37, #38 and #40 use the stand-alone recast in the table. Old amounts stay (15% block cut, +15 ticks down, +1 counter tick, +15 ticks down, +25% damage). **needs balance-check** on each, because the bonus used to wait for a lock and now it does not. No new amount was picked.
+**Conflict 5. Decided (team call, Nov 8).** Every seal works on its own. No seal needs another seal equipped. #26, #34, #37, #38 and #40 use the stand-alone recast in the table. #26's block cut is 0.02. Steady Hold (#37) has no tick. It moved to Counter as a guard-swish cue at 0 PE: the gold "!" and the gold COUNTER flash the game already draws, plus the existing guard swish once when the window opens. #34 keeps +15 ticks down, #38 keeps +15 ticks down, and #40 keeps +25% damage. Those three were not measured, because a thrown state is not in the fight rules.
 **Conflict 6. Applied Nov 8 (team lean), with one choice noted.** The 10 placeholder Seals on main (Off-Balance, Escape Step, Sweep, Steady Breath, Strong Block, Sharp Eyes, Create Distance, Disarm, Throw, Follow Through; `abilities.json`) each become a rank effect. None are thrown away.
 
 | Old power | Lands on | What I chose |
@@ -100,7 +119,7 @@ Names, belts and S4 effects are copied from `S4-self-defense-powers.md` (not fro
 | Disarm | #13 Kick the Weapon | Team lean, as written |
 | Follow Through (more damage on a staggered enemy) | #10 Grab and Strike | Team lean, as written |
 | Today's "Throw" (it is really a stronger counter) | #7 Palm Heel | Team lean, as written. The real throw is #11. The old placeholder must not keep the name Throw. No new name is picked here. |
-| Strong Block (blocks take less) | #26 Shoulder Control | Team lean, as written. Stand-alone, so no lock is required. The written 15% stays. **needs balance-check** |
+| Strong Block (blocks take less) | #26 Shoulder Control | Team lean, as written. Stand-alone, so no lock is required. The measured block cut is 0.02. |
 | Steady Breath (heal on a Perfect Counter) | #10 Grab and Strike, Counter family | **It shares #10.** The seal-families lean put the heal on #16, and Jay's Nov 8 answer makes #16 an extra hit, so that home is closed. The team lean that still fits is the beta plan (`R-PROGRESSION-BETA.md`, Manager, Nov 1): Steady Breath stays in Counter and rides on the last beta Counter rank, which is #10. Grab and Strike keeps its own stagger bonus. No new rank, and no heal amount was set, so none was measured or changed. |
 
 The new Throw seal (#11) is a different thing from today's placeholder named "Throw".
@@ -149,13 +168,13 @@ Real technique names are the Content Designer's list in `drafts/content/abilitie
 
 Same harness as PB-11: whole runs on the real fight rules (`startRun`, `createRunWorld`, the balance bot), 20 seeds from seed 1000, the trained-student stats in `r-bal-12-artists.ts`. Bots: kid, newer, careful, masher. Guided and Standard on belts 1–10. Challenge on belts 4–10. PE is the Insight ruler (0, 10, 20, 30, 40, 60 percent Power). A star means that difficulty's +60% Power ruler moved health-lost by less than 1 point on every belt, so that PE is not used to pick a size. Noise on this harness is about ±5 PE. The script is `drafts/planning/j21-seal-sim.ts`. The raw rows are in `drafts/planning/j21-sim-out/`.
 
-Limits held to: a single effect at or under **PE 12**, an Insight pair under **PE 50**, a card plus the effect at or under **38**, a pair plus the effect at or under **62**, a route plus the effect at or under **67**. Double Strike stays **0.2** in `content/insights/insights.json` (it was not edited). R-BAL-12, strength-1 hits: Floor Keeper **45–54** hits on Standard and **67–80** on Challenge, knockout **5–10** hits, nothing under 5. Hearth Cook for the "trains more" student on Challenge is **86–88** hits, the exception already accepted for that boss. None of these seal effects change Power or a strength-1 hit, so that band does not move. No amount in this note is bigger or smaller on Challenge than on Guided or Standard. Challenge stays new patterns, not bigger numbers (Jay, Oct 27).
+Limits held to: a single effect at or under **PE 12**, an Insight pair under **PE 50**, a card plus the effect at or under **38**, a pair plus the effect at or under **62**, a route plus the effect at or under **67**. Double Strike stays **0.2** in `content/insights/insights.json` (it was not edited). R-BAL-12, strength-1 hits: Floor Keeper **45–54** hits on Standard and **67–80** on Challenge, knockout **5–10** hits, nothing under 5. Hearth Cook for the "trains more" student on Challenge is **86–89** hits, the exception already accepted for that boss. None of these seal effects change Power or a strength-1 hit, so that band does not move. No amount in this note is bigger or smaller on Challenge than on Guided or Standard. Challenge stays new patterns, not bigger numbers (Jay, Oct 27).
 
 Pooled PE for the written amounts. G = Guided, S = Standard, C = Challenge.
 
 | Effect | Bot | G | S | C |
 |---|---|---|---|---|
-| Advancing push 1.5 tiles | kid | 0.4 | 0.2 | 0 |
+| OPEN push 1.5 tiles (Advancing family) | kid | 0.4 | 0.2 | 0 |
 | | newer | 0* | 6.8 | 6 |
 | | careful | 0* | 2.2 | 28.4 |
 | | masher | 0 | 0 | 0 |
@@ -174,7 +193,7 @@ Pooled PE for the written amounts. G = Guided, S = Standard, C = Challenge.
 | | masher | 29.5 | 26.1 | 29.1 |
 | Steady Hold cue | kid, newer, careful, masher | 0 | 0 | 0 |
 
-**Advancing, 1.5 tiles. Kept.** On the rows that form a line, PE is 0 to 6.8. The masher is 0 because a push only happens on a Great Counter, and that bot never makes one. Careful on Challenge reads 28.4, but 1.0 tiles read 12 and 0.5 tiles read 27.2 on that same row, so it is not a clean line and it is not used to change the distance. Card plus the push stays under 38 (highest 24.6, newer, Standard). Pair plus the push stays under 62. Route plus the push stays under 67.
+**OPEN (Advancing family), 1.5 tiles. Kept.** On the rows that form a line, PE is 0 to 6.8. The masher is 0 because a push only happens on a Great Counter, and that bot never makes one. Careful on Challenge reads 28.4, but 1.0 tiles read 12 and 0.5 tiles read 27.2 on that same row, so it is not a clean line and it is not used to change the distance. Card plus the push stays under 38 (highest 24.6, newer, Standard). Pair plus the push stays under 62. Route plus the push stays under 67.
 
 **#25, general escape. Kept. No amount.** The built escape is a Block refilling Dash (`dashOnBlock`). It measured PE 0 on every bot and every difficulty, including every belt. There is no smaller amount to pick. It is on or off, and on does not move the fight in this harness. Card, pair, and route ceilings stay where the cards already were.
 

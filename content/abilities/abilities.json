@@ -89,7 +89,8 @@
     },
     {
       "id": "quick-combo",
-      "name": "Jumping Spins",
+      "name": "Jumping Spin Kicks",
+      "altName": "Jumping Spins",
       "text": "Jump and spin three times: a new STRIKE to choose.",
       "effect": {
         "type": "strikeCost",
@@ -100,7 +101,8 @@
   "seals": [
     {
       "id": "off-balance",
-      "name": "Off-Balance",
+      "name": "Double Punch",
+      "altName": "Off-Balance",
       "text": "Great Counters leave the attacker off-balance half a second longer.",
       "effect": {
         "type": "staggerTicks",
@@ -117,7 +119,8 @@
     },
     {
       "id": "sweep",
-      "name": "Sweep",
+      "name": "Back Fist",
+      "altName": "Sweep",
       "text": "Great Counters also knock into enemies close by.",
       "effect": {
         "type": "rippleCounter",
@@ -154,7 +157,8 @@
     },
     {
       "id": "create-distance",
-      "name": "Create Distance",
+      "name": "Palm Heel",
+      "altName": "Create Distance",
       "text": "Blocks shove the attacker back, bouncing 20% of the hit back at them.",
       "effect": {
         "type": "blockReflect",
@@ -173,7 +177,7 @@
     {
       "id": "throw",
       "name": "Throw",
-      "text": "Great Counter hits are 25% stronger.",
+      "text": "A Great Counter knocks a big or fast foe down. Hit it while it rests!",
       "effect": {
         "type": "counterStrength",
         "amount": 0.5
@@ -181,7 +185,8 @@
     },
     {
       "id": "follow-through",
-      "name": "Follow Through",
+      "name": "Double Knifehand Block",
+      "altName": "Follow Through",
       "text": "Off-balance (staggered) enemies take 15% more damage.",
       "effect": {
         "type": "staggerBonus",
