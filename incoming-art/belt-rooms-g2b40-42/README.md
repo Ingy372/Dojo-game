@@ -2,7 +2,9 @@
 
 Not imported. Jay said the belt rooms look good and to build the full set. The Manager relayed that on Nov 10.
 
-The three approved sample pictures stay in `sprites/`. This delivery is the full kit built from those looks and from each room's own data file.
+The first full-kit pass was too empty. It is kept in `superseded/pass-63fb0263/`. This pass uses the same layouts, with larger props, quiet floors that still have some texture, and the kitchen fighter left at its real size.
+
+The three approved sample pictures stay in `sprites/`.
 
 ## Delivery Note
 
@@ -35,9 +37,8 @@ Each room picture is `rooms/<id>.png`. The piece list, sizes, and anchors are `k
 
 ## Look here
 
-- `preview/compare-approved.png` — the three approved samples beside the new full rooms.
-- `preview/kit-closeup.png` — floors and the new pieces.
-- `preview/*-48.png` — every room at phone size, with the fighter.
+- `preview/closeup-green.png`, `closeup-red.png`, `closeup-brown.png`, and the other four tiers — the whole room at 80 px per tile, the failed pass at the same scale, and the approved sample where there is one.
+- `preview/*-48.png` — all 59 rooms at 48 px per tile. The fighter is the kitchen sprite, scaled only because the whole picture is.
 
 ## Rebuild
 

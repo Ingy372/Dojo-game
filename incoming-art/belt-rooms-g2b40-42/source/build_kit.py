@@ -73,11 +73,32 @@ def oell(lay, name, c, s, color, rot=(0, 0, 0), outline=True):
 def otube(lay, name, p0, p1, r0, r1, color, outline=True):
     return put(name, tube(p0, p1, r0, r1, segs=8), color, lay, outline, smooth=True)
 
-def add_target(name, top, note, group):
-    TARGETS.append(dict(name=name, layers=[name], rect=[0, 0, 1, 1], top=top, anchor=[0, 0], note=note, group=group))
+def add_target(name, top, note, group, w=1.0, h=1.0):
+    TARGETS.append(dict(name=name, layers=[name], rect=[0, 0, w, h], top=top, anchor=[0, 0], note=note, group=group))
 
-def floor_tile(name, color, group, note):
+def shadow(lay, name, c, r, rx, ry):
+    oell(lay, name, grid(c, r, 0.012), (rx, ry * 0.7, 0.015), "#2c2824", outline=False)
+
+def floor_tile(name, color, group, note, kind="plain"):
+    """Quiet floor with a little texture, not a blank fill and not a hard checker."""
     gbox(name, name + "_f", 0.0, 0.0, 1.0, 1.0, -0.04, 0.0, color, outline=False)
+    if kind == "moss":
+        # One soft patch and one pebble. Two tile versions shift them so the floor is not a stamp.
+        shift = 0.35 if name.endswith("-b") else 0.0
+        oell(name, name + "_m", grid(0.28 + shift, 0.4, 0.015), (0.22, 0.12, 0.015), "#5f8f4e", outline=False)
+        oell(name, name + "_p", grid(0.72 - shift, 0.68, 0.02), (0.07, 0.05, 0.015), "#8a8780", outline=False)
+    elif kind == "brick":
+        gbox(name, name + "_a", 0.04, 0.08, 0.96, 0.48, -0.01, 0.0, "#b07954", outline=False)
+        gbox(name, name + "_b", 0.0, 0.52, 0.62, 0.94, -0.01, 0.0, "#9d6244", outline=False)
+        gbox(name, name + "_c", 0.66, 0.52, 1.0, 0.94, -0.01, 0.0, "#a9714e", outline=False)
+    elif kind == "plank":
+        gbox(name, name + "_s", 0.0, 0.48, 1.0, 0.52, -0.01, 0.005, "#c9a06a", outline=False)
+    elif kind == "river":
+        oell(name, name + "_r", grid(0.4, 0.55, 0.02), (0.3, 0.16, 0.02), "#9ec4d4", outline=False)
+    elif kind == "slate":
+        oell(name, name + "_s", grid(0.6, 0.4, 0.02), (0.22, 0.12, 0.02), "#7a7268", outline=False)
+    elif kind == "night":
+        oell(name, name + "_g", grid(0.3, 0.3, 0.02), (0.16, 0.1, 0.02), "#4a5670", outline=False)
     add_target(name, 0.0, note, group)
 
 def wall_tile(name, stone, cap, group):
@@ -88,9 +109,18 @@ def wall_tile(name, stone, cap, group):
     add_target(name, 1.2, "top-wall cell", group)
 
 def block_tile(name, stone, cap, group, h=0.55):
-    gbox(name, name + "_k", 0.08, 0.08, 0.92, 0.92, 0.0, h, stone, bevel=0.02)
-    gbox(name, name + "_c", 0.04, 0.04, 0.96, 0.96, h - 0.02, h + 0.08, cap, outline=False)
-    add_target(name, h + 0.15, "solid layout block", group)
+    """A stepped block, the same idea as the sample side stairs, not a plain cube."""
+    gbox(name, name + "_a", 0.08, 0.55, 0.92, 0.95, 0.0, h * 0.4, stone, bevel=0.015)
+    gbox(name, name + "_b", 0.14, 0.28, 0.86, 0.7, 0.0, h * 0.7, stone, bevel=0.015)
+    gbox(name, name + "_c", 0.22, 0.06, 0.78, 0.42, 0.0, h, stone, bevel=0.015)
+    gbox(name, name + "_m", 0.24, 0.08, 0.74, 0.38, h - 0.02, h + 0.04, cap, outline=False)
+    add_target(name, h + 0.12, "solid layout block", group)
+
+def side_tile(name, stone, cap, group):
+    """A thin rim for the left and right walls, matching the sample's side returns."""
+    gbox(name, name + "_s", 0.0, 0.0, 0.42, 1.0, 0.0, 0.85, stone, bevel=0.02)
+    gbox(name, name + "_c", 0.0, 0.0, 0.48, 1.0, 0.85, 0.98, cap, outline=False)
+    add_target(name, 1.05, "side wall", group)
 
 def door_tile(name, stone, cap, group):
     y = grid(0, 0.28, 0).y
@@ -118,17 +148,19 @@ def flat_ell(name, color, sx, sy, group, note, z=0.03):
     add_target(name, 0.05, note, group)
 
 def prop_stone(name, color, moss, group):
-    oell(name, name + "_s", grid(0.5, 0.55, 0.08), (0.42, 0.28, 0.08), color)
-    oell(name, name + "_m", grid(0.42, 0.5, 0.13), (0.16, 0.1, 0.03), moss, outline=False)
-    add_target(name, 0.2, "flat stepping stone", group)
+    shadow(name, name + "_sh", 0.5, 0.72, 0.5, 0.28)
+    oell(name, name + "_s", grid(0.5, 0.55, 0.1), (0.72, 0.42, 0.12), color)
+    oell(name, name + "_m", grid(0.38, 0.48, 0.16), (0.28, 0.14, 0.035), moss, outline=False)
+    add_target(name, 0.25, "big stepping stone", group)
 
 def prop_fern(name, leaf, group):
-    base = grid(0.5, 0.6, 0)
-    otube(name, name + "_t", base, base + Vector((0, 0, 0.16)), 0.03, 0.02, "#2f5a28", outline=False)
-    for i, ang in enumerate((-0.7, 0.05, 0.7)):
-        oell(name, name + f"l{i}", base + Vector((math.sin(ang) * 0.16, -0.02, 0.24)),
-             (0.26, 0.09, 0.05), leaf, rot=(68, 0, math.degrees(ang)))
-    add_target(name, 0.4, "fern", group)
+    shadow(name, name + "_sh", 0.5, 0.72, 0.36, 0.22)
+    base = grid(0.5, 0.55, 0)
+    otube(name, name + "_t", base, base + Vector((0, 0, 0.18)), 0.035, 0.028, "#2f5a28", outline=False)
+    for i, ang in enumerate((-0.7, 0.05, 0.75)):
+        oell(name, name + f"l{i}", base + Vector((math.sin(ang) * 0.18, -0.02, 0.28)),
+             (0.32, 0.1, 0.06), leaf if i != 1 else "#6aaa52", rot=(68, 0, math.degrees(ang)))
+    add_target(name, 0.45, "fern", group)
 
 def prop_jar(name, clay, group):
     p = grid(0.5, 0.55, 0)
@@ -162,36 +194,44 @@ def prop_oar(name, wood, group):
     add_target(name, 0.45, "oar", group)
 
 def prop_bellows(name, leather, iron, group):
-    q = grid(0.45, 0.55, 0)
-    obox(name, name + "_g", q + Vector((0, 0, 0.22)), (0.55, 0.32, 0.28), leather, bevel=0.04)
-    obox(name, name + "_n", q + Vector((0.32, 0, 0.2)), (0.18, 0.16, 0.12), iron, bevel=0.02)
-    add_target(name, 0.45, "bellows", group)
+    shadow(name, name + "_sh", 0.5, 0.78, 0.55, 0.32)
+    q = grid(0.48, 0.5, 0)
+    obox(name, name + "_g", q + Vector((0, 0, 0.32)), (0.85, 0.48, 0.42), leather, bevel=0.06)
+    obox(name, name + "_n", q + Vector((0.42, -0.02, 0.3)), (0.22, 0.2, 0.16), iron, bevel=0.02)
+    otube(name, name + "_h", q + Vector((-0.28, 0.02, 0.12)), q + Vector((0.12, -0.04, 0.58)), 0.045, 0.035, "#c4a06a")
+    add_target(name, 0.7, "leather bellows", group)
 
 def prop_anvil(name, iron, group):
-    p = grid(0.42, 0.55, 0)
-    obox(name, name + "_b", p + Vector((0, 0, 0.12)), (0.28, 0.22, 0.22), "#3a3e46", bevel=0.02)
-    obox(name, name + "_t", p + Vector((0.04, -0.02, 0.28)), (0.5, 0.24, 0.12), iron, bevel=0.02)
-    add_target(name, 0.45, "anvil", group)
+    shadow(name, name + "_sh", 0.48, 0.78, 0.5, 0.3)
+    p = grid(0.4, 0.5, 0)
+    obox(name, name + "_b", p + Vector((0, 0, 0.16)), (0.5, 0.38, 0.3), "#3a3e46", bevel=0.03)
+    obox(name, name + "_t", p + Vector((0.06, -0.02, 0.38)), (0.78, 0.36, 0.16), iron, bevel=0.04)
+    oell(name, name + "_n", p + Vector((0.48, 0, 0.4)), (0.26, 0.12, 0.09), "#6a727c")
+    add_target(name, 0.55, "anvil", group)
 
 def prop_barrel(name, wood, band, water, group):
-    p = grid(0.5, 0.55, 0)
-    otube(name, name + "_b", p, p + Vector((0, 0, 0.42)), 0.18, 0.16, wood)
-    obox(name, name + "_n", p + Vector((0, 0, 0.22)), (0.4, 0.28, 0.05), band, outline=False)
+    shadow(name, name + "_sh", 0.5, 0.75, 0.32, 0.22)
+    p = grid(0.5, 0.5, 0)
+    otube(name, name + "_b", p + Vector((0, 0, 0.08)), p + Vector((0, 0, 0.55)), 0.24, 0.22, wood)
+    obox(name, name + "_n", p + Vector((0, 0, 0.32)), (0.52, 0.36, 0.06), band, outline=False)
     if water:
-        oell(name, name + "_w", p + Vector((0, -0.02, 0.44)), (0.12, 0.08, 0.04), water, outline=False)
-    add_target(name, 0.55, "barrel", group)
+        oell(name, name + "_w", p + Vector((0, -0.02, 0.56)), (0.16, 0.12, 0.05), water, outline=False)
+    add_target(name, 0.7, "barrel", group)
 
 def prop_shelf(name, wood, books, group):
-    sy = grid(0, 0.4, 0).y
-    obox(name, name + "_s", Vector((0.5, sy, 0.4)), (0.8, 0.18, 0.7), wood, bevel=0.02)
-    for i, col in enumerate(books):
-        obox(name, name + f"k{i}", Vector((0.28 + i * 0.16, sy - 0.1, 0.55)), (0.12, 0.08, 0.22), col)
-    add_target(name, 0.85, "bookshelf", group)
+    shadow(name, name + "_sh", 1.0, 0.85, 0.7, 0.22)
+    sy = grid(0, 0.35, 0).y
+    obox(name, name + "_s", Vector((1.0, sy, 0.62)), (1.15, 0.26, 1.15), wood, bevel=0.02)
+    for zi, z in enumerate((0.32, 0.62, 0.9)):
+        for i, col in enumerate(books):
+            obox(name, name + f"k{zi}_{i}", Vector((0.62 + i * 0.24, sy - 0.14, z)), (0.18, 0.1, 0.26), col)
+    add_target(name, 1.05, "bookshelf of coloured books", group, w=2.0)
 
 def prop_root(name, bark, group):
-    a, b = grid(0.15, 0.7, 0.05), grid(0.85, 0.55, 0.06)
-    otube(name, name + "_r", a, b, 0.06, 0.035, bark)
-    add_target(name, 0.15, "short root along a wall edge", group)
+    a, b = grid(0.12, 0.62, 0.06), grid(0.88, 0.48, 0.07)
+    otube(name, name + "_r", a, b, 0.09, 0.05, bark)
+    oell(name, name + "_k", grid(0.5, 0.55, 0.1), (0.14, 0.1, 0.08), "#8a6844")
+    add_target(name, 0.2, "short root along a wall edge", group)
 
 def prop_lamp(name, post, glow, group):
     prop_lantern(name, post, glow, group)
@@ -201,8 +241,8 @@ def prop_cushion(name, cloth, group):
     add_target(name, 0.2, "cushion", group)
 
 def prop_rug(name, cloth, group):
-    gbox(name, name + "_g", 0.08, 0.2, 0.92, 0.85, 0.0, 0.025, cloth, outline=False)
-    add_target(name, 0.05, "rug", group)
+    gbox(name, name + "_g", 0.05, 0.15, 1.9, 0.9, 0.0, 0.03, cloth, outline=False)
+    add_target(name, 0.05, "rug", group, w=2.0)
 
 def prop_drum(name, hide, band, group):
     p = grid(0.5, 0.55, 0)
@@ -260,12 +300,19 @@ THEMES = {
                   cloth="#6a6248", wood="#5a5348", metal="#c8cdd4", glow="#e2b15a", water="#6a7890", accent="#d5dbe4"),
 }
 
+FLOOR_KIND = {
+    "green": "moss", "blue": "river", "red": "brick", "redblack": "slate",
+    "brown": "plank", "brownblack": "slate", "black": "night",
+}
+
 def build_theme(key, pal):
     g = key
-    floor_tile(f"{g}-floor", pal["floor"], g, "even floor tile")
+    kind = FLOOR_KIND[key]
+    floor_tile(f"{g}-floor", pal["floor"], g, "quiet floor tile", kind)
     if pal["floor2"] != pal["floor"]:
-        floor_tile(f"{g}-floor-b", pal["floor2"], g, "a second floor tile, only a little lighter")
+        floor_tile(f"{g}-floor-b", pal["floor2"], g, "a second floor tile, only a little lighter", kind)
     wall_tile(f"{g}-wall", pal["wall"], pal["cap"], g)
+    side_tile(f"{g}-side", pal["wall"], pal["cap"], g)
     block_tile(f"{g}-block", pal["block"], pal["cap"], g)
     door_tile(f"{g}-door", pal["wall"], pal["cap"], g)
     chest_tile(f"{g}-chest", pal["wood"], pal["cap"], pal["accent"], g)
@@ -284,7 +331,11 @@ prop_jar("green-jar", "#b5835c", "green")
 prop_blanket("green-blanket", "#c4a06a", "green")
 block_tile("green-stair", "#7d7a74", "#6e9a62", "green", h=0.42)
 flat_ell("green-shade", "#7f97a8", 0.7, 0.4, "green", "soft blue corner shade")
-flat_ell("green-stream", "#7eb4c8", 0.7, 0.36, "green", "narrow sparkling stream", z=0.02)
+gbox("green-stream", "green-stream_w", 0.15, 0.0, 0.85, 1.0, -0.02, 0.02, "#7eb4c8", outline=False)
+gbox("green-stream", "green-stream_b", 0.05, 0.0, 0.2, 1.0, 0.0, 0.05, "#4e7a3a", outline=False)
+oell("green-stream", "green-stream_s", grid(0.55, 0.3, 0.04), (0.08, 0.05, 0.02), "#f4f7f2", outline=False)
+oell("green-stream", "green-stream_s2", grid(0.48, 0.7, 0.04), (0.07, 0.04, 0.02), "#f4f7f2", outline=False)
+add_target("green-stream", 0.08, "one tile of the sparkling stream", "green")
 
 # Blue, Quiet River.
 prop_reed("blue-reed", "#3f8a62", "blue")
@@ -303,9 +354,10 @@ flat_ell("red-ember", "#ffb25a", 0.55, 0.32, "red", "warm ember pool", z=0.02)
 obox("red-tool", "red-tool_b", grid(0.5, 0.45, 0.4), (0.16, 0.1, 0.55), "#6b4428", bevel=0.02)
 obox("red-tool", "red-tool_h", grid(0.5, 0.4, 0.62), (0.32, 0.1, 0.1), "#5c636e", bevel=0.01)
 add_target("red-tool", 0.75, "tool rack", "red")
-gbox("red-trough", "red-trough_b", 0.1, 0.3, 0.9, 0.75, 0.0, 0.16, "#4e555e", bevel=0.02)
-gbox("red-trough", "red-trough_w", 0.18, 0.38, 0.82, 0.68, 0.12, 0.2, "#7eb4c8", outline=False)
-add_target("red-trough", 0.3, "water trough", "red")
+shadow("red-trough", "red-trough_sh", 1.0, 0.8, 0.7, 0.28)
+obox("red-trough", "red-trough_b", grid(1.0, 0.5, 0.16), (1.15, 0.42, 0.28), "#4e555e", bevel=0.02)
+obox("red-trough", "red-trough_w", grid(1.0, 0.48, 0.28), (0.95, 0.28, 0.08), "#7eb4c8", outline=False)
+add_target("red-trough", 0.4, "water trough", "red", w=2.0)
 prop_blanket("red-bench", "#6b4428", "red")
 
 # Red-Black, Hall of Echoes. Charcoal and silver. No danger-red, no purple stripes.

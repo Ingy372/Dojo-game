@@ -21,8 +21,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.0,
@@ -31,7 +31,7 @@
         0.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "even floor tile"
+      "note": "quiet floor tile"
     },
     "green-floor-b": {
       "size": [
@@ -47,8 +47,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.0,
@@ -73,8 +73,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -85,10 +85,36 @@
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "top-wall cell"
     },
+    "green-side": {
+      "size": [
+        80,
+        164
+      ],
+      "layers": [
+        "green-side"
+      ],
+      "files": {
+        "green-side": "green-side_green-side.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.05,
+      "anchorPx": [
+        0,
+        84.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "side wall"
+    },
     "green-block": {
       "size": [
         80,
-        136
+        134
       ],
       "layers": [
         "green-block"
@@ -99,14 +125,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.7000000000000001,
+      "topExtraTiles": 0.67,
       "anchorPx": [
         0,
-        56.0
+        53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "solid layout block"
@@ -125,8 +151,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -151,8 +177,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.55,
@@ -177,8 +203,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -203,8 +229,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -229,8 +255,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.2,
@@ -243,7 +269,7 @@
     },
     "green-rug": {
       "size": [
-        80,
+        160,
         84
       ],
       "layers": [
@@ -255,8 +281,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 2.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -281,8 +307,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.0,
@@ -291,7 +317,7 @@
         0.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "even floor tile"
+      "note": "quiet floor tile"
     },
     "blue-floor-b": {
       "size": [
@@ -307,8 +333,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.0,
@@ -333,8 +359,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -345,10 +371,36 @@
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "top-wall cell"
     },
+    "blue-side": {
+      "size": [
+        80,
+        164
+      ],
+      "layers": [
+        "blue-side"
+      ],
+      "files": {
+        "blue-side": "blue-side_blue-side.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.05,
+      "anchorPx": [
+        0,
+        84.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "side wall"
+    },
     "blue-block": {
       "size": [
         80,
-        136
+        134
       ],
       "layers": [
         "blue-block"
@@ -359,14 +411,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.7000000000000001,
+      "topExtraTiles": 0.67,
       "anchorPx": [
         0,
-        56.0
+        53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "solid layout block"
@@ -385,8 +437,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -411,8 +463,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.55,
@@ -437,8 +489,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -463,8 +515,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -489,8 +541,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.2,
@@ -503,7 +555,7 @@
     },
     "blue-rug": {
       "size": [
-        80,
+        160,
         84
       ],
       "layers": [
@@ -515,8 +567,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 2.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -541,8 +593,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.0,
@@ -551,7 +603,7 @@
         0.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "even floor tile"
+      "note": "quiet floor tile"
     },
     "red-floor-b": {
       "size": [
@@ -567,8 +619,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.0,
@@ -593,8 +645,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -605,10 +657,36 @@
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "top-wall cell"
     },
+    "red-side": {
+      "size": [
+        80,
+        164
+      ],
+      "layers": [
+        "red-side"
+      ],
+      "files": {
+        "red-side": "red-side_red-side.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.05,
+      "anchorPx": [
+        0,
+        84.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "side wall"
+    },
     "red-block": {
       "size": [
         80,
-        136
+        134
       ],
       "layers": [
         "red-block"
@@ -619,14 +697,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.7000000000000001,
+      "topExtraTiles": 0.67,
       "anchorPx": [
         0,
-        56.0
+        53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "solid layout block"
@@ -645,8 +723,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -671,8 +749,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.55,
@@ -697,8 +775,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -723,8 +801,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -749,8 +827,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.2,
@@ -763,7 +841,7 @@
     },
     "red-rug": {
       "size": [
-        80,
+        160,
         84
       ],
       "layers": [
@@ -775,8 +853,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 2.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -801,8 +879,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.0,
@@ -811,7 +889,7 @@
         0.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "even floor tile"
+      "note": "quiet floor tile"
     },
     "redblack-floor-b": {
       "size": [
@@ -827,8 +905,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.0,
@@ -853,8 +931,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -865,10 +943,36 @@
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "top-wall cell"
     },
+    "redblack-side": {
+      "size": [
+        80,
+        164
+      ],
+      "layers": [
+        "redblack-side"
+      ],
+      "files": {
+        "redblack-side": "redblack-side_redblack-side.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.05,
+      "anchorPx": [
+        0,
+        84.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "side wall"
+    },
     "redblack-block": {
       "size": [
         80,
-        136
+        134
       ],
       "layers": [
         "redblack-block"
@@ -879,14 +983,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.7000000000000001,
+      "topExtraTiles": 0.67,
       "anchorPx": [
         0,
-        56.0
+        53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "solid layout block"
@@ -905,8 +1009,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -931,8 +1035,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.55,
@@ -957,8 +1061,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -983,8 +1087,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -1009,8 +1113,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.2,
@@ -1023,7 +1127,7 @@
     },
     "redblack-rug": {
       "size": [
-        80,
+        160,
         84
       ],
       "layers": [
@@ -1035,8 +1139,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 2.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -1061,8 +1165,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.0,
@@ -1071,7 +1175,7 @@
         0.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "even floor tile"
+      "note": "quiet floor tile"
     },
     "brown-wall": {
       "size": [
@@ -1087,8 +1191,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -1099,10 +1203,36 @@
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "top-wall cell"
     },
+    "brown-side": {
+      "size": [
+        80,
+        164
+      ],
+      "layers": [
+        "brown-side"
+      ],
+      "files": {
+        "brown-side": "brown-side_brown-side.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.05,
+      "anchorPx": [
+        0,
+        84.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "side wall"
+    },
     "brown-block": {
       "size": [
         80,
-        136
+        134
       ],
       "layers": [
         "brown-block"
@@ -1113,14 +1243,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.7000000000000001,
+      "topExtraTiles": 0.67,
       "anchorPx": [
         0,
-        56.0
+        53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "solid layout block"
@@ -1139,8 +1269,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -1165,8 +1295,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.55,
@@ -1191,8 +1321,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -1217,8 +1347,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -1243,8 +1373,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.2,
@@ -1257,7 +1387,7 @@
     },
     "brown-rug": {
       "size": [
-        80,
+        160,
         84
       ],
       "layers": [
@@ -1269,8 +1399,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 2.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -1295,8 +1425,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.0,
@@ -1305,7 +1435,7 @@
         0.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "even floor tile"
+      "note": "quiet floor tile"
     },
     "brownblack-floor-b": {
       "size": [
@@ -1321,8 +1451,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.0,
@@ -1347,8 +1477,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -1359,10 +1489,36 @@
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "top-wall cell"
     },
+    "brownblack-side": {
+      "size": [
+        80,
+        164
+      ],
+      "layers": [
+        "brownblack-side"
+      ],
+      "files": {
+        "brownblack-side": "brownblack-side_brownblack-side.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.05,
+      "anchorPx": [
+        0,
+        84.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "side wall"
+    },
     "brownblack-block": {
       "size": [
         80,
-        136
+        134
       ],
       "layers": [
         "brownblack-block"
@@ -1373,14 +1529,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.7000000000000001,
+      "topExtraTiles": 0.67,
       "anchorPx": [
         0,
-        56.0
+        53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "solid layout block"
@@ -1399,8 +1555,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -1425,8 +1581,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.55,
@@ -1451,8 +1607,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -1477,8 +1633,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -1503,8 +1659,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.2,
@@ -1517,7 +1673,7 @@
     },
     "brownblack-rug": {
       "size": [
-        80,
+        160,
         84
       ],
       "layers": [
@@ -1529,8 +1685,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 2.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -1555,8 +1711,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.0,
@@ -1565,7 +1721,7 @@
         0.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "even floor tile"
+      "note": "quiet floor tile"
     },
     "black-floor-b": {
       "size": [
@@ -1581,8 +1737,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.0,
@@ -1607,8 +1763,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -1619,10 +1775,36 @@
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "top-wall cell"
     },
+    "black-side": {
+      "size": [
+        80,
+        164
+      ],
+      "layers": [
+        "black-side"
+      ],
+      "files": {
+        "black-side": "black-side_black-side.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.05,
+      "anchorPx": [
+        0,
+        84.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "side wall"
+    },
     "black-block": {
       "size": [
         80,
-        136
+        134
       ],
       "layers": [
         "black-block"
@@ -1633,14 +1815,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.7000000000000001,
+      "topExtraTiles": 0.67,
       "anchorPx": [
         0,
-        56.0
+        53.6
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "solid layout block"
@@ -1659,8 +1841,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.2,
@@ -1685,8 +1867,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.55,
@@ -1711,8 +1893,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -1737,8 +1919,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -1763,8 +1945,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.2,
@@ -1777,7 +1959,7 @@
     },
     "black-rug": {
       "size": [
-        80,
+        160,
         84
       ],
       "layers": [
@@ -1789,8 +1971,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 2.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -1804,7 +1986,7 @@
     "green-stone": {
       "size": [
         80,
-        96
+        100
       ],
       "layers": [
         "green-stone"
@@ -1815,22 +1997,22 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.2,
+      "topExtraTiles": 0.25,
       "anchorPx": [
         0,
-        16.0
+        20.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "flat stepping stone"
+      "note": "big stepping stone"
     },
     "green-fern": {
       "size": [
         80,
-        112
+        116
       ],
       "layers": [
         "green-fern"
@@ -1841,14 +2023,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.4,
+      "topExtraTiles": 0.45,
       "anchorPx": [
         0,
-        32.0
+        36.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "fern"
@@ -1867,8 +2049,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.7,
@@ -1893,8 +2075,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.15,
@@ -1908,7 +2090,7 @@
     "green-stair": {
       "size": [
         80,
-        126
+        123
       ],
       "layers": [
         "green-stair"
@@ -1919,14 +2101,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.57,
+      "topExtraTiles": 0.54,
       "anchorPx": [
         0,
-        45.6
+        43.2
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "solid layout block"
@@ -1945,8 +2127,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -1956,6 +2138,32 @@
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "soft blue corner shade"
+    },
+    "green-stream": {
+      "size": [
+        80,
+        86
+      ],
+      "layers": [
+        "green-stream"
+      ],
+      "files": {
+        "green-stream": "green-stream_green-stream.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 1.0,
+        "row1": 1.0,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 0.08,
+      "anchorPx": [
+        0,
+        6.4
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "one tile of the sparkling stream"
     },
     "blue-reed": {
       "size": [
@@ -1971,8 +2179,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.65,
@@ -1997,8 +2205,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.25,
@@ -2023,8 +2231,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.45,
@@ -2049,8 +2257,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -2075,8 +2283,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -2090,7 +2298,7 @@
     "blue-stone": {
       "size": [
         80,
-        96
+        100
       ],
       "layers": [
         "blue-stone"
@@ -2101,22 +2309,22 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.2,
+      "topExtraTiles": 0.25,
       "anchorPx": [
         0,
-        16.0
+        20.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "flat stepping stone"
+      "note": "big stepping stone"
     },
     "red-bellows": {
       "size": [
         80,
-        116
+        136
       ],
       "layers": [
         "red-bellows"
@@ -2127,22 +2335,22 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.45,
+      "topExtraTiles": 0.7,
       "anchorPx": [
         0,
-        36.0
+        56.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "bellows"
+      "note": "leather bellows"
     },
     "red-anvil": {
       "size": [
         80,
-        116
+        124
       ],
       "layers": [
         "red-anvil"
@@ -2153,14 +2361,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.45,
+      "topExtraTiles": 0.55,
       "anchorPx": [
         0,
-        36.0
+        44.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "anvil"
@@ -2168,7 +2376,7 @@
     "red-barrel": {
       "size": [
         80,
-        124
+        136
       ],
       "layers": [
         "red-barrel"
@@ -2179,14 +2387,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.55,
+      "topExtraTiles": 0.7,
       "anchorPx": [
         0,
-        44.0
+        56.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "barrel"
@@ -2194,7 +2402,7 @@
     "red-bin": {
       "size": [
         80,
-        124
+        136
       ],
       "layers": [
         "red-bin"
@@ -2205,14 +2413,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.55,
+      "topExtraTiles": 0.7,
       "anchorPx": [
         0,
-        44.0
+        56.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "barrel"
@@ -2231,8 +2439,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -2257,8 +2465,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -2271,8 +2479,8 @@
     },
     "red-trough": {
       "size": [
-        80,
-        104
+        160,
+        112
       ],
       "layers": [
         "red-trough"
@@ -2283,14 +2491,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 2.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.3,
+      "topExtraTiles": 0.4,
       "anchorPx": [
         0,
-        24.0
+        32.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "water trough"
@@ -2309,8 +2517,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.15,
@@ -2335,8 +2543,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.85,
@@ -2361,8 +2569,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.6,
@@ -2387,8 +2595,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.15,
@@ -2413,8 +2621,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -2427,8 +2635,8 @@
     },
     "brown-shelf": {
       "size": [
-        80,
-        148
+        160,
+        164
       ],
       "layers": [
         "brown-shelf"
@@ -2439,22 +2647,22 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 2.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.85,
+      "topExtraTiles": 1.05,
       "anchorPx": [
         0,
-        68.0
+        84.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "bookshelf"
+      "note": "bookshelf of coloured books"
     },
     "brown-root": {
       "size": [
         80,
-        92
+        96
       ],
       "layers": [
         "brown-root"
@@ -2465,14 +2673,14 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
-      "topExtraTiles": 0.15,
+      "topExtraTiles": 0.2,
       "anchorPx": [
         0,
-        12.0
+        16.0
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "short root along a wall edge"
@@ -2491,8 +2699,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.75,
@@ -2517,8 +2725,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.5,
@@ -2543,8 +2751,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.7,
@@ -2569,8 +2777,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.4,
@@ -2595,8 +2803,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.5,
@@ -2621,8 +2829,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.6,
@@ -2647,8 +2855,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -2673,8 +2881,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.9,
@@ -2699,8 +2907,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.8,
@@ -2725,8 +2933,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.6,
@@ -2751,8 +2959,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 1.15,
@@ -2777,8 +2985,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.05,
@@ -2803,8 +3011,8 @@
       "groundRect": {
         "col0": 0,
         "row0": 0,
-        "col1": 1,
-        "row1": 1,
+        "col1": 1.0,
+        "row1": 1.0,
         "note": "the image's ground area in tiles"
       },
       "topExtraTiles": 0.15,
@@ -2814,32 +3022,6 @@
       ],
       "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
       "note": "blanket"
-    },
-    "green-stream": {
-      "size": [
-        80,
-        84
-      ],
-      "layers": [
-        "green-stream"
-      ],
-      "files": {
-        "green-stream": "green-stream_green-stream.png"
-      },
-      "groundRect": {
-        "col0": 0,
-        "row0": 0,
-        "col1": 1,
-        "row1": 1,
-        "note": "the image's ground area in tiles"
-      },
-      "topExtraTiles": 0.05,
-      "anchorPx": [
-        0,
-        4.0
-      ],
-      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
-      "note": "narrow sparkling stream"
     }
   }
 }

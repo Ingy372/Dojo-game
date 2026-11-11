@@ -120,25 +120,40 @@ def player_sprite():
     return im, (J["anchor"]["x"], J["anchor"]["y"])
 
 
-def paste(canvas, im, spec, col, row):
+def paste(canvas, im, spec, col, row, dx=0):
     ax, ay = spec["anchorPx"]
-    x = int(col * T - ax)
+    x = int(col * T - ax + dx)
     y = int((row + ROOM_TOP) * T - ay)
     canvas.alpha_composite(im, (x, y))
 
+def span(spec):
+    g = spec["groundRect"]
+    return max(1, int(round(g["col1"] - g["col0"])))
 
-def props_for(theme, text):
+
+# The approved sample rooms keep every prop from that sample, still off the middle.
+ROOM_PACK = {
+    "bellows-door": ["red-bellows", "red-anvil", "red-tool", "red-bin", "red-trough", "red-barrel", "red-ember"],
+    "reading-nook": ["brown-shelf", "brown-rug", "brown-seat", "brown-cushion", "brown-lamp", "brown-root"],
+}
+
+def props_for(theme, text, room_id=""):
     low = text.lower()
     found = []
-    for piece in TIER_LOOK.get(theme, []):
+    for piece in ROOM_PACK.get(room_id, []):
         found.append(piece)
+    for piece in TIER_LOOK.get(theme, []):
+        if piece not in found:
+            found.append(piece)
     for word, piece in WORDS[theme]:
         if word in low and piece not in found:
             found.append(piece)
-    if theme == "red" and any(w in low for w in ("coal", "forge", "ember", "bellows")):
-        if "red-ember" not in found:
-            found.append("red-ember")
-    return found[:6]
+    if theme == "red" and "red-ember" not in found:
+        found.append("red-ember")
+    # Two bellows, as the Bellows Door line says.
+    if "red-bellows" in found:
+        found.insert(found.index("red-bellows") + 1, "red-bellows")
+    return found
 
 
 def slots(tiles, kind, n):
@@ -168,52 +183,96 @@ def theme_of(data):
     return data["tier"].replace("-", "")
 
 
+def open_cell(tiles, x, y, w=1):
+    H, W = len(tiles), len(tiles[0])
+    if y < 2 or y > H - 3:
+        return False
+    for dx in range(w):
+        xx = x + dx
+        if xx <= 0 or xx >= W - 1 or tiles[y][xx] != ".":
+            return False
+        if abs(xx - (W - 1) / 2) < 2.0:
+            return False
+    return True
+
+
+def side_spots(tiles, w=1):
+    H, W = len(tiles), len(tiles[0])
+    spots = []
+    for y in range(2, H - 2):
+        for x in (2, 3, W - 3 - (w - 1), W - 2 - (w - 1)):
+            if open_cell(tiles, x, y, w) and (x, y) not in spots:
+                spots.append((x, y))
+    return spots
+
+
 def draw_room(data, room, specs, images, fighter):
     theme = theme_of(data)
     tiles = room["tiles"]
     H, W = len(tiles), len(tiles[0])
     canvas = Image.new("RGBA", (W * T, int((H + ROOM_TOP) * T)), (0, 0, 0, 0))
-    floor, floor_b = f"{theme}-floor", f"{theme}-floor-b"
+    floor = f"{theme}-floor"
+    # Floors first, so every later piece sits on them and nearer rows paint over farther ones.
     for y, row in enumerate(tiles):
         for x, ch in enumerate(row):
             if ch == "#":
                 continue
             paste(canvas, images[floor], specs[floor], x, y)
+    layers = []
     for y, row in enumerate(tiles):
         for x, ch in enumerate(row):
-            if ch != "#":
-                continue
-            top = y == 0
-            piece = f"{theme}-wall" if top else f"{theme}-block"
-            paste(canvas, images[piece], specs[piece], x, y)
-    for y, row in enumerate(tiles):
-        for x, ch in enumerate(row):
-            if ch == "D":
-                paste(canvas, images[f"{theme}-door"], specs[f"{theme}-door"], x, y)
+            if ch == "#" and y == 0:
+                layers.append((y, x, f"{theme}-wall", 0))
+            elif ch == "#" and x in (0, W - 1):
+                layers.append((y, x, f"{theme}-side", int(0.58 * T) if x == W - 1 else 0))
+            elif ch == "#":
+                layers.append((y, x, f"{theme}-block", 0))
+            elif ch == "D":
+                layers.append((y, x, f"{theme}-door", 0))
             elif ch == "C":
-                paste(canvas, images[f"{theme}-chest"], specs[f"{theme}-chest"], x, y)
+                layers.append((y, x, f"{theme}-chest", 0))
             elif ch == "S":
-                paste(canvas, images[f"{theme}-shrine"], specs[f"{theme}-shrine"], x, y)
-    chosen = props_for(theme, room.get("artProps", ""))
+                layers.append((y, x, f"{theme}-shrine", 0))
+    chosen = props_for(theme, room.get("artProps", ""), room["id"])
+    if theme == "green" and "green-stream" not in chosen:
+        chosen.append("green-stream")
     used = set()
+    # A stream is a run of water tiles on the outer floor, not one speck.
+    if "green-stream" in chosen:
+        n = 0
+        for y in range(2, H - 2):
+            x = W - 2
+            if tiles[y][x] == "." and n < 4:
+                layers.append((y, x, "green-stream", 0))
+                used.add((x, y))
+                n += 1
+        chosen = [p for p in chosen if p != "green-stream"]
     for piece in chosen:
         if piece not in images:
             continue
-        kind = "edge" if piece in EDGE_ONLY or piece.endswith("-root") else "side"
-        copies = 3 if piece in FLAT else 1
+        w = span(specs[piece])
+        copies = 3 if piece in FLAT or piece.endswith(("-stone", "-fern", "-ember", "-root")) else 1
         placed = 0
-        for cell in slots(tiles, kind, max(copies * 2, copies)):
-            if cell in used:
+        pool = side_spots(tiles, w)
+        if piece.endswith("-root"):
+            pool = [(x, y) for x, y in pool if x in (1, 2, W - 3, W - 2)]
+        for cell in pool:
+            if any((cell[0] + d, cell[1]) in used for d in range(w)):
                 continue
-            paste(canvas, images[piece], specs[piece], cell[0], cell[1])
-            used.add(cell)
+            layers.append((cell[1], cell[0], piece, 0))
+            for d in range(w):
+                used.add((cell[0] + d, cell[1]))
             placed += 1
             if placed >= copies:
                 break
+    # Nearer rows last, so a front prop covers the foot of the wall behind it.
+    for y, x, piece, dx in sorted(layers, key=lambda t: (t[0], t[1])):
+        paste(canvas, images[piece], specs[piece], x, y, dx)
     for y, row in enumerate(tiles):
         if "P" in row:
             x = row.index("P")
             im, (ax, ay) = fighter
+            # Same placement as the approved kitchen preview: feet on the cell, sprite not scaled.
             canvas.alpha_composite(im, (int(x * T + T / 2 - ax), int((y + ROOM_TOP + 0.8) * T - ay)))
     return canvas
 
@@ -299,25 +358,44 @@ def main():
     }, open(os.path.join(ROOT, "manifest.json"), "w"), indent=2)
     for name, items in by_set.items():
         sheet(items, name + " at 48 px per tile, with the kitchen fighter", os.path.join(PREVIEW, name + "-48.png"), 48 / 80)
-    # Approved samples beside the new full rooms of the same three.
-    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
+    # Same 80 px per tile on every picture. Seven tiles wide, so the fighter and props match the samples.
     pairs = [
-        ("Green sample", os.path.join(ROOT, "sprites", "room-green_room-green.png"), "pebble-path"),
-        ("Red sample", os.path.join(ROOT, "sprites", "room-red_room-red.png"), "bellows-door"),
-        ("Brown sample", os.path.join(ROOT, "sprites", "room-brown_room-brown.png"), "reading-nook"),
+        ("Green", "room-green_room-green.png", "pebble-path"),
+        ("Blue", None, "ferry-landing"),
+        ("Red", "room-red_room-red.png", "bellows-door"),
+        ("Red-Black", None, "whisper-gate"),
+        ("Brown", "room-brown_room-brown.png", "reading-nook"),
+        ("Brown-Black", None, "rainy-landing"),
+        ("Black", None, "summit-steps"),
     ]
+    old_root = os.path.join(ROOT, "superseded", "pass-63fb0263", "rooms")
     cells = []
-    for lab, sample, rid in pairs:
-        a = Image.open(sample).convert("RGBA")
-        b = Image.open(os.path.join(ROOMS, rid + ".png")).convert("RGBA")
-        b = b.resize((round(b.width * 0.45), round(b.height * 0.45)), Image.Resampling.LANCZOS)
-        h = max(a.height, b.height)
-        row = Image.new("RGBA", (a.width + b.width + 12, h), (20, 18, 28, 255))
-        row.alpha_composite(a, (0, 0))
-        row.alpha_composite(b, (a.width + 12, 0))
-        cells.append((lab + "  |  " + rid, row))
+    for i, (lab, sample, rid) in enumerate(pairs):
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)
+        blocks = []
+        new = Image.open(os.path.join(ROOMS, rid + ".png")).convert("RGBA")
+        blocks.append(("Now, 80 px per tile", new))
+        oldp = os.path.join(old_root, rid + ".png")
+        if os.path.exists(oldp):
+            blocks.append(("Before, same scale", Image.open(oldp).convert("RGBA")))
+        if sample:
+            blocks.append(("Approved sample, 80 px per tile", Image.open(os.path.join(ROOT, "sprites", sample)).convert("RGBA")))
+        w = max(b.width for _, b in blocks)
+        h = sum(b.height + 32 for _, b in blocks) + 16
+        page = Image.new("RGB", (w + 24, h), (20, 18, 28))
+        d = ImageDraw.Draw(page)
+        y = 8
+        for title, im in blocks:
+            d.text((12, y), lab + " — " + title, fill=(244, 236, 220), font=font)
+            bg = Image.new("RGBA", im.size, (20, 18, 28, 255))
+            bg.alpha_composite(im)
+            page.paste(bg.convert("RGB"), (12, y + 26))
+            y += im.height + 32
+        page.save(os.path.join(PREVIEW, "closeup-" + lab.lower().replace(" ", "-") + ".png"))
+        cells.append((lab, new.crop((0, 0, min(new.width, 7 * T), min(new.height, int((5 + ROOM_TOP) * T))))))
     sheet([(c[0], _save_tmp(c[1], i)) for i, c in enumerate(cells)],
-          "Approved samples beside the new full rooms", os.path.join(PREVIEW, "compare-approved.png"), 1)
+          "Equal scale, 80 px per tile. Before, now, and the approved sample where we have one.",
+          os.path.join(PREVIEW, "compare-equal-scale.png"), 1)
     print("danger rooms", {k: v for k, v in reds.items() if v})
     print("rooms", len(manifest))
 
