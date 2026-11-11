@@ -35,7 +35,7 @@ The walk sheet is marked 1.6 tiles a second so it can be played back. That numbe
 ## Look here
 
 - `preview/approved-40.png` — idle, a walk step, the slash, Spark Shield, Forge Sweep, the shift, and the back view, each 40 px tall.
-- `preview/idle-S.gif`, `preview/walk-S.gif`, `preview/attack-S.gif`, `preview/spark-shield-S.gif`, `preview/forge-sweep-S.gif`, `preview/shift-S.gif` — facing the camera.
+- `preview/idle-S.gif`, `preview/walk-S.gif`, `preview/attack-S.gif`, `preview/spark-shield-S.gif`, `preview/forge-sweep-S.gif` — facing the camera. The shift is the shift frame on `preview/approved-40.png` and `sprites/ember-knight_shift.png`.
 - `preview/attack-closeup.png`, `preview/spark-shield-closeup.png`, `preview/forge-sweep-closeup.png`.
 - `sprites/ember-knight.json` — frame size, anchor, camera, frame counts, fps, and hit frames.
 
