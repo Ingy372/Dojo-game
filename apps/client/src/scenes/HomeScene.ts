@@ -33,10 +33,11 @@ import {
   kataArrows,
   activeDifficulty,
   seedFakeStudent,
+  dismissSlotNote,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
-import { STYLE_LEFT_SHARE, STYLE_LEFT_SHARE_MIN, STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleLayout, type StyleModel, type StylePick, type StyleSlot } from '../ui/fightingStyle';
+import { STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleScreenLayout, applyStyleTap, type StyleModel, type StylePick, type StyleSlot, type StyleSession } from '../ui/fightingStyle';
 import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, pinnedAgain, runId, headingSparkle, sparkleStars, SPARKLE_W, statStack, takeCountUp, takeLevelUpSound, type FoundTile, type KeyStore } from '../ui/lastRun';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, gearSheetBox, slotEmptyLine, tileBox, toggleFilter, bagScreenLayout, bagTileBox, BAG_SCREEN, bagPageCount, turnBagPage, sheetAtTop } from '../ui/gearBoard';
@@ -49,6 +50,7 @@ import { isPlayTimeUp } from '../game/playTime';
 import { KO, homePointer } from '../game/knockout';
 import { addIcon, ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
+import { addSlotIcon, loadSlotIcons } from '../art/slotIcons';
 import { loadArt } from '../art/art';
 import { hasMenu2, menu2Fit, menu2Frames, menu2Image, menu2Slice, setMenu2, skinButton, woodSkin, HONEY_INK } from '../art/menu2';
 import { MENU2_PACK, artRarity } from '../art/menu2Frames';
@@ -108,8 +110,18 @@ export class HomeScene extends Phaser.Scene {
   private tab: Tab = 'run';
   /** P-MENU2-a: which part of Abilities is showing. */
   private part: AbilitiesPart = 'trophy';
-  /** P-MENU2-e: the chosen Fighting Style slot (tap 1 of 2). */
-  private styleSlot: StyleSlot = 'stance';
+  /** PB-05: the open Fighting Style card. Null until a card is tapped. Shot scripts may set this. */
+  styleSlot: StyleSlot | null = null;
+  /** Which Seal card is open. */
+  private styleSealIndex = 0;
+  /** The family waiting for "Swap with which one?". */
+  private swapFamily: string | null = null;
+  /** The pick last tapped, so its line shows before it equips. */
+  private styleFocus: string | null = null;
+  /** One first-use line per visit to this screen. */
+  private styleHelpUsed = false;
+  private styleHelpLine: string | null = null;
+  private styleTriggers: string[] = ['open'];
   /** B-POLISH-2: which page of the tray is showing (reset when the slot changes). */
   private trayPageNo = 0;
   /** P-MENU2-b: the open cubby sheet, and how many Trophy Case pages there are. */
@@ -176,6 +188,7 @@ export class HomeScene extends Phaser.Scene {
   preload(): void {
     loadArt(this, [...playerPacks(), ICON_PACK, MENU2_PACK]);
     loadGearIcons(this);
+    loadSlotIcons(this);
   }
 
   init(data: HomeSceneData): void {
@@ -1065,167 +1078,187 @@ export class HomeScene extends Phaser.Scene {
   }
 
   /**
-   * P-MENU2-e: Fighting Style. Two slot cards (Stance, Virtue), the tray of picks for the chosen
-   * slot, a plain-words preview, and the "Your Strike" row. Tap a slot, then a pick (D4); the
-   * pick is saved at once. Not-yet picks say "Learn this at the dojo" and open their sheet.
-   * Placeholder art drawn in code until Jay OKs the #265 art.
+   * PB-05: Fighting Style. Five slot kinds (Stance, Virtue, Strike, Kata, Seal), one card per
+   * Seal slot, then a tray. Tap a card, then a pick. Trophy Case cubbies are not drawn here.
    */
   private renderFightingStyle(x: number, y: number, w: number, h: number): void {
+    if (this.profile.styleSeen === null) {
+      const probe = buildStyle(this.training, CONTENT.abilities, this.profile.loadout, this.profile.grandfatheredStances);
+      const ids = (['stance', 'virtue', 'strike', 'kata', 'seal'] as const).flatMap((s) => probe.trays[s].filter((p) => p.earned).map((p) => p.id));
+      this.profile.styleSeen = [...new Set(ids)];
+      writeSave(this.profile);
+    }
     const m = this.styleModel();
-    // B-POLISH-2: tray tiles must hold their widest word (hyphens break) at 12 px with cubby padding.
-    const widest = Math.max(...[...m.trays.stance, ...m.trays.virtue].flatMap((p) => p.name.split(/\s+|(?<=-)/)).map((word) => {
+    if (m.help && !this.styleHelpUsed) {
+      this.styleHelpUsed = true;
+      if (!m.help.yielded) {
+        this.styleHelpLine = m.help.line;
+        this.profile.styleHelpSeen = [...this.profile.styleHelpSeen, m.help.id];
+        writeSave(this.profile);
+      }
+    }
+    const wordsOf = (['stance', 'virtue', 'strike', 'kata', 'seal'] as const).flatMap((s) => m.trays[s].map((p) => p.name));
+    const widest = Math.max(MIN_TAP, ...wordsOf.flatMap((name) => name.split(/\s+|(?<=-)/)).map((word) => {
       const probe = this.add.text(0, 0, word, { fontFamily: FONT, fontSize: `${TYPE.label}px`, fontStyle: 'bold' });
       const wd = probe.width; probe.destroy(); return wd;
     }));
     const tileMin = Math.ceil(widest) + 2 * TROPHY_UI.cubbyPadX + TROPHY_UI.stroke;
-    // R-STANCE-d1: every gap in the preview card is at least 8 px (S2). If the longest pick's words
-    // don't fit even at the smaller sizes, the card takes width from the left side (667 only).
-    let L = styleLayout(w, h, tileMin);
-    for (let share = STYLE_LEFT_SHARE; share >= STYLE_LEFT_SHARE_MIN - 1e-9; share -= 0.02) {
-      L = styleLayout(w, h, tileMin, share);
-      if (this.previewFits(m, L.previewW, L.previewH)) break;
-    }
+    const L = styleScreenLayout(w, h, m.cards.map((c) => ({ slot: c.slot, index: c.index, locked: c.locked !== null })), m.note !== null);
     const ink = WOOD.ink;
-    (['stance', 'virtue'] as const).forEach((slot, i) => {
-      const pick = m.current[slot];
-      const on = this.styleSlot === slot;
-      const b = button(this, { x: x + i * (L.slotW + S2), y, w: L.slotW, h: L.slotH, label: '', color: on ? WOOD.switchOn : WOOD.frameDark, size: TYPE.body, selected: on, stroke: WOOD.grain, onTap: () => this.pickSlot(slot) }, this.ui);
-      const v = b.visual.setData('styleSlot', slot);
-      const top = -L.slotH / 2;
-      let glyphR = Math.min(18, Math.max(12, (L.slotH - 52) / 2));
-      const disc = this.add.circle(0, 0, glyphR, BOARD_PAPER, 0.95).setStrokeStyle(2, 0xffd166, on ? 1 : 0.5);
-      const glyph = this.add.text(0, 0, STYLE_WORDS.glyphs[slot], { fontFamily: FONT, fontSize: `${Math.round(glyphR * 1.1)}px`, color: ink }).setOrigin(0.5).setResolution(crisp());
-      const slotLabel = this.add.text(0, 0, STYLE_WORDS.slots[slot].toUpperCase(), { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e3c4', fontStyle: 'bold' }).setOrigin(0.5, 0).setResolution(crisp());
-      // P-MENU2-SPACE: the name starts under the label's real line height (12 + 2 overlapped it by 1).
-      const name = this.add.text(0, 0, pick ? pick.name : STYLE_WORDS.noVirtue, { fontFamily: FONT, fontSize: `${TYPE.body}px`, color: '#fff6e6', fontStyle: 'bold', align: 'center', wordWrap: { width: L.slotW - 2 * S2 } }).setOrigin(0.5, 0).setResolution(crisp());
-      // Q-PREMIUM-2 M6: names wrap to two lines and stay inside the card: step the name to 12, then shrink the
-      // glyph disc (down to 10) until the name's last line clears the card's bottom by 4.
-      const place = (): number => {
-        disc.setRadius(glyphR).setPosition(0, top + 6 + glyphR);
-        glyph.setFontSize(Math.round(glyphR * 1.1)).setPosition(0, top + 6 + glyphR);
-        const ny = top + 6 + 2 * glyphR + 2;
-        slotLabel.setPosition(0, ny);
-        name.setPosition(0, ny + slotLabel.height + 2);
-        return L.slotH / 2 - 4 - (name.y + name.height);
-      };
-      if (place() < 0) name.setFontSize(TYPE.label);
-      while (place() < 0 && glyphR > 10) glyphR -= 1;
-      v.add([disc, glyph, slotLabel, name]);
-    });
+    const open = this.styleSlot === null ? null : m.cards.find((c) => c.slot === this.styleSlot && (c.slot !== 'seal' || c.index === this.styleSealIndex)) ?? null;
 
-    // The tray: picks for the chosen slot, earned first. Equipped one is gold-outlined.
-    const ty = y + L.slotH + S2;
-    const picks = m.trays[this.styleSlot];
-    const minTileW = Math.ceil(widest) + 2 * TROPHY_UI.cubbyPadX + TROPHY_UI.stroke;
-    const tp = trayPaging(L.leftW, minTileW, picks.length);
-    this.trayPageNo = Math.max(0, Math.min(tp.pages - 1, this.trayPageNo));
-    const tray = trayPage(picks, tp, this.trayPageNo);
-    const cur = m.current[this.styleSlot];
-    if (tp.arrows) {
-      // The Trophy Case's arrows: ◀ ▶ in switch-off wood, 15 pt, a full 44 wide; greyed at the ends.
-      button(this, { x, y: ty, w: MIN_TAP, h: L.tileH, label: '◀', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo === 0, onTap: () => this.turnTray(-1) }, this.ui);
-      button(this, { x: x + L.leftW - MIN_TAP, y: ty, w: MIN_TAP, h: L.tileH, label: '▶', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo >= tp.pages - 1, onTap: () => this.turnTray(1) }, this.ui);
+    const showTray = open !== null && open.locked === null && this.styleSlot !== null;
+    if (showTray && this.styleSlot) {
+      const picks = m.trays[this.styleSlot];
+      const tp = trayPaging(L.tray.w, tileMin, picks.length);
+      this.trayPageNo = Math.max(0, Math.min(tp.pages - 1, this.trayPageNo));
+      const tray = trayPage(picks, tp, this.trayPageNo);
+      const ty = y + L.tray.y;
+      for (const d of trayDots(tp.pages, this.trayPageNo, L.leftW)) this.ui.add(this.add.circle(x + L.tray.x + d.x, ty + L.tray.h + 4, 3, d.on ? 0xffd166 : WOOD.paper, d.on ? 1 : 0.35).setData('trayDot', d.on));
+      if (tp.arrows) {
+        button(this, { x: x + L.tray.x, y: ty, w: MIN_TAP, h: L.tray.h, label: '◀', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo === 0, onTap: () => this.turnTray(-1) }, this.ui);
+        button(this, { x: x + L.tray.x + L.tray.w - MIN_TAP, y: ty, w: MIN_TAP, h: L.tray.h, label: '▶', color: WOOD.switchOff, size: 15, disabled: this.trayPageNo >= tp.pages - 1, onTap: () => this.turnTray(1) }, this.ui);
+      }
+      const room = L.tray.w - 2 * tp.tilesX;
+      const tx0 = x + L.tray.x + tp.tilesX + (room - (tray.length * tp.tileW + (tray.length - 1) * S2)) / 2;
+      const equipped = new Set(this.styleSlot === 'seal' ? (this.profile.loadout?.seals ?? []) : open.pick ? [open.pick.id] : []);
+      tray.forEach((p, i) => {
+        const tile = button(this, {
+          x: tx0 + i * (tp.tileW + S2), y: ty, w: tp.tileW, h: L.tray.h,
+          label: p.name, labelWrap: cubbyTextW(tp.tileW), size: TYPE.label,
+          color: p.earned && !p.comingLater ? WOOD.frame : BOARD_PAPER, labelColor: p.earned && !p.comingLater ? '#fff6e6' : ink,
+          stroke: WOOD.grain, selected: equipped.has(p.id),
+          onTap: () => (p.earned && !p.comingLater ? this.equipStyle(p) : this.commitStyle(applyStyleTap(this.styleSession(), { kind: 'pick', id: p.id }, this.training, CONTENT.abilities, this.profile.grandfatheredStances))),
+        }, this.ui).visual.list[2] as Phaser.GameObjects.Text;
+        wrapLikeCubby(tile, p.name, cubbyTextW(tp.tileW));
+      });
     }
-    // P-MENU2-f: page dots under the tray (in the gap before "Your Strike"), no numbers.
-    for (const d of trayDots(tp.pages, this.trayPageNo, L.leftW)) this.ui.add(this.add.circle(x + d.x, ty + L.tileH + S2 / 2, 3, d.on ? 0xffd166 : WOOD.paper, d.on ? 1 : 0.35).setData('trayDot', d.on));
-    // Tiles are centred in the room between the arrows (or the whole row).
-    const room = L.leftW - 2 * tp.tilesX;
-    const tx0 = x + tp.tilesX + (room - (tray.length * tp.tileW + (tray.length - 1) * S2)) / 2;
-    tray.forEach((p, i) => {
-      const equipped = p.earned && cur?.id === p.id;
-      const tile = button(this, {
-        x: tx0 + i * (tp.tileW + S2), y: ty, w: tp.tileW, h: L.tileH,
-        label: p.name, labelWrap: cubbyTextW(tp.tileW), size: TYPE.label,
-        color: p.earned ? WOOD.frame : BOARD_PAPER, labelColor: p.earned ? '#fff6e6' : ink, stroke: WOOD.grain, selected: equipped,
-        onTap: () => (p.earned ? this.equipStyle(p) : this.openStylePick(p)),
-      }, this.ui).visual.list[2] as Phaser.GameObjects.Text;
-      wrapLikeCubby(tile, p.name, cubbyTextW(tp.tileW));
-      if (!p.earned) {
-        // The lantern: something to look forward to (no lock, no count).
-        const lg = this.add.graphics();
-        lg.fillStyle(0xffb347, 0.35).fillCircle(tx0 + i * (tp.tileW + S2) + tp.tileW - 10, ty + 11, 7);
-        lg.fillStyle(0xe8743b).fillRoundedRect(tx0 + i * (tp.tileW + S2) + tp.tileW - 14, ty + 5, 8, 11, 3);
-        this.ui.add(lg);
+
+    m.cards.forEach((card, i) => {
+      const box = L.cards[i];
+      if (!box) return;
+      const on = open?.slot === card.slot && open.index === card.index;
+      const swapOn = this.swapFamily !== null && card.slot === 'seal' && card.pick !== null && card.locked === null;
+      const b = button(this, {
+        x: x + box.x, y: y + box.y, w: box.w, h: box.h, label: '',
+        color: on || swapOn ? WOOD.switchOn : WOOD.frameDark, size: TYPE.label, selected: on || swapOn, stroke: WOOD.grain,
+        onTap: () => this.pickSlot(card.slot, card.index),
+      }, this.ui);
+      const v = b.visual.setData('styleKey', `${card.slot}:${card.index}`).setData('styleSlot', card.slot);
+      const top = -box.h / 2;
+      const icon = Math.max(24, Math.min(L.icon, box.h - TYPE.label * 2 - 14));
+      const iy = top + 4 + icon / 2;
+      const iconId = card.locked ? 'lock' : card.slot === 'seal' ? (card.pick?.id ?? 'empty-slot') : card.slot === 'kata' ? 'kata' : card.pick?.id ?? '';
+      const img = iconId ? addSlotIcon(this, iconId, 0, iy, icon) : null;
+      if (img) v.add(img);
+      else if (card.slot === 'stance' || card.slot === 'virtue') {
+        const glyphR = Math.min(16, icon / 2);
+        v.add(this.add.circle(0, iy, glyphR, BOARD_PAPER, 0.95).setStrokeStyle(3, 0xffd166, on ? 1 : 0.7));
+        v.add(this.add.text(0, iy, STYLE_WORDS.glyphs[card.slot], { fontFamily: FONT, fontSize: `${Math.round(glyphR)}px`, color: ink }).setOrigin(0.5).setResolution(crisp()));
+      } else {
+        const g = this.add.graphics();
+        g.fillStyle(BOARD_PAPER, 1).fillCircle(0, iy, icon / 2 - 3);
+        g.lineStyle(3, 0xa8703f, 1).strokeCircle(0, iy, icon / 2 - 3);
+        v.add(g);
+      }
+      // The slot word is always there. The pick's name is added only when it fits on one line,
+      // so a long name is not cut in half. The full line stays on the right when the card is open.
+      const under = iy + icon / 2 + 2;
+      const slotLabel = this.add.text(0, under, card.label.toUpperCase(), { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#f2e3c4', fontStyle: 'bold', align: 'center' }).setOrigin(0.5, 0).setResolution(crisp());
+      v.add(slotLabel);
+      const name = card.locked ?? card.pick?.name ?? '';
+      if (name) {
+        const probe = this.add.text(0, 0, name, { fontFamily: FONT, fontSize: `${TYPE.label}px`, fontStyle: 'bold' });
+        const fits = probe.width <= box.w - 2 * S2 && slotLabel.y + slotLabel.height + TYPE.label <= box.h / 2 - 2;
+        probe.destroy();
+        if (fits) v.add(this.add.text(0, slotLabel.y + slotLabel.height, name, { fontFamily: FONT, fontSize: `${TYPE.label}px`, color: '#fff6e6', fontStyle: 'bold', align: 'center' }).setOrigin(0.5, 0).setResolution(crisp()));
+      }
+      if (card.newDot) {
+        const dot = this.add.circle(box.w / 2 - 8, top + 8, 5, 0xffd166).setData('newDot', true);
+        v.add(dot);
+        if (!reducedMotion()) this.tweens.add({ targets: dot, alpha: 0.35, yoyo: true, repeat: -1, duration: 700 });
       }
     });
 
-    // The preview card: the chosen slot's pick in plain words (D6), plus the switch line for Stance.
-    const px = x + L.previewX;
-    const pg = this.add.graphics();
-    pg.fillStyle(BOARD_PAPER).fillRoundedRect(px, y, L.previewW, L.previewH, RADIUS.panel);
-    pg.lineStyle(2, WOOD.grain).strokeRoundedRect(px, y, L.previewW, L.previewH, RADIUS.panel);
-    pg.setData('previewCard', { x: px, y, w: L.previewW, h: L.previewH });
-    this.ui.add(pg);
-    const pw = L.previewW - 2 * S2;
-    // B-POLISH-2: the hint always shows (bottom of the card); the title wraps to 2 lines (no "…"),
-    // and the title/body step down a size if the words would otherwise reach the hint.
-    const hintText = this.text(px + L.previewW / 2, 0, STYLE_WORDS.hint, TYPE.label, '#7a5a3a', false, FONT, L.previewW - S2).setOrigin(0.5, 0).setAlign('center');
-    balanceWrap(hintText, L.previewW - S2);
-    const hy = y + L.previewH - S2 - hintText.height;
-    hintText.setY(hy);
-    const foot = this.styleSlot === 'stance' ? STYLE_WORDS.switchLine : STYLE_WORDS.virtueLine;
-    const title = this.text(px + L.previewW / 2, 0, cur ? cur.name : STYLE_WORDS.noVirtue, TYPE.title, ink, true, FONT, pw).setOrigin(0.5, 0).setAlign('center').setMaxLines(2);
-    const body = this.text(px + L.previewW / 2, 0, cur ? cur.line : STYLE_WORDS.noVirtueLine, TYPE.body, '#5a3e28', false, FONT, pw).setOrigin(0.5, 0).setAlign('center');
-    const f = this.text(px + L.previewW / 2, 0, foot, TYPE.label, '#7a4a22', true, FONT, pw).setOrigin(0.5, 0).setAlign('center');
-    const place = (gap: number): number => {
-      let py = y + gap;
-      title.setY(py);
-      py += title.height + S1;
-      body.setY(py);
-      py += body.height + gap;
-      f.setY(py);
-      return py + f.height + S1;
-    };
-    if (place(S2) + S1 > hy) { title.setFontSize(TYPE.body); body.setFontSize(TYPE.label); if (place(S2) + S1 > hy) place(S1); }
+    const side = this.swapFamily !== null || (open?.slot === 'seal' && open.pick !== null && open.locked === null);
+    const previewW = L.preview.w - (side ? 80 : 0) - S2;
+    let preview = this.styleHelpLine && !this.swapFamily && !this.styleFocus ? this.styleHelpLine : STYLE_WORDS.hint;
+    if (this.swapFamily) preview = STYLE_WORDS.swapPrompt;
+    else if (this.styleFocus && this.styleSlot) {
+      const picked = m.trays[this.styleSlot].find((p) => p.id === this.styleFocus);
+      if (picked) preview = picked.line;
+    } else if (open?.locked) preview = open.locked;
+    else if (open?.pick) preview = open.pick.line;
+    else if (open?.slot === 'kata') preview = STYLE_WORDS.emptyKata;
+    else if (open?.slot === 'seal') preview = STYLE_WORDS.emptySeal;
+    const pt = this.text(x + L.preview.x, y + L.preview.y + S1, preview, TYPE.label, '#f2e3c4', false, FONT, Math.max(MIN_TAP, previewW)).setData('styleLine', preview);
+    balanceWrap(pt, Math.max(MIN_TAP, previewW));
+    if (this.styleHelpLine && preview === this.styleHelpLine) pt.setData('styleHelp', true);
+    if (this.swapFamily) {
+      const cancel = button(this, { x: x + L.preview.x + L.preview.w - 72, y: y + L.preview.y, w: 72, h: Math.max(MIN_TAP, L.preview.h), label: STYLE_WORDS.swapCancel, color: WOOD.switchOff, size: TYPE.label, onTap: () => this.commitStyle(applyStyleTap(this.styleSession(), { kind: 'cancel' }, this.training, CONTENT.abilities, this.profile.grandfatheredStances)) }, this.ui);
+      cancel.visual.setData('styleCancel', true);
+    } else if (open?.slot === 'seal' && open.pick && open.locked === null) {
+      const take = button(this, { x: x + L.preview.x + L.preview.w - 72, y: y + L.preview.y, w: 72, h: Math.max(MIN_TAP, L.preview.h), label: STYLE_WORDS.takeOut, color: WOOD.switchOff, size: TYPE.label, onTap: () => this.commitStyle(applyStyleTap(this.styleSession(), { kind: 'take-out' }, this.training, CONTENT.abilities, this.profile.grandfatheredStances)) }, this.ui);
+      take.visual.setData('styleTakeOut', true);
+    }
 
-    // "Your Strike": the Strike in the Strike slot is shown here, not picked (PB-05 adds the slot picks).
-    const ay = y + L.alwaysY;
-    this.text(x, ay, STYLE_WORDS.always, TYPE.label, '#f2e3c4', true);
-    const iy = ay + TYPE.label + S1;
-    if (!m.always.length) this.text(x, iy + (L.icon - TYPE.body) / 2, STYLE_WORDS.alwaysEmpty, TYPE.body, '#d9c6a3');
-    m.always.slice(0, L.perAlways).forEach((a, i) => {
-      const cx = x + i * (L.icon + S1) + L.icon / 2;
-      const cy = iy + L.icon / 2;
-      const g = this.add.graphics();
-      g.fillStyle(0xffd166, 0.25).fillRoundedRect(cx - L.icon / 2, iy, L.icon, L.icon, RADIUS.button);
-      g.lineStyle(2, 0xffd166, 0.8).strokeRoundedRect(cx - L.icon / 2, iy, L.icon, L.icon, RADIUS.button);
-      this.ui.add(g);
-      const icon = addIcon(this, a.id, cx, cy, L.icon - 8);
-      if (icon) this.ui.add(icon);
-      // B-POLISH-2: no art yet: a code-drawn placeholder (a small gold star), never a letter.
-      else this.ui.add(this.add.star(cx, cy, 5, (L.icon - 8) / 5, (L.icon - 8) / 2.4, 0xffd166).setStrokeStyle(2, 0xa8703f));
-    });
+    if (L.note && m.note) {
+      this.text(x + L.note.x, y + L.note.y + S1, m.note, TYPE.label, '#f2e3c4', false, FONT, L.note.w - 88).setData('slotNote', true);
+      button(this, { x: x + L.note.x + L.note.w - 80, y: y + L.note.y, w: 72, h: MIN_TAP, label: STYLE_WORDS.gotIt, color: WOOD.switchOn, size: TYPE.label, onTap: () => { dismissSlotNote(this.profile); writeSave(this.profile); this.renderPanel('none'); } }, this.ui);
+    }
   }
 
-  /** R-STANCE-d1: true if every pick's preview fits a card previewW x previewH with 8 px gaps (smaller sizes allowed). */
-  private previewFits(m: StyleModel, previewW: number, previewH: number): boolean {
-    const pw = previewW - 2 * S2;
-    const h = (str: string, size: number, bold: boolean, wrap: number): number => {
-      const t = this.add.text(0, 0, str, { fontFamily: FONT, fontSize: `${size}px`, fontStyle: bold ? 'bold' : 'normal', wordWrap: { width: wrap } }).setMaxLines(bold && size !== TYPE.label ? 2 : 0);
-      const v = t.height; t.destroy(); return v;
-    };
-    const hint = h(STYLE_WORDS.hint, TYPE.label, false, previewW - S2);
-    return (['stance', 'virtue'] as const).every((slot) => {
-      const foot = h(slot === 'stance' ? STYLE_WORDS.switchLine : STYLE_WORDS.virtueLine, TYPE.label, true, pw);
-      const picks = m.trays[slot].map((p) => [p.name, p.line]).concat(slot === 'virtue' ? [[STYLE_WORDS.noVirtue, STYLE_WORDS.noVirtueLine]] : []);
-      return picks.every(([name, line]) => S2 + h(name, TYPE.body, true, pw) + S1 + h(line, TYPE.label, false, pw) + S2 + foot + S2 + hint + S2 <= previewH);
-    });
+  private styleSession(): StyleSession {
+    return { loadout: this.profile.loadout, open: this.styleSlot ? { slot: this.styleSlot, index: this.styleSealIndex } : null, swap: this.swapFamily, focus: this.styleFocus };
   }
 
   private styleModel(): StyleModel {
-    return buildStyle(this.training, CONTENT.abilities, this.profile.loadout, this.profile.grandfatheredStances);
+    return buildStyle(this.training, CONTENT.abilities, this.profile.loadout, this.profile.grandfatheredStances, {
+      seen: this.profile.styleSeen, showNote: this.profile.showSlotNote, helpSeen: this.profile.styleHelpSeen,
+      helpUsed: this.styleHelpUsed, triggers: this.part === 'style' && !this.styleHelpUsed ? this.styleTriggers : [],
+    });
+  }
+
+  /** Apply one Fighting Style tap and save when the loadout changed. */
+  private commitStyle(r: ReturnType<typeof applyStyleTap>): void {
+    const prev = `${this.styleSlot ?? ''}:${this.styleSealIndex}`;
+    this.styleSlot = r.session.open?.slot ?? null;
+    this.styleSealIndex = r.session.open?.index ?? 0;
+    if (`${this.styleSlot ?? ''}:${this.styleSealIndex}` !== prev) this.trayPageNo = 0;
+    this.swapFamily = r.session.swap;
+    this.styleFocus = r.session.focus;
+    if (r.save) {
+      const next = r.session.loadout;
+      if (next !== this.profile.loadout) {
+        this.profile.loadout = next;
+        writeSave(this.profile);
+      }
+    }
+    if (r.seenIds.length && this.profile.styleSeen) {
+      const add = r.seenIds.filter((id) => !this.profile.styleSeen!.includes(id));
+      if (add.length) { this.profile.styleSeen = [...this.profile.styleSeen, ...add]; writeSave(this.profile); }
+    }
+    if (!this.styleHelpUsed && r.triggers.length) this.styleTriggers = r.triggers;
+    if (r.sheet) this.openStylePick(r.sheet);
+    this.renderPanel('none');
+    if (!r.save || reducedMotion()) return;
+    const key = this.styleSlot ? `${this.styleSlot}:${this.styleSealIndex}` : '';
+    const card = this.panelContent?.list.find((c) => c instanceof Phaser.GameObjects.Container && (c as Phaser.GameObjects.Container).getData?.('styleKey') === key);
+    if (card) this.tweens.add({ targets: card, scale: 1.06, duration: MOTION.pop.ms / 2, yoyo: true, ease: 'Sine.Out' });
   }
 
   /** Tap 1: choose the slot. */
-  pickSlot(slot: StyleSlot): void {
-    if (slot === this.styleSlot) return;
-    this.styleSlot = slot;
-    this.trayPageNo = 0;
-    this.renderPanel('none');
+  pickSlot(slot: StyleSlot, index = 0): void {
+    this.commitStyle(applyStyleTap(this.styleSession(), { kind: 'card', slot, index }, this.training, CONTENT.abilities, this.profile.grandfatheredStances));
   }
 
   /** Tap 2: put an earned pick in the chosen slot. Saved at once, so it survives a restart. */
   equipStyle(p: StylePick): void {
+    if (p.slot !== 'stance' && p.slot !== 'virtue') {
+      this.commitStyle(applyStyleTap(this.styleSession(), { kind: 'pick', id: p.id }, this.training, CONTENT.abilities, this.profile.grandfatheredStances));
+      return;
+    }
+    if (!this.styleSlot) return;
     const next = equipPick(this.profile.loadout, this.styleSlot, p);
     if (next === this.profile.loadout) return;
     this.profile.loadout = next;
@@ -1237,8 +1270,9 @@ export class HomeScene extends Phaser.Scene {
     if (card) this.tweens.add({ targets: card, scale: 1.06, duration: MOTION.pop.ms / 2, yoyo: true, ease: 'Sine.Out' });
   }
 
-  /** A not-yet pick: its sheet says "Ask Sensei about this one" (D3). */
+  /** A not-yet pick: its sheet says "Ask Sensei about this one" (D3). Lock stays on the card. */
   private openStylePick(p: StylePick): void {
+    if (p.comingLater) return;
     const fromCase = p.requirementId ? this.trophyCubbies().find((c) => c.id === p.requirementId) : undefined;
     // R-STANCE-d2: the stance's icon if the set has one; otherwise no empty circle (no new art).
     this.openCubby(fromCase ?? { id: p.id, shelf: 'stripes', name: p.name, earned: false, icon: p.id, hideBlankIcon: true, effect: p.line, status: STYLE_WORDS.askSensei });
@@ -1252,9 +1286,11 @@ export class HomeScene extends Phaser.Scene {
   }
 
   tapStyleTile(i: number): void {
+    if (!this.styleSlot) return;
     const p = this.styleModel().trays[this.styleSlot][i];
-    if (p) (p.earned ? this.equipStyle(p) : this.openStylePick(p));
+    if (p) (p.earned && !p.comingLater ? this.equipStyle(p) : this.openStylePick(p));
   }
+
 
   /**
    * P-MENU2-b: the Trophy Case. A belt ribbon, then shelves of cubbies (earned: wood card and
@@ -2149,6 +2185,11 @@ export class HomeScene extends Phaser.Scene {
     if (part === this.part) return;
     this.part = part;
     this.page = 0;
+    if (part === 'style') {
+      this.styleHelpUsed = false;
+      this.styleHelpLine = null;
+      this.styleTriggers = ['open'];
+    }
     this.renderPanel('tab');
   }
 

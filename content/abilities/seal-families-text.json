@@ -1,0 +1,93 @@
+{
+  "notes": "PB-06 (R-PROGRESSION-BETA, PR #407): kid words for the Seal families, seal ranks #1-15 and the three Strikes. Words only: no effect numbers, no game code. Family map is the plan's section 4.4 (the Programmer's file seal-families.json copies ids, names and text from here). Rank 'name' keeps the current names unchanged: the S4 table names in drafts/planning/S4-self-defense-powers.md (all are proposals; the name-clash list in G2B-02 stays a list of proposals). 'technique' is the self-defense number. 'oldSeal' is the placeholder Seal in abilities.json whose effect lands on that rank (plan 4.4). 'carries' are the two old Seals that ride on a rank (Steady Breath on the last Counter rank, Strong Block on the last Guard rank); both keep their current names. 'effectRef' only points at the S4 effect; amounts are placeholders until PB-09. 'status' marks a rank whose effect is not built yet. Kid wording: Great Counter (S4 still says Perfect Counter), capital STRIKE, DASH and COUNTER, no digits, one sentence under 80 characters. Seal text for #31-40 (Injured status) is elsewhere. Kata power lines wait on Jay (PB-11). ui.sealLocked is just the belt name: the school belt name already ends in Belt, so the code fills {belt} with the full name (for example Orange Belt) and adds no word after it.",
+  "families": [
+    {
+      "id": "escape",
+      "name": "Escape",
+      "text": "Slip out of the way, then answer back.",
+      "ranks": [
+        { "technique": 1, "name": "Off the Line", "text": "A Great Counter adds two quick punches.", "effectRef": "counterHits 2 x 0.3 (S4 #1)", "status": "new effect counterHits (PB-02)" },
+        { "technique": 2, "name": "Other Side", "text": "A Block fills your DASH right back up, so you can step away.", "oldSeal": "escape-step", "effectRef": "dashOnBlock (S4 #2)" },
+        { "technique": 15, "name": "Slip and Double", "text": "Great Counters add a third quick punch and give you a little more time.", "oldSeal": "sharp-eyes", "effectRef": "counterHits +1, counterWindow +1 tick (S4 #15)", "status": "waits on #1 (counterHits)" }
+      ]
+    },
+    {
+      "id": "advancing",
+      "name": "Advancing",
+      "text": "Step forward into the attacker and close the distance.",
+      "ranks": [
+        { "technique": 4, "name": "OPEN", "text": "A Great Counter pushes the attacker back and leaves them off-balance.", "effectRef": "counterPush 1.5 (S4 #4 OPEN)", "status": "built push, measured in PR #453; family row not in seal-families.json yet", "j27": "Name OPEN. Drive Back is retired. Family Advancing, not Escape. The live seal-families.json still needs this family. See familyMoves in J27-seal-renames.json." }
+      ]
+    },
+    {
+      "id": "counter",
+      "name": "Counter",
+      "text": "Make your Great Counters hit wider and harder.",
+      "ranks": [
+        { "technique": 3, "name": "Spin Back Fist", "text": "A Great Counter also knocks into enemies close by.", "oldSeal": "sweep", "effectRef": "rippleCounter 0.6 / 1.2 (S4 #3)" },
+        { "technique": 5, "name": "Spin Elbow", "text": "The spin of your Great Counter reaches farther and hits harder.", "effectRef": "rippleCounter +0.2 / +0.4 (S4 #5)" },
+        { "technique": 6, "name": "Arm Wrap", "text": "A Great Counter keeps the attacker trapped a little longer.", "oldSeal": "off-balance", "effectRef": "staggerTicks 10 (S4 #6)" },
+        { "technique": 7, "name": "Palm Heel", "text": "Your Great Counter hits a bit harder.", "oldSeal": "throw", "effectRef": "counterStrength (S4 #7)" },
+        {
+          "technique": 10, "name": "Grab and Strike", "text": "Enemies who are off-balance or trapped take extra damage.", "oldSeal": "follow-through", "effectRef": "staggerBonus 0.15 (S4 #10)",
+          "carries": { "oldSeal": "steady-breath", "name": "Steady Breath", "text": "Each Great Counter gives you back a little Health.", "effectRef": "healOnPerfect (amount is a placeholder until PB-09)" }
+        }
+      ]
+    },
+    {
+      "id": "guard",
+      "name": "Guard",
+      "text": "Make your Blocks do more than block.",
+      "ranks": [
+        { "technique": 8, "name": "Block and Strike", "text": "Blocks bounce some of the hit back at the attacker.", "oldSeal": "create-distance", "effectRef": "blockReflect 0.2 (S4 #8)" },
+        {
+          "technique": 9, "name": "High Block Strike", "text": "Blocks bounce back even more and leave the attacker off-balance.", "effectRef": "blockReflect +0.15, reflectStaggers (S4 #9)", "status": "new flag reflectStaggers (PB-02)",
+          "carries": { "oldSeal": "strong-block", "name": "Strong Block", "text": "Your Blocks take a little less damage.", "effectRef": "blockCut (amount is a placeholder until PB-09)" }
+        }
+      ]
+    },
+    {
+      "id": "disarm",
+      "name": "Disarm",
+      "text": "Make an attacker's next swing weaker.",
+      "ranks": [
+        { "technique": 13, "name": "Kick the Weapon", "text": "A Great Counter kicks the weapon aside, so their next hit is weaker.", "oldSeal": "disarm", "effectRef": "disarm 0.5 (S4 #13)" },
+        { "technique": 14, "name": "Kick and Spin", "text": "Your kick lasts longer: their next two hits are weaker.", "effectRef": "disarm + disarmAttacks 2 (S4 #14)", "status": "new effect disarmAttacks (PB-02)" }
+      ]
+    },
+    {
+      "id": "throw",
+      "name": "Throw",
+      "text": "Great Counters can tumble enemies to the ground.",
+      "ranks": [
+        { "technique": 11, "name": "Outside Reap", "text": "A Great Counter tumbles a brute or swarmer to the ground for a moment.", "effectRef": "counterThrow 30 ticks (S4 #11)", "status": "waits on R-G2B-04 (thrown state)" },
+        { "technique": 12, "name": "Reap and Finish", "text": "Enemies you tumble take extra damage while they are on the ground.", "effectRef": "counterThrow + downBonus 0.25 (S4 #12)", "status": "waits on R-G2B-04 (thrown state)" }
+      ]
+    },
+    {
+      "id": "lock",
+      "name": "Lock",
+      "text": "Locks are coming later, so keep training!",
+      "comingLater": "Coming later",
+      "ranks": []
+    }
+  ],
+  "rankLine": "{family} Seal, Rank {rank}: {name}",
+  "strikes": [
+    { "id": "spin-kick", "name": "Spin Kick", "combo": 1, "text": "Your starting STRIKE: one strong spin kick." },
+    { "id": "jumping-spins", "name": "Jumping Spins", "combo": 2, "text": "Jump and spin for a few quick kicks in a row." },
+    { "id": "butterfly-flow", "name": "Butterfly Flow", "combo": 3, "text": "A slower butterfly kick that lands extra hard." }
+  ],
+  "ui": {
+    "slots": { "strike": "Strike", "kata": "Kata", "seal": "Seal" },
+    "choose": { "strike": "Pick a Strike", "kata": "Pick a Kata power", "seal": "Pick a Seal" },
+    "emptySlots": {
+      "strike": "Spin Kick is ready. Earn more Strikes at the dojo!",
+      "kata": "Power coming soon",
+      "seal": "Pick a Seal to bring along."
+    },
+    "sealLocked": "{belt}",
+    "swapPrompt": "Swap with which one?",
+    "slotNote": "Your Seals now go in slots. We picked your first ones. Change them any time!"
+  }
+}
