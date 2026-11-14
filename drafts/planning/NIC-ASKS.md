@@ -31,7 +31,7 @@ How to read: **Must** = no launch without it (review L12). **Soon** = needed for
 | B2 | **"Ready to show Sensei" request endpoint** (one button for launch, no Missions) | Lets a kid flag a technique for review; only staff change records | core-design; review (Missions delayed) |
 | B3 | **Planned absences** (vacation, illness) in the feed | Pauses the Home Dojo mess so kids are not punished | decisions.md; progress.md |
 | B4 | **Stripes, accolades, streak weeks, approved home practice minutes, class goals** confirmed as fields DojoForge can send | Reward moments and Practice Heart | framework 14 |
-| B5 | **Multi-school**: the same feed works for any DojoForge school with its own belts and names | Selling to other dojos | framework section 9 / rule 5 |
+| B5 | **Multi-school**: the same feed works for any DojoForge school with its own belts and names | Selling to other dojos | framework 14, rule 5 |
 
 ## C. Later (after launch, only if still wanted)
 
