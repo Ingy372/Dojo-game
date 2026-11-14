@@ -26,3 +26,5 @@ Open questions (not guessed as final):
 1. PB-13 has not set the card size, the room size, or the layout.
 2. Is the empty spot always a circle, because Seals use the round PB-07 medallions, or does a Strike or a kata power need a different spot?
 3. Should the Programmer tint only the ring, or the whole card, when the student's rank changes?
+
+The review-sheet crop is fixed so the training pad shows in full, and PB-15 is on hold.

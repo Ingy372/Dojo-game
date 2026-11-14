@@ -77,7 +77,8 @@ def sheet():
     room = backdrop(360, 200)
     mat = prop_mat(140, 70)
     pad = prop_pad(42, 70)
-    W, H = 860, 520
+    # Tall enough that the mat and pad (pasted at y=460, 70 px tall) sit fully inside, with a margin.
+    W, H = 860, 580
     im = Image.new('RGB', (W, H), (28, 26, 24))
     d = ImageDraw.Draw(im)
     # empty frames on the left stand for 'none'
