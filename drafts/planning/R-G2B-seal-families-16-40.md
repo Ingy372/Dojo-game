@@ -1,6 +1,6 @@
 # R-G2B: Seal families and ranks for #1-40, with Lock and Break Free
 
-Written Nov 1, 2026 by the Researcher & Planner. Updated Nov 8, 2026 with Jay's answers (J21). A later ruling corrects #4: the real name is OPEN, and Advancing is the family, not the name. Docs only. Source of truth: `power-and-progression-redesign.md`. Technique names and what each technique is: `S4-self-defense-powers.md` (Jay approved the list Oct 24) plus Jay's Nov 8 answers below. Rows Jay answered on Nov 8 are decided. The other family and "recast" cells are still a **proposal**. Rule 5: the test bot sets the numbers, so no amount below is final. Where a Nov 8 answer changes when an old amount applies, the amount is left as written and marked **needs balance-check**. No new amount was picked.
+Written Nov 1, 2026 by the Researcher & Planner. Updated Nov 8, 2026 with Jay's answers (J21). A later ruling corrects #4: the real name is OPEN, and Advancing is the family, not the name. Updated Nov 11, 2026 with the J21-THROW-BAL measurement of #34, #38 and #40, after the thrown state landed in #457. Docs only. Source of truth: `power-and-progression-redesign.md`. Technique names and what each technique is: `S4-self-defense-powers.md` (Jay approved the list Oct 24) plus Jay's Nov 8 answers below. Rows Jay answered on Nov 8 are decided. The other family and "recast" cells are still a **proposal**. Rule 5: the test bot sets the numbers, so no amount below is final. Where a Nov 8 answer changes when an old amount applies, the amount is left as written and marked **needs balance-check**. No new amount was picked.
 
 **In plain words.** Every self-defense technique becomes a rank of one of seven Seal families, named by the technique. A kid picks Seals into 2-4 slots (2 at White and Yellow, 3 at Orange, Green and Blue, 4 from Red). Only three things are truly new in the game: **Throw**, **Lock** and **Break Free**. Everything else reuses something already built. This note gives all 40 a family and a rank, says which are already built, and writes down the Lock and Break Free rules so they can be built once.
 
@@ -11,7 +11,7 @@ These win where they disagree with the Nov 1 proposal.
 1. **#4's real name is OPEN. Advancing is the family, not the name.** OPEN is not in the Escape family. The old game name Drive Back is retired. In class the move steps you forward into the attacker to close the distance. In the game it still pushes one attacker back 1.5 tiles. That distance was measured in PR #453 and stays. Advancing's only confirmed member so far is #4 OPEN. The Programmer adds this family to `content/abilities/seal-families.json`. This note does not edit that file. See "Advancing family" below.
 2. **#25 Escape from Behind is a general escape** (team call). The built effect is a Block refilling Dash. It measured PE 0. No amount was added.
 3. **#16 is a quick two-hit follow-up after a Great Counter, not a heal.** In class it is a very quick hammer fist low, then a back fist high. Game text says "quick low hammer fist, then a high back fist." It does not say groin or face. Why: the real move is two fast strikes in a row, so the seal adds a hit after the counter. It uses the same hook as the kata kick: one extra hit, strength 0.3. The same strength is used on Guided, Standard, and Challenge. A Strike-button extra hit at 0.3 did not fit, so this is not that. Names are in `drafts/content/abilities/J27-audit.md`.
-4. **Each seal works alone** (team call). No seal needs another seal equipped. #26's block cut, measured on its own, is 0.02. #37 adds no tick. #34, #38, and #40 stay stand-alone, and they were not measured because a thrown state is not in the fight rules.
+4. **Each seal works alone** (team call). No seal needs another seal equipped. #26's block cut, measured on its own, is 0.02. #37 adds no tick. #34, #38, and #40 stay stand-alone. They have now been measured on the live thrown state (J21-THROW-BAL, below). The written +15 ticks and a second +25% down bonus are not the active recommendation.
 5. **Old placeholder powers:** the team lean in Conflict 6 is applied. Steady Breath does **not** go on #16, because #16 is the extra hit. It **shares #10** (see below).
 6. **#37 Steady Hold moves to the Counter family. Yes.** It is Counter rank 10. The +1 tick is removed. With Steady Hold equipped, the counter window keeps the gold "!" and the gold COUNTER flash the game already draws, and the existing guard swish plays once when that window opens. No fight number changes. It measured 0 PE on every belt.
 7. **#19 Wrist Lock moves to Disarm.** Why: the effect that is built is `disarm` at a full cut for one attack (the fight rules cap a disarm at 0.9). It does not hold the enemy. A Lock rank is a hold. Putting a disarm on the Lock seal would make Lock disarm, and would leave the Disarm seal without this rank. So it is Disarm rank 3, between Kick and Spin and X-Block Lock.
@@ -87,13 +87,13 @@ Names, belts and S4 effects are copied from `S4-self-defense-powers.md` (not fro
 | 31 | Red/Black | Arm Bar Release | Lock | 3 | Locks +10 ticks. Lock end: push 1 tile and off-balance (new `lockRelease`) | Lock end: push and off-balance. No extra ticks (ceiling) | Small (Lock) |
 | 32 | Red/Black | Slide to the Wrist | Lock | 4 | Locked enemies take 15% more (`staggerBonus`, new condition) | same | Small (Lock) |
 | 33 | Red/Black | Party Flex | Lock | 5 | Each lock gives +5 Focus (new `lockFocus`) | same (twist) | Small (Lock) |
-| 34 | Red/Black | Lock and Drop | Throw | 4 | When a lock ends, enemy is thrown instead, down 30 ticks | Works alone. Thrown enemies stay down longer. No tick count was set, and a thrown state is not in the fight rules, so this was not measured. | Not measured |
+| 34 | Red/Black | Lock and Drop | Throw | 4 | When a lock ends, enemy is thrown instead, down 30 ticks | Works alone. The written stand-alone amount was +15 ticks down. Measured on the live thrown state: 45 ticks is package 5.00, and 5.75 with #12's 0.25, which fails the mid-enemy 5-hit ceiling. +15 is not the active recommendation. Real name OPEN (J27). | Measured. +15 not recommended |
 | 35 | Red/Black | Catch the Hand | Lock | 6 | A Block locks a quick attacker (wind-up 12 or less) 10 ticks (new `blockLock`) | same | Small (Lock) |
 | 36 | Brown | Wide Release | Lock | 7 | Release pushes +0.5 tile, bumped enemies knock others (new flag) | same | Small (Lock) |
 | 37 | Brown | Steady Hold | Counter | 10 | While holding a lock, Counter window +1 tick (`counterWindow`) | Counter family. No +1 tick. The cue is the gold "!" and COUNTER flash already in the game, plus the existing guard swish once when the window opens. Measured 0 PE. | Cue only. 0 PE |
-| 38 | Brown | Lock to Takedown | Throw | 5 | Thrown stays down +15 ticks, lock throws work on shields and elites | Works alone. The +15 ticks stay written. A thrown state is not in the fight rules, so this was not measured. | Not measured |
+| 38 | Brown | Lock to Takedown | Throw | 5 | Thrown stays down +15 ticks, lock throws work on shields and elites | Works alone. The written +15 ticks use the same live hook as #34 (counterThrow takes the longer time, Math.max, so #34 and #38 do not add to 60). Measured: same mid-ceiling fail as #34. The 'throws work on shields and elites' clause has no live hook (`throwAll` is not in the fight rules; `canThrow` still refuses elites). Real name OPEN (J27). | Measured. +15 not recommended |
 | 39 | Brown | Release and Go | Lock | 8 | Release: enemies within 1.5 tiles off-balance, Dash refilled | same | Yes (built parts) |
-| 40 | Brown | Master Hold | Throw | 6 | Locks +10 ticks, lock-thrown enemies take 25% more (`downBonus`) | Works alone. The 25% stays written. A thrown state is not in the fight rules, so this was not measured. | Not measured |
+| 40 | Brown | Master Hold | Throw | 6 | Locks +10 ticks, lock-thrown enemies take 25% more (`downBonus`) | Works alone. The written amount is the 25% down bonus, not the old +10 lock ticks. Measured: 0.25 alone does nothing unless a throw lands (PE 0). Stacked with live #12 it becomes 0.50, package 5.00 at 30 ticks (on the mid minimum) and 6.50 with the written +15. A second 0.25 is not the active recommendation. Real name OPEN (J27). | Measured. Second 0.25 not recommended |
 
 **Count by family:** Counter 10, Lock 8, Escape 5, Throw 6, Disarm 6, Guard 4, Advancing 1 (total 40). #4 OPEN is Advancing rank 1, the only member so far. #37 Steady Hold is Counter rank 10. #19 Wrist Lock is Disarm rank 3. #39 Release and Go is Lock rank 8. Counter ranks in order: #1, #3, #5, #6, #7, #10, #15, #16, #20, #37. Escape ranks in order: #2, #18, #25, #29, #30. Disarm ranks in order: #13, #14, #19, #21, #22, #24. Lock ranks in order: #17, #28, #31, #32, #33, #35, #36, #39.
 **The beta (#1-15):** Counter 7 (#1, 3, 5, 6, 7, 10, 15), Guard 2 (#8, 9), Escape 1 (#2 Other Side), Advancing 1 (#4 OPEN), Disarm 2 (#13, 14), Throw 2 (#11, 12). **No Lock until Green (#17)**, as the redesign says, and Break Free arrives at Red (#29). #37 is Brown, so the beta counts do not change.
@@ -106,7 +106,7 @@ Names, belts and S4 effects are copied from `S4-self-defense-powers.md` (not fro
 **Conflict 2. Pinned and Injured are cut until after launch (redesign).** S4 had Pinned in #22 and Injured in #31-40. The map has neither. #22 Lock and Pin keeps its name and gets a bigger disarm.
 **Conflict 3. Decided (team call, Nov 8).** #25 Escape from Behind is a **general escape**. Blocks or dashes create space and refill Dash, from any side. The game does not need a new "attack came from behind" check, so `rearCounter` is not the effect. No new amount was picked. **needs balance-check.**
 **Conflict 4. Decided (Jay, Nov 8).** #16 stays a Counter rank, and it is one extra hit after a Great Counter, strength 0.3, the same hook as the kata kick. It is not a heal. Why: in class it is a very quick hammer fist low, then a back fist high, so the seal adds a hit. A heal would not look like that move. Game text: "quick low hammer fist, then a high back fist." No groin. No face. The same 0.3 is used on every difficulty. It was measured and it fits. The earlier lean (put the old Steady Breath heal here) is not the effect. Names are in `drafts/content/abilities/J27-audit.md`.
-**Conflict 5. Decided (team call, Nov 8).** Every seal works on its own. No seal needs another seal equipped. #26, #34, #37, #38 and #40 use the stand-alone recast in the table. #26's block cut is 0.02. Steady Hold (#37) has no tick. It moved to Counter as a guard-swish cue at 0 PE: the gold "!" and the gold COUNTER flash the game already draws, plus the existing guard swish once when the window opens. #34 keeps +15 ticks down, #38 keeps +15 ticks down, and #40 keeps +25% damage. Those three were not measured, because a thrown state is not in the fight rules.
+**Conflict 5. Decided (team call, Nov 8).** Every seal works on its own. No seal needs another seal equipped. #26, #34, #37, #38 and #40 use the stand-alone recast in the table. #26's block cut is 0.02. Steady Hold (#37) has no tick. It moved to Counter as a guard-swish cue at 0 PE: the gold "!" and the gold COUNTER flash the game already draws, plus the existing guard swish once when the window opens. The written stand-alone amounts for the other three were +15 ticks down (#34 and #38) and +25% damage (#40). Those three have now been measured on the live thrown state (J21-THROW-BAL). The written +15 ticks and a second +25% on top of live #12 are not the active recommendation. See the J21-THROW-BAL section.
 **Conflict 6. Applied Nov 8 (team lean), with one choice noted.** The 10 placeholder Seals on main (Off-Balance, Escape Step, Sweep, Steady Breath, Strong Block, Sharp Eyes, Create Distance, Disarm, Throw, Follow Through; `abilities.json`) each become a rank effect. None are thrown away.
 
 | Old power | Lands on | What I chose |
@@ -207,7 +207,7 @@ Pooled PE for the written amounts. G = Guided, S = Standard, C = Challenge.
 
 **Steady Hold. The +1 tick is removed.** In its place the rank is a cue with no power: the gold "!" and the gold COUNTER flash the game already draws, plus the existing guard swish once when the window opens. Reduced motion keeps the still gold outline. An empty effect list, which is all this cue is in the fight rules, measured 0 PE on every bot, every difficulty, and every belt.
 
-**#34, #38, and #40 were not measured.** "Stay down longer," "+15 ticks down," and "+25% while down" need a thrown state. That state is not in the fight rules, so there was no real hook to run. Those amounts were not changed.
+**#34, #38, and #40 have now been measured** (J21-THROW-BAL, below). The earlier note that they could not be measured until a thrown state existed is history. The written amounts were not kept as the active recommendation.
 
 Per-belt PE, Standard, for the written amounts. Belts 1 to 10.
 
@@ -266,3 +266,134 @@ Guided, belts 1 to 10, for #16. A star on the pooled row means the ruler barely 
 | Steady Hold cue | all four | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 Newer and careful Guided are starred and were not used to pick a size. Careful Guided belt 3 reads 32.9 with a ruler that moved the wrong way (health-lost change −0.3), so it is not a size. The single-belt scores over 12 on Standard for newer and careful are the same kind of row: the bot already wins every run and the ruler moves about 1 health point or less.
+
+
+## J21-THROW-BAL (measured Nov 11, 2026)
+
+### Delivery Note
+
+| | |
+|---|---|
+| **ITEM** | J21-THROW-BAL (current `bot-manager` board: measure #34, #38 and #40 once the thrown state is in the fight rules; done when this balance table is updated) |
+| **WHAT** | The thrown state is in the live fight rules (`#457` merged, commit `bbd00271`, present on `main` `1b07659f`). #34, #38 and #40 were measured on those live hooks, with the same PE harness as the Nov 8 check (kid, newer, careful, masher; Guided and Standard belts 1–10; Challenge belts 4–10) and with the section G package formula from the real cooldown and damage rules. |
+| **WHY** | The Nov 8 note could not measure "stay down longer," "+15 ticks down," or "+25% while down" because a thrown state was not in the fight rules. That blocker is gone. |
+| **DECIDE** | The written +15 ticks down for #34 and #38, and a second +25% down bonus for #40 on top of live #12, are not the active recommendation. They fail the section G mid-enemy 5-hit ceiling once they stack with the live Throw ranks. No replacement tick or percent is picked here (that would be a new, unmeasured number). Live #11 (down 30) and #12 (+25%) still pass and stay. |
+| **NEXT** | The Programmer should not build the written +15 or a second +25%. If a passing stand-alone effect is wanted, a later shrink pass must measure it. #38's "throws work on shields and elites" clause still has no live hook. Real names for #34, #38 and #40 stay OPEN in `drafts/content/abilities/J27-audit.md`. This package is unpublished. |
+
+### What was verified
+
+- **#457 is merged** into `main` (GitHub: merged 2026-11-09, 3:27 PM America/New_York; merge commit `bbd00271`). The current `bot-manager` board still lists J21-THROW-BAL as waiting on that merge; the merge itself is confirmed on `main`.
+- **Thrown state is in the fight rules**, not assumed. Live hooks, checked in this checkout: `counterThrow` (ticks, `Math.max` when stacked), `downBonus` (adds), `canThrow` (only `throwable`, never a Guardian or elite), tumble 1 tile, down time from `counterThrowTicks`. Content marks only `brute` and `swarmer` throwable. Tests in `packages/sim/test/g2b-04-throw.test.ts` lock #11 at 30 ticks and #12 at +25%.
+- **Lock is still not live** (Throw is `live: true`; Lock stays `live: false` until it has a first rank). The stand-alone recast does not need a lock. The old S4 "when a lock ends, the enemy is thrown" hook was not built, and was not invented here.
+- **#38's shield/elite clause is still unmeasurable as a flag.** There is no `throwAll` (or similar) in `effects.ts`, and `canThrow` still refuses elites. Only the +15 ticks amount could be measured.
+- Names: J27 leaves #34, #38 and #40 **OPEN**. This note does not invent a real technique name and does not name body targets.
+- **Analytical Challenge HP/Power model.** The section G package sizes (basic-hit units) and the PE tables used live hooks and the live fight rules. The accompanying analytical CSV's Challenge *share / hits-to-beat / KO* cells were computed with the dropped D5 ×1.5 Health and Power multiplier. That is a historical model, not the live Challenge baseline (`packages/sim/src/config.ts` `DIFFICULTY.challenge.enemyPowerScale` is 1; Health is not multiplied by difficulty). Those Challenge CSV numbers were not re-run or rewritten, and they are not a validation of live Challenge. The current `bot-manager` board records Q-CHALLENGE as done (Oct 27): patterns instead of bigger numbers; the G2B-18 Manager note (Nov 1) says the Manager dropped D5 per that call. This note cites those Manager-recorded sources; it does not assert an independently verified Jay quote.
+
+### Package check (live formulas, section G)
+
+A package is one Perfect Counter hit (strength 2) plus `floor(ticks / 12)` basic hits while the enemy is down. The throw hit does not get `downBonus`; the free basic hits do. Cooldown 12 and strength 2 are from `packages/sim/src/config.ts`. This matches the G2B-04 / section G table (30 ticks = 4.00; 30 ticks + 0.25 = 4.50).
+
+| Setup | Ticks | downBonus | Free basics | Package | vs mid minimum 5 | vs baseline 3.00 |
+|---|---|---|---|---|---|---|
+| Live #11 | 30 | 0.00 | 2 | 4.00 | PASS (under 5) | 1.33x |
+| Live #11 + #12 | 30 | 0.25 | 2 | 4.50 | PASS (under 5) | 1.50x |
+| #34 or #38 written +15, stand-alone throw (45) | 45 | 0.00 | 3 | 5.00 | EDGE (equals 5) | 1.67x |
+| #40 written 0.25 with live #11 (same as #12) | 30 | 0.25 | 2 | 4.50 | PASS (under 5) | 1.50x |
+| #12 + #40 stacked (0.25+0.25) with #11 | 30 | 0.50 | 2 | 5.00 | EDGE (equals 5) | 1.67x |
+| Written +15 with live #12 | 45 | 0.25 | 3 | 5.75 | FAIL (over 5) | 1.92x |
+| Full Throw stack #11 + #12 + +15 + second 0.25 | 45 | 0.50 | 3 | 6.50 | FAIL (over 5) | 2.17x |
+
+Live stacking: `counterThrow` keeps the longer time, so two written +15 amounts both become 45 ticks, not 60. `downBonus` adds, so #12 and #40 together are 0.50 if both are equipped. The mid-enemy 5-hit floor is the section G ceiling (a mid should take 5–10 hits). It matters as soon as a throw can land on a mid (planned #27, and #38's unbuilt shield/elite clause). Guardians stay unthrowable.
+
+Because basic hits land every 12 ticks, any down time from 36 to 47 ticks already has 3 free hits. The written +15 (45 ticks) crosses that line. Only +0 to +5 ticks would stay at 2 free hits. That is a fact from the live cooldown, not a new recommended amount.
+
+### Live throwables (brute and swarmer)
+
+Share of HP from one throw package, Standard, typical Artist (the J21 PE harness also uses typical-artist stats for every playstyle bot). Guided does not change enemy Health or player Power (`enemyPowerScale` 0.75 only changes enemy damage). Challenge *share / hits-to-beat / KO* cells in the analytical CSV used the dropped D5 ×1.5 Health and Power multiplier from belt 4. Those rows are a historical model, not a live Challenge baseline check (live Power ×1, Health unscaled). The numbers were not re-run or rewritten. Package sizes in basic-hit units do not use that multiplier.
+
+On a **brute** (heavy, band 10–20), the package stays under the band minimum of 10 in all 81 cells when measured in basic-hit units (4.00–6.50 is under 10). That package-unit check does not depend on the Challenge Health model. The “about 55–59% of brute Health (11–12 hits to beat)” figures are from the Standard / Guided, Health-unscaled rows (typical Artist). Challenge HP-share rows in the CSV are historical D5 ×1.5 and are not cited as live Challenge evidence. On a **swarmer** (small, band 2–4), a live throw package of 4.00 or more already beats it in one Perfect Counter on the Standard / Guided rows. Section G already recorded that pattern for small enemies; it is not used to shrink shipped #11.
+
+The mid-enemy ceiling, not the brute band, is why the written +15 and a second +25% are not recommended.
+
+### PE check (same harness as the Nov 8 table)
+
+Whole runs on the real fight rules (`startRun`, `createRunWorld`, the balance bot), 20 seeds from seed 1000, typical-artist stats, bots kid, newer, careful and masher. Script: `drafts/planning/j21-throw-bal-sim.ts`. Raw rows: `drafts/planning/j21-throw-bal-out/`. Limits and starring rule are the same as above (PE 12, noise about ±5, a star means the +60% Power ruler moved health-lost by less than 1 point on every belt). Because this harness uses the live sim, Challenge PE is the live baseline (Power ×1, Health unscaled, plus Challenge windows and patterns). It is not the analytical CSV's historical D5 ×1.5 Health/Power model, and the PE tables were not re-run in this source correction.
+
+Pooled PE. G = Guided, S = Standard, C = Challenge. `throw30` is live #11. `throw45` is the written +15 on a stand-alone throw. `down25` is the written #40 amount with no throw hook. `throw30+down50` is live #11 plus #12 and #40 stacked.
+
+| Effect | Bot | G | S | C |
+|---|---|---|---|---|
+| throw30 (live #11) | kid | 0.8 | 1 | 0 |
+| | newer | 0* | 0 | 0 |
+| | careful | 13.9* | 1.8 | 20 |
+| | masher | 0 | 0 | 0 |
+| throw45 (written +15) | kid | 0 | 3.7 | 4.7 |
+| | newer | 0* | 0 | 0 |
+| | careful | 13.8* | 5.6 | 27.7 |
+| | masher | 0 | 0 | 0 |
+| down25 alone (no throw) | kid | 0 | 0 | 0 |
+| | newer | 0* | 0 | 0 |
+| | careful | 0* | 0 | 0 |
+| | masher | 0 | 0 | 0 |
+| throw30+down25 (live #11+#12) | kid | 1.5 | 1.2 | 7.8 |
+| | newer | 0* | 0 | 0 |
+| | careful | 14.5* | 3.9 | 12.3 |
+| | masher | 0 | 0 | 0 |
+| throw30+down50 (#40 stacked with #12) | kid | 1.9 | 1.8 | 8.4 |
+| | newer | 0* | 0 | 0 |
+| | careful | 0.8* | 3.3 | 12.4 |
+| | masher | 0 | 0 | 0 |
+| throw45+down25 | kid | 0.8 | 5.3 | 5 |
+| | newer | 0* | 0 | 0 |
+| | careful | 13.9* | 3.8 | 12.8 |
+| | masher | 0 | 0 | 0 |
+| throw45+down50 (full written stack) | kid | 1.1 | 7.5 | 9.9 |
+| | newer | 0* | 0 | 0 |
+| | careful | 0.6* | 2.3 | 12.4 |
+| | masher | 0 | 0 | 0 |
+
+**How to read it.** Masher is 0 on every throw row, because that bot never makes a Great Counter, so a throw never starts. `down25` alone is 0 for every bot, because `downBonus` only applies while an enemy is thrown. Newer already wins every run, so the throw rows barely move. Careful Guided is starred (the ruler moved less than 1 health point on every belt) and is not used to size. Careful Challenge reads over 12 on several throw rows (live #11 is already 20; written +15 is 27.7) while that bot already wins every run; the ruler moved 2.5–2.9 health points, so it is not starred by the <1 rule. Those rows are the noisy kind the Nov 8 note already refused to use for sizing when the bot wins every run. On Standard, every unstarred pooled score for the written amounts is under PE 12 (highest 7.5, kid, full stack).
+
+The package ceiling, not PE 12, is what fails the written +15 and a second +25%.
+
+Per-belt PE, Standard, belts 1 to 10.
+
+| Effect | Bot | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| throw45 (written +15) | kid | 0 | 6.3 | 0.7 | 0.4 | 12.6 | 9.3 | 7.6 | 3.6 | 4.7 | 3.8 |
+| | newer | 0 | 0 | 0 | 0 | 0 | 0 | 4.3 | 12.3 | 4.3 | 1.8 |
+| | careful | 0 | 5.8 | 0 | 3.9 | 6.3 | 6.2 | 8.3 | 8.3 | 8.4 | 8.3 |
+| | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| down25 alone | all four | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| throw30+down50 (#40 with #12) | kid | 0 | 3.1 | 0.9 | 2.3 | 1.1 | 8.9 | 5.6 | 2 | 1.3 | 0 |
+| | newer | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | careful | 0 | 6.3 | 0 | 7.6 | 1.2 | 0.7 | 6.6 | 6.7 | 6.7 | 6.7 |
+| | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| throw45+down50 (full written stack) | kid | 0 | 8.1 | 2.1 | 2.1 | 11.9 | 11.6 | 8.3 | 7.1 | 6.9 | 7.4 |
+| | newer | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | careful | 0 | 6.3 | 0 | 7.6 | 0.1 | 0 | 5.2 | 5.3 | 5.3 | 4.6 |
+| | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+Challenge, belts 4 to 10.
+
+| Effect | Bot | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|---|---|---|---|---|---|---|---|---|
+| throw45 (written +15) | kid | 0 | 12.4 | 5.5 | 0 | 0 | 4.5 | 4.4 |
+| | newer | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | careful | 16.2 | 0.9 | 4.7 | 30.9 | 29.8 | 30.6 | 29.4 |
+| | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| down25 alone | all four | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| throw30+down50 (#40 with #12) | kid | 13.6 | 6.1 | 0 | 13.4 | 5.5 | 10.5 | 17.7 |
+| | newer | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | careful | 17 | 8.1 | 9.2 | 12.6 | 29.3 | 12.6 | 28.8 |
+| | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| throw45+down50 (full written stack) | kid | 0.6 | 12.4 | 5.5 | 7.5 | 12.3 | 21 | 17.4 |
+| | newer | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | careful | 16.4 | 8.2 | 12 | 12.6 | 15 | 12.6 | 12.2 |
+| | masher | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+#34 is learned at Red/Black (belt 7) and #38 and #40 at Brown (belt 8). Those belts are included in the tables. Single-belt scores a little over 12 on Standard (kid throw45 belt 5 is 12.6; newer throw45 belt 8 is 12.3) sit inside the ±5 noise, or on rows where the bot already wins, the same rule as the Nov 8 #16 check.
+
+Card, pair and route PE ceilings were not used to accept the written amounts, because those amounts already fail the package ceiling. They were not invented or estimated.
+
+The old S4 "+10 lock ticks" on #40 is not the stand-alone recast and is not a recommended amount. Adding lock ticks was already dropped for later Lock ranks in section G, and Lock is still not live.

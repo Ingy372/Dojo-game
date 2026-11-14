@@ -1,0 +1,37 @@
+{
+  "notes": "OV-C2 (Nov 14, 2026, America/New_York). Words for Blessing-in-runs (OV-B5 / review 8.6). Drop-in for the Programmer: replace every clock or hours line. A class adds 5 runs; the Blessing holds at most 10; nothing is taken away for missing class. Kid lines (audience: the student) are 8 words or fewer. No hours, no countdown, no pressure. The name Dojo Blessing is the existing name; nothing new was invented. Check: python3 drafts/content/tools/check-ov-c2-words.py.",
+  "rules": {
+    "runsPerClass": 5,
+    "maxRuns": 10,
+    "noHours": true
+  },
+  "kid": {
+    "title": "Dojo Blessing!",
+    "celebration": "Dojo Blessing for your next runs!",
+    "home": "Blessing on for {n} more runs.",
+    "homeOne": "Blessing on for one more run.",
+    "afterClass": "Class time helps your next five runs!",
+    "full": "Blessing ready for ten Tower runs."
+  },
+  "replaces": [
+    {
+      "file": "apps/client/src/ui/Celebrations.ts",
+      "current": "Dojo Blessing for 48 hours",
+      "use": "kid.celebration"
+    },
+    {
+      "file": "apps/client/src/scenes/HomeScene.ts",
+      "current": "\u2726 Blessing +{xp}% XP \u00b7 {hours}h left",
+      "use": "kid.home / kid.homeOne"
+    },
+    {
+      "file": "apps/client/src/ui/TestingPanel.ts",
+      "current": "Dojo Blessing: on ({hours}h left)",
+      "use": "staff.status"
+    }
+  ],
+  "staff": {
+    "status": "Dojo Blessing: on ({n} runs)",
+    "statusOff": "Dojo Blessing: off"
+  }
+}

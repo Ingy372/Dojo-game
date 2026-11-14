@@ -774,7 +774,7 @@ Jay's balance calls (D1–D5, drafts/planning/balance-research.md), recorded her
 - **D1:** enemies are scaled to the *expected* Artist for each tier, not the actual player.
 - **D2:** the target bands are OK as written (Swarmer 2–4 hits, mid 5–10, Brute 10–20, Floor-keeper 40–80; enemy hits to KO the player: 12 / 8 / 5 / 5 at least).
 - **D3:** XP steps are softened so the last step is ≤ 10 runs, using weights (k+11) (R-BAL-5).
-- **D4:** Endless stays +3% per floor with no cap (R-BAL-6 dropped).
+- **D4:** Endless stays +3% per floor with no cap (R-BAL-6 dropped). **Manager-requested replacement (unpublished):** see the 2026-11-10 G2B-31 entry at the bottom of this log. Manager reports Jay approved on Nov 10: “Yes, cap endless at floor 13 like the Tester suggests.”
 - **D5:** Challenge is ×1.5 enemy Health and Power.
 
 Live enemy changes (maxHealth / power / guard; nothing else changed):
@@ -1749,3 +1749,29 @@ Children pick the Strikes, Seals and Kata they have earned from the Fighting Sty
 - **Switch contrast (2026-11-11).** The selected Fighting Style half was white on gold `#a8703f`, measured 4.15:1. That half now uses the wood frame brown. Glyph pixels read `#ffffff` on `#885838`, 6.00:1, at 844×390 and 667×375. The gold outline still marks the selected half. Got it uses the same brown, so its white label clears 4.5 as well. Cancel and Take out keep a 72×44 tap target at both sizes. The painted face is shorter than that target.
 - **Slot note (2026-11-11).** A row of its own for the one-time note was drawn past the wood on a phone (content bounds 7 px outside the frame at 667). The note now shares the line under the cards, so it stays in the panel. While it is up, the first help line waits and is not marked seen. Crowding is the painted share of the inner board, not the box around the outermost objects (that box counted the empty wood and read 85.9% / 88.6%). Painted share with the note up is 41.6% at 844 and 48.9% at 667. The frame-to-content gap is 12 px.
 - **QA fixes (2026-11-14).** The Testing button moved beside Practice room (96 wide, 44 tall; Practice room keeps the rest of the row). Its own row had squeezed the next-step card to about 11 pt at 375 tall. A beta build draws no Testing button, and Practice room keeps the full row there. The Testing screen gets an "Old save (show slot note again)" row. It sets `loadoutV2` and `strikeSeeded` back to false, clears the Fighting Style seen and help lists (an old save has none), saves, and calls the same `seedLoadout` the game runs at start. The note shows only when the student has Seals (Orange). It is a row inside the fixture screen, so a beta build cannot reach it. Picks already in the loadout are kept, as the real seed keeps them.
+## G2B-31: Manager-requested replacement of D4's Endless no-cap (2026-11-10, unpublished)
+
+Manager reports Jay approved on Nov 10: “Yes, cap endless at floor 13 like the Tester suggests.” This is the Manager-requested decision text for replacing D4. Prepared for Manager review and publication; unpublished. This entry does not assert independently verified Jay approval. The Manager owns recording the D4 replacement. There is no need to ask Jay again.
+
+- **Replacement rule:** Guided and Standard Endless still rise at +3% per floor, then the scale stops at floor 13 (×1.4685, written as ×1.47). Challenge Endless stays at the existing Summit baseline, with no further +3% floor scaling. Floors can continue past 13; only the scale is capped. The active Challenge baseline is not ×1.5.
+- **Replaces:** D4 (R-BAL-9c, 2026-10-24), which kept +3% per floor with no cap and dropped the R-BAL-6 soft cap. The no-cap call is no longer the active recommendation in this entry. The Manager owns recording this replacement.
+- **Conflict with D5:** the R-BAL-9c log still records D5 as Challenge ×1.5 enemy Health and Power (2026-10-24). The current `bot-manager` board records Q-CHALLENGE as done (Oct 27): new attack patterns instead of bigger numbers, plan #363 / #369. The same board's G2B-18 Manager note (Nov 1) says the Manager dropped D5 (Challenge ×1.5), per that Oct 27 call. `drafts/planning/R-CHALLENGE-PATTERNS.md` records the same plan. This entry cites those Manager-recorded sources; it does not assert an independently verified Jay quote. Live runtime, read-only on `main` `1b07659f`: `DIFFICULTY.challenge.enemyPowerScale` is 1; Health is not multiplied by difficulty.
+- **Why:** Guided and Standard pass every checked cell through floor 13 and fail at 14. Challenge Endless is frozen at the existing Summit baseline so it does not stack +3% per floor. The older “Challenge already on the edge at floor 0” finding used the dropped ×1.5 multiplier and is not a check of the live Challenge baseline.
+- **Evidence:** Guided and Standard rows in the table below are the current floor-13 cap evidence. Challenge rows are a historical check that used D5 ×1.5; they are not a pass/fail result for the live Challenge baseline, and this entry does not claim that every current Challenge tier passes. Boss beat = Lost Lightbearer hits-to-beat; swarm KO = Storm Wisp hits-to-KO the player. Bands: boss 40–80; swarm KO at least 12.
+
+| Skill | Diff | Scale used | Boss beat | Swarm KO | Result |
+|---|---|---|---|---|---|
+| weak | Guided | ×1.4685 | 73 | 16 | **PASS** |
+| weak | Standard | ×1.4685 | 73 | 12 | **PASS** |
+| weak | Challenge | ×1.00 (historical D5 ×1.5) | 75 | 12 | historical only |
+| typical | Guided | ×1.4685 | 73 | 20 | **PASS** |
+| typical | Standard | ×1.4685 | 73 | 15 | **PASS** |
+| typical | Challenge | ×1.00 (historical D5 ×1.5) | 75 | 15 | historical only |
+| strong | Guided | ×1.4685 | 78 | 22 | **PASS** |
+| strong | Standard | ×1.4685 | 78 | 17 | **PASS** |
+| strong | Challenge | ×1.00 (historical D5 ×1.5) | 80 | 16 | historical only |
+
+The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a historical ×1.5 check only and are not a live-baseline result. Source note checkout `dc926cb5`. Guided/Standard artist, config and enemy inputs are unchanged on current main (`1b07659f`).
+- **Coverage and gaps:** Endless unlocks at Black belt, after launch (core-design §13), so only Black was checked. The three model students are playsOnly / typical / trainsMore (labeled weak / typical / strong in the note), on Guided, Standard and Challenge. The kid, newer, careful and masher playstyle bots were not run. The check is hits-to-beat and hits-to-KO only; there is no full-run win-rate sim (`playRun` is not modelled for Endless rooms). The note says the Guided/Standard cap search used the full Black cast; the printed table shows the binding pair (Lost Lightbearer, Storm Wisp). Live Challenge (Power ×1, Health unscaled, patterns) was not re-measured, so this entry does not claim that current Challenge tiers pass. The planning script `drafts/planning/r-g2b-balance-check.py` still hardcodes `CHALLENGE = 1.5`; that script was not edited in this correction. No new tuning numbers are introduced here.
+- **Not edited in this docs change:** `docs/work-board.md` (R-BAL-1, R-BAL-6), `docs/core-design.md` §12 ("no ceiling" / "each floor is about 3% stronger"), `drafts/content/enemies/bestiary-plan.md` and `.json`, and `drafts/planning/balance-research.md`, which still state the old no-cap wording. Update them when the Manager publishes the D4 replacement. This change does not edit game code or `docs/work-board.md`.
+- **After the Manager records this replacement:** Programmer applies `scale = min(1.03^f, 1.03^13)` on Guided/Standard. Challenge uses `scale = 1.0` at the existing Summit baseline, with no further floor scaling and no ×1.5.
