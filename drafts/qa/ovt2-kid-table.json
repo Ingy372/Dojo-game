@@ -1,0 +1,1993 @@
+{
+  "sha": "fecfdb60131ddb15f6adfd9c6e9a088fb4ffc2fe",
+  "seedList": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004,
+    1005,
+    1006,
+    1007,
+    1008,
+    1009,
+    1010,
+    1011,
+    1012,
+    1013,
+    1014,
+    1015,
+    1016,
+    1017,
+    1018,
+    1019
+  ],
+  "bot": "kid",
+  "skill": "novice",
+  "student": "ARTISTS.typical[tier-1]",
+  "belts": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "diffs": [
+    "guided",
+    "standard",
+    "challenge"
+  ],
+  "table": {
+    "guided": {
+      "1": {
+        "wins": 19,
+        "runs": 20,
+        "rate": 0.95,
+        "room1Kos": 0,
+        "eliteRooms": 0,
+        "eliteKinds": {},
+        "meanDamage": 234.148,
+        "meanHits": 8,
+        "meanRoomsCleared": 7.7,
+        "startRooms": {
+          "w-pillar-court": 4,
+          "w-bamboo-hall": 4,
+          "w-lantern-room": 5,
+          "w-brute-and-swarm": 4,
+          "w-training-yard": 3
+        },
+        "deathRooms": {
+          "w-narrow-bridge": 1
+        },
+        "allRooms": {
+          "w-pillar-court": 11,
+          "w-shield-wall": 7,
+          "w-narrow-bridge": 12,
+          "w-quiet-shrine": 4,
+          "w-lantern-room": 15,
+          "w-training-yard": 15,
+          "w-gauntlet": 3,
+          "w-keepers-hall": 19,
+          "w-bamboo-hall": 13,
+          "w-stone-garden": 10,
+          "w-shield-escort": 12,
+          "w-guarded-swarm": 10,
+          "w-twin-shields": 8,
+          "w-brute-and-swarm": 15,
+          "w-treasure-vault": 1
+        },
+        "lostSeedIndexes": [
+          6
+        ],
+        "lostSeeds": [
+          1006
+        ]
+      },
+      "2": {
+        "wins": 19,
+        "runs": 20,
+        "rate": 0.95,
+        "room1Kos": 0,
+        "eliteRooms": 0,
+        "eliteKinds": {},
+        "meanDamage": 373.004,
+        "meanHits": 7.45,
+        "meanRoomsCleared": 7.8,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "stone-garden": 1
+        },
+        "allRooms": {
+          "pillar-court": 12,
+          "shield-wall": 4,
+          "staff-and-shield": 8,
+          "brute-and-swarm": 13,
+          "quiet-shrine": 7,
+          "narrow-bridge": 12,
+          "bopper-yard": 11,
+          "keepers-hall": 19,
+          "bamboo-hall": 11,
+          "stone-garden": 8,
+          "training-yard": 10,
+          "twin-shields": 7,
+          "treasure-vault": 4,
+          "lantern-room": 10,
+          "shield-escort": 7,
+          "guarded-swarm": 10,
+          "gauntlet": 4
+        },
+        "lostSeedIndexes": [
+          11
+        ],
+        "lostSeeds": [
+          1011
+        ]
+      },
+      "3": {
+        "wins": 19,
+        "runs": 20,
+        "rate": 0.95,
+        "room1Kos": 0,
+        "eliteRooms": 0,
+        "eliteKinds": {},
+        "meanDamage": 508.4895,
+        "meanHits": 7.7,
+        "meanRoomsCleared": 7.85,
+        "startRooms": {
+          "oven-row": 7,
+          "ember-pantry": 13
+        },
+        "deathRooms": {
+          "pin-lanes": 1
+        },
+        "allRooms": {
+          "oven-row": 36,
+          "ember-pantry": 26,
+          "long-table-hall": 27,
+          "pin-lanes": 34,
+          "great-hearth": 19,
+          "supper-rush": 5,
+          "warm-hearth": 5,
+          "spice-cupboard": 6
+        },
+        "lostSeedIndexes": [
+          12
+        ],
+        "lostSeeds": [
+          1012
+        ]
+      },
+      "4": {
+        "wins": 18,
+        "runs": 20,
+        "rate": 0.9,
+        "room1Kos": 0,
+        "eliteRooms": 18,
+        "eliteKinds": {
+          "swift": 18
+        },
+        "meanDamage": 678.341,
+        "meanHits": 7.2,
+        "meanRoomsCleared": 7.45,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "gauntlet": 2
+        },
+        "allRooms": {
+          "pillar-court": 13,
+          "shield-wall": 2,
+          "staff-and-shield": 10,
+          "bamboo-hall": 13,
+          "lantern-room": 12,
+          "twin-shields": 7,
+          "stone-garden": 7,
+          "keepers-hall": 18,
+          "training-yard": 11,
+          "gauntlet": 3,
+          "treasure-vault": 8,
+          "shield-escort": 3,
+          "quiet-shrine": 6,
+          "bopper-yard": 12,
+          "brute-and-swarm": 11,
+          "guarded-swarm": 8,
+          "narrow-bridge": 7
+        },
+        "lostSeedIndexes": [
+          1,
+          6
+        ],
+        "lostSeeds": [
+          1001,
+          1006
+        ]
+      },
+      "5": {
+        "wins": 19,
+        "runs": 20,
+        "rate": 0.95,
+        "room1Kos": 0,
+        "eliteRooms": 18,
+        "eliteKinds": {
+          "swift": 18
+        },
+        "meanDamage": 898.0424999999999,
+        "meanHits": 9.15,
+        "meanRoomsCleared": 7.65,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "gauntlet": 1
+        },
+        "allRooms": {
+          "pillar-court": 11,
+          "shield-wall": 3,
+          "staff-and-shield": 11,
+          "training-yard": 13,
+          "twin-shields": 7,
+          "bopper-yard": 13,
+          "stone-garden": 10,
+          "keepers-hall": 19,
+          "bamboo-hall": 12,
+          "quiet-shrine": 8,
+          "shield-escort": 6,
+          "guarded-swarm": 7,
+          "lantern-room": 10,
+          "treasure-vault": 3,
+          "brute-and-swarm": 9,
+          "narrow-bridge": 8,
+          "gauntlet": 4
+        },
+        "lostSeedIndexes": [
+          6
+        ],
+        "lostSeeds": [
+          1006
+        ]
+      },
+      "6": {
+        "wins": 19,
+        "runs": 20,
+        "rate": 0.95,
+        "room1Kos": 0,
+        "eliteRooms": 18,
+        "eliteKinds": {
+          "swift": 18
+        },
+        "meanDamage": 1092.0815,
+        "meanHits": 9.15,
+        "meanRoomsCleared": 7.65,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "gauntlet": 1
+        },
+        "allRooms": {
+          "pillar-court": 10,
+          "shield-wall": 3,
+          "staff-and-shield": 10,
+          "training-yard": 13,
+          "twin-shields": 7,
+          "bopper-yard": 12,
+          "stone-garden": 10,
+          "keepers-hall": 19,
+          "bamboo-hall": 12,
+          "quiet-shrine": 9,
+          "narrow-bridge": 8,
+          "brute-and-swarm": 12,
+          "lantern-room": 12,
+          "treasure-vault": 3,
+          "shield-escort": 5,
+          "guarded-swarm": 5,
+          "gauntlet": 4
+        },
+        "lostSeedIndexes": [
+          6
+        ],
+        "lostSeeds": [
+          1006
+        ]
+      },
+      "7": {
+        "wins": 19,
+        "runs": 20,
+        "rate": 0.95,
+        "room1Kos": 0,
+        "eliteRooms": 22,
+        "eliteKinds": {
+          "swift": 22
+        },
+        "meanDamage": 1330.7305000000001,
+        "meanHits": 9.15,
+        "meanRoomsCleared": 7.65,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "gauntlet": 1
+        },
+        "allRooms": {
+          "pillar-court": 12,
+          "shield-wall": 3,
+          "staff-and-shield": 9,
+          "training-yard": 12,
+          "twin-shields": 8,
+          "bopper-yard": 12,
+          "stone-garden": 8,
+          "keepers-hall": 19,
+          "bamboo-hall": 13,
+          "quiet-shrine": 9,
+          "shield-escort": 7,
+          "guarded-swarm": 9,
+          "lantern-room": 10,
+          "narrow-bridge": 7,
+          "brute-and-swarm": 10,
+          "gauntlet": 4,
+          "treasure-vault": 2
+        },
+        "lostSeedIndexes": [
+          6
+        ],
+        "lostSeeds": [
+          1006
+        ]
+      },
+      "8": {
+        "wins": 19,
+        "runs": 20,
+        "rate": 0.95,
+        "room1Kos": 0,
+        "eliteRooms": 23,
+        "eliteKinds": {
+          "swift": 23
+        },
+        "meanDamage": 1554.7649999999999,
+        "meanHits": 9.45,
+        "meanRoomsCleared": 7.65,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "gauntlet": 1
+        },
+        "allRooms": {
+          "pillar-court": 11,
+          "shield-wall": 3,
+          "staff-and-shield": 9,
+          "training-yard": 12,
+          "twin-shields": 7,
+          "bopper-yard": 12,
+          "stone-garden": 7,
+          "keepers-hall": 19,
+          "bamboo-hall": 12,
+          "quiet-shrine": 6,
+          "narrow-bridge": 8,
+          "brute-and-swarm": 11,
+          "lantern-room": 11,
+          "guarded-swarm": 10,
+          "shield-escort": 6,
+          "gauntlet": 5,
+          "treasure-vault": 5
+        },
+        "lostSeedIndexes": [
+          6
+        ],
+        "lostSeeds": [
+          1006
+        ]
+      },
+      "9": {
+        "wins": 19,
+        "runs": 20,
+        "rate": 0.95,
+        "room1Kos": 0,
+        "eliteRooms": 21,
+        "eliteKinds": {
+          "swift": 21
+        },
+        "meanDamage": 1814.0865,
+        "meanHits": 9.65,
+        "meanRoomsCleared": 7.65,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "gauntlet": 1
+        },
+        "allRooms": {
+          "pillar-court": 11,
+          "shield-wall": 3,
+          "staff-and-shield": 9,
+          "training-yard": 12,
+          "twin-shields": 6,
+          "bopper-yard": 12,
+          "stone-garden": 8,
+          "keepers-hall": 19,
+          "bamboo-hall": 12,
+          "quiet-shrine": 7,
+          "narrow-bridge": 8,
+          "brute-and-swarm": 11,
+          "lantern-room": 11,
+          "guarded-swarm": 9,
+          "shield-escort": 7,
+          "gauntlet": 5,
+          "treasure-vault": 4
+        },
+        "lostSeedIndexes": [
+          6
+        ],
+        "lostSeeds": [
+          1006
+        ]
+      },
+      "10": {
+        "wins": 19,
+        "runs": 20,
+        "rate": 0.95,
+        "room1Kos": 0,
+        "eliteRooms": 20,
+        "eliteKinds": {
+          "swift": 20
+        },
+        "meanDamage": 1986.4569999999999,
+        "meanHits": 9.75,
+        "meanRoomsCleared": 7.65,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "gauntlet": 1
+        },
+        "allRooms": {
+          "pillar-court": 10,
+          "shield-wall": 3,
+          "staff-and-shield": 12,
+          "training-yard": 12,
+          "twin-shields": 6,
+          "bopper-yard": 13,
+          "stone-garden": 7,
+          "keepers-hall": 19,
+          "bamboo-hall": 13,
+          "quiet-shrine": 7,
+          "narrow-bridge": 7,
+          "brute-and-swarm": 11,
+          "lantern-room": 12,
+          "guarded-swarm": 8,
+          "shield-escort": 6,
+          "gauntlet": 5,
+          "treasure-vault": 3
+        },
+        "lostSeedIndexes": [
+          6
+        ],
+        "lostSeeds": [
+          1006
+        ]
+      }
+    },
+    "standard": {
+      "1": {
+        "wins": 12,
+        "runs": 20,
+        "rate": 0.6,
+        "room1Kos": 0,
+        "eliteRooms": 0,
+        "eliteKinds": {},
+        "meanDamage": 274.184,
+        "meanHits": 3.05,
+        "meanRoomsCleared": 5.85,
+        "startRooms": {
+          "w-pillar-court": 4,
+          "w-bamboo-hall": 4,
+          "w-lantern-room": 5,
+          "w-brute-and-swarm": 4,
+          "w-training-yard": 3
+        },
+        "deathRooms": {
+          "w-stone-garden": 1,
+          "w-bamboo-hall": 1,
+          "w-shield-wall": 1,
+          "w-guarded-swarm": 1,
+          "w-narrow-bridge": 1,
+          "w-pillar-court": 2,
+          "w-twin-shields": 1
+        },
+        "allRooms": {
+          "w-pillar-court": 10,
+          "w-quiet-shrine": 14,
+          "w-guarded-swarm": 8,
+          "w-shield-escort": 5,
+          "w-lantern-room": 14,
+          "w-twin-shields": 3,
+          "w-keepers-hall": 12,
+          "w-bamboo-hall": 13,
+          "w-stone-garden": 8,
+          "w-training-yard": 12,
+          "w-gauntlet": 2,
+          "w-narrow-bridge": 7,
+          "w-shield-wall": 2,
+          "w-brute-and-swarm": 10,
+          "w-treasure-vault": 5
+        },
+        "lostSeedIndexes": [
+          3,
+          4,
+          6,
+          7,
+          9,
+          13,
+          14,
+          16
+        ],
+        "lostSeeds": [
+          1003,
+          1004,
+          1006,
+          1007,
+          1009,
+          1013,
+          1014,
+          1016
+        ]
+      },
+      "2": {
+        "wins": 8,
+        "runs": 20,
+        "rate": 0.4,
+        "room1Kos": 0,
+        "eliteRooms": 0,
+        "eliteKinds": {},
+        "meanDamage": 402.298,
+        "meanHits": 3.45,
+        "meanRoomsCleared": 4.85,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "gauntlet": 2,
+          "training-yard": 2,
+          "bamboo-hall": 1,
+          "pillar-court": 2,
+          "stone-garden": 1,
+          "guarded-swarm": 2,
+          "twin-shields": 1,
+          "lantern-room": 1
+        },
+        "allRooms": {
+          "pillar-court": 9,
+          "gauntlet": 3,
+          "bamboo-hall": 10,
+          "stone-garden": 7,
+          "training-yard": 8,
+          "lantern-room": 10,
+          "treasure-vault": 8,
+          "shield-escort": 4,
+          "brute-and-swarm": 10,
+          "bopper-yard": 6,
+          "quiet-shrine": 8,
+          "narrow-bridge": 6,
+          "keepers-hall": 8,
+          "twin-shields": 5,
+          "staff-and-shield": 4,
+          "guarded-swarm": 3
+        },
+        "lostSeedIndexes": [
+          0,
+          1,
+          2,
+          3,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          14,
+          16
+        ],
+        "lostSeeds": [
+          1000,
+          1001,
+          1002,
+          1003,
+          1007,
+          1008,
+          1009,
+          1010,
+          1011,
+          1012,
+          1014,
+          1016
+        ]
+      },
+      "3": {
+        "wins": 14,
+        "runs": 20,
+        "rate": 0.7,
+        "room1Kos": 0,
+        "eliteRooms": 0,
+        "eliteKinds": {},
+        "meanDamage": 599.7370000000001,
+        "meanHits": 4.65,
+        "meanRoomsCleared": 6.45,
+        "startRooms": {
+          "oven-row": 7,
+          "ember-pantry": 13
+        },
+        "deathRooms": {
+          "pin-lanes": 3,
+          "ember-pantry": 2,
+          "long-table-hall": 1
+        },
+        "allRooms": {
+          "oven-row": 27,
+          "ember-pantry": 25,
+          "pin-lanes": 21,
+          "warm-hearth": 16,
+          "long-table-hall": 24,
+          "great-hearth": 14,
+          "spice-cupboard": 7,
+          "supper-rush": 1
+        },
+        "lostSeedIndexes": [
+          1,
+          2,
+          4,
+          7,
+          10,
+          18
+        ],
+        "lostSeeds": [
+          1001,
+          1002,
+          1004,
+          1007,
+          1010,
+          1018
+        ]
+      },
+      "4": {
+        "wins": 7,
+        "runs": 20,
+        "rate": 0.35,
+        "room1Kos": 0,
+        "eliteRooms": 15,
+        "eliteKinds": {
+          "swift": 11,
+          "guarding": 4
+        },
+        "meanDamage": 822.3165000000001,
+        "meanHits": 4,
+        "meanRoomsCleared": 5.2,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "gauntlet": 3,
+          "training-yard": 2,
+          "staff-and-shield": 1,
+          "keepers-hall": 3,
+          "pillar-court": 1,
+          "lantern-room": 1,
+          "stone-garden": 1,
+          "shield-escort": 1
+        },
+        "allRooms": {
+          "pillar-court": 12,
+          "gauntlet": 4,
+          "bamboo-hall": 6,
+          "stone-garden": 5,
+          "training-yard": 9,
+          "lantern-room": 10,
+          "treasure-vault": 7,
+          "staff-and-shield": 6,
+          "brute-and-swarm": 10,
+          "quiet-shrine": 15,
+          "narrow-bridge": 7,
+          "keepers-hall": 10,
+          "bopper-yard": 6,
+          "guarded-swarm": 6,
+          "shield-escort": 2,
+          "shield-wall": 1,
+          "twin-shields": 1
+        },
+        "lostSeedIndexes": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          10,
+          11,
+          13,
+          16,
+          17,
+          18
+        ],
+        "lostSeeds": [
+          1000,
+          1001,
+          1002,
+          1004,
+          1005,
+          1006,
+          1007,
+          1010,
+          1011,
+          1013,
+          1016,
+          1017,
+          1018
+        ]
+      },
+      "5": {
+        "wins": 14,
+        "runs": 20,
+        "rate": 0.7,
+        "room1Kos": 0,
+        "eliteRooms": 14,
+        "eliteKinds": {
+          "guarding": 3,
+          "swift": 11
+        },
+        "meanDamage": 1052.3049999999998,
+        "meanHits": 4.85,
+        "meanRoomsCleared": 6.15,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "shield-wall": 1,
+          "gauntlet": 3,
+          "lantern-room": 2
+        },
+        "allRooms": {
+          "pillar-court": 9,
+          "shield-wall": 1,
+          "bamboo-hall": 7,
+          "stone-garden": 4,
+          "training-yard": 10,
+          "quiet-shrine": 20,
+          "narrow-bridge": 9,
+          "brute-and-swarm": 11,
+          "keepers-hall": 14,
+          "lantern-room": 9,
+          "treasure-vault": 8,
+          "shield-escort": 2,
+          "bopper-yard": 12,
+          "twin-shields": 4,
+          "guarded-swarm": 2,
+          "gauntlet": 3,
+          "staff-and-shield": 4
+        },
+        "lostSeedIndexes": [
+          0,
+          6,
+          7,
+          11,
+          13,
+          16
+        ],
+        "lostSeeds": [
+          1000,
+          1006,
+          1007,
+          1011,
+          1013,
+          1016
+        ]
+      },
+      "6": {
+        "wins": 13,
+        "runs": 20,
+        "rate": 0.65,
+        "room1Kos": 0,
+        "eliteRooms": 13,
+        "eliteKinds": {
+          "swift": 11,
+          "guarding": 2
+        },
+        "meanDamage": 1246.6705,
+        "meanHits": 4.65,
+        "meanRoomsCleared": 5.85,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "shield-wall": 1,
+          "training-yard": 1,
+          "gauntlet": 3,
+          "lantern-room": 2
+        },
+        "allRooms": {
+          "pillar-court": 9,
+          "shield-wall": 1,
+          "bamboo-hall": 7,
+          "stone-garden": 4,
+          "training-yard": 10,
+          "lantern-room": 9,
+          "treasure-vault": 8,
+          "staff-and-shield": 5,
+          "twin-shields": 5,
+          "quiet-shrine": 18,
+          "keepers-hall": 13,
+          "brute-and-swarm": 10,
+          "bopper-yard": 11,
+          "narrow-bridge": 8,
+          "guarded-swarm": 2,
+          "gauntlet": 3,
+          "shield-escort": 1
+        },
+        "lostSeedIndexes": [
+          0,
+          1,
+          6,
+          7,
+          11,
+          13,
+          16
+        ],
+        "lostSeeds": [
+          1000,
+          1001,
+          1006,
+          1007,
+          1011,
+          1013,
+          1016
+        ]
+      },
+      "7": {
+        "wins": 12,
+        "runs": 20,
+        "rate": 0.6,
+        "room1Kos": 0,
+        "eliteRooms": 12,
+        "eliteKinds": {
+          "swift": 11,
+          "guarding": 1
+        },
+        "meanDamage": 1592.9440000000002,
+        "meanHits": 4.45,
+        "meanRoomsCleared": 6.2,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "pillar-court": 1,
+          "gauntlet": 2,
+          "twin-shields": 1,
+          "keepers-hall": 2,
+          "lantern-room": 2
+        },
+        "allRooms": {
+          "pillar-court": 10,
+          "quiet-shrine": 20,
+          "lantern-room": 10,
+          "bopper-yard": 12,
+          "guarded-swarm": 2,
+          "shield-escort": 1,
+          "narrow-bridge": 9,
+          "keepers-hall": 14,
+          "bamboo-hall": 8,
+          "stone-garden": 4,
+          "training-yard": 11,
+          "brute-and-swarm": 13,
+          "treasure-vault": 6,
+          "staff-and-shield": 4,
+          "twin-shields": 5,
+          "gauntlet": 3
+        },
+        "lostSeedIndexes": [
+          5,
+          6,
+          7,
+          10,
+          11,
+          13,
+          15,
+          16
+        ],
+        "lostSeeds": [
+          1005,
+          1006,
+          1007,
+          1010,
+          1011,
+          1013,
+          1015,
+          1016
+        ]
+      },
+      "8": {
+        "wins": 14,
+        "runs": 20,
+        "rate": 0.7,
+        "room1Kos": 0,
+        "eliteRooms": 14,
+        "eliteKinds": {
+          "guarding": 2,
+          "swift": 12
+        },
+        "meanDamage": 1879.7899999999997,
+        "meanHits": 4.35,
+        "meanRoomsCleared": 6.45,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "pillar-court": 1,
+          "gauntlet": 2,
+          "keepers-hall": 1,
+          "stone-garden": 1,
+          "lantern-room": 1
+        },
+        "allRooms": {
+          "pillar-court": 9,
+          "quiet-shrine": 22,
+          "lantern-room": 10,
+          "bopper-yard": 12,
+          "guarded-swarm": 2,
+          "shield-escort": 2,
+          "narrow-bridge": 9,
+          "keepers-hall": 15,
+          "bamboo-hall": 8,
+          "stone-garden": 5,
+          "training-yard": 10,
+          "brute-and-swarm": 13,
+          "treasure-vault": 6,
+          "staff-and-shield": 5,
+          "twin-shields": 4,
+          "gauntlet": 3
+        },
+        "lostSeedIndexes": [
+          5,
+          6,
+          10,
+          11,
+          15,
+          16
+        ],
+        "lostSeeds": [
+          1005,
+          1006,
+          1010,
+          1011,
+          1015,
+          1016
+        ]
+      },
+      "9": {
+        "wins": 14,
+        "runs": 20,
+        "rate": 0.7,
+        "room1Kos": 0,
+        "eliteRooms": 13,
+        "eliteKinds": {
+          "guarding": 3,
+          "swift": 10
+        },
+        "meanDamage": 2105.7690000000002,
+        "meanHits": 4.3,
+        "meanRoomsCleared": 6.2,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "shield-wall": 1,
+          "pillar-court": 1,
+          "gauntlet": 2,
+          "stone-garden": 1,
+          "lantern-room": 1
+        },
+        "allRooms": {
+          "pillar-court": 9,
+          "quiet-shrine": 21,
+          "lantern-room": 9,
+          "bopper-yard": 12,
+          "guarded-swarm": 3,
+          "shield-escort": 2,
+          "narrow-bridge": 8,
+          "keepers-hall": 14,
+          "bamboo-hall": 8,
+          "stone-garden": 5,
+          "training-yard": 9,
+          "brute-and-swarm": 11,
+          "treasure-vault": 7,
+          "staff-and-shield": 5,
+          "shield-wall": 1,
+          "gauntlet": 3,
+          "twin-shields": 3
+        },
+        "lostSeedIndexes": [
+          4,
+          5,
+          6,
+          11,
+          15,
+          16
+        ],
+        "lostSeeds": [
+          1004,
+          1005,
+          1006,
+          1011,
+          1015,
+          1016
+        ]
+      },
+      "10": {
+        "wins": 14,
+        "runs": 20,
+        "rate": 0.7,
+        "room1Kos": 0,
+        "eliteRooms": 14,
+        "eliteKinds": {
+          "guarding": 2,
+          "swift": 12
+        },
+        "meanDamage": 2440.192,
+        "meanHits": 4.6,
+        "meanRoomsCleared": 6.45,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "keepers-hall": 1,
+          "pillar-court": 1,
+          "gauntlet": 2,
+          "stone-garden": 1,
+          "lantern-room": 1
+        },
+        "allRooms": {
+          "pillar-court": 9,
+          "quiet-shrine": 22,
+          "lantern-room": 10,
+          "bopper-yard": 12,
+          "guarded-swarm": 3,
+          "shield-escort": 2,
+          "narrow-bridge": 9,
+          "keepers-hall": 15,
+          "bamboo-hall": 8,
+          "stone-garden": 5,
+          "training-yard": 9,
+          "brute-and-swarm": 12,
+          "treasure-vault": 6,
+          "staff-and-shield": 5,
+          "twin-shields": 4,
+          "gauntlet": 3,
+          "shield-wall": 1
+        },
+        "lostSeedIndexes": [
+          4,
+          5,
+          6,
+          11,
+          15,
+          16
+        ],
+        "lostSeeds": [
+          1004,
+          1005,
+          1006,
+          1011,
+          1015,
+          1016
+        ]
+      }
+    },
+    "challenge": {
+      "1": {
+        "wins": 7,
+        "runs": 20,
+        "rate": 0.35,
+        "room1Kos": 0,
+        "eliteRooms": 0,
+        "eliteKinds": {},
+        "meanDamage": 289.374,
+        "meanHits": 3.05,
+        "meanRoomsCleared": 5.1,
+        "startRooms": {
+          "w-pillar-court": 4,
+          "w-bamboo-hall": 4,
+          "w-lantern-room": 5,
+          "w-brute-and-swarm": 4,
+          "w-training-yard": 3
+        },
+        "deathRooms": {
+          "w-keepers-hall": 4,
+          "w-narrow-bridge": 2,
+          "w-gauntlet": 2,
+          "w-brute-and-swarm": 2,
+          "w-training-yard": 1,
+          "w-guarded-swarm": 1,
+          "w-shield-wall": 1
+        },
+        "allRooms": {
+          "w-pillar-court": 7,
+          "w-quiet-shrine": 18,
+          "w-guarded-swarm": 8,
+          "w-shield-escort": 7,
+          "w-treasure-vault": 9,
+          "w-stone-garden": 6,
+          "w-keepers-hall": 11,
+          "w-bamboo-hall": 8,
+          "w-training-yard": 8,
+          "w-twin-shields": 3,
+          "w-brute-and-swarm": 11,
+          "w-lantern-room": 8,
+          "w-narrow-bridge": 8,
+          "w-gauntlet": 2,
+          "w-shield-wall": 1
+        },
+        "lostSeedIndexes": [
+          0,
+          1,
+          4,
+          5,
+          6,
+          9,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          18
+        ],
+        "lostSeeds": [
+          1000,
+          1001,
+          1004,
+          1005,
+          1006,
+          1009,
+          1011,
+          1012,
+          1013,
+          1014,
+          1015,
+          1016,
+          1018
+        ]
+      },
+      "2": {
+        "wins": 6,
+        "runs": 20,
+        "rate": 0.3,
+        "room1Kos": 1,
+        "eliteRooms": 0,
+        "eliteKinds": {},
+        "meanDamage": 421.10600000000005,
+        "meanHits": 2.8,
+        "meanRoomsCleared": 4.3,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "gauntlet": 1,
+          "stone-garden": 1,
+          "keepers-hall": 2,
+          "brute-and-swarm": 5,
+          "bopper-yard": 1,
+          "training-yard": 1,
+          "twin-shields": 1,
+          "lantern-room": 1,
+          "guarded-swarm": 1
+        },
+        "allRooms": {
+          "pillar-court": 4,
+          "gauntlet": 1,
+          "bamboo-hall": 6,
+          "stone-garden": 4,
+          "lantern-room": 5,
+          "training-yard": 5,
+          "treasure-vault": 8,
+          "guarded-swarm": 8,
+          "quiet-shrine": 15,
+          "staff-and-shield": 4,
+          "twin-shields": 3,
+          "keepers-hall": 8,
+          "brute-and-swarm": 12,
+          "bopper-yard": 9,
+          "narrow-bridge": 5,
+          "shield-escort": 3
+        },
+        "lostSeedIndexes": [
+          0,
+          1,
+          2,
+          4,
+          6,
+          8,
+          9,
+          11,
+          12,
+          13,
+          16,
+          17,
+          18,
+          19
+        ],
+        "lostSeeds": [
+          1000,
+          1001,
+          1002,
+          1004,
+          1006,
+          1008,
+          1009,
+          1011,
+          1012,
+          1013,
+          1016,
+          1017,
+          1018,
+          1019
+        ]
+      },
+      "3": {
+        "wins": 6,
+        "runs": 20,
+        "rate": 0.3,
+        "room1Kos": 0,
+        "eliteRooms": 0,
+        "eliteKinds": {},
+        "meanDamage": 637.3030000000002,
+        "meanHits": 3,
+        "meanRoomsCleared": 5.25,
+        "startRooms": {
+          "oven-row": 7,
+          "ember-pantry": 13
+        },
+        "deathRooms": {
+          "pin-lanes": 5,
+          "oven-row": 2,
+          "long-table-hall": 4,
+          "ember-pantry": 1,
+          "great-hearth": 2
+        },
+        "allRooms": {
+          "oven-row": 21,
+          "warm-hearth": 15,
+          "ember-pantry": 22,
+          "long-table-hall": 18,
+          "supper-rush": 3,
+          "pin-lanes": 18,
+          "great-hearth": 8,
+          "spice-cupboard": 14
+        },
+        "lostSeedIndexes": [
+          1,
+          3,
+          4,
+          7,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          19
+        ],
+        "lostSeeds": [
+          1001,
+          1003,
+          1004,
+          1007,
+          1009,
+          1010,
+          1011,
+          1012,
+          1013,
+          1014,
+          1015,
+          1016,
+          1017,
+          1019
+        ]
+      },
+      "4": {
+        "wins": 3,
+        "runs": 20,
+        "rate": 0.15,
+        "room1Kos": 1,
+        "eliteRooms": 5,
+        "eliteKinds": {
+          "swift": 5
+        },
+        "meanDamage": 682.0985,
+        "meanHits": 2.1,
+        "meanRoomsCleared": 3.6,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "gauntlet": 1,
+          "stone-garden": 5,
+          "guarded-swarm": 2,
+          "keepers-hall": 3,
+          "brute-and-swarm": 4,
+          "training-yard": 1,
+          "lantern-room": 1
+        },
+        "allRooms": {
+          "pillar-court": 4,
+          "gauntlet": 1,
+          "bamboo-hall": 5,
+          "stone-garden": 6,
+          "lantern-room": 7,
+          "training-yard": 7,
+          "treasure-vault": 12,
+          "guarded-swarm": 8,
+          "brute-and-swarm": 9,
+          "quiet-shrine": 8,
+          "bopper-yard": 6,
+          "narrow-bridge": 4,
+          "keepers-hall": 6,
+          "staff-and-shield": 4,
+          "twin-shields": 2
+        },
+        "lostSeedIndexes": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "lostSeeds": [
+          1000,
+          1001,
+          1002,
+          1003,
+          1005,
+          1006,
+          1008,
+          1009,
+          1010,
+          1011,
+          1012,
+          1013,
+          1014,
+          1015,
+          1016,
+          1017,
+          1018
+        ]
+      },
+      "5": {
+        "wins": 8,
+        "runs": 20,
+        "rate": 0.4,
+        "room1Kos": 2,
+        "eliteRooms": 11,
+        "eliteKinds": {
+          "swift": 10,
+          "guarding": 1
+        },
+        "meanDamage": 980.0599999999998,
+        "meanHits": 3.2,
+        "meanRoomsCleared": 4.9,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "pillar-court": 1,
+          "stone-garden": 1,
+          "guarded-swarm": 2,
+          "keepers-hall": 3,
+          "brute-and-swarm": 2,
+          "training-yard": 1,
+          "lantern-room": 1,
+          "twin-shields": 1
+        },
+        "allRooms": {
+          "pillar-court": 6,
+          "bamboo-hall": 6,
+          "stone-garden": 7,
+          "lantern-room": 6,
+          "training-yard": 8,
+          "treasure-vault": 8,
+          "guarded-swarm": 7,
+          "brute-and-swarm": 8,
+          "quiet-shrine": 14,
+          "twin-shields": 4,
+          "narrow-bridge": 7,
+          "keepers-hall": 11,
+          "bopper-yard": 9,
+          "staff-and-shield": 6,
+          "shield-escort": 3
+        },
+        "lostSeedIndexes": [
+          0,
+          1,
+          2,
+          3,
+          9,
+          11,
+          12,
+          13,
+          16,
+          17,
+          18,
+          19
+        ],
+        "lostSeeds": [
+          1000,
+          1001,
+          1002,
+          1003,
+          1009,
+          1011,
+          1012,
+          1013,
+          1016,
+          1017,
+          1018,
+          1019
+        ]
+      },
+      "6": {
+        "wins": 7,
+        "runs": 20,
+        "rate": 0.35,
+        "room1Kos": 2,
+        "eliteRooms": 9,
+        "eliteKinds": {
+          "swift": 9
+        },
+        "meanDamage": 1209.6595000000002,
+        "meanHits": 3.2,
+        "meanRoomsCleared": 4.7,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "pillar-court": 1,
+          "stone-garden": 2,
+          "guarded-swarm": 2,
+          "keepers-hall": 3,
+          "brute-and-swarm": 2,
+          "training-yard": 1,
+          "lantern-room": 1,
+          "twin-shields": 1
+        },
+        "allRooms": {
+          "pillar-court": 6,
+          "bamboo-hall": 5,
+          "stone-garden": 8,
+          "lantern-room": 5,
+          "training-yard": 8,
+          "treasure-vault": 8,
+          "guarded-swarm": 7,
+          "brute-and-swarm": 9,
+          "quiet-shrine": 15,
+          "twin-shields": 3,
+          "narrow-bridge": 7,
+          "keepers-hall": 10,
+          "bopper-yard": 8,
+          "staff-and-shield": 6,
+          "shield-escort": 2
+        },
+        "lostSeedIndexes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          9,
+          10,
+          11,
+          12,
+          13,
+          16,
+          18,
+          19
+        ],
+        "lostSeeds": [
+          1000,
+          1001,
+          1002,
+          1003,
+          1004,
+          1009,
+          1010,
+          1011,
+          1012,
+          1013,
+          1016,
+          1018,
+          1019
+        ]
+      },
+      "7": {
+        "wins": 5,
+        "runs": 20,
+        "rate": 0.25,
+        "room1Kos": 3,
+        "eliteRooms": 7,
+        "eliteKinds": {
+          "swift": 5,
+          "guarding": 2
+        },
+        "meanDamage": 1424.7075000000002,
+        "meanHits": 3.35,
+        "meanRoomsCleared": 4.3,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "pillar-court": 2,
+          "stone-garden": 2,
+          "guarded-swarm": 2,
+          "keepers-hall": 3,
+          "training-yard": 2,
+          "brute-and-swarm": 1,
+          "twin-shields": 2,
+          "lantern-room": 1
+        },
+        "allRooms": {
+          "pillar-court": 5,
+          "bamboo-hall": 5,
+          "stone-garden": 5,
+          "lantern-room": 5,
+          "training-yard": 7,
+          "treasure-vault": 9,
+          "guarded-swarm": 7,
+          "brute-and-swarm": 9,
+          "quiet-shrine": 15,
+          "bopper-yard": 7,
+          "narrow-bridge": 5,
+          "twin-shields": 5,
+          "staff-and-shield": 6,
+          "keepers-hall": 8,
+          "shield-escort": 2,
+          "gauntlet": 1
+        },
+        "lostSeedIndexes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          7,
+          9,
+          11,
+          12,
+          13,
+          14,
+          16,
+          17,
+          18,
+          19
+        ],
+        "lostSeeds": [
+          1000,
+          1001,
+          1002,
+          1003,
+          1004,
+          1007,
+          1009,
+          1011,
+          1012,
+          1013,
+          1014,
+          1016,
+          1017,
+          1018,
+          1019
+        ]
+      },
+      "8": {
+        "wins": 6,
+        "runs": 20,
+        "rate": 0.3,
+        "room1Kos": 1,
+        "eliteRooms": 9,
+        "eliteKinds": {
+          "swift": 6,
+          "guarding": 3
+        },
+        "meanDamage": 1785.2600000000002,
+        "meanHits": 3.7,
+        "meanRoomsCleared": 4.85,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "keepers-hall": 4,
+          "stone-garden": 1,
+          "guarded-swarm": 2,
+          "pillar-court": 1,
+          "twin-shields": 2,
+          "staff-and-shield": 1,
+          "brute-and-swarm": 1,
+          "training-yard": 1,
+          "lantern-room": 1
+        },
+        "allRooms": {
+          "pillar-court": 5,
+          "quiet-shrine": 17,
+          "lantern-room": 6,
+          "staff-and-shield": 8,
+          "brute-and-swarm": 10,
+          "stone-garden": 6,
+          "keepers-hall": 10,
+          "bamboo-hall": 5,
+          "training-yard": 7,
+          "treasure-vault": 10,
+          "guarded-swarm": 7,
+          "bopper-yard": 7,
+          "narrow-bridge": 5,
+          "twin-shields": 5,
+          "shield-escort": 2,
+          "gauntlet": 1
+        },
+        "lostSeedIndexes": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          7,
+          9,
+          11,
+          12,
+          14,
+          16,
+          17,
+          18,
+          19
+        ],
+        "lostSeeds": [
+          1000,
+          1001,
+          1002,
+          1003,
+          1005,
+          1007,
+          1009,
+          1011,
+          1012,
+          1014,
+          1016,
+          1017,
+          1018,
+          1019
+        ]
+      },
+      "9": {
+        "wins": 5,
+        "runs": 20,
+        "rate": 0.25,
+        "room1Kos": 1,
+        "eliteRooms": 9,
+        "eliteKinds": {
+          "swift": 6,
+          "guarding": 3
+        },
+        "meanDamage": 2076.2475000000004,
+        "meanHits": 3.75,
+        "meanRoomsCleared": 4.95,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "keepers-hall": 5,
+          "stone-garden": 1,
+          "guarded-swarm": 2,
+          "pillar-court": 1,
+          "twin-shields": 2,
+          "staff-and-shield": 1,
+          "brute-and-swarm": 1,
+          "training-yard": 1,
+          "gauntlet": 1
+        },
+        "allRooms": {
+          "pillar-court": 6,
+          "quiet-shrine": 17,
+          "lantern-room": 6,
+          "staff-and-shield": 8,
+          "brute-and-swarm": 12,
+          "stone-garden": 6,
+          "keepers-hall": 10,
+          "bamboo-hall": 5,
+          "training-yard": 7,
+          "treasure-vault": 9,
+          "guarded-swarm": 7,
+          "bopper-yard": 8,
+          "narrow-bridge": 5,
+          "twin-shields": 4,
+          "shield-escort": 2,
+          "gauntlet": 2
+        },
+        "lostSeedIndexes": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          7,
+          9,
+          11,
+          12,
+          13,
+          14,
+          16,
+          17,
+          18,
+          19
+        ],
+        "lostSeeds": [
+          1000,
+          1001,
+          1002,
+          1003,
+          1005,
+          1007,
+          1009,
+          1011,
+          1012,
+          1013,
+          1014,
+          1016,
+          1017,
+          1018,
+          1019
+        ]
+      },
+      "10": {
+        "wins": 5,
+        "runs": 20,
+        "rate": 0.25,
+        "room1Kos": 1,
+        "eliteRooms": 9,
+        "eliteKinds": {
+          "swift": 6,
+          "guarding": 3
+        },
+        "meanDamage": 2296.6549999999997,
+        "meanHits": 3.25,
+        "meanRoomsCleared": 4.8,
+        "startRooms": {
+          "pillar-court": 2,
+          "bamboo-hall": 3,
+          "lantern-room": 2,
+          "brute-and-swarm": 4,
+          "bopper-yard": 4,
+          "training-yard": 3,
+          "narrow-bridge": 2
+        },
+        "deathRooms": {
+          "keepers-hall": 5,
+          "stone-garden": 1,
+          "guarded-swarm": 2,
+          "pillar-court": 1,
+          "twin-shields": 2,
+          "staff-and-shield": 1,
+          "brute-and-swarm": 1,
+          "training-yard": 1,
+          "lantern-room": 1
+        },
+        "allRooms": {
+          "pillar-court": 5,
+          "quiet-shrine": 16,
+          "lantern-room": 6,
+          "staff-and-shield": 7,
+          "brute-and-swarm": 11,
+          "stone-garden": 6,
+          "keepers-hall": 10,
+          "bamboo-hall": 5,
+          "training-yard": 8,
+          "treasure-vault": 9,
+          "guarded-swarm": 7,
+          "bopper-yard": 8,
+          "narrow-bridge": 5,
+          "twin-shields": 5,
+          "shield-escort": 2,
+          "gauntlet": 1
+        },
+        "lostSeedIndexes": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          7,
+          9,
+          10,
+          11,
+          12,
+          14,
+          16,
+          17,
+          18,
+          19
+        ],
+        "lostSeeds": [
+          1000,
+          1001,
+          1002,
+          1003,
+          1005,
+          1007,
+          1009,
+          1010,
+          1011,
+          1012,
+          1014,
+          1016,
+          1017,
+          1018,
+          1019
+        ]
+      }
+    }
+  }
+}
