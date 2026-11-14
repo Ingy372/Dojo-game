@@ -1,0 +1,20 @@
+{
+  "notes": "OV-C2 (Nov 14, 2026, America/New_York). Words for the belt-entry parent note and the fix path (OV-B7 / review 8.2 #1). Drop-in that extends content/settings/belt-entry.json. A grown-up (not the student) should set the belt. A wrong entry can be corrected behind the grown-up gate; belts no longer only go up. Kid lines are 8 words or fewer. Parent notes may be longer, still plain and calm. The review also suggests a parent-set PIN and removing belt entry when the DojoForge feed arrives; those are noted for a decision, not written as new screens here. Check: python3 drafts/content/tools/check-ov-c2-words.py.",
+  "extends": "content/settings/belt-entry.json",
+  "parentNote": "A grown-up should set the belt, not the student. Pick the real belt and stripes from the dojo. If it is wrong, a grown-up can fix it here.",
+  "whoMayEnter": "A grown-up should set the belt, not the student.",
+  "help": "A grown-up picks the real belt and stripes. If that pick is wrong, a grown-up can fix it here. This stays on this phone.",
+  "kid": {
+    "saved": "Saved: {belt}, {n} stripes",
+    "savedOne": "Saved: {belt}, 1 stripe",
+    "savedNone": "Saved: {belt}"
+  },
+  "fixPath": {
+    "button": "Fix a mistake",
+    "title": "Fix the belt",
+    "help": "A grown-up can correct a wrong belt here.",
+    "confirm": "Change the saved belt to {entry}?",
+    "yes": "Yes, fix it",
+    "no": "Not yet"
+  }
+}
