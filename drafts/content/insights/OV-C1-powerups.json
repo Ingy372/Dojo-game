@@ -1,0 +1,9 @@
+{
+  "_note": "OV-C1 names and card text for the 4 new Power-ups in drafts/planning/R-POWERUPS-15-data.json. Drop-in by id for OV-B6: copy name and text into insights.json. Effects and families unchanged.",
+  "insights": [
+    { "id": "calm-breath", "name": "Quiet Mind", "text": "Your Focus fills up faster." },
+    { "id": "steady-start", "name": "Warm Up", "text": "Start every room with some Focus." },
+    { "id": "lighter-strike", "name": "Swift Strikes", "text": "Your Strikes use less Focus." },
+    { "id": "softer-block", "name": "Firm Guard", "text": "Your Blocks stop more of the hit." }
+  ]
+}
