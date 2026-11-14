@@ -182,5 +182,21 @@
       ],
       "sensei": "The light was with you the whole climb."
     }
+  ],
+  "storyScreens": [
+    {
+      "faithOverlayKey": "chapter-1-screen-15",
+      "story": "drafts/content/story/chapter-1.json",
+      "screen": 15,
+      "speaker": "sensei",
+      "theme": "Light shining in the dark",
+      "verses": [
+        {
+          "reference": "John 1:5",
+          "text": "And the light shineth in darkness; and the darkness comprehended it not."
+        }
+      ],
+      "notes": "C-STORY-a: the main story line stays plain; this verse shows with screen 15 when the faith layer is on. KJV checked against bible-api.com (translation=kjv) on 2026-10-26. KJV is a placeholder until Jay answers sign wording vs KJV."
+    }
   ]
 }
