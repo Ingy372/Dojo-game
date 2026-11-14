@@ -16,7 +16,7 @@ KEY = [
     ("calm-breath",   (226, 96, 196),  "breath",  "three calm breath swirls (Quiet Mind: Focus fills faster)"),
     ("steady-start",  (88, 100, 214),  "orb",     "a Focus orb already glowing (Warm Up: start every room with some Focus)"),
     ("lighter-strike",(120, 196, 250), "feather", "a light feather (Swift Strikes: Strikes use less Focus)"),
-    ("softer-block",  (226, 180, 104), "pad",     "a raised forearm block (gi sleeve, closed fist) with hits bouncing off (Firm Guard: Blocks stop more of the hit)"),
+    ("softer-block",  (226, 180, 104), "pad",     "Iron Block: a rising forearm block with a steel arm and fist (white gi sleeve), the hit bouncing off (Blocks stop more of the hit)"),
 ]
 def mix(c, k, t=(255, 255, 255)): return tuple(int(a + (b - a) * k) for a, b in zip(c, t))
 def poly(d, pts, fill, ow=3.2):
@@ -68,14 +68,17 @@ def symbol(d, kind, c):
             d.line((s(x0), s(y), s(x0 + 12), s(y)), fill=INK, width=s(5)); d.line((s(x0), s(y), s(x0 + 12), s(y)), fill=lt, width=s(2.5))
     elif kind == "pad":                                       # Firm Guard: a rising forearm block (gi sleeve, closed fist), the hit bounces off the top of the forearm
         import math
-        SKIN, SKD, GI = (238, 188, 146), (206, 150, 112), (250, 250, 246)
+        SKIN, SKD, GI = (176, 186, 200), (112, 122, 140), (250, 250, 246)   # Iron Block: steel arm and fist
         ang = math.radians(-24); ux, uy = math.cos(ang), math.sin(ang); nx, ny = -uy, ux
         def seg(t0, t1, w0, w1, ox=cx - 30, oy=cy + 21):
             return [(ox + ux * t0 + nx * w0, oy + uy * t0 + ny * w0), (ox + ux * t1 + nx * w1, oy + uy * t1 + ny * w1),
                     (ox + ux * t1 - nx * w1, oy + uy * t1 - ny * w1), (ox + ux * t0 - nx * w0, oy + uy * t0 - ny * w0)]
         poly(d, seg(3, 24, 10.5, 10), GI, 3.2)                 # gi sleeve (white)
         poly(d, seg(22, 29, 9.5, 9.5), c, 2.6)                  # sand cuff band
-        poly(d, seg(28, 46, 7.5, 7), SKIN, 3.2)                 # forearm
+        poly(d, seg(28, 46, 7.5, 7), SKIN, 3.2)                 # forearm (steel)
+        ox_, oy_ = cx - 30, cy + 21
+        for w, col, wd in ((-3.4, (236, 242, 250), 2.2), (3.6, SKD, 1.8)):   # top sheen line, lower shade line
+            d.line((s(ox_ + ux * 31 + nx * w), s(oy_ + uy * 31 + ny * w), s(ox_ + ux * 44 + nx * w), s(oy_ + uy * 44 + ny * w)), fill=col, width=s(wd))
         fx, fy = cx - 30 + ux * 54, cy + 21 + uy * 54         # fist centre
         F = Image.new("RGBA", (s(30), s(30))); fd = ImageDraw.Draw(F)
         fd.rounded_rectangle((s(3), s(3), s(27), s(27)), s(8), fill=SKIN, outline=INK, width=s(3.2))
@@ -83,6 +86,8 @@ def symbol(d, kind, c):
         fd.rounded_rectangle((s(3), s(15), s(19), s(25)), s(5), fill=SKIN, outline=INK, width=s(2.4))   # thumb wrapped across the front
         F = F.rotate(24, resample=Image.BICUBIC, expand=True)
         d._image.alpha_composite(F, (int(s(fx) - F.width / 2), int(s(fy) - F.height / 2)))
+        d.line((s(fx - 6), s(fy - 9), s(fx + 3), s(fy - 12)), fill=(236, 242, 250), width=s(2))   # sheen on the fist
+        sparkle(d, fx + 8, fy - 16, 5, (255, 255, 255))
         mx, my = cx - 30 + ux * 34 + nx * -14, cy + 21 + uy * 34 + ny * -14   # just above the forearm
         for r in (9, 16):
             box = (s(mx - r * 1.5), s(my - r * 1.4), s(mx + r * 1.5), s(my + r * 0.6))
