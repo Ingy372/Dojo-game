@@ -1,0 +1,89 @@
+{
+ "note": "OV-A1 Power-up icons. Same frame/size/anchor rules as incoming-art/icons/sprites/static.json. No text baked in.",
+ "sprites": {
+  "icon-calm-breath": {
+   "size": [
+    128,
+    128
+   ],
+   "files": {
+    "1x": "icon-calm-breath.png",
+    "2x": "icon-calm-breath@2x.png"
+   },
+   "anchorPx": [
+    64.0,
+    64.0
+   ],
+   "frames": 1,
+   "accentRGB": [
+    226,
+    96,
+    196
+   ],
+   "note": "Power-up calm-breath: three calm breath swirls (Quiet Mind: Focus fills faster). 128 x 128 (+ @2x 256), anchor = centre"
+  },
+  "icon-steady-start": {
+   "size": [
+    128,
+    128
+   ],
+   "files": {
+    "1x": "icon-steady-start.png",
+    "2x": "icon-steady-start@2x.png"
+   },
+   "anchorPx": [
+    64.0,
+    64.0
+   ],
+   "frames": 1,
+   "accentRGB": [
+    88,
+    100,
+    214
+   ],
+   "note": "Power-up steady-start: a Focus orb already glowing (Warm Up: start every room with some Focus). 128 x 128 (+ @2x 256), anchor = centre"
+  },
+  "icon-lighter-strike": {
+   "size": [
+    128,
+    128
+   ],
+   "files": {
+    "1x": "icon-lighter-strike.png",
+    "2x": "icon-lighter-strike@2x.png"
+   },
+   "anchorPx": [
+    64.0,
+    64.0
+   ],
+   "frames": 1,
+   "accentRGB": [
+    120,
+    196,
+    250
+   ],
+   "note": "Power-up lighter-strike: a light feather (Swift Strikes: Strikes use less Focus). 128 x 128 (+ @2x 256), anchor = centre"
+  },
+  "icon-softer-block": {
+   "size": [
+    128,
+    128
+   ],
+   "files": {
+    "1x": "icon-softer-block.png",
+    "2x": "icon-softer-block@2x.png"
+   },
+   "anchorPx": [
+    64.0,
+    64.0
+   ],
+   "frames": 1,
+   "accentRGB": [
+    226,
+    180,
+    104
+   ],
+   "note": "Power-up softer-block: a firm dojo blocking pad with hits bouncing off (Firm Guard: Blocks stop more of the hit). 128 x 128 (+ @2x 256), anchor = centre"
+  }
+ }
+}
