@@ -1,7 +1,7 @@
 {
   "id": "masklet",
   "name": "Masklet",
-  "notes": "DRAFT for C13-3 (bestiary-plan.md). Little floating masks that giggle and gather in groups. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second).",
+  "notes": "DRAFT for C13-3 (bestiary-plan.md). Little floating masks that giggle and gather in groups. Stats set in R-BAL-8 (#185/#186). Distances in tiles, times in ticks (20 per second). G2B-32 (Nov 14): telegraphTicks 14 to 12 so #35 Catch the Hand (wind-up 12 or less) stays true.",
   "color": "#c7b8e0",
   "maxHealth": 20,
   "power": 7,
@@ -15,7 +15,7 @@
     "startRange": 0.95,
     "reach": 0.5,
     "areaRadius": 0.55,
-    "telegraphTicks": 14,
+    "telegraphTicks": 12,
     "recoverTicks": 16
   },
   "parSeconds": 2.0,
