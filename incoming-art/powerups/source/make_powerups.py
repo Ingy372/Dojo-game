@@ -14,7 +14,7 @@ def s(v): return int(round(v * SS))
 # id: (accent, symbol, what it shows). Accents differ in hue/brightness from the 9 existing Power-ups.
 KEY = [
     ("calm-breath",   (226, 96, 196),  "breath",  "three calm breath swirls (Quiet Mind: Focus fills faster)"),
-    ("steady-start",  (88, 100, 214),  "orb",     "a Focus orb already glowing (Warm Up: start every room with some Focus)"),
+    ("steady-start",  (252, 172, 58),  "orb",     "a warm sun-like Focus orb already glowing (Warm Up: start every room with some Focus)"),
     ("lighter-strike",(120, 196, 250), "feather", "a light feather (Swift Strikes: Strikes use less Focus)"),
     ("softer-block",  (226, 180, 104), "pad",     "Iron Block: a rising forearm block with a steel arm and fist (white gi sleeve), the hit bouncing off (Blocks stop more of the hit)"),
 ]
@@ -160,3 +160,19 @@ if ofg and os.path.exists(ofg):
     d.line((10, 160, ba.width - 10, 160), fill=(255, 255, 255), width=2)
     ba.save(os.path.join(PV, "firm-guard-before-after.png"))
 print("ok2")
+# 5) Warm Up before/after (indigo -> warm amber) at 128 and 36 px, next to Quick Hands and Double Strike; needs OLD_WARMUP=<old icon-steady-start.png>
+owu = os.environ.get("OLD_WARMUP", "")
+if owu and os.path.exists(owu):
+    old = Image.open(owu).convert("RGBA"); new = NEW["steady-start"]
+    near = [Image.open(os.path.join(od, f"icon-{n}.png")).convert("RGBA") for n in ("quick-hands", "double-strike") if od and os.path.exists(os.path.join(od, f"icon-{n}.png"))]
+    ba = Image.new("RGBA", (20 + 2 * 150 + 40 + 4 * 52, 2 * 150 + 20), BG); d = ImageDraw.Draw(ba)
+    for k, im in enumerate((old, new)):
+        y = 10 + k * 150
+        ba.alpha_composite(im, (20, y)); ba.alpha_composite(im.resize((36, 36), Image.LANCZOS), (170, y + 46))
+        ba.alpha_composite(grey(im.resize((36, 36), Image.LANCZOS)), (214, y + 46))
+        x = 280
+        for n in near: ba.alpha_composite(n.resize((36, 36), Image.LANCZOS), (x, y + 46)); x += 52
+        ba.alpha_composite(im.resize((36, 36), Image.LANCZOS), (x, y + 46))
+    d.line((10, 160, ba.width - 10, 160), fill=(255, 255, 255), width=2)
+    ba.save(os.path.join(PV, "warm-up-before-after.png"))
+print("ok3")

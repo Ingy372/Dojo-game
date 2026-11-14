@@ -7,7 +7,7 @@
 | id | Name | Symbol | Accent RGB |
 |---|---|---|---|
 | calm-breath | Quiet Mind | three calm breath swirls and a sparkle | 226,96,196 (pink) |
-| steady-start | Warm Up | a Focus orb that is already glowing | 88,100,214 (indigo) |
+| steady-start | Warm Up | a warm, sun-like Focus orb that is already glowing (OV-A1b: changed from indigo to amber, as Jay asked) | 252,172,58 (warm amber) |
 | lighter-strike | Swift Strikes | a light feather with speed lines | 120,196,250 (sky) |
 | softer-block | Iron Block (Jay's new name; was Firm Guard) | the same rising forearm block, with the forearm and fist now polished steel (sheen line and a glint) below a white gi sleeve and sand cuff, and the hit bouncing off the top of the forearm | 226,180,104 (sand) |
 
@@ -21,6 +21,7 @@
   - `preview/sizes-30-36-40.png`: true size, in colour and greyscale, on the menu colour and on a cream card.
   - `preview/family-36px.png`: the 9 existing icons, a divider, then the 4 new ones, at 36 px in colour and greyscale.
   - `preview/closeup-256.png`
+  - `preview/warm-up-before-after.png`: indigo (top) and warm amber (bottom), each at 128 px and at 36 px in colour and greyscale, next to Quick Hands (yellow) and Double Strike (orange).
   - `preview/firm-guard-before-after.png`: the skin-tone forearm block from 8f71d625 (top) and the steel Iron Block (bottom). Each is shown at 128 px, at 36 px in colour and greyscale, and at 36 px next to Iron Skin (shield) and Heavy Hands (kettlebell).
 
 **Checks**
@@ -31,6 +32,8 @@
 **WHY:** The Programmer needs these for OV-B6, when the 4 cards go into `insights.json`. Drop them in next to the existing icon files under the same ids.
 
 **OV-A1b:** Jay asked for Firm Guard to become Iron Block, with a metal arm. The icon id stays `softer-block`. The card name is the Content Designer's to update. The sand glow and frame keep it distinct from the grey Iron Skin shield.
+
+The Warm Up amber sits between yellow Quick Hands and orange Double Strike. The sun orb shape keeps it apart from both.
 
 **ART GATE:** The Manager passed Quiet Mind, Warm Up and Swift Strikes at 11c1edde. Their files are byte-identical in this update. Firm Guard failed at that commit because it read as a barrel. It is now a forearm block, so it no longer looks like gym gear and differs from the Iron Skin shield.
 

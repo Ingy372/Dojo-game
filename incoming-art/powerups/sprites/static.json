@@ -37,11 +37,11 @@
    ],
    "frames": 1,
    "accentRGB": [
-    88,
-    100,
-    214
+    252,
+    172,
+    58
    ],
-   "note": "Power-up steady-start: a Focus orb already glowing (Warm Up: start every room with some Focus). 128 x 128 (+ @2x 256), anchor = centre"
+   "note": "Power-up steady-start: a warm sun-like Focus orb already glowing (Warm Up: start every room with some Focus). 128 x 128 (+ @2x 256), anchor = centre"
   },
   "icon-lighter-strike": {
    "size": [
