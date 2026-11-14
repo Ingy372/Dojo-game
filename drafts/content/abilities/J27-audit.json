@@ -2,13 +2,13 @@
  {
   "file": "content/abilities/abilities.json",
   "id": "off-balance",
-  "name": "Off-Balance",
-  "verbatim": "docs/self-defense.md:60",
+  "name": "Double Punch",
+  "verbatim": "docs/self-defense.md:11",
   "cand": "Double Punch",
   "src": "docs/self-defense.md:11",
   "live": "live",
   "note": "",
-  "status": "Renamed (drop-in)"
+  "status": "Real"
  },
  {
   "file": "content/abilities/abilities.json",
@@ -24,13 +24,13 @@
  {
   "file": "content/abilities/abilities.json",
   "id": "sweep",
-  "name": "Sweep",
-  "verbatim": "docs/self-defense.md:37",
+  "name": "Back Fist",
+  "verbatim": "docs/self-defense.md:13",
   "cand": "Back Fist",
   "src": "docs/self-defense.md:13",
   "live": "live",
   "note": "also #5, #10",
-  "status": "Renamed (drop-in)"
+  "status": "Real"
  },
  {
   "file": "content/abilities/abilities.json",
@@ -40,7 +40,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:14",
   "live": "live",
-  "note": "family Advancing (Jay, Nov 8: \"Self-defense #4 belongs to Advancing.\"); no real name in the docs. Push-back effect kept",
+  "note": "name OPEN, family Advancing (#459). Drive Back is retired, not a current name. Push-back effect kept",
   "status": "OPEN"
  },
  {
@@ -68,13 +68,13 @@
  {
   "file": "content/abilities/abilities.json",
   "id": "create-distance",
-  "name": "Create Distance",
-  "verbatim": "docs/self-defense.md:78",
+  "name": "Palm Heel",
+  "verbatim": "docs/self-defense.md:17",
   "cand": "Palm Heel",
   "src": "docs/self-defense.md:17",
   "live": "live",
   "note": "",
-  "status": "Renamed (drop-in)"
+  "status": "Real"
  },
  {
   "file": "content/abilities/abilities.json",
@@ -95,19 +95,19 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:19",
   "live": "live",
-  "note": "as #8, high",
+  "note": "as #8, high. Clash: this legacy seal (Trophy Case / abilities.json id throw) is also named Throw, same as the #457 Throw family and the real throw at #11. Waiting on Jay; keep the current name. Clash with #457 Throw (the Throw family and the real throw at #11 Osotogari). This is the legacy Trophy Case seal (abilities.json id throw). Waiting on Jay; keep the current name.",
   "status": "OPEN"
  },
  {
   "file": "content/abilities/abilities.json",
   "id": "follow-through",
-  "name": "Follow Through",
-  "verbatim": "docs/self-defense.md:81",
+  "name": "Double Knifehand Block",
+  "verbatim": "docs/self-defense.md:20",
   "cand": "Double Knifehand Block",
   "src": "docs/self-defense.md:20",
   "live": "live",
   "note": "",
-  "status": "Renamed (drop-in)"
+  "status": "Real"
  },
  {
   "file": "content/abilities/abilities.json",
@@ -123,13 +123,13 @@
  {
   "file": "content/abilities/abilities.json",
   "id": "quick-combo",
-  "name": "Jumping Spins",
-  "verbatim": null,
+  "name": "Jumping Spin Kicks",
+  "verbatim": "docs/curriculum.md:47",
   "cand": "Jumping Spin Kicks",
   "src": "docs/curriculum.md:47",
   "live": "live",
   "note": "doc: \"3 jumping spin kicks\" (plural, word for word)",
-  "status": "Renamed (drop-in)"
+  "status": "Real"
  },
  {
   "file": "content/abilities/abilities.json",
@@ -211,24 +211,24 @@
  {
   "file": "content/abilities/strikes.json",
   "id": "jumping-spins",
-  "name": "Jumping Spins",
-  "verbatim": null,
+  "name": "Jumping Spin Kicks",
+  "verbatim": "docs/curriculum.md:47",
   "cand": "Jumping Spin Kicks",
   "src": "docs/curriculum.md:47",
   "live": "live",
   "note": "doc: \"3 jumping spin kicks\" (plural, word for word)",
-  "status": "Renamed (drop-in)"
+  "status": "Real"
  },
  {
   "file": "content/abilities/strikes.json",
   "id": "butterfly-flow",
-  "name": "Butterfly Flow",
-  "verbatim": null,
+  "name": "Butterfly Kick",
+  "verbatim": "docs/curriculum.md:48",
   "cand": "Butterfly Kick",
   "src": "docs/curriculum.md:48",
   "live": "live",
   "note": "\"tornado kick (we call it butterfly kick)\"",
-  "status": "Renamed (drop-in)"
+  "status": "Real"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -244,13 +244,13 @@
  {
   "file": "content/abilities/seal-families.json",
   "id": "escape #1",
-  "name": "Off the Line",
+  "name": "Double Punch",
   "verbatim": "docs/self-defense.md:11",
   "cand": "Double Punch",
   "src": "docs/self-defense.md:11",
   "live": "live",
   "note": "",
-  "status": "Renamed (drop-in)"
+  "status": "Real"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -265,17 +265,6 @@
  },
  {
   "file": "content/abilities/seal-families.json",
-  "id": "escape #4",
-  "name": "Drive Back",
-  "verbatim": null,
-  "cand": "OPEN",
-  "src": "docs/self-defense.md:14",
-  "live": "live",
-  "note": "family Advancing (Jay, Nov 8: \"Self-defense #4 belongs to Advancing.\"); no real name in the docs. Push-back effect kept",
-  "status": "OPEN"
- },
- {
-  "file": "content/abilities/seal-families.json",
   "id": "escape #15",
   "name": "Slip and Double",
   "verbatim": null,
@@ -283,6 +272,28 @@
   "src": "docs/self-defense.md:25",
   "live": "live",
   "note": "candidate double punch (also #1)",
+  "status": "OPEN"
+ },
+ {
+  "file": "content/abilities/seal-families.json",
+  "id": "advancing",
+  "name": "Advancing",
+  "verbatim": "docs/self-defense.md:14",
+  "cand": "KEEP",
+  "src": "",
+  "live": "live",
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
+ },
+ {
+  "file": "content/abilities/seal-families.json",
+  "id": "advancing #4",
+  "name": "Self-Defense #4",
+  "verbatim": "docs/curriculum.md:64",
+  "cand": "OPEN",
+  "src": "docs/self-defense.md:14",
+  "live": "live",
+  "note": "name OPEN, family Advancing (#459). Drive Back is retired, not a current name. Push-back effect kept",
   "status": "OPEN"
  },
  {
@@ -299,13 +310,13 @@
  {
   "file": "content/abilities/seal-families.json",
   "id": "counter #3",
-  "name": "Spin Back Fist",
-  "verbatim": null,
+  "name": "Back Fist",
+  "verbatim": "docs/self-defense.md:13",
   "cand": "Back Fist",
   "src": "docs/self-defense.md:13",
   "live": "live",
   "note": "also #5, #10",
-  "status": "Renamed (drop-in)"
+  "status": "Real"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -343,13 +354,13 @@
  {
   "file": "content/abilities/seal-families.json",
   "id": "counter #10",
-  "name": "Grab and Strike",
+  "name": "Double Knifehand Block",
   "verbatim": "docs/self-defense.md:20",
   "cand": "Double Knifehand Block",
   "src": "docs/self-defense.md:20",
   "live": "live",
   "note": "",
-  "status": "Renamed (drop-in)"
+  "status": "Real"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -381,7 +392,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:19",
   "live": "live",
-  "note": "as #8, high",
+  "note": "as #8, high. Clash: this legacy seal (Trophy Case / abilities.json id throw) is also named Throw, same as the #457 Throw family and the real throw at #11. Waiting on Jay; keep the current name",
   "status": "OPEN"
  },
  {
@@ -398,13 +409,13 @@
  {
   "file": "content/abilities/seal-families.json",
   "id": "throw #11",
-  "name": "Outside Reap",
-  "verbatim": null,
+  "name": "Osotogari",
+  "verbatim": "docs/self-defense.md:21",
   "cand": "Osotogari",
   "src": "docs/self-defense.md:21",
   "live": "live",
   "note": "Jay's spelling; S4 \"Osoto Gari\"",
-  "status": "Renamed (drop-in)"
+  "status": "Real"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -431,13 +442,13 @@
  {
   "file": "content/abilities/seal-families.json",
   "id": "disarm #13",
-  "name": "Kick the Weapon",
-  "verbatim": "docs/self-defense.md:23",
+  "name": "Inside Kick",
+  "verbatim": "docs/curriculum.md:46",
   "cand": "Inside Kick",
   "src": "docs/self-defense.md:23",
   "live": "live",
   "note": "also #14",
-  "status": "Renamed (drop-in)"
+  "status": "Real"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -496,17 +507,6 @@
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
-  "id": "escape #4",
-  "name": "Drive Back",
-  "verbatim": null,
-  "cand": "OPEN",
-  "src": "docs/self-defense.md:14",
-  "live": "drafts",
-  "note": "family Advancing (Jay, Nov 8: \"Self-defense #4 belongs to Advancing.\"); no real name in the docs. Push-back effect kept",
-  "status": "OPEN"
- },
- {
-  "file": "drafts/content/abilities/seal-families-text.json",
   "id": "escape #15",
   "name": "Slip and Double",
   "verbatim": null,
@@ -514,6 +514,28 @@
   "src": "docs/self-defense.md:25",
   "live": "drafts",
   "note": "candidate double punch (also #1)",
+  "status": "OPEN"
+ },
+ {
+  "file": "drafts/content/abilities/seal-families-text.json",
+  "id": "advancing",
+  "name": "Advancing",
+  "verbatim": "docs/self-defense.md:14",
+  "cand": "KEEP",
+  "src": "",
+  "live": "drafts",
+  "note": "game group label (Manager, Nov 8: keep)",
+  "status": "KEEP"
+ },
+ {
+  "file": "drafts/content/abilities/seal-families-text.json",
+  "id": "advancing #4",
+  "name": "OPEN",
+  "verbatim": "docs/self-defense.md:75",
+  "cand": "OPEN",
+  "src": "docs/self-defense.md:14",
+  "live": "drafts",
+  "note": "name OPEN, family Advancing (#459). Drive Back is retired, not a current name. Push-back effect kept",
   "status": "OPEN"
  },
  {
@@ -623,7 +645,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:19",
   "live": "drafts",
-  "note": "as #8, high",
+  "note": "as #8, high. Clash: this legacy seal (Trophy Case / abilities.json id throw) is also named Throw, same as the #457 Throw family and the real throw at #11. Waiting on Jay; keep the current name",
   "status": "OPEN"
  },
  {
@@ -1096,7 +1118,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:14",
   "live": "drafts",
-  "note": "family Advancing (Jay, Nov 8: \"Self-defense #4 belongs to Advancing.\"); no real name in the docs. Push-back effect kept",
+  "note": "name OPEN, family Advancing (#459). Drive Back is retired, not a current name. Push-back effect kept",
   "status": "OPEN"
  },
  {
@@ -1151,7 +1173,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:19",
   "live": "drafts",
-  "note": "as #8, high",
+  "note": "as #8, high. Clash: this legacy seal (Trophy Case / abilities.json id throw) is also named Throw, same as the #457 Throw family and the real throw at #11. Waiting on Jay; keep the current name. Clash with #457 Throw (the Throw family and the real throw at #11 Osotogari). This is the legacy Trophy Case seal (abilities.json id throw). Waiting on Jay; keep the current name.",
   "status": "OPEN"
  },
  {
@@ -1256,12 +1278,12 @@
  {
   "file": "drafts/content/abilities/unlock-text.json",
   "id": "seal #4 (title)",
-  "name": "Drive Back",
-  "verbatim": null,
+  "name": "OPEN",
+  "verbatim": "docs/self-defense.md:75",
   "cand": "OPEN",
   "src": "docs/self-defense.md:14",
   "live": "drafts",
-  "note": "family Advancing (Jay, Nov 8: \"Self-defense #4 belongs to Advancing.\"); no real name in the docs. Push-back effect kept",
+  "note": "name OPEN, family Advancing (#459). Drive Back is retired, not a current name. Push-back effect kept",
   "status": "OPEN"
  },
  {
@@ -1316,7 +1338,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:19",
   "live": "drafts",
-  "note": "as #8, high",
+  "note": "as #8, high. Clash: this legacy seal (Trophy Case / abilities.json id throw) is also named Throw, same as the #457 Throw family and the real throw at #11. Waiting on Jay; keep the current name",
   "status": "OPEN"
  },
  {

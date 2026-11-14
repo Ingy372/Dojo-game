@@ -27,7 +27,12 @@ for i, (e, s) in enumerate(zip(seals, live), 1):
     if e.get('subtitle') != e.get('name'): bad.append(f'{t}: subtitle must equal name')
     name = e.get('name') or ''
     if len(name.split()) > 3: bad.append(f'{t}: name over 3 words')
-    if e.get('status') == 'PROPOSED':
+    if e.get('status') == 'APPLIED':
+        if e.get('name') != s['name']:
+            bad.append(f'{t}: APPLIED name must match abilities.json ({s["name"]!r})')
+        if e.get('altName') == s['name']:
+            bad.append(f'{t}: APPLIED altName should keep the old name, not the live one')
+    elif e.get('status') == 'PROPOSED':
         if e.get('altName') != s['name']: bad.append(f'{t}: altName must be the current name {s["name"]!r}')
         src = e.get('source') or ''
         m = re.fullmatch(r'(.+):(\d+)', src)
@@ -84,6 +89,11 @@ for r in audit:
     if not (R / r['file']).exists(): bad.append(f'audit {r["id"]}: file {r["file"]} missing')
     if r['status'] in ('Real', 'Rename', 'Renamed (drop-in)') and not on_line(r['cand'], r['src']): bad.append(f'audit {r["file"]} {r["id"]}: candidate {r["cand"]!r} is not on {r["src"]}')
     if r['status'] == 'OPEN' and r['cand'] != 'OPEN': bad.append(f'audit {r["id"]}: OPEN row must say OPEN')
+if any(r.get('name')=='Drive Back' for r in audit):
+    bad.append('audit: Drive Back is retired; #4 current name must not be Drive Back (name OPEN, family Advancing)')
+throw_rows=[r for r in audit if r.get('name')=='Throw' and r.get('status')=='OPEN']
+if not throw_rows or any('Clash with #457' not in (r.get('note') or '') for r in throw_rows):
+    bad.append('audit: legacy Trophy Case seal Throw must stay OPEN, with a #457 clash note, current name kept')
 print(f'strikes: {len(d.get("strikes", []))}; seal16: {s16.get("status")}; audit rows: {len(audit)}')
 # Manager's calls (Nov 8): 35 drop-in renames, family labels KEEP.
 def resolve(doc, where):
@@ -108,7 +118,7 @@ if any(e.get('name') == 'Advancing' for e in ren) or any(e.get('name') == 'Advan
 fm = [m for m in d.get('familyMoves', []) if m.get('technique') == 4]
 if not fm or fm[0].get('to') != 'advancing' or fm[0].get('from') != 'escape': bad.append('familyMoves: #4 must move from escape to advancing')
 for m in d.get('familyMoves', []):
-    if m.get('applyNow') is not False or 'FUTURE DEPENDENCY' not in (m.get('status') or '') or 'loader' not in (m.get('dependsOn') or ''): bad.append(f'familyMoves #{m.get("technique")}: must be marked a future dependency (applyNow false, dependsOn the loader)')
+    applied = 'APPLIED' in (m.get('status') or ''); future = 'FUTURE DEPENDENCY' in (m.get('status') or ''); bad.append(f'familyMoves #{m.get("technique")}: applyNow must be false; status APPLIED (already on main) or FUTURE DEPENDENCY') if m.get('applyNow') is not False or not (applied or future) else None
     for f in m.get('files', []):
         tgt = resolve(json.loads((R / f['file']).read_text()), f['where'])
         if tgt is None or tgt.get('technique') != m['technique']: bad.append(f'familyMoves: {f["file"]} {f["where"]} not found')

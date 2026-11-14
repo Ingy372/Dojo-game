@@ -13,7 +13,7 @@ Clash list: PR #402 (`seal-name-clashes-1-10.md`). Names come word for word from
 | 6 | `sharp-eyes` | Sharp Eyes | Self-Defense #6! / Sharp Eyes | OPEN: Candidate: 'Hook Punch' (line 16), but the attacker also throws a hook punch, which could confuse. | `docs/self-defense.md:16` | **OPEN** |
 | 7 | `create-distance` | Create Distance | Self-Defense #7! / Create Distance | Self-Defense #7! / **Palm Heel** | `docs/self-defense.md:17` | PROPOSED |
 | 8 | `disarm` | Disarm | Self-Defense #8! / Disarm | OPEN: Block-and-strike together (line 18) has no set name. Candidate: 'Outside Block' (also #4, #6, #7, #9). | `docs/self-defense.md:18` | **OPEN** |
-| 9 | `throw` | Throw | Self-Defense #9! / Throw | OPEN: Same as #8, high (line 19). No set name. Candidate: 'Outside Block'. | `docs/self-defense.md:19` | **OPEN** |
+| 9 | `throw` | Throw | Self-Defense #9! / Throw | OPEN: Same as #8, high (line 19). No set name. Candidate: 'Outside Block'. Clash with #457 Throw (legacy Trophy Case seal); waiting on Jay; keep the current name. | `docs/self-defense.md:19` | **OPEN** |
 | 10 | `follow-through` | Follow Through | Self-Defense #10! / Follow Through | Self-Defense #10! / **Double Knifehand Block** | `docs/self-defense.md:20` | PROPOSED |
 
 ## Nov 8 rule: real dojo names only (Jay, via the Manager)

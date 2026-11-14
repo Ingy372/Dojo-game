@@ -13,9 +13,9 @@ def where(name):
 SD=lambda n:f'docs/self-defense.md:{10+n}'
 KC=lambda n:f'docs/curriculum.md:{45+n}'
 # candidate per technique number / combo: (term or None, note)
-SEAL={1:('double punch',''),2:(None,'same as #1, other side'),3:('back fist','also #5, #10'),4:(None,'family Advancing (Jay, Nov 8: "Self-defense #4 belongs to Advancing."); no real name in the docs. Push-back effect kept'),
+SEAL={1:('double punch',''),2:(None,'same as #1, other side'),3:('back fist','also #5, #10'),4:(None,'name OPEN, family Advancing (#459). Drive Back is retired, not a current name. Push-back effect kept'),
 5:(None,'candidates back fist (also #3) / elbow'),6:(None,'candidate hook punch (attacker also throws one)'),7:('palm heel',''),8:(None,'block-and-strike, no set name'),
-9:(None,'as #8, high'),10:('double knifehand block',''),11:('osotogari','Jay\'s spelling; S4 "Osoto Gari"'),12:(None,'osotogari again (also #11)'),
+9:(None,'as #8, high. Clash: this legacy seal (Trophy Case / abilities.json id throw) is also named Throw, same as the #457 Throw family and the real throw at #11. Waiting on Jay; keep the current name'),10:('double knifehand block',''),11:('osotogari','Jay\'s spelling; S4 "Osoto Gari"'),12:(None,'osotogari again (also #11)'),
 13:('inside kick','also #14'),14:(None,'candidate spin kick (clashes with Strike "Spin Kick")'),15:(None,'candidate double punch (also #1)'),
 16:(None,'Jay (Nov 8): low hammer fist, then back fist; no name in docs'),17:('arm bar',''),18:(None,'parry is in many; no set name'),19:('wrist lock',''),20:(None,'grab and combo, no set name'),
 31:(None,'candidate arm bar (also #17)'),32:(None,'"slide to the wrist" is a step; candidate wrist lock (also #19)'),33:('party flex',''),34:(None,'no name ("same as 33 with a slam")'),
@@ -71,7 +71,18 @@ for k,v in json.load(open('drafts/content/katas/moves.json'))['moves'].items():
 for r in rows:
     if r['file'].endswith('abilities.json') and r['id'].endswith('stance') and r['cand']=='OPEN':
         r['note']="Jay-approved stance (J1, drafts/content/katas/stances.json), but not in the 3 docs"
-    r['status']='Real' if r['cand'].lower()==r['name'].lower().rstrip('!') else ('OPEN' if r['cand']=='OPEN' else 'Rename')
+    placeholder = r['name'] in ('OPEN',) or r['name'].startswith('Self-Defense #')
+    if placeholder or r['cand']=='OPEN':
+        r['status']='OPEN'
+    elif r['cand'].lower()==r['name'].lower().rstrip('!'):
+        r['status']='Real'
+    else:
+        r['status']='Rename'
+    if r['name']=='Throw' and 'family label' not in r['note'] and 'game group' not in r['note']:
+        clash = 'Clash with #457 Throw (the Throw family and the real throw at #11 Osotogari). This is the legacy Trophy Case seal (abilities.json id throw). Waiting on Jay; keep the current name.'
+        if clash not in r['note']:
+            r['note'] = (r['note'] + '. ' if r['note'] else '') + clash
+
 import collections; FIX={'pivot':('Skip','','motion word, not a technique'),'turn.180':('Skip','','motion word'),'turn':('Skip','','motion word'),'turn.big-special':('Skip','','motion word'),
 'stance.attention':('Skip','','"attention" position, not a technique; docs match is unrelated'),'chamber':('Skip','','motion word'),'catch':('Skip','','docs match is unrelated'),
 'strike.backfist':('Back Fist','docs/self-defense.md:13','spelling: docs write "back fist"'),'block.double-knife-hand':('Double Knifehand Block','docs/self-defense.md:20','docs spelling "knifehand"')}
