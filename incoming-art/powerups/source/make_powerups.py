@@ -16,7 +16,7 @@ KEY = [
     ("calm-breath",   (226, 96, 196),  "breath",  "three calm breath swirls (Quiet Mind: Focus fills faster)"),
     ("steady-start",  (88, 100, 214),  "orb",     "a Focus orb already glowing (Warm Up: start every room with some Focus)"),
     ("lighter-strike",(120, 196, 250), "feather", "a light feather (Swift Strikes: Strikes use less Focus)"),
-    ("softer-block",  (226, 180, 104), "pad",     "a firm dojo blocking pad with hits bouncing off (Firm Guard: Blocks stop more of the hit)"),
+    ("softer-block",  (226, 180, 104), "pad",     "a raised forearm block (gi sleeve, closed fist) with hits bouncing off (Firm Guard: Blocks stop more of the hit)"),
 ]
 def mix(c, k, t=(255, 255, 255)): return tuple(int(a + (b - a) * k) for a, b in zip(c, t))
 def poly(d, pts, fill, ow=3.2):
@@ -66,14 +66,27 @@ def symbol(d, kind, c):
         d.line((s(cx - 25), s(cy + 29), s(cx + 20), s(cy - 24)), fill=mix(c, .8), width=s(2))
         for y, x0 in ((cy - 8, cx - 38), (cy + 4, cx - 40)):
             d.line((s(x0), s(y), s(x0 + 12), s(y)), fill=INK, width=s(5)); d.line((s(x0), s(y), s(x0 + 12), s(y)), fill=lt, width=s(2.5))
-    elif kind == "pad":                                       # a dojo blocking pad (kick shield) held up firm, impact arcs bounce off
-        d.rounded_rectangle((s(cx - 17), s(cy - 29), s(cx + 17), s(cy + 29)), s(11), fill=c, outline=INK, width=s(3.4))
-        d.rounded_rectangle((s(cx - 11), s(cy - 23), s(cx - 3), s(cy + 6)), s(4), fill=lt)
-        for y in (cy - 12, cy + 12):
-            d.rectangle((s(cx - 17), s(y - 3), s(cx + 17), s(y + 3)), fill=dk, outline=INK, width=s(1.8))
-        for r in (8, 15):
-            d.arc((s(cx + 18 - r), s(cy - r * 1.6), s(cx + 18 + r * 1.2), s(cy + r * 1.6)), -60, 60, fill=INK, width=s(4.4))
-            d.arc((s(cx + 18 - r), s(cy - r * 1.6), s(cx + 18 + r * 1.2), s(cy + r * 1.6)), -58, 58, fill=lt, width=s(2))
+    elif kind == "pad":                                       # Firm Guard: a rising forearm block (gi sleeve, closed fist), the hit bounces off the top of the forearm
+        import math
+        SKIN, SKD, GI = (238, 188, 146), (206, 150, 112), (250, 250, 246)
+        ang = math.radians(-24); ux, uy = math.cos(ang), math.sin(ang); nx, ny = -uy, ux
+        def seg(t0, t1, w0, w1, ox=cx - 30, oy=cy + 21):
+            return [(ox + ux * t0 + nx * w0, oy + uy * t0 + ny * w0), (ox + ux * t1 + nx * w1, oy + uy * t1 + ny * w1),
+                    (ox + ux * t1 - nx * w1, oy + uy * t1 - ny * w1), (ox + ux * t0 - nx * w0, oy + uy * t0 - ny * w0)]
+        poly(d, seg(3, 24, 10.5, 10), GI, 3.2)                 # gi sleeve (white)
+        poly(d, seg(22, 29, 9.5, 9.5), c, 2.6)                  # sand cuff band
+        poly(d, seg(28, 46, 7.5, 7), SKIN, 3.2)                 # forearm
+        fx, fy = cx - 30 + ux * 54, cy + 21 + uy * 54         # fist centre
+        F = Image.new("RGBA", (s(30), s(30))); fd = ImageDraw.Draw(F)
+        fd.rounded_rectangle((s(3), s(3), s(27), s(27)), s(8), fill=SKIN, outline=INK, width=s(3.2))
+        for x in (11, 17, 23): fd.line((s(x), s(5), s(x), s(15)), fill=SKD, width=s(2))
+        fd.rounded_rectangle((s(3), s(15), s(19), s(25)), s(5), fill=SKIN, outline=INK, width=s(2.4))   # thumb wrapped across the front
+        F = F.rotate(24, resample=Image.BICUBIC, expand=True)
+        d._image.alpha_composite(F, (int(s(fx) - F.width / 2), int(s(fy) - F.height / 2)))
+        mx, my = cx - 30 + ux * 34 + nx * -14, cy + 21 + uy * 34 + ny * -14   # just above the forearm
+        for r in (9, 16):
+            box = (s(mx - r * 1.5), s(my - r * 1.4), s(mx + r * 1.5), s(my + r * 0.6))
+            d.arc(box, 205, 335, fill=INK, width=s(5.2)); d.arc(box, 207, 333, fill=c, width=s(2.6))
 def icon(c, kind, W=128):
     im = Image.new("RGBA", (s(128), s(128))); 
     g = Image.new("RGBA", im.size); gd = ImageDraw.Draw(g); gd.ellipse((s(16), s(16), s(112), s(112)), fill=c + (170,)); g = g.filter(ImageFilter.GaussianBlur(s(3)))
@@ -124,3 +137,21 @@ cl = Image.new("RGBA", (20 + 4 * 276, 296), BG)
 for k, i in enumerate(ids): cl.alpha_composite(Image.open(os.path.join(SP, f"icon-{i}@2x.png")), (20 + k * 276, 20))
 cl.save(os.path.join(PV, "closeup-256.png"))
 print("ok")
+# 4) Firm Guard before/after at 36 px (and 128 px) for the art-gate redraw; needs OLD_FIRMGUARD=<old icon-softer-block.png>
+ofg = os.environ.get("OLD_FIRMGUARD", "")
+if ofg and os.path.exists(ofg):
+    old = Image.open(ofg).convert("RGBA"); new = NEW["softer-block"]
+    ctx = Image.open(os.path.join(od, "icon-heavy-hands.png")).convert("RGBA") if od and os.path.exists(os.path.join(od, "icon-heavy-hands.png")) else None
+    ctx2 = Image.open(os.path.join(od, "icon-iron-skin.png")).convert("RGBA") if od and os.path.exists(os.path.join(od, "icon-iron-skin.png")) else None
+    ba = Image.new("RGBA", (20 + 2 * 150 + 40 + 4 * 52, 2 * 150 + 20), BG); d = ImageDraw.Draw(ba)
+    for k, (im, near) in enumerate(((old, [ctx2, ctx]), (new, [ctx2, ctx]))):
+        y = 10 + k * 150
+        ba.alpha_composite(im, (20, y)); ba.alpha_composite(im.resize((36, 36), Image.LANCZOS), (170, y + 46))
+        ba.alpha_composite(grey(im.resize((36, 36), Image.LANCZOS)), (214, y + 46))
+        x = 280
+        for n in near:
+            if n is not None: ba.alpha_composite(n.resize((36, 36), Image.LANCZOS), (x, y + 46)); x += 52
+        ba.alpha_composite(im.resize((36, 36), Image.LANCZOS), (x, y + 46))
+    d.line((10, 160, ba.width - 10, 160), fill=(255, 255, 255), width=2)
+    ba.save(os.path.join(PV, "firm-guard-before-after.png"))
+print("ok2")
