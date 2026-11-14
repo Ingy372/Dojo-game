@@ -29,6 +29,8 @@ const screen = (js.match(/Testing screen/g) ?? []).length;
 console.log(`files ${files.length}`);
 console.log(`quoted Testing label ${button.length}`);
 console.log(`Testing screen string ${screen}`);
+// The Old save action is a row inside the fixture screen, so with no Testing button it has no way in.
+console.log(`Old save action string ${(js.match(/Old save \(show slot note again\)/g) ?? []).length} (inside the fixture screen only)`);
 if (button.length > 0) {
   console.error('FAIL: beta bundle still has the Testing button label, so the fixture list can be opened from it.');
   process.exit(1);

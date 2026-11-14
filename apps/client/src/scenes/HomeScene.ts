@@ -43,7 +43,7 @@ import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type 
 import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, gearSheetBox, slotEmptyLine, tileBox, toggleFilter, bagScreenLayout, bagTileBox, BAG_SCREEN, bagPageCount, turnBagPage, sheetAtTop } from '../ui/gearBoard';
 import { CONTENT, KATAS } from '../game/content';
 import { loadSave, writeSave } from '../game/save';
-import { currentTraining, selectProfile, shortDate } from '../game/student';
+import { currentTraining, seedLoadout, selectProfile, shortDate } from '../game/student';
 import { hex } from '../ui/belt';
 import { startTowerRun } from '../game/tower';
 import { isPlayTimeUp } from '../game/playTime';
@@ -447,13 +447,12 @@ export class HomeScene extends Phaser.Scene {
     const enterH = short ? MIN_TAP : 52;
     this.button(pad, y, leftW, enterH, 'ENTER THE TOWER', 0xd5713a, 19, () => this.enterTower());
     y += enterH + S2;
-    this.button(pad, y, leftW, 44, 'Practice room', 0x3a3a4a, TYPE.body, () => this.goTo('Game', {}));
+    // Staff fixture list, beside Practice room so the next-step card keeps its height on a 375 pt phone.
+    // One ordinary click. A beta build does not draw it (B-SAFE) and Practice room keeps the full row.
+    const testW = BETA ? 0 : 96;
+    this.button(pad, y, leftW - (testW && testW + S2), 44, 'Practice room', 0x3a3a4a, TYPE.body, () => this.goTo('Game', {}));
+    if (!BETA) this.button(pad + leftW - testW, y, testW, MIN_TAP, 'Testing', 0x4a3f63, TYPE.body, () => this.openTesting());
     y += 44 + S2;
-    // Staff fixture list. One ordinary click. A beta build does not draw it (B-SAFE).
-    if (!BETA) {
-      this.button(pad, y, leftW, MIN_TAP, 'Testing', 0x4a3f63, TYPE.body, () => this.openTesting());
-      y += MIN_TAP + S2;
-    }
     this.renderPath(pad, y, leftW, height - y - pad);
 
     // ---- right: tabs
@@ -2178,6 +2177,16 @@ export class HomeScene extends Phaser.Scene {
         writeSave(this.profile);
         this.render();
         this.openTesting();
+      },
+      // Turns this save back into one from before Seal slots and runs the real one-time seed,
+      // so the slot note, Got it and the waiting help can be checked on a deployed build.
+      oldSave: () => {
+        Object.assign(this.profile, { loadoutV2: false, strikeSeeded: false, showSlotNote: false, styleSeen: null, styleHelpSeen: [] });
+        writeSave(this.profile);
+        seedLoadout();
+        this.profile = loadSave();
+        this.closeTesting();
+        this.refresh();
       },
       close: () => this.closeTesting(),
     });

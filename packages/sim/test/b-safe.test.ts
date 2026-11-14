@@ -51,8 +51,11 @@ describe('B-SAFE', () => {
 
   it('the Training Board Testing button exists only outside beta, and it cannot open the fixture screen in beta', () => {
     const home = file('scenes/HomeScene.ts');
-    // One ordinary click, full 44 pt row, drawn only when this is not a beta build.
-    expect(home).toMatch(/if \(!BETA\) \{\s*this\.button\(pad, y, leftW, MIN_TAP, 'Testing'[\s\S]*?this\.openTesting\(\)/);
+    // One ordinary click, a 44 pt button beside Practice room, drawn only when this is not a beta build.
+    expect(home).toMatch(/if \(!BETA\) this\.button\(pad \+ leftW - testW, y, testW, MIN_TAP, 'Testing'[^\n]*this\.openTesting\(\)\)/);
+    // The Old save action lives only inside the fixture screen, so a beta build cannot reach it either.
+    expect(home.indexOf('oldSave:')).toBeGreaterThan(home.indexOf('new TestingPanel'));
+    expect(file('ui/TestingPanel.ts')).toMatch(/'Old save \(show slot note again\)'/);
     // The button's handler calls openTesting, which returns before the panel exists.
     expect(home).toMatch(/openTesting\(\): void \{\s*if \(BETA\) return/);
     const open = home.slice(home.indexOf('private openTesting'));
