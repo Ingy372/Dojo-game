@@ -1,0 +1,9 @@
+{
+  "_note": "OV-P1 data draft, not live. New Power-ups for content/insights/insights.json (OV-B6 imports). Names and card text are OPEN for the Content Designer (OV-C1). Families use today's code names; see R-POWERUPS-15.md section 5 for the rename proposal.",
+  "insights": [
+    { "id": "calm-breath", "name": "OPEN", "family": "virtue", "text": "OPEN (meaning: you gain Focus a bit faster)", "effect": { "type": "focusGain", "amount": 0.25 } },
+    { "id": "steady-start", "name": "OPEN", "family": "virtue", "text": "OPEN (meaning: start every room with some Focus)", "effect": { "type": "startFocus", "amount": 40 } },
+    { "id": "lighter-strike", "name": "OPEN", "family": "flowing", "text": "OPEN (meaning: Strikes cost less Focus)", "effect": { "type": "strikeCost", "amount": 4 } },
+    { "id": "softer-block", "name": "OPEN", "family": "rooted", "text": "OPEN (meaning: your Blocks stop a little more of the hit)", "effect": { "type": "blockCut", "amount": 0.1 } }
+  ]
+}
