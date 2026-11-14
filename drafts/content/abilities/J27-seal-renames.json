@@ -1,5 +1,5 @@
 {
-  "notes": "J27 (Jay via the Manager): seal callout subtitles use the REAL Action Zone technique names, because they teach the terms. Drop-in for content/abilities/abilities.json seals[0..9]: same ids, same order, same text and effect; only 'name' changes and the old name goes in 'altName' (as #414 did). 'subtitle' is the line under the 'Self-Defense #N!' callout (technique-callouts.json). Each proposed name is copied word for word (title case) from the 'What the student does' column of docs/self-defense.md, at the file and line in 'source'. docs/curriculum.md names no technique steps. OPEN = no single clear real name; the seal keeps its current name until Jay picks. 'about' is a new 8-words-or-fewer line; 'text' is unchanged game text. PROPOSAL only: nothing is renamed in game files. When the Programmer copies a seal over, drop 'technique', 'subtitle', 'callout', 'about', 'source', 'status' and 'openNote' unless the loader takes them. Check: drafts/content/tools/check-j27-seal-names.py. Nov 8 (Jay via the Manager: real dojo names ONLY, everywhere): 'strikes' holds the Kick Combo 5 Strike, named 'Hook Kick' (docs/curriculum.md:50, 'step behind hook kick'); the old name 'Low-High Kicks' stays in altName, id unchanged. 'Low-High' appears in drafts/content only in strikes-4-7-text.json (already altName), seals-16-20-text.json (#16) and two notes; it is in no seal-families text and nowhere in content/. 'seal16' is #16: no real name in the docs, so OPEN, with a description and an 8-word kid line. Nov 8, Manager's calls on #447: 'renames' holds all 35 ready real names as drop-ins, one per place the name appears: 'file' and 'where' find the entry ('where' uses id, technique or ability keys, never positions), 'field' is the field to change, 'name' is the real name, 'altName' the old one, 'source' the docs line. ids never change. live=true means the file is in content/: the Programmer applies those; this PR edits no content/ file. Seal family labels stay (KEEP). Nov 8 (Manager's correction): Jay said \"Self-defense #4 belongs to Advancing.\" Advancing is #4's FAMILY, not its name, so #4 is OPEN with family Advancing and keeps its push-back effect. #16's kid line (Manager, Nov 8): \"Quick low hammer fist, then high back fist.\" (8 words).. The renames list now also covers unlock-text.json titles, which the first audit missed. Manager, Nov 8: #18 (slide-away) is OPEN, not Parry (parry is in many; no set name).",
+  "notes": "J27 (Jay via the Manager): seal callout subtitles use the REAL Action Zone technique names, because they teach the terms. Drop-in for content/abilities/abilities.json seals[0..9]: same ids, same order, same text and effect; only 'name' changes and the old name goes in 'altName' (as #414 did). 'subtitle' is the line under the 'Self-Defense #N!' callout (technique-callouts.json). Each proposed name is copied word for word (title case) from the 'What the student does' column of docs/self-defense.md, at the file and line in 'source'. docs/curriculum.md names no technique steps. OPEN = no single clear real name; the seal keeps its current name until Jay picks. 'about' is a new 8-words-or-fewer line; 'text' is unchanged game text. PROPOSAL only: nothing is renamed in game files. When the Programmer copies a seal over, drop 'technique', 'subtitle', 'callout', 'about', 'source', 'status' and 'openNote' unless the loader takes them. Check: drafts/content/tools/check-j27-seal-names.py. Nov 8 (Jay via the Manager: real dojo names ONLY, everywhere): 'strikes' holds the Kick Combo 5 Strike, named 'Hook Kick' (docs/curriculum.md:50, 'step behind hook kick'); the old name 'Low-High Kicks' stays in altName, id unchanged. 'Low-High' appears in drafts/content only in strikes-4-7-text.json (already altName), seals-16-20-text.json (#16) and two notes; it is in no seal-families text and nowhere in content/. 'seal16' is #16: no real name in the docs, so OPEN, with a description and an 8-word kid line. Nov 8, Manager's calls on #447: 'renames' holds all 35 ready real names as drop-ins, one per place the name appears: 'file' and 'where' find the entry ('where' uses id, technique or ability keys, never positions), 'field' is the field to change, 'name' is the real name, 'altName' the old one, 'source' the docs line. ids never change. live=true means the file is in content/: the Programmer applies those; this PR edits no content/ file. Seal family labels stay (KEEP). Nov 8 (Manager's correction): Jay said \"Self-defense #4 belongs to Advancing.\" Advancing is #4's FAMILY, not its name, so #4 is OPEN with family Advancing and keeps its push-back effect. #16's kid line (Manager, Nov 8): \"Quick low hammer fist, then high back fist.\" (8 words).. The renames list now also covers unlock-text.json titles, which the first audit missed. Manager, Nov 8: #18 (slide-away) is OPEN, not Parry (parry is in many; no set name). Nov 14 (OV-C3, Manager fix): #11 stays Outside Reap (Jay, Nov 9; docs/decisions.md:1695), not Osotogari. #9 Throw stays a placeholder, OPEN, waiting on Jay (one note). The Throw family is unchanged.",
   "seals": [
     {
       "id": "off-balance",
@@ -10,12 +10,13 @@
       "subtitle": "Double Punch",
       "about": "Step aside, then punch two times fast.",
       "source": "docs/self-defense.md:11",
-      "status": "PROPOSED",
+      "status": "APPLIED",
       "text": "Great Counters leave the attacker off-balance half a second longer.",
       "effect": {
         "type": "staggerTicks",
         "amount": 10
-      }
+      },
+      "applied": "Live name already on main (J27-APPLY)."
     },
     {
       "id": "escape-step",
@@ -42,13 +43,14 @@
       "subtitle": "Back Fist",
       "about": "Spin around and strike with a back fist.",
       "source": "docs/self-defense.md:13",
-      "status": "PROPOSED",
+      "status": "APPLIED",
       "text": "Great Counters also knock into enemies close by.",
       "effect": {
         "type": "rippleCounter",
         "amount": 0.6,
         "radius": 1.2
-      }
+      },
+      "applied": "Live name already on main (J27-APPLY)."
     },
     {
       "id": "steady-breath",
@@ -113,12 +115,13 @@
       "subtitle": "Palm Heel",
       "about": "Trap the arm, then one strong palm strike.",
       "source": "docs/self-defense.md:17",
-      "status": "PROPOSED",
+      "status": "APPLIED",
       "text": "Blocks shove the attacker back, bouncing 20% of the hit back at them.",
       "effect": {
         "type": "blockReflect",
         "amount": 0.2
-      }
+      },
+      "applied": "Live name already on main (J27-APPLY)."
     },
     {
       "id": "disarm",
@@ -141,14 +144,14 @@
       "id": "throw",
       "technique": 9,
       "name": "Throw",
-      "altName": null,
+      "altName": "Throw",
       "callout": "Self-Defense #9!",
       "subtitle": "Throw",
       "about": null,
       "source": null,
       "status": "OPEN",
-      "openNote": "Same as #8, high (line 19). No set name. Candidate: 'Outside Block'.",
-      "text": "Great Counter hits are 25% stronger.",
+      "openNote": "Placeholder, OPEN, waiting on Jay. Clash with the #457 Throw family. Keep the current name Throw. This is the legacy Trophy Case seal.",
+      "text": "A Great Counter knocks a big or fast foe down. Hit it while it rests!",
       "effect": {
         "type": "counterStrength",
         "amount": 0.5
@@ -163,12 +166,13 @@
       "subtitle": "Double Knifehand Block",
       "about": "Block with both hands, then grab the arm.",
       "source": "docs/self-defense.md:20",
-      "status": "PROPOSED",
+      "status": "APPLIED",
       "text": "Off-balance (staggered) enemies take 15% more damage.",
       "effect": {
         "type": "staggerBonus",
         "amount": 0.15
-      }
+      },
+      "applied": "Live name already on main (J27-APPLY)."
     }
   ],
   "strikes": [
@@ -204,123 +208,13 @@
   },
   "renames": [
     {
-      "file": "content/abilities/abilities.json",
-      "where": "seals[id=off-balance]",
-      "field": "name",
-      "id": "off-balance",
-      "name": "Double Punch",
-      "altName": "Off-Balance",
-      "source": "docs/self-defense.md:11",
-      "live": true
-    },
-    {
-      "file": "content/abilities/abilities.json",
-      "where": "seals[id=sweep]",
-      "field": "name",
-      "id": "sweep",
-      "name": "Back Fist",
-      "altName": "Sweep",
-      "source": "docs/self-defense.md:13",
-      "live": true
-    },
-    {
-      "file": "content/abilities/abilities.json",
-      "where": "seals[id=create-distance]",
-      "field": "name",
-      "id": "create-distance",
-      "name": "Palm Heel",
-      "altName": "Create Distance",
-      "source": "docs/self-defense.md:17",
-      "live": true
-    },
-    {
-      "file": "content/abilities/abilities.json",
-      "where": "seals[id=follow-through]",
-      "field": "name",
-      "id": "follow-through",
-      "name": "Double Knifehand Block",
-      "altName": "Follow Through",
-      "source": "docs/self-defense.md:20",
-      "live": true
-    },
-    {
-      "file": "content/abilities/abilities.json",
-      "where": "strikes[id=quick-combo]",
-      "field": "name",
-      "id": "quick-combo",
-      "name": "Jumping Spin Kicks",
-      "altName": "Jumping Spins",
-      "source": "docs/curriculum.md:47",
-      "live": true
-    },
-    {
-      "file": "content/abilities/strikes.json",
-      "where": "strikes[id=jumping-spins]",
-      "field": "name",
-      "id": "jumping-spins",
-      "name": "Jumping Spin Kicks",
-      "altName": "Jumping Spins",
-      "source": "docs/curriculum.md:47",
-      "live": true
-    },
-    {
-      "file": "content/abilities/strikes.json",
-      "where": "strikes[id=butterfly-flow]",
-      "field": "name",
-      "id": "butterfly-flow",
-      "name": "Butterfly Kick",
-      "altName": "Butterfly Flow",
-      "source": "docs/curriculum.md:48",
-      "live": true
-    },
-    {
-      "file": "content/abilities/seal-families.json",
-      "where": "families[id=escape].ranks[technique=1]",
-      "field": "name",
-      "id": "escape #1",
-      "name": "Double Punch",
-      "altName": "Off the Line",
-      "source": "docs/self-defense.md:11",
-      "live": true
-    },
-    {
-      "file": "content/abilities/seal-families.json",
-      "where": "families[id=counter].ranks[technique=3]",
-      "field": "name",
-      "id": "counter #3",
-      "name": "Back Fist",
-      "altName": "Spin Back Fist",
-      "source": "docs/self-defense.md:13",
-      "live": true
-    },
-    {
-      "file": "content/abilities/seal-families.json",
-      "where": "families[id=counter].ranks[technique=10]",
-      "field": "name",
-      "id": "counter #10",
-      "name": "Double Knifehand Block",
-      "altName": "Grab and Strike",
-      "source": "docs/self-defense.md:20",
-      "live": true
-    },
-    {
       "file": "content/abilities/seal-families.json",
       "where": "families[id=throw].ranks[technique=11]",
       "field": "name",
       "id": "throw #11",
-      "name": "Osotogari",
-      "altName": "Outside Reap",
-      "source": "docs/self-defense.md:21",
-      "live": true
-    },
-    {
-      "file": "content/abilities/seal-families.json",
-      "where": "families[id=disarm].ranks[technique=13]",
-      "field": "name",
-      "id": "disarm #13",
-      "name": "Inside Kick",
-      "altName": "Kick the Weapon",
-      "source": "docs/self-defense.md:23",
+      "name": "Outside Reap",
+      "altName": "Osotogari",
+      "source": "docs/decisions.md:1695",
       "live": true
     },
     {
@@ -365,16 +259,6 @@
     },
     {
       "file": "drafts/content/abilities/seal-families-text.json",
-      "where": "families[id=throw].ranks[technique=11]",
-      "field": "name",
-      "id": "throw #11",
-      "name": "Osotogari",
-      "altName": "Outside Reap",
-      "source": "docs/self-defense.md:21",
-      "live": false
-    },
-    {
-      "file": "drafts/content/abilities/seal-families-text.json",
       "where": "strikes[id=jumping-spins]",
       "field": "name",
       "id": "jumping-spins",
@@ -391,16 +275,6 @@
       "name": "Butterfly Kick",
       "altName": "Butterfly Flow",
       "source": "docs/curriculum.md:48",
-      "live": false
-    },
-    {
-      "file": "drafts/content/abilities/seals-11-15-text.json",
-      "where": "seals[id=outside-reap]",
-      "field": "name",
-      "id": "outside-reap",
-      "name": "Osotogari",
-      "altName": "Outside Reap",
-      "source": "docs/self-defense.md:21",
       "live": false
     },
     {
@@ -575,16 +449,6 @@
     },
     {
       "file": "drafts/content/abilities/unlock-text.json",
-      "where": "seals[technique=11]",
-      "field": "title",
-      "id": "seal #11",
-      "name": "Osotogari",
-      "altName": "Outside Reap",
-      "source": "docs/self-defense.md:21",
-      "live": false
-    },
-    {
-      "file": "drafts/content/abilities/unlock-text.json",
       "where": "seals[technique=13]",
       "field": "title",
       "id": "seal #13",
@@ -624,12 +488,12 @@
       "files": [
         {
           "file": "content/abilities/seal-families.json",
-          "where": "families[id=escape].ranks[technique=4]",
+          "where": "families[id=advancing].ranks[technique=4]",
           "live": true
         },
         {
           "file": "drafts/content/abilities/seal-families-text.json",
-          "where": "families[id=escape].ranks[technique=4]",
+          "where": "families[id=advancing].ranks[technique=4]",
           "live": false
         },
         {
@@ -640,10 +504,11 @@
         }
       ],
       "source": "Jay, Nov 8, via the Manager (#447 correction): \"Self-defense #4 belongs to Advancing.\" Advancing is the family, not the name. This replaces J21's Escape family (drafts/planning/R-G2B-seal-families-16-40.md:11).",
-      "note": "Files #4 under a new Advancing family; name and push-back effect unchanged. Do not apply yet: no Advancing family exists in seal-families.json and the loader rejects one. When the loader supports it, the Programmer adds the family (family text is the Planner's call) and then applies this move. The renames can be applied now.",
-      "status": "FUTURE DEPENDENCY: do not apply",
+      "note": "Already done on main (#459): #4 is in the Advancing family, name still OPEN, push-back kept. This entry is a record, not a drop-in to apply again.",
+      "status": "APPLIED on main (#459). Do not apply again.",
       "applyNow": false,
-      "dependsOn": "The loader schema must support an 'advancing' family id first. Tester (#447, at 4cec6ff5): adding or moving to an advancing family throws today; removing #4 from escape without adding the family loses its push. Until then #4 stays under escape in content and drafts, with a j27 note on the entry."
+      "dependsOn": "Done. The loader now supports the advancing family (see #459).",
+      "appliedBy": "#459"
     }
   ]
 }

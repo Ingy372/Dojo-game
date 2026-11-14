@@ -9,12 +9,12 @@ Each line: current name(s), what the move is (from `docs/self-defense.md` unless
 
 **Live in `content/` first**
 1. **#2** Escape Step / Other Side: like #1, other direction. Candidates: Double Punch (also #1).
-2. **#4** Steady Breath / Drive Back: outside block, double punch, punch high. **Family: Advancing** (Jay, Nov 8). Candidates: Outside Block, Double Punch (also #1).
+2. **#4** Steady Breath (Drive Back is retired, not a current name): outside block, double punch, punch high. **Name OPEN, family Advancing** (#459). Candidates: Outside Block, Double Punch (also #1).
 3. **#5** Strong Block / Spin Elbow: inside block, spin elbow, back fist. Candidates: Back Fist (also #3), elbow (no set name).
 4. **#6** Sharp Eyes / Arm Wrap: outside block, wrap the arm, several strikes. Candidates: Hook Punch (the attacker throws one too).
 5. **#8** Disarm / Block and Strike: block and strike at the same moment. Candidates: Outside Block.
-6. **#9** Throw / High Block Strike: like #8, but high. Candidates: Outside Block.
-7. **#12** Reap and Finish: osotogari, then a finish on the ground. Candidates: Osotogari (also #11).
+6. **#9** Throw (placeholder, OPEN, waiting on Jay): like #8, but high. Clash with the #457 Throw family. Keep the current name. The family rank at #9 is still High Block Strike.
+7. **#12** Reap and Finish: same throw as #11 (Outside Reap), then a finish. Candidates: none (Outside Reap is #11's name).
 8. **#14** Kick and Spin: kick the weapon aside, then spin kick. Candidates: Spin Kick (same as the Strike), Inside Kick (also #13).
 9. **#15** Slip and Double: parry, outside block, double punch. Candidates: Double Punch (also #1).
 10. **Stances** Open Leg, Cat, Front, Horse: approved in J1, but Jay's own words naming them are not in `decisions.md` or `progress.md`, and they are not in the three docs. Candidates: keep these names once Jay's words are recorded.
@@ -37,22 +37,22 @@ Each line: current name(s), what the move is (from `docs/self-defense.md` unless
 **Real names** are matched word for word (case aside) against `docs/curriculum.md`, `docs/self-defense.md` and `docs/framework.md`. framework.md has no technique list, so every source is one of the other two. A candidate is the real term on that technique's own line in the docs. **OPEN** means the docs have no single clear name.
 **Status:** Real = already the real name. Renamed (drop-in) = a ready real name, built as a drop-in in `J27-seal-renames.json` under `renames` (the Programmer applies the live ones). KEEP = Seal family label, kept as a game group (Manager, Nov 8). OPEN = needs Jay. Skip = a motion word, not a technique.
 
-**Totals:** 147 names (including the `unlock-text.json` titles). Live in `content/`: Real 5, Renamed (drop-in) 12, KEEP 6, OPEN 19. Drafts only: Real 11, Renamed (drop-in) 29, KEEP 6, OPEN 52, Skip 7.
+**Totals:** 149 names (including the `unlock-text.json` titles). Live in `content/`: Real 16, Renamed (drop-in) 1, KEEP 7, OPEN 19. Drafts only: Real 14, Renamed (drop-in) 26, KEEP 7, OPEN 52, Skip 7.
 
 | File | Id | Current name | Real-name candidate | Source line | Live or drafts | Status | Note |
 |---|---|---|---|---|---|---|---|
-| `content/abilities/abilities.json` | `off-balance` | Off-Balance | Double Punch | `docs/self-defense.md:11` | live | Renamed (drop-in) |  |
+| `content/abilities/abilities.json` | `off-balance` | Double Punch | Double Punch | `docs/self-defense.md:11` | live | Real |  |
 | `content/abilities/abilities.json` | `escape-step` | Escape Step | OPEN | `docs/self-defense.md:12` | live | OPEN | same as #1, other side |
-| `content/abilities/abilities.json` | `sweep` | Sweep | Back Fist | `docs/self-defense.md:13` | live | Renamed (drop-in) | also #5, #10 |
-| `content/abilities/abilities.json` | `steady-breath` | Steady Breath | OPEN | `docs/self-defense.md:14` | live | OPEN | family Advancing (Jay, Nov 8: "Self-defense #4 belongs to Advancing."); no real name in the docs. Push-back effect kept |
+| `content/abilities/abilities.json` | `sweep` | Back Fist | Back Fist | `docs/self-defense.md:13` | live | Real | also #5, #10 |
+| `content/abilities/abilities.json` | `steady-breath` | Steady Breath | OPEN | `docs/self-defense.md:14` | live | OPEN | name OPEN, family Advancing (#459). Drive Back is retired, not a current name. Push-back effect kept |
 | `content/abilities/abilities.json` | `strong-block` | Strong Block | OPEN | `docs/self-defense.md:15` | live | OPEN | candidates back fist (also #3) / elbow |
 | `content/abilities/abilities.json` | `sharp-eyes` | Sharp Eyes | OPEN | `docs/self-defense.md:16` | live | OPEN | candidate hook punch (attacker also throws one) |
-| `content/abilities/abilities.json` | `create-distance` | Create Distance | Palm Heel | `docs/self-defense.md:17` | live | Renamed (drop-in) |  |
+| `content/abilities/abilities.json` | `create-distance` | Palm Heel | Palm Heel | `docs/self-defense.md:17` | live | Real |  |
 | `content/abilities/abilities.json` | `disarm` | Disarm | OPEN | `docs/self-defense.md:18` | live | OPEN | block-and-strike, no set name |
-| `content/abilities/abilities.json` | `throw` | Throw | OPEN | `docs/self-defense.md:19` | live | OPEN | as #8, high |
-| `content/abilities/abilities.json` | `follow-through` | Follow Through | Double Knifehand Block | `docs/self-defense.md:20` | live | Renamed (drop-in) |  |
+| `content/abilities/abilities.json` | `throw` | Throw | OPEN | `docs/self-defense.md:19` | live | OPEN | Placeholder, OPEN, waiting on Jay. Clash with the #457 Throw family. Keep the current name Throw. This is the legacy Trophy Case seal (abilities.json id throw). |
+| `content/abilities/abilities.json` | `follow-through` | Double Knifehand Block | Double Knifehand Block | `docs/self-defense.md:20` | live | Real |  |
 | `content/abilities/abilities.json` | `follow-up-kick` | Spin Kick | Spin Kick | `docs/curriculum.md:46` | live | Real |  |
-| `content/abilities/abilities.json` | `quick-combo` | Jumping Spins | Jumping Spin Kicks | `docs/curriculum.md:47` | live | Renamed (drop-in) | doc: "3 jumping spin kicks" (plural, word for word) |
+| `content/abilities/abilities.json` | `quick-combo` | Jumping Spin Kicks | Jumping Spin Kicks | `docs/curriculum.md:47` | live | Real | doc: "3 jumping spin kicks" (plural, word for word) |
 | `content/abilities/abilities.json` | `beginners-stance` | Beginner's Stance | Beginner's Stance | `docs/curriculum.md:36` | live | Real |  |
 | `content/abilities/abilities.json` | `ready-stance` | Open Leg Stance | OPEN | - | live | OPEN | Jay-approved stance (J1), but Jay's own words naming it are not in decisions.md or progress.md, so curriculum.md was not edited |
 | `content/abilities/abilities.json` | `cat-stance` | Cat Stance | OPEN | - | live | OPEN | Jay-approved stance (J1), but Jay's own words naming it are not in decisions.md or progress.md, so curriculum.md was not edited |
@@ -60,34 +60,36 @@ Each line: current name(s), what the move is (from `docs/self-defense.md` unless
 | `content/abilities/abilities.json` | `fighting-stance` | Fighting Stance | Fighting Stance | `docs/self-defense.md:23` | live | Real |  |
 | `content/abilities/abilities.json` | `horse-stance` | Horse Stance | OPEN | - | live | OPEN | Jay-approved stance (J1), but Jay's own words naming it are not in decisions.md or progress.md, so curriculum.md was not edited |
 | `content/abilities/strikes.json` | `spin-kick` | Spin Kick | Spin Kick | `docs/curriculum.md:46` | live | Real |  |
-| `content/abilities/strikes.json` | `jumping-spins` | Jumping Spins | Jumping Spin Kicks | `docs/curriculum.md:47` | live | Renamed (drop-in) | doc: "3 jumping spin kicks" (plural, word for word) |
-| `content/abilities/strikes.json` | `butterfly-flow` | Butterfly Flow | Butterfly Kick | `docs/curriculum.md:48` | live | Renamed (drop-in) | "tornado kick (we call it butterfly kick)" |
+| `content/abilities/strikes.json` | `jumping-spins` | Jumping Spin Kicks | Jumping Spin Kicks | `docs/curriculum.md:47` | live | Real | doc: "3 jumping spin kicks" (plural, word for word) |
+| `content/abilities/strikes.json` | `butterfly-flow` | Butterfly Kick | Butterfly Kick | `docs/curriculum.md:48` | live | Real | "tornado kick (we call it butterfly kick)" |
 | `content/abilities/seal-families.json` | `escape` | Escape | KEEP | - | live | KEEP | game group label (Manager, Nov 8: keep) |
-| `content/abilities/seal-families.json` | `escape #1` | Off the Line | Double Punch | `docs/self-defense.md:11` | live | Renamed (drop-in) |  |
+| `content/abilities/seal-families.json` | `escape #1` | Double Punch | Double Punch | `docs/self-defense.md:11` | live | Real |  |
 | `content/abilities/seal-families.json` | `escape #2` | Other Side | OPEN | `docs/self-defense.md:12` | live | OPEN | same as #1, other side |
-| `content/abilities/seal-families.json` | `escape #4` | Drive Back | OPEN | `docs/self-defense.md:14` | live | OPEN | family Advancing (Jay, Nov 8: "Self-defense #4 belongs to Advancing."); no real name in the docs. Push-back effect kept |
 | `content/abilities/seal-families.json` | `escape #15` | Slip and Double | OPEN | `docs/self-defense.md:25` | live | OPEN | candidate double punch (also #1) |
+| `content/abilities/seal-families.json` | `advancing` | Advancing | KEEP | - | live | KEEP | game group label (Manager, Nov 8: keep) |
+| `content/abilities/seal-families.json` | `advancing #4` | Self-Defense #4 | OPEN | `docs/self-defense.md:14` | live | OPEN | name OPEN, family Advancing (#459). Drive Back is retired, not a current name. Push-back effect kept |
 | `content/abilities/seal-families.json` | `counter` | Counter | KEEP | - | live | KEEP | game group label (Manager, Nov 8: keep) |
-| `content/abilities/seal-families.json` | `counter #3` | Spin Back Fist | Back Fist | `docs/self-defense.md:13` | live | Renamed (drop-in) | also #5, #10 |
+| `content/abilities/seal-families.json` | `counter #3` | Back Fist | Back Fist | `docs/self-defense.md:13` | live | Real | also #5, #10 |
 | `content/abilities/seal-families.json` | `counter #5` | Spin Elbow | OPEN | `docs/self-defense.md:15` | live | OPEN | candidates back fist (also #3) / elbow |
 | `content/abilities/seal-families.json` | `counter #6` | Arm Wrap | OPEN | `docs/self-defense.md:16` | live | OPEN | candidate hook punch (attacker also throws one) |
 | `content/abilities/seal-families.json` | `counter #7` | Palm Heel | Palm Heel | `docs/self-defense.md:17` | live | Real |  |
-| `content/abilities/seal-families.json` | `counter #10` | Grab and Strike | Double Knifehand Block | `docs/self-defense.md:20` | live | Renamed (drop-in) |  |
+| `content/abilities/seal-families.json` | `counter #10` | Double Knifehand Block | Double Knifehand Block | `docs/self-defense.md:20` | live | Real |  |
 | `content/abilities/seal-families.json` | `guard` | Guard | KEEP | - | live | KEEP | game group label (Manager, Nov 8: keep) |
 | `content/abilities/seal-families.json` | `guard #8` | Block and Strike | OPEN | `docs/self-defense.md:18` | live | OPEN | block-and-strike, no set name |
 | `content/abilities/seal-families.json` | `guard #9` | High Block Strike | OPEN | `docs/self-defense.md:19` | live | OPEN | as #8, high |
 | `content/abilities/seal-families.json` | `throw` | Throw | KEEP | - | live | KEEP | game group label (Manager, Nov 8: keep) |
-| `content/abilities/seal-families.json` | `throw #11` | Outside Reap | Osotogari | `docs/self-defense.md:21` | live | Renamed (drop-in) | Jay's spelling; S4 "Osoto Gari" |
-| `content/abilities/seal-families.json` | `throw #12` | Reap and Finish | OPEN | `docs/self-defense.md:22` | live | OPEN | osotogari again (also #11) |
+| `content/abilities/seal-families.json` | `throw #11` | Osotogari | Outside Reap | `docs/decisions.md:1695` | live | Renamed (drop-in) | Jay, Nov 9: Outside Reap is the Throw's real dojo name (docs/decisions.md:1695). Not Osotogari. |
+| `content/abilities/seal-families.json` | `throw #12` | Reap and Finish | OPEN | `docs/self-defense.md:22` | live | OPEN | same throw as #11 (Outside Reap), then a finish |
 | `content/abilities/seal-families.json` | `disarm` | Disarm | KEEP | - | live | KEEP | game group label (Manager, Nov 8: keep) |
-| `content/abilities/seal-families.json` | `disarm #13` | Kick the Weapon | Inside Kick | `docs/self-defense.md:23` | live | Renamed (drop-in) | also #14 |
+| `content/abilities/seal-families.json` | `disarm #13` | Inside Kick | Inside Kick | `docs/self-defense.md:23` | live | Real | also #14 |
 | `content/abilities/seal-families.json` | `disarm #14` | Kick and Spin | OPEN | `docs/self-defense.md:24` | live | OPEN | candidate spin kick (clashes with Strike "Spin Kick") |
 | `content/abilities/seal-families.json` | `lock` | Lock | KEEP | - | live | KEEP | game group label (Manager, Nov 8: keep) |
 | `drafts/content/abilities/seal-families-text.json` | `escape` | Escape | KEEP | - | drafts | KEEP | game group label (Manager, Nov 8: keep) |
 | `drafts/content/abilities/seal-families-text.json` | `escape #1` | Off the Line | Double Punch | `docs/self-defense.md:11` | drafts | Renamed (drop-in) |  |
 | `drafts/content/abilities/seal-families-text.json` | `escape #2` | Other Side | OPEN | `docs/self-defense.md:12` | drafts | OPEN | same as #1, other side |
-| `drafts/content/abilities/seal-families-text.json` | `escape #4` | Drive Back | OPEN | `docs/self-defense.md:14` | drafts | OPEN | family Advancing (Jay, Nov 8: "Self-defense #4 belongs to Advancing."); no real name in the docs. Push-back effect kept |
 | `drafts/content/abilities/seal-families-text.json` | `escape #15` | Slip and Double | OPEN | `docs/self-defense.md:25` | drafts | OPEN | candidate double punch (also #1) |
+| `drafts/content/abilities/seal-families-text.json` | `advancing` | Advancing | KEEP | - | drafts | KEEP | game group label (Manager, Nov 8: keep) |
+| `drafts/content/abilities/seal-families-text.json` | `advancing #4` | OPEN | OPEN | `docs/self-defense.md:14` | drafts | OPEN | name OPEN, family Advancing (#459). Drive Back is retired, not a current name. Push-back effect kept |
 | `drafts/content/abilities/seal-families-text.json` | `counter` | Counter | KEEP | - | drafts | KEEP | game group label (Manager, Nov 8: keep) |
 | `drafts/content/abilities/seal-families-text.json` | `counter #3` | Spin Back Fist | Back Fist | `docs/self-defense.md:13` | drafts | Renamed (drop-in) | also #5, #10 |
 | `drafts/content/abilities/seal-families-text.json` | `counter #5` | Spin Elbow | OPEN | `docs/self-defense.md:15` | drafts | OPEN | candidates back fist (also #3) / elbow |
@@ -103,14 +105,14 @@ Each line: current name(s), what the move is (from `docs/self-defense.md` unless
 | `drafts/content/abilities/seal-families-text.json` | `disarm #13` | Kick the Weapon | Inside Kick | `docs/self-defense.md:23` | drafts | Renamed (drop-in) | also #14 |
 | `drafts/content/abilities/seal-families-text.json` | `disarm #14` | Kick and Spin | OPEN | `docs/self-defense.md:24` | drafts | OPEN | candidate spin kick (clashes with Strike "Spin Kick") |
 | `drafts/content/abilities/seal-families-text.json` | `throw` | Throw | KEEP | - | drafts | KEEP | game group label (Manager, Nov 8: keep) |
-| `drafts/content/abilities/seal-families-text.json` | `throw #11` | Outside Reap | Osotogari | `docs/self-defense.md:21` | drafts | Renamed (drop-in) | Jay's spelling; S4 "Osoto Gari" |
-| `drafts/content/abilities/seal-families-text.json` | `throw #12` | Reap and Finish | OPEN | `docs/self-defense.md:22` | drafts | OPEN | osotogari again (also #11) |
+| `drafts/content/abilities/seal-families-text.json` | `throw #11` | Outside Reap | Outside Reap | `docs/decisions.md:1695` | drafts | Real | Jay, Nov 9: Outside Reap is the Throw's real dojo name (docs/decisions.md:1695). Not Osotogari. |
+| `drafts/content/abilities/seal-families-text.json` | `throw #12` | Reap and Finish | OPEN | `docs/self-defense.md:22` | drafts | OPEN | same throw as #11 (Outside Reap), then a finish |
 | `drafts/content/abilities/seal-families-text.json` | `lock` | Lock | KEEP | - | drafts | KEEP | game group label (Manager, Nov 8: keep) |
 | `drafts/content/abilities/seal-families-text.json` | `spin-kick` | Spin Kick | Spin Kick | `docs/curriculum.md:46` | drafts | Real |  |
 | `drafts/content/abilities/seal-families-text.json` | `jumping-spins` | Jumping Spins | Jumping Spin Kicks | `docs/curriculum.md:47` | drafts | Renamed (drop-in) | doc: "3 jumping spin kicks" (plural, word for word) |
 | `drafts/content/abilities/seal-families-text.json` | `butterfly-flow` | Butterfly Flow | Butterfly Kick | `docs/curriculum.md:48` | drafts | Renamed (drop-in) | "tornado kick (we call it butterfly kick)" |
-| `drafts/content/abilities/seals-11-15-text.json` | `outside-reap` | Outside Reap | Osotogari | `docs/self-defense.md:21` | drafts | Renamed (drop-in) | Jay's spelling; S4 "Osoto Gari" |
-| `drafts/content/abilities/seals-11-15-text.json` | `reap-and-finish` | Reap and Finish | OPEN | `docs/self-defense.md:22` | drafts | OPEN | osotogari again (also #11) |
+| `drafts/content/abilities/seals-11-15-text.json` | `outside-reap` | Outside Reap | Outside Reap | `docs/decisions.md:1695` | drafts | Real | Jay, Nov 9: Outside Reap is the Throw's real dojo name (docs/decisions.md:1695). Not Osotogari. |
+| `drafts/content/abilities/seals-11-15-text.json` | `reap-and-finish` | Reap and Finish | OPEN | `docs/self-defense.md:22` | drafts | OPEN | same throw as #11 (Outside Reap), then a finish |
 | `drafts/content/abilities/seals-11-15-text.json` | `kick-the-weapon` | Kick the Weapon | Inside Kick | `docs/self-defense.md:23` | drafts | Renamed (drop-in) | also #14 |
 | `drafts/content/abilities/seals-11-15-text.json` | `kick-and-spin` | Kick and Spin | OPEN | `docs/self-defense.md:24` | drafts | OPEN | candidate spin kick (clashes with Strike "Spin Kick") |
 | `drafts/content/abilities/seals-11-15-text.json` | `slip-and-double` | Slip and Double | OPEN | `docs/self-defense.md:25` | drafts | OPEN | candidate double punch (also #1) |
@@ -140,12 +142,12 @@ Each line: current name(s), what the move is (from `docs/self-defense.md` unless
 | `drafts/content/abilities/technique-callouts.json` | `off-balance (subtitle)` | Off-Balance | Double Punch | `docs/self-defense.md:11` | drafts | Renamed (drop-in) |  |
 | `drafts/content/abilities/technique-callouts.json` | `escape-step (subtitle)` | Escape Step | OPEN | `docs/self-defense.md:12` | drafts | OPEN | same as #1, other side |
 | `drafts/content/abilities/technique-callouts.json` | `sweep (subtitle)` | Sweep | Back Fist | `docs/self-defense.md:13` | drafts | Renamed (drop-in) | also #5, #10 |
-| `drafts/content/abilities/technique-callouts.json` | `steady-breath (subtitle)` | Steady Breath | OPEN | `docs/self-defense.md:14` | drafts | OPEN | family Advancing (Jay, Nov 8: "Self-defense #4 belongs to Advancing."); no real name in the docs. Push-back effect kept |
+| `drafts/content/abilities/technique-callouts.json` | `steady-breath (subtitle)` | Steady Breath | OPEN | `docs/self-defense.md:14` | drafts | OPEN | name OPEN, family Advancing (#459). Drive Back is retired, not a current name. Push-back effect kept |
 | `drafts/content/abilities/technique-callouts.json` | `strong-block (subtitle)` | Strong Block | OPEN | `docs/self-defense.md:15` | drafts | OPEN | candidates back fist (also #3) / elbow |
 | `drafts/content/abilities/technique-callouts.json` | `sharp-eyes (subtitle)` | Sharp Eyes | OPEN | `docs/self-defense.md:16` | drafts | OPEN | candidate hook punch (attacker also throws one) |
 | `drafts/content/abilities/technique-callouts.json` | `create-distance (subtitle)` | Create Distance | Palm Heel | `docs/self-defense.md:17` | drafts | Renamed (drop-in) |  |
 | `drafts/content/abilities/technique-callouts.json` | `disarm (subtitle)` | Disarm | OPEN | `docs/self-defense.md:18` | drafts | OPEN | block-and-strike, no set name |
-| `drafts/content/abilities/technique-callouts.json` | `throw (subtitle)` | Throw | OPEN | `docs/self-defense.md:19` | drafts | OPEN | as #8, high |
+| `drafts/content/abilities/technique-callouts.json` | `throw (subtitle)` | Throw | OPEN | `docs/self-defense.md:19` | drafts | OPEN | Placeholder, OPEN, waiting on Jay. Clash with the #457 Throw family. Keep the current name Throw. This is the legacy Trophy Case seal (abilities.json id throw). |
 | `drafts/content/abilities/technique-callouts.json` | `follow-through (subtitle)` | Follow Through | Double Knifehand Block | `docs/self-defense.md:20` | drafts | Renamed (drop-in) |  |
 | `drafts/content/abilities/unlock-text.json` | `sealCarries 10` | Steady Breath | OPEN | - | drafts | OPEN | old placeholder Seal carried on a rank |
 | `drafts/content/abilities/unlock-text.json` | `sealCarries 9` | Strong Block | OPEN | - | drafts | OPEN | old placeholder Seal carried on a rank |
@@ -155,15 +157,15 @@ Each line: current name(s), what the move is (from `docs/self-defense.md` unless
 | `drafts/content/abilities/unlock-text.json` | `seal #1 (title)` | Off the Line | Double Punch | `docs/self-defense.md:11` | drafts | Renamed (drop-in) |  |
 | `drafts/content/abilities/unlock-text.json` | `seal #2 (title)` | Other Side | OPEN | `docs/self-defense.md:12` | drafts | OPEN | same as #1, other side |
 | `drafts/content/abilities/unlock-text.json` | `seal #3 (title)` | Spin Back Fist | Back Fist | `docs/self-defense.md:13` | drafts | Renamed (drop-in) | also #5, #10 |
-| `drafts/content/abilities/unlock-text.json` | `seal #4 (title)` | Drive Back | OPEN | `docs/self-defense.md:14` | drafts | OPEN | family Advancing (Jay, Nov 8: "Self-defense #4 belongs to Advancing."); no real name in the docs. Push-back effect kept |
+| `drafts/content/abilities/unlock-text.json` | `seal #4 (title)` | OPEN | OPEN | `docs/self-defense.md:14` | drafts | OPEN | name OPEN, family Advancing (#459). Drive Back is retired, not a current name. Push-back effect kept |
 | `drafts/content/abilities/unlock-text.json` | `seal #5 (title)` | Spin Elbow | OPEN | `docs/self-defense.md:15` | drafts | OPEN | candidates back fist (also #3) / elbow |
 | `drafts/content/abilities/unlock-text.json` | `seal #6 (title)` | Arm Wrap | OPEN | `docs/self-defense.md:16` | drafts | OPEN | candidate hook punch (attacker also throws one) |
 | `drafts/content/abilities/unlock-text.json` | `seal #7 (title)` | Palm Heel | Palm Heel | `docs/self-defense.md:17` | drafts | Real |  |
 | `drafts/content/abilities/unlock-text.json` | `seal #8 (title)` | Block and Strike | OPEN | `docs/self-defense.md:18` | drafts | OPEN | block-and-strike, no set name |
 | `drafts/content/abilities/unlock-text.json` | `seal #9 (title)` | High Block Strike | OPEN | `docs/self-defense.md:19` | drafts | OPEN | as #8, high |
 | `drafts/content/abilities/unlock-text.json` | `seal #10 (title)` | Grab and Strike | Double Knifehand Block | `docs/self-defense.md:20` | drafts | Renamed (drop-in) |  |
-| `drafts/content/abilities/unlock-text.json` | `seal #11 (title)` | Outside Reap | Osotogari | `docs/self-defense.md:21` | drafts | Renamed (drop-in) | Jay's spelling; S4 "Osoto Gari" |
-| `drafts/content/abilities/unlock-text.json` | `seal #12 (title)` | Reap and Finish | OPEN | `docs/self-defense.md:22` | drafts | OPEN | osotogari again (also #11) |
+| `drafts/content/abilities/unlock-text.json` | `seal #11 (title)` | Outside Reap | Outside Reap | `docs/decisions.md:1695` | drafts | Real | Jay, Nov 9: Outside Reap is the Throw's real dojo name (docs/decisions.md:1695). Not Osotogari. |
+| `drafts/content/abilities/unlock-text.json` | `seal #12 (title)` | Reap and Finish | OPEN | `docs/self-defense.md:22` | drafts | OPEN | same throw as #11 (Outside Reap), then a finish |
 | `drafts/content/abilities/unlock-text.json` | `seal #13 (title)` | Kick the Weapon | Inside Kick | `docs/self-defense.md:23` | drafts | Renamed (drop-in) | also #14 |
 | `drafts/content/abilities/unlock-text.json` | `seal #14 (title)` | Kick and Spin | OPEN | `docs/self-defense.md:24` | drafts | OPEN | candidate spin kick (clashes with Strike "Spin Kick") |
 | `drafts/content/abilities/unlock-text.json` | `seal #15 (title)` | Slip and Double | OPEN | `docs/self-defense.md:25` | drafts | OPEN | candidate double punch (also #1) |
@@ -188,12 +190,11 @@ Each line: current name(s), what the move is (from `docs/self-defense.md` unless
 | `drafts/content/katas/moves.json` | `catch` | Catch | - | - | drafts | Skip | docs match is unrelated |
 | `drafts/content/katas/moves.json` | `break.double-choke` | Choke break | OPEN | - | drafts | OPEN | kata move; file says wording is a guess; not in the 3 docs (Jay's kata sheets may have it) |
 | `drafts/content/katas/moves.json` | `shout.kiai` | Kiai! | OPEN | - | drafts | OPEN | kata move; file says wording is a guess; not in the 3 docs (Jay's kata sheets may have it) |
-
 ## What this shows
 
 - **Same name in several files:** each Seal appears in up to four places (`abilities.json`, `seal-families.json` or `seal-families-text.json`, the seal text file, `technique-callouts.json`). One decision per technique number fixes all of them.
 - **Seal families** (Escape, Counter, Guard, Throw, Disarm, Lock) are game groups, not techniques. Manager (Nov 8): keep them (KEEP).
 - **Stances** (Open Leg, Cat, Front, Horse): J1 is recorded only as "the 5 stances are approved" (`drafts/planning/R-STANCE-stances-and-kata-rewards.md:64`). `decisions.md` has "Jay's call: Ready is the open leg stance" (line 1257), which is a summary, not Jay's own words. Neither file names Cat, Front and Horse in Jay's words. So `docs/curriculum.md` was **not** edited.
-- **Repeats:** one real term can fit several techniques (double punch #1, #4, #15; back fist #3, #5, #10, #16; osotogari #11, #12; wrist lock #19, #32, #35; arm bar #17, #31). Each is given to one technique only; the rest stay OPEN.
+- **Repeats:** one real term can fit several techniques (double punch #1, #4, #15; back fist #3, #5, #10, #16; Outside Reap #11, #12; wrist lock #19, #32, #35; arm bar #17, #31). Each is given to one technique only; the rest stay OPEN.
 - **#36-40** are "(not stated)" in the docs, so all are OPEN.
 - Rows are in `J27-audit.json`. `python3 drafts/content/tools/j27-audit.py` (from the repo root) rebuilds the JSON.
