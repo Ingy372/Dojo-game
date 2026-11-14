@@ -12,12 +12,12 @@ Last updated: 2026-11-14 1:55 PM EST by Dojo-ascent Manager (overhaul task lists
 
 ## 000. Nov 14, 2026 overhaul task lists (Manager)
 Source: `docs/reviews/fable-progression-overhaul.md` (PR #477, main 57e38509). Jay (Nov 14): "After reading the report, create a task list for each bot on what needs to be accomplished. go ahead and hand them the task lists and let's get to work."
-**Rules:** work top to bottom, one PR at a time. Programmer ships one small PR per item. Only the PR the Manager names gets updated after a merge. No subagents or cloud agents except the Programmer's single reused worker. Usage is tight.
+**Rules:** work top to bottom, one PR at a time. Programmer ships one small PR per item. Only the PR the Manager names gets updated after a merge. No subagents or cloud agents. Usage is tight.
 **Jay's answers to review section 11 (Nov 14, 5:59 PM), quoted:** "1. B 2. B. otherwise players feel like there work gets reset 3. A 4. Yes still early april 5. stop at 40 6. A, one less metric to deal with 7. A, and probably not. well use ai voice if it sounds decent. i will use my voice if needed 8. A 9. A 10. A"
 So: (1) kata keeps its own powers, stances stay separate sign-offs; (2) one level number that climbs to 100, no Belt Levels reset (review L2 dropped); (3) split locks into groups Jay names; (4) launch early April 2027; (5) self-defense stops at #40; (6) Street Smarts gives badges, no fight bonus; (7) all four faith pieces, AI voice if it sounds decent; (8) earned-coin looks-only shop, never paid; (9) ages 6–9 start on Guided; (10) about 60% of strength from real training.
 Kata scope (Jay, Nov 14): "ill give katas penon 1, penon 2, penon 3, nahachi ... and well pause there." Kata work runs through Nahanchi; Possi waits.
 **Back on:** PB-04 (kata power slot) and kata powers (PB-11, J24) resume after OV-B3. OV-B4 is dropped.
-**No subagents** (Jay, Nov 14). The Programmer keeps its one reused cloud worker only.
+**No subagents and no cloud agents** (Jay, Nov 14: "if not lets not employ any subagents"). Every bot works on its own computer with git and gh; ask the Manager if something truly cannot be done that way.
 
 | ID | Owner | What | Done when | Waits on |
 |---|---|---|---|---|
