@@ -3,12 +3,20 @@
 // Tap a card, then tap a pick. Wording comes from content/abilities/fighting-style.json.
 // Rank names come from the live seal families (J27), not the older draft labels.
 
-import { defaultStrikeDef, earnedStrikes, emptyLoadout, equipSeal, equipStrike, normalizeLoadout, removeSeal, sealSlots, signedOffTechniques, swapSeal, unlockedFamilies, unlockedStances, virtueTitle, type AbilityContent, type Loadout, type SealFamilyDef, type TrainingState } from '@dojo/sim';
+import { defaultStrikeDef, earnedStrikes, emptyLoadout, equipSeal, equipStrike, normalizeLoadout, removeSeal, sealSlots, signedOffTechniques, swapSeal, unlockedFamilies, unlockedStances, virtueTitle, type AbilityContent, type Loadout, type PickLine, type SealFamilyDef, type TrainingState } from '@dojo/sim';
 import words from '../../../../content/abilities/fighting-style.json';
 import helpFile from '../../../../content/abilities/fighting-style-help.json';
 import { MIN_TAP, S1, S2, TYPE, pageDots } from './tokens';
 
 export const STYLE_WORDS = words;
+
+/** OV-B1: the kid line for one Sensei's Pick result, with real move names. */
+export function pickLineText(l: PickLine, abilities: AbilityContent): string {
+  const name = (id: string) => (l.slot === 'strike' ? abilities.strikeDefs.find((s) => s.id === id)?.name : abilities.families.find((f) => f.id === id)?.name) ?? id;
+  const t = words.senseiPick;
+  const line = l.kind === 'added' ? t.added : l.kind === 'swapped' ? t.swapped : t.ready;
+  return line.replace('{move}', name(l.move)).replace('{old}', l.out ? name(l.out) : '');
+}
 
 export type StyleSlot = 'stance' | 'virtue' | 'strike' | 'kata' | 'seal';
 

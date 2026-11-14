@@ -1135,3 +1135,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Still for Tester: White, Orange, Help, Got it, New dots, geometry, contrast and animation. The Yellow checks from the phone pass stand. Not a merge pass.
 - QA fixes (2026-11-14): Testing now sits beside Practice room, so the next-step card is whole at 667x375 (the extra row had cut it off). The Testing screen has an "Old save (show slot note again)" row: it makes the save one from before Seal slots and runs the real one-time seed, so the note, Got it and the waiting help line can be checked on a deployed build. Phone check `docs/shots/pb-05/board-oldsave.mjs` 56 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off. Beta bundle check still PASS.
 - Next: PB-10 can run the phone test plan. Kata powers still wait on Jay (PB-11) and PB-04.
+
+## OV-B1 — Sensei's Pick (2026-11-14)
+- When a sign-off earns a new Kick or Seal, Sensei puts it in the moves after the sign-off celebration. One line per move: "Sensei added Counter to your moves!", or when the slots are full "Throw is in. Escape is resting." (it names the Seal that came out).
+- Sensei's Pick is on by default. An On/Off switch sits on Fighting Style (hidden on Guided). Off means new moves only say "ready", and the player's own choice is kept.
+- The first check after this update only records what was already earned, so old saves never move. Each move is picked once.
+- A one-time lesson rides in that step the first time Sensei picks something.
+- Tests: `ov-b1-sensei-pick` (8) and the lessons test. Phone check `docs/shots/ov-b1/sensei-pick.mjs` 80 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off.

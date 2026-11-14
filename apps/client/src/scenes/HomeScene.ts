@@ -34,10 +34,12 @@ import {
   activeDifficulty,
   seedFakeStudent,
   dismissSlotNote,
+  earnedPicks,
+  senseiPick,
 } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { BOARD_PAPER, KATA_INK, MIN_TAP, TROPHY_UI, cubbyIconSize, cubbyTextW, unlockPopScales, type KataInk } from '../ui/tokens';
-import { STYLE_WORDS, buildStyle, trayDots, trayPage, trayPaging, equipPick, styleScreenLayout, applyStyleTap, type StyleModel, type StylePick, type StyleSlot, type StyleSession } from '../ui/fightingStyle';
+import { STYLE_WORDS, buildStyle, pickLineText, trayDots, trayPage, trayPaging, equipPick, styleScreenLayout, applyStyleTap, type StyleModel, type StylePick, type StyleSlot, type StyleSession } from '../ui/fightingStyle';
 import { LASTRUN_WORDS, LASTRUN_MOTION, bestsRows as lastRunBests, buildLastRun, countAt, foundPage, lastRunLayout, newForYou, pinnedAgain, runId, headingSparkle, sparkleStars, SPARKLE_W, statStack, takeCountUp, takeLevelUpSound, type FoundTile, type KeyStore } from '../ui/lastRun';
 import { TROPHY_WORDS, buildCubbies, shelfRows, trophyLayout, trophyPages, type Cubby } from '../ui/trophyCase';
 import { ARROW, COMPARE_COLOR, COMPARE_CSS, GEAR_BOARD, GEAR_WORDS, compareWith, tileWForLabel, filterBag, gearBoardLayout, gearSheetBox, slotEmptyLine, tileBox, toggleFilter, bagScreenLayout, bagTileBox, BAG_SCREEN, bagPageCount, turnBagPage, sheetAtTop } from '../ui/gearBoard';
@@ -243,6 +245,16 @@ export class HomeScene extends Phaser.Scene {
     }
     this.training = currentTraining();
     const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.stances[0].name);
+    // OV-B1: Sensei's Pick puts new Kicks and Defenses in their slots; the lesson comes the first time one moves.
+    const picked = senseiPick(this.profile, earnedPicks(this.training, CONTENT.abilities), this.training.tier);
+    const picks = { lesson: [] as string[], lines: picked.map((l) => pickLineText(l, CONTENT.abilities)) };
+    if (picked.some((l) => l.kind !== 'ready')) {
+      const lesson = takeLesson('firstSenseiPick', null);
+      if (lesson) {
+        this.profile.lessons = loadSave().lessons;
+        picks.lesson = lesson.screens;
+      }
+    }
     // First return home after the tutorial floor: Sensei's welcome line, once, then the
     // unlock cascade (M7-P4, Manager call: both play here, the line first).
     const sensei: string[] = [];
@@ -259,7 +271,7 @@ export class HomeScene extends Phaser.Scene {
       this.profile.seen = snapshot(this.training);
       writeSave(this.profile);
     };
-    if (moments.length === 0 && sensei.length === 0) {
+    if (moments.length === 0 && sensei.length === 0 && picks.lines.length === 0) {
       remember();
       this.maybeGoals();
       return;
@@ -276,6 +288,8 @@ export class HomeScene extends Phaser.Scene {
         this.maybeGoals();
       },
       sensei,
+      undefined,
+      picks,
     );
   }
 
@@ -1194,8 +1208,13 @@ export class HomeScene extends Phaser.Scene {
     const paging = showTray && this.styleSlot ? m.trays[this.styleSlot].length > trayPaging(L.tray.w, tileMin, 0).perPage : false;
     const arrowW = paging ? MIN_TAP + S2 + MIN_TAP + S2 : 0;
     const side = this.swapFamily !== null || (open?.slot === 'seal' && open.pick !== null && open.locked === null);
+    // The one-time note uses this row while no card is open. An extra row of its own fell past the wood.
+    const noteUp = !!(L.note && m.note) && open === null && this.swapFamily === null;
+    // OV-B1: the Sensei's Pick switch shares the row when nothing is open. Hidden on Guided (OV-L1 section 4).
+    const pickW = 150;
+    const pickSwitch = !noteUp && open === null && this.swapFamily === null && activeDifficulty(this.profile, this.training.belt.tier) !== 'guided';
     const previewX = L.preview.x + arrowW;
-    const previewW = L.preview.w - arrowW - (side ? 80 : 0) - S2;
+    const previewW = L.preview.w - arrowW - (side ? 80 : 0) - (pickSwitch ? pickW + S2 : 0) - S2;
     let preview = this.styleHelpLine && !this.swapFamily && !this.styleFocus ? this.styleHelpLine : STYLE_WORDS.hint;
     if (this.swapFamily) preview = STYLE_WORDS.swapPrompt;
     else if (this.styleFocus && this.styleSlot) {
@@ -1205,12 +1224,19 @@ export class HomeScene extends Phaser.Scene {
     else if (open?.pick) preview = open.pick.line;
     else if (open?.slot === 'kata') preview = STYLE_WORDS.emptyKata;
     else if (open?.slot === 'seal') preview = STYLE_WORDS.emptySeal;
-    // The one-time note uses this row while no card is open. An extra row of its own fell past the wood.
-    const noteUp = !!(L.note && m.note) && open === null && this.swapFamily === null;
     if (!noteUp) {
       const pt = this.text(x + previewX, y + L.preview.y + S1, preview, TYPE.label, '#f2e3c4', false, FONT, Math.max(MIN_TAP, previewW)).setData('styleLine', preview);
       balanceWrap(pt, Math.max(MIN_TAP, previewW));
       if (this.styleHelpLine && preview === this.styleHelpLine) pt.setData('styleHelp', true);
+    }
+    if (pickSwitch) {
+      const on = this.profile.senseiPick;
+      const sw = button(this, { x: x + L.preview.x + L.preview.w - pickW, y: y + L.preview.y, w: pickW, h: Math.max(MIN_TAP, L.preview.h), label: on ? STYLE_WORDS.senseiPick.on : STYLE_WORDS.senseiPick.off, color: on ? WOOD.frame : WOOD.switchOff, size: TYPE.label, selected: on, onTap: () => {
+        this.profile.senseiPick = !on;
+        writeSave(this.profile);
+        this.renderPanel('none');
+      } }, this.ui);
+      sw.visual.setData('senseiPick', on);
     }
     if (this.swapFamily) {
       const cancel = button(this, { x: x + L.preview.x + L.preview.w - 72, y: y + L.preview.y, w: 72, h: Math.max(MIN_TAP, L.preview.h), label: STYLE_WORDS.swapCancel, color: WOOD.switchOff, size: TYPE.label, onTap: () => this.commitStyle(applyStyleTap(this.styleSession(), { kind: 'cancel' }, this.training, CONTENT.abilities, this.profile.grandfatheredStances)) }, this.ui);
