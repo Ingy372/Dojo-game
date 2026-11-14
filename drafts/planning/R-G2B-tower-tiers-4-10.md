@@ -133,7 +133,7 @@ No new Seal in the plan. Black Strikes #8-12 wait on Jay.
 | F3-4 | Sky Sweeper (mid, dash-only) | Arc, then a lane, 20 ticks each | Purple stripes and "!!" | none |
 | Guardian | The Lost Lightbearer | Storm swing, shadow echoes of earlier Guardians, Storm Sweep (dash-only) | | Concept sheets only, form shift Lost Lightbearer to Cloud Lantern |
 
-Endless mode after the Summit scales at +3% per floor with no cap (bestiary plan). The balance check did not test endless floors. Item R-G2B-31 covers it.
+Endless mode after the Summit still grows at +3% per floor on Guided and Standard, then the scale stops at floor 13 (×1.4685, written as ×1.47). Challenge Endless stays at the existing Summit baseline, with no further +3% and no ×1.5 (live Challenge uses patterns, not bigger Health or Power numbers). Floors can continue past 13. This is the Manager-requested R-G2B-31 replacement for D4's no-cap call. Manager reports Jay approved on Nov 10: “Yes, cap endless at floor 13 like the Tester suggests.” Prepared for Manager review and publication; unpublished. The check and tables are in `R-G2B-31-endless-balance.md`.
 
 ## Numbers (from `R-G2B-balance-check.md`)
 
