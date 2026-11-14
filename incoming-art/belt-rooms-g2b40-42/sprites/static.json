@@ -1,0 +1,89 @@
+{
+  "pixelsPerTile": 80,
+  "camera": {
+    "projection": "orthographic",
+    "elevationDeg": 35.0,
+    "facing": "north (the one game view)"
+  },
+  "groundRule": "a ground tile is exactly ppt x ppt px (the scene's depth is stretched by 1/sin(35)); heights show at ppt*cos(35) px per tile",
+  "sprites": {
+    "room-green": {
+      "size": [
+        560,
+        508
+      ],
+      "layers": [
+        "room-green"
+      ],
+      "files": {
+        "room-green": "room-green_room-green.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 7,
+        "row1": 5,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.35,
+      "anchorPx": [
+        0,
+        108.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "G2B-40 sample. Green, Giant's Steps, Pebble Path. Moss floor, river stones, side stairs."
+    },
+    "room-red": {
+      "size": [
+        560,
+        508
+      ],
+      "layers": [
+        "room-red"
+      ],
+      "files": {
+        "room-red": "room-red_room-red.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 7,
+        "row1": 5,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.35,
+      "anchorPx": [
+        0,
+        108.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "G2B-41 sample. Red belt forge, Bellows Door. Bellows, rack, bin, trough, barrel, ember pools. No danger red."
+    },
+    "room-brown": {
+      "size": [
+        560,
+        508
+      ],
+      "layers": [
+        "room-brown"
+      ],
+      "files": {
+        "room-brown": "room-brown_room-brown.png"
+      },
+      "groundRect": {
+        "col0": 0,
+        "row0": 0,
+        "col1": 7,
+        "row1": 5,
+        "note": "the image's ground area in tiles"
+      },
+      "topExtraTiles": 1.35,
+      "anchorPx": [
+        0,
+        108.0
+      ],
+      "anchorNote": "the point of the image that sits on the anchor spot (default: bottom-centre of the footprint)",
+      "note": "G2B-42 sample. Brown, Root Library, Reading Nook. Shelves, cart, rugs, cushions, floor roots, ladder."
+    }
+  }
+}
