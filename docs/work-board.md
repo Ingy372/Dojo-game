@@ -1,6 +1,6 @@
 # Dojo Ascent — Work Board
 
-Last updated: 2026-11-08 2:00 PM EST by Dojo-ascent Manager (2 PM check-in: recorded merges #447, #454, #419, #441, #456; new PRs #458–#461). Catch-up covers PRs #62–#461. Main is 2682945 and green.
+Last updated: 2026-11-14 1:55 PM EST by Dojo-ascent Manager (overhaul task lists from the Fable review, section 000).
 
 **What this file is:** the one list of open work. Every bot and Dojo-Ascent Programmer reads it. Each item has an ID, one owner, and what it's waiting on. Work only on items with your role as owner, in the order listed, and skip any item that is still waiting on something. Put the item ID (for example S2) in your Delivery Note.
 
@@ -9,6 +9,33 @@ Last updated: 2026-11-08 2:00 PM EST by Dojo-ascent Manager (2 PM check-in: reco
 **Owners:** Jay · Dojo-Ascent Programmer · Dojo-Ascent Researcher & Planner (drafts/planning/) · Learning & Engagement Designer · Content Writer · Art Director · QA & Playability Tester · DojoForge (outside this repository).
 
 ---
+
+## 000. Nov 14, 2026 overhaul task lists (Manager)
+Source: `docs/reviews/fable-progression-overhaul.md` (PR #477, main 57e38509). Jay (Nov 14): "After reading the report, create a task list for each bot on what needs to be accomplished. go ahead and hand them the task lists and let's get to work."
+**Rules:** work top to bottom, one PR at a time. Programmer ships one small PR per item. Only the PR the Manager names gets updated after a merge. No subagents or cloud agents except the Programmer's single reused worker. Usage is tight.
+**Placeholders (Manager, until Jay answers section 11 of the review):** the review's recommended pick is used for every question. Guided is the default for ages 6–9. Kata gives a stance. Belt Levels are launch work only; the beta uses the B2 fallback. Late answers are logged and the work is redone if needed.
+**Superseded:** PB-04 (kata power slot) and kata powers (PB-11, J24) are on hold until Jay answers question 1. If he picks (a), they're replaced by B4/L6.
+
+| ID | Owner | What | Done when | Waits on |
+|---|---|---|---|---|
+| PB-05 | Dojo-Ascent Programmer | **First.** Finish #472: fix the 667 Testing clipping, give the old-save note a deployed route, then hand over for Tester recheck. | Tester PASS on the open cases; Manager merges. | — |
+| OV-B1 | Dojo-Ascent Programmer | Auto-equip new Kicks and Defenses (Sensei's Pick, default on); if slots are full, swap out the oldest and say so in one line (review 6.3). | A new sign-off puts the move in the loadout without a menu; a player who turned picking off keeps their choice; tests pass. | PB-05 merged |
+| OV-B2 | Dojo-Ascent Programmer | A returning student starts at the level cap of the belt below (review 5.4 fallback); update the `start-level-pin` tests. | A Yellow fixture starts at White's cap; a White fixture starts at 1. | OV-B1 |
+| OV-B5 | Dojo-Ascent Programmer | Blessing counted in runs: the next 5 runs after a class, holds at most 10, no hours shown (review 8.6). | No clock text anywhere; tests pass. Words from OV-C2. | OV-B2, OV-C2 |
+| OV-B7 | Dojo-Ascent Programmer | Belt entry: parent note on who may enter it, plus a grown-up path to fix a wrong entry (review 8.2 #1). | A wrong belt can be corrected behind the grown-up gate; words from OV-C2. | OV-B5, OV-C2 |
+| OV-B3 | Dojo-Ascent Programmer | Ages 6–9 start on Guided; Standard is one tap away (placeholder until Jay answers question 9). | A new 6–9 profile opens on Guided; Tester's OV-T2 target is met. | OV-B7, OV-T2 |
+| OV-B6 | Dojo-Ascent Programmer | Import about 15 Power-ups (from 9) from OV-P1 data; existing effect types only. | R-INSIGHT-BAL tests pass with the new pool. | OV-B3, OV-P1, OV-C1 |
+| OV-B4 | Dojo-Ascent Programmer | Kata cards say which stance they give, instead of "Power coming soon". | The beta katas show their stance. | Jay's kata-to-stance mapping |
+| OV-T1 | Dojo-Ascent Game Logic/systems Tester | **First:** recheck only the open #472 cases. | Plain PASS/FAIL on #472. | PB-05 new head |
+| OV-T2 | Dojo-Ascent Game Logic/systems Tester | B8 + B3 numbers: report why Orange wins everything (R-PREMIUM-e), and measure the White kid bot on Guided against a target of about 7 in 10 floor clears. | `drafts/qa/` note with the numbers and a short fix list. No tuning applied. | — |
+| OV-T3 | Dojo-Ascent Game Logic/systems Tester | QA each OV-B PR as it opens; run PB-10 after PB-05 merges. | PASS/FAIL comment on each PR. | Each PR |
+| OV-P1 | Dojo-Ascent Researcher & Planner | Power-up pool plan: about 6 new Power-ups built only from existing effect types, checked with the balance-check skill; rename Rooted/Flowing (review 8.1 #10) as a proposal. | `drafts/planning/R-POWERUPS-15.md` plus data draft; docs-only PR. | — |
+| OV-P2 | Dojo-Ascent Researcher & Planner | Launch plan: turn review L1–L20 into buildable items (owner, Done when, waits on, effort), in the order of the review's top five, and list which items need Jay's answers. | `drafts/planning/R-OVERHAUL-LAUNCH.md`; docs-only PR. Manager adds approved items to the board. | OV-P1 |
+| OV-C1 | Dojo-Ascent Content Designer | Kid names and one-line text for the OV-P1 Power-ups (no numbers, no pressure words). | Lines in `drafts/content/`; word check passes. | OV-P1 draft |
+| OV-C2 | Dojo-Ascent Content Designer | Words for Blessing-in-runs (OV-B5) and the belt-entry parent note and fix path (OV-B7). | Lines in `drafts/content/`; word check passes. | — |
+| OV-C3 | Dojo-Ascent Content Designer | Masklet wind-up retune 14 to 12 (G2B-32 follow-up), with Drive Back and Trophy Throw. | One small PR. | — |
+| OV-L1 | Dojo-ascent Learning & Engagement Designer | Learning review for 6–9s: the auto-equip "new move" line and Sensei's Lesson for Sensei's Pick (OV-B1), and the OV-C2 words. | Short pass/change note in `drafts/learning/`. | OV-C2 draft |
+| OV-A1 | Dojo-ascent Artist | Power-up icons that read without text for the new OV-P1 Power-ups, in the approved icon style; batch them and reuse your scripts. Also fix the #476 preview sheet crop. | `incoming-art/powerups/` with a 30–40px preview strip; Manager art gate before Jay. | OV-P1 draft |
 
 ## 00. Nov 8, 2026 status (Manager)
 Team resumed Nov 8. Jay approved in principle: kata powers are passives, a simplicity pass with belt-by-belt reveal and Easy controls, and explicit tutorial lessons. Real dojo names only (J27).
