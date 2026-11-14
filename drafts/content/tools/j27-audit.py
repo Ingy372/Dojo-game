@@ -15,7 +15,7 @@ KC=lambda n:f'docs/curriculum.md:{45+n}'
 # candidate per technique number / combo: (term or None, note)
 SEAL={1:('double punch',''),2:(None,'same as #1, other side'),3:('back fist','also #5, #10'),4:(None,'name OPEN, family Advancing (#459). Drive Back is retired, not a current name. Push-back effect kept'),
 5:(None,'candidates back fist (also #3) / elbow'),6:(None,'candidate hook punch (attacker also throws one)'),7:('palm heel',''),8:(None,'block-and-strike, no set name'),
-9:(None,'as #8, high. Clash: this legacy seal (Trophy Case / abilities.json id throw) is also named Throw, same as the #457 Throw family and the real throw at #11. Waiting on Jay; keep the current name'),10:('double knifehand block',''),11:('osotogari','Jay\'s spelling; S4 "Osoto Gari"'),12:(None,'osotogari again (also #11)'),
+9:(None,'as #8, high'),10:('double knifehand block',''),11:('outside reap','Jay, Nov 9: Outside Reap is the Throw\'s real dojo name (docs/decisions.md:1695). Not Osotogari.'),12:(None,'same throw as #11 (Outside Reap), then a finish'),
 13:('inside kick','also #14'),14:(None,'candidate spin kick (clashes with Strike "Spin Kick")'),15:(None,'candidate double punch (also #1)'),
 16:(None,'Jay (Nov 8): low hammer fist, then back fist; no name in docs'),17:('arm bar',''),18:(None,'parry is in many; no set name'),19:('wrist lock',''),20:(None,'grab and combo, no set name'),
 31:(None,'candidate arm bar (also #17)'),32:(None,'"slide to the wrist" is a step; candidate wrist lock (also #19)'),33:('party flex',''),34:(None,'no name ("same as 33 with a slam")'),
@@ -78,10 +78,8 @@ for r in rows:
         r['status']='Real'
     else:
         r['status']='Rename'
-    if r['name']=='Throw' and 'family label' not in r['note'] and 'game group' not in r['note']:
-        clash = 'Clash with #457 Throw (the Throw family and the real throw at #11 Osotogari). This is the legacy Trophy Case seal (abilities.json id throw). Waiting on Jay; keep the current name.'
-        if clash not in r['note']:
-            r['note'] = (r['note'] + '. ' if r['note'] else '') + clash
+    if r['name']=='Throw' and r.get('status')!='KEEP' and 'family label' not in r['note'] and 'game group' not in r['note']:
+        r['note'] = 'Placeholder, OPEN, waiting on Jay. Clash with the #457 Throw family. Keep the current name Throw. This is the legacy Trophy Case seal (abilities.json id throw).'
 
 import collections; FIX={'pivot':('Skip','','motion word, not a technique'),'turn.180':('Skip','','motion word'),'turn':('Skip','','motion word'),'turn.big-special':('Skip','','motion word'),
 'stance.attention':('Skip','','"attention" position, not a technique; docs match is unrelated'),'chamber':('Skip','','motion word'),'catch':('Skip','','docs match is unrelated'),
@@ -95,5 +93,9 @@ for r in rows:
     if r['status'] == 'Rename': r['status'] = 'Renamed (drop-in)'
     if r['status'] == 'OPEN' and 'family label' in r['note']: r['status'] = 'KEEP'; r['cand'] = 'KEEP'; r['note'] = 'game group label (Manager, Nov 8: keep)'
     if r['status'] == 'OPEN' and 'stance' in r['note'].lower(): r['note'] = "Jay-approved stance (J1), but Jay's own words naming it are not in decisions.md or progress.md, so curriculum.md was not edited"
+for r in rows:
+    if r['cand']=='Outside Reap':
+        r['src']='docs/decisions.md:1695'
+        r['note']="Jay, Nov 9: Outside Reap is the Throw's real dojo name (docs/decisions.md:1695). Not Osotogari."
 json.dump(rows,open('drafts/content/abilities/J27-audit.json','w'),indent=1); open('drafts/content/abilities/J27-audit.json','a').write('\n')
 print(len(rows), 'names;', dict(collections.Counter((r['status'],r['live']) for r in rows)))

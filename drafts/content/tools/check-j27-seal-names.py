@@ -12,7 +12,7 @@ R = pathlib.Path(__file__).resolve().parents[3]
 path = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else R / 'drafts/content/abilities/J27-seal-renames.json'
 d = json.loads(path.read_text())
 live = json.loads((R / 'content/abilities/abilities.json').read_text())['seals'][:10]
-DOCS = ('docs/self-defense.md', 'docs/curriculum.md')
+DOCS = ('docs/self-defense.md', 'docs/curriculum.md', 'docs/decisions.md')
 BANNED = ('perfect', 'loot box', 'buy', 'purchase', 'streak', 'throat', 'eyes', 'groin', 'nose', 'broken')
 bad = []
 seals = d.get('seals', [])
@@ -92,8 +92,12 @@ for r in audit:
 if any(r.get('name')=='Drive Back' for r in audit):
     bad.append('audit: Drive Back is retired; #4 current name must not be Drive Back (name OPEN, family Advancing)')
 throw_rows=[r for r in audit if r.get('name')=='Throw' and r.get('status')=='OPEN']
-if not throw_rows or any('Clash with #457' not in (r.get('note') or '') for r in throw_rows):
-    bad.append('audit: legacy Trophy Case seal Throw must stay OPEN, with a #457 clash note, current name kept')
+if not throw_rows or any(r.get('status')!='OPEN' or r.get('name')!='Throw' for r in throw_rows):
+    bad.append('audit: legacy Trophy Case seal #9 must stay named Throw, OPEN, waiting on Jay')
+if any('Osotogari' in (r.get('note') or '') for r in throw_rows):
+    bad.append('audit: #9 note must not use Osotogari; #11 is Outside Reap')
+if any(e.get('name')=='Osotogari' for e in d.get('renames',[])) or any(e.get('name')=='Osotogari' for e in d.get('seals',[])):
+    bad.append('#11 stays Outside Reap; no rename to Osotogari')
 print(f'strikes: {len(d.get("strikes", []))}; seal16: {s16.get("status")}; audit rows: {len(audit)}')
 # Manager's calls (Nov 8): 35 drop-in renames, family labels KEEP.
 def resolve(doc, where):

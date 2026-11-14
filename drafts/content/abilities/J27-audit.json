@@ -95,7 +95,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:19",
   "live": "live",
-  "note": "as #8, high. Clash: this legacy seal (Trophy Case / abilities.json id throw) is also named Throw, same as the #457 Throw family and the real throw at #11. Waiting on Jay; keep the current name. Clash with #457 Throw (the Throw family and the real throw at #11 Osotogari). This is the legacy Trophy Case seal (abilities.json id throw). Waiting on Jay; keep the current name.",
+  "note": "Placeholder, OPEN, waiting on Jay. Clash with the #457 Throw family. Keep the current name Throw. This is the legacy Trophy Case seal (abilities.json id throw).",
   "status": "OPEN"
  },
  {
@@ -392,7 +392,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:19",
   "live": "live",
-  "note": "as #8, high. Clash: this legacy seal (Trophy Case / abilities.json id throw) is also named Throw, same as the #457 Throw family and the real throw at #11. Waiting on Jay; keep the current name",
+  "note": "as #8, high",
   "status": "OPEN"
  },
  {
@@ -411,11 +411,11 @@
   "id": "throw #11",
   "name": "Osotogari",
   "verbatim": "docs/self-defense.md:21",
-  "cand": "Osotogari",
-  "src": "docs/self-defense.md:21",
+  "cand": "Outside Reap",
+  "src": "docs/decisions.md:1695",
   "live": "live",
-  "note": "Jay's spelling; S4 \"Osoto Gari\"",
-  "status": "Real"
+  "note": "Jay, Nov 9: Outside Reap is the Throw's real dojo name (docs/decisions.md:1695). Not Osotogari.",
+  "status": "Renamed (drop-in)"
  },
  {
   "file": "content/abilities/seal-families.json",
@@ -425,7 +425,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:22",
   "live": "live",
-  "note": "osotogari again (also #11)",
+  "note": "same throw as #11 (Outside Reap), then a finish",
   "status": "OPEN"
  },
  {
@@ -645,7 +645,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:19",
   "live": "drafts",
-  "note": "as #8, high. Clash: this legacy seal (Trophy Case / abilities.json id throw) is also named Throw, same as the #457 Throw family and the real throw at #11. Waiting on Jay; keep the current name",
+  "note": "as #8, high",
   "status": "OPEN"
  },
  {
@@ -708,11 +708,11 @@
   "id": "throw #11",
   "name": "Outside Reap",
   "verbatim": null,
-  "cand": "Osotogari",
-  "src": "docs/self-defense.md:21",
+  "cand": "Outside Reap",
+  "src": "docs/decisions.md:1695",
   "live": "drafts",
-  "note": "Jay's spelling; S4 \"Osoto Gari\"",
-  "status": "Renamed (drop-in)"
+  "note": "Jay, Nov 9: Outside Reap is the Throw's real dojo name (docs/decisions.md:1695). Not Osotogari.",
+  "status": "Real"
  },
  {
   "file": "drafts/content/abilities/seal-families-text.json",
@@ -722,7 +722,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:22",
   "live": "drafts",
-  "note": "osotogari again (also #11)",
+  "note": "same throw as #11 (Outside Reap), then a finish",
   "status": "OPEN"
  },
  {
@@ -774,11 +774,11 @@
   "id": "outside-reap",
   "name": "Outside Reap",
   "verbatim": null,
-  "cand": "Osotogari",
-  "src": "docs/self-defense.md:21",
+  "cand": "Outside Reap",
+  "src": "docs/decisions.md:1695",
   "live": "drafts",
-  "note": "Jay's spelling; S4 \"Osoto Gari\"",
-  "status": "Renamed (drop-in)"
+  "note": "Jay, Nov 9: Outside Reap is the Throw's real dojo name (docs/decisions.md:1695). Not Osotogari.",
+  "status": "Real"
  },
  {
   "file": "drafts/content/abilities/seals-11-15-text.json",
@@ -788,7 +788,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:22",
   "live": "drafts",
-  "note": "osotogari again (also #11)",
+  "note": "same throw as #11 (Outside Reap), then a finish",
   "status": "OPEN"
  },
  {
@@ -1173,7 +1173,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:19",
   "live": "drafts",
-  "note": "as #8, high. Clash: this legacy seal (Trophy Case / abilities.json id throw) is also named Throw, same as the #457 Throw family and the real throw at #11. Waiting on Jay; keep the current name. Clash with #457 Throw (the Throw family and the real throw at #11 Osotogari). This is the legacy Trophy Case seal (abilities.json id throw). Waiting on Jay; keep the current name.",
+  "note": "Placeholder, OPEN, waiting on Jay. Clash with the #457 Throw family. Keep the current name Throw. This is the legacy Trophy Case seal (abilities.json id throw).",
   "status": "OPEN"
  },
  {
@@ -1338,7 +1338,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:19",
   "live": "drafts",
-  "note": "as #8, high. Clash: this legacy seal (Trophy Case / abilities.json id throw) is also named Throw, same as the #457 Throw family and the real throw at #11. Waiting on Jay; keep the current name",
+  "note": "as #8, high",
   "status": "OPEN"
  },
  {
@@ -1357,11 +1357,11 @@
   "id": "seal #11 (title)",
   "name": "Outside Reap",
   "verbatim": null,
-  "cand": "Osotogari",
-  "src": "docs/self-defense.md:21",
+  "cand": "Outside Reap",
+  "src": "docs/decisions.md:1695",
   "live": "drafts",
-  "note": "Jay's spelling; S4 \"Osoto Gari\"",
-  "status": "Renamed (drop-in)"
+  "note": "Jay, Nov 9: Outside Reap is the Throw's real dojo name (docs/decisions.md:1695). Not Osotogari.",
+  "status": "Real"
  },
  {
   "file": "drafts/content/abilities/unlock-text.json",
@@ -1371,7 +1371,7 @@
   "cand": "OPEN",
   "src": "docs/self-defense.md:22",
   "live": "drafts",
-  "note": "osotogari again (also #11)",
+  "note": "same throw as #11 (Outside Reap), then a finish",
   "status": "OPEN"
  },
  {
