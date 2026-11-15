@@ -1707,7 +1707,11 @@ export class DojoScene extends Phaser.Scene {
 
   private button(x: number, y: number, w: number, h: number, label: string, color: number, size: number, onTap: () => void): void {
     // P-MENU-e: the shared rounded button; its (at least 44 pt) tap zone also blocks floor taps.
-    const b = roundButton(this, { x, y, w, h, label, color, size, onTap }, this.ui);
+    // OV-FX1: a button only acts in the mode it was drawn for. The top row stays on screen while
+    // the bow and arrival run (mode 'arriving'); a tap there must not open a screen that would
+    // later restore 'arriving' and leave the Dojo stuck.
+    const drawnIn = this.mode;
+    const b = roundButton(this, { x, y, w, h, label, color, size, onTap: () => this.mode === drawnIn && onTap() }, this.ui);
     this.uiRects.push(b.hit.getBounds());
   }
 

@@ -1806,3 +1806,9 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Which ages:** a content list, `guidedStartAgeBands` in `content/settings/difficulty.json`, so another dojo can change it without code.
 - **Old saves:** only a profile with no difficulty yet gets the start pick (`settleDifficulty`), so nobody's saved choice changes.
 - **"One tap away":** the existing Settings chooser (Settings, then Steady). No new button.
+
+## OV-FX1: Dojo stuck after Settings during the arrival (2026-11-14)
+
+- **Root cause:** the top row stays drawn from `play` while the bow and arrival run in mode `arriving`. A screen opened then saves `arriving` as its way back; if the arrival ends first, closing the screen restores `arriving` and nothing ends it.
+- **Fix:** a Dojo button only acts in the mode it was drawn for (`button()`), so no screen can open during the arrival. The row stays on screen, so nothing jumps. Hiding it with `renderUi()` was rejected: that would wipe the one-time difficulty line drawn on entry.
+- **Music/Sound:** the − and + width floor is `MIN_TAP` (44), not 36.

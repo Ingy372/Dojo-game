@@ -1164,3 +1164,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Standard is one tap away: Dojo Settings, then Steady. The pick sticks after a reload.
 - Saves that already have a difficulty never move.
 - Tests: `difficulty` (new start-band and old-save cases). Phone check `docs/shots/ov-b3/guided-start.mjs` 60 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off.
+
+## OV-FX1 — Dojo stuck after Settings during the arrival (2026-11-14)
+
+- Fixed: tapping Settings (or any top-row button) while the bow and arrival played, then leaving Settings after the arrival (for example For grown-ups, then Back), left the Dojo with no top row and no walking until a reload.
+- A Dojo button now only acts in the mode it was drawn for, so the top row does nothing during the bow and arrival. It works again as soon as the walk-in ends.
+- Music and Sound − and + buttons are at least 44x44 at every size (they were 43x44 at 667x375).
+- Phone check `docs/shots/ov-fx1/settings-arrival.mjs` 44 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off. On main it fails 36 checks (stuck in `arriving`).
