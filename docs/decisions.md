@@ -278,7 +278,7 @@ Jay asked Claude to test and tune the game before his next playtest.
 - **The Learning & Engagement Designer's proposals are suggestions,** reviewed by Jay with his Claude chat before anything is built. It also reviews milestone 4's open questions (powers, numbers, black belt degrees), which is the design material milestone 4 is paused for.
 - **No art pack is bought.** The Art Director bot makes all art in Blender: low-poly 3D models, rigged and animated (Mixamo allowed), rendered from one fixed top-down three-quarter camera in 8 directions into transparent PNG sprite sheets with a reusable render script. Icons, portraits and scene pictures come from the same models so everything matches. This replaces the pixel-art-pack plan in framework section 13. Details: "Art process" in core-design section 13.
 - **Dojo-Ascent Programmer builds the import step:** a repeatable script that trims, sizes and packs approved renders into texture atlases for Phaser.
-- **Character customization replaces the placeholder circle:** a layered character (body, skin tone, face, hair style and color, gi, belt), each part rendered separately from the same model, chosen at character creation and changeable at the Home Dojo. The belt is its own layer, recolored in code to the real rank and stripes, and is never customizable. Extra looks are earned, never bought.
+- **Character customization replaces the placeholder circle:** a layered character (body, skin tone, face, hair style and color, gi, belt), each part rendered separately from the same model, chosen at character creation and changeable at the Home Dojo. The belt is its own layer, recolored in code to the real rank and stripes, and is never customizable. Extra looks are earned, never bought. *Refined (Nov 14, 2026, Jay's pick 8A): looks can be bought with earned coins only, never real money. See "OV-P6: Looks shop uses earned coins only (2026-11-14)" further down.*
 
 ### Milestone 5 — changes after Jay's first test (2026-10-08)
 
@@ -379,7 +379,7 @@ From section 1 of `docs/work-board.md`.
 - **Claude Code is replaced by Dojo-Ascent Programmer** (Jay, 2026-10-23). Jay no longer works with Claude Code; every mention in `docs/` now says Dojo-Ascent Programmer.
 - **Sensei's Lessons timing:** the Lessons system is built in milestone 7 and finished (a lesson for every launch system) in milestone 10.
 - **Black belt to 2nd degree (J6, Jay, 2026-10-23):** 2 years between 1st degree and 2nd degree black belt. The game now uses 2 years: Black Belt's time in rank is 24 months in the test profiles (brown/black stays 12), checked by a test. DojoForge's real data needs the same value.
-- **Cosmetics (J5, Jay, 2026-10-23):** cosmetics come from gear, in-game achievements and dojo achievements, and are never bought.
+- **Cosmetics (J5, Jay, 2026-10-23):** cosmetics come from gear, in-game achievements and dojo achievements, and are never bought. *Refined (Nov 14, 2026, Jay's pick 8A): looks can also be bought in a looks-only shop with earned coins, never real money. See "OV-P6: Looks shop uses earned coins only (2026-11-14)" further down.*
 - **Fonts (J7, Jay, 2026-10-23):** Fredoka for headings, Andika for body text. The game still uses the system font until Dojo-Ascent Programmer adds the font files in a later code step.
 - **Belt names (Jay, 2026-10-23):** keep the game's wording, "Red/Black Belt" and "Brown/Black Belt". The curriculum's "Red with a black stripe" and "Brown with a black stripe" describe the same ranks.
 - **Guided first Counter (G1, 2026-10-23, Learning proposal 6):** On a new profile, the first "!" warning slows the game to half speed and Sensei says "Look! A red circle." / "It's coming!". When the circle is nearly full, the game holds still with Counter pulsing and "Tap Counter... now!" until Counter is tapped, which always gives a Perfect Counter. The next warning: three-quarter speed, pulse, "Wait for it... Counter!". The one after: normal speed, small pulse, "Counter!". Then the guide is done for that profile. The lines come from `content/tutorial/sensei-lessons.json`. The hold-still rule is in `packages/sim` (world `guide`); the slowdown and pulse are in the client. Saves made before G1 by players who have already played a run skip the guide. Open questions are in the G1 pull request's DECIDE list.
@@ -1864,3 +1864,10 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 
 ## LP-B3b: count classes by the feed total too (2026-11-15)
 - A Class Chest follows real classes, not app opens. When the feed sends `classesTotal`, its growth since the last sync is the floor for chests, so a long absence never loses one. Without a total (old feeds) we can only count the dates still in the window.
+
+## OV-P6: Looks shop uses earned coins only (2026-11-14)
+
+- **Jay (Nov 14, question 8 A):** the game has a looks-only shop paid for with earned coins. It never takes real money: no purchases, no ads, no paid coins.
+- **What it refines:** J5 (Oct 23, "cosmetics ... are never bought") and the character customization line ("Extra looks are earned, never bought"). Both still stand for real money. "Bought" now means only with coins earned in play.
+- **Looks only:** shop items change how the character looks. They never give power. Real training stays the main source of power, and the belt layer is never for sale.
+- **What still earns looks:** gear, in-game achievements and dojo achievements still give looks, as J5 says. The shop is one more way to get them.
