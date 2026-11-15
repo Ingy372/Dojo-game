@@ -92,8 +92,9 @@ describe('LP-B1: the layout fits 667x375 and 932x430', () => {
 
 describe('LP-B1: kid words and the old screens', () => {
   it('kid lines are 8 words or fewer, with no percents', () => {
+    // Skips notes (_), Content's pointerSpots map, and the grown-ups-only hint (LP-C4, #505).
     for (const [k, line] of Object.entries(PATH_WORDS)) {
-      if (k.startsWith('_')) continue;
+      if (k.startsWith('_') || typeof line !== 'string' || k === 'adultProfilesHint') continue;
       expect(line.split(/\s+/).length, k).toBeLessThanOrEqual(8);
       expect(line).not.toMatch(/%/);
     }
