@@ -32,6 +32,7 @@ FIX = dict(
     real_step=('Show Sensei', 'Self-Defense #18', 'in class'), real_when='Next class: Monday',
     game_step='Reach level 13 in the Tower',
 )
+SHOW_FAITH = os.environ.get('SHOW_FAITH') == '1'   # LP-L1: FAITH DOES stays off the Path until L5 is approved
 TIERS = ['White', 'Yellow', 'Orange', 'Green', 'Blue']  # coloured tiers drawn; higher tiers are plain grey shapes in the mist (no red in view)
 FUTURE = 3
 
@@ -348,15 +349,19 @@ def real_step(M, x, y, w, h, small):
 def game_step(M, x, y, w, h, small):
     M.put('panel-inset', x, y, w, h)
     M.text(x + 14, y + 18, 'NEXT IN THE GAME', 9.5 if small else 10.5, INK_SOFT, 'lm', 'Black')
+    isz = 26 if small else 30
+    mini_tower(M, x + 12, y + (30 if small else 28), isz)
+    tx = x + 12 + isz + 8
+    g = FIX['game_step'].split(' in the ')
     if small:   # two short lines on the small phone
-        g = FIX['game_step'].split(' in the ')
-        M.text(x + 14, y + 36, g[0], 12, INK, 'lm', 'ExtraBold')
-        M.text(x + 14, y + 51, 'in the ' + g[1], 12, INK, 'lm', 'ExtraBold')
+        M.text(tx, y + 36, g[0], 12, INK, 'lm', 'ExtraBold')
+        M.text(tx, y + 51, 'in the ' + g[1], 12, INK, 'lm', 'ExtraBold')
     else:
-        M.text(x + 14, y + 42, FIX['game_step'], 13, INK, 'lm', 'ExtraBold')
+        M.text(tx, y + 36, g[0], 13, INK, 'lm', 'ExtraBold')
+        M.text(tx, y + 52, 'in the ' + g[1], 13, INK, 'lm', 'ExtraBold')
     # level bar (menu2 xp bar)
     bw = w - 28
-    by = y + 62 if small else y + 60
+    by = y + 62 if small else y + 68
     M.put('xp-bar-frame', x + 14, by, bw, 20)
     frac = .62
     fw = max(16, (bw - 8) * frac)
@@ -381,11 +386,52 @@ def link(M, a, b):
         d.ellipse([S(xx - 1.8), S(yy - 1.8), S(xx + 1.8), S(yy + 1.8)], fill=GOLD, outline=(140, 90, 20), width=S(.6))
 
 
-def path_screen(small):
+def mini_tower(M, x, y, s):
+    """picture before text: a tiny Tower glyph for the game step."""
+    d = draw(M)
+    for i, col in enumerate([(236, 236, 232), (240, 196, 60), (238, 140, 50)]):
+        ty = y + s - (i + 1) * s / 3.2
+        bw = s * (.62 - i * .08)
+        cx = x + s / 2
+        d.rectangle([S(cx - bw / 2), S(ty + 3), S(cx + bw / 2), S(ty + s / 3.2)], fill=(236, 214, 176), outline=(150, 110, 70), width=S(1))
+        d.polygon([(S(cx - bw / 2 - 4), S(ty + 5)), (S(cx), S(ty - 1)), (S(cx + bw / 2 + 4), S(ty + 5))], fill=col, outline=(110, 74, 40))
+
+
+def intro_card(M, W, H, card, small):
+    """LP-L1: one intro card, existing players only, first visit. Dims everything but the next class step."""
+    x0, y0, x1, y1 = card
+    Wd, Hd = M.img.size
+    scrim = Image.new('RGBA', (Wd, Hd), (24, 14, 8, 165))
+    hole = Image.new('L', (Wd, Hd), 255)
+    ImageDraw.Draw(hole).rounded_rectangle([S(x0 - 6), S(y0 - 6), S(x1 + 6), S(y1 + 6)], S(16), fill=0)
+    hole = hole.filter(ImageFilter.GaussianBlur(S(4)))
+    scrim.putalpha(Image.fromarray((np.asarray(hole).astype(np.float32) / 255 * 165).astype(np.uint8)))
+    M.img.alpha_composite(scrim)
+    d = draw(M)
+    d.rounded_rectangle([S(x0 - 5), S(y0 - 5), S(x1 + 5), S(y1 + 5)], S(15), outline=(255, 226, 140), width=S(3))
+    # the card sits just above the class step (over the dimmed Gate), pointing down at it
+    cw, chh = (230, 96) if small else (260, 104)
+    cx, cyy = (x0 + x1) / 2 - cw / 2, y0 - chh - 18
+    soft_shadow(M, (cx, cyy, cx + cw, cyy + chh), 14, 120, 8, 4)
+    M.put('panel-inset', cx, cyy, cw, chh)
+    d = draw(M)
+    ax = cx + cw / 2
+    d.polygon([(S(ax - 11), S(cyy + chh - 2)), (S(ax), S(cyy + chh + 14)), (S(ax + 11), S(cyy + chh - 2))], fill=(250, 236, 208), outline=(170, 128, 84))
+    M.text(cx + 18, cyy + 30, 'This is your Path.', 15 if small else 16, INK, 'lm', 'Black')
+    M.text(cx + 18, cyy + 54, 'Your next step is here.', 12 if small else 13, INK_SOFT, 'lm', 'ExtraBold')
+    M.put('button-primary-normal', cx + cw - 76, cyy + chh - 42, 62, 32)
+    M.text(cx + cw - 45, cyy + chh - 26.5, 'OK', 14, INK, 'mm', 'Black')
+
+
+def path_screen(small, intro=False):
     W, H = (667, 375) if small else (932, 430)
     M = mm.Mock(W, H)
     back_button(M, 12, 10)
-    faith_banner(M, W / 2, 6 if small else 7, small)
+    if SHOW_FAITH:
+        faith_banner(M, W / 2, 6 if small else 7, small)
+    else:
+        M.put('title-plaque', W / 2 - 70, 8, 140, 38)
+        M.text(W / 2, 27, 'My Path', 16, INK, 'mm', 'Black')
     chip_w = 150 if small else 170
     player_chip(M, W - chip_w - 12, 8, chip_w, small)
     px, py = 8, 54
@@ -404,7 +450,9 @@ def path_screen(small):
     rsw = int(rw * (.58 if small else .56))
     real_step(M, rx, cy, rsw, ch, small)
     game_step(M, rx + rsw + 10, cy, rw - rsw - 10, ch, small)
-    name = f'path-screen-{"small-667x375" if small else "large-932x430"}'
+    if intro:
+        intro_card(M, W, H, (rx, cy, rx + rsw, cy + ch), small)
+    name = f'path-screen-{"intro-" if intro else ""}{"small-667x375" if small else "large-932x430"}'
     M.save(name)
     return name
 
@@ -412,6 +460,7 @@ def path_screen(small):
 if __name__ == '__main__':
     for sm in (True, False):
         print(path_screen(sm))
+        print(path_screen(sm, intro=True))
 
 
 def key_and_compare():
@@ -421,7 +470,7 @@ def key_and_compare():
     d = ImageDraw.Draw(k)
     f = ImageFont.truetype(mm.FONT, 30)
     f.set_variation_by_name('Black')
-    for n, (x, y) in enumerate([(615, 42), (50, 135), (630, 150), (630, 430), (1298, 430)], 1):
+    for n, (x, y) in enumerate([(768, 54), (50, 135), (630, 150), (630, 430), (1298, 430)], 1):
         d.ellipse([x - 22, y - 22, x + 22, y + 22], fill=(58, 52, 84), outline=(255, 236, 186), width=4)
         d.text((x, y), str(n), font=f, fill=(255, 236, 186), anchor='mm')
     k.save(os.path.join(mm.PV, 'key-numbered-932x430@2x.png'))
