@@ -1791,3 +1791,9 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **After a lower fix:** `seen` is set to the new progress, so a later raise back to the old belt isn't a surprise promotion and the lower belt plays no moment.
 - **Level after a lower fix (Manager):** the stored level and XP are kept; the game only shows and plays the level capped by the belt. `gainXp` no longer clears XP when the stored level is above the cap, so nothing is lost if the belt is raised again.
 - **Words:** from OV-C2 with the OV-L1 changes ("Keep {belt}", "Your belt was updated."). The new save-confirm line "Save {entry}? If it is wrong, a grown-up can fix it here." is Programmer wording built from OV-C2; the Content Designer may replace it in `content/settings/belt-entry.json`.
+## OV-B5: Dojo Blessing counted in runs (2026-11-14)
+
+- **Old saves (Manager OK):** the first check gives a save that has had any class 5 runs once, quietly, with no card. Long histories never flood it.
+- **Run-out (Manager OK):** no "Blessing ended" line, so there's no loss message (OV-L1).
+- **When a run is used:** at the start of a counted run, so XP and loot use the run's own `blessed` flag. Test-link runs and the tutorial floor don't use one.
+- **Class dates:** one class per date (YYYY-MM-DD), same as class pieces. The 48-hour window and `BLESSING.hours` are gone.

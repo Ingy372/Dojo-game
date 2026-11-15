@@ -68,7 +68,7 @@ export function bankRun(
   const earned = bankRunDecorations(profile, homeDojo(profile), CONTENT, summary, { tier: run.tier, color: belt.color });
   if (profile.lastRun) profile.lastRun.earned = earned;
   // Experience, capped by the real belt (with the Blessing and catch-up bonuses).
-  const xp = gainXp(profile, training, runXp(summary));
+  const xp = gainXp(profile, training, runXp(summary), run.blessed);
   if (profile.lastRun) profile.lastRun.xp = xp;
   writeSave(profile);
   return { summary, xp, profile };

@@ -3,6 +3,7 @@ import { button } from '../ui/button';
 import { GREEN, GATE, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, gateLockR, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
+import BLESS from '../../../../content/settings/blessing.json';
 import {
   BLESSING,
   GEAR_SLOTS,
@@ -17,6 +18,7 @@ import {
   markGoalsShown,
   nextGoals,
   rewardMoments,
+  creditBlessing,
   snapshot,
   decorationDef,
   virtueSetupFor,
@@ -244,7 +246,8 @@ export class HomeScene extends Phaser.Scene {
       return;
     }
     this.training = currentTraining();
-    const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.stances[0].name);
+    const blessingAdded = creditBlessing(this.profile.blessing, this.training.classCheckIns);
+    const moments = rewardMoments(this.profile.seen, this.training, CONTENT.abilities.stances[0].name, blessingAdded);
     // OV-B1: Sensei's Pick puts new Kicks and Defenses in their slots; the lesson comes the first time one moves.
     const picked = senseiPick(this.profile, earnedPicks(this.training, CONTENT.abilities), this.training.tier);
     const picks = { lesson: [] as string[], lines: picked.map((l) => pickLineText(l, CONTENT.abilities)) };
@@ -420,10 +423,11 @@ export class HomeScene extends Phaser.Scene {
     // Q-PREMIUM-2 L3: "Level 5 of 40", not "cap 40" (a game word a child does not know).
     const levelLine = atCap ? `Level ${level}  ·  Top level! The Gate shows how to go higher.` : `Level ${level} of ${t.levelCap}`;
     // Compact: the stack gains the level line (and keeps the Blessing line), so the row grows to fit it.
-    const stackH = TYPE.title + S1 + TYPE.body + (t.blessed ? S1 + TYPE.label : 0) + (short ? S1 + TYPE.label + 2 : 0);
+    const blessRuns = this.profile.blessing.runs;
+    const stackH = TYPE.title + S1 + TYPE.body + (blessRuns > 0 ? S1 + TYPE.label : 0) + (short ? S1 + TYPE.label + 2 : 0);
     const rowH = short ? Math.max(56, stackH + S1) : 64;
     const cy = rowTop + rowH / 2;
-    if (t.blessed) {
+    if (blessRuns > 0) {
       // Full fill, so the object's alpha is the alpha you see (0.25 to 0.15).
       const glow = this.add.circle(pad + 24, cy, 32, 0x6fb7ff, 1).setAlpha(MOTION.breath.from);
       this.ui.add(glow);
@@ -439,9 +443,10 @@ export class HomeScene extends Phaser.Scene {
     sy += TYPE.title + S1;
     const stripeText = t.stripesThisBelt ? `  ·  ${t.stripesThisBelt} stripe${t.stripesThisBelt > 1 ? 's' : ''}` : '';
     this.oneLine(this.text(textX, sy, `${t.belt.name}${stripeText}`, TYPE.body, beltTextColor(t.belt.color), true), textW, TYPE.label);
-    if (t.blessed) {
-      const hours = Math.max(1, Math.round(((t.blessingEndsMs ?? 0) - Date.now()) / 3600000));
-      this.oneLine(this.text(textX, sy + TYPE.body + S1 + 2, `✦ Blessing +${Math.round(BLESSING.xpBonus * 100)}% XP · ${hours}h left`, TYPE.label, '#9ad1ff', true), textW, 10);
+    if (blessRuns > 0) {
+      // OV-B5: counted in runs, never hours.
+      const line = blessRuns === 1 ? BLESS.homeOne : blessRuns >= BLESSING.maxRuns ? BLESS.full : BLESS.home.replace('{n}', `${blessRuns}`);
+      this.oneLine(this.text(textX, sy + TYPE.body + S1 + 2, `✦ ${line}`, TYPE.label, '#9ad1ff', true), textW, 10);
       sy += S1 + TYPE.label + 2;
     }
     if (short) this.oneLine(this.text(textX, sy + TYPE.body + S1 + 2, levelLine, TYPE.label, atCap ? '#ffd166' : '#b9ad99', true), textW, TYPE.label);

@@ -281,7 +281,10 @@ export const PROGRESSION = {
 
 /** Dojo Blessing (core-design section 10): after attending class. */
 export const BLESSING = {
-  hours: 48,
+  /** OV-B5: Tower runs one new class adds. */
+  runsPerClass: 5,
+  /** OV-B5: the most blessed runs the Blessing holds. */
+  maxRuns: 10,
   /** Extra share of experience while blessed (0.5 = +50%). */
   xpBonus: 0.5,
   /** Better loot: this much weight moves from Common to Rare on every roll while blessed. */

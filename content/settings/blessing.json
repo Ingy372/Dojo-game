@@ -1,0 +1,11 @@
+{
+  "_note": "OV-B5. Dojo Blessing words, counted in Tower runs (OV-C2, with the OV-L1 changes). No hours or countdown anywhere. Nothing is shown when the Blessing runs out. 'five' and 'ten' match BLESSING.runsPerClass and BLESSING.maxRuns.",
+  "title": "Dojo Blessing!",
+  "celebration": "Dojo Blessing for your next five runs!",
+  "afterClass": "Class time helps your next five runs!",
+  "full": "Blessing ready for ten Tower runs.",
+  "home": "Blessing on for {n} more runs.",
+  "homeOne": "Blessing on for one more run.",
+  "staffOn": "Dojo Blessing: on ({n} runs)",
+  "staffOff": "Dojo Blessing: off"
+}

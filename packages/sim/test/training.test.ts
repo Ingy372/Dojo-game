@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import {
-  BLESSING,
   FeedError,
   POWER,
   PROGRESSION,
@@ -90,9 +89,6 @@ describe('brand-new white belt', () => {
     expect(t.gate.toBelt?.name).toBe('Yellow Belt');
     expect(t.path.next?.name).toBe('Basic Form 1');
   });
-  it('is not blessed (last class over 48 hours ago)', () => {
-    expect(t.blessed).toBe(false);
-  });
 });
 
 describe('white belt with 3 sign-offs and a stripe', () => {
@@ -114,10 +110,6 @@ describe('white belt with 3 sign-offs and a stripe', () => {
   it('lights 3 Gate locks and points to the next unsigned technique', () => {
     expect(t.gate.lit).toBe(3);
     expect(t.path.next?.name).toBe('Self-Defense #2');
-  });
-  it('is blessed after class today', () => {
-    expect(t.blessed).toBe(true);
-    expect(t.blessingEndsMs! - Date.parse(t.lastClass!)).toBe(BLESSING.hours * 3600 * 1000);
   });
 });
 
@@ -175,7 +167,7 @@ describe('reward moments', () => {
   });
 
   it('celebrates new progress, the stripe before the sign-offs', () => {
-    const m = rewardMoments(snapshot(a), b);
+    const m = rewardMoments(snapshot(a), b, undefined, 5);
     // R-STANCE-d2: 3 belt sign-offs + the Cat Stance sign-off group into one card.
     expect(m.map((x) => x.kind)).toEqual(['stripe', 'signOffs', 'blessing']);
     const card = m[1];
@@ -240,11 +232,10 @@ describe('levels and experience', () => {
 
   it('gives double experience below the expected level, and more when blessed', () => {
     const p = newProfile();
-    const y = train(yellow); // expected level 10, not blessed
+    const y = train(yellow); // expected level 10
     expect(gainXp(p, y, 100).gained).toBe(200);
-    const blessed = train(white3);
     const q = newProfile();
-    expect(gainXp(q, blessed, 100).gained).toBe(150);
+    expect(gainXp(q, train(white3), 100, true).gained).toBe(150);
   });
 });
 

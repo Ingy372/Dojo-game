@@ -8,6 +8,7 @@ import Phaser from 'phaser';
 import { powerRating, xpToNext, type PowerSource, type Profile, type TrainingState } from '@dojo/sim';
 import { FAKE_PROFILES, selectedProfileKey } from '../game/student';
 import { FONT, crisp, view } from './theme';
+import BLESS from '../../../../content/settings/blessing.json';
 import { GREEN, MIN_TAP } from './tokens';
 
 const SOURCE_NAME: Record<PowerSource, string> = {
@@ -148,7 +149,7 @@ export class TestingPanel {
     const need = profile.level < training.levelCap ? xpToNext(profile.level, training.belts) : 0;
     const lines = [
       `Level ${Math.min(profile.level, training.levelCap)} of ${training.levelCap}${profile.level > training.levelCap ? ` (saved level ${profile.level}, capped by belt)` : ''} · experience ${profile.xp} / ${need || 'cap'}`,
-      `Dojo Blessing: ${training.blessed ? `on (${Math.round(((training.blessingEndsMs ?? 0) - Date.now()) / 3600000)}h left)` : 'off'} · expected level ${training.expectedLevel}`,
+      `${profile.blessing.runs > 0 ? BLESS.staffOn.replace('{n}', `${profile.blessing.runs}`) : BLESS.staffOff} · expected level ${training.expectedLevel}`,
     ];
     for (const l of lines) {
       this.text(rx, ry, l, 11, '#b9ad99', false, rw);

@@ -1150,3 +1150,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - After a fix lowers the belt, the child sees "Your belt was updated." Gear, items and levels are kept.
 - A normal Save still only raises the belt. The old "can't be lowered later" line now says "If it is wrong, a grown-up can fix it here."
 - Tests: `ov-b7-belt-fix` (4), plus the B-BELT and start-level tests. Phone check `docs/shots/ov-b7/belt-fix.mjs` 108 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off.
+## OV-B5 — Dojo Blessing counted in runs (2026-11-14)
+
+- The Dojo Blessing now counts Tower runs, not hours (review 8.6). Each new class date adds 5 runs, and the Blessing holds at most 10. Each counted run uses one when it starts. Test-link runs and the tutorial floor use none.
+- No clock text anywhere. The Training Board shows "Blessing on for {n} more runs.", "…one more run.", or "Blessing ready for ten Tower runs." at 10. Nothing is shown when it runs out.
+- A new class plays the Blessing card with "Class time helps your next five runs!", or the full line when the Blessing was already at 10 (OV-L1). The promotion card says "Dojo Blessing for your next five runs!".
+- Words: `content/settings/blessing.json` (OV-C2 with the OV-L1 changes). Numbers: `BLESSING.runsPerClass` and `BLESSING.maxRuns`.
+- Tests: `ov-b5-blessing` (5) and the training test. Phone check `docs/shots/ov-b5/blessing.mjs` 76 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off.
