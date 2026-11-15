@@ -51,7 +51,6 @@ export interface ProgressSnapshot {
   /** Stripes, as "word|belt|date". */
   stripes: string[];
   approved: boolean;
-  lastClass: string | null;
 }
 
 export type RewardMoment =
@@ -68,7 +67,8 @@ export type RewardMoment =
   /** Several sign-offs at once (more than 3) are shown together. */
   | { kind: 'signOffs'; list: Array<{ requirement: RequirementStatus; ability: string }> }
   | { kind: 'testApproved'; testDate: string | null }
-  | { kind: 'blessing' };
+  /** OV-B5: a new class added Blessing runs. full: it was already at the most it holds. */
+  | { kind: 'blessing'; full: boolean };
 
 export interface WelcomePreview {
   /** The Stance everyone starts with (stances[0]). */
@@ -89,7 +89,6 @@ export function snapshot(t: TrainingState): ProgressSnapshot {
     signed: [...t.requirements, ...t.stances.map((s) => s.requirement)].filter((r) => r.signedOff).map((r) => r.id),
     stripes: stripeKeys(t),
     approved: t.gate.sealLit,
-    lastClass: t.lastClass,
   };
 }
 
@@ -110,8 +109,11 @@ export function abilityLabel(t: TrainingState, id: string): string {
   return name ? `${kind}: ${name}` : `${kind} (power arrives in a later update)`;
 }
 
-/** What's new since the last snapshot, biggest celebration first. `prev` null = first time. */
-export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState, stance = "Beginner's Stance"): RewardMoment[] {
+/**
+ * What's new since the last snapshot, biggest celebration first. `prev` null = first time.
+ * `blessingAdded` is what `creditBlessing` returned: runs a new class added, or null for none.
+ */
+export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState, stance = "Beginner's Stance", blessingAdded: number | null = null): RewardMoment[] {
   if (!prev || prev.studentId !== t.studentId) {
     return unlockCascade(t, stance);
   }
@@ -144,7 +146,7 @@ export function rewardMoments(prev: ProgressSnapshot | null, t: TrainingState, s
   else for (const f of fresh) out.push({ kind: 'signOff', ...f });
 
   if (t.gate.sealLit && !prev.approved) out.push({ kind: 'testApproved', testDate: t.gate.testDate });
-  if (t.blessed && t.lastClass !== prev.lastClass) out.push({ kind: 'blessing' });
+  if (blessingAdded !== null) out.push({ kind: 'blessing', full: blessingAdded === 0 });
   return out;
 }
 

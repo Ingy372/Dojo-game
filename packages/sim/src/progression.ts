@@ -64,13 +64,13 @@ export function runXp(summary: RunSummary): number {
 }
 
 /**
- * Adds a run's experience to the profile. The Dojo Blessing adds 50%; players below
+ * Adds a run's experience to the profile. A blessed run adds 50%; players below
  * their rank's expected level earn double. Levels stop at the rank's cap (extra
  * experience at the cap will turn into materials and Mastery after launch).
  */
-export function gainXp(profile: Profile, training: TrainingState, base: number): XpGain {
+export function gainXp(profile: Profile, training: TrainingState, base: number, blessed = false): XpGain {
   const catchUp = profile.level < training.expectedLevel;
-  const multiplier = (catchUp ? PROGRESSION.catchUpMultiplier : 1) * (training.blessed ? 1 + BLESSING.xpBonus : 1);
+  const multiplier = (catchUp ? PROGRESSION.catchUpMultiplier : 1) * (blessed ? 1 + BLESSING.xpBonus : 1);
   const gained = Math.round(base * multiplier);
   let levelsGained = 0;
   if (profile.level < training.levelCap) {
@@ -84,7 +84,7 @@ export function gainXp(profile: Profile, training: TrainingState, base: number):
     }
   }
   if (profile.level >= training.levelCap) profile.xp = 0;
-  return { base, multiplier, gained, blessed: training.blessed, catchUp, levelsGained, atCap: profile.level >= training.levelCap };
+  return { base, multiplier, gained, blessed, catchUp, levelsGained, atCap: profile.level >= training.levelCap };
 }
 
 /** The Virtue taken into fights, with its rank applied (each rank above I is 25% stronger). */
