@@ -4,12 +4,12 @@ Every new line Jay approves in one go. Scripture, covenants and the creed are co
 
 ## One choice
 
-Section 6.3 of `docs/faith-and-creed.md` says the game uses KJV where the wall differs. The full KJV differs from the wall wording on 9 of 10 verses (for example John 3:3 starts "Jesus answered and said unto him, Verily, verily"). The pack shows KJV (`showText: kjv`); switching any verse to the wall wording is one field.
+Section 6.3 of `docs/faith-and-creed.md` says the game uses KJV where the wall differs. The full KJV differs from the wall wording on 9 of 10 verses (for example John 3:3 starts "Jesus answered and said unto him, Verily, verily"). Each verse has `kjvText` and `wallText` side by side; `showText` picks one (now `kjv`). The Learning review (LP-L2) recommends the wall wording so kids read the same words they see in class.
 
 ## Creed Scroll
 - description: "The words our class says together."
 - found: "The Creed Scroll! Say it with your class."
-- sensei: "Which line feels like yours today?"
+- sensei: "Which line do you like best?"
 
 ## FAITH DOES Banner
 - description: "A dojo banner. Each belt lights a letter."
@@ -35,11 +35,11 @@ Section 6.3 of `docs/faith-and-creed.md` says the game uses KJV where the wall d
 | Together Scroll | yellow to orange | Romans 3:10 | Availability | A new scroll! Nobody climbs alone. | Who helps you when the climb is hard? |
 | Helping Hand Scroll | orange to green | Romans 3:23 | Prayer | Everyone stumbles. God's light helps us up. | Who would you like to pray for? |
 | Gift Scroll | green to blue | Romans 6:23 | Openness | A gift you never have to earn! | What is the best gift you ever got? |
-| Heart Scroll | blue to red | Romans 5:8 | Honest | God loved us first, even in the dark. | When is it brave to tell the truth? |
+| Heart Scroll | blue to red | Romans 5:8 | Honesty | God loved us first, even in the dark. | When is it brave to tell the truth? |
 | Fresh Start Scroll | red to red-black | 1 John 1:9 | Sensitivity | Saying sorry lets the light back in. | How does a fresh start feel? |
 | Rescue Scroll | red-black to brown | John 3:17 | Confidentiality | The light came to save, not to scare. | Who could you help on a hard day? |
 | Sunrise Scroll | brown to brown-black | John 3:3 | Accountability | Born again, like a brand new morning. | What has changed in you since white belt? |
-| Wind Scroll | brown-black to black | John 3:5–8 | none | You can't see the wind, but it moves. | Who could you serve today? |
+| Wind Scroll | brown-black to black | John 3:5–8 | none | You can't see wind, but you hear it. | Who could you serve today? |
 | Summit Scroll | black to black belt | John 6:40 | none | The light carried you all the way up. | Who will you help climb next? |
 
 ## Guardian restored lines
@@ -56,12 +56,12 @@ Section 6.3 of `docs/faith-and-creed.md` says the game uses KJV where the wall d
 | The Ember Knight | red | The Knight's shield glows warm, not angry. |
 | The Echo Mask | red-black | The echoes speak kind words now. |
 | The Root Keeper | brown | The old roots drink the light again. |
-| The Storm Herald | brown-black | Peace, be still. The storm is quiet. |
+| The Storm Herald | brown-black | The storm is quiet. The sky is calm. |
 | The Lost Lightbearer | black | The Last Light is home. The Tower shines! |
 
 ## Where it shows (proposal)
 
 - creedScroll: In the Book's Faith page from the first visit; Sensei shows it once after the first class check-in.
 - faithDoesBanner: Hangs in the Home Dojo; one letter lights at each real promotion (ceremony screen).
-- verseScrolls: Given on the promotion ceremony screen: found line, verse, covenant, then Sensei. Kept in the Book's Faith page.
+- verseScrolls: promotion ceremony, one step per tap: found line and verse, then the covenant (name in large type), then Sensei once. All kept in the Book.
 - guardianRestored: One line when a Guardian is freed, before its relic scroll from guardian-faith-overlay.json.

@@ -1,5 +1,5 @@
 {
-  "notes": "DRAFT for LP-C1 (L5 faith pack). Swappable Action Zone faith layer (schoolId action-zone); nothing here is a lock, quiz, or Gate requirement. Every verse, covenant and creed word is copied from docs/faith-and-creed.md: wallText is section 3 with the two section 6 KJV fixes (Romans 3:23 'come short', Romans 5:8 'died'); kjvText is the full King James verse, checked against bible-api.com (translation=kjv) on 2026-11-14, because section 6.3 says the game uses KJV where the wall differs. showText picks which one the game shows. Kid lines (anything under lines, meaning, lit, description, and guardianRestored) are new, 8 words max, and need Jay's OK. Covenant 'Honest' uses the section 4 name; the section 6 summary says 'Honesty'. Supersedes creed-and-verses.json once Jay approves.",
+  "notes": "DRAFT for LP-C1 (L5 faith pack). Swappable Action Zone faith layer (schoolId action-zone); nothing here is a lock, quiz, or Gate requirement. Every verse, covenant and creed word is copied from docs/faith-and-creed.md: wallText is section 3 with the two section 6 KJV fixes (Romans 3:23 'come short', Romans 5:8 'died'); kjvText is the full King James verse, checked against bible-api.com (translation=kjv) on 2026-11-14, because section 6.3 says the game uses KJV where the wall differs. showText picks which one the game shows. Kid lines (anything under lines, meaning, lit, description, and guardianRestored) are new, 8 words max, and need Jay's OK. Covenant name 'Honesty' (Manager's call, LP-C2), from the section 6 summary; section 4 says 'Honest'. Covenant words are never reworded; voice on tap comes with L19. LP-C2 applied the LP-L2 review edits. No scripture outside docs/faith-and-creed.md in kid lines. Supersedes creed-and-verses.json once Jay approves.",
   "schoolId": "action-zone",
   "translation": "KJV",
   "verifiedAgainst": [
@@ -18,7 +18,7 @@
     "lines": {
       "description": "The words our class says together.",
       "found": "The Creed Scroll! Say it with your class.",
-      "sensei": "Which line feels like yours today?"
+      "sensei": "Which line do you like best?"
     }
   },
   "faithDoesBanner": {
@@ -109,7 +109,11 @@
       "wallText": "For God so loved the world that he gave his only begotten Son that whosoever believes in him shall not perish but have everlasting life.",
       "covenant": {
         "name": "Unconditional Love",
-        "text": "No matter what you say or do to me, I will always love and pray for you."
+        "text": "No matter what you say or do to me, I will always love and pray for you.",
+        "display": {
+          "nameLarge": true,
+          "voiceOnTap": "after L19"
+        }
       },
       "lines": {
         "found": "A new scroll! God loves the whole world.",
@@ -129,7 +133,11 @@
       "wallText": "There is no one righteous, no not one.",
       "covenant": {
         "name": "Availability",
-        "text": "My time, my money, and anything I have, I will make available to you."
+        "text": "My time, my money, and anything I have, I will make available to you.",
+        "display": {
+          "nameLarge": true,
+          "voiceOnTap": "after L19"
+        }
       },
       "lines": {
         "found": "A new scroll! Nobody climbs alone.",
@@ -149,7 +157,11 @@
       "wallText": "For all have sinned and come short of the glory of God.",
       "covenant": {
         "name": "Prayer",
-        "text": "I will always make time to pray for you."
+        "text": "I will always make time to pray for you.",
+        "display": {
+          "nameLarge": true,
+          "voiceOnTap": "after L19"
+        }
       },
       "lines": {
         "found": "Everyone stumbles. God's light helps us up.",
@@ -169,7 +181,11 @@
       "wallText": "For the wages of sin is death but the gift of God is eternal life through Jesus Christ our Lord.",
       "covenant": {
         "name": "Openness",
-        "text": "I will always share my thoughts and feelings with you."
+        "text": "I will always share my thoughts and feelings with you.",
+        "display": {
+          "nameLarge": true,
+          "voiceOnTap": "after L19"
+        }
       },
       "lines": {
         "found": "A gift you never have to earn!",
@@ -188,8 +204,12 @@
       "kjvText": "But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us.",
       "wallText": "For God commendeth his love toward us in that while we were yet sinners Christ died for us.",
       "covenant": {
-        "name": "Honest",
-        "text": "I will always be honest with you."
+        "name": "Honesty",
+        "text": "I will always be honest with you.",
+        "display": {
+          "nameLarge": true,
+          "voiceOnTap": "after L19"
+        }
       },
       "lines": {
         "found": "God loved us first, even in the dark.",
@@ -209,7 +229,11 @@
       "wallText": "If we confess our sins he is faithful and just to forgive us of our sins and purify us from all unrighteousness.",
       "covenant": {
         "name": "Sensitivity",
-        "text": "I will always be sensitive to your needs, thoughts, and feelings."
+        "text": "I will always be sensitive to your needs, thoughts, and feelings.",
+        "display": {
+          "nameLarge": true,
+          "voiceOnTap": "after L19"
+        }
       },
       "lines": {
         "found": "Saying sorry lets the light back in.",
@@ -229,7 +253,11 @@
       "wallText": "For God did not send his Son into the world to condemn the world but to save the world through him.",
       "covenant": {
         "name": "Confidentiality",
-        "text": "I will keep whatever is shared within the confines of the group to provide an atmosphere of openness."
+        "text": "I will keep whatever is shared within the confines of the group to provide an atmosphere of openness.",
+        "display": {
+          "nameLarge": true,
+          "voiceOnTap": "after L19"
+        }
       },
       "lines": {
         "found": "The light came to save, not to scare.",
@@ -249,7 +277,11 @@
       "wallText": "I tell you the truth, unless a man is born again he may not enter the kingdom of God.",
       "covenant": {
         "name": "Accountability",
-        "text": "I am accountable to you to become what God has designed me to be in his living creation."
+        "text": "I am accountable to you to become what God has designed me to be in his living creation.",
+        "display": {
+          "nameLarge": true,
+          "voiceOnTap": "after L19"
+        }
       },
       "lines": {
         "found": "Born again, like a brand new morning.",
@@ -269,7 +301,7 @@
       "wallText": "I tell you the truth, unless a man is born of water and the Spirit, he cannot enter the kingdom of God. Flesh gives birth to flesh, but the Spirit gives birth to spirit. You should not be surprised at my saying, \"You must be born again.\" The wind blows wherever it pleases. You hear its sound, but you cannot tell where it comes from or where it is going. So it is with everyone born of the Spirit.",
       "covenant": null,
       "lines": {
-        "found": "You can't see the wind, but it moves.",
+        "found": "You can't see wind, but you hear it.",
         "sensei": "Who could you serve today?"
       }
     },
@@ -346,7 +378,7 @@
         "faithOverlayKey": "storm-herald",
         "tier": "brown-black",
         "name": "The Storm Herald",
-        "line": "Peace, be still. The storm is quiet."
+        "line": "The storm is quiet. The sky is calm."
       },
       {
         "faithOverlayKey": "lost-lightbearer",
@@ -359,7 +391,7 @@
   "placement": {
     "creedScroll": "In the Book's Faith page from the first visit; Sensei shows it once after the first class check-in.",
     "faithDoesBanner": "Hangs in the Home Dojo; one letter lights at each real promotion (ceremony screen).",
-    "verseScrolls": "Given on the promotion ceremony screen: found line, verse, covenant, then Sensei. Kept in the Book's Faith page.",
+    "verseScrolls": "Promotion ceremony, one step per tap: (1) found line and verse, (2) covenant, name in large type above the promise, (3) Sensei's question, once. All kept in the Book's Faith page.",
     "guardianRestored": "One line when a Guardian is freed, before its relic scroll from guardian-faith-overlay.json."
   }
 }
