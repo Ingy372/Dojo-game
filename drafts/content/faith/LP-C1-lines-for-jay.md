@@ -1,7 +1,7 @@
 # LP-C1: faith pack lines for Jay
 
-
 **Jay-approved, Nov 14, 2026 (LP-C3):** "Everything in faith lines looks good. Go with the wording that's on the wall." Every line below is approved, and all 10 verses show the wall wording.
+
 Every new line Jay approves in one go. Scripture, covenants and the creed are copied, not written, so they are listed only by reference. Data: `LP-C1-faith-pack.json`. Checker: `python3 drafts/content/tools/check-lp-c1-faith-pack.py --online`.
 
 ## One choice
