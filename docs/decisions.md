@@ -498,13 +498,15 @@ From section 1 of `docs/work-board.md`.
 
 ## M7-P1 update: everyone starts on Standard (Manager + Learning Designer, 2026-10-24)
 
-- **Everyone starts on Standard** ("Steady" to kids). No age-based Guided default and no age question. `settleDifficulty(profile)` only fills an empty difficulty.
+> **Superseded in part (Nov 14, 2026):** the two "starts on Standard" bullets below are replaced by OV-B3 ([#500](https://github.com/Ingy372/Dojo-game/pull/500), Jay's Nov 14 pick 9A). A new profile in an age band listed in `content/settings/difficulty.json` `guidedStartAgeBands` (now `["6-9"]`) starts on Guided; other ages start on Standard (Steady), one tap away in Settings. See "OV-B3: Ages 6–9 start on Guided (2026-11-14)" further down. The rest of this section still stands.
+
+- ~~**Everyone starts on Standard** ("Steady" to kids). No age-based Guided default and no age question.~~ *Superseded by OV-B3 (#500): ages 6–9 start on Guided.* `settleDifficulty(profile)` only fills an empty difficulty.
 - **Kind Guided offer:** after `offerAfterLosses` (2) lost runs in a row on the same floor (belt tier), a card offers Guided before the run-over card. A clear resets the count; resting doesn't count. At most once a day (`guidedOfferedOn`, local date). The text never mentions losing (a test checks). It never switches by itself: only "Try it" changes it.
 - **Offer resolved (C9 update):** the Learning Designer's review (#114, SHOULD 3) settles it: the offer is for **Guided** ("Want more time to COUNTER?" / "You can try Guided…", buttons "Try it" / "No thanks"). Steady stays Standard's kid name.
 - **Home line** "You're on {name}…" shows once ever (`difficultyLineShown`).
 - **Standard card** now reads "The usual pace."
 - **Guided in Settings:** still on the Settings choice screen. In P1 that screen isn't behind a grown-up gate; #110 (P9) adds the grown-up gate. Merge #108 before #110.
-- **Fixture:** `fixtures/5-white-belt-age-6-9.json` (Mia R., ageBand 6-9) for testing young players; it starts on Standard like everyone.
+- **Fixture:** `fixtures/5-white-belt-age-6-9.json` (Mia R., ageBand 6-9) for testing young players; ~~it starts on Standard like everyone.~~ *Superseded by OV-B3 (#500): it now starts on Guided.*
 - All text is in content/settings/difficulty.json.
 
 ## M7-P9 update: daily play time, math gate, resting door (Manager + Learning Designer, 2026-10-24)
