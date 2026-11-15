@@ -1177,4 +1177,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Four new Power-ups join the pick screen, so the pool is 13: Quiet Mind (Focus fills faster), Warm Up (start every room with some Focus), Swift Strikes (Strikes use less Focus) and Iron Block (blocks stop more of the hit).
 - Each has its own icon from #485 (Iron Block shows the steel arm).
 - The Rooted and Flowing families are now called Guard and Speed, which the card's top stripe shows.
-- Tests: `insight-budget` (caps for the 4 cards, every family has at least 2 cards). The slow R-INSIGHT-BAL run (`BALANCE=1`, lines B1–B10) passes on the 13-card pool. Phone check `docs/shots/ov-b6/powerups.mjs` 172 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off.
+- Tests: `insight-budget` (caps for the 4 cards, every family has at least 2 cards). The slow R-INSIGHT-BAL run (`BALANCE=1`) on 13 cards: B5 (pool win) and B10 (route spread) still fail, waiting on a tuning call. Phone check `docs/shots/ov-b6/powerups.mjs` 172 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off.
