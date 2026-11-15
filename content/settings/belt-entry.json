@@ -1,8 +1,8 @@
 {
-  "_note": "B-BELT. A grown-up enters the student's real belt and stripes behind the grown-up gate. Saved only on this phone. It can only go up: lower choices are greyed out.",
+  "_note": "B-BELT, OV-B7. A grown-up enters the student's real belt and stripes behind the grown-up gate. Saved only on this phone. Save only goes up (lower choices are greyed out); 'Fix a mistake' lets a grown-up correct a wrong entry, down to what the dojo's own data shows. Words from OV-C2 with the OV-L1 changes ('Keep {belt}', and 'Your belt was updated.' for the child after a fix).",
   "open": "Belt & stripes",
   "title": "Belt and stripes",
-  "help": "Pick your child's belt and stripes from the real dojo. This stays on this phone, and it can only go up.",
+  "help": "A grown-up should set the belt, not the student. Pick the real belt and stripes from the dojo. If it is wrong, a grown-up can fix it here.",
   "stripes": "Stripes",
   "save": "Save",
   "back": "Back",
@@ -10,10 +10,17 @@
   "savedOne": "Saved: {belt}, 1 stripe",
   "savedNone": "Saved: {belt}",
   "confirmTitle": "Are you sure?",
-  "confirmHelp": "Save {entry}? Belts here can only go up, so this can't be lowered later.",
+  "confirmHelp": "Save {entry}? If it is wrong, a grown-up can fix it here.",
   "confirmYes": "Yes, save",
   "confirmNo": "Not yet",
   "entryStripes": "{belt}, {n} stripes",
   "entryOne": "{belt}, 1 stripe",
-  "entryNone": "{belt}"
+  "entryNone": "{belt}",
+  "fixButton": "Fix a mistake",
+  "fixTitle": "Fix the belt",
+  "fixHelp": "A grown-up can correct a wrong belt here.",
+  "fixConfirm": "Change the saved belt to {entry}?",
+  "fixYes": "Yes, fix it",
+  "fixKeep": "Keep {belt}",
+  "fixed": "Your belt was updated."
 }

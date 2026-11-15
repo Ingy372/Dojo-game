@@ -83,7 +83,8 @@ export function gainXp(profile: Profile, training: TrainingState, base: number, 
       levelsGained++;
     }
   }
-  if (profile.level >= training.levelCap) profile.xp = 0;
+  // Above the cap (a grown-up lowered the belt, OV-B7) the stored level and XP stay for when it rises again.
+  if (profile.level === training.levelCap) profile.xp = 0;
   return { base, multiplier, gained, blessed, catchUp, levelsGained, atCap: profile.level >= training.levelCap };
 }
 

@@ -1784,6 +1784,13 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Lesson:** `lesson-sensei-pick` is a fading follow-up and not on the Lesson Scroll, because it has no practice line. It skips the session limit so it shows with the first pick.
 - **Switch hidden on Guided** and while the slot note shows, so the row stays clear.
 
+## OV-B7: Grown-up belt fix (2026-11-14)
+
+- **Gate:** no change. The sum question stays, with no PIN, and the belt screen is only reachable through it.
+- **How low a fix can go:** down to the feed's own belt and stripes. A fix replaces the saved entry (`fixBeltEntry`); an entry at or below the feed is dropped.
+- **After a lower fix:** `seen` is set to the new progress, so a later raise back to the old belt isn't a surprise promotion and the lower belt plays no moment.
+- **Level after a lower fix (Manager):** the stored level and XP are kept; the game only shows and plays the level capped by the belt. `gainXp` no longer clears XP when the stored level is above the cap, so nothing is lost if the belt is raised again.
+- **Words:** from OV-C2 with the OV-L1 changes ("Keep {belt}", "Your belt was updated."). The new save-confirm line "Save {entry}? If it is wrong, a grown-up can fix it here." is Programmer wording built from OV-C2; the Content Designer may replace it in `content/settings/belt-entry.json`.
 ## OV-B5: Dojo Blessing counted in runs (2026-11-14)
 
 - **Old saves (Manager OK):** the first check gives a save that has had any class 5 runs once, quietly, with no card. Long histories never flood it.

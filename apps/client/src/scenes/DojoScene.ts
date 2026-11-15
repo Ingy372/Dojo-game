@@ -58,7 +58,7 @@ import MOTION_TEXT from '../../../../content/settings/motion.json';
 import streetUi from '../../../../content/street-smarts/ui.json';
 import { baseFeed, currentTraining } from '../game/student';
 import BELT_TEXT from '../../../../content/settings/belt-entry.json';
-import { applyBeltEntry, entryRank, feedEntry, pickBelt, recordBeltEntry, type BeltEntry } from '@dojo/sim';
+import { applyBeltEntry, entryRank, feedEntry, fixBeltEntry, pickBelt, recordBeltEntry, type BeltEntry } from '@dojo/sim';
 import { button as roundButton } from '../ui/button';
 import { GREEN, MIN_TAP, RADIUS } from '../ui/tokens';
 import { startTowerRun } from '../game/tower';
@@ -1297,14 +1297,18 @@ export class DojoScene extends Phaser.Scene {
     }
   }
 
-  /** Grown-up setting (B-BELT): the real belt and stripes. Choices below what's saved are greyed out. */
-  private openBeltEntry(back: Mode): void {
+  /**
+   * Grown-up setting (B-BELT): the real belt and stripes. Choices below what's saved are greyed out.
+   * `fix` (OV-B7) lets a grown-up correct a wrong entry, down to what the feed itself shows.
+   */
+  private openBeltEntry(back: Mode, fix = false): void {
     const t = BELT_TEXT;
     const { width, height } = view(this);
     const feed = baseFeed();
     const belts = feed.school.belts;
-    const floor = feedEntry(applyBeltEntry(feed, this.profile.beltEntry));
-    const pick: BeltEntry = { ...floor };
+    const saved = feedEntry(applyBeltEntry(feed, this.profile.beltEntry));
+    const floor = fix ? feedEntry(feed) : saved;
+    const pick: BeltEntry = { ...saved };
     const box = this.add.container(0, 0).setDepth(70);
     box.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
     const close = () => {
@@ -1314,8 +1318,8 @@ export class DojoScene extends Phaser.Scene {
       this.renderUi();
     };
     const w = Math.min(600, width - 32);
-    box.add(this.add.text(width / 2, 10, t.title, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
-    box.add(this.add.text(width / 2, 38, t.help, { fontFamily: FONT, fontSize: '14px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp()));
+    box.add(this.add.text(width / 2, 10, fix ? t.fixTitle : t.title, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp()));
+    box.add(this.add.text(width / 2, 38, fix ? t.fixHelp : t.help, { fontFamily: FONT, fontSize: '14px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp()));
     const cols = 5;
     const gap = 8;
     const cw = (w - gap * (cols - 1)) / cols;
@@ -1352,34 +1356,49 @@ export class DojoScene extends Phaser.Scene {
     const button = (x: number, label: string, color: number, tap: () => void) => {
       roundButton(this, { x, y: byy, w: bw, h: 44, label, color, size: 16, onTap: tap }, box);
     };
-    button(width / 2 - bw - 8, t.back, 0x4a4a55, close);
-    button(width / 2 + 8, t.save, GREEN, () => this.confirmBeltEntry(belts, pick, () => {
+    const save = () => {
       sfx.place(true);
-      this.profile.beltEntry = recordBeltEntry(belts, this.profile.beltEntry, pick);
+      const lowered = entryRank(belts, pick) < entryRank(belts, saved);
+      this.profile.beltEntry = fix ? fixBeltEntry(feed, pick) : recordBeltEntry(belts, this.profile.beltEntry, pick);
       writeSave(this.profile);
+      // A lower belt is not a promotion to replay later: remember where progress now stands.
+      if (lowered) {
+        this.profile.seen = snapshot(currentTraining());
+        writeSave(this.profile);
+      }
       const name = belts.find((b) => b.id === pick.belt)!.name;
-      const line = pick.stripes === 0 ? t.savedNone : pick.stripes === 1 ? t.savedOne : t.saved;
+      const line = lowered ? t.fixed : pick.stripes === 0 ? t.savedNone : pick.stripes === 1 ? t.savedOne : t.saved;
       close();
       this.toast(line.replace('{belt}', name).replace('{n}', String(pick.stripes)));
-    }));
+    };
+    if (fix) button(width / 2 - bw - 8, t.back, 0x4a4a55, () => { box.destroy(); this.openBeltEntry(back); });
+    else {
+      button(width / 2 - bw * 1.5 - 12, t.back, 0x4a4a55, close);
+      button(width / 2 - bw / 2, t.fixButton, 0x2a2536, () => { box.destroy(); this.openBeltEntry(back, true); });
+    }
+    button(fix ? width / 2 + 8 : width / 2 + bw / 2 + 12, t.save, GREEN, () => this.confirmBeltEntry(belts, pick, save, fix ? saved : undefined));
   }
 
-  /** "Are you sure?" before a belt entry is saved: saves only go up, so it can't be lowered later. */
-  private confirmBeltEntry(belts: readonly { id: string; name: string }[], pick: BeltEntry, save: () => void): void {
+  /** "Are you sure?" before a belt entry is saved. With `keep` it is a grown-up's fix (OV-B7). */
+  private confirmBeltEntry(belts: readonly { id: string; name: string }[], pick: BeltEntry, save: () => void, keep?: BeltEntry): void {
     const t = BELT_TEXT;
     const { width, height } = view(this);
     const card = this.add.container(0, 0).setDepth(90);
     card.add(this.add.rectangle(0, 0, width, height, 0x0a0810, 0.97).setOrigin(0).setInteractive());
-    const name = belts.find((b) => b.id === pick.belt)!.name;
-    const entry = (pick.stripes === 0 ? t.entryNone : pick.stripes === 1 ? t.entryOne : t.entryStripes).replace('{belt}', name).replace('{n}', String(pick.stripes));
+    const entryText = (e: BeltEntry) => {
+      const name = belts.find((b) => b.id === e.belt)!.name;
+      return (e.stripes === 0 ? t.entryNone : e.stripes === 1 ? t.entryOne : t.entryStripes).replace('{belt}', name).replace('{n}', String(e.stripes));
+    };
+    const entry = entryText(pick);
     const w = Math.min(460, width - 40);
-    const title = this.add.text(width / 2, height * 0.16, t.confirmTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp());
-    const help = this.add.text(width / 2, title.y + title.height + 12, t.confirmHelp.replace('{entry}', entry), { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
+    const title = this.add.text(width / 2, height * 0.16, keep ? t.fixTitle : t.confirmTitle, { fontFamily: 'Georgia, serif', fontStyle: 'bold', fontSize: '20px', color: '#ffd166' }).setOrigin(0.5, 0).setResolution(crisp());
+    const help = this.add.text(width / 2, title.y + title.height + 12, (keep ? t.fixConfirm : t.confirmHelp).replace('{entry}', entry), { fontFamily: FONT, fontSize: '15px', color: '#e8d9b5', align: 'center', wordWrap: { width: w } }).setOrigin(0.5, 0).setResolution(crisp());
     card.add([title, help]);
-    const bw = 140;
+    const bw = keep ? 200 : 140;
     const by = Math.min(height - 12 - 44, help.y + help.height + 22);
-    roundButton(this, { x: width / 2 - bw - 8, y: by, w: bw, h: 44, label: t.confirmNo, color: 0x4a4a55, size: 16, onTap: () => card.destroy() }, card);
-    roundButton(this, { x: width / 2 + 8, y: by, w: bw, h: 44, label: t.confirmYes, color: GREEN, size: 16, onTap: () => { card.destroy(); save(); } }, card);
+    const no = keep ? t.fixKeep.replace('{belt}', entryText(keep)) : t.confirmNo;
+    roundButton(this, { x: width / 2 - bw - 8, y: by, w: bw, h: 44, label: no, color: 0x4a4a55, size: 16, labelWrap: bw - 12, onTap: () => card.destroy() }, card);
+    roundButton(this, { x: width / 2 + 8, y: by, w: bw, h: 44, label: keep ? t.fixYes : t.confirmYes, color: GREEN, size: 16, onTap: () => { card.destroy(); save(); } }, card);
   }
 
   /** Asks how the player likes to move decorations: tap the spot, or an arrow pad. */

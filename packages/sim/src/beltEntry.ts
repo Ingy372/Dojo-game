@@ -1,6 +1,7 @@
 // B-BELT: a grown-up types in the student's real belt and stripes (behind the grown-up gate),
 // until the DojoForge feed sends them. It stays on this phone, inside the save. It can only
-// ever raise progress: an entry below what the save or the feed already shows is ignored.
+// ever raise progress: an entry below what the save or the feed already shows is ignored, except
+// through a grown-up's fix (OV-B7), which can lower it as far as the feed itself.
 
 import { POWER } from './config';
 import type { FeedBelt, StudentFeed } from './feed';
@@ -72,4 +73,15 @@ export function applyBeltEntry(feed: StudentFeed, entry: BeltEntry | null): Stud
 export function pickBelt(belts: readonly FeedBelt[], floor: BeltEntry, belt: string): BeltEntry {
   const pick = { belt, stripes: 0 };
   return entryRank(belts, pick) < entryRank(belts, floor) ? { belt, stripes: floor.stripes } : pick;
+}
+
+/**
+ * OV-B7: a grown-up's fix replaces the saved entry outright, so a wrong belt can go down. It can't
+ * go below what the feed itself shows: an entry at or below the feed is dropped (null).
+ */
+export function fixBeltEntry(feed: StudentFeed, next: BeltEntry): BeltEntry | null {
+  const belts = feed.school.belts;
+  const n = readBeltEntry(next);
+  if (!n || entryRank(belts, n) <= entryRank(belts, feedEntry(feed))) return null;
+  return n;
 }
