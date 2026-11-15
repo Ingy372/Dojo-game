@@ -78,6 +78,7 @@ import SAFE_TEXT from '../../../../content/settings/safety.json';
 import { NAMED_PACK } from '../game/named';
 import { openMonsterJournal } from '../ui/MonsterJournal';
 import { isOpen, systemForToday } from '../game/unlocks';
+import { PATH_WORDS as PW } from '../ui/pathScreen';
 
 /** Pixels per tile in the room (before it's scaled to fit the screen). */
 const TILE = 48;
@@ -344,7 +345,7 @@ export class DojoScene extends Phaser.Scene {
         this.card('Your Home Dojo', [
           'This space is yours. Bow when you enter, keep it clean, and make it your own.',
           'Walk over dust to sweep it. Stand by a mat or the weapon rack to tidy it.',
-          'The board on the wall has the Tower, your gear and the Gate. The door leads to the Tower.',
+          `${PW.tourBoard} ${PW.tourDoor}`,
         ], "Let's go!", next),
       );
       this.dojo.welcomed = true;
@@ -785,7 +786,7 @@ export class DojoScene extends Phaser.Scene {
     return {
       back: [floor, board].filter(Boolean),
       front: [front].filter(Boolean),
-      labels: [label(door.x * TILE, (door.y - 0.2) * TILE, 'TOWER', LABEL_PX), label(b.col * TILE + TILE / 2, TILE + 2, 'BOARD', LABEL_PX)],
+      labels: [label(door.x * TILE, (door.y - 0.2) * TILE, 'TOWER', LABEL_PX), label(b.col * TILE + TILE / 2, TILE + 2, PW.dojoWallLabel, LABEL_PX)],
     };
   }
 
@@ -942,7 +943,7 @@ export class DojoScene extends Phaser.Scene {
       hintText.setBackgroundColor('#14121c').setPadding(12, 6, 12, 6).setAlpha(1);
       this.renderTray(width, height);
     } else if (this.mode === 'play') {
-      this.button(width - pad - 80, 8, 80, 32, 'Board', 0x4a3f63, 14, () => this.goBoard());
+      this.button(width - pad - 80, 8, 80, 32, PW.dojoButton, 0x4a3f63, 14, () => this.goBoard());
       this.button(width - pad - 80 - 8 - 100, 8, 100, 32, 'Decorate', 0x8a5a35, 14, () => this.setDecorating(true));
       this.button(width - pad - 80 - 8 - 100 - 8 - 70, 8, 70, 32, 'Look', 0x3a6ea5, 14, () => this.changeLook());
       this.button(width - pad - 80 - 8 - 100 - 8 - 70 - 8 - 90, 8, 90, 32, DIFFICULTY_TEXT.button, 0x3a3a4a, 14, () => this.openDifficulty());
@@ -1601,7 +1602,7 @@ export class DojoScene extends Phaser.Scene {
       this.scene.restart();
     });
     y += 54;
-    text(pad, y, 'Student profiles and Power Rating: open the Board and tap its title 5 times.', 12, '#b9ad99');
+    text(pad, y, PW.adultProfilesHint, 12, '#b9ad99');
     btn(pad, height - pad - 36, Math.min(200, width - pad * 2), 'Close', 0x5b4a3c, close);
   }
 

@@ -16,6 +16,7 @@ import { reducedMotion } from '../game/motion';
 import { hex } from './belt';
 import { FONT, crisp, view } from './theme';
 import { FAITH, drawCreed, drawScroll } from './faith';
+import { PATH_WORDS as PW, fill } from './pathScreen';
 
 type Step =
   /** Sensei's welcome-home line, before the cascade (M7-P4, Manager call). */
@@ -237,7 +238,7 @@ export class Celebrations {
       const t = this.text(rightX, top + 30 + i * lineH, `${r.signedOff ? '✓' : '○'}  ${r.name}`, 15, r.signedOff ? '#5cd65c' : '#f2e9d8', false, FONT, colW).setAlpha(0);
       this.scene.tweens.add({ targets: t, alpha: 1, delay: 200 + i * 90, duration: 250 });
     });
-    this.text(cx, height - 50, `Each one Sensei signs off unlocks a new power. See them anytime on the Board.`, 13, '#b9ad99', false, FONT, width - 40).setOrigin(0.5).setAlign('center');
+    this.text(cx, height - 50, `${PW.powersNew} ${PW.powersWhere}`, 13, '#b9ad99', false, FONT, width - 40).setOrigin(0.5).setAlign('center');
     this.burst(cx, height * 0.08, [hex(to.color), GOLD], 40);
     sfx.stripe();
     return 900;
@@ -344,7 +345,7 @@ export class Celebrations {
           if (shown <= cols) break;
         }
         const extra = m.list.length - res.made.length;
-        if (extra > 0) this.text(cx, bottom + 2, `…and ${extra} more! See them all on the Board.`, size, '#b9ad99').setOrigin(0.5, 0);
+        if (extra > 0) this.text(cx, bottom + 2, fill(PW.powersMore, { n: extra }), size, '#b9ad99').setOrigin(0.5, 0);
         res.made.forEach((t, i) => {
           t.setAlpha(0);
           this.scene.tweens.add({ targets: t, alpha: 1, delay: i * 70, duration: 200 });

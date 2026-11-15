@@ -1837,3 +1837,8 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Students who start above White** get their letters and scrolls already lit on the Faith page, with no ceremony for promotions before the app.
 - **Guardian lines are data:** keyed by enemy id (`faithOverlayKey`), so only Guardians in both the pack and the game speak; today that is the Hearth Cook.
 - **No art:** the banner, the Faith page and the scrolls are drawn; no images imported.
+
+## LP-B1b: My Path words (2026-11-15)
+
+- **One source:** each line named in path.json's `pointerSpots` is read from the file at that spot, and a test fails if a key goes unused or an old string comes back.
+- **Grown-ups hint is exempt from the 8-word limit:** it is for adults, and it wraps to the screen.
