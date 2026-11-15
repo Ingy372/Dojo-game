@@ -104,9 +104,10 @@ describe('PB-01 normalizing a loadout', () => {
     expect(o.seals).toEqual(['escape', 'counter', 'guard']);
   });
 
-  it('with no kata powers in the game yet, a kata pick is dropped; Seals are kept if earned (Yellow has Escape, Counter, Guard); Stance and Virtue are untouched', () => {
+  it('an earned kata power is kept (PB-04), one not earned is dropped; Seals are kept if earned (Yellow has Escape, Counter, Guard); Stance and Virtue are untouched', () => {
     const n = normalizeLoadout({ ...l, virtue: 'second-wind' }, training(yellow), content.abilities)!;
-    expect(n).toEqual({ stance: null, virtue: 'second-wind', strike: 'jumping-spins', kata: null, seals: ['escape', 'counter'] });
+    expect(n).toEqual({ stance: null, virtue: 'second-wind', strike: 'jumping-spins', kata: 'basic-form-1-power', seals: ['escape', 'counter'] });
+    expect(normalizeLoadout({ ...l, kata: 'keon-power' }, training(yellow), content.abilities)!.kata).toBeNull();
   });
 
   it('PB-03: the old Strike id follow-up-kick means Spin Kick (the empty slot); quick-combo means Jumping Spins and is kept when its combo is signed off', () => {

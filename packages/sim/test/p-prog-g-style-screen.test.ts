@@ -124,10 +124,10 @@ describe('PB-05 Fighting Style screen', () => {
     expect(after.effects.some((e) => e.type === 'counterPush' && e.amount === 1.5)).toBe(true);
   });
 
-  it('a chosen kata is only a placeholder: the fight does not change', () => {
+  it('a chosen kata power is only a placeholder (PB-04): the fight does not change', () => {
     const t = belts.white;
     const kata = buildStyle(t, content.abilities, null).trays.kata.find((p) => p.earned);
-    expect(kata?.id).toBe('basic-form-1');
+    expect(kata?.id).toBe('basic-form-1-power');
     const p = newProfile();
     const before = characterSetup(p, t, content.abilities);
     p.loadout = equip(t, null, 'kata', 0, kata!.id).session.loadout;

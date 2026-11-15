@@ -114,7 +114,7 @@ describe('PB-01 migration (migrateLoadoutV2, seedLoadoutV2)', () => {
     }
   });
 
-  it('seedInputFor reads the belt tier, the Strikes unlocked and the Seal families earned (no kata powers yet)', () => {
+  it('seedInputFor reads the belt tier, the Strikes unlocked and the Seal families and kata powers earned', () => {
     const t = training(green);
     const i = seedInputFor(t, content.abilities);
     expect(i.tier).toBe(t.tier);
@@ -122,6 +122,6 @@ describe('PB-01 migration (migrateLoadoutV2, seedLoadoutV2)', () => {
     expect(i.earned.strikes).toEqual(earnedStrikes(t, content.abilities.strikeDefs));
     expect(i.earned.strikes.length).toBeGreaterThan(0);
     expect(i.earned.families.length).toBeGreaterThan(0);
-    expect(i.earned.kataPowers).toEqual([]);
+    expect(i.earned.kataPowers).toEqual(['basic-form-1-power', 'basic-form-2-power', 'keon-power']);
   });
 });
