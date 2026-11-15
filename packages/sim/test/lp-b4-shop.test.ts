@@ -1,3 +1,4 @@
+import { GOLD, GREEN, contrast } from '../../../apps/client/src/ui/tokens';
 // LP-B4 (L13 Stage 1): coins and the looks shop. Looks only, coins only, no real money anywhere.
 import { describe, expect, it } from 'vitest';
 import {
@@ -225,3 +226,10 @@ function deltaE2000(a: string, b: string): number {
   const RT = -2 * Math.sqrt(Cmp ** 7 / (Cmp ** 7 + 25 ** 7)) * Math.sin(60 * Math.exp(-(((hm - 275) / 25) ** 2)) * rad);
   return Math.sqrt((dL / SL) ** 2 + (dC / SC) ** 2 + (dH / SH) ** 2 + RT * (dC / SC) * (dH / SH));
 }
+
+describe('LP-B4 button words are readable', () => {
+  it('white words on the Shop and Get it buttons are at least 4.5:1', () => {
+    expect(contrast(GOLD, 0xffffff)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(GREEN, 0xffffff)).toBeGreaterThanOrEqual(4.5);
+  });
+});

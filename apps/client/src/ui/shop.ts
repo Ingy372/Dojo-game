@@ -11,7 +11,7 @@ import { SHOP, SHOP_WORDS as W } from '../game/shop';
 import { button } from './button';
 import { fill } from './pathScreen';
 import { FONT, crisp } from './theme';
-import { MIN_TAP, RADIUS, S1, S2, S3, TYPE } from './tokens';
+import { GREEN, MIN_TAP, RADIUS, S1, S2, S3, TYPE } from './tokens';
 
 const TILE = 46;
 const GAP = 6;
@@ -82,7 +82,7 @@ export function openShop(scene: Phaser.Scene, width: number, height: number, pro
     };
     const btnY = top + bodyH - MIN_TAP - S2;
     const act = (label: string, onTap: (() => void) | null) => {
-      button(scene, { x: pad + S3, y: btnY, w: leftW - 2 * S3, h: MIN_TAP, label, color: 0x3aa655, size: TYPE.title, disabled: !onTap, onTap: onTap ?? (() => {}) }, layer);
+      button(scene, { x: pad + S3, y: btnY, w: leftW - 2 * S3, h: MIN_TAP, label, color: GREEN, size: TYPE.title, disabled: !onTap, onTap: onTap ?? (() => {}) }, layer);
       action = onTap;
     };
     const wear = () => {

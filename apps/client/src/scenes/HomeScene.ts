@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { GREEN, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
+import { GOLD, GREEN, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import BLESS from '../../../../content/settings/blessing.json';
@@ -471,7 +471,7 @@ export class HomeScene extends Phaser.Scene {
     const { bar } = L;
     this.button(bar.x, bar.y, 96, bar.h, PW.back, 0x8a5a35, TYPE.body, () => this.backToDojo());
     this.button(bar.x + 96 + S2, bar.y, 96, bar.h, PW.board, 0x3a3a4a, TYPE.body, () => this.setView('board'));
-    this.button(bar.x + 2 * (96 + S2), bar.y, SHOP_BUTTON_W, bar.h, SHOP_WORDS.button, 0xc9962b, TYPE.body, () => this.openShop());
+    this.button(bar.x + 2 * (96 + S2), bar.y, SHOP_BUTTON_W, bar.h, SHOP_WORDS.button, GOLD, TYPE.body, () => this.openShop());
     const chipW = Math.min(220, Math.round(bar.w * 0.3));
     const chipX = bar.x + bar.w - chipW;
     const titleL = bar.x + 2 * 96 + SHOP_BUTTON_W + 3 * S2;
