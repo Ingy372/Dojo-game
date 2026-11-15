@@ -78,7 +78,8 @@ export class Celebrations {
     if (picks?.lines.length) this.steps.push({ kind: 'picks', ...picks });
     if (creed) this.steps.push({ kind: 'creed' });
     const { width, height } = view(scene);
-    const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.9).setOrigin(0).setInteractive();
+    // Opaque (LP-B2 QA): the Path's lower cards showed through the ceremony and met 'Tap to continue'.
+    const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 1).setOrigin(0).setInteractive();
     shade.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.next());
     this.root = scene.add.container(0, 0, [shade]).setDepth(100);
     this.next(true);

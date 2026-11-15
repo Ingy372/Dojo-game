@@ -190,6 +190,7 @@ for (const [W, H] of sizes) {
       if (shots.length && shots[shots.length - 1].some((a) => c.some((x) => x.t === a.t))) shots[shots.length - 1] = c;
       else shots.push(c);
       if (rm === '1') await pg.screenshot({ path: `${OUT}/ceremony-${W}x${H}-${shots.length - 1}.png` });
+      check(where, `screen ${shots.length - 1}: backdrop is opaque`, await pg.evaluate(() => window.game.scene.getScene('Home').children.list.find((c) => c.depth === 100).list[0].fillAlpha === 1));
       check(where, `screen ${shots.length - 1}: on screen`, fits(c, W, H).length === 0, fits(c, W, H).join(','));
       check(where, `screen ${shots.length - 1}: no overlaps`, overlaps(c).length === 0, overlaps(c).join(', '));
       const before = JSON.stringify(c.map((t) => t.t));
