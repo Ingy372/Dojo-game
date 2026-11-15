@@ -1,5 +1,4 @@
 // LP-B2 (L5): the school's faith pack is loaded as approved and shown word for word.
-import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { bannerLetters, buildTraining, creedDue, guardianLine, loadFaith, loadFeed, loadProfile, newProfile, promotionFaith, scrollsFound, verseText, type Now } from '../src';
 import PACK from '../../../content/faith/action-zone.json';
@@ -32,7 +31,7 @@ describe('LP-B2: the pack, as approved', () => {
     expect(() => loadFaith({ ...PACK, faithDoesBanner: { ...PACK.faithDoesBanner, acrostic: 'FAITH' } })).toThrow(/acrostic/);
   });
   it('the game shows the wall wording, word for word as docs/faith-and-creed.md has it', () => {
-    const doc = readFileSync(new URL('../../../docs/faith-and-creed.md', import.meta.url), 'utf8');
+    const doc = Object.values(import.meta.glob(['../../../docs/faith-and-creed.md'], { query: '?raw', import: 'default', eager: true }))[0] as string;
     const fixed: Record<string, string> = { 'Romans 3:23': 'come short of the glory of God', 'Romans 5:8': 'Christ died for us' };
     for (const v of FAITH.verseScrolls) {
       expect(verseText(v), v.id).toBe(v.wallText);
