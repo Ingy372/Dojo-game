@@ -1887,3 +1887,4 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Wall paint:** a see-through MULTIPLY tint over the Home Dojo back wall, so the dark beams stay dark and only the paper panels take the colour.
 - **Shop tabs:** with 7 groups the shelves no longer fit a 375 px tall phone, so groups sit under 4 tabs.
 - **Placeholders:** effect colours and recipes are the Programmer's picks for the Manager's art gate (contact sheet in `docs/shots/lp-b4b/`).
+- **Art gate fix (Manager, Nov 15):** pale effects were hard to see. Every particle now has a 1.5 px darker edge (its own colour at 45%) and stays at full strength for the first 40% of its life before fading. Pale puffs, hit pops, two trails and the firework spokes are bigger or thicker; the dust cloud is darker. Before/after in `docs/shots/lp-b4b/before-after.png`.

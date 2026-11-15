@@ -1234,3 +1234,4 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Looks only: effects never touch the fight (the sim hash and stats are unchanged). Caps: 24 pieces, short lifetimes, no flashes. Reduced motion shows one still picture under half a second, and no trail.
 - Each item is previewed on the hero in the Shop. "Wearing" is now plain text (fixes the Tester's contrast note).
 - Tests: `lp-b4b-effects` (6) and `lp-b4-shop` (15). Phone check `docs/shots/lp-b4b/fx-verify.mjs` at 667x375, 844x390 and 932x430, Reduced motion on and off (shop, a real run, the Dojo wall), plus `contact-sheet.png` of every effect and paint next to the hero. `docs/shots/lp-b4/shop-verify.mjs` is kept as history; it predates the tabs.
+- Art gate fix: every effect now has a darker edge and holds full strength longer; the faint puffs, hit pops, snow and confetti trails and win fireworks are bolder (`docs/shots/lp-b4b/before-after.png`).

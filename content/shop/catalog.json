@@ -323,7 +323,7 @@
         ],
         "count": 14,
         "lifeMs": 800,
-        "size": 0.08,
+        "size": 0.1,
         "spread": 0.3,
         "motion": "drift"
       }
@@ -363,7 +363,7 @@
         ],
         "count": 12,
         "lifeMs": 700,
-        "size": 0.09,
+        "size": 0.12,
         "spread": 0.3,
         "motion": "drift"
       }
@@ -414,16 +414,16 @@
       "name": "Dust Cloud",
       "price": 200,
       "belt": 1,
-      "color": "#d8c8a8",
+      "color": "#b8a47e",
       "fx": {
         "shape": "puff",
         "colors": [
-          "#d8c8a8",
-          "#bfae8c"
+          "#b8a47e",
+          "#9e8a66"
         ],
         "count": 6,
         "lifeMs": 400,
-        "size": 0.16,
+        "size": 0.22,
         "spread": 0.45,
         "motion": "burst"
       }
@@ -443,7 +443,7 @@
         ],
         "count": 8,
         "lifeMs": 400,
-        "size": 0.1,
+        "size": 0.13,
         "spread": 0.5,
         "motion": "burst"
       }
@@ -463,7 +463,7 @@
         ],
         "count": 8,
         "lifeMs": 400,
-        "size": 0.09,
+        "size": 0.13,
         "spread": 0.5,
         "motion": "burst"
       }
@@ -483,7 +483,7 @@
         ],
         "count": 6,
         "lifeMs": 400,
-        "size": 0.15,
+        "size": 0.22,
         "spread": 0.45,
         "motion": "burst"
       }
@@ -503,7 +503,7 @@
         ],
         "count": 8,
         "lifeMs": 380,
-        "size": 0.1,
+        "size": 0.13,
         "spread": 0.6,
         "motion": "burst"
       }
@@ -523,7 +523,7 @@
         ],
         "count": 10,
         "lifeMs": 380,
-        "size": 0.1,
+        "size": 0.13,
         "spread": 0.6,
         "motion": "burst"
       }
@@ -563,7 +563,7 @@
         ],
         "count": 10,
         "lifeMs": 380,
-        "size": 0.1,
+        "size": 0.13,
         "spread": 0.6,
         "motion": "burst"
       }
@@ -604,7 +604,7 @@
         ],
         "count": 5,
         "lifeMs": 380,
-        "size": 0.16,
+        "size": 0.22,
         "spread": 0.6,
         "motion": "burst"
       }
@@ -624,7 +624,7 @@
         ],
         "count": 8,
         "lifeMs": 380,
-        "size": 0.1,
+        "size": 0.13,
         "spread": 0.6,
         "motion": "burst"
       }
@@ -645,7 +645,7 @@
         ],
         "count": 12,
         "lifeMs": 380,
-        "size": 0.08,
+        "size": 0.11,
         "spread": 0.6,
         "motion": "burst"
       }

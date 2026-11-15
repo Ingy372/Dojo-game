@@ -14,6 +14,10 @@ export interface FxPlace {
 }
 
 const hex = (c: string) => parseInt(c.slice(1), 16);
+/** The colour at 45% brightness: the edge under each particle, so pale ones read on a light floor too. */
+const edgeOf = (c: number) => (Math.round(((c >> 16) & 255) * 0.45) << 16) | (Math.round(((c >> 8) & 255) * 0.45) << 8) | Math.round((c & 255) * 0.45);
+/** How wide that edge is (px). */
+const EDGE = 1.5;
 
 /** One shape, centred on 0,0, about r pixels from the middle to the edge. */
 export function drawShape(g: Phaser.GameObjects.Graphics, shape: FxShape, r: number, color: number): void {
@@ -82,7 +86,7 @@ export function drawShape(g: Phaser.GameObjects.Graphics, shape: FxShape, r: num
       break;
     case 'firework':
       g.fillStyle(color).fillCircle(0, 0, r * 0.2);
-      g.lineStyle(Math.max(1.5, r * 0.12), color);
+      g.lineStyle(Math.max(2, r * 0.2), color);
       for (let i = 0; i < 8; i++) {
         const a = (i / 8) * Math.PI * 2;
         g.lineBetween(Math.cos(a) * r * 0.4, Math.sin(a) * r * 0.4, Math.cos(a) * r, Math.sin(a) * r);
@@ -93,7 +97,9 @@ export function drawShape(g: Phaser.GameObjects.Graphics, shape: FxShape, r: num
 
 function spawn(scene: Phaser.Scene, f: FxRecipe, p: FxParticle, x: number, y: number, at: FxPlace, done?: () => void): void {
   const g = scene.add.graphics({ x: x + p.x0 * at.tile, y: y + p.y0 * at.tile }).setDepth(at.depth).setName('fx');
-  drawShape(g, f.shape, f.size * at.tile, hex(p.color));
+  const r = f.size * at.tile;
+  drawShape(g, f.shape, r + EDGE, edgeOf(hex(p.color)));
+  drawShape(g, f.shape, r, hex(p.color));
   at.add?.(g);
   const end = () => {
     g.destroy();
@@ -109,7 +115,6 @@ function spawn(scene: Phaser.Scene, f: FxRecipe, p: FxParticle, x: number, y: nu
     x: x + p.x1 * at.tile,
     y: y + p.y1 * at.tile,
     rotation: p.spin,
-    alpha: 0,
     scale: f.motion === 'burst' ? 0.6 : 0.85,
     delay: p.delayMs,
     duration: p.lifeMs,
@@ -117,6 +122,8 @@ function spawn(scene: Phaser.Scene, f: FxRecipe, p: FxParticle, x: number, y: nu
     onStart: () => g.setVisible(true),
     onComplete: end,
   });
+  // Full strength for the first 40% of its life, then it fades out.
+  scene.tweens.add({ targets: g, alpha: 0, delay: p.delayMs + p.lifeMs * 0.4, duration: p.lifeMs * 0.6 });
 }
 
 /** Plays a puff, hit pop or win burst once at x, y (pixels). */

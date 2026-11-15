@@ -242,7 +242,7 @@ if (PARTS.includes('dojo')) for (const [W, H] of sizes) {
 // (win bursts on Home, the way a cleared floor shows them), and each wall paint in the Home Dojo.
 if (PARTS.includes('sheet')) {
   const [W, H] = [844, 390];
-  const { ctx, pg } = await open(W, H, '0', '1-white-belt-new');
+  const { ctx, pg } = await open(W, H, '0', process.env.SHEET_STUDENT || '1-white-belt-new');
   await restart(pg, 'Dojo', { shop: { owned: [], wearing: NONE } });
   await pg.waitForFunction(() => window.game.scene.getScene('Dojo')?.sys.isActive());
   await pg.waitForTimeout(500);
