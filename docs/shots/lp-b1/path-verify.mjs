@@ -94,13 +94,12 @@ for (const [W, H] of sizes) {
       check(where, 'Home opens on the Path', (await homeView(pg)) === 'path');
       let tx = await texts(pg);
       const all = tx.map((t) => t.t).join(' | ');
-      check(where, 'title My Path', tx.some((t) => t.t === 'My Path'));
+      check(where, 'FAITH DOES banner in the title spot (LP-B2)', tx.filter((t) => /^[A-Z]$/.test(t.t) && t.cy < 50).length === 9);
       check(where, `next class step ${step}`, tx.some((t) => t.t === step), all.slice(0, 200));
       check(where, 'Show Sensei / in class', tx.some((t) => t.t === 'Show Sensei') && tx.some((t) => t.t === 'in class'));
       check(where, 'next game step', tx.some((t) => t.t.startsWith(game)));
       check(where, 'Enter the Tower', tx.some((t) => t.t === 'Enter the Tower'));
       check(where, 'no Gate tab, Path card or goals card', !tx.some((t) => /^Gate( ✦)?$|YOUR NEXT STEP$|Last run|Next goals/i.test(t.t)));
-      check(where, 'no FAITH DOES yet', !tx.some((t) => /FAITH/i.test(t.t)));
       check(where, 'every word on screen', tx.every((t) => t.x >= -1 && t.y >= -1 && t.x + t.w <= W + 1 && t.y + t.h <= H + 1), tx.filter((t) => !(t.x >= -1 && t.y >= -1 && t.x + t.w <= W + 1 && t.y + t.h <= H + 1)).map((t) => t.t).join(','));
       check(where, 'words at least 10 pt', tx.every((t) => t.size >= 10), tx.filter((t) => t.size < 10).map((t) => t.t).join(','));
       const lap = [];

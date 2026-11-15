@@ -1189,3 +1189,12 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - FAITH DOES is not on the Path yet (L5).
 - Words: `content/settings/path.json` (placeholders, Content owns them).
 - Tests: `lp-b1-path` (new, 13); `goals` removed; `p-menu-*` updated. Phone check `docs/shots/lp-b1/path-verify.mjs` 231 PASS / 0 FAIL at 667x375, 932x430 and 844x390, Reduced motion on and off, White and Green.
+
+## LP-B2 — The faith layer, L5 (2026-11-15)
+
+- The school's approved faith pack is in `content/faith/action-zone.json`, unchanged from LP-C1 (Jay-approved Nov 14), with the wall wording.
+- The Path's title is now the FAITH DOES banner: one letter lights at each promotion from Yellow to Black. Tapping it opens the Faith page: the banner (each lit letter with its word and meaning), the Creed Scroll, and each verse scroll found so far with its covenant.
+- A promotion ceremony is at most 4 screens: the bow, the Gate, the verse scroll (verse, covenant name large, Sensei's question), then everything new, which now says which letter shines.
+- The Creed Scroll shows once, after the first class check-in (`creedSeen` in the profile).
+- A freed Guardian with a line in the pack says it (only the Hearth Cook has one today).
+- Tests: `lp-b2-faith` (new, 11), including the word-for-word check against the pack and `docs/faith-and-creed.md`. Phone check `docs/shots/lp-b2/faith-verify.mjs` at 667x375, 932x430 and 844x390, Reduced motion on and off.
