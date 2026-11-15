@@ -2,13 +2,14 @@
 // checked on the real C1 content, and the plan's section 4 table (BALANCE=1 to print it) with a
 // warning for each Challenge cell more than 5 points off the §4b L+B row.
 import { describe, expect, it } from 'vitest';
-import { loadEnemy, scaleEnemyDef, type Content, type Difficulty } from '../src';
+import { loadEnemy, loadInsights, scaleEnemyDef, type Content, type Difficulty } from '../src';
 import { PATTERN_ANSWERS, playRun, SKILLS, type RunStats } from './balance/bot';
 import { targetWarnings, TARGET_TOLERANCE } from './balance/challenge-targets';
 import { testContent } from './load-content';
 import { ARTISTS } from './r-bal-12-artists';
 import { captureGolden } from './golden-capture';
 import goldenRaw from '../../../fixtures/golden/p-menu2-d-default-run.json?raw';
+import nineCardPool from './r-challenge-p5-nine-cards.json';
 
 const balance = !!(import.meta.env as Record<string, string | undefined>).BALANCE;
 const content = testContent();
@@ -63,10 +64,9 @@ describe('R-CHALLENGE P7: the real C1 patterns change nothing off Challenge', ()
 
 describe('R-CHALLENGE P5: the bot answers patterns', () => {
   // OV-B6 (Manager call): these two checks test the bot's answer to a pattern, not the cards, so they keep the 9-card
-  // Insight pool they were measured on. On the 13-card pool the random offers reshuffle every run: step-out read -9.2%
+  // Insight pool they were measured on, numbers and all (r-challenge-p5-nine-cards.json, main before OV-B6). On the 13-card pool the random offers reshuffle every run: step-out read -9.2%
   // (gate 10%) and the double-slam hold +0.05% (noise). The Planner may re-measure them on 13 cards later.
-  const NINE = ['ripple-counter', 'iron-skin', 'wind-step', 'double-strike', 'quick-hands', 'press-the-advantage', 'shield-breaker', 'heavy-hands', 'rally'];
-  const nineCards: Content = { ...content, insights: content.insights.filter((i) => NINE.includes(i.id)) };
+  const nineCards: Content = { ...content, insights: loadInsights(nineCardPool) };
   // Whole runs drift apart once one choice differs, so total Health over many runs is too noisy for a rule this small
   // (the old total-Health comparison flipped sign with the card numbers). Instead the pairs are matched: the same seed,
   // belt and cards, and the same moment (the room's first landing-circle swing). The two runs are identical up to the

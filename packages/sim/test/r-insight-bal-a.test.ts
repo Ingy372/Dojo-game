@@ -7,7 +7,9 @@ import insights from '../../../content/insights/insights.json';
 // R-INSIGHT-BAL-a: the three small rule changes behind the Insight rebalance.
 const enemyTypes = { brute: loadEnemy(bruteData), shield: loadEnemy(shieldData) };
 const IDLE: PlayerInput = { kind: 'none' };
-const card = (id: string) => (insights.insights as { id: string; effect: Effect }[]).find((i) => i.id === id)!.effect;
+// OV-B6 dropped the Wind Step card (OV-P5), but the comboSpeed effect stays in the game, so rule A keeps its old numbers here.
+const WIND_STEP: Effect = { type: 'comboSpeed', amount: 0.3, everyHits: 5, seconds: 2 };
+const card = (id: string) => (id === 'wind-step' ? WIND_STEP : (insights.insights as { id: string; effect: Effect }[]).find((i) => i.id === id)!.effect);
 const mods = (...ids: string[]) => modsFrom(ids.map(card), TICKS_PER_SECOND);
 
 /** One enemy standing in basic-attack reach of the player. */
@@ -58,14 +60,14 @@ describe('Rule B: Press the Advantage also works on winded or recovering enemies
 });
 
 describe('Rule C: Shield Breaker gives Focus when it breaks a shield', () => {
-  it('7 Focus on the break, none for a plain hit and none without the card', () => {
-    expect(card('shield-breaker').focusOnBreak).toBe(7);
+  it('12 Focus on the break (OV-P5), none for a plain hit and none without the card', () => {
+    expect(card('shield-breaker').focusOnBreak).toBe(12);
     const withCard = duel('shield', ['shield-breaker']);
     withCard.e.mode = 'stagger';
     withCard.e.modeTicks = 1000;
     stepWorld(withCard.world, withCard.room, { p1: IDLE });
     expect(withCard.world.events.some((ev) => ev.kind === 'shieldBreak')).toBe(true);
-    expect(withCard.p.focus).toBe(COMBAT.focus.perHit + 7);
+    expect(withCard.p.focus).toBe(COMBAT.focus.perHit + card('shield-breaker').focusOnBreak!);
 
     // The shield is down now: the next basic hit only gives the normal Focus.
     withCard.p.attackCooldown = 0;
@@ -91,13 +93,12 @@ describe('Rule C: Shield Breaker gives Focus when it breaks a shield', () => {
 });
 
 describe('R-INSIGHT-BAL-a card numbers (4a)', () => {
-  it('match the proposal', () => {
+  it('match the proposal, with the OV-P5 retune (Double Strike 0.3, Press the Advantage 0.4)', () => {
     expect(card('ripple-counter').amount).toBe(1.2);
     expect(card('iron-skin').amount).toBe(1.2);
-    expect(card('wind-step')).toMatchObject({ amount: 0.3, everyHits: 5, seconds: 2 });
-    expect(card('double-strike').amount).toBe(0.2);
+    expect(card('double-strike').amount).toBe(0.3);
     expect(card('quick-hands').amount).toBe(0.2);
-    expect(card('press-the-advantage').amount).toBe(0.3);
+    expect(card('press-the-advantage').amount).toBe(0.4);
     expect(card('rally').amount).toBe(0.75);
     expect(card('heavy-hands').amount).toBe(0.2);
   });

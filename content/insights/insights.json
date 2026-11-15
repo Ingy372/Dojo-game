@@ -16,18 +16,11 @@
       "effect": { "type": "blockReflect", "amount": 1.2 }
     },
     {
-      "id": "wind-step",
-      "name": "Wind Step",
-      "family": "speed",
-      "text": "Every 5 combo hits gives you a 2-second burst of speed.",
-      "effect": { "type": "comboSpeed", "amount": 0.3, "everyHits": 5, "seconds": 2 }
-    },
-    {
       "id": "double-strike",
       "name": "Double Strike",
       "family": "speed",
       "text": "Strikes chain one extra hit.",
-      "effect": { "type": "strikeExtraHit", "amount": 0.2 }
+      "effect": { "type": "strikeExtraHit", "amount": 0.3 }
     },
     {
       "id": "quick-hands",
@@ -40,15 +33,15 @@
       "id": "press-the-advantage",
       "name": "Press the Advantage",
       "family": "power",
-      "text": "Hit dizzy or winded enemies 30% harder.",
-      "effect": { "type": "staggerBonus", "amount": 0.3 }
+      "text": "Hit dizzy or winded enemies 40% harder.",
+      "effect": { "type": "staggerBonus", "amount": 0.4 }
     },
     {
       "id": "shield-breaker",
       "name": "Shield Breaker",
       "family": "power",
       "text": "Any hit breaks shields, and breaking one gives you a little Focus.",
-      "effect": { "type": "shieldBreaker", "focusOnBreak": 7 }
+      "effect": { "type": "shieldBreaker", "focusOnBreak": 12 }
     },
     {
       "id": "heavy-hands",
@@ -76,21 +69,21 @@
       "name": "Warm Up",
       "family": "virtue",
       "text": "Start every room with some Focus.",
-      "effect": { "type": "startFocus", "amount": 40 }
+      "effect": { "type": "startFocus", "amount": 60 }
     },
     {
       "id": "lighter-strike",
       "name": "Swift Strikes",
       "family": "speed",
       "text": "Your Strikes use less Focus.",
-      "effect": { "type": "strikeCost", "amount": 4 }
+      "effect": { "type": "strikeCost", "amount": 7 }
     },
     {
       "id": "softer-block",
       "name": "Iron Block",
       "family": "guard",
       "text": "Iron arms stop more of the hit.",
-      "effect": { "type": "blockCut", "amount": 0.1 }
+      "effect": { "type": "blockCut", "amount": 0.12 }
     }
   ]
 }

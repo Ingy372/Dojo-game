@@ -1813,7 +1813,10 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Fix:** a Dojo button only acts in the mode it was drawn for (`button()`), so no screen can open during the arrival. The row stays on screen, so nothing jumps. Hiding it with `renderUi()` was rejected: that would wipe the one-time difficulty line drawn on entry.
 - **Music/Sound:** the − and + width floor is `MIN_TAP` (44), not 36.
 
-## OV-B6: 13 Power-ups (2026-11-14)
+## OV-B6: 12 Power-ups (2026-11-14, OV-P5 retune 2026-11-15)
+
+- **OV-P5 (#511):** the pool is 12. Wind Step is dropped and six numbers move (Press 0.4, Shield Breaker 12, Double Strike 0.3, Warm Up 60, Swift Strikes 7, Iron Block 0.12). The `comboSpeed` effect type and the Wind Step icon stay (no card uses them), so nothing about effects or art changes. Saved runs never store the pool, so an old save simply stops being offered Wind Step.
+- **P5 bot checks:** they test the bot's answer to a pattern, not the cards, so they keep the 9-card pool they were measured on, numbers and all, in a test file instead of filtering the live pool.
 
 - **Cards and numbers:** the 4 that passed in R-POWERUPS-15 (`drafts/planning/R-POWERUPS-15-data.json`), with the OV-C1 names and text. Existing effect types only.
 - **Caps:** the `insight-budget` CAPS rows are the OV-P1 numbers. Quiet Mind's cap moves from the old placeholder's 0.15 to 0.25, the number R-POWERUPS-15 measured and the 13-card `BALANCE=1` run passed.

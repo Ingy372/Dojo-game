@@ -28,7 +28,6 @@ export function addIcon(scene: Phaser.Scene, id: string, x: number, y: number, s
 export const INSIGHT_ACCENT: Readonly<Record<string, number>> = {
   'ripple-counter': 0x4096eb,
   'iron-skin': 0x6e7c96,
-  'wind-step': 0x3cc896,
   'double-strike': 0xff921e,
   'quick-hands': 0xfad628,
   'press-the-advantage': 0x9660e6,

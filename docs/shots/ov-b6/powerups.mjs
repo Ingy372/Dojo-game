@@ -1,5 +1,6 @@
 // OV-B6: the 4 new Power-ups show on the pick screen with their own icon, name, card text and family stripe
 // (GUARD / SPEED / VIRTUE after the rename), every card fits the screen, and tapping one picks it.
+// OV-P5: Wind Step is gone from the pool; Press the Advantage reads "40% harder".
 // Usage: URL=http://localhost:5199/ OUT=/workspace/ovb6-shots node docs/shots/ov-b6/powerups.mjs
 import { chromium } from 'playwright';
 import fs from 'fs';
@@ -15,12 +16,12 @@ const WANT = {
   'lighter-strike': ['Swift Strikes', 'SPEED', 'Your Strikes use less Focus.'],
   'softer-block': ['Iron Block', 'GUARD', 'Iron arms stop more of the hit.'],
   'ripple-counter': ['Ripple Counter', 'GUARD', null],
-  'wind-step': ['Wind Step', 'SPEED', null],
+  'press-the-advantage': ['Press the Advantage', 'POWER', 'Hit dizzy or winded enemies 40% harder.'],
 };
-const OFFERS = [['calm-breath', 'steady-start', 'lighter-strike'], ['softer-block', 'ripple-counter', 'wind-step']];
+const OFFERS = [['calm-breath', 'steady-start', 'lighter-strike'], ['softer-block', 'ripple-counter', 'press-the-advantage']];
 const b = await chromium.launch();
 
-for (const [W, H] of [[844, 390], [667, 375]]) for (const rm of ['off', 'on']) {
+for (const [W, H] of [[844, 390], [667, 375], [932, 430]]) for (const rm of ['off', 'on']) {
   const tag = `${W}x${H}-rm-${rm}`;
   const ctx = await b.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 2, hasTouch: true, isMobile: true });
   await ctx.addInitScript(([k]) => {

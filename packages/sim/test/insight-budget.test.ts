@@ -8,7 +8,7 @@ const cards = testContent().insights;
 
 /**
  * One row per card: the proven cap for each effect number. `max` numbers may not go above it, `min` numbers may not go below it
- * (Wind Step's "every N hits" gets weaker as N grows). Numbers not listed (Ripple Counter's radius) are not capped.
+ * (none today). Numbers not listed (Ripple Counter's radius) are not capped.
  * A card is allowed to be a bit weaker than its cap; to make one stronger, run `BALANCE=1 npx vitest run test/balance/insight-budget`
  * (in packages/sim), then update this table with the new PE.
  */
@@ -16,18 +16,17 @@ type Cap = { type: Effect['type']; max?: Partial<Record<'amount' | 'seconds' | '
 const CAPS: Record<string, Cap> = {
   'ripple-counter': { type: 'rippleCounter', max: { amount: 1.2 } },
   'iron-skin': { type: 'blockReflect', max: { amount: 1.2 } },
-  'wind-step': { type: 'comboSpeed', max: { amount: 0.3, seconds: 2 }, min: { everyHits: 5 } },
-  'double-strike': { type: 'strikeExtraHit', max: { amount: 0.2 } },
+  'double-strike': { type: 'strikeExtraHit', max: { amount: 0.3 } },
   'quick-hands': { type: 'attackSpeed', max: { amount: 0.2 } },
-  'press-the-advantage': { type: 'staggerBonus', max: { amount: 0.3 } },
-  'shield-breaker': { type: 'shieldBreaker', max: { focusOnBreak: 7 } },
+  'press-the-advantage': { type: 'staggerBonus', max: { amount: 0.4 } },
+  'shield-breaker': { type: 'shieldBreaker', max: { focusOnBreak: 12 } },
   'heavy-hands': { type: 'powerScale', max: { amount: 0.2 } },
   rally: { type: 'lowHealthFocus', max: { amount: 0.75 } },
-  // OV-B6: the four OV-P1 cards, at the numbers R-POWERUPS-15 measured (drafts/planning/R-POWERUPS-15.md section 4).
+  // OV-B6: the 12-card pool OV-P5 measured (drafts/planning/OV-P5-powerup-retune.md; Wind Step dropped).
   'calm-breath': { type: 'focusGain', max: { amount: 0.25 } },
-  'steady-start': { type: 'startFocus', max: { amount: 40 } },
-  'lighter-strike': { type: 'strikeCost', max: { amount: 4 } },
-  'softer-block': { type: 'blockCut', max: { amount: 0.1 } },
+  'steady-start': { type: 'startFocus', max: { amount: 60 } },
+  'lighter-strike': { type: 'strikeCost', max: { amount: 7 } },
+  'softer-block': { type: 'blockCut', max: { amount: 0.12 } },
 };
 const RERUN = 'Re-run `BALANCE=1 npx vitest run test/balance/insight-budget` (in packages/sim) and update the CAPS table with the new PE.';
 
