@@ -1,0 +1,211 @@
+{
+  "bot": "kid",
+  "diff": "challenge",
+  "seeds": 20,
+  "base": {
+    "pe": 0,
+    "win": 1.4,
+    "lost": 49.8,
+    "ticks": 334
+  },
+  "rows": [
+    {
+      "name": "heal-on-perfect",
+      "pe": 4.4,
+      "win": 2.9,
+      "lost": 50.4,
+      "ticks": 337,
+      "star": false,
+      "perBelt": [
+        {
+          "belt": 4,
+          "pe": 0,
+          "win": 10,
+          "lost": 51.6,
+          "ticks": 330,
+          "rulerLost": 18.7
+        },
+        {
+          "belt": 5,
+          "pe": 6.4,
+          "win": 5,
+          "lost": 50.8,
+          "ticks": 343,
+          "rulerLost": 20.9
+        },
+        {
+          "belt": 6,
+          "pe": 0,
+          "win": 0,
+          "lost": 50.9,
+          "ticks": 338,
+          "rulerLost": 20.6
+        },
+        {
+          "belt": 7,
+          "pe": 3.5,
+          "win": 0,
+          "lost": 49.5,
+          "ticks": 333,
+          "rulerLost": 17.7
+        },
+        {
+          "belt": 8,
+          "pe": 0,
+          "win": 0,
+          "lost": 49.2,
+          "ticks": 335,
+          "rulerLost": 17.7
+        },
+        {
+          "belt": 9,
+          "pe": 5.2,
+          "win": 5,
+          "lost": 50.2,
+          "ticks": 343,
+          "rulerLost": 19.3
+        },
+        {
+          "belt": 10,
+          "pe": 0,
+          "win": 0,
+          "lost": 50.6,
+          "ticks": 339,
+          "rulerLost": 18.7
+        }
+      ]
+    },
+    {
+      "name": "block-then-dash",
+      "pe": 0,
+      "win": 1.4,
+      "lost": 49.8,
+      "ticks": 334,
+      "star": false,
+      "perBelt": [
+        {
+          "belt": 4,
+          "pe": 0,
+          "win": 5,
+          "lost": 50.1,
+          "ticks": 324,
+          "rulerLost": 18.7
+        },
+        {
+          "belt": 5,
+          "pe": 0,
+          "win": 5,
+          "lost": 50.2,
+          "ticks": 341,
+          "rulerLost": 20.9
+        },
+        {
+          "belt": 6,
+          "pe": 0,
+          "win": 0,
+          "lost": 50.6,
+          "ticks": 336,
+          "rulerLost": 20.6
+        },
+        {
+          "belt": 7,
+          "pe": 0,
+          "win": 0,
+          "lost": 49.2,
+          "ticks": 332,
+          "rulerLost": 17.7
+        },
+        {
+          "belt": 8,
+          "pe": 0,
+          "win": 0,
+          "lost": 48.6,
+          "ticks": 332,
+          "rulerLost": 17.7
+        },
+        {
+          "belt": 9,
+          "pe": 0,
+          "win": 0,
+          "lost": 50.2,
+          "ticks": 340,
+          "rulerLost": 19.3
+        },
+        {
+          "belt": 10,
+          "pe": 0,
+          "win": 0,
+          "lost": 50.2,
+          "ticks": 337,
+          "rulerLost": 18.7
+        }
+      ]
+    },
+    {
+      "name": "longer-stagger-20",
+      "pe": 4.5,
+      "win": 2.9,
+      "lost": 50,
+      "ticks": 338,
+      "star": false,
+      "perBelt": [
+        {
+          "belt": 4,
+          "pe": 0,
+          "win": 5,
+          "lost": 52.3,
+          "ticks": 329,
+          "rulerLost": 18.7
+        },
+        {
+          "belt": 5,
+          "pe": 8.2,
+          "win": 5,
+          "lost": 49.9,
+          "ticks": 338,
+          "rulerLost": 20.9
+        },
+        {
+          "belt": 6,
+          "pe": 8.8,
+          "win": 0,
+          "lost": 50.1,
+          "ticks": 332,
+          "rulerLost": 20.6
+        },
+        {
+          "belt": 7,
+          "pe": 3.9,
+          "win": 5,
+          "lost": 49.5,
+          "ticks": 341,
+          "rulerLost": 17.7
+        },
+        {
+          "belt": 8,
+          "pe": 6.5,
+          "win": 5,
+          "lost": 49.2,
+          "ticks": 342,
+          "rulerLost": 17.7
+        },
+        {
+          "belt": 9,
+          "pe": 5.6,
+          "win": 0,
+          "lost": 49.5,
+          "ticks": 343,
+          "rulerLost": 19.3
+        },
+        {
+          "belt": 10,
+          "pe": 4.9,
+          "win": 0,
+          "lost": 50,
+          "ticks": 341,
+          "rulerLost": 18.7
+        }
+      ]
+    }
+  ]
+}

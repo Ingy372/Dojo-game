@@ -1,0 +1,373 @@
+{
+  "bot": "newer",
+  "diff": "guided",
+  "seeds": 60,
+  "base": {
+    "pe": 0,
+    "win": 100,
+    "lost": 0.7,
+    "ticks": 259
+  },
+  "rows": [
+    {
+      "name": "calm-breath",
+      "pe": 3,
+      "win": 100,
+      "lost": 0.7,
+      "ticks": 251,
+      "star": true,
+      "perBelt": [
+        {
+          "belt": 1,
+          "pe": 5.7,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 214,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 2,
+          "pe": 11,
+          "win": 100,
+          "lost": 0.6,
+          "ticks": 235,
+          "rulerLost": 0.2
+        },
+        {
+          "belt": 3,
+          "pe": 30.8,
+          "win": 100,
+          "lost": 0.5,
+          "ticks": 354,
+          "rulerLost": 0.2
+        },
+        {
+          "belt": 4,
+          "pe": 4.9,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 236,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 5,
+          "pe": 1.9,
+          "win": 100,
+          "lost": 0.8,
+          "ticks": 243,
+          "rulerLost": 0
+        },
+        {
+          "belt": 6,
+          "pe": 1.9,
+          "win": 100,
+          "lost": 0.8,
+          "ticks": 243,
+          "rulerLost": 0
+        },
+        {
+          "belt": 7,
+          "pe": 1.5,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 246,
+          "rulerLost": 0
+        },
+        {
+          "belt": 8,
+          "pe": 1.4,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 246,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 9,
+          "pe": 1.4,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 246,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 10,
+          "pe": 1.4,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 246,
+          "rulerLost": 0.1
+        }
+      ]
+    },
+    {
+      "name": "steady-start",
+      "pe": 2.1,
+      "win": 100,
+      "lost": 0.7,
+      "ticks": 253,
+      "star": true,
+      "perBelt": [
+        {
+          "belt": 1,
+          "pe": 9.2,
+          "win": 100,
+          "lost": 0.9,
+          "ticks": 211,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 2,
+          "pe": 5.9,
+          "win": 100,
+          "lost": 0.6,
+          "ticks": 244,
+          "rulerLost": 0.2
+        },
+        {
+          "belt": 3,
+          "pe": 1.9,
+          "win": 100,
+          "lost": 0.5,
+          "ticks": 377,
+          "rulerLost": 0.2
+        },
+        {
+          "belt": 4,
+          "pe": 2.3,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 241,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 5,
+          "pe": 3.6,
+          "win": 100,
+          "lost": 0.6,
+          "ticks": 241,
+          "rulerLost": 0
+        },
+        {
+          "belt": 6,
+          "pe": 2.4,
+          "win": 100,
+          "lost": 0.6,
+          "ticks": 241,
+          "rulerLost": 0
+        },
+        {
+          "belt": 7,
+          "pe": 2.3,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 244,
+          "rulerLost": 0
+        },
+        {
+          "belt": 8,
+          "pe": 3.3,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 244,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 9,
+          "pe": 2.3,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 244,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 10,
+          "pe": 2,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 244,
+          "rulerLost": 0.1
+        }
+      ]
+    },
+    {
+      "name": "lighter-strike",
+      "pe": 2,
+      "win": 100,
+      "lost": 0.7,
+      "ticks": 253,
+      "star": true,
+      "perBelt": [
+        {
+          "belt": 1,
+          "pe": 0.9,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 217,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 2,
+          "pe": 2.4,
+          "win": 100,
+          "lost": 0.8,
+          "ticks": 239,
+          "rulerLost": 0.2
+        },
+        {
+          "belt": 3,
+          "pe": 25.3,
+          "win": 100,
+          "lost": 0.5,
+          "ticks": 370,
+          "rulerLost": 0.2
+        },
+        {
+          "belt": 4,
+          "pe": 4,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 237,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 5,
+          "pe": 1.7,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 243,
+          "rulerLost": 0
+        },
+        {
+          "belt": 6,
+          "pe": 1.7,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 243,
+          "rulerLost": 0
+        },
+        {
+          "belt": 7,
+          "pe": 1.6,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 246,
+          "rulerLost": 0
+        },
+        {
+          "belt": 8,
+          "pe": 1.6,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 246,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 9,
+          "pe": 1.6,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 246,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 10,
+          "pe": 1.5,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 246,
+          "rulerLost": 0.1
+        }
+      ]
+    },
+    {
+      "name": "softer-block",
+      "pe": 13,
+      "win": 100,
+      "lost": 0.6,
+      "ticks": 259,
+      "star": true,
+      "perBelt": [
+        {
+          "belt": 1,
+          "pe": 3.6,
+          "win": 100,
+          "lost": 0.7,
+          "ticks": 218,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 2,
+          "pe": 5.1,
+          "win": 100,
+          "lost": 0.6,
+          "ticks": 245,
+          "rulerLost": 0.2
+        },
+        {
+          "belt": 3,
+          "pe": 19.7,
+          "win": 100,
+          "lost": 0.5,
+          "ticks": 385,
+          "rulerLost": 0.2
+        },
+        {
+          "belt": 4,
+          "pe": 3.2,
+          "win": 100,
+          "lost": 0.6,
+          "ticks": 243,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 5,
+          "pe": 15.1,
+          "win": 100,
+          "lost": 0.5,
+          "ticks": 248,
+          "rulerLost": 0
+        },
+        {
+          "belt": 6,
+          "pe": 9.2,
+          "win": 100,
+          "lost": 0.5,
+          "ticks": 248,
+          "rulerLost": 0
+        },
+        {
+          "belt": 7,
+          "pe": 8.3,
+          "win": 100,
+          "lost": 0.6,
+          "ticks": 250,
+          "rulerLost": 0
+        },
+        {
+          "belt": 8,
+          "pe": 7.2,
+          "win": 100,
+          "lost": 0.6,
+          "ticks": 250,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 9,
+          "pe": 8.1,
+          "win": 100,
+          "lost": 0.5,
+          "ticks": 250,
+          "rulerLost": 0.1
+        },
+        {
+          "belt": 10,
+          "pe": 10.4,
+          "win": 100,
+          "lost": 0.6,
+          "ticks": 250,
+          "rulerLost": 0.1
+        }
+      ]
+    }
+  ]
+}

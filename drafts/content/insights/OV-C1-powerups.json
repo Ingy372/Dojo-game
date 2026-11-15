@@ -1,0 +1,30 @@
+{
+  "_note": "OV-C1 names and card text for the 4 new Power-ups in drafts/planning/R-POWERUPS-15-data.json. Drop-in by id for OV-B6: copy name and text into insights.json. Effects and families unchanged.",
+  "insights": [
+    {
+      "id": "calm-breath",
+      "name": "Quiet Mind",
+      "text": "Your Focus fills up faster."
+    },
+    {
+      "id": "steady-start",
+      "name": "Warm Up",
+      "text": "Start every room with some Focus."
+    },
+    {
+      "id": "lighter-strike",
+      "name": "Swift Strikes",
+      "text": "Your Strikes use less Focus."
+    },
+    {
+      "id": "softer-block",
+      "name": "Iron Block",
+      "text": "Iron arms stop more of the hit."
+    }
+  ],
+  "familyRenames": {
+    "_note": "Insight family rename (review 8.1 #10). The Manager picked the Planner's words after Jay said: \"Go with whatever name is appropriate\". Staff view only; kids never see family names. The Programmer applies it in OV-B6a (insight.ts family list, insights.json, R-INSIGHT-BAL tests). Power and virtue stay.",
+    "rooted": "guard",
+    "flowing": "speed"
+  }
+}
