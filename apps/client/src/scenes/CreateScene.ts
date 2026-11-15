@@ -49,7 +49,8 @@ export class CreateScene extends Phaser.Scene {
 
   create(): void {
     hiDpi(this.cameras.main);
-    this.look = loadLook();
+    // LP-B4: shop dyes are left off here, so the colour choices show as they are.
+    this.look = { ...loadLook(), dye: undefined };
     this.training = currentTraining();
     this.leaving = false;
     this.ui = this.add.container(0, 0);

@@ -2,9 +2,10 @@
 // creation and changeable in the Home Dojo. It's saved with the student's progress.
 // The belt is never part of the look: it always shows the real rank.
 
-import type { CharacterLook } from '@dojo/sim';
+import { wornColors, type CharacterLook } from '@dojo/sim';
 import type { PackName } from '../art/art';
 import { loadSave, writeSave } from './save';
+import { SHOP } from './shop';
 
 export type Body = 'a' | 'b';
 
@@ -18,6 +19,8 @@ export interface PlayerLook {
   skin: number;
   hairColor: number;
   gi: number;
+  /** LP-B4: shop dyes worn over the gi and hair colours ("#rrggbb"), never saved in the look. */
+  dye?: { gi: string | null; hair: string | null };
 }
 
 export const FACES = ['face-01', 'face-02', 'face-03', 'face-04', 'face-05', 'face-06'];
@@ -52,8 +55,9 @@ export function hasLook(): boolean {
 
 /** The student's look (or the default look before they've made their character). */
 export function loadLook(): PlayerLook {
-  const saved = valid(loadSave().look);
-  if (saved) return saved;
+  const profile = loadSave();
+  const saved = valid(profile.look);
+  if (saved) return { ...saved, dye: wornColors(profile, SHOP) };
   try {
     const old = localStorage.getItem(OLD_TEST_KEY);
     if (old) return valid(JSON.parse(old) as Partial<CharacterLook>) ?? { ...DEFAULT_LOOK };
@@ -65,7 +69,8 @@ export function loadLook(): PlayerLook {
 
 export function saveLook(look: PlayerLook): void {
   const profile = loadSave();
-  profile.look = { ...look };
+  const { dye: _dye, ...own } = look;
+  profile.look = own;
   writeSave(profile);
 }
 

@@ -50,10 +50,16 @@ export function dressLook(sprite: LayeredSprite, look: PlayerLook): void {
   for (const f of FACES) sprite.setLayer(f, f === look.face);
   for (const h of HAIRS) {
     sprite.setLayer(h, h === look.hair);
-    sprite.setLayerTint(h, swatch('hair', look.hairColor, '#3a2519'));
+    sprite.setLayerTint(h, look.dye?.hair ? rgb(look.dye.hair) : swatch('hair', look.hairColor, '#3a2519'));
   }
   sprite.setLayerTint('skin', swatch('skin', look.skin, '#efc3a4'));
-  sprite.setLayerTint('gi', swatch('gi', look.gi, '#f2f2f2'));
+  sprite.setLayerTint('gi', look.dye?.gi ? rgb(look.dye.gi) : swatch('gi', look.gi, '#f2f2f2'));
+}
+
+/** LP-B4: the student's own gi or hair colour (from the art's swatches), shown on the shop's "My color" tile. */
+export function ownColor(scene: Phaser.Scene, look: PlayerLook, slot: 'gi' | 'hair'): number {
+  const pal = characterArt(scene, bigLookPack(look), 'player')?.palettes ?? characterArt(scene, lookPacks(look)[0], 'player')?.palettes ?? {};
+  return rgb(pal[slot]?.[slot === 'gi' ? look.gi : look.hairColor] ?? (slot === 'gi' ? '#f2f2f2' : '#3a2519'));
 }
 
 /** The character for walking around rooms, put together from its packs, or null if one isn't loaded. */
