@@ -21,8 +21,8 @@ Kata scope (Jay, Nov 14): "ill give katas penon 1, penon 2, penon 3, nahachi ...
 
 | ID | Owner | What | Done when | Waits on |
 |---|---|---|---|---|
-| PB-05 | Dojo-Ascent Programmer | **First.** Finish #472: fix the 667 Testing clipping, give the old-save note a deployed route, then hand over for Tester recheck. | Tester PASS on the open cases; Manager merges. | — |
-| OV-B1 | Dojo-Ascent Programmer | Auto-equip new Kicks and Defenses (Sensei's Pick, default on); if slots are full, swap out the oldest and say so in one line (review 6.3). | A new sign-off puts the move in the loadout without a menu; a player who turned picking off keeps their choice; tests pass. | PB-05 merged |
+| PB-05 | Dojo-Ascent Programmer | Finish #472. | DONE #472 (5cefad05), Tester PASS. | — |
+| OV-B1 | Dojo-Ascent Programmer | Auto-equip new Kicks and Defenses (Sensei's Pick, default on); if slots are full, swap out the oldest and say so in one line (review 6.3). | A new sign-off puts the move in the loadout without a menu; a player who turned picking off keeps their choice; tests pass. | **Now:** PB-05 merged; open the PR. |
 | OV-B2 | Dojo-Ascent Programmer | A returning student starts at the level cap of the belt below (review 5.4 fallback); update the `start-level-pin` tests. | A Yellow fixture starts at White's cap; a White fixture starts at 1. | OV-B1 |
 | OV-B5 | Dojo-Ascent Programmer | Blessing counted in runs: the next 5 runs after a class, holds at most 10, no hours shown (review 8.6). | No clock text anywhere; tests pass. Words from OV-C2. | OV-B2, OV-C2 |
 | OV-B7 | Dojo-Ascent Programmer | Belt entry: parent note on who may enter it, plus a grown-up path to fix a wrong entry (review 8.2 #1). | A wrong belt can be corrected behind the grown-up gate; words from OV-C2. | OV-B5, OV-C2 |
@@ -30,7 +30,7 @@ Kata scope (Jay, Nov 14): "ill give katas penon 1, penon 2, penon 3, nahachi ...
 | OV-B6 | Dojo-Ascent Programmer | Import about 15 Power-ups (from 9) from OV-P1 data; existing effect types only. | R-INSIGHT-BAL tests pass with the new pool. | OV-B3, OV-P1, OV-C1 |
 | OV-B4 | — | DROPPED (Jay chose question 1 B). Replaced by PB-04 and kata powers. | — | — |
 | PB-04 | Dojo-Ascent Programmer | Resume the kata power slot as already planned (Jay, Nov 14: question 1 B). | As in its original item. | OV-B3 |
-| OV-T1 | Dojo-Ascent Game Logic/systems Tester | **First:** recheck only the open #472 cases. | Plain PASS/FAIL on #472. | PB-05 new head |
+| OV-T1 | Dojo-Ascent Game Logic/systems Tester | Recheck the open #472 cases. | DONE, PASS; #472 merged. | — |
 | OV-T2 | Dojo-Ascent Game Logic/systems Tester | B8 + B3 numbers: report why Orange wins everything (R-PREMIUM-e), and measure the White kid bot on Guided against a target of about 7 in 10 floor clears. | DONE #481 (e4c28b9d). | — |
 | OV-T3 | Dojo-Ascent Game Logic/systems Tester | QA each OV-B PR as it opens; run PB-10 after PB-05 merges. | PASS/FAIL comment on each PR. | Each PR |
 | OV-P1 | Dojo-Ascent Researcher & Planner | Power-up pool plan: about 6 new Power-ups built only from existing effect types, checked with the balance-check skill; rename Rooted/Flowing (review 8.1 #10) as a proposal. | DONE #482 (ffcf273d): 4 pass, pool 9 to 13, no new code (Manager: take 13, no new effect types). Rooted/Flowing renamed to Guard/Speed (Jay, Nov 14: "Go with whatever name is appropriate"; Manager picked the Planner proposal). Content adds it to OV-C1. | — |
