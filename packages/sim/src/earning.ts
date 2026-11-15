@@ -9,6 +9,7 @@
 // Kids rules: nothing is ever taken away, nothing has a deadline, there are no streaks.
 // Test-link runs give nothing.
 
+import { COINS } from './config';
 import type { Content } from './content';
 import { addDecorations, type DecorationDef, type DojoState, type DropBelt, type NewDecoration } from './dojo';
 import { makeItem, rollRarity, type GearItem } from './loot';
@@ -110,6 +111,7 @@ export function openClassChests(profile: Profile, dojo: DojoState, content: Cont
     if (!profile.equipped[item.slot]) profile.equipped[item.slot] = item.uid;
     opened.push({ kind: 'gear', item });
   }
+  profile.coins += COINS.classChest * chests;
   addDecorations(dojo, opened.flatMap((c) => (c.kind === 'decor' ? [{ id: c.id, belt: { ...info.belt } }] : [])));
   return opened;
 }

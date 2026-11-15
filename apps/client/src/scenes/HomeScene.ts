@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { GREEN, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
+import { GOLD, GREEN, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import BLESS from '../../../../content/settings/blessing.json';
@@ -62,6 +62,8 @@ import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
 import { drawBanner, openFaithPage } from '../ui/faith';
+import { openShop, type ShopScreen } from '../ui/shop';
+import { SHOP_WORDS } from '../game/shop';
 import { PATH_LABEL, PATH_LOCK_R, PATH_WORDS as PW, clampStart, fill, pathLayout, towerStart, type Box } from '../ui/pathScreen';
 import { takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
@@ -91,6 +93,8 @@ type Tab = 'run' | 'gear' | 'abilities';
 /** P-MENU2-i: the A-MENU2 stat icons (Rooms has none, so it shows its number only). */
 /** QA: rarity words on the paper tiles, darkened to at least 4.5:1 on the paper (#efe0c4). */
 /** A-LEGENDARY-wire: where the 9-slice's gold rim ends inside the tile box (CSS px; frame drawn 6 px outside the box at k 0.5): sides 22/2 - 6, bottom 33/2 - 6 (+0.5 for the inner highlight). */
+/** LP-B4: the Shop button in the Path top bar (narrower than Dojo and Board, so the banner keeps its room). */
+const SHOP_BUTTON_W = 80;
 const LEGEND_RIM = { side: 5, bottom: 11 } as const;
 /** Clear paper between the rarity word (descenders included) and the rim. */
 const LEGEND_CLEAR = 8;
@@ -116,6 +120,8 @@ export class HomeScene extends Phaser.Scene {
   /** LP-B2: the open Faith page (null = closed), kept so a resize redraws it. */
   private faithPage: number | null = null;
   private faithLayer: Phaser.GameObjects.Container | null = null;
+  /** LP-B4: the looks shop over the Path, while open. */
+  private shop: ShopScreen | null = null;
   /** LP-B1: the lowest Tower tier shown on the Path (null = around the current tier). */
   private towerFrom: number | null = null;
   /** P-MENU2-a: which part of Abilities is showing. */
@@ -215,6 +221,7 @@ export class HomeScene extends Phaser.Scene {
     this.towerFrom = null;
     this.faithPage = null;
     this.faithLayer = null;
+    this.shop = null;
     this.page = 0;
     this.selected = null;
     this.testing = null;
@@ -464,9 +471,10 @@ export class HomeScene extends Phaser.Scene {
     const { bar } = L;
     this.button(bar.x, bar.y, 96, bar.h, PW.back, 0x8a5a35, TYPE.body, () => this.backToDojo());
     this.button(bar.x + 96 + S2, bar.y, 96, bar.h, PW.board, 0x3a3a4a, TYPE.body, () => this.setView('board'));
+    this.button(bar.x + 2 * (96 + S2), bar.y, SHOP_BUTTON_W, bar.h, SHOP_WORDS.button, GOLD, TYPE.body, () => this.openShop());
     const chipW = Math.min(220, Math.round(bar.w * 0.3));
     const chipX = bar.x + bar.w - chipW;
-    const titleL = bar.x + 2 * 96 + 2 * S2;
+    const titleL = bar.x + 2 * 96 + SHOP_BUTTON_W + 3 * S2;
     // LP-B2: the FAITH DOES banner takes the title's place; it opens the Faith page.
     drawBanner(this, (o) => this.ui.add(o), { x: titleL, y: bar.y, w: chipX - titleL - S2, h: bar.h }, t, () => this.openFaith(0));
     const chip = this.add.graphics();
@@ -482,6 +490,19 @@ export class HomeScene extends Phaser.Scene {
     this.renderClassStep(L.classCard, pv.classStep);
     this.renderGameStep(L.gameCard, pv.game, level);
     if (this.faithPage !== null) this.openFaith(this.faithPage);
+    if (this.shop) this.openShop();
+  }
+
+  /** LP-B4: the looks shop over the Path. */
+  private openShop(): void {
+    if (this.celebrating && !this.shop) return;
+    this.shop?.layer.destroy();
+    const { width, height } = view(this);
+    this.shop = openShop(this, width, height, this.profile, this.training, () => {
+      this.shop?.layer.destroy();
+      this.shop = null;
+      this.renderPathScreen();
+    });
   }
 
   /** LP-B2: the Faith page over the Path (the banner, the Creed Scroll, the verse scrolls found). */

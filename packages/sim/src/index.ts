@@ -44,3 +44,4 @@ export * from './audio';
 export * from './bossTag';
 export * from './beltEntry';
 export * from './safety';
+export * from './shop';

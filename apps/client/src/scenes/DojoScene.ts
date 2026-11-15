@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { reducedMotion, setReducedMotion } from '../game/motion';
 import {
   BOW,
+  COINS,
   DOJO,
   MOVEMENT,
   TICKS_PER_SECOND,
@@ -371,6 +372,7 @@ export class DojoScene extends Phaser.Scene {
       const shown = chests.slice(0, 3).map((c) => (c.kind === 'decor' ? fill(CW.decor, { name: decorationDef(CONTENT.dojo, c.id).name }) : fill(CW.gear, { name: c.item.name })));
       if (chests.length > 3) shown.push(fill(CW.more, { n: chests.length - 3 }));
       if (chests.some((c) => c.kind === 'decor')) shown.push(CW.storage);
+      shown.push(fill(CW.coins, { n: chests.length * COINS.classChest }));
       const title = chests.length === 1 ? CW.title : fill(CW.titleMany, { n: chests.length });
       steps.push(() => this.card(title, [CW.line, shown.join('\n')], CW.button, next, true));
     }

@@ -1,0 +1,195 @@
+{
+  "_note": "LP-B4 (L13 Stage 1) PLACEHOLDERS for Content: the looks shop. Gi dyes from R-SHOP 3.3 (colours as listed there); hair dyes from R-SHOP 3.4 (their colours are placeholders picked by the Programmer). Prices from LP-P1 (#494). belt = the belt tier where it goes on the shelf. Looks only: a dye changes the gi or hair colour, never the belt and never a fight. Words: no money signs, no 'buy coins', no timers or 'only today'.",
+  "groups": [
+    {
+      "id": "gi-dye",
+      "name": "Gi Colors",
+      "slot": "gi"
+    },
+    {
+      "id": "hair-dye",
+      "name": "Hair Colors",
+      "slot": "hair"
+    }
+  ],
+  "items": [
+    {
+      "id": "gi-rose",
+      "group": "gi-dye",
+      "name": "Rose",
+      "price": 200,
+      "belt": 1,
+      "color": "#e8a0b4"
+    },
+    {
+      "id": "gi-peach",
+      "group": "gi-dye",
+      "name": "Peach",
+      "price": 200,
+      "belt": 1,
+      "color": "#f5c6a8"
+    },
+    {
+      "id": "gi-mint",
+      "group": "gi-dye",
+      "name": "Mint",
+      "price": 200,
+      "belt": 1,
+      "color": "#a8dcc4"
+    },
+    {
+      "id": "gi-aqua",
+      "group": "gi-dye",
+      "name": "Aqua",
+      "price": 200,
+      "belt": 1,
+      "color": "#6fd0d8"
+    },
+    {
+      "id": "gi-lilac",
+      "group": "gi-dye",
+      "name": "Lilac",
+      "price": 200,
+      "belt": 1,
+      "color": "#b9a2dc"
+    },
+    {
+      "id": "gi-sage",
+      "group": "gi-dye",
+      "name": "Sage",
+      "price": 200,
+      "belt": 1,
+      "color": "#9db59a"
+    },
+    {
+      "id": "gi-plum",
+      "group": "gi-dye",
+      "name": "Plum",
+      "price": 200,
+      "belt": 2,
+      "color": "#6a3a7a"
+    },
+    {
+      "id": "gi-teal",
+      "group": "gi-dye",
+      "name": "Teal",
+      "price": 200,
+      "belt": 2,
+      "color": "#2e8c8c"
+    },
+    {
+      "id": "gi-pine",
+      "group": "gi-dye",
+      "name": "Pine",
+      "price": 200,
+      "belt": 2,
+      "color": "#2f5d48"
+    },
+    {
+      "id": "gi-mauve",
+      "group": "gi-dye",
+      "name": "Mauve",
+      "price": 200,
+      "belt": 2,
+      "color": "#9b6b8a"
+    },
+    {
+      "id": "gi-bubblegum",
+      "group": "gi-dye",
+      "name": "Bubblegum",
+      "price": 200,
+      "belt": 2,
+      "color": "#f08fc0"
+    },
+    {
+      "id": "gi-lime",
+      "group": "gi-dye",
+      "name": "Lime",
+      "price": 200,
+      "belt": 2,
+      "color": "#b6d94c"
+    },
+    {
+      "id": "hair-bubblegum",
+      "group": "hair-dye",
+      "name": "Bubblegum",
+      "price": 200,
+      "belt": 1,
+      "color": "#f08fc0"
+    },
+    {
+      "id": "hair-mint",
+      "group": "hair-dye",
+      "name": "Mint",
+      "price": 200,
+      "belt": 1,
+      "color": "#8fd8b8"
+    },
+    {
+      "id": "hair-lilac",
+      "group": "hair-dye",
+      "name": "Lilac",
+      "price": 200,
+      "belt": 1,
+      "color": "#b9a2dc"
+    },
+    {
+      "id": "hair-peach",
+      "group": "hair-dye",
+      "name": "Peach",
+      "price": 200,
+      "belt": 1,
+      "color": "#f5b890"
+    },
+    {
+      "id": "hair-aqua",
+      "group": "hair-dye",
+      "name": "Aqua",
+      "price": 200,
+      "belt": 2,
+      "color": "#5cc8d6"
+    },
+    {
+      "id": "hair-sunset",
+      "group": "hair-dye",
+      "name": "Sunset",
+      "price": 200,
+      "belt": 2,
+      "color": "#f08a5d"
+    },
+    {
+      "id": "hair-silver",
+      "group": "hair-dye",
+      "name": "Silver",
+      "price": 200,
+      "belt": 2,
+      "color": "#c9ced6"
+    },
+    {
+      "id": "hair-rose-gold",
+      "group": "hair-dye",
+      "name": "Rose Gold",
+      "price": 200,
+      "belt": 2,
+      "color": "#d9a090"
+    }
+  ],
+  "_noteWords": "words: the Shop screen. {n}, {name}, {before}, {after} are filled in by the game. Kid lines 8 words or fewer. PLACEHOLDERS for Content.",
+  "words": {
+    "button": "Shop",
+    "title": "Shop",
+    "coins": "{n} coins",
+    "line": "Earn coins in runs and class!",
+    "own": "My color",
+    "ownLine": "Your own color.",
+    "price": "{n} coins",
+    "afterLine": "You have {before}. After: {after}.",
+    "get": "Get it",
+    "got": "It's yours!",
+    "wear": "Wear it",
+    "wearing": "Wearing",
+    "locked": "Comes with a new belt!",
+    "short": "{n} more coins to go",
+    "back": "Back"
+  }
+}

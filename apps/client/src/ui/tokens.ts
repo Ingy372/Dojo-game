@@ -200,6 +200,8 @@ export type KataInk = (typeof KATA_INK)[keyof typeof KATA_INK];
 
 /** Q-PREM-COLOR: the shared green for buttons and fills. At least 4.5:1 behind white (#ffffff) and cream (#fff6e0) text. */
 export const GREEN = 0x277a56;
+/** Gold button behind white words (LP-B4 Shop); at least 4.5:1. */
+export const GOLD = 0x8a6418;
 
 /** WCAG contrast ratio between two 0xRRGGBB colours. */
 export function contrast(a: number, b: number): number {

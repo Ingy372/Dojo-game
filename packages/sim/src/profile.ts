@@ -13,6 +13,7 @@ import type { XpGain } from './progression';
 import type { ProgressSnapshot } from './rewards';
 import type { RunSummary } from './run';
 import { GUIDE_DONE } from './world';
+import { newShopSave, readCoins, readShopSave, runCoins, type ShopSave } from './shop';
 import { readJournal, type JournalEntry, type NamedContent } from './named';
 import { newLessonLog, readLessonLog, type LessonLog } from './lessons';
 import { newWelcomeWeekLog, readWelcomeWeekLog, type WelcomeWeekLog } from './unlocks';
@@ -63,7 +64,7 @@ export interface Profile {
   floorsCleared: number;
   /** Floors played at each belt tier (key: tier), so a tier's first floor can be gentler. */
   floorsByTier: Record<string, number>;
-  lastRun: { summary: RunSummary; newBests: BestKey[]; xp?: XpGain; /** One-time dojo pieces it earned (trophies, statues). */ earned?: string[] } | null;
+  lastRun: { summary: RunSummary; newBests: BestKey[]; xp?: XpGain; /** One-time dojo pieces it earned (trophies, statues). */ earned?: string[]; /** LP-B4: coins it paid. */ coins?: number } | null;
   /** Experience level (capped by real rank) and experience toward the next level. */
   level: number;
   xp: number;
@@ -110,6 +111,10 @@ export interface Profile {
   creedSeen: boolean;
   /** LP-B3: the best weekly class streak ever (weeks); the aura reads it, so it never shrinks. */
   bestStreakWeeks: number;
+  /** LP-B4: coins from runs and Class Chests, spent only in the looks shop (never below 0). */
+  coins: number;
+  /** LP-B4: looks bought in the shop and the ones worn. */
+  shop: ShopSave;
   /**
    * P-MENU-f: the belt ids whose Sensei's Seal the player has already seen lit (each rings its
    * bell once). null = an old save from before this field; the first Gate view fills it in
@@ -271,6 +276,8 @@ export function newProfile(): Profile {
     pathIntroSeen: true,
     creedSeen: false,
     bestStreakWeeks: 0,
+    coins: 0,
+    shop: newShopSave(),
     sealsSeen: [],
     trophiesSeen: [],
     keeperCelebrated: false,
@@ -333,7 +340,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, pathIntroSeen: typeof p.pathIntroSeen === 'boolean' ? p.pathIntroSeen : !((p.runsPlayed ?? 0) > 0), creedSeen: p.creedSeen === true, bestStreakWeeks: typeof p.bestStreakWeeks === 'number' && p.bestStreakWeeks > 0 ? Math.floor(p.bestStreakWeeks) : 0, sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, keeperCelebrated: typeof p.keeperCelebrated === 'boolean' ? p.keeperCelebrated : oldKeeperWin(p.lastRun), patternsSeen: Array.isArray(p.patternsSeen) ? p.patternsSeen.filter((v) => typeof v === 'string') : [], styleSeen: Array.isArray(p.styleSeen) ? p.styleSeen.filter((v) => typeof v === 'string') : null, styleHelpSeen: Array.isArray(p.styleHelpSeen) ? p.styleHelpSeen.filter((v) => typeof v === 'string') : [], senseiPick: p.senseiPick !== false, picksKnown: Array.isArray(p.picksKnown) ? p.picksKnown.filter((v) => typeof v === 'string') : null, blessing: readBlessing(p.blessing), ...migrateReadyStance(p, readLoadout(p.loadout)), ...readLoadoutV2Flags(p) };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, pathIntroSeen: typeof p.pathIntroSeen === 'boolean' ? p.pathIntroSeen : !((p.runsPlayed ?? 0) > 0), creedSeen: p.creedSeen === true, bestStreakWeeks: typeof p.bestStreakWeeks === 'number' && p.bestStreakWeeks > 0 ? Math.floor(p.bestStreakWeeks) : 0, coins: readCoins(p.coins), shop: readShopSave(p.shop), sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, keeperCelebrated: typeof p.keeperCelebrated === 'boolean' ? p.keeperCelebrated : oldKeeperWin(p.lastRun), patternsSeen: Array.isArray(p.patternsSeen) ? p.patternsSeen.filter((v) => typeof v === 'string') : [], styleSeen: Array.isArray(p.styleSeen) ? p.styleSeen.filter((v) => typeof v === 'string') : null, styleHelpSeen: Array.isArray(p.styleHelpSeen) ? p.styleHelpSeen.filter((v) => typeof v === 'string') : [], senseiPick: p.senseiPick !== false, picksKnown: Array.isArray(p.picksKnown) ? p.picksKnown.filter((v) => typeof v === 'string') : null, blessing: readBlessing(p.blessing), ...migrateReadyStance(p, readLoadout(p.loadout)), ...readLoadoutV2Flags(p) };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {
@@ -426,11 +433,13 @@ export function finishRun(profile: Profile, summary: RunSummary): BestKey[] {
   const foundRare = items.some((i) => rarityRank(i.rarity) >= rarityRank(best));
   profile.dryRuns = foundRare ? 0 : Math.min(profile.dryRuns + 1, LOOT.guaranteedRareOnRun - 1);
   profile.runsPlayed++;
+  const coins = runCoins(summary);
+  profile.coins += coins;
 
   const newBests: BestKey[] = [];
   const b = profile.bests;
   if (summary.test) {
-    profile.lastRun = { summary: { ...summary, items }, newBests };
+    profile.lastRun = { summary: { ...summary, items }, newBests, coins };
     return newBests;
   }
   const tier = String(summary.tier ?? 1);
@@ -454,7 +463,7 @@ export function finishRun(profile: Profile, summary: RunSummary): BestKey[] {
     b.mostSGrades = summary.sGrades;
     newBests.push('mostSGrades');
   }
-  profile.lastRun = { summary: { ...summary, items }, newBests };
+  profile.lastRun = { summary: { ...summary, items }, newBests, coins };
   return newBests;
 }
 
