@@ -1,0 +1,50 @@
+{
+  "notes": "PB-08 (R-PROGRESSION-BETA, PR #407): first-use help for the Fighting Style screen, in Sensei's voice. The plan allows 3 Fighting Style lines (slots first, Seals next, swap last); the Manager added 3 Kata card lines (sessions 4 to 6), so the file now holds 6 lines, one new idea per session. Each 'line' is ONE short sentence, or a very short question and its answer (8 words or fewer, under 80 characters), ages 6-9, no digits, no guilt or pressure, no timers. 'screen' names the part of the Fighting Style screen the line sits on (words from content/abilities/fighting-style.json). 'trigger' says when the Programmer shows it (once each, then never again; the seen list lives in the save, additive). 'session' is the order: show only one line per visit. Needs a read by the Learning & Engagement Designer (PB-08 'done when'). Nothing here needs a tutorial step or new art. OVERLAP WITH THE SEAL UNLOCK TIP (PR #404, drafts/learning/g2b-11-lock-breakfree-welcome-week.md, 'Equip tip'): the unlock screen shows \"Put this Seal in a slot.\" / \"Then it helps you in fights.\" once per session. help-slots and help-seals say nearly the same thing, so they carry \"yieldsTo\": \"seal-unlock-equip-tip\". Rule for the Programmer: if the equip tip has shown earlier in the same session (same app visit), do NOT show this line and do NOT mark it seen; it stays waiting and shows on the next visit when the tip has not just shown. help-swap does not yield (the main tip does not talk about swapping). If the tip's Alt A or Alt B (which mention swapping) is ever chosen, help-swap should yield to the tip too. KATA CARD LINES (Manager request; what the card does comes from drafts/planning/R-PROGRESSION-BETA.md, section 5 item 5 and PB-04: the Kata slot holds one passive kata power, earned by a real class sign-off; White sees one pick, Orange up to three; while a power is a placeholder the card says \"Power coming soon\"). Real class is the source of power in every kata line. Overlap with PR #404: its tip is only on the Seal unlock screen and talks about Seals and slots, so no kata line repeats it, and the kata lines show only on the Kata card. help-kata-class carries \"yieldsTo\": \"kata-power-unlock-screen\" (PB-13/PB-14 unlock line for a new kata power says the same idea): skip it, and do not mark it seen, if that screen showed in the same session. help-kata-soon shows only while the card reads \"Power coming soon\" and goes away on its own once a real power is in. help-kata-pick shows only when the student has two or more kata powers to choose from (Orange and up).",
+  "help": [
+    {
+      "id": "help-slots",
+      "session": 1,
+      "screen": "Fighting Style, the slot cards",
+      "trigger": "the first time the Fighting Style screen opens",
+      "line": "Tap a slot, then pick a Seal.",
+      "yieldsTo": "seal-unlock-equip-tip"
+    },
+    {
+      "id": "help-seals",
+      "session": 2,
+      "screen": "Fighting Style, a Seal card",
+      "trigger": "the first time the student taps a Seal card",
+      "line": "Seals grow as you learn moves in class.",
+      "yieldsTo": "seal-unlock-equip-tip"
+    },
+    {
+      "id": "help-swap",
+      "session": 3,
+      "screen": "Fighting Style, the swap question",
+      "trigger": "the first time all Seal slots are full and a new Seal is tapped",
+      "line": "Slots full? Pick a Seal to swap."
+    },
+    {
+      "id": "help-kata-class",
+      "session": 4,
+      "screen": "Fighting Style, the Kata card",
+      "trigger": "the first time the student taps the Kata card",
+      "line": "Learn a kata in class for its power.",
+      "yieldsTo": "kata-power-unlock-screen"
+    },
+    {
+      "id": "help-kata-soon",
+      "session": 5,
+      "screen": "Fighting Style, the Kata card that reads \"Power coming soon\"",
+      "trigger": "the first time the Kata card shows \"Power coming soon\" and the student taps it",
+      "line": "Sensei is getting this power ready."
+    },
+    {
+      "id": "help-kata-pick",
+      "session": 6,
+      "screen": "Fighting Style, the Kata card with a choice",
+      "trigger": "the first time the student has two or more kata powers to pick from",
+      "line": "Pick one kata power at a time."
+    }
+  ]
+}

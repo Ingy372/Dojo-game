@@ -56,7 +56,7 @@ describe('P-MENU-c: every swapped button is at least 44 pt (button() also pads t
     expect(home).toMatch(/96, 44, '◀ Dojo'/);
     expect(home).toMatch(/const enterH = short \? MIN_TAP : 52;/);
     expect(home).toMatch(/leftW, enterH, 'ENTER THE TOWER'/);
-    expect(home).toMatch(/leftW, 44, 'Practice room'/);
+    expect(home).toMatch(/leftW - \(testW && testW \+ S2\), 44, 'Practice room'/);
   });
 });
 
