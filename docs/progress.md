@@ -1142,3 +1142,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - The first check after this update only records what was already earned, so old saves never move. Each move is picked once.
 - A one-time lesson rides in that step the first time Sensei picks something.
 - Tests: `ov-b1-sensei-pick` (8) and the lessons test. Phone check `docs/shots/ov-b1/sensei-pick.mjs` 80 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off.
+
+## OV-B7 — Grown-up belt fix (2026-11-14)
+
+- The belt screen behind the grown-up gate now shows the OV-C2 parent note: a grown-up should set the belt, not the student.
+- A "Fix a mistake" button opens "Fix the belt". In it every belt can be picked, down to what the dojo's own data shows. It asks "Change the saved belt to {entry}?" with the buttons "Keep {belt}" and "Yes, fix it".
+- After a fix lowers the belt, the child sees "Your belt was updated." Gear, items and levels are kept.
+- A normal Save still only raises the belt. The old "can't be lowered later" line now says "If it is wrong, a grown-up can fix it here."
+- Tests: `ov-b7-belt-fix` (4), plus the B-BELT and start-level tests. Phone check `docs/shots/ov-b7/belt-fix.mjs` 108 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off.
