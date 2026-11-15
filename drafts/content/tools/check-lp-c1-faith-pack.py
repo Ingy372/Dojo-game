@@ -12,6 +12,7 @@ wall['Romans 3:23'] = wall['Romans 3:23'].replace('and falled short', 'and come 
 wall['Romans 5:8'] = wall['Romans 5:8'].replace('Christ dies', 'Christ died')
 sec4 = doc.split('## 4.')[1].split('## 5.')[0]
 cov = {m.group(1): m.group(2).strip() for m in re.finditer(r'\| \*\*(.+?)\*\* \| (.+?\.)(?: \*\(.*)? ?\|', sec4)}
+cov['Honesty'] = cov.pop('Honest')  # LP-C2: Manager picked the section 6 name
 sec5 = doc.split('## 5.')[1].split('## 6.')[0]
 words = re.findall(r'\| ([A-Z]) \| (\w+) \| ([\w/]+) \|', sec5)
 sec1 = doc.split('## 1.')[1].split('## 2.')[0]
@@ -46,7 +47,7 @@ kid += [('guardian.template', P['guardianRestored']['template'])] + [(g['faithOv
 for k, v in kid:
     n = len(v.split())
     if n > 8: fail(f'{k}: {n} words: {v}')
-    if re.search(r'perfect|must|should|shame|bad kid', v, re.I): fail(f'{k}: banned word: {v}')
+    if re.search(r'perfect|must|should|shame|bad kid|peace, be still', v, re.I): fail(f'{k}: banned word: {v}')
 if '--online' in sys.argv:
     for s in P['verseScrolls'] + [{'id': 'motto', 'reference': P['creedScroll']['mottoVerse']['reference'], 'kjvText': P['creedScroll']['mottoVerse']['text']}]:
         r = s['reference'].replace('–', '-')
