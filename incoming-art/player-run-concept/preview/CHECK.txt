@@ -1,0 +1,40 @@
+frame 128x160  frames 10  fps 30  duration 0.3333s
+anchor {'x': 64.0, 'y': 136.96, 'note': "feet / ground point of the character, in pixels from the frame's top-left"}  ppt 80.0  camera {'projection': 'orthographic', 'elevationDeg': 35.0, 'orthoScaleTiles': 1.6, 'note': 'one tile on the ground is pixelsPerTile wide and pixelsPerTile*sin(elevation) tall on screen'}
+dirs ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+sheets ['body', 'skin', 'gi', 'belt', 'belt-sheen', 'belt-rim', 'face-01', 'hair-01']
+empty cells: 9
+  EMPTY face-01 N f0
+  EMPTY face-01 N f2
+  EMPTY face-01 N f3
+  EMPTY face-01 N f4
+  EMPTY face-01 N f5
+  EMPTY face-01 N f6
+  EMPTY face-01 N f7
+  EMPTY face-01 N f8
+  EMPTY face-01 N f9
+  (expected: facing away, the face sits on the front of the head. The kept walk's north face row is also only a few pixels.)
+closest opaque to frame edge: body SE f5 L41 R38 T54 B9 px
+registration flags: 0
+N step-delta mean 0.1328  wrap(f9->f0) 0.1419  vs-walk mean 0.1087 min 0.0821
+NE step-delta mean 0.1795  wrap(f9->f0) 0.1484  vs-walk mean 0.1444 min 0.1014
+E step-delta mean 0.2148  wrap(f9->f0) 0.1916  vs-walk mean 0.1745 min 0.1534
+SE step-delta mean 0.1901  wrap(f9->f0) 0.1884  vs-walk mean 0.1588 min 0.1423
+S step-delta mean 0.1472  wrap(f9->f0) 0.1406  vs-walk mean 0.1355 min 0.1132
+SW step-delta mean 0.1887  wrap(f9->f0) 0.1654  vs-walk mean 0.1585 min 0.1381
+W step-delta mean 0.2132  wrap(f9->f0) 0.2045  vs-walk mean 0.1749 min 0.1537
+NW step-delta mean 0.1800  wrap(f9->f0) 0.1906  vs-walk mean 0.1451 min 0.1020
+HEAD/FEET  (top y, bottom y, head-x, foot-x) run then walk
+  S run top 53-57 (span 4) bottom 135-149 (span 14) headx-footx mean 0.0
+  S walk top 51-53 (span 2) bottom 136-149 (span 13) headx-footx mean 0.1
+  E run top 48-53 (span 5) bottom 133-143 (span 10) headx-footx mean 5.4
+  E walk top 48-51 (span 3) bottom 134-143 (span 9) headx-footx mean 1.8
+  N run top 44-48 (span 4) bottom 132-143 (span 11) headx-footx mean -0.2
+  N walk top 46-49 (span 3) bottom 134-144 (span 10) headx-footx mean 0.0
+danger-red pixels on composited run: 0
+S belt centre travel run 7.4px walk 4.6px; gi width change run 5px walk 2px
+E belt centre travel run 6.5px walk 5.3px; gi width change run 11px walk 9px
+frames with >40 enclosed transparent px: 0
+
+Blend re-opened after the render (action run): planted-foot step 0.1500 m left and 0.1500 m right. Frame 1 left foot forward with the right hand forward. Frame 6 is the swap. Hip height 0.478 m to 0.540 m. Walk action still present. sprite_fps 30, stride 1.5 tiles, design speed 4.5 tiles/s.
+
+GIF stores 30 ms per frame (3/100 s, about 33 fps). run-front-side-back.mp4 is 60 frames at 30/1 fps, duration 2.000 s.
