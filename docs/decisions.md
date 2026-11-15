@@ -1789,4 +1789,5 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Gate:** no change. The sum question stays, with no PIN, and the belt screen is only reachable through it.
 - **How low a fix can go:** down to the feed's own belt and stripes. A fix replaces the saved entry (`fixBeltEntry`); an entry at or below the feed is dropped.
 - **After a lower fix:** `seen` is set to the new progress, so a later raise back to the old belt isn't a surprise promotion and the lower belt plays no moment.
+- **Level after a lower fix (Manager):** the stored level and XP are kept; the game only shows and plays the level capped by the belt. `gainXp` no longer clears XP when the stored level is above the cap, so nothing is lost if the belt is raised again.
 - **Words:** from OV-C2 with the OV-L1 changes ("Keep {belt}", "Your belt was updated."). The new save-confirm line "Save {entry}? If it is wrong, a grown-up can fix it here." is Programmer wording built from OV-C2; the Content Designer may replace it in `content/settings/belt-entry.json`.

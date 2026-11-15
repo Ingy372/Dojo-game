@@ -1367,14 +1367,12 @@ export class DojoScene extends Phaser.Scene {
       close();
       this.toast(line.replace('{belt}', name).replace('{n}', String(pick.stripes)));
     };
-    if (fix) {
-      button(width / 2 - bw - 8, t.back, 0x4a4a55, () => { box.destroy(); this.openBeltEntry(back); });
-      button(width / 2 + 8, t.save, GREEN, () => this.confirmBeltEntry(belts, pick, save, saved));
-    } else {
+    if (fix) button(width / 2 - bw - 8, t.back, 0x4a4a55, () => { box.destroy(); this.openBeltEntry(back); });
+    else {
       button(width / 2 - bw * 1.5 - 12, t.back, 0x4a4a55, close);
       button(width / 2 - bw / 2, t.fixButton, 0x2a2536, () => { box.destroy(); this.openBeltEntry(back, true); });
-      button(width / 2 + bw / 2 + 12, t.save, GREEN, () => this.confirmBeltEntry(belts, pick, save));
     }
+    button(fix ? width / 2 + 8 : width / 2 + bw / 2 + 12, t.save, GREEN, () => this.confirmBeltEntry(belts, pick, save, fix ? saved : undefined));
   }
 
   /** "Are you sure?" before a belt entry is saved. With `keep` it is a grown-up's fix (OV-B7). */

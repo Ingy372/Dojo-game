@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyBeltEntry, buildTraining, feedEntry, fixBeltEntry, loadFeed, recordBeltEntry, rewardMoments, snapshot } from '../src';
+import { applyBeltEntry, buildTraining, effectiveLevel, feedEntry, fixBeltEntry, gainXp, loadFeed, newProfile, recordBeltEntry, rewardMoments, snapshot } from '../src';
 import BELT_TEXT from '../../../content/settings/belt-entry.json';
 import { testContent } from './load-content';
 
@@ -35,6 +35,20 @@ describe('OV-B7: a grown-up can fix a wrong belt entry', () => {
     expect(BELT_TEXT.fixed).toBe('Your belt was updated.');
     const words = Object.entries(BELT_TEXT).filter(([k]) => !k.startsWith('_')).map(([, v]) => String(v)).join(' ');
     expect(words).not.toMatch(/only go up|can't be lowered|lost|lose|wrong of you|sorry/i);
+  });
+
+  it('a lower belt only shows the level capped: stored level and XP are kept for a later raise', () => {
+    const high = buildTraining(applyBeltEntry(white, { belt: 'green', stripes: 1 }), abilities, now);
+    const low = buildTraining(applyBeltEntry(white, fixBeltEntry(white, { belt: 'yellow', stripes: 0 })), abilities, now);
+    expect(low.levelCap).toBeLessThan(high.levelCap);
+    const p = newProfile();
+    p.level = high.levelCap - 1;
+    p.xp = 7;
+    expect(effectiveLevel(p, low)).toBe(low.levelCap);
+    gainXp(p, low, 50);
+    expect(p.level).toBe(high.levelCap - 1);
+    expect(p.xp).toBe(7);
+    expect(effectiveLevel(p, high)).toBe(high.levelCap - 1);
   });
 
   it('the fix sits behind the grown-up gate, with "Keep {belt}" and "Yes, fix it"', () => {
