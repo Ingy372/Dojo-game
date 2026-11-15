@@ -44,6 +44,6 @@ describe('P-MENU-b: tab, page and gear taps redraw only the panel', () => {
   });
   it('the shell no longer draws tabs or panel contents', () => {
     const b = body('renderShell');
-    expect(b).not.toMatch(/renderGear|renderRun|renderGate|renderAbilities|setTab/);
+    expect(b).not.toMatch(/renderGear|renderRun|renderAbilities|setTab/);
   });
 });

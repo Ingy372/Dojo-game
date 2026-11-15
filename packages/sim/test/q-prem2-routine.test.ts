@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { MOVEMENT, circleHitsWall, createWorld, loadInsideRoom, stepWorld, type Vec2 } from '../src';
 import insideJson from '../../../content/dojo/action-zone/inside-room.json';
+import pathWords from '../../../content/settings/path.json';
 
 const src = import.meta.glob('../../../apps/client/src/**/*.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 const read = (name: string): string => {
@@ -53,11 +54,11 @@ describe('Q-PREMIUM-2 M9 / M10 / L2 Dojo panels and labels', () => {
 
 describe('Q-PREMIUM-2 L3 Board wording', () => {
   const s = read('scenes/HomeScene.ts');
-  it('the level line reads "Level N of CAP" and the rank dial says Classes done', () => {
+  it('the level line reads "Level N of CAP" and the rank dial counts classes (LP-B1: on the Path)', () => {
     expect(s).toMatch(/Level \$\{[^}]+\} of \$\{/);
-    expect(s).toMatch(/'Classes done'/);
     expect(s).not.toMatch(/'Time in rank'/);
-    expect(s).toMatch(/Lit when Sensei says you're ready\./);
+    expect(pathWords.classes).toBe('Classes {n} of {m}');
+    expect(s).toMatch(/PW\.classes/);
   });
   it('long lesson names shorten Self-Defense to Defense', () => {
     expect(s).toMatch(/'Self-Defense '/);

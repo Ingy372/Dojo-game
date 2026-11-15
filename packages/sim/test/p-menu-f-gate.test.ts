@@ -1,29 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { loadProfile, newProfile, sealBell } from '../src';
-import { GATE, MIN_TAP, TYPE, gateLockR } from '../../../apps/client/src/ui/tokens';
-
-const src = Object.values(import.meta.glob(['../../../apps/client/src/scenes/HomeScene.ts'], { query: '?raw', import: 'default', eager: true }))[0] as string;
-const gate = src.slice(src.indexOf('private renderGate('), src.indexOf('private renderGear('));
-
-describe('P-MENU-f Gate sizes', () => {
-  it('uses the 3c sizes', () => {
-    expect(GATE).toMatchObject({ lockR: 22, lockMinR: 18, label: 12, labelLines: 3, cardH: 96, sealR: 28 });
-    expect(GATE.label).toBeGreaterThanOrEqual(TYPE.label);
-    expect(GATE.cardH).toBeGreaterThanOrEqual(MIN_TAP);
-  });
-  it('lock radius is 22, never under 18', () => {
-    expect(gateLockR(200)).toBe(22);
-    expect(gateLockR(55)).toBeCloseTo(19.8);
-    expect(gateLockR(20)).toBe(18);
-  });
-  it('the Gate draws with the tokens, no endless tweens', () => {
-    expect(gate).toMatch(/gateLockR\(slot\)/);
-    expect(gate).toMatch(/GATE\.cardH/);
-    expect(gate).toMatch(/setMaxLines\(GATE\.labelLines\)/);
-    expect(gate).not.toMatch(/repeat:\s*-1|yoyo/);
-    expect(gate).toMatch(/if \(!reducedMotion\(\)\)[\s\S]*seal\.setScale/);
-  });
-});
 
 describe('P-MENU-f Seal bell plays once per Seal', () => {
   it('a new player hears it once, then never again', () => {

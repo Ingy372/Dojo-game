@@ -1,7 +1,8 @@
 // Decor earning (S7): how Home Dojo pieces are given outside Tower chests.
-//  - Class pieces: real classes at the dojo. One every 2 classes at White belt, then one
-//    every 3. The first sync gives one welcome piece; after that only new check-ins count.
-//    They come in a fixed order (C10): the class scrolls in curriculum order, then gear.
+//  - Class Chests (LP-B3): one for every real class, with no end. The first sync gives one
+//    welcome chest; after that only new check-ins count. Each holds the next class piece in a
+//    fixed order (C10: the class scrolls in curriculum order, then gear decor), and once those
+//    are all given, one piece of Uncommon or better gear for the bag.
 //  - Journal trophies: the first defeat of each monster kind, on a win or a loss.
 //  - Keeper statues: statue N the first time the Floor Keeper is beaten at belt tier N.
 //  - The folding screen: once every Tier 1 Journal trophy is earned.
@@ -10,11 +11,10 @@
 
 import type { Content } from './content';
 import { addDecorations, type DecorationDef, type DojoState, type DropBelt, type NewDecoration } from './dojo';
+import { makeItem, rollRarity, type GearItem } from './loot';
 import type { Profile } from './profile';
+import { createRng } from './rng';
 import type { RunSummary } from './run';
-
-/** Classes per class piece at White belt (tier 1), and after it (Manager call). */
-export const CLASSES_PER_PIECE = { white: 2, after: 3 } as const;
 
 /** The Floor Keeper's enemy id: beating it gives the keeper statue for that belt tier. */
 export const KEEPER_ENEMY = 'floor-keeper';
@@ -24,8 +24,6 @@ export const FLOOR_GUARDIANS = [KEEPER_ENEMY, 'hearth-cook'];
 export interface DecorEarning {
   /** Classes the game has counted (never goes down), or null until the first sync. */
   classesCounted: number | null;
-  /** New classes since the last class piece. */
-  classesToward: number;
   /** Class dates (YYYY-MM-DD) already counted (only the ones still in the feed's window are kept). */
   countedCheckIns: string[];
   /** Class pieces given so far: the next one is classPieceOrder[classPiecesGiven]. */
@@ -35,7 +33,7 @@ export interface DecorEarning {
 }
 
 export function newDecorEarning(): DecorEarning {
-  return { classesCounted: null, classesToward: 0, countedCheckIns: [], classPiecesGiven: 0, given: [] };
+  return { classesCounted: null, countedCheckIns: [], classPiecesGiven: 0, given: [] };
 }
 
 /** Reads a saved record, falling back to a fresh one for old saves or damaged data. */
@@ -47,7 +45,6 @@ export function readDecorEarning(v: unknown): DecorEarning {
   const strings = (x: unknown) => (Array.isArray(x) ? x.filter((s): s is string => typeof s === 'string') : []);
   return {
     classesCounted: e.classesCounted === null || e.classesCounted === undefined ? null : n(e.classesCounted),
-    classesToward: n(e.classesToward),
     countedCheckIns: strings(e.countedCheckIns),
     classPiecesGiven: n(e.classPiecesGiven),
     given: strings(e.given),
@@ -68,52 +65,50 @@ export function classPieceOrder(content: Content): DecorationDef[] {
   return content.dojo.decorations.filter((d) => d.source === 'class');
 }
 
-function classesPerPiece(tier: number): number {
-  return tier <= 1 ? CLASSES_PER_PIECE.white : CLASSES_PER_PIECE.after;
-}
+/** What one Class Chest held: the next class piece for the dojo, or gear for the bag. */
+export type ClassChest = { kind: 'decor'; id: string } | { kind: 'gear'; item: GearItem };
 
 /**
- * Counts new class check-ins and gives class pieces into the dojo. Returns the pieces given.
- * The first sync seeds the counter from the feed (old saves: classesInRank) and gives one
- * welcome piece, so a long history never floods the dojo.
+ * Counts new class check-ins and opens one Class Chest for each, with no end. The first sync
+ * seeds the counter from the feed (old saves: classesInRank) and opens one welcome chest, so a
+ * long history never floods the dojo. Gear goes into the bag and fills an empty slot.
  */
-export function syncClassPieces(profile: Profile, dojo: DojoState, content: Content, info: ClassInfo): string[] {
+export function openClassChests(profile: Profile, dojo: DojoState, content: Content, info: ClassInfo): ClassChest[] {
   const rec = profile.decorEarning;
-  const order = classPieceOrder(content);
-  const earned: string[] = [];
-  const give = () => {
-    const def = order[rec.classPiecesGiven];
-    if (!def) return;
-    rec.classPiecesGiven++;
-    earned.push(def.id);
-  };
   // One class per date (YYYY-MM-DD): the same day checked in twice counts once.
   const live = new Set(info.checkIns.map((c) => c.slice(0, 10)));
+  let chests = 0;
   if (rec.classesCounted === null) {
     rec.classesCounted = Math.max(info.classesInRank, info.classesTotal ?? 0, live.size);
     rec.countedCheckIns = [...live];
-    give();
+    chests = 1;
   } else {
     const counted = new Set(rec.countedCheckIns);
-    let added = 0;
     for (const c of live) {
       if (counted.has(c)) continue;
       counted.add(c);
-      added++;
+      chests++;
     }
     rec.countedCheckIns = [...counted].filter((c) => live.has(c));
-    rec.classesCounted = Math.max(rec.classesCounted + added, info.classesTotal ?? 0);
-    rec.classesToward += added;
-    const per = classesPerPiece(info.belt.tier);
-    while (rec.classesToward >= per) {
-      rec.classesToward -= per;
-      give();
-    }
-    // All class pieces given: extra classes don't pile up.
-    if (rec.classPiecesGiven >= order.length) rec.classesToward = 0;
+    rec.classesCounted = Math.max(rec.classesCounted + chests, info.classesTotal ?? 0);
   }
-  addDecorations(dojo, earned.map((id) => ({ id, belt: { ...info.belt } })));
-  return earned;
+  const order = classPieceOrder(content);
+  const rng = createRng(rec.classesCounted * 7919 + profile.nextItemId);
+  const opened: ClassChest[] = [];
+  for (let i = 0; i < chests; i++) {
+    const def = order[rec.classPiecesGiven];
+    if (def) {
+      rec.classPiecesGiven++;
+      opened.push({ kind: 'decor', id: def.id });
+      continue;
+    }
+    const item = makeItem(rng, content.loot, rollRarity(rng, 0, 'uncommon'), `i${profile.nextItemId++}`);
+    profile.inventory.push(item);
+    if (!profile.equipped[item.slot]) profile.equipped[item.slot] = item.uid;
+    opened.push({ kind: 'gear', item });
+  }
+  addDecorations(dojo, opened.flatMap((c) => (c.kind === 'decor' ? [{ id: c.id, belt: { ...info.belt } }] : [])));
+  return opened;
 }
 
 /**

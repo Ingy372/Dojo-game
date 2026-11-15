@@ -1,0 +1,32 @@
+{
+  "_note": "R-PROGRESSION-BETA PB-04. One power per kata for the Kata slot; a student equips one per run. kata = the content/katas id, requirement = that kata's curriculum requirement (a test checks it against content/katas), and its teacher sign-off earns the power. status 'placeholder' = waiting for Jay's power list (PB-11): no effects, and the Fighting Style screen says 'Power coming soon'. A 'final' power lists its effects here, no code needed. Passive only: effect types from PASSIVE_EFFECTS in packages/sim/src/effects.ts (always-on stats, no event triggers). Damage cap: the biggest Stance powerScale plus the power's powerScale must be at most 0.12; the game refuses to load data over it.",
+  "powers": [
+    {
+      "id": "basic-form-1-power",
+      "kata": "basic-form-1",
+      "requirement": "white-kata",
+      "name": "Basic Form 1",
+      "text": "Power coming soon.",
+      "status": "placeholder",
+      "effects": []
+    },
+    {
+      "id": "basic-form-2-power",
+      "kata": "basic-form-2",
+      "requirement": "yellow-kata",
+      "name": "Basic Form 2",
+      "text": "Power coming soon.",
+      "status": "placeholder",
+      "effects": []
+    },
+    {
+      "id": "keon-power",
+      "kata": "keon",
+      "requirement": "orange-kata",
+      "name": "Keon",
+      "text": "Power coming soon.",
+      "status": "placeholder",
+      "effects": []
+    }
+  ]
+}

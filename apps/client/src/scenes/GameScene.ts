@@ -79,7 +79,9 @@ import {
   patternShape,
   patternKey,
   firstPatternSight,
+  guardianLine,
 } from '@dojo/sim';
+import { FAITH } from '../ui/faith';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
 import tutorialData from '../../../../content/tutorial/tutorial-floor.json';
@@ -100,6 +102,7 @@ import { ICON_PACK } from '../art/icons';
 import { addGearIcon, loadGearIcons } from '../art/gearIcons';
 import { ENEMY_ART_PACKS, attackAnim, auraId, enemyArt, testAura, towerPack } from '../art/tiers';
 import { addShadow, makePlayerSprite, playLocomotion } from '../art/player';
+import { streakAura } from '../ui/classChest';
 import { loadLook, playerPacks } from '../game/look';
 import { sfx } from '../audio/Sfx';
 import { CONTENT } from '../game/content';
@@ -1112,7 +1115,9 @@ export class GameScene extends Phaser.Scene {
     this.hero = makePlayerSprite(this, this.training.belt, this.training.stripesThisBelt, loadLook())!;
     this.shield = this.add.graphics();
     this.virtueAura = this.add.circle(0, -r * 0.6, r * 1.6).setStrokeStyle(5, COLORS.gold).setVisible(false);
-    return this.add.container(0, 0, [this.virtueAura, this.hero.container, this.shield]);
+    // LP-B3: the best-streak glow (the Dojo saves the best; a new best shows here at once too).
+    const aura = streakAura(this, r, Math.max(loadSave().bestStreakWeeks, this.training.streakWeeks));
+    return this.add.container(0, 0, [...(aura ? [aura] : []), this.virtueAura, this.hero.container, this.shield]);
   }
 
   /** Adds views for enemies that were called in, and removes views for enemies that are gone. */
@@ -1393,6 +1398,9 @@ export class GameScene extends Phaser.Scene {
             sfx.enemyDown();
             this.impact(FEEL.enemyDown);
             this.setFree(e.pos, !!e.def.boss);
+            // LP-B2: a freed Guardian's faith line, from the school's pack (none for Guardians it has no line for).
+            const faith = e.def.boss ? guardianLine(FAITH, e.def.id) : null;
+            if (faith) this.senseiSay(faith, 1800);
           }
           break;
         }

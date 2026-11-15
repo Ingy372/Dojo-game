@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { button } from '../ui/button';
-import { GREEN, GATE, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, gateLockR, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
+import { GREEN, GEAR, MOTION, RADIUS, S1, S2, S3, TYPE, XP_FILL, pageDots, panelSwap, xpFillFrom, BOARD, abilitiesSwitch, type AbilitiesPart, type PanelChange } from '../ui/tokens';
 import { reducedMotion } from '../game/motion';
 import playTimeText from '../../../../content/settings/play-time.json';
 import BLESS from '../../../../content/settings/blessing.json';
@@ -14,9 +14,9 @@ import {
   equip,
   letGo,
   unequip,
-  goalsDue,
-  markGoalsShown,
-  nextGoals,
+  pathView,
+  pathIntroDue,
+  creedDue,
   rewardMoments,
   creditBlessing,
   snapshot,
@@ -61,9 +61,11 @@ import { MENU2_PACK, artRarity } from '../art/menu2Frames';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
-import { GoalsCard } from '../ui/GoalsCard';
-import { localDay, takeLesson } from '../game/lessons';
+import { drawBanner, openFaithPage } from '../ui/faith';
+import { PATH_LABEL, PATH_LOCK_R, PATH_WORDS as PW, clampStart, fill, pathLayout, towerStart, type Box } from '../ui/pathScreen';
+import { takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
+import { chestIcon } from '../ui/classChest';
 import { BETA } from '../game/beta';
 import { showGrades } from '../game/difficulty';
 import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, crisp, css, view, hiDpi, WOOD } from '../ui/theme';
@@ -79,11 +81,12 @@ export interface HomeSceneData {
 const SLOT_NAME: Record<GearSlot, string> = { hands: 'Hands', gi: 'Gi', charm: 'Charm' };
 const KIND_MARK: Record<string, string> = { rest: '+' };
 
-type Tab = 'run' | 'gear' | 'abilities' | 'gate';
+type Tab = 'run' | 'gear' | 'abilities';
 /**
- * The training board (opened from the notice board in the Home Dojo): the character with
- * their real belt, level and Blessing, the Path card, starting a run, the last run's
- * summary, gear, abilities, and the Gate.
+ * Home (opened from the notice board in the Home Dojo). LP-B1: it opens on the one Path screen
+ * (the Tower, the Gate, the next class step and the next game step); its Board button shows the
+ * training board: the character with their real belt, level and Blessing, starting a run, the
+ * last run's summary, gear and abilities.
  */
 /** P-MENU2-i: the A-MENU2 stat icons (Rooms has none, so it shows its number only). */
 /** QA: rarity words on the paper tiles, darkened to at least 4.5:1 on the paper (#efe0c4). */
@@ -95,14 +98,10 @@ const RARITY_INK: Record<GearItem['rarity'], string> = { common: '#6b5a48', unco
 /** QA: the painted wood rim of the stat tile at k 0.5 (12 of its 32 @2x slice px; half at k 0.25), and the space kept inside it. */
 const STAT_RIM = 6;
 const STAT_PAD = S2;
-/** P-MENU2-SPACE: the full left column's height (edges 16, Path card at its 57 pt minimum); shorter screens go compact. */
+/** P-MENU2-SPACE: the full left column's height (edges 16); shorter screens go compact. */
 const LEFT_FULL_H = 369;
-/** P-MENU2-SPACE: the Path card's smallest full card (12 pad, label, step, 12 pad); shorter, it is one row. */
-const PATH_MIN_H = 12 + TYPE.label + 4 + TYPE.title + 12;
 /** P-MENU2-SPACE: the height Last run and My Style get at 667x375, where they are clean; shorter panels scroll. */
 const PANEL_FULL_H = 277;
-/** A 12 pt Gate label line (the Text's real line height). */
-const GATE_LINE_H = 15;
 const STAT_ICON: Record<string, string | undefined> = { perfects: 'stat-perfect', combo: 'stat-combo', time: 'stat-clock', xp: 'stat-xp' };
 
 /** A-MENU2: only the Black belt gets the full knot sheen. */
@@ -112,6 +111,13 @@ export class HomeScene extends Phaser.Scene {
   private profile!: Profile;
   private training!: TrainingState;
   private tab: Tab = 'run';
+  /** LP-B1: the Path screen, or the training board (Last run, Gear, Abilities). Straight from a run, the board. */
+  view: 'path' | 'board' = 'path';
+  /** LP-B2: the open Faith page (null = closed), kept so a resize redraws it. */
+  private faithPage: number | null = null;
+  private faithLayer: Phaser.GameObjects.Container | null = null;
+  /** LP-B1: the lowest Tower tier shown on the Path (null = around the current tier). */
+  private towerFrom: number | null = null;
   /** P-MENU2-a: which part of Abilities is showing. */
   private part: AbilitiesPart = 'trophy';
   /** PB-05: the open Fighting Style card. Null until a card is tapped. Shot scripts may set this. */
@@ -177,7 +183,7 @@ export class HomeScene extends Phaser.Scene {
   private celebrating = false;
   /** Times the title was tapped recently (5 quick taps open the hidden testing screen). */
   private titleTaps: number[] = [];
-  /** Came here straight from a run, and the next goals haven't been considered yet. */
+  /** Came here straight from a run (the XP bar fills from what it last showed). */
   private fromRun = false;
   private knockout: HomeSceneData['knockout'] | null = null;
   private firstFloorDone = false;
@@ -204,7 +210,11 @@ export class HomeScene extends Phaser.Scene {
   create(): void {
     hiDpi(this.cameras.main);
     this.profile = loadSave();
-    this.tab = this.profile.lastRun ? 'run' : 'gate';
+    this.tab = 'run';
+    this.view = this.fromRun || this.knockout ? 'board' : 'path';
+    this.towerFrom = null;
+    this.faithPage = null;
+    this.faithLayer = null;
     this.page = 0;
     this.selected = null;
     this.testing = null;
@@ -269,14 +279,17 @@ export class HomeScene extends Phaser.Scene {
         sensei.push(...welcome.screens.map((l) => l.replace('{player}', name)));
       }
     }
+    // LP-B2: Sensei shows the Creed Scroll once, after the first class check-in.
+    const creed = creedDue(this.profile.creedSeen, this.training);
     this.render();
     const remember = () => {
       this.profile.seen = snapshot(this.training);
+      if (creed) this.profile.creedSeen = true;
       writeSave(this.profile);
     };
-    if (moments.length === 0 && sensei.length === 0 && picks.lines.length === 0) {
+    if (moments.length === 0 && sensei.length === 0 && picks.lines.length === 0 && !creed) {
       remember();
-      this.maybeGoals();
+      this.maybePathIntro();
       return;
     }
     this.celebrating = true;
@@ -288,11 +301,12 @@ export class HomeScene extends Phaser.Scene {
         this.celebrating = false;
         remember();
         this.render();
-        this.maybeGoals();
+        this.maybePathIntro();
       },
       sensei,
       undefined,
       picks,
+      creed,
     );
   }
 
@@ -373,25 +387,307 @@ export class HomeScene extends Phaser.Scene {
     } }, card);
   }
 
-  /** The three next goals (M7-P10), after the run summary and any celebrations, at most once a day. */
-  private maybeGoals(): void {
-    if (!this.fromRun) return;
-    this.fromRun = false;
-    const today = localDay();
-    if (!goalsDue(this.profile, today)) return;
-    markGoalsShown(this.profile, today);
-    writeSave(this.profile);
+  /** LP-B1: "This is your Path." once, for players who had the old screens; it dims all but the class step. */
+  private maybePathIntro(): void {
+    if (this.view !== 'path' || this.celebrating || !pathIntroDue(this.profile)) return;
+    const { width, height } = view(this);
+    const c = pathLayout(width, height).classCard;
+    const box = this.add.container(0, 0).setDepth(50);
+    const dim = (x: number, y: number, w: number, h: number) => box.add(this.add.rectangle(x, y, w, h, 0x000000, 0.7).setOrigin(0).setInteractive());
+    dim(0, 0, width, c.y);
+    dim(0, c.y + c.h, width, height - c.y - c.h);
+    dim(0, c.y, c.x, c.h);
+    dim(c.x + c.w, c.y, width - c.x - c.w, c.h);
+    box.add(this.add.graphics().lineStyle(3, 0xffd166).strokeRoundedRect(c.x - 2, c.y - 2, c.w + 4, c.h + 4, RADIUS.panel + 2));
+    const bw = Math.min(c.w, 300);
+    const bx = c.x + (c.w - bw) / 2;
+    const bh = 106;
+    const by = Math.max(S2, c.y - bh - S2);
+    box.add(this.add.rectangle(bx, by, bw, bh, 0x221d2e).setOrigin(0).setStrokeStyle(3, 0xffd166));
+    const line = (y: number, str: string, size: number, color: string) =>
+      box.add(this.add.text(bx + bw / 2, y, str, { fontFamily: FONT, fontStyle: 'bold', fontSize: `${size}px`, color, align: 'center', wordWrap: { width: bw - 24 } }).setOrigin(0.5, 0).setResolution(crisp()));
+    line(by + 10, PW.introTitle, TYPE.title, '#ffd166');
+    line(by + 10 + TYPE.title + 6, PW.introLine, TYPE.body, '#f2e9d8');
     this.celebrating = true;
-    new GoalsCard(this, nextGoals(this.profile, this.training, CONTENT), () => {
+    button(this, { x: bx + bw / 2 - 48, y: by + bh - MIN_TAP - 8, w: 96, h: MIN_TAP, label: PW.introOk, color: 0xd5713a, size: TYPE.body, onTap: () => {
+      this.profile.pathIntroSeen = true;
+      writeSave(this.profile);
       this.celebrating = false;
-    });
+      box.destroy();
+    } }, box);
+  }
+
+  /** LP-B1: Path or Board. */
+  private setView(v: 'path' | 'board'): void {
+    if (this.celebrating) return;
+    this.view = v;
+    this.bagOpen = false;
+    this.selected = null;
+    this.render();
+    this.maybePathIntro();
   }
 
   /** Everything: the shell, the tab bar and the panel. */
   private render(): void {
+    if (this.view === 'path') return this.renderPathScreen();
     this.renderShell();
     this.renderTabs(false);
     this.renderPanel('none');
+  }
+
+  /**
+   * LP-B1 (L1, LP-A1 mock): the one Path screen. The next real step is the biggest card, the next
+   * game step is smaller, and the Tower shows where you are. Drawn in code until the mock art is OK'd.
+   */
+  private renderPathScreen(): void {
+    this.shell.removeAll(true);
+    this.tabBar.removeAll(true);
+    this.underline.setVisible(false);
+    if (this.panel) {
+      this.tweens.killTweensOf(this.panel);
+      this.panel.destroy(true);
+      this.panel = null;
+    }
+    this.panelScroll = null;
+    this.panelContent = null;
+    this.renderBagLayer();
+    this.ui = this.shell;
+    const { width, height } = view(this);
+    const L = pathLayout(width, height);
+    const t = this.training;
+    const level = effectiveLevel(this.profile, t);
+    const pv = pathView(this.profile, t, level);
+    this.ui.add(this.add.rectangle(0, 0, width, height, 0x1e1a14).setOrigin(0));
+    for (let x = 0; x < width; x += 48) this.ui.add(this.add.rectangle(x, 0, 2, height, 0x2a241c).setOrigin(0));
+
+    // Top bar: Dojo, Board, the title, and the student chip.
+    const { bar } = L;
+    this.button(bar.x, bar.y, 96, bar.h, PW.back, 0x8a5a35, TYPE.body, () => this.backToDojo());
+    this.button(bar.x + 96 + S2, bar.y, 96, bar.h, PW.board, 0x3a3a4a, TYPE.body, () => this.setView('board'));
+    const chipW = Math.min(220, Math.round(bar.w * 0.3));
+    const chipX = bar.x + bar.w - chipW;
+    const titleL = bar.x + 2 * 96 + 2 * S2;
+    // LP-B2: the FAITH DOES banner takes the title's place; it opens the Faith page.
+    drawBanner(this, (o) => this.ui.add(o), { x: titleL, y: bar.y, w: chipX - titleL - S2, h: bar.h }, t, () => this.openFaith(0));
+    const chip = this.add.graphics();
+    chip.fillStyle(0x221d2e).fillRoundedRect(chipX, bar.y, chipW, bar.h, RADIUS.panel);
+    this.ui.add(chip);
+    this.ui.add(makeStandingCharacter(this, chipX + 20, bar.y + bar.h / 2, 14, t.belt, t.stripesThisBelt, loadLook()).container);
+    const stripe = t.stripesThisBelt ? `  ·  ${t.stripesThisBelt} stripe${t.stripesThisBelt > 1 ? 's' : ''}` : '';
+    this.oneLine(this.text(chipX + 40, bar.y + 4, t.displayName, TYPE.body, '#f2e9d8', true), chipW - 48, TYPE.label);
+    this.oneLine(this.text(chipX + 40, bar.y + 4 + TYPE.body + 3, `${t.belt.name}${stripe}`, TYPE.label, beltTextColor(t.belt.color), true), chipW - 48, 10);
+
+    this.renderTower(L.tower, L.tierH, pv.tower);
+    this.renderPathGate(L.gate);
+    this.renderClassStep(L.classCard, pv.classStep);
+    this.renderGameStep(L.gameCard, pv.game, level);
+    if (this.faithPage !== null) this.openFaith(this.faithPage);
+  }
+
+  /** LP-B2: the Faith page over the Path (the banner, the Creed Scroll, the verse scrolls found). */
+  private openFaith(page: number): void {
+    if (this.celebrating && this.faithPage === null) return;
+    this.faithLayer?.destroy();
+    this.faithPage = page;
+    const { width, height } = view(this);
+    this.faithLayer = openFaithPage(this, width, height, this.training, page, PW.boardBack, (p) => this.openFaith(p), () => {
+      this.faithLayer?.destroy();
+      this.faithLayer = null;
+      this.faithPage = null;
+    });
+  }
+
+  /** LP-B1: the Tower, one tier per belt: cleared tiers lit, yours glowing with you on it, the next in mist, the rest grey. */
+  private renderTower(b: Box, tierH: number, tiers: ReturnType<typeof pathView>['tower']): void {
+    this.ui.add(woodFrame(this, b.x, b.y, b.w, b.h));
+    const f = BOARD.frame;
+    const inner = { x: b.x + f, y: b.y + f, w: b.w - 2 * f, h: b.h - 2 * f };
+    const sky = this.add.graphics();
+    sky.fillStyle(0x2a3a55).fillRect(inner.x, inner.y, inner.w, inner.h);
+    this.ui.add(sky);
+    const visible = Math.max(1, Math.floor(inner.h / tierH));
+    const current = tiers.findIndex((tr) => tr.state === 'current');
+    const start = this.towerFrom === null ? towerStart(tiers.length, current, visible) : clampStart(this.towerFrom, tiers.length, visible);
+    const cx = inner.x + inner.w / 2;
+    const tw = inner.w - 16;
+    const g = this.add.graphics();
+    this.ui.add(g);
+    for (let i = start; i < Math.min(tiers.length, start + visible); i++) {
+      const tr = tiers[i];
+      const bottom = inner.y + inner.h - (i - start) * tierH;
+      const top = bottom - tierH;
+      const lit = tr.state === 'cleared' || tr.state === 'current';
+      const roof = tr.state === 'ahead' ? 0x8a8296 : hex(tr.color);
+      const wall = tr.state === 'ahead' ? 0x4a4656 : 0x6b5a48;
+      const a = tr.state === 'next' ? 0.55 : 1;
+      if (tr.state === 'current') g.fillStyle(0xffd166, 0.25).fillRect(inner.x, top, inner.w, tierH);
+      g.fillStyle(wall, a).fillRect(cx - tw * 0.36, top + 12, tw * 0.72, tierH - 18);
+      // Roof and sash in the belt's colour; grey for tiers still ahead.
+      g.fillStyle(roof, a).fillTriangle(cx - tw / 2, top + 14, cx + tw / 2, top + 14, cx, top + 2);
+      g.fillStyle(roof, a).fillRect(cx - tw / 2, top + 10, tw, 5);
+      g.fillStyle(roof, a).fillRect(cx - tw * 0.4, bottom - 8, tw * 0.8, 5);
+      for (const k of [-1, 0, 1]) g.fillStyle(lit ? 0xffd166 : 0x2a2536, a).fillRoundedRect(cx + k * tw * 0.2 - 4, top + 20, 8, 14, 3);
+      if (tr.state === 'next') g.fillStyle(0xf2e9d8, 0.18).fillRect(inner.x, top, inner.w, tierH);
+      if (tr.state === 'current') {
+        g.lineStyle(2, 0xffd166).strokeRect(inner.x + 1, top + 1, inner.w - 2, tierH - 2);
+        this.ui.add(makeStandingCharacter(this, cx - tw * 0.2, bottom - 18, 13, this.training.belt, this.training.stripesThisBelt, loadLook()).container);
+        g.fillStyle(0xffd166).fillCircle(cx - tw * 0.2, top + 4, 5);
+      }
+    }
+    // Scroll the Tower a tier at a time.
+    const arrow = (y: number, label: string, to: number) =>
+      this.button(inner.x + inner.w - MIN_TAP, y, MIN_TAP, MIN_TAP, label, 0x3a3150, TYPE.body, () => {
+        this.towerFrom = to;
+        this.render();
+      });
+    if (start + visible < tiers.length) arrow(inner.y, '▲', start + 1);
+    if (start > 0) arrow(inner.y + inner.h - MIN_TAP, '▼', start - 1);
+  }
+
+  /** LP-B1: the Gate on the Path: one lock per requirement (Defense locks show their number under a Defense bracket), the sundial and Sensei's Seal. */
+  private renderPathGate(b: Box): void {
+    const g = this.training.gate;
+    const box = this.add.graphics();
+    box.fillStyle(0x221d2e).fillRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
+    box.lineStyle(2, 0x3a3150).strokeRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
+    this.ui.add(box);
+    const x = b.x + 12;
+    const w = b.w - 24;
+    if (!g.toBelt) {
+      this.text(x, b.y + 10, PW.top, TYPE.title, '#ffd166', true, FONT, w);
+      return;
+    }
+    const lit = this.text(x + w, b.y + 12, fill(PW.lit, { n: g.lit, m: g.locks.length }), TYPE.body, g.ready ? '#ffd166' : '#b9ad99', true).setOrigin(1, 0);
+    this.oneLine(this.text(x, b.y + 10, fill(PW.gateTo, { belt: g.toBelt.name }), 18, '#f2e9d8', true, 'Georgia, serif'), w - lit.width - S2, TYPE.body);
+    const sideW = Math.min(150, w * 0.3);
+    const lockW = w - sideW - S2;
+    const slot = lockW / Math.max(1, g.locks.length);
+    const r = Math.min(PATH_LOCK_R, slot * 0.42);
+    const ly = b.y + 10 + 20 + 6 + PATH_LOCK_R;
+    const labelY = ly + PATH_LOCK_R + 4;
+    const next = this.training.path.next?.id;
+    const isDefense = (lock: RequirementStatus) => lock.name.startsWith('Self-Defense ');
+    g.locks.forEach((lock, i) => {
+      const lx = x + slot * (i + 0.5);
+      if (lock.signedOff) {
+        this.ui.add(this.add.circle(lx, ly, r + 4, 0xffd166, 0.25));
+        this.ui.add(this.add.circle(lx, ly, r, 0xffd166).setStrokeStyle(2, 0xffffff, 0.8));
+        this.text(lx, ly, '✓', r, '#14121c', true).setOrigin(0.5);
+      } else if (lock.id === next) {
+        this.ui.add(this.add.circle(lx, ly, r + 4, 0xffd166, 0.3));
+        this.ui.add(this.add.circle(lx, ly, r, 0xf2e9d8).setStrokeStyle(3, 0xffd166));
+        this.text(lx, ly, '🔒', r * 0.8, '#8a6a20').setOrigin(0.5);
+      } else {
+        this.ui.add(this.add.circle(lx, ly, r, 0x2a2536).setStrokeStyle(2, 0x6b6478));
+        this.text(lx, ly, '🔒', r * 0.8, '#8a8296').setOrigin(0.5).setAlpha(0.6);
+      }
+      const name = isDefense(lock) ? lock.name.slice('Self-Defense '.length) : shortName(lock);
+      this.text(lx, labelY, name, PATH_LABEL.size, lock.signedOff ? '#ffd166' : '#b9ad99', false, FONT, slot - 4).setOrigin(0.5, 0).setAlign('center').setMaxLines(PATH_LABEL.lines);
+    });
+    // One "Defense" bracket under each run of Defense locks.
+    for (let i = 0; i < g.locks.length; i++) {
+      if (!isDefense(g.locks[i])) continue;
+      let j = i;
+      while (j + 1 < g.locks.length && isDefense(g.locks[j + 1])) j++;
+      const x0 = x + slot * i + 6;
+      const x1 = x + slot * (j + 1) - 6;
+      const by = labelY + PATH_LABEL.lineH + 3;
+      const br = this.add.graphics().lineStyle(1, 0x8a8296);
+      br.lineBetween(x0, by - 3, x0, by).lineBetween(x0, by, x1, by).lineBetween(x1, by, x1, by - 3);
+      this.ui.add(br);
+      this.text((x0 + x1) / 2, by + 2, PW.defense, PATH_LABEL.size, '#b9ad99', false, FONT, x1 - x0 + 8).setOrigin(0.5, 0);
+      i = j;
+    }
+    // Divider, then the classes sundial and Sensei's Seal.
+    const sx0 = x + lockW + S2;
+    this.ui.add(this.add.graphics().lineStyle(1, 0x3a3150).lineBetween(sx0 - S2 / 2, ly - PATH_LOCK_R, sx0 - S2 / 2, b.y + b.h - 10));
+    const half = sideW / 2;
+    const dx = sx0 + half / 2;
+    const dial = this.add.graphics();
+    dial.fillStyle(0x2a2536).fillCircle(dx, ly, r);
+    if (g.sundial > 0) dial.fillStyle(0xffd166, 0.9).slice(dx, ly, r, -Math.PI / 2, -Math.PI / 2 + g.sundial * Math.PI * 2).fillPath();
+    dial.lineStyle(2, 0x6b6478).strokeCircle(dx, ly, r);
+    this.ui.add(dial);
+    const classes = fill(PW.classes, { n: Math.min(g.classesInRank, g.classesBeforeTest), m: g.classesBeforeTest });
+    this.text(dx, labelY, classes, PATH_LABEL.size, '#b9ad99', false, FONT, half - 2).setOrigin(0.5, 0).setAlign('center').setMaxLines(PATH_LABEL.lines);
+    const kx = sx0 + half * 1.5;
+    const seal = this.add.container(kx, ly);
+    if (g.sealLit) seal.add(this.add.circle(0, 0, r + 4, 0xffd166, 0.35));
+    seal.add(this.add.circle(0, 0, r, g.sealLit ? 0xe0533d : 0x2a2536).setStrokeStyle(2, g.sealLit ? 0xffd166 : 0x6b6478));
+    seal.add(this.add.text(0, 0, '師', { fontFamily: FONT, fontSize: `${Math.round(r)}px`, color: g.sealLit ? '#ffffff' : '#6b6478', fontStyle: 'bold' }).setResolution(crisp()).setOrigin(0.5));
+    this.ui.add(seal);
+    // First time this Seal is seen lit: one pop (skipped in reduced motion) and one soft bell.
+    const migrating = this.profile.sealsSeen === null;
+    const ring = sealBell(this.profile, g.toBelt.id, g.sealLit);
+    if (ring || migrating) writeSave(this.profile);
+    if (ring) {
+      sfx.seal();
+      if (!reducedMotion()) {
+        seal.setScale(0.9);
+        this.tweens.add({ targets: seal, scale: 1, duration: MOTION.pop.ms, ease: MOTION.pop.ease });
+      }
+    }
+    // Never shows or guesses a reason when the Seal isn't lit.
+    const sealText = g.sealLit ? (g.testDate ? fill(PW.testDay, { date: shortDate(g.testDate) }) : PW.sealLit) : PW.seal;
+    this.text(kx, labelY, sealText, PATH_LABEL.size, g.sealLit ? '#ffd166' : '#b9ad99', g.sealLit, FONT, half - 2).setOrigin(0.5, 0).setAlign('center').setMaxLines(PATH_LABEL.lines);
+  }
+
+  /** LP-B1: the biggest card, the next real step (core-design section 9: always visible). */
+  private renderClassStep(b: Box, step: RequirementStatus | null): void {
+    const card = this.add.graphics();
+    card.fillStyle(0x221d2e).fillRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
+    card.lineStyle(3, 0xffd166, 0.7).strokeRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
+    this.ui.add(card);
+    const x = b.x + S3;
+    const w = b.w - 2 * S3;
+    this.text(x, b.y + 12, PW.classLabel, TYPE.label, '#ffd166', true);
+    const p = this.training.path;
+    const bits: string[] = [];
+    if (p.nextClassDay) bits.push(fill(PW.nextClass, { day: p.nextClassDay }));
+    if (p.testDate) bits.push(fill(PW.testDay, { date: shortDate(p.testDate) }));
+    const footH = bits.length ? TYPE.body + 12 : 0;
+    const midY = (b.y + 12 + TYPE.label + b.y + b.h - footH) / 2;
+    if (!step) {
+      this.text(x, midY, PW.allDone, TYPE.title, '#5cd65c', true, FONT, w).setOrigin(0, 0.5);
+    } else {
+      const ir = 20;
+      const ix = x + ir;
+      this.ui.add(this.add.circle(ix, midY, ir + 4, 0xffd166, 0.25));
+      this.ui.add(this.add.circle(ix, midY, ir, 0xf2e9d8).setStrokeStyle(3, 0xffd166));
+      this.text(ix, midY, '🔒', ir * 0.8, '#8a6a20').setOrigin(0.5);
+      const tx = x + 2 * ir + S3;
+      const tw = w - 2 * ir - S3;
+      this.oneLine(this.text(tx, midY - 2, step.name, 22, '#ffffff', true).setOrigin(0, 0.5), tw, TYPE.body);
+      this.oneLine(this.text(tx, midY - 16, PW.classTop, TYPE.body, '#b9ad99').setOrigin(0, 1), tw, TYPE.label);
+      const under = step.catchUp ? fill(PW.catchUp, { belt: step.beltName }) : PW.classBottom;
+      this.oneLine(this.text(tx, midY + 12, under, TYPE.body, step.catchUp ? '#ffd166' : '#b9ad99'), tw, TYPE.label);
+    }
+    if (bits.length) this.oneLine(this.text(x, b.y + b.h - 12 - TYPE.body, bits.join('   ·   '), TYPE.body, '#5cd65c', true), w, TYPE.label);
+  }
+
+  /** LP-B1: the smaller card, the next game step, the level bar and Enter the Tower. */
+  private renderGameStep(b: Box, game: ReturnType<typeof pathView>['game'], level: number): void {
+    const card = this.add.graphics();
+    card.fillStyle(0x221d2e, 0.8).fillRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
+    card.lineStyle(2, 0x3a3150).strokeRoundedRect(b.x, b.y, b.w, b.h, RADIUS.panel);
+    this.ui.add(card);
+    const x = b.x + 12;
+    const w = b.w - 24;
+    let y = b.y + 12;
+    this.text(x, y, PW.gameLabel, TYPE.label, '#b9ad99', true);
+    y += TYPE.label + 8;
+    // A small Tower picture first, then the words (LP-L1: a picture before text).
+    const icon = this.add.graphics();
+    for (const [k, c] of [[0, 0xd5713a], [1, 0xf2e9d8], [2, 0xd5713a]] as const) icon.fillStyle(c).fillTriangle(x + 4 + k * 2, y + 30 - k * 10, x + 28 - k * 2, y + 30 - k * 10, x + 16, y + 22 - k * 10);
+    this.ui.add(icon);
+    const line = game.kind === 'level' ? fill(PW.gameLevel, { n: game.level }) : game.kind === 'combo' ? fill(PW.gameCombo, { n: game.best }) : PW.gameFirstCombo;
+    const words = this.text(x + 36, y, line, TYPE.body, '#f2e9d8', true, FONT, w - 36).setMaxLines(2);
+    y += Math.max(36, words.height) + 6;
+    const atCap = game.kind !== 'level';
+    const share = atCap ? 1 : Math.min(1, this.profile.xp / xpToNext(level, this.training.belts));
+    const lv = this.text(x, y, fill(PW.level, { n: level }), TYPE.label, '#f2e9d8', true);
+    this.xpBar(x + lv.width + S2, y + 2, w - lv.width - S2, share, level, atCap);
+    this.button(x, b.y + b.h - 12 - MIN_TAP, w, MIN_TAP, PW.enter, 0xd5713a, TYPE.body + 1, () => this.enterTower());
   }
 
   /** P-MENU-b: the frame (background, left column, panel box). Not the tabs or the panel contents. */
@@ -414,14 +710,14 @@ export class HomeScene extends Phaser.Scene {
     // Header: the title and ◀ Dojo on one 44 pt row.
     const title = this.text(pad, pad + 22, 'Training Board', TYPE.heading, '#f2e9d8', true, 'Georgia, serif').setOrigin(0, 0.5);
     title.setInteractive().on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.tapTitle());
-    this.button(pad + leftW - 96, pad, 96, 44, '◀ Dojo', 0x8a5a35, TYPE.body, () => this.backToDojo());
+    this.button(pad + leftW - 96, pad, 96, 44, PW.boardBack, 0x8a5a35, TYPE.body, () => this.setView('path'));
 
     // Character block: a 64 pt row; name and belt stacked 4 pt apart, centred on the avatar.
     const rowTop = pad + 44 + S2;
     const level = effectiveLevel(this.profile, t);
     const atCap = level >= t.levelCap;
     // Q-PREMIUM-2 L3: "Level 5 of 40", not "cap 40" (a game word a child does not know).
-    const levelLine = atCap ? `Level ${level}  ·  Top level! The Gate shows how to go higher.` : `Level ${level} of ${t.levelCap}`;
+    const levelLine = atCap ? `Level ${level}  ·  ${PW.levelTop}` : `Level ${level} of ${t.levelCap}`;
     // Compact: the stack gains the level line (and keeps the Blessing line), so the row grows to fit it.
     const blessRuns = this.profile.blessing.runs;
     const stackH = TYPE.title + S1 + TYPE.body + (blessRuns > 0 ? S1 + TYPE.label : 0) + (short ? S1 + TYPE.label + 2 : 0);
@@ -455,7 +751,7 @@ export class HomeScene extends Phaser.Scene {
     let y = rowTop + rowH + S2;
     if (!short) {
       this.text(pad, y, `Level ${level}`, TYPE.body, '#f2e9d8', true);
-      this.oneLine(this.text(pad + leftW, y + 1, atCap ? 'Top level! The Gate shows how to go higher.' : `of ${t.levelCap}`, TYPE.label, atCap ? '#ffd166' : '#b9ad99').setOrigin(1, 0), leftW - 70, 10);
+      this.oneLine(this.text(pad + leftW, y + 1, atCap ? PW.levelTop : `of ${t.levelCap}`, TYPE.label, atCap ? '#ffd166' : '#b9ad99').setOrigin(1, 0), leftW - 70, 10);
       y += TYPE.body + 4 + S2;
     }
     const share = atCap ? 1 : Math.min(1, this.profile.xp / xpToNext(level, t.belts));
@@ -471,8 +767,6 @@ export class HomeScene extends Phaser.Scene {
     const testW = BETA ? 0 : 96;
     this.button(pad, y, leftW - (testW && testW + S2), 44, 'Practice room', 0x3a3a4a, TYPE.body, () => this.goTo('Game', {}));
     if (!BETA) this.button(pad + leftW - testW, y, testW, MIN_TAP, 'Testing', 0x4a3f63, TYPE.body, () => this.openTesting());
-    y += 44 + S2;
-    this.renderPath(pad, y, leftW, height - y - pad);
 
     // ---- right: tabs
     const rx = pad * 2 + leftW;
@@ -482,20 +776,18 @@ export class HomeScene extends Phaser.Scene {
     this.codeFrame = woodFrame(this, rx, top, rw, panelH);
     this.ui.add(this.codeFrame);
     this.panelBox = { rx, top, rw, panelH };
-    this.tabBox = { rx, y: pad, tabW: (rw - 6 * 3) / 4 };
+    this.tabBox = { rx, y: pad, tabW: (rw - 6 * 2) / 3 };
   }
 
   /** P-MENU-b: the tab buttons, and the underline slides to the picked tab (jumps with Reduced motion). */
   private renderTabs(slide: boolean): void {
     this.tabBar.removeAll(true);
     this.ui = this.tabBar;
-    const t = this.training;
     const { rx, y: pad } = this.tabBox;
     const tabs: Array<[Tab, string]> = [
       ['run', 'Last run'],
       ['gear', `Gear (${this.profile.inventory.length})`],
       ['abilities', 'Abilities'],
-      ['gate', t.gate.ready ? 'Gate ✦' : 'Gate'],
     ];
     const tabW = this.tabBox.tabW;
     tabs.forEach(([tab, label], i) => {
@@ -534,12 +826,11 @@ export class HomeScene extends Phaser.Scene {
     this.panelContent = content;
     this.ui = content;
     const inner = panelH - 20;
-    const h = Math.max(inner, this.panelMinH(rw - 24));
+    const h = Math.max(inner, this.panelMinH());
     this.runFooter = 0;
     if (this.tab === 'run') this.renderRun(rx + 12, top + 10, rw - 24, h, inner);
     else if (this.tab === 'gear') this.renderGear(rx + 10, top + 10, rw - 20, h);
-    else if (this.tab === 'abilities') this.renderAbilities(rx + 10, top + 10, rw - 20, h);
-    else this.renderGate(rx + 12, top + 10, rw - 24, h);
+    else this.renderAbilities(rx + 10, top + 10, rw - 20, h);
     // Q-PREM-F6: a pinned footer (Last run's Again!) keeps the scroll window clear above it.
     this.panelScroll = this.makePanelScroll(content, h > inner ? h - inner + this.runFooter : 0, this.runFooter);
     const swap = panelSwap(change, reducedMotion());
@@ -552,17 +843,11 @@ export class HomeScene extends Phaser.Scene {
 
   /**
    * P-MENU2-SPACE: the least height the tab's contents need. Only real content counts: the empty
-   * Last run, Gear and the Trophy Case fit any panel; the Gate needs its locks, 3-line labels and cards.
+   * Last run, Gear and the Trophy Case fit any panel.
    */
-  private panelMinH(w: number): number {
+  private panelMinH(): number {
     if (this.tab === 'run') return this.profile.lastRun ? PANEL_FULL_H : 0;
     if (this.tab === 'abilities') return this.part === 'style' ? PANEL_FULL_H : 0;
-    if (this.tab === 'gate') {
-      const g = this.training.gate;
-      if (!g.toBelt) return 0;
-      const r = gateLockR(w / g.locks.length);
-      return 52 + 2 * r + 4 + GATE.labelLines * GATE_LINE_H + S2 + GATE.cardH;
-    }
     return 0;
   }
 
@@ -667,47 +952,6 @@ export class HomeScene extends Phaser.Scene {
     this.input.on(Phaser.Input.Events.POINTER_WHEEL, (p: Phaser.Input.Pointer, _o: unknown, _dx: number, dy: number) => {
       if (this.panelScroll && inside(p)) this.panelScroll.to(this.panelScroll.y + dy);
     });
-  }
-
-  /** The Path card: the next real step, always visible (core-design section 9). */
-  private renderPath(x: number, y: number, w: number, h: number): void {
-    // P-MENU-c: padding 16, radius 10; label 12 bold gold, step 17 bold, details 14.
-    const p = this.training.path;
-    const card = this.add.graphics();
-    card.fillStyle(0x221d2e).fillRoundedRect(x, y, w, h, RADIUS.panel);
-    card.lineStyle(2, 0xffd166, 0.5).strokeRoundedRect(x, y, w, h, RADIUS.panel);
-    this.ui.add(card);
-    // A short phone (375 pt tall) gets 12 pt padding so the step still fits.
-    const padP = h >= 16 + TYPE.label + S2 + TYPE.title + 16 ? S3 : 12;
-    if (h < PATH_MIN_H) {
-      // P-MENU2-SPACE: too short for the card: the label and the step share one row.
-      const my = y + h / 2;
-      const lab = this.text(x + S2 + 4, my, 'YOUR NEXT STEP', TYPE.label, '#ffd166', true).setOrigin(0, 0.5);
-      const step = p.next ? p.next.name : 'Everything is signed off. Keep training!';
-      this.oneLine(this.text(lab.x + lab.width + S2, my, step, p.next ? TYPE.body : TYPE.label, p.next ? '#ffffff' : '#5cd65c', true).setOrigin(0, 0.5), w - (lab.width + 3 * S2 + 4), TYPE.label);
-      return;
-    }
-    const px = x + padP;
-    const pw = w - 2 * padP;
-    let ty = y + padP;
-    this.text(px, ty, 'YOUR NEXT STEP', TYPE.label, '#ffd166', true);
-    ty += TYPE.label + (padP === S3 ? S2 : 4);
-    if (p.next) {
-      // G2B12-FIXES: no "Video soon" tag until a video exists (the library arrives with the real DojoForge connection).
-      this.oneLine(this.text(px, ty, p.next.name, TYPE.title, '#ffffff', true), pw, TYPE.body);
-      ty += TYPE.title + S2;
-      if (p.next.catchUp) {
-        this.text(px, ty, `Catch-up from ${p.next.beltName}`, TYPE.label, '#ffd166');
-        ty += TYPE.label + S2;
-      }
-    } else {
-      const done = this.text(px, ty, 'Everything is signed off. Keep training!', TYPE.body, '#5cd65c', true, FONT, pw);
-      ty += done.height + S2;
-    }
-    const bits: string[] = [];
-    if (p.nextClassDay) bits.push(`Next class: ${p.nextClassDay}`);
-    if (p.testDate) bits.push(`Test day: ${shortDate(p.testDate)}`);
-    if (bits.length && ty + TYPE.body <= y + h - S2) this.text(px, ty, bits.join('   ·   '), TYPE.body, '#f2e9d8', false, FONT, pw);
   }
 
   /**
@@ -1678,95 +1922,6 @@ export class HomeScene extends Phaser.Scene {
     else this.tweens.add({ targets: s, alpha: 0, duration: MOTION.sheet.outMs, onComplete: () => s.destroy(true) });
   }
 
-  /** The Gate: one lock per requirement, the time-in-rank sundial, and Sensei's Seal. */
-  private renderGate(x: number, y: number, w: number, h: number): void {
-    const g = this.training.gate;
-    if (!g.toBelt) {
-      this.text(x, y, 'You have reached the top of the Tower.', 18, '#ffd166', true, FONT, w);
-      return;
-    }
-    this.text(x, y, `The Gate to ${g.toBelt.name}`, TYPE.heading, '#f2e9d8', true, 'Georgia, serif');
-    if (g.ready) {
-      const chip = this.text(x + w, y + 2, ' READY ', 15, '#14121c', true).setOrigin(1, 0).setBackgroundColor('#ffd166');
-      // P-MENU-e: one pop when the tab opens, then still (no endless blinking).
-      if (!reducedMotion()) {
-        chip.setScale(0.9);
-        this.tweens.add({ targets: chip, scale: 1, duration: MOTION.pop.ms, ease: MOTION.pop.ease });
-      }
-    }
-    this.text(x, y + 28, `${g.lit} of ${g.locks.length} locks lit. A real promotion opens the Gate.`, TYPE.label, '#b9ad99', false, FONT, w);
-
-    // The locks. P-MENU-f: radius 22 (at least 18), labels 12, at most 3 lines (P-MENU2-SPACE: "David and Goliath" needs 3 in a narrow slot), centred.
-    const n = g.locks.length;
-    const slot = w / n;
-    const r = gateLockR(slot);
-    const ly = y + 52 + r;
-    g.locks.forEach((lock, i) => {
-      const lx = x + slot * (i + 0.5);
-      if (lock.signedOff) {
-        this.ui.add(this.add.circle(lx, ly, r + 6, 0xffd166, 0.25));
-        this.ui.add(this.add.circle(lx, ly, r, 0xffd166).setStrokeStyle(3, 0xffffff, 0.8));
-        this.text(lx, ly, '✓', r, '#14121c', true).setOrigin(0.5);
-      } else {
-        this.ui.add(this.add.circle(lx, ly, r, 0x221d2e).setStrokeStyle(3, 0x6b6478));
-        this.text(lx, ly, '🔒', r * 0.8, '#8a8296').setOrigin(0.5);
-      }
-      const label = this.text(lx, ly + r + 4, shortName(lock), GATE.label, lock.signedOff ? '#ffd166' : '#b9ad99', false, FONT, slot - 4).setOrigin(0.5, 0).setAlign('center');
-      label.setMaxLines(GATE.labelLines);
-    });
-
-    // P-MENU-f: the sundial and Sensei's Seal on two equal 96-tall cards pinned to the panel's bottom.
-    const cardW = w / 2 - GATE.cardGap / 2;
-    const cardY = y + h - GATE.cardH;
-    const sr = GATE.sealR;
-    const cards = this.add.graphics();
-    for (const cx of [x, x + cardW + GATE.cardGap]) {
-      cards.fillStyle(0x221d2e, 0.6).fillRoundedRect(cx, cardY, cardW, GATE.cardH, RADIUS.panel);
-      cards.lineStyle(2, 0x3a3150).strokeRoundedRect(cx, cardY, cardW, GATE.cardH, RADIUS.panel);
-    }
-    this.ui.add(cards);
-    const sy = cardY + GATE.cardH / 2;
-    const titleY = cardY + 12;
-    const lineY = titleY + TYPE.title + 4;
-    const textW = cardW - sr * 2 - 3 * S2 - 4;
-    const sx = x + S2 + 4 + sr;
-    const dial = this.add.graphics();
-    dial.fillStyle(0x221d2e).fillCircle(sx, sy, sr);
-    if (g.sundial > 0) {
-      dial.fillStyle(0xffd166, 0.9).slice(sx, sy, sr, -Math.PI / 2, -Math.PI / 2 + g.sundial * Math.PI * 2).fillPath();
-    }
-    dial.lineStyle(3, 0x6b6478).strokeCircle(sx, sy, sr);
-    this.ui.add(dial);
-    const tx = sx + sr + S2 + 2;
-    this.oneLine(this.text(tx, titleY, 'Classes done', TYPE.title, '#f2e9d8', true), textW, TYPE.label);
-    this.text(tx, lineY, `${Math.min(g.classesInRank, g.classesBeforeTest)} of ${g.classesBeforeTest}`, TYPE.body, '#b9ad99', false, FONT, textW).setMaxLines(2);
-
-    const kx = x + cardW + GATE.cardGap + S2 + 4 + sr;
-    const seal = this.add.container(kx, sy);
-    if (g.sealLit) seal.add(this.add.circle(0, 0, sr + GATE.ring.w, 0xffd166, GATE.ring.alpha));
-    seal.add(this.add.circle(0, 0, sr, g.sealLit ? 0xe0533d : 0x221d2e).setStrokeStyle(3, g.sealLit ? 0xffd166 : 0x6b6478));
-    seal.add(this.add.text(0, 0, '師', { fontFamily: FONT, fontSize: `${sr}px`, color: g.sealLit ? '#ffffff' : '#6b6478', fontStyle: 'bold' }).setResolution(crisp()).setOrigin(0.5));
-    this.ui.add(seal);
-    // First time this Seal is seen lit: one pop (skipped in reduced motion) and one soft bell.
-    const migrating = this.profile.sealsSeen === null;
-    const ring = sealBell(this.profile, g.toBelt.id, g.sealLit);
-    if (ring || migrating) writeSave(this.profile);
-    if (ring) {
-      sfx.seal();
-      if (!reducedMotion()) {
-        seal.setScale(0.9);
-        this.tweens.add({ targets: seal, scale: 1, duration: MOTION.pop.ms, ease: MOTION.pop.ease });
-      }
-    }
-    const kt = kx + sr + S2 + 2;
-    this.oneLine(this.text(kt, titleY, "Sensei's Seal", TYPE.title, '#f2e9d8', true), textW, TYPE.label);
-    // Never shows or guesses a reason when the Seal isn't lit.
-    const sealText = g.sealLit ? (g.testDate ? `Test day: ${shortDate(g.testDate)}` : 'Approved to test!') : "Lit when Sensei says you're ready.";
-    // The full words always show: shrink toward 12 until they fit the card (no cut-off reason).
-    const st = this.text(kt, lineY, sealText, TYPE.body, g.sealLit ? '#ffd166' : '#b9ad99', g.sealLit, FONT, textW);
-    for (let size = TYPE.body; st.height > cardY + GATE.cardH - 6 - lineY && size > TYPE.label; ) st.setFontSize(--size);
-  }
-
   /**
    * P-MENU2-f: Gear. A paper doll on the left with one ring per slot (what's worn); tapping a ring
    * filters the bag to that slot, tapping it again shows everything. The bag is a tile grid that
@@ -2422,7 +2577,6 @@ function bagIcon(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.
   return g;
 }
 
-/** A tiny treasure chest drawn in code (no art file): lid, box, band and lock. */
 /** P-MENU2-g: localStorage, or null in private mode. */
 function safeStore(): KeyStore | null {
   try {
@@ -2439,15 +2593,6 @@ function houseIcon(scene: Phaser.Scene, x: number, y: number, size: number): Pha
   g.fillStyle(0xc0392b).fillTriangle(-h, -h * 0.1, h, -h * 0.1, 0, -h);
   g.fillStyle(0xffd166).fillRect(-h * 0.7, -h * 0.1, h * 1.4, h * 1.1);
   g.fillStyle(0x3a2618).fillRect(-h * 0.2, h * 0.35, h * 0.4, h * 0.65);
-  return g;
-}
-
-function chestIcon(scene: Phaser.Scene, x: number, y: number, color: number): Phaser.GameObjects.Graphics {
-  const g = scene.add.graphics({ x, y });
-  g.fillStyle(0x8a5a35).fillRoundedRect(-10, -8, 20, 7, { tl: 4, tr: 4, bl: 0, br: 0 });
-  g.fillStyle(0x6b4428).fillRect(-10, -1, 20, 10);
-  g.lineStyle(2, color).strokeRoundedRect(-10, -8, 20, 17, 3).lineBetween(-10, -1, 10, -1);
-  g.fillStyle(color).fillRect(-2, -3, 4, 5);
   return g;
 }
 

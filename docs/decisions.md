@@ -1812,3 +1812,42 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Root cause:** the top row stays drawn from `play` while the bow and arrival run in mode `arriving`. A screen opened then saves `arriving` as its way back; if the arrival ends first, closing the screen restores `arriving` and nothing ends it.
 - **Fix:** a Dojo button only acts in the mode it was drawn for (`button()`), so no screen can open during the arrival. The row stays on screen, so nothing jumps. Hiding it with `renderUi()` was rejected: that would wipe the one-time difficulty line drawn on entry.
 - **Music/Sound:** the − and + width floor is `MIN_TAP` (44), not 36.
+
+## PB-04: kata power slot (2026-11-15)
+
+- **File:** `content/abilities/kata-powers.json`, not `content/katas/powers.json` as the plan says. Four loaders read every `content/katas/*.json` file as a kata card, so a powers file there would break them. It sits next to `strikes.json` and `seal-families.json`.
+- **Passive (Manager, Nov 15):** always-on stat types only: powerScale, attackSpeed, blockCut, focusGain, startFocus, strikeCost, counterWindow. Nothing that fires on an event. The list is `PASSIVE_EFFECTS` in `effects.ts`. The loader and `p-prog-e` both read it, so PB-11's real powers are checked against it.
+- **Damage cap:** checked when the data loads (`loadKataPowers`). The biggest Stance `powerScale` plus the power's `powerScale` must be at most `STANCE_POWER_CAP` (0.12). Data over the cap fails to load and is never clipped in a fight.
+- **Earning:** each power names its kata's curriculum requirement (`requirement`), so the sim doesn't need the kata files. A test checks it matches `content/katas`.
+- **Old saves:** PB-05 saved the kata id in `loadout.kata`. `resolveKataPowerId` maps it to that kata's power, and the seen list maps the same way, so the New dot doesn't come back.
+
+## LP-B1: one Path screen (2026-11-15)
+
+- **Layout A (Manager, Nov 15):** Home opens on the Path, with a Board button. The Board keeps three tabs: Last run, Gear, Abilities.
+- **After a run or knockout:** Home opens on the Board, so the Last run results and celebrations show where they always did. Every other visit opens on the Path.
+- **Code:** sim `myPath.ts` (`pathView`: tiers, class step, game step); `goals.ts` and `GoalsCard.ts` deleted. The file is not `path.ts` because that name is the pathfinding module.
+- **Intro once:** `pathIntroSeen` replaces `goalsShownOn`. Old saves with runs get the intro; new profiles start with it seen.
+- **No art imported:** the Tower, Gate and cards are drawn with the existing frame and button helpers, not the mock images.
+
+## LP-B2: faith wiring (2026-11-15)
+
+- **Ceremony length (Manager, Nov 15):** the verse and covenant share one screen, so a promotion is at most 4 screens (Oct 18 QA cut).
+- **Sensei's question** shows in the ceremony only (each promotion plays once); the Faith page shows the verse and covenant without it.
+- **Summit scroll:** it has no promotion into it, so it shows on the Faith page for Black Belts only, never in a ceremony.
+- **Students who start above White** get their letters and scrolls already lit on the Faith page, with no ceremony for promotions before the app.
+- **Guardian lines are data:** keyed by enemy id (`faithOverlayKey`), so only Guardians in both the pack and the game speak; today that is the Hearth Cook.
+- **No art:** the banner, the Faith page and the scrolls are drawn; no images imported.
+
+## LP-B1b: My Path words (2026-11-15)
+
+- **One source:** each line named in path.json's `pointerSpots` is read from the file at that spot, and a test fails if a key goes unused or an old string comes back.
+- **Grown-ups hint is exempt from the 8-word limit:** it is for adults, and it wraps to the screen.
+
+## LP-B3: Class Chest and best-streak aura (2026-11-15)
+
+- **Chest contents (Manager, Nov 15):** the class pieces in their fixed order first, then gear of Uncommon or better, matching the overhaul review's Class Chest row. Coins wait for L13.
+- **First sync** still opens only one welcome chest, so a long class history never floods the dojo or the bag.
+- **Gear is seeded** from the class count and the next item id, so the same sync always gives the same item.
+- **The aura reads the best streak ever**, saved when the Dojo opens; the Tower shows the larger of the saved best and today's streak.
+- **Word check:** a test scans every string in content/ and the game code for streak-loss wording; `_note` keys and code comments are skipped.
+- **No art:** the chests and the glow are drawn in code.
