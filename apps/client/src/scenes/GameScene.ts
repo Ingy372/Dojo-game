@@ -127,6 +127,9 @@ import { TouchControls } from '../input/TouchControls';
 import { twistBanner, twistIcon } from '../ui/twist';
 import type { HomeSceneData } from './HomeScene';
 import { clampDoorLabels } from '../ui/doorLabel';
+import { wornShop } from '../game/shop';
+import { FX_DEPTH } from '../fx/plan';
+import { TrailEmitter, playFx, type FxPlace } from '../fx/shopFx';
 import { VISIBLE_ROWS, bossHeadroom, bossRoomZoom, bossZoomPlan, cameraBounds } from '../game/cameraView';
 
 /** Pixels per tile in the world (before camera zoom). */
@@ -291,6 +294,8 @@ export class GameScene extends Phaser.Scene {
   /** The student's real progress, and the character it makes (level, abilities, Virtue). */
   private training!: TrainingState;
   private setup!: CharacterSetup;
+  private shopFx: ReturnType<typeof wornShop>['fx'] = { trail: null, puff: null, hit: null, win: null };
+  private trail: TrailEmitter | null = null;
   /** Aura around the character while a Virtue lasts. */
   private virtueAura!: Phaser.GameObjects.Arc;
   /** True while a menu (like the Insight choice) is open: the fight is paused. */
@@ -483,6 +488,9 @@ export class GameScene extends Phaser.Scene {
     this.training = currentTraining();
     seedLoadout();
     this.setup = characterSetup(loadSave(), this.training, CONTENT.abilities);
+    // LP-B4b: the shop effects the student wears (looks only: the sim never sees them).
+    this.shopFx = wornShop().fx;
+    this.trail = this.shopFx.trail ? new TrailEmitter(this, this.shopFx.trail, this.fxPlace()) : null;
     if (this.run) {
       this.room = currentRoom(CONTENT, this.run);
       this.world = createRunWorld(withForced(CONTENT, testForced()), this.run, this.setup, this.setup.effects, undefined, testGuide() ?? loadSave().guideStep, COUNTER_HINT);
@@ -674,6 +682,7 @@ export class GameScene extends Phaser.Scene {
     const y = Phaser.Math.Linear(this.prevPos.y, p.pos.y, blend);
     this.player.setPosition(x * TILE, y * TILE).setDepth(depthAt(y * TILE));
     this.animateHero(p, now);
+    if (p.moving) this.trail?.step(x * TILE, (y + 0.15) * TILE);
 
     const r = MOVEMENT.playerRadius * TILE;
 
@@ -1373,6 +1382,7 @@ export class GameScene extends Phaser.Scene {
           else v.hitUntil = this.time.now + 250; // a quick flinch (only while chasing)
           const heavy = ev.move !== 'basic';
           this.sparks(e.pos, heavy ? 12 : 5, heavy ? COLORS.gold : 0xffffff);
+          if (ev.playerId === this.me && this.shopFx.hit) playFx(this, this.shopFx.hit, e.pos.x * TILE, e.pos.y * TILE, this.fxPlace());
           this.floatText(e.pos, `${ev.damage}`, heavy ? '#ffd166' : '#ffffff', heavy ? 30 : 22);
           // The character punches (the automatic jab only when standing, so walking stays smooth).
           if (ev.move === 'basic' && !this.world.players[ev.playerId].moving && !this.heroAction) this.heroDo('jab');
@@ -1525,6 +1535,7 @@ export class GameScene extends Phaser.Scene {
           const p = this.world.players[ev.playerId];
           sfx.dash();
           this.heroDo('dash');
+          if (ev.playerId === this.me && this.shopFx.puff) playFx(this, this.shopFx.puff, p.pos.x * TILE, (p.pos.y + 0.15) * TILE, this.fxPlace());
           this.dashTrail(p.pos);
           break;
         }
@@ -2816,6 +2827,11 @@ export class GameScene extends Phaser.Scene {
   /** K28: the one shake rule (hits and named-monster wind-ups): Brown rank and up or Challenge, 65%, never with Reduced motion. */
   private shakeScale(kind: 'hurt' | 'windup' | 'block'): number {
     return hurtShakeScale({ kind, beltTier: currentTraining().belt.tier, difficulty: this.world.difficulty, reducedMotion: reducedMotion() });
+  }
+
+  /** LP-B4b: shop effects draw in the world, under enemy warnings, bars and numbers. */
+  private fxPlace(): FxPlace {
+    return { tile: TILE, depth: FX_DEPTH, add: (g) => this.addWorld(g) };
   }
 
   private addWorld<T extends Phaser.GameObjects.GameObject>(obj: T): T {

@@ -63,7 +63,8 @@ import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
 import { drawBanner, openFaithPage } from '../ui/faith';
 import { openShop, type ShopScreen } from '../ui/shop';
-import { SHOP_WORDS } from '../game/shop';
+import { SHOP_WORDS, wornShop } from '../game/shop';
+import { playFx } from '../fx/shopFx';
 import { PATH_LABEL, PATH_LOCK_R, PATH_WORDS as PW, clampStart, fill, pathLayout, towerStart, type Box } from '../ui/pathScreen';
 import { takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
@@ -242,9 +243,19 @@ export class HomeScene extends Phaser.Scene {
       this.welcomeHome(homePointer(this.training.path.nextClassDay, resting || isPlayTimeUp(this.profile)), () => this.refresh());
     } else this.refresh();
     this.cameras.main.fadeIn(400, 10, 8, 16);
+    this.winBurst();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.render, this);
     this.listenPanelScroll();
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.render, this));
+  }
+
+  /** LP-B4b: the win burst from the shop, once, when the student comes home from a cleared floor. */
+  private winBurst(): void {
+    const run = this.profile.lastRun?.summary;
+    const win = wornShop().fx.win;
+    if (!this.fromRun || !win || run?.result !== 'cleared' || run.test) return;
+    const { width, height } = view(this);
+    playFx(this, win, width / 2, height * 0.55, { tile: height / 4, depth: 58 });
   }
 
   /** Reads the student's real progress and celebrates anything new since last time. */

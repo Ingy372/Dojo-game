@@ -50,6 +50,7 @@ import { LOCK_SHAKE, LOCKED_CARD, lockedLine, lockedTapFeedback, lockShakeOffset
 import { music } from '../audio/Music';
 import { addVolumeRow } from '../ui/VolumeRow';
 import { CONTENT } from '../game/content';
+import { wornShop } from '../game/shop';
 import { bowIsDue, homeDojo, setBowDue } from '../game/dojo';
 import { loadSave, writeSave } from '../game/save';
 import { DIFFICULTY_TEXT, ensureDifficulty } from '../game/difficulty';
@@ -776,6 +777,18 @@ export class DojoScene extends Phaser.Scene {
    * The wooden room from the art: the floor and back wall with the notice board, and the
    * front wall with the door, which is drawn in front of the character.
    */
+  /**
+   * LP-B4b: the wall paint from the shop, a colour multiplied over the back wall's paper panels and
+   * beam (from the picture's top edge, 0.3 tiles above row 0, down to row 1). Drawn in code, no art.
+   */
+  private wallPaint(): Phaser.GameObjects.Graphics | null {
+    const color = wornShop().wall;
+    if (!color) return null;
+    const g = this.add.graphics().setBlendMode(Phaser.BlendModes.MULTIPLY);
+    g.fillStyle(Phaser.Display.Color.HexStringToColor(color).color).fillRect(0, -0.3 * TILE, CONTENT.dojo.room.width * TILE, 1.3 * TILE);
+    return g;
+  }
+
   private drawRoom(): { back: Phaser.GameObjects.GameObject[]; front: Phaser.GameObjects.GameObject[]; labels: Phaser.GameObjects.GameObject[] } {
     const room = CONTENT.dojo.room;
     const [floor, board, front] = addStatic(this, 'dojo', 'room', 0, 0);
@@ -787,7 +800,7 @@ export class DojoScene extends Phaser.Scene {
         .setOrigin(0.5, 0)
         .setResolution(crisp() * 2);
     return {
-      back: [floor, board].filter(Boolean),
+      back: [floor, this.wallPaint(), board].filter((o): o is Phaser.GameObjects.Image | Phaser.GameObjects.Graphics => !!o),
       front: [front].filter(Boolean),
       labels: [label(door.x * TILE, (door.y - 0.2) * TILE, 'TOWER', LABEL_PX), label(b.col * TILE + TILE / 2, TILE + 2, PW.dojoWallLabel, LABEL_PX)],
     };

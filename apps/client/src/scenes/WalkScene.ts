@@ -8,6 +8,8 @@ import { loadLook, playerPacks } from '../game/look';
 import { loadArt } from '../art/art';
 import type { LayeredSprite } from '../art/LayeredSprite';
 import { makePlayerSprite, playLocomotion } from '../art/player';
+import { TrailEmitter } from '../fx/shopFx';
+import { wornShop } from '../game/shop';
 import { TouchControls } from '../input/TouchControls';
 import { hiDpi, view } from '../ui/theme';
 
@@ -48,6 +50,7 @@ export abstract class WalkScene extends Phaser.Scene {
   private elapsed = 0;
   protected leaving = false;
   private armed = new Map<string, boolean>();
+  private trail: TrailEmitter | null = null;
 
   /** The sim room (walls). */
   protected abstract room(): Room;
@@ -92,6 +95,9 @@ export abstract class WalkScene extends Phaser.Scene {
     this.player = this.makePlayer();
     this.standLayer.add(this.player);
     this.drawRoom();
+    // LP-B4b: the walk trail from the shop, on the floor under the hero.
+    const trail = wornShop().fx.trail;
+    this.trail = trail ? new TrailEmitter(this, trail, { tile: TILE, depth: 0, add: (g) => this.worldLayer.add(g) }) : null;
 
     this.controls = new TouchControls(this, this.cameras.main, (x, y) => this.toTile(x, y), () => this.leaving, (x, y) => this.isTapTarget(this.rawTile(x, y)));
     this.layout();
@@ -175,6 +181,7 @@ export abstract class WalkScene extends Phaser.Scene {
       this.standLayer.sort('depth');
     }
     this.onDraw(y);
+    if (p.moving) this.trail?.step(x * TILE, (y + 0.15) * TILE);
 
     this.hero.face(p.facing.x, p.facing.y);
     const speed = Math.hypot(p.pos.x - this.prevPos.x, p.pos.y - this.prevPos.y) * TICKS_PER_SECOND;
