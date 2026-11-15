@@ -122,7 +122,7 @@ export const COMBAT = {
     holdCapTicks: 24,
     /**
      * ...and the Seals' extra damage against a staggered, winded or recovering enemy (staggerBonus from every equipped Seal
-     * together) never passes +20%. Insights and gear are not Seals: Press the Advantage keeps its +30% for one run.
+     * together) never passes +20%. Insights and gear are not Seals: Press the Advantage keeps its +40% for one run.
      */
     sealStaggerBonusCap: 0.2,
     /** G2B-04: a thrown enemy tumbles this many tiles away from the player. */
@@ -289,6 +289,23 @@ export const BLESSING = {
   xpBonus: 0.5,
   /** Better loot: this much weight moves from Common to Rare on every roll while blessed. */
   rareWeight: 3,
+} as const;
+
+/**
+ * LP-B4 (L13, LP-P1 #494): coins, earned by playing and by real classes, spent only in the looks
+ * shop. Fixed amounts, never random, never bought, never lost.
+ */
+export const COINS = {
+  /** Any finished run, won or lost (a rest before the first room is cleared pays nothing). */
+  run: 60,
+  /** Each battle or challenge room cleared. */
+  fightRoom: 3,
+  /** The boss room cleared. */
+  bossRoom: 10,
+  /** The floor won. */
+  win: 10,
+  /** Each Class Chest (one per real class). */
+  classChest: 150,
 } as const;
 
 /** Home practice (framework section 5): approved minutes per Training Point. */

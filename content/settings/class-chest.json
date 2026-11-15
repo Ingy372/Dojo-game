@@ -7,6 +7,7 @@
   "gear": "New gear in your bag: {name}",
   "more": "…and {n} more!",
   "storage": "Decorations wait in storage.",
+  "coins": "+{n} coins for the shop!",
   "button": "Thank you!",
   "_noteAura": "auraSteps: the best weekly class streak ever (weeks) where the glow around the hero grows one ring. It reads the BEST streak, so it never shrinks. Placeholder numbers.",
   "auraSteps": [2, 4, 8, 12, 20]
