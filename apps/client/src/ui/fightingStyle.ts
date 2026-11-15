@@ -3,7 +3,7 @@
 // Tap a card, then tap a pick. Wording comes from content/abilities/fighting-style.json.
 // Rank names come from the live seal families (J27), not the older draft labels.
 
-import { defaultStrikeDef, earnedStrikes, emptyLoadout, equipSeal, equipStrike, normalizeLoadout, removeSeal, sealSlots, signedOffTechniques, swapSeal, unlockedFamilies, unlockedStances, virtueTitle, type AbilityContent, type Loadout, type PickLine, type SealFamilyDef, type TrainingState } from '@dojo/sim';
+import { defaultStrikeDef, earnedKataPowers, earnedStrikes, resolveKataPowerId, emptyLoadout, equipSeal, equipStrike, normalizeLoadout, removeSeal, sealSlots, signedOffTechniques, swapSeal, unlockedFamilies, unlockedStances, virtueTitle, type AbilityContent, type Loadout, type PickLine, type SealFamilyDef, type TrainingState } from '@dojo/sim';
 import words from '../../../../content/abilities/fighting-style.json';
 import helpFile from '../../../../content/abilities/fighting-style-help.json';
 import { MIN_TAP, S1, S2, TYPE, pageDots } from './tokens';
@@ -123,10 +123,6 @@ const HELP_TRIGGER: Record<string, string> = {
   'help-kata-pick': 'kata-pick',
 };
 
-interface KataCard { id: string; name: string; requirement: string }
-const kataFiles = import.meta.glob('../../../../content/katas/*.json', { eager: true, import: 'default' }) as Record<string, KataCard>;
-const KATA_CARDS: KataCard[] = Object.keys(kataFiles).sort().map((k) => kataFiles[k]);
-
 /** The belt name of the first tier that has a third Seal slot, when this belt does not have it yet. */
 export function nextSealBelt(tier: number, belts: readonly { name: string }[]): string | null {
   if (sealSlots(tier) >= 3) return null;
@@ -204,13 +200,11 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
   });
   const strikePick = strikeTray.find((p) => p.id === strikeDef?.id) ?? null;
 
-  // Kata powers are still placeholders (PB-04, PB-11). A signed-off kata can be chosen; it changes no fight.
-  const kataOrder = training.abilities.filter((a) => a.kind === 'stance').map((a) => a.requirement.id);
-  const earnedKataReqs = new Set(training.abilities.filter((a) => a.kind === 'stance' && a.unlocked).map((a) => a.requirement.id));
-  const kataTray: StylePick[] = KATA_CARDS.filter((k) => earnedKataReqs.has(k.requirement))
-    .sort((a, b) => kataOrder.indexOf(a.requirement) - kataOrder.indexOf(b.requirement))
-    .map((k) => ({ id: k.id, slot: 'kata' as const, name: k.name, line: words.emptyKata, earned: true }));
-  const kataPick = kataTray.find((p) => p.id === loadout?.kata) ?? null;
+  // PB-04: the kata powers of the signed-off katas. A placeholder (until PB-11) says "Power coming soon" and changes no fight.
+  const earnedKata = earnedKataPowers(training, abilities.kataPowers);
+  const kataTray: StylePick[] = earnedKata.map((id) => abilities.kataPowers.find((p) => p.id === id)!)
+    .map((p) => ({ id: p.id, slot: 'kata' as const, name: p.name, line: p.status === 'final' ? p.text : words.emptyKata, earned: true }));
+  const kataPick = kataTray.find((p) => p.id === normalized?.kata) ?? null;
 
   const signed = signedOffTechniques(training);
   const earnedFamilies = unlockedFamilies(training, abilities.families);
@@ -241,7 +235,8 @@ export function buildStyle(training: TrainingState, abilities: AbilityContent, l
     { slot: 'stance', index: 0, label: words.slots.stance, pick: stance, locked: null, newDot: dot(seen, earnedStances) },
     { slot: 'virtue', index: 0, label: words.slots.virtue, pick: virtue, locked: null, newDot: dot(seen, earnedVirtues) },
     { slot: 'strike', index: 0, label: words.slots.strike, pick: strikePick, locked: null, newDot: dot(seen, strikeTray) },
-    { slot: 'kata', index: 0, label: words.slots.kata, pick: kataPick, locked: null, newDot: dot(seen, kataTray) },
+    // A kata id seen before PB-04 counts as its power seen.
+    { slot: 'kata', index: 0, label: words.slots.kata, pick: kataPick, locked: null, newDot: dot(seen && seen.map((id) => resolveKataPowerId(abilities.kataPowers, id) ?? id), kataTray) },
   ];
   for (let i = 0; i < slots; i++) {
     const id = equippedSeals[i] ?? null;

@@ -1178,3 +1178,45 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Each has its own icon from #485 (Iron Block shows the steel arm).
 - The Rooted and Flowing families are now called Guard and Speed, which the card's top stripe shows.
 - Tests: `insight-budget` (caps for the 4 cards, every family has at least 2 cards). The slow R-INSIGHT-BAL run (`BALANCE=1`) on 13 cards: B5 (pool win) and B10 (route spread) still fail, waiting on a tuning call. Phone check `docs/shots/ov-b6/powerups.mjs` 172 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off.
+## PB-04 — Kata power slot with placeholder powers (2026-11-15)
+
+- `content/abilities/kata-powers.json` has one power each for Basic Form 1, Basic Form 2 and Keon. All three are placeholders until Jay's list (PB-11), so they change no fight.
+- A kata power is earned with its kata's teacher sign-off. The Kata card on Fighting Style shows the earned powers ("Power coming soon"), and one goes into each run.
+- A final power is data only: set `status` to `final` and list its effects. The game checks it when the data loads. Only passive types are allowed (`PASSIVE_EFFECTS`), and the biggest Stance plus the power must stay at or under +12% damage.
+- Kata picks saved before this (the kata id) switch to that kata's power, without the New dot coming back.
+- Tests: `p-prog-e-kata-power` (new, 12), with `p-prog-b`, `p-prog-f` and `p-prog-g` updated for earned kata powers.
+
+## LP-B1 — One Path screen (2026-11-15)
+
+- Home now opens on one Path screen (review L1, mock #495, learning notes #490). It replaces the Gate tab, the Path card and the goals card; the Tower map was never built.
+- Left: the Tower, one floor per belt, with your character on your belt's floor (▲ and ▼ scroll it). Top right: the Gate to your next belt (locks, classes sundial, Sensei's Seal). Below: "Your next class step" (the biggest card) and "Next in the game" with Enter the Tower.
+- A Board button opens the Training Board (Last run, Gear, Abilities); its ◀ Path button comes back. Straight after a run or a knockout, Home opens on the Board so the run results show first.
+- Players who had the old screens see "This is your Path." once over the class step; OK saves it. New players skip it.
+- FAITH DOES is not on the Path yet (L5).
+- Words: `content/settings/path.json` (placeholders, Content owns them).
+- Tests: `lp-b1-path` (new, 13); `goals` removed; `p-menu-*` updated. Phone check `docs/shots/lp-b1/path-verify.mjs` 231 PASS / 0 FAIL at 667x375, 932x430 and 844x390, Reduced motion on and off, White and Green.
+
+## LP-B2 — The faith layer, L5 (2026-11-15)
+
+- The school's approved faith pack is in `content/faith/action-zone.json`, unchanged from LP-C1 (Jay-approved Nov 14), with the wall wording.
+- The Path's title is now the FAITH DOES banner: one letter lights at each promotion from Yellow to Black. Tapping it opens the Faith page: the banner (each lit letter with its word and meaning), the Creed Scroll, and each verse scroll found so far with its covenant.
+- A promotion ceremony is at most 4 screens: the bow, the Gate, the verse scroll (verse, covenant name large, Sensei's question), then everything new, which now says which letter shines.
+- The Creed Scroll shows once, after the first class check-in (`creedSeen` in the profile).
+- A freed Guardian with a line in the pack says it (only the Hearth Cook has one today).
+- Tests: `lp-b2-faith` (new, 11), including the word-for-word check against the pack and `docs/faith-and-creed.md`. Phone check `docs/shots/lp-b2/faith-verify.mjs` at 667x375, 932x430 and 844x390, Reduced motion on and off.
+
+## LP-B1b — My Path words come from data (2026-11-15)
+
+- The Dojo tour line, the wall label (MY PATH), the Dojo button (My Path), the grown-ups hint, Home's top-level line and the promotion summary's powers lines now read `content/settings/path.json` (LP-C4, #505). The old Gate and Board strings are gone.
+- Tests: `lp-b1b-path-words` (new, 3): every pointer key is used where path.json says, the old words are gone, kid lines are 8 words or fewer. Phone check `docs/shots/lp-b1b/words-verify.mjs` at 667x375, 932x430 and 844x390, Reduced motion on and off: 72 pass, 0 fail.
+
+## LP-B3 — Class Chest every class, best-streak aura, L4 (2026-11-15)
+
+- Every real class now opens a Class Chest, with no end: the next class piece for the Home Dojo while any are left, then one piece of Uncommon or better gear for the bag (it fills an empty slot). The old "one piece every 2-3 classes, stops at 13" is gone. No coins yet (L13).
+- Arriving at the Dojo shows one card for the new chests ("3 Class Chests!"), with two drawn chests and what was inside.
+- A soft gold glow around the hero, in the Dojo and the Tower, grows one ring at each step of the best weekly class streak ever (`bestStreakWeeks` in the profile). It never shrinks and nothing warns.
+- The chest words and aura steps are placeholders in `content/settings/class-chest.json` for Content.
+- Tests: `lp-b3-class-chest` (new, 6): 30 classes give 30 chests (one at a time or all at once), the aura never goes down, no streak-loss words in content or game code, short kid lines; `earning` updated. Phone check `docs/shots/lp-b3/chest-verify.mjs` at 667x375, 932x430 and 844x390, Reduced motion on and off: 72 pass, 0 fail.
+
+## LP-B3b — Class Chests for classes the feed window dropped (2026-11-15)
+- After a long time away, the feed only lists recent check-ins, so 20 new classes with 8 still in the window gave 8 chests (Tester note on #509). `openClassChests` now opens the larger of the new dates and the growth in the feed's `classesTotal`. Test: 10 classes, then 30 with 8 in the window, gives 20 chests, then 0, then 1.

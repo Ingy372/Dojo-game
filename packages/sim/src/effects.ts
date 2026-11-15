@@ -269,6 +269,12 @@ const TYPES: readonly EffectType[] = [
   'downBonus',
 ];
 
+/**
+ * PB-04: the effect types a kata power may use. Passive means an always-on stat change; effects
+ * that fire on an event (a counter, a block, a hit) are not passive.
+ */
+export const PASSIVE_EFFECTS: readonly EffectType[] = ['powerScale', 'attackSpeed', 'blockCut', 'focusGain', 'startFocus', 'strikeCost', 'counterWindow'];
+
 /** Effects that are simply on or off (no amount needed). */
 const SWITCHES: readonly EffectType[] = ['shieldBreaker', 'dashOnBlock'];
 

@@ -8,6 +8,7 @@ import type { FeedBelt } from './feed';
 import { playerStats, type Loadout, type Profile } from './profile';
 import { earnedPicks, normalizeSlots, sealSlots, type LoadoutEarned } from './loadout';
 import { equippedSealEffects } from './sealFamilies';
+import { kataPowerEffects, resolveKataPowerId } from './kataPowers';
 import { equippedStrikeSetup, resolveStrikeId } from './strikes';
 import type { RunSummary } from './run';
 import { trainingStats, unlockedStances, virtueTitle, type TrainingState, type VirtueInfo } from './training';
@@ -116,7 +117,7 @@ export function describeVirtue(v: VirtueSetup, text: string): string {
 
 export interface CharacterSetup extends PlayerSetup {
   level: number;
-  /** Charm effects plus the equipped Seal families (Insights are added per run). */
+  /** Charm effects plus the equipped Seal families and kata power (Insights are added per run). */
   effects: Effect[];
 }
 
@@ -128,6 +129,8 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
   // slot filled (or no family earned) means no Seal effects.
   const loadout = normalizeLoadout(profile.loadout, training, abilities, profile.grandfatheredStances);
   const seals = equippedSealEffects(training, abilities.families, loadout?.seals ?? []);
+  // PB-04: the one kata power in the Kata slot (a placeholder adds nothing).
+  const kata = kataPowerEffects(abilities.kataPowers, loadout?.kata ?? null);
   // R-BAL-12: real training adds whole-number stats on top of gear and level.
   const trained = trainingStats(training);
   return {
@@ -137,7 +140,7 @@ export function characterSetup(profile: Profile, training: TrainingState, abilit
     guard: gear.guard + trained.guard,
     // B-TUNE-GUIDED: a testing fixture's pinned stats replace the worked-out ones.
     ...training.pinnedStats,
-    effects: [...seals, ...gear.effects],
+    effects: [...seals, ...kata, ...gear.effects],
     // PB-03: the Strike is the one in the Strike slot (Spin Kick when empty). The old always-on Strike upgrades are retired.
     strike: equippedStrikeSetup(abilities.strikeDefs, loadout?.strike ?? null),
     ...loadoutAbilities(profile.loadout, training, abilities, profile.grandfatheredStances),
@@ -154,7 +157,8 @@ export function normalizeLoadout(loadout: Loadout | null, training: TrainingStat
   // A stance that isn't unlocked goes to the Beginner's Stance (null); the loadout and its virtue are kept.
   // R-PROGRESSION-BETA: a Strike, kata power or Seal that isn't earned goes to its slot's default; extra Seals are dropped from the end.
   // PB-03: an old Strike id means the Strike with the same kick combo number (`resolveStrikeId`).
-  const resolved = { ...loadout, strike: resolveStrikeId(abilities.strikeDefs, loadout.strike) };
+  // PB-04: a kata id (saved before kata powers existed) means that kata's power.
+  const resolved = { ...loadout, strike: resolveStrikeId(abilities.strikeDefs, loadout.strike), kata: resolveKataPowerId(abilities.kataPowers, loadout.kata) };
   return { stance: ok ? loadout.stance : null, virtue: loadout.virtue, ...normalizeSlots(resolved, earned, sealSlots(training.tier)) };
 }
 
