@@ -1221,3 +1221,9 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 ## LP-B3b — Class Chests for classes the feed window dropped (2026-11-15)
 - After a long time away, the feed only lists recent check-ins, so 20 new classes with 8 still in the window gave 8 chests (Tester note on #509). `openClassChests` now opens the larger of the new dates and the growth in the feed's `classesTotal`. Test: 10 classes, then 30 with 8 in the window, gives 20 chests, then 0, then 1.
+
+## LP-B4 — coins and the Stage 1 looks shop (2026-11-15)
+- Finished runs and Class Chests now give coins (`profile.coins`, old saves start at 0). The Class Chest card says "+150 coins for the shop!".
+- A **Shop** button on the Path's top bar opens the looks shop: 12 gi colours and 8 hair colours (200 coins each, belt 1 or 2), each previewed on the hero, with the coins before and after, one tap to get it, then wear it or go back to "My color" any time. Words and colours are placeholders in `content/shop/catalog.json`.
+- No real money anywhere: no billing or ads package, no money signs, no timers; coins only go down when a look is bought.
+- Tests: `lp-b4-shop` (14) and `balance/coin-rates` (4 quick cells, the whole table with BALANCE=1). Phone check `docs/shots/lp-b4/shop-verify.mjs` at 667x375, 844x390 and 932x430, Reduced motion on and off.

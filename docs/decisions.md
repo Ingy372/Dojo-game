@@ -1864,3 +1864,12 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 
 ## LP-B3b: count classes by the feed total too (2026-11-15)
 - A Class Chest follows real classes, not app opens. When the feed sends `classesTotal`, its growth since the last sync is the floor for chests, so a long absence never loses one. Without a total (old feeds) we can only count the dates still in the window.
+
+## LP-B4: coins and the Stage 1 looks shop (2026-11-15)
+- **Coin rates are LP-P1's (#494)** and live in `COINS` (config.ts): 60 a finished run, +3 a battle or challenge room cleared, +10 the boss, +10 a win, +150 a Class Chest. Fixed amounts, never random, never lost. Test-link runs pay 0. The Star Chest's 100 waits for L2b.
+- **Resting before clearing any room pays 0** (otherwise starting a run and resting at once would pay 60 every time). A rest after a cleared room pays like a loss.
+- **The coin table test:** newer and careful (who win nearly every run) must stay within 1 coin of #494; kid and masher within 5. On main just before OV-B6 (#512) every cell was within 1; #512 moved the kid and masher cells by up to 4.2 coins. T1 (at least 60 a run, at most 2x spread) is checked on the whole table with BALANCE=1.
+- **Looks never touch a fight:** the shop's save (`profile.shop`) is read only by `shop.ts` and the look code; a test checks no other sim file reads it and stats are unchanged with every dye worn.
+- **Dyes are tints drawn in code** over the gi and hair layers; the belt layers are never tinted by a dye. The look editor (Create) shows the student's own colours, without dyes, so its colour choices are visible.
+- **One tap buys:** picking a tile previews it on the hero and shows the price and the coins before and after; the green button then gets it and wears it straight away. Looks above the belt show a lock and "Comes with a new belt!".
+- **Hair dye colours** are placeholders I picked (R-SHOP 3.4 names them without colours); Content and Art can change them in `content/shop/catalog.json`.
