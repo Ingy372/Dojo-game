@@ -32,7 +32,7 @@ Kata scope (Jay, Nov 14): "ill give katas penon 1, penon 2, penon 3, nahachi ...
 | OV-B6 | Dojo-Ascent Programmer | Import about 15 Power-ups (from 9) from OV-P1 data; existing effect types only. | R-INSIGHT-BAL tests pass with the new pool. | OV-P5 (13-card pool fails R-INSIGHT-BAL B5 46.1% vs 59±6 and B10 spread 18.7 vs 14; branch bot-code/ov-b6 80e64fed held). |
 | OV-P5 | Dojo-Ascent Researcher & Planner | Retune the OV-P1 13-card pool so R-INSIGHT-BAL B5 (kid random-pool win 59±6) and B10 (route spread ≤14) pass, using the balance-check skill and branch bot-code/ov-b6. Lowering numbers alone worsens B5; dropping or recasting weak cards is fine (existing effect types only). Docs PR with the new numbers. | B1-B10 pass in the Planner's run on the ov-b6 branch; numbers table in drafts/planning/. | — |
 | OV-B4 | — | DROPPED (Jay chose question 1 B). Replaced by PB-04 and kata powers. | — | — |
-| PB-04 | Dojo-Ascent Programmer | Resume the kata power slot as already planned (Jay, Nov 14: question 1 B). | As in its original item. | **Now** (next PR while OV-B6 waits on OV-P5). |
+| PB-04 | Dojo-Ascent Programmer | Resume the kata power slot as already planned (Jay, Nov 14: question 1 B). | As in its original item. | **Now**: PR #503 in QA. |
 | OV-T1 | Dojo-Ascent Game Logic/systems Tester | Recheck the open #472 cases. | DONE, PASS; #472 merged. | — |
 | OV-T2 | Dojo-Ascent Game Logic/systems Tester | B8 + B3 numbers: report why Orange wins everything (R-PREMIUM-e), and measure the White kid bot on Guided against a target of about 7 in 10 floor clears. | DONE #481 (e4c28b9d). | — |
 | OV-T3 | Dojo-Ascent Game Logic/systems Tester | QA each OV-B PR as it opens; run PB-10 after PB-05 merges. | PASS/FAIL comment on each PR. | Each PR |
