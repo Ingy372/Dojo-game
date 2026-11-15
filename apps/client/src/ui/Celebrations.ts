@@ -3,8 +3,8 @@
 // the game, then a stripe, then a sign-off; Sensei's Seal and the Blessing are small.
 
 import Phaser from 'phaser';
-import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState } from '@dojo/sim';
-import { gainText, litGateLock, signOffCardText, signOffGain, signOffLines, signOffsMixed, signOffsRow, signOffsTitle, stripeGain } from '@dojo/sim';
+import type { BeltInfo, RequirementStatus, RewardMoment, TrainingState, VerseScroll } from '@dojo/sim';
+import { gainText, litGateLock, signOffCardText, signOffGain, signOffLines, signOffsMixed, signOffsRow, signOffsTitle, stripeGain, promotionFaith } from '@dojo/sim';
 import GAINS from '../../../../content/settings/training-gains.json';
 import BLESS from '../../../../content/settings/blessing.json';
 import STYLE from '../../../../content/abilities/fighting-style.json';
@@ -15,6 +15,7 @@ import { loadLook } from '../game/look';
 import { reducedMotion } from '../game/motion';
 import { hex } from './belt';
 import { FONT, crisp, view } from './theme';
+import { FAITH, drawCreed, drawScroll } from './faith';
 
 type Step =
   /** Sensei's welcome-home line, before the cascade (M7-P4, Manager call). */
@@ -26,7 +27,11 @@ type Step =
   | { kind: 'moment'; moment: Exclude<RewardMoment, { kind: 'promotion' }> }
   | { kind: 'bow'; from: BeltInfo; to: BeltInfo }
   | { kind: 'gate'; to: BeltInfo }
-  | { kind: 'summary'; to: BeltInfo; levelCap: number; preview: RequirementStatus[]; extras: Extra[] };
+  /** LP-B2: the verse scroll this promotion finds, its covenant and Sensei's question, on one screen. */
+  | { kind: 'verse'; scroll: VerseScroll }
+  /** LP-B2: the Creed Scroll, once, after the first class check-in. */
+  | { kind: 'creed' }
+  | { kind: 'summary'; to: BeltInfo; levelCap: number; preview: RequirementStatus[]; extras: Extra[]; faith: string[] };
 
 /** Other real moments that arrive together with a promotion: shown on its last screen instead of one screen each. */
 type Extra = Exclude<RewardMoment, { kind: 'promotion' } | { kind: 'welcome' }>;
@@ -49,11 +54,12 @@ export class Celebrations {
     sensei: string[] = [],
     keeperTitle?: string,
     picks?: { lesson: string[]; lines: string[] },
+    creed = false,
   ) {
     if (keeperTitle) this.steps.push({ kind: 'keeper', title: keeperTitle });
     if (sensei.length) this.steps.push({ kind: 'sensei', lines: sensei });
-    // The promotion ceremony is 3 screens (QA, 2026-10-18: 8 in a row was too many):
-    // the bow and new belt, the Gate opens, then one screen with everything new.
+    // The promotion ceremony is at most 4 screens (QA, 2026-10-18: 8 in a row was too many):
+    // the bow and new belt, the Gate opens, the verse scroll (LP-B2), then one screen with everything new.
     // Stripes, sign-offs and Sensei's Seal that arrive with it join that last screen;
     // the details stay on the Board's Abilities tab and the Path screen.
     const promotion = moments.find((m) => m.kind === 'promotion');
@@ -62,10 +68,15 @@ export class Celebrations {
       if (m.kind === 'promotion') {
         this.steps.push({ kind: 'bow', from: m.from, to: m.to });
         this.steps.push({ kind: 'gate', to: m.to });
-        this.steps.push({ kind: 'summary', to: m.to, levelCap: m.levelCap, preview: m.preview, extras });
+        const faith = promotionFaith(FAITH, training, m.from.tier, m.to.id);
+        if (faith.scroll) this.steps.push({ kind: 'verse', scroll: faith.scroll });
+        const lit = faith.letters.map((l) => l.lit);
+        if (faith.complete) lit.push(FAITH.faithDoesBanner.lines.complete);
+        this.steps.push({ kind: 'summary', to: m.to, levelCap: m.levelCap, preview: m.preview, extras, faith: lit });
       } else if (m.kind === 'welcome' || !promotion) this.steps.push({ kind: 'moment', moment: m });
     }
     if (picks?.lines.length) this.steps.push({ kind: 'picks', ...picks });
+    if (creed) this.steps.push({ kind: 'creed' });
     const { width, height } = view(scene);
     const shade = scene.add.rectangle(0, 0, width, height, 0x0a0810, 0.9).setOrigin(0).setInteractive();
     shade.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.next());
@@ -94,8 +105,14 @@ export class Celebrations {
       case 'gate':
         wait = this.gate(step.to);
         break;
+      case 'verse':
+        wait = this.verse(step.scroll);
+        break;
+      case 'creed':
+        wait = this.creed();
+        break;
       case 'summary':
-        wait = this.summary(step.to, step.levelCap, step.preview, step.extras);
+        wait = this.summary(step.to, step.levelCap, step.preview, step.extras, step.faith);
         break;
       case 'moment':
         this.moment(step.moment);
@@ -166,14 +183,32 @@ export class Celebrations {
     return 1600;
   }
 
-  /** 3. Everything new, on one screen: what was earned, and what to learn next in class. */
-  private summary(to: BeltInfo, levelCap: number, preview: RequirementStatus[], extras: Extra[]): number {
+  /** 3. LP-B2: the verse scroll this promotion finds: its found line, the verse, the covenant (name large) and Sensei's question. */
+  private verse(v: VerseScroll): number {
+    const { width, height } = this.size();
+    const w = Math.min(620, width - 48);
+    drawScroll(this.scene, (o) => this.layer.add(o), { x: (width - w) / 2, y: 16, w, h: height - 16 - 40 }, v, { found: true, sensei: true });
+    sfx.stripe();
+    return 1200;
+  }
+
+  /** LP-B2: the Creed Scroll, once, after the first class check-in. */
+  private creed(): number {
+    const { width, height } = this.size();
+    const w = Math.min(620, width - 48);
+    drawCreed(this.scene, (o) => this.layer.add(o), { x: (width - w) / 2, y: 16, w, h: height - 16 - 40 }, true);
+    return 1200;
+  }
+
+  /** 4. Everything new, on one screen: what was earned, and what to learn next in class. */
+  private summary(to: BeltInfo, levelCap: number, preview: RequirementStatus[], extras: Extra[], faith: string[]): number {
     const { width, height } = this.size();
     const cx = width / 2;
     this.text(cx, height * 0.08, `Congratulations, ${this.training.firstName}!`, 26, '#ffd166', true, 'Georgia, serif').setOrigin(0.5);
 
     // Left: what was earned.
     const earned: { line: string; color: string }[] = [{ line: `Your character can now reach level ${levelCap}`, color: '#ffffff' }];
+    for (const line of faith) earned.push({ line, color: '#ffd166' });
     // One line per stripe word, at its highest rank ("earned again" when the same word comes back).
     const stripes = new Map<string, number>();
     for (const e of extras) if (e.kind === 'stripe') stripes.set(e.word, Math.max(stripes.get(e.word) ?? 0, e.rank));

@@ -79,7 +79,9 @@ import {
   patternShape,
   patternKey,
   firstPatternSight,
+  guardianLine,
 } from '@dojo/sim';
+import { FAITH } from '../ui/faith';
 import bruteData from '../../../../content/enemies/brute.json';
 import trainingRoom from '../../../../content/rooms/training-room.json';
 import tutorialData from '../../../../content/tutorial/tutorial-floor.json';
@@ -1393,6 +1395,9 @@ export class GameScene extends Phaser.Scene {
             sfx.enemyDown();
             this.impact(FEEL.enemyDown);
             this.setFree(e.pos, !!e.def.boss);
+            // LP-B2: a freed Guardian's faith line, from the school's pack (none for Guardians it has no line for).
+            const faith = e.def.boss ? guardianLine(FAITH, e.def.id) : null;
+            if (faith) this.senseiSay(faith, 1800);
           }
           break;
         }
