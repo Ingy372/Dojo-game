@@ -26,5 +26,26 @@
   "enter": "Enter the Tower",
   "introTitle": "This is your Path.",
   "introLine": "Your next step is here.",
-  "introOk": "OK"
+  "introOk": "OK",
+  "_noteLpC4": "LP-C4 (Content): new wording for 6 strings LP-B1 (#504) left in code that still point to the Gate or Board. Programmer wires each key at the place named in pointerSpots, replacing the hard-coded text. Kid lines 8 words or fewer; adultProfilesHint is grown-ups only.",
+  "tourBoard": "The board shows your Path to the top.",
+  "tourDoor": "The door leads to the Tower.",
+  "levelTop": "Top level! See My Path to climb higher.",
+  "powersNew": "Each Sensei sign-off unlocks a new power!",
+  "powersWhere": "See them on the Board in My Path.",
+  "powersMore": "…and {n} more! See them on the Board.",
+  "dojoButton": "My Path",
+  "dojoWallLabel": "MY PATH",
+  "adultProfilesHint": "Student profiles and Power Rating: open My Path, tap Board, then tap its title 5 times.",
+  "pointerSpots": {
+    "tourBoard": "DojoScene.ts:347 tour line, first half",
+    "tourDoor": "DojoScene.ts:347 tour line, second half",
+    "levelTop": "HomeScene.ts:693 and :727 level-cap line",
+    "powersNew": "Celebrations.ts:204, first sentence",
+    "powersWhere": "Celebrations.ts:204, second sentence",
+    "powersMore": "Celebrations.ts:311",
+    "dojoButton": "DojoScene.ts:945 Board button",
+    "dojoWallLabel": "DojoScene.ts:788 wall label",
+    "adultProfilesHint": "DojoScene.ts:1604 (grown-ups only)"
+  }
 }
