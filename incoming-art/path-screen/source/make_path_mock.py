@@ -18,6 +18,7 @@ mm.PV = os.path.join(ROOT, 'preview')
 K = mm.K
 INK, INK_SOFT, CREAM = mm.INK, mm.INK_SOFT, mm.CREAM
 GOLD = (238, 182, 58)
+LOCKED_INK = (92, 62, 38)   # locked labels: darker than INK_SOFT so they read on tan at 1x
 GOLD_D = (176, 120, 30)
 NIGHT = (58, 52, 84)
 SEAL_FONT = '/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc'
@@ -196,9 +197,15 @@ def tower(M, x, y, w, h, small):
             ww, wh = bwi * .11, (th - 10) * .36
             wc = (255, 214, 110) if state in ('done', 'cur') else (92, 88, 110)
             d.rounded_rectangle([S(wx - ww / 2), S(wy), S(wx + ww / 2), S(wy + wh)], S(ww / 2), fill=wc + (255,), outline=(120, 80, 40, 255), width=S(1))
-        # balcony rail
-        d.rectangle([S(cx - bwi / 2 - 6), S(ty + th - 4), S(cx + bwi / 2 + 6), S(ty + th)], fill=(140, 92, 50, 255))
-        rc = col if state in ('done', 'cur') else tuple(int(c * .45 + 150 * .55) for c in col)
+        # each tier wears its belt: a wash on the wall, a sash under the roof and a coloured floor band
+        if state in ('cur', 'next'):
+            wash = col if state == 'cur' else tuple(int(c * .8 + 190 * .2) for c in col)
+            d.rectangle([S(cx - bwi / 2 + 1), S(ty + 11), S(cx + bwi / 2 - 1), S(ty + th - 1)], fill=wash + (52 if state == 'cur' else 105,))
+        bc = col if state in ('done', 'cur') else (tuple(int(c * .8 + 190 * .2) for c in col) if state == 'next' else (176, 170, 186))
+        rimc = rim if state != 'far' else (130, 124, 142)
+        d.rectangle([S(cx - bwi / 2), S(ty + 11), S(cx + bwi / 2), S(ty + 17)], fill=bc + (255,), outline=rimc + (255,), width=S(1))
+        d.rectangle([S(cx - bwi / 2 - 7), S(ty + th - 7), S(cx + bwi / 2 + 7), S(ty + th)], fill=bc + (255,), outline=rimc + (255,), width=S(1.2))
+        rc = col if state in ('done', 'cur') else (tuple(int(c * .8 + 190 * .2) for c in col) if state == 'next' else tuple(int(c * .45 + 150 * .55) for c in col))
         roof(d, cx, ty - 3, bwi, rc + (255,), rim + (255,), state != 'next')
         if state == 'cur':
             anchor = (x + cx + bwi / 2 + 8, y + ty + th * .55)
@@ -210,7 +217,8 @@ def tower(M, x, y, w, h, small):
     mist = Image.new('RGBA', (W2, H2), (0, 0, 0, 0))
     md = ImageDraw.Draw(mist)
     ny = base - (cur + 2) * th
-    md.rectangle([0, 0, W2, S(ny + th * .9)], fill=(236, 232, 248, 110))
+    md.rectangle([0, 0, W2, S(ny - th * .15)], fill=(236, 232, 248, 120))
+    md.rectangle([0, S(ny - th * .15), W2, S(ny + th * .8)], fill=(236, 232, 248, 45))
     sky.alpha_composite(mist.filter(ImageFilter.GaussianBlur(S(10))))
     # glow behind the current tier
     g = Image.new('RGBA', (W2, H2), (0, 0, 0, 0))
@@ -280,8 +288,17 @@ def lock_medallion(M, cx, cy, r, state):
         padlock(d, cx, cy, r * .8, (160, 128, 96))
 
 
-def wrap2(label):
+def wrap2(label, maxw=None, f=None):
     parts = label.split(' ')
+    if maxw and f:   # greedy by real width: as many lines as needed (David / and / Goliath)
+        lines, cur = [], ''
+        for w_ in parts:
+            t = (cur + ' ' + w_).strip()
+            if cur and f.getlength(t) > maxw:
+                lines.append(cur); cur = w_
+            else:
+                cur = t
+        return lines + [cur]
     if len(parts) == 1 or len(label) <= 7:
         return [label]
     best = min(range(1, len(parts)), key=lambda i: abs(len(' '.join(parts[:i])) - len(' '.join(parts[i:]))))
@@ -292,18 +309,50 @@ def gate(M, x, y, w, h, small):
     M.put('panel-inset', x, y, w, h)
     lit = sum(1 for _, s in FIX['locks'] if s == 'lit')
     M.text(x + 14, y + 16, f"The Gate to {FIX['next_belt']} Belt", 14 if small else 16, INK, 'lm', 'ExtraBold')
-    M.text(x + w - 14, y + 16, f"{lit} of {len(FIX['locks'])} lit", 11 if small else 12, INK_SOFT, 'rm', 'ExtraBold')
+    M.text(x + w - 14, y + 16, f"{lit} of {len(FIX['locks'])} lit", 12 if small else 13, INK, 'rm', 'ExtraBold')
     n = len(FIX['locks'])
-    side = 84 if small else 118   # room on the right for the sundial and Sensei's Seal
+    side = 100 if small else 124   # room on the right for the sundial and Sensei's Seal
     lw = w - 24 - side
     step = lw / n
     r = min(15 if small else 18, step * .36)
-    cy = y + 46 if small else y + 52
+    cy = y + 44 if small else y + 52
+    fs = 11 if small else 12
+    lf = ImageFont.truetype(mm.FONT, fs); lf.set_variation_by_name('ExtraBold')
+    # runs of numbered locks from one set ("Defense #16".."#20") show just the number,
+    # with the set's name once on a bracket underneath, so labels never touch at 1x
+    import re
+    groups, cur = [], None
+    for i, (label, _) in enumerate(FIX['locks']):
+        m_ = re.match(r'^(.*) (#\d+)$', label)
+        key = m_.group(1) if m_ else None
+        if key and cur and cur[0] == key:
+            cur[2] = i
+        else:
+            cur = [key, i, i]; groups.append(cur)
+    grp_of = {}
+    for key, a, b in groups:
+        for i in range(a, b + 1):
+            grp_of[i] = (key, a, b) if key and b > a else None
     for i, (label, st) in enumerate(FIX['locks']):
         cx = x + 12 + step * (i + .5)
         lock_medallion(M, cx, cy, r, st)
-        for j, line in enumerate(wrap2(label)):
-            M.text(cx, cy + r + 9 + j * 10.5, line, 8.5 if small else 10, INK if st != 'locked' else INK_SOFT, 'mm', 'ExtraBold')
+        g_ = grp_of.get(i)
+        lines = [label.rsplit(' ', 1)[1]] if g_ else wrap2(label, step - 3, lf)
+        for j, line in enumerate(lines):
+            M.text(cx, cy + r + 10 + j * 12.5, line, fs, INK if st != 'locked' else LOCKED_INK, 'mm', 'ExtraBold')
+    d0 = draw(M)
+    for key, a, b in groups:
+        if not key or b == a:
+            continue
+        x0 = x + 12 + step * (a + .5) - step * .38
+        x1 = x + 12 + step * (b + .5) + step * .38
+        by_ = cy + r + 21
+        d0.line([S(x0), S(by_ - 3), S(x0), S(by_), S(x1), S(by_), S(x1), S(by_ - 3)], fill=(176, 136, 88), width=S(1.2))
+        tw_ = lf.getlength(key) + 12
+        xm = (x0 + x1) / 2
+        M.text(xm, by_ + 9, key, fs, INK, 'mm', 'ExtraBold')
+    for i, (label, st) in enumerate(FIX['locks']):
+        cx = x + 12 + step * (i + .5)
         if st == 'next':
             M.put('cubby-lantern-0', cx + r - 6, cy - r - 14)
     # divider
@@ -317,14 +366,14 @@ def gate(M, x, y, w, h, small):
     d.ellipse([S(sx - rr), S(cy - rr), S(sx + rr), S(cy + rr)], fill=(244, 230, 204), outline=(150, 112, 70), width=S(1.6))
     d.pieslice([S(sx - rr + 2), S(cy - rr + 2), S(sx + rr - 2), S(cy + rr - 2)], -90, -90 + 360 * done / need, fill=GOLD)
     d.ellipse([S(sx - 2), S(cy - 2), S(sx + 2), S(cy + 2)], fill=(120, 80, 40))
-    M.text(sx, cy + rr + 9, 'Classes', 9 if small else 10, INK, 'mm', 'ExtraBold')
-    M.text(sx, cy + rr + 20, f'{done} of {need}', 9 if small else 10, INK_SOFT, 'mm', 'Bold')
+    M.text(sx, cy + rr + 10, 'Classes', 11 if small else 12, INK, 'mm', 'ExtraBold')
+    M.text(sx, cy + rr + 22.5, f'{done} of {need}', 11 if small else 12, INK, 'mm', 'ExtraBold')
     ex = dx + side * 3 / 4 - 2
     d.ellipse([S(ex - rr), S(cy - rr), S(ex + rr), S(cy + rr)], fill=(226, 206, 172), outline=(170, 132, 90), width=S(1.6))
     f = ImageFont.truetype(SEAL_FONT, S(rr * 1.05))
     d.text((S(ex), S(cy + .5)), '師', font=f, fill=(170, 132, 96), anchor='mm')
-    M.text(ex, cy + rr + 9, "Sensei's", 9 if small else 10, INK_SOFT, 'mm', 'ExtraBold')
-    M.text(ex, cy + rr + 20, 'Seal', 9 if small else 10, INK_SOFT, 'mm', 'ExtraBold')
+    M.text(ex, cy + rr + 10, "Sensei's", 11 if small else 12, LOCKED_INK, 'mm', 'ExtraBold')
+    M.text(ex, cy + rr + 22.5, 'Seal', 11 if small else 12, LOCKED_INK, 'mm', 'ExtraBold')
     return (x, cy)
 
 
@@ -367,7 +416,7 @@ def game_step(M, x, y, w, h, small):
     fw = max(16, (bw - 8) * frac)
     M.put(mm.nine(mm.tint(mm.spr('xp-bar-fill'), (242, 193, 78)), S(fw), S(11), [0, 6, 0, 6]), x + 18, by + 4)
     M.put(mm.nine(mm.spr('xp-bar-gloss'), S(fw), S(11), [0, 6, 0, 6]), x + 18, by + 4)
-    M.text(x + 14, by + 30, f"Level {FIX['level']}", 10 if small else 11, INK_SOFT, 'lm', 'ExtraBold')
+    M.text(x + 14, by + 30, f"Level {FIX['level']}", 11 if small else 12, INK, 'lm', 'ExtraBold')
     bh = 40 if small else 46
     bwid = w - 28
     M.put('button-primary-normal', x + 14, y + h - bh - 10, bwid, bh)
@@ -438,11 +487,11 @@ def path_screen(small, intro=False):
     M.put('panel-frame', px, py, W - 16, H - py - 4)
     ix, iy = px + 22, py + 20
     iw, ih = W - 16 - 44, H - py - 4 - 40
-    tw = int(iw * (.27 if small else .30))
+    tw = int(iw * (.23 if small else .28))
     a = tower(M, ix, iy, tw, ih, small)
-    rx = ix + tw + (22 if small else 28)
+    rx = ix + tw + (16 if small else 24)
     rw = ix + iw - rx
-    gh = 112 if small else 126
+    gh = 120 if small else 134
     b = gate(M, rx, iy, rw, gh, small)
     link(M, a, (b[0] + 4, iy + gh * .55))
     cy = iy + gh + (10 if small else 12)

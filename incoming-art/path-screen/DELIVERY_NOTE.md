@@ -37,3 +37,11 @@
 | `source/make_path_mock.py` | Builds everything. Run it from the repo root. `OLD_GATE=<gate screenshot>` adds the before/after sheet. |
 
 Checks: zero danger-red pixels in all eight mock files. No outside assets: everything is drawn by the script or comes from our own menu2 and player art. The belt on the player cut-out is recoloured to the fixture's rank, the same way the game recolours the belt layer.
+
+## Fix 1 (Manager art gate on 117af550)
+- Gate labels are now 11pt on small and 12pt on large. Locked labels use a darker brown ink instead of the soft grey-brown.
+- The five Defense locks show just their number (#16 to #20), with "Defense" written once on a bracket underneath. This stops the labels touching at 1x. "David and Goliath" wraps to 3 lines on small.
+- "3 of 7 lit" is now 12/13pt. "Classes 15 of 24", "Sensei's Seal" and "Level 12" are now 11/12pt and use the darker ink.
+- Tower: each tier wears its belt colour as a sash under the roof and a band at the floor. Kai's tier is also washed in green, and the next tier reads as blue through lighter mist. Far tiers stay grey. The tower is a little narrower on small to make room for the gate row.
+- The big card, the path and the banner are unchanged.
+- Before/after crops at 1x: preview/fix1-before-after-1x.png (plus a 2x zoom copy).
