@@ -1227,3 +1227,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - A **Shop** button on the Path's top bar opens the looks shop: 12 gi colours and 8 hair colours (200 coins each, belt 1 or 2), each previewed on the hero, with the coins before and after, one tap to get it, then wear it or go back to "My color" any time. Words and colours are placeholders in `content/shop/catalog.json`.
 - No real money anywhere: no billing or ads package, no money signs, no timers; coins only go down when a look is bought.
 - Tests: `lp-b4-shop` (14) and `balance/coin-rates` (4 quick cells, the whole table with BALANCE=1). Phone check `docs/shots/lp-b4/shop-verify.mjs` at 667x375, 844x390 and 932x430, Reduced motion on and off.
+
+## LP-B4b — effects and wall paint in the looks shop (2026-11-15)
+- The Shop now has tabs (Looks, Trails, Pops, Dojo) and sells the rest of the Stage 1 catalog from R-SHOP 3.3: 10 walk trails, 4 dash puffs, 8 hit pops, 6 win bursts and 6 wall paints, each with a free "None" or "Plain wood". Names, prices and belts follow R-SHOP; colours and effect recipes are placeholders in `content/shop/catalog.json`.
+- Effects are drawn in code (no art files): a trail behind the hero while walking (runs and Home Dojo), a puff when dashing, a pop when the hero's strike lands, a burst on Home after a cleared floor. Wall paint tints the Home Dojo's back wall.
+- Looks only: effects never touch the fight (the sim hash and stats are unchanged). Caps: 24 pieces, short lifetimes, no flashes. Reduced motion shows one still picture under half a second, and no trail.
+- Each item is previewed on the hero in the Shop. "Wearing" is now plain text (fixes the Tester's contrast note).
+- Tests: `lp-b4b-effects` (6) and `lp-b4-shop` (15). Phone check `docs/shots/lp-b4b/fx-verify.mjs` at 667x375, 844x390 and 932x430, Reduced motion on and off (shop, a real run, the Dojo wall), plus `contact-sheet.png` of every effect and paint next to the hero. `docs/shots/lp-b4/shop-verify.mjs` is kept as history; it predates the tabs.
+- Art gate fix: every effect now has a darker edge and holds full strength longer; the faint puffs, hit pops, snow and confetti trails and win fireworks are bolder (`docs/shots/lp-b4b/before-after.png`).
