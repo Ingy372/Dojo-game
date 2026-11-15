@@ -69,7 +69,8 @@ export function classPieceOrder(content: Content): DecorationDef[] {
 export type ClassChest = { kind: 'decor'; id: string } | { kind: 'gear'; item: GearItem };
 
 /**
- * Counts new class check-ins and opens one Class Chest for each, with no end. The first sync
+ * Counts new class check-ins (or the growth in the feed's class total, whichever is more) and
+ * opens one Class Chest for each, with no end. The first sync
  * seeds the counter from the feed (old saves: classesInRank) and opens one welcome chest, so a
  * long history never floods the dojo. Gear goes into the bag and fills an empty slot.
  */
@@ -90,6 +91,8 @@ export function openClassChests(profile: Profile, dojo: DojoState, content: Cont
       chests++;
     }
     rec.countedCheckIns = [...counted].filter((c) => live.has(c));
+    // Classes that fell out of the feed's window while the app was closed still count.
+    if (info.classesTotal !== null) chests = Math.max(chests, info.classesTotal - rec.classesCounted);
     rec.classesCounted = Math.max(rec.classesCounted + chests, info.classesTotal ?? 0);
   }
   const order = classPieceOrder(content);
