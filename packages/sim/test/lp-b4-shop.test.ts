@@ -76,7 +76,7 @@ describe('coins a run pays (LP-P1 #494)', () => {
     delete old.shop;
     const p = loadProfile(old);
     expect(p.coins).toBe(0);
-    expect(p.shop).toEqual({ owned: [], wearing: { gi: null, hair: null } });
+    expect(p.shop).toEqual({ owned: [], wearing: { gi: null, hair: null, trail: null, puff: null, hit: null, win: null, wall: null } });
     expect(loadProfile({ ...old, coins: -40 }).coins).toBe(0);
     p.coins = 350;
     expect(buyLook(p, CATALOG, 'gi-rose', 1)).toBe(true);
@@ -89,12 +89,12 @@ describe('the catalog (content/shop/catalog.json)', () => {
     const by = (g: string) => CATALOG.items.filter((i) => i.group === g);
     expect(by('gi-dye')).toHaveLength(12);
     expect(by('hair-dye')).toHaveLength(8);
-    for (const i of CATALOG.items) {
+    for (const i of [...by('gi-dye'), ...by('hair-dye')]) {
       expect(i.price).toBe(200);
       expect([1, 2]).toContain(i.belt);
     }
-    expect(shelf(CATALOG, 1)).toHaveLength(10);
-    expect(shelf(CATALOG, 2)).toHaveLength(20);
+    expect(shelf(CATALOG, 1).filter((i) => i.group.endsWith('-dye'))).toHaveLength(10);
+    expect(shelf(CATALOG, 2).filter((i) => i.group.endsWith('-dye'))).toHaveLength(20);
   });
 
   it('the checker refuses broken entries', () => {
@@ -159,11 +159,11 @@ describe('buying and wearing', () => {
     p.coins = 400;
     buyLook(p, CATALOG, 'gi-mint', 1);
     buyLook(p, CATALOG, 'hair-lilac', 1);
-    expect(wornColors(p, CATALOG)).toEqual({ gi: '#a8dcc4', hair: '#b9a2dc' });
+    expect(wornColors(p, CATALOG)).toEqual({ gi: '#a8dcc4', hair: '#b9a2dc', wall: null });
     expect(wearLook(p, CATALOG, 'hair', 'gi-mint')).toBe(false);
     expect(wearLook(p, CATALOG, 'gi', 'gi-rose')).toBe(false);
     expect(wearLook(p, CATALOG, 'gi', null)).toBe(true);
-    expect(wornColors(p, CATALOG)).toEqual({ gi: null, hair: '#b9a2dc' });
+    expect(wornColors(p, CATALOG)).toEqual({ gi: null, hair: '#b9a2dc', wall: null });
   });
 
   it('looks never reach a fight: stats are the same with every dye worn, and no run code reads the shop', () => {
@@ -171,7 +171,7 @@ describe('buying and wearing', () => {
     const before = JSON.stringify(playerStats(p));
     p.coins = 99999;
     for (const i of CATALOG.items) buyLook(p, CATALOG, i.id, 9);
-    expect(p.shop.owned).toHaveLength(20);
+    expect(p.shop.owned).toHaveLength(CATALOG.items.length);
     expect(JSON.stringify(playerStats(p))).toBe(before);
     const readers = Object.entries(SIM_SRC).filter(([f, code]) => !f.endsWith('/shop.ts') && /\.shop\b|wornColors|ShopSave/.test(code)).map(([f]) => f.split('/').pop());
     expect(readers).toEqual(['profile.ts']);

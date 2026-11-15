@@ -1,15 +1,47 @@
 {
-  "_note": "LP-B4 (L13 Stage 1) PLACEHOLDERS for Content: the looks shop. Gi dyes from R-SHOP 3.3 (colours as listed there); hair dyes from R-SHOP 3.4 (their colours are placeholders picked by the Programmer). Prices from LP-P1 (#494). belt = the belt tier where it goes on the shelf. Looks only: a dye changes the gi or hair colour, never the belt and never a fight. Words: no money signs, no 'buy coins', no timers or 'only today'.",
+  "_note": "LP-B4/LP-B4b (L13 Stage 1) PLACEHOLDERS for Content: the looks shop. Gi dyes from R-SHOP 3.3 (colours as listed there); hair dyes from R-SHOP 3.4 (their colours are placeholders picked by the Programmer). Prices from LP-P1 (#494). belt = the belt tier where it goes on the shelf. Looks only: a dye changes the gi or hair colour, never the belt and never a fight. Words: no money signs, no 'buy coins', no timers or 'only today'. LP-B4b: effects and wall paint from R-SHOP 3.3 (names, prices, belts); their colours and fx recipes are placeholders picked by the Programmer. fx: shape (one of 16 drawn in code), colors, count (at most 24), lifeMs (trail 800, puff and hit 400, win 3000 at most), size and spread in tiles, motion drift/burst/fall/rise. tab = the Shop tab the group shows under.",
   "groups": [
     {
       "id": "gi-dye",
       "name": "Gi Colors",
-      "slot": "gi"
+      "slot": "gi",
+      "tab": "Looks"
     },
     {
       "id": "hair-dye",
       "name": "Hair Colors",
-      "slot": "hair"
+      "slot": "hair",
+      "tab": "Looks"
+    },
+    {
+      "id": "walk-trail",
+      "name": "Walk Trails",
+      "slot": "trail",
+      "tab": "Trails"
+    },
+    {
+      "id": "dash-puff",
+      "name": "Dash Puffs",
+      "slot": "puff",
+      "tab": "Trails"
+    },
+    {
+      "id": "hit-pop",
+      "name": "Hit Pops",
+      "slot": "hit",
+      "tab": "Pops"
+    },
+    {
+      "id": "win-burst",
+      "name": "Win Bursts",
+      "slot": "win",
+      "tab": "Pops"
+    },
+    {
+      "id": "wall-paint",
+      "name": "Wall Paint",
+      "slot": "wall",
+      "tab": "Dojo"
     }
   ],
   "items": [
@@ -172,6 +204,625 @@
       "price": 200,
       "belt": 2,
       "color": "#d9a090"
+    },
+    {
+      "id": "trail-cherry-petals",
+      "group": "walk-trail",
+      "name": "Cherry Petals",
+      "price": 400,
+      "belt": 1,
+      "color": "#f6b8c8",
+      "fx": {
+        "shape": "petal",
+        "colors": [
+          "#f6b8c8",
+          "#f9d3dc"
+        ],
+        "count": 12,
+        "lifeMs": 800,
+        "size": 0.1,
+        "spread": 0.3,
+        "motion": "drift"
+      }
+    },
+    {
+      "id": "trail-maple-leaves",
+      "group": "walk-trail",
+      "name": "Maple Leaves",
+      "price": 400,
+      "belt": 1,
+      "color": "#e0743a",
+      "fx": {
+        "shape": "leaf",
+        "colors": [
+          "#e0743a",
+          "#c8502e",
+          "#e8a23a"
+        ],
+        "count": 12,
+        "lifeMs": 800,
+        "size": 0.11,
+        "spread": 0.3,
+        "motion": "drift"
+      }
+    },
+    {
+      "id": "trail-ink-swish",
+      "group": "walk-trail",
+      "name": "Ink Swish",
+      "price": 400,
+      "belt": 1,
+      "color": "#3a3448",
+      "fx": {
+        "shape": "ink",
+        "colors": [
+          "#3a3448",
+          "#5a5470"
+        ],
+        "count": 10,
+        "lifeMs": 700,
+        "size": 0.12,
+        "spread": 0.2,
+        "motion": "drift"
+      }
+    },
+    {
+      "id": "trail-star-dust",
+      "group": "walk-trail",
+      "name": "Star Dust",
+      "price": 400,
+      "belt": 2,
+      "color": "#ffd166",
+      "fx": {
+        "shape": "star",
+        "colors": [
+          "#ffd166",
+          "#fff1b8"
+        ],
+        "count": 14,
+        "lifeMs": 700,
+        "size": 0.08,
+        "spread": 0.3,
+        "motion": "drift"
+      }
+    },
+    {
+      "id": "trail-bubbles",
+      "group": "walk-trail",
+      "name": "Bubbles",
+      "price": 400,
+      "belt": 2,
+      "color": "#8fd8f0",
+      "fx": {
+        "shape": "bubble",
+        "colors": [
+          "#8fd8f0",
+          "#c8eefa"
+        ],
+        "count": 10,
+        "lifeMs": 800,
+        "size": 0.1,
+        "spread": 0.35,
+        "motion": "drift"
+      }
+    },
+    {
+      "id": "trail-paper-confetti",
+      "group": "walk-trail",
+      "name": "Paper Confetti",
+      "price": 400,
+      "belt": 3,
+      "color": "#f08fc0",
+      "fx": {
+        "shape": "confetti",
+        "colors": [
+          "#f08fc0",
+          "#8fd8b8",
+          "#ffd166",
+          "#8fb8f0"
+        ],
+        "count": 14,
+        "lifeMs": 800,
+        "size": 0.08,
+        "spread": 0.3,
+        "motion": "drift"
+      }
+    },
+    {
+      "id": "trail-fireflies",
+      "group": "walk-trail",
+      "name": "Fireflies",
+      "price": 400,
+      "belt": 3,
+      "color": "#d8f27a",
+      "fx": {
+        "shape": "dot",
+        "colors": [
+          "#d8f27a",
+          "#fff6b0"
+        ],
+        "count": 10,
+        "lifeMs": 800,
+        "size": 0.06,
+        "spread": 0.4,
+        "motion": "drift"
+      }
+    },
+    {
+      "id": "trail-snow-sparkle",
+      "group": "walk-trail",
+      "name": "Snow Sparkle",
+      "price": 400,
+      "belt": 4,
+      "color": "#ffffff",
+      "fx": {
+        "shape": "sparkle",
+        "colors": [
+          "#ffffff",
+          "#cfe8ff"
+        ],
+        "count": 12,
+        "lifeMs": 700,
+        "size": 0.09,
+        "spread": 0.3,
+        "motion": "drift"
+      }
+    },
+    {
+      "id": "trail-ribbon-swirl",
+      "group": "walk-trail",
+      "name": "Ribbon Swirl",
+      "price": 400,
+      "belt": 5,
+      "color": "#f08fc0",
+      "fx": {
+        "shape": "ribbon",
+        "colors": [
+          "#f08fc0",
+          "#8fb8f0"
+        ],
+        "count": 8,
+        "lifeMs": 800,
+        "size": 0.14,
+        "spread": 0.3,
+        "motion": "drift"
+      }
+    },
+    {
+      "id": "trail-little-hearts",
+      "group": "walk-trail",
+      "name": "Little Hearts",
+      "price": 400,
+      "belt": 6,
+      "color": "#f07a9a",
+      "fx": {
+        "shape": "heart",
+        "colors": [
+          "#f07a9a",
+          "#ffb3c6"
+        ],
+        "count": 10,
+        "lifeMs": 800,
+        "size": 0.09,
+        "spread": 0.3,
+        "motion": "drift"
+      }
+    },
+    {
+      "id": "puff-dust-cloud",
+      "group": "dash-puff",
+      "name": "Dust Cloud",
+      "price": 200,
+      "belt": 1,
+      "color": "#d8c8a8",
+      "fx": {
+        "shape": "puff",
+        "colors": [
+          "#d8c8a8",
+          "#bfae8c"
+        ],
+        "count": 6,
+        "lifeMs": 400,
+        "size": 0.16,
+        "spread": 0.45,
+        "motion": "burst"
+      }
+    },
+    {
+      "id": "puff-leaf-puffs",
+      "group": "dash-puff",
+      "name": "Leaf Puffs",
+      "price": 200,
+      "belt": 1,
+      "color": "#7cc46a",
+      "fx": {
+        "shape": "leaf",
+        "colors": [
+          "#7cc46a",
+          "#a8d98a"
+        ],
+        "count": 8,
+        "lifeMs": 400,
+        "size": 0.1,
+        "spread": 0.5,
+        "motion": "burst"
+      }
+    },
+    {
+      "id": "puff-star-puffs",
+      "group": "dash-puff",
+      "name": "Star Puffs",
+      "price": 200,
+      "belt": 1,
+      "color": "#ffd166",
+      "fx": {
+        "shape": "star",
+        "colors": [
+          "#ffd166",
+          "#fff1b8"
+        ],
+        "count": 8,
+        "lifeMs": 400,
+        "size": 0.09,
+        "spread": 0.5,
+        "motion": "burst"
+      }
+    },
+    {
+      "id": "puff-snow-puffs",
+      "group": "dash-puff",
+      "name": "Snow Puffs",
+      "price": 200,
+      "belt": 1,
+      "color": "#ffffff",
+      "fx": {
+        "shape": "puff",
+        "colors": [
+          "#ffffff",
+          "#dceeff"
+        ],
+        "count": 6,
+        "lifeMs": 400,
+        "size": 0.15,
+        "spread": 0.45,
+        "motion": "burst"
+      }
+    },
+    {
+      "id": "hit-star-pop",
+      "group": "hit-pop",
+      "name": "Star Pop",
+      "price": 800,
+      "belt": 2,
+      "color": "#ffd166",
+      "fx": {
+        "shape": "star",
+        "colors": [
+          "#ffd166",
+          "#fff1b8"
+        ],
+        "count": 8,
+        "lifeMs": 380,
+        "size": 0.1,
+        "spread": 0.6,
+        "motion": "burst"
+      }
+    },
+    {
+      "id": "hit-petal-burst",
+      "group": "hit-pop",
+      "name": "Petal Burst",
+      "price": 800,
+      "belt": 3,
+      "color": "#f6b8c8",
+      "fx": {
+        "shape": "petal",
+        "colors": [
+          "#f6b8c8",
+          "#f9d3dc"
+        ],
+        "count": 10,
+        "lifeMs": 380,
+        "size": 0.1,
+        "spread": 0.6,
+        "motion": "burst"
+      }
+    },
+    {
+      "id": "hit-ink-splash",
+      "group": "hit-pop",
+      "name": "Ink Splash",
+      "price": 800,
+      "belt": 3,
+      "color": "#3a3448",
+      "fx": {
+        "shape": "blob",
+        "colors": [
+          "#3a3448",
+          "#5a5470"
+        ],
+        "count": 7,
+        "lifeMs": 380,
+        "size": 0.1,
+        "spread": 0.5,
+        "motion": "burst"
+      }
+    },
+    {
+      "id": "hit-leaf-burst",
+      "group": "hit-pop",
+      "name": "Leaf Burst",
+      "price": 800,
+      "belt": 4,
+      "color": "#7cc46a",
+      "fx": {
+        "shape": "leaf",
+        "colors": [
+          "#7cc46a",
+          "#e0743a"
+        ],
+        "count": 10,
+        "lifeMs": 380,
+        "size": 0.1,
+        "spread": 0.6,
+        "motion": "burst"
+      }
+    },
+    {
+      "id": "hit-drum-ring",
+      "group": "hit-pop",
+      "name": "Drum Ring",
+      "price": 800,
+      "belt": 4,
+      "color": "#f2e9d8",
+      "fx": {
+        "shape": "ring",
+        "colors": [
+          "#f2e9d8",
+          "#ffd166"
+        ],
+        "count": 3,
+        "lifeMs": 380,
+        "size": 0.25,
+        "spread": 0.4,
+        "motion": "burst"
+      }
+    },
+    {
+      "id": "hit-firework-pop",
+      "group": "hit-pop",
+      "name": "Firework Pop",
+      "price": 800,
+      "belt": 5,
+      "color": "#ff8a80",
+      "fx": {
+        "shape": "firework",
+        "colors": [
+          "#ff8a80",
+          "#ffd166",
+          "#8fb8f0"
+        ],
+        "count": 5,
+        "lifeMs": 380,
+        "size": 0.16,
+        "spread": 0.6,
+        "motion": "burst"
+      }
+    },
+    {
+      "id": "hit-bubble-pop",
+      "group": "hit-pop",
+      "name": "Bubble Pop",
+      "price": 800,
+      "belt": 5,
+      "color": "#8fd8f0",
+      "fx": {
+        "shape": "bubble",
+        "colors": [
+          "#8fd8f0",
+          "#c8eefa"
+        ],
+        "count": 8,
+        "lifeMs": 380,
+        "size": 0.1,
+        "spread": 0.6,
+        "motion": "burst"
+      }
+    },
+    {
+      "id": "hit-paper-bits-burst",
+      "group": "hit-pop",
+      "name": "Paper-Bits Burst",
+      "price": 800,
+      "belt": 6,
+      "color": "#f08fc0",
+      "fx": {
+        "shape": "confetti",
+        "colors": [
+          "#f08fc0",
+          "#8fd8b8",
+          "#ffd166"
+        ],
+        "count": 12,
+        "lifeMs": 380,
+        "size": 0.08,
+        "spread": 0.6,
+        "motion": "burst"
+      }
+    },
+    {
+      "id": "win-lantern-rise",
+      "group": "win-burst",
+      "name": "Lantern Rise",
+      "price": 800,
+      "belt": 2,
+      "color": "#f08a5d",
+      "fx": {
+        "shape": "lantern",
+        "colors": [
+          "#f08a5d",
+          "#ffd166"
+        ],
+        "count": 10,
+        "lifeMs": 3000,
+        "size": 0.18,
+        "spread": 3,
+        "motion": "rise"
+      }
+    },
+    {
+      "id": "win-petal-rain",
+      "group": "win-burst",
+      "name": "Petal Rain",
+      "price": 800,
+      "belt": 3,
+      "color": "#f6b8c8",
+      "fx": {
+        "shape": "petal",
+        "colors": [
+          "#f6b8c8",
+          "#f9d3dc"
+        ],
+        "count": 22,
+        "lifeMs": 3000,
+        "size": 0.12,
+        "spread": 3,
+        "motion": "fall"
+      }
+    },
+    {
+      "id": "win-confetti-fall",
+      "group": "win-burst",
+      "name": "Confetti Fall",
+      "price": 800,
+      "belt": 4,
+      "color": "#f08fc0",
+      "fx": {
+        "shape": "confetti",
+        "colors": [
+          "#f08fc0",
+          "#8fd8b8",
+          "#ffd166",
+          "#8fb8f0"
+        ],
+        "count": 24,
+        "lifeMs": 3000,
+        "size": 0.1,
+        "spread": 3,
+        "motion": "fall"
+      }
+    },
+    {
+      "id": "win-fireworks",
+      "group": "win-burst",
+      "name": "Fireworks",
+      "price": 800,
+      "belt": 5,
+      "color": "#ff8a80",
+      "fx": {
+        "shape": "firework",
+        "colors": [
+          "#ff8a80",
+          "#ffd166",
+          "#8fb8f0",
+          "#b9a2dc"
+        ],
+        "count": 6,
+        "lifeMs": 2400,
+        "size": 0.4,
+        "spread": 2.5,
+        "motion": "burst"
+      }
+    },
+    {
+      "id": "win-paper-stars",
+      "group": "win-burst",
+      "name": "Paper Stars",
+      "price": 800,
+      "belt": 6,
+      "color": "#ffd166",
+      "fx": {
+        "shape": "star",
+        "colors": [
+          "#ffd166",
+          "#f08fc0",
+          "#8fd8f0"
+        ],
+        "count": 20,
+        "lifeMs": 3000,
+        "size": 0.12,
+        "spread": 3,
+        "motion": "fall"
+      }
+    },
+    {
+      "id": "win-ribbon-streamers",
+      "group": "win-burst",
+      "name": "Ribbon Streamers",
+      "price": 800,
+      "belt": 6,
+      "color": "#f08fc0",
+      "fx": {
+        "shape": "ribbon",
+        "colors": [
+          "#f08fc0",
+          "#8fb8f0",
+          "#ffd166"
+        ],
+        "count": 14,
+        "lifeMs": 3000,
+        "size": 0.2,
+        "spread": 3,
+        "motion": "fall"
+      }
+    },
+    {
+      "id": "wall-sunrise",
+      "group": "wall-paint",
+      "name": "Sunrise",
+      "price": 400,
+      "belt": 1,
+      "color": "#f4b183"
+    },
+    {
+      "id": "wall-seafoam",
+      "group": "wall-paint",
+      "name": "Seafoam",
+      "price": 400,
+      "belt": 1,
+      "color": "#8fd3c1"
+    },
+    {
+      "id": "wall-lavender",
+      "group": "wall-paint",
+      "name": "Lavender",
+      "price": 400,
+      "belt": 1,
+      "color": "#c3b1e1"
+    },
+    {
+      "id": "wall-sand",
+      "group": "wall-paint",
+      "name": "Sand",
+      "price": 400,
+      "belt": 2,
+      "color": "#e3cfa0"
+    },
+    {
+      "id": "wall-sky",
+      "group": "wall-paint",
+      "name": "Sky",
+      "price": 400,
+      "belt": 2,
+      "color": "#9cc9ec"
+    },
+    {
+      "id": "wall-rose",
+      "group": "wall-paint",
+      "name": "Rose",
+      "price": 400,
+      "belt": 2,
+      "color": "#e9a9b6"
     }
   ],
   "_noteWords": "words: the Shop screen. {n}, {name}, {before}, {after} are filled in by the game. Kid lines 8 words or fewer. PLACEHOLDERS for Content.",
@@ -190,6 +841,10 @@
     "wearing": "Wearing",
     "locked": "Comes with a new belt!",
     "short": "{n} more coins to go",
-    "back": "Back"
+    "back": "Back",
+    "plain": "None",
+    "plainLine": "No effect.",
+    "wood": "Plain wood",
+    "woodLine": "The dojo's own wood."
   }
 }
