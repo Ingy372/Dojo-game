@@ -1,0 +1,365 @@
+{
+  "notes": "DRAFT for LP-C1 (L5 faith pack). Swappable Action Zone faith layer (schoolId action-zone); nothing here is a lock, quiz, or Gate requirement. Every verse, covenant and creed word is copied from docs/faith-and-creed.md: wallText is section 3 with the two section 6 KJV fixes (Romans 3:23 'come short', Romans 5:8 'died'); kjvText is the full King James verse, checked against bible-api.com (translation=kjv) on 2026-11-14, because section 6.3 says the game uses KJV where the wall differs. showText picks which one the game shows. Kid lines (anything under lines, meaning, lit, description, and guardianRestored) are new, 8 words max, and need Jay's OK. Covenant 'Honest' uses the section 4 name; the section 6 summary says 'Honesty'. Supersedes creed-and-verses.json once Jay approves.",
+  "schoolId": "action-zone",
+  "translation": "KJV",
+  "verifiedAgainst": [
+    "https://bible-api.com (translation=kjv)"
+  ],
+  "creedScroll": {
+    "id": "creed-scroll",
+    "name": "Creed Scroll",
+    "signedBy": "Shihan Lowery",
+    "text": "I intend to live by the code of the black belt.\nTo seek God's truth. To put God first.\nTo bring honor to the family.\nTo show respect to my fellow man.\nTo encourage and stand firm with him,\ndoing all that I can to make the world a better place to live.\n\nI AM MORE THAN A CONQUEROR THROUGH JESUS CHRIST!!!",
+    "motto": "More Than a Conqueror",
+    "mottoVerse": {
+      "reference": "Romans 8:37",
+      "text": "Nay, in all these things we are more than conquerors through him that loved us."
+    },
+    "lines": {
+      "description": "The words our class says together.",
+      "found": "The Creed Scroll! Say it with your class.",
+      "sensei": "Which line feels like yours today?"
+    }
+  },
+  "faithDoesBanner": {
+    "id": "faith-does-banner",
+    "name": "FAITH DOES Banner",
+    "acrostic": "FAITH DOES",
+    "lines": {
+      "description": "A dojo banner. Each belt lights a letter.",
+      "complete": "FAITH DOES! Every letter shines bright!"
+    },
+    "letters": [
+      {
+        "letter": "F",
+        "word": "Forgiveness",
+        "earnedAt": "yellow",
+        "meaning": "Forgiving others, just like God forgives us.",
+        "lit": "F for Forgiveness now shines on your banner!"
+      },
+      {
+        "letter": "A",
+        "word": "Acceptance",
+        "earnedAt": "orange",
+        "meaning": "Welcoming others just the way they are.",
+        "lit": "A for Acceptance now shines on your banner!"
+      },
+      {
+        "letter": "I",
+        "word": "Integrity",
+        "earnedAt": "green",
+        "meaning": "Doing right, even when no one sees.",
+        "lit": "I for Integrity now shines on your banner!"
+      },
+      {
+        "letter": "T",
+        "word": "Trust",
+        "earnedAt": "blue",
+        "meaning": "Leaning on God when things feel hard.",
+        "lit": "T for Trust now shines on your banner!"
+      },
+      {
+        "letter": "H",
+        "word": "Honor",
+        "earnedAt": "red",
+        "meaning": "Treating others as truly special.",
+        "lit": "H for Honor now shines on your banner!"
+      },
+      {
+        "letter": "D",
+        "word": "Discipline",
+        "earnedAt": "red-black",
+        "meaning": "Doing hard things one step at a time.",
+        "lit": "D for Discipline now shines on your banner!"
+      },
+      {
+        "letter": "O",
+        "word": "Obedience",
+        "earnedAt": "brown",
+        "meaning": "Listening and following with a willing heart.",
+        "lit": "O for Obedience now shines on your banner!"
+      },
+      {
+        "letter": "E",
+        "word": "Empathy",
+        "earnedAt": "brown-black",
+        "meaning": "Feeling with others when they hurt.",
+        "lit": "E for Empathy now shines on your banner!"
+      },
+      {
+        "letter": "S",
+        "word": "Servanthood",
+        "earnedAt": "black",
+        "meaning": "Helping others, the way Jesus did.",
+        "lit": "S for Servanthood now shines on your banner!"
+      }
+    ]
+  },
+  "verseScrolls": [
+    {
+      "id": "love-scroll",
+      "name": "Love Scroll",
+      "promotion": {
+        "fromBelt": "white",
+        "toBelt": "yellow"
+      },
+      "reference": "John 3:16",
+      "showText": "kjv",
+      "kjvText": "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.",
+      "wallText": "For God so loved the world that he gave his only begotten Son that whosoever believes in him shall not perish but have everlasting life.",
+      "covenant": {
+        "name": "Unconditional Love",
+        "text": "No matter what you say or do to me, I will always love and pray for you."
+      },
+      "lines": {
+        "found": "A new scroll! God loves the whole world.",
+        "sensei": "Who could you show love to this week?"
+      }
+    },
+    {
+      "id": "together-scroll",
+      "name": "Together Scroll",
+      "promotion": {
+        "fromBelt": "yellow",
+        "toBelt": "orange"
+      },
+      "reference": "Romans 3:10",
+      "showText": "kjv",
+      "kjvText": "As it is written, There is none righteous, no, not one:",
+      "wallText": "There is no one righteous, no not one.",
+      "covenant": {
+        "name": "Availability",
+        "text": "My time, my money, and anything I have, I will make available to you."
+      },
+      "lines": {
+        "found": "A new scroll! Nobody climbs alone.",
+        "sensei": "Who helps you when the climb is hard?"
+      }
+    },
+    {
+      "id": "helping-hand-scroll",
+      "name": "Helping Hand Scroll",
+      "promotion": {
+        "fromBelt": "orange",
+        "toBelt": "green"
+      },
+      "reference": "Romans 3:23",
+      "showText": "kjv",
+      "kjvText": "For all have sinned, and come short of the glory of God;",
+      "wallText": "For all have sinned and come short of the glory of God.",
+      "covenant": {
+        "name": "Prayer",
+        "text": "I will always make time to pray for you."
+      },
+      "lines": {
+        "found": "Everyone stumbles. God's light helps us up.",
+        "sensei": "Who would you like to pray for?"
+      }
+    },
+    {
+      "id": "gift-scroll",
+      "name": "Gift Scroll",
+      "promotion": {
+        "fromBelt": "green",
+        "toBelt": "blue"
+      },
+      "reference": "Romans 6:23",
+      "showText": "kjv",
+      "kjvText": "For the wages of sin is death; but the gift of God is eternal life through Jesus Christ our Lord.",
+      "wallText": "For the wages of sin is death but the gift of God is eternal life through Jesus Christ our Lord.",
+      "covenant": {
+        "name": "Openness",
+        "text": "I will always share my thoughts and feelings with you."
+      },
+      "lines": {
+        "found": "A gift you never have to earn!",
+        "sensei": "What is the best gift you ever got?"
+      }
+    },
+    {
+      "id": "heart-scroll",
+      "name": "Heart Scroll",
+      "promotion": {
+        "fromBelt": "blue",
+        "toBelt": "red"
+      },
+      "reference": "Romans 5:8",
+      "showText": "kjv",
+      "kjvText": "But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us.",
+      "wallText": "For God commendeth his love toward us in that while we were yet sinners Christ died for us.",
+      "covenant": {
+        "name": "Honest",
+        "text": "I will always be honest with you."
+      },
+      "lines": {
+        "found": "God loved us first, even in the dark.",
+        "sensei": "When is it brave to tell the truth?"
+      }
+    },
+    {
+      "id": "fresh-start-scroll",
+      "name": "Fresh Start Scroll",
+      "promotion": {
+        "fromBelt": "red",
+        "toBelt": "red-black"
+      },
+      "reference": "1 John 1:9",
+      "showText": "kjv",
+      "kjvText": "If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.",
+      "wallText": "If we confess our sins he is faithful and just to forgive us of our sins and purify us from all unrighteousness.",
+      "covenant": {
+        "name": "Sensitivity",
+        "text": "I will always be sensitive to your needs, thoughts, and feelings."
+      },
+      "lines": {
+        "found": "Saying sorry lets the light back in.",
+        "sensei": "How does a fresh start feel?"
+      }
+    },
+    {
+      "id": "rescue-scroll",
+      "name": "Rescue Scroll",
+      "promotion": {
+        "fromBelt": "red-black",
+        "toBelt": "brown"
+      },
+      "reference": "John 3:17",
+      "showText": "kjv",
+      "kjvText": "For God sent not his Son into the world to condemn the world; but that the world through him might be saved.",
+      "wallText": "For God did not send his Son into the world to condemn the world but to save the world through him.",
+      "covenant": {
+        "name": "Confidentiality",
+        "text": "I will keep whatever is shared within the confines of the group to provide an atmosphere of openness."
+      },
+      "lines": {
+        "found": "The light came to save, not to scare.",
+        "sensei": "Who could you help on a hard day?"
+      }
+    },
+    {
+      "id": "sunrise-scroll",
+      "name": "Sunrise Scroll",
+      "promotion": {
+        "fromBelt": "brown",
+        "toBelt": "brown-black"
+      },
+      "reference": "John 3:3",
+      "showText": "kjv",
+      "kjvText": "Jesus answered and said unto him, Verily, verily, I say unto thee, Except a man be born again, he cannot see the kingdom of God.",
+      "wallText": "I tell you the truth, unless a man is born again he may not enter the kingdom of God.",
+      "covenant": {
+        "name": "Accountability",
+        "text": "I am accountable to you to become what God has designed me to be in his living creation."
+      },
+      "lines": {
+        "found": "Born again, like a brand new morning.",
+        "sensei": "What has changed in you since white belt?"
+      }
+    },
+    {
+      "id": "wind-scroll",
+      "name": "Wind Scroll",
+      "promotion": {
+        "fromBelt": "brown-black",
+        "toBelt": "black"
+      },
+      "reference": "John 3:5–8",
+      "showText": "kjv",
+      "kjvText": "Jesus answered, Verily, verily, I say unto thee, Except a man be born of water and of the Spirit, he cannot enter into the kingdom of God. That which is born of the flesh is flesh; and that which is born of the Spirit is spirit. Marvel not that I said unto thee, Ye must be born again. The wind bloweth where it listeth, and thou hearest the sound thereof, but canst not tell whence it cometh, and whither it goeth: so is every one that is born of the Spirit.",
+      "wallText": "I tell you the truth, unless a man is born of water and the Spirit, he cannot enter the kingdom of God. Flesh gives birth to flesh, but the Spirit gives birth to spirit. You should not be surprised at my saying, \"You must be born again.\" The wind blows wherever it pleases. You hear its sound, but you cannot tell where it comes from or where it is going. So it is with everyone born of the Spirit.",
+      "covenant": null,
+      "lines": {
+        "found": "You can't see the wind, but it moves.",
+        "sensei": "Who could you serve today?"
+      }
+    },
+    {
+      "id": "summit-scroll",
+      "name": "Summit Scroll",
+      "promotion": {
+        "fromBelt": "black",
+        "toBelt": null
+      },
+      "reference": "John 6:40",
+      "showText": "kjv",
+      "kjvText": "And this is the will of him that sent me, that every one which seeth the Son, and believeth on him, may have everlasting life: and I will raise him up at the last day.",
+      "wallText": "For my Father's will is that everyone that looks to the Son and believes in him shall have eternal life, and I shall raise him up at that last day.",
+      "covenant": null,
+      "lines": {
+        "found": "The light carried you all the way up.",
+        "sensei": "Who will you help climb next?"
+      }
+    }
+  ],
+  "guardianRestored": {
+    "template": "A piece of the light comes home!",
+    "guardians": [
+      {
+        "faithOverlayKey": "lamp-keeper",
+        "tier": "white",
+        "name": "The Lamp Keeper",
+        "line": "The lanterns glow again. Light wins!"
+      },
+      {
+        "faithOverlayKey": "sun-gardener",
+        "tier": "yellow",
+        "name": "The Sun Gardener",
+        "line": "The garden wakes up in the sunlight!"
+      },
+      {
+        "faithOverlayKey": "hearth-cook",
+        "tier": "orange",
+        "name": "The Hearth Cook",
+        "line": "The hearth is warm again. Supper's ready!"
+      },
+      {
+        "faithOverlayKey": "stone-giant",
+        "tier": "green",
+        "name": "The Stone Giant",
+        "line": "The Giant is free! Small faith, big win."
+      },
+      {
+        "faithOverlayKey": "river-watcher",
+        "tier": "blue",
+        "name": "The River Watcher",
+        "line": "The river runs calm and clear again."
+      },
+      {
+        "faithOverlayKey": "ember-knight",
+        "tier": "red",
+        "name": "The Ember Knight",
+        "line": "The Knight's shield glows warm, not angry."
+      },
+      {
+        "faithOverlayKey": "echo-mask",
+        "tier": "red-black",
+        "name": "The Echo Mask",
+        "line": "The echoes speak kind words now."
+      },
+      {
+        "faithOverlayKey": "root-keeper",
+        "tier": "brown",
+        "name": "The Root Keeper",
+        "line": "The old roots drink the light again."
+      },
+      {
+        "faithOverlayKey": "storm-herald",
+        "tier": "brown-black",
+        "name": "The Storm Herald",
+        "line": "Peace, be still. The storm is quiet."
+      },
+      {
+        "faithOverlayKey": "lost-lightbearer",
+        "tier": "black",
+        "name": "The Lost Lightbearer",
+        "line": "The Last Light is home. The Tower shines!"
+      }
+    ]
+  },
+  "placement": {
+    "creedScroll": "In the Book's Faith page from the first visit; Sensei shows it once after the first class check-in.",
+    "faithDoesBanner": "Hangs in the Home Dojo; one letter lights at each real promotion (ceremony screen).",
+    "verseScrolls": "Given on the promotion ceremony screen: found line, verse, covenant, then Sensei. Kept in the Book's Faith page.",
+    "guardianRestored": "One line when a Guardian is freed, before its relic scroll from guardian-faith-overlay.json."
+  }
+}
