@@ -11,6 +11,11 @@ All numbers are tagged **[MEASURED]** (from the sim run in `LP-P1-sim/`), **[COD
 
 ---
 
+## Manager decisions (Nov 14, 2026, after #494 merged)
+- Class Chest stays at **150** coins.
+- Stage 1 has **no selling**.
+- Launch target: **Stage 1 plus part of Stage 2**. Stage 1 alone is the fallback.
+
 ## 1. What changed since R-SHOP
 R-SHOP (Nov 1) set the payout on an older sim and three bots, and paid most of the gap between bots through selling gear. Since then: crafting was cut, the Class Chest (L4) and Star Chest (L2b, Jay: "yes thats a fantastic idea") were added, the masher bot exists, and combat was retuned. So I re-measured everything on today's code and **dropped selling from Stage 1** (there is still no bag size in code, so "sell when the bag is full" has nothing to trigger it, and selling is the one source kids could grind). The run payout itself is unchanged from R-SHOP.
 

@@ -117,15 +117,15 @@ The acrostic gives the game a natural collection: a student's journey to black b
 
 Jay sent new photos of the dojo walls on Oct 24. They settle the questions this section used to ask:
 
-1. **Wording.** Use the King James (KJV) text, the same as on the walls. This means Romans 3:23 reads "come short of the glory of God" and Romans 5:8 reads "Christ died for us". The Confidentiality covenant reads in full: "I will keep whatever is shared within the confines of the group to provide an atmosphere of openness."
+1. **Wording.** *(Updated Nov 14, 2026; see item 3.)* The game shows the **wall wording**: the section 3 text, with the two sign typos fixed so Romans 3:23 reads "come short of the glory of God" and Romans 5:8 reads "Christ died for us". The Oct 24 note said the walls were KJV, but the LP-C1 pack check found the walls differ from KJV on 9 of 10 verses (`drafts/learning/LP-L2-faith-pack-review.md`). The Confidentiality covenant reads in full: "I will keep whatever is shared within the confines of the group to provide an atmosphere of openness."
 2. **Brown/Black Belt → Black.** This step has a verse (John 3:5–8) and a life word (S = Servanthood), but no covenant. The game shows no covenant for it.
-3. **Translation.** KJV for every verse. Where the section 3 text differs from KJV, the game uses the KJV text.
+3. **Translation (Jay, Nov 14, 2026).** Jay: *"Everything in faith lines looks good. Go with the wording that's on the wall."* So the game shows the wall wording for every verse (`showText: wall` in the faith pack). The full King James text stays in the pack (`kjvText`) as a reference only and is not shown in the game. This replaces the Oct 24 rule "KJV for every verse".
 4. **Life words vs. stripe words.** These are separate. The FAITH DOES letters (Forgiveness, Acceptance, Integrity, Trust, Honor, Discipline, Obedience, Empathy, Servanthood) go with each belt promotion. The stripe words (Respect, Great Effort, Self-Discipline) still power the Virtues. *Manager's call, since Jay delegated gaps.*
 5. **What students must know.** In the game, students learn these through play: the Sensei talks about them, and they appear on the Belt Gate screen and in a collectible "Creed Wall". They are **not** Gate locks. This keeps the faith content warm and hopeful for kids aged 6 and up, not a quiz. *Manager's call. Jay can change it.*
 
 ### Summary of each belt step (from the wall photos)
 
-| Promotion | Verse (KJV) | Covenant | Letter |
+| Promotion | Verse (wall wording; KJV as reference) | Covenant | Letter |
 |---|---|---|---|
 | White → Yellow | John 3:16 | Unconditional Love: no matter what you say or do to me, I will always love and pray for you | F = Forgiveness |
 | Yellow → Orange | Romans 3:10 | Availability: my time, my money, and anything I have, I will make available to you | A = Acceptance |
