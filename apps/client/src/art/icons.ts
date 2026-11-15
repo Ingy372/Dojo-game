@@ -28,11 +28,15 @@ export function addIcon(scene: Phaser.Scene, id: string, x: number, y: number, s
 export const INSIGHT_ACCENT: Readonly<Record<string, number>> = {
   'ripple-counter': 0x4096eb,
   'iron-skin': 0x6e7c96,
-  'wind-step': 0x3cc896,
   'double-strike': 0xff921e,
   'quick-hands': 0xfad628,
   'press-the-advantage': 0x9660e6,
   'shield-breaker': 0x1ebace,
   'heavy-hands': 0x965c32,
   rally: 0x82cd32,
+  // OV-A1 (#485): the four OV-B6 Power-ups.
+  'calm-breath': 0xe260c4,
+  'steady-start': 0xfcac3a,
+  'lighter-strike': 0x78c4fa,
+  'softer-block': 0xe2b468,
 };

@@ -20,10 +20,15 @@ describe('enemy mixes', () => {
   };
 
   // C-B1-ROOMS: white-belt rooms use only swarmers and shields, so a white floor has fewer mixes.
-  it('white belt: at least 2 different mixes over 5 runs, all swarmers and shields only', () => {
-    const mixes = mixesAt();
-    expect(mixes.size).toBeGreaterThanOrEqual(2);
-    for (const m of mixes) for (const e of m.split('+')) expect(['shield', 'swarmer']).toContain(e);
+  // Only one white room (Twin Shields) has a second mix, so whether 5 runs meet it depends on the Power-up draws.
+  it('white belt: the floor offers at least 2 mixes, and runs meet swarmers and shields only', () => {
+    const offered = new Set(
+      content.rooms
+        .filter((r) => r.floorSet === 'white-dojo' && (r.kind === 'battle' || r.kind === 'challenge'))
+        .map((r) => mixOf(r.id)),
+    );
+    expect(offered.size).toBeGreaterThanOrEqual(2);
+    for (const m of mixesAt()) for (const e of m.split('+')) expect(['shield', 'swarmer']).toContain(e);
   });
 
   it('belt 2: shows at least 4 different enemy mixes over 5 runs', () => {

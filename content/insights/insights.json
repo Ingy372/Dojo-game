@@ -4,35 +4,28 @@
     {
       "id": "ripple-counter",
       "name": "Ripple Counter",
-      "family": "rooted",
+      "family": "guard",
       "text": "Great Counters also hit every enemy near you.",
       "effect": { "type": "rippleCounter", "amount": 1.2, "radius": 2.2 }
     },
     {
       "id": "iron-skin",
       "name": "Iron Skin",
-      "family": "rooted",
+      "family": "guard",
       "text": "Blocks bounce the hit back at the enemy, with a little extra.",
       "effect": { "type": "blockReflect", "amount": 1.2 }
     },
     {
-      "id": "wind-step",
-      "name": "Wind Step",
-      "family": "flowing",
-      "text": "Every 5 combo hits gives you a 2-second burst of speed.",
-      "effect": { "type": "comboSpeed", "amount": 0.3, "everyHits": 5, "seconds": 2 }
-    },
-    {
       "id": "double-strike",
       "name": "Double Strike",
-      "family": "flowing",
+      "family": "speed",
       "text": "Strikes chain one extra hit.",
-      "effect": { "type": "strikeExtraHit", "amount": 0.2 }
+      "effect": { "type": "strikeExtraHit", "amount": 0.3 }
     },
     {
       "id": "quick-hands",
       "name": "Quick Hands",
-      "family": "flowing",
+      "family": "speed",
       "text": "Your basic attacks are 20% faster.",
       "effect": { "type": "attackSpeed", "amount": 0.2 }
     },
@@ -40,15 +33,15 @@
       "id": "press-the-advantage",
       "name": "Press the Advantage",
       "family": "power",
-      "text": "Hit dizzy or winded enemies 30% harder.",
-      "effect": { "type": "staggerBonus", "amount": 0.3 }
+      "text": "Hit dizzy or winded enemies 40% harder.",
+      "effect": { "type": "staggerBonus", "amount": 0.4 }
     },
     {
       "id": "shield-breaker",
       "name": "Shield Breaker",
       "family": "power",
       "text": "Any hit breaks shields, and breaking one gives you a little Focus.",
-      "effect": { "type": "shieldBreaker", "focusOnBreak": 7 }
+      "effect": { "type": "shieldBreaker", "focusOnBreak": 12 }
     },
     {
       "id": "heavy-hands",
@@ -63,6 +56,34 @@
       "family": "virtue",
       "text": "Below half health? Focus fills 75% faster!",
       "effect": { "type": "lowHealthFocus", "amount": 0.75, "below": 0.5 }
+    },
+    {
+      "id": "calm-breath",
+      "name": "Quiet Mind",
+      "family": "virtue",
+      "text": "Your Focus fills up faster.",
+      "effect": { "type": "focusGain", "amount": 0.25 }
+    },
+    {
+      "id": "steady-start",
+      "name": "Warm Up",
+      "family": "virtue",
+      "text": "Start every room with some Focus.",
+      "effect": { "type": "startFocus", "amount": 60 }
+    },
+    {
+      "id": "lighter-strike",
+      "name": "Swift Strikes",
+      "family": "speed",
+      "text": "Your Strikes use less Focus.",
+      "effect": { "type": "strikeCost", "amount": 7 }
+    },
+    {
+      "id": "softer-block",
+      "name": "Iron Block",
+      "family": "guard",
+      "text": "Iron arms stop more of the hit.",
+      "effect": { "type": "blockCut", "amount": 0.12 }
     }
   ]
 }

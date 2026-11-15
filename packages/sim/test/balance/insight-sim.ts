@@ -4,7 +4,7 @@
 
 import { ARTISTS } from '../r-bal-12-artists';
 import { testContent } from '../load-content';
-import { createRng, createRunWorld, currentRoom, startRun, type Content, type Difficulty, type InsightDef } from '../../src';
+import { createRng, createRunWorld, currentRoom, startRun, type Difficulty } from '../../src';
 import { playRoom, SKILLS, type InsightPicker, type Skill, type Style } from './bot';
 
 export type BotName = 'kid' | 'newer' | 'careful';
@@ -21,12 +21,6 @@ export const BELTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
  */
 export const SEED_BASE = 1000;
 
-/** Virtue stand-ins for after the beta (R-INSIGHT-BAL section 5). They are added to the sim only while the real cards are not in the content. */
-export const PLACEHOLDER_CARDS: InsightDef[] = [
-  { id: 'calm-breath', name: 'Calm Breath', family: 'virtue', text: 'Focus fills 15% faster.', effect: { type: 'focusGain', amount: 0.15 } },
-  { id: 'steady-start', name: 'Steady Start', family: 'virtue', text: 'Start each fight with a Strike ready.', effect: { type: 'startFocus', amount: 40 } },
-];
-
 /** What a run is given. */
 export type Setup =
   | { kind: 'none' }
@@ -36,13 +30,8 @@ export type Setup =
   | { kind: 'held'; ids: string[] }
   /** A made-up +amount Power card held all run: the PE ruler. */
   | { kind: 'ruler'; amount: number }
-  /** The real pick screen over every card (placeholders too), with a deliberate picker. */
+  /** The real pick screen over the game's own cards, with a deliberate picker. */
   | { kind: 'picker'; pick: InsightPicker };
-
-/** All cards the budget covers: the game's own, plus the placeholders that are not in the content yet. */
-export function allCards(content: Content = testContent()): InsightDef[] {
-  return [...content.insights, ...PLACEHOLDER_CARDS.filter((p) => !content.insights.some((i) => i.id === p.id))];
-}
 
 /** Picks the first offered card of one of these ids, else the first offered. */
 export const leanPicker = (ids: string[]): InsightPicker => (_run, choices) => choices.find((c) => ids.includes(c)) ?? choices[0];
@@ -85,14 +74,12 @@ function playOne(setup: Setup, bot: BotName, diff: Difficulty, tier: number, see
   let pickInsight: InsightPicker | undefined;
   if (setup.kind === 'none') c.insights = [];
   else if (setup.kind === 'held') {
-    const cards = allCards(c);
-    c.insights = cards.filter((i) => setup.ids.includes(i.id));
+    c.insights = c.insights.filter((i) => setup.ids.includes(i.id));
     grant = c.insights.map((i) => i.id);
   } else if (setup.kind === 'ruler') {
     c.insights = [{ id: 'ruler', name: 'ruler', family: 'power', text: 'ruler', effect: { type: 'powerScale', amount: setup.amount } }];
     grant = ['ruler'];
   } else if (setup.kind === 'picker') {
-    c.insights = allCards(c);
     pickInsight = setup.pick;
   }
   const run = startRun(c, { seed, dryRuns: 0, difficulty: diff, tier });

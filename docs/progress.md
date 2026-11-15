@@ -1172,6 +1172,13 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - Music and Sound − and + buttons are at least 44x44 at every size (they were 43x44 at 667x375).
 - Phone check `docs/shots/ov-fx1/settings-arrival.mjs` 44 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off. On main it fails 36 checks (stuck in `arriving`).
 
+## OV-B6 — 12 Power-ups, OV-P5 numbers (2026-11-15)
+
+- Four new Power-ups join the pick screen and Wind Step leaves it (OV-P5, #511), so the pool is 12: Quiet Mind (Focus fills faster), Warm Up (start every room with some Focus), Swift Strikes (Strikes use less Focus) and Iron Block (blocks stop more of the hit).
+- Each has its own icon from #485 (Iron Block shows the steel arm).
+- The Rooted and Flowing families are now called Guard and Speed, which the card's top stripe shows.
+- OV-P5 numbers: Press the Advantage 0.4 (card text "40% harder"), Shield Breaker 12 Focus, Double Strike 0.3, Warm Up 60, Swift Strikes 7, Iron Block 0.12.
+- Tests: `insight-budget` CAPS rows match OV-P5 (no Wind Step row), every family has at least 2 cards. The golden run is re-captured for the 12-card pool. The two R-CHALLENGE P5 bot-answer checks keep the 9-card pool they were measured on, frozen in `r-challenge-p5-nine-cards.json`. Rule A (the comboSpeed effect) keeps its test with Wind Step's old numbers, since the effect type stays. Phone check `docs/shots/ov-b6/powerups.mjs` 172 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off.
 ## PB-04 — Kata power slot with placeholder powers (2026-11-15)
 
 - `content/abilities/kata-powers.json` has one power each for Basic Form 1, Basic Form 2 and Keon. All three are placeholders until Jay's list (PB-11), so they change no fight.

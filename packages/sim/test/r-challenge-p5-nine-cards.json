@@ -1,0 +1,99 @@
+{
+  "_note": "R-CHALLENGE P5's bot-answer checks were measured on this 9-card Insight pool (main before OV-B6). The game's pool is now content/insights/insights.json; these checks keep the pool they were measured on (Manager call, OV-B6).",
+  "insights": [
+    {
+      "id": "ripple-counter",
+      "name": "Ripple Counter",
+      "family": "guard",
+      "text": "Great Counters also hit every enemy near you.",
+      "effect": {
+        "type": "rippleCounter",
+        "amount": 1.2,
+        "radius": 2.2
+      }
+    },
+    {
+      "id": "iron-skin",
+      "name": "Iron Skin",
+      "family": "guard",
+      "text": "Blocks bounce the hit back at the enemy, with a little extra.",
+      "effect": {
+        "type": "blockReflect",
+        "amount": 1.2
+      }
+    },
+    {
+      "id": "wind-step",
+      "name": "Wind Step",
+      "family": "speed",
+      "text": "Every 5 combo hits gives you a 2-second burst of speed.",
+      "effect": {
+        "type": "comboSpeed",
+        "amount": 0.3,
+        "everyHits": 5,
+        "seconds": 2
+      }
+    },
+    {
+      "id": "double-strike",
+      "name": "Double Strike",
+      "family": "speed",
+      "text": "Strikes chain one extra hit.",
+      "effect": {
+        "type": "strikeExtraHit",
+        "amount": 0.2
+      }
+    },
+    {
+      "id": "quick-hands",
+      "name": "Quick Hands",
+      "family": "speed",
+      "text": "Your basic attacks are 20% faster.",
+      "effect": {
+        "type": "attackSpeed",
+        "amount": 0.2
+      }
+    },
+    {
+      "id": "press-the-advantage",
+      "name": "Press the Advantage",
+      "family": "power",
+      "text": "Hit dizzy or winded enemies 30% harder.",
+      "effect": {
+        "type": "staggerBonus",
+        "amount": 0.3
+      }
+    },
+    {
+      "id": "shield-breaker",
+      "name": "Shield Breaker",
+      "family": "power",
+      "text": "Any hit breaks shields, and breaking one gives you a little Focus.",
+      "effect": {
+        "type": "shieldBreaker",
+        "focusOnBreak": 7
+      }
+    },
+    {
+      "id": "heavy-hands",
+      "name": "Heavy Hands",
+      "family": "power",
+      "text": "+20% Power.",
+      "effect": {
+        "type": "powerScale",
+        "amount": 0.2
+      }
+    },
+    {
+      "id": "rally",
+      "name": "Rally",
+      "family": "virtue",
+      "text": "Below half health? Focus fills 75% faster!",
+      "effect": {
+        "type": "lowHealthFocus",
+        "amount": 0.75,
+        "below": 0.5
+      }
+    }
+  ]
+}

@@ -2,13 +2,14 @@
 // checked on the real C1 content, and the plan's section 4 table (BALANCE=1 to print it) with a
 // warning for each Challenge cell more than 5 points off the §4b L+B row.
 import { describe, expect, it } from 'vitest';
-import { loadEnemy, scaleEnemyDef, type Content, type Difficulty } from '../src';
+import { loadEnemy, loadInsights, scaleEnemyDef, type Content, type Difficulty } from '../src';
 import { PATTERN_ANSWERS, playRun, SKILLS, type RunStats } from './balance/bot';
 import { targetWarnings, TARGET_TOLERANCE } from './balance/challenge-targets';
 import { testContent } from './load-content';
 import { ARTISTS } from './r-bal-12-artists';
 import { captureGolden } from './golden-capture';
 import goldenRaw from '../../../fixtures/golden/p-menu2-d-default-run.json?raw';
+import nineCardPool from './r-challenge-p5-nine-cards.json';
 
 const balance = !!(import.meta.env as Record<string, string | undefined>).BALANCE;
 const content = testContent();
@@ -62,6 +63,10 @@ describe('R-CHALLENGE P7: the real C1 patterns change nothing off Challenge', ()
 });
 
 describe('R-CHALLENGE P5: the bot answers patterns', () => {
+  // OV-B6 (Manager call): these two checks test the bot's answer to a pattern, not the cards, so they keep the 9-card
+  // Insight pool they were measured on, numbers and all (r-challenge-p5-nine-cards.json, main before OV-B6). On the 13-card pool the random offers reshuffle every run: step-out read -9.2%
+  // (gate 10%) and the double-slam hold +0.05% (noise). The Planner may re-measure them on 13 cards later.
+  const nineCards: Content = { ...content, insights: loadInsights(nineCardPool) };
   // Whole runs drift apart once one choice differs, so total Health over many runs is too noisy for a rule this small
   // (the old total-Health comparison flipped sign with the card numbers). Instead the pairs are matched: the same seed,
   // belt and cards, and the same moment (the room's first landing-circle swing). The two runs are identical up to the
@@ -69,7 +74,7 @@ describe('R-CHALLENGE P5: the bot answers patterns', () => {
   const firstLanding = (stepOut: boolean, tier: number, seed: number): number | undefined => {
     PATTERN_ANSWERS.stepOutOfLanding = stepOut;
     try {
-      return run(content, seed, BOTS[1], 'challenge', tier).rooms.find((r) => r.landingFirst !== undefined)?.landingFirst;
+      return run(nineCards, seed, BOTS[1], 'challenge', tier).rooms.find((r) => r.landingFirst !== undefined)?.landingFirst;
     } finally {
       PATTERN_ANSWERS.stepOutOfLanding = true;
     }
@@ -107,7 +112,7 @@ describe('R-CHALLENGE P5: the bot answers patterns', () => {
     PATTERN_ANSWERS[key] = on;
     try {
       let damage = 0;
-      for (const tier of [4, 6, 8, 10]) for (let seed = 501; seed <= 800; seed++) for (const r of run(content, seed, BOTS[1], 'challenge', tier).rooms) damage += r.damage;
+      for (const tier of [4, 6, 8, 10]) for (let seed = 501; seed <= 800; seed++) for (const r of run(nineCards, seed, BOTS[1], 'challenge', tier).rooms) damage += r.damage;
       return damage;
     } finally {
       PATTERN_ANSWERS[key] = true;

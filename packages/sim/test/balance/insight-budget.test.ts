@@ -16,11 +16,11 @@
 //  - Iron Skin: kid-leaning; the kid blocks by mashing and takes hits, skilled bots dodge or counter instead.
 //  - Wind Step: needs long combos, so a skilled bot's rhythm wastes the burst.
 //  - Quick Hands and Shield Breaker: a skilled bot already fills its Focus and breaks shields.
-//  - Calm Breath and Steady Start (placeholders): Focus cards, where a skilled bot has Focus to spare.
+//  - Quiet Mind, Warm Up and Swift Strikes (calm-breath, steady-start, lighter-strike): Focus cards, where a skilled bot has Focus to spare.
 import { describe, expect, it } from 'vitest';
 import type { InsightDef } from '../../src';
 import { testContent } from '../load-content';
-import { allCards, BELTS, BOT_NAMES, buildRuler, leanPicker, pe, peOf, play, read, sum, type BotName, type Ruler, type Setup } from './insight-sim';
+import { BELTS, BOT_NAMES, buildRuler, leanPicker, pe, peOf, play, read, sum, type BotName, type Ruler, type Setup } from './insight-sim';
 
 declare const console: { log(...args: unknown[]): void };
 const enabled = !!(import.meta.env as Record<string, string | undefined>).BALANCE;
@@ -35,7 +35,7 @@ const SEEDS: Record<BotName, { single: number; pair: number; ruler: number }> = 
 const ROUTES = 150;
 const POOL = 150;
 const PICKERS = 60;
-const FAMILIES = ['rooted', 'flowing', 'power', 'virtue'] as const;
+const FAMILIES = ['guard', 'speed', 'power', 'virtue'] as const;
 /** B5: the kid's pool win % per belt before the rebalance, and its mean. */
 const POOL_BEFORE = [60, 67, 67, 61, 57, 57, 47, 50, 53, 51];
 const POOL_BEFORE_MEAN = 59;
@@ -53,7 +53,7 @@ const winPct = (setup: Setup, seeds: number) => read(sum(play(setup, 'kid', 'sta
 const pairName = (a: string, b: string) => [a, b].sort().join('|');
 
 describe.skipIf(!enabled)('Insight budget (R-INSIGHT-BAL layer 2)', () => {
-  const cards: InsightDef[] = allCards(testContent());
+  const cards: InsightDef[] = testContent().insights;
   const ids = cards.map((c) => c.id);
   const rulers = {} as Record<BotName, Ruler>;
   const ruler = (bot: BotName) => (rulers[bot] ??= buildRuler(bot, 'standard', SEEDS[bot].ruler));

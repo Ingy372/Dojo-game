@@ -3,8 +3,8 @@
 
 import { loadEffect, type Effect } from './effects';
 
-export type InsightFamily = 'rooted' | 'flowing' | 'power' | 'virtue';
-const FAMILIES: readonly InsightFamily[] = ['rooted', 'flowing', 'power', 'virtue'];
+export type InsightFamily = 'guard' | 'speed' | 'power' | 'virtue';
+const FAMILIES: readonly InsightFamily[] = ['guard', 'speed', 'power', 'virtue'];
 
 export interface InsightDef {
   id: string;
