@@ -3,12 +3,12 @@ import Phaser from 'phaser';
 import { nudgeVolume, VOLUME_STEPS } from '@dojo/sim';
 import { sfx } from '../audio/Sfx';
 import { AUDIO_TEXT, loadVolume, saveVolume, type Channel } from '../audio/volume';
-import { FONT, crisp } from './theme';
+import { FONT, MIN_TAP, crisp } from './theme';
 
 export function addVolumeRow(scene: Phaser.Scene, box: Phaser.GameObjects.Container, ch: Channel, x: number, y: number, w: number, h: number, onChange: (step: number) => void): void {
   let step = loadVolume(ch);
   const labelW = Math.min(64, w * 0.3);
-  const bw = Math.max(36, Math.min(48, (w - labelW) * 0.28));
+  const bw = Math.max(MIN_TAP, Math.min(48, (w - labelW) * 0.28));
   box.add(scene.add.text(x, y + h / 2, AUDIO_TEXT[ch].label, { fontFamily: FONT, fontStyle: 'bold', fontSize: '14px', color: '#ffffff' }).setOrigin(0, 0.5).setResolution(crisp()));
   const minusX = x + labelW;
   const plusX = x + w - bw;
