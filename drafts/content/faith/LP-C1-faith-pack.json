@@ -1,5 +1,5 @@
 {
-  "notes": "DRAFT for LP-C1 (L5 faith pack). Swappable Action Zone faith layer (schoolId action-zone); nothing here is a lock, quiz, or Gate requirement. Every verse, covenant and creed word is copied from docs/faith-and-creed.md: wallText is section 3 with the two section 6 KJV fixes (Romans 3:23 'come short', Romans 5:8 'died'); kjvText is the full King James verse, checked against bible-api.com (translation=kjv) on 2026-11-14, because section 6.3 says the game uses KJV where the wall differs. showText picks which one the game shows. Kid lines (anything under lines, meaning, lit, description, and guardianRestored) are new, 8 words max, and need Jay's OK. Covenant name 'Honesty' (Manager's call, LP-C2), from the section 6 summary; section 4 says 'Honest'. Covenant words are never reworded; voice on tap comes with L19. LP-C2 applied the LP-L2 review edits. No scripture outside docs/faith-and-creed.md in kid lines. Supersedes creed-and-verses.json once Jay approves.",
+  "notes": "DRAFT for LP-C1 (L5 faith pack). Swappable Action Zone faith layer (schoolId action-zone); nothing here is a lock, quiz, or Gate requirement. Every verse, covenant and creed word is copied from docs/faith-and-creed.md: wallText is section 3 with the two section 6 KJV fixes (Romans 3:23 'come short', Romans 5:8 'died'); kjvText is the full King James verse, checked against bible-api.com (translation=kjv) on 2026-11-14, because section 6.3 says the game uses KJV where the wall differs. showText picks which one the game shows; Jay chose the wall wording on 2026-11-14 (LP-C3). Kid lines (anything under lines, meaning, lit, description, and guardianRestored) are new, 8 words max, and need Jay's OK. Covenant name 'Honesty' (Manager's call, LP-C2), from the section 6 summary; section 4 says 'Honest'. Covenant words are never reworded; voice on tap comes with L19. LP-C2 applied the LP-L2 review edits. No scripture outside docs/faith-and-creed.md in kid lines. Supersedes creed-and-verses.json once Jay approves.",
   "schoolId": "action-zone",
   "translation": "KJV",
   "verifiedAgainst": [
@@ -104,7 +104,7 @@
         "toBelt": "yellow"
       },
       "reference": "John 3:16",
-      "showText": "kjv",
+      "showText": "wall",
       "kjvText": "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.",
       "wallText": "For God so loved the world that he gave his only begotten Son that whosoever believes in him shall not perish but have everlasting life.",
       "covenant": {
@@ -128,7 +128,7 @@
         "toBelt": "orange"
       },
       "reference": "Romans 3:10",
-      "showText": "kjv",
+      "showText": "wall",
       "kjvText": "As it is written, There is none righteous, no, not one:",
       "wallText": "There is no one righteous, no not one.",
       "covenant": {
@@ -152,7 +152,7 @@
         "toBelt": "green"
       },
       "reference": "Romans 3:23",
-      "showText": "kjv",
+      "showText": "wall",
       "kjvText": "For all have sinned, and come short of the glory of God;",
       "wallText": "For all have sinned and come short of the glory of God.",
       "covenant": {
@@ -176,7 +176,7 @@
         "toBelt": "blue"
       },
       "reference": "Romans 6:23",
-      "showText": "kjv",
+      "showText": "wall",
       "kjvText": "For the wages of sin is death; but the gift of God is eternal life through Jesus Christ our Lord.",
       "wallText": "For the wages of sin is death but the gift of God is eternal life through Jesus Christ our Lord.",
       "covenant": {
@@ -200,7 +200,7 @@
         "toBelt": "red"
       },
       "reference": "Romans 5:8",
-      "showText": "kjv",
+      "showText": "wall",
       "kjvText": "But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us.",
       "wallText": "For God commendeth his love toward us in that while we were yet sinners Christ died for us.",
       "covenant": {
@@ -224,7 +224,7 @@
         "toBelt": "red-black"
       },
       "reference": "1 John 1:9",
-      "showText": "kjv",
+      "showText": "wall",
       "kjvText": "If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.",
       "wallText": "If we confess our sins he is faithful and just to forgive us of our sins and purify us from all unrighteousness.",
       "covenant": {
@@ -248,7 +248,7 @@
         "toBelt": "brown"
       },
       "reference": "John 3:17",
-      "showText": "kjv",
+      "showText": "wall",
       "kjvText": "For God sent not his Son into the world to condemn the world; but that the world through him might be saved.",
       "wallText": "For God did not send his Son into the world to condemn the world but to save the world through him.",
       "covenant": {
@@ -272,7 +272,7 @@
         "toBelt": "brown-black"
       },
       "reference": "John 3:3",
-      "showText": "kjv",
+      "showText": "wall",
       "kjvText": "Jesus answered and said unto him, Verily, verily, I say unto thee, Except a man be born again, he cannot see the kingdom of God.",
       "wallText": "I tell you the truth, unless a man is born again he may not enter the kingdom of God.",
       "covenant": {
@@ -296,7 +296,7 @@
         "toBelt": "black"
       },
       "reference": "John 3:5–8",
-      "showText": "kjv",
+      "showText": "wall",
       "kjvText": "Jesus answered, Verily, verily, I say unto thee, Except a man be born of water and of the Spirit, he cannot enter into the kingdom of God. That which is born of the flesh is flesh; and that which is born of the Spirit is spirit. Marvel not that I said unto thee, Ye must be born again. The wind bloweth where it listeth, and thou hearest the sound thereof, but canst not tell whence it cometh, and whither it goeth: so is every one that is born of the Spirit.",
       "wallText": "I tell you the truth, unless a man is born of water and the Spirit, he cannot enter the kingdom of God. Flesh gives birth to flesh, but the Spirit gives birth to spirit. You should not be surprised at my saying, \"You must be born again.\" The wind blows wherever it pleases. You hear its sound, but you cannot tell where it comes from or where it is going. So it is with everyone born of the Spirit.",
       "covenant": null,
@@ -313,7 +313,7 @@
         "toBelt": null
       },
       "reference": "John 6:40",
-      "showText": "kjv",
+      "showText": "wall",
       "kjvText": "And this is the will of him that sent me, that every one which seeth the Son, and believeth on him, may have everlasting life: and I will raise him up at the last day.",
       "wallText": "For my Father's will is that everyone that looks to the Son and believes in him shall have eternal life, and I shall raise him up at that last day.",
       "covenant": null,
@@ -393,5 +393,12 @@
     "faithDoesBanner": "Hangs in the Home Dojo; one letter lights at each real promotion (ceremony screen).",
     "verseScrolls": "Promotion ceremony, one step per tap: (1) found line and verse, (2) covenant, name in large type above the promise, (3) Sensei's question, once. All kept in the Book's Faith page.",
     "guardianRestored": "One line when a Guardian is freed, before its relic scroll from guardian-faith-overlay.json."
+  },
+  "approval": {
+    "status": "jay-approved",
+    "date": "2026-11-14",
+    "quote": "Everything in faith lines looks good. Go with the wording that's on the wall.",
+    "via": "Dojo-ascent Manager (LP-C3)",
+    "covers": "every kid line in this pack, plus showText wall for all 10 verses"
   }
 }
