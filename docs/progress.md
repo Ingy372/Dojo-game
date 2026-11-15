@@ -1198,3 +1198,8 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - The Creed Scroll shows once, after the first class check-in (`creedSeen` in the profile).
 - A freed Guardian with a line in the pack says it (only the Hearth Cook has one today).
 - Tests: `lp-b2-faith` (new, 11), including the word-for-word check against the pack and `docs/faith-and-creed.md`. Phone check `docs/shots/lp-b2/faith-verify.mjs` at 667x375, 932x430 and 844x390, Reduced motion on and off.
+
+## LP-B1b — My Path words come from data (2026-11-15)
+
+- The Dojo tour line, the wall label (MY PATH), the Dojo button (My Path), the grown-ups hint, Home's top-level line and the promotion summary's powers lines now read `content/settings/path.json` (LP-C4, #505). The old Gate and Board strings are gone.
+- Tests: `lp-b1b-path-words` (new, 3): every pointer key is used where path.json says, the old words are gone, kid lines are 8 words or fewer. Phone check `docs/shots/lp-b1b/words-verify.mjs` at 667x375, 932x430 and 844x390, Reduced motion on and off: 72 pass, 0 fail.

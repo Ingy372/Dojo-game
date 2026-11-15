@@ -716,7 +716,7 @@ export class HomeScene extends Phaser.Scene {
     const level = effectiveLevel(this.profile, t);
     const atCap = level >= t.levelCap;
     // Q-PREMIUM-2 L3: "Level 5 of 40", not "cap 40" (a game word a child does not know).
-    const levelLine = atCap ? `Level ${level}  ·  Top level! The Gate shows how to go higher.` : `Level ${level} of ${t.levelCap}`;
+    const levelLine = atCap ? `Level ${level}  ·  ${PW.levelTop}` : `Level ${level} of ${t.levelCap}`;
     // Compact: the stack gains the level line (and keeps the Blessing line), so the row grows to fit it.
     const blessRuns = this.profile.blessing.runs;
     const stackH = TYPE.title + S1 + TYPE.body + (blessRuns > 0 ? S1 + TYPE.label : 0) + (short ? S1 + TYPE.label + 2 : 0);
@@ -750,7 +750,7 @@ export class HomeScene extends Phaser.Scene {
     let y = rowTop + rowH + S2;
     if (!short) {
       this.text(pad, y, `Level ${level}`, TYPE.body, '#f2e9d8', true);
-      this.oneLine(this.text(pad + leftW, y + 1, atCap ? 'Top level! The Gate shows how to go higher.' : `of ${t.levelCap}`, TYPE.label, atCap ? '#ffd166' : '#b9ad99').setOrigin(1, 0), leftW - 70, 10);
+      this.oneLine(this.text(pad + leftW, y + 1, atCap ? PW.levelTop : `of ${t.levelCap}`, TYPE.label, atCap ? '#ffd166' : '#b9ad99').setOrigin(1, 0), leftW - 70, 10);
       y += TYPE.body + 4 + S2;
     }
     const share = atCap ? 1 : Math.min(1, this.profile.xp / xpToNext(level, t.belts));
