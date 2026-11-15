@@ -22,7 +22,7 @@ refs = [s['reference'] for s in P['verseScrolls']]
 if sorted(refs) != sorted(wall): fail(f'verse set differs: {refs}')
 for s in P['verseScrolls']:
     if s['wallText'] != wall.get(s['reference']): fail(f"{s['id']}: wallText differs from doc")
-    if s['showText'] not in ('kjv', 'wall'): fail(f"{s['id']}: bad showText")
+    if s['showText'] != 'wall': fail(f"{s['id']}: showText must be wall (Jay, Nov 14)")
     c = s['covenant']
     if c and cov.get(c['name']) != c['text']: fail(f"{s['id']}: covenant {c['name']} differs from section 4")
 used = [s['covenant']['name'] for s in P['verseScrolls'] if s['covenant']]
@@ -30,6 +30,7 @@ if sorted(used) != sorted(cov): fail('covenant set differs from section 4')
 L = [(x['letter'], x['word']) for x in P['faithDoesBanner']['letters']]
 if L != [(a, b) for a, b, _ in words]: fail('FAITH DOES letters differ from section 5')
 if ''.join(a for a, _ in L) != P['faithDoesBanner']['acrostic'].replace(' ', ''): fail('acrostic mismatch')
+if P.get('approval', {}).get('status') != 'jay-approved': fail('approval missing')
 # Guardians match bosses and overlay
 names = {json.load(open(f))['faithOverlayKey']: json.load(open(f))['name'] for f in glob.glob('drafts/content/bosses/*.json')}
 ov = {g['faithOverlayKey'] for g in json.load(open('drafts/content/faith/guardian-faith-overlay.json'))['guardians']}

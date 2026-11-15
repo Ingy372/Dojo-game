@@ -1,10 +1,12 @@
 # LP-C1: faith pack lines for Jay
 
+
+**Jay-approved, Nov 14, 2026 (LP-C3):** "Everything in faith lines looks good. Go with the wording that's on the wall." Every line below is approved, and all 10 verses show the wall wording.
 Every new line Jay approves in one go. Scripture, covenants and the creed are copied, not written, so they are listed only by reference. Data: `LP-C1-faith-pack.json`. Checker: `python3 drafts/content/tools/check-lp-c1-faith-pack.py --online`.
 
 ## One choice
 
-Section 6.3 of `docs/faith-and-creed.md` says the game uses KJV where the wall differs. The full KJV differs from the wall wording on 9 of 10 verses (for example John 3:3 starts "Jesus answered and said unto him, Verily, verily"). Each verse has `kjvText` and `wallText` side by side; `showText` picks one (now `kjv`). The Learning review (LP-L2) recommends the wall wording so kids read the same words they see in class.
+Section 6.3 of `docs/faith-and-creed.md` says the game uses KJV where the wall differs. The full KJV differs from the wall wording on 9 of 10 verses (for example John 3:3 starts "Jesus answered and said unto him, Verily, verily"). Each verse has `kjvText` and `wallText` side by side; `showText` picks one (now `wall`). The Learning review (LP-L2) recommends the wall wording so kids read the same words they see in class.
 
 ## Creed Scroll
 - description: "The words our class says together."
