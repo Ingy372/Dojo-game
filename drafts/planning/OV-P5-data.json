@@ -1,0 +1,127 @@
+{
+  "_note": "OV-P5 data draft, not live. The full Power-up list for content/insights/insights.json (OV-B6 imports it): 12 cards. Wind Step is dropped. Families use today's code names (rooted/flowing); OV-B6 may rename them guard/speed. Names and text for the 4 new cards are the OPEN placeholders from R-POWERUPS-15-data.json; use the OV-C1 names and text already on the OV-B6 branch. Only press-the-advantage's text needs a number change (40%).",
+  "insights": [
+    {
+      "id": "ripple-counter",
+      "name": "Ripple Counter",
+      "family": "rooted",
+      "text": "Great Counters also hit every enemy near you.",
+      "effect": {
+        "type": "rippleCounter",
+        "amount": 1.2,
+        "radius": 2.2
+      }
+    },
+    {
+      "id": "iron-skin",
+      "name": "Iron Skin",
+      "family": "rooted",
+      "text": "Blocks bounce the hit back at the enemy, with a little extra.",
+      "effect": {
+        "type": "blockReflect",
+        "amount": 1.2
+      }
+    },
+    {
+      "id": "double-strike",
+      "name": "Double Strike",
+      "family": "flowing",
+      "text": "Strikes chain one extra hit.",
+      "effect": {
+        "type": "strikeExtraHit",
+        "amount": 0.3
+      }
+    },
+    {
+      "id": "quick-hands",
+      "name": "Quick Hands",
+      "family": "flowing",
+      "text": "Your basic attacks are 20% faster.",
+      "effect": {
+        "type": "attackSpeed",
+        "amount": 0.2
+      }
+    },
+    {
+      "id": "press-the-advantage",
+      "name": "Press the Advantage",
+      "family": "power",
+      "text": "Hit dizzy or winded enemies 30% harder.",
+      "effect": {
+        "type": "staggerBonus",
+        "amount": 0.4
+      }
+    },
+    {
+      "id": "shield-breaker",
+      "name": "Shield Breaker",
+      "family": "power",
+      "text": "Any hit breaks shields, and breaking one gives you a little Focus.",
+      "effect": {
+        "type": "shieldBreaker",
+        "focusOnBreak": 12
+      }
+    },
+    {
+      "id": "heavy-hands",
+      "name": "Heavy Hands",
+      "family": "power",
+      "text": "+20% Power.",
+      "effect": {
+        "type": "powerScale",
+        "amount": 0.2
+      }
+    },
+    {
+      "id": "rally",
+      "name": "Rally",
+      "family": "virtue",
+      "text": "Below half health? Focus fills 75% faster!",
+      "effect": {
+        "type": "lowHealthFocus",
+        "amount": 0.75,
+        "below": 0.5
+      }
+    },
+    {
+      "id": "calm-breath",
+      "name": "OPEN",
+      "family": "virtue",
+      "text": "OPEN (meaning: you gain Focus a bit faster)",
+      "effect": {
+        "type": "focusGain",
+        "amount": 0.25
+      }
+    },
+    {
+      "id": "steady-start",
+      "name": "OPEN",
+      "family": "virtue",
+      "text": "OPEN (meaning: start every room with some Focus)",
+      "effect": {
+        "type": "startFocus",
+        "amount": 60
+      }
+    },
+    {
+      "id": "lighter-strike",
+      "name": "OPEN",
+      "family": "flowing",
+      "text": "OPEN (meaning: Strikes cost less Focus)",
+      "effect": {
+        "type": "strikeCost",
+        "amount": 7
+      }
+    },
+    {
+      "id": "softer-block",
+      "name": "OPEN",
+      "family": "rooted",
+      "text": "OPEN (meaning: your Blocks stop a little more of the hit)",
+      "effect": {
+        "type": "blockCut",
+        "amount": 0.12
+      }
+    }
+  ]
+}

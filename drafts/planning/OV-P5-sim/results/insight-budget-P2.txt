@@ -1,0 +1,336 @@
+
+ RUN  v5.0.3 /tmp/dojo-lp/packages/sim
+
+
+=== B1 single card, held all run, Standard ===
+card or combo                    bot      PE     limit
+ripple-counter                   kid      24.4   12 to 26          
+ripple-counter                   newer    23.0   max 26            
+ripple-counter                   careful  14.9   max 26            
+iron-skin                        kid      22.8   12 to 26          
+iron-skin                        newer    0.0    max 26            
+iron-skin                        careful  3.3    max 26            
+double-strike                    kid      22.5   12 to 26          
+double-strike                    newer    19.8   max 26            
+double-strike                    careful  16.2   max 26            
+quick-hands                      kid      24.7   12 to 26          
+quick-hands                      newer    1.8    max 26            
+quick-hands                      careful  3.8    max 26            
+press-the-advantage              kid      24.8   12 to 26          
+press-the-advantage              newer    13.1   max 26            
+press-the-advantage              careful  20.2   max 26            
+shield-breaker                   kid      24.0   12 to 26          
+shield-breaker                   newer    3.2    max 26            
+shield-breaker                   careful  7.6    max 26            
+heavy-hands                      kid      21.2   12 to 26          
+heavy-hands                      newer    10.5   max 26            
+heavy-hands                      careful  14.7   max 26            
+rally                            kid      22.9   12 to 26          
+rally                            newer    0.0    max 26            
+rally                            careful  3.4    max 26            
+calm-breath                      kid      19.0   12 to 26          
+calm-breath                      newer    12.9   max 26            
+calm-breath                      careful  4.6    max 26            
+steady-start                     kid      20.7   12 to 26          
+steady-start                     newer    10.6   max 26            
+steady-start                     careful  10.1   max 26            
+lighter-strike                   kid      21.7   12 to 26          
+lighter-strike                   newer    17.5   max 26            
+lighter-strike                   careful  13.2   max 26            
+softer-block                     kid      17.8   12 to 26          
+softer-block                     newer    3.3    max 26            
+softer-block                     careful  9.5    max 26            
+
+=== B2 skilled-bot single card cap ===
+card or combo                    bot      PE     limit
+ripple-counter                   newer    23.0   max 30            
+ripple-counter                   careful  14.9   max 30            
+iron-skin                        newer    0.0    max 30            
+iron-skin                        careful  3.3    max 30            
+double-strike                    newer    19.8   max 30            
+double-strike                    careful  16.2   max 30            
+quick-hands                      newer    1.8    max 30            
+quick-hands                      careful  3.8    max 30            
+press-the-advantage              newer    13.1   max 30            
+press-the-advantage              careful  20.2   max 30            
+shield-breaker                   newer    3.2    max 30            
+shield-breaker                   careful  7.6    max 30            
+heavy-hands                      newer    10.5   max 30            
+heavy-hands                      careful  14.7   max 30            
+rally                            newer    0.0    max 30            
+rally                            careful  3.4    max 30            
+calm-breath                      newer    12.9   max 30            
+calm-breath                      careful  4.6    max 30            
+steady-start                     newer    10.6   max 30            
+steady-start                     careful  10.1   max 30            
+lighter-strike                   newer    17.5   max 30            
+lighter-strike                   careful  13.2   max 30            
+softer-block                     newer    3.3    max 30            
+softer-block                     careful  9.5    max 30            
+
+=== B3 pairs (66 pairs) ===
+card or combo                    bot      PE     limit
+iron-skin|ripple-counter         kid      38.2   20 to 50          
+iron-skin|ripple-counter         newer    27.1   max 50            
+iron-skin|ripple-counter         careful  19.0   max 50            
+double-strike|ripple-counter     kid      38.1   20 to 50          
+double-strike|ripple-counter     newer    47.7   max 50            
+double-strike|ripple-counter     careful  26.0   max 50            
+quick-hands|ripple-counter       kid      36.7   20 to 50          
+quick-hands|ripple-counter       newer    24.9   max 50            
+quick-hands|ripple-counter       careful  19.2   max 50            
+press-the-advantage|ripple-counter kid      40.5   20 to 50          
+press-the-advantage|ripple-counter newer    37.9   max 50            
+press-the-advantage|ripple-counter careful  27.2   max 50            
+ripple-counter|shield-breaker    kid      35.6   20 to 50          
+ripple-counter|shield-breaker    newer    28.8   max 50            
+ripple-counter|shield-breaker    careful  19.0   max 50            
+heavy-hands|ripple-counter       kid      42.8   20 to 50          
+heavy-hands|ripple-counter       newer    49.3   max 50            
+heavy-hands|ripple-counter       careful  32.2   max 50            
+rally|ripple-counter             kid      37.4   20 to 50          
+rally|ripple-counter             newer    27.1   max 50            
+rally|ripple-counter             careful  15.7   max 50            
+calm-breath|ripple-counter       kid      33.1   20 to 50          
+calm-breath|ripple-counter       newer    27.8   max 50            
+calm-breath|ripple-counter       careful  17.9   max 50            
+ripple-counter|steady-start      kid      33.3   20 to 50          
+ripple-counter|steady-start      newer    16.3   max 50            
+ripple-counter|steady-start      careful  39.2   max 50            
+lighter-strike|ripple-counter    kid      36.8   20 to 50          
+lighter-strike|ripple-counter    newer    30.0   max 50            
+lighter-strike|ripple-counter    careful  21.1   max 50            
+ripple-counter|softer-block      kid      31.3   20 to 50          
+ripple-counter|softer-block      newer    42.9   max 50            
+ripple-counter|softer-block      careful  20.6   max 50            
+double-strike|iron-skin          kid      34.9   20 to 50          
+double-strike|iron-skin          newer    22.7   max 50            
+double-strike|iron-skin          careful  18.0   max 50            
+iron-skin|quick-hands            kid      36.9   20 to 50          
+iron-skin|quick-hands            newer    3.2    max 50            
+iron-skin|quick-hands            careful  7.3    max 50            
+iron-skin|press-the-advantage    kid      37.9   20 to 50          
+iron-skin|press-the-advantage    newer    19.8   max 50            
+iron-skin|press-the-advantage    careful  20.9   max 50            
+iron-skin|shield-breaker         kid      37.4   20 to 50          
+iron-skin|shield-breaker         newer    5.2    max 50            
+iron-skin|shield-breaker         careful  7.5    max 50            
+heavy-hands|iron-skin            kid      39.8   20 to 50          
+heavy-hands|iron-skin            newer    22.8   max 50            
+heavy-hands|iron-skin            careful  17.9   max 50            
+iron-skin|rally                  kid      37.3   20 to 50          
+iron-skin|rally                  newer    0.0    max 50            
+iron-skin|rally                  careful  2.6    max 50            
+calm-breath|iron-skin            kid      34.9   20 to 50          
+calm-breath|iron-skin            newer    17.0   max 50            
+calm-breath|iron-skin            careful  8.0    max 50            
+iron-skin|steady-start           kid      36.7   20 to 50          
+iron-skin|steady-start           newer    11.0   max 50            
+iron-skin|steady-start           careful  9.5    max 50            
+iron-skin|lighter-strike         kid      37.1   20 to 50          
+iron-skin|lighter-strike         newer    19.1   max 50            
+iron-skin|lighter-strike         careful  15.7   max 50            
+iron-skin|softer-block           kid      31.6   20 to 50          
+iron-skin|softer-block           newer    10.9   max 50            
+iron-skin|softer-block           careful  8.7    max 50            
+double-strike|quick-hands        kid      38.8   20 to 50          
+double-strike|quick-hands        newer    24.7   max 50            
+double-strike|quick-hands        careful  17.3   max 50            
+double-strike|press-the-advantage kid      34.1   20 to 50          
+double-strike|press-the-advantage newer    31.5   max 50            
+double-strike|press-the-advantage careful  24.3   max 50            
+double-strike|shield-breaker     kid      34.5   20 to 50          
+double-strike|shield-breaker     newer    25.8   max 50            
+double-strike|shield-breaker     careful  21.3   max 50            
+double-strike|heavy-hands        kid      32.6   20 to 50          
+double-strike|heavy-hands        newer    46.7   max 50            
+double-strike|heavy-hands        careful  29.0   max 50            
+double-strike|rally              kid      40.2   20 to 50          
+double-strike|rally              newer    21.7   max 50            
+double-strike|rally              careful  16.9   max 50            
+calm-breath|double-strike        kid      35.5   20 to 50          
+calm-breath|double-strike        newer    32.7   max 50            
+calm-breath|double-strike        careful  25.1   max 50            
+double-strike|steady-start       kid      34.5   20 to 50          
+double-strike|steady-start       newer    33.6   max 50            
+double-strike|steady-start       careful  30.5   max 50            
+double-strike|lighter-strike     kid      38.6   20 to 50          
+double-strike|lighter-strike     newer    48.3   max 50            
+double-strike|lighter-strike     careful  33.4   max 50            
+double-strike|softer-block       kid      29.2   20 to 50          
+double-strike|softer-block       newer    35.1   max 50            
+double-strike|softer-block       careful  34.0   max 50            
+press-the-advantage|quick-hands  kid      37.1   20 to 50          
+press-the-advantage|quick-hands  newer    23.2   max 50            
+press-the-advantage|quick-hands  careful  14.4   max 50            
+quick-hands|shield-breaker       kid      39.7   20 to 50          
+quick-hands|shield-breaker       newer    4.9    max 50            
+quick-hands|shield-breaker       careful  13.0   max 50            
+heavy-hands|quick-hands          kid      37.2   20 to 50          
+heavy-hands|quick-hands          newer    25.1   max 50            
+heavy-hands|quick-hands          careful  16.6   max 50            
+quick-hands|rally                kid      37.1   20 to 50          
+quick-hands|rally                newer    1.8    max 50            
+quick-hands|rally                careful  7.3    max 50            
+calm-breath|quick-hands          kid      38.5   20 to 50          
+calm-breath|quick-hands          newer    23.5   max 50            
+calm-breath|quick-hands          careful  13.4   max 50            
+quick-hands|steady-start         kid      35.6   20 to 50          
+quick-hands|steady-start         newer    10.9   max 50            
+quick-hands|steady-start         careful  19.1   max 50            
+lighter-strike|quick-hands       kid      35.7   20 to 50          
+lighter-strike|quick-hands       newer    21.8   max 50            
+lighter-strike|quick-hands       careful  18.2   max 50            
+quick-hands|softer-block         kid      32.7   20 to 50          
+quick-hands|softer-block         newer    8.5    max 50            
+quick-hands|softer-block         careful  24.2   max 50            
+press-the-advantage|shield-breaker kid      35.0   20 to 50          
+press-the-advantage|shield-breaker newer    23.7   max 50            
+press-the-advantage|shield-breaker careful  21.9   max 50            
+heavy-hands|press-the-advantage  kid      37.9   20 to 50          
+heavy-hands|press-the-advantage  newer    33.2   max 50            
+heavy-hands|press-the-advantage  careful  27.8   max 50            
+press-the-advantage|rally        kid      37.2   20 to 50          
+press-the-advantage|rally        newer    14.4   max 50            
+press-the-advantage|rally        careful  21.2   max 50            
+calm-breath|press-the-advantage  kid      33.2   20 to 50          
+calm-breath|press-the-advantage  newer    27.9   max 50            
+calm-breath|press-the-advantage  careful  24.0   max 50            
+press-the-advantage|steady-start kid      33.9   20 to 50          
+press-the-advantage|steady-start newer    32.3   max 50            
+press-the-advantage|steady-start careful  26.0   max 50            
+lighter-strike|press-the-advantage kid      37.0   20 to 50          
+lighter-strike|press-the-advantage newer    29.7   max 50            
+lighter-strike|press-the-advantage careful  27.7   max 50            
+press-the-advantage|softer-block kid      31.2   20 to 50          
+press-the-advantage|softer-block newer    23.7   max 50            
+press-the-advantage|softer-block careful  42.6   max 50            
+heavy-hands|shield-breaker       kid      37.2   20 to 50          
+heavy-hands|shield-breaker       newer    17.7   max 50            
+heavy-hands|shield-breaker       careful  19.2   max 50            
+rally|shield-breaker             kid      37.2   20 to 50          
+rally|shield-breaker             newer    4.2    max 50            
+rally|shield-breaker             careful  6.8    max 50            
+calm-breath|shield-breaker       kid      33.3   20 to 50          
+calm-breath|shield-breaker       newer    20.6   max 50            
+calm-breath|shield-breaker       careful  17.4   max 50            
+shield-breaker|steady-start      kid      32.7   20 to 50          
+shield-breaker|steady-start      newer    10.4   max 50            
+shield-breaker|steady-start      careful  18.4   max 50            
+lighter-strike|shield-breaker    kid      34.8   20 to 50          
+lighter-strike|shield-breaker    newer    20.0   max 50            
+lighter-strike|shield-breaker    careful  20.2   max 50            
+shield-breaker|softer-block      kid      31.7   20 to 50          
+shield-breaker|softer-block      newer    14.6   max 50            
+shield-breaker|softer-block      careful  13.2   max 50            
+heavy-hands|rally                kid      37.0   20 to 50          
+heavy-hands|rally                newer    12.4   max 50            
+heavy-hands|rally                careful  19.5   max 50            
+calm-breath|heavy-hands          kid      33.3   20 to 50          
+calm-breath|heavy-hands          newer    28.2   max 50            
+calm-breath|heavy-hands          careful  23.2   max 50            
+heavy-hands|steady-start         kid      34.3   20 to 50          
+heavy-hands|steady-start         newer    28.9   max 50            
+heavy-hands|steady-start         careful  24.9   max 50            
+heavy-hands|lighter-strike       kid      36.3   20 to 50          
+heavy-hands|lighter-strike       newer    30.1   max 50            
+heavy-hands|lighter-strike       careful  24.3   max 50            
+heavy-hands|softer-block         kid      28.6   20 to 50          
+heavy-hands|softer-block         newer    22.5   max 50            
+heavy-hands|softer-block         careful  39.8   max 50            
+calm-breath|rally                kid      36.8   20 to 50          
+calm-breath|rally                newer    15.7   max 50            
+calm-breath|rally                careful  4.7    max 50            
+rally|steady-start               kid      36.7   20 to 50          
+rally|steady-start               newer    12.7   max 50            
+rally|steady-start               careful  8.7    max 50            
+lighter-strike|rally             kid      38.7   20 to 50          
+lighter-strike|rally             newer    17.4   max 50            
+lighter-strike|rally             careful  13.5   max 50            
+rally|softer-block               kid      27.4   20 to 50          
+rally|softer-block               newer    4.3    max 50            
+rally|softer-block               careful  9.9    max 50            
+calm-breath|steady-start         kid      33.6   20 to 50          
+calm-breath|steady-start         newer    25.2   max 50            
+calm-breath|steady-start         careful  17.8   max 50            
+calm-breath|lighter-strike       kid      35.2   20 to 50          
+calm-breath|lighter-strike       newer    23.9   max 50            
+calm-breath|lighter-strike       careful  15.1   max 50            
+calm-breath|softer-block         kid      26.4   20 to 50          
+calm-breath|softer-block         newer    29.0   max 50            
+calm-breath|softer-block         careful  10.8   max 50            
+lighter-strike|steady-start      kid      39.9   20 to 50          
+lighter-strike|steady-start      newer    27.0   max 50            
+lighter-strike|steady-start      careful  24.3   max 50            
+softer-block|steady-start        kid      29.5   20 to 50          
+softer-block|steady-start        newer    21.0   max 50            
+softer-block|steady-start        careful  14.7   max 50            
+lighter-strike|softer-block      kid      27.8   20 to 50          
+lighter-strike|softer-block      newer    20.9   max 50            
+lighter-strike|softer-block      careful  32.8   max 50            
+
+=== B4 route PE per card (route PE in the next table) ===
+card or combo                    bot      PE     limit
+rooted route (3 cards, win 48.3%) kid      14.9   11.7-19.5, route <= 55
+flowing route (3 cards, win 49.9%) kid      16.2   11.7-19.5, route <= 55
+power route (3 cards, win 42.7%) kid      15.9   11.7-19.5, route <= 55
+virtue route (3 cards, win 50.7%) kid      15.3   11.7-19.5, route <= 55
+
+=== B4 route PE ===
+card or combo                    bot      PE     limit
+rooted                           kid      44.7   max 55            
+flowing                          kid      48.5   max 55            
+power                            kid      47.6   max 55            
+virtue                           kid      46.0   max 55            
+
+B10 route win % (kid, Standard, 150 seeds): rooted held 48.3 / lean 61.2,  flowing held 49.9 / lean 58.5,  power held 42.7 / lean 59.5,  virtue held 50.7 / lean 60.9
+B10 held spread 8.0 (limit 14, target 10)   lean-picker spread 2.7 (limit 10)
+
+=== B5 random pool (12 cards), kid, Standard, 150 seeds per belt ===
+belt   1    2    3    4    5    6    7    8    9    10   
+win %  64.0 70.0 63.3 55.3 62.7 64.0 52.7 54.7 53.3 57.3 
+before 60   67   67   61   57   57   47   50   53   51   
+mean 59.7 (limit 59 +/- 6)
+B5 (info only) guided pool win 96.8%, goal >= 90
+B5 (info only) challenge pool win 36.7%, goal about 30 +/- 10
+
+=== B6 best-pick 63.5% against worst-pick 63.3%, kid, Standard, 60 seeds per belt: gap 0.2 (limit 25) ===
+
+=== B7 kid single cards: highest press-the-advantage 24.8, lowest softer-block 17.8, ratio 1.4 (limit 2) ===
+
+=== B9 (information only) guided single card ===
+card or combo                    bot      PE     limit
+ripple-counter                   kid      28.9   info, max 32      
+iron-skin                        kid      8.5    info, max 32      
+double-strike                    kid      22.2   info, max 32      
+quick-hands                      kid      23.2   info, max 32      
+press-the-advantage              kid      23.2   info, max 32      
+shield-breaker                   kid      16.4   info, max 32      
+heavy-hands                      kid      20.0   info, max 32      
+rally                            kid      19.8   info, max 32      
+calm-breath                      kid      21.7   info, max 32      
+steady-start                     kid      14.6   info, max 32      
+lighter-strike                   kid      23.1   info, max 32      
+softer-block                     kid      12.5   info, max 32      
+
+=== B9 (information only) challenge single card ===
+card or combo                    bot      PE     limit
+ripple-counter                   kid      23.0   info, max 32      
+iron-skin                        kid      31.5   info, max 32      
+double-strike                    kid      22.4   info, max 32      
+quick-hands                      kid      31.2   info, max 32      
+press-the-advantage              kid      25.3   info, max 32      
+shield-breaker                   kid      27.6   info, max 32      
+heavy-hands                      kid      20.0   info, max 32      
+rally                            kid      28.0   info, max 32      
+calm-breath                      kid      23.8   info, max 32      
+steady-start                     kid      24.2   info, max 32      
+lighter-strike                   kid      24.2   info, max 32      
+softer-block                     kid      21.5   info, max 32      
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  03:09:01
+   Duration  1377.53s (tests 100%)
+
+DONE
