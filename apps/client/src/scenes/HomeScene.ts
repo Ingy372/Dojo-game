@@ -16,6 +16,7 @@ import {
   unequip,
   pathView,
   pathIntroDue,
+  creedDue,
   rewardMoments,
   creditBlessing,
   snapshot,
@@ -60,6 +61,7 @@ import { MENU2_PACK, artRarity } from '../art/menu2Frames';
 import { makeStandingCharacter } from '../art/player';
 import { loadLook, playerPacks } from '../game/look';
 import { Celebrations } from '../ui/Celebrations';
+import { drawBanner, openFaithPage } from '../ui/faith';
 import { PATH_LABEL, PATH_LOCK_R, PATH_WORDS as PW, clampStart, fill, pathLayout, towerStart, type Box } from '../ui/pathScreen';
 import { takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
@@ -110,6 +112,9 @@ export class HomeScene extends Phaser.Scene {
   private tab: Tab = 'run';
   /** LP-B1: the Path screen, or the training board (Last run, Gear, Abilities). Straight from a run, the board. */
   view: 'path' | 'board' = 'path';
+  /** LP-B2: the open Faith page (null = closed), kept so a resize redraws it. */
+  private faithPage: number | null = null;
+  private faithLayer: Phaser.GameObjects.Container | null = null;
   /** LP-B1: the lowest Tower tier shown on the Path (null = around the current tier). */
   private towerFrom: number | null = null;
   /** P-MENU2-a: which part of Abilities is showing. */
@@ -207,6 +212,8 @@ export class HomeScene extends Phaser.Scene {
     this.tab = 'run';
     this.view = this.fromRun || this.knockout ? 'board' : 'path';
     this.towerFrom = null;
+    this.faithPage = null;
+    this.faithLayer = null;
     this.page = 0;
     this.selected = null;
     this.testing = null;
@@ -271,12 +278,15 @@ export class HomeScene extends Phaser.Scene {
         sensei.push(...welcome.screens.map((l) => l.replace('{player}', name)));
       }
     }
+    // LP-B2: Sensei shows the Creed Scroll once, after the first class check-in.
+    const creed = creedDue(this.profile.creedSeen, this.training);
     this.render();
     const remember = () => {
       this.profile.seen = snapshot(this.training);
+      if (creed) this.profile.creedSeen = true;
       writeSave(this.profile);
     };
-    if (moments.length === 0 && sensei.length === 0 && picks.lines.length === 0) {
+    if (moments.length === 0 && sensei.length === 0 && picks.lines.length === 0 && !creed) {
       remember();
       this.maybePathIntro();
       return;
@@ -295,6 +305,7 @@ export class HomeScene extends Phaser.Scene {
       sensei,
       undefined,
       picks,
+      creed,
     );
   }
 
@@ -455,7 +466,8 @@ export class HomeScene extends Phaser.Scene {
     const chipW = Math.min(220, Math.round(bar.w * 0.3));
     const chipX = bar.x + bar.w - chipW;
     const titleL = bar.x + 2 * 96 + 2 * S2;
-    this.oneLine(this.text((titleL + chipX) / 2, bar.y + bar.h / 2, PW.title, TYPE.heading, '#f2e9d8', true, 'Georgia, serif').setOrigin(0.5), chipX - titleL - S2, TYPE.title);
+    // LP-B2: the FAITH DOES banner takes the title's place; it opens the Faith page.
+    drawBanner(this, (o) => this.ui.add(o), { x: titleL, y: bar.y, w: chipX - titleL - S2, h: bar.h }, t, () => this.openFaith(0));
     const chip = this.add.graphics();
     chip.fillStyle(0x221d2e).fillRoundedRect(chipX, bar.y, chipW, bar.h, RADIUS.panel);
     this.ui.add(chip);
@@ -468,6 +480,20 @@ export class HomeScene extends Phaser.Scene {
     this.renderPathGate(L.gate);
     this.renderClassStep(L.classCard, pv.classStep);
     this.renderGameStep(L.gameCard, pv.game, level);
+    if (this.faithPage !== null) this.openFaith(this.faithPage);
+  }
+
+  /** LP-B2: the Faith page over the Path (the banner, the Creed Scroll, the verse scrolls found). */
+  private openFaith(page: number): void {
+    if (this.celebrating && this.faithPage === null) return;
+    this.faithLayer?.destroy();
+    this.faithPage = page;
+    const { width, height } = view(this);
+    this.faithLayer = openFaithPage(this, width, height, this.training, page, PW.boardBack, (p) => this.openFaith(p), () => {
+      this.faithLayer?.destroy();
+      this.faithLayer = null;
+      this.faithPage = null;
+    });
   }
 
   /** LP-B1: the Tower, one tier per belt: cleared tiers lit, yours glowing with you on it, the next in mist, the rest grey. */

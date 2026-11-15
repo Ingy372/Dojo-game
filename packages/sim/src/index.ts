@@ -26,6 +26,7 @@ export * from './strikes';
 export * from './kataPowers';
 export * from './rewards';
 export * from './myPath';
+export * from './faith';
 export * from './power';
 export * from './dojo';
 export * from './actionZone';

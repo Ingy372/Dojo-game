@@ -1828,3 +1828,12 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Code:** sim `myPath.ts` (`pathView`: tiers, class step, game step); `goals.ts` and `GoalsCard.ts` deleted. The file is not `path.ts` because that name is the pathfinding module.
 - **Intro once:** `pathIntroSeen` replaces `goalsShownOn`. Old saves with runs get the intro; new profiles start with it seen.
 - **No art imported:** the Tower, Gate and cards are drawn with the existing frame and button helpers, not the mock images.
+
+## LP-B2: faith wiring (2026-11-15)
+
+- **Ceremony length (Manager, Nov 15):** the verse and covenant share one screen, so a promotion is at most 4 screens (Oct 18 QA cut).
+- **Sensei's question** shows in the ceremony only (each promotion plays once); the Faith page shows the verse and covenant without it.
+- **Summit scroll:** it has no promotion into it, so it shows on the Faith page for Black Belts only, never in a ceremony.
+- **Students who start above White** get their letters and scrolls already lit on the Faith page, with no ceremony for promotions before the app.
+- **Guardian lines are data:** keyed by enemy id (`faithOverlayKey`), so only Guardians in both the pack and the game speak; today that is the Hearth Cook.
+- **No art:** the banner, the Faith page and the scrolls are drawn; no images imported.
