@@ -22,8 +22,8 @@ Kata scope (Jay, Nov 14): "ill give katas penon 1, penon 2, penon 3, nahachi ...
 | ID | Owner | What | Done when | Waits on |
 |---|---|---|---|---|
 | PB-05 | Dojo-Ascent Programmer | Finish #472. | DONE #472 (5cefad05), Tester PASS. | — |
-| OV-B1 | Dojo-Ascent Programmer | Auto-equip new Kicks and Defenses (Sensei's Pick, default on); if slots are full, swap out the oldest and say so in one line (review 6.3). | A new sign-off puts the move in the loadout without a menu; a player who turned picking off keeps their choice; tests pass. | **Now:** PB-05 merged; open the PR. |
-| OV-B2 | Dojo-Ascent Programmer | A returning student starts at the level cap of the belt below (review 5.4 fallback); update the `start-level-pin` tests. | A Yellow fixture starts at White's cap; a White fixture starts at 1. | OV-B1 |
+| OV-B1 | Dojo-Ascent Programmer | Sensei's Pick auto-equip. | DONE #488 (063ba7db), Tester PASS (reduced-motion Pick step goes to PB-10). | — |
+| OV-B2 | Dojo-Ascent Programmer | A returning student starts at the level cap of the belt below (review 5.4 fallback); update the `start-level-pin` tests. | A Yellow fixture starts at White's cap; a White fixture starts at 1. | **Now:** OV-B1 merged. |
 | OV-B5 | Dojo-Ascent Programmer | Blessing counted in runs: the next 5 runs after a class, holds at most 10, no hours shown (review 8.6). | No clock text anywhere; tests pass. Words from OV-C2. | OV-B2, OV-C2 |
 | OV-B7 | Dojo-Ascent Programmer | Belt entry: parent note on who may enter it, plus a grown-up path to fix a wrong entry (review 8.2 #1). | A wrong belt can be corrected behind the grown-up gate; words from OV-C2. | OV-B5, OV-C2 |
 | OV-B3 | Dojo-Ascent Programmer | Ages 6–9 start on Guided; Standard is one tap away (Jay, Nov 14: question 9 A). | A new 6–9 profile opens on Guided; Tester's OV-T2 target is met. | OV-B7, OV-T2 |
