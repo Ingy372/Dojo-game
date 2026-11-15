@@ -1203,3 +1203,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 
 - The Dojo tour line, the wall label (MY PATH), the Dojo button (My Path), the grown-ups hint, Home's top-level line and the promotion summary's powers lines now read `content/settings/path.json` (LP-C4, #505). The old Gate and Board strings are gone.
 - Tests: `lp-b1b-path-words` (new, 3): every pointer key is used where path.json says, the old words are gone, kid lines are 8 words or fewer. Phone check `docs/shots/lp-b1b/words-verify.mjs` at 667x375, 932x430 and 844x390, Reduced motion on and off: 72 pass, 0 fail.
+
+## LP-B3 — Class Chest every class, best-streak aura, L4 (2026-11-15)
+
+- Every real class now opens a Class Chest, with no end: the next class piece for the Home Dojo while any are left, then one piece of Uncommon or better gear for the bag (it fills an empty slot). The old "one piece every 2-3 classes, stops at 13" is gone. No coins yet (L13).
+- Arriving at the Dojo shows one card for the new chests ("3 Class Chests!"), with two drawn chests and what was inside.
+- A soft gold glow around the hero, in the Dojo and the Tower, grows one ring at each step of the best weekly class streak ever (`bestStreakWeeks` in the profile). It never shrinks and nothing warns.
+- The chest words and aura steps are placeholders in `content/settings/class-chest.json` for Content.
+- Tests: `lp-b3-class-chest` (new, 6): 30 classes give 30 chests (one at a time or all at once), the aura never goes down, no streak-loss words in content or game code, short kid lines; `earning` updated. Phone check `docs/shots/lp-b3/chest-verify.mjs` at 667x375, 932x430 and 844x390, Reduced motion on and off: 72 pass, 0 fail.

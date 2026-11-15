@@ -65,6 +65,7 @@ import { drawBanner, openFaithPage } from '../ui/faith';
 import { PATH_LABEL, PATH_LOCK_R, PATH_WORDS as PW, clampStart, fill, pathLayout, towerStart, type Box } from '../ui/pathScreen';
 import { takeLesson } from '../game/lessons';
 import { TestingPanel } from '../ui/TestingPanel';
+import { chestIcon } from '../ui/classChest';
 import { BETA } from '../game/beta';
 import { showGrades } from '../game/difficulty';
 import { FONT, GRADE_COLOR, RARITY_COLOR, rarityName, crisp, css, view, hiDpi, WOOD } from '../ui/theme';
@@ -2576,7 +2577,6 @@ function bagIcon(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.
   return g;
 }
 
-/** A tiny treasure chest drawn in code (no art file): lid, box, band and lock. */
 /** P-MENU2-g: localStorage, or null in private mode. */
 function safeStore(): KeyStore | null {
   try {
@@ -2593,15 +2593,6 @@ function houseIcon(scene: Phaser.Scene, x: number, y: number, size: number): Pha
   g.fillStyle(0xc0392b).fillTriangle(-h, -h * 0.1, h, -h * 0.1, 0, -h);
   g.fillStyle(0xffd166).fillRect(-h * 0.7, -h * 0.1, h * 1.4, h * 1.1);
   g.fillStyle(0x3a2618).fillRect(-h * 0.2, h * 0.35, h * 0.4, h * 0.65);
-  return g;
-}
-
-function chestIcon(scene: Phaser.Scene, x: number, y: number, color: number): Phaser.GameObjects.Graphics {
-  const g = scene.add.graphics({ x, y });
-  g.fillStyle(0x8a5a35).fillRoundedRect(-10, -8, 20, 7, { tl: 4, tr: 4, bl: 0, br: 0 });
-  g.fillStyle(0x6b4428).fillRect(-10, -1, 20, 10);
-  g.lineStyle(2, color).strokeRoundedRect(-10, -8, 20, 17, 3).lineBetween(-10, -1, 10, -1);
-  g.fillStyle(color).fillRect(-2, -3, 4, 5);
   return g;
 }
 

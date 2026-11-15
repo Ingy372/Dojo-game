@@ -13,7 +13,7 @@ import {
   restoreRun,
   startRun,
   summarizeRun,
-  syncClassPieces,
+  openClassChests,
   updateRun,
   type ClassInfo,
   type Content,
@@ -42,8 +42,10 @@ const summary = (over: Partial<RunSummary>): RunSummary => ({
   ...over,
 });
 
-describe('class pieces (S7)', () => {
-  it('come in a fixed order: the class scrolls in curriculum order, then gear', () => {
+const ids = (got: ReturnType<typeof openClassChests>) => got.map((c) => (c.kind === 'decor' ? c.id : 'gear'));
+
+describe('Class Chests (S7, LP-B3)', () => {
+  it('class pieces come in a fixed order: the class scrolls in curriculum order, then gear decor', () => {
     expect(classPieceOrder(content).map((d) => d.id.replace('decor-a6-', ''))).toEqual([
       'class-scroll-bow', 'class-scroll-form1', 'class-scroll-form2', 'class-scroll-key-on',
       'class-scroll-kicks', 'class-scroll-defense', 'class-scroll-kindness',
@@ -51,64 +53,49 @@ describe('class pieces (S7)', () => {
     ]);
   });
 
-  it('the first sync gives one welcome piece and seeds the count from the feed, however long the history', () => {
+  it('the first sync opens one welcome chest and seeds the count from the feed, however long the history', () => {
     const p = newProfile();
     const dojo = newDojo(content.dojo, 1);
-    const got = syncClassPieces(p, dojo, content, info(classes(9), { classesInRank: 40, classesTotal: 143 }));
-    expect(got).toEqual(['decor-a6-class-scroll-bow']);
+    expect(ids(openClassChests(p, dojo, content, info(classes(9), { classesInRank: 40, classesTotal: 143 })))).toEqual(['decor-a6-class-scroll-bow']);
     expect(p.decorEarning.classesCounted).toBe(143);
     // An old save with no classesTotal starts from classesInRank.
     const old = loadProfile({ ...newProfile(), decorEarning: undefined });
-    syncClassPieces(old, newDojo(content.dojo, 1), content, info(classes(3), { classesInRank: 12 }));
+    openClassChests(old, newDojo(content.dojo, 1), content, info(classes(3), { classesInRank: 12 }));
     expect(old.decorEarning.classesCounted).toBe(12);
-    // Syncing again with nothing new gives nothing.
-    expect(syncClassPieces(p, dojo, content, info(classes(9), { classesInRank: 40, classesTotal: 143 }))).toEqual([]);
+    // Syncing again with nothing new opens nothing.
+    expect(openClassChests(p, dojo, content, info(classes(9), { classesInRank: 40, classesTotal: 143 }))).toEqual([]);
   });
 
-  it('one piece every 2 new classes at White belt, every 3 after; it remembers the belt', () => {
+  it('one chest for every new class at any belt; its piece remembers the belt', () => {
     const p = newProfile();
     const dojo = newDojo(content.dojo, 1);
-    syncClassPieces(p, dojo, content, info([]));
-    expect(syncClassPieces(p, dojo, content, info(classes(1)))).toEqual([]);
-    expect(syncClassPieces(p, dojo, content, info(classes(2)))).toEqual(['decor-a6-class-scroll-form1']);
+    openClassChests(p, dojo, content, info([]));
+    expect(ids(openClassChests(p, dojo, content, info(classes(1))))).toEqual(['decor-a6-class-scroll-form1']);
     expect(owned(dojo, 'decor-a6-class-scroll-form1')[0].belt).toEqual(WHITE);
-    // Yellow belt: 3 classes per piece.
-    expect(syncClassPieces(p, dojo, content, info(classes(4), { belt: YELLOW }))).toEqual([]);
-    expect(syncClassPieces(p, dojo, content, info(classes(5), { belt: YELLOW }))).toEqual(['decor-a6-class-scroll-form2']);
+    expect(ids(openClassChests(p, dojo, content, info(classes(3), { belt: YELLOW })))).toEqual(['decor-a6-class-scroll-form2', 'decor-a6-class-scroll-key-on']);
     expect(owned(dojo, 'decor-a6-class-scroll-form2')[0].belt).toEqual(YELLOW);
-    expect(p.decorEarning.classesCounted).toBe(5);
+    expect(p.decorEarning.classesCounted).toBe(3);
   });
 
   it('no streaks or deadlines: a gap loses nothing, old check-ins leaving the window take nothing away', () => {
     const p = newProfile();
     const dojo = newDojo(content.dojo, 1);
-    syncClassPieces(p, dojo, content, info([]));
-    syncClassPieces(p, dojo, content, info(classes(1, 1)));
+    openClassChests(p, dojo, content, info([]));
+    openClassChests(p, dojo, content, info(classes(1, 1)));
     // Weeks later, the first class has left the feed's window and one new class arrives.
-    expect(syncClassPieces(p, dojo, content, info(classes(1, 20)))).toEqual(['decor-a6-class-scroll-form1']);
+    expect(ids(openClassChests(p, dojo, content, info(classes(1, 20))))).toEqual(['decor-a6-class-scroll-form2']);
     // A smaller classesTotal never lowers the count.
-    syncClassPieces(p, dojo, content, info(classes(1, 20), { classesTotal: 0 }));
+    openClassChests(p, dojo, content, info(classes(1, 20), { classesTotal: 0 }));
     expect(p.decorEarning.classesCounted).toBe(2);
-    expect(dojo.items.filter((i) => i.id.startsWith('decor-a6-class')).length).toBe(2);
+    expect(dojo.items.filter((i) => i.id.startsWith('decor-a6-class')).length).toBe(3);
   });
 
   it('counts one class per date', () => {
     const p = newProfile();
     const dojo = newDojo(content.dojo, 1);
-    syncClassPieces(p, dojo, content, info([]));
-    expect(syncClassPieces(p, dojo, content, info(['2026-10-05T09:00:00', '2026-10-05T18:00:00']))).toEqual([]);
+    openClassChests(p, dojo, content, info([]));
+    expect(openClassChests(p, dojo, content, info(['2026-10-05T09:00:00', '2026-10-05T18:00:00']))).toHaveLength(1);
     expect(p.decorEarning.classesCounted).toBe(1);
-  });
-
-  it('stops after the last piece', () => {
-    const p = newProfile();
-    const dojo = newDojo(content.dojo, 1);
-    syncClassPieces(p, dojo, content, info([]));
-    syncClassPieces(p, dojo, content, info(classes(28)));
-    syncClassPieces(p, dojo, content, info(classes(30)));
-    const n = classPieceOrder(content).length;
-    expect(p.decorEarning.classPiecesGiven).toBe(n);
-    expect(new Set(dojo.items.filter((i) => i.id.startsWith('decor-a6-class') || classPieceOrder(content).some((d) => d.id === i.id)).map((i) => i.id)).size).toBe(n);
   });
 });
 

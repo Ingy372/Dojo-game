@@ -1,0 +1,13 @@
+{
+  "_note": "LP-B3 (L4) PLACEHOLDERS for Content: the Class Chest card and the best-streak aura. Gains only: never streak loss, missed weeks, warnings or 'keep it going'. Kid lines 8 words or fewer.",
+  "title": "A Class Chest!",
+  "titleMany": "{n} Class Chests!",
+  "line": "Sensei left this for coming to class.",
+  "decor": "For your Home Dojo: {name}",
+  "gear": "New gear in your bag: {name}",
+  "more": "…and {n} more!",
+  "storage": "Decorations wait in storage.",
+  "button": "Thank you!",
+  "_noteAura": "auraSteps: the best weekly class streak ever (weeks) where the glow around the hero grows one ring. It reads the BEST streak, so it never shrinks. Placeholder numbers.",
+  "auraSteps": [2, 4, 8, 12, 20]
+}

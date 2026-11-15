@@ -6,7 +6,8 @@ import {
   MOVEMENT,
   TICKS_PER_SECOND,
   addDecorations,
-  syncClassPieces,
+  noteBestStreak,
+  openClassChests,
   canPlace,
   choreInReach,
   choresLeft,
@@ -78,7 +79,8 @@ import SAFE_TEXT from '../../../../content/settings/safety.json';
 import { NAMED_PACK } from '../game/named';
 import { openMonsterJournal } from '../ui/MonsterJournal';
 import { isOpen, systemForToday } from '../game/unlocks';
-import { PATH_WORDS as PW } from '../ui/pathScreen';
+import { PATH_WORDS as PW, fill } from '../ui/pathScreen';
+import { CHEST_WORDS as CW, chestIcon, streakAura } from '../ui/classChest';
 
 /** Pixels per tile in the room (before it's scaled to fit the screen). */
 const TILE = 48;
@@ -195,6 +197,7 @@ export class DojoScene extends Phaser.Scene {
     this.training = currentTraining();
     const hoursAway = returnToDojo(this.dojo, CONTENT.dojo, Date.now());
     ensureDifficulty(this.profile, this.training.ageBand);
+    noteBestStreak(this.profile, this.training.streakWeeks);
     writeSave(this.profile);
 
     this.mode = 'play';
@@ -355,24 +358,21 @@ export class DojoScene extends Phaser.Scene {
       const line = chores > 0 ? "Your dojo is ready for a fresh sweep! Let's make it shine together." : 'Everything is just how you left it.';
       steps.push(() => this.card(`Welcome back, ${name}!`, [hello, line], chores > 0 ? "Let's clean up" : "Let's go!", next));
     }
-    // Real classes give class pieces (S7): a welcome piece first, then one every few classes.
+    // LP-B3: a Class Chest for every real class: the next class piece, then gear for the bag.
     const t = this.training;
-    const classPieces = syncClassPieces(this.profile, this.dojo, CONTENT, {
+    const chests = openClassChests(this.profile, this.dojo, CONTENT, {
       checkIns: t.classCheckIns,
       classesInRank: t.gate.classesInRank,
       classesTotal: t.classesTotal,
       belt: { tier: t.belt.tier, color: t.belt.color },
     });
-    if (classPieces.length > 0) {
+    if (chests.length > 0) {
       writeSave(this.profile);
-      const names = classPieces.map((id) => decorationDef(CONTENT.dojo, id).name).join(', ');
-      const first = this.profile.decorEarning.classPiecesGiven === classPieces.length;
-      steps.push(() =>
-        this.card(first ? 'A gift for training' : 'From your classes', [
-          first ? `Sensei is glad you train at the real dojo. Here is a ${names} for your Home Dojo.` : `You keep coming to class! Something new for your Home Dojo: ${names}.`,
-          'Find it in storage when you decorate.',
-        ], 'Thank you!', next),
-      );
+      const shown = chests.slice(0, 3).map((c) => (c.kind === 'decor' ? fill(CW.decor, { name: decorationDef(CONTENT.dojo, c.id).name }) : fill(CW.gear, { name: c.item.name })));
+      if (chests.length > 3) shown.push(fill(CW.more, { n: chests.length - 3 }));
+      if (chests.some((c) => c.kind === 'decor')) shown.push(CW.storage);
+      const title = chests.length === 1 ? CW.title : fill(CW.titleMany, { n: chests.length });
+      steps.push(() => this.card(title, [CW.line, shown.join('\n')], CW.button, next, true));
     }
     // OV-B5: new classes add Blessing runs once, in whichever screen sees them first.
     const blessingAdded = creditBlessing(this.profile.blessing, t.classCheckIns);
@@ -414,7 +414,7 @@ export class DojoScene extends Phaser.Scene {
   }
 
   /** A gentle card with a title, a few short lines and one button. */
-  private card(title: string, lines: string[], button: string, onClose: () => void): void {
+  private card(title: string, lines: string[], button: string, onClose: () => void, chest = false): void {
     const { width, height } = view(this);
     const w = Math.min(460, width - 40);
     const box = this.add.container(0, 0).setDepth(70);
@@ -436,6 +436,7 @@ export class DojoScene extends Phaser.Scene {
     );
     body.setY(top + 52);
     box.add(body);
+    if (chest) for (const side of [-1, 1]) box.add(chestIcon(this, width / 2 + side * (w / 2 - 34), top + 32, 0xffd166).setScale(1.4));
     const by = top + h - 56;
     roundButton(this, { x: width / 2 - 95, y: by, w: 190, h: MIN_TAP, label: button, color: GREEN, size: 16, onTap: () => {
       box.destroy();
@@ -797,7 +798,8 @@ export class DojoScene extends Phaser.Scene {
     this.calmAura.setY(-r * 0.4);
     this.hero = makePlayerSprite(this, this.training.belt, this.training.stripesThisBelt, loadLook())!;
     const p = this.world.players.p1.pos;
-    return this.add.container(p.x * TILE, p.y * TILE, [this.calmAura, this.hero.container]);
+    const aura = streakAura(this, r, this.profile.bestStreakWeeks);
+    return this.add.container(p.x * TILE, p.y * TILE, [...(aura ? [aura] : []), this.calmAura, this.hero.container]);
   }
 
   /** Starts a one-off move for `ms` milliseconds, optionally facing a direction. */
