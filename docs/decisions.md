@@ -1783,3 +1783,10 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Switch words:** "Sensei's Pick: On/Off" is Programmer wording; OV-C2 and OV-L1 had none. Content Designer may replace it in `content/abilities/fighting-style.json`.
 - **Lesson:** `lesson-sensei-pick` is a fading follow-up and not on the Lesson Scroll, because it has no practice line. It skips the session limit so it shows with the first pick.
 - **Switch hidden on Guided** and while the slot note shows, so the row stays clear.
+
+## OV-B5: Dojo Blessing counted in runs (2026-11-14)
+
+- **Old saves (Manager OK):** the first check gives a save that has had any class 5 runs once, quietly, with no card. Long histories never flood it.
+- **Run-out (Manager OK):** no "Blessing ended" line, so there's no loss message (OV-L1).
+- **When a run is used:** at the start of a counted run, so XP and loot use the run's own `blessed` flag. Test-link runs and the tutorial floor don't use one.
+- **Class dates:** one class per date (YYYY-MM-DD), same as class pieces. The 48-hour window and `BLESSING.hours` are gone.
