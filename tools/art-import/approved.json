@@ -604,13 +604,19 @@
       ]
     },
     "icons": {
-      "note": "Batch 8: 28 icons for gear, Insights and Seals. Kept at full size (scale 1) so they stay sharp in menus.",
+      "note": "Batch 8: 28 icons for gear, Insights and Seals, plus the 4 OV-A1 Power-up icons (#485, Jay OK Nov 14). Kept at full size (scale 1) so they stay sharp in menus.",
       "scale": 1,
       "sources": [
         {
           "id": "icons",
           "type": "static",
           "json": "incoming-art/icons/sprites/static.json"
+        },
+        {
+          "id": "powerups",
+          "type": "static",
+          "json": "incoming-art/powerups/sprites/static.json",
+          "onlyLayers": ["1x"]
         }
       ]
     },

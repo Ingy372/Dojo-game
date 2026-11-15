@@ -27,8 +27,8 @@ export const RARITY_COLOR: Record<Rarity, number> = {
 export const rarityName = (r: Rarity): string => CONTENT.loot.rarityNames[r];
 
 export const FAMILY_COLOR: Record<InsightFamily, number> = {
-  rooted: 0x6fb7ff,
-  flowing: 0x5cd6b0,
+  guard: 0x6fb7ff,
+  speed: 0x5cd6b0,
   power: 0xff7a45,
   virtue: 0xffd166,
 };

@@ -1812,3 +1812,11 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Root cause:** the top row stays drawn from `play` while the bow and arrival run in mode `arriving`. A screen opened then saves `arriving` as its way back; if the arrival ends first, closing the screen restores `arriving` and nothing ends it.
 - **Fix:** a Dojo button only acts in the mode it was drawn for (`button()`), so no screen can open during the arrival. The row stays on screen, so nothing jumps. Hiding it with `renderUi()` was rejected: that would wipe the one-time difficulty line drawn on entry.
 - **Music/Sound:** the − and + width floor is `MIN_TAP` (44), not 36.
+
+## OV-B6: 13 Power-ups (2026-11-14)
+
+- **Cards and numbers:** the 4 that passed in R-POWERUPS-15 (`drafts/planning/R-POWERUPS-15-data.json`), with the OV-C1 names and text. Existing effect types only.
+- **Caps:** the `insight-budget` CAPS rows are the OV-P1 numbers. Quiet Mind's cap moves from the old placeholder's 0.15 to 0.25, the number R-POWERUPS-15 measured and the 13-card `BALANCE=1` run passed.
+- **Placeholders gone:** the real Calm Breath and Steady Start ids are in the content, so the sim's stand-in cards and the "Virtue has fewer than 2 cards" exception are deleted.
+- **Rename:** families `rooted` and `flowing` are now `guard` and `speed` (R-POWERUPS-15 section 5, Manager OK). No save stores a family, so no save change is needed.
+- **Icons:** the 4 #485 icons go into the existing `icons` pack through `tools/art-import` (1x only; the game draws them at 44 px).
