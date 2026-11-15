@@ -486,13 +486,20 @@ export function activeDifficulty(profile: Profile, tier?: number): Difficulty {
 }
 
 /**
- * Gives the profile a real difficulty the first time it's needed: everyone starts on the
- * default (Standard, "Steady" for kids). A difficulty already set or chosen is never changed.
- * Returns true if it set one. (Manager call, 2026-10-24: no age-based Guided default.)
+ * OV-B3 (Jay, Nov 14): the youngest age bands (content/settings/difficulty.json) start on Guided;
+ * everyone else starts on the default (Standard, "Steady" for kids).
  */
-export function settleDifficulty(profile: Profile): boolean {
+export function startingDifficulty(ageBand: string, guidedAgeBands: readonly string[]): Difficulty {
+  return guidedAgeBands.includes(ageBand) ? 'guided' : COMBAT.defaultDifficulty;
+}
+
+/**
+ * Gives the profile a real difficulty the first time it's needed. A difficulty already set or
+ * chosen is never changed, so an existing save keeps its setting. Returns true if it set one.
+ */
+export function settleDifficulty(profile: Profile, start: Difficulty = COMBAT.defaultDifficulty): boolean {
   if (profile.difficultyChosenByPlayer || profile.difficulty !== null) return false;
-  profile.difficulty = COMBAT.defaultDifficulty;
+  profile.difficulty = start;
   return true;
 }
 

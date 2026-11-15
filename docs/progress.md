@@ -1157,3 +1157,10 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - A new class plays the Blessing card with "Class time helps your next five runs!", or the full line when the Blessing was already at 10 (OV-L1). The promotion card says "Dojo Blessing for your next five runs!".
 - Words: `content/settings/blessing.json` (OV-C2 with the OV-L1 changes). Numbers: `BLESSING.runsPerClass` and `BLESSING.maxRuns`.
 - Tests: `ov-b5-blessing` (5) and the training test. Phone check `docs/shots/ov-b5/blessing.mjs` 76 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off.
+
+## OV-B3 — Ages 6–9 start on Guided (2026-11-14)
+
+- A new profile in an age band listed in `content/settings/difficulty.json` `guidedStartAgeBands` (now `["6-9"]`) starts on Guided. Other ages start on Standard ("Steady"), as before.
+- Standard is one tap away: Dojo Settings, then Steady. The pick sticks after a reload.
+- Saves that already have a difficulty never move.
+- Tests: `difficulty` (new start-band and old-save cases). Phone check `docs/shots/ov-b3/guided-start.mjs` 60 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off.

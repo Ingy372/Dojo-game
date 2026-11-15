@@ -1797,3 +1797,10 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Run-out (Manager OK):** no "Blessing ended" line, so there's no loss message (OV-L1).
 - **When a run is used:** at the start of a counted run, so XP and loot use the run's own `blessed` flag. Test-link runs and the tutorial floor don't use one.
 - **Class dates:** one class per date (YYYY-MM-DD), same as class pieces. The 48-hour window and `BLESSING.hours` are gone.
+
+## OV-B3: Ages 6–9 start on Guided (2026-11-14)
+
+- **Jay (Nov 14, question 9 A):** ages 6–9 start on Guided. This replaces the Oct 24 call of no age-based Guided default.
+- **Which ages:** a content list, `guidedStartAgeBands` in `content/settings/difficulty.json`, so another dojo can change it without code.
+- **Old saves:** only a profile with no difficulty yet gets the start pick (`settleDifficulty`), so nobody's saved choice changes.
+- **"One tap away":** the existing Settings chooser (Settings, then Steady). No new button.
