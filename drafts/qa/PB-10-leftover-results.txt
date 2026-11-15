@@ -1,0 +1,46 @@
+PB-10 leftover play — text results only (no screenshots).
+Live: https://dojo-ascent.jay-lindemuth.workers.dev/
+Title: Version: Nov 14, 10:03 PM
+Bundle: assets/index-DqhWhEQF.js
+BUILD_TIME: 2026-11-15T03:03:33.687Z (10:03:33 PM America/New_York)
+main: 4302658f4c4fc7ac8ccd3be5da8359552da60d4c (OV-B7 #498)
+
+Playwright, 667x375 and 844x390, viewport set before load, hook did not wipe storage.
+Settings opened only after Home Dojo mode === play.
+
+==== leftover-results.txt (first pass this evening) ====
+PASS  lo-667x375-viewport  viewport exact at load  667x375
+PASS  lo-667x375-version  title Version recorded  Version: Nov 14, 10:03 PM
+PASS  lo-667x375-land  Landed on the board after a play-mode Dojo  Home
+PASS  lo-667x375-yellow  Testing → Yellow Belt  picked
+PASS  lo-667x375-guided-set  Settings → Guided (opened in play mode)  {"difficulty":"guided","chosen":true}
+PASS  lo-667x375-guided-windups  PB-10 18: Guided ordinary room, after Bow, wind-ups readable, loadout kept  diff=guided room=training-yard kind=battle tutorial=false strike={"id":"jumping-spins"} loadout={"stance":null,"virtue":null,"strike":"jumping-spins","kata":null,"seals":["counter","guard"]} windupSamples=44 telAlphas=0.25,1 noSwap=true bowedEnemiesAt=31549.1
+PASS  lo-667x375-rm-on  Reduced motion On via Settings, read back  label="Reduced motion: On" ls=on
+PASS  lo-667x375-rm-persist-ls  After closing and reopening the page (same storage), RM key still on  ls=on
+PASS  lo-667x375-rm-persist-ui  Settings still reads Reduced motion: On after reopen  label="Reduced motion: On" ls=on opened=true
+PASS  lo-667x375-no-zoom  G2B-06 21: keepers-hall boss zoom-out does not run with RM On  room=keepers-hall bosses=["floor-keeper"] rm=on bossSeen=false bossZoom min=1 max=1 n=58 camZoom min=1.0416666666666667
+PASS  lo-667x375-rm-off  Reduced motion Off via Settings, read back  label="Reduced motion: Off" ls=off
+FAIL  lo-667x375-off-fx  G2B-06 22 first try (script miss, not a product fail): Practice-room dummy still off-screen, no wind-up sampled  rm=off windSeen=false telSeen=false
+PASS  lo-844x390-viewport  viewport exact at load  844x390
+PASS  lo-844x390-version  title Version recorded  Version: Nov 14, 10:03 PM
+PASS  lo-844x390-land  Landed on the board after a play-mode Dojo  Home
+PASS  lo-844x390-yellow  Testing → Yellow Belt
+PASS  lo-844x390-steady-set  Settings → Steady (opened in play mode)  {"difficulty":"standard","chosen":false}
+PASS  lo-844x390-steady-room  844 Steady ordinary room uses the Yellow loadout  diff=standard strike={"id":"jumping-spins"} room=bamboo-hall loadout={"stance":null,"virtue":null,"strike":"jumping-spins","kata":null,"seals":["counter","guard"]} tutorial=false
+PASS  lo-844x390-green  Testing → Green Belt
+PASS  lo-844x390-bfly-equip  Butterfly Kick equipped on Green  {"stance":null,"virtue":null,"strike":"butterfly-flow","kata":null,"seals":["advancing","throw","disarm"]}
+PASS  lo-844x390-bfly-fight  844 Green fight uses Butterfly Kick  diff=standard strike={"id":"butterfly-flow"} room=lantern-room
+PASS  lo-844x390-challenge-set  Challenge unlocked and picked on Green  {"difficulty":"challenge","chosen":true}
+PASS  lo-844x390-challenge-kept  Challenge keeps Butterfly Kick  {"stance":null,"virtue":null,"strike":"butterfly-flow","kata":null,"seals":["advancing","throw","disarm"]}
+PASS  lo-844x390-challenge-room  844 Challenge room starts, Butterfly used, no purchase prompt  diff=challenge strike={"id":"butterfly-flow"} pressure=[] room=pillar-court
+
+==== leftover-fx-results.txt (G2B-06 21 in-view retry + 22 pulse measure) ====
+PASS  fx-version  title Version recorded  Version: Nov 14, 10:03 PM
+PASS  fx-land  Landed on the board in play mode
+PASS  fx-yellow  Testing → Yellow Belt
+PASS  fx-rm-on  Reduced motion On via Settings, read back  label="Reduced motion: On" ls=on
+PASS  fx-no-zoom  G2B-06 21: with the Floor Keeper in view, RM On, boss zoom-out does not run  room=keepers-hall rm=on bossSeen=true keeperInView=true bossZoom min=1 max=1 n=60 camZoom min=1.0417
+PASS  fx-rm-off  Reduced motion Off via Settings, read back  label="Reduced motion: Off" ls=off
+PASS  fx-off-fx  G2B-06 22: RM Off, telegraph pulse measured across frames, Strike/Counter flash plays  rm=off room=narrow-bridge windSamples=96 telSeen=true telPulse=true rises=37 falls=36 telRange=[0.25,1] n=111 flashPlayed=true counterFills=[3110099,7317759,3030101] windowOpen=true
+
+In-window telegraph alpha oscillated 0.7 / 1.0 (shipped pulse). The first keepers-hall sample left the Floor Keeper off-camera (bossSeen=false); the retry walked the Keeper into view and still saw bossZoom stay 1.
