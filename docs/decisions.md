@@ -1812,3 +1812,11 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Root cause:** the top row stays drawn from `play` while the bow and arrival run in mode `arriving`. A screen opened then saves `arriving` as its way back; if the arrival ends first, closing the screen restores `arriving` and nothing ends it.
 - **Fix:** a Dojo button only acts in the mode it was drawn for (`button()`), so no screen can open during the arrival. The row stays on screen, so nothing jumps. Hiding it with `renderUi()` was rejected: that would wipe the one-time difficulty line drawn on entry.
 - **Music/Sound:** the − and + width floor is `MIN_TAP` (44), not 36.
+
+## PB-04: kata power slot (2026-11-15)
+
+- **File:** `content/abilities/kata-powers.json`, not `content/katas/powers.json` as the plan says. Four loaders read every `content/katas/*.json` file as a kata card, so a powers file there would break them. It sits next to `strikes.json` and `seal-families.json`.
+- **Passive (Manager, Nov 15):** always-on stat types only: powerScale, attackSpeed, blockCut, focusGain, startFocus, strikeCost, counterWindow. Nothing that fires on an event. The list is `PASSIVE_EFFECTS` in `effects.ts`. The loader and `p-prog-e` both read it, so PB-11's real powers are checked against it.
+- **Damage cap:** checked when the data loads (`loadKataPowers`). The biggest Stance `powerScale` plus the power's `powerScale` must be at most `STANCE_POWER_CAP` (0.12). Data over the cap fails to load and is never clipped in a fight.
+- **Earning:** each power names its kata's curriculum requirement (`requirement`), so the sim doesn't need the kata files. A test checks it matches `content/katas`.
+- **Old saves:** PB-05 saved the kata id in `loadout.kata`. `resolveKataPowerId` maps it to that kata's power, and the seen list maps the same way, so the New dot doesn't come back.

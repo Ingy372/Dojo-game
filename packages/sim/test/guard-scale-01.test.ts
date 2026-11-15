@@ -83,6 +83,7 @@ import gear from '../../../content/loot/gear.json';
 import drops from '../../../content/loot/drops.json';
 import abilities from '../../../content/abilities/abilities.json';
 import sealFamilies from '../../../content/abilities/seal-families.json';
+import kataPowers from '../../../content/abilities/kata-powers.json';
 import strikes from '../../../content/abilities/strikes.json';
 import dojoRoom from '../../../content/dojo/home-dojo.json';
 import decorations from '../../../content/dojo/decorations.json';
@@ -92,7 +93,7 @@ import named from '../../../content/named/named.json';
 const rawRooms = import.meta.glob('../../../content/rooms/*.json', { eager: true, import: 'default' });
 function rawBundle(): RawContent {
   const sorted = (files: Record<string, unknown>) => Object.keys(files).sort().map((k) => files[k]);
-  return { rooms: sorted(rawRooms), enemies: rawEnemies, insights, gear, drops, abilities, sealFamilies, strikes, dojoRoom, decorations, twists, elites, named, guardianScale: guardianScaleRaw };
+  return { rooms: sorted(rawRooms), enemies: rawEnemies, insights, gear, drops, abilities, sealFamilies, strikes, kataPowers, dojoRoom, decorations, twists, elites, named, guardianScale: guardianScaleRaw };
 }
 
 describe('GUARD-SCALE-01: hitbox and attack reach match the bigger body', () => {

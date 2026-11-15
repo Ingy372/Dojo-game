@@ -23,6 +23,7 @@ export * from './progression';
 export * from './loadout';
 export * from './sealFamilies';
 export * from './strikes';
+export * from './kataPowers';
 export * from './rewards';
 export * from './goals';
 export * from './power';

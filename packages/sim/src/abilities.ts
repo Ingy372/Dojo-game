@@ -2,7 +2,7 @@
 // upgrades (kick combos), Technique Seals (self-defense) and Virtues (stripes).
 // Defined in content/abilities/abilities.json and checked here.
 
-import { loadEffect, type Effect } from './effects';
+import { loadEffect, PASSIVE_EFFECTS, type Effect } from './effects';
 
 /** A stance the player switches between in a fight. Its numbers apply while it's active. */
 export interface StanceDef {
@@ -50,7 +50,7 @@ export interface PerkDef {
 }
 
 // R-PROGRESSION-BETA: the types for the slot system. Seal families are loaded here (PB-02, from
-// content/abilities/seal-families.json); Strikes (PB-03) and kata powers (PB-04) come later.
+// content/abilities/seal-families.json), Strikes (PB-03) and kata powers (PB-04) below.
 
 export type SealFamilyId = 'counter' | 'guard' | 'escape' | 'advancing' | 'disarm' | 'throw' | 'lock';
 
@@ -103,6 +103,8 @@ export interface KataPowerDef {
   id: string;
   /** The content/katas id. */
   kata: string;
+  /** That kata's curriculum requirement (e.g. "white-kata"): its sign-off earns the power. */
+  requirement: string;
   name: string;
   text: string;
   status: 'placeholder' | 'final';
@@ -136,6 +138,8 @@ export interface AbilityContent {
   families: SealFamilyDef[];
   /** PB-03: the Strikes for the Strike slot (empty if `loadAbilities` was given no Strike file). */
   strikeDefs: StrikeDef[];
+  /** PB-04: the kata powers for the Kata slot (empty if `loadAbilities` was given no kata power file). */
+  kataPowers: KataPowerDef[];
 }
 
 export class AbilityError extends Error {
@@ -158,7 +162,7 @@ function num(v: unknown, where: string): number {
   return v as number;
 }
 
-export function loadAbilities(data: unknown, familyData?: unknown, strikeData?: unknown): AbilityContent {
+export function loadAbilities(data: unknown, familyData?: unknown, strikeData?: unknown, kataPowerData?: unknown): AbilityContent {
   const d = data as Record<string, unknown>;
   if (!d || typeof d !== 'object') fail('the file is not an object');
   const listOf = (key: string): Record<string, unknown>[] => {
@@ -236,7 +240,7 @@ export function loadAbilities(data: unknown, familyData?: unknown, strikeData?: 
     };
   });
 
-  return { stances, strikes: perks('strikes'), seals: perks('seals'), virtues, families: familyData === undefined ? [] : loadSealFamilies(familyData), strikeDefs: strikeData === undefined ? [] : loadStrikeDefs(strikeData) };
+  return { stances, strikes: perks('strikes'), seals: perks('seals'), virtues, families: familyData === undefined ? [] : loadSealFamilies(familyData), strikeDefs: strikeData === undefined ? [] : loadStrikeDefs(strikeData), kataPowers: kataPowerData === undefined ? [] : loadKataPowers(kataPowerData, stances) };
 }
 
 const FAMILY_IDS: readonly SealFamilyId[] = ['escape', 'advancing', 'counter', 'guard', 'throw', 'disarm', 'lock'];
@@ -324,4 +328,35 @@ export function loadStrikeDefs(data: unknown): StrikeDef[] {
   if (defs.filter((s) => s.default).length !== 1) fail('strikes: exactly one Strike must have "default": true');
   if (!defs[0].default) fail('strikes: the default Strike (Spin Kick) must be first');
   return defs;
+}
+
+/**
+ * Checks content/abilities/kata-powers.json: no repeated ids or katas, passive effects only, no
+ * effects while a power is a placeholder, and every Stance plus the power stays inside the
+ * damage cap (Stance powerScale + the power's powerScale is at most STANCE_POWER_CAP). Over the cap
+ * fails here; it is never clipped in a fight.
+ */
+export function loadKataPowers(data: unknown, stances: readonly StanceDef[]): KataPowerDef[] {
+  const d = data as Record<string, unknown>;
+  if (!d || typeof d !== 'object' || !Array.isArray(d.powers)) fail('kata powers: the file needs a "powers" list');
+  const ids = new Set<string>();
+  const katas = new Set<string>();
+  const topStance = Math.max(0, ...stances.map((s) => s.powerScale));
+  return (d.powers as Record<string, unknown>[]).map((p, i) => {
+    const w = `powers[${i + 1}]`;
+    const id = str(p.id, `${w}.id`);
+    const kata = str(p.kata, `${w}.kata`);
+    if (ids.has(id)) fail(`${w}: the id "${id}" is used twice`);
+    if (katas.has(kata)) fail(`${w}: the kata "${kata}" already has a power`);
+    ids.add(id);
+    katas.add(kata);
+    if (p.status !== 'placeholder' && p.status !== 'final') fail(`${w}.status must be placeholder or final`);
+    if (!Array.isArray(p.effects)) fail(`${w}.effects must be a list`);
+    const effects = (p.effects as unknown[]).map((e) => loadEffect(e, (problem) => fail(`${w}: ${problem}`)));
+    if (p.status === 'placeholder' && effects.length > 0) fail(`${w}: a placeholder power has no effects`);
+    for (const e of effects) if (!PASSIVE_EFFECTS.includes(e.type)) fail(`${w}: "${e.type}" is not passive (allowed: ${PASSIVE_EFFECTS.join(', ')})`);
+    const power = effects.filter((e) => e.type === 'powerScale').reduce((sum, e) => sum + e.amount, 0);
+    if (topStance + power > STANCE_POWER_CAP + 1e-9) fail(`${w}: a Stance plus this power is over the +${Math.round(STANCE_POWER_CAP * 100)}% damage cap`);
+    return { id, kata, requirement: str(p.requirement, `${w}.requirement`), name: str(p.name, `${w}.name`), text: str(p.text, `${w}.text`), status: p.status as KataPowerDef['status'], effects };
+  });
 }

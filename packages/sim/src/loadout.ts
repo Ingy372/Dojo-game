@@ -1,12 +1,13 @@
 // R-PROGRESSION-BETA (PB-01): the Loadout's five slots, the Seal slot count by belt, the pure
 // equip rules for Seals, and the one-time seed for saves from before slots. Nothing here changes
-// a fight by itself: `characterSetup` reads the Stance, Virtue and (PB-02) the Seals; PB-03 and
-// PB-04 wire the Strike and kata slots in.
+// a fight by itself: `characterSetup` reads the Stance, Virtue, Seals (PB-02), Strike (PB-03) and
+// kata power (PB-04).
 
 import type { AbilityContent } from './abilities';
 import { SEAL_SLOTS_BY_TIER } from './config';
 import { emptyLoadout, type Loadout, type Profile } from './profile';
 import { unlockedFamilies } from './sealFamilies';
+import { earnedKataPowers } from './kataPowers';
 import { earnedStrikes, resolveStrikeId } from './strikes';
 import type { TrainingState } from './training';
 
@@ -20,9 +21,8 @@ export function sealSlots(tier: number): number {
 /**
  * What a student has earned for each slot that holds a choice, oldest first. `strikes` are Strike
  * ids, `families` Seal family ids, `kataPowers` kata power ids.
- * `families` come from the signed-off self-defense techniques (PB-02). PB-01/PB-04: kata powers
- * have no data yet, so that list is empty and a kata pick is dropped until PB-04. The caller can
- * pass its own lists (the tests do).
+ * `families` come from the signed-off self-defense techniques (PB-02), `kataPowers` from the
+ * signed-off katas (PB-04). The caller can pass its own lists (the tests do).
  */
 export interface LoadoutEarned {
   strikes: readonly string[];
@@ -31,13 +31,13 @@ export interface LoadoutEarned {
 }
 
 /**
- * The Strike ids and Seal family ids a student has earned, oldest first. Strikes (PB-03) are the
- * ones in content/abilities/strikes.json whose kick combo is signed off; Spin Kick is the empty
- * slot, so it is not listed.
+ * The Strike, Seal family and kata power ids a student has earned, oldest first. Strikes (PB-03)
+ * are the ones in content/abilities/strikes.json whose kick combo is signed off; Spin Kick is the
+ * empty slot, so it is not listed.
  */
 export function earnedPicks(training: TrainingState, abilities: AbilityContent): LoadoutEarned {
   const strikes = earnedStrikes(training, abilities.strikeDefs);
-  return { strikes, families: unlockedFamilies(training, abilities.families), kataPowers: [] };
+  return { strikes, families: unlockedFamilies(training, abilities.families), kataPowers: earnedKataPowers(training, abilities.kataPowers) };
 }
 
 /**

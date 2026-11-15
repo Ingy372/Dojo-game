@@ -37,6 +37,8 @@ export interface RawContent {
   sealFamilies: unknown;
   /** PB-03: content/abilities/strikes.json. */
   strikes: unknown;
+  /** PB-04: content/abilities/kata-powers.json. */
+  kataPowers: unknown;
   dojoRoom: unknown;
   decorations: unknown;
   twists: unknown;
@@ -99,7 +101,7 @@ export function loadContent(raw: RawContent): Content {
     enemies,
     insights: loadInsights(raw.insights),
     loot,
-    abilities: loadAbilities(raw.abilities, raw.sealFamilies, raw.strikes),
+    abilities: loadAbilities(raw.abilities, raw.sealFamilies, raw.strikes, raw.kataPowers),
     dojo,
     twists: loadTwists(raw.twists),
     elites,

@@ -1171,3 +1171,11 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - A Dojo button now only acts in the mode it was drawn for, so the top row does nothing during the bow and arrival. It works again as soon as the walk-in ends.
 - Music and Sound − and + buttons are at least 44x44 at every size (they were 43x44 at 667x375).
 - Phone check `docs/shots/ov-fx1/settings-arrival.mjs` 44 PASS / 0 FAIL at 844x390 and 667x375, Reduced motion on and off. On main it fails 36 checks (stuck in `arriving`).
+
+## PB-04 — Kata power slot with placeholder powers (2026-11-15)
+
+- `content/abilities/kata-powers.json` has one power each for Basic Form 1, Basic Form 2 and Keon. All three are placeholders until Jay's list (PB-11), so they change no fight.
+- A kata power is earned with its kata's teacher sign-off. The Kata card on Fighting Style shows the earned powers ("Power coming soon"), and one goes into each run.
+- A final power is data only: set `status` to `final` and list its effects. The game checks it when the data loads. Only passive types are allowed (`PASSIVE_EFFECTS`), and the biggest Stance plus the power must stay at or under +12% damage.
+- Kata picks saved before this (the kata id) switch to that kata's power, without the New dot coming back.
+- Tests: `p-prog-e-kata-power` (new, 12), with `p-prog-b`, `p-prog-f` and `p-prog-g` updated for earned kata powers.
