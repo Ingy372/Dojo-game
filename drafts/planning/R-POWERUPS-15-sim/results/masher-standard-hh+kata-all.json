@@ -1,0 +1,553 @@
+{
+  "bot": "masher",
+  "diff": "standard",
+  "seeds": 20,
+  "base": {
+    "pe": 0,
+    "win": 3,
+    "lost": 52,
+    "ticks": 343
+  },
+  "rows": [
+    {
+      "name": "calm-breath+heavy-hands+kata",
+      "pe": 37.2,
+      "win": 20.5,
+      "lost": 43.5,
+      "ticks": 310,
+      "star": false,
+      "perBelt": [
+        {
+          "belt": 1,
+          "pe": 35.2,
+          "win": 5,
+          "lost": 45.5,
+          "ticks": 291,
+          "rulerLost": 18.4
+        },
+        {
+          "belt": 2,
+          "pe": 39.1,
+          "win": 20,
+          "lost": 39.7,
+          "ticks": 278,
+          "rulerLost": 16.2
+        },
+        {
+          "belt": 3,
+          "pe": 16.7,
+          "win": 0,
+          "lost": 40.4,
+          "ticks": 366,
+          "rulerLost": 26.3
+        },
+        {
+          "belt": 4,
+          "pe": 36.9,
+          "win": 20,
+          "lost": 42.2,
+          "ticks": 295,
+          "rulerLost": 15.7
+        },
+        {
+          "belt": 5,
+          "pe": 36.6,
+          "win": 20,
+          "lost": 42.6,
+          "ticks": 301,
+          "rulerLost": 15.4
+        },
+        {
+          "belt": 6,
+          "pe": 36.8,
+          "win": 20,
+          "lost": 42.7,
+          "ticks": 300,
+          "rulerLost": 16.2
+        },
+        {
+          "belt": 7,
+          "pe": 41,
+          "win": 20,
+          "lost": 46.4,
+          "ticks": 316,
+          "rulerLost": 16.1
+        },
+        {
+          "belt": 8,
+          "pe": 41.4,
+          "win": 35,
+          "lost": 46.4,
+          "ticks": 319,
+          "rulerLost": 15.3
+        },
+        {
+          "belt": 9,
+          "pe": 45,
+          "win": 35,
+          "lost": 45.3,
+          "ticks": 315,
+          "rulerLost": 15.3
+        },
+        {
+          "belt": 10,
+          "pe": 41.3,
+          "win": 30,
+          "lost": 46.4,
+          "ticks": 318,
+          "rulerLost": 15.4
+        }
+      ]
+    },
+    {
+      "name": "steady-start+heavy-hands+kata",
+      "pe": 38.2,
+      "win": 19,
+      "lost": 44.3,
+      "ticks": 299,
+      "star": false,
+      "perBelt": [
+        {
+          "belt": 1,
+          "pe": 35.6,
+          "win": 0,
+          "lost": 46.9,
+          "ticks": 286,
+          "rulerLost": 18.4
+        },
+        {
+          "belt": 2,
+          "pe": 36.8,
+          "win": 20,
+          "lost": 41.4,
+          "ticks": 281,
+          "rulerLost": 16.2
+        },
+        {
+          "belt": 3,
+          "pe": 12.3,
+          "win": 20,
+          "lost": 43.2,
+          "ticks": 370,
+          "rulerLost": 26.3
+        },
+        {
+          "belt": 4,
+          "pe": 35.4,
+          "win": 20,
+          "lost": 44.8,
+          "ticks": 287,
+          "rulerLost": 15.7
+        },
+        {
+          "belt": 5,
+          "pe": 37.3,
+          "win": 20,
+          "lost": 44.5,
+          "ticks": 291,
+          "rulerLost": 15.4
+        },
+        {
+          "belt": 6,
+          "pe": 37.8,
+          "win": 20,
+          "lost": 44.2,
+          "ticks": 289,
+          "rulerLost": 16.2
+        },
+        {
+          "belt": 7,
+          "pe": 47.1,
+          "win": 25,
+          "lost": 44.9,
+          "ticks": 298,
+          "rulerLost": 16.1
+        },
+        {
+          "belt": 8,
+          "pe": 47.6,
+          "win": 20,
+          "lost": 44.1,
+          "ticks": 296,
+          "rulerLost": 15.3
+        },
+        {
+          "belt": 9,
+          "pe": 46.3,
+          "win": 20,
+          "lost": 44.8,
+          "ticks": 299,
+          "rulerLost": 15.3
+        },
+        {
+          "belt": 10,
+          "pe": 46.8,
+          "win": 25,
+          "lost": 44.8,
+          "ticks": 299,
+          "rulerLost": 15.4
+        }
+      ]
+    },
+    {
+      "name": "lighter-strike+heavy-hands+kata",
+      "pe": 34.6,
+      "win": 13,
+      "lost": 46.3,
+      "ticks": 311,
+      "star": false,
+      "perBelt": [
+        {
+          "belt": 1,
+          "pe": 33.7,
+          "win": 0,
+          "lost": 50.1,
+          "ticks": 303,
+          "rulerLost": 18.4
+        },
+        {
+          "belt": 2,
+          "pe": 39.1,
+          "win": 20,
+          "lost": 40.2,
+          "ticks": 279,
+          "rulerLost": 16.2
+        },
+        {
+          "belt": 3,
+          "pe": 35.2,
+          "win": 65,
+          "lost": 36.7,
+          "ticks": 375,
+          "rulerLost": 26.3
+        },
+        {
+          "belt": 4,
+          "pe": 17.9,
+          "win": 10,
+          "lost": 48.2,
+          "ticks": 295,
+          "rulerLost": 15.7
+        },
+        {
+          "belt": 5,
+          "pe": 32.8,
+          "win": 10,
+          "lost": 48,
+          "ticks": 297,
+          "rulerLost": 15.4
+        },
+        {
+          "belt": 6,
+          "pe": 21.6,
+          "win": 5,
+          "lost": 48.1,
+          "ticks": 297,
+          "rulerLost": 16.2
+        },
+        {
+          "belt": 7,
+          "pe": 35.1,
+          "win": 5,
+          "lost": 50.1,
+          "ticks": 310,
+          "rulerLost": 16.1
+        },
+        {
+          "belt": 8,
+          "pe": 36.5,
+          "win": 5,
+          "lost": 49.4,
+          "ticks": 309,
+          "rulerLost": 15.3
+        },
+        {
+          "belt": 9,
+          "pe": 36,
+          "win": 5,
+          "lost": 49.3,
+          "ticks": 311,
+          "rulerLost": 15.3
+        },
+        {
+          "belt": 10,
+          "pe": 35.5,
+          "win": 5,
+          "lost": 49.9,
+          "ticks": 311,
+          "rulerLost": 15.4
+        }
+      ]
+    },
+    {
+      "name": "softer-block+heavy-hands+kata",
+      "pe": 37.4,
+      "win": 28,
+      "lost": 40.2,
+      "ticks": 337,
+      "star": false,
+      "perBelt": [
+        {
+          "belt": 1,
+          "pe": 24.5,
+          "win": 10,
+          "lost": 44.2,
+          "ticks": 335,
+          "rulerLost": 18.4
+        },
+        {
+          "belt": 2,
+          "pe": 48.7,
+          "win": 50,
+          "lost": 36.1,
+          "ticks": 306,
+          "rulerLost": 16.2
+        },
+        {
+          "belt": 3,
+          "pe": 34.2,
+          "win": 55,
+          "lost": 32.6,
+          "ticks": 396,
+          "rulerLost": 26.3
+        },
+        {
+          "belt": 4,
+          "pe": 24.5,
+          "win": 15,
+          "lost": 43.5,
+          "ticks": 326,
+          "rulerLost": 15.7
+        },
+        {
+          "belt": 5,
+          "pe": 29.5,
+          "win": 30,
+          "lost": 42,
+          "ticks": 326,
+          "rulerLost": 15.4
+        },
+        {
+          "belt": 6,
+          "pe": 33.1,
+          "win": 30,
+          "lost": 41,
+          "ticks": 328,
+          "rulerLost": 16.2
+        },
+        {
+          "belt": 7,
+          "pe": 36.3,
+          "win": 25,
+          "lost": 41.4,
+          "ticks": 336,
+          "rulerLost": 16.1
+        },
+        {
+          "belt": 8,
+          "pe": 35.7,
+          "win": 15,
+          "lost": 41.2,
+          "ticks": 333,
+          "rulerLost": 15.3
+        },
+        {
+          "belt": 9,
+          "pe": 36.1,
+          "win": 25,
+          "lost": 41.4,
+          "ticks": 336,
+          "rulerLost": 15.3
+        },
+        {
+          "belt": 10,
+          "pe": 35.7,
+          "win": 25,
+          "lost": 41.6,
+          "ticks": 335,
+          "rulerLost": 15.4
+        }
+      ]
+    },
+    {
+      "name": "longer-stagger+heavy-hands+kata",
+      "pe": 31.6,
+      "win": 10,
+      "lost": 46.1,
+      "ticks": 323,
+      "star": false,
+      "perBelt": [
+        {
+          "belt": 1,
+          "pe": 26.9,
+          "win": 0,
+          "lost": 51.1,
+          "ticks": 318,
+          "rulerLost": 18.4
+        },
+        {
+          "belt": 2,
+          "pe": 34.6,
+          "win": 15,
+          "lost": 43.3,
+          "ticks": 293,
+          "rulerLost": 16.2
+        },
+        {
+          "belt": 3,
+          "pe": 23.8,
+          "win": 40,
+          "lost": 39.5,
+          "ticks": 392,
+          "rulerLost": 26.3
+        },
+        {
+          "belt": 4,
+          "pe": 19.6,
+          "win": 0,
+          "lost": 47.5,
+          "ticks": 305,
+          "rulerLost": 15.7
+        },
+        {
+          "belt": 5,
+          "pe": 21.1,
+          "win": 5,
+          "lost": 47.1,
+          "ticks": 309,
+          "rulerLost": 15.4
+        },
+        {
+          "belt": 6,
+          "pe": 21.2,
+          "win": 5,
+          "lost": 47.1,
+          "ticks": 308,
+          "rulerLost": 16.2
+        },
+        {
+          "belt": 7,
+          "pe": 20,
+          "win": 5,
+          "lost": 47.5,
+          "ticks": 318,
+          "rulerLost": 16.1
+        },
+        {
+          "belt": 8,
+          "pe": 20.1,
+          "win": 10,
+          "lost": 47.6,
+          "ticks": 322,
+          "rulerLost": 15.3
+        },
+        {
+          "belt": 9,
+          "pe": 30.6,
+          "win": 10,
+          "lost": 47,
+          "ticks": 321,
+          "rulerLost": 15.3
+        },
+        {
+          "belt": 10,
+          "pe": 20.4,
+          "win": 10,
+          "lost": 47.7,
+          "ticks": 321,
+          "rulerLost": 15.4
+        }
+      ]
+    },
+    {
+      "name": "wider-window+heavy-hands+kata",
+      "pe": 31.6,
+      "win": 10,
+      "lost": 46.1,
+      "ticks": 323,
+      "star": false,
+      "perBelt": [
+        {
+          "belt": 1,
+          "pe": 26.9,
+          "win": 0,
+          "lost": 51.1,
+          "ticks": 318,
+          "rulerLost": 18.4
+        },
+        {
+          "belt": 2,
+          "pe": 34.6,
+          "win": 15,
+          "lost": 43.3,
+          "ticks": 293,
+          "rulerLost": 16.2
+        },
+        {
+          "belt": 3,
+          "pe": 23.8,
+          "win": 40,
+          "lost": 39.5,
+          "ticks": 392,
+          "rulerLost": 26.3
+        },
+        {
+          "belt": 4,
+          "pe": 19.6,
+          "win": 0,
+          "lost": 47.5,
+          "ticks": 305,
+          "rulerLost": 15.7
+        },
+        {
+          "belt": 5,
+          "pe": 21.1,
+          "win": 5,
+          "lost": 47.1,
+          "ticks": 309,
+          "rulerLost": 15.4
+        },
+        {
+          "belt": 6,
+          "pe": 21.2,
+          "win": 5,
+          "lost": 47.1,
+          "ticks": 308,
+          "rulerLost": 16.2
+        },
+        {
+          "belt": 7,
+          "pe": 20,
+          "win": 5,
+          "lost": 47.5,
+          "ticks": 318,
+          "rulerLost": 16.1
+        },
+        {
+          "belt": 8,
+          "pe": 20.1,
+          "win": 10,
+          "lost": 47.6,
+          "ticks": 322,
+          "rulerLost": 15.3
+        },
+        {
+          "belt": 9,
+          "pe": 30.6,
+          "win": 10,
+          "lost": 47,
+          "ticks": 321,
+          "rulerLost": 15.3
+        },
+        {
+          "belt": 10,
+          "pe": 20.4,
+          "win": 10,
+          "lost": 47.7,
+          "ticks": 321,
+          "rulerLost": 15.4
+        }
+      ]
+    }
+  ]
+}
