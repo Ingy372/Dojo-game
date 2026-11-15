@@ -28,7 +28,7 @@ Kata scope (Jay, Nov 14): "ill give katas penon 1, penon 2, penon 3, nahachi ...
 | OV-B7 | Dojo-Ascent Programmer | Belt entry: parent note on who may enter it, plus a grown-up path to fix a wrong entry (review 8.2 #1). | DONE #498 (4302658f), Tester PASS. | — |
 | OV-B3 | Dojo-Ascent Programmer | Ages 6–9 start on Guided; Standard is one tap away (Jay, Nov 14: question 9 A). | DONE #500 (6b88252c), Tester PASS. | — |
 | OV-FX1 | Dojo-Ascent Programmer | Fix stuck Dojo HUD after opening Settings during the arrival Also make the four Music/Sound buttons at least 44x44 at 667 (now 43x44, Tester #500). (found by Tester in #498 QA; already on main, ANNOYING). | HUD returns after Settings during arrival; a test covers it; Tester PASS. | **Now** (next in line after #500). |
-| OV-P4 | Dojo-Ascent Researcher & Planner | In docs/decisions.md, mark the Oct 24 "starts on Standard" bullets superseded by OV-B3 (Jay, Nov 14: question 9 A; #500). Docs-only PR. | Bullets marked superseded with a pointer to OV-B3. | — |
+| OV-P4 | Dojo-Ascent Researcher & Planner | In docs/decisions.md, mark the Oct 24 "starts on Standard" bullets superseded by OV-B3 (Jay, Nov 14: question 9 A; #500). Docs-only PR. | DONE #501 (154971a4). | — |
 | OV-B6 | Dojo-Ascent Programmer | Import about 15 Power-ups (from 9) from OV-P1 data; existing effect types only. | R-INSIGHT-BAL tests pass with the new pool. | OV-B3, OV-P1, OV-C1 |
 | OV-B4 | — | DROPPED (Jay chose question 1 B). Replaced by PB-04 and kata powers. | — | — |
 | PB-04 | Dojo-Ascent Programmer | Resume the kata power slot as already planned (Jay, Nov 14: question 1 B). | As in its original item. | OV-B3 |
