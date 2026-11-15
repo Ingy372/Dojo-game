@@ -1842,3 +1842,12 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 
 - **One source:** each line named in path.json's `pointerSpots` is read from the file at that spot, and a test fails if a key goes unused or an old string comes back.
 - **Grown-ups hint is exempt from the 8-word limit:** it is for adults, and it wraps to the screen.
+
+## LP-B3: Class Chest and best-streak aura (2026-11-15)
+
+- **Chest contents (Manager, Nov 15):** the class pieces in their fixed order first, then gear of Uncommon or better, matching the overhaul review's Class Chest row. Coins wait for L13.
+- **First sync** still opens only one welcome chest, so a long class history never floods the dojo or the bag.
+- **Gear is seeded** from the class count and the next item id, so the same sync always gives the same item.
+- **The aura reads the best streak ever**, saved when the Dojo opens; the Tower shows the larger of the saved best and today's streak.
+- **Word check:** a test scans every string in content/ and the game code for streak-loss wording; `_note` keys and code comments are skipped.
+- **No art:** the chests and the glow are drawn in code.

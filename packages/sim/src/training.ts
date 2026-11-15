@@ -129,6 +129,8 @@ export interface TrainingState {
   classCheckIns: string[];
   /** Lifetime classes from the feed, or null if the feed doesn't send it. */
   classesTotal: number | null;
+  /** LP-B3: the feed's weekly class streak now (the aura keeps the best one). */
+  streakWeeks: number;
   /** B-TUNE-GUIDED: fight stats pinned by a testing fixture (feed testStats); absent otherwise. */
   pinnedStats?: { maxHealth: number; power: number; guard: number };
   trainingPoints: number;
@@ -276,6 +278,7 @@ export function buildTraining(feed: StudentFeed, abilities: AbilityContent, now:
     path: { next: nextStep, nextClassDay: nextClassDay(feed.attendance.classDays, now.weekday), testDate: gate.testDate },
     classCheckIns: feed.attendance.recentClasses.filter((d) => Date.parse(d) <= now.ms),
     classesTotal: feed.attendance.classesTotal,
+    streakWeeks: feed.streak.weeks,
     ...(feed.testStats ? { pinnedStats: { ...feed.testStats } } : {}),
     trainingPoints: Math.floor(feed.homePractice.approvedMinutes / TRAINING_POINTS.minutesPerPoint),
     approvedMinutes: feed.homePractice.approvedMinutes,

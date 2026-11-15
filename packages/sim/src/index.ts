@@ -37,6 +37,7 @@ export * from './streetSmarts';
 export * from './named';
 export * from './playTime';
 export * from './earning';
+export * from './streakAura';
 export * from './blessing';
 export * from './unlocks';
 export * from './audio';
