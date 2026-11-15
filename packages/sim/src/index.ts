@@ -25,7 +25,7 @@ export * from './sealFamilies';
 export * from './strikes';
 export * from './kataPowers';
 export * from './rewards';
-export * from './goals';
+export * from './myPath';
 export * from './power';
 export * from './dojo';
 export * from './actionZone';

@@ -1179,3 +1179,13 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - A final power is data only: set `status` to `final` and list its effects. The game checks it when the data loads. Only passive types are allowed (`PASSIVE_EFFECTS`), and the biggest Stance plus the power must stay at or under +12% damage.
 - Kata picks saved before this (the kata id) switch to that kata's power, without the New dot coming back.
 - Tests: `p-prog-e-kata-power` (new, 12), with `p-prog-b`, `p-prog-f` and `p-prog-g` updated for earned kata powers.
+
+## LP-B1 — One Path screen (2026-11-15)
+
+- Home now opens on one Path screen (review L1, mock #495, learning notes #490). It replaces the Gate tab, the Path card and the goals card; the Tower map was never built.
+- Left: the Tower, one floor per belt, with your character on your belt's floor (▲ and ▼ scroll it). Top right: the Gate to your next belt (locks, classes sundial, Sensei's Seal). Below: "Your next class step" (the biggest card) and "Next in the game" with Enter the Tower.
+- A Board button opens the Training Board (Last run, Gear, Abilities); its ◀ Path button comes back. Straight after a run or a knockout, Home opens on the Board so the run results show first.
+- Players who had the old screens see "This is your Path." once over the class step; OK saves it. New players skip it.
+- FAITH DOES is not on the Path yet (L5).
+- Words: `content/settings/path.json` (placeholders, Content owns them).
+- Tests: `lp-b1-path` (new, 13); `goals` removed; `p-menu-*` updated. Phone check `docs/shots/lp-b1/path-verify.mjs` 231 PASS / 0 FAIL at 667x375, 932x430 and 844x390, Reduced motion on and off, White and Green.
