@@ -1851,3 +1851,6 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **The aura reads the best streak ever**, saved when the Dojo opens; the Tower shows the larger of the saved best and today's streak.
 - **Word check:** a test scans every string in content/ and the game code for streak-loss wording; `_note` keys and code comments are skipped.
 - **No art:** the chests and the glow are drawn in code.
+
+## LP-B3b: count classes by the feed total too (2026-11-15)
+- A Class Chest follows real classes, not app opens. When the feed sends `classesTotal`, its growth since the last sync is the floor for chests, so a long absence never loses one. Without a total (old feeds) we can only count the dates still in the window.

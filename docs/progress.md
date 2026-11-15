@@ -1211,3 +1211,6 @@ I checked every "Next" and "Not done / known limits" note. Only one is a bug: **
 - A soft gold glow around the hero, in the Dojo and the Tower, grows one ring at each step of the best weekly class streak ever (`bestStreakWeeks` in the profile). It never shrinks and nothing warns.
 - The chest words and aura steps are placeholders in `content/settings/class-chest.json` for Content.
 - Tests: `lp-b3-class-chest` (new, 6): 30 classes give 30 chests (one at a time or all at once), the aura never goes down, no streak-loss words in content or game code, short kid lines; `earning` updated. Phone check `docs/shots/lp-b3/chest-verify.mjs` at 667x375, 932x430 and 844x390, Reduced motion on and off: 72 pass, 0 fail.
+
+## LP-B3b — Class Chests for classes the feed window dropped (2026-11-15)
+- After a long time away, the feed only lists recent check-ins, so 20 new classes with 8 still in the window gave 8 chests (Tester note on #509). `openClassChests` now opens the larger of the new dates and the growth in the feed's `classesTotal`. Test: 10 classes, then 30 with 8 in the window, gives 20 chests, then 0, then 1.
