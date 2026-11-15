@@ -145,6 +145,20 @@ export interface Profile {
   /** PB-01: true while the one-time "Your Seals now go in slots" note has not been dismissed. */
   showSlotNote: boolean;
   /**
+   * PB-05: Fighting Style pick ids already opened. null means the screen has not been opened
+   * yet, so the first visit marks what they already earned (no dots) and a later unlock gets a New dot.
+   */
+  styleSeen: string[] | null;
+  /** PB-05: first-use help line ids already shown. Missing on an old save means none. */
+  styleHelpSeen: string[];
+  /** OV-B1: Sensei's Pick. On (the default) puts each new Kick and Defense in its slot after a sign-off. */
+  senseiPick: boolean;
+  /**
+   * OV-B1: Strike and Seal family ids Sensei's Pick already knows about. null until the first
+   * check, which only records what is earned, so older moves are never moved.
+   */
+  picksKnown: string[] | null;
+  /**
    * R-STANCE-g: Stance ids this student keeps without a teacher's sign-off. Students who played
    * before Open Leg (Ready) needed a sign-off keep it (Manager Q5 (b)).
    */
@@ -255,6 +269,10 @@ export function newProfile(): Profile {
     loadout: null,
     loadoutV2: true,
     showSlotNote: false,
+    styleSeen: null,
+    styleHelpSeen: [],
+    senseiPick: true,
+    picksKnown: null,
     strikeSeeded: true,
     grandfatheredStances: [],
     stanceMigrated: true,
@@ -305,7 +323,7 @@ export function loadProfile(data: unknown): Profile {
     return newProfile();
   }
   const fresh = newProfile();
-  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null, sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, keeperCelebrated: typeof p.keeperCelebrated === 'boolean' ? p.keeperCelebrated : oldKeeperWin(p.lastRun), patternsSeen: Array.isArray(p.patternsSeen) ? p.patternsSeen.filter((v) => typeof v === 'string') : [], ...migrateReadyStance(p, readLoadout(p.loadout)), ...readLoadoutV2Flags(p) };
+  return { ...fresh, ...p, equipped: { ...fresh.equipped, ...p.equipped }, bests: { ...fresh.bests, ...p.bests }, floorsByTier: p.floorsByTier && typeof p.floorsByTier === 'object' ? { ...p.floorsByTier } : {}, look: readLook(p.look), guideStep: typeof p.guideStep === 'number' ? p.guideStep : p.runsPlayed > 0 ? GUIDE_DONE : 0, streetSmarts: readStreetSmarts(p.streetSmarts), difficulty: isDifficulty(p.difficulty) ? p.difficulty : null, difficultyChosenByPlayer: p.difficultyChosenByPlayer === true, floorLosses: readFloorLosses(p.floorLosses), guidedOfferedOn: typeof p.guidedOfferedOn === 'string' ? p.guidedOfferedOn : null, difficultyLineShown: p.difficultyLineShown === true, playLimitMinutes: isPlayLimit(p.playLimitMinutes) ? p.playLimitMinutes : 0, beltEntry: readBeltEntry(p.beltEntry), monsterJournal: readJournal(p.monsterJournal), decorEarning: readDecorEarning(p.decorEarning), runsStarted: typeof p.runsStarted === 'number' && p.runsStarted >= 0 ? p.runsStarted : p.runsPlayed ?? 0, lessons: readLessonLog(p.lessons), welcomeWeek: p.welcomeWeek ? readWelcomeWeekLog(p.welcomeWeek) : { existing: (p.runsPlayed ?? 0) > 0 ? false : null, introduced: [] }, goalsShownOn: typeof p.goalsShownOn === 'string' ? p.goalsShownOn : null, sealsSeen: Array.isArray(p.sealsSeen) ? p.sealsSeen.filter((v) => typeof v === 'string') : null, trophiesSeen: Array.isArray(p.trophiesSeen) ? p.trophiesSeen.filter((v) => typeof v === 'string') : null, keeperCelebrated: typeof p.keeperCelebrated === 'boolean' ? p.keeperCelebrated : oldKeeperWin(p.lastRun), patternsSeen: Array.isArray(p.patternsSeen) ? p.patternsSeen.filter((v) => typeof v === 'string') : [], styleSeen: Array.isArray(p.styleSeen) ? p.styleSeen.filter((v) => typeof v === 'string') : null, styleHelpSeen: Array.isArray(p.styleHelpSeen) ? p.styleHelpSeen.filter((v) => typeof v === 'string') : [], senseiPick: p.senseiPick !== false, picksKnown: Array.isArray(p.picksKnown) ? p.picksKnown.filter((v) => typeof v === 'string') : null, ...migrateReadyStance(p, readLoadout(p.loadout)), ...readLoadoutV2Flags(p) };
 }
 
 function readStreetSmarts(v: unknown): StreetSmartsSave {

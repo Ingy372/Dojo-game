@@ -1,5 +1,7 @@
-// The hidden testing screen (tap "Home Dojo" 5 times). For Jay and staff only:
-// switch fake student profiles, replay celebrations, and check the Power Rating.
+// The fixture list for Jay and staff. On the Training Board, the Testing button opens it
+// (one ordinary click). Five taps on the words "Training Board" still open it too.
+// A beta build draws neither way in. This is not the Home Dojo title.
+// Switch fake student profiles, replay celebrations, and check the Power Rating.
 // Power Rating must never appear anywhere a player would normally look.
 
 import Phaser from 'phaser';
@@ -23,6 +25,7 @@ export interface TestingActions {
   forgetSeen: () => void;
   addLevel: () => void;
   resetLevel: () => void;
+  oldSave: () => void;
   close: () => void;
 }
 
@@ -86,6 +89,9 @@ export class TestingPanel {
     const half = (leftW - 8) / 2;
     this.button(pad, y, half, 32, '+1 level', GREEN, 13, actions.addLevel);
     this.button(pad + half + 8, y, half, 32, 'Back to level 1', 0x6b3a3a, 12, actions.resetLevel);
+    y += 38;
+    // PB-05: the one-time Seal slot note. Needs a student with Seals (Orange).
+    this.button(pad, y, leftW, 32, 'Old save (show slot note again)', 0x4a3f63, 12, actions.oldSave);
     y += 38;
     this.host = this.container;
     // Close is added after the list so it is above every list row, whatever the list is doing.

@@ -25,7 +25,7 @@ const NEW_KEYS = ['twoAttacksAtOnce', 'firstInsightChoice', 'firstDecoration', '
 describe("Sensei's Lessons (M7-P5)", () => {
   it('every lesson has its own triggerKey', () => {
     const keys = Object.values(LESSONS).map((l) => l.triggerKey);
-    expect(keys.length).toBe(12);
+    expect(keys.length).toBe(13);
     expect(new Set(keys).size).toBe(keys.length);
     const dup = JSON.parse(JSON.stringify(lessonsData)) as { lessons: Array<{ triggerKey: string }> };
     dup.lessons[1].triggerKey = dup.lessons[0].triggerKey;
@@ -89,6 +89,12 @@ describe("Sensei's Lessons (M7-P5)", () => {
     expect(fire(log, 'thirdWarning', day(1), 'r1')).toBe('lesson-counter-hint-3');
     expect(fire(log, 'firstHomeReturn', day(1), null)).toBe('line-welcome-home');
     expect(fire(log, 'firstHomeReturn', day(1), null)).toBeNull(); // once only
+  });
+
+  it("OV-B1: the Sensei's Pick lesson shows the first time a move is picked, even on a day with a new lesson, then never again", () => {
+    const log = afterTutorial();
+    expect(fire(log, 'firstSenseiPick', day(1), null)).toBe('lesson-sensei-pick');
+    expect(fire(log, 'firstSenseiPick', day(2), null)).toBeNull();
   });
 
   it('every seen lesson is on the Scroll, except the follow-ups and the welcome line', () => {
