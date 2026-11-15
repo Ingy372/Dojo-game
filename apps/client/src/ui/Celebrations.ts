@@ -55,7 +55,7 @@ export class Celebrations {
     // The promotion ceremony is 3 screens (QA, 2026-10-18: 8 in a row was too many):
     // the bow and new belt, the Gate opens, then one screen with everything new.
     // Stripes, sign-offs and Sensei's Seal that arrive with it join that last screen;
-    // the details stay on the Board's Abilities and Gate tabs.
+    // the details stay on the Board's Abilities tab and the Path screen.
     const promotion = moments.find((m) => m.kind === 'promotion');
     const extras: Extra[] = promotion ? moments.filter((m): m is Extra => m.kind !== 'promotion' && m.kind !== 'welcome') : [];
     for (const m of moments) {

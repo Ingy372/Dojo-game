@@ -1820,3 +1820,11 @@ The six Guided/Standard cells PASS at ×1.4685. The three Challenge cells are a 
 - **Damage cap:** checked when the data loads (`loadKataPowers`). The biggest Stance `powerScale` plus the power's `powerScale` must be at most `STANCE_POWER_CAP` (0.12). Data over the cap fails to load and is never clipped in a fight.
 - **Earning:** each power names its kata's curriculum requirement (`requirement`), so the sim doesn't need the kata files. A test checks it matches `content/katas`.
 - **Old saves:** PB-05 saved the kata id in `loadout.kata`. `resolveKataPowerId` maps it to that kata's power, and the seen list maps the same way, so the New dot doesn't come back.
+
+## LP-B1: one Path screen (2026-11-15)
+
+- **Layout A (Manager, Nov 15):** Home opens on the Path, with a Board button. The Board keeps three tabs: Last run, Gear, Abilities.
+- **After a run or knockout:** Home opens on the Board, so the Last run results and celebrations show where they always did. Every other visit opens on the Path.
+- **Code:** sim `myPath.ts` (`pathView`: tiers, class step, game step); `goals.ts` and `GoalsCard.ts` deleted. The file is not `path.ts` because that name is the pathfinding module.
+- **Intro once:** `pathIntroSeen` replaces `goalsShownOn`. Old saves with runs get the intro; new profiles start with it seen.
+- **No art imported:** the Tower, Gate and cards are drawn with the existing frame and button helpers, not the mock images.

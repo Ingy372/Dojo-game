@@ -45,8 +45,8 @@ describe('P-MENU-e: Dojo popups, the resume offer and the Gate use button()', ()
     expect(method(dojo, 'card')).toMatch(/roundPanel\(/);
     expect(method(dojo, 'roundPanel')).toMatch(/fillRoundedRect\([^)]*RADIUS\.panel\)/);
   });
-  it('the Gate READY chip pops once and never loops; sundial and Seal sit on rounded cards', () => {
-    const gate = method(home, 'renderGate');
+  it('the Path Gate: the Seal pops once and never loops; it sits on a rounded box (LP-B1)', () => {
+    const gate = method(home, 'renderPathGate');
     expect(gate).not.toMatch(/repeat: -1/);
     expect(gate).toMatch(/MOTION\.pop/);
     expect(gate).toMatch(/fillRoundedRect\([^;]*RADIUS\.panel/);
