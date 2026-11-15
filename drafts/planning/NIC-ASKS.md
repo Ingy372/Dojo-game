@@ -52,3 +52,4 @@ How to read: **Must** = no launch without it (review L12). **Soon** = needed for
 ## Change log
 
 - Nov 14, 2026: list started (OV-P3).
+- Nov 14, 2026: checked against LP-P1 (coin rates). No new asks: Class Chests use the per-class check-ins already in A2 and A4.
